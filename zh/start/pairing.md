@@ -1,59 +1,56 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "Pairing overview: approve who can DM you + which nodes can join"
+summary: "配对概览：批准谁可以私聊 + 哪些节点可以加入"
 read_when:
-  - Setting up DM access control
-  - Pairing a new iOS/Android node
-  - Reviewing OpenClaw security posture
+  - 设置私聊访问控制
+  - 配对新的 iOS/Android 节点
+  - 回顾 OpenClaw 安全态势
 ---
 
-# Pairing
+# 配对
 
-“Pairing” is OpenClaw’s explicit **owner approval** step.
-It is used in two places:
+“配对”是 OpenClaw 的显式 **所有者批准** 步骤。
+主要用于两类场景：
 
-1) **DM pairing** (who is allowed to talk to the bot)
-2) **Node pairing** (which devices/nodes are allowed to join the gateway network)
+1) **私聊配对**（谁可以与机器人对话）
+2) **节点配对**（哪些设备/节点可以加入网关网络）
 
-Security context: [Security](/gateway/security)
+安全背景：[安全](/zh/gateway/security)
 
-## 1) DM pairing (inbound chat access)
+## 1) 私聊配对（入站聊天访问）
 
-When a channel is configured with DM policy `pairing`, unknown senders get a short code and their message is **not processed** until you approve.
+当某个渠道的私聊策略为 `pairing` 时，未知发送者会收到一个短码，消息在你批准前 **不会处理**。
 
-Default DM policies are documented in: [Security](/gateway/security)
+默认私聊策略参见：[安全](/zh/gateway/security)
 
-Pairing codes:
-- 8 characters, uppercase, no ambiguous chars (`0O1I`).
-- **Expire after 1 hour**. The bot only sends the pairing message when a new request is created (roughly once per hour per sender).
-- Pending DM pairing requests are capped at **3 per channel** by default; additional requests are ignored until one expires or is approved.
+配对码规则：
+- 8 位字符，大写，不含易混字符（`0O1I`）。
+- **1 小时过期**。机器人只会在新请求创建时发送一次配对消息（大致每个发送者每小时一次）。
+- 待处理私聊配对默认 **每个渠道最多 3 个**；超出会被忽略，直到有请求过期或被批准。
 
-### Approve a sender
+### 批准发送者
 
 ```bash
 openclaw pairing list telegram
 openclaw pairing approve telegram <CODE>
 ```
 
-Supported channels: `telegram`, `whatsapp`, `signal`, `imessage`, `discord`, `slack`.
+支持渠道：`telegram`、`whatsapp`、`signal`、`imessage`、`discord`、`slack`。
 
-### Where the state lives
+### 状态存储位置
 
-Stored under `~/.openclaw/credentials/`:
-- Pending requests: `<channel>-pairing.json`
-- Approved allowlist store: `<channel>-allowFrom.json`
+存放在 `~/.openclaw/credentials/`：
+- 待处理请求：`<channel>-pairing.json`
+- 已批准 allowlist：`<channel>-allowFrom.json`
 
-Treat these as sensitive (they gate access to your assistant).
+这些文件很敏感（决定谁能访问你的助理）。
 
 
-## 2) Node device pairing (iOS/Android/macOS/headless nodes)
+## 2) 节点设备配对（iOS/Android/macOS/无头节点）
 
-Nodes connect to the Gateway as **devices** with `role: node`. The Gateway
-creates a device pairing request that must be approved.
+节点以 **设备** 形式连接到网关，`role: node`。
+网关会创建设备配对请求，必须批准才能加入。
 
-### Approve a node device
+### 批准节点设备
 
 ```bash
 openclaw devices list
@@ -61,26 +58,26 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-### Where the state lives
+### 状态存储位置
 
-Stored under `~/.openclaw/devices/`:
-- `pending.json` (short-lived; pending requests expire)
-- `paired.json` (paired devices + tokens)
+存放在 `~/.openclaw/devices/`：
+- `pending.json`（短期；待处理请求会过期）
+- `paired.json`（已配对设备 + token）
 
-### Notes
+### 说明
 
-- The legacy `node.pair.*` API (CLI: `openclaw nodes pending/approve`) is a
-  separate gateway-owned pairing store. WS nodes still require device pairing.
+- 旧版 `node.pair.*` API（CLI：`openclaw nodes pending/approve`）
+  是独立的、由网关维护的配对存储。WS 节点仍然需要设备配对。
 
 
-## Related docs
+## 相关文档
 
-- Security model + prompt injection: [Security](/gateway/security)
-- Updating safely (run doctor): [Updating](/install/updating)
-- Channel configs:
-  - Telegram: [Telegram](/channels/telegram)
-  - WhatsApp: [WhatsApp](/channels/whatsapp)
-  - Signal: [Signal](/channels/signal)
-  - iMessage: [iMessage](/channels/imessage)
-  - Discord: [Discord](/channels/discord)
-  - Slack: [Slack](/channels/slack)
+- 安全模型 + 提示注入：[安全](/zh/gateway/security)
+- 安全更新（运行 doctor）：[更新](/zh/install/updating)
+- 渠道配置：
+  - Telegram：[Telegram](/zh/channels/telegram)
+  - WhatsApp：[WhatsApp](/zh/channels/whatsapp)
+  - Signal：[Signal](/zh/channels/signal)
+  - iMessage：[iMessage](/zh/channels/imessage)
+  - Discord：[Discord](/zh/channels/discord)
+  - Slack：[Slack](/zh/channels/slack)
