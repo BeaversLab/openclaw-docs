@@ -1,23 +1,20 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "CLI reference for `openclaw skills` (list/info/check) and skill eligibility"
+summary: "`openclaw skills` 的 CLI 参考（list/info/check）与技能就绪情况"
 read_when:
-  - You want to see which skills are available and ready to run
-  - You want to debug missing binaries/env/config for skills
+  - 需要查看哪些技能可用且已就绪
+  - 需要排查技能缺失的二进制/环境/配置
 ---
 
 # `openclaw skills`
 
-Inspect skills (bundled + workspace + managed overrides) and see what’s eligible vs missing requirements.
+检查技能（内置 + 工作区 + 托管覆盖）并查看哪些就绪/缺失依赖。
 
-Related:
-- Skills system: [Skills](/tools/skills)
-- Skills config: [Skills config](/tools/skills-config)
-- ClawdHub installs: [ClawdHub](/tools/clawdhub)
+相关：
+- 技能系统：[Skills](/zh/tools/skills)
+- 技能配置：[Skills config](/zh/tools/skills-config)
+- ClawdHub 安装：[ClawdHub](/zh/tools/clawdhub)
 
-## Commands
+## 命令
 
 ```bash
 openclaw skills list
@@ -25,4 +22,3 @@ openclaw skills list --eligible
 openclaw skills info <name>
 openclaw skills check
 ```
-

@@ -1,18 +1,14 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "CLI reference for `openclaw docs` (search the live docs index)"
+summary: "`openclaw docs` 的 CLI 参考（搜索在线文档索引）"
 read_when:
-  - You want to search the live OpenClaw docs from the terminal
+  - 你想在终端中搜索 OpenClaw 在线文档
 ---
 
 # `openclaw docs`
 
-Search the live docs index.
+搜索在线文档索引。
 
 ```bash
 openclaw docs browser extension
 openclaw docs sandbox allowHostControl
 ```
-

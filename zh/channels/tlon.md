@@ -1,47 +1,43 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "Tlon/Urbit support status, capabilities, and configuration"
+summary: "Tlon/Urbit 支持状态、能力与配置"
 read_when:
-  - Working on Tlon/Urbit channel features
+  - 开发 Tlon/Urbit 渠道功能
 ---
-# Tlon (plugin)
+# Tlon（插件）
 
-Tlon is a decentralized messenger built on Urbit. OpenClaw connects to your Urbit ship and can
-respond to DMs and group chat messages. Group replies require an @ mention by default and can
-be further restricted via allowlists.
+Tlon 是基于 Urbit 的去中心化消息应用。OpenClaw 连接到你的 Urbit ship，
+可回复私聊与群聊消息。群聊默认需要 @mention 才回复，并可通过 allowlist 进一步限制。
 
-Status: supported via plugin. DMs, group mentions, thread replies, and text-only media fallback
-(URL appended to caption). Reactions, polls, and native media uploads are not supported.
+状态：通过插件支持。支持私聊、群提及、线程回复，以及文本式媒体降级
+（URL 附加到 caption）。不支持 reactions、投票与原生媒体上传。
 
-## Plugin required
+## 需要插件
 
-Tlon ships as a plugin and is not bundled with the core install.
+Tlon 为插件形式，未随核心安装打包。
 
-Install via CLI (npm registry):
+通过 CLI 安装（npm registry）：
 
 ```bash
 openclaw plugins install @openclaw/tlon
 ```
 
-Local checkout (when running from a git repo):
+本地检出（从 git 仓库运行时）：
 
 ```bash
 openclaw plugins install ./extensions/tlon
 ```
 
-Details: [Plugins](/plugin)
+详情：[Plugins](/zh/plugin)
 
-## Setup
+## 设置
 
-1) Install the Tlon plugin.
-2) Gather your ship URL and login code.
-3) Configure `channels.tlon`.
-4) Restart the gateway.
-5) DM the bot or mention it in a group channel.
+1) 安装 Tlon 插件。
+2) 准备 ship URL 与登录 code。
+3) 配置 `channels.tlon`。
+4) 重启 gateway。
+5) 私聊 bot 或在群频道中提及它。
 
-Minimal config (single account):
+最小配置（单账号）：
 
 ```json5
 {
@@ -56,9 +52,9 @@ Minimal config (single account):
 }
 ```
 
-## Group channels
+## 群频道
 
-Auto-discovery is enabled by default. You can also pin channels manually:
+默认启用自动发现。也可以手动固定频道：
 
 ```json5
 {
@@ -73,7 +69,7 @@ Auto-discovery is enabled by default. You can also pin channels manually:
 }
 ```
 
-Disable auto-discovery:
+禁用自动发现：
 
 ```json5
 {
@@ -85,9 +81,9 @@ Disable auto-discovery:
 }
 ```
 
-## Access control
+## 访问控制
 
-DM allowlist (empty = allow all):
+DM allowlist（空 = 允许全部）：
 
 ```json5
 {
@@ -99,7 +95,7 @@ DM allowlist (empty = allow all):
 }
 ```
 
-Group authorization (restricted by default):
+群聊授权（默认限制）：
 
 ```json5
 {
@@ -122,15 +118,15 @@ Group authorization (restricted by default):
 }
 ```
 
-## Delivery targets (CLI/cron)
+## 投递目标（CLI/cron）
 
-Use these with `openclaw message send` or cron delivery:
+配合 `openclaw message send` 或 cron 投递使用：
 
-- DM: `~sampel-palnet` or `dm/~sampel-palnet`
-- Group: `chat/~host-ship/channel` or `group:~host-ship/channel`
+- 私聊：`~sampel-palnet` 或 `dm/~sampel-palnet`
+- 群聊：`chat/~host-ship/channel` 或 `group:~host-ship/channel`
 
-## Notes
+## 备注
 
-- Group replies require a mention (e.g. `~your-bot-ship`) to respond.
-- Thread replies: if the inbound message is in a thread, OpenClaw replies in-thread.
-- Media: `sendMedia` falls back to text + URL (no native upload).
+- 群聊回复需要提及（如 `~your-bot-ship`）。
+- 线程回复：若入站消息在线程内，OpenClaw 会在线程内回复。
+- 媒体：`sendMedia` 会降级为文本 + URL（无原生上传）。

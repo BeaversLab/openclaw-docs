@@ -1,20 +1,17 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "CLI reference for `openclaw webhooks` (webhook helpers + Gmail Pub/Sub)"
+summary: "`openclaw webhooks` 的 CLI 参考（webhook 助手 + Gmail Pub/Sub）"
 read_when:
-  - You want to wire Gmail Pub/Sub events into OpenClaw
-  - You want webhook helper commands
+  - 需要将 Gmail Pub/Sub 事件接入 OpenClaw
+  - 需要 webhook 辅助命令
 ---
 
 # `openclaw webhooks`
 
-Webhook helpers and integrations (Gmail Pub/Sub, webhook helpers).
+Webhook 助手与集成（Gmail Pub/Sub、webhook helpers）。
 
-Related:
-- Webhooks: [Webhook](/automation/webhook)
-- Gmail Pub/Sub: [Gmail Pub/Sub](/automation/gmail-pubsub)
+相关：
+- Webhooks：[Webhook](/zh/automation/webhook)
+- Gmail Pub/Sub：[Gmail Pub/Sub](/zh/automation/gmail-pubsub)
 
 ## Gmail
 
@@ -23,4 +20,4 @@ openclaw webhooks gmail setup --account you@example.com
 openclaw webhooks gmail run
 ```
 
-See [Gmail Pub/Sub documentation](/automation/gmail-pubsub) for details.
+详情见 [Gmail Pub/Sub 文档](/zh/automation/gmail-pubsub)。

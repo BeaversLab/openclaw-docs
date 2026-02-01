@@ -1,21 +1,18 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "CLI reference for `openclaw voicecall` (voice-call plugin command surface)"
+summary: "`openclaw voicecall` 的 CLI 参考（语音通话插件命令）"
 read_when:
-  - You use the voice-call plugin and want the CLI entry points
-  - You want quick examples for `voicecall call|continue|status|tail|expose`
+  - 使用语音通话插件并需要 CLI 入口
+  - 想快速查看 `voicecall call|continue|status|tail|expose` 示例
 ---
 
 # `openclaw voicecall`
 
-`voicecall` is a plugin-provided command. It only appears if the voice-call plugin is installed and enabled.
+`voicecall` 是插件提供的命令。仅在语音通话插件已安装并启用时出现。
 
-Primary doc:
-- Voice-call plugin: [Voice Call](/plugins/voice-call)
+主文档：
+- 语音通话插件：[Voice Call](/zh/plugins/voice-call)
 
-## Common commands
+## 常用命令
 
 ```bash
 openclaw voicecall status --call-id <id>
@@ -24,7 +21,7 @@ openclaw voicecall continue --call-id <id> --message "Any questions?"
 openclaw voicecall end --call-id <id>
 ```
 
-## Exposing webhooks (Tailscale)
+## 暴露 webhooks（Tailscale）
 
 ```bash
 openclaw voicecall expose --mode serve
@@ -32,5 +29,4 @@ openclaw voicecall expose --mode funnel
 openclaw voicecall unexpose
 ```
 
-Security note: only expose the webhook endpoint to networks you trust. Prefer Tailscale Serve over Funnel when possible.
-
+安全提示：仅将 webhook 端点暴露到可信网络。能用 Tailscale Serve 就不要用 Funnel。

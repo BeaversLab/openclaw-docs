@@ -1,31 +1,28 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "CLI reference for `openclaw browser` (profiles, tabs, actions, extension relay)"
+summary: "`openclaw browser` 的 CLI 参考（profiles、tabs、actions、扩展中继）"
 read_when:
-  - You use `openclaw browser` and want examples for common tasks
-  - You want to control a browser running on another machine via a node host
-  - You want to use the Chrome extension relay (attach/detach via toolbar button)
+  - 你在使用 `openclaw browser` 并需要常见任务示例
+  - 你想通过 node host 控制另一台机器上的浏览器
+  - 你想使用 Chrome 扩展中继（通过工具栏按钮 attach/detach）
 ---
 
 # `openclaw browser`
 
-Manage OpenClaw’s browser control server and run browser actions (tabs, snapshots, screenshots, navigation, clicks, typing).
+管理 OpenClaw 的浏览器控制服务，并执行浏览器动作（tabs、snapshot、screenshot、导航、点击、输入）。
 
-Related:
-- Browser tool + API: [Browser tool](/tools/browser)
-- Chrome extension relay: [Chrome extension](/tools/chrome-extension)
+相关：
+- Browser 工具 + API：[Browser tool](/zh/tools/browser)
+- Chrome 扩展中继：[Chrome extension](/zh/tools/chrome-extension)
 
-## Common flags
+## 常用参数
 
-- `--url <gatewayWsUrl>`: Gateway WebSocket URL (defaults to config).
-- `--token <token>`: Gateway token (if required).
-- `--timeout <ms>`: request timeout (ms).
-- `--browser-profile <name>`: choose a browser profile (default from config).
-- `--json`: machine-readable output (where supported).
+- `--url <gatewayWsUrl>`：Gateway WebSocket URL（默认读取配置）。
+- `--token <token>`：Gateway token（如需）。
+- `--timeout <ms>`：请求超时（毫秒）。
+- `--browser-profile <name>`：选择浏览器 profile（默认取配置）。
+- `--json`：机器可读输出（如支持）。
 
-## Quick start (local)
+## 快速开始（本地）
 
 ```bash
 openclaw browser --browser-profile chrome tabs
@@ -36,9 +33,9 @@ openclaw browser --browser-profile openclaw snapshot
 
 ## Profiles
 
-Profiles are named browser routing configs. In practice:
-- `openclaw`: launches/attaches to a dedicated OpenClaw-managed Chrome instance (isolated user data dir).
-- `chrome`: controls your existing Chrome tab(s) via the Chrome extension relay.
+Profiles 是命名的浏览器路由配置。通常：
+- `openclaw`：启动/连接一个由 OpenClaw 管理的专用 Chrome 实例（隔离用户数据目录）。
+- `chrome`：通过 Chrome 扩展中继控制你现有的 Chrome tab。
 
 ```bash
 openclaw browser profiles
@@ -46,7 +43,7 @@ openclaw browser create-profile --name work --color "#FF5A36"
 openclaw browser delete-profile --name work
 ```
 
-Use a specific profile:
+使用指定 profile：
 
 ```bash
 openclaw browser --browser-profile work tabs
@@ -63,19 +60,19 @@ openclaw browser close <targetId>
 
 ## Snapshot / screenshot / actions
 
-Snapshot:
+Snapshot：
 
 ```bash
 openclaw browser snapshot
 ```
 
-Screenshot:
+Screenshot：
 
 ```bash
 openclaw browser screenshot
 ```
 
-Navigate/click/type (ref-based UI automation):
+导航/点击/输入（基于 ref 的 UI 自动化）：
 
 ```bash
 openclaw browser navigate https://example.com
@@ -83,25 +80,25 @@ openclaw browser click <ref>
 openclaw browser type <ref> "hello"
 ```
 
-## Chrome extension relay (attach via toolbar button)
+## Chrome 扩展中继（工具栏按钮 attach）
 
-This mode lets the agent control an existing Chrome tab that you attach manually (it does not auto-attach).
+该模式允许 agent 控制你手动 attach 的现有 Chrome tab（不会自动 attach）。
 
-Install the unpacked extension to a stable path:
+安装解压扩展到稳定路径：
 
 ```bash
 openclaw browser extension install
 openclaw browser extension path
 ```
 
-Then Chrome → `chrome://extensions` → enable “Developer mode” → “Load unpacked” → select the printed folder.
+然后在 Chrome 中打开 `chrome://extensions` → 启用 “Developer mode” → “Load unpacked” → 选择输出的目录。
 
-Full guide: [Chrome extension](/tools/chrome-extension)
+完整指南：[Chrome extension](/zh/tools/chrome-extension)
 
-## Remote browser control (node host proxy)
+## 远程浏览器控制（node host 代理）
 
-If the Gateway runs on a different machine than the browser, run a **node host** on the machine that has Chrome/Brave/Edge/Chromium. The Gateway will proxy browser actions to that node (no separate browser control server required).
+如果 Gateway 与浏览器不在同一台机器上，请在有 Chrome/Brave/Edge/Chromium 的机器上运行 **node host**。Gateway 会将浏览器动作代理到该 node（无需单独启动浏览器控制服务）。
 
-Use `gateway.nodes.browser.mode` to control auto-routing and `gateway.nodes.browser.node` to pin a specific node if multiple are connected.
+使用 `gateway.nodes.browser.mode` 控制自动路由，并用 `gateway.nodes.browser.node` 在有多个 node 时指定某个 node。
 
-Security + remote setup: [Browser tool](/tools/browser), [Remote access](/gateway/remote), [Tailscale](/gateway/tailscale), [Security](/gateway/security)
+安全与远程设置： [Browser tool](/zh/tools/browser)、[Remote access](/zh/gateway/remote)、[Tailscale](/zh/gateway/tailscale)、[Security](/zh/gateway/security)

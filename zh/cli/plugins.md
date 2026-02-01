@@ -1,23 +1,20 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "CLI reference for `openclaw plugins` (list, install, enable/disable, doctor)"
+summary: "`openclaw plugins` 的 CLI 参考（list、install、enable/disable、doctor）"
 read_when:
-  - You want to install or manage in-process Gateway plugins
-  - You want to debug plugin load failures
+  - 需要安装或管理进程内 Gateway 插件
+  - 需要排查插件加载失败
 ---
 
 # `openclaw plugins`
 
-Manage Gateway plugins/extensions (loaded in-process).
+管理 Gateway 插件/扩展（进程内加载）。
 
-Related:
-- Plugin system: [Plugins](/plugin)
-- Plugin manifest + schema: [Plugin manifest](/plugins/manifest)
-- Security hardening: [Security](/gateway/security)
+相关：
+- 插件系统：[Plugins](/zh/plugin)
+- 插件清单 + schema：[Plugin manifest](/zh/plugins/manifest)
+- 安全加固：[Security](/zh/gateway/security)
 
-## Commands
+## 命令
 
 ```bash
 openclaw plugins list
@@ -29,30 +26,29 @@ openclaw plugins update <id>
 openclaw plugins update --all
 ```
 
-Bundled plugins ship with OpenClaw but start disabled. Use `plugins enable` to
-activate them.
+内置插件随 OpenClaw 一起提供，但默认禁用。使用 `plugins enable` 激活。
 
-All plugins must ship a `openclaw.plugin.json` file with an inline JSON Schema
-(`configSchema`, even if empty). Missing/invalid manifests or schemas prevent
-the plugin from loading and fail config validation.
+所有插件必须包含 `openclaw.plugin.json` 文件，并内嵌 JSON Schema
+（`configSchema`，即使为空）。缺失/无效的清单或 schema 会阻止插件加载，
+并导致配置校验失败。
 
-### Install
+### 安装
 
 ```bash
 openclaw plugins install <path-or-spec>
 ```
 
-Security note: treat plugin installs like running code. Prefer pinned versions.
+安全说明：插件安装相当于运行代码。建议使用固定版本。
 
-Supported archives: `.zip`, `.tgz`, `.tar.gz`, `.tar`.
+支持的归档：`.zip`、`.tgz`、`.tar.gz`、`.tar`。
 
-Use `--link` to avoid copying a local directory (adds to `plugins.load.paths`):
+使用 `--link` 可避免复制本地目录（写入 `plugins.load.paths`）：
 
 ```bash
 openclaw plugins install -l ./my-plugin
 ```
 
-### Update
+### 更新
 
 ```bash
 openclaw plugins update <id>
@@ -60,4 +56,4 @@ openclaw plugins update --all
 openclaw plugins update <id> --dry-run
 ```
 
-Updates only apply to plugins installed from npm (tracked in `plugins.installs`).
+更新仅适用于从 npm 安装的插件（记录于 `plugins.installs`）。

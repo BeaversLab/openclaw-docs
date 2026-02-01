@@ -1,20 +1,16 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "CLI reference for `openclaw reset` (reset local state/config)"
+summary: "`openclaw reset` 的 CLI 参考（重置本地状态/配置）"
 read_when:
-  - You want to wipe local state while keeping the CLI installed
-  - You want a dry-run of what would be removed
+  - 想在保留 CLI 的情况下清理本地状态
+  - 想查看将被移除内容的 dry-run
 ---
 
 # `openclaw reset`
 
-Reset local config/state (keeps the CLI installed).
+重置本地配置/状态（保留 CLI）。
 
 ```bash
 openclaw reset
 openclaw reset --dry-run
 openclaw reset --scope config+creds+sessions --yes --non-interactive
 ```
-

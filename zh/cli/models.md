@@ -1,22 +1,19 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "CLI reference for `openclaw models` (status/list/set/scan, aliases, fallbacks, auth)"
+summary: "`openclaw models` 的 CLI 参考（status/list/set/scan、aliases、fallbacks、auth）"
 read_when:
-  - You want to change default models or view provider auth status
-  - You want to scan available models/providers and debug auth profiles
+  - 需要更改默认模型或查看提供商认证状态
+  - 需要扫描可用模型/提供商并排查认证配置
 ---
 
 # `openclaw models`
 
-Model discovery, scanning, and configuration (default model, fallbacks, auth profiles).
+模型发现、扫描与配置（默认模型、fallbacks、auth profiles）。
 
-Related:
-- Providers + models: [Models](/providers/models)
-- Provider auth setup: [Getting started](/start/getting-started)
+相关：
+- Providers + models：[Models](/zh/providers/models)
+- Provider 认证设置：[Getting started](/zh/start/getting-started)
 
-## Common commands
+## 常用命令
 
 ```bash
 openclaw models status
@@ -25,25 +22,24 @@ openclaw models set <model-or-alias>
 openclaw models scan
 ```
 
-`openclaw models status` shows the resolved default/fallbacks plus an auth overview.
-When provider usage snapshots are available, the OAuth/token status section includes
-provider usage headers.
-Add `--probe` to run live auth probes against each configured provider profile.
-Probes are real requests (may consume tokens and trigger rate limits).
+`openclaw models status` 会显示解析后的默认模型/回退，以及认证概览。
+当提供商用量快照可用时，OAuth/token 状态区会包含 provider usage 标题。
+加上 `--probe` 可对每个已配置的 provider profile 进行实时认证探测。
+探测是实际请求（可能消耗 token 并触发限流）。
 
-Notes:
-- `models set <model-or-alias>` accepts `provider/model` or an alias.
-- Model refs are parsed by splitting on the **first** `/`. If the model ID includes `/` (OpenRouter-style), include the provider prefix (example: `openrouter/moonshotai/kimi-k2`).
-- If you omit the provider, OpenClaw treats the input as an alias or a model for the **default provider** (only works when there is no `/` in the model ID).
+备注：
+- `models set <model-or-alias>` 接受 `provider/model` 或 alias。
+- 模型引用按 **第一个** `/` 分割。如果模型 ID 本身包含 `/`（OpenRouter 风格），请包含 provider 前缀（示例：`openrouter/moonshotai/kimi-k2`）。
+- 如果省略 provider，OpenClaw 会将输入视为 alias 或 **默认 provider** 的模型（仅当模型 ID 中不含 `/` 时生效）。
 
 ### `models status`
-Options:
+选项：
 - `--json`
 - `--plain`
-- `--check` (exit 1=expired/missing, 2=expiring)
-- `--probe` (live probe of configured auth profiles)
-- `--probe-provider <name>` (probe one provider)
-- `--probe-profile <id>` (repeat or comma-separated profile ids)
+- `--check`（exit 1=过期/缺失，2=即将过期）
+- `--probe`（对已配置的 auth profile 进行实时探测）
+- `--probe-provider <name>`（探测某个 provider）
+- `--probe-profile <id>`（可重复或逗号分隔的 profile id）
 - `--probe-timeout <ms>`
 - `--probe-concurrency <n>`
 - `--probe-max-tokens <n>`
@@ -63,9 +59,9 @@ openclaw models auth login --provider <id>
 openclaw models auth setup-token
 openclaw models auth paste-token
 ```
-`models auth login` runs a provider plugin’s auth flow (OAuth/API key). Use
-`openclaw plugins list` to see which providers are installed.
+`models auth login` 会运行提供商插件的认证流程（OAuth/API key）。使用
+`openclaw plugins list` 查看已安装的提供商。
 
-Notes:
-- `setup-token` prompts for a setup-token value (generate it with `claude setup-token` on any machine).
-- `paste-token` accepts a token string generated elsewhere or from automation.
+备注：
+- `setup-token` 会提示输入 setup-token 值（可在任意机器上用 `claude setup-token` 生成）。
+- `paste-token` 接受在其他地方或自动化中生成的 token 字符串。

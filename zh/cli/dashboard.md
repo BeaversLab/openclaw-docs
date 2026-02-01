@@ -1,19 +1,15 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "CLI reference for `openclaw dashboard` (open the Control UI)"
+summary: "`openclaw dashboard` 的 CLI 参考（打开 Control UI）"
 read_when:
-  - You want to open the Control UI with your current token
-  - You want to print the URL without launching a browser
+  - 你想用当前 token 打开 Control UI
+  - 你想打印 URL 而不启动浏览器
 ---
 
 # `openclaw dashboard`
 
-Open the Control UI using your current auth.
+使用当前认证打开 Control UI。
 
 ```bash
 openclaw dashboard
 openclaw dashboard --no-open
 ```
-

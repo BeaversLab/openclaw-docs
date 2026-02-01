@@ -1,20 +1,16 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "CLI reference for `openclaw uninstall` (remove gateway service + local data)"
+summary: "`openclaw uninstall` 的 CLI 参考（移除 gateway 服务 + 本地数据）"
 read_when:
-  - You want to remove the gateway service and/or local state
-  - You want a dry-run first
+  - 需要移除 gateway 服务和/或本地状态
+  - 想先进行 dry-run
 ---
 
 # `openclaw uninstall`
 
-Uninstall the gateway service + local data (CLI remains).
+卸载 gateway 服务 + 本地数据（CLI 保留）。
 
 ```bash
 openclaw uninstall
 openclaw uninstall --all --yes
 openclaw uninstall --dry-run
 ```
-

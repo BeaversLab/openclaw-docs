@@ -1,18 +1,15 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "Troubleshooting hub: symptoms → checks → fixes"
+summary: "故障排查枢纽：症状 → 检查 → 修复"
 read_when:
-  - You see an error and want the fix path
-  - The installer says “success” but the CLI doesn’t work
+  - 看到错误，想要修复路径
+  - 安装器提示“成功”但 CLI 不工作
 ---
 
-# Troubleshooting
+# 故障排查
 
-## First 60 seconds
+## 前 60 秒
 
-Run these in order:
+按顺序运行：
 
 ```bash
 openclaw status
@@ -22,79 +19,79 @@ openclaw logs --follow
 openclaw doctor
 ```
 
-If the gateway is reachable, deep probes:
+如果网关可达，做深度探测：
 
 ```bash
 openclaw status --deep
 ```
 
-## Common “it broke” cases
+## 常见“崩了”场景
 
 ### `openclaw: command not found`
 
-Almost always a Node/npm PATH issue. Start here:
+几乎都是 Node/npm PATH 问题。先看：
 
-- [Install (Node/npm PATH sanity)](/install#nodejs--npm-path-sanity)
+- [安装（Node/npm PATH 检查）](/zh/install#nodejs--npm-path-sanity)
 
-### Installer fails (or you need full logs)
+### 安装器失败（或你需要完整日志）
 
-Re-run the installer in verbose mode to see the full trace and npm output:
+用 verbose 重新运行安装器，查看完整 trace 和 npm 输出：
 
 ```bash
 curl -fsSL https://openclaw.bot/install.sh | bash -s -- --verbose
 ```
 
-For beta installs:
+Beta 安装：
 
 ```bash
 curl -fsSL https://openclaw.bot/install.sh | bash -s -- --beta --verbose
 ```
 
-You can also set `OPENCLAW_VERBOSE=1` instead of the flag.
+也可以用 `OPENCLAW_VERBOSE=1` 代替参数。
 
-### Gateway “unauthorized”, can’t connect, or keeps reconnecting
+### Gateway “unauthorized”、连不上或持续重连
 
-- [Gateway troubleshooting](/gateway/troubleshooting)
-- [Gateway authentication](/gateway/authentication)
+- [Gateway 故障排查](/zh/gateway/troubleshooting)
+- [Gateway 认证](/zh/gateway/authentication)
 
-### Control UI fails on HTTP (device identity required)
+### Control UI 在 HTTP 下失败（需要设备身份）
 
-- [Gateway troubleshooting](/gateway/troubleshooting)
-- [Control UI](/web/control-ui#insecure-http)
+- [Gateway 故障排查](/zh/gateway/troubleshooting)
+- [Control UI](/zh/web/control-ui#insecure-http)
 
-### `docs.openclaw.ai` shows an SSL error (Comcast/Xfinity)
+### `docs.openclaw.ai` 出现 SSL 错误（Comcast/Xfinity）
 
-Some Comcast/Xfinity connections block `docs.openclaw.ai` via Xfinity Advanced Security.
-Disable Advanced Security or add `docs.openclaw.ai` to the allowlist, then retry.
+某些 Comcast/Xfinity 连接会通过 Xfinity Advanced Security 阻断 `docs.openclaw.ai`。
+关闭 Advanced Security 或将 `docs.openclaw.ai` 加入允许列表后重试。
 
-- Xfinity Advanced Security help: https://www.xfinity.com/support/articles/using-xfinity-xfi-advanced-security
-- Quick sanity checks: try a mobile hotspot or VPN to confirm it’s ISP-level filtering
+- Xfinity Advanced Security 帮助：https://www.xfinity.com/support/articles/using-xfinity-xfi-advanced-security
+- 快速排查：用手机热点或 VPN 试一下，确认是否为 ISP 级过滤
 
-### Service says running, but RPC probe fails
+### 服务显示运行，但 RPC 探测失败
 
-- [Gateway troubleshooting](/gateway/troubleshooting)
-- [Background process / service](/gateway/background-process)
+- [Gateway 故障排查](/zh/gateway/troubleshooting)
+- [后台进程 / 服务](/zh/gateway/background-process)
 
-### Model/auth failures (rate limit, billing, “all models failed”)
+### 模型/认证失败（限流、计费、“all models failed”）
 
-- [Models](/cli/models)
-- [OAuth / auth concepts](/concepts/oauth)
+- [模型](/zh/cli/models)
+- [OAuth / 认证概念](/zh/concepts/oauth)
 
-### `/model` says `model not allowed`
+### `/model` 提示 `model not allowed`
 
-This usually means `agents.defaults.models` is configured as an allowlist. When it’s non-empty,
-only those provider/model keys can be selected.
+这通常表示 `agents.defaults.models` 配置为 allowlist。非空时，
+只能选择这些 provider/model 键。
 
-- Check the allowlist: `openclaw config get agents.defaults.models`
-- Add the model you want (or clear the allowlist) and retry `/model`
-- Use `/models` to browse the allowed providers/models
+- 查看 allowlist：`openclaw config get agents.defaults.models`
+- 添加你要的模型（或清空 allowlist）后重试 `/model`
+- 用 `/models` 浏览允许的 provider/model
 
-### When filing an issue
+### 提交问题时
 
-Paste a safe report:
+请粘贴安全报告：
 
 ```bash
 openclaw status --all
 ```
 
-If you can, include the relevant log tail from `openclaw logs --follow`.
+如果可以，附上 `openclaw logs --follow` 的相关日志尾部。

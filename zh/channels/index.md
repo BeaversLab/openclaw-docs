@@ -1,46 +1,42 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "Messaging platforms OpenClaw can connect to"
+summary: "OpenClaw 可连接的消息平台"
 read_when:
-  - You want to choose a chat channel for OpenClaw
-  - You need a quick overview of supported messaging platforms
+  - 你想为 OpenClaw 选择聊天渠道
+  - 你需要支持平台的快速概览
 ---
-# Chat Channels
+# 聊天渠道
 
-OpenClaw can talk to you on any chat app you already use. Each channel connects via the Gateway.
-Text is supported everywhere; media and reactions vary by channel.
+OpenClaw 可以在你已使用的任何聊天应用中与你对话。每个渠道都通过 Gateway 连接。
+文本在所有渠道均支持；媒体与 reactions 支持因渠道而异。
 
-## Supported channels
+## 支持的渠道
 
-- [WhatsApp](/channels/whatsapp) — Most popular; uses Baileys and requires QR pairing.
-- [Telegram](/channels/telegram) — Bot API via grammY; supports groups.
-- [Discord](/channels/discord) — Discord Bot API + Gateway; supports servers, channels, and DMs.
-- [Slack](/channels/slack) — Bolt SDK; workspace apps.
-- [Google Chat](/channels/googlechat) — Google Chat API app via HTTP webhook.
-- [Mattermost](/channels/mattermost) — Bot API + WebSocket; channels, groups, DMs (plugin, installed separately).
-- [Signal](/channels/signal) — signal-cli; privacy-focused.
-- [BlueBubbles](/channels/bluebubbles) — **Recommended for iMessage**; uses the BlueBubbles macOS server REST API with full feature support (edit, unsend, effects, reactions, group management — edit currently broken on macOS 26 Tahoe).
-- [iMessage](/channels/imessage) — macOS only; native integration via imsg (legacy, consider BlueBubbles for new setups).
-- [Microsoft Teams](/channels/msteams) — Bot Framework; enterprise support (plugin, installed separately).
-- [LINE](/channels/line) — LINE Messaging API bot (plugin, installed separately).
-- [Nextcloud Talk](/channels/nextcloud-talk) — Self-hosted chat via Nextcloud Talk (plugin, installed separately).
-- [Matrix](/channels/matrix) — Matrix protocol (plugin, installed separately).
-- [Nostr](/channels/nostr) — Decentralized DMs via NIP-04 (plugin, installed separately).
-- [Tlon](/channels/tlon) — Urbit-based messenger (plugin, installed separately).
-- [Twitch](/channels/twitch) — Twitch chat via IRC connection (plugin, installed separately).
-- [Zalo](/channels/zalo) — Zalo Bot API; Vietnam's popular messenger (plugin, installed separately).
-- [Zalo Personal](/channels/zalouser) — Zalo personal account via QR login (plugin, installed separately).
-- [WebChat](/web/webchat) — Gateway WebChat UI over WebSocket.
+- [WhatsApp](/zh/channels/whatsapp) — 最常用；使用 Baileys，需要扫码配对。
+- [Telegram](/zh/channels/telegram) — Bot API 通过 grammY；支持群聊。
+- [Discord](/zh/channels/discord) — Discord Bot API + Gateway；支持服务器、频道与私聊。
+- [Slack](/zh/channels/slack) — Bolt SDK；工作区应用。
+- [Google Chat](/zh/channels/googlechat) — 通过 HTTP webhook 的 Google Chat API 应用。
+- [Mattermost](/zh/channels/mattermost) — Bot API + WebSocket；频道、群组与私聊（插件，需单独安装）。
+- [Signal](/zh/channels/signal) — signal-cli；隐私优先。
+- [BlueBubbles](/zh/channels/bluebubbles) — **推荐用于 iMessage**；使用 BlueBubbles macOS 服务器 REST API，功能完整（编辑、撤回、特效、reactions、群管理 —— 在 macOS 26 Tahoe 上编辑目前不可用）。
+- [iMessage](/zh/channels/imessage) — 仅 macOS；通过 imsg 的原生集成（旧方案，新部署建议用 BlueBubbles）。
+- [Microsoft Teams](/zh/channels/msteams) — Bot Framework；企业支持（插件，需单独安装）。
+- [LINE](/zh/channels/line) — LINE Messaging API bot（插件，需单独安装）。
+- [Nextcloud Talk](/zh/channels/nextcloud-talk) — Nextcloud Talk 自托管聊天（插件，需单独安装）。
+- [Matrix](/zh/channels/matrix) — Matrix 协议（插件，需单独安装）。
+- [Nostr](/zh/channels/nostr) — NIP-04 的去中心化私信（插件，需单独安装）。
+- [Tlon](/zh/channels/tlon) — 基于 Urbit 的聊天（插件，需单独安装）。
+- [Twitch](/zh/channels/twitch) — 通过 IRC 连接的 Twitch 聊天（插件，需单独安装）。
+- [Zalo](/zh/channels/zalo) — Zalo Bot API；越南流行的消息平台（插件，需单独安装）。
+- [Zalo Personal](/zh/channels/zalouser) — Zalo 个人账号扫码登录（插件，需单独安装）。
+- [WebChat](/zh/web/webchat) — Gateway WebChat UI（WebSocket）。
 
-## Notes
+## 备注
 
-- Channels can run simultaneously; configure multiple and OpenClaw will route per chat.
-- Fastest setup is usually **Telegram** (simple bot token). WhatsApp requires QR pairing and
-  stores more state on disk.
-- Group behavior varies by channel; see [Groups](/concepts/groups).
-- DM pairing and allowlists are enforced for safety; see [Security](/gateway/security).
-- Telegram internals: [grammY notes](/channels/grammy).
-- Troubleshooting: [Channel troubleshooting](/channels/troubleshooting).
-- Model providers are documented separately; see [Model Providers](/providers/models).
+- 渠道可同时运行；配置多个后，OpenClaw 会按聊天来源进行路由。
+- 最快的设置通常是 **Telegram**（只需 bot token）。WhatsApp 需要扫码配对，并在磁盘中保存更多状态。
+- 群组行为因渠道而异；见 [Groups](/zh/concepts/groups)。
+- DM 配对与 allowlist 会强制执行以保证安全；见 [Security](/zh/gateway/security)。
+- Telegram 内部实现：[grammY notes](/zh/channels/grammy)。
+- 故障排查：[Channel troubleshooting](/zh/channels/troubleshooting)。
+- 模型提供商文档在别处；见 [Model Providers](/zh/providers/models)。

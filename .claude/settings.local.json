@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/Users/marco/Documents/git/github.com/BeaversLab/crawfish-docs/.worktrees/mintlify-i18n/copy-translated.sh:*)"
+    ]
+  }
+}

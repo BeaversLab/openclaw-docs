@@ -1,18 +1,15 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "Webhook ingress for wake and isolated agent runs"
+summary: "用于唤醒与隔离代理运行的 Webhook 入站"
 read_when:
-  - Adding or changing webhook endpoints
-  - Wiring external systems into OpenClaw
+  - 新增或修改 webhook 端点
+  - 将外部系统接入 OpenClaw
 ---
 
 # Webhooks
 
-Gateway can expose a small HTTP webhook endpoint for external triggers.
+Gateway 可对外暴露一个小型 HTTP webhook 端点，用于外部触发。
 
-## Enable
+## 启用
 
 ```json5
 {
@@ -24,18 +21,18 @@ Gateway can expose a small HTTP webhook endpoint for external triggers.
 }
 ```
 
-Notes:
-- `hooks.token` is required when `hooks.enabled=true`.
-- `hooks.path` defaults to `/hooks`.
+注意：
+- 当 `hooks.enabled=true` 时必须设置 `hooks.token`。
+- `hooks.path` 默认为 `/hooks`。
 
-## Auth
+## 鉴权
 
-Every request must include the hook token. Prefer headers:
-- `Authorization: Bearer <token>` (recommended)
+每个请求都必须携带 hook token。推荐使用请求头：
+- `Authorization: Bearer <token>`（推荐）
 - `x-openclaw-token: <token>`
-- `?token=<token>` (deprecated; logs a warning and will be removed in a future major release)
+- `?token=<token>`（已弃用；会记录警告，并将在未来主版本移除）
 
-## Endpoints
+## 端点
 
 ### `POST /hooks/wake`
 
@@ -44,12 +41,12 @@ Payload:
 { "text": "System line", "mode": "now" }
 ```
 
-- `text` **required** (string): The description of the event (e.g., "New email received").
-- `mode` optional (`now` | `next-heartbeat`): Whether to trigger an immediate heartbeat (default `now`) or wait for the next periodic check.
+- `text` **必填**（string）：事件描述（例如 “New email received”）。
+- `mode` 可选（`now` | `next-heartbeat`）：立即触发 heartbeat（默认 `now`）或等待下一次周期检查。
 
-Effect:
-- Enqueues a system event for the **main** session
-- If `mode=now`, triggers an immediate heartbeat
+效果：
+- 为**主**会话排队一个 system event
+- 若 `mode=now`，触发一次即时 heartbeat
 
 ### `POST /hooks/agent`
 
@@ -69,50 +66,49 @@ Payload:
 }
 ```
 
-- `message` **required** (string): The prompt or message for the agent to process.
-- `name` optional (string): Human-readable name for the hook (e.g., "GitHub"), used as a prefix in session summaries.
-- `sessionKey` optional (string): The key used to identify the agent's session. Defaults to a random `hook:<uuid>`. Using a consistent key allows for a multi-turn conversation within the hook context.
-- `wakeMode` optional (`now` | `next-heartbeat`): Whether to trigger an immediate heartbeat (default `now`) or wait for the next periodic check.
-- `deliver` optional (boolean): If `true`, the agent's response will be sent to the messaging channel. Defaults to `true`. Responses that are only heartbeat acknowledgments are automatically skipped.
-- `channel` optional (string): The messaging channel for delivery. One of: `last`, `whatsapp`, `telegram`, `discord`, `slack`, `mattermost` (plugin), `signal`, `imessage`, `msteams`. Defaults to `last`.
-- `to` optional (string): The recipient identifier for the channel (e.g., phone number for WhatsApp/Signal, chat ID for Telegram, channel ID for Discord/Slack/Mattermost (plugin), conversation ID for MS Teams). Defaults to the last recipient in the main session.
-- `model` optional (string): Model override (e.g., `anthropic/claude-3-5-sonnet` or an alias). Must be in the allowed model list if restricted.
-- `thinking` optional (string): Thinking level override (e.g., `low`, `medium`, `high`).
-- `timeoutSeconds` optional (number): Maximum duration for the agent run in seconds.
+- `message` **必填**（string）：交给代理处理的提示或消息。
+- `name` 可选（string）：hook 的易读名称（例如 “GitHub”），用于会话摘要前缀。
+- `sessionKey` 可选（string）：用于标识代理会话的 key。默认随机 `hook:<uuid>`。使用一致的 key 可在 hook 上下文中进行多轮对话。
+- `wakeMode` 可选（`now` | `next-heartbeat`）：立即触发 heartbeat（默认 `now`）或等待下一次周期检查。
+- `deliver` 可选（boolean）：若为 `true`，代理响应将投递到消息渠道。默认 `true`。仅为 heartbeat 确认的响应会自动跳过投递。
+- `channel` 可选（string）：投递渠道，支持 `last`、`whatsapp`、`telegram`、`discord`、`slack`、`mattermost`（插件）、`signal`、`imessage`、`msteams`。默认 `last`。
+- `to` 可选（string）：渠道收件人标识（如 WhatsApp/Signal 的手机号、Telegram 的 chat ID、Discord/Slack/Mattermost（插件）的 channel ID、MS Teams 的 conversation ID）。默认主会话最近一次收件人。
+- `model` 可选（string）：模型覆盖（如 `anthropic/claude-3-5-sonnet` 或别名）。若有模型限制，必须在允许列表内。
+- `thinking` 可选（string）：思考等级覆盖（如 `low`、`medium`、`high`）。
+- `timeoutSeconds` 可选（number）：本次代理运行的最大时长（秒）。
 
-Effect:
-- Runs an **isolated** agent turn (own session key)
-- Always posts a summary into the **main** session
-- If `wakeMode=now`, triggers an immediate heartbeat
+效果：
+- 运行一次**隔离**的代理回合（独立 session key）
+- 总会在**主**会话发布摘要
+- 若 `wakeMode=now`，触发一次即时 heartbeat
 
-### `POST /hooks/<name>` (mapped)
+### `POST /hooks/<name>`（映射）
 
-Custom hook names are resolved via `hooks.mappings` (see configuration). A mapping can
-turn arbitrary payloads into `wake` or `agent` actions, with optional templates or
-code transforms.
+自定义 hook 名称通过 `hooks.mappings` 解析（见配置）。映射可将任意 payload
+转成 `wake` 或 `agent` 动作，并可附带模板或代码转换。
 
-Mapping options (summary):
-- `hooks.presets: ["gmail"]` enables the built-in Gmail mapping.
-- `hooks.mappings` lets you define `match`, `action`, and templates in config.
-- `hooks.transformsDir` + `transform.module` loads a JS/TS module for custom logic.
-- Use `match.source` to keep a generic ingest endpoint (payload-driven routing).
-- TS transforms require a TS loader (e.g. `bun` or `tsx`) or precompiled `.js` at runtime.
-- Set `deliver: true` + `channel`/`to` on mappings to route replies to a chat surface
-  (`channel` defaults to `last` and falls back to WhatsApp).
-- `allowUnsafeExternalContent: true` disables the external content safety wrapper for that hook
-  (dangerous; only for trusted internal sources).
-- `openclaw webhooks gmail setup` writes `hooks.gmail` config for `openclaw webhooks gmail run`.
-See [Gmail Pub/Sub](/automation/gmail-pubsub) for the full Gmail watch flow.
+映射选项（概要）：
+- `hooks.presets: ["gmail"]` 启用内置 Gmail 映射。
+- `hooks.mappings` 允许在配置中定义 `match`、`action` 与模板。
+- `hooks.transformsDir` + `transform.module` 加载 JS/TS 模块以实现自定义逻辑。
+- 使用 `match.source` 以保留通用 ingest 端点（按 payload 路由）。
+- TS 转换需要 TS loader（如 `bun` 或 `tsx`），或在运行时使用预编译 `.js`。
+- 在映射上设置 `deliver: true` + `channel`/`to` 可将回复路由到聊天渠道
+  （`channel` 默认为 `last`，回退到 WhatsApp）。
+- `allowUnsafeExternalContent: true` 会为该 hook 禁用外部内容安全包裹
+  （危险，仅用于受信任的内部来源）。
+- `openclaw webhooks gmail setup` 会写入 `hooks.gmail` 配置，供 `openclaw webhooks gmail run` 使用。
+参见 [Gmail Pub/Sub](/zh/automation/gmail-pubsub) 获取完整 Gmail watch 流程。
 
-## Responses
+## 响应
 
-- `200` for `/hooks/wake`
-- `202` for `/hooks/agent` (async run started)
-- `401` on auth failure
-- `400` on invalid payload
-- `413` on oversized payloads
+- `/hooks/wake` 返回 `200`
+- `/hooks/agent` 返回 `202`（异步运行已启动）
+- 鉴权失败返回 `401`
+- 无效 payload 返回 `400`
+- 过大 payload 返回 `413`
 
-## Examples
+## 示例
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/wake \
@@ -128,9 +124,9 @@ curl -X POST http://127.0.0.1:18789/hooks/agent \
   -d '{"message":"Summarize inbox","name":"Email","wakeMode":"next-heartbeat"}'
 ```
 
-### Use a different model
+### 使用不同模型
 
-Add `model` to the agent payload (or mapping) to override the model for that run:
+在 agent payload（或映射）里添加 `model` 以覆盖本次运行模型：
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/agent \
@@ -139,7 +135,7 @@ curl -X POST http://127.0.0.1:18789/hooks/agent \
   -d '{"message":"Summarize inbox","name":"Email","model":"openai/gpt-5.2-mini"}'
 ```
 
-If you enforce `agents.defaults.models`, make sure the override model is included there.
+如果你强制使用 `agents.defaults.models`，请确保覆盖模型包含在其中。
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/gmail \
@@ -148,11 +144,11 @@ curl -X POST http://127.0.0.1:18789/hooks/gmail \
   -d '{"source":"gmail","messages":[{"from":"Ada","subject":"Hello","snippet":"Hi"}]}'
 ```
 
-## Security
+## 安全
 
-- Keep hook endpoints behind loopback, tailnet, or trusted reverse proxy.
-- Use a dedicated hook token; do not reuse gateway auth tokens.
-- Avoid including sensitive raw payloads in webhook logs.
-- Hook payloads are treated as untrusted and wrapped with safety boundaries by default.
-  If you must disable this for a specific hook, set `allowUnsafeExternalContent: true`
-  in that hook's mapping (dangerous).
+- 将 hook 端点放在 loopback、tailnet 或可信反向代理之后。
+- 使用专用 hook token，不要复用 gateway 认证 token。
+- 避免在 webhook 日志中包含敏感原始 payload。
+- Hook payload 默认视为不可信，并包裹安全边界。
+  如需为特定 hook 禁用，请在该 hook 映射中设置 `allowUnsafeExternalContent: true`
+  （危险）。

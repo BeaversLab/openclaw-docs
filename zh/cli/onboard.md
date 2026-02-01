@@ -1,20 +1,17 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "CLI reference for `openclaw onboard` (interactive onboarding wizard)"
+summary: "`openclaw onboard` 的 CLI 参考（交互式 onboarding 向导）"
 read_when:
-  - You want guided setup for gateway, workspace, auth, channels, and skills
+  - 需要为 gateway、工作区、认证、频道与技能做引导式设置
 ---
 
 # `openclaw onboard`
 
-Interactive onboarding wizard (local or remote Gateway setup).
+交互式 onboarding 向导（本地或远程 Gateway 设置）。
 
-Related:
-- Wizard guide: [Onboarding](/start/onboarding)
+相关：
+- 向导指南：[Onboarding](/zh/start/onboarding)
 
-## Examples
+## 示例
 
 ```bash
 openclaw onboard
@@ -23,7 +20,7 @@ openclaw onboard --flow manual
 openclaw onboard --mode remote --remote-url ws://gateway-host:18789
 ```
 
-Flow notes:
-- `quickstart`: minimal prompts, auto-generates a gateway token.
-- `manual`: full prompts for port/bind/auth (alias of `advanced`).
-- Fastest first chat: `openclaw dashboard` (Control UI, no channel setup).
+流程说明：
+- `quickstart`：最少提示，自动生成 gateway token。
+- `manual`：完整端口/bind/auth 提示（`advanced` 的别名）。
+- 最快开始聊天：`openclaw dashboard`（Control UI，无需频道设置）。

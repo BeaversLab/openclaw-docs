@@ -1,15 +1,12 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "CLI reference for `openclaw health` (gateway health endpoint via RPC)"
+summary: "`openclaw health` 的 CLI 参考（通过 RPC 的 gateway 健康端点）"
 read_when:
-  - You want to quickly check the running Gateway’s health
+  - 你想快速检查运行中的 Gateway 健康状态
 ---
 
 # `openclaw health`
 
-Fetch health from the running Gateway.
+从运行中的 Gateway 获取健康信息。
 
 ```bash
 openclaw health
@@ -17,6 +14,6 @@ openclaw health --json
 openclaw health --verbose
 ```
 
-Notes:
-- `--verbose` runs live probes and prints per-account timings when multiple accounts are configured.
-- Output includes per-agent session stores when multiple agents are configured.
+说明：
+- `--verbose` 会执行实时探测；当配置多个账号时会输出每个账号的耗时。
+- 当配置多个 agent 时，输出包含每个 agent 的会话存储。

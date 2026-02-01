@@ -1,26 +1,23 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 title: Sandbox CLI
-summary: "Manage sandbox containers and inspect effective sandbox policy"
-read_when: "You are managing sandbox containers or debugging sandbox/tool-policy behavior."
+summary: "管理 sandbox 容器并检查生效的 sandbox 策略"
+read_when: "你在管理 sandbox 容器或排查 sandbox/tool-policy 行为。"
 status: active
 ---
 
 # Sandbox CLI
 
-Manage Docker-based sandbox containers for isolated agent execution.
+管理基于 Docker 的 sandbox 容器，用于隔离 agent 执行。
 
-## Overview
+## 概览
 
-OpenClaw can run agents in isolated Docker containers for security. The `sandbox` commands help you manage these containers, especially after updates or configuration changes.
+OpenClaw 可以在隔离的 Docker 容器中运行 agent 以提升安全性。`sandbox` 命令帮助你管理这些容器，尤其是在更新或配置变更后。
 
-## Commands
+## 命令
 
 ### `openclaw sandbox explain`
 
-Inspect the **effective** sandbox mode/scope/workspace access, sandbox tool policy, and elevated gates (with fix-it config key paths).
+查看 **生效** 的 sandbox 模式/作用域/工作区访问、sandbox 工具策略以及提升权限的关卡（包含可修复的配置键路径）。
 
 ```bash
 openclaw sandbox explain
@@ -31,98 +28,98 @@ openclaw sandbox explain --json
 
 ### `openclaw sandbox list`
 
-List all sandbox containers with their status and configuration.
+列出所有 sandbox 容器的状态与配置。
 
 ```bash
 openclaw sandbox list
-openclaw sandbox list --browser  # List only browser containers
-openclaw sandbox list --json     # JSON output
+openclaw sandbox list --browser  # 仅列出浏览器容器
+openclaw sandbox list --json     # JSON 输出
 ```
 
-**Output includes:**
-- Container name and status (running/stopped)
-- Docker image and whether it matches config
-- Age (time since creation)
-- Idle time (time since last use)
-- Associated session/agent
+**输出包含：**
+- 容器名称与状态（运行/停止）
+- Docker 镜像以及是否与配置匹配
+- Age（创建时间）
+- Idle time（上次使用时间）
+- 关联的 session/agent
 
 ### `openclaw sandbox recreate`
 
-Remove sandbox containers to force recreation with updated images/config.
+删除 sandbox 容器以强制用更新后的镜像/配置重新创建。
 
 ```bash
-openclaw sandbox recreate --all                # Recreate all containers
-openclaw sandbox recreate --session main       # Specific session
-openclaw sandbox recreate --agent mybot        # Specific agent
-openclaw sandbox recreate --browser            # Only browser containers
-openclaw sandbox recreate --all --force        # Skip confirmation
+openclaw sandbox recreate --all                # 重建所有容器
+openclaw sandbox recreate --session main       # 指定 session
+openclaw sandbox recreate --agent mybot        # 指定 agent
+openclaw sandbox recreate --browser            # 仅浏览器容器
+openclaw sandbox recreate --all --force        # 跳过确认
 ```
 
-**Options:**
-- `--all`: Recreate all sandbox containers
-- `--session <key>`: Recreate container for specific session
-- `--agent <id>`: Recreate containers for specific agent
-- `--browser`: Only recreate browser containers
-- `--force`: Skip confirmation prompt
+**选项：**
+- `--all`：重建所有 sandbox 容器
+- `--session <key>`：重建指定 session 的容器
+- `--agent <id>`：重建指定 agent 的容器
+- `--browser`：仅重建浏览器容器
+- `--force`：跳过确认提示
 
-**Important:** Containers are automatically recreated when the agent is next used.
+**重要：** 容器会在下次使用 agent 时自动重建。
 
 ## Use Cases
 
-### After updating Docker images
+### 更新 Docker 镜像后
 
 ```bash
-# Pull new image
+# 拉取新镜像
 docker pull openclaw-sandbox:latest
 docker tag openclaw-sandbox:latest openclaw-sandbox:bookworm-slim
 
-# Update config to use new image
-# Edit config: agents.defaults.sandbox.docker.image (or agents.list[].sandbox.docker.image)
+# 更新配置以使用新镜像
+# 编辑配置：agents.defaults.sandbox.docker.image（或 agents.list[].sandbox.docker.image）
 
-# Recreate containers
+# 重建容器
 openclaw sandbox recreate --all
 ```
 
-### After changing sandbox configuration
+### 修改 sandbox 配置后
 
 ```bash
-# Edit config: agents.defaults.sandbox.* (or agents.list[].sandbox.*)
+# 编辑配置：agents.defaults.sandbox.*（或 agents.list[].sandbox.*）
 
-# Recreate to apply new config
+# 重建以应用新配置
 openclaw sandbox recreate --all
 ```
 
-### After changing setupCommand
+### 修改 setupCommand 后
 
 ```bash
 openclaw sandbox recreate --all
-# or just one agent:
+# 或仅重建一个 agent：
 openclaw sandbox recreate --agent family
 ```
 
 
-### For a specific agent only
+### 仅针对某个 agent
 
 ```bash
-# Update only one agent's containers
+# 仅更新一个 agent 的容器
 openclaw sandbox recreate --agent alfred
 ```
 
-## Why is this needed?
+## 为什么需要这样做？
 
-**Problem:** When you update sandbox Docker images or configuration:
-- Existing containers continue running with old settings
-- Containers are only pruned after 24h of inactivity
-- Regularly-used agents keep old containers running indefinitely
+**问题：** 当你更新 sandbox Docker 镜像或配置时：
+- 已有容器仍使用旧设置运行
+- 容器只有在 24 小时空闲后才会被清理
+- 频繁使用的 agent 会一直复用旧容器
 
-**Solution:** Use `openclaw sandbox recreate` to force removal of old containers. They'll be recreated automatically with current settings when next needed.
+**解决方案：** 使用 `openclaw sandbox recreate` 强制删除旧容器。它们会在下次需要时按当前设置自动重建。
 
-Tip: prefer `openclaw sandbox recreate` over manual `docker rm`. It uses the
-Gateway’s container naming and avoids mismatches when scope/session keys change.
+提示：优先使用 `openclaw sandbox recreate` 而不是手动 `docker rm`。
+它会使用 Gateway 的容器命名，并避免 scope/session key 变更导致的错配。
 
-## Configuration
+## 配置
 
-Sandbox settings live in `~/.openclaw/openclaw.json` under `agents.defaults.sandbox` (per-agent overrides go in `agents.list[].sandbox`):
+Sandbox 配置位于 `~/.openclaw/openclaw.json` 的 `agents.defaults.sandbox` 下（每个 agent 的覆盖在 `agents.list[].sandbox`）：
 
 ```jsonc
 {
@@ -134,11 +131,11 @@ Sandbox settings live in `~/.openclaw/openclaw.json` under `agents.defaults.sand
         "docker": {
           "image": "openclaw-sandbox:bookworm-slim",
           "containerPrefix": "openclaw-sbx-"
-          // ... more Docker options
+          // ... 更多 Docker 选项
         },
         "prune": {
-          "idleHours": 24,               // Auto-prune after 24h idle
-          "maxAgeDays": 7                // Auto-prune after 7 days
+          "idleHours": 24,               // 空闲 24h 自动清理
+          "maxAgeDays": 7                // 最长保留 7 天
         }
       }
     }
@@ -146,8 +143,8 @@ Sandbox settings live in `~/.openclaw/openclaw.json` under `agents.defaults.sand
 }
 ```
 
-## See Also
+## 另请参阅
 
-- [Sandbox Documentation](/gateway/sandboxing)
-- [Agent Configuration](/concepts/agent-workspace)
-- [Doctor Command](/gateway/doctor) - Check sandbox setup
+- [Sandbox Documentation](/zh/gateway/sandboxing)
+- [Agent Configuration](/zh/concepts/agent-workspace)
+- [Doctor Command](/zh/gateway/doctor) - 检查 sandbox 设置

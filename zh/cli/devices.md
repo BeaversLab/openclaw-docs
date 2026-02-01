@@ -1,22 +1,19 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "CLI reference for `openclaw devices` (device pairing + token rotation/revocation)"
+summary: "`openclaw devices` 的 CLI 参考（设备配对 + token 轮换/撤销）"
 read_when:
-  - You are approving device pairing requests
-  - You need to rotate or revoke device tokens
+  - 你在批准设备配对请求
+  - 你需要轮换或撤销设备 token
 ---
 
 # `openclaw devices`
 
-Manage device pairing requests and device-scoped tokens.
+管理设备配对请求与设备级 token。
 
-## Commands
+## 命令
 
 ### `openclaw devices list`
 
-List pending pairing requests and paired devices.
+列出待处理配对请求与已配对设备。
 
 ```
 openclaw devices list
@@ -25,7 +22,7 @@ openclaw devices list --json
 
 ### `openclaw devices approve <requestId>`
 
-Approve a pending device pairing request.
+批准待处理的设备配对请求。
 
 ```
 openclaw devices approve <requestId>
@@ -33,7 +30,7 @@ openclaw devices approve <requestId>
 
 ### `openclaw devices reject <requestId>`
 
-Reject a pending device pairing request.
+拒绝待处理的设备配对请求。
 
 ```
 openclaw devices reject <requestId>
@@ -41,7 +38,7 @@ openclaw devices reject <requestId>
 
 ### `openclaw devices rotate --device <id> --role <role> [--scope <scope...>]`
 
-Rotate a device token for a specific role (optionally updating scopes).
+为指定角色轮换设备 token（可选更新 scope）。
 
 ```
 openclaw devices rotate --device <deviceId> --role operator --scope operator.read --scope operator.write
@@ -49,21 +46,21 @@ openclaw devices rotate --device <deviceId> --role operator --scope operator.rea
 
 ### `openclaw devices revoke --device <id> --role <role>`
 
-Revoke a device token for a specific role.
+撤销指定角色的设备 token。
 
 ```
 openclaw devices revoke --device <deviceId> --role node
 ```
 
-## Common options
+## 常用选项
 
-- `--url <url>`: Gateway WebSocket URL (defaults to `gateway.remote.url` when configured).
-- `--token <token>`: Gateway token (if required).
-- `--password <password>`: Gateway password (password auth).
-- `--timeout <ms>`: RPC timeout.
-- `--json`: JSON output (recommended for scripting).
+- `--url <url>`：Gateway WebSocket URL（若已配置则默认 `gateway.remote.url`）。
+- `--token <token>`：Gateway token（如需）。
+- `--password <password>`：Gateway password（密码认证）。
+- `--timeout <ms>`：RPC 超时。
+- `--json`：JSON 输出（推荐用于脚本）。
 
-## Notes
+## 说明
 
-- Token rotation returns a new token (sensitive). Treat it like a secret.
-- These commands require `operator.pairing` (or `operator.admin`) scope.
+- 轮换会返回新的 token（敏感信息），请视为密钥处理。
+- 这些命令需要 `operator.pairing`（或 `operator.admin`）scope。
