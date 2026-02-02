@@ -1,9 +1,6 @@
 ---
 title: "Ansible 安装"
 ---
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "使用 Ansible + Tailscale VPN + 防火墙隔离的自动化加固安装"
 read_when:

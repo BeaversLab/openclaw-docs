@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "将 Claude Max/Pro 订阅作为 OpenAI 兼容 API 端点使用"
 read_when:

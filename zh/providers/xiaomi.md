@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "在 OpenClaw 中使用 Xiaomi MiMo（mimo-v2-flash）"
 read_when:

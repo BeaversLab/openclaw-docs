@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "在树莓派上运行 OpenClaw（预算自托管方案）"
 read_when:

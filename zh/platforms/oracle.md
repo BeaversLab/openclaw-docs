@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "在 Oracle Cloud（Always Free ARM）上运行 OpenClaw"
 read_when:

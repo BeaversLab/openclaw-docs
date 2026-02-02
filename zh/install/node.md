@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 title: "Node.js + npm（PATH 自检）"
 summary: "Node.js + npm 安装自检：版本、PATH 与全局安装"

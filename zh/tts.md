@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "外发回复的文本转语音（TTS）"
 read_when:

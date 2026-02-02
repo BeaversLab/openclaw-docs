@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "将 OpenClaw 安装从一台机器迁移到另一台"
 read_when:

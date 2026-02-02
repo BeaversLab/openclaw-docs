@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "在插件中编写代理工具（schema、可选工具、allowlist）"
 read_when:

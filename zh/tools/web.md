@@ -7,9 +7,6 @@ read_when:
 title: "Web 工具"
 ---
 
-> [!NOTE]
-> 本页正在翻译中。
-
 # Web 工具
 
 OpenClaw 提供两个轻量级 web 工具：

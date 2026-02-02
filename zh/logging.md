@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "日志概览：文件日志、控制台输出、CLI 跟随与 Control UI"
 read_when:

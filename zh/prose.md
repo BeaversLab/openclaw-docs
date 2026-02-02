@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "OpenProse：.prose 工作流、斜杠命令与 OpenClaw 中的状态"
 read_when:

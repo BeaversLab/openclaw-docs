@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "Perplexity Sonar 的 web_search 配置"
 read_when:

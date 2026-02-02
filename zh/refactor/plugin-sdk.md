@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "计划：统一插件 SDK + runtime，覆盖所有消息连接器"
 read_when:

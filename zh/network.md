@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "网络枢纽：gateway surface、配对、发现与安全"
 read_when:

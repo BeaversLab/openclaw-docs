@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "重构计划：exec host 路由、节点审批与无界面 runner"
 read_when:

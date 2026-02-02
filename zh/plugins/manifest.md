@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "插件清单 + JSON schema 要求（严格配置校验）"
 read_when:

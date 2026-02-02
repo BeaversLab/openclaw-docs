@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "用于 web_fetch 的 Firecrawl 兜底（反机器人 + 缓存抽取）"
 read_when:

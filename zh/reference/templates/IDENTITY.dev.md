@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "开发用 agent 身份（C-3PO）"
 read_when:

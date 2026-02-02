@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "OpenClaw 的 VPS 托管索引（Oracle/Fly/Hetzner/GCP/exe.dev）"
 read_when:

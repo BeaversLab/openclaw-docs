@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "使用设备登录流程从 OpenClaw 登录 GitHub Copilot"
 read_when:

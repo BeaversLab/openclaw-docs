@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "在 OpenClaw 中使用 Venice AI 隐私优先模型"
 read_when:

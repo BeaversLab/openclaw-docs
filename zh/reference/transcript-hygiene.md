@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "参考：各 provider 的转录清理与修复规则"
 read_when:

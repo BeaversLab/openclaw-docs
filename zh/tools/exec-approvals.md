@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "Exec 审批、允许列表与沙箱逃逸提示"
 read_when:

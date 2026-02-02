@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "开发用 agent 工具笔记（C-3PO）"
 read_when:

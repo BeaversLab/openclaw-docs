@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "在 DigitalOcean 上运行 OpenClaw（简单的付费 VPS 方案）"
 read_when:

@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "在 OpenClaw 中使用 Qwen OAuth（免费额度）"
 read_when:

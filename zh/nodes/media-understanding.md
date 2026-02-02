@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "入站图片/音频/视频理解（可选），支持 provider + CLI 回退"
 read_when:

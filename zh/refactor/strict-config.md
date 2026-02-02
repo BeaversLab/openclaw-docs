@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "严格配置校验 + 仅 doctor 迁移"
 read_when:

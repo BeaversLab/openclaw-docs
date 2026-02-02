@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "使用 Ollama 运行 OpenClaw（本地 LLM 运行时）"
 read_when:

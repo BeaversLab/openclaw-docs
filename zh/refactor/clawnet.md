@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "Clawnet 重构：统一网络协议、角色、认证、审批与身份"
 read_when:
