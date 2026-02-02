@@ -1,5 +1,6 @@
 ---
 summary: "审计哪些功能会产生费用、使用哪些 key，以及如何查看用量"
+title: "API Usage and Costs"
 read_when:
   - 想了解哪些功能可能调用付费 API
   - 需要审计 key、成本与用量可见性

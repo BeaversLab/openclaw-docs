@@ -1,5 +1,5 @@
 ---
-title: "Ansible 安装"
+title: "Ansible"
 ---
 ---
 summary: "使用 Ansible + Tailscale VPN + 防火墙隔离的自动化加固安装"

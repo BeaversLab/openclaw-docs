@@ -3,7 +3,7 @@ summary: "模型 provider 概览（含示例配置与 CLI 流程）"
 read_when:
   - 需要按 provider 的模型设置参考
   - 想要示例配置或模型 provider 的 CLI onboarding 命令
-title: "模型供应商"
+title: "模型提供商"
 ---
 # 模型供应商
 

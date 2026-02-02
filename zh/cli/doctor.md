@@ -3,7 +3,7 @@ summary: "`openclaw doctor` 的 CLI 参考（健康检查 + 引导修复）"
 read_when:
   - 你遇到连接/认证问题并需要引导式修复
   - 你刚更新并想做一次 sanity check
-title: "`openclaw doctor`"
+title: "doctor"
 ---
 
 # `openclaw doctor`

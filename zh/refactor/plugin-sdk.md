@@ -3,6 +3,7 @@ summary: "计划：统一插件 SDK + runtime，覆盖所有消息连接器"
 read_when:
   - 定义或重构插件架构
   - 迁移频道连接器到插件 SDK/runtime
+title: "Plugin SDK Refactor"
 ---
 # Plugin SDK + Runtime 重构计划
 

@@ -2,7 +2,7 @@
 summary: "渠道连接的健康检查步骤"
 read_when:
   - 诊断 WhatsApp 渠道健康
-title: "健康检查 (CLI)"
+title: "Health Checks"
 ---
 # 健康检查 (CLI)
 

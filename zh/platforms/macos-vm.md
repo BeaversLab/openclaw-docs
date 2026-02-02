@@ -1,5 +1,5 @@
 ---
-title: "OpenClaw on macOS VMs（Sandboxing）"
+title: "macOS VMs"
 summary: "在沙盒化 macOS VM 中运行 OpenClaw（本地或托管），用于隔离或 iMessage"
 read_when:
   - 你想将 OpenClaw 与主 macOS 环境隔离

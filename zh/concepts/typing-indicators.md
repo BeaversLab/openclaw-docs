@@ -2,7 +2,7 @@
 summary: "OpenClaw 何时显示输入指示以及如何调节"
 read_when:
   - 修改输入指示行为或默认值
-title: "输入指示"
+title: "Typing Indicators"
 ---
 # 输入指示
 

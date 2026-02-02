@@ -1,5 +1,5 @@
 ---
-title: "会话管理与压缩（深度解析）"
+title: "Session Management Deep Dive"
 summary: "深度解析：会话存储 + 转录、生命周期与（自动）压缩内部机制"
 read_when:
   - 需要调试 session id、transcript JSONL 或 sessions.json 字段

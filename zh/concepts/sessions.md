@@ -2,7 +2,7 @@
 summary: "会话管理文档的别名"
 read_when:
   - 你在找 docs/sessions.md；正文在 docs/session.md
-title: "会话"
+title: "Sessions"
 ---
 # 会话
 

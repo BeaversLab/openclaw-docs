@@ -3,7 +3,7 @@ summary: "Mattermost bot 设置与 OpenClaw 配置"
 read_when:
   - 设置 Mattermost
   - 调试 Mattermost 路由
-title: "Mattermost（插件）"
+title: "Mattermost"
 ---
 
 # Mattermost（插件）

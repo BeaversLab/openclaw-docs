@@ -1,5 +1,5 @@
 ---
-title: "常见问题（FAQ）"
+title: "FAQ"
 summary: "关于 OpenClaw 安装、配置与使用的常见问题"
 ---
 # 常见问题（FAQ）

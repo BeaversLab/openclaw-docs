@@ -1,5 +1,5 @@
 ---
-title: "语音唤醒与按住说话"
+title: "Voice Wake"
 summary: "mac 应用中的语音唤醒与按住说话模式及路由细节"
 read_when:
   - 开发语音唤醒或 PTT 路径

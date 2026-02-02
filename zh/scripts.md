@@ -1,5 +1,5 @@
 ---
-title: "脚本"
+title: "Scripts"
 summary: "仓库脚本：用途、范围与安全说明"
 read_when:
   - 运行仓库中的脚本

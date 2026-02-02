@@ -3,7 +3,7 @@ summary: "模型认证：OAuth、API keys 与 setup-token"
 read_when:
   - 排查模型认证或 OAuth 过期
   - 记录认证或凭据存储
-title: "认证"
+title: "Authentication"
 ---
 # 认证
 
@@ -15,16 +15,16 @@ OpenClaw 支持模型 providers 的 OAuth 与 API keys。对 Anthropic 账号，
 
 若直接使用 Anthropic，请使用 API key。
 
-1) 在 Anthropic Console 创建 API key。
-2) 将其放在**gateway 主机**上（运行 `openclaw gateway` 的机器）。
+1. 在 Anthropic Console 创建 API key。
+2. 将其放在**gateway 主机**上（运行 `openclaw gateway` 的机器）。
 
 ```bash
 export ANTHROPIC_API_KEY="..."
 openclaw models status
 ```
 
-3) 若 Gateway 由 systemd/launchd 运行，建议将 key 放入
-`~/.openclaw/.env` 以便 daemon 读取：
+3. 若 Gateway 由 systemd/launchd 运行，建议将 key 放入
+   `~/.openclaw/.env` 以便 daemon 读取：
 
 ```bash
 cat >> ~/.openclaw/.env <<'EOT'
@@ -106,7 +106,7 @@ openclaw doctor
 
 ### 按 agent（CLI 覆盖）
 
-为某个 agent 设置显式 auth profile 顺序覆盖（存入该 agent 的 `auth-profiles.json`）：
+为某个 agent 设置显式 auth profile 顺序覆盖（存入该 agent 的`auth-profiles.json`）：
 
 ```bash
 openclaw models auth order get --provider anthropic
@@ -118,7 +118,7 @@ openclaw models auth order clear --provider anthropic
 
 ## 排查
 
-### “No credentials found”
+### "No credentials found"
 
 若缺少 Anthropic token profile，请在**gateway 主机**运行 `claude setup-token`，再复查：
 

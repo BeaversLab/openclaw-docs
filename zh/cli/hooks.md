@@ -3,7 +3,7 @@ summary: "`openclaw hooks` 的 CLI 参考（agent hooks）"
 read_when:
   - 你想管理 agent hooks
   - 你想安装或更新 hooks
-title: "`openclaw hooks`"
+title: "hooks"
 ---
 
 # `openclaw hooks`

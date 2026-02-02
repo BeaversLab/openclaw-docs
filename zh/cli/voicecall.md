@@ -3,7 +3,7 @@ summary: "`openclaw voicecall` 的 CLI 参考（语音通话插件命令）"
 read_when:
   - 使用语音通话插件并需要 CLI 入口
   - 想快速查看 `voicecall call|continue|status|tail|expose` 示例
-title: "`openclaw voicecall`"
+title: "voicecall"
 ---
 
 # `openclaw voicecall`

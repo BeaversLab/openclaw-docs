@@ -1,5 +1,6 @@
 ---
 summary: "探索：模型配置、auth profiles 与回退行为"
+title: "Model Config Exploration"
 read_when:
   - 探索未来的模型选择 + auth profile 方案
 ---

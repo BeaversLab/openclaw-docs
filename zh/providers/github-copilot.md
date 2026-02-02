@@ -3,6 +3,7 @@ summary: "使用设备登录流程从 OpenClaw 登录 GitHub Copilot"
 read_when:
   - 想用 GitHub Copilot 作为模型提供商
   - 需要 `openclaw models auth login-github-copilot` 流程
+title: "GitHub Copilot"
 ---
 # Github Copilot
 

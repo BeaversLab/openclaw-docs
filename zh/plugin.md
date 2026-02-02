@@ -1,5 +1,5 @@
 ---
-title: "插件（扩展）"
+title: "Plugins"
 summary: "OpenClaw 插件/扩展：发现、配置与安全"
 read_when:
   - 添加或修改插件/扩展

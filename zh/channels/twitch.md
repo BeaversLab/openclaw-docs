@@ -2,6 +2,7 @@
 summary: "Twitch 聊天机器人配置与设置"
 read_when:
   - 为 OpenClaw 设置 Twitch 聊天集成
+title: "Twitch"
 ---
 # Twitch（插件）
 

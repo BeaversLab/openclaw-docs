@@ -1,5 +1,5 @@
 ---
-title: "图片和多媒体支持 — 2025-12-05"
+title: "Image and Media Support"
 summary: "发送、gateway 与 agent 回复的图片/媒体处理规则"
 read_when:
   - 你在修改媒体管线或附件处理

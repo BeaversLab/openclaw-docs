@@ -1,5 +1,5 @@
 ---
-title: "仪表盘（Control UI）"
+title: "Dashboard"
 summary: "Gateway 仪表盘（Control UI）访问与认证"
 read_when:
   - 修改仪表盘认证或暴露方式

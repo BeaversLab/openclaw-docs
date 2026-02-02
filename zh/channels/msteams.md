@@ -2,7 +2,7 @@
 summary: "Microsoft Teams bot 支持状态、能力与配置"
 read_when:
   - 开发 MS Teams 渠道功能
-title: "Microsoft Teams（插件）"
+title: "Microsoft Teams"
 ---
 # Microsoft Teams（插件）
 

@@ -4,7 +4,7 @@ read_when:
   - 配置广播组
   - 调试 WhatsApp 的多 agent 回复
 status: experimental
-title: "广播组"
+title: "广播群组"
 ---
 
 # 广播组

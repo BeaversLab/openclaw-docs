@@ -3,7 +3,7 @@ summary: "安装 OpenClaw（推荐安装器、全局安装或从源码）"
 read_when:
   - 安装 OpenClaw
   - 你想从 GitHub 安装
-title: "安装"
+title: "Install"
 ---
 
 # 安装

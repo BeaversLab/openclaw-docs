@@ -3,6 +3,7 @@ summary: "通过 NIP-04 加密消息接入 Nostr DM"
 read_when:
   - 你想让 OpenClaw 通过 Nostr 接收私信
   - 你在设置去中心化消息
+title: "Nostr"
 ---
 # Nostr
 

@@ -3,7 +3,7 @@ summary: "`openclaw status` 的 CLI 参考（诊断、探测、用量快照）"
 read_when:
   - 需要快速诊断频道健康 + 最近会话接收者
   - 需要可粘贴的 “all” 状态用于调试
-title: "`openclaw status`"
+title: "status"
 ---
 
 # `openclaw status`

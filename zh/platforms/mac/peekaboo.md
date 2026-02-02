@@ -1,5 +1,5 @@
 ---
-title: "Peekaboo Bridge（macOS UI 自动化）"
+title: "Peekaboo Bridge"
 summary: "用于 macOS UI 自动化的 PeekabooBridge 集成"
 read_when:
   - 在 OpenClaw.app 中托管 PeekabooBridge

@@ -1,5 +1,5 @@
 ---
-title: "日志（macOS）"
+title: "macOS Logging"
 summary: "OpenClaw 日志：滚动诊断文件 + 统一日志隐私标记"
 read_when:
   - 捕获 macOS 日志或调查私密数据日志

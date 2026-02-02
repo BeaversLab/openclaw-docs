@@ -2,7 +2,7 @@
 summary: "Zalo bot 支持状态、能力与配置"
 read_when:
   - 开发 Zalo 功能或 webhook
-title: "Zalo（Bot API）"
+title: "Zalo"
 ---
 # Zalo（Bot API）
 

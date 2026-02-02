@@ -2,7 +2,7 @@
 summary: "`openclaw onboard` 的 CLI 参考（交互式 onboarding 向导）"
 read_when:
   - 需要为 gateway、工作区、认证、频道与技能做引导式设置
-title: "`openclaw onboard`"
+title: "onboard"
 ---
 
 # `openclaw onboard`

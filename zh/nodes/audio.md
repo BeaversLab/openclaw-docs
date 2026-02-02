@@ -1,5 +1,5 @@
 ---
-title: "音视频笔记 — 2026-01-17"
+title: "Audio and Voice Notes"
 summary: "入站音频/语音如何下载、转写并注入回复"
 read_when:
   - 你在调整音频转写或媒体处理

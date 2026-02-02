@@ -2,7 +2,7 @@
 summary: "聊天的会话管理规则、key 与持久化"
 read_when:
   - 修改会话处理或存储
-title: "会话管理"
+title: "Session Management"
 ---
 # 会话管理
 

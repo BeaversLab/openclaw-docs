@@ -1,5 +1,5 @@
 ---
-title: "macOS 权限（TCC）"
+title: "macOS Permissions"
 summary: "macOS 权限持久化（TCC）与签名要求"
 read_when:
   - 排查 macOS 权限提示缺失或卡住

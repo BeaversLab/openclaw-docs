@@ -3,7 +3,7 @@ summary: "Doctor 命令：健康检查、配置迁移与修复步骤"
 read_when:
   - 添加或修改 doctor 迁移
   - 引入破坏性配置变更
-title: "修复工具（Doctor）"
+title: "诊断"
 ---
 # 修复工具（Doctor）
 

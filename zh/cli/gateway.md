@@ -4,7 +4,7 @@ read_when:
   - 通过 CLI 运行 Gateway（dev 或服务器）
   - 调试 Gateway 认证、绑定模式与连接性
   - 通过 Bonjour 发现 gateway（LAN + tailnet）
-title: "Gateway CLI"
+title: "gateway"
 ---
 
 # Gateway CLI

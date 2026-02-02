@@ -4,6 +4,7 @@ read_when:
   - 设计或实现配置校验行为
   - 处理配置迁移或 doctor 工作流
   - 处理插件配置 schema 或插件加载门控
+title: "Strict Config Validation"
 ---
 # 严格配置校验（仅 doctor 迁移）
 

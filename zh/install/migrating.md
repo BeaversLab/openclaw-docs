@@ -1,5 +1,6 @@
 ---
 summary: "将 OpenClaw 安装从一台机器迁移到另一台"
+title: "Migration Guide"
 read_when:
   - 你要把 OpenClaw 迁移到新笔记本/服务器
   - 你希望保留会话、认证与频道登录（WhatsApp 等）

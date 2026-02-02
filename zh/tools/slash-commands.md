@@ -1,5 +1,5 @@
 ---
-title: "斜杠命令"
+title: "Slash Commands"
 summary: "斜杠命令：文本 vs 原生、配置与支持的命令"
 read_when:
   - 使用或配置聊天命令

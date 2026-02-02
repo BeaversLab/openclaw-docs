@@ -4,6 +4,7 @@ read_when:
   - 想运行或编写 .prose 工作流
   - 想启用 OpenProse 插件
   - 需要了解状态存储
+title: "OpenProse"
 ---
 # OpenProse
 

@@ -1,5 +1,5 @@
 ---
-title: "Location command（nodes）"
+title: "Location Command"
 summary: "Nodes 的定位命令（location.get）、权限模式与后台行为"
 read_when:
   - 添加定位 node 支持或权限 UI

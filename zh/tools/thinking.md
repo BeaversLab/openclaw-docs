@@ -1,5 +1,5 @@
 ---
-title: "思考等级（/think 指令）"
+title: "Thinking Levels"
 summary: "/think + /verbose 的指令语法与对模型推理的影响"
 read_when:
   - 调整 thinking 或 verbose 指令解析/默认值

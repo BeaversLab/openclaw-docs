@@ -4,7 +4,7 @@ read_when:
   - 需要知道加载哪些 env vars 以及顺序
   - 排查 Gateway 缺少 API keys
   - 记录 provider 认证或部署环境
-title: "环境变量"
+title: "Environment Variables"
 ---
 # 环境变量
 

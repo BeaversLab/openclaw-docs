@@ -3,6 +3,7 @@ summary: "运行 ACP 桥接以集成 IDE"
 read_when:
   - 设置基于 ACP 的 IDE 集成
   - 调试 ACP 会话到 Gateway 的路由
+title: "acp"
 ---
 
 # acp

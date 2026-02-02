@@ -4,6 +4,7 @@ read_when:
   - 配置 exec 审批或允许列表
   - 在 macOS 应用中实现 exec 审批 UX
   - 评审沙箱逃逸提示及其影响
+title: "Exec Approvals"
 ---
 
 # Exec 审批

@@ -4,7 +4,7 @@ read_when:
   - 需要在不创建 cron 的情况下入队系统事件
   - 需要启用或禁用心跳
   - 需要查看 system presence 条目
-title: "`openclaw system`"
+title: "system"
 ---
 
 # `openclaw system`

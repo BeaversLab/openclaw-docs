@@ -3,6 +3,7 @@ summary: "在 OpenClaw 中使用 Venice AI 隐私优先模型"
 read_when:
   - 想在 OpenClaw 中进行隐私优先推理
   - 需要 Venice AI 配置指引
+title: "Venice AI"
 ---
 # Venice AI（Venice 亮点）
 

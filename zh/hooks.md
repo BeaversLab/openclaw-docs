@@ -3,7 +3,7 @@ summary: "Hooks：面向命令与生命周期事件的事件驱动自动化"
 read_when:
   - 你想对 /new、/reset、/stop 与 agent 生命周期事件做事件驱动自动化
   - 你想构建、安装或调试 hooks
-title: "Hooks"
+title: "钩子"
 ---
 # Hooks
 

@@ -2,7 +2,7 @@
 summary: "WhatsApp（web 渠道）集成：登录、收件箱、回复、媒体与运维"
 read_when:
   - 开发 WhatsApp/web 渠道行为或收件箱路由
-title: "WhatsApp（web 渠道）"
+title: "WhatsApp"
 ---
 # WhatsApp（web 渠道）
 

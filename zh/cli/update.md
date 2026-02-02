@@ -3,7 +3,7 @@ summary: "`openclaw update` 的 CLI 参考（相对安全的源码更新 + gatew
 read_when:
   - 需要安全更新源码检出
   - 需要理解 `--update` 简写行为
-title: "`openclaw update`"
+title: "update"
 ---
 
 # `openclaw update`

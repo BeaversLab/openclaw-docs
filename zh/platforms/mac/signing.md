@@ -1,5 +1,5 @@
 ---
-title: "mac 签名（debug 构建）"
+title: "macOS Signing"
 summary: "打包脚本生成的 macOS debug 构建签名步骤"
 read_when:
   - 构建或签名 mac debug 版本

@@ -1,5 +1,5 @@
 ---
-title: "Skills（macOS）"
+title: "Skills"
 summary: "macOS Skills 设置界面与基于 gateway 的状态"
 read_when:
   - 更新 macOS Skills 设置 UI

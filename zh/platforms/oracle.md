@@ -4,6 +4,7 @@ read_when:
   - 在 Oracle Cloud 上部署 OpenClaw
   - 寻找低成本 OpenClaw VPS 托管方案
   - 想让 OpenClaw 24/7 运行在小服务器上
+title: "Oracle Cloud"
 ---
 
 # OpenClaw on Oracle Cloud (OCI)

@@ -1,5 +1,6 @@
 ---
 summary: "`openclaw webhooks` 的 CLI 参考（webhook 助手 + Gmail Pub/Sub）"
+title: "webhooks"
 read_when:
   - 需要将 Gmail Pub/Sub 事件接入 OpenClaw
   - 需要 webhook 辅助命令

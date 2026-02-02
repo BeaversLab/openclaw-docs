@@ -2,7 +2,7 @@
 summary: "`openclaw pairing` 的 CLI 参考（approve/list 配对请求）"
 read_when:
   - 使用配对模式 DM，需要批准发送方
-title: "`openclaw pairing`"
+title: "pairing"
 ---
 
 # `openclaw pairing`

@@ -3,6 +3,7 @@ summary: "在插件中编写代理工具（schema、可选工具、allowlist）"
 read_when:
   - 想在插件中新增代理工具
   - 需要通过 allowlist 让工具成为可选项
+title: "Plugin Agent Tools"
 ---
 # 插件代理工具
 

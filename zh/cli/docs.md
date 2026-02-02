@@ -2,7 +2,7 @@
 summary: "`openclaw docs` 的 CLI 参考（搜索在线文档索引）"
 read_when:
   - 你想在终端中搜索 OpenClaw 在线文档
-title: "`openclaw docs`"
+title: "docs"
 ---
 
 # `openclaw docs`

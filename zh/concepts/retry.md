@@ -3,7 +3,7 @@ summary: "出站 provider 调用的重试策略"
 read_when:
   - 更新 provider 重试行为或默认值
   - 排查 provider 发送错误或限流
-title: "重试策略（Retry policy）"
+title: "Retry Policy"
 ---
 # 重试策略（Retry policy）
 

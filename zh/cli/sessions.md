@@ -2,7 +2,7 @@
 summary: "`openclaw sessions` 的 CLI 参考（列出存储会话 + 用量）"
 read_when:
   - 需要列出已存储会话并查看最近活动
-title: "`openclaw sessions`"
+title: "sessions"
 ---
 
 # `openclaw sessions`

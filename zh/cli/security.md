@@ -3,7 +3,7 @@ summary: "`openclaw security` 的 CLI 参考（审计并修复常见安全隐患
 read_when:
   - 需要对配置/状态做快速安全审计
   - 需要应用安全的“fix”建议（chmod、收紧默认值）
-title: "`openclaw security`"
+title: "security"
 ---
 
 # `openclaw security`

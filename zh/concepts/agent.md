@@ -2,7 +2,7 @@
 summary: "Agent runtime（嵌入式 p-mono）、workspace 约定与会话引导"
 read_when:
   - 需要修改 agent runtime、workspace bootstrap 或会话行为
-title: "Agent Runtime 🤖"
+title: "Agent Runtime"
 ---
 # Agent Runtime 🤖
 

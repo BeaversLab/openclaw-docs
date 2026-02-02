@@ -1,5 +1,5 @@
 ---
-title: "OpenClaw macOS IPC 架构"
+title: "macOS IPC"
 summary: "OpenClaw macOS 应用、gateway 节点传输与 PeekabooBridge 的 IPC 架构"
 read_when:
   - 编辑 IPC 契约或菜单栏应用 IPC

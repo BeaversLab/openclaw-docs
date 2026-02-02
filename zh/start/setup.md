@@ -3,7 +3,7 @@ summary: "设置指南：在保持个性化的同时，持续更新 OpenClaw"
 read_when:
   - 配置新机器
   - 想要“最新 + 最佳”但不破坏个人设置
-title: "设置"
+title: "Setup"
 ---
 
 # 设置

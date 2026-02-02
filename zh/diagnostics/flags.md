@@ -1,5 +1,6 @@
 ---
 summary: "用于定向调试日志的 Diagnostics flags"
+title: "Diagnostics Flags"
 read_when:
   - 需要定向日志而不提高全局日志级别
   - 需要捕获子系统日志用于支持

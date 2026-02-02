@@ -1,5 +1,5 @@
 ---
-title: "Nix 安装"
+title: "Nix"
 summary: "使用 Nix 以声明式方式安装 OpenClaw"
 read_when:
   - 你想要可复现、可回滚的安装

@@ -3,7 +3,7 @@ summary: "OpenClaw system prompt 包含什么以及如何组装"
 read_when:
   - 编辑 system prompt 文本、工具列表或时间/heartbeat 部分
   - 修改工作区引导或 skills 注入行为
-title: "系统提示词（System Prompt）"
+title: "System Prompt"
 ---
 # 系统提示词（System Prompt）
 

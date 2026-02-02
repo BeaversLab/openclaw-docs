@@ -1,5 +1,5 @@
 ---
-title: "安装器内部结构"
+title: "Installer Internals"
 summary: "安装器脚本的工作方式（install.sh + install-cli.sh）、flags 与自动化"
 read_when:
   - 你想了解 `openclaw.bot/install.sh`

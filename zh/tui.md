@@ -1,5 +1,5 @@
 ---
-title: "TUI（Terminal UI）"
+title: "TUI"
 summary: "终端 UI（TUI）：从任意机器连接 Gateway"
 read_when:
   - 想要 TUI 的入门指南

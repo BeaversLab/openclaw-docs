@@ -2,6 +2,7 @@
 summary: "Nextcloud Talk 支持状态、能力与配置"
 read_when:
   - 开发 Nextcloud Talk 渠道功能
+title: "Nextcloud Talk"
 ---
 # Nextcloud Talk（插件）
 

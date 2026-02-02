@@ -1,5 +1,6 @@
 ---
 summary: "在 OpenClaw 中使用 Qwen OAuth（免费额度）"
+title: "Qwen"
 read_when:
   - 想在 OpenClaw 中使用 Qwen
   - 想用 Qwen Coder 的免费 OAuth 额度

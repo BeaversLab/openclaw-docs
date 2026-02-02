@@ -1,5 +1,6 @@
 ---
 summary: "网络枢纽：gateway surface、配对、发现与安全"
+title: "Network"
 read_when:
   - 你需要网络架构 + 安全概览
   - 你在排查本地 vs tailnet 访问或配对

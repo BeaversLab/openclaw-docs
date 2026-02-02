@@ -4,6 +4,7 @@ read_when:
   - 你想使用 Firecrawl 支持的网页抽取
   - 你需要 Firecrawl API key
   - 你想为 web_fetch 启用反机器人抽取
+title: "Firecrawl"
 ---
 
 # Firecrawl

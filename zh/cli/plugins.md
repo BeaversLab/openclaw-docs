@@ -3,7 +3,7 @@ summary: "`openclaw plugins` 的 CLI 参考（list、install、enable/disable、
 read_when:
   - 需要安装或管理进程内 Gateway 插件
   - 需要排查插件加载失败
-title: "`openclaw plugins`"
+title: "plugins"
 ---
 
 # `openclaw plugins`

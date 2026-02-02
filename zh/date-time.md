@@ -3,6 +3,7 @@ summary: "信封、提示、工具与连接器中的日期与时间处理"
 read_when:
   - 修改时间戳如何展示给模型或用户
   - 排查消息或 system prompt 的时间格式
+title: "Date and Time"
 ---
 
 # Date & Time

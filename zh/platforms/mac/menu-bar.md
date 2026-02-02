@@ -1,5 +1,5 @@
 ---
-title: "菜单栏状态逻辑"
+title: "Menu Bar"
 summary: "菜单栏状态逻辑与对用户展示的内容"
 read_when:
   - 调整 mac 菜单 UI 或状态逻辑

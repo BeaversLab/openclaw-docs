@@ -3,7 +3,7 @@ summary: "OpenClaw 可连接的消息平台"
 read_when:
   - 你想为 OpenClaw 选择聊天渠道
   - 你需要支持平台的快速概览
-title: "聊天渠道"
+title: "Chat Channels"
 ---
 # 聊天渠道
 

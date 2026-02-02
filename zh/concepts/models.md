@@ -4,7 +4,7 @@ read_when:
   - 添加或修改 models CLI（models list/set/scan/aliases/fallbacks）
   - 修改模型回退行为或选择 UX
   - 更新模型扫描探测（tools/images）
-title: "模型 CLI"
+title: "Models CLI"
 ---
 # 模型 CLI
 

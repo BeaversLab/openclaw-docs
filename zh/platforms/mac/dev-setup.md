@@ -1,5 +1,5 @@
 ---
-title: "macOS 开发者设置"
+title: "macOS Dev Setup"
 summary: "OpenClaw macOS 应用的开发环境搭建指南"
 read_when:
   - 搭建 macOS 开发环境

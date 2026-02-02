@@ -1,5 +1,5 @@
 ---
-title: "网页（网关）"
+title: "Web"
 summary: "Gateway Web 面：Control UI、绑定模式与安全"
 read_when:
   - 你想通过 Tailscale 访问 Gateway

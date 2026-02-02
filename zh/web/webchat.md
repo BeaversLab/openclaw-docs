@@ -1,5 +1,5 @@
 ---
-title: "网页聊天 (网关WebSocket界面)"
+title: "WebChat"
 summary: "Loopback WebChat 静态宿主与 Gateway WS 用于聊天 UI"
 read_when:
   - 调试或配置 WebChat 访问

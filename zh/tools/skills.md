@@ -3,7 +3,7 @@ summary: "技能：托管 vs 工作区、门控规则与配置/环境注入"
 read_when:
   - 添加或修改技能
   - 修改技能门控或加载规则
-title: "技能（OpenClaw）"
+title: "Skills"
 ---
 
 # 技能（OpenClaw）

@@ -2,7 +2,7 @@
 summary: "`openclaw agents` 的 CLI 参考（list/add/delete/set identity）"
 read_when:
   - 你需要多个隔离 agent（工作区 + 路由 + 授权）
-title: "`openclaw agents`"
+title: "agents"
 ---
 
 # `openclaw agents`

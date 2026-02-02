@@ -1,5 +1,5 @@
 ---
-title: "Docker（可选）"
+title: "Docker"
 summary: "可选的 Docker 化安装与 OpenClaw onboarding 流程"
 read_when:
   - 你想用容器化 gateway 而非本地安装

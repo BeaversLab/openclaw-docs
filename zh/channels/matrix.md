@@ -2,7 +2,7 @@
 summary: "Matrix 支持状态、能力与配置"
 read_when:
   - 开发 Matrix 渠道功能
-title: "Matrix（插件）"
+title: "Matrix"
 ---
 # Matrix（插件）
 

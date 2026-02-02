@@ -2,7 +2,7 @@
 summary: "Google Chat 应用支持状态、能力与配置"
 read_when:
   - 开发 Google Chat 渠道功能
-title: "Google Chat（Chat API）"
+title: "Google Chat"
 ---
 # Google Chat（Chat API）
 

@@ -3,7 +3,7 @@ summary: "Heartbeat 轮询消息与通知规则"
 read_when:
   - 调整 heartbeat 频率或消息
   - 在 heartbeat 与 cron 之间做调度选择
-title: "Heartbeat（Gateway）"
+title: "心跳"
 ---
 # Heartbeat（Gateway）
 

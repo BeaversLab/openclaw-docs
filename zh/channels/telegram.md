@@ -2,7 +2,7 @@
 summary: "Telegram bot 支持状态、能力与配置"
 read_when:
   - 开发 Telegram 功能或 webhook
-title: "Telegram（Bot API）"
+title: "Telegram"
 ---
 # Telegram（Bot API）
 

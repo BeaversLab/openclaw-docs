@@ -3,7 +3,7 @@ summary: "`openclaw cron` 的 CLI 参考（调度并运行后台任务）"
 read_when:
   - 你需要定时任务与唤醒
   - 你在调试 cron 执行与日志
-title: "`openclaw cron`"
+title: "cron"
 ---
 
 # `openclaw cron`

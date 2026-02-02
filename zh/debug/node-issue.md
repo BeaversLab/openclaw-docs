@@ -3,6 +3,7 @@ summary: Node + tsx "__name is not a function" 崩溃说明与规避方案
 read_when:
   - 排查仅 Node 的 dev 脚本或 watch 失败
   - 调查 OpenClaw 中 tsx/esbuild loader 崩溃
+title: "Node + tsx Crash"
 ---
 
 # Node + tsx "__name is not a function" 崩溃

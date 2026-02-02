@@ -1,5 +1,6 @@
 ---
 summary: "`openclaw devices` 的 CLI 参考（设备配对 + token 轮换/撤销）"
+title: "devices"
 read_when:
   - 你在批准设备配对请求
   - 你需要轮换或撤销设备 token

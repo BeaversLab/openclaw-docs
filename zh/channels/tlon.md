@@ -2,6 +2,7 @@
 summary: "Tlon/Urbit 支持状态、能力与配置"
 read_when:
   - 开发 Tlon/Urbit 渠道功能
+title: "Tlon"
 ---
 # Tlon（插件）
 

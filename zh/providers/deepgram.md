@@ -3,6 +3,7 @@ summary: "用于入站语音消息的 Deepgram 转写"
 read_when:
   - 想用 Deepgram 为音频附件做语音转写
   - 需要快速的 Deepgram 配置示例
+title: "Deepgram"
 ---
 # Deepgram（音频转写）
 

@@ -1,5 +1,5 @@
 ---
-title: "浏览器排查（Linux）"
+title: "Browser Troubleshooting"
 summary: "修复 Linux 上 OpenClaw 浏览器控制在 Chrome/Brave/Edge/Chromium 上的 CDP 启动问题"
 read_when: "Linux 上浏览器控制失败，尤其是 snap 版 Chromium"
 ---

@@ -3,6 +3,7 @@ summary: "使用 Ollama 运行 OpenClaw（本地 LLM 运行时）"
 read_when:
   - 想通过 Ollama 运行本地模型
   - 需要 Ollama 设置与配置指引
+title: "Ollama"
 ---
 # Ollama
 

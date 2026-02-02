@@ -4,7 +4,7 @@ read_when:
   - 实现无需 macOS UI 的 node 配对审批
   - 添加 CLI 的远程 node 审批流程
   - 通过 node 管理扩展 gateway 协议
-title: "Gateway 自主配对（Option B）"
+title: "Gateway-Owned Pairing"
 ---
 # Gateway 自主配对（Option B）
 

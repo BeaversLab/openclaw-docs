@@ -1,5 +1,5 @@
 ---
-title: "相机采集 (agent)"
+title: "Camera Capture"
 summary: "相机采集（iOS node + macOS app）：照片（jpg）与短视频（mp4）"
 read_when:
   - 你在 iOS node 或 macOS 上新增/修改相机采集

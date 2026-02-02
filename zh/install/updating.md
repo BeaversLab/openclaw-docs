@@ -1,5 +1,5 @@
 ---
-title: "更新"
+title: "Updating"
 summary: "安全更新 OpenClaw（全局安装或源码），以及回滚策略"
 read_when:
   - 更新 OpenClaw

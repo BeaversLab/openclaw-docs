@@ -2,7 +2,7 @@
 summary: "运行具备 shell 访问的 AI Gateway 时的安全注意事项与威胁模型"
 read_when:
   - 添加扩大访问或自动化的功能时
-title: "安全 🔒"
+title: "安全"
 ---
 # 安全 🔒
 

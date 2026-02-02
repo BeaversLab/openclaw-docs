@@ -3,6 +3,7 @@ summary: "`openclaw node` 的 CLI 参考（无头 node host）"
 read_when:
   - 运行无头 node host
   - 为 system.run 配对非 macOS 节点
+title: "node"
 ---
 
 # `openclaw node`

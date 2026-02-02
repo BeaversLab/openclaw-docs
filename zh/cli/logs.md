@@ -3,7 +3,7 @@ summary: "`openclaw logs` 的 CLI 参考（通过 RPC 追踪 gateway 日志）"
 read_when:
   - 需要远程追踪 Gateway 日志（无需 SSH）
   - 希望输出 JSON 日志行以供工具处理
-title: "`openclaw logs`"
+title: "logs"
 ---
 
 # `openclaw logs`
