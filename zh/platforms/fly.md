@@ -1,5 +1,5 @@
 ---
-title: "Fly.io Deployment"
+title: "Fly.io"
 description: 在 Fly.io 上部署 OpenClaw
 ---
 

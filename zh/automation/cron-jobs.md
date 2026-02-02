@@ -4,7 +4,7 @@ read_when:
   - 安排后台作业或唤醒
   - 为需要与心跳一起运行的自动化流程接线
   - 在定时任务里决定使用 heartbeat 还是 cron
-title: "定时任务"
+title: "Cron Jobs"
 ---
 # 定时任务（Gateway 调度器）
 

@@ -1,6 +1,6 @@
 ---
 summary: "多 agent 路由：隔离 agents、渠道账号与 bindings"
-title: Multi-Agent Routing
+title: "Multi-Agent Routing"
 read_when: "需要在一个 gateway 进程中使用多个隔离 agents（工作区 + auth）。"
 status: active
 ---

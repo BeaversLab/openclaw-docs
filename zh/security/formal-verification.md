@@ -1,5 +1,5 @@
 ---
-title: 形式化验证（安全模型）
+title: "Formal Verification (Security Models)"
 summary: OpenClaw 最高风险路径的机器校验安全模型。
 permalink: /security/formal-verification/
 ---

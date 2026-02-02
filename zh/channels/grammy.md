@@ -2,7 +2,7 @@
 summary: "通过 grammY 集成 Telegram Bot API（含设置说明）"
 read_when:
   - 开发 Telegram 或 grammY 路径
-title: grammY
+title: "grammY"
 ---
 
 # grammY 集成（Telegram Bot API）

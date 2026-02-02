@@ -1,5 +1,5 @@
 ---
-title: 出站会话镜像重构（Issue #1520）
+title: "Outbound Session Mirroring Refactor (Issue #1520)"
 description: 记录出站会话镜像重构的说明、决策、测试与待办事项。
 ---
 

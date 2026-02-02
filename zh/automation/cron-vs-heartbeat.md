@@ -4,7 +4,7 @@ read_when:
   - 决定如何调度周期性任务
   - 设置后台监控或通知
   - 优化周期性检查的 token 使用
-title: "定时任务 vs 心跳"
+title: "Cron vs Heartbeat"
 ---
 
 # Cron vs Heartbeat：何时使用哪一种

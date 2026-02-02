@@ -4,7 +4,7 @@ read_when:
   - 学习如何配置 OpenClaw
   - 查找配置示例
   - 首次设置 OpenClaw
-title: "配置示例"
+title: "Configuration Examples"
 ---
 # 配置示例
 

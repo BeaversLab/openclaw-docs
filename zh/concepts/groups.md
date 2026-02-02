@@ -2,7 +2,7 @@
 summary: "跨平台群聊行为（WhatsApp/Telegram/Discord/Slack/Signal/iMessage/Microsoft Teams）"
 read_when:
   - 需要修改群聊行为或 mention gating
-title: "群组"
+title: "Groups"
 ---
 # 群（群聊天）
 

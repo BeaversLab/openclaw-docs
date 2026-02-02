@@ -4,7 +4,7 @@ read_when:
   - 你想将 OpenClaw 连接到 LINE
   - 你需要 LINE webhook + 凭据设置
   - 你需要 LINE 特定消息选项
-title: "LINE（插件）"
+title: "LINE"
 ---
 
 # LINE（插件）

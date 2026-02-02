@@ -1,5 +1,5 @@
 ---
-title: Sandbox CLI
+title: "Sandbox CLI"
 summary: "管理 sandbox 容器并检查生效的 sandbox 策略"
 read_when: "你在管理 sandbox 容器或排查 sandbox/tool-policy 行为。"
 status: active

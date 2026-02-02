@@ -1,5 +1,5 @@
 ---
-title: Lobster
+title: "Lobster"
 summary: "用于 OpenClaw 的强类型工作流运行时，带可恢复的审批关卡。"
 description: 用于 OpenClaw 的强类型工作流运行时 —— 可组合管线与审批关卡。
 read_when:

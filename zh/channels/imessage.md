@@ -3,7 +3,7 @@ summary: "通过 imsg 支持 iMessage（stdio 上的 JSON-RPC）、设置与 cha
 read_when:
   - 设置 iMessage 支持
   - 调试 iMessage 收发
-title: iMessage
+title: "iMessage"
 ---
 
 # iMessage (imsg)

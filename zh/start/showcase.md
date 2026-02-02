@@ -1,5 +1,5 @@
 ---
-title: "展示"
+title: "Showcase"
 description: "来自社区的真实 OpenClaw 项目"
 summary: "社区构建的项目与集成，基于 OpenClaw 驱动"
 ---
