@@ -3,10 +3,10 @@ summary: "用于唤醒与隔离代理运行的 Webhook 入站"
 read_when:
   - 新增或修改 webhook 端点
   - 将外部系统接入 OpenClaw
-title: "Webhooks"
+title: "Webhook"
 ---
 
-# Webhooks
+# Webhook
 
 Gateway 可对外暴露一个小型 HTTP webhook 端点，用于外部触发。
 
@@ -17,8 +17,8 @@ Gateway 可对外暴露一个小型 HTTP webhook 端点，用于外部触发。
   hooks: {
     enabled: true,
     token: "shared-secret",
-    path: "/hooks"
-  }
+    path: "/hooks",
+  },
 }
 ```
 
@@ -37,21 +37,24 @@ Gateway 可对外暴露一个小型 HTTP webhook 端点，用于外部触发。
 
 ### `POST /hooks/wake`
 
-Payload:
+Payload：
+
 ```json
 { "text": "System line", "mode": "now" }
 ```
 
-- `text` **必填**（string）：事件描述（例如 “New email received”）。
-- `mode` 可选（`now` | `next-heartbeat`）：立即触发 heartbeat（默认 `now`）或等待下一次周期检查。
+- `text` **必填** (string)：事件描述（例如 "New email received"）。
+- `mode` 可选 (`now` | `next-heartbeat`)：是否触发即时 heartbeat（默认 `now`）或等待下一次周期检查。
 
 效果：
-- 为**主**会话排队一个 system event
+
+- 为**主**会话排队一个系统事件
 - 若 `mode=now`，触发一次即时 heartbeat
 
 ### `POST /hooks/agent`
 
-Payload:
+Payload：
+
 ```json
 {
   "message": "Run this",
@@ -67,39 +70,40 @@ Payload:
 }
 ```
 
-- `message` **必填**（string）：交给代理处理的提示或消息。
-- `name` 可选（string）：hook 的易读名称（例如 “GitHub”），用于会话摘要前缀。
-- `sessionKey` 可选（string）：用于标识代理会话的 key。默认随机 `hook:<uuid>`。使用一致的 key 可在 hook 上下文中进行多轮对话。
-- `wakeMode` 可选（`now` | `next-heartbeat`）：立即触发 heartbeat（默认 `now`）或等待下一次周期检查。
-- `deliver` 可选（boolean）：若为 `true`，代理响应将投递到消息渠道。默认 `true`。仅为 heartbeat 确认的响应会自动跳过投递。
-- `channel` 可选（string）：投递渠道，支持 `last`、`whatsapp`、`telegram`、`discord`、`slack`、`mattermost`（插件）、`signal`、`imessage`、`msteams`。默认 `last`。
-- `to` 可选（string）：渠道收件人标识（如 WhatsApp/Signal 的手机号、Telegram 的 chat ID、Discord/Slack/Mattermost（插件）的 channel ID、MS Teams 的 conversation ID）。默认主会话最近一次收件人。
-- `model` 可选（string）：模型覆盖（如 `anthropic/claude-3-5-sonnet` 或别名）。若有模型限制，必须在允许列表内。
-- `thinking` 可选（string）：思考等级覆盖（如 `low`、`medium`、`high`）。
-- `timeoutSeconds` 可选（number）：本次代理运行的最大时长（秒）。
+- `message` **必填** (string)：代理要处理的提示或消息。
+- `name` 可选 (string)：hook 的易读名称（例如 "GitHub"），用作会话摘要中的前缀。
+- `sessionKey` 可选 (string)：用于标识代理会话的 key。默认为随机 `hook:<uuid>`。使用一致的 key 可以在 hook 上下文中进行多轮对话。
+- `wakeMode` 可选 (`now` | `next-heartbeat`)：是否触发即时 heartbeat（默认 `now`）或等待下一次周期检查。
+- `deliver` 可选 (boolean)：若为 `true`，代理的响应将发送到消息渠道。默认为 `true`。仅 heartbeat 确认的响应会自动跳过。
+- `channel` 可选 (string)：消息投递渠道。支持：`last`、`whatsapp`、`telegram`、`discord`、`slack`、`mattermost`（插件）、`signal`、`imessage`、`msteams`。默认为 `last`。
+- `to` 可选 (string)：渠道的收件人标识（例如 WhatsApp/Signal 的手机号、Telegram 的 chat ID、Discord/Slack/Mattermost（插件）的 channel ID、MS Teams 的 conversation ID）。默认主会话的最后一次收件人。
+- `model` 可选 (string)：模型覆盖（例如 `anthropic/claude-3-5-sonnet` 或别名）。如果受限，必须在允许的模型列表中。
+- `thinking` 可选 (string)：思考等级覆盖（例如 `low`、`medium`、`high`）。
+- `timeoutSeconds` 可选 (number)：代理运行的最长时间（秒）。
 
 效果：
-- 运行一次**隔离**的代理回合（独立 session key）
-- 总会在**主**会话发布摘要
+
+- 运行一次**隔离**的代理回合（独立的 session key）
+- 总会在**主**会话中发布摘要
 - 若 `wakeMode=now`，触发一次即时 heartbeat
 
-### `POST /hooks/<name>`（映射）
+### `POST /hooks/<name>` (mapped)
 
-自定义 hook 名称通过 `hooks.mappings` 解析（见配置）。映射可将任意 payload
-转成 `wake` 或 `agent` 动作，并可附带模板或代码转换。
+自定义 hook 名称通过 `hooks.mappings` 解析（见配置）。映射可以将任意 payload 转换为 `wake` 或 `agent` 动作，并可选地使用模板或代码转换。
 
 映射选项（概要）：
-- `hooks.presets: ["gmail"]` 启用内置 Gmail 映射。
-- `hooks.mappings` 允许在配置中定义 `match`、`action` 与模板。
+
+- `hooks.presets: ["gmail"]` 启用内置的 Gmail 映射。
+- `hooks.mappings` 允许在配置中定义 `match`、`action` 和模板。
 - `hooks.transformsDir` + `transform.module` 加载 JS/TS 模块以实现自定义逻辑。
-- 使用 `match.source` 以保留通用 ingest 端点（按 payload 路由）。
-- TS 转换需要 TS loader（如 `bun` 或 `tsx`），或在运行时使用预编译 `.js`。
-- 在映射上设置 `deliver: true` + `channel`/`to` 可将回复路由到聊天渠道
+- 使用 `match.source` 保留通用接收端点（按 payload 路由）。
+- TS 转换需要 TS loader（例如 `bun` 或 `tsx`）或在运行时使用预编译的 `.js`。
+- 在映射上设置 `deliver: true` + `channel`/`to` 可以将回复路由到聊天界面
   （`channel` 默认为 `last`，回退到 WhatsApp）。
-- `allowUnsafeExternalContent: true` 会为该 hook 禁用外部内容安全包裹
-  （危险，仅用于受信任的内部来源）。
-- `openclaw webhooks gmail setup` 会写入 `hooks.gmail` 配置，供 `openclaw webhooks gmail run` 使用。
-参见 [Gmail Pub/Sub](/zh/automation/gmail-pubsub) 获取完整 Gmail watch 流程。
+- `allowUnsafeExternalContent: true` 禁用该 hook 的外部内容安全包裹
+  （危险；仅用于受信任的内部来源）。
+- `openclaw webhooks gmail setup` 写入 `hooks.gmail` 配置供 `openclaw webhooks gmail run` 使用。
+  参见 [Gmail Pub/Sub](/zh/automation/gmail-pubsub) 了解完整的 Gmail watch 流程。
 
 ## 响应
 

@@ -1,9 +1,10 @@
 ---
-title: "OpenClaw 🦞"
 summary: "OpenClaw 的顶层概览、功能与定位"
 read_when:
   - 向新用户介绍 OpenClaw
+title: "OpenClaw"
 ---
+
 # OpenClaw 🦞
 
 > *“EXFOLIATE! EXFOLIATE!”* — 也许是一只太空龙虾

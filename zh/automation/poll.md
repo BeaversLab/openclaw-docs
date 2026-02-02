@@ -5,8 +5,8 @@ read_when:
   - 调试从 CLI 或网关发送投票
 title: "投票"
 ---
-# 投票
 
+# 投票
 
 ## 支持的渠道
 - WhatsApp（web 渠道）

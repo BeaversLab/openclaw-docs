@@ -17,7 +17,8 @@ OpenClaw 将聊天渠道共享的位置规范化为：
 - **WhatsApp**（locationMessage + liveLocationMessage）
 - **Matrix**（带 `geo_uri` 的 `m.location`）
 
-## 文本格式
+
+## Text formatting
 位置会以友好的行展示（不含方括号）：
 
 - 钉点：
@@ -33,7 +34,8 @@ OpenClaw 将聊天渠道共享的位置规范化为：
 Meet here
 ```
 
-## 上下文字段
+
+## Context fields
 当位置存在时，这些字段会加入 `ctx`：
 - `LocationLat`（number）
 - `LocationLon`（number）
@@ -41,9 +43,9 @@ Meet here
 - `LocationName`（string；可选）
 - `LocationAddress`（string；可选）
 - `LocationSource`（`pin | place | live`）
-- `LocationIsLive`（boolean）
+- `LocationIsLive` (boolean)
 
-## 渠道说明
+## Channel notes
 - **Telegram**：venue 映射到 `LocationName/LocationAddress`；实时位置使用 `live_period`。
-- **WhatsApp**：`locationMessage.comment` 与 `liveLocationMessage.caption` 会作为 caption 行追加。
+- **WhatsApp**: `locationMessage.comment` and `liveLocationMessage.caption` are appended as the caption line.
 - **Matrix**：`geo_uri` 解析为钉点位置；忽略海拔，且 `LocationIsLive` 总为 false。

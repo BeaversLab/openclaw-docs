@@ -56,7 +56,7 @@ Windows：使用 **WSL2**（推荐 Ubuntu）。强烈推荐 WSL2；原生 Window
 ## 1) 安装 CLI（推荐）
 
 ```bash
-curl -fsSL https://openclaw.bot/install.sh | bash
+curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
 安装器选项（安装方式、非交互、来自 GitHub）：[安装](/zh/install)。
@@ -86,10 +86,10 @@ openclaw onboard --install-daemon
 你将选择：
 - **本地 vs 远程** 网关
 - **认证**：OpenAI Code (Codex) 订阅（OAuth）或 API key。Anthropic 推荐 API key；也支持 `claude setup-token`。
-- **提供商**：WhatsApp 二维码登录、Telegram/Discord 机器人 token、Mattermost 插件 token 等。
+- **提供商**：WhatsApp QR 登录、Telegram/Discord bot token、Mattermost (插件) token 等。
 - **守护进程**：后台安装（launchd/systemd；WSL2 使用 systemd）
-  - **运行时**：Node（推荐；WhatsApp/Telegram 需要）。不推荐使用 Bun。
-- **网关令牌**：向导默认生成（即便是 loopback）并写入 `gateway.auth.token`。
+  - **运行时**：Node（推荐；WhatsApp/Telegram 需要）。**不推荐**使用 Bun。
+- **网关令牌**：向导默认生成（即便是 loopback）并存储到 `gateway.auth.token`。
 
 向导文档：[向导](/zh/start/wizard)
 

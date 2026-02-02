@@ -688,7 +688,7 @@ This stores OAuth tokens in auth profiles on the gateway host. Details: [Model p
 
 ### Is a local model OK for casual chats
 
-Usually no. OpenClaw needs large context + strong safety; small cards truncate and leak. If you must, run the **largest** MiniMax M2.1 build you can locally (LM Studio) and see [/gateway/local-models](/gateway/local-models). Smaller/quantized models increase prompt-injection risk - see [Security](/gateway/security).
+Usually no. OpenClaw needs large context + strong safety; small cards truncate and leak. If you must, run the **largest** MiniMax M2.1 build you can locally (LM Studio) and see [/gateway/local-models](/zh/gateway/local-models). Smaller/quantized models increase prompt-injection risk - see [Security](/zh/gateway/security).
 
 ### How do I keep hosted model traffic in a specific region
 
@@ -753,7 +753,7 @@ Official Bot API:
 Third-party (less private):
 - DM `@userinfobot` or `@getidsbot`.
 
-See [/channels/telegram](/channels/telegram#access-control-dms--groups).
+See [/channels/telegram](/zh/channels/telegram#access-control-dms--groups).
 
 ### Can multiple people use one WhatsApp number with different OpenClaw instances
 
@@ -1591,7 +1591,7 @@ You can also define inline env vars in config (applied only if missing from the 
 }
 ```
 
-See [/environment](/environment) for full precedence and sources.
+See [/environment](/zh/environment) for full precedence and sources.
 
 ### I started the Gateway via the service and my env vars disappeared What now
 
@@ -1636,7 +1636,7 @@ openclaw models status
 ```
 
 Copilot tokens are read from `COPILOT_GITHUB_TOKEN` (also `GH_TOKEN` / `GITHUB_TOKEN`).
-See [/concepts/model-providers](/concepts/model-providers) and [/environment](/environment).
+See [/concepts/model-providers](/zh/concepts/model-providers) and [/environment](/zh/environment).
 
 ## Sessions & multiple chats
 

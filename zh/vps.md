@@ -3,6 +3,7 @@ summary: "OpenClaw 的 VPS 托管索引（Oracle/Fly/Hetzner/GCP/exe.dev）"
 read_when:
   - 你想在云端运行 Gateway
   - 你需要 VPS/托管指南速览
+title: "VPS 托管"
 ---
 # VPS 托管
 
