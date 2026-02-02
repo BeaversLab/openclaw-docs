@@ -1,6 +1,6 @@
 ---
 summary: "OpenClaw 沙盒如何工作：模式、范围、工作区访问与镜像"
-title: 沙盒
+title: "Sandboxing"
 read_when: "你需要专门的沙盒说明或想调优 agents.defaults.sandbox。"
 status: active
 ---

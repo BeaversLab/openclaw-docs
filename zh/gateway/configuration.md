@@ -2,7 +2,7 @@
 summary: "~/.openclaw/openclaw.json 的全部配置项与示例"
 read_when:
   - 添加或修改配置字段时
-title: "配置"
+title: "Configuration"
 ---
 # 配置 🔧
 

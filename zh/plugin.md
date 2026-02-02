@@ -15,19 +15,19 @@ read_when:
 
 快速路径：
 
-1) 查看已加载的插件：
+1. 查看已加载的插件：
 
 ```bash
 openclaw plugins list
 ```
 
-2) 安装官方插件（示例：Voice Call）：
+2. 安装官方插件（示例：Voice Call）：
 
 ```bash
 openclaw plugins install @openclaw/voice-call
 ```
 
-3) 重启 Gateway，然后在 `plugins.entries.<id>.config` 下配置。
+3. 重启 Gateway，然后在 `plugins.entries.<id>.config` 下配置。
 
 具体示例参见 [Voice Call](/zh/plugins/voice-call)。
 
@@ -84,18 +84,18 @@ const result = await api.runtime.tts.textToSpeechTelephony({
 
 OpenClaw 按顺序扫描：
 
-1) 配置路径
+1. 配置路径
 - `plugins.load.paths`（文件或目录）
 
-2) 工作区扩展
+2. 工作区扩展
 - `<workspace>/.openclaw/extensions/*.ts`
 - `<workspace>/.openclaw/extensions/*/index.ts`
 
-3) 全局扩展
+3. 全局扩展
 - `~/.openclaw/extensions/*.ts`
 - `~/.openclaw/extensions/*/index.ts`
 
-4) 内置扩展（随 OpenClaw 发行，**默认禁用**）
+4. 内置扩展（随 OpenClaw 发行，**默认禁用**）
 - `<openclaw>/extensions/*`
 
 内置插件必须显式启用：`plugins.entries.<id>.enabled` 或 `openclaw plugins enable <id>`。

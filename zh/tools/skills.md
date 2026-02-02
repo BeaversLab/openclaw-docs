@@ -14,9 +14,9 @@ OpenClaw 使用 **[AgentSkills](https://agentskills.io) 兼容** 的技能文件
 
 技能从 **三** 个位置加载：
 
-1) **内置技能**：随安装包（npm 包或 OpenClaw.app）一起提供
-2) **托管/本地技能**：`~/.openclaw/skills`
-3) **工作区技能**：`<workspace>/skills`
+1. **内置技能**：随安装包（npm 包或 OpenClaw.app）一起提供
+2. **托管/本地技能**：`~/.openclaw/skills`
+3. **工作区技能**：`<workspace>/skills`
 
 若技能名冲突，优先级为：
 
@@ -185,10 +185,10 @@ metadata: {"openclaw":{"emoji":"♊️","requires":{"bins":["gemini"]},"install"
 ## 环境注入（按 agent 运行）
 
 当 agent 开始一次运行时，OpenClaw：
-1) 读取技能元数据。
-2) 将 `skills.entries.<key>.env` 或 `skills.entries.<key>.apiKey` 注入到 `process.env`。
-3) 使用 **符合条件** 的技能构建系统提示。
-4) 运行结束后恢复原始环境。
+1. 读取技能元数据。
+2. 将 `skills.entries.<key>.env` 或 `skills.entries.<key>.apiKey` 注入到 `process.env`。
+3. 使用 **符合条件** 的技能构建系统提示。
+4. 运行结束后恢复原始环境。
 
 这是 **按 agent 运行范围** 生效，而非全局 shell 环境。
 

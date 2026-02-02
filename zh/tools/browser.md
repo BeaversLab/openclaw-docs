@@ -213,7 +213,7 @@ OpenClaw 也可以通过本地 CDP 中继 + Chrome 扩展驱动 **你现有的 C
 
 ### 设置
 
-1) 加载扩展（dev/未打包）：
+1. 加载扩展（dev/未打包）：
 
 ```bash
 openclaw browser extension install
@@ -223,7 +223,7 @@ openclaw browser extension install
 - “加载已解压的扩展程序” → 选择 `openclaw browser extension path` 打印的目录
 - 固定扩展，然后在想控制的标签页点击它（徽标显示 `ON`）
 
-2) 使用它：
+2. 使用它：
 - CLI：`openclaw browser --browser-profile chrome tabs`
 - Agent 工具：`browser`，`profile="chrome"`
 

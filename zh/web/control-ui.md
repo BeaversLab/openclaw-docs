@@ -132,8 +132,8 @@ pnpm ui:dev # auto-installs UI deps on first run
 
 Control UI 是静态文件；WebSocket 目标可配置，且可与 HTTP 来源不同。当你希望本地 Vite dev server，但 Gateway 在远端时很有用。
 
-1) 启动 UI dev server：`pnpm ui:dev`
-2) 打开 URL：
+1. 启动 UI dev server：`pnpm ui:dev`
+2. 打开 URL：
 
 ```text
 http://localhost:5173/?gatewayUrl=ws://<gateway-host>:18789

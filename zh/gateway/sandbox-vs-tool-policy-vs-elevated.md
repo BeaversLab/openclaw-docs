@@ -1,5 +1,5 @@
 ---
-title: 沙盒 vs 工具策略 vs 提升模式
+title: "Sandbox vs Tool Policy vs Elevated"
 summary: "为什么工具被阻止：沙盒运行时、工具允许/拒绝策略，以及提升 exec 门控"
 read_when: "你遇到 'sandbox jail' 或看到工具/提升被拒绝，想知道该改哪个配置键。"
 status: active
