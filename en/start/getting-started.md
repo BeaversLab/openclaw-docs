@@ -12,7 +12,7 @@ Goal: go from **zero** → **first working chat** (with sane defaults) as quickl
 
 Fastest chat: open the Control UI (no channel setup needed). Run `openclaw dashboard`
 and chat in the browser, or open `http://127.0.0.1:18789/` on the gateway host.
-Docs: [Dashboard](/web/dashboard) and [Control UI](/web/control-ui).
+Docs: [Dashboard](/en/web/dashboard) and [Control UI](/en/web/control-ui).
 
 Recommended path: use the **CLI onboarding wizard** (`openclaw onboard`). It sets up:
 
@@ -23,7 +23,7 @@ Recommended path: use the **CLI onboarding wizard** (`openclaw onboard`). It set
 - workspace bootstrap + skills
 - optional background service
 
-If you want the deeper reference pages, jump to: [Wizard](/start/wizard), [Setup](/start/setup), [Pairing](/start/pairing), [Security](/gateway/security).
+If you want the deeper reference pages, jump to: [Wizard](/en/start/wizard), [Setup](/en/start/setup), [Pairing](/en/start/pairing), [Security](/en/gateway/security).
 
 Sandboxing note: `agents.defaults.sandbox.mode: "non-main"` uses `session.mainKey` (default `"main"`),
 so group/channel sessions are sandboxed. If you want the main agent to always
@@ -48,10 +48,10 @@ run on host, set an explicit per-agent override:
 - `pnpm` (optional; recommended if you build from source)
 - **Recommended:** Brave Search API key for web search. Easiest path:
   `openclaw configure --section web` (stores `tools.web.search.apiKey`).
-  See [Web tools](/tools/web).
+  See [Web tools](/en/tools/web).
 
 macOS: if you plan to build the apps, install Xcode / CLT. For the CLI + gateway only, Node is enough.
-Windows: use **WSL2** (Ubuntu recommended). WSL2 is strongly recommended; native Windows is untested, more problematic, and has poorer tool compatibility. Install WSL2 first, then run the Linux steps inside WSL. See [Windows (WSL2)](/platforms/windows).
+Windows: use **WSL2** (Ubuntu recommended). WSL2 is strongly recommended; native Windows is untested, more problematic, and has poorer tool compatibility. Install WSL2 first, then run the Linux steps inside WSL. See [Windows (WSL2)](/en/platforms/windows).
 
 ## 1) Install the CLI (recommended)
 
@@ -59,7 +59,7 @@ Windows: use **WSL2** (Ubuntu recommended). WSL2 is strongly recommended; native
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-Installer options (install method, non-interactive, from GitHub): [Install](/install).
+Installer options (install method, non-interactive, from GitHub): [Install](/en/install).
 
 Windows (PowerShell):
 
@@ -92,7 +92,7 @@ What you’ll choose:
   - **Runtime**: Node (recommended; required for WhatsApp/Telegram). Bun is **not recommended**.
 - **Gateway token**: the wizard generates one by default (even on loopback) and stores it in `gateway.auth.token`.
 
-Wizard doc: [Wizard](/start/wizard)
+Wizard doc: [Wizard](/en/start/wizard)
 
 ### Auth: where it lives (important)
 
@@ -141,15 +141,15 @@ openclaw channels login
 
 Scan via WhatsApp → Settings → Linked Devices.
 
-WhatsApp doc: [WhatsApp](/channels/whatsapp)
+WhatsApp doc: [WhatsApp](/en/channels/whatsapp)
 
 ### Telegram / Discord / others
 
 The wizard can write tokens/config for you. If you prefer manual config, start with:
 
-- Telegram: [Telegram](/channels/telegram)
-- Discord: [Discord](/channels/discord)
-- Mattermost (plugin): [Mattermost](/channels/mattermost)
+- Telegram: [Telegram](/en/channels/telegram)
+- Discord: [Discord](/en/channels/discord)
+- Mattermost (plugin): [Mattermost](/en/channels/mattermost)
 
 **Telegram DM tip:** your first DM returns a pairing code. Approve it (see next step) or the bot won’t respond.
 
@@ -163,7 +163,7 @@ openclaw pairing list whatsapp
 openclaw pairing approve whatsapp <code>
 ```
 
-Pairing doc: [Pairing](/start/pairing)
+Pairing doc: [Pairing](/en/start/pairing)
 
 ## From source (development)
 
@@ -202,7 +202,7 @@ Health probes: `openclaw health` (or `openclaw status --deep`) asks the running 
 
 ## Next steps (optional, but great)
 
-- macOS menu bar app + voice wake: [macOS app](/platforms/macos)
-- iOS/Android nodes (Canvas/camera/voice): [Nodes](/nodes)
-- Remote access (SSH tunnel / Tailscale Serve): [Remote access](/gateway/remote) and [Tailscale](/gateway/tailscale)
-- Always-on / VPN setups: [Remote access](/gateway/remote), [exe.dev](/platforms/exe-dev), [Hetzner](/platforms/hetzner), [macOS remote](/platforms/mac/remote)
+- macOS menu bar app + voice wake: [macOS app](/en/platforms/macos)
+- iOS/Android nodes (Canvas/camera/voice): [Nodes](/en/nodes)
+- Remote access (SSH tunnel / Tailscale Serve): [Remote access](/en/gateway/remote) and [Tailscale](/en/gateway/tailscale)
+- Always-on / VPN setups: [Remote access](/en/gateway/remote), [exe.dev](/en/platforms/exe-dev), [Hetzner](/en/platforms/hetzner), [macOS remote](/en/platforms/mac/remote)

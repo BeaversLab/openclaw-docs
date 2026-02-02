@@ -9,9 +9,9 @@ title: "Troubleshooting"
 
 When OpenClaw misbehaves, here's how to fix it.
 
-Start with the FAQ’s [First 60 seconds](/help/faq#first-60-seconds-if-somethings-broken) if you just want a quick triage recipe. This page goes deeper on runtime failures and diagnostics.
+Start with the FAQ’s [First 60 seconds](/en/help/faq#first-60-seconds-if-somethings-broken) if you just want a quick triage recipe. This page goes deeper on runtime failures and diagnostics.
 
-Provider-specific shortcuts: [/channels/troubleshooting](/channels/troubleshooting)
+Provider-specific shortcuts: [/channels/troubleshooting](/en/channels/troubleshooting)
 
 ## Status & Diagnostics
 
@@ -29,7 +29,7 @@ Quick triage commands (in order):
 
 **Sharing output:** prefer `openclaw status --all` (it redacts tokens). If you paste `openclaw status`, consider setting `OPENCLAW_SHOW_SECRETS=0` first (token previews).
 
-See also: [Health checks](/gateway/health) and [Logging](/logging).
+See also: [Health checks](/en/gateway/health) and [Logging](/en/logging).
 
 ## Common Issues
 
@@ -74,7 +74,7 @@ openclaw models auth paste-token --provider anthropic
 openclaw models status
 ```
 
-More detail: [Anthropic](/providers/anthropic) and [OAuth](/concepts/oauth).
+More detail: [Anthropic](/en/providers/anthropic) and [OAuth](/en/concepts/oauth).
 
 ### Control UI fails on HTTP ("device identity required" / "connect failed")
 
@@ -84,16 +84,16 @@ blocks WebCrypto, so device identity can’t be generated.
 
 **Fix:**
 
-- Prefer HTTPS via [Tailscale Serve](/gateway/tailscale).
+- Prefer HTTPS via [Tailscale Serve](/en/gateway/tailscale).
 - Or open locally on the gateway host: `http://127.0.0.1:18789/`.
 - If you must stay on HTTP, enable `gateway.controlUi.allowInsecureAuth: true` and
   use a gateway token (token-only; no device identity/pairing). See
-  [Control UI](/web/control-ui#insecure-http).
+  [Control UI](/en/web/control-ui#insecure-http).
 
 ### CI Secrets Scan Failed
 
 This means `detect-secrets` found new candidates not yet in the baseline.
-Follow [Secret scanning](/gateway/security#secret-scanning-detect-secrets).
+Follow [Secret scanning](/en/gateway/security#secret-scanning-detect-secrets).
 
 ### Service Installed but Nothing is Running
 
@@ -129,7 +129,7 @@ Doctor/service will show runtime state (PID/last exit) and log hints.
   ```
 - Quick tip: `--verbose` affects **console** output only. File logs remain controlled by `logging.level`.
 
-See [/logging](/logging) for a full overview of formats, config, and access.
+See [/logging](/en/logging) for a full overview of formats, config, and access.
 
 ### "Gateway start blocked: set gateway.mode=local"
 
@@ -174,7 +174,7 @@ variables like `DISPLAY` should live in `~/.openclaw/.env` (loaded early by the
 gateway).
 Exec runs on `host=gateway` merge your login-shell `PATH` into the exec environment,
 so missing tools usually mean your shell init isn’t exporting them (or set
-`tools.exec.pathPrepend`). See [/tools/exec](/tools/exec).
+`tools.exec.pathPrepend`). See [/tools/exec](/en/tools/exec).
 
 WhatsApp + Telegram channels require **Node**; Bun is unsupported. If your
 service was installed with Bun or a version-managed Node path, run `openclaw doctor`
@@ -259,7 +259,7 @@ Multiple workspace directories can cause confusing auth or state drift because
 only one workspace is active.
 
 **Fix:** keep a single active workspace and archive/remove the rest. See
-[Agent workspace](/concepts/agent-workspace#extra-workspace-folders).
+[Agent workspace](/en/concepts/agent-workspace#extra-workspace-folders).
 
 ### Main chat running in a sandbox workspace
 
@@ -300,7 +300,7 @@ longer supported.
   `openclaw models scan` and choose a supported one.
 - Check gateway logs for the detailed failure reason.
 
-See also: [Models CLI](/cli/models) and [Model providers](/concepts/model-providers).
+See also: [Models CLI](/en/cli/models) and [Model providers](/en/concepts/model-providers).
 
 ### Messages Not Triggering
 
@@ -499,7 +499,7 @@ Enable self-chat mode and allowlist your own number:
 }
 ```
 
-See [WhatsApp setup](/channels/whatsapp).
+See [WhatsApp setup](/en/channels/whatsapp).
 
 ### WhatsApp logged me out. How do I re‑auth?
 
@@ -576,7 +576,7 @@ Fix checklist:
 2. Set `channels.telegram.streamMode: "off"` if you want real multi‑message block replies.
 3. Use smaller chunk/coalesce thresholds while debugging.
 
-See [Streaming](/concepts/streaming).
+See [Streaming](/en/concepts/streaming).
 
 ### Discord doesn’t reply in my server even with `requireMention: false`. Why?
 
@@ -593,7 +593,7 @@ Fix checklist:
 4. Ensure the bot has **Message Content Intent** and channel permissions.
 5. Run `openclaw channels status --probe` for audit hints.
 
-Docs: [Discord](/channels/discord), [Channels troubleshooting](/channels/troubleshooting).
+Docs: [Discord](/en/channels/discord), [Channels troubleshooting](/en/channels/troubleshooting).
 
 ### Cloud Code Assist API error: invalid tool schema (400). What now?
 
@@ -612,7 +612,7 @@ Fix checklist:
 3. If you define custom tools, keep the top‑level schema as `type: "object"` with
    `properties` and simple enums.
 
-See [Tools](/tools) and [TypeBox schemas](/concepts/typebox).
+See [Tools](/en/tools) and [TypeBox schemas](/en/concepts/typebox).
 
 ## macOS Specific Issues
 
@@ -764,4 +764,4 @@ Then set in config:
 }
 ```
 
-**Full guide:** See [browser-linux-troubleshooting](/tools/browser-linux-troubleshooting)
+**Full guide:** See [browser-linux-troubleshooting](/en/tools/browser-linux-troubleshooting)

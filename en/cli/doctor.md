@@ -12,8 +12,8 @@ Health checks + quick fixes for the gateway and channels.
 
 Related:
 
-- Troubleshooting: [Troubleshooting](/gateway/troubleshooting)
-- Security audit: [Security](/gateway/security)
+- Troubleshooting: [Troubleshooting](/en/gateway/troubleshooting)
+- Security audit: [Security](/en/gateway/security)
 
 ## Examples
 

@@ -9,7 +9,7 @@ title: "Security"
 
 ## Quick check: `openclaw security audit`
 
-See also: [Formal Verification (Security Models)](/security/formal-verification/)
+See also: [Formal Verification (Security Models)](/en/security/formal-verification/)
 
 Run this regularly (especially after changing config or exposing network surfaces):
 
@@ -155,8 +155,8 @@ OpenClaw’s stance:
 ## Command authorization model
 
 Slash commands and directives are only honored for **authorized senders**. Authorization is derived from
-channel allowlists/pairing plus `commands.useAccessGroups` (see [Configuration](/gateway/configuration)
-and [Slash commands](/tools/slash-commands)). If a channel allowlist is empty or includes `"*"`,
+channel allowlists/pairing plus `commands.useAccessGroups` (see [Configuration](/en/gateway/configuration)
+and [Slash commands](/en/tools/slash-commands)). If a channel allowlist is empty or includes `"*"`,
 commands are effectively open for that channel.
 
 `/exec` is a session-only convenience for authorized operators. It does **not** write config or
@@ -175,7 +175,7 @@ Plugins run **in-process** with the Gateway. Treat them as trusted code:
   - OpenClaw uses `npm pack` and then runs `npm install --omit=dev` in that directory (npm lifecycle scripts can execute code during install).
   - Prefer pinned, exact versions (`@scope/pkg@1.2.3`), and inspect the unpacked code on disk before enabling.
 
-Details: [Plugins](/plugin)
+Details: [Plugins](/en/plugin)
 
 ## DM access model (pairing / allowlist / open / disabled)
 
@@ -193,7 +193,7 @@ openclaw pairing list <channel>
 openclaw pairing approve <channel> <code>
 ```
 
-Details + files on disk: [Pairing](/start/pairing)
+Details + files on disk: [Pairing](/en/start/pairing)
 
 ## DM session isolation (multi-user mode)
 
@@ -205,7 +205,7 @@ By default, OpenClaw routes **all DMs into the main session** so your assistant 
 }
 ```
 
-This prevents cross-user context leakage while keeping group chats isolated. If you run multiple accounts on the same channel, use `per-account-channel-peer` instead. If the same person contacts you on multiple channels, use `session.identityLinks` to collapse those DM sessions into one canonical identity. See [Session Management](/concepts/session) and [Configuration](/gateway/configuration).
+This prevents cross-user context leakage while keeping group chats isolated. If you run multiple accounts on the same channel, use `per-account-channel-peer` instead. If the same person contacts you on multiple channels, use `session.identityLinks` to collapse those DM sessions into one canonical identity. See [Session Management](/en/concepts/session) and [Configuration](/en/gateway/configuration).
 
 ## Allowlists (DM + groups) — terminology
 
@@ -220,7 +220,7 @@ OpenClaw has two separate “who can trigger me?” layers:
     - `channels.discord.guilds` / `channels.slack.channels`: per-surface allowlists + mention defaults.
   - **Security note:** treat `dmPolicy="open"` and `groupPolicy="open"` as last-resort settings. They should be barely used; prefer pairing + allowlists unless you fully trust every member of the room.
 
-Details: [Configuration](/gateway/configuration) and [Groups](/concepts/groups)
+Details: [Configuration](/en/gateway/configuration) and [Groups](/en/concepts/groups)
 
 ## Prompt injection (what it is, why it matters)
 
@@ -454,12 +454,12 @@ Trusted proxies:
 - OpenClaw will trust `x-forwarded-for` (or `x-real-ip`) from those IPs to determine the client IP for local pairing checks and HTTP auth/local checks.
 - Ensure your proxy **overwrites** `x-forwarded-for` and blocks direct access to the Gateway port.
 
-See [Tailscale](/gateway/tailscale) and [Web overview](/web).
+See [Tailscale](/en/gateway/tailscale) and [Web overview](/en/web).
 
 ### 0.6.1) Browser control via node host (recommended)
 
 If your Gateway is remote but the browser runs on another machine, run a **node host**
-on the browser machine and let the Gateway proxy browser actions (see [Browser tool](/tools/browser)).
+on the browser machine and let the Gateway proxy browser actions (see [Browser tool](/en/tools/browser)).
 Treat node pairing like admin access.
 
 Recommended pattern:
@@ -503,7 +503,7 @@ Recommendations:
 - When sharing diagnostics, prefer `openclaw status --all` (pasteable, secrets redacted) over raw logs.
 - Prune old session transcripts and log files if you don’t need long retention.
 
-Details: [Logging](/gateway/logging)
+Details: [Logging](/en/gateway/logging)
 
 ### 1) DMs: pairing by default
 
@@ -578,12 +578,12 @@ If you want “safer by default” tool execution too, add a sandbox + deny dang
 
 ## Sandboxing (recommended)
 
-Dedicated doc: [Sandboxing](/gateway/sandboxing)
+Dedicated doc: [Sandboxing](/en/gateway/sandboxing)
 
 Two complementary approaches:
 
-- **Run the full Gateway in Docker** (container boundary): [Docker](/install/docker)
-- **Tool sandbox** (`agents.defaults.sandbox`, host gateway + Docker-isolated tools): [Sandboxing](/gateway/sandboxing)
+- **Run the full Gateway in Docker** (container boundary): [Docker](/en/install/docker)
+- **Tool sandbox** (`agents.defaults.sandbox`, host gateway + Docker-isolated tools): [Sandboxing](/en/gateway/sandboxing)
 
 Note: to prevent cross-agent access, keep `agents.defaults.sandbox.scope` at `"agent"` (default)
 or `"session"` for stricter per-session isolation. `scope: "shared"` uses a
@@ -595,7 +595,7 @@ Also consider agent workspace access inside the sandbox:
 - `agents.defaults.sandbox.workspaceAccess: "ro"` mounts the agent workspace read-only at `/agent` (disables `write`/`edit`/`apply_patch`)
 - `agents.defaults.sandbox.workspaceAccess: "rw"` mounts the agent workspace read/write at `/workspace`
 
-Important: `tools.elevated` is the global baseline escape hatch that runs exec on the host. Keep `tools.elevated.allowFrom` tight and don’t enable it for strangers. You can further restrict elevated per agent via `agents.list[].tools.elevated`. See [Elevated Mode](/tools/elevated).
+Important: `tools.elevated` is the global baseline escape hatch that runs exec on the host. Keep `tools.elevated.allowFrom` tight and don’t enable it for strangers. You can further restrict elevated per agent via `agents.list[].tools.elevated`. See [Elevated Mode](/en/tools/elevated).
 
 ## Browser control risks
 
@@ -618,7 +618,7 @@ access those accounts and data. Treat browser profiles as **sensitive state**:
 
 With multi-agent routing, each agent can have its own sandbox + tool policy:
 use this to give **full access**, **read-only**, or **no access** per agent.
-See [Multi-Agent Sandbox & Tools](/multi-agent-sandbox-tools) for full details
+See [Multi-Agent Sandbox & Tools](/en/multi-agent-sandbox-tools) for full details
 and precedence rules.
 
 Common use cases:

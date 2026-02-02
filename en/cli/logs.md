@@ -12,7 +12,7 @@ Tail Gateway file logs over RPC (works in remote mode).
 
 Related:
 
-- Logging overview: [Logging](/logging)
+- Logging overview: [Logging](/en/logging)
 
 ## Examples
 

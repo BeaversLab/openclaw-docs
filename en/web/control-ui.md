@@ -51,7 +51,7 @@ openclaw devices approve <requestId>
 
 Once approved, the device is remembered and won't require re-approval unless
 you revoke it with `openclaw devices revoke --device <id> --role <role>`. See
-[Devices CLI](/cli/devices) for token rotation and revocation.
+[Devices CLI](/en/cli/devices) for token rotation and revocation.
 
 **Notes:**
 
@@ -149,7 +149,7 @@ OpenClaw **blocks** Control UI connections without device identity.
 This disables device identity + pairing for the Control UI (even on HTTPS). Use
 only if you trust the network.
 
-See [Tailscale](/gateway/tailscale) for HTTPS setup guidance.
+See [Tailscale](/en/gateway/tailscale) for HTTPS setup guidance.
 
 ## Building the UI
 
@@ -198,4 +198,4 @@ Notes:
 - `token` is stored in localStorage; `password` is kept in memory only.
 - Use `wss://` when the Gateway is behind TLS (Tailscale Serve, HTTPS proxy, etc.).
 
-Remote access setup details: [Remote access](/gateway/remote).
+Remote access setup details: [Remote access](/en/gateway/remote).

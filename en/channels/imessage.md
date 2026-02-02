@@ -187,7 +187,7 @@ Notes:
 - Use SSH keys so `ssh bot@mac-mini.tailnet-1234.ts.net` works without prompts.
 - `remoteHost` should match the SSH target so SCP can fetch attachments.
 
-Multi-account support: use `channels.imessage.accounts` with per-account config and optional `name`. See [`gateway/configuration`](/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) for the shared pattern. Don't commit `~/.openclaw/openclaw.json` (it often contains tokens).
+Multi-account support: use `channels.imessage.accounts` with per-account config and optional `name`. See [`gateway/configuration`](/en/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) for the shared pattern. Don't commit `~/.openclaw/openclaw.json` (it often contains tokens).
 
 ## Access control (DMs + groups)
 
@@ -198,7 +198,7 @@ DMs:
 - Approve via:
   - `openclaw pairing list imessage`
   - `openclaw pairing approve imessage <CODE>`
-- Pairing is the default token exchange for iMessage DMs. Details: [Pairing](/start/pairing)
+- Pairing is the default token exchange for iMessage DMs. Details: [Pairing](/en/start/pairing)
 
 Groups:
 
@@ -237,7 +237,7 @@ Example:
 }
 ```
 
-This is useful when you want an isolated personality/model for a specific thread (see [Multi-agent routing](/concepts/multi-agent)). For filesystem isolation, see [Sandboxing](/gateway/sandboxing).
+This is useful when you want an isolated personality/model for a specific thread (see [Multi-agent routing](/en/concepts/multi-agent)). For filesystem isolation, see [Sandboxing](/en/gateway/sandboxing).
 
 ## Media + limits
 
@@ -267,7 +267,7 @@ imsg chats --limit 20
 
 ## Configuration reference (iMessage)
 
-Full configuration: [Configuration](/gateway/configuration)
+Full configuration: [Configuration](/en/gateway/configuration)
 
 Provider options:
 

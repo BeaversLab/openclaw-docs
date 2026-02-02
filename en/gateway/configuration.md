@@ -18,7 +18,7 @@ If the file is missing, OpenClaw uses safe-ish defaults (embedded Pi agent + per
 - tune the embedded agent defaults (`agents.defaults`) and session behavior (`session`)
 - set per-agent identity (`agents.list[].identity`)
 
-> **New to configuration?** Check out the [Configuration Examples](/gateway/configuration-examples) guide for complete examples with detailed explanations!
+> **New to configuration?** Check out the [Configuration Examples](/en/gateway/configuration-examples) guide for complete examples with detailed explanations!
 
 ## Strict config validation
 
@@ -289,7 +289,7 @@ process env is missing the key (same non-overriding rule):
 }
 ```
 
-See [/environment](/environment) for full precedence and sources.
+See [/environment](/en/environment) for full precedence and sources.
 
 ### `env.shellEnv` (optional)
 
@@ -361,7 +361,7 @@ OpenClaw stores **per-agent** auth profiles (OAuth + API keys) in:
 
 - `<agentDir>/auth-profiles.json` (default: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`)
 
-See also: [/concepts/oauth](/concepts/oauth)
+See also: [/concepts/oauth](/en/concepts/oauth)
 
 Legacy OAuth imports:
 
@@ -788,7 +788,7 @@ levels in one gateway:
 - **Read-only** tools + workspace
 - **No filesystem access** (messaging/session tools only)
 
-See [Multi-Agent Sandbox & Tools](/multi-agent-sandbox-tools) for precedence and
+See [Multi-Agent Sandbox & Tools](/en/multi-agent-sandbox-tools) for precedence and
 additional examples.
 
 Full access (no sandbox):
@@ -1104,7 +1104,7 @@ Draft streaming notes:
 - Uses Telegram `sendMessageDraft` (draft bubble, not a real message).
 - Requires **private chat topics** (message_thread_id in DMs; bot has topics enabled).
 - `/reasoning stream` streams reasoning into the draft, then sends the final answer.
-  Retry policy defaults and behavior are documented in [Retry policy](/concepts/retry).
+  Retry policy defaults and behavior are documented in [Retry policy](/en/concepts/retry).
 
 ### `channels.discord` (bot transport)
 
@@ -1190,7 +1190,7 @@ Reaction notification modes:
 - `all`: all reactions on all messages.
 - `allowlist`: reactions from `guilds.<id>.users` on all messages (empty list disables).
   Outbound text is chunked by `channels.discord.textChunkLimit` (default 2000). Set `channels.discord.chunkMode="newline"` to split on blank lines (paragraph boundaries) before length chunking. Discord clients can clip very tall messages, so `channels.discord.maxLinesPerMessage` (default 17) splits long multi-line replies even when under 2000 chars.
-  Retry policy defaults and behavior are documented in [Retry policy](/concepts/retry).
+  Retry policy defaults and behavior are documented in [Retry policy](/en/concepts/retry).
 
 ### `channels.googlechat` (Chat API webhook)
 
@@ -1501,7 +1501,7 @@ Default: `auto` (OS preference).
 ### `messages`
 
 Controls inbound/outbound prefixes and optional ack reactions.
-See [Messages](/concepts/messages) for queueing, sessions, and streaming context.
+See [Messages](/en/concepts/messages) for queueing, sessions, and streaming context.
 
 ```json5
 {
@@ -1906,11 +1906,11 @@ Example (adaptive tuned):
 }
 ```
 
-See [/concepts/session-pruning](/concepts/session-pruning) for behavior details.
+See [/concepts/session-pruning](/en/concepts/session-pruning) for behavior details.
 
 #### `agents.defaults.compaction` (reserve headroom + memory flush)
 
-`agents.defaults.compaction.mode` selects the compaction summarization strategy. Defaults to `default`; set `safeguard` to enable chunked summarization for very long histories. See [/concepts/compaction](/concepts/compaction).
+`agents.defaults.compaction.mode` selects the compaction summarization strategy. Defaults to `default`; set `safeguard` to enable chunked summarization for very long histories. See [/concepts/compaction](/en/concepts/compaction).
 
 `agents.defaults.compaction.reserveTokensFloor` enforces a minimum `reserveTokens`
 value for Pi compaction (default: `20000`). Set it to `0` to disable the floor.
@@ -1981,7 +1981,7 @@ Block streaming:
     agents: { defaults: { humanDelay: { mode: "natural" } } },
   }
   ```
-  See [/concepts/streaming](/concepts/streaming) for behavior + chunking details.
+  See [/concepts/streaming](/en/concepts/streaming) for behavior + chunking details.
 
 Typing indicators:
 
@@ -1990,7 +1990,7 @@ Typing indicators:
 - `session.typingMode`: per-session override for the mode.
 - `agents.defaults.typingIntervalSeconds`: how often the typing signal is refreshed (default: 6s).
 - `session.typingIntervalSeconds`: per-session override for the refresh interval.
-  See [/concepts/typing-indicators](/concepts/typing-indicators) for behavior details.
+  See [/concepts/typing-indicators](/en/concepts/typing-indicators) for behavior details.
 
 `agents.defaults.model.primary` should be set as `provider/model` (e.g. `anthropic/claude-opus-4-5`).
 Aliases come from `agents.defaults.models.*.alias` (e.g. `Opus`).
@@ -2263,7 +2263,7 @@ per session key at a time). Default: 1.
 Optional **Docker sandboxing** for the embedded agent. Intended for non-main
 sessions so they cannot access your host system.
 
-Details: [Sandboxing](/gateway/sandboxing)
+Details: [Sandboxing](/en/gateway/sandboxing)
 
 Defaults (if enabled):
 
@@ -2276,7 +2276,7 @@ Defaults (if enabled):
 - auto-prune: idle > 24h OR age > 7d
 - tool policy: allow only `exec`, `process`, `read`, `write`, `edit`, `apply_patch`, `sessions_list`, `sessions_history`, `sessions_send`, `sessions_spawn`, `session_status` (deny wins)
   - configure via `tools.sandbox.tools`, override per-agent via `agents.list[].tools.sandbox.tools`
-  - tool group shorthands supported in sandbox policy: `group:runtime`, `group:fs`, `group:sessions`, `group:memory` (see [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands))
+  - tool group shorthands supported in sandbox policy: `group:runtime`, `group:fs`, `group:sessions`, `group:memory` (see [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands))
 - optional sandboxed browser (Chromium + CDP, noVNC observer)
 - hardening knobs: `network`, `user`, `pidsLimit`, `memory`, `cpus`, `ulimits`, `seccompProfile`, `apparmorProfile`
 
@@ -2413,7 +2413,7 @@ OpenClaw uses the **pi-coding-agent** model catalog. You can add custom provider
 (LiteLLM, local OpenAI-compatible servers, Anthropic proxies, etc.) by writing
 `~/.openclaw/agents/<agentId>/agent/models.json` or by defining the same schema inside your
 OpenClaw config under `models.providers`.
-Provider-by-provider overview + examples: [/concepts/model-providers](/concepts/model-providers).
+Provider-by-provider overview + examples: [/concepts/model-providers](/en/concepts/model-providers).
 
 When `models.providers` is present, OpenClaw writes/merges a `models.json` into
 `~/.openclaw/agents/<agentId>/agent/` on startup:
@@ -2619,7 +2619,7 @@ Notes:
 
 ### Local models (LM Studio) — recommended setup
 
-See [/gateway/local-models](/gateway/local-models) for the current local guidance. TL;DR: run MiniMax M2.1 via LM Studio Responses API on serious hardware; keep hosted models merged for fallback.
+See [/gateway/local-models](/en/gateway/local-models) for the current local guidance. TL;DR: run MiniMax M2.1 via LM Studio Responses API on serious hardware; keep hosted models merged for fallback.
 
 ### MiniMax M2.1
 
@@ -2829,7 +2829,7 @@ Example:
 Controls plugin discovery, allow/deny, and per-plugin config. Plugins are loaded
 from `~/.openclaw/extensions`, `<workspace>/.openclaw/extensions`, plus any
 `plugins.load.paths` entries. **Config changes require a gateway restart.**
-See [/plugin](/plugin) for full usage.
+See [/plugin](/en/plugin) for full usage.
 
 Fields:
 
@@ -2960,10 +2960,10 @@ Control UI base path:
 
 Related docs:
 
-- [Control UI](/web/control-ui)
-- [Web overview](/web)
-- [Tailscale](/gateway/tailscale)
-- [Remote access](/gateway/remote)
+- [Control UI](/en/web/control-ui)
+- [Web overview](/en/web)
+- [Tailscale](/en/gateway/tailscale)
+- [Remote access](/en/gateway/remote)
 
 Trusted proxies:
 
@@ -3100,8 +3100,8 @@ Convenience flags (CLI):
 - `openclaw --dev …` → uses `~/.openclaw-dev` + shifts ports from base `19001`
 - `openclaw --profile <name> …` → uses `~/.openclaw-<name>` (port via config/env/flags)
 
-See [Gateway runbook](/gateway) for the derived port mapping (gateway/browser/canvas).
-See [Multiple gateways](/gateway/multiple-gateways) for browser/CDP port isolation details.
+See [Gateway runbook](/en/gateway) for the derived port mapping (gateway/browser/canvas).
+See [Multiple gateways](/en/gateway/multiple-gateways) for browser/CDP port isolation details.
 
 Example:
 
@@ -3372,7 +3372,7 @@ Template placeholders are expanded in `tools.media.*.models[].args` and `tools.m
 
 ## Cron (Gateway scheduler)
 
-Cron is a Gateway-owned scheduler for wakeups and scheduled jobs. See [Cron jobs](/automation/cron-jobs) for the feature overview and CLI examples.
+Cron is a Gateway-owned scheduler for wakeups and scheduled jobs. See [Cron jobs](/en/automation/cron-jobs) for the feature overview and CLI examples.
 
 ```json5
 {
@@ -3385,4 +3385,4 @@ Cron is a Gateway-owned scheduler for wakeups and scheduled jobs. See [Cron jobs
 
 ---
 
-_Next: [Agent Runtime](/concepts/agent)_ 🦞
+_Next: [Agent Runtime](/en/concepts/agent)_ 🦞

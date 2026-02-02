@@ -9,7 +9,7 @@ title: "Configuration Examples"
 
 # Configuration Examples
 
-Examples below are aligned with the current config schema. For the exhaustive reference and per-field notes, see [Configuration](/gateway/configuration).
+Examples below are aligned with the current config schema. For the exhaustive reference and per-field notes, see [Configuration](/en/gateway/configuration).
 
 ## Quick start
 
@@ -577,4 +577,4 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
 - If you set `dmPolicy: "open"`, the matching `allowFrom` list must include `"*"`.
 - Provider IDs differ (phone numbers, user IDs, channel IDs). Use the provider docs to confirm the format.
 - Optional sections to add later: `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
-- See [Providers](/channels/whatsapp) and [Troubleshooting](/gateway/troubleshooting) for deeper setup notes.
+- See [Providers](/en/channels/whatsapp) and [Troubleshooting](/en/gateway/troubleshooting) for deeper setup notes.

@@ -23,7 +23,7 @@ OpenClaw uses **auth profiles** for both API keys and OAuth tokens.
 - Config `auth.profiles` / `auth.order` are **metadata + routing only** (no secrets).
 - Legacy import-only OAuth file: `~/.openclaw/credentials/oauth.json` (imported into `auth-profiles.json` on first use).
 
-More detail: [/concepts/oauth](/concepts/oauth)
+More detail: [/concepts/oauth](/en/concepts/oauth)
 
 Credential types:
 
@@ -138,7 +138,7 @@ When a run starts with a model override (hooks or CLI), fallbacks still end at
 
 ## Related config
 
-See [Gateway configuration](/gateway/configuration) for:
+See [Gateway configuration](/en/gateway/configuration) for:
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
@@ -146,4 +146,4 @@ See [Gateway configuration](/gateway/configuration) for:
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
 - `agents.defaults.imageModel` routing
 
-See [Models](/concepts/models) for the broader model selection and fallback overview.
+See [Models](/en/concepts/models) for the broader model selection and fallback overview.

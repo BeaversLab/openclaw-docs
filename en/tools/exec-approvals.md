@@ -143,7 +143,7 @@ must advertise `system.execApprovals.get/set` (macOS app or headless node host).
 If a node does not advertise exec approvals yet, edit its local
 `~/.openclaw/exec-approvals.json` directly.
 
-CLI: `openclaw approvals` supports gateway or node editing (see [Approvals CLI](/cli/approvals)).
+CLI: `openclaw approvals` supports gateway or node editing (see [Approvals CLI](/en/cli/approvals)).
 
 ## Approval flow
 
@@ -239,6 +239,6 @@ Approval-gated execs reuse the approval id as the `runId` in these messages for 
 
 Related:
 
-- [Exec tool](/tools/exec)
-- [Elevated mode](/tools/elevated)
-- [Skills](/tools/skills)
+- [Exec tool](/en/tools/exec)
+- [Elevated mode](/en/tools/elevated)
+- [Skills](/en/tools/skills)

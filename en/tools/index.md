@@ -166,14 +166,14 @@ Example (allow only file tools + browser):
 ## Plugins + tools
 
 Plugins can register **additional tools** (and CLI commands) beyond the core set.
-See [Plugins](/plugin) for install + config, and [Skills](/tools/skills) for how
+See [Plugins](/en/plugin) for install + config, and [Skills](/en/tools/skills) for how
 tool usage guidance is injected into prompts. Some plugins ship their own skills
 alongside tools (for example, the voice-call plugin).
 
 Optional plugin tools:
 
-- [Lobster](/tools/lobster): typed workflow runtime with resumable approvals (requires the Lobster CLI on the gateway host).
-- [LLM Task](/tools/llm-task): JSON-only LLM step for structured workflow output (optional schema validation).
+- [Lobster](/en/tools/lobster): typed workflow runtime with resumable approvals (requires the Lobster CLI on the gateway host).
+- [LLM Task](/en/tools/llm-task): JSON-only LLM step for structured workflow output (optional schema validation).
 
 ## Tool inventory
 
@@ -207,7 +207,7 @@ Notes:
 - `elevated` is gated by `tools.elevated` plus any `agents.list[].tools.elevated` override (both must allow) and is an alias for `host=gateway` + `security=full`.
 - `elevated` only changes behavior when the agent is sandboxed (otherwise it’s a no-op).
 - `host=node` can target a macOS companion app or a headless node host (`openclaw node run`).
-- gateway/node approvals and allowlists: [Exec approvals](/tools/exec-approvals).
+- gateway/node approvals and allowlists: [Exec approvals](/en/tools/exec-approvals).
 
 ### `process`
 
@@ -237,7 +237,7 @@ Notes:
 - Requires a Brave API key (recommended: `openclaw configure --section web`, or set `BRAVE_API_KEY`).
 - Enable via `tools.web.search.enabled`.
 - Responses are cached (default 15 min).
-- See [Web tools](/tools/web) for setup.
+- See [Web tools](/en/tools/web) for setup.
 
 ### `web_fetch`
 
@@ -254,8 +254,8 @@ Notes:
 - Enable via `tools.web.fetch.enabled`.
 - Responses are cached (default 15 min).
 - For JS-heavy sites, prefer the browser tool.
-- See [Web tools](/tools/web) for setup.
-- See [Firecrawl](/tools/firecrawl) for the optional anti-bot fallback.
+- See [Web tools](/en/tools/web) for setup.
+- See [Firecrawl](/en/tools/firecrawl) for the optional anti-bot fallback.
 
 ### `browser`
 

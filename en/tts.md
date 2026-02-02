@@ -64,7 +64,7 @@ when no OpenAI or ElevenLabs API keys are available.
 ## Config
 
 TTS config lives under `messages.tts` in `openclaw.json`.
-Full schema is in [Gateway configuration](/gateway/configuration).
+Full schema is in [Gateway configuration](/en/gateway/configuration).
 
 ### Minimal config (enable + provider)
 
@@ -353,7 +353,7 @@ Reply -> TTS enabled?
 ## Slash command usage
 
 There is a single command: `/tts`.
-See [Slash commands](/tools/slash-commands) for enablement details.
+See [Slash commands](/en/tools/slash-commands) for enablement details.
 
 Discord note: `/tts` is a built-in Discord command, so OpenClaw registers
 `/voice` as the native command there. Text `/tts ...` still works.

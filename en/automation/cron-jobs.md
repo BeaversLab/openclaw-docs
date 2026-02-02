@@ -9,7 +9,7 @@ title: "Cron Jobs"
 
 # Cron jobs (Gateway scheduler)
 
-> **Cron vs Heartbeat?** See [Cron vs Heartbeat](/automation/cron-vs-heartbeat) for guidance on when to use each.
+> **Cron vs Heartbeat?** See [Cron vs Heartbeat](/en/automation/cron-vs-heartbeat) for guidance on when to use each.
 
 Cron is the Gateway’s built-in scheduler. It persists jobs, wakes the agent at
 the right time, and can optionally deliver output back to a chat.
@@ -60,7 +60,7 @@ openclaw cron add \
 
 ## Tool-call equivalents (Gateway cron tool)
 
-For the canonical JSON shapes and examples, see [JSON schema for tool calls](/automation/cron-jobs#json-schema-for-tool-calls).
+For the canonical JSON shapes and examples, see [JSON schema for tool calls](/en/automation/cron-jobs#json-schema-for-tool-calls).
 
 ## Where cron jobs are stored
 
@@ -126,7 +126,7 @@ They must use `payload.kind = "systemEvent"`.
 - `wakeMode: "now"`: event triggers an immediate heartbeat run.
 
 This is the best fit when you want the normal heartbeat prompt + main-session context.
-See [Heartbeat](/gateway/heartbeat).
+See [Heartbeat](/en/gateway/heartbeat).
 
 #### Isolated jobs (dedicated cron sessions)
 
@@ -427,7 +427,7 @@ openclaw system event --mode now --text "Next heartbeat: check battery."
 
 - `cron.list`, `cron.status`, `cron.add`, `cron.update`, `cron.remove`
 - `cron.run` (force or due), `cron.runs`
-  For immediate system events without a job, use [`openclaw system event`](/cli/system).
+  For immediate system events without a job, use [`openclaw system event`](/en/cli/system).
 
 ## Troubleshooting
 

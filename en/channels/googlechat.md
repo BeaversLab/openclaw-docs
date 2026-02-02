@@ -245,6 +245,6 @@ openclaw channels status
 
 Related docs:
 
-- [Gateway configuration](/gateway/configuration)
-- [Security](/gateway/security)
-- [Reactions](/tools/reactions)
+- [Gateway configuration](/en/gateway/configuration)
+- [Security](/en/gateway/security)
+- [Reactions](/en/tools/reactions)

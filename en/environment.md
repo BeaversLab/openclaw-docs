@@ -72,10 +72,10 @@ You can reference env vars directly in config string values using `${VAR_NAME}` 
 }
 ```
 
-See [Configuration: Env var substitution](/gateway/configuration#env-var-substitution-in-config) for full details.
+See [Configuration: Env var substitution](/en/gateway/configuration#env-var-substitution-in-config) for full details.
 
 ## Related
 
-- [Gateway configuration](/gateway/configuration)
-- [FAQ: env vars and .env loading](/help/faq#env-vars-and-env-loading)
-- [Models overview](/concepts/models)
+- [Gateway configuration](/en/gateway/configuration)
+- [FAQ: env vars and .env loading](/en/help/faq#env-vars-and-env-loading)
+- [Models overview](/en/concepts/models)

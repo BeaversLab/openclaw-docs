@@ -147,7 +147,7 @@ If your ACP client supports metadata, you can override per session:
 }
 ```
 
-Learn more about session keys at [/concepts/session](/concepts/session).
+Learn more about session keys at [/concepts/session](/en/concepts/session).
 
 ## Options
 

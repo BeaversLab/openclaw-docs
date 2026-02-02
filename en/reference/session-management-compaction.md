@@ -21,10 +21,10 @@ This document explains how OpenClaw manages sessions end-to-end:
 
 If you want a higher-level overview first, start with:
 
-- [/concepts/session](/concepts/session)
-- [/concepts/compaction](/concepts/compaction)
-- [/concepts/session-pruning](/concepts/session-pruning)
-- [/reference/transcript-hygiene](/reference/transcript-hygiene)
+- [/concepts/session](/en/concepts/session)
+- [/concepts/compaction](/en/concepts/compaction)
+- [/concepts/session-pruning](/en/concepts/session-pruning)
+- [/reference/transcript-hygiene](/en/reference/transcript-hygiene)
 
 ---
 
@@ -77,7 +77,7 @@ Common patterns:
 - Cron: `cron:<job.id>`
 - Webhook: `hook:<uuid>` (unless overridden)
 
-The canonical rules are documented at [/concepts/session](/concepts/session).
+The canonical rules are documented at [/concepts/session](/en/concepts/session).
 
 ---
 
@@ -154,7 +154,7 @@ If you’re tuning limits:
 - The context window comes from the model catalog (and can be overridden via config).
 - `contextTokens` in the store is a runtime estimate/reporting value; don’t treat it as a strict guarantee.
 
-For more, see [/token-use](/token-use).
+For more, see [/token-use](/en/token-use).
 
 ---
 
@@ -167,7 +167,7 @@ After compaction, future turns see:
 - The compaction summary
 - Messages after `firstKeptEntryId`
 
-Compaction is **persistent** (unlike session pruning). See [/concepts/session-pruning](/concepts/session-pruning).
+Compaction is **persistent** (unlike session pruning). See [/concepts/session-pruning](/en/concepts/session-pruning).
 
 ---
 
@@ -267,7 +267,7 @@ Notes:
 - The flush runs once per compaction cycle (tracked in `sessions.json`).
 - The flush runs only for embedded Pi sessions (CLI backends skip it).
 - The flush is skipped when the session workspace is read-only (`workspaceAccess: "ro"` or `"none"`).
-- See [Memory](/concepts/memory) for the workspace file layout and write patterns.
+- See [Memory](/en/concepts/memory) for the workspace file layout and write patterns.
 
 Pi also exposes a `session_before_compact` hook in the extension API, but OpenClaw’s
 flush logic lives on the Gateway side today.
@@ -276,7 +276,7 @@ flush logic lives on the Gateway side today.
 
 ## Troubleshooting checklist
 
-- Session key wrong? Start with [/concepts/session](/concepts/session) and confirm the `sessionKey` in `/status`.
+- Session key wrong? Start with [/concepts/session](/en/concepts/session) and confirm the `sessionKey` in `/status`.
 - Store vs transcript mismatch? Confirm the Gateway host and the store path from `openclaw status`.
 - Compaction spam? Check:
   - model context window (too small)

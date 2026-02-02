@@ -30,7 +30,7 @@ Not sandboxed:
 - The Gateway process itself.
 - Any tool explicitly allowed to run on the host (e.g. `tools.elevated`).
   - **Elevated exec runs on the host and bypasses sandboxing.**
-  - If sandboxing is off, `tools.elevated` does not change execution (already on host). See [Elevated Mode](/tools/elevated).
+  - If sandboxing is off, `tools.elevated` does not change execution (already on host). See [Elevated Mode](/en/tools/elevated).
 
 ## Modes
 
@@ -102,7 +102,7 @@ Security notes:
 - Binds bypass the sandbox filesystem: they expose host paths with whatever mode you set (`:ro` or `:rw`).
 - Sensitive mounts (e.g., `docker.sock`, secrets, SSH keys) should be `:ro` unless absolutely required.
 - Combine with `workspaceAccess: "ro"` if you only need read access to the workspace; bind modes stay independent.
-- See [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated) for how binds interact with tool policy and elevated exec.
+- See [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) for how binds interact with tool policy and elevated exec.
 
 ## Images + setup
 
@@ -129,7 +129,7 @@ By default, sandbox containers run with **no network**.
 Override with `agents.defaults.sandbox.docker.network`.
 
 Docker installs and the containerized gateway live here:
-[Docker](/install/docker)
+[Docker](/en/install/docker)
 
 ## setupCommand (one-time container setup)
 
@@ -156,19 +156,19 @@ globally or per-agent, sandboxing doesn’t bring it back.
 
 `tools.elevated` is an explicit escape hatch that runs `exec` on the host.
 `/exec` directives only apply for authorized senders and persist per session; to hard-disable
-`exec`, use tool policy deny (see [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated)).
+`exec`, use tool policy deny (see [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)).
 
 Debugging:
 
 - Use `openclaw sandbox explain` to inspect effective sandbox mode, tool policy, and fix-it config keys.
-- See [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated) for the “why is this blocked?” mental model.
+- See [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) for the “why is this blocked?” mental model.
   Keep it locked down.
 
 ## Multi-agent overrides
 
 Each agent can override sandbox + tools:
 `agents.list[].sandbox` and `agents.list[].tools` (plus `agents.list[].tools.sandbox.tools` for sandbox tool policy).
-See [Multi-Agent Sandbox & Tools](/multi-agent-sandbox-tools) for precedence.
+See [Multi-Agent Sandbox & Tools](/en/multi-agent-sandbox-tools) for precedence.
 
 ## Minimal enable example
 
@@ -188,6 +188,6 @@ See [Multi-Agent Sandbox & Tools](/multi-agent-sandbox-tools) for precedence.
 
 ## Related docs
 
-- [Sandbox Configuration](/gateway/configuration#agentsdefaults-sandbox)
-- [Multi-Agent Sandbox & Tools](/multi-agent-sandbox-tools)
-- [Security](/gateway/security)
+- [Sandbox Configuration](/en/gateway/configuration#agentsdefaults-sandbox)
+- [Multi-Agent Sandbox & Tools](/en/multi-agent-sandbox-tools)
+- [Security](/en/gateway/security)

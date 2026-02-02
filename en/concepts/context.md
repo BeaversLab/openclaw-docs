@@ -27,7 +27,7 @@ Context is _not the same thing_ as “memory”: memory can be stored on disk an
 - `/usage tokens` → append per-reply usage footer to normal replies.
 - `/compact` → summarize older history into a compact entry to free window space.
 
-See also: [Slash commands](/tools/slash-commands), [Token use & costs](/token-use), [Compaction](/concepts/compaction).
+See also: [Slash commands](/en/tools/slash-commands), [Token use & costs](/en/token-use), [Compaction](/en/concepts/compaction).
 
 ## Example output
 
@@ -98,7 +98,7 @@ The system prompt is **OpenClaw-owned** and rebuilt each run. It includes:
 - Runtime metadata (host/OS/model/thinking).
 - Injected workspace bootstrap files under **Project Context**.
 
-Full breakdown: [System Prompt](/concepts/system-prompt).
+Full breakdown: [System Prompt](/en/concepts/system-prompt).
 
 ## Injected workspace files (Project Context)
 
@@ -139,7 +139,7 @@ Slash commands are handled by the Gateway. There are a few different behaviors:
   - Inline directives in a normal message act as per-message hints.
 - **Inline shortcuts** (allowlisted senders only): certain `/...` tokens inside a normal message can run immediately (example: “hey /status”), and are stripped before the model sees the remaining text.
 
-Details: [Slash commands](/tools/slash-commands).
+Details: [Slash commands](/en/tools/slash-commands).
 
 ## Sessions, compaction, and pruning (what persists)
 
@@ -149,7 +149,7 @@ What persists across messages depends on the mechanism:
 - **Compaction** persists a summary into the transcript and keeps recent messages intact.
 - **Pruning** removes old tool results from the _in-memory_ prompt for a run, but does not rewrite the transcript.
 
-Docs: [Session](/concepts/session), [Compaction](/concepts/compaction), [Session pruning](/concepts/session-pruning).
+Docs: [Session](/en/concepts/session), [Compaction](/en/concepts/compaction), [Session pruning](/en/concepts/session-pruning).
 
 ## What `/context` actually reports
 

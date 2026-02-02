@@ -13,13 +13,13 @@ deployments work at a high level.
 
 ## Pick a provider
 
-- **Railway** (one‑click + browser setup): [Railway](/railway)
-- **Northflank** (one‑click + browser setup): [Northflank](/northflank)
-- **Oracle Cloud (Always Free)**: [Oracle](/platforms/oracle) — $0/month (Always Free, ARM; capacity/signup can be finicky)
-- **Fly.io**: [Fly.io](/platforms/fly)
-- **Hetzner (Docker)**: [Hetzner](/platforms/hetzner)
-- **GCP (Compute Engine)**: [GCP](/platforms/gcp)
-- **exe.dev** (VM + HTTPS proxy): [exe.dev](/platforms/exe-dev)
+- **Railway** (one‑click + browser setup): [Railway](/en/railway)
+- **Northflank** (one‑click + browser setup): [Northflank](/en/northflank)
+- **Oracle Cloud (Always Free)**: [Oracle](/en/platforms/oracle) — $0/month (Always Free, ARM; capacity/signup can be finicky)
+- **Fly.io**: [Fly.io](/en/platforms/fly)
+- **Hetzner (Docker)**: [Hetzner](/en/platforms/hetzner)
+- **GCP (Compute Engine)**: [GCP](/en/platforms/gcp)
+- **exe.dev** (VM + HTTPS proxy): [exe.dev](/en/platforms/exe-dev)
 - **AWS (EC2/Lightsail/free tier)**: works well too. Video guide:
   https://x.com/techfrenAJ/status/2014934471095812547
 
@@ -31,8 +31,8 @@ deployments work at a high level.
 - Secure default: keep the Gateway on loopback and access it via SSH tunnel or Tailscale Serve.
   If you bind to `lan`/`tailnet`, require `gateway.auth.token` or `gateway.auth.password`.
 
-Remote access: [Gateway remote](/gateway/remote)  
-Platforms hub: [Platforms](/platforms)
+Remote access: [Gateway remote](/en/gateway/remote)  
+Platforms hub: [Platforms](/en/platforms)
 
 ## Using nodes with a VPS
 
@@ -40,4 +40,4 @@ You can keep the Gateway in the cloud and pair **nodes** on your local devices
 (Mac/iOS/Android/headless). Nodes provide local screen/camera/canvas and `system.run`
 capabilities while the Gateway stays in the cloud.
 
-Docs: [Nodes](/nodes), [Nodes CLI](/cli/nodes)
+Docs: [Nodes](/en/nodes), [Nodes CLI](/en/cli/nodes)

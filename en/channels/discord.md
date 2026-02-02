@@ -57,10 +57,10 @@ Minimal config:
 8. Group DMs are ignored by default; enable via `channels.discord.dm.groupEnabled` and optionally restrict by `channels.discord.dm.groupChannels`.
 9. Optional guild rules: set `channels.discord.guilds` keyed by guild id (preferred) or slug, with per-channel rules.
 10. Optional native commands: `commands.native` defaults to `"auto"` (on for Discord/Telegram, off for Slack). Override with `channels.discord.commands.native: true|false|"auto"`; `false` clears previously registered commands. Text commands are controlled by `commands.text` and must be sent as standalone `/...` messages. Use `commands.useAccessGroups: false` to bypass access-group checks for commands.
-    - Full command list + config: [Slash commands](/tools/slash-commands)
+    - Full command list + config: [Slash commands](/en/tools/slash-commands)
 11. Optional guild context history: set `channels.discord.historyLimit` (default 20, falls back to `messages.groupChat.historyLimit`) to include the last N guild messages as context when replying to a mention. Set `0` to disable.
 12. Reactions: the agent can trigger reactions via the `discord` tool (gated by `channels.discord.actions.*`).
-    - Reaction removal semantics: see [/tools/reactions](/tools/reactions).
+    - Reaction removal semantics: see [/tools/reactions](/en/tools/reactions).
     - The `discord` tool is only exposed when the current channel is Discord.
 13. Native commands use isolated session keys (`agent:<agentId>:discord:slash:<userId>`) rather than the shared `main` session.
 
@@ -156,7 +156,7 @@ Or via config:
 }
 ```
 
-Multi-account support: use `channels.discord.accounts` with per-account tokens and optional `name`. See [`gateway/configuration`](/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) for the shared pattern.
+Multi-account support: use `channels.discord.accounts` with per-account tokens and optional `name`. See [`gateway/configuration`](/en/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) for the shared pattern.
 
 #### Allowlist + channel routing
 
@@ -226,7 +226,7 @@ Notes:
   - `channels.discord.execApprovals.enabled: true` in your config.
   - Your Discord user ID is listed in `channels.discord.execApprovals.approvers` (the UI is only sent to approvers).
   - Use the buttons in the DM prompt (**Allow once**, **Always allow**, **Deny**).
-  - See [Exec approvals](/tools/exec-approvals) and [Slash commands](/tools/slash-commands) for the broader approvals and command flow.
+  - See [Exec approvals](/en/tools/exec-approvals) and [Slash commands](/en/tools/slash-commands) for the broader approvals and command flow.
 
 ## Capabilities & limits
 
@@ -240,7 +240,7 @@ Notes:
 
 ## Retry policy
 
-Outbound Discord API calls retry on rate limits (429) using Discord `retry_after` when available, with exponential backoff and jitter. Configure via `channels.discord.retry`. See [Retry policy](/concepts/retry).
+Outbound Discord API calls retry on rate limits (429) using Discord `retry_after` when available, with exponential backoff and jitter. Configure via `channels.discord.retry`. See [Retry policy](/en/concepts/retry).
 
 ## Config
 

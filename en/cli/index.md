@@ -12,45 +12,45 @@ This page describes the current CLI behavior. If commands change, update this do
 
 ## Command pages
 
-- [`setup`](/cli/setup)
-- [`onboard`](/cli/onboard)
-- [`configure`](/cli/configure)
-- [`config`](/cli/config)
-- [`doctor`](/cli/doctor)
-- [`dashboard`](/cli/dashboard)
-- [`reset`](/cli/reset)
-- [`uninstall`](/cli/uninstall)
-- [`update`](/cli/update)
-- [`message`](/cli/message)
-- [`agent`](/cli/agent)
-- [`agents`](/cli/agents)
-- [`acp`](/cli/acp)
-- [`status`](/cli/status)
-- [`health`](/cli/health)
-- [`sessions`](/cli/sessions)
-- [`gateway`](/cli/gateway)
-- [`logs`](/cli/logs)
-- [`system`](/cli/system)
-- [`models`](/cli/models)
-- [`memory`](/cli/memory)
-- [`nodes`](/cli/nodes)
-- [`devices`](/cli/devices)
-- [`node`](/cli/node)
-- [`approvals`](/cli/approvals)
-- [`sandbox`](/cli/sandbox)
-- [`tui`](/cli/tui)
-- [`browser`](/cli/browser)
-- [`cron`](/cli/cron)
-- [`dns`](/cli/dns)
-- [`docs`](/cli/docs)
-- [`hooks`](/cli/hooks)
-- [`webhooks`](/cli/webhooks)
-- [`pairing`](/cli/pairing)
-- [`plugins`](/cli/plugins) (plugin commands)
-- [`channels`](/cli/channels)
-- [`security`](/cli/security)
-- [`skills`](/cli/skills)
-- [`voicecall`](/cli/voicecall) (plugin; if installed)
+- [`setup`](/en/cli/setup)
+- [`onboard`](/en/cli/onboard)
+- [`configure`](/en/cli/configure)
+- [`config`](/en/cli/config)
+- [`doctor`](/en/cli/doctor)
+- [`dashboard`](/en/cli/dashboard)
+- [`reset`](/en/cli/reset)
+- [`uninstall`](/en/cli/uninstall)
+- [`update`](/en/cli/update)
+- [`message`](/en/cli/message)
+- [`agent`](/en/cli/agent)
+- [`agents`](/en/cli/agents)
+- [`acp`](/en/cli/acp)
+- [`status`](/en/cli/status)
+- [`health`](/en/cli/health)
+- [`sessions`](/en/cli/sessions)
+- [`gateway`](/en/cli/gateway)
+- [`logs`](/en/cli/logs)
+- [`system`](/en/cli/system)
+- [`models`](/en/cli/models)
+- [`memory`](/en/cli/memory)
+- [`nodes`](/en/cli/nodes)
+- [`devices`](/en/cli/devices)
+- [`node`](/en/cli/node)
+- [`approvals`](/en/cli/approvals)
+- [`sandbox`](/en/cli/sandbox)
+- [`tui`](/en/cli/tui)
+- [`browser`](/en/cli/browser)
+- [`cron`](/en/cli/cron)
+- [`dns`](/en/cli/dns)
+- [`docs`](/en/cli/docs)
+- [`hooks`](/en/cli/hooks)
+- [`webhooks`](/en/cli/webhooks)
+- [`pairing`](/en/cli/pairing)
+- [`plugins`](/en/cli/plugins) (plugin commands)
+- [`channels`](/en/cli/channels)
+- [`security`](/en/cli/security)
+- [`skills`](/en/cli/skills)
+- [`voicecall`](/en/cli/voicecall) (plugin; if installed)
 
 ## Global flags
 
@@ -255,7 +255,7 @@ Manage extensions and their config:
 - `openclaw plugins enable <id>` / `disable <id>` — toggle `plugins.entries.<id>.enabled`.
 - `openclaw plugins doctor` — report plugin load errors.
 
-Most plugin changes require a gateway restart. See [/plugin](/plugin).
+Most plugin changes require a gateway restart. See [/plugin](/en/plugin).
 
 ## Memory
 
@@ -267,7 +267,7 @@ Vector search over `MEMORY.md` + `memory/*.md`:
 
 ## Chat slash commands
 
-Chat messages support `/...` commands (text and native). See [/tools/slash-commands](/tools/slash-commands).
+Chat messages support `/...` commands (text and native). See [/tools/slash-commands](/en/tools/slash-commands).
 
 Highlights:
 
@@ -408,7 +408,7 @@ Common options:
 - `--lines <n>` (default `200`)
 - `--json`
 
-More detail: [/concepts/oauth](/concepts/oauth)
+More detail: [/concepts/oauth](/en/concepts/oauth)
 
 Examples:
 
@@ -449,7 +449,7 @@ Subcommands:
 
 ### `webhooks gmail`
 
-Gmail Pub/Sub hook setup + runner. See [/automation/gmail-pubsub](/automation/gmail-pubsub).
+Gmail Pub/Sub hook setup + runner. See [/automation/gmail-pubsub](/en/automation/gmail-pubsub).
 
 Subcommands:
 
@@ -458,7 +458,7 @@ Subcommands:
 
 ### `dns setup`
 
-Wide-area discovery DNS helper (CoreDNS + Tailscale). See [/gateway/discovery](/gateway/discovery).
+Wide-area discovery DNS helper (CoreDNS + Tailscale). See [/gateway/discovery](/en/gateway/discovery).
 
 Options:
 
@@ -470,7 +470,7 @@ Options:
 
 Unified outbound messaging + channel actions.
 
-See: [/cli/message](/cli/message)
+See: [/cli/message](/en/cli/message)
 
 Subcommands:
 
@@ -550,7 +550,7 @@ Options:
 
 Run the ACP bridge that connects IDEs to the Gateway.
 
-See [`acp`](/cli/acp) for full options and examples.
+See [`acp`](/en/cli/acp) for full options and examples.
 
 ### `status`
 
@@ -585,7 +585,7 @@ Notes:
 - Data comes directly from provider usage endpoints (no estimates).
 - Providers: Anthropic, GitHub Copilot, OpenAI Codex OAuth, plus Gemini CLI/Antigravity when those provider plugins are enabled.
 - If no matching credentials exist, usage is hidden.
-- Details: see [Usage tracking](/concepts/usage-tracking).
+- Details: see [Usage tracking](/en/concepts/usage-tracking).
 
 ### `health`
 
@@ -737,7 +737,7 @@ Tip: when calling `config.set`/`config.apply`/`config.patch` directly, pass `bas
 
 ## Models
 
-See [/concepts/models](/concepts/models) for fallback behavior and scanning strategy.
+See [/concepts/models](/en/concepts/models) for fallback behavior and scanning strategy.
 
 Preferred Anthropic auth (setup-token):
 
@@ -886,7 +886,7 @@ Options:
 
 ## Cron
 
-Manage scheduled jobs (Gateway RPC). See [/automation/cron-jobs](/automation/cron-jobs).
+Manage scheduled jobs (Gateway RPC). See [/automation/cron-jobs](/en/automation/cron-jobs).
 
 Subcommands:
 
@@ -905,7 +905,7 @@ All `cron` commands accept `--url`, `--token`, `--timeout`, `--expect-final`.
 ## Node host
 
 `node` runs a **headless node host** or manages it as a background service. See
-[`openclaw node`](/cli/node).
+[`openclaw node`](/en/cli/node).
 
 Subcommands:
 
@@ -918,7 +918,7 @@ Subcommands:
 
 ## Nodes
 
-`nodes` talks to the Gateway and targets paired nodes. See [/nodes](/nodes).
+`nodes` talks to the Gateway and targets paired nodes. See [/nodes](/en/nodes).
 
 Common options:
 
@@ -960,7 +960,7 @@ Location:
 
 ## Browser
 
-Browser control CLI (dedicated Chrome/Brave/Edge/Chromium). See [`openclaw browser`](/cli/browser) and the [Browser tool](/tools/browser).
+Browser control CLI (dedicated Chrome/Brave/Edge/Chromium). See [`openclaw browser`](/en/cli/browser) and the [Browser tool](/en/tools/browser).
 
 Common options:
 

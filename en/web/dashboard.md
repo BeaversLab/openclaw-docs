@@ -16,12 +16,12 @@ Quick open (local Gateway):
 
 Key references:
 
-- [Control UI](/web/control-ui) for usage and UI capabilities.
-- [Tailscale](/gateway/tailscale) for Serve/Funnel automation.
-- [Web surfaces](/web) for bind modes and security notes.
+- [Control UI](/en/web/control-ui) for usage and UI capabilities.
+- [Tailscale](/en/gateway/tailscale) for Serve/Funnel automation.
+- [Web surfaces](/en/web) for bind modes and security notes.
 
 Authentication is enforced at the WebSocket handshake via `connect.params.auth`
-(token or password). See `gateway.auth` in [Gateway configuration](/gateway/configuration).
+(token or password). See `gateway.auth` in [Gateway configuration](/en/gateway/configuration).
 
 Security note: the Control UI is an **admin surface** (chat, config, exec approvals).
 Do not expose it publicly. The UI stores the token in `localStorage` after first load.
@@ -37,7 +37,7 @@ Prefer localhost, Tailscale Serve, or an SSH tunnel.
 
 - **Localhost**: open `http://127.0.0.1:18789/`. If you see “unauthorized,” run `openclaw dashboard` and use the tokenized link (`?token=...`).
 - **Token source**: `gateway.auth.token` (or `OPENCLAW_GATEWAY_TOKEN`); the UI stores it after first load.
-- **Not localhost**: use Tailscale Serve (tokenless if `gateway.auth.allowTailscale: true`), tailnet bind with a token, or an SSH tunnel. See [Web surfaces](/web).
+- **Not localhost**: use Tailscale Serve (tokenless if `gateway.auth.allowTailscale: true`), tailnet bind with a token, or an SSH tunnel. See [Web surfaces](/en/web).
 
 ## If you see “unauthorized” / 1008
 

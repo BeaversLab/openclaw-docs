@@ -34,7 +34,7 @@ openclaw plugins install ./extensions/matrix
 If you choose Matrix during configure/onboarding and a git checkout is detected,
 OpenClaw will offer the local install path automatically.
 
-Details: [Plugins](/plugin)
+Details: [Plugins](/en/plugin)
 
 ## Setup
 
@@ -204,7 +204,7 @@ Once verified, the bot can decrypt messages in encrypted rooms.
 
 ## Configuration reference (Matrix)
 
-Full configuration: [Configuration](/gateway/configuration)
+Full configuration: [Configuration](/en/gateway/configuration)
 
 Provider options:
 

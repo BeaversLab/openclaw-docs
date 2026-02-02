@@ -18,7 +18,7 @@ Venice is our recommended Venice AI setup for privacy-first inference with an op
 - Default: `venice/llama-3.3-70b`
 - Best overall: `venice/claude-opus-45` (Opus remains the strongest)
 
-See [Venice AI](/providers/venice).
+See [Venice AI](/en/providers/venice).
 
 ## Quick start (two steps)
 
@@ -33,18 +33,18 @@ See [Venice AI](/providers/venice).
 
 ## Supported providers (starter set)
 
-- [OpenAI (API + Codex)](/providers/openai)
-- [Anthropic (API + Claude Code CLI)](/providers/anthropic)
-- [OpenRouter](/providers/openrouter)
-- [Vercel AI Gateway](/providers/vercel-ai-gateway)
-- [Moonshot AI (Kimi + Kimi Coding)](/providers/moonshot)
-- [Synthetic](/providers/synthetic)
-- [OpenCode Zen](/providers/opencode)
-- [Z.AI](/providers/zai)
-- [GLM models](/providers/glm)
-- [MiniMax](/providers/minimax)
-- [Venice (Venice AI)](/providers/venice)
-- [Amazon Bedrock](/bedrock)
+- [OpenAI (API + Codex)](/en/providers/openai)
+- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
+- [OpenRouter](/en/providers/openrouter)
+- [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
+- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
+- [Synthetic](/en/providers/synthetic)
+- [OpenCode Zen](/en/providers/opencode)
+- [Z.AI](/en/providers/zai)
+- [GLM models](/en/providers/glm)
+- [MiniMax](/en/providers/minimax)
+- [Venice (Venice AI)](/en/providers/venice)
+- [Amazon Bedrock](/en/bedrock)
 
 For the full provider catalog (xAI, Groq, Mistral, etc.) and advanced configuration,
-see [Model providers](/concepts/model-providers).
+see [Model providers](/en/concepts/model-providers).

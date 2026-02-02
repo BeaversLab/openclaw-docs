@@ -50,7 +50,7 @@ Installer flags:
 curl -fsSL https://openclaw.ai/install.sh | bash -s -- --help
 ```
 
-Details: [Installer internals](/install/installer).
+Details: [Installer internals](/en/install/installer).
 
 Non-interactive (skip onboarding):
 
@@ -105,10 +105,10 @@ Tip: if you don’t have a global install yet, run repo commands via `pnpm openc
 
 ### 4) Other install options
 
-- Docker: [Docker](/install/docker)
-- Nix: [Nix](/install/nix)
-- Ansible: [Ansible](/install/ansible)
-- Bun (CLI only): [Bun](/install/bun)
+- Docker: [Docker](/en/install/docker)
+- Nix: [Nix](/en/install/nix)
+- Ansible: [Ansible](/en/install/ansible)
+- Bun (CLI only): [Bun](/en/install/bun)
 
 ## After install
 
@@ -181,6 +181,6 @@ Then open a new terminal (or `rehash` in zsh / `hash -r` in bash).
 
 ## Update / uninstall
 
-- Updates: [Updating](/install/updating)
-- Migrate to a new machine: [Migrating](/install/migrating)
-- Uninstall: [Uninstall](/install/uninstall)
+- Updates: [Updating](/en/install/updating)
+- Migrate to a new machine: [Migrating](/en/install/migrating)
+- Uninstall: [Uninstall](/en/install/uninstall)

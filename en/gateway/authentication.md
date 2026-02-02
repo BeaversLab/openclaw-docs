@@ -12,7 +12,7 @@ OpenClaw supports OAuth and API keys for model providers. For Anthropic
 accounts, we recommend using an **API key**. For Claude subscription access,
 use the long‑lived token created by `claude setup-token`.
 
-See [/concepts/oauth](/concepts/oauth) for the full OAuth flow and storage
+See [/concepts/oauth](/en/concepts/oauth) for the full OAuth flow and storage
 layout.
 
 ## Recommended Anthropic setup (API key)
@@ -46,7 +46,7 @@ openclaw doctor
 If you’d rather not manage env vars yourself, the onboarding wizard can store
 API keys for daemon use: `openclaw onboard`.
 
-See [Help](/help) for details on env inheritance (`env.shellEnv`,
+See [Help](/en/help) for details on env inheritance (`env.shellEnv`,
 `~/.openclaw/.env`, systemd/launchd).
 
 ## Anthropic: setup-token (subscription auth)
@@ -92,7 +92,7 @@ openclaw models status --check
 ```
 
 Optional ops scripts (systemd/Termux) are documented here:
-[/automation/auth-monitoring](/automation/auth-monitoring)
+[/automation/auth-monitoring](/en/automation/auth-monitoring)
 
 > `claude setup-token` requires an interactive TTY.
 

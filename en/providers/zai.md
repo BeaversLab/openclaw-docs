@@ -32,5 +32,5 @@ openclaw onboard --zai-api-key "$ZAI_API_KEY"
 ## Notes
 
 - GLM models are available as `zai/<model>` (example: `zai/glm-4.7`).
-- See [/providers/glm](/providers/glm) for the model family overview.
+- See [/providers/glm](/en/providers/glm) for the model family overview.
 - Z.AI uses Bearer auth with your API key.

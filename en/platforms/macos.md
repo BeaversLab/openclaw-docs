@@ -190,14 +190,14 @@ components can talk to a remote Gateway as if it were on localhost.
   ExitOnForwardFailure + keepalive options.
 - **IP reporting:** the SSH tunnel uses loopback, so the gateway will see the node
   IP as `127.0.0.1`. Use **Direct (ws/wss)** transport if you want the real client
-  IP to appear (see [macOS remote access](/platforms/mac/remote)).
+  IP to appear (see [macOS remote access](/en/platforms/mac/remote)).
 
-For setup steps, see [macOS remote access](/platforms/mac/remote). For protocol
-details, see [Gateway protocol](/gateway/protocol).
+For setup steps, see [macOS remote access](/en/platforms/mac/remote). For protocol
+details, see [Gateway protocol](/en/gateway/protocol).
 
 ## Related docs
 
-- [Gateway runbook](/gateway)
-- [Gateway (macOS)](/platforms/mac/bundled-gateway)
-- [macOS permissions](/platforms/mac/permissions)
-- [Canvas](/platforms/mac/canvas)
+- [Gateway runbook](/en/gateway)
+- [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
+- [macOS permissions](/en/platforms/mac/permissions)
+- [Canvas](/en/platforms/mac/canvas)

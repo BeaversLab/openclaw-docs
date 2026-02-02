@@ -11,7 +11,7 @@ Interactive onboarding wizard (local or remote Gateway setup).
 
 Related:
 
-- Wizard guide: [Onboarding](/start/onboarding)
+- Wizard guide: [Onboarding](/en/start/onboarding)
 
 ## Examples
 

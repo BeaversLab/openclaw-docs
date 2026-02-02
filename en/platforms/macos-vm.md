@@ -12,9 +12,9 @@ title: "macOS VMs"
 
 ## Recommended default (most users)
 
-- **Small Linux VPS** for an always-on Gateway and low cost. See [VPS hosting](/vps).
+- **Small Linux VPS** for an always-on Gateway and low cost. See [VPS hosting](/en/vps).
 - **Dedicated hardware** (Mac mini or Linux box) if you want full control and a **residential IP** for browser automation. Many sites block data center IPs, so local browsing often works better.
-- **Hybrid:** keep the Gateway on a cheap VPS, and connect your Mac as a **node** when you need browser/UI automation. See [Nodes](/nodes) and [Gateway remote](/gateway/remote).
+- **Hybrid:** keep the Gateway on a cheap VPS, and connect your Mac as a **node** when you need browser/UI automation. See [Nodes](/en/nodes) and [Gateway remote](/en/gateway/remote).
 
 Use a macOS VM when you specifically need macOS-only capabilities (iMessage/BlueBubbles) or want strict isolation from your daily Mac.
 
@@ -223,7 +223,7 @@ Add to your OpenClaw config:
 
 Restart the gateway. Now your agent can send and receive iMessages.
 
-Full setup details: [BlueBubbles channel](/channels/bluebubbles)
+Full setup details: [BlueBubbles channel](/en/channels/bluebubbles)
 
 ---
 
@@ -254,7 +254,7 @@ Keep the VM running by:
 - Disabling sleep in System Settings → Energy Saver
 - Using `caffeinate` if needed
 
-For true always-on, consider a dedicated Mac mini or a small VPS. See [VPS hosting](/vps).
+For true always-on, consider a dedicated Mac mini or a small VPS. See [VPS hosting](/en/vps).
 
 ---
 
@@ -271,11 +271,11 @@ For true always-on, consider a dedicated Mac mini or a small VPS. See [VPS hosti
 
 ## Related docs
 
-- [VPS hosting](/vps)
-- [Nodes](/nodes)
-- [Gateway remote](/gateway/remote)
-- [BlueBubbles channel](/channels/bluebubbles)
+- [VPS hosting](/en/vps)
+- [Nodes](/en/nodes)
+- [Gateway remote](/en/gateway/remote)
+- [BlueBubbles channel](/en/channels/bluebubbles)
 - [Lume Quickstart](https://cua.ai/docs/lume/guide/getting-started/quickstart)
 - [Lume CLI Reference](https://cua.ai/docs/lume/reference/cli-reference)
 - [Unattended VM Setup](https://cua.ai/docs/lume/guide/fundamentals/unattended-setup) (advanced)
-- [Docker Sandboxing](/install/docker) (alternative isolation approach)
+- [Docker Sandboxing](/en/install/docker) (alternative isolation approach)

@@ -17,7 +17,7 @@ OpenClaw integrates external CLIs via JSON-RPC. Two patterns are used today.
 - Health probe: `/api/v1/check`.
 - OpenClaw owns lifecycle when `channels.signal.autoStart=true`.
 
-See [Signal](/channels/signal) for setup and endpoints.
+See [Signal](/en/channels/signal) for setup and endpoints.
 
 ## Pattern B: stdio child process (imsg)
 
@@ -32,7 +32,7 @@ Core methods used:
 - `send`
 - `chats.list` (probe/diagnostics)
 
-See [iMessage](/channels/imessage) for setup and addressing (`chat_id` preferred).
+See [iMessage](/en/channels/imessage) for setup and addressing (`chat_id` preferred).
 
 ## Adapter guidelines
 

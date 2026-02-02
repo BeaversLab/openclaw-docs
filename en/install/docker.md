@@ -14,14 +14,14 @@ Docker is **optional**. Use it only if you want a containerized gateway or to va
 
 - **Yes**: you want an isolated, throwaway gateway environment or to run OpenClaw on a host without local installs.
 - **No**: you’re running on your own machine and just want the fastest dev loop. Use the normal install flow instead.
-- **Sandboxing note**: agent sandboxing uses Docker too, but it does **not** require the full gateway to run in Docker. See [Sandboxing](/gateway/sandboxing).
+- **Sandboxing note**: agent sandboxing uses Docker too, but it does **not** require the full gateway to run in Docker. See [Sandboxing](/en/gateway/sandboxing).
 
 This guide covers:
 
 - Containerized Gateway (full OpenClaw in Docker)
 - Per-session Agent Sandbox (host gateway + Docker-isolated agent tools)
 
-Sandboxing details: [Sandboxing](/gateway/sandboxing)
+Sandboxing details: [Sandboxing](/en/gateway/sandboxing)
 
 ## Requirements
 
@@ -63,7 +63,7 @@ It writes config/workspace on the host:
 - `~/.openclaw/`
 - `~/.openclaw/workspace`
 
-Running on a VPS? See [Hetzner (Docker VPS)](/platforms/hetzner).
+Running on a VPS? See [Hetzner (Docker VPS)](/en/platforms/hetzner).
 
 ### Manual flow (compose)
 
@@ -92,7 +92,7 @@ docker compose run --rm openclaw-cli devices list
 docker compose run --rm openclaw-cli devices approve <requestId>
 ```
 
-More detail: [Dashboard](/web/dashboard), [Devices](/cli/devices).
+More detail: [Dashboard](/en/web/dashboard), [Devices](/en/cli/devices).
 
 ### Extra mounts (optional)
 
@@ -274,7 +274,7 @@ Discord (bot token):
 docker compose run --rm openclaw-cli channels add --channel discord --token "<token>"
 ```
 
-Docs: [WhatsApp](/channels/whatsapp), [Telegram](/channels/telegram), [Discord](/channels/discord)
+Docs: [WhatsApp](/en/channels/whatsapp), [Telegram](/en/channels/telegram), [Discord](/en/channels/discord)
 
 ### OpenAI Codex OAuth (headless Docker)
 
@@ -309,7 +309,7 @@ pnpm test:docker:qr
 
 ## Agent Sandbox (host gateway + Docker tools)
 
-Deep dive: [Sandboxing](/gateway/sandboxing)
+Deep dive: [Sandboxing](/en/gateway/sandboxing)
 
 ### What it does
 
@@ -336,7 +336,7 @@ mixed access levels in one gateway:
 - Read-only tools + read-only workspace (family/work agent)
 - No filesystem/shell tools (public agent)
 
-See [Multi-Agent Sandbox & Tools](/multi-agent-sandbox-tools) for examples,
+See [Multi-Agent Sandbox & Tools](/en/multi-agent-sandbox-tools) for examples,
 precedence, and troubleshooting.
 
 ### Default behavior

@@ -20,7 +20,7 @@ openclaw onboard
 ```
 
 Fastest first chat: open the Control UI (no channel setup needed). Run
-`openclaw dashboard` and chat in the browser. Docs: [Dashboard](/web/dashboard).
+`openclaw dashboard` and chat in the browser. Docs: [Dashboard](/en/web/dashboard).
 
 Follow‑up reconfiguration:
 
@@ -30,7 +30,7 @@ openclaw configure
 
 Recommended: set up a Brave Search API key so the agent can use `web_search`
 (`web_fetch` works without a key). Easiest path: `openclaw configure --section web`
-which stores `tools.web.search.apiKey`. Docs: [Web tools](/tools/web).
+which stores `tools.web.search.apiKey`. Docs: [Web tools](/en/tools/web).
 
 ## QuickStart vs Advanced
 
@@ -94,25 +94,25 @@ Tip: `--json` does **not** imply non-interactive mode. Use `--non-interactive` (
    - **OpenCode Zen (multi-model proxy)**: prompts for `OPENCODE_API_KEY` (or `OPENCODE_ZEN_API_KEY`, get it at https://opencode.ai/auth).
    - **API key**: stores the key for you.
    - **Vercel AI Gateway (multi-model proxy)**: prompts for `AI_GATEWAY_API_KEY`.
-   - More detail: [Vercel AI Gateway](/providers/vercel-ai-gateway)
+   - More detail: [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
    - **MiniMax M2.1**: config is auto-written.
-   - More detail: [MiniMax](/providers/minimax)
+   - More detail: [MiniMax](/en/providers/minimax)
    - **Synthetic (Anthropic-compatible)**: prompts for `SYNTHETIC_API_KEY`.
-   - More detail: [Synthetic](/providers/synthetic)
+   - More detail: [Synthetic](/en/providers/synthetic)
    - **Moonshot (Kimi K2)**: config is auto-written.
    - **Kimi Coding**: config is auto-written.
-   - More detail: [Moonshot AI (Kimi + Kimi Coding)](/providers/moonshot)
+   - More detail: [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
    - **Skip**: no auth configured yet.
    - Pick a default model from detected options (or enter provider/model manually).
    - Wizard runs a model check and warns if the configured model is unknown or missing auth.
 
 - OAuth credentials live in `~/.openclaw/credentials/oauth.json`; auth profiles live in `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (API keys + OAuth).
-- More detail: [/concepts/oauth](/concepts/oauth)
+- More detail: [/concepts/oauth](/en/concepts/oauth)
 
 3. **Workspace**
    - Default `~/.openclaw/workspace` (configurable).
    - Seeds the workspace files needed for the agent bootstrap ritual.
-   - Full workspace layout + backup guide: [Agent workspace](/concepts/agent-workspace)
+   - Full workspace layout + backup guide: [Agent workspace](/en/concepts/agent-workspace)
 
 4. **Gateway**
    - Port, bind, auth mode, tailscale exposure.
@@ -121,13 +121,13 @@ Tip: `--json` does **not** imply non-interactive mode. Use `--non-interactive` (
    - Non‑loopback binds still require auth.
 
 5. **Channels**
-   - [WhatsApp](/channels/whatsapp): optional QR login.
-   - [Telegram](/channels/telegram): bot token.
-   - [Discord](/channels/discord): bot token.
-   - [Google Chat](/channels/googlechat): service account JSON + webhook audience.
-   - [Mattermost](/channels/mattermost) (plugin): bot token + base URL.
-   - [Signal](/channels/signal): optional `signal-cli` install + account config.
-   - [iMessage](/channels/imessage): local `imsg` CLI path + DB access.
+   - [WhatsApp](/en/channels/whatsapp): optional QR login.
+   - [Telegram](/en/channels/telegram): bot token.
+   - [Discord](/en/channels/discord): bot token.
+   - [Google Chat](/en/channels/googlechat): service account JSON + webhook audience.
+   - [Mattermost](/en/channels/mattermost) (plugin): bot token + base URL.
+   - [Signal](/en/channels/signal): optional `signal-cli` install + account config.
+   - [iMessage](/en/channels/imessage): local `imsg` CLI path + DB access.
    - DM security: default is pairing. First DM sends a code; approve via `openclaw pairing approve <channel> <code>` or use allowlists.
 
 6. **Daemon install**
@@ -327,7 +327,7 @@ will prompt to install it (npm or a local path) before it can be configured.
 
 ## Related docs
 
-- macOS app onboarding: [Onboarding](/start/onboarding)
-- Config reference: [Gateway configuration](/gateway/configuration)
-- Providers: [WhatsApp](/channels/whatsapp), [Telegram](/channels/telegram), [Discord](/channels/discord), [Google Chat](/channels/googlechat), [Signal](/channels/signal), [iMessage](/channels/imessage)
-- Skills: [Skills](/tools/skills), [Skills config](/tools/skills-config)
+- macOS app onboarding: [Onboarding](/en/start/onboarding)
+- Config reference: [Gateway configuration](/en/gateway/configuration)
+- Providers: [WhatsApp](/en/channels/whatsapp), [Telegram](/en/channels/telegram), [Discord](/en/channels/discord), [Google Chat](/en/channels/googlechat), [Signal](/en/channels/signal), [iMessage](/en/channels/imessage)
+- Skills: [Skills](/en/tools/skills), [Skills config](/en/tools/skills-config)

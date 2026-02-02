@@ -25,7 +25,7 @@ Local checkout (when running from a git repo):
 openclaw plugins install ./extensions/twitch
 ```
 
-Details: [Plugins](/plugin)
+Details: [Plugins](/en/plugin)
 
 ## Quick setup (beginner)
 
@@ -146,7 +146,7 @@ The bot automatically refreshes tokens before expiration and logs refresh events
 
 ## Multi-account support
 
-Use `channels.twitch.accounts` with per-account tokens. See [`gateway/configuration`](/gateway/configuration) for the shared pattern.
+Use `channels.twitch.accounts` with per-account tokens. See [`gateway/configuration`](/en/gateway/configuration) for the shared pattern.
 
 Example (one bot account in two channels):
 

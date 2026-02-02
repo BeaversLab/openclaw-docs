@@ -70,7 +70,7 @@ The agent reads this on each heartbeat and handles all items in one turn.
 }
 ```
 
-See [Heartbeat](/gateway/heartbeat) for full configuration.
+See [Heartbeat](/en/gateway/heartbeat) for full configuration.
 
 ## Cron: Precise Scheduling
 
@@ -123,7 +123,7 @@ openclaw cron add \
   --delete-after-run
 ```
 
-See [Cron jobs](/automation/cron-jobs) for full CLI reference.
+See [Cron jobs](/en/automation/cron-jobs) for full CLI reference.
 
 ## Decision Flowchart
 
@@ -208,7 +208,7 @@ For ad-hoc workflows, call Lobster directly.
 - The tool is an **optional plugin**; enable it additively via `tools.alsoAllow: ["lobster"]` (recommended).
 - If you pass `lobsterPath`, it must be an **absolute path**.
 
-See [Lobster](/tools/lobster) for full usage and examples.
+See [Lobster](/en/tools/lobster) for full usage and examples.
 
 ## Main Session vs Isolated Session
 
@@ -276,6 +276,6 @@ openclaw cron add \
 
 ## Related
 
-- [Heartbeat](/gateway/heartbeat) - full heartbeat configuration
-- [Cron jobs](/automation/cron-jobs) - full cron CLI and API reference
-- [System](/cli/system) - system events + heartbeat controls
+- [Heartbeat](/en/gateway/heartbeat) - full heartbeat configuration
+- [Cron jobs](/en/automation/cron-jobs) - full cron CLI and API reference
+- [System](/en/cli/system) - system events + heartbeat controls

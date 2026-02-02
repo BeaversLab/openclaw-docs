@@ -68,7 +68,7 @@ Config:
 }
 ```
 
-See: [Broadcast Groups](/broadcast-groups).
+See: [Broadcast Groups](/en/broadcast-groups).
 
 ## Config overview
 

@@ -23,7 +23,7 @@ OpenClaw assembles its own system prompt on every run. It includes:
 - Reply tags + heartbeat behavior
 - Runtime metadata (host/OS/model/thinking)
 
-See the full breakdown in [System Prompt](/concepts/system-prompt).
+See the full breakdown in [System Prompt](/en/concepts/system-prompt).
 
 ## What counts in the context window
 
@@ -36,7 +36,7 @@ Everything the model receives counts toward the context limit:
 - Compaction summaries and pruning artifacts
 - Provider wrappers or safety headers (not visible, but still counted)
 
-For a practical breakdown (per injected file, tools, skills, and system prompt size), use `/context list` or `/context detail`. See [Context](/concepts/context).
+For a practical breakdown (per injected file, tools, skills, and system prompt size), use `/context list` or `/context detail`. See [Context](/en/concepts/context).
 
 ## How to see current token usage
 
@@ -75,8 +75,8 @@ has expired, then resets the cache window so subsequent requests can re-use the
 freshly cached context instead of re-caching the full history. This keeps cache
 write costs lower when a session goes idle past the TTL.
 
-Configure it in [Gateway configuration](/gateway/configuration) and see the
-behavior details in [Session pruning](/concepts/session-pruning).
+Configure it in [Gateway configuration](/en/gateway/configuration) and see the
+behavior details in [Session pruning](/en/concepts/session-pruning).
 
 Heartbeat can keep the cache **warm** across idle gaps. If your model cache TTL
 is `1h`, setting the heartbeat interval just under that (e.g., `55m`) can avoid
@@ -109,4 +109,4 @@ agents:
 - Keep skill descriptions short (skill list is injected into the prompt).
 - Prefer smaller models for verbose, exploratory work.
 
-See [Skills](/tools/skills) for the exact skill list overhead formula.
+See [Skills](/en/tools/skills) for the exact skill list overhead formula.

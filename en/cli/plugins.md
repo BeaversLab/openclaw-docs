@@ -12,9 +12,9 @@ Manage Gateway plugins/extensions (loaded in-process).
 
 Related:
 
-- Plugin system: [Plugins](/plugin)
-- Plugin manifest + schema: [Plugin manifest](/plugins/manifest)
-- Security hardening: [Security](/gateway/security)
+- Plugin system: [Plugins](/en/plugin)
+- Plugin manifest + schema: [Plugin manifest](/en/plugins/manifest)
+- Security hardening: [Security](/en/gateway/security)
 
 ## Commands
 

@@ -218,6 +218,6 @@ ollama serve
 
 ## See Also
 
-- [Model Providers](/concepts/model-providers) - Overview of all providers
-- [Model Selection](/concepts/models) - How to choose models
-- [Configuration](/gateway/configuration) - Full config reference
+- [Model Providers](/en/concepts/model-providers) - Overview of all providers
+- [Model Selection](/en/concepts/models) - How to choose models
+- [Configuration](/en/gateway/configuration) - Full config reference

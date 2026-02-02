@@ -59,7 +59,7 @@ title: "Thinking Levels"
 
 ## Related
 
-- Elevated mode docs live in [Elevated mode](/tools/elevated).
+- Elevated mode docs live in [Elevated mode](/en/tools/elevated).
 
 ## Heartbeats
 

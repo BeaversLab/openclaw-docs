@@ -345,7 +345,7 @@ We already have a few CI-safe tests that behave like “agent reliability evals�
 - Mock tool-calling through the real gateway + agent loop (`src/gateway/gateway.tool-calling.mock-openai.test.ts`).
 - End-to-end wizard flows that validate session wiring and config effects (`src/gateway/gateway.wizard.e2e.test.ts`).
 
-What’s still missing for skills (see [Skills](/tools/skills)):
+What’s still missing for skills (see [Skills](/en/tools/skills)):
 
 - **Decisioning:** when skills are listed in the prompt, does the agent pick the right skill (or avoid irrelevant ones)?
 - **Compliance:** does the agent read `SKILL.md` before use and follow required steps/args?

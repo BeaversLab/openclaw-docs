@@ -9,7 +9,7 @@ title: "Model Providers"
 # Model providers
 
 This page covers **LLM/model providers** (not chat channels like WhatsApp/Telegram).
-For model selection rules, see [/concepts/models](/concepts/models).
+For model selection rules, see [/concepts/models](/en/concepts/models).
 
 ## Quick rules
 
@@ -196,7 +196,7 @@ Model refs:
 - `qwen-portal/coder-model`
 - `qwen-portal/vision-model`
 
-See [/providers/qwen](/providers/qwen) for setup details and notes.
+See [/providers/qwen](/en/providers/qwen) for setup details and notes.
 
 ### Synthetic
 
@@ -233,7 +233,7 @@ MiniMax is configured via `models.providers` because it uses custom endpoints:
 - MiniMax (Anthropic‑compatible): `--auth-choice minimax-api`
 - Auth: `MINIMAX_API_KEY`
 
-See [/providers/minimax](/providers/minimax) for setup details, model options, and config snippets.
+See [/providers/minimax](/en/providers/minimax) for setup details, model options, and config snippets.
 
 ### Ollama
 
@@ -257,7 +257,7 @@ ollama pull llama3.3
 }
 ```
 
-Ollama is automatically detected when running locally at `http://127.0.0.1:11434/v1`. See [/providers/ollama](/providers/ollama) for model recommendations and custom configuration.
+Ollama is automatically detected when running locally at `http://127.0.0.1:11434/v1`. See [/providers/ollama](/en/providers/ollama) for model recommendations and custom configuration.
 
 ### Local proxies (LM Studio, vLLM, LiteLLM, etc.)
 
@@ -313,4 +313,4 @@ openclaw models set opencode/claude-opus-4-5
 openclaw models list
 ```
 
-See also: [/gateway/configuration](/gateway/configuration) for full configuration examples.
+See also: [/gateway/configuration](/en/gateway/configuration) for full configuration examples.

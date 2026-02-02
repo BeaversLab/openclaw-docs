@@ -15,13 +15,13 @@ It is used in two places:
 1. **DM pairing** (who is allowed to talk to the bot)
 2. **Node pairing** (which devices/nodes are allowed to join the gateway network)
 
-Security context: [Security](/gateway/security)
+Security context: [Security](/en/gateway/security)
 
 ## 1) DM pairing (inbound chat access)
 
 When a channel is configured with DM policy `pairing`, unknown senders get a short code and their message is **not processed** until you approve.
 
-Default DM policies are documented in: [Security](/gateway/security)
+Default DM policies are documented in: [Security](/en/gateway/security)
 
 Pairing codes:
 
@@ -74,12 +74,12 @@ Stored under `~/.openclaw/devices/`:
 
 ## Related docs
 
-- Security model + prompt injection: [Security](/gateway/security)
-- Updating safely (run doctor): [Updating](/install/updating)
+- Security model + prompt injection: [Security](/en/gateway/security)
+- Updating safely (run doctor): [Updating](/en/install/updating)
 - Channel configs:
-  - Telegram: [Telegram](/channels/telegram)
-  - WhatsApp: [WhatsApp](/channels/whatsapp)
-  - Signal: [Signal](/channels/signal)
-  - iMessage: [iMessage](/channels/imessage)
-  - Discord: [Discord](/channels/discord)
-  - Slack: [Slack](/channels/slack)
+  - Telegram: [Telegram](/en/channels/telegram)
+  - WhatsApp: [WhatsApp](/en/channels/whatsapp)
+  - Signal: [Signal](/en/channels/signal)
+  - iMessage: [iMessage](/en/channels/imessage)
+  - Discord: [Discord](/en/channels/discord)
+  - Slack: [Slack](/en/channels/slack)

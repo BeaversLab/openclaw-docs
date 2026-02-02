@@ -192,7 +192,7 @@ If you omit `capabilities`, the entry is eligible for the list it appears in.
 
 - `openai/gpt-4o-mini-transcribe`, `groq/whisper-large-v3-turbo`, or `deepgram/nova-3`.
 - CLI fallback: `whisper-cli` (whisper-cpp) or `whisper`.
-- Deepgram setup: [Deepgram (audio transcription)](/providers/deepgram).
+- Deepgram setup: [Deepgram (audio transcription)](/en/providers/deepgram).
 
 **Video**
 
@@ -375,5 +375,5 @@ This shows per‑capability outcomes and the chosen provider/model when applicab
 
 ## Related docs
 
-- [Configuration](/gateway/configuration)
-- [Image & Media Support](/nodes/images)
+- [Configuration](/en/gateway/configuration)
+- [Image & Media Support](/en/nodes/images)

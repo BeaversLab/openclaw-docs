@@ -26,7 +26,7 @@ The default workspace layout uses two memory layers:
   - **Only load in the main, private session** (never in group contexts).
 
 These files live under the workspace (`agents.defaults.workspace`, default
-`~/.openclaw/workspace`). See [Agent workspace](/concepts/agent-workspace) for the full layout.
+`~/.openclaw/workspace`). See [Agent workspace](/en/concepts/agent-workspace) for the full layout.
 
 ## When to write memory
 
@@ -74,7 +74,7 @@ Details:
   `workspaceAccess: "ro"` or `"none"`, the flush is skipped.
 
 For the full compaction lifecycle, see
-[Session management + compaction](/reference/session-management-compaction).
+[Session management + compaction](/en/reference/session-management-compaction).
 
 ## Vector memory search
 

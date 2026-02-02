@@ -32,7 +32,7 @@ The Gateway can be accessed via:
 
 This guide assumes Ubuntu or Debian on Hetzner.  
 If you are on another Linux VPS, map packages accordingly.
-For the generic Docker flow, see [Docker](/install/docker).
+For the generic Docker flow, see [Docker](/en/install/docker).
 
 ---
 

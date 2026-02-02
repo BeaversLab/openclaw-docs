@@ -13,8 +13,8 @@ Provided by the active memory plugin (default: `memory-core`; set `plugins.slots
 
 Related:
 
-- Memory concept: [Memory](/concepts/memory)
-- Plugins: [Plugins](/plugins)
+- Memory concept: [Memory](/en/concepts/memory)
+- Plugins: [Plugins](/en/plugins)
 
 ## Examples
 

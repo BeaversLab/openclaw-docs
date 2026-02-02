@@ -36,5 +36,5 @@ false negatives when deciding whether to respond in DMs or groups.
 
 ## Related docs
 
-- [Group Chats](/concepts/groups)
-- [Telegram Provider](/channels/telegram)
+- [Group Chats](/en/concepts/groups)
+- [Telegram Provider](/en/channels/telegram)

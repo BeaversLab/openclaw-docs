@@ -72,7 +72,7 @@ Example:
 Env option: `TELEGRAM_BOT_TOKEN=...` (works for the default account).
 If both env and config are set, config takes precedence.
 
-Multi-account support: use `channels.telegram.accounts` with per-account tokens and optional `name`. See [`gateway/configuration`](/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) for the shared pattern.
+Multi-account support: use `channels.telegram.accounts` with per-account tokens and optional `name`. See [`gateway/configuration`](/en/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) for the shared pattern.
 
 3. Start the gateway. Telegram starts when a token is resolved (config first, env fallback).
 4. DM access defaults to pairing. Approve the code when the bot is first contacted.
@@ -152,7 +152,7 @@ You can add custom commands to the menu via config:
 - `setMyCommands failed` in logs usually means outbound HTTPS/DNS is blocked to `api.telegram.org`.
 - If you see `sendMessage` or `sendChatAction` failures, check IPv6 routing and DNS.
 
-More help: [Channel troubleshooting](/channels/troubleshooting).
+More help: [Channel troubleshooting](/en/channels/troubleshooting).
 
 Notes:
 
@@ -351,7 +351,7 @@ Use the global setting when all Telegram bots/accounts should behave the same. U
 - Approve via:
   - `openclaw pairing list telegram`
   - `openclaw pairing approve telegram <CODE>`
-- Pairing is the default token exchange used for Telegram DMs. Details: [Pairing](/start/pairing)
+- Pairing is the default token exchange used for Telegram DMs. Details: [Pairing](/en/start/pairing)
 - `channels.telegram.allowFrom` accepts numeric user IDs (recommended) or `@username` entries. It is **not** the bot username; use the human sender’s ID. The wizard accepts `@username` and resolves it to the numeric ID when possible.
 
 #### Finding your Telegram user ID
@@ -597,18 +597,18 @@ Reasoning stream (Telegram only):
 - `/reasoning stream` streams reasoning into the draft bubble while the reply is
   generating, then sends the final answer without reasoning.
 - If `channels.telegram.streamMode` is `off`, reasoning stream is disabled.
-  More context: [Streaming + chunking](/concepts/streaming).
+  More context: [Streaming + chunking](/en/concepts/streaming).
 
 ## Retry policy
 
-Outbound Telegram API calls retry on transient network/429 errors with exponential backoff and jitter. Configure via `channels.telegram.retry`. See [Retry policy](/concepts/retry).
+Outbound Telegram API calls retry on transient network/429 errors with exponential backoff and jitter. Configure via `channels.telegram.retry`. See [Retry policy](/en/concepts/retry).
 
 ## Agent tool (messages + reactions)
 
 - Tool: `telegram` with `sendMessage` action (`to`, `content`, optional `mediaUrl`, `replyToMessageId`, `messageThreadId`).
 - Tool: `telegram` with `react` action (`chatId`, `messageId`, `emoji`).
 - Tool: `telegram` with `deleteMessage` action (`chatId`, `messageId`).
-- Reaction removal semantics: see [/tools/reactions](/tools/reactions).
+- Reaction removal semantics: see [/tools/reactions](/en/tools/reactions).
 - Tool gating: `channels.telegram.actions.reactions`, `channels.telegram.actions.sendMessage`, `channels.telegram.actions.deleteMessage` (default: enabled), and `channels.telegram.actions.sticker` (default: disabled).
 
 ## Reaction notifications
@@ -702,7 +702,7 @@ The agent sees reactions as **system notifications** in the conversation history
 
 ## Configuration reference (Telegram)
 
-Full configuration: [Configuration](/gateway/configuration)
+Full configuration: [Configuration](/en/gateway/configuration)
 
 Provider options:
 

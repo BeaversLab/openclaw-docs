@@ -437,6 +437,6 @@ Planned features:
 
 ## See Also
 
-- [Multi-Agent Configuration](/multi-agent-sandbox-tools)
-- [Routing Configuration](/concepts/channel-routing)
-- [Session Management](/concepts/sessions)
+- [Multi-Agent Configuration](/en/multi-agent-sandbox-tools)
+- [Routing Configuration](/en/concepts/channel-routing)
+- [Session Management](/en/concepts/sessions)

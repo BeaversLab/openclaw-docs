@@ -15,7 +15,7 @@ drive **runtime validation**, **JSON Schema export**, and **Swift codegen** for
 the macOS app. One source of truth; everything else is generated.
 
 If you want the higher-level protocol context, start with
-[Gateway architecture](/concepts/architecture).
+[Gateway architecture](/en/concepts/architecture).
 
 ## Mental model (30 seconds)
 

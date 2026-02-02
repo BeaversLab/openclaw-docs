@@ -22,12 +22,12 @@ The design goal is to keep all network discovery/advertising in the **Node Gatew
 - **Gateway WS (control plane)**: the WebSocket endpoint on `127.0.0.1:18789` by default; can be bound to LAN/tailnet via `gateway.bind`.
 - **Direct WS transport**: a LAN/tailnet-facing Gateway WS endpoint (no SSH).
 - **SSH transport (fallback)**: remote control by forwarding `127.0.0.1:18789` over SSH.
-- **Legacy TCP bridge (deprecated/removed)**: older node transport (see [Bridge protocol](/gateway/bridge-protocol)); no longer advertised for discovery.
+- **Legacy TCP bridge (deprecated/removed)**: older node transport (see [Bridge protocol](/en/gateway/bridge-protocol)); no longer advertised for discovery.
 
 Protocol details:
 
-- [Gateway protocol](/gateway/protocol)
-- [Bridge protocol (legacy)](/gateway/bridge-protocol)
+- [Gateway protocol](/en/gateway/protocol)
+- [Bridge protocol (legacy)](/en/gateway/bridge-protocol)
 
 ## Why we keep both “direct” and SSH
 
@@ -51,7 +51,7 @@ Target direction:
 - The **gateway** advertises its WS endpoint via Bonjour.
 - Clients browse and show a “pick a gateway” list, then store the chosen endpoint.
 
-Troubleshooting and beacon details: [Bonjour](/gateway/bonjour).
+Troubleshooting and beacon details: [Bonjour](/en/gateway/bonjour).
 
 #### Service beacon details
 
@@ -88,7 +88,7 @@ If the gateway can detect it is running under Tailscale, it publishes `tailnetDn
 
 When there is no direct route (or direct is disabled), clients can always connect via SSH by forwarding the loopback gateway port.
 
-See [Remote access](/gateway/remote).
+See [Remote access](/en/gateway/remote).
 
 ## Transport selection (client policy)
 
@@ -103,7 +103,7 @@ Recommended client behavior:
 
 The gateway is the source of truth for node/client admission.
 
-- Pairing requests are created/approved/rejected in the gateway (see [Gateway pairing](/gateway/pairing)).
+- Pairing requests are created/approved/rejected in the gateway (see [Gateway pairing](/en/gateway/pairing)).
 - The gateway enforces:
   - auth (token / keypair)
   - scopes/ACLs (the gateway is not a raw proxy to every method)

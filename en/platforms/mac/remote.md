@@ -57,7 +57,7 @@ Remote mode supports two transports:
 
 - Prefer loopback binds on the remote host and connect via SSH or Tailscale.
 - If you bind the Gateway to a non-loopback interface, require token/password auth.
-- See [Security](/gateway/security) and [Tailscale](/gateway/tailscale).
+- See [Security](/en/gateway/security) and [Tailscale](/en/gateway/tailscale).
 
 ## WhatsApp login flow (remote)
 

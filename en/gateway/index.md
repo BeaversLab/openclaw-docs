@@ -33,9 +33,9 @@ pnpm gateway:watch
   - Disable with `gateway.reload.mode="off"`.
 - Binds WebSocket control plane to `127.0.0.1:<port>` (default 18789).
 - The same port also serves HTTP (control UI, hooks, A2UI). Single-port multiplex.
-  - OpenAI Chat Completions (HTTP): [`/v1/chat/completions`](/gateway/openai-http-api).
-  - OpenResponses (HTTP): [`/v1/responses`](/gateway/openresponses-http-api).
-  - Tools Invoke (HTTP): [`/tools/invoke`](/gateway/tools-invoke-http-api).
+  - OpenAI Chat Completions (HTTP): [`/v1/chat/completions`](/en/gateway/openai-http-api).
+  - OpenResponses (HTTP): [`/v1/responses`](/en/gateway/openresponses-http-api).
+  - Tools Invoke (HTTP): [`/tools/invoke`](/en/gateway/tools-invoke-http-api).
 - Starts a Canvas file server by default on `canvasHost.port` (default `18793`), serving `http://<gateway-host>:18793/__openclaw__/canvas/` from `~/.openclaw/workspace/canvas`. Disable with `canvasHost.enabled=false` or `OPENCLAW_SKIP_CANVAS_HOST=1`.
 - Logs to stdout; use launchd/systemd to keep it alive and rotate logs.
 - Pass `--verbose` to mirror debug logging (handshakes, req/res, events) from the log file into stdio when troubleshooting.
@@ -59,7 +59,7 @@ pnpm gateway:watch
 
 Usually unnecessary: one Gateway can serve multiple messaging channels and agents. Use multiple Gateways only for redundancy or strict isolation (ex: rescue bot).
 
-Supported if you isolate state + config and use unique ports. Full guide: [Multiple gateways](/gateway/multiple-gateways).
+Supported if you isolate state + config and use unique ports. Full guide: [Multiple gateways](/en/gateway/multiple-gateways).
 
 Service names are profile-aware:
 
@@ -73,7 +73,7 @@ Install metadata is embedded in the service config:
 - `OPENCLAW_SERVICE_KIND=gateway`
 - `OPENCLAW_SERVICE_VERSION=<version>`
 
-Rescue-Bot Pattern: keep a second Gateway isolated with its own profile, state dir, workspace, and base port spacing. Full guide: [Rescue-bot guide](/gateway/multiple-gateways#rescue-bot-guide).
+Rescue-Bot Pattern: keep a second Gateway isolated with its own profile, state dir, workspace, and base port spacing. Full guide: [Rescue-bot guide](/en/gateway/multiple-gateways#rescue-bot-guide).
 
 ### Dev profile (`--dev`)
 
@@ -127,7 +127,7 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b opencla
 
 ## Protocol (operator view)
 
-- Full docs: [Gateway protocol](/gateway/protocol) and [Bridge protocol (legacy)](/gateway/bridge-protocol).
+- Full docs: [Gateway protocol](/en/gateway/protocol) and [Bridge protocol (legacy)](/en/gateway/bridge-protocol).
 - Mandatory first frame from client: `req {type:"req", id, method:"connect", params:{minProtocol,maxProtocol,client:{id,displayName?,version,platform,deviceFamily?,modelIdentifier?,mode,instanceId?}, caps, auth?, locale?, userAgent? } }`.
 - Gateway replies `res {type:"res", id, ok:true, payload:hello-ok }` (or `ok:false` with an error, then closes).
 - After handshake:
@@ -149,7 +149,7 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b opencla
 - `node.invoke` — invoke a command on a node (e.g. `canvas.*`, `camera.*`).
 - `node.pair.*` — pairing lifecycle (`request`, `list`, `approve`, `reject`, `verify`).
 
-See also: [Presence](/concepts/presence) for how presence is produced/deduped and why a stable `client.instanceId` matters.
+See also: [Presence](/en/concepts/presence) for how presence is produced/deduped and why a stable `client.instanceId` matters.
 
 ## Events
 
@@ -231,7 +231,7 @@ Notes:
 - `gateway status` includes the last gateway error line when the service looks running but the port is closed.
 - `logs` tails the Gateway file log via RPC (no manual `tail`/`grep` needed).
 - If other gateway-like services are detected, the CLI warns unless they are OpenClaw profile services.
-  We still recommend **one gateway per machine** for most setups; use isolated profiles/ports for redundancy or a rescue bot. See [Multiple gateways](/gateway/multiple-gateways).
+  We still recommend **one gateway per machine** for most setups; use isolated profiles/ports for redundancy or a rescue bot. See [Multiple gateways](/en/gateway/multiple-gateways).
   - Cleanup: `openclaw gateway uninstall` (current service) and `openclaw doctor` (legacy migrations).
 - `gateway install` is a no-op when already installed; use `openclaw gateway install --force` to reinstall (profile/env/path changes).
 

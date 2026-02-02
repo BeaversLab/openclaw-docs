@@ -32,7 +32,7 @@ openclaw status --deep
 
 Almost always a Node/npm PATH issue. Start here:
 
-- [Install (Node/npm PATH sanity)](/install#nodejs--npm-path-sanity)
+- [Install (Node/npm PATH sanity)](/en/install#nodejs--npm-path-sanity)
 
 ### Installer fails (or you need full logs)
 
@@ -52,13 +52,13 @@ You can also set `OPENCLAW_VERBOSE=1` instead of the flag.
 
 ### Gateway “unauthorized”, can’t connect, or keeps reconnecting
 
-- [Gateway troubleshooting](/gateway/troubleshooting)
-- [Gateway authentication](/gateway/authentication)
+- [Gateway troubleshooting](/en/gateway/troubleshooting)
+- [Gateway authentication](/en/gateway/authentication)
 
 ### Control UI fails on HTTP (device identity required)
 
-- [Gateway troubleshooting](/gateway/troubleshooting)
-- [Control UI](/web/control-ui#insecure-http)
+- [Gateway troubleshooting](/en/gateway/troubleshooting)
+- [Control UI](/en/web/control-ui#insecure-http)
 
 ### `docs.openclaw.ai` shows an SSL error (Comcast/Xfinity)
 
@@ -70,13 +70,13 @@ Disable Advanced Security or add `docs.openclaw.ai` to the allowlist, then retry
 
 ### Service says running, but RPC probe fails
 
-- [Gateway troubleshooting](/gateway/troubleshooting)
-- [Background process / service](/gateway/background-process)
+- [Gateway troubleshooting](/en/gateway/troubleshooting)
+- [Background process / service](/en/gateway/background-process)
 
 ### Model/auth failures (rate limit, billing, “all models failed”)
 
-- [Models](/cli/models)
-- [OAuth / auth concepts](/concepts/oauth)
+- [Models](/en/cli/models)
+- [OAuth / auth concepts](/en/concepts/oauth)
 
 ### `/model` says `model not allowed`
 
