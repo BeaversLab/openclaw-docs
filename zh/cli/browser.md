@@ -4,6 +4,7 @@ read_when:
   - 你在使用 `openclaw browser` 并需要常见任务示例
   - 你想通过 node host 控制另一台机器上的浏览器
   - 你想使用 Chrome 扩展中继（通过工具栏按钮 attach/detach）
+title: "`openclaw browser`"
 ---
 
 # `openclaw browser`

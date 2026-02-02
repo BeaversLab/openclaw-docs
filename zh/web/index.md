@@ -1,13 +1,11 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "网页（网关）"
 summary: "Gateway Web 面：Control UI、绑定模式与安全"
 read_when:
   - 你想通过 Tailscale 访问 Gateway
   - 你需要浏览器 Control UI 与配置编辑
 ---
-# Web（Gateway）
+# 网页（网关）
 
 Gateway 在与 WebSocket 相同的端口提供一个小型 **浏览器 Control UI**（Vite + Lit）：
 

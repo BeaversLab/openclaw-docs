@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "OpenClaw on GCP Compute Engine（Docker，生产 VPS 指南）"
 summary: "在 GCP Compute Engine VM 上 24/7 运行 OpenClaw Gateway（Docker），具备持久化状态"
 read_when:
   - 你想在 GCP 上 24/7 运行 OpenClaw

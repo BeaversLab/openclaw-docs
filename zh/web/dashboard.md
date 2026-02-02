@@ -1,12 +1,10 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "仪表盘（Control UI）"
 summary: "Gateway 仪表盘（Control UI）访问与认证"
 read_when:
   - 修改仪表盘认证或暴露方式
 ---
-# Dashboard（Control UI）
+# 仪表盘（Control UI）
 
 Gateway 仪表盘是默认在 `/` 提供的浏览器 Control UI
 （可用 `gateway.controlUi.basePath` 覆盖）。

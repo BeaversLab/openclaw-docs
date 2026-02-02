@@ -2,8 +2,9 @@
 summary: "跨平台群聊行为（WhatsApp/Telegram/Discord/Slack/Signal/iMessage/Microsoft Teams）"
 read_when:
   - 需要修改群聊行为或 mention gating
+title: "群（群聊天）"
 ---
-# Groups
+# 群（群聊天）
 
 OpenClaw 在各平台对群聊的处理一致：WhatsApp、Telegram、Discord、Slack、Signal、iMessage、Microsoft Teams。
 

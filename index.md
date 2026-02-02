@@ -4,7 +4,9 @@ title: OpenClaw Docs
 
 Redirecting...
 
-<script>
+<script
+  dangerouslySetInnerHTML={{
+    __html: `
 (function () {
   try {
     var saved = localStorage.getItem('preferredLang');
@@ -28,4 +30,6 @@ Redirecting...
   }
   window.location.replace(isZh ? '/zh/' : '/en/');
 })();
-</script>
+`,
+  }}
+/>

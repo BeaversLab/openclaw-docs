@@ -3,6 +3,7 @@ summary: "入站渠道位置解析（Telegram + WhatsApp）与上下文字段"
 read_when:
   - 添加或修改渠道位置解析
   - 在 agent 提示或工具中使用位置上下文字段
+title: "渠道位置解析"
 ---
 
 # 渠道位置解析

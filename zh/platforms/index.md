@@ -1,13 +1,11 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "平台"
 summary: "平台支持概览（Gateway + 伴侣应用）"
 read_when:
   - 查找 OS 支持或安装路径
   - 决定在哪里运行 Gateway
 ---
-# Platforms
+# 平台
 
 OpenClaw 核心由 TypeScript 编写。**推荐运行时是 Node**。
 不推荐用 Bun 作为 Gateway 运行时（WhatsApp/Telegram 有 bug）。

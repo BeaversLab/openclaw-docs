@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "TOOLS.md - 本地笔记"
 summary: "TOOLS.md 工作区模板"
 read_when:
   - 手动引导工作区

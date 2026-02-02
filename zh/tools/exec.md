@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Exec 工具"
 summary: "Exec 工具用法、stdin 模式与 TTY 支持"
 read_when:
   - 使用或修改 exec 工具

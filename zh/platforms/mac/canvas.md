@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Canvas（macOS 应用）"
 summary: "通过 WKWebView + 自定义 URL scheme 嵌入的代理控制 Canvas 面板"
 read_when:
   - 实现 macOS Canvas 面板

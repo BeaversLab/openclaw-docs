@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "BOOT.md"
 summary: "BOOT.md 工作区模板"
 read_when:
   - 添加 BOOT.md 清单

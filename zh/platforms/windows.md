@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Windows（WSL2）"
 summary: "Windows（WSL2）支持 + 伴侣应用状态"
 read_when:
   - 在 Windows 上安装 OpenClaw

@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "发布清单（npm + macOS）"
 summary: "npm + macOS 应用发布的逐步清单"
 read_when:
   - 发布新的 npm 版本

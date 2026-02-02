@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "测试"
 summary: "测试工具包：单元/e2e/live 套件、Docker 运行器，以及每个测试覆盖范围"
 read_when:
   - 在本地或 CI 运行测试
@@ -9,7 +7,7 @@ read_when:
   - 调试 gateway + agent 行为
 ---
 
-# Testing
+# 测试
 
 OpenClaw 有三套 Vitest 套件（unit/integration、e2e、live）以及一小组 Docker 运行器。
 

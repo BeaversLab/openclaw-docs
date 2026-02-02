@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "安装器内部结构"
 summary: "安装器脚本的工作方式（install.sh + install-cli.sh）、flags 与自动化"
 read_when:
   - 你想了解 `openclaw.bot/install.sh`
@@ -9,7 +7,7 @@ read_when:
   - 你想从 GitHub checkout 安装
 ---
 
-# Installer internals
+# 安装器内部结构
 
 OpenClaw 提供两个安装脚本（由 `openclaw.ai` 提供）：
 

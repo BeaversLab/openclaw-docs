@@ -2,6 +2,7 @@
 summary: "以 TypeBox schemas 作为 Gateway 协议的单一事实来源"
 read_when:
   - 更新协议 schema 或代码生成
+title: "TypeBox 作为协议真相源"
 ---
 # TypeBox 作为协议真相源
 

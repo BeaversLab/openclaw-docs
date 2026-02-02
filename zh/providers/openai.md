@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "OpenAI"
 summary: "在 OpenClaw 中通过 API key 或 Codex 订阅使用 OpenAI"
 read_when:
   - 想在 OpenClaw 中使用 OpenAI 模型

@@ -4,8 +4,9 @@ read_when:
   - 需要知道加载哪些 env vars 以及顺序
   - 排查 Gateway 缺少 API keys
   - 记录 provider 认证或部署环境
+title: "环境变量"
 ---
-# Environment variables
+# 环境变量
 
 OpenClaw 从多个来源读取环境变量。规则是**绝不覆盖已有值**。
 

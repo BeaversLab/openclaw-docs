@@ -3,6 +3,7 @@ summary: "`openclaw dns` 的 CLI 参考（广域发现辅助）"
 read_when:
   - 你想通过 Tailscale + CoreDNS 实现广域发现（DNS-SD）
   - 你在为自定义发现域（如 openclaw.internal）配置 split DNS
+title: "`openclaw dns`"
 ---
 
 # `openclaw dns`

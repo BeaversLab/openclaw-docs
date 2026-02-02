@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Talk Mode"
 summary: "Talk 模式：与 ElevenLabs TTS 的连续语音对话"
 read_when:
   - 在 macOS/iOS/Android 上实现 Talk 模式

@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Moonshot AI（Kimi）"
 summary: "配置 Moonshot K2 vs Kimi Code（独立 provider + key）"
 read_when:
   - 想配置 Moonshot K2（Moonshot Open Platform）或 Kimi Code

@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "OpenClaw on Hetzner（Docker，生产 VPS 指南）"
 summary: "在便宜的 Hetzner VPS 上 24/7 运行 OpenClaw Gateway（Docker），具备持久化状态与内置二进制"
 read_when:
   - 你希望 OpenClaw 24/7 运行在云 VPS（非本机）

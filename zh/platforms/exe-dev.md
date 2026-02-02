@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "exe.dev"
 summary: "在 exe.dev（VM + HTTPS 代理）上运行 OpenClaw Gateway 以便远程访问"
 read_when:
   - 你想要便宜的常驻 Linux 主机运行 Gateway

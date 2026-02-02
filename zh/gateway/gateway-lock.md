@@ -3,8 +3,9 @@ summary: "使用 WebSocket 监听绑定实现 Gateway 单例保护"
 read_when:
   - 运行或调试 gateway 进程
   - 调查单实例强制机制
+title: "网关锁"
 ---
-# Gateway lock
+# 网关锁
 
 最后更新：2025-12-11
 

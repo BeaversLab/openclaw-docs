@@ -4,9 +4,10 @@ read_when:
   - 需要检查推理泄露的原始模型输出
   - 需要在 watch 模式下运行 Gateway 迭代
   - 需要可复现的调试流程
+title: "调试"
 ---
 
-# Debugging
+# 调试
 
 本页涵盖流式输出调试辅助，尤其是 provider 将推理混入普通文本时。
 

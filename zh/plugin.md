@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "插件（扩展）"
 summary: "OpenClaw 插件/扩展：发现、配置与安全"
 read_when:
   - 添加或修改插件/扩展

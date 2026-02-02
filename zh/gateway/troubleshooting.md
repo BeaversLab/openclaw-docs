@@ -2,6 +2,7 @@
 summary: "OpenClaw 常见故障的快速排查指南"
 read_when:
   - 排查运行时问题或失败
+title: "故障排查 🔧"
 ---
 # 故障排查 🔧
 

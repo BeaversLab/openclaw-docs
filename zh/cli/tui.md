@@ -3,6 +3,7 @@ summary: "`openclaw tui` 的 CLI 参考（连接 Gateway 的终端 UI）"
 read_when:
   - 需要用于 Gateway 的终端 UI（适合远程）
   - 需要从脚本传递 url/token/session
+title: "`openclaw tui`"
 ---
 
 # `openclaw tui`

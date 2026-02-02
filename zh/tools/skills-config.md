@@ -1,13 +1,11 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "技能配置"
 summary: "技能配置 schema 与示例"
 read_when:
   - 添加或修改技能配置
   - 调整内置 allowlist 或安装行为
 ---
-# Skills Config
+# 技能配置
 
 所有技能相关配置位于 `~/.openclaw/openclaw.json` 的 `skills` 下。
 

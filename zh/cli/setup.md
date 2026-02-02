@@ -3,6 +3,7 @@ summary: "`openclaw setup` 的 CLI 参考（初始化配置 + 工作区）"
 read_when:
   - 不使用完整 onboarding 向导进行首次设置
   - 需要设置默认工作区路径
+title: "`openclaw setup`"
 ---
 
 # `openclaw setup`

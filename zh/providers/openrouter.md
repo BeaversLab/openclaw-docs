@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "OpenRouter"
 summary: "在 OpenClaw 中使用 OpenRouter 的统一 API 访问多模型"
 read_when:
   - 想用一个 API key 访问多种 LLM

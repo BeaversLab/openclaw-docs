@@ -1,6 +1,3 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 title: "Vercel AI Gateway"
 summary: "Vercel AI Gateway 配置（认证 + 模型选择）"

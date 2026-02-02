@@ -1,14 +1,12 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
 summary: "安装 OpenClaw（推荐安装器、全局安装或从源码）"
 read_when:
   - 安装 OpenClaw
   - 你想从 GitHub 安装
+title: "安装"
 ---
 
-# Install
+# 安装
 
 除非你有明确理由，否则使用安装器。它会设置 CLI 并运行 onboarding。
 

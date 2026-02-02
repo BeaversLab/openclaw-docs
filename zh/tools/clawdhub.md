@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "ClawdHub"
 summary: "ClawdHub 指南：公共技能注册表 + CLI 工作流"
 read_when:
   - 向新用户介绍 ClawdHub

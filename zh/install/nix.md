@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Nix 安装"
 summary: "使用 Nix 以声明式方式安装 OpenClaw"
 read_when:
   - 你想要可复现、可回滚的安装

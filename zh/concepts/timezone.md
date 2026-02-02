@@ -3,9 +3,10 @@ summary: "Agent、信封与提示中的时区处理"
 read_when:
   - 需要了解时间戳如何为模型标准化
   - 配置 system prompt 的用户时区
+title: "时区"
 ---
 
-# Timezones
+# 时区
 
 OpenClaw 会标准化时间戳，使模型看到**单一参考时间**。
 

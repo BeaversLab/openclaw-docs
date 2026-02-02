@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Linux App"
 summary: "Linux 支持 + 伴侣应用状态"
 read_when:
   - 查看 Linux 伴侣应用状态

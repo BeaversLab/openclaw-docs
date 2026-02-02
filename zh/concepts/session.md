@@ -2,8 +2,9 @@
 summary: "聊天的会话管理规则、key 与持久化"
 read_when:
   - 修改会话处理或存储
+title: "会话管理"
 ---
-# Session Management
+# 会话管理
 
 OpenClaw 将**每个 agent 的一个私聊会话**视为主会话。私聊会折叠为 `agent:<agentId>:<mainKey>`（默认 `main`），群/频道聊天拥有自己的 key。`session.mainKey` 会被遵循。
 

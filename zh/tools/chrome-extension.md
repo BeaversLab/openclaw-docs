@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Chrome 扩展（浏览器中继）"
 summary: "Chrome 扩展：让 OpenClaw 驱动你现有的 Chrome 标签页"
 read_when:
   - 你想让 agent 驱动现有 Chrome 标签页（工具栏按钮）

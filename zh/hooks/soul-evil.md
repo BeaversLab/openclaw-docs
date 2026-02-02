@@ -3,6 +3,7 @@ summary: "SOUL Evil hook（用 SOUL_EVIL.md 替换 SOUL.md）"
 read_when:
   - 你想启用或调优 SOUL Evil hook
   - 你想设置清洗窗口或随机人格切换
+title: "SOUL Evil Hook"
 ---
 
 # SOUL Evil Hook

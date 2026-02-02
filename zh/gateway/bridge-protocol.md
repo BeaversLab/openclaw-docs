@@ -4,6 +4,7 @@ read_when:
   - 构建或调试 node 客户端（iOS/Android/macOS node 模式）
   - 调查配对或 bridge 认证失败
   - 审计 gateway 暴露的 node 面
+title: "Bridge 协议（旧版 node 传输）"
 ---
 
 # Bridge 协议（旧版 node 传输）

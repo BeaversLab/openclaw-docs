@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "MiniMax"
 summary: "在 OpenClaw 中使用 MiniMax M2.1"
 read_when:
   - 想在 OpenClaw 中使用 MiniMax 模型

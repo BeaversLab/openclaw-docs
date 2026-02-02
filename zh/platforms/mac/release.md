@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "OpenClaw macOS 发布（Sparkle）"
 summary: "OpenClaw macOS 发布清单（Sparkle feed、打包、签名）"
 read_when:
   - 发布或验证 OpenClaw macOS 版本

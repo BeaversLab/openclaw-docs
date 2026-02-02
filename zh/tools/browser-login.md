@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "浏览器登录 + X/Twitter 发帖"
 summary: "浏览器自动化的手动登录 + X/Twitter 发帖"
 read_when:
   - 你需要为浏览器自动化登录站点

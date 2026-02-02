@@ -2,8 +2,9 @@
 summary: "通过 SSH 隧道（Gateway WS）与 tailnet 的远程访问"
 read_when:
   - 运行或排查远程 gateway 设置
+title: "远程访问（SSH、隧道与 tailnet）"
 ---
-# Remote access（SSH、隧道与 tailnet）
+# 远程访问（SSH、隧道与 tailnet）
 
 本仓库支持“SSH 远程”模式：在专用主机（桌面/服务器）上保持单个 Gateway（master）运行，并将客户端连接到它。
 

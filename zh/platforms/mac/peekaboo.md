@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Peekaboo Bridge（macOS UI 自动化）"
 summary: "用于 macOS UI 自动化的 PeekabooBridge 集成"
 read_when:
   - 在 OpenClaw.app 中托管 PeekabooBridge

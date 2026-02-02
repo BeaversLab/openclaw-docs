@@ -3,6 +3,7 @@ summary: "通过 Gateway HTTP 端点直接调用单个工具"
 read_when:
   - 想在不运行完整 agent 轮次的情况下调用工具
   - 构建需要工具策略约束的自动化
+title: "Tools Invoke（HTTP）"
 ---
 # Tools Invoke（HTTP）
 

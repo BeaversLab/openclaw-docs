@@ -3,8 +3,9 @@ summary: "在同一主机运行多个 OpenClaw Gateway（隔离、端口与 prof
 read_when:
   - 在同一机器运行多个 Gateway
   - 需要为每个 Gateway 隔离 config/state/端口
+title: "多网关（同一主机）"
 ---
-# Multiple Gateways（同一主机）
+# 多网关（同一主机）
 
 多数场景应使用单个 Gateway，因为一个 Gateway 可处理多个消息连接与 agents。若需要更强隔离或冗余（例如救援 bot），请使用隔离 profile/端口运行多个 Gateway。
 

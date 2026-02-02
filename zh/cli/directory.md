@@ -3,6 +3,7 @@ summary: "`openclaw directory` 的 CLI 参考（self、peers、groups）"
 read_when:
   - 你想查找某个渠道的联系人/群组/self id
   - 你在开发渠道目录适配器
+title: "`openclaw directory`"
 ---
 
 # `openclaw directory`

@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "SOUL.md - 你是谁"
 summary: "SOUL.md 工作区模板"
 read_when:
   - 手动引导工作区

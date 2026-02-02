@@ -967,7 +967,7 @@
           {
             "group": "Gateway & Ops",
             "pages": [
-              "en/gateway",
+              "en/gateway/index",
               "en/gateway/protocol",
               "en/gateway/bridge-protocol",
               "en/gateway/pairing",
@@ -986,7 +986,7 @@
               "en/gateway/heartbeat",
               "en/gateway/doctor",
               "en/gateway/logging",
-              "en/gateway/security",
+              "en/gateway/security/index",
               "en/security/formal-verification",
               "en/gateway/sandbox-vs-tool-policy-vs-elevated",
               "en/gateway/sandboxing",
@@ -1002,7 +1002,7 @@
           {
             "group": "Web & Interfaces",
             "pages": [
-              "en/web",
+              "en/web/index",
               "en/web/control-ui",
               "en/web/dashboard",
               "en/web/webchat",
@@ -1066,7 +1066,7 @@
           {
             "group": "Tools & Skills",
             "pages": [
-              "en/tools",
+              "en/tools/index",
               "en/tools/lobster",
               "en/tools/llm-task",
               "en/plugin",
@@ -1094,7 +1094,7 @@
           {
             "group": "Nodes & Media",
             "pages": [
-              "en/nodes",
+              "en/nodes/index",
               "en/nodes/camera",
               "en/nodes/images",
               "en/nodes/audio",
@@ -1106,7 +1106,7 @@
           {
             "group": "Platforms",
             "pages": [
-              "en/platforms",
+              "en/platforms/index",
               "en/platforms/macos",
               "en/platforms/macos-vm",
               "en/platforms/ios",
@@ -1288,7 +1288,7 @@
           {
             "group": "网关与运维",
             "pages": [
-              "zh/gateway",
+              "zh/gateway/index",
               "zh/gateway/protocol",
               "zh/gateway/bridge-protocol",
               "zh/gateway/pairing",
@@ -1307,7 +1307,7 @@
               "zh/gateway/heartbeat",
               "zh/gateway/doctor",
               "zh/gateway/logging",
-              "zh/gateway/security",
+              "zh/gateway/security/index",
               "zh/security/formal-verification",
               "zh/gateway/sandbox-vs-tool-policy-vs-elevated",
               "zh/gateway/sandboxing",
@@ -1323,7 +1323,7 @@
           {
             "group": "Web 与界面",
             "pages": [
-              "zh/web",
+              "zh/web/index",
               "zh/web/control-ui",
               "zh/web/dashboard",
               "zh/web/webchat",
@@ -1387,7 +1387,7 @@
           {
             "group": "工具与技能",
             "pages": [
-              "zh/tools",
+              "zh/tools/index",
               "zh/tools/lobster",
               "zh/tools/llm-task",
               "zh/plugin",
@@ -1415,7 +1415,7 @@
           {
             "group": "节点与媒体",
             "pages": [
-              "zh/nodes",
+              "zh/nodes/index",
               "zh/nodes/camera",
               "zh/nodes/images",
               "zh/nodes/audio",
@@ -1427,7 +1427,7 @@
           {
             "group": "平台",
             "pages": [
-              "zh/platforms",
+              "zh/platforms/index",
               "zh/platforms/macos",
               "zh/platforms/macos-vm",
               "zh/platforms/ios",

@@ -2,8 +2,9 @@
 summary: "按频道路由规则（WhatsApp、Telegram、Discord、Slack）与共享上下文"
 read_when:
   - 需要修改频道路由或收件箱行为
+title: "频道和路由"
 ---
-# Channels & routing
+# 频道和路由
 
 
 OpenClaw 会将回复 **路由回消息来源的频道**。模型不会选择频道；路由是确定性的，并由主机配置控制。

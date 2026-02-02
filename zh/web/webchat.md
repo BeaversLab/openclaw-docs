@@ -1,12 +1,10 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "网页聊天 (网关WebSocket界面)"
 summary: "Loopback WebChat 静态宿主与 Gateway WS 用于聊天 UI"
 read_when:
   - 调试或配置 WebChat 访问
 ---
-# WebChat（Gateway WebSocket UI）
+# 网页聊天 (网关WebSocket界面)
 
 
 状态：macOS/iOS 的 SwiftUI 聊天 UI 直接连接 Gateway WebSocket。

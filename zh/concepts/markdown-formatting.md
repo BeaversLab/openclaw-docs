@@ -4,6 +4,7 @@ read_when:
   - 需要修改出站频道的 markdown 格式化或分块
   - 需要新增频道格式化器或样式映射
   - 在排查跨频道格式回归
+title: "Markdown 格式化"
 ---
 # Markdown 格式化
 

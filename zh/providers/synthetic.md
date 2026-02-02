@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Synthetic"
 summary: "在 OpenClaw 中使用 Synthetic 的 Anthropic 兼容 API"
 read_when:
   - 想将 Synthetic 作为模型提供商

@@ -1,14 +1,11 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "多Agent沙盒以及工具配置"
 summary: "按 agent 的 sandbox + 工具限制、优先级与示例"
-title: Multi-Agent Sandbox & Tools
 read_when: "你想在多 agent gateway 中启用按 agent 的 sandbox 或工具 allow/deny 策略。"
 status: active
 ---
 
-# Multi-Agent Sandbox & Tools Configuration
+# 多Agent沙盒以及工具配置
 
 ## Overview
 

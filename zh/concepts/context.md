@@ -4,8 +4,9 @@ read_when:
   - 想理解 OpenClaw 中 “context” 的含义
   - 在排查模型为何“知道”某件事（或忘记了）
   - 想减少上下文开销（/context、/status、/compact）
+title: "上下文（Context）"
 ---
-# Context
+# 上下文（Context）
 
 “Context” 是 **OpenClaw 在一次运行中发送给模型的全部内容**。它受模型 **上下文窗口**（token 限制）约束。
 

@@ -3,9 +3,10 @@ summary: "日志输出面、文件日志、WS 日志样式与控制台格式"
 read_when:
   - 修改日志输出或格式
   - 排查 CLI 或 gateway 输出
+title: "日志"
 ---
 
-# Logging
+# 日志
 
 用户侧概览（CLI + Control UI + config）见 [/logging](/zh/logging)。
 

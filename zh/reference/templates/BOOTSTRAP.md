@@ -1,12 +1,10 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "BOOTSTRAP.md - 你好，世界"
 summary: "新 agent 的首次运行仪式"
 read_when:
   - 手动引导工作区
 ---
-# BOOTSTRAP.md - Hello, World
+# BOOTSTRAP.md - 你好，世界
 
 *你刚刚醒来。该弄清你是谁了。*
 

@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "iOS App (Node)"
 summary: "iOS node 应用：连接 Gateway、配对、canvas 与排障"
 read_when:
   - 配对或重连 iOS node

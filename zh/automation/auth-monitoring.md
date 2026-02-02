@@ -3,6 +3,7 @@ summary: "监控模型提供方的 OAuth 到期情况"
 read_when:
   - 配置认证到期监控或告警
   - 自动化 Claude Code / Codex OAuth 刷新检查
+title: "认证监控"
 ---
 # 认证监控
 

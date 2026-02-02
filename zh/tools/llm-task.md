@@ -1,14 +1,12 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "LLM 任务"
 summary: "工作流中的仅 JSON LLM 任务（可选插件工具）"
 read_when:
   - 你希望在工作流中加入仅 JSON 的 LLM 步骤
   - 你需要对 LLM 输出做 schema 校验以便自动化
 ---
 
-# LLM Task
+# LLM 任务
 
 `llm-task` 是 **可选插件工具**，运行仅 JSON 的 LLM 任务并返回结构化输出（可选 JSON Schema 校验）。
 

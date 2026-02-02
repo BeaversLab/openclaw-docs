@@ -2,6 +2,7 @@
 summary: "OpenClaw 的背景故事与世界观（用于语气与上下文）"
 read_when:
   - 撰写引用世界观的文档或 UX 文案
+title: "OpenClaw 的世界观 🦞📖"
 ---
 # OpenClaw 的世界观 🦞📖
 

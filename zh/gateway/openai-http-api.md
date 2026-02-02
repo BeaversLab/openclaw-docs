@@ -2,8 +2,9 @@
 summary: "通过 Gateway 暴露 OpenAI 兼容的 /v1/chat/completions HTTP 端点"
 read_when:
   - 集成依赖 OpenAI Chat Completions 的工具
+title: "OpenAI Chat 兼容（HTTP）"
 ---
-# OpenAI Chat Completions（HTTP）
+# OpenAI Chat 兼容（HTTP）
 
 OpenClaw 的 Gateway 可提供一个小型 OpenAI 兼容的 Chat Completions 端点。
 

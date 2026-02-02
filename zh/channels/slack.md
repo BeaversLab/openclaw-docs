@@ -1,6 +1,7 @@
 ---
 summary: "Slack 的 Socket 或 HTTP webhook 模式设置"
 read_when: "设置 Slack 或调试 Slack socket/HTTP 模式"
+title: "Slack"
 ---
 
 # Slack

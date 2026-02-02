@@ -4,21 +4,21 @@ read_when:
   - 配置广播组
   - 调试 WhatsApp 的多 agent 回复
 status: experimental
+title: "广播组"
 ---
 
-# Broadcast Groups
-
+# 广播组
 **状态：** 实验性  
 **版本：** 2026.1.9 新增
 
 ## 概览
 
-Broadcast Groups 允许多个 agent 同时处理并回复同一条消息。这样你可以在一个
+广播组允许多个 agent 同时处理并回复同一条消息。这样你可以在一个
 WhatsApp 群聊或私聊中组建协作的专用 agent 团队——只用一个手机号。
 
 当前范围：**仅 WhatsApp**（web 渠道）。
 
-Broadcast groups 会在渠道 allowlist 与群组激活规则之后评估。对 WhatsApp 群聊而言，
+广播组会在渠道 allowlist 与群组激活规则之后评估。对 WhatsApp 群聊而言，
 这表示只有在 OpenClaw 原本会回复的情况下（例如被提及，取决于群设置）才会触发广播。
 
 ## 使用场景
@@ -154,7 +154,7 @@ agent 按顺序处理（前一个完成后再开始）：
 4. **若不在广播列表中**：
    - 走常规路由（首个匹配 binding）
 
-注意：broadcast groups 不会绕过渠道 allowlist 或群组激活规则（提及/命令等）。
+注意：广播组不会绕过渠道 allowlist 或群组激活规则（提及/命令等）。
 它们只改变 *在消息满足处理条件时，哪些 agent 会运行*。
 
 ### 会话隔离
@@ -262,7 +262,7 @@ Result: Agent A and C respond, Agent B logs error
 
 ### Providers
 
-Broadcast groups 当前支持：
+广播组当前支持：
 - ✅ WhatsApp（已实现）
 - 🚧 Telegram（计划中）
 - 🚧 Discord（计划中）
@@ -270,7 +270,7 @@ Broadcast groups 当前支持：
 
 ### Routing
 
-Broadcast groups 可与现有路由并存：
+广播组可与现有路由并存：
 
 ```json
 {

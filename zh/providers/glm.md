@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "GLM 模型"
 summary: "GLM 模型家族概览 + 在 OpenClaw 中的使用方式"
 read_when:
   - 想在 OpenClaw 中使用 GLM 模型

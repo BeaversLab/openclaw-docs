@@ -3,6 +3,7 @@ summary: "`openclaw message` 的 CLI 参考（发送 + 频道操作）"
 read_when:
   - 添加或修改 message CLI 行为时
   - 调整出站频道行为时
+title: "`openclaw message`"
 ---
 
 # `openclaw message`

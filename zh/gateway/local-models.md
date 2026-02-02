@@ -4,6 +4,7 @@ read_when:
   - 需要从自有 GPU 机器提供模型
   - 接入 LM Studio 或 OpenAI 兼容代理
   - 需要更安全的本地模型建议
+title: "本地模型"
 ---
 # 本地模型
 

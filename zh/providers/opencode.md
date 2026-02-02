@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "OpenCode Zen"
 summary: "在 OpenClaw 中使用 OpenCode Zen（精选模型）"
 read_when:
   - 想使用 OpenCode Zen 获取模型访问

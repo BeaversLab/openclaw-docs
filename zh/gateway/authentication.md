@@ -3,8 +3,9 @@ summary: "模型认证：OAuth、API keys 与 setup-token"
 read_when:
   - 排查模型认证或 OAuth 过期
   - 记录认证或凭据存储
+title: "认证"
 ---
-# Authentication
+# 认证
 
 OpenClaw 支持模型 providers 的 OAuth 与 API keys。对 Anthropic 账号，推荐使用 **API key**。若使用 Claude 订阅，请使用 `claude setup-token` 生成的长效 token。
 

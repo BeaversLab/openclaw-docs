@@ -1,14 +1,12 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "相机采集 (agent)"
 summary: "相机采集（iOS node + macOS app）：照片（jpg）与短视频（mp4）"
 read_when:
   - 你在 iOS node 或 macOS 上新增/修改相机采集
   - 你在扩展 agent 可访问的 MEDIA 临时文件流程
 ---
 
-# Camera capture (agent)
+# 相机采集 (agent)
 
 OpenClaw 支持 **相机采集** 用于 agent 工作流：
 

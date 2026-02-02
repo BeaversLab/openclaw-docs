@@ -1,14 +1,12 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "更新"
 summary: "安全更新 OpenClaw（全局安装或源码），以及回滚策略"
 read_when:
   - 更新 OpenClaw
   - 更新后出现问题
 ---
 
-# Updating
+# 更新
 
 OpenClaw 更新很快（仍处于 1.0 之前）。像运维一样对待更新：更新 → 运行检查 → 重启（或使用会自动重启的 `openclaw update`）→ 验证。
 

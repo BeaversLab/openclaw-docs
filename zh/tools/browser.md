@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "浏览器（openclaw 管理）"
 summary: "集成的浏览器控制服务 + 动作命令"
 read_when:
   - 添加 agent 控制的浏览器自动化

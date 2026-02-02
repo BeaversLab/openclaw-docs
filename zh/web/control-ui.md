@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Control UI（浏览器）"
 summary: "Gateway 的浏览器控制 UI（聊天、节点、配置）"
 read_when:
   - 你希望通过浏览器操作 Gateway

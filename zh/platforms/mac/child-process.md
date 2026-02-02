@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "macOS 上的 Gateway 生命周期"
 summary: "macOS 上的 Gateway 生命周期（launchd）"
 read_when:
   - 将 mac 应用与 Gateway 生命周期集成

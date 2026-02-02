@@ -3,6 +3,7 @@ summary: "在 OpenClaw 中使用 Amazon Bedrock（Converse API）模型"
 read_when:
   - 你想在 OpenClaw 中使用 Amazon Bedrock 模型
   - 你需要配置 AWS 认证/区域以调用模型
+title: "Amazon Bedrock"
 ---
 # Amazon Bedrock
 

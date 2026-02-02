@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "AGENTS.md — OpenClaw 个人助理（默认）"
 summary: "默认 OpenClaw agent 指令与个人助理技能列表"
 read_when:
   - 启动新的 OpenClaw agent 会话

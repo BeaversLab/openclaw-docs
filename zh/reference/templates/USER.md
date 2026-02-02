@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "USER.md - 关于你的用户"
 summary: "用户资料记录"
 read_when:
   - 手动引导工作区

@@ -3,6 +3,7 @@ summary: "`openclaw nodes` 的 CLI 参考（list/status/approve/invoke、camera/
 read_when:
   - 你在管理已配对节点（摄像头、屏幕、画布）
   - 需要批准请求或调用节点命令
+title: "`openclaw nodes`"
 ---
 
 # `openclaw nodes`

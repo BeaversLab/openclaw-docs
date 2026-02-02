@@ -3,8 +3,9 @@ summary: "Session pruning：裁剪工具结果以减少上下文膨胀"
 read_when:
   - 想减少 LLM 上下文因工具输出增长
   - 正在调整 agents.defaults.contextPruning
+title: "会话修剪（Session Pruning）"
 ---
-# Session Pruning
+# 会话修剪（Session Pruning）
 
 Session pruning 会在每次 LLM 调用前，从内存上下文中裁剪**旧的工具结果**。它**不会**改写磁盘上的会话历史（`*.jsonl`）。
 

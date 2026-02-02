@@ -3,6 +3,7 @@ summary: "为 Gateway 控制台集成 Tailscale Serve/Funnel"
 read_when:
   - 在 localhost 之外暴露 Gateway Control UI
   - 自动化 tailnet 或公开 dashboard 访问
+title: "Tailscale（Gateway 控制台）"
 ---
 # Tailscale（Gateway 控制台）
 

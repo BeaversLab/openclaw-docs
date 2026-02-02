@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "WebChat（macOS 应用）"
 summary: "mac 应用如何嵌入 gateway WebChat 以及调试方式"
 read_when:
   - 调试 mac WebChat 视图或 loopback 端口

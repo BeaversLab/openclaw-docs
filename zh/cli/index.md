@@ -3,6 +3,7 @@ summary: "OpenClaw CLI `openclaw` 命令、子命令与选项参考"
 read_when:
   - 添加或修改 CLI 命令或选项时
   - 记录新的命令入口时
+title: "CLI 参考"
 ---
 
 # CLI 参考

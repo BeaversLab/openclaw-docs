@@ -4,8 +4,9 @@ read_when:
   - 学习如何配置 OpenClaw
   - 查找配置示例
   - 首次设置 OpenClaw
+title: "配置示例"
 ---
-# Configuration Examples
+# 配置示例
 
 以下示例与当前配置 schema 对齐。完整参考与逐字段说明见 [Configuration](/zh/gateway/configuration)。
 

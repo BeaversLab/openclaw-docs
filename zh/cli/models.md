@@ -3,6 +3,7 @@ summary: "`openclaw models` 的 CLI 参考（status/list/set/scan、aliases、fa
 read_when:
   - 需要更改默认模型或查看提供商认证状态
   - 需要扫描可用模型/提供商并排查认证配置
+title: "`openclaw models`"
 ---
 
 # `openclaw models`

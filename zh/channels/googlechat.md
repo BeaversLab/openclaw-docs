@@ -2,6 +2,7 @@
 summary: "Google Chat 应用支持状态、能力与配置"
 read_when:
   - 开发 Google Chat 渠道功能
+title: "Google Chat（Chat API）"
 ---
 # Google Chat（Chat API）
 
@@ -32,7 +33,7 @@ read_when:
    - 在 **Connection settings** 选择 **HTTP endpoint URL**。
    - 在 **Triggers** 中选择 **Use a common HTTP endpoint URL for all triggers**，并设置为你的 gateway 公网 URL 加 `/googlechat`。
      - *提示：运行 `openclaw status` 可查看 gateway 公网 URL。*
-   - 在 **Visibility** 勾选 **Make this Chat app available to specific people and groups in <Your Domain>**。
+   - 在 **Visibility** 勾选 **Make this Chat app available to specific people and groups in &lt;Your Domain&gt;**。
    - 在文本框输入你的邮箱（如 `user@example.com`）。
    - 点击底部 **Save**。
 6) **启用应用状态**：

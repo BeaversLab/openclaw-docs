@@ -1,6 +1,7 @@
 ---
 summary: "OpenClaw.app 通过 SSH 隧道连接远程 gateway 的设置"
 read_when: "在 macOS app 中通过 SSH 连接远程 gateway"
+title: "使用远程 Gateway 运行 OpenClaw.app"
 ---
 
 # 使用远程 Gateway 运行 OpenClaw.app

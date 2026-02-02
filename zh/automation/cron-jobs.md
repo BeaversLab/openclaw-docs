@@ -4,8 +4,9 @@ read_when:
   - 安排后台作业或唤醒
   - 为需要与心跳一起运行的自动化流程接线
   - 在定时任务里决定使用 heartbeat 还是 cron
+title: "定时任务（Gateway 调度器）"
 ---
-# Cron 作业（Gateway 调度器）
+# 定时任务（Gateway 调度器）
 
 > **Cron 还是 Heartbeat？** 参考 [Cron vs Heartbeat](/zh/automation/cron-vs-heartbeat) 了解何时使用哪一种。
 

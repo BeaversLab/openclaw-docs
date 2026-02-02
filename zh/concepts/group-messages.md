@@ -2,6 +2,7 @@
 summary: "WhatsApp 群消息处理的行为与配置（mentionPatterns 在多端共享）"
 read_when:
   - 需要修改群消息规则或 mentions
+title: "群消息（WhatsApp web 频道）"
 ---
 # 群消息（WhatsApp web 频道）
 

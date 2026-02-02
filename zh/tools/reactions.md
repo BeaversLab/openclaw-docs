@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "表情回应工具"
 summary: "跨频道共享的表情回应语义"
 read_when:
   - 处理任意频道的 reactions

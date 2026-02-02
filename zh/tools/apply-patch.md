@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "apply_patch 工具"
 summary: "使用 apply_patch 工具应用多文件补丁"
 read_when:
   - 需要跨多个文件进行结构化编辑

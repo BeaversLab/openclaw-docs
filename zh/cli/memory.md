@@ -3,6 +3,7 @@ summary: "`openclaw memory` 的 CLI 参考（status/index/search）"
 read_when:
   - 需要索引或搜索语义记忆
   - 需要排查记忆可用性或索引问题
+title: "`openclaw memory`"
 ---
 
 # `openclaw memory`

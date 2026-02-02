@@ -4,8 +4,9 @@ read_when:
   - 解释入站消息如何成为回复
   - 澄清会话、队列模式或流式行为
   - 记录推理可见性与用量影响
+title: "消息（Messages）"
 ---
-# Messages
+# 消息（Messages）
 
 本页汇总 OpenClaw 如何处理入站消息、会话、队列、流式与推理可见性。
 

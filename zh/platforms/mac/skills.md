@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Skills（macOS）"
 summary: "macOS Skills 设置界面与基于 gateway 的状态"
 read_when:
   - 更新 macOS Skills 设置 UI

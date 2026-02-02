@@ -3,6 +3,7 @@ summary: "渠道专项故障排查速记（Discord/Telegram/WhatsApp）"
 read_when:
   - 渠道已连接但消息不通
   - 排查渠道配置问题（intents、权限、隐私模式）
+title: "渠道故障排查"
 ---
 # 渠道故障排查
 

@@ -4,8 +4,9 @@ read_when:
   - 实现或修改 Bonjour 发现/广播
   - 调整远程连接模式（direct vs SSH）
   - 设计远程 node 的发现 + 配对
+title: "发现和传输"
 ---
-# Discovery & transports
+# 发现和传输
 
 OpenClaw 有两个表面上相似但实际不同的问题：
 

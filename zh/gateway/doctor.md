@@ -3,8 +3,9 @@ summary: "Doctor 命令：健康检查、配置迁移与修复步骤"
 read_when:
   - 添加或修改 doctor 迁移
   - 引入破坏性配置变更
+title: "修复工具（Doctor）"
 ---
-# Doctor
+# 修复工具（Doctor）
 
 `openclaw doctor` 是 OpenClaw 的修复 + 迁移工具。它会修复陈旧
 config/state、检查健康状况，并提供可执行的修复步骤。

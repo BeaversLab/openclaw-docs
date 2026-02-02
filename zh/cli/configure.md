@@ -2,6 +2,7 @@
 summary: "`openclaw configure` 的 CLI 参考（交互式配置提示）"
 read_when:
   - 你想交互式调整凭据、设备或 agent 默认值
+title: "`openclaw configure`"
 ---
 
 # `openclaw configure`

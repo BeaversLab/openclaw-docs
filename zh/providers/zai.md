@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Z.AI"
 summary: "在 OpenClaw 中使用 Z.AI（GLM 模型）"
 read_when:
   - 想在 OpenClaw 中使用 Z.AI / GLM 模型

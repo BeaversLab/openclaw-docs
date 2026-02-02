@@ -4,6 +4,7 @@ read_when:
   - 解释各渠道的 streaming 或分块如何工作
   - 修改 block streaming 或渠道分块行为
   - 排查重复/过早的块回复或草稿流
+title: "Streaming + 分块"
 ---
 # Streaming + 分块
 

@@ -3,12 +3,10 @@ summary: "技能：托管 vs 工作区、门控规则与配置/环境注入"
 read_when:
   - 添加或修改技能
   - 修改技能门控或加载规则
+title: "技能（OpenClaw）"
 ---
 
-> [!NOTE]
-> 本页正在翻译中。
-
-# Skills（OpenClaw）
+# 技能（OpenClaw）
 
 OpenClaw 使用 **[AgentSkills](https://agentskills.io) 兼容** 的技能文件夹来教 agent 如何使用工具。每个技能是一个包含 `SKILL.md`（带 YAML frontmatter 与说明）的目录。OpenClaw 加载 **内置技能** 与可选本地覆盖，并在加载时依据环境、配置与二进制存在性进行过滤。
 

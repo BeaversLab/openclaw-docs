@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Anthropic（Claude）"
 summary: "在 OpenClaw 中通过 API key 或 setup-token 使用 Anthropic Claude"
 read_when:
   - 想在 OpenClaw 中使用 Anthropic 模型

@@ -3,6 +3,7 @@ summary: "`openclaw approvals` 的 CLI 参考（gateway 或节点主机的 exec 
 read_when:
   - 你要通过 CLI 编辑 exec 审批
   - 你需要管理 gateway 或 node 主机的 allowlist
+title: "`openclaw approvals`"
 ---
 
 # `openclaw approvals`

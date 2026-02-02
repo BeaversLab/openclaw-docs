@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "设备型号数据库（友好名称）"
 summary: "OpenClaw 如何为 macOS 应用的友好设备名引入 Apple 设备型号标识"
 read_when:
   - 更新设备型号映射或 NOTICE/license 文件

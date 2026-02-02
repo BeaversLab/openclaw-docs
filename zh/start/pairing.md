@@ -4,6 +4,7 @@ read_when:
   - 设置私聊访问控制
   - 配对新的 iOS/Android 节点
   - 回顾 OpenClaw 安全态势
+title: "配对"
 ---
 
 # 配对

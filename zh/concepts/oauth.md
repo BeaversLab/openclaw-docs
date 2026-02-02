@@ -5,6 +5,7 @@ read_when:
   - 遇到 token 失效 / 登出问题
   - 想使用 setup-token 或 OAuth 认证流程
   - 需要多账号或 profile 路由
+title: "OAuth"
 ---
 # OAuth
 

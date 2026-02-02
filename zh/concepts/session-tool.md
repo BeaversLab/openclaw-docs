@@ -2,9 +2,10 @@
 summary: "Agent 会话工具：列出会话、获取历史、跨会话发送消息"
 read_when:
   - 添加或修改 session tools
+title: "会话工具"
 ---
 
-# Session Tools
+# 会话工具
 
 目标：提供一组小而难误用的工具，让 agent 可以列出会话、获取历史，并向另一个会话发送消息。
 

@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "`openclaw agent`（直接运行 agent）"
 summary: "直接运行 `openclaw agent` CLI（可选投递）"
 read_when:
   - 添加或修改 agent CLI 入口

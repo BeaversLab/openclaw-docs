@@ -3,6 +3,7 @@ summary: "通过网关 + CLI 发送投票"
 read_when:
   - 添加或修改投票支持
   - 调试从 CLI 或网关发送投票
+title: "投票"
 ---
 # 投票
 

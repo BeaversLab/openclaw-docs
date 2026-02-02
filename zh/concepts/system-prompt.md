@@ -3,8 +3,9 @@ summary: "OpenClaw system prompt 包含什么以及如何组装"
 read_when:
   - 编辑 system prompt 文本、工具列表或时间/heartbeat 部分
   - 修改工作区引导或 skills 注入行为
+title: "系统提示词（System Prompt）"
 ---
-# System Prompt
+# 系统提示词（System Prompt）
 
 OpenClaw 为每次 agent 运行构建自定义 system prompt。该 prompt 由 **OpenClaw** 拥有，不使用 p-coding-agent 的默认提示。
 

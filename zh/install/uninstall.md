@@ -1,14 +1,12 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "卸载"
 summary: "彻底卸载 OpenClaw（CLI、服务、state、workspace）"
 read_when:
   - 你想从机器上移除 OpenClaw
   - 卸载后 gateway 服务仍在运行
 ---
 
-# Uninstall
+# 卸载
 
 两条路径：
 - **简便路径**（`openclaw` 仍可用）

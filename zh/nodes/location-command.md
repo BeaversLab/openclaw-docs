@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Location command（nodes）"
 summary: "Nodes 的定位命令（location.get）、权限模式与后台行为"
 read_when:
   - 添加定位 node 支持或权限 UI

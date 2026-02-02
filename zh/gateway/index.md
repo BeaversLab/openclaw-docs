@@ -2,6 +2,7 @@
 summary: "Gateway 服务运行手册、生命周期与运维"
 read_when:
   - 运行或调试 gateway 进程
+title: "Gateway 服务 runbook"
 ---
 # Gateway 服务 runbook
 

@@ -4,6 +4,7 @@ read_when:
   - 需要在 API provider 失败时有可靠回退
   - 运行 Claude Code CLI 或其他本地 AI CLI 并希望复用
   - 需要纯文本、无工具但仍支持会话/图片的路径
+title: "CLI backends（回退运行时）"
 ---
 # CLI backends（回退运行时）
 

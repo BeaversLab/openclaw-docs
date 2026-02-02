@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "IDENTITY.md - 我是谁？"
 summary: "Agent 身份记录"
 read_when:
   - 手动引导工作区

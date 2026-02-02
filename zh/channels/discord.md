@@ -2,6 +2,7 @@
 summary: "Discord 机器人支持状态、能力与配置"
 read_when:
   - 开发 Discord 渠道功能
+title: "Discord（Bot API）"
 ---
 # Discord（Bot API）
 

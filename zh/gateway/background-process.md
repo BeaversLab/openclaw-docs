@@ -3,9 +3,10 @@ summary: "后台 exec 执行与进程管理"
 read_when:
   - 添加或修改后台 exec 行为
   - 排查长时间运行的 exec 任务
+title: "后台执行和进程工具"
 ---
 
-# Background Exec + Process Tool
+# 后台执行和进程工具
 
 OpenClaw 通过 `exec` 工具运行 shell 命令，并将长任务保存在内存中。`process` 工具用于管理这些后台会话。
 

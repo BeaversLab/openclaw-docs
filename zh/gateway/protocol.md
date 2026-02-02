@@ -4,9 +4,10 @@ read_when:
   - 实现或更新 gateway WS 客户端
   - 排查协议不匹配或连接失败
   - 重新生成协议 schema/models
+title: "网关协议（WebSocket）"
 ---
 
-# Gateway protocol（WebSocket）
+# 网关协议（WebSocket）
 
 Gateway WS 协议是 OpenClaw 的**单一控制平面 + node 传输**。
 所有客户端（CLI、web UI、macOS app、iOS/Android nodes、headless

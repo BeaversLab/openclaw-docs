@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "RPC 适配器"
 summary: "外部 CLI（signal-cli、imsg）的 RPC 适配器与网关模式"
 read_when:
   - 添加或修改外部 CLI 集成

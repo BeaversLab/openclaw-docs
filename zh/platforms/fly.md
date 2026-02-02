@@ -1,8 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-title: Fly.io
+title: "Fly.io Deployment"
 description: 在 Fly.io 上部署 OpenClaw
 ---
 

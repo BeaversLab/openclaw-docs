@@ -1,0 +1,2786 @@
+[
+  {
+    "path": "zh/index.md",
+    "group": "开始",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/start/getting-started.md",
+    "group": "开始",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 6,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 6 处）"
+    ]
+  },
+  {
+    "path": "zh/start/wizard.md",
+    "group": "开始",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 6,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 6 处）"
+    ]
+  },
+  {
+    "path": "zh/start/setup.md",
+    "group": "开始",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/start/pairing.md",
+    "group": "开始",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/start/openclaw.md",
+    "group": "开始",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/start/showcase.md",
+    "group": "开始",
+    "exists": true,
+    "hasTitle": true,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": []
+  },
+  {
+    "path": "zh/start/hubs.md",
+    "group": "开始",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/start/onboarding.md",
+    "group": "开始",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/start/lore.md",
+    "group": "开始",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 5,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 5 处）"
+    ]
+  },
+  {
+    "path": "zh/help/index.md",
+    "group": "帮助",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/help/troubleshooting.md",
+    "group": "帮助",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/help/faq.md",
+    "group": "帮助",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 531,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 531 处）"
+    ]
+  },
+  {
+    "path": "zh/install/index.md",
+    "group": "安装与更新",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/install/installer.md",
+    "group": "安装与更新",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/install/updating.md",
+    "group": "安装与更新",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 9,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 9 处）"
+    ]
+  },
+  {
+    "path": "zh/install/development-channels.md",
+    "group": "安装与更新",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 8,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 8 处）"
+    ]
+  },
+  {
+    "path": "zh/install/uninstall.md",
+    "group": "安装与更新",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 8,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 8 处）"
+    ]
+  },
+  {
+    "path": "zh/install/ansible.md",
+    "group": "安装与更新",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 8,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 8 处）"
+    ]
+  },
+  {
+    "path": "zh/install/nix.md",
+    "group": "安装与更新",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/install/docker.md",
+    "group": "安装与更新",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 8,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 8 处）"
+    ]
+  },
+  {
+    "path": "zh/railway.md",
+    "group": "安装与更新",
+    "exists": false,
+    "issues": [
+      "文件不存在"
+    ]
+  },
+  {
+    "path": "zh/render.md",
+    "group": "安装与更新",
+    "exists": false,
+    "issues": [
+      "文件不存在"
+    ]
+  },
+  {
+    "path": "zh/northflank.md",
+    "group": "安装与更新",
+    "exists": false,
+    "issues": [
+      "文件不存在"
+    ]
+  },
+  {
+    "path": "zh/install/bun.md",
+    "group": "安装与更新",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/index.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 6,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 6 处）"
+    ]
+  },
+  {
+    "path": "zh/cli/setup.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/onboard.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/configure.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/doctor.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 5,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 5 处）"
+    ]
+  },
+  {
+    "path": "zh/cli/dashboard.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/reset.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/uninstall.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/browser.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 11,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 11 处）"
+    ]
+  },
+  {
+    "path": "zh/cli/message.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/agent.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/agents.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/status.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/health.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/sessions.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/channels.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 8,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 8 处）"
+    ]
+  },
+  {
+    "path": "zh/cli/directory.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/skills.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/plugins.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 4,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 4 处）"
+    ]
+  },
+  {
+    "path": "zh/cli/memory.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 8,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 8 处）"
+    ]
+  },
+  {
+    "path": "zh/cli/models.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 6,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 6 处）"
+    ]
+  },
+  {
+    "path": "zh/cli/logs.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/system.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/nodes.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 4,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 4 处）"
+    ]
+  },
+  {
+    "path": "zh/cli/approvals.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/gateway.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 13,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 13 处）"
+    ]
+  },
+  {
+    "path": "zh/cli/tui.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/voicecall.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/cron.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/dns.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/docs.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/hooks.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 10,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 10 处）"
+    ]
+  },
+  {
+    "path": "zh/cli/pairing.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/security.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/cli/update.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 8,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 8 处）"
+    ]
+  },
+  {
+    "path": "zh/cli/sandbox.md",
+    "group": "CLI",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 12,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 12 处）"
+    ]
+  },
+  {
+    "path": "zh/concepts/architecture.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/agent.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/agent-loop.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/system-prompt.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/context.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/token-use.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/oauth.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 5,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 5 处）"
+    ]
+  },
+  {
+    "path": "zh/concepts/agent-workspace.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/memory.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/multi-agent.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/compaction.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/session.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/session-pruning.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/sessions.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/session-tool.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/presence.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/channel-routing.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/messages.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/streaming.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/markdown-formatting.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/groups.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/group-messages.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/typing-indicators.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/queue.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/retry.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/model-providers.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/models.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 7,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 7 处）"
+    ]
+  },
+  {
+    "path": "zh/concepts/model-failover.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/usage-tracking.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/timezone.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/concepts/typebox.md",
+    "group": "核心概念",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/index.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 10,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 10 处）"
+    ]
+  },
+  {
+    "path": "zh/gateway/protocol.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/bridge-protocol.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/pairing.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/gateway-lock.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/environment.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/configuration.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 14,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 14 处）"
+    ]
+  },
+  {
+    "path": "zh/gateway/multiple-gateways.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 10,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 10 处）"
+    ]
+  },
+  {
+    "path": "zh/gateway/configuration-examples.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/authentication.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 12,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 12 处）"
+    ]
+  },
+  {
+    "path": "zh/gateway/openai-http-api.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/tools-invoke-http-api.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/cli-backends.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/local-models.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/background-process.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/health.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/heartbeat.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/doctor.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/logging.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/security/index.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 9,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 9 处）"
+    ]
+  },
+  {
+    "path": "zh/security/formal-verification.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 21,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 21 处）"
+    ]
+  },
+  {
+    "path": "zh/gateway/sandbox-vs-tool-policy-vs-elevated.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/sandboxing.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/troubleshooting.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 9,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 9 处）"
+    ]
+  },
+  {
+    "path": "zh/debugging.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/remote.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/remote-gateway-readme.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/discovery.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/bonjour.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/gateway/tailscale.md",
+    "group": "网关与运维",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/web/index.md",
+    "group": "Web 与界面",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/web/control-ui.md",
+    "group": "Web 与界面",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/web/dashboard.md",
+    "group": "Web 与界面",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/web/webchat.md",
+    "group": "Web 与界面",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tui.md",
+    "group": "Web 与界面",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/index.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/whatsapp.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 7,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 7 处）"
+    ]
+  },
+  {
+    "path": "zh/channels/telegram.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/grammy.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/discord.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/slack.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/googlechat.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 5,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 5 处）"
+    ]
+  },
+  {
+    "path": "zh/channels/mattermost.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/signal.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/imessage.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/msteams.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/line.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/matrix.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/zalo.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/zalouser.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 4,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 4 处）"
+    ]
+  },
+  {
+    "path": "zh/broadcast-groups.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 12,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 12 处）"
+    ]
+  },
+  {
+    "path": "zh/channels/troubleshooting.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/channels/location.md",
+    "group": "渠道",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/providers/index.md",
+    "group": "提供商",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/providers/models.md",
+    "group": "提供商",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/providers/openai.md",
+    "group": "提供商",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/providers/anthropic.md",
+    "group": "提供商",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/bedrock.md",
+    "group": "提供商",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/providers/moonshot.md",
+    "group": "提供商",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/providers/minimax.md",
+    "group": "提供商",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/providers/vercel-ai-gateway.md",
+    "group": "提供商",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/providers/openrouter.md",
+    "group": "提供商",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/providers/synthetic.md",
+    "group": "提供商",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/providers/opencode.md",
+    "group": "提供商",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/providers/glm.md",
+    "group": "提供商",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/providers/zai.md",
+    "group": "提供商",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/hooks.md",
+    "group": "自动化与 Hooks",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 34,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 34 处）"
+    ]
+  },
+  {
+    "path": "zh/hooks/soul-evil.md",
+    "group": "自动化与 Hooks",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/automation/auth-monitoring.md",
+    "group": "自动化与 Hooks",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/automation/webhook.md",
+    "group": "自动化与 Hooks",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/automation/gmail-pubsub.md",
+    "group": "自动化与 Hooks",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 5,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 5 处）"
+    ]
+  },
+  {
+    "path": "zh/automation/cron-jobs.md",
+    "group": "自动化与 Hooks",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/automation/cron-vs-heartbeat.md",
+    "group": "自动化与 Hooks",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 4,
+    "issues": [
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 4 处）"
+    ]
+  },
+  {
+    "path": "zh/automation/poll.md",
+    "group": "自动化与 Hooks",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/index.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/lobster.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/llm-task.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/plugin.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/plugins/voice-call.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/plugins/zalouser.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/exec.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/web.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/apply-patch.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/elevated.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/browser.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 40,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 40 处）"
+    ]
+  },
+  {
+    "path": "zh/tools/browser-login.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/chrome-extension.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/browser-linux-troubleshooting.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/slash-commands.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/thinking.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/agent-send.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/subagents.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/multi-agent-sandbox-tools.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/reactions.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/skills.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/skills-config.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/tools/clawdhub.md",
+    "group": "工具与技能",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/nodes/index.md",
+    "group": "节点与媒体",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 8,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 8 处）"
+    ]
+  },
+  {
+    "path": "zh/nodes/camera.md",
+    "group": "节点与媒体",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/nodes/images.md",
+    "group": "节点与媒体",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/nodes/audio.md",
+    "group": "节点与媒体",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/nodes/location-command.md",
+    "group": "节点与媒体",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/nodes/voicewake.md",
+    "group": "节点与媒体",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/nodes/talk.md",
+    "group": "节点与媒体",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/index.md",
+    "group": "平台",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/macos.md",
+    "group": "平台",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/macos-vm.md",
+    "group": "平台",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 7,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 7 处）"
+    ]
+  },
+  {
+    "path": "zh/platforms/ios.md",
+    "group": "平台",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/android.md",
+    "group": "平台",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/windows.md",
+    "group": "平台",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/linux.md",
+    "group": "平台",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/fly.md",
+    "group": "平台",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 10,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 10 处）"
+    ]
+  },
+  {
+    "path": "zh/platforms/hetzner.md",
+    "group": "平台",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 8,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 8 处）"
+    ]
+  },
+  {
+    "path": "zh/platforms/gcp.md",
+    "group": "平台",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 12,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 12 处）"
+    ]
+  },
+  {
+    "path": "zh/platforms/exe-dev.md",
+    "group": "平台",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 4,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段",
+      "可能存在未翻译段落（约 4 处）"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/dev-setup.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/menu-bar.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 2,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/voicewake.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/voice-overlay.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/webchat.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/canvas.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/child-process.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/health.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/icon.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/logging.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/permissions.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 3,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/remote.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/signing.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/release.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/bundled-gateway.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/xpc.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/skills.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/platforms/mac/peekaboo.md",
+    "group": "macOS 伴侣应用",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/testing.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/scripts.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/session-management-compaction.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/rpc.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/device-models.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/test.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/RELEASING.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/AGENTS.default.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/templates/AGENTS.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/templates/BOOT.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/templates/BOOTSTRAP.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 1,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/templates/HEARTBEAT.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/templates/IDENTITY.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/templates/SOUL.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/templates/TOOLS.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  },
+  {
+    "path": "zh/reference/templates/USER.md",
+    "group": "参考与模板",
+    "exists": true,
+    "hasTitle": false,
+    "hasTranslationNote": false,
+    "potentialUntranslated": 0,
+    "issues": [
+      "缺少 frontmatter",
+      "缺少 title 字段"
+    ]
+  }
+]

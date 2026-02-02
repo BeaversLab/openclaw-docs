@@ -4,6 +4,7 @@ read_when:
   - 你要启用 web_search 或 web_fetch
   - 你需要设置 Brave Search API key
   - 你想用 Perplexity Sonar 做网页搜索
+title: "Web 工具"
 ---
 
 > [!NOTE]

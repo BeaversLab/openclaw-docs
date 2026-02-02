@@ -1,14 +1,12 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "子 agent"
 summary: "Sub-agents：启动隔离的 agent 运行，并将结果回传到请求聊天"
 read_when:
   - 你希望通过 agent 做后台/并行工作
   - 你在修改 sessions_spawn 或子 agent 工具策略
 ---
 
-# Sub-agents
+# 子 agent
 
 子 agent 是从现有 agent 运行中派生的后台运行。它们在独立会话中执行（`agent:<agentId>:subagent:<uuid>`），完成后会将结果 **公告** 回传到请求的聊天频道。
 

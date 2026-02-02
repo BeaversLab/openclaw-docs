@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Elevated 模式（/elevated 指令）"
 summary: "Elevated exec 模式与 /elevated 指令"
 read_when:
   - 调整 elevated 默认值、允许列表或斜杠命令行为

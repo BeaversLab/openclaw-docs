@@ -3,6 +3,7 @@ summary: "上下文窗口 + compaction：OpenClaw 如何保持会话在模型限
 read_when:
   - 需要理解自动 compaction 与 /compact
   - 在排查长会话触发上下文限制
+title: "上下文窗口与 Compaction"
 ---
 # 上下文窗口与 Compaction
 

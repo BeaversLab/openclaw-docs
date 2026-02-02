@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Android App (Node)"
 summary: "Android 应用（node）：连接 runbook + Canvas/Chat/Camera"
 read_when:
   - 配对或重连 Android node

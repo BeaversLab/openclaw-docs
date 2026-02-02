@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "mac 签名（debug 构建）"
 summary: "打包脚本生成的 macOS debug 构建签名步骤"
 read_when:
   - 构建或签名 mac debug 版本

@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Bun（实验性）"
 summary: "Bun 工作流（实验性）：安装与相对 pnpm 的注意事项"
 read_when:
   - 你想要最快的本地开发循环（bun + watch）

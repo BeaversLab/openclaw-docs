@@ -1,7 +1,5 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
+title: "Nodes"
 summary: "Nodes：配对、能力、权限，以及 canvas/camera/screen/system 的 CLI helper"
 read_when:
   - 将 iOS/Android nodes 配对到 gateway
