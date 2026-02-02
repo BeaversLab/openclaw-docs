@@ -2,65 +2,63 @@
 > 本页正在翻译中。
 
 ---
-summary: "Windows (WSL2) support + companion app status"
+summary: "Windows（WSL2）支持 + 伴侣应用状态"
 read_when:
-  - Installing OpenClaw on Windows
-  - Looking for Windows companion app status
+  - 在 Windows 上安装 OpenClaw
+  - 了解 Windows 伴侣应用状态
 ---
-# Windows (WSL2)
+# Windows（WSL2）
 
-OpenClaw on Windows is recommended **via WSL2** (Ubuntu recommended). The
-CLI + Gateway run inside Linux, which keeps the runtime consistent and makes
-tooling far more compatible (Node/Bun/pnpm, Linux binaries, skills). Native
-Windows installs are untested and more problematic.
+在 Windows 上运行 OpenClaw **推荐使用 WSL2**（推荐 Ubuntu）。
+CLI + Gateway 在 Linux 内运行，运行时更一致，工具链兼容性更好（Node/Bun/pnpm、Linux 二进制、skills）。
+原生 Windows 安装未充分测试且问题更多。
 
-Native Windows companion apps are planned.
+原生 Windows 伴侣应用在规划中。
 
-## Install (WSL2)
-- [Getting Started](/start/getting-started) (use inside WSL)
-- [Install & updates](/install/updating)
-- Official WSL2 guide (Microsoft): https://learn.microsoft.com/windows/wsl/install
+## 安装（WSL2）
+- [Getting Started](/zh/start/getting-started)（在 WSL 中使用）
+- [Install & updates](/zh/install/updating)
+- 官方 WSL2 指南（Microsoft）：https://learn.microsoft.com/windows/wsl/install
 
 ## Gateway
-- [Gateway runbook](/gateway)
-- [Configuration](/gateway/configuration)
+- [Gateway runbook](/zh/gateway)
+- [Configuration](/zh/gateway/configuration)
 
-## Gateway service install (CLI)
+## Gateway 服务安装（CLI）
 
-Inside WSL2:
+在 WSL2 中：
 
 ```
 openclaw onboard --install-daemon
 ```
 
-Or:
+或：
 
 ```
 openclaw gateway install
 ```
 
-Or:
+或：
 
 ```
 openclaw configure
 ```
 
-Select **Gateway service** when prompted.
+提示时选择 **Gateway service**。
 
-Repair/migrate:
+修复/迁移：
 
 ```
 openclaw doctor
 ```
 
-## Advanced: expose WSL services over LAN (portproxy)
+## 高级：通过 LAN 暴露 WSL 服务（portproxy）
 
-WSL has its own virtual network. If another machine needs to reach a service
-running **inside WSL** (SSH, a local TTS server, or the Gateway), you must
-forward a Windows port to the current WSL IP. The WSL IP changes after restarts,
-so you may need to refresh the forwarding rule.
+WSL 有独立虚拟网络。如果另一台机器需要访问**运行在 WSL 内**的服务
+（SSH、本地 TTS 服务器或 Gateway），你必须把 Windows 端口转发到当前 WSL IP。
+WSL IP 在重启后会变化，因此可能需要刷新转发规则。
 
-Example (PowerShell **as Administrator**):
+示例（PowerShell **以管理员**运行）：
 
 ```powershell
 $Distro = "Ubuntu-24.04"
@@ -74,14 +72,14 @@ netsh interface portproxy add v4tov4 listenaddress=0.0.0.0 listenport=$ListenPor
   connectaddress=$WslIp connectport=$TargetPort
 ```
 
-Allow the port through Windows Firewall (one-time):
+放行 Windows 防火墙（一次性）：
 
 ```powershell
 New-NetFirewallRule -DisplayName "WSL SSH $ListenPort" -Direction Inbound `
   -Protocol TCP -LocalPort $ListenPort -Action Allow
 ```
 
-Refresh the portproxy after WSL restarts:
+WSL 重启后刷新 portproxy：
 
 ```powershell
 netsh interface portproxy delete v4tov4 listenport=$ListenPort listenaddress=0.0.0.0 | Out-Null
@@ -89,32 +87,31 @@ netsh interface portproxy add v4tov4 listenport=$ListenPort listenaddress=0.0.0.
   connectaddress=$WslIp connectport=$TargetPort | Out-Null
 ```
 
-Notes:
-- SSH from another machine targets the **Windows host IP** (example: `ssh user@windows-host -p 2222`).
-- Remote nodes must point at a **reachable** Gateway URL (not `127.0.0.1`); use
-  `openclaw status --all` to confirm.
-- Use `listenaddress=0.0.0.0` for LAN access; `127.0.0.1` keeps it local only.
-- If you want this automatic, register a Scheduled Task to run the refresh
-  step at login.
+注意：
+- 从另一台机器 SSH 时，目标是**Windows 主机 IP**（例如 `ssh user@windows-host -p 2222`）。
+- 远程节点必须指向**可达**的 Gateway URL（不是 `127.0.0.1`）；可用
+  `openclaw status --all` 确认。
+- 用 `listenaddress=0.0.0.0` 才能 LAN 访问；`127.0.0.1` 仅本机。
+- 若需自动化，可注册计划任务在登录时运行刷新步骤。
 
-## Step-by-step WSL2 install
+## WSL2 安装步骤
 
-### 1) Install WSL2 + Ubuntu
+### 1) 安装 WSL2 + Ubuntu
 
-Open PowerShell (Admin):
+打开 PowerShell（管理员）：
 
 ```powershell
 wsl --install
-# Or pick a distro explicitly:
+# 或显式选择发行版：
 wsl --list --online
 wsl --install -d Ubuntu-24.04
 ```
 
-Reboot if Windows asks.
+若 Windows 提示，请重启。
 
-### 2) Enable systemd (required for gateway install)
+### 2) 启用 systemd（安装 gateway 服务必需）
 
-In your WSL terminal:
+在 WSL 终端：
 
 ```bash
 sudo tee /etc/wsl.conf >/dev/null <<'EOF'
@@ -123,34 +120,33 @@ systemd=true
 EOF
 ```
 
-Then from PowerShell:
+然后在 PowerShell：
 
 ```powershell
 wsl --shutdown
 ```
 
-Re-open Ubuntu, then verify:
+重新打开 Ubuntu，并验证：
 
 ```bash
 systemctl --user status
 ```
 
-### 3) Install OpenClaw (inside WSL)
+### 3) 安装 OpenClaw（在 WSL 中）
 
-Follow the Linux Getting Started flow inside WSL:
+在 WSL 内按 Linux Getting Started 流程：
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
 cd openclaw
 pnpm install
-pnpm ui:build # auto-installs UI deps on first run
+pnpm ui:build # 首次运行会自动安装 UI 依赖
 pnpm build
 openclaw onboard
 ```
 
-Full guide: [Getting Started](/start/getting-started)
+完整指南：[Getting Started](/zh/start/getting-started)
 
-## Windows companion app
+## Windows 伴侣应用
 
-We do not have a Windows companion app yet. Contributions are welcome if you want
-contributions to make it happen.
+目前还没有 Windows 伴侣应用。如果你想推动它，欢迎贡献。

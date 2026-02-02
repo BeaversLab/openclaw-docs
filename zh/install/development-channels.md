@@ -2,28 +2,27 @@
 > 本页正在翻译中。
 
 ---
-summary: "Stable, beta, and dev channels: semantics, switching, and tagging"
+summary: "Stable、beta 与 dev 渠道：语义、切换与打标签"
 read_when:
-  - You want to switch between stable/beta/dev
-  - You are tagging or publishing prereleases
+  - 你想在 stable/beta/dev 间切换
+  - 你在打标签或发布预发布版本
 ---
 
 # Development channels
 
 Last updated: 2026-01-21
 
-OpenClaw ships three update channels:
+OpenClaw 提供三条更新渠道：
 
-- **stable**: npm dist-tag `latest`.
-- **beta**: npm dist-tag `beta` (builds under test).
-- **dev**: moving head of `main` (git). npm dist-tag: `dev` (when published).
+- **stable**：npm dist-tag `latest`。
+- **beta**：npm dist-tag `beta`（测试中的构建）。
+- **dev**：`main` 的滚动头（git）。npm dist-tag：`dev`（发布时）。
 
-We ship builds to **beta**, test them, then **promote a vetted build to `latest`**
-without changing the version number — dist-tags are the source of truth for npm installs.
+我们会先把构建发布到 **beta**、测试，通过后**提升到 `latest`**，而**不改变版本号** —— 对 npm 安装来说，dist-tags 是唯一权威。
 
 ## Switching channels
 
-Git checkout:
+Git checkout：
 
 ```bash
 openclaw update --channel stable
@@ -31,10 +30,10 @@ openclaw update --channel beta
 openclaw update --channel dev
 ```
 
-- `stable`/`beta` check out the latest matching tag (often the same tag).
-- `dev` switches to `main` and rebases on the upstream.
+- `stable`/`beta` 会检出最新匹配的 tag（通常是同一个 tag）。
+- `dev` 切换到 `main` 并基于上游 rebase。
 
-npm/pnpm global install:
+npm/pnpm 全局安装：
 
 ```bash
 openclaw update --channel stable
@@ -42,36 +41,35 @@ openclaw update --channel beta
 openclaw update --channel dev
 ```
 
-This updates via the corresponding npm dist-tag (`latest`, `beta`, `dev`).
+它会根据对应的 npm dist-tag（`latest`、`beta`、`dev`）更新。
 
-When you **explicitly** switch channels with `--channel`, OpenClaw also aligns
-the install method:
+当你**显式**用 `--channel` 切换时，OpenClaw 也会同步安装方式：
 
-- `dev` ensures a git checkout (default `~/openclaw`, override with `OPENCLAW_GIT_DIR`),
-  updates it, and installs the global CLI from that checkout.
-- `stable`/`beta` installs from npm using the matching dist-tag.
+- `dev` 确保使用 git checkout（默认 `~/openclaw`，可用 `OPENCLAW_GIT_DIR` 覆盖），
+  然后更新并从该 checkout 安装全局 CLI。
+- `stable`/`beta` 通过 npm 安装对应 dist-tag。
 
-Tip: if you want stable + dev in parallel, keep two clones and point your gateway at the stable one.
+提示：若你想稳定版和 dev 并行，保留两个 clone，并让 gateway 指向稳定版。
 
 ## Plugins and channels
 
-When you switch channels with `openclaw update`, OpenClaw also syncs plugin sources:
+使用 `openclaw update` 切换渠道时，OpenClaw 也会同步插件来源：
 
-- `dev` prefers bundled plugins from the git checkout.
-- `stable` and `beta` restore npm-installed plugin packages.
+- `dev` 优先使用 git checkout 中的内置插件。
+- `stable` 和 `beta` 会恢复 npm 安装的插件包。
 
 ## Tagging best practices
 
-- Tag releases you want git checkouts to land on (`vYYYY.M.D` or `vYYYY.M.D-<patch>`).
-- Keep tags immutable: never move or reuse a tag.
-- npm dist-tags remain the source of truth for npm installs:
+- 给希望 git checkout 落地的版本打 tag（`vYYYY.M.D` 或 `vYYYY.M.D-<patch>`）。
+- tag 必须不可变：不要移动或复用 tag。
+- npm dist-tags 仍是 npm 安装的权威：
   - `latest` → stable
-  - `beta` → candidate build
-  - `dev` → main snapshot (optional)
+  - `beta` → 候选构建
+  - `dev` → main 快照（可选）
 
 ## macOS app availability
 
-Beta and dev builds may **not** include a macOS app release. That’s OK:
+beta 和 dev 构建可能**不包含 macOS app**。这是可接受的：
 
-- The git tag and npm dist-tag can still be published.
-- Call out “no macOS build for this beta” in release notes or changelog.
+- git tag 与 npm dist-tag 仍可发布。
+- 在 release notes 或 changelog 中注明“此 beta 无 macOS 构建”。

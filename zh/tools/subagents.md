@@ -2,103 +2,101 @@
 > 本页正在翻译中。
 
 ---
-summary: "Sub-agents: spawning isolated agent runs that announce results back to the requester chat"
+summary: "Sub-agents：启动隔离的 agent 运行，并将结果回传到请求聊天"
 read_when:
-  - You want background/parallel work via the agent
-  - You are changing sessions_spawn or sub-agent tool policy
+  - 你希望通过 agent 做后台/并行工作
+  - 你在修改 sessions_spawn 或子 agent 工具策略
 ---
 
 # Sub-agents
 
-Sub-agents are background agent runs spawned from an existing agent run. They run in their own session (`agent:<agentId>:subagent:<uuid>`) and, when finished, **announce** their result back to the requester chat channel.
+子 agent 是从现有 agent 运行中派生的后台运行。它们在独立会话中执行（`agent:<agentId>:subagent:<uuid>`），完成后会将结果 **公告** 回传到请求的聊天频道。
 
-## Slash command
+## 斜杠命令
 
-Use `/subagents` to inspect or control sub-agent runs for the **current session**:
+使用 `/subagents` 查看或控制 **当前会话** 的子 agent 运行：
 - `/subagents list`
 - `/subagents stop <id|#|all>`
 - `/subagents log <id|#> [limit] [tools]`
 - `/subagents info <id|#>`
 - `/subagents send <id|#> <message>`
 
-`/subagents info` shows run metadata (status, timestamps, session id, transcript path, cleanup).
+`/subagents info` 显示运行元数据（状态、时间戳、session id、转录路径、清理状态）。
 
-Primary goals:
-- Parallelize “research / long task / slow tool” work without blocking the main run.
-- Keep sub-agents isolated by default (session separation + optional sandboxing).
-- Keep the tool surface hard to misuse: sub-agents do **not** get session tools by default.
-- Avoid nested fan-out: sub-agents cannot spawn sub-agents.
+主要目标：
+- 将“研究/长任务/慢工具”并行化，而不阻塞主运行。
+- 默认隔离子 agent（会话隔离 + 可选沙箱）。
+- 工具面尽量难以误用：子 agent 默认 **不** 拥有会话工具。
+- 避免嵌套扩散：子 agent 不能再生成子 agent。
 
-Cost note: each sub-agent has its **own** context and token usage. For heavy or repetitive
-tasks, set a cheaper model for sub-agents and keep your main agent on a higher-quality model.
-You can configure this via `agents.defaults.subagents.model` or per-agent overrides.
+成本说明：每个子 agent 都有 **独立** 上下文与 token 用量。对重任务或重复任务，建议为子 agent 设置更便宜的模型，而主 agent 使用更高质量模型。可通过 `agents.defaults.subagents.model` 或按 agent 覆盖配置。
 
-## Tool
+## 工具
 
-Use `sessions_spawn`:
-- Starts a sub-agent run (`deliver: false`, global lane: `subagent`)
-- Then runs an announce step and posts the announce reply to the requester chat channel
-- Default model: inherits the caller unless you set `agents.defaults.subagents.model` (or per-agent `agents.list[].subagents.model`); an explicit `sessions_spawn.model` still wins.
+使用 `sessions_spawn`：
+- 启动子 agent 运行（`deliver: false`，全局车道：`subagent`）
+- 然后执行公告步骤并将公告回复发送回请求聊天频道
+- 默认模型：继承调用方，除非设置 `agents.defaults.subagents.model`（或 `agents.list[].subagents.model`）；显式 `sessions_spawn.model` 仍优先生效。
 
-Tool params:
-- `task` (required)
-- `label?` (optional)
-- `agentId?` (optional; spawn under another agent id if allowed)
-- `model?` (optional; overrides the sub-agent model; invalid values are skipped and the sub-agent runs on the default model with a warning in the tool result)
-- `thinking?` (optional; overrides thinking level for the sub-agent run)
-- `runTimeoutSeconds?` (default `0`; when set, the sub-agent run is aborted after N seconds)
-- `cleanup?` (`delete|keep`, default `keep`)
+工具参数：
+- `task`（必填）
+- `label?`（可选）
+- `agentId?`（可选；若允许则在另一个 agent id 下启动）
+- `model?`（可选；覆盖子 agent 模型；无效值会被跳过，并在工具结果中给出警告，子 agent 使用默认模型）
+- `thinking?`（可选；覆盖子 agent 的思考级别）
+- `runTimeoutSeconds?`（默认 `0`；设置后运行超过 N 秒会被中止）
+- `cleanup?`（`delete|keep`，默认 `keep`）
 
-Allowlist:
-- `agents.list[].subagents.allowAgents`: list of agent ids that can be targeted via `agentId` (`["*"]` to allow any). Default: only the requester agent.
+Allowlist：
+- `agents.list[].subagents.allowAgents`：允许通过 `agentId` 指定的 agent id 列表（`["*"]` 代表允许任意）。默认：仅请求方 agent。
 
-Discovery:
-- Use `agents_list` to see which agent ids are currently allowed for `sessions_spawn`.
+发现：
+- 使用 `agents_list` 查看 `sessions_spawn` 当前允许的 agent id。
 
-Auto-archive:
-- Sub-agent sessions are automatically archived after `agents.defaults.subagents.archiveAfterMinutes` (default: 60).
-- Archive uses `sessions.delete` and renames the transcript to `*.deleted.<timestamp>` (same folder).
-- `cleanup: "delete"` archives immediately after announce (still keeps the transcript via rename).
-- Auto-archive is best-effort; pending timers are lost if the gateway restarts.
-- `runTimeoutSeconds` does **not** auto-archive; it only stops the run. The session remains until auto-archive.
+自动归档：
+- 子 agent 会话会在 `agents.defaults.subagents.archiveAfterMinutes`（默认：60）后自动归档。
+- 归档使用 `sessions.delete` 并将转录重命名为 `*.deleted.<timestamp>`（同目录）。
+- `cleanup: "delete"` 会在公告后立即归档（仍通过重命名保留转录）。
+- 自动归档尽力而为；若 gateway 重启，待执行定时器会丢失。
+- `runTimeoutSeconds` **不会** 自动归档；它只停止运行。会话仍会等待自动归档。
 
-## Authentication
+## 认证
 
-Sub-agent auth is resolved by **agent id**, not by session type:
-- The sub-agent session key is `agent:<agentId>:subagent:<uuid>`.
-- The auth store is loaded from that agent’s `agentDir`.
-- The main agent’s auth profiles are merged in as a **fallback**; agent profiles override main profiles on conflicts.
+子 agent 的认证按 **agent id** 解析，而不是会话类型：
+- 子 agent 会话 key 为 `agent:<agentId>:subagent:<uuid>`。
+- 认证存储从该 agent 的 `agentDir` 加载。
+- 主 agent 的认证 profile 会作为 **回退** 合并；若冲突，子 agent 的配置覆盖主 agent。
 
-Note: the merge is additive, so main profiles are always available as fallbacks. Fully isolated auth per agent is not supported yet.
+注意：合并为叠加式，因此主 agent 的 profile 始终作为回退可用。目前尚不支持完全隔离的按 agent 认证。
 
-## Announce
+## 公告
 
-Sub-agents report back via an announce step:
-- The announce step runs inside the sub-agent session (not the requester session).
-- If the sub-agent replies exactly `ANNOUNCE_SKIP`, nothing is posted.
-- Otherwise the announce reply is posted to the requester chat channel via a follow-up `agent` call (`deliver=true`).
-- Announce replies preserve thread/topic routing when available (Slack threads, Telegram topics, Matrix threads).
-- Announce messages are normalized to a stable template:
-  - `Status:` derived from the run outcome (`success`, `error`, `timeout`, or `unknown`).
-  - `Result:` the summary content from the announce step (or `(not available)` if missing).
-  - `Notes:` error details and other useful context.
-- `Status` is not inferred from model output; it comes from runtime outcome signals.
+子 agent 通过公告步骤回传：
+- 公告步骤在子 agent 会话中执行（不是请求者会话）。
+- 若子 agent 回复正好为 `ANNOUNCE_SKIP`，则不发送。
+- 否则公告回复会通过后续 `agent` 调用（`deliver=true`）发送到请求聊天频道。
+- 公告回复在可用时保留线程/主题路由（Slack 线程、Telegram 话题、Matrix 线程）。
+- 公告消息会规范化为稳定模板：
+  - `Status:` 来自运行结果（`success`、`error`、`timeout` 或 `unknown`）。
+  - `Result:` 来自公告步骤的摘要内容（缺失则为 `(not available)`）。
+  - `Notes:` 错误细节与其他有用上下文。
+- `Status` 不从模型输出推断，而由运行时结果信号提供。
 
-Announce payloads include a stats line at the end (even when wrapped):
-- Runtime (e.g., `runtime 5m12s`)
-- Token usage (input/output/total)
-- Estimated cost when model pricing is configured (`models.providers.*.models[].cost`)
-- `sessionKey`, `sessionId`, and transcript path (so the main agent can fetch history via `sessions_history` or inspect the file on disk)
+公告 payload 末尾包含统计行（即使包裹发送）：
+- 运行时间（如 `runtime 5m12s`）
+- Token 用量（输入/输出/总计）
+- 当配置模型价格时的估算成本（`models.providers.*.models[].cost`）
+- `sessionKey`、`sessionId` 与转录路径（主 agent 可用 `sessions_history` 获取历史或在磁盘上查看）
 
-## Tool Policy (sub-agent tools)
+## 工具策略（子 agent 工具）
 
-By default, sub-agents get **all tools except session tools**:
+默认情况下，子 agent 拥有 **除会话工具外的所有工具**：
 - `sessions_list`
 - `sessions_history`
 - `sessions_send`
 - `sessions_spawn`
 
-Override via config:
+可通过配置覆盖：
 
 ```json5
 {
@@ -122,19 +120,19 @@ Override via config:
 }
 ```
 
-## Concurrency
+## 并发
 
-Sub-agents use a dedicated in-process queue lane:
-- Lane name: `subagent`
-- Concurrency: `agents.defaults.subagents.maxConcurrent` (default `8`)
+子 agent 使用专用的进程内队列车道：
+- 车道名：`subagent`
+- 并发数：`agents.defaults.subagents.maxConcurrent`（默认 `8`）
 
-## Stopping
+## 停止
 
-- Sending `/stop` in the requester chat aborts the requester session and stops any active sub-agent runs spawned from it.
+- 在请求聊天中发送 `/stop` 会中止请求者会话，并停止由其派生的所有活动子 agent 运行。
 
-## Limitations
+## 限制
 
-- Sub-agent announce is **best-effort**. If the gateway restarts, pending “announce back” work is lost.
-- Sub-agents still share the same gateway process resources; treat `maxConcurrent` as a safety valve.
-- `sessions_spawn` is always non-blocking: it returns `{ status: "accepted", runId, childSessionKey }` immediately.
-- Sub-agent context only injects `AGENTS.md` + `TOOLS.md` (no `SOUL.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, or `BOOTSTRAP.md`).
+- 子 agent 公告为 **尽力而为**。若 gateway 重启，待发送的“回传公告”会丢失。
+- 子 agent 仍共享同一 gateway 进程资源；`maxConcurrent` 应作为安全阀。
+- `sessions_spawn` 始终非阻塞：会立即返回 `{ status: "accepted", runId, childSessionKey }`。
+- 子 agent 上下文只注入 `AGENTS.md` + `TOOLS.md`（不含 `SOUL.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md` 或 `BOOTSTRAP.md`）。

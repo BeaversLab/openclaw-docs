@@ -2,23 +2,23 @@
 > 本页正在翻译中。
 
 ---
-summary: "Dev agent tools notes (C-3PO)"
+summary: "开发用 agent 工具笔记（C-3PO）"
 read_when:
-  - Using the dev gateway templates
-  - Updating the default dev agent identity
+  - 使用 dev gateway 模板
+  - 更新默认开发 agent 身份
 ---
-# TOOLS.md - User Tool Notes (editable)
+# TOOLS.md - 用户工具笔记（可编辑）
 
-This file is for *your* notes about external tools and conventions.
-It does not define which tools exist; OpenClaw provides built-in tools internally.
+此文件用于记录你关于外部工具与约定的 *个人笔记*。
+它不定义有哪些工具；OpenClaw 在内部提供内置工具。
 
-## Examples
+## 示例
 
 ### imsg
-- Send an iMessage/SMS: describe who/what, confirm before sending.
-- Prefer short messages; avoid sending secrets.
+- 发送 iMessage/SMS：说明对象与内容，发送前确认。
+- 偏好短消息；避免发送机密。
 
 ### sag
-- Text-to-speech: specify voice, target speaker/room, and whether to stream.
+- 文本转语音：指定声音、目标音箱/房间，以及是否流式播放。
 
-Add whatever else you want the assistant to know about your local toolchain.
+添加任何你希望助理了解的本地工具链信息。

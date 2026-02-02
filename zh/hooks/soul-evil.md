@@ -1,34 +1,27 @@
-> [!NOTE]
-> 本页正在翻译中。
-
 ---
-summary: "SOUL Evil hook (swap SOUL.md with SOUL_EVIL.md)"
+summary: "SOUL Evil hook（用 SOUL_EVIL.md 替换 SOUL.md）"
 read_when:
-  - You want to enable or tune the SOUL Evil hook
-  - You want a purge window or random-chance persona swap
+  - 你想启用或调优 SOUL Evil hook
+  - 你想设置清洗窗口或随机人格切换
 ---
 
 # SOUL Evil Hook
 
-The SOUL Evil hook swaps the **injected** `SOUL.md` content with `SOUL_EVIL.md` during
-a purge window or by random chance. It does **not** modify files on disk.
+SOUL Evil hook 会在清洗窗口或随机概率下，将 **注入** 的 `SOUL.md` 内容替换为 `SOUL_EVIL.md`。它 **不会** 修改磁盘上的文件。
 
-## How It Works
+## 工作原理
 
-When `agent:bootstrap` runs, the hook can replace the `SOUL.md` content in memory
-before the system prompt is assembled. If `SOUL_EVIL.md` is missing or empty,
-OpenClaw logs a warning and keeps the normal `SOUL.md`.
+当 `agent:bootstrap` 运行时，hook 可以在系统提示组装前替换内存中的 `SOUL.md` 内容。如果 `SOUL_EVIL.md` 缺失或为空，OpenClaw 会记录警告并保留正常 `SOUL.md`。
 
-Sub-agent runs do **not** include `SOUL.md` in their bootstrap files, so this hook
-has no effect on sub-agents.
+子 agent 运行 **不会** 在 bootstrap 文件中包含 `SOUL.md`，因此该 hook 对子 agent 无效。
 
-## Enable
+## 启用
 
 ```bash
 openclaw hooks enable soul-evil
 ```
 
-Then set the config:
+然后设置配置：
 
 ```json
 {
@@ -48,24 +41,24 @@ Then set the config:
 }
 ```
 
-Create `SOUL_EVIL.md` in the agent workspace root (next to `SOUL.md`).
+在 agent 工作区根目录创建 `SOUL_EVIL.md`（与 `SOUL.md` 同级）。
 
-## Options
+## 选项
 
-- `file` (string): alternate SOUL filename (default: `SOUL_EVIL.md`)
-- `chance` (number 0–1): random chance per run to use `SOUL_EVIL.md`
-- `purge.at` (HH:mm): daily purge start (24-hour clock)
-- `purge.duration` (duration): window length (e.g. `30s`, `10m`, `1h`)
+- `file`（string）：替代 SOUL 文件名（默认：`SOUL_EVIL.md`）
+- `chance`（number 0–1）：每次运行随机使用 `SOUL_EVIL.md` 的概率
+- `purge.at`（HH:mm）：每日清洗开始时间（24 小时制）
+- `purge.duration`（duration）：窗口时长（如 `30s`, `10m`, `1h`）
 
-**Precedence:** purge window wins over chance.
+**优先级：**清洗窗口优先于随机概率。
 
-**Timezone:** uses `agents.defaults.userTimezone` when set; otherwise host timezone.
+**时区：**若设置了 `agents.defaults.userTimezone` 则使用它，否则使用主机时区。
 
-## Notes
+## 说明
 
-- No files are written or modified on disk.
-- If `SOUL.md` is not in the bootstrap list, the hook does nothing.
+- 不会写入或修改磁盘文件。
+- 若 `SOUL.md` 不在 bootstrap 列表中，该 hook 不会生效。
 
-## See Also
+## 另见
 
-- [Hooks](/hooks)
+- [Hooks](/zh/hooks)

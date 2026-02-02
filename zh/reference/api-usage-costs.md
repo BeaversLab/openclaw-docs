@@ -2,118 +2,113 @@
 > 本页正在翻译中。
 
 ---
-summary: "Audit what can spend money, which keys are used, and how to view usage"
+summary: "审计哪些功能会产生费用、使用哪些 key，以及如何查看用量"
 read_when:
-  - You want to understand which features may call paid APIs
-  - You need to audit keys, costs, and usage visibility
-  - You’re explaining /status or /usage cost reporting
+  - 想了解哪些功能可能调用付费 API
+  - 需要审计 key、成本与用量可见性
+  - 正在解释 /status 或 /usage 费用展示
 ---
-# API usage & costs
+# API 用量与成本
 
-This doc lists **features that can invoke API keys** and where their costs show up. It focuses on
-OpenClaw features that can generate provider usage or paid API calls.
+本文列出 **会调用 API key 的功能** 以及费用显示位置。重点是可能产生 provider 用量或付费 API 调用的 OpenClaw 功能。
 
-## Where costs show up (chat + CLI)
+## 成本显示位置（聊天 + CLI）
 
-**Per-session cost snapshot**
-- `/status` shows the current session model, context usage, and last response tokens.
-- If the model uses **API-key auth**, `/status` also shows **estimated cost** for the last reply.
+**按会话成本快照**
+- `/status` 显示当前会话模型、上下文用量与最后一次回复的 token。
+- 若模型使用 **API-key 认证**，`/status` 还会显示最后一次回复的 **预估成本**。
 
-**Per-message cost footer**
-- `/usage full` appends a usage footer to every reply, including **estimated cost** (API-key only).
-- `/usage tokens` shows tokens only; OAuth flows hide dollar cost.
+**按消息成本脚注**
+- `/usage full` 会在每条回复后附加用量脚注，包含 **预估成本**（仅 API-key）。
+- `/usage tokens` 仅显示 token；OAuth 流程隐藏金额。
 
-**CLI usage windows (provider quotas)**
-- `openclaw status --usage` and `openclaw channels list` show provider **usage windows**
-  (quota snapshots, not per-message costs).
+**CLI 用量窗口（provider 配额）**
+- `openclaw status --usage` 与 `openclaw channels list` 显示 provider **用量窗口**
+  （配额快照，而非每条消息成本）。
 
-See [Token use & costs](/token-use) for details and examples.
+详情与示例参见 [Token use & costs](/zh/token-use)。
 
-## How keys are discovered
+## Key 的发现方式
 
-OpenClaw can pick up credentials from:
-- **Auth profiles** (per-agent, stored in `auth-profiles.json`).
-- **Environment variables** (e.g. `OPENAI_API_KEY`, `BRAVE_API_KEY`, `FIRECRAWL_API_KEY`).
-- **Config** (`models.providers.*.apiKey`, `tools.web.search.*`, `tools.web.fetch.firecrawl.*`,
-  `memorySearch.*`, `talk.apiKey`).
-- **Skills** (`skills.entries.<name>.apiKey`) which may export keys to the skill process env.
+OpenClaw 可以从以下来源获取凭据：
+- **Auth profiles**（按代理，存储在 `auth-profiles.json`）。
+- **环境变量**（如 `OPENAI_API_KEY`、`BRAVE_API_KEY`、`FIRECRAWL_API_KEY`）。
+- **配置**（`models.providers.*.apiKey`、`tools.web.search.*`、`tools.web.fetch.firecrawl.*`、
+  `memorySearch.*`、`talk.apiKey`）。
+- **Skills**（`skills.entries.<name>.apiKey`），可将 key 导出到 skill 进程环境变量。
 
-## Features that can spend keys
+## 可能产生费用的功能
 
-### 1) Core model responses (chat + tools)
-Every reply or tool call uses the **current model provider** (OpenAI, Anthropic, etc). This is the
-primary source of usage and cost.
+### 1) 核心模型回复（聊天 + 工具）
+每次回复或工具调用都会使用 **当前模型提供商**（OpenAI、Anthropic 等）。这是主要的用量与成本来源。
 
-See [Models](/providers/models) for pricing config and [Token use & costs](/token-use) for display.
+定价配置参见 [Models](/zh/providers/models)，显示方式参见 [Token use & costs](/zh/token-use)。
 
-### 2) Media understanding (audio/image/video)
-Inbound media can be summarized/transcribed before the reply runs. This uses model/provider APIs.
+### 2) 媒体理解（音频/图片/视频）
+入站媒体可在回复前被总结/转写，这会调用模型/provider API。
 
-- Audio: OpenAI / Groq / Deepgram (now **auto-enabled** when keys exist).
-- Image: OpenAI / Anthropic / Google.
-- Video: Google.
+- 音频：OpenAI / Groq / Deepgram（当存在 key 时 **自动启用**）。
+- 图片：OpenAI / Anthropic / Google。
+- 视频：Google。
 
-See [Media understanding](/nodes/media-understanding).
+参见 [Media understanding](/zh/nodes/media-understanding)。
 
-### 3) Memory embeddings + semantic search
-Semantic memory search uses **embedding APIs** when configured for remote providers:
+### 3) 记忆向量与语义搜索
+语义记忆搜索在配置为远程 provider 时会使用 **embedding API**：
 - `memorySearch.provider = "openai"` → OpenAI embeddings
 - `memorySearch.provider = "gemini"` → Gemini embeddings
-- Optional fallback to OpenAI if local embeddings fail
+- 可选：本地 embeddings 失败时回退到 OpenAI
 
-You can keep it local with `memorySearch.provider = "local"` (no API usage).
+可使用 `memorySearch.provider = "local"` 保持本地（无 API 用量）。
 
-See [Memory](/concepts/memory).
+参见 [Memory](/zh/concepts/memory)。
 
-### 4) Web search tool (Brave / Perplexity via OpenRouter)
-`web_search` uses API keys and may incur usage charges:
+### 4) Web 搜索工具（Brave / Perplexity via OpenRouter）
+`web_search` 使用 API key，可能产生费用：
 
-- **Brave Search API**: `BRAVE_API_KEY` or `tools.web.search.apiKey`
-- **Perplexity** (via OpenRouter): `PERPLEXITY_API_KEY` or `OPENROUTER_API_KEY`
+- **Brave Search API**：`BRAVE_API_KEY` 或 `tools.web.search.apiKey`
+- **Perplexity**（通过 OpenRouter）：`PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`
 
-**Brave free tier (generous):**
-- **2,000 requests/month**
-- **1 request/second**
-- **Credit card required** for verification (no charge unless you upgrade)
+**Brave 免费额度（较慷慨）：**
+- **每月 2,000 次请求**
+- **每秒 1 次请求**
+- **需要信用卡验证**（除非升级，否则不收费）
 
-See [Web tools](/tools/web).
+参见 [Web tools](/zh/tools/web)。
 
-### 5) Web fetch tool (Firecrawl)
-`web_fetch` can call **Firecrawl** when an API key is present:
-- `FIRECRAWL_API_KEY` or `tools.web.fetch.firecrawl.apiKey`
+### 5) Web 抓取工具（Firecrawl）
+`web_fetch` 在配置 API key 时可调用 **Firecrawl**：
+- `FIRECRAWL_API_KEY` 或 `tools.web.fetch.firecrawl.apiKey`
 
-If Firecrawl isn’t configured, the tool falls back to direct fetch + readability (no paid API).
+若未配置 Firecrawl，工具会回退到直连抓取 + readability（无付费 API）。
 
-See [Web tools](/tools/web).
+参见 [Web tools](/zh/tools/web)。
 
-### 6) Provider usage snapshots (status/health)
-Some status commands call **provider usage endpoints** to display quota windows or auth health.
-These are typically low-volume calls but still hit provider APIs:
+### 6) Provider 用量快照（status/health）
+某些状态命令会调用 **provider 用量端点** 来显示配额窗口或认证健康状态。
+这些通常是低频调用，但仍会触发 provider API：
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-See [Models CLI](/cli/models).
+参见 [Models CLI](/zh/cli/models)。
 
-### 7) Compaction safeguard summarization
-The compaction safeguard can summarize session history using the **current model**, which
-invokes provider APIs when it runs.
+### 7) Compaction 保护性摘要
+Compaction safeguard 可能使用 **当前模型** 对会话历史进行摘要，从而调用 provider API。
 
-See [Session management + compaction](/reference/session-management-compaction).
+参见 [Session management + compaction](/zh/reference/session-management-compaction)。
 
-### 8) Model scan / probe
-`openclaw models scan` can probe OpenRouter models and uses `OPENROUTER_API_KEY` when
-probing is enabled.
+### 8) 模型扫描 / 探测
+`openclaw models scan` 可探测 OpenRouter 模型，在启用探测时会使用 `OPENROUTER_API_KEY`。
 
-See [Models CLI](/cli/models).
+参见 [Models CLI](/zh/cli/models)。
 
-### 9) Talk (speech)
-Talk mode can invoke **ElevenLabs** when configured:
-- `ELEVENLABS_API_KEY` or `talk.apiKey`
+### 9) Talk（语音）
+Talk 模式在配置时可调用 **ElevenLabs**：
+- `ELEVENLABS_API_KEY` 或 `talk.apiKey`
 
-See [Talk mode](/nodes/talk).
+参见 [Talk mode](/zh/nodes/talk)。
 
-### 10) Skills (third-party APIs)
-Skills can store `apiKey` in `skills.entries.<name>.apiKey`. If a skill uses that key for external
-APIs, it can incur costs according to the skill’s provider.
+### 10) Skills（第三方 API）
+Skills 可以在 `skills.entries.<name>.apiKey` 中存储 `apiKey`。若某个 skill 使用该 key 访问外部 API，则会产生对应 provider 的费用。
 
-See [Skills](/tools/skills).
+参见 [Skills](/zh/tools/skills)。

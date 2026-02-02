@@ -2,57 +2,56 @@
 > 本页正在翻译中。
 
 ---
-summary: "Voice Call plugin: outbound + inbound calls via Twilio/Telnyx/Plivo (plugin install + config + CLI)"
+summary: "Voice Call 插件：通过 Twilio/Telnyx/Plivo 进行呼入/呼出（安装 + 配置 + CLI）"
 read_when:
-  - You want to place an outbound voice call from OpenClaw
-  - You are configuring or developing the voice-call plugin
+  - 想从 OpenClaw 发起外呼
+  - 正在配置或开发 voice-call 插件
 ---
 
-# Voice Call (plugin)
+# Voice Call（插件）
 
-Voice calls for OpenClaw via a plugin. Supports outbound notifications and
-multi-turn conversations with inbound policies.
+通过插件实现 OpenClaw 的语音通话。支持外呼通知以及带呼入策略的多轮对话。
 
-Current providers:
-- `twilio` (Programmable Voice + Media Streams)
-- `telnyx` (Call Control v2)
-- `plivo` (Voice API + XML transfer + GetInput speech)
-- `mock` (dev/no network)
+当前提供商：
+- `twilio`（Programmable Voice + Media Streams）
+- `telnyx`（Call Control v2）
+- `plivo`（Voice API + XML transfer + GetInput speech）
+- `mock`（开发用/无网络）
 
-Quick mental model:
-- Install plugin
-- Restart Gateway
-- Configure under `plugins.entries.voice-call.config`
-- Use `openclaw voicecall ...` or the `voice_call` tool
+快速心智模型：
+- 安装插件
+- 重启 Gateway
+- 在 `plugins.entries.voice-call.config` 下配置
+- 使用 `openclaw voicecall ...` 或 `voice_call` 工具
 
-## Where it runs (local vs remote)
+## 运行位置（本地 vs 远程）
 
-The Voice Call plugin runs **inside the Gateway process**.
+Voice Call 插件 **在 Gateway 进程内**运行。
 
-If you use a remote Gateway, install/configure the plugin on the **machine running the Gateway**, then restart the Gateway to load it.
+如果使用远程 Gateway，请在 **运行 Gateway 的机器** 上安装/配置插件，然后重启 Gateway 以加载。
 
-## Install
+## 安装
 
-### Option A: install from npm (recommended)
+### 方案 A：从 npm 安装（推荐）
 
 ```bash
 openclaw plugins install @openclaw/voice-call
 ```
 
-Restart the Gateway afterwards.
+随后重启 Gateway。
 
-### Option B: install from a local folder (dev, no copying)
+### 方案 B：从本地目录安装（开发，无需复制）
 
 ```bash
 openclaw plugins install ./extensions/voice-call
 cd ./extensions/voice-call && pnpm install
 ```
 
-Restart the Gateway afterwards.
+随后重启 Gateway。
 
-## Config
+## 配置
 
-Set config under `plugins.entries.voice-call.config`:
+在 `plugins.entries.voice-call.config` 下配置：
 
 ```json5
 {
@@ -61,7 +60,7 @@ Set config under `plugins.entries.voice-call.config`:
       "voice-call": {
         enabled: true,
         config: {
-          provider: "twilio", // or "telnyx" | "plivo" | "mock"
+          provider: "twilio", // 或 "telnyx" | "plivo" | "mock"
           fromNumber: "+15550001234",
           toNumber: "+15550005678",
 
@@ -75,13 +74,13 @@ Set config under `plugins.entries.voice-call.config`:
             authToken: "..."
           },
 
-          // Webhook server
+          // Webhook 服务器
           serve: {
             port: 3334,
             path: "/voice/webhook"
           },
 
-          // Public exposure (pick one)
+          // 公网暴露（任选其一）
           // publicUrl: "https://example.ngrok.app/voice/webhook",
           // tunnel: { provider: "ngrok" },
           // tailscale: { mode: "funnel", path: "/voice/webhook" }
@@ -101,20 +100,18 @@ Set config under `plugins.entries.voice-call.config`:
 }
 ```
 
-Notes:
-- Twilio/Telnyx require a **publicly reachable** webhook URL.
-- Plivo requires a **publicly reachable** webhook URL.
-- `mock` is a local dev provider (no network calls).
-- `skipSignatureVerification` is for local testing only.
-- If you use ngrok free tier, set `publicUrl` to the exact ngrok URL; signature verification is always enforced.
-- `tunnel.allowNgrokFreeTierLoopbackBypass: true` allows Twilio webhooks with invalid signatures **only** when `tunnel.provider="ngrok"` and `serve.bind` is loopback (ngrok local agent). Use for local dev only.
-- Ngrok free tier URLs can change or add interstitial behavior; if `publicUrl` drifts, Twilio signatures will fail. For production, prefer a stable domain or Tailscale funnel.
+说明：
+- Twilio/Telnyx 需要 **公网可达** 的 webhook URL。
+- Plivo 需要 **公网可达** 的 webhook URL。
+- `mock` 为本地开发 provider（无网络调用）。
+- `skipSignatureVerification` 仅用于本地测试。
+- 使用 ngrok 免费版时，将 `publicUrl` 设为准确的 ngrok URL；签名验证始终强制。
+- `tunnel.allowNgrokFreeTierLoopbackBypass: true` 仅在 `tunnel.provider="ngrok"` 且 `serve.bind` 为 loopback 时允许无效签名的 Twilio webhook（ngrok 本地代理）。仅用于本地开发。
+- Ngrok 免费版 URL 可能变化或添加中间页；若 `publicUrl` 漂移，Twilio 签名会失败。生产环境建议使用稳定域名或 Tailscale funnel。
 
-## TTS for calls
+## 通话 TTS
 
-Voice Call uses the core `messages.tts` configuration (OpenAI or ElevenLabs) for
-streaming speech on calls. You can override it under the plugin config with the
-**same shape** — it deep‑merges with `messages.tts`.
+Voice Call 使用核心 `messages.tts` 配置（OpenAI 或 ElevenLabs）为通话提供流式语音。你也可以在插件配置中使用**相同形状**覆盖，它会与 `messages.tts` 深度合并。
 
 ```json5
 {
@@ -128,13 +125,13 @@ streaming speech on calls. You can override it under the plugin config with the
 }
 ```
 
-Notes:
-- **Edge TTS is ignored for voice calls** (telephony audio needs PCM; Edge output is unreliable).
-- Core TTS is used when Twilio media streaming is enabled; otherwise calls fall back to provider native voices.
+说明：
+- **Edge TTS 在语音通话中会被忽略**（电话音频需要 PCM；Edge 输出不可靠）。
+- 启用 Twilio 媒体流时使用核心 TTS；否则通话回退到 provider 原生语音。
 
-### More examples
+### 更多示例
 
-Use core TTS only (no override):
+只用核心 TTS（无覆盖）：
 
 ```json5
 {
@@ -147,7 +144,7 @@ Use core TTS only (no override):
 }
 ```
 
-Override to ElevenLabs just for calls (keep core default elsewhere):
+仅对通话覆盖为 ElevenLabs（其他保持核心默认）：
 
 ```json5
 {
@@ -170,7 +167,7 @@ Override to ElevenLabs just for calls (keep core default elsewhere):
 }
 ```
 
-Override only the OpenAI model for calls (deep‑merge example):
+仅覆盖通话的 OpenAI 模型（深度合并示例）：
 
 ```json5
 {
@@ -191,9 +188,9 @@ Override only the OpenAI model for calls (deep‑merge example):
 }
 ```
 
-## Inbound calls
+## 呼入通话
 
-Inbound policy defaults to `disabled`. To enable inbound calls, set:
+呼入策略默认 `disabled`。要启用呼入通话，设置：
 
 ```json5
 {
@@ -203,7 +200,7 @@ Inbound policy defaults to `disabled`. To enable inbound calls, set:
 }
 ```
 
-Auto-responses use the agent system. Tune with:
+自动回复使用代理系统，可通过以下项调整：
 - `responseModel`
 - `responseSystemPrompt`
 - `responseTimeoutMs`
@@ -220,23 +217,23 @@ openclaw voicecall tail
 openclaw voicecall expose --mode funnel
 ```
 
-## Agent tool
+## 代理工具
 
-Tool name: `voice_call`
+工具名：`voice_call`
 
-Actions:
-- `initiate_call` (message, to?, mode?)
-- `continue_call` (callId, message)
-- `speak_to_user` (callId, message)
-- `end_call` (callId)
-- `get_status` (callId)
+动作：
+- `initiate_call`（message, to?, mode?）
+- `continue_call`（callId, message）
+- `speak_to_user`（callId, message）
+- `end_call`（callId）
+- `get_status`（callId）
 
-This repo ships a matching skill doc at `skills/voice-call/SKILL.md`.
+本仓库提供对应的 skill 文档：`skills/voice-call/SKILL.md`。
 
 ## Gateway RPC
 
-- `voicecall.initiate` (`to?`, `message`, `mode?`)
-- `voicecall.continue` (`callId`, `message`)
-- `voicecall.speak` (`callId`, `message`)
-- `voicecall.end` (`callId`)
-- `voicecall.status` (`callId`)
+- `voicecall.initiate`（`to?`, `message`, `mode?`）
+- `voicecall.continue`（`callId`, `message`）
+- `voicecall.speak`（`callId`, `message`）
+- `voicecall.end`（`callId`）
+- `voicecall.status`（`callId`）

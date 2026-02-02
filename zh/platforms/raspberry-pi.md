@@ -2,121 +2,121 @@
 > 本页正在翻译中。
 
 ---
-summary: "OpenClaw on Raspberry Pi (budget self-hosted setup)"
+summary: "在树莓派上运行 OpenClaw（预算自托管方案）"
 read_when:
-  - Setting up OpenClaw on a Raspberry Pi
-  - Running OpenClaw on ARM devices
-  - Building a cheap always-on personal AI
+  - 在树莓派上部署 OpenClaw
+  - 在 ARM 设备上运行 OpenClaw
+  - 构建便宜的常驻个人 AI
 ---
 
 # OpenClaw on Raspberry Pi
 
-## Goal
+## 目标
 
-Run a persistent, always-on OpenClaw Gateway on a Raspberry Pi for **~$35-80** one-time cost (no monthly fees).
+在树莓派上运行一个持久化、常驻的 OpenClaw Gateway，**一次性成本约 $35-80**（无月费）。
 
-Perfect for:
-- 24/7 personal AI assistant
-- Home automation hub
-- Low-power, always-available Telegram/WhatsApp bot
+适合：
+- 24/7 个人 AI 助手
+- 家庭自动化中枢
+- 低功耗、常在线的 Telegram/WhatsApp bot
 
-## Hardware Requirements
+## 硬件要求
 
 | Pi Model | RAM | Works? | Notes |
 |----------|-----|--------|-------|
-| **Pi 5** | 4GB/8GB | ✅ Best | Fastest, recommended |
-| **Pi 4** | 4GB | ✅ Good | Sweet spot for most users |
-| **Pi 4** | 2GB | ✅ OK | Works, add swap |
-| **Pi 4** | 1GB | ⚠️ Tight | Possible with swap, minimal config |
-| **Pi 3B+** | 1GB | ⚠️ Slow | Works but sluggish |
-| **Pi Zero 2 W** | 512MB | ❌ | Not recommended |
+| **Pi 5** | 4GB/8GB | ✅ Best | 最快，推荐 |
+| **Pi 4** | 4GB | ✅ Good | 多数用户甜 spot |
+| **Pi 4** | 2GB | ✅ OK | 可用，建议加 swap |
+| **Pi 4** | 1GB | ⚠️ Tight | 可用但紧张，需最小化配置 |
+| **Pi 3B+** | 1GB | ⚠️ Slow | 可用但偏慢 |
+| **Pi Zero 2 W** | 512MB | ❌ | 不推荐 |
 
-**Minimum specs:** 1GB RAM, 1 core, 500MB disk  
-**Recommended:** 2GB+ RAM, 64-bit OS, 16GB+ SD card (or USB SSD)
+**最低规格：** 1GB RAM，1 核，500MB 磁盘  
+**推荐：** 2GB+ RAM，64-bit OS，16GB+ SD 卡（或 USB SSD）
 
-## What You'll Need
+## 你需要什么
 
-- Raspberry Pi 4 or 5 (2GB+ recommended)
-- MicroSD card (16GB+) or USB SSD (better performance)
-- Power supply (official Pi PSU recommended)
-- Network connection (Ethernet or WiFi)
-- ~30 minutes
+- Raspberry Pi 4 或 5（推荐 2GB+）
+- MicroSD 卡（16GB+）或 USB SSD（性能更好）
+- 电源（推荐官方电源）
+- 网络连接（有线或 WiFi）
+- ~30 分钟
 
-## 1) Flash the OS
+## 1) 刷入系统
 
-Use **Raspberry Pi OS Lite (64-bit)** — no desktop needed for a headless server.
+使用 **Raspberry Pi OS Lite (64-bit)** —— 无桌面即可做无头服务器。
 
-1. Download [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
-2. Choose OS: **Raspberry Pi OS Lite (64-bit)**
-3. Click the gear icon (⚙️) to pre-configure:
-   - Set hostname: `gateway-host`
-   - Enable SSH
-   - Set username/password
-   - Configure WiFi (if not using Ethernet)
-4. Flash to your SD card / USB drive
-5. Insert and boot the Pi
+1. 下载 [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+2. 选择 OS：**Raspberry Pi OS Lite (64-bit)**
+3. 点击齿轮（⚙️）预配置：
+   - 设置 hostname：`gateway-host`
+   - 启用 SSH
+   - 设置用户名/密码
+   - 配置 WiFi（若非有线）
+4. 刷入 SD 卡 / USB 盘
+5. 插入并启动 Pi
 
-## 2) Connect via SSH
+## 2) SSH 连接
 
 ```bash
 ssh user@gateway-host
-# or use the IP address
+# 或使用 IP
 ssh user@192.168.x.x
 ```
 
-## 3) System Setup
+## 3) 系统设置
 
 ```bash
-# Update system
+# 更新系统
 sudo apt update && sudo apt upgrade -y
 
-# Install essential packages
+# 安装必需包
 sudo apt install -y git curl build-essential
 
-# Set timezone (important for cron/reminders)
-sudo timedatectl set-timezone America/Chicago  # Change to your timezone
+# 设置时区（对 cron/提醒很重要）
+sudo timedatectl set-timezone America/Chicago  # 改成你的时区
 ```
 
-## 4) Install Node.js 22 (ARM64)
+## 4) 安装 Node.js 22（ARM64）
 
 ```bash
-# Install Node.js via NodeSource
+# 通过 NodeSource 安装 Node.js
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
 
-# Verify
-node --version  # Should show v22.x.x
+# 验证
+node --version  # 应显示 v22.x.x
 npm --version
 ```
 
-## 5) Add Swap (Important for 2GB or less)
+## 5) 添加 Swap（2GB 或更低内存必做）
 
-Swap prevents out-of-memory crashes:
+Swap 可避免内存不足崩溃：
 
 ```bash
-# Create 2GB swap file
+# 创建 2GB swap 文件
 sudo fallocate -l 2G /swapfile
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
 
-# Make permanent
+# 持久化
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
-# Optimize for low RAM (reduce swappiness)
+# 优化低内存（降低 swappiness）
 echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
 ```
 
-## 6) Install OpenClaw
+## 6) 安装 OpenClaw
 
-### Option A: Standard Install (Recommended)
+### 方案 A：标准安装（推荐）
 
 ```bash
 curl -fsSL https://openclaw.bot/install.sh | bash
 ```
 
-### Option B: Hackable Install (For tinkering)
+### 方案 B：可 Hack 安装（便于折腾）
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -126,127 +126,127 @@ npm run build
 npm link
 ```
 
-The hackable install gives you direct access to logs and code — useful for debugging ARM-specific issues.
+可 Hack 安装让你更容易查看日志与代码，便于排查 ARM 特有问题。
 
-## 7) Run Onboarding
+## 7) 运行 Onboarding
 
 ```bash
 openclaw onboard --install-daemon
 ```
 
-Follow the wizard:
-1. **Gateway mode:** Local
-2. **Auth:** API keys recommended (OAuth can be finicky on headless Pi)
-3. **Channels:** Telegram is easiest to start with
-4. **Daemon:** Yes (systemd)
+向导步骤：
+1. **Gateway mode：** Local
+2. **Auth：** 推荐 API keys（OAuth 在 headless Pi 上可能较麻烦）
+3. **Channels：** 最容易起步的是 Telegram
+4. **Daemon：** Yes（systemd）
 
-## 8) Verify Installation
+## 8) 验证安装
 
 ```bash
-# Check status
+# 查看状态
 openclaw status
 
-# Check service
+# 查看服务
 sudo systemctl status openclaw
 
-# View logs
+# 查看日志
 journalctl -u openclaw -f
 ```
 
-## 9) Access the Dashboard
+## 9) 访问 Dashboard
 
-Since the Pi is headless, use an SSH tunnel:
+Pi 是 headless，用 SSH 隧道：
 
 ```bash
-# From your laptop/desktop
+# 在你的笔记本/台式机
 ssh -L 18789:localhost:18789 user@gateway-host
 
-# Then open in browser
+# 然后在浏览器打开
 open http://localhost:18789
 ```
 
-Or use Tailscale for always-on access:
+或使用 Tailscale 进行常驻访问：
 
 ```bash
-# On the Pi
+# 在 Pi 上
 curl -fsSL https://tailscale.com/install.sh | sh
 sudo tailscale up
 
-# Update config
+# 更新配置
 openclaw config set gateway.bind tailnet
 sudo systemctl restart openclaw
 ```
 
 ---
 
-## Performance Optimizations
+## 性能优化
 
-### Use a USB SSD (Huge Improvement)
+### 使用 USB SSD（巨大提升）
 
-SD cards are slow and wear out. A USB SSD dramatically improves performance:
+SD 卡慢且易损。USB SSD 性能提升明显：
 
 ```bash
-# Check if booting from USB
+# 查看是否从 USB 启动
 lsblk
 ```
 
-See [Pi USB boot guide](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot) for setup.
+设置参考：[Pi USB boot guide](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot)
 
-### Reduce Memory Usage
+### 降低内存占用
 
 ```bash
-# Disable GPU memory allocation (headless)
+# 禁用 GPU 内存分配（headless）
 echo 'gpu_mem=16' | sudo tee -a /boot/config.txt
 
-# Disable Bluetooth if not needed
+# 若不需要蓝牙
 sudo systemctl disable bluetooth
 ```
 
-### Monitor Resources
+### 监控资源
 
 ```bash
-# Check memory
+# 查看内存
 free -h
 
-# Check CPU temperature
+# 查看 CPU 温度
 vcgencmd measure_temp
 
-# Live monitoring
+# 实时监控
 htop
 ```
 
 ---
 
-## ARM-Specific Notes
+## ARM 特性说明
 
-### Binary Compatibility
+### 二进制兼容性
 
-Most OpenClaw features work on ARM64, but some external binaries may need ARM builds:
+多数 OpenClaw 功能在 ARM64 可用，但部分外部二进制需要 ARM 版本：
 
 | Tool | ARM64 Status | Notes |
 |------|--------------|-------|
-| Node.js | ✅ | Works great |
-| WhatsApp (Baileys) | ✅ | Pure JS, no issues |
-| Telegram | ✅ | Pure JS, no issues |
-| gog (Gmail CLI) | ⚠️ | Check for ARM release |
+| Node.js | ✅ | 工作良好 |
+| WhatsApp (Baileys) | ✅ | 纯 JS，无问题 |
+| Telegram | ✅ | 纯 JS，无问题 |
+| gog (Gmail CLI) | ⚠️ | 检查是否有 ARM 版本 |
 | Chromium (browser) | ✅ | `sudo apt install chromium-browser` |
 
-If a skill fails, check if its binary has an ARM build. Many Go/Rust tools do; some don't.
+若某个 skill 失败，检查其二进制是否有 ARM 构建。很多 Go/Rust 工具有，部分没有。
 
 ### 32-bit vs 64-bit
 
-**Always use 64-bit OS.** Node.js and many modern tools require it. Check with:
+**务必使用 64-bit OS。** Node.js 和许多现代工具要求 64 位。检查：
 
 ```bash
 uname -m
-# Should show: aarch64 (64-bit) not armv7l (32-bit)
+# 应显示：aarch64（64-bit），而非 armv7l（32-bit）
 ```
 
 ---
 
-## Recommended Model Setup
+## 推荐模型配置
 
-Since the Pi is just the Gateway (models run in the cloud), use API-based models:
+树莓派只作为 Gateway（模型在云端）。使用 API 模型：
 
 ```json
 {
@@ -261,22 +261,22 @@ Since the Pi is just the Gateway (models run in the cloud), use API-based models
 }
 ```
 
-**Don't try to run local LLMs on a Pi** — even small models are too slow. Let Claude/GPT do the heavy lifting.
+**不要尝试在 Pi 上跑本地 LLM** —— 即便小模型也太慢。让 Claude/GPT 扛。
 
 ---
 
-## Auto-Start on Boot
+## 开机自启
 
-The onboarding wizard sets this up, but to verify:
+Onboarding 向导会设置，但可验证：
 
 ```bash
-# Check service is enabled
+# 确认已启用
 sudo systemctl is-enabled openclaw
 
-# Enable if not
+# 若未启用
 sudo systemctl enable openclaw
 
-# Start on boot
+# 开机启动
 sudo systemctl start openclaw
 ```
 
@@ -284,74 +284,74 @@ sudo systemctl start openclaw
 
 ## Troubleshooting
 
-### Out of Memory (OOM)
+### 内存不足（OOM）
 
 ```bash
-# Check memory
+# 查看内存
 free -h
 
-# Add more swap (see Step 5)
-# Or reduce services running on the Pi
+# 添加更多 swap（见第 5 步）
+# 或减少运行中的服务
 ```
 
-### Slow Performance
+### 性能慢
 
-- Use USB SSD instead of SD card
-- Disable unused services: `sudo systemctl disable cups bluetooth avahi-daemon`
-- Check CPU throttling: `vcgencmd get_throttled` (should return `0x0`)
+- 用 USB SSD 替代 SD 卡
+- 禁用不需要的服务：`sudo systemctl disable cups bluetooth avahi-daemon`
+- 检查 CPU 降频：`vcgencmd get_throttled`（应返回 `0x0`）
 
-### Service Won't Start
+### 服务无法启动
 
 ```bash
-# Check logs
+# 查看日志
 journalctl -u openclaw --no-pager -n 100
 
-# Common fix: rebuild
-cd ~/openclaw  # if using hackable install
+# 常见修复：重新构建
+cd ~/openclaw  # 如果用可 hack 安装
 npm run build
 sudo systemctl restart openclaw
 ```
 
-### ARM Binary Issues
+### ARM 二进制问题
 
-If a skill fails with "exec format error":
-1. Check if the binary has an ARM64 build
-2. Try building from source
-3. Or use a Docker container with ARM support
+若 skill 报 “exec format error”：
+1. 检查是否有 ARM64 构建
+2. 尝试从源码构建
+3. 或使用支持 ARM 的 Docker 容器
 
-### WiFi Drops
+### WiFi 掉线
 
-For headless Pis on WiFi:
+无头 Pi 使用 WiFi 时：
 
 ```bash
-# Disable WiFi power management
+# 关闭 WiFi 省电
 sudo iwconfig wlan0 power off
 
-# Make permanent
+# 持久化
 echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 ```
 
 ---
 
-## Cost Comparison
+## 成本对比
 
 | Setup | One-Time Cost | Monthly Cost | Notes |
 |-------|---------------|--------------|-------|
-| **Pi 4 (2GB)** | ~$45 | $0 | + power (~$5/yr) |
-| **Pi 4 (4GB)** | ~$55 | $0 | Recommended |
-| **Pi 5 (4GB)** | ~$60 | $0 | Best performance |
-| **Pi 5 (8GB)** | ~$80 | $0 | Overkill but future-proof |
-| DigitalOcean | $0 | $6/mo | $72/year |
-| Hetzner | $0 | €3.79/mo | ~$50/year |
+| **Pi 4 (2GB)** | ~$45 | $0 | + 电费（~$5/年） |
+| **Pi 4 (4GB)** | ~$55 | $0 | 推荐 |
+| **Pi 5 (4GB)** | ~$60 | $0 | 性能最好 |
+| **Pi 5 (8GB)** | ~$80 | $0 | 过度但长远 |
+| DigitalOcean | $0 | $6/mo | $72/年 |
+| Hetzner | $0 | €3.79/mo | ~$50/年 |
 
-**Break-even:** A Pi pays for itself in ~6-12 months vs cloud VPS.
+**回本：** 相对云 VPS，Pi 大约 6-12 个月回本。
 
 ---
 
 ## See Also
 
-- [Linux guide](/platforms/linux) — general Linux setup
-- [DigitalOcean guide](/platforms/digitalocean) — cloud alternative
-- [Hetzner guide](/platforms/hetzner) — Docker setup
-- [Tailscale](/gateway/tailscale) — remote access
-- [Nodes](/nodes) — pair your laptop/phone with the Pi gateway
+- [Linux guide](/zh/platforms/linux) — 通用 Linux 设置
+- [DigitalOcean guide](/zh/platforms/digitalocean) — 云端替代方案
+- [Hetzner guide](/zh/platforms/hetzner) — Docker 方案
+- [Tailscale](/zh/gateway/tailscale) — 远程访问
+- [Nodes](/zh/nodes) — 配对你的笔记本/手机到 Pi gateway

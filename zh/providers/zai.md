@@ -2,26 +2,25 @@
 > 本页正在翻译中。
 
 ---
-summary: "Use Z.AI (GLM models) with OpenClaw"
+summary: "在 OpenClaw 中使用 Z.AI（GLM 模型）"
 read_when:
-  - You want Z.AI / GLM models in OpenClaw
-  - You need a simple ZAI_API_KEY setup
+  - 想在 OpenClaw 中使用 Z.AI / GLM 模型
+  - 需要简单的 ZAI_API_KEY 配置
 ---
 # Z.AI
 
-Z.AI is the API platform for **GLM** models. It provides REST APIs for GLM and uses API keys
-for authentication. Create your API key in the Z.AI console. OpenClaw uses the `zai` provider
-with a Z.AI API key.
+Z.AI 是 **GLM** 模型的 API 平台。它为 GLM 提供 REST API，并使用 API key 认证。
+请在 Z.AI 控制台创建 API key。OpenClaw 使用 `zai` provider 与 Z.AI API key。
 
-## CLI setup
+## CLI 设置
 
 ```bash
 openclaw onboard --auth-choice zai-api-key
-# or non-interactive
+# 或非交互式
 openclaw onboard --zai-api-key "$ZAI_API_KEY"
 ```
 
-## Config snippet
+## 配置片段
 
 ```json5
 {
@@ -30,8 +29,8 @@ openclaw onboard --zai-api-key "$ZAI_API_KEY"
 }
 ```
 
-## Notes
+## 说明
 
-- GLM models are available as `zai/<model>` (example: `zai/glm-4.7`).
-- See [/providers/glm](/providers/glm) for the model family overview.
-- Z.AI uses Bearer auth with your API key.
+- GLM 模型引用为 `zai/<model>`（例如：`zai/glm-4.7`）。
+- 模型家族概览参见 [/providers/glm](/zh/providers/glm)。
+- Z.AI 使用 Bearer token 认证。

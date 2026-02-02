@@ -2,54 +2,54 @@
 > 本页正在翻译中。
 
 ---
-summary: "Zalo Personal plugin: QR login + messaging via zca-cli (plugin install + channel config + CLI + tool)"
+summary: "Zalo Personal 插件：通过 zca-cli 扫码登录并发送消息（安装 + 频道配置 + CLI + 工具）"
 read_when:
-  - You want Zalo Personal (unofficial) support in OpenClaw
-  - You are configuring or developing the zalouser plugin
+  - 想在 OpenClaw 中使用 Zalo Personal（非官方）
+  - 正在配置或开发 zalouser 插件
 ---
 
-# Zalo Personal (plugin)
+# Zalo Personal（插件）
 
-Zalo Personal support for OpenClaw via a plugin, using `zca-cli` to automate a normal Zalo user account.
+通过插件为 OpenClaw 提供 Zalo Personal 支持，使用 `zca-cli` 自动化普通 Zalo 个人账号。
 
-> **Warning:** Unofficial automation may lead to account suspension/ban. Use at your own risk.
+> **警告：** 非官方自动化可能导致账号暂停/封禁。风险自担。
 
-## Naming
-Channel id is `zalouser` to make it explicit this automates a **personal Zalo user account** (unofficial). We keep `zalo` reserved for a potential future official Zalo API integration.
+## 命名
+频道 id 为 `zalouser`，用于明确这是 **个人 Zalo 用户账号**（非官方）自动化。我们保留 `zalo` 供未来潜在的官方 Zalo API 集成。
 
-## Where it runs
-This plugin runs **inside the Gateway process**.
+## 运行位置
+该插件 **在 Gateway 进程内**运行。
 
-If you use a remote Gateway, install/configure it on the **machine running the Gateway**, then restart the Gateway.
+如果使用远程 Gateway，请在 **运行 Gateway 的机器** 上安装/配置，然后重启 Gateway。
 
-## Install
+## 安装
 
-### Option A: install from npm
+### 方案 A：从 npm 安装
 
 ```bash
 openclaw plugins install @openclaw/zalouser
 ```
 
-Restart the Gateway afterwards.
+随后重启 Gateway。
 
-### Option B: install from a local folder (dev)
+### 方案 B：从本地目录安装（开发）
 
 ```bash
 openclaw plugins install ./extensions/zalouser
 cd ./extensions/zalouser && pnpm install
 ```
 
-Restart the Gateway afterwards.
+随后重启 Gateway。
 
-## Prerequisite: zca-cli
-The Gateway machine must have `zca` on `PATH`:
+## 前置条件：zca-cli
+Gateway 机器必须在 `PATH` 中有 `zca`：
 
 ```bash
 zca --version
 ```
 
-## Config
-Channel config lives under `channels.zalouser` (not `plugins.entries.*`):
+## 配置
+频道配置在 `channels.zalouser` 下（不是 `plugins.entries.*`）：
 
 ```json5
 {
@@ -72,7 +72,7 @@ openclaw message send --channel zalouser --target <threadId> --message "Hello fr
 openclaw directory peers list --channel zalouser --query "name"
 ```
 
-## Agent tool
-Tool name: `zalouser`
+## 代理工具
+工具名：`zalouser`
 
-Actions: `send`, `image`, `link`, `friends`, `groups`, `me`, `status`
+动作：`send`、`image`、`link`、`friends`、`groups`、`me`、`status`

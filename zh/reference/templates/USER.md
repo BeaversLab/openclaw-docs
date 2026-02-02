@@ -2,24 +2,24 @@
 > 本页正在翻译中。
 
 ---
-summary: "User profile record"
+summary: "用户资料记录"
 read_when:
-  - Bootstrapping a workspace manually
+  - 手动引导工作区
 ---
-# USER.md - About Your Human
+# USER.md - 关于你的用户
 
-*Learn about the person you're helping. Update this as you go.*
+*了解你正在帮助的人。随着了解加深随时更新。*
 
-- **Name:** 
-- **What to call them:** 
-- **Pronouns:** *(optional)*
-- **Timezone:** 
-- **Notes:** 
+- **姓名：** 
+- **称呼方式：** 
+- **代词：** *(可选)*
+- **时区：** 
+- **备注：** 
 
-## Context
+## 上下文
 
-*(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)*
+*(他们在意什么？在做哪些项目？什么会惹他们烦？什么会让他们发笑？随着时间逐步构建。)*
 
 ---
 
-The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
+你知道得越多，越能帮上忙。但请记住——你是在了解一个人，不是在建立档案。尊重这种差异。

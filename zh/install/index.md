@@ -2,148 +2,148 @@
 > 本页正在翻译中。
 
 ---
-summary: "Install OpenClaw (recommended installer, global install, or from source)"
+summary: "安装 OpenClaw（推荐安装器、全局安装或从源码）"
 read_when:
-  - Installing OpenClaw
-  - You want to install from GitHub
+  - 安装 OpenClaw
+  - 你想从 GitHub 安装
 ---
 
 # Install
 
-Use the installer unless you have a reason not to. It sets up the CLI and runs onboarding.
+除非你有明确理由，否则使用安装器。它会设置 CLI 并运行 onboarding。
 
-## Quick install (recommended)
+## 快速安装（推荐）
 
 ```bash
 curl -fsSL https://openclaw.bot/install.sh | bash
 ```
 
-Windows (PowerShell):
+Windows（PowerShell）：
 
 ```powershell
 iwr -useb https://openclaw.ai/install.ps1 | iex
 ```
 
-Next step (if you skipped onboarding):
+下一步（若跳过了 onboarding）：
 
 ```bash
 openclaw onboard --install-daemon
 ```
 
-## System requirements
+## 系统要求
 
 - **Node >=22**
-- macOS, Linux, or Windows via WSL2
-- `pnpm` only if you build from source
+- macOS、Linux 或通过 WSL2 的 Windows
+- 仅在从源码构建时需要 `pnpm`
 
-## Choose your install path
+## 选择安装方式
 
-### 1) Installer script (recommended)
+### 1) 安装器脚本（推荐）
 
-Installs `openclaw` globally via npm and runs onboarding.
+通过 npm 全局安装 `openclaw` 并运行 onboarding。
 
 ```bash
 curl -fsSL https://openclaw.bot/install.sh | bash
 ```
 
-Installer flags:
+安装器 flags：
 
 ```bash
 curl -fsSL https://openclaw.bot/install.sh | bash -s -- --help
 ```
 
-Details: [Installer internals](/install/installer).
+细节：[Installer internals](/zh/install/installer)。
 
-Non-interactive (skip onboarding):
+非交互（跳过 onboarding）：
 
 ```bash
 curl -fsSL https://openclaw.bot/install.sh | bash -s -- --no-onboard
 ```
 
-### 2) Global install (manual)
+### 2) 全局安装（手动）
 
-If you already have Node:
+如果你已经有 Node：
 
 ```bash
 npm install -g openclaw@latest
 ```
 
-If you have libvips installed globally (common on macOS via Homebrew) and `sharp` fails to install, force prebuilt binaries:
+如果你全局安装了 libvips（macOS 上通过 Homebrew 常见），且 `sharp` 安装失败，可强制使用预编译二进制：
 
 ```bash
 SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
 ```
 
-If you see `sharp: Please add node-gyp to your dependencies`, either install build tooling (macOS: Xcode CLT + `npm install -g node-gyp`) or use the `SHARP_IGNORE_GLOBAL_LIBVIPS=1` workaround above to skip the native build.
+如果你看到 `sharp: Please add node-gyp to your dependencies`，请安装构建工具（macOS：Xcode CLT + `npm install -g node-gyp`），或使用上面的 `SHARP_IGNORE_GLOBAL_LIBVIPS=1` 方案跳过原生构建。
 
-Or:
+或者：
 
 ```bash
 pnpm add -g openclaw@latest
 ```
 
-Then:
+然后：
 
 ```bash
 openclaw onboard --install-daemon
 ```
 
-### 3) From source (contributors/dev)
+### 3) 从源码（贡献者/开发）
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
 cd openclaw
 pnpm install
-pnpm ui:build # auto-installs UI deps on first run
+pnpm ui:build # 首次运行会自动安装 UI 依赖
 pnpm build
 openclaw onboard --install-daemon
 ```
 
-Tip: if you don’t have a global install yet, run repo commands via `pnpm openclaw ...`.
+提示：如果尚未全局安装，可通过 `pnpm openclaw ...` 运行仓库命令。
 
-### 4) Other install options
+### 4) 其他安装选项
 
-- Docker: [Docker](/install/docker)
-- Nix: [Nix](/install/nix)
-- Ansible: [Ansible](/install/ansible)
-- Bun (CLI only): [Bun](/install/bun)
+- Docker：[Docker](/zh/install/docker)
+- Nix：[Nix](/zh/install/nix)
+- Ansible：[Ansible](/zh/install/ansible)
+- Bun（仅 CLI）：[Bun](/zh/install/bun)
 
-## After install
+## 安装后
 
-- Run onboarding: `openclaw onboard --install-daemon`
-- Quick check: `openclaw doctor`
-- Check gateway health: `openclaw status` + `openclaw health`
-- Open the dashboard: `openclaw dashboard`
+- 运行 onboarding：`openclaw onboard --install-daemon`
+- 快速检查：`openclaw doctor`
+- 检查 gateway 健康：`openclaw status` + `openclaw health`
+- 打开仪表盘：`openclaw dashboard`
 
-## Install method: npm vs git (installer)
+## 安装方式：npm vs git（安装器）
 
-The installer supports two methods:
+安装器支持两种方式：
 
-- `npm` (default): `npm install -g openclaw@latest`
-- `git`: clone/build from GitHub and run from a source checkout
+- `npm`（默认）：`npm install -g openclaw@latest`
+- `git`：从 GitHub clone/build 并从源码 checkout 运行
 
 ### CLI flags
 
 ```bash
-# Explicit npm
+# 显式 npm
 curl -fsSL https://openclaw.bot/install.sh | bash -s -- --install-method npm
 
-# Install from GitHub (source checkout)
+# 从 GitHub 安装（源码 checkout）
 curl -fsSL https://openclaw.bot/install.sh | bash -s -- --install-method git
 ```
 
-Common flags:
+常用 flags：
 
 - `--install-method npm|git`
-- `--git-dir <path>` (default: `~/openclaw`)
-- `--no-git-update` (skip `git pull` when using an existing checkout)
-- `--no-prompt` (disable prompts; required in CI/automation)
-- `--dry-run` (print what would happen; make no changes)
-- `--no-onboard` (skip onboarding)
+- `--git-dir <path>`（默认：`~/openclaw`）
+- `--no-git-update`（使用现有 checkout 时跳过 `git pull`）
+- `--no-prompt`（禁用提示；CI/自动化中必需）
+- `--dry-run`（仅输出将执行的步骤，不做改动）
+- `--no-onboard`（跳过 onboarding）
 
-### Environment variables
+### 环境变量
 
-Equivalent env vars (useful for automation):
+等价环境变量（适用于自动化）：
 
 - `OPENCLAW_INSTALL_METHOD=git|npm`
 - `OPENCLAW_GIT_DIR=...`
@@ -151,11 +151,11 @@ Equivalent env vars (useful for automation):
 - `OPENCLAW_NO_PROMPT=1`
 - `OPENCLAW_DRY_RUN=1`
 - `OPENCLAW_NO_ONBOARD=1`
-- `SHARP_IGNORE_GLOBAL_LIBVIPS=0|1` (default: `1`; avoids `sharp` building against system libvips)
+- `SHARP_IGNORE_GLOBAL_LIBVIPS=0|1`（默认：`1`；避免 `sharp` 使用系统 libvips 构建）
 
-## Troubleshooting: `openclaw` not found (PATH)
+## 故障排查：找不到 `openclaw`（PATH）
 
-Quick diagnosis:
+快速诊断：
 
 ```bash
 node -v
@@ -164,21 +164,21 @@ npm prefix -g
 echo "$PATH"
 ```
 
-If `$(npm prefix -g)/bin` (macOS/Linux) or `$(npm prefix -g)` (Windows) is **not** present inside `echo "$PATH"`, your shell can’t find global npm binaries (including `openclaw`).
+如果 `$(npm prefix -g)/bin`（macOS/Linux）或 `$(npm prefix -g)`（Windows）**不在** `echo "$PATH"` 中，说明 shell 无法找到全局 npm 二进制（包含 `openclaw`）。
 
-Fix: add it to your shell startup file (zsh: `~/.zshrc`, bash: `~/.bashrc`):
+修复：把它加入 shell 启动文件（zsh：`~/.zshrc`，bash：`~/.bashrc`）：
 
 ```bash
 # macOS / Linux
 export PATH="$(npm prefix -g)/bin:$PATH"
 ```
 
-On Windows, add the output of `npm prefix -g` to your PATH.
+Windows 上，将 `npm prefix -g` 的输出加入 PATH。
 
-Then open a new terminal (or `rehash` in zsh / `hash -r` in bash).
+然后打开新终端（或在 zsh 中 `rehash` / bash 中 `hash -r`）。
 
-## Update / uninstall
+## 更新 / 卸载
 
-- Updates: [Updating](/install/updating)
-- Migrate to a new machine: [Migrating](/install/migrating)
-- Uninstall: [Uninstall](/install/uninstall)
+- 更新：[Updating](/zh/install/updating)
+- 迁移到新机器：[Migrating](/zh/install/migrating)
+- 卸载：[Uninstall](/zh/install/uninstall)

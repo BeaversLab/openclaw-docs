@@ -2,43 +2,43 @@
 > 本页正在翻译中。
 
 ---
-summary: "OpenProse: .prose workflows, slash commands, and state in OpenClaw"
+summary: "OpenProse：.prose 工作流、斜杠命令与 OpenClaw 中的状态"
 read_when:
-  - You want to run or write .prose workflows
-  - You want to enable the OpenProse plugin
-  - You need to understand state storage
+  - 想运行或编写 .prose 工作流
+  - 想启用 OpenProse 插件
+  - 需要了解状态存储
 ---
 # OpenProse
 
-OpenProse is a portable, markdown-first workflow format for orchestrating AI sessions. In OpenClaw it ships as a plugin that installs an OpenProse skill pack plus a `/prose` slash command. Programs live in `.prose` files and can spawn multiple sub-agents with explicit control flow.
+OpenProse 是一种可移植、以 Markdown 为先的工作流格式，用于编排 AI 会话。在 OpenClaw 中，它以插件形式提供，安装 OpenProse skill 包并注册 `/prose` 斜杠命令。程序存放在 `.prose` 文件中，可通过显式控制流启动多个子代理。
 
-Official site: https://www.prose.md
+官方站点：https://www.prose.md
 
-## What it can do
+## 能做什么
 
-- Multi-agent research + synthesis with explicit parallelism.
-- Repeatable approval-safe workflows (code review, incident triage, content pipelines).
-- Reusable `.prose` programs you can run across supported agent runtimes.
+- 显式并行的多代理研究与综合。
+- 可复用、审批安全的工作流（代码评审、事故分诊、内容流水线）。
+- 可重复运行的 `.prose` 程序，适用于支持的代理运行时。
 
-## Install + enable
+## 安装与启用
 
-Bundled plugins are disabled by default. Enable OpenProse:
+内置插件默认禁用。启用 OpenProse：
 
 ```bash
 openclaw plugins enable open-prose
 ```
 
-Restart the Gateway after enabling the plugin.
+启用后重启 Gateway。
 
-Dev/local checkout: `openclaw plugins install ./extensions/open-prose`
+开发/本地检出：`openclaw plugins install ./extensions/open-prose`
 
-Related docs: [Plugins](/plugin), [Plugin manifest](/plugins/manifest), [Skills](/tools/skills).
+相关文档：[Plugins](/zh/plugin)、[Plugin manifest](/zh/plugins/manifest)、[Skills](/zh/tools/skills)。
 
-## Slash command
+## 斜杠命令
 
-OpenProse registers `/prose` as a user-invocable skill command. It routes to the OpenProse VM instructions and uses OpenClaw tools under the hood.
+OpenProse 注册 `/prose` 作为用户可调用的 skill 命令。它会路由到 OpenProse VM 指令，并在底层使用 OpenClaw 工具。
 
-Common commands:
+常用命令：
 
 ```
 /prose help
@@ -50,7 +50,7 @@ Common commands:
 /prose update
 ```
 
-## Example: a simple `.prose` file
+## 示例：一个简单的 `.prose` 文件
 
 ```prose
 # Research + synthesis with two agents running in parallel.
@@ -75,9 +75,9 @@ session "Merge the findings + draft into a final answer."
 context: { findings, draft }
 ```
 
-## File locations
+## 文件位置
 
-OpenProse keeps state under `.prose/` in your workspace:
+OpenProse 在工作区的 `.prose/` 下保存状态：
 
 ```
 .prose/
@@ -91,44 +91,44 @@ OpenProse keeps state under `.prose/` in your workspace:
 └── agents/
 ```
 
-User-level persistent agents live at:
+用户级的持久化 agent 位于：
 
 ```
 ~/.prose/agents/
 ```
 
-## State modes
+## 状态模式
 
-OpenProse supports multiple state backends:
+OpenProse 支持多种状态后端：
 
-- **filesystem** (default): `.prose/runs/...`
-- **in-context**: transient, for small programs
-- **sqlite** (experimental): requires `sqlite3` binary
-- **postgres** (experimental): requires `psql` and a connection string
+- **filesystem**（默认）：`.prose/runs/...`
+- **in-context**：短期，适用于小型程序
+- **sqlite**（实验）：需要 `sqlite3` 二进制
+- **postgres**（实验）：需要 `psql` 与连接字符串
 
-Notes:
-- sqlite/postgres are opt-in and experimental.
-- postgres credentials flow into subagent logs; use a dedicated, least-privileged DB.
+说明：
+- sqlite/postgres 为可选且实验性。
+- postgres 凭据会进入子代理日志；请使用专用、最小权限的数据库。
 
-## Remote programs
+## 远程程序
 
-`/prose run <handle/slug>` resolves to `https://p.prose.md/<handle>/<slug>`.
-Direct URLs are fetched as-is. This uses the `web_fetch` tool (or `exec` for POST).
+`/prose run <handle/slug>` 会解析到 `https://p.prose.md/<handle>/<slug>`。
+直接 URL 会原样抓取。此过程使用 `web_fetch` 工具（或对 POST 使用 `exec`）。
 
-## OpenClaw runtime mapping
+## OpenClaw 运行时映射
 
-OpenProse programs map to OpenClaw primitives:
+OpenProse 程序映射到 OpenClaw 原语：
 
-| OpenProse concept | OpenClaw tool |
+| OpenProse 概念 | OpenClaw 工具 |
 | --- | --- |
 | Spawn session / Task tool | `sessions_spawn` |
-| File read/write | `read` / `write` |
-| Web fetch | `web_fetch` |
+| 文件读写 | `read` / `write` |
+| Web 抓取 | `web_fetch` |
 
-If your tool allowlist blocks these tools, OpenProse programs will fail. See [Skills config](/tools/skills-config).
+如果你的工具 allowlist 阻止这些工具，OpenProse 程序将失败。参见 [Skills config](/zh/tools/skills-config)。
 
-## Security + approvals
+## 安全与审批
 
-Treat `.prose` files like code. Review before running. Use OpenClaw tool allowlists and approval gates to control side effects.
+将 `.prose` 文件视为代码，在运行前审查。使用 OpenClaw 工具 allowlist 与审批门控来控制副作用。
 
-For deterministic, approval-gated workflows, compare with [Lobster](/tools/lobster).
+如需确定性、审批门控的工作流，可参考 [Lobster](/zh/tools/lobster)。

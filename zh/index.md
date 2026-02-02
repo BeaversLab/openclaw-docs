@@ -2,13 +2,13 @@
 > 本页正在翻译中。
 
 ---
-summary: "Top-level overview of OpenClaw, features, and purpose"
+summary: "OpenClaw 的顶层概览、功能与定位"
 read_when:
-  - Introducing OpenClaw to newcomers
+  - 向新用户介绍 OpenClaw
 ---
 # OpenClaw 🦞
 
-> *"EXFOLIATE! EXFOLIATE!"* — A space lobster, probably
+> *“EXFOLIATE! EXFOLIATE!”* — 也许是一只太空龙虾
 
 
 <p align="center">
@@ -20,35 +20,35 @@ read_when:
 
 
 <p align="center">
-  <strong>Any OS + WhatsApp/Telegram/Discord/iMessage gateway for AI agents (Pi).</strong><br />
-  Plugins add Mattermost and more.
-  Send a message, get an agent response — from your pocket.
+  <strong>Any OS + WhatsApp/Telegram/Discord/iMessage 网关，面向 AI agent（Pi）。</strong><br />
+  插件可添加 Mattermost 等。
+  发条消息，口袋里就能收到 agent 回复。
 </p>
 
 <p align="center">
   <a href="https://github.com/openclaw/openclaw">GitHub</a> ·
   <a href="https://github.com/openclaw/openclaw/releases">Releases</a> ·
-  <a href="/">Docs</a> ·
-  <a href="/start/openclaw">OpenClaw assistant setup</a>
+  <a href="/zh/">Docs</a> ·
+  <a href="/zh/start/openclaw">OpenClaw assistant setup</a>
 </p>
 
-OpenClaw bridges WhatsApp (via WhatsApp Web / Baileys), Telegram (Bot API / grammY), Discord (Bot API / channels.discord.js), and iMessage (imsg CLI) to coding agents like [Pi](https://github.com/badlogic/pi-mono). Plugins add Mattermost (Bot API + WebSocket) and more.
-OpenClaw also powers the OpenClaw assistant.
+OpenClaw 将 WhatsApp（WhatsApp Web / Baileys）、Telegram（Bot API / grammY）、Discord（Bot API / channels.discord.js）与 iMessage（imsg CLI）桥接到如 [Pi](https://github.com/badlogic/pi-mono) 的编码 agent。插件还可接入 Mattermost（Bot API + WebSocket）等。
+OpenClaw 也驱动 OpenClaw assistant。
 
 ## Start here
 
-- **New install from zero:** [Getting Started](/start/getting-started)
-- **Guided setup (recommended):** [Wizard](/start/wizard) (`openclaw onboard`)
-- **Open the dashboard (local Gateway):** http://127.0.0.1:18789/ (or http://localhost:18789/)
+- **从零新装：**[Getting Started](/zh/start/getting-started)
+- **向导式设置（推荐）：**[Wizard](/zh/start/wizard)（`openclaw onboard`）
+- **打开仪表盘（本地 Gateway）：**http://127.0.0.1:18789/（或 http://localhost:18789/）
 
-If the Gateway is running on the same computer, that link opens the browser Control UI
-immediately. If it fails, start the Gateway first: `openclaw gateway`.
+如果 Gateway 运行在同一台电脑上，该链接会直接打开浏览器 Control UI。
+如果打不开，先启动 Gateway：`openclaw gateway`。
 
-## Dashboard (browser Control UI)
+## Dashboard（浏览器 Control UI）
 
-The dashboard is the browser Control UI for chat, config, nodes, sessions, and more.
-Local default: http://127.0.0.1:18789/
-Remote access: [Web surfaces](/web) and [Tailscale](/gateway/tailscale)
+Dashboard 是浏览器里的 Control UI，用于聊天、配置、节点、会话等。
+本地默认：http://127.0.0.1:18789/
+远程访问见：[Web surfaces](/zh/web) 与 [Tailscale](/zh/gateway/tailscale)
 
 <p align="center">
   <img src="whatsapp-openclaw.jpg" alt="OpenClaw" width="420" />
@@ -75,95 +75,93 @@ WhatsApp / Telegram / Discord / iMessage (+ plugins)
               └─ Android node via Gateway WS + pairing
 ```
 
-Most operations flow through the **Gateway** (`openclaw gateway`), a single long-running process that owns channel connections and the WebSocket control plane.
+大多数操作都通过 **Gateway**（`openclaw gateway`）流转，它是一个长期运行的单一进程，负责管理频道连接与 WebSocket 控制平面。
 
 ## Network model
 
-- **One Gateway per host (recommended)**: it is the only process allowed to own the WhatsApp Web session. If you need a rescue bot or strict isolation, run multiple gateways with isolated profiles and ports; see [Multiple gateways](/gateway/multiple-gateways).
-- **Loopback-first**: Gateway WS defaults to `ws://127.0.0.1:18789`.
-  - The wizard now generates a gateway token by default (even for loopback).
-  - For Tailnet access, run `openclaw gateway --bind tailnet --token ...` (token is required for non-loopback binds).
-- **Nodes**: connect to the Gateway WebSocket (LAN/tailnet/SSH as needed); legacy TCP bridge is deprecated/removed.
-- **Canvas host**: HTTP file server on `canvasHost.port` (default `18793`), serving `/__openclaw__/canvas/` for node WebViews; see [Gateway configuration](/gateway/configuration) (`canvasHost`).
-- **Remote use**: SSH tunnel or tailnet/VPN; see [Remote access](/gateway/remote) and [Discovery](/gateway/discovery).
+- **每台主机一个 Gateway（推荐）**：它是唯一允许持有 WhatsApp Web 会话的进程。如果需要救援 bot 或强隔离，可用隔离的 profile 与端口运行多个网关；见 [Multiple gateways](/zh/gateway/multiple-gateways)。
+- **Loopback-first**：Gateway WS 默认为 `ws://127.0.0.1:18789`。
+  - 向导现在默认生成 gateway token（即便是 loopback）。
+  - Tailnet 访问用：`openclaw gateway --bind tailnet --token ...`（非 loopback 绑定必须带 token）。
+- **Nodes**：通过 Gateway WebSocket 连接（按需用 LAN/tailnet/SSH）；旧 TCP bridge 已弃用/移除。
+- **Canvas host**：HTTP 文件服务运行在 `canvasHost.port`（默认 `18793`），提供 `/__openclaw__/canvas/` 供 node WebView 使用；见 [Gateway configuration](/zh/gateway/configuration)（`canvasHost`）。
+- **远程使用**：SSH 隧道或 tailnet/VPN；见 [Remote access](/zh/gateway/remote) 与 [Discovery](/zh/gateway/discovery)。
 
-## Features (high level)
+## Features（高层概览）
 
-- 📱 **WhatsApp Integration** — Uses Baileys for WhatsApp Web protocol
-- ✈️ **Telegram Bot** — DMs + groups via grammY
-- 🎮 **Discord Bot** — DMs + guild channels via channels.discord.js
-- 🧩 **Mattermost Bot (plugin)** — Bot token + WebSocket events
-- 💬 **iMessage** — Local imsg CLI integration (macOS)
-- 🤖 **Agent bridge** — Pi (RPC mode) with tool streaming
-- ⏱️ **Streaming + chunking** — Block streaming + Telegram draft streaming details ([/concepts/streaming](/concepts/streaming))
-- 🧠 **Multi-agent routing** — Route provider accounts/peers to isolated agents (workspace + per-agent sessions)
-- 🔐 **Subscription auth** — Anthropic (Claude Pro/Max) + OpenAI (ChatGPT/Codex) via OAuth
-- 💬 **Sessions** — Direct chats collapse into shared `main` (default); groups are isolated
-- 👥 **Group Chat Support** — Mention-based by default; owner can toggle `/activation always|mention`
-- 📎 **Media Support** — Send and receive images, audio, documents
-- 🎤 **Voice notes** — Optional transcription hook
-- 🖥️ **WebChat + macOS app** — Local UI + menu bar companion for ops and voice wake
-- 📱 **iOS node** — Pairs as a node and exposes a Canvas surface
-- 📱 **Android node** — Pairs as a node and exposes Canvas + Chat + Camera
+- 📱 **WhatsApp 集成** — 使用 Baileys 的 WhatsApp Web 协议
+- ✈️ **Telegram Bot** — grammY 支持 DMs + 群组
+- 🎮 **Discord Bot** — channels.discord.js 支持 DMs + 服务器频道
+- 🧩 **Mattermost Bot（插件）** — Bot token + WebSocket 事件
+- 💬 **iMessage** — 本地 imsg CLI 集成（macOS）
+- 🤖 **Agent bridge** — Pi（RPC 模式）+ 工具流式
+- ⏱️ **Streaming + chunking** — 分块流式 + Telegram 草稿流式细节（[/concepts/streaming](/zh/concepts/streaming)）
+- 🧠 **多 agent 路由** — 把 provider 账号/peer 路由到隔离的 agent（workspace + 每 agent 会话）
+- 🔐 **订阅认证** — Anthropic（Claude Pro/Max）+ OpenAI（ChatGPT/Codex）OAuth
+- 💬 **Sessions** — 直聊默认合并到 `main`；群组独立
+- 👥 **群聊支持** — 默认基于提及；owner 可切换 `/activation always|mention`
+- 📎 **媒体支持** — 发送/接收图片、音频、文档
+- 🎤 **语音消息** — 可选转写 hook
+- 🖥️ **WebChat + macOS app** — 本地 UI + 菜单栏伴侣用于运维与语音唤醒
+- 📱 **iOS node** — 作为节点配对并提供 Canvas
+- 📱 **Android node** — 作为节点配对并提供 Canvas + Chat + Camera
 
-Note: legacy Claude/Codex/Gemini/Opencode paths have been removed; Pi is the only coding-agent path.
+注意：旧的 Claude/Codex/Gemini/Opencode 路径已移除；Pi 是唯一的编码 agent 路径。
 
 ## Quick start
 
-Runtime requirement: **Node ≥ 22**.
+运行时要求：**Node ≥ 22**。
 
 ```bash
-# Recommended: global install (npm/pnpm)
+# 推荐：全局安装（npm/pnpm）
 npm install -g openclaw@latest
 # or: pnpm add -g openclaw@latest
 
-# Onboard + install the service (launchd/systemd user service)
+# Onboard + 安装服务（launchd/systemd 用户服务）
 openclaw onboard --install-daemon
 
-# Pair WhatsApp Web (shows QR)
+# 配对 WhatsApp Web（显示二维码）
 openclaw channels login
 
-# Gateway runs via the service after onboarding; manual run is still possible:
+# Onboarding 后 Gateway 通过服务运行；也可手动运行：
 openclaw gateway --port 18789
 ```
 
-Switching between npm and git installs later is easy: install the other flavor and run `openclaw doctor` to update the gateway service entrypoint.
+之后在 npm 与 git 安装之间切换很容易：安装另一个版本并运行 `openclaw doctor` 更新 gateway 服务入口。
 
-From source (development):
+从源码（开发）：
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
 cd openclaw
 pnpm install
-pnpm ui:build # auto-installs UI deps on first run
+pnpm ui:build # 首次运行会自动安装 UI 依赖
 pnpm build
 openclaw onboard --install-daemon
 ```
 
-If you don’t have a global install yet, run the onboarding step via `pnpm openclaw ...` from the repo.
+如果还没有全局安装，可在仓库中通过 `pnpm openclaw ...` 运行 onboarding。
 
-Multi-instance quickstart (optional):
+多实例快速启动（可选）：
 
 ```bash
-OPENCLAW_CONFIG_PATH=~/.openclaw/a.json \
-OPENCLAW_STATE_DIR=~/.openclaw-a \
-openclaw gateway --port 19001
+OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a openclaw gateway --port 19001
 ```
 
-Send a test message (requires a running Gateway):
+发送测试消息（需要 Gateway 运行）：
 
 ```bash
 openclaw message send --target +15555550123 --message "Hello from OpenClaw"
 ```
 
-## Configuration (optional)
+## Configuration（可选）
 
-Config lives at `~/.openclaw/openclaw.json`.
+配置位于 `~/.openclaw/openclaw.json`。
 
-- If you **do nothing**, OpenClaw uses the bundled Pi binary in RPC mode with per-sender sessions.
-- If you want to lock it down, start with `channels.whatsapp.allowFrom` and (for groups) mention rules.
+- **不做任何配置**时，OpenClaw 会使用内置 Pi 二进制（RPC 模式）+ 按发送者划分会话。
+- 如果要更严格的安全控制，先从 `channels.whatsapp.allowFrom` 和（群组）提及规则开始。
 
-Example:
+示例：
 
 ```json5
 {
@@ -180,73 +178,73 @@ Example:
 ## Docs
 
 - Start here:
-  - [Docs hubs (all pages linked)](/start/hubs)
-  - [Help](/help) ← *common fixes + troubleshooting*
-  - [Configuration](/gateway/configuration)
-  - [Configuration examples](/gateway/configuration-examples)
-  - [Slash commands](/tools/slash-commands)
-  - [Multi-agent routing](/concepts/multi-agent)
-  - [Updating / rollback](/install/updating)
-  - [Pairing (DM + nodes)](/start/pairing)
-  - [Nix mode](/install/nix)
-  - [OpenClaw assistant setup](/start/openclaw)
-  - [Skills](/tools/skills)
-  - [Skills config](/tools/skills-config)
-  - [Workspace templates](/reference/templates/AGENTS)
-  - [RPC adapters](/reference/rpc)
-  - [Gateway runbook](/gateway)
-  - [Nodes (iOS/Android)](/nodes)
-  - [Web surfaces (Control UI)](/web)
-  - [Discovery + transports](/gateway/discovery)
-  - [Remote access](/gateway/remote)
+  - [Docs hubs (all pages linked)](/zh/start/hubs)
+  - [Help](/zh/help) ← *常见修复 + 故障排查*
+  - [Configuration](/zh/gateway/configuration)
+  - [Configuration examples](/zh/gateway/configuration-examples)
+  - [Slash commands](/zh/tools/slash-commands)
+  - [Multi-agent routing](/zh/concepts/multi-agent)
+  - [Updating / rollback](/zh/install/updating)
+  - [Pairing (DM + nodes)](/zh/start/pairing)
+  - [Nix mode](/zh/install/nix)
+  - [OpenClaw assistant setup](/zh/start/openclaw)
+  - [Skills](/zh/tools/skills)
+  - [Skills config](/zh/tools/skills-config)
+  - [Workspace templates](/zh/reference/templates/AGENTS)
+  - [RPC adapters](/zh/reference/rpc)
+  - [Gateway runbook](/zh/gateway)
+  - [Nodes (iOS/Android)](/zh/nodes)
+  - [Web surfaces (Control UI)](/zh/web)
+  - [Discovery + transports](/zh/gateway/discovery)
+  - [Remote access](/zh/gateway/remote)
 - Providers and UX:
-  - [WebChat](/web/webchat)
-  - [Control UI (browser)](/web/control-ui)
-  - [Telegram](/channels/telegram)
-  - [Discord](/channels/discord)
-  - [Mattermost (plugin)](/channels/mattermost)
-  - [iMessage](/channels/imessage)
-  - [Groups](/concepts/groups)
-  - [WhatsApp group messages](/concepts/group-messages)
-  - [Media: images](/nodes/images)
-  - [Media: audio](/nodes/audio)
+  - [WebChat](/zh/web/webchat)
+  - [Control UI (browser)](/zh/web/control-ui)
+  - [Telegram](/zh/channels/telegram)
+  - [Discord](/zh/channels/discord)
+  - [Mattermost (plugin)](/zh/channels/mattermost)
+  - [iMessage](/zh/channels/imessage)
+  - [Groups](/zh/concepts/groups)
+  - [WhatsApp group messages](/zh/concepts/group-messages)
+  - [Media: images](/zh/nodes/images)
+  - [Media: audio](/zh/nodes/audio)
 - Companion apps:
-  - [macOS app](/platforms/macos)
-  - [iOS app](/platforms/ios)
-  - [Android app](/platforms/android)
-  - [Windows (WSL2)](/platforms/windows)
-  - [Linux app](/platforms/linux)
+  - [macOS app](/zh/platforms/macos)
+  - [iOS app](/zh/platforms/ios)
+  - [Android app](/zh/platforms/android)
+  - [Windows (WSL2)](/zh/platforms/windows)
+  - [Linux app](/zh/platforms/linux)
 - Ops and safety:
-  - [Sessions](/concepts/session)
-  - [Cron jobs](/automation/cron-jobs)
-  - [Webhooks](/automation/webhook)
-  - [Gmail hooks (Pub/Sub)](/automation/gmail-pubsub)
-  - [Security](/gateway/security)
-  - [Troubleshooting](/gateway/troubleshooting)
+  - [Sessions](/zh/concepts/session)
+  - [Cron jobs](/zh/automation/cron-jobs)
+  - [Webhooks](/zh/automation/webhook)
+  - [Gmail hooks (Pub/Sub)](/zh/automation/gmail-pubsub)
+  - [Security](/zh/gateway/security)
+  - [Troubleshooting](/zh/gateway/troubleshooting)
 
 ## The name
 
-**OpenClaw = CLAW + TARDIS** — because every space lobster needs a time-and-space machine.
+**OpenClaw = CLAW + TARDIS** — 因为每只太空龙虾都需要一台时间与空间机器。
 
 ---
 
-*"We're all just playing with our own prompts."* — an AI, probably high on tokens
+*“We’re all just playing with our own prompts.”* — 也许是一位 token 上头的 AI
 
 ## Credits
 
 - **Peter Steinberger** ([@steipete](https://twitter.com/steipete)) — Creator, lobster whisperer
 - **Mario Zechner** ([@badlogicc](https://twitter.com/badlogicgames)) — Pi creator, security pen-tester
-- **Clawd** — The space lobster who demanded a better name
+- **Clawd** — 那只要求更好名字的太空龙虾
 
 ## Core Contributors
 
 - **Maxim Vovshin** (@Hyaxia, 36747317+Hyaxia@users.noreply.github.com) — Blogwatcher skill
-- **Nacho Iacovino** (@nachoiacovino, nacho.iacovino@gmail.com) — Location parsing (Telegram + WhatsApp)
+- **Nacho Iacovino** (@nachoiacovino, nacho.iacovino@gmail.com) — Location parsing（Telegram + WhatsApp）
 
 ## License
 
-MIT — Free as a lobster in the ocean 🦞
+MIT — 像海里的龙虾一样自由 🦞
 
 ---
 
-*"We're all just playing with our own prompts."* — An AI, probably high on tokens
+*“We’re all just playing with our own prompts.”* — 也许是一位 token 上头的 AI

@@ -2,192 +2,193 @@
 > 本页正在翻译中。
 
 ---
-summary: "Move (migrate) a OpenClaw install from one machine to another"
+summary: "将 OpenClaw 安装从一台机器迁移到另一台"
 read_when:
-  - You are moving OpenClaw to a new laptop/server
-  - You want to preserve sessions, auth, and channel logins (WhatsApp, etc.)
+  - 你要把 OpenClaw 迁移到新笔记本/服务器
+  - 你希望保留会话、认证与频道登录（WhatsApp 等）
 ---
-# Migrating OpenClaw to a new machine
+# 将 OpenClaw 迁移到新机器
 
-This guide migrates a OpenClaw Gateway from one machine to another **without redoing onboarding**.
+本指南将 OpenClaw Gateway 从一台机器迁移到另一台，**无需重新 onboarding**。
 
-The migration is simple conceptually:
+概念上很简单：
 
-- Copy the **state directory** (`$OPENCLAW_STATE_DIR`, default: `~/.openclaw/`) — this includes config, auth, sessions, and channel state.
-- Copy your **workspace** (`~/.openclaw/workspace/` by default) — this includes your agent files (memory, prompts, etc.).
+- 复制 **state 目录**（`$OPENCLAW_STATE_DIR`，默认 `~/.openclaw/`）——包含配置、认证、会话和频道状态。
+- 复制 **workspace**（默认 `~/.openclaw/workspace/`）——包含你的 agent 文件（memory、prompts 等）。
 
-But there are common footguns around **profiles**, **permissions**, and **partial copies**.
+但常见坑在 **profiles**、**权限** 和 **不完整复制** 上。
 
-## Before you start (what you are migrating)
+## 开始前（你要迁移的内容）
 
-### 1) Identify your state directory
+### 1) 确定 state 目录
 
-Most installs use the default:
+多数安装使用默认：
 
-- **State dir:** `~/.openclaw/`
+- **State 目录：** `~/.openclaw/`
 
-But it may be different if you use:
+但如果你使用了：
 
-- `--profile <name>` (often becomes `~/.openclaw-<profile>/`)
+- `--profile <name>`（通常变为 `~/.openclaw-<profile>/`）
 - `OPENCLAW_STATE_DIR=/some/path`
 
-If you’re not sure, run on the **old** machine:
+如果不确定，在**旧机器**上运行：
 
 ```bash
 openclaw status
 ```
 
-Look for mentions of `OPENCLAW_STATE_DIR` / profile in the output. If you run multiple gateways, repeat for each profile.
+看输出中是否提到 `OPENCLAW_STATE_DIR` / profile。如果你运行多个 gateway，请对每个 profile 重复检查。
 
-### 2) Identify your workspace
+### 2) 确定 workspace
 
-Common defaults:
+常见默认：
 
-- `~/.openclaw/workspace/` (recommended workspace)
-- a custom folder you created
+- `~/.openclaw/workspace/`（推荐 workspace）
+- 你自定义的目录
 
-Your workspace is where files like `MEMORY.md`, `USER.md`, and `memory/*.md` live.
+workspace 里会有 `MEMORY.md`、`USER.md` 和 `memory/*.md` 等文件。
 
-### 3) Understand what you will preserve
+### 3) 理解哪些会被保留
 
-If you copy **both** the state dir and workspace, you keep:
+如果你**同时**复制 state 目录和 workspace，会保留：
 
-- Gateway configuration (`openclaw.json`)
+- Gateway 配置（`openclaw.json`）
 - Auth profiles / API keys / OAuth tokens
-- Session history + agent state
-- Channel state (e.g. WhatsApp login/session)
-- Your workspace files (memory, skills notes, etc.)
+- 会话历史 + agent 状态
+- 频道状态（如 WhatsApp 登录/会话）
+- 你的 workspace 文件（memory、skills 记录等）
 
-If you copy **only** the workspace (e.g., via Git), you do **not** preserve:
+如果你**只**复制 workspace（例如用 Git），**不会**保留：
 
-- sessions
-- credentials
-- channel logins
+- 会话
+- 凭据
+- 频道登录
 
-Those live under `$OPENCLAW_STATE_DIR`.
+这些都在 `$OPENCLAW_STATE_DIR` 下。
 
-## Migration steps (recommended)
+## 迁移步骤（推荐）
 
-### Step 0 — Make a backup (old machine)
+### Step 0 — 先备份（旧机器）
 
-On the **old** machine, stop the gateway first so files aren’t changing mid-copy:
+在**旧机器**上先停止 gateway，避免复制过程中有文件变动：
 
 ```bash
 openclaw gateway stop
 ```
 
-(Optional but recommended) archive the state dir and workspace:
+（可选但推荐）打包 state 目录与 workspace：
 
 ```bash
-# Adjust paths if you use a profile or custom locations
+# 如果使用 profile 或自定义路径，调整下面路径
 cd ~
 tar -czf openclaw-state.tgz .openclaw
 
 tar -czf openclaw-workspace.tgz .openclaw/workspace
 ```
 
-If you have multiple profiles/state dirs (e.g. `~/.openclaw-main`, `~/.openclaw-work`), archive each.
+如果你有多个 profiles/state 目录（例如 `~/.openclaw-main`、`~/.openclaw-work`），请分别打包。
 
-### Step 1 — Install OpenClaw on the new machine
+### Step 1 — 在新机器上安装 OpenClaw
 
-On the **new** machine, install the CLI (and Node if needed):
+在**新机器**上安装 CLI（需要时先装 Node）：
 
-- See: [Install](/install)
+- 见：[Install](/zh/install)
 
-At this stage, it’s OK if onboarding creates a fresh `~/.openclaw/` — you will overwrite it in the next step.
+此时即便 onboarding 生成了新的 `~/.openclaw/` 也没关系，下一步会覆盖。
 
-### Step 2 — Copy the state dir + workspace to the new machine
+### Step 2 — 复制 state 目录 + workspace 到新机器
 
-Copy **both**:
+复制**两者**：
 
-- `$OPENCLAW_STATE_DIR` (default `~/.openclaw/`)
-- your workspace (default `~/.openclaw/workspace/`)
+- `$OPENCLAW_STATE_DIR`（默认 `~/.openclaw/`）
+- workspace（默认 `~/.openclaw/workspace/`）
 
-Common approaches:
+常见方式：
 
-- `scp` the tarballs and extract
-- `rsync -a` over SSH
-- external drive
+- 用 `scp` 传 tar 包并解压
+- 通过 SSH 的 `rsync -a`
+- 外接硬盘
 
-After copying, ensure:
+复制后请确认：
 
-- Hidden directories were included (e.g. `.openclaw/`)
-- File ownership is correct for the user running the gateway
+- 隐藏目录已包含（如 `.openclaw/`）
+- 文件属主与运行 gateway 的用户一致
 
-### Step 3 — Run Doctor (migrations + service repair)
+### Step 3 — 运行 Doctor（迁移 + 服务修复）
 
-On the **new** machine:
+在**新机器**上：
 
 ```bash
 openclaw doctor
 ```
 
-Doctor is the “safe boring” command. It repairs services, applies config migrations, and warns about mismatches.
+Doctor 是“安全且无聊”的命令，会修复服务、应用配置迁移，并提示不匹配问题。
 
-Then:
+然后：
 
 ```bash
 openclaw gateway restart
 openclaw status
 ```
 
-## Common footguns (and how to avoid them)
+## 常见坑（及避免方法）
 
-### Footgun: profile / state-dir mismatch
+### 坑：profile / state-dir 不匹配
 
-If you ran the old gateway with a profile (or `OPENCLAW_STATE_DIR`), and the new gateway uses a different one, you’ll see symptoms like:
+如果旧 gateway 用 profile（或 `OPENCLAW_STATE_DIR`），而新 gateway 用了不同的，
+你会看到：
 
-- config changes not taking effect
-- channels missing / logged out
-- empty session history
+- 配置修改不生效
+- 频道缺失 / 退出登录
+- 会话历史为空
 
-Fix: run the gateway/service using the **same** profile/state dir you migrated, then rerun:
+修复：使用**相同**的 profile/state dir 来运行 gateway/服务，然后重新运行：
 
 ```bash
 openclaw doctor
 ```
 
-### Footgun: copying only `openclaw.json`
+### 坑：只复制 `openclaw.json`
 
-`openclaw.json` is not enough. Many providers store state under:
+`openclaw.json` 不够。很多 provider 状态保存在：
 
 - `$OPENCLAW_STATE_DIR/credentials/`
 - `$OPENCLAW_STATE_DIR/agents/<agentId>/...`
 
-Always migrate the entire `$OPENCLAW_STATE_DIR` folder.
+务必迁移整个 `$OPENCLAW_STATE_DIR` 文件夹。
 
-### Footgun: permissions / ownership
+### 坑：权限 / 属主
 
-If you copied as root or changed users, the gateway may fail to read credentials/sessions.
+如果你用 root 复制或更换了用户，gateway 可能无法读取凭据/会话。
 
-Fix: ensure the state dir + workspace are owned by the user running the gateway.
+修复：确保 state 目录 + workspace 的属主是运行 gateway 的用户。
 
-### Footgun: migrating between remote/local modes
+### 坑：在 remote/local 模式之间迁移
 
-- If your UI (WebUI/TUI) points at a **remote** gateway, the remote host owns the session store + workspace.
-- Migrating your laptop won’t move the remote gateway’s state.
+- 如果你的 UI（WebUI/TUI）指向**远程** gateway，那么远程主机才拥有会话存储 + workspace。
+- 迁移你的笔记本并不会迁移远程 gateway 的状态。
 
-If you’re in remote mode, migrate the **gateway host**.
+若你处于 remote 模式，请迁移**gateway 主机**。
 
-### Footgun: secrets in backups
+### 坑：备份中的 secrets
 
-`$OPENCLAW_STATE_DIR` contains secrets (API keys, OAuth tokens, WhatsApp creds). Treat backups like production secrets:
+`$OPENCLAW_STATE_DIR` 包含敏感信息（API keys、OAuth tokens、WhatsApp 凭据）。请把备份当作生产密钥处理：
 
-- store encrypted
-- avoid sharing over insecure channels
-- rotate keys if you suspect exposure
+- 加密存储
+- 避免通过不安全渠道分享
+- 若怀疑泄露，及时轮换密钥
 
-## Verification checklist
+## 验证清单
 
-On the new machine, confirm:
+在新机器上确认：
 
-- `openclaw status` shows the gateway running
-- Your channels are still connected (e.g. WhatsApp doesn’t require re-pair)
-- The dashboard opens and shows existing sessions
-- Your workspace files (memory, configs) are present
+- `openclaw status` 显示 gateway 正在运行
+- 频道仍已连接（如 WhatsApp 不需要重新配对）
+- Dashboard 能打开并显示已有会话
+- workspace 文件（memory、configs）存在
 
-## Related
+## 相关
 
-- [Doctor](/gateway/doctor)
-- [Gateway troubleshooting](/gateway/troubleshooting)
-- [Where does OpenClaw store its data?](/help/faq#where-does-openclaw-store-its-data)
+- [Doctor](/zh/gateway/doctor)
+- [Gateway troubleshooting](/zh/gateway/troubleshooting)
+- [OpenClaw 数据存在哪里？](/zh/help/faq#where-does-openclaw-store-its-data)

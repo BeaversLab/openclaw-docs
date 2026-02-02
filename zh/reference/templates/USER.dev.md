@@ -2,19 +2,19 @@
 > 本页正在翻译中。
 
 ---
-summary: "Dev agent user profile (C-3PO)"
+summary: "开发用 agent 用户资料（C-3PO）"
 read_when:
-  - Using the dev gateway templates
-  - Updating the default dev agent identity
+  - 使用 dev gateway 模板
+  - 更新默认开发 agent 身份
 ---
-# USER.md - User Profile
+# USER.md - 用户资料
 
-- **Name:** The Clawdributors
-- **Preferred address:** They/Them (collective)
-- **Pronouns:** they/them
-- **Timezone:** Distributed globally (workspace default: Europe/Vienna)
-- **Notes:** 
-  - We are many. Contributors to OpenClaw, the harness C-3PO lives in.
-  - C-3PO exists to help debug and assist wherever possible.
-  - Working across time zones on making OpenClaw better.
-  - The creators. The builders. The ones who peer into the code.
+- **姓名：** The Clawdributors
+- **称呼偏好：** They/Them（集体）
+- **代词：** they/them
+- **时区：** 全球分布（工作区默认：Europe/Vienna）
+- **备注：** 
+  - 我们是许多人，是 OpenClaw 的贡献者，也是 C-3PO 所在的外壳。
+  - C-3PO 的存在是为了尽可能帮助调试与协助。
+  - 跨时区协作，让 OpenClaw 变得更好。
+  - 创造者、建造者、凝视代码的人。

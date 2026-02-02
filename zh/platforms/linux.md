@@ -2,73 +2,73 @@
 > 本页正在翻译中。
 
 ---
-summary: "Linux support + companion app status"
+summary: "Linux 支持 + 伴侣应用状态"
 read_when:
-  - Looking for Linux companion app status
-  - Planning platform coverage or contributions
+  - 查看 Linux 伴侣应用状态
+  - 规划平台覆盖或贡献
 ---
 # Linux App
 
-The Gateway is fully supported on Linux. **Node is the recommended runtime**.
-Bun is not recommended for the Gateway (WhatsApp/Telegram bugs).
+Gateway 在 Linux 上完全支持。**推荐运行时是 Node**。
+不推荐用 Bun 作为 Gateway 运行时（WhatsApp/Telegram 有 bug）。
 
-Native Linux companion apps are planned. Contributions are welcome if you want to help build one.
+原生 Linux 伴侣应用在规划中。如果你愿意参与建设，欢迎贡献。
 
-## Beginner quick path (VPS)
+## 新手快速路径（VPS）
 
-1) Install Node 22+  
+1) 安装 Node 22+  
 2) `npm i -g openclaw@latest`  
 3) `openclaw onboard --install-daemon`  
-4) From your laptop: `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`  
-5) Open `http://127.0.0.1:18789/` and paste your token
+4) 在笔记本上：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`  
+5) 打开 `http://127.0.0.1:18789/` 并粘贴 token
 
-Step-by-step VPS guide: [exe.dev](/platforms/exe-dev)
+VPS 逐步指南：[exe.dev](/zh/platforms/exe-dev)
 
-## Install
-- [Getting Started](/start/getting-started)
-- [Install & updates](/install/updating)
-- Optional flows: [Bun (experimental)](/install/bun), [Nix](/install/nix), [Docker](/install/docker)
+## 安装
+- [Getting Started](/zh/start/getting-started)
+- [Install & updates](/zh/install/updating)
+- 可选流程：[Bun（实验性）](/zh/install/bun)、[Nix](/zh/install/nix)、[Docker](/zh/install/docker)
 
 ## Gateway
-- [Gateway runbook](/gateway)
-- [Configuration](/gateway/configuration)
+- [Gateway runbook](/zh/gateway)
+- [Configuration](/zh/gateway/configuration)
 
-## Gateway service install (CLI)
+## Gateway 服务安装（CLI）
 
-Use one of these:
+使用以下方式之一：
 
 ```
 openclaw onboard --install-daemon
 ```
 
-Or:
+或：
 
 ```
 openclaw gateway install
 ```
 
-Or:
+或：
 
 ```
 openclaw configure
 ```
 
-Select **Gateway service** when prompted.
+提示时选择 **Gateway service**。
 
-Repair/migrate:
+修复/迁移：
 
 ```
 openclaw doctor
 ```
 
-## System control (systemd user unit)
-OpenClaw installs a systemd **user** service by default. Use a **system**
-service for shared or always-on servers. The full unit example and guidance
-live in the [Gateway runbook](/gateway).
+## 系统控制（systemd user unit）
 
-Minimal setup:
+OpenClaw 默认安装 systemd **user** 服务。共享或常驻服务器建议改用 **system** 服务。
+完整 unit 示例与指导见 [Gateway runbook](/zh/gateway)。
 
-Create `~/.config/systemd/user/openclaw-gateway[-<profile>].service`:
+最小配置：
+
+创建 `~/.config/systemd/user/openclaw-gateway[-<profile>].service`：
 
 ```
 [Unit]
@@ -85,7 +85,7 @@ RestartSec=5
 WantedBy=default.target
 ```
 
-Enable it:
+启用：
 
 ```
 systemctl --user enable --now openclaw-gateway[-<profile>].service

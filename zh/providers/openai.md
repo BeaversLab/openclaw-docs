@@ -2,30 +2,29 @@
 > 本页正在翻译中。
 
 ---
-summary: "Use OpenAI via API keys or Codex subscription in OpenClaw"
+summary: "在 OpenClaw 中通过 API key 或 Codex 订阅使用 OpenAI"
 read_when:
-  - You want to use OpenAI models in OpenClaw
-  - You want Codex subscription auth instead of API keys
+  - 想在 OpenClaw 中使用 OpenAI 模型
+  - 想使用 Codex 订阅认证而非 API key
 ---
 # OpenAI
 
-OpenAI provides developer APIs for GPT models. Codex supports **ChatGPT sign-in** for subscription
-access or **API key** sign-in for usage-based access. Codex cloud requires ChatGPT sign-in.
+OpenAI 提供 GPT 模型的开发者 API。Codex 支持 **ChatGPT 登录**（订阅访问）或 **API key** 登录（按量计费）。Codex 云端要求 ChatGPT 登录。
 
-## Option A: OpenAI API key (OpenAI Platform)
+## 方案 A：OpenAI API key（OpenAI Platform）
 
-**Best for:** direct API access and usage-based billing.
-Get your API key from the OpenAI dashboard.
+**适用：** 直接 API 访问与按量计费。
+在 OpenAI Dashboard 获取 API key。
 
-### CLI setup
+### CLI 设置
 
 ```bash
 openclaw onboard --auth-choice openai-api-key
-# or non-interactive
+# 或非交互式
 openclaw onboard --openai-api-key "$OPENAI_API_KEY"
 ```
 
-### Config snippet
+### 配置片段
 
 ```json5
 {
@@ -34,22 +33,22 @@ openclaw onboard --openai-api-key "$OPENAI_API_KEY"
 }
 ```
 
-## Option B: OpenAI Code (Codex) subscription
+## 方案 B：OpenAI Code（Codex）订阅
 
-**Best for:** using ChatGPT/Codex subscription access instead of an API key.
-Codex cloud requires ChatGPT sign-in, while the Codex CLI supports ChatGPT or API key sign-in.
+**适用：** 使用 ChatGPT/Codex 订阅访问而非 API key。
+Codex 云端需要 ChatGPT 登录，Codex CLI 支持 ChatGPT 或 API key 登录。
 
-### CLI setup
+### CLI 设置
 
 ```bash
-# Run Codex OAuth in the wizard
+# 在向导中运行 Codex OAuth
 openclaw onboard --auth-choice openai-codex
 
-# Or run OAuth directly
+# 或直接运行 OAuth
 openclaw models auth login --provider openai-codex
 ```
 
-### Config snippet
+### 配置片段
 
 ```json5
 {
@@ -57,7 +56,7 @@ openclaw models auth login --provider openai-codex
 }
 ```
 
-## Notes
+## 说明
 
-- Model refs always use `provider/model` (see [/concepts/models](/concepts/models)).
-- Auth details + reuse rules are in [/concepts/oauth](/concepts/oauth).
+- 模型引用始终使用 `provider/model`（见 [/concepts/models](/zh/concepts/models)）。
+- 认证细节与复用规则见 [/concepts/oauth](/zh/concepts/oauth)。

@@ -2,52 +2,51 @@
 > 本页正在翻译中。
 
 ---
-summary: "Platform support overview (Gateway + companion apps)"
+summary: "平台支持概览（Gateway + 伴侣应用）"
 read_when:
-  - Looking for OS support or install paths
-  - Deciding where to run the Gateway
+  - 查找 OS 支持或安装路径
+  - 决定在哪里运行 Gateway
 ---
 # Platforms
 
-OpenClaw core is written in TypeScript. **Node is the recommended runtime**.
-Bun is not recommended for the Gateway (WhatsApp/Telegram bugs).
+OpenClaw 核心由 TypeScript 编写。**推荐运行时是 Node**。
+不推荐用 Bun 作为 Gateway 运行时（WhatsApp/Telegram 有 bug）。
 
-Companion apps exist for macOS (menu bar app) and mobile nodes (iOS/Android). Windows and
-Linux companion apps are planned, but the Gateway is fully supported today.
-Native companion apps for Windows are also planned; the Gateway is recommended via WSL2.
+macOS 有伴侣应用（菜单栏 app），移动端有节点（iOS/Android）。Windows 与 Linux 伴侣应用在规划中，但 Gateway 已完全支持。
+Windows 的原生伴侣应用也在规划中；Gateway 推荐通过 WSL2 运行。
 
-## Choose your OS
+## 选择你的 OS
 
-- macOS: [macOS](/platforms/macos)
-- iOS: [iOS](/platforms/ios)
-- Android: [Android](/platforms/android)
-- Windows: [Windows](/platforms/windows)
-- Linux: [Linux](/platforms/linux)
+- macOS：[macOS](/zh/platforms/macos)
+- iOS：[iOS](/zh/platforms/ios)
+- Android：[Android](/zh/platforms/android)
+- Windows：[Windows](/zh/platforms/windows)
+- Linux：[Linux](/zh/platforms/linux)
 
-## VPS & hosting
+## VPS & 托管
 
-- VPS hub: [VPS hosting](/vps)
-- Fly.io: [Fly.io](/platforms/fly)
-- Hetzner (Docker): [Hetzner](/platforms/hetzner)
-- GCP (Compute Engine): [GCP](/platforms/gcp)
-- exe.dev (VM + HTTPS proxy): [exe.dev](/platforms/exe-dev)
+- VPS 枢纽：[VPS hosting](/zh/vps)
+- Fly.io：[Fly.io](/zh/platforms/fly)
+- Hetzner（Docker）：[Hetzner](/zh/platforms/hetzner)
+- GCP（Compute Engine）：[GCP](/zh/platforms/gcp)
+- exe.dev（VM + HTTPS 代理）：[exe.dev](/zh/platforms/exe-dev)
 
-## Common links
+## 常用链接
 
-- Install guide: [Getting Started](/start/getting-started)
-- Gateway runbook: [Gateway](/gateway)
-- Gateway configuration: [Configuration](/gateway/configuration)
-- Service status: `openclaw gateway status`
+- 安装指南：[Getting Started](/zh/start/getting-started)
+- Gateway runbook：[Gateway](/zh/gateway)
+- Gateway 配置：[Configuration](/zh/gateway/configuration)
+- 服务状态：`openclaw gateway status`
 
-## Gateway service install (CLI)
+## Gateway 服务安装（CLI）
 
-Use one of these (all supported):
+使用以下方式之一（均支持）：
 
-- Wizard (recommended): `openclaw onboard --install-daemon`
-- Direct: `openclaw gateway install`
-- Configure flow: `openclaw configure` → select **Gateway service**
-- Repair/migrate: `openclaw doctor` (offers to install or fix the service)
+- 向导（推荐）：`openclaw onboard --install-daemon`
+- 直接安装：`openclaw gateway install`
+- 配置流程：`openclaw configure` → 选择 **Gateway service**
+- 修复/迁移：`openclaw doctor`（会提示安装或修复服务）
 
-The service target depends on OS:
-- macOS: LaunchAgent (`bot.molt.gateway` or `bot.molt.<profile>`; legacy `com.openclaw.*`)
-- Linux/WSL2: systemd user service (`openclaw-gateway[-<profile>].service`)
+服务目标因 OS 而异：
+- macOS：LaunchAgent（`bot.molt.gateway` 或 `bot.molt.<profile>`；旧 `com.openclaw.*`）
+- Linux/WSL2：systemd user service（`openclaw-gateway[-<profile>].service`）

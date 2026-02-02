@@ -2,34 +2,34 @@
 > 本页正在翻译中。
 
 ---
-summary: "Fix Chrome/Brave/Edge/Chromium CDP startup issues for OpenClaw browser control on Linux"
-read_when: "Browser control fails on Linux, especially with snap Chromium"
+summary: "修复 Linux 上 OpenClaw 浏览器控制在 Chrome/Brave/Edge/Chromium 上的 CDP 启动问题"
+read_when: "Linux 上浏览器控制失败，尤其是 snap 版 Chromium"
 ---
 
-# Browser Troubleshooting (Linux)
+# 浏览器排查（Linux）
 
-## Problem: "Failed to start Chrome CDP on port 18800"
+## 问题：“Failed to start Chrome CDP on port 18800”
 
-OpenClaw's browser control server fails to launch Chrome/Brave/Edge/Chromium with the error:
+OpenClaw 的浏览器控制服务在启动 Chrome/Brave/Edge/Chromium 时失败，错误如下：
 ```
-{"error":"Error: Failed to start Chrome CDP on port 18800 for profile \"openclaw\"."}
+{"error":"Error: Failed to start Chrome CDP on port 18800 for profile "openclaw"."}
 ```
 
-### Root Cause
+### 根因
 
-On Ubuntu (and many Linux distros), the default Chromium installation is a **snap package**. Snap's AppArmor confinement interferes with how OpenClaw spawns and monitors the browser process.
+在 Ubuntu（以及许多 Linux 发行版）上，默认的 Chromium 安装是 **snap 包**。Snap 的 AppArmor 隔离会干扰 OpenClaw 启动并监控浏览器进程。
 
-The `apt install chromium` command installs a stub package that redirects to snap:
+`apt install chromium` 实际安装的是一个重定向到 snap 的占位包：
 ```
 Note, selecting 'chromium-browser' instead of 'chromium'
 chromium-browser is already the newest version (2:1snap1-0ubuntu2).
 ```
 
-This is NOT a real browser — it's just a wrapper.
+这并不是一个真正的浏览器 —— 只是一个包装器。
 
-### Solution 1: Install Google Chrome (Recommended)
+### 解决方案 1：安装 Google Chrome（推荐）
 
-Install the official Google Chrome `.deb` package, which is not sandboxed by snap:
+安装官方的 Google Chrome `.deb` 包，它不会被 snap 沙箱化：
 
 ```bash
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -37,7 +37,7 @@ sudo dpkg -i google-chrome-stable_current_amd64.deb
 sudo apt --fix-broken install -y  # if there are dependency errors
 ```
 
-Then update your OpenClaw config (`~/.openclaw/openclaw.json`):
+然后更新你的 OpenClaw 配置（`~/.openclaw/openclaw.json`）：
 
 ```json
 {
@@ -50,11 +50,11 @@ Then update your OpenClaw config (`~/.openclaw/openclaw.json`):
 }
 ```
 
-### Solution 2: Use Snap Chromium with Attach-Only Mode
+### 解决方案 2：使用 Snap Chromium（仅附加模式）
 
-If you must use snap Chromium, configure OpenClaw to attach to a manually-started browser:
+如果你必须使用 snap 版 Chromium，将 OpenClaw 配置为只附加到手动启动的浏览器：
 
-1. Update config:
+1. 更新配置：
 ```json
 {
   "browser": {
@@ -66,15 +66,12 @@ If you must use snap Chromium, configure OpenClaw to attach to a manually-starte
 }
 ```
 
-2. Start Chromium manually:
+2. 手动启动 Chromium：
 ```bash
-chromium-browser --headless --no-sandbox --disable-gpu \
-  --remote-debugging-port=18800 \
-  --user-data-dir=$HOME/.openclaw/browser/openclaw/user-data \
-  about:blank &
+chromium-browser --headless --no-sandbox --disable-gpu   --remote-debugging-port=18800   --user-data-dir=$HOME/.openclaw/browser/openclaw/user-data   about:blank &
 ```
 
-3. Optionally create a systemd user service to auto-start Chrome:
+3. （可选）创建 systemd 用户服务，自动启动 Chrome：
 ```ini
 # ~/.config/systemd/user/openclaw-browser.service
 [Unit]
@@ -90,43 +87,41 @@ RestartSec=5
 WantedBy=default.target
 ```
 
-Enable with: `systemctl --user enable --now openclaw-browser.service`
+启用：`systemctl --user enable --now openclaw-browser.service`
 
-### Verifying the Browser Works
+### 验证浏览器是否工作
 
-Check status:
+检查状态：
 ```bash
 curl -s http://127.0.0.1:18791/ | jq '{running, pid, chosenBrowser}'
 ```
 
-Test browsing:
+测试浏览：
 ```bash
 curl -s -X POST http://127.0.0.1:18791/start
 curl -s http://127.0.0.1:18791/tabs
 ```
 
-### Config Reference
+### 配置参考
 
-| Option | Description | Default |
+| 选项 | 说明 | 默认值 |
 |--------|-------------|---------|
-| `browser.enabled` | Enable browser control | `true` |
-| `browser.executablePath` | Path to a Chromium-based browser binary (Chrome/Brave/Edge/Chromium) | auto-detected (prefers default browser when Chromium-based) |
-| `browser.headless` | Run without GUI | `false` |
-| `browser.noSandbox` | Add `--no-sandbox` flag (needed for some Linux setups) | `false` |
-| `browser.attachOnly` | Don't launch browser, only attach to existing | `false` |
-| `browser.cdpPort` | Chrome DevTools Protocol port | `18800` |
+| `browser.enabled` | 启用浏览器控制 | `true` |
+| `browser.executablePath` | Chromium 内核浏览器二进制路径（Chrome/Brave/Edge/Chromium） | 自动探测（优先默认浏览器且为 Chromium 内核） |
+| `browser.headless` | 无界面运行 | `false` |
+| `browser.noSandbox` | 添加 `--no-sandbox` 标志（部分 Linux 环境需要） | `false` |
+| `browser.attachOnly` | 不启动浏览器，仅附加到已有实例 | `false` |
+| `browser.cdpPort` | Chrome DevTools Protocol 端口 | `18800` |
 
-### Problem: "Chrome extension relay is running, but no tab is connected"
+### 问题：“Chrome extension relay is running, but no tab is connected”
 
-You’re using the `chrome` profile (extension relay). It expects the OpenClaw
-browser extension to be attached to a live tab.
+你正在使用 `chrome` profile（扩展中继）。它期望 OpenClaw 浏览器扩展附加到一个正在运行的标签页。
 
-Fix options:
-1. **Use the managed browser:** `openclaw browser start --browser-profile openclaw`
-   (or set `browser.defaultProfile: "openclaw"`).
-2. **Use the extension relay:** install the extension, open a tab, and click the
-   OpenClaw extension icon to attach it.
+修复方式：
+1. **使用托管浏览器**：`openclaw browser start --browser-profile openclaw`
+   （或设置 `browser.defaultProfile: "openclaw"`）。
+2. **使用扩展中继**：安装扩展，打开一个标签页，并点击 OpenClaw 扩展图标进行附加。
 
-Notes:
-- The `chrome` profile uses your **system default Chromium browser** when possible.
-- Local `openclaw` profiles auto-assign `cdpPort`/`cdpUrl`; only set those for remote CDP.
+备注：
+- `chrome` profile 尽可能使用你的 **系统默认 Chromium 浏览器**。
+- 本地 `openclaw` profile 会自动分配 `cdpPort`/`cdpUrl`；只有在远程 CDP 时才需要手动设置。

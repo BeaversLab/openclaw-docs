@@ -2,41 +2,36 @@
 > 本页正在翻译中。
 
 ---
-summary: "Exec approvals, allowlists, and sandbox escape prompts"
+summary: "Exec 审批、允许列表与沙箱逃逸提示"
 read_when:
-  - Configuring exec approvals or allowlists
-  - Implementing exec approval UX in the macOS app
-  - Reviewing sandbox escape prompts and implications
+  - 配置 exec 审批或允许列表
+  - 在 macOS 应用中实现 exec 审批 UX
+  - 评审沙箱逃逸提示及其影响
 ---
 
-# Exec approvals
+# Exec 审批
 
-Exec approvals are the **companion app / node host guardrail** for letting a sandboxed agent run
-commands on a real host (`gateway` or `node`). Think of it like a safety interlock:
-commands are allowed only when policy + allowlist + (optional) user approval all agree.
-Exec approvals are **in addition** to tool policy and elevated gating (unless elevated is set to `full`, which skips approvals).
-Effective policy is the **stricter** of `tools.exec.*` and approvals defaults; if an approvals field is omitted, the `tools.exec` value is used.
+Exec 审批是 **伴侣应用 / node host 的护栏**，用于允许沙箱化 agent 在真实主机（`gateway` 或 `node`）上运行命令。把它理解为安全联锁：只有在策略 + allowlist +（可选）用户审批都同意时才允许。Exec 审批 **在** 工具策略与 elevated 门控之上（除非 elevated 设为 `full`，会跳过审批）。有效策略取 `tools.exec.*` 与审批默认值中 **更严格** 的那个；如果审批字段缺失，则使用 `tools.exec` 的值。
 
-If the companion app UI is **not available**, any request that requires a prompt is
-resolved by the **ask fallback** (default: deny).
+若伴侣应用 UI **不可用**，任何需要提示的请求会由 **ask fallback** 处理（默认：拒绝）。
 
-## Where it applies
+## 适用范围
 
-Exec approvals are enforced locally on the execution host:
-- **gateway host** → `openclaw` process on the gateway machine
-- **node host** → node runner (macOS companion app or headless node host)
+Exec 审批在执行主机上本地生效：
+- **gateway host** → gateway 机器上的 `openclaw` 进程
+- **node host** → node 运行器（macOS 伴侣应用或无 UI 的 node host）
 
-macOS split:
-- **node host service** forwards `system.run` to the **macOS app** over local IPC.
-- **macOS app** enforces approvals + executes the command in UI context.
+macOS 分工：
+- **node host 服务** 通过本地 IPC 将 `system.run` 转发给 **macOS 应用**。
+- **macOS 应用** 执行审批并在 UI 上下文中执行命令。
 
-## Settings and storage
+## 设置与存储
 
-Approvals live in a local JSON file on the execution host:
+审批配置保存在执行主机上的本地 JSON 文件：
 
 `~/.openclaw/exec-approvals.json`
 
-Example schema:
+示例 schema：
 ```json
 {
   "version": 1,
@@ -70,102 +65,84 @@ Example schema:
 }
 ```
 
-## Policy knobs
+## 策略旋钮
 
 ### Security (`exec.security`)
-- **deny**: block all host exec requests.
-- **allowlist**: allow only allowlisted commands.
-- **full**: allow everything (equivalent to elevated).
+- **deny**：阻止所有宿主机 exec 请求。
+- **allowlist**：只允许 allowlist 中的命令。
+- **full**：全部允许（等同 elevated）。
 
 ### Ask (`exec.ask`)
-- **off**: never prompt.
-- **on-miss**: prompt only when allowlist does not match.
-- **always**: prompt on every command.
+- **off**：永不提示。
+- **on-miss**：仅当 allowlist 未命中时提示。
+- **always**：每次命令都提示。
 
 ### Ask fallback (`askFallback`)
-If a prompt is required but no UI is reachable, fallback decides:
-- **deny**: block.
-- **allowlist**: allow only if allowlist matches.
-- **full**: allow.
+当需要提示但 UI 不可达时，fallback 决定：
+- **deny**：阻止。
+- **allowlist**：仅当 allowlist 命中时允许。
+- **full**：允许。
 
-## Allowlist (per agent)
+## Allowlist（按 agent）
 
-Allowlists are **per agent**. If multiple agents exist, switch which agent you’re
-editing in the macOS app. Patterns are **case-insensitive glob matches**.
-Patterns should resolve to **binary paths** (basename-only entries are ignored).
-Legacy `agents.default` entries are migrated to `agents.main` on load.
+Allowlists **按 agent 维度**。如果有多个 agent，请在 macOS 应用中切换要编辑的 agent。匹配模式为 **不区分大小写的 glob**。模式应解析为 **二进制路径**（仅 basename 的条目会被忽略）。旧的 `agents.default` 会在加载时迁移到 `agents.main`。
 
-Examples:
+示例：
 - `~/Projects/**/bin/bird`
 - `~/.local/bin/*`
 - `/opt/homebrew/bin/rg`
 
-Each allowlist entry tracks:
-- **id** stable UUID used for UI identity (optional)
-- **last used** timestamp
-- **last used command**
-- **last resolved path**
+每条 allowlist 记录：
+- **id**：用于 UI 身份的稳定 UUID（可选）
+- **last used**：上次使用时间戳
+- **last used command**：上次使用命令
+- **last resolved path**：上次解析路径
 
-## Auto-allow skill CLIs
+## 自动允许技能 CLI
 
-When **Auto-allow skill CLIs** is enabled, executables referenced by known skills
-are treated as allowlisted on nodes (macOS node or headless node host). This uses
-`skills.bins` over the Gateway RPC to fetch the skill bin list. Disable this if you want strict manual allowlists.
+启用 **Auto-allow skill CLIs** 后，已知技能引用的可执行文件会在节点（macOS node 或无 UI node host）上视为 allowlisted。它通过 Gateway RPC 的 `skills.bins` 获取技能 bin 列表。如果你想严格手动 allowlist，可禁用此功能。
 
-## Safe bins (stdin-only)
+## 安全 bin（仅 stdin）
 
-`tools.exec.safeBins` defines a small list of **stdin-only** binaries (for example `jq`)
-that can run in allowlist mode **without** explicit allowlist entries. Safe bins reject
-positional file args and path-like tokens, so they can only operate on the incoming stream.
-Shell chaining and redirections are not auto-allowed in allowlist mode.
+`tools.exec.safeBins` 定义一组 **仅 stdin** 的二进制（例如 `jq`），可在 allowlist 模式下 **无需** 明确 allowlist 条目运行。安全 bin 会拒绝位置参数中的文件路径或类似路径的 token，因此只能处理输入流。
+在 allowlist 模式下，shell 链接与重定向不会自动允许。
 
-Shell chaining (`&&`, `||`, `;`) is allowed when every top-level segment satisfies the allowlist
-(including safe bins or skill auto-allow). Redirections remain unsupported in allowlist mode.
+当每个顶层片段都满足 allowlist（包括安全 bin 或技能自动允许）时，允许 shell 链接（`&&`、`||`、`;`）。重定向仍不支持。
 
-Default safe bins: `jq`, `grep`, `cut`, `sort`, `uniq`, `head`, `tail`, `tr`, `wc`.
+默认安全 bin：`jq`、`grep`、`cut`、`sort`、`uniq`、`head`、`tail`、`tr`、`wc`。
 
-## Control UI editing
+## 控制 UI 编辑
 
-Use the **Control UI → Nodes → Exec approvals** card to edit defaults, per‑agent
-overrides, and allowlists. Pick a scope (Defaults or an agent), tweak the policy,
-add/remove allowlist patterns, then **Save**. The UI shows **last used** metadata
-per pattern so you can keep the list tidy.
+使用 **Control UI → Nodes → Exec approvals** 卡片编辑默认值、单 agent 覆盖与 allowlist。选择作用域（Defaults 或某个 agent），调整策略，添加/删除 allowlist 模式，然后 **Save**。UI 会显示每条模式的 **last used** 元数据，便于整理。
 
-The target selector chooses **Gateway** (local approvals) or a **Node**. Nodes
-must advertise `system.execApprovals.get/set` (macOS app or headless node host).
-If a node does not advertise exec approvals yet, edit its local
-`~/.openclaw/exec-approvals.json` directly.
+目标选择器可选 **Gateway**（本地审批）或 **Node**。节点必须声明 `system.execApprovals.get/set`（macOS 应用或无 UI node host）。如果节点尚未声明 exec 审批，请直接编辑其本地 `~/.openclaw/exec-approvals.json`。
 
-CLI: `openclaw approvals` supports gateway or node editing (see [Approvals CLI](/cli/approvals)).
+CLI：`openclaw approvals` 支持 gateway 或 node 编辑（见 [Approvals CLI](/zh/cli/approvals)）。
 
-## Approval flow
+## 审批流程
 
-When a prompt is required, the gateway broadcasts `exec.approval.requested` to operator clients.
-The Control UI and macOS app resolve it via `exec.approval.resolve`, then the gateway forwards the
-approved request to the node host.
+当需要提示时，gateway 会向 operator 客户端广播 `exec.approval.requested`。
+Control UI 与 macOS 应用通过 `exec.approval.resolve` 处理，随后 gateway 将已批准请求转发给 node host。
 
-When approvals are required, the exec tool returns immediately with an approval id. Use that id to
-correlate later system events (`Exec finished` / `Exec denied`). If no decision arrives before the
-timeout, the request is treated as an approval timeout and surfaced as a denial reason.
+当需要审批时，exec 工具会立即返回审批 id。用该 id 关联后续系统事件（`Exec finished` / `Exec denied`）。若在超时前没有决策，请求会作为审批超时处理，并以拒绝原因展示。
 
-The confirmation dialog includes:
+确认对话框包含：
 - command + args
 - cwd
 - agent id
-- resolved executable path
-- host + policy metadata
+- 解析后的可执行路径
+- host + 策略元数据
 
-Actions:
-- **Allow once** → run now
-- **Always allow** → add to allowlist + run
-- **Deny** → block
+操作：
+- **Allow once** → 立即执行
+- **Always allow** → 加入 allowlist + 执行
+- **Deny** → 阻止
 
-## Approval forwarding to chat channels
+## 审批转发到聊天频道
 
-You can forward exec approval prompts to any chat channel (including plugin channels) and approve
-them with `/approve`. This uses the normal outbound delivery pipeline.
+你可以把 exec 审批提示转发到任何聊天频道（包括插件频道），并用 `/approve` 进行审批。这使用常规的出站投递管线。
 
-Config:
+配置：
 ```json5
 {
   approvals: {
@@ -183,14 +160,14 @@ Config:
 }
 ```
 
-Reply in chat:
+在聊天中回复：
 ```
 /approve <id> allow-once
 /approve <id> allow-always
 /approve <id> deny
 ```
 
-### macOS IPC flow
+### macOS IPC 流程
 ```
 Gateway -> Node Service (WS)
                  |  IPC (UDS + token + HMAC + TTL)
@@ -198,32 +175,32 @@ Gateway -> Node Service (WS)
              Mac App (UI + approvals + system.run)
 ```
 
-Security notes:
-- Unix socket mode `0600`, token stored in `exec-approvals.json`.
-- Same-UID peer check.
-- Challenge/response (nonce + HMAC token + request hash) + short TTL.
+安全说明：
+- Unix socket 模式 `0600`，token 存储在 `exec-approvals.json`。
+- Same-UID peer check。
+- Challenge/response（nonce + HMAC token + request hash）+ 短 TTL。
 
-## System events
+## 系统事件
 
-Exec lifecycle is surfaced as system messages:
-- `Exec running` (only if the command exceeds the running notice threshold)
+Exec 生命周期会以系统消息形式呈现：
+- `Exec running`（仅当命令超过运行提示阈值时）
 - `Exec finished`
 - `Exec denied`
 
-These are posted to the agent’s session after the node reports the event.
-Gateway-host exec approvals emit the same lifecycle events when the command finishes (and optionally when running longer than the threshold).
-Approval-gated execs reuse the approval id as the `runId` in these messages for easy correlation.
+这些消息在节点上报后发布到 agent 的会话中。
+Gateway-host exec 审批在命令结束时也会发送相同生命周期事件（若命令长于阈值，还会在运行中发送）。
+需要审批的 exec 会复用审批 id 作为这些消息的 `runId`，便于关联。
 
-## Implications
+## 影响
 
-- **full** is powerful; prefer allowlists when possible.
-- **ask** keeps you in the loop while still allowing fast approvals.
-- Per-agent allowlists prevent one agent’s approvals from leaking into others.
-- Approvals only apply to host exec requests from **authorized senders**. Unauthorized senders cannot issue `/exec`.
-- `/exec security=full` is a session-level convenience for authorized operators and skips approvals by design.
-  To hard-block host exec, set approvals security to `deny` or deny the `exec` tool via tool policy.
+- **full** 很强大；尽量使用 allowlist。
+- **ask** 让你保持在环路中，同时能快速批准。
+- 按 agent 分离 allowlist 可防止一个 agent 的审批泄漏给另一个。
+- 审批只对 **授权发送者** 的宿主机 exec 请求生效。未授权发送者不能发起 `/exec`。
+- `/exec security=full` 是授权操作员的会话级便捷功能，设计上会跳过审批。
+  若要硬性阻止宿主机 exec，请将审批 security 设为 `deny`，或在工具策略中拒绝 `exec`。
 
-Related:
-- [Exec tool](/tools/exec)
-- [Elevated mode](/tools/elevated)
-- [Skills](/tools/skills)
+相关：
+- [Exec 工具](/zh/tools/exec)
+- [Elevated 模式](/zh/tools/elevated)
+- [技能](/zh/tools/skills)

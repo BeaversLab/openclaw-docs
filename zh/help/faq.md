@@ -2,13 +2,13 @@
 > 本页正在翻译中。
 
 ---
-summary: "Frequently asked questions about OpenClaw setup, configuration, and usage"
+summary: "关于 OpenClaw 安装、配置与使用的常见问题"
 ---
-# FAQ
+# 常见问题（FAQ）
 
-Quick answers plus deeper troubleshooting for real-world setups (local dev, VPS, multi-agent, OAuth/API keys, model failover). For runtime diagnostics, see [Troubleshooting](/gateway/troubleshooting). For the full config reference, see [Configuration](/gateway/configuration).
+快速答案 + 更深入的实战排障（本地开发、VPS、多 agent、OAuth/API keys、模型 failover）。运行时诊断请看 [Troubleshooting](/zh/gateway/troubleshooting)。完整配置参考见 [Configuration](/zh/gateway/configuration)。
 
-## Table of contents
+## 目录
 
 - [Quick start and first-run setup](#quick-start-and-firstrun-setup)
   - [Im stuck whats the fastest way to get unstuck?](#im-stuck-whats-the-fastest-way-to-get-unstuck)
@@ -198,84 +198,77 @@ Quick answers plus deeper troubleshooting for real-world setups (local dev, VPS,
 
 ## First 60 seconds if something's broken
 
-1) **Quick status (first check)**
+1) **快速状态（首个检查）**
    ```bash
    openclaw status
    ```
-   Fast local summary: OS + update, gateway/service reachability, agents/sessions, provider config + runtime issues (when gateway is reachable).
+   本地快速摘要：OS + 更新、gateway/服务可达性、agents/sessions、provider 配置 + 运行时问题（当 gateway 可达时）。
 
-2) **Pasteable report (safe to share)**
+2) **可粘贴报告（安全分享）**
    ```bash
    openclaw status --all
    ```
-   Read-only diagnosis with log tail (tokens redacted).
+   只读诊断 + 日志尾（token 已脱敏）。
 
-3) **Daemon + port state**
+3) **守护进程 + 端口状态**
    ```bash
    openclaw gateway status
    ```
-   Shows supervisor runtime vs RPC reachability, the probe target URL, and which config the service likely used.
+   显示 supervisor 运行状态 vs RPC 可达性、探测目标 URL，以及服务可能使用的配置。
 
-4) **Deep probes**
+4) **深入探测**
    ```bash
    openclaw status --deep
    ```
-   Runs gateway health checks + provider probes (requires a reachable gateway). See [Health](/gateway/health).
+   运行 gateway 健康检查 + provider 探测（需要可达的 gateway）。见 [Health](/zh/gateway/health)。
 
-5) **Tail the latest log**
+5) **跟随最新日志**
    ```bash
    openclaw logs --follow
    ```
-   If RPC is down, fall back to:
+   如果 RPC 不可用，回退到：
    ```bash
    tail -f "$(ls -t /tmp/openclaw/openclaw-*.log | head -1)"
    ```
-   File logs are separate from service logs; see [Logging](/logging) and [Troubleshooting](/gateway/troubleshooting).
+   文件日志与服务日志是分开的；见 [Logging](/zh/logging) 与 [Troubleshooting](/zh/gateway/troubleshooting)。
 
-6) **Run the doctor (repairs)**
+6) **运行 doctor（修复）**
    ```bash
    openclaw doctor
    ```
-   Repairs/migrates config/state + runs health checks. See [Doctor](/gateway/doctor).
+   修复/迁移配置与状态 + 运行健康检查。见 [Doctor](/zh/gateway/doctor)。
 
-7) **Gateway snapshot**
+7) **Gateway 快照**
    ```bash
    openclaw health --json
    openclaw health --verbose   # shows the target URL + config path on errors
    ```
-   Asks the running gateway for a full snapshot (WS-only). See [Health](/gateway/health).
+   向运行中的 gateway 请求完整快照（仅 WS）。见 [Health](/zh/gateway/health)。
 
 ## Quick start and first-run setup
 
 ### Im stuck whats the fastest way to get unstuck
 
-Use a local AI agent that can **see your machine**. That is far more effective than asking
-in Discord, because most "I'm stuck" cases are **local config or environment issues** that
-remote helpers cannot inspect.
+使用一个能 **看到你机器** 的本地 AI agent。这比在 Discord 里求助更有效，因为多数“卡住”都源于 **本地配置或环境问题**，远程协助者无法直接检查。
 
 - **Claude Code**: https://www.anthropic.com/claude-code/
 - **OpenAI Codex**: https://openai.com/codex/
 
-These tools can read the repo, run commands, inspect logs, and help fix your machine-level
-setup (PATH, services, permissions, auth files). Give them the **full source checkout** via
-the hackable (git) install:
+这些工具可以读取 repo、运行命令、检查日志，并帮你修复机器级设置（PATH、服务、权限、认证文件）。请用 hackable（git）安装提供 **完整源码 checkout**：
 
 ```bash
 curl -fsSL https://openclaw.bot/install.sh | bash -s -- --install-method git
 ```
 
-This installs OpenClaw **from a git checkout**, so the agent can read the code + docs and
-reason about the exact version you are running. You can always switch back to stable later
-by re-running the installer without `--install-method git`.
+这样会 **从 git checkout 安装** OpenClaw，agent 能读取代码 + 文档，并基于你正在运行的具体版本进行推理。你随时可以通过不带 `--install-method git` 重新运行安装器切回稳定版。
 
-Tip: ask the agent to **plan and supervise** the fix (step-by-step), then execute only the
-necessary commands. That keeps changes small and easier to audit.
+提示：让 agent **规划并监督** 修复流程（逐步执行），然后只执行必要命令。这样变更更小、也更易审计。
 
-If you discover a real bug or fix, please file a GitHub issue or send a PR:
+如果你发现了真实 bug 或修复，请提 GitHub issue 或发 PR：
 https://github.com/openclaw/openclaw/issues
 https://github.com/openclaw/openclaw/pulls
 
-Start with these commands (share outputs when asking for help):
+先从这些命令开始（求助时分享输出）：
 
 ```bash
 openclaw status
@@ -283,17 +276,16 @@ openclaw models status
 openclaw doctor
 ```
 
-What they do:
-- `openclaw status`: quick snapshot of gateway/agent health + basic config.
-- `openclaw models status`: checks provider auth + model availability.
-- `openclaw doctor`: validates and repairs common config/state issues.
+它们的作用：
+- `openclaw status`：gateway/agent 健康 + 基础配置的快速快照。
+- `openclaw models status`：检查 provider 认证 + 模型可用性。
+- `openclaw doctor`：验证并修复常见配置/状态问题。
 
-Other useful CLI checks: `openclaw status --all`, `openclaw logs --follow`,
-`openclaw gateway status`, `openclaw health --verbose`.
+其他有用的 CLI 检查：`openclaw status --all`, `openclaw logs --follow`,
+`openclaw gateway status`, `openclaw health --verbose`。
 
-Quick debug loop: [First 60 seconds if something's broken](#first-60-seconds-if-somethings-broken).
-Install docs: [Install](/install), [Installer flags](/install/installer), [Updating](/install/updating).
-
+快速调试循环：[First 60 seconds if something's broken](#first-60-seconds-if-somethings-broken)。
+安装文档：[Install](/zh/install), [Installer flags](/zh/install/installer), [Updating](/zh/install/updating)。
 ### Whats the recommended way to install and set up OpenClaw
 
 The repo recommends running from source and using the onboarding wizard:
@@ -2020,21 +2012,21 @@ Fallbacks are for **errors**, not “hard tasks,” so use `/model` or a separat
 }
 ```
 
-Then:
+然后：
 ```
 /model gpt
 ```
 
 **Option B: separate agents**
-- Agent A default: MiniMax
-- Agent B default: OpenAI
-- Route by agent or use `/agent` to switch
+- Agent A 默认：MiniMax
+- Agent B 默认：OpenAI
+- 按 agent 路由或使用 `/agent` 切换
 
-Docs: [Models](/concepts/models), [Multi-Agent Routing](/concepts/multi-agent), [MiniMax](/providers/minimax), [OpenAI](/providers/openai).
+Docs: [Models](/zh/concepts/models), [Multi-Agent Routing](/zh/concepts/multi-agent), [MiniMax](/zh/providers/minimax), [OpenAI](/zh/providers/openai).
 
 ### Are opus sonnet gpt builtin shortcuts
 
-Yes. OpenClaw ships a few default shorthands (only applied when the model exists in `agents.defaults.models`):
+是的。OpenClaw 内置了一些默认快捷别名（仅在模型存在于 `agents.defaults.models` 时生效）：
 
 - `opus` → `anthropic/claude-opus-4-5`
 - `sonnet` → `anthropic/claude-sonnet-4-5`
@@ -2043,11 +2035,11 @@ Yes. OpenClaw ships a few default shorthands (only applied when the model exists
 - `gemini` → `google/gemini-3-pro-preview`
 - `gemini-flash` → `google/gemini-3-flash-preview`
 
-If you set your own alias with the same name, your value wins.
+如果你用同名自定义 alias，你的值会覆盖默认值。
 
 ### How do I defineoverride model shortcuts aliases
 
-Aliases come from `agents.defaults.models.<modelId>.alias`. Example:
+别名来自 `agents.defaults.models.<modelId>.alias`。例如：
 
 ```json5
 {
@@ -2064,11 +2056,11 @@ Aliases come from `agents.defaults.models.<modelId>.alias`. Example:
 }
 ```
 
-Then `/model sonnet` (or `/<alias>` when supported) resolves to that model ID.
+然后 `/model sonnet`（或在支持时使用 `/<alias>`）会解析为该模型 ID。
 
 ### How do I add models from other providers like OpenRouter or ZAI
 
-OpenRouter (pay‑per‑token; many models):
+OpenRouter（按 token 计费；模型众多）：
 
 ```json5
 {
@@ -2082,7 +2074,7 @@ OpenRouter (pay‑per‑token; many models):
 }
 ```
 
-Z.AI (GLM models):
+Z.AI（GLM 模型）：
 
 ```json5
 {
@@ -2096,33 +2088,32 @@ Z.AI (GLM models):
 }
 ```
 
-If you reference a provider/model but the required provider key is missing, you’ll get a runtime auth error (e.g. `No API key found for provider "zai"`).
+如果你引用了某个 provider/model，但缺少所需的 provider key，你会得到运行时 auth 错误（例如 `No API key found for provider "zai"`）。
 
 **No API key found for provider after adding a new agent**
 
-This usually means the **new agent** has an empty auth store. Auth is per-agent and
-stored in:
+这通常意味着**新 agent**的 auth 存储为空。Auth 是按 agent 分隔的，存储在：
 
 ```
 ~/.openclaw/agents/<agentId>/agent/auth-profiles.json
 ```
 
-Fix options:
-- Run `openclaw agents add <id>` and configure auth during the wizard.
-- Or copy `auth-profiles.json` from the main agent’s `agentDir` into the new agent’s `agentDir`.
+修复选项：
+- 运行 `openclaw agents add <id>` 并在向导中配置 auth。
+- 或从主 agent 的 `agentDir` 复制 `auth-profiles.json` 到新 agent 的 `agentDir`。
 
-Do **not** reuse `agentDir` across agents; it causes auth/session collisions.
+不要在多个 agent 之间复用 `agentDir`；这会导致 auth/session 冲突。
 
 ## Model failover and “All models failed”
 
 ### How does failover work
 
-Failover happens in two stages:
+Failover 分两步进行：
 
-1) **Auth profile rotation** within the same provider.
-2) **Model fallback** to the next model in `agents.defaults.model.fallbacks`.
+1) 在同一 provider 内进行 **Auth profile 轮换**。
+2) 在 `agents.defaults.model.fallbacks` 中 **切换到下一个模型**。
 
-Cooldowns apply to failing profiles (exponential backoff), so OpenClaw can keep responding even when a provider is rate‑limited or temporarily failing.
+失败的 profile 会进入冷却（指数退避），所以即便 provider 限流或暂时故障，OpenClaw 也能继续响应。
 
 ### What does this error mean
 
@@ -2130,57 +2121,55 @@ Cooldowns apply to failing profiles (exponential backoff), so OpenClaw can keep 
 No credentials found for profile "anthropic:default"
 ```
 
-It means the system attempted to use the auth profile ID `anthropic:default`, but could not find credentials for it in the expected auth store.
+说明系统尝试使用 auth profile ID `anthropic:default`，但在预期的 auth 存储中找不到凭据。
 
 ### Fix checklist for No credentials found for profile anthropicdefault
 
-- **Confirm where auth profiles live** (new vs legacy paths)
-  - Current: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
-  - Legacy: `~/.openclaw/agent/*` (migrated by `openclaw doctor`)
-- **Confirm your env var is loaded by the Gateway**
-  - If you set `ANTHROPIC_API_KEY` in your shell but run the Gateway via systemd/launchd, it may not inherit it. Put it in `~/.openclaw/.env` or enable `env.shellEnv`.
-- **Make sure you’re editing the correct agent**
-  - Multi‑agent setups mean there can be multiple `auth-profiles.json` files.
-- **Sanity‑check model/auth status**
-  - Use `openclaw models status` to see configured models and whether providers are authenticated.
+- **确认 auth profiles 的位置**（新路径 vs 旧路径）
+  - 当前：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+  - 旧路径：`~/.openclaw/agent/*`（由 `openclaw doctor` 迁移）
+- **确认你的环境变量被 Gateway 加载**
+  - 如果你在 shell 里设置了 `ANTHROPIC_API_KEY`，但通过 systemd/launchd 运行 Gateway，它可能不会继承。把它放进 `~/.openclaw/.env` 或启用 `env.shellEnv`。
+- **确保你在编辑正确的 agent**
+  - 多 agent 配置意味着会有多个 `auth-profiles.json` 文件。
+- **快速检查模型/auth 状态**
+  - 使用 `openclaw models status` 查看已配置模型以及 providers 的认证状态。
 
 **Fix checklist for No credentials found for profile anthropic**
 
-This means the run is pinned to an Anthropic auth profile, but the Gateway
-can’t find it in its auth store.
+这表示运行被固定到某个 Anthropic auth profile，但 Gateway 在其 auth 存储中找不到它。
 
-- **Use a setup-token**
-  - Run `claude setup-token`, then paste it with `openclaw models auth setup-token --provider anthropic`.
-  - If the token was created on another machine, use `openclaw models auth paste-token --provider anthropic`.
-- **If you want to use an API key instead**
-  - Put `ANTHROPIC_API_KEY` in `~/.openclaw/.env` on the **gateway host**.
-  - Clear any pinned order that forces a missing profile:
+- **使用 setup-token**
+  - 运行 `claude setup-token`，然后用 `openclaw models auth setup-token --provider anthropic` 粘贴。
+  - 如果 token 是在另一台机器上创建的，使用 `openclaw models auth paste-token --provider anthropic`。
+- **如果你想改用 API key**
+  - 在**Gateway 主机**的 `~/.openclaw/.env` 中设置 `ANTHROPIC_API_KEY`。
+  - 清除任何强制缺失 profile 的固定顺序：
     ```bash
     openclaw models auth order clear --provider anthropic
     ```
-- **Confirm you’re running commands on the gateway host**
-  - In remote mode, auth profiles live on the gateway machine, not your laptop.
+- **确认你在 Gateway 主机上运行命令**
+  - 远程模式下，auth profiles 位于 Gateway 机器上，而不是你的笔记本。
 
 ### Why did it also try Google Gemini and fail
 
-If your model config includes Google Gemini as a fallback (or you switched to a Gemini shorthand), OpenClaw will try it during model fallback. If you haven’t configured Google credentials, you’ll see `No API key found for provider "google"`.
+如果你的模型配置包含 Google Gemini 作为 fallback（或你切换到了 Gemini 快捷名），OpenClaw 会在 fallback 期间尝试它。如果你没有配置 Google 凭据，就会看到 `No API key found for provider "google"`。
 
-Fix: either provide Google auth, or remove/avoid Google models in `agents.defaults.model.fallbacks` / aliases so fallback doesn’t route there.
+修复：提供 Google auth，或从 `agents.defaults.model.fallbacks` / aliases 中移除或避免 Google 模型，防止 fallback 路由过去。
 
 **LLM request rejected message thinking signature required google antigravity**
 
-Cause: the session history contains **thinking blocks without signatures** (often from
-an aborted/partial stream). Google Antigravity requires signatures for thinking blocks.
+原因：会话历史包含**没有签名的 thinking 块**（通常来自被中止/部分流式的输出）。Google Antigravity 需要 thinking 块带签名。
 
-Fix: OpenClaw now strips unsigned thinking blocks for Google Antigravity Claude. If it still appears, start a **new session** or set `/thinking off` for that agent.
+修复：OpenClaw 现在会为 Google Antigravity Claude 清理未签名的 thinking 块。如果仍出现，开启**新会话**或为该 agent 设置 `/thinking off`。
 
 ## Auth profiles: what they are and how to manage them
 
-Related: [/concepts/oauth](/concepts/oauth) (OAuth flows, token storage, multi-account patterns)
+相关：[/concepts/oauth](/zh/concepts/oauth)（OAuth 流程、token 存储、多账号模式）
 
 ### What is an auth profile
 
-An auth profile is a named credential record (OAuth or API key) tied to a provider. Profiles live in:
+Auth profile 是一个按 provider 绑定的命名凭据记录（OAuth 或 API key）。Profiles 存放在：
 
 ```
 ~/.openclaw/agents/<agentId>/agent/auth-profiles.json
@@ -2188,19 +2177,19 @@ An auth profile is a named credential record (OAuth or API key) tied to a provid
 
 ### What are typical profile IDs
 
-OpenClaw uses provider‑prefixed IDs like:
+OpenClaw 使用带 provider 前缀的 ID，例如：
 
-- `anthropic:default` (common when no email identity exists)
-- `anthropic:<email>` for OAuth identities
-- custom IDs you choose (e.g. `anthropic:work`)
+- `anthropic:default`（没有 email 身份时常见）
+- `anthropic:<email>` 用于 OAuth 身份
+- 你自定义的 ID（例如 `anthropic:work`）
 
 ### Can I control which auth profile is tried first
 
-Yes. Config supports optional metadata for profiles and an ordering per provider (`auth.order.<provider>`). This does **not** store secrets; it maps IDs to provider/mode and sets rotation order.
+可以。配置支持为 profile 添加可选元数据，并为每个 provider 设置顺序（`auth.order.<provider>`）。它**不存储 secrets**；只是在 IDs 与 provider/mode 之间做映射并设置轮换顺序。
 
-OpenClaw may temporarily skip a profile if it’s in a short **cooldown** (rate limits/timeouts/auth failures) or a longer **disabled** state (billing/insufficient credits). To inspect this, run `openclaw models status --json` and check `auth.unusableProfiles`. Tuning: `auth.cooldowns.billingBackoffHours*`.
+OpenClaw 可能会临时跳过处于**短期冷却**（限流/超时/auth 失败）或**长期禁用**（账单/额度不足）状态的 profile。要检查这些，运行 `openclaw models status --json` 并查看 `auth.unusableProfiles`。调优参数：`auth.cooldowns.billingBackoffHours*`。
 
-You can also set a **per-agent** order override (stored in that agent’s `auth-profiles.json`) via the CLI:
+你还可以通过 CLI 设置**按 agent 覆盖**的顺序（存储在该 agent 的 `auth-profiles.json` 中）：
 
 ```bash
 # Defaults to the configured default agent (omit --agent)
@@ -2216,7 +2205,7 @@ openclaw models auth order set --provider anthropic anthropic:work anthropic:def
 openclaw models auth order clear --provider anthropic
 ```
 
-To target a specific agent:
+要针对特定 agent：
 
 ```bash
 openclaw models auth order set --provider anthropic --agent main anthropic:default
@@ -2224,20 +2213,20 @@ openclaw models auth order set --provider anthropic --agent main anthropic:defau
 
 ### OAuth vs API key whats the difference
 
-OpenClaw supports both:
+OpenClaw 同时支持两者：
 
-- **OAuth** often leverages subscription access (where applicable).
-- **API keys** use pay‑per‑token billing.
+- **OAuth** 通常可利用订阅访问（如适用）。
+- **API keys** 使用按 token 计费。
 
-The wizard explicitly supports Anthropic setup-token and OpenAI Codex OAuth and can store API keys for you.
+向导明确支持 Anthropic setup-token 和 OpenAI Codex OAuth，并可为你存储 API keys。
 
 ## Gateway: ports, “already running”, and remote mode
 
 ### What port does the Gateway use
 
-`gateway.port` controls the single multiplexed port for WebSocket + HTTP (Control UI, hooks, etc.).
+`gateway.port` 控制 WebSocket + HTTP 的单一复用端口（Control UI、hooks 等）。
 
-Precedence:
+优先级：
 
 ```
 --port > OPENCLAW_GATEWAY_PORT > gateway.port > default 18789
@@ -2245,32 +2234,32 @@ Precedence:
 
 ### Why does openclaw gateway status say Runtime running but RPC probe failed
 
-Because “running” is the **supervisor’s** view (launchd/systemd/schtasks). The RPC probe is the CLI actually connecting to the gateway WebSocket and calling `status`.
+因为“running”是**监督进程**（launchd/systemd/schtasks）的视角。RPC probe 是 CLI 实际连接 Gateway WebSocket 并调用 `status`。
 
-Use `openclaw gateway status` and trust these lines:
-- `Probe target:` (the URL the probe actually used)
-- `Listening:` (what’s actually bound on the port)
-- `Last gateway error:` (common root cause when the process is alive but the port isn’t listening)
+运行 `openclaw gateway status`，重点看这些行：
+- `Probe target:`（probe 实际使用的 URL）
+- `Listening:`（端口真正绑定在哪里）
+- `Last gateway error:`（进程活着但端口不监听时的常见根因）
 
 ### Why does openclaw gateway status show Config cli and Config service different
 
-You’re editing one config file while the service is running another (often a `--profile` / `OPENCLAW_STATE_DIR` mismatch).
+你在编辑一个 config，但服务运行的是另一个（常见是 `--profile` / `OPENCLAW_STATE_DIR` 不匹配）。
 
-Fix:
+修复：
 ```bash
 openclaw gateway install --force
 ```
-Run that from the same `--profile` / environment you want the service to use.
+从你希望服务使用的同一 `--profile` / 环境运行该命令。
 
 ### What does another gateway instance is already listening mean
 
-OpenClaw enforces a runtime lock by binding the WebSocket listener immediately on startup (default `ws://127.0.0.1:18789`). If the bind fails with `EADDRINUSE`, it throws `GatewayLockError` indicating another instance is already listening.
+OpenClaw 通过在启动时立刻绑定 WebSocket 监听器来实现运行锁（默认 `ws://127.0.0.1:18789`）。如果绑定失败并返回 `EADDRINUSE`，会抛出 `GatewayLockError`，表示已有实例在监听。
 
-Fix: stop the other instance, free the port, or run with `openclaw gateway --port <port>`.
+修复：停止其他实例、释放端口，或改用 `openclaw gateway --port <port>`。
 
 ### How do I run OpenClaw in remote mode client connects to a Gateway elsewhere
 
-Set `gateway.mode: "remote"` and point to a remote WebSocket URL, optionally with a token/password:
+设置 `gateway.mode: "remote"` 并指向远程 WebSocket URL，可选 token/password：
 
 ```json5
 {
@@ -2285,121 +2274,119 @@ Set `gateway.mode: "remote"` and point to a remote WebSocket URL, optionally wit
 }
 ```
 
-Notes:
-- `openclaw gateway` only starts when `gateway.mode` is `local` (or you pass the override flag).
-- The macOS app watches the config file and switches modes live when these values change.
+说明：
+- `openclaw gateway` 只会在 `gateway.mode` 为 `local` 时启动（或你传了 override flag）。
+- macOS app 会监控配置文件，值变化时会实时切换模式。
 
 ### The Control UI says unauthorized or keeps reconnecting What now
 
-Your gateway is running with auth enabled (`gateway.auth.*`), but the UI is not sending the matching token/password.
+你的 Gateway 启用了 auth（`gateway.auth.*`），但 UI 没有发送匹配的 token/password。
 
-Facts (from code):
-- The Control UI stores the token in browser localStorage key `openclaw.control.settings.v1`.
-- The UI can import `?token=...` (and/or `?password=...`) once, then strips it from the URL.
+事实（来自代码）：
+- Control UI 把 token 存在浏览器 localStorage 的 `openclaw.control.settings.v1`。
+- UI 能一次性导入 `?token=...`（和/或 `?password=...`），然后会从 URL 中移除。
 
-Fix:
-- Fastest: `openclaw dashboard` (prints + copies tokenized link, tries to open; shows SSH hint if headless).
-- If you don’t have a token yet: `openclaw doctor --generate-gateway-token`.
-- If remote, tunnel first: `ssh -N -L 18789:127.0.0.1:18789 user@host` then open `http://127.0.0.1:18789/?token=...`.
-- Set `gateway.auth.token` (or `OPENCLAW_GATEWAY_TOKEN`) on the gateway host.
-- In the Control UI settings, paste the same token (or refresh with a one-time `?token=...` link).
-- Still stuck? Run `openclaw status --all` and follow [Troubleshooting](/gateway/troubleshooting). See [Dashboard](/web/dashboard) for auth details.
+修复：
+- 最快：`openclaw dashboard`（打印并复制带 token 的链接，尝试打开；无头环境会提示 SSH）。
+- 如果还没有 token：`openclaw doctor --generate-gateway-token`。
+- 远程时先打隧道：`ssh -N -L 18789:127.0.0.1:18789 user@host`，然后打开 `http://127.0.0.1:18789/?token=...`。
+- 在 Gateway 主机上设置 `gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）。
+- 在 Control UI 设置中粘贴同一个 token（或用一次性 `?token=...` 链接刷新）。
+- 仍未解决？运行 `openclaw status --all` 并查看 [Troubleshooting](/zh/gateway/troubleshooting)。[Dashboard](/zh/web/dashboard) 有 auth 细节。
 
 ### I set gatewaybind tailnet but it cant bind nothing listens
 
-`tailnet` bind picks a Tailscale IP from your network interfaces (100.64.0.0/10). If the machine isn’t on Tailscale (or the interface is down), there’s nothing to bind to.
+`tailnet` 绑定会从网卡里选择一个 Tailscale IP（100.64.0.0/10）。如果机器不在 Tailscale 上（或接口未启用），就没有可绑定的地址。
 
-Fix:
-- Start Tailscale on that host (so it has a 100.x address), or
-- Switch to `gateway.bind: "loopback"` / `"lan"`.
+修复：
+- 在该主机上启动 Tailscale（使其获得 100.x 地址），或
+- 切换为 `gateway.bind: "loopback"` / `"lan"`。
   
-Note: `tailnet` is explicit. `auto` prefers loopback; use `gateway.bind: "tailnet"` when you want a tailnet-only bind.
+注意：`tailnet` 是显式指定的；`auto` 更偏向 loopback。需要仅 tailnet 绑定时使用 `gateway.bind: "tailnet"`。
 
 ### Can I run multiple Gateways on the same host
 
-Usually no - one Gateway can run multiple messaging channels and agents. Use multiple Gateways only when you need redundancy (ex: rescue bot) or hard isolation.
+通常不需要：一个 Gateway 就能跑多个消息通道和 agents。只有在需要冗余（例如救援 bot）或强隔离时，才建议多个 Gateway。
 
-Yes, but you must isolate:
+可以，但必须隔离：
 
-- `OPENCLAW_CONFIG_PATH` (per‑instance config)
-- `OPENCLAW_STATE_DIR` (per‑instance state)
-- `agents.defaults.workspace` (workspace isolation)
-- `gateway.port` (unique ports)
+- `OPENCLAW_CONFIG_PATH`（每实例 config）
+- `OPENCLAW_STATE_DIR`（每实例 state）
+- `agents.defaults.workspace`（workspace 隔离）
+- `gateway.port`（唯一端口）
 
-Quick setup (recommended):
-- Use `openclaw --profile <name> …` per instance (auto-creates `~/.openclaw-<name>`).
-- Set a unique `gateway.port` in each profile config (or pass `--port` for manual runs).
-- Install a per-profile service: `openclaw --profile <name> gateway install`.
+快速配置（推荐）：
+- 每实例使用 `openclaw --profile <name> …`（自动创建 `~/.openclaw-<name>`）。
+- 在每个 profile 的 config 中设置唯一 `gateway.port`（或手动运行时传 `--port`）。
+- 安装每 profile 的服务：`openclaw --profile <name> gateway install`。
 
-Profiles also suffix service names (`bot.molt.<profile>`; legacy `com.openclaw.*`, `openclaw-gateway-<profile>.service`, `OpenClaw Gateway (<profile>)`).
-Full guide: [Multiple gateways](/gateway/multiple-gateways).
+Profiles 还会给服务名加后缀（`bot.molt.<profile>`；旧的 `com.openclaw.*`、`openclaw-gateway-<profile>.service`、`OpenClaw Gateway (<profile>)`）。
+完整指南：[Multiple gateways](/zh/gateway/multiple-gateways)。
 
 ### What does invalid handshake code 1008 mean
 
-The Gateway is a **WebSocket server**, and it expects the very first message to
-be a `connect` frame. If it receives anything else, it closes the connection
-with **code 1008** (policy violation).
+Gateway 是一个 **WebSocket server**，它期望第一条消息是 `connect` 帧。如果收到其它内容，就会以 **code 1008**（策略违规）关闭连接。
 
-Common causes:
-- You opened the **HTTP** URL in a browser (`http://...`) instead of a WS client.
-- You used the wrong port or path.
-- A proxy or tunnel stripped auth headers or sent a non‑Gateway request.
+常见原因：
+- 你在浏览器中打开了 **HTTP** URL（`http://...`），而不是 WS 客户端。
+- 使用了错误的端口或路径。
+- 代理/隧道剥离了 auth headers，或发送了非 Gateway 的请求。
 
-Quick fixes:
-1) Use the WS URL: `ws://<host>:18789` (or `wss://...` if HTTPS).
-2) Don’t open the WS port in a normal browser tab.
-3) If auth is on, include the token/password in the `connect` frame.
+快速修复：
+1) 使用 WS URL：`ws://<host>:18789`（或 HTTPS 时用 `wss://...`）。
+2) 不要用普通浏览器标签页打开 WS 端口。
+3) 若开启了 auth，在 `connect` 帧中带上 token/password。
 
-If you’re using the CLI or TUI, the URL should look like:
+如果你使用 CLI 或 TUI，URL 应类似：
 ```
 openclaw tui --url ws://<host>:18789 --token <token>
 ```
 
-Protocol details: [Gateway protocol](/gateway/protocol).
+协议细节：[Gateway protocol](/zh/gateway/protocol)。
 
 ## Logging and debugging
 
 ### Where are logs
 
-File logs (structured):
+文件日志（结构化）：
 
 ```
 /tmp/openclaw/openclaw-YYYY-MM-DD.log
 ```
 
-You can set a stable path via `logging.file`. File log level is controlled by `logging.level`. Console verbosity is controlled by `--verbose` and `logging.consoleLevel`.
+你可以通过 `logging.file` 设置稳定路径。文件日志级别由 `logging.level` 控制。控制台详细度由 `--verbose` 和 `logging.consoleLevel` 控制。
 
-Fastest log tail:
+最快的日志跟随：
 
 ```bash
 openclaw logs --follow
 ```
 
-Service/supervisor logs (when the gateway runs via launchd/systemd):
-- macOS: `$OPENCLAW_STATE_DIR/logs/gateway.log` and `gateway.err.log` (default: `~/.openclaw/logs/...`; profiles use `~/.openclaw-<profile>/logs/...`)
-- Linux: `journalctl --user -u openclaw-gateway[-<profile>].service -n 200 --no-pager`
-- Windows: `schtasks /Query /TN "OpenClaw Gateway (<profile>)" /V /FO LIST`
+服务/监督进程日志（Gateway 通过 launchd/systemd 运行时）：
+- macOS：`$OPENCLAW_STATE_DIR/logs/gateway.log` 和 `gateway.err.log`（默认 `~/.openclaw/logs/...`；profiles 使用 `~/.openclaw-<profile>/logs/...`）
+- Linux：`journalctl --user -u openclaw-gateway[-<profile>].service -n 200 --no-pager`
+- Windows：`schtasks /Query /TN "OpenClaw Gateway (<profile>)" /V /FO LIST`
 
-See [Troubleshooting](/gateway/troubleshooting#log-locations) for more.
+更多信息见 [Troubleshooting](/zh/gateway/troubleshooting#log-locations)。
 
 ### How do I startstoprestart the Gateway service
 
-Use the gateway helpers:
+使用 gateway helpers：
 
 ```bash
 openclaw gateway status
 openclaw gateway restart
 ```
 
-If you run the gateway manually, `openclaw gateway --force` can reclaim the port. See [Gateway](/gateway).
+如果你是手动运行 gateway，`openclaw gateway --force` 可以抢占端口。见 [Gateway](/zh/gateway)。
 
 ### I closed my terminal on Windows how do I restart OpenClaw
 
-There are **two Windows install modes**:
+Windows 有**两种安装模式**：
 
-**1) WSL2 (recommended):** the Gateway runs inside Linux.
+**1) WSL2（推荐）：**Gateway 运行在 Linux 内。
 
-Open PowerShell, enter WSL, then restart:
+打开 PowerShell，进入 WSL，然后重启：
 
 ```powershell
 wsl
@@ -2407,32 +2394,32 @@ openclaw gateway status
 openclaw gateway restart
 ```
 
-If you never installed the service, start it in the foreground:
+如果你从未安装过服务，可以前台启动：
 
 ```bash
 openclaw gateway run
 ```
 
-**2) Native Windows (not recommended):** the Gateway runs directly in Windows.
+**2) 原生 Windows（不推荐）：**Gateway 直接运行在 Windows 上。
 
-Open PowerShell and run:
+打开 PowerShell 并运行：
 
 ```powershell
 openclaw gateway status
 openclaw gateway restart
 ```
 
-If you run it manually (no service), use:
+如果是手动运行（无服务），使用：
 
 ```powershell
 openclaw gateway run
 ```
 
-Docs: [Windows (WSL2)](/platforms/windows), [Gateway service runbook](/gateway).
+Docs: [Windows (WSL2)](/zh/platforms/windows), [Gateway service runbook](/zh/gateway)。
 
 ### The Gateway is up but replies never arrive What should I check
 
-Start with a quick health sweep:
+先做一轮快速健康检查：
 
 ```bash
 openclaw status
@@ -2441,50 +2428,49 @@ openclaw channels status
 openclaw logs --follow
 ```
 
-Common causes:
-- Model auth not loaded on the **gateway host** (check `models status`).
-- Channel pairing/allowlist blocking replies (check channel config + logs).
-- WebChat/Dashboard is open without the right token.
+常见原因：
+- **Gateway 主机**上未加载模型 auth（看 `models status`）。
+- 频道的 pairing/allowlist 阻止了回复（检查频道配置 + 日志）。
+- WebChat/Dashboard 没有正确 token。
 
-If you are remote, confirm the tunnel/Tailscale connection is up and that the
-Gateway WebSocket is reachable.
+如果你是远程模式，确认隧道/Tailscale 连接可用，并且 Gateway WebSocket 可达。
 
-Docs: [Channels](/channels), [Troubleshooting](/gateway/troubleshooting), [Remote access](/gateway/remote).
+Docs: [Channels](/zh/channels), [Troubleshooting](/zh/gateway/troubleshooting), [Remote access](/zh/gateway/remote)。
 
 ### Disconnected from gateway no reason what now
 
-This usually means the UI lost the WebSocket connection. Check:
+这通常意味着 UI 丢了 WebSocket 连接。检查：
 
-1) Is the Gateway running? `openclaw gateway status`
-2) Is the Gateway healthy? `openclaw status`
-3) Does the UI have the right token? `openclaw dashboard`
-4) If remote, is the tunnel/Tailscale link up?
+1) Gateway 在运行吗？`openclaw gateway status`
+2) Gateway 健康吗？`openclaw status`
+3) UI 有没有正确 token？`openclaw dashboard`
+4) 如果是远程，隧道/Tailscale 连接是否正常？
 
-Then tail logs:
+然后跟随日志：
 
 ```bash
 openclaw logs --follow
 ```
 
-Docs: [Dashboard](/web/dashboard), [Remote access](/gateway/remote), [Troubleshooting](/gateway/troubleshooting).
+Docs: [Dashboard](/zh/web/dashboard), [Remote access](/zh/gateway/remote), [Troubleshooting](/zh/gateway/troubleshooting)。
 
 ### Telegram setMyCommands fails with network errors What should I check
 
-Start with logs and channel status:
+先看日志和频道状态：
 
 ```bash
 openclaw channels status
 openclaw channels logs --channel telegram
 ```
 
-If you are on a VPS or behind a proxy, confirm outbound HTTPS is allowed and DNS works.
-If the Gateway is remote, make sure you are looking at logs on the Gateway host.
+如果你在 VPS 或代理后面，确认出站 HTTPS 允许且 DNS 正常。
+如果 Gateway 是远程的，确保你在 Gateway 主机上看日志。
 
-Docs: [Telegram](/channels/telegram), [Channel troubleshooting](/channels/troubleshooting).
+Docs: [Telegram](/zh/channels/telegram), [Channel troubleshooting](/zh/channels/troubleshooting)。
 
 ### TUI shows no output What should I check
 
-First confirm the Gateway is reachable and the agent can run:
+先确认 Gateway 可达且 agent 能运行：
 
 ```bash
 openclaw status
@@ -2492,171 +2478,154 @@ openclaw models status
 openclaw logs --follow
 ```
 
-In the TUI, use `/status` to see the current state. If you expect replies in a chat
-channel, make sure delivery is enabled (`/deliver on`).
+在 TUI 中用 `/status` 查看当前状态。如果你期待在聊天频道收到回复，确保开启投递（`/deliver on`）。
 
-Docs: [TUI](/tui), [Slash commands](/tools/slash-commands).
+Docs: [TUI](/zh/tui), [Slash commands](/zh/tools/slash-commands)。
 
 ### How do I completely stop then start the Gateway
 
-If you installed the service:
+如果你安装了服务：
 
 ```bash
 openclaw gateway stop
 openclaw gateway start
 ```
 
-This stops/starts the **supervised service** (launchd on macOS, systemd on Linux).
-Use this when the Gateway runs in the background as a daemon.
+这会停止/启动**受监督的服务**（macOS 上是 launchd，Linux 上是 systemd）。当 Gateway 作为守护进程在后台运行时用这个。
 
-If you’re running in the foreground, stop with Ctrl‑C, then:
+如果你是前台运行，Ctrl‑C 停止，然后：
 
 ```bash
 openclaw gateway run
 ```
 
-Docs: [Gateway service runbook](/gateway).
+Docs: [Gateway service runbook](/zh/gateway)。
 
 ### ELI5 openclaw gateway restart vs openclaw gateway
 
-- `openclaw gateway restart`: restarts the **background service** (launchd/systemd).
-- `openclaw gateway`: runs the gateway **in the foreground** for this terminal session.
+- `openclaw gateway restart`：重启**后台服务**（launchd/systemd）。
+- `openclaw gateway`：在本终端**前台**运行 gateway。
 
-If you installed the service, use the gateway commands. Use `openclaw gateway` when
-you want a one-off, foreground run.
+如果你安装了服务，就用 gateway 命令；要临时前台跑一遍，就用 `openclaw gateway`。
 
 ### Whats the fastest way to get more details when something fails
 
-Start the Gateway with `--verbose` to get more console detail. Then inspect the log file for channel auth, model routing, and RPC errors.
+用 `--verbose` 启动 Gateway 以获得更多控制台信息，然后查看日志文件以排查频道 auth、模型路由和 RPC 错误。
 
 ## Media & attachments
 
 ### My skill generated an imagePDF but nothing was sent
 
-Outbound attachments from the agent must include a `MEDIA:<path-or-url>` line (on its own line). See [OpenClaw assistant setup](/start/openclaw) and [Agent send](/tools/agent-send).
+Agent 发送附件时，必须在消息里包含一行 `MEDIA:<path-or-url>`（单独一行）。见 [OpenClaw assistant setup](/zh/start/openclaw) 和 [Agent send](/zh/tools/agent-send)。
 
-CLI sending:
+CLI 发送：
 
 ```bash
 openclaw message send --target +15555550123 --message "Here you go" --media /path/to/file.png
 ```
 
-Also check:
-- The target channel supports outbound media and isn’t blocked by allowlists.
-- The file is within the provider’s size limits (images are resized to max 2048px).
+还要检查：
+- 目标频道支持外发媒体，且未被 allowlist 阻止。
+- 文件大小在该 provider 的限制内（图片会缩放到最大 2048px）。
 
-See [Images](/nodes/images).
+见 [Images](/zh/nodes/images)。
 
 ## Security and access control
 
 ### Is it safe to expose OpenClaw to inbound DMs
 
-Treat inbound DMs as untrusted input. Defaults are designed to reduce risk:
+把入站 DMs 视为不可信输入。默认设置旨在降低风险：
 
-- Default behavior on DM‑capable channels is **pairing**:
-  - Unknown senders receive a pairing code; the bot does not process their message.
-  - Approve with: `openclaw pairing approve <channel> <code>`
-  - Pending requests are capped at **3 per channel**; check `openclaw pairing list <channel>` if a code didn’t arrive.
-- Opening DMs publicly requires explicit opt‑in (`dmPolicy: "open"` and allowlist `"*"`).
+- 支持 DMs 的频道默认是 **pairing**：
+  - 未知发送者会收到 pairing 码；bot 不处理其消息。
+  - 通过 `openclaw pairing approve <channel> <code>` 批准。
+  - 待处理请求每个频道最多 **3** 个；若没收到 code，检查 `openclaw pairing list <channel>`。
+- 公开开放 DMs 需要显式 opt‑in（`dmPolicy: "open"` 且 allowlist 为 `"*"`）。
 
-Run `openclaw doctor` to surface risky DM policies.
+运行 `openclaw doctor` 可提示高风险 DM 策略。
 
 ### Is prompt injection only a concern for public bots
 
-No. Prompt injection is about **untrusted content**, not just who can DM the bot.
-If your assistant reads external content (web search/fetch, browser pages, emails,
-docs, attachments, pasted logs), that content can include instructions that try
-to hijack the model. This can happen even if **you are the only sender**.
+不是。Prompt injection 针对的是**不可信内容**，不是仅仅谁能 DM 机器人。
+如果你的助手会读取外部内容（web search/fetch、浏览器页面、邮件、文档、附件、粘贴的日志），这些内容可能包含试图劫持模型的指令。即便**只有你**是发送者，也可能发生。
 
-The biggest risk is when tools are enabled: the model can be tricked into
-exfiltrating context or calling tools on your behalf. Reduce the blast radius by:
-- using a read-only or tool-disabled "reader" agent to summarize untrusted content
-- keeping `web_search` / `web_fetch` / `browser` off for tool-enabled agents
-- sandboxing and strict tool allowlists
+最大风险出现在启用了工具时：模型可能被诱导去泄露上下文或替你调用工具。降低影响半径的方法：
+- 用只读或禁工具的“reader” agent 来总结不可信内容
+- 对启用工具的 agent 关闭 `web_search` / `web_fetch` / `browser`
+- 开启 sandbox 并使用严格的工具 allowlist
 
-Details: [Security](/gateway/security).
+细节见 [Security](/zh/gateway/security)。
 
 ### Should my bot have its own email GitHub account or phone number
 
-Yes, for most setups. Isolating the bot with separate accounts and phone numbers
-reduces the blast radius if something goes wrong. This also makes it easier to rotate
-credentials or revoke access without impacting your personal accounts.
+对大多数配置来说，应该有独立账号。把 bot 隔离为单独账号/手机号能降低出问题时的影响范围，也更便于轮换凭据或撤销权限，而不影响你的个人账号。
 
-Start small. Give access only to the tools and accounts you actually need, and expand
-later if required.
+先从小范围开始，只授予真正需要的工具和账号，后续再扩展。
 
-Docs: [Security](/gateway/security), [Pairing](/start/pairing).
+Docs: [Security](/zh/gateway/security), [Pairing](/zh/start/pairing)。
 
 ### Can I give it autonomy over my text messages and is that safe
 
-We do **not** recommend full autonomy over your personal messages. The safest pattern is:
-- Keep DMs in **pairing mode** or a tight allowlist.
-- Use a **separate number or account** if you want it to message on your behalf.
-- Let it draft, then **approve before sending**.
+我们**不建议**让它对你的个人消息完全自治。更安全的模式是：
+- 保持 DMs 在 **pairing** 模式或严格 allowlist。
+- 如果要让它代发消息，使用**独立号码或账号**。
+- 让它先拟稿，然后**批准后发送**。
 
-If you want to experiment, do it on a dedicated account and keep it isolated. See
-[Security](/gateway/security).
+如果要实验，请用专用账号并保持隔离。见 [Security](/zh/gateway/security)。
 
 ### Can I use cheaper models for personal assistant tasks
 
-Yes, **if** the agent is chat-only and the input is trusted. Smaller tiers are
-more susceptible to instruction hijacking, so avoid them for tool-enabled agents
-or when reading untrusted content. If you must use a smaller model, lock down
-tools and run inside a sandbox. See [Security](/gateway/security).
+可以，**前提是**该 agent 仅聊天且输入可信。更小的模型更容易被指令劫持，所以不适合启用工具的 agent，或读取不可信内容时使用。
+如果必须用小模型，务必锁紧工具并在 sandbox 中运行。见 [Security](/zh/gateway/security)。
 
 ### I ran start in Telegram but didnt get a pairing code
 
-Pairing codes are sent **only** when an unknown sender messages the bot and
-`dmPolicy: "pairing"` is enabled. `/start` by itself doesn’t generate a code.
+只有未知发送者发消息且 `dmPolicy: "pairing"` 启用时才会发送 pairing 码。单独的 `/start` 不会生成 code。
 
-Check pending requests:
+查看待处理请求：
 ```bash
 openclaw pairing list telegram
 ```
 
-If you want immediate access, allowlist your sender id or set `dmPolicy: "open"`
-for that account.
+如果你想立即访问，allowlist 你的 sender id，或对该账号设置 `dmPolicy: "open"`。
 
 ### WhatsApp will it message my contacts How does pairing work
 
-No. Default WhatsApp DM policy is **pairing**. Unknown senders only get a pairing code and their message is **not processed**. OpenClaw only replies to chats it receives or to explicit sends you trigger.
+不会。WhatsApp 默认 DM 策略是 **pairing**。未知发送者只会收到 pairing 码，其消息**不会被处理**。OpenClaw 只会回复它收到的聊天消息，或你显式触发的发送。
 
-Approve pairing with:
+批准 pairing：
 
 ```bash
 openclaw pairing approve whatsapp <code>
 ```
 
-List pending requests:
+查看待处理请求：
 
 ```bash
 openclaw pairing list whatsapp
 ```
 
-Wizard phone number prompt: it’s used to set your **allowlist/owner** so your own DMs are permitted. It’s not used for auto-sending. If you run on your personal WhatsApp number, use that number and enable `channels.whatsapp.selfChatMode`.
+向导中的手机号提示用于设置你的 **allowlist/owner**，以允许你自己的 DMs。它不会用于自动发送。如果你用个人 WhatsApp 号码运行，使用该号码并启用 `channels.whatsapp.selfChatMode`。
 
 ## Chat commands, aborting tasks, and “it won’t stop”
 
 ### How do I stop internal system messages from showing in chat
 
-Most internal or tool messages only appear when **verbose** or **reasoning** is enabled
-for that session.
+多数内部或工具消息只会在该会话启用 **verbose** 或 **reasoning** 时显示。
 
-Fix in the chat where you see it:
+在出现的聊天中这样修复：
 ```
 /verbose off
 /reasoning off
 ```
 
-If it is still noisy, check the session settings in the Control UI and set verbose
-to **inherit**. Also confirm you are not using a bot profile with `verboseDefault` set
-to `on` in config.
+如果仍然很吵，检查 Control UI 的会话设置并将 verbose 设为 **inherit**。同时确认你没有在 config 中使用 `verboseDefault` 为 `on` 的 bot profile。
 
-Docs: [Thinking and verbose](/tools/thinking), [Security](/gateway/security#reasoning--verbose-output-in-groups).
+Docs: [Thinking and verbose](/zh/tools/thinking), [Security](/zh/gateway/security#reasoning--verbose-output-in-groups)。
 
 ### How do I stopcancel a running task
 
-Send any of these **as a standalone message** (no slash):
+发送以下任一**独立消息**（不带斜杠）：
 
 ```
 stop
@@ -2667,24 +2636,23 @@ exit
 interrupt
 ```
 
-These are abort triggers (not slash commands).
+这些是中止触发词（不是 slash commands）。
 
-For background processes (from the exec tool), you can ask the agent to run:
+对于后台进程（来自 exec 工具），可以让 agent 运行：
 
 ```
 process action:kill sessionId:XXX
 ```
 
-Slash commands overview: see [Slash commands](/tools/slash-commands).
+Slash commands 总览见 [Slash commands](/zh/tools/slash-commands)。
 
-Most commands must be sent as a **standalone** message that starts with `/`, but a few shortcuts (like `/status`) also work inline for allowlisted senders.
+大多数命令必须以 `/` 开头并作为**单独消息**发送，但少数快捷指令（如 `/status`）在允许的发送者下也可内联。
 
 ### How do I send a Discord message from Telegram Crosscontext messaging denied
 
-OpenClaw blocks **cross‑provider** messaging by default. If a tool call is bound
-to Telegram, it won’t send to Discord unless you explicitly allow it.
+OpenClaw 默认阻止**跨 provider**消息。如果工具调用绑定在 Telegram，就不会发送到 Discord，除非你明确允许。
 
-Enable cross‑provider messaging for the agent:
+为 agent 启用跨 provider 消息：
 
 ```json5
 {
@@ -2703,27 +2671,26 @@ Enable cross‑provider messaging for the agent:
 }
 ```
 
-Restart the gateway after editing config. If you only want this for a single
-agent, set it under `agents.list[].tools.message` instead.
+编辑 config 后重启 gateway。如果只想对单个 agent 生效，把它放在 `agents.list[].tools.message` 下。
 
 ### Why does it feel like the bot ignores rapidfire messages
 
-Queue mode controls how new messages interact with an in‑flight run. Use `/queue` to change modes:
+队列模式决定新消息如何与进行中的运行交互。用 `/queue` 切换模式：
 
-- `steer` - new messages redirect the current task
-- `followup` - run messages one at a time
-- `collect` - batch messages and reply once (default)
-- `steer-backlog` - steer now, then process backlog
-- `interrupt` - abort current run and start fresh
+- `steer` - 新消息会重定向当前任务
+- `followup` - 逐条处理
+- `collect` - 批量收集后一次回复（默认）
+- `steer-backlog` - 先 steer，再处理积压
+- `interrupt` - 中止当前运行并重新开始
 
-You can add options like `debounce:2s cap:25 drop:summarize` for followup modes.
+你还可以为 followup 模式添加选项，如 `debounce:2s cap:25 drop:summarize`。
 
 ## Answer the exact question from the screenshot/chat log
 
 **Q: “What’s the default model for Anthropic with an API key?”**
 
-**A:** In OpenClaw, credentials and model selection are separate. Setting `ANTHROPIC_API_KEY` (or storing an Anthropic API key in auth profiles) enables authentication, but the actual default model is whatever you configure in `agents.defaults.model.primary` (for example, `anthropic/claude-sonnet-4-5` or `anthropic/claude-opus-4-5`). If you see `No credentials found for profile "anthropic:default"`, it means the Gateway couldn’t find Anthropic credentials in the expected `auth-profiles.json` for the agent that’s running.
+**A:** 在 OpenClaw 中，凭据和模型选择是分开的。设置 `ANTHROPIC_API_KEY`（或在 auth profiles 中存储 Anthropic API key）只会启用认证；真正的默认模型由你在 `agents.defaults.model.primary` 中配置（例如 `anthropic/claude-sonnet-4-5` 或 `anthropic/claude-opus-4-5`）。如果你看到 `No credentials found for profile "anthropic:default"`，说明 Gateway 在运行该 agent 的预期 `auth-profiles.json` 中找不到 Anthropic 凭据。
 
 ---
 
-Still stuck? Ask in [Discord](https://discord.com/invite/clawd) or open a [GitHub discussion](https://github.com/openclaw/openclaw/discussions).
+还卡住？去 [Discord](https://discord.com/invite/clawd) 或开一个 [GitHub discussion](https://github.com/openclaw/openclaw/discussions)。

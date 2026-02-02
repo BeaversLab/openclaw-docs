@@ -2,44 +2,41 @@
 > 本页正在翻译中。
 
 ---
-summary: "Gateway dashboard (Control UI) access and auth"
+summary: "Gateway 仪表盘（Control UI）访问与认证"
 read_when:
-  - Changing dashboard authentication or exposure modes
+  - 修改仪表盘认证或暴露方式
 ---
-# Dashboard (Control UI)
+# Dashboard（Control UI）
 
-The Gateway dashboard is the browser Control UI served at `/` by default
-(override with `gateway.controlUi.basePath`).
+Gateway 仪表盘是默认在 `/` 提供的浏览器 Control UI
+（可用 `gateway.controlUi.basePath` 覆盖）。
 
-Quick open (local Gateway):
-- http://127.0.0.1:18789/ (or http://localhost:18789/)
+本地快速打开：
+- http://127.0.0.1:18789/（或 http://localhost:18789/）
 
-Key references:
-- [Control UI](/web/control-ui) for usage and UI capabilities.
-- [Tailscale](/gateway/tailscale) for Serve/Funnel automation.
-- [Web surfaces](/web) for bind modes and security notes.
+关键参考：
+- 使用方式与 UI 能力见 [Control UI](/zh/web/control-ui)。
+- Serve/Funnel 自动化见 [Tailscale](/zh/gateway/tailscale)。
+- 绑定方式与安全说明见 [Web surfaces](/zh/web)。
 
-Authentication is enforced at the WebSocket handshake via `connect.params.auth`
-(token or password). See `gateway.auth` in [Gateway configuration](/gateway/configuration).
+认证在 WebSocket 握手阶段通过 `connect.params.auth`（token 或密码）强制执行。配置见 [Gateway configuration](/zh/gateway/configuration) 的 `gateway.auth`。
 
-Security note: the Control UI is an **admin surface** (chat, config, exec approvals).
-Do not expose it publicly. The UI stores the token in `localStorage` after first load.
-Prefer localhost, Tailscale Serve, or an SSH tunnel.
+安全说明：Control UI 是 **管理员面**（聊天、配置、exec 审批）。不要对公网暴露。UI 在首次加载后将 token 存入 `localStorage`。优先使用 localhost、Tailscale Serve 或 SSH 隧道。
 
-## Fast path (recommended)
+## 快速路径（推荐）
 
-- After onboarding, the CLI now auto-opens the dashboard with your token and prints the same tokenized link.
-- Re-open anytime: `openclaw dashboard` (copies link, opens browser if possible, shows SSH hint if headless).
-- The token stays local (query param only); the UI strips it after first load and saves it in localStorage.
+- Onboarding 后，CLI 会自动用你的 token 打开仪表盘，并打印相同的带 token 链接。
+- 随时重新打开：`openclaw dashboard`（复制链接，尽可能打开浏览器，若无 UI 则提示 SSH）。
+- token 仅在本地（query 参数）；UI 首次加载后会剥离并存入 localStorage。
 
-## Token basics (local vs remote)
+## Token 基础（本地 vs 远程）
 
-- **Localhost**: open `http://127.0.0.1:18789/`. If you see “unauthorized,” run `openclaw dashboard` and use the tokenized link (`?token=...`).
-- **Token source**: `gateway.auth.token` (or `OPENCLAW_GATEWAY_TOKEN`); the UI stores it after first load.
-- **Not localhost**: use Tailscale Serve (tokenless if `gateway.auth.allowTailscale: true`), tailnet bind with a token, or an SSH tunnel. See [Web surfaces](/web).
+- **Localhost**：打开 `http://127.0.0.1:18789/`。若出现 “unauthorized”，运行 `openclaw dashboard` 并使用带 token 的链接（`?token=...`）。
+- **Token 来源**：`gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）；UI 首次加载后会保存。
+- **非 localhost**：使用 Tailscale Serve（若 `gateway.auth.allowTailscale: true` 则可免 token）、绑定 tailnet + token，或 SSH 隧道。见 [Web surfaces](/zh/web)。
 
-## If you see “unauthorized” / 1008
+## 若看到 “unauthorized” / 1008
 
-- Run `openclaw dashboard` to get a fresh tokenized link.
-- Ensure the gateway is reachable (local: `openclaw status`; remote: SSH tunnel `ssh -N -L 18789:127.0.0.1:18789 user@host` then open `http://127.0.0.1:18789/?token=...`).
-- In the dashboard settings, paste the same token you configured in `gateway.auth.token` (or `OPENCLAW_GATEWAY_TOKEN`).
+- 运行 `openclaw dashboard` 获取新的带 token 链接。
+- 确认 gateway 可达（本地：`openclaw status`；远程：SSH 隧道 `ssh -N -L 18789:127.0.0.1:18789 user@host`，然后打开 `http://127.0.0.1:18789/?token=...`）。
+- 在仪表盘设置中粘贴与你配置的 `gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）一致的 token。

@@ -2,21 +2,20 @@
 > 本页正在翻译中。
 
 ---
-summary: "Plugin manifest + JSON schema requirements (strict config validation)"
+summary: "插件清单 + JSON schema 要求（严格配置校验）"
 read_when:
-  - You are building a OpenClaw plugin
-  - You need to ship a plugin config schema or debug plugin validation errors
+  - 构建 OpenClaw 插件
+  - 需要发布插件配置 schema 或排查插件校验错误
 ---
-# Plugin manifest (openclaw.plugin.json)
+# 插件清单（openclaw.plugin.json）
 
-Every plugin **must** ship a `openclaw.plugin.json` file in the **plugin root**.
-OpenClaw uses this manifest to validate configuration **without executing plugin
-code**. Missing or invalid manifests are treated as plugin errors and block
-config validation.
+每个插件 **必须** 在 **插件根目录** 提供 `openclaw.plugin.json` 文件。
+OpenClaw 使用该清单在 **不执行插件代码** 的情况下校验配置。
+缺失或无效的清单会被视为插件错误，并阻断配置校验。
 
-See the full plugin system guide: [Plugins](/plugin).
+完整插件体系指南参见：[Plugins](/zh/plugin)。
 
-## Required fields
+## 必填字段
 
 ```json
 {
@@ -29,42 +28,36 @@ See the full plugin system guide: [Plugins](/plugin).
 }
 ```
 
-Required keys:
-- `id` (string): canonical plugin id.
-- `configSchema` (object): JSON Schema for plugin config (inline).
+必填键：
+- `id`（string）：插件规范 id。
+- `configSchema`（object）：插件配置 JSON Schema（内联）。
 
-Optional keys:
-- `kind` (string): plugin kind (example: `"memory"`).
-- `channels` (array): channel ids registered by this plugin (example: `["matrix"]`).
-- `providers` (array): provider ids registered by this plugin.
-- `skills` (array): skill directories to load (relative to the plugin root).
-- `name` (string): display name for the plugin.
-- `description` (string): short plugin summary.
-- `uiHints` (object): config field labels/placeholders/sensitive flags for UI rendering.
-- `version` (string): plugin version (informational).
+可选键：
+- `kind`（string）：插件类型（例如：`"memory"`）。
+- `channels`（array）：此插件注册的频道 id（例如：`["matrix"]`）。
+- `providers`（array）：此插件注册的 provider id。
+- `skills`（array）：要加载的 skill 目录（相对插件根目录）。
+- `name`（string）：插件展示名称。
+- `description`（string）：插件简要说明。
+- `uiHints`（object）：用于 UI 渲染的配置字段标签/占位/敏感标记。
+- `version`（string）：插件版本（信息用途）。
 
-## JSON Schema requirements
+## JSON Schema 要求
 
-- **Every plugin must ship a JSON Schema**, even if it accepts no config.
-- An empty schema is acceptable (for example, `{ "type": "object", "additionalProperties": false }`).
-- Schemas are validated at config read/write time, not at runtime.
+- **每个插件必须提供 JSON Schema**，即使不接受任何配置。
+- 可使用空 schema（例如 `{ "type": "object", "additionalProperties": false }`）。
+- Schema 在配置读写时校验，而非运行时。
 
-## Validation behavior
+## 校验行为
 
-- Unknown `channels.*` keys are **errors**, unless the channel id is declared by
-  a plugin manifest.
-- `plugins.entries.<id>`, `plugins.allow`, `plugins.deny`, and `plugins.slots.*`
-  must reference **discoverable** plugin ids. Unknown ids are **errors**.
-- If a plugin is installed but has a broken or missing manifest or schema,
-  validation fails and Doctor reports the plugin error.
-- If plugin config exists but the plugin is **disabled**, the config is kept and
-  a **warning** is surfaced in Doctor + logs.
+- 未知的 `channels.*` 键是 **错误**，除非该频道 id 由插件清单声明。
+- `plugins.entries.<id>`、`plugins.allow`、`plugins.deny` 与 `plugins.slots.*`
+  必须引用 **可发现** 的插件 id。未知 id 为 **错误**。
+- 插件已安装但清单或 schema 破损/缺失时，校验失败，Doctor 报告插件错误。
+- 若插件配置存在但插件 **被禁用**，配置会保留，同时在 Doctor + 日志中提示 **warning**。
 
-## Notes
+## 说明
 
-- The manifest is **required for all plugins**, including local filesystem loads.
-- Runtime still loads the plugin module separately; the manifest is only for
-  discovery + validation.
-- If your plugin depends on native modules, document the build steps and any
-  package-manager allowlist requirements (for example, pnpm `allow-build-scripts`
-  + `pnpm rebuild <package>`).
+- 清单对 **所有插件** 必须，包括本地文件系统加载的插件。
+- 运行时仍会单独加载插件模块；清单仅用于发现 + 校验。
+- 若插件依赖原生模块，请在文档中写明构建步骤及包管理器 allowlist 要求（例如 pnpm `allow-build-scripts` + `pnpm rebuild <package>`）。

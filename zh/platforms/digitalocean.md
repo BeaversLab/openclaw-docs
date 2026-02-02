@@ -2,141 +2,141 @@
 > 本页正在翻译中。
 
 ---
-summary: "OpenClaw on DigitalOcean (simple paid VPS option)"
+summary: "在 DigitalOcean 上运行 OpenClaw（简单的付费 VPS 方案）"
 read_when:
-  - Setting up OpenClaw on DigitalOcean
-  - Looking for cheap VPS hosting for OpenClaw
+  - 在 DigitalOcean 上部署 OpenClaw
+  - 寻找便宜的 OpenClaw VPS 托管方案
 ---
 
 # OpenClaw on DigitalOcean
 
-## Goal
+## 目标
 
-Run a persistent OpenClaw Gateway on DigitalOcean for **$6/month** (or $4/mo with reserved pricing).
+在 DigitalOcean 上以 **$6/月**（或保留价 $4/月）运行持久化 OpenClaw Gateway。
 
-If you want a $0/month option and don’t mind ARM + provider-specific setup, see the [Oracle Cloud guide](/platforms/oracle).
+如果你想要 $0/月 且不介意 ARM + provider 特有配置，见 [Oracle Cloud guide](/zh/platforms/oracle)。
 
-## Cost Comparison (2026)
+## 成本对比（2026）
 
 | Provider | Plan | Specs | Price/mo | Notes |
 |----------|------|-------|----------|-------|
-| Oracle Cloud | Always Free ARM | up to 4 OCPU, 24GB RAM | $0 | ARM, limited capacity / signup quirks |
-| Hetzner | CX22 | 2 vCPU, 4GB RAM | €3.79 (~$4) | Cheapest paid option |
-| DigitalOcean | Basic | 1 vCPU, 1GB RAM | $6 | Easy UI, good docs |
-| Vultr | Cloud Compute | 1 vCPU, 1GB RAM | $6 | Many locations |
-| Linode | Nanode | 1 vCPU, 1GB RAM | $5 | Now part of Akamai |
+| Oracle Cloud | Always Free ARM | up to 4 OCPU, 24GB RAM | $0 | ARM，容量有限/注册有坑 |
+| Hetzner | CX22 | 2 vCPU, 4GB RAM | €3.79 (~$4) | 最便宜付费选项 |
+| DigitalOcean | Basic | 1 vCPU, 1GB RAM | $6 | UI 简单，文档完善 |
+| Vultr | Cloud Compute | 1 vCPU, 1GB RAM | $6 | 机房多 |
+| Linode | Nanode | 1 vCPU, 1GB RAM | $5 | 现属 Akamai |
 
-**Picking a provider:**
-- DigitalOcean: simplest UX + predictable setup (this guide)
-- Hetzner: good price/perf (see [Hetzner guide](/platforms/hetzner))
-- Oracle Cloud: can be $0/month, but is more finicky and ARM-only (see [Oracle guide](/platforms/oracle))
+**选择建议：**
+- DigitalOcean：最简单的 UX + 可预测（本指南）
+- Hetzner：价格/性能更好（见 [Hetzner guide](/zh/platforms/hetzner)）
+- Oracle Cloud：可 $0/月，但更折腾且仅 ARM（见 [Oracle guide](/zh/platforms/oracle)）
 
 ---
 
-## Prerequisites
+## 前置条件
 
-- DigitalOcean account ([signup with $200 free credit](https://m.do.co/c/signup))
-- SSH key pair (or willingness to use password auth)
-- ~20 minutes
+- DigitalOcean 账号（[signup with $200 free credit](https://m.do.co/c/signup)）
+- SSH key（或愿意用密码登录）
+- ~20 分钟
 
-## 1) Create a Droplet
+## 1) 创建 Droplet
 
-1. Log into [DigitalOcean](https://cloud.digitalocean.com/)
-2. Click **Create → Droplets**
-3. Choose:
-   - **Region:** Closest to you (or your users)
-   - **Image:** Ubuntu 24.04 LTS
-   - **Size:** Basic → Regular → **$6/mo** (1 vCPU, 1GB RAM, 25GB SSD)
-   - **Authentication:** SSH key (recommended) or password
-4. Click **Create Droplet**
-5. Note the IP address
+1. 登录 [DigitalOcean](https://cloud.digitalocean.com/)
+2. 点击 **Create → Droplets**
+3. 选择：
+   - **Region：** 离你最近（或用户最近）
+   - **Image：** Ubuntu 24.04 LTS
+   - **Size：** Basic → Regular → **$6/mo**（1 vCPU，1GB RAM，25GB SSD）
+   - **Authentication：** SSH key（推荐）或密码
+4. 点击 **Create Droplet**
+5. 记下 IP 地址
 
-## 2) Connect via SSH
+## 2) 通过 SSH 连接
 
 ```bash
 ssh root@YOUR_DROPLET_IP
 ```
 
-## 3) Install OpenClaw
+## 3) 安装 OpenClaw
 
 ```bash
-# Update system
+# 更新系统
 apt update && apt upgrade -y
 
-# Install Node.js 22
+# 安装 Node.js 22
 curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
 apt install -y nodejs
 
-# Install OpenClaw
+# 安装 OpenClaw
 curl -fsSL https://openclaw.bot/install.sh | bash
 
-# Verify
+# 验证
 openclaw --version
 ```
 
-## 4) Run Onboarding
+## 4) 运行 Onboarding
 
 ```bash
 openclaw onboard --install-daemon
 ```
 
-The wizard will walk you through:
-- Model auth (API keys or OAuth)
-- Channel setup (Telegram, WhatsApp, Discord, etc.)
-- Gateway token (auto-generated)
-- Daemon installation (systemd)
+向导会引导完成：
+- 模型认证（API keys 或 OAuth）
+- 频道设置（Telegram、WhatsApp、Discord 等）
+- Gateway token（自动生成）
+- Daemon 安装（systemd）
 
-## 5) Verify the Gateway
+## 5) 验证 Gateway
 
 ```bash
-# Check status
+# 检查状态
 openclaw status
 
-# Check service
+# 检查服务
 systemctl --user status openclaw-gateway.service
 
-# View logs
+# 查看日志
 journalctl --user -u openclaw-gateway.service -f
 ```
 
-## 6) Access the Dashboard
+## 6) 访问 Dashboard
 
-The gateway binds to loopback by default. To access the Control UI:
+Gateway 默认绑定在 loopback。访问 Control UI：
 
-**Option A: SSH Tunnel (recommended)**
+**选项 A：SSH 隧道（推荐）**
 ```bash
-# From your local machine
+# 在本地机器
 ssh -L 18789:localhost:18789 root@YOUR_DROPLET_IP
 
-# Then open: http://localhost:18789
+# 然后打开：http://localhost:18789
 ```
 
-**Option B: Tailscale Serve (HTTPS, loopback-only)**
+**选项 B：Tailscale Serve（HTTPS，loopback-only）**
 ```bash
-# On the droplet
+# 在 droplet 上
 curl -fsSL https://tailscale.com/install.sh | sh
 tailscale up
 
-# Configure Gateway to use Tailscale Serve
+# 配置 Gateway 使用 Tailscale Serve
 openclaw config set gateway.tailscale.mode serve
 openclaw gateway restart
 ```
 
-Open: `https://<magicdns>/`
+打开：`https://<magicdns>/`
 
-Notes:
-- Serve keeps the Gateway loopback-only and authenticates via Tailscale identity headers.
-- To require token/password instead, set `gateway.auth.allowTailscale: false` or use `gateway.auth.mode: "password"`.
+注意：
+- Serve 让 Gateway 保持 loopback-only，并通过 Tailscale 身份头认证。
+- 若要 token/password 认证，设置 `gateway.auth.allowTailscale: false` 或 `gateway.auth.mode: "password"`。
 
-**Option C: Tailnet bind (no Serve)**
+**选项 C：Tailnet bind（不使用 Serve）**
 ```bash
 openclaw config set gateway.bind tailnet
 openclaw gateway restart
 ```
 
-Open: `http://<tailscale-ip>:18789` (token required).
+打开：`http://<tailscale-ip>:18789`（需要 token）。
 
-## 7) Connect Your Channels
+## 7) 连接你的频道
 
 ### Telegram
 ```bash
@@ -147,18 +147,18 @@ openclaw pairing approve telegram <CODE>
 ### WhatsApp
 ```bash
 openclaw channels login whatsapp
-# Scan QR code
+# 扫描二维码
 ```
 
-See [Channels](/channels) for other providers.
+其它 providers 见 [Channels](/zh/channels)。
 
 ---
 
-## Optimizations for 1GB RAM
+## 1GB RAM 优化
 
-The $6 droplet only has 1GB RAM. To keep things running smoothly:
+$6 的 droplet 只有 1GB RAM。保持稳定运行建议：
 
-### Add swap (recommended)
+### 添加 swap（推荐）
 ```bash
 fallocate -l 2G /swapfile
 chmod 600 /swapfile
@@ -167,12 +167,13 @@ swapon /swapfile
 echo '/swapfile none swap sw 0 0' >> /etc/fstab
 ```
 
-### Use a lighter model
-If you're hitting OOMs, consider:
-- Using API-based models (Claude, GPT) instead of local models
-- Setting `agents.defaults.model.primary` to a smaller model
+### 使用更轻量的模型
 
-### Monitor memory
+若出现 OOM，考虑：
+- 用 API 模型（Claude、GPT）替代本地模型
+- 将 `agents.defaults.model.primary` 设为更小模型
+
+### 监控内存
 ```bash
 free -h
 htop
@@ -180,67 +181,64 @@ htop
 
 ---
 
-## Persistence
+## 持久化
 
-All state lives in:
-- `~/.openclaw/` — config, credentials, session data
-- `~/.openclaw/workspace/` — workspace (SOUL.md, memory, etc.)
+所有状态位于：
+- `~/.openclaw/` — 配置、凭据、会话数据
+- `~/.openclaw/workspace/` — workspace（SOUL.md、memory 等）
 
-These survive reboots. Back them up periodically:
+这些会在重启后保留。定期备份：
 ```bash
 tar -czvf openclaw-backup.tar.gz ~/.openclaw ~/.openclaw/workspace
 ```
 
 ---
 
-## Oracle Cloud Free Alternative
+## Oracle Cloud 免费替代
 
-Oracle Cloud offers **Always Free** ARM instances that are significantly more powerful than any paid option here — for $0/month.
+Oracle Cloud 提供 **Always Free** ARM 实例，性能显著高于上述付费方案 —— $0/月。
 
 | What you get | Specs |
 |--------------|-------|
 | **4 OCPUs** | ARM Ampere A1 |
-| **24GB RAM** | More than enough |
-| **200GB storage** | Block volume |
-| **Forever free** | No credit card charges |
+| **24GB RAM** | 足够使用 |
+| **200GB storage** | 块存储 |
+| **Forever free** | 永久免费 |
 
-**Caveats:**
-- Signup can be finicky (retry if it fails)
-- ARM architecture — most things work, but some binaries need ARM builds
+**注意事项：**
+- 注册可能比较折腾（失败就重试）
+- ARM 架构 — 大多可用，但部分二进制需要 ARM 构建
 
-For the full setup guide, see [Oracle Cloud](/platforms/oracle). For signup tips and troubleshooting the enrollment process, see this [community guide](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
+完整指南见 [Oracle Cloud](/zh/platforms/oracle)。注册与排障提示见这个 [社区指南](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd)。
 
 ---
 
 ## Troubleshooting
 
-### Gateway won't start
+### Gateway 无法启动
 ```bash
 openclaw gateway status
 openclaw doctor --non-interactive
 journalctl -u openclaw --no-pager -n 50
 ```
 
-### Port already in use
+### 端口占用
 ```bash
 lsof -i :18789
 kill <PID>
 ```
 
-### Out of memory
+### 内存不足
 ```bash
-# Check memory
+# 查看内存
 free -h
 
-# Add more swap
-# Or upgrade to $12/mo droplet (2GB RAM)
+# 添加更多 swap
+# 或升级到 $12/mo droplet（2GB RAM）
 ```
 
 ---
 
 ## See Also
 
-- [Hetzner guide](/platforms/hetzner) — cheaper, more powerful
-- [Docker install](/install/docker) — containerized setup
-- [Tailscale](/gateway/tailscale) — secure remote access
-- [Configuration](/gateway/configuration) — full config reference
+- [Hetzner guide](/zh/platforms/hetzner) — 更便宜、性能更好

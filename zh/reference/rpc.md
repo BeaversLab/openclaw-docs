@@ -2,37 +2,37 @@
 > 本页正在翻译中。
 
 ---
-summary: "RPC adapters for external CLIs (signal-cli, imsg) and gateway patterns"
+summary: "外部 CLI（signal-cli、imsg）的 RPC 适配器与网关模式"
 read_when:
-  - Adding or changing external CLI integrations
-  - Debugging RPC adapters (signal-cli, imsg)
+  - 添加或修改外部 CLI 集成
+  - 调试 RPC 适配器（signal-cli、imsg）
 ---
-# RPC adapters
+# RPC 适配器
 
-OpenClaw integrates external CLIs via JSON-RPC. Two patterns are used today.
+OpenClaw 通过 JSON-RPC 集成外部 CLI。目前使用两种模式。
 
-## Pattern A: HTTP daemon (signal-cli)
-- `signal-cli` runs as a daemon with JSON-RPC over HTTP.
-- Event stream is SSE (`/api/v1/events`).
-- Health probe: `/api/v1/check`.
-- OpenClaw owns lifecycle when `channels.signal.autoStart=true`.
+## 模式 A：HTTP daemon（signal-cli）
+- `signal-cli` 以 daemon 运行，通过 HTTP 提供 JSON-RPC。
+- 事件流为 SSE（`/api/v1/events`）。
+- 健康探测：`/api/v1/check`。
+- 当 `channels.signal.autoStart=true` 时，OpenClaw 管理其生命周期。
 
-See [Signal](/channels/signal) for setup and endpoints.
+安装与端点参见 [Signal](/zh/channels/signal)。
 
-## Pattern B: stdio child process (imsg)
-- OpenClaw spawns `imsg rpc` as a child process.
-- JSON-RPC is line-delimited over stdin/stdout (one JSON object per line).
-- No TCP port, no daemon required.
+## 模式 B：stdio 子进程（imsg）
+- OpenClaw 启动 `imsg rpc` 作为子进程。
+- JSON-RPC 通过 stdin/stdout 行分隔传输（每行一个 JSON 对象）。
+- 无需 TCP 端口或 daemon。
 
-Core methods used:
-- `watch.subscribe` → notifications (`method: "message"`)
+使用的核心方法：
+- `watch.subscribe` → 通知（`method: "message"`）
 - `watch.unsubscribe`
 - `send`
-- `chats.list` (probe/diagnostics)
+- `chats.list`（探测/诊断）
 
-See [iMessage](/channels/imessage) for setup and addressing (`chat_id` preferred).
+安装与地址说明参见 [iMessage](/zh/channels/imessage)（推荐 `chat_id`）。
 
-## Adapter guidelines
-- Gateway owns the process (start/stop tied to provider lifecycle).
-- Keep RPC clients resilient: timeouts, restart on exit.
-- Prefer stable IDs (e.g., `chat_id`) over display strings.
+## 适配器指南
+- Gateway 管理进程（启动/停止与 provider 生命周期绑定）。
+- RPC 客户端要具备韧性：超时、进程退出重启。
+- 优先使用稳定 ID（如 `chat_id`）而非显示字符串。

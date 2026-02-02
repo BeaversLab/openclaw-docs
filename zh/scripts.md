@@ -2,33 +2,32 @@
 > 本页正在翻译中。
 
 ---
-summary: "Repository scripts: purpose, scope, and safety notes"
+summary: "仓库脚本：用途、范围与安全说明"
 read_when:
-  - Running scripts from the repo
-  - Adding or changing scripts under ./scripts
+  - 运行仓库中的脚本
+  - 在 ./scripts 下新增或修改脚本
 ---
 # Scripts
 
-The `scripts/` directory contains helper scripts for local workflows and ops tasks.
-Use these when a task is clearly tied to a script; otherwise prefer the CLI.
+`scripts/` 目录包含本地工作流与运维任务的辅助脚本。任务明确对应脚本时使用，否则优先使用 CLI。
 
-## Conventions
+## 约定
 
-- Scripts are **optional** unless referenced in docs or release checklists.
-- Prefer CLI surfaces when they exist (example: auth monitoring uses `openclaw models status --check`).
-- Assume scripts are host‑specific; read them before running on a new machine.
+- 除非文档或发布清单引用，脚本 **可选**。
+- 若已有 CLI 接口，优先使用（例如认证监控使用 `openclaw models status --check`）。
+- 假定脚本与主机相关；在新机器上运行前先阅读。
 
 ## Git hooks
 
-- `scripts/setup-git-hooks.js`: best-effort setup for `core.hooksPath` when inside a git repo.
-- `scripts/format-staged.js`: pre-commit formatter for staged `src/` and `test/` files.
+- `scripts/setup-git-hooks.js`：在 git 仓库内尽力设置 `core.hooksPath`。
+- `scripts/format-staged.js`：对已暂存的 `src/` 与 `test/` 文件进行 pre-commit 格式化。
 
-## Auth monitoring scripts
+## 认证监控脚本
 
-Auth monitoring scripts are documented here:
-[/automation/auth-monitoring](/automation/auth-monitoring)
+认证监控脚本文档见：
+[/automation/auth-monitoring](/zh/automation/auth-monitoring)
 
-## When adding scripts
+## 新增脚本时
 
-- Keep scripts focused and documented.
-- Add a short entry in the relevant doc (or create one if missing).
+- 保持脚本聚焦并有文档说明。
+- 在相关文档中添加简短条目（如无则创建）。

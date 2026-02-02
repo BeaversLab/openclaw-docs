@@ -2,37 +2,34 @@
 > 本页正在翻译中。
 
 ---
-summary: "Integrated browser control service + action commands"
+summary: "集成的浏览器控制服务 + 动作命令"
 read_when:
-  - Adding agent-controlled browser automation
-  - Debugging why openclaw is interfering with your own Chrome
-  - Implementing browser settings + lifecycle in the macOS app
+  - 添加 agent 控制的浏览器自动化
+  - 排查 openclaw 干扰你自己的 Chrome
+  - 在 macOS 应用中实现浏览器设置与生命周期
 ---
 
-# Browser (openclaw-managed)
+# 浏览器（openclaw 管理）
 
-OpenClaw can run a **dedicated Chrome/Brave/Edge/Chromium profile** that the agent controls.
-It is isolated from your personal browser and is managed through a small local
-control service inside the Gateway (loopback only).
+OpenClaw 可以运行一个 **独立的 Chrome/Brave/Edge/Chromium profile** 供 agent 控制。
+它与个人浏览器隔离，并通过 Gateway 内部的本地控制服务管理（仅回环）。
 
-Beginner view:
-- Think of it as a **separate, agent-only browser**.
-- The `openclaw` profile does **not** touch your personal browser profile.
-- The agent can **open tabs, read pages, click, and type** in a safe lane.
-- The default `chrome` profile uses the **system default Chromium browser** via the
-  extension relay; switch to `openclaw` for the isolated managed browser.
+新手视角：
+- 把它理解为 **一个只给 agent 用的独立浏览器**。
+- `openclaw` profile **不会**触碰你的个人浏览器 profile。
+- agent 可以在安全通道中 **打开标签、读取页面、点击和输入**。
+- 默认 `chrome` profile 使用 **系统默认 Chromium 浏览器** 通过扩展中继；若要隔离的托管浏览器，请切换到 `openclaw`。
 
-## What you get
+## 你会得到什么
 
-- A separate browser profile named **openclaw** (orange accent by default).
-- Deterministic tab control (list/open/focus/close).
-- Agent actions (click/type/drag/select), snapshots, screenshots, PDFs.
-- Optional multi-profile support (`openclaw`, `work`, `remote`, ...).
+- 一个名为 **openclaw** 的独立浏览器 profile（默认橙色强调）。
+- 可确定的标签控制（列出/打开/聚焦/关闭）。
+- agent 动作（点击/输入/拖拽/选择），快照、截图、PDF。
+- 可选多 profile 支持（`openclaw`、`work`、`remote` 等）。
 
-This browser is **not** your daily driver. It is a safe, isolated surface for
-agent automation and verification.
+这个浏览器 **不是**你的日常主浏览器。它是一个安全隔离的自动化与验证界面。
 
-## Quick start
+## 快速开始
 
 ```bash
 openclaw browser --browser-profile openclaw status
@@ -41,20 +38,18 @@ openclaw browser --browser-profile openclaw open https://example.com
 openclaw browser --browser-profile openclaw snapshot
 ```
 
-If you get “Browser disabled”, enable it in config (see below) and restart the
-Gateway.
+如果出现“Browser disabled”，请在配置中启用（见下）并重启 Gateway。
 
-## Profiles: `openclaw` vs `chrome`
+## Profiles：`openclaw` vs `chrome`
 
-- `openclaw`: managed, isolated browser (no extension required).
-- `chrome`: extension relay to your **system browser** (requires the OpenClaw
-  extension to be attached to a tab).
+- `openclaw`：托管、隔离浏览器（无需扩展）。
+- `chrome`：扩展中继到你的 **系统浏览器**（需要 OpenClaw 扩展附加到某个标签）。
 
-Set `browser.defaultProfile: "openclaw"` if you want managed mode by default.
+如果你想默认使用托管模式，设置 `browser.defaultProfile: "openclaw"`。
 
-## Configuration
+## 配置
 
-Browser settings live in `~/.openclaw/openclaw.json`.
+浏览器设置在 `~/.openclaw/openclaw.json`。
 
 ```json5
 {
@@ -78,27 +73,23 @@ Browser settings live in `~/.openclaw/openclaw.json`.
 }
 ```
 
-Notes:
-- The browser control service binds to loopback on a port derived from `gateway.port`
-  (default: `18791`, which is gateway + 2). The relay uses the next port (`18792`).
-- If you override the Gateway port (`gateway.port` or `OPENCLAW_GATEWAY_PORT`),
-  the derived browser ports shift to stay in the same “family”.
-- `cdpUrl` defaults to the relay port when unset.
-- `remoteCdpTimeoutMs` applies to remote (non-loopback) CDP reachability checks.
-- `remoteCdpHandshakeTimeoutMs` applies to remote CDP WebSocket reachability checks.
-- `attachOnly: true` means “never launch a local browser; only attach if it is already running.”
-- `color` + per-profile `color` tint the browser UI so you can see which profile is active.
-- Default profile is `chrome` (extension relay). Use `defaultProfile: "openclaw"` for the managed browser.
-- Auto-detect order: system default browser if Chromium-based; otherwise Chrome → Brave → Edge → Chromium → Chrome Canary.
-- Local `openclaw` profiles auto-assign `cdpPort`/`cdpUrl` — set those only for remote CDP.
+说明：
+- 浏览器控制服务绑定到由 `gateway.port` 派生的回环端口（默认 `18791`，即 gateway + 2）。中继使用下一个端口（`18792`）。
+- 若覆盖 Gateway 端口（`gateway.port` 或 `OPENCLAW_GATEWAY_PORT`），派生浏览器端口会随之偏移以保持同一“端口族”。
+- `cdpUrl` 在未设置时默认使用中继端口。
+- `remoteCdpTimeoutMs` 用于远程（非回环）CDP 可达性检查的 HTTP 超时。
+- `remoteCdpHandshakeTimeoutMs` 用于远程 CDP WebSocket 可达性检查的握手超时。
+- `attachOnly: true` 表示“永不启动本地浏览器；仅在浏览器已运行时附加”。
+- `color` 与每个 profile 的 `color` 会为浏览器 UI 着色，便于识别当前 profile。
+- 默认 profile 是 `chrome`（扩展中继）。若要托管浏览器，设置 `defaultProfile: "openclaw"`。
+- 自动探测顺序：系统默认浏览器（若是 Chromium 内核）；否则 Chrome → Brave → Edge → Chromium → Chrome Canary。
+- 本地 `openclaw` profile 会自动分配 `cdpPort`/`cdpUrl` —— 仅在远程 CDP 时才需手动设置。
 
-## Use Brave (or another Chromium-based browser)
+## 使用 Brave（或其它 Chromium 浏览器）
 
-If your **system default** browser is Chromium-based (Chrome/Brave/Edge/etc),
-OpenClaw uses it automatically. Set `browser.executablePath` to override
-auto-detection:
+如果你的 **系统默认** 浏览器是 Chromium 内核（Chrome/Brave/Edge 等），OpenClaw 会自动使用它。可用 `browser.executablePath` 覆盖自动探测：
 
-CLI example:
+CLI 示例：
 
 ```bash
 openclaw config set browser.executablePath "/usr/bin/google-chrome"
@@ -115,7 +106,7 @@ openclaw config set browser.executablePath "/usr/bin/google-chrome"
 // Windows
 {
   browser: {
-    executablePath: "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
+    executablePath: "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
   }
 }
 
@@ -127,41 +118,34 @@ openclaw config set browser.executablePath "/usr/bin/google-chrome"
 }
 ```
 
-## Local vs remote control
+## 本地 vs 远程控制
 
-- **Local control (default):** the Gateway starts the loopback control service and can launch a local browser.
-- **Remote control (node host):** run a node host on the machine that has the browser; the Gateway proxies browser actions to it.
-- **Remote CDP:** set `browser.profiles.<name>.cdpUrl` (or `browser.cdpUrl`) to
-  attach to a remote Chromium-based browser. In this case, OpenClaw will not launch a local browser.
+- **本地控制（默认）：** Gateway 启动回环控制服务，并可启动本地浏览器。
+- **远程控制（node host）：** 在有浏览器的机器上运行 node host；Gateway 将浏览器动作代理给它。
+- **远程 CDP：** 设置 `browser.profiles.<name>.cdpUrl`（或 `browser.cdpUrl`）以附加到远程 Chromium 浏览器。在此模式下，OpenClaw 不会启动本地浏览器。
 
-Remote CDP URLs can include auth:
-- Query tokens (e.g., `https://provider.example?token=<token>`)
-- HTTP Basic auth (e.g., `https://user:pass@provider.example`)
+远程 CDP URL 可以包含认证：
+- 查询令牌（例如 `https://provider.example?token=<token>`）
+- HTTP Basic auth（例如 `https://user:pass@provider.example`）
 
-OpenClaw preserves the auth when calling `/json/*` endpoints and when connecting
-to the CDP WebSocket. Prefer environment variables or secrets managers for
-tokens instead of committing them to config files.
+OpenClaw 在调用 `/json/*` 端点和连接 CDP WebSocket 时会保留认证信息。对 token 请优先使用环境变量或密钥管理器，不要提交到配置文件中。
 
-## Node browser proxy (zero-config default)
+## Node 浏览器代理（零配置默认）
 
-If you run a **node host** on the machine that has your browser, OpenClaw can
-auto-route browser tool calls to that node without any extra browser config.
-This is the default path for remote gateways.
+如果你在有浏览器的机器上运行了 **node host**，OpenClaw 可无需额外浏览器配置就自动将浏览器工具调用路由到该节点。这是远程 Gateway 的默认路径。
 
-Notes:
-- The node host exposes its local browser control server via a **proxy command**.
-- Profiles come from the node’s own `browser.profiles` config (same as local).
-- Disable if you don’t want it:
-  - On the node: `nodeHost.browserProxy.enabled=false`
-  - On the gateway: `gateway.nodes.browser.mode="off"`
+说明：
+- node host 通过 **代理命令** 暴露其本地浏览器控制服务。
+- Profile 来自节点自己的 `browser.profiles` 配置（与本地相同）。
+- 如果你不希望使用它：
+  - 在节点上：`nodeHost.browserProxy.enabled=false`
+  - 在网关上：`gateway.nodes.browser.mode="off"`
 
-## Browserless (hosted remote CDP)
+## Browserless（托管的远程 CDP）
 
-[Browserless](https://browserless.io) is a hosted Chromium service that exposes
-CDP endpoints over HTTPS. You can point a OpenClaw browser profile at a
-Browserless region endpoint and authenticate with your API key.
+[Browserless](https://browserless.io) 是托管的 Chromium 服务，通过 HTTPS 暴露 CDP 端点。你可以把 OpenClaw 浏览器 profile 指向 Browserless 的区域端点，并用 API key 认证。
 
-Example:
+示例：
 ```json5
 {
   browser: {
@@ -179,157 +163,146 @@ Example:
 }
 ```
 
-Notes:
-- Replace `<BROWSERLESS_API_KEY>` with your real Browserless token.
-- Choose the region endpoint that matches your Browserless account (see their docs).
+说明：
+- 将 `<BROWSERLESS_API_KEY>` 替换为你的 Browserless token。
+- 选择与你的 Browserless 账号匹配的区域端点（见其文档）。
 
-## Security
+## 安全性
 
-Key ideas:
-- Browser control is loopback-only; access flows through the Gateway’s auth or node pairing.
-- Keep the Gateway and any node hosts on a private network (Tailscale); avoid public exposure.
-- Treat remote CDP URLs/tokens as secrets; prefer env vars or a secrets manager.
+核心要点：
+- 浏览器控制仅限回环；访问流经 Gateway 的认证或 node 配对。
+- 将 Gateway 与任何 node host 保持在私有网络（Tailscale），避免公网暴露。
+- 将远程 CDP URL/token 当作机密；优先使用环境变量或密钥管理器。
 
-Remote CDP tips:
-- Prefer HTTPS endpoints and short-lived tokens where possible.
-- Avoid embedding long-lived tokens directly in config files.
+远程 CDP 建议：
+- 尽量使用 HTTPS 端点与短期 token。
+- 避免把长期 token 直接写进配置文件。
 
-## Profiles (multi-browser)
+## Profiles（多浏览器）
 
-OpenClaw supports multiple named profiles (routing configs). Profiles can be:
-- **openclaw-managed**: a dedicated Chromium-based browser instance with its own user data directory + CDP port
-- **remote**: an explicit CDP URL (Chromium-based browser running elsewhere)
-- **extension relay**: your existing Chrome tab(s) via the local relay + Chrome extension
+OpenClaw 支持多个命名 profile（路由配置）。Profile 可以是：
+- **openclaw-managed**：独立的 Chromium 浏览器实例，拥有自己的用户数据目录 + CDP 端口
+- **remote**：显式 CDP URL（浏览器在其它机器）
+- **extension relay**：通过本地中继 + Chrome 扩展控制你现有的 Chrome 标签页
 
-Defaults:
-- The `openclaw` profile is auto-created if missing.
-- The `chrome` profile is built-in for the Chrome extension relay (points at `http://127.0.0.1:18792` by default).
-- Local CDP ports allocate from **18800–18899** by default.
-- Deleting a profile moves its local data directory to Trash.
+默认值：
+- 若缺少 `openclaw` profile，会自动创建。
+- `chrome` profile 为 Chrome 扩展中继的内置 profile（默认指向 `http://127.0.0.1:18792`）。
+- 本地 CDP 端口默认分配自 **18800–18899**。
+- 删除 profile 会将其本地数据目录移到废纸篓。
 
-All control endpoints accept `?profile=<name>`; the CLI uses `--browser-profile`.
+所有控制端点都接受 `?profile=<name>`；CLI 使用 `--browser-profile`。
 
-## Chrome extension relay (use your existing Chrome)
+## Chrome 扩展中继（使用你现有的 Chrome）
 
-OpenClaw can also drive **your existing Chrome tabs** (no separate “openclaw” Chrome instance) via a local CDP relay + a Chrome extension.
+OpenClaw 也可以通过本地 CDP 中继 + Chrome 扩展驱动 **你现有的 Chrome 标签页**（无需单独的“openclaw”Chrome 实例）。
 
-Full guide: [Chrome extension](/tools/chrome-extension)
+完整指南：[Chrome 扩展](/zh/tools/chrome-extension)
 
-Flow:
-- The Gateway runs locally (same machine) or a node host runs on the browser machine.
-- A local **relay server** listens at a loopback `cdpUrl` (default: `http://127.0.0.1:18792`).
-- You click the **OpenClaw Browser Relay** extension icon on a tab to attach (it does not auto-attach).
-- The agent controls that tab via the normal `browser` tool, by selecting the right profile.
+流程：
+- Gateway 在本机运行（同一台机器），或者在浏览器机器上运行 node host。
+- 本地 **中继服务器** 监听一个回环 `cdpUrl`（默认 `http://127.0.0.1:18792`）。
+- 你在某个标签页点击 **OpenClaw Browser Relay** 扩展图标来附加（不会自动附加）。
+- agent 通过常规 `browser` 工具，选择正确 profile 来控制该标签页。
 
-If the Gateway runs elsewhere, run a node host on the browser machine so the Gateway can proxy browser actions.
+如果 Gateway 在其他机器上运行，请在浏览器所在机器上运行 node host，以便 Gateway 代理浏览器动作。
 
-### Sandboxed sessions
+### 沙箱会话
 
-If the agent session is sandboxed, the `browser` tool may default to `target="sandbox"` (sandbox browser).
-Chrome extension relay takeover requires host browser control, so either:
-- run the session unsandboxed, or
-- set `agents.defaults.sandbox.browser.allowHostControl: true` and use `target="host"` when calling the tool.
+如果 agent 会话是沙箱化的，`browser` 工具可能默认使用 `target="sandbox"`（沙箱浏览器）。Chrome 扩展中继接管需要宿主机浏览器控制，因此要么：
+- 让会话非沙箱化，或
+- 设置 `agents.defaults.sandbox.browser.allowHostControl: true` 并在调用工具时使用 `target="host"`。
 
-### Setup
+### 设置
 
-1) Load the extension (dev/unpacked):
+1) 加载扩展（dev/未打包）：
 
 ```bash
 openclaw browser extension install
 ```
 
-- Chrome → `chrome://extensions` → enable “Developer mode”
-- “Load unpacked” → select the directory printed by `openclaw browser extension path`
-- Pin the extension, then click it on the tab you want to control (badge shows `ON`).
+- Chrome → `chrome://extensions` → 启用“开发者模式”
+- “加载已解压的扩展程序” → 选择 `openclaw browser extension path` 打印的目录
+- 固定扩展，然后在想控制的标签页点击它（徽标显示 `ON`）
 
-2) Use it:
-- CLI: `openclaw browser --browser-profile chrome tabs`
-- Agent tool: `browser` with `profile="chrome"`
+2) 使用它：
+- CLI：`openclaw browser --browser-profile chrome tabs`
+- Agent 工具：`browser`，`profile="chrome"`
 
-Optional: if you want a different name or relay port, create your own profile:
+可选：如果你想用不同名称或中继端口，创建自己的 profile：
 
 ```bash
-openclaw browser create-profile \
-  --name my-chrome \
-  --driver extension \
-  --cdp-url http://127.0.0.1:18792 \
-  --color "#00AA00"
+openclaw browser create-profile   --name my-chrome   --driver extension   --cdp-url http://127.0.0.1:18792   --color "#00AA00"
 ```
 
-Notes:
-- This mode relies on Playwright-on-CDP for most operations (screenshots/snapshots/actions).
-- Detach by clicking the extension icon again.
+说明：
+- 此模式对大多数操作依赖 Playwright-on-CDP（截图/快照/动作）。
+- 再次点击扩展图标即可断开。
 
-## Isolation guarantees
+## 隔离保证
 
-- **Dedicated user data dir**: never touches your personal browser profile.
-- **Dedicated ports**: avoids `9222` to prevent collisions with dev workflows.
-- **Deterministic tab control**: target tabs by `targetId`, not “last tab”.
+- **独立用户数据目录**：不会触碰你的个人浏览器 profile。
+- **独立端口**：避免使用 `9222`，减少与开发工作流冲突。
+- **确定性的标签控制**：以 `targetId` 为目标，而不是“最近的标签”。
 
-## Browser selection
+## 浏览器选择
 
-When launching locally, OpenClaw picks the first available:
+本地启动时，OpenClaw 会按顺序选择第一个可用浏览器：
 1. Chrome
 2. Brave
 3. Edge
 4. Chromium
 5. Chrome Canary
 
-You can override with `browser.executablePath`.
+你可以用 `browser.executablePath` 覆盖。
 
-Platforms:
-- macOS: checks `/Applications` and `~/Applications`.
-- Linux: looks for `google-chrome`, `brave`, `microsoft-edge`, `chromium`, etc.
-- Windows: checks common install locations.
+平台：
+- macOS：检查 `/Applications` 与 `~/Applications`。
+- Linux：查找 `google-chrome`、`brave`、`microsoft-edge`、`chromium` 等。
+- Windows：检查常见安装位置。
 
-## Control API (optional)
+## 控制 API（可选）
 
-For local integrations only, the Gateway exposes a small loopback HTTP API:
+仅用于本地集成时，Gateway 暴露一个小型回环 HTTP API：
 
-- Status/start/stop: `GET /`, `POST /start`, `POST /stop`
-- Tabs: `GET /tabs`, `POST /tabs/open`, `POST /tabs/focus`, `DELETE /tabs/:targetId`
-- Snapshot/screenshot: `GET /snapshot`, `POST /screenshot`
-- Actions: `POST /navigate`, `POST /act`
-- Hooks: `POST /hooks/file-chooser`, `POST /hooks/dialog`
-- Downloads: `POST /download`, `POST /wait/download`
-- Debugging: `GET /console`, `POST /pdf`
-- Debugging: `GET /errors`, `GET /requests`, `POST /trace/start`, `POST /trace/stop`, `POST /highlight`
-- Network: `POST /response/body`
-- State: `GET /cookies`, `POST /cookies/set`, `POST /cookies/clear`
-- State: `GET /storage/:kind`, `POST /storage/:kind/set`, `POST /storage/:kind/clear`
-- Settings: `POST /set/offline`, `POST /set/headers`, `POST /set/credentials`, `POST /set/geolocation`, `POST /set/media`, `POST /set/timezone`, `POST /set/locale`, `POST /set/device`
+- 状态/启动/停止：`GET /`、`POST /start`、`POST /stop`
+- 标签页：`GET /tabs`、`POST /tabs/open`、`POST /tabs/focus`、`DELETE /tabs/:targetId`
+- 快照/截图：`GET /snapshot`、`POST /screenshot`
+- 动作：`POST /navigate`、`POST /act`
+- Hooks：`POST /hooks/file-chooser`、`POST /hooks/dialog`
+- 下载：`POST /download`、`POST /wait/download`
+- 调试：`GET /console`、`POST /pdf`
+- 调试：`GET /errors`、`GET /requests`、`POST /trace/start`、`POST /trace/stop`、`POST /highlight`
+- 网络：`POST /response/body`
+- 状态：`GET /cookies`、`POST /cookies/set`、`POST /cookies/clear`
+- 状态：`GET /storage/:kind`、`POST /storage/:kind/set`、`POST /storage/:kind/clear`
+- 设置：`POST /set/offline`、`POST /set/headers`、`POST /set/credentials`、`POST /set/geolocation`、`POST /set/media`、`POST /set/timezone`、`POST /set/locale`、`POST /set/device`
 
-All endpoints accept `?profile=<name>`.
+所有端点都接受 `?profile=<name>`。
 
-### Playwright requirement
+### Playwright 要求
 
-Some features (navigate/act/AI snapshot/role snapshot, element screenshots, PDF) require
-Playwright. If Playwright isn’t installed, those endpoints return a clear 501
-error. ARIA snapshots and basic screenshots still work for openclaw-managed Chrome.
-For the Chrome extension relay driver, ARIA snapshots and screenshots require Playwright.
+部分功能（navigate/act/AI snapshot/role snapshot、元素截图、PDF）需要 Playwright。若未安装 Playwright，这些端点会返回明确的 501 错误。openclaw 托管的 Chrome 仍可用 ARIA 快照与基础截图。
+对于 Chrome 扩展中继驱动，ARIA 快照与截图也需要 Playwright。
 
-If you see `Playwright is not available in this gateway build`, install the full
-Playwright package (not `playwright-core`) and restart the gateway, or reinstall
-OpenClaw with browser support.
+如果看到 `Playwright is not available in this gateway build`，请安装完整的 Playwright 包（不是 `playwright-core`），并重启 gateway，或重新安装带浏览器支持的 OpenClaw。
 
-## How it works (internal)
+## 工作原理（内部）
 
-High-level flow:
-- A small **control server** accepts HTTP requests.
-- It connects to Chromium-based browsers (Chrome/Brave/Edge/Chromium) via **CDP**.
-- For advanced actions (click/type/snapshot/PDF), it uses **Playwright** on top
-  of CDP.
-- When Playwright is missing, only non-Playwright operations are available.
+高层流程：
+- 一个小型 **控制服务器** 接收 HTTP 请求。
+- 它通过 **CDP** 连接到 Chromium 浏览器（Chrome/Brave/Edge/Chromium）。
+- 对高级动作（点击/输入/快照/PDF），在 CDP 之上使用 **Playwright**。
+- 当缺少 Playwright 时，仅提供非 Playwright 操作。
 
-This design keeps the agent on a stable, deterministic interface while letting
-you swap local/remote browsers and profiles.
+此设计让 agent 使用稳定、确定的接口，同时允许你替换本地/远程浏览器与 profile。
 
-## CLI quick reference
+## CLI 快速参考
 
-All commands accept `--browser-profile <name>` to target a specific profile.
-All commands also accept `--json` for machine-readable output (stable payloads).
+所有命令都接受 `--browser-profile <name>` 指定 profile。
+所有命令也接受 `--json` 输出机器可读结果（稳定 payload）。
 
-Basics:
+基础：
 - `openclaw browser status`
 - `openclaw browser start`
 - `openclaw browser stop`
@@ -342,7 +315,7 @@ Basics:
 - `openclaw browser focus abcd1234`
 - `openclaw browser close abcd1234`
 
-Inspection:
+检查：
 - `openclaw browser screenshot`
 - `openclaw browser screenshot --full-page`
 - `openclaw browser screenshot --ref 12`
@@ -360,7 +333,7 @@ Inspection:
 - `openclaw browser pdf`
 - `openclaw browser responsebody "**/api" --max-chars 5000`
 
-Actions:
+动作：
 - `openclaw browser navigate https://example.com`
 - `openclaw browser resize 1280 720`
 - `openclaw browser click 12 --double`
@@ -383,7 +356,7 @@ Actions:
 - `openclaw browser trace start`
 - `openclaw browser trace stop`
 
-State:
+状态：
 - `openclaw browser cookies`
 - `openclaw browser cookies set session abc123 --url "https://example.com"`
 - `openclaw browser cookies clear`
@@ -401,84 +374,79 @@ State:
 - `openclaw browser set locale en-US`
 - `openclaw browser set device "iPhone 14"`
 
-Notes:
-- `upload` and `dialog` are **arming** calls; run them before the click/press
-  that triggers the chooser/dialog.
-- `upload` can also set file inputs directly via `--input-ref` or `--element`.
-- `snapshot`:
-  - `--format ai` (default when Playwright is installed): returns an AI snapshot with numeric refs (`aria-ref="<n>"`).
-  - `--format aria`: returns the accessibility tree (no refs; inspection only).
-  - `--efficient` (or `--mode efficient`): compact role snapshot preset (interactive + compact + depth + lower maxChars).
-  - Config default (tool/CLI only): set `browser.snapshotDefaults.mode: "efficient"` to use efficient snapshots when the caller does not pass a mode (see [Gateway configuration](/gateway/configuration#browser-openclaw-managed-browser)).
-  - Role snapshot options (`--interactive`, `--compact`, `--depth`, `--selector`) force a role-based snapshot with refs like `ref=e12`.
-  - `--frame "<iframe selector>"` scopes role snapshots to an iframe (pairs with role refs like `e12`).
-  - `--interactive` outputs a flat, easy-to-pick list of interactive elements (best for driving actions).
-  - `--labels` adds a viewport-only screenshot with overlayed ref labels (prints `MEDIA:<path>`).
-- `click`/`type`/etc require a `ref` from `snapshot` (either numeric `12` or role ref `e12`).
-  CSS selectors are intentionally not supported for actions.
+说明：
+- `upload` 与 `dialog` 是 **预置** 调用；需在触发选择器/对话框的点击/按键之前运行。
+- `upload` 也可通过 `--input-ref` 或 `--element` 直接设置文件输入。
+- `snapshot`：
+  - `--format ai`（默认，Playwright 已安装时）：返回带数字 ref 的 AI 快照（`aria-ref="<n>"`）。
+  - `--format aria`：返回无 ref 的可访问性树（仅用于检查）。
+  - `--efficient`（或 `--mode efficient`）：紧凑的 role 快照预设（interactive + compact + depth + 更低 maxChars）。
+  - 配置默认（仅 tool/CLI）：设置 `browser.snapshotDefaults.mode: "efficient"`，当调用方未传 mode 时使用高效快照（见 [Gateway configuration](/zh/gateway/configuration#browser-openclaw-managed-browser)）。
+  - Role 快照选项（`--interactive`、`--compact`、`--depth`、`--selector`）会强制 role 快照并生成如 `ref=e12` 的 ref。
+  - `--frame "<iframe selector>"` 将 role 快照限定在某个 iframe（与 `e12` 等 role ref 配对）。
+  - `--interactive` 输出扁平化的交互元素列表（最适合驱动动作）。
+  - `--labels` 会输出带 ref 覆盖标签的视口截图（打印 `MEDIA:<path>`）。
+- `click`/`type` 等需要来自 `snapshot` 的 `ref`（数字 `12` 或 role ref `e12`）。
+  动作不支持 CSS 选择器是刻意为之。
 
-## Snapshots and refs
+## 快照与 ref
 
-OpenClaw supports two “snapshot” styles:
+OpenClaw 支持两种“快照”风格：
 
-- **AI snapshot (numeric refs)**: `openclaw browser snapshot` (default; `--format ai`)
-  - Output: a text snapshot that includes numeric refs.
-  - Actions: `openclaw browser click 12`, `openclaw browser type 23 "hello"`.
-  - Internally, the ref is resolved via Playwright’s `aria-ref`.
+- **AI 快照（数字 ref）**：`openclaw browser snapshot`（默认；`--format ai`）
+  - 输出：包含数字 ref 的文本快照。
+  - 动作：`openclaw browser click 12`、`openclaw browser type 23 "hello"`。
+  - 内部：ref 由 Playwright 的 `aria-ref` 解析。
 
-- **Role snapshot (role refs like `e12`)**: `openclaw browser snapshot --interactive` (or `--compact`, `--depth`, `--selector`, `--frame`)
-  - Output: a role-based list/tree with `[ref=e12]` (and optional `[nth=1]`).
-  - Actions: `openclaw browser click e12`, `openclaw browser highlight e12`.
-  - Internally, the ref is resolved via `getByRole(...)` (plus `nth()` for duplicates).
-  - Add `--labels` to include a viewport screenshot with overlayed `e12` labels.
+- **Role 快照（role ref 如 `e12`）**：`openclaw browser snapshot --interactive`（或 `--compact`、`--depth`、`--selector`、`--frame`）
+  - 输出：带 `[ref=e12]`（可选 `[nth=1]`）的 role 列表/树。
+  - 动作：`openclaw browser click e12`、`openclaw browser highlight e12`。
+  - 内部：ref 通过 `getByRole(...)` 解析（重复项再叠加 `nth()`）。
+  - 使用 `--labels` 可附带带有 `e12` 标签的视口截图。
 
-Ref behavior:
-- Refs are **not stable across navigations**; if something fails, re-run `snapshot` and use a fresh ref.
-- If the role snapshot was taken with `--frame`, role refs are scoped to that iframe until the next role snapshot.
+ref 行为：
+- ref **不会跨导航保持稳定**；若失败，请重新 `snapshot` 并使用新的 ref。
+- 如果 role 快照使用 `--frame`，role ref 会限定在该 iframe 内，直到下一次 role 快照。
 
-## Wait power-ups
+## Wait 加成
 
-You can wait on more than just time/text:
+你可以等待的不只是时间/文本：
 
-- Wait for URL (globs supported by Playwright):
+- 等待 URL（Playwright 支持 glob）：
   - `openclaw browser wait --url "**/dash"`
-- Wait for load state:
+- 等待加载状态：
   - `openclaw browser wait --load networkidle`
-- Wait for a JS predicate:
+- 等待 JS 条件：
   - `openclaw browser wait --fn "window.ready===true"`
-- Wait for a selector to become visible:
+- 等待选择器可见：
   - `openclaw browser wait "#main"`
 
-These can be combined:
+这些可以组合：
 
 ```bash
-openclaw browser wait "#main" \
-  --url "**/dash" \
-  --load networkidle \
-  --fn "window.ready===true" \
-  --timeout-ms 15000
+openclaw browser wait "#main"   --url "**/dash"   --load networkidle   --fn "window.ready===true"   --timeout-ms 15000
 ```
 
-## Debug workflows
+## 调试流程
 
-When an action fails (e.g. “not visible”, “strict mode violation”, “covered”):
+当动作失败（如 “not visible”、“strict mode violation”、“covered”）：
 
 1. `openclaw browser snapshot --interactive`
-2. Use `click <ref>` / `type <ref>` (prefer role refs in interactive mode)
-3. If it still fails: `openclaw browser highlight <ref>` to see what Playwright is targeting
-4. If the page behaves oddly:
+2. 使用 `click <ref>` / `type <ref>`（交互模式优先使用 role ref）
+3. 若仍失败：`openclaw browser highlight <ref>` 查看 Playwright 目标
+4. 页面异常时：
    - `openclaw browser errors --clear`
    - `openclaw browser requests --filter api --clear`
-5. For deep debugging: record a trace:
+5. 深度调试：录制 trace：
    - `openclaw browser trace start`
-   - reproduce the issue
-   - `openclaw browser trace stop` (prints `TRACE:<path>`)
+   - 复现问题
+   - `openclaw browser trace stop`（打印 `TRACE:<path>`）
 
-## JSON output
+## JSON 输出
 
-`--json` is for scripting and structured tooling.
+`--json` 适用于脚本和结构化工具。
 
-Examples:
+示例：
 
 ```bash
 openclaw browser status --json
@@ -487,53 +455,52 @@ openclaw browser requests --filter api --json
 openclaw browser cookies --json
 ```
 
-Role snapshots in JSON include `refs` plus a small `stats` block (lines/chars/refs/interactive) so tools can reason about payload size and density.
+JSON 的 role 快照包含 `refs` 与一个小型 `stats` 块（lines/chars/refs/interactive），便于工具评估 payload 大小和密度。
 
-## State and environment knobs
+## 状态与环境旋钮
 
-These are useful for “make the site behave like X” workflows:
+这些对“让网站表现为某种环境”很有用：
 
-- Cookies: `cookies`, `cookies set`, `cookies clear`
-- Storage: `storage local|session get|set|clear`
-- Offline: `set offline on|off`
-- Headers: `set headers --json '{"X-Debug":"1"}'` (or `--clear`)
-- HTTP basic auth: `set credentials user pass` (or `--clear`)
-- Geolocation: `set geo <lat> <lon> --origin "https://example.com"` (or `--clear`)
-- Media: `set media dark|light|no-preference|none`
-- Timezone / locale: `set timezone ...`, `set locale ...`
-- Device / viewport:
-  - `set device "iPhone 14"` (Playwright device presets)
+- Cookies：`cookies`、`cookies set`、`cookies clear`
+- Storage：`storage local|session get|set|clear`
+- Offline：`set offline on|off`
+- Headers：`set headers --json '{"X-Debug":"1"}'`（或 `--clear`）
+- HTTP basic auth：`set credentials user pass`（或 `--clear`）
+- Geolocation：`set geo <lat> <lon> --origin "https://example.com"`（或 `--clear`）
+- Media：`set media dark|light|no-preference|none`
+- Timezone / locale：`set timezone ...`、`set locale ...`
+- Device / viewport：
+  - `set device "iPhone 14"`（Playwright 设备预设）
   - `set viewport 1280 720`
 
-## Security & privacy
+## 安全与隐私
 
-- The openclaw browser profile may contain logged-in sessions; treat it as sensitive.
-- `browser act kind=evaluate` / `openclaw browser evaluate` and `wait --fn`
-  execute arbitrary JavaScript in the page context. Prompt injection can steer
-  this. Disable it with `browser.evaluateEnabled=false` if you do not need it.
-- For logins and anti-bot notes (X/Twitter, etc.), see [Browser login + X/Twitter posting](/tools/browser-login).
-- Keep the Gateway/node host private (loopback or tailnet-only).
-- Remote CDP endpoints are powerful; tunnel and protect them.
+- openclaw 浏览器 profile 可能包含已登录会话，请视为敏感信息。
+- `browser act kind=evaluate` / `openclaw browser evaluate` 与 `wait --fn`
+  会在页面上下文中执行任意 JavaScript，提示注入可能引导它。若不需要可用 `browser.evaluateEnabled=false` 关闭。
+- 登录与反机器人注意事项（X/Twitter 等）见 [浏览器登录 + X/Twitter 发帖](/zh/tools/browser-login)。
+- 保持 Gateway/node host 私有（仅回环或 tailnet）。
+- 远程 CDP 端点权限很大；请使用隧道并保护它们。
 
-## Troubleshooting
+## 排错
 
-For Linux-specific issues (especially snap Chromium), see
-[Browser troubleshooting](/tools/browser-linux-troubleshooting).
+Linux 特定问题（尤其是 snap Chromium），见
+[浏览器排查](/zh/tools/browser-linux-troubleshooting)。
 
-## Agent tools + how control works
+## Agent 工具与控制方式
 
-The agent gets **one tool** for browser automation:
+agent 只有 **一个工具** 用于浏览器自动化：
 - `browser` — status/start/stop/tabs/open/focus/close/snapshot/screenshot/navigate/act
 
-How it maps:
-- `browser snapshot` returns a stable UI tree (AI or ARIA).
-- `browser act` uses the snapshot `ref` IDs to click/type/drag/select.
-- `browser screenshot` captures pixels (full page or element).
-- `browser` accepts:
-  - `profile` to choose a named browser profile (openclaw, chrome, or remote CDP).
-  - `target` (`sandbox` | `host` | `node`) to select where the browser lives.
-  - In sandboxed sessions, `target: "host"` requires `agents.defaults.sandbox.browser.allowHostControl=true`.
-  - If `target` is omitted: sandboxed sessions default to `sandbox`, non-sandbox sessions default to `host`.
-  - If a browser-capable node is connected, the tool may auto-route to it unless you pin `target="host"` or `target="node"`.
+映射关系：
+- `browser snapshot` 返回稳定的 UI 树（AI 或 ARIA）。
+- `browser act` 使用快照的 `ref` ID 来点击/输入/拖拽/选择。
+- `browser screenshot` 捕获像素（全页或元素）。
+- `browser` 接受：
+  - `profile` 选择命名 profile（openclaw、chrome 或远程 CDP）。
+  - `target`（`sandbox` | `host` | `node`）指定浏览器所在位置。
+  - 在沙箱会话中，`target: "host"` 需要 `agents.defaults.sandbox.browser.allowHostControl=true`。
+  - 若省略 `target`：沙箱会话默认 `sandbox`，非沙箱会话默认 `host`。
+  - 若连接了具备浏览器能力的节点，工具可能自动路由到该节点；除非你固定 `target="host"` 或 `target="node"`。
 
-This keeps the agent deterministic and avoids brittle selectors.
+这能让 agent 保持确定性，避免脆弱的选择器。

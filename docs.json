@@ -20,6 +20,18 @@
       "url": "https://github.com/openclaw/openclaw/releases"
     }
   ],
+  "scripts": [
+    {
+      "src": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX",
+      "async": true,
+      "crossorigin": "anonymous"
+    }
+  ],
+  "analytics": {
+    "googleAdSense": {
+      "id": "ca-pub-XXXXXXXXXXXXXXXX"
+    }
+  },
   "redirects": [
     {
       "source": "/cron",

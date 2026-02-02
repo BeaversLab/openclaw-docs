@@ -2,53 +2,50 @@
 > 本页正在翻译中。
 
 ---
-summary: "Use Qwen OAuth (free tier) in OpenClaw"
+summary: "在 OpenClaw 中使用 Qwen OAuth（免费额度）"
 read_when:
-  - You want to use Qwen with OpenClaw
-  - You want free-tier OAuth access to Qwen Coder
+  - 想在 OpenClaw 中使用 Qwen
+  - 想用 Qwen Coder 的免费 OAuth 额度
 ---
 # Qwen
 
-Qwen provides a free-tier OAuth flow for Qwen Coder and Qwen Vision models
-(2,000 requests/day, subject to Qwen rate limits).
+Qwen 提供 Qwen Coder 与 Qwen Vision 的免费 OAuth 流程
+（每日 2,000 次请求，受 Qwen 速率限制）。
 
-## Enable the plugin
+## 启用插件
 
 ```bash
 openclaw plugins enable qwen-portal-auth
 ```
 
-Restart the Gateway after enabling.
+启用后重启 Gateway。
 
-## Authenticate
+## 认证
 
 ```bash
 openclaw models auth login --provider qwen-portal --set-default
 ```
 
-This runs the Qwen device-code OAuth flow and writes a provider entry to your
-`models.json` (plus a `qwen` alias for quick switching).
+该命令会运行 Qwen 的设备码 OAuth 流程，并在你的 `models.json` 中写入 provider 条目
+（同时添加 `qwen` 别名以便快速切换）。
 
-## Model IDs
+## 模型 ID
 
 - `qwen-portal/coder-model`
 - `qwen-portal/vision-model`
 
-Switch models with:
+切换模型：
 
 ```bash
 openclaw models set qwen-portal/coder-model
 ```
 
-## Reuse Qwen Code CLI login
+## 复用 Qwen Code CLI 登录
 
-If you already logged in with the Qwen Code CLI, OpenClaw will sync credentials
-from `~/.qwen/oauth_creds.json` when it loads the auth store. You still need a
-`models.providers.qwen-portal` entry (use the login command above to create one).
+如果你已在 Qwen Code CLI 登录，OpenClaw 会在加载 auth store 时从 `~/.qwen/oauth_creds.json` 同步凭据。你仍需要一个 `models.providers.qwen-portal` 条目（使用上面的登录命令创建）。
 
-## Notes
+## 说明
 
-- Tokens auto-refresh; re-run the login command if refresh fails or access is revoked.
-- Default base URL: `https://portal.qwen.ai/v1` (override with
-  `models.providers.qwen-portal.baseUrl` if Qwen provides a different endpoint).
-- See [Model providers](/concepts/model-providers) for provider-wide rules.
+- Token 会自动刷新；若刷新失败或访问被撤销，请重新运行登录命令。
+- 默认 base URL：`https://portal.qwen.ai/v1`（若 Qwen 提供不同端点，可用 `models.providers.qwen-portal.baseUrl` 覆盖）。
+- Provider 规则参见 [Model providers](/zh/concepts/model-providers)。

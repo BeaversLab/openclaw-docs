@@ -2,47 +2,47 @@
 > 本页正在翻译中。
 
 ---
-summary: "How to run tests locally (vitest) and when to use force/coverage modes"
+summary: "如何在本地运行测试（vitest）以及何时使用 force/coverage 模式"
 read_when:
-  - Running or fixing tests
+  - 运行或修复测试
 ---
 # Tests
 
-- Full testing kit (suites, live, Docker): [Testing](/testing)
+- 完整测试工具包（suites、live、Docker）：[Testing](/zh/testing)
 
-- `pnpm test:force`: Kills any lingering gateway process holding the default control port, then runs the full Vitest suite with an isolated gateway port so server tests don’t collide with a running instance. Use this when a prior gateway run left port 18789 occupied.
-- `pnpm test:coverage`: Runs Vitest with V8 coverage. Global thresholds are 70% lines/branches/functions/statements. Coverage excludes integration-heavy entrypoints (CLI wiring, gateway/telegram bridges, webchat static server) to keep the target focused on unit-testable logic.
-- `pnpm test:e2e`: Runs gateway end-to-end smoke tests (multi-instance WS/HTTP/node pairing).
-- `pnpm test:live`: Runs provider live tests (minimax/zai). Requires API keys and `LIVE=1` (or provider-specific `*_LIVE_TEST=1`) to unskip.
+- `pnpm test:force`：终止占用默认控制端口的残留 gateway 进程，然后用独立 gateway 端口运行完整 Vitest 套件，避免与正在运行的实例冲突。当上次 gateway 占用 18789 端口时使用。
+- `pnpm test:coverage`：运行带 V8 覆盖率的 Vitest。全局阈值为 70%（lines/branches/functions/statements）。覆盖率排除集成较重的入口（CLI wiring、gateway/telegram bridges、webchat 静态服务器），以聚焦于单元可测逻辑。
+- `pnpm test:e2e`：运行 gateway 端到端冒烟测试（多实例 WS/HTTP/node 配对）。
+- `pnpm test:live`：运行 provider live 测试（minimax/zai）。需要 API key 且 `LIVE=1`（或 provider 特定 `*_LIVE_TEST=1`）以取消跳过。
 
-## Model latency bench (local keys)
+## 模型延迟基准（本地 key）
 
-Script: [`scripts/bench-model.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-model.ts)
+脚本：[`scripts/bench-model.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-model.ts)
 
-Usage:
+用法：
 - `source ~/.profile && pnpm tsx scripts/bench-model.ts --runs 10`
-- Optional env: `MINIMAX_API_KEY`, `MINIMAX_BASE_URL`, `MINIMAX_MODEL`, `ANTHROPIC_API_KEY`
-- Default prompt: “Reply with a single word: ok. No punctuation or extra text.”
+- 可选环境变量：`MINIMAX_API_KEY`、`MINIMAX_BASE_URL`、`MINIMAX_MODEL`、`ANTHROPIC_API_KEY`
+- 默认提示词：“Reply with a single word: ok. No punctuation or extra text.”
 
-Last run (2025-12-31, 20 runs):
-- minimax median 1279ms (min 1114, max 2431)
-- opus median 2454ms (min 1224, max 3170)
+上次运行（2025-12-31，20 次）：
+- minimax 中位数 1279ms（最小 1114，最大 2431）
+- opus 中位数 2454ms（最小 1224，最大 3170）
 
-## Onboarding E2E (Docker)
+## Onboarding E2E（Docker）
 
-Docker is optional; this is only needed for containerized onboarding smoke tests.
+Docker 可选；仅用于容器化 onboarding 冒烟测试。
 
-Full cold-start flow in a clean Linux container:
+在干净 Linux 容器中完整冷启动流程：
 
 ```bash
 scripts/e2e/onboard-docker.sh
 ```
 
-This script drives the interactive wizard via a pseudo-tty, verifies config/workspace/session files, then starts the gateway and runs `openclaw health`.
+该脚本通过伪 TTY 驱动交互向导，验证配置/工作区/会话文件，然后启动 gateway 并运行 `openclaw health`。
 
-## QR import smoke (Docker)
+## QR 导入冒烟（Docker）
 
-Ensures `qrcode-terminal` loads under Node 22+ in Docker:
+确保 `qrcode-terminal` 在 Docker 的 Node 22+ 下可加载：
 
 ```bash
 pnpm test:docker:qr

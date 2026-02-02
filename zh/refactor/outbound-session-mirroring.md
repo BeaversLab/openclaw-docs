@@ -2,77 +2,77 @@
 > 本页正在翻译中。
 
 ---
-title: Outbound Session Mirroring Refactor (Issue #1520)
-description: Track outbound session mirroring refactor notes, decisions, tests, and open items.
+title: 出站会话镜像重构（Issue #1520）
+description: 记录出站会话镜像重构的说明、决策、测试与待办事项。
 ---
 
-# Outbound Session Mirroring Refactor (Issue #1520)
+# 出站会话镜像重构（Issue #1520）
 
-## Status
-- In progress.
-- Core + plugin channel routing updated for outbound mirroring.
-- Gateway send now derives target session when sessionKey is omitted.
+## 状态
+- 进行中。
+- 核心与插件频道路由已更新以支持出站镜像。
+- Gateway send 在省略 sessionKey 时会派生目标会话。
 
-## Context
-Outbound sends were mirrored into the *current* agent session (tool session key) rather than the target channel session. Inbound routing uses channel/peer session keys, so outbound responses landed in the wrong session and first-contact targets often lacked session entries.
+## 背景
+出站发送被镜像到 **当前** 代理会话（tool session key），而不是目标频道会话。入站路由使用 channel/peer session key，因此出站回复落在错误会话中，且首次联系的目标经常缺少会话条目。
 
-## Goals
-- Mirror outbound messages into the target channel session key.
-- Create session entries on outbound when missing.
-- Keep thread/topic scoping aligned with inbound session keys.
-- Cover core channels plus bundled extensions.
+## 目标
+- 将出站消息镜像到目标频道 session key。
+- 出站缺失时创建会话条目。
+- 保持 thread/topic 范围与入站 session key 对齐。
+- 覆盖核心频道与内置扩展。
 
-## Implementation Summary
-- New outbound session routing helper:
+## 实现摘要
+- 新增出站会话路由助手：
   - `src/infra/outbound/outbound-session.ts`
-  - `resolveOutboundSessionRoute` builds target sessionKey using `buildAgentSessionKey` (dmScope + identityLinks).
-  - `ensureOutboundSessionEntry` writes minimal `MsgContext` via `recordSessionMetaFromInbound`.
-- `runMessageAction` (send) derives target sessionKey and passes it to `executeSendAction` for mirroring.
-- `message-tool` no longer mirrors directly; it only resolves agentId from the current session key.
-- Plugin send path mirrors via `appendAssistantMessageToSessionTranscript` using the derived sessionKey.
-- Gateway send derives a target session key when none is provided (default agent), and ensures a session entry.
+  - `resolveOutboundSessionRoute` 使用 `buildAgentSessionKey`（dmScope + identityLinks）构建目标 sessionKey。
+  - `ensureOutboundSessionEntry` 通过 `recordSessionMetaFromInbound` 写入最小 `MsgContext`。
+- `runMessageAction`（send）派生目标 sessionKey，并传给 `executeSendAction` 用于镜像。
+- `message-tool` 不再直接镜像；仅从当前 session key 解析 agentId。
+- 插件发送路径通过 `appendAssistantMessageToSessionTranscript` 使用派生的 sessionKey 镜像。
+- Gateway send 在未提供 session key 时派生目标 session key（默认 agent），并确保创建会话条目。
 
-## Thread/Topic Handling
-- Slack: replyTo/threadId -> `resolveThreadSessionKeys` (suffix).
-- Discord: threadId/replyTo -> `resolveThreadSessionKeys` with `useSuffix=false` to match inbound (thread channel id already scopes session).
-- Telegram: topic IDs map to `chatId:topic:<id>` via `buildTelegramGroupPeerId`.
+## Thread/Topic 处理
+- Slack：replyTo/threadId -> `resolveThreadSessionKeys`（后缀）。
+- Discord：threadId/replyTo -> `resolveThreadSessionKeys` 且 `useSuffix=false` 以匹配入站（thread channel id 已限定会话）。
+- Telegram：topic ID 通过 `buildTelegramGroupPeerId` 映射为 `chatId:topic:<id>`。
 
-## Extensions Covered
-- Matrix, MS Teams, Mattermost, BlueBubbles, Nextcloud Talk, Zalo, Zalo Personal, Nostr, Tlon.
-- Notes:
-  - Mattermost targets now strip `@` for DM session key routing.
-  - Zalo Personal uses DM peer kind for 1:1 targets (group only when `group:` is present).
-  - BlueBubbles group targets strip `chat_*` prefixes to match inbound session keys.
-  - Slack auto-thread mirroring matches channel ids case-insensitively.
-  - Gateway send lowercases provided session keys before mirroring.
+## 覆盖的扩展
+- Matrix、MS Teams、Mattermost、BlueBubbles、Nextcloud Talk、Zalo、Zalo Personal、Nostr、Tlon。
+- 说明：
+  - Mattermost 目标现在会移除 `@` 以路由 DM 会话 key。
+  - Zalo Personal 对 1:1 目标使用 DM peer kind（仅当存在 `group:` 时才视为群组）。
+  - BlueBubbles 群组目标会移除 `chat_*` 前缀以匹配入站 session key。
+  - Slack 自动 thread 镜像按 channel id 不区分大小写匹配。
+  - Gateway send 在镜像前将提供的 session key 统一转小写。
 
-## Decisions
-- **Gateway send session derivation**: if `sessionKey` is provided, use it. If omitted, derive a sessionKey from target + default agent and mirror there.
-- **Session entry creation**: always use `recordSessionMetaFromInbound` with `Provider/From/To/ChatType/AccountId/Originating*` aligned to inbound formats.
-- **Target normalization**: outbound routing uses resolved targets (post `resolveChannelTarget`) when available.
-- **Session key casing**: canonicalize session keys to lowercase on write and during migrations.
+## 决策
+- **Gateway send 会话派生**：若提供 `sessionKey` 则使用；若省略，则基于目标 + 默认 agent 派生 sessionKey 并镜像到该会话。
+- **会话条目创建**：始终使用 `recordSessionMetaFromInbound`，确保 `Provider/From/To/ChatType/AccountId/Originating*` 与入站格式对齐。
+- **目标规范化**：可用时，出站路由使用解析后的目标（`resolveChannelTarget` 之后）。
+- **会话 key 大小写**：写入时与迁移时统一转小写。
 
-## Tests Added/Updated
+## 新增/更新测试
 - `src/infra/outbound/outbound-session.test.ts`
-  - Slack thread session key.
-  - Telegram topic session key.
-  - dmScope identityLinks with Discord.
+  - Slack thread session key。
+  - Telegram topic session key。
+  - Discord 的 dmScope identityLinks。
 - `src/agents/tools/message-tool.test.ts`
-  - Derives agentId from session key (no sessionKey passed through).
+  - 从 session key 派生 agentId（不传递 sessionKey）。
 - `src/gateway/server-methods/send.test.ts`
-  - Derives session key when omitted and creates session entry.
+  - 省略 session key 时派生并创建会话条目。
 
-## Open Items / Follow-ups
-- Voice-call plugin uses custom `voice:<phone>` session keys. Outbound mapping is not standardized here; if message-tool should support voice-call sends, add explicit mapping.
-- Confirm if any external plugin uses non-standard `From/To` formats beyond the bundled set.
+## 待办 / 后续
+- voice-call 插件使用自定义 `voice:<phone>` session key。此处未标准化出站映射；如 message-tool 要支持 voice-call 发送，应添加显式映射。
+- 确认是否有外部插件使用非标准 `From/To` 格式（超出内置集合）。
 
-## Files Touched
+## 涉及文件
 - `src/infra/outbound/outbound-session.ts`
 - `src/infra/outbound/outbound-send-service.ts`
 - `src/infra/outbound/message-action-runner.ts`
 - `src/agents/tools/message-tool.ts`
 - `src/gateway/server-methods/send.ts`
-- Tests in:
+- 测试文件：
   - `src/infra/outbound/outbound-session.test.ts`
   - `src/agents/tools/message-tool.test.ts`
   - `src/gateway/server-methods/send.test.ts`

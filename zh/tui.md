@@ -2,136 +2,136 @@
 > 本页正在翻译中。
 
 ---
-summary: "Terminal UI (TUI): connect to the Gateway from any machine"
+summary: "终端 UI（TUI）：从任意机器连接 Gateway"
 read_when:
-  - You want a beginner-friendly walkthrough of the TUI
-  - You need the complete list of TUI features, commands, and shortcuts
+  - 想要 TUI 的入门指南
+  - 需要完整的 TUI 功能、命令与快捷键列表
 ---
-# TUI (Terminal UI)
+# TUI（Terminal UI）
 
-## Quick start
-1) Start the Gateway.
+## 快速开始
+1) 启动 Gateway。
 ```bash
 openclaw gateway
 ```
-2) Open the TUI.
+2) 打开 TUI。
 ```bash
 openclaw tui
 ```
-3) Type a message and press Enter.
+3) 输入消息并按 Enter。
 
-Remote Gateway:
+远程 Gateway：
 ```bash
 openclaw tui --url ws://<host>:<port> --token <gateway-token>
 ```
-Use `--password` if your Gateway uses password auth.
+若 Gateway 使用密码认证，使用 `--password`。
 
-## What you see
-- Header: connection URL, current agent, current session.
-- Chat log: user messages, assistant replies, system notices, tool cards.
-- Status line: connection/run state (connecting, running, streaming, idle, error).
-- Footer: connection state + agent + session + model + think/verbose/reasoning + token counts + deliver.
-- Input: text editor with autocomplete.
+## 你会看到什么
+- Header：连接 URL、当前 agent、当前 session。
+- Chat log：用户消息、助手回复、系统提示、工具卡片。
+- 状态行：连接/运行状态（connecting、running、streaming、idle、error）。
+- Footer：连接状态 + agent + session + model + think/verbose/reasoning + token 计数 + deliver。
+- 输入框：带自动补全的文本编辑器。
 
-## Mental model: agents + sessions
-- Agents are unique slugs (e.g. `main`, `research`). The Gateway exposes the list.
-- Sessions belong to the current agent.
-- Session keys are stored as `agent:<agentId>:<sessionKey>`.
-  - If you type `/session main`, the TUI expands it to `agent:<currentAgent>:main`.
-  - If you type `/session agent:other:main`, you switch to that agent session explicitly.
-- Session scope:
-  - `per-sender` (default): each agent has many sessions.
-  - `global`: the TUI always uses the `global` session (the picker may be empty).
-- The current agent + session are always visible in the footer.
+## 心智模型：agents + sessions
+- Agents 是唯一 slug（如 `main`、`research`）。Gateway 会暴露列表。
+- Sessions 属于当前 agent。
+- Session keys 以 `agent:<agentId>:<sessionKey>` 存储。
+  - 输入 `/session main` 时，TUI 会展开为 `agent:<currentAgent>:main`。
+  - 输入 `/session agent:other:main` 时，会显式切换到该 agent 会话。
+- Session scope：
+  - `per-sender`（默认）：每个 agent 有多个会话。
+  - `global`：TUI 始终使用 `global` 会话（选择器可能为空）。
+- Footer 始终显示当前 agent + session。
 
-## Sending + delivery
-- Messages are sent to the Gateway; delivery to providers is off by default.
-- Turn delivery on:
+## 发送与投递
+- 消息发送到 Gateway；默认不投递到 provider。
+- 开启投递：
   - `/deliver on`
-  - or the Settings panel
-  - or start with `openclaw tui --deliver`
+  - 或 Settings 面板
+  - 或启动时用 `openclaw tui --deliver`
 
-## Pickers + overlays
-- Model picker: list available models and set the session override.
-- Agent picker: choose a different agent.
-- Session picker: shows only sessions for the current agent.
-- Settings: toggle deliver, tool output expansion, and thinking visibility.
+## 选择器与覆盖层
+- 模型选择器：列出模型并设置会话覆盖。
+- Agent 选择器：选择不同 agent。
+- Session 选择器：仅显示当前 agent 的会话。
+- Settings：切换投递、工具输出展开、thinking 可见性。
 
-## Keyboard shortcuts
-- Enter: send message
-- Esc: abort active run
-- Ctrl+C: clear input (press twice to exit)
-- Ctrl+D: exit
-- Ctrl+L: model picker
-- Ctrl+G: agent picker
-- Ctrl+P: session picker
-- Ctrl+O: toggle tool output expansion
-- Ctrl+T: toggle thinking visibility (reloads history)
+## 键盘快捷键
+- Enter：发送消息
+- Esc：终止当前 run
+- Ctrl+C：清空输入（按两次退出）
+- Ctrl+D：退出
+- Ctrl+L：模型选择器
+- Ctrl+G：agent 选择器
+- Ctrl+P：session 选择器
+- Ctrl+O：切换工具输出展开
+- Ctrl+T：切换 thinking 可见性（会重新加载历史）
 
-## Slash commands
-Core:
+## 斜杠命令
+核心：
 - `/help`
 - `/status`
-- `/agent <id>` (or `/agents`)
-- `/session <key>` (or `/sessions`)
-- `/model <provider/model>` (or `/models`)
+- `/agent <id>`（或 `/agents`）
+- `/session <key>`（或 `/sessions`）
+- `/model <provider/model>`（或 `/models`）
 
-Session controls:
+会话控制：
 - `/think <off|minimal|low|medium|high>`
 - `/verbose <on|full|off>`
 - `/reasoning <on|off|stream>`
 - `/usage <off|tokens|full>`
-- `/elevated <on|off|ask|full>` (alias: `/elev`)
+- `/elevated <on|off|ask|full>`（别名：`/elev`）
 - `/activation <mention|always>`
 - `/deliver <on|off>`
 
-Session lifecycle:
-- `/new` or `/reset` (reset the session)
-- `/abort` (abort the active run)
+会话生命周期：
+- `/new` 或 `/reset`（重置会话）
+- `/abort`（终止当前 run）
 - `/settings`
 - `/exit`
 
-Other Gateway slash commands (for example, `/context`) are forwarded to the Gateway and shown as system output. See [Slash commands](/tools/slash-commands).
+其他 Gateway 斜杠命令（例如 `/context`）会转发给 Gateway 并作为系统输出显示。参见 [Slash commands](/zh/tools/slash-commands)。
 
-## Local shell commands
-- Prefix a line with `!` to run a local shell command on the TUI host.
-- The TUI prompts once per session to allow local execution; declining keeps `!` disabled for the session.
-- Commands run in a fresh, non-interactive shell in the TUI working directory (no persistent `cd`/env).
-- A lone `!` is sent as a normal message; leading spaces do not trigger local exec.
+## 本地 shell 命令
+- 以 `!` 开头的行会在 TUI 主机上运行本地 shell 命令。
+- TUI 会在每个会话第一次请求时询问是否允许本地执行；拒绝后该会话内 `!` 会被禁用。
+- 命令在 TUI 工作目录的全新非交互 shell 中运行（不会持久 `cd`/env）。
+- 单独一个 `!` 会作为普通消息发送；前导空格不会触发本地 exec。
 
-## Tool output
-- Tool calls show as cards with args + results.
-- Ctrl+O toggles between collapsed/expanded views.
-- While tools run, partial updates stream into the same card.
+## 工具输出
+- 工具调用显示为卡片（参数 + 结果）。
+- Ctrl+O 在折叠/展开视图间切换。
+- 工具运行时，局部更新会流入同一张卡片。
 
-## History + streaming
-- On connect, the TUI loads the latest history (default 200 messages).
-- Streaming responses update in place until finalized.
-- The TUI also listens to agent tool events for richer tool cards.
+## 历史与流式
+- 连接后，TUI 会加载最新历史（默认 200 条）。
+- 流式回复会原位更新，直到最终定稿。
+- TUI 还会监听 agent 工具事件，用于更丰富的工具卡片。
 
-## Connection details
-- The TUI registers with the Gateway as `mode: "tui"`.
-- Reconnects show a system message; event gaps are surfaced in the log.
+## 连接细节
+- TUI 以 `mode: "tui"` 注册到 Gateway。
+- 断线重连会显示系统消息；事件缺口会记录到日志。
 
-## Options
-- `--url <url>`: Gateway WebSocket URL (defaults to config or `ws://127.0.0.1:<port>`)
-- `--token <token>`: Gateway token (if required)
-- `--password <password>`: Gateway password (if required)
-- `--session <key>`: Session key (default: `main`, or `global` when scope is global)
-- `--deliver`: Deliver assistant replies to the provider (default off)
-- `--thinking <level>`: Override thinking level for sends
-- `--timeout-ms <ms>`: Agent timeout in ms (defaults to `agents.defaults.timeoutSeconds`)
+## 选项
+- `--url <url>`：Gateway WebSocket URL（默认来自配置或 `ws://127.0.0.1:<port>`）
+- `--token <token>`：Gateway token（如需要）
+- `--password <password>`：Gateway 密码（如需要）
+- `--session <key>`：Session key（默认：`main`，或在 global scope 时为 `global`）
+- `--deliver`：将助手回复投递到 provider（默认关闭）
+- `--thinking <level>`：覆盖发送时的 thinking 级别
+- `--timeout-ms <ms>`：agent 超时（毫秒，默认 `agents.defaults.timeoutSeconds`）
 
-## Troubleshooting
+## 故障排查
 
-No output after sending a message:
-- Run `/status` in the TUI to confirm the Gateway is connected and idle/busy.
-- Check the Gateway logs: `openclaw logs --follow`.
-- Confirm the agent can run: `openclaw status` and `openclaw models status`.
-- If you expect messages in a chat channel, enable delivery (`/deliver on` or `--deliver`).
-- `--history-limit <n>`: History entries to load (default 200)
+发送消息后无输出：
+- 在 TUI 运行 `/status` 确认 Gateway 已连接且 idle/busy。
+- 查看 Gateway 日志：`openclaw logs --follow`。
+- 确认 agent 可运行：`openclaw status` 与 `openclaw models status`。
+- 若期望消息出现在聊天频道，请开启投递（`/deliver on` 或 `--deliver`）。
+- `--history-limit <n>`：加载的历史条数（默认 200）。
 
-## Troubleshooting
-- `disconnected`: ensure the Gateway is running and your `--url/--token/--password` are correct.
-- No agents in picker: check `openclaw agents list` and your routing config.
-- Empty session picker: you might be in global scope or have no sessions yet.
+## 故障排查
+- `disconnected`：确保 Gateway 运行，且 `--url/--token/--password` 正确。
+- 选择器无 agent：检查 `openclaw agents list` 与路由配置。
+- session 选择器为空：可能在 global scope 或尚无会话。

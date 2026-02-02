@@ -2,143 +2,144 @@
 > 本页正在翻译中。
 
 ---
-summary: "Android app (node): connection runbook + Canvas/Chat/Camera"
+summary: "Android 应用（node）：连接 runbook + Canvas/Chat/Camera"
 read_when:
-  - Pairing or reconnecting the Android node
-  - Debugging Android gateway discovery or auth
-  - Verifying chat history parity across clients
+  - 配对或重连 Android node
+  - 排查 Android gateway 发现或认证
+  - 验证各客户端聊天历史一致性
 ---
 
 # Android App (Node)
 
-## Support snapshot
-- Role: companion node app (Android does not host the Gateway).
-- Gateway required: yes (run it on macOS, Linux, or Windows via WSL2).
-- Install: [Getting Started](/start/getting-started) + [Pairing](/gateway/pairing).
-- Gateway: [Runbook](/gateway) + [Configuration](/gateway/configuration).
-  - Protocols: [Gateway protocol](/gateway/protocol) (nodes + control plane).
+## 支持概览
+- 角色：伴侣 node 应用（Android 不托管 Gateway）。
+- 需要 Gateway：是（运行在 macOS、Linux 或通过 WSL2 的 Windows）。
+- 安装：[Getting Started](/zh/start/getting-started) + [Pairing](/zh/gateway/pairing)。
+- Gateway：[Runbook](/zh/gateway) + [Configuration](/zh/gateway/configuration)。
+  - 协议：[Gateway protocol](/zh/gateway/protocol)（nodes + 控制面）。
 
-## System control
-System control (launchd/systemd) lives on the Gateway host. See [Gateway](/gateway).
+## 系统控制
+
+系统控制（launchd/systemd）在 Gateway 主机上。见 [Gateway](/zh/gateway)。
 
 ## Connection Runbook
 
 Android node app ⇄ (mDNS/NSD + WebSocket) ⇄ **Gateway**
 
-Android connects directly to the Gateway WebSocket (default `ws://<host>:18789`) and uses Gateway-owned pairing.
+Android 直接连接到 Gateway WebSocket（默认 `ws://<host>:18789`），并使用 Gateway-owned 配对。
 
-### Prerequisites
+### 前置条件
 
-- You can run the Gateway on the “master” machine.
-- Android device/emulator can reach the gateway WebSocket:
-  - Same LAN with mDNS/NSD, **or**
-  - Same Tailscale tailnet using Wide-Area Bonjour / unicast DNS-SD (see below), **or**
-  - Manual gateway host/port (fallback)
-- You can run the CLI (`openclaw`) on the gateway machine (or via SSH).
+- 你能在“主机”上运行 Gateway。
+- Android 设备/模拟器能访问 gateway WebSocket：
+  - 同一 LAN + mDNS/NSD，**或**
+  - 同一 Tailscale tailnet（Wide-Area Bonjour / 单播 DNS-SD，见下），**或**
+  - 手动 gateway host/port（兜底）
+- 你能在 gateway 主机上运行 CLI（`openclaw`，或通过 SSH）。
 
-### 1) Start the Gateway
+### 1) 启动 Gateway
 
 ```bash
 openclaw gateway --port 18789 --verbose
 ```
 
-Confirm in logs you see something like:
+确认日志中有类似：
 - `listening on ws://0.0.0.0:18789`
 
-For tailnet-only setups (recommended for Vienna ⇄ London), bind the gateway to the tailnet IP:
+对于仅 tailnet 的部署（例如 Vienna ⇄ London），将 gateway 绑定到 tailnet IP：
 
-- Set `gateway.bind: "tailnet"` in `~/.openclaw/openclaw.json` on the gateway host.
-- Restart the Gateway / macOS menubar app.
+- 在 gateway 主机 `~/.openclaw/openclaw.json` 中设置 `gateway.bind: "tailnet"`。
+- 重启 Gateway / macOS 菜单栏 app。
 
-### 2) Verify discovery (optional)
+### 2) 验证发现（可选）
 
-From the gateway machine:
+在 gateway 主机：
 
 ```bash
 dns-sd -B _openclaw-gw._tcp local.
 ```
 
-More debugging notes: [Bonjour](/gateway/bonjour).
+更多调试说明见 [Bonjour](/zh/gateway/bonjour)。
 
-#### Tailnet (Vienna ⇄ London) discovery via unicast DNS-SD
+#### Tailnet（Vienna ⇄ London）单播 DNS-SD 发现
 
-Android NSD/mDNS discovery won’t cross networks. If your Android node and the gateway are on different networks but connected via Tailscale, use Wide-Area Bonjour / unicast DNS-SD instead:
+Android 的 NSD/mDNS 无法跨网络。如果 Android node 与 gateway 不在同一网络但通过 Tailscale 连接，使用 Wide-Area Bonjour / 单播 DNS-SD：
 
-1) Set up a DNS-SD zone (example `openclaw.internal.`) on the gateway host and publish `_openclaw-gw._tcp` records.
-2) Configure Tailscale split DNS for your chosen domain pointing at that DNS server.
+1) 在 gateway 主机上设置 DNS-SD zone（示例 `openclaw.internal.`），发布 `_openclaw-gw._tcp` 记录。
+2) 配置 Tailscale split DNS，把你的域名指向该 DNS 服务器。
 
-Details and example CoreDNS config: [Bonjour](/gateway/bonjour).
+细节与 CoreDNS 示例见 [Bonjour](/zh/gateway/bonjour)。
 
-### 3) Connect from Android
+### 3) Android 端连接
 
-In the Android app:
+在 Android app：
 
-- The app keeps its gateway connection alive via a **foreground service** (persistent notification).
-- Open **Settings**.
-- Under **Discovered Gateways**, select your gateway and hit **Connect**.
-- If mDNS is blocked, use **Advanced → Manual Gateway** (host + port) and **Connect (Manual)**.
+- 应用通过**前台服务**保持连接（常驻通知）。
+- 打开 **Settings**。
+- 在 **Discovered Gateways** 里选中你的 gateway 并点击 **Connect**。
+- 如果 mDNS 被阻断，使用 **Advanced → Manual Gateway**（host + port）并点击 **Connect (Manual)**。
 
-After the first successful pairing, Android auto-reconnects on launch:
-- Manual endpoint (if enabled), otherwise
-- The last discovered gateway (best-effort).
+首次配对成功后，Android 会在启动时自动重连：
+- 若启用手动端点：优先使用手动端点
+- 否则：使用最近发现的 gateway（best-effort）。
 
-### 4) Approve pairing (CLI)
+### 4) 批准配对（CLI）
 
-On the gateway machine:
+在 gateway 主机：
 
 ```bash
 openclaw nodes pending
 openclaw nodes approve <requestId>
 ```
 
-Pairing details: [Gateway pairing](/gateway/pairing).
+配对细节见 [Gateway pairing](/zh/gateway/pairing)。
 
-### 5) Verify the node is connected
+### 5) 验证 node 已连接
 
-- Via nodes status:
+- 通过 nodes status：
   ```bash
   openclaw nodes status
   ```
-- Via Gateway:
+- 通过 Gateway：
   ```bash
   openclaw gateway call node.list --params "{}"
   ```
 
 ### 6) Chat + history
 
-The Android node’s Chat sheet uses the gateway’s **primary session key** (`main`), so history and replies are shared with WebChat and other clients:
+Android node 的 Chat sheet 使用 gateway 的**主会话 key**（`main`），因此历史与回复与 WebChat 等客户端共享：
 
-- History: `chat.history`
-- Send: `chat.send`
-- Push updates (best-effort): `chat.subscribe` → `event:"chat"`
+- 历史：`chat.history`
+- 发送：`chat.send`
+- 推送更新（best-effort）：`chat.subscribe` → `event:"chat"`
 
 ### 7) Canvas + camera
 
-#### Gateway Canvas Host (recommended for web content)
+#### Gateway Canvas Host（推荐用于 Web 内容）
 
-If you want the node to show real HTML/CSS/JS that the agent can edit on disk, point the node at the Gateway canvas host.
+如果你希望 node 展示可由 agent 在磁盘编辑的 HTML/CSS/JS，请指向 Gateway canvas host。
 
-Note: nodes use the standalone canvas host on `canvasHost.port` (default `18793`).
+注意：node 使用独立 canvas host（`canvasHost.port`，默认 `18793`）。
 
-1) Create `~/.openclaw/workspace/canvas/index.html` on the gateway host.
+1) 在 gateway 主机创建 `~/.openclaw/workspace/canvas/index.html`。
 
-2) Navigate the node to it (LAN):
+2) 让 node 导航到它（LAN）：
 
 ```bash
 openclaw nodes invoke --node "<Android Node>" --command canvas.navigate --params '{"url":"http://<gateway-hostname>.local:18793/__openclaw__/canvas/"}'
 ```
 
-Tailnet (optional): if both devices are on Tailscale, use a MagicDNS name or tailnet IP instead of `.local`, e.g. `http://<gateway-magicdns>:18793/__openclaw__/canvas/`.
+Tailnet（可选）：若两端在 Tailscale，使用 MagicDNS 名称或 tailnet IP 替代 `.local`，例如 `http://<gateway-magicdns>:18793/__openclaw__/canvas/`。
 
-This server injects a live-reload client into HTML and reloads on file changes.
-The A2UI host lives at `http://<gateway-host>:18793/__openclaw__/a2ui/`.
+该服务器会向 HTML 注入 live-reload 客户端并在文件变更时重载。
+A2UI host 位于 `http://<gateway-host>:18793/__openclaw__/a2ui/`。
 
-Canvas commands (foreground only):
-- `canvas.eval`, `canvas.snapshot`, `canvas.navigate` (use `{"url":""}` or `{"url":"/"}` to return to the default scaffold). `canvas.snapshot` returns `{ format, base64 }` (default `format="jpeg"`).
-- A2UI: `canvas.a2ui.push`, `canvas.a2ui.reset` (`canvas.a2ui.pushJSONL` legacy alias)
+Canvas 命令（仅前台）：
+- `canvas.eval`, `canvas.snapshot`, `canvas.navigate`（用 `{"url":""}` 或 `{"url":"/"}` 返回默认 scaffold）。`canvas.snapshot` 返回 `{ format, base64 }`（默认 `format="jpeg"`）。
+- A2UI：`canvas.a2ui.push`, `canvas.a2ui.reset`（`canvas.a2ui.pushJSONL` 为旧别名）
 
-Camera commands (foreground only; permission-gated):
-- `camera.snap` (jpg)
-- `camera.clip` (mp4)
+相机命令（仅前台；权限控制）：
+- `camera.snap`（jpg）
+- `camera.clip`（mp4）
 
-See [Camera node](/nodes/camera) for parameters and CLI helpers.
+参数与 CLI helper 见 [Camera node](/zh/nodes/camera)。

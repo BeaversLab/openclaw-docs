@@ -2,105 +2,97 @@
 > 本页正在翻译中。
 
 ---
-summary: "Browser-based control UI for the Gateway (chat, nodes, config)"
+summary: "Gateway 的浏览器控制 UI（聊天、节点、配置）"
 read_when:
-  - You want to operate the Gateway from a browser
-  - You want Tailnet access without SSH tunnels
+  - 你希望通过浏览器操作 Gateway
+  - 你希望无需 SSH 隧道的 Tailnet 访问
 ---
-# Control UI (browser)
+# Control UI（浏览器）
 
-The Control UI is a small **Vite + Lit** single-page app served by the Gateway:
+Control UI 是 Gateway 提供的 **Vite + Lit** 单页应用：
 
-- default: `http://<host>:18789/`
-- optional prefix: set `gateway.controlUi.basePath` (e.g. `/openclaw`)
+- 默认：`http://<host>:18789/`
+- 可选前缀：设置 `gateway.controlUi.basePath`（如 `/openclaw`）
 
-It speaks **directly to the Gateway WebSocket** on the same port.
+它 **直接连接** 到同端口的 Gateway WebSocket。
 
-## Quick open (local)
+## 快速打开（本地）
 
-If the Gateway is running on the same computer, open:
+若 Gateway 在同一台电脑上运行，打开：
 
-- http://127.0.0.1:18789/ (or http://localhost:18789/)
+- http://127.0.0.1:18789/（或 http://localhost:18789/）
 
-If the page fails to load, start the Gateway first: `openclaw gateway`.
+若页面加载失败，请先启动 Gateway：`openclaw gateway`。
 
-Auth is supplied during the WebSocket handshake via:
+认证在 WebSocket 握手中提供：
 - `connect.params.auth.token`
 - `connect.params.auth.password`
-The dashboard settings panel lets you store a token; passwords are not persisted.
-The onboarding wizard generates a gateway token by default, so paste it here on first connect.
+仪表盘设置面板可存储 token；密码不持久化。
+Onboarding 向导默认生成 gateway token，请在首次连接时粘贴。
 
-## What it can do (today)
-- Chat with the model via Gateway WS (`chat.history`, `chat.send`, `chat.abort`, `chat.inject`)
-- Stream tool calls + live tool output cards in Chat (agent events)
-- Channels: WhatsApp/Telegram/Discord/Slack + plugin channels (Mattermost, etc.) status + QR login + per-channel config (`channels.status`, `web.login.*`, `config.patch`)
-- Instances: presence list + refresh (`system-presence`)
-- Sessions: list + per-session thinking/verbose overrides (`sessions.list`, `sessions.patch`)
-- Cron jobs: list/add/run/enable/disable + run history (`cron.*`)
-- Skills: status, enable/disable, install, API key updates (`skills.*`)
-- Nodes: list + caps (`node.list`)
-- Exec approvals: edit gateway or node allowlists + ask policy for `exec host=gateway/node` (`exec.approvals.*`)
-- Config: view/edit `~/.openclaw/openclaw.json` (`config.get`, `config.set`)
-- Config: apply + restart with validation (`config.apply`) and wake the last active session
-- Config writes include a base-hash guard to prevent clobbering concurrent edits
-- Config schema + form rendering (`config.schema`, including plugin + channel schemas); Raw JSON editor remains available
-- Debug: status/health/models snapshots + event log + manual RPC calls (`status`, `health`, `models.list`)
-- Logs: live tail of gateway file logs with filter/export (`logs.tail`)
-- Update: run a package/git update + restart (`update.run`) with a restart report
+## 目前可做什么
+- 通过 Gateway WS 与模型聊天（`chat.history`、`chat.send`、`chat.abort`、`chat.inject`）
+- 在聊天中流式展示工具调用与实时工具输出卡片（agent events）
+- Channels：WhatsApp/Telegram/Discord/Slack + 插件渠道（Mattermost 等）状态 + 二维码登录 + 每渠道配置（`channels.status`、`web.login.*`、`config.patch`）
+- Instances：presence 列表 + 刷新（`system-presence`）
+- Sessions：列表 + 每会话 thinking/verbose 覆盖（`sessions.list`、`sessions.patch`）
+- Cron：列表/新增/运行/启用/禁用 + 运行历史（`cron.*`）
+- Skills：状态、启用/禁用、安装、API key 更新（`skills.*`）
+- Nodes：列表 + 能力（`node.list`）
+- Exec approvals：编辑 gateway 或 node allowlist + `exec host=gateway/node` 的 ask 策略（`exec.approvals.*`）
+- Config：查看/编辑 `~/.openclaw/openclaw.json`（`config.get`、`config.set`）
+- Config：校验后应用 + 重启（`config.apply`）并唤醒最后活跃会话
+- Config 写入包含 base-hash 保护，防止并发编辑覆盖
+- Config schema + 表单渲染（`config.schema`，包括插件 + 渠道 schema）；仍保留 Raw JSON 编辑器
+- Debug：状态/健康/模型快照 + 事件日志 + 手动 RPC 调用（`status`、`health`、`models.list`）
+- Logs：网关文件日志的实时 tail，支持过滤/导出（`logs.tail`）
+- Update：运行包/仓库更新 + 重启（`update.run`），并给出重启报告
 
-## Chat behavior
+## 聊天行为
 
-- `chat.send` is **non-blocking**: it acks immediately with `{ runId, status: "started" }` and the response streams via `chat` events.
-- Re-sending with the same `idempotencyKey` returns `{ status: "in_flight" }` while running, and `{ status: "ok" }` after completion.
-- `chat.inject` appends an assistant note to the session transcript and broadcasts a `chat` event for UI-only updates (no agent run, no channel delivery).
-- Stop:
-  - Click **Stop** (calls `chat.abort`)
-  - Type `/stop` (or `stop|esc|abort|wait|exit|interrupt`) to abort out-of-band
-  - `chat.abort` supports `{ sessionKey }` (no `runId`) to abort all active runs for that session
+- `chat.send` 为 **非阻塞**：立即回 ACK `{ runId, status: "started" }`，响应通过 `chat` 事件流式返回。
+- 使用相同 `idempotencyKey` 重发：运行中返回 `{ status: "in_flight" }`，完成后返回 `{ status: "ok" }`。
+- `chat.inject` 向会话转录追加一条助手备注，并广播 `chat` 事件用于 UI 更新（不触发 agent 运行，也不投递到频道）。
+- 停止：
+  - 点击 **Stop**（调用 `chat.abort`）
+  - 输入 `/stop`（或 `stop|esc|abort|wait|exit|interrupt`）进行带外中止
+  - `chat.abort` 支持 `{ sessionKey }`（不带 `runId`）以中止该会话所有运行
 
-## Tailnet access (recommended)
+## Tailnet 访问（推荐）
 
-### Integrated Tailscale Serve (preferred)
+### 集成 Tailscale Serve（推荐）
 
-Keep the Gateway on loopback and let Tailscale Serve proxy it with HTTPS:
+保持 Gateway 在回环，并用 Tailscale Serve 以 HTTPS 代理：
 
 ```bash
 openclaw gateway --tailscale serve
 ```
 
-Open:
-- `https://<magicdns>/` (or your configured `gateway.controlUi.basePath`)
+打开：
+- `https://<magicdns>/`（或你配置的 `gateway.controlUi.basePath`）
 
-By default, Serve requests can authenticate via Tailscale identity headers
-(`tailscale-user-login`) when `gateway.auth.allowTailscale` is `true`. OpenClaw
-verifies the identity by resolving the `x-forwarded-for` address with
-`tailscale whois` and matching it to the header, and only accepts these when the
-request hits loopback with Tailscale’s `x-forwarded-*` headers. Set
-`gateway.auth.allowTailscale: false` (or force `gateway.auth.mode: "password"`)
-if you want to require a token/password even for Serve traffic.
+默认情况下，当 `gateway.auth.allowTailscale` 为 `true`，Serve 请求可通过 Tailscale 身份头（`tailscale-user-login`）认证。OpenClaw 会通过 `tailscale whois` 校验 `x-forwarded-for` 地址并匹配该头，仅当请求命中回环且带 Tailscale `x-forwarded-*` 头时接受。若希望即便在 Serve 流量中也强制 token/password，设置 `gateway.auth.allowTailscale: false`（或强制 `gateway.auth.mode: "password"`）。
 
-### Bind to tailnet + token
+### 绑定到 tailnet + token
 
 ```bash
 openclaw gateway --bind tailnet --token "$(openssl rand -hex 32)"
 ```
 
-Then open:
-- `http://<tailscale-ip>:18789/` (or your configured `gateway.controlUi.basePath`)
+然后打开：
+- `http://<tailscale-ip>:18789/`（或你配置的 `gateway.controlUi.basePath`）
 
-Paste the token into the UI settings (sent as `connect.params.auth.token`).
+将 token 粘贴到 UI 设置中（以 `connect.params.auth.token` 发送）。
 
-## Insecure HTTP
+## 不安全 HTTP
 
-If you open the dashboard over plain HTTP (`http://<lan-ip>` or `http://<tailscale-ip>`),
-the browser runs in a **non-secure context** and blocks WebCrypto. By default,
-OpenClaw **blocks** Control UI connections without device identity.
+如果通过明文 HTTP 打开仪表盘（`http://<lan-ip>` 或 `http://<tailscale-ip>`），浏览器会处于 **非安全上下文** 并阻止 WebCrypto。默认情况下，OpenClaw **拒绝** 无设备身份的 Control UI 连接。
 
-**Recommended fix:** use HTTPS (Tailscale Serve) or open the UI locally:
-- `https://<magicdns>/` (Serve)
-- `http://127.0.0.1:18789/` (on the gateway host)
+**推荐修复：** 使用 HTTPS（Tailscale Serve）或在本地打开 UI：
+- `https://<magicdns>/`（Serve）
+- `http://127.0.0.1:18789/`（在 gateway 主机上）
 
-**Downgrade example (token-only over HTTP):**
+**降级示例（HTTP 上仅 token）：**
 
 ```json5
 {
@@ -112,55 +104,52 @@ OpenClaw **blocks** Control UI connections without device identity.
 }
 ```
 
-This disables device identity + pairing for the Control UI (even on HTTPS). Use
-only if you trust the network.
+这会禁用 Control UI 的设备身份 + 配对（即便在 HTTPS 上）。仅在信任网络时使用。
 
-See [Tailscale](/gateway/tailscale) for HTTPS setup guidance.
+HTTPS 设置见 [Tailscale](/zh/gateway/tailscale)。
 
-## Building the UI
+## 构建 UI
 
-The Gateway serves static files from `dist/control-ui`. Build them with:
+Gateway 从 `dist/control-ui` 提供静态文件。构建命令：
 
 ```bash
 pnpm ui:build # auto-installs UI deps on first run
 ```
 
-Optional absolute base (when you want fixed asset URLs):
+可选绝对 base（当你需要固定资源 URL）：
 
 ```bash
 OPENCLAW_CONTROL_UI_BASE_PATH=/openclaw/ pnpm ui:build
 ```
 
-For local development (separate dev server):
+本地开发（独立 dev server）：
 
 ```bash
 pnpm ui:dev # auto-installs UI deps on first run
 ```
 
-Then point the UI at your Gateway WS URL (e.g. `ws://127.0.0.1:18789`).
+然后将 UI 指向 Gateway WS URL（如 `ws://127.0.0.1:18789`）。
 
-## Debugging/testing: dev server + remote Gateway
+## 调试/测试：dev server + 远程 Gateway
 
-The Control UI is static files; the WebSocket target is configurable and can be
-different from the HTTP origin. This is handy when you want the Vite dev server
-locally but the Gateway runs elsewhere.
+Control UI 是静态文件；WebSocket 目标可配置，且可与 HTTP 来源不同。当你希望本地 Vite dev server，但 Gateway 在远端时很有用。
 
-1) Start the UI dev server: `pnpm ui:dev`
-2) Open a URL like:
+1) 启动 UI dev server：`pnpm ui:dev`
+2) 打开 URL：
 
 ```text
 http://localhost:5173/?gatewayUrl=ws://<gateway-host>:18789
 ```
 
-Optional one-time auth (if needed):
+可选一次性认证（如需要）：
 
 ```text
 http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789&token=<gateway-token>
 ```
 
-Notes:
-- `gatewayUrl` is stored in localStorage after load and removed from the URL.
-- `token` is stored in localStorage; `password` is kept in memory only.
-- Use `wss://` when the Gateway is behind TLS (Tailscale Serve, HTTPS proxy, etc.).
+说明：
+- `gatewayUrl` 加载后存入 localStorage，并从 URL 中移除。
+- `token` 存入 localStorage；`password` 仅保存在内存中。
+- 当 Gateway 在 TLS 后（Tailscale Serve、HTTPS 代理等）时使用 `wss://`。
 
-Remote access setup details: [Remote access](/gateway/remote).
+远程访问设置细节：见 [Remote access](/zh/gateway/remote)。
