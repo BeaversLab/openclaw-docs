@@ -42,14 +42,14 @@ read_when:
 
 4. **验证**
 
-- [ ] `pnpm lint`
+- [ ] `pnpm build`
+- [ ] `pnpm check`
 - [ ] `pnpm test`（或 `pnpm test:coverage` 如需覆盖率输出）
-- [ ] `pnpm run build`（测试后最后一次 sanity check）
 - [ ] `pnpm release:check`（验证 npm pack 内容）
 - [ ] `OPENCLAW_INSTALL_SMOKE_SKIP_NONROOT=1 pnpm test:install:smoke`（Docker 安装冒烟测试，快速路径；发布前必做）
   - 若上一个 npm 版本已知损坏，可设置 `OPENCLAW_INSTALL_SMOKE_PREVIOUS=<last-good-version>` 或 `OPENCLAW_INSTALL_SMOKE_SKIP_PREVIOUS=1` 以跳过预安装步骤。
 - [ ] （可选）完整 installer 冒烟（包含非 root + CLI 覆盖）：`pnpm test:install:smoke`
-- [ ] （可选）Installer E2E（Docker，运行 `curl -fsSL https://openclaw.bot/install.sh | bash`，onboard，然后执行真实工具调用）：
+- [ ] （可选）Installer E2E（Docker，运行 `curl -fsSL https://openclaw.ai/install.sh | bash`，onboard，然后执行真实工具调用）：
   - `pnpm test:install:e2e:openai`（需要 `OPENAI_API_KEY`）
   - `pnpm test:install:e2e:anthropic`（需要 `ANTHROPIC_API_KEY`）
   - `pnpm test:install:e2e`（需要两个 key；运行两个 provider）

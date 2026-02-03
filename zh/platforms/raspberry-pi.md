@@ -112,7 +112,7 @@ sudo sysctl -p
 ### 方案 A：标准安装（推荐）
 
 ```bash
-curl -fsSL https://openclaw.bot/install.sh | bash
+curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
 ### 方案 B：可 Hack 安装（便于折腾）

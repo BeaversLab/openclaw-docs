@@ -36,6 +36,8 @@ read_when:
 - 若有多个 node，可设置 `exec.node` 或 `tools.exec.node` 选择。
 - 在非 Windows 主机上，exec 优先使用 `SHELL`；若 `SHELL` 为 `fish`，会优先使用 `PATH` 中的 `bash`（或 `sh`）
   以避免 fish 不兼容脚本，若不存在才回退 `SHELL`。
+- 主机执行（`gateway`/`node`）会拒绝 `env.PATH` 和加载器覆盖（`LD_*`/`DYLD_*`）以
+  防止二进制劫持或注入代码。
 - 重要：沙箱默认 **关闭**。如果关闭沙箱，`host=sandbox` 会直接在 gateway 主机上运行
   （无容器）且 **不需要审批**。要启用审批，请使用 `host=gateway` 并配置 exec 审批（或开启沙箱）。
 
@@ -64,13 +66,14 @@ read_when:
 
 ### PATH 处理
 
-- `host=gateway`：把你的登录 shell `PATH` 合并到 exec 环境中（除非 exec 调用已设置 `env.PATH`）。守护进程本身仍使用最小 `PATH`：
+- `host=gateway`：把你的登录 shell `PATH` 合并到 exec 环境中。`env.PATH` 覆盖会被
+  拒绝用于主机执行。守护进程本身仍使用最小 `PATH`：
   - macOS：`/opt/homebrew/bin`、`/usr/local/bin`、`/usr/bin`、`/bin`
   - Linux：`/usr/local/bin`、`/usr/bin`、`/bin`
 - `host=sandbox`：在容器内运行 `sh -lc`（登录 shell），因此 `/etc/profile` 可能重置 `PATH`。
   OpenClaw 通过内部 env 变量在 profile 解析后前置 `env.PATH`（不做 shell 插值）；`tools.exec.pathPrepend` 也生效。
-- `host=node`：仅传递你提供的 env 覆盖。`tools.exec.pathPrepend` 只有在 exec 调用已设置 `env.PATH` 时才生效。
-  无 UI node host 只接受对 PATH 的前置（不允许替换）；macOS node 会完全丢弃 PATH 覆盖。
+- `host=node`：仅传递未被阻止的 env 覆盖。`env.PATH` 覆盖会被
+  拒绝用于主机执行。无 UI node host 只接受对 PATH 的前置（不允许替换）；macOS node 会完全丢弃 PATH 覆盖。
 
 按 agent 绑定 node（使用配置中的 agent list 索引）：
 

@@ -98,8 +98,8 @@ openclaw agents add <name>
    - **Synthetic（Anthropic 兼容）**：提示 `SYNTHETIC_API_KEY`。
    - 详情：[Synthetic](/zh/providers/synthetic)
    - **Moonshot（Kimi K2）**：自动写入配置。
-   - **Kimi Code**：自动写入配置。
-   - 详情：[Moonshot AI（Kimi + Kimi Code）](/zh/providers/moonshot)
+   - **Kimi Coding**：自动写入配置。
+   - 详情：[Moonshot AI（Kimi + Kimi Coding）](/zh/providers/moonshot)
    - **跳过**：暂不配置认证。
    - 从检测到的选项中选择默认模型（或手动输入 provider/model）。
    - 向导会进行模型检查，并在模型未知或缺少认证时警告。

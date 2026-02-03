@@ -30,6 +30,36 @@ Control UI 是 Gateway 提供的 **Vite + Lit** 单页应用：
   仪表盘设置面板可存储 token；密码不持久化。
   Onboarding 向导默认生成 gateway token，请在首次连接时粘贴。
 
+## 设备配对（首次连接）
+
+当你从新浏览器或设备连接到 Control UI 时，Gateway
+需要 **一次性配对批准** —— 即使你在同一 Tailnet 上
+且设置了 `gateway.auth.allowTailscale: true`。这是一项安全措施，防止未授权访问。
+
+**你会看到：** "disconnected (1008): pairing required"
+
+**要批准设备：**
+
+```bash
+# 列出待处理请求
+openclaw devices list
+
+# 通过请求 ID 批准
+openclaw devices approve <requestId>
+```
+
+一旦批准，设备将被记住，除非你使用
+`openclaw devices revoke --device <id> --role <role>` 撤销，
+否则无需重新批准。参见 [Devices CLI](/zh/cli/devices)
+了解 token 轮换与撤销。
+
+**说明：**
+
+- 本地连接（`127.0.0.1`）自动批准。
+- 远程连接（LAN、Tailnet 等）需要显式批准。
+- 每个浏览器配置文件生成唯一设备 ID，因此切换浏览器或
+  清除浏览器数据需要重新配对。
+
 ## 目前可做什么
 
 - 通过 Gateway WS 与模型聊天（`chat.history`、`chat.send`、`chat.abort`、`chat.inject`）

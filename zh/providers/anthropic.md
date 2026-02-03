@@ -36,10 +36,17 @@ openclaw onboard --anthropic-api-key "$ANTHROPIC_API_KEY"
 
 ## 提示词缓存（Anthropic API）
 
-除非你设置，OpenClaw **不会** 覆盖 Anthropic 默认的缓存 TTL。
-这 **仅适用于 API**；订阅认证不支持 TTL 设置。
+OpenClaw 支持 Anthropic 的提示词缓存功能。这 **仅适用于 API**；订阅认证不支持缓存设置。
 
-要为每个模型设置 TTL，请在模型 `params` 中使用 `cacheControlTtl`：
+### 配置
+
+在模型配置中使用 `cacheRetention` 参数：
+
+| 值      | 缓存时长  | 说明                               |
+| ------- | --------- | ---------------------------------- |
+| `none`  | 无缓存   | 禁用提示词缓存                      |
+| `short` | 5 分钟   | API Key 认证的默认值               |
+| `long`  | 1 小时   | 扩展缓存（需要 beta 标记）        |
 
 ```json5
 {
@@ -47,16 +54,13 @@ openclaw onboard --anthropic-api-key "$ANTHROPIC_API_KEY"
     defaults: {
       models: {
         "anthropic/claude-opus-4-5": {
-          params: { cacheControlTtl: "5m" }, // 或 "1h"
+          params: { cacheRetention: "long" },
         },
       },
     },
   },
 }
 ```
-
-OpenClaw 会在 Anthropic API 请求中包含 `extended-cache-ttl-2025-04-11` beta 标记；
-如你覆盖 provider headers，请保留它（见 [/gateway/configuration](/zh/gateway/configuration)）。
 
 ## 方案 B：Claude setup-token
 

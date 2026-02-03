@@ -31,7 +31,26 @@ MiniMax 在 M2.1 中强调以下改进：
 
 ## 选择一种配置方式
 
-### MiniMax M2.1 — 推荐
+### MiniMax OAuth（Coding Plan）— 推荐
+
+**适用：** 通过 MiniMax Coding Plan 快速配置，无需 API key，使用 OAuth 认证。
+
+启用捆绑的 OAuth 插件并完成认证：
+
+```bash
+openclaw plugins enable minimax-portal-auth  # 若已加载可跳过
+openclaw gateway restart  # 若 gateway 已运行需重启
+openclaw onboard --auth-choice minimax-portal
+```
+
+系统将提示选择端点：
+
+- **Global** - 国际用户 (`api.minimax.io`)
+- **CN** - 中国用户 (`api.minimaxi.com`)
+
+详情参见 [MiniMax OAuth plugin README](https://github.com/openclaw/openclaw/tree/main/extensions/minimax-portal-auth)。
+
+### MiniMax M2.1（API key）
 
 **适用：** 通过 Anthropic 兼容 API 使用托管 MiniMax。
 

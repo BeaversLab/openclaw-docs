@@ -99,7 +99,7 @@ tailscale status
 ## 5) 安装 OpenClaw
 
 ```bash
-curl -fsSL https://openclaw.bot/install.sh | bash
+curl -fsSL https://openclaw.ai/install.sh | bash
 source ~/.bashrc
 ```
 

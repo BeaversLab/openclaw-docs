@@ -39,27 +39,27 @@ OpenClaw 使用 **[AgentSkills](https://agentskills.io) 兼容** 的技能文件
 
 插件可在 `openclaw.plugin.json` 中列出 `skills` 目录（相对插件根路径）来提供自己的技能。插件启用后，插件技能会按常规优先级参与加载。你可通过插件配置项的 `metadata.openclaw.requires.config` 对其门控。插件发现/配置见 [插件](/zh/plugin)，这些技能所教授的工具面见 [工具](/zh/tools)。
 
-## ClawdHub（安装 + 同步）
+## ClawHub（安装 + 同步）
 
-ClawdHub 是 OpenClaw 的公共技能注册表。浏览：
-https://clawdhub.com。你可以用它发现、安装、更新和备份技能。
-完整指南：[ClawdHub](/zh/tools/clawdhub)。
+ClawHub 是 OpenClaw 的公共技能注册表。浏览：
+https://clawhub.com。你可以用它发现、安装、更新和备份技能。
+完整指南：[ClawHub](/zh/tools/clawhub)。
 
 常见流程：
 
 - 安装技能到工作区：
-  - `clawdhub install <skill-slug>`
+  - `clawhub install <skill-slug>`
 - 更新所有已安装技能：
-  - `clawdhub update --all`
+  - `clawhub update --all`
 - 同步（扫描 + 发布更新）：
-  - `clawdhub sync --all`
+  - `clawhub sync --all`
 
-默认情况下，`clawdhub` 安装到当前工作目录下的 `./skills`
+默认情况下，`clawhub` 安装到当前工作目录下的 `./skills`
 （或回退到配置的 OpenClaw 工作区）。OpenClaw 会在下一次会话中将其作为 `<workspace>/skills` 加载。
 
 ## 安全说明
 
-- 将第三方技能视为 **可信代码**。启用前请先阅读。
+- 将第三方技能视为 **不可信代码**。启用前请先阅读。
 - 对不可信输入或高风险工具，优先使用沙箱。见 [沙箱](/zh/gateway/sandboxing)。
 - `skills.entries.*.env` 与 `skills.entries.*.apiKey` 会把密钥注入到 **宿主机** 进程中（而不是沙箱）。避免把密钥写入提示与日志。
 - 更完整的威胁模型与清单见 [安全](/zh/gateway/security)。
