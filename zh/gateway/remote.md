@@ -4,6 +4,7 @@ read_when:
   - 运行或排查远程 gateway 设置
 title: "远程访问"
 ---
+
 # 远程访问（SSH、隧道与 tailnet）
 
 本仓库支持“SSH 远程”模式：在专用主机（桌面/服务器）上保持单个 Gateway（master）运行，并将客户端连接到它。
@@ -54,12 +55,14 @@ Runbook： [macOS remote access](/zh/platforms/mac/remote)。
 一个 gateway 服务拥有 state + channels，nodes 作为外设。
 
 示例流程（Telegram → node）：
+
 - Telegram 消息到达 **Gateway**。
 - Gateway 运行 **agent** 并决定是否调用 node 工具。
 - Gateway 通过 Gateway WebSocket 调用 **node**（`node.*` RPC）。
 - Node 返回结果；Gateway 回复 Telegram。
 
 注：
+
 - **Nodes 不运行 gateway 服务。**除非你明确运行隔离 profile，否则每台主机只运行一个 gateway（见 [Multiple gateways](/zh/gateway/multiple-gateways)）。
 - macOS app 的 “node mode” 只是 Gateway WebSocket 上的 node 客户端。
 
@@ -72,6 +75,7 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 ```
 
 隧道建立后：
+
 - `openclaw health` 与 `openclaw status --deep` 会通过 `ws://127.0.0.1:18789` 访问远端 gateway。
 - `openclaw gateway {status,health,send,agent,call}` 也可在需要时用 `--url` 指向转发地址。
 
@@ -87,9 +91,9 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
     mode: "remote",
     remote: {
       url: "ws://127.0.0.1:18789",
-      token: "your-token"
-    }
-  }
+      token: "your-token",
+    },
+  },
 }
 ```
 

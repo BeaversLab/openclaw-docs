@@ -5,6 +5,7 @@ read_when:
   - 想用一个 API key 访问多种 LLM
   - 想通过 OpenRouter 在 OpenClaw 中运行模型
 ---
+
 # OpenRouter
 
 OpenRouter 提供 **统一 API**，在单一端点与 API key 后路由多种模型。它兼容 OpenAI，因此大多数 OpenAI SDK 只需切换 base URL 即可使用。
@@ -22,9 +23,9 @@ openclaw onboard --auth-choice apiKey --token-provider openrouter --token "$OPEN
   env: { OPENROUTER_API_KEY: "sk-or-..." },
   agents: {
     defaults: {
-      model: { primary: "openrouter/anthropic/claude-sonnet-4-5" }
-    }
-  }
+      model: { primary: "openrouter/anthropic/claude-sonnet-4-5" },
+    },
+  },
 }
 ```
 

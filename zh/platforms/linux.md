@@ -5,6 +5,7 @@ read_when:
   - 查看 Linux 伴侣应用状态
   - 规划平台覆盖或贡献
 ---
+
 # Linux App
 
 Gateway 在 Linux 上完全支持。**推荐运行时是 Node**。
@@ -14,20 +15,22 @@ Gateway 在 Linux 上完全支持。**推荐运行时是 Node**。
 
 ## 新手快速路径（VPS）
 
-1) 安装 Node 22+  
-2) `npm i -g openclaw@latest`  
-3) `openclaw onboard --install-daemon`  
-4) 在笔记本上：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`  
-5) 打开 `http://127.0.0.1:18789/` 并粘贴 token
+1. 安装 Node 22+
+2. `npm i -g openclaw@latest`
+3. `openclaw onboard --install-daemon`
+4. 在笔记本上：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
+5. 打开 `http://127.0.0.1:18789/` 并粘贴 token
 
 VPS 逐步指南：[exe.dev](/zh/platforms/exe-dev)
 
 ## 安装
+
 - [Getting Started](/zh/start/getting-started)
 - [Install & updates](/zh/install/updating)
 - 可选流程：[Bun（实验性）](/zh/install/bun)、[Nix](/zh/install/nix)、[Docker](/zh/install/docker)
 
 ## Gateway
+
 - [Gateway runbook](/zh/gateway)
 - [Configuration](/zh/gateway/configuration)
 

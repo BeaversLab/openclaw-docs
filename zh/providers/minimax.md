@@ -5,6 +5,7 @@ read_when:
   - 想在 OpenClaw 中使用 MiniMax 模型
   - 需要 MiniMax 配置指引
 ---
+
 # MiniMax
 
 MiniMax 是一家 AI 公司，构建 **M2/M2.1** 模型家族。当前面向编程的版本为 **MiniMax M2.1**（2025-12-23），用于现实世界的复杂任务。
@@ -35,6 +36,7 @@ MiniMax 在 M2.1 中强调以下改进：
 **适用：** 通过 Anthropic 兼容 API 使用托管 MiniMax。
 
 通过 CLI 配置：
+
 - 运行 `openclaw configure`
 - 选择 **Model/auth**
 - 选择 **MiniMax M2.1**
@@ -58,12 +60,12 @@ MiniMax 在 M2.1 中强调以下改进：
             input: ["text"],
             cost: { input: 15, output: 60, cacheRead: 2, cacheWrite: 10 },
             contextWindow: 200000,
-            maxTokens: 8192
-          }
-        ]
-      }
-    }
-  }
+            maxTokens: 8192,
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 
@@ -78,14 +80,14 @@ MiniMax 在 M2.1 中强调以下改进：
     defaults: {
       models: {
         "anthropic/claude-opus-4-5": { alias: "opus" },
-        "minimax/MiniMax-M2.1": { alias: "minimax" }
+        "minimax/MiniMax-M2.1": { alias: "minimax" },
       },
       model: {
         primary: "anthropic/claude-opus-4-5",
-        fallbacks: ["minimax/MiniMax-M2.1"]
-      }
-    }
-  }
+        fallbacks: ["minimax/MiniMax-M2.1"],
+      },
+    },
+  },
 }
 ```
 
@@ -101,8 +103,8 @@ MiniMax 在 M2.1 中强调以下改进：
   agents: {
     defaults: {
       model: { primary: "lmstudio/minimax-m2.1-gs32" },
-      models: { "lmstudio/minimax-m2.1-gs32": { alias: "Minimax" } }
-    }
+      models: { "lmstudio/minimax-m2.1-gs32": { alias: "Minimax" } },
+    },
   },
   models: {
     mode: "merge",
@@ -119,12 +121,12 @@ MiniMax 在 M2.1 中强调以下改进：
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 196608,
-            maxTokens: 8192
-          }
-        ]
-      }
-    }
-  }
+            maxTokens: 8192,
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 
@@ -132,10 +134,10 @@ MiniMax 在 M2.1 中强调以下改进：
 
 使用交互式配置向导设置 MiniMax，无需编辑 JSON：
 
-1) 运行 `openclaw configure`。
-2) 选择 **Model/auth**。
-3) 选择 **MiniMax M2.1**。
-4) 在提示时选择默认模型。
+1. 运行 `openclaw configure`。
+2. 选择 **Model/auth**。
+3. 选择 **MiniMax M2.1**。
+4. 在提示时选择默认模型。
 
 ## 配置选项
 
@@ -160,16 +162,19 @@ MiniMax 在 M2.1 中强调以下改进：
 ### “Unknown model: minimax/MiniMax-M2.1”
 
 这通常意味着 **MiniMax provider 未配置**（没有 provider entry，也没有 MiniMax 认证 profile/env key）。此检测的修复在 **2026.1.12** 中（编写时未发布）。修复方式：
+
 - 升级到 **2026.1.12**（或从源码 `main` 运行），然后重启 gateway。
 - 运行 `openclaw configure` 并选择 **MiniMax M2.1**，或
 - 手动添加 `models.providers.minimax` 区块，或
 - 设置 `MINIMAX_API_KEY`（或 MiniMax 认证 profile），以便注入 provider。
 
 确保模型 id **区分大小写**：
+
 - `minimax/MiniMax-M2.1`
 - `minimax/MiniMax-M2.1-lightning`
 
 然后重新检查：
+
 ```bash
 openclaw models list
 ```

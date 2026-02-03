@@ -49,12 +49,14 @@ title: "群组消息"
 ```
 
 备注：
+
 - 正则不区分大小写；可覆盖 `@openclaw` 显示名 ping 以及带/不带 `+` 或空格的号码。
 - WhatsApp 在有人点击联系人时仍会通过 `mentionedJids` 发送规范 mention，因此号码兜底通常不需要，但作为安全网很有用。
 
 ### 激活命令（仅 owner）
 
 使用群聊天命令：
+
 - `/activation mention`
 - `/activation always`
 
@@ -80,4 +82,3 @@ title: "群组消息"
 - Echo 抑制使用合并后的批次字符串；若连续发送相同文本但未 mention，只有第一条会收到回复。
 - Session store 中的条目会显示为 `agent:<agentId>:whatsapp:group:<jid>`（默认在 `~/.openclaw/agents/<agentId>/sessions/sessions.json`）；缺失条目仅表示该群尚未触发运行。
 - 群内的 typing indicators 遵循 `agents.defaults.typingMode`（未 mention 时默认 `message`）。
-

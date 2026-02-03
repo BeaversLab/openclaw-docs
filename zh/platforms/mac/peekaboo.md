@@ -6,6 +6,7 @@ read_when:
   - 通过 Swift Package Manager 集成 Peekaboo
   - 修改 PeekabooBridge 协议/路径
 ---
+
 # Peekaboo Bridge（macOS UI 自动化）
 
 OpenClaw 可将 **PeekabooBridge** 作为本地、权限感知的 UI 自动化 broker 托管。
@@ -20,6 +21,7 @@ OpenClaw 可将 **PeekabooBridge** 作为本地、权限感知的 UI 自动化 b
 ## 启用 Bridge
 
 在 macOS 应用中：
+
 - Settings → **Enable Peekaboo Bridge**
 
 启用后，OpenClaw 会启动本地 UNIX socket 服务器。禁用后 host 会停止，

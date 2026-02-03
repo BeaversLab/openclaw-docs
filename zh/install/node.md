@@ -28,13 +28,13 @@ echo "$PATH"
 
 ## 修复：把 npm 的全局 bin 目录加入 PATH
 
-1) 找出你的全局 npm prefix：
+1. 找出你的全局 npm prefix：
 
 ```bash
 npm prefix -g
 ```
 
-2) 把全局 npm 的 bin 目录加入 shell 启动文件：
+2. 把全局 npm 的 bin 目录加入 shell 启动文件：
 
 - zsh：`~/.zshrc`
 - bash：`~/.bashrc`

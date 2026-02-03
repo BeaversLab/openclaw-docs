@@ -17,6 +17,7 @@ Mattermost 是可自托管的团队消息平台；产品与下载见官方站点
 Mattermost 为插件形式，未随核心安装打包。
 
 通过 CLI 安装（npm registry）：
+
 ```bash
 openclaw plugins install @openclaw/mattermost
 ```

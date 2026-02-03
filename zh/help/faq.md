@@ -2,6 +2,7 @@
 title: "FAQ"
 summary: "关于 OpenClaw 安装、配置与使用的常见问题"
 ---
+
 # 常见问题（FAQ）
 
 快速答案 + 更深入的实战排障（本地开发、VPS、多 agent、OAuth/API keys、模型 failover）。运行时诊断请看 [Troubleshooting](/zh/gateway/troubleshooting)。完整配置参考见 [Configuration](/zh/gateway/configuration)。
@@ -196,47 +197,61 @@ summary: "关于 OpenClaw 安装、配置与使用的常见问题"
 
 ## First 60 seconds if something's broken
 
-1) **快速状态（首个检查）**
+1. **快速状态（首个检查）**
+
    ```bash
    openclaw status
    ```
+
    本地快速摘要：OS + 更新、gateway/服务可达性、agents/sessions、provider 配置 + 运行时问题（当 gateway 可达时）。
 
-2) **可粘贴报告（安全分享）**
+2. **可粘贴报告（安全分享）**
+
    ```bash
    openclaw status --all
    ```
+
    只读诊断 + 日志尾（token 已脱敏）。
 
-3) **守护进程 + 端口状态**
+3. **守护进程 + 端口状态**
+
    ```bash
    openclaw gateway status
    ```
+
    显示 supervisor 运行状态 vs RPC 可达性、探测目标 URL，以及服务可能使用的配置。
 
-4) **深入探测**
+4. **深入探测**
+
    ```bash
    openclaw status --deep
    ```
+
    运行 gateway 健康检查 + provider 探测（需要可达的 gateway）。见 [Health](/zh/gateway/health)。
 
-5) **跟随最新日志**
+5. **跟随最新日志**
+
    ```bash
    openclaw logs --follow
    ```
+
    如果 RPC 不可用，回退到：
+
    ```bash
    tail -f "$(ls -t /tmp/openclaw/openclaw-*.log | head -1)"
    ```
+
    文件日志与服务日志是分开的；见 [Logging](/zh/logging) 与 [Troubleshooting](/zh/gateway/troubleshooting)。
 
-6) **运行 doctor（修复）**
+6. **运行 doctor（修复）**
+
    ```bash
    openclaw doctor
    ```
+
    修复/迁移配置与状态 + 运行健康检查。见 [Doctor](/zh/gateway/doctor)。
 
-7) **Gateway 快照**
+7. **Gateway 快照**
    ```bash
    openclaw health --json
    openclaw health --verbose   # shows the target URL + config path on errors
@@ -275,6 +290,7 @@ openclaw doctor
 ```
 
 它们的作用：
+
 - `openclaw status`：gateway/agent 健康 + 基础配置的快速快照。
 - `openclaw models status`：检查 provider 认证 + 模型可用性。
 - `openclaw doctor`：验证并修复常见配置/状态问题。
@@ -284,6 +300,7 @@ openclaw doctor
 
 快速调试循环：[First 60 seconds if something's broken](#first-60-seconds-if-somethings-broken)。
 安装文档：[Install](/zh/install), [Installer flags](/zh/install/installer), [Updating](/zh/install/updating)。
+
 ### Whats the recommended way to install and set up OpenClaw
 
 The repo recommends running from source and using the onboarding wizard:
@@ -315,11 +332,13 @@ The wizard now opens your browser with a tokenized dashboard URL right after onb
 ### How do I authenticate the dashboard token on localhost vs remote
 
 **Localhost (same machine):**
+
 - Open `http://127.0.0.1:18789/`.
 - If it asks for auth, run `openclaw dashboard` and use the tokenized link (`?token=...`).
 - The token is the same value as `gateway.auth.token` (or `OPENCLAW_GATEWAY_TOKEN`) and is stored by the UI after first load.
 
 **Not on localhost:**
+
 - **Tailscale Serve** (recommended): keep bind loopback, run `openclaw gateway --tailscale serve`, open `https://<magicdns>/`. If `gateway.auth.allowTailscale` is `true`, identity headers satisfy auth (no token).
 - **Tailnet bind**: run `openclaw gateway --bind tailnet --token "<token>"`, open `http://<tailscale-ip>:18789/`, paste token in dashboard settings.
 - **SSH tunnel**: `ssh -N -L 18789:127.0.0.1:18789 user@host` then open `http://127.0.0.1:18789/?token=...` from `openclaw dashboard`.
@@ -358,17 +377,22 @@ That screen depends on the Gateway being reachable and authenticated. The TUI al
 "Wake up, my friend!" automatically on first hatch. If you see that line with **no reply**
 and tokens stay at 0, the agent never ran.
 
-1) Restart the Gateway:
+1. Restart the Gateway:
+
 ```bash
 openclaw gateway restart
 ```
-2) Check status + auth:
+
+2. Check status + auth:
+
 ```bash
 openclaw status
 openclaw models status
 openclaw logs --follow
 ```
-3) If it still hangs, run:
+
+3. If it still hangs, run:
+
 ```bash
 openclaw doctor
 ```
@@ -382,10 +406,10 @@ Yes. Copy the **state directory** and **workspace**, then run Doctor once. This
 keeps your bot “exactly the same” (memory, session history, auth, and channel
 state) as long as you copy **both** locations:
 
-1) Install OpenClaw on the new machine.
-2) Copy `$OPENCLAW_STATE_DIR` (default: `~/.openclaw`) from the old machine.
-3) Copy your workspace (default: `~/.openclaw/workspace`).
-4) Run `openclaw doctor` and restart the Gateway service.
+1. Install OpenClaw on the new machine.
+2. Copy `$OPENCLAW_STATE_DIR` (default: `~/.openclaw`) from the old machine.
+3. Copy your workspace (default: `~/.openclaw/workspace`).
+4. Run `openclaw doctor` and restart the Gateway service.
 
 That preserves config, auth profiles, WhatsApp creds, sessions, and memory. If you’re in
 remote mode, remember the gateway host owns the session store and workspace.
@@ -420,6 +444,7 @@ https://github.com/openclaw/openclaw/tree/main/docs
 ### Whats the difference between stable and beta
 
 **Stable** and **beta** are **npm dist‑tags**, not separate code lines:
+
 - `latest` = stable
 - `beta` = early build for testing
 
@@ -453,6 +478,7 @@ More detail: [Development channels](/install/development-channels) and [Installe
 ### How long does install and onboarding usually take
 
 Rough guide:
+
 - **Install:** 2-5 minutes
 - **Onboarding:** 5-15 minutes depending on how many channels/models you configure
 
@@ -463,19 +489,24 @@ and the fast debug loop in [Im stuck](/help/faq#im-stuck--whats-the-fastest-way-
 
 Two options:
 
-1) **Dev channel (git checkout):**
+1. **Dev channel (git checkout):**
+
 ```bash
 openclaw update --channel dev
 ```
+
 This switches to the `main` branch and updates from source.
 
-2) **Hackable install (from the installer site):**
+2. **Hackable install (from the installer site):**
+
 ```bash
 curl -fsSL https://openclaw.bot/install.sh | bash -s -- --install-method git
 ```
+
 That gives you a local repo you can edit, then update via git.
 
 If you prefer a clean clone manually, use:
+
 ```bash
 git clone https://github.com/openclaw/openclaw.git
 cd openclaw
@@ -513,10 +544,12 @@ More options: [Installer flags](/install/installer).
 Two common Windows issues:
 
 **1) npm error spawn git / git not found**
+
 - Install **Git for Windows** and make sure `git` is on your PATH.
 - Close and reopen PowerShell, then re-run the installer.
 
 **2) openclaw is not recognized after install**
+
 - Your npm global bin folder is not on PATH.
 - Check the path:
   ```powershell
@@ -531,7 +564,7 @@ Docs: [Windows](/platforms/windows).
 ### The docs didnt answer my question how do I get a better answer
 
 Use the **hackable (git) install** so you have the full source and docs locally, then ask
-your bot (or Claude/Codex) *from that folder* so it can read the repo and answer precisely.
+your bot (or Claude/Codex) _from that folder_ so it can read the repo and answer precisely.
 
 ```bash
 curl -fsSL https://openclaw.bot/install.sh | bash -s -- --install-method git
@@ -681,8 +714,9 @@ See [OAuth](/concepts/oauth), [Model providers](/concepts/model-providers), and 
 Gemini CLI uses a **plugin auth flow**, not a client id or secret in `openclaw.json`.
 
 Steps:
-1) Enable the plugin: `openclaw plugins enable google-gemini-cli-auth`
-2) Login: `openclaw models auth login --provider google-gemini-cli --set-default`
+
+1. Enable the plugin: `openclaw plugins enable google-gemini-cli-auth`
+2. Login: `openclaw models auth login --provider google-gemini-cli --set-default`
 
 This stores OAuth tokens in auth profiles on the gateway host. Details: [Model providers](/concepts/model-providers).
 
@@ -712,6 +746,7 @@ any Mac works. OpenClaw’s iMessage integrations run on macOS (BlueBubbles or `
 the Gateway can run elsewhere.
 
 Common setups:
+
 - Run the Gateway on Linux/VPS, and point `channels.imessage.cliPath` at an SSH wrapper that
   runs `imsg` on the Mac.
 - Run everything on the Mac if you want the simplest single‑machine setup.
@@ -726,6 +761,7 @@ Yes. The **Mac mini can run the Gateway**, and your MacBook Pro can connect as a
 capabilities like screen/camera/canvas and `system.run` on that device.
 
 Common pattern:
+
 - Gateway on the Mac mini (always‑on).
 - MacBook Pro runs the macOS app or a node host and pairs to the Gateway.
 - Use `openclaw nodes status` / `openclaw nodes list` to see it.
@@ -745,12 +781,15 @@ without WhatsApp/Telegram.
 `channels.telegram.allowFrom` is **the human sender’s Telegram user ID** (numeric, recommended) or `@username`. It is not the bot username.
 
 Safer (no third-party bot):
+
 - DM your bot, then run `openclaw logs --follow` and read `from.id`.
 
 Official Bot API:
+
 - DM your bot, then call `https://api.telegram.org/bot<bot_token>/getUpdates` and read `message.from.id`.
 
 Third-party (less private):
+
 - DM `@userinfobot` or `@getidsbot`.
 
 See [/channels/telegram](/zh/channels/telegram#access-control-dms--groups).
@@ -821,10 +860,12 @@ Short answer: **if you want 24/7 reliability, use a VPS**. If you want the
 lowest friction and you’re okay with sleep/restarts, run it locally.
 
 **Laptop (local Gateway)**
+
 - **Pros:** no server cost, direct access to local files, live browser window.
 - **Cons:** sleep/network drops = disconnects, OS updates/reboots interrupt, must stay awake.
 
 **VPS / cloud**
+
 - **Pros:** always‑on, stable network, no laptop sleep issues, easier to keep running.
 - **Cons:** often run headless (use screenshots), remote file access only, you must SSH for updates.
 
@@ -859,6 +900,7 @@ Yes. Treat a VM the same as a VPS: it needs to be always on, reachable, and have
 RAM for the Gateway and any channels you enable.
 
 Baseline guidance:
+
 - **Absolute minimum:** 1 vCPU, 1GB RAM.
 - **Recommended:** 2GB RAM or more if you run multiple channels, browser automation, or media tools.
 - **OS:** Ubuntu LTS or another modern Debian/Ubuntu.
@@ -881,15 +923,16 @@ stateful sessions, memory, and tools - without handing control of your workflows
 SaaS.
 
 Highlights:
+
 - **Your devices, your data:** run the Gateway wherever you want (Mac, Linux, VPS) and keep the
-  workspace + session history local.  
+  workspace + session history local.
 - **Real channels, not a web sandbox:** WhatsApp/Telegram/Slack/Discord/Signal/iMessage/etc,
-  plus mobile voice and Canvas on supported platforms.  
+  plus mobile voice and Canvas on supported platforms.
 - **Model-agnostic:** use Anthropic, OpenAI, MiniMax, OpenRouter, etc., with per‑agent routing
-  and failover.  
+  and failover.
 - **Local-only option:** run local models so **all data can stay on your device** if you want.
 - **Multi-agent routing:** separate agents per channel, account, or task, each with its own
-  workspace and defaults.  
+  workspace and defaults.
 - **Open source and hackable:** inspect, extend, and self-host without vendor lock‑in.
 
 Docs: [Gateway](/gateway), [Channels](/channels), [Multi‑agent](/concepts/multi-agent),
@@ -898,6 +941,7 @@ Docs: [Gateway](/gateway), [Channels](/channels), [Multi‑agent](/concepts/mult
 ### I just set it up what should I do first
 
 Good first projects:
+
 - Build a website (WordPress, Shopify, or a simple static site).
 - Prototype a mobile app (outline, screens, API plan).
 - Organize files and folders (cleanup, naming, tagging).
@@ -909,6 +953,7 @@ use sub agents for parallel work.
 ### What are the top five everyday use cases for OpenClaw
 
 Everyday wins usually look like:
+
 - **Personal briefings:** summaries of inbox, calendar, and news you care about.
 - **Research and drafting:** quick research, summaries, and first drafts for emails or docs.
 - **Reminders and follow ups:** cron or heartbeat driven nudges and checklists.
@@ -933,6 +978,7 @@ Claude Code or Codex for the fastest direct coding loop inside a repo. Use OpenC
 want durable memory, cross-device access, and tool orchestration.
 
 Advantages:
+
 - **Persistent memory + workspace** across sessions
 - **Multi-platform access** (WhatsApp, Telegram, TUI, WebChat)
 - **Tool orchestration** (browser, files, scheduling, hooks)
@@ -954,6 +1000,7 @@ Yes. Add extra directories via `skills.load.extraDirs` in `~/.openclaw/openclaw.
 ### How can I use different models for different tasks
 
 Today the supported patterns are:
+
 - **Cron jobs**: isolated jobs can set a `model` override per job.
 - **Sub-agents**: route tasks to separate agents with different default models.
 - **On-demand switch**: use `/model` to switch the current session model at any time.
@@ -979,11 +1026,13 @@ Cron runs inside the Gateway process. If the Gateway is not running continuously
 scheduled jobs will not run.
 
 Checklist:
+
 - Confirm cron is enabled (`cron.enabled`) and `OPENCLAW_SKIP_CRON` is not set.
 - Check the Gateway is running 24/7 (no sleep/restarts).
 - Verify timezone settings for the job (`--tz` vs host timezone).
 
 Debug:
+
 ```bash
 openclaw cron run <jobId> --force
 openclaw cron runs --id <jobId> --limit 50
@@ -1032,22 +1081,22 @@ Run the Gateway on Linux, pair a macOS node (menubar app), and set **Node Run Co
 **Option C - proxy macOS binaries over SSH (advanced).**  
 Keep the Gateway on Linux, but make the required CLI binaries resolve to SSH wrappers that run on a Mac. Then override the skill to allow Linux so it stays eligible.
 
-1) Create an SSH wrapper for the binary (example: `imsg`):
+1. Create an SSH wrapper for the binary (example: `imsg`):
    ```bash
    #!/usr/bin/env bash
    set -euo pipefail
    exec ssh -T user@mac-host /opt/homebrew/bin/imsg "$@"
    ```
-2) Put the wrapper on `PATH` on the Linux host (for example `~/bin/imsg`).
-3) Override the skill metadata (workspace or `~/.openclaw/skills`) to allow Linux:
+2. Put the wrapper on `PATH` on the Linux host (for example `~/bin/imsg`).
+3. Override the skill metadata (workspace or `~/.openclaw/skills`) to allow Linux:
    ```markdown
    ---
    name: imsg
    description: iMessage/SMS CLI for listing chats, history, watch, and sending.
-   metadata: {"openclaw":{"os":["darwin","linux"],"requires":{"bins":["imsg"]}}}
+   metadata: { "openclaw": { "os": ["darwin", "linux"], "requires": { "bins": ["imsg"] } } }
    ---
    ```
-4) Start a new session so the skills snapshot refreshes.
+4. Start a new session so the skills snapshot refreshes.
 
 For iMessage specifically, you can also point `channels.imessage.cliPath` at an SSH wrapper (OpenClaw only needs stdio). See [iMessage](/channels/imessage).
 
@@ -1056,10 +1105,12 @@ For iMessage specifically, you can also point `channels.imessage.cliPath` at an 
 Not built‑in today.
 
 Options:
+
 - **Custom skill / plugin:** best for reliable API access (Notion/HeyGen both have APIs).
 - **Browser automation:** works without code but is slower and more fragile.
 
 If you want to keep context per client (agency workflows), a simple pattern is:
+
 - One Notion page per client (context + preferences + active work).
 - Ask the agent to fetch that page at the start of a session.
 
@@ -1115,6 +1166,7 @@ Set `agents.defaults.sandbox.docker.binds` to `["host:path:mode"]` (e.g., `"/hom
 ### How does memory work
 
 OpenClaw memory is just Markdown files in the agent workspace:
+
 - Daily notes in `memory/YYYY-MM-DD.md`
 - Curated long-term notes in `MEMORY.md` (main/private sessions only)
 
@@ -1182,16 +1234,16 @@ Related: [Agent workspace](/concepts/agent-workspace), [Memory](/concepts/memory
 
 Everything lives under `$OPENCLAW_STATE_DIR` (default: `~/.openclaw`):
 
-| Path | Purpose |
-|------|---------|
-| `$OPENCLAW_STATE_DIR/openclaw.json` | Main config (JSON5) |
-| `$OPENCLAW_STATE_DIR/credentials/oauth.json` | Legacy OAuth import (copied into auth profiles on first use) |
-| `$OPENCLAW_STATE_DIR/agents/<agentId>/agent/auth-profiles.json` | Auth profiles (OAuth + API keys) |
-| `$OPENCLAW_STATE_DIR/agents/<agentId>/agent/auth.json` | Runtime auth cache (managed automatically) |
-| `$OPENCLAW_STATE_DIR/credentials/` | Provider state (e.g. `whatsapp/<accountId>/creds.json`) |
-| `$OPENCLAW_STATE_DIR/agents/` | Per‑agent state (agentDir + sessions) |
-| `$OPENCLAW_STATE_DIR/agents/<agentId>/sessions/` | Conversation history & state (per agent) |
-| `$OPENCLAW_STATE_DIR/agents/<agentId>/sessions/sessions.json` | Session metadata (per agent) |
+| Path                                                            | Purpose                                                      |
+| --------------------------------------------------------------- | ------------------------------------------------------------ |
+| `$OPENCLAW_STATE_DIR/openclaw.json`                             | Main config (JSON5)                                          |
+| `$OPENCLAW_STATE_DIR/credentials/oauth.json`                    | Legacy OAuth import (copied into auth profiles on first use) |
+| `$OPENCLAW_STATE_DIR/agents/<agentId>/agent/auth-profiles.json` | Auth profiles (OAuth + API keys)                             |
+| `$OPENCLAW_STATE_DIR/agents/<agentId>/agent/auth.json`          | Runtime auth cache (managed automatically)                   |
+| `$OPENCLAW_STATE_DIR/credentials/`                              | Provider state (e.g. `whatsapp/<accountId>/creds.json`)      |
+| `$OPENCLAW_STATE_DIR/agents/`                                   | Per‑agent state (agentDir + sessions)                        |
+| `$OPENCLAW_STATE_DIR/agents/<agentId>/sessions/`                | Conversation history & state (per agent)                     |
+| `$OPENCLAW_STATE_DIR/agents/<agentId>/sessions/sessions.json`   | Session metadata (per agent)                                 |
 
 Legacy single‑agent path: `~/.openclaw/agent/*` (migrated by `openclaw doctor`).
 
@@ -1210,7 +1262,7 @@ Default workspace is `~/.openclaw/workspace`, configurable via:
 
 ```json5
 {
-  agents: { defaults: { workspace: "~/.openclaw/workspace" } }
+  agents: { defaults: { workspace: "~/.openclaw/workspace" } },
 }
 ```
 
@@ -1255,9 +1307,9 @@ Example (repo as default cwd):
 {
   agents: {
     defaults: {
-      workspace: "~/Projects/my-repo"
-    }
-  }
+      workspace: "~/Projects/my-repo",
+    },
+  },
 }
 ```
 
@@ -1287,13 +1339,14 @@ Non-loopback binds **require auth**. Configure `gateway.auth.mode` + `gateway.au
     bind: "lan",
     auth: {
       mode: "token",
-      token: "replace-me"
-    }
-  }
+      token: "replace-me",
+    },
+  },
 }
 ```
 
 Notes:
+
 - `gateway.remote.token` is for **remote CLI calls** only; it does not enable local gateway auth.
 - The Control UI authenticates via `connect.params.auth.token` (stored in app/UI settings). Avoid putting tokens in URLs.
 
@@ -1324,17 +1377,18 @@ Gateway process.
       search: {
         enabled: true,
         apiKey: "BRAVE_API_KEY_HERE",
-        maxResults: 5
+        maxResults: 5,
       },
       fetch: {
-        enabled: true
-      }
-    }
-  }
+        enabled: true,
+      },
+    },
+  },
 }
 ```
 
 Notes:
+
 - If you use allowlists, add `web_search`/`web_fetch` or `group:web`.
 - `web_fetch` is enabled by default (unless explicitly disabled).
 - Daemons read env vars from `~/.openclaw/.env` (or the service environment).
@@ -1362,15 +1416,16 @@ Yes. It’s a config option:
   browser: { headless: true },
   agents: {
     defaults: {
-      sandbox: { browser: { headless: true } }
-    }
-  }
+      sandbox: { browser: { headless: true } },
+    },
+  },
 }
 ```
 
 Default is `false` (headful). Headless is more likely to trigger anti‑bot checks on some sites. See [Browser](/tools/browser).
 
 Headless uses the **same Chromium engine** and works for most automation (forms, clicks, scraping, logins). The main differences:
+
 - No visible browser window (use screenshots if you need visuals).
 - Some sites are stricter about automation in headless mode (CAPTCHAs, anti‑bot).
   For example, X/Twitter often blocks headless sessions.
@@ -1397,12 +1452,13 @@ Short answer: **pair your computer as a node**. The Gateway runs elsewhere, but 
 call `node.*` tools (screen, camera, system) on your local machine over the Gateway WebSocket.
 
 Typical setup:
-1) Run the Gateway on the always‑on host (VPS/home server).
-2) Put the Gateway host + your computer on the same tailnet.
-3) Ensure the Gateway WS is reachable (tailnet bind or SSH tunnel).
-4) Open the macOS app locally and connect in **Remote over SSH** mode (or direct tailnet)
+
+1. Run the Gateway on the always‑on host (VPS/home server).
+2. Put the Gateway host + your computer on the same tailnet.
+3. Ensure the Gateway WS is reachable (tailnet bind or SSH tunnel).
+4. Open the macOS app locally and connect in **Remote over SSH** mode (or direct tailnet)
    so it can register as a node.
-5) Approve the node on the Gateway:
+5. Approve the node on the Gateway:
    ```bash
    openclaw nodes pending
    openclaw nodes approve <requestId>
@@ -1418,11 +1474,13 @@ Docs: [Nodes](/nodes), [Gateway protocol](/gateway/protocol), [macOS remote mode
 ### Tailscale is connected but I get no replies What now
 
 Check the basics:
+
 - Gateway is running: `openclaw gateway status`
 - Gateway health: `openclaw status`
 - Channel health: `openclaw channels status`
 
 Then verify auth and routing:
+
 - If you use Tailscale Serve, make sure `gateway.auth.allowTailscale` is set correctly.
 - If you connect via SSH tunnel, confirm the local tunnel is up and points at the right port.
 - Confirm your allowlists (DM or group) include your account.
@@ -1443,6 +1501,7 @@ listens. If one bot is on a remote VPS, point your CLI at that remote Gateway
 via SSH/Tailscale (see [Remote access](/gateway/remote)).
 
 Example pattern (run from a machine that can reach the target Gateway):
+
 ```bash
 openclaw agent --message "Hello from local bot" --deliver --channel telegram --reply-to <chat-id>
 ```
@@ -1508,12 +1567,14 @@ Yes. `config.apply` validates + writes the full config and restarts the Gateway 
 else is removed.
 
 Recover:
+
 - Restore from backup (git or a copied `~/.openclaw/openclaw.json`).
 - If you have no backup, re-run `openclaw doctor` and reconfigure channels/models.
 - If this was unexpected, file a bug and include your last known config or any backup.
 - A local coding agent can often reconstruct a working config from logs or history.
 
 Avoid it:
+
 - Use `openclaw config set` for small changes.
 - Use `openclaw configure` for interactive edits.
 
@@ -1524,7 +1585,7 @@ Docs: [Config](/cli/config), [Configure](/cli/configure), [Doctor](/gateway/doct
 ```json5
 {
   agents: { defaults: { workspace: "~/.openclaw/workspace" } },
-  channels: { whatsapp: { allowFrom: ["+15555550123"] } }
+  channels: { whatsapp: { allowFrom: ["+15555550123"] } },
 }
 ```
 
@@ -1534,23 +1595,25 @@ This sets your workspace and restricts who can trigger the bot.
 
 Minimal steps:
 
-1) **Install + login on the VPS**
+1. **Install + login on the VPS**
    ```bash
    curl -fsSL https://tailscale.com/install.sh | sh
    sudo tailscale up
    ```
-2) **Install + login on your Mac**
+2. **Install + login on your Mac**
    - Use the Tailscale app and sign in to the same tailnet.
-3) **Enable MagicDNS (recommended)**
+3. **Enable MagicDNS (recommended)**
    - In the Tailscale admin console, enable MagicDNS so the VPS has a stable name.
-4) **Use the tailnet hostname**
+4. **Use the tailnet hostname**
    - SSH: `ssh user@your-vps.tailnet-xxxx.ts.net`
    - Gateway WS: `ws://your-vps.tailnet-xxxx.ts.net:18789`
 
 If you want the Control UI without SSH, use Tailscale Serve on the VPS:
+
 ```bash
 openclaw gateway --tailscale serve
 ```
+
 This keeps the gateway bound to loopback and exposes HTTPS via Tailscale. See [Tailscale](/gateway/tailscale).
 
 ### How do I connect a Mac node to a remote Gateway Tailscale Serve
@@ -1558,10 +1621,11 @@ This keeps the gateway bound to loopback and exposes HTTPS via Tailscale. See [T
 Serve exposes the **Gateway Control UI + WS**. Nodes connect over the same Gateway WS endpoint.
 
 Recommended setup:
-1) **Make sure the VPS + Mac are on the same tailnet**.
-2) **Use the macOS app in Remote mode** (SSH target can be the tailnet hostname).
+
+1. **Make sure the VPS + Mac are on the same tailnet**.
+2. **Use the macOS app in Remote mode** (SSH target can be the tailnet hostname).
    The app will tunnel the Gateway port and connect as a node.
-3) **Approve the node** on the gateway:
+3. **Approve the node** on the gateway:
    ```bash
    openclaw nodes pending
    openclaw nodes approve <requestId>
@@ -1586,8 +1650,8 @@ You can also define inline env vars in config (applied only if missing from the 
 {
   env: {
     OPENROUTER_API_KEY: "sk-or-...",
-    vars: { GROQ_API_KEY: "gsk-..." }
-  }
+    vars: { GROQ_API_KEY: "gsk-..." },
+  },
 }
 ```
 
@@ -1597,17 +1661,17 @@ See [/environment](/zh/environment) for full precedence and sources.
 
 Two common fixes:
 
-1) Put the missing keys in `~/.openclaw/.env` so they’re picked up even when the service doesn’t inherit your shell env.
-2) Enable shell import (opt‑in convenience):
+1. Put the missing keys in `~/.openclaw/.env` so they’re picked up even when the service doesn’t inherit your shell env.
+2. Enable shell import (opt‑in convenience):
 
 ```json5
 {
   env: {
     shellEnv: {
       enabled: true,
-      timeoutMs: 15000
-    }
-  }
+      timeoutMs: 15000,
+    },
+  },
 }
 ```
 
@@ -1623,14 +1687,15 @@ your login shell automatically.
 If the Gateway runs as a service (launchd/systemd), it won’t inherit your shell
 environment. Fix by doing one of these:
 
-1) Put the token in `~/.openclaw/.env`:
+1. Put the token in `~/.openclaw/.env`:
    ```
    COPILOT_GITHUB_TOKEN=...
    ```
-2) Or enable shell import (`env.shellEnv.enabled: true`).
-3) Or add it to your config `env` block (applies only if missing).
+2. Or enable shell import (`env.shellEnv.enabled: true`).
+3. Or add it to your config `env` block (applies only if missing).
 
 Then restart the gateway and recheck:
+
 ```bash
 openclaw models status
 ```
@@ -1653,8 +1718,8 @@ transcripts - it just starts a new session.
 ```json5
 {
   session: {
-    idleMinutes: 240
-  }
+    idleMinutes: 240,
+  },
 }
 ```
 
@@ -1676,6 +1741,7 @@ Session context is limited by the model window. Long chats, large tool outputs, 
 files can trigger compaction or truncation.
 
 What helps:
+
 - Ask the bot to summarize the current state and write it to a file.
 - Use `/compact` before long tasks, and `/new` when switching topics.
 - Keep important context in the workspace and ask the bot to read it back.
@@ -1703,6 +1769,7 @@ openclaw onboard --install-daemon
 ```
 
 Notes:
+
 - The onboarding wizard also offers **Reset** if it sees an existing config. See [Wizard](/start/wizard).
 - If you used profiles (`--profile` / `OPENCLAW_PROFILE`), reset each state dir (defaults are `~/.openclaw-<profile>`).
 - Dev reset: `openclaw gateway --dev --reset` (dev-only; wipes dev config + credentials + sessions + workspace).
@@ -1712,9 +1779,11 @@ Notes:
 Use one of these:
 
 - **Compact** (keeps the conversation but summarizes older turns):
+
   ```
   /compact
   ```
+
   or `/compact <instructions>` to guide the summary.
 
 - **Reset** (fresh session ID for the same chat key):
@@ -1724,6 +1793,7 @@ Use one of these:
   ```
 
 If it keeps happening:
+
 - Enable or tune **session pruning** (`agents.defaults.contextPruning`) to trim old tool output.
 - Use a model with a larger context window.
 
@@ -1746,10 +1816,10 @@ Heartbeats run every **30m** by default. Tune or disable them:
   agents: {
     defaults: {
       heartbeat: {
-        every: "2h"   // or "0m" to disable
-      }
-    }
-  }
+        every: "2h", // or "0m" to disable
+      },
+    },
+  },
 }
 ```
 
@@ -1771,9 +1841,9 @@ If you want only **you** to be able to trigger group replies:
   channels: {
     whatsapp: {
       groupPolicy: "allowlist",
-      groupAllowFrom: ["+15551234567"]
-    }
-  }
+      groupAllowFrom: ["+15551234567"],
+    },
+  },
 }
 ```
 
@@ -1799,6 +1869,7 @@ Docs: [WhatsApp](/channels/whatsapp), [Directory](/cli/directory), [Logs](/cli/l
 ### Why doesnt OpenClaw reply in a group
 
 Two common causes:
+
 - Mention gating is on (default). You must @mention the bot (or match `mentionPatterns`).
 - You configured `channels.whatsapp.groups` without `"*"` and the group isn’t allowlisted.
 
@@ -1817,6 +1888,7 @@ No hard limits. Dozens (even hundreds) are fine, but watch for:
 - **Ops overhead:** per-agent auth profiles, workspaces, and channel routing.
 
 Tips:
+
 - Keep one **active** workspace per agent (`agents.defaults.workspace`).
 - Prune old sessions (delete JSONL or store entries) if disk grows.
 - Use `openclaw doctor` to spot stray workspaces and profile mismatches.
@@ -1831,6 +1903,7 @@ still block automation. For the most reliable browser control, use the Chrome ex
 on the machine that runs the browser (and keep the Gateway anywhere).
 
 Best‑practice setup:
+
 - Always‑on Gateway host (VPS/Mac mini).
 - One agent per role (bindings).
 - Slack channel(s) bound to those agents.
@@ -1889,6 +1962,7 @@ Docs: [Ollama](/providers/ollama), [Local models](/gateway/local-models),
 Use **model commands** or edit only the **model** fields. Avoid full config replaces.
 
 Safe options:
+
 - `/model` in chat (quick, per-session)
 - `openclaw models set ...` (updates just model config)
 - `openclaw configure --section models` (interactive)
@@ -1976,12 +2050,13 @@ profile was found), so the model can’t be resolved. A fix for this detection i
 in **2026.1.12** (unreleased at the time of writing).
 
 Fix checklist:
-1) Upgrade to **2026.1.12** (or run from source `main`), then restart the gateway.
-2) Make sure MiniMax is configured (wizard or JSON), or that a MiniMax API key
+
+1. Upgrade to **2026.1.12** (or run from source `main`), then restart the gateway.
+2. Make sure MiniMax is configured (wizard or JSON), or that a MiniMax API key
    exists in env/auth profiles so the provider can be injected.
-3) Use the exact model id (case‑sensitive): `minimax/MiniMax-M2.1` or
+3. Use the exact model id (case‑sensitive): `minimax/MiniMax-M2.1` or
    `minimax/MiniMax-M2.1-lightning`.
-4) Run:
+4. Run:
    ```bash
    openclaw models list
    ```
@@ -1995,6 +2070,7 @@ Yes. Use **MiniMax as the default** and switch models **per session** when neede
 Fallbacks are for **errors**, not “hard tasks,” so use `/model` or a separate agent.
 
 **Option A: switch per session**
+
 ```json5
 {
   env: { MINIMAX_API_KEY: "sk-...", OPENAI_API_KEY: "sk-..." },
@@ -2003,19 +2079,21 @@ Fallbacks are for **errors**, not “hard tasks,” so use `/model` or a separat
       model: { primary: "minimax/MiniMax-M2.1" },
       models: {
         "minimax/MiniMax-M2.1": { alias: "minimax" },
-        "openai/gpt-5.2": { alias: "gpt" }
-      }
-    }
-  }
+        "openai/gpt-5.2": { alias: "gpt" },
+      },
+    },
+  },
 }
 ```
 
 然后：
+
 ```
 /model gpt
 ```
 
 **Option B: separate agents**
+
 - Agent A 默认：MiniMax
 - Agent B 默认：OpenAI
 - 按 agent 路由或使用 `/agent` 切换
@@ -2047,10 +2125,10 @@ Docs: [Models](/zh/concepts/models), [Multi-Agent Routing](/zh/concepts/multi-ag
       models: {
         "anthropic/claude-opus-4-5": { alias: "opus" },
         "anthropic/claude-sonnet-4-5": { alias: "sonnet" },
-        "anthropic/claude-haiku-4-5": { alias: "haiku" }
-      }
-    }
-  }
+        "anthropic/claude-haiku-4-5": { alias: "haiku" },
+      },
+    },
+  },
 }
 ```
 
@@ -2065,10 +2143,10 @@ OpenRouter（按 token 计费；模型众多）：
   agents: {
     defaults: {
       model: { primary: "openrouter/anthropic/claude-sonnet-4-5" },
-      models: { "openrouter/anthropic/claude-sonnet-4-5": {} }
-    }
+      models: { "openrouter/anthropic/claude-sonnet-4-5": {} },
+    },
   },
-  env: { OPENROUTER_API_KEY: "sk-or-..." }
+  env: { OPENROUTER_API_KEY: "sk-or-..." },
 }
 ```
 
@@ -2079,10 +2157,10 @@ Z.AI（GLM 模型）：
   agents: {
     defaults: {
       model: { primary: "zai/glm-4.7" },
-      models: { "zai/glm-4.7": {} }
-    }
+      models: { "zai/glm-4.7": {} },
+    },
   },
-  env: { ZAI_API_KEY: "..." }
+  env: { ZAI_API_KEY: "..." },
 }
 ```
 
@@ -2097,6 +2175,7 @@ Z.AI（GLM 模型）：
 ```
 
 修复选项：
+
 - 运行 `openclaw agents add <id>` 并在向导中配置 auth。
 - 或从主 agent 的 `agentDir` 复制 `auth-profiles.json` 到新 agent 的 `agentDir`。
 
@@ -2108,8 +2187,8 @@ Z.AI（GLM 模型）：
 
 Failover 分两步进行：
 
-1) 在同一 provider 内进行 **Auth profile 轮换**。
-2) 在 `agents.defaults.model.fallbacks` 中 **切换到下一个模型**。
+1. 在同一 provider 内进行 **Auth profile 轮换**。
+2. 在 `agents.defaults.model.fallbacks` 中 **切换到下一个模型**。
 
 失败的 profile 会进入冷却（指数退避），所以即便 provider 限流或暂时故障，OpenClaw 也能继续响应。
 
@@ -2235,6 +2314,7 @@ OpenClaw 同时支持两者：
 因为“running”是**监督进程**（launchd/systemd/schtasks）的视角。RPC probe 是 CLI 实际连接 Gateway WebSocket 并调用 `status`。
 
 运行 `openclaw gateway status`，重点看这些行：
+
 - `Probe target:`（probe 实际使用的 URL）
 - `Listening:`（端口真正绑定在哪里）
 - `Last gateway error:`（进程活着但端口不监听时的常见根因）
@@ -2244,9 +2324,11 @@ OpenClaw 同时支持两者：
 你在编辑一个 config，但服务运行的是另一个（常见是 `--profile` / `OPENCLAW_STATE_DIR` 不匹配）。
 
 修复：
+
 ```bash
 openclaw gateway install --force
 ```
+
 从你希望服务使用的同一 `--profile` / 环境运行该命令。
 
 ### What does another gateway instance is already listening mean
@@ -2266,13 +2348,14 @@ OpenClaw 通过在启动时立刻绑定 WebSocket 监听器来实现运行锁（
     remote: {
       url: "ws://gateway.tailnet:18789",
       token: "your-token",
-      password: "your-password"
-    }
-  }
+      password: "your-password",
+    },
+  },
 }
 ```
 
 说明：
+
 - `openclaw gateway` 只会在 `gateway.mode` 为 `local` 时启动（或你传了 override flag）。
 - macOS app 会监控配置文件，值变化时会实时切换模式。
 
@@ -2281,10 +2364,12 @@ OpenClaw 通过在启动时立刻绑定 WebSocket 监听器来实现运行锁（
 你的 Gateway 启用了 auth（`gateway.auth.*`），但 UI 没有发送匹配的 token/password。
 
 事实（来自代码）：
+
 - Control UI 把 token 存在浏览器 localStorage 的 `openclaw.control.settings.v1`。
 - UI 能一次性导入 `?token=...`（和/或 `?password=...`），然后会从 URL 中移除。
 
 修复：
+
 - 最快：`openclaw dashboard`（打印并复制带 token 的链接，尝试打开；无头环境会提示 SSH）。
 - 如果还没有 token：`openclaw doctor --generate-gateway-token`。
 - 远程时先打隧道：`ssh -N -L 18789:127.0.0.1:18789 user@host`，然后打开 `http://127.0.0.1:18789/?token=...`。
@@ -2297,9 +2382,10 @@ OpenClaw 通过在启动时立刻绑定 WebSocket 监听器来实现运行锁（
 `tailnet` 绑定会从网卡里选择一个 Tailscale IP（100.64.0.0/10）。如果机器不在 Tailscale 上（或接口未启用），就没有可绑定的地址。
 
 修复：
+
 - 在该主机上启动 Tailscale（使其获得 100.x 地址），或
 - 切换为 `gateway.bind: "loopback"` / `"lan"`。
-  
+
 注意：`tailnet` 是显式指定的；`auto` 更偏向 loopback。需要仅 tailnet 绑定时使用 `gateway.bind: "tailnet"`。
 
 ### Can I run multiple Gateways on the same host
@@ -2314,6 +2400,7 @@ OpenClaw 通过在启动时立刻绑定 WebSocket 监听器来实现运行锁（
 - `gateway.port`（唯一端口）
 
 快速配置（推荐）：
+
 - 每实例使用 `openclaw --profile <name> …`（自动创建 `~/.openclaw-<name>`）。
 - 在每个 profile 的 config 中设置唯一 `gateway.port`（或手动运行时传 `--port`）。
 - 安装每 profile 的服务：`openclaw --profile <name> gateway install`。
@@ -2326,16 +2413,19 @@ Profiles 还会给服务名加后缀（`bot.molt.<profile>`；旧的 `com.opencl
 Gateway 是一个 **WebSocket server**，它期望第一条消息是 `connect` 帧。如果收到其它内容，就会以 **code 1008**（策略违规）关闭连接。
 
 常见原因：
+
 - 你在浏览器中打开了 **HTTP** URL（`http://...`），而不是 WS 客户端。
 - 使用了错误的端口或路径。
 - 代理/隧道剥离了 auth headers，或发送了非 Gateway 的请求。
 
 快速修复：
-1) 使用 WS URL：`ws://<host>:18789`（或 HTTPS 时用 `wss://...`）。
-2) 不要用普通浏览器标签页打开 WS 端口。
-3) 若开启了 auth，在 `connect` 帧中带上 token/password。
+
+1. 使用 WS URL：`ws://<host>:18789`（或 HTTPS 时用 `wss://...`）。
+2. 不要用普通浏览器标签页打开 WS 端口。
+3. 若开启了 auth，在 `connect` 帧中带上 token/password。
 
 如果你使用 CLI 或 TUI，URL 应类似：
+
 ```
 openclaw tui --url ws://<host>:18789 --token <token>
 ```
@@ -2361,6 +2451,7 @@ openclaw logs --follow
 ```
 
 服务/监督进程日志（Gateway 通过 launchd/systemd 运行时）：
+
 - macOS：`$OPENCLAW_STATE_DIR/logs/gateway.log` 和 `gateway.err.log`（默认 `~/.openclaw/logs/...`；profiles 使用 `~/.openclaw-<profile>/logs/...`）
 - Linux：`journalctl --user -u openclaw-gateway[-<profile>].service -n 200 --no-pager`
 - Windows：`schtasks /Query /TN "OpenClaw Gateway (<profile>)" /V /FO LIST`
@@ -2427,6 +2518,7 @@ openclaw logs --follow
 ```
 
 常见原因：
+
 - **Gateway 主机**上未加载模型 auth（看 `models status`）。
 - 频道的 pairing/allowlist 阻止了回复（检查频道配置 + 日志）。
 - WebChat/Dashboard 没有正确 token。
@@ -2439,10 +2531,10 @@ Docs: [Channels](/zh/channels), [Troubleshooting](/zh/gateway/troubleshooting), 
 
 这通常意味着 UI 丢了 WebSocket 连接。检查：
 
-1) Gateway 在运行吗？`openclaw gateway status`
-2) Gateway 健康吗？`openclaw status`
-3) UI 有没有正确 token？`openclaw dashboard`
-4) 如果是远程，隧道/Tailscale 连接是否正常？
+1. Gateway 在运行吗？`openclaw gateway status`
+2. Gateway 健康吗？`openclaw status`
+3. UI 有没有正确 token？`openclaw dashboard`
+4. 如果是远程，隧道/Tailscale 连接是否正常？
 
 然后跟随日志：
 
@@ -2523,6 +2615,7 @@ openclaw message send --target +15555550123 --message "Here you go" --media /pat
 ```
 
 还要检查：
+
 - 目标频道支持外发媒体，且未被 allowlist 阻止。
 - 文件大小在该 provider 的限制内（图片会缩放到最大 2048px）。
 
@@ -2548,6 +2641,7 @@ openclaw message send --target +15555550123 --message "Here you go" --media /pat
 如果你的助手会读取外部内容（web search/fetch、浏览器页面、邮件、文档、附件、粘贴的日志），这些内容可能包含试图劫持模型的指令。即便**只有你**是发送者，也可能发生。
 
 最大风险出现在启用了工具时：模型可能被诱导去泄露上下文或替你调用工具。降低影响半径的方法：
+
 - 用只读或禁工具的“reader” agent 来总结不可信内容
 - 对启用工具的 agent 关闭 `web_search` / `web_fetch` / `browser`
 - 开启 sandbox 并使用严格的工具 allowlist
@@ -2565,6 +2659,7 @@ Docs: [Security](/zh/gateway/security), [Pairing](/zh/start/pairing)。
 ### Can I give it autonomy over my text messages and is that safe
 
 我们**不建议**让它对你的个人消息完全自治。更安全的模式是：
+
 - 保持 DMs 在 **pairing** 模式或严格 allowlist。
 - 如果要让它代发消息，使用**独立号码或账号**。
 - 让它先拟稿，然后**批准后发送**。
@@ -2581,6 +2676,7 @@ Docs: [Security](/zh/gateway/security), [Pairing](/zh/start/pairing)。
 只有未知发送者发消息且 `dmPolicy: "pairing"` 启用时才会发送 pairing 码。单独的 `/start` 不会生成 code。
 
 查看待处理请求：
+
 ```bash
 openclaw pairing list telegram
 ```
@@ -2612,6 +2708,7 @@ openclaw pairing list whatsapp
 多数内部或工具消息只会在该会话启用 **verbose** 或 **reasoning** 时显示。
 
 在出现的聊天中这样修复：
+
 ```
 /verbose off
 /reasoning off
@@ -2660,12 +2757,12 @@ OpenClaw 默认阻止**跨 provider**消息。如果工具调用绑定在 Telegr
         message: {
           crossContext: {
             allowAcrossProviders: true,
-            marker: { enabled: true, prefix: "[from {channel}] " }
-          }
-        }
-      }
-    }
-  }
+            marker: { enabled: true, prefix: "[from {channel}] " },
+          },
+        },
+      },
+    },
+  },
 }
 ```
 

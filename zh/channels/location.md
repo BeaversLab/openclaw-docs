@@ -37,10 +37,10 @@ OpenClaw 将聊天渠道共享的位置规范化为：
 Meet here
 ```
 
-
 ## Context fields
 
 当位置存在时，这些字段会加入 `ctx`：
+
 - `LocationLat`（number）
 - `LocationLon`（number）
 - `LocationAccuracy`（number，米；可选）

@@ -7,7 +7,7 @@ status: active
 
 # Multi-Agent Routing
 
-目标：在一个运行中的 Gateway 内同时运行多个_隔离_ agent（独立 workspace + `agentDir` + sessions），以及多个渠道账号（例如两个 WhatsApp）。入站消息通过 bindings 路由到某个 agent。
+目标：在一个运行中的 Gateway 内同时运行多个*隔离* agent（独立 workspace + `agentDir` + sessions），以及多个渠道账号（例如两个 WhatsApp）。入站消息通过 bindings 路由到某个 agent。
 
 ## 什么是“一个 agent”？
 
@@ -106,6 +106,7 @@ openclaw agents list --bindings
 ```
 
 注：
+
 - DM 访问控制是**每个 WhatsApp 账号全局**的（pairing/allowlist），不是 per-agent。
 - 对共享群，绑定群到一个 agent 或使用 [Broadcast groups](/zh/broadcast-groups)。
 
@@ -226,6 +227,7 @@ Bindings 是**确定性**的，且**最具体优先**：
 ```
 
 注：
+
 - 若渠道有多个账号，为 binding 添加 `accountId`（例如 `{ channel: "whatsapp", accountId: "personal" }`）。
 - 若要将单个 DM/群路由到 Opus 而其余仍在 chat，添加该 peer 的 `match.peer` 绑定；peer 匹配总是高于渠道级规则。
 
@@ -309,6 +311,7 @@ peer 绑定总是优先，因此要放在渠道级规则之上。
 ```
 
 注：
+
 - 工具 allow/deny 列表是 **tools**，不是 skills。若某 skill 需要执行
   二进制，请确保允许 `exec` 且该二进制存在于 sandbox。
 - 若需更严格门控，设置 `agents.list[].groupChat.mentionPatterns` 并保持渠道群 allowlist 启用。
@@ -354,6 +357,7 @@ peer 绑定总是优先，因此要放在渠道级规则之上。
 当解析后的 scope 为 `"shared"` 时，per-agent `sandbox.docker.*` 覆盖会被忽略。
 
 **收益：**
+
 - **安全隔离**：限制不可信 agent 的工具
 - **资源控制**：将指定 agent 放入 sandbox，其他仍在 host
 - **灵活策略**：每个 agent 不同权限

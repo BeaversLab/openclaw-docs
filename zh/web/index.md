@@ -5,6 +5,7 @@ read_when:
   - 你想通过 Tailscale 访问 Gateway
   - 你需要浏览器 Control UI 与配置编辑
 ---
+
 # 网页（网关）
 
 Gateway 在与 WebSocket 相同的端口提供一个小型 **浏览器 Control UI**（Vite + Lit）：
@@ -28,8 +29,8 @@ Gateway 在与 WebSocket 相同的端口提供一个小型 **浏览器 Control U
 ```json5
 {
   gateway: {
-    controlUi: { enabled: true, basePath: "/openclaw" } // basePath optional
-  }
+    controlUi: { enabled: true, basePath: "/openclaw" }, // basePath optional
+  },
 }
 ```
 
@@ -43,8 +44,8 @@ Gateway 在与 WebSocket 相同的端口提供一个小型 **浏览器 Control U
 {
   gateway: {
     bind: "loopback",
-    tailscale: { mode: "serve" }
-  }
+    tailscale: { mode: "serve" },
+  },
 }
 ```
 
@@ -55,6 +56,7 @@ openclaw gateway
 ```
 
 打开：
+
 - `https://<magicdns>/`（或你配置的 `gateway.controlUi.basePath`）
 
 ### Tailnet 绑定 + token
@@ -64,8 +66,8 @@ openclaw gateway
   gateway: {
     bind: "tailnet",
     controlUi: { enabled: true },
-    auth: { mode: "token", token: "your-token" }
-  }
+    auth: { mode: "token", token: "your-token" },
+  },
 }
 ```
 
@@ -76,6 +78,7 @@ openclaw gateway
 ```
 
 打开：
+
 - `http://<tailscale-ip>:18789/`（或你配置的 `gateway.controlUi.basePath`）
 
 ### 公网（Funnel）
@@ -85,8 +88,8 @@ openclaw gateway
   gateway: {
     bind: "loopback",
     tailscale: { mode: "funnel" },
-    auth: { mode: "password" } // or OPENCLAW_GATEWAY_PASSWORD
-  }
+    auth: { mode: "password" }, // or OPENCLAW_GATEWAY_PASSWORD
+  },
 }
 ```
 

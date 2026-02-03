@@ -7,13 +7,13 @@
 ## 2. 导入 i18n
 
 ```typescript
-import { createI18n } from '../i18n';
+import { createI18n } from "../i18n";
 ```
 
 ## 3. 在组件中使用
 
 ```typescript
-@customElement('my-component')
+@customElement("my-component")
 export class MyComponent extends LitElement {
   private i18n = createI18n(this);
 
@@ -39,6 +39,7 @@ render() {
 ## 5. 测试
 
 运行 UI:
+
 ```bash
 cd ui
 pnpm dev

@@ -157,6 +157,7 @@ openclaw gateway uninstall
 ```
 
 说明：
+
 - `gateway install` 支持 `--port`、`--runtime`、`--token`、`--force`、`--json`。
 - 生命周期命令支持 `--json` 用于脚本化。
 
@@ -170,6 +171,7 @@ openclaw gateway uninstall
 只有开启 Bonjour 发现（默认开启）的 gateway 才会广播。
 
 Wide-Area 发现记录包含（TXT）：
+
 - `role`（gateway 角色提示）
 - `transport`（传输提示，如 `gateway`）
 - `gatewayPort`（WebSocket 端口，通常 `18789`）
@@ -185,6 +187,7 @@ openclaw gateway discover
 ```
 
 选项：
+
 - `--timeout <ms>`：每次命令的超时（browse/resolve）；默认 `2000`。
 - `--json`：机器可读输出（同时禁用样式/转圈）。
 

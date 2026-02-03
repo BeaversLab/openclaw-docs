@@ -5,6 +5,7 @@ read_when:
   - 需要 XIAOMI_API_KEY 配置
 title: "小米 MiMo"
 ---
+
 # Xiaomi MiMo
 
 Xiaomi MiMo 是 **MiMo** 模型的 API 平台。它提供兼容 OpenAI 与 Anthropic 格式的 REST API，并使用 API key 认证。
@@ -45,12 +46,12 @@ openclaw onboard --auth-choice xiaomi-api-key --xiaomi-api-key "$XIAOMI_API_KEY"
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 262144,
-            maxTokens: 8192
-          }
-        ]
-      }
-    }
-  }
+            maxTokens: 8192,
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 

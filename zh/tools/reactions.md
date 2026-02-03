@@ -4,6 +4,7 @@ summary: "跨频道共享的表情回应语义"
 read_when:
   - 处理任意频道的 reactions
 ---
+
 # 表情回应工具
 
 跨频道共享的 reaction 语义：

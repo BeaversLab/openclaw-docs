@@ -7,13 +7,14 @@ title: "grammY"
 
 # grammY 集成（Telegram Bot API）
 
-
 # 为什么是 grammY
+
 - TS 优先的 Bot API 客户端，内置长轮询 + webhook 辅助、中间件、错误处理、限流。
 - 比手写 fetch + FormData 更干净的媒体辅助；支持全部 Bot API 方法。
 - 可扩展：通过自定义 fetch 支持代理，可选会话中间件，类型安全上下文。
 
 # 已实现内容
+
 - **单一客户端路径：** 已移除基于 fetch 的实现；grammY 成为唯一 Telegram 客户端（发送 + gateway），默认启用 grammY throttler。
 - **Gateway：** `monitorTelegramProvider` 构建 grammY `Bot`，接入提及/allowlist 门控，通过 `getFile`/`download` 下载媒体，并用 `sendMessage/sendPhoto/sendVideo/sendAudio/sendDocument` 投递回复。支持长轮询或 `webhookCallback`。
 - **代理：** 可选 `channels.telegram.proxy`，通过 grammY 的 `client.baseFetch` 使用 `undici.ProxyAgent`。
@@ -24,6 +25,7 @@ title: "grammY"
 - **测试：** grammY mocks 覆盖 DM + 群提及门控与出站发送；仍欢迎补充媒体/webhook 相关测试夹具。
 
 未决问题
+
 - 若遇到 Bot API 429，是否需要可选 grammY 插件（throttler）。
 - 增加更结构化的媒体测试（贴纸、语音消息）。
 - 使 webhook 监听端口可配置（目前固定为 8787，除非经由 gateway 接线）。

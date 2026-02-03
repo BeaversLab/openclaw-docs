@@ -6,16 +6,17 @@ read_when:
   - 想通过订阅而非 API key 节省成本
 title: "Claude Max API 代理"
 ---
+
 # Claude Max API Proxy
 
 **claude-max-api-proxy** 是社区工具，可将你的 Claude Max/Pro 订阅暴露为 OpenAI 兼容 API 端点。这使你能用订阅配合任何支持 OpenAI API 格式的工具。
 
 ## 为什么使用它？
 
-| 方案 | 成本 | 适用场景 |
-|----------|------|----------|
-| Anthropic API | 按 token 计费（Opus 约 $15/M 输入，$75/M 输出） | 生产应用、高流量 |
-| Claude Max 订阅 | $200/月固定 | 个人使用、开发、无限用量 |
+| 方案            | 成本                                            | 适用场景                 |
+| --------------- | ----------------------------------------------- | ------------------------ |
+| Anthropic API   | 按 token 计费（Opus 约 $15/M 输入，$75/M 输出） | 生产应用、高流量         |
+| Claude Max 订阅 | $200/月固定                                     | 个人使用、开发、无限用量 |
 
 如果你有 Claude Max 订阅且想在 OpenAI 兼容工具中使用，它可以显著节省成本。
 
@@ -27,6 +28,7 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
 ```
 
 该代理：
+
 1. 在 `http://localhost:3456/v1/chat/completions` 接受 OpenAI 格式请求
 2. 将其转换为 Claude Code CLI 命令
 3. 返回 OpenAI 格式响应（支持流式）
@@ -74,23 +76,23 @@ curl http://localhost:3456/v1/chat/completions   -H "Content-Type: application/j
 {
   env: {
     OPENAI_API_KEY: "not-needed",
-    OPENAI_BASE_URL: "http://localhost:3456/v1"
+    OPENAI_BASE_URL: "http://localhost:3456/v1",
   },
   agents: {
     defaults: {
-      model: { primary: "openai/claude-opus-4" }
-    }
-  }
+      model: { primary: "openai/claude-opus-4" },
+    },
+  },
 }
 ```
 
 ## 可用模型
 
-| Model ID | 映射到 |
-|----------|---------|
-| `claude-opus-4` | Claude Opus 4 |
+| Model ID          | 映射到          |
+| ----------------- | --------------- |
+| `claude-opus-4`   | Claude Opus 4   |
 | `claude-sonnet-4` | Claude Sonnet 4 |
-| `claude-haiku-4` | Claude Haiku 4 |
+| `claude-haiku-4`  | Claude Haiku 4  |
 
 ## 在 macOS 上自动启动
 

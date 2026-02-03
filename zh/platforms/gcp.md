@@ -26,6 +26,7 @@ read_when:
 - 通过 SSH 隧道从笔记本访问 Control UI
 
 Gateway 可通过以下方式访问：
+
 - 笔记本 SSH 端口转发
 - 直接暴露端口（需自行处理防火墙与 token）
 
@@ -37,14 +38,14 @@ Ubuntu 也可用；按需调整包名。
 
 ## 快速路径（熟练运维）
 
-1) 创建 GCP 项目 + 启用 Compute Engine API
-2) 创建 Compute Engine VM（e2-small，Debian 12，20GB）
-3) SSH 进入 VM
-4) 安装 Docker
-5) 克隆 OpenClaw 仓库
-6) 创建持久化宿主目录
-7) 配置 `.env` 与 `docker-compose.yml`
-8) 烘焙所需二进制、构建并启动
+1. 创建 GCP 项目 + 启用 Compute Engine API
+2. 创建 Compute Engine VM（e2-small，Debian 12，20GB）
+3. SSH 进入 VM
+4. 安装 Docker
+5. 克隆 OpenClaw 仓库
+6. 创建持久化宿主目录
+7. 配置 `.env` 与 `docker-compose.yml`
+8. 烘焙所需二进制、构建并启动
 
 ---
 
@@ -113,9 +114,9 @@ gcloud services enable compute.googleapis.com
 
 **机型：**
 
-| Type | Specs | Cost | Notes |
-|------|-------|------|-------|
-| e2-small | 2 vCPU, 2GB RAM | ~$12/mo | 推荐 |
+| Type     | Specs                   | Cost               | Notes    |
+| -------- | ----------------------- | ------------------ | -------- |
+| e2-small | 2 vCPU, 2GB RAM         | ~$12/mo            | 推荐     |
 | e2-micro | 2 vCPU（共享）, 1GB RAM | Free tier eligible | 可能 OOM |
 
 **CLI：**
@@ -272,7 +273,7 @@ services:
         "--bind",
         "${OPENCLAW_GATEWAY_BIND}",
         "--port",
-        "${OPENCLAW_GATEWAY_PORT}"
+        "${OPENCLAW_GATEWAY_PORT}",
       ]
 ```
 
@@ -286,6 +287,7 @@ services:
 所有 skills 依赖的外部二进制必须在镜像构建时安装。
 
 下面示例只展示三种常见二进制：
+
 - Gmail 访问：`gog`
 - Google Places：`goplaces`
 - WhatsApp：`wacli`
@@ -294,6 +296,7 @@ services:
 可用相同模式安装更多二进制。
 
 若你后续添加依赖其它二进制的 skill，你必须：
+
 1. 更新 Dockerfile
 2. 重建镜像
 3. 重启容器
@@ -396,18 +399,18 @@ gcloud compute ssh openclaw-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:1
 OpenClaw 运行在 Docker 中，但 Docker 不是事实来源。
 所有长期状态必须在重启、重建、重启机后仍保留。
 
-| Component | Location | Persistence mechanism | Notes |
-|---|---|---|---|
-| Gateway config | `/home/node/.openclaw/` | 宿主机卷挂载 | 包含 `openclaw.json`、tokens |
-| Model auth profiles | `/home/node/.openclaw/` | 宿主机卷挂载 | OAuth tokens、API keys |
-| Skill configs | `/home/node/.openclaw/skills/` | 宿主机卷挂载 | Skill 级状态 |
-| Agent workspace | `/home/node/.openclaw/workspace/` | 宿主机卷挂载 | 代码与 agent 产物 |
-| WhatsApp session | `/home/node/.openclaw/` | 宿主机卷挂载 | 保留 QR 登录 |
-| Gmail keyring | `/home/node/.openclaw/` | 宿主机卷 + 密码 | 需要 `GOG_KEYRING_PASSWORD` |
-| External binaries | `/usr/local/bin/` | Docker 镜像 | 必须构建时烘焙 |
-| Node runtime | 容器文件系统 | Docker 镜像 | 每次构建重建 |
-| OS packages | 容器文件系统 | Docker 镜像 | 不要在运行时安装 |
-| Docker container | 临时 | 可重启 | 可安全删除 |
+| Component           | Location                          | Persistence mechanism | Notes                        |
+| ------------------- | --------------------------------- | --------------------- | ---------------------------- |
+| Gateway config      | `/home/node/.openclaw/`           | 宿主机卷挂载          | 包含 `openclaw.json`、tokens |
+| Model auth profiles | `/home/node/.openclaw/`           | 宿主机卷挂载          | OAuth tokens、API keys       |
+| Skill configs       | `/home/node/.openclaw/skills/`    | 宿主机卷挂载          | Skill 级状态                 |
+| Agent workspace     | `/home/node/.openclaw/workspace/` | 宿主机卷挂载          | 代码与 agent 产物            |
+| WhatsApp session    | `/home/node/.openclaw/`           | 宿主机卷挂载          | 保留 QR 登录                 |
+| Gmail keyring       | `/home/node/.openclaw/`           | 宿主机卷 + 密码       | 需要 `GOG_KEYRING_PASSWORD`  |
+| External binaries   | `/usr/local/bin/`                 | Docker 镜像           | 必须构建时烘焙               |
+| Node runtime        | 容器文件系统                      | Docker 镜像           | 每次构建重建                 |
+| OS packages         | 容器文件系统                      | Docker 镜像           | 不要在运行时安装             |
+| Docker container    | 临时                              | 可重启                | 可安全删除                   |
 
 ---
 
@@ -464,6 +467,7 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 用于自动化或 CI/CD 时，创建最小权限的服务账号：
 
 1. 创建服务账号：
+
    ```bash
    gcloud iam service-accounts create openclaw-deploy      --display-name="OpenClaw Deployment"
    ```

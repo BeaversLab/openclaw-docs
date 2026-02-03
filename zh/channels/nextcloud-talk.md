@@ -4,6 +4,7 @@ read_when:
   - 开发 Nextcloud Talk 渠道功能
 title: "Nextcloud Talk"
 ---
+
 # Nextcloud Talk（插件）
 
 状态：通过插件支持（webhook bot）。支持私聊、房间、reactions 与 markdown 消息。
@@ -13,6 +14,7 @@ title: "Nextcloud Talk"
 Nextcloud Talk 为插件形式，未随核心安装打包。
 
 通过 CLI 安装（npm registry）：
+
 ```bash
 openclaw plugins install @openclaw/nextcloud-talk
 ```
@@ -90,19 +92,22 @@ openclaw plugins install ./extensions/nextcloud-talk
 - 若要不允许任何房间，请保持 allowlist 为空或设置 `channels.nextcloud-talk.groupPolicy="disabled"`。
 
 ## 能力
-| 功能 | 状态 |
-|---------|--------|
-| 私聊 | 支持 |
-| 房间 | 支持 |
-| 线程 | 不支持 |
-| 媒体 | 仅 URL |
-| Reactions | 支持 |
-| 原生命令 | 不支持 |
+
+| 功能      | 状态   |
+| --------- | ------ |
+| 私聊      | 支持   |
+| 房间      | 支持   |
+| 线程      | 不支持 |
+| 媒体      | 仅 URL |
+| Reactions | 支持   |
+| 原生命令  | 不支持 |
 
 ## 配置参考（Nextcloud Talk）
+
 完整配置见：[Configuration](/zh/gateway/configuration)
 
 Provider 选项：
+
 - `channels.nextcloud-talk.enabled`：启用/禁用渠道启动。
 - `channels.nextcloud-talk.baseUrl`：Nextcloud 实例 URL。
 - `channels.nextcloud-talk.botSecret`：bot 共享密钥。

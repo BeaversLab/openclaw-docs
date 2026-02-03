@@ -15,6 +15,7 @@ OpenClaw 运行在你自己的消息账号上。没有单独的 WhatsApp bot 用
 如果 **你** 在一个群里，OpenClaw 就能看到该群并在那里回复。
 
 默认行为：
+
 - 群聊受限（`groupPolicy: "allowlist"`）。
 - 回复需要被 mention，除非你显式禁用 mention gating。
 
@@ -113,6 +114,7 @@ otherwise -> reply
 ```
 
 相关：
+
 - 配置键与默认值：[Gateway configuration](/zh/gateway/configuration#agentsdefaultssandbox)
 - 排查工具被阻止原因：[Sandbox vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)
 - Bind mounts 细节：[Sandboxing](/zh/gateway/sandboxing#custom-bind-mounts)
@@ -171,11 +173,11 @@ otherwise -> reply
 }
 ```
 
-| Policy | 行为 |
-|--------|----------|
-| `"open"` | 群聊绕过 allowlist；仍受 mention gating 约束。 |
-| `"disabled"` | 完全阻止所有群消息。 |
-| `"allowlist"` | 仅允许匹配 allowlist 的群/房间。 |
+| Policy        | 行为                                           |
+| ------------- | ---------------------------------------------- |
+| `"open"`      | 群聊绕过 allowlist；仍受 mention gating 约束。 |
+| `"disabled"`  | 完全阻止所有群消息。                           |
+| `"allowlist"` | 仅允许匹配 allowlist 的群/房间。               |
 
 备注：
 
@@ -342,6 +344,7 @@ otherwise -> reply
 ## Activation（仅 owner）
 
 群 owner 可切换每个群的激活模式：
+
 - `/activation mention`
 - `/activation always`
 
@@ -366,4 +369,5 @@ Agent system prompt 在新群会话首回合会包含一段群聊提示，提醒
 - 群回复始终回到同一 `chat_id`。
 
 ## WhatsApp 特性
+
 WhatsApp 专有行为（历史注入、mention 处理细节）见 [Group messages](/zh/concepts/group-messages)。

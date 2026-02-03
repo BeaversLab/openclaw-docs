@@ -147,6 +147,7 @@ openclaw hooks enable session-memory
 ```
 
 **行为：**
+
 - 检查 hook 是否存在且可用
 - 更新 `hooks.internal.entries.<name>.enabled = true`
 - 保存配置到磁盘
@@ -164,6 +165,7 @@ openclaw hooks disable <name>
 通过更新配置禁用指定 hook。
 
 **参数：**
+
 - `<name>`：Hook 名称（如 `command-logger`）
 
 **示例：**
@@ -191,6 +193,7 @@ openclaw hooks install <path-or-spec>
 从本地目录/压缩包或 npm 安装 hook pack。
 
 **行为：**
+
 - 将 hook pack 复制到 `~/.openclaw/hooks/<id>`
 - 在 `hooks.internal.entries.*` 中启用已安装 hooks
 - 在 `hooks.internal.installs` 中记录安装信息

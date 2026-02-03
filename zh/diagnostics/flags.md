@@ -5,6 +5,7 @@ read_when:
   - 需要定向日志而不提高全局日志级别
   - 需要捕获子系统日志用于支持
 ---
+
 # Diagnostics Flags
 
 Diagnostics flags 允许开启定向调试日志，而无需全局开启 verbose。Flags 需显式开启，且只有子系统检查到它们时才生效。

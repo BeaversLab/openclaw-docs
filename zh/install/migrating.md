@@ -5,6 +5,7 @@ read_when:
   - 你要把 OpenClaw 迁移到新笔记本/服务器
   - 你希望保留会话、认证与频道登录（WhatsApp 等）
 ---
+
 # 将 OpenClaw 迁移到新机器
 
 本指南将 OpenClaw Gateway 从一台机器迁移到另一台，**无需重新 onboarding**。

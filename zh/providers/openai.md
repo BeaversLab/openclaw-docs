@@ -5,6 +5,7 @@ read_when:
   - 想在 OpenClaw 中使用 OpenAI 模型
   - 想使用 Codex 订阅认证而非 API key
 ---
+
 # OpenAI
 
 OpenAI 提供 GPT 模型的开发者 API。Codex 支持 **ChatGPT 登录**（订阅访问）或 **API key** 登录（按量计费）。Codex 云端要求 ChatGPT 登录。
@@ -27,7 +28,7 @@ openclaw onboard --openai-api-key "$OPENAI_API_KEY"
 ```json5
 {
   env: { OPENAI_API_KEY: "sk-..." },
-  agents: { defaults: { model: { primary: "openai/gpt-5.2" } } }
+  agents: { defaults: { model: { primary: "openai/gpt-5.2" } } },
 }
 ```
 
@@ -50,7 +51,7 @@ openclaw models auth login --provider openai-codex
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "openai-codex/gpt-5.2" } } }
+  agents: { defaults: { model: { primary: "openai-codex/gpt-5.2" } } },
 }
 ```
 

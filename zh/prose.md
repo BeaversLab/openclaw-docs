@@ -6,6 +6,7 @@ read_when:
   - 需要了解状态存储
 title: "OpenProse"
 ---
+
 # OpenProse
 
 OpenProse 是一种可移植、以 Markdown 为先的工作流格式，用于编排 AI 会话。在 OpenClaw 中，它以插件形式提供，安装 OpenProse skill 包并注册 `/prose` 斜杠命令。程序存放在 `.prose` 文件中，可通过显式控制流启动多个子代理。
@@ -105,6 +106,7 @@ OpenProse 支持多种状态后端：
 - **postgres**（实验）：需要 `psql` 与连接字符串
 
 说明：
+
 - sqlite/postgres 为可选且实验性。
 - postgres 凭据会进入子代理日志；请使用专用、最小权限的数据库。
 
@@ -117,11 +119,11 @@ OpenProse 支持多种状态后端：
 
 OpenProse 程序映射到 OpenClaw 原语：
 
-| OpenProse 概念 | OpenClaw 工具 |
-| --- | --- |
+| OpenProse 概念            | OpenClaw 工具    |
+| ------------------------- | ---------------- |
 | Spawn session / Task tool | `sessions_spawn` |
-| 文件读写 | `read` / `write` |
-| Web 抓取 | `web_fetch` |
+| 文件读写                  | `read` / `write` |
+| Web 抓取                  | `web_fetch`      |
 
 如果你的工具 allowlist 阻止这些工具，OpenProse 程序将失败。参见 [Skills config](/zh/tools/skills-config)。
 

@@ -5,6 +5,7 @@ read_when:
   - 调整语音唤醒词行为或默认值
   - 新增需要唤醒词同步的 node 平台
 ---
+
 # Voice Wake（全局唤醒词）
 
 OpenClaw 将**唤醒词**视为由 **Gateway** 持有的**全局列表**。
@@ -33,6 +34,7 @@ OpenClaw 将**唤醒词**视为由 **Gateway** 持有的**全局列表**。
 - `voicewake.set`（参数 `{ triggers: string[] }`）→ `{ triggers: string[] }`
 
 注意：
+
 - 触发词会被规范化（trim、去空）。空列表会回落到默认值。
 - 出于安全，会对数量/长度做限制。
 
@@ -41,6 +43,7 @@ OpenClaw 将**唤醒词**视为由 **Gateway** 持有的**全局列表**。
 - `voicewake.changed` payload `{ triggers: string[] }`
 
 接收方：
+
 - 所有 WebSocket 客户端（macOS app、WebChat 等）
 - 所有已连接 nodes（iOS/Android），并在 node 连接时作为初始“当前状态”推送
 

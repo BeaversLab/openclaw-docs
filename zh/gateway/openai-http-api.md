@@ -92,8 +92,6 @@ OpenClaw 的 Gateway 可提供一个小型 OpenAI 兼容的 Chat Completions 端
 
 非流式：
 
-
-
 ```bash
 curl -sS http://127.0.0.1:18789/v1/chat/completions \
   -H 'Authorization: Bearer YOUR_TOKEN' \

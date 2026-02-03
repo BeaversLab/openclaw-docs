@@ -6,6 +6,7 @@ read_when:
   - 为可视化工作区添加代理控制
   - 调试 WKWebView 画布加载
 ---
+
 # Canvas（macOS 应用）
 
 macOS 应用使用 `WKWebView` 嵌入代理控制的 **Canvas 面板**。它是一个轻量的可视化工作区，
@@ -22,6 +23,7 @@ Canvas 面板通过 **自定义 URL scheme** 提供这些文件：
 - `openclaw-canvas://<session>/<path>`
 
 示例：
+
 - `openclaw-canvas://main/` → `<canvasRoot>/main/index.html`
 - `openclaw-canvas://main/assets/app.css` → `<canvasRoot>/main/assets/app.css`
 - `openclaw-canvas://main/widgets/todo/` → `<canvasRoot>/main/widgets/todo/index.html`
@@ -56,6 +58,7 @@ openclaw nodes canvas snapshot --node <id>
 ```
 
 注意：
+
 - `canvas.navigate` 接受 **本地 canvas 路径**、`http(s)` URL，以及 `file://` URL。
 - 传入 `"/"` 时，Canvas 会显示本地脚手架或 `index.html`。
 

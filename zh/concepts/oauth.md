@@ -27,9 +27,11 @@ openclaw models auth login --provider <id>
 OAuth providers 通常在登录/刷新时生成**新的 refresh token**。部分 providers（或 OAuth 客户端）会在同一用户/应用生成新 token 时使旧 token 失效。
 
 实际症状：
-- 你同时用 OpenClaw *和* Claude Code / Codex CLI 登录 → 其中一个会在之后“随机掉线”
+
+- 你同时用 OpenClaw _和_ Claude Code / Codex CLI 登录 → 其中一个会在之后“随机掉线”
 
 为降低此问题，OpenClaw 将 `auth-profiles.json` 视为 **token sink**：
+
 - 运行时只从**一个地方**读取凭据
 - 可保留多个 profile 并进行确定性路由
 
@@ -41,6 +43,7 @@ Secrets **按 agent 存储**：
 - 运行时缓存（自动管理，不要编辑）：`~/.openclaw/agents/<agentId>/agent/auth.json`
 
 旧版仅导入文件（仍支持，但非主存储）：
+
 - `~/.openclaw/credentials/oauth.json`（首次使用时导入 `auth-profiles.json`）
 
 以上路径均支持 `$OPENCLAW_STATE_DIR` 覆盖。完整参考：[/gateway/configuration](/zh/gateway/configuration#auth-storage-oauth--api-keys)
@@ -97,6 +100,7 @@ OpenClaw 的交互式登录流程由 `@mariozechner/pi-ai` 实现，并接入向
 Profiles 存储 `expires` 时间戳。
 
 运行时：
+
 - `expires` 在未来 → 使用已存储的 access token
 - 已过期 → 刷新（加文件锁）并覆盖已存储的凭据
 
@@ -122,15 +126,19 @@ openclaw agents add personal
 `auth-profiles.json` 可为同一 provider 存储多个 profile ID。
 
 选择使用哪个 profile：
+
 - 全局：通过配置顺序（`auth.order`）
 - 会话级：通过 `/model ...@<profileId>`
 
 示例（会话覆盖）：
+
 - `/model Opus@anthropic:work`
 
 查看已有 profile IDs：
+
 - `openclaw channels list --json`（显示 `auth[]`）
 
 相关文档：
+
 - [/concepts/model-failover](/zh/concepts/model-failover)（轮换 + 冷却规则）
 - [/tools/slash-commands](/zh/tools/slash-commands)（命令面）

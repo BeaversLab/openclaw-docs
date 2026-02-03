@@ -9,6 +9,7 @@ title: "轮询"
 # 投票
 
 ## 支持的渠道
+
 - WhatsApp（web 渠道）
 - Discord
 - MS Teams（Adaptive Cards）
@@ -34,6 +35,7 @@ openclaw message poll --channel msteams --target conversation:19:abc@thread.tacv
 ```
 
 选项：
+
 - `--channel`：`whatsapp`（默认）、`discord` 或 `msteams`
 - `--poll-multi`：允许多选
 - `--poll-duration-hours`：仅 Discord（省略时默认 24）
@@ -43,6 +45,7 @@ openclaw message poll --channel msteams --target conversation:19:abc@thread.tacv
 方法：`poll`
 
 参数：
+
 - `to`（string，必填）
 - `question`（string，必填）
 - `options`（string[]，必填）
@@ -52,11 +55,13 @@ openclaw message poll --channel msteams --target conversation:19:abc@thread.tacv
 - `idempotencyKey`（string，必填）
 
 ## 渠道差异
+
 - WhatsApp：2-12 个选项，`maxSelections` 必须在选项数量范围内，忽略 `durationHours`。
 - Discord：2-10 个选项，`durationHours` 会被限制为 1-768 小时（默认 24）。`maxSelections > 1` 启用多选；Discord 不支持严格的“选 N 项”。
 - MS Teams：Adaptive Card 投票（由 OpenClaw 管理）。无原生投票 API；`durationHours` 被忽略。
 
 ## Agent 工具（Message）
+
 使用 `message` 工具的 `poll` 动作（`to`、`pollQuestion`、`pollOption`，可选 `pollMulti`、`pollDurationHours`、`channel`）。
 
 注意：Discord 没有“必须选 N 项”的模式；`pollMulti` 映射为多选。

@@ -64,6 +64,7 @@ Nodes 可发送 `exec.finished` 或 `exec.denied` 事件以呈现 system.run 活
 这些会映射为 gateway 的系统事件。（旧版 nodes 可能仍发送 `exec.started`。）
 
 Payload 字段（除注明外均为可选）：
+
 - `sessionKey`（必填）：接收系统事件的 agent 会话。
 - `runId`：用于分组的唯一 exec id。
 - `command`：原始或格式化命令字符串。

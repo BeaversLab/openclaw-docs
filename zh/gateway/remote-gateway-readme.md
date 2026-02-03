@@ -113,6 +113,7 @@ launchctl bootstrap gui/$UID ~/Library/LaunchAgents/bot.molt.ssh-tunnel.plist
 ```
 
 隧道将：
+
 - 登录时自动启动
 - 崩溃后自动重启
 - 后台持续运行
@@ -146,11 +147,11 @@ launchctl bootout gui/$UID/bot.molt.ssh-tunnel
 
 ## 工作原理
 
-| 组件 | 作用 |
-|-----------|--------------|
+| 组件                                 | 作用                                   |
+| ------------------------------------ | -------------------------------------- |
 | `LocalForward 18789 127.0.0.1:18789` | 将本地 18789 端口转发到远程 18789 端口 |
-| `ssh -N` | 不执行远程命令的 SSH（仅端口转发） |
-| `KeepAlive` | 隧道崩溃时自动重启 |
-| `RunAtLoad` | Agent 加载时启动隧道 |
+| `ssh -N`                             | 不执行远程命令的 SSH（仅端口转发）     |
+| `KeepAlive`                          | 隧道崩溃时自动重启                     |
+| `RunAtLoad`                          | Agent 加载时启动隧道                   |
 
 OpenClaw.app 连接客户端机器上的 `ws://127.0.0.1:18789`，SSH 隧道将该连接转发到远端 Gateway 所在机器的 18789 端口。

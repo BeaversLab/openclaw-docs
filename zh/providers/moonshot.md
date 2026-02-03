@@ -13,13 +13,14 @@ Moonshot 提供 OpenAI 兼容端点的 Kimi API。配置 provider 并将默认�
 或使用 `kimi-code/kimi-for-coding` 的 Kimi Code。
 
 当前 Kimi K2 模型 ID：
-{/* moonshot-kimi-k2-ids:start */}
+{/_ moonshot-kimi-k2-ids:start _/}
+
 - `kimi-k2.5`
 - `kimi-k2-0905-preview`
 - `kimi-k2-turbo-preview`
 - `kimi-k2-thinking`
 - `kimi-k2-thinking-turbo`
-{/* moonshot-kimi-k2-ids:end */}
+  {/_ moonshot-kimi-k2-ids:end _/}
 
 ```bash
 openclaw onboard --auth-choice moonshot-api-key
@@ -47,10 +48,10 @@ openclaw onboard --auth-choice kimi-code-api-key
         "moonshot/kimi-k2-0905-preview": { alias: "Kimi K2" },
         "moonshot/kimi-k2-turbo-preview": { alias: "Kimi K2 Turbo" },
         "moonshot/kimi-k2-thinking": { alias: "Kimi K2 Thinking" },
-        "moonshot/kimi-k2-thinking-turbo": { alias: "Kimi K2 Thinking Turbo" }
+        "moonshot/kimi-k2-thinking-turbo": { alias: "Kimi K2 Thinking Turbo" },
         // moonshot-kimi-k2-aliases:end
-      }
-    }
+      },
+    },
   },
   models: {
     mode: "merge",
@@ -68,7 +69,7 @@ openclaw onboard --auth-choice kimi-code-api-key
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 256000,
-            maxTokens: 8192
+            maxTokens: 8192,
           },
           {
             id: "kimi-k2-0905-preview",
@@ -77,7 +78,7 @@ openclaw onboard --auth-choice kimi-code-api-key
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 256000,
-            maxTokens: 8192
+            maxTokens: 8192,
           },
           {
             id: "kimi-k2-turbo-preview",
@@ -86,7 +87,7 @@ openclaw onboard --auth-choice kimi-code-api-key
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 256000,
-            maxTokens: 8192
+            maxTokens: 8192,
           },
           {
             id: "kimi-k2-thinking",
@@ -95,7 +96,7 @@ openclaw onboard --auth-choice kimi-code-api-key
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 256000,
-            maxTokens: 8192
+            maxTokens: 8192,
           },
           {
             id: "kimi-k2-thinking-turbo",
@@ -104,13 +105,13 @@ openclaw onboard --auth-choice kimi-code-api-key
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 256000,
-            maxTokens: 8192
-          }
+            maxTokens: 8192,
+          },
           // moonshot-kimi-k2-models:end
-        ]
-      }
-    }
-  }
+        ],
+      },
+    },
+  },
 }
 ```
 
@@ -123,9 +124,9 @@ openclaw onboard --auth-choice kimi-code-api-key
     defaults: {
       model: { primary: "kimi-code/kimi-for-coding" },
       models: {
-        "kimi-code/kimi-for-coding": { alias: "Kimi Code" }
-      }
-    }
+        "kimi-code/kimi-for-coding": { alias: "Kimi Code" },
+      },
+    },
   },
   models: {
     mode: "merge",
@@ -144,12 +145,12 @@ openclaw onboard --auth-choice kimi-code-api-key
             contextWindow: 262144,
             maxTokens: 32768,
             headers: { "User-Agent": "KimiCLI/0.77" },
-            compat: { supportsDeveloperRole: false }
-          }
-        ]
-      }
-    }
-  }
+            compat: { supportsDeveloperRole: false },
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 

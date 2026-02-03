@@ -1,0 +1,73 @@
+# Prettier Configuration for OpenClaw Docs
+# See https://prettier.io/docs/en/options.html
+
+# 每行最大字符数
+printWidth: 80
+
+# 缩进空格数
+tabWidth: 2
+
+# 使用空格缩进
+useTabs: false
+
+# 语句末尾添加分号
+semi: true
+
+# 使用单引号
+singleQuote: false
+
+# 对象属性添加引号
+quoteProps: "as-needed"
+
+# 尾随逗号（all = 在所有可能的地方添加，包括 TS/JS 函数参数）
+trailingComma: "all"
+
+# 在大括号内添加空格
+bracketSpacing: true
+
+# 多行 HTML 元素 > 放在末尾
+bracketSameLine: false
+
+# 箭头函数参数使用括号
+arrowParens: "always"
+
+# Markdown 换行符
+proseWrap: "preserve"
+
+# HTML 空白敏感度
+htmlWhitespaceSensitivity: "css"
+
+# Vue 文件缩进 <script> 和 <style>
+vueIndentScriptAndStyle: false
+
+# 行尾符
+endOfLine: "lf"
+
+# 在文件末尾添加换行符（仅在支持的文件类型）
+insertFinalNewline: true
+
+# 覆盖配置（针对特定文件类型）
+overrides:
+  # Markdown 文件特殊配置
+  - files:
+      - "*.md"
+      - "*.markdown"
+    options:
+      # Markdown 保持换行
+      proseWrap: "preserve"
+      # Markdown 宽度可以更宽
+      printWidth: 100
+      # Markdown 中的代码块也添加尾随逗号
+      trailingComma: "all"
+
+  # JSON/JSON5/YAML 文件
+  - files:
+      - "*.json"
+      - "*.json5"
+      - "*.yaml"
+      - "*.yml"
+    options:
+      # JSON 文件尾随逗号
+      trailingComma: "es5"
+      # 对象属性保持引号
+      quoteProps: "preserve"

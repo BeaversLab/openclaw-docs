@@ -28,12 +28,12 @@ OpenClaw 使用 pi SDK 将 AI 编码 agent 嵌入到其消息网关架构中。O
 }
 ```
 
-| 包               | 用途                                                                                               |
-| ---------------- | -------------------------------------------------------------------------------------------------- |
-| `pi-ai`           | 核心 LLM 抽象：`Model`、`streamSimple`、消息类型、提供程序 API                              |
-| `pi-agent-core`   | Agent 循环、工具执行、`AgentMessage` 类型                                                       |
+| 包                | 用途                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------ |
+| `pi-ai`           | 核心 LLM 抽象：`Model`、`streamSimple`、消息类型、提供程序 API                             |
+| `pi-agent-core`   | Agent 循环、工具执行、`AgentMessage` 类型                                                  |
 | `pi-coding-agent` | 高级 SDK：`createAgentSession`、`SessionManager`、`AuthStorage`、`ModelRegistry`、内置工具 |
-| `pi-tui`          | 终端 UI 组件（在 OpenClaw 的本地 TUI 模式中使用）                                                |
+| `pi-tui`          | 终端 UI 组件（在 OpenClaw 的本地 TUI 模式中使用）                                          |
 
 ## 文件结构
 
@@ -236,11 +236,7 @@ OpenClaw 通过以下方式注入自定义工具：
 
 ```typescript
 const builtInTools = await createOpenClawCodingTools(params);
-const customTools = [
-  ...openclawSpecificTools,
-  ...channelSpecificTools,
-  ...sandboxTools,
-];
+const customTools = [...openclawSpecificTools, ...channelSpecificTools, ...sandboxTools];
 ```
 
 **内置工具**（来自 pi）：
@@ -388,15 +384,15 @@ logger.error("Run failed", { error, runId });
 
 ## 差异：Pi CLI vs OpenClaw Embedded
 
-| 方面             | Pi CLI                  | OpenClaw 嵌入式                                                                              |
-| ---------------- | ----------------------- | ------------------------------------------------------------------------------------------- |
-| 调用             | `pi` 命令 / RPC       | 通过 `createAgentSession()` 的 SDK                                                          |
-| 工具             | 默认编码工具            | 自定义 OpenClaw 工具套                                                                       |
-| 系统提示         | AGENTS.md + 提示        | 每个频道/上下文的动态提示                                                                   |
-| 会话存储         | `~/.pi/agent/sessions/` | `~/.openclaw/agents/<agentId>/sessions/`（或 `/agents/<agentId>/sessions/`） |
-| 身份验证         | 单一凭据                | 支持轮换的多配置                                                                             |
-| 扩展             | 从磁盘加载              | 编程 + 磁盘路径                                                                             |
-| 事件处理         | TUI 渲染                | 基于回调（onBlockReply 等）                                                                 |
+| 方面     | Pi CLI                  | OpenClaw 嵌入式                                                              |
+| -------- | ----------------------- | ---------------------------------------------------------------------------- |
+| 调用     | `pi` 命令 / RPC         | 通过 `createAgentSession()` 的 SDK                                           |
+| 工具     | 默认编码工具            | 自定义 OpenClaw 工具套                                                       |
+| 系统提示 | AGENTS.md + 提示        | 每个频道/上下文的动态提示                                                    |
+| 会话存储 | `~/.pi/agent/sessions/` | `~/.openclaw/agents/<agentId>/sessions/`（或 `/agents/<agentId>/sessions/`） |
+| 身份验证 | 单一凭据                | 支持轮换的多配置                                                             |
+| 扩展     | 从磁盘加载              | 编程 + 磁盘路径                                                              |
+| 事件处理 | TUI 渲染                | 基于回调（onBlockReply 等）                                                  |
 
 ## 未来考虑
 

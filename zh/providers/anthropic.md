@@ -5,6 +5,7 @@ read_when:
   - 想在 OpenClaw 中使用 Anthropic 模型
   - 想用 setup-token 替代 API key
 ---
+
 # Anthropic（Claude）
 
 Anthropic 构建 **Claude** 模型家族，并提供 API 访问。在 OpenClaw 中你可以使用 API key 或 **setup-token** 认证。
@@ -29,7 +30,7 @@ openclaw onboard --anthropic-api-key "$ANTHROPIC_API_KEY"
 ```json5
 {
   env: { ANTHROPIC_API_KEY: "sk-ant-..." },
-  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } }
+  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } },
 }
 ```
 
@@ -46,11 +47,11 @@ openclaw onboard --anthropic-api-key "$ANTHROPIC_API_KEY"
     defaults: {
       models: {
         "anthropic/claude-opus-4-5": {
-          params: { cacheControlTtl: "5m" } // 或 "1h"
-        }
-      }
-    }
-  }
+          params: { cacheControlTtl: "5m" }, // 或 "1h"
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -92,7 +93,7 @@ openclaw onboard --auth-choice setup-token
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } }
+  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } },
 }
 ```
 
@@ -105,19 +106,23 @@ openclaw onboard --auth-choice setup-token
 ## 故障排查
 
 **401 错误 / token 突然失效**
+
 - Claude 订阅认证可能过期或被撤销。重新执行 `claude setup-token` 并粘贴到 **gateway 主机**。
 - 如果 Claude CLI 登录在另一台机器上，请在 gateway 主机上执行
   `openclaw models auth paste-token --provider anthropic`。
 
 **No API key found for provider "anthropic"**
+
 - 认证是 **按代理** 绑定的。新代理不会继承主代理的 key。
 - 为该代理重新 onboarding，或在 gateway 主机上粘贴 setup-token / API key，然后用 `openclaw models status` 验证。
 
 **No credentials found for profile `anthropic:default`**
+
 - 运行 `openclaw models status` 查看活跃的认证 profile。
 - 重新 onboarding，或为该 profile 粘贴 setup-token / API key。
 
 **No available auth profile (all in cooldown/unavailable)**
+
 - 运行 `openclaw models status --json` 查看 `auth.unusableProfiles`。
 - 添加另一个 Anthropic profile 或等待 cooldown。
 

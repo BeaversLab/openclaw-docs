@@ -5,6 +5,7 @@ read_when:
   - 想在 OpenClaw 中使用 Z.AI / GLM 模型
   - 需要简单的 ZAI_API_KEY 配置
 ---
+
 # Z.AI
 
 Z.AI 是 **GLM** 模型的 API 平台。它为 GLM 提供 REST API，并使用 API key 认证。
@@ -23,7 +24,7 @@ openclaw onboard --zai-api-key "$ZAI_API_KEY"
 ```json5
 {
   env: { ZAI_API_KEY: "sk-..." },
-  agents: { defaults: { model: { primary: "zai/glm-4.7" } } }
+  agents: { defaults: { model: { primary: "zai/glm-4.7" } } },
 }
 ```
 

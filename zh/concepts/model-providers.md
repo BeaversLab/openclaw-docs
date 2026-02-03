@@ -131,17 +131,18 @@ Moonshot 使用 OpenAI 兼容端点，因此作为自定义 provider 配置：
 - Auth：`MOONSHOT_API_KEY`
 - 示例模型：`moonshot/kimi-k2.5`
 - Kimi K2 模型 ID：
-  {/* moonshot-kimi-k2-model-refs:start */}
+  {/_ moonshot-kimi-k2-model-refs:start _/}
   - `moonshot/kimi-k2.5`
   - `moonshot/kimi-k2-0905-preview`
   - `moonshot/kimi-k2-turbo-preview`
   - `moonshot/kimi-k2-thinking`
   - `moonshot/kimi-k2-thinking-turbo`
-  {/* moonshot-kimi-k2-model-refs:end */}
+    {/_ moonshot-kimi-k2-model-refs:end _/}
+
 ```json5
 {
   agents: {
-    defaults: { model: { primary: "moonshot/kimi-k2.5" } }
+    defaults: { model: { primary: "moonshot/kimi-k2.5" } },
   },
   models: {
     mode: "merge",
@@ -150,10 +151,10 @@ Moonshot 使用 OpenAI 兼容端点，因此作为自定义 provider 配置：
         baseUrl: "https://api.moonshot.ai/v1",
         apiKey: "${MOONSHOT_API_KEY}",
         api: "openai-completions",
-        models: [{ id: "kimi-k2.5", name: "Kimi K2.5" }]
-      }
-    }
-  }
+        models: [{ id: "kimi-k2.5", name: "Kimi K2.5" }],
+      },
+    },
+  },
 }
 ```
 
@@ -169,7 +170,7 @@ Kimi Code 使用专用端点与 key（与 Moonshot 分离）：
 {
   env: { KIMICODE_API_KEY: "sk-..." },
   agents: {
-    defaults: { model: { primary: "kimi-code/kimi-for-coding" } }
+    defaults: { model: { primary: "kimi-code/kimi-for-coding" } },
   },
   models: {
     mode: "merge",
@@ -178,10 +179,10 @@ Kimi Code 使用专用端点与 key（与 Moonshot 分离）：
         baseUrl: "https://api.kimi.com/coding/v1",
         apiKey: "${KIMICODE_API_KEY}",
         api: "openai-completions",
-        models: [{ id: "kimi-for-coding", name: "Kimi For Coding" }]
-      }
-    }
-  }
+        models: [{ id: "kimi-for-coding", name: "Kimi For Coding" }],
+      },
+    },
+  },
 }
 ```
 
@@ -196,6 +197,7 @@ openclaw models auth login --provider qwen-portal --set-default
 ```
 
 模型引用：
+
 - `qwen-portal/coder-model`
 - `qwen-portal/vision-model`
 
@@ -213,7 +215,7 @@ Synthetic 在 `synthetic` provider 下提供 Anthropic 兼容模型：
 ```json5
 {
   agents: {
-    defaults: { model: { primary: "synthetic/hf:MiniMaxAI/MiniMax-M2.1" } }
+    defaults: { model: { primary: "synthetic/hf:MiniMaxAI/MiniMax-M2.1" } },
   },
   models: {
     mode: "merge",
@@ -222,10 +224,10 @@ Synthetic 在 `synthetic` provider 下提供 Anthropic 兼容模型：
         baseUrl: "https://api.synthetic.new/anthropic",
         apiKey: "${SYNTHETIC_API_KEY}",
         api: "anthropic-messages",
-        models: [{ id: "hf:MiniMaxAI/MiniMax-M2.1", name: "MiniMax M2.1" }]
-      }
-    }
-  }
+        models: [{ id: "hf:MiniMaxAI/MiniMax-M2.1", name: "MiniMax M2.1" }],
+      },
+    },
+  },
 }
 ```
 
@@ -255,8 +257,8 @@ ollama pull llama3.3
 ```json5
 {
   agents: {
-    defaults: { model: { primary: "ollama/llama3.3" } }
-  }
+    defaults: { model: { primary: "ollama/llama3.3" } },
+  },
 }
 ```
 
@@ -272,8 +274,8 @@ Ollama 在本地 `http://127.0.0.1:11434/v1` 运行时会被自动检测。
   agents: {
     defaults: {
       model: { primary: "lmstudio/minimax-m2.1-gs32" },
-      models: { "lmstudio/minimax-m2.1-gs32": { alias: "Minimax" } }
-    }
+      models: { "lmstudio/minimax-m2.1-gs32": { alias: "Minimax" } },
+    },
   },
   models: {
     providers: {
@@ -289,16 +291,17 @@ Ollama 在本地 `http://127.0.0.1:11434/v1` 运行时会被自动检测。
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 200000,
-            maxTokens: 8192
-          }
-        ]
-      }
-    }
-  }
+            maxTokens: 8192,
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 
 注：
+
 - 对自定义 providers，`reasoning`、`input`、`cost`、`contextWindow`、`maxTokens` 可选。
   若省略，OpenClaw 默认：
   - `reasoning: false`

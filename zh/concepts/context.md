@@ -160,4 +160,3 @@ Slash 命令由 Gateway 处理，存在几种行为：
 - `System prompt (estimate)` = 当没有 run 报告时（或 CLI 后端不生成报告时）即时计算。
 
 无论哪种方式，它只报告大小和主要贡献者；**不会**输出完整 system prompt 或 tool schemas。
-

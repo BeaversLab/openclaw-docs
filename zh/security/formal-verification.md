@@ -13,6 +13,7 @@ permalink: /security/formal-verification/
 **目标（北极星）：** 在明确假设下，提供机器校验的论证，证明 OpenClaw 能执行其预期的安全策略（授权、会话隔离、工具门控与配置安全）。
 
 **今天的含义：** 一个可执行、攻击者视角的 **安全回归套件**：
+
 - 每个主张都有在有限状态空间内可运行的 model-check。
 - 许多主张配有 **负模型**，用于生成现实 bug 类的反例轨迹。
 
@@ -31,6 +32,7 @@ permalink: /security/formal-verification/
 ## 复现实验结果
 
 目前通过本地克隆模型仓库并运行 TLC 复现（见下）。未来可能提供：
+
 - 在 CI 运行模型并发布产物（反例轨迹、运行日志）
 - 托管的“小范围模型运行”工作流
 
@@ -98,7 +100,6 @@ make <target>
 - 红（预期）：
   - `make routing-isolation-negative`
 
-
 ## v1++：更多有界模型（并发、重试、追踪正确性）
 
 这些后续模型用于更贴近真实故障模式（非原子更新、重试、消息扇出）。
@@ -108,6 +109,7 @@ make <target>
 **主张：** 配对存储应在并发交错下仍强制 `MaxPending` 与幂等（即“先检查再写入”必须原子/加锁；刷新不应产生重复）。
 
 含义：
+
 - 并发请求下，频道的 `MaxPending` 不可被超出。
 - 同一 `(channel, sender)` 的重复请求/刷新不应生成重复的活跃 pending 条目。
 
@@ -127,6 +129,7 @@ make <target>
 **主张：** ingestion 应在扇出时保持追踪关联，并在 provider 重试下保持幂等。
 
 含义：
+
 - 当一个外部事件映射为多个内部消息时，每一部分保持同一 trace/event identity。
 - 重试不会导致重复处理。
 - 若 provider 缺少事件 ID，去重应回退到安全键（如 trace ID），以避免丢弃不同事件。
@@ -147,6 +150,7 @@ make <target>
 **主张：** 路由默认保持 DM 会话隔离，仅在明确配置时才折叠（频道优先级 + identity links）。
 
 含义：
+
 - 频道级 dmScope 覆盖必须优先于全局默认。
 - identityLinks 只能在明确链接组内折叠，不能跨无关 peer。
 

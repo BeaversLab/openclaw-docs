@@ -6,6 +6,7 @@ read_when:
   - 从源码运行 iOS app
   - 排查 gateway 发现或 canvas 命令
 ---
+
 # iOS App (Node)
 
 状态：内部预览。iOS app 目前尚未公开分发。
@@ -26,22 +27,22 @@ read_when:
 
 ## 快速开始（配对 + 连接）
 
-1) 启动 Gateway：
+1. 启动 Gateway：
 
 ```bash
 openclaw gateway --port 18789
 ```
 
-2) 在 iOS app 中打开 Settings，选择已发现的 gateway（或启用 Manual Host 并填写 host/port）。
+2. 在 iOS app 中打开 Settings，选择已发现的 gateway（或启用 Manual Host 并填写 host/port）。
 
-3) 在 gateway 主机上批准配对请求：
+3. 在 gateway 主机上批准配对请求：
 
 ```bash
 openclaw nodes pending
 openclaw nodes approve <requestId>
 ```
 
-4) 验证连接：
+4. 验证连接：
 
 ```bash
 openclaw nodes status
@@ -72,6 +73,7 @@ openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"ur
 ```
 
 注意：
+
 - Gateway canvas host 提供 `/__openclaw__/canvas/` 与 `/__openclaw__/a2ui/`。
 - 当广播了 canvas host URL 时，iOS node 连接后会自动导航到 A2UI。
 - 通过 `canvas.navigate` + `{"url":""}` 可回到内置 scaffold。

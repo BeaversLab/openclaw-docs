@@ -4,15 +4,18 @@ summary: "Gateway 仪表盘（Control UI）访问与认证"
 read_when:
   - 修改仪表盘认证或暴露方式
 ---
+
 # 仪表盘（Control UI）
 
 Gateway 仪表盘是默认在 `/` 提供的浏览器 Control UI
 （可用 `gateway.controlUi.basePath` 覆盖）。
 
 本地快速打开：
+
 - http://127.0.0.1:18789/（或 http://localhost:18789/）
 
 关键参考：
+
 - 使用方式与 UI 能力见 [Control UI](/zh/web/control-ui)。
 - Serve/Funnel 自动化见 [Tailscale](/zh/gateway/tailscale)。
 - 绑定方式与安全说明见 [Web surfaces](/zh/web)。

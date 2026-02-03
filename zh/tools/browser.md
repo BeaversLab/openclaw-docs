@@ -13,6 +13,7 @@ OpenClaw 可以运行一个 **独立的 Chrome/Brave/Edge/Chromium profile** 供
 它与个人浏览器隔离，并通过 Gateway 内部的本地控制服务管理（仅回环）。
 
 新手视角：
+
 - 把它理解为 **一个只给 agent 用的独立浏览器**。
 - `openclaw` profile **不会**触碰你的个人浏览器 profile。
 - agent 可以在安全通道中 **打开标签、读取页面、点击和输入**。
@@ -52,9 +53,9 @@ openclaw browser --browser-profile openclaw snapshot
 ```json5
 {
   browser: {
-    enabled: true,                    // default: true
+    enabled: true, // default: true
     // cdpUrl: "http://127.0.0.1:18792", // legacy single-profile override
-    remoteCdpTimeoutMs: 1500,         // remote CDP HTTP timeout (ms)
+    remoteCdpTimeoutMs: 1500, // remote CDP HTTP timeout (ms)
     remoteCdpHandshakeTimeoutMs: 3000, // remote CDP WebSocket handshake timeout (ms)
     defaultProfile: "chrome",
     color: "#FF4500",
@@ -65,13 +66,14 @@ openclaw browser --browser-profile openclaw snapshot
     profiles: {
       openclaw: { cdpPort: 18800, color: "#FF4500" },
       work: { cdpPort: 18801, color: "#0066CC" },
-      remote: { cdpUrl: "http://10.0.0.42:9222", color: "#00AA00" }
-    }
-  }
+      remote: { cdpUrl: "http://10.0.0.42:9222", color: "#00AA00" },
+    },
+  },
 }
 ```
 
 说明：
+
 - 浏览器控制服务绑定到由 `gateway.port` 派生的回环端口（默认 `18791`，即 gateway + 2）。中继使用下一个端口（`18792`）。
 - 若覆盖 Gateway 端口（`gateway.port` 或 `OPENCLAW_GATEWAY_PORT`），派生浏览器端口会随之偏移以保持同一“端口族”。
 - `cdpUrl` 在未设置时默认使用中继端口。
@@ -123,6 +125,7 @@ openclaw config set browser.executablePath "/usr/bin/google-chrome"
 - **远程 CDP：** 设置 `browser.profiles.<name>.cdpUrl`（或 `browser.cdpUrl`）以附加到远程 Chromium 浏览器。在此模式下，OpenClaw 不会启动本地浏览器。
 
 远程 CDP URL 可以包含认证：
+
 - 查询令牌（例如 `https://provider.example?token=<token>`）
 - HTTP Basic auth（例如 `https://user:pass@provider.example`）
 
@@ -133,6 +136,7 @@ OpenClaw 在调用 `/json/*` 端点和连接 CDP WebSocket 时会保留认证信
 如果你在有浏览器的机器上运行了 **node host**，OpenClaw 可无需额外浏览器配置就自动将浏览器工具调用路由到该节点。这是远程 Gateway 的默认路径。
 
 说明：
+
 - node host 通过 **代理命令** 暴露其本地浏览器控制服务。
 - Profile 来自节点自己的 `browser.profiles` 配置（与本地相同）。
 - 如果你不希望使用它：
@@ -144,6 +148,7 @@ OpenClaw 在调用 `/json/*` 端点和连接 CDP WebSocket 时会保留认证信
 [Browserless](https://browserless.io) 是托管的 Chromium 服务，通过 HTTPS 暴露 CDP 端点。你可以把 OpenClaw 浏览器 profile 指向 Browserless 的区域端点，并用 API key 认证。
 
 示例：
+
 ```json5
 {
   browser: {
@@ -154,36 +159,41 @@ OpenClaw 在调用 `/json/*` 端点和连接 CDP WebSocket 时会保留认证信
     profiles: {
       browserless: {
         cdpUrl: "https://production-sfo.browserless.io?token=<BROWSERLESS_API_KEY>",
-        color: "#00AA00"
-      }
-    }
-  }
+        color: "#00AA00",
+      },
+    },
+  },
 }
 ```
 
 说明：
+
 - 将 `<BROWSERLESS_API_KEY>` 替换为你的 Browserless token。
 - 选择与你的 Browserless 账号匹配的区域端点（见其文档）。
 
 ## 安全性
 
 核心要点：
+
 - 浏览器控制仅限回环；访问流经 Gateway 的认证或 node 配对。
 - 将 Gateway 与任何 node host 保持在私有网络（Tailscale），避免公网暴露。
 - 将远程 CDP URL/token 当作机密；优先使用环境变量或密钥管理器。
 
 远程 CDP 建议：
+
 - 尽量使用 HTTPS 端点与短期 token。
 - 避免把长期 token 直接写进配置文件。
 
 ## Profiles（多浏览器）
 
 OpenClaw 支持多个命名 profile（路由配置）。Profile 可以是：
+
 - **openclaw-managed**：独立的 Chromium 浏览器实例，拥有自己的用户数据目录 + CDP 端口
 - **remote**：显式 CDP URL（浏览器在其它机器）
 - **extension relay**：通过本地中继 + Chrome 扩展控制你现有的 Chrome 标签页
 
 默认值：
+
 - 若缺少 `openclaw` profile，会自动创建。
 - `chrome` profile 为 Chrome 扩展中继的内置 profile（默认指向 `http://127.0.0.1:18792`）。
 - 本地 CDP 端口默认分配自 **18800–18899**。
@@ -198,6 +208,7 @@ OpenClaw 也可以通过本地 CDP 中继 + Chrome 扩展驱动 **你现有的 C
 完整指南：[Chrome 扩展](/zh/tools/chrome-extension)
 
 流程：
+
 - Gateway 在本机运行（同一台机器），或者在浏览器机器上运行 node host。
 - 本地 **中继服务器** 监听一个回环 `cdpUrl`（默认 `http://127.0.0.1:18792`）。
 - 你在某个标签页点击 **OpenClaw Browser Relay** 扩展图标来附加（不会自动附加）。
@@ -208,6 +219,7 @@ OpenClaw 也可以通过本地 CDP 中继 + Chrome 扩展驱动 **你现有的 C
 ### 沙箱会话
 
 如果 agent 会话是沙箱化的，`browser` 工具可能默认使用 `target="sandbox"`（沙箱浏览器）。Chrome 扩展中继接管需要宿主机浏览器控制，因此要么：
+
 - 让会话非沙箱化，或
 - 设置 `agents.defaults.sandbox.browser.allowHostControl: true` 并在调用工具时使用 `target="host"`。
 
@@ -224,6 +236,7 @@ openclaw browser extension install
 - 固定扩展，然后在想控制的标签页点击它（徽标显示 `ON`）
 
 2. 使用它：
+
 - CLI：`openclaw browser --browser-profile chrome tabs`
 - Agent 工具：`browser`，`profile="chrome"`
 
@@ -234,6 +247,7 @@ openclaw browser create-profile   --name my-chrome   --driver extension   --cdp-
 ```
 
 说明：
+
 - 此模式对大多数操作依赖 Playwright-on-CDP（截图/快照/动作）。
 - 再次点击扩展图标即可断开。
 
@@ -246,6 +260,7 @@ openclaw browser create-profile   --name my-chrome   --driver extension   --cdp-
 ## 浏览器选择
 
 本地启动时，OpenClaw 会按顺序选择第一个可用浏览器：
+
 1. Chrome
 2. Brave
 3. Edge
@@ -255,6 +270,7 @@ openclaw browser create-profile   --name my-chrome   --driver extension   --cdp-
 你可以用 `browser.executablePath` 覆盖。
 
 平台：
+
 - macOS：检查 `/Applications` 与 `~/Applications`。
 - Linux：查找 `google-chrome`、`brave`、`microsoft-edge`、`chromium` 等。
 - Windows：检查常见安装位置。
@@ -288,6 +304,7 @@ openclaw browser create-profile   --name my-chrome   --driver extension   --cdp-
 ## 工作原理（内部）
 
 高层流程：
+
 - 一个小型 **控制服务器** 接收 HTTP 请求。
 - 它通过 **CDP** 连接到 Chromium 浏览器（Chrome/Brave/Edge/Chromium）。
 - 对高级动作（点击/输入/快照/PDF），在 CDP 之上使用 **Playwright**。
@@ -301,6 +318,7 @@ openclaw browser create-profile   --name my-chrome   --driver extension   --cdp-
 所有命令也接受 `--json` 输出机器可读结果（稳定 payload）。
 
 基础：
+
 - `openclaw browser status`
 - `openclaw browser start`
 - `openclaw browser stop`
@@ -314,6 +332,7 @@ openclaw browser create-profile   --name my-chrome   --driver extension   --cdp-
 - `openclaw browser close abcd1234`
 
 检查：
+
 - `openclaw browser screenshot`
 - `openclaw browser screenshot --full-page`
 - `openclaw browser screenshot --ref 12`
@@ -332,6 +351,7 @@ openclaw browser create-profile   --name my-chrome   --driver extension   --cdp-
 - `openclaw browser responsebody "**/api" --max-chars 5000`
 
 动作：
+
 - `openclaw browser navigate https://example.com`
 - `openclaw browser resize 1280 720`
 - `openclaw browser click 12 --double`
@@ -355,6 +375,7 @@ openclaw browser create-profile   --name my-chrome   --driver extension   --cdp-
 - `openclaw browser trace stop`
 
 状态：
+
 - `openclaw browser cookies`
 - `openclaw browser cookies set session abc123 --url "https://example.com"`
 - `openclaw browser cookies clear`
@@ -373,6 +394,7 @@ openclaw browser create-profile   --name my-chrome   --driver extension   --cdp-
 - `openclaw browser set device "iPhone 14"`
 
 说明：
+
 - `upload` 与 `dialog` 是 **预置** 调用；需在触发选择器/对话框的点击/按键之前运行。
 - `upload` 也可通过 `--input-ref` 或 `--element` 直接设置文件输入。
 - `snapshot`：
@@ -403,6 +425,7 @@ OpenClaw 支持两种“快照”风格：
   - 使用 `--labels` 可附带带有 `e12` 标签的视口截图。
 
 ref 行为：
+
 - ref **不会跨导航保持稳定**；若失败，请重新 `snapshot` 并使用新的 ref。
 - 如果 role 快照使用 `--frame`，role ref 会限定在该 iframe 内，直到下一次 role 快照。
 
@@ -488,9 +511,11 @@ Linux 特定问题（尤其是 snap Chromium），见
 ## Agent 工具与控制方式
 
 agent 只有 **一个工具** 用于浏览器自动化：
+
 - `browser` — status/start/stop/tabs/open/focus/close/snapshot/screenshot/navigate/act
 
 映射关系：
+
 - `browser snapshot` 返回稳定的 UI 树（AI 或 ARIA）。
 - `browser act` 使用快照的 `ref` ID 来点击/输入/拖拽/选择。
 - `browser screenshot` 捕获像素（全页或元素）。

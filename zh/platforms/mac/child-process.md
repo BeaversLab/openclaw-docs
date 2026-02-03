@@ -4,6 +4,7 @@ summary: "macOS 上的 Gateway 生命周期（launchd）"
 read_when:
   - 将 mac 应用与 Gateway 生命周期集成
 ---
+
 # macOS 上的 Gateway 生命周期
 
 macOS 应用默认 **通过 launchd 管理 Gateway**，不会将 Gateway 作为子进程启动。

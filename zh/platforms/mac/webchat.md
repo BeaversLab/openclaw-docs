@@ -4,6 +4,7 @@ summary: "mac 应用如何嵌入 gateway WebChat 以及调试方式"
 read_when:
   - 调试 mac WebChat 视图或 loopback 端口
 ---
+
 # WebChat（macOS 应用）
 
 macOS 菜单栏应用将 WebChat UI 嵌入为原生 SwiftUI 视图。它连接到 Gateway，

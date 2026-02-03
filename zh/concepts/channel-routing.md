@@ -4,8 +4,8 @@ read_when:
   - 需要修改频道路由或收件箱行为
 title: "渠道路由"
 ---
-# 频道和路由
 
+# 频道和路由
 
 OpenClaw 会将回复 **路由回消息来源的频道**。模型不会选择频道；路由是确定性的，并由主机配置控制。
 
@@ -105,6 +105,7 @@ WebChat 可以在一个位置查看该 agent 跨频道的上下文。
 ## 回复上下文
 
 入站回复包含：
+
 - 可用时附带 `ReplyToId`、`ReplyToBody`、`ReplyToSender`。
 - 引用上下文会作为 `[Replying to ...]` 块追加到 `Body`。
 

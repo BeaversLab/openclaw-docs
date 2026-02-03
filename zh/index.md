@@ -7,8 +7,7 @@ title: "OpenClaw"
 
 # OpenClaw 🦞
 
-> *“EXFOLIATE! EXFOLIATE!”* — 也许是一只太空龙虾
-
+> _“EXFOLIATE! EXFOLIATE!”_ — 也许是一只太空龙虾
 
 <p align="center">
     <picture>
@@ -16,7 +15,6 @@ title: "OpenClaw"
         <img src="https://raw.githubusercontent.com/openclaw/openclaw/main/docs/assets/openclaw-logo-text.png" alt="OpenClaw" width="500" />
     </picture>
 </p>
-
 
 <p align="center">
   <strong>Any OS + WhatsApp/Telegram/Discord/iMessage 网关，面向 AI agent（Pi）。</strong><br />
@@ -167,10 +165,10 @@ openclaw message send --target +15555550123 --message "Hello from OpenClaw"
   channels: {
     whatsapp: {
       allowFrom: ["+15555550123"],
-      groups: { "*": { requireMention: true } }
-    }
+      groups: { "*": { requireMention: true } },
+    },
   },
-  messages: { groupChat: { mentionPatterns: ["@openclaw"] } }
+  messages: { groupChat: { mentionPatterns: ["@openclaw"] } },
 }
 ```
 
@@ -178,7 +176,7 @@ openclaw message send --target +15555550123 --message "Hello from OpenClaw"
 
 - Start here:
   - [Docs hubs (all pages linked)](/zh/start/hubs)
-  - [Help](/zh/help) ← *常见修复 + 故障排查*
+  - [Help](/zh/help) ← _常见修复 + 故障排查_
   - [Configuration](/zh/gateway/configuration)
   - [Configuration examples](/zh/gateway/configuration-examples)
   - [Slash commands](/zh/tools/slash-commands)
@@ -227,7 +225,7 @@ openclaw message send --target +15555550123 --message "Hello from OpenClaw"
 
 ---
 
-*“We’re all just playing with our own prompts.”* — 也许是一位 token 上头的 AI
+_“We’re all just playing with our own prompts.”_ — 也许是一位 token 上头的 AI
 
 ## Credits
 
@@ -246,4 +244,4 @@ MIT — 像海里的龙虾一样自由 🦞
 
 ---
 
-*“We’re all just playing with our own prompts.”* — 也许是一位 token 上头的 AI
+_“We’re all just playing with our own prompts.”_ — 也许是一位 token 上头的 AI

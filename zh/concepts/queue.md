@@ -10,10 +10,12 @@ title: "命令队列"
 我们通过一个小型进程内队列对入站自动回复运行（所有渠道）进行串行化，防止多个 agent 运行相互冲突，同时允许跨会话的安全并行。
 
 ## Why
+
 - 自动回复运行可能成本很高（LLM 调用），且多条入站消息靠得很近时会发生冲突。
 - 串行化可避免争用共享资源（会话文件、日志、CLI stdin），并降低上游限流风险。
 
 ## How it works
+
 - 一个具备 lane 的 FIFO 队列按 lane 进行排队，且每个 lane 有可配置并发上限（未配置的 lane 默认 1；main 默认 4，subagent 默认 8）。
 - `runEmbeddedPiAgent` 按**session key**入队（lane 为 `session:<key>`），确保同一会话同一时间仅一个运行。
 - 每个会话运行随后入队到**全局 lane**（默认 `main`），以 `agents.defaults.maxConcurrent` 作为整体并行上限。
@@ -23,6 +25,7 @@ title: "命令队列"
 ## 队列模式（按渠道）
 
 入站消息可以 steer 当前运行、等待 followup 回合，或两者兼具：
+
 - `steer`：立即注入当前运行（在下一个工具边界后取消待执行工具调用）。若非 streaming，则回退为 followup。
 - `followup`：在当前运行结束后排队进入下一个 agent 回合。
 - `collect`：将所有排队消息合并为**一个** followup 回合（默认）。若消息目标不同渠道/线程，会分别排空以保持路由。
@@ -34,6 +37,7 @@ Steer-backlog 可能在 steer 运行后产生 followup 回复，因此在 stream
 以独立命令发送 `/queue collect`（按会话）或设置 `messages.queue.byChannel.discord: "collect"`。
 
 默认值（配置未设置时）：
+
 - 所有表面 → `collect`
 
 通过 `messages.queue` 全局或按渠道配置：
@@ -55,6 +59,7 @@ Steer-backlog 可能在 steer 运行后产生 followup 回复，因此在 stream
 ## 队列选项
 
 选项适用于 `followup`、`collect` 与 `steer-backlog`（以及 `steer` 回退为 followup 时）：
+
 - `debounceMs`：等待静默后再启动 followup 回合（防止“继续、继续”）。
 - `cap`：每个会话最大排队消息数。
 - `drop`：溢出策略（`old`、`new`、`summarize`）。

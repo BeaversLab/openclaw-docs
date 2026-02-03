@@ -171,7 +171,7 @@ BlueBubbles 支持群聊提及门控，行为与 iMessage/WhatsApp 一致：
 
 ### Message IDs（短 ID vs 完整 ID）
 
-OpenClaw 可能会提供_短_消息 ID（例如 `1`、`2`）以节省 token。
+OpenClaw 可能会提供*短*消息 ID（例如 `1`、`2`）以节省 token。
 
 - `MessageSid` / `ReplyToId` 可能为短 ID。
 - `MessageSidFull` / `ReplyToIdFull` 包含 provider 的完整 ID。

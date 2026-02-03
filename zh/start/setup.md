@@ -11,11 +11,13 @@ title: "Setup"
 最后更新：2026-01-01
 
 ## TL;DR
+
 - **个性化配置放在仓库之外：** `~/.openclaw/workspace`（工作区） + `~/.openclaw/openclaw.json`（配置）。
 - **稳定流程：** 安装 macOS 应用；由它运行内置 Gateway。
 - **前沿流程：** 自己用 `pnpm gateway:watch` 跑 Gateway，然后让 macOS 应用在本地模式下接入。
 
 ## 前置条件（从源码）
+
 - Node `>=22`
 - `pnpm`
 - Docker（可选；仅容器化配置/端到端测试需要 — 见 [Docker](/zh/install/docker)）
@@ -43,22 +45,23 @@ openclaw setup
 
 ## 稳定流程（优先 macOS 应用）
 
-1) 安装并启动 **OpenClaw.app**（菜单栏）。
-2) 完成引导/权限清单（TCC 提示）。
-3) 确认 Gateway 为 **Local** 且正在运行（应用托管）。
-4) 连接入口（示例：WhatsApp）：
+1. 安装并启动 **OpenClaw.app**（菜单栏）。
+2. 完成引导/权限清单（TCC 提示）。
+3. 确认 Gateway 为 **Local** 且正在运行（应用托管）。
+4. 连接入口（示例：WhatsApp）：
 
 ```bash
 openclaw channels login
 ```
 
-5) 健康检查：
+5. 健康检查：
 
 ```bash
 openclaw health
 ```
 
 如果你的构建中没有引导：
+
 - 运行 `openclaw setup`，再运行 `openclaw channels login`，然后手动启动 Gateway（`openclaw gateway`）。
 
 ## 前沿流程（终端运行 Gateway）
@@ -87,7 +90,7 @@ pnpm gateway:watch
 在 **OpenClaw.app** 中：
 
 - Connection Mode：**Local**
-应用会连接到配置端口上的网关。
+  应用会连接到配置端口上的网关。
 
 ### 3) 验证
 
@@ -99,6 +102,7 @@ openclaw health
 ```
 
 ### 常见坑
+
 - **端口错误：** Gateway WS 默认 `ws://127.0.0.1:18789`；保持应用和 CLI 使用同一端口。
 - **状态存放位置：**
   - 凭据：`~/.openclaw/credentials/`
@@ -116,7 +120,7 @@ openclaw health
 - **配对 allowlist**：`~/.openclaw/credentials/<channel>-allowFrom.json`
 - **模型认证档案**：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
 - **旧版 OAuth 导入**：`~/.openclaw/credentials/oauth.json`
-更多细节：[安全](/zh/gateway/security#credential-storage-map)。
+  更多细节：[安全](/zh/gateway/security#credential-storage-map)。
 
 ## 更新（不破坏你的配置）
 

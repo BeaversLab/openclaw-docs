@@ -11,24 +11,28 @@ title: "会话修剪（Session Pruning）"
 Session pruning 会在每次 LLM 调用前，从内存上下文中裁剪**旧的工具结果**。它**不会**改写磁盘上的会话历史（`*.jsonl`）。
 
 ## 何时运行
+
 - 当启用 `mode: "cache-ttl"` 且该会话最后一次 Anthropic 调用距离现在超过 `ttl`。
 - 仅影响该次请求发送给模型的消息。
- - 仅对 Anthropic API 调用生效（以及 OpenRouter 的 Anthropic 模型）。
- - 最佳做法：将 `ttl` 与模型的 `cacheControlTtl` 对齐。
- - 每次 pruning 后 TTL 窗口重置，后续请求会继续缓存直到 `ttl` 再次过期。
+- 仅对 Anthropic API 调用生效（以及 OpenRouter 的 Anthropic 模型）。
+- 最佳做法：将 `ttl` 与模型的 `cacheControlTtl` 对齐。
+- 每次 pruning 后 TTL 窗口重置，后续请求会继续缓存直到 `ttl` 再次过期。
 
 ## 智能默认值（Anthropic）
+
 - **OAuth 或 setup-token** profiles：启用 `cache-ttl` pruning，heartbeat 设为 `1h`。
 - **API key** profiles：启用 `cache-ttl` pruning，heartbeat 设为 `30m`，并将 Anthropic 模型默认 `cacheControlTtl` 设为 `1h`。
 - 若你显式设置了这些值，OpenClaw **不会**覆盖。
 
 ## 改善点（成本 + 缓存行为）
+
 - **为何剪裁**：Anthropic prompt 缓存只在 TTL 内有效。若会话闲置超过 TTL，下一次请求会重新缓存完整 prompt，除非先剪裁。
 - **哪里变便宜**：pruning 会减少 TTL 过期后的首个请求的 **cacheWrite** 大小。
 - **TTL 重置意义**：pruning 执行后缓存窗口重置，后续请求可复用新缓存的 prompt，而不是再次缓存完整历史。
 - **不会发生什么**：pruning 不会增加 token 或“加倍”成本；只影响 TTL 后首个请求的缓存内容。
 
 ## 可以被剪裁的内容
+
 - 仅 `toolResult` 消息。
 - 用户与 assistant 消息**从不**修改。
 - 最近 `keepLastAssistants` 条 assistant 消息被保护；该截止点之后的工具结果不会被剪裁。
@@ -48,26 +52,31 @@ Pruning 使用估算的上下文窗口（chars ≈ tokens × 4）。基础窗口
 ## 模式
 
 ### cache-ttl
+
 - 仅当最后一次 Anthropic 调用超过 `ttl`（默认 `5m`）时运行。
 - 运行时：与之前一致的 soft-trim + hard-clear 行为。
 
 ## Soft vs hard pruning
+
 - **Soft-trim**：仅对超大工具结果。
   - 保留头 + 尾，插入 `...`，并追加原始大小说明。
   - 跳过含图像块的结果。
 - **Hard-clear**：用 `hardClear.placeholder` 替换整个工具结果。
 
 ## Tool 选择
+
 - `tools.allow` / `tools.deny` 支持 `*` 通配符。
 - Deny 优先。
 - 匹配不区分大小写。
 - Allow 为空 => 允许全部工具。
 
 ## 与其他限制的关系
+
 - 内置工具已对输出进行截断；session pruning 是额外层，用于防止长会话在模型上下文中积累过多工具输出。
 - Compaction 是独立机制：compaction 总结并持久化，pruning 是按请求的短暂行为。参见 [/concepts/compaction](/zh/concepts/compaction)。
 
 ## 默认值（启用时）
+
 - `ttl`: `"5m"`
 - `keepLastAssistants`: `3`
 - `softTrimRatio`: `0.3`

@@ -23,12 +23,14 @@ Gateway 可对外暴露一个小型 HTTP webhook 端点，用于外部触发。
 ```
 
 注意：
+
 - 当 `hooks.enabled=true` 时必须设置 `hooks.token`。
 - `hooks.path` 默认为 `/hooks`。
 
 ## 鉴权
 
 每个请求都必须携带 hook token。推荐使用请求头：
+
 - `Authorization: Bearer <token>`（推荐）
 - `x-openclaw-token: <token>`
 - `?token=<token>`（已弃用；会记录警告，并将在未来主版本移除）

@@ -5,6 +5,7 @@ read_when:
   - 需要通过 allowlist 让工具成为可选项
 title: "插件 Agent 工具"
 ---
+
 # 插件代理工具
 
 OpenClaw 插件可以注册 **代理工具**（JSON‑schema 函数），在代理运行期间暴露给 LLM。工具可为 **必需**（始终可用）或 **可选**（需显式启用）。
@@ -51,7 +52,7 @@ export default function (api) {
         return { content: [{ type: "text", text: params.pipeline }] };
       },
     },
-    { optional: true },
+    { optional: true }
   );
 }
 ```
@@ -66,18 +67,19 @@ export default function (api) {
         id: "main",
         tools: {
           allow: [
-            "workflow_tool",  // 指定工具名
-            "workflow",       // 插件 id（启用该插件所有工具）
-            "group:plugins"   // 所有插件工具
-          ]
-        }
-      }
-    ]
-  }
+            "workflow_tool", // 指定工具名
+            "workflow", // 插件 id（启用该插件所有工具）
+            "group:plugins", // 所有插件工具
+          ],
+        },
+      },
+    ],
+  },
 }
 ```
 
 其他会影响工具可用性的配置：
+
 - 仅列出插件工具的 allowlist 会被视为插件 opt‑in；除非你在 allowlist 中也包含 core 工具或 group，否则 core 工具仍保持启用。
 - `tools.profile` / `agents.list[].tools.profile`（基础 allowlist）
 - `tools.byProvider` / `agents.list[].tools.byProvider`（按 provider 的 allow/deny）

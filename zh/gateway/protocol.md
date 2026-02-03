@@ -125,8 +125,8 @@ Gateway → Client：
 
 ## 帧格式
 
-- **Request**：`{type:"req", id, method, params}`  
-- **Response**：`{type:"res", id, ok, payload|error}`  
+- **Request**：`{type:"req", id, method, params}`
+- **Response**：`{type:"res", id, ok, payload|error}`
 - **Event**：`{type:"event", event, payload, seq?, stateVersion?}`
 
 有副作用的方法需要**幂等键**（参见 schema）。
@@ -134,11 +134,14 @@ Gateway → Client：
 ## Roles + scopes
 
 ### Roles
+
 - `operator` = 控制平面客户端（CLI/UI/automation）。
 - `node` = 能力宿主（camera/screen/canvas/system.run）。
 
 ### Scopes（operator）
+
 常见 scopes：
+
 - `operator.read`
 - `operator.write`
 - `operator.admin`
@@ -146,7 +149,9 @@ Gateway → Client：
 - `operator.pairing`
 
 ### Caps/commands/permissions（node）
+
 Nodes 在 connect 时声明能力：
+
 - `caps`：高层能力分类。
 - `commands`：可 invoke 的命令 allowlist。
 - `permissions`：细粒度开关（如 `screen.record`、`camera.capture`）。

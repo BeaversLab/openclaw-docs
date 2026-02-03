@@ -15,6 +15,7 @@ title: "快速入门"
 文档：[Dashboard](/zh/web/dashboard) 和 [Control UI](/zh/web/control-ui)。
 
 推荐路径：使用 **CLI 引导向导**（`openclaw onboard`）。它会设置：
+
 - 模型/认证（推荐 OAuth）
 - 网关设置
 - 渠道（WhatsApp/Telegram/Discord/Mattermost（插件）/…）
@@ -84,6 +85,7 @@ openclaw onboard --install-daemon
 ```
 
 你将选择：
+
 - **本地 vs 远程** 网关
 - **认证**：OpenAI Code (Codex) 订阅（OAuth）或 API key。Anthropic 推荐 API key；也支持 `claude setup-token`。
 - **提供商**：WhatsApp QR 登录、Telegram/Discord bot token、Mattermost (插件) token 等。
@@ -145,6 +147,7 @@ WhatsApp 文档：[WhatsApp](/zh/channels/whatsapp)
 ### Telegram / Discord / 其他
 
 向导可以替你写入 token/配置。如果你更喜欢手动配置，先看：
+
 - Telegram：[Telegram](/zh/channels/telegram)
 - Discord：[Discord](/zh/channels/discord)
 - Mattermost（插件）：[Mattermost](/zh/channels/mattermost)

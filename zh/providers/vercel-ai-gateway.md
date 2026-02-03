@@ -5,6 +5,7 @@ read_when:
   - 想在 OpenClaw 中使用 Vercel AI Gateway
   - 需要 API key 环境变量或 CLI 认证选项
 ---
+
 # Vercel AI Gateway
 
 [ Vercel AI Gateway](https://vercel.com/ai-gateway) 提供统一 API，可通过单一端点访问数百个模型。
@@ -15,21 +16,21 @@ read_when:
 
 ## 快速开始
 
-1) 设置 API key（建议存储给 Gateway 使用）：
+1. 设置 API key（建议存储给 Gateway 使用）：
 
 ```bash
 openclaw onboard --auth-choice ai-gateway-api-key
 ```
 
-2) 设置默认模型：
+2. 设置默认模型：
 
 ```json5
 {
   agents: {
     defaults: {
-      model: { primary: "vercel-ai-gateway/anthropic/claude-opus-4.5" }
-    }
-  }
+      model: { primary: "vercel-ai-gateway/anthropic/claude-opus-4.5" },
+    },
+  },
 }
 ```
 

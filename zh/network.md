@@ -6,6 +6,7 @@ read_when:
   - 你在排查本地 vs tailnet 访问或配对
   - 你想要网络相关文档的权威列表
 ---
+
 # Network hub
 
 此枢纽链接 OpenClaw 在 localhost、LAN 与 tailnet 中连接、配对与安全的核心文档。
@@ -25,6 +26,7 @@ read_when:
 - [Pairing CLI (DM approvals)](/zh/cli/pairing)
 
 本地信任：
+
 - 本地连接（loopback 或 gateway 主机自身的 tailnet 地址）可以自动批准配对，以保持同机体验顺滑。
 - 非本地 tailnet/LAN 客户端仍需要显式配对批准。
 

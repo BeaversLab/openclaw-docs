@@ -5,6 +5,7 @@ read_when:
   - 回顾安全/权限影响
 title: "个人助理设置"
 ---
+
 # 用 OpenClaw 构建个人助理
 
 OpenClaw 是一个 WhatsApp + Telegram + Discord + iMessage 的 **Pi** 代理网关。插件可添加 Mattermost。本指南是“个人助理”方案：一个专用的 WhatsApp 号码，行为像你的常驻助理。
@@ -12,11 +13,13 @@ OpenClaw 是一个 WhatsApp + Telegram + Discord + iMessage 的 **Pi** 代理网
 ## ⚠️ 安全优先
 
 你正在让代理有能力：
+
 - 在你的机器上运行命令（取决于你的 Pi 工具配置）
 - 在你的工作区读写文件
 - 通过 WhatsApp/Telegram/Discord/Mattermost（插件）向外发送消息
 
 从保守开始：
+
 - 始终设置 `channels.whatsapp.allowFrom`（不要在个人 Mac 上开放对外）。
 - 为助理使用专用 WhatsApp 号码。
 - 心跳默认每 30 分钟一次。设置 `agents.defaults.heartbeat.every: "0m"` 在信任前禁用。
@@ -66,23 +69,23 @@ Your Phone (personal)          Second Phone (assistant)
 
 ## 5 分钟快速开始
 
-1) 连接 WhatsApp Web（显示二维码；用助理手机号扫码）：
+1. 连接 WhatsApp Web（显示二维码；用助理手机号扫码）：
 
 ```bash
 openclaw channels login
 ```
 
-2) 启动 Gateway（保持运行）：
+2. 启动 Gateway（保持运行）：
 
 ```bash
 openclaw gateway --port 18789
 ```
 
-3) 在 `~/.openclaw/openclaw.json` 写入最小配置：
+3. 在 `~/.openclaw/openclaw.json` 写入最小配置：
 
 ```json5
 {
-  channels: { whatsapp: { allowFrom: ["+15555550123"] } }
+  channels: { whatsapp: { allowFrom: ["+15555550123"] } },
 }
 ```
 
@@ -110,8 +113,8 @@ openclaw setup
 ```json5
 {
   agent: {
-    workspace: "~/.openclaw/workspace"
-  }
+    workspace: "~/.openclaw/workspace",
+  },
 }
 ```
 
@@ -120,14 +123,15 @@ openclaw setup
 ```json5
 {
   agent: {
-    skipBootstrap: true
-  }
+    skipBootstrap: true,
+  },
 }
 ```
 
 ## 把它变成“助理”的配置
 
 OpenClaw 的默认配置已适合作为助理，但通常还需要调整：
+
 - `SOUL.md` 中的人设/指令
 - 思考强度默认值（如需要）
 - 心跳频率（在你信任后）
@@ -143,20 +147,20 @@ OpenClaw 的默认配置已适合作为助理，但通常还需要调整：
     thinkingDefault: "high",
     timeoutSeconds: 1800,
     // 从 0 开始；之后再启用。
-    heartbeat: { every: "0m" }
+    heartbeat: { every: "0m" },
   },
   channels: {
     whatsapp: {
       allowFrom: ["+15555550123"],
       groups: {
-        "*": { requireMention: true }
-      }
-    }
+        "*": { requireMention: true },
+      },
+    },
   },
   routing: {
     groupChat: {
-      mentionPatterns: ["@openclaw", "openclaw"]
-    }
+      mentionPatterns: ["@openclaw", "openclaw"],
+    },
   },
   session: {
     scope: "per-sender",
@@ -164,9 +168,9 @@ OpenClaw 的默认配置已适合作为助理，但通常还需要调整：
     reset: {
       mode: "daily",
       atHour: 4,
-      idleMinutes: 10080
-    }
-  }
+      idleMinutes: 10080,
+    },
+  },
 }
 ```
 
@@ -191,14 +195,15 @@ OpenClaw 的默认配置已适合作为助理，但通常还需要调整：
 ```json5
 {
   agent: {
-    heartbeat: { every: "30m" }
-  }
+    heartbeat: { every: "30m" },
+  },
 }
 ```
 
 ## 媒体收发
 
 入站附件（图片/音频/文档）可通过模板字段传递到你的命令：
+
 - `{{MediaPath}}`（本地临时文件路径）
 - `{{MediaUrl}}`（伪 URL）
 - `{{Transcript}}`（启用音频转写时）

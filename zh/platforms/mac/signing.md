@@ -4,6 +4,7 @@ summary: "打包脚本生成的 macOS debug 构建签名步骤"
 read_when:
   - 构建或签名 mac debug 版本
 ---
+
 # mac 签名（debug 构建）
 
 该应用通常通过 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 构建，该脚本现在会：
@@ -29,11 +30,13 @@ DISABLE_LIBRARY_VALIDATION=1 scripts/package-mac-app.sh   # 仅开发：Sparkle 
 ```
 
 ### Ad-hoc 签名说明
+
 使用 `SIGN_IDENTITY="-"`（ad-hoc）签名时，脚本会自动禁用 **Hardened Runtime**（`--options runtime`）。这是为了避免应用加载 Team ID 不同的内嵌框架（如 Sparkle）时崩溃。ad-hoc 也会破坏 TCC 权限持久化；恢复步骤见 [macOS permissions](/zh/platforms/mac/permissions)。
 
 ## About 页的构建元数据
 
 `package-mac-app.sh` 会写入：
+
 - `OpenClawBuildTimestamp`：打包时的 ISO8601 UTC
 - `OpenClawGitCommit`：短 git hash（或不可用时为 `unknown`）
 

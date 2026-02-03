@@ -5,6 +5,7 @@ read_when:
   - 使用或配置聊天命令
   - 排查命令路由或权限
 ---
+
 # 斜杠命令
 
 命令由 Gateway 处理。多数命令必须作为 **独立** 消息发送，并以 `/` 开头。
@@ -36,8 +37,8 @@ read_when:
     config: false,
     debug: false,
     restart: false,
-    useAccessGroups: true
-  }
+    useAccessGroups: true,
+  },
 }
 ```
 
@@ -59,6 +60,7 @@ read_when:
 ## 命令列表
 
 文本 + 原生（启用时）：
+
 - `/help`
 - `/commands`
 - `/skill <name> [input]`（按名称运行技能）
@@ -91,12 +93,14 @@ read_when:
 - `/bash <command>`（仅宿主机；`! <command>` 别名；需 `commands.bash: true` + `tools.elevated` allowlist）
 
 仅文本：
+
 - `/compact [instructions]`（见 [/concepts/compaction](/zh/concepts/compaction)）
 - `! <command>`（仅宿主机；一次一个；长任务用 `!poll` + `!stop`）
 - `!poll`（查看输出/状态；可选 `sessionId`；`/bash poll` 也可用）
 - `!stop`（停止运行中的 bash 任务；可选 `sessionId`；`/bash stop` 也可用）
 
 说明：
+
 - 命令可在命令与参数之间使用可选的 `:`（如 `/think: high`、`/send: on`、`/help:`）。
 - `/new <model>` 接受模型别名、`provider/model` 或 provider 名（模糊匹配）；若无匹配则把文本视为消息体。
 - 若要查看完整 provider 用量拆解，使用 `openclaw status --usage`。
@@ -140,6 +144,7 @@ read_when:
 ```
 
 说明：
+
 - `/model` 与 `/model list` 显示紧凑编号选择器（模型家族 + 可用 providers）。
 - `/model <#>` 从该选择器选择（尽可能优先当前 provider）。
 - `/model status` 显示详细视图，包括已配置 provider 端点（`baseUrl`）与 API 模式（`api`）。
@@ -159,6 +164,7 @@ read_when:
 ```
 
 说明：
+
 - 覆盖会立即生效，但 **不会** 写入 `openclaw.json`。
 - 使用 `/debug reset` 清除所有覆盖并恢复磁盘配置。
 
@@ -177,6 +183,7 @@ read_when:
 ```
 
 说明：
+
 - 配置在写入前会校验；无效变更会被拒绝。
 - `/config` 的更新会跨重启持久化。
 

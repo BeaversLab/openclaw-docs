@@ -4,20 +4,24 @@ summary: "唤醒词与按住说话重叠时的语音覆盖层生命周期"
 read_when:
   - 调整语音覆盖层行为
 ---
+
 # 语音覆盖层生命周期（macOS）
 
 受众：macOS 应用贡献者。目标：当唤醒词与按住说话重叠时，让语音覆盖层行为可预测。
 
 ### 当前意图
-- 如果覆盖层已由唤醒词显示，用户再按下热键，则热键会 *接管* 现有文本而不是重置。覆盖层在热键按住期间保持显示。用户松开时：若有裁剪后的文本则发送，否则关闭。
+
+- 如果覆盖层已由唤醒词显示，用户再按下热键，则热键会 _接管_ 现有文本而不是重置。覆盖层在热键按住期间保持显示。用户松开时：若有裁剪后的文本则发送，否则关闭。
 - 仅唤醒词时仍在静默后自动发送；按住说话则在松开时立即发送。
 
 ### 已实现（2025-12-09）
+
 - 覆盖层会话为每次捕获（唤醒词或按住说话）携带 token。当 token 不匹配时，partial/final/send/dismiss/level 更新会被丢弃，避免陈旧回调。
 - 按住说话会将当前可见的覆盖层文本作为前缀（即唤醒覆盖层显示时按热键会保留文本并追加新语音）。它会等待最多 1.5 秒的最终转写，超时则回退到当前文本。
 - 在 `voicewake.overlay`、`voicewake.ptt`、`voicewake.chime` 分类下以 `info` 级别输出提示音/覆盖层日志（会话开始、partial、final、send、dismiss、提示音原因）。
 
 ### 下一步
+
 1. **VoiceSessionCoordinator（actor）**
    - 任何时刻只拥有一个 `VoiceSession`。
    - API（基于 token）：`beginWakeCapture`、`beginPushToTalk`、`updatePartial`、`endCapture`、`cancel`、`applyCooldown`。
@@ -37,15 +41,18 @@ read_when:
    - 关键事件：`session_started`、`adopted_by_push_to_talk`、`partial`、`finalized`、`send`、`dismiss`、`cancel`、`cooldown`。
 
 ### 调试清单
+
 - 复现覆盖层卡住时，实时查看日志：
 
   ```bash
   sudo log stream --predicate 'subsystem == "bot.molt" AND category CONTAINS "voicewake"' --level info --style compact
   ```
+
 - 验证只存在一个活跃的 session token；陈旧回调应被 coordinator 丢弃。
 - 确保按住说话松开时总是用活跃 token 调用 `endCapture`；若文本为空，预期 `dismiss`，不播放提示音或发送。
 
 ### 迁移步骤（建议）
+
 1. 添加 `VoiceSessionCoordinator`、`VoiceSession` 与 `VoiceSessionPublisher`。
 2. 重构 `VoiceWakeRuntime`，改为创建/更新/结束会话，而非直接操作 `VoiceWakeOverlayController`。
 3. 重构 `VoicePushToTalk`，采用现有会话并在松开时调用 `endCapture`；应用运行时冷却。

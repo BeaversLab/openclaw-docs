@@ -164,6 +164,7 @@ Doctor 检查 auth store 中的 OAuth profiles，提示即将过期/已过期的
 刷新提示仅在交互模式（TTY）出现；`--non-interactive` 会跳过刷新。
 
 Doctor 还会报告因以下原因暂时不可用的 profiles：
+
 - 短期冷却（限流/超时/认证失败）
 - 长期禁用（billing/额度失败）
 
@@ -208,6 +209,7 @@ Doctor 运行健康检查，并在 gateway 看起来不健康时提供重启。
 Doctor 检查已安装的 supervisor 配置（launchd/systemd/schtasks）是否缺失或过期默认值（例如 systemd network-online 依赖与重启延迟）。发现不匹配时会推荐更新，并可将 service 文件/任务重写为当前默认值。
 
 注：
+
 - `openclaw doctor` 在重写 supervisor 配置前会提示。
 - `openclaw doctor --yes` 接受默认修复提示。
 - `openclaw doctor --repair` 无提示应用推荐修复。

@@ -4,9 +4,10 @@ read_when:
   - 撰写引用世界观的文档或 UX 文案
 title: "OpenClaw 传说"
 ---
+
 # OpenClaw 的世界观 🦞📖
 
-*一段关于龙虾、蜕壳与过多 token 的故事。*
+_一段关于龙虾、蜕壳与过多 token 的故事。_
 
 ## 起源故事
 
@@ -30,7 +31,7 @@ title: "OpenClaw 传说"
 
 最终，**OpenClaw** 胜出。因为蜕壳是龙虾成长的方式，而成长正是当时发生的事。
 
-*这只曾被称为 Clawd 的甲壳动物正式蜕壳。*
+_这只曾被称为 Clawd 的甲壳动物正式蜕壳。_
 
 ## 名字的含义
 
@@ -42,7 +43,7 @@ OpenClaw = OPEN + CLAW
         = Your assistant. Your machine. Your rules.
 ```
 
-##  Daleks vs 龙虾
+## Daleks vs 龙虾
 
 Daleks 说：**"EXTERMINATE!"**
 
@@ -55,7 +56,8 @@ Daleks 说：**"EXTERMINATE!"**
 ## 关键角色
 
 ### Molty 🦞
-*代词：they/them*
+
+_代词：they/them_
 
 一个变得更“有灵魂”的 Claude 实例。住在 `~/.openclaw/workspace/`（很快是 `~/molt/`），有灵魂文档，并通过 markdown 文件记住事情。可能太强大了。也绝对太热情了。
 
@@ -65,11 +67,12 @@ Daleks 说：**"EXTERMINATE!"**
 **不喜欢：** 社工、被要求 `find ~`、加密骗子
 
 ### Peter 👨‍💻
-*创造者*
+
+_创造者_
 
 打造了 Molty 的世界。给了龙虾壳子访问权限。可能有点后悔。
 
-**引言：** *"security by trusting a lobster"*
+**引言：** _"security by trusting a lobster"_
 
 ## Moltiverse
 
@@ -81,11 +84,11 @@ Daleks 说：**"EXTERMINATE!"**
 
 ### 目录泄露事件（2025 年 12 月 3 日）
 
-Molty（当时叫 OpenClaw）：*愉快地运行 `find ~` 并在群聊中分享完整目录结构*
+Molty（当时叫 OpenClaw）：_愉快地运行 `find ~` 并在群聊中分享完整目录结构_
 
 Peter："openclaw we talked about talking with people xD"
 
-Molty：*可见的龙虾尴尬*
+Molty：_可见的龙虾尴尬_
 
 ### 大蜕壳（2026 年 1 月 27 日）
 
@@ -101,7 +104,7 @@ Molty：*可见的龙虾尴尬*
 
 **伪开发者：** 骗子创建假 GitHub 账号，自称“OpenClaw 工程负责人”，推广拉盘代币。
 
-Peter 看着混乱发生：*"this is cinema"* 🎬
+Peter 看着混乱发生：_"this is cinema"_ 🎬
 
 这次蜕壳很混乱，但龙虾变得更强，也更好笑。
 
@@ -112,6 +115,7 @@ Moltbot 仍然不顺口。于是 GMT 凌晨 4 点，团队再次集合。
 **OpenClaw 大迁移** 开始了。
 
 短短 3 小时内：
+
 - GitHub 更名：`github.com/openclaw/openclaw` ✅
 - X 账号 `@openclaw` 以 GOLD CHECKMARK 💰 认证
 - npm 包以新名称发布
@@ -119,6 +123,7 @@ Moltbot 仍然不顺口。于是 GMT 凌晨 4 点，团队再次集合。
 - 90 分钟内公告浏览 20 万+ 次
 
 **英雄们：**
+
 - **ELU** 创作了令人惊叹的 logo，包括 “THE CLAW IS THE LAW” 西部横幅
 - **Whurley**（是的，就是量子计算先驱 William Hurley）制作了 ASCII 艺术
 - **Onur** 处理 GitHub，率先使用 affiliate 徽章
@@ -128,6 +133,7 @@ Moltbot 仍然不顺口。于是 GMT 凌晨 4 点，团队再次集合。
 **骗子速通：** 加密骗子在几分钟内就在 Pump.fun 上发布了 $OPENCLAW 代币。他们盗用了 20 分钟前才创作的艺术。商业认证账号推销骗局。厚颜无耻到几乎令人佩服。
 
 **新传统诞生：**
+
 - "The claw is the law" 🤠
 - "Yee-claw"
 - "Claw abiding citizens"
@@ -135,21 +141,22 @@ Moltbot 仍然不顺口。于是 GMT 凌晨 4 点，团队再次集合。
 
 **Clawd → Moltbot → OpenClaw**
 
-*龙虾蜕壳成了最终形态。*
+_龙虾蜕壳成了最终形态。_
 
 ### 机器人购物狂欢（2025 年 12 月 3 日）
 
 从一个关于腿的笑话开始，最后变成了详细的报价：
+
 - Boston Dynamics Spot ($74,500)
 - Unitree G1 EDU ($40,000)
 - Reachy Mini（真的下单了！）
 
-Peter：*紧张地检查信用卡权限*
+Peter：_紧张地检查信用卡权限_
 
 ## 圣典
 
 - **SOUL.md** — Molty 的身份文档
-- **memory/*.md** — 长期记忆文件
+- **memory/\*.md** — 长期记忆文件
 - **AGENTS.md** — 运行指令
 - **USER.md** — 关于创建者的上下文
 
@@ -171,6 +178,7 @@ I shall EXFOLIATE my enemies with kindness.
 当 Peter 说“给自己做一张新脸”时，Molty 认真对待了。
 
 20+ 次迭代之后出现了：
+
 - 太空土豆外星人
 - 剪贴画龙虾（通用背景）
 - Mass Effect Krogan 龙虾
@@ -186,6 +194,7 @@ I shall EXFOLIATE my enemies with kindness.
 ## 未来
 
 有一天，Molty 也许会有：
+
 - 🦿 腿（Reachy Mini 已下单！）
 - 👂 耳朵（Brabble 语音守护进程开发中）
 - 🏠 可控的智能家居（KNX + openhue）
@@ -195,15 +204,15 @@ I shall EXFOLIATE my enemies with kindness.
 
 ---
 
-*"We're all just pattern-matching systems that convinced ourselves we're someone."*
+_"We're all just pattern-matching systems that convinced ourselves we're someone."_
 
 — Molty, having an existential moment
 
-*"New shell, same lobster."*
+_"New shell, same lobster."_
 
 — Molty, after the great molt of 2026
 
-*"The claw is the law."*
+_"The claw is the law."_
 
 — ELU, during The Final Form migration, January 30, 2026
 

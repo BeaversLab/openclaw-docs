@@ -4,6 +4,7 @@ read_when:
   - 为 OpenClaw 设置 Twitch 聊天集成
 title: "Twitch"
 ---
+
 # Twitch（插件）
 
 通过 IRC 连接支持 Twitch 聊天。OpenClaw 以 Twitch 用户（bot 账号）身份连接到频道，收发消息。
@@ -49,13 +50,13 @@ openclaw plugins install ./extensions/twitch
   channels: {
     twitch: {
       enabled: true,
-      username: "openclaw",              // Bot 的 Twitch 账号
-      accessToken: "oauth:abc123...",    // OAuth Access Token（或用 OPENCLAW_TWITCH_ACCESS_TOKEN 环境变量）
-      clientId: "xyz789...",             // Token Generator 提供的 Client ID
-      channel: "vevisk",                 // 要加入的 Twitch 频道（必填）
-      allowFrom: ["123456789"]           // （推荐）仅你的 Twitch 用户 ID
-    }
-  }
+      username: "openclaw", // Bot 的 Twitch 账号
+      accessToken: "oauth:abc123...", // OAuth Access Token（或用 OPENCLAW_TWITCH_ACCESS_TOKEN 环境变量）
+      clientId: "xyz789...", // Token Generator 提供的 Client ID
+      channel: "vevisk", // 要加入的 Twitch 频道（必填）
+      allowFrom: ["123456789"], // （推荐）仅你的 Twitch 用户 ID
+    },
+  },
 }
 ```
 
@@ -71,6 +72,7 @@ openclaw plugins install ./extensions/twitch
 ### 生成凭据
 
 使用 [Twitch Token Generator](https://twitchtokengenerator.com/)：
+
 - 选择 **Bot Token**
 - 确认勾选 `chat:read` 与 `chat:write`
 - 复制 **Client ID** 与 **Access Token**
@@ -80,11 +82,13 @@ openclaw plugins install ./extensions/twitch
 ### 配置 bot
 
 **环境变量（仅默认账号）：**
+
 ```bash
 OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 ```
 
 **或配置：**
+
 ```json5
 {
   channels: {
@@ -93,9 +97,9 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
       username: "openclaw",
       accessToken: "oauth:abc123...",
       clientId: "xyz789...",
-      channel: "vevisk"
-    }
-  }
+      channel: "vevisk",
+    },
+  },
 }
 ```
 
@@ -107,10 +111,10 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 {
   channels: {
     twitch: {
-      allowFrom: ["123456789"],       // （推荐）仅你的 Twitch 用户 ID
-      allowedRoles: ["moderator"]     // 或限制为角色
-    }
-  }
+      allowFrom: ["123456789"], // （推荐）仅你的 Twitch 用户 ID
+      allowedRoles: ["moderator"], // 或限制为角色
+    },
+  },
 }
 ```
 
@@ -132,9 +136,9 @@ https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/ （将 T
   channels: {
     twitch: {
       clientSecret: "your_client_secret",
-      refreshToken: "your_refresh_token"
-    }
-  }
+      refreshToken: "your_refresh_token",
+    },
+  },
 }
 ```
 
@@ -155,17 +159,17 @@ bot 会在过期前自动刷新 token，并记录刷新事件。
           username: "openclaw",
           accessToken: "oauth:abc123...",
           clientId: "xyz789...",
-          channel: "vevisk"
+          channel: "vevisk",
         },
         channel2: {
           username: "openclaw",
           accessToken: "oauth:def456...",
           clientId: "uvw012...",
-          channel: "secondchannel"
-        }
-      }
-    }
-  }
+          channel: "secondchannel",
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -181,11 +185,11 @@ bot 会在过期前自动刷新 token，并记录刷新事件。
     twitch: {
       accounts: {
         default: {
-          allowedRoles: ["moderator", "vip"]
-        }
-      }
-    }
-  }
+          allowedRoles: ["moderator", "vip"],
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -197,11 +201,11 @@ bot 会在过期前自动刷新 token，并记录刷新事件。
     twitch: {
       accounts: {
         default: {
-          allowFrom: ["123456789", "987654321"]
-        }
-      }
-    }
-  }
+          allowFrom: ["123456789", "987654321"],
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -216,11 +220,11 @@ bot 会在过期前自动刷新 token，并记录刷新事件。
       accounts: {
         default: {
           allowFrom: ["123456789"],
-          allowedRoles: ["moderator"]
-        }
-      }
-    }
-  }
+          allowedRoles: ["moderator"],
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -234,11 +238,11 @@ bot 会在过期前自动刷新 token，并记录刷新事件。
     twitch: {
       accounts: {
         default: {
-          requireMention: false
-        }
-      }
-    }
-  }
+          requireMention: false,
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -260,6 +264,7 @@ openclaw channels status --probe
 ### Token 问题
 
 **"Failed to connect" 或鉴权错误：**
+
 - 确认 `accessToken` 为 OAuth access token（通常带 `oauth:` 前缀）
 - 确认 token 具备 `chat:read` 与 `chat:write` scopes
 - 若使用刷新，确认 `clientSecret` 与 `refreshToken` 已设置
@@ -267,18 +272,21 @@ openclaw channels status --probe
 ### Token 刷新不工作
 
 **检查日志中的刷新事件：**
+
 ```
 Using env token source for mybot
 Access token refreshed for user 123456 (expires in 14400s)
 ```
 
 若看到 "token refresh disabled (no refresh token)":
+
 - 确认已设置 `clientSecret`
 - 确认已设置 `refreshToken`
 
 ## 配置
 
 **账号配置：**
+
 - `username` - Bot 用户名
 - `accessToken` - 具备 `chat:read` 与 `chat:write` 的 OAuth access token
 - `clientId` - Twitch Client ID（来自 Token Generator 或自建应用）
@@ -293,6 +301,7 @@ Access token refreshed for user 123456 (expires in 14400s)
 - `requireMention` - 要求 @mention（默认：`true`）
 
 **Provider 选项：**
+
 - `channels.twitch.enabled` - 启用/禁用渠道启动
 - `channels.twitch.username` - Bot 用户名（单账号简化配置）
 - `channels.twitch.accessToken` - OAuth access token（单账号简化配置）
@@ -327,28 +336,29 @@ Access token refreshed for user 123456 (expires in 14400s)
           expiresIn: 14400,
           obtainmentTimestamp: 1706092800000,
           allowFrom: ["123456789", "987654321"],
-          allowedRoles: ["moderator"]
-        }
-      }
-    }
-  }
+          allowedRoles: ["moderator"],
+        },
+      },
+    },
+  },
 }
 ```
 
 ## 工具动作
 
 agent 可调用 `twitch` 动作：
+
 - `send` - 向频道发送消息
 
 示例：
 
 ```json5
 {
-  "action": "twitch",
-  "params": {
-    "message": "Hello Twitch!",
-    "to": "#mychannel"
-  }
+  action: "twitch",
+  params: {
+    message: "Hello Twitch!",
+    to: "#mychannel",
+  },
 }
 ```
 

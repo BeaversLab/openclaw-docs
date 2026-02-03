@@ -41,6 +41,7 @@ openclaw models scan
 ### `models status`
 
 选项：
+
 - `--json`
 - `--plain`
 - `--check`（exit 1=过期/缺失，2=即将过期）
@@ -66,6 +67,7 @@ openclaw models auth login --provider <id>
 openclaw models auth setup-token
 openclaw models auth paste-token
 ```
+
 `models auth login` 会运行提供商插件的认证流程（OAuth/API key）。使用
 `openclaw plugins list` 查看已安装的提供商。
 

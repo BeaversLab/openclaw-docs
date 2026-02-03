@@ -4,6 +4,7 @@ read_when:
   - 排查运行时问题或失败
 title: "故障排查"
 ---
+
 # 故障排查 🔧
 
 当 OpenClaw 表现异常时，这里是修复思路。
@@ -16,15 +17,15 @@ title: "故障排查"
 
 快速分诊命令（按顺序）：
 
-| 命令 | 说明 | 何时使用 |
-|---|---|---|
-| `openclaw status` | 本地摘要：OS + 更新、gateway 可达性/模式、服务、agents/sessions、provider 配置状态 | 首次检查、快速概览 |
-| `openclaw status --all` | 完整本地诊断（只读、可粘贴、较安全）含日志尾 | 需要分享调试报告时 |
-| `openclaw status --deep` | 运行 gateway 健康检查（含 provider 探测；需要可达的 gateway） | “配置好但不工作”时 |
-| `openclaw gateway probe` | Gateway 发现 + 可达性（本地 + 远程目标） | 怀疑在探测错误 gateway 时 |
-| `openclaw channels status --probe` | 询问运行中的 gateway 频道状态（可选探测） | gateway 可达但频道异常 |
-| `openclaw gateway status` | 监督器状态（launchd/systemd/schtasks）、运行 PID/退出、最近 gateway 错误 | 服务“像是加载了”但实际没运行 |
-| `openclaw logs --follow` | 实时日志（运行时问题的最佳信号） | 需要真实失败原因 |
+| 命令                               | 说明                                                                               | 何时使用                     |
+| ---------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------- |
+| `openclaw status`                  | 本地摘要：OS + 更新、gateway 可达性/模式、服务、agents/sessions、provider 配置状态 | 首次检查、快速概览           |
+| `openclaw status --all`            | 完整本地诊断（只读、可粘贴、较安全）含日志尾                                       | 需要分享调试报告时           |
+| `openclaw status --deep`           | 运行 gateway 健康检查（含 provider 探测；需要可达的 gateway）                      | “配置好但不工作”时           |
+| `openclaw gateway probe`           | Gateway 发现 + 可达性（本地 + 远程目标）                                           | 怀疑在探测错误 gateway 时    |
+| `openclaw channels status --probe` | 询问运行中的 gateway 频道状态（可选探测）                                          | gateway 可达但频道异常       |
+| `openclaw gateway status`          | 监督器状态（launchd/systemd/schtasks）、运行 PID/退出、最近 gateway 错误           | 服务“像是加载了”但实际没运行 |
+| `openclaw logs --follow`           | 实时日志（运行时问题的最佳信号）                                                   | 需要真实失败原因             |
 
 **分享输出：**优先 `openclaw status --all`（会脱敏 token）。若粘贴 `openclaw status`，考虑先设 `OPENCLAW_SHOW_SECRETS=0`（token 预览）。
 
@@ -38,6 +39,7 @@ title: "故障排查"
 认证是 **按 agent** 的，新 agent 不会继承主 agent 的 key。
 
 修复选项：
+
 - 重新运行 onboarding 并为该 agent 选择 **Anthropic**。
 - 或在 **gateway 主机** 粘贴 setup-token：
   ```bash
@@ -46,6 +48,7 @@ title: "故障排查"
 - 或将主 agent 目录的 `auth-profiles.json` 复制到新 agent 目录。
 
 验证：
+
 ```bash
 openclaw models status
 ```
@@ -80,6 +83,7 @@ openclaw models status
 会阻止 WebCrypto，导致无法生成设备身份。
 
 **修复：**
+
 - 优先使用 [Tailscale Serve](/zh/gateway/tailscale) 的 HTTPS。
 - 或在 gateway 主机本地打开：`http://127.0.0.1:18789/`。
 - 若必须使用 HTTP，启用 `gateway.controlUi.allowInsecureAuth: true` 并
@@ -96,6 +100,7 @@ openclaw models status
 如果 gateway 服务已安装但进程立刻退出，服务可能显示“已加载”但实际无进程。
 
 **检查：**
+
 ```bash
 openclaw gateway status
 openclaw doctor
@@ -104,6 +109,7 @@ openclaw doctor
 Doctor/服务会显示运行状态（PID/最近退出）与日志提示。
 
 **日志：**
+
 - 推荐：`openclaw logs --follow`
 - 文件日志（始终）：`/tmp/openclaw/openclaw-YYYY-MM-DD.log`（或你配置的 `logging.file`）
 - macOS LaunchAgent（若安装）：`$OPENCLAW_STATE_DIR/logs/gateway.log` 与 `gateway.err.log`
@@ -111,6 +117,7 @@ Doctor/服务会显示运行状态（PID/最近退出）与日志提示。
 - Windows：`schtasks /Query /TN "OpenClaw Gateway (<profile>)" /V /FO LIST`
 
 **开启更多日志：**
+
 - 提高文件日志细节（持久化 JSONL）：
   ```json
   { "logging": { "level": "debug" } }
@@ -128,6 +135,7 @@ Doctor/服务会显示运行状态（PID/最近退出）与日志提示。
 这表示配置存在但 `gateway.mode` 未设置（或不是 `local`），因此 Gateway 拒绝启动。
 
 **修复（推荐）：**
+
 - 运行向导并将 Gateway 运行模式设为 **Local**：
   ```bash
   openclaw configure
@@ -138,6 +146,7 @@ Doctor/服务会显示运行状态（PID/最近退出）与日志提示。
   ```
 
 **如果你想运行远程 Gateway：**
+
 - 设定远程 URL，并保持 `gateway.mode=remote`：
   ```bash
   openclaw config set gateway.mode remote
@@ -151,6 +160,7 @@ Doctor/服务会显示运行状态（PID/最近退出）与日志提示。
 ### 服务环境（PATH + runtime）
 
 gateway 服务使用 **最小 PATH** 以避免 shell/管理器干扰：
+
 - macOS：`/opt/homebrew/bin`, `/usr/local/bin`, `/usr/bin`, `/bin`
 - Linux：`/usr/local/bin`, `/usr/bin`, `/bin`
 
@@ -170,6 +180,7 @@ WhatsApp + Telegram 频道需要 **Node**；不支持 Bun。若服务使用 Bun 
 **原因：**沙盒 exec 在 Docker 内运行，**不** 继承宿主 `process.env`。
 
 **修复：**
+
 - 设置 `agents.defaults.sandbox.docker.env`（或每 agent `agents.list[].sandbox.docker.env`）
 - 或将 key 烘焙进自定义沙盒镜像
 - 然后运行 `openclaw sandbox recreate --agent <id>`（或 `--all`）
@@ -179,11 +190,13 @@ WhatsApp + Telegram 频道需要 **Node**；不支持 Bun。若服务使用 Bun 
 若服务显示 **running** 但 gateway 端口无监听，Gateway 很可能拒绝绑定。
 
 **这里的“running”含义：**
+
 - `Runtime: running` 表示 supervisor（launchd/systemd/schtasks）认为进程还活着。
 - `RPC probe` 表示 CLI 实际连上 gateway WebSocket 并调用了 `status`。
 - 始终以 `Probe target:` + `Config (service):` 作为“我们到底探测了哪里”的准绳。
 
 **检查：**
+
 - `gateway.mode` 必须为 `local` 才能运行 `openclaw gateway` 与服务。
 - 若你设置了 `gateway.mode=remote`，**CLI 默认** 会指向远程 URL。服务可能仍在本地运行，但 CLI 在探测错误位置。使用 `openclaw gateway status` 查看服务解析的端口 + 探测目标（或传 `--url`）。
 - 当服务看似运行但端口关闭时，`openclaw gateway status` 与 `openclaw doctor` 会从日志中显示 **最近 gateway 错误**。

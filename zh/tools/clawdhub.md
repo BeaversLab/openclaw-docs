@@ -24,12 +24,12 @@ ClawdHub 是 **OpenClaw 的公共技能注册表**。它是一个免费服务：
 
 ## 快速开始（非技术）
 
-1) 安装 CLI（见下一节）。
-2) 搜索你需要的内容：
+1. 安装 CLI（见下一节）。
+2. 搜索你需要的内容：
    - `clawdhub search "calendar"`
-3) 安装技能：
+3. 安装技能：
    - `clawdhub install <skill-slug>`
-4) 启动新的 OpenClaw 会话，以加载新技能。
+4. 启动新的 OpenClaw 会话，以加载新技能。
 
 ## 安装 CLI
 

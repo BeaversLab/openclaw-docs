@@ -4,6 +4,7 @@ read_when:
   - 开发 Tlon/Urbit 渠道功能
 title: "Tlon"
 ---
+
 # Tlon（插件）
 
 Tlon 是基于 Urbit 的去中心化消息应用。OpenClaw 连接到你的 Urbit ship，
@@ -47,9 +48,9 @@ openclaw plugins install ./extensions/tlon
       enabled: true,
       ship: "~sampel-palnet",
       url: "https://your-ship-host",
-      code: "lidlut-tabwed-pillex-ridrup"
-    }
-  }
+      code: "lidlut-tabwed-pillex-ridrup",
+    },
+  },
 }
 ```
 
@@ -61,12 +62,9 @@ openclaw plugins install ./extensions/tlon
 {
   channels: {
     tlon: {
-      groupChannels: [
-        "chat/~host-ship/general",
-        "chat/~host-ship/support"
-      ]
-    }
-  }
+      groupChannels: ["chat/~host-ship/general", "chat/~host-ship/support"],
+    },
+  },
 }
 ```
 
@@ -76,9 +74,9 @@ openclaw plugins install ./extensions/tlon
 {
   channels: {
     tlon: {
-      autoDiscoverChannels: false
-    }
-  }
+      autoDiscoverChannels: false,
+    },
+  },
 }
 ```
 
@@ -90,9 +88,9 @@ DM allowlist（空 = 允许全部）：
 {
   channels: {
     tlon: {
-      dmAllowlist: ["~zod", "~nec"]
-    }
-  }
+      dmAllowlist: ["~zod", "~nec"],
+    },
+  },
 }
 ```
 
@@ -107,15 +105,15 @@ DM allowlist（空 = 允许全部）：
         channelRules: {
           "chat/~host-ship/general": {
             mode: "restricted",
-            allowedShips: ["~zod", "~nec"]
+            allowedShips: ["~zod", "~nec"],
           },
           "chat/~host-ship/announcements": {
-            mode: "open"
-          }
-        }
-      }
-    }
-  }
+            mode: "open",
+          },
+        },
+      },
+    },
+  },
 }
 ```
 

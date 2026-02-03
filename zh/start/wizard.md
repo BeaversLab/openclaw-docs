@@ -35,6 +35,7 @@ openclaw configure
 向导会从 **QuickStart**（默认值）与 **Advanced**（完全控制）开始。
 
 **QuickStart** 保持默认：
+
 - 本地网关（loopback）
 - 工作区默认值（或已有工作区）
 - 网关端口 **18789**
@@ -47,6 +48,7 @@ openclaw configure
 ## 向导会做什么
 
 **本地模式（默认）** 会引导你完成：
+
 - 模型/认证（OpenAI Code (Codex) 订阅 OAuth，Anthropic API key（推荐）或 setup-token（粘贴），以及 MiniMax/GLM/Moonshot/AI Gateway 选项）
 - 工作区位置 + 引导文件
 - 网关设置（端口/绑定/认证/tailscale）
@@ -68,7 +70,7 @@ openclaw agents add <name>
 
 ## 流程细节（本地）
 
-1) **已有配置检测**
+1. **已有配置检测**
    - 如果存在 `~/.openclaw/openclaw.json`，可选择 **保留 / 修改 / 重置**。
    - 重新运行向导 **不会** 清空任何内容，除非你显式选择 **重置**
      （或传 `--reset`）。
@@ -79,7 +81,7 @@ openclaw agents add <name>
      - 配置 + 凭据 + 会话
      - 全量重置（也移除工作区）
 
-2) **模型/认证**
+2. **模型/认证**
    - **Anthropic API key（推荐）**：如果有 `ANTHROPIC_API_KEY` 则使用，否则提示输入，然后保存供守护进程使用。
    - **Anthropic OAuth（Claude Code CLI）**：macOS 上检查钥匙串项 "Claude Code-credentials"（选择 "Always Allow" 以避免 launchd 启动被阻塞）；Linux/Windows 复用 `~/.claude/.credentials.json`（如果存在）。
    - **Anthropic token（粘贴 setup-token）**：在任意机器运行 `claude setup-token`，然后粘贴 token（可命名；留空为默认）。
@@ -104,18 +106,18 @@ openclaw agents add <name>
    - OAuth 凭据在 `~/.openclaw/credentials/oauth.json`；认证档案在 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`（API key + OAuth）。
    - 详情：[/concepts/oauth](/zh/concepts/oauth)
 
-3) **工作区**
+3. **工作区**
    - 默认 `~/.openclaw/workspace`（可配置）。
    - 写入代理引导所需的工作区文件。
    - 完整工作区结构 + 备份指南：[代理工作区](/zh/concepts/agent-workspace)
 
-4) **网关**
+4. **网关**
    - 端口、绑定、认证模式、tailscale 暴露。
    - 认证建议：即便是 loopback 也保持 **Token**，确保本地 WS 客户端必须认证。
    - 仅在完全信任所有本地进程时才关闭认证。
    - 非 loopback 绑定仍需要认证。
 
-5) **渠道**
+5. **渠道**
    - WhatsApp：可选二维码登录。
    - Telegram：bot token。
    - Discord：bot token。
@@ -125,7 +127,7 @@ openclaw agents add <name>
    - iMessage：本地 `imsg` CLI 路径 + DB 访问。
    - 私聊安全：默认是配对。第一次私聊发送代码；用 `openclaw pairing approve <channel> <code>` 批准，或使用 allowlist。
 
-6) **守护进程安装**
+6. **守护进程安装**
    - macOS：LaunchAgent
      - 需要登录用户会话；无头环境请使用自定义 LaunchDaemon（未内置）。
    - Linux（以及 Windows 通过 WSL2）：systemd 用户单元
@@ -133,16 +135,16 @@ openclaw agents add <name>
      - 可能提示 sudo（写入 `/var/lib/systemd/linger`）；会先尝试不使用 sudo。
    - **运行时选择：** Node（推荐；WhatsApp/Telegram 需要）。不推荐 Bun。
 
-7) **健康检查**
+7. **健康检查**
    - 启动网关（如需要）并运行 `openclaw health`。
    - 提示：`openclaw status --deep` 会在状态输出中加入网关健康探测（需要可达网关）。
 
-8) **技能（推荐）**
+8. **技能（推荐）**
    - 读取可用技能并检查要求。
    - 选择 node 包管理器：**npm / pnpm**（不推荐 bun）。
    - 安装可选依赖（macOS 上部分使用 Homebrew）。
 
-9) **完成**
+9. **完成**
    - 汇总 + 下一步，包括 iOS/Android/macOS 应用以获取额外功能。
    - 如果未检测到 GUI，向导会打印 Control UI 的 SSH 端口转发说明，而不是打开浏览器。
    - 若 Control UI 资源缺失，向导会尝试构建；备用方式是 `pnpm ui:build`（会自动安装 UI 依赖）。
@@ -152,10 +154,12 @@ openclaw agents add <name>
 远程模式配置本地客户端连接到其他地方的网关。
 
 需要设置：
+
 - 远程网关 URL（`ws://...`）
 - 如果远程网关需要认证，则提供 Token（推荐）
 
 说明：
+
 - 不会进行远程安装或守护进程更改。
 - 如果网关仅 loopback，可用 SSH 隧道或 tailnet。
 - 发现提示：
@@ -168,11 +172,13 @@ openclaw agents add <name>
 不带 `--workspace` 运行会启动向导。
 
 它会设置：
+
 - `agents.list[].name`
 - `agents.list[].workspace`
 - `agents.list[].agentDir`
 
 说明：
+
 - 默认工作区遵循 `~/.openclaw/workspace-<agentId>`。
 - 添加 `bindings` 以路由入站消息（向导可完成）。
 - 非交互参数：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
@@ -280,11 +286,13 @@ openclaw agents add work \
 ## Signal 设置（signal-cli）
 
 向导可从 GitHub releases 安装 `signal-cli`：
+
 - 下载对应的 release 资产。
 - 存放到 `~/.openclaw/tools/signal-cli/<version>/`。
 - 将 `channels.signal.cliPath` 写入配置。
 
 说明：
+
 - JVM 版本需要 **Java 21**。
 - 有原生版本时优先使用原生版本。
 - Windows 使用 WSL2；signal-cli 安装按 WSL 内 Linux 流程进行。
@@ -292,6 +300,7 @@ openclaw agents add work \
 ## 向导会写入什么
 
 `~/.openclaw/openclaw.json` 中的常见字段：
+
 - `agents.defaults.workspace`
 - `agents.defaults.model` / `models.providers`（选择 Minimax 时）
 - `gateway.*`（mode、bind、auth、tailscale）

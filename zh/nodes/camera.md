@@ -75,6 +75,7 @@ openclaw nodes camera clip --node <id> --no-audio
 ```
 
 注意：
+
 - `nodes camera snap` 默认**前后都拍**，便于 agent 获得双视角。
 - 输出文件是临时文件（系统临时目录），除非你自己封装。
 
@@ -131,6 +132,7 @@ openclaw nodes camera clip --node <id> --no-audio
 ```
 
 注意：
+
 - `openclaw nodes camera snap` 默认 `maxWidth=1600`，除非显式覆盖。
 - 在 macOS 上，`camera.snap` 在预热/曝光稳定后等待 `delayMs`（默认 2000ms）再拍摄。
 - 照片 payload 会重新压缩以保持 base64 < 5 MB。
@@ -149,4 +151,5 @@ openclaw nodes screen record --node <id> --duration 10s --fps 15   # 输出 MEDI
 ```
 
 注意：
+
 - 需要 macOS **Screen Recording** 权限（TCC）。

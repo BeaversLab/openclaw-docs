@@ -4,6 +4,7 @@ summary: "如何在本地运行测试（vitest）以及何时使用 force/covera
 read_when:
   - 运行或修复测试
 ---
+
 # 测试
 
 - 完整测试工具包（suites、live、Docker）：[Testing](/zh/testing)
@@ -18,11 +19,13 @@ read_when:
 脚本：[`scripts/bench-model.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-model.ts)
 
 用法：
+
 - `source ~/.profile && pnpm tsx scripts/bench-model.ts --runs 10`
 - 可选环境变量：`MINIMAX_API_KEY`、`MINIMAX_BASE_URL`、`MINIMAX_MODEL`、`ANTHROPIC_API_KEY`
 - 默认提示词：“Reply with a single word: ok. No punctuation or extra text.”
 
 上次运行（2025-12-31，20 次）：
+
 - minimax 中位数 1279ms（最小 1114，最大 2431）
 - opus 中位数 2454ms（最小 1224，最大 3170）
 

@@ -13,6 +13,7 @@ last_updated: "2026-01-05"
 近期 gateway 日志出现大量 `cron.add` 无效参数失败（缺少 `sessionTarget`、`wakeMode`、`payload` 以及 `schedule` 格式错误）。这表明至少有一个客户端（可能是 agent 工具调用路径）在发送被包裹或不完整的 job payload。另有 TypeScript、gateway schema、CLI flags 与 UI 表单类型之间的 cron provider 枚举漂移，以及 UI 对 `cron.status` 的字段不匹配（期望 `jobCount`，但 gateway 返回 `jobs`）。
 
 ## 目标
+
 - 通过规范化常见包裹 payload 并推断缺失 `kind`，阻止 `cron.add` 的 INVALID_REQUEST 垃圾日志。
 - 对齐 gateway schema、cron types、CLI 文档与 UI 表单中的 cron provider 列表。
 - 让 agent cron tool schema 明确化，使 LLM 生成正确的 job payload。

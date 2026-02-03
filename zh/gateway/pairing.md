@@ -6,6 +6,7 @@ read_when:
   - 通过 node 管理扩展 gateway 协议
 title: "Gateway 拥有的配对"
 ---
+
 # Gateway 自主配对（Option B）
 
 在 Gateway 自主配对中，**Gateway** 是决定哪些 nodes 可加入的事实来源。

@@ -5,6 +5,7 @@ read_when:
   - 你希望通过浏览器操作 Gateway
   - 你希望无需 SSH 隧道的 Tailnet 访问
 ---
+
 # Control UI（浏览器）
 
 Control UI 是 Gateway 提供的 **Vite + Lit** 单页应用：
@@ -23,12 +24,14 @@ Control UI 是 Gateway 提供的 **Vite + Lit** 单页应用：
 若页面加载失败，请先启动 Gateway：`openclaw gateway`。
 
 认证在 WebSocket 握手中提供：
+
 - `connect.params.auth.token`
 - `connect.params.auth.password`
-仪表盘设置面板可存储 token；密码不持久化。
-Onboarding 向导默认生成 gateway token，请在首次连接时粘贴。
+  仪表盘设置面板可存储 token；密码不持久化。
+  Onboarding 向导默认生成 gateway token，请在首次连接时粘贴。
 
 ## 目前可做什么
+
 - 通过 Gateway WS 与模型聊天（`chat.history`、`chat.send`、`chat.abort`、`chat.inject`）
 - 在聊天中流式展示工具调用与实时工具输出卡片（agent events）
 - Channels：WhatsApp/Telegram/Discord/Slack + 插件渠道（Mattermost 等）状态 + 二维码登录 + 每渠道配置（`channels.status`、`web.login.*`、`config.patch`）
@@ -67,6 +70,7 @@ openclaw gateway --tailscale serve
 ```
 
 打开：
+
 - `https://<magicdns>/`（或你配置的 `gateway.controlUi.basePath`）
 
 默认情况下，当 `gateway.auth.allowTailscale` 为 `true`，Serve 请求可通过 Tailscale 身份头（`tailscale-user-login`）认证。OpenClaw 会通过 `tailscale whois` 校验 `x-forwarded-for` 地址并匹配该头，仅当请求命中回环且带 Tailscale `x-forwarded-*` 头时接受。若希望即便在 Serve 流量中也强制 token/password，设置 `gateway.auth.allowTailscale: false`（或强制 `gateway.auth.mode: "password"`）。
@@ -78,6 +82,7 @@ openclaw gateway --bind tailnet --token "$(openssl rand -hex 32)"
 ```
 
 然后打开：
+
 - `http://<tailscale-ip>:18789/`（或你配置的 `gateway.controlUi.basePath`）
 
 将 token 粘贴到 UI 设置中（以 `connect.params.auth.token` 发送）。
@@ -87,6 +92,7 @@ openclaw gateway --bind tailnet --token "$(openssl rand -hex 32)"
 如果通过明文 HTTP 打开仪表盘（`http://<lan-ip>` 或 `http://<tailscale-ip>`），浏览器会处于 **非安全上下文** 并阻止 WebCrypto。默认情况下，OpenClaw **拒绝** 无设备身份的 Control UI 连接。
 
 **推荐修复：** 使用 HTTPS（Tailscale Serve）或在本地打开 UI：
+
 - `https://<magicdns>/`（Serve）
 - `http://127.0.0.1:18789/`（在 gateway 主机上）
 
@@ -97,8 +103,8 @@ openclaw gateway --bind tailnet --token "$(openssl rand -hex 32)"
   gateway: {
     controlUi: { allowInsecureAuth: true },
     bind: "tailnet",
-    auth: { mode: "token", token: "replace-me" }
-  }
+    auth: { mode: "token", token: "replace-me" },
+  },
 }
 ```
 
@@ -146,6 +152,7 @@ http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789&token=<gateway-toke
 ```
 
 说明：
+
 - `gatewayUrl` 加载后存入 localStorage，并从 URL 中移除。
 - `token` 存入 localStorage；`password` 仅保存在内存中。
 - 当 Gateway 在 TLS 后（Tailscale Serve、HTTPS 代理等）时使用 `wss://`。

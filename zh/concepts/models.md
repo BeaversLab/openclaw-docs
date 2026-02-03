@@ -22,6 +22,7 @@ OpenClaw 按以下顺序选择模型：
 3. **Provider auth failover** 在 provider 内完成，然后才进入下一个模型。
 
 相关：
+
 - `agents.defaults.models` 是 OpenClaw 可用模型的 allowlist/目录（含别名）。
 - `agents.defaults.imageModel` **仅在** primary 模型不支持图像时使用。
 - per-agent 默认值可通过 `agents.list[].model` + bindings 覆盖 `agents.defaults.model`（见 [/concepts/multi-agent](/zh/concepts/multi-agent)）。
@@ -97,6 +98,7 @@ allowlist 配置示例：
 ```
 
 注：
+
 - `/model`（与 `/model list`）是紧凑的编号选择器（模型系列 + 可用 providers）。
 - `/model <#>` 从该选择器中选中。
 - `/model status` 为详细视图（auth 候选以及配置时的 provider endpoint `baseUrl` + `api` 模式）。
@@ -179,6 +181,7 @@ openclaw models status
 4. 参数规模
 
 输入
+
 - OpenRouter `/models` 列表（过滤 `:free`）
 - 需要来自 auth profiles 或 `OPENROUTER_API_KEY` 的 OpenRouter API key（见 [/environment](/zh/environment)）
 - 可选过滤：`--max-age-days`、`--min-params`、`--provider`、`--max-candidates`

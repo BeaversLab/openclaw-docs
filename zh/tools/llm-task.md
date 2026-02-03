@@ -14,7 +14,7 @@ read_when:
 
 ## 启用插件
 
-1) 启用插件：
+1. 启用插件：
 
 ```json
 {
@@ -26,7 +26,7 @@ read_when:
 }
 ```
 
-2) 将工具加入 allowlist（它以 `optional: true` 注册）：
+2. 将工具加入 allowlist（它以 `optional: true` 注册）：
 
 ```json
 {

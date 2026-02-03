@@ -25,6 +25,7 @@ read_when:
 用 [Lume](https://cua.ai/docs/lume) 在 Apple Silicon Mac 上运行沙盒化 macOS VM。
 
 你将获得：
+
 - 完整隔离的 macOS 环境（宿主机保持干净）
 - 通过 BlueBubbles 支持 iMessage（Linux/Windows 无法实现）
 - 通过克隆快速重置 VM
@@ -33,6 +34,7 @@ read_when:
 ### 托管 Mac 提供商（云）
 
 若你想在云上运行 macOS，可选择托管 Mac：
+
 - [MacStadium](https://www.macstadium.com/)（托管 Mac）
 - 其它托管 Mac 供应商也可用；遵循其 VM + SSH 文档
 
@@ -97,12 +99,14 @@ lume create openclaw --os macos --ipsw latest
 ## 3) 完成 Setup Assistant
 
 在 VNC 窗口中：
+
 1. 选择语言与区域
 2. 跳过 Apple ID（若后续需要 iMessage 可登录）
 3. 创建用户账号（记住用户名/密码）
 4. 跳过所有可选功能
 
 完成后启用 SSH：
+
 1. 打开 System Settings → General → Sharing
 2. 启用 “Remote Login”
 
@@ -245,6 +249,7 @@ lume run openclaw --no-display
 ## 24/7 运行
 
 保持 VM 常驻：
+
 - Mac 保持接电
 - 在 System Settings → Energy Saver 中禁用睡眠
 - 필요时使用 `caffeinate`
@@ -255,11 +260,11 @@ lume run openclaw --no-display
 
 ## Troubleshooting
 
-| Problem | Solution |
-|---------|----------|
-| 无法 SSH 进入 VM | 确认 VM 的 System Settings 中启用了 “Remote Login” |
-| VM IP 未显示 | 等 VM 完全启动后再运行 `lume get openclaw` |
-| 找不到 lume 命令 | 将 `~/.local/bin` 加入 PATH |
+| Problem              | Solution                                                        |
+| -------------------- | --------------------------------------------------------------- |
+| 无法 SSH 进入 VM     | 确认 VM 的 System Settings 中启用了 “Remote Login”              |
+| VM IP 未显示         | 等 VM 完全启动后再运行 `lume get openclaw`                      |
+| 找不到 lume 命令     | 将 `~/.local/bin` 加入 PATH                                     |
 | WhatsApp QR 无法扫码 | 运行 `openclaw channels login` 时确保在 VM 内登录（不是宿主机） |
 
 ---

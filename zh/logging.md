@@ -106,9 +106,7 @@ openclaw channels logs --channel whatsapp
     "consoleLevel": "info",
     "consoleStyle": "pretty",
     "redactSensitive": "tools",
-    "redactPatterns": [
-      "sk-.*"
-    ]
+    "redactPatterns": ["sk-.*"]
   }
 }
 ```
@@ -158,9 +156,11 @@ Diagnostics 事件在进程内发出，但只有在启用 diagnostics + exporter
 ### Diagnostics 事件目录
 
 模型使用：
+
 - `model.usage`：tokens、cost、duration、context、provider/model/channel、session ids。
 
 消息流：
+
 - `webhook.received`：每频道 webhook 入口。
 - `webhook.processed`：webhook 处理 + 耗时。
 - `webhook.error`：webhook 处理错误。
@@ -168,6 +168,7 @@ Diagnostics 事件在进程内发出，但只有在启用 diagnostics + exporter
 - `message.processed`：结果 + 耗时 + 可选错误。
 
 队列 + 会话：
+
 - `queue.lane.enqueue`：命令队列 lane 入队 + 深度。
 - `queue.lane.dequeue`：命令队列 lane 出队 + 等待时间。
 - `session.state`：会话状态变更 + 原因。
@@ -207,6 +208,7 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 ```
 
 注意：
+
 - flag 日志会写入标准日志文件（同 `logging.file`）。
 - 输出仍会按 `logging.redactSensitive` 脱敏。
 - 完整指南：[/diagnostics/flags](/zh/diagnostics/flags)。
@@ -243,6 +245,7 @@ Diagnostics 可通过 `diagnostics-otel` 插件（OTLP/HTTP）导出。适用于
 ```
 
 注意：
+
 - 也可以用 `openclaw plugins enable diagnostics-otel` 启用插件。
 - `protocol` 目前只支持 `http/protobuf`，`grpc` 会被忽略。
 - Metrics 包括 token 使用、成本、context size、运行时长、消息流计数/直方图（webhooks、queueing、session state、queue depth/wait）。
@@ -254,6 +257,7 @@ Diagnostics 可通过 `diagnostics-otel` 插件（OTLP/HTTP）导出。适用于
 ### 导出指标（名称 + 类型）
 
 模型使用：
+
 - `openclaw.tokens`（counter，attrs：`openclaw.token`、`openclaw.channel`、
   `openclaw.provider`、`openclaw.model`）
 - `openclaw.cost.usd`（counter，attrs：`openclaw.channel`、`openclaw.provider`、
@@ -264,6 +268,7 @@ Diagnostics 可通过 `diagnostics-otel` 插件（OTLP/HTTP）导出。适用于
   `openclaw.channel`、`openclaw.provider`、`openclaw.model`）
 
 消息流：
+
 - `openclaw.webhook.received`（counter，attrs：`openclaw.channel`、
   `openclaw.webhook`）
 - `openclaw.webhook.error`（counter，attrs：`openclaw.channel`、
@@ -278,6 +283,7 @@ Diagnostics 可通过 `diagnostics-otel` 插件（OTLP/HTTP）导出。适用于
   `openclaw.outcome`）
 
 队列 + 会话：
+
 - `openclaw.queue.lane.enqueue`（counter，attrs：`openclaw.lane`）
 - `openclaw.queue.lane.dequeue`（counter，attrs：`openclaw.lane`）
 - `openclaw.queue.depth`（histogram，attrs：`openclaw.lane` 或

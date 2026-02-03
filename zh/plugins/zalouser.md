@@ -13,9 +13,11 @@ read_when:
 > **警告：** 非官方自动化可能导致账号暂停/封禁。风险自担。
 
 ## 命名
+
 频道 id 为 `zalouser`，用于明确这是 **个人 Zalo 用户账号**（非官方）自动化。我们保留 `zalo` 供未来潜在的官方 Zalo API 集成。
 
 ## 运行位置
+
 该插件 **在 Gateway 进程内**运行。
 
 如果使用远程 Gateway，请在 **运行 Gateway 的机器** 上安装/配置，然后重启 Gateway。
@@ -40,6 +42,7 @@ cd ./extensions/zalouser && pnpm install
 随后重启 Gateway。
 
 ## 前置条件：zca-cli
+
 Gateway 机器必须在 `PATH` 中有 `zca`：
 
 ```bash
@@ -47,6 +50,7 @@ zca --version
 ```
 
 ## 配置
+
 频道配置在 `channels.zalouser` 下（不是 `plugins.entries.*`）：
 
 ```json5
@@ -54,9 +58,9 @@ zca --version
   channels: {
     zalouser: {
       enabled: true,
-      dmPolicy: "pairing"
-    }
-  }
+      dmPolicy: "pairing",
+    },
+  },
 }
 ```
 
@@ -71,6 +75,7 @@ openclaw directory peers list --channel zalouser --query "name"
 ```
 
 ## 代理工具
+
 工具名：`zalouser`
 
 动作：`send`、`image`、`link`、`friends`、`groups`、`me`、`status`

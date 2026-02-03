@@ -30,5 +30,5 @@ title: "Gateway 锁"
 
 ## 运维说明
 
-- 若端口被_其他_进程占用，错误相同；释放端口或用 `openclaw gateway --port <port>` 选择其他端口。
+- 若端口被*其他*进程占用，错误相同；释放端口或用 `openclaw gateway --port <port>` 选择其他端口。
 - macOS app 在启动 gateway 前仍有轻量 PID guard；运行时锁由 WebSocket 绑定强制。

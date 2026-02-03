@@ -5,6 +5,7 @@ read_when:
   - 需要快速的 Deepgram 配置示例
 title: "Deepgram"
 ---
+
 # Deepgram（音频转写）
 
 Deepgram 是语音转文本 API。在 OpenClaw 中它用于 `tools.media.audio` 的 **入站音频/语音消息转写**。
@@ -16,22 +17,24 @@ Deepgram 是语音转文本 API。在 OpenClaw 中它用于 `tools.media.audio` 
 
 ## 快速开始
 
-1) 设置 API key：
+1. 设置 API key：
+
 ```
 DEEPGRAM_API_KEY=dg_...
 ```
 
-2) 启用 provider：
+2. 启用 provider：
+
 ```json5
 {
   tools: {
     media: {
       audio: {
         enabled: true,
-        models: [{ provider: "deepgram", model: "nova-3" }]
-      }
-    }
-  }
+        models: [{ provider: "deepgram", model: "nova-3" }],
+      },
+    },
+  },
 }
 ```
 
@@ -44,22 +47,22 @@ DEEPGRAM_API_KEY=dg_...
 - `tools.media.audio.providerOptions.deepgram.smart_format`：启用智能格式化（可选）
 
 带语言示例：
+
 ```json5
 {
   tools: {
     media: {
       audio: {
         enabled: true,
-        models: [
-          { provider: "deepgram", model: "nova-3", language: "en" }
-        ]
-      }
-    }
-  }
+        models: [{ provider: "deepgram", model: "nova-3", language: "en" }],
+      },
+    },
+  },
 }
 ```
 
 带 Deepgram 选项示例：
+
 ```json5
 {
   tools: {
@@ -70,13 +73,13 @@ DEEPGRAM_API_KEY=dg_...
           deepgram: {
             detect_language: true,
             punctuate: true,
-            smart_format: true
-          }
+            smart_format: true,
+          },
         },
-        models: [{ provider: "deepgram", model: "nova-3" }]
-      }
-    }
-  }
+        models: [{ provider: "deepgram", model: "nova-3" }],
+      },
+    },
+  },
 }
 ```
 

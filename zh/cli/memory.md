@@ -14,7 +14,7 @@ title: "memory"
 相关：
 
 - Memory 概念：[Memory](/zh/concepts/memory)
- - 插件：[Plugins](/zh/plugins)
+- 插件：[Plugins](/zh/plugins)
 
 ## 示例
 

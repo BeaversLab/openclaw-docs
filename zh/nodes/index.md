@@ -16,6 +16,7 @@ read_when:
 macOS 也可运行在 **node 模式**：菜单栏 app 连接 Gateway 的 WS 服务器，并将本地 canvas/camera 命令作为 node 暴露（因此 `openclaw nodes …` 可对这台 Mac 生效）。
 
 注意：
+
 - Nodes 是**外设**，不是 gateways；不会运行 gateway 服务。
 - Telegram/WhatsApp 等消息落在 **gateway** 上，而不是 nodes。
 
@@ -34,6 +35,7 @@ openclaw nodes describe --node <idOrNameOrIp>
 ```
 
 注意：
+
 - `nodes status` 会在其设备配对 role 包含 `node` 时标记为 **paired**。
 - `node.pair.*`（CLI：`openclaw nodes pending/approve/reject`）是独立的 gateway-owned
   node 配对存储；**不**影响 WS `connect` 握手。
@@ -44,6 +46,7 @@ openclaw nodes describe --node <idOrNameOrIp>
 模型仍与 **gateway** 对话；当选择 `host=node` 时，gateway 会把 `exec` 转发到 **node host**。
 
 ### 谁运行在哪里
+
 - **Gateway host**：接收消息、运行模型、路由工具调用。
 - **Node host**：在 node 机器上执行 `system.run`/`system.which`。
 - **审批**：在 node host 上通过 `~/.openclaw/exec-approvals.json` 强制。
@@ -74,6 +77,7 @@ openclaw nodes list
 ```
 
 命名方式：
+
 - 在 `openclaw node run` / `openclaw node install` 上使用 `--display-name`（会持久化到 node 侧 `~/.openclaw/node.json`）。
 - `openclaw nodes rename --node <id|name|ip> --name "Build Node"`（gateway 侧覆盖）。
 
@@ -107,6 +111,7 @@ openclaw config set tools.exec.node "<id-or-name>"
 设置后，任何 `host=node` 的 `exec` 调用都会在 node host 上执行（受 node 的 allowlist/approvals 限制）。
 
 相关：
+
 - [Node host CLI](/zh/cli/node)
 - [Exec tool](/zh/tools/exec)
 - [Exec approvals](/zh/tools/exec-approvals)
@@ -142,6 +147,7 @@ openclaw nodes canvas eval --node <idOrNameOrIp> --js "document.title"
 ```
 
 注意：
+
 - `canvas present` 接受 URL 或本地文件路径（`--target`），并可用 `--x/--y/--width/--height` 指定位置。
 - `canvas eval` 接受内联 JS（`--js`）或位置参数。
 
@@ -154,6 +160,7 @@ openclaw nodes canvas a2ui reset --node <idOrNameOrIp>
 ```
 
 注意：
+
 - 只支持 A2UI v0.8 JSONL（v0.9/createSurface 会被拒绝）。
 
 ## 照片 + 视频（node camera）
@@ -174,6 +181,7 @@ openclaw nodes camera clip --node <idOrNameOrIp> --duration 3000 --no-audio
 ```
 
 注意：
+
 - `canvas.*` 和 `camera.*` 需要 node **前台**（后台调用返回 `NODE_BACKGROUND_UNAVAILABLE`）。
 - 片段时长会被限制（当前 `<= 60s`）以避免 base64 payload 过大。
 - Android 会在可能时请求 `CAMERA`/`RECORD_AUDIO` 权限；拒绝会报 `*_PERMISSION_REQUIRED`。
@@ -188,6 +196,7 @@ openclaw nodes screen record --node <idOrNameOrIp> --duration 10s --fps 10 --no-
 ```
 
 注意：
+
 - `screen.record` 需要 node 前台。
 - Android 会显示系统的屏幕捕获提示。
 - 录屏时长限制为 `<= 60s`。
@@ -206,6 +215,7 @@ openclaw nodes location get --node <idOrNameOrIp> --accuracy precise --max-age 1
 ```
 
 注意：
+
 - Location **默认关闭**。
 - “Always” 需要系统权限；后台获取为 best-effort。
 - 响应包含 lat/lon、精度（米）与时间戳。
@@ -221,6 +231,7 @@ openclaw nodes invoke --node <idOrNameOrIp> --command sms.send --params '{"to":"
 ```
 
 注意：
+
 - 必须在 Android 设备上接受权限提示，能力才会被广播。
 - 仅 Wi‑Fi 的设备不会广播 `sms.send`。
 
@@ -237,6 +248,7 @@ openclaw nodes notify --node <idOrNameOrIp> --title "Ping" --body "Gateway ready
 ```
 
 注意：
+
 - `system.run` 在 payload 中返回 stdout/stderr/exit code。
 - `system.notify` 受 macOS app 的通知权限影响。
 - `system.run` 支持 `--cwd`、`--env KEY=VAL`、`--command-timeout`、`--needs-screen-recording`。
@@ -287,6 +299,7 @@ openclaw node run --host <gateway-host> --port 18789
 ```
 
 注意：
+
 - 仍需配对（Gateway 会显示 node 批准提示）。
 - node host 会把 node id、token、display name 与 gateway 连接信息存到 `~/.openclaw/node.json`。
 - exec approvals 在本地 `~/.openclaw/exec-approvals.json` 强制执行

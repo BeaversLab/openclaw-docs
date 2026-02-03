@@ -18,6 +18,7 @@ openclaw status --usage
 ```
 
 备注：
+
 - `--deep` 会运行实时探测（WhatsApp Web + Telegram + Discord + Google Chat + Slack + Signal）。
 - 当配置多个 agent 时，输出包含每个 agent 的会话存储。
 - 概览在可用时包含 Gateway + node host 服务安装/运行状态。

@@ -14,17 +14,16 @@ read_when:
 
 ## 新手快速路径
 
-1) [https://exe.new/openclaw](https://exe.new/openclaw)
-2) 按需填写 auth key/token
-3) 点击 VM 旁的 “Agent”，然后等待…
-4) ???
-5) Profit
+1. [https://exe.new/openclaw](https://exe.new/openclaw)
+2. 按需填写 auth key/token
+3. 点击 VM 旁的 “Agent”，然后等待…
+4. ???
+5. Profit
 
 ## 你需要什么
 
 - exe.dev 账号
 - 通过 `ssh exe.dev` 访问 [exe.dev](https://exe.dev) 虚拟机（可选）
-
 
 ## 使用 Shelley 自动安装
 
@@ -41,7 +40,7 @@ Set up OpenClaw (https://docs.openclaw.ai/install) on this VM. Use the non-inter
 在你的设备上：
 
 ```bash
-ssh exe.dev new 
+ssh exe.dev new
 ```
 
 然后连接：

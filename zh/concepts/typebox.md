@@ -37,14 +37,14 @@ Client                    Gateway
 
 常见方法 + 事件：
 
-| Category  | Examples                                                  | Notes               |
-| --------- | --------------------------------------------------------- | -------------------- |
-| Core      | `connect`, `health`, `status`                             | `connect` 必须是第一条 |
+| Category  | Examples                                                  | Notes                         |
+| --------- | --------------------------------------------------------- | ----------------------------- |
+| Core      | `connect`, `health`, `status`                             | `connect` 必须是第一条        |
 | Messaging | `send`, `poll`, `agent`, `agent.wait`                     | 有副作用需要 `idempotencyKey` |
-| Chat      | `chat.history`, `chat.send`, `chat.abort`, `chat.inject`  | WebChat 使用          |
-| Sessions  | `sessions.list`, `sessions.patch`, `sessions.delete`      | 会话管理             |
-| Nodes     | `node.list`, `node.invoke`, `node.pair.*`                 | Gateway WS + node 操作  |
-| Events    | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | 服务器推送           |
+| Chat      | `chat.history`, `chat.send`, `chat.abort`, `chat.inject`  | WebChat 使用                  |
+| Sessions  | `sessions.list`, `sessions.patch`, `sessions.delete`      | 会话管理                      |
+| Nodes     | `node.list`, `node.invoke`, `node.pair.*`                 | Gateway WS + node 操作        |
+| Events    | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | 服务器推送                    |
 
 权威列表在 `src/gateway/server.ts`（`METHODS`, `EVENTS`）。
 
@@ -161,7 +161,7 @@ ws.on("open", () => {
           mode: "cli",
         },
       },
-    }),
+    })
   );
 });
 
@@ -188,12 +188,12 @@ ws.on("message", (data) => {
 ```ts
 export const SystemEchoParamsSchema = Type.Object(
   { text: NonEmptyString },
-  { additionalProperties: false },
+  { additionalProperties: false }
 );
 
 export const SystemEchoResultSchema = Type.Object(
   { ok: Type.Boolean(), text: NonEmptyString },
-  { additionalProperties: false },
+  { additionalProperties: false }
 );
 ```
 

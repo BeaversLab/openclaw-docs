@@ -17,22 +17,28 @@ ui/src/i18n/
 ## 已创建的文件
 
 ### 1. `ui/src/i18n/locales.ts`
+
 定义支持的语言类型和配置。
 
 ### 2. `ui/src/i18n/translations.ts`
+
 包含所有翻译文本，目前支持中英文。
 
 ### 3. `ui/src/i18n/i18n.ts`
+
 核心 i18n 逻辑，包括：
+
 - `I18nController`: Lit 控制器
 - `t`: 翻译指令
 - `createI18n`: 创建 i18n 实例
 - `useI18n`: 使用 i18n hook
 
 ### 4. `ui/src/i18n/index.ts`
+
 统一导出模块。
 
 ### 5. `ui/src/ui/components/locale-switcher.ts`
+
 语言切换器组件。
 
 ## 使用方法
@@ -40,17 +46,17 @@ ui/src/i18n/
 ### 在组件中集成 i18n
 
 ```typescript
-import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import { createI18n } from '../i18n';
+import { LitElement, html } from "lit";
+import { customElement } from "lit/decorators.js";
+import { createI18n } from "../i18n";
 
-@customElement('my-component')
+@customElement("my-component")
 export class MyComponent extends LitElement {
   private i18n = createI18n(this);
 
   render() {
     const { t } = this.i18n;
-    
+
     return html`
       <h1>${t.topbar.brandTitle}</h1>
       <p>${t.topbar.brandSub}</p>
@@ -65,9 +71,9 @@ export class MyComponent extends LitElement {
 在 `OpenClawApp` 类中添加 i18n 控制器：
 
 ```typescript
-import { createI18n, type Locale } from '../i18n';
+import { createI18n, type Locale } from "../i18n";
 
-@customElement('openclaw-app')
+@customElement("openclaw-app")
 export class OpenClawApp extends LitElement {
   // 添加 i18n 控制器
   private i18n = createI18n(this);
@@ -81,7 +87,7 @@ export class OpenClawApp extends LitElement {
 更新渲染函数使用翻译：
 
 ```typescript
-import { createI18n } from './i18n';
+import { createI18n } from "./i18n";
 
 export function renderApp(state: AppViewState) {
   // 添加 i18n
@@ -111,19 +117,19 @@ export function renderApp(state: AppViewState) {
 修改 `ui/src/ui/navigation.ts` 添加翻译支持：
 
 ```typescript
-import { createI18n } from '../i18n';
+import { createI18n } from "../i18n";
 
 export function titleForTab(tab: Tab): string {
   const i18n = createI18n(/* 需要传递 host */);
   const { t } = i18n;
-  
+
   const titles: Record<Tab, string> = {
     overview: t.nav.overview,
     chat: t.nav.chat,
     config: t.nav.config,
     // ...
   };
-  
+
   return titles[tab] || tab;
 }
 ```
@@ -171,6 +177,7 @@ import '../components/locale-switcher';
 ### i18n 控制器
 
 `I18nController` 是一个 Lit 控制器，提供：
+
 - 当前语言 (`locale`)
 - 翻译函数 (`t`)
 - 语言切换 (`set locale`)
@@ -180,17 +187,19 @@ import '../components/locale-switcher';
 ### 翻译函数
 
 使用点号分隔的路径访问翻译：
+
 ```typescript
-t.topbar.brandTitle    // 'OPENCLAW' 或 'OPENCLAW'
-t.common.save          // 'Save' 或 '保存'
+t.topbar.brandTitle; // 'OPENCLAW' 或 'OPENCLAW'
+t.common.save; // 'Save' 或 '保存'
 ```
 
 ### 参数化翻译
 
 支持参数替换：
+
 ```typescript
 // 翻译中: 'Hello {name}!'
-t.greeting({ name: 'World' })  // 'Hello World!'
+t.greeting({ name: "World" }); // 'Hello World!'
 ```
 
 ## 注意事项
@@ -203,6 +212,7 @@ t.greeting({ name: 'World' })  // 'Hello World!'
 ## 贡献指南
 
 添加新语言时：
+
 1. 在 `locales.ts` 中添加语言配置
 2. 在 `translations.ts` 中添加翻译对象
 3. 测试所有页面

@@ -1,12 +1,16 @@
 ---
 title: "Ansible"
 ---
+
 ---
+
 summary: "使用 Ansible + Tailscale VPN + 防火墙隔离的自动化加固安装"
 read_when:
-  - 你希望自动化部署并进行安全加固
-  - 你需要通过 VPN 访问的防火墙隔离方案
-  - 你要部署到远程 Debian/Ubuntu 服务器
+
+- 你希望自动化部署并进行安全加固
+- 你需要通过 VPN 访问的防火墙隔离方案
+- 你要部署到远程 Debian/Ubuntu 服务器
+
 ---
 
 # Ansible 安装
@@ -151,6 +155,7 @@ cd openclaw-ansible
 ### 防火墙阻断了连接
 
 如果你被锁在外面：
+
 - 先确保能通过 Tailscale VPN 访问
 - SSH（22 端口）始终允许
 - Gateway **设计上只通过 Tailscale 访问**
@@ -196,6 +201,7 @@ openclaw channels login
 ## 高级配置
 
 安全架构与排障细节：
+
 - [Security Architecture](https://github.com/openclaw/openclaw-ansible/blob/main/docs/security.md)
 - [Technical Details](https://github.com/openclaw/openclaw-ansible/blob/main/docs/architecture.md)
 - [Troubleshooting Guide](https://github.com/openclaw/openclaw-ansible/blob/main/docs/troubleshooting.md)

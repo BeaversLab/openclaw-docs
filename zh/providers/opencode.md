@@ -5,6 +5,7 @@ read_when:
   - 想使用 OpenCode Zen 获取模型访问
   - 想要一份适合编码的精选模型列表
 ---
+
 # OpenCode Zen
 
 OpenCode Zen 是 OpenCode 团队为编码代理推荐的 **精选模型列表**。它是一个可选的托管模型访问路径，使用 API key 和 `opencode` provider。Zen 目前处于 beta。
@@ -22,7 +23,7 @@ openclaw onboard --opencode-zen-api-key "$OPENCODE_API_KEY"
 ```json5
 {
   env: { OPENCODE_API_KEY: "sk-..." },
-  agents: { defaults: { model: { primary: "opencode/claude-opus-4-5" } } }
+  agents: { defaults: { model: { primary: "opencode/claude-opus-4-5" } } },
 }
 ```
 

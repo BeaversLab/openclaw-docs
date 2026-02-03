@@ -23,25 +23,30 @@ title: "Gateway 架构"
 ## 组件与流程
 
 ### Gateway（daemon）
+
 - 维护 provider 连接。
 - 暴露类型化 WS API（请求、响应、服务端推送事件）。
 - 使用 JSON Schema 校验入站帧。
 - 发出 `agent`、`chat`、`presence`、`health`、`heartbeat`、`cron` 等事件。
 
 ### Clients（mac app / CLI / web admin）
+
 - 每个客户端一个 WS 连接。
 - 发送请求（`health`、`status`、`send`、`agent`、`system-presence`）。
 - 订阅事件（`tick`、`agent`、`presence`、`shutdown`）。
 
 ### Nodes（macOS / iOS / Android / headless）
+
 - 使用 `role: node` 连接到 **同一个 WS server**。
 - 在 `connect` 中提供设备身份；配对是 **设备级**（role `node`），审批存于设备配对存储。
 - 暴露 `canvas.*`、`camera.*`、`screen.record`、`location.get` 等命令。
 
 协议细节：
+
 - [Gateway protocol](/zh/gateway/protocol)
 
 ### WebChat
+
 - 静态 UI，使用 Gateway WS API 获取聊天历史并发送消息。
 - 远程部署时，通过与其他客户端相同的 SSH/Tailscale 隧道连接。
 

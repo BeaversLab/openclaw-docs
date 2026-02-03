@@ -120,6 +120,7 @@ Gateway 写入滚动日志文件（启动时打印 `gateway log file: ...`）。
 iOS node 使用 `NWBrowser` 发现 `_openclaw-gw._tcp`。
 
 采集日志：
+
 - Settings → Gateway → Advanced → **Discovery Debug Logs**
 - Settings → Gateway → Advanced → **Discovery Logs** → 复现 → **Copy**
 

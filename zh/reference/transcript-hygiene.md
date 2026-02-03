@@ -6,11 +6,13 @@ read_when:
   - 修改转录清理或工具调用修复逻辑
   - 调查跨 provider 的 tool-call id 不匹配
 ---
+
 # 转录清理（Provider 修复）
 
 本文描述在运行前（构建模型上下文时）对转录应用的 **provider 特定修复**。这些调整仅在 **内存中** 进行，用于满足严格的 provider 要求，**不会** 重写磁盘上的 JSONL 转录。
 
 范围包括：
+
 - Tool call id 清理
 - Tool result 配对修复
 - 回合校验/排序
@@ -18,6 +20,7 @@ read_when:
 - 图片载荷清理
 
 如需转录存储细节，请参见：
+
 - [/reference/session-management-compaction](/zh/reference/session-management-compaction)
 
 ---
@@ -25,6 +28,7 @@ read_when:
 ## 运行位置
 
 所有转录清理集中在内置 runner：
+
 - 策略选择：`src/agents/transcript-policy.ts`
 - 清理/修复应用：`src/agents/pi-embedded-runner/google.ts` 中的 `sanitizeSessionHistory`
 
@@ -37,6 +41,7 @@ read_when:
 图片载荷始终会清理，以避免因大小限制被 provider 拒绝（对过大的 base64 图片进行降采样/重压缩）。
 
 实现：
+
 - `src/agents/pi-embedded-helpers/images.ts` 中的 `sanitizeSessionMessagesImages`
 - `src/agents/tool-images.ts` 中的 `sanitizeContentBlocksImages`
 
@@ -45,6 +50,7 @@ read_when:
 ## Provider 矩阵（当前行为）
 
 **OpenAI / OpenAI Codex**
+
 - 仅进行图片清理。
 - 切换到 OpenAI Responses/Codex 时，丢弃孤立的 reasoning signature（没有后续 content block 的 reasoning 项）。
 - 不清理 tool call id。
@@ -54,6 +60,7 @@ read_when:
 - 不移除 thought signature。
 
 **Google（Generative AI / Gemini CLI / Antigravity）**
+
 - Tool call id 清理：严格字母数字。
 - Tool result 配对修复与合成 tool result。
 - 回合校验（Gemini 风格回合交替）。
@@ -61,16 +68,20 @@ read_when:
 - Antigravity Claude：规范化 thinking signatures；丢弃未签名的 thinking block。
 
 **Anthropic / Minimax（Anthropic 兼容）**
+
 - Tool result 配对修复与合成 tool result。
 - 回合校验（合并连续 user 回合以满足严格交替）。
 
 **Mistral（含基于 model-id 的检测）**
+
 - Tool call id 清理：strict9（长度 9 的字母数字）。
 
 **OpenRouter Gemini**
+
 - Thought signature 清理：移除非 base64 的 `thought_signature` 值（保留 base64）。
 
 **其他**
+
 - 仅图片清理。
 
 ---

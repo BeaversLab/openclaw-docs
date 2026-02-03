@@ -1,0 +1,20 @@
+{
+  "name": "crawfish-docs",
+  "version": "1.0.0",
+  "description": "OpenClaw Documentation - Markdown format with Prettier",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write \"**/*.{md,json,yaml,yml,json5}\"",
+    "format:check": "prettier --check \"**/*.{md,json,yaml,yml,json5}\"",
+    "format:en": "prettier --write \"en/**/*.md\"",
+    "format:zh": "prettier --write \"zh/**/*.md\"",
+    "format:staged": "prettier --write"
+  },
+  "keywords": ["documentation", "markdown", "prettier"],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.26.1",
+  "devDependencies": {
+    "prettier": "^3.8.1"
+  }
+}

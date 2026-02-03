@@ -62,13 +62,13 @@ OPENCLAW_PROFILE=dev openclaw tui
 
 其作用：
 
-1) **Profile 隔离**（全局 `--dev`）
+1. **Profile 隔离**（全局 `--dev`）
    - `OPENCLAW_PROFILE=dev`
    - `OPENCLAW_STATE_DIR=~/.openclaw-dev`
    - `OPENCLAW_CONFIG_PATH=~/.openclaw-dev/openclaw.json`
    - `OPENCLAW_GATEWAY_PORT=19001`（browser/canvas 端口随之偏移）
 
-2) **Dev bootstrap**（`gateway --dev`）
+2. **Dev bootstrap**（`gateway --dev`）
    - 缺失时写入最小配置（`gateway.mode=local`，绑定 loopback）。
    - 将 `agent.workspace` 设为 dev workspace。
    - 设置 `agent.skipBootstrap=true`（不创建 BOOTSTRAP.md）。

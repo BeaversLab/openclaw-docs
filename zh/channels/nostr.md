@@ -5,6 +5,7 @@ read_when:
   - 你在设置去中心化消息
 title: "Nostr"
 ---
+
 # Nostr
 
 **状态：** 可选插件（默认禁用）。
@@ -70,15 +71,15 @@ export NOSTR_PRIVATE_KEY="nsec1..."
 
 ## 配置参考
 
-| Key | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `privateKey` | string | required | `nsec` 或 hex 格式私钥 |
-| `relays` | string[] | `['wss://relay.damus.io', 'wss://nos.lol']` | Relay URL（WebSocket） |
-| `dmPolicy` | string | `pairing` | 私聊访问策略 |
-| `allowFrom` | string[] | `[]` | 允许发送者 pubkey |
-| `enabled` | boolean | `true` | 启用/禁用渠道 |
-| `name` | string | - | 显示名 |
-| `profile` | object | - | NIP-01 资料元数据 |
+| Key          | 类型     | 默认                                        | 说明                   |
+| ------------ | -------- | ------------------------------------------- | ---------------------- |
+| `privateKey` | string   | required                                    | `nsec` 或 hex 格式私钥 |
+| `relays`     | string[] | `['wss://relay.damus.io', 'wss://nos.lol']` | Relay URL（WebSocket） |
+| `dmPolicy`   | string   | `pairing`                                   | 私聊访问策略           |
+| `allowFrom`  | string[] | `[]`                                        | 允许发送者 pubkey      |
+| `enabled`    | boolean  | `true`                                      | 启用/禁用渠道          |
+| `name`       | string   | -                                           | 显示名                 |
+| `profile`    | object   | -                                           | NIP-01 资料元数据      |
 
 ## Profile 元数据
 
@@ -150,11 +151,7 @@ Profile 数据会以 NIP-01 `kind:0` 事件发布。你可以在 Control UI（Ch
   "channels": {
     "nostr": {
       "privateKey": "${NOSTR_PRIVATE_KEY}",
-      "relays": [
-        "wss://relay.damus.io",
-        "wss://relay.primal.net",
-        "wss://nostr.wine"
-      ]
+      "relays": ["wss://relay.damus.io", "wss://relay.primal.net", "wss://nostr.wine"]
     }
   }
 }
@@ -169,12 +166,12 @@ Profile 数据会以 NIP-01 `kind:0` 事件发布。你可以在 Control UI（Ch
 
 ## 协议支持
 
-| NIP | 状态 | 说明 |
-| --- | --- | --- |
-| NIP-01 | 支持 | 基本事件格式 + Profile 元数据 |
-| NIP-04 | 支持 | 加密私信（`kind:4`） |
-| NIP-17 | 计划中 | Gift-wrapped DMs |
-| NIP-44 | 计划中 | 版本化加密 |
+| NIP    | 状态   | 说明                          |
+| ------ | ------ | ----------------------------- |
+| NIP-01 | 支持   | 基本事件格式 + Profile 元数据 |
+| NIP-04 | 支持   | 加密私信（`kind:4`）          |
+| NIP-17 | 计划中 | Gift-wrapped DMs              |
+| NIP-44 | 计划中 | 版本化加密                    |
 
 ## 测试
 

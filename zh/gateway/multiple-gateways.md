@@ -5,11 +5,13 @@ read_when:
   - 需要为每个 Gateway 隔离 config/state/端口
 title: "多个 Gateway"
 ---
+
 # 多网关（同一主机）
 
 多数场景应使用单个 Gateway，因为一个 Gateway 可处理多个消息连接与 agents。若需要更强隔离或冗余（例如救援 bot），请使用隔离 profile/端口运行多个 Gateway。
 
 ## 隔离检查清单（必需）
+
 - `OPENCLAW_CONFIG_PATH` — 每实例配置文件
 - `OPENCLAW_STATE_DIR` — 每实例 sessions、creds、缓存
 - `agents.defaults.workspace` — 每实例 workspace 根
@@ -33,6 +35,7 @@ openclaw --profile rescue gateway --port 19001
 ```
 
 按 profile 安装服务：
+
 ```bash
 openclaw --profile main gateway install
 openclaw --profile rescue gateway install
@@ -41,6 +44,7 @@ openclaw --profile rescue gateway install
 ## 救援 bot 指南
 
 在同一主机上运行第二个 Gateway，并拥有独立的：
+
 - profile/config
 - state dir
 - workspace

@@ -58,4 +58,3 @@ pruning 详见 [/concepts/session-pruning](/zh/concepts/session-pruning)。
 - 会话感觉冗长或上下文臃肿时使用 `/compact`。
 - 大型工具输出已被截断；pruning 可进一步减少工具结果堆积。
 - 若需全新开始，`/new` 或 `/reset` 会创建新的 session id。
-

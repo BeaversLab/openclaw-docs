@@ -14,20 +14,21 @@ title: "树莓派"
 在树莓派上运行一个持久化、常驻的 OpenClaw Gateway，**一次性成本约 $35-80**（无月费）。
 
 适合：
+
 - 24/7 个人 AI 助手
 - 家庭自动化中枢
 - 低功耗、常在线的 Telegram/WhatsApp bot
 
 ## 硬件要求
 
-| Pi Model | RAM | Works? | Notes |
-|----------|-----|--------|-------|
-| **Pi 5** | 4GB/8GB | ✅ Best | 最快，推荐 |
-| **Pi 4** | 4GB | ✅ Good | 多数用户甜 spot |
-| **Pi 4** | 2GB | ✅ OK | 可用，建议加 swap |
-| **Pi 4** | 1GB | ⚠️ Tight | 可用但紧张，需最小化配置 |
-| **Pi 3B+** | 1GB | ⚠️ Slow | 可用但偏慢 |
-| **Pi Zero 2 W** | 512MB | ❌ | 不推荐 |
+| Pi Model        | RAM     | Works?   | Notes                    |
+| --------------- | ------- | -------- | ------------------------ |
+| **Pi 5**        | 4GB/8GB | ✅ Best  | 最快，推荐               |
+| **Pi 4**        | 4GB     | ✅ Good  | 多数用户甜 spot          |
+| **Pi 4**        | 2GB     | ✅ OK    | 可用，建议加 swap        |
+| **Pi 4**        | 1GB     | ⚠️ Tight | 可用但紧张，需最小化配置 |
+| **Pi 3B+**      | 1GB     | ⚠️ Slow  | 可用但偏慢               |
+| **Pi Zero 2 W** | 512MB   | ❌       | 不推荐                   |
 
 **最低规格：** 1GB RAM，1 核，500MB 磁盘  
 **推荐：** 2GB+ RAM，64-bit OS，16GB+ SD 卡（或 USB SSD）
@@ -133,6 +134,7 @@ openclaw onboard --install-daemon
 ```
 
 向导步骤：
+
 1. **Gateway mode：** Local
 2. **Auth：** 推荐 API keys（OAuth 在 headless Pi 上可能较麻烦）
 3. **Channels：** 最容易起步的是 Telegram
@@ -221,13 +223,13 @@ htop
 
 多数 OpenClaw 功能在 ARM64 可用，但部分外部二进制需要 ARM 版本：
 
-| Tool | ARM64 Status | Notes |
-|------|--------------|-------|
-| Node.js | ✅ | 工作良好 |
-| WhatsApp (Baileys) | ✅ | 纯 JS，无问题 |
-| Telegram | ✅ | 纯 JS，无问题 |
-| gog (Gmail CLI) | ⚠️ | 检查是否有 ARM 版本 |
-| Chromium (browser) | ✅ | `sudo apt install chromium-browser` |
+| Tool               | ARM64 Status | Notes                               |
+| ------------------ | ------------ | ----------------------------------- |
+| Node.js            | ✅           | 工作良好                            |
+| WhatsApp (Baileys) | ✅           | 纯 JS，无问题                       |
+| Telegram           | ✅           | 纯 JS，无问题                       |
+| gog (Gmail CLI)    | ⚠️           | 检查是否有 ARM 版本                 |
+| Chromium (browser) | ✅           | `sudo apt install chromium-browser` |
 
 若某个 skill 失败，检查其二进制是否有 ARM 构建。很多 Go/Rust 工具有，部分没有。
 
@@ -313,6 +315,7 @@ sudo systemctl restart openclaw
 ### ARM 二进制问题
 
 若 skill 报 “exec format error”：
+
 1. 检查是否有 ARM64 构建
 2. 尝试从源码构建
 3. 或使用支持 ARM 的 Docker 容器
@@ -333,14 +336,14 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ## 成本对比
 
-| Setup | One-Time Cost | Monthly Cost | Notes |
-|-------|---------------|--------------|-------|
-| **Pi 4 (2GB)** | ~$45 | $0 | + 电费（~$5/年） |
-| **Pi 4 (4GB)** | ~$55 | $0 | 推荐 |
-| **Pi 5 (4GB)** | ~$60 | $0 | 性能最好 |
-| **Pi 5 (8GB)** | ~$80 | $0 | 过度但长远 |
-| DigitalOcean | $0 | $6/mo | $72/年 |
-| Hetzner | $0 | €3.79/mo | ~$50/年 |
+| Setup          | One-Time Cost | Monthly Cost | Notes            |
+| -------------- | ------------- | ------------ | ---------------- |
+| **Pi 4 (2GB)** | ~$45          | $0           | + 电费（~$5/年） |
+| **Pi 4 (4GB)** | ~$55          | $0           | 推荐             |
+| **Pi 5 (4GB)** | ~$60          | $0           | 性能最好         |
+| **Pi 5 (8GB)** | ~$80          | $0           | 过度但长远       |
+| DigitalOcean   | $0            | $6/mo        | $72/年           |
+| Hetzner        | $0            | €3.79/mo     | ~$50/年          |
 
 **回本：** 相对云 VPS，Pi 大约 6-12 个月回本。
 

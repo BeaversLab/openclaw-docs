@@ -13,7 +13,7 @@ OpenClaw 提供两个安装脚本（由 `openclaw.ai` 提供）：
 
 - `https://openclaw.bot/install.sh` — “推荐”安装器（默认全局 npm 安装；也可从 GitHub checkout 安装）
 - `https://openclaw.bot/install-cli.sh` — 适合非 root 的 CLI 安装器（安装到带自带 Node 的 prefix）
- - `https://openclaw.ai/install.ps1` — Windows PowerShell 安装器（默认 npm；可选 git 安装）
+- `https://openclaw.ai/install.ps1` — Windows PowerShell 安装器（默认 npm；可选 git 安装）
 
 查看当前 flags/行为：
 

@@ -35,11 +35,11 @@ Perplexity 直连 API 或通过 OpenRouter 连接。
         perplexity: {
           apiKey: "pplx-...",
           baseUrl: "https://api.perplexity.ai",
-          model: "perplexity/sonar-pro"
-        }
-      }
-    }
-  }
+          model: "perplexity/sonar-pro",
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -53,11 +53,11 @@ Perplexity 直连 API 或通过 OpenRouter 连接。
         provider: "perplexity",
         perplexity: {
           apiKey: "pplx-...",
-          baseUrl: "https://api.perplexity.ai"
-        }
-      }
-    }
-  }
+          baseUrl: "https://api.perplexity.ai",
+        },
+      },
+    },
+  },
 }
 ```
 

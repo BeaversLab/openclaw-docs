@@ -15,7 +15,7 @@ OpenClaw 有三个相关（但不同）的控制：
 
 ## 快速排查
 
-用检查器查看 OpenClaw *实际* 在做什么：
+用检查器查看 OpenClaw _实际_ 在做什么：
 
 ```bash
 openclaw sandbox explain
@@ -25,6 +25,7 @@ openclaw sandbox explain --json
 ```
 
 它会输出：
+
 - 实际生效的沙盒 mode/scope/workspace 访问
 - 当前会话是否在沙盒中（main vs non-main）
 - 实际沙盒工具 allow/deny（以及来源：agent/全局/默认）
@@ -33,6 +34,7 @@ openclaw sandbox explain --json
 ## 沙盒：工具在哪运行
 
 沙盒由 `agents.defaults.sandbox.mode` 控制：
+
 - `"off"`：所有内容在宿主运行。
 - `"non-main"`：仅非 main 会话进入沙盒（群/频道常见“意外”来源）。
 - `"all"`：全部进入沙盒。
@@ -41,7 +43,7 @@ openclaw sandbox explain --json
 
 ### Bind 挂载（安全快检）
 
-- `docker.binds` 会 *穿透* 沙盒文件系统：挂载的内容在容器内可见，权限取决于你设置的模式（`:ro` 或 `:rw`）。
+- `docker.binds` 会 _穿透_ 沙盒文件系统：挂载的内容在容器内可见，权限取决于你设置的模式（`:ro` 或 `:rw`）。
 - 若省略模式，默认读写；源码/机密请优先 `:ro`。
 - `scope: "shared"` 会忽略每 agent 的 binds（只应用全局 binds）。
 - 绑定 `/var/run/docker.sock` 等同于将宿主控制权交给沙盒；仅在明确需要时使用。
@@ -50,6 +52,7 @@ openclaw sandbox explain --json
 ## 工具策略：哪些工具存在/可调用
 
 两层策略很关键：
+
 - **工具 profile**：`tools.profile` 与 `agents.list[].tools.profile`（基础 allowlist）
 - **Provider 工具 profile**：`tools.byProvider[provider].profile` 与 `agents.list[].tools.byProvider[provider].profile`
 - **全局/每 agent 工具策略**：`tools.allow`/`tools.deny` 与 `agents.list[].tools.allow`/`agents.list[].tools.deny`
@@ -57,11 +60,12 @@ openclaw sandbox explain --json
 - **沙盒工具策略**（仅沙盒时生效）：`tools.sandbox.tools.allow`/`tools.sandbox.tools.deny` 与 `agents.list[].tools.sandbox.tools.*`
 
 经验法则：
+
 - `deny` 永远优先。
 - 若 `allow` 非空，则其它工具默认视为阻止。
 - 工具策略是硬闸：被拒绝的 `exec` 不能通过 `/exec` 绕过。
 - `/exec` 仅改变已授权发件人的会话默认值，不会授予工具权限。
-Provider 工具 key 可用 `provider`（如 `google-antigravity`）或 `provider/model`（如 `openai/gpt-5.2`）。
+  Provider 工具 key 可用 `provider`（如 `google-antigravity`）或 `provider/model`（如 `openai/gpt-5.2`）。
 
 ### 工具组（简写）
 
@@ -72,14 +76,15 @@ Provider 工具 key 可用 `provider`（如 `google-antigravity`）或 `provider
   tools: {
     sandbox: {
       tools: {
-        allow: ["group:runtime", "group:fs", "group:sessions", "group:memory"]
-      }
-    }
-  }
+        allow: ["group:runtime", "group:fs", "group:sessions", "group:memory"],
+      },
+    },
+  },
 }
 ```
 
 可用组：
+
 - `group:runtime`: `exec`, `bash`, `process`
 - `group:fs`: `read`, `write`, `edit`, `apply_patch`
 - `group:sessions`: `sessions_list`, `sessions_history`, `sessions_send`, `sessions_spawn`, `session_status`
@@ -93,6 +98,7 @@ Provider 工具 key 可用 `provider`（如 `google-antigravity`）或 `provider
 ## 提升模式：仅 exec 的“宿主运行”
 
 提升模式 **不会** 赋予额外工具；只影响 `exec`。
+
 - 若在沙盒中，`/elevated on`（或 `exec` 的 `elevated: true`）会在宿主运行（可能仍需审批）。
 - 用 `/elevated full` 跳过会话内的 exec 审批。
 - 若已在宿主直跑，提升模式基本无效（但仍受门控）。
@@ -100,6 +106,7 @@ Provider 工具 key 可用 `provider`（如 `google-antigravity`）或 `provider
 - `/exec` 与提升模式分离：只调整授权发件人的会话级 exec 默认值。
 
 门控：
+
 - 开关：`tools.elevated.enabled`（可选 `agents.list[].tools.elevated.enabled`）
 - 发件人 allowlist：`tools.elevated.allowFrom.<provider>`（可选 `agents.list[].tools.elevated.allowFrom.<provider>`）
 
@@ -110,6 +117,7 @@ Provider 工具 key 可用 `provider`（如 `google-antigravity`）或 `provider
 ### “工具 X 被沙盒工具策略阻止”
 
 修复键（择一）：
+
 - 关闭沙盒：`agents.defaults.sandbox.mode=off`（或 per-agent `agents.list[].sandbox.mode=off`）
 - 在沙盒内允许该工具：
   - 从 `tools.sandbox.tools.deny` 中移除（或 per-agent `agents.list[].tools.sandbox.tools.deny`）

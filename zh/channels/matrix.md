@@ -4,6 +4,7 @@ read_when:
   - 开发 Matrix 渠道功能
 title: "Matrix"
 ---
+
 # Matrix（插件）
 
 Matrix 是开放的去中心化消息协议。OpenClaw 作为 Matrix **用户**连接到任意 homeserver，
@@ -35,13 +36,13 @@ openclaw plugins install ./extensions/matrix
 
 ## 设置
 
-1) 安装 Matrix 插件：
+1. 安装 Matrix 插件：
    - npm：`openclaw plugins install @openclaw/matrix`
    - 本地检出：`openclaw plugins install ./extensions/matrix`
-2) 在 homeserver 创建 Matrix 账号：
+2. 在 homeserver 创建 Matrix 账号：
    - 浏览托管选项：[https://matrix.org/ecosystem/hosting/](https://matrix.org/ecosystem/hosting/)
    - 或自行部署。
-3) 获取 bot 账号的 access token：
+3. 获取 bot 账号的 access token：
    - 在你的 homeserver 用 `curl` 调用 Matrix 登录 API：
 
    ```bash
@@ -61,14 +62,15 @@ openclaw plugins install ./extensions/matrix
    - 将 `matrix.example.org` 替换为你的 homeserver URL。
    - 或设置 `channels.matrix.userId` + `channels.matrix.password`：OpenClaw 会调用相同登录端点，
      将 access token 存入 `~/.openclaw/credentials/matrix/credentials.json`，并在下次启动复用。
-4) 配置凭据：
+
+4. 配置凭据：
    - 环境变量：`MATRIX_HOMESERVER`、`MATRIX_ACCESS_TOKEN`（或 `MATRIX_USER_ID` + `MATRIX_PASSWORD`）
    - 或配置：`channels.matrix.*`
    - 两者同时设置时，以配置优先。
    - 使用 access token 时，用户 ID 会通过 `/whoami` 自动获取。
    - 若设置 `channels.matrix.userId`，需为完整 Matrix ID（如 `@bot:example.org`）。
-5) 重启 gateway（或完成上手流程）。
-6) 从任意 Matrix 客户端（Element、Beeper 等；见 https://matrix.org/ecosystem/clients/）与 bot 私聊或邀请进房间。
+5. 重启 gateway（或完成上手流程）。
+6. 从任意 Matrix 客户端（Element、Beeper 等；见 https://matrix.org/ecosystem/clients/）与 bot 私聊或邀请进房间。
    Beeper 需要 E2EE，因此请设置 `channels.matrix.encryption: true` 并验证设备。
 
 最小配置（access token，user ID 自动获取）：
@@ -80,9 +82,9 @@ openclaw plugins install ./extensions/matrix
       enabled: true,
       homeserver: "https://matrix.example.org",
       accessToken: "syt_***",
-      dm: { policy: "pairing" }
-    }
-  }
+      dm: { policy: "pairing" },
+    },
+  },
 }
 ```
 
@@ -96,9 +98,9 @@ E2EE 配置（端到端加密启用）：
       homeserver: "https://matrix.example.org",
       accessToken: "syt_***",
       encryption: true,
-      dm: { policy: "pairing" }
-    }
-  }
+      dm: { policy: "pairing" },
+    },
+  },
 }
 ```
 
@@ -154,11 +156,11 @@ Crypto 状态按账号 + access token 存在：
       groupPolicy: "allowlist",
       groups: {
         "!roomId:example.org": { allow: true },
-        "#alias:example.org": { allow: true }
+        "#alias:example.org": { allow: true },
       },
-      groupAllowFrom: ["@owner:example.org"]
-    }
-  }
+      groupAllowFrom: ["@owner:example.org"],
+    },
+  },
 }
 ```
 
@@ -182,17 +184,17 @@ Crypto 状态按账号 + access token 存在：
 
 ## 能力
 
-| 功能 | 状态 |
-|---------|--------|
-| 私聊 | ✅ 支持 |
-| 房间 | ✅ 支持 |
-| 线程 | ✅ 支持 |
-| 媒体 | ✅ 支持 |
-| E2EE | ✅ 支持（需 crypto 模块） |
-| Reactions | ✅ 支持（通过工具读/发） |
-| 投票 | ✅ 发送支持；入站 poll-start 会转为文本（忽略响应/结束） |
-| 位置 | ✅ 支持（geo URI；忽略海拔） |
-| 原生命令 | ✅ 支持 |
+| 功能      | 状态                                                     |
+| --------- | -------------------------------------------------------- |
+| 私聊      | ✅ 支持                                                  |
+| 房间      | ✅ 支持                                                  |
+| 线程      | ✅ 支持                                                  |
+| 媒体      | ✅ 支持                                                  |
+| E2EE      | ✅ 支持（需 crypto 模块）                                |
+| Reactions | ✅ 支持（通过工具读/发）                                 |
+| 投票      | ✅ 发送支持；入站 poll-start 会转为文本（忽略响应/结束） |
+| 位置      | ✅ 支持（geo URI；忽略海拔）                             |
+| 原生命令  | ✅ 支持                                                  |
 
 ## 配置参考（Matrix）
 

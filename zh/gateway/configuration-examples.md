@@ -137,14 +137,14 @@ title: "配置示例"
           // Optional CLI fallback (Whisper binary):
           // { type: "cli", command: "whisper", args: ["--model", "base", "{{MediaPath}}"] }
         ],
-        timeoutSeconds: 120
+        timeoutSeconds: 120,
       },
       video: {
         enabled: true,
         maxBytes: 52428800,
-        models: [{ provider: "google", model: "gemini-3-flash-preview" }]
-      }
-    }
+        models: [{ provider: "google", model: "gemini-3-flash-preview" }],
+      },
+    },
   },
 
   // Session behavior
@@ -153,20 +153,18 @@ title: "配置示例"
     reset: {
       mode: "daily",
       atHour: 4,
-      idleMinutes: 60
+      idleMinutes: 60,
     },
     resetByChannel: {
-      discord: { mode: "idle", idleMinutes: 10080 }
+      discord: { mode: "idle", idleMinutes: 10080 },
     },
     resetTriggers: ["/new", "/reset"],
     store: "~/.openclaw/agents/default/sessions/sessions.json",
     typingIntervalSeconds: 5,
     sendPolicy: {
       default: "allow",
-      rules: [
-        { action: "deny", match: { channel: "discord", chatType: "group" } }
-      ]
-    }
+      rules: [{ action: "deny", match: { channel: "discord", chatType: "group" } }],
+    },
   },
 
   // Channels
@@ -176,7 +174,7 @@ title: "配置示例"
       allowFrom: ["+15555550123"],
       groupPolicy: "allowlist",
       groupAllowFrom: ["+15555550123"],
-      groups: { "*": { requireMention: true } }
+      groups: { "*": { requireMention: true } },
     },
 
     telegram: {
@@ -185,7 +183,7 @@ title: "配置示例"
       allowFrom: ["123456789"],
       groupPolicy: "allowlist",
       groupAllowFrom: ["123456789"],
-      groups: { "*": { requireMention: true } }
+      groups: { "*": { requireMention: true } },
     },
 
     discord: {
@@ -198,10 +196,10 @@ title: "配置示例"
           requireMention: false,
           channels: {
             general: { allow: true },
-            help: { allow: true, requireMention: true }
-          }
-        }
-      }
+            help: { allow: true, requireMention: true },
+          },
+        },
+      },
     },
 
     slack: {
@@ -209,16 +207,16 @@ title: "配置示例"
       botToken: "xoxb-REPLACE_ME",
       appToken: "xapp-REPLACE_ME",
       channels: {
-        "#general": { allow: true, requireMention: true }
+        "#general": { allow: true, requireMention: true },
       },
       dm: { enabled: true, allowFrom: ["U123"] },
       slashCommand: {
         enabled: true,
         name: "openclaw",
         sessionPrefix: "slack:slash",
-        ephemeral: true
-      }
-    }
+        ephemeral: true,
+      },
+    },
   },
 
   // Agent runtime
@@ -228,15 +226,15 @@ title: "配置示例"
       userTimezone: "America/Chicago",
       model: {
         primary: "anthropic/claude-sonnet-4-5",
-        fallbacks: ["anthropic/claude-opus-4-5", "openai/gpt-5.2"]
+        fallbacks: ["anthropic/claude-opus-4-5", "openai/gpt-5.2"],
       },
       imageModel: {
-        primary: "openrouter/anthropic/claude-sonnet-4-5"
+        primary: "openrouter/anthropic/claude-sonnet-4-5",
       },
       models: {
         "anthropic/claude-opus-4-5": { alias: "opus" },
         "anthropic/claude-sonnet-4-5": { alias: "sonnet" },
-        "openai/gpt-5.2": { alias: "gpt" }
+        "openai/gpt-5.2": { alias: "gpt" },
       },
       thinkingDefault: "low",
       verboseDefault: "off",
@@ -246,13 +244,13 @@ title: "配置示例"
       blockStreamingChunk: {
         minChars: 800,
         maxChars: 1200,
-        breakPreference: "paragraph"
+        breakPreference: "paragraph",
       },
       blockStreamingCoalesce: {
-        idleMs: 1000
+        idleMs: 1000,
       },
       humanDelay: {
-        mode: "natural"
+        mode: "natural",
       },
       timeoutSeconds: 600,
       mediaMaxMb: 5,
@@ -264,15 +262,15 @@ title: "配置示例"
         target: "last",
         to: "+15555550123",
         prompt: "HEARTBEAT",
-        ackMaxChars: 300
+        ackMaxChars: 300,
       },
       memorySearch: {
         provider: "gemini",
         model: "gemini-embedding-001",
         remote: {
-          apiKey: "${GEMINI_API_KEY}"
+          apiKey: "${GEMINI_API_KEY}",
         },
-        extraPaths: ["../team-docs", "/srv/shared-notes"]
+        extraPaths: ["../team-docs", "/srv/shared-notes"],
       },
       sandbox: {
         mode: "non-main",
@@ -284,13 +282,13 @@ title: "配置示例"
           readOnlyRoot: true,
           tmpfs: ["/tmp", "/var/tmp", "/run"],
           network: "none",
-          user: "1000:1000"
+          user: "1000:1000",
         },
         browser: {
-          enabled: false
-        }
-      }
-    }
+          enabled: false,
+        },
+      },
+    },
   },
 
   tools: {
@@ -299,7 +297,7 @@ title: "配置示例"
     exec: {
       backgroundMs: 10000,
       timeoutSec: 1800,
-      cleanupMs: 1800000
+      cleanupMs: 1800000,
     },
     elevated: {
       enabled: true,
@@ -310,9 +308,9 @@ title: "配置示例"
         slack: ["U123"],
         signal: ["+15555550123"],
         imessage: ["user@example.com"],
-        webchat: ["session:demo"]
-      }
-    }
+        webchat: ["session:demo"],
+      },
+    },
   },
 
   // Custom model providers
@@ -334,18 +332,18 @@ title: "配置示例"
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 128000,
-            maxTokens: 32000
-          }
-        ]
-      }
-    }
+            maxTokens: 32000,
+          },
+        ],
+      },
+    },
   },
 
   // Cron jobs
   cron: {
     enabled: true,
     store: "~/.openclaw/cron/cron.json",
-    maxConcurrentRuns: 2
+    maxConcurrentRuns: 2,
   },
 
   // Webhooks
@@ -370,8 +368,8 @@ title: "配置示例"
         to: "+15555550123",
         thinking: "low",
         timeoutSeconds: 300,
-        transform: { module: "./transforms/gmail.js", export: "transformGmail" }
-      }
+        transform: { module: "./transforms/gmail.js", export: "transformGmail" },
+      },
     ],
     gmail: {
       account: "openclaw@gmail.com",
@@ -384,8 +382,8 @@ title: "配置示例"
       maxBytes: 20000,
       renewEveryMinutes: 720,
       serve: { bind: "127.0.0.1", port: 8788, path: "/" },
-      tailscale: { mode: "funnel", path: "/gmail-pubsub" }
-    }
+      tailscale: { mode: "funnel", path: "/gmail-pubsub" },
+    },
   },
 
   // Gateway + networking
@@ -397,31 +395,31 @@ title: "配置示例"
     auth: {
       mode: "token",
       token: "gateway-token",
-      allowTailscale: true
+      allowTailscale: true,
     },
     tailscale: { mode: "serve", resetOnExit: false },
     remote: { url: "ws://gateway.tailnet:18789", token: "remote-token" },
-    reload: { mode: "hybrid", debounceMs: 300 }
+    reload: { mode: "hybrid", debounceMs: 300 },
   },
 
   skills: {
     allowBundled: ["gemini", "peekaboo"],
     load: {
-      extraDirs: ["~/Projects/agent-scripts/skills"]
+      extraDirs: ["~/Projects/agent-scripts/skills"],
     },
     install: {
       preferBrew: true,
-      nodeManager: "npm"
+      nodeManager: "npm",
     },
     entries: {
       "nano-banana-pro": {
         enabled: true,
         apiKey: "GEMINI_KEY_HERE",
-        env: { GEMINI_API_KEY: "GEMINI_KEY_HERE" }
+        env: { GEMINI_API_KEY: "GEMINI_KEY_HERE" },
       },
-      peekaboo: { enabled: true }
-    }
-  }
+      peekaboo: { enabled: true },
+    },
+  },
 }
 ```
 

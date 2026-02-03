@@ -5,6 +5,7 @@ read_when:
   - 解释 token 用量、成本或上下文窗口
   - 调试上下文增长或压缩行为
 ---
+
 # Token 用量与成本
 
 OpenClaw 统计 **tokens**，而不是字符。token 与模型相关，但多数 OpenAI 风格模型对英文平均约 4 个字符/ token。

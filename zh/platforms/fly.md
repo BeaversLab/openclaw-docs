@@ -78,13 +78,13 @@ primary_region = "iad"
 
 **关键设置：**
 
-| Setting | Why |
-|---------|-----|
-| `--bind lan` | 绑定 `0.0.0.0`，让 Fly 代理可访问 gateway |
-| `--allow-unconfigured` | 无配置时也能启动（之后再创建配置） |
-| `internal_port = 3000` | 必须匹配 `--port 3000`（或 `OPENCLAW_GATEWAY_PORT`），用于健康检查 |
-| `memory = "2048mb"` | 512MB 太小；推荐 2GB |
-| `OPENCLAW_STATE_DIR = "/data"` | 将状态持久化到 volume |
+| Setting                        | Why                                                                |
+| ------------------------------ | ------------------------------------------------------------------ |
+| `--bind lan`                   | 绑定 `0.0.0.0`，让 Fly 代理可访问 gateway                          |
+| `--allow-unconfigured`         | 无配置时也能启动（之后再创建配置）                                 |
+| `internal_port = 3000`         | 必须匹配 `--port 3000`（或 `OPENCLAW_GATEWAY_PORT`），用于健康检查 |
+| `memory = "2048mb"`            | 512MB 太小；推荐 2GB                                               |
+| `OPENCLAW_STATE_DIR = "/data"` | 将状态持久化到 volume                                              |
 
 ## 3) 设置 secrets
 
@@ -104,6 +104,7 @@ fly secrets set DISCORD_BOT_TOKEN=MTQ...
 ```
 
 **注意：**
+
 - 非 loopback 绑定（`--bind lan`）需要 `OPENCLAW_GATEWAY_TOKEN` 以保证安全。
 - 这些 token 视为密码。
 - **优先用环境变量，不要放在配置文件**。避免 `openclaw.json` 泄露或被记录。
@@ -117,12 +118,14 @@ fly deploy
 首次部署需要构建 Docker 镜像（约 2–3 分钟）。之后的部署会更快。
 
 部署后验证：
+
 ```bash
 fly status
 fly logs
 ```
 
 你应看到：
+
 ```
 [gateway] listening on ws://0.0.0.0:3000 (PID xxx)
 [discord] logged in to discord as xxx
@@ -137,6 +140,7 @@ fly ssh console
 ```
 
 创建配置目录与文件：
+
 ```bash
 mkdir -p /data
 cat > /data/openclaw.json << 'EOF'
@@ -194,12 +198,14 @@ EOF
 **注意：** 设置了 `OPENCLAW_STATE_DIR=/data` 后，配置路径为 `/data/openclaw.json`。
 
 **注意：** Discord token 可来自：
+
 - 环境变量：`DISCORD_BOT_TOKEN`（推荐）
 - 配置文件：`channels.discord.token`
 
 若使用环境变量，无需把 token 写入配置。gateway 会自动读取 `DISCORD_BOT_TOKEN`。
 
 重启生效：
+
 ```bash
 exit
 fly machine restart <machine-id>
@@ -210,6 +216,7 @@ fly machine restart <machine-id>
 ### Control UI
 
 在浏览器打开：
+
 ```bash
 fly open
 ```
@@ -250,12 +257,14 @@ Fly 无法访问配置端口上的 gateway。
 容器频繁重启或被杀。迹象：`SIGABRT`、`v8::internal::Runtime_AllocateInYoungGeneration` 或无提示重启。
 
 **修复：** 在 `fly.toml` 中提升内存：
+
 ```toml
 [[vm]]
   memory = "2048mb"
 ```
 
 或更新现有机器：
+
 ```bash
 fly machine update <machine-id> --vm-memory 2048 -y
 ```
@@ -269,6 +278,7 @@ Gateway 报“already running”无法启动。
 这通常是容器重启后，PID lock 文件仍在 volume 上。
 
 **修复：** 删除 lock 文件：
+
 ```bash
 fly ssh console --command "rm -f /data/gateway.*.lock"
 fly machine restart <machine-id>
@@ -281,6 +291,7 @@ fly machine restart <machine-id>
 若使用 `--allow-unconfigured`，gateway 会创建最小配置。你的 `/data/openclaw.json` 应在重启后被读取。
 
 确认配置存在：
+
 ```bash
 fly ssh console --command "cat /data/openclaw.json"
 ```
@@ -299,6 +310,7 @@ fly sftp shell
 ```
 
 **注意：** `fly sftp` 若文件已存在可能失败。先删除：
+
 ```bash
 fly ssh console --command "rm /data/openclaw.json"
 ```
@@ -381,6 +393,7 @@ fly ips allocate-v6 --private -a my-openclaw
 ```
 
 之后 `fly ips list` 应只显示 `private` 类型 IP：
+
 ```
 VERSION  IP                   TYPE             REGION
 v6       fdaa:x:x:x:x::x      private          global
@@ -391,6 +404,7 @@ v6       fdaa:x:x:x:x::x      private          global
 没有公网 URL，可用以下方式之一：
 
 **选项 1：本地代理（最简单）**
+
 ```bash
 # 转发本地端口 3000 到 app
 fly proxy 3000:3000 -a my-openclaw
@@ -399,6 +413,7 @@ fly proxy 3000:3000 -a my-openclaw
 ```
 
 **选项 2：WireGuard VPN**
+
 ```bash
 # 创建 WireGuard 配置（一次性）
 fly wireguard create
@@ -408,6 +423,7 @@ fly wireguard create
 ```
 
 **选项 3：仅 SSH**
+
 ```bash
 fly ssh console -a my-openclaw
 ```
@@ -421,6 +437,7 @@ fly ssh console -a my-openclaw
 3. **仅出站** - 某些 provider（Twilio）出站不依赖 webhooks
 
 ngrok 的 voice-call 配置示例：
+
 ```json
 {
   "plugins": {
@@ -441,12 +458,12 @@ ngrok 隧道运行在容器内，提供公网 webhook URL，而不暴露 Fly app
 
 ### 安全收益
 
-| Aspect | Public | Private |
-|--------|--------|---------|
-| Internet scanners | Discoverable | Hidden |
-| Direct attacks | Possible | Blocked |
-| Control UI access | Browser | Proxy/VPN |
-| Webhook delivery | Direct | Via tunnel |
+| Aspect            | Public       | Private    |
+| ----------------- | ------------ | ---------- |
+| Internet scanners | Discoverable | Hidden     |
+| Direct attacks    | Possible     | Blocked    |
+| Control UI access | Browser      | Proxy/VPN  |
+| Webhook delivery  | Direct       | Via tunnel |
 
 ## 备注
 
@@ -459,6 +476,7 @@ ngrok 隧道运行在容器内，提供公网 webhook URL，而不暴露 Fly app
 ## 成本
 
 推荐配置（`shared-cpu-2x`, 2GB RAM）：
+
 - 约 $10–15/月（视用量而定）
 - 免费层包含一定额度
 

@@ -5,6 +5,7 @@ read_when:
   - 自动化 tailnet 或公开 dashboard 访问
 title: "Tailscale"
 ---
+
 # Tailscale（Gateway 控制台）
 
 OpenClaw 可为 Gateway 控制台与 WebSocket 端口自动配置 Tailscale **Serve**（tailnet）或 **Funnel**（公开）。这样 Gateway 仍绑定在 loopback，由 Tailscale 提供 HTTPS、路由与（Serve 时的）身份头。
@@ -33,8 +34,8 @@ OpenClaw 可为 Gateway 控制台与 WebSocket 端口自动配置 Tailscale **Se
 {
   gateway: {
     bind: "loopback",
-    tailscale: { mode: "serve" }
-  }
+    tailscale: { mode: "serve" },
+  },
 }
 ```
 
@@ -48,12 +49,13 @@ OpenClaw 可为 Gateway 控制台与 WebSocket 端口自动配置 Tailscale **Se
 {
   gateway: {
     bind: "tailnet",
-    auth: { mode: "token", token: "your-token" }
-  }
+    auth: { mode: "token", token: "your-token" },
+  },
 }
 ```
 
 从另一台 Tailnet 设备连接：
+
 - Control UI：`http://<tailscale-ip>:18789/`
 - WebSocket：`ws://<tailscale-ip>:18789`
 
@@ -66,8 +68,8 @@ OpenClaw 可为 Gateway 控制台与 WebSocket 端口自动配置 Tailscale **Se
   gateway: {
     bind: "loopback",
     tailscale: { mode: "funnel" },
-    auth: { mode: "password", password: "replace-me" }
-  }
+    auth: { mode: "password", password: "replace-me" },
+  },
 }
 ```
 

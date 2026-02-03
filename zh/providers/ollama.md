@@ -5,15 +5,16 @@ read_when:
   - 需要 Ollama 设置与配置指引
 title: "Ollama"
 ---
+
 # Ollama
 
 Ollama 是本地 LLM 运行时，便于在机器上运行开源模型。OpenClaw 与 Ollama 的 OpenAI 兼容 API 集成，并在你使用 `OLLAMA_API_KEY`（或认证 profile）且未显式定义 `models.providers.ollama` 时，可 **自动发现支持工具的模型**。
 
 ## 快速开始
 
-1) 安装 Ollama：https://ollama.ai
+1. 安装 Ollama：https://ollama.ai
 
-2) 拉取模型：
+2. 拉取模型：
 
 ```bash
 ollama pull llama3.3
@@ -23,7 +24,7 @@ ollama pull qwen2.5-coder:32b
 ollama pull deepseek-r1:32b
 ```
 
-3) 为 OpenClaw 启用 Ollama（任意值都可；Ollama 不要求真实 key）：
+3. 为 OpenClaw 启用 Ollama（任意值都可；Ollama 不要求真实 key）：
 
 ```bash
 # 设置环境变量
@@ -33,15 +34,15 @@ export OLLAMA_API_KEY="ollama-local"
 openclaw config set models.providers.ollama.apiKey "ollama-local"
 ```
 
-4) 使用 Ollama 模型：
+4. 使用 Ollama 模型：
 
 ```json5
 {
   agents: {
     defaults: {
-      model: { primary: "ollama/llama3.3" }
-    }
-  }
+      model: { primary: "ollama/llama3.3" },
+    },
+  },
 }
 ```
 
@@ -88,6 +89,7 @@ export OLLAMA_API_KEY="ollama-local"
 ### 显式配置（手动模型）
 
 以下场景建议显式配置：
+
 - Ollama 运行在其他主机/端口。
 - 你希望强制指定上下文窗口或模型列表。
 - 你想包含未声明工具能力的模型。
@@ -130,10 +132,10 @@ export OLLAMA_API_KEY="ollama-local"
     providers: {
       ollama: {
         apiKey: "ollama-local",
-        baseUrl: "http://ollama-host:11434/v1"
-      }
-    }
-  }
+        baseUrl: "http://ollama-host:11434/v1",
+      },
+    },
+  },
 }
 ```
 
@@ -147,10 +149,10 @@ export OLLAMA_API_KEY="ollama-local"
     defaults: {
       model: {
         primary: "ollama/llama3.3",
-        fallback: ["ollama/qwen2.5-coder:32b"]
-      }
-    }
-  }
+        fallback: ["ollama/qwen2.5-coder:32b"],
+      },
+    },
+  },
 }
 ```
 
@@ -191,6 +193,7 @@ curl http://localhost:11434/api/tags
 ### 没有可用模型
 
 OpenClaw 只会自动发现报告工具能力的模型。若你的模型未列出：
+
 - 拉取支持工具的模型，或
 - 在 `models.providers.ollama` 中显式定义模型。
 

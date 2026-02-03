@@ -16,5 +16,6 @@ openclaw health --verbose
 ```
 
 说明：
+
 - `--verbose` 会执行实时探测；当配置多个账号时会输出每个账号的耗时。
 - 当配置多个 agent 时，输出包含每个 agent 的会话存储。
