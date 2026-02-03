@@ -4,6 +4,7 @@ read_when:
   - 回顾历史 Telegram allowlist 变更
 title: "Telegram 白名单加固"
 ---
+
 # Telegram Allowlist 加固
 
 **日期**：2026-01-05  
@@ -25,7 +26,7 @@ Telegram allowlist 现支持不区分大小写的 `telegram:` 与 `tg:` 前缀�
 
 - `telegram:123456`
 - `TG:123456`
-- ` tg:123456 `
+- `tg:123456`
 
 ## 重要性
 

@@ -5,13 +5,16 @@ read_when:
   - 需要解释用量追踪行为或认证要求
 title: "使用跟踪"
 ---
+
 # 用量追踪
 
 ## 是什么
+
 - 直接从 provider 的 usage 端点拉取用量/配额。
 - 不估算成本；只显示 provider 报告的窗口。
 
 ## 展示位置
+
 - 聊天中的 `/status`：带 emoji 的状态卡（会话 tokens + 估算成本，仅 API key）。当可用时显示**当前模型 provider**的 usage。
 - 聊天中的 `/usage off|tokens|full`：每条回复的用量脚注（OAuth 仅显示 tokens）。
 - 聊天中的 `/usage cost`：OpenClaw 会话日志聚合的本地成本摘要。
@@ -20,6 +23,7 @@ title: "使用跟踪"
 - macOS 菜单栏：Context 下的 “Usage” 区域（仅在可用时）。
 
 ## Providers + 凭据
+
 - **Anthropic (Claude)**：auth profiles 中的 OAuth tokens。
 - **GitHub Copilot**：auth profiles 中的 OAuth tokens。
 - **Gemini CLI**：auth profiles 中的 OAuth tokens。

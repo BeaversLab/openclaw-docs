@@ -5,6 +5,7 @@ read_when:
   - 修改 mDNS 服务类型、TXT 记录或发现 UX
 title: "Bonjour 发现"
 ---
+
 # Bonjour / mDNS 发现
 
 OpenClaw 使用 Bonjour（mDNS / DNS‑SD）作为**局域网内的便捷发现**，用于发现活跃 Gateway（WebSocket 端点）。这是 best‑effort，**不能**替代 SSH 或 Tailnet 连接。
@@ -38,6 +39,7 @@ openclaw dns setup --apply
 ```
 
 这会安装 CoreDNS 并配置为：
+
 - 仅在 gateway 的 Tailscale 接口上监听 53 端口
 - 从 `~/.openclaw/dns/<domain>.db` 提供所选域名（例：`openclaw.internal.`）
 
@@ -62,6 +64,7 @@ dig @<TAILNET_IPV4> -p 53 _openclaw-gw._tcp.openclaw.internal PTR +short
 Gateway WS 端口（默认 `18789`）默认只绑定到 loopback。若需 LAN/tailnet 访问，请显式绑定并保持 auth 启用。
 
 对仅 tailnet 的部署：
+
 - 在 `~/.openclaw/openclaw.json` 中设置 `gateway.bind: "tailnet"`。
 - 重启 Gateway（或重启 macOS 菜单栏 app）。
 

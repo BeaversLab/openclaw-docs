@@ -5,6 +5,7 @@ read_when:
   - 排查 provider 发送错误或限流
 title: "重试策略"
 ---
+
 # 重试策略（Retry policy）
 
 ## 目标
@@ -43,18 +44,18 @@ title: "重试策略"
         attempts: 3,
         minDelayMs: 400,
         maxDelayMs: 30000,
-        jitter: 0.1
-      }
+        jitter: 0.1,
+      },
     },
     discord: {
       retry: {
         attempts: 3,
         minDelayMs: 500,
         maxDelayMs: 30000,
-        jitter: 0.1
-      }
-    }
-  }
+        jitter: 0.1,
+      },
+    },
+  },
 }
 ```
 

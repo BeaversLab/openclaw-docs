@@ -5,6 +5,7 @@ read_when:
   - 想要示例配置或模型 provider 的 CLI onboarding 命令
 title: "模型提供商"
 ---
+
 # 模型供应商
 
 本页涵盖 **LLM/model providers**（不是 WhatsApp/Telegram 这类聊天渠道）。
@@ -29,7 +30,7 @@ OpenClaw 自带 pi‑ai catalog。这些 providers **不需要** `models.provide
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "openai/gpt-5.2" } } }
+  agents: { defaults: { model: { primary: "openai/gpt-5.2" } } },
 }
 ```
 
@@ -42,7 +43,7 @@ OpenClaw 自带 pi‑ai catalog。这些 providers **不需要** `models.provide
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } }
+  agents: { defaults: { model: { primary: "anthropic/claude-opus-4-5" } } },
 }
 ```
 
@@ -55,7 +56,7 @@ OpenClaw 自带 pi‑ai catalog。这些 providers **不需要** `models.provide
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "openai-codex/gpt-5.2" } } }
+  agents: { defaults: { model: { primary: "openai-codex/gpt-5.2" } } },
 }
 ```
 
@@ -68,7 +69,7 @@ OpenClaw 自带 pi‑ai catalog。这些 providers **不需要** `models.provide
 
 ```json5
 {
-  agents: { defaults: { model: { primary: "opencode/claude-opus-4-5" } } }
+  agents: { defaults: { model: { primary: "opencode/claude-opus-4-5" } } },
 }
 ```
 

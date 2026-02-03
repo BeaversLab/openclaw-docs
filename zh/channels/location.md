@@ -9,6 +9,7 @@ title: "渠道位置解析"
 # 渠道位置解析
 
 OpenClaw 将聊天渠道共享的位置规范化为：
+
 - 追加到入站正文的人类可读文本，以及
 - 自动回复上下文 payload 中的结构化字段。
 
@@ -19,6 +20,7 @@ OpenClaw 将聊天渠道共享的位置规范化为：
 - **Matrix**（带 `geo_uri` 的 `m.location`）
 
 ## 文本格式化
+
 位置会以友好的行展示（不含方括号）：
 
 - 钉点：
@@ -29,6 +31,7 @@ OpenClaw 将聊天渠道共享的位置规范化为：
   - `🛰 Live location: 48.858844, 2.294351 ±12m`
 
 如果渠道包含 caption/comment，会在下一行追加：
+
 ```
 📍 48.858844, 2.294351 ±12m
 Meet here
@@ -36,6 +39,7 @@ Meet here
 
 
 ## Context fields
+
 当位置存在时，这些字段会加入 `ctx`：
 - `LocationLat`（number）
 - `LocationLon`（number）

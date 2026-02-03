@@ -8,7 +8,6 @@ title: "Microsoft Teams"
 
 > "Abandon all hope, ye who enter here."
 
-
 更新：2026-01-21
 
 状态：支持文本 + DM 附件；频道/群聊发送文件需要 `sharePointSiteId` + Graph 权限（见 [群聊发送文件](#群聊发送文件)）。投票通过 Adaptive Cards 发送。

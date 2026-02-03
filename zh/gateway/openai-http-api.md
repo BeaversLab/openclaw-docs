@@ -4,6 +4,7 @@ read_when:
   - 集成依赖 OpenAI Chat Completions 的工具
 title: "OpenAI 聊天补全"
 ---
+
 # OpenAI Chat 兼容（HTTP）
 
 OpenClaw 的 Gateway 可提供一个小型 OpenAI 兼容的 Chat Completions 端点。
@@ -22,6 +23,7 @@ OpenClaw 的 Gateway 可提供一个小型 OpenAI 兼容的 Chat Completions 端
 - `Authorization: Bearer <token>`
 
 注：
+
 - 当 `gateway.auth.mode="token"` 时，使用 `gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）。
 - 当 `gateway.auth.mode="password"` 时，使用 `gateway.auth.password`（或 `OPENCLAW_GATEWAY_PASSWORD`）。
 
@@ -37,6 +39,7 @@ OpenClaw 的 Gateway 可提供一个小型 OpenAI 兼容的 Chat Completions 端
 - `x-openclaw-agent-id: <agentId>`（默认：`main`）
 
 高级：
+
 - `x-openclaw-session-key: <sessionKey>` 用于完全控制会话路由。
 
 ## 启用端点
@@ -48,10 +51,10 @@ OpenClaw 的 Gateway 可提供一个小型 OpenAI 兼容的 Chat Completions 端
   gateway: {
     http: {
       endpoints: {
-        chatCompletions: { enabled: true }
-      }
-    }
-  }
+        chatCompletions: { enabled: true },
+      },
+    },
+  },
 }
 ```
 
@@ -64,10 +67,10 @@ OpenClaw 的 Gateway 可提供一个小型 OpenAI 兼容的 Chat Completions 端
   gateway: {
     http: {
       endpoints: {
-        chatCompletions: { enabled: false }
-      }
-    }
-  }
+        chatCompletions: { enabled: false },
+      },
+    },
+  },
 }
 ```
 
@@ -88,6 +91,9 @@ OpenClaw 的 Gateway 可提供一个小型 OpenAI 兼容的 Chat Completions 端
 ## 示例
 
 非流式：
+
+
+
 ```bash
 curl -sS http://127.0.0.1:18789/v1/chat/completions \
   -H 'Authorization: Bearer YOUR_TOKEN' \
@@ -100,6 +106,7 @@ curl -sS http://127.0.0.1:18789/v1/chat/completions \
 ```
 
 流式：
+
 ```bash
 curl -N http://127.0.0.1:18789/v1/chat/completions \
   -H 'Authorization: Bearer YOUR_TOKEN' \

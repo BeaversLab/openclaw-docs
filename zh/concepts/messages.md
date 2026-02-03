@@ -6,6 +6,7 @@ read_when:
   - 记录推理可见性与用量影响
 title: "消息"
 ---
+
 # 消息（Messages）
 
 本页汇总 OpenClaw 如何处理入站消息、会话、队列、流式与推理可见性。
@@ -44,10 +45,10 @@ Inbound message
       byChannel: {
         whatsapp: 5000,
         slack: 1500,
-        discord: 1500
-      }
-    }
-  }
+        discord: 1500,
+      },
+    },
+  },
 }
 ```
 

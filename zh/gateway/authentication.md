@@ -5,6 +5,7 @@ read_when:
   - 记录认证或凭据存储
 title: "认证"
 ---
+
 # 认证
 
 OpenClaw 支持模型 providers 的 OAuth 与 API keys。对 Anthropic 账号，推荐使用 **API key**。若使用 Claude 订阅，请使用 `claude setup-token` 生成的长效 token。
@@ -16,7 +17,7 @@ OpenClaw 支持模型 providers 的 OAuth 与 API keys。对 Anthropic 账号，
 若直接使用 Anthropic，请使用 API key。
 
 1. 在 Anthropic Console 创建 API key。
-2. 将其放在**gateway 主机**上（运行 `openclaw gateway` 的机器）。
+2. 将其放在**Gateway 主机**上（运行 `openclaw gateway` 的机器）。
 
 ```bash
 export ANTHROPIC_API_KEY="..."
@@ -27,9 +28,9 @@ openclaw models status
    `~/.openclaw/.env` 以便 daemon 读取：
 
 ```bash
-cat >> ~/.openclaw/.env <<'EOT'
+cat >> ~/.openclaw/.env <<'EOF'
 ANTHROPIC_API_KEY=...
-EOT
+EOF
 ```
 
 然后重启 daemon（或重启 Gateway 进程）并复查：

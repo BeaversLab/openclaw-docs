@@ -4,6 +4,7 @@ read_when:
   - 诊断 WhatsApp 渠道健康
 title: "健康检查"
 ---
+
 # 健康检查 (CLI)
 
 无需猜测即可验证渠道连通性。

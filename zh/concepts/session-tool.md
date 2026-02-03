@@ -10,13 +10,15 @@ title: "Session 工具"
 目标：提供一组小而难误用的工具，让 agent 可以列出会话、获取历史，并向另一个会话发送消息。
 
 ## Tool Names
+
 - `sessions_list`
 - `sessions_history`
 - `sessions_send`
 - `sessions_spawn`
 
 ## Key Model
-- 主私聊桶键始终是字面量 `"main"`（解析为当前 agent 的 main key）。
+
+- 主私聊桶键始终是字面量 `"main"`（解析为当前 agent 的main key）。
 - 群聊使用 `agent:<agentId>:<channel>:group:<id>` 或 `agent:<agentId>:<channel>:channel:<id>`（传完整 key）。
 - Cron 作业使用 `cron:<job.id>`。
 - Hooks 使用 `hook:<uuid>`，除非显式设置。
@@ -29,17 +31,20 @@ title: "Session 工具"
 以行数组列出会话。
 
 参数：
+
 - `kinds?: string[]` 过滤：`"main" | "group" | "cron" | "hook" | "node" | "other"`
 - `limit?: number` 最大行数（默认：服务器默认，可能上限如 200）
 - `activeMinutes?: number` 仅显示 N 分钟内更新的会话
 - `messageLimit?: number` 0 = 不带消息（默认 0）；>0 = 包含最近 N 条消息
 
 行为：
+
 - `messageLimit > 0` 会按会话读取 `chat.history` 并包含最近 N 条消息。
 - 列表输出中过滤工具结果；工具消息请用 `sessions_history`。
 - 在 **sandboxed** agent 会话中，session tools 默认仅可见 **spawned-only**（见下）。
 
 行结构（JSON）：
+
 - `key`：session key（string）
 - `kind`：`main | group | cron | hook | node | other`
 - `channel`：`whatsapp | telegram | discord | signal | imessage | webchat | internal | unknown`
@@ -59,11 +64,13 @@ title: "Session 工具"
 获取某个会话的转录。
 
 参数：
+
 - `sessionKey`（必填；接受 session key 或 `sessions_list` 返回的 `sessionId`）
 - `limit?: number` 最大消息数（服务器会限制）
 - `includeTools?: boolean`（默认 false）
 
 行为：
+
 - `includeTools=false` 会过滤 `role: "toolResult"` 消息。
 - 返回原始转录格式的消息数组。
 - 传入 `sessionId` 时，OpenClaw 会解析为对应 session key（缺失则报错）。
@@ -73,11 +80,13 @@ title: "Session 工具"
 向另一个会话发送消息。
 
 参数：
+
 - `sessionKey`（必填；接受 session key 或 `sessions_list` 返回的 `sessionId`）
 - `message`（必填）
 - `timeoutSeconds?: number`（默认 >0；0 = fire-and-forget）
 
 行为：
+
 - `timeoutSeconds = 0`：排队并返回 `{ runId, status: "accepted" }`。
 - `timeoutSeconds > 0`：最多等待 N 秒完成，然后返回 `{ runId, status: "ok", reply }`。
 - 超时：`{ runId, status: "timeout", error }`。运行继续；稍后用 `sessions_history` 查看。
@@ -122,10 +131,12 @@ title: "Session 工具"
 ```
 
 运行时覆盖（按会话条目）：
+
 - `sendPolicy: "allow" | "deny"`（未设置 = 继承配置）
 - 可通过 `sessions.patch` 或仅 owner 的 `/send on|off|inherit`（独立消息）设置。
 
 执行点：
+
 - `chat.send` / `agent`（gateway）
 - 自动回复投递逻辑
 
@@ -134,6 +145,7 @@ title: "Session 工具"
 在隔离会话中启动子 agent 运行，并将结果回传到请求方聊天渠道。
 
 参数：
+
 - `task`（必填）
 - `label?`（可选；用于日志/UI）
 - `agentId?`（可选；若允许，可在其他 agent id 下启动）
@@ -142,12 +154,15 @@ title: "Session 工具"
 - `cleanup?`（`delete|keep`，默认 `keep`）
 
 Allowlist：
+
 - `agents.list[].subagents.allowAgents`：允许通过 `agentId` 的 agent id 列表（`["*"]` 表示允许任意）。默认：仅请求方 agent。
 
 Discovery：
+
 - 使用 `agents_list` 发现允许 `sessions_spawn` 的 agent ids。
 
 行为：
+
 - 启动新的 `agent:<agentId>:subagent:<uuid>` 会话，`deliver: false`。
 - 子 agents 默认使用完整工具集**但不含 session tools**（可通过 `tools.subagents.tools` 配置）。
 - 子 agents 不允许调用 `sessions_spawn`（禁止子 agent 再起子 agent）。
@@ -170,9 +185,9 @@ Sandboxed 会话也可使用 session tools，但默认只看到它们通过 `ses
     defaults: {
       sandbox: {
         // default: "spawned"
-        sessionToolsVisibility: "spawned" // or "all"
-      }
-    }
-  }
+        sessionToolsVisibility: "spawned", // or "all"
+      },
+    },
+  },
 }
 ```

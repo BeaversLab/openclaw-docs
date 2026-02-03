@@ -62,8 +62,8 @@ Broadcast groups 允许在 OpenClaw **通常会回复的场景**下，为同一 
   broadcast: {
     strategy: "parallel",
     "120363403215116621@g.us": ["alfred", "baerbel"],
-    "+15555550123": ["support", "logger"]
-  }
+    "+15555550123": ["support", "logger"],
+  },
 }
 ```
 
@@ -79,14 +79,12 @@ Broadcast groups 允许在 OpenClaw **通常会回复的场景**下，为同一 
 ```json5
 {
   agents: {
-    list: [
-      { id: "support", name: "Support", workspace: "~/.openclaw/workspace-support" }
-    ]
+    list: [{ id: "support", name: "Support", workspace: "~/.openclaw/workspace-support" }],
   },
   bindings: [
     { match: { channel: "slack", teamId: "T123" }, agentId: "support" },
-    { match: { channel: "telegram", peer: { kind: "group", id: "-100123" } }, agentId: "support" }
-  ]
+    { match: { channel: "telegram", peer: { kind: "group", id: "-100123" } }, agentId: "support" },
+  ],
 }
 ```
 

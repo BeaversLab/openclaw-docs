@@ -5,6 +5,7 @@ read_when:
   - 需要备份或迁移 agent workspace
 title: "Agent 工作区"
 ---
+
 # Agent workspace
 
 Workspace 是 agent 的家。它是文件工具与工作区上下文所使用的唯一工作目录。
@@ -28,8 +29,8 @@ Workspace 是 agent 的家。它是文件工具与工作区上下文所使用的
 ```json5
 {
   agent: {
-    workspace: "~/.openclaw/workspace"
-  }
+    workspace: "~/.openclaw/workspace",
+  },
 }
 ```
 

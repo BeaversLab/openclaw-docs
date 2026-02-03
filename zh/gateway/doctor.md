@@ -5,6 +5,7 @@ read_when:
   - 引入破坏性配置变更
 title: "Doctor"
 ---
+
 # 修复工具（Doctor）
 
 `openclaw doctor` 是 OpenClaw 的修复 + 迁移工具。它会修复陈旧
@@ -56,6 +57,7 @@ cat ~/.openclaw/openclaw.json
 ```
 
 ## 功能概览
+
 - Git 安装的可选预更新（仅交互模式）。
 - UI 协议新鲜度检查（协议 schema 更新时重建 Control UI）。
 - 健康检查 + 重启提示。
@@ -96,6 +98,7 @@ cat ~/.openclaw/openclaw.json
 当配置包含已弃用键时，其他命令会拒绝执行并提示运行 `openclaw doctor`。
 
 Doctor 会：
+
 - 说明发现了哪些旧键。
 - 展示其应用的迁移。
 - 用更新后的 schema 重写 `~/.openclaw/openclaw.json`。
@@ -103,6 +106,7 @@ Doctor 会：
 当 Gateway 启动检测到旧配置格式时也会自动运行迁移，以便无需手工介入即可修复陈旧配置。
 
 当前迁移：
+
 - `routing.allowFrom` → `channels.whatsapp.allowFrom`
 - `routing.groupChat.requireMention` → `channels.whatsapp/telegram/imessage.groups."*".requireMention`
 - `routing.groupChat.historyLimit` → `messages.groupChat.historyLimit`
@@ -127,6 +131,7 @@ Doctor 会：
 ### 3) 旧版状态迁移（磁盘布局）
 
 Doctor 可将旧磁盘布局迁移到当前结构：
+
 - Sessions store + transcripts：
   - 从 `~/.openclaw/sessions/` 到 `~/.openclaw/agents/<agentId>/sessions/`
 - Agent dir：
@@ -139,9 +144,10 @@ Doctor 可将旧磁盘布局迁移到当前结构：
 
 ### 4) 状态完整性检查（会话持久化、路由与安全）
 
-状态目录是运行的“脑干”。丢失它会导致会话、凭据、日志与配置丢失（除非你在别处备份）。
+状态目录是运行的"脑干"。丢失它会导致会话、凭据、日志与配置丢失（除非你在别处备份）。
 
 Doctor 检查：
+
 - **State dir 缺失**：警告灾难性状态丢失，提示重建目录并提醒无法恢复缺失数据。
 - **State dir 权限**：验证可写性；提供修复权限（当发现 owner/group 不匹配时提示 `chown`）。
 - **Session dirs 缺失**：`sessions/` 与会话 store 目录必须存在，否则会导致 `ENOENT` 崩溃。

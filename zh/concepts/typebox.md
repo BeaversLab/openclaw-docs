@@ -4,6 +4,7 @@ read_when:
   - 更新协议 schema 或代码生成
 title: "TypeBox"
 ---
+
 # TypeBox 作为协议真相源
 
 最后更新：2026-01-10
@@ -36,14 +37,14 @@ Client                    Gateway
 
 常见方法 + 事件：
 
-| Category | Examples | Notes |
-| --- | --- | --- |
-| Core | `connect`, `health`, `status` | `connect` 必须是第一条 |
-| Messaging | `send`, `poll`, `agent`, `agent.wait` | 有副作用需要 `idempotencyKey` |
-| Chat | `chat.history`, `chat.send`, `chat.abort`, `chat.inject` | WebChat 使用 |
-| Sessions | `sessions.list`, `sessions.patch`, `sessions.delete` | 会话管理 |
-| Nodes | `node.list`, `node.invoke`, `node.pair.*` | Gateway WS + node 操作 |
-| Events | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | 服务器推送 |
+| Category  | Examples                                                  | Notes               |
+| --------- | --------------------------------------------------------- | -------------------- |
+| Core      | `connect`, `health`, `status`                             | `connect` 必须是第一条 |
+| Messaging | `send`, `poll`, `agent`, `agent.wait`                     | 有副作用需要 `idempotencyKey` |
+| Chat      | `chat.history`, `chat.send`, `chat.abort`, `chat.inject`  | WebChat 使用          |
+| Sessions  | `sessions.list`, `sessions.patch`, `sessions.delete`      | 会话管理             |
+| Nodes     | `node.list`, `node.invoke`, `node.pair.*`                 | Gateway WS + node 操作  |
+| Events    | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | 服务器推送           |
 
 权威列表在 `src/gateway/server.ts`（`METHODS`, `EVENTS`）。
 
@@ -107,7 +108,12 @@ Hello-ok 响应：
     "protocol": 2,
     "server": { "version": "dev", "connId": "ws-1" },
     "features": { "methods": ["health"], "events": ["tick"] },
-    "snapshot": { "presence": [], "health": {}, "stateVersion": { "presence": 0, "health": 0 }, "uptimeMs": 0 },
+    "snapshot": {
+      "presence": [],
+      "health": {},
+      "stateVersion": { "presence": 0, "health": 0 },
+      "uptimeMs": 0
+    },
     "policy": { "maxPayload": 1048576, "maxBufferedBytes": 1048576, "tickIntervalMs": 30000 }
   }
 }
@@ -139,22 +145,24 @@ import { WebSocket } from "ws";
 const ws = new WebSocket("ws://127.0.0.1:18789");
 
 ws.on("open", () => {
-  ws.send(JSON.stringify({
-    type: "req",
-    id: "c1",
-    method: "connect",
-    params: {
-      minProtocol: 3,
-      maxProtocol: 3,
-      client: {
-        id: "cli",
-        displayName: "example",
-        version: "dev",
-        platform: "node",
-        mode: "cli"
-      }
-    }
-  }));
+  ws.send(
+    JSON.stringify({
+      type: "req",
+      id: "c1",
+      method: "connect",
+      params: {
+        minProtocol: 3,
+        maxProtocol: 3,
+        client: {
+          id: "cli",
+          displayName: "example",
+          version: "dev",
+          platform: "node",
+          mode: "cli",
+        },
+      },
+    }),
+  );
 });
 
 ws.on("message", (data) => {
@@ -173,7 +181,7 @@ ws.on("message", (data) => {
 
 示例：新增 `system.echo` 请求，返回 `{ ok: true, text }`。
 
-1) **Schema（事实来源）**
+1. **Schema（事实来源）**
 
 在 `src/gateway/protocol/schema.ts` 中添加：
 
@@ -201,16 +209,15 @@ export type SystemEchoParams = Static<typeof SystemEchoParamsSchema>;
 export type SystemEchoResult = Static<typeof SystemEchoResultSchema>;
 ```
 
-2) **Validation**
+2. **Validation**
 
 在 `src/gateway/protocol/index.ts` 中导出 AJV 校验器：
 
 ```ts
-export const validateSystemEchoParams =
-  ajv.compile<SystemEchoParams>(SystemEchoParamsSchema);
+export const validateSystemEchoParams = ajv.compile<SystemEchoParams>(SystemEchoParamsSchema);
 ```
 
-3) **Server 行为**
+3. **Server 行为**
 
 在 `src/gateway/server-methods/system.ts` 添加 handler：
 
@@ -225,13 +232,13 @@ export const systemHandlers: GatewayRequestHandlers = {
 
 在 `src/gateway/server-methods.ts` 中注册（已合并 `systemHandlers`），然后在 `src/gateway/server.ts` 的 `METHODS` 中加入 `"system.echo"`。
 
-4) **重新生成**
+4. **重新生成**
 
 ```bash
 pnpm protocol:check
 ```
 
-5) **Tests + docs**
+5. **Tests + docs**
 
 在 `src/gateway/server.*.test.ts` 添加 server test，并在文档中注明该方法。
 
@@ -267,6 +274,6 @@ Swift 生成器会输出：
 
 ## 当你修改 schemas
 
-1) 更新 TypeBox schemas。
-2) 运行 `pnpm protocol:check`。
-3) 提交重新生成的 schema + Swift models。
+1. 更新 TypeBox schemas。
+2. 运行 `pnpm protocol:check`。
+3. 提交重新生成的 schema + Swift models。

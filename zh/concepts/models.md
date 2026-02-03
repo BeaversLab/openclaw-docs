@@ -6,6 +6,7 @@ read_when:
   - 更新模型扫描探测（tools/images）
 title: "Models CLI"
 ---
+
 # 模型 CLI
 
 参见 [/concepts/model-failover](/zh/concepts/model-failover) 了解 auth profile
@@ -16,9 +17,9 @@ title: "Models CLI"
 
 OpenClaw 按以下顺序选择模型：
 
-1) **Primary** 模型（`agents.defaults.model.primary` 或 `agents.defaults.model`）。
-2) **Fallbacks**（`agents.defaults.model.fallbacks`，按顺序）。
-3) **Provider auth failover** 在 provider 内完成，然后才进入下一个模型。
+1. **Primary** 模型（`agents.defaults.model.primary` 或 `agents.defaults.model`）。
+2. **Fallbacks**（`agents.defaults.model.fallbacks`，按顺序）。
+3. **Provider auth failover** 在 provider 内完成，然后才进入下一个模型。
 
 相关：
 - `agents.defaults.models` 是 OpenClaw 可用模型的 allowlist/目录（含别名）。
@@ -77,9 +78,9 @@ allowlist 配置示例：
     model: { primary: "anthropic/claude-sonnet-4-5" },
     models: {
       "anthropic/claude-sonnet-4-5": { alias: "Sonnet" },
-      "anthropic/claude-opus-4-5": { alias: "Opus" }
-    }
-  }
+      "anthropic/claude-opus-4-5": { alias: "Opus" },
+    },
+  },
 }
 ```
 
@@ -171,10 +172,11 @@ openclaw models status
 探测需要 OpenRouter API key（来自 auth profiles 或 `OPENROUTER_API_KEY`）。无 key 时请用 `--no-probe` 仅列候选。
 
 扫描结果排序依据：
-1) 图像支持
-2) 工具延迟
-3) 上下文大小
-4) 参数规模
+
+1. 图像支持
+2. 工具延迟
+3. 上下文大小
+4. 参数规模
 
 输入
 - OpenRouter `/models` 列表（过滤 `:free`）

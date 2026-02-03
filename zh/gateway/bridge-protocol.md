@@ -4,7 +4,7 @@ read_when:
   - 构建或调试 node 客户端（iOS/Android/macOS node 模式）
   - 调查配对或 bridge 认证失败
   - 审计 gateway 暴露的 node 面
-title: "桥接协议"
+title: "Bridge 协议"
 ---
 
 # Bridge 协议（旧版 node 传输）
@@ -35,20 +35,22 @@ Bridge 协议是**旧版** node 传输（TCP JSONL）。新的 node 客户端应
 
 ## 握手 + 配对
 
-1) 客户端发送 `hello`（node 元数据 + token，若已配对）。  
-2) 未配对时 gateway 返回 `error`（`NOT_PAIRED`/`UNAUTHORIZED`）。  
-3) 客户端发送 `pair-request`。  
-4) Gateway 等待审批，然后发送 `pair-ok` 与 `hello-ok`。
+1. 客户端发送 `hello`（node 元数据 + token，若已配对）。
+2. 未配对时 gateway 返回 `error`（`NOT_PAIRED`/`UNAUTHORIZED`）。
+3. 客户端发送 `pair-request`。
+4. Gateway 等待审批，然后发送 `pair-ok` 与 `hello-ok`。
 
 `hello-ok` 返回 `serverName`，并可能包含 `canvasHostUrl`。
 
 ## Frames
 
-Client → Gateway:
+Client → Gateway：
+
 - `req` / `res`：作用域 gateway RPC（chat、sessions、config、health、voicewake、skills.bins）
 - `event`：node 信号（语音转写、agent 请求、chat 订阅、exec 生命周期）
 
-Gateway → Client:
+Gateway → Client：
+
 - `invoke` / `invoke-res`：node 命令（`canvas.*`、`camera.*`、`screen.record`、
   `location.get`、`sms.send`）
 - `event`：已订阅会话的 chat 更新

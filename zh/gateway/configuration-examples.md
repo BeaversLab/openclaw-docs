@@ -6,6 +6,7 @@ read_when:
   - 首次设置 OpenClaw
 title: "配置示例"
 ---
+
 # 配置示例
 
 以下示例与当前配置 schema 对齐。完整参考与逐字段说明见 [Configuration](/zh/gateway/configuration)。
@@ -13,33 +14,35 @@ title: "配置示例"
 ## 快速开始
 
 ### 绝对最小
+
 ```json5
 {
   agent: { workspace: "~/.openclaw/workspace" },
-  channels: { whatsapp: { allowFrom: ["+15555550123"] } }
+  channels: { whatsapp: { allowFrom: ["+15555550123"] } },
 }
 ```
 
 保存到 `~/.openclaw/openclaw.json`，即可从该号码私聊 bot。
 
 ### 推荐入门
+
 ```json5
 {
   identity: {
     name: "Clawd",
     theme: "helpful assistant",
-    emoji: "🦞"
+    emoji: "🦞",
   },
   agent: {
     workspace: "~/.openclaw/workspace",
-    model: { primary: "anthropic/claude-sonnet-4-5" }
+    model: { primary: "anthropic/claude-sonnet-4-5" },
   },
   channels: {
     whatsapp: {
       allowFrom: ["+15555550123"],
-      groups: { "*": { requireMention: true } }
-    }
-  }
+      groups: { "*": { requireMention: true } },
+    },
+  },
 }
 ```
 
@@ -53,12 +56,12 @@ title: "配置示例"
   env: {
     OPENROUTER_API_KEY: "sk-or-...",
     vars: {
-      GROQ_API_KEY: "gsk-..."
+      GROQ_API_KEY: "gsk-...",
     },
     shellEnv: {
       enabled: true,
-      timeoutMs: 15000
-    }
+      timeoutMs: 15000,
+    },
   },
 
   // Auth profile metadata (secrets live in auth-profiles.json)
@@ -67,20 +70,20 @@ title: "配置示例"
       "anthropic:me@example.com": { provider: "anthropic", mode: "oauth", email: "me@example.com" },
       "anthropic:work": { provider: "anthropic", mode: "api_key" },
       "openai:default": { provider: "openai", mode: "api_key" },
-      "openai-codex:default": { provider: "openai-codex", mode: "oauth" }
+      "openai-codex:default": { provider: "openai-codex", mode: "oauth" },
     },
     order: {
       anthropic: ["anthropic:me@example.com", "anthropic:work"],
       openai: ["openai:default"],
-      "openai-codex": ["openai-codex:default"]
-    }
+      "openai-codex": ["openai-codex:default"],
+    },
   },
 
   // Identity
   identity: {
     name: "Samantha",
     theme: "helpful sloth",
-    emoji: "🦥"
+    emoji: "🦥",
   },
 
   // Logging
@@ -89,7 +92,7 @@ title: "配置示例"
     file: "/tmp/openclaw/openclaw.log",
     consoleLevel: "info",
     consoleStyle: "pretty",
-    redactSensitive: "tools"
+    redactSensitive: "tools",
   },
 
   // Message formatting
@@ -97,14 +100,14 @@ title: "配置示例"
     messagePrefix: "[openclaw]",
     responsePrefix: ">",
     ackReaction: "👀",
-    ackReactionScope: "group-mentions"
+    ackReactionScope: "group-mentions",
   },
 
   // Routing + queue
   routing: {
     groupChat: {
       mentionPatterns: ["@openclaw", "openclaw"],
-      historyLimit: 50
+      historyLimit: 50,
     },
     queue: {
       mode: "collect",
@@ -118,9 +121,9 @@ title: "配置示例"
         slack: "collect",
         signal: "collect",
         imessage: "collect",
-        webchat: "collect"
-      }
-    }
+        webchat: "collect",
+      },
+    },
   },
 
   // Tooling
@@ -425,6 +428,7 @@ title: "配置示例"
 ## 常见模式
 
 ### 多平台配置
+
 ```json5
 {
   agent: { workspace: "~/.openclaw/workspace" },
@@ -433,18 +437,19 @@ title: "配置示例"
     telegram: {
       enabled: true,
       botToken: "YOUR_TOKEN",
-      allowFrom: ["123456789"]
+      allowFrom: ["123456789"],
     },
     discord: {
       enabled: true,
       token: "YOUR_TOKEN",
-      dm: { allowFrom: ["yourname"] }
-    }
-  }
+      dm: { allowFrom: ["yourname"] },
+    },
+  },
 }
 ```
 
 ### OAuth + API key 回退
+
 ```json5
 {
   auth: {
@@ -452,28 +457,29 @@ title: "配置示例"
       "anthropic:subscription": {
         provider: "anthropic",
         mode: "oauth",
-        email: "me@example.com"
+        email: "me@example.com",
       },
       "anthropic:api": {
         provider: "anthropic",
-        mode: "api_key"
-      }
+        mode: "api_key",
+      },
     },
     order: {
-      anthropic: ["anthropic:subscription", "anthropic:api"]
-    }
+      anthropic: ["anthropic:subscription", "anthropic:api"],
+    },
   },
   agent: {
     workspace: "~/.openclaw/workspace",
     model: {
       primary: "anthropic/claude-sonnet-4-5",
-      fallbacks: ["anthropic/claude-opus-4-5"]
-    }
-  }
+      fallbacks: ["anthropic/claude-opus-4-5"],
+    },
+  },
 }
 ```
 
 ### Anthropic 订阅 + API key，MiniMax 回退
+
 ```json5
 {
   auth: {
@@ -481,46 +487,47 @@ title: "配置示例"
       "anthropic:subscription": {
         provider: "anthropic",
         mode: "oauth",
-        email: "user@example.com"
+        email: "user@example.com",
       },
       "anthropic:api": {
         provider: "anthropic",
-        mode: "api_key"
-      }
+        mode: "api_key",
+      },
     },
     order: {
-      anthropic: ["anthropic:subscription", "anthropic:api"]
-    }
+      anthropic: ["anthropic:subscription", "anthropic:api"],
+    },
   },
   models: {
     providers: {
       minimax: {
         baseUrl: "https://api.minimax.io/anthropic",
         api: "anthropic-messages",
-        apiKey: "${MINIMAX_API_KEY}"
-      }
-    }
+        apiKey: "${MINIMAX_API_KEY}",
+      },
+    },
   },
   agent: {
     workspace: "~/.openclaw/workspace",
     model: {
       primary: "anthropic/claude-opus-4-5",
-      fallbacks: ["minimax/MiniMax-M2.1"]
-    }
-  }
+      fallbacks: ["minimax/MiniMax-M2.1"],
+    },
+  },
 }
 ```
 
 ### 工作机器人（受限访问）
+
 ```json5
 {
   identity: {
     name: "WorkBot",
-    theme: "professional assistant"
+    theme: "professional assistant",
   },
   agent: {
     workspace: "~/work-openclaw",
-    elevated: { enabled: false }
+    elevated: { enabled: false },
   },
   channels: {
     slack: {
@@ -528,19 +535,20 @@ title: "配置示例"
       botToken: "xoxb-...",
       channels: {
         "#engineering": { allow: true, requireMention: true },
-        "#general": { allow: true, requireMention: true }
-      }
-    }
-  }
+        "#general": { allow: true, requireMention: true },
+      },
+    },
+  },
 }
 ```
 
 ### 仅本地模型
+
 ```json5
 {
   agent: {
     workspace: "~/.openclaw/workspace",
-    model: { primary: "lmstudio/minimax-m2.1-gs32" }
+    model: { primary: "lmstudio/minimax-m2.1-gs32" },
   },
   models: {
     mode: "merge",
@@ -557,12 +565,12 @@ title: "配置示例"
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 196608,
-            maxTokens: 8192
-          }
-        ]
-      }
-    }
-  }
+            maxTokens: 8192,
+          },
+        ],
+      },
+    },
+  },
 }
 ```
 

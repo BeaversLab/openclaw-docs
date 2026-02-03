@@ -4,6 +4,7 @@ read_when:
   - 在处理 gateway 协议、客户端或传输层工作
 title: "Gateway 架构"
 ---
+
 # Gateway 架构
 
 最后更新：2026-01-22

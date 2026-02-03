@@ -9,6 +9,7 @@ title: "Nextcloud Talk"
 状态：通过插件支持（webhook bot）。支持私聊、房间、reactions 与 markdown 消息。
 
 ## 需要插件
+
 Nextcloud Talk 为插件形式，未随核心安装打包。
 
 通过 CLI 安装（npm registry）：
@@ -17,6 +18,7 @@ openclaw plugins install @openclaw/nextcloud-talk
 ```
 
 本地检出（从 git 仓库运行时）：
+
 ```bash
 openclaw plugins install ./extensions/nextcloud-talk
 ```
@@ -39,6 +41,7 @@ openclaw plugins install ./extensions/nextcloud-talk
 5. 重启 gateway（或完成上手流程）。
 
 最小配置：
+
 ```json5
 {
   channels: {
@@ -46,19 +49,21 @@ openclaw plugins install ./extensions/nextcloud-talk
       enabled: true,
       baseUrl: "https://cloud.example.com",
       botSecret: "shared-secret",
-      dmPolicy: "pairing"
-    }
-  }
+      dmPolicy: "pairing",
+    },
+  },
 }
 ```
 
 ## 说明
+
 - Bot 无法主动发起 DM，用户必须先发消息。
 - Webhook URL 必须可被 gateway 访问；若在代理之后，请设置 `webhookPublicUrl`。
 - Bot API 不支持媒体上传；媒体以 URL 发送。
 - Webhook payload 无法区分 DM 与房间；设置 `apiUser` + `apiPassword` 可启用房间类型查询（否则 DM 会被当作房间）。
 
 ## 访问控制（私聊）
+
 - 默认：`channels.nextcloud-talk.dmPolicy = "pairing"`。未知发送者会收到配对码。
 - 批准命令：
   - `openclaw pairing list nextcloud-talk`
@@ -66,19 +71,22 @@ openclaw plugins install ./extensions/nextcloud-talk
 - 公共私聊：`channels.nextcloud-talk.dmPolicy="open"` 且 `channels.nextcloud-talk.allowFrom=["*"]`。
 
 ## 房间（群组）
+
 - 默认：`channels.nextcloud-talk.groupPolicy = "allowlist"`（提及门控）。
 - 使用 `channels.nextcloud-talk.rooms` allowlist 房间：
+
 ```json5
 {
   channels: {
     "nextcloud-talk": {
       rooms: {
-        "room-token": { requireMention: true }
-      }
-    }
-  }
+        "room-token": { requireMention: true },
+      },
+    },
+  },
 }
 ```
+
 - 若要不允许任何房间，请保持 allowlist 为空或设置 `channels.nextcloud-talk.groupPolicy="disabled"`。
 
 ## 能力

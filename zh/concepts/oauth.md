@@ -7,6 +7,7 @@ read_when:
   - 需要多账号或 profile 路由
 title: "OAuth"
 ---
+
 # OAuth
 
 OpenClaw 通过 OAuth 支持“订阅认证”（支持该方式的 providers，尤其是 **OpenAI Codex（ChatGPT OAuth）**）。Anthropic 订阅请使用 **setup-token** 流程。本文解释：
@@ -72,9 +73,9 @@ OpenClaw 的交互式登录流程由 `@mariozechner/pi-ai` 实现，并接入向
 
 流程：
 
-1) 运行 `claude setup-token`
-2) 粘贴 token 到 OpenClaw
-3) 作为 token auth profile 存储（不刷新）
+1. 运行 `claude setup-token`
+2. 粘贴 token 到 OpenClaw
+3. 作为 token auth profile 存储（不刷新）
 
 向导路径：`openclaw onboard` → auth choice `setup-token`（Anthropic）。
 
@@ -82,12 +83,12 @@ OpenClaw 的交互式登录流程由 `@mariozechner/pi-ai` 实现，并接入向
 
 流程（PKCE）：
 
-1) 生成 PKCE verifier/challenge + 随机 `state`
-2) 打开 `https://auth.openai.com/oauth/authorize?...`
-3) 尝试在 `http://127.0.0.1:1455/auth/callback` 捕获回调
-4) 若回调无法绑定（或你在远程/无头环境），粘贴 redirect URL/code
-5) 在 `https://auth.openai.com/oauth/token` 交换
-6) 从 access token 提取 `accountId` 并存储 `{ access, refresh, expires, accountId }`
+1. 生成 PKCE verifier/challenge + 随机 `state`
+2. 打开 `https://auth.openai.com/oauth/authorize?...`
+3. 尝试在 `http://127.0.0.1:1455/auth/callback` 捕获回调
+4. 若回调无法绑定（或你在远程/无头环境），粘贴 redirect URL/code
+5. 在 `https://auth.openai.com/oauth/token` 交换
+6. 从 access token 提取 `accountId` 并存储 `{ access, refresh, expires, accountId }`
 
 向导路径：`openclaw onboard` → auth choice `openai-codex`。
 

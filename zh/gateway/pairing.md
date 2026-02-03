@@ -46,10 +46,12 @@ openclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
 ## API 面（gateway 协议）
 
 事件：
+
 - `node.pair.requested` — 创建新 pending request 时发出。
 - `node.pair.resolved` — 请求被批准/拒绝/过期时发出。
 
 方法：
+
 - `node.pair.request` — 创建或复用 pending request。
 - `node.pair.list` — 列出 pending + paired nodes。
 - `node.pair.approve` — 批准 pending request（颁发 token）。
@@ -57,6 +59,7 @@ openclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
 - `node.pair.verify` — 校验 `{ nodeId, token }`。
 
 注：
+
 - `node.pair.request` 对每个 node 是幂等的：重复调用返回同一 pending request。
 - 批准**总会**生成新 token；`node.pair.request` 不会返回 token。
 - 请求可包含 `silent: true`，作为自动审批流程的提示。
@@ -64,6 +67,7 @@ openclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
 ## 自动审批（macOS app）
 
 macOS app 可在以下情况下尝试**静默审批**：
+
 - 请求标记为 `silent`，且
 - app 能用同一用户通过 SSH 连接到 gateway 主机。
 
@@ -79,6 +83,7 @@ macOS app 可在以下情况下尝试**静默审批**：
 若覆盖 `OPENCLAW_STATE_DIR`，`nodes/` 目录随之移动。
 
 安全说明：
+
 - Tokens 属于机密；请将 `paired.json` 视为敏感文件。
 - 轮换 token 需要重新审批（或删除该 node 条目）。
 

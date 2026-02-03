@@ -6,6 +6,7 @@ read_when:
   - 在排查跨频道格式回归
 title: "Markdown 格式"
 ---
+
 # Markdown 格式化
 
 OpenClaw 通过把出站 Markdown 转换为共享的中间表示（IR）来进行格式化，然后渲染为各频道特定输出。IR 保留源文本，同时携带样式/链接范围，使分块与渲染在不同频道之间保持一致。
@@ -43,12 +44,8 @@ IR（示意）：
 ```json
 {
   "text": "Hello world — see docs.",
-  "styles": [
-    { "start": 6, "end": 11, "style": "bold" }
-  ],
-  "links": [
-    { "start": 19, "end": 23, "href": "https://docs.openclaw.ai" }
-  ]
+  "styles": [{ "start": 6, "end": 11, "style": "bold" }],
+  "links": [{ "start": 19, "end": 23, "href": "https://docs.openclaw.ai" }]
 }
 ```
 

@@ -6,9 +6,11 @@ read_when:
   - 修改 gateway WS 连接或 system-event 信标
 title: "在线状态"
 ---
+
 # Presence
 
-OpenClaw 的 “presence” 是一个轻量、best‑effort 的视图：
+OpenClaw 的 "presence" 是一个轻量、best‑effort 的视图：
+
 - **Gateway** 本身，以及
 - **连接到 Gateway 的客户端**（mac app、WebChat、CLI 等）
 

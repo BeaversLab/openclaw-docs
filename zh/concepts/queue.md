@@ -4,6 +4,7 @@ read_when:
   - 修改自动回复执行或并发
 title: "命令队列"
 ---
+
 # 命令队列 (2026-01-16)
 
 我们通过一个小型进程内队列对入站自动回复运行（所有渠道）进行串行化，防止多个 agent 运行相互冲突，同时允许跨会话的安全并行。
@@ -45,9 +46,9 @@ Steer-backlog 可能在 steer 运行后产生 followup 回复，因此在 stream
       debounceMs: 1000,
       cap: 20,
       drop: "summarize",
-      byChannel: { discord: "collect" }
-    }
-  }
+      byChannel: { discord: "collect" },
+    },
+  },
 }
 ```
 

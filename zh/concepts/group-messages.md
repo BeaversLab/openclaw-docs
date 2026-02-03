@@ -4,6 +4,7 @@ read_when:
   - 需要修改群消息规则或 mentions
 title: "群组消息"
 ---
+
 # 群消息（WhatsApp web 频道）
 
 目标：让 Clawd 待在 WhatsApp 群里，只在被点名时唤醒，并保持该线程与个人 DM 会话分离。

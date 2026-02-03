@@ -28,9 +28,9 @@ OpenClaw 会标准化时间戳，使模型看到**单一参考时间**。
     defaults: {
       envelopeTimezone: "local", // "utc" | "local" | "user" | IANA timezone
       envelopeTimestamp: "on", // "on" | "off"
-      envelopeElapsed: "on" // "on" | "off"
-    }
-  }
+      envelopeElapsed: "on", // "on" | "off"
+    },
+  },
 }
 ```
 
@@ -76,11 +76,12 @@ OpenClaw 会标准化时间戳，使模型看到**单一参考时间**。
 
 ```json5
 {
-  agents: { defaults: { userTimezone: "America/Chicago" } }
+  agents: { defaults: { userTimezone: "America/Chicago" } },
 }
 ```
 
 System prompt 会包含：
+
 - `Current Date & Time` 分节（本地时间与时区）
 - `Time format: 12-hour` 或 `24-hour`
 

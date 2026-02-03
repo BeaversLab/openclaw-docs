@@ -9,8 +9,9 @@ title: "模型故障转移"
 # 模型失败处理
 
 OpenClaw 以两阶段处理失败：
-1) 当前 provider 内的 **Auth profile 轮换**。
-2) **模型回退**到 `agents.defaults.model.fallbacks` 中的下一个模型。
+
+1. 当前 provider 内的 **Auth profile 轮换**。
+2. **模型回退**到 `agents.defaults.model.fallbacks` 中的下一个模型。
 
 本文解释运行时规则及其背后的数据。
 
@@ -40,9 +41,9 @@ Profiles 存在 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 的 `pro
 
 当一个 provider 有多个 profile 时，OpenClaw 按以下顺序选择：
 
-1) **显式配置**：`auth.order[provider]`（若设置）。
-2) **配置中的 profiles**：`auth.profiles` 中按 provider 过滤。
-3) **已存储 profiles**：`auth-profiles.json` 中该 provider 的条目。
+1. **显式配置**：`auth.order[provider]`（若设置）。
+2. **配置中的 profiles**：`auth.profiles` 中按 provider 过滤。
+3. **已存储 profiles**：`auth-profiles.json` 中该 provider 的条目。
 
 若无显式顺序，OpenClaw 使用轮询（round‑robin）：
 - **主排序**：profile 类型（**OAuth 优先于 API keys**）。

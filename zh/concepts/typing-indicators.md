@@ -4,6 +4,7 @@ read_when:
   - 修改输入指示行为或默认值
 title: "输入指示器"
 ---
+
 # 输入指示
 
 输入指示会在运行中发送到聊天渠道。使用 `agents.defaults.typingMode` 控制**何时**开始输入指示，使用 `typingIntervalSeconds` 控制**刷新频率**。
@@ -11,6 +12,7 @@ title: "输入指示器"
 ## 默认值
 
 当 `agents.defaults.typingMode` **未设置**时，OpenClaw 保持旧行为：
+
 - **私聊**：模型循环开始即显示输入。
 - **群聊且有 mention**：立即显示输入。
 - **群聊且无 mention**：仅当消息文本开始 streaming 时显示输入。
@@ -19,6 +21,7 @@ title: "输入指示器"
 ## 模式
 
 将 `agents.defaults.typingMode` 设置为：
+
 - `never` — 永不显示输入指示。
 - `instant` — **模型循环开始即显示**，即便最终仅返回静默 token。
 - `thinking` — 在**第一个推理 delta**时显示（需该次运行 `reasoningLevel: "stream"`）。
@@ -33,18 +36,19 @@ title: "输入指示器"
 {
   agent: {
     typingMode: "thinking",
-    typingIntervalSeconds: 6
-  }
+    typingIntervalSeconds: 6,
+  },
 }
 ```
 
 可按会话覆盖模式或频率：
+
 ```json5
 {
   session: {
     typingMode: "message",
-    typingIntervalSeconds: 4
-  }
+    typingIntervalSeconds: 4,
+  },
 }
 ```
 

@@ -5,6 +5,7 @@ read_when:
   - 正在调整 agents.defaults.contextPruning
 title: "会话修剪（Session Pruning）"
 ---
+
 # 会话修剪（Session Pruning）
 
 Session pruning 会在每次 LLM 调用前，从内存上下文中裁剪**旧的工具结果**。它**不会**改写磁盘上的会话历史（`*.jsonl`）。
@@ -36,11 +37,13 @@ Session pruning 会在每次 LLM 调用前，从内存上下文中裁剪**旧的
 
 ## 上下文窗口估算
 
-Pruning 使用估算的上下文窗口（chars ≈ tokens × 4）。窗口大小按以下顺序解析：
-1) 模型定义 `contextWindow`（来自模型注册表）。
-2) `models.providers.*.models[].contextWindow` 覆盖。
-3) `agents.defaults.contextTokens`。
-4) 默认 `200000` tokens。
+Pruning 使用估算的上下文窗口（chars ≈ tokens × 4）。基础窗口按以下顺序解析：
+
+1. `models.providers.*.models[].contextWindow` 覆盖。
+2. 模型定义 `contextWindow`（来自模型注册表）。
+3. 默认 `200000` tokens。
+
+若设置了 `agents.defaults.contextTokens`，它将被视为解析窗口的上限（最小值）。
 
 ## 模式
 
@@ -76,32 +79,35 @@ Pruning 使用估算的上下文窗口（chars ≈ tokens × 4）。窗口大小
 ## 示例
 
 默认（关闭）：
+
 ```json5
 {
   agent: {
-    contextPruning: { mode: "off" }
-  }
+    contextPruning: { mode: "off" },
+  },
 }
 ```
 
 启用 TTL-aware pruning：
+
 ```json5
 {
   agent: {
-    contextPruning: { mode: "cache-ttl", ttl: "5m" }
-  }
+    contextPruning: { mode: "cache-ttl", ttl: "5m" },
+  },
 }
 ```
 
 仅对特定工具启用 pruning：
+
 ```json5
 {
   agent: {
     contextPruning: {
       mode: "cache-ttl",
-      tools: { allow: ["exec", "read"], deny: ["*image*"] }
-    }
-  }
+      tools: { allow: ["exec", "read"], deny: ["*image*"] },
+    },
+  },
 }
 ```
 

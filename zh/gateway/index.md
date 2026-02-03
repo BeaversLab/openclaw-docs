@@ -4,16 +4,19 @@ read_when:
   - 运行或调试 gateway 进程
 title: "Gateway 运维手册"
 ---
+
 # Gateway 服务 runbook
 
 最后更新：2025-12-09
 
 ## 它是什么
+
 - 始终在线的进程，拥有单一 Baileys/Telegram 连接与控制/事件平面。
 - 取代旧 `gateway` 命令。CLI 入口：`openclaw gateway`。
 - 运行直到被停止；遇到致命错误时以非 0 退出以便 supervisor 重启。
 
 ## 如何运行（本地）
+
 ```bash
 openclaw gateway --port 18789
 # 输出到 stdio 的完整 debug/trace 日志：
@@ -23,6 +26,8 @@ openclaw gateway --force
 # 开发循环（TS 变更自动重载）：
 pnpm gateway:watch
 ```
+
+
 - Config 热重载监听 `~/.openclaw/openclaw.json`（或 `OPENCLAW_CONFIG_PATH`）。
   - 默认模式：`gateway.reload.mode="hybrid"`（安全变更热应用，关键变更重启）。
   - 必要时通过 **SIGUSR1** 触发进程内重启。
@@ -43,6 +48,7 @@ pnpm gateway:watch
 - 端口优先级：`--port` > `OPENCLAW_GATEWAY_PORT` > `gateway.port` > 默认 `18789`。
 
 ## 远程访问
+
 - 首选 Tailscale/VPN；否则使用 SSH 隧道：
   ```bash
   ssh -N -L 18789:127.0.0.1:18789 user@host

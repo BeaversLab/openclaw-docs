@@ -57,9 +57,9 @@ gateway 会响应 LINE 的 webhook 验证（GET）与入站事件（POST）。
       enabled: true,
       channelAccessToken: "LINE_CHANNEL_ACCESS_TOKEN",
       channelSecret: "LINE_CHANNEL_SECRET",
-      dmPolicy: "pairing"
-    }
-  }
+      dmPolicy: "pairing",
+    },
+  },
 }
 ```
 
@@ -75,9 +75,9 @@ Token/secret 文件：
   channels: {
     line: {
       tokenFile: "/path/to/line-token.txt",
-      secretFile: "/path/to/line-secret.txt"
-    }
-  }
+      secretFile: "/path/to/line-secret.txt",
+    },
+  },
 }
 ```
 
@@ -91,11 +91,11 @@ Token/secret 文件：
         marketing: {
           channelAccessToken: "...",
           channelSecret: "...",
-          webhookPath: "/line/marketing"
-        }
-      }
-    }
-  }
+          webhookPath: "/line/marketing",
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -143,11 +143,13 @@ LINE ID 区分大小写。有效 ID 形如：
         title: "Office",
         address: "123 Main St",
         latitude: 35.681236,
-        longitude: 139.767125
+        longitude: 139.767125,
       },
       flexMessage: {
         altText: "Status card",
-        contents: { /* Flex payload */ }
+        contents: {
+          /* Flex payload */
+        },
       },
       templateMessage: {
         type: "confirm",
@@ -155,10 +157,10 @@ LINE ID 区分大小写。有效 ID 形如：
         confirmLabel: "Yes",
         confirmData: "yes",
         cancelLabel: "No",
-        cancelData: "no"
-      }
-    }
-  }
+        cancelData: "no",
+      },
+    },
+  },
 }
 ```
 

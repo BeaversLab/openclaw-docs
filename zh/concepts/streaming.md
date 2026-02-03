@@ -6,9 +6,11 @@ read_when:
   - 排查重复/过早的块回复或草稿流
 title: "流式传输和分块"
 ---
+
 # Streaming + 分块
 
-OpenClaw 有两层独立的“streaming”：
+OpenClaw 有两层独立的"streaming"：
+
 - **Block streaming（渠道）**：assistant 写到一定程度就发送已完成的**块**。这些是普通渠道消息（不是 token delta）。
 - **Token-ish streaming（仅 Telegram）**：生成中以**草稿气泡**更新部分文本；最终消息在结束时发送。
 
@@ -27,12 +29,15 @@ Model output
             └─ chunker flushes at message_end
                    └─ channel send (block replies)
 ```
+
 Legend:
+
 - `text_delta/events`：模型流式事件（对非流式模型可能很稀疏）。
 - `chunker`：`EmbeddedBlockChunker` 应用最小/最大边界与断点偏好。
 - `channel send`：实际出站消息（块回复）。
 
 **控制项：**
+
 - `agents.defaults.blockStreamingDefault`：`"on"`/`"off"`（默认 off）。
 - 渠道覆盖：`*.blockStreaming`（及每账号变体）强制按渠道开/关。
 - `agents.defaults.blockStreamingBreak`：`"text_end"` 或 `"message_end"`。
@@ -43,6 +48,7 @@ Legend:
 - Discord 软上限：`channels.discord.maxLinesPerMessage`（默认 17），避免 UI 裁切。
 
 **边界语义：**
+
 - `text_end`：chunker 产出就发送；每个 `text_end` 都会 flush。
 - `message_end`：等 assistant 消息结束再 flush 缓冲。
 
@@ -51,6 +57,7 @@ Legend:
 ## 分块算法（低/高边界）
 
 Block chunking 由 `EmbeddedBlockChunker` 实现：
+
 - **低边界**：缓冲 < `minChars` 不发送（除非强制）。
 - **高边界**：优先在 `maxChars` 前切分；必要时强制在 `maxChars` 处切。
 - **断点偏好**：`paragraph` → `newline` → `sentence` → `whitespace` → 硬切。
@@ -80,9 +87,10 @@ Block chunking 由 `EmbeddedBlockChunker` 实现：
 - 模式：`off`（默认）、`natural`（800–2500ms）、`custom`（`minMs`/`maxMs`）。
 - 仅作用于**块回复**，不影响最终回复或工具摘要。
 
-## “流式分块”还是“一次性发完”
+## "流式分块"还是"一次性发完"
 
 映射如下：
+
 - **流式分块**：`blockStreamingDefault: "on"` + `blockStreamingBreak: "text_end"`（边生成边发）。非 Telegram 渠道还需显式 `*.blockStreaming: true`。
 - **结束再发**：`blockStreamingBreak: "message_end"`（一次 flush，超长时仍可能多块）。
 - **不启用 block streaming**：`blockStreamingDefault: "off"`（只发最终回复）。
@@ -94,6 +102,7 @@ Block chunking 由 `EmbeddedBlockChunker` 实现：
 ## Telegram 草稿流（token-ish）
 
 Telegram 是唯一支持草稿流的渠道：
+
 - 在**带话题的私聊**中使用 Bot API `sendMessageDraft`。
 - `channels.telegram.streamMode: "partial" | "block" | "off"`。
   - `partial`：用最新流式文本更新草稿。
@@ -113,6 +122,8 @@ Telegram (private + topics)
        └─ streamMode=block   → chunker updates draft
   └─ final reply → normal message
 ```
+
 Legend:
+
 - `sendMessageDraft`：Telegram 草稿气泡（非真实消息）。
 - `final reply`：普通 Telegram 消息发送。

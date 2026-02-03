@@ -11,6 +11,7 @@ title: "hooks"
 管理 agent hooks（针对 `/new`、`/reset`、gateway 启动等命令的事件驱动自动化）。
 
 相关：
+
 - Hooks：[Hooks](/zh/hooks)
 - 插件 hooks：[Plugins](/zh/plugin#plugin-hooks)
 
@@ -23,6 +24,7 @@ openclaw hooks list
 列出工作区、managed 与 bundled 目录中发现的所有 hooks。
 
 **选项：**
+
 - `--eligible`：仅显示满足要求的 hooks
 - `--json`：JSON 输出
 - `-v, --verbose`：显示更详细信息（含缺失的要求）
@@ -64,9 +66,11 @@ openclaw hooks info <name>
 显示指定 hook 的详细信息。
 
 **参数：**
+
 - `<name>`：Hook 名称（如 `session-memory`）
 
 **选项：**
+
 - `--json`：JSON 输出
 
 **示例：**
@@ -102,6 +106,7 @@ openclaw hooks check
 显示 hook 可用性摘要（就绪 vs 未就绪）。
 
 **选项：**
+
 - `--json`：JSON 输出
 
 **示例输出：**
@@ -126,6 +131,7 @@ openclaw hooks enable <name>
 不能在这里启用/禁用，请改为启用/禁用插件。
 
 **参数：**
+
 - `<name>`：Hook 名称（如 `session-memory`）
 
 **示例：**
@@ -146,6 +152,7 @@ openclaw hooks enable session-memory
 - 保存配置到磁盘
 
 **启用后：**
+
 - 重启 gateway 以重新加载 hooks（macOS 菜单栏 app 重启，或在 dev 中重启 gateway 进程）。
 
 ## 禁用 Hook
@@ -172,6 +179,7 @@ openclaw hooks disable command-logger
 ```
 
 **禁用后：**
+
 - 重启 gateway 以重新加载 hooks
 
 ## 安装 Hooks
@@ -188,6 +196,7 @@ openclaw hooks install <path-or-spec>
 - 在 `hooks.internal.installs` 中记录安装信息
 
 **选项：**
+
 - `-l, --link`：链接本地目录而非复制（添加到 `hooks.internal.load.extraDirs`）
 
 **支持的压缩包：** `.zip`、`.tgz`、`.tar.gz`、`.tar`
@@ -218,6 +227,7 @@ openclaw hooks update --all
 更新已安装的 hook packs（仅 npm 安装）。
 
 **选项：**
+
 - `--all`：更新所有已跟踪 hook packs
 - `--dry-run`：仅展示变更，不写入
 
