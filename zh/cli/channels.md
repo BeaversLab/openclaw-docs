@@ -11,6 +11,7 @@ title: "channels"
 管理 Gateway 上的聊天渠道账号及其运行状态。
 
 相关文档：
+
 - 渠道指南：[Channels](/zh/channels/index)
 - Gateway 配置：[Configuration](/zh/gateway/configuration)
 
@@ -57,6 +58,7 @@ openclaw channels capabilities --channel discord --target channel:123
 ```
 
 说明：
+
 - `--channel` 可选；省略则列出所有渠道（含扩展）。
 - `--target` 支持 `channel:<id>` 或纯数字 channel id，仅适用于 Discord。
 - 探测为 provider 定制：Discord intents + 可选频道权限；Slack bot + user scopes；Telegram bot 标记 + webhook；Signal daemon 版本；MS Teams app token + Graph 角色/scopes（已知信息会标注）。无探测的渠道会显示 `Probe: unavailable`。
@@ -72,5 +74,6 @@ openclaw channels resolve --channel matrix "Project Room"
 ```
 
 说明：
+
 - 使用 `--kind user|group|auto` 强制目标类型。
 - 当名称有多个匹配时，优先选择活跃匹配。

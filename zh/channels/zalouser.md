@@ -24,11 +24,11 @@ Gateway 机器必须在 `PATH` 中提供 `zca` 二进制。
 - 若缺失，请安装 zca-cli（见 `extensions/zalouser/README.md` 或上游 zca-cli 文档）。
 
 ## 快速设置（新手）
-1) 安装插件（见上方）。
-2) 登录（扫码，Gateway 机器上执行）：
+1. 安装插件（见上方）。
+2. 登录（扫码，Gateway 机器上执行）：
    - `openclaw channels login --channel zalouser`
    - 用 Zalo 手机 App 扫描终端二维码。
-3) 启用渠道：
+3. 启用渠道：
 
 ```json5
 {
@@ -41,8 +41,8 @@ Gateway 机器必须在 `PATH` 中提供 `zca` 二进制。
 }
 ```
 
-4) 重启 Gateway（或完成 onboarding）。
-5) 私聊默认需要配对；首次联系时批准配对码。
+4. 重启 Gateway（或完成 onboarding）。
+5. 私聊默认需要配对；首次联系时批准配对码。
 
 ## 这是什么
 - 通过 `zca listen` 接收入站消息。

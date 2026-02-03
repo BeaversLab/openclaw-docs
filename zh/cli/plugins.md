@@ -11,6 +11,7 @@ title: "plugins"
 管理 Gateway 插件/扩展（进程内加载）。
 
 相关：
+
 - 插件系统：[Plugins](/zh/plugin)
 - 插件清单 + schema：[Plugin manifest](/zh/plugins/manifest)
 - 安全加固：[Security](/zh/gateway/security)

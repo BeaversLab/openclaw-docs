@@ -11,6 +11,7 @@ title: "doctor"
 用于 Gateway 与渠道的健康检查 + 快速修复。
 
 相关：
+
 - 故障排查：[Troubleshooting](/zh/gateway/troubleshooting)
 - 安全审计：[Security](/zh/gateway/security)
 
@@ -23,6 +24,7 @@ openclaw doctor --deep
 ```
 
 说明：
+
 - 交互式提示（如 keychain/OAuth 修复）仅在 stdin 为 TTY 且未设置 `--non-interactive` 时运行。无终端的运行（cron、Telegram、无 TTY）会跳过提示。
 - `--fix`（`--repair` 别名）会在 `~/.openclaw/openclaw.json.bak` 写入备份，并删除未知配置键，逐条列出移除项。
 

@@ -12,6 +12,7 @@ title: "memory"
 由当前启用的 memory 插件提供（默认：`memory-core`；设置 `plugins.slots.memory = "none"` 可禁用）。
 
 相关：
+
 - Memory 概念：[Memory](/zh/concepts/memory)
  - 插件：[Plugins](/zh/plugins)
 
@@ -37,6 +38,7 @@ openclaw memory index --agent main --verbose
 - `--verbose`：在探测与索引期间输出详细日志。
 
 备注：
+
 - `memory status --deep` 会探测向量与 embedding 可用性。
 - `memory status --deep --index` 在存储为 dirty 时执行重索引。
 - `memory index --verbose` 输出各阶段细节（provider、model、sources、batch activity）。

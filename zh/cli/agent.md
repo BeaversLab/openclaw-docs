@@ -1,17 +1,18 @@
 ---
-summary: "用于 `openclaw agent` 的 CLI 参考（通过 Gateway 发送一次 agent 回合）"
+summary: "CLI 参考文档：`openclaw agent`（通过网关发送一个代理轮次）"
 read_when:
-  - 你想从脚本触发一次 agent 回合（可选投递回复）
+  - 您想从脚本运行一个代理轮次（可选地传递回复）
 title: "agent"
 ---
 
 # `openclaw agent`
 
-通过 Gateway 运行一次 agent 回合（嵌入式用 `--local`）。
-使用 `--agent <id>` 直接指定已配置的 agent。
+通过网关运行代理轮次（使用 `--local` 进行嵌入式）。
+使用 `--agent <id>` 直接定位已配置的代理。
 
-相关：
-- Agent send 工具：[Agent send](/zh/tools/agent-send)
+相关文档：
+
+- 代理发送工具：[Agent send](/zh/tools/agent-send)
 
 ## 示例
 

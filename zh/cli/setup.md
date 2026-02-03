@@ -11,6 +11,7 @@ title: "setup"
 初始化 `~/.openclaw/openclaw.json` 与 agent 工作区。
 
 相关：
+
 - Getting started：[Getting started](/zh/start/getting-started)
 - 向导：[Onboarding](/zh/start/onboarding)
 

@@ -26,16 +26,17 @@ openclaw plugins install ./extensions/nextcloud-talk
 详情：[Plugins](/zh/plugin)
 
 ## 快速设置（新手）
-1) 安装 Nextcloud Talk 插件。
-2) 在你的 Nextcloud 服务器上创建 bot：
+
+1. 安装 Nextcloud Talk 插件。
+2. 在你的 Nextcloud 服务器上创建 bot：
    ```bash
    ./occ talk:bot:install "OpenClaw" "<shared-secret>" "<webhook-url>" --feature reaction
    ```
-3) 在目标房间设置中启用 bot。
-4) 配置 OpenClaw：
+3. 在目标房间设置中启用 bot。
+4. 配置 OpenClaw：
    - 配置：`channels.nextcloud-talk.baseUrl` + `channels.nextcloud-talk.botSecret`
    - 或环境变量：`NEXTCLOUD_TALK_BOT_SECRET`（仅默认账号）
-5) 重启 gateway（或完成上手流程）。
+5. 重启 gateway（或完成上手流程）。
 
 最小配置：
 ```json5

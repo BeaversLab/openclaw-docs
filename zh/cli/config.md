@@ -1,8 +1,8 @@
 ---
 summary: "`openclaw config` 的 CLI 参考（get/set/unset 配置值）"
-title: "config"
 read_when:
   - 你想以非交互方式读取或编辑配置
+title: "config"
 ---
 
 # `openclaw config`

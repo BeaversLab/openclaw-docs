@@ -35,11 +35,12 @@ openclaw plugins install ./extensions/msteams
 详情：[Plugins](/zh/plugin)
 
 ## 快速设置（新手）
-1) 安装 Microsoft Teams 插件。
-2) 创建 **Azure Bot**（App ID + client secret + tenant ID）。
-3) 使用这些凭据配置 OpenClaw。
-4) 通过公网 URL 或隧道暴露 `/api/messages`（默认端口 3978）。
-5) 安装 Teams 应用包并启动 gateway。
+
+1. 安装 Microsoft Teams 插件。
+2. 创建 **Azure Bot**（App ID + client secret + tenant ID）。
+3. 使用这些凭据配置 OpenClaw。
+4. 通过公网 URL 或隧道暴露 `/api/messages`（默认端口 3978）。
+5. 安装 Teams 应用包并启动 gateway。
 
 最小配置：
 ```json5

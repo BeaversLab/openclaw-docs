@@ -11,6 +11,7 @@ title: "skills"
 检查技能（内置 + 工作区 + 托管覆盖）并查看哪些就绪/缺失依赖。
 
 相关：
+
 - 技能系统：[Skills](/zh/tools/skills)
 - 技能配置：[Skills config](/zh/tools/skills-config)
 - ClawdHub 安装：[ClawdHub](/zh/tools/clawdhub)

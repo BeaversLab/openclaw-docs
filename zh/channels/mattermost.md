@@ -30,10 +30,11 @@ openclaw plugins install ./extensions/mattermost
 详情：[Plugins](/zh/plugin)
 
 ## 快速设置
-1) 安装 Mattermost 插件。
-2) 创建 Mattermost bot 账号并复制 **bot token**。
-3) 复制 Mattermost **base URL**（例如 `https://chat.example.com`）。
-4) 配置 OpenClaw 并启动 gateway。
+
+1. 安装 Mattermost 插件。
+2. 创建 Mattermost bot 账号并复制 **bot token**。
+3. 复制 Mattermost **base URL**（例如 `https://chat.example.com`）。
+4. 配置 OpenClaw 并启动 gateway。
 
 最小配置：
 ```json5

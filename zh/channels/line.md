@@ -31,12 +31,12 @@ openclaw plugins install ./extensions/line
 
 ## 设置
 
-1) 创建 LINE Developers 账号并打开 Console：
+1. 创建 LINE Developers 账号并打开 Console：
    https://developers.line.biz/console/
-2) 创建（或选择）Provider，并添加 **Messaging API** 渠道。
-3) 从渠道设置中复制 **Channel access token** 与 **Channel secret**。
-4) 在 Messaging API 设置中启用 **Use webhook**。
-5) 将 webhook URL 设置为你的 gateway 端点（需 HTTPS）：
+2. 创建（或选择）Provider，并添加 **Messaging API** 渠道。
+3. 从渠道设置中复制 **Channel access token** 与 **Channel secret**。
+4. 在 Messaging API 设置中启用 **Use webhook**。
+5. 将 webhook URL 设置为你的 gateway 端点（需 HTTPS）：
 
 ```
 https://gateway-host/line/webhook

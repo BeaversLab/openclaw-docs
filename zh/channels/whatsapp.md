@@ -10,10 +10,10 @@ title: "WhatsApp"
 状态：仅支持基于 Baileys 的 WhatsApp Web。Gateway 持有会话。
 
 ## 快速设置（新手）
-1) 尽量使用**独立手机号**（推荐）。
-2) 在 `~/.openclaw/openclaw.json` 中配置 WhatsApp。
-3) 运行 `openclaw channels login` 扫码（Linked Devices）。
-4) 启动 gateway。
+1. 尽量使用**独立手机号**（推荐）。
+2. 在 `~/.openclaw/openclaw.json` 中配置 WhatsApp。
+3. 运行 `openclaw channels login` 扫码（Linked Devices）。
+4. 启动 gateway。
 
 最小配置：
 ```json5

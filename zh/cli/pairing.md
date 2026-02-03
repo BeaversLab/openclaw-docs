@@ -10,6 +10,7 @@ title: "pairing"
 批准或查看 DM 配对请求（适用于支持配对的频道）。
 
 相关：
+
 - 配对流程：[Pairing](/zh/start/pairing)
 
 ## 命令

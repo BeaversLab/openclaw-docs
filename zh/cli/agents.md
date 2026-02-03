@@ -1,17 +1,18 @@
 ---
-summary: "`openclaw agents` 的 CLI 参考（list/add/delete/set identity）"
+summary: "CLI 参考文档：`openclaw agents`（列出/添加/删除/设置身份）"
 read_when:
-  - 你需要多个隔离 agent（工作区 + 路由 + 授权）
+  - 您想要多个隔离的代理（工作区 + 路由 + 认证）
 title: "agents"
 ---
 
 # `openclaw agents`
 
-管理隔离 agent（工作区 + 授权 + 路由）。
+管理隔离的代理（工作区 + 认证 + 路由）。
 
-相关：
-- 多 agent 路由：[Multi-Agent Routing](/zh/concepts/multi-agent)
-- Agent 工作区：[Agent workspace](/zh/concepts/agent-workspace)
+相关文档：
+
+- 多代理路由：[Multi-Agent Routing](/zh/concepts/multi-agent)
+- 代理工作区：[Agent workspace](/zh/concepts/agent-workspace)
 
 ## 示例
 
@@ -23,21 +24,23 @@ openclaw agents set-identity --agent main --avatar avatars/openclaw.png
 openclaw agents delete work
 ```
 
-## Identity 文件
+## 身份文件
 
-每个 agent 工作区根目录可包含 `IDENTITY.md`：
+每个代理工作区可以在工作区根目录包含一个 `IDENTITY.md`：
+
 - 示例路径：`~/.openclaw/workspace/IDENTITY.md`
-- `set-identity --from-identity` 从工作区根目录读取（或指定 `--identity-file`）
+- `set-identity --from-identity` 从工作区根目录读取（或显式的 `--identity-file`）
 
-Avatar 路径相对工作区根目录解析。
+头像路径相对于工作区根目录解析。
 
-## 设置 identity
+## 设置身份
 
-`set-identity` 会写入 `agents.list[].identity`：
+`set-identity` 将字段写入 `agents.list[].identity`：
+
 - `name`
 - `theme`
 - `emoji`
-- `avatar`（工作区相对路径、http(s) URL 或 data URI）
+- `avatar`（工作区相对路径、http(s) URL 或数据 URI）
 
 从 `IDENTITY.md` 加载：
 
@@ -63,10 +66,10 @@ openclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞" --ava
           name: "OpenClaw",
           theme: "space lobster",
           emoji: "🦞",
-          avatar: "avatars/openclaw.png"
-        }
-      }
-    ]
-  }
+          avatar: "avatars/openclaw.png",
+        },
+      },
+    ],
+  },
 }
 ```

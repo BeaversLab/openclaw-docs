@@ -13,12 +13,12 @@ OpenClaw 将聊天渠道共享的位置规范化为：
 - 自动回复上下文 payload 中的结构化字段。
 
 当前支持：
+
 - **Telegram**（位置钉点 + 场所 + 实时位置）
 - **WhatsApp**（locationMessage + liveLocationMessage）
 - **Matrix**（带 `geo_uri` 的 `m.location`）
 
-
-## Text formatting
+## 文本格式化
 位置会以友好的行展示（不含方括号）：
 
 - 钉点：
@@ -45,7 +45,8 @@ Meet here
 - `LocationSource`（`pin | place | live`）
 - `LocationIsLive` (boolean)
 
-## Channel notes
+## 渠道说明
+
 - **Telegram**：venue 映射到 `LocationName/LocationAddress`；实时位置使用 `live_period`。
-- **WhatsApp**: `locationMessage.comment` and `liveLocationMessage.caption` are appended as the caption line.
+- **WhatsApp**：`locationMessage.comment` 和 `liveLocationMessage.caption` 作为说明行追加。
 - **Matrix**：`geo_uri` 解析为钉点位置；忽略海拔，且 `LocationIsLive` 总为 false。

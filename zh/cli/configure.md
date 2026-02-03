@@ -16,11 +16,13 @@ title: "configure"
 `openclaw config get|set|unset`。
 
 相关：
+
 - Gateway 配置参考：[Configuration](/zh/gateway/configuration)
 - Config CLI：[Config](/zh/cli/config)
 
 说明：
-- 选择 Gateway 运行位置始终会更新 `gateway.mode`。若只需要这一项，可选择 “Continue” 跳过其他部分。
+
+- 选择 Gateway 运行位置始终会更新 `gateway.mode`。若只需要这一项，可选择 "Continue" 跳过其他部分。
 - 面向渠道的服务（Slack/Discord/Matrix/Microsoft Teams）在设置中会询问频道/房间 allowlist。你可以输入名称或 ID；向导会在可能时解析名称为 ID。
 
 ## 示例

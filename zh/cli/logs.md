@@ -11,6 +11,7 @@ title: "logs"
 通过 RPC 追踪 Gateway 文件日志（支持远程模式）。
 
 相关：
+
 - 日志概览：[Logging](/zh/logging)
 
 ## 示例

@@ -32,11 +32,11 @@ openclaw plugins install ./extensions/tlon
 
 ## 设置
 
-1) 安装 Tlon 插件。
-2) 准备 ship URL 与登录 code。
-3) 配置 `channels.tlon`。
-4) 重启 gateway。
-5) 私聊 bot 或在群频道中提及它。
+1. 安装 Tlon 插件。
+2. 准备 ship URL 与登录 code。
+3. 配置 `channels.tlon`。
+4. 重启 gateway。
+5. 私聊 bot 或在群频道中提及它。
 
 最小配置（单账号）：
 

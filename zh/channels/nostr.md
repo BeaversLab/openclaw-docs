@@ -41,14 +41,14 @@ openclaw plugins install --link <path-to-openclaw>/extensions/nostr
 
 ## 快速设置
 
-1) 生成 Nostr 密钥对（如需）：
+1. 生成 Nostr 密钥对（如需）：
 
 ```bash
 # Using nak
 nak key generate
 ```
 
-2) 添加到配置：
+2. 添加到配置：
 
 ```json
 {
@@ -60,13 +60,13 @@ nak key generate
 }
 ```
 
-3) 导出 key：
+3. 导出 key：
 
 ```bash
 export NOSTR_PRIVATE_KEY="nsec1..."
 ```
 
-4) 重启 Gateway。
+4. 重启 Gateway。
 
 ## 配置参考
 
@@ -198,10 +198,10 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ### 手动测试
 
-1) 从日志中获取 bot pubkey（npub）。
-2) 打开 Nostr 客户端（Damus、Amethyst 等）。
-3) 向 bot pubkey 发送私信。
-4) 验证回复。
+1. 从日志中获取 bot pubkey（npub）。
+2. 打开 Nostr 客户端（Damus、Amethyst 等）。
+3. 向 bot pubkey 发送私信。
+4. 验证回复。
 
 ## 故障排查
 

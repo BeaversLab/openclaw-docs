@@ -8,14 +8,15 @@ title: "上下文"
 ---
 # 上下文（Context）
 
-“Context” 是 **OpenClaw 在一次运行中发送给模型的全部内容**。它受模型 **上下文窗口**（token 限制）约束。
+"Context" 是 **OpenClaw 在一次运行中发送给模型的全部内容**。它受模型 **上下文窗口**（token 限制）约束。
 
 入门心智模型：
+
 - **System prompt**（OpenClaw 构建）：规则、工具、技能列表、时间/运行信息、注入的 workspace 文件。
 - **对话历史**：本会话中的你的消息 + assistant 的消息。
 - **工具调用/结果 + 附件**：命令输出、文件读取、图片/音频等。
 
-Context *不等同于* “memory”：memory 可以写入磁盘并在之后加载；context 则是模型当前窗口中的内容。
+Context _不等同于_ "memory"：memory 可以写入磁盘并在之后加载；context 则是模型当前窗口中的内容。
 
 ## 快速上手（检查 context）
 
@@ -77,16 +78,18 @@ Top tools (schema size):
 ## 什么会计入上下文窗口
 
 模型接收的所有内容都会计入，包括：
+
 - System prompt（所有部分）。
 - 对话历史。
 - 工具调用 + 工具结果。
 - 附件/转录（图片/音频/文件）。
 - Compaction 摘要与 pruning 产物。
-- Provider 的“包装层”或隐藏头（不可见，但仍计入）。
+- Provider 的"包装层"或隐藏头（不可见，但仍计入）。
 
 ## OpenClaw 如何构建 system prompt
 
 System prompt 由 **OpenClaw** 构建并在每次运行重建。内容包含：
+
 - 工具列表 + 简短描述。
 - Skills 列表（仅元信息；见下）。
 - Workspace 位置。
@@ -99,6 +102,7 @@ System prompt 由 **OpenClaw** 构建并在每次运行重建。内容包含：
 ## 注入的 workspace 文件（Project Context）
 
 默认情况下，OpenClaw 会注入固定的一组 workspace 文件（若存在）：
+
 - `AGENTS.md`
 - `SOUL.md`
 - `TOOLS.md`
@@ -119,35 +123,40 @@ System prompt 中包含简洁的 **skills 列表**（名称 + 描述 + 位置）
 ## Tools：两类成本
 
 Tools 会以两种方式影响上下文：
-1) System prompt 中的 **工具列表文本**（你看到的 “Tooling”）。
-2) **Tool schemas**（JSON）。这些会发送给模型以便调用工具，尽管你看不到文本，但同样计入上下文。
+
+1. System prompt 中的 **工具列表文本**（你看到的 "Tooling"）。
+2. **Tool schemas**（JSON）。这些会发送给模型以便调用工具，尽管你看不到文本，但同样计入上下文。
 
 `/context detail` 会拆解最大体量的 tool schema，便于识别主要占用。
 
-## 命令、指令与“内联快捷方式”
+## 命令、指令与"内联快捷方式"
 
 Slash 命令由 Gateway 处理，存在几种行为：
+
 - **独立命令**：仅包含 `/...` 的消息会作为命令执行。
 - **指令**：`/think`、`/verbose`、`/reasoning`、`/elevated`、`/model`、`/queue` 会在模型看到消息前被剥离。
   - 仅指令的消息会持久化会话设置。
   - 普通消息中的内联指令作为每条消息的提示。
-- **内联快捷方式**（仅 allowlisted 发送者）：普通消息中的某些 `/...` token 可以立即执行（例：“hey /status”），并在模型看到文本前被剥离。
+- **内联快捷方式**（仅 allowlisted 发送者）：普通消息中的某些 `/...` token 可以立即执行（例："hey /status"），并在模型看到文本前被剥离。
 
 详情见：[Slash commands](/zh/tools/slash-commands)。
 
 ## Sessions、compaction 与 pruning（哪些会持久化）
 
 跨消息持久化取决于机制：
+
 - **正常历史** 会保存在会话转录中，直到被 compaction/pruning 策略处理。
 - **Compaction** 会把摘要持久化到转录中，并保留近期消息。
-- **Pruning** 只从一次运行的 *内存提示* 中移除旧工具结果，不会改写转录。
+- **Pruning** 只从一次运行的 _内存提示_ 中移除旧工具结果，不会改写转录。
 
 文档： [Session](/zh/concepts/session)、[Compaction](/zh/concepts/compaction)、[Session pruning](/zh/concepts/session-pruning)。
 
 ## `/context` 实际报告什么
 
 `/context` 优先使用最新 **run-built** system prompt 报告（若存在）：
+
 - `System prompt (run)` = 从最近一次内嵌（可用工具）运行捕获并持久化在会话存储中。
 - `System prompt (estimate)` = 当没有 run 报告时（或 CLI 后端不生成报告时）即时计算。
 
 无论哪种方式，它只报告大小和主要贡献者；**不会**输出完整 system prompt 或 tool schemas。
+

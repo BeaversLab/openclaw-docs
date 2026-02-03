@@ -11,6 +11,7 @@ title: "cron"
 管理 Gateway 调度器的 cron 任务。
 
 相关：
+
 - Cron 任务：[Cron jobs](/zh/automation/cron-jobs)
 
 提示：运行 `openclaw cron --help` 查看完整命令面。

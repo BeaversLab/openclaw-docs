@@ -14,6 +14,7 @@ Gateway 是 OpenClaw 的 WebSocket 服务器（channels、nodes、sessions、hoo
 本页子命令均为 `openclaw gateway …`。
 
 相关文档：
+
 - [/gateway/bonjour](/zh/gateway/bonjour)
 - [/gateway/discovery](/zh/gateway/discovery)
 - [/gateway/configuration](/zh/gateway/configuration)
@@ -33,6 +34,7 @@ openclaw gateway run
 ```
 
 说明：
+
 - 默认情况下，除非在 `~/.openclaw/openclaw.json` 中设置 `gateway.mode=local`，Gateway 会拒绝启动。用于临时/dev 运行请使用 `--allow-unconfigured`。
 - 未启用认证时禁止绑定到 loopback 之外（安全护栏）。
 - `SIGUSR1` 在授权时触发进程内重启（启用 `commands.restart` 或使用 gateway 工具/配置 apply/update）。
@@ -63,11 +65,13 @@ openclaw gateway run
 所有查询命令都使用 WebSocket RPC。
 
 输出模式：
+
 - 默认：可读格式（TTY 里有颜色）。
 - `--json`：机器可读 JSON（无样式/转圈）。
 - `--no-color`（或 `NO_COLOR=1`）：禁用 ANSI，但保留布局。
 
 共享选项（支持时）：
+
 - `--url <url>`：Gateway WebSocket URL。
 - `--token <token>`：Gateway token。
 - `--password <password>`：Gateway 密码。
@@ -90,6 +94,7 @@ openclaw gateway status --json
 ```
 
 选项：
+
 - `--url <url>`：覆盖探测 URL。
 - `--token <token>`：探测的 token 认证。
 - `--password <password>`：探测的密码认证。
@@ -99,7 +104,8 @@ openclaw gateway status --json
 
 ### `gateway probe`
 
-`gateway probe` 是“全量调试”命令。它总会探测：
+`gateway probe` 是"全量调试"命令。它总会探测：
+
 - 你配置的 remote gateway（若已设置），以及
 - localhost（loopback），**即使设置了 remote**。
 
@@ -121,11 +127,13 @@ openclaw gateway probe --ssh user@gateway-host
 ```
 
 选项：
+
 - `--ssh <target>`：`user@host` 或 `user@host:port`（端口默认 `22`）。
 - `--ssh-identity <path>`：identity 文件。
 - `--ssh-auto`：自动选择首个发现的 gateway 主机作为 SSH 目标（仅 LAN/WAB）。
 
 配置（可选，作默认）：
+
 - `gateway.remote.sshTarget`
 - `gateway.remote.sshIdentity`
 

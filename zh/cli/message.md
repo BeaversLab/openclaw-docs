@@ -18,11 +18,13 @@ openclaw message <subcommand> [flags]
 ```
 
 频道选择：
+
 - 若配置了多个频道，需要 `--channel`。
 - 若仅配置一个频道，则它会成为默认。
 - 可选值：`whatsapp|telegram|discord|googlechat|slack|mattermost|signal|imessage|msteams`（Mattermost 需要插件）
 
 目标格式（`--target`）：
+
 - WhatsApp：E.164 或群组 JID
 - Telegram：chat id 或 `@username`
 - Discord：`channel:<id>` 或 `user:<id>`（或 `<@id>` 提及；纯数字 id 会被视为频道）
@@ -34,6 +36,7 @@ openclaw message <subcommand> [flags]
 - MS Teams：conversation id（`19:...@thread.tacv2`）或 `conversation:<id>` 或 `user:<aad-object-id>`
 
 名称查找：
+
 - 对支持的提供商（Discord/Slack 等），`Help` 或 `#help` 等频道名会通过目录缓存解析。
 - 缓存未命中时，若提供商支持，OpenClaw 会尝试实时目录查找。
 
@@ -181,12 +184,14 @@ openclaw message <subcommand> [flags]
 ## 示例
 
 发送 Discord 回复：
+
 ```
 openclaw message send --channel discord \
   --target channel:123 --message "hi" --reply-to 456
 ```
 
 创建 Discord 投票：
+
 ```
 openclaw message poll --channel discord \
   --target channel:123 \
@@ -196,12 +201,14 @@ openclaw message poll --channel discord \
 ```
 
 发送 Teams 主动消息：
+
 ```
 openclaw message send --channel msteams \
   --target conversation:19:abc@thread.tacv2 --message "hi"
 ```
 
 创建 Teams 投票：
+
 ```
 openclaw message poll --channel msteams \
   --target conversation:19:abc@thread.tacv2 \
@@ -210,12 +217,14 @@ openclaw message poll --channel msteams \
 ```
 
 Slack 中 react：
+
 ```
 openclaw message react --channel slack \
   --target C123 --message-id 456 --emoji "✅"
 ```
 
 在 Signal 群组中 react：
+
 ```
 openclaw message react --channel signal \
   --target signal:group:abc123 --message-id 1737630212345 \
@@ -223,6 +232,7 @@ openclaw message react --channel signal \
 ```
 
 发送 Telegram inline buttons：
+
 ```
 openclaw message send --channel telegram --target @mychat --message "Choose:" \
   --buttons '[ [{"text":"Yes","callback_data":"cmd:yes"}], [{"text":"No","callback_data":"cmd:no"}] ]'

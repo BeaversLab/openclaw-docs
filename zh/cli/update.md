@@ -48,6 +48,7 @@ openclaw update status --timeout 10
 ```
 
 选项：
+
 - `--json`：输出机器可读的状态 JSON。
 - `--timeout <seconds>`：检查超时（默认 3s）。
 

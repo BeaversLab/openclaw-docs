@@ -17,6 +17,7 @@ title: "node"
 就可以使用 node host。
 
 常见用例：
+
 - 在远程 Linux/Windows 机器上执行命令（构建服务器、实验室机器、NAS）。
 - 让 exec 仍 **受 gateway 沙盒控制**，但将已批准的运行委派给其他主机。
 - 为自动化或 CI 节点提供轻量、无头的执行目标。
@@ -35,9 +36,9 @@ title: "node"
 {
   nodeHost: {
     browserProxy: {
-      enabled: false
-    }
-  }
+      enabled: false,
+    },
+  },
 }
 ```
 
@@ -48,6 +49,7 @@ openclaw node run --host <gateway-host> --port 18789
 ```
 
 选项：
+
 - `--host <host>`：Gateway WebSocket host（默认：`127.0.0.1`）
 - `--port <port>`：Gateway WebSocket 端口（默认：`18789`）
 - `--tls`：对 gateway 连接使用 TLS
@@ -64,6 +66,7 @@ openclaw node install --host <gateway-host> --port 18789
 ```
 
 选项：
+
 - `--host <host>`：Gateway WebSocket host（默认：`127.0.0.1`）
 - `--port <port>`：Gateway WebSocket 端口（默认：`18789`）
 - `--tls`：对 gateway 连接使用 TLS

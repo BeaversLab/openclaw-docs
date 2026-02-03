@@ -1,0 +1,15 @@
+meta:
+  created: '2026-02-03T02:48:47.543Z'
+  source_dir: ../../../en
+  target_dir: ../../../zh
+  type: sync
+  status: completed
+summary:
+  total: 0
+  new: 0
+  deleted: 0
+  modified: 0
+  unchanged: 0
+  needs_action: 0
+files: []
+log: []

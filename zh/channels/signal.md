@@ -11,11 +11,11 @@ title: "Signal"
 状态：外部 CLI 集成。Gateway 通过 HTTP JSON-RPC + SSE 与 `signal-cli` 通信。
 
 ## 快速设置（新手）
-1) 使用**独立的 Signal 号码**作为 bot（推荐）。
-2) 安装 `signal-cli`（需要 Java）。
-3) 关联 bot 设备并启动守护进程：
+1. 使用**独立的 Signal 号码**作为 bot（推荐）。
+2. 安装 `signal-cli`（需要 Java）。
+3. 关联 bot 设备并启动守护进程：
    - `signal-cli link -n "OpenClaw"`
-4) 配置 OpenClaw 并启动 gateway。
+4. 配置 OpenClaw 并启动 gateway。
 
 最小配置：
 ```json5
@@ -53,10 +53,10 @@ title: "Signal"
 - 若希望“我发消息，bot 回复”，请使用**独立的 bot 号码**。
 
 ## 设置（快捷路径）
-1) 安装 `signal-cli`（需要 Java）。
-2) 关联 bot 账号：
+1. 安装 `signal-cli`（需要 Java）。
+2. 关联 bot 账号：
    - `signal-cli link -n "OpenClaw"`，然后用 Signal 扫码。
-3) 配置 Signal 并启动 gateway。
+3. 配置 Signal 并启动 gateway。
 
 示例：
 ```json5

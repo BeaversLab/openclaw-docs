@@ -12,6 +12,7 @@ title: "approvals"
 默认操作磁盘上的本地审批文件。使用 `--gateway` 操作 gateway，或用 `--node` 指定某个 node。
 
 相关：
+
 - Exec approvals：[Exec approvals](/zh/tools/exec-approvals)
 - Nodes：[Nodes](/zh/nodes)
 

@@ -12,6 +12,7 @@ title: "browser"
 管理 OpenClaw 的浏览器控制服务，并执行浏览器动作（tabs、snapshot、screenshot、导航、点击、输入）。
 
 相关：
+
 - Browser 工具 + API：[Browser tool](/zh/tools/browser)
 - Chrome 扩展中继：[Chrome extension](/zh/tools/chrome-extension)
 
@@ -35,6 +36,7 @@ openclaw browser --browser-profile openclaw snapshot
 ## Profiles
 
 Profiles 是命名的浏览器路由配置。通常：
+
 - `openclaw`：启动/连接一个由 OpenClaw 管理的专用 Chrome 实例（隔离用户数据目录）。
 - `chrome`：通过 Chrome 扩展中继控制你现有的 Chrome tab。
 

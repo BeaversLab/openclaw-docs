@@ -11,6 +11,7 @@ title: "dns"
 用于广域发现（Tailscale + CoreDNS）的 DNS 辅助工具。目前聚焦 macOS + Homebrew CoreDNS。
 
 相关：
+
 - Gateway 发现：[Discovery](/zh/gateway/discovery)
 - 广域发现配置：[Configuration](/zh/gateway/configuration)
 

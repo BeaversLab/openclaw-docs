@@ -11,11 +11,13 @@ title: "nodes"
 管理已配对节点（设备）并调用节点能力。
 
 相关：
+
 - Nodes 概览：[Nodes](/zh/nodes)
 - Camera：[Camera nodes](/zh/nodes/camera)
 - Images：[Image nodes](/zh/nodes/images)
 
 常用选项：
+
 - `--url`、`--token`、`--timeout`、`--json`
 
 ## 常用命令
@@ -45,6 +47,7 @@ openclaw nodes run --agent main --node <id|name|ip> --raw "git status"
 ```
 
 Invoke 标志：
+
 - `--params <json>`：JSON 对象字符串（默认 `{}`）。
 - `--invoke-timeout <ms>`：node invoke 超时（默认 `15000`）。
 - `--idempotency-key <key>`：可选幂等键。
@@ -59,6 +62,7 @@ Invoke 标志：
 - 需要可提供 `system.run` 的节点（macOS 伴侣应用或无头 node host）。
 
 标志：
+
 - `--cwd <path>`：工作目录。
 - `--env <key=val>`：环境变量覆盖（可重复）。
 - `--command-timeout <ms>`：命令超时。

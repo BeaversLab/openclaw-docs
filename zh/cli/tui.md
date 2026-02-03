@@ -11,6 +11,7 @@ title: "tui"
 打开连接到 Gateway 的终端 UI。
 
 相关：
+
 - TUI 指南：[TUI](/zh/tui)
 
 ## 示例

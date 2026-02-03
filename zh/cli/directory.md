@@ -11,11 +11,13 @@ title: "directory"
 对支持目录功能的渠道做查询（联系人/peers、群组，以及“我”）。
 
 ## 常用参数
+
 - `--channel <name>`：渠道 id/别名（配置多个渠道时必填；仅有一个渠道时自动选择）
 - `--account <id>`：账号 id（默认：渠道默认账号）
 - `--json`：输出 JSON
 
 ## 说明
+
 - `directory` 用于查找可粘贴到其他命令的 ID（尤其是 `openclaw message send --target ...`）。
 - 许多渠道的结果来自配置（allowlist/已配置群组），而非实时 provider 目录。
 - 默认输出为 `id`（有时带 `name`），用制表符分隔；脚本使用 `--json`。

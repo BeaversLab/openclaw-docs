@@ -28,17 +28,17 @@ openclaw plugins install ./extensions/twitch
 
 ## 快速设置（新手）
 
-1) 为 bot 创建一个专用 Twitch 账号（或使用已有账号）。
-2) 生成凭据：[Twitch Token Generator](https://twitchtokengenerator.com/)
+1. 为 bot 创建一个专用 Twitch 账号（或使用已有账号）。
+2. 生成凭据：[Twitch Token Generator](https://twitchtokengenerator.com/)
    - 选择 **Bot Token**
    - 确认勾选 `chat:read` 和 `chat:write` scopes
    - 复制 **Client ID** 和 **Access Token**
-3) 查找你的 Twitch 用户 ID： https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/
-4) 配置 token：
+3. 查找你的 Twitch 用户 ID： https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/
+4. 配置 token：
    - 环境变量：`OPENCLAW_TWITCH_ACCESS_TOKEN=...`（仅默认账号）
    - 或配置：`channels.twitch.accessToken`
    - 两者都设置时以配置优先（环境变量仅用于默认账号回退）。
-5) 启动 gateway。
+5. 启动 gateway。
 
 **⚠️ 重要：** 添加访问控制（`allowFrom` 或 `allowedRoles`）以防止未授权用户触发 bot。`requireMention` 默认是 `true`。
 

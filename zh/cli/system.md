@@ -26,6 +26,7 @@ openclaw system presence
 使用 `--mode now` 立即触发心跳；`next-heartbeat` 等待下一次定时心跳。
 
 标志：
+
 - `--text <text>`：必需的系统事件文本。
 - `--mode <mode>`：`now` 或 `next-heartbeat`（默认）。
 - `--json`：机器可读输出。
@@ -33,11 +34,13 @@ openclaw system presence
 ## `system heartbeat last|enable|disable`
 
 心跳控制：
+
 - `last`：显示上一次心跳事件。
 - `enable`：重新开启心跳（若被禁用时使用）。
 - `disable`：暂停心跳。
 
 标志：
+
 - `--json`：机器可读输出。
 
 ## `system presence`
@@ -45,6 +48,7 @@ openclaw system presence
 列出 Gateway 当前已知的系统 presence 条目（节点、实例等状态行）。
 
 标志：
+
 - `--json`：机器可读输出。
 
 ## 备注
