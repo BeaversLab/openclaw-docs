@@ -4,7 +4,7 @@ read_when:
   - 实现或修改 Bonjour 发现/广播
   - 调整远程连接模式（direct vs SSH）
   - 设计远程 node 的发现 + 配对
-title: "Discovery and Transports"
+title: "发现和传输"
 ---
 # 发现和传输
 

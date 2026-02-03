@@ -1,5 +1,5 @@
 ---
-title: "Platforms"
+title: "平台"
 summary: "平台支持概览（Gateway + 伴侣应用）"
 read_when:
   - 查找 OS 支持或安装路径

@@ -3,7 +3,7 @@ summary: "在 OpenClaw 中使用 Xiaomi MiMo（mimo-v2-flash）"
 read_when:
   - 想在 OpenClaw 中使用 Xiaomi MiMo 模型
   - 需要 XIAOMI_API_KEY 配置
-title: "Xiaomi MiMo"
+title: "小米 MiMo"
 ---
 # Xiaomi MiMo
 

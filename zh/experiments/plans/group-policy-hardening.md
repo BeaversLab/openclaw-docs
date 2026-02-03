@@ -2,7 +2,7 @@
 summary: "Telegram allowlist 加固：前缀 + 空白归一化"
 read_when:
   - 回顾历史 Telegram allowlist 变更
-title: "Telegram Allowlist Hardening"
+title: "Telegram 白名单加固"
 ---
 # Telegram Allowlist 加固
 

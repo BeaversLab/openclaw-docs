@@ -2,7 +2,7 @@
 summary: "通过 SSH 隧道（Gateway WS）与 tailnet 的远程访问"
 read_when:
   - 运行或排查远程 gateway 设置
-title: "Remote Access"
+title: "远程访问"
 ---
 # 远程访问（SSH、隧道与 tailnet）
 

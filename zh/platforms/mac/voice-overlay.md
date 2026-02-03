@@ -1,5 +1,5 @@
 ---
-title: "Voice Overlay"
+title: "语音覆盖层"
 summary: "唤醒词与按住说话重叠时的语音覆盖层生命周期"
 read_when:
   - 调整语音覆盖层行为

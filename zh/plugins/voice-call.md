@@ -1,5 +1,5 @@
 ---
-title: "Voice Call Plugin"
+title: "语音通话插件"
 summary: "Voice Call 插件：通过 Twilio/Telnyx/Plivo 进行呼入/呼出（安装 + 配置 + CLI）"
 read_when:
   - 想从 OpenClaw 发起外呼

@@ -1,6 +1,6 @@
 ---
 summary: "加强 cron.add 入参处理、对齐 schema，并改进 cron UI/agent 工具"
-title: "Cron Add Hardening"
+title: "Cron 添加加固"
 owner: "openclaw"
 status: "complete"
 last_updated: "2026-01-05"

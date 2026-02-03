@@ -2,7 +2,7 @@
 summary: "Agent loop 生命周期、流与等待语义"
 read_when:
   - 需要对 agent loop 或生命周期事件的准确解析
-title: "Agent Loop"
+title: "Agent 循环"
 ---
 # Agent Loop（OpenClaw）
 

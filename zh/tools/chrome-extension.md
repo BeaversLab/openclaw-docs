@@ -1,5 +1,5 @@
 ---
-title: "Chrome Extension"
+title: "Chrome 扩展"
 summary: "Chrome 扩展：让 OpenClaw 驱动你现有的 Chrome 标签页"
 read_when:
   - 你想让 agent 驱动现有 Chrome 标签页（工具栏按钮）

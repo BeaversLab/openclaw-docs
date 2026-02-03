@@ -4,7 +4,7 @@ read_when:
   - 解释入站消息如何成为回复
   - 澄清会话、队列模式或流式行为
   - 记录推理可见性与用量影响
-title: "Messages"
+title: "消息"
 ---
 # 消息（Messages）
 

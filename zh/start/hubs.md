@@ -2,7 +2,7 @@
 summary: "链接到所有 OpenClaw 文档的枢纽页"
 read_when:
   - 想要完整的文档地图
-title: "Docs Hubs"
+title: "文档中心"
 ---
 # 文档枢纽
 

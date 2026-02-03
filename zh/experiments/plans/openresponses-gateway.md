@@ -1,6 +1,6 @@
 ---
 summary: "计划：新增 OpenResponses /v1/responses 端点并平滑弃用 chat completions"
-title: "OpenResponses Gateway Plan"
+title: "OpenResponses Gateway 计划"
 owner: "openclaw"
 status: "draft"
 last_updated: "2026-01-19"

@@ -3,7 +3,7 @@ summary: "插件清单 + JSON schema 要求（严格配置校验）"
 read_when:
   - 构建 OpenClaw 插件
   - 需要发布插件配置 schema 或排查插件校验错误
-title: "Plugin Manifest"
+title: "插件清单"
 ---
 # 插件清单（openclaw.plugin.json）
 

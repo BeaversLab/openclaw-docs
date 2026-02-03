@@ -1,5 +1,5 @@
 ---
-title: "Browser (OpenClaw-managed)"
+title: "浏览器（OpenClaw 托管）"
 summary: "集成的浏览器控制服务 + 动作命令"
 read_when:
   - 添加 agent 控制的浏览器自动化

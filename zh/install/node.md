@@ -1,5 +1,5 @@
 ---
-title: "Node.js + npm (PATH sanity)"
+title: "Node.js + npm（PATH 完整性）"
 summary: "Node.js + npm 安装自检：版本、PATH 与全局安装"
 read_when:
   - "你安装了 OpenClaw 但 `openclaw` 提示 ‘command not found’"

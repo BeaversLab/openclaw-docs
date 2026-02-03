@@ -1,5 +1,5 @@
 ---
-title: "Pi Integration Architecture"
+title: "Pi 集成架构"
 ---
 
 # Pi 集成架构

@@ -4,7 +4,7 @@ read_when:
   - 设计超出每日 Markdown 日志的工作区 memory（~/.openclaw/workspace）
   - 决定：独立 CLI 还是深度集成 OpenClaw
   - 增加离线 recall + reflect（retain/recall/reflect）
-title: "Workspace Memory Research"
+title: "工作区记忆研究"
 ---
 
 # Workspace Memory v2（离线）：研究笔记

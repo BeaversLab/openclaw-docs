@@ -1,5 +1,5 @@
 ---
-title: "Remote Control"
+title: "远程控制"
 summary: "通过 SSH 远程控制 OpenClaw gateway 的 macOS 应用流程"
 read_when:
   - 设置或调试远程 mac 控制

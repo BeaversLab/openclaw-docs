@@ -1,5 +1,5 @@
 ---
-title: "LLM Task"
+title: "LLM 任务"
 summary: "工作流中的仅 JSON LLM 任务（可选插件工具）"
 read_when:
   - 你希望在工作流中加入仅 JSON 的 LLM 步骤

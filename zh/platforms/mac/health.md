@@ -1,5 +1,5 @@
 ---
-title: "Health Checks"
+title: "健康检查"
 summary: "macOS 应用如何报告 gateway/Baileys 健康状态"
 read_when:
   - 排查 mac 应用健康指示

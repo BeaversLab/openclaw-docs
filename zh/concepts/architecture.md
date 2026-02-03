@@ -2,7 +2,7 @@
 summary: "WebSocket gateway 架构、组件与客户端流程"
 read_when:
   - 在处理 gateway 协议、客户端或传输层工作
-title: "Gateway Architecture"
+title: "Gateway 架构"
 ---
 # Gateway 架构
 

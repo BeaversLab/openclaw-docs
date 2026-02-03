@@ -4,7 +4,7 @@ read_when:
   - 启用回复 TTS
   - 配置 TTS provider 或限制
   - 使用 /tts 命令
-title: "Text-to-Speech"
+title: "文本转语音"
 ---
 
 # 文本转语音（TTS）

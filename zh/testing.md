@@ -1,5 +1,5 @@
 ---
-title: "Testing"
+title: "测试"
 summary: "测试工具包：单元/e2e/live 套件、Docker 运行器，以及每个测试覆盖范围"
 read_when:
   - 在本地或 CI 运行测试

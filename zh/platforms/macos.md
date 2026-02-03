@@ -1,5 +1,5 @@
 ---
-title: "macOS App"
+title: "macOS 应用"
 summary: "OpenClaw macOS 伴侣应用（菜单栏 + gateway broker）"
 read_when:
   - 你在实现 macOS app 功能

@@ -1,5 +1,5 @@
 ---
-title: "Control UI"
+title: "控制界面"
 summary: "Gateway 的浏览器控制 UI（聊天、节点、配置）"
 read_when:
   - 你希望通过浏览器操作 Gateway

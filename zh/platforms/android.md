@@ -1,5 +1,5 @@
 ---
-title: "Android App"
+title: "Android 应用"
 summary: "Android 应用（node）：连接 runbook + Canvas/Chat/Camera"
 read_when:
   - 配对或重连 Android node

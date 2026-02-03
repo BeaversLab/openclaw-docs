@@ -2,7 +2,7 @@
 summary: "按频道路由规则（WhatsApp、Telegram、Discord、Slack）与共享上下文"
 read_when:
   - 需要修改频道路由或收件箱行为
-title: "Channel Routing"
+title: "渠道路由"
 ---
 # 频道和路由
 

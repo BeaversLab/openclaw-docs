@@ -1,6 +1,6 @@
 ---
 summary: "Onboarding 向导与配置 schema 的 RPC 协议说明"
-title: "Onboarding and Config Protocol"
+title: "入门和配置协议"
 read_when: "修改 onboarding 向导步骤或配置 schema 端点时"
 ---
 

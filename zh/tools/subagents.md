@@ -1,5 +1,5 @@
 ---
-title: "Sub-Agents"
+title: "子 Agent"
 summary: "Sub-agents：启动隔离的 agent 运行，并将结果回传到请求聊天"
 read_when:
   - 你希望通过 agent 做后台/并行工作

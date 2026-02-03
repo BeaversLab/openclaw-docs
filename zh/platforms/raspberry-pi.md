@@ -4,7 +4,7 @@ read_when:
   - 在树莓派上部署 OpenClaw
   - 在 ARM 设备上运行 OpenClaw
   - 构建便宜的常驻个人 AI
-title: "Raspberry Pi"
+title: "树莓派"
 ---
 
 # OpenClaw on Raspberry Pi

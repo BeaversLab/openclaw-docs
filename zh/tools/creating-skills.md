@@ -1,5 +1,5 @@
 ---
-title: "Creating Skills"
+title: "创建技能"
 ---
 
 # 创建自定义技能 🛠

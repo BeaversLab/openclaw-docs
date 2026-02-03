@@ -3,7 +3,7 @@ summary: "作为个人助理运行 OpenClaw 的端到端指南（含安全注意
 read_when:
   - 引导新的助理实例
   - 回顾安全/权限影响
-title: "Personal Assistant Setup"
+title: "个人助理设置"
 ---
 # 用 OpenClaw 构建个人助理
 

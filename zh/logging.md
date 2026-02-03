@@ -4,7 +4,7 @@ read_when:
   - 你需要面向新手的日志概览
   - 你想配置日志级别或格式
   - 你在排障且需要快速定位日志
-title: "Logging"
+title: "日志"
 ---
 
 # Logging

@@ -4,7 +4,7 @@ read_when:
   - 想用 Claude Max 订阅配合 OpenAI 兼容工具
   - 想要一个包装 Claude Code CLI 的本地 API 服务器
   - 想通过订阅而非 API key 节省成本
-title: "Claude Max API Proxy"
+title: "Claude Max API 代理"
 ---
 # Claude Max API Proxy
 

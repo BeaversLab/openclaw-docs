@@ -1,5 +1,5 @@
 ---
-title: "Development Channels"
+title: "开发渠道"
 summary: "Stable、beta 与 dev 渠道：语义、切换与打标签"
 read_when:
   - 你想在 stable/beta/dev 间切换

@@ -4,7 +4,7 @@ read_when:
   - 设计 exec host 路由或 exec 审批
   - 实现 node runner + UI IPC
   - 增加 exec host 安全模式与斜杠命令
-title: "Exec Host Refactor"
+title: "Exec Host 重构"
 ---
 
 # Exec host 重构计划

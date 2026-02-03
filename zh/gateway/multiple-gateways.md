@@ -3,7 +3,7 @@ summary: "在同一主机运行多个 OpenClaw Gateway（隔离、端口与 prof
 read_when:
   - 在同一机器运行多个 Gateway
   - 需要为每个 Gateway 隔离 config/state/端口
-title: "Multiple Gateways"
+title: "多个 Gateway"
 ---
 # 多网关（同一主机）
 

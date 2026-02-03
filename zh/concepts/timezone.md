@@ -3,7 +3,7 @@ summary: "Agent、信封与提示中的时区处理"
 read_when:
   - 需要了解时间戳如何为模型标准化
   - 配置 system prompt 的用户时区
-title: "Timezones"
+title: "时区"
 ---
 
 # 时区

@@ -3,7 +3,7 @@ summary: "模型认证：OAuth、API keys 与 setup-token"
 read_when:
   - 排查模型认证或 OAuth 过期
   - 记录认证或凭据存储
-title: "Authentication"
+title: "认证"
 ---
 # 认证
 

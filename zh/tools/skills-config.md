@@ -1,5 +1,5 @@
 ---
-title: "Skills Config"
+title: "技能配置"
 summary: "技能配置 schema 与示例"
 read_when:
   - 添加或修改技能配置

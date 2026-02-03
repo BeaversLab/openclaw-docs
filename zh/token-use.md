@@ -1,5 +1,5 @@
 ---
-title: "Token Use and Costs"
+title: "Token 使用和成本"
 summary: "OpenClaw 如何构建提示上下文并报告 token 用量与成本"
 read_when:
   - 解释 token 用量、成本或上下文窗口

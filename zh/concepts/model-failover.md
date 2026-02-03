@@ -3,7 +3,7 @@ summary: "OpenClaw 如何轮换 auth profiles 并在模型间回退"
 read_when:
   - 诊断 auth profile 轮换、冷却或模型回退行为
   - 更新 auth profiles 或模型的 failover 规则
-title: "Model Failover"
+title: "模型故障转移"
 ---
 
 # 模型失败处理

@@ -1,5 +1,5 @@
 ---
-title: "Linux App"
+title: "Linux 应用"
 summary: "Linux 支持 + 伴侣应用状态"
 read_when:
   - 查看 Linux 伴侣应用状态

@@ -1,5 +1,5 @@
 ---
-title: "Gateway on macOS"
+title: "macOS 上的 Gateway"
 summary: "macOS 上的 Gateway 运行时（外部 launchd 服务）"
 read_when:
   - 打包 OpenClaw.app

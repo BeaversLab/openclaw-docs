@@ -3,7 +3,7 @@ summary: "后台 exec 执行与进程管理"
 read_when:
   - 添加或修改后台 exec 行为
   - 排查长时间运行的 exec 任务
-title: "Background Exec and Process Tool"
+title: "后台 Exec 和进程工具"
 ---
 
 # 后台 Exec 和进程工具

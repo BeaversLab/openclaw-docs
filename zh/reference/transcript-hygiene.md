@@ -1,6 +1,6 @@
 ---
 summary: "参考：各 provider 的转录清理与修复规则"
-title: "Transcript Hygiene"
+title: "转录清理"
 read_when:
   - 调试因转录结构导致的 provider 请求拒绝
   - 修改转录清理或工具调用修复逻辑

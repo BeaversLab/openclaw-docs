@@ -1,5 +1,5 @@
 ---
-title: "Voice Wake"
+title: "语音唤醒"
 summary: "全局语音唤醒词（Gateway 持有）及跨节点同步方式"
 read_when:
   - 调整语音唤醒词行为或默认值

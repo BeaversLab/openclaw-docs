@@ -3,7 +3,7 @@ summary: "用量追踪界面与凭据要求"
 read_when:
   - 正在接入 provider 的使用量/配额界面
   - 需要解释用量追踪行为或认证要求
-title: "Usage Tracking"
+title: "使用跟踪"
 ---
 # 用量追踪
 

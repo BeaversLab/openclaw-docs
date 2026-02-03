@@ -1,5 +1,5 @@
 ---
-title: "Tests"
+title: "测试"
 summary: "如何在本地运行测试（vitest）以及何时使用 force/coverage 模式"
 read_when:
   - 运行或修复测试

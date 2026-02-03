@@ -4,7 +4,7 @@ read_when:
   - 排查 Instances 选项卡
   - 调查重复或陈旧的实例行
   - 修改 gateway WS 连接或 system-event 信标
-title: "Presence"
+title: "在线状态"
 ---
 # Presence
 

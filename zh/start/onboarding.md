@@ -3,7 +3,7 @@ summary: "OpenClaw 首次运行引导流程（macOS 应用）"
 read_when:
   - 设计 macOS 引导助手
   - 实现认证或身份设置
-title: "Onboarding"
+title: "入门"
 ---
 # 引导（macOS 应用）
 

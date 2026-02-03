@@ -3,7 +3,7 @@ summary: "OpenClaw 的 agent 工具面（browser、canvas、nodes、message、cr
 read_when:
   - 添加或修改 agent 工具
   - 退役或更改 `openclaw-*` skills
-title: "Tools"
+title: "工具"
 ---
 
 # 工具（OpenClaw）

@@ -1,5 +1,5 @@
 ---
-title: "Audio and Voice Notes"
+title: "音频和语音笔记"
 summary: "入站音频/语音如何下载、转写并注入回复"
 read_when:
   - 你在调整音频转写或媒体处理

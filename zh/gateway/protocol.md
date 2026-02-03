@@ -4,7 +4,7 @@ read_when:
   - 实现或更新 gateway WS 客户端
   - 排查协议不匹配或连接失败
   - 重新生成协议 schema/models
-title: "Gateway Protocol"
+title: "Gateway 协议"
 ---
 
 # 网关协议（WebSocket）

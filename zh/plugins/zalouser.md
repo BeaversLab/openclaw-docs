@@ -1,5 +1,5 @@
 ---
-title: "Zalo Personal Plugin"
+title: "Zalo 个人插件"
 summary: "Zalo Personal 插件：通过 zca-cli 扫码登录并发送消息（安装 + 频道配置 + CLI + 工具）"
 read_when:
   - 想在 OpenClaw 中使用 Zalo Personal（非官方）

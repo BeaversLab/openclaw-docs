@@ -1,5 +1,5 @@
 ---
-title: "Agent Send"
+title: "Agent 发送"
 summary: "直接运行 `openclaw agent` CLI（可选投递）"
 read_when:
   - 添加或修改 agent CLI 入口
