@@ -296,7 +296,7 @@ tar -czvf openclaw-backup.tar.gz ~/.openclaw ~/.openclaw/workspace
 
 ## See Also
 
-- [Gateway remote access](/zh/gateway/remote) — 其他远程访问方案
+- [Gateway 远程 access](/zh/gateway/remote) — 其他远程访问方案
 - [Tailscale integration](/zh/gateway/tailscale) — 完整 Tailscale 文档
 - [Gateway 配置](/zh/gateway/configuration) — 全部配置项
 - [DigitalOcean guide](/zh/platforms/digitalocean) — 若你想要付费 + 更好注册体验

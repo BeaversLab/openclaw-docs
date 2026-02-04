@@ -90,5 +90,5 @@ apps/macos/Sources/OpenClaw/Resources/Info.plist
 ## 相关
 
 - [nix-openclaw](https://github.com/openclaw/nix-openclaw) — 完整安装指南
-- [Wizard](/zh/start/wizard) — 非 Nix CLI 设置
+- [向导](/zh/start/wizard) — 非 Nix CLI 设置
 - [Docker](/zh/install/docker) — 容器化方案

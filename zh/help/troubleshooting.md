@@ -58,7 +58,7 @@ curl -fsSL https://openclaw.bot/install.sh | bash -s -- --beta --verbose
 ### Control UI 在 HTTP 下失败（需要设备身份）
 
 - [Gateway 故障排查](/zh/gateway/troubleshooting)
-- [Control UI](/zh/web/control-ui#insecure-http)
+- [控制界面](/zh/web/control-ui#insecure-http)
 
 ### `docs.openclaw.ai` 出现 SSL 错误（Comcast/Xfinity）
 

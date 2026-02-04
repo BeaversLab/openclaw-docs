@@ -67,7 +67,7 @@ Broadcast groups 允许在 OpenClaw **通常会回复的场景**下，为同一 
 }
 ```
 
-参见：[Broadcast Groups](/zh/broadcast-groups)。
+参见：[Broadcast 群组](/zh/broadcast-groups)。
 
 ## 配置概览
 

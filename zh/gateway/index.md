@@ -59,7 +59,7 @@ pnpm gateway:watch
 
 通常不需要：一个 Gateway 可服务多个消息渠道与 agents。仅在冗余或严格隔离（例如救援 bot）时使用多个 Gateway。
 
-支持方式：隔离 state + config 并使用唯一端口。完整指南见 [Multiple gateways](/zh/gateway/multiple-gateways)。
+支持方式：隔离 state + config 并使用唯一端口。完整指南见 [多 Gateway](/zh/gateway/multiple-gateways)。
 
 服务名支持 profile：
 
@@ -127,7 +127,7 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b opencla
 
 ## 协议（运营视角）
 
-- 完整文档： [Gateway protocol](/zh/gateway/protocol) 与 [桥接 protocol（旧）](/zh/gateway/bridge-protocol)。
+- 完整文档： [Gateway 协议](/zh/gateway/protocol) 与 [桥接 protocol（旧）](/zh/gateway/bridge-protocol)。
 - 客户端首帧必须是 `req {type:"req", id, method:"connect", params:{minProtocol,maxProtocol,client:{id,displayName?,version,platform,deviceFamily?,modelIdentifier?,mode,instanceId?}, caps, auth?, locale?, userAgent? } }`。
 - Gateway 回复 `res {type:"res", id, ok:true, payload:hello-ok }`（或 `ok:false` + error 后关闭）。
 - 握手后：
@@ -231,7 +231,7 @@ openclaw logs --follow
 - `gateway status` 在服务看起来运行但端口关闭时包含最后一行 gateway 错误。
 - `logs` 通过 RPC 跟踪 Gateway 文件日志（无需手动 `tail`/`grep`）。
 - 若检测到其他 gateway-like 服务，CLI 会告警，除非它们是 OpenClaw profile 服务。
-  我们仍推荐多数场景**每台机器一个 gateway**；冗余或救援 bot 使用隔离 profile/端口。见 [Multiple gateways](/zh/gateway/multiple-gateways)。
+  我们仍推荐多数场景**每台机器一个 gateway**；冗余或救援 bot 使用隔离 profile/端口。见 [多 Gateway](/zh/gateway/multiple-gateways)。
   - 清理：`openclaw gateway uninstall`（当前服务）与 `openclaw doctor`（旧迁移）。
 - `gateway install` 在已安装时为 no-op；使用 `openclaw gateway install --force` 重新安装（profile/env/path 变更）。
 

@@ -16,7 +16,7 @@ Gateway 仪表盘是默认在 `/` 提供的浏览器 Control UI
 
 关键参考：
 
-- 使用方式与 UI 能力见 [Control UI](/zh/web/control-ui)。
+- 使用方式与 UI 能力见 [控制界面](/zh/web/control-ui)。
 - Serve/Funnel 自动化见 [Tailscale](/zh/gateway/tailscale)。
 - 绑定方式与安全说明见 [Web surfaces](/zh/web)。
 

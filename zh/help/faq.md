@@ -66,7 +66,7 @@ summary: "关于 OpenClaw 安装、配置与使用的常见问题"
   - [What are the top five everyday use cases for OpenClaw](#what-are-the-top-five-everyday-use-cases-for-openclaw)
   - [Can OpenClaw help with lead gen outreach ads and blogs for a SaaS](#can-openclaw-help-with-lead-gen-outreach-ads-and-blogs-for-a-saas)
   - [What are the advantages vs Claude Code for web development?](#what-are-the-advantages-vs-claude-code-for-web-development)
-- [Skills and automation](#skills-and-automation)
+- [技能 and automation](#skills-and-automation)
   - [How do I customize skills without keeping the repo dirty?](#how-do-i-customize-skills-without-keeping-the-repo-dirty)
   - [Can I load skills from a custom folder?](#can-i-load-skills-from-a-custom-folder)
   - [How can I use different models for different tasks?](#how-can-i-use-different-models-for-different-tasks)
@@ -76,7 +76,7 @@ summary: "关于 OpenClaw 安装、配置与使用的常见问题"
   - [Can OpenClaw run tasks on a schedule or continuously in the background?](#can-openclaw-run-tasks-on-a-schedule-or-continuously-in-the-background)
   - [Can I run Apple/macOS-only skills from Linux?](#can-i-run-applemacosonly-skills-from-linux)
   - [Do you have a Notion or HeyGen integration?](#do-you-have-a-notion-or-heygen-integration)
-  - [How do I install the Chrome extension for browser takeover?](#how-do-i-install-the-chrome-extension-for-browser-takeover)
+  - [How do I install the Chrome 扩展 for browser takeover?](#how-do-i-install-the-chrome-extension-for-browser-takeover)
 - [沙盒隔离 and memory](#sandboxing-and-memory)
   - [Is there a dedicated sandboxing doc?](#is-there-a-dedicated-sandboxing-doc)
   - [How do I bind a host folder into the sandbox?](#how-do-i-bind-a-host-folder-into-the-sandbox)
@@ -164,7 +164,7 @@ summary: "关于 OpenClaw 安装、配置与使用的常见问题"
   - [Why does `openclaw gateway status` show `Config (cli)` and `Config (service)` different?](#why-does-openclaw-gateway-status-show-config-cli-and-config-service-different)
   - [What does “another gateway instance is already listening” mean?](#what-does-another-gateway-instance-is-already-listening-mean)
   - [How do I run OpenClaw in remote mode (client connects to a Gateway elsewhere)?](#how-do-i-run-openclaw-in-remote-mode-client-connects-to-a-gateway-elsewhere)
-  - [The Control UI says “unauthorized” (or keeps reconnecting). What now?](#the-control-ui-says-unauthorized-or-keeps-reconnecting-what-now)
+  - [The 控制界面 says “unauthorized” (or keeps reconnecting). What now?](#the-control-ui-says-unauthorized-or-keeps-reconnecting-what-now)
   - [I set `gateway.bind: "tailnet"` but it can’t bind / nothing listens](#i-set-gatewaybind-tailnet-but-it-cant-bind-nothing-listens)
   - [Can I run multiple Gateways on the same host?](#can-i-run-multiple-gateways-on-the-same-host)
   - [What does “invalid handshake” / code 1008 mean?](#what-does-invalid-handshake-code-1008-mean)
@@ -343,7 +343,7 @@ The wizard now opens your browser with a tokenized dashboard URL right after onb
 - **Tailnet bind**: run `openclaw gateway --bind tailnet --token "<token>"`, open `http://<tailscale-ip>:18789/`, paste token in dashboard settings.
 - **SSH tunnel**: `ssh -N -L 18789:127.0.0.1:18789 user@host` then open `http://127.0.0.1:18789/?token=...` from `openclaw dashboard`.
 
-See [Dashboard](/web/dashboard) and [Web surfaces](/web) for bind modes and auth details.
+See [仪表板](/web/dashboard) and [Web surfaces](/web) for bind modes and auth details.
 
 ### What runtime do I need
 
@@ -585,7 +585,7 @@ Short answer: follow the Linux guide, then run the onboarding wizard.
 Any Linux VPS works. Install on the server, then use SSH/Tailscale to reach the Gateway.
 
 Guides: [exe.dev](/platforms/exe-dev), [Hetzner](/platforms/hetzner), [Fly.io](/platforms/fly).  
-Remote access: [Gateway remote](/gateway/remote).
+Remote access: [Gateway 远程](/gateway/remote).
 
 ### Where are the cloudVPS install guides
 
@@ -604,7 +604,7 @@ You can pair **nodes** (Mac/iOS/Android/headless) to that cloud Gateway to acces
 local screen/camera/canvas or run commands on your laptop while keeping the
 Gateway in the cloud.
 
-Hub: [平台](/platforms). Remote access: [Gateway remote](/gateway/remote).
+Hub: [平台](/platforms). Remote access: [Gateway 远程](/gateway/remote).
 Nodes: [节点](/nodes), [节点 CLI](/cli/nodes).
 
 ### Can I ask OpenClaw to update itself
@@ -700,14 +700,14 @@ Yes - via pi‑ai’s **Amazon Bedrock (Converse)** provider with **manual confi
 
 ### How does Codex auth work
 
-OpenClaw supports **OpenAI Code (Codex)** via OAuth (ChatGPT sign-in). The wizard can run the OAuth flow and will set the default model to `openai-codex/gpt-5.2` when appropriate. See [模型 providers](/concepts/model-providers) and [Wizard](/start/wizard).
+OpenClaw supports **OpenAI Code (Codex)** via OAuth (ChatGPT sign-in). The wizard can run the OAuth flow and will set the default model to `openai-codex/gpt-5.2` when appropriate. See [模型 providers](/concepts/model-providers) and [向导](/start/wizard).
 
 ### Do you support OpenAI subscription auth Codex OAuth
 
 Yes. OpenClaw fully supports **OpenAI Code (Codex) subscription OAuth**. The onboarding wizard
 can run the OAuth flow for you.
 
-See [OAuth](/concepts/oauth), [模型 providers](/concepts/model-providers), and [Wizard](/start/wizard).
+See [OAuth](/concepts/oauth), [模型 providers](/concepts/model-providers), and [向导](/start/wizard).
 
 ### How do I set up Gemini CLI OAuth
 
@@ -1124,7 +1124,7 @@ clawdhub install <skill-slug>
 clawdhub update --all
 ```
 
-ClawdHub installs into `./skills` under your current directory (or falls back to your configured OpenClaw workspace); OpenClaw treats that as `<workspace>/skills` on the next session. For shared skills across agents, place them in `~/.openclaw/skills/<name>/SKILL.md`. Some skills expect binaries installed via Homebrew; on Linux that means Linuxbrew (see the Homebrew Linux FAQ entry above). See [Skills](/tools/skills) and [ClawdHub](/tools/clawdhub).
+ClawdHub installs into `./skills` under your current directory (or falls back to your configured OpenClaw workspace); OpenClaw treats that as `<workspace>/skills` on the next session. For shared skills across agents, place them in `~/.openclaw/skills/<name>/SKILL.md`. Some skills expect binaries installed via Homebrew; on Linux that means Linuxbrew (see the Homebrew Linux FAQ entry above). See [技能](/tools/skills) and [ClawdHub](/tools/clawdhub).
 
 ### How do I install the Chrome extension for browser takeover
 
@@ -1137,7 +1137,7 @@ openclaw browser extension path
 
 Then Chrome → `chrome://extensions` → enable “Developer mode” → “Load unpacked” → pick that folder.
 
-Full guide (including remote Gateway + security notes): [Chrome extension](/tools/chrome-extension)
+Full guide (including remote Gateway + security notes): [Chrome 扩展](/tools/chrome-extension)
 
 If the Gateway runs on the same machine as Chrome (default setup), you usually **do not** need anything extra.
 If the Gateway runs elsewhere, run a node host on the browser machine so the Gateway can proxy browser actions.
@@ -1155,7 +1155,7 @@ Yes - if your private traffic is **DMs** and your public traffic is **groups**.
 
 Use `agents.defaults.sandbox.mode: "non-main"` so group/channel sessions (non-main keys) run in Docker, while the main DM session stays on-host. Then restrict what tools are available in sandboxed sessions via `tools.sandbox.tools`.
 
-Setup walkthrough + example config: [Groups: personal DMs + public groups](/concepts/groups#pattern-personal-dms-public-groups-single-agent)
+Setup walkthrough + example config: [群组: personal DMs + public groups](/concepts/groups#pattern-personal-dms-public-groups-single-agent)
 
 Key config reference: [Gateway 配置](/gateway/configuration#agentsdefaultssandbox)
 
@@ -1393,7 +1393,7 @@ Notes:
 - `web_fetch` is enabled by default (unless explicitly disabled).
 - Daemons read env vars from `~/.openclaw/.env` (or the service environment).
 
-Docs: [Web tools](/tools/web).
+Docs: [Web 工具](/tools/web).
 
 ### How do I run a central Gateway with specialized workers across devices
 
@@ -1469,7 +1469,7 @@ No separate TCP bridge is required; nodes connect over the Gateway WebSocket.
 Security reminder: pairing a macOS node allows `system.run` on that machine. Only
 pair devices you trust, and review [安全](/gateway/security).
 
-Docs: [节点](/nodes), [Gateway protocol](/gateway/protocol), [macOS remote mode](/platforms/mac/remote), [安全](/gateway/security).
+Docs: [节点](/nodes), [Gateway 协议](/gateway/protocol), [macOS remote mode](/platforms/mac/remote), [安全](/gateway/security).
 
 ### Tailscale is connected but I get no replies What now
 
@@ -1537,7 +1537,7 @@ setup is an always‑on host plus your laptop as a node.
 SSH is fine for ad‑hoc shell access, but nodes are simpler for ongoing agent workflows and
 device automation.
 
-Docs: [节点](/nodes), [节点 CLI](/cli/nodes), [Chrome extension](/tools/chrome-extension).
+Docs: [节点](/nodes), [节点 CLI](/cli/nodes), [Chrome 扩展](/tools/chrome-extension).
 
 ### Should I install on a second laptop or just add a node
 
@@ -1547,11 +1547,11 @@ currently macOS-only, but we plan to extend them to other OSes.
 
 Install a second Gateway only when you need **hard isolation** or two fully separate bots.
 
-Docs: [节点](/nodes), [节点 CLI](/cli/nodes), [Multiple gateways](/gateway/multiple-gateways).
+Docs: [节点](/nodes), [节点 CLI](/cli/nodes), [多 Gateway](/gateway/multiple-gateways).
 
 ### Do nodes run a gateway service
 
-No. Only **one gateway** should run per host unless you intentionally run isolated profiles (see [Multiple gateways](/gateway/multiple-gateways)). Nodes are peripherals that connect
+No. Only **one gateway** should run per host unless you intentionally run isolated profiles (see [多 Gateway](/gateway/multiple-gateways)). Nodes are peripherals that connect
 to the gateway (iOS/Android nodes, or macOS “node mode” in the menubar app). For headless node
 hosts and CLI control, see [节点 host CLI](/cli/node).
 
@@ -1631,7 +1631,7 @@ Recommended setup:
    openclaw nodes approve <requestId>
    ```
 
-Docs: [Gateway protocol](/gateway/protocol), [发现](/gateway/discovery), [macOS remote mode](/platforms/mac/remote).
+Docs: [Gateway 协议](/gateway/protocol), [发现](/gateway/discovery), [macOS remote mode](/platforms/mac/remote).
 
 ## Env vars and .env loading
 
@@ -1770,7 +1770,7 @@ openclaw onboard --install-daemon
 
 Notes:
 
-- The onboarding wizard also offers **Reset** if it sees an existing config. See [Wizard](/start/wizard).
+- The onboarding wizard also offers **Reset** if it sees an existing config. See [向导](/start/wizard).
 - If you used profiles (`--profile` / `OPENCLAW_PROFILE`), reset each state dir (defaults are `~/.openclaw-<profile>`).
 - Dev reset: `openclaw gateway --dev --reset` (dev-only; wipes dev config + credentials + sessions + workspace).
 
@@ -1797,7 +1797,7 @@ If it keeps happening:
 - Enable or tune **session pruning** (`agents.defaults.contextPruning`) to trim old tool output.
 - Use a model with a larger context window.
 
-Docs: [Compaction](/concepts/compaction), [会话 pruning](/concepts/session-pruning), [会话 management](/concepts/session).
+Docs: [压缩](/concepts/compaction), [会话 pruning](/concepts/session-pruning), [会话 management](/concepts/session).
 
 ### Why am I seeing LLM request rejected messagesNcontentXtooluseinput Field required
 
@@ -1873,11 +1873,11 @@ Two common causes:
 - Mention gating is on (default). You must @mention the bot (or match `mentionPatterns`).
 - You configured `channels.whatsapp.groups` without `"*"` and the group isn’t allowlisted.
 
-See [Groups](/concepts/groups) and [Group messages](/concepts/group-messages).
+See [群组](/concepts/groups) and [Group messages](/concepts/group-messages).
 
 ### Do groupsthreads share context with DMs
 
-Direct chats collapse to the main session by default. Groups/channels have their own session keys, and Telegram topics / Discord threads are separate sessions. See [Groups](/concepts/groups) and [Group messages](/concepts/group-messages).
+Direct chats collapse to the main session by default. Groups/channels have their own session keys, and Telegram topics / Discord threads are separate sessions. See [群组](/concepts/groups) and [Group messages](/concepts/group-messages).
 
 ### How many workspaces and agents can I create
 
@@ -1910,7 +1910,7 @@ Best‑practice setup:
 - Local browser via extension relay (or a node) when needed.
 
 Docs: [Multi‑Agent Routing](/concepts/multi-agent), [Slack](/channels/slack),
-[Browser](/tools/browser), [Chrome extension](/tools/chrome-extension), [节点](/nodes).
+[Browser](/tools/browser), [Chrome 扩展](/tools/chrome-extension), [节点](/nodes).
 
 ## Models: defaults, selection, aliases, switching
 
@@ -2375,7 +2375,7 @@ OpenClaw 通过在启动时立刻绑定 WebSocket 监听器来实现运行锁（
 - 远程时先打隧道：`ssh -N -L 18789:127.0.0.1:18789 user@host`，然后打开 `http://127.0.0.1:18789/?token=...`。
 - 在 Gateway 主机上设置 `gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）。
 - 在 Control UI 设置中粘贴同一个 token（或用一次性 `?token=...` 链接刷新）。
-- 仍未解决？运行 `openclaw status --all` 并查看 [故障排查](/zh/gateway/troubleshooting)。[Dashboard](/zh/web/dashboard) 有 auth 细节。
+- 仍未解决？运行 `openclaw status --all` 并查看 [故障排查](/zh/gateway/troubleshooting)。[仪表板](/zh/web/dashboard) 有 auth 细节。
 
 ### I set gatewaybind tailnet but it cant bind nothing listens
 
@@ -2406,7 +2406,7 @@ OpenClaw 通过在启动时立刻绑定 WebSocket 监听器来实现运行锁（
 - 安装每 profile 的服务：`openclaw --profile <name> gateway install`。
 
 Profiles 还会给服务名加后缀（`bot.molt.<profile>`；旧的 `com.openclaw.*`、`openclaw-gateway-<profile>.service`、`OpenClaw Gateway (<profile>)`）。
-完整指南：[Multiple gateways](/zh/gateway/multiple-gateways)。
+完整指南：[多 Gateway](/zh/gateway/multiple-gateways)。
 
 ### What does invalid handshake code 1008 mean
 
@@ -2430,7 +2430,7 @@ Gateway 是一个 **WebSocket server**，它期望第一条消息是 `connect` �
 openclaw tui --url ws://<host>:18789 --token <token>
 ```
 
-协议细节：[Gateway protocol](/zh/gateway/protocol)。
+协议细节：[Gateway 协议](/zh/gateway/protocol)。
 
 ## Logging and debugging
 
@@ -2542,7 +2542,7 @@ Docs: [通道](/zh/channels), [故障排查](/zh/gateway/troubleshooting), [远�
 openclaw logs --follow
 ```
 
-Docs: [Dashboard](/zh/web/dashboard), [远程访问](/zh/gateway/remote), [故障排查](/zh/gateway/troubleshooting)。
+Docs: [仪表板](/zh/web/dashboard), [远程访问](/zh/gateway/remote), [故障排查](/zh/gateway/troubleshooting)。
 
 ### Telegram setMyCommands fails with network errors What should I check
 

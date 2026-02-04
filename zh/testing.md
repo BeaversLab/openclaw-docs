@@ -343,7 +343,7 @@ Live 测试发现凭据的方式与 CLI 相同。实际含义：
 - 通过真实 gateway + agent loop 的 mock 工具调用（`src/gateway/gateway.tool-calling.mock-openai.test.ts`）。
 - 端到端向导流程，验证会话连接与配置效果（`src/gateway/gateway.wizard.e2e.test.ts`）。
 
-Skills 仍缺少的内容（见 [Skills](/zh/tools/skills)）：
+Skills 仍缺少的内容（见 [技能](/zh/tools/skills)）：
 
 - **Decisioning：** prompt 中列出 skills 时，agent 是否选择正确的技能（或避免不相关技能）？
 - **Compliance：** agent 是否在使用前读取 `SKILL.md`，并遵循必须的步骤/参数？

@@ -14,7 +14,7 @@ title: "browser"
 相关：
 
 - Browser 工具 + API：[Browser tool](/zh/tools/browser)
-- Chrome 扩展中继：[Chrome extension](/zh/tools/chrome-extension)
+- Chrome 扩展中继：[Chrome 扩展](/zh/tools/chrome-extension)
 
 ## 常用参数
 
@@ -96,7 +96,7 @@ openclaw browser extension path
 
 然后在 Chrome 中打开 `chrome://extensions` → 启用 “Developer mode” → “Load unpacked” → 选择输出的目录。
 
-完整指南：[Chrome extension](/zh/tools/chrome-extension)
+完整指南：[Chrome 扩展](/zh/tools/chrome-extension)
 
 ## 远程浏览器控制（node host 代理）
 

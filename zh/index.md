@@ -35,7 +35,7 @@ OpenClaw 也驱动 OpenClaw assistant。
 ## Start here
 
 - **从零新装：**[入门指南](/zh/start/getting-started)
-- **向导式设置（推荐）：**[Wizard](/zh/start/wizard)（`openclaw onboard`）
+- **向导式设置（推荐）：**[向导](/zh/start/wizard)（`openclaw onboard`）
 - **打开仪表盘（本地 Gateway）：**http://127.0.0.1:18789/（或 http://localhost:18789/）
 
 如果 Gateway 运行在同一台电脑上，该链接会直接打开浏览器 Control UI。
@@ -76,7 +76,7 @@ WhatsApp / Telegram / Discord / iMessage (+ plugins)
 
 ## Network model
 
-- **每台主机一个 Gateway（推荐）**：它是唯一允许持有 WhatsApp Web 会话的进程。如果需要救援 bot 或强隔离，可用隔离的 profile 与端口运行多个网关；见 [Multiple gateways](/zh/gateway/multiple-gateways)。
+- **每台主机一个 Gateway（推荐）**：它是唯一允许持有 WhatsApp Web 会话的进程。如果需要救援 bot 或强隔离，可用隔离的 profile 与端口运行多个网关；见 [多 Gateway](/zh/gateway/multiple-gateways)。
 - **Loopback-first**：Gateway WS 默认为 `ws://127.0.0.1:18789`。
   - 向导现在默认生成 gateway token（即便是 loopback）。
   - Tailnet 访问用：`openclaw gateway --bind tailnet --token ...`（非 loopback 绑定必须带 token）。
@@ -185,23 +185,23 @@ openclaw message send --target +15555550123 --message "Hello from OpenClaw"
   - [配对 (DM + nodes)](/zh/start/pairing)
   - [Nix mode](/zh/install/nix)
   - [OpenClaw assistant setup](/zh/start/openclaw)
-  - [Skills](/zh/tools/skills)
-  - [Skills config](/zh/tools/skills-config)
+  - [技能](/zh/tools/skills)
+  - [技能配置](/zh/tools/skills-config)
   - [Workspace templates](/zh/reference/templates/AGENTS)
   - [RPC adapters](/zh/reference/rpc)
-  - [Gateway runbook](/zh/gateway)
+  - [Gateway 运维手册](/zh/gateway)
   - [节点 (iOS/Android)](/zh/nodes)
-  - [Web surfaces (Control UI)](/zh/web)
+  - [Web surfaces (控制界面)](/zh/web)
   - [发现 + transports](/zh/gateway/discovery)
   - [远程访问](/zh/gateway/remote)
 - Providers and UX:
   - [WebChat](/zh/web/webchat)
-  - [Control UI (browser)](/zh/web/control-ui)
+  - [控制界面 (browser)](/zh/web/control-ui)
   - [Telegram](/zh/channels/telegram)
   - [Discord](/zh/channels/discord)
   - [Mattermost (plugin)](/zh/channels/mattermost)
   - [iMessage](/zh/channels/imessage)
-  - [Groups](/zh/concepts/groups)
+  - [群组](/zh/concepts/groups)
   - [WhatsApp group messages](/zh/concepts/group-messages)
   - [Media: images](/zh/nodes/images)
   - [Media: audio](/zh/nodes/audio)

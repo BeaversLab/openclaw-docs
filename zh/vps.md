@@ -30,7 +30,7 @@ title: "VPS 托管"
 - 安全默认：保持 Gateway 在回环，仅通过 SSH 隧道或 Tailscale Serve 访问。
   若绑定到 `lan`/`tailnet`，需要 `gateway.auth.token` 或 `gateway.auth.password`。
 
-远程访问：[Gateway remote](/zh/gateway/remote)  
+远程访问：[Gateway 远程](/zh/gateway/remote)  
 平台索引：[平台](/zh/platforms)
 
 ## 在 VPS 上使用节点

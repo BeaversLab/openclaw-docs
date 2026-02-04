@@ -26,7 +26,7 @@ Auth profiles 是 **per-agent** 的。每个 agent 从各自的路径读取：
 主 agent 的凭据**不会**自动共享。不要在 agents 之间复用 `agentDir`
 （会造成 auth/session 冲突）。若需要共享凭据，请将 `auth-profiles.json` 复制到其他 agent 的 `agentDir`。
 
-Skills 以各 workspace 的 `skills/` 目录为 per-agent；共享 skills 位于 `~/.openclaw/skills`。参见 [Skills: per-agent vs shared](/zh/tools/skills#per-agent-vs-shared-skills)。
+Skills 以各 workspace 的 `skills/` 目录为 per-agent；共享 skills 位于 `~/.openclaw/skills`。参见 [技能: per-agent vs shared](/zh/tools/skills#per-agent-vs-shared-skills)。
 
 Gateway 可以运行**一个 agent**（默认）或**多个 agents**并排运行。
 

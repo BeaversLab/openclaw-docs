@@ -27,7 +27,7 @@ Context _不等同于_ "memory"：memory 可以写入磁盘并在之后加载；
 - `/usage tokens` → 为普通回复附加每条回复的用量页脚。
 - `/compact` → 将旧历史压缩为摘要以释放窗口空间。
 
-另见：[斜杠命令](/zh/tools/slash-commands)、[Token use & costs](/zh/token-use)、[Compaction](/zh/concepts/compaction)。
+另见：[斜杠命令](/zh/tools/slash-commands)、[Token use & costs](/zh/token-use)、[压缩](/zh/concepts/compaction)。
 
 ## 示例输出
 
@@ -150,7 +150,7 @@ Slash 命令由 Gateway 处理，存在几种行为：
 - **Compaction** 会把摘要持久化到转录中，并保留近期消息。
 - **Pruning** 只从一次运行的 _内存提示_ 中移除旧工具结果，不会改写转录。
 
-文档： [会话](/zh/concepts/session)、[Compaction](/zh/concepts/compaction)、[会话 pruning](/zh/concepts/session-pruning)。
+文档： [会话](/zh/concepts/session)、[压缩](/zh/concepts/compaction)、[会话 pruning](/zh/concepts/session-pruning)。
 
 ## `/context` 实际报告什么
 

@@ -21,7 +21,7 @@ Compaction 会 **持久化** 到会话 JSONL 历史。
 
 ## 配置
 
-`agents.defaults.compaction` 设置详见 [Compaction config & modes](/zh/concepts/compaction)。
+`agents.defaults.compaction` 设置详见 [压缩 config & modes](/zh/concepts/compaction)。
 
 ## 自动 compaction（默认开启）
 

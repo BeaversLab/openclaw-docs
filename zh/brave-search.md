@@ -38,4 +38,4 @@ OpenClaw 使用 Brave Search 作为 `web_search` 的默认 provider。
 - Data for AI 套餐**不**兼容 `web_search`。
 - Brave 提供免费层与付费套餐；当前限制请查看 Brave API 控制台。
 
-参见 [Web tools](/zh/tools/web) 了解完整 web_search 配置。
+参见 [Web 工具](/zh/tools/web) 了解完整 web_search 配置。

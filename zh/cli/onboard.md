@@ -11,7 +11,7 @@ title: "onboard"
 
 相关：
 
-- 向导指南：[Onboarding](/zh/start/onboarding)
+- 向导指南：[入门](/zh/start/onboarding)
 
 ## 示例
 

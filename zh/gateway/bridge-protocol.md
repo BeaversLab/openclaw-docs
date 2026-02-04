@@ -12,7 +12,7 @@ title: "Bridge 协议"
 Bridge 协议是**旧版** node 传输（TCP JSONL）。新的 node 客户端应使用统一的 Gateway WebSocket 协议。
 
 如果你在构建 operator 或 node 客户端，请使用
-[Gateway protocol](/zh/gateway/protocol)。
+[Gateway 协议](/zh/gateway/protocol)。
 
 **注意：**当前 OpenClaw 构建已不再提供 TCP bridge listener；此文仅作历史参考。
 旧版 `bridge.*` 配置键也不再属于配置 schema。

@@ -1,27 +1,17 @@
 # 未翻译的链接文本
-# 生成时间: 2026-02-04T06:52:48.831Z
-# 总数: 1049
+# 生成时间: 2026-02-04T07:02:28.789Z
+# 总数: 584
 
 # 格式: 行号 | 文件路径 | 原文 | 链接
 
 
 ## zh/automation/cron-jobs.md
 
-12 | "Cron vs Heartbeat" | /zh/automation/cron-vs-heartbeat
+421 | "`openclaw system event`" | /zh/cli/system
 
 ## zh/automation/cron-vs-heartbeat.md
 
-126 | "Cron jobs" | /zh/automation/cron-jobs
-211 | "Lobster" | /zh/tools/lobster
-284 | "Cron jobs" | /zh/automation/cron-jobs
 285 | "System" | /zh/cli/system
-
-## zh/automation/gmail-pubsub.md
-
-16 | "gogcli.sh" | https://gogcli.sh/
-17 | "Webhooks" | /zh/automation/webhook
-18 | "tailscale.com" | https://tailscale.com/
-90 | "Webhooks" | /zh/automation/webhook
 
 ## zh/automation/webhook.md
 
@@ -31,130 +21,54 @@
 
 41 | "Web tools" | /zh/tools/web
 
-## zh/channels/bluebubbles.md
-
-17 | "bluebubbles.app" | https://bluebubbles.app
-28 | "bluebubbles.app/install" | https://bluebubbles.app/install
-77 | "Pairing" | /zh/start/pairing
-252 | "Gateway security" | /zh/gateway/security#reverse-proxy-configuration
-
 ## zh/channels/discord.md
 
-60 | "Slash commands" | /zh/tools/slash-commands
-63 | "/tools/reactions" | /zh/tools/reactions
+159 | "`gateway/configuration`" | /zh/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts
 236 | "Retry policy" | /zh/concepts/retry
 
 ## zh/channels/googlechat.md
 
-15 | "Google Chat API Credentials" | https://console.cloud.google.com/apis/api/chat.googleapis.com/credentials
-56 | "Google Chat" | https://chat.google.com/
-248 | "Gateway configuration" | /zh/gateway/configuration
 250 | "Reactions" | /zh/tools/reactions
 
 ## zh/channels/imessage.md
 
-201 | "Pairing" | /zh/start/pairing
+190 | "`gateway/configuration`" | /zh/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts
 240 | "Multi-agent routing" | /zh/concepts/multi-agent
-240 | "Sandboxing" | /zh/gateway/sandboxing
 
 ## zh/channels/index.md
 
-16 | "WhatsApp" | /zh/channels/whatsapp
-17 | "Telegram" | /zh/channels/telegram
-18 | "Discord" | /zh/channels/discord
-19 | "Slack" | /zh/channels/slack
-20 | "Google Chat" | /zh/channels/googlechat
-21 | "Mattermost" | /zh/channels/mattermost
-22 | "Signal" | /zh/channels/signal
-23 | "BlueBubbles" | /zh/channels/bluebubbles
-24 | "iMessage" | /zh/channels/imessage
 25 | "Microsoft Teams" | /zh/channels/msteams
-26 | "LINE" | /zh/channels/line
-27 | "Nextcloud Talk" | /zh/channels/nextcloud-talk
-28 | "Matrix" | /zh/channels/matrix
-29 | "Nostr" | /zh/channels/nostr
-30 | "Tlon" | /zh/channels/tlon
-31 | "Twitch" | /zh/channels/twitch
-32 | "Zalo" | /zh/channels/zalo
-33 | "Zalo Personal" | /zh/channels/zalouser
 34 | "WebChat" | /zh/web/webchat
 40 | "Groups" | /zh/concepts/groups
-42 | "grammY notes" | /zh/channels/grammy
-
-## zh/channels/mattermost.md
-
-13 | "mattermost.com" | https://mattermost.com
 
 ## zh/channels/msteams.md
 
-153 | "Create Azure Bot" | https://portal.azure.com/#create/Microsoft.AzureBot
 211 | "Teams Developer Portal" | https://dev.teams.microsoft.com/apps
 458 | "Reply Style" | #reply-style-threads-vs-posts
-471 | "/concepts/session" | /zh/concepts/session
 628 | "Adaptive Cards documentation" | https://adaptivecards.io/
 628 | "Target formats" | #target-formats
-758 | "Create Azure Bot" | https://learn.microsoft.com/en-us/azure/bot-service/bot-service-quickstart-registration
 759 | "Teams Developer Portal" | https://dev.teams.microsoft.com/apps
 760 | "Teams app manifest schema" | https://learn.microsoft.com/en-us/microsoftteams/platform/resources/schema/manifest-schema
-761 | "Receive channel messages with RSC" | https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/conversations/channel-messages-with-rsc
-762 | "RSC permissions reference" | https://learn.microsoft.com/en-us/microsoftteams/platform/graph-api/rsc/resource-specific-consent
 763 | "Teams bot file handling" | https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/bots-filesv4
 764 | "Proactive messaging" | https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/conversations/send-proactive-messages
 
 ## zh/channels/signal.md
 
-112 | "Pairing" | /zh/start/pairing
+84 | "`gateway/configuration`" | /zh/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts
 
 ## zh/channels/slack.md
 
-464 | "Slash commands" | /zh/tools/slash-commands
-528 | "/tools/reactions" | /zh/tools/reactions
+50 | "`gateway/configuration`" | /zh/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts
 
 ## zh/channels/telegram.md
 
-340 | "Pairing" | /zh/start/pairing
+75 | "`gateway/configuration`" | /zh/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts
 582 | "Streaming + chunking" | /zh/concepts/streaming
 586 | "Retry policy" | /zh/concepts/retry
-593 | "/tools/reactions" | /zh/tools/reactions
-
-## zh/channels/troubleshooting.md
-
-22 | "/channels/discord#troubleshooting" | /zh/channels/discord#troubleshooting
-23 | "/channels/telegram#troubleshooting" | /zh/channels/telegram#troubleshooting
-24 | "/channels/whatsapp#troubleshooting-quick" | /zh/channels/whatsapp#troubleshooting-quick
-28 | "/channels/telegram#troubleshooting" | /zh/channels/telegram#troubleshooting
 
 ## zh/channels/twitch.md
 
-33 | "Twitch Token Generator" | https://twitchtokengenerator.com/
-74 | "Twitch Token Generator" | https://twitchtokengenerator.com/
-130 | "Twitch Token Generator" | https://twitchtokengenerator.com/
-132 | "Twitch Developer Console" | https://dev.twitch.tv/console
-
-## zh/channels/whatsapp.md
-
-105 | "hot.at" | https://www.hot.at
-106 | "giffgaff" | https://www.giffgaff.com
-197 | "Multi-Agent Routing" | /zh/concepts/multi-agent
-297 | "/tools/reactions" | /zh/tools/reactions
-385 | "Gateway troubleshooting" | /zh/gateway/troubleshooting
-
-## zh/channels/zalo.md
-
-107 | "Pairing" | /zh/start/pairing
-
-## zh/cli/acp.md
-
-148 | "/concepts/session" | /zh/concepts/session
-
-## zh/cli/agent.md
-
-15 | "Agent send" | /zh/tools/agent-send
-
-## zh/cli/agents.md
-
-14 | "Multi-Agent Routing" | /zh/concepts/multi-agent
-15 | "Agent workspace" | /zh/concepts/agent-workspace
+149 | "`gateway/configuration`" | /zh/gateway/configuration
 
 ## zh/cli/approvals.md
 
@@ -166,27 +80,10 @@
 17 | "Chrome extension" | /zh/tools/chrome-extension
 99 | "Chrome extension" | /zh/tools/chrome-extension
 107 | "Browser tool" | /zh/tools/browser
-107 | "Remote access" | /zh/gateway/remote
-107 | "Tailscale" | /zh/gateway/tailscale
 
 ## zh/cli/configure.md
 
 21 | "Config" | /zh/cli/config
-
-## zh/cli/cron.md
-
-15 | "Cron jobs" | /zh/automation/cron-jobs
-
-## zh/cli/dns.md
-
-15 | "Discovery" | /zh/gateway/discovery
-
-## zh/cli/gateway.md
-
-18 | "/gateway/bonjour" | /zh/gateway/bonjour
-19 | "/gateway/discovery" | /zh/gateway/discovery
-20 | "/gateway/configuration" | /zh/gateway/configuration
-169 | "/gateway/bonjour" | /zh/gateway/bonjour
 
 ## zh/cli/hooks.md
 
@@ -195,15 +92,48 @@
 
 ## zh/cli/index.md
 
-258 | "/plugin" | /zh/plugin
-270 | "/tools/slash-commands" | /zh/tools/slash-commands
-410 | "/concepts/oauth" | /zh/concepts/oauth
-451 | "/automation/gmail-pubsub" | /zh/automation/gmail-pubsub
-460 | "/gateway/discovery" | /zh/gateway/discovery
-472 | "/cli/message" | /zh/cli/message
-738 | "/concepts/models" | /zh/concepts/models
-887 | "/automation/cron-jobs" | /zh/automation/cron-jobs
-919 | "/nodes" | /zh/nodes
+15 | "`setup`" | /zh/cli/setup
+16 | "`onboard`" | /zh/cli/onboard
+17 | "`configure`" | /zh/cli/configure
+18 | "`config`" | /zh/cli/config
+19 | "`doctor`" | /zh/cli/doctor
+20 | "`dashboard`" | /zh/cli/dashboard
+21 | "`reset`" | /zh/cli/reset
+22 | "`uninstall`" | /zh/cli/uninstall
+23 | "`update`" | /zh/cli/update
+24 | "`message`" | /zh/cli/message
+25 | "`agent`" | /zh/cli/agent
+26 | "`agents`" | /zh/cli/agents
+27 | "`acp`" | /zh/cli/acp
+28 | "`status`" | /zh/cli/status
+29 | "`health`" | /zh/cli/health
+30 | "`sessions`" | /zh/cli/sessions
+31 | "`gateway`" | /zh/cli/gateway
+32 | "`logs`" | /zh/cli/logs
+33 | "`system`" | /zh/cli/system
+34 | "`models`" | /zh/cli/models
+35 | "`memory`" | /zh/cli/memory
+36 | "`nodes`" | /zh/cli/nodes
+37 | "`devices`" | /zh/cli/devices
+38 | "`node`" | /zh/cli/node
+39 | "`approvals`" | /zh/cli/approvals
+40 | "`sandbox`" | /zh/cli/sandbox
+41 | "`tui`" | /zh/cli/tui
+42 | "`browser`" | /zh/cli/browser
+43 | "`cron`" | /zh/cli/cron
+44 | "`dns`" | /zh/cli/dns
+45 | "`docs`" | /zh/cli/docs
+46 | "`hooks`" | /zh/cli/hooks
+47 | "`webhooks`" | /zh/cli/webhooks
+48 | "`pairing`" | /zh/cli/pairing
+49 | "`plugins`" | /zh/cli/plugins
+50 | "`channels`" | /zh/cli/channels
+51 | "`security`" | /zh/cli/security
+52 | "`skills`" | /zh/cli/skills
+53 | "`voicecall`" | /zh/cli/voicecall
+552 | "`acp`" | /zh/cli/acp
+906 | "`openclaw node`" | /zh/cli/node
+961 | "`openclaw browser`" | /zh/cli/browser
 961 | "Browser tool" | /zh/tools/browser
 
 ## zh/cli/models.md
@@ -223,10 +153,6 @@
 
 14 | "Onboarding" | /zh/start/onboarding
 
-## zh/cli/pairing.md
-
-14 | "Pairing" | /zh/start/pairing
-
 ## zh/cli/plugins.md
 
 16 | "Plugin manifest" | /zh/plugins/manifest
@@ -242,19 +168,9 @@
 16 | "Skills config" | /zh/tools/skills-config
 17 | "ClawdHub" | /zh/tools/clawdhub
 
-## zh/cli/status.md
-
-26 | "Updating" | /zh/install/updating
-
 ## zh/cli/tui.md
 
 15 | "TUI" | /zh/tui
-
-## zh/cli/update.md
-
-14 | "Updating" | /zh/install/updating
-96 | "Updating" | /zh/install/updating
-97 | "CLI reference" | /zh/cli
 
 ## zh/cli/voicecall.md
 
@@ -272,11 +188,12 @@
 99 | "Streaming" | /zh/concepts/streaming
 122 | "Compaction" | /zh/concepts/compaction
 
+## zh/concepts/agent-workspace.md
+
+18 | "`agents.defaults.sandbox`" | /zh/gateway/sandboxing
+
 ## zh/concepts/agent.md
 
-18 | "Agent workspace" | /zh/concepts/agent-workspace
-22 | "Gateway configuration" | /zh/gateway/configuration
-63 | "Gateway configuration" | /zh/gateway/configuration
 86 | "Queue" | /zh/concepts/queue
 93 | "Streaming + chunking" | /zh/concepts/streaming
 112 | "Group Chats" | /zh/concepts/group-messages
@@ -285,7 +202,6 @@
 
 46 | "Gateway protocol" | /zh/gateway/protocol
 92 | "Gateway protocol" | /zh/gateway/protocol
-92 | "Pairing" | /zh/start/pairing
 
 ## zh/concepts/channel-routing.md
 
@@ -294,24 +210,17 @@
 ## zh/concepts/compaction.md
 
 24 | "Compaction config & modes" | /zh/concepts/compaction
-54 | "/concepts/session-pruning" | /zh/concepts/session-pruning
 
 ## zh/concepts/context.md
 
-30 | "Slash commands" | /zh/tools/slash-commands
 30 | "Token use & costs" | /zh/token-use
 30 | "Compaction" | /zh/concepts/compaction
 101 | "System Prompt" | /zh/concepts/system-prompt
-143 | "Slash commands" | /zh/tools/slash-commands
 153 | "Compaction" | /zh/concepts/compaction
 
 ## zh/concepts/groups.md
 
 39 | "Group message flow" | /zh/images/groups-flow.svg
-67 | "Multi-Agent Routing" | /zh/concepts/multi-agent
-118 | "Gateway configuration" | /zh/gateway/configuration#agentsdefaultssandbox
-119 | "Sandbox vs Tool Policy vs Elevated" | /zh/gateway/sandbox-vs-tool-policy-vs-elevated
-120 | "Sandboxing" | /zh/gateway/sandboxing#custom-bind-mounts
 373 | "Group messages" | /zh/concepts/group-messages
 
 ## zh/concepts/markdown-formatting.md
@@ -322,10 +231,6 @@
 90 | "label" | url
 91 | "label" | url
 
-## zh/concepts/memory.md
-
-26 | "Agent workspace" | /zh/concepts/agent-workspace
-
 ## zh/concepts/messages.md
 
 100 | "Queueing" | /zh/concepts/queue
@@ -333,49 +238,14 @@
 126 | "Thinking + reasoning directives" | /zh/tools/thinking
 126 | "Token use" | /zh/token-use
 
-## zh/concepts/model-failover.md
-
-26 | "/concepts/oauth" | /zh/concepts/oauth
-134 | "Gateway configuration" | /zh/gateway/configuration
-
-## zh/concepts/model-providers.md
-
-12 | "/concepts/models" | /zh/concepts/models
-204 | "/providers/qwen" | /zh/providers/qwen
-241 | "/providers/minimax" | /zh/providers/minimax
-266 | "/providers/ollama" | /zh/providers/ollama
-322 | "/gateway/configuration" | /zh/gateway/configuration
-
-## zh/concepts/models.md
-
-12 | "/concepts/model-failover" | /zh/concepts/model-failover
-14 | "/concepts/model-providers" | /zh/concepts/model-providers
-28 | "/concepts/multi-agent" | /zh/concepts/multi-agent
-57 | "/gateway/configuration" | /zh/gateway/configuration#opencode-zen-multi-model-proxy
-109 | "Slash commands" | /zh/tools/slash-commands
-186 | "/environment" | /zh/environment
-
 ## zh/concepts/multi-agent.md
 
 29 | "Skills: per-agent vs shared" | /zh/tools/skills#per-agent-vs-shared-skills
-34 | "Sandboxing" | /zh/gateway/sandboxing
 111 | "Broadcast groups" | /zh/broadcast-groups
-
-## zh/concepts/oauth.md
-
-49 | "/gateway/configuration" | /zh/gateway/configuration#auth-storage-oauth--api-keys
-143 | "/concepts/model-failover" | /zh/concepts/model-failover
-144 | "/tools/slash-commands" | /zh/tools/slash-commands
-
-## zh/concepts/session-pruning.md
-
-76 | "/concepts/compaction" | /zh/concepts/compaction
 
 ## zh/concepts/session.md
 
-40 | "/concepts/session-pruning" | /zh/concepts/session-pruning
 45 | "Compaction" | /zh/concepts/compaction
-143 | "/concepts/compaction" | /zh/concepts/compaction
 
 ## zh/concepts/system-prompt.md
 
@@ -395,41 +265,16 @@
 122 | "Timezones" | /zh/concepts/timezone
 123 | "Messages" | /zh/concepts/messages
 
-## zh/diagnostics/flags.md
-
-85 | "/cli/logs" | /zh/cli/logs
-91 | "/logging" | /zh/logging
-
-## zh/environment.md
-
-79 | "Gateway configuration" | /zh/gateway/configuration
-
-## zh/experiments/plans/cron-add-hardening.md
-
-49 | "Cron jobs" | /zh/automation/cron-jobs
-
 ## zh/experiments/plans/group-policy-hardening.md
 
 37 | "Group Chats" | /zh/concepts/groups
-38 | "Telegram Provider" | /zh/channels/telegram
-
-## zh/experiments/plans/openresponses-gateway.md
-
-14 | "OpenAI Chat Completions" | /zh/gateway/openai-http-api
-
-## zh/experiments/proposals/model-config.md
-
-14 | "OAuth + profiles" | /zh/concepts/oauth
 
 ## zh/gateway/authentication.md
 
-13 | "/concepts/oauth" | /zh/concepts/oauth
 45 | "Help" | /zh/help
-89 | "/automation/auth-monitoring" | /zh/automation/auth-monitoring
 
 ## zh/gateway/bonjour.md
 
-153 | "Discovery" | /zh/gateway/discovery
 154 | "Gateway pairing" | /zh/gateway/pairing
 
 ## zh/gateway/bridge-protocol.md
@@ -438,64 +283,35 @@
 
 ## zh/gateway/configuration.md
 
-292 | "/zh/environment" | /zh/environment
-364 | "/zh/concepts/oauth" | /zh/concepts/oauth
 1492 | "Messages" | /zh/concepts/messages
-1883 | "/zh/concepts/session-pruning" | /zh/concepts/session-pruning
-1887 | "/zh/concepts/compaction" | /zh/concepts/compaction
-1954 | "/zh/concepts/streaming" | /zh/concepts/streaming
-1963 | "/zh/concepts/typing-indicators" | /zh/concepts/typing-indicators
-2242 | "Sandbox vs Tool Policy vs Elevated" | /zh/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands
-2370 | "/zh/concepts/model-providers" | /zh/concepts/model-providers
-2598 | "/zh/gateway/local-models" | /zh/gateway/local-models
 
 ## zh/gateway/discovery.md
 
-25 | "Bridge protocol" | /zh/gateway/bridge-protocol
 29 | "Gateway protocol" | /zh/gateway/protocol
 54 | "Bonjour" | /zh/gateway/bonjour
-91 | "Remote access" | /zh/gateway/remote
 106 | "Gateway pairing" | /zh/gateway/pairing
-
-## zh/gateway/doctor.md
-
-235 | "/concepts/agent-workspace" | /zh/concepts/agent-workspace
 
 ## zh/gateway/heartbeat.md
 
-11 | "Cron vs Heartbeat" | /zh/automation/cron-vs-heartbeat
-53 | "/concepts/timezone" | /zh/concepts/timezone
-132 | "sessions CLI" | /zh/cli/sessions
 133 | "Groups" | /zh/concepts/groups
 
 ## zh/gateway/index.md
 
+36 | "`/v1/chat/completions`" | /zh/gateway/openai-http-api
+37 | "`/v1/responses`" | /zh/gateway/openresponses-http-api
+38 | "`/tools/invoke`" | /zh/gateway/tools-invoke-http-api
 62 | "Multiple gateways" | /zh/gateway/multiple-gateways
 76 | "Rescue-bot guide" | /zh/gateway/multiple-gateways#rescue-bot-guide
 130 | "Gateway protocol" | /zh/gateway/protocol
 152 | "Presence" | /zh/concepts/presence
 234 | "Multiple gateways" | /zh/gateway/multiple-gateways
 
-## zh/gateway/logging.md
-
-11 | "/logging" | /zh/logging
-
 ## zh/gateway/remote.md
 
-31 | "exe.dev" | /zh/platforms/exe-dev
-31 | "Hetzner" | /zh/platforms/hetzner
 42 | "macOS remote access" | /zh/platforms/mac/remote
-51 | "Tailscale" | /zh/gateway/tailscale
 51 | "Web overview" | /zh/web
 66 | "Multiple gateways" | /zh/gateway/multiple-gateways
 113 | "macOS remote access" | /zh/platforms/mac/remote
-
-## zh/gateway/sandboxing.md
-
-103 | "Sandbox vs Tool Policy vs Elevated" | /zh/gateway/sandbox-vs-tool-policy-vs-elevated
-129 | "Docker" | /zh/install/docker
-156 | "Sandbox vs Tool Policy vs Elevated" | /zh/gateway/sandbox-vs-tool-policy-vs-elevated
-161 | "Sandbox vs Tool Policy vs Elevated" | /zh/gateway/sandbox-vs-tool-policy-vs-elevated
 
 ## zh/gateway/security/formal-verification.md
 
@@ -503,21 +319,11 @@
 
 ## zh/gateway/security/index.md
 
-170 | "/zh/plugin" | /zh/plugin
-188 | "/zh/start/pairing" | /zh/start/pairing
 229 | "“A step forward on safety”" | https://www.anthropic.com/news/claude-opus-4-5
-432 | "Tailscale" | /zh/gateway/tailscale
-558 | "Docker" | /zh/install/docker
 
 ## zh/gateway/troubleshooting.md
 
-14 | "/zh/channels/troubleshooting" | /zh/channels/troubleshooting
-77 | "Anthropic" | /zh/providers/anthropic
-77 | "OAuth" | /zh/concepts/oauth
-87 | "Tailscale Serve" | /zh/gateway/tailscale
 91 | "Control UI" | /zh/web/control-ui#insecure-http
-131 | "/zh/logging" | /zh/logging
-172 | "/zh/tools/exec" | /zh/tools/exec
 
 ## zh/help/faq.md
 
@@ -532,7 +338,6 @@
 20 | "It is stuck on "wake up my friend" / onboarding will not hatch. What now?" | #it-is-stuck-on-wake-up-my-friend-onboarding-will-not-hatch-what-now
 21 | "Can I migrate my setup to a new machine (Mac mini) without redoing onboarding?" | #can-i-migrate-my-setup-to-a-new-machine-mac-mini-without-redoing-onboarding
 22 | "Where do I see what’s new in the latest version?" | #where-do-i-see-what-is-new-in-the-latest-version
-23 | "I can't access docs.openclaw.ai (SSL error). What now?" | #i-cant-access-docsopenclawai-ssl-error-what-now
 24 | "What’s the difference between stable and beta?" | #whats-the-difference-between-stable-and-beta
 25 | "How do I install the beta version, and what’s the difference between beta and dev?" | #how-do-i-install-the-beta-version-and-whats-the-difference-between-beta-and-dev
 26 | "How do I try the latest bits?" | #how-do-i-try-the-latest-bits
@@ -545,24 +350,13 @@
 33 | "Where are the cloud/VPS install guides?" | #where-are-the-cloudvps-install-guides
 34 | "Can I ask OpenClaw to update itself?" | #can-i-ask-openclaw-to-update-itself
 35 | "What does the onboarding wizard actually do?" | #what-does-the-onboarding-wizard-actually-do
-36 | "Do I need a Claude or OpenAI subscription to run this?" | #do-i-need-a-claude-or-openai-subscription-to-run-this
-37 | "Can I use Claude Max subscription without an API key" | #can-i-use-claude-max-subscription-without-an-api-key
-38 | "How does Anthropic "setup-token" auth work?" | #how-does-anthropic-setuptoken-auth-work
-39 | "Where do I find an Anthropic setup-token?" | #where-do-i-find-an-anthropic-setuptoken
-40 | "Do you support Claude subscription auth (Claude Code OAuth)?" | #do-you-support-claude-subscription-auth-claude-code-oauth
-41 | "Why am I seeing `HTTP 429: rate_limit_error` from Anthropic?" | #why-am-i-seeing-http-429-ratelimiterror-from-anthropic
 42 | "Is AWS Bedrock supported?" | #is-aws-bedrock-supported
 43 | "How does Codex auth work?" | #how-does-codex-auth-work
-44 | "Do you support OpenAI subscription auth (Codex OAuth)?" | #do-you-support-openai-subscription-auth-codex-oauth
-45 | "How do I set up Gemini CLI OAuth" | #how-do-i-set-up-gemini-cli-oauth
 46 | "Is a local model OK for casual chats?" | #is-a-local-model-ok-for-casual-chats
 47 | "How do I keep hosted model traffic in a specific region?" | #how-do-i-keep-hosted-model-traffic-in-a-specific-region
 48 | "Do I have to buy a Mac Mini to install this?" | #do-i-have-to-buy-a-mac-mini-to-install-this
-49 | "Do I need a Mac mini for iMessage support?" | #do-i-need-a-mac-mini-for-imessage-support
 50 | "If I buy a Mac mini to run OpenClaw, can I connect it to my MacBook Pro?" | #if-i-buy-a-mac-mini-to-run-openclaw-can-i-connect-it-to-my-macbook-pro
 51 | "Can I use Bun?" | #can-i-use-bun
-52 | "Telegram: what goes in `allowFrom`?" | #telegram-what-goes-in-allowfrom
-53 | "Can multiple people use one WhatsApp number with different OpenClaw instances?" | #can-multiple-people-use-one-whatsapp-number-with-different-openclaw-instances
 54 | "Can I run a "fast chat" agent and an "Opus for coding" agent?" | #can-i-run-a-fast-chat-agent-and-an-opus-for-coding-agent
 55 | "Does Homebrew work on Linux?" | #does-homebrew-work-on-linux
 56 | "What’s the difference between the hackable (git) install and npm install?" | #whats-the-difference-between-the-hackable-git-install-and-npm-install
@@ -583,18 +377,15 @@
 71 | "Can I load skills from a custom folder?" | #can-i-load-skills-from-a-custom-folder
 72 | "How can I use different models for different tasks?" | #how-can-i-use-different-models-for-different-tasks
 73 | "The bot freezes while doing heavy work. How do I offload that?" | #the-bot-freezes-while-doing-heavy-work-how-do-i-offload-that
-74 | "Cron or reminders do not fire. What should I check?" | #cron-or-reminders-do-not-fire-what-should-i-check
 75 | "How do I install skills on Linux?" | #how-do-i-install-skills-on-linux
 76 | "Can OpenClaw run tasks on a schedule or continuously in the background?" | #can-openclaw-run-tasks-on-a-schedule-or-continuously-in-the-background
 77 | "Can I run Apple/macOS-only skills from Linux?" | #can-i-run-applemacosonly-skills-from-linux
 78 | "Do you have a Notion or HeyGen integration?" | #do-you-have-a-notion-or-heygen-integration
 79 | "How do I install the Chrome extension for browser takeover?" | #how-do-i-install-the-chrome-extension-for-browser-takeover
-80 | "Sandboxing and memory" | #sandboxing-and-memory
 81 | "Is there a dedicated sandboxing doc?" | #is-there-a-dedicated-sandboxing-doc
 82 | "How do I bind a host folder into the sandbox?" | #how-do-i-bind-a-host-folder-into-the-sandbox
 83 | "How does memory work?" | #how-does-memory-work
 85 | "Does memory persist forever? What are the limits?" | #does-memory-persist-forever-what-are-the-limits
-86 | "Does semantic memory search require an OpenAI API key?" | #does-semantic-memory-search-require-an-openai-api-key
 87 | "Where things live on disk" | #where-things-live-on-disk
 88 | "Is all data used with OpenClaw saved locally?" | #is-all-data-used-with-openclaw-saved-locally
 89 | "Where does OpenClaw store its data?" | #where-does-openclaw-store-its-data
@@ -614,17 +405,12 @@
 103 | "Can the OpenClaw browser run headless?" | #can-the-openclaw-browser-run-headless
 104 | "How do I use Brave for browser control?" | #how-do-i-use-brave-for-browser-control
 105 | "Remote gateways + nodes" | #remote-gateways-nodes
-106 | "How do commands propagate between Telegram, the gateway, and nodes?" | #how-do-commands-propagate-between-telegram-the-gateway-and-nodes
 107 | "How can my agent access my computer if the Gateway is hosted remotely?" | #how-can-my-agent-access-my-computer-if-the-gateway-is-hosted-remotely
-108 | "Tailscale is connected but I get no replies. What now?" | #tailscale-is-connected-but-i-get-no-replies-what-now
 109 | "Can two OpenClaw instances talk to each other (local + VPS)?" | #can-two-openclaw-instances-talk-to-each-other-local-vps
 110 | "Do I need separate VPSes for multiple agents" | #do-i-need-separate-vpses-for-multiple-agents
 111 | "Is there a benefit to using a node on my personal laptop instead of SSH from a VPS?" | #is-there-a-benefit-to-using-a-node-on-my-personal-laptop-instead-of-ssh-from-a-vps
 112 | "Do nodes run a gateway service?" | #do-nodes-run-a-gateway-service
-113 | "Is there an API / RPC way to apply config?" | #is-there-an-api-rpc-way-to-apply-config
 114 | "What’s a minimal “sane” config for a first install?" | #whats-a-minimal-sane-config-for-a-first-install
-115 | "How do I set up Tailscale on a VPS and connect from my Mac?" | #how-do-i-set-up-tailscale-on-a-vps-and-connect-from-my-mac
-116 | "How do I connect a Mac node to a remote Gateway (Tailscale Serve)?" | #how-do-i-connect-a-mac-node-to-a-remote-gateway-tailscale-serve
 117 | "Should I install on a second laptop or just add a node?" | #should-i-install-on-a-second-laptop-or-just-add-a-node
 118 | "Env vars and .env loading" | #env-vars-and-env-loading
 119 | "How does OpenClaw load environment variables?" | #how-does-openclaw-load-environment-variables
@@ -638,12 +424,9 @@
 128 | "I’m getting “context too large” errors - how do I reset or compact?" | #im-getting-context-too-large-errors-how-do-i-reset-or-compact
 129 | "Why am I seeing “LLM request rejected: messages.N.content.X.tool_use.input: Field required”?" | #why-am-i-seeing-llm-request-rejected-messagesncontentxtooluseinput-field-required
 130 | "Why am I getting heartbeat messages every 30 minutes?" | #why-am-i-getting-heartbeat-messages-every-30-minutes
-131 | "Do I need to add a “bot account” to a WhatsApp group?" | #do-i-need-to-add-a-bot-account-to-a-whatsapp-group
-132 | "How do I get the JID of a WhatsApp group?" | #how-do-i-get-the-jid-of-a-whatsapp-group
 133 | "Why doesn’t OpenClaw reply in a group?" | #why-doesnt-openclaw-reply-in-a-group
 134 | "Do groups/threads share context with DMs?" | #do-groupsthreads-share-context-with-dms
 135 | "How many workspaces and agents can I create?" | #how-many-workspaces-and-agents-can-i-create
-136 | "Can I run multiple bots or chats at the same time (Slack), and how should I set that up?" | #can-i-run-multiple-bots-or-chats-at-the-same-time-slack-and-how-should-i-set-that-up
 138 | "What is the “default model”?" | #what-is-the-default-model
 139 | "What model do you recommend?" | #what-model-do-you-recommend
 140 | "How do I switch models without wiping my config?" | #how-do-i-switch-models-without-wiping-my-config
@@ -651,23 +434,17 @@
 142 | "What do OpenClaw, Flawd, and Krill use for models?" | #what-do-openclaw-flawd-and-krill-use-for-models
 143 | "How do I switch models on the fly (without restarting)?" | #how-do-i-switch-models-on-the-fly-without-restarting
 144 | "Can I use GPT 5.2 for daily tasks and Codex 5.2 for coding" | #can-i-use-gpt-52-for-daily-tasks-and-codex-52-for-coding
-146 | "Why do I see “Unknown model: minimax/MiniMax-M2.1”?" | #why-do-i-see-unknown-model-minimaxminimaxm21
-147 | "Can I use MiniMax as my default and OpenAI for complex tasks?" | #can-i-use-minimax-as-my-default-and-openai-for-complex-tasks
 148 | "Are opus / sonnet / gpt built‑in shortcuts?" | #are-opus-sonnet-gpt-builtin-shortcuts
 149 | "How do I define/override model shortcuts (aliases)?" | #how-do-i-defineoverride-model-shortcuts-aliases
-150 | "How do I add models from other providers like OpenRouter or Z.AI?" | #how-do-i-add-models-from-other-providers-like-openrouter-or-zai
 152 | "How does failover work?" | #how-does-failover-work
 153 | "What does this error mean?" | #what-does-this-error-mean
 154 | "Fix checklist for `No credentials found for profile "anthropic:default"`" | #fix-checklist-for-no-credentials-found-for-profile-anthropicdefault
-155 | "Why did it also try Google Gemini and fail?" | #why-did-it-also-try-google-gemini-and-fail
 156 | "Auth profiles: what they are and how to manage them" | #auth-profiles-what-they-are-and-how-to-manage-them
 157 | "What is an auth profile?" | #what-is-an-auth-profile
 158 | "What are typical profile IDs?" | #what-are-typical-profile-ids
 159 | "Can I control which auth profile is tried first?" | #can-i-control-which-auth-profile-is-tried-first
-160 | "OAuth vs API key: what’s the difference?" | #oauth-vs-api-key-whats-the-difference
 161 | "Gateway: ports, “already running”, and remote mode" | #gateway-ports-already-running-and-remote-mode
 162 | "What port does the Gateway use?" | #what-port-does-the-gateway-use
-163 | "Why does `openclaw gateway status` say `Runtime: running` but `RPC probe: failed`?" | #why-does-openclaw-gateway-status-say-runtime-running-but-rpc-probe-failed
 164 | "Why does `openclaw gateway status` show `Config (cli)` and `Config (service)` different?" | #why-does-openclaw-gateway-status-show-config-cli-and-config-service-different
 165 | "What does “another gateway instance is already listening” mean?" | #what-does-another-gateway-instance-is-already-listening-mean
 166 | "How do I run OpenClaw in remote mode (client connects to a Gateway elsewhere)?" | #how-do-i-run-openclaw-in-remote-mode-client-connects-to-a-gateway-elsewhere
@@ -680,7 +457,6 @@
 174 | "I closed my terminal on Windows - how do I restart OpenClaw?" | #i-closed-my-terminal-on-windows-how-do-i-restart-openclaw
 175 | "The Gateway is up but replies never arrive. What should I check?" | #the-gateway-is-up-but-replies-never-arrive-what-should-i-check
 176 | ""Disconnected from gateway: no reason" - what now?" | #disconnected-from-gateway-no-reason-what-now
-177 | "Telegram setMyCommands fails with network errors. What should I check?" | #telegram-setmycommands-fails-with-network-errors-what-should-i-check
 178 | "TUI shows no output. What should I check?" | #tui-shows-no-output-what-should-i-check
 179 | "How do I completely stop then start the Gateway?" | #how-do-i-completely-stop-then-start-the-gateway
 180 | "ELI5: `openclaw gateway restart` vs `openclaw gateway`" | #eli5-openclaw-gateway-restart-vs-openclaw-gateway
@@ -692,27 +468,19 @@
 187 | "Should my bot have its own email GitHub account or phone number" | #should-my-bot-have-its-own-email-github-account-or-phone-number
 188 | "Can I give it autonomy over my text messages and is that safe" | #can-i-give-it-autonomy-over-my-text-messages-and-is-that-safe
 189 | "Can I use cheaper models for personal assistant tasks?" | #can-i-use-cheaper-models-for-personal-assistant-tasks
-190 | "I ran `/start` in Telegram but didn’t get a pairing code" | #i-ran-start-in-telegram-but-didnt-get-a-pairing-code
-191 | "WhatsApp: will it message my contacts? How does pairing work?" | #whatsapp-will-it-message-my-contacts-how-does-pairing-work
 192 | "Chat commands, aborting tasks, and “it won’t stop”" | #chat-commands-aborting-tasks-and-it-wont-stop
 193 | "How do I stop internal system messages from showing in chat" | #how-do-i-stop-internal-system-messages-from-showing-in-chat
 194 | "How do I stop/cancel a running task?" | #how-do-i-stopcancel-a-running-task
-195 | "How do I send a Discord message from Telegram? (“Cross-context messaging denied”)" | #how-do-i-send-a-discord-message-from-telegram-crosscontext-messaging-denied
 196 | "Why does it feel like the bot “ignores” rapid‑fire messages?" | #why-does-it-feel-like-the-bot-ignores-rapidfire-messages
 230 | "Health" | /zh/gateway/health
-252 | "Doctor" | /zh/gateway/doctor
 259 | "Health" | /zh/gateway/health
 301 | "First 60 seconds if something's broken" | #first-60-seconds-if-somethings-broken
 302 | "Installer flags" | /zh/install/installer
-302 | "Updating" | /zh/install/updating
 346 | "Dashboard" | /web/dashboard
 346 | "Web surfaces" | /web
 372 | "Linux" | /platforms/linux
-401 | "Remote access" | /gateway/remote
 421 | "Migrating" | /install/migrating
 421 | "Where things live on disk" | /help/faq#where-does-openclaw-store-its-data
-422 | "Agent workspace" | /concepts/agent-workspace
-422 | "Doctor" | /gateway/doctor
 423 | "Remote mode" | /gateway/remote
 476 | "Installer flags" | /install/installer
 485 | "Installer stuck" | /help/faq#installer-stuck-how-do-i-get-more-feedback
@@ -721,40 +489,16 @@
 562 | "Windows" | /platforms/windows
 573 | "Installer flags" | /install/installer
 579 | "Linux" | /platforms/linux
-587 | "exe.dev" | /platforms/exe-dev
-587 | "Hetzner" | /platforms/hetzner
-587 | "Fly.io" | /platforms/fly
 588 | "Gateway remote" | /gateway/remote
 594 | "VPS hosting" | /vps
-595 | "Fly.io" | /platforms/fly
-596 | "Hetzner" | /platforms/hetzner
-597 | "exe.dev" | /platforms/exe-dev
 607 | "Gateway remote" | /gateway/remote
-633 | "Updating" | /install/updating
-654 | "Anthropic" | /providers/anthropic
-654 | "OpenAI" | /providers/openai
 655 | "Local models" | /gateway/local-models
-669 | "OAuth" | /concepts/oauth
-679 | "Anthropic" | /providers/anthropic
-683 | "Anthropic" | /providers/anthropic
-683 | "OAuth" | /concepts/oauth
-695 | "OAuth" | /concepts/oauth
 699 | "Amazon Bedrock" | /bedrock
 703 | "Wizard" | /start/wizard
-710 | "OAuth" | /concepts/oauth
 710 | "Wizard" | /start/wizard
-725 | "/gateway/local-models" | /zh/gateway/local-models
-740 | "iMessage" | /channels/imessage
 740 | "Mac remote mode" | /platforms/mac/remote
-754 | "iMessage" | /channels/imessage
-754 | "BlueBubbles" | /channels/bluebubbles
 755 | "Mac remote mode" | /platforms/mac/remote
-795 | "/channels/telegram" | /zh/channels/telegram#access-control-dms--groups
-799 | "Multi-Agent Routing" | /concepts/multi-agent
-799 | "WhatsApp" | /channels/whatsapp
-803 | "Multi-Agent Routing" | /concepts/multi-agent
 826 | "Getting started" | /start/getting-started
-826 | "Updating" | /install/updating
 855 | "Backup strategy" | /help/faq#whats-the-recommended-backup-strategy
 872 | "Browser" | /tools/browser
 895 | "Linux" | /platforms/linux
@@ -762,63 +506,33 @@
 909 | "Windows" | /platforms/windows
 909 | "VPS hosting" | /vps
 910 | "macOS VM" | /platforms/macos-vm
+938 | "Gateway" | /gateway
 938 | "Multi‑agent" | /concepts/multi-agent
-1008 | "Cron jobs" | /automation/cron-jobs
-1008 | "Multi-Agent Routing" | /concepts/multi-agent
-1008 | "Slash commands" | /tools/slash-commands
 1021 | "Sub-agents" | /tools/subagents
-1041 | "Cron jobs" | /automation/cron-jobs
-1041 | "Cron vs Heartbeat" | /automation/cron-vs-heartbeat
-1066 | "Cron jobs" | /automation/cron-jobs
-1066 | "Cron vs Heartbeat" | /automation/cron-vs-heartbeat
 1076 | "remote mode" | #how-do-i-run-openclaw-in-remote-mode-client-connects-to-a-gateway-elsewhere
-1101 | "iMessage" | /channels/imessage
 1127 | "Skills" | /tools/skills
 1127 | "ClawdHub" | /tools/clawdhub
 1140 | "Chrome extension" | /tools/chrome-extension
-1150 | "Sandboxing" | /gateway/sandboxing
-1150 | "Docker" | /install/docker
 1158 | "Groups: personal DMs + public groups" | /concepts/groups#pattern-personal-dms-public-groups-single-agent
-1160 | "Gateway configuration" | /gateway/configuration#agentsdefaultssandbox
-1164 | "Sandboxing" | /gateway/sandboxing#custom-bind-mounts
-1164 | "Sandbox vs Tool Policy vs Elevated" | /gateway/sandbox-vs-tool-policy-vs-elevated#bind-mounts-security-quick-check
-1186 | "Agent workspace" | /concepts/agent-workspace
-1231 | "Agent workspace" | /concepts/agent-workspace
-1276 | "Agent workspace" | /concepts/agent-workspace
-1288 | "Agent workspace" | /concepts/agent-workspace
 1292 | "Uninstall" | /install/uninstall
+1299 | "`agents.defaults.sandbox`" | /gateway/sandboxing
 1396 | "Web tools" | /tools/web
-1408 | "Remote access" | /gateway/remote
-1408 | "Multi-Agent Routing" | /concepts/multi-agent
 1408 | "Sub-agents" | /tools/subagents
 1408 | "TUI" | /tui
 1425 | "Browser" | /tools/browser
 1436 | "Browser" | /tools/browser#use-brave-or-another-chromium-based-browser
 1472 | "Gateway protocol" | /gateway/protocol
 1472 | "macOS remote mode" | /platforms/mac/remote
-1488 | "Tailscale" | /gateway/tailscale
-1488 | "Remote access" | /gateway/remote
-1501 | "Remote access" | /gateway/remote
-1512 | "Remote access" | /gateway/remote
-1512 | "Agent CLI" | /cli/agent
-1512 | "Agent send" | /tools/agent-send
 1540 | "Chrome extension" | /tools/chrome-extension
 1550 | "Multiple gateways" | /gateway/multiple-gateways
 1554 | "Multiple gateways" | /gateway/multiple-gateways
 1581 | "Config" | /cli/config
-1581 | "Doctor" | /gateway/doctor
-1617 | "Tailscale" | /gateway/tailscale
 1634 | "Gateway protocol" | /gateway/protocol
-1634 | "Discovery" | /gateway/discovery
 1634 | "macOS remote mode" | /platforms/mac/remote
-1658 | "/environment" | /zh/environment
-1704 | "/concepts/model-providers" | /zh/concepts/model-providers
-1704 | "/environment" | /zh/environment
 1736 | "Multi-agent routing" | /concepts/multi-agent
 1736 | "Sub-agents" | /tools/subagents
 1773 | "Wizard" | /start/wizard
 1800 | "Compaction" | /concepts/compaction
-1867 | "WhatsApp" | /channels/whatsapp
 1867 | "Directory" | /cli/directory
 1867 | "Logs" | /cli/logs
 1876 | "Groups" | /concepts/groups
@@ -826,49 +540,26 @@
 1880 | "Groups" | /concepts/groups
 1880 | "Group messages" | /concepts/group-messages
 1912 | "Multi‑Agent Routing" | /concepts/multi-agent
-1912 | "Slack" | /channels/slack
 1913 | "Browser" | /tools/browser
 1913 | "Chrome extension" | /tools/chrome-extension
-1934 | "MiniMax" | /providers/minimax
 1935 | "Local models" | /gateway/local-models
 1940 | "Sub-agents" | /tools/subagents
 1956 | "Ollama" | /providers/ollama
 1956 | "Local models" | /gateway/local-models
-1958 | "Sandboxing" | /gateway/sandboxing
 1974 | "Config" | /cli/config
-1974 | "Doctor" | /gateway/doctor
-1978 | "Anthropic" | /providers/anthropic
-1979 | "MiniMax" | /providers/minimax
-2032 | "Slash commands" | /tools/slash-commands
-2065 | "MiniMax" | /providers/minimax
-2101 | "Multi-Agent Routing" | /zh/concepts/multi-agent
-2101 | "MiniMax" | /zh/providers/minimax
-2101 | "OpenAI" | /zh/providers/openai
-2245 | "/concepts/oauth" | /zh/concepts/oauth
 2378 | "Dashboard" | /zh/web/dashboard
 2409 | "Multiple gateways" | /zh/gateway/multiple-gateways
 2433 | "Gateway protocol" | /zh/gateway/protocol
+2470 | "Gateway" | /zh/gateway
 2507 | "Windows (WSL2)" | /zh/platforms/windows
 2507 | "Gateway service runbook" | /zh/gateway
-2528 | "Remote access" | /zh/gateway/remote
 2545 | "Dashboard" | /zh/web/dashboard
-2545 | "Remote access" | /zh/gateway/remote
-2559 | "Telegram" | /zh/channels/telegram
 2573 | "TUI" | /zh/tui
-2573 | "Slash commands" | /zh/tools/slash-commands
 2592 | "Gateway service runbook" | /zh/gateway
 2609 | "OpenClaw assistant setup" | /zh/start/openclaw
-2609 | "Agent send" | /zh/tools/agent-send
 2622 | "Images" | /zh/nodes/images
-2657 | "Pairing" | /zh/start/pairing
 2719 | "Thinking and verbose" | /zh/tools/thinking
-2742 | "Slash commands" | /zh/tools/slash-commands
-2791 | "Discord" | https://discord.com/invite/clawd
 2791 | "GitHub discussion" | https://github.com/openclaw/openclaw/discussions
-
-## zh/help/index.md
-
-17 | "Doctor" | /zh/gateway/doctor
 
 ## zh/help/troubleshooting.md
 
@@ -886,43 +577,23 @@
 
 65 | "Hooks" | /zh/hooks
 
-## zh/i18n-guide.md
-
-223 | "Web i18n API" | https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl
-
 ## zh/index.md
 
 38 | "Wizard" | /zh/start/wizard
 48 | "Web surfaces" | /zh/web
-48 | "Tailscale" | /zh/gateway/tailscale
 79 | "Multiple gateways" | /zh/gateway/multiple-gateways
-84 | "Gateway configuration" | /zh/gateway/configuration
-85 | "Remote access" | /zh/gateway/remote
-85 | "Discovery" | /zh/gateway/discovery
-95 | "/concepts/streaming" | /zh/concepts/streaming
 179 | "Help" | /zh/help
-182 | "Slash commands" | /zh/tools/slash-commands
 183 | "Multi-agent routing" | /zh/concepts/multi-agent
-184 | "Updating / rollback" | /zh/install/updating
-185 | "Pairing (DM + nodes)" | /zh/start/pairing
 186 | "Nix mode" | /zh/install/nix
 187 | "OpenClaw assistant setup" | /zh/start/openclaw
 188 | "Skills" | /zh/tools/skills
 189 | "Skills config" | /zh/tools/skills-config
 190 | "Workspace templates" | /zh/reference/templates/AGENTS
-191 | "RPC adapters" | /zh/reference/rpc
 192 | "Gateway runbook" | /zh/gateway
 194 | "Web surfaces (Control UI)" | /zh/web
-195 | "Discovery + transports" | /zh/gateway/discovery
-196 | "Remote access" | /zh/gateway/remote
 198 | "WebChat" | /zh/web/webchat
 199 | "Control UI (browser)" | /zh/web/control-ui
-200 | "Telegram" | /zh/channels/telegram
-201 | "Discord" | /zh/channels/discord
-202 | "Mattermost (plugin)" | /zh/channels/mattermost
-203 | "iMessage" | /zh/channels/imessage
 204 | "Groups" | /zh/concepts/groups
-205 | "WhatsApp group messages" | /zh/concepts/group-messages
 206 | "Media: images" | /zh/nodes/images
 207 | "Media: audio" | /zh/nodes/audio
 209 | "macOS app" | /zh/platforms/macos
@@ -930,72 +601,33 @@
 211 | "Android app" | /zh/platforms/android
 212 | "Windows (WSL2)" | /zh/platforms/windows
 213 | "Linux app" | /zh/platforms/linux
-216 | "Cron jobs" | /zh/automation/cron-jobs
-217 | "Webhooks" | /zh/automation/webhook
 218 | "Gmail hooks (Pub/Sub)" | /zh/automation/gmail-pubsub
-232 | "@steipete" | https://twitter.com/steipete
-233 | "@badlogicc" | https://twitter.com/badlogicgames
 
 ## zh/install/ansible.md
 
 18 | "openclaw-ansible" | https://github.com/openclaw/openclaw-ansible
-28 | "github.com/openclaw/openclaw-ansible" | https://github.com/openclaw/openclaw-ansible
-59 | "Sandboxing" | /zh/gateway/sandboxing
-142 | "Updating" | /zh/install/updating
 206 | "Technical Details" | https://github.com/openclaw/openclaw-ansible/blob/main/docs/architecture.md
 211 | "openclaw-ansible" | https://github.com/openclaw/openclaw-ansible
-212 | "Docker" | /zh/install/docker
-213 | "Sandboxing" | /zh/gateway/sandboxing
-
-## zh/install/docker.md
-
-17 | "Sandboxing" | /zh/gateway/sandboxing
-24 | "Sandboxing" | /zh/gateway/sandboxing
-65 | "Hetzner (Docker VPS)" | /zh/platforms/hetzner
-194 | "WhatsApp" | /zh/channels/whatsapp
-194 | "Telegram" | /zh/channels/telegram
-194 | "Discord" | /zh/channels/discord
-221 | "Sandboxing" | /zh/gateway/sandboxing
 
 ## zh/install/index.md
 
 53 | "Installer internals" | /zh/install/installer
-104 | "Docker" | /zh/install/docker
 105 | "Nix" | /zh/install/nix
 106 | "Ansible" | /zh/install/ansible
 107 | "Bun" | /zh/install/bun
-180 | "Updating" | /zh/install/updating
 181 | "Migrating" | /zh/install/migrating
 182 | "Uninstall" | /zh/install/uninstall
-
-## zh/install/migrating.md
-
-191 | "Doctor" | /zh/gateway/doctor
-192 | "Gateway troubleshooting" | /zh/gateway/troubleshooting
 
 ## zh/install/nix.md
 
 12 | "nix-openclaw" | https://github.com/openclaw/nix-openclaw
-33 | "github.com/openclaw/nix-openclaw" | https://github.com/openclaw/nix-openclaw
 92 | "nix-openclaw" | https://github.com/openclaw/nix-openclaw
 93 | "Wizard" | /zh/start/wizard
-94 | "Docker" | /zh/install/docker
 
 ## zh/install/updating.md
 
-151 | "Doctor" | /zh/gateway/doctor
+133 | "`openclaw.mjs`" | https://github.com/openclaw/openclaw/blob/main/openclaw.mjs
 172 | "Gateway runbook" | /zh/gateway
-
-## zh/logging.md
-
-71 | "/web/control-ui" | /zh/web/control-ui
-214 | "/diagnostics/flags" | /zh/diagnostics/flags
-
-## zh/multi-agent-sandbox-tools.md
-
-34 | "Sandboxing" | /zh/gateway/sandboxing
-35 | "Sandbox vs Tool Policy vs Elevated" | /zh/gateway/sandbox-vs-tool-policy-vs-elevated
-391 | "Multi-Agent Routing" | /zh/concepts/multi-agent
 
 ## zh/network.md
 
@@ -1003,22 +635,13 @@
 17 | "Gateway protocol" | /zh/gateway/protocol
 18 | "Gateway runbook" | /zh/gateway
 19 | "Web surfaces + bind modes" | /zh/web
-23 | "Pairing overview (DM + nodes)" | /zh/start/pairing
 24 | "Gateway-owned node pairing" | /zh/gateway/pairing
-25 | "Devices CLI (pairing + token rotation)" | /zh/cli/devices
-26 | "Pairing CLI (DM approvals)" | /zh/cli/pairing
-35 | "Discovery & transports" | /zh/gateway/discovery
 36 | "Bonjour / mDNS" | /zh/gateway/bonjour
-37 | "Remote access (SSH)" | /zh/gateway/remote
-38 | "Tailscale" | /zh/gateway/tailscale
-43 | "Bridge protocol (legacy nodes)" | /zh/gateway/bridge-protocol
 50 | "Gateway config reference" | /zh/gateway/configuration
-52 | "Doctor" | /zh/gateway/doctor
 
 ## zh/nodes/index.md
 
 12 | "Gateway protocol" | /zh/gateway/protocol
-14 | "Bridge protocol" | /zh/gateway/bridge-protocol
 116 | "Exec tool" | /zh/tools/exec
 117 | "Exec approvals" | /zh/tools/exec-approvals
 306 | "Exec approvals" | /zh/tools/exec-approvals
@@ -1041,9 +664,9 @@
 
 ## zh/platforms/android.md
 
-16 | "Pairing" | /zh/gateway/pairing
 17 | "Runbook" | /zh/gateway
 18 | "Gateway protocol" | /zh/gateway/protocol
+22 | "Gateway" | /zh/gateway
 62 | "Bonjour" | /zh/gateway/bonjour
 71 | "Bonjour" | /zh/gateway/bonjour
 96 | "Gateway pairing" | /zh/gateway/pairing
@@ -1051,35 +674,7 @@
 
 ## zh/platforms/digitalocean.md
 
-15 | "Oracle Cloud guide" | /zh/platforms/oracle
-30 | "Hetzner guide" | /zh/platforms/hetzner
-31 | "Oracle guide" | /zh/platforms/oracle
 37 | "signup with $200 free credit" | https://m.do.co/c/signup
-43 | "DigitalOcean" | https://cloud.digitalocean.com/
-224 | "Oracle Cloud" | /zh/platforms/oracle
-259 | "Hetzner guide" | /zh/platforms/hetzner
-
-## zh/platforms/exe-dev.md
-
-26 | "exe.dev" | https://exe.dev
-30 | "exe.dev" | https://exe.dev
-111 | "exe.dev" | https://exe.dev
-123 | "Updating" | /zh/install/updating
-
-## zh/platforms/fly.md
-
-8 | "Fly.io" | https://fly.io
-12 | "flyctl CLI" | https://fly.io/docs/hands-on/install-flyctl/
-483 | "Fly.io pricing" | https://fly.io/docs/about/pricing/
-
-## zh/platforms/gcp.md
-
-35 | "Docker" | /zh/install/docker
-490 | "Gateway configuration" | /zh/gateway/configuration
-
-## zh/platforms/hetzner.md
-
-35 | "Docker" | /zh/install/docker
 
 ## zh/platforms/index.md
 
@@ -1089,24 +684,16 @@
 22 | "Windows" | /zh/platforms/windows
 23 | "Linux" | /zh/platforms/linux
 27 | "VPS hosting" | /zh/vps
-28 | "Fly.io" | /zh/platforms/fly
-29 | "Hetzner" | /zh/platforms/hetzner
-30 | "GCP" | /zh/platforms/gcp
-31 | "exe.dev" | /zh/platforms/exe-dev
+36 | "Gateway" | /zh/gateway
 
 ## zh/platforms/ios.md
 
 61 | "Bonjour" | /zh/gateway/bonjour
-99 | "Gateway configuration" | /zh/gateway/configuration
-105 | "Pairing" | /zh/gateway/pairing
-106 | "Discovery" | /zh/gateway/discovery
 107 | "Bonjour" | /zh/gateway/bonjour
 
 ## zh/platforms/linux.md
 
-24 | "exe.dev" | /zh/platforms/exe-dev
 30 | "Nix" | /zh/install/nix
-30 | "Docker" | /zh/install/docker
 34 | "Gateway runbook" | /zh/gateway
 68 | "Gateway runbook" | /zh/gateway
 
@@ -1117,10 +704,6 @@
 ## zh/platforms/mac/logging.md
 
 27 | "logging privacy shenanigans" | https://steipete.me/posts/2025/logging-privacy-shenanigans
-
-## zh/platforms/mac/remote.md
-
-62 | "Tailscale" | /zh/gateway/tailscale
 
 ## zh/platforms/mac/signing.md
 
@@ -1137,14 +720,10 @@
 17 | "Gateway remote" | /zh/gateway/remote
 25 | "Lume" | https://cua.ai/docs/lume
 38 | "MacStadium" | https://www.macstadium.com/
-201 | "BlueBubbles" | https://bluebubbles.app
-226 | "BlueBubbles channel" | /zh/channels/bluebubbles
 257 | "VPS hosting" | /zh/vps
 274 | "VPS hosting" | /zh/vps
 276 | "Gateway remote" | /zh/gateway/remote
-277 | "BlueBubbles channel" | /zh/channels/bluebubbles
 278 | "Lume Quickstart" | https://cua.ai/docs/lume/guide/getting-started/quickstart
-281 | "Docker Sandboxing" | /zh/install/docker
 
 ## zh/platforms/macos.md
 
@@ -1159,23 +738,13 @@
 ## zh/platforms/oracle.md
 
 35 | "signup" | https://www.oracle.com/cloud/free/
-36 | "tailscale.com" | https://tailscale.com
-41 | "Oracle Cloud Console" | https://cloud.oracle.com/
-199 | "Tailscale admin console" | https://login.tailscale.com/admin
 299 | "Gateway remote access" | /zh/gateway/remote
-300 | "Tailscale integration" | /zh/gateway/tailscale
-301 | "Gateway configuration" | /zh/gateway/configuration
-302 | "DigitalOcean guide" | /zh/platforms/digitalocean
-303 | "Hetzner guide" | /zh/platforms/hetzner
 
 ## zh/platforms/raspberry-pi.md
 
 48 | "Raspberry Pi Imager" | https://www.raspberrypi.com/software/
 193 | "Pi USB boot guide" | https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot
 354 | "Linux guide" | /zh/platforms/linux
-355 | "DigitalOcean guide" | /zh/platforms/digitalocean
-356 | "Hetzner guide" | /zh/platforms/hetzner
-357 | "Tailscale" | /zh/gateway/tailscale
 
 ## zh/platforms/windows.md
 
@@ -1185,10 +754,6 @@
 
 33 | "Voice Call" | /zh/plugins/voice-call
 40 | "Voice Call" | /zh/plugins/voice-call
-41 | "Zalo Personal" | /zh/plugins/zalouser
-42 | "Matrix" | /zh/channels/matrix
-43 | "Nostr" | /zh/channels/nostr
-44 | "Zalo" | /zh/channels/zalo
 45 | "Microsoft Teams" | /zh/channels/msteams
 52 | "Plugin manifest" | /zh/plugins/manifest
 66 | "Plugin agent tools" | /zh/plugins/agent-tools
@@ -1198,89 +763,23 @@
 34 | "Plugin manifest" | /zh/plugins/manifest
 34 | "Skills" | /zh/tools/skills
 128 | "Skills config" | /zh/tools/skills-config
-134 | "Lobster" | /zh/tools/lobster
-
-## zh/providers/anthropic.md
-
-107 | "/gateway/troubleshooting#oauth-token-refresh-failed-anthropic-claude-subscription" | /zh/gateway/troubleshooting#oauth-token-refresh-failed-anthropic-claude-subscription
-108 | "/concepts/oauth" | /zh/concepts/oauth
-133 | "/gateway/troubleshooting" | /zh/gateway/troubleshooting
-133 | "/help/faq" | /zh/help/faq
-
-## zh/providers/claude-max-api-proxy.md
-
-145 | "Anthropic provider" | /zh/providers/anthropic
-146 | "OpenAI provider" | /zh/providers/openai
-
-## zh/providers/glm.md
-
-32 | "/providers/zai" | /zh/providers/zai
 
 ## zh/providers/index.md
 
-22 | "Venice AI" | /zh/providers/venice
-37 | "OpenAI (API + Codex)" | /zh/providers/openai
-38 | "Anthropic (API + Claude Code CLI)" | /zh/providers/anthropic
-39 | "Qwen (OAuth)" | /zh/providers/qwen
-40 | "OpenRouter" | /zh/providers/openrouter
-41 | "Vercel AI Gateway" | /zh/providers/vercel-ai-gateway
-42 | "Moonshot AI (Kimi + Kimi Coding)" | /zh/providers/moonshot
 43 | "OpenCode Zen" | /zh/providers/opencode
 44 | "Amazon Bedrock" | /zh/bedrock
 46 | "Xiaomi" | /zh/providers/xiaomi
-47 | "GLM models" | /zh/providers/glm
-48 | "MiniMax" | /zh/providers/minimax
-58 | "Claude Max API Proxy" | /zh/providers/claude-max-api-proxy
-
-## zh/providers/minimax.md
-
-13 | "MiniMax M2.1 release note" | https://www.minimax.io/news/minimax-m21
-51 | "MiniMax OAuth plugin README" | https://github.com/openclaw/openclaw/tree/main/extensions/minimax-portal-auth
-176 | "/concepts/model-providers" | /zh/concepts/model-providers
 
 ## zh/providers/models.md
 
-20 | "Venice AI" | /zh/providers/venice
-35 | "OpenAI (API + Codex)" | /zh/providers/openai
-36 | "Anthropic (API + Claude Code CLI)" | /zh/providers/anthropic
-37 | "OpenRouter" | /zh/providers/openrouter
-38 | "Vercel AI Gateway" | /zh/providers/vercel-ai-gateway
-39 | "Moonshot AI (Kimi + Kimi Coding)" | /zh/providers/moonshot
 40 | "Synthetic" | /zh/providers/synthetic
 41 | "OpenCode Zen" | /zh/providers/opencode
-43 | "GLM models" | /zh/providers/glm
-44 | "MiniMax" | /zh/providers/minimax
-45 | "Venice (Venice AI)" | /zh/providers/venice
 46 | "Amazon Bedrock" | /zh/bedrock
-
-## zh/providers/openai.md
-
-60 | "/concepts/models" | /zh/concepts/models
-61 | "/concepts/oauth" | /zh/concepts/oauth
-
-## zh/providers/openrouter.md
-
-35 | "/concepts/model-providers" | /zh/concepts/model-providers
 
 ## zh/providers/venice.md
 
-46 | "venice.ai" | https://venice.ai
-178 | "venice.ai/pricing" | https://venice.ai/pricing
-262 | "Venice AI" | https://venice.ai
 264 | "Pricing" | https://venice.ai/pricing
 265 | "Status" | https://status.venice.ai
-
-## zh/providers/vercel-ai-gateway.md
-
-11 | " Vercel AI Gateway" | https://vercel.com/ai-gateway
-
-## zh/providers/xiaomi.md
-
-62 | "/concepts/model-providers" | /zh/concepts/model-providers
-
-## zh/providers/zai.md
-
-34 | "/providers/glm" | /zh/providers/glm
 
 ## zh/refactor/exec-host.md
 
@@ -1290,6 +789,10 @@
 
 ## zh/reference/RELEASING.md
 
+26 | "`src/cli/program.ts`" | https://github.com/openclaw/openclaw/blob/main/src/cli/program.ts
+26 | "`src/provider-web.ts`" | https://github.com/openclaw/openclaw/blob/main/src/provider-web.ts
+27 | "`openclaw.mjs`" | https://github.com/openclaw/openclaw/blob/main/openclaw.mjs
+32 | "`src/canvas-host/a2ui/a2ui.bundle.js`" | https://github.com/openclaw/openclaw/blob/main/src/canvas-host/a2ui/a2ui.bundle.js
 63 | "macOS release" | /zh/platforms/mac/release
 65 | "macOS release" | /zh/platforms/mac/release
 
@@ -1303,33 +806,13 @@
 126 | "Talk mode" | /zh/nodes/talk
 132 | "Skills" | /zh/tools/skills
 
-## zh/reference/rpc.md
+## zh/reference/test.md
 
-20 | "Signal" | /zh/channels/signal
-35 | "iMessage" | /zh/channels/imessage
-
-## zh/reference/session-management-compaction.md
-
-24 | "/concepts/session" | /zh/concepts/session
-25 | "/concepts/compaction" | /zh/concepts/compaction
-26 | "/concepts/session-pruning" | /zh/concepts/session-pruning
-27 | "/reference/transcript-hygiene" | /zh/reference/transcript-hygiene
-80 | "/concepts/session" | /zh/concepts/session
-157 | "/token-use" | /zh/token-use
-170 | "/concepts/session-pruning" | /zh/concepts/session-pruning
-276 | "/concepts/session" | /zh/concepts/session
-
-## zh/reference/transcript-hygiene.md
-
-25 | "/reference/session-management-compaction" | /zh/reference/session-management-compaction
+19 | "`scripts/bench-model.ts`" | https://github.com/openclaw/openclaw/blob/main/scripts/bench-model.ts
 
 ## zh/render.mdx
 
 10 | "model provider" | /zh/providers
-
-## zh/scripts.md
-
-27 | "/automation/auth-monitoring" | /zh/automation/auth-monitoring
 
 ## zh/security/formal-verification.md
 
@@ -1340,41 +823,19 @@
 15 | "Dashboard" | /zh/web/dashboard
 15 | "Control UI" | /zh/web/control-ui
 55 | "Windows（WSL2）" | /zh/platforms/windows
-145 | "WhatsApp" | /zh/channels/whatsapp
-151 | "Telegram" | /zh/channels/telegram
-152 | "Discord" | /zh/channels/discord
-153 | "Mattermost" | /zh/channels/mattermost
-208 | "Tailscale" | /zh/gateway/tailscale
-209 | "exe.dev" | /zh/platforms/exe-dev
-209 | "Hetzner" | /zh/platforms/hetzner
 
 ## zh/start/hubs.md
 
 14 | "Index" | /zh/index
-29 | "Docker" | /zh/install/docker
 30 | "Nix" | /zh/install/nix
-50 | "Slash commands" | /zh/tools/slash-commands
 52 | "TypeBox schema" | /zh/concepts/typebox
 56 | "Bonjour" | /zh/gateway/bonjour
-61 | "OAuth" | /zh/concepts/oauth
-67 | "WhatsApp" | /zh/channels/whatsapp
-68 | "Telegram" | /zh/channels/telegram
-70 | "Slack" | /zh/channels/slack
-71 | "Discord" | /zh/channels/discord
-72 | "Mattermost" | /zh/channels/mattermost
-73 | "Signal" | /zh/channels/signal
-74 | "iMessage" | /zh/channels/imessage
 76 | "WebChat" | /zh/web/webchat
-77 | "Webhooks" | /zh/automation/webhook
 78 | "Gmail Pub/Sub" | /zh/automation/gmail-pubsub
-88 | "Doctor" | /zh/gateway/doctor
 91 | "Dashboard" | /zh/web/dashboard
 92 | "Control UI" | /zh/web/control-ui
-95 | "Tailscale" | /zh/gateway/tailscale
 102 | "OpenProse" | /zh/prose
-107 | "Cron vs Heartbeat" | /zh/automation/cron-vs-heartbeat
 108 | "Thinking + verbose" | /zh/tools/thinking
-111 | "Agent send CLI" | /zh/tools/agent-send
 130 | "macOS" | /zh/platforms/macos
 131 | "iOS" | /zh/platforms/ios
 132 | "Android" | /zh/platforms/android
@@ -1387,30 +848,10 @@
 156 | "macOS Peekaboo" | /zh/platforms/mac/peekaboo
 161 | "ClawdHub" | /zh/tools/clawdhub
 
-## zh/start/onboarding.md
-
-92 | "/automation/gmail-pubsub" | /zh/automation/gmail-pubsub
-
 ## zh/start/openclaw.md
 
 233 | "WebChat" | /zh/web/webchat
-235 | "Cron jobs" | /zh/automation/cron-jobs
 239 | "Windows（WSL2）" | /zh/platforms/windows
-
-## zh/start/pairing.md
-
-80 | "Telegram" | /zh/channels/telegram
-81 | "WhatsApp" | /zh/channels/whatsapp
-82 | "Signal" | /zh/channels/signal
-83 | "iMessage" | /zh/channels/imessage
-84 | "Discord" | /zh/channels/discord
-85 | "Slack" | /zh/channels/slack
-
-## zh/start/setup.md
-
-23 | "Docker" | /zh/install/docker
-146 | "Discord" | /zh/channels/discord
-146 | "Telegram" | /zh/channels/telegram
 
 ## zh/start/showcase.md
 
@@ -1421,17 +862,7 @@
 ## zh/start/wizard.md
 
 21 | "Dashboard" | /zh/web/dashboard
-95 | "Vercel AI Gateway" | /zh/providers/vercel-ai-gateway
-97 | "MiniMax" | /zh/providers/minimax
 99 | "Synthetic" | /zh/providers/synthetic
-102 | "Moonshot AI（Kimi + Kimi Coding）" | /zh/providers/moonshot
-107 | "/concepts/oauth" | /zh/concepts/oauth
-327 | "WhatsApp" | /zh/channels/whatsapp
-327 | "Telegram" | /zh/channels/telegram
-327 | "Discord" | /zh/channels/discord
-327 | "Google Chat" | /zh/channels/googlechat
-327 | "Signal" | /zh/channels/signal
-327 | "iMessage" | /zh/channels/imessage
 
 ## zh/testing.md
 
@@ -1440,40 +871,24 @@
 ## zh/token-use.md
 
 25 | "System Prompt" | /zh/concepts/system-prompt
-69 | "Gateway configuration" | /zh/gateway/configuration
 98 | "Skills" | /zh/tools/skills
 
 ## zh/tools/browser.md
 
 148 | "Browserless" | https://browserless.io
-404 | "Gateway configuration" | /zh/gateway/configuration#browser-openclaw-managed-browser
-
-## zh/tools/chrome-extension.md
-
-172 | "Tailscale" | /zh/gateway/tailscale
-
-## zh/tools/clawhub.md
-
-14 | "clawhub.ai" | https://clawhub.ai
 
 ## zh/tools/creating-skills.md
 
 54 | "ClawHub" | https://clawhub.com
 
-## zh/tools/exec-approvals.md
-
-128 | "Approvals CLI" | /zh/cli/approvals
-
 ## zh/tools/index.md
 
-168 | "Lobster" | /zh/tools/lobster
 169 | "LLM Task" | /zh/tools/llm-task
 251 | "Firecrawl" | /zh/tools/firecrawl
 
 ## zh/tools/lobster.md
 
 120 | "LLM Task" | /zh/tools/llm-task
-154 | "Lobster repo" | https://github.com/openclaw/lobster
 312 | "OpenProse" | /zh/prose
 
 ## zh/tools/skills.md
@@ -1484,8 +899,6 @@
 
 ## zh/tools/slash-commands.md
 
-76 | "/tts" | /zh/tts
-97 | "/concepts/compaction" | /zh/concepts/compaction
 122 | "OpenProse" | /zh/prose
 
 ## zh/tools/web.md
@@ -1495,89 +908,34 @@
 
 ## zh/tts.md
 
-48 | "OpenAI Text-to-Speech guide" | https://platform.openai.com/docs/guides/text-to-speech
-49 | "OpenAI Audio API reference" | https://platform.openai.com/docs/api-reference/audio
 50 | "ElevenLabs Text to Speech" | https://elevenlabs.io/docs/api-reference/text-to-speech
 52 | "node-edge-tts" | https://github.com/SchneeHertz/node-edge-tts
 53 | "Microsoft Speech output formats" | https://learn.microsoft.com/azure/ai-services/speech-service/rest-text-to-speech#audio-outputs
-64 | "Gateway configuration" | /zh/gateway/configuration
-347 | "Slash commands" | /zh/tools/slash-commands
-
-## zh/tui.md
-
-109 | "Slash commands" | /zh/tools/slash-commands
 
 ## zh/vps.md
 
 15 | "Railway" | /zh/railway
 16 | "Northflank" | /zh/northflank
-17 | "Oracle" | /zh/platforms/oracle
-18 | "Fly.io" | /zh/platforms/fly
-19 | "Hetzner" | /zh/platforms/hetzner
-20 | "GCP" | /zh/platforms/gcp
-21 | "exe.dev" | /zh/platforms/exe-dev
 33 | "Gateway remote" | /zh/gateway/remote
-
-## zh/web/control-ui.md
-
-53 | "Devices CLI" | /zh/cli/devices
-143 | "Tailscale" | /zh/gateway/tailscale
-190 | "Remote access" | /zh/gateway/remote
 
 ## zh/web/dashboard.md
 
 19 | "Control UI" | /zh/web/control-ui
-20 | "Tailscale" | /zh/gateway/tailscale
 21 | "Web surfaces" | /zh/web
-23 | "Gateway configuration" | /zh/gateway/configuration
 37 | "Web surfaces" | /zh/web
 
 ## zh/web/index.md
 
 16 | "Control UI" | /zh/web/control-ui
-22 | "Gateway configuration" | /zh/gateway/configuration
-102 | "Tailscale" | /zh/gateway/tailscale
 
 ## zh/zh-CN/index.md
 
-62 | "Tailscale" | /gateway/tailscale
-109 | "/concepts/streaming" | /concepts/streaming
-216 | "Telegram" | /channels/telegram
-217 | "Discord" | /channels/discord
-219 | "iMessage" | /channels/imessage
 228 | "Windows (WSL2)" | /platforms/windows
-233 | "Webhooks" | /automation/webhook
-248 | "@steipete" | https://twitter.com/steipete
-249 | "@badlogicc" | https://twitter.com/badlogicgames
 
 ## zh/zh-CN/start/getting-started.md
 
 59 | "Windows (WSL2)" | /platforms/windows
-148 | "WhatsApp" | /channels/whatsapp
-154 | "Telegram" | /channels/telegram
-155 | "Discord" | /channels/discord
-156 | "Mattermost" | /channels/mattermost
-211 | "Tailscale" | /gateway/tailscale
-212 | "exe.dev" | /platforms/exe-dev
-212 | "Hetzner" | /platforms/hetzner
 
 ## zh/zh-CN/start/wizard.md
 
-99 | "Vercel AI Gateway" | /providers/vercel-ai-gateway
-101 | "MiniMax" | /providers/minimax
 103 | "Synthetic" | /providers/synthetic
-106 | "Moonshot AI (Kimi + Kimi Coding)" | /providers/moonshot
-112 | "/concepts/oauth" | /concepts/oauth
-126 | "WhatsApp" | /channels/whatsapp
-127 | "Telegram" | /channels/telegram
-128 | "Discord" | /channels/discord
-129 | "Google Chat" | /channels/googlechat
-130 | "Mattermost" | /channels/mattermost
-131 | "Signal" | /channels/signal
-132 | "iMessage" | /channels/imessage
-330 | "WhatsApp" | /channels/whatsapp
-330 | "Telegram" | /channels/telegram
-330 | "Discord" | /channels/discord
-330 | "Google Chat" | /channels/googlechat
-330 | "Signal" | /channels/signal
-330 | "iMessage" | /channels/imessage

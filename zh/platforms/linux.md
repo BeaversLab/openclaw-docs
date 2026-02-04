@@ -31,7 +31,7 @@ VPS 逐步指南：[exe.dev](/zh/platforms/exe-dev)
 
 ## Gateway
 
-- [Gateway runbook](/zh/gateway)
+- [Gateway 运维手册](/zh/gateway)
 - [配置](/zh/gateway/configuration)
 
 ## Gateway 服务安装（CLI）
@@ -65,7 +65,7 @@ openclaw doctor
 ## 系统控制（systemd user unit）
 
 OpenClaw 默认安装 systemd **user** 服务。共享或常驻服务器建议改用 **system** 服务。
-完整 unit 示例与指导见 [Gateway runbook](/zh/gateway)。
+完整 unit 示例与指导见 [Gateway 运维手册](/zh/gateway)。
 
 最小配置：
 

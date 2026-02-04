@@ -95,4 +95,4 @@ agents:
 - 保持 skill 描述简短（skill 列表会注入 prompt）。
 - 在探索性、冗长工作中优先使用更小的模型。
 
-技能列表开销的精确公式参见 [Skills](/zh/tools/skills)。
+技能列表开销的精确公式参见 [技能](/zh/tools/skills)。

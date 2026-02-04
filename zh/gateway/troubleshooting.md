@@ -88,7 +88,7 @@ openclaw models status
 - 或在 gateway 主机本地打开：`http://127.0.0.1:18789/`。
 - 若必须使用 HTTP，启用 `gateway.controlUi.allowInsecureAuth: true` 并
   使用 gateway token（仅 token；无设备身份/配对）。见
-  [Control UI](/zh/web/control-ui#insecure-http)。
+  [控制界面](/zh/web/control-ui#insecure-http)。
 
 ### CI Secrets 扫描失败
 

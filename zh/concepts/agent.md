@@ -90,7 +90,7 @@ Block streaming 会在 assistant block 完成时立即发送；默认 **关闭**
 通过 `agents.defaults.blockStreamingChunk` 控制软分块（默认 800–1200 字符；优先段落，其次换行，最后句子）。
 使用 `agents.defaults.blockStreamingCoalesce` 合并流式 chunk 以减少单行刷屏（基于 idle 的合并再发送）。非 Telegram 频道需要显式 `*.blockStreaming: true` 才启用块回复。
 Verbose 工具摘要在工具启动时发出（无 debounce）；Control UI 在可用时通过 agent 事件流式输出工具内容。
-更多细节见 [Streaming + chunking](/zh/concepts/streaming)。
+更多细节见 [流式 + 分块](/zh/concepts/streaming)。
 
 ## Model refs
 

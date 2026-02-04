@@ -13,7 +13,7 @@ title: "setup"
 相关：
 
 - Getting started：[Getting started](/zh/start/getting-started)
-- 向导：[Onboarding](/zh/start/onboarding)
+- 向导：[入门](/zh/start/onboarding)
 
 ## 示例
 

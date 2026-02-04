@@ -13,7 +13,7 @@ title: "approvals"
 
 相关：
 
-- Exec approvals：[Exec approvals](/zh/tools/exec-approvals)
+- Exec approvals：[Exec 审批](/zh/tools/exec-approvals)
 - Nodes：[节点](/zh/nodes)
 
 ## 常用命令

@@ -107,5 +107,5 @@ node host 会将 node id、token、显示名与 gateway 连接信息存储在
 `system.run` 受本地 exec approvals 限制：
 
 - `~/.openclaw/exec-approvals.json`
-- [Exec approvals](/zh/tools/exec-approvals)
+- [Exec 审批](/zh/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>`（从 Gateway 编辑）

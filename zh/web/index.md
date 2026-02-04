@@ -13,7 +13,7 @@ Gateway 在与 WebSocket 相同的端口提供一个小型 **浏览器 Control U
 - 默认：`http://<host>:18789/`
 - 可选前缀：设置 `gateway.controlUi.basePath`（如 `/openclaw`）
 
-能力见 [Control UI](/zh/web/control-ui)。
+能力见 [控制界面](/zh/web/control-ui)。
 本页重点是绑定模式、安全与 Web 暴露面。
 
 ## Webhooks

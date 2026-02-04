@@ -18,7 +18,7 @@ openclaw onboard
 ```
 
 最快的第一次聊天：打开 Control UI（无需渠道配置）。运行
-`openclaw dashboard` 并在浏览器里聊天。文档：[Dashboard](/zh/web/dashboard)。
+`openclaw dashboard` 并在浏览器里聊天。文档：[仪表板](/zh/web/dashboard)。
 
 后续重新配置：
 

@@ -12,7 +12,7 @@ title: "快速入门"
 
 最快聊天：打开 Control UI（无需设置渠道）。运行 `openclaw dashboard`
 并在浏览器里聊天，或在网关主机上打开 `http://127.0.0.1:18789/`。
-文档：[Dashboard](/zh/web/dashboard) 和 [Control UI](/zh/web/control-ui)。
+文档：[仪表板](/zh/web/dashboard) 和 [控制界面](/zh/web/control-ui)。
 
 推荐路径：使用 **CLI 引导向导**（`openclaw onboard`）。它会设置：
 

@@ -83,7 +83,7 @@ OpenClaw 可以从以下来源获取凭据：
 - **每秒 1 次请求**
 - **需要信用卡验证**（除非升级，否则不收费）
 
-参见 [Web tools](/zh/tools/web)。
+参见 [Web 工具](/zh/tools/web)。
 
 ### 5) Web 抓取工具（Firecrawl）
 
@@ -93,7 +93,7 @@ OpenClaw 可以从以下来源获取凭据：
 
 若未配置 Firecrawl，工具会回退到直连抓取 + readability（无付费 API）。
 
-参见 [Web tools](/zh/tools/web)。
+参见 [Web 工具](/zh/tools/web)。
 
 ### 6) Provider 用量快照（status/health）
 
@@ -129,4 +129,4 @@ Talk 模式在配置时可调用 **ElevenLabs**：
 
 Skills 可以在 `skills.entries.<name>.apiKey` 中存储 `apiKey`。若某个 skill 使用该 key 访问外部 API，则会产生对应 provider 的费用。
 
-参见 [Skills](/zh/tools/skills)。
+参见 [技能](/zh/tools/skills)。

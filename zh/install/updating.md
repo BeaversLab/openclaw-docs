@@ -169,7 +169,7 @@ openclaw logs --follow
 - Windows（WSL2）：`systemctl --user restart openclaw-gateway[-<profile>].service`
   - `launchctl`/`systemctl` 仅在服务已安装时有效；否则运行 `openclaw gateway install`。
 
-Runbook + 精确服务标签见：[Gateway runbook](/zh/gateway)
+Runbook + 精确服务标签见：[Gateway 运维手册](/zh/gateway)
 
 ## 回滚 / 固定版本（出问题时）
 

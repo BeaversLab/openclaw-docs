@@ -9,7 +9,7 @@ read_when:
 
 # Nodes
 
-**Node** 是一个伴侣设备（macOS/iOS/Android/headless），通过 Gateway **WebSocket**（与 operators 同端口）以 `role: "node"` 连接，并通过 `node.invoke` 暴露命令面（如 `canvas.*`、`camera.*`、`system.*`）。协议细节见 [Gateway protocol](/zh/gateway/protocol)。
+**Node** 是一个伴侣设备（macOS/iOS/Android/headless），通过 Gateway **WebSocket**（与 operators 同端口）以 `role: "node"` 连接，并通过 `node.invoke` 暴露命令面（如 `canvas.*`、`camera.*`、`system.*`）。协议细节见 [Gateway 协议](/zh/gateway/protocol)。
 
 旧传输方式：[桥接 protocol](/zh/gateway/bridge-protocol)（TCP JSONL；已弃用/移除）。
 
@@ -114,7 +114,7 @@ openclaw config set tools.exec.node "<id-or-name>"
 
 - [节点 host CLI](/zh/cli/node)
 - [Exec tool](/zh/tools/exec)
-- [Exec approvals](/zh/tools/exec-approvals)
+- [Exec 审批](/zh/tools/exec-approvals)
 
 ## 调用命令
 
@@ -303,7 +303,7 @@ openclaw node run --host <gateway-host> --port 18789
 - 仍需配对（Gateway 会显示 node 批准提示）。
 - node host 会把 node id、token、display name 与 gateway 连接信息存到 `~/.openclaw/node.json`。
 - exec approvals 在本地 `~/.openclaw/exec-approvals.json` 强制执行
-  （见 [Exec approvals](/zh/tools/exec-approvals)）。
+  （见 [Exec 审批](/zh/tools/exec-approvals)）。
 - 在 macOS 上，headless node host 若可达会优先使用伴侣 app 的 exec host，
   若 app 不可用则回退到本地执行。设置 `OPENCLAW_NODE_EXEC_HOST=app` 可强制依赖 app，
   或用 `OPENCLAW_NODE_EXEC_FALLBACK=0` 禁止回退。

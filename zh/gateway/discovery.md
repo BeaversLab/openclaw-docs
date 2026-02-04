@@ -26,7 +26,7 @@ OpenClaw 有两个表面上相似但实际不同的问题：
 
 协议详情：
 
-- [Gateway protocol](/zh/gateway/protocol)
+- [Gateway 协议](/zh/gateway/protocol)
 - [桥接 protocol（旧）](/zh/gateway/bridge-protocol)
 
 ## 为什么同时保留“direct”和 SSH

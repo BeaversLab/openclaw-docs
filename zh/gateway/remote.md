@@ -63,7 +63,7 @@ Runbook： [macOS remote access](/zh/platforms/mac/remote)。
 
 注：
 
-- **Nodes 不运行 gateway 服务。**除非你明确运行隔离 profile，否则每台主机只运行一个 gateway（见 [Multiple gateways](/zh/gateway/multiple-gateways)）。
+- **Nodes 不运行 gateway 服务。**除非你明确运行隔离 profile，否则每台主机只运行一个 gateway（见 [多 Gateway](/zh/gateway/multiple-gateways)）。
 - macOS app 的 “node mode” 只是 Gateway WebSocket 上的 node 客户端。
 
 ## SSH 隧道（CLI + tools）

@@ -43,7 +43,7 @@ title: "Gateway 架构"
 
 协议细节：
 
-- [Gateway protocol](/zh/gateway/protocol)
+- [Gateway 协议](/zh/gateway/protocol)
 
 ### WebChat
 
@@ -89,7 +89,7 @@ Client                    Gateway
 - **非本地** 连接必须签名 `connect.challenge` nonce 并需要显式批准。
 - Gateway 认证（`gateway.auth.*`）仍适用于 **所有** 连接，无论本地或远程。
 
-详情： [Gateway protocol](/zh/gateway/protocol)、[配对](/zh/start/pairing)、
+详情： [Gateway 协议](/zh/gateway/protocol)、[配对](/zh/start/pairing)、
 [安全](/zh/gateway/security)。
 
 ## 协议类型与代码生成

@@ -8,10 +8,16 @@ const OUTPUT_YAML = path.join(process.cwd(), '.i18n/link-translations.yaml');
 
 // 扩展翻译映射表 - 按优先级排序（长的在前）
 const translations = {
-  // === 组合短语 ===
+  // === Gateway 相关组合 ===
   'Gateway configuration': 'Gateway 配置',
   'Gateway security': 'Gateway 安全',
   'Gateway troubleshooting': 'Gateway 故障排查',
+  'Gateway protocol': 'Gateway 协议',
+  'Gateway runbook': 'Gateway 运维手册',
+  'Gateway remote': 'Gateway 远程',
+  'Multiple gateways': '多 Gateway',
+
+  // === 其他组合短语 ===
   'Slash commands': '斜杠命令',
   'Remote access': '远程访问',
   'Cron jobs': 'Cron 作业',
@@ -22,6 +28,29 @@ const translations = {
   'Model Providers': '模型提供商',
   'Getting Started': '入门指南',
   'Channel Configuration': '通道配置',
+  'Exec approvals': 'Exec 审批',
+  'Chrome extension': 'Chrome 扩展',
+  'VPS hosting': 'VPS 托管',
+  'Streaming + chunking': '流式 + 分块',
+  'Skills config': '技能配置',
+
+  // === UI 和界面 ===
+  'Control UI': '控制界面',
+  'Dashboard': '仪表板',
+  'WebChat': 'WebChat',
+
+  // === Wizard 和向导 ===
+  'Wizard': '向导',
+  'Onboarding': '入门',
+
+  // === 平台（部分保持） ===
+  'Platform': '平台',
+  'Platforms': '平台',
+  'Linux': 'Linux',
+  'macOS': 'macOS',
+  'Windows': 'Windows',
+  'Android': 'Android',
+  'iOS': 'iOS',
 
   // === 配置和设置 ===
   'Configuration': '配置',
@@ -42,6 +71,7 @@ const translations = {
 
   // === 工具和功能 ===
   'Tools': '工具',
+  'Web tools': 'Web 工具',
   'Plugins': '插件',
   'Extensions': '扩展',
   'Integrations': '集成',
@@ -55,6 +85,10 @@ const translations = {
   'Agents': 'Agent',
   'Model': '模型',
   'Models': '模型',
+  'Skills': '技能',
+  'Groups': '群组',
+  'Compaction': '压缩',
+  'Bonjour': 'Bonjour',
 
   // === 诊断和调试 ===
   'Doctor': '诊断',
@@ -132,16 +166,30 @@ const translations = {
 
 // 保持英文的专有名词和品牌
 const keepEnglishList = [
+  // 通信平台
   'Tailscale', 'Docker', 'WhatsApp', 'Telegram', 'Discord',
   'iMessage', 'Signal', 'Mattermost', 'Google Chat', 'Slack',
   'Matrix', 'LINE', 'Nextcloud', 'Twitch', 'Zalo', 'Nostr', 'Tlon',
+  'WebChat',
+
+  // AI 提供商
   'MiniMax', 'Moonshot', 'Anthropic', 'OpenAI', 'Google', 'Azure',
-  'Vercel', 'Hetzner', 'Oracle', 'DigitalOcean', 'Fly', 'GCP',
-  'OpenRouter', 'Venice', 'Qwen', 'GLM', 'Zai', 'Vercel AI Gateway',
+  'Vercel', 'OpenRouter', 'Venice', 'Qwen', 'GLM', 'Zai', 'Vercel AI Gateway',
+
+  // 云平台
+  'Hetzner', 'Oracle', 'DigitalOcean', 'Fly', 'GCP', 'VPS hosting',
+
+  // 技术术语
   'BlueBubbles', 'Webhooks', 'OAuth', 'API', 'CLI', 'RPC', 'JSON',
-  'RSC', 'Lobster', 'Heartbeat', 'Cron', 'Tailscale', 'exe.dev',
+  'RSC', 'Lobster', 'Heartbeat', 'Cron', 'exe.dev',
   'hot.at', 'giffgaff', 'gogcli.sh', 'tailscale.com', 'bluebubbles.app',
   'mattermost.com', 'grammY', '@steipete', '@badlogicc',
+
+  // 操作系统（保持英文）
+  'Linux', 'macOS', 'Windows', 'Android', 'iOS',
+
+  // Apple 技术
+  'Bonjour', 'XPC',
 ];
 
 function isKeepEnglish(text) {

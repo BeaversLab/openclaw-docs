@@ -76,4 +76,4 @@ Perplexity 直连 API 或通过 OpenRouter 连接。
 - `perplexity/sonar-pro`（默认）— 多步推理 + 网页搜索
 - `perplexity/sonar-reasoning-pro` — 深度研究
 
-完整的 web_search 配置请参见 [Web tools](/zh/tools/web)。
+完整的 web_search 配置请参见 [Web 工具](/zh/tools/web)。

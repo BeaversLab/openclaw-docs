@@ -113,7 +113,7 @@ Block streaming 会在模型产出文本块时发送部分回复。
 - `agents.defaults.humanDelay`（块回复之间的类人延迟）
 - 渠道覆盖：`*.blockStreaming` 与 `*.blockStreamingCoalesce`（非 Telegram 渠道需显式 `*.blockStreaming: true`）
 
-详情： [Streaming + chunking](/zh/concepts/streaming)。
+详情： [流式 + 分块](/zh/concepts/streaming)。
 
 ## 推理可见性与 token
 

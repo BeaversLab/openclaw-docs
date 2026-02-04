@@ -119,7 +119,7 @@ OpenClaw 有两套 hook 系统：
 
 - 自动 compaction 会发出 `compaction` 流事件并可能触发重试。
 - 重试时会重置内存缓冲与工具摘要，避免重复输出。
-- compaction 流程见 [Compaction](/zh/concepts/compaction)。
+- compaction 流程见 [压缩](/zh/concepts/compaction)。
 
 ## 事件流（当前）
 

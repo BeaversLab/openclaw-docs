@@ -82,7 +82,7 @@ channels:
 - 列表前缀与引用前缀属于 IR 文本，因此分块不会在前缀中断开。
 - 内联样式（bold/italic/strike/inline-code/spoiler）不会跨块断裂；渲染器会在每个块内重新打开样式。
 
-若需更多跨频道分块行为说明，见 [Streaming + chunking](/zh/concepts/streaming)。
+若需更多跨频道分块行为说明，见 [流式 + 分块](/zh/concepts/streaming)。
 
 ## 链接策略
 

@@ -12,8 +12,8 @@ title: "skills"
 
 相关：
 
-- 技能系统：[Skills](/zh/tools/skills)
-- 技能配置：[Skills config](/zh/tools/skills-config)
+- 技能系统：[技能](/zh/tools/skills)
+- 技能配置：[技能配置](/zh/tools/skills-config)
 - ClawdHub 安装：[ClawdHub](/zh/tools/clawdhub)
 
 ## 命令
