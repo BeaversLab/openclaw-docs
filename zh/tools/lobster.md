@@ -117,7 +117,7 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 }'
 ```
 
-详情与配置选项见 [LLM Task](/zh/tools/llm-task)。
+详情与配置选项见 [LLM 任务](/zh/tools/llm-task)。
 
 ## 工作流文件（.lobster）
 

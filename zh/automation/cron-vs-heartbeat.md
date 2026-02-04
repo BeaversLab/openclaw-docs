@@ -282,4 +282,4 @@ openclaw cron add \
 
 - [Heartbeat](/zh/gateway/heartbeat) - 完整 heartbeat 配置
 - [Cron jobs](/zh/automation/cron-jobs) - 完整 cron CLI 与 API 参考
-- [System](/zh/cli/system) - system event + heartbeat 控制
+- [系统](/zh/cli/system) - system event + heartbeat 控制

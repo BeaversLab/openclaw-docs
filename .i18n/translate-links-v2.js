@@ -51,6 +51,16 @@ const translations = {
   'Date & Time': '日期与时间',
   'Retry policy': '重试策略',
   'Where things live on disk': '文件存储位置',
+  'Gateway service runbook': 'Gateway 服务运维手册',
+  'Mac remote mode': 'Mac 远程模式',
+  'OpenClaw assistant setup': 'OpenClaw 助手设置',
+  'Exec tool': 'Exec 工具',
+  'LLM Task': 'LLM 任务',
+  'Health': '健康',
+  'Migrating': '迁移',
+  'Uninstall': '卸载',
+  'System': '系统',
+  'Reactions': '反应',
 
   // === UI 和界面 ===
   'Control UI': '控制界面',
@@ -212,11 +222,13 @@ const keepEnglishList = [
   'Hetzner', 'Oracle', 'DigitalOcean', 'Fly', 'GCP', 'VPS hosting',
 
   // 技术术语
-  'BlueBubbles', 'ClawHub', 'ClawdHub', 'Webhooks', 'OAuth', 'API', 'CLI', 'RPC', 'JSON',
+  'BlueBubbles', 'ClawHub', 'ClawdHub', 'Firecrawl', 'Webhooks', 'OAuth', 'API', 'CLI', 'RPC', 'JSON',
   'RSC', 'Lobster', 'Heartbeat', 'Cron', 'exe.dev',
   'hot.at', 'giffgaff', 'gogcli.sh', 'tailscale.com', 'bluebubbles.app',
   'mattermost.com', 'grammY', '@steipete', '@badlogicc',
   'Gmail Pub/Sub', // Google 产品
+  'openclaw-ansible', 'nix-openclaw', // 项目名
+  '@openclaw', 'OpenCode Zen', // 产品和账号
 
   // 操作系统（保持英文）
   'Linux', 'macOS', 'Windows', 'Android', 'iOS', 'Nix',

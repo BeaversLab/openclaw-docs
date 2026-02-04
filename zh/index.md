@@ -184,7 +184,7 @@ openclaw message send --target +15555550123 --message "Hello from OpenClaw"
   - [更新 / rollback](/zh/install/updating)
   - [配对 (DM + nodes)](/zh/start/pairing)
   - [Nix mode](/zh/install/nix)
-  - [OpenClaw assistant setup](/zh/start/openclaw)
+  - [OpenClaw 助手设置](/zh/start/openclaw)
   - [技能](/zh/tools/skills)
   - [技能配置](/zh/tools/skills-config)
   - [Workspace templates](/zh/reference/templates/AGENTS)

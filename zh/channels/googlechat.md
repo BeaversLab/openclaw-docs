@@ -247,4 +247,4 @@ openclaw channels status
 
 - [Gateway 配置](/zh/gateway/configuration)
 - [安全](/zh/gateway/security)
-- [Reactions](/zh/tools/reactions)
+- [反应](/zh/tools/reactions)

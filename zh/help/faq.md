@@ -227,7 +227,7 @@ summary: "关于 OpenClaw 安装、配置与使用的常见问题"
    openclaw status --deep
    ```
 
-   运行 gateway 健康检查 + provider 探测（需要可达的 gateway）。见 [Health](/zh/gateway/health)。
+   运行 gateway 健康检查 + provider 探测（需要可达的 gateway）。见 [健康](/zh/gateway/health)。
 
 5. **跟随最新日志**
 
@@ -256,7 +256,7 @@ summary: "关于 OpenClaw 安装、配置与使用的常见问题"
    openclaw health --json
    openclaw health --verbose   # shows the target URL + config path on errors
    ```
-   向运行中的 gateway 请求完整快照（仅 WS）。见 [Health](/zh/gateway/health)。
+   向运行中的 gateway 请求完整快照（仅 WS）。见 [健康](/zh/gateway/health)。
 
 ## Quick start and first-run setup
 
@@ -418,7 +418,7 @@ remote mode, remember the gateway host owns the session store and workspace.
 up **memory + bootstrap files**, but **not** session history or auth. Those live
 under `~/.openclaw/` (for example `~/.openclaw/agents/<agentId>/sessions/`).
 
-Related: [Migrating](/install/migrating), [文件存储位置](/help/faq#where-does-openclaw-store-its-data),
+Related: [迁移](/install/migrating), [文件存储位置](/help/faq#where-does-openclaw-store-its-data),
 [Agent 工作区](/concepts/agent-workspace), [诊断](/gateway/doctor),
 [Remote mode](/gateway/remote).
 
@@ -737,7 +737,7 @@ You only need a Mac **for macOS‑only tools**. For iMessage, you can keep the G
 and run `imsg` on any Mac over SSH by pointing `channels.imessage.cliPath` at an SSH wrapper.
 If you want other macOS‑only tools, run the Gateway on a Mac or pair a macOS node.
 
-Docs: [iMessage](/channels/imessage), [节点](/nodes), [Mac remote mode](/platforms/mac/remote).
+Docs: [iMessage](/channels/imessage), [节点](/nodes), [Mac 远程模式](/platforms/mac/remote).
 
 ### Do I need a Mac mini for iMessage support
 
@@ -752,7 +752,7 @@ Common setups:
 - Run everything on the Mac if you want the simplest single‑machine setup.
 
 Docs: [iMessage](/channels/imessage), [BlueBubbles](/channels/bluebubbles),
-[Mac remote mode](/platforms/mac/remote).
+[Mac 远程模式](/platforms/mac/remote).
 
 ### If I buy a Mac mini to run OpenClaw can I connect it to my MacBook Pro
 
@@ -1289,7 +1289,7 @@ Docs: [Agent 工作区](/concepts/agent-workspace).
 
 ### How do I completely uninstall OpenClaw
 
-See the dedicated guide: [Uninstall](/install/uninstall).
+See the dedicated guide: [卸载](/install/uninstall).
 
 ### Can agents work outside the workspace
 
@@ -2504,7 +2504,7 @@ openclaw gateway restart
 openclaw gateway run
 ```
 
-Docs: [Windows (WSL2)](/zh/platforms/windows), [Gateway service runbook](/zh/gateway)。
+Docs: [Windows (WSL2)](/zh/platforms/windows), [Gateway 服务运维手册](/zh/gateway)。
 
 ### The Gateway is up but replies never arrive What should I check
 
@@ -2589,7 +2589,7 @@ openclaw gateway start
 openclaw gateway run
 ```
 
-Docs: [Gateway service runbook](/zh/gateway)。
+Docs: [Gateway 服务运维手册](/zh/gateway)。
 
 ### ELI5 openclaw gateway restart vs openclaw gateway
 
@@ -2606,7 +2606,7 @@ Docs: [Gateway service runbook](/zh/gateway)。
 
 ### My skill generated an imagePDF but nothing was sent
 
-Agent 发送附件时，必须在消息里包含一行 `MEDIA:<path-or-url>`（单独一行）。见 [OpenClaw assistant setup](/zh/start/openclaw) 和 [Agent 发送](/zh/tools/agent-send)。
+Agent 发送附件时，必须在消息里包含一行 `MEDIA:<path-or-url>`（单独一行）。见 [OpenClaw 助手设置](/zh/start/openclaw) 和 [Agent 发送](/zh/tools/agent-send)。
 
 CLI 发送：
 

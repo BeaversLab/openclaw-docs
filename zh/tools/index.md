@@ -166,7 +166,7 @@ Provider key 可为 `provider`（如 `google-antigravity`）或 `provider/model`
 可选插件工具：
 
 - [Lobster](/zh/tools/lobster)：带可恢复审批的强类型工作流运行时（需要在 gateway 主机上安装 Lobster CLI）。
-- [LLM Task](/zh/tools/llm-task)：仅 JSON 的 LLM 步骤，用于结构化工作流输出（可选 schema 校验）。
+- [LLM 任务](/zh/tools/llm-task)：仅 JSON 的 LLM 步骤，用于结构化工作流输出（可选 schema 校验）。
 
 ## 工具清单
 

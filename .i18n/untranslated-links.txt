@@ -1,6 +1,6 @@
 # 未翻译的链接文本
-# 生成时间: 2026-02-04T07:06:40.134Z
-# 总数: 346
+# 生成时间: 2026-02-04T07:14:59.420Z
+# 总数: 305
 
 # 格式: 行号 | 文件路径 | 原文 | 链接
 
@@ -16,7 +16,6 @@
 ## zh/channels/discord.md
 
 159 | "`gateway/configuration`" | /zh/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts
-236 | "Retry policy" | /zh/concepts/retry
 
 ## zh/channels/googlechat.md
 
@@ -26,17 +25,11 @@
 
 190 | "`gateway/configuration`" | /zh/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts
 
-## zh/channels/index.md
-
-25 | "Microsoft Teams" | /zh/channels/msteams
-
 ## zh/channels/msteams.md
 
-211 | "Teams Developer Portal" | https://dev.teams.microsoft.com/apps
 458 | "Reply Style" | #reply-style-threads-vs-posts
 628 | "Adaptive Cards documentation" | https://adaptivecards.io/
 628 | "Target formats" | #target-formats
-759 | "Teams Developer Portal" | https://dev.teams.microsoft.com/apps
 760 | "Teams app manifest schema" | https://learn.microsoft.com/en-us/microsoftteams/platform/resources/schema/manifest-schema
 763 | "Teams bot file handling" | https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/bots-filesv4
 764 | "Proactive messaging" | https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/conversations/send-proactive-messages
@@ -52,15 +45,10 @@
 ## zh/channels/telegram.md
 
 75 | "`gateway/configuration`" | /zh/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts
-586 | "Retry policy" | /zh/concepts/retry
 
 ## zh/channels/twitch.md
 
 149 | "`gateway/configuration`" | /zh/gateway/configuration
-
-## zh/cli/hooks.md
-
-290 | "SOUL Evil Hook" | /zh/hooks/soul-evil
 
 ## zh/cli/index.md
 
@@ -128,7 +116,6 @@
 ## zh/concepts/agent.md
 
 86 | "Queue" | /zh/concepts/queue
-112 | "Group Chats" | /zh/concepts/group-messages
 
 ## zh/concepts/groups.md
 
@@ -148,42 +135,9 @@
 
 111 | "Broadcast groups" | /zh/broadcast-groups
 
-## zh/concepts/system-prompt.md
-
-81 | "Date & Time" | /zh/date-time
-
-## zh/concepts/timezone.md
-
-90 | "Date & Time" | /zh/date-time
-
-## zh/concepts/typebox.md
-
-15 | "Gateway architecture" | /zh/concepts/architecture
-
 ## zh/date-time.md
 
 122 | "Timezones" | /zh/concepts/timezone
-123 | "Messages" | /zh/concepts/messages
-
-## zh/experiments/plans/group-policy-hardening.md
-
-37 | "Group Chats" | /zh/concepts/groups
-
-## zh/gateway/authentication.md
-
-45 | "Help" | /zh/help
-
-## zh/gateway/bonjour.md
-
-154 | "Gateway pairing" | /zh/gateway/pairing
-
-## zh/gateway/configuration.md
-
-1492 | "Messages" | /zh/concepts/messages
-
-## zh/gateway/discovery.md
-
-106 | "Gateway pairing" | /zh/gateway/pairing
 
 ## zh/gateway/index.md
 
@@ -196,10 +150,6 @@
 ## zh/gateway/remote.md
 
 51 | "Web overview" | /zh/web
-
-## zh/gateway/security/formal-verification.md
-
-25 | "vignesh07/openclaw-formal-models" | https://github.com/vignesh07/openclaw-formal-models
 
 ## zh/gateway/security/index.md
 
@@ -259,7 +209,6 @@
 82 | "How do I bind a host folder into the sandbox?" | #how-do-i-bind-a-host-folder-into-the-sandbox
 83 | "How does memory work?" | #how-does-memory-work
 85 | "Does memory persist forever? What are the limits?" | #does-memory-persist-forever-what-are-the-limits
-87 | "Where things live on disk" | #where-things-live-on-disk
 88 | "Is all data used with OpenClaw saved locally?" | #is-all-data-used-with-openclaw-saved-locally
 89 | "Where does OpenClaw store its data?" | #where-does-openclaw-store-its-data
 90 | "Where should AGENTS.md / SOUL.md / USER.md / MEMORY.md live?" | #where-should-agentsmd-soulmd-usermd-memorymd-live
@@ -345,12 +294,9 @@
 259 | "Health" | /zh/gateway/health
 301 | "First 60 seconds if something's broken" | #first-60-seconds-if-somethings-broken
 421 | "Migrating" | /install/migrating
-421 | "Where things live on disk" | /help/faq#where-does-openclaw-store-its-data
 423 | "Remote mode" | /gateway/remote
 485 | "Installer stuck" | /help/faq#installer-stuck-how-do-i-get-more-feedback
 486 | "Im stuck" | /help/faq#im-stuck--whats-the-fastest-way-to-get-unstuck
-655 | "Local models" | /gateway/local-models
-699 | "Amazon Bedrock" | /bedrock
 740 | "Mac remote mode" | /platforms/mac/remote
 755 | "Mac remote mode" | /platforms/mac/remote
 855 | "Backup strategy" | /help/faq#whats-the-recommended-backup-strategy
@@ -361,9 +307,7 @@
 1867 | "Directory" | /cli/directory
 1867 | "Logs" | /cli/logs
 1912 | "Multi‑Agent Routing" | /concepts/multi-agent
-1935 | "Local models" | /gateway/local-models
 1956 | "Ollama" | /providers/ollama
-1956 | "Local models" | /gateway/local-models
 2507 | "Gateway service runbook" | /zh/gateway
 2592 | "Gateway service runbook" | /zh/gateway
 2609 | "OpenClaw assistant setup" | /zh/start/openclaw
@@ -374,12 +318,9 @@
 ## zh/hooks.md
 
 245 | "Agent Loop" | /zh/concepts/agent-loop
-534 | "SOUL Evil Hook" | /zh/hooks/soul-evil
 
 ## zh/index.md
 
-179 | "Help" | /zh/help
-186 | "Nix mode" | /zh/install/nix
 187 | "OpenClaw assistant setup" | /zh/start/openclaw
 190 | "Workspace templates" | /zh/reference/templates/AGENTS
 206 | "Media: images" | /zh/nodes/images
@@ -395,7 +336,6 @@
 ## zh/install/index.md
 
 53 | "Installer internals" | /zh/install/installer
-105 | "Nix" | /zh/install/nix
 106 | "Ansible" | /zh/install/ansible
 107 | "Bun" | /zh/install/bun
 181 | "Migrating" | /zh/install/migrating
@@ -412,7 +352,6 @@
 
 ## zh/network.md
 
-16 | "Gateway architecture" | /zh/concepts/architecture
 24 | "Gateway-owned node pairing" | /zh/gateway/pairing
 50 | "Gateway config reference" | /zh/gateway/configuration
 
@@ -435,16 +374,11 @@
 ## zh/platforms/android.md
 
 17 | "Runbook" | /zh/gateway
-96 | "Gateway pairing" | /zh/gateway/pairing
 149 | "Camera node" | /zh/nodes/camera
 
 ## zh/platforms/digitalocean.md
 
 37 | "signup with $200 free credit" | https://m.do.co/c/signup
-
-## zh/platforms/linux.md
-
-30 | "Nix" | /zh/install/nix
 
 ## zh/platforms/mac/health.md
 
@@ -479,20 +413,16 @@
 
 ## zh/plugin.md
 
-45 | "Microsoft Teams" | /zh/channels/msteams
 66 | "Plugin agent tools" | /zh/plugins/agent-tools
 
 ## zh/providers/index.md
 
 43 | "OpenCode Zen" | /zh/providers/opencode
-44 | "Amazon Bedrock" | /zh/bedrock
 46 | "Xiaomi" | /zh/providers/xiaomi
 
 ## zh/providers/models.md
 
-40 | "Synthetic" | /zh/providers/synthetic
 41 | "OpenCode Zen" | /zh/providers/opencode
-46 | "Amazon Bedrock" | /zh/bedrock
 
 ## zh/providers/venice.md
 
@@ -524,16 +454,10 @@
 
 10 | "model provider" | /zh/providers
 
-## zh/security/formal-verification.md
-
-24 | "vignesh07/openclaw-formal-models" | https://github.com/vignesh07/openclaw-formal-models
-
 ## zh/start/hubs.md
 
 14 | "Index" | /zh/index
-30 | "Nix" | /zh/install/nix
 52 | "TypeBox schema" | /zh/concepts/typebox
-102 | "OpenProse" | /zh/prose
 108 | "Thinking + verbose" | /zh/tools/thinking
 
 ## zh/start/showcase.md
@@ -541,10 +465,6 @@
 12 | "@openclaw" | https://x.com/openclaw
 191 | "Clawdspace" | https://github.com/adam91holt/clawdspace
 408 | "@openclaw" | https://x.com/openclaw
-
-## zh/start/wizard.md
-
-99 | "Synthetic" | /zh/providers/synthetic
 
 ## zh/tools/browser.md
 
@@ -558,15 +478,10 @@
 ## zh/tools/lobster.md
 
 120 | "LLM Task" | /zh/tools/llm-task
-312 | "OpenProse" | /zh/prose
 
 ## zh/tools/skills.md
 
 11 | "AgentSkills" | https://agentskills.io
-
-## zh/tools/slash-commands.md
-
-122 | "OpenProse" | /zh/prose
 
 ## zh/tools/web.md
 
@@ -583,7 +498,3 @@
 
 15 | "Railway" | /zh/railway
 16 | "Northflank" | /zh/northflank
-
-## zh/zh-CN/start/wizard.md
-
-103 | "Synthetic" | /providers/synthetic
