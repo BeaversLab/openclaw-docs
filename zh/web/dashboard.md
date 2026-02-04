@@ -18,7 +18,7 @@ Gateway 仪表盘是默认在 `/` 提供的浏览器 Control UI
 
 - 使用方式与 UI 能力见 [控制界面](/zh/web/control-ui)。
 - Serve/Funnel 自动化见 [Tailscale](/zh/gateway/tailscale)。
-- 绑定方式与安全说明见 [Web surfaces](/zh/web)。
+- 绑定方式与安全说明见 [Web 界面](/zh/web)。
 
 认证在 WebSocket 握手阶段通过 `connect.params.auth`（token 或密码）强制执行。配置见 [Gateway 配置](/zh/gateway/configuration) 的 `gateway.auth`。
 
@@ -34,7 +34,7 @@ Gateway 仪表盘是默认在 `/` 提供的浏览器 Control UI
 
 - **Localhost**：打开 `http://127.0.0.1:18789/`。若出现 “unauthorized”，运行 `openclaw dashboard` 并使用带 token 的链接（`?token=...`）。
 - **Token 来源**：`gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）；UI 首次加载后会保存。
-- **非 localhost**：使用 Tailscale Serve（若 `gateway.auth.allowTailscale: true` 则可免 token）、绑定 tailnet + token，或 SSH 隧道。见 [Web surfaces](/zh/web)。
+- **非 localhost**：使用 Tailscale Serve（若 `gateway.auth.allowTailscale: true` 则可免 token）、绑定 tailnet + token，或 SSH 隧道。见 [Web 界面](/zh/web)。
 
 ## 若看到 “unauthorized” / 1008
 

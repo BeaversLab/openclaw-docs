@@ -86,9 +86,9 @@ channels:
 
 ## 链接策略
 
-- **Slack:** `[label](url)` -> `<url|label>`；裸 URL 保持原样。解析时禁用 autolink 以避免双重链接。
-- **Telegram:** `[label](url)` -> `<a href="url">label</a>`（HTML parse mode）。
-- **Signal:** `[label](url)` -> `label (url)`，除非 label 与 URL 相同。
+- **Slack:** `[标签](url)` -> `<url|label>`；裸 URL 保持原样。解析时禁用 autolink 以避免双重链接。
+- **Telegram:** `[标签](url)` -> `<a href="url">label</a>`（HTML parse mode）。
+- **Signal:** `[标签](url)` -> `label (url)`，除非 label 与 URL 相同。
 
 ## Spoilers
 

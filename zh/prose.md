@@ -31,7 +31,7 @@ openclaw plugins enable open-prose
 
 开发/本地检出：`openclaw plugins install ./extensions/open-prose`
 
-相关文档：[插件](/zh/plugin)、[Plugin manifest](/zh/plugins/manifest)、[技能](/zh/tools/skills)。
+相关文档：[插件](/zh/plugin)、[插件清单](/zh/plugins/manifest)、[技能](/zh/tools/skills)。
 
 ## 斜杠命令
 

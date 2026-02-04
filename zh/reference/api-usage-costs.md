@@ -28,7 +28,7 @@ read_when:
 - `openclaw status --usage` 与 `openclaw channels list` 显示 provider **用量窗口**
   （配额快照，而非每条消息成本）。
 
-详情与示例参见 [Token use & costs](/zh/token-use)。
+详情与示例参见 [Token 使用与成本](/zh/token-use)。
 
 ## Key 的发现方式
 
@@ -46,7 +46,7 @@ OpenClaw 可以从以下来源获取凭据：
 
 每次回复或工具调用都会使用 **当前模型提供商**（OpenAI、Anthropic 等）。这是主要的用量与成本来源。
 
-定价配置参见 [模型](/zh/providers/models)，显示方式参见 [Token use & costs](/zh/token-use)。
+定价配置参见 [模型](/zh/providers/models)，显示方式参见 [Token 使用与成本](/zh/token-use)。
 
 ### 2) 媒体理解（音频/图片/视频）
 

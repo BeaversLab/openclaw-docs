@@ -1,6 +1,6 @@
 # 未翻译的链接文本
-# 生成时间: 2026-02-04T07:02:28.789Z
-# 总数: 584
+# 生成时间: 2026-02-04T07:05:06.673Z
+# 总数: 416
 
 # 格式: 行号 | 文件路径 | 原文 | 链接
 
@@ -16,10 +16,6 @@
 ## zh/automation/webhook.md
 
 108 | "Gmail Pub/Sub" | /zh/automation/gmail-pubsub
-
-## zh/brave-search.md
-
-41 | "Web tools" | /zh/tools/web
 
 ## zh/channels/discord.md
 
@@ -38,8 +34,6 @@
 ## zh/channels/index.md
 
 25 | "Microsoft Teams" | /zh/channels/msteams
-34 | "WebChat" | /zh/web/webchat
-40 | "Groups" | /zh/concepts/groups
 
 ## zh/channels/msteams.md
 
@@ -63,22 +57,15 @@
 ## zh/channels/telegram.md
 
 75 | "`gateway/configuration`" | /zh/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts
-582 | "Streaming + chunking" | /zh/concepts/streaming
 586 | "Retry policy" | /zh/concepts/retry
 
 ## zh/channels/twitch.md
 
 149 | "`gateway/configuration`" | /zh/gateway/configuration
 
-## zh/cli/approvals.md
-
-16 | "Exec approvals" | /zh/tools/exec-approvals
-
 ## zh/cli/browser.md
 
 16 | "Browser tool" | /zh/tools/browser
-17 | "Chrome extension" | /zh/tools/chrome-extension
-99 | "Chrome extension" | /zh/tools/chrome-extension
 107 | "Browser tool" | /zh/tools/browser
 
 ## zh/cli/configure.md
@@ -140,18 +127,10 @@
 
 16 | "Getting started" | /zh/start/getting-started
 
-## zh/cli/node.md
-
-110 | "Exec approvals" | /zh/tools/exec-approvals
-
 ## zh/cli/nodes.md
 
 16 | "Camera nodes" | /zh/nodes/camera
 17 | "Image nodes" | /zh/nodes/images
-
-## zh/cli/onboard.md
-
-14 | "Onboarding" | /zh/start/onboarding
 
 ## zh/cli/plugins.md
 
@@ -160,12 +139,9 @@
 ## zh/cli/setup.md
 
 15 | "Getting started" | /zh/start/getting-started
-16 | "Onboarding" | /zh/start/onboarding
 
 ## zh/cli/skills.md
 
-15 | "Skills" | /zh/tools/skills
-16 | "Skills config" | /zh/tools/skills-config
 17 | "ClawdHub" | /zh/tools/clawdhub
 
 ## zh/cli/tui.md
@@ -186,7 +162,6 @@
 62 | "System prompt" | /zh/concepts/system-prompt
 77 | "Hooks" | /zh/hooks
 99 | "Streaming" | /zh/concepts/streaming
-122 | "Compaction" | /zh/concepts/compaction
 
 ## zh/concepts/agent-workspace.md
 
@@ -195,28 +170,12 @@
 ## zh/concepts/agent.md
 
 86 | "Queue" | /zh/concepts/queue
-93 | "Streaming + chunking" | /zh/concepts/streaming
 112 | "Group Chats" | /zh/concepts/group-messages
-
-## zh/concepts/architecture.md
-
-46 | "Gateway protocol" | /zh/gateway/protocol
-92 | "Gateway protocol" | /zh/gateway/protocol
-
-## zh/concepts/channel-routing.md
-
-70 | "Broadcast Groups" | /zh/broadcast-groups
-
-## zh/concepts/compaction.md
-
-24 | "Compaction config & modes" | /zh/concepts/compaction
 
 ## zh/concepts/context.md
 
 30 | "Token use & costs" | /zh/token-use
-30 | "Compaction" | /zh/concepts/compaction
 101 | "System Prompt" | /zh/concepts/system-prompt
-153 | "Compaction" | /zh/concepts/compaction
 
 ## zh/concepts/groups.md
 
@@ -226,7 +185,6 @@
 ## zh/concepts/markdown-formatting.md
 
 39 | "docs" | https://docs.openclaw.ai
-85 | "Streaming + chunking" | /zh/concepts/streaming
 89 | "label" | url
 90 | "label" | url
 91 | "label" | url
@@ -234,18 +192,12 @@
 ## zh/concepts/messages.md
 
 100 | "Queueing" | /zh/concepts/queue
-116 | "Streaming + chunking" | /zh/concepts/streaming
 126 | "Thinking + reasoning directives" | /zh/tools/thinking
 126 | "Token use" | /zh/token-use
 
 ## zh/concepts/multi-agent.md
 
-29 | "Skills: per-agent vs shared" | /zh/tools/skills#per-agent-vs-shared-skills
 111 | "Broadcast groups" | /zh/broadcast-groups
-
-## zh/concepts/session.md
-
-45 | "Compaction" | /zh/concepts/compaction
 
 ## zh/concepts/system-prompt.md
 
@@ -277,41 +229,25 @@
 
 154 | "Gateway pairing" | /zh/gateway/pairing
 
-## zh/gateway/bridge-protocol.md
-
-15 | "Gateway protocol" | /zh/gateway/protocol
-
 ## zh/gateway/configuration.md
 
 1492 | "Messages" | /zh/concepts/messages
 
 ## zh/gateway/discovery.md
 
-29 | "Gateway protocol" | /zh/gateway/protocol
-54 | "Bonjour" | /zh/gateway/bonjour
 106 | "Gateway pairing" | /zh/gateway/pairing
-
-## zh/gateway/heartbeat.md
-
-133 | "Groups" | /zh/concepts/groups
 
 ## zh/gateway/index.md
 
 36 | "`/v1/chat/completions`" | /zh/gateway/openai-http-api
 37 | "`/v1/responses`" | /zh/gateway/openresponses-http-api
 38 | "`/tools/invoke`" | /zh/gateway/tools-invoke-http-api
-62 | "Multiple gateways" | /zh/gateway/multiple-gateways
 76 | "Rescue-bot guide" | /zh/gateway/multiple-gateways#rescue-bot-guide
-130 | "Gateway protocol" | /zh/gateway/protocol
 152 | "Presence" | /zh/concepts/presence
-234 | "Multiple gateways" | /zh/gateway/multiple-gateways
 
 ## zh/gateway/remote.md
 
-42 | "macOS remote access" | /zh/platforms/mac/remote
 51 | "Web overview" | /zh/web
-66 | "Multiple gateways" | /zh/gateway/multiple-gateways
-113 | "macOS remote access" | /zh/platforms/mac/remote
 
 ## zh/gateway/security/formal-verification.md
 
@@ -320,10 +256,6 @@
 ## zh/gateway/security/index.md
 
 229 | "“A step forward on safety”" | https://www.anthropic.com/news/claude-opus-4-5
-
-## zh/gateway/troubleshooting.md
-
-91 | "Control UI" | /zh/web/control-ui#insecure-http
 
 ## zh/help/faq.md
 
@@ -343,9 +275,7 @@
 26 | "How do I try the latest bits?" | #how-do-i-try-the-latest-bits
 27 | "How long does install and onboarding usually take?" | #how-long-does-install-and-onboarding-usually-take
 28 | "Installer stuck? How do I get more feedback?" | #installer-stuck-how-do-i-get-more-feedback
-29 | "Windows install says git not found or openclaw not recognized" | #windows-install-says-git-not-found-or-openclaw-not-recognized
 30 | "The docs didn’t answer my question - how do I get a better answer?" | #the-docs-didnt-answer-my-question-how-do-i-get-a-better-answer
-31 | "How do I install OpenClaw on Linux?" | #how-do-i-install-openclaw-on-linux
 32 | "How do I install OpenClaw on a VPS?" | #how-do-i-install-openclaw-on-a-vps
 33 | "Where are the cloud/VPS install guides?" | #where-are-the-cloudvps-install-guides
 34 | "Can I ask OpenClaw to update itself?" | #can-i-ask-openclaw-to-update-itself
@@ -358,7 +288,6 @@
 50 | "If I buy a Mac mini to run OpenClaw, can I connect it to my MacBook Pro?" | #if-i-buy-a-mac-mini-to-run-openclaw-can-i-connect-it-to-my-macbook-pro
 51 | "Can I use Bun?" | #can-i-use-bun
 54 | "Can I run a "fast chat" agent and an "Opus for coding" agent?" | #can-i-run-a-fast-chat-agent-and-an-opus-for-coding-agent
-55 | "Does Homebrew work on Linux?" | #does-homebrew-work-on-linux
 56 | "What’s the difference between the hackable (git) install and npm install?" | #whats-the-difference-between-the-hackable-git-install-and-npm-install
 57 | "Can I switch between npm and git installs later?" | #can-i-switch-between-npm-and-git-installs-later
 58 | "Should I run the Gateway on my laptop or a VPS?" | #should-i-run-the-gateway-on-my-laptop-or-a-vps
@@ -372,16 +301,12 @@
 66 | "What are the top five everyday use cases for OpenClaw" | #what-are-the-top-five-everyday-use-cases-for-openclaw
 67 | "Can OpenClaw help with lead gen outreach ads and blogs for a SaaS" | #can-openclaw-help-with-lead-gen-outreach-ads-and-blogs-for-a-saas
 68 | "What are the advantages vs Claude Code for web development?" | #what-are-the-advantages-vs-claude-code-for-web-development
-69 | "Skills and automation" | #skills-and-automation
 70 | "How do I customize skills without keeping the repo dirty?" | #how-do-i-customize-skills-without-keeping-the-repo-dirty
 71 | "Can I load skills from a custom folder?" | #can-i-load-skills-from-a-custom-folder
 72 | "How can I use different models for different tasks?" | #how-can-i-use-different-models-for-different-tasks
 73 | "The bot freezes while doing heavy work. How do I offload that?" | #the-bot-freezes-while-doing-heavy-work-how-do-i-offload-that
-75 | "How do I install skills on Linux?" | #how-do-i-install-skills-on-linux
 76 | "Can OpenClaw run tasks on a schedule or continuously in the background?" | #can-openclaw-run-tasks-on-a-schedule-or-continuously-in-the-background
-77 | "Can I run Apple/macOS-only skills from Linux?" | #can-i-run-applemacosonly-skills-from-linux
 78 | "Do you have a Notion or HeyGen integration?" | #do-you-have-a-notion-or-heygen-integration
-79 | "How do I install the Chrome extension for browser takeover?" | #how-do-i-install-the-chrome-extension-for-browser-takeover
 81 | "Is there a dedicated sandboxing doc?" | #is-there-a-dedicated-sandboxing-doc
 82 | "How do I bind a host folder into the sandbox?" | #how-do-i-bind-a-host-folder-into-the-sandbox
 83 | "How does memory work?" | #how-does-memory-work
@@ -448,13 +373,11 @@
 164 | "Why does `openclaw gateway status` show `Config (cli)` and `Config (service)` different?" | #why-does-openclaw-gateway-status-show-config-cli-and-config-service-different
 165 | "What does “another gateway instance is already listening” mean?" | #what-does-another-gateway-instance-is-already-listening-mean
 166 | "How do I run OpenClaw in remote mode (client connects to a Gateway elsewhere)?" | #how-do-i-run-openclaw-in-remote-mode-client-connects-to-a-gateway-elsewhere
-167 | "The Control UI says “unauthorized” (or keeps reconnecting). What now?" | #the-control-ui-says-unauthorized-or-keeps-reconnecting-what-now
 168 | "I set `gateway.bind: "tailnet"` but it can’t bind / nothing listens" | #i-set-gatewaybind-tailnet-but-it-cant-bind-nothing-listens
 169 | "Can I run multiple Gateways on the same host?" | #can-i-run-multiple-gateways-on-the-same-host
 170 | "What does “invalid handshake” / code 1008 mean?" | #what-does-invalid-handshake-code-1008-mean
 172 | "Where are logs?" | #where-are-logs
 173 | "How do I start/stop/restart the Gateway service?" | #how-do-i-startstoprestart-the-gateway-service
-174 | "I closed my terminal on Windows - how do I restart OpenClaw?" | #i-closed-my-terminal-on-windows-how-do-i-restart-openclaw
 175 | "The Gateway is up but replies never arrive. What should I check?" | #the-gateway-is-up-but-replies-never-arrive-what-should-i-check
 176 | ""Disconnected from gateway: no reason" - what now?" | #disconnected-from-gateway-no-reason-what-now
 178 | "TUI shows no output. What should I check?" | #tui-shows-no-output-what-should-i-check
@@ -476,9 +399,7 @@
 259 | "Health" | /zh/gateway/health
 301 | "First 60 seconds if something's broken" | #first-60-seconds-if-somethings-broken
 302 | "Installer flags" | /zh/install/installer
-346 | "Dashboard" | /web/dashboard
 346 | "Web surfaces" | /web
-372 | "Linux" | /platforms/linux
 421 | "Migrating" | /install/migrating
 421 | "Where things live on disk" | /help/faq#where-does-openclaw-store-its-data
 423 | "Remote mode" | /gateway/remote
@@ -486,84 +407,47 @@
 485 | "Installer stuck" | /help/faq#installer-stuck-how-do-i-get-more-feedback
 486 | "Im stuck" | /help/faq#im-stuck--whats-the-fastest-way-to-get-unstuck
 540 | "Installer flags" | /install/installer
-562 | "Windows" | /platforms/windows
 573 | "Installer flags" | /install/installer
-579 | "Linux" | /platforms/linux
-588 | "Gateway remote" | /gateway/remote
-594 | "VPS hosting" | /vps
-607 | "Gateway remote" | /gateway/remote
 655 | "Local models" | /gateway/local-models
 699 | "Amazon Bedrock" | /bedrock
-703 | "Wizard" | /start/wizard
-710 | "Wizard" | /start/wizard
 740 | "Mac remote mode" | /platforms/mac/remote
 755 | "Mac remote mode" | /platforms/mac/remote
 826 | "Getting started" | /start/getting-started
 855 | "Backup strategy" | /help/faq#whats-the-recommended-backup-strategy
 872 | "Browser" | /tools/browser
-895 | "Linux" | /platforms/linux
-895 | "VPS hosting" | /vps
-909 | "Windows" | /platforms/windows
-909 | "VPS hosting" | /vps
-910 | "macOS VM" | /platforms/macos-vm
 938 | "Gateway" | /gateway
 938 | "Multi‑agent" | /concepts/multi-agent
 1021 | "Sub-agents" | /tools/subagents
 1076 | "remote mode" | #how-do-i-run-openclaw-in-remote-mode-client-connects-to-a-gateway-elsewhere
-1127 | "Skills" | /tools/skills
 1127 | "ClawdHub" | /tools/clawdhub
-1140 | "Chrome extension" | /tools/chrome-extension
-1158 | "Groups: personal DMs + public groups" | /concepts/groups#pattern-personal-dms-public-groups-single-agent
 1292 | "Uninstall" | /install/uninstall
 1299 | "`agents.defaults.sandbox`" | /gateway/sandboxing
-1396 | "Web tools" | /tools/web
 1408 | "Sub-agents" | /tools/subagents
 1408 | "TUI" | /tui
 1425 | "Browser" | /tools/browser
 1436 | "Browser" | /tools/browser#use-brave-or-another-chromium-based-browser
-1472 | "Gateway protocol" | /gateway/protocol
-1472 | "macOS remote mode" | /platforms/mac/remote
-1540 | "Chrome extension" | /tools/chrome-extension
-1550 | "Multiple gateways" | /gateway/multiple-gateways
-1554 | "Multiple gateways" | /gateway/multiple-gateways
 1581 | "Config" | /cli/config
-1634 | "Gateway protocol" | /gateway/protocol
-1634 | "macOS remote mode" | /platforms/mac/remote
 1736 | "Multi-agent routing" | /concepts/multi-agent
 1736 | "Sub-agents" | /tools/subagents
-1773 | "Wizard" | /start/wizard
-1800 | "Compaction" | /concepts/compaction
 1867 | "Directory" | /cli/directory
 1867 | "Logs" | /cli/logs
-1876 | "Groups" | /concepts/groups
 1876 | "Group messages" | /concepts/group-messages
-1880 | "Groups" | /concepts/groups
 1880 | "Group messages" | /concepts/group-messages
 1912 | "Multi‑Agent Routing" | /concepts/multi-agent
 1913 | "Browser" | /tools/browser
-1913 | "Chrome extension" | /tools/chrome-extension
 1935 | "Local models" | /gateway/local-models
 1940 | "Sub-agents" | /tools/subagents
 1956 | "Ollama" | /providers/ollama
 1956 | "Local models" | /gateway/local-models
 1974 | "Config" | /cli/config
-2378 | "Dashboard" | /zh/web/dashboard
-2409 | "Multiple gateways" | /zh/gateway/multiple-gateways
-2433 | "Gateway protocol" | /zh/gateway/protocol
 2470 | "Gateway" | /zh/gateway
-2507 | "Windows (WSL2)" | /zh/platforms/windows
 2507 | "Gateway service runbook" | /zh/gateway
-2545 | "Dashboard" | /zh/web/dashboard
 2573 | "TUI" | /zh/tui
 2592 | "Gateway service runbook" | /zh/gateway
 2609 | "OpenClaw assistant setup" | /zh/start/openclaw
 2622 | "Images" | /zh/nodes/images
 2719 | "Thinking and verbose" | /zh/tools/thinking
 2791 | "GitHub discussion" | https://github.com/openclaw/openclaw/discussions
-
-## zh/help/troubleshooting.md
-
-61 | "Control UI" | /zh/web/control-ui#insecure-http
 
 ## zh/hooks.md
 
@@ -579,28 +463,14 @@
 
 ## zh/index.md
 
-38 | "Wizard" | /zh/start/wizard
 48 | "Web surfaces" | /zh/web
-79 | "Multiple gateways" | /zh/gateway/multiple-gateways
 179 | "Help" | /zh/help
 183 | "Multi-agent routing" | /zh/concepts/multi-agent
 186 | "Nix mode" | /zh/install/nix
 187 | "OpenClaw assistant setup" | /zh/start/openclaw
-188 | "Skills" | /zh/tools/skills
-189 | "Skills config" | /zh/tools/skills-config
 190 | "Workspace templates" | /zh/reference/templates/AGENTS
-192 | "Gateway runbook" | /zh/gateway
-194 | "Web surfaces (Control UI)" | /zh/web
-198 | "WebChat" | /zh/web/webchat
-199 | "Control UI (browser)" | /zh/web/control-ui
-204 | "Groups" | /zh/concepts/groups
 206 | "Media: images" | /zh/nodes/images
 207 | "Media: audio" | /zh/nodes/audio
-209 | "macOS app" | /zh/platforms/macos
-210 | "iOS app" | /zh/platforms/ios
-211 | "Android app" | /zh/platforms/android
-212 | "Windows (WSL2)" | /zh/platforms/windows
-213 | "Linux app" | /zh/platforms/linux
 218 | "Gmail hooks (Pub/Sub)" | /zh/automation/gmail-pubsub
 
 ## zh/install/ansible.md
@@ -622,29 +492,21 @@
 
 12 | "nix-openclaw" | https://github.com/openclaw/nix-openclaw
 92 | "nix-openclaw" | https://github.com/openclaw/nix-openclaw
-93 | "Wizard" | /zh/start/wizard
 
 ## zh/install/updating.md
 
 133 | "`openclaw.mjs`" | https://github.com/openclaw/openclaw/blob/main/openclaw.mjs
-172 | "Gateway runbook" | /zh/gateway
 
 ## zh/network.md
 
 16 | "Gateway architecture" | /zh/concepts/architecture
-17 | "Gateway protocol" | /zh/gateway/protocol
-18 | "Gateway runbook" | /zh/gateway
 19 | "Web surfaces + bind modes" | /zh/web
 24 | "Gateway-owned node pairing" | /zh/gateway/pairing
-36 | "Bonjour / mDNS" | /zh/gateway/bonjour
 50 | "Gateway config reference" | /zh/gateway/configuration
 
 ## zh/nodes/index.md
 
-12 | "Gateway protocol" | /zh/gateway/protocol
 116 | "Exec tool" | /zh/tools/exec
-117 | "Exec approvals" | /zh/tools/exec-approvals
-306 | "Exec approvals" | /zh/tools/exec-approvals
 
 ## zh/nodes/media-understanding.md
 
@@ -654,10 +516,6 @@
 
 11 | "Deploy OpenClaw" | https://northflank.com/stacks/deploy-openclaw
 
-## zh/perplexity.md
-
-79 | "Web tools" | /zh/tools/web
-
 ## zh/pi.md
 
 7 | "pi-coding-agent" | https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent
@@ -665,10 +523,7 @@
 ## zh/platforms/android.md
 
 17 | "Runbook" | /zh/gateway
-18 | "Gateway protocol" | /zh/gateway/protocol
 22 | "Gateway" | /zh/gateway
-62 | "Bonjour" | /zh/gateway/bonjour
-71 | "Bonjour" | /zh/gateway/bonjour
 96 | "Gateway pairing" | /zh/gateway/pairing
 149 | "Camera node" | /zh/nodes/camera
 
@@ -678,24 +533,11 @@
 
 ## zh/platforms/index.md
 
-19 | "macOS" | /zh/platforms/macos
-20 | "iOS" | /zh/platforms/ios
-21 | "Android" | /zh/platforms/android
-22 | "Windows" | /zh/platforms/windows
-23 | "Linux" | /zh/platforms/linux
-27 | "VPS hosting" | /zh/vps
 36 | "Gateway" | /zh/gateway
-
-## zh/platforms/ios.md
-
-61 | "Bonjour" | /zh/gateway/bonjour
-107 | "Bonjour" | /zh/gateway/bonjour
 
 ## zh/platforms/linux.md
 
 30 | "Nix" | /zh/install/nix
-34 | "Gateway runbook" | /zh/gateway
-68 | "Gateway runbook" | /zh/gateway
 
 ## zh/platforms/mac/health.md
 
@@ -705,50 +547,28 @@
 
 27 | "logging privacy shenanigans" | https://steipete.me/posts/2025/logging-privacy-shenanigans
 
-## zh/platforms/mac/signing.md
-
-14 | "macOS permissions" | /zh/platforms/mac/permissions
-34 | "macOS permissions" | /zh/platforms/mac/permissions
-
 ## zh/platforms/mac/xpc.md
 
 45 | "PeekabooBridge usage" | /zh/platforms/mac/peekaboo
 
 ## zh/platforms/macos-vm.md
 
-15 | "VPS hosting" | /zh/vps
-17 | "Gateway remote" | /zh/gateway/remote
 25 | "Lume" | https://cua.ai/docs/lume
 38 | "MacStadium" | https://www.macstadium.com/
-257 | "VPS hosting" | /zh/vps
-274 | "VPS hosting" | /zh/vps
-276 | "Gateway remote" | /zh/gateway/remote
 278 | "Lume Quickstart" | https://cua.ai/docs/lume/guide/getting-started/quickstart
 
 ## zh/platforms/macos.md
 
-179 | "macOS remote access" | /zh/platforms/mac/remote
-181 | "macOS remote access" | /zh/platforms/mac/remote
-181 | "Gateway protocol" | /zh/gateway/protocol
-185 | "Gateway runbook" | /zh/gateway
-186 | "Gateway (macOS)" | /zh/platforms/mac/bundled-gateway
-187 | "macOS permissions" | /zh/platforms/mac/permissions
 188 | "Canvas" | /zh/platforms/mac/canvas
 
 ## zh/platforms/oracle.md
 
 35 | "signup" | https://www.oracle.com/cloud/free/
-299 | "Gateway remote access" | /zh/gateway/remote
 
 ## zh/platforms/raspberry-pi.md
 
 48 | "Raspberry Pi Imager" | https://www.raspberrypi.com/software/
 193 | "Pi USB boot guide" | https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot
-354 | "Linux guide" | /zh/platforms/linux
-
-## zh/platforms/windows.md
-
-25 | "Gateway runbook" | /zh/gateway
 
 ## zh/plugin.md
 
@@ -761,8 +581,6 @@
 ## zh/prose.md
 
 34 | "Plugin manifest" | /zh/plugins/manifest
-34 | "Skills" | /zh/tools/skills
-128 | "Skills config" | /zh/tools/skills-config
 
 ## zh/providers/index.md
 
@@ -784,7 +602,6 @@
 ## zh/refactor/exec-host.md
 
 313 | "Exec tool" | /zh/tools/exec
-314 | "Exec approvals" | /zh/tools/exec-approvals
 316 | "Elevated mode" | /zh/tools/elevated
 
 ## zh/reference/RELEASING.md
@@ -793,18 +610,13 @@
 26 | "`src/provider-web.ts`" | https://github.com/openclaw/openclaw/blob/main/src/provider-web.ts
 27 | "`openclaw.mjs`" | https://github.com/openclaw/openclaw/blob/main/openclaw.mjs
 32 | "`src/canvas-host/a2ui/a2ui.bundle.js`" | https://github.com/openclaw/openclaw/blob/main/src/canvas-host/a2ui/a2ui.bundle.js
-63 | "macOS release" | /zh/platforms/mac/release
-65 | "macOS release" | /zh/platforms/mac/release
 
 ## zh/reference/api-usage-costs.md
 
 31 | "Token use & costs" | /zh/token-use
 49 | "Token use & costs" | /zh/token-use
 59 | "Media understanding" | /zh/nodes/media-understanding
-86 | "Web tools" | /zh/tools/web
-96 | "Web tools" | /zh/tools/web
 126 | "Talk mode" | /zh/nodes/talk
-132 | "Skills" | /zh/tools/skills
 
 ## zh/reference/test.md
 
@@ -818,40 +630,15 @@
 
 24 | "vignesh07/openclaw-formal-models" | https://github.com/vignesh07/openclaw-formal-models
 
-## zh/start/getting-started.md
-
-15 | "Dashboard" | /zh/web/dashboard
-15 | "Control UI" | /zh/web/control-ui
-55 | "Windows（WSL2）" | /zh/platforms/windows
-
 ## zh/start/hubs.md
 
 14 | "Index" | /zh/index
 30 | "Nix" | /zh/install/nix
 52 | "TypeBox schema" | /zh/concepts/typebox
-56 | "Bonjour" | /zh/gateway/bonjour
-76 | "WebChat" | /zh/web/webchat
 78 | "Gmail Pub/Sub" | /zh/automation/gmail-pubsub
-91 | "Dashboard" | /zh/web/dashboard
-92 | "Control UI" | /zh/web/control-ui
 102 | "OpenProse" | /zh/prose
 108 | "Thinking + verbose" | /zh/tools/thinking
-130 | "macOS" | /zh/platforms/macos
-131 | "iOS" | /zh/platforms/ios
-132 | "Android" | /zh/platforms/android
-133 | "Windows（WSL2）" | /zh/platforms/windows
-134 | "Linux" | /zh/platforms/linux
-143 | "macOS WebChat" | /zh/platforms/mac/webchat
-144 | "macOS Canvas" | /zh/platforms/mac/canvas
-153 | "macOS Gateway（launchd）" | /zh/platforms/mac/bundled-gateway
-154 | "macOS XPC" | /zh/platforms/mac/xpc
-156 | "macOS Peekaboo" | /zh/platforms/mac/peekaboo
 161 | "ClawdHub" | /zh/tools/clawdhub
-
-## zh/start/openclaw.md
-
-233 | "WebChat" | /zh/web/webchat
-239 | "Windows（WSL2）" | /zh/platforms/windows
 
 ## zh/start/showcase.md
 
@@ -861,17 +648,11 @@
 
 ## zh/start/wizard.md
 
-21 | "Dashboard" | /zh/web/dashboard
 99 | "Synthetic" | /zh/providers/synthetic
-
-## zh/testing.md
-
-346 | "Skills" | /zh/tools/skills
 
 ## zh/token-use.md
 
 25 | "System Prompt" | /zh/concepts/system-prompt
-98 | "Skills" | /zh/tools/skills
 
 ## zh/tools/browser.md
 
@@ -895,7 +676,6 @@
 
 11 | "AgentSkills" | https://agentskills.io
 46 | "ClawHub" | /zh/tools/clawhub
-276 | "Skills config" | /zh/tools/skills-config
 
 ## zh/tools/slash-commands.md
 
@@ -916,25 +696,11 @@
 
 15 | "Railway" | /zh/railway
 16 | "Northflank" | /zh/northflank
-33 | "Gateway remote" | /zh/gateway/remote
 
 ## zh/web/dashboard.md
 
-19 | "Control UI" | /zh/web/control-ui
 21 | "Web surfaces" | /zh/web
 37 | "Web surfaces" | /zh/web
-
-## zh/web/index.md
-
-16 | "Control UI" | /zh/web/control-ui
-
-## zh/zh-CN/index.md
-
-228 | "Windows (WSL2)" | /platforms/windows
-
-## zh/zh-CN/start/getting-started.md
-
-59 | "Windows (WSL2)" | /platforms/windows
 
 ## zh/zh-CN/start/wizard.md
 

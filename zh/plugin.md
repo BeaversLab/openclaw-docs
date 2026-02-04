@@ -30,14 +30,14 @@ openclaw plugins install @openclaw/voice-call
 
 3. 重启 Gateway，然后在 `plugins.entries.<id>.config` 下配置。
 
-具体示例参见 [Voice Call](/zh/plugins/voice-call)。
+具体示例参见 [语音通话](/zh/plugins/voice-call)。
 
 ## 可用插件（官方）
 
 - Microsoft Teams 自 2026.1.15 起仅支持插件方式；使用 Teams 请安装 `@openclaw/msteams`。
 - Memory (Core) — 内置的记忆搜索插件（默认通过 `plugins.slots.memory` 启用）
 - Memory (LanceDB) — 内置长期记忆插件（自动召回/捕获；设置 `plugins.slots.memory = "memory-lancedb"`）
-- [Voice Call](/zh/plugins/voice-call) — `@openclaw/voice-call`
+- [语音通话](/zh/plugins/voice-call) — `@openclaw/voice-call`
 - [Zalo Personal](/zh/plugins/zalouser) — `@openclaw/zalouser`
 - [Matrix](/zh/channels/matrix) — `@openclaw/matrix`
 - [Nostr](/zh/channels/nostr) — `@openclaw/nostr`
@@ -49,7 +49,7 @@ openclaw plugins install @openclaw/voice-call
 - Copilot Proxy（provider auth）— 本地 VS Code Copilot Proxy 桥接；不同于内置的 `github-copilot` 设备登录（内置，默认禁用）
 
 OpenClaw 插件是通过 jiti 在运行时加载的 **TypeScript 模块**。**配置校验不会执行插件代码**；
-它使用插件清单与 JSON Schema。参见 [Plugin manifest](/zh/plugins/manifest)。
+它使用插件清单与 JSON Schema。参见 [插件清单](/zh/plugins/manifest)。
 
 插件可以注册：
 

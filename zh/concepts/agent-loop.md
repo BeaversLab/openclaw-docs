@@ -74,7 +74,7 @@ OpenClaw 有两套 hook 系统：
   可用来添加/移除 bootstrap context 文件。
 - **Command hooks**：`/new`、`/reset`、`/stop` 等命令事件（见 Hooks 文档）。
 
-见 [Hooks](/zh/hooks) 获取设置与示例。
+见 [钩子](/zh/hooks) 获取设置与示例。
 
 ### 插件 hooks（agent + gateway 生命周期）
 

@@ -92,7 +92,7 @@ summary: "关于 OpenClaw 安装、配置与使用的常见问题"
   - [How do I completely uninstall OpenClaw?](#how-do-i-completely-uninstall-openclaw)
   - [Can agents work outside the workspace?](#can-agents-work-outside-the-workspace)
   - [I’m in remote mode - where is the session store?](#im-in-remote-mode-where-is-the-session-store)
-- [Config basics](#config-basics)
+- [配置 basics](#config-basics)
   - [What format is the config? Where is it?](#what-format-is-the-config-where-is-it)
   - [I set `gateway.bind: "lan"` (or `"tailnet"`) and now nothing listens / the UI says unauthorized](#i-set-gatewaybind-lan-or-tailnet-and-now-nothing-listens-the-ui-says-unauthorized)
   - [Why do I need a token on localhost now?](#why-do-i-need-a-token-on-localhost-now)
@@ -161,7 +161,7 @@ summary: "关于 OpenClaw 安装、配置与使用的常见问题"
 - [Gateway: ports, “already running”, and remote mode](#gateway-ports-already-running-and-remote-mode)
   - [What port does the Gateway use?](#what-port-does-the-gateway-use)
   - [Why does `openclaw gateway status` say `Runtime: running` but `RPC probe: failed`?](#why-does-openclaw-gateway-status-say-runtime-running-but-rpc-probe-failed)
-  - [Why does `openclaw gateway status` show `Config (cli)` and `Config (service)` different?](#why-does-openclaw-gateway-status-show-config-cli-and-config-service-different)
+  - [Why does `openclaw gateway status` show `配置 (cli)` and `配置 (service)` different?](#why-does-openclaw-gateway-status-show-config-cli-and-config-service-different)
   - [What does “another gateway instance is already listening” mean?](#what-does-another-gateway-instance-is-already-listening-mean)
   - [How do I run OpenClaw in remote mode (client connects to a Gateway elsewhere)?](#how-do-i-run-openclaw-in-remote-mode-client-connects-to-a-gateway-elsewhere)
   - [The 控制界面 says “unauthorized” (or keeps reconnecting). What now?](#the-control-ui-says-unauthorized-or-keeps-reconnecting-what-now)
@@ -299,7 +299,7 @@ openclaw doctor
 `openclaw gateway status`, `openclaw health --verbose`。
 
 快速调试循环：[First 60 seconds if something's broken](#first-60-seconds-if-somethings-broken)。
-安装文档：[安装](/zh/install), [Installer flags](/zh/install/installer), [更新](/zh/install/updating)。
+安装文档：[安装](/zh/install), [安装器标志](/zh/install/installer), [更新](/zh/install/updating)。
 
 ### Whats the recommended way to install and set up OpenClaw
 
@@ -343,7 +343,7 @@ The wizard now opens your browser with a tokenized dashboard URL right after onb
 - **Tailnet bind**: run `openclaw gateway --bind tailnet --token "<token>"`, open `http://<tailscale-ip>:18789/`, paste token in dashboard settings.
 - **SSH tunnel**: `ssh -N -L 18789:127.0.0.1:18789 user@host` then open `http://127.0.0.1:18789/?token=...` from `openclaw dashboard`.
 
-See [仪表板](/web/dashboard) and [Web surfaces](/web) for bind modes and auth details.
+See [仪表板](/web/dashboard) and [Web 界面](/web) for bind modes and auth details.
 
 ### What runtime do I need
 
@@ -473,7 +473,7 @@ curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.bot/install.sh | bash -s 
 Windows installer (PowerShell):
 https://openclaw.ai/install.ps1
 
-More detail: [开发环境 channels](/install/development-channels) and [Installer flags](/install/installer).
+More detail: [开发环境 channels](/install/development-channels) and [安装器标志](/install/installer).
 
 ### How long does install and onboarding usually take
 
@@ -537,7 +537,7 @@ For a hackable (git) install:
 curl -fsSL https://openclaw.bot/install.sh | bash -s -- --install-method git --verbose
 ```
 
-More options: [Installer flags](/install/installer).
+More options: [安装器标志](/install/installer).
 
 ### Windows install says git not found or openclaw not recognized
 
@@ -570,7 +570,7 @@ your bot (or Claude/Codex) _from that folder_ so it can read the repo and answer
 curl -fsSL https://openclaw.bot/install.sh | bash -s -- --install-method git
 ```
 
-More detail: [安装](/install) and [Installer flags](/install/installer).
+More detail: [安装](/install) and [安装器标志](/install/installer).
 
 ### How do I install OpenClaw on Linux
 
@@ -823,7 +823,7 @@ Recent builds also prepend common user bin dirs on Linux systemd services (for e
 - **npm install:** global CLI install, no repo, best for “just run it.”
   Updates come from npm dist‑tags.
 
-Docs: [Getting started](/start/getting-started), [更新](/install/updating).
+Docs: [入门](/start/getting-started), [更新](/install/updating).
 
 ### Can I switch between npm and git installs later
 
@@ -869,7 +869,7 @@ lowest friction and you’re okay with sleep/restarts, run it locally.
 - **Pros:** always‑on, stable network, no laptop sleep issues, easier to keep running.
 - **Cons:** often run headless (use screenshots), remote file access only, you must SSH for updates.
 
-**OpenClaw-specific note:** WhatsApp/Telegram/Slack/Mattermost (plugin)/Discord all work fine from a VPS. The only real trade-off is **headless browser** vs a visible window. See [Browser](/tools/browser).
+**OpenClaw-specific note:** WhatsApp/Telegram/Slack/Mattermost (plugin)/Discord all work fine from a VPS. The only real trade-off is **headless browser** vs a visible window. See [浏览器](/tools/browser).
 
 **Recommended default:** VPS if you had gateway disconnects before. Local is great when you’re actively using the Mac and want local file access or UI automation with a visible browser.
 
@@ -1018,7 +1018,7 @@ Use `/status` in chat to see what the Gateway is doing right now (and whether it
 Token tip: long tasks and sub-agents both consume tokens. If cost is a concern, set a
 cheaper model for sub-agents via `agents.defaults.subagents.model`.
 
-Docs: [Sub-agents](/tools/subagents).
+Docs: [子 Agent](/tools/subagents).
 
 ### Cron or reminders do not fire What should I check
 
@@ -1405,7 +1405,7 @@ The common pattern is **one Gateway** (e.g. Raspberry Pi) plus **nodes** and **a
 - **Sub‑agents:** spawn background work from a main agent when you want parallelism.
 - **TUI:** connect to the Gateway and switch agents/sessions.
 
-Docs: [节点](/nodes), [远程访问](/gateway/remote), [多 Agent 路由](/concepts/multi-agent), [Sub-agents](/tools/subagents), [TUI](/tui).
+Docs: [节点](/nodes), [远程访问](/gateway/remote), [多 Agent 路由](/concepts/multi-agent), [子 Agent](/tools/subagents), [TUI](/tui).
 
 ### Can the OpenClaw browser run headless
 
@@ -1422,7 +1422,7 @@ Yes. It’s a config option:
 }
 ```
 
-Default is `false` (headful). Headless is more likely to trigger anti‑bot checks on some sites. See [Browser](/tools/browser).
+Default is `false` (headful). Headless is more likely to trigger anti‑bot checks on some sites. See [浏览器](/tools/browser).
 
 Headless uses the **same Chromium engine** and works for most automation (forms, clicks, scraping, logins). The main differences:
 
@@ -1433,7 +1433,7 @@ Headless uses the **same Chromium engine** and works for most automation (forms,
 ### How do I use Brave for browser control
 
 Set `browser.executablePath` to your Brave binary (or any Chromium-based browser) and restart the Gateway.
-See the full config examples in [Browser](/tools/browser#use-brave-or-another-chromium-based-browser).
+See the full config examples in [浏览器](/tools/browser#use-brave-or-another-chromium-based-browser).
 
 ## Remote gateways + nodes
 
@@ -1578,7 +1578,7 @@ Avoid it:
 - Use `openclaw config set` for small changes.
 - Use `openclaw configure` for interactive edits.
 
-Docs: [Config](/cli/config), [配置](/cli/configure), [诊断](/gateway/doctor).
+Docs: [配置](/cli/config), [配置](/cli/configure), [诊断](/gateway/doctor).
 
 ### Whats a minimal sane config for a first install
 
@@ -1733,7 +1733,7 @@ less efficient than using one bot with separate sessions. The typical model we
 envision is one bot you talk to, with different sessions for parallel work. That
 bot can also spawn sub-agents when needed.
 
-Docs: [Multi-agent routing](/concepts/multi-agent), [Sub-agents](/tools/subagents), [Agent CLI](/cli/agents).
+Docs: [多 Agent 路由](/concepts/multi-agent), [子 Agent](/tools/subagents), [Agent CLI](/cli/agents).
 
 ### Why did context get truncated midtask How do I prevent it
 
@@ -1873,11 +1873,11 @@ Two common causes:
 - Mention gating is on (default). You must @mention the bot (or match `mentionPatterns`).
 - You configured `channels.whatsapp.groups` without `"*"` and the group isn’t allowlisted.
 
-See [群组](/concepts/groups) and [Group messages](/concepts/group-messages).
+See [群组](/concepts/groups) and [群组消息](/concepts/group-messages).
 
 ### Do groupsthreads share context with DMs
 
-Direct chats collapse to the main session by default. Groups/channels have their own session keys, and Telegram topics / Discord threads are separate sessions. See [群组](/concepts/groups) and [Group messages](/concepts/group-messages).
+Direct chats collapse to the main session by default. Groups/channels have their own session keys, and Telegram topics / Discord threads are separate sessions. See [群组](/concepts/groups) and [群组消息](/concepts/group-messages).
 
 ### How many workspaces and agents can I create
 
@@ -1910,7 +1910,7 @@ Best‑practice setup:
 - Local browser via extension relay (or a node) when needed.
 
 Docs: [Multi‑Agent Routing](/concepts/multi-agent), [Slack](/channels/slack),
-[Browser](/tools/browser), [Chrome 扩展](/tools/chrome-extension), [节点](/nodes).
+[浏览器](/tools/browser), [Chrome 扩展](/tools/chrome-extension), [节点](/nodes).
 
 ## Models: defaults, selection, aliases, switching
 
@@ -1937,7 +1937,7 @@ MiniMax M2.1 has its own docs: [MiniMax](/providers/minimax) and
 Rule of thumb: use the **best model you can afford** for high-stakes work, and a cheaper
 model for routine chat or summaries. You can route models per agent and use sub-agents to
 parallelize long tasks (each sub-agent consumes tokens). See [模型](/concepts/models) and
-[Sub-agents](/tools/subagents).
+[子 Agent](/tools/subagents).
 
 Strong warning: weaker/over-quantized models are more vulnerable to prompt
 injection and unsafe behavior. See [安全](/gateway/security).
@@ -1971,7 +1971,7 @@ Safe options:
 Avoid `config.apply` with a partial object unless you intend to replace the whole config.
 If you did overwrite config, restore from backup or re-run `openclaw doctor` to repair.
 
-Docs: [模型](/concepts/models), [配置](/cli/configure), [Config](/cli/config), [诊断](/gateway/doctor).
+Docs: [模型](/concepts/models), [配置](/cli/configure), [配置](/cli/config), [诊断](/gateway/doctor).
 
 ### What do OpenClaw, Flawd, and Krill use for models
 

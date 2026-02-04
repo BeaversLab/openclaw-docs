@@ -13,7 +13,7 @@ title: "browser"
 
 相关：
 
-- Browser 工具 + API：[Browser tool](/zh/tools/browser)
+- Browser 工具 + API：[浏览器工具](/zh/tools/browser)
 - Chrome 扩展中继：[Chrome 扩展](/zh/tools/chrome-extension)
 
 ## 常用参数
@@ -104,4 +104,4 @@ openclaw browser extension path
 
 使用 `gateway.nodes.browser.mode` 控制自动路由，并用 `gateway.nodes.browser.node` 在有多个 node 时指定某个 node。
 
-安全与远程设置： [Browser tool](/zh/tools/browser)、[远程访问](/zh/gateway/remote)、[Tailscale](/zh/gateway/tailscale)、[安全](/zh/gateway/security)
+安全与远程设置： [浏览器工具](/zh/tools/browser)、[远程访问](/zh/gateway/remote)、[Tailscale](/zh/gateway/tailscale)、[安全](/zh/gateway/security)

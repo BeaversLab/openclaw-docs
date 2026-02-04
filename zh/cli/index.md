@@ -958,7 +958,7 @@ heartbeat 控制（Gateway RPC）。
 
 ## Browser
 
-浏览器控制 CLI（独立 Chrome/Brave/Edge/Chromium）。见 [`openclaw browser`](/zh/cli/browser) 与 [Browser tool](/zh/tools/browser)。
+浏览器控制 CLI（独立 Chrome/Brave/Edge/Chromium）。见 [`openclaw browser`](/zh/cli/browser) 与 [浏览器工具](/zh/tools/browser)。
 
 通用选项：
 

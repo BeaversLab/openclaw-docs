@@ -433,7 +433,7 @@ Doctor 可帮你生成：`openclaw doctor --generate-gateway-token`。
 
 ### 0.6.1) 通过 node host 的浏览器控制（推荐）
 
-若 Gateway 在远端但浏览器在另一台机器上，请在浏览器机器上运行 **node host**，让 Gateway 代理浏览器动作（见 [Browser 工具](/zh/tools/browser)）。将节点配对视为管理员访问。
+若 Gateway 在远端但浏览器在另一台机器上，请在浏览器机器上运行 **node host**，让 Gateway 代理浏览器动作（见 [浏览器 工具](/zh/tools/browser)）。将节点配对视为管理员访问。
 
 推荐模式：
 

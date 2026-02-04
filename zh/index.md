@@ -45,7 +45,7 @@ OpenClaw 也驱动 OpenClaw assistant。
 
 Dashboard 是浏览器里的 Control UI，用于聊天、配置、节点、会话等。
 本地默认：http://127.0.0.1:18789/
-远程访问见：[Web surfaces](/zh/web) 与 [Tailscale](/zh/gateway/tailscale)
+远程访问见：[Web 界面](/zh/web) 与 [Tailscale](/zh/gateway/tailscale)
 
 <p align="center">
   <img src="whatsapp-openclaw.jpg" alt="OpenClaw" width="420" />
@@ -180,7 +180,7 @@ openclaw message send --target +15555550123 --message "Hello from OpenClaw"
   - [配置](/zh/gateway/configuration)
   - [配置 examples](/zh/gateway/configuration-examples)
   - [斜杠命令](/zh/tools/slash-commands)
-  - [Multi-agent routing](/zh/concepts/multi-agent)
+  - [多 Agent 路由](/zh/concepts/multi-agent)
   - [更新 / rollback](/zh/install/updating)
   - [配对 (DM + nodes)](/zh/start/pairing)
   - [Nix mode](/zh/install/nix)

@@ -237,7 +237,7 @@ exec ssh -T bot@mac-mini.tailnet-1234.ts.net imsg "$@"
 }
 ```
 
-当你想为特定线程提供独立的人格/模型时，这很有用（参见 [Multi-agent routing](/zh/concepts/multi-agent)）。关于文件系统隔离，参见 [沙盒隔离](/zh/gateway/sandboxing)。
+当你想为特定线程提供独立的人格/模型时，这很有用（参见 [多 Agent 路由](/zh/concepts/multi-agent)）。关于文件系统隔离，参见 [沙盒隔离](/zh/gateway/sandboxing)。
 
 ## 媒体 + 限制
 

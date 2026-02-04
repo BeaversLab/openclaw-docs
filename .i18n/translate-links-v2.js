@@ -24,15 +24,26 @@ const translations = {
   'Agent workspace': 'Agent 工作区',
   'Agent send': 'Agent 发送',
   'Multi-Agent Routing': '多 Agent 路由',
+  'Multi-agent routing': '多 Agent 路由',
   'Channel troubleshooting': '通道故障排查',
   'Model Providers': '模型提供商',
   'Getting Started': '入门指南',
+  'Getting started': '入门',
   'Channel Configuration': '通道配置',
   'Exec approvals': 'Exec 审批',
   'Chrome extension': 'Chrome 扩展',
   'VPS hosting': 'VPS 托管',
   'Streaming + chunking': '流式 + 分块',
   'Skills config': '技能配置',
+  'Installer flags': '安装器标志',
+  'Web surfaces': 'Web 界面',
+  'Sub-agents': '子 Agent',
+  'Browser tool': '浏览器工具',
+  'Plugin manifest': '插件清单',
+  'Voice Call': '语音通话',
+  'Token use & costs': 'Token 使用与成本',
+  'System Prompt': '系统提示',
+  'Group messages': '群组消息',
 
   // === UI 和界面 ===
   'Control UI': '控制界面',
@@ -72,6 +83,8 @@ const translations = {
   // === 工具和功能 ===
   'Tools': '工具',
   'Web tools': 'Web 工具',
+  'Browser': '浏览器',
+  'Browser tool': '浏览器工具',
   'Plugins': '插件',
   'Extensions': '扩展',
   'Integrations': '集成',
@@ -83,12 +96,15 @@ const translations = {
   'Session': '会话',
   'Agent': 'Agent',
   'Agents': 'Agent',
+  'Sub-agents': '子 Agent',
   'Model': '模型',
   'Models': '模型',
   'Skills': '技能',
   'Groups': '群组',
   'Compaction': '压缩',
   'Bonjour': 'Bonjour',
+  'Hooks': '钩子',
+  'Config': '配置',
 
   // === 诊断和调试 ===
   'Doctor': '诊断',
@@ -159,6 +175,10 @@ const translations = {
   'Commands': '命令',
   'Command': '命令',
   'Flags': '标志',
+  'Gateway': 'Gateway',
+  'TUI': 'TUI',
+  'label': '标签',
+  'labels': '标签',
 
   // === 平台和提供商标识符（保持英文）===
   // 这些会通过 isKeepEnglish 函数过滤掉
@@ -180,10 +200,11 @@ const keepEnglishList = [
   'Hetzner', 'Oracle', 'DigitalOcean', 'Fly', 'GCP', 'VPS hosting',
 
   // 技术术语
-  'BlueBubbles', 'Webhooks', 'OAuth', 'API', 'CLI', 'RPC', 'JSON',
+  'BlueBubbles', 'ClawHub', 'ClawdHub', 'Webhooks', 'OAuth', 'API', 'CLI', 'RPC', 'JSON',
   'RSC', 'Lobster', 'Heartbeat', 'Cron', 'exe.dev',
   'hot.at', 'giffgaff', 'gogcli.sh', 'tailscale.com', 'bluebubbles.app',
   'mattermost.com', 'grammY', '@steipete', '@badlogicc',
+  'Gmail Pub/Sub', // Google 产品
 
   // 操作系统（保持英文）
   'Linux', 'macOS', 'Windows', 'Android', 'iOS',

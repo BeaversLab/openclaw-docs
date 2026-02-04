@@ -16,7 +16,7 @@ read_when:
 - [Gateway architecture](/zh/concepts/architecture)
 - [Gateway 协议](/zh/gateway/protocol)
 - [Gateway 运维手册](/zh/gateway)
-- [Web surfaces + bind modes](/zh/web)
+- [Web 界面 + bind modes](/zh/web)
 
 ## 配对 + 身份
 

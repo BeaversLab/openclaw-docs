@@ -370,4 +370,4 @@ Agent system prompt 在新群会话首回合会包含一段群聊提示，提醒
 
 ## WhatsApp 特性
 
-WhatsApp 专有行为（历史注入、mention 处理细节）见 [Group messages](/zh/concepts/group-messages)。
+WhatsApp 专有行为（历史注入、mention 处理细节）见 [群组消息](/zh/concepts/group-messages)。

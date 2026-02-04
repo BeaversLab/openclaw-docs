@@ -27,7 +27,7 @@ Context _不等同于_ "memory"：memory 可以写入磁盘并在之后加载；
 - `/usage tokens` → 为普通回复附加每条回复的用量页脚。
 - `/compact` → 将旧历史压缩为摘要以释放窗口空间。
 
-另见：[斜杠命令](/zh/tools/slash-commands)、[Token use & costs](/zh/token-use)、[压缩](/zh/concepts/compaction)。
+另见：[斜杠命令](/zh/tools/slash-commands)、[Token 使用与成本](/zh/token-use)、[压缩](/zh/concepts/compaction)。
 
 ## 示例输出
 
@@ -98,7 +98,7 @@ System prompt 由 **OpenClaw** 构建并在每次运行重建。内容包含：
 - 运行时元数据（host/OS/model/thinking）。
 - 在 **Project Context** 中注入的 workspace bootstrap 文件。
 
-完整拆解见：[System Prompt](/zh/concepts/system-prompt)。
+完整拆解见：[系统提示](/zh/concepts/system-prompt)。
 
 ## 注入的 workspace 文件（Project Context）
 

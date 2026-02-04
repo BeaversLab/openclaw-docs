@@ -22,7 +22,7 @@ OpenClaw 每次运行都会组装自己的 system prompt，包含：
 - 回复标签 + heartbeat 行为
 - 运行时元数据（主机/OS/模型/思考模式）
 
-完整拆解参见 [System Prompt](/zh/concepts/system-prompt)。
+完整拆解参见 [系统提示](/zh/concepts/system-prompt)。
 
 ## 什么会计入上下文窗口
 
