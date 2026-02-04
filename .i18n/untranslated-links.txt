@@ -1,6 +1,6 @@
 # 未翻译的链接文本
-# 生成时间: 2026-02-04T07:05:06.673Z
-# 总数: 416
+# 生成时间: 2026-02-04T07:06:40.134Z
+# 总数: 346
 
 # 格式: 行号 | 文件路径 | 原文 | 链接
 
@@ -12,10 +12,6 @@
 ## zh/automation/cron-vs-heartbeat.md
 
 285 | "System" | /zh/cli/system
-
-## zh/automation/webhook.md
-
-108 | "Gmail Pub/Sub" | /zh/automation/gmail-pubsub
 
 ## zh/channels/discord.md
 
@@ -29,7 +25,6 @@
 ## zh/channels/imessage.md
 
 190 | "`gateway/configuration`" | /zh/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts
-240 | "Multi-agent routing" | /zh/concepts/multi-agent
 
 ## zh/channels/index.md
 
@@ -63,18 +58,8 @@
 
 149 | "`gateway/configuration`" | /zh/gateway/configuration
 
-## zh/cli/browser.md
-
-16 | "Browser tool" | /zh/tools/browser
-107 | "Browser tool" | /zh/tools/browser
-
-## zh/cli/configure.md
-
-21 | "Config" | /zh/cli/config
-
 ## zh/cli/hooks.md
 
-15 | "Hooks" | /zh/hooks
 290 | "SOUL Evil Hook" | /zh/hooks/soul-evil
 
 ## zh/cli/index.md
@@ -121,46 +106,19 @@
 552 | "`acp`" | /zh/cli/acp
 906 | "`openclaw node`" | /zh/cli/node
 961 | "`openclaw browser`" | /zh/cli/browser
-961 | "Browser tool" | /zh/tools/browser
-
-## zh/cli/models.md
-
-16 | "Getting started" | /zh/start/getting-started
 
 ## zh/cli/nodes.md
 
 16 | "Camera nodes" | /zh/nodes/camera
 17 | "Image nodes" | /zh/nodes/images
 
-## zh/cli/plugins.md
-
-16 | "Plugin manifest" | /zh/plugins/manifest
-
-## zh/cli/setup.md
-
-15 | "Getting started" | /zh/start/getting-started
-
-## zh/cli/skills.md
-
-17 | "ClawdHub" | /zh/tools/clawdhub
-
-## zh/cli/tui.md
-
-15 | "TUI" | /zh/tui
-
-## zh/cli/voicecall.md
-
-15 | "Voice Call" | /zh/plugins/voice-call
-
 ## zh/cli/webhooks.md
 
 15 | "Webhook" | /zh/automation/webhook
-16 | "Gmail Pub/Sub" | /zh/automation/gmail-pubsub
 
 ## zh/concepts/agent-loop.md
 
 62 | "System prompt" | /zh/concepts/system-prompt
-77 | "Hooks" | /zh/hooks
 99 | "Streaming" | /zh/concepts/streaming
 
 ## zh/concepts/agent-workspace.md
@@ -172,22 +130,13 @@
 86 | "Queue" | /zh/concepts/queue
 112 | "Group Chats" | /zh/concepts/group-messages
 
-## zh/concepts/context.md
-
-30 | "Token use & costs" | /zh/token-use
-101 | "System Prompt" | /zh/concepts/system-prompt
-
 ## zh/concepts/groups.md
 
 39 | "Group message flow" | /zh/images/groups-flow.svg
-373 | "Group messages" | /zh/concepts/group-messages
 
 ## zh/concepts/markdown-formatting.md
 
 39 | "docs" | https://docs.openclaw.ai
-89 | "label" | url
-90 | "label" | url
-91 | "label" | url
 
 ## zh/concepts/messages.md
 
@@ -213,7 +162,6 @@
 
 ## zh/date-time.md
 
-121 | "System Prompt" | /zh/concepts/system-prompt
 122 | "Timezones" | /zh/concepts/timezone
 123 | "Messages" | /zh/concepts/messages
 
@@ -319,7 +267,6 @@
 92 | "How do I completely uninstall OpenClaw?" | #how-do-i-completely-uninstall-openclaw
 93 | "Can agents work outside the workspace?" | #can-agents-work-outside-the-workspace
 94 | "I’m in remote mode - where is the session store?" | #im-in-remote-mode-where-is-the-session-store
-95 | "Config basics" | #config-basics
 96 | "What format is the config? Where is it?" | #what-format-is-the-config-where-is-it
 97 | "I set `gateway.bind: "lan"` (or `"tailnet"`) and now nothing listens / the UI says unauthorized" | #i-set-gatewaybind-lan-or-tailnet-and-now-nothing-listens-the-ui-says-unauthorized
 98 | "Why do I need a token on localhost now?" | #why-do-i-need-a-token-on-localhost-now
@@ -370,7 +317,6 @@
 159 | "Can I control which auth profile is tried first?" | #can-i-control-which-auth-profile-is-tried-first
 161 | "Gateway: ports, “already running”, and remote mode" | #gateway-ports-already-running-and-remote-mode
 162 | "What port does the Gateway use?" | #what-port-does-the-gateway-use
-164 | "Why does `openclaw gateway status` show `Config (cli)` and `Config (service)` different?" | #why-does-openclaw-gateway-status-show-config-cli-and-config-service-different
 165 | "What does “another gateway instance is already listening” mean?" | #what-does-another-gateway-instance-is-already-listening-mean
 166 | "How do I run OpenClaw in remote mode (client connects to a Gateway elsewhere)?" | #how-do-i-run-openclaw-in-remote-mode-client-connects-to-a-gateway-elsewhere
 168 | "I set `gateway.bind: "tailnet"` but it can’t bind / nothing listens" | #i-set-gatewaybind-tailnet-but-it-cant-bind-nothing-listens
@@ -398,51 +344,27 @@
 230 | "Health" | /zh/gateway/health
 259 | "Health" | /zh/gateway/health
 301 | "First 60 seconds if something's broken" | #first-60-seconds-if-somethings-broken
-302 | "Installer flags" | /zh/install/installer
-346 | "Web surfaces" | /web
 421 | "Migrating" | /install/migrating
 421 | "Where things live on disk" | /help/faq#where-does-openclaw-store-its-data
 423 | "Remote mode" | /gateway/remote
-476 | "Installer flags" | /install/installer
 485 | "Installer stuck" | /help/faq#installer-stuck-how-do-i-get-more-feedback
 486 | "Im stuck" | /help/faq#im-stuck--whats-the-fastest-way-to-get-unstuck
-540 | "Installer flags" | /install/installer
-573 | "Installer flags" | /install/installer
 655 | "Local models" | /gateway/local-models
 699 | "Amazon Bedrock" | /bedrock
 740 | "Mac remote mode" | /platforms/mac/remote
 755 | "Mac remote mode" | /platforms/mac/remote
-826 | "Getting started" | /start/getting-started
 855 | "Backup strategy" | /help/faq#whats-the-recommended-backup-strategy
-872 | "Browser" | /tools/browser
-938 | "Gateway" | /gateway
 938 | "Multi‑agent" | /concepts/multi-agent
-1021 | "Sub-agents" | /tools/subagents
 1076 | "remote mode" | #how-do-i-run-openclaw-in-remote-mode-client-connects-to-a-gateway-elsewhere
-1127 | "ClawdHub" | /tools/clawdhub
 1292 | "Uninstall" | /install/uninstall
 1299 | "`agents.defaults.sandbox`" | /gateway/sandboxing
-1408 | "Sub-agents" | /tools/subagents
-1408 | "TUI" | /tui
-1425 | "Browser" | /tools/browser
-1436 | "Browser" | /tools/browser#use-brave-or-another-chromium-based-browser
-1581 | "Config" | /cli/config
-1736 | "Multi-agent routing" | /concepts/multi-agent
-1736 | "Sub-agents" | /tools/subagents
 1867 | "Directory" | /cli/directory
 1867 | "Logs" | /cli/logs
-1876 | "Group messages" | /concepts/group-messages
-1880 | "Group messages" | /concepts/group-messages
 1912 | "Multi‑Agent Routing" | /concepts/multi-agent
-1913 | "Browser" | /tools/browser
 1935 | "Local models" | /gateway/local-models
-1940 | "Sub-agents" | /tools/subagents
 1956 | "Ollama" | /providers/ollama
 1956 | "Local models" | /gateway/local-models
-1974 | "Config" | /cli/config
-2470 | "Gateway" | /zh/gateway
 2507 | "Gateway service runbook" | /zh/gateway
-2573 | "TUI" | /zh/tui
 2592 | "Gateway service runbook" | /zh/gateway
 2609 | "OpenClaw assistant setup" | /zh/start/openclaw
 2622 | "Images" | /zh/nodes/images
@@ -451,21 +373,12 @@
 
 ## zh/hooks.md
 
-18 | "Webhook Hooks" | /zh/automation/webhook
 245 | "Agent Loop" | /zh/concepts/agent-loop
 534 | "SOUL Evil Hook" | /zh/hooks/soul-evil
-909 | "Bundled Hooks README" | https://github.com/openclaw/openclaw/tree/main/src/hooks/bundled
-910 | "Webhook Hooks" | /zh/automation/webhook
-
-## zh/hooks/soul-evil.md
-
-65 | "Hooks" | /zh/hooks
 
 ## zh/index.md
 
-48 | "Web surfaces" | /zh/web
 179 | "Help" | /zh/help
-183 | "Multi-agent routing" | /zh/concepts/multi-agent
 186 | "Nix mode" | /zh/install/nix
 187 | "OpenClaw assistant setup" | /zh/start/openclaw
 190 | "Workspace templates" | /zh/reference/templates/AGENTS
@@ -500,7 +413,6 @@
 ## zh/network.md
 
 16 | "Gateway architecture" | /zh/concepts/architecture
-19 | "Web surfaces + bind modes" | /zh/web
 24 | "Gateway-owned node pairing" | /zh/gateway/pairing
 50 | "Gateway config reference" | /zh/gateway/configuration
 
@@ -523,17 +435,12 @@
 ## zh/platforms/android.md
 
 17 | "Runbook" | /zh/gateway
-22 | "Gateway" | /zh/gateway
 96 | "Gateway pairing" | /zh/gateway/pairing
 149 | "Camera node" | /zh/nodes/camera
 
 ## zh/platforms/digitalocean.md
 
 37 | "signup with $200 free credit" | https://m.do.co/c/signup
-
-## zh/platforms/index.md
-
-36 | "Gateway" | /zh/gateway
 
 ## zh/platforms/linux.md
 
@@ -572,15 +479,8 @@
 
 ## zh/plugin.md
 
-33 | "Voice Call" | /zh/plugins/voice-call
-40 | "Voice Call" | /zh/plugins/voice-call
 45 | "Microsoft Teams" | /zh/channels/msteams
-52 | "Plugin manifest" | /zh/plugins/manifest
 66 | "Plugin agent tools" | /zh/plugins/agent-tools
-
-## zh/prose.md
-
-34 | "Plugin manifest" | /zh/plugins/manifest
 
 ## zh/providers/index.md
 
@@ -613,8 +513,6 @@
 
 ## zh/reference/api-usage-costs.md
 
-31 | "Token use & costs" | /zh/token-use
-49 | "Token use & costs" | /zh/token-use
 59 | "Media understanding" | /zh/nodes/media-understanding
 126 | "Talk mode" | /zh/nodes/talk
 
@@ -635,10 +533,8 @@
 14 | "Index" | /zh/index
 30 | "Nix" | /zh/install/nix
 52 | "TypeBox schema" | /zh/concepts/typebox
-78 | "Gmail Pub/Sub" | /zh/automation/gmail-pubsub
 102 | "OpenProse" | /zh/prose
 108 | "Thinking + verbose" | /zh/tools/thinking
-161 | "ClawdHub" | /zh/tools/clawdhub
 
 ## zh/start/showcase.md
 
@@ -650,17 +546,9 @@
 
 99 | "Synthetic" | /zh/providers/synthetic
 
-## zh/token-use.md
-
-25 | "System Prompt" | /zh/concepts/system-prompt
-
 ## zh/tools/browser.md
 
 148 | "Browserless" | https://browserless.io
-
-## zh/tools/creating-skills.md
-
-54 | "ClawHub" | https://clawhub.com
 
 ## zh/tools/index.md
 
@@ -675,7 +563,6 @@
 ## zh/tools/skills.md
 
 11 | "AgentSkills" | https://agentskills.io
-46 | "ClawHub" | /zh/tools/clawhub
 
 ## zh/tools/slash-commands.md
 
@@ -696,11 +583,6 @@
 
 15 | "Railway" | /zh/railway
 16 | "Northflank" | /zh/northflank
-
-## zh/web/dashboard.md
-
-21 | "Web surfaces" | /zh/web
-37 | "Web surfaces" | /zh/web
 
 ## zh/zh-CN/start/wizard.md
 

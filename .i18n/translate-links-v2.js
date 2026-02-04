@@ -15,7 +15,10 @@ const translations = {
   'Gateway protocol': 'Gateway 协议',
   'Gateway runbook': 'Gateway 运维手册',
   'Gateway remote': 'Gateway 远程',
+  'Gateway pairing': 'Gateway 配对',
+  'Gateway architecture': 'Gateway 架构',
   'Multiple gateways': '多 Gateway',
+  'Local models': '本地模型',
 
   // === 其他组合短语 ===
   'Slash commands': '斜杠命令',
@@ -44,6 +47,10 @@ const translations = {
   'Token use & costs': 'Token 使用与成本',
   'System Prompt': '系统提示',
   'Group messages': '群组消息',
+  'Group Chats': '群组聊天',
+  'Date & Time': '日期与时间',
+  'Retry policy': '重试策略',
+  'Where things live on disk': '文件存储位置',
 
   // === UI 和界面 ===
   'Control UI': '控制界面',
@@ -179,6 +186,10 @@ const translations = {
   'TUI': 'TUI',
   'label': '标签',
   'labels': '标签',
+  'Messages': '消息',
+  'Help': '帮助',
+  'Usage': '用法',
+  'Reference': '参考',
 
   // === 平台和提供商标识符（保持英文）===
   // 这些会通过 isKeepEnglish 函数过滤掉
@@ -193,8 +204,9 @@ const keepEnglishList = [
   'WebChat',
 
   // AI 提供商
-  'MiniMax', 'Moonshot', 'Anthropic', 'OpenAI', 'Google', 'Azure',
-  'Vercel', 'OpenRouter', 'Venice', 'Qwen', 'GLM', 'Zai', 'Vercel AI Gateway',
+  'MiniMax', 'Moonshot', 'Synthetic', 'Anthropic', 'OpenAI', 'Google', 'Azure',
+  'Amazon Bedrock', 'Vercel', 'OpenRouter', 'Venice', 'Qwen', 'GLM', 'Zai', 'Vercel AI Gateway',
+  'OpenProse', // 产品名
 
   // 云平台
   'Hetzner', 'Oracle', 'DigitalOcean', 'Fly', 'GCP', 'VPS hosting',
@@ -207,10 +219,14 @@ const keepEnglishList = [
   'Gmail Pub/Sub', // Google 产品
 
   // 操作系统（保持英文）
-  'Linux', 'macOS', 'Windows', 'Android', 'iOS',
+  'Linux', 'macOS', 'Windows', 'Android', 'iOS', 'Nix',
 
   // Apple 技术
   'Bonjour', 'XPC',
+
+  // 其他产品和技术
+  'SOUL Evil Hook', 'Microsoft Teams', 'Teams Developer Portal',
+  'vignesh07/openclaw-formal-models', // GitHub 仓库
 ];
 
 function isKeepEnglish(text) {

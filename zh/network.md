@@ -13,7 +13,7 @@ read_when:
 
 ## 核心模型
 
-- [Gateway architecture](/zh/concepts/architecture)
+- [Gateway 架构](/zh/concepts/architecture)
 - [Gateway 协议](/zh/gateway/protocol)
 - [Gateway 运维手册](/zh/gateway)
 - [Web 界面 + bind modes](/zh/web)

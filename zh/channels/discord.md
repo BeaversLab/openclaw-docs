@@ -233,7 +233,7 @@ Discord 处处使用数字 id；OpenClaw 配置也偏好 id。
 
 ## 重试策略
 
-Discord API 出站调用在 429 限流时重试，优先使用 Discord 的 `retry_after`，并配合指数退避与抖动。通过 `channels.discord.retry` 配置。参见 [Retry policy](/zh/concepts/retry)。
+Discord API 出站调用在 429 限流时重试，优先使用 Discord 的 `retry_after`，并配合指数退避与抖动。通过 `channels.discord.retry` 配置。参见 [重试策略](/zh/concepts/retry)。
 
 ## 配置
 

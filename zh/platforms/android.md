@@ -93,7 +93,7 @@ openclaw nodes pending
 openclaw nodes approve <requestId>
 ```
 
-配对细节见 [Gateway pairing](/zh/gateway/pairing)。
+配对细节见 [Gateway 配对](/zh/gateway/pairing)。
 
 ### 5) 验证 node 已连接
 

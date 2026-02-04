@@ -109,4 +109,4 @@ Verbose 工具摘要在工具启动时发出（无 debounce）；Control UI 在�
 
 ---
 
-_下一篇：[Group Chats](/zh/concepts/group-messages)_ 🦞
+_下一篇：[群组聊天](/zh/concepts/group-messages)_ 🦞

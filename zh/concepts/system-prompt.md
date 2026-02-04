@@ -78,7 +78,7 @@ Context**，而不是 **Group Chat Context**。
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat`（`auto` | `12` | `24`）
 
-完整行为参见 [Date & Time](/zh/date-time)。
+完整行为参见 [日期与时间](/zh/date-time)。
 
 ## Skills
 

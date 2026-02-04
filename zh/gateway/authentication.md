@@ -42,7 +42,7 @@ openclaw doctor
 
 如果不想手动管理 env vars，onboarding 向导可为 daemon 存储 API keys：`openclaw onboard`。
 
-有关 env 继承细节参见 [Help](/zh/help)（`env.shellEnv`、`~/.openclaw/.env`、systemd/launchd）。
+有关 env 继承细节参见 [帮助](/zh/help)（`env.shellEnv`、`~/.openclaw/.env`、systemd/launchd）。
 
 ## Anthropic：setup-token（订阅认证）
 

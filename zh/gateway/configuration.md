@@ -1489,7 +1489,7 @@ exec ssh -T gateway-host imsg "$@"
 ### `messages`
 
 控制入站/出站前缀与可选 ack 反应。
-队列、会话与流式上下文参见 [Messages](/zh/concepts/messages)。
+队列、会话与流式上下文参见 [消息](/zh/concepts/messages)。
 
 ```json5
 {

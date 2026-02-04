@@ -176,7 +176,7 @@ openclaw message send --target +15555550123 --message "Hello from OpenClaw"
 
 - Start here:
   - [文档 hubs (all pages linked)](/zh/start/hubs)
-  - [Help](/zh/help) ← _常见修复 + 故障排查_
+  - [帮助](/zh/help) ← _常见修复 + 故障排查_
   - [配置](/zh/gateway/configuration)
   - [配置 examples](/zh/gateway/configuration-examples)
   - [斜杠命令](/zh/tools/slash-commands)

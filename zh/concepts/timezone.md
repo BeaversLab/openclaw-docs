@@ -87,4 +87,4 @@ System prompt 会包含：
 
 可用 `agents.defaults.timeFormat`（`auto` | `12` | `24`）控制格式。
 
-完整行为与示例参见 [Date & Time](/zh/date-time)。
+完整行为与示例参见 [日期与时间](/zh/date-time)。

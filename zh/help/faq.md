@@ -84,7 +84,7 @@ summary: "关于 OpenClaw 安装、配置与使用的常见问题"
   - [记忆 keeps forgetting things. How do I make it stick?](#memory-keeps-forgetting-things-how-do-i-make-it-stick)
   - [Does memory persist forever? What are the limits?](#does-memory-persist-forever-what-are-the-limits)
   - [Does semantic memory search require an OpenAI API key?](#does-semantic-memory-search-require-an-openai-api-key)
-- [Where things live on disk](#where-things-live-on-disk)
+- [文件存储位置](#where-things-live-on-disk)
   - [Is all data used with OpenClaw saved locally?](#is-all-data-used-with-openclaw-saved-locally)
   - [Where does OpenClaw store its data?](#where-does-openclaw-store-its-data)
   - [Where should AGENTS.md / SOUL.md / USER.md / MEMORY.md live?](#where-should-agentsmd-soulmd-usermd-memorymd-live)
@@ -418,7 +418,7 @@ remote mode, remember the gateway host owns the session store and workspace.
 up **memory + bootstrap files**, but **not** session history or auth. Those live
 under `~/.openclaw/` (for example `~/.openclaw/agents/<agentId>/sessions/`).
 
-Related: [Migrating](/install/migrating), [Where things live on disk](/help/faq#where-does-openclaw-store-its-data),
+Related: [Migrating](/install/migrating), [文件存储位置](/help/faq#where-does-openclaw-store-its-data),
 [Agent 工作区](/concepts/agent-workspace), [诊断](/gateway/doctor),
 [Remote mode](/gateway/remote).
 
@@ -652,7 +652,7 @@ No. You can run OpenClaw with **API keys** (Anthropic/OpenAI/others) or with
 Pro/Max or OpenAI Codex) are optional ways to authenticate those providers.
 
 Docs: [Anthropic](/providers/anthropic), [OpenAI](/providers/openai),
-[Local models](/gateway/local-models), [模型](/concepts/models).
+[本地模型](/gateway/local-models), [模型](/concepts/models).
 
 ### Can I use Claude Max subscription without an API key
 
@@ -1932,7 +1932,7 @@ Models are referenced as `provider/model` (example: `anthropic/claude-opus-4-5`)
 **Budget:** `zai/glm-4.7`.
 
 MiniMax M2.1 has its own docs: [MiniMax](/providers/minimax) and
-[Local models](/gateway/local-models).
+[本地模型](/gateway/local-models).
 
 Rule of thumb: use the **best model you can afford** for high-stakes work, and a cheaper
 model for routine chat or summaries. You can route models per agent and use sub-agents to
@@ -1953,7 +1953,7 @@ Security note: smaller or heavily quantized models are more vulnerable to prompt
 injection. We strongly recommend **large models** for any bot that can use tools.
 If you still want small models, enable sandboxing and strict tool allowlists.
 
-Docs: [Ollama](/providers/ollama), [Local models](/gateway/local-models),
+Docs: [Ollama](/providers/ollama), [本地模型](/gateway/local-models),
 [模型 providers](/concepts/model-providers), [安全](/gateway/security),
 [沙盒隔离](/gateway/sandboxing).
 

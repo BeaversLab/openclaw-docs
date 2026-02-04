@@ -12,7 +12,7 @@ title: "TypeBox"
 TypeBox 是 TypeScript 优先的 schema 库。我们用它定义 **Gateway WebSocket 协议**（握手、请求/响应、服务器事件）。这些 schemas 驱动**运行时校验**、**JSON Schema 导出**以及 macOS app 的 **Swift 代码生成**。单一事实来源，其它都由它生成。
 
 如需更高层协议背景，先看
-[Gateway architecture](/zh/concepts/architecture)。
+[Gateway 架构](/zh/concepts/architecture)。
 
 ## 心智模型（30 秒）
 
