@@ -81,8 +81,8 @@ WhatsApp / Telegram / Discord / iMessage (+ plugins)
   - 向导现在默认生成 gateway token（即便是 loopback）。
   - Tailnet 访问用：`openclaw gateway --bind tailnet --token ...`（非 loopback 绑定必须带 token）。
 - **Nodes**：通过 Gateway WebSocket 连接（按需用 LAN/tailnet/SSH）；旧 TCP bridge 已弃用/移除。
-- **Canvas host**：HTTP 文件服务运行在 `canvasHost.port`（默认 `18793`），提供 `/__openclaw__/canvas/` 供 node WebView 使用；见 [Gateway configuration](/zh/gateway/configuration)（`canvasHost`）。
-- **远程使用**：SSH 隧道或 tailnet/VPN；见 [Remote access](/zh/gateway/remote) 与 [Discovery](/zh/gateway/discovery)。
+- **Canvas host**：HTTP 文件服务运行在 `canvasHost.port`（默认 `18793`），提供 `/__openclaw__/canvas/` 供 node WebView 使用；见 [Gateway 配置](/zh/gateway/configuration)（`canvasHost`）。
+- **远程使用**：SSH 隧道或 tailnet/VPN；见 [远程访问](/zh/gateway/remote) 与 [发现](/zh/gateway/discovery)。
 
 ## Features（高层概览）
 
@@ -179,10 +179,10 @@ openclaw message send --target +15555550123 --message "Hello from OpenClaw"
   - [Help](/zh/help) ← _常见修复 + 故障排查_
   - [配置](/zh/gateway/configuration)
   - [配置 examples](/zh/gateway/configuration-examples)
-  - [Slash commands](/zh/tools/slash-commands)
+  - [斜杠命令](/zh/tools/slash-commands)
   - [Multi-agent routing](/zh/concepts/multi-agent)
-  - [Updating / rollback](/zh/install/updating)
-  - [Pairing (DM + nodes)](/zh/start/pairing)
+  - [更新 / rollback](/zh/install/updating)
+  - [配对 (DM + nodes)](/zh/start/pairing)
   - [Nix mode](/zh/install/nix)
   - [OpenClaw assistant setup](/zh/start/openclaw)
   - [Skills](/zh/tools/skills)
@@ -192,8 +192,8 @@ openclaw message send --target +15555550123 --message "Hello from OpenClaw"
   - [Gateway runbook](/zh/gateway)
   - [节点 (iOS/Android)](/zh/nodes)
   - [Web surfaces (Control UI)](/zh/web)
-  - [Discovery + transports](/zh/gateway/discovery)
-  - [Remote access](/zh/gateway/remote)
+  - [发现 + transports](/zh/gateway/discovery)
+  - [远程访问](/zh/gateway/remote)
 - Providers and UX:
   - [WebChat](/zh/web/webchat)
   - [Control UI (browser)](/zh/web/control-ui)

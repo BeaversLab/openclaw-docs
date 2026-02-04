@@ -27,7 +27,7 @@ Context _不等同于_ "memory"：memory 可以写入磁盘并在之后加载；
 - `/usage tokens` → 为普通回复附加每条回复的用量页脚。
 - `/compact` → 将旧历史压缩为摘要以释放窗口空间。
 
-另见：[Slash commands](/zh/tools/slash-commands)、[Token use & costs](/zh/token-use)、[Compaction](/zh/concepts/compaction)。
+另见：[斜杠命令](/zh/tools/slash-commands)、[Token use & costs](/zh/token-use)、[Compaction](/zh/concepts/compaction)。
 
 ## 示例输出
 
@@ -140,7 +140,7 @@ Slash 命令由 Gateway 处理，存在几种行为：
   - 普通消息中的内联指令作为每条消息的提示。
 - **内联快捷方式**（仅 allowlisted 发送者）：普通消息中的某些 `/...` token 可以立即执行（例："hey /status"），并在模型看到文本前被剥离。
 
-详情见：[Slash commands](/zh/tools/slash-commands)。
+详情见：[斜杠命令](/zh/tools/slash-commands)。
 
 ## Sessions、compaction 与 pruning（哪些会持久化）
 

@@ -177,6 +177,6 @@ Windows 上，将 `npm prefix -g` 的输出加入 PATH。
 
 ## 更新 / 卸载
 
-- 更新：[Updating](/zh/install/updating)
+- 更新：[更新](/zh/install/updating)
 - 迁移到新机器：[Migrating](/zh/install/migrating)
 - 卸载：[Uninstall](/zh/install/uninstall)

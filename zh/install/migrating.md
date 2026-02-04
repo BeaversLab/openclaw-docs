@@ -188,6 +188,6 @@ openclaw doctor
 
 ## 相关
 
-- [Doctor](/zh/gateway/doctor)
-- [Gateway troubleshooting](/zh/gateway/troubleshooting)
+- [诊断](/zh/gateway/doctor)
+- [Gateway 故障排查](/zh/gateway/troubleshooting)
 - [OpenClaw 数据存在哪里？](/zh/help/faq#where-does-openclaw-store-its-data)

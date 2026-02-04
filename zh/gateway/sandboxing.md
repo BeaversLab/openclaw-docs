@@ -100,7 +100,7 @@ OpenClaw 会把可用 skills 镜像到沙盒工作区（`.../skills`）以便读
 - Binds 会绕过沙盒文件系统：暴露宿主路径，权限取决于你设置的模式（`:ro` 或 `:rw`）。
 - 敏感挂载（例如 `docker.sock`、机密、SSH key）应为 `:ro`，除非绝对必要。
 - 如果只需要读工作区，配合 `workspaceAccess: "ro"`；bind 模式互不影响。
-- Binds 与工具策略/提升 exec 的交互见 [Sandbox vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)。
+- Binds 与工具策略/提升 exec 的交互见 [沙盒 vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)。
 
 ## 镜像 + setup
 
@@ -153,12 +153,12 @@ Docker 安装与容器化 gateway 在此：
 
 `tools.elevated` 是显式的逃生舱，在宿主运行 `exec`。
 `/exec` 指令仅对授权发件人生效并按会话持久；若要硬禁用
-`exec`，请用工具策略 deny（见 [Sandbox vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)）。
+`exec`，请用工具策略 deny（见 [沙盒 vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)）。
 
 调试：
 
 - 使用 `openclaw sandbox explain` 检查生效的沙盒模式、工具策略和修复键。
-- “为何被阻止”的心智模型见 [Sandbox vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)。
+- “为何被阻止”的心智模型见 [沙盒 vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)。
   保持锁紧。
 
 ## 多 agent 覆盖

@@ -64,7 +64,7 @@ otherwise -> reply
 - **DMs**：完整工具（主机）
 - **Groups**：sandbox + 受限工具（Docker）
 
-> 如果你需要真正独立的 workspace/persona（“personal” 与 “public” 不能混），请使用第二个 agent + bindings。见 [Multi-Agent Routing](/zh/concepts/multi-agent)。
+> 如果你需要真正独立的 workspace/persona（“personal” 与 “public” 不能混），请使用第二个 agent + bindings。见 [多 Agent 路由](/zh/concepts/multi-agent)。
 
 示例（DMs 在主机、群聊 sandbox + 仅消息工具）：
 
@@ -115,9 +115,9 @@ otherwise -> reply
 
 相关：
 
-- 配置键与默认值：[Gateway configuration](/zh/gateway/configuration#agentsdefaultssandbox)
-- 排查工具被阻止原因：[Sandbox vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Bind mounts 细节：[Sandboxing](/zh/gateway/sandboxing#custom-bind-mounts)
+- 配置键与默认值：[Gateway 配置](/zh/gateway/configuration#agentsdefaultssandbox)
+- 排查工具被阻止原因：[沙盒 vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Bind mounts 细节：[沙盒隔离](/zh/gateway/sandboxing#custom-bind-mounts)
 
 ## 显示标签
 

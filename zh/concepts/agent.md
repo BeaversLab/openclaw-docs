@@ -15,11 +15,11 @@ OpenClaw 使用单一 agent workspace 目录（`agents.defaults.workspace`）作
 
 建议：使用 `openclaw setup` 在缺失时创建 `~/.openclaw/openclaw.json` 并初始化 workspace 文件。
 
-完整 workspace 布局与备份指南见：[Agent workspace](/zh/concepts/agent-workspace)
+完整 workspace 布局与备份指南见：[Agent 工作区](/zh/concepts/agent-workspace)
 
 若启用 `agents.defaults.sandbox`，非主会话可使用
 `agents.defaults.sandbox.workspaceRoot` 下的按会话 workspace（见
-[Gateway configuration](/zh/gateway/configuration)）。
+[Gateway 配置](/zh/gateway/configuration)）。
 
 ## Bootstrap 文件（注入）
 
@@ -60,7 +60,7 @@ OpenClaw 从三个位置加载技能（重名时 workspace 优先）：
 - Managed/local：`~/.openclaw/skills`
 - Workspace：`<workspace>/skills`
 
-技能可由配置/环境 gating（见 [Gateway configuration](/zh/gateway/configuration) 中的 `skills`）。
+技能可由配置/环境 gating（见 [Gateway 配置](/zh/gateway/configuration) 中的 `skills`）。
 
 ## pi-mono 集成
 

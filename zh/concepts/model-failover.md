@@ -131,7 +131,7 @@ Billing/额度失败（如 “insufficient credits” / “credit balance too lo
 
 ## 相关配置
 
-参见 [Gateway configuration](/zh/gateway/configuration)：
+参见 [Gateway 配置](/zh/gateway/configuration)：
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`

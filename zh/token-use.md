@@ -66,7 +66,7 @@ models.providers.<provider>.models[].cost
 
 Provider 提示缓存只在 cache TTL 窗口内生效。OpenClaw 可选运行 **cache-ttl 修剪**：当 cache TTL 过期时修剪会话，然后重置缓存窗口，使后续请求复用新的缓存上下文而不是重写整个历史。这在会话超时闲置后可降低 cache 写入成本。
 
-在 [Gateway configuration](/zh/gateway/configuration) 中配置，行为细节参见 [会话 pruning](/zh/concepts/session-pruning)。
+在 [Gateway 配置](/zh/gateway/configuration) 中配置，行为细节参见 [会话 pruning](/zh/concepts/session-pruning)。
 
 Heartbeat 可以在空闲间隔内保持缓存 **温热**。若模型 cache TTL 为 `1h`，将 heartbeat 间隔设置略小于该值（如 `55m`）可避免重新缓存完整 prompt，从而降低 cache 写入成本。
 

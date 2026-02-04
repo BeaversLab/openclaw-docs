@@ -76,6 +76,6 @@ OpenClaw 从多个来源读取环境变量。规则是**绝不覆盖已有值**�
 
 ## 相关
 
-- [Gateway configuration](/zh/gateway/configuration)
+- [Gateway 配置](/zh/gateway/configuration)
 - [常见问题: env vars and .env loading](/zh/help/faq#env-vars-and-env-loading)
 - [模型 overview](/zh/concepts/models)

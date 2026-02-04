@@ -56,7 +56,7 @@ Ansible playbook 会安装并配置：
 5. **OpenClaw**（在宿主机上运行，非容器化）
 6. **Systemd service**（开机自启 + 安全加固）
 
-注意：Gateway **直接运行在宿主机**（不在 Docker 中），但 agent sandboxes 使用 Docker 做隔离。详情见 [Sandboxing](/zh/gateway/sandboxing)。
+注意：Gateway **直接运行在宿主机**（不在 Docker 中），但 agent sandboxes 使用 Docker 做隔离。详情见 [沙盒隔离](/zh/gateway/sandboxing)。
 
 ## 安装后设置
 
@@ -113,7 +113,7 @@ nmap -p- YOUR_SERVER_IP
 
 Docker 用于**agent sandboxes**（隔离的工具执行），不是用来运行 gateway 本体。Gateway 仅绑定在 localhost，通过 Tailscale VPN 访问。
 
-Sandbox 配置见 [Multi-Agent Sandbox & 工具](/zh/multi-agent-sandbox-tools)。
+Sandbox 配置见 [Multi-Agent 沙盒 & 工具](/zh/multi-agent-sandbox-tools)。
 
 ## 手动安装
 
@@ -139,7 +139,7 @@ ansible-galaxy collection install -r requirements.yml
 
 ## 更新 OpenClaw
 
-Ansible 安装器默认使用手动更新。标准更新流程见 [Updating](/zh/install/updating)。
+Ansible 安装器默认使用手动更新。标准更新流程见 [更新](/zh/install/updating)。
 
 重新运行 Ansible playbook（例如修改配置）：
 
@@ -210,5 +210,5 @@ openclaw channels login
 
 - [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) — 完整部署指南
 - [Docker](/zh/install/docker) — 容器化 gateway 方案
-- [Sandboxing](/zh/gateway/sandboxing) — agent sandbox 配置
-- [Multi-Agent Sandbox & 工具](/zh/multi-agent-sandbox-tools) — 按 agent 隔离
+- [沙盒隔离](/zh/gateway/sandboxing) — agent sandbox 配置
+- [Multi-Agent 沙盒 & 工具](/zh/multi-agent-sandbox-tools) — 按 agent 隔离

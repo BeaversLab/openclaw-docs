@@ -12,7 +12,7 @@ title: "agent"
 
 相关文档：
 
-- 代理发送工具：[Agent send](/zh/tools/agent-send)
+- 代理发送工具：[Agent 发送](/zh/tools/agent-send)
 
 ## 示例
 

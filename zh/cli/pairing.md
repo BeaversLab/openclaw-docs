@@ -11,7 +11,7 @@ title: "pairing"
 
 相关：
 
-- 配对流程：[Pairing](/zh/start/pairing)
+- 配对流程：[配对](/zh/start/pairing)
 
 ## 命令
 

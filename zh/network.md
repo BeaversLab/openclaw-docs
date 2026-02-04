@@ -20,7 +20,7 @@ read_when:
 
 ## 配对 + 身份
 
-- [Pairing overview (DM + nodes)](/zh/start/pairing)
+- [配对 overview (DM + nodes)](/zh/start/pairing)
 - [Gateway-owned node pairing](/zh/gateway/pairing)
 - [Devices CLI (pairing + token rotation)](/zh/cli/devices)
 - [Pairing CLI (DM approvals)](/zh/cli/pairing)
@@ -32,15 +32,15 @@ read_when:
 
 ## 发现 + 传输
 
-- [Discovery & transports](/zh/gateway/discovery)
+- [发现 & transports](/zh/gateway/discovery)
 - [Bonjour / mDNS](/zh/gateway/bonjour)
-- [Remote access (SSH)](/zh/gateway/remote)
+- [远程访问 (SSH)](/zh/gateway/remote)
 - [Tailscale](/zh/gateway/tailscale)
 
 ## Nodes + 传输
 
 - [节点 overview](/zh/nodes)
-- [Bridge protocol (legacy nodes)](/zh/gateway/bridge-protocol)
+- [桥接 protocol (legacy nodes)](/zh/gateway/bridge-protocol)
 - [节点 runbook: iOS](/zh/platforms/ios)
 - [节点 runbook: Android](/zh/platforms/android)
 
@@ -49,4 +49,4 @@ read_when:
 - [安全 overview](/zh/gateway/security)
 - [Gateway config reference](/zh/gateway/configuration)
 - [故障排查](/zh/gateway/troubleshooting)
-- [Doctor](/zh/gateway/doctor)
+- [诊断](/zh/gateway/doctor)

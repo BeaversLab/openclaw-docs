@@ -32,7 +32,7 @@ openclaw status --deep
 
 几乎都是 Node/npm PATH 问题。先看：
 
-- [安装（Node/npm PATH 检查）](/zh/install#nodejs--npm-path-sanity)
+- [安装（节点/npm PATH 检查）](/zh/install#nodejs--npm-path-sanity)
 
 ### 安装器失败（或你需要完整日志）
 

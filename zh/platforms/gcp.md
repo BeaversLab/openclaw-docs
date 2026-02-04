@@ -487,4 +487,4 @@ IAM 角色详情见 https://cloud.google.com/iam/docs/understanding-roles
 
 - 配置消息通道：[通道](/zh/channels)
 - 配对本地设备为 nodes：[节点](/zh/nodes)
-- 配置 Gateway：[Gateway configuration](/zh/gateway/configuration)
+- 配置 Gateway：[Gateway 配置](/zh/gateway/configuration)

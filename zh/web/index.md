@@ -19,7 +19,7 @@ Gateway 在与 WebSocket 相同的端口提供一个小型 **浏览器 Control U
 ## Webhooks
 
 当 `hooks.enabled=true` 时，Gateway 也会在同一 HTTP 服务器上暴露 webhook 端点。
-认证与 payload 见 [Gateway configuration](/zh/gateway/configuration) → `hooks`。
+认证与 payload 见 [Gateway 配置](/zh/gateway/configuration) → `hooks`。
 
 ## Config（默认开启）
 

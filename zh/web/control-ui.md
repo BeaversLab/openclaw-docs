@@ -187,4 +187,4 @@ http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789&token=<gateway-toke
 - `token` 存入 localStorage；`password` 仅保存在内存中。
 - 当 Gateway 在 TLS 后（Tailscale Serve、HTTPS 代理等）时使用 `wss://`。
 
-远程访问设置细节：见 [Remote access](/zh/gateway/remote)。
+远程访问设置细节：见 [远程访问](/zh/gateway/remote)。

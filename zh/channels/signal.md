@@ -109,7 +109,7 @@ title: "Signal"
 - 批准命令：
   - `openclaw pairing list signal`
   - `openclaw pairing approve signal <CODE>`
-- 配对是 Signal 私聊的默认 token 交换机制。详情见 [Pairing](/zh/start/pairing)
+- 配对是 Signal 私聊的默认 token 交换机制。详情见 [配对](/zh/start/pairing)
 - 仅 UUID 发送者（来自 `sourceUuid`）会以 `uuid:<id>` 存入 `channels.signal.allowFrom`。
 
 群聊：

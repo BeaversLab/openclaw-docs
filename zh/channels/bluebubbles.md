@@ -74,7 +74,7 @@ openclaw channels add bluebubbles --http-url http://192.168.1.100:1234 --passwor
 - 通过以下方式批准：
   - `openclaw pairing list bluebubbles`
   - `openclaw pairing approve bluebubbles <CODE>`
-- 配对是默认的 token 交换机制。详情见 [Pairing](/zh/start/pairing)
+- 配对是默认的 token 交换机制。详情见 [配对](/zh/start/pairing)
 
 群聊：
 
@@ -249,7 +249,7 @@ Provider 选项：
 
 - Webhook 请求通过比较 `guid`/`password` 查询参数或 header 与 `channels.bluebubbles.password` 验证。来自 `localhost` 的请求也会被接受。
 - 保持 API 密码与 webhook 端点私密（视为凭据）。
-- Localhost 信任意味着同机反向代理可能意外绕过密码。若你代理 gateway，请在代理层启用鉴权并配置 `gateway.trustedProxies`。参见 [Gateway security](/zh/gateway/security#reverse-proxy-configuration)。
+- Localhost 信任意味着同机反向代理可能意外绕过密码。若你代理 gateway，请在代理层启用鉴权并配置 `gateway.trustedProxies`。参见 [Gateway 安全](/zh/gateway/security#reverse-proxy-configuration)。
 - 若 BlueBubbles 服务器暴露到 LAN 外，开启 HTTPS 与防火墙规则。
 
 ## 故障排查

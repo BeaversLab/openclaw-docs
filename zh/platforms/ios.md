@@ -96,12 +96,12 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 ## 常见错误
 
 - `NODE_BACKGROUND_UNAVAILABLE`：把 iOS app 切到前台（canvas/camera/screen 命令需要前台）。
-- `A2UI_HOST_NOT_CONFIGURED`：Gateway 未广播 canvas host URL；检查 [Gateway configuration](/zh/gateway/configuration) 中的 `canvasHost`。
+- `A2UI_HOST_NOT_CONFIGURED`：Gateway 未广播 canvas host URL；检查 [Gateway 配置](/zh/gateway/configuration) 中的 `canvasHost`。
 - 配对提示未出现：运行 `openclaw nodes pending` 并手动批准。
 - 重装后无法重连：Keychain 中的配对 token 被清除；重新配对 node。
 
 ## 相关文档
 
-- [Pairing](/zh/gateway/pairing)
-- [Discovery](/zh/gateway/discovery)
+- [配对](/zh/gateway/pairing)
+- [发现](/zh/gateway/discovery)
 - [Bonjour](/zh/gateway/bonjour)

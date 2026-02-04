@@ -127,7 +127,7 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b opencla
 
 ## 协议（运营视角）
 
-- 完整文档： [Gateway protocol](/zh/gateway/protocol) 与 [Bridge protocol（旧）](/zh/gateway/bridge-protocol)。
+- 完整文档： [Gateway protocol](/zh/gateway/protocol) 与 [桥接 protocol（旧）](/zh/gateway/bridge-protocol)。
 - 客户端首帧必须是 `req {type:"req", id, method:"connect", params:{minProtocol,maxProtocol,client:{id,displayName?,version,platform,deviceFamily?,modelIdentifier?,mode,instanceId?}, caps, auth?, locale?, userAgent? } }`。
 - Gateway 回复 `res {type:"res", id, ok:true, payload:hello-ok }`（或 `ok:false` + error 后关闭）。
 - 握手后：

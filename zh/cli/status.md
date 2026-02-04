@@ -23,4 +23,4 @@ openclaw status --usage
 - 当配置多个 agent 时，输出包含每个 agent 的会话存储。
 - 概览在可用时包含 Gateway + node host 服务安装/运行状态。
 - 概览包含更新通道 + git SHA（用于源码检出）。
-- 更新信息显示在概览中；若有可用更新，status 会提示运行 `openclaw update`（见 [Updating](/zh/install/updating)）。
+- 更新信息显示在概览中；若有可用更新，status 会提示运行 `openclaw update`（见 [更新](/zh/install/updating)）。

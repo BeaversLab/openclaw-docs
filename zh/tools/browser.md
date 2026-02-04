@@ -401,7 +401,7 @@ openclaw browser create-profile   --name my-chrome   --driver extension   --cdp-
   - `--format ai`（默认，Playwright 已安装时）：返回带数字 ref 的 AI 快照（`aria-ref="<n>"`）。
   - `--format aria`：返回无 ref 的可访问性树（仅用于检查）。
   - `--efficient`（或 `--mode efficient`）：紧凑的 role 快照预设（interactive + compact + depth + 更低 maxChars）。
-  - 配置默认（仅 tool/CLI）：设置 `browser.snapshotDefaults.mode: "efficient"`，当调用方未传 mode 时使用高效快照（见 [Gateway configuration](/zh/gateway/configuration#browser-openclaw-managed-browser)）。
+  - 配置默认（仅 tool/CLI）：设置 `browser.snapshotDefaults.mode: "efficient"`，当调用方未传 mode 时使用高效快照（见 [Gateway 配置](/zh/gateway/configuration#browser-openclaw-managed-browser)）。
   - Role 快照选项（`--interactive`、`--compact`、`--depth`、`--selector`）会强制 role 快照并生成如 `ref=e12` 的 ref。
   - `--frame "<iframe selector>"` 将 role 快照限定在某个 iframe（与 `e12` 等 role ref 配对）。
   - `--interactive` 输出扁平化的交互元素列表（最适合驱动动作）。

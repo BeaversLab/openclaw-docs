@@ -11,7 +11,7 @@ read_when:
 
 **Node** 是一个伴侣设备（macOS/iOS/Android/headless），通过 Gateway **WebSocket**（与 operators 同端口）以 `role: "node"` 连接，并通过 `node.invoke` 暴露命令面（如 `canvas.*`、`camera.*`、`system.*`）。协议细节见 [Gateway protocol](/zh/gateway/protocol)。
 
-旧传输方式：[Bridge protocol](/zh/gateway/bridge-protocol)（TCP JSONL；已弃用/移除）。
+旧传输方式：[桥接 protocol](/zh/gateway/bridge-protocol)（TCP JSONL；已弃用/移除）。
 
 macOS 也可运行在 **node 模式**：菜单栏 app 连接 Gateway 的 WS 服务器，并将本地 canvas/camera 命令作为 node 暴露（因此 `openclaw nodes …` 可对这台 Mac 生效）。
 

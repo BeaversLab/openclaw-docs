@@ -61,7 +61,7 @@ Edge TTS **不需要** API key。若未发现任何 API key，OpenClaw 默认
 ## 配置
 
 TTS 配置在 `openclaw.json` 的 `messages.tts` 下。
-完整 schema 见 [Gateway configuration](/zh/gateway/configuration)。
+完整 schema 见 [Gateway 配置](/zh/gateway/configuration)。
 
 ### 最小配置（启用 + provider）
 
@@ -344,7 +344,7 @@ Reply -> TTS enabled?
 ## 斜杠命令用法
 
 只有一个命令：`/tts`。
-启用细节见 [Slash commands](/zh/tools/slash-commands)。
+启用细节见 [斜杠命令](/zh/tools/slash-commands)。
 
 Discord 说明：`/tts` 是 Discord 内置命令，因此 OpenClaw 在该处注册
 `/voice` 作为原生命令。文本 `/tts ...` 仍可用。

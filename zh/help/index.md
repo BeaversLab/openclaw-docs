@@ -14,8 +14,8 @@ title: "帮助"
 - **安装检查（Node/npm/PATH）：** [安装](/zh/install#nodejs--npm-path-sanity)
 - **Gateway 问题：** [Gateway 故障排查](/zh/gateway/troubleshooting)
 - **日志：** [日志](/zh/logging) 和 [Gateway 日志](/zh/gateway/logging)
-- **修复：** [Doctor](/zh/gateway/doctor)
+- **修复：** [诊断](/zh/gateway/doctor)
 
 如果你在找概念性问题（而不是“坏了”）：
 
-- [FAQ（概念）](/zh/help/faq)
+- [常见问题（概念）](/zh/help/faq)

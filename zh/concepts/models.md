@@ -106,7 +106,7 @@ allowlist 配置示例：
 - 若模型 ID 本身包含 `/`（OpenRouter 风格），必须包含 provider 前缀（示例：`/model openrouter/moonshotai/kimi-k2`）。
 - 若省略 provider，OpenClaw 会将输入视为别名或**默认 provider** 的模型（仅在模型 ID 不含 `/` 时生效）。
 
-完整命令行为/配置： [Slash commands](/zh/tools/slash-commands)。
+完整命令行为/配置： [斜杠命令](/zh/tools/slash-commands)。
 
 ## CLI 命令
 

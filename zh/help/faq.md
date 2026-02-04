@@ -77,7 +77,7 @@ summary: "关于 OpenClaw 安装、配置与使用的常见问题"
   - [Can I run Apple/macOS-only skills from Linux?](#can-i-run-applemacosonly-skills-from-linux)
   - [Do you have a Notion or HeyGen integration?](#do-you-have-a-notion-or-heygen-integration)
   - [How do I install the Chrome extension for browser takeover?](#how-do-i-install-the-chrome-extension-for-browser-takeover)
-- [Sandboxing and memory](#sandboxing-and-memory)
+- [沙盒隔离 and memory](#sandboxing-and-memory)
   - [Is there a dedicated sandboxing doc?](#is-there-a-dedicated-sandboxing-doc)
   - [How do I bind a host folder into the sandbox?](#how-do-i-bind-a-host-folder-into-the-sandbox)
   - [How does memory work?](#how-does-memory-work)
@@ -249,7 +249,7 @@ summary: "关于 OpenClaw 安装、配置与使用的常见问题"
    openclaw doctor
    ```
 
-   修复/迁移配置与状态 + 运行健康检查。见 [Doctor](/zh/gateway/doctor)。
+   修复/迁移配置与状态 + 运行健康检查。见 [诊断](/zh/gateway/doctor)。
 
 7. **Gateway 快照**
    ```bash
@@ -299,7 +299,7 @@ openclaw doctor
 `openclaw gateway status`, `openclaw health --verbose`。
 
 快速调试循环：[First 60 seconds if something's broken](#first-60-seconds-if-somethings-broken)。
-安装文档：[安装](/zh/install), [Installer flags](/zh/install/installer), [Updating](/zh/install/updating)。
+安装文档：[安装](/zh/install), [Installer flags](/zh/install/installer), [更新](/zh/install/updating)。
 
 ### Whats the recommended way to install and set up OpenClaw
 
@@ -398,7 +398,7 @@ openclaw doctor
 ```
 
 If the Gateway is remote, ensure the tunnel/Tailscale connection is up and that the UI
-is pointed at the right Gateway. See [Remote access](/gateway/remote).
+is pointed at the right Gateway. See [远程访问](/gateway/remote).
 
 ### Can I migrate my setup to a new machine Mac mini without redoing onboarding
 
@@ -419,7 +419,7 @@ up **memory + bootstrap files**, but **not** session history or auth. Those live
 under `~/.openclaw/` (for example `~/.openclaw/agents/<agentId>/sessions/`).
 
 Related: [Migrating](/install/migrating), [Where things live on disk](/help/faq#where-does-openclaw-store-its-data),
-[Agent workspace](/concepts/agent-workspace), [Doctor](/gateway/doctor),
+[Agent 工作区](/concepts/agent-workspace), [诊断](/gateway/doctor),
 [Remote mode](/gateway/remote).
 
 ### Where do I see what is new in the latest version
@@ -630,7 +630,7 @@ openclaw update --yes --no-restart
 openclaw gateway restart
 ```
 
-Docs: [更新](/cli/update), [Updating](/install/updating).
+Docs: [更新](/cli/update), [更新](/install/updating).
 
 ### What does the onboarding wizard actually do
 
@@ -796,11 +796,11 @@ See [/channels/telegram](/zh/channels/telegram#access-control-dms--groups).
 
 ### Can multiple people use one WhatsApp number with different OpenClaw instances
 
-Yes, via **multi‑agent routing**. Bind each sender’s WhatsApp **DM** (peer `kind: "dm"`, sender E.164 like `+15551234567`) to a different `agentId`, so each person gets their own workspace and session store. Replies still come from the **same WhatsApp account**, and DM access control (`channels.whatsapp.dmPolicy` / `channels.whatsapp.allowFrom`) is global per WhatsApp account. See [Multi-Agent Routing](/concepts/multi-agent) and [WhatsApp](/channels/whatsapp).
+Yes, via **multi‑agent routing**. Bind each sender’s WhatsApp **DM** (peer `kind: "dm"`, sender E.164 like `+15551234567`) to a different `agentId`, so each person gets their own workspace and session store. Replies still come from the **same WhatsApp account**, and DM access control (`channels.whatsapp.dmPolicy` / `channels.whatsapp.allowFrom`) is global per WhatsApp account. See [多 Agent 路由](/concepts/multi-agent) and [WhatsApp](/channels/whatsapp).
 
 ### Can I run a fast chat agent and an Opus for coding agent
 
-Yes. Use multi‑agent routing: give each agent its own default model, then bind inbound routes (provider account or specific peers) to each agent. Example config lives in [Multi-Agent Routing](/concepts/multi-agent). See also [模型](/concepts/models) and [配置](/gateway/configuration).
+Yes. Use multi‑agent routing: give each agent its own default model, then bind inbound routes (provider account or specific peers) to each agent. Example config lives in [多 Agent 路由](/concepts/multi-agent). See also [模型](/concepts/models) and [配置](/gateway/configuration).
 
 ### Does Homebrew work on Linux
 
@@ -823,7 +823,7 @@ Recent builds also prepend common user bin dirs on Linux systemd services (for e
 - **npm install:** global CLI install, no repo, best for “just run it.”
   Updates come from npm dist‑tags.
 
-Docs: [Getting started](/start/getting-started), [Updating](/install/updating).
+Docs: [Getting started](/start/getting-started), [更新](/install/updating).
 
 ### Can I switch between npm and git installs later
 
@@ -1005,7 +1005,7 @@ Today the supported patterns are:
 - **Sub-agents**: route tasks to separate agents with different default models.
 - **On-demand switch**: use `/model` to switch the current session model at any time.
 
-See [Cron jobs](/automation/cron-jobs), [Multi-Agent Routing](/concepts/multi-agent), and [Slash commands](/tools/slash-commands).
+See [Cron jobs](/automation/cron-jobs), [多 Agent 路由](/concepts/multi-agent), and [斜杠命令](/tools/slash-commands).
 
 ### The bot freezes while doing heavy work How do I offload that
 
@@ -1147,7 +1147,7 @@ You still need to click the extension button on the tab you want to control (it 
 
 ### Is there a dedicated sandboxing doc
 
-Yes. See [Sandboxing](/gateway/sandboxing). For Docker-specific setup (full gateway in Docker or sandbox images), see [Docker](/install/docker).
+Yes. See [沙盒隔离](/gateway/sandboxing). For Docker-specific setup (full gateway in Docker or sandbox images), see [Docker](/install/docker).
 
 **Can I keep DMs personal but make groups public sandboxed with one agent**
 
@@ -1157,11 +1157,11 @@ Use `agents.defaults.sandbox.mode: "non-main"` so group/channel sessions (non-ma
 
 Setup walkthrough + example config: [Groups: personal DMs + public groups](/concepts/groups#pattern-personal-dms-public-groups-single-agent)
 
-Key config reference: [Gateway configuration](/gateway/configuration#agentsdefaultssandbox)
+Key config reference: [Gateway 配置](/gateway/configuration#agentsdefaultssandbox)
 
 ### How do I bind a host folder into the sandbox
 
-Set `agents.defaults.sandbox.docker.binds` to `["host:path:mode"]` (e.g., `"/home/user/src:/src:ro"`). Global + per-agent binds merge; per-agent binds are ignored when `scope: "shared"`. Use `:ro` for anything sensitive and remember binds bypass the sandbox filesystem walls. See [Sandboxing](/gateway/sandboxing#custom-bind-mounts) and [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated#bind-mounts-security-quick-check) for examples and safety notes.
+Set `agents.defaults.sandbox.docker.binds` to `["host:path:mode"]` (e.g., `"/home/user/src:/src:ro"`). Global + per-agent binds merge; per-agent binds are ignored when `scope: "shared"`. Use `:ro` for anything sensitive and remember binds bypass the sandbox filesystem walls. See [沙盒隔离](/gateway/sandboxing#custom-bind-mounts) and [沙盒 vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated#bind-mounts-security-quick-check) for examples and safety notes.
 
 ### How does memory work
 
@@ -1183,7 +1183,7 @@ This is still an area we are improving. It helps to remind the model to store me
 it will know what to do. If it keeps forgetting, verify the Gateway is using the same
 workspace on every run.
 
-Docs: [记忆](/concepts/memory), [Agent workspace](/concepts/agent-workspace).
+Docs: [记忆](/concepts/memory), [Agent 工作区](/concepts/agent-workspace).
 
 ### Does semantic memory search require an OpenAI API key
 
@@ -1228,7 +1228,7 @@ No - **OpenClaw’s state is local**, but **external services still see what you
 - **You control the footprint:** using local models keeps prompts on your machine, but channel
   traffic still goes through the channel’s servers.
 
-Related: [Agent workspace](/concepts/agent-workspace), [记忆](/concepts/memory).
+Related: [Agent 工作区](/concepts/agent-workspace), [记忆](/concepts/memory).
 
 ### Where does OpenClaw store its data
 
@@ -1273,7 +1273,7 @@ workspace, not your local laptop).
 Tip: if you want a durable behavior or preference, ask the bot to **write it into
 AGENTS.md or MEMORY.md** rather than relying on chat history.
 
-See [Agent workspace](/concepts/agent-workspace) and [记忆](/concepts/memory).
+See [Agent 工作区](/concepts/agent-workspace) and [记忆](/concepts/memory).
 
 ### Whats the recommended backup strategy
 
@@ -1285,7 +1285,7 @@ Do **not** commit anything under `~/.openclaw` (credentials, sessions, tokens).
 If you need a full restore, back up both the workspace and the state directory
 separately (see the migration question above).
 
-Docs: [Agent workspace](/concepts/agent-workspace).
+Docs: [Agent 工作区](/concepts/agent-workspace).
 
 ### How do I completely uninstall OpenClaw
 
@@ -1405,7 +1405,7 @@ The common pattern is **one Gateway** (e.g. Raspberry Pi) plus **nodes** and **a
 - **Sub‑agents:** spawn background work from a main agent when you want parallelism.
 - **TUI:** connect to the Gateway and switch agents/sessions.
 
-Docs: [节点](/nodes), [Remote access](/gateway/remote), [Multi-Agent Routing](/concepts/multi-agent), [Sub-agents](/tools/subagents), [TUI](/tui).
+Docs: [节点](/nodes), [远程访问](/gateway/remote), [多 Agent 路由](/concepts/multi-agent), [Sub-agents](/tools/subagents), [TUI](/tui).
 
 ### Can the OpenClaw browser run headless
 
@@ -1485,7 +1485,7 @@ Then verify auth and routing:
 - If you connect via SSH tunnel, confirm the local tunnel is up and points at the right port.
 - Confirm your allowlists (DM or group) include your account.
 
-Docs: [Tailscale](/gateway/tailscale), [Remote access](/gateway/remote), [通道](/channels).
+Docs: [Tailscale](/gateway/tailscale), [远程访问](/gateway/remote), [通道](/channels).
 
 ### Can two OpenClaw instances talk to each other local VPS
 
@@ -1498,7 +1498,7 @@ Have Bot A send a message to Bot B, then let Bot B reply as usual.
 **CLI bridge (generic):** run a script that calls the other Gateway with
 `openclaw agent --message ... --deliver`, targeting a chat where the other bot
 listens. If one bot is on a remote VPS, point your CLI at that remote Gateway
-via SSH/Tailscale (see [Remote access](/gateway/remote)).
+via SSH/Tailscale (see [远程访问](/gateway/remote)).
 
 Example pattern (run from a machine that can reach the target Gateway):
 
@@ -1509,7 +1509,7 @@ openclaw agent --message "Hello from local bot" --deliver --channel telegram --r
 Tip: add a guardrail so the two bots do not loop endlessly (mention-only, channel
 allowlists, or a "do not reply to bot messages" rule).
 
-Docs: [Remote access](/gateway/remote), [Agent CLI](/cli/agent), [Agent send](/tools/agent-send).
+Docs: [远程访问](/gateway/remote), [Agent CLI](/cli/agent), [Agent 发送](/tools/agent-send).
 
 ### Do I need separate VPSes for multiple agents
 
@@ -1578,7 +1578,7 @@ Avoid it:
 - Use `openclaw config set` for small changes.
 - Use `openclaw configure` for interactive edits.
 
-Docs: [Config](/cli/config), [配置](/cli/configure), [Doctor](/gateway/doctor).
+Docs: [Config](/cli/config), [配置](/cli/configure), [诊断](/gateway/doctor).
 
 ### Whats a minimal sane config for a first install
 
@@ -1631,7 +1631,7 @@ Recommended setup:
    openclaw nodes approve <requestId>
    ```
 
-Docs: [Gateway protocol](/gateway/protocol), [Discovery](/gateway/discovery), [macOS remote mode](/platforms/mac/remote).
+Docs: [Gateway protocol](/gateway/protocol), [发现](/gateway/discovery), [macOS remote mode](/platforms/mac/remote).
 
 ## Env vars and .env loading
 
@@ -1955,7 +1955,7 @@ If you still want small models, enable sandboxing and strict tool allowlists.
 
 Docs: [Ollama](/providers/ollama), [Local models](/gateway/local-models),
 [模型 providers](/concepts/model-providers), [安全](/gateway/security),
-[Sandboxing](/gateway/sandboxing).
+[沙盒隔离](/gateway/sandboxing).
 
 ### How do I switch models without wiping my config
 
@@ -1971,7 +1971,7 @@ Safe options:
 Avoid `config.apply` with a partial object unless you intend to replace the whole config.
 If you did overwrite config, restore from backup or re-run `openclaw doctor` to repair.
 
-Docs: [模型](/concepts/models), [配置](/cli/configure), [Config](/cli/config), [Doctor](/gateway/doctor).
+Docs: [模型](/concepts/models), [配置](/cli/configure), [Config](/cli/config), [诊断](/gateway/doctor).
 
 ### What do OpenClaw, Flawd, and Krill use for models
 
@@ -2029,7 +2029,7 @@ Yes. Set one as default and switch as needed:
 - **Default + switch:** set `agents.defaults.model.primary` to `openai-codex/gpt-5.2`, then switch to `openai-codex/gpt-5.2-codex` when coding (or the other way around).
 - **Sub-agents:** route coding tasks to sub-agents with a different default model.
 
-See [模型](/concepts/models) and [Slash commands](/tools/slash-commands).
+See [模型](/concepts/models) and [斜杠命令](/tools/slash-commands).
 
 ### Why do I see Model is not allowed and then no reply
 
@@ -2098,7 +2098,7 @@ Fallbacks are for **errors**, not “hard tasks,” so use `/model` or a separat
 - Agent B 默认：OpenAI
 - 按 agent 路由或使用 `/agent` 切换
 
-Docs: [模型](/zh/concepts/models), [Multi-Agent Routing](/zh/concepts/multi-agent), [MiniMax](/zh/providers/minimax), [OpenAI](/zh/providers/openai).
+Docs: [模型](/zh/concepts/models), [多 Agent 路由](/zh/concepts/multi-agent), [MiniMax](/zh/providers/minimax), [OpenAI](/zh/providers/openai).
 
 ### Are opus sonnet gpt builtin shortcuts
 
@@ -2525,7 +2525,7 @@ openclaw logs --follow
 
 如果你是远程模式，确认隧道/Tailscale 连接可用，并且 Gateway WebSocket 可达。
 
-Docs: [通道](/zh/channels), [故障排查](/zh/gateway/troubleshooting), [Remote access](/zh/gateway/remote)。
+Docs: [通道](/zh/channels), [故障排查](/zh/gateway/troubleshooting), [远程访问](/zh/gateway/remote)。
 
 ### Disconnected from gateway no reason what now
 
@@ -2542,7 +2542,7 @@ Docs: [通道](/zh/channels), [故障排查](/zh/gateway/troubleshooting), [Remo
 openclaw logs --follow
 ```
 
-Docs: [Dashboard](/zh/web/dashboard), [Remote access](/zh/gateway/remote), [故障排查](/zh/gateway/troubleshooting)。
+Docs: [Dashboard](/zh/web/dashboard), [远程访问](/zh/gateway/remote), [故障排查](/zh/gateway/troubleshooting)。
 
 ### Telegram setMyCommands fails with network errors What should I check
 
@@ -2570,7 +2570,7 @@ openclaw logs --follow
 
 在 TUI 中用 `/status` 查看当前状态。如果你期待在聊天频道收到回复，确保开启投递（`/deliver on`）。
 
-Docs: [TUI](/zh/tui), [Slash commands](/zh/tools/slash-commands)。
+Docs: [TUI](/zh/tui), [斜杠命令](/zh/tools/slash-commands)。
 
 ### How do I completely stop then start the Gateway
 
@@ -2606,7 +2606,7 @@ Docs: [Gateway service runbook](/zh/gateway)。
 
 ### My skill generated an imagePDF but nothing was sent
 
-Agent 发送附件时，必须在消息里包含一行 `MEDIA:<path-or-url>`（单独一行）。见 [OpenClaw assistant setup](/zh/start/openclaw) 和 [Agent send](/zh/tools/agent-send)。
+Agent 发送附件时，必须在消息里包含一行 `MEDIA:<path-or-url>`（单独一行）。见 [OpenClaw assistant setup](/zh/start/openclaw) 和 [Agent 发送](/zh/tools/agent-send)。
 
 CLI 发送：
 
@@ -2654,7 +2654,7 @@ openclaw message send --target +15555550123 --message "Here you go" --media /pat
 
 先从小范围开始，只授予真正需要的工具和账号，后续再扩展。
 
-Docs: [安全](/zh/gateway/security), [Pairing](/zh/start/pairing)。
+Docs: [安全](/zh/gateway/security), [配对](/zh/start/pairing)。
 
 ### Can I give it autonomy over my text messages and is that safe
 
@@ -2739,7 +2739,7 @@ interrupt
 process action:kill sessionId:XXX
 ```
 
-Slash commands 总览见 [Slash commands](/zh/tools/slash-commands)。
+Slash commands 总览见 [斜杠命令](/zh/tools/slash-commands)。
 
 大多数命令必须以 `/` 开头并作为**单独消息**发送，但少数快捷指令（如 `/status`）在允许的发送者下也可内联。
 

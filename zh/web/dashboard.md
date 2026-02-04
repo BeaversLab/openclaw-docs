@@ -20,7 +20,7 @@ Gateway 仪表盘是默认在 `/` 提供的浏览器 Control UI
 - Serve/Funnel 自动化见 [Tailscale](/zh/gateway/tailscale)。
 - 绑定方式与安全说明见 [Web surfaces](/zh/web)。
 
-认证在 WebSocket 握手阶段通过 `connect.params.auth`（token 或密码）强制执行。配置见 [Gateway configuration](/zh/gateway/configuration) 的 `gateway.auth`。
+认证在 WebSocket 握手阶段通过 `connect.params.auth`（token 或密码）强制执行。配置见 [Gateway 配置](/zh/gateway/configuration) 的 `gateway.auth`。
 
 安全说明：Control UI 是 **管理员面**（聊天、配置、exec 审批）。不要对公网暴露。UI 在首次加载后将 token 存入 `localStorage`。优先使用 localhost、Tailscale Serve 或 SSH 隧道。
 

@@ -194,7 +194,7 @@ WhatsApp 需要真实手机号验证。VoIP 与虚拟号通常被拦截。OpenCl
 - 配对码 1 小时过期；每个渠道待处理上限 3 个。
 
 **一个 WhatsApp 号码能被多个 OpenClaw 实例使用吗？**  
-可以，通过 `bindings` 将不同发送者路由到不同 agent（peer `kind: "dm"`，sender 为 E.164，例如 `+15551234567`）。回复仍来自**同一个 WhatsApp 账号**，且私聊会折叠到各自 agent 的主会话，因此建议**一人一 agent**。DM 访问控制（`dmPolicy`/`allowFrom`）对该 WhatsApp 账号全局生效。详见 [Multi-Agent Routing](/zh/concepts/multi-agent)。
+可以，通过 `bindings` 将不同发送者路由到不同 agent（peer `kind: "dm"`，sender 为 E.164，例如 `+15551234567`）。回复仍来自**同一个 WhatsApp 账号**，且私聊会折叠到各自 agent 的主会话，因此建议**一人一 agent**。DM 访问控制（`dmPolicy`/`allowFrom`）对该 WhatsApp 账号全局生效。详见 [多 Agent 路由](/zh/concepts/multi-agent)。
 
 **为什么向导要我手机号？**  
 向导用它设置你的 **allowlist/owner** 以允许你的私聊。它不会用于自动发送。若使用个人号码运行 OpenClaw，请填写同一个号码并启用 `channels.whatsapp.selfChatMode`。
@@ -382,7 +382,7 @@ WhatsApp 以**语音消息**（PTT 气泡）发送音频。
 
 - 子系统：`whatsapp/inbound`、`whatsapp/outbound`、`web-heartbeat`、`web-reconnect`。
 - 日志文件：`/tmp/openclaw/openclaw-YYYY-MM-DD.log`（可配置）。
-- 故障排查指南：[Gateway troubleshooting](/zh/gateway/troubleshooting)。
+- 故障排查指南：[Gateway 故障排查](/zh/gateway/troubleshooting)。
 
 ## 故障排查（快速）
 

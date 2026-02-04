@@ -57,7 +57,7 @@ title: "Discord"
 8. 群 DM 默认忽略；使用 `channels.discord.dm.groupEnabled` 启用，可选 `channels.discord.dm.groupChannels` 限制。
 9. 可选服务器规则：设置 `channels.discord.guilds`，以服务器 id（推荐）或 slug 为键，配置按频道规则。
 10. 可选原生命令：`commands.native` 默认为 `"auto"`（Discord/Telegram 开启，Slack 关闭）。可用 `channels.discord.commands.native: true|false|"auto"` 覆盖；`false` 会清理已注册命令。文本命令由 `commands.text` 控制，必须以独立 `/...` 消息发送。使用 `commands.useAccessGroups: false` 可绕过命令的 access-group 检查。
-    - 完整命令列表与配置见 [Slash commands](/zh/tools/slash-commands)
+    - 完整命令列表与配置见 [斜杠命令](/zh/tools/slash-commands)
 11. 可选服务器上下文历史：设置 `channels.discord.historyLimit`（默认 20，回退到 `messages.groupChat.historyLimit`），在回复提及时包含最近 N 条消息作为上下文。设置 `0` 禁用。
 12. Reactions：agent 可通过 `discord` 工具触发 reactions（受 `channels.discord.actions.*` 控制）。
     - Reaction 移除语义见 [/tools/reactions](/zh/tools/reactions)。

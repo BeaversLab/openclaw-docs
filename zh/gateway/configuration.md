@@ -2239,7 +2239,7 @@ Provider key 接受 `provider`（如 `google-antigravity`）或 `provider/model`
 - 自动清理：空闲 > 24h 或年龄 > 7d
 - 工具策略：仅允许 `exec`, `process`, `read`, `write`, `edit`, `apply_patch`, `sessions_list`, `sessions_history`, `sessions_send`, `sessions_spawn`, `session_status`（deny 优先）
   - 通过 `tools.sandbox.tools` 配置；每 agent 覆盖通过 `agents.list[].tools.sandbox.tools`
-  - 沙盒策略支持工具组简写：`group:runtime`, `group:fs`, `group:sessions`, `group:memory`（详见 [Sandbox vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)）
+  - 沙盒策略支持工具组简写：`group:runtime`, `group:fs`, `group:sessions`, `group:memory`（详见 [沙盒 vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)）
 - 可选沙盒浏览器（Chromium + CDP, noVNC 观察）
 - 加固选项：`network`, `user`, `pidsLimit`, `memory`, `cpus`, `ulimits`, `seccompProfile`, `apparmorProfile`
 

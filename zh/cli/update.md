@@ -11,7 +11,7 @@ title: "update"
 安全更新 OpenClaw，并在 stable/beta/dev 渠道间切换。
 
 如果你通过 **npm/pnpm** 安装（全局安装，无 git 元数据），更新将通过
-[Updating](/zh/install/updating) 中的包管理器流程完成。
+[更新](/zh/install/updating) 中的包管理器流程完成。
 
 ## 用法
 
@@ -93,5 +93,5 @@ openclaw update status --timeout 10
 
 - `openclaw doctor`（在 git 检出时会建议先运行 update）
 - [开发环境 channels](/zh/install/development-channels)
-- [Updating](/zh/install/updating)
+- [更新](/zh/install/updating)
 - [CLI reference](/zh/cli)

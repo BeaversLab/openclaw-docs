@@ -198,7 +198,7 @@ exec ssh -T bot@mac-mini.tailnet-1234.ts.net imsg "$@"
 - 批准方式：
   - `openclaw pairing list imessage`
   - `openclaw pairing approve imessage <CODE>`
-- 配对是 iMessage 私聊的默认令牌交换。详情：[Pairing](/zh/start/pairing)
+- 配对是 iMessage 私聊的默认令牌交换。详情：[配对](/zh/start/pairing)
 
 群聊：
 
@@ -237,7 +237,7 @@ exec ssh -T bot@mac-mini.tailnet-1234.ts.net imsg "$@"
 }
 ```
 
-当你想为特定线程提供独立的人格/模型时，这很有用（参见 [Multi-agent routing](/zh/concepts/multi-agent)）。关于文件系统隔离，参见 [Sandboxing](/zh/gateway/sandboxing)。
+当你想为特定线程提供独立的人格/模型时，这很有用（参见 [Multi-agent routing](/zh/concepts/multi-agent)）。关于文件系统隔离，参见 [沙盒隔离](/zh/gateway/sandboxing)。
 
 ## 媒体 + 限制
 

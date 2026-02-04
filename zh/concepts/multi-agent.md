@@ -31,7 +31,7 @@ Skills 以各 workspace 的 `skills/` 目录为 per-agent；共享 skills 位于
 Gateway 可以运行**一个 agent**（默认）或**多个 agents**并排运行。
 
 **Workspace 注意：**每个 agent 的 workspace 是**默认 cwd**，而非强制沙箱。相对路径会在 workspace 内解析，但绝对路径仍可访问主机其他位置，除非启用 sandboxing。参见
-[Sandboxing](/zh/gateway/sandboxing)。
+[沙盒隔离](/zh/gateway/sandboxing)。
 
 ## 路径（速查）
 
@@ -366,4 +366,4 @@ peer 绑定总是优先，因此要放在渠道级规则之上。
 若需要 per-agent 边界，请用 `agents.list[].tools` 禁止 `exec`。
 若要针对群组，使用 `agents.list[].groupChat.mentionPatterns`，以便 @mentions 明确映射到目标 agent。
 
-参见 [Multi-Agent Sandbox & 工具](/zh/multi-agent-sandbox-tools) 查看详细示例。
+参见 [Multi-Agent 沙盒 & 工具](/zh/multi-agent-sandbox-tools) 查看详细示例。
