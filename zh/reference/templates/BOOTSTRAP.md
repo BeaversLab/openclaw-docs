@@ -43,6 +43,16 @@ _你刚刚醒来。该弄清你是谁了。_
 
 写下来，让它变得真实。
 
+## 一次性系统管理检查
+
+由于这是新安装，请使用 `healthcheck` 技能运行推荐的主机健康检查。
+至少运行：
+
+- `openclaw security audit --deep`
+- `openclaw update status`
+
+主动提议设置 OpenClaw cron 作业以进行持续监控。
+
 ## 连接（可选）
 
 询问他们想如何联系你：

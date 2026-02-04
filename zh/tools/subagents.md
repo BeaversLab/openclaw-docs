@@ -38,6 +38,7 @@ read_when:
 - 启动子 agent 运行（`deliver: false`，全局车道：`subagent`）
 - 然后执行公告步骤并将公告回复发送回请求聊天频道
 - 默认模型：继承调用方，除非设置 `agents.defaults.subagents.model`（或 `agents.list[].subagents.model`）；显式 `sessions_spawn.model` 仍优先生效。
+- 默认思考：继承调用方，除非设置 `agents.defaults.subagents.thinking`（或 `agents.list[].subagents.thinking`）；显式 `sessions_spawn.thinking` 仍优先生效。
 
 工具参数：
 

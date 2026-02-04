@@ -9,11 +9,12 @@ read_when:
 
 # 转录清理（Provider 修复）
 
-本文描述在运行前（构建模型上下文时）对转录应用的 **provider 特定修复**。这些调整仅在 **内存中** 进行，用于满足严格的 provider 要求，**不会** 重写磁盘上的 JSONL 转录。
+本文描述在运行前（构建模型上下文时）对转录应用的 **provider 特定修复**。这些清理步骤仅在 **内存中** 进行，用于满足严格的 provider 要求，**不会** 重写磁盘上的 JSONL 转录；然而，单独的会话文件修复过程可能会在会话加载前，通过丢弃无效行来重写格式错误的 JSONL 文件。当修复发生时，原始文件会在会话文件旁备份。
 
 范围包括：
 
 - Tool call id 清理
+- Tool call input 校验
 - Tool result 配对修复
 - 回合校验/排序
 - Thought signature 清理
@@ -34,6 +35,11 @@ read_when:
 
 策略使用 `provider`、`modelApi`、`modelId` 决定应用哪些规则。
 
+与转录清理分开，会话文件在加载前会修复（如需要）：
+
+- `src/agents/session-file-repair.ts` 中的 `repairSessionFileIfNeeded`
+- 从 `run/attempt.ts` 和 `compact.ts` 调用（内置 runner）
+
 ---
 
 ## 全局规则：图片清理
@@ -44,6 +50,17 @@ read_when:
 
 - `src/agents/pi-embedded-helpers/images.ts` 中的 `sanitizeSessionMessagesImages`
 - `src/agents/tool-images.ts` 中的 `sanitizeContentBlocksImages`
+
+---
+
+## 全局规则：格式错误的工具调用
+
+在构建模型上下文之前，缺少 `input` 和 `arguments` 的 assistant 工具调用块将被丢弃。这可以防止来自部分持久化工具调用（例如，在速率限制失败后）的 provider 拒绝。
+
+实现：
+
+- `src/agents/session-transcript-repair.ts` 中的 `sanitizeToolCallInputs`
+- 应用于 `src/agents/pi-embedded-runner/google.ts` 中的 `sanitizeSessionHistory`
 
 ---
 

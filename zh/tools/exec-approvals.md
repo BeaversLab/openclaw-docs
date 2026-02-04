@@ -115,6 +115,7 @@ Allowlists **按 agent 维度**。如果有多个 agent，请在 macOS 应用中
 在 allowlist 模式下，shell 链接与重定向不会自动允许。
 
 当每个顶层片段都满足 allowlist（包括安全 bin 或技能自动允许）时，允许 shell 链接（`&&`、`||`、`;`）。重定向仍不支持。
+命令替换（`$()` / 反引号）在 allowlist 解析期间会被拒绝，包括在双引号内；如果需要字面量 `$()` 文本，请使用单引号。
 
 默认安全 bin：`jq`、`grep`、`cut`、`sort`、`uniq`、`head`、`tail`、`tr`、`wc`。
 

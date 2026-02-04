@@ -27,7 +27,7 @@ curl -fsSL https://openclaw.bot/install.sh | bash
   ```
   安装器只会在仓库干净时执行 `git pull --rebase`。
 - **全局安装**时，脚本内部会使用 `npm install -g openclaw@latest`。
-- 旧版兼容：`openclaw` 仍作为兼容 shim 提供。
+- 旧版兼容：`clawdbot` 仍作为兼容 shim 提供。
 
 ## 更新前准备
 
