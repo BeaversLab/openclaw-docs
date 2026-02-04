@@ -420,7 +420,7 @@ under `~/.openclaw/` (for example `~/.openclaw/agents/<agentId>/sessions/`).
 
 Related: [迁移](/install/migrating), [文件存储位置](/help/faq#where-does-openclaw-store-its-data),
 [Agent 工作区](/concepts/agent-workspace), [诊断](/gateway/doctor),
-[Remote mode](/gateway/remote).
+[远程模式](/gateway/remote).
 
 ### Where do I see what is new in the latest version
 
@@ -482,8 +482,8 @@ Rough guide:
 - **Install:** 2-5 minutes
 - **Onboarding:** 5-15 minutes depending on how many channels/models you configure
 
-If it hangs, use [Installer stuck](/help/faq#installer-stuck-how-do-i-get-more-feedback)
-and the fast debug loop in [Im stuck](/help/faq#im-stuck--whats-the-fastest-way-to-get-unstuck).
+If it hangs, use [Installer 卡住/help/faq#installer-stuck-how-do-i-get-more-feedback)
+and the fast debug loop in [我卡住了/help/faq#im-stuck--whats-the-fastest-way-to-get-unstuck).
 
 ### How do I try the latest bits
 
@@ -907,7 +907,7 @@ Baseline guidance:
 
 If you are on Windows, **WSL2 is the easiest VM style setup** and has the best tooling
 compatibility. See [Windows](/platforms/windows), [VPS hosting](/vps).
-If you are running macOS in a VM, see [macOS VM](/platforms/macos-vm).
+If you are running macOS in a VM, see [macOS 虚拟机/platforms/macos-vm).
 
 ## What is OpenClaw?
 
@@ -1005,7 +1005,7 @@ Today the supported patterns are:
 - **Sub-agents**: route tasks to separate agents with different default models.
 - **On-demand switch**: use `/model` to switch the current session model at any time.
 
-See [Cron jobs](/automation/cron-jobs), [多 Agent 路由](/concepts/multi-agent), and [斜杠命令](/tools/slash-commands).
+See [Cron 作业/automation/cron-jobs), [多 Agent 路由](/concepts/multi-agent), and [斜杠命令](/tools/slash-commands).
 
 ### The bot freezes while doing heavy work How do I offload that
 
@@ -1038,7 +1038,7 @@ openclaw cron run <jobId> --force
 openclaw cron runs --id <jobId> --limit 50
 ```
 
-Docs: [Cron jobs](/automation/cron-jobs), [Cron vs Heartbeat](/automation/cron-vs-heartbeat).
+Docs: [Cron 作业/automation/cron-jobs), [Cron vs Heartbeat/automation/cron-vs-heartbeat).
 
 ### How do I install skills on Linux
 
@@ -1063,7 +1063,7 @@ Yes. Use the Gateway scheduler:
 - **Heartbeat** for “main session” periodic checks.
 - **Isolated jobs** for autonomous agents that post summaries or deliver to chats.
 
-Docs: [Cron jobs](/automation/cron-jobs), [Cron vs Heartbeat](/automation/cron-vs-heartbeat),
+Docs: [Cron 作业/automation/cron-jobs), [Cron vs Heartbeat/automation/cron-vs-heartbeat),
 [Heartbeat](/gateway/heartbeat).
 
 **Can I run Apple macOS only skills from Linux**
@@ -1469,7 +1469,7 @@ No separate TCP bridge is required; nodes connect over the Gateway WebSocket.
 Security reminder: pairing a macOS node allows `system.run` on that machine. Only
 pair devices you trust, and review [安全](/gateway/security).
 
-Docs: [节点](/nodes), [Gateway 协议](/gateway/protocol), [macOS remote mode](/platforms/mac/remote), [安全](/gateway/security).
+Docs: [节点](/nodes), [Gateway 协议](/gateway/protocol), [macOS 远程模式/platforms/mac/remote), [安全](/gateway/security).
 
 ### Tailscale is connected but I get no replies What now
 
@@ -1509,7 +1509,7 @@ openclaw agent --message "Hello from local bot" --deliver --channel telegram --r
 Tip: add a guardrail so the two bots do not loop endlessly (mention-only, channel
 allowlists, or a "do not reply to bot messages" rule).
 
-Docs: [远程访问](/gateway/remote), [Agent CLI](/cli/agent), [Agent 发送](/tools/agent-send).
+Docs: [远程访问](/gateway/remote), [Agent CLI/cli/agent), [Agent 发送](/tools/agent-send).
 
 ### Do I need separate VPSes for multiple agents
 
@@ -1631,7 +1631,7 @@ Recommended setup:
    openclaw nodes approve <requestId>
    ```
 
-Docs: [Gateway 协议](/gateway/protocol), [发现](/gateway/discovery), [macOS remote mode](/platforms/mac/remote).
+Docs: [Gateway 协议](/gateway/protocol), [发现](/gateway/discovery), [macOS 远程模式/platforms/mac/remote).
 
 ## Env vars and .env loading
 
@@ -1733,7 +1733,7 @@ less efficient than using one bot with separate sessions. The typical model we
 envision is one bot you talk to, with different sessions for parallel work. That
 bot can also spawn sub-agents when needed.
 
-Docs: [多 Agent 路由](/concepts/multi-agent), [子 Agent](/tools/subagents), [Agent CLI](/cli/agents).
+Docs: [多 Agent 路由](/concepts/multi-agent), [子 Agent](/tools/subagents), [Agent CLI/cli/agents).
 
 ### Why did context get truncated midtask How do I prevent it
 
@@ -1864,7 +1864,7 @@ Option 2 (if already configured/allowlisted): list groups from config:
 openclaw directory groups list --channel whatsapp
 ```
 
-Docs: [WhatsApp](/channels/whatsapp), [Directory](/cli/directory), [Logs](/cli/logs).
+Docs: [WhatsApp](/channels/whatsapp), [目录/cli/directory), [日志/cli/logs).
 
 ### Why doesnt OpenClaw reply in a group
 
@@ -2619,7 +2619,7 @@ openclaw message send --target +15555550123 --message "Here you go" --media /pat
 - 目标频道支持外发媒体，且未被 allowlist 阻止。
 - 文件大小在该 provider 的限制内（图片会缩放到最大 2048px）。
 
-见 [Images](/zh/nodes/images)。
+见 [图片/zh/nodes/images)。
 
 ## Security and access control
 
@@ -2716,7 +2716,7 @@ openclaw pairing list whatsapp
 
 如果仍然很吵，检查 Control UI 的会话设置并将 verbose 设为 **inherit**。同时确认你没有在 config 中使用 `verboseDefault` 为 `on` 的 bot profile。
 
-Docs: [Thinking and verbose](/zh/tools/thinking), [安全](/zh/gateway/security#reasoning--verbose-output-in-groups)。
+Docs: [思考和详细模式/zh/tools/thinking), [安全](/zh/gateway/security#reasoning--verbose-output-in-groups)。
 
 ### How do I stopcancel a running task
 
