@@ -267,7 +267,7 @@ imsg chats --limit 20
 
 ## 配置参考（iMessage）
 
-完整配置：[Configuration](/zh/gateway/configuration)
+完整配置：[配置](/zh/gateway/configuration)
 
 Provider 选项：
 

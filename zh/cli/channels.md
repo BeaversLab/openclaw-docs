@@ -12,8 +12,8 @@ title: "channels"
 
 相关文档：
 
-- 渠道指南：[Channels](/zh/channels/index)
-- Gateway 配置：[Configuration](/zh/gateway/configuration)
+- 渠道指南：[通道](/zh/channels/index)
+- Gateway 配置：[配置](/zh/gateway/configuration)
 
 ## 常用命令
 

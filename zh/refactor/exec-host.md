@@ -312,5 +312,5 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 
 - [Exec tool](/zh/tools/exec)
 - [Exec approvals](/zh/tools/exec-approvals)
-- [Nodes](/zh/nodes)
+- [节点](/zh/nodes)
 - [Elevated mode](/zh/tools/elevated)

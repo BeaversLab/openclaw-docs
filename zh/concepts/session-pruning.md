@@ -120,4 +120,4 @@ Pruning 使用估算的上下文窗口（chars ≈ tokens × 4）。基础窗口
 }
 ```
 
-配置参考： [Gateway Configuration](/zh/gateway/configuration)
+配置参考： [Gateway 配置](/zh/gateway/configuration)

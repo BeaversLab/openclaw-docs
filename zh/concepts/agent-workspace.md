@@ -99,7 +99,7 @@ Workspace 是 agent 的家。它是文件工具与工作区上下文所使用的
   - 经过整理的长期记忆。
   - 仅在主私密会话中加载（非共享/群组上下文）。
 
-记忆流程与自动 flush 见 [Memory](/zh/concepts/memory)。
+记忆流程与自动 flush 见 [记忆](/zh/concepts/memory)。
 
 - `skills/`（可选）
   - Workspace 专属技能。
@@ -215,6 +215,6 @@ git push
 ## 高级说明
 
 - 多 agent 路由可为不同 agent 使用不同 workspace。见
-  [Channel routing](/zh/concepts/channel-routing) 的路由配置。
+  [通道 routing](/zh/concepts/channel-routing) 的路由配置。
 - 若启用了 `agents.defaults.sandbox`，非主会话可使用 `agents.defaults.sandbox.workspaceRoot`
   下的按会话 sandbox workspace。

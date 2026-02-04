@@ -372,5 +372,5 @@ OpenClaw 会按以下顺序自动检测并**在首个可用项停止**：
 
 ## 相关文档
 
-- [Configuration](/zh/gateway/configuration)
+- [配置](/zh/gateway/configuration)
 - [Image & Media Support](/zh/nodes/images)

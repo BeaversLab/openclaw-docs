@@ -59,7 +59,7 @@ read_when:
 
 - 远程主机优先使用 loopback bind，并通过 SSH 或 Tailscale 连接。
 - 如果 Gateway 绑定到非 loopback 接口，请启用 token/password 认证。
-- 参见 [Security](/zh/gateway/security) 与 [Tailscale](/zh/gateway/tailscale)。
+- 参见 [安全](/zh/gateway/security) 与 [Tailscale](/zh/gateway/tailscale)。
 
 ## WhatsApp 登录流程（远程）
 

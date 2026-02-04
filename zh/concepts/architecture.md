@@ -90,7 +90,7 @@ Client                    Gateway
 - Gateway 认证（`gateway.auth.*`）仍适用于 **所有** 连接，无论本地或远程。
 
 详情： [Gateway protocol](/zh/gateway/protocol)、[Pairing](/zh/start/pairing)、
-[Security](/zh/gateway/security)。
+[安全](/zh/gateway/security)。
 
 ## 协议类型与代码生成
 

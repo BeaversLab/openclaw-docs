@@ -355,4 +355,4 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 - [DigitalOcean guide](/zh/platforms/digitalocean) — 云端替代方案
 - [Hetzner guide](/zh/platforms/hetzner) — Docker 方案
 - [Tailscale](/zh/gateway/tailscale) — 远程访问
-- [Nodes](/zh/nodes) — 配对你的笔记本/手机到 Pi gateway
+- [节点](/zh/nodes) — 配对你的笔记本/手机到 Pi gateway

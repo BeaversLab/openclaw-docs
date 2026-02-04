@@ -389,5 +389,5 @@ Provider 工具键支持 `provider`（如 `google-antigravity`）或 `provider/m
 ## See Also
 
 - [Multi-Agent Routing](/zh/concepts/multi-agent)
-- [Sandbox Configuration](/zh/gateway/configuration#agentsdefaults-sandbox)
-- [Session Management](/zh/concepts/session)
+- [Sandbox 配置](/zh/gateway/configuration#agentsdefaults-sandbox)
+- [会话 Management](/zh/concepts/session)

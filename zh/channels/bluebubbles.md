@@ -183,7 +183,7 @@ OpenClaw 可能会提供*短*消息 ID（例如 `1`、`2`）以节省 token。
 - 模板：`{{MessageSidFull}}`、`{{ReplyToIdFull}}`
 - 上下文：`MessageSidFull` / `ReplyToIdFull` 出现在入站 payload 中
 
-参见 [Configuration](/zh/gateway/configuration) 了解模板变量。
+参见 [配置](/zh/gateway/configuration) 了解模板变量。
 
 ## 分块流式
 
@@ -207,7 +207,7 @@ OpenClaw 可能会提供*短*消息 ID（例如 `1`、`2`）以节省 token。
 
 ## 配置参考
 
-完整配置见：[Configuration](/zh/gateway/configuration)
+完整配置见：[配置](/zh/gateway/configuration)
 
 Provider 选项：
 
@@ -262,4 +262,4 @@ Provider 选项：
 - OpenClaw 会根据 BlueBubbles 服务器的 macOS 版本自动隐藏已知不可用动作。若在 macOS 26 (Tahoe) 上仍显示 edit，请手动设置 `channels.bluebubbles.actions.edit=false`。
 - 查看状态/健康信息：`openclaw status --all` 或 `openclaw status --deep`。
 
-通用渠道工作流参考见 [Channels](/zh/channels) 与 [Plugins](/zh/plugins) 指南。
+通用渠道工作流参考见 [通道](/zh/channels) 与 [插件](/zh/plugins) 指南。

@@ -12,7 +12,7 @@ title: "logs"
 
 相关：
 
-- 日志概览：[Logging](/zh/logging)
+- 日志概览：[日志](/zh/logging)
 
 ## 示例
 

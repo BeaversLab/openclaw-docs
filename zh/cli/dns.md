@@ -13,7 +13,7 @@ title: "dns"
 相关：
 
 - Gateway 发现：[Discovery](/zh/gateway/discovery)
-- 广域发现配置：[Configuration](/zh/gateway/configuration)
+- 广域发现配置：[配置](/zh/gateway/configuration)
 
 ## 设置
 

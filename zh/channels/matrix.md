@@ -32,7 +32,7 @@ openclaw plugins install ./extensions/matrix
 
 若在配置/上手流程中选择 Matrix 且检测到 git 检出，OpenClaw 会自动提供本地安装路径。
 
-详情：[Plugins](/zh/plugin)
+详情：[插件](/zh/plugin)
 
 ## 设置
 
@@ -198,7 +198,7 @@ Crypto 状态按账号 + access token 存在：
 
 ## 配置参考（Matrix）
 
-完整配置见：[Configuration](/zh/gateway/configuration)
+完整配置见：[配置](/zh/gateway/configuration)
 
 Provider 选项：
 

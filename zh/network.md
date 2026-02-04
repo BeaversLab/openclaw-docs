@@ -39,14 +39,14 @@ read_when:
 
 ## Nodes + 传输
 
-- [Nodes overview](/zh/nodes)
+- [节点 overview](/zh/nodes)
 - [Bridge protocol (legacy nodes)](/zh/gateway/bridge-protocol)
-- [Node runbook: iOS](/zh/platforms/ios)
-- [Node runbook: Android](/zh/platforms/android)
+- [节点 runbook: iOS](/zh/platforms/ios)
+- [节点 runbook: Android](/zh/platforms/android)
 
 ## Security
 
-- [Security overview](/zh/gateway/security)
+- [安全 overview](/zh/gateway/security)
 - [Gateway config reference](/zh/gateway/configuration)
-- [Troubleshooting](/zh/gateway/troubleshooting)
+- [故障排查](/zh/gateway/troubleshooting)
 - [Doctor](/zh/gateway/doctor)

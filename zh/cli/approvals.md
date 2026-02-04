@@ -14,7 +14,7 @@ title: "approvals"
 相关：
 
 - Exec approvals：[Exec approvals](/zh/tools/exec-approvals)
-- Nodes：[Nodes](/zh/nodes)
+- Nodes：[节点](/zh/nodes)
 
 ## 常用命令
 

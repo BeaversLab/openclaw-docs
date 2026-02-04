@@ -92,6 +92,6 @@ openclaw update status --timeout 10
 ## 另请参阅
 
 - `openclaw doctor`（在 git 检出时会建议先运行 update）
-- [Development channels](/zh/install/development-channels)
+- [开发环境 channels](/zh/install/development-channels)
 - [Updating](/zh/install/updating)
 - [CLI reference](/zh/cli)

@@ -7,7 +7,7 @@ read_when:
 
 # 测试
 
-- 完整测试工具包（suites、live、Docker）：[Testing](/zh/testing)
+- 完整测试工具包（suites、live、Docker）：[测试](/zh/testing)
 
 - `pnpm test:force`：终止占用默认控制端口的残留 gateway 进程，然后用独立 gateway 端口运行完整 Vitest 套件，避免与正在运行的实例冲突。当上次 gateway 占用 18789 端口时使用。
 - `pnpm test:coverage`：运行带 V8 覆盖率的 Vitest。全局阈值为 70%（lines/branches/functions/statements）。覆盖率排除集成较重的入口（CLI wiring、gateway/telegram bridges、webchat 静态服务器），以聚焦于单元可测逻辑。

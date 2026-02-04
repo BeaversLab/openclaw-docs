@@ -150,7 +150,7 @@ Slash 命令由 Gateway 处理，存在几种行为：
 - **Compaction** 会把摘要持久化到转录中，并保留近期消息。
 - **Pruning** 只从一次运行的 _内存提示_ 中移除旧工具结果，不会改写转录。
 
-文档： [Session](/zh/concepts/session)、[Compaction](/zh/concepts/compaction)、[Session pruning](/zh/concepts/session-pruning)。
+文档： [会话](/zh/concepts/session)、[Compaction](/zh/concepts/compaction)、[会话 pruning](/zh/concepts/session-pruning)。
 
 ## `/context` 实际报告什么
 

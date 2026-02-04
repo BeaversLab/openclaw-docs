@@ -14,7 +14,7 @@ read_when:
 
 - **小型 Linux VPS**：常驻 Gateway、成本低。见 [VPS hosting](/zh/vps)。
 - **专用硬件**（Mac mini 或 Linux 盒子）：若你需要完整控制权，且希望浏览器自动化使用**住宅 IP**。很多网站会屏蔽机房 IP，本地浏览更稳定。
-- **混合方案：** Gateway 放在便宜 VPS，需要浏览器/UI 自动化时让 Mac 作为 **node** 连接。见 [Nodes](/zh/nodes) 与 [Gateway remote](/zh/gateway/remote)。
+- **混合方案：** Gateway 放在便宜 VPS，需要浏览器/UI 自动化时让 Mac 作为 **node** 连接。见 [节点](/zh/nodes) 与 [Gateway remote](/zh/gateway/remote)。
 
 只有当你需要 macOS 独占能力（iMessage/BlueBubbles）或希望严格隔离时，才使用 macOS VM。
 
@@ -80,7 +80,7 @@ echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.zshrc && source ~/.zshrc
 lume --version
 ```
 
-文档：[Lume Installation](https://cua.ai/docs/lume/guide/getting-started/installation)
+文档：[Lume 安装](https://cua.ai/docs/lume/guide/getting-started/installation)
 
 ---
 
@@ -272,10 +272,10 @@ lume run openclaw --no-display
 ## 相关文档
 
 - [VPS hosting](/zh/vps)
-- [Nodes](/zh/nodes)
+- [节点](/zh/nodes)
 - [Gateway remote](/zh/gateway/remote)
 - [BlueBubbles channel](/zh/channels/bluebubbles)
 - [Lume Quickstart](https://cua.ai/docs/lume/guide/getting-started/quickstart)
-- [Lume CLI Reference](https://cua.ai/docs/lume/reference/cli-reference)
-- [Unattended VM Setup](https://cua.ai/docs/lume/guide/fundamentals/unattended-setup)（高级）
+- [Lume CLI 参考](https://cua.ai/docs/lume/reference/cli-reference)
+- [Unattended VM 设置](https://cua.ai/docs/lume/guide/fundamentals/unattended-setup)（高级）
 - [Docker Sandboxing](/zh/install/docker)（替代隔离方案）

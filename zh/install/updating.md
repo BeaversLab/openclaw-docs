@@ -62,7 +62,7 @@ openclaw update --channel stable
 
 使用 `--tag <dist-tag|version>` 做一次性安装 tag/版本。
 
-通道语义与发布说明见 [Development channels](/zh/install/development-channels)。
+通道语义与发布说明见 [开发环境 channels](/zh/install/development-channels)。
 
 注意：在 npm 安装中，gateway 启动时会记录更新提示（检查当前通道 tag）。可通过 `update.checkOnStart: false` 关闭。
 
@@ -221,5 +221,5 @@ git pull
 ## 如果卡住了
 
 - 再次运行 `openclaw doctor` 并仔细阅读输出（经常会提示修复办法）。
-- 查看：[Troubleshooting](/zh/gateway/troubleshooting)
+- 查看：[故障排查](/zh/gateway/troubleshooting)
 - 去 Discord 提问：https://channels.discord.gg/clawd

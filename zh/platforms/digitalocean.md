@@ -156,7 +156,7 @@ openclaw channels login whatsapp
 # 扫描二维码
 ```
 
-其它 providers 见 [Channels](/zh/channels)。
+其它 providers 见 [通道](/zh/channels)。
 
 ---
 

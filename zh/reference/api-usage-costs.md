@@ -46,7 +46,7 @@ OpenClaw 可以从以下来源获取凭据：
 
 每次回复或工具调用都会使用 **当前模型提供商**（OpenAI、Anthropic 等）。这是主要的用量与成本来源。
 
-定价配置参见 [Models](/zh/providers/models)，显示方式参见 [Token use & costs](/zh/token-use)。
+定价配置参见 [模型](/zh/providers/models)，显示方式参见 [Token use & costs](/zh/token-use)。
 
 ### 2) 媒体理解（音频/图片/视频）
 
@@ -68,7 +68,7 @@ OpenClaw 可以从以下来源获取凭据：
 
 可使用 `memorySearch.provider = "local"` 保持本地（无 API 用量）。
 
-参见 [Memory](/zh/concepts/memory)。
+参见 [记忆](/zh/concepts/memory)。
 
 ### 4) Web 搜索工具（Brave / Perplexity via OpenRouter）
 
@@ -103,19 +103,19 @@ OpenClaw 可以从以下来源获取凭据：
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-参见 [Models CLI](/zh/cli/models)。
+参见 [模型 CLI](/zh/cli/models)。
 
 ### 7) Compaction 保护性摘要
 
 Compaction safeguard 可能使用 **当前模型** 对会话历史进行摘要，从而调用 provider API。
 
-参见 [Session management + compaction](/zh/reference/session-management-compaction)。
+参见 [会话 management + compaction](/zh/reference/session-management-compaction)。
 
 ### 8) 模型扫描 / 探测
 
 `openclaw models scan` 可探测 OpenRouter 模型，在启用探测时会使用 `OPENROUTER_API_KEY`。
 
-参见 [Models CLI](/zh/cli/models)。
+参见 [模型 CLI](/zh/cli/models)。
 
 ### 9) Talk（语音）
 

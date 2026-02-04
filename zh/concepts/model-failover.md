@@ -139,4 +139,4 @@ Billing/额度失败（如 “insufficient credits” / “credit balance too lo
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
 - `agents.defaults.imageModel` 路由
 
-另见 [Models](/zh/concepts/models) 了解更广泛的模型选择与回退概览。
+另见 [模型](/zh/concepts/models) 了解更广泛的模型选择与回退概览。

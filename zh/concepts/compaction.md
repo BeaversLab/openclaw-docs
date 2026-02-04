@@ -32,7 +32,7 @@ Compaction 会 **持久化** 到会话 JSONL 历史。
 - verbose 模式中的 `🧹 Auto-compaction complete`
 - `/status` 显示 `🧹 Compactions: <count>`
 
-在 compaction 前，OpenClaw 可能先运行一次 **静默 memory flush**，将持久化笔记写入磁盘。详见 [Memory](/zh/concepts/memory) 与相关配置。
+在 compaction 前，OpenClaw 可能先运行一次 **静默 memory flush**，将持久化笔记写入磁盘。详见 [记忆](/zh/concepts/memory) 与相关配置。
 
 ## 手动 compaction
 

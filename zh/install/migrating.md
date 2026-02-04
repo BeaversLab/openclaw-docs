@@ -91,7 +91,7 @@ tar -czf openclaw-workspace.tgz .openclaw/workspace
 
 在**新机器**上安装 CLI（需要时先装 Node）：
 
-- 见：[Install](/zh/install)
+- 见：[安装](/zh/install)
 
 此时即便 onboarding 生成了新的 `~/.openclaw/` 也没关系，下一步会覆盖。
 

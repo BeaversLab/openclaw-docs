@@ -265,7 +265,7 @@ OpenClaw 使用 **阈值前写入** 策略：
 - 每个压缩周期只运行一次写入（在 `sessions.json` 中跟踪）。
 - 仅对内置 Pi 会话运行（CLI backend 会跳过）。
 - 当会话工作区只读时会跳过（`workspaceAccess: "ro"` 或 `"none"`）。
-- 工作区文件布局与写入模式参见 [Memory](/zh/concepts/memory)。
+- 工作区文件布局与写入模式参见 [记忆](/zh/concepts/memory)。
 
 Pi 也在扩展 API 中提供 `session_before_compact` 钩子，但 OpenClaw 目前的写入逻辑在 Gateway 侧。
 

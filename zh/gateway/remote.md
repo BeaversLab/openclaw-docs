@@ -124,4 +124,4 @@ Runbook： [macOS remote access](/zh/platforms/mac/remote)。
   若要强制 token/password，请设为 `false`。
 - 将浏览器控制视为 operator 访问：仅 tailnet + 明确 node 配对。
 
-深入说明： [Security](/zh/gateway/security)。
+深入说明： [安全](/zh/gateway/security)。

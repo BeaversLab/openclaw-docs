@@ -9,7 +9,7 @@ title: "配置示例"
 
 # 配置示例
 
-以下示例与当前配置 schema 对齐。完整参考与逐字段说明见 [Configuration](/zh/gateway/configuration)。
+以下示例与当前配置 schema 对齐。完整参考与逐字段说明见 [配置](/zh/gateway/configuration)。
 
 ## 快速开始
 
@@ -577,4 +577,4 @@ title: "配置示例"
 - 若设置 `dmPolicy: "open"`，对应 `allowFrom` 必须包含 `"*"`。
 - Provider IDs 不同（电话号码、用户 ID、渠道 ID）。请参考 provider 文档确认格式。
 - 可后续添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 深入设置说明见 [Providers](/zh/channels/whatsapp) 与 [Troubleshooting](/zh/gateway/troubleshooting)。
+- 深入设置说明见 [提供商](/zh/channels/whatsapp) 与 [故障排查](/zh/gateway/troubleshooting)。

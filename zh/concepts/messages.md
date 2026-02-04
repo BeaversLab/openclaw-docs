@@ -27,7 +27,7 @@ Inbound message
 - `agents.defaults.*` 用于块流式与分块默认值。
 - 渠道覆盖（`channels.whatsapp.*`、`channels.telegram.*` 等）用于上限与流式开关。
 
-完整 schema 参见 [Configuration](/zh/gateway/configuration)。
+完整 schema 参见 [配置](/zh/gateway/configuration)。
 
 ## 入站去重
 
@@ -69,7 +69,7 @@ Inbound message
 
 多个设备/渠道可映射到同一会话，但历史不会完全回写到每个客户端。建议：长对话使用一个主设备以避免上下文分叉。Control UI 与 TUI 始终显示 gateway 侧会话转录，因此是事实来源。
 
-详情： [Session management](/zh/concepts/session)。
+详情： [会话 management](/zh/concepts/session)。
 
 ## 入站 body 与历史上下文
 
@@ -132,4 +132,4 @@ OpenClaw 可显示或隐藏模型推理：
 - `messages.responsePrefix`（出站前缀）与 `channels.whatsapp.messagePrefix`（WhatsApp 入站前缀）
 - 通过 `replyToMode` 与渠道默认值进行回复串线
 
-详情： [Configuration](/zh/gateway/configuration#messages) 与各渠道文档。
+详情： [配置](/zh/gateway/configuration#messages) 与各渠道文档。

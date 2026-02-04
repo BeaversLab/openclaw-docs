@@ -584,7 +584,7 @@ OpenClaw 在有 OAuth/API 凭据时可展示提供商用量/配额。
 - 数据直接来自提供商用量端点（无估算）。
 - 提供商：Anthropic、GitHub Copilot、OpenAI Codex OAuth，以及启用提供商插件时的 Gemini CLI/Antigravity。
 - 若无匹配凭据，用量会隐藏。
-- 详情见：[Usage tracking](/zh/concepts/usage-tracking)。
+- 详情见：[用法 tracking](/zh/concepts/usage-tracking)。
 
 ### `health`
 

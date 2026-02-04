@@ -31,11 +31,11 @@ title: "VPS 托管"
   若绑定到 `lan`/`tailnet`，需要 `gateway.auth.token` 或 `gateway.auth.password`。
 
 远程访问：[Gateway remote](/zh/gateway/remote)  
-平台索引：[Platforms](/zh/platforms)
+平台索引：[平台](/zh/platforms)
 
 ## 在 VPS 上使用节点
 
 你可以让 Gateway 在云端运行，同时在本地设备（Mac/iOS/Android/无 UI）配对 **nodes**。
 节点提供本地屏幕/摄像头/画布与 `system.run` 能力，而 Gateway 仍在云端。
 
-文档：[Nodes](/zh/nodes)、[Nodes CLI](/zh/cli/nodes)
+文档：[节点](/zh/nodes)、[节点 CLI](/zh/cli/nodes)

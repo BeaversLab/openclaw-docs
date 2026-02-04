@@ -94,4 +94,4 @@ synthetic/hf:MiniMaxAI/MiniMax-M2.1
 
 - 模型引用使用 `synthetic/<modelId>`。
 - 若启用了模型 allowlist（`agents.defaults.models`），请将要用的模型全部加入。
-- Provider 规则参见 [Model providers](/zh/concepts/model-providers)。
+- Provider 规则参见 [模型 providers](/zh/concepts/model-providers)。

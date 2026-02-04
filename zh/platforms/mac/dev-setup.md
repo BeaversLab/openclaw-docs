@@ -37,7 +37,7 @@ pnpm install
 关于开发运行模式、签名参数和 Team ID 排查，参见 macOS 应用 README：
 https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md
 
-> **注意**：ad-hoc 签名可能触发安全提示。如果应用启动即崩溃并提示 "Abort trap 6"，请参见 [Troubleshooting](#troubleshooting)。
+> **注意**：ad-hoc 签名可能触发安全提示。如果应用启动即崩溃并提示 "Abort trap 6"，请参见 [故障排查](#troubleshooting)。
 
 ## 3. 安装 CLI
 

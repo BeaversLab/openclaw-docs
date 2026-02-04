@@ -12,8 +12,8 @@ title: "doctor"
 
 相关：
 
-- 故障排查：[Troubleshooting](/zh/gateway/troubleshooting)
-- 安全审计：[Security](/zh/gateway/security)
+- 故障排查：[故障排查](/zh/gateway/troubleshooting)
+- 安全审计：[安全](/zh/gateway/security)
 
 ## 示例
 

@@ -12,7 +12,7 @@ title: "models"
 
 相关：
 
-- Providers + models：[Models](/zh/providers/models)
+- Providers + models：[模型](/zh/providers/models)
 - Provider 认证设置：[Getting started](/zh/start/getting-started)
 
 ## 常用命令

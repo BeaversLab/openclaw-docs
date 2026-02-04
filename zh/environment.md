@@ -72,10 +72,10 @@ OpenClaw 从多个来源读取环境变量。规则是**绝不覆盖已有值**�
 }
 ```
 
-详见 [Configuration: Env var substitution](/zh/gateway/configuration#env-var-substitution-in-config)。
+详见 [配置: Env var substitution](/zh/gateway/configuration#env-var-substitution-in-config)。
 
 ## 相关
 
 - [Gateway configuration](/zh/gateway/configuration)
-- [FAQ: env vars and .env loading](/zh/help/faq#env-vars-and-env-loading)
-- [Models overview](/zh/concepts/models)
+- [常见问题: env vars and .env loading](/zh/help/faq#env-vars-and-env-loading)
+- [模型 overview](/zh/concepts/models)

@@ -29,7 +29,7 @@ openclaw plugins install @openclaw/tlon
 openclaw plugins install ./extensions/tlon
 ```
 
-详情：[Plugins](/zh/plugin)
+详情：[插件](/zh/plugin)
 
 ## 设置
 

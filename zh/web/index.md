@@ -99,7 +99,7 @@ openclaw gateway
 - 非回环绑定仍 **需要** 共享 token/password（`gateway.auth` 或环境变量）。
 - 向导默认生成 gateway token（即使在回环）。
 - UI 发送 `connect.params.auth.token` 或 `connect.params.auth.password`。
-- 在 Serve 模式下，若 `gateway.auth.allowTailscale` 为 `true`，Tailscale 身份头可满足认证（无需 token/password）。若要强制凭据，设 `gateway.auth.allowTailscale: false`。见 [Tailscale](/zh/gateway/tailscale) 与 [Security](/zh/gateway/security)。
+- 在 Serve 模式下，若 `gateway.auth.allowTailscale` 为 `true`，Tailscale 身份头可满足认证（无需 token/password）。若要强制凭据，设 `gateway.auth.allowTailscale: false`。见 [Tailscale](/zh/gateway/tailscale) 与 [安全](/zh/gateway/security)。
 - `gateway.tailscale.mode: "funnel"` 需要 `gateway.auth.mode: "password"`（共享密码）。
 
 ## 构建 UI

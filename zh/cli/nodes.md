@@ -12,7 +12,7 @@ title: "nodes"
 
 相关：
 
-- Nodes 概览：[Nodes](/zh/nodes)
+- Nodes 概览：[节点](/zh/nodes)
 - Camera：[Camera nodes](/zh/nodes/camera)
 - Images：[Image nodes](/zh/nodes/images)
 

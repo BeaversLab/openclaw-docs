@@ -13,7 +13,7 @@ title: "hooks"
 相关：
 
 - Hooks：[Hooks](/zh/hooks)
-- 插件 hooks：[Plugins](/zh/plugin#plugin-hooks)
+- 插件 hooks：[插件](/zh/plugin#plugin-hooks)
 
 ## 列出所有 Hooks
 

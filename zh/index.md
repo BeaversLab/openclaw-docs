@@ -34,7 +34,7 @@ OpenClaw 也驱动 OpenClaw assistant。
 
 ## Start here
 
-- **从零新装：**[Getting Started](/zh/start/getting-started)
+- **从零新装：**[入门指南](/zh/start/getting-started)
 - **向导式设置（推荐）：**[Wizard](/zh/start/wizard)（`openclaw onboard`）
 - **打开仪表盘（本地 Gateway）：**http://127.0.0.1:18789/（或 http://localhost:18789/）
 
@@ -175,10 +175,10 @@ openclaw message send --target +15555550123 --message "Hello from OpenClaw"
 ## Docs
 
 - Start here:
-  - [Docs hubs (all pages linked)](/zh/start/hubs)
+  - [文档 hubs (all pages linked)](/zh/start/hubs)
   - [Help](/zh/help) ← _常见修复 + 故障排查_
-  - [Configuration](/zh/gateway/configuration)
-  - [Configuration examples](/zh/gateway/configuration-examples)
+  - [配置](/zh/gateway/configuration)
+  - [配置 examples](/zh/gateway/configuration-examples)
   - [Slash commands](/zh/tools/slash-commands)
   - [Multi-agent routing](/zh/concepts/multi-agent)
   - [Updating / rollback](/zh/install/updating)
@@ -190,7 +190,7 @@ openclaw message send --target +15555550123 --message "Hello from OpenClaw"
   - [Workspace templates](/zh/reference/templates/AGENTS)
   - [RPC adapters](/zh/reference/rpc)
   - [Gateway runbook](/zh/gateway)
-  - [Nodes (iOS/Android)](/zh/nodes)
+  - [节点 (iOS/Android)](/zh/nodes)
   - [Web surfaces (Control UI)](/zh/web)
   - [Discovery + transports](/zh/gateway/discovery)
   - [Remote access](/zh/gateway/remote)
@@ -212,12 +212,12 @@ openclaw message send --target +15555550123 --message "Hello from OpenClaw"
   - [Windows (WSL2)](/zh/platforms/windows)
   - [Linux app](/zh/platforms/linux)
 - Ops and safety:
-  - [Sessions](/zh/concepts/session)
+  - [会话](/zh/concepts/session)
   - [Cron jobs](/zh/automation/cron-jobs)
   - [Webhooks](/zh/automation/webhook)
   - [Gmail hooks (Pub/Sub)](/zh/automation/gmail-pubsub)
-  - [Security](/zh/gateway/security)
-  - [Troubleshooting](/zh/gateway/troubleshooting)
+  - [安全](/zh/gateway/security)
+  - [故障排查](/zh/gateway/troubleshooting)
 
 ## The name
 

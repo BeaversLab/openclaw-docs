@@ -25,14 +25,14 @@ VPS 逐步指南：[exe.dev](/zh/platforms/exe-dev)
 
 ## 安装
 
-- [Getting Started](/zh/start/getting-started)
-- [Install & updates](/zh/install/updating)
+- [入门指南](/zh/start/getting-started)
+- [安装 & updates](/zh/install/updating)
 - 可选流程：[Bun（实验性）](/zh/install/bun)、[Nix](/zh/install/nix)、[Docker](/zh/install/docker)
 
 ## Gateway
 
 - [Gateway runbook](/zh/gateway)
-- [Configuration](/zh/gateway/configuration)
+- [配置](/zh/gateway/configuration)
 
 ## Gateway 服务安装（CLI）
 

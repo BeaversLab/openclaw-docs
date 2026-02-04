@@ -170,7 +170,7 @@ message action=react channel=signal target=signal:group:<groupId> targetAuthor=u
 
 ## 配置参考（Signal）
 
-完整配置见：[Configuration](/zh/gateway/configuration)
+完整配置见：[配置](/zh/gateway/configuration)
 
 Provider 选项：
 

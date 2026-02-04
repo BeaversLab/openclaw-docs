@@ -13,8 +13,8 @@ read_when:
 
 - 角色：伴侣 node 应用（Android 不托管 Gateway）。
 - 需要 Gateway：是（运行在 macOS、Linux 或通过 WSL2 的 Windows）。
-- 安装：[Getting Started](/zh/start/getting-started) + [Pairing](/zh/gateway/pairing)。
-- Gateway：[Runbook](/zh/gateway) + [Configuration](/zh/gateway/configuration)。
+- 安装：[入门指南](/zh/start/getting-started) + [Pairing](/zh/gateway/pairing)。
+- Gateway：[Runbook](/zh/gateway) + [配置](/zh/gateway/configuration)。
   - 协议：[Gateway protocol](/zh/gateway/protocol)（nodes + 控制面）。
 
 ## 系统控制

@@ -366,4 +366,4 @@ peer 绑定总是优先，因此要放在渠道级规则之上。
 若需要 per-agent 边界，请用 `agents.list[].tools` 禁止 `exec`。
 若要针对群组，使用 `agents.list[].groupChat.mentionPatterns`，以便 @mentions 明确映射到目标 agent。
 
-参见 [Multi-Agent Sandbox & Tools](/zh/multi-agent-sandbox-tools) 查看详细示例。
+参见 [Multi-Agent Sandbox & 工具](/zh/multi-agent-sandbox-tools) 查看详细示例。

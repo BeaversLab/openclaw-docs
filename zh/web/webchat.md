@@ -35,7 +35,7 @@ read_when:
 
 ## 配置参考（WebChat）
 
-完整配置见 [Configuration](/zh/gateway/configuration)。
+完整配置见 [配置](/zh/gateway/configuration)。
 
 频道选项：
 

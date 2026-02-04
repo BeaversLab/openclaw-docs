@@ -113,7 +113,7 @@ nmap -p- YOUR_SERVER_IP
 
 Docker 用于**agent sandboxes**（隔离的工具执行），不是用来运行 gateway 本体。Gateway 仅绑定在 localhost，通过 Tailscale VPN 访问。
 
-Sandbox 配置见 [Multi-Agent Sandbox & Tools](/zh/multi-agent-sandbox-tools)。
+Sandbox 配置见 [Multi-Agent Sandbox & 工具](/zh/multi-agent-sandbox-tools)。
 
 ## 手动安装
 
@@ -202,13 +202,13 @@ openclaw channels login
 
 安全架构与排障细节：
 
-- [Security Architecture](https://github.com/openclaw/openclaw-ansible/blob/main/docs/security.md)
+- [安全 架构](https://github.com/openclaw/openclaw-ansible/blob/main/docs/security.md)
 - [Technical Details](https://github.com/openclaw/openclaw-ansible/blob/main/docs/architecture.md)
-- [Troubleshooting Guide](https://github.com/openclaw/openclaw-ansible/blob/main/docs/troubleshooting.md)
+- [故障排查 指南](https://github.com/openclaw/openclaw-ansible/blob/main/docs/troubleshooting.md)
 
 ## 相关
 
 - [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) — 完整部署指南
 - [Docker](/zh/install/docker) — 容器化 gateway 方案
 - [Sandboxing](/zh/gateway/sandboxing) — agent sandbox 配置
-- [Multi-Agent Sandbox & Tools](/zh/multi-agent-sandbox-tools) — 按 agent 隔离
+- [Multi-Agent Sandbox & 工具](/zh/multi-agent-sandbox-tools) — 按 agent 隔离

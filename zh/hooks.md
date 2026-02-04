@@ -17,7 +17,7 @@ Hooks 是在“某件事发生时”运行的小脚本。有两类：
 - **Hooks**（本页）：在 Gateway 内运行，当 agent 事件触发，如 `/new`、`/reset`、`/stop` 或生命周期事件。
 - **Webhooks**：外部 HTTP webhook，用于让其它系统触发 OpenClaw 工作。见 [Webhook Hooks](/zh/automation/webhook) 或用 `openclaw webhooks` 获取 Gmail 辅助命令。
 
-Hooks 也可打包在插件内；见 [Plugins](/zh/plugin#plugin-hooks)。
+Hooks 也可打包在插件内；见 [插件](/zh/plugin#plugin-hooks)。
 
 常见用途：
 

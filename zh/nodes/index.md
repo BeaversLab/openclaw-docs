@@ -112,7 +112,7 @@ openclaw config set tools.exec.node "<id-or-name>"
 
 相关：
 
-- [Node host CLI](/zh/cli/node)
+- [节点 host CLI](/zh/cli/node)
 - [Exec tool](/zh/tools/exec)
 - [Exec approvals](/zh/tools/exec-approvals)
 

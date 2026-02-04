@@ -25,7 +25,7 @@ openclaw plugins install @openclaw/twitch
 openclaw plugins install ./extensions/twitch
 ```
 
-详情：[Plugins](/zh/plugin)
+详情：[插件](/zh/plugin)
 
 ## 快速设置（新手）
 

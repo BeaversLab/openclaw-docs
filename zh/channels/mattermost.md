@@ -30,7 +30,7 @@ openclaw plugins install ./extensions/mattermost
 
 若在配置/上手流程中选择 Mattermost 且检测到 git 检出，OpenClaw 会自动提供本地安装路径。
 
-详情：[Plugins](/zh/plugin)
+详情：[插件](/zh/plugin)
 
 ## 快速设置
 

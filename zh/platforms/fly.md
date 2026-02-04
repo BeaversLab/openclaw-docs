@@ -41,7 +41,7 @@ fly volumes create openclaw_data --size 1 --region iad
 
 编辑 `fly.toml`，匹配你的 app 名称与需求。
 
-**安全提示：** 默认配置会暴露公网 URL。若需无公网 IP 的加固部署，见 [Private Deployment](#private-deployment-hardened) 或使用 `fly.private.toml`。
+**安全提示：** 默认配置会暴露公网 URL。若需无公网 IP 的加固部署，见 [Private 部署](#private-deployment-hardened) 或使用 `fly.private.toml`。
 
 ```toml
 app = "my-openclaw"  # 你的 app 名称

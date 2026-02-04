@@ -65,7 +65,7 @@ Context**，而不是 **Group Chat Context**。
 
 内部 hooks 可通过 `agent:bootstrap` 拦截此步骤以变更或替换注入的引导文件（例如用替代 persona 替换 `SOUL.md`）。
 
-要查看每个注入文件贡献（原始 vs 注入、截断，以及工具 schema 开销），使用 `/context list` 或 `/context detail`。参见 [Context](/zh/concepts/context)。
+要查看每个注入文件贡献（原始 vs 注入、截断，以及工具 schema 开销），使用 `/context list` 或 `/context detail`。参见 [上下文](/zh/concepts/context)。
 
 ## 时间处理
 

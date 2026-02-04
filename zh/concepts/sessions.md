@@ -7,4 +7,4 @@ title: "Sessions"
 
 # 会话
 
-会话管理的正文文档位于 [Session management](/zh/concepts/session)。
+会话管理的正文文档位于 [会话 management](/zh/concepts/session)。

@@ -9,8 +9,8 @@ read_when:
 
 本文记录未来模型配置的**想法**，并非已发布规范。当前行为参见：
 
-- [Models](/zh/concepts/models)
-- [Model failover](/zh/concepts/model-failover)
+- [模型](/zh/concepts/models)
+- [模型 failover](/zh/concepts/model-failover)
 - [OAuth + profiles](/zh/concepts/oauth)
 
 ## 动机

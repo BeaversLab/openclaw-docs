@@ -244,7 +244,7 @@ Gateway 仍在宿主机上，但工具执行被隔离：
 - 只读工具 + 只读 workspace（家庭/工作 agent）
 - 无文件系统/ shell 工具（公开 agent）
 
-示例、优先级与排障见 [Multi-Agent Sandbox & Tools](/zh/multi-agent-sandbox-tools)。
+示例、优先级与排障见 [Multi-Agent Sandbox & 工具](/zh/multi-agent-sandbox-tools)。
 
 ### 默认行为
 

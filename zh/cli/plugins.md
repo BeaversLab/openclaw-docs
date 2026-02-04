@@ -12,9 +12,9 @@ title: "plugins"
 
 相关：
 
-- 插件系统：[Plugins](/zh/plugin)
+- 插件系统：[插件](/zh/plugin)
 - 插件清单 + schema：[Plugin manifest](/zh/plugins/manifest)
-- 安全加固：[Security](/zh/gateway/security)
+- 安全加固：[安全](/zh/gateway/security)
 
 ## 命令
 
