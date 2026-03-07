@@ -21,7 +21,7 @@ Cron 是 Gateway 内置的调度器。它会持久化作业，在合适时间唤
 - 作业保存在 `~/.openclaw/cron/`，重启不会丢失计划。
 - 两种执行风格：
   - **主会话**：排队一个系统事件，在下一次心跳中运行。
-  - **隔离**：在 `cron:<jobId>` 中运行独立的代理轮次，可选发送输出。
+  - **隔离**：在 `cron:<jobId>` 中运行独立的代理轮次，带投递（默认 announce 或 none）。
 - 唤醒是第一等能力：作业可以请求"现在唤醒"或"下次心跳"。
 
 ## 快速开始（可执行）
@@ -45,13 +45,14 @@ openclaw cron runs --id <job-id>
 调度一个循环的隔离作业并投递：
 
 ```bash
+```bash
 openclaw cron add \
   --name "Morning brief" \
   --cron "0 7 * * *" \
   --tz "America/Los_Angeles" \
   --session isolated \
   --message "Summarize overnight updates." \
-  --deliver \
+  --announce \
   --channel slack \
   --to "channel:C1234567890"
 ```
@@ -73,7 +74,7 @@ Gateway 会把文件加载到内存并在变更时写回，因此手动编辑只
 1. **选择调度方式**
    - 单次提醒 → `schedule.kind = "at"`（CLI: `--at`）
    - 重复任务 → `schedule.kind = "every"` 或 `schedule.kind = "cron"`
-   - ISO 时间戳如果不包含时区，会被当作 **UTC**。
+   - 如果 ISO 时间戳省略时区，会被当作 **UTC**。
 
 2. **选择运行位置**
    - `sessionTarget: "main"` → 在下一次心跳中用主会话上下文运行。
@@ -83,7 +84,8 @@ Gateway 会把文件加载到内存并在变更时写回，因此手动编辑只
    - 主会话 → `payload.kind = "systemEvent"`
    - 隔离会话 → `payload.kind = "agentTurn"`
 
-可选：`deleteAfterRun: true` 会在单次作业成功后从存储中移除。
+可选：单次作业（`schedule.kind = "at"`）默认在成功后删除。设置
+`deleteAfterRun: false` 来保留它们（它们会在成功后禁用）。
 
 ## 概念
 
@@ -93,22 +95,22 @@ Gateway 会把文件加载到内存并在变更时写回，因此手动编辑只
 
 - **schedule**（何时运行）、
 - **payload**（做什么）、
-- 可选的 **delivery**（输出要发送到哪里）。
+- 可选的 **delivery mode**（announce 或 none）。
 - 可选 **agent 绑定**（`agentId`）：用指定 agent 运行；缺失或未知时，Gateway 会回退到默认 agent。
 
 作业通过稳定的 `jobId` 标识（CLI/Gateway API 使用）。
 在 agent 工具调用中，`jobId` 为规范字段；旧字段 `id` 为兼容而保留。
-单次作业成功后可通过 `deleteAfterRun: true` 自动删除。
+单次作业默认在成功后自动删除；设置 `deleteAfterRun: false` 来保留它们。
 
 ### 调度方式
 
 Cron 支持三种调度类型：
 
-- `at`：单次时间戳（epoch 毫秒）。Gateway 接受 ISO 8601 并转成 UTC。
+- `at`：通过 `schedule.at` 的单次时间戳（ISO 8601）。
 - `every`：固定间隔（毫秒）。
 - `cron`：5 字段 cron 表达式，可选 IANA 时区。
 
-Cron 表达式使用 `croner`。如未指定时区，使用 Gateway 主机的本地时区。
+Cron 表达式使用 `croner`。如果省略时区，使用 Gateway 主机的本地时区。
 
 ### 主会话 vs 隔离执行
 
@@ -131,9 +133,13 @@ Cron 表达式使用 `croner`。如未指定时区，使用 Gateway 主机的本
 
 - 提示词会加上 `[cron:<jobId> <job name>]` 前缀，便于追踪。
 - 每次运行都会使用 **全新的会话 id**（不继承旧对话）。
-- 会将摘要发布到主会话（前缀 `Cron`，可配置）。
-- `wakeMode: "now"` 会在发布摘要后立即触发心跳。
-- 若 `payload.deliver: true`，输出会投递到频道；否则保持内部。
+- 默认行为：如果省略 `delivery`，隔离作业会发布摘要（`delivery.mode = "announce"`）。
+- `delivery.mode`（仅隔离）选择发生什么：
+  - `announce`：向目标频道投递摘要，并向主会话发布简要摘要。
+  - `none`：仅内部（无投递，无主会话摘要）。
+- `wakeMode` 控制主会话摘要何时发布：
+  - `now`：立即心跳。
+  - `next-heartbeat`：等待下一次计划心跳。
 
 当任务噪声高、频率高或是"后台杂活"而不想刷屏主聊天记录时，建议使用隔离作业。
 
@@ -149,23 +155,42 @@ Cron 表达式使用 `croner`。如未指定时区，使用 Gateway 主机的本
 - `message`：必需的文本提示词。
 - `model` / `thinking`：可选覆盖（见下）。
 - `timeoutSeconds`：可选超时覆盖。
-- `deliver`：`true` 时把输出发送到频道目标。
-- `channel`：`last` 或具体频道。
-- `to`：频道的具体目标（手机号/聊天/频道 id）。
-- `bestEffortDeliver`：投递失败也不让作业失败。
 
-隔离选项（仅 `session=isolated`）：
+投递配置（仅隔离作业）：
 
-- `postToMainPrefix`（CLI: `--post-prefix`）：发布到主会话的系统事件前缀。
-- `postToMainMode`：`summary`（默认）或 `full`。
-- `postToMainMaxChars`：`postToMainMode=full` 时的最大字符数（默认 8000）。
+- `delivery.mode`：`none` | `announce`。
+- `delivery.channel`：`last` 或具体频道。
+- `delivery.to`：频道的具体目标（手机号/聊天/频道 id）。
+- `delivery.bestEffort`：在投递失败时避免作业失败。
+
+Announce 投递会为该次运行抑制消息工具发送；使用 `delivery.channel`/`delivery.to`
+来定位聊天。当 `delivery.mode = "none"` 时，不会向主会话发布摘要。
+
+如果隔离作业省略 `delivery`，OpenClaw 默认为 `announce`。
+
+#### Announce 投递流程
+
+当 `delivery.mode = "announce"` 时，cron 通过出站频道适配器直接投递。
+不会启动主代理来制作或转发消息。
+
+行为详情：
+
+- 内容：投递使用隔离运行的出站载荷（文本/媒体），包含正常分块和
+  频道格式。
+- 仅心跳响应（`HEARTBEAT_OK` 无实际内容）不会被投递。
+- 如果隔离运行已通过消息工具向同一目标发送消息，投递会
+  跳过以避免重复。
+- 缺失或无效的投递目标会导致作业失败，除非 `delivery.bestEffort = true`。
+- 仅当 `delivery.mode = "announce"` 时才向主会话发布简要摘要。
+- 主会话摘要遵守 `wakeMode`：`now` 触发立即心跳，
+  `next-heartbeat` 等待下一次计划心跳。
 
 ### 模型与 thinking 覆盖
 
-隔离作业（`agentTurn`）可以覆盖模型与 thinking 级别：
+隔离作业（`agentTurn`）可以覆盖模型与思考级别：
 
 - `model`：Provider/model 字符串（如 `anthropic/claude-sonnet-4-20250514`）或别名（如 `opus`）
-- `thinking`：thinking 级别（`off`、`minimal`、`low`、`medium`、`high`、`xhigh`；仅 GPT-5.2 + Codex 模型）
+- `thinking`：思考级别（`off`、`minimal`、`low`、`medium`、`high`、`xhigh`；仅 GPT-5.2 + Codex 模型）
 
 注意：主会话作业也可以设置 `model`，但这会改变共享的主会话模型。
 我们建议只在隔离作业中做模型覆盖，以避免意外的上下文切换。
@@ -187,9 +212,9 @@ Cron 表达式使用 `croner`。如未指定时区，使用 Gateway 主机的本
 
 投递说明：
 
-- 只要设置了 `to`，即便省略 `deliver`，cron 也会自动投递最终输出。
-- 想要不显式设置 `to` 也投递到 last route，请使用 `deliver: true`。
-- 用 `deliver: false` 可以即使存在 `to` 也不投递，让输出保持内部。
+- 只要设置了 `to`，即便省略 `delivery`，cron 也会自动投递最终输出。
+- 想要不显式设置 `to` 也投递到 last route，请使用 `delivery.mode = "announce"`。
+- 用 `delivery.mode = "none"` 可以即使存在 `to` 也不投递，让输出保持内部。
 
 目标格式提醒：
 
@@ -240,10 +265,11 @@ CLI 标志接受人类可读的时长如 `20m`，但工具调用使用 epoch 毫
   "payload": {
     "kind": "agentTurn",
     "message": "Summarize overnight updates.",
-    "deliver": true,
-    "channel": "slack",
-    "to": "channel:C1234567890",
-    "bestEffortDeliver": true
+    "delivery": {
+      "mode": "announce",
+      "channel": "slack",
+      "to": "channel:C1234567890"
+    }
   },
   "isolation": { "postToMainPrefix": "Cron", "postToMainMode": "summary" }
 }
@@ -341,7 +367,7 @@ openclaw cron add \
   --tz "America/Los_Angeles" \
   --session isolated \
   --message "Summarize inbox + calendar for today." \
-  --deliver \
+  --announce \
   --channel whatsapp \
   --to "+15551234567"
 ```
@@ -355,7 +381,7 @@ openclaw cron add \
   --tz "America/Los_Angeles" \
   --session isolated \
   --message "Summarize today; send to the nightly topic." \
-  --deliver \
+  --announce \
   --channel telegram \
   --to "-1001234567890:topic:123"
 ```
@@ -371,7 +397,7 @@ openclaw cron add \
   --message "Weekly deep analysis of project progress." \
   --model "opus" \
   --thinking high \
-  --deliver \
+  --announce \
   --channel whatsapp \
   --to "+15551234567"
 ```
@@ -420,7 +446,7 @@ openclaw system event --mode now --text "Next heartbeat: check battery."
 - `cron.run`（force 或 due）、`cron.runs`
   对于不通过作业的立即系统事件，使用 [`openclaw system event`](/zh/cli/system)。
 
-## 故障排除
+## 故障排查
 
 ### "什么都不运行"
 

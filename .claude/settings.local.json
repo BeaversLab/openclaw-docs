@@ -3,7 +3,8 @@
     "allow": [
       "Skill(markdown-i18n)",
       "Bash(node:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(ls:*)"
     ]
   }
 }
