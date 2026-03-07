@@ -27,7 +27,7 @@ Step-by-step VPS guide: [exe.dev](/en/platforms/exe-dev)
 
 - [Getting Started](/en/start/getting-started)
 - [Install & updates](/en/install/updating)
-- Optional flows: [Bun (experimental)](/en/install/bun), [Nix](/en/install/nix), [Docker](/en/install/docker)
+- Optional flows: [Bun (/en/install/bun)](/install/bun), [Nix](/en/install/nix), [Docker](/en/install/docker)
 
 ## Gateway
 

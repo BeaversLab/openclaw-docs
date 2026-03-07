@@ -9,7 +9,7 @@ title: "Security"
 
 ## Quick check: `openclaw security audit`
 
-See also: [Formal Verification (Security Models)](/en/security/formal-verification/)
+See also: [Formal Verification (/en/security/formal-verification/)](/security/formal-verification/)
 
 Run this regularly (especially after changing config or exposing network surfaces):
 
@@ -205,7 +205,16 @@ By default, OpenClaw routes **all DMs into the main session** so your assistant 
 }
 ```
 
-This prevents cross-user context leakage while keeping group chats isolated. If you run multiple accounts on the same channel, use `per-account-channel-peer` instead. If the same person contacts you on multiple channels, use `session.identityLinks` to collapse those DM sessions into one canonical identity. See [Session Management](/en/concepts/session) and [Configuration](/en/gateway/configuration).
+This prevents cross-user context leakage while keeping group chats isolated.
+
+### Secure DM mode (recommended)
+
+Treat the snippet above as **secure DM mode**:
+
+- Default: `session.dmScope: "main"` (all DMs share one session for continuity).
+- Secure DM mode: `session.dmScope: "per-channel-peer"` (each channel+sender pair gets an isolated DM context).
+
+If you run multiple accounts on the same channel, use `per-account-channel-peer` instead. If the same person contacts you on multiple channels, use `session.identityLinks` to collapse those DM sessions into one canonical identity. See [Session Management](/en/concepts/session) and [Configuration](/en/gateway/configuration).
 
 ## Allowlists (DM + groups) — terminology
 

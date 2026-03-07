@@ -192,7 +192,7 @@ If you omit `capabilities`, the entry is eligible for the list it appears in.
 
 - `openai/gpt-4o-mini-transcribe`, `groq/whisper-large-v3-turbo`, or `deepgram/nova-3`.
 - CLI fallback: `whisper-cli` (whisper-cpp) or `whisper`.
-- Deepgram setup: [Deepgram (audio transcription)](/en/providers/deepgram).
+- Deepgram setup: [Deepgram (/en/providers/deepgram)](/providers/deepgram).
 
 **Video**
 

@@ -27,7 +27,7 @@ The design goal is to keep all network discovery/advertising in the **Node Gatew
 Protocol details:
 
 - [Gateway protocol](/en/gateway/protocol)
-- [Bridge protocol (legacy)](/en/gateway/bridge-protocol)
+- [Bridge protocol (/en/gateway/bridge-protocol)](/gateway/bridge-protocol)
 
 ## Why we keep both “direct” and SSH
 

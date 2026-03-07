@@ -18,4 +18,4 @@ If you want a quick “get unstuck” flow, start here:
 
 If you’re looking for conceptual questions (not “something broke”):
 
-- [FAQ (concepts)](/en/help/faq)
+- [FAQ (/en/help/faq)](/help/faq)

@@ -80,6 +80,7 @@ Stored under `~/.openclaw/devices/`:
   - Telegram: [Telegram](/en/channels/telegram)
   - WhatsApp: [WhatsApp](/en/channels/whatsapp)
   - Signal: [Signal](/en/channels/signal)
-  - iMessage: [iMessage](/en/channels/imessage)
+  - BlueBubbles (iMessage): [BlueBubbles](/en/channels/bluebubbles)
+  - iMessage (legacy): [iMessage](/en/channels/imessage)
   - Discord: [Discord](/en/channels/discord)
   - Slack: [Slack](/en/channels/slack)

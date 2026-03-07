@@ -95,13 +95,15 @@ Tip: `--json` does **not** imply non-interactive mode. Use `--non-interactive` (
    - **API key**: stores the key for you.
    - **Vercel AI Gateway (multi-model proxy)**: prompts for `AI_GATEWAY_API_KEY`.
    - More detail: [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
+   - **Cloudflare AI Gateway**: prompts for Account ID, Gateway ID, and `CLOUDFLARE_AI_GATEWAY_API_KEY`.
+   - More detail: [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
    - **MiniMax M2.1**: config is auto-written.
    - More detail: [MiniMax](/en/providers/minimax)
    - **Synthetic (Anthropic-compatible)**: prompts for `SYNTHETIC_API_KEY`.
    - More detail: [Synthetic](/en/providers/synthetic)
    - **Moonshot (Kimi K2)**: config is auto-written.
    - **Kimi Coding**: config is auto-written.
-   - More detail: [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
+   - More detail: [Moonshot AI (/en/providers/moonshot)](/providers/moonshot)
    - **Skip**: no auth configured yet.
    - Pick a default model from detected options (or enter provider/model manually).
    - Wizard runs a model check and warns if the configured model is unknown or missing auth.
@@ -127,7 +129,8 @@ Tip: `--json` does **not** imply non-interactive mode. Use `--non-interactive` (
    - [Google Chat](/en/channels/googlechat): service account JSON + webhook audience.
    - [Mattermost](/en/channels/mattermost) (plugin): bot token + base URL.
    - [Signal](/en/channels/signal): optional `signal-cli` install + account config.
-   - [iMessage](/en/channels/imessage): local `imsg` CLI path + DB access.
+   - [BlueBubbles](/en/channels/bluebubbles): **recommended for iMessage**; server URL + password + webhook.
+   - [iMessage](/en/channels/imessage): legacy `imsg` CLI path + DB access.
    - DM security: default is pairing. First DM sends a code; approve via `openclaw pairing approve <channel> <code>` or use allowlists.
 
 6. **Daemon install**
@@ -238,6 +241,19 @@ openclaw onboard --non-interactive \
   --gateway-bind loopback
 ```
 
+Cloudflare AI Gateway example:
+
+```bash
+openclaw onboard --non-interactive \
+  --mode local \
+  --auth-choice cloudflare-ai-gateway-api-key \
+  --cloudflare-ai-gateway-account-id "your-account-id" \
+  --cloudflare-ai-gateway-gateway-id "your-gateway-id" \
+  --cloudflare-ai-gateway-api-key "$CLOUDFLARE_AI_GATEWAY_API_KEY" \
+  --gateway-port 18789 \
+  --gateway-bind loopback
+```
+
 Moonshot example:
 
 ```bash
@@ -329,5 +345,5 @@ will prompt to install it (npm or a local path) before it can be configured.
 
 - macOS app onboarding: [Onboarding](/en/start/onboarding)
 - Config reference: [Gateway configuration](/en/gateway/configuration)
-- Providers: [WhatsApp](/en/channels/whatsapp), [Telegram](/en/channels/telegram), [Discord](/en/channels/discord), [Google Chat](/en/channels/googlechat), [Signal](/en/channels/signal), [iMessage](/en/channels/imessage)
+- Providers: [WhatsApp](/en/channels/whatsapp), [Telegram](/en/channels/telegram), [Discord](/en/channels/discord), [Google Chat](/en/channels/googlechat), [Signal](/en/channels/signal), [BlueBubbles](/en/channels/bluebubbles) (iMessage), [iMessage](/en/channels/imessage) (legacy)
 - Skills: [Skills](/en/tools/skills), [Skills config](/en/tools/skills-config)

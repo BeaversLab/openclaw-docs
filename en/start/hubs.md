@@ -13,11 +13,13 @@ Use these hubs to discover every page, including deep dives and reference docs t
 
 - [Index](/en/)
 - [Getting Started](/en/start/getting-started)
+- [Quick start](/en/start/quickstart)
 - [Onboarding](/en/start/onboarding)
 - [Wizard](/en/start/wizard)
 - [Setup](/en/start/setup)
 - [Dashboard (local Gateway)](http://127.0.0.1:18789/)
 - [Help](/en/help)
+- [Docs directory](/en/start/docs-directory)
 - [Configuration](/en/gateway/configuration)
 - [Configuration examples](/en/gateway/configuration-examples)
 - [OpenClaw assistant](/en/start/openclaw)
@@ -29,11 +31,12 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Docker](/en/install/docker)
 - [Nix](/en/install/nix)
 - [Updating / rollback](/en/install/updating)
-- [Bun workflow (experimental)](/en/install/bun)
+- [Bun workflow (/en/install/bun)](/install/bun)
 
 ## Core concepts
 
 - [Architecture](/en/concepts/architecture)
+- [Features](/en/concepts/features)
 - [Network hub](/en/network)
 - [Agent runtime](/en/concepts/agent)
 - [Agent workspace](/en/concepts/agent-workspace)
@@ -43,7 +46,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Multi-agent routing](/en/concepts/multi-agent)
 - [Compaction](/en/concepts/compaction)
 - [Sessions](/en/concepts/session)
-- [Sessions (alias)](/en/concepts/sessions)
+- [Sessions (/en/concepts/sessions)](/concepts/sessions)
 - [Session pruning](/en/concepts/session-pruning)
 - [Session tools](/en/concepts/session-tool)
 - [Queue](/en/concepts/queue)
@@ -66,12 +69,13 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Model providers hub](/en/providers/models)
 - [WhatsApp](/en/channels/whatsapp)
 - [Telegram](/en/channels/telegram)
-- [Telegram (grammY notes)](/en/channels/grammy)
+- [Telegram (/en/channels/grammy)](/channels/grammy)
 - [Slack](/en/channels/slack)
 - [Discord](/en/channels/discord)
 - [Mattermost](/en/channels/mattermost) (plugin)
 - [Signal](/en/channels/signal)
-- [iMessage](/en/channels/imessage)
+- [BlueBubbles (/en/channels/bluebubbles)](/channels/bluebubbles)
+- [iMessage (/en/channels/imessage)](/channels/imessage)
 - [Location parsing](/en/channels/location)
 - [WebChat](/en/web/webchat)
 - [Webhooks](/en/automation/webhook)
@@ -80,6 +84,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 ## Gateway + operations
 
 - [Gateway runbook](/en/gateway)
+- [Network model](/en/gateway/network-model)
 - [Gateway pairing](/en/gateway/pairing)
 - [Gateway lock](/en/gateway/gateway-lock)
 - [Background process](/en/gateway/background-process)
@@ -111,7 +116,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Agent send CLI](/en/tools/agent-send)
 - [Terminal UI](/en/tui)
 - [Browser control](/en/tools/browser)
-- [Browser (Linux troubleshooting)](/en/tools/browser-linux-troubleshooting)
+- [Browser (/en/tools/browser-linux-troubleshooting)](/tools/browser-linux-troubleshooting)
 - [Polls](/en/automation/poll)
 
 ## Nodes, media, voice
@@ -130,7 +135,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [macOS](/en/platforms/macos)
 - [iOS](/en/platforms/ios)
 - [Android](/en/platforms/android)
-- [Windows (WSL2)](/en/platforms/windows)
+- [Windows (/en/platforms/windows)](/platforms/windows)
 - [Linux](/en/platforms/linux)
 - [Web surfaces](/en/web)
 
@@ -150,7 +155,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [macOS remote](/en/platforms/mac/remote)
 - [macOS signing](/en/platforms/mac/signing)
 - [macOS release](/en/platforms/mac/release)
-- [macOS gateway (launchd)](/en/platforms/mac/bundled-gateway)
+- [macOS gateway (/en/platforms/mac/bundled-gateway)](/platforms/mac/bundled-gateway)
 - [macOS XPC](/en/platforms/mac/xpc)
 - [macOS skills](/en/platforms/mac/skills)
 - [macOS Peekaboo](/en/platforms/mac/peekaboo)
@@ -176,6 +181,10 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Group policy hardening notes](/en/experiments/plans/group-policy-hardening)
 - [Research: memory](/en/experiments/research/memory)
 - [Model config exploration](/en/experiments/proposals/model-config)
+
+## Project
+
+- [Credits](/en/reference/credits)
 
 ## Testing + release
 

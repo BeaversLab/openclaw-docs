@@ -198,6 +198,6 @@ details, see [Gateway protocol](/en/gateway/protocol).
 ## Related docs
 
 - [Gateway runbook](/en/gateway)
-- [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
+- [Gateway (/en/platforms/mac/bundled-gateway)](/platforms/mac/bundled-gateway)
 - [macOS permissions](/en/platforms/mac/permissions)
 - [Canvas](/en/platforms/mac/canvas)

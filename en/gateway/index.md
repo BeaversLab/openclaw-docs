@@ -127,7 +127,7 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b opencla
 
 ## Protocol (operator view)
 
-- Full docs: [Gateway protocol](/en/gateway/protocol) and [Bridge protocol (legacy)](/en/gateway/bridge-protocol).
+- Full docs: [Gateway protocol](/en/gateway/protocol) and [Bridge protocol (/en/gateway/bridge-protocol)](/gateway/bridge-protocol).
 - Mandatory first frame from client: `req {type:"req", id, method:"connect", params:{minProtocol,maxProtocol,client:{id,displayName?,version,platform,deviceFamily?,modelIdentifier?,mode,instanceId?}, caps, auth?, locale?, userAgent? } }`.
 - Gateway replies `res {type:"res", id, ok:true, payload:hello-ok }` (or `ok:false` with an error, then closes).
 - After handshake:
