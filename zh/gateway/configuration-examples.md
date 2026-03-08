@@ -1,19 +1,19 @@
 ---
-summary: "与当前 schema 对齐的常见 OpenClaw 配置示例"
+summary: "常见 OpenClaw 设置的模式准确配置示例"
 read_when:
-  - 学习如何配置 OpenClaw
-  - 查找配置示例
-  - 首次设置 OpenClaw
+  - "学习如何配置 OpenClaw"
+  - "查找配置示例"
+  - "首次设置 OpenClaw"
 title: "配置示例"
 ---
 
 # 配置示例
 
-以下示例与当前配置 schema 对齐。完整参考与逐字段说明见 [配置](/zh/gateway/configuration)。
+下面的示例与当前配置模式一致。有关详尽的参考和每字段说明，请参阅[配置](/zh/gateway/configuration)。
 
 ## 快速开始
 
-### 绝对最小
+### 绝对最小配置
 
 ```json5
 {
@@ -22,9 +22,9 @@ title: "配置示例"
 }
 ```
 
-保存到 `~/.openclaw/openclaw.json`，即可从该号码私聊 bot。
+保存到 `~/.openclaw/openclaw.json`，您就可以从该号码私信机器人。
 
-### 推荐入门
+### 推荐的起始配置
 
 ```json5
 {
@@ -48,7 +48,7 @@ title: "配置示例"
 
 ## 扩展示例（主要选项）
 
-> JSON5 允许注释与尾随逗号。普通 JSON 也可用。
+> JSON5 允许您使用注释和尾随逗号。常规 JSON 也可以。
 
 ```json5
 {
@@ -425,7 +425,7 @@ title: "配置示例"
 
 ## 常见模式
 
-### 多平台配置
+### 多平台设置
 
 ```json5
 {
@@ -446,7 +446,33 @@ title: "配置示例"
 }
 ```
 
-### OAuth + API key 回退
+### 安全私聊模式（共享收件箱/多用户私聊）
+
+如果多个人可以私信您的机器人（`allowFrom` 中有多个条目、多人的配对批准或 `dmPolicy: "open"`），请启用**安全私聊模式**，以便来自不同发送者的私聊默认不会共享一个上下文：
+
+```json5
+{
+  // Secure DM mode (recommended for multi-user or sensitive DM agents)
+  session: { dmScope: "per-channel-peer" },
+
+  channels: {
+    // Example: WhatsApp multi-user inbox
+    whatsapp: {
+      dmPolicy: "allowlist",
+      allowFrom: ["+15555550123", "+15555550124"],
+    },
+
+    // Example: Discord multi-user inbox
+    discord: {
+      enabled: true,
+      token: "YOUR_DISCORD_BOT_TOKEN",
+      dm: { enabled: true, allowFrom: ["alice", "bob"] },
+    },
+  },
+}
+```
+
+### OAuth with API key failover
 
 ```json5
 {
@@ -476,7 +502,7 @@ title: "配置示例"
 }
 ```
 
-### Anthropic 订阅 + API key，MiniMax 回退
+### Anthropic subscription + API key, MiniMax fallback
 
 ```json5
 {
@@ -574,7 +600,7 @@ title: "配置示例"
 
 ## 提示
 
-- 若设置 `dmPolicy: "open"`，对应 `allowFrom` 必须包含 `"*"`。
-- Provider IDs 不同（电话号码、用户 ID、渠道 ID）。请参考 provider 文档确认格式。
-- 可后续添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 深入设置说明见 [提供商](/zh/channels/whatsapp) 与 [故障排查](/zh/gateway/troubleshooting)。
+- 如果您设置 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包括 `"*"`。
+- 提供商 ID 不同（电话号码、用户 ID、频道 ID）。请使用提供商文档确认格式。
+- 稍后可添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
+- 有关更深入的设置说明，请参阅[提供商](/zh/channels/whatsapp)和[故障排除](/zh/gateway/troubleshooting)。

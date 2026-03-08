@@ -78,6 +78,9 @@ openclaw gateway run
 - `--timeout <ms>`：超时/预算（各命令不同）。
 - `--expect-final`：等待 “final” 响应（agent 调用）。
 
+注意：设置 `--url` 时，CLI 不会回退到配置或环境凭证。
+显式传递 `--token` 或 `--password`。缺少显式凭证会报错。
+
 ### `gateway health`
 
 ```bash

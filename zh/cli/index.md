@@ -303,7 +303,7 @@ openclaw [--dev] [--profile <name>] <command>
 - `--non-interactive`
 - `--mode <local|remote>`
 - `--flow <quickstart|advanced|manual>`（manual 是 advanced 的别名）
-- `--auth-choice <setup-token|token|chutes|openai-codex|openai-api-key|openrouter-api-key|ai-gateway-api-key|moonshot-api-key|kimi-code-api-key|synthetic-api-key|venice-api-key|gemini-api-key|zai-api-key|apiKey|minimax-api|minimax-api-lightning|opencode-zen|skip>`
+- `--auth-choice <setup-token|token|chutes|openai-codex|openai-api-key|openrouter-api-key|ai-gateway-api-key|moonshot-api-key|moonshot-api-key-cn|kimi-code-api-key|synthetic-api-key|venice-api-key|gemini-api-key|zai-api-key|apiKey|minimax-api|minimax-api-lightning|opencode-zen|skip>`
 - `--token-provider <id>`（非交互；配合 `--auth-choice token` 使用）
 - `--token <token>`（非交互；配合 `--auth-choice token` 使用）
 - `--token-profile-id <id>`（非交互；默认：`<provider>:manual`）
@@ -714,6 +714,9 @@ openclaw logs --no-color
 ### `gateway <subcommand>`
 
 Gateway CLI 助手（RPC 子命令使用 `--url`、`--token`、`--password`、`--timeout`、`--expect-final`）。
+
+传递 `--url` 时，CLI 不会自动应用配置或环境凭证。
+显式包含 `--token` 或 `--password`。缺少显式凭证会报错。
 
 子命令：
 

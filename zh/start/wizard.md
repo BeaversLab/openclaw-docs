@@ -1,9 +1,9 @@
 ---
-summary: "CLI 引导向导：网关、工作区、渠道、技能的引导式配置"
+summary: "CLI 引导向导：网关、工作区、渠道和技能的引导式设置"
 read_when:
-  - 运行或配置引导向导
-  - 在新机器上设置
-title: "入门向导"
+  - "Running or configuring the onboarding wizard"
+  - "Setting up a new machine"
+title: "引导向导"
 ---
 
 # 引导向导（CLI）
@@ -93,6 +93,8 @@ openclaw agents add <name>
    - **API key**：为你存储 key。
    - **Vercel AI Gateway（多模型代理）**：提示 `AI_GATEWAY_API_KEY`。
    - 详情：[Vercel AI Gateway](/zh/providers/vercel-ai-gateway)
+   - **Cloudflare AI Gateway**：提示输入账号 ID、网关 ID 和 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
+   - 详情：[Cloudflare AI Gateway](/zh/providers/cloudflare-ai-gateway)
    - **MiniMax M2.1**：自动写入配置。
    - 详情：[MiniMax](/zh/providers/minimax)
    - **Synthetic（Anthropic 兼容）**：提示 `SYNTHETIC_API_KEY`。
@@ -110,7 +112,6 @@ openclaw agents add <name>
    - 默认 `~/.openclaw/workspace`（可配置）。
    - 写入代理引导所需的工作区文件。
    - 完整工作区结构 + 备份指南：[代理工作区](/zh/concepts/agent-workspace)
-
 4. **网关**
    - 端口、绑定、认证模式、tailscale 暴露。
    - 认证建议：即便是 loopback 也保持 **Token**，确保本地 WS 客户端必须认证。
@@ -118,13 +119,14 @@ openclaw agents add <name>
    - 非 loopback 绑定仍需要认证。
 
 5. **渠道**
-   - WhatsApp：可选二维码登录。
-   - Telegram：bot token。
-   - Discord：bot token。
-   - Google Chat：服务账号 JSON + webhook audience。
-   - Mattermost（插件）：bot token + base URL。
-   - Signal：可选 `signal-cli` 安装 + 账号配置。
-   - iMessage：本地 `imsg` CLI 路径 + DB 访问。
+   - [WhatsApp](/zh/channels/whatsapp)：可选二维码登录。
+   - [Telegram](/zh/channels/telegram)：bot token。
+   - [Discord](/zh/channels/discord)：bot token。
+   - [Google Chat](/zh/channels/googlechat)：服务账号 JSON + webhook audience。
+   - [Mattermost](/zh/channels/mattermost)（插件）：bot token + base URL。
+   - [Signal](/zh/channels/signal)：可选 `signal-cli` 安装 + 账号配置。
+   - [BlueBubbles](/zh/channels/bluebubbles)：**iMessage 推荐方式**；服务器 URL + 密码 + webhook。
+   - [iMessage](/zh/channels/imessage)：旧版 `imsg` CLI 路径 + DB 访问。
    - 私聊安全：默认是配对。第一次私聊发送代码；用 `openclaw pairing approve <channel> <code>` 批准，或使用 allowlist。
 
 6. **守护进程安装**
@@ -149,43 +151,55 @@ openclaw agents add <name>
    - 如果未检测到 GUI，向导会打印 Control UI 的 SSH 端口转发说明，而不是打开浏览器。
    - 若 Control UI 资源缺失，向导会尝试构建；备用方式是 `pnpm ui:build`（会自动安装 UI 依赖）。
 
-## 远程模式
+8. **技能（推荐）**
+   - 读取可用技能并检查要求。
+   - 让你选择 node 包管理器：**npm / pnpm**（不推荐 bun）。
+   - 安装可选依赖（macOS 上部分使用 Homebrew）。
 
-远程模式配置本地客户端连接到其他地方的网关。
+9. **完成**
+   - 汇总 + 下一步，包括 iOS/Android/macOS 应用以获取额外功能。
 
-需要设置：
-
+- 若未检测到 GUI，向导会打印 Control UI 的 SSH 端口转发说明，而不是打开浏览器。
 - 远程网关 URL（`ws://...`）
-- 如果远程网关需要认证，则提供 Token（推荐）
+
+## 远程模式
 
 说明：
 
-- 不会进行远程安装或守护进程更改。
+将要设置的内容：
+
 - 如果网关仅 loopback，可用 SSH 隧道或 tailnet。
 - 发现提示：
   - macOS：Bonjour（`dns-sd`）
   - Linux：Avahi（`avahi-browse`）
 
+`~/.openclaw/openclaw.json` 中的常见字段：
+
+- 不会执行远程安装或守护进程修改。
+- 如果网关仅限 loopback，请使用 SSH 隧道或 tailnet。
+- 发现提示：
+  - macOS：Bonjour (`dns-sd`)
+  - Linux：Avahi (`avahi-browse`)
+
 ## 添加另一个代理
 
-使用 `openclaw agents add <name>` 创建一个独立代理，拥有自己的工作区、会话和认证档案。
-不带 `--workspace` 运行会启动向导。
+使用 `openclaw agents add <name>` 创建具有自己的工作区、会话和认证档案的独立代理。不带 `--workspace` 运行会启动向导。
 
-它会设置：
+设置内容：
 
 - `agents.list[].name`
 - `agents.list[].workspace`
 - `agents.list[].agentDir`
 
-说明：
+`~/.openclaw/openclaw.json` 中的常见字段：
 
 - 默认工作区遵循 `~/.openclaw/workspace-<agentId>`。
-- 添加 `bindings` 以路由入站消息（向导可完成）。
-- 非交互参数：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
+- 添加 `bindings` 以路由传入消息（向导可以执行此操作）。
+- 非交互标志：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
 
 ## 非交互模式
 
-用 `--non-interactive` 自动化/脚本化引导：
+Vercel AI Gateway 示例：
 
 ```bash
 openclaw onboard --non-interactive \
@@ -199,9 +213,9 @@ openclaw onboard --non-interactive \
   --skip-skills
 ```
 
-添加 `--json` 以获得机器可读摘要。
+Moonshot 示例：
 
-Gemini 示例：
+Synthetic 示例：
 
 ```bash
 openclaw onboard --non-interactive \
@@ -212,7 +226,7 @@ openclaw onboard --non-interactive \
   --gateway-bind loopback
 ```
 
-Z.AI 示例：
+OpenCode Zen 示例：
 
 ```bash
 openclaw onboard --non-interactive \
@@ -223,7 +237,7 @@ openclaw onboard --non-interactive \
   --gateway-bind loopback
 ```
 
-Vercel AI Gateway 示例：
+添加代理（非交互）示例：
 
 ```bash
 openclaw onboard --non-interactive \
@@ -234,7 +248,21 @@ openclaw onboard --non-interactive \
   --gateway-bind loopback
 ```
 
-Moonshot 示例：
+Cloudflare AI Gateway 示例：
+
+```bash
+openclaw onboard --non-interactive \
+  --mode local \
+  --auth-choice cloudflare-ai-gateway-api-key \
+  --cloudflare-ai-gateway-account-id "your-account-id" \
+  --cloudflare-ai-gateway-gateway-id "your-gateway-id" \
+  --cloudflare-ai-gateway-api-key "$CLOUDFLARE_AI_GATEWAY_API_KEY" \
+  --gateway-port 18789 \
+  --gateway-bind loopback
+```
+
+网关通过 RPC 暴露向导流程（`wizard.start`、`wizard.next`、`wizard.cancel`、`wizard.status`）。
+客户端（macOS 应用、Control UI）可以渲染步骤，而无需重新实现引导逻辑。
 
 ```bash
 openclaw onboard --non-interactive \
@@ -256,7 +284,7 @@ openclaw onboard --non-interactive \
   --gateway-bind loopback
 ```
 
-OpenCode Zen 示例：
+向导可从 GitHub releases 安装 `signal-cli`：
 
 ```bash
 openclaw onboard --non-interactive \
@@ -283,29 +311,28 @@ openclaw agents add work \
 网关通过 RPC 暴露向导流程（`wizard.start`、`wizard.next`、`wizard.cancel`、`wizard.status`）。
 客户端（macOS 应用、Control UI）可以渲染步骤，而无需重新实现引导逻辑。
 
-## Signal 设置（signal-cli）
+## Signal 设置 (signal-cli)
 
-向导可从 GitHub releases 安装 `signal-cli`：
+向导可以从 GitHub releases 安装 `signal-cli`：
 
-- 下载对应的 release 资产。
-- 存放到 `~/.openclaw/tools/signal-cli/<version>/`。
-- 将 `channels.signal.cliPath` 写入配置。
-
-说明：
-
-- JVM 版本需要 **Java 21**。
 - 有原生版本时优先使用原生版本。
 - Windows 使用 WSL2；signal-cli 安装按 WSL 内 Linux 流程进行。
-
-## 向导会写入什么
+- 向你的配置写入 `channels.signal.cliPath`。
 
 `~/.openclaw/openclaw.json` 中的常见字段：
 
-- `agents.defaults.workspace`
 - `agents.defaults.model` / `models.providers`（选择 Minimax 时）
 - `gateway.*`（mode、bind、auth、tailscale）
 - `channels.telegram.botToken`、`channels.discord.token`、`channels.signal.*`、`channels.imessage.*`
-- 渠道 allowlist（Slack/Discord/Matrix/Microsoft Teams），在提示中选择后写入（名称会尽量解析为 ID）。
+
+## 向导写入的内容
+
+`openclaw agents add` 会写入 `agents.list[]` 和可选的 `bindings`。
+
+- `agents.defaults.workspace`
+- `agents.defaults.model` / `models.providers`（如果选择了 MiniMax）
+- `gateway.*`（mode、bind、auth、tailscale）
+- `channels.telegram.botToken`、`channels.discord.token`、`channels.signal.*`、`channels.imessage.*`
 - `skills.install.nodeManager`
 - `wizard.lastRunAt`
 - `wizard.lastRunVersion`
@@ -313,16 +340,16 @@ openclaw agents add work \
 - `wizard.lastRunCommand`
 - `wizard.lastRunMode`
 
-`openclaw agents add` 会写入 `agents.list[]` 和可选的 `bindings`。
+`openclaw agents add` 写入 `agents.list[]` 和可选的 `bindings`。
 
-WhatsApp 凭据位于 `~/.openclaw/credentials/whatsapp/<accountId>/`。
-会话存储在 `~/.openclaw/agents/<agentId>/sessions/`。
+WhatsApp 凭据存放在 `~/.openclaw/credentials/whatsapp/<accountId>/` 下。
+会话存储在 `~/.openclaw/agents/<agentId>/sessions/` 下。
 
-部分渠道以插件形式提供。你在引导中选择后，向导会提示安装（npm 或本地路径），之后才能配置。
+部分渠道以插件形式提供。当你在引导期间选择其中之一时，向导会在配置前提示安装（npm 或本地路径）。
 
 ## 相关文档
 
 - macOS 应用引导：[引导](/zh/start/onboarding)
 - 配置参考：[网关配置](/zh/gateway/configuration)
-- 提供商：[WhatsApp](/zh/channels/whatsapp)、[Telegram](/zh/channels/telegram)、[Discord](/zh/channels/discord)、[Google Chat](/zh/channels/googlechat)、[Signal](/zh/channels/signal)、[iMessage](/zh/channels/imessage)
+- 提供商：[WhatsApp](/zh/channels/whatsapp)、[Telegram](/zh/channels/telegram)、[Discord](/zh/channels/discord)、[Google Chat](/zh/channels/googlechat)、[Signal](/zh/channels/signal)、[BlueBubbles](/zh/channels/bluebubbles) (iMessage)、[iMessage](/zh/channels/imessage)（旧版）
 - 技能：[技能](/zh/tools/skills)、[技能配置](/zh/tools/skills-config)

@@ -1,14 +1,18 @@
 ---
-summary: "通过 imsg 支持 iMessage（stdio 上的 JSON-RPC）、设置与 chat_id 路由"
+summary: "旧版 iMessage 支持（通过 imsg 以 stdio 进行 JSON-RPC）。新设置应使用 BlueBubbles。"
 read_when:
   - 设置 iMessage 支持
   - 调试 iMessage 收发
 title: "iMessage"
 ---
 
-# iMessage (imsg)
+# iMessage（旧版：imsg）
 
-状态：外部 CLI 集成。Gateway 会拉起 `imsg rpc`（stdio 上的 JSON-RPC）。
+> **推荐：** 新的 iMessage 设置请使用 [BlueBubbles](/zh/channels/bluebubbles)。
+>
+> `imsg` 渠道是旧版外部 CLI 集成，未来版本可能移除。
+
+状态：旧版外部 CLI 集成。Gateway 会拉起 `imsg rpc`（stdio 上的 JSON-RPC）。
 
 ## 快速设置（新手）
 
@@ -85,7 +89,7 @@ title: "iMessage"
 #!/usr/bin/env bash
 set -euo pipefail
 
-# 先执行一次交互式 SSH 接受 host key：
+# Run an interactive SSH once first to accept host keys:
 #   ssh <bot-macos-user>@localhost true
 exec /usr/bin/ssh -o BatchMode=yes -o ConnectTimeout=5 -T <bot-macos-user>@localhost \
   "/usr/local/bin/imsg" "$@"
@@ -130,8 +134,8 @@ exec ssh -T gateway-host imsg "$@"
 {
   channels: {
     imessage: {
-      cliPath: "~/imsg-ssh", // SSH wrapper 到远程 Mac
-      remoteHost: "user@gateway-host", // 用于 SCP 文件传输
+      cliPath: "~/imsg-ssh", // SSH wrapper to remote Mac
+      remoteHost: "user@gateway-host", // for SCP file transfer
       includeAttachments: true,
     },
   },

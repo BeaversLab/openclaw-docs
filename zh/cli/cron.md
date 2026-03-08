@@ -20,12 +20,22 @@ title: "cron"
 
 在不修改消息的情况下更新投递设置：
 
+注意：隔离的 `cron add` 任务默认为 `--announce` 投递。使用 `--no-deliver` 保持输出内部。`--deliver` 保留为 `--announce` 的已弃用别名。
+
+注意：单次（`--at`）任务默认在成功后删除。使用 `--keep-after-run` 保留它们。
+
 ```bash
-openclaw cron edit <job-id> --deliver --channel telegram --to "123456789"
+openclaw cron edit <job-id> --announce --channel telegram --to "123456789"
 ```
 
 为隔离任务禁用投递：
 
 ```bash
 openclaw cron edit <job-id> --no-deliver
+```
+
+公告到指定频道：
+
+```bash
+openclaw cron edit <job-id> --announce --channel slack --to "channel:C1234567890"
 ```

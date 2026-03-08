@@ -17,6 +17,26 @@ OpenClaw 将**每个 agent 的一个私聊会话**视为主会话。私聊会折
 - `per-account-channel-peer`：按账号 + 渠道 + 发送者隔离（推荐多账号收件箱）。
   使用 `session.identityLinks` 将 provider 前缀的 peer id 映射到统一身份，以便在 `per-peer`、`per-channel-peer` 或 `per-account-channel-peer` 下，同一人跨渠道共享 DM 会话。
 
+### 安全 DM 模式（推荐）
+
+如果你的 agent 会接收**多人**的私聊（配对批准了多个发送者、DM allowlist 有多个条目，或 `dmPolicy: "open"`），请启用**安全 DM 模式**以避免跨用户上下文泄露：
+
+```json5
+// ~/.openclaw/openclaw.json
+{
+  session: {
+    // Secure DM mode: isolate DM context per channel + sender.
+    dmScope: "per-channel-peer",
+  },
+}
+```
+
+说明：
+
+- 默认为 `dmScope: "main"` 以保持连续性（所有 DM 共享主会话）。
+- 对于同渠道的多账号收件箱，优先使用 `per-account-channel-peer`。
+- 如果同一人通过多个渠道联系你，使用 `session.identityLinks` 将其 DM 会话折叠为一个统一身份。
+
 ## Gateway 是事实来源
 
 所有会话状态由 **gateway** 持有（“master” OpenClaw）。UI 客户端（macOS app、WebChat 等）必须向 gateway 查询会话列表与 token 统计，而不是读取本地文件。

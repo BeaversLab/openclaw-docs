@@ -1,52 +1,51 @@
 ---
-summary: "网络枢纽：gateway surface、配对、发现与安全"
-title: "网络"
+summary: "网络中心：网关界面、配对、发现和安全"
 read_when:
-  - 你需要网络架构 + 安全概览
-  - 你在排查本地 vs tailnet 访问或配对
-  - 你想要网络相关文档的权威列表
+  - "您需要网络架构 + 安全概述"
+  - "您正在调试本地与 tailnet 访问或配对"
+  - "您想要网络文档的规范列表"
+title: "网络"
 ---
 
-# Network hub
+# 网络中心
 
-此枢纽链接 OpenClaw 在 localhost、LAN 与 tailnet 中连接、配对与安全的核心文档。
+此中心链接核心文档，介绍 OpenClaw 如何跨 localhost、LAN 和 tailnet 连接、配对和保护设备。
 
 ## 核心模型
 
-- [Gateway 架构](/zh/concepts/architecture)
-- [Gateway 协议](/zh/gateway/protocol)
-- [Gateway 运维手册](/zh/gateway)
-- [Web 界面 + bind modes](/zh/web)
+- [网关架构](/zh/concepts/architecture)
+- [网关协议](/zh/gateway/protocol)
+- [网关运行手册](/zh/gateway)
+- [Web 界面 + 绑定模式](/zh/web)
 
 ## 配对 + 身份
 
-- [配对 overview (DM + nodes)](/zh/start/pairing)
-- [Gateway-owned node pairing](/zh/gateway/pairing)
-- [Devices CLI (pairing + token rotation)](/zh/cli/devices)
-- [Pairing CLI (DM approvals)](/zh/cli/pairing)
+- [配对概述 (/en/start/pairing)](/zh/start/pairing)
+- [网关拥有的节点配对](/zh/gateway/pairing)
+- [设备 CLI (/en/cli/devices)](/zh/cli/devices)
+- [配对 CLI (/en/cli/pairing)](/zh/cli/pairing)
 
 本地信任：
-
-- 本地连接（loopback 或 gateway 主机自身的 tailnet 地址）可以自动批准配对，以保持同机体验顺滑。
-- 非本地 tailnet/LAN 客户端仍需要显式配对批准。
+- 本地连接（环回或网关主机自己的 tailnet 地址）可以自动批准配对，以保持同主机 UX 流畅。
+- 非本地 tailnet/LAN 客户端仍需要明确的配对批准。
 
 ## 发现 + 传输
 
-- [发现 & transports](/zh/gateway/discovery)
+- [发现与传输](/zh/gateway/discovery)
 - [Bonjour / mDNS](/zh/gateway/bonjour)
-- [远程访问 (SSH)](/zh/gateway/remote)
+- [远程访问 (/en/gateway/remote)](/zh/gateway/remote)
 - [Tailscale](/zh/gateway/tailscale)
 
-## Nodes + 传输
+## 节点 + 传输
 
-- [节点 overview](/zh/nodes)
-- [桥接 protocol (legacy nodes)](/zh/gateway/bridge-protocol)
-- [节点 runbook: iOS](/zh/platforms/ios)
-- [节点 runbook: Android](/zh/platforms/android)
+- [节点概述](/zh/nodes)
+- [桥接协议 (/en/gateway/bridge-protocol)](/zh/gateway/bridge-protocol)
+- [节点运行手册：iOS](/zh/platforms/ios)
+- [节点运行手册：Android](/zh/platforms/android)
 
-## Security
+## 安全
 
-- [安全 overview](/zh/gateway/security)
-- [Gateway config reference](/zh/gateway/configuration)
-- [故障排查](/zh/gateway/troubleshooting)
-- [诊断](/zh/gateway/doctor)
+- [安全概述](/zh/gateway/security)
+- [网关配置参考](/zh/gateway/configuration)
+- [故障排除](/zh/gateway/troubleshooting)
+- [诊断工具](/zh/gateway/doctor)

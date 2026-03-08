@@ -61,6 +61,9 @@ openclaw devices revoke --device <deviceId> --role node
 - `--timeout <ms>`：RPC 超时。
 - `--json`：JSON 输出（推荐用于脚本）。
 
+注意：设置 `--url` 时，CLI 不会回退到配置或环境凭证。
+显式传递 `--token` 或 `--password`。缺少显式凭证会报错。
+
 ## 说明
 
 - 轮换会返回新的 token（敏感信息），请视为密钥处理。

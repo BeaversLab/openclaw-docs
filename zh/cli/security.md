@@ -22,5 +22,5 @@ openclaw security audit --deep
 openclaw security audit --fix
 ```
 
-审计会在多个 DM 发送者共享主会话时给出警告，并建议对共享收件箱使用 `session.dmScope="per-channel-peer"`（多账号频道使用 `per-account-channel-peer`）。
+审计会在多个 DM 发送者共享主会话时给出警告，并建议对共享收件箱使用**安全 DM 模式**：`session.dmScope="per-channel-peer"`（多账号频道使用 `per-account-channel-peer`）。
 它也会在未启用 sandbox 且启用了 web/browser 工具时，检测到使用小模型（`<=300B`）并提示警告。

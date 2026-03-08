@@ -1,74 +1,74 @@
 ---
-summary: "通过 SSH 隧道（Gateway WS）与 tailnet 的远程访问"
+summary: “使用 SSH 隧道（网关 WS）和尾网进行远程访问”
 read_when:
-  - 运行或排查远程 gateway 设置
-title: "远程访问"
+  - “Running or troubleshooting remote gateway setups”
+title: “远程访问”
 ---
 
-# 远程访问（SSH、隧道与 tailnet）
+# 远程访问（SSH、隧道和尾网）
 
-本仓库支持“SSH 远程”模式：在专用主机（桌面/服务器）上保持单个 Gateway（master）运行，并将客户端连接到它。
+此仓库通过在专用主机（桌面/服务器）上运行单个网关（主网关）并将客户端连接到它来支持”通过 SSH 远程访问”。
 
-- 对**operators（你 / macOS app）**：SSH 隧道是通用兜底。
-- 对**nodes（iOS/Android 与未来设备）**：连接 Gateway **WebSocket**（视需要走 LAN/tailnet 或 SSH 隧道）。
+- 对于**操作员（你/macOS 应用）**：SSH 隧道是通用的备用方案。
+- 对于**节点（iOS/Android 和未来的设备）**：连接到网关 **WebSocket**（根据需要使用 LAN/尾网或 SSH 隧道）。
 
-## 核心思路
+## 核心概念
 
-- Gateway WebSocket 默认绑定到**loopback**（默认端口 18789）。
-- 远程使用时，通过 SSH 转发该 loopback 端口（或使用 tailnet/VPN 以减少隧道需求）。
+- 网关 WebSocket 绑定到你配置的端口上的**环回**（默认为 18789）。
+- 对于远程使用，你通过 SSH 转发该环回端口（或使用尾网/VPN 并减少隧道）。
 
-## 常见 VPN/tailnet 场景（agent 在哪里）
+## 常见的 VPN/尾网设置（代理所在的位置）
 
-将 **Gateway 主机**视为“agent 所在地”。它拥有 sessions、auth profiles、channels 与 state。
-你的笔记本/桌面（以及 nodes）连接到该主机。
+将**网关主机**视为”代理所在的位置”。它拥有会话、身份验证配置文件、频道和状态。
+你的笔记本电脑/桌面（和节点）连接到该主机。
 
-### 1) Tailnet 中的常驻 Gateway（VPS 或家用服务器）
+### 1) 尾网中的始终运行的网关（VPS 或家庭服务器）
 
-在持久在线主机上运行 Gateway，通过 **Tailscale** 或 SSH 访问。
+在持久主机上运行网关并通过 **Tailscale** 或 SSH 访问它。
 
-- **最佳体验：**保持 `gateway.bind: "loopback"` 并使用 **Tailscale Serve** 提供 Control UI。
-- **兜底：**保持 loopback + SSH 隧道，任何机器都可访问。
-- **示例：**[exe.dev](/zh/platforms/exe-dev)（易用 VM）或 [Hetzner](/zh/platforms/hetzner)（生产 VPS）。
+- **最佳用户体验**：保持 `gateway.bind: "loopback"` 并为控制 UI 使用 **Tailscale Serve**。
+- **备用方案**：保持环回 + 来自任何需要访问的机器的 SSH 隧道。
+- **示例**：[exe.dev](/zh/platforms/exe-dev)（简单 VM）或 [Hetzner](/zh/platforms/hetzner)（生产 VPS）。
 
-适用于你的笔记本经常休眠但希望 agent 常驻的场景。
+当你的笔记本电脑经常休眠但你希望代理始终运行时，这是理想的。
 
-### 2) 家用台式机运行 Gateway，笔记本远程控制
+### 2) 家庭桌面运行网关，笔记本电脑是远程控制
 
-笔记本**不**运行 agent，仅远程连接：
+笔记本电脑**不**运行代理。它远程连接：
 
-- 使用 macOS app 的 **Remote over SSH** 模式（Settings → General → “OpenClaw runs”）。
-- App 会打开并管理隧道，WebChat + 健康检查可直接使用。
+- 使用 macOS 应用的**通过 SSH 远程**模式（设置 → 通用 → “OpenClaw 运行”）。
+- 应用打开并管理隧道，因此 WebChat + 健康检查”正常工作”。
 
-Runbook： [macOS remote access](/zh/platforms/mac/remote)。
+运行手册：[macOS 远程访问](/zh/platforms/mac/remote)。
 
-### 3) 笔记本运行 Gateway，其他机器远程访问
+### 3) 笔记本电脑运行网关，从其他机器远程访问
 
-保持 Gateway 本地，同时安全暴露：
+保持网关本地但安全地暴露它：
 
-- 其他机器用 SSH 隧道连到笔记本，或
-- 用 Tailscale Serve 提供 Control UI，并保持 Gateway 仅 loopback。
+- 从其他机器到笔记本电脑的 SSH 隧道，或
+- 为控制 UI 提供 Tailscale Serve 并保持网关仅环回。
 
-指南： [Tailscale](/zh/gateway/tailscale) 与 [Web overview](/zh/web)。
+指南：[Tailscale](/zh/gateway/tailscale) 和 [Web 概述](/zh/web)。
 
-## 命令流（运行在哪）
+## 命令流（在哪里运行什么）
 
-一个 gateway 服务拥有 state + channels，nodes 作为外设。
+一个网关服务拥有状态 + 频道。节点是外设。
 
-示例流程（Telegram → node）：
+流示例（Telegram → 节点）：
 
-- Telegram 消息到达 **Gateway**。
-- Gateway 运行 **agent** 并决定是否调用 node 工具。
-- Gateway 通过 Gateway WebSocket 调用 **node**（`node.*` RPC）。
-- Node 返回结果；Gateway 回复 Telegram。
+- Telegram 消息到达**网关**。
+- 网关运行**代理**并决定是否调用节点工具。
+- 网关通过网关 WebSocket（`node.*` RPC）调用**节点**。
+- 节点返回结果；网关回复回 Telegram。
 
-注：
+注意：
 
-- **Nodes 不运行 gateway 服务。**除非你明确运行隔离 profile，否则每台主机只运行一个 gateway（见 [多 Gateway](/zh/gateway/multiple-gateways)）。
-- macOS app 的 “node mode” 只是 Gateway WebSocket 上的 node 客户端。
+- **节点不运行网关服务。** 每个主机只应运行一个网关，除非你有意运行隔离的配置文件（参见[多个网关](/zh/gateway/multiple-gateways)）。
+- macOS 应用”节点模式”只是通过网关 WebSocket 的节点客户端。
 
-## SSH 隧道（CLI + tools）
+## SSH 隧道（CLI + 工具）
 
-建立到远端 Gateway WS 的本地隧道：
+创建到远程网关 WS 的本地隧道：
 
 ```bash
 ssh -N -L 18789:127.0.0.1:18789 user@host
@@ -76,14 +76,16 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 
 隧道建立后：
 
-- `openclaw health` 与 `openclaw status --deep` 会通过 `ws://127.0.0.1:18789` 访问远端 gateway。
-- `openclaw gateway {status,health,send,agent,call}` 也可在需要时用 `--url` 指向转发地址。
+- `openclaw health` 和 `openclaw status --deep` 现在通过 `ws://127.0.0.1:18789` 到达远程网关。
+- `openclaw gateway {status,health,send,agent,call}` 也可以在需要时通过 `--url` 定向转发的 URL。
 
-注：将 `18789` 替换为你的 `gateway.port`（或 `--port`/`OPENCLAW_GATEWAY_PORT`）。
+注意：将 `18789` 替换为你配置的 `gateway.port`（或 `--port`/`OPENCLAW_GATEWAY_PORT`）。
+注意：当你传递 `--url` 时，CLI 不会回退到配置或环境凭据。
+明确包含 `--token` 或 `--password`。缺少明确的凭据是错误的。
 
 ## CLI 远程默认值
 
-可持久化远程目标，使 CLI 默认使用：
+你可以持久化远程目标，以便 CLI 命令默认使用它：
 
 ```json5
 {
@@ -97,31 +99,31 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 }
 ```
 
-当 gateway 仅 loopback 绑定时，URL 保持 `ws://127.0.0.1:18789`，并先建立 SSH 隧道。
+当网关仅环回时，将 URL 保持在 `ws://127.0.0.1:18789` 并首先打开 SSH 隧道。
 
-## Chat UI over SSH
+## 通过 SSH 的聊天 UI
 
-WebChat 不再使用独立 HTTP 端口。SwiftUI Chat UI 直接连接 Gateway WebSocket。
+WebChat 不再使用单独的 HTTP 端口。SwiftUI 聊天 UI 直接连接到网关 WebSocket。
 
-- 通过 SSH 转发 `18789`（见上），然后让客户端连接 `ws://127.0.0.1:18789`。
-- 在 macOS 上，优先使用 app 的 “Remote over SSH” 模式（自动管理隧道）。
+- 通过 SSH 转发 `18789`（见上文），然后将客户端连接到 `ws://127.0.0.1:18789`。
+- 在 macOS 上，首选应用的”通过 SSH 远程”模式，该模式自动管理隧道。
 
-## macOS app “Remote over SSH”
+## macOS 应用”通过 SSH 远程”
 
-macOS 菜单栏 app 可端到端驱动该设置（远程状态检查、WebChat、Voice Wake 转发）。
+macOS 菜单栏应用可以端到端驱动相同的设置（远程状态检查、WebChat 和语音唤醒转发）。
 
-Runbook： [macOS remote access](/zh/platforms/mac/remote)。
+运行手册：[macOS 远程访问](/zh/platforms/mac/remote)。
 
-## 安全规则（remote/VPN）
+## 安全规则（远程/VPN）
 
-简版：**除非确定需要，否则保持 Gateway 仅 loopback**。
+简短版本：**保持网关仅环回**，除非你确定需要绑定。
 
-- **Loopback + SSH/Tailscale Serve** 是最安全默认（无公网暴露）。
-- **非 loopback 绑定**（`lan`/`tailnet`/`custom`，或 loopback 不可用时的 `auto`）必须使用 auth token/password。
-- `gateway.remote.token` **仅**用于远程 CLI 调用 — **不会**启用本地认证。
-- `gateway.remote.tlsFingerprint` 在使用 `wss://` 时固定远端 TLS 证书。
-- **Tailscale Serve** 在 `gateway.auth.allowTailscale: true` 时可通过身份头认证。
-  若要强制 token/password，请设为 `false`。
-- 将浏览器控制视为 operator 访问：仅 tailnet + 明确 node 配对。
+- **环回 + SSH/Tailscale Serve** 是最安全的默认设置（无公共暴露）。
+- **非环回绑定**（`lan`/`tailnet`/`custom`，或在环回不可用时使用 `auto`）必须使用身份验证令牌/密码。
+- `gateway.remote.token` **仅**用于远程 CLI 调用 — 它**不**启用本地身份验证。
+- `gateway.remote.tlsFingerprint` 在使用 `wss://` 时固定远程 TLS 证书。
+- **Tailscale Serve** 可以在 `gateway.auth.allowTailscale: true` 时通过身份标头进行身份验证。
+  如果你想要令牌/密码，请将其设置为 `false`。
+- 像对待操作员访问一样对待浏览器控制：仅尾网 + 故意的节点配对。
 
-深入说明： [安全](/zh/gateway/security)。
+深入探讨：[安全性](/zh/gateway/security)。

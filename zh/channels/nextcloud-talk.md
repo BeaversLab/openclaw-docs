@@ -71,6 +71,7 @@ openclaw plugins install ./extensions/nextcloud-talk
   - `openclaw pairing list nextcloud-talk`
   - `openclaw pairing approve nextcloud-talk <CODE>`
 - 公共私聊：`channels.nextcloud-talk.dmPolicy="open"` 且 `channels.nextcloud-talk.allowFrom=["*"]`。
+- `allowFrom` 仅匹配 Nextcloud 用户 ID；显示名会被忽略。
 
 ## 房间（群组）
 

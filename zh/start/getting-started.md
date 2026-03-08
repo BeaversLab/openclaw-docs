@@ -174,7 +174,7 @@ openclaw pairing approve whatsapp <code>
 git clone https://github.com/openclaw/openclaw.git
 cd openclaw
 pnpm install
-pnpm ui:build # 首次运行会自动安装 UI 依赖
+pnpm ui:build # auto-installs UI deps on first run
 pnpm build
 openclaw onboard --install-daemon
 ```

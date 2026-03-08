@@ -36,7 +36,7 @@ requireMention? yes -> mentioned? no -> store for context only
 otherwise -> reply
 ```
 
-![Group message flow](/zh/images/groups-flow.svg)
+![Group message flow](/images/groups-flow.svg)
 
 如果你想...
 | 目标 | 需要设置 |

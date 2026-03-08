@@ -142,12 +142,12 @@ Crypto 状态按账号 + access token 存在：
   - `openclaw pairing list matrix`
   - `openclaw pairing approve matrix <CODE>`
 - 公共私聊：`channels.matrix.dm.policy="open"` 且 `channels.matrix.dm.allowFrom=["*"]`。
-- `channels.matrix.dm.allowFrom` 可接受用户 ID 或显示名。向导在可用目录搜索时会将显示名解析为用户 ID。
+- `channels.matrix.dm.allowFrom` 可接受完整 Matrix 用户 ID（如 `@user:server`）。向导在目录搜索找到单个精确匹配时将显示名解析为用户 ID。
 
 ## 房间（群组）
 
 - 默认：`channels.matrix.groupPolicy = "allowlist"`（提及门控）。若未设置，可用 `channels.defaults.groupPolicy` 覆盖默认值。
-- 使用 `channels.matrix.groups` allowlist 房间（room ID、别名或名称）：
+- 使用 `channels.matrix.groups` allowlist 房间（room ID 或别名；名称在目录搜索找到单个精确匹配时解析为 ID）：
 
 ```json5
 {
@@ -166,10 +166,10 @@ Crypto 状态按账号 + access token 存在：
 
 - `requireMention: false` 可在该房间启用自动回复。
 - `groups."*"` 可设置全局提及门控默认值。
-- `groupAllowFrom` 可限制哪些发送者可在房间中触发 bot（可选）。
-- 每房间 `users` allowlist 可进一步限制该房间的发送者。
-- 配置向导会提示设置房间 allowlist（room ID、别名或名称），并在可能时解析名称。
-- 启动时，OpenClaw 会将 allowlist 中的房间/用户名称解析为 ID 并记录映射；无法解析的条目保留原样。
+- `groupAllowFrom` 可限制哪些发送者可在房间中触发 bot（完整 Matrix 用户 ID）。
+- 每房间 `users` allowlist 可进一步限制该房间的发送者（使用完整 Matrix 用户 ID）。
+- 配置向导会提示设置房间 allowlist（room ID、别名或名称），仅在找到单个精确匹配时解析名称。
+- 启动时，OpenClaw 会将 allowlist 中的房间/用户名称解析为 ID 并记录映射；无法解析的条目在 allowlist 匹配时被忽略。
 - 邀请默认自动加入；用 `channels.matrix.autoJoin` 与 `channels.matrix.autoJoinAllowlist` 控制。
 - 若要**禁止所有房间**，设置 `channels.matrix.groupPolicy: "disabled"`（或保持空 allowlist）。
 - 旧键：`channels.matrix.rooms`（与 `groups` 结构相同）。
@@ -214,9 +214,9 @@ Provider 选项：
 - `channels.matrix.textChunkLimit`：出站文本分块大小（字符）。
 - `channels.matrix.chunkMode`：`length`（默认）或 `newline`（按空行分段再分块）。
 - `channels.matrix.dm.policy`：`pairing | allowlist | open | disabled`（默认：pairing）。
-- `channels.matrix.dm.allowFrom`：私聊 allowlist（用户 ID 或显示名）。`open` 需要 `"*"`。向导会在可能时解析名称。
+- `channels.matrix.dm.allowFrom`：私聊 allowlist（完整 Matrix 用户 ID）。`open` 需要 `"*"`。向导会在可能时解析名称。
 - `channels.matrix.groupPolicy`：`allowlist | open | disabled`（默认：allowlist）。
-- `channels.matrix.groupAllowFrom`：群聊允许的发送者。
+- `channels.matrix.groupAllowFrom`：群聊允许的发送者（完整 Matrix 用户 ID）。
 - `channels.matrix.allowlistOnly`：强制私聊 + 房间走 allowlist 规则。
 - `channels.matrix.groups`：群 allowlist + 房间配置 map。
 - `channels.matrix.rooms`：旧版群 allowlist/config。

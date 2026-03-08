@@ -1,49 +1,49 @@
 ---
-summary: "Gateway 服务运行手册、生命周期与运维"
+summary: "网关服务的运行手册、生命周期和操作"
 read_when:
-  - 运行或调试 gateway 进程
-title: "Gateway 运维手册"
+  - "Running or debugging the gateway process"
+title: "网关运行手册"
 ---
 
-# Gateway 服务 runbook
+# 网关服务运行手册
 
 最后更新：2025-12-09
 
-## 它是什么
+## 是什么
 
-- 始终在线的进程，拥有单一 Baileys/Telegram 连接与控制/事件平面。
-- 取代旧 `gateway` 命令。CLI 入口：`openclaw gateway`。
-- 运行直到被停止；遇到致命错误时以非 0 退出以便 supervisor 重启。
+- 拥有单一 Baileys/Telegram 连接和控制/事件平面的始终运行进程。
+- 取代传统的 `gateway` 命令。CLI 入口点：`openclaw gateway`。
+- 运行直到停止；在致命错误时以非零退出，以便监督程序重新启动它。
 
 ## 如何运行（本地）
 
 ```bash
 openclaw gateway --port 18789
-# 输出到 stdio 的完整 debug/trace 日志：
+# for full debug/trace logs in stdio:
 openclaw gateway --port 18789 --verbose
-# 端口被占用时，终止监听后再启动：
+# if the port is busy, terminate listeners then start:
 openclaw gateway --force
-# 开发循环（TS 变更自动重载）：
+# dev loop (auto-reload on TS changes):
 pnpm gateway:watch
 ```
 
-- Config 热重载监听 `~/.openclaw/openclaw.json`（或 `OPENCLAW_CONFIG_PATH`）。
-  - 默认模式：`gateway.reload.mode="hybrid"`（安全变更热应用，关键变更重启）。
-  - 必要时通过 **SIGUSR1** 触发进程内重启。
-  - 用 `gateway.reload.mode="off"` 禁用。
-- WebSocket 控制平面默认绑定 `127.0.0.1:<port>`（默认 18789）。
-- 同一端口也提供 HTTP（Control UI、hooks、A2UI）。单端口复用。
-  - OpenAI Chat Completions（HTTP）：[`/v1/chat/completions`](/zh/gateway/openai-http-api)。
-  - OpenResponses（HTTP）：[`/v1/responses`](/zh/gateway/openresponses-http-api)。
-  - Tools Invoke（HTTP）：[`/tools/invoke`](/zh/gateway/tools-invoke-http-api)。
-- 默认在 `canvasHost.port` 启动 Canvas 文件服务（默认 `18793`），从 `~/.openclaw/workspace/canvas` 提供 `http://<gateway-host>:18793/__openclaw__/canvas/`。可用 `canvasHost.enabled=false` 或 `OPENCLAW_SKIP_CANVAS_HOST=1` 禁用。
-- 日志写入 stdout；用 launchd/systemd 保活并轮转日志。
-- 排障时用 `--verbose` 将日志文件中的调试日志（握手、req/res、events）镜像到 stdio。
-- `--force` 使用 `lsof` 查找端口监听，发送 SIGTERM，记录杀掉的进程后启动 gateway（若缺少 `lsof` 则快速失败）。
-- 在 supervisor（launchd/systemd/mac app 子进程）下运行时，停止/重启通常发送 **SIGTERM**；旧版本可能显示为 `pnpm` `ELIFECYCLE` 退出码 **143**（SIGTERM），这是正常关闭而非崩溃。
-- **SIGUSR1** 会在授权时触发进程内重启（gateway 工具/config apply/update，或启用 `commands.restart` 的手动重启）。
-- 默认需要 gateway 认证：设置 `gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）或 `gateway.auth.password`。客户端需在 `connect.params.auth.token/password` 中发送，除非使用 Tailscale Serve 身份。
-- 向导现在默认生成 token，即使是 loopback。
+- 配置热重载监视 `~/.openclaw/openclaw.json`（或 `OPENCLAW_CONFIG_PATH`）。
+  - 默认模式：`gateway.reload.mode="hybrid"`（热应用安全更改，关键时重启）。
+  - 热重载在需要时通过 **SIGUSR1** 使用进程内重启。
+  - 使用 `gateway.reload.mode="off"` 禁用。
+- 将 WebSocket 控制平面绑定到 `127.0.0.1:<port>`（默认 18789）。
+- 同一端口也提供 HTTP（控制 UI、hooks、A2UI）。单端口多路复用。
+  - OpenAI Chat Completions (HTTP)：[`/v1/chat/completions`](/zh/gateway/openai-http-api)。
+  - OpenResponses (HTTP)：[`/v1/responses`](/zh/gateway/openresponses-http-api)。
+  - Tools Invoke (HTTP)：[`/tools/invoke`](/zh/gateway/tools-invoke-http-api)。
+- 默认情况下在 `canvasHost.port`（默认 `18793`）上启动 Canvas 文件服务器，从 `~/.openclaw/workspace/canvas` 提供 `http://<gateway-host>:18793/__openclaw__/canvas/`。使用 `canvasHost.enabled=false` 或 `OPENCLAW_SKIP_CANVAS_HOST=1` 禁用。
+- 日志输出到 stdout；使用 launchd/systemd 保持其运行并轮换日志。
+- 传递 `--verbose` 以在故障排除时将调试日志（握手、请求/响应、事件）从日志文件镜像到 stdio。
+- `--force` 使用 `lsof` 查找所选端口上的监听器，发送 SIGTERM，记录其终止的内容，然后启动网关（如果 `lsof` 缺失则快速失败）。
+- 如果你在监督程序下运行（launchd/systemd/mac 应用子进程模式），停止/重启通常会发送 **SIGTERM**；旧版本可能将其显示为 `pnpm` `ELIFECYCLE` 退出代码 **143** (SIGTERM)，这是正常关机，不是崩溃。
+- **SIGUSR1** 在授权时触发进程内重启（网关工具/配置应用/更新，或启用 `commands.restart` 进行手动重启）。
+- 默认情况下需要网关身份验证：设置 `gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）或 `gateway.auth.password`。除非使用 Tailscale Serve 身份，否则客户端必须发送 `connect.params.auth.token/password`。
+- 向导现在默认生成令牌，即使在环回上。
 - 端口优先级：`--port` > `OPENCLAW_GATEWAY_PORT` > `gateway.port` > 默认 `18789`。
 
 ## 远程访问
@@ -52,37 +52,37 @@ pnpm gateway:watch
   ```bash
   ssh -N -L 18789:127.0.0.1:18789 user@host
   ```
-- 客户端通过隧道连接 `ws://127.0.0.1:18789`。
-- 若配置了 token，客户端即使通过隧道也必须在 `connect.params.auth.token` 中携带。
+- 然后客户端通过隧道连接到 `ws://127.0.0.1:18789`。
+- 如果配置了令牌，即使通过隧道，客户端也必须在 `connect.params.auth.token` 中包含它。
 
-## 多个 Gateway（同一主机）
+## 多个网关（同一主机）
 
-通常不需要：一个 Gateway 可服务多个消息渠道与 agents。仅在冗余或严格隔离（例如救援 bot）时使用多个 Gateway。
+通常不需要：一个网关可以为多个消息频道和代理提供服务。仅在冗余或严格隔离时使用多个网关（例如：救援机器人）。
 
-支持方式：隔离 state + config 并使用唯一端口。完整指南见 [多 Gateway](/zh/gateway/multiple-gateways)。
+如果你隔离状态 + 配置并使用唯一端口，则支持。完整指南：[多个网关](/zh/gateway/multiple-gateways)。
 
-服务名支持 profile：
+服务名称支持配置文件：
 
-- macOS：`bot.molt.<profile>`（旧 `com.openclaw.*` 可能仍存在）
+- macOS：`bot.molt.<profile>`（传统的 `com.openclaw.*` 可能仍然存在）
 - Linux：`openclaw-gateway-<profile>.service`
 - Windows：`OpenClaw Gateway (<profile>)`
 
-安装元数据写入服务配置：
+安装元数据嵌入在服务配置中：
 
 - `OPENCLAW_SERVICE_MARKER=openclaw`
 - `OPENCLAW_SERVICE_KIND=gateway`
 - `OPENCLAW_SERVICE_VERSION=<version>`
 
-救援 bot 模式：保持第二个 Gateway 使用独立 profile、state dir、workspace 与基础端口间隔。完整指南： [Rescue-bot guide](/zh/gateway/multiple-gateways#rescue-bot-guide)。
+救援机器人模式：保持第二个网关隔离，具有自己的配置文件、状态目录、工作区和基础端口间距。完整指南：[救援机器人指南](/zh/gateway/multiple-gateways#rescue-bot-guide)。
 
-### Dev profile（`--dev`）
+### 开发配置文件（`--dev`）
 
-快速通道：运行完全隔离的 dev 实例（config/state/workspace），不影响主环境。
+快速路径：运行完全隔离的开发实例（配置/状态/工作区），而无需触及主设置。
 
 ```bash
 openclaw --dev setup
 openclaw --dev gateway --allow-unconfigured
-# 然后指向 dev 实例：
+# then target the dev instance:
 openclaw --dev status
 openclaw --dev health
 ```
@@ -91,27 +91,28 @@ openclaw --dev health
 
 - `OPENCLAW_STATE_DIR=~/.openclaw-dev`
 - `OPENCLAW_CONFIG_PATH=~/.openclaw-dev/openclaw.json`
-- `OPENCLAW_GATEWAY_PORT=19001`（Gateway WS + HTTP）
-- 浏览器控制服务端口 = `19003`（派生：`gateway.port+2`，仅 loopback）
+- `OPENCLAW_GATEWAY_PORT=19001`（网关 WS + HTTP）
+<!-- /i18n:todo -->
+- 浏览器控制服务端口 = `19003`（派生：`gateway.port+2`，仅环回）
 - `canvasHost.port=19005`（派生：`gateway.port+4`）
 - 当你在 `--dev` 下运行 `setup`/`onboard` 时，`agents.defaults.workspace` 默认变为 `~/.openclaw/workspace-dev`。
 
-派生端口（经验规则）：
+派生端口（经验法则）：
 
 - 基础端口 = `gateway.port`（或 `OPENCLAW_GATEWAY_PORT` / `--port`）
-- 浏览器控制服务端口 = 基础 + 2（仅 loopback）
-- `canvasHost.port = base + 4`（或 `OPENCLAW_CANVAS_HOST_PORT` / config 覆盖）
-- 浏览器 profile 的 CDP 端口从 `browser.controlPort + 9 .. + 108` 自动分配（按 profile 持久化）。
+- 浏览器控制服务端口 = 基础端口 + 2（仅环回）
+- `canvasHost.port = base + 4`（或 `OPENCLAW_CANVAS_HOST_PORT` / 配置覆盖）
+- 浏览器配置文件 CDP 端口从 `browser.controlPort + 9 .. + 108` 自动分配（每个配置文件持久化）。
 
-每个实例检查清单：
+每个实例的检查清单：
 
-- 唯一 `gateway.port`
-- 唯一 `OPENCLAW_CONFIG_PATH`
-- 唯一 `OPENCLAW_STATE_DIR`
-- 唯一 `agents.defaults.workspace`
-- 分离 WhatsApp 号码（若使用 WA）
+- 唯一的 `gateway.port`
+- 唯一的 `OPENCLAW_CONFIG_PATH`
+- 唯一的 `OPENCLAW_STATE_DIR`
+- 唯一的 `agents.defaults.workspace`
+- 分开的 WhatsApp 号码（如果使用 WA）
 
-按 profile 安装服务：
+每个配置文件的服务安装：
 
 ```bash
 openclaw --profile main gateway install
@@ -125,92 +126,91 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a opencla
 OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
 ```
 
-## 协议（运营视角）
+## 协议（操作员视图）
 
-- 完整文档： [Gateway 协议](/zh/gateway/protocol) 与 [桥接 protocol（旧）](/zh/gateway/bridge-protocol)。
-- 客户端首帧必须是 `req {type:"req", id, method:"connect", params:{minProtocol,maxProtocol,client:{id,displayName?,version,platform,deviceFamily?,modelIdentifier?,mode,instanceId?}, caps, auth?, locale?, userAgent? } }`。
-- Gateway 回复 `res {type:"res", id, ok:true, payload:hello-ok }`（或 `ok:false` + error 后关闭）。
+- 完整文档：[网关协议](/zh/gateway/protocol) 和 [网桥协议 (/en/gateway/bridge-protocol)](/zh/gateway/bridge-protocol)。
+- 客户端必须的第一帧：`req {type:"req", id, method:"connect", params:{minProtocol,maxProtocol,client:{id,displayName?,version,platform,deviceFamily?,modelIdentifier?,mode,instanceId?}, caps, auth?, locale?, userAgent? } }`。
+- 网关回复 `res {type:"res", id, ok:true, payload:hello-ok }`（或 `ok:false` 并带有错误，然后关闭）。
 - 握手后：
-  - Requests: `{type:"req", id, method, params}` → `{type:"res", id, ok, payload|error}`
-  - Events: `{type:"event", event, payload, seq?, stateVersion?}`
-- 结构化 presence 条目：`{host, ip, version, platform?, deviceFamily?, modelIdentifier?, mode, lastInputSeconds?, ts, reason?, tags?[], instanceId? }`（对 WS 客户端，`instanceId` 来自 `connect.client.instanceId`）。
-- `agent` 响应是两阶段：先 `res` ack `{runId,status:"accepted"}`，运行结束后再返回最终 `res` `{runId,status:"ok"|"error",summary}`；流式输出以 `event:"agent"` 发送。
+  - 请求：`{type:"req", id, method, params}` → `{type:"res", id, ok, payload|error}`
+  - 事件：`{type:"event", event, payload, seq?, stateVersion?}`
+- 结构化存在条目：`{host, ip, version, platform?, deviceFamily?, modelIdentifier?, mode, lastInputSeconds?, ts, reason?, tags?[], instanceId? }`（对于 WS 客户端，`instanceId` 来自 `connect.client.instanceId`）。
+- `agent` 响应分两个阶段：首先是 `res` ack `{runId,status:"accepted"}`，然后是运行完成后的最终 `res` `{runId,status:"ok"|"error",summary}`；流式输出以 `event:"agent"` 到达。
 
-## 方法（初始集合）
+## 方法（初始集）
 
-- `health` — 完整健康快照（与 `openclaw health --json` 同形）。
+- `health` — 完整的健康快照（与 `openclaw health --json` 形状相同）。
 - `status` — 简短摘要。
-- `system-presence` — 当前 presence 列表。
-- `system-event` — 发送 presence/system 注记（结构化）。
-- `send` — 通过活动渠道发送消息。
-- `agent` — 运行 agent 回合（在同连接上流式事件）。
-- `node.list` — 列出已配对 + 当前连接的 nodes（包含 `caps`、`deviceFamily`、`modelIdentifier`、`paired`、`connected` 与声明的 `commands`）。
-- `node.describe` — 描述 node（能力 + 支持的 `node.invoke` 命令；适用于已配对与当前连接的未配对 node）。
-- `node.invoke` — 调用 node 命令（例如 `canvas.*`、`camera.*`）。
+- `system-presence` — 当前存在列表。
+- `system-event` — 发布存在/系统注释（结构化）。
+- `send` — 通过活动频道发送消息。
+- `agent` — 运行代理轮次（在同一连接上回流事件）。
+- `node.list` — 列出已配对 + 当前连接的节点（包括 `caps`、`deviceFamily`、`modelIdentifier`、`paired`、`connected` 和广播的 `commands`）。
+- `node.describe` — 描述节点（功能 + 支持的 `node.invoke` 命令；适用于已配对节点和当前连接的未配对节点）。
+- `node.invoke` — 在节点上调用命令（例如 `canvas.*`、`camera.*`）。
 - `node.pair.*` — 配对生命周期（`request`、`list`、`approve`、`reject`、`verify`）。
 
-另见：[Presence](/zh/concepts/presence) 了解 presence 的生成/去重以及稳定 `client.instanceId` 的重要性。
+另请参见：[Presence](/zh/concepts/presence) 了解如何生成/去重存在以及为什么稳定的 `client.instanceId` 很重要。
 
 ## 事件
 
-- `agent` — agent 运行中的工具/输出事件（带 seq）。
-- `presence` — presence 更新（带 stateVersion 的增量），推送给所有连接客户端。
-- `tick` — 周期性 keepalive/no-op。
-- `shutdown` — Gateway 即将退出；payload 含 `reason` 与可选 `restartExpectedMs`。客户端应重连。
+- `agent` — 来自代理运行的流式工具/输出事件（seq 标记）。
+- `presence` — 存在更新（带有 stateVersion 的增量）推送到所有连接的客户端。
+- `tick` — 周期性保活/无操作以确认活动状态。
+- `shutdown` — 网关正在退出；载荷包括 `reason` 和可选的 `restartExpectedMs`。客户端应该重新连接。
 
 ## WebChat 集成
 
-- WebChat 是原生 SwiftUI UI，直接通过 Gateway WebSocket 获取历史、发送/中止与事件。
-- 远程使用走同一 SSH/Tailscale 隧道；若配置了 gateway token，客户端在 `connect` 中携带。
-- macOS app 通过单一 WS 连接；初始快照注入 presence，并监听 `presence` 事件更新 UI。
+- WebChat 是一个原生 SwiftUI UI，直接与网关 WebSocket 对话以获取历史记录、发送、中止和事件。
+- 远程使用通过相同的 SSH/Tailscale 隧道；如果配置了网关令牌，客户端在 `connect` 期间包含它。
+- macOS 应用通过单个 WS（共享连接）连接；它从初始快照水合存在，并监听 `presence` 事件以更新 UI。
+## 类型检查和验证
 
-## Typing 与校验
-
-- 服务器用 AJV 对每个入站 frame 进行 JSON Schema 校验（从协议定义生成）。
-- 客户端（TS/Swift）消费生成的类型（TS 直接使用；Swift 通过仓库生成器）。
-- 协议定义是事实来源；重生成 schema/models：
+- 服务器使用 AJV 根据从协议定义发出的 JSON Schema 验证每个入站帧。
+- 客户端（TS/Swift）使用生成的类型（TS 直接使用；Swift 通过仓库的生成器）。
+- 协议定义是真实来源；使用以下命令重新生成 schema/model：
   - `pnpm protocol:gen`
   - `pnpm protocol:gen:swift`
 
 ## 连接快照
 
-- `hello-ok` 包含 `snapshot`（`presence`、`health`、`stateVersion`、`uptimeMs`）以及 `policy {maxPayload,maxBufferedBytes,tickIntervalMs}`，使客户端无需额外请求即可立即渲染。
-- `health`/`system-presence` 仍可用于手动刷新，但并非连接时必需。
+- `hello-ok` 包含 `snapshot`，具有 `presence`、`health`、`stateVersion` 和 `uptimeMs` 以及 `policy {maxPayload,maxBufferedBytes,tickIntervalMs}`，因此客户端可以立即渲染而无需额外请求。
+- `health`/`system-presence` 仍可用于手动刷新，但在连接时不需要。
 
-## 错误码（res.error 形态）
+## 错误代码（res.error 形状）
 
 - 错误使用 `{ code, message, details?, retryable?, retryAfterMs? }`。
-- 标准码：
-  - `NOT_LINKED` — WhatsApp 未认证。
-  - `AGENT_TIMEOUT` — agent 未在截止时间内响应。
-  - `INVALID_REQUEST` — schema/参数校验失败。
-  - `UNAVAILABLE` — Gateway 正在关闭或依赖不可用。
+- 标准代码：
+  - `NOT_LINKED` — WhatsApp 未通过身份验证。
+  - `AGENT_TIMEOUT` — 代理未在配置的截止时间内响应。
+  - `INVALID_REQUEST` — schema/param 验证失败。
+  - `UNAVAILABLE` — 网关正在关闭或依赖项不可用。
 
-## Keepalive 行为
+## 保活行为
 
-- 周期性发送 `tick`（或 WS ping/pong）以保持客户端知道 Gateway 存活。
-- send/agent 的 ack 仍是独立响应；不要让 tick 承担该职责。
+- `tick` 事件（或 WS ping/pong）定期发出，以便客户端即使在没有流量时也知道网关处于活动状态。
+- 发送/代理确认保持单独的响应；不要使发送过载。
 
-## 重放 / 缺口
+## 重放/差距
 
-- 事件不会重放。客户端检测到 seq 缺口后应刷新（`health` + `system-presence`）再继续。WebChat 与 macOS 客户端现会在缺口时自动刷新。
+- 事件不会重放。客户端检测 seq 差距，应该在继续之前刷新（`health` + `system-presence`）。WebChat 和 macOS 客户端现在在差距时自动刷新。
 
 ## 监督（macOS 示例）
 
-- 使用 launchd 保活：
-  - Program：`openclaw` 路径
-  - Arguments：`gateway`
-  - KeepAlive: true
+- 使用 launchd 保持服务运行：
+  - 程序：`openclaw` 的路径
+  - 参数：`gateway`
+  - KeepAlive：true
   - StandardOut/Err：文件路径或 `syslog`
-- 失败时 launchd 自动重启；致命配置错误应持续退出以提醒运营者。
-- LaunchAgents 按用户生效且需登录；无头部署使用自定义 LaunchDaemon（不随包发布）。
+- 失败时，launchd 重新启动；致命的错误配置应该保持退出，以便操作员注意到。
+- LaunchAgents 是每个用户的，需要登录会话；对于无头设置，使用自定义 LaunchDaemon（未附带）。
   - `openclaw gateway install` 写入 `~/Library/LaunchAgents/bot.molt.gateway.plist`
-    （或 `bot.molt.<profile>.plist`；旧 `com.openclaw.*` 会清理）。
-  - `openclaw doctor` 会审计 LaunchAgent 配置并可更新到当前默认值。
+    （或 `bot.molt.<profile>.plist`；传统的 `com.openclaw.*` 被清理）。
+  - `openclaw doctor` 审计 LaunchAgent 配置，可以将其更新为当前默认值。
 
-## Gateway 服务管理（CLI）
+## 网关服务管理（CLI）
 
-使用 Gateway CLI 进行安装/启动/停止/重启/状态：
+使用网关 CLI 进行安装/启动/停止/重启/状态查询：
 
 ```bash
 openclaw gateway status
@@ -220,37 +220,42 @@ openclaw gateway restart
 openclaw logs --follow
 ```
 
-注：
+注意：
 
-- `gateway status` 默认通过服务解析出的端口/配置探测 Gateway RPC（可用 `--url` 覆盖）。
-- `gateway status --deep` 额外扫描系统级配置（LaunchDaemons/system units）。
-- `gateway status --no-probe` 跳过 RPC 探测（网络异常时有用）。
+- `gateway status` 默认使用服务解析的端口/配置探测网关 RPC（使用 `--url` 覆盖）。
+- `gateway status --deep` 添加系统级扫描（LaunchDaemons/system units）。
+- `gateway status --no-probe` 跳过 RPC 探测（当网络关闭时很有用）。
 - `gateway status --json` 对脚本稳定。
-- `gateway status` 分开报告**supervisor 运行状态**（launchd/systemd 运行）与**RPC 可达性**（WS connect + status RPC）。
-- `gateway status` 会打印 config 路径与探测目标，避免“localhost vs LAN bind”混淆及 profile 不匹配。
-- `gateway status` 在服务看起来运行但端口关闭时包含最后一行 gateway 错误。
-- `logs` 通过 RPC 跟踪 Gateway 文件日志（无需手动 `tail`/`grep`）。
-- 若检测到其他 gateway-like 服务，CLI 会告警，除非它们是 OpenClaw profile 服务。
-  我们仍推荐多数场景**每台机器一个 gateway**；冗余或救援 bot 使用隔离 profile/端口。见 [多 Gateway](/zh/gateway/multiple-gateways)。
-  - 清理：`openclaw gateway uninstall`（当前服务）与 `openclaw doctor`（旧迁移）。
-- `gateway install` 在已安装时为 no-op；使用 `openclaw gateway install --force` 重新安装（profile/env/path 变更）。
+- `gateway status` 分别报告**监督程序运行时**（launchd/systemd 运行）和**RPC 可达性**（WS 连接 + 状态 RPC）。
+- `gateway status` 打印配置路径 + 探测目标，以避免”localhost vs LAN 绑定”混淆和配置文件不匹配。
+- `gateway status` 包含最后的网关错误行，当服务看起来正在运行但端口关闭时。
+- `logs` 通过 RPC 跟踪网关文件日志（不需要手动 `tail`/`grep`）。
+- 如果检测到其他类似网关的服务，CLI 会警告，除非它们是 OpenClaw 配置文件服务。
+  我们仍然建议大多数设置使用**每台机器一个网关**；使用隔离的配置文件/端口进行冗余或救援机器人。参见[多个网关](/zh/gateway/multiple-gateways)。
+  - 清理：`openclaw gateway uninstall`（当前服务）和 `openclaw doctor`（传统迁移）。
+- `gateway install` 在已安装时是空操作；使用 `openclaw gateway install --force` 重新安装（配置文件/环境/路径更改）。
 
-Bundled mac app：
+捆绑的 mac 应用：
 
-- OpenClaw.app 可打包 Node-based gateway relay 并安装 per-user LaunchAgent，标签为
-  `bot.molt.gateway`（或 `bot.molt.<profile>`；旧 `com.openclaw.*` 标签仍可干净卸载）。
-- 需要干净停止时，使用 `openclaw gateway stop`（或 `launchctl bootout gui/$UID/bot.molt.gateway`）。
-- 重启使用 `openclaw gateway restart`（或 `launchctl kickstart -k gui/$UID/bot.molt.gateway`）。
-  - `launchctl` 仅在已安装 LaunchAgent 时可用；否则先用 `openclaw gateway install`。
-  - 运行具名 profile 时将标签替换为 `bot.molt.<profile>`。
+- OpenClaw.app 可以捆绑基于 Node 的网关中继，并安装标记为
+  `bot.molt.gateway` 的每个用户的 LaunchAgent
+  （或 `bot.molt.<profile>`；传统的 `com.openclaw.*` 标签仍然可以干净地卸载）。
+- 要干净地停止它，请使用 `openclaw gateway stop`（或 `launchctl bootout gui/$UID/bot.molt.gateway`）。
+- 要重新启动，请使用 `openclaw gateway restart`（或 `launchctl kickstart -k gui/$UID/bot.molt.gateway`）。
+  - `launchctl` 仅在安装了 LaunchAgent 时有效；否则首先使用 `openclaw gateway install`。
+  - 运行命名配置文件时，将标签替换为 `bot.molt.<profile>`。
 
-## 监督（systemd 用户单元）
+## Supervision (systemd user unit)
 
-OpenClaw 在 Linux/WSL2 默认安装 **systemd 用户服务**。单用户机器推荐用户服务（环境更简单、按用户配置）。多用户或常驻服务器建议使用**系统服务**（无需 linger、共享 supervision）。
+OpenClaw installs a **systemd user service** by default on Linux/WSL2. We
+recommend user services for single-user machines (simpler env, per-user config).
+Use a **system service** for multi-user or always-on servers (no lingering
+required, shared supervision).
 
-`openclaw gateway install` 写入用户单元。`openclaw doctor` 会审计单元并更新为推荐默认值。
+`openclaw gateway install` writes the user unit. `openclaw doctor` audits the
+unit and can update it to match the current recommended defaults.
 
-创建 `~/.config/systemd/user/openclaw-gateway[-<profile>].service`：
+Create `~/.config/systemd/user/openclaw-gateway[-<profile>].service`:
 
 ```
 [Unit]
@@ -269,53 +274,56 @@ WorkingDirectory=/home/youruser
 WantedBy=default.target
 ```
 
-启用 linger（需要，确保用户服务在注销/空闲后存活）：
+启用 lingering（必需，以便用户服务在注销/空闲后继续运行）：
 
 ```
 sudo loginctl enable-linger youruser
 ```
 
-Onboarding 会在 Linux/WSL2 上执行此操作（可能提示 sudo；写入 `/var/lib/systemd/linger`）。
+Onboarding 在 Linux/WSL2 上运行此命令（可能会提示 sudo；写入 `/var/lib/systemd/linger`）。
 然后启用服务：
 
 ```
 systemctl --user enable --now openclaw-gateway[-<profile>].service
 ```
 
-**替代方案（系统服务）**：常驻或多用户服务器可安装 systemd **system** 单元（无需 linger）。创建 `/etc/systemd/system/openclaw-gateway[-<profile>].service`（复制上面的单元，改 `WantedBy=multi-user.target`，设置 `User=` + `WorkingDirectory=`），然后：
+**替代方案（系统服务）** - 对于始终运行或多用户服务器，你可以
+安装 systemd **系统**单元而不是用户单元（不需要 lingering）。
+创建 `/etc/systemd/system/openclaw-gateway[-<profile>].service`（复制上面的单元，
+切换 `WantedBy=multi-user.target`，设置 `User=` + `WorkingDirectory=`），然后：
 
 ```
 sudo systemctl daemon-reload
 sudo systemctl enable --now openclaw-gateway[-<profile>].service
 ```
 
-## Windows（WSL2）
+## Windows (WSL2)
 
-Windows 安装应使用 **WSL2** 并遵循上面的 Linux systemd 章节。
+Windows 安装应使用 **WSL2** 并按照上面的 Linux systemd 部分。
 
-## 运行检查
+## 操作检查
 
-- 存活性：打开 WS 并发送 `req:connect` → 期望 `res` 且 `payload.type="hello-ok"`（含 snapshot）。
-- 就绪性：调用 `health` → 期望 `ok: true` 且在适用时 `linkChannel` 已链接。
-- 调试：订阅 `tick` 与 `presence` 事件；确保 `status` 显示链接/认证年龄；presence 条目显示 Gateway 主机与连接客户端。
+- 活动性：打开 WS 并发送 `req:connect` → 期望 `res` 带有 `payload.type="hello-ok"`（带有快照）。
+- 就绪性：调用 `health` → 期望 `ok: true` 和 `linkChannel` 中的链接频道（如适用）。
+- 调试：订阅 `tick` 和 `presence` 事件；确保 `status` 显示链接/身份验证时间；存在条目显示网关主机和连接的客户端。
 
 ## 安全保证
 
-- 默认每台主机一个 Gateway；若运行多个 profile，隔离端口/状态并指向正确实例。
-- 不回退到直接 Baileys 连接；Gateway 不可用时发送会快速失败。
-- 非 connect 首帧或错误 JSON 会被拒绝并关闭 socket。
-- 优雅关闭：关闭前发送 `shutdown` 事件；客户端需处理 close + 重连。
+- 默认假设每个主机一个网关；如果运行多个配置文件，请隔离端口/状态并定位正确的实例。
+- 不会回退到直接 Baileys 连接；如果网关关闭，发送会快速失败。
+- 非连接的第一帧或格式错误的 JSON 将被拒绝，并且套接字将关闭。
+- 优雅关闭：在关闭之前发出 `shutdown` 事件；客户端必须处理关闭 + 重新连接。
 
-## CLI 辅助
+## CLI 辅助工具
 
-- `openclaw gateway health|status` — 通过 Gateway WS 请求 health/status。
-- `openclaw message send --target <num> --message "hi" [--media ...]` — 通过 Gateway 发送（WhatsApp 可幂等）。
-- `openclaw agent --message "hi" --to <num>` — 运行 agent 回合（默认等待最终响应）。
-- `openclaw gateway call <method> --params '{"k":"v"}'` — 调试用原始方法调用器。
-- `openclaw gateway stop|restart` — 停止/重启受监督的 gateway 服务（launchd/systemd）。
-- Gateway 辅助子命令假定 `--url` 上已有运行的 gateway；不再自动启动。
+- `openclaw gateway health|status` — 通过网关 WS 请求健康/状态。
+- `openclaw message send --target <num> --message "hi" [--media ...]` — 通过网关发送（对于 WhatsApp 是幂等的）。
+- `openclaw agent --message "hi" --to <num>` — 运行代理轮次（默认等待最终结果）。
+- `openclaw gateway call <method> --params '{"k":"v"}'` — 用于调试的原始方法调用器。
+- `openclaw gateway stop|restart` — 停止/重启受监督的网关服务（launchd/systemd）。
+- 网关辅助子命令假定在 `--url` 上运行一个网关；它们不再自动生成一个。
 
-## 迁移指引
+## 迁移指导
 
-- 弃用 `openclaw gateway` 的旧 TCP 控制端口。
-- 更新客户端以使用 WS 协议（强制 connect + 结构化 presence）。
+- 停止使用 `openclaw gateway` 和传统的 TCP 控制端口。
+- 更新客户端以使用 WS 协议进行强制连接和结构化存在。

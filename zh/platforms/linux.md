@@ -1,60 +1,60 @@
 ---
-title: "Linux 应用"
-summary: "Linux 支持 + 伴侣应用状态"
+summary: "Linux 支持和配套应用状态"
 read_when:
-  - 查看 Linux 伴侣应用状态
-  - 规划平台覆盖或贡献
+  - "查找 Linux 配套应用状态"
+  - "规划平台覆盖或贡献"
+title: "Linux 应用"
 ---
 
-# Linux App
+# Linux 应用
 
-Gateway 在 Linux 上完全支持。**推荐运行时是 Node**。
-不推荐用 Bun 作为 Gateway 运行时（WhatsApp/Telegram 有 bug）。
+网关在 Linux 上完全支持。**Node 是推荐的运行时**。
+不建议为网关使用 Bun（WhatsApp/Telegram 错误）。
 
-原生 Linux 伴侣应用在规划中。如果你愿意参与建设，欢迎贡献。
+原生 Linux 配套应用正在计划中。如果您想帮助构建一个，欢迎贡献。
 
-## 新手快速路径（VPS）
+## 初学者快速路径（VPS）
 
 1. 安装 Node 22+
 2. `npm i -g openclaw@latest`
 3. `openclaw onboard --install-daemon`
-4. 在笔记本上：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
-5. 打开 `http://127.0.0.1:18789/` 并粘贴 token
+4. 从您的笔记本电脑：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
+5. 打开 `http://127.0.0.1:18789/` 并粘贴您的令牌
 
-VPS 逐步指南：[exe.dev](/zh/platforms/exe-dev)
+分步 VPS 指南：[exe.dev](/zh/platforms/exe-dev)
 
 ## 安装
 
-- [入门指南](/zh/start/getting-started)
-- [安装 & updates](/zh/install/updating)
-- 可选流程：[Bun（实验性）](/zh/install/bun)、[Nix](/zh/install/nix)、[Docker](/zh/install/docker)
+- [入门](/zh/start/getting-started)
+- [安装和更新](/zh/install/updating)
+- 可选流程：[Bun (/en/install/bun)](/zh/install/bun)、[Nix](/zh/install/nix)、[Docker](/zh/install/docker)
 
-## Gateway
+## 网关
 
-- [Gateway 运维手册](/zh/gateway)
+- [网关运行手册](/zh/gateway)
 - [配置](/zh/gateway/configuration)
 
-## Gateway 服务安装（CLI）
+## 网关服务安装（CLI）
 
-使用以下方式之一：
+使用以下任一方式：
 
 ```
 openclaw onboard --install-daemon
 ```
 
-或：
+或者：
 
 ```
 openclaw gateway install
 ```
 
-或：
+或者：
 
 ```
 openclaw configure
 ```
 
-提示时选择 **Gateway service**。
+提示时选择**网关服务**。
 
 修复/迁移：
 
@@ -62,12 +62,11 @@ openclaw configure
 openclaw doctor
 ```
 
-## 系统控制（systemd user unit）
+## 系统控制（systemd 用户单元）
 
-OpenClaw 默认安装 systemd **user** 服务。共享或常驻服务器建议改用 **system** 服务。
-完整 unit 示例与指导见 [Gateway 运维手册](/zh/gateway)。
+OpenClaw 默认安装 systemd **用户**服务。对于共享或始终在线的服务器，使用**系统**服务。完整的单元示例和指南位于[网关运行手册](/zh/gateway)。
 
-最小配置：
+最小设置：
 
 创建 `~/.config/systemd/user/openclaw-gateway[-<profile>].service`：
 
@@ -86,7 +85,7 @@ RestartSec=5
 WantedBy=default.target
 ```
 
-启用：
+启用它：
 
 ```
 systemctl --user enable --now openclaw-gateway[-<profile>].service

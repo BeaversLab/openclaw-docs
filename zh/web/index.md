@@ -1,30 +1,28 @@
 ---
-title: "Web"
-summary: "Gateway Web 面：Control UI、绑定模式与安全"
+summary: "网关 Web 界面：控制界面、绑定模式和安全"
 read_when:
-  - 你想通过 Tailscale 访问 Gateway
-  - 你需要浏览器 Control UI 与配置编辑
+  - "您想通过 Tailscale 访问网关"
+  - "您想要浏览器控制界面和配置编辑"
+title: "Web"
 ---
 
-# 网页（网关）
+# Web（网关）
 
-Gateway 在与 WebSocket 相同的端口提供一个小型 **浏览器 Control UI**（Vite + Lit）：
+网关从与网关 WebSocket 相同的端口提供一个小的**浏览器控制界面**（Vite + Lit）：
 
 - 默认：`http://<host>:18789/`
-- 可选前缀：设置 `gateway.controlUi.basePath`（如 `/openclaw`）
+- 可选前缀：设置 `gateway.controlUi.basePath`（例如 `/openclaw`）
 
-能力见 [控制界面](/zh/web/control-ui)。
-本页重点是绑定模式、安全与 Web 暴露面。
+功能位于[控制界面](/zh/web/control-ui)。
+此页面专注于绑定模式、安全和面向 Web 的界面。
 
 ## Webhooks
 
-当 `hooks.enabled=true` 时，Gateway 也会在同一 HTTP 服务器上暴露 webhook 端点。
-认证与 payload 见 [Gateway 配置](/zh/gateway/configuration) → `hooks`。
+当 `hooks.enabled=true` 时，网关还在同一 HTTP 服务器上公开一个小的 webhook 端点。参阅[网关配置](/zh/gateway/configuration) → `hooks` 了解身份验证 + 负载。
 
-## Config（默认开启）
+## 配置（默认开启）
 
-当 assets 存在（`dist/control-ui`）时，Control UI **默认启用**。
-可通过配置控制：
+当资产存在时（`dist/control-ui`），控制界面**默认启用**。您可以通过配置控制它：
 
 ```json5
 {
@@ -38,7 +36,7 @@ Gateway 在与 WebSocket 相同的端口提供一个小型 **浏览器 Control U
 
 ### 集成 Serve（推荐）
 
-保持 Gateway 在回环，让 Tailscale Serve 代理：
+将网关保持在环回上，让 Tailscale Serve 代理它：
 
 ```json5
 {
@@ -49,7 +47,7 @@ Gateway 在与 WebSocket 相同的端口提供一个小型 **浏览器 Control U
 }
 ```
 
-然后启动 gateway：
+然后启动网关：
 
 ```bash
 openclaw gateway
@@ -57,9 +55,9 @@ openclaw gateway
 
 打开：
 
-- `https://<magicdns>/`（或你配置的 `gateway.controlUi.basePath`）
+- `https://<magicdns>/`（或您配置的 `gateway.controlUi.basePath`）
 
-### Tailnet 绑定 + token
+### Tailnet 绑定 + 令牌
 
 ```json5
 {
@@ -71,7 +69,7 @@ openclaw gateway
 }
 ```
 
-然后启动 gateway（非回环绑定需要 token）：
+然后启动网关（非环回绑定需要令牌）：
 
 ```bash
 openclaw gateway
@@ -79,9 +77,9 @@ openclaw gateway
 
 打开：
 
-- `http://<tailscale-ip>:18789/`（或你配置的 `gateway.controlUi.basePath`）
+- `http://<tailscale-ip>:18789/`（或您配置的 `gateway.controlUi.basePath`）
 
-### 公网（Funnel）
+### 公共互联网（Funnel）
 
 ```json5
 {
@@ -93,18 +91,19 @@ openclaw gateway
 }
 ```
 
-## 安全说明
+## 安全备注
 
-- Gateway 认证默认必需（token/password 或 Tailscale 身份头）。
-- 非回环绑定仍 **需要** 共享 token/password（`gateway.auth` 或环境变量）。
-- 向导默认生成 gateway token（即使在回环）。
+- 默认需要网关身份验证（令牌/密码或 Tailscale 身份头）。
+- 非环回绑定仍然**需要**共享令牌/密码（`gateway.auth` 或环境变量）。
+- 向导默认生成网关令牌（即使在环回上）。
 - UI 发送 `connect.params.auth.token` 或 `connect.params.auth.password`。
-- 在 Serve 模式下，若 `gateway.auth.allowTailscale` 为 `true`，Tailscale 身份头可满足认证（无需 token/password）。若要强制凭据，设 `gateway.auth.allowTailscale: false`。见 [Tailscale](/zh/gateway/tailscale) 与 [安全](/zh/gateway/security)。
+- 控制界面发送反点击劫持头，并且除非设置了 `gateway.controlUi.allowedOrigins`，否则仅接受同源浏览器 websocket 连接。
+- 使用 Serve 时，当 `gateway.auth.allowTailscale` 为 `true` 时，Tailscale 身份头可以满足身份验证（不需要令牌/密码）。设置 `gateway.auth.allowTailscale: false` 以需要显式凭证。参阅[Tailscale](/zh/gateway/tailscale) 和[安全](/zh/gateway/security)。
 - `gateway.tailscale.mode: "funnel"` 需要 `gateway.auth.mode: "password"`（共享密码）。
 
 ## 构建 UI
 
-Gateway 从 `dist/control-ui` 提供静态文件。构建：
+网关从 `dist/control-ui` 提供静态文件。使用以下命令构建它们：
 
 ```bash
 pnpm ui:build # auto-installs UI deps on first run

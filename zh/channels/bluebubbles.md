@@ -40,6 +40,81 @@ title: "BlueBubbles"
      },
    }
    ```
+
+## 保持 Messages.app 活跃（VM / 无头设置）
+
+某些 macOS VM / always-on 设置可能会导致 Messages.app 进入"闲置"状态（传入事件停止，直到应用被打开/切换到前台）。一个简单的解决方法是使用 AppleScript + LaunchAgent **每 5 分钟唤醒一次 Messages**。
+
+### 1) 保存 AppleScript
+
+保存为：
+
+- `~/Scripts/poke-messages.scpt`
+
+示例脚本（非交互式；不会抢占焦点）：
+
+```applescript
+try
+  tell application "Messages"
+    if not running then
+      launch
+    end if
+
+    -- Touch the scripting interface to keep the process responsive.
+    set _chatCount to (count of chats)
+  end tell
+on error
+  -- Ignore transient failures (first-run prompts, locked session, etc).
+end try
+```
+
+### 2) 安装 LaunchAgent
+
+保存为：
+
+- `~/Library/LaunchAgents/com.user.poke-messages.plist`
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.user.poke-messages</string>
+
+    <key>ProgramArguments</key>
+    <array>
+      <string>/bin/bash</string>
+      <string>-lc</string>
+      <string>/usr/bin/osascript "$HOME/Scripts/poke-messages.scpt"</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StartInterval</key>
+    <integer>300</integer>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/poke-messages.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/poke-messages.err</string>
+  </dict>
+</plist>
+```
+
+说明：
+
+- 这将**每 300 秒运行一次**并在**登录时**运行。
+- 首次运行可能会触发 macOS **Automation** 提示（`osascript` → Messages）。在与运行 LaunchAgent 相同的用户会话中批准这些提示。
+
+加载它：
+
+```bash
+launchctl unload ~/Library/LaunchAgents/com.user.poke-messages.plist 2>/dev/null || true
+launchctl load ~/Library/LaunchAgents/com.user.poke-messages.plist
+```
+
 4. 将 BlueBubbles webhook 指向你的 gateway（例如：`https://your-gateway-host:3000/bluebubbles-webhook?password=<password>`）。
 5. 启动 gateway；它会注册 webhook 处理器并开始配对。
 
@@ -122,7 +197,7 @@ BlueBubbles 支持群聊提及门控，行为与 iMessage/WhatsApp 一致：
 {
   channels: {
     bluebubbles: {
-      sendReadReceipts: false, // 禁用已读回执
+      sendReadReceipts: false, // disable read receipts
     },
   },
 }
@@ -137,7 +212,7 @@ BlueBubbles 支持群聊提及门控，行为与 iMessage/WhatsApp 一致：
   channels: {
     bluebubbles: {
       actions: {
-        reactions: true, // tapbacks（默认：true）
+        reactions: true, // tapbacks (default: true)
         edit: true, // 编辑已发送消息（macOS 13+，macOS 26 Tahoe 上不可用）
         unsend: true, // 撤回消息（macOS 13+）
         reply: true, // 按消息 GUID 回复线程
@@ -193,7 +268,7 @@ OpenClaw 可能会提供*短*消息 ID（例如 `1`、`2`）以节省 token。
 {
   channels: {
     bluebubbles: {
-      blockStreaming: true, // 启用分块流式（默认关闭）
+      blockStreaming: true, // enable block streaming (off by default)
     },
   },
 }

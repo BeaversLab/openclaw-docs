@@ -129,7 +129,7 @@ OpenClaw 可显示或隐藏模型推理：
 
 出站消息格式由 `messages` 集中控制：
 
-- `messages.responsePrefix`（出站前缀）与 `channels.whatsapp.messagePrefix`（WhatsApp 入站前缀）
+- `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix`（出站前缀级联），以及 `channels.whatsapp.messagePrefix`（WhatsApp 入站前缀）
 - 通过 `replyToMode` 与渠道默认值进行回复串线
 
 详情： [配置](/zh/gateway/configuration#messages) 与各渠道文档。
