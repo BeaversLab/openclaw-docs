@@ -6,7 +6,9 @@
       "Bash(test:*)",
       "Bash(ls:*)",
       "Bash(grep:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(chmod +x:*)",
+      "Bash(npx bmi18n-plan:*)"
     ]
   }
 }

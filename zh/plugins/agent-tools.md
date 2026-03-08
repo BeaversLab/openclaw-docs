@@ -52,7 +52,7 @@ export default function (api) {
         return { content: [{ type: "text", text: params.pipeline }] };
       },
     },
-    { optional: true }
+    { optional: true },
   );
 }
 ```
@@ -67,9 +67,9 @@ export default function (api) {
         id: "main",
         tools: {
           allow: [
-            "workflow_tool", // 指定工具名
-            "workflow", // 插件 id（启用该插件所有工具）
-            "group:plugins", // 所有插件工具
+            "workflow_tool", // specific tool name
+            "workflow", // plugin id (enables all tools from that plugin)
+            "group:plugins", // all plugin tools
           ],
         },
       },

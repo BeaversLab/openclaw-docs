@@ -38,8 +38,8 @@ MiniMax 在 M2.1 中强调以下改进：
 启用捆绑的 OAuth 插件并完成认证：
 
 ```bash
-openclaw plugins enable minimax-portal-auth  # 若已加载可跳过
-openclaw gateway restart  # 若 gateway 已运行需重启
+openclaw plugins enable minimax-portal-auth  # skip if already loaded.
+openclaw gateway restart  # restart if gateway is already running
 openclaw onboard --auth-choice minimax-portal
 ```
 

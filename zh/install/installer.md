@@ -18,7 +18,7 @@ OpenClaw 提供两个安装脚本（由 `openclaw.ai` 提供）：
 查看当前 flags/行为：
 
 ```bash
-curl -fsSL https://openclaw.bot/install.sh | bash -s -- --help
+curl -fsSL https://openclaw.ai/install.sh | bash -s -- --help
 ```
 
 Windows（PowerShell）帮助：
@@ -46,7 +46,7 @@ Windows（PowerShell）帮助：
 如果你*想要* `sharp` 链接全局安装的 libvips（或在调试），设置：
 
 ```bash
-SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL https://openclaw.bot/install.sh | bash
+SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
 ### 可发现性 / “git install” 提示
@@ -79,7 +79,7 @@ SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL https://openclaw.bot/install.sh | bash
 帮助：
 
 ```bash
-curl -fsSL https://openclaw.bot/install-cli.sh | bash -s -- --help
+curl -fsSL https://openclaw.ai/install-cli.sh | bash -s -- --help
 ```
 
 ## install.ps1（Windows PowerShell）
@@ -103,7 +103,7 @@ iwr -useb https://openclaw.ai/install.ps1 | iex -InstallMethod git
 ```
 
 ```powershell
-iwr -useb https://openclaw.ai/install.ps1 | iex -InstallMethod git -GitDir "C:\openclaw"
+iwr -useb https://openclaw.ai/install.ps1 | iex -InstallMethod git -GitDir "C:\\openclaw"
 ```
 
 环境变量：

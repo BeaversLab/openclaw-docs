@@ -59,32 +59,32 @@ title: "树莓派"
 
 ```bash
 ssh user@gateway-host
-# 或使用 IP
+# or use the IP address
 ssh user@192.168.x.x
 ```
 
 ## 3) 系统设置
 
 ```bash
-# 更新系统
+# Update system
 sudo apt update && sudo apt upgrade -y
 
-# 安装必需包
+# Install essential packages
 sudo apt install -y git curl build-essential
 
-# 设置时区（对 cron/提醒很重要）
-sudo timedatectl set-timezone America/Chicago  # 改成你的时区
+# Set timezone (important for cron/reminders)
+sudo timedatectl set-timezone America/Chicago  # Change to your timezone
 ```
 
 ## 4) 安装 Node.js 22（ARM64）
 
 ```bash
-# 通过 NodeSource 安装 Node.js
+# Install Node.js via NodeSource
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
 
-# 验证
-node --version  # 应显示 v22.x.x
+# Verify
+node --version  # Should show v22.x.x
 npm --version
 ```
 
@@ -93,16 +93,16 @@ npm --version
 Swap 可避免内存不足崩溃：
 
 ```bash
-# 创建 2GB swap 文件
+# Create 2GB swap file
 sudo fallocate -l 2G /swapfile
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
 
-# 持久化
+# Make permanent
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
-# 优化低内存（降低 swappiness）
+# Optimize for low RAM (reduce swappiness)
 echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
 ```
@@ -143,13 +143,13 @@ openclaw onboard --install-daemon
 ## 8) 验证安装
 
 ```bash
-# 查看状态
+# Check status
 openclaw status
 
-# 查看服务
+# Check service
 sudo systemctl status openclaw
 
-# 查看日志
+# View logs
 journalctl -u openclaw -f
 ```
 
@@ -158,21 +158,21 @@ journalctl -u openclaw -f
 Pi 是 headless，用 SSH 隧道：
 
 ```bash
-# 在你的笔记本/台式机
+# From your laptop/desktop
 ssh -L 18789:localhost:18789 user@gateway-host
 
-# 然后在浏览器打开
+# Then open in browser
 open http://localhost:18789
 ```
 
 或使用 Tailscale 进行常驻访问：
 
 ```bash
-# 在 Pi 上
+# On the Pi
 curl -fsSL https://tailscale.com/install.sh | sh
 sudo tailscale up
 
-# 更新配置
+# Update config
 openclaw config set gateway.bind tailnet
 sudo systemctl restart openclaw
 ```
@@ -186,7 +186,7 @@ sudo systemctl restart openclaw
 SD 卡慢且易损。USB SSD 性能提升明显：
 
 ```bash
-# 查看是否从 USB 启动
+# Check if booting from USB
 lsblk
 ```
 
@@ -195,23 +195,23 @@ lsblk
 ### 降低内存占用
 
 ```bash
-# 禁用 GPU 内存分配（headless）
+# Disable GPU memory allocation (headless)
 echo 'gpu_mem=16' | sudo tee -a /boot/config.txt
 
-# 若不需要蓝牙
+# Disable Bluetooth if not needed
 sudo systemctl disable bluetooth
 ```
 
 ### 监控资源
 
 ```bash
-# 查看内存
+# Check memory
 free -h
 
-# 查看 CPU 温度
+# Check CPU temperature
 vcgencmd measure_temp
 
-# 实时监控
+# Live monitoring
 htop
 ```
 
@@ -239,7 +239,7 @@ htop
 
 ```bash
 uname -m
-# 应显示：aarch64（64-bit），而非 armv7l（32-bit）
+# Should show: aarch64 (64-bit) not armv7l (32-bit)
 ```
 
 ---
@@ -270,13 +270,13 @@ uname -m
 Onboarding 向导会设置，但可验证：
 
 ```bash
-# 确认已启用
+# Check service is enabled
 sudo systemctl is-enabled openclaw
 
-# 若未启用
+# Enable if not
 sudo systemctl enable openclaw
 
-# 开机启动
+# Start on boot
 sudo systemctl start openclaw
 ```
 
@@ -287,11 +287,11 @@ sudo systemctl start openclaw
 ### 内存不足（OOM）
 
 ```bash
-# 查看内存
+# Check memory
 free -h
 
-# 添加更多 swap（见第 5 步）
-# 或减少运行中的服务
+# Add more swap (see Step 5)
+# Or reduce services running on the Pi
 ```
 
 ### 性能慢
@@ -303,11 +303,11 @@ free -h
 ### 服务无法启动
 
 ```bash
-# 查看日志
+# Check logs
 journalctl -u openclaw --no-pager -n 100
 
-# 常见修复：重新构建
-cd ~/openclaw  # 如果用可 hack 安装
+# Common fix: rebuild
+cd ~/openclaw  # if using hackable install
 npm run build
 sudo systemctl restart openclaw
 ```
@@ -325,10 +325,10 @@ sudo systemctl restart openclaw
 无头 Pi 使用 WiFi 时：
 
 ```bash
-# 关闭 WiFi 省电
+# Disable WiFi power management
 sudo iwconfig wlan0 power off
 
-# 持久化
+# Make permanent
 echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 ```
 

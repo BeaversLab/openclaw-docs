@@ -207,7 +207,9 @@ OPENCLAW_LIVE_SETUP_TOKEN=1 OPENCLAW_LIVE_SETUP_TOKEN_PROFILE=anthropic:setup-to
 示例：
 
 ```bash
-OPENCLAW_LIVE_CLI_BACKEND=1   OPENCLAW_LIVE_CLI_BACKEND_MODEL="claude-cli/claude-sonnet-4-5"   pnpm test:live src/gateway/gateway-cli-backend.live.test.ts
+OPENCLAW_LIVE_CLI_BACKEND=1 \
+  OPENCLAW_LIVE_CLI_BACKEND_MODEL="claude-cli/claude-sonnet-4-5" \
+  pnpm test:live src/gateway/gateway-cli-backend.live.test.ts
 ```
 
 ### 推荐的 live 配方

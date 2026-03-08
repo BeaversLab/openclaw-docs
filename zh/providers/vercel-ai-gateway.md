@@ -37,7 +37,10 @@ openclaw onboard --auth-choice ai-gateway-api-key
 ## 非交互示例
 
 ```bash
-openclaw onboard --non-interactive   --mode local   --auth-choice ai-gateway-api-key   --ai-gateway-api-key "$AI_GATEWAY_API_KEY"
+openclaw onboard --non-interactive \
+  --mode local \
+  --auth-choice ai-gateway-api-key \
+  --ai-gateway-api-key "$AI_GATEWAY_API_KEY"
 ```
 
 ## 环境说明

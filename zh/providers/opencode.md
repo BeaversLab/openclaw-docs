@@ -14,7 +14,7 @@ OpenCode Zen 是 OpenCode 团队为编码代理推荐的 **精选模型列表**�
 
 ```bash
 openclaw onboard --auth-choice opencode-zen
-# 或非交互式
+# or non-interactive
 openclaw onboard --opencode-zen-api-key "$OPENCODE_API_KEY"
 ```
 

@@ -32,9 +32,11 @@ macOS 伴侣应用通过将 Apple 设备型号标识（如 `iPad16,6`、`Mac16,6
 IOS_COMMIT="<commit sha for ios-device-identifiers.json>"
 MAC_COMMIT="<commit sha for mac-device-identifiers.json>"
 
-curl -fsSL "https://raw.githubusercontent.com/kyle-seongwoo-jun/apple-device-identifiers/${IOS_COMMIT}/ios-device-identifiers.json"   -o apps/macos/Sources/OpenClaw/Resources/DeviceModels/ios-device-identifiers.json
+curl -fsSL "https://raw.githubusercontent.com/kyle-seongwoo-jun/apple-device-identifiers/${IOS_COMMIT}/ios-device-identifiers.json" \
+  -o apps/macos/Sources/OpenClaw/Resources/DeviceModels/ios-device-identifiers.json
 
-curl -fsSL "https://raw.githubusercontent.com/kyle-seongwoo-jun/apple-device-identifiers/${MAC_COMMIT}/mac-device-identifiers.json"   -o apps/macos/Sources/OpenClaw/Resources/DeviceModels/mac-device-identifiers.json
+curl -fsSL "https://raw.githubusercontent.com/kyle-seongwoo-jun/apple-device-identifiers/${MAC_COMMIT}/mac-device-identifiers.json" \
+  -o apps/macos/Sources/OpenClaw/Resources/DeviceModels/mac-device-identifiers.json
 ```
 
 4. 确认 `apps/macos/Sources/OpenClaw/Resources/DeviceModels/LICENSE.apple-device-identifiers.txt` 仍与上游一致（若上游许可证变更，请替换）。

@@ -122,7 +122,7 @@ EC2 实例角色**所需 IAM 权限**：
 **快速设置：**
 
 ```bash
-# 1. 创建 IAM role 与实例配置文件
+# 1. Create IAM role and instance profile
 aws iam create-role --role-name EC2-Bedrock-Access \
   --assume-role-policy-document '{
     "Version": "2012-10-17",
@@ -141,21 +141,21 @@ aws iam add-role-to-instance-profile \
   --instance-profile-name EC2-Bedrock-Access \
   --role-name EC2-Bedrock-Access
 
-# 2. 绑定到 EC2 实例
+# 2. Attach to your EC2 instance
 aws ec2 associate-iam-instance-profile \
   --instance-id i-xxxxx \
   --iam-instance-profile Name=EC2-Bedrock-Access
 
-# 3. 在 EC2 上启用发现
+# 3. On the EC2 instance, enable discovery
 openclaw config set models.bedrockDiscovery.enabled true
 openclaw config set models.bedrockDiscovery.region us-east-1
 
-# 4. 设置变通环境变量
+# 4. Set the workaround env vars
 echo 'export AWS_PROFILE=default' >> ~/.bashrc
 echo 'export AWS_REGION=us-east-1' >> ~/.bashrc
 source ~/.bashrc
 
-# 5. 验证模型发现
+# 5. Verify models are discovered
 openclaw models list
 ```
 

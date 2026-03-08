@@ -57,20 +57,20 @@ openclaw --profile rescue gateway install
 ### 安装方式（救援 bot）
 
 ```bash
-# 主 bot（已存在或新建，不带 --profile）
-# 运行在 18789 + Chrome CDC/Canvas/... 端口
+# Main bot (existing or fresh, without --profile param)
+# Runs on port 18789 + Chrome CDC/Canvas/... Ports
 openclaw onboard
 openclaw gateway install
 
-# 救援 bot（隔离 profile + 端口）
+# Rescue bot (isolated profile + ports)
 openclaw --profile rescue onboard
 # Notes:
-# - workspace 默认会追加 -rescue 后缀
-# - 端口应至少 18789 + 20，
-#   更推荐选完全不同的基础端口，如 19789
-# - 其余 onboarding 与常规一致
+# - workspace name will be postfixed with -rescue per default
+# - Port should be at least 18789 + 20 Ports,
+#   better choose completely different base port, like 19789,
+# - rest of the onboarding is the same as normal
 
-# 安装服务（若 onboarding 未自动完成）
+# To install the service (if not happened automatically during onboarding)
 openclaw --profile rescue gateway install
 ```
 

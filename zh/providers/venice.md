@@ -71,7 +71,9 @@ openclaw onboard --auth-choice venice-api-key
 **方案 C：非交互式**
 
 ```bash
-openclaw onboard --non-interactive   --auth-choice venice-api-key   --venice-api-key "vapi_xxxxxxxxxxxx"
+openclaw onboard --non-interactive \
+  --auth-choice venice-api-key \
+  --venice-api-key "vapi_xxxxxxxxxxxx"
 ```
 
 ### 3. 验证配置
@@ -192,19 +194,19 @@ Venice 使用积分计费。当前费率请查看 [venice.ai/pricing](https://ve
 ## 使用示例
 
 ```bash
-# 使用默认私密模型
+# Use default private model
 openclaw chat --model venice/llama-3.3-70b
 
-# 通过 Venice 使用 Claude（匿名）
+# Use Claude via Venice (anonymized)
 openclaw chat --model venice/claude-opus-45
 
-# 使用无审查模型
+# Use uncensored model
 openclaw chat --model venice/venice-uncensored
 
-# 使用视觉模型并传图
+# Use vision model with image
 openclaw chat --model venice/qwen3-vl-235b-a22b
 
-# 使用编码模型
+# Use coding model
 openclaw chat --model venice/qwen3-coder-480b-a35b-instruct
 ```
 

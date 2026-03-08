@@ -161,7 +161,7 @@ ws.on("open", () => {
           mode: "cli",
         },
       },
-    })
+    }),
   );
 });
 
@@ -188,12 +188,12 @@ ws.on("message", (data) => {
 ```ts
 export const SystemEchoParamsSchema = Type.Object(
   { text: NonEmptyString },
-  { additionalProperties: false }
+  { additionalProperties: false },
 );
 
 export const SystemEchoResultSchema = Type.Object(
   { ok: Type.Boolean(), text: NonEmptyString },
-  { additionalProperties: false }
+  { additionalProperties: false },
 );
 ```
 

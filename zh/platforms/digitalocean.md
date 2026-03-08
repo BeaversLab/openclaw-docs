@@ -59,17 +59,17 @@ ssh root@YOUR_DROPLET_IP
 ## 3) 安装 OpenClaw
 
 ```bash
-# 更新系统
+# Update system
 apt update && apt upgrade -y
 
-# 安装 Node.js 22
+# Install Node.js 22
 curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
 apt install -y nodejs
 
-# 安装 OpenClaw
-curl -fsSL https://openclaw.bot/install.sh | bash
+# Install OpenClaw
+curl -fsSL https://openclaw.ai/install.sh | bash
 
-# 验证
+# Verify
 openclaw --version
 ```
 
@@ -89,13 +89,13 @@ openclaw onboard --install-daemon
 ## 5) 验证 Gateway
 
 ```bash
-# 检查状态
+# Check status
 openclaw status
 
-# 检查服务
+# Check service
 systemctl --user status openclaw-gateway.service
 
-# 查看日志
+# View logs
 journalctl --user -u openclaw-gateway.service -f
 ```
 
@@ -106,20 +106,20 @@ Gateway 默认绑定在 loopback。访问 Control UI：
 **选项 A：SSH 隧道（推荐）**
 
 ```bash
-# 在本地机器
+# From your local machine
 ssh -L 18789:localhost:18789 root@YOUR_DROPLET_IP
 
-# 然后打开：http://localhost:18789
+# Then open: http://localhost:18789
 ```
 
 **选项 B：Tailscale Serve（HTTPS，loopback-only）**
 
 ```bash
-# 在 droplet 上
+# On the droplet
 curl -fsSL https://tailscale.com/install.sh | sh
 tailscale up
 
-# 配置 Gateway 使用 Tailscale Serve
+# Configure Gateway to use Tailscale Serve
 openclaw config set gateway.tailscale.mode serve
 openclaw gateway restart
 ```
@@ -153,7 +153,7 @@ openclaw pairing approve telegram <CODE>
 
 ```bash
 openclaw channels login whatsapp
-# 扫描二维码
+# Scan QR code
 ```
 
 其它 providers 见 [通道](/zh/channels)。
@@ -245,11 +245,11 @@ kill <PID>
 ### 内存不足
 
 ```bash
-# 查看内存
+# Check memory
 free -h
 
-# 添加更多 swap
-# 或升级到 $12/mo droplet（2GB RAM）
+# Add more swap
+# Or upgrade to $12/mo droplet (2GB RAM)
 ```
 
 ---

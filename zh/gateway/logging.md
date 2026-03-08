@@ -79,13 +79,13 @@ gateway 以两种模式打印 WebSocket 协议日志：
 示例：
 
 ```bash
-# 优化模式（仅错误/慢调用）
+# optimized (only errors/slow)
 openclaw gateway
 
-# 显示全部 WS 流量（配对）
+# show all WS traffic (paired)
 openclaw gateway --verbose --ws-log compact
 
-# 显示全部 WS 流量（完整元数据）
+# show all WS traffic (full meta)
 openclaw gateway --verbose --ws-log full
 ```
 

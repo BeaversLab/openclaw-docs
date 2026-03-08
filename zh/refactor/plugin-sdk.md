@@ -90,7 +90,7 @@ export type PluginRuntime = {
         buffer: Uint8Array,
         contentType: string | undefined,
         direction: "inbound" | "outbound",
-        maxBytes: number
+        maxBytes: number,
       ): Promise<{ path: string; contentType?: string }>;
     };
     mentions: {
@@ -102,7 +102,7 @@ export type PluginRuntime = {
         cfg: OpenClawConfig,
         channel: string,
         accountId: string,
-        groupId: string
+        groupId: string,
       ): {
         allowlistEnabled: boolean;
         allowed: boolean;
@@ -114,7 +114,7 @@ export type PluginRuntime = {
         channel: string,
         accountId: string,
         groupId: string,
-        override?: boolean
+        override?: boolean,
       ): boolean;
     };
     debounce: {

@@ -11,7 +11,7 @@ read_when: "Linux 上浏览器控制失败，尤其是 snap 版 Chromium"
 OpenClaw 的浏览器控制服务在启动 Chrome/Brave/Edge/Chromium 时失败，错误如下：
 
 ```
-{"error":"Error: Failed to start Chrome CDP on port 18800 for profile "openclaw"."}
+{"error":"Error: Failed to start Chrome CDP on port 18800 for profile \"openclaw\"."}
 ```
 
 ### 根因
@@ -70,7 +70,10 @@ sudo apt --fix-broken install -y  # if there are dependency errors
 2. 手动启动 Chromium：
 
 ```bash
-chromium-browser --headless --no-sandbox --disable-gpu   --remote-debugging-port=18800   --user-data-dir=$HOME/.openclaw/browser/openclaw/user-data   about:blank &
+chromium-browser --headless --no-sandbox --disable-gpu \
+  --remote-debugging-port=18800 \
+  --user-data-dir=$HOME/.openclaw/browser/openclaw/user-data \
+  about:blank &
 ```
 
 3. （可选）创建 systemd 用户服务，自动启动 Chrome：

@@ -86,7 +86,7 @@ end try
     <array>
       <string>/bin/bash</string>
       <string>-lc</string>
-      <string>/usr/bin/osascript "$HOME/Scripts/poke-messages.scpt"</string>
+      <string>/usr/bin/osascript &quot;$HOME/Scripts/poke-messages.scpt&quot;</string>
     </array>
 
     <key>RunAtLoad</key>
@@ -173,8 +173,8 @@ BlueBubbles 支持群聊提及门控，行为与 iMessage/WhatsApp 一致：
       groupPolicy: "allowlist",
       groupAllowFrom: ["+15555550123"],
       groups: {
-        "*": { requireMention: true }, // 默认对所有群生效
-        "iMessage;-;chat123": { requireMention: false }, // 覆盖特定群
+        "*": { requireMention: true }, // default for all groups
+        "iMessage;-;chat123": { requireMention: false }, // override for specific group
       },
     },
   },
@@ -213,16 +213,16 @@ BlueBubbles 支持群聊提及门控，行为与 iMessage/WhatsApp 一致：
     bluebubbles: {
       actions: {
         reactions: true, // tapbacks (default: true)
-        edit: true, // 编辑已发送消息（macOS 13+，macOS 26 Tahoe 上不可用）
-        unsend: true, // 撤回消息（macOS 13+）
-        reply: true, // 按消息 GUID 回复线程
-        sendWithEffect: true, // 消息效果（slam、loud 等）
-        renameGroup: true, // 重命名群聊
-        setGroupIcon: true, // 设置群聊头像/图标（macOS 26 Tahoe 上不稳定）
-        addParticipant: true, // 添加群成员
-        removeParticipant: true, // 移除群成员
-        leaveGroup: true, // 离开群聊
-        sendAttachment: true, // 发送附件/媒体
+        edit: true, // edit sent messages (macOS 13+, broken on macOS 26 Tahoe)
+        unsend: true, // unsend messages (macOS 13+)
+        reply: true, // reply threading by message GUID
+        sendWithEffect: true, // message effects (slam, loud, etc.)
+        renameGroup: true, // rename group chats
+        setGroupIcon: true, // set group chat icon/photo (flaky on macOS 26 Tahoe)
+        addParticipant: true, // add participants to groups
+        removeParticipant: true, // remove participants from groups
+        leaveGroup: true, // leave group chats
+        sendAttachment: true, // send attachments/media
       },
     },
   },

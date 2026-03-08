@@ -36,10 +36,10 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
 ## 安装
 
 ```bash
-# 需要 Node.js 20+ 与 Claude Code CLI
+# Requires Node.js 20+ and Claude Code CLI
 npm install -g claude-max-api-proxy
 
-# 确认 Claude CLI 已认证
+# Verify Claude CLI is authenticated
 claude --version
 ```
 
@@ -49,20 +49,22 @@ claude --version
 
 ```bash
 claude-max-api
-# 服务器运行在 http://localhost:3456
+# Server runs at http://localhost:3456
 ```
 
 ### 测试
 
 ```bash
-# 健康检查
+# Health check
 curl http://localhost:3456/health
 
-# 列出模型
+# List models
 curl http://localhost:3456/v1/models
 
 # Chat completion
-curl http://localhost:3456/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+curl http://localhost:3456/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
     "model": "claude-opus-4",
     "messages": [{"role": "user", "content": "Hello!"}]
   }'

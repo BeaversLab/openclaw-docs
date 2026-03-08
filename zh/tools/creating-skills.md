@@ -27,12 +27,12 @@ mkdir -p ~/.openclaw/workspace/skills/hello-world
 ```markdown
 ---
 name: hello_world
-description: 一个简单的问候技能。
+description: A simple skill that says hello.
 ---
 
-# Hello World 技能
+# Hello World Skill
 
-当用户要求问候时，使用 `echo` 工具说Hello from your custom skill!。
+When the user asks for a greeting, use the `echo` tool to say "Hello from your custom skill!".
 ```
 
 ### 3. 添加工具（可选）

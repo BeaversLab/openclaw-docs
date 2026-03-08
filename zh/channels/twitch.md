@@ -50,11 +50,11 @@ openclaw plugins install ./extensions/twitch
   channels: {
     twitch: {
       enabled: true,
-      username: "openclaw", // Bot 的 Twitch 账号
-      accessToken: "oauth:abc123...", // OAuth Access Token（或用 OPENCLAW_TWITCH_ACCESS_TOKEN 环境变量）
-      clientId: "xyz789...", // Token Generator 提供的 Client ID
-      channel: "vevisk", // 要加入的 Twitch 频道（必填）
-      allowFrom: ["123456789"], // （推荐）仅你的 Twitch 用户 ID
+      username: "openclaw", // Bot's Twitch account
+      accessToken: "oauth:abc123...", // OAuth Access Token (or use OPENCLAW_TWITCH_ACCESS_TOKEN env var)
+      clientId: "xyz789...", // Client ID from Token Generator
+      channel: "vevisk", // Which Twitch channel's chat to join (required)
+      allowFrom: ["123456789"], // (recommended) Your Twitch user ID only - get it from https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/
     },
   },
 }
@@ -111,8 +111,7 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 {
   channels: {
     twitch: {
-      allowFrom: ["123456789"], // （推荐）仅你的 Twitch 用户 ID
-      allowedRoles: ["moderator"], // 或限制为角色
+      allowFrom: ["123456789"], // (recommended) Your Twitch user ID only
     },
   },
 }
@@ -219,7 +218,6 @@ bot 会在过期前自动刷新 token，并记录刷新事件。
     twitch: {
       accounts: {
         default: {
-          allowFrom: ["123456789"],
           allowedRoles: ["moderator"],
         },
       },

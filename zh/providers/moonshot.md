@@ -120,35 +120,12 @@ openclaw onboard --auth-choice kimi-code-api-key
 
 ```json5
 {
-  env: { KIMICODE_API_KEY: "sk-..." },
+  env: { KIMI_API_KEY: "sk-..." },
   agents: {
     defaults: {
       model: { primary: "kimi-coding/k2p5" },
       models: {
-        "kimi-coding/k2p5": { alias: "Kimi Coding" },
-      },
-    },
-  },
-  models: {
-    mode: "merge",
-    providers: {
-      "kimi-coding": {
-        baseUrl: "https://api.kimi.com/coding/v1",
-        apiKey: "${KIMICODE_API_KEY}",
-        api: "openai-completions",
-        models: [
-          {
-            id: "k2p5",
-            name: "Kimi For Coding",
-            reasoning: true,
-            input: ["text"],
-            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
-            contextWindow: 262144,
-            maxTokens: 32768,
-            headers: { "User-Agent": "KimiCLI/0.77" },
-            compat: { supportsDeveloperRole: false },
-          },
-        ],
+        "kimi-coding/k2p5": { alias: "Kimi K2.5" },
       },
     },
   },

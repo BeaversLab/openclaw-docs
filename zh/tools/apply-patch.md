@@ -43,11 +43,6 @@ read_when:
 ```json
 {
   "tool": "apply_patch",
-  "input": "*** Begin Patch
-*** Update File: src/index.ts
-@@
--const foo = 1
-+const foo = 2
-*** End Patch"
+  "input": "*** Begin Patch\n*** Update File: src/index.ts\n@@\n-const foo = 1\n+const foo = 2\n*** End Patch"
 }
 ```

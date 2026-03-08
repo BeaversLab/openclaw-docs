@@ -115,7 +115,7 @@ Docker 容器是临时的。
 mkdir -p /root/.openclaw
 mkdir -p /root/.openclaw/workspace
 
-# 将属主设置为容器用户（uid 1000）：
+# Set ownership to the container user (uid 1000):
 chown -R 1000:1000 /root/.openclaw
 chown -R 1000:1000 /root/.openclaw/workspace
 ```
@@ -175,12 +175,12 @@ services:
       - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
       - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
     ports:
-      # 推荐：让 Gateway 在 VPS 上保持 loopback-only；通过 SSH 隧道访问。
-      # 若要对公网暴露，移除 `127.0.0.1:` 前缀并自行配置防火墙。
+      # Recommended: keep the Gateway loopback-only on the VPS; access via SSH tunnel.
+      # To expose it publicly, remove the `127.0.0.1:` prefix and firewall accordingly.
       - "127.0.0.1:${OPENCLAW_GATEWAY_PORT}:18789"
 
-      # 可选：仅当 iOS/Android nodes 连接此 VPS 且需要 Canvas host 时启用。
-      # 若对公网暴露，先阅读 /gateway/security 并配置防火墙。
+      # Optional: only if you run iOS/Android nodes against this VPS and need Canvas host.
+      # If you expose this publicly, read /gateway/security and firewall accordingly.
       # - "18793:18793"
     command:
       [
@@ -223,16 +223,19 @@ FROM node:22-bookworm
 
 RUN apt-get update && apt-get install -y socat && rm -rf /var/lib/apt/lists/*
 
-# 示例二进制 1：Gmail CLI
-RUN curl -L https://github.com/steipete/gog/releases/latest/download/gog_Linux_x86_64.tar.gz   | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/gog
+# Example binary 1: Gmail CLI
+RUN curl -L https://github.com/steipete/gog/releases/latest/download/gog_Linux_x86_64.tar.gz \
+  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/gog
 
-# 示例二进制 2：Google Places CLI
-RUN curl -L https://github.com/steipete/goplaces/releases/latest/download/goplaces_Linux_x86_64.tar.gz   | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/goplaces
+# Example binary 2: Google Places CLI
+RUN curl -L https://github.com/steipete/goplaces/releases/latest/download/goplaces_Linux_x86_64.tar.gz \
+  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/goplaces
 
-# 示例二进制 3：WhatsApp CLI
-RUN curl -L https://github.com/steipete/wacli/releases/latest/download/wacli_Linux_x86_64.tar.gz   | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/wacli
+# Example binary 3: WhatsApp CLI
+RUN curl -L https://github.com/steipete/wacli/releases/latest/download/wacli_Linux_x86_64.tar.gz \
+  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/wacli
 
-# 按同样模式添加更多二进制
+# Add more binaries below using the same pattern
 
 WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./

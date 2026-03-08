@@ -84,7 +84,7 @@ cd ~/.openclaw/workspace
 git init
 git add AGENTS.md
 git commit -m "Add Clawd workspace"
-# 可选：添加私有远程并 push
+# Optional: add a private remote + push
 ```
 
 ## OpenClaw 能做什么

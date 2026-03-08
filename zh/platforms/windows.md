@@ -104,7 +104,7 @@ netsh interface portproxy add v4tov4 listenport=$ListenPort listenaddress=0.0.0.
 
 ```powershell
 wsl --install
-# 或显式选择发行版：
+# Or pick a distro explicitly:
 wsl --list --online
 wsl --install -d Ubuntu-24.04
 ```
@@ -142,7 +142,7 @@ systemctl --user status
 git clone https://github.com/openclaw/openclaw.git
 cd openclaw
 pnpm install
-pnpm ui:build # 首次运行会自动安装 UI 依赖
+pnpm ui:build # auto-installs UI deps on first run
 pnpm build
 openclaw onboard
 ```

@@ -207,16 +207,16 @@ openclaw hooks install <path-or-spec>
 **示例：**
 
 ```bash
-# 本地目录
+# Local directory
 openclaw hooks install ./my-hook-pack
 
-# 本地压缩包
+# Local archive
 openclaw hooks install ./my-hook-pack.zip
 
-# NPM 包
+# NPM package
 openclaw hooks install @openclaw/my-hook-pack
 
-# 链接本地目录（不复制）
+# Link a local directory without copying
 openclaw hooks install -l ./my-hook-pack
 ```
 
@@ -265,13 +265,13 @@ openclaw hooks enable command-logger
 **查看日志：**
 
 ```bash
-# 最近命令
+# Recent commands
 tail -n 20 ~/.openclaw/logs/commands.log
 
-# 美化输出
+# Pretty-print
 cat ~/.openclaw/logs/commands.log | jq .
 
-# 按 action 过滤
+# Filter by action
 grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 ```
 

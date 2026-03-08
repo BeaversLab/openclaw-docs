@@ -21,12 +21,12 @@ read_when:
 ## 使用方式
 
 ```bash
-# 从仓库根目录
-scripts/package-mac-app.sh               # 自动选择签名身份；若未找到则报错
-SIGN_IDENTITY="Developer ID Application: Your Name" scripts/package-mac-app.sh   # 真证书
-ALLOW_ADHOC_SIGNING=1 scripts/package-mac-app.sh    # ad-hoc（权限不会持久）
-SIGN_IDENTITY="-" scripts/package-mac-app.sh        # 明确 ad-hoc（同样注意）
-DISABLE_LIBRARY_VALIDATION=1 scripts/package-mac-app.sh   # 仅开发：Sparkle Team ID 不匹配的规避方案
+# from repo root
+scripts/package-mac-app.sh               # auto-selects identity; errors if none found
+SIGN_IDENTITY="Developer ID Application: Your Name" scripts/package-mac-app.sh   # real cert
+ALLOW_ADHOC_SIGNING=1 scripts/package-mac-app.sh    # ad-hoc (permissions will not stick)
+SIGN_IDENTITY="-" scripts/package-mac-app.sh        # explicit ad-hoc (same caveat)
+DISABLE_LIBRARY_VALIDATION=1 scripts/package-mac-app.sh   # dev-only Sparkle Team ID mismatch workaround
 ```
 
 ### Ad-hoc 签名说明

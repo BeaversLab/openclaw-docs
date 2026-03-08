@@ -78,7 +78,7 @@ openclaw gateway stop
 （可选但推荐）打包 state 目录与 workspace：
 
 ```bash
-# 如果使用 profile 或自定义路径，调整下面路径
+# Adjust paths if you use a profile or custom locations
 cd ~
 tar -czf openclaw-state.tgz .openclaw
 

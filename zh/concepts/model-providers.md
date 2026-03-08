@@ -168,20 +168,9 @@ Kimi Code 使用专用端点与 key（与 Moonshot 分离）：
 
 ```json5
 {
-  env: { KIMICODE_API_KEY: "sk-..." },
+  env: { KIMI_API_KEY: "sk-..." },
   agents: {
-    defaults: { model: { primary: "kimi-code/kimi-for-coding" } },
-  },
-  models: {
-    mode: "merge",
-    providers: {
-      "kimi-code": {
-        baseUrl: "https://api.kimi.com/coding/v1",
-        apiKey: "${KIMICODE_API_KEY}",
-        api: "openai-completions",
-        models: [{ id: "kimi-for-coding", name: "Kimi For Coding" }],
-      },
-    },
+    defaults: { model: { primary: "kimi-coding/k2p5" } },
   },
 }
 ```

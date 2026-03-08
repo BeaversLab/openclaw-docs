@@ -18,16 +18,16 @@ title: "acp"
 ```bash
 openclaw acp
 
-# 远程网关
+# Remote Gateway
 openclaw acp --url wss://gateway-host:18789 --token <token>
 
-# 附加到现有会话密钥
+# Attach to an existing session key
 openclaw acp --session agent:main:main
 
-# 通过标签附加（必须已存在）
+# Attach by label (must already exist)
 openclaw acp --session-label "support inbox"
 
-# 在第一次提示之前重置会话密钥
+# Reset the session key before the first prompt
 openclaw acp --session agent:main:main --reset-session
 ```
 
@@ -39,10 +39,10 @@ openclaw acp --session agent:main:main --reset-session
 ```bash
 openclaw acp client
 
-# 将生成的网桥指向远程网关
+# Point the spawned bridge at a remote Gateway
 openclaw acp client --server-args --url wss://gateway-host:18789 --token <token>
 
-# 覆盖服务器命令（默认：openclaw）
+# Override the server command (default: openclaw)
 openclaw acp client --server "node" --server-args openclaw.mjs acp --url ws://127.0.0.1:19001
 ```
 

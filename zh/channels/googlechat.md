@@ -233,7 +233,7 @@ status code: 405, reason phrase: HTTP error response: HTTP/1.1 405 Method Not Al
 
 ```bash
 openclaw channels status
-# 应显示：Google Chat default: enabled, configured, ...
+# Should show: Google Chat default: enabled, configured, ...
 ```
 
 ### 其他问题

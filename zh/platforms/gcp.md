@@ -122,7 +122,12 @@ gcloud services enable compute.googleapis.com
 **CLI：**
 
 ```bash
-gcloud compute instances create openclaw-gateway   --zone=us-central1-a   --machine-type=e2-small   --boot-disk-size=20GB   --image-family=debian-12   --image-project=debian-cloud
+gcloud compute instances create openclaw-gateway \
+  --zone=us-central1-a \
+  --machine-type=e2-small \
+  --boot-disk-size=20GB \
+  --image-family=debian-12 \
+  --image-project=debian-cloud
 ```
 
 **Console：**
@@ -258,12 +263,12 @@ services:
       - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
       - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
     ports:
-      # 推荐：让 Gateway 在 VM 上保持 loopback-only；通过 SSH 隧道访问。
-      # 若要对公网暴露，移除 `127.0.0.1:` 前缀并自行配置防火墙。
+      # Recommended: keep the Gateway loopback-only on the VM; access via SSH tunnel.
+      # To expose it publicly, remove the `127.0.0.1:` prefix and firewall accordingly.
       - "127.0.0.1:${OPENCLAW_GATEWAY_PORT}:18789"
 
-      # 可选：仅当 iOS/Android nodes 连接此 VM 且需要 Canvas host 时启用。
-      # 若对公网暴露，先阅读 /gateway/security 并配置防火墙。
+      # Optional: only if you run iOS/Android nodes against this VM and need Canvas host.
+      # If you expose this publicly, read /gateway/security and firewall accordingly.
       # - "18793:18793"
     command:
       [
@@ -308,16 +313,19 @@ FROM node:22-bookworm
 
 RUN apt-get update && apt-get install -y socat && rm -rf /var/lib/apt/lists/*
 
-# 示例二进制 1：Gmail CLI
-RUN curl -L https://github.com/steipete/gog/releases/latest/download/gog_Linux_x86_64.tar.gz   | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/gog
+# Example binary 1: Gmail CLI
+RUN curl -L https://github.com/steipete/gog/releases/latest/download/gog_Linux_x86_64.tar.gz \
+  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/gog
 
-# 示例二进制 2：Google Places CLI
-RUN curl -L https://github.com/steipete/goplaces/releases/latest/download/goplaces_Linux_x86_64.tar.gz   | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/goplaces
+# Example binary 2: Google Places CLI
+RUN curl -L https://github.com/steipete/goplaces/releases/latest/download/goplaces_Linux_x86_64.tar.gz \
+  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/goplaces
 
-# 示例二进制 3：WhatsApp CLI
-RUN curl -L https://github.com/steipete/wacli/releases/latest/download/wacli_Linux_x86_64.tar.gz   | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/wacli
+# Example binary 3: WhatsApp CLI
+RUN curl -L https://github.com/steipete/wacli/releases/latest/download/wacli_Linux_x86_64.tar.gz \
+  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/wacli
 
-# 按同样模式添加更多二进制
+# Add more binaries below using the same pattern
 
 WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
@@ -448,13 +456,15 @@ gcloud compute os-login describe-profile
 如果使用 e2-micro 出现 OOM，升级到 e2-small 或 e2-medium：
 
 ```bash
-# 先停止 VM
+# Stop the VM first
 gcloud compute instances stop openclaw-gateway --zone=us-central1-a
 
-# 修改机型
-gcloud compute instances set-machine-type openclaw-gateway   --zone=us-central1-a   --machine-type=e2-small
+# Change machine type
+gcloud compute instances set-machine-type openclaw-gateway \
+  --zone=us-central1-a \
+  --machine-type=e2-small
 
-# 启动 VM
+# Start the VM
 gcloud compute instances start openclaw-gateway --zone=us-central1-a
 ```
 

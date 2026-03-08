@@ -76,16 +76,16 @@ sudo -i -u openclaw
 ### 快捷命令
 
 ```bash
-# 查看服务状态
+# Check service status
 sudo systemctl status openclaw
 
-# 实时日志
+# View live logs
 sudo journalctl -u openclaw -f
 
-# 重启 gateway
+# Restart gateway
 sudo systemctl restart openclaw
 
-# Provider 登录（以 openclaw 用户运行）
+# Provider login (run as openclaw user)
 sudo -i -u openclaw
 openclaw channels login
 ```
@@ -120,20 +120,20 @@ Sandbox 配置见 [Multi-Agent 沙盒 & 工具](/zh/multi-agent-sandbox-tools)�
 如果你更偏好手动控制而不是自动化：
 
 ```bash
-# 1. 安装前置依赖
+# 1. Install prerequisites
 sudo apt update && sudo apt install -y ansible git
 
-# 2. 克隆仓库
+# 2. Clone repository
 git clone https://github.com/openclaw/openclaw-ansible.git
 cd openclaw-ansible
 
-# 3. 安装 Ansible collections
+# 3. Install Ansible collections
 ansible-galaxy collection install -r requirements.yml
 
-# 4. 运行 playbook
+# 4. Run playbook
 ./run-playbook.sh
 
-# 或直接运行（然后手动执行 /tmp/openclaw-setup.sh）
+# Or run directly (then manually execute /tmp/openclaw-setup.sh after)
 # ansible-playbook playbook.yml --ask-become-pass
 ```
 
@@ -163,13 +163,13 @@ cd openclaw-ansible
 ### 服务无法启动
 
 ```bash
-# 查看日志
+# Check logs
 sudo journalctl -u openclaw -n 100
 
-# 验证权限
+# Verify permissions
 sudo ls -la /opt/openclaw
 
-# 手动启动测试
+# Test manual start
 sudo -i -u openclaw
 cd ~/openclaw
 pnpm start
@@ -178,13 +178,13 @@ pnpm start
 ### Docker sandbox 问题
 
 ```bash
-# 确认 Docker 正在运行
+# Verify Docker is running
 sudo systemctl status docker
 
-# 检查 sandbox 镜像
+# Check sandbox image
 sudo docker images | grep openclaw-sandbox
 
-# 如果缺失，构建 sandbox 镜像
+# Build sandbox image if missing
 cd /opt/openclaw/openclaw
 sudo -u openclaw ./scripts/sandbox-setup.sh
 ```

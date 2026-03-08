@@ -150,7 +150,7 @@ Auth 是按 agent 分离的：每个 agent 读取自身 `agentDir` 的 auth 存�
   "agents": {
     "defaults": {
       "sandbox": {
-        "mode": "non-main", // 全局默认
+        "mode": "non-main", // Global default
         "scope": "session"
       }
     },
@@ -159,14 +159,14 @@ Auth 是按 agent 分离的：每个 agent 读取自身 `agentDir` 的 auth 存�
         "id": "main",
         "workspace": "~/.openclaw/workspace",
         "sandbox": {
-          "mode": "off" // 覆盖：main 从不 sandbox
+          "mode": "off" // Override: main never sandboxed
         }
       },
       {
         "id": "public",
         "workspace": "~/.openclaw/workspace-public",
         "sandbox": {
-          "mode": "all", // 覆盖：public 始终 sandbox
+          "mode": "all", // Override: public always sandboxed
           "scope": "agent"
         },
         "tools": {

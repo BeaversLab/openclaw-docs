@@ -64,13 +64,13 @@ title: "工作区记忆研究"
 
 ```
 ~/.openclaw/workspace/
-  memory.md                    # 小而核心：持久事实 + 偏好
+  memory.md                    # small: durable facts + preferences (core-ish)
   memory/
-    YYYY-MM-DD.md              # 每日日志（追加；叙事）
-  bank/                        # “类型化”记忆页（稳定、可审阅）
-    world.md                   # 客观世界事实
-    experience.md              # agent 做过的事（第一人称）
-    opinions.md                # 主观偏好/判断 + 置信度 + 证据指针
+    YYYY-MM-DD.md              # daily log (append; narrative)
+  bank/                        # “typed” memory pages (stable, reviewable)
+    world.md                   # objective facts about the world
+    experience.md              # what the agent did (first-person)
+    opinions.md                # subjective prefs/judgments + confidence + evidence pointers
     entities/
       Peter.md
       The-Castle.md
@@ -119,7 +119,7 @@ Hindsight 的关键洞见：存储**叙事、可自洽的事实**，而不是细
 ## Retain
 - W @Peter: Currently in Marrakech (Nov 27–Dec 1, 2025) for Andy’s birthday.
 - B @warelay: I fixed the Baileys WS crash by wrapping connection.update handlers in try/catch (see memory/2025-11-27.md).
-- O(c=0.95) @Peter: Prefers concise replies (<1500 chars) on WhatsApp; long content goes into files.
+- O(c=0.95) @Peter: Prefers concise replies (&lt;1500 chars) on WhatsApp; long content goes into files.
 ```
 
 最小解析：

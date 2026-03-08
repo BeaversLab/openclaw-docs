@@ -15,7 +15,7 @@ OpenClaw 更新很快（仍处于 1.0 之前）。像运维一样对待更新：
 **首选**更新路径是重新运行官网安装器。它会检测已有安装，原地升级，并在需要时运行 `openclaw doctor`。
 
 ```bash
-curl -fsSL https://openclaw.bot/install.sh | bash
+curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
 注意：
@@ -123,7 +123,7 @@ openclaw update
 git pull
 pnpm install
 pnpm build
-pnpm ui:build # 首次运行会自动安装 UI 依赖
+pnpm ui:build # auto-installs UI deps on first run
 openclaw doctor
 openclaw health
 ```
@@ -200,7 +200,7 @@ openclaw gateway restart
 
 ```bash
 git fetch origin
-git checkout "$(git rev-list -n 1 --before="2026-01-01" origin/main)"
+git checkout "$(git rev-list -n 1 --before=\"2026-01-01\" origin/main)"
 ```
 
 然后重装依赖 + 重启：
