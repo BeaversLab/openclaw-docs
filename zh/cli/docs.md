@@ -1,13 +1,13 @@
 ---
-summary: "`openclaw docs` 的 CLI 参考（搜索在线文档索引）"
+summary: "`openclaw logs` 的 CLI 参考（搜索实时文档索引）"
 read_when:
-  - 你想在终端中搜索 OpenClaw 在线文档
+  - "You want to search the live OpenClaw docs from the terminal"
 title: "docs"
 ---
 
 # `openclaw docs`
 
-搜索在线文档索引。
+搜索实时文档索引。
 
 ```bash
 openclaw docs browser extension

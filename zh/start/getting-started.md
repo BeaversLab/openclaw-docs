@@ -1,33 +1,33 @@
 ---
-summary: "Beginner guide: from zero to first message (wizard, auth, channels, pairing)"
+summary: "初学者指南：从零到第一次成功聊天（向导、认证、频道、配对）"
 read_when:
   - "First time setup from zero"
   - "You want the fastest path from install → onboarding → first message"
-title: "Getting Started"
+title: "快速入门"
 ---
 
-# Getting Started
+# 快速入门
 
-Goal: go from **zero** → **first working chat** (with sane defaults) as quickly as possible.
+目标：从 **零** → **第一次成功的聊天**（使用合理的默认配置）尽可能快速地完成。
 
-Fastest chat: open the Control UI (no channel setup needed). Run `openclaw dashboard`
-and chat in the browser, or open `http://127.0.0.1:18789/` on the gateway host.
-Docs: [Dashboard](/zh/web/dashboard) and [Control UI](/zh/web/control-ui).
+最快的聊天方式：打开控制 UI（无需设置频道）。运行 `openclaw dashboard`
+并在浏览器中聊天，或在网关主机上打开 `http://127.0.0.1:18789/`。
+文档：[仪表板](/en/web/dashboard) 和 [控制 UI](/en/web/control-ui)。
 
-Recommended path: use the **CLI onboarding wizard** (`openclaw onboard`). It sets up:
+推荐路径：使用 **CLI 入门向导**（`openclaw onboard`）。它将设置：
 
-- model/auth (OAuth recommended)
-- gateway settings
-- channels (WhatsApp/Telegram/Discord/Mattermost (plugin)/...)
-- pairing defaults (secure DMs)
-- workspace bootstrap + skills
-- optional background service
+- 模型/认证（推荐 OAuth）
+- 网关设置
+- 频道（WhatsApp/Telegram/Discord/Mattermost（插件）/...）
+- 配对默认值（安全私信）
+- 工作空间引导 + 技能
+- 可选的后台服务
 
-If you want the deeper reference pages, jump to: [Wizard](/zh/start/wizard), [Setup](/zh/start/setup), [Pairing](/zh/start/pairing), [Security](/zh/gateway/security).
+如果您需要更深入的参考页面，请跳转到：[向导](/en/start/wizard)、[设置](/en/start/setup)、[配对](/en/start/pairing)、[安全](/en/gateway/security)。
 
-Sandboxing note: `agents.defaults.sandbox.mode: "non-main"` uses `session.mainKey` (default `"main"`),
-so group/channel sessions are sandboxed. If you want the main agent to always
-run on host, set an explicit per-agent override:
+沙箱说明：`agents.defaults.sandbox.mode: "non-main"` 使用 `session.mainKey`（默认 `"main"`），
+因此群组/频道会话会被隔离。如果您希望主代理始终
+在主机上运行，请设置显式的每个代理覆盖：
 
 ```json
 {
@@ -42,16 +42,16 @@ run on host, set an explicit per-agent override:
 }
 ```
 
-## 0) Prereqs
+## 0) 前置要求
 
 - Node `>=22`
-- `pnpm` (optional; recommended if you build from source)
-- **Recommended:** Brave Search API key for web search. Easiest path:
-  `openclaw configure --section web` (stores `tools.web.search.apiKey`).
-  See [Web tools](/zh/tools/web).
+- `pnpm`（可选；如果从源码构建则推荐）
+- **推荐：** 用于网络搜索的 Brave Search API 密钥。最简单的方法：
+  `openclaw configure --section web`（存储 `tools.web.search.apiKey`）。
+  参见 [网络工具](/en/tools/web)。
 
-macOS: if you plan to build the apps, install Xcode / CLT. For the CLI + gateway only, Node is enough.
-Windows: use **WSL2** (Ubuntu recommended). WSL2 is strongly recommended; native Windows is untested, more problematic, and has poorer tool compatibility. Install WSL2 first, then run the Linux steps inside WSL. See [Windows (/en/platforms/windows)](/zh/platforms/windows).
+macOS：如果您计划构建应用程序，请安装 Xcode / CLT。仅使用 CLI + 网关的话，Node 就足够了。
+Windows：使用 **WSL2**（推荐 Ubuntu）。强烈推荐 WSL2；原生 Windows 未经过测试，问题更多，且工具兼容性较差。先安装 WSL2，然后在 WSL 中运行 Linux 步骤。参见 [Windows (/en/platforms/windows)](/platforms/windows)。
 
 ## 1) Install the CLI (recommended)
 
@@ -59,15 +59,15 @@ Windows: use **WSL2** (Ubuntu recommended). WSL2 is strongly recommended; native
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-Installer options (install method, non-interactive, from GitHub): [Install](/zh/install).
+安装程序选项（安装方法、非交互式、从 GitHub）：[安装](/en/install)。
 
-Windows (PowerShell):
+Windows (PowerShell)：
 
 ```powershell
 iwr -useb https://openclaw.ai/install.ps1 | iex
 ```
 
-Alternative (global install):
+替代方法（全局安装）：
 
 ```bash
 npm install -g openclaw@latest
@@ -77,53 +77,53 @@ npm install -g openclaw@latest
 pnpm add -g openclaw@latest
 ```
 
-## 2) Run the onboarding wizard (and install the service)
+## 2) 运行入门向导（并安装服务）
 
 ```bash
 openclaw onboard --install-daemon
 ```
 
-What you’ll choose:
+您需要选择：
 
-- **Local vs Remote** gateway
-- **Auth**: OpenAI Code (Codex) subscription (OAuth) or API keys. For Anthropic we recommend an API key; `claude setup-token` is also supported.
-- **Providers**: WhatsApp QR login, Telegram/Discord bot tokens, Mattermost plugin tokens, etc.
-- **Daemon**: background install (launchd/systemd; WSL2 uses systemd)
-  - **Runtime**: Node (recommended; required for WhatsApp/Telegram). Bun is **not recommended**.
-- **Gateway token**: the wizard generates one by default (even on loopback) and stores it in `gateway.auth.token`.
+- **本地 vs 远程**网关
+- **认证**：OpenAI Code (Codex) 订阅（OAuth）或 API 密钥。对于 Anthropic，我们推荐使用 API 密钥；也支持 `claude setup-token`。
+- **提供商**：WhatsApp QR 登录、Telegram/Discord 机器人令牌、Mattermost 插件令牌等。
+- **守护进程**：后台安装（launchd/systemd；WSL2 使用 systemd）
+  - **运行时**：Node（推荐；WhatsApp/Telegram 必需）。**不推荐**使用 Bun。
+- **网关令牌**：向导默认生成一个（即使在环回上）并将其存储在 `gateway.auth.token` 中。
 
-Wizard doc: [Wizard](/zh/start/wizard)
+向导文档：[向导](/en/start/wizard)
 
-### Auth: where it lives (important)
+### 认证：配置位置（重要）
 
-- **Recommended Anthropic path:** set an API key (wizard can store it for service use). `claude setup-token` is also supported if you want to reuse Claude Code credentials.
+- **推荐的 Anthropic 方式：** 设置 API 密钥（向导可以存储它供服务使用）。如果您想重用 Claude Code 凭据，也支持 `claude setup-token`。
 
-- OAuth credentials (legacy import): `~/.openclaw/credentials/oauth.json`
-- Auth profiles (OAuth + API keys): `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+- OAuth 凭据（旧版导入）：`~/.openclaw/credentials/oauth.json`
+- 认证配置文件（OAuth + API 密钥）：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
 
-Headless/server tip: do OAuth on a normal machine first, then copy `oauth.json` to the gateway host.
+无头/服务器提示：先在普通机器上进行 OAuth，然后将 `oauth.json` 复制到网关主机。
 
-## 3) Start the Gateway
+## 3) 启动网关
 
-If you installed the service during onboarding, the Gateway should already be running:
+如果您在入门期间安装了服务，网关应该已经在运行：
 
 ```bash
 openclaw gateway status
 ```
 
-Manual run (foreground):
+手动运行（前台）：
 
 ```bash
 openclaw gateway --port 18789 --verbose
 ```
 
-Dashboard (local loopback): `http://127.0.0.1:18789/`
-If a token is configured, paste it into the Control UI settings (stored as `connect.params.auth.token`).
+仪表板（本地环回）：`http://127.0.0.1:18789/`
+如果配置了令牌，将其粘贴到控制 UI 设置中（存储为 `connect.params.auth.token`）。
 
-⚠️ **Bun warning (WhatsApp + Telegram):** Bun has known issues with these
-channels. If you use WhatsApp or Telegram, run the Gateway with **Node**.
+⚠️ **Bun 警告（WhatsApp + Telegram）：** Bun 在这些
+频道上存在已知问题。如果您使用 WhatsApp 或 Telegram，请使用 **Node** 运行网关。
 
-## 3.5) Quick verify (2 min)
+## 3.5) 快速验证（2 分钟）
 
 ```bash
 openclaw status
@@ -131,43 +131,43 @@ openclaw health
 openclaw security audit --deep
 ```
 
-## 4) Pair + connect your first chat surface
+## 4) 配对 + 连接您的第一个聊天界面
 
-### WhatsApp (QR login)
+### WhatsApp（QR 登录）
 
 ```bash
 openclaw channels login
 ```
 
-Scan via WhatsApp → Settings → Linked Devices.
+通过 WhatsApp → 设置 → 已关联的设备进行扫描。
 
-WhatsApp doc: [WhatsApp](/zh/channels/whatsapp)
+WhatsApp 文档：[WhatsApp](/en/channels/whatsapp)
 
-### Telegram / Discord / others
+### Telegram / Discord / 其他
 
-The wizard can write tokens/config for you. If you prefer manual config, start with:
+向导可以为您编写令牌/配置。如果您更喜欢手动配置，请从以下开始：
 
-- Telegram: [Telegram](/zh/channels/telegram)
-- Discord: [Discord](/zh/channels/discord)
-- Mattermost (plugin): [Mattermost](/zh/channels/mattermost)
+- Telegram：[Telegram](/en/channels/telegram)
+- Discord：[Discord](/en/channels/discord)
+- Mattermost（插件）：[Mattermost](/en/channels/mattermost)
 
-**Telegram DM tip:** your first DM returns a pairing code. Approve it (see next step) or the bot won’t respond.
+**Telegram 私信提示：** 您的第一条私信将返回一个配对代码。批准它（见下一步），否则机器人不会响应。
 
-## 5) DM safety (pairing approvals)
+## 5) 私信安全（配对批准）
 
-Default posture: unknown DMs get a short code and messages are not processed until approved.
-If your first DM gets no reply, approve the pairing:
+默认策略：未知的私信会获得一个短代码，在批准之前不会处理消息。
+如果您的第一条私信没有回复，请批准配对：
 
 ```bash
 openclaw pairing list whatsapp
 openclaw pairing approve whatsapp <code>
 ```
 
-Pairing doc: [Pairing](/zh/start/pairing)
+配对文档：[配对](/en/start/pairing)
 
-## From source (development)
+## 从源码（开发）
 
-If you’re hacking on OpenClaw itself, run from source:
+如果您正在开发 OpenClaw 本身，请从源码运行：
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -178,31 +178,31 @@ pnpm build
 openclaw onboard --install-daemon
 ```
 
-If you don’t have a global install yet, run the onboarding step via `pnpm openclaw ...` from the repo.
-`pnpm build` also bundles A2UI assets; if you need to run just that step, use `pnpm canvas:a2ui:bundle`.
+如果您还没有全局安装，请通过仓库中的 `pnpm openclaw ...` 运行入门步骤。
+`pnpm build` 也捆绑了 A2UI 资产；如果您只需要运行该步骤，请使用 `pnpm canvas:a2ui:bundle`。
 
-Gateway (from this repo):
+网关（来自此仓库）：
 
 ```bash
 node openclaw.mjs gateway --port 18789 --verbose
 ```
 
-## 7) Verify end-to-end
+## 7) 端到端验证
 
-In a new terminal, send a test message:
+在新的终端中，发送测试消息：
 
 ```bash
 openclaw message send --target +15555550123 --message "Hello from OpenClaw"
 ```
 
-If `openclaw health` shows “no auth configured”, go back to the wizard and set OAuth/key auth — the agent won’t be able to respond without it.
+如果 `openclaw health` 显示”未配置认证”，请返回向导并设置 OAuth/密钥认证——没有它代理将无法响应。
 
-Tip: `openclaw status --all` is the best pasteable, read-only debug report.
-Health probes: `openclaw health` (or `openclaw status --deep`) asks the running gateway for a health snapshot.
+提示：`openclaw status --all` 是最好的可粘贴的只读调试报告。
+健康探测：`openclaw health`（或 `openclaw status --deep`）向运行的网关请求健康快照。
 
-## Next steps (optional, but great)
+## 后续步骤（可选，但很棒）
 
-- macOS menu bar app + voice wake: [macOS app](/zh/platforms/macos)
-- iOS/Android nodes (Canvas/camera/voice): [Nodes](/zh/nodes)
-- Remote access (SSH tunnel / Tailscale Serve): [Remote access](/zh/gateway/remote) and [Tailscale](/zh/gateway/tailscale)
-- Always-on / VPN setups: [Remote access](/zh/gateway/remote), [exe.dev](/zh/platforms/exe-dev), [Hetzner](/zh/platforms/hetzner), [macOS remote](/zh/platforms/mac/remote)
+- macOS 菜单栏应用 + 语音唤醒：[macOS 应用](/en/platforms/macos)
+- iOS/Android 节点（Canvas/相机/语音）：[节点](/en/nodes)
+- 远程访问（SSH 隧道 / Tailscale Serve）：[远程访问](/en/gateway/remote) 和 [Tailscale](/en/gateway/tailscale)
+- 始终开启 / VPN 设置：[远程访问](/en/gateway/remote)、[exe.dev](/en/platforms/exe-dev)、[Hetzner](/en/platforms/hetzner)、[macOS 远程](/en/platforms/mac/remote)

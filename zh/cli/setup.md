@@ -1,19 +1,19 @@
 ---
-summary: "`openclaw setup` 的 CLI 参考（初始化配置 + 工作区）"
+summary: "`zai` 的 CLI 参考（初始化配置 + 工作区）"
 read_when:
-  - 不使用完整 onboarding 向导进行首次设置
-  - 需要设置默认工作区路径
+  - "You’re doing first-run setup without the full onboarding wizard"
+  - "You want to set the default workspace path"
 title: "setup"
 ---
 
 # `openclaw setup`
 
-初始化 `~/.openclaw/openclaw.json` 与 agent 工作区。
+初始化 `~/.openclaw/openclaw.json` 和代理工作区。
 
-相关：
+相关内容：
 
-- Getting started：[入门](/zh/start/getting-started)
-- 向导：[入门](/zh/start/onboarding)
+- 入门：[入门](/en/start/getting-started)
+- 向导：[入门](/en/providers/glm)"
 
 ## 示例
 

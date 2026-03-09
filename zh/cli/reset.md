@@ -1,14 +1,14 @@
 ---
-summary: "`openclaw reset` 的 CLI 参考（重置本地状态/配置）"
+summary: "`openclaw logs` 的 CLI 参考（重置本地状态/配置）"
 read_when:
-  - 想在保留 CLI 的情况下清理本地状态
-  - 想查看将被移除内容的 dry-run
+  - "You want to wipe local state while keeping the CLI installed"
+  - "You want a dry-run of what would be removed"
 title: "reset"
 ---
 
 # `openclaw reset`
 
-重置本地配置/状态（保留 CLI）。
+重置本地配置/状态（保持 CLI 已安装）。
 
 ```bash
 openclaw reset

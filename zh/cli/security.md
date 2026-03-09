@@ -1,26 +1,31 @@
 ---
-summary: "`openclaw security` 的 CLI 参考（审计并修复常见安全隐患）"
+summary: "<!-- i18n:todo -->的 CLI 参考 %%P1%% (audit and fix common security footguns)<!-- /i18n:todo -->"
 read_when:
-  - 需要对配置/状态做快速安全审计
-  - 需要应用安全的“fix”建议（chmod、收紧默认值）
-title: "security"
+  - "You want to run a quick security audit on config/state"
+  - "You want to apply safe “fix” suggestions (chmod, tighten defaults)"
+title: "<!-- i18n:todo -->security<!-- /i18n:todo -->"
 ---
 
 # `openclaw security`
 
-安全工具（审计 + 可选修复）。
+<!-- i18n:todo -->
+Security tools (audit + optional fixes).
+<!-- /i18n:todo -->
 
-相关：
+<!-- i18n:todo -->
+Related:
+<!-- /i18n:todo -->
 
-- 安全指南：[安全](/zh/gateway/security)
+<!-- i18n:todo -->
+- Security guide: [Security]%%P2%%
+<!-- /i18n:todo -->
 
-## 审计
+<!-- i18n:todo -->
+## Audit
+<!-- /i18n:todo -->
 
-```bash
-openclaw security audit
-openclaw security audit --deep
-openclaw security audit --fix
-```
-
-审计会在多个 DM 发送者共享主会话时给出警告，并建议对共享收件箱使用**安全 DM 模式**：`session.dmScope="per-channel-peer"`（多账号频道使用 `per-account-channel-peer`）。
-它也会在未启用 sandbox 且启用了 web/browser 工具时，检测到使用小模型（`<=300B`）并提示警告。
+%%CB_72de7df3%%
+<!-- i18n:todo -->
+The audit warns when multiple DM senders share the main session and recommends **secure DM mode**: %%P3%% (or %%P4%% for multi-account channels) for shared inboxes.
+It also warns when small models (%%P5%%) are used without sandboxing and with web/browser tools enabled.
+<!-- /i18n:todo -->

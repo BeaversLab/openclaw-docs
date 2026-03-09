@@ -1,10 +1,10 @@
 ---
-summary: "会话管理文档的别名"
+summary: "Alias for session management docs"
 read_when:
-  - 你在找 docs/sessions.md；正文在 docs/session.md
+  - "You looked for docs/sessions.md; canonical doc lives in docs/session.md"
 title: "Sessions"
 ---
 
-# 会话
+# Sessions
 
-会话管理的正文文档位于 [会话 management](/zh/concepts/session)。
+Canonical session management docs live in [Session management](/en/concepts/session).

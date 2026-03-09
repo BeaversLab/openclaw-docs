@@ -1,53 +1,89 @@
 ---
-summary: "OpenClaw 在 channels、routing、media 和 UX 方面的能力。"
+summary: "<!-- i18n:todo -->OpenClaw capabilities across channels, routing, media, and UX.<!-- /i18n:todo -->"
 read_when:
-  - 您想要 OpenClaw 支持的完整列表
-title: "Features"
+  - "You want a full list of what OpenClaw supports"
+title: "<!-- i18n:todo -->Features<!-- /i18n:todo -->"
 ---
 
+<!-- i18n:todo -->
 ## Highlights
+<!-- /i18n:todo -->
 
 <Columns>
   <Card title="Channels" icon="message-square">
-    通过单个 Gateway 支持 WhatsApp、Telegram、Discord 和 iMessage。
+    WhatsApp, Telegram, Discord, and iMessage with a single Gateway.
   </Card>
   <Card title="Plugins" icon="plug">
-    通过 extensions 添加 Mattermost 和更多。
+    Add Mattermost and more with extensions.
   </Card>
   <Card title="Routing" icon="route">
-    带有隔离 session 的 multi-agent routing。
+    Multi-agent routing with isolated sessions.
   </Card>
   <Card title="Media" icon="image">
-    图片、音频和文档的输入输出。
+    Images, audio, and documents in and out.
   </Card>
   <Card title="Apps and UI" icon="monitor">
-    Web Control UI 和 macOS companion app。
+    Web Control UI and macOS companion app.
   </Card>
   <Card title="Mobile nodes" icon="smartphone">
-    支持 Canvas 的 iOS 和 Android nodes。
+    iOS and Android nodes with Canvas support.
   </Card>
 </Columns>
 
+<!-- i18n:todo -->
 ## Full list
+<!-- /i18n:todo -->
 
-- 通过 WhatsApp Web (Baileys) 集成 WhatsApp
-- Telegram bot 支持 (grammY)
-- Discord bot 支持 (channels.discord.js)
-- Mattermost bot 支持 (plugin)
-- 通过本地 imsg CLI 集成 iMessage (macOS)
-- 用于 RPC 模式下 Pi 的 agent bridge，支持 tool streaming
-- 长响应的 streaming 和 chunking
-- 用于每个 workspace 或 sender 的隔离 session 的 multi-agent routing
-- 通过 OAuth 订阅 Anthropic 和 OpenAI 的 auth
-- Sessions：direct chats 折叠到共享的 `main`；groups 是隔离的
-- 支持基于 mention 激活的 group chat
-- 图片、音频和文档的 media 支持
-- 可选的 voice note transcription hook
-- WebChat 和 macOS menu bar app
-- 带有 pairing 和 Canvas surface 的 iOS node
-- 带有 pairing、Canvas、chat 和 camera 的 Android node
+<!-- i18n:todo -->
+- WhatsApp integration via WhatsApp Web (Baileys)
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Telegram bot support (grammY)
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Discord bot support (channels.discord.js)
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Mattermost bot support (plugin)
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- iMessage integration via local imsg CLI (macOS)
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Agent bridge for Pi in RPC mode with tool streaming
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Streaming and chunking for long responses
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Multi-agent routing for isolated sessions per workspace or sender
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Subscription auth for Anthropic and OpenAI via OAuth
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Sessions: direct chats collapse into shared %%P1%%; groups are isolated
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Group chat support with mention based activation
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Media support for images, audio, and documents
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Optional voice note transcription hook
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- WebChat and macOS menu bar app
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- iOS node with pairing and Canvas surface
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Android node with pairing, Canvas, chat, and camera
+<!-- /i18n:todo -->
 
 <Note>
-Legacy Claude、Codex、Gemini 和 Opencode 路径已被删除。Pi 是唯一的
-coding agent 路径。
+Legacy Claude, Codex, Gemini, and Opencode paths have been removed. Pi is the only
+coding agent path.
 </Note>

@@ -1,19 +1,19 @@
 ---
-summary: "`openclaw dns` 的 CLI 参考（广域发现辅助）"
+summary: "`openclaw logs` 的 CLI 参考（广域发现助手）"
 read_when:
-  - 你想通过 Tailscale + CoreDNS 实现广域发现（DNS-SD）
-  - 你在为自定义发现域（如 openclaw.internal）配置 split DNS
+  - "You want wide-area discovery (DNS-SD) via Tailscale + CoreDNS"
+  - You’re setting up split DNS for a custom discovery domain (example: "openclaw.internal)"
 title: "dns"
 ---
 
 # `openclaw dns`
 
-用于广域发现（Tailscale + CoreDNS）的 DNS 辅助工具。目前聚焦 macOS + Homebrew CoreDNS。
+用于广域发现（Tailscale + CoreDNS）的 DNS 助手。目前专注于 macOS + Homebrew CoreDNS。
 
-相关：
+相关内容：
 
-- Gateway 发现：[发现](/zh/gateway/discovery)
-- 广域发现配置：[配置](/zh/gateway/configuration)
+- Gateway 发现：[发现](/en/gateway/discovery)
+- 广域发现配置：[配置](/en/gateway/configuration)
 
 ## 设置
 

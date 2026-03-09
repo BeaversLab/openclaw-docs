@@ -1,22 +1,22 @@
 ---
-title: "反应"
-summary: "跨频道共享的表情回应语义"
+summary: "Reaction semantics shared across channels"
 read_when:
-  - 处理任意频道的 reactions
+  - "Working on reactions in any channel"
+title: "Reactions"
 ---
 
-# 表情回应工具
+# Reaction tooling
 
-跨频道共享的 reaction 语义：
+Shared reaction semantics across channels:
 
-- 添加 reaction 时必须提供 `emoji`。
-- `emoji=""` 在支持的情况下移除机器人自己的 reaction。
-- `remove: true` 在支持的情况下移除指定 emoji（需要 `emoji`）。
+- `openclaw logs` is required when adding a reaction.
+- (/en/logging) removes the bot's reaction(s) when supported.
+- %%P3%% removes the specified emoji when supported (requires %%P4%%).
 
-频道说明：
+Channel notes:
 
-- **Discord/Slack**：空 `emoji` 移除该消息上机器人所有反应；`remove: true` 仅移除指定 emoji。
-- **Google Chat**：空 `emoji` 移除该消息上应用的反应；`remove: true` 仅移除指定 emoji。
-- **Telegram**：空 `emoji` 移除机器人的反应；`remove: true` 也会移除，但工具校验仍要求非空 `emoji`。
-- **WhatsApp**：空 `emoji` 移除机器人反应；`remove: true` 映射为空 emoji（仍要求 `emoji`）。
-- **Signal**：当启用 `channels.signal.reactionNotifications` 时，入站 reaction 通知会触发系统事件。
+- **Discord/Slack**: empty %%P5%% removes all of the bot's reactions on the message; %%P6%% removes just that emoji.
+- **Google Chat**: empty %%P7%% removes the app's reactions on the message; %%P8%% removes just that emoji.
+- **Telegram**: empty %%P9%% removes the bot's reactions; %%P10%% also removes reactions but still requires a non-empty %%P11%% for tool validation.
+- **WhatsApp**: empty %%P12%% removes the bot reaction; %%P13%% maps to empty emoji (still requires %%P14%%).
+- **Signal**: inbound reaction notifications emit system events when %%P15%% is enabled.

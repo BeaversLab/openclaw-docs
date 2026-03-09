@@ -1,29 +1,39 @@
 ---
-summary: "`openclaw onboard` 的 CLI 参考（交互式 onboarding 向导）"
+summary: "<!-- i18n:todo -->的 CLI 参考 %%P1%% (interactive onboarding wizard)<!-- /i18n:todo -->"
 read_when:
-  - 需要为 gateway、工作区、认证、频道与技能做引导式设置
-title: "onboard"
+  - "You want guided setup for gateway, workspace, auth, channels, and skills"
+title: "<!-- i18n:todo -->onboard<!-- /i18n:todo -->"
 ---
 
 # `openclaw onboard`
 
-交互式 onboarding 向导（本地或远程 Gateway 设置）。
+<!-- i18n:todo -->
+Interactive onboarding wizard (local or remote Gateway setup).
+<!-- /i18n:todo -->
 
-相关：
+<!-- i18n:todo -->
+Related:
+<!-- /i18n:todo -->
 
-- 向导指南：[入门](/zh/start/onboarding)
+<!-- i18n:todo -->
+- Wizard guide: [Onboarding]%%P2%%
+<!-- /i18n:todo -->
 
-## 示例
+<!-- i18n:todo -->
+## Examples
+<!-- /i18n:todo -->
 
-```bash
-openclaw onboard
-openclaw onboard --flow quickstart
-openclaw onboard --flow manual
-openclaw onboard --mode remote --remote-url ws://gateway-host:18789
-```
+%%CB_85575c78%%
+<!-- i18n:todo -->
+Flow notes:
+<!-- /i18n:todo -->
 
-流程说明：
-
-- `quickstart`：最少提示，自动生成 gateway token。
-- `manual`：完整端口/bind/auth 提示（`advanced` 的别名）。
-- 最快开始聊天：`openclaw dashboard`（Control UI，无需频道设置）。
+<!-- i18n:todo -->
+- %%P3%%: minimal prompts, auto-generates a gateway token.
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- %%P4%%: full prompts for port/bind/auth (alias of %%P5%%).
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Fastest first chat: %%P6%% (Control UI, no channel setup).
+<!-- /i18n:todo -->

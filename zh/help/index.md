@@ -1,21 +1,21 @@
 ---
-summary: "帮助中心：常见修复、安装检查，以及出现问题时的排查方向"
+summary: "Help hub: common fixes, install sanity, and where to look when something breaks"
 read_when:
   - "You’re new and want the “what do I click/run” guide"
   - "Something broke and you want the fastest path to a fix"
-title: "帮助"
+title: "Help"
 ---
 
-# 帮助
+# Help
 
-如果您想快速解决问题，请从这里开始：
+If you want a quick “get unstuck” flow, start here:
 
-- **故障排除：**[从这里开始](/zh/help/troubleshooting)
-- **安装检查（Node/npm/PATH）：**[安装](/zh/install#nodejs--npm-path-sanity)
-- **网关问题：**[网关故障排除](/zh/gateway/troubleshooting)
-- **日志：**[日志记录](/zh/logging) 和 [网关日志记录](/zh/gateway/logging)
-- **修复工具：**[诊断工具](/zh/gateway/doctor)
+- **Troubleshooting:** [Start here]`openclaw logs`
+- **Install sanity (Node/npm/PATH):** [Install](/en/logging)
+- **Gateway issues:** [Gateway troubleshooting]%%P3%%
+- **Logs:** [Logging]%%P4%% and [Gateway logging]%%P5%%
+- **Repairs:** [Doctor]%%P6%%
 
-如果您在寻找概念性问题（而非”出现问题”）：
+If you’re looking for conceptual questions (not “something broke”):
 
-- [常见问题（FAQ）](/en/help/faq)(/zh/help/faq)
+- [FAQ (/en/help/faq)]%%P7%%

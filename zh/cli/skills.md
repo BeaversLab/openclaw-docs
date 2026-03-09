@@ -1,26 +1,33 @@
 ---
-summary: "`openclaw skills` 的 CLI 参考（list/info/check）与技能就绪情况"
+summary: "<!-- i18n:todo -->的 CLI 参考 %%P1%% (list/info/check) and skill eligibility<!-- /i18n:todo -->"
 read_when:
-  - 需要查看哪些技能可用且已就绪
-  - 需要排查技能缺失的二进制/环境/配置
-title: "skills"
+  - "You want to see which skills are available and ready to run"
+  - "You want to debug missing binaries/env/config for skills"
+title: "<!-- i18n:todo -->skills<!-- /i18n:todo -->"
 ---
 
 # `openclaw skills`
 
-检查技能（内置 + 工作区 + 托管覆盖）并查看哪些就绪/缺失依赖。
+<!-- i18n:todo -->
+Inspect skills (bundled + workspace + managed overrides) and see what’s eligible vs missing requirements.
+<!-- /i18n:todo -->
 
-相关：
+<!-- i18n:todo -->
+Related:
+<!-- /i18n:todo -->
 
-- 技能系统：[技能](/zh/tools/skills)
-- 技能配置：[技能配置](/zh/tools/skills-config)
-- ClawdHub 安装：[ClawdHub](/zh/tools/clawdhub)
+<!-- i18n:todo -->
+- Skills system: [Skills]%%P2%%
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Skills config: [Skills config]%%P3%%
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- ClawHub installs: [ClawHub]%%P4%%
+<!-- /i18n:todo -->
 
-## 命令
+<!-- i18n:todo -->
+## Commands
+<!-- /i18n:todo -->
 
-```bash
-openclaw skills list
-openclaw skills list --eligible
-openclaw skills info <name>
-openclaw skills check
-```
+%%CB_37dd8fc8%%
