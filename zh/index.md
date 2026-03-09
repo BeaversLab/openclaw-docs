@@ -22,22 +22,22 @@ title: "OpenClaw"
     />
 </p>
 
-> _"去角质！去角质！"_ — 一只太空龙虾，大概
+> _"去壳！去壳！"_ — 这大概是一只太空龙虾
 
 <p align="center">
-  <strong>Any OS gateway for AI agents across WhatsApp, Telegram, Discord, iMessage, and more.</strong><br />
-  Send a message, get an agent response from your pocket. Plugins add Mattermost and more.
+  <strong>适用于任何操作系统的 AI 代理网关，支持 WhatsApp、Telegram、Discord、iMessage 等。</strong><br />
+  发送一条消息，即可随时随地收到代理的回复。插件可以扩展支持 Mattermost 等更多平台。
 </p>
 
 <Columns>
-  <Card title="Get Started" href="/start/getting-started" icon="rocket">
-    Install OpenClaw and bring up the Gateway in minutes.
+  <Card title="快速开始" href="/start/getting-started" icon="rocket">
+    安装 OpenClaw，几分钟内即可启动 Gateway。
   </Card>
-  <Card title="Run the Wizard" href="/start/wizard" icon="sparkles">
-    Guided setup with `openclaw onboard` and pairing flows.
+  <Card title="运行引导程序" href="/start/wizard" icon="sparkles">
+    使用 `openclaw onboard` 和配对流程进行引导式设置。
   </Card>
-  <Card title="Open the Control UI" href="/web/control-ui" icon="layout-dashboard">
-    Launch the browser dashboard for chat, config, and sessions.
+  <Card title="打开控制界面" href="/web/control-ui" icon="layout-dashboard">
+    启动浏览器仪表盘进行聊天、配置和会话管理。
   </Card>
 </Columns>
 
@@ -60,40 +60,40 @@ Gateway 是会话、路由和通道连接的单一真实来源。
 ## 主要功能
 
 <Columns>
-  <Card title="Multi-channel gateway" icon="network">
-    WhatsApp, Telegram, Discord, and iMessage with a single Gateway process.
+  <Card title="多通道网关" icon="network">
+    只需一个 Gateway 进程，即可连接 WhatsApp、Telegram、Discord 和 iMessage。
   </Card>
-  <Card title="Plugin channels" icon="plug">
-    Add Mattermost and more with extension packages.
+  <Card title="插件通道" icon="plug">
+    通过扩展包添加对 Mattermost 等更多平台的支持。
   </Card>
-  <Card title="Multi-agent routing" icon="route">
-    Isolated sessions per agent, workspace, or sender.
+  <Card title="多代理路由" icon="route">
+    按代理、工作区或发送者隔离会话。
   </Card>
-  <Card title="Media support" icon="image">
-    Send and receive images, audio, and documents.
+  <Card title="媒体支持" icon="image">
+    支持发送和接收图片、音频和文档。
   </Card>
-  <Card title="Web Control UI" icon="monitor">
-    Browser dashboard for chat, config, sessions, and nodes.
+  <Card title="网页版控制台" icon="monitor">
+    浏览器仪表盘，用于聊天、配置、会话和节点管理。
   </Card>
-  <Card title="Mobile nodes" icon="smartphone">
-    Pair iOS and Android nodes with Canvas support.
+  <Card title="移动节点" icon="smartphone">
+    支持 iOS 和 Android 节点配对，并可用 Canvas。
   </Card>
 </Columns>
 
 ## 快速开始
 
 <Steps>
-  <Step title="Install OpenClaw">
+  <Step title="安装 OpenClaw">
     ```bash
     npm install -g openclaw@latest
     ```
   </Step>
-  <Step title="Onboard and install the service">
+  <Step title="引导并安装服务">
     ```bash
     openclaw onboard --install-daemon
     ```
   </Step>
-  <Step title="Pair WhatsApp and start the Gateway">
+  <Step title="配对 WhatsApp 并启动网关">
     ```bash
     openclaw channels login
     openclaw gateway --port 18789
@@ -138,42 +138,42 @@ Config lives at `~/.openclaw/openclaw.json`。
 ## 从这里开始
 
 <Columns>
-  <Card title="Docs hubs" href="/start/hubs" icon="book-open">
-    All docs and guides, organized by use case.
+  <Card title="文档中心" href="/start/hubs" icon="book-open">
+    按使用场景分类的所有文档和指南。
   </Card>
-  <Card title="Configuration" href="/gateway/configuration" icon="settings">
-    Core Gateway settings, tokens, and provider config.
+  <Card title="配置" href="/gateway/configuration" icon="settings">
+    核心 Gateway 设置、令牌和服务商配置。
   </Card>
-  <Card title="Remote access" href="/gateway/remote" icon="globe">
-    SSH and tailnet access patterns.
+  <Card title="远程访问" href="/gateway/remote" icon="globe">
+    SSH 与 tailnet 的访问方式。
   </Card>
-  <Card title="Channels" href="/channels/telegram" icon="message-square">
-    Channel-specific setup for WhatsApp, Telegram, Discord, and more.
+  <Card title="频道" href="/channels/telegram" icon="message-square">
+    针对 WhatsApp、Telegram、Discord 等的专用频道设置。
   </Card>
-  <Card title="Nodes" href="/nodes" icon="smartphone">
-    iOS and Android nodes with pairing and Canvas.
+  <Card title="节点" href="/nodes" icon="smartphone">
+    支持配对与 Canvas 的 iOS 和 Android 节点。
   </Card>
-  <Card title="Help" href="/help" icon="life-buoy">
-    Common fixes and troubleshooting entry point.
+  <Card title="帮助" href="/help" icon="life-buoy">
+    常见问题和故障排查入口。
   </Card>
 </Columns>
 
 ## 了解更多
 
 <Columns>
-  <Card title="Full feature list" href="/concepts/features" icon="list">
-    Complete channel, routing, and media capabilities.
+  <Card title="功能总览" href="/concepts/features" icon="list">
+    完整的频道、路由和媒体功能。
   </Card>
-  <Card title="Multi-agent routing" href="/concepts/multi-agent" icon="route">
-    Workspace isolation and per-agent sessions.
+  <Card title="多代理路由" href="/concepts/multi-agent" icon="route">
+    工作区隔离与每个代理独立会话。
   </Card>
-  <Card title="Security" href="/gateway/security" icon="shield">
-    Tokens, allowlists, and safety controls.
+  <Card title="安全" href="/gateway/security" icon="shield">
+    令牌、白名单和安全控制。
   </Card>
-  <Card title="Troubleshooting" href="/gateway/troubleshooting" icon="wrench">
-    Gateway diagnostics and common errors.
+  <Card title="故障排查" href="/gateway/troubleshooting" icon="wrench">
+    Gateway 诊断与常见错误。
   </Card>
-  <Card title="About and credits" href="/reference/credits" icon="info">
-    Project origins, contributors, and license.
+  <Card title="关于与致谢" href="/reference/credits" icon="info">
+    项目起源、贡献者和许可协议。
   </Card>
 </Columns>

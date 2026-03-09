@@ -1,86 +1,40 @@
 ---
-summary: "<!-- i18n:todo -->RPC protocol notes for onboarding wizard and config schema<!-- /i18n:todo -->"
-read_when: "<!-- i18n:todo -->Changing onboarding wizard steps or config schema endpoints<!-- /i18n:todo -->"
-title: "<!-- i18n:todo -->Onboarding and Config Protocol<!-- /i18n:todo -->"
+summary: "入门向导和配置模式的 RPC 协议说明"
+read_when: "更改入门向导步骤或配置模式端点"
+title: "入门和配置协议"
 ---
 
-<!-- i18n:todo -->
-# Onboarding + Config Protocol
-<!-- /i18n:todo -->
+# 入门 + 配置协议
 
-<!-- i18n:todo -->
-Purpose: shared onboarding + config surfaces across CLI, macOS app, and Web UI.
-<!-- /i18n:todo -->
+目的：跨 CLI、macOS 应用和 Web UI 的共享入门 + 配置界面。
 
-<!-- i18n:todo -->
-## Components
-<!-- /i18n:todo -->
+## 组件
 
-<!-- i18n:todo -->
-- Wizard engine (shared session + prompts + onboarding state).
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- CLI onboarding uses the same wizard flow as the UI clients.
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Gateway RPC exposes wizard + config schema endpoints.
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- macOS onboarding uses the wizard step model.
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Web UI renders config forms from JSON Schema + UI hints.
-<!-- /i18n:todo -->
+- 向导引擎（共享会话 + 提示 + 入门状态）。
+- CLI 入门使用与 UI 客户端相同的向导流程。
+- Gateway RPC 暴露向导 + 配置模式端点。
+- macOS 入门使用向导步骤模型。
+- Web UI 从 JSON Schema + UI 提示渲染配置表单。
 
-<!-- i18n:todo -->
 ## Gateway RPC
-<!-- /i18n:todo -->
 
-<!-- i18n:todo -->
-- %%P1%% params: %%P2%%
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- %%P3%% params: %%P4%%
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- %%P5%% params: %%P6%%
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- %%P7%% params: %%P8%%
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- %%P9%% params: %%P10%%
-<!-- /i18n:todo -->
+- `wizard.start` 参数：`{ mode?: "local"|"remote", workspace?: string }`
+- `wizard.next` 参数：`{ sessionId, answer?: { stepId, value? } }`
+- `wizard.cancel` 参数：`{ sessionId }`
+- `wizard.status` 参数：`{ sessionId }`
+- `config.schema` 参数：`{}`
 
-<!-- i18n:todo -->
-Responses (shape)
-<!-- /i18n:todo -->
+响应（形状）
 
-<!-- i18n:todo -->
-- Wizard: %%P11%%
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Config schema: %%P12%%
-<!-- /i18n:todo -->
+- 向导：`{ sessionId, done, step?, status?, error? }`
+- 配置模式：`{ schema, uiHints, version, generatedAt }`
 
-<!-- i18n:todo -->
-## UI Hints
-<!-- /i18n:todo -->
+## UI 提示
 
-<!-- i18n:todo -->
-- %%P13%% keyed by path; optional metadata (label/help/group/order/advanced/sensitive/placeholder).
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Sensitive fields render as password inputs; no redaction layer.
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Unsupported schema nodes fall back to the raw JSON editor.
-<!-- /i18n:todo -->
+- `uiHints` 按路径键控；可选元数据（标签/帮助/分组/顺序/高级/敏感/占位符）。
+- 敏感字段呈现为密码输入；无编辑层。
+- 不支持的模式节点回退到原始 JSON 编辑器。
 
-<!-- i18n:todo -->
-## Notes
-<!-- /i18n:todo -->
+## 注意
 
-<!-- i18n:todo -->
-- This doc is the single place to track protocol refactors for onboarding/config.
-<!-- /i18n:todo -->
+- 本文档是追踪入门/配置协议重构的唯一位置。

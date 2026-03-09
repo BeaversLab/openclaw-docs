@@ -1,39 +1,34 @@
 ---
-summary: "<!-- i18n:todo -->Use Z.AI (GLM models) with OpenClaw<!-- /i18n:todo -->"
+summary: "在 OpenClaw 中使用 Z.AI (GLM 模型)"
 read_when:
-  - "You want Z.AI / GLM models in OpenClaw"
-  - "You need a simple ZAI_API_KEY setup"
-title: "<!-- i18n:todo -->Z.AI<!-- /i18n:todo -->"
+  - "你想要在 OpenClaw 中使用 Z.AI / GLM 模型"
+  - "你需要简单的 ZAI_API_KEY 设置"
+title: "Z.AI"
 ---
 
-<!-- i18n:todo -->
 # Z.AI
-<!-- /i18n:todo -->
 
-<!-- i18n:todo -->
-Z.AI is the API platform for **GLM** models. It provides REST APIs for GLM and uses API keys
-for authentication. Create your API key in the Z.AI console. OpenClaw uses the %%P1%% provider
-with a Z.AI API key.
-<!-- /i18n:todo -->
+Z.AI 是 **GLM** 模型的 API 平台。它提供 GLM 的 REST API 并使用 API 密钥进行身份验证。在 Z.AI 控制台中创建你的 API 密钥。OpenClaw 使用 `zai` 提供商配合 Z.AI API 密钥。
 
-## CLI setup
+## CLI 设置
 
-%%CB_1d26cd71%%
-<!-- i18n:todo -->
-## Config snippet
-<!-- /i18n:todo -->
+```bash
+openclaw onboard --auth-choice zai-api-key
+# or non-interactive
+openclaw onboard --zai-api-key "$ZAI_API_KEY"
+```
 
-%%CB_9c197307%%
-<!-- i18n:todo -->
-## Notes
-<!-- /i18n:todo -->
+## 配置片段
 
-<!-- i18n:todo -->
-- GLM models are available as %%P2%% (example: %%P3%%).
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- See [/providers/glm]%%P4%% for the model family overview.
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Z.AI uses Bearer auth with your API key.
-<!-- /i18n:todo -->
+```json5
+{
+  env: { ZAI_API_KEY: "sk-..." },
+  agents: { defaults: { model: { primary: "zai/glm-4.7" } } },
+}
+```
+
+## 注意事项
+
+- GLM 模型以 `zai/<model>` 形式提供（例如：`zai/glm-4.7`）。
+- 模型系列概述请参阅 [/providers/glm](/zh/providers/glm)。
+- Z.AI 使用你的 API 密钥进行 Bearer 身份验证。
