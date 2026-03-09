@@ -1,13 +1,11 @@
 ---
-summary: "<!-- i18n:todo -->OpenClaw capabilities across channels, routing, media, and UX.<!-- /i18n:todo -->"
+summary: "OpenClaw 在频道、路由、媒体和 UX 方面的功能。"
 read_when:
   - "You want a full list of what OpenClaw supports"
-title: "<!-- i18n:todo -->Features<!-- /i18n:todo -->"
+title: "功能"
 ---
 
-<!-- i18n:todo -->
-## Highlights
-<!-- /i18n:todo -->
+## 亮点"
 
 <Columns>
   <Card title="Channels" icon="message-square">
@@ -30,58 +28,24 @@ title: "<!-- i18n:todo -->Features<!-- /i18n:todo -->"
   </Card>
 </Columns>
 
-<!-- i18n:todo -->
-## Full list
-<!-- /i18n:todo -->
+## 完整列表"
 
-<!-- i18n:todo -->
-- WhatsApp integration via WhatsApp Web (Baileys)
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Telegram bot support (grammY)
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Discord bot support (channels.discord.js)
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Mattermost bot support (plugin)
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- iMessage integration via local imsg CLI (macOS)
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Agent bridge for Pi in RPC mode with tool streaming
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Streaming and chunking for long responses
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Multi-agent routing for isolated sessions per workspace or sender
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Subscription auth for Anthropic and OpenAI via OAuth
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Sessions: direct chats collapse into shared %%P1%%; groups are isolated
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Group chat support with mention based activation
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Media support for images, audio, and documents
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Optional voice note transcription hook
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- WebChat and macOS menu bar app
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- iOS node with pairing and Canvas surface
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Android node with pairing, Canvas, chat, and camera
-<!-- /i18n:todo -->
+- 通过 WhatsApp Web (Baileys) 集成 WhatsApp"
+- Telegram 机器人支持（grammY）"
+- Discord 机器人支持（channels.discord.js）"
+- Mattermost 机器人支持（插件）"
+- 通过本地 imsg CLI 集成 iMessage（macOS）"
+- Pi 的代理桥接，RPC 模式下支持工具流式传输"
+- 长响应的流式传输和分块"
+- 多代理路由，为每个工作区或发送者提供隔离的会话"
+- 通过 OAuth 订阅 Anthropic 和 OpenAI 的认证"
+- 会话：直接聊天折叠到共享的 `zai` 中；群组是隔离的"
+- 群聊支持，基于提及的激活"
+- 图像、音频和文档的媒体支持"
+- 可选的语音备忘录转录钩子"
+- WebChat 和 macOS 菜单栏应用程序"
+- iOS 节点，支持配对和 Canvas 表面"
+- Android 节点，支持配对、Canvas、聊天和相机"
 
 <Note>
 Legacy Claude, Codex, Gemini, and Opencode paths have been removed. Pi is the only

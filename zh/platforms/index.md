@@ -1,52 +1,52 @@
 ---
-title: "平台"
-summary: "平台支持概览（Gateway + 伴侣应用）"
+summary: "平台支持概述（Gateway + 伴侣应用）"
 read_when:
-  - 查找 OS 支持或安装路径
-  - 决定在哪里运行 Gateway
+  - "Looking for OS support or install paths"
+  - "Deciding where to run the Gateway"
+title: "平台"
 ---
 
 # 平台
 
-OpenClaw 核心由 TypeScript 编写。**推荐运行时是 Node**。
-不推荐用 Bun 作为 Gateway 运行时（WhatsApp/Telegram 有 bug）。
+OpenClaw 核心使用 TypeScript 编写。**Node 是推荐的运行时**。
+不建议将 Bun 用于 Gateway（WhatsApp/Telegram 存在错误）。
 
-macOS 有伴侣应用（菜单栏 app），移动端有节点（iOS/Android）。Windows 与 Linux 伴侣应用在规划中，但 Gateway 已完全支持。
-Windows 的原生伴侣应用也在规划中；Gateway 推荐通过 WSL2 运行。
+伴侣应用适用于 macOS（菜单栏应用）和移动节点（iOS/Android）。Windows 和 Linux 伴侣应用已在计划中，但目前完全支持 Gateway。
+Windows 原生伴侣应用也在计划中；建议通过 WSL2 使用 Gateway。
 
-## 选择你的 OS
+## 选择您的操作系统
 
-- macOS：[macOS](/zh/platforms/macos)
-- iOS：[iOS](/zh/platforms/ios)
-- Android：[Android](/zh/platforms/android)
-- Windows：[Windows](/zh/platforms/windows)
-- Linux：[Linux](/zh/platforms/linux)
+- macOS：[macOS](/en/platforms/macos)
+- iOS：[iOS](/en/platforms/ios)
+- Android：[Android](/en/platforms/android)
+- Windows：[Windows](/en/platforms/windows)
+- Linux：[Linux](/en/platforms/linux)
 
-## VPS & 托管
+## VPS 和托管
 
-- VPS 枢纽：[VPS hosting](/zh/vps)
-- Fly.io：[Fly.io](/zh/platforms/fly)
-- Hetzner（Docker）：[Hetzner](/zh/platforms/hetzner)
-- GCP（Compute Engine）：[GCP](/zh/platforms/gcp)
-- exe.dev（VM + HTTPS 代理）：[exe.dev](/zh/platforms/exe-dev)
+- VPS 中心：[VPS hosting](/en/vps)
+- Fly.io：[Fly.io](/en/platforms/fly)
+- Hetzner (Docker)：[Hetzner](/en/platforms/hetzner)
+- GCP (Compute Engine)：[GCP](/en/platforms/gcp)
+- exe.dev (VM + HTTPS 代理)：[exe.dev](/en/platforms/exe-dev)
 
 ## 常用链接
 
-- 安装指南：[入门指南](/zh/start/getting-started)
-- Gateway runbook：[Gateway](/zh/gateway)
-- Gateway 配置：[配置](/zh/gateway/configuration)
+- 安装指南：[Getting Started](/en/start/getting-started)
+- Gateway 运维手册：[Gateway](/en/gateway)
+- Gateway 配置：[Configuration](/en/gateway/configuration)
 - 服务状态：`openclaw gateway status`
 
-## Gateway 服务安装（CLI）
+## Gateway service install (CLI)
 
-使用以下方式之一（均支持）：
+使用以下方法之一（全部支持）：
 
 - 向导（推荐）：`openclaw onboard --install-daemon`
-- 直接安装：`openclaw gateway install`
+- 直接：`openclaw gateway install`
 - 配置流程：`openclaw configure` → 选择 **Gateway service**
-- 修复/迁移：`openclaw doctor`（会提示安装或修复服务）
+- 修复/迁移：`openclaw doctor`（提供安装或修复服务）
 
-服务目标因 OS 而异：
+服务目标取决于操作系统：
 
-- macOS：LaunchAgent（`bot.molt.gateway` 或 `bot.molt.<profile>`；旧 `com.openclaw.*`）
-- Linux/WSL2：systemd user service（`openclaw-gateway[-<profile>].service`）
+- macOS：LaunchAgent（`bot.molt.gateway` 或 `bot.molt.<profile>`；传统 `com.openclaw.*`）
+- Linux/WSL2：systemd 用户服务（`openclaw-gateway[-<profile>].service`）

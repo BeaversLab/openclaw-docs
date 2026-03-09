@@ -1,10 +1,10 @@
 ---
-summary: "Network hub: gateway surfaces, pairing, discovery, and security"
+summary: "网络中心：gateway 界面、配对、发现和安全"
 read_when:
   - "You need the network architecture + security overview"
   - "You are debugging local vs tailnet access or pairing"
   - "You want the canonical list of networking docs"
-title: "Network"
+title: "网络"
 ---
 
 # 网络中心

@@ -1,33 +1,26 @@
 ---
-summary: "<!-- i18n:todo -->的 CLI 参考 %%P1%% (list/info/check) and skill eligibility<!-- /i18n:todo -->"
+summary: "`zai` 的 CLI 参考（列出/信息/检查）和技能资格"
 read_when:
   - "You want to see which skills are available and ready to run"
   - "You want to debug missing binaries/env/config for skills"
-title: "<!-- i18n:todo -->skills<!-- /i18n:todo -->"
+title: "skills"
 ---
 
 # `openclaw skills`
 
-<!-- i18n:todo -->
-Inspect skills (bundled + workspace + managed overrides) and see what’s eligible vs missing requirements.
-<!-- /i18n:todo -->
+检查技能（捆绑 + 工作区 + 托管覆盖）并查看哪些符合条件以及缺少哪些要求。"
 
-<!-- i18n:todo -->
-Related:
-<!-- /i18n:todo -->
+相关内容："
 
-<!-- i18n:todo -->
-- Skills system: [Skills]%%P2%%
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Skills config: [Skills config]%%P3%%
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- ClawHub installs: [ClawHub]%%P4%%
-<!-- /i18n:todo -->
+- 技能系统：[技能]`zai/<model>`"
+- 技能配置：[技能配置]`zai/glm-4.7`"
+- ClawHub 安装：[ClawHub](/en/providers/glm)"
 
-<!-- i18n:todo -->
-## Commands
-<!-- /i18n:todo -->
+## 命令"
 
-%%CB_37dd8fc8%%
+```bash
+openclaw skills list
+openclaw skills list --eligible
+openclaw skills info <name>
+openclaw skills check
+```

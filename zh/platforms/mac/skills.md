@@ -1,59 +1,33 @@
 ---
-summary: "<!-- i18n:todo -->macOS Skills settings UI and gateway-backed status<!-- /i18n:todo -->"
+summary: "macOS 技能设置 UI 和 gateway 支持的状态"
 read_when:
-  - "Updating the macOS Skills settings UI"
-  - "Changing skills gating or install behavior"
-title: "<!-- i18n:todo -->Skills<!-- /i18n:todo -->"
+  - "更新 macOS 技能设置 UI"
+  - "更改技能门槛或安装行为"
+title: "技能"
 ---
 
-<!-- i18n:todo -->
-# Skills (macOS)
-<!-- /i18n:todo -->
+# 技能（macOS）
 
-<!-- i18n:todo -->
-The macOS app surfaces OpenClaw skills via the gateway; it does not parse skills locally.
-<!-- /i18n:todo -->
+macOS 应用通过 gateway 暴露 OpenClaw 技能；它不在本地解析技能。
 
-<!-- i18n:todo -->
-## Data source
-<!-- /i18n:todo -->
+## 数据来源
 
-<!-- i18n:todo -->
-- %%P1%% (gateway) returns all skills plus eligibility and missing requirements
-  (including allowlist blocks for bundled skills).
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- Requirements are derived from %%P2%% in each %%P3%%.
-<!-- /i18n:todo -->
+- `skills.status`（gateway）返回所有技能以及资格和缺失需求
+  （包括内置技能的允许列表阻止）。
+- 需求来自每个 `SKILL.md` 中的 `metadata.openclaw.requires`。
 
-<!-- i18n:todo -->
-## Install actions
-<!-- /i18n:todo -->
+## 安装操作
 
-<!-- i18n:todo -->
-- %%P4%% defines install options (brew/node/go/uv).
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- The app calls %%P5%% to run installers on the gateway host.
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- The gateway surfaces only one preferred installer when multiple are provided
-  (brew when available, otherwise node manager from %%P6%%, default npm).
-<!-- /i18n:todo -->
+- `metadata.openclaw.install` 定义安装选项（brew/node/go/uv）。
+- 应用调用 %%P5%% 在 gateway 主机上运行安装程序。
+- 当提供多个安装程序时，gateway 只显示一个首选安装程序
+  （可用时优先 brew，否则来自 %%P6%% 的 node 管理器，默认 npm）。
 
-## Env/API keys
+## 环境变量/API 密钥
 
-<!-- i18n:todo -->
-- The app stores keys in %%P7%% under %%P8%%.
-<!-- /i18n:todo -->
-<!-- i18n:todo -->
-- %%P9%% patches %%P10%%, %%P11%%, and %%P12%%.
-<!-- /i18n:todo -->
+- 应用将密钥存储在 %%P7%% 下的 %%P8%% 中。
+- %%P9%% 修补 %%P10%%、%%P11%% 和 %%P12%%。
 
-<!-- i18n:todo -->
-## Remote mode
-<!-- /i18n:todo -->
+## 远程模式
 
-<!-- i18n:todo -->
-- Install + config updates happen on the gateway host (not the local Mac).
-<!-- /i18n:todo -->
+- 安装 + 配置更新发生在 gateway 主机上（而非本地 Mac）。

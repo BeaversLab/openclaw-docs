@@ -1,20 +1,20 @@
 ---
-summary: "用于 web_search 的 Brave Search API 配置"
+summary: "Brave Search API 设置（用于 web_search）"
 read_when:
-  - 你想用 Brave Search 作为 web_search
-  - 你需要 BRAVE_API_KEY 或套餐信息
-title: "Brave 搜索"
+  - "You want to use Brave Search for web_search"
+  - "You need a BRAVE_API_KEY or plan details"
+title: "Brave Search"
 ---
 
-# Brave 搜索 API
+# Brave Search API
 
-OpenClaw 使用 Brave Search 作为 `web_search` 的默认 provider。
+OpenClaw 使用 Brave Search 作为 `web_search` 的默认提供商。
 
-## 获取 API key
+## Get an API key
 
-1. 在 https://brave.com/search/api/ 创建 Brave Search API 账号
-2. 在控制台选择 **Data for Search** 套餐并生成 API key
-3. 将 key 写入配置（推荐）或在 Gateway 环境中设置 `BRAVE_API_KEY`
+1. 在 https://brave.com/search/api/ 创建 Brave Search API 账户
+2. 在仪表板中，选择 **Data for Search** 计划并生成 API 密钥。
+3. 将密钥存储在配置中（推荐）或在 Gateway 环境中设置 `BRAVE_API_KEY`。
 
 ## 配置示例
 
@@ -33,9 +33,9 @@ OpenClaw 使用 Brave Search 作为 `web_search` 的默认 provider。
 }
 ```
 
-## 备注
+## 注意事项
 
-- Data for AI 套餐**不**兼容 `web_search`。
-- Brave 提供免费层与付费套餐；当前限制请查看 Brave API 控制台。
+- Data for AI 计划与 `web_search` **不**兼容。
+- Brave 提供免费套餐和付费计划；查看 Brave API 门户了解当前限制。
 
-参见 [Web 工具](/zh/tools/web) 了解完整 web_search 配置。
+完整的 web_search 配置请参阅 [Web tools](/en/tools/web)。

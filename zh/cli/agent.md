@@ -1,27 +1,24 @@
 ---
-summary: "<!-- i18n:todo -->的 CLI 参考 %%P1%% (send one agent turn via the Gateway)<!-- /i18n:todo -->"
+summary: "`zai` 的 CLI 参考（通过 Gateway 发送一个代理轮次）"
 read_when:
-  - "You want to run one agent turn from scripts (optionally deliver reply)"
-title: "<!-- i18n:todo -->agent<!-- /i18n:todo -->"
+  - "当你需要从脚本运行一个代理轮次时（可选择传递回复）"
+title: "agent（代理）"
 ---
 
 # `openclaw agent`
 
-<!-- i18n:todo -->
-Run an agent turn via the Gateway (use %%P2%% for embedded).
-Use %%P3%% to target a configured agent directly.
-<!-- /i18n:todo -->
+通过 Gateway 运行一个代理轮次（嵌入式使用 `--local`）。
+使用 `--agent <id>` 直接定位已配置的代理。
 
-<!-- i18n:todo -->
-Related:
-<!-- /i18n:todo -->
+相关内容：
 
-<!-- i18n:todo -->
-- Agent send tool: [Agent send]%%P4%%
-<!-- /i18n:todo -->
+- 代理发送工具：[代理发送](/zh/tools/agent-send)
 
-<!-- i18n:todo -->
-## Examples
-<!-- /i18n:todo -->
+## 示例
 
-%%CB_ff339143%%
+```bash
+openclaw agent --to +15555550123 --message "status update" --deliver
+openclaw agent --agent ops --message "Summarize logs"
+openclaw agent --session-id 1234 --message "Summarize inbox" --thinking medium
+openclaw agent --agent ops --message "Generate report" --deliver --reply-channel slack --reply-to "#reports"
+```

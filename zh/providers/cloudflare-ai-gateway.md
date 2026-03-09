@@ -1,31 +1,31 @@
 ---
 title: "Cloudflare AI Gateway"
-summary: "Cloudflare AI Gateway 设置（auth + model selection）"
+summary: "Cloudflare AI Gateway 设置（认证 + 模型选择）"
 read_when:
-  - 您想要在 OpenClaw 中使用 Cloudflare AI Gateway
-  - 您需要 account ID、gateway ID 或 API key env var
+  - "You want to use Cloudflare AI Gateway with OpenClaw"
+  - "You need the account ID, gateway ID, or API key env var"
 ---
 
 # Cloudflare AI Gateway
 
-Cloudflare AI Gateway 位于 provider APIs 前端，让您添加 analytics、caching 和 controls。对于 Anthropic，OpenClaw 通过您的 Gateway endpoint 使用 Anthropic Messages API。
+Cloudflare AI Gateway 位于提供商 API 前端，允许您添加分析、缓存和控制。对于 Anthropic，OpenClaw 通过您的 Gateway 端点使用 Anthropic Messages API。
 
-- Provider：`cloudflare-ai-gateway`
-- Base URL：`https://gateway.ai.cloudflare.com/v1/<account_id>/<gateway_id>/anthropic`
-- Default model：`cloudflare-ai-gateway/claude-sonnet-4-5`
-- API key：`CLOUDFLARE_AI_GATEWAY_API_KEY`（您通过 Gateway 的请求的 provider API key）
+- 提供商：`cloudflare-ai-gateway`
+- 基础 URL：`https://gateway.ai.cloudflare.com/v1/<account_id>/<gateway_id>/anthropic`
+- 默认模型：`cloudflare-ai-gateway/claude-sonnet-4-5`
+- API 密钥：`CLOUDFLARE_AI_GATEWAY_API_KEY`（您通过 Gateway 发起请求的提供商 API 密钥）
 
-对于 Anthropic 模型，使用您的 Anthropic API key。
+对于 Anthropic 模型，请使用您的 Anthropic API 密钥。
 
-## Quick start
+## 快速开始
 
-1. 设置 provider API key 和 Gateway 详细信息：
+1. 设置提供商 API 密钥和 Gateway 详情：
 
 ```bash
 openclaw onboard --auth-choice cloudflare-ai-gateway-api-key
 ```
 
-2. 设置默认 model：
+2. 设置默认模型：
 
 ```json5
 {
@@ -37,7 +37,7 @@ openclaw onboard --auth-choice cloudflare-ai-gateway-api-key
 }
 ```
 
-## Non-interactive example
+## 非交互式示例
 
 ```bash
 openclaw onboard --non-interactive \
@@ -48,9 +48,9 @@ openclaw onboard --non-interactive \
   --cloudflare-ai-gateway-api-key "$CLOUDFLARE_AI_GATEWAY_API_KEY"
 ```
 
-## Authenticated gateways
+## 已认证的网关
 
-如果您在 Cloudflare 中启用了 Gateway authentication，添加 `cf-aig-authorization` header（这除了您的 provider API key 之外）。
+如果您在 Cloudflare 中启用了 Gateway 认证，请添加 `cf-aig-authorization` 请求头（这是对提供商 API 密钥的补充）。
 
 ```json5
 {
@@ -66,6 +66,6 @@ openclaw onboard --non-interactive \
 }
 ```
 
-## Environment note
+## 环境注意事项
 
-如果 Gateway 作为 daemon 运行（launchd/systemd），请确保 `CLOUDFLARE_AI_GATEWAY_API_KEY` 对该进程可用（例如，在 `~/.openclaw/.env` 中或通过 `env.shellEnv`）。
+如果 Gateway 作为守护进程（launchd/systemd）运行，请确保 `CLOUDFLARE_AI_GATEWAY_API_KEY` 对该进程可用（例如，在 `~/.openclaw/.env` 中或通过 `env.shellEnv`）。

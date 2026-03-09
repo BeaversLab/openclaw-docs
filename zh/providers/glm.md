@@ -1,16 +1,16 @@
 ---
-title: "GLM 模型"
-summary: "GLM 模型家族概览 + 在 OpenClaw 中的使用方式"
+summary: "GLM 模型系列概述 + 在 OpenClaw 中使用的方法"
 read_when:
-  - 想在 OpenClaw 中使用 GLM 模型
-  - 需要模型命名约定与配置方式
+  - "You want GLM models in OpenClaw"
+  - "You need the model naming convention and setup"
+title: "GLM 模型"
 ---
 
 # GLM 模型
 
-GLM 是一个 **模型家族**（不是公司），通过 Z.AI 平台提供。在 OpenClaw 中，GLM 模型通过 `zai` provider 与类似 `zai/glm-4.7` 的模型 ID 访问。
+GLM 是通过 Z.AI 平台提供的**模型系列**（而非公司）。在 OpenClaw 中，GLM 模型通过 `zai` 提供商和 `zai/glm-4.7` 等模型 ID 访问。
 
-## CLI 设置
+## CLI setup
 
 ```bash
 openclaw onboard --auth-choice zai-api-key
@@ -25,8 +25,8 @@ openclaw onboard --auth-choice zai-api-key
 }
 ```
 
-## 说明
+## 注意事项
 
-- GLM 版本与可用性可能变化；请查看 Z.AI 文档获取最新信息。
-- 示例模型 ID 包括 `glm-4.7` 与 `glm-4.6`。
-- Provider 细节参见 [/providers/zai](/zh/providers/zai)。
+- GLM 版本和可用性可能会变化；查看 Z.AI 文档了解最新信息。
+- 示例模型 ID 包括 `glm-4.7` 和 `glm-4.6`。
+- 有关提供商详情，请参阅 [/providers/zai](/en/providers/zai)。

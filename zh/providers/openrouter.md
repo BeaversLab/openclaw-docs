@@ -1,16 +1,16 @@
 ---
-title: "OpenRouter"
-summary: "在 OpenClaw 中使用 OpenRouter 的统一 API 访问多模型"
+summary: "使用 OpenRouter 的统一 API 在 OpenClaw 中访问多个模型"
 read_when:
-  - 想用一个 API key 访问多种 LLM
-  - 想通过 OpenRouter 在 OpenClaw 中运行模型
+  - "You want a single API key for many LLMs"
+  - "You want to run models via OpenRouter in OpenClaw"
+title: "OpenRouter"
 ---
 
 # OpenRouter
 
-OpenRouter 提供 **统一 API**，在单一端点与 API key 后路由多种模型。它兼容 OpenAI，因此大多数 OpenAI SDK 只需切换 base URL 即可使用。
+OpenRouter 提供了一个**统一 API**，将请求路由到单个端点和 API 密钥背后的多个模型。它与 OpenAI 兼容，因此大多数 OpenAI SDK 可以通过切换基础 URL 来工作。
 
-## CLI 设置
+## CLI setup
 
 ```bash
 openclaw onboard --auth-choice apiKey --token-provider openrouter --token "$OPENROUTER_API_KEY"
@@ -29,8 +29,8 @@ openclaw onboard --auth-choice apiKey --token-provider openrouter --token "$OPEN
 }
 ```
 
-## 说明
+## 注意事项
 
 - 模型引用为 `openrouter/<provider>/<model>`。
-- 更多模型/provider 选项参见 [/concepts/model-providers](/zh/concepts/model-providers)。
-- OpenRouter 在底层使用你的 API key 作为 Bearer token。
+- 有关更多模型/提供商选项，请参阅 [/concepts/model-providers](/en/concepts/model-providers)。
+- OpenRouter 在底层使用带有 API 密钥的 Bearer 令牌。
