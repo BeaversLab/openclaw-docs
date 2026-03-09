@@ -1,8 +1,8 @@
 ---
-summary: "用于外部 CLI（signal-cli、旧版 imsg）和网关模式的 RPC 适配器"
+summary: "用于外部CLI（signal-cli、传统imsg）和网关模式的RPC适配器"
 read_when:
-  - "添加或更改外部 CLI 集成"
-  - "调试 RPC 适配器（signal-cli、imsg）"
+  - "Adding or changing external CLI integrations"
+  - "Debugging RPC adapters (signal-cli, imsg)"
 title: "RPC 适配器"
 ---
 

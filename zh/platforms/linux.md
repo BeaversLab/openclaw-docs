@@ -1,15 +1,15 @@
 ---
-summary: "Linux 支持和配套应用状态"
+summary: "Linux支持 + 伴侣应用状态"
 read_when:
-  - "查找 Linux 配套应用状态"
-  - "规划平台覆盖或贡献"
+  - "Looking for Linux companion app status"
+  - "Planning platform coverage or contributions"
 title: "Linux 应用"
 ---
 
 # Linux 应用
 
-网关在 Linux 上完全支持。**Node 是推荐的运行时**。
-不建议为网关使用 Bun（WhatsApp/Telegram 错误）。
+Gateway在 Linux 上完全支持。**Node 是推荐的运行时**。
+不建议为Gateway使用 Bun（WhatsApp/Telegram 错误）。
 
 原生 Linux 配套应用正在计划中。如果您想帮助构建一个，欢迎贡献。
 
@@ -29,12 +29,12 @@ title: "Linux 应用"
 - [安装和更新](/zh/install/updating)
 - 可选流程：[Bun (/en/install/bun)](/zh/install/bun)、[Nix](/zh/install/nix)、[Docker](/zh/install/docker)
 
-## 网关
+## Gateway
 
-- [网关运行手册](/zh/gateway)
+- [Gateway运行手册](/zh/gateway)
 - [配置](/zh/gateway/configuration)
 
-## 网关服务安装（CLI）
+## Gateway服务安装（CLI）
 
 使用以下任一方式：
 
@@ -54,7 +54,7 @@ openclaw gateway install
 openclaw configure
 ```
 
-提示时选择**网关服务**。
+提示时选择**Gateway服务**。
 
 修复/迁移：
 
@@ -64,7 +64,7 @@ openclaw doctor
 
 ## 系统控制（systemd 用户单元）
 
-OpenClaw 默认安装 systemd **用户**服务。对于共享或始终在线的服务器，使用**系统**服务。完整的单元示例和指南位于[网关运行手册](/zh/gateway)。
+OpenClaw 默认安装 systemd **用户**服务。对于共享或始终在线的服务器，使用**系统**服务。完整的单元示例和指南位于[Gateway运行手册](/zh/gateway)。
 
 最小设置：
 

@@ -1,10 +1,10 @@
 ---
-summary: “配对概述：批准谁可以给您发送私信 + 哪些节点可以加入”
+summary: "配对概述：批准谁可以向您发送DM + 哪些节点可以加入"
 read_when:
-  - “设置私信访问控制”
-  - “配对新的 iOS/Android 节点”
-  - “审查 OpenClaw 安全态势”
-title: “配对”
+  - "Setting up DM access control"
+  - "Pairing a new iOS/Android node"
+  - "Reviewing OpenClaw security posture"
+title: "配对"
 ---
 
 # 配对

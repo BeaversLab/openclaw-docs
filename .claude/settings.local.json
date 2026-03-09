@@ -8,7 +8,8 @@
       "Bash(grep:*)",
       "Bash(python3:*)",
       "Bash(chmod +x:*)",
-      "Bash(npx bmi18n-plan:*)"
+      "Bash(npx bmi18n-plan:*)",
+      "Bash(wc:*)"
     ]
   }
 }

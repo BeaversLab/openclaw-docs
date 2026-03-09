@@ -1,12 +1,12 @@
 ---
-summary: "心跳轮询消息和通知规则"
+summary: "Heartbeat polling messages and notification rules"
 read_when:
   - "Adjusting heartbeat cadence or messaging"
   - "Deciding between heartbeat and cron for scheduled tasks"
-title: "心跳"
+title: "Heartbeat"
 ---
 
-# 心跳（网关）
+# 心跳（Gateway）
 
 > **心跳 vs Cron？** 参见[Cron vs Heartbeat](/zh/automation/cron-vs-heartbeat)了解何时使用每个的指导。
 
@@ -59,7 +59,7 @@ title: "心跳"
   （参见[/concepts/timezone](/zh/concepts/timezone)）。
 
 如果你希望心跳执行非常特定的操作（例如”检查 Gmail PubSub
-统计”或”验证网关健康”），将 `agents.defaults.heartbeat.prompt`（或
+统计”或”验证Gateway健康”），将 `agents.defaults.heartbeat.prompt`（或
 `agents.list[].heartbeat.prompt`）设置为自定义主体（逐字发送）。
 
 ## 响应约定
@@ -250,12 +250,12 @@ channels:
 
 ### 常见模式
 
-| 目标                                     | 配置                                                                                   |
+| Goal                                     | Config                                                                                   |
 | ---------------------------------------- | ---------------------------------------------------------------------------------------- |
-| 默认行为（静音 OK，开启警报） | _(无需配置)_                                                                     |
-| 完全静音（无消息，无指示器） | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: false }` |
-| 仅指示器（无消息）             | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: true }`  |
-| 仅在一个频道中显示 OK                  | `channels.telegram.heartbeat: { showOk: true }`                                          |
+| Default behavior (silent OKs, alerts on) | _(no config needed)_                                                                     |
+| Fully silent (no messages, no indicator) | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: false }` |
+| Indicator-only (no messages)             | `channels.defaults.heartbeat: { showOk: false, showAlerts: false, useIndicator: true }`  |
+| OKs in one channel only                  | `channels.telegram.heartbeat: { showOk: true }`                                          |
 
 ## HEARTBEAT.md（可选）
 
@@ -295,6 +295,7 @@ channels:
 `HEARTBEAT.md` — 它会成为提示上下文的一部分。
 
 ## Manual wake (on-demand)
+
 你可以排队一个系统事件并使用以下命令立即触发心跳：
 
 ```bash

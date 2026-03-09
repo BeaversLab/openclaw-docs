@@ -1,14 +1,14 @@
 ---
-summary: "网关 Web 界面：控制界面、绑定模式和安全"
+summary: "Gateway Web界面：控制UI、绑定模式和安全"
 read_when:
-  - "您想通过 Tailscale 访问网关"
-  - "您想要浏览器控制界面和配置编辑"
+  - "You want to access the Gateway over Tailscale"
+  - "You want the browser Control UI and config editing"
 title: "Web"
 ---
 
-# Web（网关）
+# Web（Gateway）
 
-网关从与网关 WebSocket 相同的端口提供一个小的**浏览器控制界面**（Vite + Lit）：
+Gateway从与Gateway WebSocket 相同的端口提供一个小的**浏览器控制界面**（Vite + Lit）：
 
 - 默认：`http://<host>:18789/`
 - 可选前缀：设置 `gateway.controlUi.basePath`（例如 `/openclaw`）
@@ -18,7 +18,7 @@ title: "Web"
 
 ## Webhooks
 
-当 `hooks.enabled=true` 时，网关还在同一 HTTP 服务器上公开一个小的 webhook 端点。参阅[网关配置](/zh/gateway/configuration) → `hooks` 了解身份验证 + 负载。
+当 `hooks.enabled=true` 时，Gateway还在同一 HTTP 服务器上公开一个小的 webhook 端点。参阅[Gateway配置](/zh/gateway/configuration) → `hooks` 了解身份验证 + 负载。
 
 ## 配置（默认开启）
 
@@ -36,7 +36,7 @@ title: "Web"
 
 ### 集成 Serve（推荐）
 
-将网关保持在环回上，让 Tailscale Serve 代理它：
+将Gateway保持在环回上，让 Tailscale Serve 代理它：
 
 ```json5
 {
@@ -47,7 +47,7 @@ title: "Web"
 }
 ```
 
-然后启动网关：
+然后启动Gateway：
 
 ```bash
 openclaw gateway
@@ -69,7 +69,7 @@ openclaw gateway
 }
 ```
 
-然后启动网关（非环回绑定需要令牌）：
+然后启动Gateway（非环回绑定需要令牌）：
 
 ```bash
 openclaw gateway
@@ -93,9 +93,9 @@ openclaw gateway
 
 ## 安全备注
 
-- 默认需要网关身份验证（令牌/密码或 Tailscale 身份头）。
+- 默认需要Gateway身份验证（令牌/密码或 Tailscale 身份头）。
 - 非环回绑定仍然**需要**共享令牌/密码（`gateway.auth` 或环境变量）。
-- 向导默认生成网关令牌（即使在环回上）。
+- 向导默认生成Gateway令牌（即使在环回上）。
 - UI 发送 `connect.params.auth.token` 或 `connect.params.auth.password`。
 - 控制界面发送反点击劫持头，并且除非设置了 `gateway.controlUi.allowedOrigins`，否则仅接受同源浏览器 websocket 连接。
 - 使用 Serve 时，当 `gateway.auth.allowTailscale` 为 `true` 时，Tailscale 身份头可以满足身份验证（不需要令牌/密码）。设置 `gateway.auth.allowTailscale: false` 以需要显式凭证。参阅[Tailscale](/zh/gateway/tailscale) 和[安全](/zh/gateway/security)。
@@ -103,7 +103,7 @@ openclaw gateway
 
 ## 构建 UI
 
-网关从 `dist/control-ui` 提供静态文件。使用以下命令构建它们：
+Gateway从 `dist/control-ui` 提供静态文件。使用以下命令构建它们：
 
 ```bash
 pnpm ui:build # auto-installs UI deps on first run

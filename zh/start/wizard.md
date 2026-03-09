@@ -1,15 +1,15 @@
 ---
-summary: "CLI 引导向导：网关、工作区、渠道和技能的引导式设置"
+summary: "CLI onboarding wizard: guided setup for gateway, workspace, channels, and skills"
 read_when:
   - "Running or configuring the onboarding wizard"
   - "Setting up a new machine"
-title: "引导向导"
+title: "Onboarding Wizard"
 ---
 
 # 引导向导（CLI）
 
 引导向导是 **推荐** 的 OpenClaw 安装方式（macOS、Linux，或 Windows 通过 WSL2；强烈推荐）。
-它会在一次引导流程中配置本地网关或远程网关连接，以及渠道、技能和工作区默认值。
+它会在一次引导流程中配置本地Gateway或远程Gateway连接，以及渠道、技能和工作区默认值。
 
 主入口：
 
@@ -36,14 +36,14 @@ openclaw configure
 
 **QuickStart** 保持默认：
 
-- 本地网关（loopback）
+- 本地Gateway（loopback）
 - 工作区默认值（或已有工作区）
-- 网关端口 **18789**
-- 网关认证 **Token**（自动生成，即使是 loopback）
+- Gateway端口 **18789**
+- Gateway认证 **Token**（自动生成，即使是 loopback）
 - Tailscale 暴露 **关闭**
 - Telegram + WhatsApp 私聊默认 **allowlist**（会提示输入手机号）
 
-**Advanced** 会展示每一步（模式、工作区、网关、渠道、守护进程、技能）。
+**Advanced** 会展示每一步（模式、工作区、Gateway、渠道、守护进程、技能）。
 
 ## 向导会做什么
 
@@ -51,13 +51,13 @@ openclaw configure
 
 - 模型/认证（OpenAI Code (Codex) 订阅 OAuth，Anthropic API key（推荐）或 setup-token（粘贴），以及 MiniMax/GLM/Moonshot/AI Gateway 选项）
 - 工作区位置 + 引导文件
-- 网关设置（端口/绑定/认证/tailscale）
+- Gateway设置（端口/绑定/认证/tailscale）
 - 渠道（Telegram、WhatsApp、Discord、Google Chat、Mattermost（插件）、Signal）
 - 守护进程安装（LaunchAgent / systemd 用户单元）
 - 健康检查
 - 技能（推荐）
 
-**远程模式** 仅配置本地客户端连接到其他地方的网关。
+**远程模式** 仅配置本地客户端连接到其他地方的Gateway。
 它 **不会** 在远程主机上安装或修改任何内容。
 
 要添加更多隔离代理（独立工作区 + 会话 + 认证），使用：
@@ -93,8 +93,6 @@ openclaw agents add <name>
    - **API key**：为你存储 key。
    - **Vercel AI Gateway（多模型代理）**：提示 `AI_GATEWAY_API_KEY`。
    - 详情：[Vercel AI Gateway](/zh/providers/vercel-ai-gateway)
-   - **Cloudflare AI Gateway**：提示输入账号 ID、网关 ID 和 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
-   - 详情：[Cloudflare AI Gateway](/zh/providers/cloudflare-ai-gateway)
    - **MiniMax M2.1**：自动写入配置。
    - 详情：[MiniMax](/zh/providers/minimax)
    - **Synthetic（Anthropic 兼容）**：提示 `SYNTHETIC_API_KEY`。
@@ -112,34 +110,33 @@ openclaw agents add <name>
    - 默认 `~/.openclaw/workspace`（可配置）。
    - 写入代理引导所需的工作区文件。
    - 完整工作区结构 + 备份指南：[代理工作区](/zh/concepts/agent-workspace)
-4. **网关**
+4. **Gateway**
    - 端口、绑定、认证模式、tailscale 暴露。
    - 认证建议：即便是 loopback 也保持 **Token**，确保本地 WS 客户端必须认证。
    - 仅在完全信任所有本地进程时才关闭认证。
    - 非 loopback 绑定仍需要认证。
 
 5. **渠道**
-   - [WhatsApp](/zh/channels/whatsapp)：可选二维码登录。
-   - [Telegram](/zh/channels/telegram)：bot token。
-   - [Discord](/zh/channels/discord)：bot token。
-   - [Google Chat](/zh/channels/googlechat)：服务账号 JSON + webhook audience。
-   - [Mattermost](/zh/channels/mattermost)（插件）：bot token + base URL。
-   - [Signal](/zh/channels/signal)：可选 `signal-cli` 安装 + 账号配置。
-   - [BlueBubbles](/zh/channels/bluebubbles)：**iMessage 推荐方式**；服务器 URL + 密码 + webhook。
-   - [iMessage](/zh/channels/imessage)：旧版 `imsg` CLI 路径 + DB 访问。
+   - WhatsApp：可选二维码登录。
+   - Telegram：bot token。
+   - Discord：bot token。
+   - Google Chat：服务账号 JSON + webhook audience。
+   - Mattermost（插件）：bot token + base URL。
+   - Signal：可选 `signal-cli` 安装 + 账号配置。
+   - iMessage：本地 `imsg` CLI 路径 + DB 访问。
    - 私聊安全：默认是配对。第一次私聊发送代码；用 `openclaw pairing approve <channel> <code>` 批准，或使用 allowlist。
 
 6. **守护进程安装**
    - macOS：LaunchAgent
      - 需要登录用户会话；无头环境请使用自定义 LaunchDaemon（未内置）。
    - Linux（以及 Windows 通过 WSL2）：systemd 用户单元
-     - 向导尝试 `loginctl enable-linger <user>` 以便登出后网关仍运行。
+     - 向导尝试 `loginctl enable-linger <user>` 以便登出后Gateway仍运行。
      - 可能提示 sudo（写入 `/var/lib/systemd/linger`）；会先尝试不使用 sudo。
    - **运行时选择：** Node（推荐；WhatsApp/Telegram 需要）。不推荐 Bun。
 
 7. **健康检查**
-   - 启动网关（如需要）并运行 `openclaw health`。
-   - 提示：`openclaw status --deep` 会在状态输出中加入网关健康探测（需要可达网关）。
+   - 启动Gateway（如需要）并运行 `openclaw health`。
+   - 提示：`openclaw status --deep` 会在状态输出中加入Gateway健康探测（需要可达Gateway）。
 
 8. **技能（推荐）**
    - 读取可用技能并检查要求。
@@ -160,7 +157,7 @@ openclaw agents add <name>
    - 汇总 + 下一步，包括 iOS/Android/macOS 应用以获取额外功能。
 
 - 若未检测到 GUI，向导会打印 Control UI 的 SSH 端口转发说明，而不是打开浏览器。
-- 远程网关 URL（`ws://...`）
+- 远程Gateway URL（`ws://...`）
 
 ## 远程模式
 
@@ -168,7 +165,7 @@ openclaw agents add <name>
 
 将要设置的内容：
 
-- 如果网关仅 loopback，可用 SSH 隧道或 tailnet。
+- 如果Gateway仅 loopback，可用 SSH 隧道或 tailnet。
 - 发现提示：
   - macOS：Bonjour（`dns-sd`）
   - Linux：Avahi（`avahi-browse`）
@@ -176,7 +173,7 @@ openclaw agents add <name>
 `~/.openclaw/openclaw.json` 中的常见字段：
 
 - 不会执行远程安装或守护进程修改。
-- 如果网关仅限 loopback，请使用 SSH 隧道或 tailnet。
+- 如果Gateway仅限 loopback，请使用 SSH 隧道或 tailnet。
 - 发现提示：
   - macOS：Bonjour (`dns-sd`)
   - Linux：Avahi (`avahi-browse`)
@@ -261,7 +258,7 @@ openclaw onboard --non-interactive \
   --gateway-bind loopback
 ```
 
-网关通过 RPC 暴露向导流程（`wizard.start`、`wizard.next`、`wizard.cancel`、`wizard.status`）。
+Gateway通过 RPC 暴露向导流程（`wizard.start`、`wizard.next`、`wizard.cancel`、`wizard.status`）。
 客户端（macOS 应用、Control UI）可以渲染步骤，而无需重新实现引导逻辑。
 
 ```bash
@@ -306,9 +303,9 @@ openclaw agents add work \
   --json
 ```
 
-## 网关向导 RPC
+## Gateway向导 RPC
 
-网关通过 RPC 暴露向导流程（`wizard.start`、`wizard.next`、`wizard.cancel`、`wizard.status`）。
+Gateway通过 RPC 暴露向导流程（`wizard.start`、`wizard.next`、`wizard.cancel`、`wizard.status`）。
 客户端（macOS 应用、Control UI）可以渲染步骤，而无需重新实现引导逻辑。
 
 ## Signal 设置 (signal-cli)
@@ -333,6 +330,7 @@ openclaw agents add work \
 - `agents.defaults.model` / `models.providers`（如果选择了 MiniMax）
 - `gateway.*`（mode、bind、auth、tailscale）
 - `channels.telegram.botToken`、`channels.discord.token`、`channels.signal.*`、`channels.imessage.*`
+- macOS 应用引导：[引导](/zh/start/onboarding)
 - `skills.install.nodeManager`
 - `wizard.lastRunAt`
 - `wizard.lastRunVersion`
@@ -350,6 +348,6 @@ WhatsApp 凭据存放在 `~/.openclaw/credentials/whatsapp/<accountId>/` 下。
 ## 相关文档
 
 - macOS 应用引导：[引导](/zh/start/onboarding)
-- 配置参考：[网关配置](/zh/gateway/configuration)
+- 配置参考：[Gateway配置](/zh/gateway/configuration)
 - 提供商：[WhatsApp](/zh/channels/whatsapp)、[Telegram](/zh/channels/telegram)、[Discord](/zh/channels/discord)、[Google Chat](/zh/channels/googlechat)、[Signal](/zh/channels/signal)、[BlueBubbles](/zh/channels/bluebubbles) (iMessage)、[iMessage](/zh/channels/imessage)（旧版）
 - 技能：[技能](/zh/tools/skills)、[技能配置](/zh/tools/skills-config)

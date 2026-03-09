@@ -1,10 +1,10 @@
 ---
-summary: "网络中心：网关界面、配对、发现和安全"
+summary: "Network hub: gateway surfaces, pairing, discovery, and security"
 read_when:
-  - "您需要网络架构 + 安全概述"
-  - "您正在调试本地与 tailnet 访问或配对"
-  - "您想要网络文档的规范列表"
-title: "网络"
+  - "You need the network architecture + security overview"
+  - "You are debugging local vs tailnet access or pairing"
+  - "You want the canonical list of networking docs"
+title: "Network"
 ---
 
 # 网络中心
@@ -26,6 +26,7 @@ title: "网络"
 - [配对 CLI (/en/cli/pairing)](/zh/cli/pairing)
 
 本地信任：
+
 - 本地连接（环回或网关主机自己的 tailnet 地址）可以自动批准配对，以保持同主机 UX 流畅。
 - 非本地 tailnet/LAN 客户端仍需要明确的配对批准。
 

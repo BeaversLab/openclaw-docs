@@ -1,9 +1,9 @@
 ---
-summary: “故障排除中心：症状 → 检查 → 修复”
+summary: "故障排除中心：症状 → 检查 → 修复"
 read_when:
-  - “您看到错误并想要修复路径”
-  - “安装程序说”成功”但 CLI 不工作”
-title: “故障排除”
+  - "You see an error and want the fix path"
+  - "The installer says “success” but the CLI doesn’t work"
+title: "故障排除"
 ---
 
 # 故障排除
@@ -20,7 +20,7 @@ openclaw logs --follow
 openclaw doctor
 ```
 
-如果网关可达，深度探测：
+如果Gateway可达，深度探测：
 
 ```bash
 openclaw status --deep
@@ -50,14 +50,14 @@ curl -fsSL https://openclaw.ai/install.sh | bash -s -- --beta --verbose
 
 您也可以设置 `OPENCLAW_VERBOSE=1` 而不是使用标志。
 
-### 网关”未授权”、无法连接或不断重新连接
+### Gateway”未授权”、无法连接或不断重新连接
 
-- [网关故障排除](/zh/gateway/troubleshooting)
-- [网关身份验证](/zh/gateway/authentication)
+- [Gateway故障排除](/zh/gateway/troubleshooting)
+- [Gateway身份验证](/zh/gateway/authentication)
 
 ### 控制界面在 HTTP 上失败（需要设备身份）
 
-- [网关故障排除](/zh/gateway/troubleshooting)
+- [Gateway故障排除](/zh/gateway/troubleshooting)
 - [控制界面](/zh/web/control-ui#insecure-http)
 
 ### `docs.openclaw.ai` 显示 SSL 错误（Comcast/Xfinity）
@@ -69,7 +69,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash -s -- --beta --verbose
 
 ### 服务显示正在运行，但 RPC 探测失败
 
-- [网关故障排除](/zh/gateway/troubleshooting)
+- [Gateway故障排除](/zh/gateway/troubleshooting)
 - [后台进程 / 服务](/zh/gateway/background-process)
 
 ### 模型/身份验证失败（速率限制、计费、”所有模型失败”）

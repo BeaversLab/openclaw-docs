@@ -1,7 +1,7 @@
 ---
-summary: "OpenClaw 是一个可在任何操作系统上运行的多通道 AI 代理网关。"
+summary: "OpenClaw 是一个可在任何操作系统上运行的多通道 AI 代理 Gateway。"
 read_when:
-  - "向新手介绍 OpenClaw"
+  - "Introducing OpenClaw to newcomers"
 title: "OpenClaw"
 ---
 
@@ -22,7 +22,7 @@ title: "OpenClaw"
     />
 </p>
 
-> _"去角质！去角质！"_ — 一只太空龙虾，大概
+> _"去壳！去壳！"_ — 一只太空龙虾，大概吧
 
 <p align="center">
   <strong>Any OS gateway for AI agents across WhatsApp, Telegram, Discord, iMessage, and more.</strong><br />
@@ -41,9 +41,9 @@ title: "OpenClaw"
   </Card>
 </Columns>
 
-OpenClaw 通过单个 Gateway 进程将聊天应用连接到 Pi 等编码代理。它为 OpenClaw 助手提供动力，并支持本地或远程设置。
+OpenClaw 通过单个 Gateway 进程将聊天应用连接到像 Pi 这样的编码代理。它为 OpenClaw 助手提供动力，并支持本地或远程设置。
 
-## 工作原理
+## How it works
 
 ```mermaid
 flowchart LR
@@ -55,9 +55,9 @@ flowchart LR
   B --> G["iOS and Android nodes"]
 ```
 
-网关是会话、路由和通道连接的单一真实来源。
+The Gateway is the single source of truth for sessions, routing, and channel connections.
 
-## 核心功能
+## Key capabilities
 
 <Columns>
   <Card title="Multi-channel gateway" icon="network">
@@ -101,25 +101,25 @@ flowchart LR
   </Step>
 </Steps>
 
-需要完整的安装和开发设置？参阅[快速开始](/zh/start/quickstart)。
+Need the full install and dev setup? See [Quick start](/en/start/quickstart).
 
-## 仪表板
+## Dashboard
 
-网关启动后打开浏览器控制 UI。
+Open the browser Control UI after the Gateway starts.
 
-- 本地默认：http://127.0.0.1:18789/
-- 远程访问：[Web 表面](/zh/web) 和[Tailscale](/zh/gateway/tailscale)
+- Local default: http://127.0.0.1:18789/
+- Remote access: [Web surfaces](/en/web) and [Tailscale](/en/gateway/tailscale)
 
 <p align="center">
   <img src="whatsapp-openclaw.jpg" alt="OpenClaw" width="420" />
 </p>
 
-## 配置（可选）
+## Configuration (optional)
 
-配置位于 `~/.openclaw/openclaw.json`。
+Config lives at `~/.openclaw/openclaw.json`.
 
-- 如果您**什么都不做**，OpenClaw 将使用 RPC 模式下的捆绑 Pi 二进制文件，每个发件人一个会话。
-- 如果您想锁定它，请从 `channels.whatsapp.allowFrom` 和（针对群组）提及规则开始。
+- If you **do nothing**, OpenClaw uses the bundled Pi binary in RPC mode with per-sender sessions.
+- If you want to lock it down, start with `channels.whatsapp.allowFrom` and (for groups) mention rules.
 
 示例：
 
@@ -135,7 +135,7 @@ flowchart LR
 }
 ```
 
-## 从这里开始
+## Start here
 
 <Columns>
   <Card title="Docs hubs" href="/start/hubs" icon="book-open">
@@ -158,7 +158,7 @@ flowchart LR
   </Card>
 </Columns>
 
-## 了解更多
+## Learn more
 
 <Columns>
   <Card title="Full feature list" href="/concepts/features" icon="list">

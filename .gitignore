@@ -1,3 +1,6 @@
 .worktrees/
 node_modules/
 en/zh-CN/
+.i18n/chunks/
+.i18n/runs
+.i18n/task-meta.json

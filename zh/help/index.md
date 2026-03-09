@@ -1,9 +1,9 @@
 ---
-summary: “帮助中心：常见修复、安装检查，以及出现问题时该从哪里查找”
+summary: "帮助中心：常见修复、安装检查，以及出现问题时的排查方向"
 read_when:
-  - “您是新手，想要”我该点击/运行什么”指南”
-  - “出现了问题，您想要最快的修复路径”
-title: “帮助”
+  - "You’re new and want the “what do I click/run” guide"
+  - "Something broke and you want the fastest path to a fix"
+title: "帮助"
 ---
 
 # 帮助
@@ -18,4 +18,4 @@ title: “帮助”
 
 如果您在寻找概念性问题（而非”出现问题”）：
 
-- [常见问题（FAQ）](/zh/help/faq)
+- [常见问题（FAQ）](/en/help/faq)(/zh/help/faq)

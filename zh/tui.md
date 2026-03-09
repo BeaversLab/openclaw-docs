@@ -1,8 +1,8 @@
 ---
-summary: "终端界面（TUI）：从任何机器连接到网关"
+summary: "终端界面(TUI)：从任何机器连接到Gateway"
 read_when:
-  - "您想要 TUI 的初学者友好演练"
-  - "您需要 TUI 功能、命令和快捷键的完整列表"
+  - "You want a beginner-friendly walkthrough of the TUI"
+  - "You need the complete list of TUI features, commands, and shortcuts"
 title: "TUI"
 ---
 
@@ -10,7 +10,7 @@ title: "TUI"
 
 ## 快速开始
 
-1. 启动网关。
+1. 启动Gateway。
 
 ```bash
 openclaw gateway
@@ -24,13 +24,13 @@ openclaw tui
 
 3. 输入消息并按 Enter。
 
-远程网关：
+远程Gateway：
 
 ```bash
 openclaw tui --url ws://<host>:<port> --token <gateway-token>
 ```
 
-如果您的网关使用密码身份验证，请使用 `--password`。
+如果您的Gateway使用密码身份验证，请使用 `--password`。
 
 ## 您看到的内容
 
@@ -42,7 +42,7 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 ## 心理模型：代理 + 会话
 
-- 代理是唯一的 slug（例如 `main`、`personal`）。网关公开列表。
+- 代理是唯一的 slug（例如 `main`、`personal`）。Gateway公开列表。
 - 会话属于当前代理。
 - 会话密钥存储为 `~/.openclaw/tui/sessions.json`。
   - 如果您输入 `@personal`，TUI 会将其展开为 `agent:personal` 会话密钥。
@@ -54,7 +54,7 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 ## 发送 + 投递
 
-- 消息被发送到网关；默认情况下不会投递到提供商。
+- 消息被发送到Gateway；默认情况下不会投递到提供商。
 - 打开投递：
   - `/deliver on`
   - 或设置面板
@@ -106,7 +106,7 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - `/settings`
 - `/exit`
 
-其他网关斜杠命令（例如 `/image`）被转发到网关并显示为系统输出。参阅[斜杠命令]。
+其他Gateway斜杠命令（例如 `/image`）被转发到Gateway并显示为系统输出。参阅[斜杠命令]。
 
 ## 本地 shell 命令
 
@@ -129,14 +129,14 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 ## 连接详情
 
-- TUI 向网关注册为 `clientType: "tui"`。
+- TUI 向Gateway注册为 `clientType: "tui"`。
 - 重新连接显示系统消息；事件间隙显示在日志中。
 
 ## 选项
 
-- `--url`：网关 WebSocket URL（默认为配置或 `ws://127.0.0.1:18789`）
-- `--token`：网关令牌（如果需要）
-- `--password`：网关密码（如果需要）
+- `--url`：Gateway WebSocket URL（默认为配置或 `ws://127.0.0.1:18789`）
+- `--token`：Gateway令牌（如果需要）
+- `--password`：Gateway密码（如果需要）
 - `--session`：会话密钥（默认：`__default__`，或作用域为全局时为 `__global__`）
 - `--deliver`：将助手回复投递到提供商（默认关闭）
 - `--think`：覆盖发送的思考级别
@@ -149,13 +149,14 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 发送消息后没有输出：
 
-- 在 TUI 中运行 `/status` 以确认网关已连接并且空闲/忙碌。
-- 检查网关日志：`openclaw logs --follow`。
+- 在 TUI 中运行 `/status` 以确认Gateway已连接并且空闲/忙碌。
+- 检查Gateway日志：`openclaw logs --follow`。
 - 确认代理可以运行：`/status` 和 `/test`。
 - 如果您期望在聊天频道中有消息，请启用投递（`/deliver on` 或 `--deliver`）。
 - `--history`：要加载的历史条目（默认 200）
+
 ## 故障排除
 
-- `--url`：确保网关正在运行并且您的 `--url` 设置正确。
+- `--url`：确保Gateway正在运行并且您的 `--url` 设置正确。
 - 选择器中没有代理：检查 `openclaw agents list` 和您的路由配置。
 - 空会话选择器：您可能处于全局范围或还没有会话。
