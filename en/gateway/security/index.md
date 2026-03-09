@@ -9,7 +9,7 @@ title: "Security"
 
 ## Quick check: `openclaw security audit`
 
-See also: [Formal Verification (/en/security/formal-verification/)](/security/formal-verification/)
+See also: [Formal Verification (Security Models)](/en/security/formal-verification/)
 
 Run this regularly (especially after changing config or exposing network surfaces):
 

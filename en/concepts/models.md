@@ -42,8 +42,8 @@ openclaw onboard
 ```
 
 It can set up model + auth for common providers, including **OpenAI Code (Codex)
-subscription** (OAuth) and **Anthropic** (API key recommended; `claude
-setup-token` also supported).
+subscription** (OAuth) and **Anthropic** (API key recommended; subscription** (OAuth) and **Anthropic** (API key recommended; `claude
+setup-tokensetup-token` also supported).
 
 ## Config keys (overview)
 

@@ -12,8 +12,8 @@ title: "dns"
 
 相关内容：
 
-- Gateway 发现：[发现](/en/gateway/discovery)
-- 广域发现配置：[配置](/en/gateway/configuration)
+- Gateway 发现：[发现](/zh/gateway/discovery)
+- 广域发现配置：[配置](/zh/gateway/configuration)
 
 ## 设置
 

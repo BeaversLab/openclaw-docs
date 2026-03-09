@@ -15,8 +15,8 @@ title: "configure"
 
 相关内容：
 
-- Gateway 配置参考：[Configuration](/en/gateway/configuration)
-- 配置 CLI：[Config](/en/cli/config)
+- Gateway 配置参考：[Configuration](/zh/gateway/configuration)
+- 配置 CLI：[Config](/zh/cli/config)
 
 注意：
 

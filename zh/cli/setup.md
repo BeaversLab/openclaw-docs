@@ -12,8 +12,8 @@ title: "setup"
 
 相关内容：
 
-- 入门：[入门](/en/start/getting-started)
-- 向导：[入门](/en/providers/glm)"
+- 入门：[入门](/zh/start/getting-started)
+- 向导：[入门](/zh/providers/glm)"
 
 ## 示例
 

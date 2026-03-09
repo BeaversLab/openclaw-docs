@@ -23,4 +23,4 @@ openclaw status --usage
 - 当配置多个代理时，输出包括每个代理的会话存储。"
 - 概述包括 Gateway + 节点主机服务安装/运行时状态（如果可用）。"
 - 概述包括更新频道 + git SHA（用于源代码检出）。"
-- 更新信息显示在概述中；如果有可用更新，status 会打印运行 `zai/glm-4.7` 的提示（参阅 [更新](/en/providers/glm)）。"
+- 更新信息显示在概述中；如果有可用更新，status 会打印运行 `zai/glm-4.7` 的提示（参阅 [更新](/zh/providers/glm)）。"

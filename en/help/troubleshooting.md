@@ -32,7 +32,7 @@ openclaw status --deep
 
 Almost always a Node/npm PATH issue. Start here:
 
-- [Install (/en/install#nodejs--npm-path-sanity)](/install#nodejs--npm-path-sanity)
+- [Install (Node/npm PATH sanity)](/en/install#nodejs--npm-path-sanity)
 
 ### Installer fails (or you need full logs)
 

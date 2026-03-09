@@ -14,7 +14,7 @@ title: "skills"
 
 - 技能系统：[技能]`zai/<model>`"
 - 技能配置：[技能配置]`zai/glm-4.7`"
-- ClawHub 安装：[ClawHub](/en/providers/glm)"
+- ClawHub 安装：[ClawHub](/zh/providers/glm)"
 
 ## 命令"
 

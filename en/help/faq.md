@@ -2523,7 +2523,7 @@ If you run it manually (no service), use:
 openclaw gateway run
 ```
 
-Docs: [Windows (/en/platforms/windows)](/platforms/windows), [Gateway service runbook](/en/gateway).
+Docs: [Windows (WSL2)](/en/platforms/windows), [Gateway service runbook](/en/gateway).
 
 ### The Gateway is up but replies never arrive What should I check
 

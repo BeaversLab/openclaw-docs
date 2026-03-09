@@ -41,8 +41,8 @@ openclaw onboard
 ```
 
 它可为常见 providers 设置 model + auth，包括 **OpenAI Code (Codex)
-subscription**（OAuth）与 **Anthropic**（推荐 API key；也支持 `claude
-setup-token`）。
+subscription**（OAuth）与 **Anthropic**（推荐 API key；也支持 subscription**（OAuth）与 **Anthropic**（推荐 API key；也支持 `claude
+setup-tokensetup-token`）。
 
 ## 配置键（概览）
 

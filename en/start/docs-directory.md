@@ -11,14 +11,14 @@ For a complete map of the docs, see [Docs hubs](/en/start/hubs).
 
 ## Start here
 
-- [Docs hubs (/en/start/hubs)](/start/hubs)
+- [Docs hubs (all pages linked)](/en/start/hubs)
 - [Help](/en/help)
 - [Configuration](/en/gateway/configuration)
 - [Configuration examples](/en/gateway/configuration-examples)
 - [Slash commands](/en/tools/slash-commands)
 - [Multi-agent routing](/en/concepts/multi-agent)
 - [Updating and rollback](/en/install/updating)
-- [Pairing (/en/start/pairing)](/start/pairing)
+- [Pairing (DM and nodes)](/en/start/pairing)
 - [Nix mode](/en/install/nix)
 - [OpenClaw assistant setup](/en/start/openclaw)
 - [Skills](/en/tools/skills)
@@ -26,20 +26,20 @@ For a complete map of the docs, see [Docs hubs](/en/start/hubs).
 - [Workspace templates](/en/reference/templates/AGENTS)
 - [RPC adapters](/en/reference/rpc)
 - [Gateway runbook](/en/gateway)
-- [Nodes (/en/nodes)](/nodes)
-- [Web surfaces (/en/web)](/web)
+- [Nodes (iOS and Android)](/en/nodes)
+- [Web surfaces (Control UI)](/en/web)
 - [Discovery and transports](/en/gateway/discovery)
 - [Remote access](/en/gateway/remote)
 
 ## Providers and UX
 
 - [WebChat](/en/web/webchat)
-- [Control UI (/en/web/control-ui)](/web/control-ui)
+- [Control UI (browser)](/en/web/control-ui)
 - [Telegram](/en/channels/telegram)
 - [Discord](/en/channels/discord)
-- [Mattermost (/en/channels/mattermost)](/channels/mattermost)
-- [BlueBubbles (/en/channels/bluebubbles)](/channels/bluebubbles)
-- [iMessage (/en/channels/imessage)](/channels/imessage)
+- [Mattermost (plugin)](/en/channels/mattermost)
+- [BlueBubbles (iMessage)](/en/channels/bluebubbles)
+- [iMessage (legacy)](/en/channels/imessage)
 - [Groups](/en/concepts/groups)
 - [WhatsApp group messages](/en/concepts/group-messages)
 - [Media images](/en/nodes/images)
@@ -50,7 +50,7 @@ For a complete map of the docs, see [Docs hubs](/en/start/hubs).
 - [macOS app](/en/platforms/macos)
 - [iOS app](/en/platforms/ios)
 - [Android app](/en/platforms/android)
-- [Windows (/en/platforms/windows)](/platforms/windows)
+- [Windows (WSL2)](/en/platforms/windows)
 - [Linux app](/en/platforms/linux)
 
 ## Operations and safety
@@ -58,6 +58,6 @@ For a complete map of the docs, see [Docs hubs](/en/start/hubs).
 - [Sessions](/en/concepts/session)
 - [Cron jobs](/en/automation/cron-jobs)
 - [Webhooks](/en/automation/webhook)
-- [Gmail hooks (/en/automation/gmail-pubsub)](/automation/gmail-pubsub)
+- [Gmail hooks (Pub/Sub)](/en/automation/gmail-pubsub)
 - [Security](/en/gateway/security)
 - [Troubleshooting](/en/gateway/troubleshooting)

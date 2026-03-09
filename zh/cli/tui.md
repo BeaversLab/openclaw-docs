@@ -12,7 +12,7 @@ title: "tui"
 
 相关内容：
 
-- TUI 指南：[TUI](/en/tui)
+- TUI 指南：[TUI](/zh/tui)
 
 ## 示例
 

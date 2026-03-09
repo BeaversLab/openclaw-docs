@@ -7,4 +7,4 @@ title: "Sessions"
 
 # Sessions
 
-Canonical session management docs live in [Session management](/en/concepts/session).
+Canonical session management docs live in [Session management](/zh/concepts/session).

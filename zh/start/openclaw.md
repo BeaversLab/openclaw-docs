@@ -105,8 +105,8 @@ Tip: treat this folder like OpenClaw’s “memory” and make it a git repo (id
 openclaw setup
 ```
 
-Full workspace layout + backup guide: [Agent workspace](/en/concepts/agent-workspace)
-Memory workflow: [Memory](/en/concepts/memory)
+Full workspace layout + backup guide: [Agent workspace](/zh/concepts/agent-workspace)
+Memory workflow: [Memory](/zh/concepts/memory)
 
 Optional: choose a different workspace with `agents.defaults.workspace` (supports `~`).
 
@@ -230,12 +230,12 @@ Logs live under `/tmp/openclaw/` (default: `openclaw-YYYY-MM-DD.log`).
 
 ## Next steps
 
-- WebChat: [WebChat](/en/web/webchat)
-- Gateway ops: [Gateway runbook](/en/gateway)
-- Cron + wakeups: [Cron jobs](/en/automation/cron-jobs)
-- macOS menu bar companion: [OpenClaw macOS app](/en/platforms/macos)
-- iOS node app: [iOS app](/en/platforms/ios)
-- Android node app: [Android app](/en/platforms/android)
-- Windows status: [Windows (/en/platforms/windows)](/platforms/windows)
-- Linux status: [Linux app](/en/platforms/linux)
-- Security: [Security](/en/gateway/security)
+- WebChat: [WebChat](/zh/web/webchat)
+- Gateway ops: [Gateway runbook](/zh/gateway)
+- Cron + wakeups: [Cron jobs](/zh/automation/cron-jobs)
+- macOS menu bar companion: [OpenClaw macOS app](/zh/platforms/macos)
+- iOS node app: [iOS app](/zh/platforms/ios)
+- Android node app: [Android app](/zh/platforms/android)
+- Windows status: [Windows (/en/platforms/windows)](/zh/platforms/windows)
+- Linux status: [Linux app](/zh/platforms/linux)
+- Security: [Security](/zh/gateway/security)

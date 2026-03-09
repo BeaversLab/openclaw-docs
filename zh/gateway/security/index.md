@@ -9,7 +9,7 @@ title: "安全性"
 
 ## 快速检查：`openclaw security audit`
 
-另请参阅：[形式化验证 (/en/security/formal-verification/)](/security/formal-verification/)
+另请参阅：[形式化验证 (/en/security/formal-verification/)](/zh/security/formal-verification/)
 
 定期运行此命令（尤其是在更改配置或暴露网络表面之后）：
 
@@ -145,7 +145,7 @@ OpenClaw 的立场：
 
 ## 命令授权模型
 
-斜杠命令和指令仅对**授权发件人**有效。授权来自频道允许列表/配对以及 `commands.useAccessGroups`（参见[配置](/en/gateway/configuration)和[斜杠命令](/en/tools/slash-commands)）。如果频道允许列表为空或包含 `"*"`，则该频道的命令实际上开放。
+斜杠命令和指令仅对**授权发件人**有效。授权来自频道允许列表/配对以及 `commands.useAccessGroups`（参见[配置](/zh/gateway/configuration)和[斜杠命令](/zh/tools/slash-commands)）。如果频道允许列表为空或包含 `"*"`，则该频道的命令实际上开放。
 
 `/exec` 是授权操作员的会话便利功能。它**不会**写入配置或更改其他会话。
 
@@ -162,7 +162,7 @@ OpenClaw 的立场：
   - OpenClaw 使用 `npm pack` 然后在该目录中运行 `npm install --omit=dev`（npm 生命周期脚本可以在安装期间执行代码）。
   - 首选固定的、确切版本（`@scope/pkg@1.2.3`），并在启用之前检查磁盘上解压的代码。
 
-详细信息：[插件](/en/plugin)
+详细信息：[插件](/zh/plugin)
 
 ## DM 访问模型（配对 / 允许列表 / 开放 / 禁用）
 
@@ -180,7 +180,7 @@ openclaw pairing list <channel>
 openclaw pairing approve <channel> <code>
 ```
 
-详细信息 + 磁盘上的文件：[配对](/en/start/pairing)
+详细信息 + 磁盘上的文件：[配对](/zh/start/pairing)
 
 ## DM 会话隔离（多用户模式）
 
@@ -201,7 +201,7 @@ openclaw pairing approve <channel> <code>
 - 默认：`session.dmScope: "main"`（所有 DM 共享一个会话以保持连续性）。
 - 安全 DM 模式：`session.dmScope: "per-channel-peer"`（每个频道+发件人对获得一个隔离的 DM 上下文）。
 
-如果您在同一频道上运行多个账户，请改用 `per-account-channel-peer`。如果同一人通过多个频道联系您，请使用 `session.identityLinks` 将这些 DM 会话合并为一个规范身份。请参阅[会话管理](/en/concepts/session)和[配置](/en/gateway/configuration)。
+如果您在同一频道上运行多个账户，请改用 `per-account-channel-peer`。如果同一人通过多个频道联系您，请使用 `session.identityLinks` 将这些 DM 会话合并为一个规范身份。请参阅[会话管理](/zh/concepts/session)和[配置](/zh/gateway/configuration)。
 
 ## 允许列表（DM + 群组）— 术语
 
@@ -216,7 +216,7 @@ OpenClaw 有两个独立的"谁可以触发我？"层：
     - `channels.discord.guilds` / `channels.slack.channels`：每个表面的允许列表 + 提及默认值。
   - **安全说明**：将 `dmPolicy="open"` 和 `groupPolicy="open"` 视为最后手段设置。它们应该很少使用；除非您完全信任房间的每个成员，否则首选配对 + 允许列表。
 
-详细信息：[配置](/en/gateway/configuration)和[群组](/en/concepts/groups)
+详细信息：[配置](/zh/gateway/configuration)和[群组](/zh/concepts/groups)
 
 ## 提示注入（它是什么，为什么重要）
 
@@ -430,11 +430,11 @@ Doctor 可以为您生成一个：`openclaw doctor --generate-gateway-token`。
 - OpenClaw 将信任来自这些 IP 的 `x-forwarded-for`（或 `x-real-ip`）来确定本地配对检查和 HTTP auth/本地检查的客户端 IP。
 - 确保您的代理**覆盖** `x-forwarded-for` 并阻止对 Gateway 端口的直接访问。
 
-参见[Tailscale](/en/gateway/tailscale)和[Web 概述](/en/web)。
+参见[Tailscale](/zh/gateway/tailscale)和[Web 概述](/zh/web)。
 
 ### 0.6.1) 通过节点主机进行浏览器控制（推荐）
 
-如果您的 Gateway 是远程的，但浏览器在另一台机器上运行，请在浏览器机器上运行一个**节点主机**，并让 Gateway 代理浏览器操作（参见[浏览器工具](/en/tools/browser)）。将节点配对视为管理员访问。
+如果您的 Gateway 是远程的，但浏览器在另一台机器上运行，请在浏览器机器上运行一个**节点主机**，并让 Gateway 代理浏览器操作（参见[浏览器工具](/zh/tools/browser)）。将节点配对视为管理员访问。
 
 推荐模式：
 
@@ -477,7 +477,7 @@ Doctor 可以为您生成一个：`openclaw doctor --generate-gateway-token`。
 - 共享诊断信息时，优先使用 `openclaw status --all`（可粘贴、已编辑机密）而非原始日志。
 - 如果您不需要长期保留，请清理旧的会话记录和日志文件。
 
-详细信息：[日志记录](/en/gateway/logging)
+详细信息：[日志记录](/zh/gateway/logging)
 
 ### 1) DM：默认配对
 
@@ -552,12 +552,12 @@ Doctor 可以为您生成一个：`openclaw doctor --generate-gateway-token`。
 
 ## 沙箱（推荐）
 
-专用文档：[沙箱](/en/gateway/sandboxing)
+专用文档：[沙箱](/zh/gateway/sandboxing)
 
 两种互补的方法：
 
-- **在 Docker 中运行完整的 Gateway**（容器边界）：[Docker](/en/install/docker)
-- **工具沙箱**（`agents.defaults.sandbox`，主机Gateway + Docker 隔离工具）：[沙箱](/en/gateway/sandboxing)
+- **在 Docker 中运行完整的 Gateway**（容器边界）：[Docker](/zh/install/docker)
+- **工具沙箱**（`agents.defaults.sandbox`，主机Gateway + Docker 隔离工具）：[沙箱](/zh/gateway/sandboxing)
 
 注意：为了防止跨代理访问，请将 `agents.defaults.sandbox.scope` 保持在 `"agent"`（默认）或 `"session"` 用于更严格的每会话隔离。`scope: "shared"` 使用单个容器/工作区。
 
@@ -567,7 +567,7 @@ Doctor 可以为您生成一个：`openclaw doctor --generate-gateway-token`。
 - `agents.defaults.sandbox.workspaceAccess: "ro"` 在 `/agent` 处以只读方式挂载代理工作区（禁用 `write`/`edit`/`apply_patch`）
 - `agents.defaults.sandbox.workspaceAccess: "rw"` 在 `/workspace` 处以读/写方式挂载代理工作区
 
-重要：`tools.elevated` 是在主机上运行 exec 的全局基准逃生舱。保持 `tools.elevated.allowFrom` 严格，不要为陌生人启用它。您可以通过 `agents.list[].tools.elevated` 进一步限制每个代理的提升。请参阅[提升模式](/en/tools/elevated)。
+重要：`tools.elevated` 是在主机上运行 exec 的全局基准逃生舱。保持 `tools.elevated.allowFrom` 严格，不要为陌生人启用它。您可以通过 `agents.list[].tools.elevated` 进一步限制每个代理的提升。请参阅[提升模式](/zh/tools/elevated)。
 
 ## 浏览器控制风险
 
@@ -586,7 +586,7 @@ Doctor 可以为您生成一个：`openclaw doctor --generate-gateway-token`。
 
 ## 每代理访问配置文件（多代理）
 
-使用多代理路由，每个代理可以拥有自己的沙箱 + 工具策略：使用它为每个代理提供**完全访问**、**只读**或**无访问**。请参阅[多代理沙箱和工具](/en/multi-agent-sandbox-tools)了解完整详细信息和优先级规则。
+使用多代理路由，每个代理可以拥有自己的沙箱 + 工具策略：使用它为每个代理提供**完全访问**、**只读**或**无访问**。请参阅[多代理沙箱和工具](/zh/multi-agent-sandbox-tools)了解完整详细信息和优先级规则。
 
 常见用例：
 

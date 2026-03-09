@@ -30,13 +30,13 @@ title: "OpenClaw"
 </p>
 
 <Columns>
-  <Card title="Get Started" href="/start/getting-started" icon="rocket">
+  <Card title="Get Started" href="/en/start/getting-started" icon="rocket">
     Install OpenClaw and bring up the Gateway in minutes.
   </Card>
-  <Card title="Run the Wizard" href="/start/wizard" icon="sparkles">
+  <Card title="Run the Wizard" href="/en/start/wizard" icon="sparkles">
     Guided setup with `openclaw onboard` and pairing flows.
   </Card>
-  <Card title="Open the Control UI" href="/web/control-ui" icon="layout-dashboard">
+  <Card title="Open the Control UI" href="/en/web/control-ui" icon="layout-dashboard">
     Launch the browser dashboard for chat, config, and sessions.
   </Card>
 </Columns>
@@ -138,22 +138,22 @@ Example:
 ## Start here
 
 <Columns>
-  <Card title="Docs hubs" href="/start/hubs" icon="book-open">
+  <Card title="Docs hubs" href="/en/start/hubs" icon="book-open">
     All docs and guides, organized by use case.
   </Card>
-  <Card title="Configuration" href="/gateway/configuration" icon="settings">
+  <Card title="Configuration" href="/en/gateway/configuration" icon="settings">
     Core Gateway settings, tokens, and provider config.
   </Card>
-  <Card title="Remote access" href="/gateway/remote" icon="globe">
+  <Card title="Remote access" href="/en/gateway/remote" icon="globe">
     SSH and tailnet access patterns.
   </Card>
-  <Card title="Channels" href="/channels/telegram" icon="message-square">
+  <Card title="Channels" href="/en/channels/telegram" icon="message-square">
     Channel-specific setup for WhatsApp, Telegram, Discord, and more.
   </Card>
-  <Card title="Nodes" href="/nodes" icon="smartphone">
+  <Card title="Nodes" href="/en/nodes" icon="smartphone">
     iOS and Android nodes with pairing and Canvas.
   </Card>
-  <Card title="Help" href="/help" icon="life-buoy">
+  <Card title="Help" href="/en/help" icon="life-buoy">
     Common fixes and troubleshooting entry point.
   </Card>
 </Columns>
@@ -161,19 +161,19 @@ Example:
 ## Learn more
 
 <Columns>
-  <Card title="Full feature list" href="/concepts/features" icon="list">
+  <Card title="Full feature list" href="/en/concepts/features" icon="list">
     Complete channel, routing, and media capabilities.
   </Card>
-  <Card title="Multi-agent routing" href="/concepts/multi-agent" icon="route">
+  <Card title="Multi-agent routing" href="/en/concepts/multi-agent" icon="route">
     Workspace isolation and per-agent sessions.
   </Card>
-  <Card title="Security" href="/gateway/security" icon="shield">
+  <Card title="Security" href="/en/gateway/security" icon="shield">
     Tokens, allowlists, and safety controls.
   </Card>
-  <Card title="Troubleshooting" href="/gateway/troubleshooting" icon="wrench">
+  <Card title="Troubleshooting" href="/en/gateway/troubleshooting" icon="wrench">
     Gateway diagnostics and common errors.
   </Card>
-  <Card title="About and credits" href="/reference/credits" icon="info">
+  <Card title="About and credits" href="/en/reference/credits" icon="info">
     Project origins, contributors, and license.
   </Card>
 </Columns>

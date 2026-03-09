@@ -29,4 +29,4 @@ openclaw onboard --auth-choice zai-api-key
 
 - GLM 版本和可用性可能会变化；查看 Z.AI 文档了解最新信息。
 - 示例模型 ID 包括 `glm-4.7` 和 `glm-4.6`。
-- 有关提供商详情，请参阅 [/providers/zai](/en/providers/zai)。
+- 有关提供商详情，请参阅 [/providers/zai](/zh/providers/zai)。

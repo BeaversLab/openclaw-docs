@@ -11,7 +11,7 @@ title: "Help"
 If you want a quick “get unstuck” flow, start here:
 
 - **Troubleshooting:** [Start here]`openclaw logs`
-- **Install sanity (Node/npm/PATH):** [Install](/en/logging)
+- **Install sanity (Node/npm/PATH):** [Install](/zh/logging)
 - **Gateway issues:** [Gateway troubleshooting]%%P3%%
 - **Logs:** [Logging]%%P4%% and [Gateway logging]%%P5%%
 - **Repairs:** [Doctor]%%P6%%

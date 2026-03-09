@@ -15,7 +15,7 @@ OpenClaw ships two lightweight web tools:
 - `web_fetch` — HTTP fetch + readable extraction (HTML → markdown/text).
 
 These are **not** browser automation. For JS-heavy sites or logins, use the
-[Browser tool](/en/tools/browser).
+[Browser tool](/zh/tools/browser).
 
 ## How it works
 
@@ -34,7 +34,7 @@ These are **not** browser automation. For JS-heavy sites or logins, use the
 | **Brave** (default) | Fast, structured results, free tier          | Traditional search results               | `BRAVE_API_KEY`                              |
 | **Perplexity**      | AI-synthesized answers, citations, real-time | Requires Perplexity or OpenRouter access | `OPENROUTER_API_KEY` or `PERPLEXITY_API_KEY` |
 
-See [Brave Search setup](/en/brave-search) and [Perplexity Sonar](/en/perplexity) for provider-specific details.
+See [Brave Search setup](/zh/brave-search) and [Perplexity Sonar](/zh/perplexity) for provider-specific details.
 
 Set the provider in config:
 
@@ -85,7 +85,7 @@ current limits and pricing.
 
 **Environment alternative:** set `BRAVE_API_KEY` in the Gateway process
 environment. For a gateway install, put it in `~/.openclaw/.env` (or your
-service environment). See [Env vars](/en/help/faq#how-does-openclaw-load-environment-variables).
+service environment). See [Env vars](/zh/help/faq#how-does-openclaw-load-environment-variables).
 
 ## Using Perplexity (direct or via OpenRouter)
 
@@ -255,7 +255,7 @@ Notes:
 - `web_fetch` blocks private/internal hostnames and re-checks redirects (limit with `maxRedirects`).
 - `maxChars` is clamped to `tools.web.fetch.maxCharsCap`.
 - `web_fetch` is best-effort extraction; some sites will need the browser tool.
-- See [Firecrawl](/en/tools/firecrawl) for key setup and service details.
+- See [Firecrawl](/zh/tools/firecrawl) for key setup and service details.
 - Responses are cached (default 15 minutes) to reduce repeated fetches.
 - If you use tool profiles/allowlists, add `web_search`/`web_fetch` or `group:web`.
 - If the Brave key is missing, `web_search` returns a short setup hint with a docs link.

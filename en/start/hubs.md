@@ -31,7 +31,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Docker](/en/install/docker)
 - [Nix](/en/install/nix)
 - [Updating / rollback](/en/install/updating)
-- [Bun workflow (/en/install/bun)](/install/bun)
+- [Bun workflow (experimental)](/en/install/bun)
 
 ## Core concepts
 
@@ -46,7 +46,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Multi-agent routing](/en/concepts/multi-agent)
 - [Compaction](/en/concepts/compaction)
 - [Sessions](/en/concepts/session)
-- [Sessions (/en/concepts/sessions)](/concepts/sessions)
+- [Sessions (alias)](/en/concepts/sessions)
 - [Session pruning](/en/concepts/session-pruning)
 - [Session tools](/en/concepts/session-tool)
 - [Queue](/en/concepts/queue)
@@ -69,13 +69,13 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Model providers hub](/en/providers/models)
 - [WhatsApp](/en/channels/whatsapp)
 - [Telegram](/en/channels/telegram)
-- [Telegram (/en/channels/grammy)](/channels/grammy)
+- [Telegram (grammY notes)](/en/channels/grammy)
 - [Slack](/en/channels/slack)
 - [Discord](/en/channels/discord)
 - [Mattermost](/en/channels/mattermost) (plugin)
 - [Signal](/en/channels/signal)
-- [BlueBubbles (/en/channels/bluebubbles)](/channels/bluebubbles)
-- [iMessage (/en/channels/imessage)](/channels/imessage)
+- [BlueBubbles (iMessage)](/en/channels/bluebubbles)
+- [iMessage (legacy)](/en/channels/imessage)
 - [Location parsing](/en/channels/location)
 - [WebChat](/en/web/webchat)
 - [Webhooks](/en/automation/webhook)
@@ -116,7 +116,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Agent send CLI](/en/tools/agent-send)
 - [Terminal UI](/en/tui)
 - [Browser control](/en/tools/browser)
-- [Browser (/en/tools/browser-linux-troubleshooting)](/tools/browser-linux-troubleshooting)
+- [Browser (Linux troubleshooting)](/en/tools/browser-linux-troubleshooting)
 - [Polls](/en/automation/poll)
 
 ## Nodes, media, voice
@@ -135,7 +135,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [macOS](/en/platforms/macos)
 - [iOS](/en/platforms/ios)
 - [Android](/en/platforms/android)
-- [Windows (/en/platforms/windows)](/platforms/windows)
+- [Windows (WSL2)](/en/platforms/windows)
 - [Linux](/en/platforms/linux)
 - [Web surfaces](/en/web)
 
@@ -155,7 +155,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [macOS remote](/en/platforms/mac/remote)
 - [macOS signing](/en/platforms/mac/signing)
 - [macOS release](/en/platforms/mac/release)
-- [macOS gateway (/en/platforms/mac/bundled-gateway)](/platforms/mac/bundled-gateway)
+- [macOS gateway (launchd)](/en/platforms/mac/bundled-gateway)
 - [macOS XPC](/en/platforms/mac/xpc)
 - [macOS skills](/en/platforms/mac/skills)
 - [macOS Peekaboo](/en/platforms/mac/peekaboo)

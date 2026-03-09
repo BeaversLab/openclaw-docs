@@ -33,18 +33,18 @@ See [Venice AI](/en/providers/venice).
 
 ## Supported providers (starter set)
 
-- [OpenAI (/en/providers/openai)](/providers/openai)
-- [Anthropic (/en/providers/anthropic)](/providers/anthropic)
+- [OpenAI (API + Codex)](/en/providers/openai)
+- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
 - [OpenRouter](/en/providers/openrouter)
 - [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
 - [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
-- [Moonshot AI (/en/providers/moonshot)](/providers/moonshot)
+- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
 - [Synthetic](/en/providers/synthetic)
 - [OpenCode Zen](/en/providers/opencode)
 - [Z.AI](/en/providers/zai)
 - [GLM models](/en/providers/glm)
 - [MiniMax](/en/providers/minimax)
-- [Venice (/en/providers/venice)](/providers/venice)
+- [Venice (Venice AI)](/en/providers/venice)
 - [Amazon Bedrock](/en/bedrock)
 
 For the full provider catalog (xAI, Groq, Mistral, etc.) and advanced configuration,

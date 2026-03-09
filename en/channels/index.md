@@ -22,7 +22,7 @@ Text is supported everywhere; media and reactions vary by channel.
 - [Mattermost](/en/channels/mattermost) — Bot API + WebSocket; channels, groups, DMs (plugin, installed separately).
 - [Signal](/en/channels/signal) — signal-cli; privacy-focused.
 - [BlueBubbles](/en/channels/bluebubbles) — **Recommended for iMessage**; uses the BlueBubbles macOS server REST API with full feature support (edit, unsend, effects, reactions, group management — edit currently broken on macOS 26 Tahoe).
-- [iMessage (/en/channels/imessage)](/channels/imessage) — Legacy macOS integration via imsg CLI (deprecated, use BlueBubbles for new setups).
+- [iMessage (legacy)](/en/channels/imessage) — Legacy macOS integration via imsg CLI (deprecated, use BlueBubbles for new setups).
 - [Microsoft Teams](/en/channels/msteams) — Bot Framework; enterprise support (plugin, installed separately).
 - [LINE](/en/channels/line) — LINE Messaging API bot (plugin, installed separately).
 - [Nextcloud Talk](/en/channels/nextcloud-talk) — Self-hosted chat via Nextcloud Talk (plugin, installed separately).

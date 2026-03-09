@@ -35,25 +35,25 @@ See [Venice AI](/en/providers/venice).
 
 ## Provider docs
 
-- [OpenAI (/en/providers/openai)](/providers/openai)
-- [Anthropic (/en/providers/anthropic)](/providers/anthropic)
-- [Qwen (/en/providers/qwen)](/providers/qwen)
+- [OpenAI (API + Codex)](/en/providers/openai)
+- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
+- [Qwen (OAuth)](/en/providers/qwen)
 - [OpenRouter](/en/providers/openrouter)
 - [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
 - [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
-- [Moonshot AI (/en/providers/moonshot)](/providers/moonshot)
+- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
 - [OpenCode Zen](/en/providers/opencode)
 - [Amazon Bedrock](/en/bedrock)
 - [Z.AI](/en/providers/zai)
 - [Xiaomi](/en/providers/xiaomi)
 - [GLM models](/en/providers/glm)
 - [MiniMax](/en/providers/minimax)
-- [Venice (/en/providers/venice)](/providers/venice)
-- [Ollama (/en/providers/ollama)](/providers/ollama)
+- [Venice (Venice AI, privacy-focused)](/en/providers/venice)
+- [Ollama (local models)](/en/providers/ollama)
 
 ## Transcription providers
 
-- [Deepgram (/en/providers/deepgram)](/providers/deepgram)
+- [Deepgram (audio transcription)](/en/providers/deepgram)
 
 ## Community tools
 

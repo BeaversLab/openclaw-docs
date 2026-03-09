@@ -21,10 +21,10 @@ devices across localhost, LAN, and tailnet.
 
 ## Pairing + identity
 
-- [Pairing overview (/en/start/pairing)](/start/pairing)
+- [Pairing overview (DM + nodes)](/en/start/pairing)
 - [Gateway-owned node pairing](/en/gateway/pairing)
-- [Devices CLI (/en/cli/devices)](/cli/devices)
-- [Pairing CLI (/en/cli/pairing)](/cli/pairing)
+- [Devices CLI (pairing + token rotation)](/en/cli/devices)
+- [Pairing CLI (DM approvals)](/en/cli/pairing)
 
 Local trust:
 
@@ -36,13 +36,13 @@ Local trust:
 
 - [Discovery & transports](/en/gateway/discovery)
 - [Bonjour / mDNS](/en/gateway/bonjour)
-- [Remote access (/en/gateway/remote)](/gateway/remote)
+- [Remote access (SSH)](/en/gateway/remote)
 - [Tailscale](/en/gateway/tailscale)
 
 ## Nodes + transports
 
 - [Nodes overview](/en/nodes)
-- [Bridge protocol (/en/gateway/bridge-protocol)](/gateway/bridge-protocol)
+- [Bridge protocol (legacy nodes)](/en/gateway/bridge-protocol)
 - [Node runbook: iOS](/en/platforms/ios)
 - [Node runbook: Android](/en/platforms/android)
 
