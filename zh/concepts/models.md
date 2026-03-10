@@ -9,9 +9,9 @@ title: "Models CLI"
 
 # Models CLI
 
-See [/concepts/model-failover](/en/concepts/model-failover) for auth profile
+See [/concepts/model-failover](/zh/concepts/model-failover) for auth profile
 rotation, cooldowns, and how that interacts with fallbacks.
-Quick provider overview + examples: [/concepts/model-providers](/en/concepts/model-providers).
+Quick provider overview + examples: [/concepts/model-providers](/zh/concepts/model-providers).
 
 ## How model selection works
 
@@ -26,7 +26,7 @@ Related:
 
 - `agents.defaults.models` is the allowlist/catalog of models OpenClaw can use (plus aliases).
 - `agents.defaults.imageModel` is used **only when** the primary model can’t accept images.
-- Per-agent defaults can override `agents.defaults.model` via `agents.list[].model` plus bindings (see [/concepts/multi-agent](/en/concepts/multi-agent)).
+- Per-agent defaults can override `agents.defaults.model` via `agents.list[].model` plus bindings (see [/concepts/multi-agent](/zh/concepts/multi-agent)).
 
 ## Quick model picks (anecdotal)
 
@@ -42,8 +42,8 @@ openclaw onboard
 ```
 
 It can set up model + auth for common providers, including **OpenAI Code (Codex)
-subscription** (OAuth) and **Anthropic** (API key recommended; subscription** (OAuth) and **Anthropic** (API key recommended; `claude
-setup-tokensetup-token` also supported).
+subscription** (OAuth) and **Anthropic** (API key recommended; subscription** (OAuth) and **Anthropic** (API key recommended; subscription** (OAuth) and **Anthropic** (API key recommended; subscription** (OAuth) and **Anthropic** (API key recommended; `claude
+setup-tokensetup-tokensetup-tokensetup-token` also supported).
 
 ## Config keys (overview)
 
@@ -56,7 +56,7 @@ Model refs are normalized to lowercase. Provider aliases like `z.ai/*` normalize
 to `zai/*`.
 
 Provider configuration examples (including OpenCode Zen) live in
-[/gateway/configuration](/en/gateway/configuration#opencode-zen-multi-model-proxy).
+[/gateway/configuration](/zh/gateway/configuration#opencode-zen-multi-model-proxy).
 
 ## “Model is not allowed” (and why replies stop)
 
@@ -110,7 +110,7 @@ Notes:
 - If the model ID itself contains `/` (OpenRouter-style), you must include the provider prefix (example: `/model openrouter/moonshotai/kimi-k2`).
 - If you omit the provider, OpenClaw treats the input as an alias or a model for the **default provider** (only works when there is no `/` in the model ID).
 
-Full command behavior/config: [Slash commands](/en/tools/slash-commands).
+Full command behavior/config: [Slash commands](/zh/tools/slash-commands).
 
 ## CLI commands
 
@@ -194,7 +194,7 @@ Scan results are ranked by:
 Input
 
 - OpenRouter `/models` list (filter `:free`)
-- Requires OpenRouter API key from auth profiles or `OPENROUTER_API_KEY` (see [/environment](/en/environment))
+- Requires OpenRouter API key from auth profiles or `OPENROUTER_API_KEY` (see [/environment](/zh/environment))
 - Optional filters: `--max-age-days`, `--min-params`, `--provider`, `--max-candidates`
 - Probe controls: `--timeout`, `--concurrency`
 

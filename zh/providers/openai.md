@@ -1,29 +1,29 @@
 ---
-title: "OpenAI"
-summary: "在 OpenClaw 中通过 API key 或 Codex 订阅使用 OpenAI"
+summary: "在 OpenClaw 中通过 API 密钥或 Codex 订阅使用 OpenAI"
 read_when:
-  - 想在 OpenClaw 中使用 OpenAI 模型
-  - 想使用 Codex 订阅认证而非 API key
+  - "You want to use OpenAI models in OpenClaw"
+  - "You want Codex subscription auth instead of API keys"
+title: "OpenAI"
 ---
 
 # OpenAI
 
-OpenAI 提供 GPT 模型的开发者 API。Codex 支持 **ChatGPT 登录**（订阅访问）或 **API key** 登录（按量计费）。Codex 云端要求 ChatGPT 登录。
+OpenAI 为 GPT 模型提供开发者 API。Codex 支持 **ChatGPT 登录**以获取订阅访问权限，或 **API 密钥**登录以获取按使用量付费的访问权限。Codex cloud 需要 ChatGPT 登录。
 
-## 方案 A：OpenAI API key（OpenAI Platform）
+## 选项 A：OpenAI API 密钥（OpenAI Platform）
 
-**适用：** 直接 API 访问与按量计费。
-在 OpenAI Dashboard 获取 API key。
+**适用场景：**直接 API 访问和按使用量计费。
+从 OpenAI 控制台获取 API 密钥。
 
 ### CLI 设置
 
 ```bash
 openclaw onboard --auth-choice openai-api-key
-# or non-interactive
+# 或非交互模式
 openclaw onboard --openai-api-key "$OPENAI_API_KEY"
 ```
 
-### 配置片段
+### 配置代码段
 
 ```json5
 {
@@ -32,22 +32,22 @@ openclaw onboard --openai-api-key "$OPENAI_API_KEY"
 }
 ```
 
-## 方案 B：OpenAI Code（Codex）订阅
+## 选项 B：OpenAI Code (Codex) 订阅
 
-**适用：** 使用 ChatGPT/Codex 订阅访问而非 API key。
-Codex 云端需要 ChatGPT 登录，Codex CLI 支持 ChatGPT 或 API key 登录。
+**适用场景：**使用 ChatGPT/Codex 订阅访问权限而不是 API 密钥。
+Codex cloud 需要 ChatGPT 登录，而 Codex CLI 支持 ChatGPT 或 API 密钥登录。
 
 ### CLI 设置
 
 ```bash
-# Run Codex OAuth in the wizard
+# 在向导中运行 Codex OAuth
 openclaw onboard --auth-choice openai-codex
 
-# Or run OAuth directly
+# 或直接运行 OAuth
 openclaw models auth login --provider openai-codex
 ```
 
-### 配置片段
+### 配置代码段
 
 ```json5
 {
@@ -55,7 +55,7 @@ openclaw models auth login --provider openai-codex
 }
 ```
 
-## 说明
+## 注意事项
 
-- 模型引用始终使用 `provider/model`（见 [/concepts/models](/zh/concepts/models)）。
-- 认证细节与复用规则见 [/concepts/oauth](/zh/concepts/oauth)。
+- 模型引用始终使用 `provider/model`（参阅 [/concepts/models](/zh/concepts/models)）。
+- 身份验证详细信息和重用规则位于 [/concepts/oauth](/zh/concepts/oauth)。

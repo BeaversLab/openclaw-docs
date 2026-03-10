@@ -68,7 +68,7 @@ openclaw doctor
 ### 控制 UI (Web)
 
 控制 UI 的 **日志** 选项卡使用 `logs.tail` 跟踪同一个文件。
-有关如何打开它,请参阅 [/web/control-ui](/en/web/control-ui)。
+有关如何打开它,请参阅 [/web/control-ui](/zh/web/control-ui)。
 
 ### 仅频道日志
 
@@ -211,7 +211,7 @@ Notes:
 
 - Flag logs go to the standard log file (same as `logging.file`).
 - Output is still redacted according to `logging.redactSensitive`.
-- Full guide: [/diagnostics/flags](/en/diagnostics/flags).
+- Full guide: [/diagnostics/flags](/zh/diagnostics/flags).
 
 ### Export to OpenTelemetry
 

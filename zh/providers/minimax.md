@@ -1,58 +1,58 @@
 ---
-title: "MiniMax"
 summary: "在 OpenClaw 中使用 MiniMax M2.1"
 read_when:
-  - 想在 OpenClaw 中使用 MiniMax 模型
-  - 需要 MiniMax 配置指引
+  - 您想在 OpenClaw 中使用 MiniMax 模型
+  - 您需要 MiniMax 设置指南
+title: "MiniMax"
 ---
 
 # MiniMax
 
-MiniMax 是一家 AI 公司，构建 **M2/M2.1** 模型家族。当前面向编程的版本为 **MiniMax M2.1**（2025-12-23），用于现实世界的复杂任务。
+MiniMax 是一家构建 **M2/M2.1** 模型系列的 AI 公司。当前专注于编码的版本是 **MiniMax M2.1**（2025 年 12 月 23 日），专为现实世界的复杂任务而构建。
 
-来源：[MiniMax M2.1 release note](https://www.minimax.io/news/minimax-m21)
+来源：[MiniMax M2.1 发布说明](https://www.minimax.io/news/minimax-m21)
 
-## 模型概览（M2.1）
+## 模型概述（M2.1）
 
-MiniMax 在 M2.1 中强调以下改进：
+MiniMax 在 M2.1 中强调了这些改进：
 
-- 更强的 **多语言编码**（Rust、Java、Go、C++、Kotlin、Objective‑C、TS/JS）。
-- 更好的 **Web/应用开发** 与审美输出质量（包括原生移动端）。
-- 提升 **复合指令** 处理能力，适配办公类工作流，基于交错思考与约束执行。
-- **更简洁的回复**，更低 token 消耗与更快迭代。
-- 更强的 **工具/代理框架** 兼容性与上下文管理（Claude Code、Droid/Factory AI、Cline、Kilo Code、Roo Code、BlackBox）。
-- 更高质量的 **对话与技术写作** 输出。
+- 更强的**多语言编码**（Rust、Java、Go、C++、Kotlin、Objective-C、TS/JS）。
+- 更好的 **Web/应用开发**和美学输出质量（包括原生移动端）。
+- 改进的**复合指令**处理，适用于办公风格工作流，建立在交错思考和集成约束执行之上。
+- **更简洁的响应**，更低的令牌使用量和更快的迭代周期。
+- 更强的**工具/代理框架**兼容性和上下文管理（Claude Code、Droid/Factory AI、Cline、Kilo Code、Roo Code、BlackBox）。
+- 更高质量的**对话和技术写作**输出。
 
 ## MiniMax M2.1 vs MiniMax M2.1 Lightning
 
-- **速度：** Lightning 是 MiniMax 定价文档中的“快速”变体。
-- **成本：** 定价显示输入成本相同，但 Lightning 输出成本更高。
-- **Coding plan 路由：** Lightning 后端在 MiniMax coding plan 中不可直接选择。MiniMax 会将多数请求自动路由到 Lightning，但在流量高峰会回退到常规 M2.1 后端。
+- **速度：** Lightning 是 MiniMax 定价文档中的"快速"变体。
+- **成本：** 定价显示相同的输入成本，但 Lightning 有更高的输出成本。
+- **编码计划路由：** Lightning 后端在 MiniMax 编码计划上不直接可用。MiniMax 自动将大多数请求路由到 Lightning，但在流量高峰期间回退到常规 M2.1 后端。
 
-## 选择一种配置方式
+## 选择设置
 
-### MiniMax OAuth（Coding Plan）— 推荐
+### MiniMax OAuth（编码计划）— 推荐
 
-**适用：** 通过 MiniMax Coding Plan 快速配置，无需 API key，使用 OAuth 认证。
+**最适合：** 通过 OAuth 快速设置 MiniMax 编码计划，无需 API 密钥。
 
-启用捆绑的 OAuth 插件并完成认证：
+启用捆绑的 OAuth 插件并进行身份验证：
 
 ```bash
-openclaw plugins enable minimax-portal-auth  # skip if already loaded.
-openclaw gateway restart  # restart if gateway is already running
+openclaw plugins enable minimax-portal-auth  # 如果已加载则跳过
+openclaw gateway restart  # 如果网关已在运行则重启
 openclaw onboard --auth-choice minimax-portal
 ```
 
-系统将提示选择端点：
+您将被提示选择端点：
 
-- **Global** - 国际用户 (`api.minimax.io`)
-- **CN** - 中国用户 (`api.minimaxi.com`)
+- **Global** - 国际用户（`api.minimax.io`）
+- **CN** - 中国用户（`api.minimaxi.com`）
 
-详情参见 [MiniMax OAuth plugin README](https://github.com/openclaw/openclaw/tree/main/extensions/minimax-portal-auth)。
+详情请参阅 [MiniMax OAuth 插件 README](https://github.com/openclaw/openclaw/tree/main/extensions/minimax-portal-auth)。
 
-### MiniMax M2.1（API key）
+### MiniMax M2.1（API 密钥）
 
-**适用：** 通过 Anthropic 兼容 API 使用托管 MiniMax。
+**最适合：** 具有 Anthropic 兼容 API 的托管 MiniMax。
 
 通过 CLI 配置：
 
@@ -88,9 +88,9 @@ openclaw onboard --auth-choice minimax-portal
 }
 ```
 
-### MiniMax M2.1 作为回退（Opus 主模型）
+### MiniMax M2.1 作为后备（Opus 主力）
 
-**适用：** 以 Opus 4.5 为主模型，MiniMax M2.1 作为故障回退。
+**最适合：** 保持 Opus 4.5 为主力，失败时切换到 MiniMax M2.1。
 
 ```json5
 {
@@ -112,8 +112,8 @@ openclaw onboard --auth-choice minimax-portal
 
 ### 可选：通过 LM Studio 本地运行（手动）
 
-**适用：** 使用 LM Studio 本地推理。
-我们在强劲硬件（如桌面/服务器）上通过 LM Studio 本地服务器测试到 MiniMax M2.1 的良好表现。
+**最适合：** 使用 LM Studio 进行本地推理。
+我们在强大硬件（例如台式机/服务器）上使用 LM Studio 的本地服务器运行 MiniMax M2.1 获得了很好的结果。
 
 通过 `openclaw.json` 手动配置：
 
@@ -156,43 +156,43 @@ openclaw onboard --auth-choice minimax-portal
 1. 运行 `openclaw configure`。
 2. 选择 **Model/auth**。
 3. 选择 **MiniMax M2.1**。
-4. 在提示时选择默认模型。
+4. 在提示时选择您的默认模型。
 
 ## 配置选项
 
-- `models.providers.minimax.baseUrl`：优先使用 `https://api.minimax.io/anthropic`（Anthropic 兼容）；`https://api.minimax.io/v1` 可选，用于 OpenAI 兼容负载。
-- `models.providers.minimax.api`：优先使用 `anthropic-messages`；`openai-completions` 可选，用于 OpenAI 兼容负载。
-- `models.providers.minimax.apiKey`：MiniMax API key（`MINIMAX_API_KEY`）。
+- `models.providers.minimax.baseUrl`：首选 `https://api.minimax.io/anthropic`（Anthropic 兼容）；`https://api.minimax.io/v1` 是 OpenAI 兼容负载的可选项。
+- `models.providers.minimax.api`：首选 `anthropic-messages`；`openai-completions` 是 OpenAI 兼容负载的可选项。
+- `models.providers.minimax.apiKey`：MiniMax API 密钥（`MINIMAX_API_KEY`）。
 - `models.providers.minimax.models`：定义 `id`、`name`、`reasoning`、`contextWindow`、`maxTokens`、`cost`。
-- `agents.defaults.models`：为 allowlist 添加模型别名。
-- `models.mode`：若要在内置模型之外添加 MiniMax，保持 `merge`。
+- `agents.defaults.models`：为您想在允许列表中使用的模型设置别名。
+- `models.mode`：如果您想在内置模型旁边添加 MiniMax，请保持 `merge`。
 
-## 说明
+## 注意事项
 
 - 模型引用格式为 `minimax/<model>`。
-- Coding Plan 用量 API：`https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains`（需要 coding plan key）。
-- 若需精确成本跟踪，请更新 `models.json` 中的定价。
-- MiniMax Coding Plan 邀请链接（9 折）：https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link
-- Provider 规则参见 [/concepts/model-providers](/zh/concepts/model-providers)。
-- 使用 `openclaw models list` 与 `openclaw models set minimax/MiniMax-M2.1` 切换。
+- 编码计划使用 API：`https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains`（需要编码计划密钥）。
+- 如果需要精确的成本跟踪，请更新 `models.json` 中的定价值。
+- MiniMax 编码计划推荐链接（10% 折扣）：https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link
+- 有关提供者规则，请参阅 [/concepts/model-providers](/zh/concepts/model-providers)。
+- 使用 `openclaw models list` 和 `openclaw models set minimax/MiniMax-M2.1` 进行切换。
 
-## 故障排查
+## 故障排除
 
-### “Unknown model: minimax/MiniMax-M2.1”
+### "Unknown model: minimax/MiniMax-M2.1"
 
-这通常意味着 **MiniMax provider 未配置**（没有 provider entry，也没有 MiniMax 认证 profile/env key）。此检测的修复在 **2026.1.12** 中（编写时未发布）。修复方式：
+这通常意味着 **MiniMax 提供者未配置**（未找到提供者条目和 MiniMax 认证配置文件/env 密钥）。对此检测的修复在 **2026.1.12** 中（撰写时尚未发布）。修复方法：
 
-- 升级到 **2026.1.12**（或从源码 `main` 运行），然后重启 gateway。
+- 升级到 **2026.1.12**（或从源码 `main` 运行），然后重启网关。
 - 运行 `openclaw configure` 并选择 **MiniMax M2.1**，或
-- 手动添加 `models.providers.minimax` 区块，或
-- 设置 `MINIMAX_API_KEY`（或 MiniMax 认证 profile），以便注入 provider。
+- 手动添加 `models.providers.minimax` 块，或
+- 设置 `MINIMAX_API_KEY`（或 MiniMax 认证配置文件），以便可以注入提供者。
 
 确保模型 id **区分大小写**：
 
 - `minimax/MiniMax-M2.1`
 - `minimax/MiniMax-M2.1-lightning`
 
-然后重新检查：
+然后使用以下命令重新检查：
 
 ```bash
 openclaw models list

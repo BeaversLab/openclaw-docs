@@ -15,9 +15,9 @@ Gateway 是 OpenClaw 的 WebSocket 服务器（通道、节点、会话、钩子
 
 相关文档：
 
-- [/gateway/bonjour](/en/gateway/bonjour)
-- [/gateway/discovery](/en/gateway/discovery)
-- [/gateway/configuration](/en/gateway/configuration)
+- [/gateway/bonjour](/zh/gateway/bonjour)
+- [/gateway/discovery](/zh/gateway/discovery)
+- [/gateway/configuration](/zh/gateway/configuration)
 
 ## 运行 Gateway
 
@@ -169,7 +169,7 @@ openclaw gateway uninstall
 `gateway discover` 扫描 Gateway 信标（`_openclaw-gw._tcp`）。
 
 - 多播 DNS-SD：`local.`
-- 单播 DNS-SD（Wide-Area Bonjour）：选择一个域（例如：`openclaw.internal.`）并设置拆分 DNS + DNS 服务器；参见 [/gateway/bonjour](/en/gateway/bonjour)
+- 单播 DNS-SD（Wide-Area Bonjour）：选择一个域（例如：`openclaw.internal.`）并设置拆分 DNS + DNS 服务器；参见 [/gateway/bonjour](/zh/gateway/bonjour)
 
 仅启用了 Bonjour 发现（默认）的 Gateway 才会广播信标。
 
