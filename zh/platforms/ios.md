@@ -1,29 +1,29 @@
 ---
-title: "iOS 应用"
-summary: "iOS node 应用：连接 Gateway、配对、canvas 与排障"
+summary: "iOS 应用"
 read_when:
-  - 配对或重连 iOS node
-  - 从源码运行 iOS app
-  - 排查 gateway 发现或 canvas 命令
+  - "Pairing or reconnecting the iOS node"
+  - "Running the iOS app from source"
+  - "Debugging gateway discovery or canvas commands"
+title: "iOS 节点应用：连接到 Gateway、配对、Canvas 和故障排除"
 ---
 
-# iOS App (Node)
+# iOS 应用（节点）
 
-状态：内部预览。iOS app 目前尚未公开分发。
+可用性：内部预览版。iOS 应用尚未公开发布。
 
 ## 功能
 
-- 通过 WebSocket 连接 Gateway（LAN 或 tailnet）。
-- 暴露 node 能力：Canvas、屏幕截图、相机采集、定位、Talk 模式、Voice wake。
-- 接收 `node.invoke` 命令并上报 node 状态事件。
+- 通过 WebSocket 连接到 Gateway（局域网或 tailnet）。
+- 暴露节点能力：Canvas、屏幕快照、摄像头捕获、位置、对讲模式、语音唤醒。
+- 接收 `node.invoke` 命令并报告节点状态事件。
 
 ## 要求
 
-- Gateway 运行在另一台设备上（macOS、Linux 或通过 WSL2 的 Windows）。
+- 在另一台设备上运行的 Gateway（macOS、Linux 或通过 WSL2 运行的 Windows）。
 - 网络路径：
-  - 同一 LAN（Bonjour），**或**
-  - Tailnet（单播 DNS‑SD；示例域名：`openclaw.internal.`），**或**
-  - 手动 host/port（兜底）。
+  - 通过 Bonjour 连接同一局域网，**或**
+  - 通过单播 DNS-SD 连接 Tailnet（示例域：`openclaw.internal.`），**或**
+  - 手动主机/端口（后备方案）。
 
 ## 快速开始（配对 + 连接）
 
@@ -33,9 +33,9 @@ read_when:
 openclaw gateway --port 18789
 ```
 
-2. 在 iOS app 中打开 Settings，选择已发现的 gateway（或启用 Manual Host 并填写 host/port）。
+2. 在 iOS 应用中，打开设置并选择一个发现的Gateway（或启用手动主机并输入主机/端口）。
 
-3. 在 gateway 主机上批准配对请求：
+3. 在Gateway主机上批准配对请求：
 
 ```bash
 openclaw nodes pending
@@ -51,22 +51,21 @@ openclaw gateway call node.list --params "{}"
 
 ## 发现路径
 
-### Bonjour（LAN）
+### Bonjour（局域网）
 
-Gateway 会在 `local.` 上广播 `_openclaw-gw._tcp`。iOS app 会自动列出。
+Gateway 在 `local.` 上通告 `_openclaw-gw._tcp`。iOS 应用会自动列出这些Gateway。
 
 ### Tailnet（跨网络）
 
-如果 mDNS 被阻断，可使用单播 DNS‑SD 区（选一个域名；例如 `openclaw.internal.`）并配置 Tailscale split DNS。
-CoreDNS 示例见 [Bonjour](/zh/gateway/bonjour)。
+如果 mDNS 被阻止，请使用单播 DNS-SD 区域（选择一个域；例如：`openclaw.internal.`）和 Tailscale 分离 DNS。参阅 [Bonjour](/en/gateway/bonjour) 了解 CoreDNS 示例。
 
-### 手动 host/port
+### 手动主机/端口
 
-在 Settings 中启用 **Manual Host** 并输入 gateway host + 端口（默认 `18789`）。
+在设置中，启用手动主机并输入Gateway主机 + 端口（默认为 `18789`）。
 
 ## Canvas + A2UI
 
-iOS node 渲染 WKWebView canvas。用 `node.invoke` 驱动：
+iOS 节点渲染 WKWebView canvas。使用 `node.invoke` 来驱动它：
 
 ```bash
 openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18793/__openclaw__/canvas/"}'
@@ -74,9 +73,9 @@ openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"ur
 
 注意：
 
-- Gateway canvas host 提供 `/__openclaw__/canvas/` 与 `/__openclaw__/a2ui/`。
-- 当广播了 canvas host URL 时，iOS node 连接后会自动导航到 A2UI。
-- 通过 `canvas.navigate` + `{"url":""}` 可回到内置 scaffold。
+- Gateway canvas 主机提供 `/__openclaw__/canvas/` 和 `/__openclaw__/a2ui/`。
+- 当通告 canvas 主机 URL 时，iOS 节点会在连接时自动导航到 A2UI。
+- 使用 `canvas.navigate` 和 `{"url":""}` 返回内置脚手架。
 
 ### Canvas eval / snapshot
 
@@ -88,20 +87,20 @@ openclaw nodes invoke --node "iOS Node" --command canvas.eval --params '{"javaSc
 openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"maxWidth":900,"format":"jpeg"}'
 ```
 
-## Voice wake + talk mode
+## 语音唤醒 + 对讲模式
 
-- Voice wake 与 talk mode 在 Settings 中可用。
-- iOS 可能暂停后台音频；当应用不在前台时，语音功能只能 best‑effort。
+- 语音唤醒和对讲模式在设置中可用。
+- iOS 可能会暂停后台音频；当应用未激活时，语音功能将尽力而为。
 
 ## 常见错误
 
-- `NODE_BACKGROUND_UNAVAILABLE`：把 iOS app 切到前台（canvas/camera/screen 命令需要前台）。
-- `A2UI_HOST_NOT_CONFIGURED`：Gateway 未广播 canvas host URL；检查 [Gateway 配置](/zh/gateway/configuration) 中的 `canvasHost`。
-- 配对提示未出现：运行 `openclaw nodes pending` 并手动批准。
-- 重装后无法重连：Keychain 中的配对 token 被清除；重新配对 node。
+- `NODE_BACKGROUND_UNAVAILABLE`：将 iOS 应用带到前台（canvas/camera/screen 命令需要它）。
+- `A2UI_HOST_NOT_CONFIGURED`：Gateway 没有通告 canvas 主机 URL；请检查 [Gateway configuration](/en/gateway/configuration) 中的 `canvasHost`。
+- 配对提示从未出现：运行 `openclaw nodes pending` 并手动批准。
+- 重新安装后重新连接失败：钥匙串配对令牌已被清除；请重新配对节点。
 
 ## 相关文档
 
-- [配对](/zh/gateway/pairing)
-- [发现](/zh/gateway/discovery)
-- [Bonjour](/zh/gateway/bonjour)
+- [Pairing](/en/gateway/pairing)
+- [Discovery](/en/gateway/discovery)
+- [Bonjour](/en/gateway/bonjour)

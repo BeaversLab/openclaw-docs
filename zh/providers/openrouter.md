@@ -32,5 +32,5 @@ openclaw onboard --auth-choice apiKey --token-provider openrouter --token "$OPEN
 ## 注意事项
 
 - 模型引用为 `openrouter/<provider>/<model>`。
-- 有关更多模型/提供商选项，请参阅 [/concepts/model-providers](/zh/concepts/model-providers)。
+- 有关更多模型/提供商选项，请参阅 [/concepts/model-providers](/en/concepts/model-providers)。
 - OpenRouter 在底层使用带有 API 密钥的 Bearer 令牌。

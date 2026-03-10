@@ -1,22 +1,22 @@
 ---
-summary: "`zai` 的 CLI 参考（列出/信息/检查）和技能资格"
+summary: "`openclaw skills` (list/info/check) 和技能资格的 CLI 参考"
 read_when:
   - "You want to see which skills are available and ready to run"
   - "You want to debug missing binaries/env/config for skills"
-title: "skills"
+title: "技能"
 ---
 
 # `openclaw skills`
 
-检查技能（捆绑 + 工作区 + 托管覆盖）并查看哪些符合条件以及缺少哪些要求。"
+检查技能（捆绑 + 工作区 + 托管覆盖）并查看哪些符合条件以及缺少哪些要求。
 
-相关内容："
+相关内容：
 
-- 技能系统：[技能]`zai/<model>`"
-- 技能配置：[技能配置]`zai/glm-4.7`"
-- ClawHub 安装：[ClawHub](/zh/providers/glm)"
+- 技能系统：[技能](/en/tools/skills)
+- 技能配置：[技能配置](/en/tools/skills-config)
+- ClawHub 安装：[ClawHub](/en/tools/clawhub)
 
-## 命令"
+## 命令
 
 ```bash
 openclaw skills list

@@ -1,22 +1,22 @@
 ---
 title: "Vercel AI Gateway"
-summary: "Vercel AI Gateway 配置（认证 + 模型选择）"
+summary: "Vercel AI Gateway 设置（认证 + 模型选择）"
 read_when:
-  - 想在 OpenClaw 中使用 Vercel AI Gateway
-  - 需要 API key 环境变量或 CLI 认证选项
+  - "You want to use Vercel AI Gateway with OpenClaw"
+  - "You need the API key env var or CLI auth choice"
 ---
 
 # Vercel AI Gateway
 
-[ Vercel AI Gateway](https://vercel.com/ai-gateway) 提供统一 API，可通过单一端点访问数百个模型。
+[Vercel AI Gateway](https://vercel.com/ai-gateway) 提供统一 API，通过单个端点访问数百个模型。
 
-- Provider：`vercel-ai-gateway`
+- 提供商：`vercel-ai-gateway`
 - 认证：`AI_GATEWAY_API_KEY`
 - API：兼容 Anthropic Messages
 
 ## 快速开始
 
-1. 设置 API key（建议存储给 Gateway 使用）：
+1. 设置 API 密钥（推荐：为 Gateway 存储）：
 
 ```bash
 openclaw onboard --auth-choice ai-gateway-api-key
@@ -34,7 +34,7 @@ openclaw onboard --auth-choice ai-gateway-api-key
 }
 ```
 
-## 非交互示例
+## 非交互式示例
 
 ```bash
 openclaw onboard --non-interactive \
@@ -45,5 +45,6 @@ openclaw onboard --non-interactive \
 
 ## 环境说明
 
-如果 Gateway 以守护进程运行（launchd/systemd），请确保 `AI_GATEWAY_API_KEY`
-对该进程可见（例如放在 `~/.openclaw/.env` 中或通过 `env.shellEnv`）。
+如果 Gateway 作为守护进程（launchd/systemd）运行，请确保 `AI_GATEWAY_API_KEY`
+对该进程可用（例如，在 `~/.openclaw/.env` 中或通过
+`env.shellEnv`）。
