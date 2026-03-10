@@ -1,38 +1,38 @@
 ---
-summary: "Telegram allowlist 加固：前缀 + 空白归一化"
+summary: "Telegram 允许列表加固：前缀 + 空格标准化"
 read_when:
-  - 回顾历史 Telegram allowlist 变更
-title: "Telegram 白名单加固"
+  - "Reviewing historical Telegram allowlist changes"
+title: "Telegram 允许列表加固"
 ---
 
-# Telegram Allowlist 加固
+# Telegram 允许列表加固
 
-**日期**：2026-01-05  
-**状态**：完成  
-**PR**：#216
+**Date**: 2026-01-05
+**Status**: Complete
+**PR**: #216
 
-## 摘要
+## Summary
 
-Telegram allowlist 现支持不区分大小写的 `telegram:` 与 `tg:` 前缀，并容忍意外空白。这使入站 allowlist 检查与出站发送的归一化对齐。
+Telegram 允许列表现在不区分大小写地接受 `telegram:` 和 `tg:` 前缀，并容忍意外的空格。这将入站允许列表检查与出站发送标准化保持一致。
 
-## 变更内容
+## What changed
 
-- `telegram:` 与 `tg:` 前缀同等对待（不区分大小写）。
-- allowlist 条目会被 trim；空条目会忽略。
+- 前缀 `telegram:` 和 `tg:` 被视为相同（不区分大小写）。
+- 允许列表条目被修剪；空条目被忽略。
 
-## 示例
+## Examples
 
-以下都等价于同一个 ID：
+所有这些都被接受用于相同的 ID：
 
 - `telegram:123456`
 - `TG:123456`
 - `tg:123456`
 
-## 重要性
+## Why it matters
 
-从日志或聊天 ID 复制粘贴时常带前缀/空白。归一化可避免 DM 或群聊响应判定的误拒。
+从日志或聊天 ID 复制/粘贴通常包括前缀和空格。标准化可以避免在决定是否在 DM 或群组中响应时出现假阴性。
 
-## 相关文档
+## Related docs
 
-- [群组聊天](/zh/concepts/groups)
+- [Group Chats](/zh/concepts/groups)
 - [Telegram Provider](/zh/channels/telegram)

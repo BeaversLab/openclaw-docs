@@ -1,5 +1,5 @@
 ---
-summary: "特定频道的故障排除快捷方式（Discord/Telegram/WhatsApp）"
+summary: "频道特定故障排除快捷方式（Discord/Telegram/WhatsApp）"
 read_when:
   - "A channel connects but messages don’t flow"
   - "Investigating channel misconfiguration (intents, permissions, privacy mode)"

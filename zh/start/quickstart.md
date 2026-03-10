@@ -1,15 +1,15 @@
 ---
-summary: "安装 OpenClaw、onboard Gateway 并配对您的第一个 channel。"
+summary: "安装 OpenClaw、入职 Gateway 并配对您的第一个频道。"
 read_when:
-  - 您想要从安装到运行 Gateway 的最快路径
-title: "Quick start"
+  - "You want the fastest path from install to a working Gateway"
+title: "快速开始"
 ---
 
 <Note>
-OpenClaw 需要 Node 22 或更新版本。
+OpenClaw 需要 Node 22 或更高版本。
 </Note>
 
-## Install
+## 安装
 
 <Tabs>
   <Tab title="npm">
@@ -24,10 +24,10 @@ OpenClaw 需要 Node 22 或更新版本。
   </Tab>
 </Tabs>
 
-## Onboard and run the Gateway
+## 入职并运行 Gateway
 
 <Steps>
-  <Step title="Onboard 并安装 service">
+  <Step title="入职并安装服务">
     ```bash
     openclaw onboard --install-daemon
     ```
@@ -44,14 +44,14 @@ OpenClaw 需要 Node 22 或更新版本。
   </Step>
 </Steps>
 
-Onboarding 后，Gateway 通过 user service 运行。您仍然可以使用 `openclaw gateway` 手动运行它。
+入职后，Gateway 通过用户服务运行。您仍然可以使用 `openclaw gateway` 手动运行它。
 
 <Info>
-稍后在 npm 和 git installs 之间切换很容易。安装其他 flavor 并运行
-`openclaw doctor` 来更新 gateway service entrypoint。
+稍后在 npm 和 git 安装之间切换很容易。安装另一个版本并运行
+`openclaw doctor` 来更新 Gateway 服务入口点。
 </Info>
 
-## From source（development）
+## 从源代码（开发）
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -62,9 +62,9 @@ pnpm build
 openclaw onboard --install-daemon
 ```
 
-如果您还没有 global install，从 repo 通过 `pnpm openclaw ...` 运行 onboarding。
+如果您还没有全局安装，请通过 `pnpm openclaw ...` 从仓库运行入职。
 
-## Multi instance quickstart（可选）
+## 多实例快速开始（可选）
 
 ```bash
 OPENCLAW_CONFIG_PATH=~/.openclaw/a.json \
@@ -72,10 +72,11 @@ OPENCLAW_STATE_DIR=~/.openclaw-a \
 openclaw gateway --port 19001
 ```
 
-## Send a test message
+## 发送测试消息
 
 需要运行中的 Gateway。
 
 ```bash
 openclaw message send --target +15555550123 --message "Hello from OpenClaw"
 ```
+

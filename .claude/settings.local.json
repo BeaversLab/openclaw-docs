@@ -9,7 +9,14 @@
       "Bash(python3:*)",
       "Bash(chmod +x:*)",
       "Bash(npx bmi18n-plan:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(do:*)",
+      "Bash(node * )",
+      "Bash(node checkpoint:*)",
+      "Bash(SKILL_DIR=*&node * checkpoint:*)",
+      "Bash(node merge:*)",
+      "Bash(node apply:*)",
+      "Bash(node fix:*)"
     ]
   }
 }

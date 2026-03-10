@@ -1,30 +1,31 @@
 ---
-summary: "模型 provider 概览（含示例配置与 CLI 流程）"
+summary: "模型提供商概述，包含示例配置 + CLI 流程"
 read_when:
-  - 需要按 provider 的模型设置参考
-  - 想要示例配置或模型 provider 的 CLI onboarding 命令
+  - "You need a provider-by-provider model setup reference"
+  - "You want example configs or CLI onboarding commands for model providers"
 title: "模型提供商"
 ---
 
-# 模型供应商
+# 模型提供商
 
-本页涵盖 **LLM/model providers**（不是 WhatsApp/Telegram 这类聊天渠道）。
-模型选择规则参见 [/concepts/models](/zh/concepts/models)。
+本页面涵盖 **LLM/模型提供商**（不是 WhatsApp/Telegram 等聊天频道）。
+有关模型选择规则，请参见 [/concepts/models](/zh/concepts/models)。
 
 ## 快速规则
 
-- 模型引用使用 `provider/model`（例如：`opencode/claude-opus-4-5`）。
-- 若设置 `agents.defaults.models`，它会成为 allowlist。
-- CLI 助手：`openclaw onboard`、`openclaw models list`、`openclaw models set <provider/model>`。
+- 模型引用使用 `provider/model`（示例：`opencode/claude-opus-4-5`）。
+- 如果您设置 `agents.defaults.models`，它将成为白名单。
+- CLI 辅助工具：`openclaw onboard`、`openclaw models list`、`openclaw models set <provider/model>`。
 
-## 内置 providers（pi-ai catalog）
+## 内置提供商（pi-ai 目录）
 
-OpenClaw 自带 pi‑ai catalog。这些 providers **不需要** `models.providers` 配置；只需设置 auth + 选择模型。
+OpenClaw 内置 pi‑ai 目录。这些提供商**不需要**
+`models.providers` 配置；只需设置认证并选择一个模型。
 
 ### OpenAI
 
-- Provider：`openai`
-- Auth：`OPENAI_API_KEY`
+- 提供商：`openai`
+- 认证：`OPENAI_API_KEY`
 - 示例模型：`openai/gpt-5.2`
 - CLI：`openclaw onboard --auth-choice openai-api-key`
 
@@ -36,8 +37,8 @@ OpenClaw 自带 pi‑ai catalog。这些 providers **不需要** `models.provide
 
 ### Anthropic
 
-- Provider：`anthropic`
-- Auth：`ANTHROPIC_API_KEY` 或 `claude setup-token`
+- 提供商：`anthropic`
+- 认证：`ANTHROPIC_API_KEY` 或 `claude setup-token`
 - 示例模型：`anthropic/claude-opus-4-5`
 - CLI：`openclaw onboard --auth-choice token`（粘贴 setup-token）或 `openclaw models auth paste-token --provider anthropic`
 
@@ -49,8 +50,8 @@ OpenClaw 自带 pi‑ai catalog。这些 providers **不需要** `models.provide
 
 ### OpenAI Code (Codex)
 
-- Provider：`openai-codex`
-- Auth：OAuth（ChatGPT）
+- 提供商：`openai-codex`
+- 认证：OAuth (ChatGPT)
 - 示例模型：`openai-codex/gpt-5.2`
 - CLI：`openclaw onboard --auth-choice openai-codex` 或 `openclaw models auth login --provider openai-codex`
 
@@ -62,8 +63,8 @@ OpenClaw 自带 pi‑ai catalog。这些 providers **不需要** `models.provide
 
 ### OpenCode Zen
 
-- Provider：`opencode`
-- Auth：`OPENCODE_API_KEY`（或 `OPENCODE_ZEN_API_KEY`）
+- 提供商：`opencode`
+- 认证：`OPENCODE_API_KEY`（或 `OPENCODE_ZEN_API_KEY`）
 - 示例模型：`opencode/claude-opus-4-5`
 - CLI：`openclaw onboard --auth-choice opencode-zen`
 
@@ -73,71 +74,75 @@ OpenClaw 自带 pi‑ai catalog。这些 providers **不需要** `models.provide
 }
 ```
 
-### Google Gemini（API key）
+### Google Gemini (API key)
 
-- Provider：`google`
-- Auth：`GEMINI_API_KEY`
+- 提供商：`google`
+- 认证：`GEMINI_API_KEY`
 - 示例模型：`google/gemini-3-pro-preview`
 - CLI：`openclaw onboard --auth-choice gemini-api-key`
 
-### Google Vertex / Antigravity / Gemini CLI
+### Google Vertex、Antigravity 和 Gemini CLI
 
-- Providers：`google-vertex`、`google-antigravity`、`google-gemini-cli`
-- Auth：Vertex 使用 gcloud ADC；Antigravity/Gemini CLI 使用各自的 auth 流程
-- Antigravity OAuth 以 bundled plugin 形式提供（`google-antigravity-auth`，默认禁用）。
+- 提供商：`google-vertex`、`google-antigravity`、`google-gemini-cli`
+- 认证：Vertex 使用 gcloud ADC；Antigravity/Gemini CLI 使用各自的认证流程
+- Antigravity OAuth 作为内置插件提供（`google-antigravity-auth`，默认禁用）。
   - 启用：`openclaw plugins enable google-antigravity-auth`
   - 登录：`openclaw models auth login --provider google-antigravity --set-default`
-- Gemini CLI OAuth 以 bundled plugin 形式提供（`google-gemini-cli-auth`，默认禁用）。
+- Gemini CLI OAuth 作为内置插件提供（`google-gemini-cli-auth`，默认禁用）。
   - 启用：`openclaw plugins enable google-gemini-cli-auth`
   - 登录：`openclaw models auth login --provider google-gemini-cli --set-default`
-  - 注：**不需要**把 client id 或 secret 粘贴到 `openclaw.json`。CLI 登录流程会将 tokens 存到 gateway 主机的 auth profiles 中。
+  - 注意：您**不要**将客户端 ID 或密钥粘贴到 `openclaw.json` 中。CLI 登录流程将令牌存储在 Gateway 主机上的认证配置文件中。
 
-### Z.AI（GLM）
+### Z.AI (GLM)
 
-- Provider：`zai`
-- Auth：`ZAI_API_KEY`
+- 提供商：`zai`
+- 认证：`ZAI_API_KEY`
 - 示例模型：`zai/glm-4.7`
 - CLI：`openclaw onboard --auth-choice zai-api-key`
-  - 别名：`z.ai/*` 与 `z-ai/*` 规范化为 `zai/*`
+  - 别名：`z.ai/*` 和 `z-ai/*` 规范化为 `zai/*`
 
 ### Vercel AI Gateway
 
-- Provider：`vercel-ai-gateway`
-- Auth：`AI_GATEWAY_API_KEY`
+- 提供商：`vercel-ai-gateway`
+- 认证：`AI_GATEWAY_API_KEY`
 - 示例模型：`vercel-ai-gateway/anthropic/claude-opus-4.5`
 - CLI：`openclaw onboard --auth-choice ai-gateway-api-key`
 
-### 其他内置 providers
+### 其他内置提供商
 
 - OpenRouter：`openrouter`（`OPENROUTER_API_KEY`）
 - 示例模型：`openrouter/anthropic/claude-sonnet-4-5`
 - xAI：`xai`（`XAI_API_KEY`）
 - Groq：`groq`（`GROQ_API_KEY`）
 - Cerebras：`cerebras`（`CEREBRAS_API_KEY`）
-  - Cerebras 上的 GLM 模型 id 为 `zai-glm-4.7` 与 `zai-glm-4.6`。
-  - OpenAI 兼容 base URL：`https://api.cerebras.ai/v1`。
+  - Cerebras 上的 GLM 模型使用 id `zai-glm-4.7` 和 `zai-glm-4.6`。
+  - OpenAI 兼容的基础 URL：`https://api.cerebras.ai/v1`。
 - Mistral：`mistral`（`MISTRAL_API_KEY`）
 - GitHub Copilot：`github-copilot`（`COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN`）
 
-## 通过 `models.providers`（自定义/base URL）
+## 通过 `models.providers` 的提供商（自定义/基础 URL）
 
-使用 `models.providers`（或 `models.json`）来添加**自定义** providers 或 OpenAI/Anthropic 兼容代理。
+使用 `models.providers`（或 `models.json`）添加**自定义**提供商或
+OpenAI/Anthropic 兼容的代理。
 
-### Moonshot AI（Kimi）
+### Moonshot AI (Kimi)
 
-Moonshot 使用 OpenAI 兼容端点，因此作为自定义 provider 配置：
+Moonshot 使用 OpenAI 兼容的端点，因此将其配置为自定义提供商：
 
-- Provider：`moonshot`
-- Auth：`MOONSHOT_API_KEY`
+- 提供商：`moonshot`
+- 认证：`MOONSHOT_API_KEY`
 - 示例模型：`moonshot/kimi-k2.5`
-- Kimi K2 模型 ID：
-  {/_ moonshot-kimi-k2-model-refs:start _/}
-  - `moonshot/kimi-k2.5`
-  - `moonshot/kimi-k2-0905-preview`
-  - `moonshot/kimi-k2-turbo-preview`
-  - `moonshot/kimi-k2-thinking`
-  - `moonshot/kimi-k2-thinking-turbo`
-    {/_ moonshot-kimi-k2-model-refs:end _/}
+
+Kimi K2 模型 ID：
+
+{/_ moonshot-kimi-k2-model-refs:start _/ && null}
+
+- `moonshot/kimi-k2.5`
+- `moonshot/kimi-k2-0905-preview`
+- `moonshot/kimi-k2-turbo-preview`
+- `moonshot/kimi-k2-thinking`
+- `moonshot/kimi-k2-thinking-turbo`
+  {/_ moonshot-kimi-k2-model-refs:end _/ && null}
 
 ```json5
 {
@@ -158,13 +163,13 @@ Moonshot 使用 OpenAI 兼容端点，因此作为自定义 provider 配置：
 }
 ```
 
-### Kimi Code
+### Kimi Coding
 
-Kimi Code 使用专用端点与 key（与 Moonshot 分离）：
+Kimi Coding 使用 Moonshot AI 的 Anthropic 兼容端点：
 
-- Provider：`kimi-code`
-- Auth：`KIMICODE_API_KEY`
-- 示例模型：`kimi-code/kimi-for-coding`
+- 提供商：`kimi-coding`
+- 认证：`KIMI_API_KEY`
+- 示例模型：`kimi-coding/k2p5`
 
 ```json5
 {
@@ -177,8 +182,8 @@ Kimi Code 使用专用端点与 key（与 Moonshot 分离）：
 
 ### Qwen OAuth（免费层）
 
-Qwen 通过 device-code flow 提供 OAuth 访问 Qwen Coder + Vision。
-启用 bundled plugin 后登录：
+Qwen 通过设备代码流程提供对 Qwen Coder + Vision 的 OAuth 访问。
+启用内置插件，然后登录：
 
 ```bash
 openclaw plugins enable qwen-portal-auth
@@ -190,14 +195,14 @@ openclaw models auth login --provider qwen-portal --set-default
 - `qwen-portal/coder-model`
 - `qwen-portal/vision-model`
 
-参见 [/providers/qwen](/zh/providers/qwen) 了解配置细节与注意事项。
+参见 [/providers/qwen](/zh/providers/qwen) 了解设置详情和说明。
 
 ### Synthetic
 
-Synthetic 在 `synthetic` provider 下提供 Anthropic 兼容模型：
+Synthetic 在 `synthetic` 提供商后面提供 Anthropic 兼容模型：
 
-- Provider：`synthetic`
-- Auth：`SYNTHETIC_API_KEY`
+- 提供商：`synthetic`
+- 认证：`SYNTHETIC_API_KEY`
 - 示例模型：`synthetic/hf:MiniMaxAI/MiniMax-M2.1`
 - CLI：`openclaw onboard --auth-choice synthetic-api-key`
 
@@ -222,19 +227,19 @@ Synthetic 在 `synthetic` provider 下提供 Anthropic 兼容模型：
 
 ### MiniMax
 
-MiniMax 使用自定义端点，因此通过 `models.providers` 配置：
+MiniMax 通过 `models.providers` 配置，因为它使用自定义端点：
 
 - MiniMax（Anthropic 兼容）：`--auth-choice minimax-api`
-- Auth：`MINIMAX_API_KEY`
+- 认证：`MINIMAX_API_KEY`
 
-参见 [/providers/minimax](/zh/providers/minimax) 了解配置细节、模型选项与配置片段。
+参见 [/providers/minimax](/zh/providers/minimax) 了解设置详情、模型选项和配置片段。
 
 ### Ollama
 
-Ollama 是本地 LLM 运行时，提供 OpenAI 兼容 API：
+Ollama 是一个本地 LLM 运行时，提供 OpenAI 兼容的 API：
 
-- Provider：`ollama`
-- Auth：无需（本地服务）
+- 提供商：`ollama`
+- 认证：无需（本地服务器）
 - 示例模型：`ollama/llama3.3`
 - 安装：https://ollama.ai
 
@@ -251,8 +256,7 @@ ollama pull llama3.3
 }
 ```
 
-Ollama 在本地 `http://127.0.0.1:11434/v1` 运行时会被自动检测。
-参见 [/providers/ollama](/zh/providers/ollama) 了解模型推荐与自定义配置。
+当在 `http://127.0.0.1:11434/v1` 本地运行时，Ollama 会自动检测。参见 [/providers/ollama](/zh/providers/ollama) 了解模型推荐和自定义配置。
 
 ### 本地代理（LM Studio、vLLM、LiteLLM 等）
 
@@ -289,16 +293,16 @@ Ollama 在本地 `http://127.0.0.1:11434/v1` 运行时会被自动检测。
 }
 ```
 
-注：
+注意事项：
 
-- 对自定义 providers，`reasoning`、`input`、`cost`、`contextWindow`、`maxTokens` 可选。
-  若省略，OpenClaw 默认：
+- 对于自定义提供商，`reasoning`、`input`、`cost`、`contextWindow` 和 `maxTokens` 是可选的。
+  省略时，OpenClaw 默认为：
   - `reasoning: false`
   - `input: ["text"]`
   - `cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }`
   - `contextWindow: 200000`
   - `maxTokens: 8192`
-- 建议：显式设置与代理/模型上限一致的值。
+- 推荐：设置与您的代理/模型限制匹配的显式值。
 
 ## CLI 示例
 
@@ -308,4 +312,4 @@ openclaw models set opencode/claude-opus-4-5
 openclaw models list
 ```
 
-另见：[/gateway/configuration](/zh/gateway/configuration) 获取完整配置示例。
+另请参见：[/gateway/configuration](/zh/gateway/configuration) 了解完整配置示例。

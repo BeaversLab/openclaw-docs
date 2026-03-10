@@ -1,41 +1,54 @@
 ---
-summary: "`openclaw cron` 的 CLI 参考（调度并运行后台任务）"
+summary: "<!-- i18n:todo -->CLI reference for %%P1%% (schedule and run background jobs)<!-- /i18n:todo -->"
 read_when:
-  - 你需要定时任务与唤醒
-  - 你在调试 cron 执行与日志
-title: "cron"
+  - "You want scheduled jobs and wakeups"
+  - "You’re debugging cron execution and logs"
+title: "<!-- i18n:todo -->cron<!-- /i18n:todo -->"
 ---
 
 # `openclaw cron`
 
-管理 Gateway 调度器的 cron 任务。
+<!-- i18n:todo -->
+Manage cron jobs for the Gateway scheduler.
+<!-- /i18n:todo -->
 
-相关：
+<!-- i18n:todo -->
+Related:
+<!-- /i18n:todo -->
 
-- Cron 任务：[Cron jobs](/zh/automation/cron-jobs)
+<!-- i18n:todo -->
+- Cron jobs: [Cron jobs]%%P2%%
+<!-- /i18n:todo -->
 
-提示：运行 `openclaw cron --help` 查看完整命令面。
+<!-- i18n:todo -->
+Tip: run %%P3%% for the full command surface.
+<!-- /i18n:todo -->
 
-## 常见编辑
+<!-- i18n:todo -->
+Note: isolated %%P4%% jobs default to %%P5%% delivery. Use %%P6%% to keep
+output internal. %%P7%% remains as a deprecated alias for %%P8%%.
+<!-- /i18n:todo -->
 
-在不修改消息的情况下更新投递设置：
+<!-- i18n:todo -->
+Note: one-shot (%%P9%%) jobs delete after success by default. Use %%P10%% to keep them.
+<!-- /i18n:todo -->
 
-注意：隔离的 `cron add` 任务默认为 `--announce` 投递。使用 `--no-deliver` 保持输出内部。`--deliver` 保留为 `--announce` 的已弃用别名。
+<!-- i18n:todo -->
+## Common edits
+<!-- /i18n:todo -->
 
-注意：单次（`--at`）任务默认在成功后删除。使用 `--keep-after-run` 保留它们。
+<!-- i18n:todo -->
+Update delivery settings without changing the message:
+<!-- /i18n:todo -->
 
-```bash
-openclaw cron edit <job-id> --announce --channel telegram --to "123456789"
-```
+%%CB_b720dd76%%
+<!-- i18n:todo -->
+Disable delivery for an isolated job:
+<!-- /i18n:todo -->
 
-为隔离任务禁用投递：
+%%CB_d9495ddc%%
+<!-- i18n:todo -->
+Announce to a specific channel:
+<!-- /i18n:todo -->
 
-```bash
-openclaw cron edit <job-id> --no-deliver
-```
-
-公告到指定频道：
-
-```bash
-openclaw cron edit <job-id> --announce --channel slack --to "channel:C1234567890"
-```
+%%CB_3e3dfd68%%

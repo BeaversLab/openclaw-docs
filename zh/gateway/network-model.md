@@ -1,17 +1,16 @@
 ---
-summary: "How the Gateway, nodes, and canvas host connect."
+summary: "Gateway、节点和 canvas 主机如何连接。"
 read_when:
   - "You want a concise view of the Gateway networking model"
-title: "Network model"
+title: "网络模型"
 ---
 
-Most operations flow through the Gateway (`openclaw gateway`), a single long-running
-process that owns channel connections and the WebSocket control plane.
+大多数操作通过 Gateway（`openclaw gateway`）进行，这是一个拥有频道连接和 WebSocket 控制平面的单一长时间运行的进程。
 
-## Core rules
+## 核心规则
 
-- One Gateway per host is recommended. It is the only process allowed to own the WhatsApp Web session. For rescue bots or strict isolation, run multiple gateways with isolated profiles and ports. See [Multiple gateways](/zh/gateway/multiple-gateways).
-- Loopback first: the Gateway WS defaults to `ws://127.0.0.1:18789`. The wizard generates a gateway token by default, even for loopback. For tailnet access, run `openclaw gateway --bind tailnet --token ...` because tokens are required for non-loopback binds.
-- Nodes connect to the Gateway WS over LAN, tailnet, or SSH as needed. The legacy TCP bridge is deprecated.
-- Canvas host is an HTTP file server on `canvasHost.port` (default `18793`) serving `/__openclaw__/canvas/` for node WebViews. See [Gateway configuration](/zh/gateway/configuration) (`canvasHost`).
-- Remote use is typically SSH tunnel or tailnet VPN. See [Remote access](/zh/gateway/remote) and [Discovery](/zh/gateway/discovery).
+- 建议每台主机运行一个 Gateway。它是唯一允许拥有 WhatsApp Web 会话的进程。对于救援机器人或严格隔离，请使用隔离的配置文件和端口运行多个 Gateway。参见 [Multiple gateways](/zh/gateway/multiple-gateways)。
+- 优先使用回环地址：Gateway WS 默认为 `ws://127.0.0.1:18789`。向导默认生成 gateway token，即使是回环地址也是如此。对于 tailnet 访问，请运行 `openclaw gateway --bind tailnet --token ...`，因为非回环绑定需要 token。
+- 节点根据需要通过 LAN、tailnet 或 SSH 连接到 Gateway WS。传统的 TCP 网桥已弃用。
+- Canvas 主机是运行在 `canvasHost.port`（默认 `18793`）上的 HTTP 文件服务器，为节点 WebView 提供 `/__openclaw__/canvas/`。参见 [Gateway configuration](/zh/gateway/configuration)（`canvasHost`）。
+- 远程使用通常是 SSH 隧道或 tailnet VPN。参见 [Remote access](/zh/gateway/remote) 和 [Discovery](/zh/gateway/discovery)。

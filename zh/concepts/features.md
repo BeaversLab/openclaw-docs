@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw 在频道、路由、媒体和 UX 方面的功能。"
+summary: "OpenClaw 在频道、路由、媒体和用户体验方面的功能"
 read_when:
   - "You want a full list of what OpenClaw supports"
 title: "功能"
@@ -8,23 +8,23 @@ title: "功能"
 ## 亮点"
 
 <Columns>
-  <Card title="Channels" icon="message-square">
-    WhatsApp, Telegram, Discord, and iMessage with a single Gateway.
+  <Card title="渠道" icon="message-square">
+    通过单一网关支持 WhatsApp、Telegram、Discord 和 iMessage。
   </Card>
-  <Card title="Plugins" icon="plug">
-    Add Mattermost and more with extensions.
+  <Card title="插件" icon="plug">
+    通过扩展添加 Mattermost 和更多功能。
   </Card>
-  <Card title="Routing" icon="route">
-    Multi-agent routing with isolated sessions.
+  <Card title="路由" icon="route">
+    支持多代理路由，提供隔离的会话。
   </Card>
-  <Card title="Media" icon="image">
-    Images, audio, and documents in and out.
+  <Card title="媒体" icon="image">
+    支持图片、音频和文档的收发。
   </Card>
-  <Card title="Apps and UI" icon="monitor">
-    Web Control UI and macOS companion app.
+  <Card title="应用和界面" icon="monitor">
+    Web 控制界面和 macOS 配套应用。
   </Card>
-  <Card title="Mobile nodes" icon="smartphone">
-    iOS and Android nodes with Canvas support.
+  <Card title="移动节点" icon="smartphone">
+    支持 iOS 与 Android 节点及 Canvas 功能。
   </Card>
 </Columns>
 

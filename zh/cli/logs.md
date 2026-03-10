@@ -1,5 +1,5 @@
 ---
-summary: "CLI reference for `openclaw logs` (tail gateway logs via RPC)"
+summary: "`openclaw logs` 的 CLI 参考（通过 RPC 追踪 Gateway 日志）"
 read_when:
   - "You need to tail Gateway logs remotely (without SSH)"
   - "You want JSON log lines for tooling"
@@ -8,13 +8,13 @@ title: "logs"
 
 # `openclaw logs`
 
-Tail Gateway file logs over RPC (works in remote mode).
+通过 RPC 追踪 Gateway 文件日志（适用于远程模式）。
 
-Related:
+相关：
 
-- Logging overview: [Logging](/zh/logging)
+- 日志概述：[Logging](/zh/logging)
 
-## Examples
+## 示例
 
 ```bash
 openclaw logs
@@ -22,3 +22,4 @@ openclaw logs --follow
 openclaw logs --json
 openclaw logs --limit 500
 ```
+

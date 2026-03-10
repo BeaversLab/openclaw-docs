@@ -3,7 +3,7 @@ summary: "OpenClaw 支持的模型提供商（LLM）"
 read_when:
   - "You want to choose a model provider"
   - "You want quick setup examples for LLM auth + model selection"
-title: "模型提供商快速入门"
+title: "模型提供商快速开始"
 ---
 
 # 模型提供商
@@ -32,18 +32,18 @@ Venice 是我们推荐的 Venice AI 设置，用于优先隐私的推理，并�
 
 ## 支持的提供商（入门套件）
 
-- [OpenAI (/en/providers/openai)](/zh/providers/openai)
-- [Anthropic (/en/providers/anthropic)](/zh/providers/anthropic)
+- [OpenAI（API + Codex）](/zh/providers/openai)
+- [Anthropic（API + Claude Code CLI）](/zh/providers/anthropic)
 - [OpenRouter](/zh/providers/openrouter)
 - [Vercel AI Gateway](/zh/providers/vercel-ai-gateway)
 - [Cloudflare AI Gateway](/zh/providers/cloudflare-ai-gateway)
-- [Moonshot AI (/en/providers/moonshot)](/zh/providers/moonshot)
+- [Moonshot AI（Kimi + Kimi Coding）](/zh/providers/moonshot)
 - [Synthetic](/zh/providers/synthetic)
 - [OpenCode Zen](/zh/providers/opencode)
 - [Z.AI](/zh/providers/zai)
 - [GLM models](/zh/providers/glm)
 - [MiniMax](/zh/providers/minimax)
-- [Venice (/en/providers/venice)](/zh/providers/venice)
+- [Venice（Venice AI）](/zh/providers/venice)
 - [Amazon Bedrock](/zh/bedrock)
 
 完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，请参阅 [Model providers](/zh/concepts/model-providers)。

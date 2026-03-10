@@ -10,9 +10,9 @@ title: "tui"
 
 打开连接到 Gateway 的终端 UI。
 
-相关内容：
+相关：
 
-- TUI 指南：[TUI](/zh/tui)
+- TUI 指南：[TUI](/zh/logging)
 
 ## 示例
 
@@ -21,3 +21,4 @@ openclaw tui
 openclaw tui --url ws://127.0.0.1:18789 --token <token>
 openclaw tui --session main --deliver
 ```
+

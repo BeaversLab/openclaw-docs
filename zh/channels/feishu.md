@@ -1,26 +1,26 @@
 ---
-summary: "Feishu bot 概述、功能和配置"
+summary: "飞书机器人概述、功能和配置"
 read_when:
-  - 您想要连接 Feishu/Lark bot
-  - 您正在配置 Feishu channel
-title: Feishu
+  - "You want to connect a Feishu/Lark bot"
+  - "You are configuring the Feishu channel"
+title: "飞书"
 ---
 
-# Feishu bot
+# 飞书机器人
 
-Feishu（Lark）是企业用于消息传递和协作的团队聊天平台。该插件通过平台的 WebSocket 事件订阅将 OpenClaw 连接到 Feishu/Lark bot，无需公开公网 webhook URL 即可接收消息。
+飞书（Lark）是公司用于消息传递和协作的团队聊天平台。此插件通过平台的 WebSocket 事件订阅将 OpenClaw 连接到飞书/Lark 机器人，以便无需暴露公共 webhook URL 即可接收消息。
 
 ---
 
-## Plugin required
+## 需要插件
 
-安装 Feishu plugin：
+安装飞书插件：
 
 ```bash
 openclaw plugins install @openclaw/feishu
 ```
 
-本地检出（从 git repo 运行时）：
+本地检出（从 git 仓库运行时）：
 
 ```bash
 openclaw plugins install ./extensions/feishu
@@ -28,11 +28,11 @@ openclaw plugins install ./extensions/feishu
 
 ---
 
-## Quickstart
+## 快速开始
 
-有两种方式添加 Feishu channel：
+添加飞书频道有两种方式：
 
-### Method 1: onboarding wizard（推荐）
+### 方式 1：入职向导（推荐）
 
 如果您刚刚安装 OpenClaw，运行向导：
 
@@ -40,28 +40,28 @@ openclaw plugins install ./extensions/feishu
 openclaw onboard
 ```
 
-向导会引导您完成：
+向导将引导您完成：
 
-1. 创建 Feishu app 并收集凭据
-2. 在 OpenClaw 中配置 app 凭据
-3. 启动 gateway
+1. 创建飞书应用并收集凭证
+2. 在 OpenClaw 中配置应用凭证
+3. 启动 Gateway
 
-✅ **配置完成后**，检查 gateway 状态：
+✅ **配置完成后**，检查 Gateway 状态：
 
 - `openclaw gateway status`
 - `openclaw logs --follow`
 
 ### Method 2: CLI setup
 
-如果您已经完成初始安装，通过 CLI 添加 channel：
+如果您已完成初始安装，通过 CLI 添加频道：
 
 ```bash
 openclaw channels add
 ```
 
-选择 **Feishu**，然后输入 App ID 和 App Secret。
+选择**飞书**，然后输入 App ID 和 App Secret。
 
-✅ **配置完成后**，管理 gateway：
+✅ **配置完成后**，管理 Gateway：
 
 - `openclaw gateway status`
 - `openclaw gateway restart`
@@ -69,36 +69,36 @@ openclaw channels add
 
 ---
 
-## Step 1: Create a Feishu app
+## 步骤 1：创建飞书应用
 
-### 1. Open Feishu Open Platform
+### 1. 打开飞书开放平台
 
-访问 [Feishu Open Platform](https://open.feishu.cn/app) 并登录。
+访问 [飞书开放平台](https://open.feishu.cn/app) 并登录。
 
-Lark（全球版）租户应使用 https://open.larksuite.com/app 并在 Feishu 配置中设置 `domain: "lark"`。
+Lark（全球）租户应使用 https://open.larksuite.com/app 并在飞书配置中设置 `domain: "lark"`。
 
-### 2. Create an app
+### 2. 创建应用
 
-1. 点击 **Create enterprise app**
-2. 填写 app 名称 + 描述
-3. 选择 app 图标
+1. 点击**创建企业应用**
+2. 填写应用名称 + 描述
+3. 选择应用图标
 
 ![Create enterprise app](../images/feishu-step2-create-app.png)
 
-### 3. Copy credentials
+### 3. 复制凭证
 
-从 **Credentials & Basic Info**，复制：
+从**凭证和基本信息**复制：
 
 - **App ID**（格式：`cli_xxx`）
 - **App Secret**
 
-❗ **Important：** 请妥善保管 App Secret，不要泄露。
+❗ **重要：**妥善保管 App Secret，不要泄露。
 
 ![Get credentials](../images/feishu-step3-credentials.png)
 
-### 4. Configure permissions
+### 4. 配置权限
 
-在 **Permissions** 上，点击 **Batch import** 并粘贴：
+在**权限**上，点击**批量导入**并粘贴：
 
 ```json
 {
@@ -128,50 +128,50 @@ Lark（全球版）租户应使用 https://open.larksuite.com/app 并在 Feishu 
 
 ![Configure permissions](../images/feishu-step4-permissions.png)
 
-### 5. Enable bot capability
+### 5. 启用机器人能力
 
-在 **App Capability** > **Bot** 中：
+在**应用能力** > **机器人**中：
 
-1. 启用 bot 功能
-2. 设置 bot 名称
+1. 启用机器人能力
+2. 设置机器人名称
 
 ![Enable bot capability](../images/feishu-step5-bot-capability.png)
 
-### 6. Configure event subscription
+### 6. 配置事件订阅
 
-⚠️ **Important：** 在设置事件订阅之前，请确保：
+⚠️ **重要：**在设置事件订阅之前，请确保：
 
-1. 您已经为 Feishu 运行了 `openclaw channels add`
-2. gateway 正在运行（`openclaw gateway status`）
+1. 您已经为飞书运行了 `openclaw channels add`
+2. Gateway 正在运行（`openclaw gateway status`）
 
-在 **Event Subscription** 中：
+在**事件订阅**中：
 
-1. 选择 **Use long connection to receive events**（WebSocket）
+1. 选择**使用长连接接收事件**（WebSocket）
 2. 添加事件：`im.message.receive_v1`
 
-⚠️ 如果 gateway 未运行，长连接设置可能无法保存。
+⚠️ 如果 Gateway 未运行，长连接设置可能无法保存。
 
 ![Configure event subscription](../images/feishu-step6-event-subscription.png)
 
-### 7. Publish the app
+### 7. 发布应用
 
-1. 在 **Version Management & Release** 中创建版本
+1. 在**版本管理与发布**中创建版本
 2. 提交审核并发布
-3. 等待管理员批准（企业 app 通常自动批准）
+3. 等待管理员批准（企业应用通常会自动批准）
 
 ---
 
-## Step 2: Configure OpenClaw
+## 步骤 2：配置 OpenClaw
 
-### Configure with the wizard（推荐）
+### 使用向导配置（推荐）
 
 ```bash
 openclaw channels add
 ```
 
-选择 **Feishu** 并粘贴您的 App ID + App Secret。
+选择**飞书**并粘贴您的 App ID + App Secret。
 
-### Configure via config file
+### 通过配置文件配置
 
 编辑 `~/.openclaw/openclaw.json`：
 
@@ -193,16 +193,16 @@ openclaw channels add
 }
 ```
 
-### Configure via environment variables
+### 通过环境变量配置
 
 ```bash
 export FEISHU_APP_ID="cli_xxx"
 export FEISHU_APP_SECRET="xxx"
 ```
 
-### Lark（全球版）domain
+### Lark（全球）域名
 
-如果您的租户在 Lark（国际版），将 domain 设置为 `lark`（或完整的 domain 字符串）。您可以在 `channels.feishu.domain` 或每个 account（`channels.feishu.accounts.<id>.domain`）设置。
+如果您的租户在 Lark（国际版），请将域名设置为 `lark`（或完整的域名字符串）。您可以在 `channels.feishu.domain` 或每个帐户（`channels.feishu.accounts.<id>.domain`）中设置。
 
 ```json5
 {
@@ -222,21 +222,21 @@ export FEISHU_APP_SECRET="xxx"
 
 ---
 
-## Step 3: Start + test
+## 步骤 3：启动 + 测试
 
-### 1. Start the gateway
+### 1. 启动 Gateway
 
 ```bash
 openclaw gateway
 ```
 
-### 2. Send a test message
+### 2. 发送测试消息
 
-在 Feishu 中，找到您的 bot 并发送消息。
+在飞书中找到您的机器人并发送消息。
 
-### 3. Approve pairing
+### 3. 批准配对
 
-默认情况下，bot 会回复配对代码。批准它：
+默认情况下，机器人会回复配对码。批准它：
 
 ```bash
 openclaw pairing approve feishu <CODE>
@@ -246,45 +246,45 @@ openclaw pairing approve feishu <CODE>
 
 ---
 
-## Overview
+## 概述
 
-- **Feishu bot channel**：由 gateway 管理的 Feishu bot
-- **Deterministic routing**：回复始终返回到 Feishu
-- **Session isolation**：DM 共享主 session；groups 是隔离的
-- **WebSocket connection**：通过 Feishu SDK 长连接，无需公网 URL
+- **飞书机器人频道**：由 Gateway 管理的飞书机器人
+- **确定路由**：回复始终返回飞书
+- **会话隔离**：私信共享主会话；群组是隔离的
+- **WebSocket 连接**：通过飞书 SDK 的长连接，无需公共 URL
 
 ---
 
-## Access control
+## 访问控制
 
-### Direct messages
+### 私信
 
-- **Default**：`dmPolicy: "pairing"`（未知用户获得配对代码）
-- **Approve pairing**：
+- **默认**：`dmPolicy: "pairing"`（未知用户会收到配对码）
+- **批准配对**：
   ```bash
   openclaw pairing list feishu
   openclaw pairing approve feishu <CODE>
   ```
-- **Allowlist mode**：设置 `channels.feishu.allowFrom` 与允许的 Open ID
+- **允许列表模式**：使用允许的 Open ID 设置 `channels.feishu.allowFrom`
 
-### Group chats
+### 群组聊天
 
-**1. Group policy**（`channels.feishu.groupPolicy`）：
+**1. 群组策略**（`channels.feishu.groupPolicy`）：
 
-- `"open"` = 允许 groups 中的所有人（默认）
+- `"open"` = 允许群组中的所有人（默认）
 - `"allowlist"` = 仅允许 `groupAllowFrom`
-- `"disabled"` = 禁用 group 消息
+- `"disabled"` = 禁用群组消息
 
-**2. Mention requirement**（`channels.feishu.groups.<chat_id>.requireMention`）：
+**2. 提及要求**（`channels.feishu.groups.<chat_id>.requireMention`）：
 
-- `true` = 需要 @mention（默认）
-- `false` = 无需 mention 即可回复
+- `true` = 需要 @提及（默认）
+- `false` = 无需提及即可响应
 
 ---
 
-## Group configuration examples
+## 群组配置示例
 
-### Allow all groups, require @mention（默认）
+### 允许所有群组，需要 @提及（默认）
 
 ```json5
 {
@@ -297,7 +297,7 @@ openclaw pairing approve feishu <CODE>
 }
 ```
 
-### Allow all groups, no @mention required
+### 允许所有群组，不需要 @提及
 
 ```json5
 {
@@ -311,7 +311,7 @@ openclaw pairing approve feishu <CODE>
 }
 ```
 
-### Allow specific users in groups only
+### 仅允许群组中的特定用户
 
 ```json5
 {
@@ -326,33 +326,33 @@ openclaw pairing approve feishu <CODE>
 
 ---
 
-## Get group/user IDs
+## 获取群组/用户 ID
 
-### Group IDs（chat_id）
+### 群组 ID（chat_id）
 
-Group IDs 看起来像 `oc_xxx`。
+群组 ID 看起来像 `oc_xxx`。
 
-**Method 1（推荐）**
+**方式 1（推荐）**
 
-1. 启动 gateway 并在 group 中 @mention bot
+1. 启动 Gateway 并在群组中 @提及机器人
 2. 运行 `openclaw logs --follow` 并查找 `chat_id`
 
-**Method 2**
+**方式 2**
 
-使用 Feishu API debugger 列出 group chats。
+使用飞书 API 调试器列出群组聊天。
 
-### User IDs（open_id）
+### 用户 ID（open_id）
 
-User IDs 看起来像 `ou_xxx`。
+用户 ID 看起来像 `ou_xxx`。
 
-**Method 1（推荐）**
+**方式 1（推荐）**
 
-1. 启动 gateway 并向 bot 发送 DM
+1. 启动 Gateway 并私信机器人
 2. 运行 `openclaw logs --follow` 并查找 `open_id`
 
-**Method 2**
+**方式 2**
 
-检查配对请求以获取用户 Open ID：
+检查配对请求中的用户 Open ID：
 
 ```bash
 openclaw pairing list feishu
@@ -360,7 +360,7 @@ openclaw pairing list feishu
 
 ---
 
-## Common commands
+## 常用命令
 
 | Command   | Description       |
 | --------- | ----------------- |
@@ -368,9 +368,9 @@ openclaw pairing list feishu
 | `/reset`  | Reset the session |
 | `/model`  | Show/switch model |
 
-> Note: Feishu 尚不支持原生命令菜单，因此命令必须作为文本发送。
+> 注意：飞书尚不支持原生命令菜单，因此命令必须作为文本发送。
 
-## Gateway management commands
+## Gateway 管理命令
 
 | Command                    | Description                   |
 | -------------------------- | ----------------------------- |
@@ -382,41 +382,41 @@ openclaw pairing list feishu
 
 ---
 
-## Troubleshooting
+## 故障排除
 
-### Bot does not respond in group chats
+### 机器人在群组聊天中不响应
 
-1. 确保 bot 已添加到 group
-2. 确保您 @mention 了 bot（默认行为）
-3. 检查 `groupPolicy` 未设置为 `"disabled"`
+1. 确保机器人已添加到群组
+2. 确保您 @提及了机器人（默认行为）
+3. 检查 `groupPolicy` 是否未设置为 `"disabled"`
 4. 检查日志：`openclaw logs --follow`
 
-### Bot does not receive messages
+### 机器人未收到消息
 
-1. 确保 app 已发布并批准
+1. 确保应用已发布并获批准
 2. 确保事件订阅包含 `im.message.receive_v1`
-3. 确保已启用 **long connection**
-4. 确保 app 权限完整
-5. 确保 gateway 正在运行：`openclaw gateway status`
+3. 确保已启用**长连接**
+4. 确保应用权限完整
+5. 确保 Gateway 正在运行：`openclaw gateway status`
 6. 检查日志：`openclaw logs --follow`
 
-### App Secret leak
+### App Secret 泄露
 
-1. 在 Feishu Open Platform 中重置 App Secret
+1. 在飞书开放平台中重置 App Secret
 2. 更新配置中的 App Secret
-3. 重启 gateway
+3. 重启 Gateway
 
-### Message send failures
+### 消息发送失败
 
-1. 确保 app 具有 `im:message:send_as_bot` 权限
-2. 确保 app 已发布
+1. 确保应用具有 `im:message:send_as_bot` 权限
+2. 确保应用已发布
 3. 检查日志以获取详细错误
 
 ---
 
-## Advanced configuration
+## 高级配置
 
-### Multiple accounts
+### 多个帐户
 
 ```json5
 {
@@ -440,32 +440,32 @@ openclaw pairing list feishu
 }
 ```
 
-### Message limits
+### 消息限制
 
-- `textChunkLimit`：outbound text 块大小（默认：2000 字符）
+- `textChunkLimit`：出站文本块大小（默认：2000 字符）
 - `mediaMaxMb`：媒体上传/下载限制（默认：30MB）
 
-### Streaming
+### 流式传输
 
-Feishu 不支持消息编辑，因此默认启用块流式传输（`blockStreaming: true`）。bot 会等待完整回复后再发送。
+飞书不支持消息编辑，因此默认启用块流式传输（`blockStreaming: true`）。机器人在发送之前会等待完整回复。
 
 ---
 
-## Configuration reference
+## 配置参考
 
-完整配置：[Gateway configuration](/zh/gateway/configuration)
+完整配置：[Gateway 配置](/zh/gateway/configuration)
 
 关键选项：
 
 | Setting                                           | Description                     | Default   |
 | ------------------------------------------------- | ------------------------------- | --------- |
 | `channels.feishu.enabled`                         | Enable/disable channel          | `true`    |
-| `channels.feishu.domain`                          | API domain（`feishu` 或 `lark`） | `feishu`  |
+| `channels.feishu.domain`                          | API domain (`feishu` or `lark`) | `feishu`  |
 | `channels.feishu.accounts.<id>.appId`             | App ID                          | -         |
 | `channels.feishu.accounts.<id>.appSecret`         | App Secret                      | -         |
 | `channels.feishu.accounts.<id>.domain`            | Per-account API domain override | `feishu`  |
 | `channels.feishu.dmPolicy`                        | DM policy                       | `pairing` |
-| `channels.feishu.allowFrom`                       | DM allowlist（open_id list）     | -         |
+| `channels.feishu.allowFrom`                       | DM allowlist (open_id list)     | -         |
 | `channels.feishu.groupPolicy`                     | Group policy                    | `open`    |
 | `channels.feishu.groupAllowFrom`                  | Group allowlist                 | -         |
 | `channels.feishu.groups.<chat_id>.requireMention` | Require @mention                | `true`    |
@@ -476,20 +476,20 @@ Feishu 不支持消息编辑，因此默认启用块流式传输（`blockStreami
 
 ---
 
-## dmPolicy reference
+## dmPolicy 参考
 
 | Value         | Behavior                                                        |
 | ------------- | --------------------------------------------------------------- |
-| `"pairing"`   | **Default。** 未知用户获得配对代码；必须批准                     |
-| `"allowlist"` | 仅 `allowFrom` 中的用户可以聊天                                 |
-| `"open"`      | 允许所有用户（需要在 allowFrom 中添加 `"*"`）                   |
-| `"disabled"`  | 禁用 DM                                                         |
+| `"pairing"`   | **Default.** Unknown users get a pairing code; must be approved |
+| `"allowlist"` | Only users in `allowFrom` can chat                              |
+| `"open"`      | Allow all users (requires `"*"` in allowFrom)                   |
+| `"disabled"`  | Disable DMs                                                     |
 
 ---
 
-## Supported message types
+## 支持的消息类型
 
-### Receive
+### 接收
 
 - ✅ Text
 - ✅ Images
@@ -498,10 +498,10 @@ Feishu 不支持消息编辑，因此默认启用块流式传输（`blockStreami
 - ✅ Video
 - ✅ Stickers
 
-### Send
+### 发送
 
 - ✅ Text
 - ✅ Images
 - ✅ Files
 - ✅ Audio
-- ⚠️ Rich text（部分支持）
+- ⚠️ Rich text (partial support)

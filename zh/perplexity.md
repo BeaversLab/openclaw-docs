@@ -1,28 +1,27 @@
 ---
-summary: "Perplexity Sonar 的 web_search 配置"
+summary: "Perplexity Sonar 设置用于 web_search"
 read_when:
-  - 你想使用 Perplexity Sonar 进行网页搜索
-  - 你需要 PERPLEXITY_API_KEY 或 OpenRouter 配置
+  - "You want to use Perplexity Sonar for web search"
+  - "You need PERPLEXITY_API_KEY or OpenRouter setup"
 title: "Perplexity Sonar"
 ---
 
 # Perplexity Sonar
 
-OpenClaw 可将 Perplexity Sonar 用于 `web_search` 工具。你可以通过
-Perplexity 直连 API 或通过 OpenRouter 连接。
+OpenClaw 可以将 Perplexity Sonar 用于 `web_search` 工具。您可以通过 Perplexy 的直接 API 或通过 OpenRouter 连接。
 
 ## API 选项
 
-### Perplexity（直连）
+### Perplexity（直接）
 
-- Base URL: https://api.perplexity.ai
+- 基础 URL：https://api.perplexity.ai
 - 环境变量：`PERPLEXITY_API_KEY`
 
-### OpenRouter（可选）
+### OpenRouter（替代）
 
-- Base URL: https://openrouter.ai/api/v1
+- 基础 URL：https://openrouter.ai/api/v1
 - 环境变量：`OPENROUTER_API_KEY`
-- 支持预付费/加密货币余额。
+- 支持预付费/加密积分。
 
 ## 配置示例
 
@@ -61,19 +60,20 @@ Perplexity 直连 API 或通过 OpenRouter 连接。
 }
 ```
 
-如果同时设置了 `PERPLEXITY_API_KEY` 与 `OPENROUTER_API_KEY`，请设置
-`tools.web.search.perplexity.baseUrl`（或 `tools.web.search.perplexity.apiKey`）以消除歧义。
+如果同时设置了 `PERPLEXITY_API_KEY` 和 `OPENROUTER_API_KEY`，请设置
+`tools.web.search.perplexity.baseUrl`（或 `tools.web.search.perplexity.apiKey`）
+来消除歧义。
 
-如果未设置 base URL，OpenClaw 会根据 API Key 来源选择默认值：
+如果未设置基础 URL，OpenClaw 会根据 API 密钥来源选择默认值：
 
-- `PERPLEXITY_API_KEY` 或 `pplx-...` → 直连 Perplexity（`https://api.perplexity.ai`）
+- `PERPLEXITY_API_KEY` 或 `pplx-...` → 直接 Perplexity（`https://api.perplexity.ai`）
 - `OPENROUTER_API_KEY` 或 `sk-or-...` → OpenRouter（`https://openrouter.ai/api/v1`）
-- 未知 Key 格式 → OpenRouter（安全回退）
+- 未知的密钥格式 → OpenRouter（安全回退）
 
 ## 模型
 
-- `perplexity/sonar` — 快速问答 + 网页搜索
-- `perplexity/sonar-pro`（默认）— 多步推理 + 网页搜索
+- `perplexity/sonar` — 带有网络搜索的快速问答
+- `perplexity/sonar-pro`（默认）— 多步推理 + 网络搜索
 - `perplexity/sonar-reasoning-pro` — 深度研究
 
-完整的 web_search 配置请参见 [Web 工具](/zh/tools/web)。
+参阅 [Web 工具](/zh/tools/web) 了解完整的 web_search 配置。

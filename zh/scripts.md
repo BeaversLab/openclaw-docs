@@ -1,8 +1,8 @@
 ---
 summary: "仓库脚本：用途、范围和安全注意事项"
 read_when:
-  - "从仓库运行脚本"
-  - "在 ./scripts 下添加或更改脚本"
+  - "Running scripts from the repo"
+  - "Adding or changing scripts under ./scripts"
 title: "脚本"
 ---
 

@@ -1,5 +1,5 @@
 ---
-summary: "`zai` 的 CLI 参考（初始化配置 + 工作区）"
+summary: "`openclaw setup` 的 CLI 参考（初始化配置 + 工作区）"
 read_when:
   - "You’re doing first-run setup without the full onboarding wizard"
   - "You want to set the default workspace path"
@@ -13,7 +13,7 @@ title: "setup"
 相关内容：
 
 - 入门：[入门](/zh/start/getting-started)
-- 向导：[入门](/zh/providers/glm)"
+- 向导：[入职](/zh/start/onboarding)
 
 ## 示例
 

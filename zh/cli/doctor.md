@@ -1,41 +1,50 @@
 ---
-summary: "`openclaw doctor` 的 CLI 参考（健康检查 + 引导修复）"
+summary: "<!-- i18n:todo -->CLI reference for %%P1%% (health checks + guided repairs)<!-- /i18n:todo -->"
 read_when:
-  - 你遇到连接/认证问题并需要引导式修复
-  - 你刚更新并想做一次 sanity check
-title: "doctor"
+  - "You have connectivity/auth issues and want guided fixes"
+  - "You updated and want a sanity check"
+title: "<!-- i18n:todo -->doctor<!-- /i18n:todo -->"
 ---
 
 # `openclaw doctor`
 
-用于 Gateway 与渠道的健康检查 + 快速修复。
+<!-- i18n:todo -->
+Health checks + quick fixes for the gateway and channels.
+<!-- /i18n:todo -->
 
-相关：
+<!-- i18n:todo -->
+Related:
+<!-- /i18n:todo -->
 
-- 故障排查：[故障排查](/zh/gateway/troubleshooting)
-- 安全审计：[安全](/zh/gateway/security)
+<!-- i18n:todo -->
+- Troubleshooting: [Troubleshooting]%%P2%%
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Security audit: [Security]%%P3%%
+<!-- /i18n:todo -->
 
-## 示例
+<!-- i18n:todo -->
+## Examples
+<!-- /i18n:todo -->
 
-```bash
-openclaw doctor
-openclaw doctor --repair
-openclaw doctor --deep
-```
+%%CB_4e737405%%
+<!-- i18n:todo -->
+Notes:
+<!-- /i18n:todo -->
 
-说明：
+<!-- i18n:todo -->
+- Interactive prompts (like keychain/OAuth fixes) only run when stdin is a TTY and %%P4%% is **not** set. Headless runs (cron, Telegram, no terminal) will skip prompts.
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- %%P5%% (alias for %%P6%%) writes a backup to %%P7%% and drops unknown config keys, listing each removal.
+<!-- /i18n:todo -->
 
-- 交互式提示（如 keychain/OAuth 修复）仅在 stdin 为 TTY 且未设置 `--non-interactive` 时运行。无终端的运行（cron、Telegram、无 TTY）会跳过提示。
-- `--fix`（`--repair` 别名）会在 `~/.openclaw/openclaw.json.bak` 写入备份，并删除未知配置键，逐条列出移除项。
+<!-- i18n:todo -->
+## macOS: %%P8%% env overrides
+<!-- /i18n:todo -->
 
-## macOS：`launchctl` 环境变量覆盖
+<!-- i18n:todo -->
+If you previously ran %%P9%% (or %%P10%%), that value overrides your config file and can cause persistent “unauthorized” errors.
+<!-- /i18n:todo -->
 
-如果你曾执行 `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...`（或 `...PASSWORD`），该值会覆盖配置文件并导致持续的 “unauthorized” 错误。
-
-```bash
-launchctl getenv OPENCLAW_GATEWAY_TOKEN
-launchctl getenv OPENCLAW_GATEWAY_PASSWORD
-
-launchctl unsetenv OPENCLAW_GATEWAY_TOKEN
-launchctl unsetenv OPENCLAW_GATEWAY_PASSWORD
-```
+%%CB_9ff4fe2c%%

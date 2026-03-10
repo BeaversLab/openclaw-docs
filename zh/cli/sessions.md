@@ -1,5 +1,5 @@
 ---
-summary: "`openclaw logs` 的 CLI 参考（列出存储的会话 + 用法）"
+summary: "`openclaw sessions` 的 CLI 参考（列出存储的会话 + 使用情况）"
 read_when:
   - "You want to list stored sessions and see recent activity"
 title: "sessions"

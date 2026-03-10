@@ -1,5 +1,5 @@
 ---
-summary: "`openclaw logs` 的 CLI 参考（广域发现助手）"
+summary: "`openclaw dns` 的 CLI 参考（广域发现助手）"
 read_when:
   - "You want wide-area discovery (DNS-SD) via Tailscale + CoreDNS"
   - You’re setting up split DNS for a custom discovery domain (example: "openclaw.internal)"
