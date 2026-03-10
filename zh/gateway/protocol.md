@@ -1,26 +1,24 @@
 ---
-summary: "Gateway WebSocket 协议：握手、帧与版本"
+summary: "Gateway WebSocket 协议：握手、帧、版本控制"
 read_when:
-  - 实现或更新 gateway WS 客户端
-  - 排查协议不匹配或连接失败
-  - 重新生成协议 schema/models
+  - "Implementing or updating gateway WS clients"
+  - "Debugging protocol mismatches or connect failures"
+  - "Regenerating protocol schema/models"
 title: "Gateway 协议"
 ---
 
-# 网关协议（WebSocket）
+# Gateway 协议（WebSocket）
 
-Gateway WS 协议是 OpenClaw 的**单一控制平面 + node 传输**。
-所有客户端（CLI、web UI、macOS app、iOS/Android nodes、headless
-nodes）都通过 WebSocket 连接，并在握手时声明其**role** + **scope**。
+Gateway WS 协议是 OpenClaw 的**单一控制平面 + 节点传输**。所有客户端（CLI、Web UI、macOS 应用、iOS/Android 节点、无头节点）都通过 WebSocket 连接，并在握手时声明其**角色** + **作用域**。
 
 ## 传输
 
-- WebSocket，文本帧承载 JSON。
-- 首帧**必须**是 `connect` 请求。
+- WebSocket，带有 JSON 载荷的文本帧。
+- 第一帧**必须**是 `connect` 请求。
 
-## 握手（connect）
+## 握手（连接）
 
-Gateway → Client（预连接 challenge）：
+Gateway → 客户端（连接前挑战）：
 
 ```json
 {
@@ -30,7 +28,7 @@ Gateway → Client（预连接 challenge）：
 }
 ```
 
-Client → Gateway：
+客户端 → Gateway：
 
 ```json
 {
@@ -65,7 +63,7 @@ Client → Gateway：
 }
 ```
 
-Gateway → Client：
+Gateway → 客户端：
 
 ```json
 {
@@ -76,7 +74,7 @@ Gateway → Client：
 }
 ```
 
-当发放 device token 时，`hello-ok` 还包含：
+当颁发设备令牌时，`hello-ok` 还包括：
 
 ```json
 {
@@ -88,7 +86,7 @@ Gateway → Client：
 }
 ```
 
-### Node 示例
+### 节点示例
 
 ```json
 {
@@ -125,22 +123,22 @@ Gateway → Client：
 
 ## 帧格式
 
-- **Request**：`{type:"req", id, method, params}`
-- **Response**：`{type:"res", id, ok, payload|error}`
-- **Event**：`{type:"event", event, payload, seq?, stateVersion?}`
+- **请求**：`{type:"req", id, method, params}`
+- **响应**：`{type:"res", id, ok, payload|error}`
+- **事件**：`{type:"event", event, payload, seq?, stateVersion?}`
 
-有副作用的方法需要**幂等键**（参见 schema）。
+有副作用的操作需要**幂等性密钥**（参见架构）。
 
-## Roles + scopes
+## 角色和作用域
 
-### Roles
+### 角色
 
-- `operator` = 控制平面客户端（CLI/UI/automation）。
-- `node` = 能力宿主（camera/screen/canvas/system.run）。
+- `operator` = 控制平面客户端（CLI/UI/自动化）。
+- `node` = 功能主机（camera/screen/canvas/system.run）。
 
-### Scopes（operator）
+### 作用域（operator）
 
-常见 scopes：
+通用作用域：
 
 - `operator.read`
 - `operator.write`
@@ -148,62 +146,59 @@ Gateway → Client：
 - `operator.approvals`
 - `operator.pairing`
 
-### Caps/commands/permissions（node）
+### 功能/命令/权限（node）
 
-Nodes 在 connect 时声明能力：
+节点在连接时声明功能声明：
 
-- `caps`：高层能力分类。
-- `commands`：可 invoke 的命令 allowlist。
-- `permissions`：细粒度开关（如 `screen.record`、`camera.capture`）。
+- `caps`：高级功能类别。
+- `commands`：invoke 的命令允许列表。
+- `permissions`：细粒度开关（例如 `screen.record`、`camera.capture`）。
 
-Gateway 将这些视为**声明**并在服务端执行 allowlist。
+Gateway 将这些视为**声明**并强制执行服务端允许列表。
 
-## Presence
+## 在线状态
 
-- `system-presence` 返回按设备身份分组的条目。
-- Presence 条目包含 `deviceId`、`roles` 与 `scopes`，使 UI 能在设备同时以 **operator** 与 **node** 连接时显示单行。
+- `system-presence` 返回按设备身份键入的条目。
+- 在线状态条目包括 `deviceId`、`roles` 和 `scopes`，因此即使设备同时以 **operator** 和 **node** 身份连接，UI 也可以为每个设备显示单行。
 
-### Node helper methods
+### 节点辅助方法
 
-- Nodes 可调用 `skills.bins` 以获取当前 skill 可执行文件列表，用于自动 allow 检查。
+- 节点可以调用 `skills.bins` 来获取当前技能可执行文件列表，以进行自动允许检查。
 
-## Exec approvals
+## 执行批准
 
-- 当 exec 请求需要审批时，gateway 会广播 `exec.approval.requested`。
-- Operator 客户端通过 `exec.approval.resolve` 处理（需要 `operator.approvals` scope）。
+- 当执行请求需要批准时，gateway 会广播 `exec.approval.requested`。
+- Operator 客户端通过调用 `exec.approval.resolve` 来解决（需要 `operator.approvals` 作用域）。
 
-## 版本
+## 版本控制
 
-- `PROTOCOL_VERSION` 位于 `src/gateway/protocol/schema.ts`。
-- 客户端发送 `minProtocol` + `maxProtocol`；服务端拒绝不匹配。
-- Schemas + models 从 TypeBox 定义生成：
+- `PROTOCOL_VERSION` 位于 `src/gateway/protocol/schema.ts` 中。
+- 客户端发送 `minProtocol` + `maxProtocol`；服务器会拒绝不匹配的版本。
+- 架构和模型从 TypeBox 定义生成：
   - `pnpm protocol:gen`
   - `pnpm protocol:gen:swift`
   - `pnpm protocol:check`
 
-## Auth
+## 身份验证
 
-- 若设置 `OPENCLAW_GATEWAY_TOKEN`（或 `--token`），`connect.params.auth.token`
-  必须匹配，否则 socket 会关闭。
-- 配对后，Gateway 发放**device token**，与连接 role + scopes 绑定。它会在 `hello-ok.auth.deviceToken` 返回，客户端应持久化以便后续连接使用。
-- 可通过 `device.token.rotate` 与 `device.token.revoke` 轮换/吊销 device tokens（需 `operator.pairing` scope）。
+- 如果设置了 `OPENCLAW_GATEWAY_TOKEN`（或 `--token`），`connect.params.auth.token` 必须匹配，否则 socket 将关闭。
+- 配对后，Gateway 会颁发一个**设备令牌**，其作用域限于连接角色 + 作用域。它在 `hello-ok.auth.deviceToken` 中返回，客户端应持久保存该令牌以供将来连接使用。
+- 设备令牌可以通过 `device.token.rotate` 和 `device.token.revoke` 轮换/撤销（需要 `operator.pairing` 作用域）。
 
-## 设备身份 + 配对
+## 设备身份和配对
 
-- Nodes 应包含稳定的设备身份（`device.id`），源自 keypair 指纹。
-- Gateway 为每个设备 + role 发放 tokens。
-- 新 device ID 需配对审批，除非启用本地自动审批。
-- **本地**连接包括 loopback 与 gateway 主机自身的 tailnet 地址（因此同机 tailnet bind 仍可自动审批）。
-- 所有 WS 客户端在 `connect` 时必须包含 `device` 身份（operator + node）。
-  仅当启用 `gateway.controlUi.allowInsecureAuth`
-  （或 `gateway.controlUi.dangerouslyDisableDeviceAuth` 用于紧急场景）时，Control UI 可省略。
-- 非本地连接必须对服务器提供的 `connect.challenge` nonce 进行签名。
+- 节点应包括从密钥对指纹派生的稳定设备身份（`device.id`）。
+- Gateway 会为每个设备 + 角色颁发令牌。
+- 除非启用了本地自动批准，否则新设备 ID 需要配对批准。
+- **本地**连接包括环回地址和 gateway 主机自己的 tailnet 地址（因此同主机 tailnet 绑定仍然可以自动批准）。
+- 所有 WS 客户端必须在 `connect` 期间包括 `device` 身份（operator + node）。只有当启用了 `gateway.controlUi.allowInsecureAuth`（或用于紧急访问的 `gateway.controlUi.dangerouslyDisableDeviceAuth`）时，控制 UI 才能省略它。
+- 非本地连接必须签名服务器提供的 `connect.challenge` nonce。
 
-## TLS + pinning
+## TLS 和证书锁定
 
-- 支持 WS 的 TLS。
-- 客户端可选固定 gateway 证书指纹（见 `gateway.tls` 配置与 `gateway.remote.tlsFingerprint` 或 CLI `--tls-fingerprint`）。
+- WS 连接支持 TLS。
+- 客户端可以选择锁定 gateway 证书指纹（参见 `gateway.tls` 配置以及 `gateway.remote.tlsFingerprint` 或 CLI `--tls-fingerprint`）。
 
-## 作用域
+## 范围
 
-该协议暴露**完整 gateway API**（status、channels、models、chat、agent、sessions、nodes、approvals 等）。确切面由 `src/gateway/protocol/schema.ts` 中的 TypeBox schemas 定义。
+此协议暴露**完整的 gateway API**（状态、频道、模型、聊天、代理、会话、节点、批准等）。确切的接口由 `src/gateway/protocol/schema.ts` 中的 TypeBox 架构定义。

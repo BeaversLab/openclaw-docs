@@ -1,9 +1,9 @@
 ---
-summary: "Brave Search API 设置（用于 web_search）"
+summary: "Brave Search API web_search 配置"
 read_when:
   - "You want to use Brave Search for web_search"
   - "You need a BRAVE_API_KEY or plan details"
-title: "Brave Search"
+title: "Brave 搜索"
 ---
 
 # Brave Search API

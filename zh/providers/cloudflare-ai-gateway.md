@@ -48,7 +48,7 @@ openclaw onboard --non-interactive \
   --cloudflare-ai-gateway-api-key "$CLOUDFLARE_AI_GATEWAY_API_KEY"
 ```
 
-## 已认证的网关
+## 已认证的 Gateway
 
 如果您在 Cloudflare 中启用了 Gateway 认证，请添加 `cf-aig-authorization` 请求头（这是对提供商 API 密钥的补充）。
 

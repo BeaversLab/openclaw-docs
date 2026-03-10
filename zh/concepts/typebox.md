@@ -1,30 +1,29 @@
 ---
-summary: "以 TypeBox schemas 作为 Gateway 协议的单一事实来源"
+summary: "TypeBox 模式作为Gateway协议的唯一真实来源"
 read_when:
-  - 更新协议 schema 或代码生成
+  - "Updating protocol schemas or codegen"
 title: "TypeBox"
 ---
 
-# TypeBox 作为协议真相源
+# TypeBox 作为协议的真实来源
 
 最后更新：2026-01-10
 
-TypeBox 是 TypeScript 优先的 schema 库。我们用它定义 **Gateway WebSocket 协议**（握手、请求/响应、服务器事件）。这些 schemas 驱动**运行时校验**、**JSON Schema 导出**以及 macOS app 的 **Swift 代码生成**。单一事实来源，其它都由它生成。
+TypeBox 是一个以 TypeScript 为优先的模式库。我们使用它来定义**Gateway WebSocket 协议**（握手、请求/响应、服务器事件）。这些模式驱动**运行时验证**、**JSON Schema 导出**和 macOS 应用的 **Swift 代码生成**。一个真实来源；其他所有内容都是生成的。
 
-如需更高层协议背景，先看
-[Gateway 架构](/zh/concepts/architecture)。
+如果您想要更高级别的协议上下文，请从[Gateway架构](/zh/concepts/architecture)开始。
 
-## 心智模型（30 秒）
+## 心理模型（30秒）
 
-每条 Gateway WS 消息都是三种 frame 之一：
+每个Gateway WebSocket 消息都是以下三种帧之一：
 
-- **Request**：`{ type: "req", id, method, params }`
-- **Response**：`{ type: "res", id, ok, payload | error }`
-- **Event**：`{ type: "event", event, payload, seq?, stateVersion? }`
+- **请求（Request）**：`{ type: "req", id, method, params }`
+- **响应（Response）**：`{ type: "res", id, ok, payload | error }`
+- **事件（Event）**：`{ type: "event", event, payload, seq?, stateVersion? }`
 
-首帧**必须**是 `connect` 请求。之后客户端可调用方法（如 `health`、`send`、`chat.send`）并订阅事件（如 `presence`、`tick`、`agent`）。
+第一个帧**必须**是 `connect` 请求。之后，客户端可以调用方法（例如 `health`、`send`、`chat.send`）并订阅事件（例如 `presence`、`tick`、`agent`）。
 
-连接流程（最小）：
+连接流程（最简版）：
 
 ```
 Client                    Gateway
@@ -35,46 +34,46 @@ Client                    Gateway
   |<---- res:health ----------|
 ```
 
-常见方法 + 事件：
+常用方法 + 事件：
 
-| Category  | Examples                                                  | Notes                         |
-| --------- | --------------------------------------------------------- | ----------------------------- |
-| Core      | `connect`, `health`, `status`                             | `connect` 必须是第一条        |
-| Messaging | `send`, `poll`, `agent`, `agent.wait`                     | 有副作用需要 `idempotencyKey` |
-| Chat      | `chat.history`, `chat.send`, `chat.abort`, `chat.inject`  | WebChat 使用                  |
-| Sessions  | `sessions.list`, `sessions.patch`, `sessions.delete`      | 会话管理                      |
-| Nodes     | `node.list`, `node.invoke`, `node.pair.*`                 | Gateway WS + node 操作        |
-| Events    | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | 服务器推送                    |
+| 类别  | 示例                                                  | 备注                              |
+| --------- | --------------------------------------------------------- | ---------------------------------- |
+| 核心      | `connect`、`health`、`status`                             | `connect` 必须是第一个            |
+| 消息传递 | `send`、`poll`、`agent`、`agent.wait`                     | 副作用需要 `idempotencyKey` |
+| 聊天      | `chat.history`、`chat.send`、`chat.abort`、`chat.inject`  | WebChat 使用这些                 |
+| 会话  | `sessions.list`、`sessions.patch`、`sessions.delete`      | 会话管理                      |
+| 节点     | `node.list`、`node.invoke`、`node.pair.*`                 | Gateway WS + 节点操作          |
+| 事件    | `tick`、`presence`、`agent`、`chat`、`health`、`shutdown` | 服务器推送                        |
 
-权威列表在 `src/gateway/server.ts`（`METHODS`, `EVENTS`）。
+权威列表位于 `src/gateway/server.ts`（`METHODS`、`EVENTS`）。
 
-## Schemas 位置
+## 模式的位置
 
-- Source：`src/gateway/protocol/schema.ts`
-- Runtime validators（AJV）：`src/gateway/protocol/index.ts`
-- Server 握手 + 方法分发：`src/gateway/server.ts`
-- Node client：`src/gateway/client.ts`
+- 源代码：`src/gateway/protocol/schema.ts`
+- 运行时验证器（AJV）：`src/gateway/protocol/index.ts`
+- 服务器握手 + 方法调度：`src/gateway/server.ts`
+- 节点客户端：`src/gateway/client.ts`
 - 生成的 JSON Schema：`dist/protocol.schema.json`
-- 生成的 Swift models：`apps/macos/Sources/OpenClawProtocol/GatewayModels.swift`
+- 生成的 Swift 模型：`apps/macos/Sources/OpenClawProtocol/GatewayModels.swift`
 
-## 当前流水线
+## 当前流程
 
 - `pnpm protocol:gen`
-  - 写入 JSON Schema（draft‑07）到 `dist/protocol.schema.json`
+  - 将 JSON Schema（draft‑07）写入 `dist/protocol.schema.json`
 - `pnpm protocol:gen:swift`
-  - 生成 Swift gateway models
+  - 生成 Swift Gateway模型
 - `pnpm protocol:check`
-  - 运行两者并验证输出已提交
+  - 运行两个生成器并验证输出已提交
 
-## 运行时如何使用 schemas
+## 模式在运行时的使用方式
 
-- **Server 侧**：每个入站 frame 都用 AJV 校验。握手只接受 params 匹配 `ConnectParams` 的 `connect` 请求。
-- **Client 侧**：JS client 在使用前校验事件与响应 frame。
-- **方法面**：Gateway 在 `hello-ok` 中公布支持的 `methods` 与 `events`。
+- **服务器端**：每个入站帧都通过 AJV 进行验证。握手仅接受参数匹配 `ConnectParams` 的 `connect` 请求。
+- **客户端**：JS 客户端在使用事件和响应帧之前会对其进行验证。
+- **方法接口**：Gateway在 `hello-ok` 中宣布支持的 `methods` 和 `events`。
 
-## 示例 frames
+## 示例帧
 
-Connect（第一条消息）：
+连接（第一条消息）：
 
 ```json
 {
@@ -137,7 +136,7 @@ Hello-ok 响应：
 
 ## 最小客户端（Node.js）
 
-最小可用流程：connect + health。
+最小的实用流程：连接 + 健康检查。
 
 ```ts
 import { WebSocket } from "ws";
@@ -177,13 +176,13 @@ ws.on("message", (data) => {
 });
 ```
 
-## Worked example：端到端新增方法
+## 完整示例：端到端添加方法
 
-示例：新增 `system.echo` 请求，返回 `{ ok: true, text }`。
+示例：添加一个新的 `system.echo` 请求，返回 `{ ok: true, text }`。
 
-1. **Schema（事实来源）**
+1. **模式（真实来源）**
 
-在 `src/gateway/protocol/schema.ts` 中添加：
+添加到 `src/gateway/protocol/schema.ts`：
 
 ```ts
 export const SystemEchoParamsSchema = Type.Object(
@@ -197,7 +196,7 @@ export const SystemEchoResultSchema = Type.Object(
 );
 ```
 
-将二者加入 `ProtocolSchemas` 并导出类型：
+将两者都添加到 `ProtocolSchemas` 并导出类型：
 
 ```ts
   SystemEchoParams: SystemEchoParamsSchema,
@@ -209,17 +208,17 @@ export type SystemEchoParams = Static<typeof SystemEchoParamsSchema>;
 export type SystemEchoResult = Static<typeof SystemEchoResultSchema>;
 ```
 
-2. **Validation**
+2. **验证**
 
-在 `src/gateway/protocol/index.ts` 中导出 AJV 校验器：
+在 `src/gateway/protocol/index.ts` 中，导出 AJV 验证器：
 
 ```ts
 export const validateSystemEchoParams = ajv.compile<SystemEchoParams>(SystemEchoParamsSchema);
 ```
 
-3. **Server 行为**
+3. **服务器行为**
 
-在 `src/gateway/server-methods/system.ts` 添加 handler：
+在 `src/gateway/server-methods/system.ts` 中添加处理程序：
 
 ```ts
 export const systemHandlers: GatewayRequestHandlers = {
@@ -230,7 +229,7 @@ export const systemHandlers: GatewayRequestHandlers = {
 };
 ```
 
-在 `src/gateway/server-methods.ts` 中注册（已合并 `systemHandlers`），然后在 `src/gateway/server.ts` 的 `METHODS` 中加入 `"system.echo"`。
+在 `src/gateway/server-methods.ts` 中注册它（已经合并 `systemHandlers`），然后在 `src/gateway/server.ts` 中的 `METHODS` 添加 `"system.echo"`。
 
 4. **重新生成**
 
@@ -238,42 +237,41 @@ export const systemHandlers: GatewayRequestHandlers = {
 pnpm protocol:check
 ```
 
-5. **Tests + docs**
+5. **测试 + 文档**
 
-在 `src/gateway/server.*.test.ts` 添加 server test，并在文档中注明该方法。
+在 `src/gateway/server.*.test.ts` 中添加服务器测试并在文档中记录该方法。
 
-## Swift codegen 行为
+## Swift 代码生成行为
 
-Swift 生成器会输出：
+Swift 生成器生成：
 
-- `GatewayFrame` enum，包含 `req`、`res`、`event` 与 `unknown` 分支
-- 强类型 payload structs/enums
-- `ErrorCode` 值与 `GATEWAY_PROTOCOL_VERSION`
+- `GatewayFrame` 枚举，包含 `req`、`res`、`event` 和 `unknown` 情况
+- 强类型负载结构体/枚举
+- `ErrorCode` 值和 `GATEWAY_PROTOCOL_VERSION`
 
-未知 frame 类型会以原始 payload 保留，保证前向兼容。
+未知帧类型作为原始负载保留，以确保向前兼容性。
 
-## 版本与兼容
+## 版本控制 + 兼容性
 
 - `PROTOCOL_VERSION` 位于 `src/gateway/protocol/schema.ts`。
-- 客户端发送 `minProtocol` + `maxProtocol`；服务端拒绝不匹配。
-- Swift models 保留未知 frame 类型以避免破坏旧客户端。
+- 客户端发送 `minProtocol` + `maxProtocol`；服务器拒绝不匹配的请求。
+- Swift 模型保留未知帧类型，以避免破坏旧版客户端。
 
-## Schema 约定与模式
+## 模式模式和约定
 
-- 大多数对象使用 `additionalProperties: false` 保持严格 payload。
-- `NonEmptyString` 用于 ID 与方法/事件名。
-- 顶层 `GatewayFrame` 使用 `type` 作为**判别字段**。
-- 有副作用的方法通常需要 params 中的 `idempotencyKey`
-  （例如 `send`、`poll`、`agent`、`chat.send`）。
+- 大多数对象使用 `additionalProperties: false` 进行严格负载定义。
+- `NonEmptyString` 是 ID 和方法/事件名称的默认选项。
+- 顶级 `GatewayFrame` 在 `type` 上使用**鉴别器**。
+- 具有副作用的方法通常在参数中需要一个 `idempotencyKey`（例如：`send`、`poll`、`agent`、`chat.send`）。
 
-## Live schema JSON
+## 实时模式 JSON
 
-生成的 JSON Schema 位于仓库 `dist/protocol.schema.json`。发布的原始文件通常可在以下地址获取：
+生成的 JSON Schema 位于仓库的 `dist/protocol.schema.json`。发布的原始文件通常可从以下位置获取：
 
 - https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json
 
-## 当你修改 schemas
+## 更新模式时的步骤
 
-1. 更新 TypeBox schemas。
+1. 更新 TypeBox 模式。
 2. 运行 `pnpm protocol:check`。
-3. 提交重新生成的 schema + Swift models。
+3. 提交重新生成的模式 + Swift 模型。

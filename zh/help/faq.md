@@ -1668,7 +1668,7 @@ openclaw onboard --install-daemon
   /compact
   ```
 
-  or   or ` 指导总结。
+  or   or   or   or ` 指导总结。
 
 - **重置**（为同一聊天键创建新的会话 ID）：
   ```

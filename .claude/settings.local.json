@@ -3,6 +3,7 @@
     "allow": [
       "Skill(markdown-i18n)",
       "Bash(node:*)",
+      "Bash(SKILL_DIR=\"/Users/marco/Documents/git/github.com/BeaversLab/crawfish-docs/.claude/skills/beaver-markdown-i18n\")",
       "Bash(test:*)",
       "Bash(ls:*)",
       "Bash(grep:*)",
@@ -16,7 +17,14 @@
       "Bash(SKILL_DIR=*&node * checkpoint:*)",
       "Bash(node merge:*)",
       "Bash(node apply:*)",
-      "Bash(node fix:*)"
+      "Bash(node fix:*)",
+      "Bash(export:*)",
+      "Bash(SKILL_DIR=\"*\" node *:*)",
+      "Bash(SKILL_DIR='*' node *:*)",
+      "Bash(node */scripts/translate-cli.js:*)",
+      "Bash(node */scripts/plan-cli.js:*)",
+      "Bash(node */scripts/quality-cli.js:*)",
+      "Bash($SKILL_DIR/scripts/*:*)"
     ]
   }
 }

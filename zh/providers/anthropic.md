@@ -1,21 +1,20 @@
 ---
-title: "Anthropic"
-summary: "在 OpenClaw 中通过 API key 或 setup-token 使用 Anthropic Claude"
+summary: "在OpenClaw中通过API密钥或setup-token使用Anthropic Claude"
 read_when:
-  - 想在 OpenClaw 中使用 Anthropic 模型
-  - 想用 setup-token 替代 API key
+  - You want to use Anthropic models in OpenClaw
+  - You want setup-token instead of API keys
+title: "Anthropic"
 ---
 
-# Anthropic（Claude）
+# Anthropic (Claude)
 
-Anthropic 构建 **Claude** 模型家族，并提供 API 访问。在 OpenClaw 中你可以使用 API key 或 **setup-token** 认证。
+Anthropic构建了**Claude**模型系列并通过API提供访问。在OpenClaw中，您可以使用API密钥或**setup-token**进行身份验证。
 
-## 方案 A：Anthropic API key
+## 选项A: Anthropic API密钥
 
-**适用：** 标准 API 访问与按量计费。
-在 Anthropic Console 中创建 API key。
+**最适合:** 标准API访问和基于使用量的计费。在Anthropic控制台中创建您的API密钥。
 
-### CLI 设置
+### CLI设置
 
 ```bash
 openclaw onboard
@@ -34,19 +33,19 @@ openclaw onboard --anthropic-api-key "$ANTHROPIC_API_KEY"
 }
 ```
 
-## 提示词缓存（Anthropic API）
+## 提示缓存 (Anthropic API)
 
-OpenClaw 支持 Anthropic 的提示词缓存功能。这 **仅适用于 API**；订阅认证不支持缓存设置。
+OpenClaw支持Anthropic的提示缓存功能。这**仅限API**；订阅认证不遵守缓存设置。
 
 ### 配置
 
-在模型配置中使用 `cacheRetention` 参数：
+在您的模型配置中使用`cacheRetention`参数:
 
-| 值      | 缓存时长  | 说明                               |
-| ------- | --------- | ---------------------------------- |
-| `none`  | 无缓存   | 禁用提示词缓存                      |
-| `short` | 5 分钟   | API Key 认证的默认值               |
-| `long`  | 1 小时   | 扩展缓存（需要 beta 标记）        |
+| 值     | 缓存时长   | 描述                     |
+| ------ | ---------- | ------------------------ |
+| `none` | 无缓存     | 禁用提示缓存             |
+| `short` | 5分钟      | API密钥认证的默认值      |
+| `long`  | 1小时      | 扩展缓存(需要beta标志)   |
 
 ```json5
 {
@@ -62,31 +61,46 @@ OpenClaw 支持 Anthropic 的提示词缓存功能。这 **仅适用于 API**；
 }
 ```
 
-## 方案 B：Claude setup-token
+### 默认值
 
-**适用：** 使用你的 Claude 订阅。
+使用Anthropic API密钥身份验证时，OpenClaw会自动为所有Anthropic模型应用`cacheRetention: "short"`(5分钟缓存)。您可以通过在配置中显式设置`cacheRetention`来覆盖此设置。
 
-### 获取 setup-token
+### 旧版参数
 
-Setup-token 由 **Claude Code CLI** 创建，而不是 Anthropic Console。可在 **任何机器** 上执行：
+旧的`cacheControlTtl`参数仍受支持以保持向后兼容:
+
+- `"5m"` 映射为 `short`
+- `"1h"` 映射为 `long`
+
+我们建议迁移到新的`cacheRetention`参数。
+
+OpenClaw为Anthropic API请求包含`extended-cache-ttl-2025-04-11` beta标志；如果您覆盖provider标头，请保留它(参见[/gateway/configuration](/zh/gateway/configuration))。
+
+## 选项B: Claude setup-token
+
+**最适合:** 使用您的Claude订阅。
+
+### 获取setup-token的位置
+
+Setup-token由**Claude Code CLI**创建，而非Anthropic控制台。您可以在**任何机器**上运行此命令:
 
 ```bash
 claude setup-token
 ```
 
-将 token 粘贴到 OpenClaw（向导：**Anthropic token (paste setup-token)**），或在 gateway 主机上运行：
+将token粘贴到OpenClaw(向导: **Anthropic token (paste setup-token)**)，或在gateway主机上运行:
 
 ```bash
 openclaw models auth setup-token --provider anthropic
 ```
 
-如果 token 在另一台机器上生成，可用以下命令粘贴：
+如果您在不同机器上生成了token，请粘贴它:
 
 ```bash
 openclaw models auth paste-token --provider anthropic
 ```
 
-### CLI 设置
+### CLI设置
 
 ```bash
 # Paste a setup-token during onboarding
@@ -101,33 +115,32 @@ openclaw onboard --auth-choice setup-token
 }
 ```
 
-## 说明
+## 注意事项
 
-- 使用 `claude setup-token` 生成并粘贴，或在 gateway 主机上运行 `openclaw models auth setup-token`。
-- 若 Claude 订阅出现 “OAuth token refresh failed …”，请用 setup-token 重新认证。参见 [/gateway/troubleshooting#oauth-token-refresh-failed-anthropic-claude-subscription](/zh/gateway/troubleshooting#oauth-token-refresh-failed-anthropic-claude-subscription)。
-- 认证细节与复用规则见 [/concepts/oauth](/zh/concepts/oauth)。
+- 使用`claude setup-token`生成setup-token并粘贴它，或在gateway主机上运行`openclaw models auth setup-token`。
+- 如果您在Claude订阅上看到"OAuth token refresh failed …"，请使用setup-token重新进行身份验证。参见[/gateway/troubleshooting#oauth-token-refresh-failed-anthropic-claude-subscription](/zh/gateway/troubleshooting#oauth-token-refresh-failed-anthropic-claude-subscription)。
+- 身份验证详情+重用规则在[/concepts/oauth](/zh/concepts/oauth)中。
 
-## 故障排查
+## 故障排除
 
-**401 错误 / token 突然失效**
+**401错误/token突然无效**
 
-- Claude 订阅认证可能过期或被撤销。重新执行 `claude setup-token` 并粘贴到 **gateway 主机**。
-- 如果 Claude CLI 登录在另一台机器上，请在 gateway 主机上执行
-  `openclaw models auth paste-token --provider anthropic`。
+- Claude订阅身份验证可能过期或被撤销。重新运行`claude setup-token`并将其粘贴到**gateway主机**中。
+- 如果Claude CLI登录位于不同的机器上，请在gateway主机上使用`openclaw models auth paste-token --provider anthropic`。
 
-**No API key found for provider "anthropic"**
+**未找到provider "anthropic" 的API密钥**
 
-- 认证是 **按代理** 绑定的。新代理不会继承主代理的 key。
-- 为该代理重新 onboarding，或在 gateway 主机上粘贴 setup-token / API key，然后用 `openclaw models status` 验证。
+- 身份验证是**按agent进行的**。新agent不会继承主agent的密钥。
+- 为该agent重新运行入职，或在gateway主机上粘贴setup-token/API密钥，然后使用`openclaw models status`进行验证。
 
-**No credentials found for profile `anthropic:default`**
+**未找到profile `anthropic:default` 的凭据**
 
-- 运行 `openclaw models status` 查看活跃的认证 profile。
-- 重新 onboarding，或为该 profile 粘贴 setup-token / API key。
+- 运行`openclaw models status`以查看哪个身份验证profile处于活动状态。
+- 重新运行入职，或为该profile粘贴setup-token/API密钥。
 
-**No available auth profile (all in cooldown/unavailable)**
+**没有可用的身份验证profile(全部处于冷却/不可用状态)**
 
-- 运行 `openclaw models status --json` 查看 `auth.unusableProfiles`。
-- 添加另一个 Anthropic profile 或等待 cooldown。
+- 检查`openclaw models status --json`中的`auth.unusableProfiles`。
+- 添加另一个Anthropic profile或等待冷却结束。
 
-更多：[/gateway/troubleshooting](/zh/gateway/troubleshooting) 与 [/help/faq](/zh/help/faq)。
+更多信息: [/gateway/troubleshooting](/zh/gateway/troubleshooting) 和 [/help/faq](/zh/help/faq)。

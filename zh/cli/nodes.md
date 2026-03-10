@@ -1,20 +1,20 @@
 ---
 summary: "`openclaw nodes` 的 CLI 参考（list/status/approve/invoke、camera/canvas/screen）"
 read_when:
-  - 你在管理已配对节点（摄像头、屏幕、画布）
-  - 需要批准请求或调用节点命令
+  - "You're managing paired nodes (cameras, screen, canvas)"
+  - "You need to approve requests or invoke node commands"
 title: "nodes"
 ---
 
 # `openclaw nodes`
 
-管理已配对节点（设备）并调用节点能力。
+管理配对的节点（设备）并调用节点功能。
 
 相关：
 
-- Nodes 概览：[节点](/zh/nodes)
-- Camera：[Camera nodes](/zh/nodes/camera)
-- Images：[Image nodes](/zh/nodes/images)
+- 节点概述：[Nodes](/zh/nodes)
+- 相机：[Camera nodes](/zh/nodes/camera)
+- 图像：[Image nodes](/zh/nodes/images)
 
 常用选项：
 
@@ -33,11 +33,11 @@ openclaw nodes status --connected
 openclaw nodes status --last-connected 24h
 ```
 
-`nodes list` 会输出 pending/paired 表格。paired 行包含最近连接时间（Last Connect）。
-使用 `--connected` 只显示当前已连接节点。使用 `--last-connected <duration>` 过滤
-在指定时间内连接过的节点（如 `24h`、`7d`）。
+`nodes list` 打印待处理/已配对的表格。已配对的行包括最近的连接时间（最后连接）。
+使用 `--connected` 仅显示当前连接的节点。使用 `--last-connected <duration>`
+过滤在持续时间内连接的节点（例如 `24h`、`7d`）。
 
-## Invoke / run
+## 调用 / 运行
 
 ```bash
 openclaw nodes invoke --node <id|name|ip> --command <command> --params <json>
@@ -46,28 +46,28 @@ openclaw nodes run --raw "git status"
 openclaw nodes run --agent main --node <id|name|ip> --raw "git status"
 ```
 
-Invoke 标志：
+调用标志：
 
 - `--params <json>`：JSON 对象字符串（默认 `{}`）。
-- `--invoke-timeout <ms>`：node invoke 超时（默认 `15000`）。
-- `--idempotency-key <key>`：可选幂等键。
+- `--invoke-timeout <ms>`：节点调用超时（默认 `15000`）。
+- `--idempotency-key <key>`：可选的幂等密钥。
 
-### Exec 风格默认
+### Exec 样式默认值
 
-`nodes run` 与模型的 exec 行为一致（默认值 + approvals）：
+`nodes run` 镜像模型的 exec 行为（默认值 + 批准）：
 
-- 读取 `tools.exec.*`（以及 `agents.list[].tools.exec.*` 覆盖）。
-- 在调用 `system.run` 前使用 exec approvals（`exec.approval.request`）。
-- 当 `tools.exec.node` 已设置时，可省略 `--node`。
-- 需要可提供 `system.run` 的节点（macOS 伴侣应用或无头 node host）。
+- 读取 `tools.exec.*`（加上 `agents.list[].tools.exec.*` 覆盖）。
+- 在调用 `system.run` 之前使用 exec 批准（`exec.approval.request`）。
+- 当设置 `tools.exec.node` 时，可以省略 `--node`。
+- 需要一个播发 `system.run` 的节点（macOS 配套应用程序或无头节点主机）。
 
 标志：
 
 - `--cwd <path>`：工作目录。
 - `--env <key=val>`：环境变量覆盖（可重复）。
 - `--command-timeout <ms>`：命令超时。
-- `--invoke-timeout <ms>`：node invoke 超时（默认 `30000`）。
+- `--invoke-timeout <ms>`：节点调用超时（默认 `30000`）。
 - `--needs-screen-recording`：需要屏幕录制权限。
 - `--raw <command>`：运行 shell 字符串（`/bin/sh -lc` 或 `cmd.exe /c`）。
-- `--agent <id>`：按 agent 作用域的 approvals/allowlists（默认使用已配置 agent）。
-- `--ask <off|on-miss|always>`、`--security <deny|allowlist|full>`：覆盖设置。
+- `--agent <id>`：代理范围的批准/允许列表（默认为配置的代理）。
+- `--ask <off|on-miss|always>`、`--security <deny|allowlist|full>`：覆盖。
