@@ -1,16 +1,16 @@
 ---
-summary: Node + tsx "__name is not a function" 崩溃说明与规避方案
+summary: "Node + tsx \"__name is not a function\" 崩溃说明和变通方法"
 read_when:
-  - 排查仅 Node 的 dev 脚本或 watch 失败
-  - 调查 OpenClaw 中 tsx/esbuild loader 崩溃
+  - "调试仅 Node 的开发脚本或监视模式失败"
+  - "调查 OpenClaw 中的 tsx/esbuild 加载器崩溃"
 title: "Node + tsx 崩溃"
 ---
 
 # Node + tsx "\_\_name is not a function" 崩溃
 
-## 摘要
+## 概要
 
-通过 Node + `tsx` 运行 OpenClaw 在启动时失败：
+通过 Node 使用 `tsx` 运行 OpenClaw 在启动时失败并出现：
 
 ```
 [openclaw] Failed to start CLI: TypeError: __name is not a function
@@ -18,15 +18,15 @@ title: "Node + tsx 崩溃"
     at .../src/agents/auth-profiles/constants.ts:25:20
 ```
 
-此问题出现在开发脚本从 Bun 切换到 `tsx` 之后（提交 `2871657e`，2026-01-06）。相同路径在 Bun 下可运行。
+这是在将开发脚本从 Bun 切换到 `tsx` 之后开始的（提交 `2871657e`，2026-01-06）。相同的运行时路径在 Bun 中有效。
 
 ## 环境
 
-- Node：v25.x（观察到 v25.3.0）
+- Node：v25.x（在 v25.3.0 上观察到）
 - tsx：4.21.0
-- OS：macOS（其他运行 Node 25 的平台可能也可复现）
+- 操作系统：macOS（在其他运行 Node 25 的平台上也可能重现）
 
-## 复现（仅 Node）
+## 重现（仅 Node）
 
 ```bash
 # in repo root
@@ -35,7 +35,7 @@ pnpm install
 node --import tsx src/entry.ts status
 ```
 
-## 仓库内最小复现
+## 仓库中的最小重现
 
 ```bash
 node --import tsx scripts/repro/tsx-name-repro.ts
@@ -45,30 +45,30 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 
 - Node 25.3.0：失败
 - Node 22.22.0（Homebrew `node@22`）：失败
-- Node 24：此处尚未安装，需要验证
+- Node 24：尚未在此处安装；需要验证
 
-## 备注 / 假设
+## 说明 / 假设
 
-- `tsx` 使用 esbuild 转换 TS/ESM。esbuild 的 `keepNames` 会生成 `__name` helper，并用 `__name(...)` 包裹函数定义。
-- 崩溃表明运行时存在 `__name` 但不是函数，说明 helper 在 Node 25 loader 路径中缺失或被覆盖。
-- 其他 esbuild 使用方也出现过类似 `__name` helper 丢失/重写的问题。
+- `tsx` 使用 esbuild 来转换 TS/ESM。esbuild 的 `keepNames` 发出 `__name` 辅助函数，并用 `__name(...)` 包装函数定义。
+- 崩溃表明 `__name` 存但在运行时不是函数，这意味着在 Node 25 加载器路径中，该模块缺少或覆盖了辅助函数。
+- 在其他 esbuild 消费者中，当缺少或重写辅助函数时，已报告了类似的 `__name` 辅助函数问题。
 
 ## 回归历史
 
-- `2871657e`（2026-01-06）：脚本从 Bun 切换到 tsx，使 Bun 可选。
-- 在此之前（Bun 路径），`openclaw status` 与 `gateway:watch` 可用。
+- `2871657e`（2026-01-06）：脚本从 Bun 更改为 tsx 以使 Bun 成为可选。
+- 在此之前（Bun 路径），`openclaw status` 和 `gateway:watch` 工作正常。
 
-## 规避方案
+## 变通方法
 
-- 使用 Bun 运行 dev 脚本（当前临时回退）。
-- 使用 Node + tsc watch，再运行编译输出：
+- 使用 Bun 进行开发脚本（当前临时回退）。
+- 使用 Node + tsc watch，然后运行编译输出：
   ```bash
   pnpm exec tsc --watch --preserveWatchOutput
   node --watch openclaw.mjs status
   ```
-- 本地确认：`pnpm exec tsc -p tsconfig.json` + `node openclaw.mjs status` 在 Node 25 可用。
-- 如果可行，禁用 TS loader 的 esbuild keepNames（防止注入 `__name` helper）；目前 tsx 不暴露该选项。
-- 测试 Node LTS（22/24）+ `tsx`，确认是否为 Node 25 特有问题。
+- 本地确认：`pnpm exec tsc -p tsconfig.json` + `node openclaw.mjs status` 在 Node 25 上有效。
+- 如果可能，在 TS 加载器中禁用 esbuild keepNames（防止 `__name` 辅助函数插入）；tsx 目前不公开此选项。
+- 使用 `tsx` 测试 Node LTS（22/24），以查看问题是否是 Node 25 特有的。
 
 ## 参考
 
@@ -76,8 +76,8 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 - https://esbuild.github.io/api/#keep-names
 - https://github.com/evanw/esbuild/issues/1031
 
-## 下一步
+## 后续步骤
 
-- 在 Node 22/24 复现以确认 Node 25 回归。
-- 测试 `tsx` nightly 或固定到较早版本（若有已知回归）。
-- 若在 Node LTS 也可复现，向上游提交最小复现与 `__name` 堆栈。
+- 在 Node 22/24 上重现以确认 Node 25 的回归。
+- 测试 `tsx` nightly 或固定到早期版本（如果存在已知的回归）。
+- 如果在 Node LTS 上重现，请使用 `__name` 堆栈跟踪向上游提交最小重现。

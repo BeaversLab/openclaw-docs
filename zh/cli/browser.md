@@ -1,28 +1,28 @@
 ---
-summary: "`openclaw browser` 的 CLI 参考（profiles、tabs、actions、扩展中继）"
+summary: "`openclaw browser` 的 CLI 参考（配置文件、标签页、操作、扩展中继）"
 read_when:
-  - 你在使用 `openclaw browser` 并需要常见任务示例
-  - 你想通过 node host 控制另一台机器上的浏览器
-  - 你想使用 Chrome 扩展中继（通过工具栏按钮 attach/detach）
+  - "You use `openclaw browser` and want examples for common tasks"
+  - "You want to control a browser running on another machine via a node host"
+  - "You want to use the Chrome extension relay (attach/detach via toolbar button)"
 title: "browser"
 ---
 
 # `openclaw browser`
 
-管理 OpenClaw 的浏览器控制服务，并执行浏览器动作（tabs、snapshot、screenshot、导航、点击、输入）。
+管理 OpenClaw 的浏览器控制服务器并运行浏览器操作（标签页、快照、截图、导航、点击、输入）。
 
 相关：
 
-- Browser 工具 + API：[浏览器工具](/zh/tools/browser)
-- Chrome 扩展中继：[Chrome 扩展](/zh/tools/chrome-extension)
+- 浏览器工具 + API：[Browser tool](/zh/tools/browser)
+- Chrome 扩展中继：[Chrome extension](/zh/tools/chrome-extension)
 
-## 常用参数
+## 常用标志
 
-- `--url <gatewayWsUrl>`：Gateway WebSocket URL（默认读取配置）。
-- `--token <token>`：Gateway token（如需）。
-- `--timeout <ms>`：请求超时（毫秒）。
-- `--browser-profile <name>`：选择浏览器 profile（默认取配置）。
-- `--json`：机器可读输出（如支持）。
+- `--url <gatewayWsUrl>`: Gateway WebSocket URL（默认为配置）。
+- `--token <token>`: Gateway token（如果需要）。
+- `--timeout <ms>`: 请求超时（毫秒）。
+- `--browser-profile <name>`: 选择浏览器配置文件（默认来自配置）。
+- `--json`: 机器可读输出（在支持的地方）。
 
 ## 快速开始（本地）
 
@@ -33,12 +33,12 @@ openclaw browser --browser-profile openclaw open https://example.com
 openclaw browser --browser-profile openclaw snapshot
 ```
 
-## Profiles
+## 配置文件
 
-Profiles 是命名的浏览器路由配置。通常：
+配置文件是命名的浏览器路由配置。实际上：
 
-- `openclaw`：启动/连接一个由 OpenClaw 管理的专用 Chrome 实例（隔离用户数据目录）。
-- `chrome`：通过 Chrome 扩展中继控制你现有的 Chrome tab。
+- `openclaw`: 启动/附加到专用的 OpenClaw 管理的 Chrome 实例（隔离的用户数据目录）。
+- `chrome`: 通过 Chrome 扩展中继控制您现有的 Chrome 标签页。
 
 ```bash
 openclaw browser profiles
@@ -46,13 +46,13 @@ openclaw browser create-profile --name work --color "#FF5A36"
 openclaw browser delete-profile --name work
 ```
 
-使用指定 profile：
+使用特定配置文件：
 
 ```bash
 openclaw browser --browser-profile work tabs
 ```
 
-## Tabs
+## 标签页
 
 ```bash
 openclaw browser tabs
@@ -61,21 +61,21 @@ openclaw browser focus <targetId>
 openclaw browser close <targetId>
 ```
 
-## Snapshot / screenshot / actions
+## 快照 / 截图 / 操作
 
-Snapshot：
+快照：
 
 ```bash
 openclaw browser snapshot
 ```
 
-Screenshot：
+截图：
 
 ```bash
 openclaw browser screenshot
 ```
 
-导航/点击/输入（基于 ref 的 UI 自动化）：
+导航/点击/输入（基于引用的 UI 自动化）：
 
 ```bash
 openclaw browser navigate https://example.com
@@ -83,25 +83,24 @@ openclaw browser click <ref>
 openclaw browser type <ref> "hello"
 ```
 
-## Chrome 扩展中继（工具栏按钮 attach）
+## Chrome 扩展中继（通过工具栏按钮附加）
 
-该模式允许 agent 控制你手动 attach 的现有 Chrome tab（不会自动 attach）。
+此模式允许代理控制您手动附加的现有 Chrome 标签页（它不会自动附加）。
 
-安装解压扩展到稳定路径：
+将解压的扩展安装到稳定路径：
 
 ```bash
 openclaw browser extension install
 openclaw browser extension path
 ```
 
-然后在 Chrome 中打开 `chrome://extensions` → 启用 “Developer mode” → “Load unpacked” → 选择输出的目录。
+然后 Chrome → `chrome://extensions` → 启用”开发者模式” → “加载解压的扩展” → 选择打印的文件夹。
 
-完整指南：[Chrome 扩展](/zh/tools/chrome-extension)
+完整指南：[Chrome extension](/zh/tools/chrome-extension)
 
-## 远程浏览器控制（node host 代理）
+## 远程浏览器控制（节点主机代理）
 
-如果 Gateway 与浏览器不在同一台机器上，请在有 Chrome/Brave/Edge/Chromium 的机器上运行 **node host**。Gateway 会将浏览器动作代理到该 node（无需单独启动浏览器控制服务）。
+如果 Gateway 在与浏览器不同的机器上运行，请在具有 Chrome/Brave/Edge/Chromium 的机器上运行 **节点主机**。Gateway 将浏览器操作代理到该节点（不需要单独的浏览器控制服务器）。
+使用 `gateway.nodes.browser.mode` 控制自动路由，如果连接了多个节点，使用 `gateway.nodes.browser.node` 固定特定节点。
 
-使用 `gateway.nodes.browser.mode` 控制自动路由，并用 `gateway.nodes.browser.node` 在有多个 node 时指定某个 node。
-
-安全与远程设置： [浏览器工具](/zh/tools/browser)、[远程访问](/zh/gateway/remote)、[Tailscale](/zh/gateway/tailscale)、[安全](/zh/gateway/security)
+安全 + 远程设置：[Browser tool](/zh/tools/browser), [Remote access](/zh/gateway/remote), [Tailscale](/zh/gateway/tailscale), [Security](/zh/gateway/security)

@@ -1,5 +1,5 @@
 ---
-summary: "`zai` 的 CLI 参考（诊断、探针、使用快照）"
+summary: "`openclaw status` 的 CLI 参考（诊断、探测、使用快照）"
 read_when:
   - "You want a quick diagnosis of channel health + recent session recipients"
   - "You want a pasteable “all” status for debugging"

@@ -1,21 +1,21 @@
 ---
-title: "沙盒 vs 工具策略 vs 提升模式"
-summary: "为什么工具被阻止：沙盒运行时、工具允许/拒绝策略，以及提升 exec 门控"
-read_when: "你遇到 'sandbox jail' 或看到工具/提升被拒绝，想知道该改哪个配置键。"
-status: active
+title: "沙箱 vs 工具策略 vs 提升权限"
+summary: "工具被阻止的原因：沙箱运行时、工具允许/拒绝策略以及提升执行 Gateway"
+read_when: "您遇到"沙箱监狱"或看到工具/提升权限拒绝，并想要更改确切的配置键。"
+status: "active"
 ---
 
-# 沙盒 vs 工具策略 vs 提升模式
+# 沙箱 vs 工具策略 vs 提升权限
 
 OpenClaw 有三个相关（但不同）的控制：
 
-1. **沙盒**（`agents.defaults.sandbox.*` / `agents.list[].sandbox.*`）决定 **工具在哪运行**（Docker vs 宿主）。
-2. **工具策略**（`tools.*`, `tools.sandbox.tools.*`, `agents.list[].tools.*`）决定 **哪些工具可用/允许**。
-3. **提升模式**（`tools.elevated.*`, `agents.list[].tools.elevated.*`）是 **仅针对 exec 的逃生舱**，当你在沙盒中时可切到宿主执行。
+1. **沙箱**（`agents.defaults.sandbox.*` / `agents.list[].sandbox.*`）决定**工具在哪里运行**（Docker vs 主机）。
+2. **工具策略**（`tools.*`、`tools.sandbox.tools.*`、`agents.list[].tools.*`）决定**哪些工具可用/被允许**。
+3. **提升权限**（`tools.elevated.*`、`agents.list[].tools.elevated.*`）是一个**仅执行的逃生舱**，用于在您被沙箱化时在主机上运行。
 
-## 快速排查
+## 快速调试
 
-用检查器查看 OpenClaw _实际_ 在做什么：
+使用检查器查看 OpenClaw _实际_在做什么：
 
 ```bash
 openclaw sandbox explain
@@ -24,52 +24,52 @@ openclaw sandbox explain --agent work
 openclaw sandbox explain --json
 ```
 
-它会输出：
+它打印：
 
-- 实际生效的沙盒 mode/scope/workspace 访问
-- 当前会话是否在沙盒中（main vs non-main）
-- 实际沙盒工具 allow/deny（以及来源：agent/全局/默认）
-- 提升模式门控与修复键路径
+- 有效的沙箱模式/范围/工作区访问
+- 会话当前是否被沙箱化（主会话 vs 非主会话）
+- 有效的沙箱工具允许/拒绝（以及它是否来自代理/全局/默认）
+- 提升权限 Gateway 和修复键路径
 
-## 沙盒：工具在哪运行
+## 沙箱：工具运行的地方
 
-沙盒由 `agents.defaults.sandbox.mode` 控制：
+沙箱由 `agents.defaults.sandbox.mode` 控制：
 
-- `"off"`：所有内容在宿主运行。
-- `"non-main"`：仅非 main 会话进入沙盒（群/频道常见“意外”来源）。
-- `"all"`：全部进入沙盒。
+- `"off"`：一切都在主机上运行。
+- `"non-main"`：只有非主会话被沙箱化（组/频道的常见”意外”）。
+- `"all"`：一切都是沙箱化的。
 
-完整矩阵（scope、工作区挂载、镜像）见 [沙盒](/zh/gateway/sandboxing)。
+参阅[沙箱](/zh/gateway/sandboxing)了解完整矩阵（范围、工作区挂载、镜像）。
 
-### Bind 挂载（安全快检）
+### 绑定挂载（安全快速检查）
 
-- `docker.binds` 会 _穿透_ 沙盒文件系统：挂载的内容在容器内可见，权限取决于你设置的模式（`:ro` 或 `:rw`）。
-- 若省略模式，默认读写；源码/机密请优先 `:ro`。
-- `scope: "shared"` 会忽略每 agent 的 binds（只应用全局 binds）。
-- 绑定 `/var/run/docker.sock` 等同于将宿主控制权交给沙盒；仅在明确需要时使用。
-- 工作区访问（`workspaceAccess: "ro"`/`"rw"`）与 bind 模式相互独立。
+- `docker.binds` _刺穿_ 沙箱文件系统：您挂载的任何内容都以您设置的模式（`:ro` 或 `:rw`）在容器内可见。
+- 如果省略模式，默认为读写模式；对于源/机密，首选 `:ro`。
+- `scope: "shared"` 忽略每个代理的绑定（仅全局绑定适用）。
+- 绑定 `/var/run/docker.sock` 实际上将主机控制权交给沙箱；请仅在有意的情况下这样做。
+- 工作区访问（`workspaceAccess: "ro"`/`"rw"`）独立于绑定模式。
 
 ## 工具策略：哪些工具存在/可调用
 
-两层策略很关键：
+两个层次很重要：
 
-- **工具 profile**：`tools.profile` 与 `agents.list[].tools.profile`（基础 allowlist）
-- **Provider 工具 profile**：`tools.byProvider[provider].profile` 与 `agents.list[].tools.byProvider[provider].profile`
-- **全局/每 agent 工具策略**：`tools.allow`/`tools.deny` 与 `agents.list[].tools.allow`/`agents.list[].tools.deny`
-- **Provider 工具策略**：`tools.byProvider[provider].allow/deny` 与 `agents.list[].tools.byProvider[provider].allow/deny`
-- **沙盒工具策略**（仅沙盒时生效）：`tools.sandbox.tools.allow`/`tools.sandbox.tools.deny` 与 `agents.list[].tools.sandbox.tools.*`
+- **工具配置文件**：`tools.profile` 和 `agents.list[].tools.profile`（基本允许列表）
+- **提供商工具配置文件**：`tools.byProvider[provider].profile` 和 `agents.list[].tools.byProvider[provider].profile`
+- **全局/每个代理的工具策略**：`tools.allow`/`tools.deny` 和 `agents.list[].tools.allow`/`agents.list[].tools.deny`
+- **提供商工具策略**：`tools.byProvider[provider].allow/deny` 和 `agents.list[].tools.byProvider[provider].allow/deny`
+- **沙箱工具策略**（仅在沙箱化时适用）：`tools.sandbox.tools.allow`/`tools.sandbox.tools.deny` 和 `agents.list[].tools.sandbox.tools.*`
 
 经验法则：
 
-- `deny` 永远优先。
-- 若 `allow` 非空，则其它工具默认视为阻止。
-- 工具策略是硬闸：被拒绝的 `exec` 不能通过 `/exec` 绕过。
-- `/exec` 仅改变已授权发件人的会话默认值，不会授予工具权限。
-  Provider 工具 key 可用 `provider`（如 `google-antigravity`）或 `provider/model`（如 `openai/gpt-5.2`）。
+- `deny` 总是获胜。
+- 如果 `allow` 非空，其他所有内容都被视为已阻止。
+- 工具策略是硬性停止：`/exec` 无法覆盖被拒绝的 `exec` 工具。
+- `/exec` 仅更改授权发送者的会话默认值；它不授予工具访问权限。
+  提供商工具键接受 `provider`（例如 `google-antigravity`）或 `provider/model`（例如 `openai/gpt-5.2`）。
 
 ### 工具组（简写）
 
-工具策略（全局、agent、沙盒）支持 `group:*` 条目，展开为多个工具：
+工具策略（全局、代理、沙箱）支持 `group:*` 条目，这些条目扩展为多个工具：
 
 ```json5
 {
@@ -85,44 +85,44 @@ openclaw sandbox explain --json
 
 可用组：
 
-- `group:runtime`: `exec`, `bash`, `process`
-- `group:fs`: `read`, `write`, `edit`, `apply_patch`
-- `group:sessions`: `sessions_list`, `sessions_history`, `sessions_send`, `sessions_spawn`, `session_status`
-- `group:memory`: `memory_search`, `memory_get`
-- `group:ui`: `browser`, `canvas`
-- `group:automation`: `cron`, `gateway`
-- `group:messaging`: `message`
-- `group:nodes`: `nodes`
-- `group:openclaw`: 所有内置 OpenClaw 工具（不含 provider 插件）
+- `group:runtime`：`exec`、`bash`、`process`
+- `group:fs`：`read`、`write`、`edit`、`apply_patch`
+- `group:sessions`：`sessions_list`、`sessions_history`、`sessions_send`、`sessions_spawn`、`session_status`
+- `group:memory`：`memory_search`、`memory_get`
+- `group:ui`：`browser`、`canvas`
+- `group:automation`：`cron`、`gateway`
+- `group:messaging`：`message`
+- `group:nodes`：`nodes`
+- `group:openclaw`：所有内置的 OpenClaw 工具（不包括提供商插件）
 
-## 提升模式：仅 exec 的“宿主运行”
+## 提升权限：仅执行的”在主机上运行”
 
-提升模式 **不会** 赋予额外工具；只影响 `exec`。
+提升权限**不会**授予额外的工具；它仅影响 `exec`。
 
-- 若在沙盒中，`/elevated on`（或 `exec` 的 `elevated: true`）会在宿主运行（可能仍需审批）。
-- 用 `/elevated full` 跳过会话内的 exec 审批。
-- 若已在宿主直跑，提升模式基本无效（但仍受门控）。
-- 提升模式 **不** 是 skill 级，且 **不** 覆盖工具 allow/deny。
-- `/exec` 与提升模式分离：只调整授权发件人的会话级 exec 默认值。
+- 如果您被沙箱化，`/elevated on`（或带有 `elevated: true` 的 `exec`）在主机上运行（可能仍需批准）。
+- 使用 `/elevated full` 跳过会话的执行批准。
+- 如果您已经直接运行，提升权限实际上是空操作（仍然受 Gateway 限制）。
+- 提升权限**不是**技能范围的，并且**不会**覆盖工具允许/拒绝。
+- `/exec` 与提升权限分开。它仅调整授权发送者的每个会话执行默认值。
 
-门控：
+Gateway：
 
-- 开关：`tools.elevated.enabled`（可选 `agents.list[].tools.elevated.enabled`）
-- 发件人 allowlist：`tools.elevated.allowFrom.<provider>`（可选 `agents.list[].tools.elevated.allowFrom.<provider>`）
+- 启用：`tools.elevated.enabled`（以及可选的 `agents.list[].tools.elevated.enabled`）
+- 发送者允许列表：`tools.elevated.allowFrom.<provider>`（以及可选的 `agents.list[].tools.elevated.allowFrom.<provider>`）
 
-详见 [提升模式](/zh/tools/elevated)。
+参阅[提升权限模式](/zh/tools/elevated)。
 
-## 常见“sandbox jail”修复
+## 常见的”沙箱监狱”修复
 
-### “工具 X 被沙盒工具策略阻止”
+### “工具 X 被沙箱工具策略阻止”
 
-修复键（择一）：
+修复键（选择一个）：
 
-- 关闭沙盒：`agents.defaults.sandbox.mode=off`（或 per-agent `agents.list[].sandbox.mode=off`）
-- 在沙盒内允许该工具：
-  - 从 `tools.sandbox.tools.deny` 中移除（或 per-agent `agents.list[].tools.sandbox.tools.deny`）
-  - 或加入 `tools.sandbox.tools.allow`（或 per-agent allow）
+- 禁用沙箱：`agents.defaults.sandbox.mode=off`（或每个代理的 `agents.list[].sandbox.mode=off`）
+- 在沙箱内允许工具：
+  - 从 `tools.sandbox.tools.deny` 中删除它（或每个代理的 `agents.list[].tools.sandbox.tools.deny`）
+  - 或将其添加到 `tools.sandbox.tools.allow`（或每个代理的允许）
 
-### “我以为这是 main，为什么在沙盒里？”
+### “我以为这是主会话，为什么被沙箱化了？”
 
-在 `"non-main"` 模式下，群/频道 key **不是** main。请使用 main 会话 key（`sandbox explain` 会显示）或将 mode 切到 `"off"`。
+在 `"non-main"` 模式下，组/频道键_不是_主会话。使用主会话键（由 `sandbox explain` 显示）或将模式切换到 `"off"`。

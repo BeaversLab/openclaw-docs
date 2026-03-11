@@ -1,5 +1,5 @@
 ---
-summary: "语音通话插件：通过 Twilio/Telnyx/Plivo 进行 outbound + inbound 通话（插件安装 + 配置 + CLI）"
+summary: "语音通话插件：通过 Twilio/Telnyx/Plivo 的 outbound + inbound 通话（插件安装 + 配置 + CLI）"
 read_when:
   - "You want to place an outbound voice call from OpenClaw"
   - "You are configuring or developing the voice-call plugin"

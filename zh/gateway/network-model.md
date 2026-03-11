@@ -1,5 +1,5 @@
 ---
-summary: "Gateway、节点和 canvas 主机如何连接。"
+summary: "Gateway、节点和 Canvas 主机如何连接。"
 read_when:
   - "You want a concise view of the Gateway networking model"
 title: "网络模型"

@@ -1,19 +1,19 @@
 ---
-summary: "`openclaw models` 的 CLI 参考（status/list/set/scan、aliases、fallbacks、auth）"
+summary: "`openclaw models` 的 CLI 参考（status/list/set/scan、别名、fallback、身份验证）"
 read_when:
-  - 需要更改默认模型或查看提供商认证状态
-  - 需要扫描可用模型/提供商并排查认证配置
+  - "You want to change default models or view provider auth status"
+  - "You want to scan available models/providers and debug auth profiles"
 title: "models"
 ---
 
 # `openclaw models`
 
-模型发现、扫描与配置（默认模型、fallbacks、auth profiles）。
+模型发现、扫描和配置（默认模型、fallback、身份验证配置文件）。
 
 相关：
 
-- Providers + models：[模型](/zh/providers/models)
-- Provider 认证设置：[入门](/zh/start/getting-started)
+- 提供商 + 模型：[模型](/zh/providers/models)
+- 提供商身份验证设置：[入门](/zh/start/getting-started)
 
 ## 常用命令
 
@@ -24,19 +24,20 @@ openclaw models set <model-or-alias>
 openclaw models scan
 ```
 
-`openclaw models status` 会显示解析后的默认模型/回退，以及认证概览。
-当提供商用量快照可用时，OAuth/token 状态区会包含 provider usage 标题。
-加上 `--probe` 可对每个已配置的 provider profile 进行实时认证探测。
-探测是实际请求（可能消耗 token 并触发限流）。
-使用 `--agent <id>` 可检查已配置 agent 的模型/认证状态。省略时，
-若设置了 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR` 则使用，否则使用
-已配置的默认 agent。
+`openclaw models status` 显示已解析的默认值/fallback 以及身份验证概述。
+当提供商使用快照可用时，OAuth/token 状态部分包括
+提供商使用标头。
+添加 `--probe` 以对每个配置的提供商配置文件运行实时身份验证探测。
+探测是真实的请求（可能会消耗 token 并触发速率限制）。
+使用 `--agent <id>` 检查配置的代理的模型/身份验证状态。如果省略，
+该命令使用 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`（如果设置），否则使用
+配置的默认代理。
 
-备注：
+注意事项：
 
-- `models set <model-or-alias>` 接受 `provider/model` 或 alias。
-- 模型引用按 **第一个** `/` 分割。如果模型 ID 本身包含 `/`（OpenRouter 风格），请包含 provider 前缀（示例：`openrouter/moonshotai/kimi-k2`）。
-- 如果省略 provider，OpenClaw 会将输入视为 alias 或 **默认 provider** 的模型（仅当模型 ID 中不含 `/` 时生效）。
+- `models set <model-or-alias>` 接受 `provider/model` 或别名。
+- 模型引用通过在 **第一个** `/` 上分割来解析。如果模型 ID 包含 `/`（OpenRouter 风格），请包含提供商前缀（例如：`openrouter/moonshotai/kimi-k2`）。
+- 如果您省略提供商，OpenClaw 会将输入视为 **默认提供商** 的别名或模型（仅当模型 ID 中没有 `/` 时才有效）。
 
 ### `models status`
 
@@ -44,22 +45,23 @@ openclaw models scan
 
 - `--json`
 - `--plain`
-- `--check`（exit 1=过期/缺失，2=即将过期）
-- `--probe`（对已配置的 auth profile 进行实时探测）
-- `--probe-provider <name>`（探测某个 provider）
-- `--probe-profile <id>`（可重复或逗号分隔的 profile id）
+- `--check`（退出 1=已过期/缺失，2=即将过期）
+- `--probe`（配置的身份验证配置文件的实时探测）
+- `--probe-provider <name>`（探测一个提供商）
+- `--probe-profile <id>`（重复或逗号分隔的配置文件 ID）
 - `--probe-timeout <ms>`
 - `--probe-concurrency <n>`
 - `--probe-max-tokens <n>`
+- `--agent <id>`（配置的代理 ID；覆盖 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`）
 
-## Aliases + fallbacks
+## 别名 + fallback
 
 ```bash
 openclaw models aliases list
 openclaw models fallbacks list
 ```
 
-## Auth profiles
+## 身份验证配置文件
 
 ```bash
 openclaw models auth add
@@ -68,10 +70,10 @@ openclaw models auth setup-token
 openclaw models auth paste-token
 ```
 
-`models auth login` 会运行提供商插件的认证流程（OAuth/API key）。使用
-`openclaw plugins list` 查看已安装的提供商。
+`models auth login` 运行提供商插件的身份验证流程（OAuth/API 密钥）。使用
+`openclaw plugins list` 查看安装了哪些提供商。
 
-备注：
+注意事项：
 
-- `setup-token` 会提示输入 setup-token 值（可在任意机器上用 `claude setup-token` 生成）。
-- `paste-token` 接受在其他地方或自动化中生成的 token 字符串。
+- `setup-token` 提示输入 setup-token 值（在任意机器上使用 `claude setup-token` 生成）。
+- `paste-token` 接受在其他地方生成的或来自自动化的 token 字符串。

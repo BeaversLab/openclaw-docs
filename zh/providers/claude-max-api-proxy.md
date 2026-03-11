@@ -1,24 +1,24 @@
 ---
-summary: "将 Claude Max/Pro 订阅作为 OpenAI 兼容 API 端点使用"
+summary: "将 Claude Max/Pro 订阅用作 OpenAI 兼容的 API 端点"
 read_when:
-  - 想用 Claude Max 订阅配合 OpenAI 兼容工具
-  - 想要一个包装 Claude Code CLI 的本地 API 服务器
-  - 想通过订阅而非 API key 节省成本
+  - "You want to use Claude Max subscription with OpenAI-compatible tools"
+  - "You want a local API server that wraps Claude Code CLI"
+  - "You want to save money by using subscription instead of API keys"
 title: "Claude Max API 代理"
 ---
 
 # Claude Max API Proxy
 
-**claude-max-api-proxy** 是社区工具，可将你的 Claude Max/Pro 订阅暴露为 OpenAI 兼容 API 端点。这使你能用订阅配合任何支持 OpenAI API 格式的工具。
+**claude-max-api-proxy** 是一个社区工具，将您的 Claude Max/Pro 订阅公开为 OpenAI 兼容的 API 端点。这允许您将订阅与任何支持 OpenAI API 格式的工具一起使用。
 
-## 为什么使用它？
+## 为什么使用这个？
 
-| 方案            | 成本                                            | 适用场景                 |
-| --------------- | ----------------------------------------------- | ------------------------ |
-| Anthropic API   | 按 token 计费（Opus 约 $15/M 输入，$75/M 输出） | 生产应用、高流量         |
-| Claude Max 订阅 | $200/月固定                                     | 个人使用、开发、无限用量 |
+| Approach                | Cost                                                | Best For                                   |
+| ----------------------- | --------------------------------------------------- | ------------------------------------------ |
+| Anthropic API           | Pay per token (~$15/M input, $75/M output for Opus) | Production apps, high volume               |
+| Claude Max subscription | $200/month flat                                     | Personal use, development, unlimited usage |
 
-如果你有 Claude Max 订阅且想在 OpenAI 兼容工具中使用，它可以显著节省成本。
+如果您有 Claude Max 订阅并想将其与 OpenAI 兼容工具一起使用，此代理可以为您节省大量资金。
 
 ## 工作原理
 
@@ -27,11 +27,11 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
      (OpenAI format)              (converts format)      (uses your login)
 ```
 
-该代理：
+代理：
 
-1. 在 `http://localhost:3456/v1/chat/completions` 接受 OpenAI 格式请求
-2. 将其转换为 Claude Code CLI 命令
-3. 返回 OpenAI 格式响应（支持流式）
+1. 在 `http://localhost:3456/v1/chat/completions` 接受 OpenAI 格式的请求
+2. 将它们转换为 Claude Code CLI 命令
+3. 以 OpenAI 格式返回响应（支持流式传输）
 
 ## 安装
 
@@ -43,7 +43,7 @@ npm install -g claude-max-api-proxy
 claude --version
 ```
 
-## 使用
+## 使用方法
 
 ### 启动服务器
 
@@ -72,7 +72,7 @@ curl http://localhost:3456/v1/chat/completions \
 
 ### 与 OpenClaw 一起使用
 
-可将 OpenClaw 指向该代理，作为自定义 OpenAI 兼容端点：
+您可以将 OpenClaw 指向代理作为自定义 OpenAI 兼容端点：
 
 ```json5
 {
@@ -90,7 +90,7 @@ curl http://localhost:3456/v1/chat/completions \
 
 ## 可用模型
 
-| Model ID          | 映射到          |
+| Model ID          | Maps To         |
 | ----------------- | --------------- |
 | `claude-opus-4`   | Claude Opus 4   |
 | `claude-sonnet-4` | Claude Sonnet 4 |
@@ -98,7 +98,7 @@ curl http://localhost:3456/v1/chat/completions \
 
 ## 在 macOS 上自动启动
 
-创建 LaunchAgent 自动运行代理：
+创建 LaunchAgent 以自动运行代理：
 
 ```bash
 cat > ~/Library/LaunchAgents/com.claude-max-api.plist << 'EOF'
@@ -131,18 +131,18 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
 
 ## 链接
 
-- **npm:** https://www.npmjs.com/package/claude-max-api-proxy
-- **GitHub:** https://github.com/atalovesyou/claude-max-api-proxy
-- **Issues:** https://github.com/atalovesyou/claude-max-api-proxy/issues
+- **npm：** https://www.npmjs.com/package/claude-max-api-proxy
+- **GitHub：** https://github.com/atalovesyou/claude-max-api-proxy
+- **问题：** https://github.com/atalovesyou/claude-max-api-proxy/issues
 
-## 说明
+## 注意事项
 
-- 这是 **社区工具**，未得到 Anthropic 或 OpenClaw 官方支持
-- 需要已认证的 Claude Code CLI 与有效的 Claude Max/Pro 订阅
-- 代理在本地运行，不会向第三方服务器发送数据
-- 完整支持流式响应
+- 这是一个**社区工具**，不受 Anthropic 或 OpenClaw 官方支持
+- 需要有效的 Claude Max/Pro 订阅，并已通过 Claude Code CLI 身份验证
+- 代理在本地运行，不会将数据发送到任何第三方服务器
+- 完全支持流式响应
 
-## 参见
+## 另请参阅
 
-- [Anthropic provider](/zh/providers/anthropic) - 使用 setup-token 或 API key 的原生集成
-- [OpenAI provider](/zh/providers/openai) - 面向 OpenAI/Codex 订阅
+- [Anthropic 提供商](/zh/providers/anthropic) - 使用 Claude setup-token 或 API 密钥的原生 OpenClaw 集成
+- [OpenAI 提供商](/zh/providers/openai) - 用于 OpenAI/Codex 订阅
