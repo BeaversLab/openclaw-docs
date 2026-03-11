@@ -14,7 +14,7 @@ When a site requires login, **sign in manually** in the **host** browser profile
 
 Do **not** give the model your credentials. Automated logins often trigger anti‑bot defenses and can lock the account.
 
-Back to the main browser docs: [Browser](/en/tools/browser).
+Back to the main browser docs: [Browser](/tools/browser).
 
 ## Which Chrome profile is used?
 
@@ -34,8 +34,7 @@ If you have multiple profiles, pass `--browser-profile <name>` (the default is `
 
 ## X/Twitter: recommended flow
 
-- **Read/search/threads:** use the **bird** CLI skill (no browser, stable).
-  - Repo: https://github.com/steipete/bird
+- **Read/search/threads:** use the **host** browser (manual login).
 - **Post updates:** use the **host** browser (manual login).
 
 ## Sandboxing + host browser access

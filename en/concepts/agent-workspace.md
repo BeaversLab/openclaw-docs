@@ -17,7 +17,7 @@ sessions.
 **Important:** the workspace is the **default cwd**, not a hard sandbox. Tools
 resolve relative paths against the workspace, but absolute paths can still reach
 elsewhere on the host unless sandboxing is enabled. If you need isolation, use
-[`agents.defaults.sandbox`](/en/gateway/sandboxing) (and/or per‑agent sandbox config).
+[`agents.defaults.sandbox`](/gateway/sandboxing) (and/or per‑agent sandbox config).
 When sandboxing is enabled and `workspaceAccess` is not `"rw"`, tools operate
 inside a sandbox workspace under `~/.openclaw/sandboxes`, not your host workspace.
 
@@ -38,6 +38,8 @@ inside a sandbox workspace under `~/.openclaw/sandboxes`, not your host workspac
 
 `openclaw onboard`, `openclaw configure`, or `openclaw setup` will create the
 workspace and seed the bootstrap files if they are missing.
+Sandbox seed copies only accept regular in-workspace files; symlink/hardlink
+aliases that resolve outside the source workspace are ignored.
 
 If you already manage the workspace files yourself, you can disable bootstrap
 file creation:
@@ -105,7 +107,7 @@ These are the standard files OpenClaw expects inside the workspace:
   - Curated long-term memory.
   - Only load in the main, private session (not shared/group contexts).
 
-See [Memory](/en/concepts/memory) for the workflow and automatic memory flush.
+See [Memory](/concepts/memory) for the workflow and automatic memory flush.
 
 - `skills/` (optional)
   - Workspace-specific skills.
@@ -116,7 +118,8 @@ See [Memory](/en/concepts/memory) for the workflow and automatic memory flush.
 
 If any bootstrap file is missing, OpenClaw injects a "missing file" marker into
 the session and continues. Large bootstrap files are truncated when injected;
-adjust the limit with `agents.defaults.bootstrapMaxChars` (default: 20000).
+adjust limits with `agents.defaults.bootstrapMaxChars` (default: 20000) and
+`agents.defaults.bootstrapTotalMaxChars` (default: 150000).
 `openclaw setup` can recreate missing defaults without overwriting existing
 files.
 
@@ -228,6 +231,6 @@ Suggested `.gitignore` starter:
 ## Advanced notes
 
 - Multi-agent routing can use different workspaces per agent. See
-  [Channel routing](/en/concepts/channel-routing) for routing configuration.
+  [Channel routing](/channels/channel-routing) for routing configuration.
 - If `agents.defaults.sandbox` is enabled, non-main sessions can use per-session sandbox
   workspaces under `agents.defaults.sandbox.workspaceRoot`.

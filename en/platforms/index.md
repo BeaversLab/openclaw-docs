@@ -17,25 +17,25 @@ Native companion apps for Windows are also planned; the Gateway is recommended v
 
 ## Choose your OS
 
-- macOS: [macOS](/en/platforms/macos)
-- iOS: [iOS](/en/platforms/ios)
-- Android: [Android](/en/platforms/android)
-- Windows: [Windows](/en/platforms/windows)
-- Linux: [Linux](/en/platforms/linux)
+- macOS: [macOS](/platforms/macos)
+- iOS: [iOS](/platforms/ios)
+- Android: [Android](/platforms/android)
+- Windows: [Windows](/platforms/windows)
+- Linux: [Linux](/platforms/linux)
 
 ## VPS & hosting
 
-- VPS hub: [VPS hosting](/en/vps)
-- Fly.io: [Fly.io](/en/platforms/fly)
-- Hetzner (Docker): [Hetzner](/en/platforms/hetzner)
-- GCP (Compute Engine): [GCP](/en/platforms/gcp)
-- exe.dev (VM + HTTPS proxy): [exe.dev](/en/platforms/exe-dev)
+- VPS hub: [VPS hosting](/vps)
+- Fly.io: [Fly.io](/install/fly)
+- Hetzner (Docker): [Hetzner](/install/hetzner)
+- GCP (Compute Engine): [GCP](/install/gcp)
+- exe.dev (VM + HTTPS proxy): [exe.dev](/install/exe-dev)
 
 ## Common links
 
-- Install guide: [Getting Started](/en/start/getting-started)
-- Gateway runbook: [Gateway](/en/gateway)
-- Gateway configuration: [Configuration](/en/gateway/configuration)
+- Install guide: [Getting Started](/start/getting-started)
+- Gateway runbook: [Gateway](/gateway)
+- Gateway configuration: [Configuration](/gateway/configuration)
 - Service status: `openclaw gateway status`
 
 ## Gateway service install (CLI)
@@ -49,5 +49,5 @@ Use one of these (all supported):
 
 The service target depends on OS:
 
-- macOS: LaunchAgent (`bot.molt.gateway` or `bot.molt.<profile>`; legacy `com.openclaw.*`)
+- macOS: LaunchAgent (`ai.openclaw.gateway` or `ai.openclaw.<profile>`; legacy `com.openclaw.*`)
 - Linux/WSL2: systemd user service (`openclaw-gateway[-<profile>].service`)

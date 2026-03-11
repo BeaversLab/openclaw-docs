@@ -38,8 +38,8 @@ openclaw gateway --port 18789
 3. Approve the pairing request on the gateway host:
 
 ```bash
-openclaw nodes pending
-openclaw nodes approve <requestId>
+openclaw devices list
+openclaw devices approve <requestId>
 ```
 
 4. Verify connection:
@@ -58,7 +58,7 @@ The Gateway advertises `_openclaw-gw._tcp` on `local.`. The iOS app lists these 
 ### Tailnet (cross-network)
 
 If mDNS is blocked, use a unicast DNS-SD zone (choose a domain; example: `openclaw.internal.`) and Tailscale split DNS.
-See [Bonjour](/en/gateway/bonjour) for the CoreDNS example.
+See [Bonjour](/gateway/bonjour) for the CoreDNS example.
 
 ### Manual host/port
 
@@ -69,12 +69,13 @@ In Settings, enable **Manual Host** and enter the gateway host + port (default `
 The iOS node renders a WKWebView canvas. Use `node.invoke` to drive it:
 
 ```bash
-openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18793/__openclaw__/canvas/"}'
+openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18789/__openclaw__/canvas/"}'
 ```
 
 Notes:
 
 - The Gateway canvas host serves `/__openclaw__/canvas/` and `/__openclaw__/a2ui/`.
+- It is served from the Gateway HTTP server (same port as `gateway.port`, default `18789`).
 - The iOS node auto-navigates to A2UI on connect when a canvas host URL is advertised.
 - Return to the built-in scaffold with `canvas.navigate` and `{"url":""}`.
 
@@ -96,12 +97,12 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 ## Common errors
 
 - `NODE_BACKGROUND_UNAVAILABLE`: bring the iOS app to the foreground (canvas/camera/screen commands require it).
-- `A2UI_HOST_NOT_CONFIGURED`: the Gateway did not advertise a canvas host URL; check `canvasHost` in [Gateway configuration](/en/gateway/configuration).
-- Pairing prompt never appears: run `openclaw nodes pending` and approve manually.
+- `A2UI_HOST_NOT_CONFIGURED`: the Gateway did not advertise a canvas host URL; check `canvasHost` in [Gateway configuration](/gateway/configuration).
+- Pairing prompt never appears: run `openclaw devices list` and approve manually.
 - Reconnect fails after reinstall: the Keychain pairing token was cleared; re-pair the node.
 
 ## Related docs
 
-- [Pairing](/en/gateway/pairing)
-- [Discovery](/en/gateway/discovery)
-- [Bonjour](/en/gateway/bonjour)
+- [Pairing](/channels/pairing)
+- [Discovery](/gateway/discovery)
+- [Bonjour](/gateway/bonjour)

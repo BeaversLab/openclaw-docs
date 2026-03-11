@@ -12,7 +12,7 @@ title: "DigitalOcean"
 
 Run a persistent OpenClaw Gateway on DigitalOcean for **$6/month** (or $4/mo with reserved pricing).
 
-If you want a $0/month option and don’t mind ARM + provider-specific setup, see the [Oracle Cloud guide](/en/platforms/oracle).
+If you want a $0/month option and don’t mind ARM + provider-specific setup, see the [Oracle Cloud guide](/platforms/oracle).
 
 ## Cost Comparison (2026)
 
@@ -27,8 +27,8 @@ If you want a $0/month option and don’t mind ARM + provider-specific setup, se
 **Picking a provider:**
 
 - DigitalOcean: simplest UX + predictable setup (this guide)
-- Hetzner: good price/perf (see [Hetzner guide](/en/platforms/hetzner))
-- Oracle Cloud: can be $0/month, but is more finicky and ARM-only (see [Oracle guide](/en/platforms/oracle))
+- Hetzner: good price/perf (see [Hetzner guide](/install/hetzner))
+- Oracle Cloud: can be $0/month, but is more finicky and ARM-only (see [Oracle guide](/platforms/oracle))
 
 ---
 
@@ -39,6 +39,10 @@ If you want a $0/month option and don’t mind ARM + provider-specific setup, se
 - ~20 minutes
 
 ## 1) Create a Droplet
+
+<Warning>
+Use a clean base image (Ubuntu 24.04 LTS). Avoid third-party Marketplace 1-click images unless you have reviewed their startup scripts and firewall defaults.
+</Warning>
 
 1. Log into [DigitalOcean](https://cloud.digitalocean.com/)
 2. Click **Create → Droplets**
@@ -128,7 +132,7 @@ Open: `https://<magicdns>/`
 
 Notes:
 
-- Serve keeps the Gateway loopback-only and authenticates via Tailscale identity headers.
+- Serve keeps the Gateway loopback-only and authenticates Control UI/WebSocket traffic via Tailscale identity headers (tokenless auth assumes trusted gateway host; HTTP APIs still require token/password).
 - To require token/password instead, set `gateway.auth.allowTailscale: false` or use `gateway.auth.mode: "password"`.
 
 **Option C: Tailnet bind (no Serve)**
@@ -156,7 +160,7 @@ openclaw channels login whatsapp
 # Scan QR code
 ```
 
-See [Channels](/en/channels) for other providers.
+See [Channels](/channels) for other providers.
 
 ---
 
@@ -221,7 +225,7 @@ Oracle Cloud offers **Always Free** ARM instances that are significantly more po
 - Signup can be finicky (retry if it fails)
 - ARM architecture — most things work, but some binaries need ARM builds
 
-For the full setup guide, see [Oracle Cloud](/en/platforms/oracle). For signup tips and troubleshooting the enrollment process, see this [community guide](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
+For the full setup guide, see [Oracle Cloud](/platforms/oracle). For signup tips and troubleshooting the enrollment process, see this [community guide](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
 
 ---
 
@@ -256,7 +260,7 @@ free -h
 
 ## See Also
 
-- [Hetzner guide](/en/platforms/hetzner) — cheaper, more powerful
-- [Docker install](/en/install/docker) — containerized setup
-- [Tailscale](/en/gateway/tailscale) — secure remote access
-- [Configuration](/en/gateway/configuration) — full config reference
+- [Hetzner guide](/install/hetzner) — cheaper, more powerful
+- [Docker install](/install/docker) — containerized setup
+- [Tailscale](/gateway/tailscale) — secure remote access
+- [Configuration](/gateway/configuration) — full config reference

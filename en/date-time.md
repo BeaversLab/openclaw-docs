@@ -123,6 +123,6 @@ If you need local time, convert it downstream using the known timezone.
 
 ## Related docs
 
-- [System Prompt](/en/concepts/system-prompt)
-- [Timezones](/en/concepts/timezone)
-- [Messages](/en/concepts/messages)
+- [System Prompt](/concepts/system-prompt)
+- [Timezones](/concepts/timezone)
+- [Messages](/concepts/messages)

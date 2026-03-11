@@ -10,12 +10,12 @@ title: "Help"
 
 If you want a quick “get unstuck” flow, start here:
 
-- **Troubleshooting:** [Start here](/en/help/troubleshooting)
-- **Install sanity (Node/npm/PATH):** [Install](/en/install#nodejs--npm-path-sanity)
-- **Gateway issues:** [Gateway troubleshooting](/en/gateway/troubleshooting)
-- **Logs:** [Logging](/en/logging) and [Gateway logging](/en/gateway/logging)
-- **Repairs:** [Doctor](/en/gateway/doctor)
+- **Troubleshooting:** [Start here](/help/troubleshooting)
+- **Install sanity (Node/npm/PATH):** [Install](/install#nodejs--npm-path-sanity)
+- **Gateway issues:** [Gateway troubleshooting](/gateway/troubleshooting)
+- **Logs:** [Logging](/logging) and [Gateway logging](/gateway/logging)
+- **Repairs:** [Doctor](/gateway/doctor)
 
 If you’re looking for conceptual questions (not “something broke”):
 
-- [FAQ (concepts)](/en/help/faq)
+- [FAQ (concepts)](/help/faq)

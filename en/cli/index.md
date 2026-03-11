@@ -12,45 +12,52 @@ This page describes the current CLI behavior. If commands change, update this do
 
 ## Command pages
 
-- [`setup`](/en/cli/setup)
-- [`onboard`](/en/cli/onboard)
-- [`configure`](/en/cli/configure)
-- [`config`](/en/cli/config)
-- [`doctor`](/en/cli/doctor)
-- [`dashboard`](/en/cli/dashboard)
-- [`reset`](/en/cli/reset)
-- [`uninstall`](/en/cli/uninstall)
-- [`update`](/en/cli/update)
-- [`message`](/en/cli/message)
-- [`agent`](/en/cli/agent)
-- [`agents`](/en/cli/agents)
-- [`acp`](/en/cli/acp)
-- [`status`](/en/cli/status)
-- [`health`](/en/cli/health)
-- [`sessions`](/en/cli/sessions)
-- [`gateway`](/en/cli/gateway)
-- [`logs`](/en/cli/logs)
-- [`system`](/en/cli/system)
-- [`models`](/en/cli/models)
-- [`memory`](/en/cli/memory)
-- [`nodes`](/en/cli/nodes)
-- [`devices`](/en/cli/devices)
-- [`node`](/en/cli/node)
-- [`approvals`](/en/cli/approvals)
-- [`sandbox`](/en/cli/sandbox)
-- [`tui`](/en/cli/tui)
-- [`browser`](/en/cli/browser)
-- [`cron`](/en/cli/cron)
-- [`dns`](/en/cli/dns)
-- [`docs`](/en/cli/docs)
-- [`hooks`](/en/cli/hooks)
-- [`webhooks`](/en/cli/webhooks)
-- [`pairing`](/en/cli/pairing)
-- [`plugins`](/en/cli/plugins) (plugin commands)
-- [`channels`](/en/cli/channels)
-- [`security`](/en/cli/security)
-- [`skills`](/en/cli/skills)
-- [`voicecall`](/en/cli/voicecall) (plugin; if installed)
+- [`setup`](/cli/setup)
+- [`onboard`](/cli/onboard)
+- [`configure`](/cli/configure)
+- [`config`](/cli/config)
+- [`completion`](/cli/completion)
+- [`doctor`](/cli/doctor)
+- [`dashboard`](/cli/dashboard)
+- [`backup`](/cli/backup)
+- [`reset`](/cli/reset)
+- [`uninstall`](/cli/uninstall)
+- [`update`](/cli/update)
+- [`message`](/cli/message)
+- [`agent`](/cli/agent)
+- [`agents`](/cli/agents)
+- [`acp`](/cli/acp)
+- [`status`](/cli/status)
+- [`health`](/cli/health)
+- [`sessions`](/cli/sessions)
+- [`gateway`](/cli/gateway)
+- [`logs`](/cli/logs)
+- [`system`](/cli/system)
+- [`models`](/cli/models)
+- [`memory`](/cli/memory)
+- [`directory`](/cli/directory)
+- [`nodes`](/cli/nodes)
+- [`devices`](/cli/devices)
+- [`node`](/cli/node)
+- [`approvals`](/cli/approvals)
+- [`sandbox`](/cli/sandbox)
+- [`tui`](/cli/tui)
+- [`browser`](/cli/browser)
+- [`cron`](/cli/cron)
+- [`dns`](/cli/dns)
+- [`docs`](/cli/docs)
+- [`hooks`](/cli/hooks)
+- [`webhooks`](/cli/webhooks)
+- [`pairing`](/cli/pairing)
+- [`qr`](/cli/qr)
+- [`plugins`](/cli/plugins) (plugin commands)
+- [`channels`](/cli/channels)
+- [`security`](/cli/security)
+- [`secrets`](/cli/secrets)
+- [`skills`](/cli/skills)
+- [`daemon`](/cli/daemon) (legacy alias for gateway service commands)
+- [`clawbot`](/cli/clawbot) (legacy alias namespace)
+- [`voicecall`](/cli/voicecall) (plugin; if installed)
 
 ## Global flags
 
@@ -94,9 +101,17 @@ openclaw [--dev] [--profile <name>] <command>
     get
     set
     unset
+  completion
   doctor
+  dashboard
+  backup
+    create
+    verify
   security
     audit
+  secrets
+    reload
+    migrate
   reset
   uninstall
   update
@@ -108,6 +123,7 @@ openclaw [--dev] [--profile <name>] <command>
     remove
     login
     logout
+  directory
   skills
     list
     info
@@ -145,6 +161,13 @@ openclaw [--dev] [--profile <name>] <command>
     stop
     restart
     run
+  daemon
+    status
+    install
+    uninstall
+    start
+    stop
+    restart
   logs
   system
     event
@@ -231,6 +254,9 @@ openclaw [--dev] [--profile <name>] <command>
   pairing
     list
     approve
+  qr
+  clawbot
+    qr
   docs
   dns
     setup
@@ -245,6 +271,13 @@ Note: plugins can add additional top-level commands (for example `openclaw voice
 - `openclaw security audit --deep` — best-effort live Gateway probe.
 - `openclaw security audit --fix` — tighten safe defaults and chmod state/config.
 
+## Secrets
+
+- `openclaw secrets reload` — re-resolve refs and atomically swap the runtime snapshot.
+- `openclaw secrets audit` — scan for plaintext residues, unresolved refs, and precedence drift.
+- `openclaw secrets configure` — interactive helper for provider setup + SecretRef mapping + preflight/apply.
+- `openclaw secrets apply --from <plan.json>` — apply a previously generated plan (`--dry-run` supported).
+
 ## Plugins
 
 Manage extensions and their config:
@@ -255,7 +288,7 @@ Manage extensions and their config:
 - `openclaw plugins enable <id>` / `disable <id>` — toggle `plugins.entries.<id>.enabled`.
 - `openclaw plugins doctor` — report plugin load errors.
 
-Most plugin changes require a gateway restart. See [/plugin](/en/plugin).
+Most plugin changes require a gateway restart. See [/plugin](/tools/plugin).
 
 ## Memory
 
@@ -263,11 +296,11 @@ Vector search over `MEMORY.md` + `memory/*.md`:
 
 - `openclaw memory status` — show index stats.
 - `openclaw memory index` — reindex memory files.
-- `openclaw memory search "<query>"` — semantic search over memory.
+- `openclaw memory search "<query>"` (or `--query "<query>"`) — semantic search over memory.
 
 ## Chat slash commands
 
-Chat messages support `/...` commands (text and native). See [/tools/slash-commands](/en/tools/slash-commands).
+Chat messages support `/...` commands (text and native). See [/tools/slash-commands](/tools/slash-commands).
 
 Highlights:
 
@@ -299,17 +332,20 @@ Interactive wizard to set up gateway, workspace, and skills.
 Options:
 
 - `--workspace <dir>`
-- `--reset` (reset config + credentials + sessions + workspace before wizard)
+- `--reset` (reset config + credentials + sessions before wizard)
+- `--reset-scope <config|config+creds+sessions|full>` (default `config+creds+sessions`; use `full` to also remove workspace)
 - `--non-interactive`
 - `--mode <local|remote>`
 - `--flow <quickstart|advanced|manual>` (manual is an alias for advanced)
-- `--auth-choice <setup-token|token|chutes|openai-codex|openai-api-key|openrouter-api-key|ai-gateway-api-key|moonshot-api-key|moonshot-api-key-cn|kimi-code-api-key|synthetic-api-key|venice-api-key|gemini-api-key|zai-api-key|apiKey|minimax-api|minimax-api-lightning|opencode-zen|skip>`
+- `--auth-choice <setup-token|token|chutes|openai-codex|openai-api-key|openrouter-api-key|ai-gateway-api-key|moonshot-api-key|moonshot-api-key-cn|kimi-code-api-key|synthetic-api-key|venice-api-key|gemini-api-key|zai-api-key|mistral-api-key|apiKey|minimax-api|minimax-api-lightning|opencode-zen|opencode-go|custom-api-key|skip>`
 - `--token-provider <id>` (non-interactive; used with `--auth-choice token`)
 - `--token <token>` (non-interactive; used with `--auth-choice token`)
 - `--token-profile-id <id>` (non-interactive; default: `<provider>:manual`)
 - `--token-expires-in <duration>` (non-interactive; e.g. `365d`, `12h`)
+- `--secret-input-mode <plaintext|ref>` (default `plaintext`; use `ref` to store provider default env refs instead of plaintext keys)
 - `--anthropic-api-key <key>`
 - `--openai-api-key <key>`
+- `--mistral-api-key <key>`
 - `--openrouter-api-key <key>`
 - `--ai-gateway-api-key <key>`
 - `--moonshot-api-key <key>`
@@ -318,10 +354,17 @@ Options:
 - `--zai-api-key <key>`
 - `--minimax-api-key <key>`
 - `--opencode-zen-api-key <key>`
+- `--opencode-go-api-key <key>`
+- `--custom-base-url <url>` (non-interactive; used with `--auth-choice custom-api-key`)
+- `--custom-model-id <id>` (non-interactive; used with `--auth-choice custom-api-key`)
+- `--custom-api-key <key>` (non-interactive; optional; used with `--auth-choice custom-api-key`; falls back to `CUSTOM_API_KEY` when omitted)
+- `--custom-provider-id <id>` (non-interactive; optional custom provider id)
+- `--custom-compatibility <openai|anthropic>` (non-interactive; optional; default `openai`)
 - `--gateway-port <port>`
 - `--gateway-bind <loopback|lan|tailnet|auto|custom>`
 - `--gateway-auth <token|password>`
 - `--gateway-token <token>`
+- `--gateway-token-ref-env <name>` (non-interactive; store `gateway.auth.token` as an env SecretRef; requires that env var to be set; cannot be combined with `--gateway-token`)
 - `--gateway-password <password>`
 - `--remote-url <url>`
 - `--remote-token <token>`
@@ -343,7 +386,7 @@ Interactive configuration wizard (models, channels, skills, gateway).
 
 ### `config`
 
-Non-interactive config helpers (get/set/unset). Running `openclaw config` with no
+Non-interactive config helpers (get/set/unset/file/validate). Running `openclaw config` with no
 subcommand launches the wizard.
 
 Subcommands:
@@ -351,6 +394,9 @@ Subcommands:
 - `config get <path>`: print a config value (dot/bracket path).
 - `config set <path> <value>`: set a value (JSON5 or raw string).
 - `config unset <path>`: remove a value.
+- `config file`: print the active config file path.
+- `config validate`: validate the current config against the schema without starting the gateway.
+- `config validate --json`: emit machine-readable JSON output.
 
 ### `doctor`
 
@@ -376,6 +422,8 @@ Subcommands:
 - Tip: `channels status` prints warnings with suggested fixes when it can detect common misconfigurations (then points you to `openclaw doctor`).
 - `channels logs`: show recent channel logs from the gateway log file.
 - `channels add`: wizard-style setup when no flags are passed; flags switch to non-interactive mode.
+  - When adding a non-default account to a channel still using single-account top-level config, OpenClaw moves account-scoped values into `channels.<channel>.accounts.default` before writing the new account.
+  - Non-interactive `channels add` does not auto-create/upgrade bindings; channel-only bindings continue to match the default account.
 - `channels remove`: disable by default; pass `--delete` to remove config entries without prompts.
 - `channels login`: interactive channel login (WhatsApp Web only).
 - `channels logout`: log out of a channel session (if supported).
@@ -408,7 +456,7 @@ Common options:
 - `--lines <n>` (default `200`)
 - `--json`
 
-More detail: [/concepts/oauth](/en/concepts/oauth)
+More detail: [/concepts/oauth](/concepts/oauth)
 
 Examples:
 
@@ -444,12 +492,27 @@ Approve DM pairing requests across channels.
 
 Subcommands:
 
-- `pairing list <channel> [--json]`
-- `pairing approve <channel> <code> [--notify]`
+- `pairing list [channel] [--channel <channel>] [--account <id>] [--json]`
+- `pairing approve <channel> <code> [--account <id>] [--notify]`
+- `pairing approve --channel <channel> [--account <id>] <code> [--notify]`
+
+### `devices`
+
+Manage gateway device pairing entries and per-role device tokens.
+
+Subcommands:
+
+- `devices list [--json]`
+- `devices approve [requestId] [--latest]`
+- `devices reject <requestId>`
+- `devices remove <deviceId>`
+- `devices clear --yes [--pending]`
+- `devices rotate --device <id> --role <role> [--scope <scope...>]`
+- `devices revoke --device <id> --role <role>`
 
 ### `webhooks gmail`
 
-Gmail Pub/Sub hook setup + runner. See [/automation/gmail-pubsub](/en/automation/gmail-pubsub).
+Gmail Pub/Sub hook setup + runner. See [/automation/gmail-pubsub](/automation/gmail-pubsub).
 
 Subcommands:
 
@@ -458,7 +521,7 @@ Subcommands:
 
 ### `dns setup`
 
-Wide-area discovery DNS helper (CoreDNS + Tailscale). See [/gateway/discovery](/en/gateway/discovery).
+Wide-area discovery DNS helper (CoreDNS + Tailscale). See [/gateway/discovery](/gateway/discovery).
 
 Options:
 
@@ -470,7 +533,7 @@ Options:
 
 Unified outbound messaging + channel actions.
 
-See: [/cli/message](/en/cli/message)
+See: [/cli/message](/cli/message)
 
 Subcommands:
 
@@ -535,7 +598,37 @@ Options:
 - `--non-interactive`
 - `--json`
 
-Binding specs use `channel[:accountId]`. When `accountId` is omitted for WhatsApp, the default account id is used.
+Binding specs use `channel[:accountId]`. When `accountId` is omitted, OpenClaw may resolve account scope via channel defaults/plugin hooks; otherwise it is a channel binding without explicit account scope.
+
+#### `agents bindings`
+
+List routing bindings.
+
+Options:
+
+- `--agent <id>`
+- `--json`
+
+#### `agents bind`
+
+Add routing bindings for an agent.
+
+Options:
+
+- `--agent <id>`
+- `--bind <channel[:accountId]>` (repeatable)
+- `--json`
+
+#### `agents unbind`
+
+Remove routing bindings for an agent.
+
+Options:
+
+- `--agent <id>`
+- `--bind <channel[:accountId]>` (repeatable)
+- `--all`
+- `--json`
 
 #### `agents delete <id>`
 
@@ -550,7 +643,7 @@ Options:
 
 Run the ACP bridge that connects IDEs to the Gateway.
 
-See [`acp`](/en/cli/acp) for full options and examples.
+See [`acp`](/cli/acp) for full options and examples.
 
 ### `status`
 
@@ -585,7 +678,7 @@ Notes:
 - Data comes directly from provider usage endpoints (no estimates).
 - Providers: Anthropic, GitHub Copilot, OpenAI Codex OAuth, plus Gemini CLI/Antigravity when those provider plugins are enabled.
 - If no matching credentials exist, usage is hidden.
-- Details: see [Usage tracking](/en/concepts/usage-tracking).
+- Details: see [Usage tracking](/concepts/usage-tracking).
 
 ### `health`
 
@@ -657,6 +750,7 @@ Options:
 - `--token <token>`
 - `--auth <token|password>`
 - `--password <password>`
+- `--password-file <path>`
 - `--tailscale <off|serve|funnel>`
 - `--tailscale-reset-on-exit`
 - `--allow-unconfigured`
@@ -689,6 +783,7 @@ Notes:
 - `gateway status` supports `--no-probe`, `--deep`, and `--json` for scripting.
 - `gateway status` also surfaces legacy or extra gateway services when it can detect them (`--deep` adds system-level scans). Profile-named OpenClaw services are treated as first-class and aren't flagged as "extra".
 - `gateway status` prints which config path the CLI uses vs which config the service likely uses (service env), plus the resolved probe target URL.
+- On Linux systemd installs, status token-drift checks include both `Environment=` and `EnvironmentFile=` unit sources.
 - `gateway install|uninstall|start|stop|restart` support `--json` for scripting (default output stays human-friendly).
 - `gateway install` defaults to Node runtime; bun is **not recommended** (WhatsApp/Telegram bugs).
 - `gateway install` options: `--port`, `--runtime`, `--token`, `--force`, `--json`.
@@ -739,15 +834,19 @@ Tip: when calling `config.set`/`config.apply`/`config.patch` directly, pass `bas
 
 ## Models
 
-See [/concepts/models](/en/concepts/models) for fallback behavior and scanning strategy.
+See [/concepts/models](/concepts/models) for fallback behavior and scanning strategy.
 
-Preferred Anthropic auth (setup-token):
+Anthropic setup-token (supported):
 
 ```bash
 claude setup-token
 openclaw models auth setup-token --provider anthropic
 openclaw models status
 ```
+
+Policy note: this is technical compatibility. Anthropic has blocked some
+subscription usage outside Claude Code in the past; verify current Anthropic
+terms before relying on setup-token in production.
 
 ### `models` (root)
 
@@ -888,7 +987,7 @@ Options:
 
 ## Cron
 
-Manage scheduled jobs (Gateway RPC). See [/automation/cron-jobs](/en/automation/cron-jobs).
+Manage scheduled jobs (Gateway RPC). See [/automation/cron-jobs](/automation/cron-jobs).
 
 Subcommands:
 
@@ -907,7 +1006,7 @@ All `cron` commands accept `--url`, `--token`, `--timeout`, `--expect-final`.
 ## Node host
 
 `node` runs a **headless node host** or manages it as a background service. See
-[`openclaw node`](/en/cli/node).
+[`openclaw node`](/cli/node).
 
 Subcommands:
 
@@ -918,9 +1017,14 @@ Subcommands:
 - `node stop`
 - `node restart`
 
+Auth notes:
+
+- `node` resolves gateway auth from env/config (no `--token`/`--password` flags): `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`, then `gateway.auth.*`. In local mode, node host intentionally ignores `gateway.remote.*`; in `gateway.mode=remote`, `gateway.remote.*` participates per remote precedence rules.
+- Legacy `CLAWDBOT_GATEWAY_*` env vars are intentionally ignored for node-host auth resolution.
+
 ## Nodes
 
-`nodes` talks to the Gateway and targets paired nodes. See [/nodes](/en/nodes).
+`nodes` talks to the Gateway and targets paired nodes. See [/nodes](/nodes).
 
 Common options:
 
@@ -962,7 +1066,7 @@ Location:
 
 ## Browser
 
-Browser control CLI (dedicated Chrome/Brave/Edge/Chromium). See [`openclaw browser`](/en/cli/browser) and the [Browser tool](/en/tools/browser).
+Browser control CLI (dedicated Chrome/Brave/Edge/Chromium). See [`openclaw browser`](/cli/browser) and the [Browser tool](/tools/browser).
 
 Common options:
 

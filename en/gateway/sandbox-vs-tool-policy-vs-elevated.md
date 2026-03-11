@@ -39,7 +39,7 @@ Sandboxing is controlled by `agents.defaults.sandbox.mode`:
 - `"non-main"`: only non-main sessions are sandboxed (common “surprise” for groups/channels).
 - `"all"`: everything is sandboxed.
 
-See [Sandboxing](/en/gateway/sandboxing) for the full matrix (scope, workspace mounts, images).
+See [Sandboxing](/gateway/sandboxing) for the full matrix (scope, workspace mounts, images).
 
 ### Bind mounts (security quick check)
 
@@ -110,7 +110,7 @@ Gates:
 - Enablement: `tools.elevated.enabled` (and optionally `agents.list[].tools.elevated.enabled`)
 - Sender allowlists: `tools.elevated.allowFrom.<provider>` (and optionally `agents.list[].tools.elevated.allowFrom.<provider>`)
 
-See [Elevated Mode](/en/tools/elevated).
+See [Elevated Mode](/tools/elevated).
 
 ## Common “sandbox jail” fixes
 

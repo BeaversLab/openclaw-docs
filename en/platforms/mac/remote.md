@@ -56,8 +56,9 @@ Remote mode supports two transports:
 ## Security notes
 
 - Prefer loopback binds on the remote host and connect via SSH or Tailscale.
+- SSH tunneling uses strict host-key checking; trust the host key first so it exists in `~/.ssh/known_hosts`.
 - If you bind the Gateway to a non-loopback interface, require token/password auth.
-- See [Security](/en/gateway/security) and [Tailscale](/en/gateway/tailscale).
+- See [Security](/gateway/security) and [Tailscale](/gateway/tailscale).
 
 ## WhatsApp login flow (remote)
 

@@ -27,7 +27,7 @@ Context is _not the same thing_ as “memory”: memory can be stored on disk an
 - `/usage tokens` → append per-reply usage footer to normal replies.
 - `/compact` → summarize older history into a compact entry to free window space.
 
-See also: [Slash commands](/en/tools/slash-commands), [Token use & costs](/en/token-use), [Compaction](/en/concepts/compaction).
+See also: [Slash commands](/tools/slash-commands), [Token use & costs](/reference/token-use), [Compaction](/concepts/compaction).
 
 ## Example output
 
@@ -98,7 +98,7 @@ The system prompt is **OpenClaw-owned** and rebuilt each run. It includes:
 - Runtime metadata (host/OS/model/thinking).
 - Injected workspace bootstrap files under **Project Context**.
 
-Full breakdown: [System Prompt](/en/concepts/system-prompt).
+Full breakdown: [System Prompt](/concepts/system-prompt).
 
 ## Injected workspace files (Project Context)
 
@@ -112,7 +112,9 @@ By default, OpenClaw injects a fixed set of workspace files (if present):
 - `HEARTBEAT.md`
 - `BOOTSTRAP.md` (first-run only)
 
-Large files are truncated per-file using `agents.defaults.bootstrapMaxChars` (default `20000` chars). `/context` shows **raw vs injected** sizes and whether truncation happened.
+Large files are truncated per-file using `agents.defaults.bootstrapMaxChars` (default `20000` chars). OpenClaw also enforces a total bootstrap injection cap across files with `agents.defaults.bootstrapTotalMaxChars` (default `150000` chars). `/context` shows **raw vs injected** sizes and whether truncation happened.
+
+When truncation occurs, the runtime can inject an in-prompt warning block under Project Context. Configure this with `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`; default `once`).
 
 ## Skills: what’s injected vs loaded on-demand
 
@@ -139,7 +141,7 @@ Slash commands are handled by the Gateway. There are a few different behaviors:
   - Inline directives in a normal message act as per-message hints.
 - **Inline shortcuts** (allowlisted senders only): certain `/...` tokens inside a normal message can run immediately (example: “hey /status”), and are stripped before the model sees the remaining text.
 
-Details: [Slash commands](/en/tools/slash-commands).
+Details: [Slash commands](/tools/slash-commands).
 
 ## Sessions, compaction, and pruning (what persists)
 
@@ -149,7 +151,13 @@ What persists across messages depends on the mechanism:
 - **Compaction** persists a summary into the transcript and keeps recent messages intact.
 - **Pruning** removes old tool results from the _in-memory_ prompt for a run, but does not rewrite the transcript.
 
-Docs: [Session](/en/concepts/session), [Compaction](/en/concepts/compaction), [Session pruning](/en/concepts/session-pruning).
+Docs: [Session](/concepts/session), [Compaction](/concepts/compaction), [Session pruning](/concepts/session-pruning).
+
+By default, OpenClaw uses the built-in `legacy` context engine for assembly and
+compaction. If you install a plugin that provides `kind: "context-engine"` and
+select it with `plugins.slots.contextEngine`, OpenClaw delegates context
+assembly, `/compact`, and related subagent context lifecycle hooks to that
+engine instead.
 
 ## What `/context` actually reports
 

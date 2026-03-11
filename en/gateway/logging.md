@@ -8,7 +8,7 @@ title: "Logging"
 
 # Logging
 
-For a user-facing overview (CLI + Control UI + config), see [/logging](/en/logging).
+For a user-facing overview (CLI + Control UI + config), see [/logging](/logging).
 
 OpenClaw has two log “surfaces”:
 

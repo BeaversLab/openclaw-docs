@@ -44,14 +44,14 @@ Plugins can ship their own skills by listing `skills` directories in
 `openclaw.plugin.json` (paths relative to the plugin root). Plugin skills load
 when the plugin is enabled and participate in the normal skill precedence rules.
 You can gate them via `metadata.openclaw.requires.config` on the plugin’s config
-entry. See [Plugins](/en/plugin) for discovery/config and [Tools](/en/tools) for the
+entry. See [Plugins](/tools/plugin) for discovery/config and [Tools](/tools) for the
 tool surface those skills teach.
 
 ## ClawHub (install + sync)
 
 ClawHub is the public skills registry for OpenClaw. Browse at
-https://clawhub.com. Use it to discover, install, update, and back up skills.
-Full guide: [ClawHub](/en/tools/clawhub).
+[https://clawhub.com](https://clawhub.com). Use it to discover, install, update, and back up skills.
+Full guide: [ClawHub](/tools/clawhub).
 
 Common flows:
 
@@ -69,10 +69,11 @@ that up as `<workspace>/skills` on the next session.
 ## Security notes
 
 - Treat third-party skills as **untrusted code**. Read them before enabling.
-- Prefer sandboxed runs for untrusted inputs and risky tools. See [Sandboxing](/en/gateway/sandboxing).
+- Prefer sandboxed runs for untrusted inputs and risky tools. See [Sandboxing](/gateway/sandboxing).
+- Workspace and extra-dir skill discovery only accepts skill roots and `SKILL.md` files whose resolved realpath stays inside the configured root.
 - `skills.entries.*.env` and `skills.entries.*.apiKey` inject secrets into the **host** process
   for that agent turn (not the sandbox). Keep secrets out of prompts and logs.
-- For a broader threat model and checklists, see [Security](/en/gateway/security).
+- For a broader threat model and checklists, see [Security](/gateway/security).
 
 ## Format (AgentSkills + Pi-compatible)
 
@@ -195,7 +196,7 @@ Bundled/managed skills can be toggled and supplied with env values:
     entries: {
       "nano-banana-pro": {
         enabled: true,
-        apiKey: "GEMINI_KEY_HERE",
+        apiKey: { source: "env", provider: "default", id: "GEMINI_API_KEY" }, // or plaintext string
         env: {
           GEMINI_API_KEY: "GEMINI_KEY_HERE",
         },
@@ -221,6 +222,7 @@ Rules:
 - `enabled: false` disables the skill even if it’s bundled/installed.
 - `env`: injected **only if** the variable isn’t already set in the process.
 - `apiKey`: convenience for skills that declare `metadata.openclaw.primaryEnv`.
+  Supports plaintext string or SecretRef object (`{ source, provider, id }`).
 - `config`: optional bag for custom per-skill fields; custom keys must live here.
 - `allowBundled`: optional allowlist for **bundled** skills only. If set, only
   bundled skills in the list are eligible (managed/workspace skills unaffected).
@@ -291,10 +293,10 @@ copy). Workspace skills are user-owned and override both on name conflicts.
 
 ## Config reference
 
-See [Skills config](/en/tools/skills-config) for the full configuration schema.
+See [Skills config](/tools/skills-config) for the full configuration schema.
 
 ## Looking for more skills?
 
-Browse https://clawhub.com.
+Browse [https://clawhub.com](https://clawhub.com).
 
 ---

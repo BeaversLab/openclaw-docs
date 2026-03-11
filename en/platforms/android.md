@@ -1,5 +1,5 @@
 ---
-summary: "Android app (node): connection runbook + Canvas/Chat/Camera"
+summary: "Android app (node): connection runbook + Connect/Chat/Voice/Canvas command surface"
 read_when:
   - Pairing or reconnecting the Android node
   - Debugging Android gateway discovery or auth
@@ -13,19 +13,19 @@ title: "Android App"
 
 - Role: companion node app (Android does not host the Gateway).
 - Gateway required: yes (run it on macOS, Linux, or Windows via WSL2).
-- Install: [Getting Started](/en/start/getting-started) + [Pairing](/en/gateway/pairing).
-- Gateway: [Runbook](/en/gateway) + [Configuration](/en/gateway/configuration).
-  - Protocols: [Gateway protocol](/en/gateway/protocol) (nodes + control plane).
+- Install: [Getting Started](/start/getting-started) + [Pairing](/channels/pairing).
+- Gateway: [Runbook](/gateway) + [Configuration](/gateway/configuration).
+  - Protocols: [Gateway protocol](/gateway/protocol) (nodes + control plane).
 
 ## System control
 
-System control (launchd/systemd) lives on the Gateway host. See [Gateway](/en/gateway).
+System control (launchd/systemd) lives on the Gateway host. See [Gateway](/gateway).
 
 ## Connection Runbook
 
 Android node app ⇄ (mDNS/NSD + WebSocket) ⇄ **Gateway**
 
-Android connects directly to the Gateway WebSocket (default `ws://<host>:18789`) and uses Gateway-owned pairing.
+Android connects directly to the Gateway WebSocket (default `ws://<host>:18789`) and uses device pairing (`role: node`).
 
 ### Prerequisites
 
@@ -59,7 +59,7 @@ From the gateway machine:
 dns-sd -B _openclaw-gw._tcp local.
 ```
 
-More debugging notes: [Bonjour](/en/gateway/bonjour).
+More debugging notes: [Bonjour](/gateway/bonjour).
 
 #### Tailnet (Vienna ⇄ London) discovery via unicast DNS-SD
 
@@ -68,16 +68,16 @@ Android NSD/mDNS discovery won’t cross networks. If your Android node and the 
 1. Set up a DNS-SD zone (example `openclaw.internal.`) on the gateway host and publish `_openclaw-gw._tcp` records.
 2. Configure Tailscale split DNS for your chosen domain pointing at that DNS server.
 
-Details and example CoreDNS config: [Bonjour](/en/gateway/bonjour).
+Details and example CoreDNS config: [Bonjour](/gateway/bonjour).
 
 ### 3) Connect from Android
 
 In the Android app:
 
 - The app keeps its gateway connection alive via a **foreground service** (persistent notification).
-- Open **Settings**.
-- Under **Discovered Gateways**, select your gateway and hit **Connect**.
-- If mDNS is blocked, use **Advanced → Manual Gateway** (host + port) and **Connect (Manual)**.
+- Open the **Connect** tab.
+- Use **Setup Code** or **Manual** mode.
+- If discovery is blocked, use manual host/port (and TLS/token/password when required) in **Advanced controls**.
 
 After the first successful pairing, Android auto-reconnects on launch:
 
@@ -89,26 +89,30 @@ After the first successful pairing, Android auto-reconnects on launch:
 On the gateway machine:
 
 ```bash
-openclaw nodes pending
-openclaw nodes approve <requestId>
+openclaw devices list
+openclaw devices approve <requestId>
+openclaw devices reject <requestId>
 ```
 
-Pairing details: [Gateway pairing](/en/gateway/pairing).
+Pairing details: [Pairing](/channels/pairing).
 
 ### 5) Verify the node is connected
 
 - Via nodes status:
+
   ```bash
   openclaw nodes status
   ```
+
 - Via Gateway:
+
   ```bash
   openclaw gateway call node.list --params "{}"
   ```
 
 ### 6) Chat + history
 
-The Android node’s Chat sheet uses the gateway’s **primary session key** (`main`), so history and replies are shared with WebChat and other clients:
+The Android Chat tab supports session selection (default `main`, plus other existing sessions):
 
 - History: `chat.history`
 - Send: `chat.send`
@@ -120,20 +124,20 @@ The Android node’s Chat sheet uses the gateway’s **primary session key** (`m
 
 If you want the node to show real HTML/CSS/JS that the agent can edit on disk, point the node at the Gateway canvas host.
 
-Note: nodes use the standalone canvas host on `canvasHost.port` (default `18793`).
+Note: nodes load canvas from the Gateway HTTP server (same port as `gateway.port`, default `18789`).
 
 1. Create `~/.openclaw/workspace/canvas/index.html` on the gateway host.
 
 2. Navigate the node to it (LAN):
 
 ```bash
-openclaw nodes invoke --node "<Android Node>" --command canvas.navigate --params '{"url":"http://<gateway-hostname>.local:18793/__openclaw__/canvas/"}'
+openclaw nodes invoke --node "<Android Node>" --command canvas.navigate --params '{"url":"http://<gateway-hostname>.local:18789/__openclaw__/canvas/"}'
 ```
 
-Tailnet (optional): if both devices are on Tailscale, use a MagicDNS name or tailnet IP instead of `.local`, e.g. `http://<gateway-magicdns>:18793/__openclaw__/canvas/`.
+Tailnet (optional): if both devices are on Tailscale, use a MagicDNS name or tailnet IP instead of `.local`, e.g. `http://<gateway-magicdns>:18789/__openclaw__/canvas/`.
 
 This server injects a live-reload client into HTML and reloads on file changes.
-The A2UI host lives at `http://<gateway-host>:18793/__openclaw__/a2ui/`.
+The A2UI host lives at `http://<gateway-host>:18789/__openclaw__/a2ui/`.
 
 Canvas commands (foreground only):
 
@@ -145,4 +149,16 @@ Camera commands (foreground only; permission-gated):
 - `camera.snap` (jpg)
 - `camera.clip` (mp4)
 
-See [Camera node](/en/nodes/camera) for parameters and CLI helpers.
+See [Camera node](/nodes/camera) for parameters and CLI helpers.
+
+### 8) Voice + expanded Android command surface
+
+- Voice: Android uses a single mic on/off flow in the Voice tab with transcript capture and TTS playback (ElevenLabs when configured, system TTS fallback). Voice stops when the app leaves the foreground.
+- Voice wake/talk-mode toggles are currently removed from Android UX/runtime.
+- Additional Android command families (availability depends on device + permissions):
+  - `device.status`, `device.info`, `device.permissions`, `device.health`
+  - `notifications.list`, `notifications.actions`
+  - `photos.latest`
+  - `contacts.search`, `contacts.add`
+  - `calendar.events`, `calendar.add`
+  - `motion.activity`, `motion.pedometer`

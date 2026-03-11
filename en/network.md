@@ -14,17 +14,17 @@ devices across localhost, LAN, and tailnet.
 
 ## Core model
 
-- [Gateway architecture](/en/concepts/architecture)
-- [Gateway protocol](/en/gateway/protocol)
-- [Gateway runbook](/en/gateway)
-- [Web surfaces + bind modes](/en/web)
+- [Gateway architecture](/concepts/architecture)
+- [Gateway protocol](/gateway/protocol)
+- [Gateway runbook](/gateway)
+- [Web surfaces + bind modes](/web)
 
 ## Pairing + identity
 
-- [Pairing overview (DM + nodes)](/en/start/pairing)
-- [Gateway-owned node pairing](/en/gateway/pairing)
-- [Devices CLI (pairing + token rotation)](/en/cli/devices)
-- [Pairing CLI (DM approvals)](/en/cli/pairing)
+- [Pairing overview (DM + nodes)](/channels/pairing)
+- [Gateway-owned node pairing](/gateway/pairing)
+- [Devices CLI (pairing + token rotation)](/cli/devices)
+- [Pairing CLI (DM approvals)](/cli/pairing)
 
 Local trust:
 
@@ -34,21 +34,21 @@ Local trust:
 
 ## Discovery + transports
 
-- [Discovery & transports](/en/gateway/discovery)
-- [Bonjour / mDNS](/en/gateway/bonjour)
-- [Remote access (SSH)](/en/gateway/remote)
-- [Tailscale](/en/gateway/tailscale)
+- [Discovery & transports](/gateway/discovery)
+- [Bonjour / mDNS](/gateway/bonjour)
+- [Remote access (SSH)](/gateway/remote)
+- [Tailscale](/gateway/tailscale)
 
 ## Nodes + transports
 
-- [Nodes overview](/en/nodes)
-- [Bridge protocol (legacy nodes)](/en/gateway/bridge-protocol)
-- [Node runbook: iOS](/en/platforms/ios)
-- [Node runbook: Android](/en/platforms/android)
+- [Nodes overview](/nodes)
+- [Bridge protocol (legacy nodes)](/gateway/bridge-protocol)
+- [Node runbook: iOS](/platforms/ios)
+- [Node runbook: Android](/platforms/android)
 
 ## Security
 
-- [Security overview](/en/gateway/security)
-- [Gateway config reference](/en/gateway/configuration)
-- [Troubleshooting](/en/gateway/troubleshooting)
-- [Doctor](/en/gateway/doctor)
+- [Security overview](/gateway/security)
+- [Gateway config reference](/gateway/configuration)
+- [Troubleshooting](/gateway/troubleshooting)
+- [Doctor](/gateway/doctor)

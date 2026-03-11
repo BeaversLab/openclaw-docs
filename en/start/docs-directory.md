@@ -6,58 +6,59 @@ title: "Docs directory"
 ---
 
 <Note>
-For a complete map of the docs, see [Docs hubs](/en/start/hubs).
+This page is a curated index. If you are new, start with [Getting Started](/start/getting-started).
+For a complete map of the docs, see [Docs hubs](/start/hubs).
 </Note>
 
 ## Start here
 
-- [Docs hubs (all pages linked)](/en/start/hubs)
-- [Help](/en/help)
-- [Configuration](/en/gateway/configuration)
-- [Configuration examples](/en/gateway/configuration-examples)
-- [Slash commands](/en/tools/slash-commands)
-- [Multi-agent routing](/en/concepts/multi-agent)
-- [Updating and rollback](/en/install/updating)
-- [Pairing (DM and nodes)](/en/start/pairing)
-- [Nix mode](/en/install/nix)
-- [OpenClaw assistant setup](/en/start/openclaw)
-- [Skills](/en/tools/skills)
-- [Skills config](/en/tools/skills-config)
-- [Workspace templates](/en/reference/templates/AGENTS)
-- [RPC adapters](/en/reference/rpc)
-- [Gateway runbook](/en/gateway)
-- [Nodes (iOS and Android)](/en/nodes)
-- [Web surfaces (Control UI)](/en/web)
-- [Discovery and transports](/en/gateway/discovery)
-- [Remote access](/en/gateway/remote)
+- [Docs hubs (all pages linked)](/start/hubs)
+- [Help](/help)
+- [Configuration](/gateway/configuration)
+- [Configuration examples](/gateway/configuration-examples)
+- [Slash commands](/tools/slash-commands)
+- [Multi-agent routing](/concepts/multi-agent)
+- [Updating and rollback](/install/updating)
+- [Pairing (DM and nodes)](/channels/pairing)
+- [Nix mode](/install/nix)
+- [OpenClaw assistant setup](/start/openclaw)
+- [Skills](/tools/skills)
+- [Skills config](/tools/skills-config)
+- [Workspace templates](/reference/templates/AGENTS)
+- [RPC adapters](/reference/rpc)
+- [Gateway runbook](/gateway)
+- [Nodes (iOS and Android)](/nodes)
+- [Web surfaces (Control UI)](/web)
+- [Discovery and transports](/gateway/discovery)
+- [Remote access](/gateway/remote)
 
 ## Providers and UX
 
-- [WebChat](/en/web/webchat)
-- [Control UI (browser)](/en/web/control-ui)
-- [Telegram](/en/channels/telegram)
-- [Discord](/en/channels/discord)
-- [Mattermost (plugin)](/en/channels/mattermost)
-- [BlueBubbles (iMessage)](/en/channels/bluebubbles)
-- [iMessage (legacy)](/en/channels/imessage)
-- [Groups](/en/concepts/groups)
-- [WhatsApp group messages](/en/concepts/group-messages)
-- [Media images](/en/nodes/images)
-- [Media audio](/en/nodes/audio)
+- [WebChat](/web/webchat)
+- [Control UI (browser)](/web/control-ui)
+- [Telegram](/channels/telegram)
+- [Discord](/channels/discord)
+- [Mattermost (plugin)](/channels/mattermost)
+- [BlueBubbles (iMessage)](/channels/bluebubbles)
+- [iMessage (legacy)](/channels/imessage)
+- [Groups](/channels/groups)
+- [WhatsApp group messages](/channels/group-messages)
+- [Media images](/nodes/images)
+- [Media audio](/nodes/audio)
 
 ## Companion apps
 
-- [macOS app](/en/platforms/macos)
-- [iOS app](/en/platforms/ios)
-- [Android app](/en/platforms/android)
-- [Windows (WSL2)](/en/platforms/windows)
-- [Linux app](/en/platforms/linux)
+- [macOS app](/platforms/macos)
+- [iOS app](/platforms/ios)
+- [Android app](/platforms/android)
+- [Windows (WSL2)](/platforms/windows)
+- [Linux app](/platforms/linux)
 
 ## Operations and safety
 
-- [Sessions](/en/concepts/session)
-- [Cron jobs](/en/automation/cron-jobs)
-- [Webhooks](/en/automation/webhook)
-- [Gmail hooks (Pub/Sub)](/en/automation/gmail-pubsub)
-- [Security](/en/gateway/security)
-- [Troubleshooting](/en/gateway/troubleshooting)
+- [Sessions](/concepts/session)
+- [Cron jobs](/automation/cron-jobs)
+- [Webhooks](/automation/webhook)
+- [Gmail hooks (Pub/Sub)](/automation/gmail-pubsub)
+- [Security](/gateway/security)
+- [Troubleshooting](/gateway/troubleshooting)

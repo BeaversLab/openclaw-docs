@@ -23,7 +23,7 @@ OpenClaw uses **auth profiles** for both API keys and OAuth tokens.
 - Config `auth.profiles` / `auth.order` are **metadata + routing only** (no secrets).
 - Legacy import-only OAuth file: `~/.openclaw/credentials/oauth.json` (imported into `auth-profiles.json` on first use).
 
-More detail: [/concepts/oauth](/en/concepts/oauth)
+More detail: [/concepts/oauth](/concepts/oauth)
 
 Credential types:
 
@@ -83,6 +83,9 @@ When a profile fails due to auth/rate‑limit errors (or a timeout that looks
 like rate limiting), OpenClaw marks it in cooldown and moves to the next profile.
 Format/invalid‑request errors (for example Cloud Code Assist tool call ID
 validation failures) are treated as failover‑worthy and use the same cooldowns.
+OpenAI-compatible stop-reason errors such as `Unhandled stop reason: error`,
+`stop reason: error`, and `reason: error` are classified as timeout/failover
+signals.
 
 Cooldowns use exponential backoff:
 
@@ -138,7 +141,7 @@ When a run starts with a model override (hooks or CLI), fallbacks still end at
 
 ## Related config
 
-See [Gateway configuration](/en/gateway/configuration) for:
+See [Gateway configuration](/gateway/configuration) for:
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
@@ -146,4 +149,4 @@ See [Gateway configuration](/en/gateway/configuration) for:
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
 - `agents.defaults.imageModel` routing
 
-See [Models](/en/concepts/models) for the broader model selection and fallback overview.
+See [Models](/concepts/models) for the broader model selection and fallback overview.

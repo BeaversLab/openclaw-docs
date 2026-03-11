@@ -18,14 +18,14 @@ Native Windows companion apps are planned.
 
 ## Install (WSL2)
 
-- [Getting Started](/en/start/getting-started) (use inside WSL)
-- [Install & updates](/en/install/updating)
-- Official WSL2 guide (Microsoft): https://learn.microsoft.com/windows/wsl/install
+- [Getting Started](/start/getting-started) (use inside WSL)
+- [Install & updates](/install/updating)
+- Official WSL2 guide (Microsoft): [https://learn.microsoft.com/windows/wsl/install](https://learn.microsoft.com/windows/wsl/install)
 
 ## Gateway
 
-- [Gateway runbook](/en/gateway)
-- [Configuration](/en/gateway/configuration)
+- [Gateway runbook](/gateway)
+- [Configuration](/gateway/configuration)
 
 ## Gateway service install (CLI)
 
@@ -53,6 +53,50 @@ Repair/migrate:
 
 ```
 openclaw doctor
+```
+
+## Gateway auto-start before Windows login
+
+For headless setups, ensure the full boot chain runs even when no one logs into
+Windows.
+
+### 1) Keep user services running without login
+
+Inside WSL:
+
+```bash
+sudo loginctl enable-linger "$(whoami)"
+```
+
+### 2) Install the OpenClaw gateway user service
+
+Inside WSL:
+
+```bash
+openclaw gateway install
+```
+
+### 3) Start WSL automatically at Windows boot
+
+In PowerShell as Administrator:
+
+```powershell
+schtasks /create /tn "WSL Boot" /tr "wsl.exe -d Ubuntu --exec /bin/true" /sc onstart /ru SYSTEM
+```
+
+Replace `Ubuntu` with your distro name from:
+
+```powershell
+wsl --list --verbose
+```
+
+### Verify startup chain
+
+After a reboot (before Windows sign-in), check from WSL:
+
+```bash
+systemctl --user is-enabled openclaw-gateway
+systemctl --user status openclaw-gateway --no-pager
 ```
 
 ## Advanced: expose WSL services over LAN (portproxy)
@@ -151,7 +195,7 @@ pnpm build
 openclaw onboard
 ```
 
-Full guide: [Getting Started](/en/start/getting-started)
+Full guide: [Getting Started](/start/getting-started)
 
 ## Windows companion app
 

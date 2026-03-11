@@ -21,10 +21,10 @@ This document explains how OpenClaw manages sessions end-to-end:
 
 If you want a higher-level overview first, start with:
 
-- [/concepts/session](/en/concepts/session)
-- [/concepts/compaction](/en/concepts/compaction)
-- [/concepts/session-pruning](/en/concepts/session-pruning)
-- [/reference/transcript-hygiene](/en/reference/transcript-hygiene)
+- [/concepts/session](/concepts/session)
+- [/concepts/compaction](/concepts/compaction)
+- [/concepts/session-pruning](/concepts/session-pruning)
+- [/reference/transcript-hygiene](/reference/transcript-hygiene)
 
 ---
 
@@ -65,6 +65,44 @@ OpenClaw resolves these via `src/config/sessions.ts`.
 
 ---
 
+## Store maintenance and disk controls
+
+Session persistence has automatic maintenance controls (`session.maintenance`) for `sessions.json` and transcript artifacts:
+
+- `mode`: `warn` (default) or `enforce`
+- `pruneAfter`: stale-entry age cutoff (default `30d`)
+- `maxEntries`: cap entries in `sessions.json` (default `500`)
+- `rotateBytes`: rotate `sessions.json` when oversized (default `10mb`)
+- `resetArchiveRetention`: retention for `*.reset.<timestamp>` transcript archives (default: same as `pruneAfter`; `false` disables cleanup)
+- `maxDiskBytes`: optional sessions-directory budget
+- `highWaterBytes`: optional target after cleanup (default `80%` of `maxDiskBytes`)
+
+Enforcement order for disk budget cleanup (`mode: "enforce"`):
+
+1. Remove oldest archived or orphan transcript artifacts first.
+2. If still above the target, evict oldest session entries and their transcript files.
+3. Keep going until usage is at or below `highWaterBytes`.
+
+In `mode: "warn"`, OpenClaw reports potential evictions but does not mutate the store/files.
+
+Run maintenance on demand:
+
+```bash
+openclaw sessions cleanup --dry-run
+openclaw sessions cleanup --enforce
+```
+
+---
+
+## Cron sessions and run logs
+
+Isolated cron runs also create session entries/transcripts, and they have dedicated retention controls:
+
+- `cron.sessionRetention` (default `24h`) prunes old isolated cron run sessions from the session store (`false` disables).
+- `cron.runLog.maxBytes` + `cron.runLog.keepLines` prune `~/.openclaw/cron/runs/<jobId>.jsonl` files (defaults: `2_000_000` bytes and `2000` lines).
+
+---
+
 ## Session keys (`sessionKey`)
 
 A `sessionKey` identifies _which conversation bucket_ you’re in (routing + isolation).
@@ -77,7 +115,7 @@ Common patterns:
 - Cron: `cron:<job.id>`
 - Webhook: `hook:<uuid>` (unless overridden)
 
-The canonical rules are documented at [/concepts/session](/en/concepts/session).
+The canonical rules are documented at [/concepts/session](/concepts/session).
 
 ---
 
@@ -90,6 +128,7 @@ Rules of thumb:
 - **Reset** (`/new`, `/reset`) creates a new `sessionId` for that `sessionKey`.
 - **Daily reset** (default 4:00 AM local time on the gateway host) creates a new `sessionId` on the next message after the reset boundary.
 - **Idle expiry** (`session.reset.idleMinutes` or legacy `session.idleMinutes`) creates a new `sessionId` when a message arrives after the idle window. When daily + idle are both configured, whichever expires first wins.
+- **Thread parent fork guard** (`session.parentForkMaxTokens`, default `100000`) skips parent transcript forking when the parent session is already too large; the new thread starts fresh. Set `0` to disable.
 
 Implementation detail: the decision happens in `initSessionState()` in `src/auto-reply/reply/session.ts`.
 
@@ -154,7 +193,7 @@ If you’re tuning limits:
 - The context window comes from the model catalog (and can be overridden via config).
 - `contextTokens` in the store is a runtime estimate/reporting value; don’t treat it as a strict guarantee.
 
-For more, see [/token-use](/en/token-use).
+For more, see [/token-use](/reference/token-use).
 
 ---
 
@@ -167,7 +206,7 @@ After compaction, future turns see:
 - The compaction summary
 - Messages after `firstKeptEntryId`
 
-Compaction is **persistent** (unlike session pruning). See [/concepts/session-pruning](/en/concepts/session-pruning).
+Compaction is **persistent** (unlike session pruning). See [/concepts/session-pruning](/concepts/session-pruning).
 
 ---
 
@@ -267,7 +306,7 @@ Notes:
 - The flush runs once per compaction cycle (tracked in `sessions.json`).
 - The flush runs only for embedded Pi sessions (CLI backends skip it).
 - The flush is skipped when the session workspace is read-only (`workspaceAccess: "ro"` or `"none"`).
-- See [Memory](/en/concepts/memory) for the workspace file layout and write patterns.
+- See [Memory](/concepts/memory) for the workspace file layout and write patterns.
 
 Pi also exposes a `session_before_compact` hook in the extension API, but OpenClaw’s
 flush logic lives on the Gateway side today.
@@ -276,7 +315,7 @@ flush logic lives on the Gateway side today.
 
 ## Troubleshooting checklist
 
-- Session key wrong? Start with [/concepts/session](/en/concepts/session) and confirm the `sessionKey` in `/status`.
+- Session key wrong? Start with [/concepts/session](/concepts/session) and confirm the `sessionKey` in `/status`.
 - Store vs transcript mismatch? Confirm the Gateway host and the store path from `openclaw status`.
 - Compaction spam? Check:
   - model context window (too small)

@@ -12,9 +12,9 @@ Inspect skills (bundled + workspace + managed overrides) and see what’s eligib
 
 Related:
 
-- Skills system: [Skills](/en/tools/skills)
-- Skills config: [Skills config](/en/tools/skills-config)
-- ClawHub installs: [ClawHub](/en/tools/clawhub)
+- Skills system: [Skills](/tools/skills)
+- Skills config: [Skills config](/tools/skills-config)
+- ClawHub installs: [ClawHub](/tools/clawhub)
 
 ## Commands
 

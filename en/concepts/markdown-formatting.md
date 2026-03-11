@@ -94,7 +94,7 @@ channels:
   chunks; the renderer reopens styles inside each chunk.
 
 If you need more on chunking behavior across channels, see
-[Streaming + chunking](/en/concepts/streaming).
+[Streaming + chunking](/concepts/streaming).
 
 ## Link policy
 

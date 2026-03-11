@@ -21,18 +21,18 @@ Native Linux companion apps are planned. Contributions are welcome if you want t
 4. From your laptop: `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. Open `http://127.0.0.1:18789/` and paste your token
 
-Step-by-step VPS guide: [exe.dev](/en/platforms/exe-dev)
+Step-by-step VPS guide: [exe.dev](/install/exe-dev)
 
 ## Install
 
-- [Getting Started](/en/start/getting-started)
-- [Install & updates](/en/install/updating)
-- Optional flows: [Bun (experimental)](/en/install/bun), [Nix](/en/install/nix), [Docker](/en/install/docker)
+- [Getting Started](/start/getting-started)
+- [Install & updates](/install/updating)
+- Optional flows: [Bun (experimental)](/install/bun), [Nix](/install/nix), [Docker](/install/docker)
 
 ## Gateway
 
-- [Gateway runbook](/en/gateway)
-- [Configuration](/en/gateway/configuration)
+- [Gateway runbook](/gateway)
+- [Configuration](/gateway/configuration)
 
 ## Gateway service install (CLI)
 
@@ -66,7 +66,7 @@ openclaw doctor
 
 OpenClaw installs a systemd **user** service by default. Use a **system**
 service for shared or always-on servers. The full unit example and guidance
-live in the [Gateway runbook](/en/gateway).
+live in the [Gateway runbook](/gateway).
 
 Minimal setup:
 

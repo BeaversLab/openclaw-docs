@@ -29,7 +29,7 @@ OpenClaw features that can generate provider usage or paid API calls.
 - `openclaw status --usage` and `openclaw channels list` show provider **usage windows**
   (quota snapshots, not per-message costs).
 
-See [Token use & costs](/en/token-use) for details and examples.
+See [Token use & costs](/reference/token-use) for details and examples.
 
 ## How keys are discovered
 
@@ -48,7 +48,7 @@ OpenClaw can pick up credentials from:
 Every reply or tool call uses the **current model provider** (OpenAI, Anthropic, etc). This is the
 primary source of usage and cost.
 
-See [Models](/en/providers/models) for pricing config and [Token use & costs](/en/token-use) for display.
+See [Models](/providers/models) for pricing config and [Token use & costs](/reference/token-use) for display.
 
 ### 2) Media understanding (audio/image/video)
 
@@ -58,7 +58,7 @@ Inbound media can be summarized/transcribed before the reply runs. This uses mod
 - Image: OpenAI / Anthropic / Google.
 - Video: Google.
 
-See [Media understanding](/en/nodes/media-understanding).
+See [Media understanding](/nodes/media-understanding).
 
 ### 3) Memory embeddings + semantic search
 
@@ -66,26 +66,31 @@ Semantic memory search uses **embedding APIs** when configured for remote provid
 
 - `memorySearch.provider = "openai"` → OpenAI embeddings
 - `memorySearch.provider = "gemini"` → Gemini embeddings
-- Optional fallback to OpenAI if local embeddings fail
+- `memorySearch.provider = "voyage"` → Voyage embeddings
+- `memorySearch.provider = "mistral"` → Mistral embeddings
+- `memorySearch.provider = "ollama"` → Ollama embeddings (local/self-hosted; typically no hosted API billing)
+- Optional fallback to a remote provider if local embeddings fail
 
 You can keep it local with `memorySearch.provider = "local"` (no API usage).
 
-See [Memory](/en/concepts/memory).
+See [Memory](/concepts/memory).
 
-### 4) Web search tool (Brave / Perplexity via OpenRouter)
+### 4) Web search tool
 
-`web_search` uses API keys and may incur usage charges:
+`web_search` uses API keys and may incur usage charges depending on your provider:
 
 - **Brave Search API**: `BRAVE_API_KEY` or `tools.web.search.apiKey`
-- **Perplexity** (via OpenRouter): `PERPLEXITY_API_KEY` or `OPENROUTER_API_KEY`
+- **Gemini (Google Search)**: `GEMINI_API_KEY` or `tools.web.search.gemini.apiKey`
+- **Grok (xAI)**: `XAI_API_KEY` or `tools.web.search.grok.apiKey`
+- **Kimi (Moonshot)**: `KIMI_API_KEY`, `MOONSHOT_API_KEY`, or `tools.web.search.kimi.apiKey`
+- **Perplexity Search API**: `PERPLEXITY_API_KEY`, `OPENROUTER_API_KEY`, or `tools.web.search.perplexity.apiKey`
 
-**Brave free tier (generous):**
+**Brave Search free credit:** Each Brave plan includes $5/month in renewing
+free credit. The Search plan costs $5 per 1,000 requests, so the credit covers
+1,000 requests/month at no charge. Set your usage limit in the Brave dashboard
+to avoid unexpected charges.
 
-- **2,000 requests/month**
-- **1 request/second**
-- **Credit card required** for verification (no charge unless you upgrade)
-
-See [Web tools](/en/tools/web).
+See [Web tools](/tools/web).
 
 ### 5) Web fetch tool (Firecrawl)
 
@@ -95,7 +100,7 @@ See [Web tools](/en/tools/web).
 
 If Firecrawl isn’t configured, the tool falls back to direct fetch + readability (no paid API).
 
-See [Web tools](/en/tools/web).
+See [Web tools](/tools/web).
 
 ### 6) Provider usage snapshots (status/health)
 
@@ -105,21 +110,21 @@ These are typically low-volume calls but still hit provider APIs:
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-See [Models CLI](/en/cli/models).
+See [Models CLI](/cli/models).
 
 ### 7) Compaction safeguard summarization
 
 The compaction safeguard can summarize session history using the **current model**, which
 invokes provider APIs when it runs.
 
-See [Session management + compaction](/en/reference/session-management-compaction).
+See [Session management + compaction](/reference/session-management-compaction).
 
 ### 8) Model scan / probe
 
 `openclaw models scan` can probe OpenRouter models and uses `OPENROUTER_API_KEY` when
 probing is enabled.
 
-See [Models CLI](/en/cli/models).
+See [Models CLI](/cli/models).
 
 ### 9) Talk (speech)
 
@@ -127,11 +132,11 @@ Talk mode can invoke **ElevenLabs** when configured:
 
 - `ELEVENLABS_API_KEY` or `talk.apiKey`
 
-See [Talk mode](/en/nodes/talk).
+See [Talk mode](/nodes/talk).
 
 ### 10) Skills (third-party APIs)
 
 Skills can store `apiKey` in `skills.entries.<name>.apiKey`. If a skill uses that key for external
 APIs, it can incur costs according to the skill’s provider.
 
-See [Skills](/en/tools/skills).
+See [Skills](/tools/skills).

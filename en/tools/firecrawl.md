@@ -40,7 +40,8 @@ with JS-heavy sites or pages that block plain HTTP fetches.
 
 Notes:
 
-- `firecrawl.enabled` defaults to true when an API key is present.
+- `firecrawl.enabled` defaults to `true` unless explicitly set to `false`.
+- Firecrawl fallback attempts run only when an API key is available (`tools.web.fetch.firecrawl.apiKey` or `FIRECRAWL_API_KEY`).
 - `maxAgeMs` controls how old cached results can be (ms). Default is 2 days.
 
 ## Stealth / bot circumvention
@@ -58,4 +59,4 @@ than basic-only scraping.
 2. Firecrawl (if configured)
 3. Basic HTML cleanup (last fallback)
 
-See [Web tools](/en/tools/web) for the full web tool setup.
+See [Web tools](/tools/web) for the full web tool setup.

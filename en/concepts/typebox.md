@@ -15,7 +15,7 @@ drive **runtime validation**, **JSON Schema export**, and **Swift codegen** for
 the macOS app. One source of truth; everything else is generated.
 
 If you want the higher-level protocol context, start with
-[Gateway architecture](/en/concepts/architecture).
+[Gateway architecture](/concepts/architecture).
 
 ## Mental model (30 seconds)
 
@@ -274,13 +274,15 @@ Unknown frame types are preserved as raw payloads for forward compatibility.
 - The top-level `GatewayFrame` uses a **discriminator** on `type`.
 - Methods with side effects usually require an `idempotencyKey` in params
   (example: `send`, `poll`, `agent`, `chat.send`).
+- `agent` accepts optional `internalEvents` for runtime-generated orchestration context
+  (for example subagent/cron task completion handoff); treat this as internal API surface.
 
 ## Live schema JSON
 
 Generated JSON Schema is in the repo at `dist/protocol.schema.json`. The
 published raw file is typically available at:
 
-- https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json
+- [https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json](https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json)
 
 ## When you change schemas
 
