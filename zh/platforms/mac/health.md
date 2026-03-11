@@ -26,9 +26,9 @@ title: "健康检查"
 
 ## 探测如何工作
 
-- 应用通过 %%P2%% 每 ~60 秒和按需运行 %%P1%%。探测加载凭证并报告状态而不发送消息。
+- 应用每约 60 秒并通过 `ShellExecutor` 运行 `openclaw health --json` 一次，以及按需运行。探测会加载凭证并报告状态，而不发送消息。"
 - 分别缓存最后的好快照和最后的错误以避免闪烁；显示每个的时间戳。
 
 ## 有疑问时
 
-- 您仍然可以在 [Gateway health]%%P9%% 中使用 CLI 流程（%%P3%%、%%P4%%、%%P5%%）并 tail %%P6%% 以查找 %%P7%% / %%P8%%。
+- 你仍然可以使用 [Gateway health](/zh/gateway/health) 中的 CLI 流程（`openclaw status`、`openclaw status --deep`、`openclaw health --json`）并为 `web-heartbeat`/`web-reconnect` 跟踪 `/tmp/openclaw/openclaw-*.log`。"

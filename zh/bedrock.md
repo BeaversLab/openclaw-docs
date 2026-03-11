@@ -14,33 +14,16 @@ OpenClaw 可以通过 pi‑ai 的 **Bedrock Converse** 流式提供程序使用
 
 ## pi‑ai 支持的内容
 
-- 提供程序：%%P323%%
-- API：%%P324%%
+- 提供商：`amazon-bedrock`"
+- API：`bedrock-converse-stream`"
 - 身份验证：AWS 凭证（环境变量、共享配置或实例角色）
-- 区域：%%P325%% 或 %%P326%%（默认：%%P327%%）
+- 区域：`AWS_REGION` 或 `AWS_DEFAULT_REGION`（默认：`us-east-1`）"
 
 ## 自动模型发现
 
-如果检测到 AWS 凭证，OpenClaw 可以自动发现支持**流式传输**和
-**文本输出**的 Bedrock 模型。发现使用 %%P328%% 并被缓存
-（默认：1 小时）。
+如果检测到 AWS 凭证，OpenClaw 可以自动发现支持**流式传输**和**文本输出**的 Bedrock 模型。发现使用 `bedrock:ListFoundationModels` 并被缓存（默认：1 小时）。"
 
-配置选项位于 %%P329%% 下：
-
-```json5
-{
-  models: {
-    bedrockDiscovery: {
-      enabled: true,
-      region: "us-east-1",
-      providerFilter: ["anthropic", "amazon"],
-      refreshInterval: 3600,
-      defaultContextWindow: 32000,
-      defaultMaxTokens: 4096,
-    },
-  },
-}
-```
+配置选项位于 `models.bedrockDiscovery` 下："
 
 ```json5
 {
@@ -59,12 +42,11 @@ OpenClaw 可以通过 pi‑ai 的 **Bedrock Converse** 流式提供程序使用
 
 注意：
 
-- 当存在 AWS 凭证时，%%P330%% 默认为 %%P331%%。
-- %%P332%% 默认为 %%P333%% 或 %%P334%%，然后是 %%P335%%。
-- %%P336%% 匹配 Bedrock 提供程序名称（例如 %%P337%%）。
-- %%P338%% 是秒数；设置为 %%P339%% 以禁用缓存。
-- %%P340%%（默认：%%P341%%）和 %%P342%%（默认：%%P343%%）
-  用于发现的模型（如果您知道模型限制，可以覆盖）。
+- `enabled` 在存在 AWS 凭证时默认为 `true`。"
+- `region` 默认为 `AWS_REGION` 或 `AWS_DEFAULT_REGION`，然后 `us-east-1`。"
+- `providerFilter` 匹配 Bedrock 提供商名称（例如 `anthropic`）。"
+- `refreshInterval` 是秒数；设置为 `0` 以禁用缓存。"
+- `defaultContextWindow`（默认：`32000`）和 `defaultMaxTokens`（默认：`4096`）用于发现的模型（如果你知道模型限制则覆盖）。"
 
 ## 设置（手动）
 
@@ -81,7 +63,7 @@ export AWS_PROFILE="your-profile"
 export AWS_BEARER_TOKEN_BEDROCK="..."
 ```
 
-2. 将 Bedrock 提供程序和模型添加到您的配置（不需要 %%P344%%）：
+2. 在配置中添加 Bedrock 提供商和模型（不需要 `apiKey`）："
 
 ```json5
 {
@@ -131,16 +113,15 @@ export AWS_PROFILE=default
 export AWS_REGION=us-east-1
 ```
 
-**变通方法：** 设置 %%P345%% 以表示 AWS 凭证可用。
-实际身份验证仍然通过 IMDS 使用实例角色。
+**EC2 实例角色所需的 IAM 权限**："
 
 - `bedrock:InvokeModel`
 - `bedrock:InvokeModelWithResponseStream`
-- %%P346%%（用于自动发现）
+- `bedrock:ListFoundationModels`（用于自动发现）"
 
-或附加托管策略 %%P347%%。
+或附加托管策略 `AmazonBedrockFullAccess`。"
 
-或附加托管策略 %%P347%%。
+**快速设置：**"
 
 ```bash
 # 1. Create IAM role and instance profile
@@ -183,10 +164,8 @@ openclaw models list
 ## 注意事项
 
 - Bedrock 要求在您的 AWS 账户/区域中启用**模型访问权限**。
-- 自动发现需要 %%P348%% 权限。
+- 自动发现需要 `bedrock:ListFoundationModels` 权限。"
 - Bedrock 要求在您的 AWS 账户/区域中启用**模型访问权限**。
-- 自动发现需要 %%P348%% 权限。
-- 如果您使用配置文件，请在 gateway 主机上设置 %%P349%%。
-- OpenClaw 按以下顺序显示凭证来源：%%P350%%，
-  然后是 %%P351%% + %%P352%%，然后是 %%P353%%，然后是
-  默认的 AWS SDK 链。
+- OpenClaw 按此顺序显示凭证源：`AWS_BEARER_TOKEN_BEDROCK`，然后 `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY`，然后 `AWS_PROFILE`，然后默认的 AWS SDK 链。"
+- 推理支持取决于模型；查看 Bedrock 模型卡以了解当前功能。"
+- 如果你更喜欢托管密钥流程，你也可以在 Bedrock 前面放置一个 OpenAI 兼容的代理，并将其配置为 OpenAI 提供商。"

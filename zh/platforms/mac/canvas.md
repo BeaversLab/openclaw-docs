@@ -1,122 +1,184 @@
 ---
-title: "Canvas"
-summary: "通过 WKWebView + 自定义 URL scheme 嵌入的代理控制 Canvas 面板"
+summary: "<!-- i18n:todo -->Agent-controlled Canvas panel embedded via WKWebView + custom URL scheme<!-- /i18n:todo -->"
 read_when:
-  - 实现 macOS Canvas 面板
-  - 为可视化工作区添加代理控制
-  - 调试 WKWebView 画布加载
+  - "Implementing the macOS Canvas panel"
+  - "Adding agent controls for visual workspace"
+  - "Debugging WKWebView canvas loads"
+title: "<!-- i18n:todo -->Canvas<!-- /i18n:todo -->"
 ---
 
-# Canvas（macOS 应用）
+<!-- i18n:todo -->
+# Canvas (macOS app)
+<!-- /i18n:todo -->
 
-macOS 应用使用 `WKWebView` 嵌入代理控制的 **Canvas 面板**。它是一个轻量的可视化工作区，
-用于 HTML/CSS/JS、A2UI 以及小型交互式 UI。
+<!-- i18n:todo -->
+The macOS app embeds an agent‑controlled **Canvas panel** using %%P1%%. It
+is a lightweight visual workspace for HTML/CSS/JS, A2UI, and small interactive
+UI surfaces.
+<!-- /i18n:todo -->
 
-## Canvas 存放位置
+<!-- i18n:todo -->
+## Where Canvas lives
+<!-- /i18n:todo -->
 
-Canvas 状态保存在 Application Support 下：
+<!-- i18n:todo -->
+Canvas state is stored under Application Support:
+<!-- /i18n:todo -->
 
 - `~/Library/Application Support/OpenClaw/canvas/<session>/...`
 
-Canvas 面板通过 **自定义 URL scheme** 提供这些文件：
+<!-- i18n:todo -->
+The Canvas panel serves those files via a **custom URL scheme**:
+<!-- /i18n:todo -->
 
 - `openclaw-canvas://<session>/<path>`
 
-示例：
+<!-- i18n:todo -->
+Examples:
+<!-- /i18n:todo -->
 
-- `openclaw-canvas://main/` → `<canvasRoot>/main/index.html`
-- `openclaw-canvas://main/assets/app.css` → `<canvasRoot>/main/assets/app.css`
-- `openclaw-canvas://main/widgets/todo/` → `<canvasRoot>/main/widgets/todo/index.html`
+<!-- i18n:todo -->
+- %%P2%% → %%P3%%
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- %%P4%% → %%P5%%
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- %%P6%% → %%P7%%
+<!-- /i18n:todo -->
 
-如果根目录没有 `index.html`，应用会显示 **内置脚手架页面**。
+<!-- i18n:todo -->
+If no %%P8%% exists at the root, the app shows a **built‑in scaffold page**.
+<!-- /i18n:todo -->
 
-## 面板行为
+<!-- i18n:todo -->
+## Panel behavior
+<!-- /i18n:todo -->
 
-- 无边框、可调整大小，靠近菜单栏（或鼠标指针）显示。
-- 按会话记住大小/位置。
-- 本地 Canvas 文件变更时自动重载。
-- 同一时间仅显示一个 Canvas 面板（需要时切换会话）。
+<!-- i18n:todo -->
+- Borderless, resizable panel anchored near the menu bar (or mouse cursor).
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Remembers size/position per session.
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Auto‑reloads when local canvas files change.
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Only one Canvas panel is visible at a time (session is switched as needed).
+<!-- /i18n:todo -->
 
-可在 Settings → **Allow Canvas** 中禁用 Canvas。禁用后，canvas 节点命令会返回 `CANVAS_DISABLED`。
+<!-- i18n:todo -->
+Canvas can be disabled from Settings → **Allow Canvas**. When disabled, canvas
+node commands return %%P9%%.
+<!-- /i18n:todo -->
 
-## 代理 API 能力
+## Agent API surface
 
-Canvas 通过 **Gateway WebSocket** 暴露，因此代理可以：
+<!-- i18n:todo -->
+Canvas is exposed via the **Gateway WebSocket**, so the agent can:
+<!-- /i18n:todo -->
 
-- 显示/隐藏面板
-- 导航到路径或 URL
-- 执行 JavaScript
-- 捕获快照图片
+<!-- i18n:todo -->
+- show/hide the panel
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- navigate to a path or URL
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- evaluate JavaScript
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- capture a snapshot image
+<!-- /i18n:todo -->
 
-CLI 示例：
+<!-- i18n:todo -->
+CLI examples:
+<!-- /i18n:todo -->
 
-```bash
-openclaw nodes canvas present --node <id>
-openclaw nodes canvas navigate --node <id> --url "/"
-openclaw nodes canvas eval --node <id> --js "document.title"
-openclaw nodes canvas snapshot --node <id>
-```
+%%CB_9952aca4%%
+<!-- i18n:todo -->
+Notes:
+<!-- /i18n:todo -->
 
-注意：
+<!-- i18n:todo -->
+- %%P10%% accepts **local canvas paths**, %%P11%% URLs, and %%P12%% URLs.
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- If you pass %%P13%%, the Canvas shows the local scaffold or %%P14%%.
+<!-- /i18n:todo -->
 
-- `canvas.navigate` 接受 **本地 canvas 路径**、`http(s)` URL，以及 `file://` URL。
-- 传入 `"/"` 时，Canvas 会显示本地脚手架或 `index.html`。
+<!-- i18n:todo -->
+## A2UI in Canvas
+<!-- /i18n:todo -->
 
-## Canvas 中的 A2UI
+<!-- i18n:todo -->
+A2UI is hosted by the Gateway canvas host and rendered inside the Canvas panel.
+When the Gateway advertises a Canvas host, the macOS app auto‑navigates to the
+A2UI host page on first open.
+<!-- /i18n:todo -->
 
-A2UI 由 Gateway 的 canvas host 托管，并在 Canvas 面板中渲染。
-当 Gateway 广播 Canvas host 时，macOS 应用在首次打开时会自动导航到 A2UI host 页面。
+<!-- i18n:todo -->
+Default A2UI host URL:
+<!-- /i18n:todo -->
 
-默认 A2UI host URL：
+%%CB_2265b731%%
+<!-- i18n:todo -->
+### A2UI commands (v0.8)
+<!-- /i18n:todo -->
 
-```
-http://<gateway-host>:18793/__openclaw__/a2ui/
-```
-
-### A2UI 命令（v0.8）
-
-Canvas 目前接受 **A2UI v0.8** 的 server→client 消息：
+<!-- i18n:todo -->
+Canvas currently accepts **A2UI v0.8** server→client messages:
+<!-- /i18n:todo -->
 
 - `beginRendering`
 - `surfaceUpdate`
 - `dataModelUpdate`
 - `deleteSurface`
 
-`createSurface`（v0.9）不支持。
+<!-- i18n:todo -->
+%%P15%% (v0.9) is not supported.
+<!-- /i18n:todo -->
 
-CLI 示例：
+<!-- i18n:todo -->
+CLI example:
+<!-- /i18n:todo -->
 
-```bash
-cat > /tmp/a2ui-v0.8.jsonl <<'EOFA2'
-{"surfaceUpdate":{"surfaceId":"main","components":[{"id":"root","component":{"Column":{"children":{"explicitList":["title","content"]}}}},{"id":"title","component":{"Text":{"text":{"literalString":"Canvas (A2UI v0.8)"},"usageHint":"h1"}}},{"id":"content","component":{"Text":{"text":{"literalString":"If you can read this, A2UI push works."},"usageHint":"body"}}}]}}
-{"beginRendering":{"surfaceId":"main","root":"root"}}
-EOFA2
+%%CB_9c68fb61%%
+<!-- i18n:todo -->
+Quick smoke:
+<!-- /i18n:todo -->
 
-openclaw nodes canvas a2ui push --jsonl /tmp/a2ui-v0.8.jsonl --node <id>
-```
+%%CB_8a829e9d%%
+<!-- i18n:todo -->
+## Triggering agent runs from Canvas
+<!-- /i18n:todo -->
 
-快速冒烟：
-
-```bash
-openclaw nodes canvas a2ui push --node <id> --text "Hello from A2UI"
-```
-
-## 从 Canvas 触发代理运行
-
-Canvas 可通过深链触发新的代理运行：
+<!-- i18n:todo -->
+Canvas can trigger new agent runs via deep links:
+<!-- /i18n:todo -->
 
 - `openclaw://agent?...`
 
-示例（JS）：
+<!-- i18n:todo -->
+Example (in JS):
+<!-- /i18n:todo -->
 
-```js
-window.location.href = "openclaw://agent?message=Review%20this%20design";
-```
+%%CB_65f34d1a%%
+<!-- i18n:todo -->
+The app prompts for confirmation unless a valid key is provided.
+<!-- /i18n:todo -->
 
-除非提供了有效的密钥，应用会提示确认。
+<!-- i18n:todo -->
+## Security notes
+<!-- /i18n:todo -->
 
-## 安全说明
-
-- Canvas scheme 会阻止目录遍历；文件必须位于会话根目录下。
-- 本地 Canvas 内容使用自定义 scheme（无需 loopback 服务器）。
-- 外部 `http(s)` URL 仅在明确导航时允许。
+<!-- i18n:todo -->
+- Canvas scheme blocks directory traversal; files must live under the session root.
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- Local Canvas content uses a custom scheme (no loopback server required).
+<!-- /i18n:todo -->
+<!-- i18n:todo -->
+- External %%P16%% URLs are allowed only when explicitly navigated.
+<!-- /i18n:todo -->

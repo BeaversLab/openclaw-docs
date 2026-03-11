@@ -3,7 +3,7 @@ summary: "入门向导"
 read_when:
   - "Running or configuring the onboarding wizard"
   - "Setting up a new machine"
-title: "CLI 入门向导：网关、工作区、渠道和技能的引导式设置"
+title: "CLI 入门向导：Gateway、工作区、渠道和技能的引导式设置"
 ---
 
 # Onboarding Wizard (CLI)
@@ -36,14 +36,14 @@ openclaw configure
 
 **QuickStart** 保持默认设置：
 
-- 本地网关（loopback）
+- 本地 Gateway（loopback）
 - 工作区默认（或现有工作区）
-- 网关端口 **18789**
-- 网关认证 **Token**（自动生成，即使在 loopback 上）
+- Gateway 端口 **18789**
+- Gateway 认证 **Token**（自动生成，即使在 loopback 上）
 - Tailscale 暴露 **关闭**
 - Telegram + WhatsApp 私信默认为 **allowlist**（系统会提示您输入电话号码）
 
-**Advanced** 会暴露每个步骤（模式、工作区、网关、渠道、守护进程、技能）。
+**Advanced** 会暴露每个步骤（模式、工作区、Gateway、渠道、守护进程、技能）。
 
 ## 向导的作用
 
@@ -81,38 +81,38 @@ openclaw agents add <name>
      - 配置 + 凭证 + 会话
      - 完全重置（也会删除工作区）
 
-2. **Model/Auth**
-   - **Anthropic API 密钥（推荐）**：如果存在 `anthropic:work` 或提示输入密钥，然后将其保存供守护进程使用。
-   - **Anthropic OAuth (Claude Code CLI)**：在 macOS 上，向导检查钥匙串项目"Claude Code-credentials"（选择"始终允许"，以便 launchd 启动不会阻止）；在 Linux/Windows 上，如果存在 `/model`，则重用它。
-   - **Anthropic token (paste setup-token)**：在任何机器上运行 `/model list`，然后粘贴 token（您可以为其命名；空白 = 默认）。
-   - **OpenAI Code (Codex) 订阅 (Codex CLI)**：如果 `/model status` 存在，向导可以重用它。
-   - **OpenAI Code (Codex) 订阅 (OAuth)**：浏览器流程；粘贴 `auth-profiles.json`。
-     - 当模型未设置或 `openclaw models status` 时，将 `--agent <id>` 设置为 `claude setup-token`。
-   - **OpenAI API 密钥**：如果存在 `claude setup-token` 或提示输入密钥，然后将其保存到 `claude setup-token`，以便 launchd 可以读取它。
-   - **OpenCode Zen (multi-model proxy)**：提示输入 `claude`（或 %%P27%%，在 https://opencode.ai/auth 获取）。
-   - **API 密钥**：为您存储密钥。
-   - **Vercel AI Gateway (multi-model proxy)**：提示输入 %%P28%%。
-   - 更多详情：[Vercel AI Gateway]%%P31%%
-   - **Cloudflare AI Gateway**：提示输入账户 ID、Gateway ID 和 %%P29%%。
-   - 更多详情：[Cloudflare AI Gateway]%%P32%%
+2. **模型/认证**
+   - **Anthropic API 密钥（推荐）**：如果存在 `ANTHROPIC_API_KEY` 则使用它，或提示输入密钥，然后将其保存以供守护进程使用。
+   - **Anthropic OAuth (Claude Code CLI)**：在 macOS 上，向导检查钥匙串项目 "Claude Code-credentials"（选择"始终允许"，以便 launchd 启动不会阻止）；在 Linux/Windows 上，如果存在 `~/.claude/.credentials.json` 则重用它。
+   - **Anthropic 令牌（粘贴 setup-token）**：在任何机器上运行 `claude setup-token`，然后粘贴令牌（你可以命名它；空白 = 默认）。
+   - **OpenAI Code (Codex) 订阅 (Codex CLI)**：如果 `~/.codex/auth.json` 存在，向导可以重用它。
+   - **OpenAI Code (Codex) 订阅 (OAuth)**：浏览器流程；粘贴 `code#state`。
+     - 当模型未设置或 `openai/*` 时，将 `agents.defaults.model` 设置为 `openai-codex/gpt-5.2`。
+   - **OpenAI API 密钥**：如果存在 `OPENAI_API_KEY` 则使用它，或提示输入密钥，然后将其保存到 `~/.openclaw/.env` 以便 launchd 可以读取它。
+   - **OpenCode Zen（多模型代理）**：提示输入 `OPENCODE_API_KEY`（或 `OPENCODE_ZEN_API_KEY`，在 https://opencode.ai/auth 获取）。
+   - **API 密钥**：为你存储密钥。
+   - **Vercel AI Gateway（多模型代理）**：提示输入 `AI_GATEWAY_API_KEY`。
+     - 更多详情：[Vercel AI Gateway](/zh/providers/vercel-ai-gateway)
+   - **Cloudflare AI Gateway**：提示输入帐户 ID、Gateway ID 和 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
+     - 更多详情：[Cloudflare AI Gateway](/zh/providers/cloudflare-ai-gateway)
    - **MiniMax M2.1**：配置自动写入。
-   - 更多详情：[MiniMax]%%P33%%
-   - **Synthetic (Anthropic-compatible)**：提示输入 %%P30%%。
-   - 更多详情：[Synthetic]%%P34%%
+     - 更多详情：[MiniMax](/zh/providers/minimax)
+   - **Synthetic（Anthropic 兼容）**：提示输入 `SYNTHETIC_API_KEY`。
+     - 更多详情：[Synthetic](/zh/providers/synthetic)
    - **Moonshot (Kimi K2)**：配置自动写入。
    - **Kimi Coding**：配置自动写入。
-   - 更多详情：[Moonshot AI (Kimi + Kimi Coding)]%%P35%%
-   - **Skip**：尚未配置认证。
-   - 从检测的选项中选择默认模型（或手动输入提供商/模型）。
-   - 向导运行模型检查，如果配置的模型未知或缺少认证，则会发出警告。
+     - 更多详情：[Moonshot AI (Kimi + Kimi Coding)](/zh/providers/moonshot)
+   - **跳过**：尚未配置认证。
+   - 从检测到的选项中选择默认模型（或手动输入提供商/模型）。
+   - 向导运行模型检查，如果配置的模型未知或缺少认证，则会发出警告。"
 
-- OAuth 凭证位于 %%P36%%；认证配置文件位于 %%P37%%（API 密钥 + OAuth）。
-- 更多详情：[/concepts/oauth]%%P38%%
+- OAuth 凭证位于 `~/.openclaw/credentials/oauth.json`；认证配置文件位于 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`（API 密钥 + OAuth）。"
+- 更多详情：[/concepts/oauth](/zh/concepts/oauth)"
 
-3. **Workspace**
-   - 默认 %%P39%%（可配置）。
-   - 为代理引导仪式所需的工作区文件进行种子设定。
-   - 完整的工作区布局 + 备份指南：[Agent workspace]%%P40%%
+3. **工作区**
+   - 默认 `~/.openclaw/workspace`（可配置）。
+   - 为代理引导仪式所需的工作区文件设定种子。
+   - 完整的工作区布局 + 备份指南：[代理工作区](/zh/concepts/agent-workspace)"
 
 4. **Gateway**
    - 端口、绑定、认证模式、tailscale 暴露。
@@ -173,8 +173,7 @@ Remote mode 配置本地客户端以连接到其他地方的 Gateway。
 
 ## 添加另一个代理
 
-使用 %%P60%% 创建具有自己的工作区、
-会话和认证配置文件的单独代理。不使用 %%P61%% 运行将启动向导。
+使用 `openclaw agents add <name>` 创建具有自己的工作区、会话和认证配置文件的单独代理。不使用 `--workspace` 运行会启动向导。"
 
 它设置的内容：
 
@@ -184,13 +183,13 @@ Remote mode 配置本地客户端以连接到其他地方的 Gateway。
 
 注意事项：
 
-- 默认工作区遵循 %%P62%%。
-- 添加 %%P63%% 以路由传入消息（向导可以执行此操作）。
-- 非交互标志：%%P64%%、%%P65%%、%%P66%%、%%P67%%。
+- 默认工作区遵循 `~/.openclaw/workspace-<agentId>`。"
+- 添加 `bindings` 以路由入站消息（向导可以执行此操作）。"
+- 非交互式标志：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。"
 
 ## 非交互模式
 
-使用 %%P68%% 自动化或脚本化入门：
+使用 `--non-interactive` 自动化或脚本化入门："
 
 ```bash
 openclaw onboard --non-interactive \
@@ -204,7 +203,7 @@ openclaw onboard --non-interactive \
   --skip-skills
 ```
 
-添加 %%P69%% 以获得机器可读的摘要。
+添加 `--json` 以获得机器可读的摘要。"
 
 Gemini 示例：
 
@@ -298,16 +297,16 @@ openclaw agents add work \
 
 ## Gateway wizard RPC
 
-Gateway 通过 RPC (%%P70%%、%%P71%%、%%P72%%、%%P73%%) 公开向导流程。
-客户端（macOS 应用、Control UI）可以在不重新实现入门逻辑的情况下渲染步骤。
+Gateway 通过 RPC 暴露向导流程（`wizard.start`、`wizard.next`、`wizard.cancel`、`wizard.status`）。
+客户端（macOS 应用、Control UI）可以呈现步骤而无需重新实现入门逻辑。"
 
 ## Signal setup (signal-cli)
 
-向导可以从 GitHub releases 安装 %%P74%%：
+向导可以从 GitHub 发布版安装 `signal-cli`："
 
 - 下载适当的 release 资源。
-- 将其存储在 %%P75%% 下。
-- 将 %%P76%% 写入您的配置。
+- 将其存储在 `~/.openclaw/tools/signal-cli/<version>/` 下。"
+- 将 `channels.signal.cliPath` 写入你的配置。"
 
 注意事项：
 
@@ -317,12 +316,12 @@ Gateway 通过 RPC (%%P70%%、%%P71%%、%%P72%%、%%P73%%) 公开向导流程。
 
 ## 向导写入的内容
 
-%%P77%% 中的典型字段：
+`~/.openclaw/openclaw.json` 中的典型字段："
 
 - `agents.defaults.workspace`
-- %%P78%% / %%P79%%（如果选择了 Minimax）
-- %%P80%%（模式、绑定、认证、tailscale）
-- %%P81%%、%%P82%%、%%P83%%、%%P84%%
+- `agents.defaults.model` / `models.providers`（如果选择了 Minimax）"
+- `gateway.*`（模式、绑定、认证、tailscale）"
+- `channels.telegram.botToken`, `channels.discord.token`, `channels.signal.*`, `channels.imessage.*`
 - Channel allowlists（Slack/Discord/Matrix/Microsoft Teams），当您在提示期间选择加入时（名称尽可能解析为 ID）。
 - `skills.install.nodeManager`
 - `wizard.lastRunAt`
@@ -331,17 +330,17 @@ Gateway 通过 RPC (%%P70%%、%%P71%%、%%P72%%、%%P73%%) 公开向导流程。
 - `wizard.lastRunCommand`
 - `wizard.lastRunMode`
 
-%%P85%% 写入 %%P86%% 和可选的 %%P87%%。
+`openclaw agents add` 写入 `agents.list[]` 和可选的 `bindings`。"
 
-WhatsApp 凭证位于 %%P88%% 下。
-会话存储在 %%P89%% 下。
+WhatsApp 凭证位于 `~/.openclaw/credentials/whatsapp/<accountId>/` 下。
+会话存储在 `~/.openclaw/agents/<agentId>/sessions/` 下。"
 
 某些渠道作为插件提供。当您在入门期间选择一个渠道时，向导
 将在可以配置之前提示安装它（npm 或本地路径）。
 
 ## 相关文档
 
-- macOS 应用入门：[Onboarding]%%P90%%
-- 配置参考：[Gateway configuration]%%P91%%
-- 提供商：[WhatsApp]%%P92%%、[Telegram]%%P93%%、[Discord]%%P94%%、[Google Chat]%%P95%%、[Signal]%%P96%%、[BlueBubbles]%%P97%% (iMessage)、[iMessage]%%P98%% (legacy)
-- 技能：[Skills]%%P99%%、[Skills config]%%P100%%
+- macOS 应用入门：[入门](/zh/start/onboarding)"
+- 配置参考：[Gateway 配置](/zh/gateway/configuration)"
+- 提供商：[WhatsApp](/zh/channels/whatsapp)、[Telegram](/zh/channels/telegram)、[Discord](/zh/channels/discord)、[Google Chat](/zh/channels/googlechat)、[Signal](/zh/channels/signal)、[BlueBubbles](/zh/channels/bluebubbles) (iMessage)、[iMessage](/zh/channels/imessage)（旧版）"
+- 技能：[技能](/zh/tools/skills)、[技能配置](/zh/tools/skills-config)"

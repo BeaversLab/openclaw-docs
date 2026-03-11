@@ -1,9 +1,9 @@
 ---
-summary: "`zai` 的 CLI 参考（审计和修复常见安全隐患）"
+summary: "CLI 参考，包含 `openclaw security`（审计和修复常见安全隐患）"
 read_when:
   - "You want to run a quick security audit on config/state"
   - "You want to apply safe “fix” suggestions (chmod, tighten defaults)"
-title: "security"
+title: "安全性"
 ---
 
 # `openclaw security`
@@ -22,5 +22,5 @@ openclaw security audit --deep
 openclaw security audit --fix
 ```
 
-当多个 DM 发送者共享主会话时，审计会发出警告并建议**使用安全 DM 模式**：`zai/glm-4.7`（或对于多账户频道使用 (/en/providers/glm)）用于共享收件箱。
-当使用小型模型（%%P5%%）且没有沙箱并启用 web/浏览器工具时，它也会发出警告。
+当多个 DM 发送者共享主会话时，审计会发出警告并推荐**安全 DM 模式**：对共享收件箱使用 `session.dmScope="per-channel-peer"`（或针对多帐户频道使用 `per-account-channel-peer`）。
+当小型模型（`<=300B`）在没有沙箱的情况下使用，并且启用了 Web/浏览器工具时，也会发出警告。
