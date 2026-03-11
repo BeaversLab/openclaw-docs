@@ -3,7 +3,7 @@
     "allow": [
       "Skill(markdown-i18n)",
       "Bash(node:*)",
-      "Bash(SKILL_DIR=\"/Users/marco/Documents/git/github.com/BeaversLab/crawfish-docs/.claude/skills/beaver-markdown-i18n\")",
+      "Bash(SKILL_DIR=\"/Users/marco/.claude/skills/beaver-markdown-i18n\")",
       "Bash(test:*)",
       "Bash(ls:*)",
       "Bash(grep:*)",

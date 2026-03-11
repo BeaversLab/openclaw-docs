@@ -1,53 +1,53 @@
 ---
-title: 在 Northflank 上部署
+title: "在 Northflank 上部署"
 ---
 
-使用一键模板在 Northflank 上部署 OpenClaw，并在浏览器中完成配置。
-这是最简单的“服务器端无需终端”路径：Northflank 会为你运行 Gateway，
-你通过 `/setup` 的网页向导完成所有配置。
+在 Northflank 上使用一键模板部署 OpenClaw，并在浏览器中完成设置。
+这是最简单的"服务器上无需终端"路径：Northflank 为您运行 Gateway，
+您可以通过 `/setup` 网络向导配置所有内容。
 
 ## 如何开始
 
-1. 点击 [Deploy OpenClaw](https://northflank.com/stacks/deploy-openclaw) 打开模板。  
-2. 如果还没有账号，请在 [Northflank 注册](https://app.northflank.com/signup)。  
-3. 点击 **Deploy OpenClaw now**。  
-4. 设置必需的环境变量：`SETUP_PASSWORD`。
+1. 点击 [Deploy OpenClaw](https://northflank.com/stacks/deploy-openclaw) 打开模板。
+2. 如果您还没有账号，请创建 [Northflank 账号](https://app.northflank.com/signup)。
+3. 点击 **Deploy OpenClaw now**。
+4. 设置所需的环境变量：`SETUP_PASSWORD`。
 5. 点击 **Deploy stack** 构建并运行 OpenClaw 模板。
 6. 等待部署完成，然后点击 **View resources**。
 7. 打开 OpenClaw 服务。
-8. 打开公开的 OpenClaw URL，在 `/setup` 完成初始化。
-9. 在 `/openclaw` 打开 Control UI。
+8. 打开公共 OpenClaw URL 并在 `/setup` 完成设置。
+9. 在 `/openclaw` 打开控制 UI。
 
-## 你将获得
+## 您将获得
 
-- 托管的 OpenClaw Gateway + Control UI
-- `/setup` 网页设置向导（无需终端命令）
-- 通过 Northflank Volume（`/data`）实现持久化存储，配置/凭据/工作区在重新部署后仍保留
+- 托管的 OpenClaw Gateway + 控制 UI
+- 位于 `/setup` 的网络设置向导（无需终端命令）
+- 通过 Northflank 卷（`/data`）实现持久化存储，使配置/凭据/工作空间在重新部署后保留
 
-## 配置流程
+## 设置流程
 
-1) 访问 `https://<your-northflank-domain>/setup` 并输入 `SETUP_PASSWORD`。
-2) 选择模型/认证提供商并粘贴密钥。
-3) （可选）添加 Telegram/Discord/Slack token。
-4) 点击 **Run setup**。
-5) 在 `https://<your-northflank-domain>/openclaw` 打开 Control UI。
+1. 访问 `https://<your-northflank-domain>/setup` 并输入您的 `SETUP_PASSWORD`。
+2. 选择模型/认证提供商并粘贴您的密钥。
+3. （可选）添加 Telegram/Discord/Slack 令牌。
+4. 点击 **Run setup**。
+5. 在 `https://<your-northflank-domain>/openclaw` 打开控制 UI
 
-如果 Telegram 私信被设置为配对模式，设置向导可以批准配对码。
+如果 Telegram 私信设置为配对，设置向导可以批准配对码。
 
-## 获取聊天平台 token
+## 获取聊天令牌
 
-### Telegram 机器人 token
+### Telegram 机器人令牌
 
-1) 在 Telegram 中私信 `@BotFather`
-2) 运行 `/newbot`
-3) 复制 token（类似 `123456789:AA...`）
-4) 粘贴到 `/setup`
+1. 在 Telegram 中向 `@BotFather` 发送消息
+2. 运行 `/newbot`
+3. 复制令牌（格式类似 `123456789:AA...`）
+4. 将其粘贴到 `/setup`
 
-### Discord 机器人 token
+### Discord 机器人令牌
 
-1) 访问 https://discord.com/developers/applications
-2) **New Application** → 选择名称
-3) **Bot** → **Add Bot**
-4) 在 Bot → Privileged Gateway Intents 下启用 **MESSAGE CONTENT INTENT**（必需，否则机器人启动会崩溃）
-5) 复制 **Bot Token** 并粘贴到 `/setup`
-6) 邀请机器人加入你的服务器（OAuth2 URL Generator；scopes: `bot`, `applications.commands`）
+1. 访问 https://discord.com/developers/applications
+2. **New Application** → 选择名称
+3. **Bot** → **Add Bot**
+4. 在 Bot → Privileged Gateway Intents 下启用 **MESSAGE CONTENT INTENT**（必须，否则机器人将在启动时崩溃）
+5. 复制 **Bot Token** 并粘贴到 `/setup`
+6. 邀请机器人到您的服务器（OAuth2 URL 生成器；范围：`bot`、`applications.commands`）

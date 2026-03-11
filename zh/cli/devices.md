@@ -1,20 +1,20 @@
 ---
-summary: "`openclaw devices` 的 CLI 参考（设备配对 + token 轮换/撤销）"
-title: "devices"
+summary: "`openclaw devices` CLI 参考（设备配对 + 令牌轮换/撤销）"
 read_when:
-  - 你在批准设备配对请求
-  - 你需要轮换或撤销设备 token
+  - "您正在批准设备配对请求"
+  - "您需要轮换或撤销设备令牌"
+title: "devices"
 ---
 
 # `openclaw devices`
 
-管理设备配对请求与设备级 token。
+管理设备配对请求和设备范围的令牌。
 
 ## 命令
 
 ### `openclaw devices list`
 
-列出待处理配对请求与已配对设备。
+列出待处理的配对请求和已配对的设备。
 
 ```
 openclaw devices list
@@ -39,7 +39,7 @@ openclaw devices reject <requestId>
 
 ### `openclaw devices rotate --device <id> --role <role> [--scope <scope...>]`
 
-为指定角色轮换设备 token（可选更新 scope）。
+轮换特定角色的设备令牌（可选择更新范围）。
 
 ```
 openclaw devices rotate --device <deviceId> --role operator --scope operator.read --scope operator.write
@@ -47,24 +47,24 @@ openclaw devices rotate --device <deviceId> --role operator --scope operator.rea
 
 ### `openclaw devices revoke --device <id> --role <role>`
 
-撤销指定角色的设备 token。
+撤销特定角色的设备令牌。
 
 ```
 openclaw devices revoke --device <deviceId> --role node
 ```
 
-## 常用选项
+## 通用选项
 
-- `--url <url>`：Gateway WebSocket URL（若已配置则默认 `gateway.remote.url`）。
-- `--token <token>`：Gateway token（如需）。
-- `--password <password>`：Gateway password（密码认证）。
-- `--timeout <ms>`：RPC 超时。
+- `--url <url>`：Gateway WebSocket URL（配置时默认为 `gateway.remote.url`）。
+- `--token <token>`：Gateway令牌（如果需要）。
+- `--password <password>`：Gateway密码（密码认证）。
+- `--timeout <ms>`：RPC 超时时间。
 - `--json`：JSON 输出（推荐用于脚本）。
 
-注意：设置 `--url` 时，CLI 不会回退到配置或环境凭证。
-显式传递 `--token` 或 `--password`。缺少显式凭证会报错。
+注意：当您设置 `--url` 时，CLI 不会回退到配置或环境凭据。
+请显式传递 `--token` 或 `--password`。缺少显式凭据是错误。
 
 ## 说明
 
-- 轮换会返回新的 token（敏感信息），请视为密钥处理。
-- 这些命令需要 `operator.pairing`（或 `operator.admin`）scope。
+- 令牌轮换会返回一个新令牌（敏感信息）。请将其视为机密处理。
+- 这些命令需要 `operator.pairing`（或 `operator.admin`）范围。

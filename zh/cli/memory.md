@@ -1,20 +1,20 @@
 ---
-summary: "`openclaw memory` 的 CLI 参考（status/index/search）"
+summary: "`openclaw memory` CLI 参考（status/index/search）"
 read_when:
-  - 需要索引或搜索语义记忆
-  - 需要排查记忆可用性或索引问题
+  - "您需要索引或搜索语义内存"
+  - "您正在调试内存可用性或索引"
 title: "memory"
 ---
 
 # `openclaw memory`
 
-管理语义记忆的索引与搜索。
-由当前启用的 memory 插件提供（默认：`memory-core`；设置 `plugins.slots.memory = "none"` 可禁用）。
+管理语义内存索引和搜索。
+由活动的内存插件提供（默认：`memory-core`；设置 `plugins.slots.memory = "none"` 以禁用）。
 
-相关：
+相关内容：
 
-- Memory 概念：[记忆](/zh/concepts/memory)
-- 插件：[插件](/zh/plugins)
+- 内存概念：[Memory](/zh/concepts/memory)
+- 插件：[Plugins](/zh/plugins)
 
 ## 示例
 
@@ -32,14 +32,14 @@ openclaw memory index --agent main --verbose
 
 ## 选项
 
-通用：
+通用选项：
 
-- `--agent <id>`：限定到单个 agent（默认：所有已配置 agent）。
-- `--verbose`：在探测与索引期间输出详细日志。
+- `--agent <id>`：限制到单个代理（默认：所有已配置的代理）。
+- `--verbose`：在探测和索引期间输出详细日志。
 
-备注：
+说明：
 
-- `memory status --deep` 会探测向量与 embedding 可用性。
-- `memory status --deep --index` 在存储为 dirty 时执行重索引。
-- `memory index --verbose` 输出各阶段细节（provider、model、sources、batch activity）。
-- `memory status` 会包含通过 `memorySearch.extraPaths` 配置的额外路径。
+- `memory status --deep` 探测向量和嵌入的可用性。
+- `memory status --deep --index` 如果存储脏了，则运行重新索引。
+- `memory index --verbose` 打印各阶段详情（提供商、模型、源、批处理活动）。
+- `memory status` 包括通过 `memorySearch.extraPaths` 配置的任何额外路径。
