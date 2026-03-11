@@ -32,8 +32,8 @@ Auth is per-agent: each agent reads from its own `agentDir` auth store at:
 Credentials are **not** shared between agents. Never reuse `agentDir` across agents.
 If you want to share creds, copy `auth-profiles.json` into the other agent's `agentDir`.
 
-For how sandboxing behaves at runtime, see [Sandboxing](/gateway/sandboxing).
-For debugging “why is this blocked?”, see [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated) and `openclaw sandbox explain`.
+For how sandboxing behaves at runtime, see [Sandboxing](/en/gateway/sandboxing).
+For debugging “why is this blocked?”, see [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) and `openclaw sandbox explain`.
 
 ---
 
@@ -392,6 +392,6 @@ After configuring multi-agent sandbox and tools:
 
 ## See Also
 
-- [Multi-Agent Routing](/concepts/multi-agent)
-- [Sandbox Configuration](/gateway/configuration#agentsdefaults-sandbox)
-- [Session Management](/concepts/session)
+- [Multi-Agent Routing](/en/concepts/multi-agent)
+- [Sandbox Configuration](/en/gateway/configuration#agentsdefaults-sandbox)
+- [Session Management](/en/concepts/session)

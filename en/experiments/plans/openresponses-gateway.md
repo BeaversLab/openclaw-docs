@@ -14,7 +14,7 @@ title: "OpenResponses Gateway Plan"
 ## Context
 
 OpenClaw Gateway currently exposes a minimal OpenAI-compatible Chat Completions endpoint at
-`/v1/chat/completions` (see [OpenAI Chat Completions](/gateway/openai-http-api)).
+`/v1/chat/completions` (see [OpenAI Chat Completions](/en/gateway/openai-http-api)).
 
 Open Responses is an open inference standard based on the OpenAI Responses API. It is designed
 for agentic workflows and uses item-based inputs plus semantic streaming events. The OpenResponses

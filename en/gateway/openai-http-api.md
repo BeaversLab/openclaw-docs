@@ -39,7 +39,7 @@ Treat this endpoint as a **full operator-access** surface for the gateway instan
 - If the target agent policy allows sensitive tools, this endpoint can use them.
 - Keep this endpoint on loopback/tailnet/private ingress only; do not expose it directly to the public internet.
 
-See [Security](/gateway/security) and [Remote access](/gateway/remote).
+See [Security](/en/gateway/security) and [Remote access](/en/gateway/remote).
 
 ## Choosing an agent
 

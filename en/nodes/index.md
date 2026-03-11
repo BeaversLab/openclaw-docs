@@ -9,9 +9,9 @@ title: "Nodes"
 
 # Nodes
 
-A **node** is a companion device (macOS/iOS/Android/headless) that connects to the Gateway **WebSocket** (same port as operators) with `role: "node"` and exposes a command surface (e.g. `canvas.*`, `camera.*`, `device.*`, `notifications.*`, `system.*`) via `node.invoke`. Protocol details: [Gateway protocol](/gateway/protocol).
+A **node** is a companion device (macOS/iOS/Android/headless) that connects to the Gateway **WebSocket** (same port as operators) with `role: "node"` and exposes a command surface (e.g. `canvas.*`, `camera.*`, `device.*`, `notifications.*`, `system.*`) via `node.invoke`. Protocol details: [Gateway protocol](/en/gateway/protocol).
 
-Legacy transport: [Bridge protocol](/gateway/bridge-protocol) (TCP JSONL; deprecated/removed for current nodes).
+Legacy transport: [Bridge protocol](/en/gateway/bridge-protocol) (TCP JSONL; deprecated/removed for current nodes).
 
 macOS can also run in **node mode**: the menubar app connects to the Gateway’s WS server and exposes its local canvas/camera commands as a node (so `openclaw nodes …` works against this Mac).
 
@@ -19,7 +19,7 @@ Notes:
 
 - Nodes are **peripherals**, not gateways. They don’t run the gateway service.
 - Telegram/WhatsApp/etc. messages land on the **gateway**, not on nodes.
-- Troubleshooting runbook: [/nodes/troubleshooting](/nodes/troubleshooting)
+- Troubleshooting runbook: [/nodes/troubleshooting](/en/nodes/troubleshooting)
 
 ## Pairing + status
 
@@ -152,9 +152,9 @@ node allowlist/approvals).
 
 Related:
 
-- [Node host CLI](/cli/node)
-- [Exec tool](/tools/exec)
-- [Exec approvals](/tools/exec-approvals)
+- [Node host CLI](/en/cli/node)
+- [Exec tool](/en/tools/exec)
+- [Exec approvals](/en/tools/exec-approvals)
 
 ## Invoking commands
 
@@ -372,7 +372,7 @@ Notes:
 - Pairing is still required (the Gateway will show a device pairing prompt).
 - The node host stores its node id, token, display name, and gateway connection info in `~/.openclaw/node.json`.
 - Exec approvals are enforced locally via `~/.openclaw/exec-approvals.json`
-  (see [Exec approvals](/tools/exec-approvals)).
+  (see [Exec approvals](/en/tools/exec-approvals)).
 - On macOS, the headless node host executes `system.run` locally by default. Set
   `OPENCLAW_NODE_EXEC_HOST=app` to route `system.run` through the companion app exec host; add
   `OPENCLAW_NODE_EXEC_FALLBACK=0` to require the app host and fail closed if it is unavailable.

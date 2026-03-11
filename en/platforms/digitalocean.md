@@ -12,7 +12,7 @@ title: "DigitalOcean"
 
 Run a persistent OpenClaw Gateway on DigitalOcean for **$6/month** (or $4/mo with reserved pricing).
 
-If you want a $0/month option and don’t mind ARM + provider-specific setup, see the [Oracle Cloud guide](/platforms/oracle).
+If you want a $0/month option and don’t mind ARM + provider-specific setup, see the [Oracle Cloud guide](/en/platforms/oracle).
 
 ## Cost Comparison (2026)
 
@@ -27,8 +27,8 @@ If you want a $0/month option and don’t mind ARM + provider-specific setup, se
 **Picking a provider:**
 
 - DigitalOcean: simplest UX + predictable setup (this guide)
-- Hetzner: good price/perf (see [Hetzner guide](/install/hetzner))
-- Oracle Cloud: can be $0/month, but is more finicky and ARM-only (see [Oracle guide](/platforms/oracle))
+- Hetzner: good price/perf (see [Hetzner guide](/en/install/hetzner))
+- Oracle Cloud: can be $0/month, but is more finicky and ARM-only (see [Oracle guide](/en/platforms/oracle))
 
 ---
 
@@ -160,7 +160,7 @@ openclaw channels login whatsapp
 # Scan QR code
 ```
 
-See [Channels](/channels) for other providers.
+See [Channels](/en/channels) for other providers.
 
 ---
 
@@ -225,7 +225,7 @@ Oracle Cloud offers **Always Free** ARM instances that are significantly more po
 - Signup can be finicky (retry if it fails)
 - ARM architecture — most things work, but some binaries need ARM builds
 
-For the full setup guide, see [Oracle Cloud](/platforms/oracle). For signup tips and troubleshooting the enrollment process, see this [community guide](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
+For the full setup guide, see [Oracle Cloud](/en/platforms/oracle). For signup tips and troubleshooting the enrollment process, see this [community guide](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
 
 ---
 
@@ -260,7 +260,7 @@ free -h
 
 ## See Also
 
-- [Hetzner guide](/install/hetzner) — cheaper, more powerful
-- [Docker install](/install/docker) — containerized setup
-- [Tailscale](/gateway/tailscale) — secure remote access
-- [Configuration](/gateway/configuration) — full config reference
+- [Hetzner guide](/en/install/hetzner) — cheaper, more powerful
+- [Docker install](/en/install/docker) — containerized setup
+- [Tailscale](/en/gateway/tailscale) — secure remote access
+- [Configuration](/en/gateway/configuration) — full config reference

@@ -91,7 +91,7 @@ If you have multiple profiles/state dirs (e.g. `~/.openclaw-main`, `~/.openclaw-
 
 On the **new** machine, install the CLI (and Node if needed):
 
-- See: [Install](/install)
+- See: [Install](/en/install)
 
 At this stage, it’s OK if onboarding creates a fresh `~/.openclaw/` — you will overwrite it in the next step.
 
@@ -187,6 +187,6 @@ On the new machine, confirm:
 
 ## Related
 
-- [Doctor](/gateway/doctor)
-- [Gateway troubleshooting](/gateway/troubleshooting)
-- [Where does OpenClaw store its data?](/help/faq#where-does-openclaw-store-its-data)
+- [Doctor](/en/gateway/doctor)
+- [Gateway troubleshooting](/en/gateway/troubleshooting)
+- [Where does OpenClaw store its data?](/en/help/faq#where-does-openclaw-store-its-data)

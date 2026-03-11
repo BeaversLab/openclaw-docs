@@ -10,7 +10,7 @@ sidebarTitle: "CLI reference"
 # CLI Onboarding Reference
 
 This page is the full reference for `openclaw onboard`.
-For the short guide, see [Onboarding Wizard (CLI)](/start/wizard).
+For the short guide, see [Onboarding Wizard (CLI)](/en/start/wizard).
 
 ## What the wizard does
 
@@ -46,7 +46,7 @@ It does not install or modify anything on the remote host.
   <Step title="Workspace">
     - Default `~/.openclaw/workspace` (configurable).
     - Seeds workspace files needed for first-run bootstrap ritual.
-    - Workspace layout: [Agent workspace](/concepts/agent-workspace).
+    - Workspace layout: [Agent workspace](/en/concepts/agent-workspace).
   </Step>
   <Step title="Gateway">
     - Prompts for port, bind, auth mode, and tailscale exposure.
@@ -62,14 +62,14 @@ It does not install or modify anything on the remote host.
     - Non-loopback binds still require auth.
   </Step>
   <Step title="Channels">
-    - [WhatsApp](/channels/whatsapp): optional QR login
-    - [Telegram](/channels/telegram): bot token
-    - [Discord](/channels/discord): bot token
-    - [Google Chat](/channels/googlechat): service account JSON + webhook audience
-    - [Mattermost](/channels/mattermost) plugin: bot token + base URL
-    - [Signal](/channels/signal): optional `signal-cli` install + account config
-    - [BlueBubbles](/channels/bluebubbles): recommended for iMessage; server URL + password + webhook
-    - [iMessage](/channels/imessage): legacy `imsg` CLI path + DB access
+    - [WhatsApp](/en/channels/whatsapp): optional QR login
+    - [Telegram](/en/channels/telegram): bot token
+    - [Discord](/en/channels/discord): bot token
+    - [Google Chat](/en/channels/googlechat): service account JSON + webhook audience
+    - [Mattermost](/en/channels/mattermost) plugin: bot token + base URL
+    - [Signal](/en/channels/signal): optional `signal-cli` install + account config
+    - [BlueBubbles](/en/channels/bluebubbles): recommended for iMessage; server URL + password + webhook
+    - [iMessage](/en/channels/imessage): legacy `imsg` CLI path + DB access
     - DM security: default is pairing. First DM sends a code; approve via
       `openclaw pairing approve <channel> <code>` or use allowlists.
   </Step>
@@ -164,23 +164,23 @@ What you set:
   </Accordion>
   <Accordion title="Vercel AI Gateway">
     Prompts for `AI_GATEWAY_API_KEY`.
-    More detail: [Vercel AI Gateway](/providers/vercel-ai-gateway).
+    More detail: [Vercel AI Gateway](/en/providers/vercel-ai-gateway).
   </Accordion>
   <Accordion title="Cloudflare AI Gateway">
     Prompts for account ID, gateway ID, and `CLOUDFLARE_AI_GATEWAY_API_KEY`.
-    More detail: [Cloudflare AI Gateway](/providers/cloudflare-ai-gateway).
+    More detail: [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway).
   </Accordion>
   <Accordion title="MiniMax M2.5">
     Config is auto-written.
-    More detail: [MiniMax](/providers/minimax).
+    More detail: [MiniMax](/en/providers/minimax).
   </Accordion>
   <Accordion title="Synthetic (Anthropic-compatible)">
     Prompts for `SYNTHETIC_API_KEY`.
-    More detail: [Synthetic](/providers/synthetic).
+    More detail: [Synthetic](/en/providers/synthetic).
   </Accordion>
   <Accordion title="Moonshot and Kimi Coding">
     Moonshot (Kimi K2) and Kimi Coding configs are auto-written.
-    More detail: [Moonshot AI (Kimi + Kimi Coding)](/providers/moonshot).
+    More detail: [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot).
   </Accordion>
   <Accordion title="Custom provider">
     Works with OpenAI-compatible and Anthropic-compatible endpoints.
@@ -289,6 +289,6 @@ Signal setup behavior:
 
 ## Related docs
 
-- Onboarding hub: [Onboarding Wizard (CLI)](/start/wizard)
-- Automation and scripts: [CLI Automation](/start/wizard-cli-automation)
-- Command reference: [`openclaw onboard`](/cli/onboard)
+- Onboarding hub: [Onboarding Wizard (CLI)](/en/start/wizard)
+- Automation and scripts: [CLI Automation](/en/start/wizard-cli-automation)
+- Command reference: [`openclaw onboard`](/en/cli/onboard)

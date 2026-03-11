@@ -12,8 +12,8 @@ Manage agent hooks (event-driven automations for commands like `/new`, `/reset`,
 
 Related:
 
-- Hooks: [Hooks](/automation/hooks)
-- Plugin hooks: [Plugins](/tools/plugin#plugin-hooks)
+- Hooks: [Hooks](/en/automation/hooks)
+- Plugin hooks: [Plugins](/en/tools/plugin#plugin-hooks)
 
 ## List All Hooks
 
@@ -262,7 +262,7 @@ openclaw hooks enable session-memory
 
 **Output:** `~/.openclaw/workspace/memory/YYYY-MM-DD-slug.md`
 
-**See:** [session-memory documentation](/automation/hooks#session-memory)
+**See:** [session-memory documentation](/en/automation/hooks#session-memory)
 
 ### bootstrap-extra-files
 
@@ -274,7 +274,7 @@ Injects additional bootstrap files (for example monorepo-local `AGENTS.md` / `TO
 openclaw hooks enable bootstrap-extra-files
 ```
 
-**See:** [bootstrap-extra-files documentation](/automation/hooks#bootstrap-extra-files)
+**See:** [bootstrap-extra-files documentation](/en/automation/hooks#bootstrap-extra-files)
 
 ### command-logger
 
@@ -301,7 +301,7 @@ cat ~/.openclaw/logs/commands.log | jq .
 grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 ```
 
-**See:** [command-logger documentation](/automation/hooks#command-logger)
+**See:** [command-logger documentation](/en/automation/hooks#command-logger)
 
 ### boot-md
 
@@ -315,4 +315,4 @@ Runs `BOOT.md` when the gateway starts (after channels start).
 openclaw hooks enable boot-md
 ```
 
-**See:** [boot-md documentation](/automation/hooks#boot-md)
+**See:** [boot-md documentation](/en/automation/hooks#boot-md)

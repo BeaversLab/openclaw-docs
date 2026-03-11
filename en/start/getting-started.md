@@ -14,7 +14,7 @@ Goal: go from zero to a first working chat with minimal setup.
 Fastest chat: open the Control UI (no channel setup needed). Run `openclaw dashboard`
 and chat in the browser, or open `http://127.0.0.1:18789/` on the
 <Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">gateway host</Tooltip>.
-Docs: [Dashboard](/web/dashboard) and [Control UI](/web/control-ui).
+Docs: [Dashboard](/en/web/dashboard) and [Control UI](/en/web/control-ui).
 </Info>
 
 ## Prereqs
@@ -48,7 +48,7 @@ Check your Node version with `node --version` if you are unsure.
     </Tabs>
 
     <Note>
-    Other install methods and requirements: [Install](/install).
+    Other install methods and requirements: [Install](/en/install).
     </Note>
 
   </Step>
@@ -58,7 +58,7 @@ Check your Node version with `node --version` if you are unsure.
     ```
 
     The wizard configures auth, gateway settings, and optional channels.
-    See [Onboarding Wizard](/start/wizard) for details.
+    See [Onboarding Wizard](/en/start/wizard) for details.
 
   </Step>
   <Step title="Check the Gateway">
@@ -109,15 +109,15 @@ If you run OpenClaw as a service account or want custom config/state locations:
 - `OPENCLAW_STATE_DIR` overrides the state directory.
 - `OPENCLAW_CONFIG_PATH` overrides the config file path.
 
-Full environment variable reference: [Environment vars](/help/environment).
+Full environment variable reference: [Environment vars](/en/help/environment).
 
 ## Go deeper
 
 <Columns>
-  <Card title="Onboarding Wizard (details)" href="/start/wizard">
+  <Card title="Onboarding Wizard (details)" href="/en/start/wizard">
     Full CLI wizard reference and advanced options.
   </Card>
-  <Card title="macOS app onboarding" href="/start/onboarding">
+  <Card title="macOS app onboarding" href="/en/start/onboarding">
     First run flow for the macOS app.
   </Card>
 </Columns>
@@ -130,6 +130,6 @@ Full environment variable reference: [Environment vars](/help/environment).
 
 ## Next steps
 
-- DM safety and approvals: [Pairing](/channels/pairing)
-- Connect more channels: [Channels](/channels)
-- Advanced workflows and from source: [Setup](/start/setup)
+- DM safety and approvals: [Pairing](/en/channels/pairing)
+- Connect more channels: [Channels](/en/channels)
+- Advanced workflows and from source: [Setup](/en/start/setup)

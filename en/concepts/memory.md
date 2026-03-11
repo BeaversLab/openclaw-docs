@@ -26,7 +26,7 @@ The default workspace layout uses two memory layers:
   - **Only load in the main, private session** (never in group contexts).
 
 These files live under the workspace (`agents.defaults.workspace`, default
-`~/.openclaw/workspace`). See [Agent workspace](/concepts/agent-workspace) for the full layout.
+`~/.openclaw/workspace`). See [Agent workspace](/en/concepts/agent-workspace) for the full layout.
 
 ## Memory tools
 
@@ -87,7 +87,7 @@ Details:
   `workspaceAccess: "ro"` or `"none"`, the flush is skipped.
 
 For the full compaction lifecycle, see
-[Session management + compaction](/reference/session-management-compaction).
+[Session management + compaction](/en/reference/session-management-compaction).
 
 ## Vector memory search
 
@@ -206,7 +206,7 @@ out to QMD for retrieval. Key points:
   `commandTimeoutMs`, `updateTimeoutMs`, `embedTimeoutMs`).
 - `limits`: clamp recall payload (`maxResults`, `maxSnippetChars`,
   `maxInjectedChars`, `timeoutMs`).
-- `scope`: same schema as [`session.sendPolicy`](/gateway/configuration#session).
+- `scope`: same schema as [`session.sendPolicy`](/en/gateway/configuration#session).
   Default is DM-only (`deny` all, `allow` direct chats); loosen it to surface QMD
   hits in groups/channels.
   - `match.keyPrefix` matches the **normalized** session key (lowercased, with any

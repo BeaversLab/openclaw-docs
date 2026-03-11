@@ -17,7 +17,7 @@ sessions.
 **Important:** the workspace is the **default cwd**, not a hard sandbox. Tools
 resolve relative paths against the workspace, but absolute paths can still reach
 elsewhere on the host unless sandboxing is enabled. If you need isolation, use
-[`agents.defaults.sandbox`](/gateway/sandboxing) (and/or per‑agent sandbox config).
+[`agents.defaults.sandbox`](/en/gateway/sandboxing) (and/or per‑agent sandbox config).
 When sandboxing is enabled and `workspaceAccess` is not `"rw"`, tools operate
 inside a sandbox workspace under `~/.openclaw/sandboxes`, not your host workspace.
 
@@ -107,7 +107,7 @@ These are the standard files OpenClaw expects inside the workspace:
   - Curated long-term memory.
   - Only load in the main, private session (not shared/group contexts).
 
-See [Memory](/concepts/memory) for the workflow and automatic memory flush.
+See [Memory](/en/concepts/memory) for the workflow and automatic memory flush.
 
 - `skills/` (optional)
   - Workspace-specific skills.
@@ -231,6 +231,6 @@ Suggested `.gitignore` starter:
 ## Advanced notes
 
 - Multi-agent routing can use different workspaces per agent. See
-  [Channel routing](/channels/channel-routing) for routing configuration.
+  [Channel routing](/en/channels/channel-routing) for routing configuration.
 - If `agents.defaults.sandbox` is enabled, non-main sessions can use per-session sandbox
   workspaces under `agents.defaults.sandbox.workspaceRoot`.

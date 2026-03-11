@@ -127,5 +127,5 @@ openclaw devices approve <requestId>
 
 Related:
 
-- [Dashboard auth troubleshooting](/web/dashboard#if-you-see-unauthorized-1008)
-- [Gateway troubleshooting](/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [Dashboard auth troubleshooting](/en/web/dashboard#if-you-see-unauthorized-1008)
+- [Gateway troubleshooting](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)

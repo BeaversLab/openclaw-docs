@@ -99,7 +99,7 @@ Fallback details:
 }
 ```
 
-See [Configuration Reference](/gateway/configuration-reference) for full field details.
+See [Configuration Reference](/en/gateway/configuration-reference) for full field details.
 
 ## Output details
 

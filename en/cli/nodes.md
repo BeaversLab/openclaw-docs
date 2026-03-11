@@ -12,9 +12,9 @@ Manage paired nodes (devices) and invoke node capabilities.
 
 Related:
 
-- Nodes overview: [Nodes](/nodes)
-- Camera: [Camera nodes](/nodes/camera)
-- Images: [Image nodes](/nodes/images)
+- Nodes overview: [Nodes](/en/nodes)
+- Camera: [Camera nodes](/en/nodes/camera)
+- Images: [Image nodes](/en/nodes/images)
 
 Common options:
 

@@ -241,5 +241,5 @@ Direct OpenAI Responses models still force `store: true` unless compat sets
 
 ## Notes
 
-- Model refs always use `provider/model` (see [/concepts/models](/concepts/models)).
-- Auth details + reuse rules are in [/concepts/oauth](/concepts/oauth).
+- Model refs always use `provider/model` (see [/concepts/models](/en/concepts/models)).
+- Auth details + reuse rules are in [/concepts/oauth](/en/concepts/oauth).

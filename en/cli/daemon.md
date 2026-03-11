@@ -48,4 +48,4 @@ Notes:
 
 ## Prefer
 
-Use [`openclaw gateway`](/cli/gateway) for current docs and examples.
+Use [`openclaw gateway`](/en/cli/gateway) for current docs and examples.

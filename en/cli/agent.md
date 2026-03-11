@@ -12,7 +12,7 @@ Use `--agent <id>` to target a configured agent directly.
 
 Related:
 
-- Agent send tool: [Agent send](/tools/agent-send)
+- Agent send tool: [Agent send](/en/tools/agent-send)
 
 ## Examples
 

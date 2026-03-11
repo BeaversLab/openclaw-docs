@@ -57,7 +57,7 @@ Notes:
 - `tools.exec.ask` (default: `on-miss`)
 - `tools.exec.node` (default: unset)
 - `tools.exec.pathPrepend`: list of directories to prepend to `PATH` for exec runs (gateway + sandbox only).
-- `tools.exec.safeBins`: stdin-only safe binaries that can run without explicit allowlist entries. For behavior details, see [Safe bins](/tools/exec-approvals#safe-bins-stdin-only).
+- `tools.exec.safeBins`: stdin-only safe binaries that can run without explicit allowlist entries. For behavior details, see [Safe bins](/en/tools/exec-approvals#safe-bins-stdin-only).
 - `tools.exec.safeBinTrustedDirs`: additional explicit directories trusted for `safeBins` path checks. `PATH` entries are never auto-trusted. Built-in defaults are `/bin` and `/usr/bin`.
 - `tools.exec.safeBinProfiles`: optional custom argv policy per safe bin (`minPositional`, `maxPositional`, `allowedValueFlags`, `deniedFlags`).
 
@@ -116,7 +116,7 @@ policy (`tools.deny: ["exec"]` or per-agent). Host approvals still apply unless 
 ## Exec approvals (companion app / node host)
 
 Sandboxed agents can require per-request approval before `exec` runs on the gateway or node host.
-See [Exec approvals](/tools/exec-approvals) for the policy, allowlist, and UI flow.
+See [Exec approvals](/en/tools/exec-approvals) for the policy, allowlist, and UI flow.
 
 When approvals are required, the exec tool returns immediately with
 `status: "approval-pending"` and an approval id. Once approved (or denied / timed out),
@@ -144,7 +144,7 @@ Use the two controls for different jobs:
 Do not treat `safeBins` as a generic allowlist, and do not add interpreter/runtime binaries (for example `python3`, `node`, `ruby`, `bash`). If you need those, use explicit allowlist entries and keep approval prompts enabled.
 `openclaw security audit` warns when interpreter/runtime `safeBins` entries are missing explicit profiles, and `openclaw doctor --fix` can scaffold missing custom `safeBinProfiles` entries.
 
-For full policy details and examples, see [Exec approvals](/tools/exec-approvals#safe-bins-stdin-only) and [Safe bins versus allowlist](/tools/exec-approvals#safe-bins-versus-allowlist).
+For full policy details and examples, see [Exec approvals](/en/tools/exec-approvals#safe-bins-stdin-only) and [Safe bins versus allowlist](/en/tools/exec-approvals#safe-bins-versus-allowlist).
 
 ## Examples
 

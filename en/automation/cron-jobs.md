@@ -9,7 +9,7 @@ title: "Cron Jobs"
 
 # Cron jobs (Gateway scheduler)
 
-> **Cron vs Heartbeat?** See [Cron vs Heartbeat](/automation/cron-vs-heartbeat) for guidance on when to use each.
+> **Cron vs Heartbeat?** See [Cron vs Heartbeat](/en/automation/cron-vs-heartbeat) for guidance on when to use each.
 
 Cron is the Gateway’s built-in scheduler. It persists jobs, wakes the agent at
 the right time, and can optionally deliver output back to a chat.
@@ -17,7 +17,7 @@ the right time, and can optionally deliver output back to a chat.
 If you want _“run this every morning”_ or _“poke the agent in 20 minutes”_,
 cron is the mechanism.
 
-Troubleshooting: [/automation/troubleshooting](/automation/troubleshooting)
+Troubleshooting: [/automation/troubleshooting](/en/automation/troubleshooting)
 
 ## TL;DR
 
@@ -65,7 +65,7 @@ openclaw cron add \
 
 ## Tool-call equivalents (Gateway cron tool)
 
-For the canonical JSON shapes and examples, see [JSON schema for tool calls](/automation/cron-jobs#json-schema-for-tool-calls).
+For the canonical JSON shapes and examples, see [JSON schema for tool calls](/en/automation/cron-jobs#json-schema-for-tool-calls).
 
 ## Where cron jobs are stored
 
@@ -143,7 +143,7 @@ They must use `payload.kind = "systemEvent"`.
 - `wakeMode: "next-heartbeat"`: event waits for the next scheduled heartbeat.
 
 This is the best fit when you want the normal heartbeat prompt + main-session context.
-See [Heartbeat](/gateway/heartbeat).
+See [Heartbeat](/en/gateway/heartbeat).
 
 #### Isolated jobs (dedicated cron sessions)
 
@@ -396,7 +396,7 @@ When a job fails, OpenClaw classifies errors as **transient** (retryable) or **p
 - On any error: apply exponential backoff (30s → 1m → 5m → 15m → 60m) before the next scheduled run.
 - Job stays enabled; backoff resets after the next successful run.
 
-Configure `cron.retry` to override these defaults (see [Configuration](/automation/cron-jobs#configuration)).
+Configure `cron.retry` to override these defaults (see [Configuration](/en/automation/cron-jobs#configuration)).
 
 ## Configuration
 
@@ -655,7 +655,7 @@ openclaw system event --mode now --text "Next heartbeat: check battery."
 
 - `cron.list`, `cron.status`, `cron.add`, `cron.update`, `cron.remove`
 - `cron.run` (force or due), `cron.runs`
-  For immediate system events without a job, use [`openclaw system event`](/cli/system).
+  For immediate system events without a job, use [`openclaw system event`](/en/cli/system).
 
 ## Troubleshooting
 
@@ -670,7 +670,7 @@ openclaw system event --mode now --text "Next heartbeat: check battery."
 - OpenClaw applies exponential retry backoff for recurring jobs after consecutive errors:
   30s, 1m, 5m, 15m, then 60m between retries.
 - Backoff resets automatically after the next successful run.
-- One-shot (`at`) jobs retry transient errors (rate limit, overloaded, network, server_error) up to 3 times with backoff; permanent errors disable immediately. See [Retry policy](/automation/cron-jobs#retry-policy).
+- One-shot (`at`) jobs retry transient errors (rate limit, overloaded, network, server_error) up to 3 times with backoff; permanent errors disable immediately. See [Retry policy](/en/automation/cron-jobs#retry-policy).
 
 ### Telegram delivers to the wrong place
 

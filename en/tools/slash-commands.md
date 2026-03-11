@@ -91,7 +91,7 @@ Text + native (when enabled):
 - `/config show|get|set|unset` (persist config to disk, owner-only; requires `commands.config: true`)
 - `/debug show|set|unset|reset` (runtime overrides, owner-only; requires `commands.debug: true`)
 - `/usage off|tokens|full|cost` (per-response usage footer or local cost summary)
-- `/tts off|always|inbound|tagged|status|provider|limit|summary|audio` (control TTS; see [/tts](/tts))
+- `/tts off|always|inbound|tagged|status|provider|limit|summary|audio` (control TTS; see [/tts](/en/tts))
   - Discord: native command is `/voice` (Discord reserves `/tts`); text `/tts` still works.
 - `/stop`
 - `/restart`
@@ -112,7 +112,7 @@ Text + native (when enabled):
 
 Text-only:
 
-- `/compact [instructions]` (see [/concepts/compaction](/concepts/compaction))
+- `/compact [instructions]` (see [/concepts/compaction](/en/concepts/compaction))
 - `! <command>` (host-only; one at a time; use `!poll` + `!stop` for long-running jobs)
 - `!poll` (check output / status; accepts optional `sessionId`; `/bash poll` also works)
 - `!stop` (stop the running bash job; accepts optional `sessionId`; `/bash stop` also works)
@@ -128,7 +128,7 @@ Notes:
 - `/restart` is enabled by default; set `commands.restart: false` to disable it.
 - Discord-only native command: `/vc join|leave|status` controls voice channels (requires `channels.discord.voice` and native commands; not available as text).
 - Discord thread-binding commands (`/focus`, `/unfocus`, `/agents`, `/session idle`, `/session max-age`) require effective thread bindings to be enabled (`session.threadBindings.enabled` and/or `channels.discord.threadBindings.enabled`).
-- ACP command reference and runtime behavior: [ACP Agents](/tools/acp-agents).
+- ACP command reference and runtime behavior: [ACP Agents](/en/tools/acp-agents).
 - `/verbose` is meant for debugging and extra visibility; keep it **off** in normal use.
 - Tool failure summaries are still shown when relevant, but detailed failure text is only included when `/verbose` is `on` or `full`.
 - `/reasoning` (and `/verbose`) are risky in group settings: they may reveal internal reasoning or tool output you did not intend to expose. Prefer leaving them off, especially in group chats.
@@ -142,7 +142,7 @@ Notes:
   - `/skill <name> [input]` runs a skill by name (useful when native command limits prevent per-skill commands).
   - By default, skill commands are forwarded to the model as a normal request.
   - Skills may optionally declare `command-dispatch: tool` to route the command directly to a tool (deterministic, no model).
-  - Example: `/prose` (OpenProse plugin) — see [OpenProse](/prose).
+  - Example: `/prose` (OpenProse plugin) — see [OpenProse](/en/prose).
 - **Native command arguments:** Discord uses autocomplete for dynamic options (and button menus when you omit required args). Telegram and Slack show a button menu when a command supports choices and you omit the arg.
 
 ## Usage surfaces (what shows where)

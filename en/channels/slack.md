@@ -10,13 +10,13 @@ title: "Slack"
 Status: production-ready for DMs + channels via Slack app integrations. Default mode is Socket Mode; HTTP Events API mode is also supported.
 
 <CardGroup cols={3}>
-  <Card title="Pairing" icon="link" href="/channels/pairing">
+  <Card title="Pairing" icon="link" href="/en/channels/pairing">
     Slack DMs default to pairing mode.
   </Card>
-  <Card title="Slash commands" icon="terminal" href="/tools/slash-commands">
+  <Card title="Slash commands" icon="terminal" href="/en/tools/slash-commands">
     Native command behavior and command catalog.
   </Card>
-  <Card title="Channel troubleshooting" icon="wrench" href="/channels/troubleshooting">
+  <Card title="Channel troubleshooting" icon="wrench" href="/en/channels/troubleshooting">
     Cross-channel diagnostics and repair playbooks.
   </Card>
 </CardGroup>
@@ -534,7 +534,7 @@ Legacy keys:
 
 Primary reference:
 
-- [Configuration reference - Slack](/gateway/configuration-reference#slack)
+- [Configuration reference - Slack](/en/gateway/configuration-reference#slack)
 
   High-signal Slack fields:
   - mode/auth: `mode`, `botToken`, `appToken`, `signingSecret`, `webhookPath`, `accounts.*`
@@ -547,8 +547,8 @@ Primary reference:
 
 ## Related
 
-- [Pairing](/channels/pairing)
-- [Channel routing](/channels/channel-routing)
-- [Troubleshooting](/channels/troubleshooting)
-- [Configuration](/gateway/configuration)
-- [Slash commands](/tools/slash-commands)
+- [Pairing](/en/channels/pairing)
+- [Channel routing](/en/channels/channel-routing)
+- [Troubleshooting](/en/channels/troubleshooting)
+- [Configuration](/en/gateway/configuration)
+- [Slash commands](/en/tools/slash-commands)

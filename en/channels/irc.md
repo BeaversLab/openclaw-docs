@@ -182,7 +182,7 @@ Notes:
 - Legacy unprefixed keys are still accepted and matched as `id:` only.
 - The first matching sender policy wins; `"*"` is the wildcard fallback.
 
-For more on group access vs mention-gating (and how they interact), see: [/channels/groups](/channels/groups).
+For more on group access vs mention-gating (and how they interact), see: [/channels/groups](/en/channels/groups).
 
 ## NickServ
 

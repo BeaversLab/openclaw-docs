@@ -289,7 +289,7 @@ Optional per-id errors:
 
 Canonical supported and unsupported credentials are listed in:
 
-- [SecretRef Credential Surface](/reference/secretref-credential-surface)
+- [SecretRef Credential Surface](/en/reference/secretref-credential-surface)
 
 Runtime-minted or rotating credentials and OAuth refresh material are intentionally excluded from read-only SecretRef resolution.
 
@@ -420,7 +420,7 @@ openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run
 
 For strict target/path contract details and exact rejection rules, see:
 
-- [Secrets Apply Plan Contract](/gateway/secrets-plan-contract)
+- [Secrets Apply Plan Contract](/en/gateway/secrets-plan-contract)
 
 ## One-way safety policy
 
@@ -446,9 +446,9 @@ Some SecretInput unions are easier to configure in raw editor mode than in form 
 
 ## Related docs
 
-- CLI commands: [secrets](/cli/secrets)
-- Plan contract details: [Secrets Apply Plan Contract](/gateway/secrets-plan-contract)
-- Credential surface: [SecretRef Credential Surface](/reference/secretref-credential-surface)
-- Auth setup: [Authentication](/gateway/authentication)
-- Security posture: [Security](/gateway/security)
-- Environment precedence: [Environment Variables](/help/environment)
+- CLI commands: [secrets](/en/cli/secrets)
+- Plan contract details: [Secrets Apply Plan Contract](/en/gateway/secrets-plan-contract)
+- Credential surface: [SecretRef Credential Surface](/en/reference/secretref-credential-surface)
+- Auth setup: [Authentication](/en/gateway/authentication)
+- Security posture: [Security](/en/gateway/security)
+- Environment precedence: [Environment Variables](/en/help/environment)

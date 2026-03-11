@@ -17,10 +17,10 @@ If the file is missing, OpenClaw uses safe defaults. Common reasons to add a con
 - Set models, tools, sandboxing, or automation (cron, hooks)
 - Tune sessions, media, networking, or UI
 
-See the [full reference](/gateway/configuration-reference) for every available field.
+See the [full reference](/en/gateway/configuration-reference) for every available field.
 
 <Tip>
-**New to configuration?** Start with `openclaw onboard` for interactive setup, or check out the [Configuration Examples](/gateway/configuration-examples) guide for complete copy-paste configs.
+**New to configuration?** Start with `openclaw onboard` for interactive setup, or check out the [Configuration Examples](/en/gateway/configuration-examples) guide for complete copy-paste configs.
 </Tip>
 
 ## Minimal config
@@ -77,15 +77,15 @@ When validation fails:
   <Accordion title="Set up a channel (WhatsApp, Telegram, Discord, etc.)">
     Each channel has its own config section under `channels.<provider>`. See the dedicated channel page for setup steps:
 
-    - [WhatsApp](/channels/whatsapp) — `channels.whatsapp`
-    - [Telegram](/channels/telegram) — `channels.telegram`
-    - [Discord](/channels/discord) — `channels.discord`
-    - [Slack](/channels/slack) — `channels.slack`
-    - [Signal](/channels/signal) — `channels.signal`
-    - [iMessage](/channels/imessage) — `channels.imessage`
-    - [Google Chat](/channels/googlechat) — `channels.googlechat`
-    - [Mattermost](/channels/mattermost) — `channels.mattermost`
-    - [MS Teams](/channels/msteams) — `channels.msteams`
+    - [WhatsApp](/en/channels/whatsapp) — `channels.whatsapp`
+    - [Telegram](/en/channels/telegram) — `channels.telegram`
+    - [Discord](/en/channels/discord) — `channels.discord`
+    - [Slack](/en/channels/slack) — `channels.slack`
+    - [Signal](/en/channels/signal) — `channels.signal`
+    - [iMessage](/en/channels/imessage) — `channels.imessage`
+    - [Google Chat](/en/channels/googlechat) — `channels.googlechat`
+    - [Mattermost](/en/channels/mattermost) — `channels.mattermost`
+    - [MS Teams](/en/channels/msteams) — `channels.msteams`
 
     All channels share the same DM policy pattern:
 
@@ -127,8 +127,8 @@ When validation fails:
     - `agents.defaults.models` defines the model catalog and acts as the allowlist for `/model`.
     - Model refs use `provider/model` format (e.g. `anthropic/claude-opus-4-6`).
     - `agents.defaults.imageMaxDimensionPx` controls transcript/tool image downscaling (default `1200`); lower values usually reduce vision-token usage on screenshot-heavy runs.
-    - See [Models CLI](/concepts/models) for switching models in chat and [Model Failover](/concepts/model-failover) for auth rotation and fallback behavior.
-    - For custom/self-hosted providers, see [Custom providers](/gateway/configuration-reference#custom-providers-and-base-urls) in the reference.
+    - See [Models CLI](/en/concepts/models) for switching models in chat and [Model Failover](/en/concepts/model-failover) for auth rotation and fallback behavior.
+    - For custom/self-hosted providers, see [Custom providers](/en/gateway/configuration-reference#custom-providers-and-base-urls) in the reference.
 
   </Accordion>
 
@@ -142,7 +142,7 @@ When validation fails:
 
     For groups, use `groupPolicy` + `groupAllowFrom` or channel-specific allowlists.
 
-    See the [full reference](/gateway/configuration-reference#dm-and-group-access) for per-channel details.
+    See the [full reference](/en/gateway/configuration-reference#dm-and-group-access) for per-channel details.
 
   </Accordion>
 
@@ -171,7 +171,7 @@ When validation fails:
 
     - **Metadata mentions**: native @-mentions (WhatsApp tap-to-mention, Telegram @bot, etc.)
     - **Text patterns**: regex patterns in `mentionPatterns`
-    - See [full reference](/gateway/configuration-reference#group-chat-mention-gating) for per-channel overrides and self-chat mode.
+    - See [full reference](/en/gateway/configuration-reference#group-chat-mention-gating) for per-channel overrides and self-chat mode.
 
   </Accordion>
 
@@ -198,8 +198,8 @@ When validation fails:
 
     - `dmScope`: `main` (shared) | `per-peer` | `per-channel-peer` | `per-account-channel-peer`
     - `threadBindings`: global defaults for thread-bound session routing (Discord supports `/focus`, `/unfocus`, `/agents`, `/session idle`, and `/session max-age`).
-    - See [Session Management](/concepts/session) for scoping, identity links, and send policy.
-    - See [full reference](/gateway/configuration-reference#session) for all fields.
+    - See [Session Management](/en/concepts/session) for scoping, identity links, and send policy.
+    - See [full reference](/en/gateway/configuration-reference#session) for all fields.
 
   </Accordion>
 
@@ -221,7 +221,7 @@ When validation fails:
 
     Build the image first: `scripts/sandbox-setup.sh`
 
-    See [Sandboxing](/gateway/sandboxing) for the full guide and [full reference](/gateway/configuration-reference#sandbox) for all options.
+    See [Sandboxing](/en/gateway/sandboxing) for the full guide and [full reference](/en/gateway/configuration-reference#sandbox) for all options.
 
   </Accordion>
 
@@ -242,7 +242,7 @@ When validation fails:
     - `every`: duration string (`30m`, `2h`). Set `0m` to disable.
     - `target`: `last` | `whatsapp` | `telegram` | `discord` | `none`
     - `directPolicy`: `allow` (default) or `block` for DM-style heartbeat targets
-    - See [Heartbeat](/gateway/heartbeat) for the full guide.
+    - See [Heartbeat](/en/gateway/heartbeat) for the full guide.
 
   </Accordion>
 
@@ -263,7 +263,7 @@ When validation fails:
 
     - `sessionRetention`: prune completed isolated run sessions from `sessions.json` (default `24h`; set `false` to disable).
     - `runLog`: prune `cron/runs/<jobId>.jsonl` by size and retained lines.
-    - See [Cron jobs](/automation/cron-jobs) for feature overview and CLI examples.
+    - See [Cron jobs](/en/automation/cron-jobs) for feature overview and CLI examples.
 
   </Accordion>
 
@@ -296,7 +296,7 @@ When validation fails:
     - Keep unsafe-content bypass flags disabled (`hooks.gmail.allowUnsafeExternalContent`, `hooks.mappings[].allowUnsafeExternalContent`) unless doing tightly scoped debugging.
     - For hook-driven agents, prefer strong modern model tiers and strict tool policy (for example messaging-only plus sandboxing where possible).
 
-    See [full reference](/gateway/configuration-reference#hooks) for all mapping options and Gmail integration.
+    See [full reference](/en/gateway/configuration-reference#hooks) for all mapping options and Gmail integration.
 
   </Accordion>
 
@@ -318,7 +318,7 @@ When validation fails:
     }
     ```
 
-    See [Multi-Agent](/concepts/multi-agent) and [full reference](/gateway/configuration-reference#multi-agent-routing) for binding rules and per-agent access profiles.
+    See [Multi-Agent](/en/concepts/multi-agent) and [full reference](/en/gateway/configuration-reference#multi-agent-routing) for binding rules and per-agent access profiles.
 
   </Accordion>
 
@@ -531,16 +531,16 @@ Rules:
 }
 ```
 
-SecretRef details (including `secrets.providers` for `env`/`file`/`exec`) are in [Secrets Management](/gateway/secrets).
-Supported credential paths are listed in [SecretRef Credential Surface](/reference/secretref-credential-surface).
+SecretRef details (including `secrets.providers` for `env`/`file`/`exec`) are in [Secrets Management](/en/gateway/secrets).
+Supported credential paths are listed in [SecretRef Credential Surface](/en/reference/secretref-credential-surface).
 </Accordion>
 
-See [Environment](/help/environment) for full precedence and sources.
+See [Environment](/en/help/environment) for full precedence and sources.
 
 ## Full reference
 
-For the complete field-by-field reference, see **[Configuration Reference](/gateway/configuration-reference)**.
+For the complete field-by-field reference, see **[Configuration Reference](/en/gateway/configuration-reference)**.
 
 ---
 
-_Related: [Configuration Examples](/gateway/configuration-examples) · [Configuration Reference](/gateway/configuration-reference) · [Doctor](/gateway/doctor)_
+_Related: [Configuration Examples](/en/gateway/configuration-examples) · [Configuration Reference](/en/gateway/configuration-reference) · [Doctor](/en/gateway/doctor)_

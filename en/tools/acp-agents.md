@@ -60,7 +60,7 @@ Use ACP when you want an external harness runtime. Use sub-agents when you want 
 | Main commands | `/acp ...`                            | `/subagents ...`                   |
 | Spawn tool    | `sessions_spawn` with `runtime:"acp"` | `sessions_spawn` (default runtime) |
 
-See also [Sub-agents](/tools/subagents).
+See also [Sub-agents](/en/tools/subagents).
 
 ## Thread-bound sessions (channel-agnostic)
 
@@ -343,7 +343,7 @@ Key flags:
 - `--cwd <absolute-path>`
 - `--label <name>`
 
-See [Slash Commands](/tools/slash-commands).
+See [Slash Commands](/en/tools/slash-commands).
 
 ## Session target resolution
 
@@ -501,7 +501,7 @@ If thread-bound ACP spawn does not work, verify the adapter feature flag first:
 
 - Discord: `channels.discord.threadBindings.spawnAcpSessions=true`
 
-See [Configuration Reference](/gateway/configuration-reference).
+See [Configuration Reference](/en/gateway/configuration-reference).
 
 ## Plugin setup for acpx backend
 
@@ -561,7 +561,7 @@ Notes:
 - When `command` points to a custom binary/path, plugin-local auto-install is disabled.
 - OpenClaw startup remains non-blocking while the backend health check runs.
 
-See [Plugins](/tools/plugin).
+See [Plugins](/en/tools/plugin).
 
 ## Permission configuration
 

@@ -36,7 +36,7 @@ openclaw plugins install ./extensions/msteams
 If you choose Teams during configure/onboarding and a git checkout is detected,
 OpenClaw will offer the local install path automatically.
 
-Details: [Plugins](/tools/plugin)
+Details: [Plugins](/en/tools/plugin)
 
 ## Quick setup (beginner)
 
@@ -478,7 +478,7 @@ Key settings (see `/gateway/configuration` for shared channel patterns):
 
 ## Routing & Sessions
 
-- Session keys follow the standard agent format (see [/concepts/session](/concepts/session)):
+- Session keys follow the standard agent format (see [/concepts/session](/en/concepts/session)):
   - Direct messages share the main session (`agent:<agentId>:<mainKey>`).
   - Channel/group messages use conversation id:
     - `agent:<agentId>:msteams:channel:<conversationId>`

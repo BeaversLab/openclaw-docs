@@ -13,8 +13,8 @@ Manage OpenClaw’s browser control server and run browser actions (tabs, snapsh
 
 Related:
 
-- Browser tool + API: [Browser tool](/tools/browser)
-- Chrome extension relay: [Chrome extension](/tools/chrome-extension)
+- Browser tool + API: [Browser tool](/en/tools/browser)
+- Chrome extension relay: [Chrome extension](/en/tools/chrome-extension)
 
 ## Common flags
 
@@ -96,7 +96,7 @@ openclaw browser extension path
 
 Then Chrome → `chrome://extensions` → enable “Developer mode” → “Load unpacked” → select the printed folder.
 
-Full guide: [Chrome extension](/tools/chrome-extension)
+Full guide: [Chrome extension](/en/tools/chrome-extension)
 
 ## Remote browser control (node host proxy)
 
@@ -104,4 +104,4 @@ If the Gateway runs on a different machine than the browser, run a **node host**
 
 Use `gateway.nodes.browser.mode` to control auto-routing and `gateway.nodes.browser.node` to pin a specific node if multiple are connected.
 
-Security + remote setup: [Browser tool](/tools/browser), [Remote access](/gateway/remote), [Tailscale](/gateway/tailscale), [Security](/gateway/security)
+Security + remote setup: [Browser tool](/en/tools/browser), [Remote access](/en/gateway/remote), [Tailscale](/en/gateway/tailscale), [Security](/en/gateway/security)

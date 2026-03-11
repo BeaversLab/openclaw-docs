@@ -14,7 +14,7 @@ This plan defines how OpenClaw should support ACP coding agents in thread-capabl
 
 Related document:
 
-- [Unified Runtime Streaming Refactor Plan](/experiments/plans/acp-unified-streaming-refactor)
+- [Unified Runtime Streaming Refactor Plan](/en/experiments/plans/acp-unified-streaming-refactor)
 
 Target user experience:
 

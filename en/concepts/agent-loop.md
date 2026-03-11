@@ -47,7 +47,7 @@ wired end-to-end.
 - Runs are serialized per session key (session lane) and optionally through a global lane.
 - This prevents tool/session races and keeps session history consistent.
 - Messaging channels can choose queue modes (collect/steer/followup) that feed this lane system.
-  See [Command Queue](/concepts/queue).
+  See [Command Queue](/en/concepts/queue).
 
 ## Session + workspace preparation
 
@@ -60,7 +60,7 @@ wired end-to-end.
 
 - System prompt is built from OpenClaw’s base prompt, skills prompt, bootstrap context, and per-run overrides.
 - Model-specific limits and compaction reserve tokens are enforced.
-- See [System prompt](/concepts/system-prompt) for what the model sees.
+- See [System prompt](/en/concepts/system-prompt) for what the model sees.
 
 ## Hook points (where you can intercept)
 
@@ -75,7 +75,7 @@ OpenClaw has two hook systems:
   Use this to add/remove bootstrap context files.
 - **Command hooks**: `/new`, `/reset`, `/stop`, and other command events (see Hooks doc).
 
-See [Hooks](/automation/hooks) for setup and examples.
+See [Hooks](/en/automation/hooks) for setup and examples.
 
 ### Plugin hooks (agent + gateway lifecycle)
 
@@ -92,14 +92,14 @@ These run inside the agent loop or gateway pipeline:
 - **`session_start` / `session_end`**: session lifecycle boundaries.
 - **`gateway_start` / `gateway_stop`**: gateway lifecycle events.
 
-See [Plugins](/tools/plugin#plugin-hooks) for the hook API and registration details.
+See [Plugins](/en/tools/plugin#plugin-hooks) for the hook API and registration details.
 
 ## Streaming + partial replies
 
 - Assistant deltas are streamed from pi-agent-core and emitted as `assistant` events.
 - Block streaming can emit partial replies either on `text_end` or `message_end`.
 - Reasoning streaming can be emitted as a separate stream or as block replies.
-- See [Streaming](/concepts/streaming) for chunking and block reply behavior.
+- See [Streaming](/en/concepts/streaming) for chunking and block reply behavior.
 
 ## Tool execution + messaging tools
 
@@ -122,7 +122,7 @@ See [Plugins](/tools/plugin#plugin-hooks) for the hook API and registration deta
 
 - Auto-compaction emits `compaction` stream events and can trigger a retry.
 - On retry, in-memory buffers and tool summaries are reset to avoid duplicate output.
-- See [Compaction](/concepts/compaction) for the compaction pipeline.
+- See [Compaction](/en/concepts/compaction) for the compaction pipeline.
 
 ## Event streams (today)
 

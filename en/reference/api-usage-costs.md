@@ -29,7 +29,7 @@ OpenClaw features that can generate provider usage or paid API calls.
 - `openclaw status --usage` and `openclaw channels list` show provider **usage windows**
   (quota snapshots, not per-message costs).
 
-See [Token use & costs](/reference/token-use) for details and examples.
+See [Token use & costs](/en/reference/token-use) for details and examples.
 
 ## How keys are discovered
 
@@ -48,7 +48,7 @@ OpenClaw can pick up credentials from:
 Every reply or tool call uses the **current model provider** (OpenAI, Anthropic, etc). This is the
 primary source of usage and cost.
 
-See [Models](/providers/models) for pricing config and [Token use & costs](/reference/token-use) for display.
+See [Models](/en/providers/models) for pricing config and [Token use & costs](/en/reference/token-use) for display.
 
 ### 2) Media understanding (audio/image/video)
 
@@ -58,7 +58,7 @@ Inbound media can be summarized/transcribed before the reply runs. This uses mod
 - Image: OpenAI / Anthropic / Google.
 - Video: Google.
 
-See [Media understanding](/nodes/media-understanding).
+See [Media understanding](/en/nodes/media-understanding).
 
 ### 3) Memory embeddings + semantic search
 
@@ -73,7 +73,7 @@ Semantic memory search uses **embedding APIs** when configured for remote provid
 
 You can keep it local with `memorySearch.provider = "local"` (no API usage).
 
-See [Memory](/concepts/memory).
+See [Memory](/en/concepts/memory).
 
 ### 4) Web search tool
 
@@ -90,7 +90,7 @@ free credit. The Search plan costs $5 per 1,000 requests, so the credit covers
 1,000 requests/month at no charge. Set your usage limit in the Brave dashboard
 to avoid unexpected charges.
 
-See [Web tools](/tools/web).
+See [Web tools](/en/tools/web).
 
 ### 5) Web fetch tool (Firecrawl)
 
@@ -100,7 +100,7 @@ See [Web tools](/tools/web).
 
 If Firecrawl isn’t configured, the tool falls back to direct fetch + readability (no paid API).
 
-See [Web tools](/tools/web).
+See [Web tools](/en/tools/web).
 
 ### 6) Provider usage snapshots (status/health)
 
@@ -110,21 +110,21 @@ These are typically low-volume calls but still hit provider APIs:
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-See [Models CLI](/cli/models).
+See [Models CLI](/en/cli/models).
 
 ### 7) Compaction safeguard summarization
 
 The compaction safeguard can summarize session history using the **current model**, which
 invokes provider APIs when it runs.
 
-See [Session management + compaction](/reference/session-management-compaction).
+See [Session management + compaction](/en/reference/session-management-compaction).
 
 ### 8) Model scan / probe
 
 `openclaw models scan` can probe OpenRouter models and uses `OPENROUTER_API_KEY` when
 probing is enabled.
 
-See [Models CLI](/cli/models).
+See [Models CLI](/en/cli/models).
 
 ### 9) Talk (speech)
 
@@ -132,11 +132,11 @@ Talk mode can invoke **ElevenLabs** when configured:
 
 - `ELEVENLABS_API_KEY` or `talk.apiKey`
 
-See [Talk mode](/nodes/talk).
+See [Talk mode](/en/nodes/talk).
 
 ### 10) Skills (third-party APIs)
 
 Skills can store `apiKey` in `skills.entries.<name>.apiKey`. If a skill uses that key for external
 APIs, it can incur costs according to the skill’s provider.
 
-See [Skills](/tools/skills).
+See [Skills](/en/tools/skills).

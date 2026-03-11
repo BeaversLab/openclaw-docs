@@ -323,7 +323,7 @@ If you're moving from token auth to trusted-proxy:
 
 ## Related
 
-- [Security](/gateway/security) — full security guide
-- [Configuration](/gateway/configuration) — config reference
-- [Remote Access](/gateway/remote) — other remote access patterns
-- [Tailscale](/gateway/tailscale) — simpler alternative for tailnet-only access
+- [Security](/en/gateway/security) — full security guide
+- [Configuration](/en/gateway/configuration) — config reference
+- [Remote Access](/en/gateway/remote) — other remote access patterns
+- [Tailscale](/en/gateway/tailscale) — simpler alternative for tailnet-only access

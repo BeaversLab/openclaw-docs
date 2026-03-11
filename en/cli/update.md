@@ -10,7 +10,7 @@ title: "update"
 
 Safely update OpenClaw and switch between stable/beta/dev channels.
 
-If you installed via **npm/pnpm** (global install, no git metadata), updates happen via the package manager flow in [Updating](/install/updating).
+If you installed via **npm/pnpm** (global install, no git metadata), updates happen via the package manager flow in [Updating](/en/install/updating).
 
 ## Usage
 
@@ -97,6 +97,6 @@ High-level:
 ## See also
 
 - `openclaw doctor` (offers to run update first on git checkouts)
-- [Development channels](/install/development-channels)
-- [Updating](/install/updating)
-- [CLI reference](/cli)
+- [Development channels](/en/install/development-channels)
+- [Updating](/en/install/updating)
+- [CLI reference](/en/cli)

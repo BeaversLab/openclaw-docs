@@ -65,7 +65,7 @@ This gives you one agent “brain” (shared workspace + memory), but two execut
 - **DMs**: full tools (host)
 - **Groups**: sandbox + restricted tools (Docker)
 
-> If you need truly separate workspaces/personas (“personal” and “public” must never mix), use a second agent + bindings. See [Multi-Agent Routing](/concepts/multi-agent).
+> If you need truly separate workspaces/personas (“personal” and “public” must never mix), use a second agent + bindings. See [Multi-Agent Routing](/en/concepts/multi-agent).
 
 Example (DMs on host, groups sandboxed + messaging-only tools):
 
@@ -116,9 +116,9 @@ Want “groups can only see folder X” instead of “no host access”? Keep `w
 
 Related:
 
-- Configuration keys and defaults: [Gateway configuration](/gateway/configuration#agentsdefaultssandbox)
-- Debugging why a tool is blocked: [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Bind mounts details: [Sandboxing](/gateway/sandboxing#custom-bind-mounts)
+- Configuration keys and defaults: [Gateway configuration](/en/gateway/configuration#agentsdefaultssandbox)
+- Debugging why a tool is blocked: [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Bind mounts details: [Sandboxing](/en/gateway/sandboxing#custom-bind-mounts)
 
 ## Display labels
 
@@ -376,4 +376,4 @@ The agent system prompt includes a group intro on the first turn of a new group 
 
 ## WhatsApp specifics
 
-See [Group messages](/channels/group-messages) for WhatsApp-only behavior (history injection, mention handling details).
+See [Group messages](/en/channels/group-messages) for WhatsApp-only behavior (history injection, mention handling details).

@@ -383,5 +383,5 @@ This shows per‑capability outcomes and the chosen provider/model when applicab
 
 ## Related docs
 
-- [Configuration](/gateway/configuration)
-- [Image & Media Support](/nodes/images)
+- [Configuration](/en/gateway/configuration)
+- [Image & Media Support](/en/nodes/images)

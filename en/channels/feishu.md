@@ -589,7 +589,7 @@ See [Get group/user IDs](#get-groupuser-ids) for lookup tips.
 
 ## Configuration reference
 
-Full configuration: [Gateway configuration](/gateway/configuration)
+Full configuration: [Gateway configuration](/en/gateway/configuration)
 
 Key options:
 

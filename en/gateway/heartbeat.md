@@ -8,12 +8,12 @@ title: "Heartbeat"
 
 # Heartbeat (Gateway)
 
-> **Heartbeat vs Cron?** See [Cron vs Heartbeat](/automation/cron-vs-heartbeat) for guidance on when to use each.
+> **Heartbeat vs Cron?** See [Cron vs Heartbeat](/en/automation/cron-vs-heartbeat) for guidance on when to use each.
 
 Heartbeat runs **periodic agent turns** in the main session so the model can
 surface anything that needs attention without spamming you.
 
-Troubleshooting: [/automation/troubleshooting](/automation/troubleshooting)
+Troubleshooting: [/automation/troubleshooting](/en/automation/troubleshooting)
 
 ## Quick start (beginner)
 
@@ -61,7 +61,7 @@ The default prompt is intentionally broad:
   follow-ups (inbox, calendar, reminders, queued work) and surface anything urgent.
 - **Human check-in**: “Checkup sometimes on your human during day time” nudges an
   occasional lightweight “anything you need?” message, but avoids night-time spam
-  by using your configured local timezone (see [/concepts/timezone](/concepts/timezone)).
+  by using your configured local timezone (see [/concepts/timezone](/en/concepts/timezone)).
 
 If you want a heartbeat to do something very specific (e.g. “check Gmail PubSub
 stats” or “verify gateway health”), set `agents.defaults.heartbeat.prompt` (or
@@ -214,8 +214,8 @@ Use `accountId` to target a specific account on multi-account channels like Tele
 - `lightContext`: when true, heartbeat runs use lightweight bootstrap context and keep only `HEARTBEAT.md` from workspace bootstrap files.
 - `session`: optional session key for heartbeat runs.
   - `main` (default): agent main session.
-  - Explicit session key (copy from `openclaw sessions --json` or the [sessions CLI](/cli/sessions)).
-  - Session key formats: see [Sessions](/concepts/session) and [Groups](/channels/groups).
+  - Explicit session key (copy from `openclaw sessions --json` or the [sessions CLI](/en/cli/sessions)).
+  - Session key formats: see [Sessions](/en/concepts/session) and [Groups](/en/channels/groups).
 - `target`:
   - `last`: deliver to the last used external channel.
   - explicit channel: `whatsapp` / `telegram` / `discord` / `googlechat` / `slack` / `msteams` / `signal` / `imessage`.

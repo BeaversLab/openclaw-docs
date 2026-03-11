@@ -10,13 +10,13 @@ title: "WhatsApp"
 Status: production-ready via WhatsApp Web (Baileys). Gateway owns linked session(s).
 
 <CardGroup cols={3}>
-  <Card title="Pairing" icon="link" href="/channels/pairing">
+  <Card title="Pairing" icon="link" href="/en/channels/pairing">
     Default DM policy is pairing for unknown senders.
   </Card>
-  <Card title="Channel troubleshooting" icon="wrench" href="/channels/troubleshooting">
+  <Card title="Channel troubleshooting" icon="wrench" href="/en/channels/troubleshooting">
     Cross-channel diagnostics and repair playbooks.
   </Card>
-  <Card title="Gateway configuration" icon="settings" href="/gateway/configuration">
+  <Card title="Gateway configuration" icon="settings" href="/en/gateway/configuration">
     Full channel config patterns and examples.
   </Card>
 </CardGroup>
@@ -427,7 +427,7 @@ Behavior notes:
 
 Primary reference:
 
-- [Configuration reference - WhatsApp](/gateway/configuration-reference#whatsapp)
+- [Configuration reference - WhatsApp](/en/gateway/configuration-reference#whatsapp)
 
 High-signal WhatsApp fields:
 
@@ -439,7 +439,7 @@ High-signal WhatsApp fields:
 
 ## Related
 
-- [Pairing](/channels/pairing)
-- [Channel routing](/channels/channel-routing)
-- [Multi-agent routing](/concepts/multi-agent)
-- [Troubleshooting](/channels/troubleshooting)
+- [Pairing](/en/channels/pairing)
+- [Channel routing](/en/channels/channel-routing)
+- [Multi-agent routing](/en/concepts/multi-agent)
+- [Troubleshooting](/en/channels/troubleshooting)

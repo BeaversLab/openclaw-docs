@@ -9,7 +9,7 @@ title: "iMessage"
 # iMessage (legacy: imsg)
 
 <Warning>
-For new iMessage deployments, use <a href="/channels/bluebubbles">BlueBubbles</a>.
+For new iMessage deployments, use <a href="/en/channels/bluebubbles">BlueBubbles</a>.
 
 The `imsg` integration is legacy and may be removed in a future release.
 </Warning>
@@ -17,13 +17,13 @@ The `imsg` integration is legacy and may be removed in a future release.
 Status: legacy external CLI integration. Gateway spawns `imsg rpc` and communicates over JSON-RPC on stdio (no separate daemon/port).
 
 <CardGroup cols={3}>
-  <Card title="BlueBubbles (recommended)" icon="message-circle" href="/channels/bluebubbles">
+  <Card title="BlueBubbles (recommended)" icon="message-circle" href="/en/channels/bluebubbles">
     Preferred iMessage path for new setups.
   </Card>
-  <Card title="Pairing" icon="link" href="/channels/pairing">
+  <Card title="Pairing" icon="link" href="/en/channels/pairing">
     iMessage DMs default to pairing mode.
   </Card>
-  <Card title="Configuration reference" icon="settings" href="/gateway/configuration-reference#imessage">
+  <Card title="Configuration reference" icon="settings" href="/en/gateway/configuration-reference#imessage">
     Full iMessage field reference.
   </Card>
 </CardGroup>
@@ -361,7 +361,7 @@ imsg send <handle> "test"
 
 ## Configuration reference pointers
 
-- [Configuration reference - iMessage](/gateway/configuration-reference#imessage)
-- [Gateway configuration](/gateway/configuration)
-- [Pairing](/channels/pairing)
-- [BlueBubbles](/channels/bluebubbles)
+- [Configuration reference - iMessage](/en/gateway/configuration-reference#imessage)
+- [Gateway configuration](/en/gateway/configuration)
+- [Pairing](/en/channels/pairing)
+- [BlueBubbles](/en/channels/bluebubbles)

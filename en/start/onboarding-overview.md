@@ -28,14 +28,14 @@ openclaw onboard
 Use the CLI wizard when you want full control of the Gateway, workspace,
 channels, and skills. Docs:
 
-- [Onboarding Wizard (CLI)](/start/wizard)
-- [`openclaw onboard` command](/cli/onboard)
+- [Onboarding Wizard (CLI)](/en/start/wizard)
+- [`openclaw onboard` command](/en/cli/onboard)
 
 ## macOS app onboarding
 
 Use the OpenClaw app when you want a fully guided setup on macOS. Docs:
 
-- [Onboarding (macOS App)](/start/onboarding)
+- [Onboarding (macOS App)](/en/start/onboarding)
 
 ## Custom Provider
 

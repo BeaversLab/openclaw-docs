@@ -1,0 +1,156 @@
+---
+title: "在 Render 上部署"
+---
+
+使用基础设施即代码在 Render 上部署 OpenClaw。包含的 `render.yaml` Blueprint 以声明方式定义您的整个堆栈、服务、磁盘、环境变量，因此您可以单击一次即可部署，并随代码一起版本控制基础设施。
+
+## 先决条件
+
+- 一个 [Render 账户](https://render.com)（提供免费层级）
+- 来自您首选 [模型提供商](/zh/providers) 的 API 密钥
+
+## 使用 Render Blueprint 部署
+
+[部署到 Render](https://render.com/deploy?repo=https://github.com/openclaw/openclaw)
+
+单击此链接将：
+
+1. 从此仓库根目录的 `render.yaml` Blueprint 创建新的 Render 服务。
+2. 提示您设置 `SETUP_PASSWORD`
+3. 构建 Docker 镜像并部署
+
+部署完成后，您的服务 URL 遵循 `https://<service-name>.onrender.com` 模式。
+
+## 了解 Blueprint
+
+Render Blueprints 是定义基础设施的 YAML 文件。此仓库中的 `render.yaml` 配置了运行 OpenClaw 所需的一切：
+
+```yaml
+services:
+  - type: web
+    name: openclaw
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: SETUP_PASSWORD
+        sync: false # prompts during deploy
+      - key: OPENCLAW_STATE_DIR
+        value: /data/.openclaw
+      - key: OPENCLAW_WORKSPACE_DIR
+        value: /data/workspace
+      - key: OPENCLAW_GATEWAY_TOKEN
+        generateValue: true # auto-generates a secure token
+    disk:
+      name: openclaw-data
+      mountPath: /data
+      sizeGB: 1
+```
+
+使用的关键 Blueprint 功能：
+
+| 功能               | 目的                                                    |
+| --------------------- | ---------------------------------------------------------- |
+| `runtime: docker`     | 从仓库的 Dockerfile 构建                          |
+| `healthCheckPath`     | Render 监控 `/health` 并重启不健康的实例 |
+| `sync: false`         | 在部署期间提示输入值（密钥）                  |
+| `generateValue: true` | 自动生成加密安全的值            |
+| `disk`                | 在重新部署后仍然保留的持久存储                 |
+
+## 选择计划
+
+| 计划      | 停机         | 磁盘          | 最适合                      |
+| --------- | ----------------- | ------------- | ----------------------------- |
+| 免费版      | 空闲 15 分钟后 | 不可用 | 测试、演示                |
+| 入门版   | 从不             | 1GB+          | 个人使用、小型团队     |
+| 标准版+ | 从不             | 1GB+          | 生产环境、多通道 |
+
+Blueprint 默认为 `starter`。要使用免费层级，请在您 fork 的 `render.yaml` 中更改 `plan: free`（但请注意：没有持久磁盘意味着每次部署时配置会重置）。
+
+## 部署后
+
+### 完成设置向导
+
+1. 导航到 `https://<your-service>.onrender.com/setup`
+2. 输入您的 `SETUP_PASSWORD`
+3. 选择模型提供商并粘贴您的 API 密钥
+4. 可选配置消息传递通道（Telegram、Discord、Slack）
+5. 单击 **运行设置**
+
+### 访问控制 UI
+
+Web 仪表板可在 `https://<your-service>.onrender.com/openclaw` 访问。
+
+## Render 仪表板功能
+
+### 日志
+
+在 **仪表板 → 您的服务 → 日志** 中查看实时日志。按以下内容过滤：
+
+- 构建日志（Docker 镜像创建）
+- 部署日志（服务启动）
+- 运行时日志（应用程序输出）
+
+### Shell 访问
+
+为了进行调试，通过 **仪表板 → 您的服务 → Shell** 打开 shell 会话。持久磁盘挂载在 `/data`。
+
+### 环境变量
+
+在 **仪表板 → 您的服务 → 环境** 中修改变量。更改会触发自动重新部署。
+
+### 自动部署
+
+如果您使用原始的 OpenClaw 仓库，Render 将不会自动部署您的 OpenClaw。要更新它，请从仪表板运行手动 Blueprint 同步。
+
+## 自定义域名
+
+1. 转到 **仪表板 → 您的服务 → 设置 → 自定义域名**
+2. 添加您的域名
+3. 按照说明配置 DNS（CNAME 到 `*.onrender.com`）
+4. Render 自动提供 TLS 证书
+
+## 扩展
+
+Render 支持水平和垂直扩展：
+
+- **垂直**：更改计划以获得更多 CPU/RAM
+- **水平**：增加实例数量（标准计划及以上）
+
+对于 OpenClaw，垂直扩展通常就足够了。水平扩展需要粘性会话或外部状态管理。
+
+## 备份和迁移
+
+随时导出您的配置和工作区：
+
+```
+https://<your-service>.onrender.com/setup/export
+```
+
+这会下载一个可移植的备份，您可以在任何 OpenClaw 主机上恢复。
+
+## 故障排除
+
+### 服务无法启动
+
+检查 Render 仪表板中的部署日志。常见问题：
+
+- 缺少 `SETUP_PASSWORD` — Blueprint 会提示输入此项，但请验证是否已设置
+- 端口不匹配 — 确保 `PORT=8080` 与 Dockerfile 公开的端口匹配
+
+### 冷启动缓慢（免费层级）
+
+免费层级服务在 15 分钟不活动后会关闭。关闭后的第一个请求需要几秒钟时间来启动容器。升级到入门计划以获得始终在线服务。
+
+### 重新部署后数据丢失
+
+这发生在免费层级上（没有持久磁盘）。升级到付费计划，或通过 `/setup/export` 定期导出您的配置。
+
+### 健康检查失败
+
+Render 期望在 30 秒内从 `/health` 获得 200 响应。如果构建成功但部署失败，服务启动时间可能太长。检查：
+
+- 构建日志中的错误
+- 容器是否使用 `docker build && docker run` 在本地运行

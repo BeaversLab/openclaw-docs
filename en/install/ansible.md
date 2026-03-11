@@ -50,7 +50,7 @@ The Ansible playbook installs and configures:
 5. **OpenClaw** (host-based, not containerized)
 6. **Systemd service** (auto-start with security hardening)
 
-Note: The gateway runs **directly on the host** (not in Docker), but agent sandboxes use Docker for isolation. See [Sandboxing](/gateway/sandboxing) for details.
+Note: The gateway runs **directly on the host** (not in Docker), but agent sandboxes use Docker for isolation. See [Sandboxing](/en/gateway/sandboxing) for details.
 
 ## Post-Install Setup
 
@@ -107,7 +107,7 @@ Should show **only port 22** (SSH) open. All other services (gateway, Docker) ar
 
 Docker is installed for **agent sandboxes** (isolated tool execution), not for running the gateway itself. The gateway binds to localhost only and is accessible via Tailscale VPN.
 
-See [Multi-Agent Sandbox & Tools](/tools/multi-agent-sandbox-tools) for sandbox configuration.
+See [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) for sandbox configuration.
 
 ## Manual Installation
 
@@ -133,7 +133,7 @@ ansible-galaxy collection install -r requirements.yml
 
 ## Updating OpenClaw
 
-The Ansible installer sets up OpenClaw for manual updates. See [Updating](/install/updating) for the standard update flow.
+The Ansible installer sets up OpenClaw for manual updates. See [Updating](/en/install/updating) for the standard update flow.
 
 To re-run the Ansible playbook (e.g., for configuration changes):
 
@@ -203,6 +203,6 @@ For detailed security architecture and troubleshooting:
 ## Related
 
 - [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) — full deployment guide
-- [Docker](/install/docker) — containerized gateway setup
-- [Sandboxing](/gateway/sandboxing) — agent sandbox configuration
-- [Multi-Agent Sandbox & Tools](/tools/multi-agent-sandbox-tools) — per-agent isolation
+- [Docker](/en/install/docker) — containerized gateway setup
+- [Sandboxing](/en/gateway/sandboxing) — agent sandbox configuration
+- [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) — per-agent isolation

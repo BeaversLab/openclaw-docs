@@ -204,7 +204,7 @@ Notes:
 - `typingIndicator` supports `none`, `message` (default), and `reaction` (reaction requires user OAuth).
 - Attachments are downloaded through the Chat API and stored in the media pipeline (size capped by `mediaMaxMb`).
 
-Secrets reference details: [Secrets Management](/gateway/secrets).
+Secrets reference details: [Secrets Management](/en/gateway/secrets).
 
 ## Troubleshooting
 
@@ -256,6 +256,6 @@ openclaw channels status
 
 Related docs:
 
-- [Gateway configuration](/gateway/configuration)
-- [Security](/gateway/security)
-- [Reactions](/tools/reactions)
+- [Gateway configuration](/en/gateway/configuration)
+- [Security](/en/gateway/security)
+- [Reactions](/en/tools/reactions)

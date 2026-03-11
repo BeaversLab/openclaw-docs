@@ -15,9 +15,9 @@ Subcommands in this page live under `openclaw gateway …`.
 
 Related docs:
 
-- [/gateway/bonjour](/gateway/bonjour)
-- [/gateway/discovery](/gateway/discovery)
-- [/gateway/configuration](/gateway/configuration)
+- [/gateway/bonjour](/en/gateway/bonjour)
+- [/gateway/discovery](/en/gateway/discovery)
+- [/gateway/configuration](/en/gateway/configuration)
 
 ## Run the Gateway
 
@@ -181,7 +181,7 @@ Notes:
 `gateway discover` scans for Gateway beacons (`_openclaw-gw._tcp`).
 
 - Multicast DNS-SD: `local.`
-- Unicast DNS-SD (Wide-Area Bonjour): choose a domain (example: `openclaw.internal.`) and set up split DNS + a DNS server; see [/gateway/bonjour](/gateway/bonjour)
+- Unicast DNS-SD (Wide-Area Bonjour): choose a domain (example: `openclaw.internal.`) and set up split DNS + a DNS server; see [/gateway/bonjour](/en/gateway/bonjour)
 
 Only gateways with Bonjour discovery enabled (default) advertise the beacon.
 

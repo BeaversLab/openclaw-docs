@@ -9,7 +9,7 @@ title: "Model Providers"
 # Model providers
 
 This page covers **LLM/model providers** (not chat channels like WhatsApp/Telegram).
-For model selection rules, see [/concepts/models](/concepts/models).
+For model selection rules, see [/concepts/models](/en/concepts/models).
 
 ## Quick rules
 
@@ -147,7 +147,7 @@ OpenClaw ships with the pi‑ai catalog. These providers require **no**
 - Base URL: `https://api.kilo.ai/api/gateway/`
 - Expanded built-in catalog includes GLM-5 Free, MiniMax M2.5 Free, GPT-5.2, Gemini 3 Pro Preview, Gemini 3 Flash Preview, Grok Code Fast 1, and Kimi K2.5.
 
-See [/providers/kilocode](/providers/kilocode) for setup details.
+See [/providers/kilocode](/en/providers/kilocode) for setup details.
 
 ### Other built-in providers
 
@@ -164,7 +164,7 @@ See [/providers/kilocode](/providers/kilocode) for setup details.
   - GLM models on Cerebras use ids `zai-glm-4.7` and `zai-glm-4.6`.
   - OpenAI-compatible base URL: `https://api.cerebras.ai/v1`.
 - GitHub Copilot: `github-copilot` (`COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN`)
-- Hugging Face Inference: `huggingface` (`HUGGINGFACE_HUB_TOKEN` or `HF_TOKEN`) — OpenAI-compatible router; example model: `huggingface/deepseek-ai/DeepSeek-R1`; CLI: `openclaw onboard --auth-choice huggingface-api-key`. See [Hugging Face (Inference)](/providers/huggingface).
+- Hugging Face Inference: `huggingface` (`HUGGINGFACE_HUB_TOKEN` or `HF_TOKEN`) — OpenAI-compatible router; example model: `huggingface/deepseek-ai/DeepSeek-R1`; CLI: `openclaw onboard --auth-choice huggingface-api-key`. See [Hugging Face (Inference)](/en/providers/huggingface).
 
 ## Providers via `models.providers` (custom/base URL)
 
@@ -247,7 +247,7 @@ Model refs:
 - `qwen-portal/coder-model`
 - `qwen-portal/vision-model`
 
-See [/providers/qwen](/providers/qwen) for setup details and notes.
+See [/providers/qwen](/en/providers/qwen) for setup details and notes.
 
 ### Volcano Engine (Doubao)
 
@@ -348,7 +348,7 @@ MiniMax is configured via `models.providers` because it uses custom endpoints:
 - MiniMax (Anthropic‑compatible): `--auth-choice minimax-api`
 - Auth: `MINIMAX_API_KEY`
 
-See [/providers/minimax](/providers/minimax) for setup details, model options, and config snippets.
+See [/providers/minimax](/en/providers/minimax) for setup details, model options, and config snippets.
 
 ### Ollama
 
@@ -372,7 +372,7 @@ ollama pull llama3.3
 }
 ```
 
-Ollama is automatically detected when running locally at `http://127.0.0.1:11434/v1`. See [/providers/ollama](/providers/ollama) for model recommendations and custom configuration.
+Ollama is automatically detected when running locally at `http://127.0.0.1:11434/v1`. See [/providers/ollama](/en/providers/ollama) for model recommendations and custom configuration.
 
 ### vLLM
 
@@ -398,7 +398,7 @@ Then set a model (replace with one of the IDs returned by `/v1/models`):
 }
 ```
 
-See [/providers/vllm](/providers/vllm) for details.
+See [/providers/vllm](/en/providers/vllm) for details.
 
 ### Local proxies (LM Studio, vLLM, LiteLLM, etc.)
 
@@ -457,4 +457,4 @@ openclaw models set opencode/claude-opus-4-6
 openclaw models list
 ```
 
-See also: [/gateway/configuration](/gateway/configuration) for full configuration examples.
+See also: [/gateway/configuration](/en/gateway/configuration) for full configuration examples.

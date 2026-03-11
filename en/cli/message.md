@@ -199,7 +199,7 @@ openclaw message send --channel discord \
   --components '{"text":"Choose a path","blocks":[{"type":"actions","buttons":[{"label":"Approve","style":"success"},{"label":"Decline","style":"danger"}]}]}'
 ```
 
-See [Discord components](/channels/discord#interactive-components) for the full schema.
+See [Discord components](/en/channels/discord#interactive-components) for the full schema.
 
 Create a Discord poll:
 

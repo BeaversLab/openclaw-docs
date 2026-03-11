@@ -154,7 +154,7 @@ Mapping options (summary):
 - `allowUnsafeExternalContent: true` disables the external content safety wrapper for that hook
   (dangerous; only for trusted internal sources).
 - `openclaw webhooks gmail setup` writes `hooks.gmail` config for `openclaw webhooks gmail run`.
-  See [Gmail Pub/Sub](/automation/gmail-pubsub) for the full Gmail watch flow.
+  See [Gmail Pub/Sub](/en/automation/gmail-pubsub) for the full Gmail watch flow.
 
 ## Responses
 

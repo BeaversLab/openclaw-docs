@@ -9,7 +9,7 @@ read_when:
 
 # Configuration Reference
 
-Every field available in `~/.openclaw/openclaw.json`. For a task-oriented overview, see [Configuration](/gateway/configuration).
+Every field available in `~/.openclaw/openclaw.json`. For a task-oriented overview, see [Configuration](/en/gateway/configuration).
 
 Config format is **JSON5** (comments + trailing commas allowed). All fields are optional — OpenClaw uses safe defaults when omitted.
 
@@ -207,9 +207,9 @@ WhatsApp runs through the gateway's web channel (Baileys Web). It starts automat
 - Optional `channels.telegram.defaultAccount` overrides default account selection when it matches a configured account id.
 - In multi-account setups (2+ account ids), set an explicit default (`channels.telegram.defaultAccount` or `channels.telegram.accounts.default`) to avoid fallback routing; `openclaw doctor` warns when this is missing or invalid.
 - `configWrites: false` blocks Telegram-initiated config writes (supergroup ID migrations, `/config set|unset`).
-- Top-level `bindings[]` entries with `type: "acp"` configure persistent ACP bindings for forum topics (use canonical `chatId:topic:topicId` in `match.peer.id`). Field semantics are shared in [ACP Agents](/tools/acp-agents#channel-specific-settings).
+- Top-level `bindings[]` entries with `type: "acp"` configure persistent ACP bindings for forum topics (use canonical `chatId:topic:topicId` in `match.peer.id`). Field semantics are shared in [ACP Agents](/en/tools/acp-agents#channel-specific-settings).
 - Telegram stream previews use `sendMessage` + `editMessageText` (works in direct and group chats).
-- Retry policy: see [Retry policy](/concepts/retry).
+- Retry policy: see [Retry policy](/en/concepts/retry).
 
 ### Discord
 
@@ -316,7 +316,7 @@ WhatsApp runs through the gateway's web channel (Baileys Web). It starts automat
   - `idleHours`: Discord override for inactivity auto-unfocus in hours (`0` disables)
   - `maxAgeHours`: Discord override for hard max age in hours (`0` disables)
   - `spawnSubagentSessions`: opt-in switch for `sessions_spawn({ thread: true })` auto thread creation/binding
-- Top-level `bindings[]` entries with `type: "acp"` configure persistent ACP bindings for channels and threads (use channel/thread id in `match.peer.id`). Field semantics are shared in [ACP Agents](/tools/acp-agents#channel-specific-settings).
+- Top-level `bindings[]` entries with `type: "acp"` configure persistent ACP bindings for channels and threads (use channel/thread id in `match.peer.id`). Field semantics are shared in [ACP Agents](/en/tools/acp-agents#channel-specific-settings).
 - `channels.discord.ui.components.accentColor` sets the accent color for Discord components v2 containers.
 - `channels.discord.voice` enables Discord voice channel conversations and optional auto-join + TTS overrides.
 - `channels.discord.voice.daveEncryption` and `channels.discord.voice.decryptionFailureTolerance` pass through to `@discordjs/voice` DAVE options (`true` and `24` by default).
@@ -524,7 +524,7 @@ BlueBubbles is the recommended iMessage path (plugin-backed, configured under `c
 
 - Core key paths covered here: `channels.bluebubbles`, `channels.bluebubbles.dmPolicy`.
 - Optional `channels.bluebubbles.defaultAccount` overrides default account selection when it matches a configured account id.
-- Full BlueBubbles channel configuration is documented in [BlueBubbles](/channels/bluebubbles).
+- Full BlueBubbles channel configuration is documented in [BlueBubbles](/en/channels/bluebubbles).
 
 ### iMessage
 
@@ -588,7 +588,7 @@ Microsoft Teams is extension-backed and configured under `channels.msteams`.
 ```
 
 - Core key paths covered here: `channels.msteams`, `channels.msteams.configWrites`.
-- Full Teams config (credentials, webhook, DM/group policy, per-team/per-channel overrides) is documented in [Microsoft Teams](/channels/msteams).
+- Full Teams config (credentials, webhook, DM/group policy, per-team/per-channel overrides) is documented in [Microsoft Teams](/en/channels/msteams).
 
 ### IRC
 
@@ -615,7 +615,7 @@ IRC is extension-backed and configured under `channels.irc`.
 
 - Core key paths covered here: `channels.irc`, `channels.irc.dmPolicy`, `channels.irc.configWrites`, `channels.irc.nickserv.*`.
 - Optional `channels.irc.defaultAccount` overrides default account selection when it matches a configured account id.
-- Full IRC channel configuration (host/port/TLS/channels/allowlists/mention gating) is documented in [IRC](/channels/irc).
+- Full IRC channel configuration (host/port/TLS/channels/allowlists/mention gating) is documented in [IRC](/en/channels/irc).
 
 ### Multi-account (all channels)
 
@@ -651,7 +651,7 @@ Run multiple accounts per channel (each with its own `accountId`):
 ### Other extension channels
 
 Many extension channels are configured as `channels.<id>` and documented in their dedicated channel pages (for example Feishu, Matrix, LINE, Nostr, Zalo, Nextcloud Talk, Synology Chat, and Twitch).
-See the full channel index: [Channels](/channels).
+See the full channel index: [Channels](/en/channels).
 
 ### Group chat mention gating
 
@@ -1020,7 +1020,7 @@ Periodic heartbeat runs.
 }
 ```
 
-- `mode`: `default` or `safeguard` (chunked summarization for long histories). See [Compaction](/concepts/compaction).
+- `mode`: `default` or `safeguard` (chunked summarization for long histories). See [Compaction](/en/concepts/compaction).
 - `identifierPolicy`: `strict` (default), `off`, or `custom`. `strict` prepends built-in opaque identifier retention guidance during compaction summarization.
 - `identifierInstructions`: optional custom identifier-preservation text used when `identifierPolicy=custom`.
 - `postCompactionSections`: optional AGENTS.md H2/H3 section names to re-inject after compaction. Defaults to `["Session Startup", "Red Lines"]`; set `[]` to disable reinjection. When unset or explicitly set to that default pair, older `Every Session`/`Safety` headings are also accepted as a legacy fallback.
@@ -1069,7 +1069,7 @@ Notes:
 
 </Accordion>
 
-See [Session Pruning](/concepts/session-pruning) for behavior details.
+See [Session Pruning](/en/concepts/session-pruning) for behavior details.
 
 ### Block streaming
 
@@ -1091,7 +1091,7 @@ See [Session Pruning](/concepts/session-pruning) for behavior details.
 - Channel overrides: `channels.<channel>.blockStreamingCoalesce` (and per-account variants). Signal/Slack/Discord/Google Chat default `minChars: 1500`.
 - `humanDelay`: randomized pause between block replies. `natural` = 800–2500ms. Per-agent override: `agents.list[].humanDelay`.
 
-See [Streaming](/concepts/streaming) for behavior + chunking details.
+See [Streaming](/en/concepts/streaming) for behavior + chunking details.
 
 ### Typing indicators
 
@@ -1109,11 +1109,11 @@ See [Streaming](/concepts/streaming) for behavior + chunking details.
 - Defaults: `instant` for direct chats/mentions, `message` for unmentioned group chats.
 - Per-session overrides: `session.typingMode`, `session.typingIntervalSeconds`.
 
-See [Typing Indicators](/concepts/typing-indicators).
+See [Typing Indicators](/en/concepts/typing-indicators).
 
 ### `agents.defaults.sandbox`
 
-Optional **Docker sandboxing** for the embedded agent. See [Sandboxing](/gateway/sandboxing) for the full guide.
+Optional **Docker sandboxing** for the embedded agent. See [Sandboxing](/en/gateway/sandboxing) for the full guide.
 
 ```json5
 {
@@ -1321,7 +1321,7 @@ scripts/sandbox-browser-setup.sh   # optional browser image
 
 ## Multi-agent routing
 
-Run multiple isolated agents inside one Gateway. See [Multi-Agent](/concepts/multi-agent).
+Run multiple isolated agents inside one Gateway. See [Multi-Agent](/en/concepts/multi-agent).
 
 ```json5
 {
@@ -1455,7 +1455,7 @@ For `type: "acp"` entries, OpenClaw resolves by exact conversation identity (`ma
 
 </Accordion>
 
-See [Multi-Agent Sandbox & Tools](/tools/multi-agent-sandbox-tools) for precedence details.
+See [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) for precedence details.
 
 ---
 
@@ -2255,7 +2255,7 @@ Set `MINIMAX_API_KEY`. Shortcut: `openclaw onboard --auth-choice minimax-api`.
 
 <Accordion title="Local models (LM Studio)">
 
-See [Local Models](/gateway/local-models). TL;DR: run MiniMax M2.5 via LM Studio Responses API on serious hardware; keep hosted models merged for fallback.
+See [Local Models](/en/gateway/local-models). TL;DR: run MiniMax M2.5 via LM Studio Responses API on serious hardware; keep hosted models merged for fallback.
 
 </Accordion>
 
@@ -2329,7 +2329,7 @@ See [Local Models](/gateway/local-models). TL;DR: run MiniMax M2.5 via LM Studio
   - Includes `source`, `spec`, `sourcePath`, `installPath`, `version`, `resolvedName`, `resolvedVersion`, `resolvedSpec`, `integrity`, `shasum`, `resolvedAt`, `installedAt`.
   - Treat `plugins.installs.*` as managed state; prefer CLI commands over manual edits.
 
-See [Plugins](/tools/plugin).
+See [Plugins](/en/tools/plugin).
 
 ---
 
@@ -2459,7 +2459,7 @@ See [Plugins](/tools/plugin).
 - **Auth**: required by default. Non-loopback binds require a shared token/password. Onboarding wizard generates a token by default.
 - If both `gateway.auth.token` and `gateway.auth.password` are configured (including SecretRefs), set `gateway.auth.mode` explicitly to `token` or `password`. Startup and service install/repair flows fail when both are configured and mode is unset.
 - `gateway.auth.mode: "none"`: explicit no-auth mode. Use only for trusted local loopback setups; this is intentionally not offered by onboarding prompts.
-- `gateway.auth.mode: "trusted-proxy"`: delegate auth to an identity-aware reverse proxy and trust identity headers from `gateway.trustedProxies` (see [Trusted Proxy Auth](/gateway/trusted-proxy-auth)).
+- `gateway.auth.mode: "trusted-proxy"`: delegate auth to an identity-aware reverse proxy and trust identity headers from `gateway.trustedProxies` (see [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)).
 - `gateway.auth.allowTailscale`: when `true`, Tailscale Serve identity headers can satisfy Control UI/WebSocket auth (verified via `tailscale whois`); HTTP API endpoints still require token/password auth. This tokenless flow assumes the gateway host is trusted. Defaults to `true` when `tailscale.mode = "serve"`.
 - `gateway.auth.rateLimit`: optional failed-auth limiter. Applies per client IP and per auth scope (shared-secret and device-token are tracked independently). Blocked attempts return `429` + `Retry-After`.
   - `gateway.auth.rateLimit.exemptLoopback` defaults to `true`; set `false` when you intentionally want localhost traffic rate-limited too (for test setups or strict proxy deployments).
@@ -2488,7 +2488,7 @@ See [Plugins](/tools/plugin).
   - `gateway.http.endpoints.responses.files.urlAllowlist`
   - `gateway.http.endpoints.responses.images.urlAllowlist`
 - Optional response hardening header:
-  - `gateway.http.securityHeaders.strictTransportSecurity` (set only for HTTPS origins you control; see [Trusted Proxy Auth](/gateway/trusted-proxy-auth#tls-termination-and-hsts))
+  - `gateway.http.securityHeaders.strictTransportSecurity` (set only for HTTPS origins you control; see [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth#tls-termination-and-hsts))
 
 ### Multi-instance isolation
 
@@ -2502,7 +2502,7 @@ openclaw gateway --port 19001
 
 Convenience flags: `--dev` (uses `~/.openclaw-dev` + port `19001`), `--profile <name>` (uses `~/.openclaw-<name>`).
 
-See [Multiple Gateways](/gateway/multiple-gateways).
+See [Multiple Gateways](/en/gateway/multiple-gateways).
 
 ---
 
@@ -2676,7 +2676,7 @@ Setup: `openclaw dns setup --apply`.
 - Inline env vars are only applied if the process env is missing the key.
 - `.env` files: CWD `.env` + `~/.openclaw/.env` (neither overrides existing vars).
 - `shellEnv`: imports missing expected keys from your login shell profile.
-- See [Environment](/help/environment) for full precedence.
+- See [Environment](/en/help/environment) for full precedence.
 
 ### Env var substitution
 
@@ -2719,7 +2719,7 @@ Validation:
 
 ### Supported credential surface
 
-- Canonical matrix: [SecretRef Credential Surface](/reference/secretref-credential-surface)
+- Canonical matrix: [SecretRef Credential Surface](/en/reference/secretref-credential-surface)
 - `secrets apply` targets supported `openclaw.json` credential paths.
 - `auth-profiles.json` refs are included in runtime resolution and audit coverage.
 
@@ -2783,8 +2783,8 @@ Notes:
 - `auth-profiles.json` supports value-level refs (`keyRef` for `api_key`, `tokenRef` for `token`).
 - Static runtime credentials come from in-memory resolved snapshots; legacy static `auth.json` entries are scrubbed when discovered.
 - Legacy OAuth imports from `~/.openclaw/credentials/oauth.json`.
-- See [OAuth](/concepts/oauth).
-- Secrets runtime behavior and `audit/configure/apply` tooling: [Secrets Management](/gateway/secrets).
+- See [OAuth](/en/concepts/oauth).
+- Secrets runtime behavior and `audit/configure/apply` tooling: [Secrets Management](/en/gateway/secrets).
 
 ---
 
@@ -2923,7 +2923,7 @@ Current builds no longer include the TCP bridge. Nodes connect over the Gateway 
 - `webhookToken`: bearer token used for cron webhook POST delivery (`delivery.mode = "webhook"`), if omitted no auth header is sent.
 - `webhook`: deprecated legacy fallback webhook URL (http/https) used only for stored jobs that still have `notify: true`.
 
-See [Cron Jobs](/automation/cron-jobs).
+See [Cron Jobs](/en/automation/cron-jobs).
 
 ---
 
@@ -2982,4 +2982,4 @@ Split config into multiple files:
 
 ---
 
-_Related: [Configuration](/gateway/configuration) · [Configuration Examples](/gateway/configuration-examples) · [Doctor](/gateway/doctor)_
+_Related: [Configuration](/en/gateway/configuration) · [Configuration Examples](/en/gateway/configuration-examples) · [Doctor](/en/gateway/doctor)_

@@ -107,8 +107,8 @@ If still stuck:
 
 Related:
 
-- [/nodes/index](/nodes/index)
-- [/nodes/camera](/nodes/camera)
-- [/nodes/location-command](/nodes/location-command)
-- [/tools/exec-approvals](/tools/exec-approvals)
-- [/gateway/pairing](/gateway/pairing)
+- [/nodes/index](/en/nodes/index)
+- [/nodes/camera](/en/nodes/camera)
+- [/nodes/location-command](/en/nodes/location-command)
+- [/tools/exec-approvals](/en/tools/exec-approvals)
+- [/gateway/pairing](/en/gateway/pairing)

@@ -64,7 +64,7 @@ You’ll see:
 - `/status` showing `🧹 Compactions: <count>`
 
 Before compaction, OpenClaw can run a **silent memory flush** turn to store
-durable notes to disk. See [Memory](/concepts/memory) for details and config.
+durable notes to disk. See [Memory](/en/concepts/memory) for details and config.
 
 ## Manual compaction
 
@@ -83,7 +83,7 @@ Context window is model-specific. OpenClaw uses the model definition from the co
 - **Compaction**: summarises and **persists** in JSONL.
 - **Session pruning**: trims old **tool results** only, **in-memory**, per request.
 
-See [/concepts/session-pruning](/concepts/session-pruning) for pruning details.
+See [/concepts/session-pruning](/en/concepts/session-pruning) for pruning details.
 
 ## OpenAI server-side compaction
 
@@ -95,7 +95,7 @@ compaction and can run alongside it.
 - Server-side compaction: OpenAI compacts context on the provider side when
   `store` + `context_management` are enabled.
 
-See [OpenAI provider](/providers/openai) for model params and overrides.
+See [OpenAI provider](/en/providers/openai) for model params and overrides.
 
 ## Tips
 

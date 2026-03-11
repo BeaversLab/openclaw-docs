@@ -130,8 +130,8 @@ Note: Binary detection is best-effort across macOS/Linux/Windows; ensure the CLI
 
 - Provider auth follows the standard model auth order (auth profiles, env vars, `models.providers.*.apiKey`).
 - Deepgram picks up `DEEPGRAM_API_KEY` when `provider: "deepgram"` is used.
-- Deepgram setup details: [Deepgram (audio transcription)](/providers/deepgram).
-- Mistral setup details: [Mistral](/providers/mistral).
+- Deepgram setup details: [Deepgram (audio transcription)](/en/providers/deepgram).
+- Mistral setup details: [Mistral](/en/providers/mistral).
 - Audio providers can override `baseUrl`, `headers`, and `providerOptions` via `tools.media.audio`.
 - Default size cap is 20MB (`tools.media.audio.maxBytes`). Oversize audio is skipped for that model and the next entry is tried.
 - Tiny/empty audio files below 1024 bytes are skipped before provider/CLI transcription.

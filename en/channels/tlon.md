@@ -30,7 +30,7 @@ Local checkout (when running from a git repo):
 openclaw plugins install ./extensions/tlon
 ```
 
-Details: [Plugins](/tools/plugin)
+Details: [Plugins](/en/tools/plugin)
 
 ## Setup
 
@@ -249,7 +249,7 @@ Common failures:
 
 ## Configuration reference
 
-Full configuration: [Configuration](/gateway/configuration)
+Full configuration: [Configuration](/en/gateway/configuration)
 
 Provider options:
 

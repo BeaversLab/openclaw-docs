@@ -12,7 +12,7 @@ Legacy alias namespace kept for backwards compatibility.
 
 Current supported alias:
 
-- `openclaw clawbot qr` (same behavior as [`openclaw qr`](/cli/qr))
+- `openclaw clawbot qr` (same behavior as [`openclaw qr`](/en/cli/qr))
 
 ## Migration
 

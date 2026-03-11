@@ -116,7 +116,7 @@ Common signatures:
 
 Related:
 
-- [/automation/cron-jobs](/automation/cron-jobs)
-- [/gateway/heartbeat](/gateway/heartbeat)
-- [/automation/cron-vs-heartbeat](/automation/cron-vs-heartbeat)
-- [/concepts/timezone](/concepts/timezone)
+- [/automation/cron-jobs](/en/automation/cron-jobs)
+- [/gateway/heartbeat](/en/gateway/heartbeat)
+- [/automation/cron-vs-heartbeat](/en/automation/cron-vs-heartbeat)
+- [/concepts/timezone](/en/concepts/timezone)

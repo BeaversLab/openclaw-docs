@@ -48,7 +48,7 @@ Last updated: 2026-01-22
 
 Protocol details:
 
-- [Gateway protocol](/gateway/protocol)
+- [Gateway protocol](/en/gateway/protocol)
 
 ### WebChat
 
@@ -105,8 +105,8 @@ sequenceDiagram
 - Gateway auth (`gateway.auth.*`) still applies to **all** connections, local or
   remote.
 
-Details: [Gateway protocol](/gateway/protocol), [Pairing](/channels/pairing),
-[Security](/gateway/security).
+Details: [Gateway protocol](/en/gateway/protocol), [Pairing](/en/channels/pairing),
+[Security](/en/gateway/security).
 
 ## Protocol typing and codegen
 

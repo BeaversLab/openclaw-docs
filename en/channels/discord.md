@@ -10,13 +10,13 @@ title: "Discord"
 Status: ready for DMs and guild channels via the official Discord gateway.
 
 <CardGroup cols={3}>
-  <Card title="Pairing" icon="link" href="/channels/pairing">
+  <Card title="Pairing" icon="link" href="/en/channels/pairing">
     Discord DMs default to pairing mode.
   </Card>
-  <Card title="Slash commands" icon="terminal" href="/tools/slash-commands">
+  <Card title="Slash commands" icon="terminal" href="/en/tools/slash-commands">
     Native command behavior and command catalog.
   </Card>
-  <Card title="Channel troubleshooting" icon="wrench" href="/channels/troubleshooting">
+  <Card title="Channel troubleshooting" icon="wrench" href="/en/channels/troubleshooting">
     Cross-channel diagnostics and repair flow.
   </Card>
 </CardGroup>
@@ -133,7 +133,7 @@ openclaw gateway
 DISCORD_BOT_TOKEN=...
 ```
 
-        SecretRef values are also supported for `channels.discord.token` (env/file/exec providers). See [Secrets Management](/gateway/secrets).
+        SecretRef values are also supported for `channels.discord.token` (env/file/exec providers). See [Secrets Management](/en/gateway/secrets).
 
       </Tab>
     </Tabs>
@@ -545,7 +545,7 @@ Use `bindings[].match.roles` to route Discord guild members to different agents 
 - Native command auth uses the same Discord allowlists/policies as normal message handling.
 - Commands may still be visible in Discord UI for users who are not authorized; execution still enforces OpenClaw auth and returns "not authorized".
 
-See [Slash commands](/tools/slash-commands) for command catalog and behavior.
+See [Slash commands](/en/tools/slash-commands) for command catalog and behavior.
 
 Default slash command settings:
 
@@ -682,7 +682,7 @@ Default slash command settings:
     - `spawnAcpSessions` must be true to auto-create/bind threads for ACP (`/acp spawn ... --thread ...` or `sessions_spawn({ runtime: "acp", thread: true })`).
     - If thread bindings are disabled for an account, `/focus` and related thread binding operations are unavailable.
 
-    See [Sub-agents](/tools/subagents), [ACP Agents](/tools/acp-agents), and [Configuration Reference](/gateway/configuration-reference).
+    See [Sub-agents](/en/tools/subagents), [ACP Agents](/en/tools/acp-agents), and [Configuration Reference](/en/gateway/configuration-reference).
 
   </Accordion>
 
@@ -747,7 +747,7 @@ Default slash command settings:
     - In a bound channel or thread, `/new` and `/reset` reset the same ACP session in place.
     - Temporary thread bindings still work and can override target resolution while active.
 
-    See [ACP Agents](/tools/acp-agents) for binding behavior details.
+    See [ACP Agents](/en/tools/acp-agents) for binding behavior details.
 
   </Accordion>
 
@@ -952,7 +952,7 @@ Default slash command settings:
 
     If approvals fail with unknown approval IDs, verify approver list and feature enablement.
 
-    Related docs: [Exec approvals](/tools/exec-approvals)
+    Related docs: [Exec approvals](/en/tools/exec-approvals)
 
   </Accordion>
 </AccordionGroup>
@@ -1189,7 +1189,7 @@ openclaw logs --follow
 
 Primary reference:
 
-- [Configuration reference - Discord](/gateway/configuration-reference#discord)
+- [Configuration reference - Discord](/en/gateway/configuration-reference#discord)
 
 High-signal Discord fields:
 
@@ -1216,8 +1216,8 @@ High-signal Discord fields:
 
 ## Related
 
-- [Pairing](/channels/pairing)
-- [Channel routing](/channels/channel-routing)
-- [Multi-agent routing](/concepts/multi-agent)
-- [Troubleshooting](/channels/troubleshooting)
-- [Slash commands](/tools/slash-commands)
+- [Pairing](/en/channels/pairing)
+- [Channel routing](/en/channels/channel-routing)
+- [Multi-agent routing](/en/concepts/multi-agent)
+- [Troubleshooting](/en/channels/troubleshooting)
+- [Slash commands](/en/tools/slash-commands)

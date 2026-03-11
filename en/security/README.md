@@ -4,8 +4,8 @@
 
 ## Documents
 
-- [Threat Model](/security/THREAT-MODEL-ATLAS) - MITRE ATLAS-based threat model for the OpenClaw ecosystem
-- [Contributing to the Threat Model](/security/CONTRIBUTING-THREAT-MODEL) - How to add threats, mitigations, and attack chains
+- [Threat Model](/en/security/THREAT-MODEL-ATLAS) - MITRE ATLAS-based threat model for the OpenClaw ecosystem
+- [Contributing to the Threat Model](/en/security/CONTRIBUTING-THREAT-MODEL) - How to add threats, mitigations, and attack chains
 
 ## Reporting Vulnerabilities
 

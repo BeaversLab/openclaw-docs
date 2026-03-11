@@ -15,9 +15,9 @@ Hooks provide an extensible event-driven system for automating actions in respon
 Hooks are small scripts that run when something happens. There are two kinds:
 
 - **Hooks** (this page): run inside the Gateway when agent events fire, like `/new`, `/reset`, `/stop`, or lifecycle events.
-- **Webhooks**: external HTTP webhooks that let other systems trigger work in OpenClaw. See [Webhook Hooks](/automation/webhook) or use `openclaw webhooks` for Gmail helper commands.
+- **Webhooks**: external HTTP webhooks that let other systems trigger work in OpenClaw. See [Webhook Hooks](/en/automation/webhook) or use `openclaw webhooks` for Gmail helper commands.
 
-Hooks can also be bundled inside plugins; see [Plugins](/tools/plugin#plugin-hooks).
+Hooks can also be bundled inside plugins; see [Plugins](/en/tools/plugin#plugin-hooks).
 
 Common uses:
 
@@ -362,7 +362,7 @@ export default handler;
 
 These hooks are not event-stream listeners; they let plugins synchronously adjust tool results before OpenClaw persists them.
 
-- **`tool_result_persist`**: transform tool results before they are written to the session transcript. Must be synchronous; return the updated tool result payload or `undefined` to keep it as-is. See [Agent Loop](/concepts/agent-loop).
+- **`tool_result_persist`**: transform tool results before they are written to the session transcript. Must be synchronous; return the updated tool result payload or `undefined` to keep it as-is. See [Agent Loop](/en/concepts/agent-loop).
 
 ### Plugin Hook Events
 
@@ -1043,7 +1043,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 
 ## See Also
 
-- [CLI Reference: hooks](/cli/hooks)
+- [CLI Reference: hooks](/en/cli/hooks)
 - [Bundled Hooks README](https://github.com/openclaw/openclaw/tree/main/src/hooks/bundled)
-- [Webhook Hooks](/automation/webhook)
-- [Configuration](/gateway/configuration#hooks)
+- [Webhook Hooks](/en/automation/webhook)
+- [Configuration](/en/gateway/configuration#hooks)

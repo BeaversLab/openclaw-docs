@@ -25,7 +25,7 @@ This page explains hardening **within that model**. It does not claim hostile mu
 
 ## Quick check: `openclaw security audit`
 
-See also: [Formal Verification (Security Models)](/security/formal-verification/)
+See also: [Formal Verification (Security Models)](/en/security/formal-verification/)
 
 Run this regularly (especially after changing config or exposing network surfaces):
 
@@ -352,7 +352,7 @@ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
 - OpenClaw gateway is local/loopback first. If you terminate TLS at a reverse proxy, set HSTS on the proxy-facing HTTPS domain there.
 - If the gateway itself terminates HTTPS, you can set `gateway.http.securityHeaders.strictTransportSecurity` to emit the HSTS header from OpenClaw responses.
-- Detailed deployment guidance is in [Trusted Proxy Auth](/gateway/trusted-proxy-auth#tls-termination-and-hsts).
+- Detailed deployment guidance is in [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth#tls-termination-and-hsts).
 - For non-loopback Control UI deployments, `gateway.controlUi.allowedOrigins` is required by default.
 - `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` enables Host-header origin fallback mode; treat it as a dangerous operator-selected policy.
 - Treat DNS rebinding and proxy-host header behavior as deployment hardening concerns; keep `trustedProxies` tight and avoid exposing the gateway directly to the public internet.
@@ -411,8 +411,8 @@ OpenClaw’s stance:
 ## Command authorization model
 
 Slash commands and directives are only honored for **authorized senders**. Authorization is derived from
-channel allowlists/pairing plus `commands.useAccessGroups` (see [Configuration](/gateway/configuration)
-and [Slash commands](/tools/slash-commands)). If a channel allowlist is empty or includes `"*"`,
+channel allowlists/pairing plus `commands.useAccessGroups` (see [Configuration](/en/gateway/configuration)
+and [Slash commands](/en/tools/slash-commands)). If a channel allowlist is empty or includes `"*"`,
 commands are effectively open for that channel.
 
 `/exec` is a session-only convenience for authorized operators. It does **not** write config or
@@ -450,7 +450,7 @@ Plugins run **in-process** with the Gateway. Treat them as trusted code:
   - OpenClaw uses `npm pack` and then runs `npm install --omit=dev` in that directory (npm lifecycle scripts can execute code during install).
   - Prefer pinned, exact versions (`@scope/pkg@1.2.3`), and inspect the unpacked code on disk before enabling.
 
-Details: [Plugins](/tools/plugin)
+Details: [Plugins](/en/tools/plugin)
 
 ## DM access model (pairing / allowlist / open / disabled)
 
@@ -468,7 +468,7 @@ openclaw pairing list <channel>
 openclaw pairing approve <channel> <code>
 ```
 
-Details + files on disk: [Pairing](/channels/pairing)
+Details + files on disk: [Pairing](/en/channels/pairing)
 
 ## DM session isolation (multi-user mode)
 
@@ -492,7 +492,7 @@ Treat the snippet above as **secure DM mode**:
 - Local CLI onboarding default: writes `session.dmScope: "per-channel-peer"` when unset (keeps existing explicit values).
 - Secure DM mode: `session.dmScope: "per-channel-peer"` (each channel+sender pair gets an isolated DM context).
 
-If you run multiple accounts on the same channel, use `per-account-channel-peer` instead. If the same person contacts you on multiple channels, use `session.identityLinks` to collapse those DM sessions into one canonical identity. See [Session Management](/concepts/session) and [Configuration](/gateway/configuration).
+If you run multiple accounts on the same channel, use `per-account-channel-peer` instead. If the same person contacts you on multiple channels, use `session.identityLinks` to collapse those DM sessions into one canonical identity. See [Session Management](/en/concepts/session) and [Configuration](/en/gateway/configuration).
 
 ## Allowlists (DM + groups) — terminology
 
@@ -509,7 +509,7 @@ OpenClaw has two separate “who can trigger me?” layers:
   - Replying to a bot message (implicit mention) does **not** bypass sender allowlists like `groupAllowFrom`.
   - **Security note:** treat `dmPolicy="open"` and `groupPolicy="open"` as last-resort settings. They should be barely used; prefer pairing + allowlists unless you fully trust every member of the room.
 
-Details: [Configuration](/gateway/configuration) and [Groups](/channels/groups)
+Details: [Configuration](/en/gateway/configuration) and [Groups](/en/channels/groups)
 
 ## Prompt injection (what it is, why it matters)
 
@@ -773,7 +773,7 @@ Auth modes:
 
 - `gateway.auth.mode: "token"`: shared bearer token (recommended for most setups).
 - `gateway.auth.mode: "password"`: password auth (prefer setting via env: `OPENCLAW_GATEWAY_PASSWORD`).
-- `gateway.auth.mode: "trusted-proxy"`: trust an identity-aware reverse proxy to authenticate users and pass identity via headers (see [Trusted Proxy Auth](/gateway/trusted-proxy-auth)).
+- `gateway.auth.mode: "trusted-proxy"`: trust an identity-aware reverse proxy to authenticate users and pass identity via headers (see [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)).
 
 Rotation checklist (token/password):
 
@@ -807,7 +807,7 @@ and require token/password auth.
 
 **Security rule:** do not forward these headers from your own reverse proxy. If
 you terminate TLS or proxy in front of the gateway, disable
-`gateway.auth.allowTailscale` and use token/password auth (or [Trusted Proxy Auth](/gateway/trusted-proxy-auth)) instead.
+`gateway.auth.allowTailscale` and use token/password auth (or [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)) instead.
 
 Trusted proxies:
 
@@ -815,12 +815,12 @@ Trusted proxies:
 - OpenClaw will trust `x-forwarded-for` (or `x-real-ip`) from those IPs to determine the client IP for local pairing checks and HTTP auth/local checks.
 - Ensure your proxy **overwrites** `x-forwarded-for` and blocks direct access to the Gateway port.
 
-See [Tailscale](/gateway/tailscale) and [Web overview](/web).
+See [Tailscale](/en/gateway/tailscale) and [Web overview](/en/web).
 
 ### 0.6.1) Browser control via node host (recommended)
 
 If your Gateway is remote but the browser runs on another machine, run a **node host**
-on the browser machine and let the Gateway proxy browser actions (see [Browser tool](/tools/browser)).
+on the browser machine and let the Gateway proxy browser actions (see [Browser tool](/en/tools/browser)).
 Treat node pairing like admin access.
 
 Recommended pattern:
@@ -866,7 +866,7 @@ Recommendations:
 - When sharing diagnostics, prefer `openclaw status --all` (pasteable, secrets redacted) over raw logs.
 - Prune old session transcripts and log files if you don’t need long retention.
 
-Details: [Logging](/gateway/logging)
+Details: [Logging](/en/gateway/logging)
 
 ### 1) DMs: pairing by default
 
@@ -949,12 +949,12 @@ Built-in baseline for chat-driven agent turns: non-owner senders cannot use the 
 
 ## Sandboxing (recommended)
 
-Dedicated doc: [Sandboxing](/gateway/sandboxing)
+Dedicated doc: [Sandboxing](/en/gateway/sandboxing)
 
 Two complementary approaches:
 
-- **Run the full Gateway in Docker** (container boundary): [Docker](/install/docker)
-- **Tool sandbox** (`agents.defaults.sandbox`, host gateway + Docker-isolated tools): [Sandboxing](/gateway/sandboxing)
+- **Run the full Gateway in Docker** (container boundary): [Docker](/en/install/docker)
+- **Tool sandbox** (`agents.defaults.sandbox`, host gateway + Docker-isolated tools): [Sandboxing](/en/gateway/sandboxing)
 
 Note: to prevent cross-agent access, keep `agents.defaults.sandbox.scope` at `"agent"` (default)
 or `"session"` for stricter per-session isolation. `scope: "shared"` uses a
@@ -966,7 +966,7 @@ Also consider agent workspace access inside the sandbox:
 - `agents.defaults.sandbox.workspaceAccess: "ro"` mounts the agent workspace read-only at `/agent` (disables `write`/`edit`/`apply_patch`)
 - `agents.defaults.sandbox.workspaceAccess: "rw"` mounts the agent workspace read/write at `/workspace`
 
-Important: `tools.elevated` is the global baseline escape hatch that runs exec on the host. Keep `tools.elevated.allowFrom` tight and don’t enable it for strangers. You can further restrict elevated per agent via `agents.list[].tools.elevated`. See [Elevated Mode](/tools/elevated).
+Important: `tools.elevated` is the global baseline escape hatch that runs exec on the host. Keep `tools.elevated.allowFrom` tight and don’t enable it for strangers. You can further restrict elevated per agent via `agents.list[].tools.elevated`. See [Elevated Mode](/en/tools/elevated).
 
 ### Sub-agent delegation guardrail
 
@@ -1022,7 +1022,7 @@ Example strict policy:
 
 With multi-agent routing, each agent can have its own sandbox + tool policy:
 use this to give **full access**, **read-only**, or **no access** per agent.
-See [Multi-Agent Sandbox & Tools](/tools/multi-agent-sandbox-tools) for full details
+See [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) for full details
 and precedence rules.
 
 Common use cases:

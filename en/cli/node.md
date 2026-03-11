@@ -119,5 +119,5 @@ The node host stores its node id, token, display name, and gateway connection in
 `system.run` is gated by local exec approvals:
 
 - `~/.openclaw/exec-approvals.json`
-- [Exec approvals](/tools/exec-approvals)
+- [Exec approvals](/en/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>` (edit from the Gateway)

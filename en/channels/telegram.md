@@ -10,13 +10,13 @@ title: "Telegram"
 Status: production-ready for bot DMs + groups via grammY. Long polling is the default mode; webhook mode is optional.
 
 <CardGroup cols={3}>
-  <Card title="Pairing" icon="link" href="/channels/pairing">
+  <Card title="Pairing" icon="link" href="/en/channels/pairing">
     Default DM policy for Telegram is pairing.
   </Card>
-  <Card title="Channel troubleshooting" icon="wrench" href="/channels/troubleshooting">
+  <Card title="Channel troubleshooting" icon="wrench" href="/en/channels/troubleshooting">
     Cross-channel diagnostics and repair playbooks.
   </Card>
-  <Card title="Gateway configuration" icon="settings" href="/gateway/configuration">
+  <Card title="Gateway configuration" icon="settings" href="/en/gateway/configuration">
     Full channel config patterns and examples.
   </Card>
 </CardGroup>
@@ -347,7 +347,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     2. paste code in iOS app
     3. `/pair approve` approves latest pending request
 
-    More details: [Pairing](/channels/pairing#pair-via-telegram-recommended-for-ios).
+    More details: [Pairing](/en/channels/pairing#pair-via-telegram-recommended-for-ios).
 
   </Accordion>
 
@@ -438,7 +438,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     Note: `edit` and `topic-create` are currently enabled by default and do not have separate `channels.telegram.actions.*` toggles.
     Runtime sends use the active config/secrets snapshot (startup/reload), so action paths do not perform ad-hoc SecretRef re-resolution per send.
 
-    Reaction removal semantics: [/tools/reactions](/tools/reactions)
+    Reaction removal semantics: [/tools/reactions](/en/tools/reactions)
 
   </Accordion>
 
@@ -812,7 +812,7 @@ openclaw message poll --channel telegram --target -1001234567890:topic:42 \
 
     Inline approval buttons also depend on `channels.telegram.capabilities.inlineButtons` allowing the target surface (`dm`, `group`, or `all`).
 
-    Related docs: [Exec approvals](/tools/exec-approvals)
+    Related docs: [Exec approvals](/en/tools/exec-approvals)
 
   </Accordion>
 </AccordionGroup>
@@ -884,7 +884,7 @@ dig +short api.telegram.org AAAA
   </Accordion>
 </AccordionGroup>
 
-More help: [Channel troubleshooting](/channels/troubleshooting).
+More help: [Channel troubleshooting](/en/channels/troubleshooting).
 
 ## Telegram config reference pointers
 
@@ -916,7 +916,7 @@ Primary reference:
   - `channels.telegram.groups.<id>.topics.<threadId>.agentId`: route this topic to a specific agent (overrides group-level and binding routing).
 - `channels.telegram.groups.<id>.topics.<threadId>.groupPolicy`: per-topic override for groupPolicy (`open | allowlist | disabled`).
 - `channels.telegram.groups.<id>.topics.<threadId>.requireMention`: per-topic mention gating override.
-- top-level `bindings[]` with `type: "acp"` and canonical topic id `chatId:topic:topicId` in `match.peer.id`: persistent ACP topic binding fields (see [ACP Agents](/tools/acp-agents#channel-specific-settings)).
+- top-level `bindings[]` with `type: "acp"` and canonical topic id `chatId:topic:topicId` in `match.peer.id`: persistent ACP topic binding fields (see [ACP Agents](/en/tools/acp-agents#channel-specific-settings)).
 - `channels.telegram.direct.<id>.topics.<threadId>.agentId`: route DM topics to a specific agent (same behavior as forum topics).
 - `channels.telegram.execApprovals.enabled`: enable Telegram as a chat-based exec approval client for this account.
 - `channels.telegram.execApprovals.approvers`: Telegram user IDs allowed to approve or deny exec requests. Required when exec approvals are enabled.
@@ -949,7 +949,7 @@ Primary reference:
 - `channels.telegram.reactionNotifications`: `off | own | all` — control which reactions trigger system events (default: `own` when not set).
 - `channels.telegram.reactionLevel`: `off | ack | minimal | extensive` — control agent's reaction capability (default: `minimal` when not set).
 
-- [Configuration reference - Telegram](/gateway/configuration-reference#telegram)
+- [Configuration reference - Telegram](/en/gateway/configuration-reference#telegram)
 
 Telegram-specific high-signal fields:
 
@@ -968,7 +968,7 @@ Telegram-specific high-signal fields:
 
 ## Related
 
-- [Pairing](/channels/pairing)
-- [Channel routing](/channels/channel-routing)
-- [Multi-agent routing](/concepts/multi-agent)
-- [Troubleshooting](/channels/troubleshooting)
+- [Pairing](/en/channels/pairing)
+- [Channel routing](/en/channels/channel-routing)
+- [Multi-agent routing](/en/concepts/multi-agent)
+- [Troubleshooting](/en/channels/troubleshooting)

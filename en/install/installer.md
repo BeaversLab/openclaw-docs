@@ -53,7 +53,7 @@ OpenClaw ships three installer scripts, served from `openclaw.ai`.
 </Tabs>
 
 <Note>
-If install succeeds but `openclaw` is not found in a new terminal, see [Node.js troubleshooting](/install/node#troubleshooting).
+If install succeeds but `openclaw` is not found in a new terminal, see [Node.js troubleshooting](/en/install/node#troubleshooting).
 </Note>
 
 ---
@@ -400,6 +400,6 @@ Use non-interactive flags/env vars for predictable runs.
   </Accordion>
 
   <Accordion title="openclaw not found after install">
-    Usually a PATH issue. See [Node.js troubleshooting](/install/node#troubleshooting).
+    Usually a PATH issue. See [Node.js troubleshooting](/en/install/node#troubleshooting).
   </Accordion>
 </AccordionGroup>

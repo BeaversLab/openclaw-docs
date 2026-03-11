@@ -59,4 +59,4 @@ than basic-only scraping.
 2. Firecrawl (if configured)
 3. Basic HTML cleanup (last fallback)
 
-See [Web tools](/tools/web) for the full web tool setup.
+See [Web tools](/en/tools/web) for the full web tool setup.

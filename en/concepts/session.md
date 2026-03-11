@@ -52,7 +52,7 @@ Notes:
 - Local CLI onboarding writes `session.dmScope: "per-channel-peer"` by default when unset (existing explicit values are preserved).
 - For multi-account inboxes on the same channel, prefer `per-account-channel-peer`.
 - If the same person contacts you on multiple channels, use `session.identityLinks` to collapse their DM sessions into one canonical identity.
-- You can verify your DM settings with `openclaw security audit` (see [security](/cli/security)).
+- You can verify your DM settings with `openclaw security audit` (see [security](/en/cli/security)).
 
 ## Gateway is the source of truth
 
@@ -177,14 +177,14 @@ openclaw sessions cleanup --enforce
 ## Session pruning
 
 OpenClaw trims **old tool results** from the in-memory context right before LLM calls by default.
-This does **not** rewrite JSONL history. See [/concepts/session-pruning](/concepts/session-pruning).
+This does **not** rewrite JSONL history. See [/concepts/session-pruning](/en/concepts/session-pruning).
 
 ## Pre-compaction memory flush
 
 When a session nears auto-compaction, OpenClaw can run a **silent memory flush**
 turn that reminds the model to write durable notes to disk. This only runs when
-the workspace is writable. See [Memory](/concepts/memory) and
-[Compaction](/concepts/compaction).
+the workspace is writable. See [Memory](/en/concepts/memory) and
+[Compaction](/en/concepts/compaction).
 
 ## Mapping transports → session keys
 
@@ -284,7 +284,7 @@ Runtime override (owner only):
 - Send `/status` as a standalone message in chat to see whether the agent is reachable, how much of the session context is used, current thinking/verbose toggles, and when your WhatsApp web creds were last refreshed (helps spot relink needs).
 - Send `/context list` or `/context detail` to see what’s in the system prompt and injected workspace files (and the biggest context contributors).
 - Send `/stop` (or standalone abort phrases like `stop`, `stop action`, `stop run`, `stop openclaw`) to abort the current run, clear queued followups for that session, and stop any sub-agent runs spawned from it (the reply includes the stopped count).
-- Send `/compact` (optional instructions) as a standalone message to summarize older context and free up window space. See [/concepts/compaction](/concepts/compaction).
+- Send `/compact` (optional instructions) as a standalone message to summarize older context and free up window space. See [/concepts/compaction](/en/concepts/compaction).
 - JSONL transcripts can be opened directly to review full turns.
 
 ## Tips

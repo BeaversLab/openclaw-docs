@@ -155,7 +155,7 @@ DMs:
 - Approve via:
   - `openclaw pairing list bluebubbles`
   - `openclaw pairing approve bluebubbles <CODE>`
-- Pairing is the default token exchange. Details: [Pairing](/channels/pairing)
+- Pairing is the default token exchange. Details: [Pairing](/en/channels/pairing)
 
 Groups:
 
@@ -264,7 +264,7 @@ Use full IDs for durable automations and storage:
 - Templates: `{{MessageSidFull}}`, `{{ReplyToIdFull}}`
 - Context: `MessageSidFull` / `ReplyToIdFull` in inbound payloads
 
-See [Configuration](/gateway/configuration) for template variables.
+See [Configuration](/en/gateway/configuration) for template variables.
 
 ## Block streaming
 
@@ -288,7 +288,7 @@ Control whether responses are sent as a single message or streamed in blocks:
 
 ## Configuration reference
 
-Full configuration: [Configuration](/gateway/configuration)
+Full configuration: [Configuration](/en/gateway/configuration)
 
 Provider options:
 
@@ -331,7 +331,7 @@ Prefer `chat_guid` for stable routing:
 
 - Webhook requests are authenticated by comparing `guid`/`password` query params or headers against `channels.bluebubbles.password`. Requests from `localhost` are also accepted.
 - Keep the API password and webhook endpoint secret (treat them like credentials).
-- Localhost trust means a same-host reverse proxy can unintentionally bypass the password. If you proxy the gateway, require auth at the proxy and configure `gateway.trustedProxies`. See [Gateway security](/gateway/security#reverse-proxy-configuration).
+- Localhost trust means a same-host reverse proxy can unintentionally bypass the password. If you proxy the gateway, require auth at the proxy and configure `gateway.trustedProxies`. See [Gateway security](/en/gateway/security#reverse-proxy-configuration).
 - Enable HTTPS + firewall rules on the BlueBubbles server if exposing it outside your LAN.
 
 ## Troubleshooting
@@ -344,4 +344,4 @@ Prefer `chat_guid` for stable routing:
 - OpenClaw auto-hides known-broken actions based on the BlueBubbles server's macOS version. If edit still appears on macOS 26 (Tahoe), disable it manually with `channels.bluebubbles.actions.edit=false`.
 - For status/health info: `openclaw status --all` or `openclaw status --deep`.
 
-For general channel workflow reference, see [Channels](/channels) and the [Plugins](/tools/plugin) guide.
+For general channel workflow reference, see [Channels](/en/channels) and the [Plugins](/en/tools/plugin) guide.

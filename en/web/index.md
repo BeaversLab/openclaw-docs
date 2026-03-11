@@ -13,13 +13,13 @@ The Gateway serves a small **browser Control UI** (Vite + Lit) from the same por
 - default: `http://<host>:18789/`
 - optional prefix: set `gateway.controlUi.basePath` (e.g. `/openclaw`)
 
-Capabilities live in [Control UI](/web/control-ui).
+Capabilities live in [Control UI](/en/web/control-ui).
 This page focuses on bind modes, security, and web-facing surfaces.
 
 ## Webhooks
 
 When `hooks.enabled=true`, the Gateway also exposes a small webhook endpoint on the same HTTP server.
-See [Gateway configuration](/gateway/configuration) → `hooks` for auth + payloads.
+See [Gateway configuration](/en/gateway/configuration) → `hooks` for auth + payloads.
 
 ## Config (default-on)
 
@@ -107,7 +107,7 @@ Open:
   when `gateway.auth.allowTailscale` is `true` (no token/password required).
   HTTP API endpoints still require token/password. Set
   `gateway.auth.allowTailscale: false` to require explicit credentials. See
-  [Tailscale](/gateway/tailscale) and [Security](/gateway/security). This
+  [Tailscale](/en/gateway/tailscale) and [Security](/en/gateway/security). This
   tokenless flow assumes the gateway host is trusted.
 - `gateway.tailscale.mode: "funnel"` requires `gateway.auth.mode: "password"` (shared password).
 

@@ -44,7 +44,7 @@ If a target does not match these rules, apply fails before mutating configuratio
 
 Plan targets are accepted for supported credential paths in:
 
-- [SecretRef Credential Surface](/reference/secretref-credential-surface)
+- [SecretRef Credential Surface](/en/reference/secretref-credential-surface)
 
 ## Target type behavior
 
@@ -100,7 +100,7 @@ If apply fails with an invalid target path message, regenerate the plan with `op
 
 ## Related docs
 
-- [Secrets Management](/gateway/secrets)
-- [CLI `secrets`](/cli/secrets)
-- [SecretRef Credential Surface](/reference/secretref-credential-surface)
-- [Configuration Reference](/gateway/configuration-reference)
+- [Secrets Management](/en/gateway/secrets)
+- [CLI `secrets`](/en/cli/secrets)
+- [SecretRef Credential Surface](/en/reference/secretref-credential-surface)
+- [Configuration Reference](/en/gateway/configuration-reference)

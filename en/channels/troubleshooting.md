@@ -38,7 +38,7 @@ Healthy baseline:
 | Group messages ignored          | Check `requireMention` + mention patterns in config | Mention the bot or relax mention policy for that group. |
 | Random disconnect/relogin loops | `openclaw channels status --probe` + logs           | Re-login and verify credentials directory is healthy.   |
 
-Full troubleshooting: [/channels/whatsapp#troubleshooting-quick](/channels/whatsapp#troubleshooting-quick)
+Full troubleshooting: [/channels/whatsapp#troubleshooting-quick](/en/channels/whatsapp#troubleshooting-quick)
 
 ## Telegram
 
@@ -51,7 +51,7 @@ Full troubleshooting: [/channels/whatsapp#troubleshooting-quick](/channels/whats
 | Send failures with network errors | Inspect logs for Telegram API call failures     | Fix DNS/IPv6/proxy routing to `api.telegram.org`.                           |
 | Upgraded and allowlist blocks you | `openclaw security audit` and config allowlists | Run `openclaw doctor --fix` or replace `@username` with numeric sender IDs. |
 
-Full troubleshooting: [/channels/telegram#troubleshooting](/channels/telegram#troubleshooting)
+Full troubleshooting: [/channels/telegram#troubleshooting](/en/channels/telegram#troubleshooting)
 
 ## Discord
 
@@ -63,7 +63,7 @@ Full troubleshooting: [/channels/telegram#troubleshooting](/channels/telegram#tr
 | Group messages ignored          | Check logs for mention gating drops | Mention bot or set guild/channel `requireMention: false`. |
 | DM replies missing              | `openclaw pairing list discord`     | Approve DM pairing or adjust DM policy.                   |
 
-Full troubleshooting: [/channels/discord#troubleshooting](/channels/discord#troubleshooting)
+Full troubleshooting: [/channels/discord#troubleshooting](/en/channels/discord#troubleshooting)
 
 ## Slack
 
@@ -75,7 +75,7 @@ Full troubleshooting: [/channels/discord#troubleshooting](/channels/discord#trou
 | DMs blocked                            | `openclaw pairing list slack`             | Approve pairing or relax DM policy.               |
 | Channel message ignored                | Check `groupPolicy` and channel allowlist | Allow the channel or switch policy to `open`.     |
 
-Full troubleshooting: [/channels/slack#troubleshooting](/channels/slack#troubleshooting)
+Full troubleshooting: [/channels/slack#troubleshooting](/en/channels/slack#troubleshooting)
 
 ## iMessage and BlueBubbles
 
@@ -89,8 +89,8 @@ Full troubleshooting: [/channels/slack#troubleshooting](/channels/slack#troubles
 
 Full troubleshooting:
 
-- [/channels/imessage#troubleshooting-macos-privacy-and-security-tcc](/channels/imessage#troubleshooting-macos-privacy-and-security-tcc)
-- [/channels/bluebubbles#troubleshooting](/channels/bluebubbles#troubleshooting)
+- [/channels/imessage#troubleshooting-macos-privacy-and-security-tcc](/en/channels/imessage#troubleshooting-macos-privacy-and-security-tcc)
+- [/channels/bluebubbles#troubleshooting](/en/channels/bluebubbles#troubleshooting)
 
 ## Signal
 
@@ -102,7 +102,7 @@ Full troubleshooting:
 | DM blocked                      | `openclaw pairing list signal`             | Approve sender or adjust DM policy.                      |
 | Group replies do not trigger    | Check group allowlist and mention patterns | Add sender/group or loosen gating.                       |
 
-Full troubleshooting: [/channels/signal#troubleshooting](/channels/signal#troubleshooting)
+Full troubleshooting: [/channels/signal#troubleshooting](/en/channels/signal#troubleshooting)
 
 ## Matrix
 
@@ -114,4 +114,4 @@ Full troubleshooting: [/channels/signal#troubleshooting](/channels/signal#troubl
 | DMs do not process                  | `openclaw pairing list matrix`               | Approve sender or adjust DM policy.             |
 | Encrypted rooms fail                | Verify crypto module and encryption settings | Enable encryption support and rejoin/sync room. |
 
-Full troubleshooting: [/channels/matrix#troubleshooting](/channels/matrix#troubleshooting)
+Full troubleshooting: [/channels/matrix#troubleshooting](/en/channels/matrix#troubleshooting)

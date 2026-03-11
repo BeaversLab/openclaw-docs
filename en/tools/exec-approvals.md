@@ -184,7 +184,7 @@ Shell chaining (`&&`, `||`, `;`) is allowed when every top-level segment satisfi
 Command substitution (`$()` / backticks) is rejected during allowlist parsing, including inside
 double quotes; use single quotes if you need literal `$()` text.
 On macOS companion-app approvals, raw shell text containing shell control or expansion syntax
-(`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) is treated as an allowlist miss unless
+(`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `))`) is treated as an allowlist miss unless
 the shell binary itself is allowlisted.
 For shell wrappers (`bash|sh|zsh ... -c/-lc`), request-scoped env overrides are reduced to a
 small explicit allowlist (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
@@ -252,7 +252,7 @@ must advertise `system.execApprovals.get/set` (macOS app or headless node host).
 If a node does not advertise exec approvals yet, edit its local
 `~/.openclaw/exec-approvals.json` directly.
 
-CLI: `openclaw approvals` supports gateway or node editing (see [Approvals CLI](/cli/approvals)).
+CLI: `openclaw approvals` supports gateway or node editing (see [Approvals CLI](/en/cli/approvals)).
 
 ## Approval flow
 
@@ -351,8 +351,8 @@ topics, OpenClaw preserves the topic for the approval prompt and the post-approv
 
 See:
 
-- [Discord](/channels/discord#exec-approvals-in-discord)
-- [Telegram](/channels/telegram#exec-approvals-in-telegram)
+- [Discord](/en/channels/discord#exec-approvals-in-discord)
+- [Telegram](/en/channels/telegram#exec-approvals-in-telegram)
 
 ### macOS IPC flow
 
@@ -392,6 +392,6 @@ Approval-gated execs reuse the approval id as the `runId` in these messages for 
 
 Related:
 
-- [Exec tool](/tools/exec)
-- [Elevated mode](/tools/elevated)
-- [Skills](/tools/skills)
+- [Exec tool](/en/tools/exec)
+- [Elevated mode](/en/tools/elevated)
+- [Skills](/en/tools/skills)

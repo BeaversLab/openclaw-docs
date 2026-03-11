@@ -28,7 +28,7 @@ Scope includes:
 
 If you need transcript storage details, see:
 
-- [/reference/session-management-compaction](/reference/session-management-compaction)
+- [/reference/session-management-compaction](/en/reference/session-management-compaction)
 
 ---
 

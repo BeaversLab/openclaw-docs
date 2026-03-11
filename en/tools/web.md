@@ -15,7 +15,7 @@ OpenClaw ships two lightweight web tools:
 - `web_fetch` — HTTP fetch + readable extraction (HTML → markdown/text).
 
 These are **not** browser automation. For JS-heavy sites or logins, use the
-[Browser tool](/tools/browser).
+[Browser tool](/en/tools/browser).
 
 ## How it works
 
@@ -25,7 +25,7 @@ These are **not** browser automation. For JS-heavy sites or logins, use the
   (HTML → markdown/text). It does **not** execute JavaScript.
 - `web_fetch` is enabled by default (unless explicitly disabled).
 
-See [Brave Search setup](/brave-search) and [Perplexity Search setup](/perplexity) for provider-specific details.
+See [Brave Search setup](/en/brave-search) and [Perplexity Search setup](/en/perplexity) for provider-specific details.
 
 ## Choosing a search provider
 
@@ -101,7 +101,7 @@ All of these fields also support SecretRef objects.
 - Kimi: `KIMI_API_KEY` or `MOONSHOT_API_KEY`
 - Perplexity: `PERPLEXITY_API_KEY` or `OPENROUTER_API_KEY`
 
-For a gateway install, put these in `~/.openclaw/.env` (or your service environment). See [Env vars](/help/faq#how-does-openclaw-load-environment-variables).
+For a gateway install, put these in `~/.openclaw/.env` (or your service environment). See [Env vars](/en/help/faq#how-does-openclaw-load-environment-variables).
 
 ### Config examples
 
@@ -382,7 +382,7 @@ Notes:
 - `maxChars` is clamped to `tools.web.fetch.maxCharsCap`.
 - `web_fetch` caps the downloaded response body size to `tools.web.fetch.maxResponseBytes` before parsing; oversized responses are truncated and include a warning.
 - `web_fetch` is best-effort extraction; some sites will need the browser tool.
-- See [Firecrawl](/tools/firecrawl) for key setup and service details.
+- See [Firecrawl](/en/tools/firecrawl) for key setup and service details.
 - Responses are cached (default 15 minutes) to reduce repeated fetches.
 - If you use tool profiles/allowlists, add `web_search`/`web_fetch` or `group:web`.
 - If the API key is missing, `web_search` returns a short setup hint with a docs link.

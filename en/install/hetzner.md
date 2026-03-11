@@ -23,7 +23,7 @@ Security model reminder:
 - Keep strict separation: dedicated VPS/runtime + dedicated accounts; no personal Apple/Google/browser/password-manager profiles on that host.
 - If users are adversarial to each other, split by gateway/host/OS user.
 
-See [Security](/gateway/security) and [VPS hosting](/vps).
+See [Security](/en/gateway/security) and [VPS hosting](/en/vps).
 
 ## What are we doing (simple terms)?
 
@@ -40,7 +40,7 @@ The Gateway can be accessed via:
 
 This guide assumes Ubuntu or Debian on Hetzner.  
 If you are on another Linux VPS, map packages accordingly.
-For the generic Docker flow, see [Docker](/install/docker).
+For the generic Docker flow, see [Docker](/en/install/docker).
 
 ---
 

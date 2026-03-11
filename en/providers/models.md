@@ -24,21 +24,21 @@ model as `provider/model`.
 
 ## Supported providers (starter set)
 
-- [OpenAI (API + Codex)](/providers/openai)
-- [Anthropic (API + Claude Code CLI)](/providers/anthropic)
-- [OpenRouter](/providers/openrouter)
-- [Vercel AI Gateway](/providers/vercel-ai-gateway)
-- [Cloudflare AI Gateway](/providers/cloudflare-ai-gateway)
-- [Moonshot AI (Kimi + Kimi Coding)](/providers/moonshot)
-- [Mistral](/providers/mistral)
-- [Synthetic](/providers/synthetic)
-- [OpenCode (Zen + Go)](/providers/opencode)
-- [Z.AI](/providers/zai)
-- [GLM models](/providers/glm)
-- [MiniMax](/providers/minimax)
-- [Venice (Venice AI)](/providers/venice)
-- [Amazon Bedrock](/providers/bedrock)
-- [Qianfan](/providers/qianfan)
+- [OpenAI (API + Codex)](/en/providers/openai)
+- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
+- [OpenRouter](/en/providers/openrouter)
+- [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
+- [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
+- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
+- [Mistral](/en/providers/mistral)
+- [Synthetic](/en/providers/synthetic)
+- [OpenCode (Zen + Go)](/en/providers/opencode)
+- [Z.AI](/en/providers/zai)
+- [GLM models](/en/providers/glm)
+- [MiniMax](/en/providers/minimax)
+- [Venice (Venice AI)](/en/providers/venice)
+- [Amazon Bedrock](/en/providers/bedrock)
+- [Qianfan](/en/providers/qianfan)
 
 For the full provider catalog (xAI, Groq, Mistral, etc.) and advanced configuration,
-see [Model providers](/concepts/model-providers).
+see [Model providers](/en/concepts/model-providers).

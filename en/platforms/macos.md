@@ -103,7 +103,7 @@ Example:
 Notes:
 
 - `allowlist` entries are glob patterns for resolved binary paths.
-- Raw shell command text that contains shell control or expansion syntax (`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) is treated as an allowlist miss and requires explicit approval (or allowlisting the shell binary).
+- Raw shell command text that contains shell control or expansion syntax (`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `))`) is treated as an allowlist miss and requires explicit approval (or allowlisting the shell binary).
 - Choosing “Always Allow” in the prompt adds that command to the allowlist.
 - `system.run` environment overrides are filtered (drops `PATH`, `DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`) and then merged with the app’s environment.
 - For shell wrappers (`bash|sh|zsh ... -c/-lc`), request-scoped environment overrides are reduced to a small explicit allowlist (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
@@ -213,14 +213,14 @@ components can talk to a remote Gateway as if it were on localhost.
   ExitOnForwardFailure + keepalive options.
 - **IP reporting:** the SSH tunnel uses loopback, so the gateway will see the node
   IP as `127.0.0.1`. Use **Direct (ws/wss)** transport if you want the real client
-  IP to appear (see [macOS remote access](/platforms/mac/remote)).
+  IP to appear (see [macOS remote access](/en/platforms/mac/remote)).
 
-For setup steps, see [macOS remote access](/platforms/mac/remote). For protocol
-details, see [Gateway protocol](/gateway/protocol).
+For setup steps, see [macOS remote access](/en/platforms/mac/remote). For protocol
+details, see [Gateway protocol](/en/gateway/protocol).
 
 ## Related docs
 
-- [Gateway runbook](/gateway)
-- [Gateway (macOS)](/platforms/mac/bundled-gateway)
-- [macOS permissions](/platforms/mac/permissions)
-- [Canvas](/platforms/mac/canvas)
+- [Gateway runbook](/en/gateway)
+- [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
+- [macOS permissions](/en/platforms/mac/permissions)
+- [Canvas](/en/platforms/mac/canvas)

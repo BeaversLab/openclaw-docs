@@ -60,7 +60,7 @@ openclaw sessions cleanup --json
 
 `openclaw sessions cleanup` uses `session.maintenance` settings from config:
 
-- Scope note: `openclaw sessions cleanup` maintains session stores/transcripts only. It does not prune cron run logs (`cron/runs/<jobId>.jsonl`), which are managed by `cron.runLog.maxBytes` and `cron.runLog.keepLines` in [Cron configuration](/automation/cron-jobs#configuration) and explained in [Cron maintenance](/automation/cron-jobs#maintenance).
+- Scope note: `openclaw sessions cleanup` maintains session stores/transcripts only. It does not prune cron run logs (`cron/runs/<jobId>.jsonl`), which are managed by `cron.runLog.maxBytes` and `cron.runLog.keepLines` in [Cron configuration](/en/automation/cron-jobs#configuration) and explained in [Cron maintenance](/en/automation/cron-jobs#maintenance).
 
 - `--dry-run`: preview how many entries would be pruned/capped without writing.
   - In text mode, dry-run prints a per-session action table (`Action`, `Key`, `Age`, `Model`, `Flags`) so you can see what would be kept vs removed.
@@ -101,4 +101,4 @@ openclaw sessions cleanup --json
 
 Related:
 
-- Session config: [Configuration reference](/gateway/configuration-reference#session)
+- Session config: [Configuration reference](/en/gateway/configuration-reference#session)

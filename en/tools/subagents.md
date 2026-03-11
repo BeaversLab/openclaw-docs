@@ -53,7 +53,7 @@ These commands work on channels that support persistent thread bindings. See **T
 - `--model` and `--thinking` override defaults for that specific run.
 - Use `info`/`log` to inspect details and output after completion.
 - `/subagents spawn` is one-shot mode (`mode: "run"`). For persistent thread-bound sessions, use `sessions_spawn` with `thread: true` and `mode: "session"`.
-- For ACP harness sessions (Codex, Claude Code, Gemini CLI), use `sessions_spawn` with `runtime: "acp"` and see [ACP Agents](/tools/acp-agents).
+- For ACP harness sessions (Codex, Claude Code, Gemini CLI), use `sessions_spawn` with `runtime: "acp"` and see [ACP Agents](/en/tools/acp-agents).
 
 Primary goals:
 
@@ -121,7 +121,7 @@ Config switches:
 - Global default: `session.threadBindings.enabled`, `session.threadBindings.idleHours`, `session.threadBindings.maxAgeHours`
 - Channel override and spawn auto-bind keys are adapter-specific. See **Thread supporting channels** above.
 
-See [Configuration Reference](/gateway/configuration-reference) and [Slash commands](/tools/slash-commands) for current adapter details.
+See [Configuration Reference](/en/gateway/configuration-reference) and [Slash commands](/en/tools/slash-commands) for current adapter details.
 
 Allowlist:
 

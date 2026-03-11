@@ -8,7 +8,7 @@ title: "OpenCode Go"
 
 # OpenCode Go
 
-OpenCode Go is the Go catalog within [OpenCode](/providers/opencode).
+OpenCode Go is the Go catalog within [OpenCode](/en/providers/opencode).
 It uses the same `OPENCODE_API_KEY` as the Zen catalog, but keeps the runtime
 provider id `opencode-go` so upstream per-model routing stays correct.
 
@@ -41,5 +41,5 @@ OpenClaw handles per-model routing automatically when the model ref uses `openco
 
 ## Notes
 
-- Use [OpenCode](/providers/opencode) for the shared onboarding and catalog overview.
+- Use [OpenCode](/en/providers/opencode) for the shared onboarding and catalog overview.
 - Runtime refs stay explicit: `opencode/...` for Zen, `opencode-go/...` for Go.

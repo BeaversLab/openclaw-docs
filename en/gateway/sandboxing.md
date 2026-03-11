@@ -34,7 +34,7 @@ Not sandboxed:
 - The Gateway process itself.
 - Any tool explicitly allowed to run on the host (e.g. `tools.elevated`).
   - **Elevated exec runs on the host and bypasses sandboxing.**
-  - If sandboxing is off, `tools.elevated` does not change execution (already on host). See [Elevated Mode](/tools/elevated).
+  - If sandboxing is off, `tools.elevated` does not change execution (already on host). See [Elevated Mode](/en/tools/elevated).
 
 ## Modes
 
@@ -112,7 +112,7 @@ Security notes:
 - OpenClaw blocks dangerous bind sources (for example: `docker.sock`, `/etc`, `/proc`, `/sys`, `/dev`, and parent mounts that would expose them).
 - Sensitive mounts (secrets, SSH keys, service credentials) should be `:ro` unless absolutely required.
 - Combine with `workspaceAccess: "ro"` if you only need read access to the workspace; bind modes stay independent.
-- See [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated) for how binds interact with tool policy and elevated exec.
+- See [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) for how binds interact with tool policy and elevated exec.
 
 ## Images + setup
 
@@ -189,12 +189,12 @@ Security defaults:
 - Break-glass override: `agents.defaults.sandbox.docker.dangerouslyAllowContainerNamespaceJoin: true`.
 
 Docker installs and the containerized gateway live here:
-[Docker](/install/docker)
+[Docker](/en/install/docker)
 
 For Docker gateway deployments, `docker-setup.sh` can bootstrap sandbox config.
 Set `OPENCLAW_SANDBOX=1` (or `true`/`yes`/`on`) to enable that path. You can
 override socket location with `OPENCLAW_DOCKER_SOCKET`. Full setup and env
-reference: [Docker](/install/docker#enable-agent-sandbox-for-docker-gateway-opt-in).
+reference: [Docker](/en/install/docker#enable-agent-sandbox-for-docker-gateway-opt-in).
 
 ## setupCommand (one-time container setup)
 
@@ -222,19 +222,19 @@ globally or per-agent, sandboxing doesn’t bring it back.
 
 `tools.elevated` is an explicit escape hatch that runs `exec` on the host.
 `/exec` directives only apply for authorized senders and persist per session; to hard-disable
-`exec`, use tool policy deny (see [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated)).
+`exec`, use tool policy deny (see [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)).
 
 Debugging:
 
 - Use `openclaw sandbox explain` to inspect effective sandbox mode, tool policy, and fix-it config keys.
-- See [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated) for the “why is this blocked?” mental model.
+- See [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) for the “why is this blocked?” mental model.
   Keep it locked down.
 
 ## Multi-agent overrides
 
 Each agent can override sandbox + tools:
 `agents.list[].sandbox` and `agents.list[].tools` (plus `agents.list[].tools.sandbox.tools` for sandbox tool policy).
-See [Multi-Agent Sandbox & Tools](/tools/multi-agent-sandbox-tools) for precedence.
+See [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) for precedence.
 
 ## Minimal enable example
 
@@ -254,6 +254,6 @@ See [Multi-Agent Sandbox & Tools](/tools/multi-agent-sandbox-tools) for preceden
 
 ## Related docs
 
-- [Sandbox Configuration](/gateway/configuration#agentsdefaults-sandbox)
-- [Multi-Agent Sandbox & Tools](/tools/multi-agent-sandbox-tools)
-- [Security](/gateway/security)
+- [Sandbox Configuration](/en/gateway/configuration#agentsdefaults-sandbox)
+- [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools)
+- [Security](/en/gateway/security)

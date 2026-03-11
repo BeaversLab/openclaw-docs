@@ -12,11 +12,11 @@ OpenClaw supports OAuth and API keys for model providers. For always-on gateway
 hosts, API keys are usually the most predictable option. Subscription/OAuth
 flows are also supported when they match your provider account model.
 
-See [/concepts/oauth](/concepts/oauth) for the full OAuth flow and storage
+See [/concepts/oauth](/en/concepts/oauth) for the full OAuth flow and storage
 layout.
-For SecretRef-based auth (`env`/`file`/`exec` providers), see [Secrets Management](/gateway/secrets).
+For SecretRef-based auth (`env`/`file`/`exec` providers), see [Secrets Management](/en/gateway/secrets).
 For credential eligibility/reason-code rules used by `models status --probe`, see
-[Auth Credential Semantics](/auth-credential-semantics).
+[Auth Credential Semantics](/en/auth-credential-semantics).
 
 ## Recommended setup (API key, any provider)
 
@@ -52,7 +52,7 @@ openclaw doctor
 If you’d rather not manage env vars yourself, the onboarding wizard can store
 API keys for daemon use: `openclaw onboard`.
 
-See [Help](/help) for details on env inheritance (`env.shellEnv`,
+See [Help](/en/help) for details on env inheritance (`env.shellEnv`,
 `~/.openclaw/.env`, systemd/launchd).
 
 ## Anthropic: setup-token (subscription auth)
@@ -109,7 +109,7 @@ openclaw models status --check
 ```
 
 Optional ops scripts (systemd/Termux) are documented here:
-[/automation/auth-monitoring](/automation/auth-monitoring)
+[/automation/auth-monitoring](/en/automation/auth-monitoring)
 
 > `claude setup-token` requires an interactive TTY.
 

@@ -36,9 +36,9 @@ Exit code note for CI/gates:
 
 Related:
 
-- Secrets guide: [Secrets Management](/gateway/secrets)
-- Credential surface: [SecretRef Credential Surface](/reference/secretref-credential-surface)
-- Security guide: [Security](/gateway/security)
+- Secrets guide: [Secrets Management](/en/gateway/secrets)
+- Credential surface: [SecretRef Credential Surface](/en/reference/secretref-credential-surface)
+- Security guide: [Security](/en/gateway/security)
 
 ## Reload runtime snapshot
 
@@ -122,7 +122,7 @@ Notes:
 - You cannot combine `--providers-only` with `--skip-provider-setup`.
 - `configure` targets secret-bearing fields in `openclaw.json` plus `auth-profiles.json` for the selected agent scope.
 - `configure` supports creating new `auth-profiles.json` mappings directly in the picker flow.
-- Canonical supported surface: [SecretRef Credential Surface](/reference/secretref-credential-surface).
+- Canonical supported surface: [SecretRef Credential Surface](/en/reference/secretref-credential-surface).
 - It performs preflight resolution before apply.
 - Generated plans default to scrub options (`scrubEnv`, `scrubAuthProfilesForProviderTargets`, `scrubLegacyAuthJson` all enabled).
 - Apply path is one-way for scrubbed plaintext values.
@@ -147,7 +147,7 @@ openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --json
 
 Plan contract details (allowed target paths, validation rules, and failure semantics):
 
-- [Secrets Apply Plan Contract](/gateway/secrets-plan-contract)
+- [Secrets Apply Plan Contract](/en/gateway/secrets-plan-contract)
 
 What `apply` may update:
 

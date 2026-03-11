@@ -90,7 +90,7 @@ You can reference env vars directly in config string values using `${VAR_NAME}` 
 }
 ```
 
-See [Configuration: Env var substitution](/gateway/configuration#env-var-substitution-in-config) for full details.
+See [Configuration: Env var substitution](/en/gateway/configuration#env-var-substitution-in-config) for full details.
 
 ## Secret refs vs `${ENV}` strings
 
@@ -99,7 +99,7 @@ OpenClaw supports two env-driven patterns:
 - `${VAR}` string substitution in config values.
 - SecretRef objects (`{ source: "env", provider: "default", id: "VAR" }`) for fields that support secrets references.
 
-Both resolve from process env at activation time. SecretRef details are documented in [Secrets Management](/gateway/secrets).
+Both resolve from process env at activation time. SecretRef details are documented in [Secrets Management](/en/gateway/secrets).
 
 ## Path-related env vars
 
@@ -135,6 +135,6 @@ When set, `OPENCLAW_HOME` replaces the system home directory (`$HOME` / `os.home
 
 ## Related
 
-- [Gateway configuration](/gateway/configuration)
-- [FAQ: env vars and .env loading](/help/faq#env-vars-and-env-loading)
-- [Models overview](/concepts/models)
+- [Gateway configuration](/en/gateway/configuration)
+- [FAQ: env vars and .env loading](/en/help/faq#env-vars-and-env-loading)
+- [Models overview](/en/concepts/models)

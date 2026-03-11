@@ -41,7 +41,7 @@ Choose this when:
 - you want extension-based control instead of raw `--remote-debugging-port`
 - the relay itself must be reachable across the WSL2/Windows boundary
 
-If you use the extension relay across namespaces, `browser.relayBindHost` is the important setting introduced in [Browser](/tools/browser) and [Chrome extension](/tools/chrome-extension).
+If you use the extension relay across namespaces, `browser.relayBindHost` is the important setting introduced in [Browser](/en/tools/browser) and [Chrome extension](/en/tools/chrome-extension).
 
 ## Working architecture
 
@@ -74,7 +74,7 @@ Use:
 
 `http://127.0.0.1:18789/`
 
-Do not default to a LAN IP for the Control UI. Plain HTTP on a LAN or tailnet address can trigger insecure-origin/device-auth behavior that is unrelated to CDP itself. See [Control UI](/web/control-ui).
+Do not default to a LAN IP for the Control UI. Plain HTTP on a LAN or tailnet address can trigger insecure-origin/device-auth behavior that is unrelated to CDP itself. See [Control UI](/en/web/control-ui).
 
 ## Validate in layers
 
@@ -183,7 +183,7 @@ Then verify:
 
 Helpful page:
 
-- [Control UI](/web/control-ui)
+- [Control UI](/en/web/control-ui)
 
 ### Layer 6: Verify end-to-end browser control
 

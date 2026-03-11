@@ -34,7 +34,7 @@ openclaw plugins install ./extensions/matrix
 If you choose Matrix during configure/onboarding and a git checkout is detected,
 OpenClaw will offer the local install path automatically.
 
-Details: [Plugins](/tools/plugin)
+Details: [Plugins](/en/tools/plugin)
 
 ## Setup
 
@@ -138,7 +138,7 @@ Once verified, the bot can decrypt messages in encrypted rooms.
 
 ## Multi-account
 
-Multi-account support: use `channels.matrix.accounts` with per-account credentials and optional `name`. See [`gateway/configuration`](/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) for the shared pattern.
+Multi-account support: use `channels.matrix.accounts` with per-account credentials and optional `name`. See [`gateway/configuration`](/en/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) for the shared pattern.
 
 Each account runs as a separate Matrix user on any homeserver. Per-account config
 inherits from the top-level `channels.matrix` settings and can override any option
@@ -269,11 +269,11 @@ Common failures:
 - DMs ignored: sender pending approval when `channels.matrix.dm.policy="pairing"`.
 - Encrypted rooms fail: crypto support or encryption settings mismatch.
 
-For triage flow: [/channels/troubleshooting](/channels/troubleshooting).
+For triage flow: [/channels/troubleshooting](/en/channels/troubleshooting).
 
 ## Configuration reference (Matrix)
 
-Full configuration: [Configuration](/gateway/configuration)
+Full configuration: [Configuration](/en/gateway/configuration)
 
 Provider options:
 

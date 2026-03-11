@@ -9,11 +9,11 @@ title: "Install"
 
 # Install
 
-Already followed [Getting Started](/start/getting-started)? You're all set — this page is for alternative install methods, platform-specific instructions, and maintenance.
+Already followed [Getting Started](/en/start/getting-started)? You're all set — this page is for alternative install methods, platform-specific instructions, and maintenance.
 
 ## System requirements
 
-- **[Node 22+](/install/node)** (the [installer script](#install-methods) will install it if missing)
+- **[Node 22+](/en/install/node)** (the [installer script](#install-methods) will install it if missing)
 - macOS, Linux, or Windows
 - `pnpm` only if you build from source
 
@@ -65,7 +65,7 @@ For VPS/cloud hosts, avoid third-party "1-click" marketplace images when possibl
       </Tab>
     </Tabs>
 
-    For all flags, env vars, and CI/automation options, see [Installer internals](/install/installer).
+    For all flags, env vars, and CI/automation options, see [Installer internals](/en/install/installer).
 
   </Accordion>
 
@@ -135,7 +135,7 @@ For VPS/cloud hosts, avoid third-party "1-click" marketplace images when possibl
       </Step>
     </Steps>
 
-    For deeper development workflows, see [Setup](/start/setup).
+    For deeper development workflows, see [Setup](/en/start/setup).
 
   </Accordion>
 </AccordionGroup>
@@ -143,19 +143,19 @@ For VPS/cloud hosts, avoid third-party "1-click" marketplace images when possibl
 ## Other install methods
 
 <CardGroup cols={2}>
-  <Card title="Docker" href="/install/docker" icon="container">
+  <Card title="Docker" href="/en/install/docker" icon="container">
     Containerized or headless deployments.
   </Card>
-  <Card title="Podman" href="/install/podman" icon="container">
+  <Card title="Podman" href="/en/install/podman" icon="container">
     Rootless container: run `setup-podman.sh` once, then the launch script.
   </Card>
-  <Card title="Nix" href="/install/nix" icon="snowflake">
+  <Card title="Nix" href="/en/install/nix" icon="snowflake">
     Declarative install via Nix.
   </Card>
-  <Card title="Ansible" href="/install/ansible" icon="server">
+  <Card title="Ansible" href="/en/install/ansible" icon="server">
     Automated fleet provisioning.
   </Card>
-  <Card title="Bun" href="/install/bun" icon="zap">
+  <Card title="Bun" href="/en/install/bun" icon="zap">
     CLI-only usage via the Bun runtime.
   </Card>
 </CardGroup>
@@ -176,7 +176,7 @@ If you need custom runtime paths, use:
 - `OPENCLAW_STATE_DIR` for mutable state location
 - `OPENCLAW_CONFIG_PATH` for config file location
 
-See [Environment vars](/help/environment) for precedence and full details.
+See [Environment vars](/en/help/environment) for precedence and full details.
 
 ## Troubleshooting: `openclaw` not found
 
@@ -206,13 +206,13 @@ Then open a new terminal (or `rehash` in zsh / `hash -r` in bash).
 ## Update / uninstall
 
 <CardGroup cols={3}>
-  <Card title="Updating" href="/install/updating" icon="refresh-cw">
+  <Card title="Updating" href="/en/install/updating" icon="refresh-cw">
     Keep OpenClaw up to date.
   </Card>
-  <Card title="Migrating" href="/install/migrating" icon="arrow-right">
+  <Card title="Migrating" href="/en/install/migrating" icon="arrow-right">
     Move to a new machine.
   </Card>
-  <Card title="Uninstall" href="/install/uninstall" icon="trash-2">
+  <Card title="Uninstall" href="/en/install/uninstall" icon="trash-2">
     Remove OpenClaw completely.
   </Card>
 </CardGroup>

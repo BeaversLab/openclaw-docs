@@ -9,7 +9,7 @@ title: "Troubleshooting"
 # Gateway troubleshooting
 
 This page is the deep runbook.
-Start at [/help/troubleshooting](/help/troubleshooting) if you want the fast triage flow first.
+Start at [/help/troubleshooting](/en/help/troubleshooting) if you want the fast triage flow first.
 
 ## Command ladder
 
@@ -54,9 +54,9 @@ Fix options:
 
 Related:
 
-- [/providers/anthropic](/providers/anthropic)
-- [/reference/token-use](/reference/token-use)
-- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
+- [/providers/anthropic](/en/providers/anthropic)
+- [/reference/token-use](/en/reference/token-use)
+- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/en/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
 
 ## No replies
 
@@ -84,9 +84,9 @@ Common signatures:
 
 Related:
 
-- [/channels/troubleshooting](/channels/troubleshooting)
-- [/channels/pairing](/channels/pairing)
-- [/channels/groups](/channels/groups)
+- [/channels/troubleshooting](/en/channels/troubleshooting)
+- [/channels/pairing](/en/channels/pairing)
+- [/channels/groups](/en/channels/groups)
 
 ## Dashboard control ui connectivity
 
@@ -124,8 +124,8 @@ Use `error.details.code` from the failed `connect` response to pick the next act
 | Detail code                  | Meaning                                                  | Recommended action                                                                                                                                                   |
 | ---------------------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `AUTH_TOKEN_MISSING`         | Client did not send a required shared token.             | Paste/set token in the client and retry. For dashboard paths: `openclaw config get gateway.auth.token` then paste into Control UI settings.                          |
-| `AUTH_TOKEN_MISMATCH`        | Shared token did not match gateway auth token.           | If `canRetryWithDeviceToken=true`, allow one trusted retry. If still failing, run the [token drift recovery checklist](/cli/devices#token-drift-recovery-checklist). |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | Cached per-device token is stale or revoked.             | Rotate/re-approve device token using [devices CLI](/cli/devices), then reconnect.                                                                                    |
+| `AUTH_TOKEN_MISMATCH`        | Shared token did not match gateway auth token.           | If `canRetryWithDeviceToken=true`, allow one trusted retry. If still failing, run the [token drift recovery checklist](/en/cli/devices#token-drift-recovery-checklist). |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | Cached per-device token is stale or revoked.             | Rotate/re-approve device token using [devices CLI](/en/cli/devices), then reconnect.                                                                                    |
 | `PAIRING_REQUIRED`           | Device identity is known but not approved for this role. | Approve pending request: `openclaw devices list` then `openclaw devices approve <requestId>`.                                                                        |
 
 Device auth v2 migration check:
@@ -144,10 +144,10 @@ If logs show nonce/signature errors, update the connecting client and verify it:
 
 Related:
 
-- [/web/control-ui](/web/control-ui)
-- [/gateway/authentication](/gateway/authentication)
-- [/gateway/remote](/gateway/remote)
-- [/cli/devices](/cli/devices)
+- [/web/control-ui](/en/web/control-ui)
+- [/gateway/authentication](/en/gateway/authentication)
+- [/gateway/remote](/en/gateway/remote)
+- [/cli/devices](/en/cli/devices)
 
 ## Gateway service not running
 
@@ -175,9 +175,9 @@ Common signatures:
 
 Related:
 
-- [/gateway/background-process](/gateway/background-process)
-- [/gateway/configuration](/gateway/configuration)
-- [/gateway/doctor](/gateway/doctor)
+- [/gateway/background-process](/en/gateway/background-process)
+- [/gateway/configuration](/en/gateway/configuration)
+- [/gateway/doctor](/en/gateway/doctor)
 
 ## Channel connected messages not flowing
 
@@ -205,10 +205,10 @@ Common signatures:
 
 Related:
 
-- [/channels/troubleshooting](/channels/troubleshooting)
-- [/channels/whatsapp](/channels/whatsapp)
-- [/channels/telegram](/channels/telegram)
-- [/channels/discord](/channels/discord)
+- [/channels/troubleshooting](/en/channels/troubleshooting)
+- [/channels/whatsapp](/en/channels/whatsapp)
+- [/channels/telegram](/en/channels/telegram)
+- [/channels/discord](/en/channels/discord)
 
 ## Cron and heartbeat delivery
 
@@ -238,9 +238,9 @@ Common signatures:
 
 Related:
 
-- [/automation/troubleshooting](/automation/troubleshooting)
-- [/automation/cron-jobs](/automation/cron-jobs)
-- [/gateway/heartbeat](/gateway/heartbeat)
+- [/automation/troubleshooting](/en/automation/troubleshooting)
+- [/automation/cron-jobs](/en/automation/cron-jobs)
+- [/gateway/heartbeat](/en/gateway/heartbeat)
 
 ## Node paired tool fails
 
@@ -269,9 +269,9 @@ Common signatures:
 
 Related:
 
-- [/nodes/troubleshooting](/nodes/troubleshooting)
-- [/nodes/index](/nodes/index)
-- [/tools/exec-approvals](/tools/exec-approvals)
+- [/nodes/troubleshooting](/en/nodes/troubleshooting)
+- [/nodes/index](/en/nodes/index)
+- [/tools/exec-approvals](/en/tools/exec-approvals)
 
 ## Browser tool fails
 
@@ -300,9 +300,9 @@ Common signatures:
 
 Related:
 
-- [/tools/browser-linux-troubleshooting](/tools/browser-linux-troubleshooting)
-- [/tools/chrome-extension](/tools/chrome-extension)
-- [/tools/browser](/tools/browser)
+- [/tools/browser-linux-troubleshooting](/en/tools/browser-linux-troubleshooting)
+- [/tools/chrome-extension](/en/tools/chrome-extension)
+- [/tools/browser](/en/tools/browser)
 
 ## If you upgraded and something suddenly broke
 
@@ -374,6 +374,6 @@ openclaw gateway restart
 
 Related:
 
-- [/gateway/pairing](/gateway/pairing)
-- [/gateway/authentication](/gateway/authentication)
-- [/gateway/background-process](/gateway/background-process)
+- [/gateway/pairing](/en/gateway/pairing)
+- [/gateway/authentication](/en/gateway/authentication)
+- [/gateway/background-process](/en/gateway/background-process)

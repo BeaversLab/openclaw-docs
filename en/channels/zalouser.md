@@ -18,7 +18,7 @@ Zalo Personal ships as a plugin and is not bundled with the core install.
 
 - Install via CLI: `openclaw plugins install @openclaw/zalouser`
 - Or from a source checkout: `openclaw plugins install ./extensions/zalouser`
-- Details: [Plugins](/tools/plugin)
+- Details: [Plugins](/en/tools/plugin)
 
 No external `zca`/`openzca` CLI binary is required.
 
@@ -159,7 +159,7 @@ Accounts map to `zalouser` profiles in OpenClaw state. Example:
 - OpenClaw sends a typing event before dispatching a reply (best-effort).
 - Message reaction action `react` is supported for `zalouser` in channel actions.
   - Use `remove: true` to remove a specific reaction emoji from a message.
-  - Reaction semantics: [Reactions](/tools/reactions)
+  - Reaction semantics: [Reactions](/en/tools/reactions)
 - For inbound messages that include event metadata, OpenClaw sends delivered + seen acknowledgements (best-effort).
 
 ## Troubleshooting

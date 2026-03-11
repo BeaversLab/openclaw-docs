@@ -50,9 +50,9 @@ Legacy import-only file (still supported, but not the main store):
 
 - `~/.openclaw/credentials/oauth.json` (imported into `auth-profiles.json` on first use)
 
-All of the above also respect `$OPENCLAW_STATE_DIR` (state dir override). Full reference: [/gateway/configuration](/gateway/configuration#auth-storage-oauth--api-keys)
+All of the above also respect `$OPENCLAW_STATE_DIR` (state dir override). Full reference: [/gateway/configuration](/en/gateway/configuration#auth-storage-oauth--api-keys)
 
-For static secret refs and runtime snapshot activation behavior, see [Secrets Management](/gateway/secrets).
+For static secret refs and runtime snapshot activation behavior, see [Secrets Management](/en/gateway/secrets).
 
 ## Anthropic setup-token (subscription auth)
 
@@ -154,5 +154,5 @@ How to see what profile IDs exist:
 
 Related docs:
 
-- [/concepts/model-failover](/concepts/model-failover) (rotation + cooldown rules)
-- [/tools/slash-commands](/tools/slash-commands) (command surface)
+- [/concepts/model-failover](/en/concepts/model-failover) (rotation + cooldown rules)
+- [/tools/slash-commands](/en/tools/slash-commands) (command surface)

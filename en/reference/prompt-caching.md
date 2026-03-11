@@ -69,7 +69,7 @@ agents:
       ttl: "1h"
 ```
 
-See [Session Pruning](/concepts/session-pruning) for full behavior.
+See [Session Pruning](/en/concepts/session-pruning) for full behavior.
 
 ### Heartbeat keep-warm
 
@@ -179,7 +179,7 @@ Defaults:
 
 Related docs:
 
-- [Anthropic](/providers/anthropic)
-- [Token Use and Costs](/reference/token-use)
-- [Session Pruning](/concepts/session-pruning)
-- [Gateway Configuration Reference](/gateway/configuration-reference)
+- [Anthropic](/en/providers/anthropic)
+- [Token Use and Costs](/en/reference/token-use)
+- [Session Pruning](/en/concepts/session-pruning)
+- [Gateway Configuration Reference](/en/gateway/configuration-reference)

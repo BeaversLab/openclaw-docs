@@ -28,7 +28,7 @@ Run the Gateway on a persistent host and reach it via **Tailscale** or SSH.
 
 - **Best UX:** keep `gateway.bind: "loopback"` and use **Tailscale Serve** for the Control UI.
 - **Fallback:** keep loopback + SSH tunnel from any machine that needs access.
-- **Examples:** [exe.dev](/install/exe-dev) (easy VM) or [Hetzner](/install/hetzner) (production VPS).
+- **Examples:** [exe.dev](/en/install/exe-dev) (easy VM) or [Hetzner](/en/install/hetzner) (production VPS).
 
 This is ideal when your laptop sleeps often but you want the agent always-on.
 
@@ -39,7 +39,7 @@ The laptop does **not** run the agent. It connects remotely:
 - Use the macOS app’s **Remote over SSH** mode (Settings → General → “OpenClaw runs”).
 - The app opens and manages the tunnel, so WebChat + health checks “just work.”
 
-Runbook: [macOS remote access](/platforms/mac/remote).
+Runbook: [macOS remote access](/en/platforms/mac/remote).
 
 ### 3) Laptop runs the Gateway, remote access from other machines
 
@@ -48,7 +48,7 @@ Keep the Gateway local but expose it safely:
 - SSH tunnel to the laptop from other machines, or
 - Tailscale Serve the Control UI and keep the Gateway loopback-only.
 
-Guide: [Tailscale](/gateway/tailscale) and [Web overview](/web).
+Guide: [Tailscale](/en/gateway/tailscale) and [Web overview](/en/web).
 
 ## Command flow (what runs where)
 
@@ -63,7 +63,7 @@ Flow example (Telegram → node):
 
 Notes:
 
-- **Nodes do not run the gateway service.** Only one gateway should run per host unless you intentionally run isolated profiles (see [Multiple gateways](/gateway/multiple-gateways)).
+- **Nodes do not run the gateway service.** Only one gateway should run per host unless you intentionally run isolated profiles (see [Multiple gateways](/en/gateway/multiple-gateways)).
 - macOS app “node mode” is just a node client over the Gateway WebSocket.
 
 ## SSH tunnel (CLI + tools)
@@ -130,7 +130,7 @@ WebChat no longer uses a separate HTTP port. The SwiftUI chat UI connects direct
 
 The macOS menu bar app can drive the same setup end-to-end (remote status checks, WebChat, and Voice Wake forwarding).
 
-Runbook: [macOS remote access](/platforms/mac/remote).
+Runbook: [macOS remote access](/en/platforms/mac/remote).
 
 ## Security rules (remote/VPN)
 
@@ -150,4 +150,4 @@ Short version: **keep the Gateway loopback-only** unless you’re sure you need 
   trusted. Set it to `false` if you want tokens/passwords everywhere.
 - Treat browser control like operator access: tailnet-only + deliberate node pairing.
 
-Deep dive: [Security](/gateway/security).
+Deep dive: [Security](/en/gateway/security).

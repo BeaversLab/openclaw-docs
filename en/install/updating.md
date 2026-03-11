@@ -67,7 +67,7 @@ openclaw update --channel stable
 
 Use `--tag <dist-tag|version>` for a one-off install tag/version.
 
-See [Development channels](/install/development-channels) for channel semantics and release notes.
+See [Development channels](/en/install/development-channels) for channel semantics and release notes.
 
 Note: on npm installs, the gateway logs an update hint on startup (checks the current channel tag). Disable via `update.checkOnStart: false`.
 
@@ -180,7 +180,7 @@ Typical things it does:
 - Detect and migrate older gateway services (launchd/systemd; legacy schtasks) to current OpenClaw services.
 - On Linux, ensure systemd user lingering (so the Gateway survives logout).
 
-Details: [Doctor](/gateway/doctor)
+Details: [Doctor](/en/gateway/doctor)
 
 ## Start / stop / restart the Gateway
 
@@ -201,7 +201,7 @@ If you’re supervised:
 - Windows (WSL2): `systemctl --user restart openclaw-gateway[-<profile>].service`
   - `launchctl`/`systemctl` only work if the service is installed; otherwise run `openclaw gateway install`.
 
-Runbook + exact service labels: [Gateway runbook](/gateway)
+Runbook + exact service labels: [Gateway runbook](/en/gateway)
 
 ## Rollback / pinning (when something breaks)
 
@@ -253,5 +253,5 @@ git pull
 ## If you’re stuck
 
 - Run `openclaw doctor` again and read the output carefully (it often tells you the fix).
-- Check: [Troubleshooting](/gateway/troubleshooting)
+- Check: [Troubleshooting](/en/gateway/troubleshooting)
 - Ask in Discord: [https://discord.gg/clawd](https://discord.gg/clawd)

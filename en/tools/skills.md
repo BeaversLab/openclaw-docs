@@ -44,14 +44,14 @@ Plugins can ship their own skills by listing `skills` directories in
 `openclaw.plugin.json` (paths relative to the plugin root). Plugin skills load
 when the plugin is enabled and participate in the normal skill precedence rules.
 You can gate them via `metadata.openclaw.requires.config` on the plugin’s config
-entry. See [Plugins](/tools/plugin) for discovery/config and [Tools](/tools) for the
+entry. See [Plugins](/en/tools/plugin) for discovery/config and [Tools](/en/tools) for the
 tool surface those skills teach.
 
 ## ClawHub (install + sync)
 
 ClawHub is the public skills registry for OpenClaw. Browse at
 [https://clawhub.com](https://clawhub.com). Use it to discover, install, update, and back up skills.
-Full guide: [ClawHub](/tools/clawhub).
+Full guide: [ClawHub](/en/tools/clawhub).
 
 Common flows:
 
@@ -69,11 +69,11 @@ that up as `<workspace>/skills` on the next session.
 ## Security notes
 
 - Treat third-party skills as **untrusted code**. Read them before enabling.
-- Prefer sandboxed runs for untrusted inputs and risky tools. See [Sandboxing](/gateway/sandboxing).
+- Prefer sandboxed runs for untrusted inputs and risky tools. See [Sandboxing](/en/gateway/sandboxing).
 - Workspace and extra-dir skill discovery only accepts skill roots and `SKILL.md` files whose resolved realpath stays inside the configured root.
 - `skills.entries.*.env` and `skills.entries.*.apiKey` inject secrets into the **host** process
   for that agent turn (not the sandbox). Keep secrets out of prompts and logs.
-- For a broader threat model and checklists, see [Security](/gateway/security).
+- For a broader threat model and checklists, see [Security](/en/gateway/security).
 
 ## Format (AgentSkills + Pi-compatible)
 
@@ -293,7 +293,7 @@ copy). Workspace skills are user-owned and override both on name conflicts.
 
 ## Config reference
 
-See [Skills config](/tools/skills-config) for the full configuration schema.
+See [Skills config](/en/tools/skills-config) for the full configuration schema.
 
 ## Looking for more skills?
 

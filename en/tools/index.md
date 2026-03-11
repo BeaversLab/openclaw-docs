@@ -166,15 +166,15 @@ Example (allow only file tools + browser):
 ## Plugins + tools
 
 Plugins can register **additional tools** (and CLI commands) beyond the core set.
-See [Plugins](/tools/plugin) for install + config, and [Skills](/tools/skills) for how
+See [Plugins](/en/tools/plugin) for install + config, and [Skills](/en/tools/skills) for how
 tool usage guidance is injected into prompts. Some plugins ship their own skills
 alongside tools (for example, the voice-call plugin).
 
 Optional plugin tools:
 
-- [Lobster](/tools/lobster): typed workflow runtime with resumable approvals (requires the Lobster CLI on the gateway host).
-- [LLM Task](/tools/llm-task): JSON-only LLM step for structured workflow output (optional schema validation).
-- [Diffs](/tools/diffs): read-only diff viewer and PNG or PDF file renderer for before/after text or unified patches.
+- [Lobster](/en/tools/lobster): typed workflow runtime with resumable approvals (requires the Lobster CLI on the gateway host).
+- [LLM Task](/en/tools/llm-task): JSON-only LLM step for structured workflow output (optional schema validation).
+- [Diffs](/en/tools/diffs): read-only diff viewer and PNG or PDF file renderer for before/after text or unified patches.
 
 ## Tool inventory
 
@@ -209,7 +209,7 @@ Notes:
 - `elevated` is gated by `tools.elevated` plus any `agents.list[].tools.elevated` override (both must allow) and is an alias for `host=gateway` + `security=full`.
 - `elevated` only changes behavior when the agent is sandboxed (otherwise it’s a no-op).
 - `host=node` can target a macOS companion app or a headless node host (`openclaw node run`).
-- gateway/node approvals and allowlists: [Exec approvals](/tools/exec-approvals).
+- gateway/node approvals and allowlists: [Exec approvals](/en/tools/exec-approvals).
 
 ### `process`
 
@@ -268,7 +268,7 @@ Notes:
 - Requires an API key for the chosen provider (recommended: `openclaw configure --section web`).
 - Enable via `tools.web.search.enabled`.
 - Responses are cached (default 15 min).
-- See [Web tools](/tools/web) for setup.
+- See [Web tools](/en/tools/web) for setup.
 
 ### `web_fetch`
 
@@ -286,8 +286,8 @@ Notes:
 - `maxChars` is clamped by `tools.web.fetch.maxCharsCap` (default 50000).
 - Responses are cached (default 15 min).
 - For JS-heavy sites, prefer the browser tool.
-- See [Web tools](/tools/web) for setup.
-- See [Firecrawl](/tools/firecrawl) for the optional anti-bot fallback.
+- See [Web tools](/en/tools/web) for setup.
+- See [Firecrawl](/en/tools/firecrawl) for the optional anti-bot fallback.
 
 ### `browser`
 
@@ -401,7 +401,7 @@ Notes:
 
 Analyze one or more PDF documents.
 
-For full behavior, limits, config, and examples, see [PDF tool](/tools/pdf).
+For full behavior, limits, config, and examples, see [PDF tool](/en/tools/pdf).
 
 ### `message`
 
@@ -486,7 +486,7 @@ Notes:
 - Session targeting is controlled by `tools.sessions.visibility` (default `tree`: current session + spawned subagent sessions). If you run a shared agent for multiple users, consider setting `tools.sessions.visibility: "self"` to prevent cross-session browsing.
 - `sessions_send` waits for final completion when `timeoutSeconds > 0`.
 - Delivery/announce happens after completion and is best-effort; `status: "ok"` confirms the agent run finished, not that the announce was delivered.
-- `sessions_spawn` supports `runtime: "subagent" | "acp"` (`subagent` default). For ACP runtime behavior, see [ACP Agents](/tools/acp-agents).
+- `sessions_spawn` supports `runtime: "subagent" | "acp"` (`subagent` default). For ACP runtime behavior, see [ACP Agents](/en/tools/acp-agents).
 - For ACP runtime, `streamTo: "parent"` routes initial-run progress summaries back to the requester session as system events instead of direct child delivery.
 - `sessions_spawn` starts a sub-agent run and posts an announce reply back to the requester chat.
   - Supports one-shot mode (`mode: "run"`) and persistent thread-bound mode (`mode: "session"` with `thread: true`).
@@ -532,8 +532,8 @@ Browser tool:
 - `target` (`sandbox` | `host` | `node`)
 - `node` (optional; pin a specific node id/name)
 - Troubleshooting guides:
-  - Linux startup/CDP issues: [Browser troubleshooting (Linux)](/tools/browser-linux-troubleshooting)
-  - WSL2 Gateway + Windows remote Chrome CDP: [WSL2 + Windows + remote Chrome CDP troubleshooting](/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+  - Linux startup/CDP issues: [Browser troubleshooting (Linux)](/en/tools/browser-linux-troubleshooting)
+  - WSL2 Gateway + Windows remote Chrome CDP: [WSL2 + Windows + remote Chrome CDP troubleshooting](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
 
 ## Recommended agent flows
 

@@ -9,8 +9,8 @@ title: "Setup"
 # Setup
 
 <Note>
-If you are setting up for the first time, start with [Getting Started](/start/getting-started).
-For wizard details, see [Onboarding Wizard](/start/wizard).
+If you are setting up for the first time, start with [Getting Started](/en/start/getting-started).
+For wizard details, see [Onboarding Wizard](/en/start/wizard).
 </Note>
 
 Last updated: 2026-01-01
@@ -25,7 +25,7 @@ Last updated: 2026-01-01
 
 - Node `>=22`
 - `pnpm`
-- Docker (optional; only for containerized setup/e2e — see [Docker](/install/docker))
+- Docker (optional; only for containerized setup/e2e — see [Docker](/en/install/docker))
 
 ## Tailoring strategy (so updates don’t hurt)
 
@@ -136,7 +136,7 @@ Use this when debugging auth or deciding what to back up:
 - **Model auth profiles**: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
 - **File-backed secrets payload (optional)**: `~/.openclaw/secrets.json`
 - **Legacy OAuth import**: `~/.openclaw/credentials/oauth.json`
-  More detail: [Security](/gateway/security#credential-storage-map).
+  More detail: [Security](/en/gateway/security#credential-storage-map).
 
 ## Updating (without wrecking your setup)
 
@@ -154,12 +154,12 @@ sudo loginctl enable-linger $USER
 ```
 
 For always-on or multi-user servers, consider a **system** service instead of a
-user service (no lingering needed). See [Gateway runbook](/gateway) for the systemd notes.
+user service (no lingering needed). See [Gateway runbook](/en/gateway) for the systemd notes.
 
 ## Related docs
 
-- [Gateway runbook](/gateway) (flags, supervision, ports)
-- [Gateway configuration](/gateway/configuration) (config schema + examples)
-- [Discord](/channels/discord) and [Telegram](/channels/telegram) (reply tags + replyToMode settings)
-- [OpenClaw assistant setup](/start/openclaw)
-- [macOS app](/platforms/macos) (gateway lifecycle)
+- [Gateway runbook](/en/gateway) (flags, supervision, ports)
+- [Gateway configuration](/en/gateway/configuration) (config schema + examples)
+- [Discord](/en/channels/discord) and [Telegram](/en/channels/telegram) (reply tags + replyToMode settings)
+- [OpenClaw assistant setup](/en/start/openclaw)
+- [macOS app](/en/platforms/macos) (gateway lifecycle)

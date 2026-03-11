@@ -51,7 +51,7 @@ openclaw devices approve <requestId>
 
 Once approved, the device is remembered and won't require re-approval unless
 you revoke it with `openclaw devices revoke --device <id> --role <role>`. See
-[Devices CLI](/cli/devices) for token rotation and revocation.
+[Devices CLI](/en/cli/devices) for token rotation and revocation.
 
 **Notes:**
 
@@ -196,7 +196,7 @@ OpenClaw **blocks** Control UI connections without device identity.
 `dangerouslyDisableDeviceAuth` disables Control UI device identity checks and is a
 severe security downgrade. Revert quickly after emergency use.
 
-See [Tailscale](/gateway/tailscale) for HTTPS setup guidance.
+See [Tailscale](/en/gateway/tailscale) for HTTPS setup guidance.
 
 ## Building the UI
 
@@ -265,4 +265,4 @@ Example:
 }
 ```
 
-Remote access setup details: [Remote access](/gateway/remote).
+Remote access setup details: [Remote access](/en/gateway/remote).

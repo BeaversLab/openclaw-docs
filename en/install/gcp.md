@@ -32,7 +32,7 @@ The Gateway can be accessed via:
 
 This guide uses Debian on GCP Compute Engine.
 Ubuntu also works; map packages accordingly.
-For the generic Docker flow, see [Docker](/install/docker).
+For the generic Docker flow, see [Docker](/en/install/docker).
 
 ---
 
@@ -519,6 +519,6 @@ See [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google
 
 ## Next steps
 
-- Set up messaging channels: [Channels](/channels)
-- Pair local devices as nodes: [Nodes](/nodes)
-- Configure the Gateway: [Gateway configuration](/gateway/configuration)
+- Set up messaging channels: [Channels](/en/channels)
+- Pair local devices as nodes: [Nodes](/en/nodes)
+- Configure the Gateway: [Gateway configuration](/en/gateway/configuration)

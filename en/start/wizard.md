@@ -20,7 +20,7 @@ openclaw onboard
 
 <Info>
 Fastest first chat: open the Control UI (no channel setup needed). Run
-`openclaw dashboard` and chat in the browser. Docs: [Dashboard](/web/dashboard).
+`openclaw dashboard` and chat in the browser. Docs: [Dashboard](/en/web/dashboard).
 </Info>
 
 To reconfigure later:
@@ -38,7 +38,7 @@ openclaw agents add <name>
 The onboarding wizard includes a web search step where you can pick a provider
 (Perplexity, Brave, Gemini, Grok, or Kimi) and paste your API key so the agent
 can use `web_search`. You can also configure this later with
-`openclaw configure --section web`. Docs: [Web tools](/tools/web).
+`openclaw configure --section web`. Docs: [Web tools](/en/tools/web).
 </Tip>
 
 ## QuickStart vs Advanced
@@ -52,7 +52,7 @@ The wizard starts with **QuickStart** (defaults) vs **Advanced** (full control).
     - Gateway port **18789**
     - Gateway auth **Token** (auto‑generated, even on loopback)
     - Tool policy default for new local setups: `tools.profile: "coding"` (existing explicit profile is preserved)
-    - DM isolation default: local onboarding writes `session.dmScope: "per-channel-peer"` when unset. Details: [CLI Onboarding Reference](/start/wizard-cli-reference#outputs-and-internals)
+    - DM isolation default: local onboarding writes `session.dmScope: "per-channel-peer"` when unset. Details: [CLI Onboarding Reference](/en/start/wizard-cli-reference#outputs-and-internals)
     - Tailscale exposure **Off**
     - Telegram + WhatsApp DMs default to **allowlist** (you'll be prompted for your phone number)
   </Tab>
@@ -113,11 +113,11 @@ Notes:
 
 For detailed step-by-step breakdowns, non-interactive scripting, Signal setup,
 RPC API, and a full list of config fields the wizard writes, see the
-[Wizard Reference](/reference/wizard).
+[Wizard Reference](/en/reference/wizard).
 
 ## Related docs
 
-- CLI command reference: [`openclaw onboard`](/cli/onboard)
-- Onboarding overview: [Onboarding Overview](/start/onboarding-overview)
-- macOS app onboarding: [Onboarding](/start/onboarding)
-- Agent first-run ritual: [Agent Bootstrapping](/start/bootstrapping)
+- CLI command reference: [`openclaw onboard`](/en/cli/onboard)
+- Onboarding overview: [Onboarding Overview](/en/start/onboarding-overview)
+- macOS app onboarding: [Onboarding](/en/start/onboarding)
+- Agent first-run ritual: [Agent Bootstrapping](/en/start/bootstrapping)

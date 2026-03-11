@@ -99,7 +99,7 @@ Example:
 }
 ```
 
-Multi-account support: use `channels.signal.accounts` with per-account config and optional `name`. See [`gateway/configuration`](/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) for the shared pattern.
+Multi-account support: use `channels.signal.accounts` with per-account config and optional `name`. See [`gateway/configuration`](/en/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) for the shared pattern.
 
 ## Setup path B: register dedicated bot number (SMS, Linux)
 
@@ -188,7 +188,7 @@ DMs:
 - Approve via:
   - `openclaw pairing list signal`
   - `openclaw pairing approve signal <CODE>`
-- Pairing is the default token exchange for Signal DMs. Details: [Pairing](/channels/pairing)
+- Pairing is the default token exchange for Signal DMs. Details: [Pairing](/en/channels/pairing)
 - UUID-only senders (from `sourceUuid`) are stored as `uuid:<id>` in `channels.signal.allowFrom`.
 
 Groups:
@@ -282,7 +282,7 @@ pgrep -af signal-cli
 grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 ```
 
-For triage flow: [/channels/troubleshooting](/channels/troubleshooting).
+For triage flow: [/channels/troubleshooting](/en/channels/troubleshooting).
 
 ## Security notes
 
@@ -293,7 +293,7 @@ For triage flow: [/channels/troubleshooting](/channels/troubleshooting).
 
 ## Configuration reference (Signal)
 
-Full configuration: [Configuration](/gateway/configuration)
+Full configuration: [Configuration](/en/gateway/configuration)
 
 Provider options:
 

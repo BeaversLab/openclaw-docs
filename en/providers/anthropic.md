@@ -122,7 +122,7 @@ The older `cacheControlTtl` parameter is still supported for backwards compatibi
 We recommend migrating to the new `cacheRetention` parameter.
 
 OpenClaw includes the `extended-cache-ttl-2025-04-11` beta flag for Anthropic API
-requests; keep it if you override provider headers (see [/gateway/configuration](/gateway/configuration)).
+requests; keep it if you override provider headers (see [/gateway/configuration](/en/gateway/configuration)).
 
 ## 1M context window (Anthropic beta)
 
@@ -200,8 +200,8 @@ openclaw onboard --auth-choice setup-token
 ## Notes
 
 - Generate the setup-token with `claude setup-token` and paste it, or run `openclaw models auth setup-token` on the gateway host.
-- If you see “OAuth token refresh failed …” on a Claude subscription, re-auth with a setup-token. See [/gateway/troubleshooting#oauth-token-refresh-failed-anthropic-claude-subscription](/gateway/troubleshooting#oauth-token-refresh-failed-anthropic-claude-subscription).
-- Auth details + reuse rules are in [/concepts/oauth](/concepts/oauth).
+- If you see “OAuth token refresh failed …” on a Claude subscription, re-auth with a setup-token. See [/gateway/troubleshooting#oauth-token-refresh-failed-anthropic-claude-subscription](/en/gateway/troubleshooting#oauth-token-refresh-failed-anthropic-claude-subscription).
+- Auth details + reuse rules are in [/concepts/oauth](/en/concepts/oauth).
 
 ## Troubleshooting
 
@@ -228,4 +228,4 @@ openclaw onboard --auth-choice setup-token
 - Check `openclaw models status --json` for `auth.unusableProfiles`.
 - Add another Anthropic profile or wait for cooldown.
 
-More: [/gateway/troubleshooting](/gateway/troubleshooting) and [/help/faq](/help/faq).
+More: [/gateway/troubleshooting](/en/gateway/troubleshooting) and [/help/faq](/en/help/faq).

@@ -28,7 +28,7 @@ Key knobs live in configuration:
 - `agents.defaults.*` for block streaming and chunking defaults.
 - Channel overrides (`channels.whatsapp.*`, `channels.telegram.*`, etc.) for caps and streaming toggles.
 
-See [Configuration](/gateway/configuration) for full schema.
+See [Configuration](/en/gateway/configuration) for full schema.
 
 ## Inbound dedupe
 
@@ -77,7 +77,7 @@ synced back to every client. Recommendation: use one primary device for long
 conversations to avoid divergent context. The Control UI and TUI always show the
 gateway-backed session transcript, so they are the source of truth.
 
-Details: [Session management](/concepts/session).
+Details: [Session management](/en/concepts/session).
 
 ## Inbound bodies and history context
 
@@ -116,7 +116,7 @@ current run, or collected for a followup turn.
 - Configure via `messages.queue` (and `messages.queue.byChannel`).
 - Modes: `interrupt`, `steer`, `followup`, `collect`, plus backlog variants.
 
-Details: [Queueing](/concepts/queue).
+Details: [Queueing](/en/concepts/queue).
 
 ## Streaming, chunking, and batching
 
@@ -132,7 +132,7 @@ Key settings:
 - `agents.defaults.humanDelay` (human-like pause between block replies)
 - Channel overrides: `*.blockStreaming` and `*.blockStreamingCoalesce` (non-Telegram channels require explicit `*.blockStreaming: true`)
 
-Details: [Streaming + chunking](/concepts/streaming).
+Details: [Streaming + chunking](/en/concepts/streaming).
 
 ## Reasoning visibility and tokens
 
@@ -142,7 +142,7 @@ OpenClaw can expose or hide model reasoning:
 - Reasoning content still counts toward token usage when produced by the model.
 - Telegram supports reasoning stream into the draft bubble.
 
-Details: [Thinking + reasoning directives](/tools/thinking) and [Token use](/reference/token-use).
+Details: [Thinking + reasoning directives](/en/tools/thinking) and [Token use](/en/reference/token-use).
 
 ## Prefixes, threading, and replies
 
@@ -151,4 +151,4 @@ Outbound message formatting is centralized in `messages`:
 - `messages.responsePrefix`, `channels.<channel>.responsePrefix`, and `channels.<channel>.accounts.<id>.responsePrefix` (outbound prefix cascade), plus `channels.whatsapp.messagePrefix` (WhatsApp inbound prefix)
 - Reply threading via `replyToMode` and per-channel defaults
 
-Details: [Configuration](/gateway/configuration#messages) and channel docs.
+Details: [Configuration](/en/gateway/configuration#messages) and channel docs.

@@ -191,6 +191,6 @@ Recommendations:
 
 Related:
 
-- Browser tool overview: [Browser](/tools/browser)
-- Security audit: [Security](/gateway/security)
-- Tailscale setup: [Tailscale](/gateway/tailscale)
+- Browser tool overview: [Browser](/en/tools/browser)
+- Security audit: [Security](/en/gateway/security)
+- Tailscale setup: [Tailscale](/en/gateway/tailscale)

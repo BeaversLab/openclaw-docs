@@ -50,4 +50,4 @@ from `~/.qwen/oauth_creds.json` when it loads the auth store. You still need a
 - Tokens auto-refresh; re-run the login command if refresh fails or access is revoked.
 - Default base URL: `https://portal.qwen.ai/v1` (override with
   `models.providers.qwen-portal.baseUrl` if Qwen provides a different endpoint).
-- See [Model providers](/concepts/model-providers) for provider-wide rules.
+- See [Model providers](/en/concepts/model-providers) for provider-wide rules.

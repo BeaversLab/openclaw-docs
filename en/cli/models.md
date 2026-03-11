@@ -12,8 +12,8 @@ Model discovery, scanning, and configuration (default model, fallbacks, auth pro
 
 Related:
 
-- Providers + models: [Models](/providers/models)
-- Provider auth setup: [Getting started](/start/getting-started)
+- Providers + models: [Models](/en/providers/models)
+- Provider auth setup: [Getting started](/en/start/getting-started)
 
 ## Common commands
 

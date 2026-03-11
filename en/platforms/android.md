@@ -13,13 +13,13 @@ title: "Android App"
 
 - Role: companion node app (Android does not host the Gateway).
 - Gateway required: yes (run it on macOS, Linux, or Windows via WSL2).
-- Install: [Getting Started](/start/getting-started) + [Pairing](/channels/pairing).
-- Gateway: [Runbook](/gateway) + [Configuration](/gateway/configuration).
-  - Protocols: [Gateway protocol](/gateway/protocol) (nodes + control plane).
+- Install: [Getting Started](/en/start/getting-started) + [Pairing](/en/channels/pairing).
+- Gateway: [Runbook](/en/gateway) + [Configuration](/en/gateway/configuration).
+  - Protocols: [Gateway protocol](/en/gateway/protocol) (nodes + control plane).
 
 ## System control
 
-System control (launchd/systemd) lives on the Gateway host. See [Gateway](/gateway).
+System control (launchd/systemd) lives on the Gateway host. See [Gateway](/en/gateway).
 
 ## Connection Runbook
 
@@ -59,7 +59,7 @@ From the gateway machine:
 dns-sd -B _openclaw-gw._tcp local.
 ```
 
-More debugging notes: [Bonjour](/gateway/bonjour).
+More debugging notes: [Bonjour](/en/gateway/bonjour).
 
 #### Tailnet (Vienna ⇄ London) discovery via unicast DNS-SD
 
@@ -68,7 +68,7 @@ Android NSD/mDNS discovery won’t cross networks. If your Android node and the 
 1. Set up a DNS-SD zone (example `openclaw.internal.`) on the gateway host and publish `_openclaw-gw._tcp` records.
 2. Configure Tailscale split DNS for your chosen domain pointing at that DNS server.
 
-Details and example CoreDNS config: [Bonjour](/gateway/bonjour).
+Details and example CoreDNS config: [Bonjour](/en/gateway/bonjour).
 
 ### 3) Connect from Android
 
@@ -94,7 +94,7 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-Pairing details: [Pairing](/channels/pairing).
+Pairing details: [Pairing](/en/channels/pairing).
 
 ### 5) Verify the node is connected
 
@@ -149,7 +149,7 @@ Camera commands (foreground only; permission-gated):
 - `camera.snap` (jpg)
 - `camera.clip` (mp4)
 
-See [Camera node](/nodes/camera) for parameters and CLI helpers.
+See [Camera node](/en/nodes/camera) for parameters and CLI helpers.
 
 ### 8) Voice + expanded Android command surface
 

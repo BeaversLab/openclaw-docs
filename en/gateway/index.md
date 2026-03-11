@@ -10,16 +10,16 @@ title: "Gateway Runbook"
 Use this page for day-1 startup and day-2 operations of the Gateway service.
 
 <CardGroup cols={2}>
-  <Card title="Deep troubleshooting" icon="siren" href="/gateway/troubleshooting">
+  <Card title="Deep troubleshooting" icon="siren" href="/en/gateway/troubleshooting">
     Symptom-first diagnostics with exact command ladders and log signatures.
   </Card>
-  <Card title="Configuration" icon="sliders" href="/gateway/configuration">
+  <Card title="Configuration" icon="sliders" href="/en/gateway/configuration">
     Task-oriented setup guide + full configuration reference.
   </Card>
-  <Card title="Secrets management" icon="key-round" href="/gateway/secrets">
+  <Card title="Secrets management" icon="key-round" href="/en/gateway/secrets">
     SecretRef contract, runtime snapshot behavior, and migrate/reload operations.
   </Card>
-  <Card title="Secrets plan contract" icon="shield-check" href="/gateway/secrets-plan-contract">
+  <Card title="Secrets plan contract" icon="shield-check" href="/en/gateway/secrets-plan-contract">
     Exact `secrets apply` target/path rules and ref-only auth-profile behavior.
   </Card>
 </CardGroup>
@@ -120,7 +120,7 @@ Then connect clients to `ws://127.0.0.1:18789` locally.
 If gateway auth is configured, clients still must send auth (`token`/`password`) even over SSH tunnels.
 </Warning>
 
-See: [Remote Gateway](/gateway/remote), [Authentication](/gateway/authentication), [Tailscale](/gateway/tailscale).
+See: [Remote Gateway](/en/gateway/remote), [Authentication](/en/gateway/authentication), [Tailscale](/en/gateway/tailscale).
 
 ## Supervision and service lifecycle
 
@@ -187,7 +187,7 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a opencla
 OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
 ```
 
-See: [Multiple gateways](/gateway/multiple-gateways).
+See: [Multiple gateways](/en/gateway/multiple-gateways).
 
 ### Dev profile quick path
 
@@ -211,7 +211,7 @@ Agent runs are two-stage:
 1. Immediate accepted ack (`status:"accepted"`)
 2. Final completion response (`status:"ok"|"error"`), with streamed `agent` events in between.
 
-See full protocol docs: [Gateway Protocol](/gateway/protocol).
+See full protocol docs: [Gateway Protocol](/en/gateway/protocol).
 
 ## Operational checks
 
@@ -241,7 +241,7 @@ Events are not replayed. On sequence gaps, refresh state (`health`, `system-pres
 | `Gateway start blocked: set gateway.mode=local`                | Config set to remote mode                |
 | `unauthorized` during connect                                  | Auth mismatch between client and gateway |
 
-For full diagnosis ladders, use [Gateway Troubleshooting](/gateway/troubleshooting).
+For full diagnosis ladders, use [Gateway Troubleshooting](/en/gateway/troubleshooting).
 
 ## Safety guarantees
 
@@ -253,9 +253,9 @@ For full diagnosis ladders, use [Gateway Troubleshooting](/gateway/troubleshooti
 
 Related:
 
-- [Troubleshooting](/gateway/troubleshooting)
-- [Background Process](/gateway/background-process)
-- [Configuration](/gateway/configuration)
-- [Health](/gateway/health)
-- [Doctor](/gateway/doctor)
-- [Authentication](/gateway/authentication)
+- [Troubleshooting](/en/gateway/troubleshooting)
+- [Background Process](/en/gateway/background-process)
+- [Configuration](/en/gateway/configuration)
+- [Health](/en/gateway/health)
+- [Doctor](/en/gateway/doctor)
+- [Authentication](/en/gateway/authentication)

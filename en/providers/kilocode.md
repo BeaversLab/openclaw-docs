@@ -69,5 +69,5 @@ kilocode/google/gemini-3-pro-preview
 - Model refs are `kilocode/<model-id>` (e.g., `kilocode/anthropic/claude-sonnet-4`).
 - Default model: `kilocode/kilo/auto`
 - Base URL: `https://api.kilo.ai/api/gateway/`
-- For more model/provider options, see [/concepts/model-providers](/concepts/model-providers).
+- For more model/provider options, see [/concepts/model-providers](/en/concepts/model-providers).
 - Kilo Gateway uses a Bearer token with your API key under the hood.
