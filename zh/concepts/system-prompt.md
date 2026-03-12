@@ -1,55 +1,56 @@
 ---
-summary: "OpenClaw system prompt 包含什么以及如何组装"
+summary: "OpenClaw 系统提示词包含的内容及其组装方式"
 read_when:
-  - 编辑 system prompt 文本、工具列表或时间/heartbeat 部分
-  - 修改工作区引导或 skills 注入行为
-title: "System Prompt"
+  - Editing system prompt text, tools list, or time/heartbeat sections
+  - Changing workspace bootstrap or skills injection behavior
+title: "系统提示词"
 ---
 
-# 系统提示词（System Prompt）
+# 系统提示词
 
-OpenClaw 为每次 agent 运行构建自定义 system prompt。该 prompt 由 **OpenClaw** 拥有，不使用 p-coding-agent 的默认提示。
+OpenClaw 会为每次 Agent 运行构建自定义的系统提示词。该提示词归 **OpenClaw 所有**，不使用 pi-coding-agent 的默认提示词。
 
-该 prompt 由 OpenClaw 组装，并注入到每次 agent 运行中。
+该提示词由 OpenClaw 组装，并注入到每次 Agent 运行中。
 
 ## 结构
 
-该 prompt 刻意保持紧凑，并使用固定分节：
+该提示词设计得紧凑精简，并使用固定的分段：
 
-- **Tooling**：当前工具列表 + 简短描述。
-- **Safety**：简短的安全护栏提醒，避免追求权力行为或绕过监督。
-- **Skills**（可用时）：告诉模型如何按需加载 skill 指令。
-- **OpenClaw Self-Update**：如何运行 `config.apply` 与 `update.run`。
-- **Workspace**：工作目录（`agents.defaults.workspace`）。
-- **Documentation**：OpenClaw 文档的本地路径（repo 或 npm 包），以及何时阅读。
-- **Workspace Files (injected)**：指示引导文件会在下方注入。
-- **Sandbox**（启用时）：说明 sandbox 运行时、sandbox 路径与是否可用 elevated exec。
-- **Current Date & Time**：用户本地时间、时区与时间格式。
-- **Reply Tags**：支持的 providers 的可选回复标签语法。
-- **Heartbeats**：heartbeat 提示与 ack 行为。
-- **Runtime**：host、OS、node、model、repo root（若检测到）、thinking level（一行）。
-- **Reasoning**：当前可见性级别 + /reasoning 切换提示。
+- **工具**：当前工具列表 + 简短描述。
+- **安全性**：简短的护栏提醒，以避免寻求权力的行为或绕过监管。
+- **技能**（Skills，当可用时）：告诉模型如何按需加载技能指令。
+- **OpenClaw 自更新**：如何运行 `config.apply` 和 `update.run`。
+- **工作区**：工作目录 (`agents.defaults.workspace`)。
+- **文档**：OpenClaw 文档的本地路径（仓库或 npm 包）以及何时阅读它们。
+- **工作区文件（已注入）**：表示引导文件包含在下方。
+- **沙盒**（Sandbox，当启用时）：指示沙盒运行时、沙盒路径以及是否可用 elevated exec。
+- **当前日期与时间**：用户本地时间、时区和时间格式。
+- **回复标签**：受支持提供商的可选回复标签语法。
+- **心跳**：心跳提示和确认行为。
+- **运行时**：主机、操作系统、节点、模型、仓库根目录（检测到时）、思考级别（一行）。
+- **推理**：当前可见性级别 + /reasoning 切换提示。
 
-System prompt 中的安全护栏仅为建议。它们指导模型行为但不强制执行策略。请使用工具策略、exec 审批、sandbox 和渠道 allowlist 进行硬性强制；操作员可以有意设计禁用这些功能。
+系统提示词中的安全护栏仅作建议。它们指导模型行为但不强制执行策略。请使用工具策略、执行审批、沙盒隔离和频道白名单来进行硬性强制执行；操作员可以设计禁用这些功能。
 
-## Prompt 模式
+## 提示词模式
 
-OpenClaw 可为子 agent 渲染更小的 system prompt。运行时为每次运行设置
-`promptMode`（非用户侧配置）：
+OpenClaw 可以为子 Agent 渲染较小的系统提示词。运行时为每次运行设置一个
+`promptMode`（不是面向用户的配置）：
 
-- `full`（默认）：包含上述所有分节。
-- `minimal`：用于子 agent；省略 **Skills**、**Memory Recall**、**OpenClaw
+- `full`（默认）：包括上述所有部分。
+- `minimal`：用于子 Agent；省略 **技能**、**记忆回溯**、**OpenClaw
   Self-Update**、**Model Aliases**、**User Identity**、**Reply Tags**、
-  **Messaging**、**Silent Replies** 与 **Heartbeats**。Tooling、**Safety**、
-  Workspace、Sandbox、Current Date & Time（已知时）、Runtime 与注入的上下文仍保留。
-- `none`：仅返回基础身份行。
+  **Messaging**、**Silent Replies** 和 **Heartbeats**。Tooling、**Safety**、
+  Workspace、Sandbox、Current Date & Time（如果已知）、Runtime 和注入的
+  context 保持可用。
+- `none`：仅返回基本身份行。
 
-当 `promptMode=minimal` 时，额外注入提示会标记为 **Subagent
-Context**，而不是 **Group Chat Context**。
+当 `promptMode=minimal` 时，额外的注入提示会被标记为 **Subagent
+Context** 而不是 **Group Chat Context**。
 
-## 工作区引导注入
+## Workspace bootstrap injection
 
-引导文件会被裁剪并附加在 **Project Context** 下，这样模型无需显式读取即可看到身份与画像上下文：
+Bootstrap 文件会被修剪并附加在 **Project Context** 下，因此模型无需显式读取即可查看身份和配置文件上下文：
 
 - `AGENTS.md`
 - `SOUL.md`
@@ -57,33 +58,56 @@ Context**，而不是 **Group Chat Context**。
 - `IDENTITY.md`
 - `USER.md`
 - `HEARTBEAT.md`
-- `BOOTSTRAP.md`（仅全新工作区）
+- `BOOTSTRAP.md`（仅限于全新的工作空间）
+- `MEMORY.md` 和/或 `memory.md`（当存在于工作空间中时；可以注入其中之一或两者）
 
-大文件会附带标记后截断。单文件最大大小由
-`agents.defaults.bootstrapMaxChars` 控制（默认：20000）。缺失文件会注入
-简短的 missing-file 标记。
+所有这些文件在每一轮都会被 **注入到上下文窗口** 中，这
+意味着它们会消耗 tokens。请保持简洁——尤其是 `MEMORY.md`，因为它可能
+随着时间的推移而增长，导致上下文使用量意外升高以及更频繁的
+压缩。
 
-内部 hooks 可通过 `agent:bootstrap` 拦截此步骤以变更或替换注入的引导文件（例如用替代 persona 替换 `SOUL.md`）。
+> **注意：** `memory/*.md` 每日文件 **不会** 自动注入。它们
+> 是通过 `memory_search` 和 `memory_get` 工具按需访问的，因此
+> 除非模型明确读取它们，否则它们不计入上下文窗口。
 
-要查看每个注入文件贡献（原始 vs 注入、截断，以及工具 schema 开销），使用 `/context list` 或 `/context detail`。参见 [上下文](/zh/concepts/context)。
+大文件会被标记截断。每个文件的最大大小由
+`agents.defaults.bootstrapMaxChars` 控制（默认值：20000）。所有文件中注入的 bootstrap
+内容总计上限为 `agents.defaults.bootstrapTotalMaxChars`
+（默认值：150000）。缺失的文件会注入一个简短的缺失文件标记。发生截断时，
+OpenClaw 可以在 Project Context 中注入一个警告块；通过
+`agents.defaults.bootstrapPromptTruncationWarning` 控制此行为（`off`、`once`、`always`；
+默认值：`once`）。
+
+子代理会话仅注入 `AGENTS.md` 和 `TOOLS.md`（其他 bootstrap 文件
+会被过滤掉，以保持子代理上下文较小）。
+
+内部钩子可以通过 `agent:bootstrap` 拦截此步骤，以更改或替换
+注入的引导文件（例如交换 `SOUL.md` 为替代的人格）。
+
+要检查每个注入文件的贡献程度（原始与注入、截断以及工具架构开销），请使用 `/context list` 或 `/context detail`。参见 [上下文](/zh/en/concepts/context)。
 
 ## 时间处理
 
-当用户时区已知时，system prompt 包含专门的 **Current Date & Time** 分节。为保持 prompt 的缓存稳定性，它现在只包含**时区**（不含动态时钟或时间格式）。
+当已知用户时区时，系统提示会包含一个专门的 **当前日期和时间** 部分。为了保持提示缓存稳定，现在仅包含
+**时区**（没有动态时钟或时间格式）。
 
-当 agent 需要当前时间时，使用 `session_status`；状态卡中包含时间戳行。
+当代理需要当前时间时请使用 `session_status`；状态卡
+包含一个时间戳行。
 
-配置：
+配置方式：
 
 - `agents.defaults.userTimezone`
-- `agents.defaults.timeFormat`（`auto` | `12` | `24`）
+- `agents.defaults.timeFormat` (`auto` | `12` | `24`)
 
-完整行为参见 [日期与时间](/zh/date-time)。
+有关完整的行为详细信息，请参见 [日期和时间](/zh/en/date-time)。
 
-## Skills
+## 技能
 
-当存在符合条件的 skills 时，OpenClaw 会注入精简的 **available skills list**
-（`formatSkillsForPrompt`），其中包含每个 skill 的**文件路径**。Prompt 会指示模型在列出的路径上使用 `read` 加载 SKILL.md（workspace、managed 或 bundled）。若无可用 skill，则省略 Skills 分节。
+当存在符合条件的技能时，OpenClaw 会注入一个紧凑的 **可用技能列表**
+(`formatSkillsForPrompt`)，其中包含每个技能的 **文件路径**。
+系统提示指示模型使用 `read` 在列出的
+位置（工作区、托管或捆绑包）加载 SKILL.md。如果没有符合条件的技能，
+则省略技能部分。
 
 ```
 <available_skills>
@@ -95,8 +119,13 @@ Context**，而不是 **Group Chat Context**。
 </available_skills>
 ```
 
-这样既保持基础 prompt 小，又能按需使用 skills。
+这既保持了基础提示的小巧，同时仍然启用了针对性的技能使用。
 
-## Documentation
+## 文档
 
-当可用时，system prompt 会包含 **Documentation** 分节，指向本地 OpenClaw 文档目录（repo workspace 中的 `docs/` 或 npm 包内置文档），并标注公共镜像、源码仓库、社区 Discord，以及 ClawHub（https://clawhub.com）用于 skills 发现。Prompt 指示模型在处理 OpenClaw 行为、命令、配置或架构时优先查本地文档，并在可能时自行运行 `openclaw status`（只有在无法访问时才询问用户）。
+如果可用，系统提示将包含一个 **文档** 部分，指向
+本地 OpenClaw 文档目录（仓库工作区中的 `docs/` 或捆绑的 npm
+包文档），并注明公共镜像、源仓库、社区 Discord 和
+用于技能发现的 ClawHub ([https://clawhub.com](https://clawhub.com))。系统提示指示模型首先查阅本地文档
+以了解 OpenClaw 的行为、命令、配置或架构，并在可能时自行运行
+`openclaw status`（仅在缺乏访问权限时询问用户）。

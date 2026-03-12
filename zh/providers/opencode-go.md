@@ -1,24 +1,24 @@
 ---
-summary: "Use the OpenCode Go catalog with the shared OpenCode setup"
+summary: "使用共享的 OpenCode 设置来使用 OpenCode Go 目录"
 read_when:
-  - "You want the OpenCode Go catalog"
-  - "You need the runtime model refs for Go-hosted models"
+  - You want the OpenCode Go catalog
+  - You need the runtime model refs for Go-hosted models
 title: "OpenCode Go"
 ---
 
 # OpenCode Go
 
-OpenCode Go is the Go catalog within [OpenCode](/zh/providers/opencode).
-It uses the same `OPENCODE_API_KEY` as the Zen catalog, but keeps the runtime
-provider id `opencode-go` so upstream per-model routing stays correct.
+OpenCode Go 是 [OpenCode](/zh/en/providers/opencode) 中的 Go 目录。
+它使用与 Zen 目录相同的 `OPENCODE_API_KEY`，但保留了运行时
+provider id `opencode-go`，以确保上游按模型路由保持正确。
 
-## Supported models
+## 支持的模型
 
 - `opencode-go/kimi-k2.5`
 - `opencode-go/glm-5`
 - `opencode-go/minimax-m2.5`
 
-## CLI setup
+## CLI 设置
 
 ```bash
 openclaw onboard --auth-choice opencode-go
@@ -26,7 +26,7 @@ openclaw onboard --auth-choice opencode-go
 openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 ```
 
-## Config snippet
+## 配置片段
 
 ```json5
 {
@@ -35,11 +35,11 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 }
 ```
 
-## Routing behavior
+## 路由行为
 
-OpenClaw handles per-model routing automatically when the model ref uses `opencode-go/...`.
+当模型引用使用 `opencode-go/...` 时，OpenClaw 会自动处理按模型路由。
 
-## Notes
+## 注意
 
-- Use [OpenCode](/zh/providers/opencode) for the shared onboarding and catalog overview.
-- Runtime refs stay explicit: `opencode/...` for Zen, `opencode-go/...` for Go.
+- 有关共享的入门指南和目录概览，请使用 [OpenCode](/zh/en/providers/opencode)。
+- 运行时引用保持显式：Zen 使用 `opencode/...`，Go 使用 `opencode-go/...`。

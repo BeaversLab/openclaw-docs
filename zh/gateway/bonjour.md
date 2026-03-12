@@ -1,35 +1,35 @@
 ---
 summary: "Bonjour/mDNS 发现 + 调试（Gateway 信标、客户端和常见故障模式）"
 read_when:
-  - "Debugging Bonjour discovery issues on macOS/iOS"
-  - "Changing mDNS service types, TXT records, or discovery UX"
-title: "Bonjour 发现"
+  - Debugging Bonjour discovery issues on macOS/iOS
+  - Changing mDNS service types, TXT records, or discovery UX
+title: "Bonjour Discovery"
 ---
 
 # Bonjour / mDNS 发现
 
-OpenClaw 使用 Bonjour（mDNS / DNS‑SD）作为**仅局域网的便利方式**来发现
+OpenClaw 使用 Bonjour (mDNS / DNS-SD) 作为一种**仅限局域网的便利手段**来发现
 活动的 Gateway（WebSocket 端点）。它是尽力而为的，并**不**替代 SSH 或
 基于 Tailnet 的连接。
 
-## 广域 Bonjour（通过 Tailscale 的单播 DNS‑SD）
+## 基于 Tailscale 的广域 Bonjour（单播 DNS-SD）
 
-如果节点和 gateway 位于不同的网络上，多播 mDNS 将无法跨越
-边界。您可以通过切换到通过 Tailscale 的**单播 DNS‑SD**
-（"广域 Bonjour"）来保持相同的发现体验。
+如果节点和网关位于不同的网络上，组播 mDNS 将无法跨越
+边界。您可以通过切换到基于 Tailscale 的**单播 DNS-SD**
+（“广域 Bonjour”）来保持相同的发现体验。
 
 高级步骤：
 
-1. 在 gateway 主机上运行 DNS 服务器（可通过 Tailnet 访问）。
-2. 在专用区域下为 `_openclaw-gw._tcp` 发布 DNS‑SD 记录
+1. 在网关主机上运行 DNS 服务器（可通过 Tailnet 访问）。
+2. 在专用区域下发布 `_openclaw-gw._tcp` 的 DNS-SD 记录
    （例如：`openclaw.internal.`）。
-3. 配置 Tailscale **拆分 DNS**，以便您选择的域名通过该
+3. 配置 Tailscale **split DNS**，以便您选择的域名通过该
    DNS 服务器为客户端（包括 iOS）解析。
 
 OpenClaw 支持任何发现域；`openclaw.internal.` 只是一个示例。
-iOS/Android 节点同时浏览 `local.` 和您配置的广域域。
+iOS/Android 节点会同时浏览 `local.` 和您配置的广域域。
 
-### Gateway 配置（推荐）
+### 网关配置（推荐）
 
 ```json5
 {
@@ -38,7 +38,7 @@ iOS/Android 节点同时浏览 `local.` 和您配置的广域域。
 }
 ```
 
-### 一次性 DNS 服务器设置（gateway 主机）
+### 一次性 DNS 服务器设置（网关主机）
 
 ```bash
 openclaw dns setup --apply
@@ -46,10 +46,10 @@ openclaw dns setup --apply
 
 这将安装 CoreDNS 并将其配置为：
 
-- 仅在 gateway 的 Tailscale 接口上监听端口 53
-- 从 `~/.openclaw/dns/<domain>.db` 提供您选择的域（例如：`openclaw.internal.`）
+- 仅在网关的 Tailscale 接口上监听端口 53
+- 从 `~/.openclaw/dns/<domain>.db` 提供您选择的域名（例如：`openclaw.internal.`）
 
-从连接到 tailnet 的机器验证：
+从连接到 tailnet 的机器进行验证：
 
 ```bash
 dns-sd -B _openclaw-gw._tcp openclaw.internal.
@@ -60,65 +60,75 @@ dig @<TAILNET_IPV4> -p 53 _openclaw-gw._tcp.openclaw.internal PTR +short
 
 在 Tailscale 管理控制台中：
 
-- 添加一个指向 gateway 的 tailnet IP 的名称服务器（UDP/TCP 53）。
-- 添加拆分 DNS，以便您的发现域使用该名称服务器。
+- 添加一个指向网关 tailnet IP (UDP/TCP 53) 的名称服务器。
+- 添加 split DNS，以便您的发现域名使用该名称服务器。
 
-一旦客户端接受 tailnet DNS，iOS 节点就可以在您的发现域中浏览
-`_openclaw-gw._tcp`，而无需多播。
+一旦客户端接受 tailnet DNS，iOS 节点就可以在无需组播的情况下浏览
+您发现域中的 `_openclaw-gw._tcp`。
 
-### Gateway 监听器安全性（推荐）
+### 网关监听器安全性（推荐）
 
-Gateway WS 端口（默认 `18789`）默认绑定到 loopback。对于局域网/tailnet
-访问，请显式绑定并保持启用认证。
+Gateway WS 端口（默认为 `18789`）默认绑定到环回地址。对于局域网/tailnet
+访问，请显式绑定并保持身份验证已启用。
 
-对于仅 tailnet 的设置：
+对于仅限 tailnet 的设置：
 
 - 在 `~/.openclaw/openclaw.json` 中设置 `gateway.bind: "tailnet"`。
 - 重启 Gateway（或重启 macOS 菜单栏应用）。
 
-## 通告内容
+## 什么进行广播
 
-只有 Gateway 通告 `_openclaw-gw._tcp`。
+只有网关会广播 `_openclaw-gw._tcp`。
 
 ## 服务类型
 
-- `_openclaw-gw._tcp` — gateway 传输信标（由 macOS/iOS/Android 节点使用）。
+- `_openclaw-gw._tcp` — 网关传输信标（供 macOS/iOS/Android 节点使用）。
 
-## TXT 键（非秘密提示）
+## TXT 密钥（非机密提示）
 
-Gateway 通告小的非秘密提示以使 UI 流程方便：
+网关会广播一些非机密的小提示，以方便 UI 流程：
 
 - `role=gateway`
 - `displayName=<friendly name>`
 - `lanHost=<hostname>.local`
-- `gatewayPort=<port>`（Gateway WS + HTTP）
-- `gatewayTls=1`（仅在启用 TLS 时）
-- `gatewayTlsSha256=<sha256>`（仅在启用 TLS 且指纹可用时）
-- `canvasPort=<port>`（仅在启用 canvas 主机时；默认 `18793`）
-- `sshPort=<port>`（未覆盖时默认为 22）
+- `gatewayPort=<port>` (Gateway WS + HTTP)
+- `gatewayTls=1` （仅在启用 TLS 时）
+- `gatewayTlsSha256=<sha256>` （仅在启用 TLS 且指纹可用时）
+- `canvasPort=<port>` （仅在启用 Canvas 主机时；目前与 `gatewayPort` 相同）
+- `sshPort=<port>` （未覆盖时默认为 22）
 - `transport=gateway`
-- `cliPath=<path>`（可选；可运行 `openclaw` 入口点的绝对路径）
-- `tailnetDns=<magicdns>`（Tailnet 可用时的可选提示）
+- `cliPath=<path>` （可选；指向可运行的 `openclaw` 入口点的绝对路径）
+- `tailnetDns=<magicdns>` （当 Tailnet 可用时的可选提示）
+
+安全说明：
+
+- Bonjour/mDNS TXT 记录是**未经身份验证的**。客户端不得将 TXT 视为权威路由。
+- 客户端应使用解析的服务端点（SRV + A/AAAA）进行路由。仅将 `lanHost`、`tailnetDns`、`gatewayPort` 和 `gatewayTlsSha256` 视为提示。
+- TLS 固定绝不允许广播的 `gatewayTlsSha256` 覆盖之前存储的固定值。
+- iOS/Android 节点应将基于发现的直接连接视为**仅限 TLS**，并在信任首次发现的指纹之前要求明确的用户确认。
 
 ## 在 macOS 上调试
 
 有用的内置工具：
 
 - 浏览实例：
+
   ```bash
   dns-sd -B _openclaw-gw._tcp local.
   ```
+
 - 解析一个实例（替换 `<instance>`）：
+
   ```bash
   dns-sd -L "<instance>" _openclaw-gw._tcp local.
   ```
 
-如果浏览有效但解析失败，通常是由于局域网策略或
+如果浏览有效但解析失败，通常是遇到了局域网策略或
 mDNS 解析器问题。
 
-## 在 Gateway 日志中调试
+## 在网关日志中调试
 
-Gateway 写入滚动日志文件（启动时打印为
+网关会写入一个滚动日志文件（启动时打印为
 `gateway log file: ...`）。查找 `bonjour:` 行，特别是：
 
 - `bonjour: advertise failed ...`
@@ -127,41 +137,40 @@ Gateway 写入滚动日志文件（启动时打印为
 
 ## 在 iOS 节点上调试
 
-iOS 节点使用 `NWBrowser` 发现 `_openclaw-gw._tcp`。
+iOS 节点使用 `NWBrowser` 来发现 `_openclaw-gw._tcp`。
 
 要捕获日志：
 
-- 设置 → Gateway → 高级 → **发现调试日志**
-- 设置 → Gateway → 高级 → **发现日志** → 重现 → **复制**
+- 设置 → 网关 → 高级 → **发现调试日志**
+- 设置 → Gateway (网关) → 高级 → **发现日志** → 复现 → **复制**
 
-日志包括浏览器状态转换和结果集更改。
+日志包含浏览器状态转换和结果集变化。
 
 ## 常见故障模式
 
-- **Bonjour 不跨网络**：使用 Tailnet 或 SSH。
-- **多播被阻止**：某些 Wi‑Fi 网络禁用 mDNS。
-- **睡眠 / 接口变化**：macOS 可能会暂时丢失 mDNS 结果；重试。
+- **Bonjour 无法跨越网络**：请使用 Tailnet 或 SSH。
+- **组播被阻止**：某些 Wi-Fi 网络会禁用 mDNS。
+- **睡眠 / 接口变动**：macOS 可能会暂时丢失 mDNS 结果；请重试。
 - **浏览有效但解析失败**：保持机器名称简单（避免表情符号或
-  标点符号），然后重启 Gateway。服务实例名称派生自
-  主机名，因此过于复杂的名称可能会混淆某些解析器。
+  标点符号），然后重启 Gateway。服务实例名称源自主机名，因此过于复杂的名称可能会迷惑某些解析器。
 
-## 转义的实例名称（`\032`）
+## 转义实例名称 (`\032`)
 
-Bonjour/DNS‑SD 通常在服务实例名称中将字节转义为十进制 `\DDD`
-序列（例如，空格变成 `\032`）。
+Bonjour/DNS‑SD 经常将服务实例名称中的字节转义为十进制 `\DDD`
+序列（例如空格变为 `\032`）。
 
 - 这在协议级别是正常的。
-- UI 应该解码以显示（iOS 使用 `BonjourEscapes.decode`）。
+- UI 应进行解码以供显示（iOS 使用 `BonjourEscapes.decode`）。
 
 ## 禁用 / 配置
 
-- `OPENCLAW_DISABLE_BONJOUR=1` 禁用通告（旧版：`OPENCLAW_DISABLE_BONJOUR`）。
+- `OPENCLAW_DISABLE_BONJOUR=1` 禁用广播（旧版：`OPENCLAW_DISABLE_BONJOUR`）。
 - `~/.openclaw/openclaw.json` 中的 `gateway.bind` 控制 Gateway 绑定模式。
-- `OPENCLAW_SSH_PORT` 覆盖 TXT 中通告的 SSH 端口（旧版：`OPENCLAW_SSH_PORT`）。
+- `OPENCLAW_SSH_PORT` 覆盖 TXT 中广播的 SSH 端口（旧版：`OPENCLAW_SSH_PORT`）。
 - `OPENCLAW_TAILNET_DNS` 在 TXT 中发布 MagicDNS 提示（旧版：`OPENCLAW_TAILNET_DNS`）。
-- `OPENCLAW_CLI_PATH` 覆盖通告的 CLI 路径（旧版：`OPENCLAW_CLI_PATH`）。
+- `OPENCLAW_CLI_PATH` 覆盖广播的 CLI 路径（旧版：`OPENCLAW_CLI_PATH`）。
 
 ## 相关文档
 
-- 发现策略和传输选择：[发现](/zh/gateway/discovery)
-- 节点配对 + 批准：[Gateway 配对](/zh/gateway/pairing)
+- 发现策略和传输选择：[Discovery](/zh/en/gateway/discovery)
+- 节点配对 + 批准：[Gateway pairing](/zh/en/gateway/pairing)

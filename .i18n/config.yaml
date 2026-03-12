@@ -1,0 +1,20 @@
+batchTokens: 500
+parallelBatches: 1
+
+collect:
+  exclude:
+    - .i18n/**
+    - ja-JP/**
+    - zh-CN/**
+
+provider:
+  baseUrl: https://open.bigmodel.cn/api/coding/paas/v4
+  model: glm-4.7
+  timeoutMs: 300000
+
+linkFix:
+  rules:
+    - dir: /en
+      prefix: en/
+    - dir: /zh
+      prefix: zh/

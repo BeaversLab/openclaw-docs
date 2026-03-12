@@ -1,42 +1,45 @@
 ---
-title: "形式验证（安全模型）"
-summary: OpenClaw 最高风险路径的机器校验安全模型。
+title: 形式化验证（安全模型）
+summary: OpenClaw 最高风险路径的机器检查安全模型。
+read_when:
+  - Reviewing formal security model guarantees or limits
+  - Reproducing or updating TLA+/TLC security model checks
 permalink: /security/formal-verification/
 ---
 
 # 形式化验证（安全模型）
 
-本页追踪 OpenClaw 的 **形式化安全模型**（目前为 TLA+/TLC；需要时扩展）。
+此页面追踪 OpenClaw 的**形式化安全模型**（目前为 TLA+/TLC；根据需要增加更多）。
 
-> 说明：部分旧链接可能仍指向之前的项目名。
+> 注意：一些较旧的链接可能指的是以前的项目名称。
 
-**目标（北极星）：** 在明确假设下，提供机器校验的论证，证明 OpenClaw 能执行其预期的安全策略（授权、会话隔离、工具门控与配置安全）。
+**目标（北极星）：** 提供一个经过机器检查的论据，证明 OpenClaw 在明确假设下执行其预期的安全策略（授权、会话隔离、工具门控和错误配置安全）。
 
-**今天的含义：** 一个可执行、攻击者视角的 **安全回归套件**：
+**当前状况：** 一个可执行的、由攻击者驱动的**安全回归套件**：
 
-- 每个主张都有在有限状态空间内可运行的 model-check。
-- 许多主张配有 **负模型**，用于生成现实 bug 类的反例轨迹。
+- 每个声明都有一个在有限状态空间上运行的可运行模型检查。
+- 许多声明都有一个配对的**负面模型**，可以为现实的错误类别生成反例追踪。
 
-**尚未达到：** “OpenClaw 在所有方面都安全”的证明，也不是对完整 TypeScript 实现的证明。
+**目前尚非：** 证明“OpenClaw 在所有方面都是安全的”或完整的 TypeScript 实现是正确的。
 
-## 模型位置
+## 模型的位置
 
-模型维护在单独仓库中：[vignesh07/openclaw-formal-models](https://github.com/vignesh07/openclaw-formal-models)。
+模型在单独的仓库中维护：[vignesh07/openclaw-formal-models](https://github.com/vignesh07/openclaw-formal-models)。
 
 ## 重要注意事项
 
-- 这些是 **模型**，不是完整 TypeScript 实现。模型与代码可能漂移。
-- 结果受 TLC 探索的状态空间约束；“绿”不代表超出已建模假设与边界的安全性。
-- 部分主张依赖明确环境假设（如正确部署、正确配置输入）。
+- 这些是**模型**，而不是完整的 TypeScript 实现。模型和代码之间可能会出现差异。
+- 结果受 TLC 探索的状态空间限制；“绿色”并不意味着超出模型假设和范围的安全性。
+- 某些声明依赖于明确的环境假设（例如，正确的部署、正确的配置输入）。
 
-## 复现实验结果
+## 复现结果
 
-目前通过本地克隆模型仓库并运行 TLC 复现（见下）。未来可能提供：
+目前，通过在本地克隆模型仓库并运行 TLC 来复现结果（见下文）。未来的迭代版本可能会提供：
 
-- 在 CI 运行模型并发布产物（反例轨迹、运行日志）
-- 托管的“小范围模型运行”工作流
+- CI 运行的模型，附带公共产物（反例追踪、运行日志）
+- 针对小型、有限检查的托管“运行此模型”工作流
 
-开始：
+入门指南：
 
 ```bash
 git clone https://github.com/vignesh07/openclaw-formal-models
@@ -48,98 +51,98 @@ cd openclaw-formal-models
 make <target>
 ```
 
-### Gateway 暴露与 open gateway 误配置
+### 网关暴露和开放网关错误配置
 
-**主张：** 未加认证地绑定到非 loopback 会导致远程入侵可能性/暴露增加；token/password 可阻止未授权攻击者（在模型假设下）。
+**声明：** 在未经身份验证的情况下绑定到环回地址之外可能会导致远程入侵成为可能 / 增加暴露面；令牌/密码可以阻止未经身份验证的攻击者（根据模型假设）。
 
-- 绿（通过）：
+- 通过的运行：
   - `make gateway-exposure-v2`
   - `make gateway-exposure-v2-protected`
-- 红（预期）：
+- 红色（预期）：
   - `make gateway-exposure-v2-negative`
 
-另见：模型仓库中的 `docs/gateway-exposure-matrix.md`。
+另请参阅：模型仓库中的 `docs/gateway-exposure-matrix.md`。
 
-### Nodes.run 流水线（最高风险能力）
+### Nodes.run 管道（最高风险能力）
 
-**主张：** `nodes.run` 需要 (a) 节点命令 allowlist + 已声明命令，且 (b) 在配置时需要实时审批；审批在模型中带 token 以防重放。
+**声明：** `nodes.run` 需要 节点命令允许列表加上已声明的命令，以及在配置时的实时批准；批准已进行令牌化以防止重放（在模型中）。
 
-- 绿（通过）：
+- 绿色运行：
   - `make nodes-pipeline`
   - `make approvals-token`
-- 红（预期）：
+- 红色（预期）：
   - `make nodes-pipeline-negative`
   - `make approvals-token-negative`
 
-### 配对存储（DM 门控）
+### 配对存储（DM 限制）
 
-**主张：** 配对请求遵守 TTL 与待处理请求上限。
+**声明：** 配对请求遵守 TTL 和待处理请求上限。
 
-- 绿（通过）：
+- 绿色运行：
   - `make pairing`
   - `make pairing-cap`
-- 红（预期）：
+- 红色（预期）：
   - `make pairing-negative`
   - `make pairing-cap-negative`
 
-### 入站门控（mentions + control-command 绕过）
+### 入口限制（提及 + 控制命令绕过）
 
-**主张：** 在需要 mention 的群聊中，未授权的 “control command” 不能绕过 mention 门控。
+**声明：** 在需要提及的群组上下文中，未经授权的“控制命令”无法绕过提及限制。
 
-- 绿：
+- 绿色：
   - `make ingress-gating`
-- 红（预期）：
+- 红色（预期）：
   - `make ingress-gating-negative`
 
-### 路由/会话键隔离
+### 路由/会话密钥隔离
 
-**主张：** 不同 peer 的私聊不会折叠到同一会话，除非明确链接/配置。
+**声明：** 来自不同对等方的 DM 不会合并到同一个会话中，除非显式链接/配置。
 
-- 绿：
+- 绿色：
   - `make routing-isolation`
-- 红（预期）：
+- 红色（预期）：
   - `make routing-isolation-negative`
 
-## v1++：更多有界模型（并发、重试、追踪正确性）
+## v1++：额外的有界模型（并发、重试、跟踪正确性）
 
-这些后续模型用于更贴近真实故障模式（非原子更新、重试、消息扇出）。
+这些是后续模型，它们收紧了围绕现实世界故障模式（非原子更新、重试和消息分发）的保真度。
 
-### 配对存储并发 / 幂等
+### 配对存储并发/幂等性
 
-**主张：** 配对存储应在并发交错下仍强制 `MaxPending` 与幂等（即“先检查再写入”必须原子/加锁；刷新不应产生重复）。
+**声明：** 配对存储应强制执行 `MaxPending` 和幂等性，即使在交错情况下（即，“检查然后写入”必须是原子/锁定的；刷新不应创建重复项）。
 
 含义：
 
-- 并发请求下，频道的 `MaxPending` 不可被超出。
-- 同一 `(channel, sender)` 的重复请求/刷新不应生成重复的活跃 pending 条目。
+- 在并发请求下，您不能超过通道的 `MaxPending`。
+- 针对同一 `(channel, sender)` 的重复请求/刷新不应创建重复的实时待处理行。
 
-- 绿（通过）：
-  - `make pairing-race`（原子/锁定的上限检查）
+- 绿色运行：
+  - `make pairing-race` (原子/锁定上限检查)
   - `make pairing-idempotency`
   - `make pairing-refresh`
   - `make pairing-refresh-race`
-- 红（预期）：
-  - `make pairing-race-negative`（非原子 begin/commit 上限竞态）
+- 红色（预期）：
+  - `make pairing-race-negative` (非原子 begin/commit cap 竞态)
   - `make pairing-idempotency-negative`
   - `make pairing-refresh-negative`
   - `make pairing-refresh-race-negative`
 
-### 入站追踪关联 / 幂等
+### Ingress 追踪关联 / 幂等性
 
-**主张：** ingestion 应在扇出时保持追踪关联，并在 provider 重试下保持幂等。
+**声明：** 摄入应在扇出过程中保持追踪关联，并在提供商重试时保持幂等。
 
 含义：
 
-- 当一个外部事件映射为多个内部消息时，每一部分保持同一 trace/event identity。
-- 重试不会导致重复处理。
-- 若 provider 缺少事件 ID，去重应回退到安全键（如 trace ID），以避免丢弃不同事件。
+- 当一个外部事件变为多个内部消息时，每个部分都保持相同的追踪/事件标识。
+- 重试不应导致双重处理。
+- 如果缺少提供商事件 ID，去重会回退到安全密钥（例如追踪 ID），以避免丢失不同的事件。
 
-- 绿：
+- 绿色：
   - `make ingress-trace`
   - `make ingress-trace2`
   - `make ingress-idempotency`
   - `make ingress-dedupe-fallback`
-- 红（预期）：
+- 红色（预期）：
   - `make ingress-trace-negative`
   - `make ingress-trace2-negative`
   - `make ingress-idempotency-negative`
@@ -147,16 +150,16 @@ make <target>
 
 ### 路由 dmScope 优先级 + identityLinks
 
-**主张：** 路由默认保持 DM 会话隔离，仅在明确配置时才折叠（频道优先级 + identity links）。
+**声明：** 路由必须默认保持 DM 会话隔离，并且仅在显式配置时才合并会话（通道优先级 + 身份链接）。
 
 含义：
 
-- 频道级 dmScope 覆盖必须优先于全局默认。
-- identityLinks 只能在明确链接组内折叠，不能跨无关 peer。
+- 特定于通道的 dmScope 覆盖必须优先于全局默认值。
+- identityLinks 应仅在显式链接的组内合并，而不应跨不相关的对等方合并。
 
-- 绿：
+- 绿色：
   - `make routing-precedence`
   - `make routing-identitylinks`
-- 红（预期）：
+- 红色（预期）：
   - `make routing-precedence-negative`
   - `make routing-identitylinks-negative`

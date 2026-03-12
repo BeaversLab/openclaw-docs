@@ -1,51 +1,51 @@
 ---
 summary: "macOS 上的 Gateway 运行时（外部 launchd 服务）"
 read_when:
-  - "Packaging OpenClaw.app"
-  - "Debugging the macOS gateway launchd service"
-  - "Installing the gateway CLI for macOS"
+  - Packaging OpenClaw.app
+  - Debugging the macOS gateway launchd service
+  - Installing the gateway CLI for macOS
 title: "macOS 上的 Gateway"
 ---
 
 # macOS 上的 Gateway（外部 launchd）
 
-OpenClaw.app 不再捆绑 Node/Bun 或 Gateway 运行时。macOS 应用
-期望**外部** `openclaw` CLI 安装，不会将 Gateway 作为子进程生成，
-并管理每个用户的 launchd 服务以保持 Gateway 运行
-（如果已有 Gateway 在运行，则附加到现有的本地 Gateway）。
+OpenClaw.app 不再打包 Node/Bun 或 Gateway 运行时。该 macOS 应用
+需要**外部** `openclaw` CLI 安装，不会将 Gateway 作为
+子进程生成，而是管理一个 per‑user launchd 服务以保持 Gateway
+运行（如果已有本地 Gateway 在运行，则附加到该现有实例）。
 
 ## 安装 CLI（本地模式需要）
 
-Mac 上需要 Node 22+，然后全局安装 `openclaw`：
+Mac 上的默认运行时是 Node 24。Node 22 LTS（目前为 `22.16+`）仍然可用于兼容性。然后全局安装 `openclaw`：
 
 ```bash
 npm install -g openclaw@<version>
 ```
 
-macOS 应用的 **安装 CLI** 按钮通过 npm/pnpm 运行相同的流程（不建议将 bun 用于 Gateway 运行时）。
+macOS 应用的 **Install CLI** 按钮通过 npm/pnpm 运行相同的流程（不推荐在 Gateway 运行时使用 bun）。
 
-## Launchd（作为 LaunchAgent 的 Gateway）
+## Launchd（Gateway 作为 LaunchAgent）
 
 标签：
 
-- `bot.molt.gateway`（或 `bot.molt.<profile>`；旧版 `com.openclaw.*` 可能仍然存在）
+- `ai.openclaw.gateway`（或 `ai.openclaw.<profile>`；遗留的 `com.openclaw.*` 可能仍然存在）
 
-Plist 位置（每个用户）：
+Plist 位置（per‑user）：
 
-- `~/Library/LaunchAgents/bot.molt.gateway.plist`
-  （或 `~/Library/LaunchAgents/bot.molt.<profile>.plist`）
+- `~/Library/LaunchAgents/ai.openclaw.gateway.plist`
+  （或 `~/Library/LaunchAgents/ai.openclaw.<profile>.plist`）
 
-管理：
+管理器：
 
-- macOS 应用在本地模式下负责 LaunchAgent 的安装/更新。
+- macOS 应用拥有本地模式下的 LaunchAgent 安装/更新权限。
 - CLI 也可以安装它：`openclaw gateway install`。
 
 行为：
 
 - “OpenClaw Active” 启用/禁用 LaunchAgent。
-- 应用退出**不会**停止 gateway（launchd 保持其运行）。
+- 退出应用**不会**停止 gateway（launchd 使其保持活动状态）。
 - 如果 Gateway 已在配置的端口上运行，应用将附加到
-  该 Gateway，而不是启动新的。
+  它而不是启动一个新的。
 
 日志记录：
 
@@ -53,10 +53,10 @@ Plist 位置（每个用户）：
 
 ## 版本兼容性
 
-macOS 应用会检查 gateway 版本与其自身版本的兼容性。如果版本
+macOS 应用会检查 gateway 版本是否与其自身版本匹配。如果它们
 不兼容，请更新全局 CLI 以匹配应用版本。
 
-## 快速检查
+## 冒烟检查
 
 ```bash
 openclaw --version

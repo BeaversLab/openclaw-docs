@@ -1,49 +1,51 @@
 ---
-summary: "Matrix 支持状态、能力与配置"
+summary: "Matrix 支持状态、功能和配置"
 read_when:
-  - 开发 Matrix 渠道功能
+  - Working on Matrix channel features
 title: "Matrix"
 ---
 
-# Matrix（插件）
+# Matrix (插件)
 
-Matrix 是开放的去中心化消息协议。OpenClaw 作为 Matrix **用户**连接到任意 homeserver，
-因此 bot 需要一个 Matrix 账号。登录后可直接 DM 或邀请到房间（Matrix “groups”）。
-Beeper 也是可用客户端，但需要启用 E2EE。
+Matrix 是一个开放、去中心化的消息传递协议。OpenClaw 作为 Matrix **用户** 连接到
+任何主服务器，因此你需要为机器人准备一个 Matrix 账户。一旦登录，你可以直接
+私信机器人或将其邀请到房间（Matrix "群组"）。Beeper 也是一个有效的客户端选项，
+但需要启用 E2EE。
 
-状态：通过插件支持（@vector-im/matrix-bot-sdk）。支持私聊、房间、线程、媒体、reactions、
-投票（发送 + poll-start 文本化）、位置，以及 E2EE（带加密支持）。
+状态：通过插件 支持。私信、房间、话题、媒体、表情回应、
+投票（发送 + 投票开始作为文本）、位置和 E2EE（支持加密）。
 
-## 需要插件
+## 所需插件
 
-Matrix 为插件形式，未随核心安装打包。
+Matrix 以插件形式提供，不包含在核心安装中。
 
-通过 CLI 安装（npm registry）：
+通过 CLI (npm 注册表) 安装：
 
 ```bash
 openclaw plugins install @openclaw/matrix
 ```
 
-本地检出（从 git 仓库运行时）：
+本地检出 (当从 git 仓库运行时)：
 
 ```bash
 openclaw plugins install ./extensions/matrix
 ```
 
-若在配置/上手流程中选择 Matrix 且检测到 git 检出，OpenClaw 会自动提供本地安装路径。
+如果你在配置/入职期间选择 Matrix 并检测到 git 检出，
+OpenClaw 将自动提供本地安装路径。
 
-详情：[插件](/zh/plugin)
+详情：[插件](/zh/en/tools/plugin)
 
 ## 设置
 
 1. 安装 Matrix 插件：
-   - npm：`openclaw plugins install @openclaw/matrix`
-   - 本地检出：`openclaw plugins install ./extensions/matrix`
-2. 在 homeserver 创建 Matrix 账号：
-   - 浏览托管选项：[https://matrix.org/ecosystem/hosting/](https://matrix.org/ecosystem/hosting/)
-   - 或自行部署。
-3. 获取 bot 账号的 access token：
-   - 在你的 homeserver 用 `curl` 调用 Matrix 登录 API：
+   - 从 npm： `openclaw plugins install @openclaw/matrix`
+   - 从本地检出： `openclaw plugins install ./extensions/matrix`
+2. 在主服务器上创建 Matrix 账户：
+   - 在 [https://matrix.org/ecosystem/hosting/](https://matrix.org/ecosystem/hosting/) 浏览托管选项
+   - 或者自己托管。
+3. 获取机器人账户的访问令牌：
+   - 在你的主服务器使用带有 `curl` 的 Matrix 登录 API：
 
    ```bash
    curl --request POST \
@@ -59,21 +61,23 @@ openclaw plugins install ./extensions/matrix
    }'
    ```
 
-   - 将 `matrix.example.org` 替换为你的 homeserver URL。
-   - 或设置 `channels.matrix.userId` + `channels.matrix.password`：OpenClaw 会调用相同登录端点，
-     将 access token 存入 `~/.openclaw/credentials/matrix/credentials.json`，并在下次启动复用。
+   - 将 `matrix.example.org` 替换为你的主服务器 URL。
+   - 或者设置 `channels.matrix.userId` + `channels.matrix.password`：OpenClaw 调用相同的
+     登录端点，将访问令牌存储在 `~/.openclaw/credentials/matrix/credentials.json` 中，
+     并在下次启动时重用它。
 
 4. 配置凭据：
-   - 环境变量：`MATRIX_HOMESERVER`、`MATRIX_ACCESS_TOKEN`（或 `MATRIX_USER_ID` + `MATRIX_PASSWORD`）
-   - 或配置：`channels.matrix.*`
-   - 两者同时设置时，以配置优先。
-   - 使用 access token 时，用户 ID 会通过 `/whoami` 自动获取。
-   - 若设置 `channels.matrix.userId`，需为完整 Matrix ID（如 `@bot:example.org`）。
-5. 重启 gateway（或完成上手流程）。
-6. 从任意 Matrix 客户端（Element、Beeper 等；见 https://matrix.org/ecosystem/clients/）与 bot 私聊或邀请进房间。
-   Beeper 需要 E2EE，因此请设置 `channels.matrix.encryption: true` 并验证设备。
+   - Env： `MATRIX_HOMESERVER`、 `MATRIX_ACCESS_TOKEN` (或 `MATRIX_USER_ID` + `MATRIX_PASSWORD`)
+   - 或配置： `channels.matrix.*`
+   - 如果两者都已设置，配置优先。
+   - 使用访问令牌：通过 `/whoami` 自动获取用户 ID。
+   - 设置时， `channels.matrix.userId` 应为完整的 Matrix ID (例如： `@bot:example.org`)。
+5. 重启网关 (或完成入职)。
+6. 从任何 Matrix 客户端开始与机器人私信或将其邀请到房间
+   (Element, Beeper 等；参见 [https://matrix.org/ecosystem/clients/](https://matrix.org/ecosystem/clients/))。Beeper 需要 E2EE，
+   因此请设置 `channels.matrix.encryption: true` 并验证设备。
 
-最小配置（access token，user ID 自动获取）：
+最小配置（访问令牌，用户 ID 自动获取）：
 
 ```json5
 {
@@ -88,7 +92,7 @@ openclaw plugins install ./extensions/matrix
 }
 ```
 
-E2EE 配置（端到端加密启用）：
+E2EE 配置（已启用端到端加密）：
 
 ```json5
 {
@@ -104,50 +108,95 @@ E2EE 配置（端到端加密启用）：
 }
 ```
 
-## 加密（E2EE）
+## 加密 (E2EE)
 
-端到端加密通过 Rust crypto SDK **支持**。
+通过 Rust 加密 SDK **支持**端到端加密。
 
-启用：`channels.matrix.encryption: true`：
+通过 `channels.matrix.encryption: true` 启用：
 
-- 若 crypto 模块加载成功，加密房间会自动解密。
-- 向加密房间发送媒体时会加密。
-- 首次连接时，OpenClaw 会请求你的其他会话进行设备验证。
-- 在另一个 Matrix 客户端（Element 等）验证设备以共享密钥。
-- 若 crypto 模块无法加载，会禁用 E2EE，并记录警告；加密房间无法解密。
-- 若出现缺失 crypto 模块错误（例如 `@matrix-org/matrix-sdk-crypto-nodejs-*`），
-  请允许 `@matrix-org/matrix-sdk-crypto-nodejs` 的构建脚本，并运行
-  `pnpm rebuild @matrix-org/matrix-sdk-crypto-nodejs` 或执行
-  `node node_modules/@matrix-org/matrix-sdk-crypto-nodejs/download-lib.js` 下载二进制。
+- 如果加密模块加载，加密房间将自动解密。
+- 发送到加密房间时，出站媒体将被加密。
+- 首次连接时，OpenClaw 会向您的其他会话请求设备验证。
+- 在另一个 Matrix 客户端（Element 等）中验证设备以启用密钥共享。
+- 如果无法加载加密模块，E2EE 将被禁用，加密房间将无法解密；
+  OpenClaw 会记录警告。
+- 如果您看到缺少加密模块的错误（例如，`@matrix-org/matrix-sdk-crypto-nodejs-*`），
+  请允许 `@matrix-org/matrix-sdk-crypto-nodejs` 的构建脚本并运行
+  `pnpm rebuild @matrix-org/matrix-sdk-crypto-nodejs` 或通过
+  `node node_modules/@matrix-org/matrix-sdk-crypto-nodejs/download-lib.js` 获取二进制文件。
 
-Crypto 状态按账号 + access token 存在：
+加密状态按帐户 + 访问令牌存储在
 `~/.openclaw/matrix/accounts/<account>/<homeserver>__<user>/<token-hash>/crypto/`
-（SQLite 数据库）。同步状态保存在同目录下的 `bot-storage.json`。
-如果 access token（设备）变化，会创建新存储，bot 需重新验证才能解密加密房间。
+(SQLite 数据库) 中。同步状态与其一起存储在 `bot-storage.json` 中。
+如果访问令牌（设备）发生更改，将创建一个新的存储，并且必须
+重新验证机器人以访问加密房间。
 
 **设备验证：**
-启用 E2EE 后，bot 启动时会向其他会话发起验证请求。
-在 Element（或其他客户端）中批准该请求以建立信任。
-验证完成后，bot 才能解密加密房间的消息。
+当启用 E2EE 时，机器人将在启动时从您的其他会话请求验证。
+打开 Element（或其他客户端）并批准验证请求以建立信任。
+验证后，机器人可以解密加密房间中的消息。
+
+## 多帐户
+
+多帐户支持：将 `channels.matrix.accounts` 与每个帐户的凭据和可选的 `name` 一起使用。有关共享模式，请参见 [`gateway/configuration`](/zh/en/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts)。
+
+每个帐户在任何主服务器上作为单独的 Matrix 用户运行。每个帐户的配置
+继承自顶级 `channels.matrix` 设置，并且可以覆盖任何选项
+（DM 策略、群组、加密等）。
+
+```json5
+{
+  channels: {
+    matrix: {
+      enabled: true,
+      dm: { policy: "pairing" },
+      accounts: {
+        assistant: {
+          name: "Main assistant",
+          homeserver: "https://matrix.example.org",
+          accessToken: "syt_assistant_***",
+          encryption: true,
+        },
+        alerts: {
+          name: "Alerts bot",
+          homeserver: "https://matrix.example.org",
+          accessToken: "syt_alerts_***",
+          dm: { policy: "allowlist", allowFrom: ["@admin:example.org"] },
+        },
+      },
+    },
+  },
+}
+```
+
+注意：
+
+- 帐号启动已序列化，以避免并发模块导入时的竞态条件。
+- 环境变量（`MATRIX_HOMESERVER`、`MATRIX_ACCESS_TOKEN` 等）仅适用于**默认**帐号。
+- 基础频道设置（DM 策略、群组策略、提及门控等）适用于所有帐号，除非针对每个帐号进行了覆盖。
+- 使用 `bindings[].match.accountId` 将每个帐号路由到不同的代理。
+- 加密状态按帐号 + 访问令牌存储（每个帐号有单独的密钥存储）。
 
 ## 路由模型
 
-- 回复始终回到 Matrix。
-- 私聊共享 agent 主会话；房间映射为群组会话。
+- 回复始终返回到 Matrix。
+- 私信共享代理的主会话；房间映射到群组会话。
 
-## 访问控制（私聊）
+## 访问控制 (DMs)
 
-- 默认：`channels.matrix.dm.policy = "pairing"`。未知发送者会收到配对码。
-- 批准命令：
+- 默认值：`channels.matrix.dm.policy = "pairing"`。未知发送者会收到配对码。
+- 通过以下方式批准：
   - `openclaw pairing list matrix`
   - `openclaw pairing approve matrix <CODE>`
-- 公共私聊：`channels.matrix.dm.policy="open"` 且 `channels.matrix.dm.allowFrom=["*"]`。
-- `channels.matrix.dm.allowFrom` 可接受完整 Matrix 用户 ID（如 `@user:server`）。向导在目录搜索找到单个精确匹配时将显示名解析为用户 ID。
+- 公开私信：`channels.matrix.dm.policy="open"` 加上 `channels.matrix.dm.allowFrom=["*"]`。
+- `channels.matrix.dm.allowFrom` 接受完整的 Matrix 用户 ID（例如：`@user:server`）。当目录搜索找到单个精确匹配项时，向导会将显示名称解析为用户 ID。
+- 不要使用显示名称或单纯的本地部分（例如：`"Alice"` 或 `"alice"`）。它们具有歧义，并且在允许列表匹配时会被忽略。请使用完整的 `@user:server` ID。
 
 ## 房间（群组）
 
-- 默认：`channels.matrix.groupPolicy = "allowlist"`（提及门控）。若未设置，可用 `channels.defaults.groupPolicy` 覆盖默认值。
-- 使用 `channels.matrix.groups` allowlist 房间（room ID 或别名；名称在目录搜索找到单个精确匹配时解析为 ID）：
+- 默认值：`channels.matrix.groupPolicy = "allowlist"`（提及门控）。当未设置时，使用 `channels.defaults.groupPolicy` 覆盖默认值。
+- 运行时说明：如果完全缺少 `channels.matrix`，运行时将回退到 `groupPolicy="allowlist"` 进行房间检查（即使设置了 `channels.defaults.groupPolicy`）。
+- 使用 `channels.matrix.groups` 将房间列入允许列表（房间 ID 或别名；当目录搜索找到单个精确匹配项时，名称将解析为 ID）：
 
 ```json5
 {
@@ -164,64 +213,91 @@ Crypto 状态按账号 + access token 存在：
 }
 ```
 
-- `requireMention: false` 可在该房间启用自动回复。
-- `groups."*"` 可设置全局提及门控默认值。
-- `groupAllowFrom` 可限制哪些发送者可在房间中触发 bot（完整 Matrix 用户 ID）。
-- 每房间 `users` allowlist 可进一步限制该房间的发送者（使用完整 Matrix 用户 ID）。
-- 配置向导会提示设置房间 allowlist（room ID、别名或名称），仅在找到单个精确匹配时解析名称。
-- 启动时，OpenClaw 会将 allowlist 中的房间/用户名称解析为 ID 并记录映射；无法解析的条目在 allowlist 匹配时被忽略。
-- 邀请默认自动加入；用 `channels.matrix.autoJoin` 与 `channels.matrix.autoJoinAllowlist` 控制。
-- 若要**禁止所有房间**，设置 `channels.matrix.groupPolicy: "disabled"`（或保持空 allowlist）。
-- 旧键：`channels.matrix.rooms`（与 `groups` 结构相同）。
+- `requireMention: false` 在该房间中启用自动回复。
+- `groups."*"` 可以为房间的提及门控设置默认值。
+- `groupAllowFrom` 限制哪些发送者可以在房间中触发机器人（完整的 Matrix 用户 ID）。
+- 每个房间的 `users` 允许列表可以进一步限制特定房间内的发送者（使用完整的 Matrix 用户 ID）。
+- 配置向导会提示输入房间允许列表（房间 ID、别名或名称），并且仅在精确且唯一匹配的情况下解析名称。
+- 启动时，OpenClaw 会将允许列表中的房间/用户名称解析为 ID 并记录映射；未解析的条目在允许列表匹配时将被忽略。
+- 默认情况下会自动加入邀请；可以通过 `channels.matrix.autoJoin` 和 `channels.matrix.autoJoinAllowlist` 进行控制。
+- 要禁止**所有房间**，请设置 `channels.matrix.groupPolicy: "disabled"`（或保持允许列表为空）。
+- 旧版键：`channels.matrix.rooms`（形状与 `groups` 相同）。
 
-## 线程
+## 话题
 
-- 支持回复线程。
-- `channels.matrix.threadReplies` 控制是否在同一线程回复：
-  - `off`、`inbound`（默认）、`always`
-- `channels.matrix.replyToMode` 控制不在线程中回复时的 reply-to 元数据：
-  - `off`（默认）、`first`、`all`
+- 支持回复话题。
+- `channels.matrix.threadReplies` 控制回复是否保留在话题中：
+  - `off`，`inbound`（默认），`always`
+- `channels.matrix.replyToMode` 控制不在话题中回复时的回复元数据：
+  - `off`（默认），`first`，`all`
 
-## 能力
+## 功能
 
-| 功能      | 状态                                                     |
-| --------- | -------------------------------------------------------- |
-| 私聊      | ✅ 支持                                                  |
-| 房间      | ✅ 支持                                                  |
-| 线程      | ✅ 支持                                                  |
-| 媒体      | ✅ 支持                                                  |
-| E2EE      | ✅ 支持（需 crypto 模块）                                |
-| Reactions | ✅ 支持（通过工具读/发）                                 |
-| 投票      | ✅ 发送支持；入站 poll-start 会转为文本（忽略响应/结束） |
-| 位置      | ✅ 支持（geo URI；忽略海拔）                             |
-| 原生命令  | ✅ 支持                                                  |
+| 功能         | 状态                                                                                |
+| --------------- | ------------------------------------------------------------------------------------- |
+| 私信           | ✅ 已支持                                                                          |
+| 房间           | ✅ 已支持                                                                          |
+| 话题线程       | ✅ 已支持                                                                          |
+| 媒体           | ✅ 已支持                                                                          |
+| 端到端加密     | ✅ 已支持（需要加密模块）                                                 |
+| 表情回应       | ✅ 已支持（通过工具发送/读取）                                                    |
+| 投票           | ✅ 发送已支持；接收到的投票开始被转换为文本（忽略响应/结束） |
+| 位置           | ✅ 已支持（地理 URI；忽略海拔）                                              |
+| 原生命令       | ✅ 已支持                                                                          |
 
-## 配置参考（Matrix）
+## 故障排除
 
-完整配置见：[配置](/zh/gateway/configuration)
+首先运行此排查步骤：
 
-Provider 选项：
+```bash
+openclaw status
+openclaw gateway status
+openclaw logs --follow
+openclaw doctor
+openclaw channels status --probe
+```
 
-- `channels.matrix.enabled`：启用/禁用渠道启动。
-- `channels.matrix.homeserver`：homeserver URL。
-- `channels.matrix.userId`：Matrix 用户 ID（access token 可选）。
-- `channels.matrix.accessToken`：access token。
-- `channels.matrix.password`：登录密码（会存 token）。
-- `channels.matrix.deviceName`：设备显示名。
-- `channels.matrix.encryption`：启用 E2EE（默认：false）。
-- `channels.matrix.initialSyncLimit`：初始同步上限。
-- `channels.matrix.threadReplies`：`off | inbound | always`（默认：inbound）。
-- `channels.matrix.textChunkLimit`：出站文本分块大小（字符）。
-- `channels.matrix.chunkMode`：`length`（默认）或 `newline`（按空行分段再分块）。
-- `channels.matrix.dm.policy`：`pairing | allowlist | open | disabled`（默认：pairing）。
-- `channels.matrix.dm.allowFrom`：私聊 allowlist（完整 Matrix 用户 ID）。`open` 需要 `"*"`。向导会在可能时解析名称。
-- `channels.matrix.groupPolicy`：`allowlist | open | disabled`（默认：allowlist）。
-- `channels.matrix.groupAllowFrom`：群聊允许的发送者（完整 Matrix 用户 ID）。
-- `channels.matrix.allowlistOnly`：强制私聊 + 房间走 allowlist 规则。
-- `channels.matrix.groups`：群 allowlist + 房间配置 map。
-- `channels.matrix.rooms`：旧版群 allowlist/config。
-- `channels.matrix.replyToMode`：线程/标签的 reply-to 模式。
-- `channels.matrix.mediaMaxMb`：入站/出站媒体上限（MB）。
-- `channels.matrix.autoJoin`：邀请处理（`always | allowlist | off`，默认：always）。
-- `channels.matrix.autoJoinAllowlist`：允许自动加入的房间 ID/别名。
-- `channels.matrix.actions`：动作级工具门控（reactions/messages/pins/memberInfo/channelInfo）。
+如有需要，然后确认私信配对状态：
+
+```bash
+openclaw pairing list matrix
+```
+
+常见故障：
+
+- 已登录但房间消息被忽略：房间被 `groupPolicy` 或房间白名单阻止。
+- 私信被忽略：当 `channels.matrix.dm.policy="pairing"` 时发送方待批准。
+- 加密房间失败：加密支持或加密设置不匹配。
+
+分流排查流程：[/channels/troubleshooting](/zh/en/channels/troubleshooting)。
+
+## 配置参考 (Matrix)
+
+完整配置：[Configuration](/zh/en/gateway/configuration)
+
+提供者选项：
+
+- `channels.matrix.enabled`: 启用/禁用频道启动。
+- `channels.matrix.homeserver`: 主机 URL。
+- `channels.matrix.userId`: Matrix 用户 ID（使用访问令牌时可选）。
+- `channels.matrix.accessToken`: 访问令牌。
+- `channels.matrix.password`: 登录密码（令牌已存储）。
+- `channels.matrix.deviceName`: 设备显示名称。
+- `channels.matrix.encryption`: 启用 E2EE（默认：false）。
+- `channels.matrix.initialSyncLimit`: 初始同步限制。
+- `channels.matrix.threadReplies`: `off | inbound | always`（默认：inbound）。
+- `channels.matrix.textChunkLimit`: 出站文本分块大小（字符数）。
+- `channels.matrix.chunkMode`: `length`（默认）或 `newline` 在按长度分块前按空行（段落边界）分割。
+- `channels.matrix.dm.policy`: `pairing | allowlist | open | disabled`（默认：pairing）。
+- `channels.matrix.dm.allowFrom`: 私信（DM）允许列表（完整的 Matrix 用户 ID）。`open` 需要 `"*"`。向导会在可能时将名称解析为 ID。
+- `channels.matrix.groupPolicy`: `allowlist | open | disabled`（默认：allowlist）。
+- `channels.matrix.groupAllowFrom`: 群组消息的允许发送者（完整的 Matrix 用户 ID）。
+- `channels.matrix.allowlistOnly`: 对私信 + 房间强制执行允许列表规则。
+- `channels.matrix.groups`: 群组允许列表 + 每个房间设置映射。
+- `channels.matrix.rooms`: 旧版群组允许列表/配置。
+- `channels.matrix.replyToMode`: 话题/标签的回复模式。
+- `channels.matrix.mediaMaxMb`: 入站/出站媒体上限（MB）。
+- `channels.matrix.autoJoin`: 邀请处理方式（`always | allowlist | off`，默认：always）。
+- `channels.matrix.autoJoinAllowlist`: 允许自动加入的房间 ID/别名。
+- `channels.matrix.accounts`: 按账户 ID 键入的多账户配置（每个账户继承顶层设置）。
+- `channels.matrix.actions`: 每个动作的工具开关（表情/消息/置顶/成员信息/频道信息）。

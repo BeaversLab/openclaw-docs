@@ -1,38 +1,38 @@
 ---
-summary: "Gateway 自主的 node 配对（Option B），适用于 iOS 与远程 nodes"
+summary: "适用于 iOS 和其他远程节点的网关拥有型节点配对（选项 B）"
 read_when:
-  - 实现无需 macOS UI 的 node 配对审批
-  - 添加 CLI 的远程 node 审批流程
-  - 通过 node 管理扩展 gateway 协议
-title: "Gateway 拥有的配对"
+  - Implementing node pairing approvals without macOS UI
+  - Adding CLI flows for approving remote nodes
+  - Extending gateway protocol with node management
+title: "网关拥有型配对"
 ---
 
-# Gateway 自主配对（Option B）
+# 网关拥有型配对（选项 B）
 
-在 Gateway 自主配对中，**Gateway** 是决定哪些 nodes 可加入的事实来源。
-UI（macOS app、未来客户端）只是前端，用于批准或拒绝待处理请求。
+在网关拥有型配对中，**网关**是决定允许哪些节点加入的唯一事实来源。UI（macOS 应用、未来的客户端）只是用于批准或拒绝待处理请求的前端。
 
-**重要：**WS nodes 在 `connect` 时使用**设备配对**（`role: node`）。
-`node.pair.*` 是独立的配对存储，**不会**门控 WS 握手。
-只有显式调用 `node.pair.*` 的客户端才会使用该流程。
+**重要提示：** WS 节点在 `connect` 期间使用 **设备配对**（角色 `node`）。
+`node.pair.*` 是一个单独的配对存储，**不**对 WS 握手进行限制。
+只有明确调用 `node.pair.*` 的客户端才使用此流程。
 
 ## 概念
 
-- **Pending request**：node 请求加入，需审批。
-- **Paired node**：已批准并获得 auth token 的 node。
-- **Transport**：Gateway WS 仅转发请求，不决定成员资格。（旧 TCP bridge 支持已弃用/移除。）
+- **待处理请求**：请求加入的节点；需要批准。
+- **已配对节点**：已获批准且拥有已颁发身份验证令牌的节点。
+- **传输**：网关 WS 端点转发请求但不决定
+  成员资格。（旧版 TCP 网桥支持已弃用/移除。）
 
-## 配对流程
+## 配对工作原理
 
-1. node 连接 Gateway WS 并请求配对。
-2. Gateway 存储一个 **pending request** 并发出 `node.pair.requested`。
-3. 你批准或拒绝该请求（CLI 或 UI）。
-4. 批准后，Gateway 颁发**新 token**（重新配对会轮换 token）。
-5. node 使用 token 重新连接，即成为 “paired”。
+1. 节点连接到网关 WS 并请求配对。
+2. 网关存储一个 **待处理请求** 并发出 `node.pair.requested`。
+3. 您批准或拒绝该请求（通过 CLI 或 UI）。
+4. 批准后，网关颁发一个 **新令牌**（重新配对时会轮换令牌）。
+5. 节点使用该令牌重新连接，此时即处于“已配对”状态。
 
-Pending requests 在 **5 分钟**后自动过期。
+待处理请求会在 **5 分钟**后自动过期。
 
-## CLI 流程（无头友好）
+## CLI 工作流程（适用于无头模式）
 
 ```bash
 openclaw nodes pending
@@ -42,54 +42,56 @@ openclaw nodes status
 openclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
 ```
 
-`nodes status` 显示已配对/已连接节点及其能力。
+`nodes status` 显示已配对/已连接的节点及其功能。
 
-## API 面（gateway 协议）
+## API 表面（网关协议）
 
 事件：
 
-- `node.pair.requested` — 创建新 pending request 时发出。
-- `node.pair.resolved` — 请求被批准/拒绝/过期时发出。
+- `node.pair.requested` — 当创建新的待处理请求时发出。
+- `node.pair.resolved` — 当请求被批准/拒绝/过期时发出。
 
 方法：
 
-- `node.pair.request` — 创建或复用 pending request。
-- `node.pair.list` — 列出 pending + paired nodes。
-- `node.pair.approve` — 批准 pending request（颁发 token）。
-- `node.pair.reject` — 拒绝 pending request。
-- `node.pair.verify` — 校验 `{ nodeId, token }`。
+- `node.pair.request` — 创建或重用待处理请求。
+- `node.pair.list` — 列出待处理和已配对的节点。
+- `node.pair.approve` — 批准待处理请求（颁发令牌）。
+- `node.pair.reject` — 拒绝待处理请求。
+- `node.pair.verify` — 验证 `{ nodeId, token }`。
 
-注：
+备注：
 
-- `node.pair.request` 对每个 node 是幂等的：重复调用返回同一 pending request。
-- 批准**总会**生成新 token；`node.pair.request` 不会返回 token。
-- 请求可包含 `silent: true`，作为自动审批流程的提示。
+- `node.pair.request` 对每个节点是幂等的：重复调用返回相同的
+  待处理请求。
+- 批准 **总是** 会生成一个新令牌；永远不会从
+  `node.pair.request` 返回任何令牌。
+- 请求中可以包含 `silent: true` 作为自动批准流程的提示。
 
-## 自动审批（macOS app）
+## 自动批准（macOS 应用）
 
-macOS app 可在以下情况下尝试**静默审批**：
+在以下情况下，macOS 应用可以选择尝试**静默批准**：
 
-- 请求标记为 `silent`，且
-- app 能用同一用户通过 SSH 连接到 gateway 主机。
+- 该请求被标记为 `silent`，并且
+- 该应用可以使用同一用户验证与网关主机的 SSH 连接。
 
-若静默审批失败，会回退到常规 “Approve/Reject” 提示。
+如果静默批准失败，它会回退到正常的“批准/拒绝”提示。
 
-## 存储（本地、私有）
+## 存储（本地，私有）
 
-配对状态保存在 Gateway 状态目录（默认 `~/.openclaw`）：
+配对状态存储在网关状态目录下（默认为 `~/.openclaw`）：
 
 - `~/.openclaw/nodes/paired.json`
 - `~/.openclaw/nodes/pending.json`
 
-若覆盖 `OPENCLAW_STATE_DIR`，`nodes/` 目录随之移动。
+如果您覆盖了 `OPENCLAW_STATE_DIR`，`nodes/` 文件夹也会随之移动。
 
 安全说明：
 
-- Tokens 属于机密；请将 `paired.json` 视为敏感文件。
-- 轮换 token 需要重新审批（或删除该 node 条目）。
+- 令牌是机密信息；请将 `paired.json` 视为敏感信息处理。
+- 轮换令牌需要重新批准（或删除节点条目）。
 
 ## 传输行为
 
-- 传输层是**无状态**的；不会存储成员资格。
-- Gateway 离线或禁用配对时，nodes 无法配对。
-- 若 Gateway 处于 remote 模式，配对仍针对远端 Gateway 的存储进行。
+- 传输层是**无状态的**；它不存储成员资格信息。
+- 如果网关离线或配对被禁用，节点无法进行配对。
+- 如果网关处于远程模式，配对仍然会针对远程网关的存储进行。

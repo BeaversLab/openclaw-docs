@@ -1,60 +1,60 @@
 ---
-summary: "Linux 支持 + 配套应用状态"
+summary: "Linux 支持与配套应用状态"
 read_when:
-  - 查找 Linux 配套应用状态
-  - 规划平台覆盖或贡献
+  - Looking for Linux companion app status
+  - Planning platform coverage or contributions
 title: "Linux 应用"
 ---
 
 # Linux 应用
 
-网关在 Linux 上完全支持。**Node 是推荐的运行时**。
-Bun 不推荐用于网关（WhatsApp/Telegram 有 bug）。
+Gateway 在 Linux 上受到完全支持。**Node 是推荐的运行时**。
+不推荐将 Bun 用于 Gateway（WhatsApp/Telegram 存在 Bug）。
 
-原生 Linux 配套应用计划中。如果您想帮助构建一个，欢迎贡献。
+原生 Linux 配套应用已在计划中。如果您愿意协助构建，欢迎贡献代码。
 
-## 初学者快速路径（VPS）
+## 新手快速入门 (VPS)
 
-1. 安装 Node 22+
+1. 安装 Node 24（推荐；Node 22 LTS，目前为 `22.16+`，为了兼容性仍然有效）
 2. `npm i -g openclaw@latest`
 3. `openclaw onboard --install-daemon`
-4. 从您的笔记本电脑：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
-5. 打开 `http://127.0.0.1:18789/` 并粘贴您的令牌
+4. 从你的笔记本电脑：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
+5. 打开 `http://127.0.0.1:18789/` 并粘贴你的令牌
 
-VPS 分步指南：[exe.dev](/zh/platforms/exe-dev)
+分步 VPS 指南：[exe.dev](/zh/en/install/exe-dev)
 
 ## 安装
 
-- [入门指南](/zh/start/getting-started)
-- [安装和更新](/zh/install/updating)
-- 可选流程：[Bun（实验性）](/zh/install/bun)、[Nix](/zh/install/nix)、[Docker](/zh/install/docker)
+- [入门指南](/zh/en/start/getting-started)
+- [安装与更新](/zh/en/install/updating)
+- 可选流程：[Bun (实验性)](/zh/en/install/bun)、[Nix](/zh/en/install/nix)、[Docker](/zh/en/install/docker)
 
-## 网关
+## Gateway
 
-- [网关 runbook](/zh/gateway)
-- [配置](/zh/gateway/configuration)
+- [Gateway 操作手册](/zh/en/gateway)
+- [配置](/zh/en/gateway/configuration)
 
-## 网关服务安装（CLI）
+## Gateway 服务安装 (CLI)
 
-使用以下之一：
+使用以下命令之一：
 
 ```
 openclaw onboard --install-daemon
 ```
 
-或：
+或者：
 
 ```
 openclaw gateway install
 ```
 
-或：
+或者：
 
 ```
 openclaw configure
 ```
 
-在提示时选择**网关服务**。
+当系统提示时，选择 **Gateway service**。
 
 修复/迁移：
 
@@ -62,11 +62,12 @@ openclaw configure
 openclaw doctor
 ```
 
-## 系统控制（systemd 用户单元）
+## 系统控制
 
-OpenClaw 默认安装 systemd **用户**服务。对于共享或始终在线的服务器，使用**系统**服务。完整的单元示例和指南在[网关 runbook](/zh/gateway) 中。
+OpenClaw 默认安装一个 systemd **用户** 服务。对于共享或永久在线的服务器，请使用 **系统**
+服务。完整的单元示例和指南位于 [Gateway 操作手册](/zh/en/gateway) 中。
 
-最小设置：
+最小化设置：
 
 创建 `~/.config/systemd/user/openclaw-gateway[-<profile>].service`：
 

@@ -160,13 +160,13 @@ Long options are validated fail-closed in safe-bin mode: unknown flags and ambig
 abbreviations are rejected.
 Denied flags by safe-bin profile:
 
-<!-- SAFE_BIN_DENIED_FLAGS:START -->
+{/* SAFE_BIN_DENIED_FLAGS:START */}
 
 - `grep`: `--dereference-recursive`, `--directories`, `--exclude-from`, `--file`, `--recursive`, `-R`, `-d`, `-f`, `-r`
 - `jq`: `--argfile`, `--from-file`, `--library-path`, `--rawfile`, `--slurpfile`, `-L`, `-f`
 - `sort`: `--compress-program`, `--files0-from`, `--output`, `--random-source`, `--temporary-directory`, `-T`, `-o`
 - `wc`: `--files0-from`
-<!-- SAFE_BIN_DENIED_FLAGS:END -->
+{/* SAFE_BIN_DENIED_FLAGS:END */}
 
 Safe bins also force argv tokens to be treated as **literal text** at execution time (no globbing
 and no `$VARS` expansion) for stdin-only segments, so patterns like `*` or `$HOME/...` cannot be
@@ -184,7 +184,7 @@ Shell chaining (`&&`, `||`, `;`) is allowed when every top-level segment satisfi
 Command substitution (`$()` / backticks) is rejected during allowlist parsing, including inside
 double quotes; use single quotes if you need literal `$()` text.
 On macOS companion-app approvals, raw shell text containing shell control or expansion syntax
-(`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `))`) is treated as an allowlist miss unless
+(`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) is treated as an allowlist miss unless
 the shell binary itself is allowlisted.
 For shell wrappers (`bash|sh|zsh ... -c/-lc`), request-scoped env overrides are reduced to a
 small explicit allowlist (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).

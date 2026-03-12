@@ -1,66 +1,66 @@
 ---
-summary: "研究笔记：Clawd 工作区的离线 memory 系统（Markdown 事实来源 + 派生索引）"
+summary: "研究笔记：Clawd 工作空间的离线记忆系统（Markdown 真实来源 + 派生索引）"
 read_when:
-  - 设计超出每日 Markdown 日志的工作区 memory（~/.openclaw/workspace）
-  - 决定：独立 CLI 还是深度集成 OpenClaw
-  - 增加离线 recall + reflect（retain/recall/reflect）
-title: "工作区记忆研究"
+  - Designing workspace memory (~/.openclaw/workspace) beyond daily Markdown logs
+  - Deciding: standalone CLI vs deep OpenClaw integration
+  - Adding offline recall + reflection (retain/recall/reflect)
+title: "工作空间记忆研究"
 ---
 
-# Workspace Memory v2（离线）：研究笔记
+# 工作空间记忆 v2（离线）：研究笔记
 
-目标：Clawd 风格工作区（`agents.defaults.workspace`，默认 `~/.openclaw/workspace`），将“memory”存为按日 Markdown 文件（`memory/YYYY-MM-DD.md`）+ 少量稳定文件（如 `memory.md`、`SOUL.md`）。
+目标：Clawd 风格的工作空间 (`agents.defaults.workspace`, 默认 `~/.openclaw/workspace`)，其中“记忆”存储为每天一个 Markdown 文件 (`memory/YYYY-MM-DD.md`) 加上一小部分稳定文件 (例如 `memory.md`, `SOUL.md`)。
 
-本文提出**离线优先**的 memory 架构：Markdown 仍是可审阅的事实来源，但通过派生索引提供**结构化 recall**（搜索、实体摘要、置信度更新）。
+本文档提出了一种 **离线优先** 的记忆架构，将 Markdown 保留为规范的、可审查的真实来源，但通过派生索引添加 **结构化召回**（搜索、实体摘要、置信度更新）。
 
-## 为什么要改？
+## 为什么要改变？
 
-现有方案（每天一个文件）擅长：
+当前的设置（每天一个文件）非常适合：
 
-- “只追加”日志
+- “仅追加”日记
 - 人工编辑
-- git 支撑的持久性 + 可审计
+- git 支持的持久性和可审计性
 - 低摩擦捕获（“直接写下来”）
 
-但薄弱点：
+它的弱点在于：
 
-- 高召回检索（"我们对 X 的结论是什么？"、"上次尝试 Y 是何时？"）
-- 实体中心问答（“说说 Alice / The Castle / warelay”）而无需翻许多文件
-- 观点/偏好的稳定性（及其变化的证据）
-- 时间约束（“2025 年 11 月时哪些为真？”）与冲突消解
+- 高召回检索（“关于 X 我们决定了什么？”，“上次我们尝试 Y 是什么时候？”）
+- 以实体为中心的答案（“告诉我关于 Alice / The Castle / warelay 的情况”），而无需重读许多文件
+- 意见/偏好稳定性（以及变化时的证据）
+- 时间约束（“2025 年 11 月期间什么是真的？”）和冲突解决
 
 ## 设计目标
 
-- **离线**：无网络即可运行；可在 laptop/Castle 上运行；无云依赖。
-- **可解释**：检索项可归因（文件 + 位置），推断与事实分离。
-- **低仪式感**：日常记录仍是 Markdown，不引入重 schema。
-- **可增量**：v1 仅 FTS 也有价值；向量/图谱为可选升级。
-- **Agent 友好**：便于“在 token 预算内 recall”（返回小包事实）。
+- **离线**：无需网络即可工作；可以在笔记本电脑/Castle 上运行；不依赖云服务。
+- **可解释**：检索到的项目应可归因（文件 + 位置）并与推理分离。
+- **低仪式感**：每日记录保持为 Markdown，无需繁重的模式工作。
+- **增量式**：v1 仅使用 FTS 就有用；语义/向量和图是可选升级。
+- **对代理友好**：使“在 token 预算内召回”变得容易（返回小捆的事实）。
 
-## 北极星模型（Hindsight × Letta）
+## 北极星模型 (Hindsight × Letta)
 
-融合两部分：
+结合两个部分：
 
-1. **Letta/MemGPT 风格控制循环**
+1. **Letta/MemGPT 风格的控制循环**
 
-- 保持一个小“核心”始终在上下文（persona + 关键用户事实）
-- 其他内容在上下文外，通过工具检索
-- 记忆写入是显式工具调用（append/replace/insert），持久化后再注入下一回合
+- 在上下文中始终保持一个小的“核心”（人设 + 关键用户事实）
+- 其他所有内容都在上下文之外，并通过工具检索
+- 内存写入是显式工具调用（追加/替换/插入），持久化，然后在下一轮重新注入
 
-2. **Hindsight 风格 memory 基座**
+2. **Hindsight 风格的记忆基底**
 
-- 区分观察、信念与摘要
-- 支持 retain/recall/reflect
-- 观点带置信度，可随证据演化
-- 实体感知检索 + 时间查询（即使没有完整图谱）
+- 区分观察到的事物、相信的事物以及总结的事物
+- 支持保留/回想/反思
+- 带有置信度的观点，可随证据演变
+- 感知实体的检索 + 时序查询（即使没有完整的知识图谱）
 
-## 架构提议（Markdown 事实来源 + 派生索引）
+## 建议的架构（Markdown 源数据 + 派生索引）
 
 ### 规范存储（git 友好）
 
-保持 `~/.openclaw/workspace` 为人类可读的记忆主仓。
+将 `~/.openclaw/workspace` 保留为规范的人类可读记忆。
 
-建议布局：
+建议的工作区布局：
 
 ```
 ~/.openclaw/workspace/
@@ -78,40 +78,40 @@ title: "工作区记忆研究"
       ...
 ```
 
-注：
+备注：
 
-- **每日日志仍是每日日志**，不必改成 JSON。
-- `bank/` 文件为**整理产物**，由反思任务生成，仍可手工编辑。
-- `memory.md` 保持“小而核心”：希望 Clawd 每次会话都看到的内容。
+- **日志仍是日志**。无需将其转换为 JSON。
+- `bank/` 文件是经过**策展**的，由反思任务生成，但仍可手动编辑。
+- `memory.md` 保持“小而核心”：即你希望 Clawd 在每次会话中看到的内容。
 
-### 派生存储（机器 recall）
+### 派生存储（机器回想）
 
-在工作区添加派生索引（不一定纳入 git）：
+在工作区下添加一个派生索引（不一定由 git 跟踪）：
 
 ```
 ~/.openclaw/workspace/.memory/index.sqlite
 ```
 
-使用：
+支持：
 
-- SQLite schema 存事实 + 实体链接 + 观点元数据
-- SQLite **FTS5** 提供词法检索（快、小、离线）
-- 可选 embeddings 表用于语义检索（仍离线）
+- 用于事实、实体链接和观点元数据的 SQLite 架构
+- 用于词汇回想的 SQLite **FTS5**（快速、小巧、离线）
+- 用于语义回想的可选嵌入表（仍为离线）
 
-索引始终**可从 Markdown 重建**。
+索引始终可以**从 Markdown 重建**。
 
-## Retain / Recall / Reflect（运行循环）
+## 保留 / 回想 / 反思（操作循环）
 
-### Retain：将每日日志规范为“事实”
+### 保留：将日志标准化为“事实”
 
-Hindsight 的关键洞见：存储**叙事、可自洽的事实**，而不是细碎片段。
+Hindsight 此处适用的关键见解：存储**叙事性的、自包含的事实**，而不是微小的片段。
 
-对 `memory/YYYY-MM-DD.md` 的实用规则：
+`memory/YYYY-MM-DD.md` 的实用规则：
 
-- 每日结束（或过程中）添加 `## Retain` 小节，包含 2–5 条：
-  - 叙事化（保留跨回合上下文）
-  - 自包含（单独拿出来也讲得通）
-  - 带类型 + 实体标注
+- 在一天结束时（或期间），添加一个 `## Retain` 部分，包含 2–5 个要点，要求：
+  - 叙事性（保留跨轮上下文）
+  - 自包含（独立阅读时通顺）
+  - 标记类型和实体提及
 
 示例：
 
@@ -122,107 +122,107 @@ Hindsight 的关键洞见：存储**叙事、可自洽的事实**，而不是细
 - O(c=0.95) @Peter: Prefers concise replies (&lt;1500 chars) on WhatsApp; long content goes into files.
 ```
 
-最小解析：
+最简解析：
 
-- 类型前缀：`W`（world）、`B`（experience/biographical）、`O`（opinion）、`S`（observation/summary；通常生成）
+- 类型前缀：`W`（世界），`B`（经历/传记），`O`（观点），`S`（观察/摘要；通常为生成）
 - 实体：`@Peter`、`@warelay` 等（slug 映射到 `bank/entities/*.md`）
 - 观点置信度：`O(c=0.0..1.0)` 可选
 
-若不想让作者思考：reflect 任务可从其他日志推断，但显式 `## Retain` 是最简单的质量杠杆。
+如果您不想让作者操心：reflect（反思）任务可以从日志的其余部分推断这些要点，但有一个显式的 `## Retain` 部分是最简单的“质量杠杆”。
 
-### Recall：基于派生索引的查询
+### Recall：对派生索引的查询
 
 Recall 应支持：
 
-- **词法**：精确词/名称/命令（FTS5）
-- **实体**：“告诉我 X”（实体页 + 实体关联事实）
-- **时间**：“11 月 27 日左右发生了什么”/“最近一周”
-- **观点**：“Peter 的偏好是什么”（带置信度 + 证据）
+- **词汇**：“查找确切的术语 / 名称 / 命令”（FTS5）
+- **实体**：“告诉我关于 X 的信息”（实体页面 + 实体关联的事实）
+- **时间**：“11 月 27 日左右发生了什么” / “上周以来”
+- **观点**：“Peter 更喜欢什么？”（附带置信度 + 证据）
 
-返回应对 agent 友好且可溯源：
+返回格式应对代理友好并引用来源：
 
-- `kind`（`world|experience|opinion|observation`）
-- `timestamp`（来源日期或抽取时间范围）
-- `entities`（`["Peter","warelay"]`）
-- `content`（叙事事实）
-- `source`（`memory/2025-11-27.md#L12` 等）
+- `kind` (`world|experience|opinion|observation`)
+- `timestamp` (来源日期，如果存在则为提取的时间范围)
+- `entities` (`["Peter","warelay"]`)
+- `content` (叙述性事实)
+- `source` (`memory/2025-11-27.md#L12` 等)
 
 ### Reflect：生成稳定页面 + 更新信念
 
-反思是定时任务（每日或 heartbeat `ultrathink`）：
+Reflection 是一个定时任务（每天或心跳 `ultrathink`)，它：
 
-- 用近期事实更新 `bank/entities/*.md`（实体摘要）
-- 基于强化/反证更新 `bank/opinions.md` 的置信度
-- 可选：向 `memory.md` 提议编辑（“核心事实”）
+- 根据近期事实更新 `bank/entities/*.md`（实体摘要）
+- 根据强化/矛盾更新 `bank/opinions.md` 置信度
+- （可选）建议对 `memory.md` 进行编辑（“核心”持久化事实）
 
-观点演化（简单可解释）：
+观点演变（简单、可解释）：
 
-- 每条观点包含：
-  - statement
+- 每个观点都有：
+  - 陈述
   - 置信度 `c ∈ [0,1]`
   - last_updated
-  - 证据链接（支持/反对的 fact IDs）
-- 新事实到来：
-  - 按实体重叠 + 相似性找候选观点（先 FTS，后 embeddings）
-  - 用小步长调整置信度；大幅变化需强反证 + 重复证据
+  - 证据链接（支持 + 矛盾的事实 ID）
+- 当新事实到达时：
+  - 通过实体重叠 + 相似度（先用 FTS，后用嵌入）查找候选观点
+  - 通过较小的增量更新置信度；大幅跳跃需要强烈的矛盾 + 重复的证据
 
-## CLI 集成：独立 vs 深度集成
+## CLI 集成：独立工具 vs 深度集成
 
-建议：**深度集成到 OpenClaw**，但保留可分离核心库。
+建议：**在 OpenClaw 中深度集成**，但保持核心库可分离。
 
-### 为什么集成进 OpenClaw？
+### 为什么要集成到 OpenClaw 中？
 
-- OpenClaw 已知：
-  - workspace 路径（`agents.defaults.workspace`）
-  - 会话模型 + heartbeats
-  - 日志 + 排障习惯
-- 希望 agent 直接调用工具：
+- OpenClaw 已经知道：
+  - 工作区路径 (`agents.defaults.workspace`)
+  - 会话模型 + 心跳
+  - 日志 + 故障排除模式
+- 您希望代理本身调用这些工具：
   - `openclaw memory recall "…" --k 25 --since 30d`
   - `openclaw memory reflect --since 7d`
 
-### 为什么仍要拆库？
+### 为什么还要拆分出一个库？
 
-- 让 memory 逻辑可在无 gateway/runtime 下测试
-- 可复用到其他场景（本地脚本、未来桌面应用等）
+- 在不使用网关/运行时的情况下保持内存逻辑可测试
+- 在其他环境中复用（本地脚本、未来的桌面应用等）
 
 形态：
-Memory 工具定位为小型 CLI + 库层，但目前仅为探索。
+内存工具旨在作为一个小型 CLI + 库层，但这仅处于探索阶段。
 
-## “S-Collide” / SuCo：何时使用（研究）
+## “S-Collide” / SuCo：何时使用它（研究）
 
-如果 "S-Collide" 指 **SuCo (Subspace Collision)**：它是一种 ANN 检索方法，通过子空间碰撞实现较强的召回/延迟权衡（论文：arXiv 2411.14754, 2024）。
+如果 “S-Collide” 指的是 **SuCo (Subspace Collision)**：这是一种 ANN 检索方法，通过在子空间中使用学习到的/结构化碰撞来针对强召回/延迟权衡（论文：arXiv 2411.14754, 2024）。
 
-对 `~/.openclaw/workspace` 的务实结论：
+针对 `~/.openclaw/workspace` 的实用建议：
 
-- **不要一开始就用 SuCo**。
-- 先用 SQLite FTS +（可选）简单 embeddings；立刻获得大部分 UX 提升。
-- 只有在以下条件满足时再考虑 SuCo/HNSW/ScaNN 类方案：
-  - 语料很大（数万/数十万 chunks）
-  - 粗暴的 embedding 搜索太慢
-  - 词法检索成为明显瓶颈
+- **不要** 从 SuCo 开始。
+- 从 SQLite FTS + （可选的）简单嵌入开始；你会立即获得大部分 UX 胜利。
+- 只有在以下情况才考虑 SuCo/HNSW/ScaNN 类解决方案：
+  - 语料库很大（数万/数十万个块）
+  - 暴力嵌入搜索变得太慢
+  - 召回质量明显受到词汇搜索的瓶颈限制
 
-离线友好替代（复杂度递增）：
+离线友好的替代方案（按复杂性递增）：
 
-- SQLite FTS5 + 元数据过滤（零 ML）
-- Embeddings + 全量扫描（chunk 少时惊人有效）
+- SQLite FTS5 + 元数据过滤器（零 ML）
+- 嵌入 + 暴力搜索（如果块数量少，效果惊人地好）
 - HNSW 索引（常见、稳健；需要库绑定）
-- SuCo（研究级；需可嵌入的稳定实现）
+- SuCo（研究级；如果有可以嵌入的可靠实现则很有吸引力）
 
-开放问题：
+未决问题：
 
-- 在你的机器（laptop + desktop）上，"个人助手 memory"的**最佳**离线 embedding 模型是什么？
-  - 若已用 Ollama：用本地模型 embedding；否则在工具链中携带小模型。
+- 在你的机器（笔记本电脑 + 台式机）上，用于“个人助手记忆”的**最佳**离线嵌入模型是什么？
+  - 如果你已经有 Ollama：使用本地模型进行嵌入；否则在工具链中附带一个小型嵌入模型。
 
-## 最小可用试点
+## 最小的有用试点
 
-如果想要一个最小但有用的版本：
+如果你想要一个最小化但仍然有用的版本：
 
-- 添加 `bank/` 实体页与每日日志的 `## Retain`。
-- 用 SQLite FTS 做带引用的 recall（路径 + 行号）。
-- 仅当召回质量或规模需要时再加 embeddings。
+- 在每日日志中添加 `bank/` 实体页面和 `## Retain` 部分。
+- 使用 SQLite FTS 进行带有引用（路径 + 行号）的召回。
+- 仅当召回质量或规模需要时才添加嵌入。
 
-## 参考
+## 参考文献
 
-- Letta / MemGPT 概念：“core memory blocks” + “archival memory” + 工具驱动自编辑记忆。
-- Hindsight Technical Report：retain/recall/reflect、四网络记忆、叙事事实抽取、观点置信度演化。
-- SuCo：arXiv 2411.14754 (2024)：Subspace Collision 近似近邻检索。
+- Letta / MemGPT 概念：“核心内存块” + “归档内存” + 工具驱动的自编辑内存。
+- Hindsight 技术报告：“保留 / 召回 / 反思”，四网络记忆，叙事事实提取，观点信心演变。
+- SuCo: arXiv 2411.14754 (2024): “Subspace Collision”（子空间碰撞）近似最近邻检索。

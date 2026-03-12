@@ -1,25 +1,25 @@
 ---
-title: "Fly.io"
-description: "在 Fly.io 上部署 OpenClaw"
+title: Fly.io
+description: 在 Fly.io 上部署 OpenClaw
 ---
 
 # Fly.io 部署
 
-**目标：** 在 [Fly.io](https://fly.io) 机器上运行 OpenClaw Gateway，具备持久化存储、自动 HTTPS 和 Discord/频道访问。
+**目标：** OpenClaw Gateway 运行在具有持久存储、自动 HTTPS 和 Discord/频道访问权限的 [Fly.io](https://fly.io) 机器上。
 
-## 你需要什么
+## 你需要准备
 
 - 已安装 [flyctl CLI](https://fly.io/docs/hands-on/install-flyctl/)
-- Fly.io 账号（免费层可用）
-- 模型认证：Anthropic API key（或其它 provider key）
-- 频道凭据：Discord bot token、Telegram token 等
+- Fly.io 账户（免费层即可）
+- 模型认证：Anthropic API 密钥（或其他提供商密钥）
+- 频道凭证：Discord 机器人令牌、Telegram 令牌等。
 
 ## 新手快速路径
 
 1. 克隆仓库 → 自定义 `fly.toml`
-2. 创建 app + volume → 设置 secrets
+2. 创建应用 + 卷 → 设置密钥
 3. 使用 `fly deploy` 部署
-4. SSH 进入创建配置或使用控制界面
+4. SSH 进入以创建配置或使用 Control UI
 
 ## 1) 创建 Fly 应用
 
@@ -35,13 +35,13 @@ fly apps create my-openclaw
 fly volumes create openclaw_data --size 1 --region iad
 ```
 
-**提示：** 选择靠近你的区域。常用选项：`lhr`（伦敦）、`iad`（弗吉尼亚）、`sjc`（圣何塞）。
+**提示：** 选择一个离你较近的区域。常见选项：`lhr`（伦敦）、`iad`（弗吉尼亚）、`sjc`（圣何塞）。
 
 ## 2) 配置 fly.toml
 
-编辑 `fly.toml` 以匹配你的应用名称和需求。
+编辑 `fly.toml` 以匹配你的应用名称和要求。
 
-**安全提示：** 默认配置会暴露公网 URL。若需无公网 IP 的加固部署，见[私有部署](#private-deployment-hardened) 或使用 `fly.private.toml`。
+**安全说明：** 默认配置会公开一个 URL。如需没有公共 IP 的加固部署，请参阅[私有部署](#private-deployment-hardened)或使用 `fly.private.toml`。
 
 ```toml
 app = "my-openclaw"  # Your app name
@@ -78,13 +78,13 @@ primary_region = "iad"
 
 **关键设置：**
 
-| 设置 | 原因 |
+| 设置                        | 原因                                                                         |
 | ------------------------------ | --------------------------------------------------------------------------- |
-| `--bind lan` | 绑定到 `0.0.0.0` 以便 Fly 的代理可以访问 gateway |
-| `--allow-unconfigured` | 无配置文件启动（你会在之后创建） |
-| `internal_port = 3000` | 必须与 `--port 3000`（或 `OPENCLAW_GATEWAY_PORT`）匹配，用于 Fly 健康检查 |
-| `memory = "2048mb"` | 512MB 太小；建议 2GB |
-| `OPENCLAW_STATE_DIR = "/data"` | 在 volume 上持久化状态 |
+| `--bind lan`                   | 绑定到 `0.0.0.0` 以便 Fly 的代理可以访问网关                     |
+| `--allow-unconfigured`         | 在没有配置文件的情况下启动（你稍后会创建一个）                      |
+| `internal_port = 3000`         | 必须与 `--port 3000`（或 `OPENCLAW_GATEWAY_PORT`）匹配以便通过 Fly 健康检查 |
+| `memory = "2048mb"`            | 512MB 太小；推荐 2GB                                         |
+| `OPENCLAW_STATE_DIR = "/data"` | 在卷上持久化状态                                                |
 
 ## 3) 设置密钥
 
@@ -103,11 +103,11 @@ fly secrets set GOOGLE_API_KEY=...
 fly secrets set DISCORD_BOT_TOKEN=MTQ...
 ```
 
-**注意事项：**
+**注意：**
 
-- 非本地绑定（`--bind lan`）出于安全需要 `OPENCLAW_GATEWAY_TOKEN`。
-- 将这些 token 视为密码。
-- **优先使用环境变量而非配置文件** 存储所有 API 密钥和 token。这样可以将密钥保存在 `openclaw.json` 之外，避免意外暴露或记录。
+- 非环回绑定（`--bind lan`）出于安全原因需要 `OPENCLAW_GATEWAY_TOKEN`。
+- 请像对待密码一样对待这些令牌。
+- 对于所有 API 密钥和令牌，**优先使用环境变量而非配置文件**。这可以避免机密信息出现在 `openclaw.json` 中，防止意外泄露或被记录。
 
 ## 4) 部署
 
@@ -117,7 +117,7 @@ fly deploy
 
 首次部署会构建 Docker 镜像（约 2-3 分钟）。后续部署会更快。
 
-部署后，验证：
+部署完成后，请验证：
 
 ```bash
 fly status
@@ -133,7 +133,7 @@ fly logs
 
 ## 5) 创建配置文件
 
-SSH 进入机器创建合适的配置：
+SSH 进入机器以创建正确的配置：
 
 ```bash
 fly ssh console
@@ -195,23 +195,23 @@ cat > /data/openclaw.json << 'EOF'
 EOF
 ```
 
-**注意：** 设置了 `OPENCLAW_STATE_DIR=/data` 后，配置路径为 `/data/openclaw.json`。
+**注意：** 使用 `OPENCLAW_STATE_DIR=/data` 时，配置路径为 `/data/openclaw.json`。
 
-**注意：** Discord token 可来自：
+**注意：** Discord 令牌可以来自以下任一来源：
 
-- 环境变量：`DISCORD_BOT_TOKEN`（推荐用于 secrets）
+- 环境变量：`DISCORD_BOT_TOKEN`（推荐用于机密信息）
 - 配置文件：`channels.discord.token`
 
-如果使用环境变量，无需在配置中添加 token。Gateway 会自动读取 `DISCORD_BOT_TOKEN`。
+如果使用环境变量，则无需将令牌添加到配置中。网关会自动读取 `DISCORD_BOT_TOKEN`。
 
-重启以应用：
+重启以应用更改：
 
 ```bash
 exit
 fly machine restart <machine-id>
 ```
 
-## 6) 访问 Gateway
+## 6) 访问网关
 
 ### 控制界面
 
@@ -223,7 +223,7 @@ fly open
 
 或访问 `https://my-openclaw.fly.dev/`
 
-粘贴你的 gateway token（来自 `OPENCLAW_GATEWAY_TOKEN`）进行认证。
+粘贴你的网关令牌（来自 `OPENCLAW_GATEWAY_TOKEN` 的那个）进行身份验证。
 
 ### 日志
 
@@ -238,25 +238,25 @@ fly logs --no-tail    # Recent logs
 fly ssh console
 ```
 
-## 故障排查
+## 故障排除
 
-### "App 未在预期地址上监听"
+### "应用程序未在预期地址上监听"
 
-Gateway 绑定到了 `127.0.0.1` 而非 `0.0.0.0`。
+网关绑定到了 `127.0.0.1` 而不是 `0.0.0.0`。
 
-**修复：** 在 `fly.toml` 的进程命令中添加 `--bind lan`。
+**修复方法：** 将 `--bind lan` 添加到 `fly.toml` 中的进程命令里。
 
 ### 健康检查失败 / 连接被拒绝
 
-Fly 无法在配置的端口上访问 gateway。
+Fly 无法在配置的端口上访问网关。
 
-**修复：** 确保 `internal_port` 与 gateway 端口匹配（设置 `--port 3000` 或 `OPENCLAW_GATEWAY_PORT=3000`）。
+**修复方法：** 确保 `internal_port` 与网关端口匹配（设置 `--port 3000` 或 `OPENCLAW_GATEWAY_PORT=3000`）。
 
-### OOM / 内存问题
+### 内存不足 (OOM) / 内存问题
 
-容器不断重启或被杀死。迹象：`SIGABRT`、`v8::internal::Runtime_AllocateInYoungGeneration` 或静默重启。
+容器不断重启或被终止。迹象：`SIGABRT`、`v8::internal::Runtime_AllocateInYoungGeneration` 或静默重启。
 
-**修复：** 在 `fly.toml` 中增加内存：
+**修复方法：** 在 `fly.toml` 中增加内存：
 
 ```toml
 [[vm]]
@@ -269,26 +269,26 @@ Fly 无法在配置的端口上访问 gateway。
 fly machine update <machine-id> --vm-memory 2048 -y
 ```
 
-**注意：** 512MB 太小。1GB 可能勉强但会在负载大或详细日志时 OOM。**建议 2GB。**
+**注意：** 512MB 太小。1GB 可能可用，但在负载下或开启详细日志时可能会发生内存不足 (OOM)。**建议使用 2GB。**
 
-### Gateway 锁文件问题
+### 网关锁定问题
 
-Gateway 拒绝启动，出现 "already running" 错误。
+网关拒绝启动，提示“already running”（正在运行）错误。
 
-这通常发生在容器重启但 PID 锁文件仍保留在 volume 上。
+这种情况发生在容器重启但 PID 锁定文件仍然保留在卷上时。
 
-**修复：** 删除锁文件：
+**修复方法：** 删除锁定文件：
 
 ```bash
 fly ssh console --command "rm -f /data/gateway.*.lock"
 fly machine restart <machine-id>
 ```
 
-锁文件位于 `/data/gateway.*.lock`（不在子目录中）。
+锁定文件位于 `/data/gateway.*.lock`（不在子目录中）。
 
-### 配置文件未被读取
+### 未读取配置
 
-如果使用 `--allow-unconfigured`，gateway 会创建最小配置。重启时应读取 `/data/openclaw.json` 处的自定义配置。
+如果使用了 `--allow-unconfigured`，网关会创建一个最小配置。您在 `/data/openclaw.json` 的自定义配置应在重启时被读取。
 
 验证配置是否存在：
 
@@ -298,7 +298,7 @@ fly ssh console --command "cat /data/openclaw.json"
 
 ### 通过 SSH 写入配置
 
-`fly ssh console -C` 命令不支持 shell 重定向。要写入配置文件：
+`fly ssh console -C` 命令不支持 Shell 重定向。要写入配置文件：
 
 ```bash
 # Use echo + tee (pipe from local to remote)
@@ -309,7 +309,7 @@ fly sftp shell
 > put /local/path/config.json /data/openclaw.json
 ```
 
-**注意：** 如果文件已存在，`fly sftp` 可能失败。先删除：
+**注意：** 如果文件已存在，`fly sftp` 可能会失败。请先删除：
 
 ```bash
 fly ssh console --command "rm /data/openclaw.json"
@@ -317,9 +317,9 @@ fly ssh console --command "rm /data/openclaw.json"
 
 ### 状态未持久化
 
-如果重启后丢失凭据或会话，说明状态目录正在写入容器文件系统。
+如果您在重启后丢失了凭据或会话，说明状态目录正在写入容器文件系统。
 
-**修复：** 确保 `OPENCLAW_STATE_DIR=/data` 在 `fly.toml` 中设置并重新部署。
+**修复：** 确保 `OPENCLAW_STATE_DIR=/data` 已在 `fly.toml` 中设置并重新部署。
 
 ## 更新
 
@@ -337,7 +337,7 @@ fly logs
 
 ### 更新机器命令
 
-如果需要更改启动命令而不完全重新部署：
+如果您需要更改启动命令而不进行完全重新部署：
 
 ```bash
 # Get machine ID
@@ -350,20 +350,20 @@ fly machine update <machine-id> --command "node dist/index.js gateway --port 300
 fly machine update <machine-id> --vm-memory 2048 --command "node dist/index.js gateway --port 3000 --bind lan" -y
 ```
 
-**注意：** 在 `fly deploy` 之后，机器命令可能会重置为 `fly.toml` 中的配置。如果进行了手动更改，部署后需重新应用。
+**注意：** 在 `fly deploy` 之后，机器命令可能会重置为 `fly.toml` 中的内容。如果您进行了手动更改，请在部署后重新应用它们。
 
-## 私有部署（加固版）
+## 私有部署（加固）
 
-默认情况下，Fly 会分配公网 IP，使你的 gateway 可通过 `https://your-app.fly.dev` 访问。这很方便，但意味着你的部署可被互联网扫描器（Shodan、Censys 等）发现。
+默认情况下，Fly 会分配公共 IP，使您的网关可以通过 `https://your-app.fly.dev` 访问。这很方便，但意味着您的部署可能会被互联网扫描器（Shodan、Censys 等）发现。
 
-若需要 **无公网暴露** 的加固部署，请使用私有模板。
+要进行**没有公开暴露**的加固部署，请使用私有模板。
 
 ### 何时使用私有部署
 
-- 你只进行 **出站** 调用/消息（无入站 webhooks）
-- 你使用 **ngrok 或 Tailscale** 隧道进行 webhook 回调
-- 你通过 **SSH、代理或 WireGuard** 访问 gateway，而非浏览器
-- 你希望部署**对互联网扫描器隐藏**
+- 您只进行**出站**调用/消息（没有入站 Webhook）
+- 您使用 **ngrok 或 Tailscale** 隧道进行任何 Webhook 回调
+- 您通过 **SSH、代理或 WireGuard** 而不是浏览器访问网关
+- 您希望部署**对互联网扫描器隐藏**
 
 ### 设置
 
@@ -374,7 +374,7 @@ fly machine update <machine-id> --vm-memory 2048 --command "node dist/index.js g
 fly deploy -c fly.private.toml
 ```
 
-或将现有部署转换为私有：
+或者转换现有部署：
 
 ```bash
 # List current IPs
@@ -392,7 +392,7 @@ fly deploy -c fly.private.toml
 fly ips allocate-v6 --private -a my-openclaw
 ```
 
-之后，`fly ips list` 应只显示 `private` 类型的 IP：
+在此之后，`fly ips list` 应该只显示 `private` 类型的 IP：
 
 ```
 VERSION  IP                   TYPE             REGION
@@ -401,7 +401,7 @@ v6       fdaa:x:x:x:x::x      private          global
 
 ### 访问私有部署
 
-由于没有公网 URL，使用以下方法之一：
+由于没有公共 URL，请使用以下方法之一：
 
 **选项 1：本地代理（最简单）**
 
@@ -428,15 +428,15 @@ fly wireguard create
 fly ssh console -a my-openclaw
 ```
 
-### 私有部署下的 Webhooks
+### 私有部署与 Webhook
 
-如果需要 webhook 回调（Twilio、Telnyx 等）而不暴露公网：
+如果您需要在没有公开暴露的情况下进行 Webhook 回调（Twilio、Telnyx 等）：
 
 1. **ngrok 隧道** - 在容器内或作为 sidecar 运行 ngrok
 2. **Tailscale Funnel** - 通过 Tailscale 暴露特定路径
-3. **仅出站** - 某些提供商（Twilio）在没有 webhooks 的情况下可以正常进行出站调用
+3. **仅限出站 (Outbound-only)** - 某些提供商 (如 Twilio) 在没有 Webhook 的情况下也能正常处理出站调用
 
-使用 ngrok 的语音通话配置示例：
+使用 ngrok 的语音呼叫配置示例：
 
 ```json
 {
@@ -457,30 +457,30 @@ fly ssh console -a my-openclaw
 }
 ```
 
-ngrok 隧道在容器内运行，提供公网 webhook URL 而不暴露 Fly 应用本身。将 `webhookSecurity.allowedHosts` 设置为公网隧道主机名，以便接受转发的 host 头。
+ngrok 隧道在容器内部运行，提供公共 Webhook URL 而无需暴露 Fly 应用本身。将 `webhookSecurity.allowedHosts` 设置为公共隧道主机名，以便接受转发的请求头。
 
 ### 安全优势
 
-| 方面 | 公网部署 | 私有部署 |
+| 方面            | 公开       | 私有    |
 | ----------------- | ------------ | ---------- |
-| 互联网扫描器 | 可被发现 | 隐藏 |
-| 直接攻击 | 可能 | 被阻止 |
-| 控制界面访问 | 浏览器 | 代理/VPN |
-| Webhook 投递 | 直接 | 通过隧道 |
+| 互联网扫描器 | 可被发现 | 隐藏     |
+| 直接攻击    | 可能     | 已阻止    |
+| 控制界面访问 | 浏览器      | 代理/VPN  |
+| Webhook 投递  | 直接       | 通过隧道 |
 
 ## 注意事项
 
-- Fly.io 使用 **x86 架构**（非 ARM）
-- Dockerfile 兼容两种架构
-- WhatsApp/Telegram 入职使用 `fly ssh console`
-- 持久化数据位于 volume 的 `/data`
-- Signal 需要 Java + signal-cli；使用自定义镜像并保持内存在 2GB 以上。
+- Fly.io 使用 **x86 架构** (非 ARM)
+- Dockerfile 兼容这两种架构
+- 对于 WhatsApp/Telegram 入门，请使用 `fly ssh console`
+- 持久化数据位于卷上的 `/data`
+- Signal 需要 Java + signal-cli；请使用自定义镜像并将内存保持在 2GB 以上。
 
-## 成本
+## 费用
 
-使用推荐配置（`shared-cpu-2x`，2GB RAM）：
+使用推荐的配置 (`shared-cpu-2x`, 2GB RAM)：
 
-- 约 $10-15/月，取决于使用情况
-- 免费层包含一定额度
+- 约 $10-15/月，具体取决于使用情况
+- 免费层级包含一定额度
 
-详见 [Fly.io 定价](https://fly.io/docs/about/pricing/)。
+详情请参阅 [Fly.io 定价](https://fly.io/docs/about/pricing/)。

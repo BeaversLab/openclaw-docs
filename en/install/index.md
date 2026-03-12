@@ -13,7 +13,7 @@ Already followed [Getting Started](/en/start/getting-started)? You're all set â€
 
 ## System requirements
 
-- **[Node 22+](/en/install/node)** (the [installer script](#install-methods) will install it if missing)
+- **[Node 24 (recommended)](/en/install/node)** (Node 22 LTS, currently `22.16+`, is still supported for compatibility; the [installer script](#install-methods) will install Node 24 if missing)
 - macOS, Linux, or Windows
 - `pnpm` only if you build from source
 
@@ -70,7 +70,7 @@ For VPS/cloud hosts, avoid third-party "1-click" marketplace images when possibl
   </Accordion>
 
   <Accordion title="npm / pnpm" icon="package">
-    If you already have Node 22+ and prefer to manage the install yourself:
+    If you already manage Node yourself, we recommend Node 24. OpenClaw still supports Node 22 LTS, currently `22.16+`, for compatibility:
 
     <Tabs>
       <Tab title="npm">

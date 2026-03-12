@@ -2,7 +2,8 @@
 node_modules/
 en/zh-CN/
 en/ja-JP/
-.i18n/chunks/
-.i18n/runs
-.i18n/task-meta.json
 .claude/settings.local.json
+.i18n/logs/
+.i18n/.env
+.i18n/artifacts/
+.i18n/flow-i18n.db*

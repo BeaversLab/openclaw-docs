@@ -1,29 +1,29 @@
 ---
-summary: "OpenClaw 从何处加载环境变量及优先级顺序"
+summary: "OpenClaw 从何处加载环境变量及其优先级顺序"
 read_when:
-  - "You need to know which env vars are loaded, and in what order"
-  - "You are debugging missing API keys in the Gateway"
-  - "You are documenting provider auth or deployment environments"
+  - You need to know which env vars are loaded, and in what order
+  - You are debugging missing API keys in the Gateway
+  - You are documenting provider auth or deployment environments
 title: "环境变量"
 ---
 
 # 环境变量
 
-OpenClaw 从多个来源获取环境变量。规则是**永远不要覆盖现有值**。
+OpenClaw 从多个来源提取环境变量。规则是**绝不覆盖现有值**。
 
 ## 优先级（从高到低）
 
-1. **进程环境**（Gateway 进程从父 shell/守护进程已获得的环境）。
-2. **当前工作目录中的 `.env`**（dotenv 默认值；不覆盖）。
-3. **`~/.openclaw/.env` 处的全局 `.env`**（又名 `$OPENCLAW_STATE_DIR/.env`；不覆盖）。
-4. **`~/.openclaw/openclaw.json` 中的配置 `env` 块**（仅在缺失时应用）。
-5. **可选的登录 shell 导入**（`env.shellEnv.enabled` 或 `OPENCLAW_LOAD_SHELL_ENV=1`），仅应用于缺失的预期键。
+1. **进程环境**（Gateway 进程从父 shell/守护进程已获取的环境）。
+2. **当前工作目录中的 `.env`**（dotenv 默认设置；不覆盖）。
+3. **位于 `~/.openclaw/.env` 的全局 `.env`**（即 `$OPENCLAW_STATE_DIR/.env`；不覆盖）。
+4. **`~/.openclaw/openclaw.json` 中的 Config `env` 块**（仅在缺失时应用）。
+5. **可选的登录 shell 导入**（`env.shellEnv.enabled` 或 `OPENCLAW_LOAD_SHELL_ENV=1`），仅针对缺失的预期键应用。
 
-如果配置文件完全缺失，则跳过步骤 4；如果启用，shell 导入仍会运行。
+如果配置文件完全缺失，将跳过第 4 步；但如果启用，shell 导入仍会运行。
 
-## 配置 `env` 块
+## Config `env` 块
 
-两种等效的方法来设置内联环境变量（两者都不覆盖）：
+设置内联环境变量的两种等效方式（均为非覆盖式）：
 
 ```json5
 {
@@ -58,7 +58,7 @@ OpenClaw 从多个来源获取环境变量。规则是**永远不要覆盖现有
 
 ## 配置中的环境变量替换
 
-您可以使用 `${VAR_NAME}` 语法直接在配置字符串值中引用环境变量：
+您可以使用 `${VAR_NAME}` 语法在配置字符串值中直接引用环境变量：
 
 ```json5
 {
@@ -72,10 +72,10 @@ OpenClaw 从多个来源获取环境变量。规则是**永远不要覆盖现有
 }
 ```
 
-参阅[配置：环境变量替换](/zh/gateway/configuration#env-var-substitution-in-config) 了解完整详情。
+有关详细信息，请参阅[配置：环境变量替换](/zh/en/gateway/configuration#env-var-substitution-in-config)。
 
 ## 相关
 
-- [Gateway 配置](/zh/gateway/configuration)
-- [常见问题：环境变量和 .env 加载](/zh/help/faq#env-vars-and-env-loading)
-- [模型概述](/zh/concepts/models)
+- [Gateway 配置](/zh/en/gateway/configuration)
+- [常见问题：环境变量与 .env 加载](/zh/en/help/faq#env-vars-and-env-loading)
+- [模型概述](/zh/en/concepts/models)

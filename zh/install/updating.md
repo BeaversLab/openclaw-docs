@@ -1,18 +1,18 @@
 ---
-title: "更新中"
-summary: "安全更新 OpenClaw（全局安装或源码），以及回滚策略"
+summary: "安全更新 OpenClaw（全局安装或源码安装），以及回滚策略"
 read_when:
-  - 更新 OpenClaw
-  - 更新后出现问题
+  - Updating OpenClaw
+  - Something breaks after an update
+title: "更新"
 ---
 
 # 更新
 
-OpenClaw 更新很快（仍处于 1.0 之前）。像运维一样对待更新：更新 → 运行检查 → 重启（或使用会自动重启的 `openclaw update`）→ 验证。
+OpenClaw 发展迅速（“1.0”之前）。请像发布基础设施一样对待更新：更新 → 运行检查 → 重启（或使用 `openclaw update`，它会自动重启）→ 验证。
 
-## 推荐：重新运行官网安装器（原地升级）
+## 推荐：重新运行网站安装程序（就地升级）
 
-**首选**更新路径是重新运行官网安装器。它会检测已有安装，原地升级，并在需要时运行 `openclaw doctor`。
+**首选**的更新路径是从网站重新运行安装程序。它会检测现有的安装，进行就地升级，并在需要时运行 `openclaw doctor`。
 
 ```bash
 curl -fsSL https://openclaw.ai/install.sh | bash
@@ -20,23 +20,26 @@ curl -fsSL https://openclaw.ai/install.sh | bash
 
 注意：
 
-- 若不想再次运行 onboarding 向导，添加 `--no-onboard`。
-- **源码安装**请使用：
+- 如果您不希望再次运行入门向导，请添加 `--no-onboard`。
+- 对于**源码安装**，请使用：
+
   ```bash
-  curl -fsSL https://openclaw.bot/install.sh | bash -s -- --install-method git --no-onboard
+  curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method git --no-onboard
   ```
-  安装器只会在仓库干净时执行 `git pull --rebase`。
-- **全局安装**时，脚本内部会使用 `npm install -g openclaw@latest`。
-- 旧版兼容：`clawdbot` 仍作为兼容 shim 提供。
 
-## 更新前准备
+  仅当代码库干净时，安装程序才会 `git pull --rebase`。
 
-- 确认你的安装方式：**全局**（npm/pnpm）vs **源码**（git clone）。
-- 确认 Gateway 的运行方式：**前台终端** vs **受监督服务**（launchd/systemd）。
-- 备份你的定制：
-  - Config：`~/.openclaw/openclaw.json`
-  - Credentials：`~/.openclaw/credentials/`
-  - Workspace：`~/.openclaw/workspace`
+- 对于**全局安装**，该脚本在底层使用 `npm install -g openclaw@latest`。
+- 旧版说明：`clawdbot` 仍然可用作兼容性填充层。
+
+## 在更新之前
+
+- 了解您的安装方式：**全局**（npm/pnpm）还是 **源码**（git clone）。
+- 了解您的网关运行方式：**前台终端**还是 **受监管的服务**（launchd/systemd）。
+- 快照您的定制配置：
+  - 配置：`~/.openclaw/openclaw.json`
+  - 凭证：`~/.openclaw/credentials/`
+  - 工作区：`~/.openclaw/workspace`
 
 ## 更新（全局安装）
 
@@ -50,9 +53,9 @@ npm i -g openclaw@latest
 pnpm add -g openclaw@latest
 ```
 
-不推荐将 Bun 用作 Gateway 运行时（WhatsApp/Telegram 有 bug）。
+我们**不**推荐在网关运行时使用 Bun（存在 WhatsApp/Telegram 错误）。
 
-切换更新通道（git + npm 安装通用）：
+要切换更新通道（git + npm 安装）：
 
 ```bash
 openclaw update --channel beta
@@ -60,11 +63,37 @@ openclaw update --channel dev
 openclaw update --channel stable
 ```
 
-使用 `--tag <dist-tag|version>` 做一次性安装 tag/版本。
+使用 `--tag <dist-tag|version>` 进行一次性安装指定的标签/版本。
 
-通道语义与发布说明见 [开发环境 channels](/zh/install/development-channels)。
+关于通道语义和发布说明，请参阅[开发通道](/zh/en/install/development-channels)。
 
-注意：在 npm 安装中，gateway 启动时会记录更新提示（检查当前通道 tag）。可通过 `update.checkOnStart: false` 关闭。
+注意：在 npm 安装上，网关会在启动时记录更新提示（检查当前通道标签）。可通过 `update.checkOnStart: false` 禁用。
+
+### 核心自动更新程序（可选）
+
+自动更新程序**默认关闭**，是网关的核心功能（不是插件）。
+
+```json
+{
+  "update": {
+    "channel": "stable",
+    "auto": {
+      "enabled": true,
+      "stableDelayHours": 6,
+      "stableJitterHours": 12,
+      "betaCheckIntervalHours": 1
+    }
+  }
+}
+```
+
+行为：
+
+- `stable`：当发现新版本时，OpenClaw 会等待 `stableDelayHours`，然后在 `stableJitterHours` 中应用确定的每安装抖动（分阶段推出）。
+- `beta`：按 `betaCheckIntervalHours` 频率（默认：每小时）检查并在有可用更新时应用。
+- `dev`：无自动应用；请使用手动 `openclaw update`。
+
+在启用自动化之前，请使用 `openclaw update --dry-run` 预览更新操作。
 
 然后：
 
@@ -76,48 +105,48 @@ openclaw health
 
 注意：
 
-- 若 Gateway 以服务方式运行，优先使用 `openclaw gateway restart`，不要手动杀 PID。
-- 若你固定在某个版本，请看下方“回滚 / 固定”。
+- 如果您的网关作为服务运行，首选 `openclaw gateway restart` 而非终止 PID。
+- 如果您锁定在特定版本，请参阅下方的“回滚 / 锁定”。
 
-## 更新（`openclaw update`）
+## 更新 (`openclaw update`)
 
-对 **源码安装**（git checkout）推荐使用：
-
-```bash
-openclaw update
-```
-
-它会执行相对安全的更新流程：
-
-- 需要干净的 worktree。
-- 切换到所选通道（tag 或分支）。
-- 获取并基于上游 rebase（dev 通道）。
-- 安装依赖、构建、构建 Control UI，然后运行 `openclaw doctor`。
-- 默认重启 gateway（用 `--no-restart` 跳过）。
-
-如果你通过 **npm/pnpm** 安装（没有 git 元数据），`openclaw update` 会尝试走包管理器更新；若无法识别安装方式，改用上面的“全局安装更新”。
-
-## 更新（Control UI / RPC）
-
-Control UI 提供 **Update & Restart**（RPC：`update.run`）。它会：
-
-1. 运行与 `openclaw update` 相同的源码更新流程（仅 git checkout）。
-2. 写入一个包含结构化报告的重启哨兵（stdout/stderr tail）。
-3. 重启 gateway，并将报告发送到最近的活跃会话。
-
-如果 rebase 失败，gateway 会中止并重启，但不会应用更新。
-
-## 更新（从源码）
-
-在仓库 checkout 中：
-
-推荐：
+对于 **源码安装** (git checkout)，建议：
 
 ```bash
 openclaw update
 ```
 
-手动（大致等价）：
+它运行一个相对安全的更新流程：
+
+- 需要干净的工作树。
+- 切换到选定的频道（标签或分支）。
+- 获取并在配置的上游（dev 频道）上进行变基。
+- 安装依赖、构建、构建控制 UI，并运行 `openclaw doctor`。
+- 默认重启网关（使用 `--no-restart` 跳过）。
+
+如果您通过 **npm/pnpm** 安装（无 git 元数据），`openclaw update` 将尝试通过您的包管理器进行更新。如果无法检测到安装，请改用“Update (global install)”。
+
+## 更新 (Control UI / RPC)
+
+控制 UI 具有 **更新并重启** (RPC: `update.run`)。它：
+
+1. 运行与 `openclaw update` 相同的源码更新流程（仅限 git checkout）。
+2. 写入包含结构化报告（stdout/stderr 尾部）的重启哨兵。
+3. 重启网关，并将报告发送给上一个活跃会话。
+
+如果变基失败，网关将中止并在不应用更新的情况下重启。
+
+## 更新 (从源码)
+
+从仓库检出目录：
+
+首选：
+
+```bash
+openclaw update
+```
+
+手动（大致等效）：
 
 ```bash
 git pull
@@ -130,29 +159,30 @@ openclaw health
 
 注意：
 
-- 当你运行打包的 `openclaw` 二进制（[`openclaw.mjs`](https://github.com/openclaw/openclaw/blob/main/openclaw.mjs)）或用 Node 运行 `dist/` 时，`pnpm build` 很重要。
-- 如果你在仓库中直接从 TypeScript 运行（`pnpm openclaw ...`），通常无需 rebuild，但**配置迁移仍然需要** → 运行 doctor。
-- 全局与 git 安装之间切换很容易：安装另一种方式，然后运行 `openclaw doctor` 以重写 gateway 服务入口为当前安装方式。
+- 当您运行打包的 `openclaw` 二进制文件 ([`openclaw.mjs`](https://github.com/openclaw/openclaw/blob/main/openclaw.mjs)) 或使用 Node 运行 `dist/` 时，`pnpm build` 很重要。
+- 如果您在没有全局安装的情况下从仓库检出目录运行，请使用 `pnpm openclaw ...` 执行 CLI 命令。
+- 如果您直接从 TypeScript 运行 (`pnpm openclaw ...`)，通常不需要重新构建，但 **配置迁移仍然适用** → 运行 doctor。
+- 在全局安装和 git 安装之间切换很容易：安装另一种版本，然后运行 `openclaw doctor`，以便网关服务入口点被重写为当前安装。
 
 ## 始终运行：`openclaw doctor`
 
-Doctor 是“安全更新”命令。它刻意保持无聊：修复 + 迁移 + 提示。
+Doctor 是“安全更新”命令。它有意设计得很枯燥：修复 + 迁移 + 警告。
 
-注意：如果你是 **源码安装**（git checkout），`openclaw doctor` 会先建议运行 `openclaw update`。
+注意：如果您使用的是 **源码安装** (git checkout)，`openclaw doctor` 将会建议先运行 `openclaw update`。
 
-它通常会做：
+它通常执行的操作包括：
 
-- 迁移已废弃的配置键 / 旧的配置文件位置。
-- 审核 DM 策略并对高风险 “open” 设置告警。
-- 检查 Gateway 健康，必要时建议重启。
-- 识别并迁移旧的 gateway 服务（launchd/systemd；旧 schtasks）到当前 OpenClaw 服务。
-- 在 Linux 上确保 systemd user lingering（保证 Gateway 退出登录后仍存活）。
+- 迁移已弃用的配置键 / 旧版配置文件位置。
+- 审核 DM 策略并对有风险的“开放”设置发出警告。
+- 检查网关健康状况，并可提供重启选项。
+- 检测并迁移较旧的网关服务（launchd/systemd；旧版 schtasks）到当前的 OpenClaw 服务。
+- 在 Linux 上，确保 systemd 用户驻留（以便网关在注销后继续运行）。
 
-详情：[诊断](/zh/gateway/doctor)
+详情：[Doctor](/zh/en/gateway/doctor)
 
-## 启动 / 停止 / 重启 Gateway
+## 启动 / 停止 / 重启网关
 
-CLI（跨 OS 通用）：
+CLI（适用于任何操作系统）：
 
 ```bash
 openclaw gateway status
@@ -162,20 +192,20 @@ openclaw gateway --port 18789
 openclaw logs --follow
 ```
 
-如果由监督服务管理：
+如果您受管理（supervised）：
 
-- macOS launchd（app 内置 LaunchAgent）：`launchctl kickstart -k gui/$UID/bot.molt.gateway`（使用 `bot.molt.<profile>`；旧 `com.openclaw.*` 仍可用）
+- macOS launchd（应用捆绑的 LaunchAgent）：`launchctl kickstart -k gui/$UID/ai.openclaw.gateway`（使用 `ai.openclaw.<profile>`；旧版 `com.openclaw.*` 仍然有效）
 - Linux systemd 用户服务：`systemctl --user restart openclaw-gateway[-<profile>].service`
-- Windows（WSL2）：`systemctl --user restart openclaw-gateway[-<profile>].service`
-  - `launchctl`/`systemctl` 仅在服务已安装时有效；否则运行 `openclaw gateway install`。
+- Windows (WSL2)：`systemctl --user restart openclaw-gateway[-<profile>].service`
+  - `launchctl`/`systemctl` 仅在已安装服务时有效；否则运行 `openclaw gateway install`。
 
-Runbook + 精确服务标签见：[Gateway 运维手册](/zh/gateway)
+操作手册 + 确切的服务标签：[Gateway runbook](/zh/en/gateway)
 
-## 回滚 / 固定版本（出问题时）
+## 回滚 / 固定版本（当出现问题时）
 
-### 固定（全局安装）
+### 固定版本（全局安装）
 
-安装一个已知良好的版本（把 `<version>` 替换为上一次正常版本）：
+安装一个已知良好的版本（将 `<version>` 替换为最后一个工作的版本）：
 
 ```bash
 npm i -g openclaw@<version>
@@ -185,25 +215,25 @@ npm i -g openclaw@<version>
 pnpm add -g openclaw@<version>
 ```
 
-提示：查看当前已发布版本可运行 `npm view openclaw version`。
+提示：要查看当前发布的版本，请运行 `npm view openclaw version`。
 
-然后重启 + 重新运行 doctor：
+然后重启并重新运行 doctor：
 
 ```bash
 openclaw doctor
 openclaw gateway restart
 ```
 
-### 固定（源码）按日期
+### 按日期固定（源码）
 
-从某天的提交中选一个（例："2026-01-01 时点的 main"）：
+从某个日期选择一个提交（例如：“截至 2026-01-01 的 main 分支状态”）：
 
 ```bash
 git fetch origin
 git checkout "$(git rev-list -n 1 --before=\"2026-01-01\" origin/main)"
 ```
 
-然后重装依赖 + 重启：
+然后重新安装依赖并重启：
 
 ```bash
 pnpm install
@@ -211,15 +241,15 @@ pnpm build
 openclaw gateway restart
 ```
 
-想回到最新：
+如果您想稍后回到最新版本：
 
 ```bash
 git checkout main
 git pull
 ```
 
-## 如果卡住了
+## 如果您卡住了
 
-- 再次运行 `openclaw doctor` 并仔细阅读输出（经常会提示修复办法）。
-- 查看：[故障排查](/zh/gateway/troubleshooting)
-- 去 Discord 提问：https://channels.discord.gg/clawd
+- 再次运行 `openclaw doctor` 并仔细阅读输出（它通常会告诉您修复方法）。
+- 查看：[故障排除](/zh/en/gateway/troubleshooting)
+- 在 Discord 中提问：[https://discord.gg/clawd](https://discord.gg/clawd)

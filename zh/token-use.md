@@ -1,79 +1,92 @@
 ---
-title: "Token 使用和成本"
-summary: "OpenClaw 如何构建提示上下文并报告 token 用量与成本"
+summary: "OpenClaw 如何构建提示词上下文并报告 Token 使用量 + 成本"
 read_when:
-  - 解释 token 用量、成本或上下文窗口
-  - 调试上下文增长或压缩行为
+  - Explaining token usage, costs, or context windows
+  - Debugging context growth or compaction behavior
+title: "Token 使用与成本"
 ---
 
-# Token 用量与成本
+# Token 使用与成本
 
-OpenClaw 统计 **tokens**，而不是字符。token 与模型相关，但多数 OpenAI 风格模型对英文平均约 4 个字符/ token。
+OpenClaw 追踪的是 **tokens**，而不是字符。Token 取决于具体的模型，但大多数 OpenAI 风格的模型对于英文文本平均每个 Token 约对应 4 个字符。
 
-## System prompt 如何构建
+## 系统提示词是如何构建的
 
-OpenClaw 每次运行都会组装自己的 system prompt，包含：
+OpenClaw 在每次运行时会组装自己的系统提示词。它包括：
 
 - 工具列表 + 简短描述
-- Skills 列表（仅元数据；说明按需通过 `read` 加载）
-- 自更新指令
-- 工作区 + bootstrap 文件（`AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、新建时的 `BOOTSTRAP.md`）。大文件按 `agents.defaults.bootstrapMaxChars` 截断（默认：20000）。
+- 技能列表（仅元数据；指令会通过 `read` 按需加载）
+- 自我更新指令
+- 工作区 + 引导文件（如有新内容，包括 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md`）。大文件会被 `agents.defaults.bootstrapMaxChars` 截断（默认：20000）。
 - 时间（UTC + 用户时区）
-- 回复标签 + heartbeat 行为
-- 运行时元数据（主机/OS/模型/思考模式）
+- 回复标签 + 心跳行为
+- 运行时元数据（主机/操作系统/模型/思考）
 
-完整拆解参见 [系统提示](/zh/concepts/system-prompt)。
+请参阅 [系统提示词](/zh/en/concepts/system-prompt) 了解完整细分。
 
-## 什么会计入上下文窗口
+## 哪些内容计入上下文窗口
 
-模型收到的所有内容都会计入上下文限制：
+模型接收的所有内容都计入上下文限制：
 
-- system prompt（上述所有部分）
+- 系统提示词（上面列出的所有部分）
 - 对话历史（用户 + 助手消息）
-- 工具调用与工具结果
+- 工具调用和工具结果
 - 附件/转录（图片、音频、文件）
-- 压缩摘要与修剪产物
-- provider 包装或安全头（不可见，但仍计入）
+- 压缩摘要和修剪产物
+- 提供商包装器或安全标头（不可见，但仍会计入）
 
-要查看注入文件/工具/skills/system prompt 的实际构成，使用 `/context list` 或 `/context detail`。参见 [上下文](/zh/concepts/context)。
+如需查看详细的细分（按注入的文件、工具、技能和系统提示词大小），请使用 `/context list` 或 `/context detail`。请参阅 [上下文](/zh/en/concepts/context)。
 
-## 如何查看当前 token 用量
+## 如何查看当前的 Token 使用量
 
-在聊天中使用：
+在聊天中使用以下命令：
 
-- `/status` → **带 emoji 的状态卡**，显示会话模型、上下文用量、最后一次回复输入/输出 token，以及 **预估成本**（仅 API key）。
-- `/usage off|tokens|full` → 每条回复附加 **单次回复用量脚注**。
-  - 按会话持久化（存为 `responseUsage`）。
-  - OAuth 认证 **隐藏成本**（仅 tokens）。
-- `/usage cost` → 从 OpenClaw 会话日志显示本地成本汇总。
+- `/status` → 显示包含会话模型、上下文使用量、
+  上一次响应输入/输出 Token 以及**预估成本**（仅限 API 密钥）的**丰富 Emoji 状态卡片**。
+- `/usage off|tokens|full` → 在每次回复后附加一个**每次响应使用情况页脚**。
+  - 按会话持久化（存储为 `responseUsage`）。
+  - OAuth 认证**隐藏成本**（仅显示 Token）。
+- `/usage cost` → 显示来自 OpenClaw 会话日志的本地成本摘要。
 
-其他入口：
+其他界面：
 
 - **TUI/Web TUI：** 支持 `/status` + `/usage`。
-- **CLI：** `openclaw status --usage` 与 `openclaw channels list` 显示 provider 配额窗口（非逐条成本）。
+- **CLI：** `openclaw status --usage` 和 `openclaw channels list` 显示
+  提供商配额窗口（而非单次响应成本）。
 
 ## 成本估算（显示时）
 
-成本按你的模型定价配置估算：
+成本是根据您的模型定价配置估算的：
 
 ```
 models.providers.<provider>.models[].cost
 ```
 
-这些是 `input`、`output`、`cacheRead`、`cacheWrite` 的 **每 1M tokens USD 价格**。若缺少定价，OpenClaw 仅显示 tokens。OAuth token 永不显示美元成本。
+这些是 `input`、`output`、`cacheRead` 和
+`cacheWrite` 的 **每 100 万 token 美元价格**。如果缺少定价，OpenClaw 仅显示 token 数量。OAuth token
+从不显示美元成本。
 
-## Cache TTL 与修剪影响
+## 缓存 TTL 和修剪影响
 
-Provider 提示缓存只在 cache TTL 窗口内生效。OpenClaw 可选运行 **cache-ttl 修剪**：当 cache TTL 过期时修剪会话，然后重置缓存窗口，使后续请求复用新的缓存上下文而不是重写整个历史。这在会话超时闲置后可降低 cache 写入成本。
+提供商提示缓存仅在缓存 TTL 窗口内适用。OpenClaw 可以
+选择运行 **cache-ttl 修剪**：一旦缓存 TTL
+过期，它就会修剪会话，然后重置缓存窗口，以便后续请求可以重新使用
+新缓存的上下文，而不是重新缓存完整的历史记录。这会在会话空闲超过 TTL 时
+保持较低的缓存写入成本。
 
-在 [Gateway 配置](/zh/gateway/configuration) 中配置，行为细节参见 [会话 pruning](/zh/concepts/session-pruning)。
+在 [Gateway configuration](/zh/en/gateway/configuration) 中进行配置，并查看
+[Session pruning](/zh/en/concepts/session-pruning) 中的行为详细信息。
 
-Heartbeat 可以在空闲间隔内保持缓存 **温热**。若模型 cache TTL 为 `1h`，将 heartbeat 间隔设置略小于该值（如 `55m`）可避免重新缓存完整 prompt，从而降低 cache 写入成本。
+心跳可以在空闲间隙期间保持缓存 **热度**。如果您的模型缓存 TTL
+为 `1h`，将心跳间隔设置为略低于该值（例如 `55m`） 可以避免
+重新缓存完整提示，从而降低缓存写入成本。
 
-对于 Anthropic API 定价，cache 读取明显便宜于 input tokens，而 cache 写入按更高倍数计费。最新费率与 TTL 倍数请参考 Anthropic 的 prompt caching 定价：
+对于 Anthropic API 定价，缓存读取显著低于输入
+token 的价格，而缓存写入则以更高的倍率计费。请参阅 Anthropic 的
+提示缓存定价以获取最新费率和 TTL 倍数：
 https://docs.anthropic.com/docs/build-with-claude/prompt-caching
 
-### 示例：用 heartbeat 保持 1h 缓存
+### 示例：使用心跳保持 1 小时缓存热度
 
 ```yaml
 agents:
@@ -88,11 +101,11 @@ agents:
       every: "55m"
 ```
 
-## 降低 token 压力的小技巧
+## 减少 token 压力的技巧
 
-- 使用 `/compact` 总结长会话。
-- 在工作流中裁剪过大的工具输出。
-- 保持 skill 描述简短（skill 列表会注入 prompt）。
-- 在探索性、冗长工作中优先使用更小的模型。
+- 使用 `/compact` 来总结长会话。
+- 修剪工作流中较大的工具输出。
+- 保持技能描述简短（技能列表会被注入到提示中）。
+- 对于冗长、探索性的工作，首选较小的模型。
 
-技能列表开销的精确公式参见 [技能](/zh/tools/skills)。
+请参阅 [Skills](/zh/en/tools/skills) 以了解确切的技能列表开销公式。

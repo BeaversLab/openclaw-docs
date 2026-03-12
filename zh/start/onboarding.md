@@ -1,100 +1,88 @@
 ---
-summary: "OpenClaw 首次运行引导流程（macOS 应用）"
+summary: “OpenClaw 首次运行入门流程（macOS 应用）”
 read_when:
-  - 设计 macOS 引导助手
-  - 实现认证或身份设置
-title: "入门"
+  - Designing the macOS onboarding assistant
+  - Implementing auth or identity setup
+title: “入门（macOS 应用）”
+sidebarTitle: “入门：macOS 应用”
 ---
 
-# 引导（macOS 应用）
+# 入门（macOS 应用）
 
-本文描述 **当前** 首次运行的引导流程。目标是
-平滑的“第 0 天”体验：选择 Gateway 运行位置、连接认证、运行向导，
-并让代理完成自举。
+本文档描述了**当前**的首次运行入门流程。目标是提供流畅的“第 0 天”体验：选择网关运行位置，连接身份验证，运行向导，并让代理自行引导。
+如需了解入门路径的总体概述，请参阅[入门概述](/zh/en/start/onboarding-overview)。
 
-## 页面顺序（当前）
+<Steps>
+<Step title="批准 macOS 警告">
+<Frame>
+<img src="/assets/macos-onboarding/01-macos-warning.jpeg" alt="" />
+</Frame>
+</Step>
+<Step title="批准查找本地网络">
+<Frame>
+<img src="/assets/macos-onboarding/02-local-networks.jpeg" alt="" />
+</Frame>
+</Step>
+<Step title="欢迎和安全提示">
+<Frame caption="阅读显示的安全提示并据此做出决定">
+<img src="/assets/macos-onboarding/03-security-notice.png" alt="" />
+</Frame>
 
-1. 欢迎 + 安全提示
-2. **Gateway 选择**（本地 / 远程 / 稍后配置）
-3. **认证（Anthropic OAuth）** — 仅本地
-4. **设置向导**（由 Gateway 驱动）
-5. **权限**（TCC 提示）
-6. **CLI**（可选）
-7. **引导聊天**（独立会话）
-8. 完成
+安全信任模型：
 
-## 1) 本地 vs 远程
+- 默认情况下，OpenClaw 是一个个人代理：一个可信操作员边界。
+- 共享/多用户设置需要锁定（分离信任边界，保持最低限度的工具访问，并遵循[安全](/zh/en/gateway/security)指南）。
+- 本地入门现在将新配置默认设置为 `tools.profile: "coding"`，以便新的本地设置保留文件系统/运行时工具，而无需强制使用不受限的 `full` 配置文件。
+- 如果启用了 hooks/webhooks 或其他不受信任的内容源，请使用强大的现代模型层级，并保持严格的工具策略/沙盒隔离。
 
-**Gateway** 运行在哪里？
+</Step>
+<Step title="本地 vs 远程">
+<Frame>
+<img src="/assets/macos-onboarding/04-choose-gateway.png" alt="" />
+</Frame>
 
-- **本地（此 Mac）：** 引导可运行 OAuth 流程并在本地写入凭据。
-- **远程（通过 SSH/Tailnet）：** 引导 **不会** 在本地运行 OAuth；凭据必须存在于网关主机。
-- **稍后配置：** 跳过设置，让应用保持未配置状态。
+**网关**运行在哪里？
 
-Gateway 认证提示：
+- **此 Mac（仅本地）：** 入门可以配置身份验证并写入凭据
+  到本地。
+- **远程（通过 SSH/Tailnet）：** 入门**不会**配置本地身份验证；
+  凭据必须存在于网关主机上。
+- **稍后配置：** 跳过设置并将应用保留为未配置状态。
 
-- 向导现在即使在 loopback 也会生成 **token**，因此本地 WS 客户端必须认证。
-- 如果关闭认证，任何本地进程都能连接；仅在完全可信的机器上使用。
-- 多机访问或非 loopback 绑定时使用 **token**。
+<Tip>
+**网关身份验证提示：**
 
-## 2) 仅本地认证（Anthropic OAuth）
+- 该向导现在甚至为环回生成一个**令牌**，因此本地 WS 客户端必须进行身份验证。
+- 如果您禁用身份验证，任何本地进程都可以连接；请仅在完全受信任的机器上使用此功能。
+- 使用 **token** 进行多机器访问或非环回绑定。
 
-macOS 应用支持 Anthropic OAuth（Claude Pro/Max）。流程：
+</Tip>
+</Step>
+<Step title="权限">
+<Frame caption="选择您想授予 OpenClaw 的权限">
+<img src="/assets/macos-onboarding/05-permissions.png" alt="" />
+</Frame>
 
-- 在浏览器打开 OAuth（PKCE）
-- 提示用户粘贴 `code#state`
-- 将凭据写入 `~/.openclaw/credentials/oauth.json`
+Onboarding 请求以下所需的 TCC 权限：
 
-其他提供商（OpenAI、自定义 API）目前通过环境变量或配置文件设置。
-
-## 3) 设置向导（由 Gateway 驱动）
-
-应用可运行与 CLI 相同的设置向导。这使引导与 Gateway 端行为保持一致，
-避免在 SwiftUI 中重复实现逻辑。
-
-## 4) 权限
-
-引导会请求所需的 TCC 权限：
-
+- 自动化
 - 通知
 - 辅助功能
 - 屏幕录制
-- 麦克风 / 语音识别
-- 自动化（AppleScript）
+- 麦克风
+- 语音识别
+- 相机
+- 位置
 
-## 5) CLI（可选）
-
-应用可通过 npm/pnpm 安装全局 `openclaw` CLI，
-这样终端工作流和 launchd 任务可开箱即用。
-
-## 6) 引导聊天（独立会话）
-
-设置完成后，应用会打开独立的引导聊天会话，让代理
-自我介绍并指引下一步。这样首次引导与正常对话分离。
-
-## 代理自举仪式
-
-首次运行代理时，OpenClaw 会初始化工作区（默认 `~/.openclaw/workspace`）：
-
-- 写入 `AGENTS.md`、`BOOTSTRAP.md`、`IDENTITY.md`、`USER.md`
-- 运行短问答仪式（一次一个问题）
-- 将身份与偏好写入 `IDENTITY.md`、`USER.md`、`SOUL.md`
-- 完成后移除 `BOOTSTRAP.md`，确保只运行一次
-
-## 可选：Gmail hooks（手动）
-
-Gmail Pub/Sub 目前是手动步骤。使用：
-
-```bash
-openclaw webhooks gmail setup --account you@gmail.com
-```
-
-详见 [/automation/gmail-pubsub](/zh/automation/gmail-pubsub)。
-
-## 远程模式说明
-
-当 Gateway 运行在另一台机器上时，凭据和工作区文件
-都 **在该主机上**。如果需要远程模式下的 OAuth，请在网关主机创建：
-
-- `~/.openclaw/credentials/oauth.json`
-- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+</Step>
+<Step title="CLI">
+  <Info>此步骤是可选的</Info>
+  该应用可以通过 npm/pnpm 安装全局 `openclaw` CLI，以便终端
+  工作流和 launchd 任务开箱即用。
+</Step>
+<Step title="Onboarding Chat (dedicated session)">
+  设置完成后，应用会打开一个专门的 Onboarding 聊天会话，以便代理可以
+  介绍自己并指导后续步骤。这使首次运行的指导与您的正常对话分开。
+  请参阅 [Bootstrapping](/zh/en/start/bootstrapping) 了解在首次运行代理期间网关主机上发生的情况。
+</Step>
+</Steps>

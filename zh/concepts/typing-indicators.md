@@ -1,33 +1,38 @@
 ---
-summary: "OpenClaw 何时显示输入指示以及如何调节"
+summary: "OpenClaw 何时显示输入指示器以及如何调整它们"
 read_when:
-  - 修改输入指示行为或默认值
+  - Changing typing indicator behavior or defaults
 title: "输入指示器"
 ---
 
-# 输入指示
+# 输入指示器
 
-输入指示会在运行中发送到聊天渠道。使用 `agents.defaults.typingMode` 控制**何时**开始输入指示，使用 `typingIntervalSeconds` 控制**刷新频率**。
+输入指示器在运行处于活动状态时发送到聊天频道。使用
+`agents.defaults.typingMode` 控制输入**何时**开始，使用 `typingIntervalSeconds`
+控制其**刷新频率**。
 
 ## 默认值
 
 当 `agents.defaults.typingMode` **未设置**时，OpenClaw 保持旧行为：
 
-- **私聊**：模型循环开始即显示输入。
-- **群聊且有 mention**：立即显示输入。
-- **群聊且无 mention**：仅当消息文本开始 streaming 时显示输入。
-- **Heartbeat 运行**：禁用输入指示。
+- **直接聊天**：一旦模型循环开始，立即开始输入。
+- **带有提及的群组聊天**：立即开始输入。
+- **没有提及的群组聊天**：仅在消息文本开始流式传输时开始输入。
+- **心跳运行**：输入已禁用。
 
 ## 模式
 
-将 `agents.defaults.typingMode` 设置为：
+将 `agents.defaults.typingMode` 设置为以下之一：
 
-- `never` — 永不显示输入指示。
-- `instant` — **模型循环开始即显示**，即便最终仅返回静默 token。
-- `thinking` — 在**第一个推理 delta**时显示（需该次运行 `reasoningLevel: "stream"`）。
-- `message` — 在**第一个非静默文本 delta**时显示（忽略 `NO_REPLY` 静默 token）。
+- `never` — 从不显示输入指示器。
+- `instant` — **在模型循环开始时立即**开始输入，即使该运行
+  随后仅返回静默回复令牌。
+- `thinking` — 在**第一个推理增量**时开始输入（需要
+  `reasoningLevel: "stream"` 用于该运行）。
+- `message` — 在**第一个非静默文本增量**时开始输入（忽略
+  `NO_REPLY` 静默令牌）。
 
-“触发越早”的顺序：
+“触发时间早晚”的顺序：
 `never` → `message` → `thinking` → `instant`
 
 ## 配置
@@ -41,7 +46,7 @@ title: "输入指示器"
 }
 ```
 
-可按会话覆盖模式或频率：
+您可以按会话覆盖模式或节奏：
 
 ```json5
 {
@@ -52,9 +57,12 @@ title: "输入指示器"
 }
 ```
 
-## 注
+## 注意事项
 
-- `message` 模式不会为仅静默回复显示输入（例如用于抑制输出的 `NO_REPLY`）。
-- `thinking` 仅在运行流式推理时触发（`reasoningLevel: "stream"`）。若模型不输出推理 delta，则不会开始输入指示。
-- Heartbeats 无论模式如何都不显示输入。
-- `typingIntervalSeconds` 控制**刷新频率**，而非开始时间。默认 6 秒。
+- `message` 模式不会为仅静默回复显示输入（例如 `NO_REPLY`
+  用于抑制输出的令牌）。
+- `thinking` 仅在运行流式传输推理时触发（`reasoningLevel: "stream"`）。
+  如果模型未发出推理增量，输入将不会开始。
+- 无论模式如何，心跳从不显示输入。
+- `typingIntervalSeconds` 控制**刷新节奏**，而不是开始时间。
+  默认值为 6 秒。

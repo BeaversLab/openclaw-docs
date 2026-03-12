@@ -1,20 +1,20 @@
 ---
-summary: "SOUL Evil hook（用 SOUL_EVIL.md 替换 SOUL.md）"
+summary: "SOUL Evil hook（将 SOUL.md 与 SOUL_EVIL.md 交换）"
 read_when:
-  - 你想启用或调优 SOUL Evil hook
-  - 你想设置清洗窗口或随机人格切换
+  - You want to enable or tune the SOUL Evil hook
+  - You want a purge window or random-chance persona swap
 title: "SOUL Evil Hook"
 ---
 
 # SOUL Evil Hook
 
-SOUL Evil hook 会在清洗窗口或随机概率下，将 **注入** 的 `SOUL.md` 内容替换为 `SOUL_EVIL.md`。它 **不会** 修改磁盘上的文件。
+SOUL Evil hook 在清除窗口内或随机将 **注入（injected）** 的 `SOUL.md` 内容替换为 `SOUL_EVIL.md`。它 **不** 会修改磁盘上的文件。
 
 ## 工作原理
 
-当 `agent:bootstrap` 运行时，hook 可以在系统提示组装前替换内存中的 `SOUL.md` 内容。如果 `SOUL_EVIL.md` 缺失或为空，OpenClaw 会记录警告并保留正常 `SOUL.md`。
+当 `agent:bootstrap` 运行时，该 hook 可以在组装系统提示词之前替换内存中的 `SOUL.md` 内容。如果 `SOUL_EVIL.md` 缺失或为空，OpenClow 将记录警告并保留正常的 `SOUL.md`。
 
-子 agent 运行 **不会** 在 bootstrap 文件中包含 `SOUL.md`，因此该 hook 对子 agent 无效。
+子代理运行在其引导文件中 **不** 包含 `SOUL.md`，因此此 hook 对子代理无效。
 
 ## 启用
 
@@ -42,24 +42,24 @@ openclaw hooks enable soul-evil
 }
 ```
 
-在 agent 工作区根目录创建 `SOUL_EVIL.md`（与 `SOUL.md` 同级）。
+在代理工作区根目录中创建 `SOUL_EVIL.md`（与 `SOUL.md` 相邻）。
 
 ## 选项
 
-- `file`（string）：替代 SOUL 文件名（默认：`SOUL_EVIL.md`）
-- `chance`（number 0–1）：每次运行随机使用 `SOUL_EVIL.md` 的概率
-- `purge.at`（HH:mm）：每日清洗开始时间（24 小时制）
-- `purge.duration`（duration）：窗口时长（如 `30s`, `10m`, `1h`）
+- `file` (字符串): 备用 SOUL 文件名（默认：`SOUL_EVIL.md`）
+- `chance` (数字 0–1): 每次运行使用 `SOUL_EVIL.md` 的随机概率
+- `purge.at` (HH:mm): 每日清除开始时间（24小时制）
+- `purge.duration` (时长): 窗口长度（例如 `30s`、`10m`、`1h`）
 
-**优先级：**清洗窗口优先于随机概率。
+**优先级：** 清除窗口优先于随机概率。
 
-**时区：**若设置了 `agents.defaults.userTimezone` 则使用它，否则使用主机时区。
+**时区：** 如果设置了 `agents.defaults.userTimezone` 则使用它；否则使用主机时区。
 
-## 说明
+## 注意事项
 
-- 不会写入或修改磁盘文件。
-- 若 `SOUL.md` 不在 bootstrap 列表中，该 hook 不会生效。
+- 磁盘上不会写入或修改任何文件。
+- 如果 `SOUL.md` 不在引导列表中，则该 hook 不起作用。
 
-## 另见
+## 另请参阅
 
-- [钩子](/zh/hooks)
+- [Hooks](/zh/en/hooks)

@@ -1,26 +1,26 @@
 ---
-title: "提示缓存"
-summary: "提示缓存旋钮、合并顺序、提供商行为和调整模式"
+title: "提示词缓存"
+summary: "提示词缓存控制、合并顺序、提供商行为和调优模式"
 read_when:
-  - "You want to reduce prompt token costs with cache retention"
-  - "You need per-agent cache behavior in multi-agent setups"
-  - "You are tuning heartbeat and cache-ttl pruning together"
+  - You want to reduce prompt token costs with cache retention
+  - You need per-agent cache behavior in multi-agent setups
+  - You are tuning heartbeat and cache-ttl pruning together
 ---
 
-# 提示缓存
+# 提示词缓存
 
-提示缓存意味着模型提供商可以在多轮中重用不变的提示前缀（通常是系统/开发者指令和其他稳定的上下文），而不是每次都重新处理它们。第一个匹配的请求写入缓存 token（`cacheWrite`），后续匹配的请求可以读回它们（`cacheRead`）。
+提示词缓存意味着模型提供商可以在多轮对话中重复使用不变的提示词前缀（通常是系统/开发者指令和其他稳定的上下文），而不必每次都重新处理它们。第一个匹配的请求写入缓存令牌 (`cacheWrite`)，随后的匹配请求可以读取它们 (`cacheRead`)。
 
-为什么这很重要：降低 token 成本、更快的响应，并为长时间运行的会话提供更可预测的性能。没有缓存，重复的提示在每一轮都要支付完整的提示成本，即使大多数输入没有改变。
+这很重要：更低的令牌成本、更快的响应，以及长时间运行会话中更可预测的性能。如果没有缓存，重复的提示词即使在大多数输入没有改变的情况下，每一轮也要支付完整的提示词成本。
 
-本页涵盖影响提示重用和 token 成本的所有与缓存相关的旋钮。
+本页面涵盖了所有影响提示词重用和令牌成本的缓存相关控制项。
 
 有关 Anthropic 定价详情，请参阅：
 [https://docs.anthropic.com/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/docs/build-with-claude/prompt-caching)
 
-## 主要旋钮
+## 主要控制项
 
-### `cacheRetention`（模型和每个代理）
+### `cacheRetention` (模型和每个代理)
 
 在模型参数上设置缓存保留：
 
@@ -33,7 +33,7 @@ agents:
           cacheRetention: "short" # none | short | long
 ```
 
-每个代理覆盖：
+每个代理的覆盖：
 
 ```yaml
 agents:
@@ -46,20 +46,20 @@ agents:
 配置合并顺序：
 
 1. `agents.defaults.models["provider/model"].params`
-2. `agents.list[].params`（匹配代理 ID；按键覆盖）
+2. `agents.list[].params` (匹配代理 id；按键覆盖)
 
-### 遗留 `cacheControlTtl`
+### 旧版 `cacheControlTtl`
 
-遗留值仍被接受并映射：
+仍接受并映射旧值：
 
 - `5m` -> `short`
 - `1h` -> `long`
 
-新配置首选 `cacheRetention`。
+新配置建议使用 `cacheRetention`。
 
 ### `contextPruning.mode: "cache-ttl"`
 
-在缓存 TTL 窗口后修剪旧工具结果上下文，以便空闲后的请求不会重新缓存过大的历史记录。
+在缓存 TTL 窗口后修剪旧的工具结果上下文，以便空闲后的请求不会重新缓存过大的历史记录。
 
 ```yaml
 agents:
@@ -69,11 +69,11 @@ agents:
       ttl: "1h"
 ```
 
-请参阅[会话修剪](/zh/concepts/session-pruning) 了解完整行为。
+有关完整行为，请参阅 [会话修剪](/zh/en/concepts/session-pruning)。
 
-### 心跳保持温暖
+### 心跳保温
 
-心跳可以保持缓存窗口温暖，并减少空闲间隙后的重复缓存写入。
+心跳可以使缓存窗口保持热度，并减少空闲间隔后的重复缓存写入。
 
 ```yaml
 agents:
@@ -82,33 +82,33 @@ agents:
       every: "55m"
 ```
 
-支持 `agents.list[].heartbeat` 处的每个代理心跳。
+在 `agents.list[].heartbeat` 支持每个代理的心跳。
 
 ## 提供商行为
 
-### Anthropic（直接 API）
+### Anthropic (直接 API)
 
 - 支持 `cacheRetention`。
-- 使用 Anthropic API 密钥身份验证配置文件时，OpenClaw 会在未设置时为 Anthropic 模型引用播种 `cacheRetention: "short"`。
+- 使用 Anthropic API 密钥身份验证配置文件时，如果未设置，OpenClaw 会为 Anthropic 模型引用设定 `cacheRetention: "short"`。
 
 ### Amazon Bedrock
 
-- Anthropic Claude 模型引用（`amazon-bedrock/*anthropic.claude*`）支持显式 `cacheRetention` 传递。
-- 非 Anthropic Bedrock 模型在运行时被强制为 `cacheRetention: "none"`。
+- Anthropic Claude 模型引用 (`amazon-bedrock/*anthropic.claude*`) 支持显式 `cacheRetention` 透传。
+- 非 Anthropic Bedrock 模型在运行时被强制设为 `cacheRetention: "none"`。
 
 ### OpenRouter Anthropic 模型
 
-对于 `openrouter/anthropic/*` 模型引用，OpenClaw 在系统/开发者提示块上注入 Anthropic `cache_control` 以改善提示缓存重用。
+对于 `openrouter/anthropic/*` 模型引用，OpenClaw 会在系统/开发者提示块上注入 Anthropic `cache_control`，以提高提示缓存的复用率。
 
 ### 其他提供商
 
-如果提供商不支持此缓存模式，`cacheRetention` 无效。
+如果提供商不支持此缓存模式，`cacheRetention` 将不起作用。
 
-## 调整模式
+## 调优模式
 
-### 混合流量（推荐默认值）
+### 混合流量（推荐的默认设置）
 
-在主代理上保持长期运行的基线，在突发通知代理上禁用缓存：
+在主代理上保持长期存在的基线，在突发通知代理上禁用缓存：
 
 ```yaml
 agents:
@@ -133,11 +133,11 @@ agents:
 
 - 设置基线 `cacheRetention: "short"`。
 - 启用 `contextPruning.mode: "cache-ttl"`。
-- 仅对受益于温暖缓存的代理，将心跳保持在 TTL 以下。
+- 仅对受益于预热缓存的代理，将心跳保持在 TTL 以下。
 
 ## 缓存诊断
 
-OpenClaw 为嵌入式代理运行公开专用缓存跟踪诊断。
+OpenClaw 为嵌入式代理运行公开了专门的缓存跟踪诊断。
 
 ### `diagnostics.cacheTrace` 配置
 
@@ -153,33 +153,33 @@ diagnostics:
 
 默认值：
 
-- `filePath`：`$OPENCLAW_STATE_DIR/logs/cache-trace.jsonl`
-- `includeMessages`：`true`
-- `includePrompt`：`true`
-- `includeSystem`：`true`
+- `filePath`: `$OPENCLAW_STATE_DIR/logs/cache-trace.jsonl`
+- `includeMessages`: `true`
+- `includePrompt`: `true`
+- `includeSystem`: `true`
 
 ### 环境切换（一次性调试）
 
 - `OPENCLAW_CACHE_TRACE=1` 启用缓存跟踪。
 - `OPENCLAW_CACHE_TRACE_FILE=/path/to/cache-trace.jsonl` 覆盖输出路径。
-- `OPENCLAW_CACHE_TRACE_MESSAGES=0|1` 切换完整消息载荷捕获。
+- `OPENCLAW_CACHE_TRACE_MESSAGES=0|1` 切换完整消息负载捕获。
 - `OPENCLAW_CACHE_TRACE_PROMPT=0|1` 切换提示文本捕获。
 - `OPENCLAW_CACHE_TRACE_SYSTEM=0|1` 切换系统提示捕获。
 
-## 检查内容
+### 检查内容
 
-- 缓存跟踪事件是 JSONL 格式，包括分阶段的快照，如 `session:loaded`、`prompt:before`、`stream:context` 和 `session:after`。
-- 每轮缓存 token 影响通过 `cacheRead` 和 `cacheWrite` 在正常使用界面中可见（例如 `/usage full` 和会话使用摘要）。
+- 缓存跟踪事件是 JSONL 格式，包含分阶段快照，如 `session:loaded`、`prompt:before`、`stream:context` 和 `session:after`。
+- 每次轮换的缓存 Token 影响可以通过 `cacheRead` 和 `cacheWrite` 在常规使用界面中查看（例如 `/usage full` 和会话使用摘要）。
 
 ## 快速故障排除
 
-- 大多数轮次上的高 `cacheWrite`：检查易变的系统提示输入，并验证模型/提供商支持您的缓存设置。
-- `cacheRetention` 无效：确认模型密钥匹配 `agents.defaults.models["provider/model"]`。
-- 带有缓存设置的 Bedrock Nova/Mistral 请求：预期运行时强制为 `none`。
+- 大多数轮换中 `cacheWrite` 较高：检查是否存在易变的系统提示输入，并验证模型/提供商是否支持您的缓存设置。
+- `cacheRetention` 无效：确认模型键匹配 `agents.defaults.models["provider/model"]`。
+- 带有缓存设置的 Bedrock Nova/Mistral 请求：预期运行时强制 `none`。
 
 相关文档：
 
-- [Anthropic](/zh/providers/anthropic)
-- [Token 使用和成本](/zh/reference/token-use)
-- [会话修剪](/zh/concepts/session-pruning)
-- [Gateway 配置参考](/zh/gateway/configuration-reference)
+- [Anthropic](/zh/en/providers/anthropic)
+- [Token Use and Costs](/zh/en/reference/token-use)
+- [Session Pruning](/zh/en/concepts/session-pruning)
+- [Gateway Configuration Reference](/zh/en/gateway/configuration-reference)

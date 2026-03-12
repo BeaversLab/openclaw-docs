@@ -1,46 +1,46 @@
 ---
-summary: "用于串行化入站自动回复运行的命令队列设计"
+summary: "命令队列设计，用于序列化入站自动回复运行"
 read_when:
-  - 修改自动回复执行或并发
+  - Changing auto-reply execution or concurrency
 title: "命令队列"
 ---
 
 # 命令队列 (2026-01-16)
 
-我们通过一个小型进程内队列对入站自动回复运行（所有渠道）进行串行化，防止多个 agent 运行相互冲突，同时允许跨会话的安全并行。
+我们通过一个微小的进程内队列序列化入站自动回复运行（所有通道），以防止多次代理运行发生冲突，同时仍允许跨会话的安全并行处理。
 
-## Why
+## 为什么
 
-- 自动回复运行可能成本很高（LLM 调用），且多条入站消息靠得很近时会发生冲突。
-- 串行化可避免争用共享资源（会话文件、日志、CLI stdin），并降低上游限流风险。
+- 自动回复运行可能会很昂贵（LLM 调用），并且当多条入站消息几乎同时到达时可能会发生冲突。
+- 序列化可以避免竞争共享资源（会话文件、日志、CLI stdin），并减少触及上游速率限制的可能性。
 
-## How it works
+## 工作原理
 
-- 一个具备 lane 的 FIFO 队列按 lane 进行排队，且每个 lane 有可配置并发上限（未配置的 lane 默认 1；main 默认 4，subagent 默认 8）。
-- `runEmbeddedPiAgent` 按**session key**入队（lane 为 `session:<key>`），确保同一会话同一时间仅一个运行。
-- 每个会话运行随后入队到**全局 lane**（默认 `main`），以 `agents.defaults.maxConcurrent` 作为整体并行上限。
-- 启用 verbose 日志时，若排队超过 ~2s 才开始，会输出短提示。
-- 当支持时，typing indicators 在入队时立即触发，因此等待排队不会改变用户体验。
+- 一个具有通道感知功能的先进先出 (FIFO) 队列会以可配置的并发上限来排空每个通道（未配置的通道默认为 1；主通道默认为 4，子代理默认为 8）。
+- `runEmbeddedPiAgent` 按 **会话密钥**（通道 `session:<key>`）加入队列，以保证每个会话只有一个活动运行。
+- 然后，每个会话运行被排队到一个 **全局通道**（默认为 `main`），因此总体并发性受到 `agents.defaults.maxConcurrent` 的限制。
+- 启用详细日志记录时，如果排队运行在开始前等待了超过约 2 秒，则会发出一条简短的通知。
+- 输入指示器仍会在入队时立即触发（当通道支持时），因此在等待轮次时用户体验保持不变。
 
-## 队列模式（按渠道）
+## 队列模式（每个通道）
 
-入站消息可以 steer 当前运行、等待 followup 回合，或两者兼具：
+入站消息可以引导当前运行、等待后续轮次，或者两者兼做：
 
-- `steer`：立即注入当前运行（在下一个工具边界后取消待执行工具调用）。若非 streaming，则回退为 followup。
-- `followup`：在当前运行结束后排队进入下一个 agent 回合。
-- `collect`：将所有排队消息合并为**一个** followup 回合（默认）。若消息目标不同渠道/线程，会分别排空以保持路由。
-- `steer-backlog`（即 `steer+backlog`）：立即 steer，**并**保留消息用于 followup 回合。
-- `interrupt`（旧）：中止该会话的活动运行，然后运行最新消息。
-- `queue`（旧别名）：等同于 `steer`。
+- `steer`：立即注入到当前运行中（在下一个工具边界之后取消待处理的工具调用）。如果未进行流式传输，则回退到后续轮次。
+- `followup`：排队等待当前运行结束后的下一个代理轮次。
+- `collect`：将所有排队的消息合并为 **单个** 后续轮次（默认）。如果消息针对不同的通道/线程，它们将单独排空以保留路由。
+- `steer-backlog`（又名 `steer+backlog`）：现在引导 **并** 保留消息以供后续轮次。
+- `interrupt`（旧版）：中止该会话的活动运行，然后运行最新消息。
+- `queue`（旧别名）：与 `steer` 相同。
 
-Steer-backlog 可能在 steer 运行后产生 followup 回复，因此在 streaming 表面可能看起来像重复。若希望每条入站只对应一次回复，优先 `collect`/`steer`。
-以独立命令发送 `/queue collect`（按会话）或设置 `messages.queue.byChannel.discord: "collect"`。
+Steer-backlog 意味着您可以在定向运行后获得后续响应，因此流式界面可能会显示重复内容。如果您希望每条入站消息仅收到一个响应，请首选 `collect`/`steer`。
+将 `/queue collect` 作为独立命令发送（每个会话）或设置 `messages.queue.byChannel.discord: "collect"`。
 
-默认值（配置未设置时）：
+默认值（在配置中未设置时）：
 
-- 所有表面 → `collect`
+- 所有界面 → `collect`
 
-通过 `messages.queue` 全局或按渠道配置：
+通过 `messages.queue` 进行全局或按通道配置：
 
 ```json5
 {
@@ -58,30 +58,30 @@ Steer-backlog 可能在 steer 运行后产生 followup 回复，因此在 stream
 
 ## 队列选项
 
-选项适用于 `followup`、`collect` 与 `steer-backlog`（以及 `steer` 回退为 followup 时）：
+选项适用于 `followup`、`collect` 和 `steer-backlog`（以及当 `steer` 回退到后续回复时）：
 
-- `debounceMs`：等待静默后再启动 followup 回合（防止“继续、继续”）。
-- `cap`：每个会话最大排队消息数。
+- `debounceMs`：在开始后续轮次之前等待静默（防止“继续、继续”）。
+- `cap`：每个会话的最大排队消息数。
 - `drop`：溢出策略（`old`、`new`、`summarize`）。
 
-Summarize 会保留被丢弃消息的简短要点列表，并作为合成 followup 提示注入。
-默认：`debounceMs: 1000`、`cap: 20`、`drop: summarize`。
+Summarize 会保留丢弃消息的简短项目符号列表，并将其作为合成的后续提示注入。
+默认值：`debounceMs: 1000`、`cap: 20`、`drop: summarize`。
 
-## 按会话覆盖
+## 每会话覆盖
 
-- 以独立命令发送 `/queue <mode>` 以保存当前会话模式。
-- 选项可组合：`/queue collect debounce:2s cap:25 drop:summarize`
-- `/queue default` 或 `/queue reset` 清除会话覆盖。
+- 将 `/queue <mode>` 作为独立命令发送，以存储当前会话的模式。
+- 选项可以组合使用：`/queue collect debounce:2s cap:25 drop:summarize`
+- `/queue default` 或 `/queue reset` 会清除会话覆盖设置。
 
-## 范围与保证
+## 范围和保证
 
-- 适用于所有使用 gateway 回复管线的入站渠道的自动回复 agent 运行（WhatsApp web、Telegram、Slack、Discord、Signal、iMessage、webchat 等）。
-- 默认 lane（`main`）为进程范围，涵盖入站与主 heartbeat；设置 `agents.defaults.maxConcurrent` 可允许多个会话并行。
-- 可能存在其他 lanes（如 `cron`、`subagent`），使后台任务并行而不阻塞入站回复。
-- 每会话 lane 保证同一会话同一时间仅一个 agent 运行。
-- 无外部依赖或后台 worker 线程；纯 TypeScript + promises。
+- 适用于所有使用网关回复管道（WhatsApp web、Telegram、Slack、Discord、Signal、iMessage、webchat 等）的入站通道的自动回复代理运行。
+- 默认通道（`main`）对于入站 + 主心跳是进程范围内的；设置 `agents.defaults.maxConcurrent` 以允许并行处理多个会话。
+- 可能存在其他通道（例如 `cron`、`subagent`），以便后台作业可以并行运行而不阻塞入站回复。
+- 每会话通道保证一次只有一个代理运行接触给定的会话。
+- 没有外部依赖或后台工作线程；纯 TypeScript + promises。
 
-## 排查
+## 故障排除
 
-- 若命令似乎卡住，启用 verbose 日志并查找 “queued for …ms” 行，确认队列正在排空。
-- 若需要队列深度，启用 verbose 日志并观察队列计时行。
+- 如果命令似乎卡住了，请启用详细日志并查找“queued for …ms”行，以确认队列正在排出。
+- 如果需要队列深度，请启用详细日志并监控队列计时行。

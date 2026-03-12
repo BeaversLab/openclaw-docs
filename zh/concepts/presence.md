@@ -1,93 +1,97 @@
 ---
-summary: "OpenClaw presence 条目如何生成、合并与展示"
+summary: "OpenClaw 在线条目的生成、合并和显示方式"
 read_when:
-  - 排查 Instances 选项卡
-  - 调查重复或陈旧的实例行
-  - 修改 gateway WS 连接或 system-event 信标
+  - Debugging the Instances tab
+  - Investigating duplicate or stale instance rows
+  - Changing gateway WS connect or system-event beacons
 title: "在线状态"
 ---
 
-# Presence
+# 在线状态
 
-OpenClaw 的 "presence" 是一个轻量、best‑effort 的视图：
+OpenClaw 的“在线状态”是对以下内容的轻量级、尽力而为的视图：
 
-- **Gateway** 本身，以及
-- **连接到 Gateway 的客户端**（mac app、WebChat、CLI 等）
+- **网关** 本身，以及
+- **连接到网关的客户端**（mac 应用、WebChat、CLI 等）
 
-Presence 主要用于渲染 macOS app 的 **Instances** 选项卡，并为运营者提供快速可见性。
+在线状态主要用于呈现 macOS 应用的 **实例** 选项卡，并为操作员提供快速的可见性。
 
-## Presence 字段（显示内容）
+## 在线状态字段（显示的内容）
 
-Presence 条目是结构化对象，字段示例：
+在线条目是结构化对象，包含如下字段：
 
-- `instanceId`（可选但强烈推荐）：稳定客户端身份（通常 `connect.client.instanceId`）
-- `host`：人类可读的主机名
-- `ip`：best‑effort IP 地址
+- `instanceId`（可选但强烈推荐）：稳定的客户端标识（通常为 `connect.client.instanceId`）
+- `host`：人类友好的主机名
+- `ip`：尽力而为的 IP 地址
 - `version`：客户端版本字符串
 - `deviceFamily` / `modelIdentifier`：硬件提示
-- `mode`：`ui`、`webchat`、`cli`、`backend`、`probe`、`test`、`node` 等
-- `lastInputSeconds`：“距最后一次用户输入的秒数”（若已知）
-- `reason`：`self`、`connect`、`node-connected`、`periodic` 等
-- `ts`：最后更新时间戳（epoch 毫秒）
+- `mode`：`ui`、`webchat`、`cli`、`backend`、`probe`、`test`、`node`、……
+- `lastInputSeconds`：“自上次用户输入以来的秒数”（如果已知）
+- `reason`：`self`、`connect`、`node-connected`、`periodic`、……
+- `ts`：最后更新时间戳（自纪元以来的毫秒数）
 
-## 生产者（presence 来自哪里）
+## 生产者（在线状态的来源）
 
-Presence 条目由多个来源生成并**合并**。
+在线条目由多个源生成并 **合并**。
 
-### 1) Gateway 自身条目
+### 1) 网关自身条目
 
-Gateway 启动时始终注入一个 “self” 条目，即使没有客户端连接，UI 也能显示 gateway 主机。
+网关始终在启动时植入一个“自身”条目，以便即使没有任何客户端连接，UI 也能显示网关主机。
 
-### 2) WebSocket connect
+### 2) WebSocket 连接
 
-每个 WS 客户端都会以 `connect` 请求开始。握手成功后，Gateway 会为该连接 upsert 一个 presence 条目。
+每个 WS 客户端都以 `connect` 请求开始。握手成功后，网关会为该连接更新或插入一个在线条目。
 
-#### 为什么一次性 CLI 命令不显示
+#### 为何一次性 CLI 命令不显示
 
-CLI 常用于短暂的一次性命令连接。为避免刷屏 Instances 列表，`client.mode === "cli"` **不会**生成 presence 条目。
+CLI 经常因简短的一次性命令而连接。为了避免刷屏实例列表，`client.mode === "cli"` **不会** 被转换为在线条目。
 
 ### 3) `system-event` 信标
 
-客户端可通过 `system-event` 定期发送更丰富的信标。mac app 使用它上报 host 名、IP 与 `lastInputSeconds`。
+客户端可以通过 `system-event` 方法发送更丰富的定期信标。mac 应用使用此方法报告主机名、IP 和 `lastInputSeconds`。
 
-### 4) Node 连接（role: node）
+### 4) 节点连接（角色：node）
 
-当 node 以 `role: node` 通过 Gateway WebSocket 连接时，Gateway 会为该 node upsert presence 条目（与其他 WS 客户端同一流程）。
+当一个节点通过带有 `role: node` 的 Gateway WebSocket 连接时，Gateway
+会为该节点更新（upsert）一个 presence 条目（与其他 WS 客户端的流程相同）。
 
-## 合并 + 去重规则（为何 `instanceId` 重要）
+## 合并 + 去重规则（为什么 `instanceId` 很重要）
 
-Presence 条目存储在单一内存 map 中：
+Presence 条目存储在单个内存映射（map）中：
 
-- 条目按 **presence key** 键控。
-- 最佳 key 是稳定的 `instanceId`（来自 `connect.client.instanceId`），可跨重启保留。
-- Key 不区分大小写。
+- 条目由 **presence key**（存在键）作为键。
+- 最好的键是一个稳定的 `instanceId`（来自 `connect.client.instanceId`），它能在重启后保持不变。
+- 键不区分大小写。
 
-若客户端重连时没有稳定 `instanceId`，可能显示为**重复**行。
+如果客户端在没有稳定 `instanceId` 的情况下重新连接，它可能会显示为
+**重复** 的行。
 
-## TTL 与容量上限
+## TTL 和有界大小
 
-Presence 有意保持短暂：
+Presence 是临时的（ephemeral）：
 
-- **TTL**：超过 5 分钟的条目会被清理
-- **最大条目数**：200（最旧先丢）
+- **TTL（生存时间）：** 超过 5 分钟的条目会被修剪
+- **最大条目数：** 200（最早添加的优先丢弃）
 
-这能保持列表新鲜并避免内存无界增长。
+这确保列表保持最新，并避免内存无限增长。
 
-## 远程/隧道注意事项（loopback IP）
+## 远程/隧道注意事项（环回 IP）
 
-当客户端通过 SSH 隧道 / 本地端口转发连接时，Gateway 可能将远端地址识别为 `127.0.0.1`。
-为避免覆盖客户端上报的有效 IP，loopback 远端地址会被忽略。
+当客户端通过 SSH 隧道/本地端口转发连接时，Gateway 可能
+会将远程地址视为 `127.0.0.1`。为避免覆盖良好的客户端报告的
+IP，环回远程地址将被忽略。
 
-## Consumers
+## 消费者
 
-### macOS Instances 选项卡
+### macOS 实例选项卡
 
-macOS app 渲染 `system-presence` 的输出，并根据最后更新时间的年龄应用状态指示（Active/Idle/Stale）。
+macOS 应用程序渲染 `system-presence` 的输出，并根据上次更新的时间应用
+一个小的状态指示器（活跃/空闲/陈旧）。
 
-## 调试提示
+## 调试技巧
 
-- 要查看原始列表，对 Gateway 调用 `system-presence`。
-- 若看到重复：
-  - 确认客户端在握手中发送稳定的 `client.instanceId`
-  - 确认周期性信标使用同一 `instanceId`
-  - 检查连接派生条目是否缺少 `instanceId`（此时重复属于预期）
+- 要查看原始列表，请对 Gateway 调用 `system-presence`。
+- 如果看到重复项：
+  - 确认客户端在握手时发送了稳定的 `client.instanceId`
+  - 确认周期性信标使用相同的 `instanceId`
+  - 检查连接派生的条目是否缺少 `instanceId`（预期会有重复）

@@ -1,15 +1,15 @@
 ---
-summary: "在 OpenClaw 中使用 Qwen OAuth（免费层级）"
+summary: "在 OpenClaw 中使用 Qwen OAuth（免费层）"
 read_when:
-  - "You want to use Qwen with OpenClaw"
-  - "You want free-tier OAuth access to Qwen Coder"
+  - You want to use Qwen with OpenClaw
+  - You want free-tier OAuth access to Qwen Coder
 title: "Qwen"
 ---
 
 # Qwen
 
-Qwen 为 Qwen Coder 和 Qwen Vision 模型提供免费层级的 OAuth 流程
-（每天 2,000 次请求，受 Qwen 速率限制限制）。
+Qwen 为 Qwen Coder 和 Qwen Vision 模型提供免费层的 OAuth 流程
+（每天 2,000 次请求，受 Qwen 速率限制）。
 
 ## 启用插件
 
@@ -17,7 +17,7 @@ Qwen 为 Qwen Coder 和 Qwen Vision 模型提供免费层级的 OAuth 流程
 openclaw plugins enable qwen-portal-auth
 ```
 
-启用后重启 Gateway。
+启用后重启网关。
 
 ## 身份验证
 
@@ -25,8 +25,8 @@ openclaw plugins enable qwen-portal-auth
 openclaw models auth login --provider qwen-portal --set-default
 ```
 
-这将运行 Qwen 设备代码 OAuth 流程，并将提供商条目写入您的
-`models.json`（以及 `qwen` 别名以便快速切换）。
+这将运行 Qwen 设备代码 OAuth 流程，并向您的
+`models.json` 写入一个提供商条目（以及用于快速切换的 `qwen` 别名）。
 
 ## 模型 ID
 
@@ -39,15 +39,14 @@ openclaw models auth login --provider qwen-portal --set-default
 openclaw models set qwen-portal/coder-model
 ```
 
-## Reuse Qwen Code CLI login
+## 重用 Qwen Code CLI 登录
 
-如果您已经通过 Qwen Code CLI 登录，OpenClaw 将在加载身份验证存储时
-从 `~/.qwen/oauth_creds.json` 同步凭据。您仍然需要
-`models.providers.qwen-portal` 条目（使用上面的登录命令创建一个）。
+如果您已经使用 Qwen Code CLI 登录，OpenClaw 将在加载身份验证存储时从 `~/.qwen/oauth_creds.json` 同步凭据。
+您仍然需要一个 `models.providers.qwen-portal` 条目（使用上面的登录命令创建一个）。
 
 ## 注意事项
 
-- Token 会自动刷新；如果刷新失败或访问权限被撤销，请重新运行登录命令。
-- 默认基础 URL：`https://portal.qwen.ai/v1`（如果 Qwen 提供不同的端点，
-  请使用 `models.providers.qwen-portal.baseUrl` 覆盖）。
-- 参阅[模型提供商](/zh/concepts/model-providers)了解提供商范围的规则。
+- 令牌会自动刷新；如果刷新失败或访问被撤销，请重新运行登录命令。
+- 默认基础 URL：`https://portal.qwen.ai/v1`（如果
+  `models.providers.qwen-portal.baseUrl` 如果 Qwen 提供不同的端点）。
+- 有关提供商范围的规则，请参阅 [模型提供商](/zh/concepts/model-providers)。

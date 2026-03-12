@@ -37,7 +37,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
+
+      - name: Fix MDX compatibility in en/
+        run: |
+          node scripts/fix-mdx-compat.js en/
 
       - name: Fix internal links in en/
         run: |

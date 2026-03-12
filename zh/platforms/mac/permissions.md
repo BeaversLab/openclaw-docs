@@ -1,41 +1,50 @@
 ---
-title: "macOS 权限"
-summary: "macOS 权限持久化（TCC）与签名要求"
+summary: "macOS 权限持久性 (TCC) 和签名要求"
 read_when:
-  - 排查 macOS 权限提示缺失或卡住
-  - 打包或签名 macOS 应用
-  - 修改 bundle ID 或应用安装路径
+  - Debugging missing or stuck macOS permission prompts
+  - Packaging or signing the macOS app
+  - Changing bundle IDs or app install paths
+title: "macOS 权限"
 ---
 
-# macOS 权限（TCC）
+# macOS 权限 (TCC)
 
-macOS 的权限授权较为脆弱。TCC 会将授权与应用的代码签名、bundle identifier 以及磁盘路径绑定。
-其中任何一项变化都会让 macOS 视为新应用，可能丢失授权或隐藏提示。
+macOS 权限授予非常脆弱。TCC 将权限授予与
+应用的代码签名、Bundle 标识符和磁盘上的路径相关联。如果其中任何一项发生变化，
+macOS 会将该应用视为新应用，并可能会丢弃或隐藏提示。
 
 ## 稳定权限的要求
 
-- 路径一致：从固定位置运行应用（OpenClaw 为 `dist/OpenClaw.app`）。
-- Bundle identifier 一致：更改 bundle ID 会创建新的权限身份。
-- 签名应用：未签名或 ad-hoc 签名不会持久化权限。
-- 签名一致：使用真实的 Apple Development 或 Developer ID 证书，确保重建时签名稳定。
+- 相同路径：从固定位置运行应用（对于 OpenClaw，为 `dist/OpenClaw.app`）。
+- 相同的 Bundle 标识符：更改 Bundle ID 会创建一个新的权限身份。
+- 已签名的应用：未签名或临时签名的构建无法持久化权限。
+- 一致的签名：使用真实的 Apple Development 或 Developer ID 证书
+  以便签名在重新构建时保持稳定。
 
-Ad-hoc 签名每次构建都会生成新的身份。macOS 会忘记之前的授权，提示可能完全不再出现，
-直到清理过期条目。
+临时签名会在每次构建时生成一个新的身份。macOS 将忘记之前的
+授权，并且提示可能会完全消失，直到清除陈旧的条目。
 
-## 提示消失时的恢复清单
+## 提示消失时的恢复检查清单
 
 1. 退出应用。
-2. 在 System Settings -> Privacy & Security 中移除应用条目。
-3. 从相同路径重新启动应用并重新授权。
-4. 若提示仍不出现，使用 `tccutil` 重置 TCC 条目后再试。
-5. 某些权限只有在完整重启 macOS 后才会再次出现。
+2. 在系统设置 -> 隐私与安全性中移除该应用的条目。
+3. 从相同路径重新启动应用并重新授予权限。
+4. 如果提示仍未出现，请使用 `tccutil` 重置 TCC 条目并重试。
+5. 某些权限只有在完全重新启动 macOS 后才会重新出现。
 
-重置示例（按需替换 bundle ID）：
+重置示例（根据需要替换 Bundle ID）：
 
 ```bash
-sudo tccutil reset Accessibility bot.molt.mac
-sudo tccutil reset ScreenCapture bot.molt.mac
+sudo tccutil reset Accessibility ai.openclaw.mac
+sudo tccutil reset ScreenCapture ai.openclaw.mac
 sudo tccutil reset AppleEvents
 ```
 
-如果你在测试权限，请始终使用真实证书签名。ad-hoc 构建仅适用于权限无关的快速本地运行。
+## 文件和文件夹权限（桌面/文档/下载）
+
+macOS 可能还会限制终端/后台进程对桌面、文档和下载文件夹的访问。如果文件读取或目录列表挂起，请向执行文件操作的同一进程上下文（例如 Terminal/iTerm、LaunchAgent 启动的应用或 SSH 进程）授予访问权限。
+
+变通方法：如果您想避免逐文件夹授予权限，请将文件移动到 OpenClaw 工作区 (`~/.openclaw/workspace`) 中。
+
+如果您正在测试权限，请务必使用真实证书进行签名。临时
+构建仅适用于权限无关紧要的快速本地运行。

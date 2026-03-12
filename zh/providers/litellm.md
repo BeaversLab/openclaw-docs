@@ -1,25 +1,25 @@
 ---
-summary: "通过 LiteLLM 代理运行 OpenClaw 以实现统一的模型访问和成本跟踪"
+summary: "通过 LiteLLM 代理运行 OpenClaw，以实现统一的模型访问和成本跟踪"
 read_when:
-  - "You want to route OpenClaw through a LiteLLM proxy"
-  - "You need cost tracking, logging, or model routing through LiteLLM"
+  - You want to route OpenClaw through a LiteLLM proxy
+  - You need cost tracking, logging, or model routing through LiteLLM
 ---
 
 # LiteLLM
 
-[LiteLLM](https://litellm.ai) 是一个开源 LLM Gateway，为 100 多个模型提供商提供统一的 API。通过 LiteLLM 路由 OpenClaw 以获得集中的成本跟踪、日志记录，以及在不更改 OpenClaw 配置的情况下切换后端的灵活性。
+[LiteLLM](https://litellm.ai) 是一个开源的 LLM 网关，为 100 多个模型提供商提供统一的 API。通过 LiteLLM 路由 OpenClaw，以获得集中的成本跟踪、日志记录，以及在无需更改 OpenClaw 配置的情况下灵活切换后端。
 
 ## 为什么在 OpenClaw 中使用 LiteLLM？
 
-- **成本跟踪** — 准确查看 OpenClaw 在所有模型上的花费
-- **模型路由** — 在 Claude、GPT-4、Gemini、Bedrock 之间切换，无需更改配置
+- **成本跟踪** — 精确查看 OpenClaw 在所有模型上的花费
+- **模型路由** — 在 Claude、GPT-4、Gemini、Bedrock 之间切换，而无需更改配置
 - **虚拟密钥** — 为 OpenClaw 创建具有支出限制的密钥
 - **日志记录** — 用于调试的完整请求/响应日志
-- **故障转移** — 如果主提供商宕机，自动故障转移
+- **故障转移** — 如果主提供商宕机，自动进行故障转移
 
 ## 快速开始
 
-### 通过入门向导
+### 通过入职引导
 
 ```bash
 openclaw onboard --auth-choice litellm-api-key
@@ -42,7 +42,7 @@ export LITELLM_API_KEY="your-litellm-key"
 openclaw
 ```
 
-就是这样。OpenClaw 现在通过 LiteLLM 路由。
+就是这样。OpenClaw 现在通过 LiteLLM 进行路由。
 
 ## 配置
 
@@ -93,7 +93,7 @@ export LITELLM_API_KEY="sk-litellm-key"
 
 ## 虚拟密钥
 
-为 OpenClaw 创建具有支出限制的专用密钥：
+为 OpenClaw 创建一个具有支出限制的专用密钥：
 
 ```bash
 curl -X POST "http://localhost:4000/key/generate" \
@@ -110,7 +110,7 @@ curl -X POST "http://localhost:4000/key/generate" \
 
 ## 模型路由
 
-LiteLLM 可以将模型请求路由到不同的后端。在您的 LiteLLM `config.yaml` 中配置：
+LiteLLM 可以将模型请求路由到不同的后端。在您的 LiteLLM `config.yaml` 中进行配置：
 
 ```yaml
 model_list:
@@ -141,13 +141,13 @@ curl "http://localhost:4000/spend/logs" \
   -H "Authorization: Bearer $LITELLM_MASTER_KEY"
 ```
 
-## 注意事项
+## 注意
 
-- LiteLLM 默认在 `http://localhost:4000` 上运行
-- OpenClaw 通过 OpenAI 兼容的 `/v1/chat/completions` 端点连接
-- 所有 OpenClaw 功能都通过 LiteLLM 工作 — 无限制
+- LiteLLM 默认运行在 `http://localhost:4000` 上
+- OpenClaw 通过兼容 OpenAI 的 `/v1/chat/completions` 端点进行连接
+- 所有 OpenClaw 功能均可通过 LiteLLM 运行 — 无任何限制
 
 ## 另请参阅
 
-- [LiteLLM Docs](https://docs.litellm.ai)
-- [Model Providers](/zh/concepts/model-providers)
+- [LiteLLM 文档](https://docs.litellm.ai)
+- [模型提供商](/zh/concepts/model-providers)

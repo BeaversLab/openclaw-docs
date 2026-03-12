@@ -1,18 +1,36 @@
 ---
-summary: "如何在本地运行测试（vitest）以及何时使用 force/coverage 模式"
+summary: "如何在本地运行测试（vitest）以及何时使用强制/覆盖率模式"
 read_when:
-  - "Running or fixing tests"
-title: "Tests"
+  - Running or fixing tests
+title: "测试"
 ---
 
 # 测试
 
-- 完整测试套件（suites、live、Docker）：[Testing](/zh/testing)
+- 完整测试工具包（套件、实时、Docker）：[测试](/zh/en/help/testing)
 
-- `pnpm test:force`：终止任何占用默认控制端口的残留 Gateway 进程，然后使用隔离的 Gateway 端口运行完整的 Vitest 套件，以避免服务器测试与运行中的实例冲突。当先前的 Gateway 运行导致端口 18789 被占用时使用此命令。
-- `pnpm test:coverage`：使用 V8 覆盖率运行 Vitest。全局阈值为 70% 的行/分支/函数/语句。覆盖率排除了重度集成的入口点（CLI 连接、gateway/telegram 网桥、webchat 静态服务器），以保持目标专注于可单元测试的逻辑。
-- `pnpm test:e2e`：运行 Gateway 端到端冒烟测试（多实例 WS/HTTP/node 配对）。
-- `pnpm test:live`：运行 provider live 测试（minimax/zai）。需要 API 密钥和 `LIVE=1`（或 provider 特定的 `*_LIVE_TEST=1`）来取消跳过。
+- `pnpm test:force`：终止任何占用默认控制端口的残留网关进程，然后使用隔离的网关端口运行完整的 Vitest 套件，以防止服务器测试与正在运行的实例发生冲突。当之前的网关运行导致端口 18789 被占用时，请使用此方法。
+- `pnpm test:coverage`：运行带有 V8 覆盖率（通过 `vitest.unit.config.ts`）的单元套件。全局阈值为 70% 的行/分支/函数/语句。覆盖率排除了侧重集成的入口点（CLI 连线、网关/telegram 桥接、webchat 静态服务器），以将目标集中在可进行单元测试的逻辑上。
+- 在 Node 24+ 上运行 `pnpm test`：OpenClaw 会自动禁用 Vitest `vmForks` 并使用 `forks` 以避免 `ERR_VM_MODULE_LINK_FAILURE` / `module is already linked`。你可以通过 `OPENCLAW_TEST_VM_FORKS=0|1` 强制执行特定行为。
+- `pnpm test`：默认运行快速的核心单元通道以获取快速的本地反馈。
+- `pnpm test:channels`：运行侧重于通道的套件。
+- `pnpm test:extensions`：运行扩展/插件套件。
+- 网关集成：通过 `OPENCLAW_TEST_INCLUDE_GATEWAY=1 pnpm test` 或 `pnpm test:gateway` 选择加入。
+- `pnpm test:e2e`：运行网关端到端冒烟测试（多实例 WS/HTTP/node 配对）。默认为 `vmForks` + `vitest.e2e.config.ts` 中的自适应工作进程；通过 `OPENCLAW_E2E_WORKERS=<n>` 进行调整，并设置 `OPENCLAW_E2E_VERBOSE=1` 以获取详细日志。
+- `pnpm test:live`：运行提供商实时测试（minimax/zai）。需要 API 密钥和 `LIVE=1`（或特定提供商的 `*_LIVE_TEST=1`）以取消跳过。
+
+## 本地 PR 门控
+
+对于本地 PR 落地/门控检查，请运行：
+
+- `pnpm check`
+- `pnpm build`
+- `pnpm test`
+- `pnpm check:docs`
+
+如果 `pnpm test` 在负载较高的主机上出现不稳定，请在将其视为回归之前重新运行一次，然后使用 `pnpm vitest run <path/to/test>` 进行隔离。对于内存受限的主机，请使用：
+
+- `OPENCLAW_TEST_PROFILE=low OPENCLAW_TEST_SERIAL_GATEWAY=1 pnpm test`
 
 ## 模型延迟基准测试（本地密钥）
 
@@ -21,17 +39,37 @@ title: "Tests"
 用法：
 
 - `source ~/.profile && pnpm tsx scripts/bench-model.ts --runs 10`
-- 可选环境变量：`MINIMAX_API_KEY`、`MINIMAX_BASE_URL`、`MINIMAX_MODEL`、`ANTHROPIC_API_KEY`
-- 默认提示："Reply with a single word: ok. No punctuation or extra text."
+- 可选环境变量：`MINIMAX_API_KEY`, `MINIMAX_BASE_URL`, `MINIMAX_MODEL`, `ANTHROPIC_API_KEY`
+- 默认提示词：“请用一个词回复：ok。不要标点符号或多余文本。”
 
 上次运行（2025-12-31，20 次运行）：
 
 - minimax 中位数 1279ms（最小 1114，最大 2431）
 - opus 中位数 2454ms（最小 1224，最大 3170）
 
-## 入职端到端测试（Docker）
+## CLI 启动基准测试
 
-Docker 是可选的；仅在需要容器化入职冒烟测试时才需要。
+脚本：[`scripts/bench-cli-startup.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-cli-startup.ts)
+
+用法：
+
+- `pnpm tsx scripts/bench-cli-startup.ts`
+- `pnpm tsx scripts/bench-cli-startup.ts --runs 12`
+- `pnpm tsx scripts/bench-cli-startup.ts --entry dist/entry.js --timeout-ms 45000`
+
+此基准测试针对以下命令：
+
+- `--version`
+- `--help`
+- `health --json`
+- `status --json`
+- `status`
+
+输出包括每个命令的平均值、p50、p95、最小/最大值以及退出码/信号分布。
+
+## 入职 E2E 测试 (Docker)
+
+Docker 是可选的；这仅用于容器化的入门冒烟测试。
 
 在干净的 Linux 容器中进行完整的冷启动流程：
 
@@ -39,13 +77,12 @@ Docker 是可选的；仅在需要容器化入职冒烟测试时才需要。
 scripts/e2e/onboard-docker.sh
 ```
 
-此脚本通过伪 TTY 驱动交互式向导，验证配置/工作区/会话文件，然后启动 Gateway 并运行 `openclaw health`。
+此脚本通过伪终端驱动交互式向导，验证配置/工作区/会话文件，然后启动网关并运行 `openclaw health`。
 
-## QR 导入冒烟测试（Docker）
+## 二维码导入冒烟测试 (Docker)
 
-确保 `qrcode-terminal` 在 Docker 中的 Node 22+ 下加载：
+确保 `qrcode-terminal` 在支持的 Docker Node 运行时（Node 24 默认，Node 22 兼容）下加载：
 
 ```bash
 pnpm test:docker:qr
 ```
-

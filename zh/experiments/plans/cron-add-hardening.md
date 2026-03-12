@@ -1,63 +1,63 @@
 ---
-summary: "加强 cron.add 入参处理、对齐 schema，并改进 cron UI/agent 工具"
-title: "Cron 添加加固"
+summary: "强化 cron.add 输入处理，对齐架构，并改进 cron UI/代理工具"
 owner: "openclaw"
 status: "complete"
 last_updated: "2026-01-05"
+title: "Cron Add Hardening"
 ---
 
-# Cron Add 加固与 Schema 对齐
+# Cron Add Hardening & Schema Alignment
 
-## 背景
+## Context
 
-近期 gateway 日志出现大量 `cron.add` 无效参数失败（缺少 `sessionTarget`、`wakeMode`、`payload` 以及 `schedule` 格式错误）。这表明至少有一个客户端（可能是 agent 工具调用路径）在发送被包裹或不完整的 job payload。另有 TypeScript、gateway schema、CLI flags 与 UI 表单类型之间的 cron provider 枚举漂移，以及 UI 对 `cron.status` 的字段不匹配（期望 `jobCount`，但 gateway 返回 `jobs`）。
+Recent gateway logs show repeated `cron.add` failures with invalid parameters (missing `sessionTarget`, `wakeMode`, `payload`, and malformed `schedule`). This indicates that at least one client (likely the agent tool call path) is sending wrapped or partially specified job payloads. Separately, there is drift between cron provider enums in TypeScript, gateway schema, CLI flags, and UI form types, plus a UI mismatch for `cron.status` (expects `jobCount` while gateway returns `jobs`).
 
-## 目标
+## Goals
 
-- 通过规范化常见包裹 payload 并推断缺失 `kind`，阻止 `cron.add` 的 INVALID_REQUEST 垃圾日志。
-- 对齐 gateway schema、cron types、CLI 文档与 UI 表单中的 cron provider 列表。
-- 让 agent cron tool schema 明确化，使 LLM 生成正确的 job payload。
-- 修复 Control UI 的 cron status job count 显示。
-- 增加测试覆盖规范化与工具行为。
+- Stop `cron.add` INVALID_REQUEST spam by normalizing common wrapper payloads and inferring missing `kind` fields.
+- Align cron provider lists across gateway schema, cron types, CLI docs, and UI forms.
+- Make agent cron tool schema explicit so the LLM produces correct job payloads.
+- Fix the Control UI cron status job count display.
+- Add tests to cover normalization and tool behavior.
 
-## 非目标
+## Non-goals
 
-- 修改 cron 调度语义或作业执行行为。
-- 新增 schedule 类型或 cron 表达式解析。
-- 对 cron UI/UX 做超出必要字段修复的改动。
+- Change cron scheduling semantics or job execution behavior.
+- Add new schedule kinds or cron expression parsing.
+- Overhaul the UI/UX for cron beyond the necessary field fixes.
 
-## 发现（当前缺口）
+## Findings (current gaps)
 
-- gateway 的 `CronPayloadSchema` 不含 `signal` + `imessage`，而 TS 类型包含。
-- Control UI 的 CronStatus 期望 `jobCount`，但 gateway 返回 `jobs`。
-- agent cron 工具 schema 允许任意 `job` 对象，导致输入畸形。
-- gateway 对 `cron.add` 严格校验且无规范化，因此包裹 payload 失败。
+- `CronPayloadSchema` in gateway excludes `signal` + `imessage`, while TS types include them.
+- Control UI CronStatus expects `jobCount`, but gateway returns `jobs`.
+- Agent cron tool schema allows arbitrary `job` objects, enabling malformed inputs.
+- Gateway strictly validates `cron.add` with no normalization, so wrapped payloads fail.
 
-## 变更内容
+## What changed
 
-- `cron.add` 与 `cron.update` 现可规范化常见包裹形态并推断缺失的 `kind` 字段。
-- agent cron 工具 schema 与 gateway schema 对齐，减少无效 payload。
-- provider 枚举在 gateway、CLI、UI 与 macOS 选择器中对齐。
-- Control UI 使用 gateway 的 `jobs` 字段显示状态数量。
+- `cron.add` and `cron.update` now normalize common wrapper shapes and infer missing `kind` fields.
+- Agent cron tool schema matches the gateway schema, which reduces invalid payloads.
+- Provider 枚举在网关、CLI、UI 和 macOS 选择器之间保持一致。
+- Control UI 使用网关的 `jobs` 计数字段来显示状态。
 
 ## 当前行为
 
-- **规范化**：解包 `data`/`job`；在安全时推断 `schedule.kind` 与 `payload.kind`。
-- **默认值**：缺失时为 `wakeMode` 与 `sessionTarget` 应用安全默认。
-- **Providers**：Discord/Slack/Signal/iMessage 在 CLI/UI 中一致呈现。
+- **规范化：** 解除 `data`/`job` 负载的包装；在安全的情况下推断 `schedule.kind` 和 `payload.kind`。
+- **默认值：** 当缺少 `wakeMode` 和 `sessionTarget` 时，应用安全的默认值。
+- **提供商：** Discord/Slack/Signal/iMessage 现在在 CLI/UI 中一致地显示。
 
-规范化形态与示例参见 [Cron jobs](/zh/automation/cron-jobs)。
+有关规范化形状和示例，请参阅 [Cron jobs](/zh/en/automation/cron-jobs)。
 
 ## 验证
 
-- 观察 gateway 日志，`cron.add` INVALID_REQUEST 错误应减少。
-- 刷新后确认 Control UI cron status 显示 job count。
+- 观察网关日志，确认 `cron.add` INVALID_REQUEST 错误已减少。
+- 确认刷新后，Control UI 的 cron 状态显示作业计数。
 
-## 可选后续
+## 可选后续工作
 
-- 手工 Control UI 冒烟：每个 provider 添加 cron job，并验证状态数量。
+- Control UI 手工冒烟测试：为每个提供商添加一个 cron 作业 + 验证状态作业计数。
 
-## 未决问题
+## 未解决的问题
 
-- `cron.add` 是否应接受客户端显式 `state`（目前 schema 不允许）？
-- 是否允许 `webchat` 作为显式投递 provider（当前投递解析时被过滤）？
+- `cron.add` 是否应接受来自客户端的显式 `state`（目前架构不允许）？
+- 我们是否应该允许将 `webchat` 作为显式传递提供商（目前在传递解析中被过滤）？

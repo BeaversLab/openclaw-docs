@@ -1,45 +1,46 @@
 ---
-summary: "CLI reference for `openclaw qr` (generate iOS pairing QR + setup code)"
+summary: "`openclaw qr` 的 CLI 参考（生成 iOS 配对二维码 + 设置代码）"
 read_when:
-  - "You want to pair the iOS app with a gateway quickly"
-  - "You need setup-code output for remote/manual sharing"
+  - You want to pair the iOS app with a gateway quickly
+  - You need setup-code output for remote/manual sharing
 title: "qr"
 ---
 
 # `openclaw qr`
 
-Generate an iOS pairing QR and setup code from your current Gateway configuration.
+根据当前的网关配置生成 iOS 配对二维码和设置代码。
 
-## Usage
+## 用法
 
 ```bash
 openclaw qr
 openclaw qr --setup-code-only
 openclaw qr --json
 openclaw qr --remote
-openclaw qr --url wss://gateway.example/ws --token '<token>'
+openclaw qr --url wss://gateway.example/ws
 ```
 
-## Options
+## 选项
 
-- `--remote`: use `gateway.remote.url` plus remote token/password from config
-- `--url <url>`: override gateway URL used in payload
-- `--public-url <url>`: override public URL used in payload
-- `--token <token>`: override gateway token for payload
-- `--password <password>`: override gateway password for payload
-- `--setup-code-only`: print only setup code
-- `--no-ascii`: skip ASCII QR rendering
-- `--json`: emit JSON (`setupCode`, `gatewayUrl`, `auth`, `urlSource`)
+- `--remote`: 使用配置中的 `gateway.remote.url` 以及远程令牌/密码
+- `--url <url>`: 覆盖载荷中使用的网关 URL
+- `--public-url <url>`: 覆盖载荷中使用的公共 URL
+- `--token <token>`：覆盖引导流程所针对的网关令牌
+- `--password <password>`：覆盖引导流程所针对的网关密码
+- `--setup-code-only`: 仅打印设置代码
+- `--no-ascii`: 跳过 ASCII 二维码渲染
+- `--json`: 输出 JSON (`setupCode`, `gatewayUrl`, `auth`, `urlSource`)
 
-## Notes
+## 注意事项
 
-- `--token` and `--password` are mutually exclusive.
-- With `--remote`, if effectively active remote credentials are configured as SecretRefs and you do not pass `--token` or `--password`, the command resolves them from the active gateway snapshot. If gateway is unavailable, the command fails fast.
-- Without `--remote`, local gateway auth SecretRefs are resolved when no CLI auth override is passed:
-  - `gateway.auth.token` resolves when token auth can win (explicit `gateway.auth.mode="token"` or inferred mode where no password source wins).
-  - `gateway.auth.password` resolves when password auth can win (explicit `gateway.auth.mode="password"` or inferred mode with no winning token from auth/env).
-- If both `gateway.auth.token` and `gateway.auth.password` are configured (including SecretRefs) and `gateway.auth.mode` is unset, setup-code resolution fails until mode is set explicitly.
-- Gateway version skew note: this command path requires a gateway that supports `secrets.resolve`; older gateways return an unknown-method error.
-- After scanning, approve device pairing with:
+- `--token` 和 `--password` 互斥。
+- 设置代码本身现在携带一个不透明的短期 `bootstrapToken`，而不是共享的网关令牌/密码。
+- 使用 `--remote` 时，如果有效活动的远程凭据被配置为 SecretRefs 且您未传递 `--token` 或 `--password`，该命令将从活动的网关快照中解析它们。如果网关不可用，该命令将快速失败。
+- 如果不使用 `--remote`，当未传递 CLI 身份验证覆盖时，本地网关身份验证 SecretRefs 将被解析：
+  - 当令牌身份验证可以胜出时（显式 `gateway.auth.mode="token"` 或推断出的无密码源胜出的模式），解析 `gateway.auth.token`。
+  - 当密码身份验证可以胜出时（显式 `gateway.auth.mode="password"` 或推断出的无来自 auth/env 的胜出令牌的模式），解析 `gateway.auth.password`。
+- 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password`（包括 SecretRefs）且未设置 `gateway.auth.mode`，则设置代码解析将失败，直到显式设置模式。
+- 网关版本偏差说明：此命令路径需要支持 `secrets.resolve` 的网关；较旧的网关将返回未知方法错误。
+- 扫描后，使用以下命令批准设备配对：
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`

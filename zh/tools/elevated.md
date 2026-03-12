@@ -1,57 +1,63 @@
 ---
-title: "提升模式"
-summary: "Elevated exec 模式与 /elevated 指令"
+summary: "提升的执行模式和 /elevated 指令"
 read_when:
-  - 调整 elevated 默认值、允许列表或斜杠命令行为
+  - Adjusting elevated mode defaults, allowlists, or slash command behavior
+title: "提升模式"
 ---
 
-# Elevated 模式（/elevated 指令）
+# 提升模式 (/elevated 指令)
 
-## 它做什么
+## 作用
 
-- `/elevated on` 在 gateway 主机上执行并保留 exec 审批（与 `/elevated ask` 相同）。
-- `/elevated full` 在 gateway 主机上执行 **且** 自动审批 exec（跳过 exec 审批）。
-- `/elevated ask` 在 gateway 主机上执行但保留 exec 审批（与 `/elevated on` 相同）。
-- `on`/`ask` **不会** 强制 `exec.security=full`；仍遵循已配置的安全/询问策略。
-- 仅在 agent **处于沙箱** 时改变行为（否则 exec 本就运行在宿主机）。
+- `/elevated on` 在网关主机上运行并保留执行审批（与 `/elevated ask` 相同）。
+- `/elevated full` 在网关主机上运行**并**自动批准执行（跳过执行审批）。
+- `/elevated ask` 在网关主机上运行但保留执行审批（与 `/elevated on` 相同）。
+- `on`/`ask` **不**强制 `exec.security=full`；配置的安全/询问策略仍然适用。
+- 仅当代理处于**沙盒**状态时才改变行为（否则执行已在主机上运行）。
 - 指令形式：`/elevated on|off|ask|full`、`/elev on|off|ask|full`。
-- 仅接受 `on|off|ask|full`；其它输入会返回提示且不会改变状态。
+- 仅接受 `on|off|ask|full`；其他任何内容都会返回提示且不会改变状态。
 
-## 它控制什么（以及不控制什么）
+## 控制内容（及不控制的内容）
 
-- **可用性门控**：`tools.elevated` 为全局基线。`agents.list[].tools.elevated` 可在单个 agent 上进一步限制（两者都必须允许）。
-- **会话状态**：`/elevated on|off|ask|full` 设置当前 session key 的 elevated 级别。
-- **行内指令**：消息内的 `/elevated on|ask|full` 只对该条消息生效。
-- **群聊**：在群聊中，仅当提及 agent 时才会响应 elevated 指令。绕过提及要求的“仅命令消息”也视为已提及。
-- **宿主机执行**：elevated 会强制 `exec` 在 gateway 主机上运行；`full` 还会设置 `security=full`。
-- **审批**：`full` 跳过 exec 审批；`on`/`ask` 在 allowlist/ask 规则要求时仍需审批。
-- **非沙箱 agent**：位置无效；仅影响门控、日志与状态。
-- **工具策略仍生效**：若 `exec` 被工具策略拒绝，elevated 也不可用。
-- **与 `/exec` 分离**：`/exec` 调整授权发送者的会话默认值，不要求 elevated。
+- **可用性门槛**：`tools.elevated` 是全局基准。`agents.list[].tools.elevated` 可以针对每个代理进一步限制提升（两者都必须允许）。
+- **每会话状态**：`/elevated on|off|ask|full` 为当前会话密钥设置提升级别。
+- **内联指令**：消息内的 `/elevated on|ask|full` 仅适用于该消息。
+- **群组**：在群组聊天中，仅当提及代理时才会遵守提升指令。绕过提及要求的纯命令消息被视为已提及。
+- **主机执行**：提升模式将 `exec` 强制到网关主机上；`full` 还会设置 `security=full`。
+- **审批**：`full` 跳过执行审批；当允许列表/询问规则要求时，`on`/`ask` 遵守它们。
+- **非沙盒代理**：对位置无操作；仅影响准入、日志记录和状态。
+- **工具策略仍然适用**：如果 `exec` 被工具策略拒绝，则无法使用提升模式。
+- **与 `/exec` 分离**：`/exec` 为授权发件人调整每会话默认值，不需要提升模式。
 
 ## 解析顺序
 
-1. 消息中的行内指令（仅对该消息生效）。
-2. 会话覆盖（通过仅指令消息设置）。
+1. 消息上的内联指令（仅适用于该消息）。
+2. 会话覆盖（通过发送仅包含指令的消息设置）。
 3. 全局默认值（配置中的 `agents.defaults.elevatedDefault`）。
 
 ## 设置会话默认值
 
-- 发送 **仅包含** 指令的消息（允许空白），例如 `/elevated full`。
-- 会发送确认回复（`Elevated mode set to full...` / `Elevated mode disabled.`）。
-- 若 elevated 访问被禁用或发送者不在允许列表中，指令会返回可执行的错误并不改变会话状态。
-- 发送 `/elevated`（或 `/elevated:`）且不带参数可查看当前 elevated 级别。
+- 发送一条**仅**包含指令的消息（允许包含空白字符），例如 `/elevated full`。
+- 发送确认回复（`Elevated mode set to full...` / `Elevated mode disabled.`）。
+- 如果 elevated 访问被禁用或发送者不在批准的允许列表中，该指令将返回可执行操作的错误并且不会更改会话状态。
+- 发送 `/elevated`（或 `/elevated:`）且不带参数，以查看当前的 elevated 级别。
 
 ## 可用性 + 允许列表
 
-- 功能开关：`tools.elevated.enabled`（即使代码支持，默认也可在配置中关闭）。
-- 发送者 allowlist：`tools.elevated.allowFrom`，按 provider（如 `discord`、`whatsapp`）分组。
-- 单 agent 开关：`agents.list[].tools.elevated.enabled`（可选；只能进一步限制）。
-- 单 agent allowlist：`agents.list[].tools.elevated.allowFrom`（可选；设置后发送者必须同时匹配全局 + 单 agent allowlist）。
-- Discord 回退：如果省略 `tools.elevated.allowFrom.discord`，则回退使用 `channels.discord.dm.allowFrom`。设置 `tools.elevated.allowFrom.discord`（即便为 `[]`）即可覆盖。单 agent allowlist **不** 使用回退。
-- 所有门控都必须通过；否则 elevated 视为不可用。
+- 功能开关：`tools.elevated.enabled`（即使代码支持，也可以通过配置将其默认关闭）。
+- 发送者允许列表：`tools.elevated.allowFrom`，带有针对每个提供商的允许列表（例如 `discord`，`whatsapp`）。
+- 不带前缀的允许列表条目仅匹配发送者作用域的身份值（`SenderId`，`SenderE164`，`From`）；接收者路由字段绝不用于 elevated 授权。
+- 可变的发送者元数据需要明确的前缀：
+  - `name:<value>` 匹配 `SenderName`
+  - `username:<value>` 匹配 `SenderUsername`
+  - `tag:<value>` 匹配 `SenderTag`
+  - `id:<value>`、`from:<value>`、`e164:<value>` 可用于明确的身份定位
+- 每个代理的开关：`agents.list[].tools.elevated.enabled`（可选；只能进一步限制）。
+- 每个代理的允许列表：`agents.list[].tools.elevated.allowFrom`（可选；设置后，发送者必须同时匹配全局和每个代理的允许列表）。
+- Discord 后备方案：如果省略了 `tools.elevated.allowFrom.discord`，则将 `channels.discord.allowFrom` 列表用作后备（旧版：`channels.discord.dm.allowFrom`）。设置 `tools.elevated.allowFrom.discord`（即使是 `[]`）以覆盖。每个代理的允许列表**不**使用后备方案。
+- 所有开关都必须通过；否则 elevated 将被视为不可用。
 
-## 日志 + 状态
+## 日志记录 + 状态
 
-- Elevated exec 调用以 info 级别记录。
-- 会话状态包含 elevated 模式（如 `elevated=ask`、`elevated=full`）。
+- Elevated exec 调用在 info 级别进行记录。
+- 会话状态包括 elevated 模式（例如 `elevated=ask`，`elevated=full`）。

@@ -1,24 +1,24 @@
 ---
-summary: "规范的支持与不支持 SecretRef 身份验证表面"
+summary: "规范的支持与不支持的 SecretRef 凭证范围"
 read_when:
-  - "Verifying SecretRef credential coverage"
-  - "Auditing whether a credential is eligible for `secrets configure` or `secrets apply`"
-  - "Verifying why a credential is outside the supported surface"
-title: "SecretRef 身份验证表面"
+  - Verifying SecretRef credential coverage
+  - Auditing whether a credential is eligible for `secrets configure` or `secrets apply`
+  - Verifying why a credential is outside the supported surface
+title: "SecretRef 凭证范围"
 ---
 
-# SecretRef 身份验证表面
+# SecretRef 凭证范围
 
-本页面定义了规范的 SecretRef 身份验证表面。
+本页面定义了规范的 SecretRef 凭证范围。
 
 范围意图：
 
-- 范围内：严格由用户提供的、OpenClaw 不创建或轮换的身份验证。
-- 范围外：运行时创建或轮换的身份验证、OAuth 刷新材料和类似会话的工件。
+- 范围内：严格限于 OpenClaw 不创建或轮换的用户提供的凭证。
+- 范围外：运行时创建或轮换的凭证、OAuth 刷新材料以及类似会话的工件。
 
-## 支持的身份验证
+## 支持的凭证
 
-### `openclaw.json` 目标（`secrets configure` + `secrets apply` + `secrets audit`）
+### `openclaw.json` 目标 (`secrets configure` + `secrets apply` + `secrets audit`)
 
 [//]: # "secretref-supported-list-start"
 
@@ -69,8 +69,10 @@ title: "SecretRef 身份验证表面"
 - `channels.bluebubbles.password`
 - `channels.bluebubbles.accounts.*.password`
 - `channels.feishu.appSecret`
+- `channels.feishu.encryptKey`
 - `channels.feishu.verificationToken`
 - `channels.feishu.accounts.*.appSecret`
+- `channels.feishu.accounts.*.encryptKey`
 - `channels.feishu.accounts.*.verificationToken`
 - `channels.msteams.appPassword`
 - `channels.mattermost.botToken`
@@ -85,30 +87,31 @@ title: "SecretRef 身份验证表面"
 - `channels.zalo.webhookSecret`
 - `channels.zalo.accounts.*.botToken`
 - `channels.zalo.accounts.*.webhookSecret`
-- `channels.googlechat.serviceAccount` 通过兄弟 `serviceAccountRef`（兼容性例外）
-- `channels.googlechat.accounts.*.serviceAccount` 通过兄弟 `serviceAccountRef`（兼容性例外）
+- `channels.googlechat.serviceAccount` 通过同级 `serviceAccountRef`（兼容性例外）
+- `channels.googlechat.accounts.*.serviceAccount` 通过同级 `serviceAccountRef`（兼容性例外）
 
-### `auth-profiles.json` 目标（`secrets configure` + `secrets apply` + `secrets audit`）
+### `auth-profiles.json` 目标 (`secrets configure` + `secrets apply` + `secrets audit`)
 
-- `profiles.*.keyRef`（`type: "api_key"`）
-- `profiles.*.tokenRef`（`type: "token"`）
+- `profiles.*.keyRef` (`type: "api_key"`)
+- `profiles.*.tokenRef` (`type: "token"`)
 
 [//]: # "secretref-supported-list-end"
 
-注意事项：
+备注：
 
-- 身份验证文件计划目标需要 `agentId`。
-- 计划条目目标 `profiles.*.key` / `profiles.*.token` 并写入兄弟引用（`keyRef` / `tokenRef`）。
-- 身份验证文件引用包含在运行时解析和审计覆盖中。
-- 对于 SecretRef 管理的模型提供商，生成的 `agents/*/agent/models.json` 条目为 `apiKey`/header 表面持久化非秘密标记（不是解析的秘密值）。
-- 对于网络搜索：
-  - 在显式提供商模式（设置了 `tools.web.search.provider`）下，仅选定的提供商密钥处于活动状态。
-  - 在自动模式（未设置 `tools.web.search.provider`）下，仅按优先级解析的第一个提供商密钥处于活动状态。
-  - 在自动模式下，非选定的提供商引用被视为非活动状态，直到被选中。
+- Auth-profile 计划目标需要 `agentId`。
+- Plan entries target `profiles.*.key` / `profiles.*.token` and write sibling refs (`keyRef` / `tokenRef`)。
+- Auth-profile refs are included in runtime resolution and audit coverage。
+- For SecretRef-managed model providers, generated `agents/*/agent/models.json` entries persist non-secret markers (not resolved secret values) for `apiKey`/header surfaces。
+- Marker persistence is source-authoritative: OpenClaw writes markers from the active source config snapshot (pre-resolution), not from resolved runtime secret values。
+- For web search：
+  - 在显式提供程序模式下（设置了 `tools.web.search.provider`），仅选定的提供程序密钥处于活动状态。
+  - 在自动模式下（未设置 `tools.web.search.provider`），仅按优先级解析的第一个提供程序密钥处于活动状态。
+  - 在自动模式下，未选定的提供程序引用在未被选中之前被视为不活动。
 
-## 不支持的身份验证
+## 不支持的凭据
 
-范围外的身份验证包括：
+超出范围的凭据包括：
 
 [//]: # "secretref-unsupported-list-start"
 
@@ -126,4 +129,4 @@ title: "SecretRef 身份验证表面"
 
 基本原理：
 
-- 这些身份验证是已创建、已轮换、承载会话或 OAuth 持久类，不适合只读外部 SecretRef 解析。
+- 这些凭据属于已创建、已轮换、承载会话或 OAuth 持久类，不适合只读外部 SecretRef 解析。

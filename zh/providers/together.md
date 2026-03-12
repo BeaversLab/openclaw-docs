@@ -1,27 +1,27 @@
 ---
-summary: "Together AI setup (auth + model selection)"
+summary: "Together AI 设置（身份验证 + 模型选择）"
 read_when:
-  - "You want to use Together AI with OpenClaw"
-  - "You need the API key env var or CLI auth choice"
+  - You want to use Together AI with OpenClaw
+  - You need the API key env var or CLI auth choice
 ---
 
 # Together AI
 
-The [Together AI](https://together.ai) provides access to leading open-source models including Llama, DeepSeek, Kimi, and more through a unified API.
+[Together AI](https://together.ai) 通过统一的 API 提供对包括 Llama、DeepSeek、Kimi 等领先开源模型的访问。
 
-- Provider: `together`
-- Auth: `TOGETHER_API_KEY`
-- API: OpenAI-compatible
+- 提供商：`together`
+- 身份验证：`TOGETHER_API_KEY`
+- API：兼容 OpenAI
 
-## Quick start
+## 快速开始
 
-1. Set the API key (recommended: store it for the Gateway):
+1. 设置 API 密钥（推荐：将其存储在网关中）：
 
 ```bash
 openclaw onboard --auth-choice together-api-key
 ```
 
-2. Set a default model:
+2. 设置默认模型：
 
 ```json5
 {
@@ -33,7 +33,7 @@ openclaw onboard --auth-choice together-api-key
 }
 ```
 
-## Non-interactive example
+## 非交互式示例
 
 ```bash
 openclaw onboard --non-interactive \
@@ -42,24 +42,24 @@ openclaw onboard --non-interactive \
   --together-api-key "$TOGETHER_API_KEY"
 ```
 
-This will set `together/moonshotai/Kimi-K2.5` as the default model.
+这将把 `together/moonshotai/Kimi-K2.5` 设置为默认模型。
 
-## Environment note
+## 环境注意事项
 
-If the Gateway runs as a daemon (launchd/systemd), make sure `TOGETHER_API_KEY`
-is available to that process (for example, in `~/.openclaw/.env` or via
-`env.shellEnv`).
+如果网关作为守护进程运行，请确保 `TOGETHER_API_KEY`
+对该进程可用（例如，在 `~/.openclaw/.env` 中或通过
+`env.shellEnv`）。
 
-## Available models
+## 可用模型
 
-Together AI provides access to many popular open-source models:
+Together AI 提供对许多热门开源模型的访问：
 
-- **GLM 4.7 Fp8** - Default model with 200K context window
-- **Llama 3.3 70B Instruct Turbo** - Fast, efficient instruction following
-- **Llama 4 Scout** - Vision model with image understanding
-- **Llama 4 Maverick** - Advanced vision and reasoning
-- **DeepSeek V3.1** - Powerful coding and reasoning model
-- **DeepSeek R1** - Advanced reasoning model
-- **Kimi K2 Instruct** - High-performance model with 262K context window
+- **GLM 4.7 Fp8** - 具有 200K 上下文窗口的默认模型
+- **Llama 3.3 70B Instruct Turbo** - 快速、高效的指令遵循
+- **Llama 4 Scout** - 具有图像理解能力的视觉模型
+- **Llama 4 Maverick** - 高级视觉和推理
+- **DeepSeek V3.1** - 强大的编码和推理模型
+- **DeepSeek R1** - 高级推理模型
+- **Kimi K2 Instruct** - 具有 262K 上下文窗口的高性能模型
 
-All models support standard chat completions and are OpenAI API compatible.
+所有模型都支持标准聊天补全，并且兼容 OpenAI API。

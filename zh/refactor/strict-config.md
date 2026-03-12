@@ -1,62 +1,62 @@
 ---
-summary: "严格配置校验 + 仅 doctor 迁移"
+summary: "严格配置验证 + 仅限 Doctor 的迁移"
 read_when:
-  - 设计或实现配置校验行为
-  - 处理配置迁移或 doctor 工作流
-  - 处理插件配置 schema 或插件加载门控
+  - Designing or implementing config validation behavior
+  - Working on config migrations or doctor workflows
+  - Handling plugin config schemas or plugin load gating
 title: "严格配置验证"
 ---
 
-# 严格配置校验（仅 doctor 迁移）
+# 严格配置验证 (仅限 Doctor 的迁移)
 
 ## 目标
 
-- **拒绝所有未知配置键**（根与嵌套）。
-- **拒绝没有 schema 的插件配置**；不加载该插件。
-- **移除加载时的自动迁移**；迁移仅通过 doctor 运行。
-- **启动时自动运行 doctor（dry-run）**；若无效，阻止非诊断命令。
+- **在各处拒绝未知的配置键**（根 + 嵌套），根 `$schema` 元数据除外。
+- **拒绝没有架构的插件配置**；不要加载该插件。
+- **移除加载时的旧版自动迁移**；迁移仅通过 Doctor 运行。
+- **启动时自动运行 Doctor (试运行)**；如果无效，则阻止非诊断命令。
 
 ## 非目标
 
-- 加载时向后兼容（旧键不会自动迁移）。
-- 静默丢弃未知键。
+- 加载时的向后兼容性（旧版键不会自动迁移）。
+- 静默丢弃无法识别的键。
 
-## 严格校验规则
+## 严格验证规则
 
-- 配置必须在每一层都精确匹配 schema。
-- 未知键即校验错误（根与嵌套均不透传）。
-- `plugins.entries.<id>.config` 必须由插件 schema 校验。
-  - 若插件缺少 schema，**拒绝加载插件** 并给出明确错误。
-- 未知 `channels.<id>` 键为错误，除非插件清单声明了该频道 id。
-- 所有插件必须提供 `openclaw.plugin.json` 清单。
+- 配置必须在每个级别上与架构完全匹配。
+- 未知的键是验证错误（在根或嵌套处无传递），除非根 `$schema` 是字符串。
+- `plugins.entries.<id>.config` 必须通过插件的架构进行验证。
+  - 如果插件缺少架构，**拒绝插件加载**并显示明确的错误。
+- 未知的 `channels.<id>` 键是错误的，除非插件清单声明了通道 ID。
+- 所有插件都需要插件清单 (`openclaw.plugin.json`)。
 
-## 插件 schema 强制
+## 插件架构强制
 
-- 每个插件都要提供严格的 JSON Schema（清单内联）。
+- 每个插件为其配置提供严格的 JSON Schema（内联在清单中）。
 - 插件加载流程：
-  1. 解析插件清单 + schema（`openclaw.plugin.json`）。
-  2. 用 schema 校验配置。
-  3. 若缺失 schema 或配置无效：阻止插件加载并记录错误。
-- 错误信息包含：
-  - 插件 id
-  - 原因（缺失 schema / 配置无效）
-  - 失败路径
-- 被禁用的插件保留其配置，但 Doctor + 日志会提示 warning。
+  1. 解析插件清单 + 架构 (`openclaw.plugin.json`)。
+  2. 根据架构验证配置。
+  3. 如果缺少架构或配置无效：阻止插件加载，记录错误。
+- 错误信息包括：
+  - 插件 ID
+  - 原因（缺少架构 / 配置无效）
+  - 验证失败的路径
+- 已禁用的插件保留其配置，但 Doctor + 日志会显示警告。
 
 ## Doctor 流程
 
-- 每次加载配置都会运行 **doctor**（默认 dry-run）。
-- 若配置无效：
-  - 打印摘要 + 可执行错误。
-  - 提示：`openclaw doctor --fix`。
+- Doctor 在每次加载配置时运行（默认为试运行）。
+- 如果配置无效：
+  - 打印摘要 + 可执行的错误。
+  - 指示：`openclaw doctor --fix`。
 - `openclaw doctor --fix`：
   - 应用迁移。
-  - 移除未知键。
-  - 写回更新后的配置。
+  - 移除未知的键。
+  - 写入更新的配置。
 
-## 命令门控（配置无效时）
+## 命令控制（当配置无效时）
 
-允许（仅诊断）：
+允许（仅限诊断）：
 
 - `openclaw doctor`
 - `openclaw logs`
@@ -65,29 +65,29 @@ title: "严格配置验证"
 - `openclaw status`
 - `openclaw gateway status`
 
-其他命令必须硬失败："Config invalid. Run `openclaw doctor --fix`."
+其他所有情况必须硬失败，并显示：“Config invalid. Run `openclaw doctor --fix`。”
 
 ## 错误 UX 格式
 
-- 单一摘要头。
-- 分组区块：
+- 单个摘要标题。
+- 分组部分：
   - 未知键（完整路径）
-  - 旧键 / 需要迁移
-  - 插件加载失败（插件 id + 原因 + 路径）
+  - 遗留键 / 需要迁移
+  - 插件加载失败（插件 ID + 原因 + 路径）
 
-## 实现触点
+## 实施接触点
 
-- `src/config/zod-schema.ts`：移除 root passthrough；全量 strict。
-- `src/config/zod-schema.providers.ts`：确保频道 schema 严格。
-- `src/config/validation.ts`：未知键失败；不应用旧迁移。
-- `src/config/io.ts`：移除加载时自动迁移；始终运行 doctor dry-run。
-- `src/config/legacy*.ts`：仅 doctor 使用。
-- `src/plugins/*`：增加 schema 注册 + 门控。
-- CLI 命令门控在 `src/cli`。
+- `src/config/zod-schema.ts`：移除根直通；在任何地方使用严格对象。
+- `src/config/zod-schema.providers.ts`：确保严格的通道架构。
+- `src/config/validation.ts`：遇未知键失败；不应用遗留迁移。
+- `src/config/io.ts`：移除遗留自动迁移；始终运行 doctor 试运行。
+- `src/config/legacy*.ts`：将使用情况移至 doctor 仅限。
+- `src/plugins/*`：添加架构注册表 + 门控。
+- `src/cli` 中的 CLI 命令门控。
 
 ## 测试
 
 - 未知键拒绝（根 + 嵌套）。
-- 插件缺少 schema → 阻止插件加载且给出明确错误。
-- 配置无效 → gateway 启动阻止（仅允许诊断命令）。
-- Doctor dry-run 自动；`doctor --fix` 写回修正配置。
+- 插件缺少架构 → 插件加载被阻止并显示明确的错误。
+- 配置无效 → 网关启动被阻止，诊断命令除外。
+- Doctor 试运行自动；`doctor --fix` 写入更正后的配置。

@@ -1,15 +1,15 @@
 ---
-summary: "常见 OpenClaw 设置的模式准确配置示例"
+summary: “常见 OpenClaw 设置的符合架构的配置示例”
 read_when:
-  - "学习如何配置 OpenClaw"
-  - "查找配置示例"
-  - "首次设置 OpenClaw"
-title: "配置示例"
+  - Learning how to configure OpenClaw
+  - Looking for configuration examples
+  - Setting up OpenClaw for the first time
+title: “配置示例”
 ---
 
 # 配置示例
 
-下面的示例与当前配置模式一致。有关详尽的参考和每字段说明，请参阅[配置](/zh/gateway/configuration)。
+以下示例与当前配置架构保持一致。有关详尽的参考和按字段的说明，请参阅[配置](/zh/en/gateway/configuration)。
 
 ## 快速开始
 
@@ -22,9 +22,9 @@ title: "配置示例"
 }
 ```
 
-保存到 `~/.openclaw/openclaw.json`，您就可以从该号码私信机器人。
+保存到 `~/.openclaw/openclaw.json`，你就可以从该号码直接私信（DM）机器人。
 
-### 推荐的起始配置
+### 推荐起步配置
 
 ```json5
 {
@@ -48,7 +48,7 @@ title: "配置示例"
 
 ## 扩展示例（主要选项）
 
-> JSON5 允许您使用注释和尾随逗号。常规 JSON 也可以。
+> JSON5 允许你使用注释和尾随逗号。常规 JSON 也可以正常工作。
 
 ```json5
 {
@@ -67,7 +67,11 @@ title: "配置示例"
   // Auth profile metadata (secrets live in auth-profiles.json)
   auth: {
     profiles: {
-      "anthropic:me@example.com": { provider: "anthropic", mode: "oauth", email: "me@example.com" },
+      "anthropic:me@example.com": {
+        provider: "anthropic",
+        mode: "oauth",
+        email: "me@example.com",
+      },
       "anthropic:work": { provider: "anthropic", mode: "api_key" },
       "openai:default": { provider: "openai", mode: "api_key" },
       "openai-codex:default": { provider: "openai-codex", mode: "oauth" },
@@ -160,6 +164,15 @@ title: "配置示例"
     },
     resetTriggers: ["/new", "/reset"],
     store: "~/.openclaw/agents/default/sessions/sessions.json",
+    maintenance: {
+      mode: "warn",
+      pruneAfter: "30d",
+      maxEntries: 500,
+      rotateBytes: "10mb",
+      resetArchiveRetention: "30d", // duration or false
+      maxDiskBytes: "500mb", // optional
+      highWaterBytes: "400mb", // optional (defaults to 80% of maxDiskBytes)
+    },
     typingIntervalSeconds: 5,
     sendPolicy: {
       default: "allow",
@@ -189,7 +202,7 @@ title: "配置示例"
     discord: {
       enabled: true,
       token: "YOUR_DISCORD_BOT_TOKEN",
-      dm: { enabled: true, allowFrom: ["steipete"] },
+      dm: { enabled: true, allowFrom: ["123456789012345678"] },
       guilds: {
         "123456789012345678": {
           slug: "friends-of-openclaw",
@@ -226,13 +239,13 @@ title: "配置示例"
       userTimezone: "America/Chicago",
       model: {
         primary: "anthropic/claude-sonnet-4-5",
-        fallbacks: ["anthropic/claude-opus-4-5", "openai/gpt-5.2"],
+        fallbacks: ["anthropic/claude-opus-4-6", "openai/gpt-5.2"],
       },
       imageModel: {
         primary: "openrouter/anthropic/claude-sonnet-4-5",
       },
       models: {
-        "anthropic/claude-opus-4-5": { alias: "opus" },
+        "anthropic/claude-opus-4-6": { alias: "opus" },
         "anthropic/claude-sonnet-4-5": { alias: "sonnet" },
         "openai/gpt-5.2": { alias: "gpt" },
       },
@@ -260,6 +273,7 @@ title: "配置示例"
         every: "30m",
         model: "anthropic/claude-sonnet-4-5",
         target: "last",
+        directPolicy: "allow", // allow (default) | block
         to: "+15555550123",
         prompt: "HEARTBEAT",
         ackMaxChars: 300,
@@ -304,7 +318,7 @@ title: "配置示例"
       allowFrom: {
         whatsapp: ["+15555550123"],
         telegram: ["123456789"],
-        discord: ["steipete"],
+        discord: ["123456789012345678"],
         slack: ["U123"],
         signal: ["+15555550123"],
         imessage: ["user@example.com"],
@@ -344,6 +358,11 @@ title: "配置示例"
     enabled: true,
     store: "~/.openclaw/cron/cron.json",
     maxConcurrentRuns: 2,
+    sessionRetention: "24h",
+    runLog: {
+      maxBytes: "2mb",
+      keepLines: 2000,
+    },
   },
 
   // Webhooks
@@ -352,7 +371,7 @@ title: "配置示例"
     path: "/hooks",
     token: "shared-secret",
     presets: ["gmail"],
-    transformsDir: "~/.openclaw/hooks",
+    transformsDir: "~/.openclaw/hooks/transforms",
     mappings: [
       {
         id: "gmail-hook",
@@ -368,7 +387,10 @@ title: "配置示例"
         to: "+15555550123",
         thinking: "low",
         timeoutSeconds: 300,
-        transform: { module: "./transforms/gmail.js", export: "transformGmail" },
+        transform: {
+          module: "gmail.js",
+          export: "transformGmail",
+        },
       },
     ],
     gmail: {
@@ -440,15 +462,15 @@ title: "配置示例"
     discord: {
       enabled: true,
       token: "YOUR_TOKEN",
-      dm: { allowFrom: ["yourname"] },
+      dm: { allowFrom: ["123456789012345678"] },
     },
   },
 }
 ```
 
-### 安全私聊模式（共享收件箱/多用户私聊）
+### 安全私信模式（共享收件箱 / 多用户私信）
 
-如果多个人可以私信您的机器人（`allowFrom` 中有多个条目、多人的配对批准或 `dmPolicy: "open"`），请启用**安全私聊模式**，以便来自不同发送者的私聊默认不会共享一个上下文：
+如果不止一个人可以向你的机器人发送私信（`allowFrom` 中有多个条目，多人的配对批准，或 `dmPolicy: "open"`），请启用**安全私信模式**，以便来自不同发送者的私信默认不共享同一上下文：
 
 ```json5
 {
@@ -466,13 +488,16 @@ title: "配置示例"
     discord: {
       enabled: true,
       token: "YOUR_DISCORD_BOT_TOKEN",
-      dm: { enabled: true, allowFrom: ["alice", "bob"] },
+      dm: { enabled: true, allowFrom: ["123456789012345678", "987654321098765432"] },
     },
   },
 }
 ```
 
-### OAuth with API key failover
+对于 Discord/Slack/Google Chat/MS Teams/Mattermost/IRC，发送者授权默认优先使用 ID。
+只有在你明确接受相关风险时，才可通过每个频道的 `dangerouslyAllowNameMatching: true` 启用直接的可变名称/电子邮件/昵称匹配。
+
+### OAuth 带 API 密钥故障转移
 
 ```json5
 {
@@ -496,13 +521,17 @@ title: "配置示例"
     workspace: "~/.openclaw/workspace",
     model: {
       primary: "anthropic/claude-sonnet-4-5",
-      fallbacks: ["anthropic/claude-opus-4-5"],
+      fallbacks: ["anthropic/claude-opus-4-6"],
     },
   },
 }
 ```
 
-### Anthropic subscription + API key, MiniMax fallback
+### Anthropic setup-token + API 密钥，MiniMax 备用
+
+<Warning>
+过去，部分用户在 Claude Code 之外使用 Anthropic setup-token 受到了限制。请将此视为用户自选风险，并在依赖订阅授权之前确认当前的 Anthropic 条款。
+</Warning>
 
 ```json5
 {
@@ -534,8 +563,8 @@ title: "配置示例"
   agent: {
     workspace: "~/.openclaw/workspace",
     model: {
-      primary: "anthropic/claude-opus-4-5",
-      fallbacks: ["minimax/MiniMax-M2.1"],
+      primary: "anthropic/claude-opus-4-6",
+      fallbacks: ["minimax/MiniMax-M2.5"],
     },
   },
 }
@@ -566,13 +595,13 @@ title: "配置示例"
 }
 ```
 
-### 仅本地模型
+### 仅限本地模型
 
 ```json5
 {
   agent: {
     workspace: "~/.openclaw/workspace",
-    model: { primary: "lmstudio/minimax-m2.1-gs32" },
+    model: { primary: "lmstudio/minimax-m2.5-gs32" },
   },
   models: {
     mode: "merge",
@@ -583,8 +612,8 @@ title: "配置示例"
         api: "openai-responses",
         models: [
           {
-            id: "minimax-m2.1-gs32",
-            name: "MiniMax M2.1 GS32",
+            id: "minimax-m2.5-gs32",
+            name: "MiniMax M2.5 GS32",
             reasoning: false,
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
@@ -600,7 +629,7 @@ title: "配置示例"
 
 ## 提示
 
-- 如果您设置 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包括 `"*"`。
-- 提供商 ID 不同（电话号码、用户 ID、频道 ID）。请使用提供商文档确认格式。
-- 稍后可添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 有关更深入的设置说明，请参阅[提供商](/zh/channels/whatsapp)和[故障排除](/zh/gateway/troubleshooting)。
+- 如果你设置了 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包含 `"*"`。
+- 提供商 ID 各不相同（电话号码、用户 ID、频道 ID）。请使用提供商文档确认格式。
+- 稍后添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
+- 有关更深入的设置说明，请参阅[提供商](/zh/en/providers)和[故障排除](/zh/en/gateway/troubleshooting)。

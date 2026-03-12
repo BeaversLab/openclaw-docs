@@ -1,26 +1,26 @@
 ---
-summary: "`openclaw nodes` 的 CLI 参考（list/status/approve/invoke、camera/canvas/screen）"
+summary: "`openclaw nodes` 的 CLI 参考（list/status/approve/invoke，camera/canvas/screen）"
 read_when:
-  - "You're managing paired nodes (cameras, screen, canvas)"
-  - "You need to approve requests or invoke node commands"
+  - You’re managing paired nodes (cameras, screen, canvas)
+  - You need to approve requests or invoke node commands
 title: "nodes"
 ---
 
 # `openclaw nodes`
 
-管理配对的节点（设备）并调用节点功能。
+管理已配对的节点（设备）并调用节点功能。
 
 相关：
 
-- 节点概述：[Nodes](/zh/nodes)
-- 相机：[Camera nodes](/zh/nodes/camera)
-- 图像：[Image nodes](/zh/nodes/images)
+- 节点概述：[Nodes](/zh/en/nodes)
+- 相机：[Camera nodes](/zh/en/nodes/camera)
+- 图片：[Image nodes](/zh/en/nodes/images)
 
-常用选项：
+通用选项：
 
-- `--url`、`--token`、`--timeout`、`--json`
+- `--url`, `--token`, `--timeout`, `--json`
 
-## 常用命令
+## 通用命令
 
 ```bash
 openclaw nodes list
@@ -33,9 +33,9 @@ openclaw nodes status --connected
 openclaw nodes status --last-connected 24h
 ```
 
-`nodes list` 打印待处理/已配对的表格。已配对的行包括最近的连接时间（最后连接）。
-使用 `--connected` 仅显示当前连接的节点。使用 `--last-connected <duration>`
-过滤在持续时间内连接的节点（例如 `24h`、`7d`）。
+`nodes list` 打印待配对/已配对表。已配对行包含最近的连接时长（上次连接）。
+使用 `--connected` 仅显示当前连接的节点。使用 `--last-connected <duration>` 筛选
+在特定持续时间内连接的节点（例如 `24h`，`7d`）。
 
 ## 调用 / 运行
 
@@ -50,24 +50,26 @@ openclaw nodes run --agent main --node <id|name|ip> --raw "git status"
 
 - `--params <json>`：JSON 对象字符串（默认 `{}`）。
 - `--invoke-timeout <ms>`：节点调用超时（默认 `15000`）。
-- `--idempotency-key <key>`：可选的幂等密钥。
+- `--idempotency-key <key>`：可选幂等键。
 
-### Exec 样式默认值
+### Exec 风格默认值
 
 `nodes run` 镜像模型的 exec 行为（默认值 + 批准）：
 
 - 读取 `tools.exec.*`（加上 `agents.list[].tools.exec.*` 覆盖）。
 - 在调用 `system.run` 之前使用 exec 批准（`exec.approval.request`）。
-- 当设置 `tools.exec.node` 时，可以省略 `--node`。
-- 需要一个播发 `system.run` 的节点（macOS 配套应用程序或无头节点主机）。
+- 当设置了 `tools.exec.node` 时，可以省略 `--node`。
+- 需要一个通告 `system.run` 的节点（macOS 伴侣应用或无头节点主机）。
 
 标志：
 
 - `--cwd <path>`：工作目录。
-- `--env <key=val>`：环境变量覆盖（可重复）。
+- `--env <key=val>`：环境变量覆盖（可重复）。注意：节点主机忽略 `PATH` 覆盖（且 `tools.exec.pathPrepend` 不应用于节点主机）。
 - `--command-timeout <ms>`：命令超时。
 - `--invoke-timeout <ms>`：节点调用超时（默认 `30000`）。
-- `--needs-screen-recording`：需要屏幕录制权限。
+- `--needs-screen-recording`：要求屏幕录制权限。
 - `--raw <command>`：运行 shell 字符串（`/bin/sh -lc` 或 `cmd.exe /c`）。
+  在 Windows 节点主机的允许列表模式下，`cmd.exe /c` shell 封装程序运行需要批准
+  （仅允许列表条目不会自动允许封装形式）。
 - `--agent <id>`：代理范围的批准/允许列表（默认为配置的代理）。
-- `--ask <off|on-miss|always>`、`--security <deny|allowlist|full>`：覆盖。
+- `--ask <off|on-miss|always>`, `--security <deny|allowlist|full>`: 覆盖。

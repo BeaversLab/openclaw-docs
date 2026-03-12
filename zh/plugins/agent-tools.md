@@ -1,16 +1,16 @@
 ---
-summary: "在插件中编写代理工具（schema、可选工具、allowlist）"
+summary: "在插件中编写代理工具（架构、可选工具、允许列表）"
 read_when:
-  - 想在插件中新增代理工具
-  - 需要通过 allowlist 让工具成为可选项
-title: "插件 Agent 工具"
+  - You want to add a new agent tool in a plugin
+  - You need to make a tool opt-in via allowlists
+title: "插件代理工具"
 ---
 
 # 插件代理工具
 
-OpenClaw 插件可以注册 **代理工具**（JSON‑schema 函数），在代理运行期间暴露给 LLM。工具可为 **必需**（始终可用）或 **可选**（需显式启用）。
+OpenClaw 插件可以注册 **agent tools**（JSON‑schema 函数），这些工具会在 agent 运行期间暴露给 LLM。工具可以是 **required**（始终可用）或 **optional**（可选择加入）。
 
-代理工具在主配置的 `tools` 下配置，或在 `agents.list[].tools` 中按代理配置。allowlist/denylist 策略控制代理可调用哪些工具。
+Agent 工具在主配置中的 `tools` 下配置，或按 Agent 在 `agents.list[].tools` 下配置。允许列表/拒绝列表策略控制 Agent 可以调用哪些工具。
 
 ## 基本工具
 
@@ -31,9 +31,9 @@ export default function (api) {
 }
 ```
 
-## 可选工具（opt‑in）
+## 可选工具（选择性加入）
 
-可选工具 **不会** 自动启用。用户必须将其加入代理 allowlist。
+可选工具**永不**自动启用。用户必须将其添加到代理允许列表中。
 
 ```ts
 export default function (api) {
@@ -78,15 +78,17 @@ export default function (api) {
 }
 ```
 
-其他会影响工具可用性的配置：
+其他影响工具可用性的配置选项：
 
-- 仅列出插件工具的 allowlist 会被视为插件 opt‑in；除非你在 allowlist 中也包含 core 工具或 group，否则 core 工具仍保持启用。
-- `tools.profile` / `agents.list[].tools.profile`（基础 allowlist）
-- `tools.byProvider` / `agents.list[].tools.byProvider`（按 provider 的 allow/deny）
-- `tools.sandbox.tools.*`（沙盒时的工具策略）
+- 仅命名插件工具的允许列表被视为插件选择加入；核心工具保持
+  除非您还在允许列表中包含核心工具或组，否则将启用。
+- `tools.profile` / `agents.list[].tools.profile`（基础允许列表）
+- `tools.byProvider` / `agents.list[].tools.byProvider`（特定于提供商的允许/拒绝）
+- `tools.sandbox.tools.*`（沙盒环境下的沙盒工具策略）
 
-## 规则与提示
+## 规则 + 提示
 
-- 工具名 **不得** 与 core 工具名冲突；冲突的工具会被跳过。
-- allowlist 中使用的插件 id 不得与 core 工具名冲突。
-- 对会触发副作用或需要额外二进制/凭据的工具，优先使用 `optional: true`。
+- 工具名称**不得**与核心工具名称冲突；冲突的工具将被跳过。
+- 允许列表中使用的插件ID不得与核心工具名称冲突。
+- 对于会触发副作用或需要额外 `optional: true` 的工具，请优先使用 `optional: true`
+  二进制文件/凭据。

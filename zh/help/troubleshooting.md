@@ -1,97 +1,298 @@
 ---
-summary: "故障排除中心：症状 → 检查 → 修复"
+summary: "OpenClaw 症状优先故障排除中心"
 read_when:
-  - "You see an error and want the fix path"
-  - "The installer says “success” but the CLI doesn’t work"
+  - OpenClaw is not working and you need the fastest path to a fix
+  - You want a triage flow before diving into deep runbooks
 title: "故障排除"
 ---
 
 # 故障排除
 
+如果您只有 2 分钟，请将此页面作为分流入口。
+
 ## 前 60 秒
 
-按顺序运行这些：
+按顺序运行以下步骤：
 
 ```bash
 openclaw status
 openclaw status --all
 openclaw gateway probe
-openclaw logs --follow
+openclaw gateway status
 openclaw doctor
+openclaw channels status --probe
+openclaw logs --follow
 ```
 
-如果 gateway 可访问，进行深度探测：
+良好的输出表现（单行）：
 
-```bash
-openclaw status --deep
+- `openclaw status` → 显示已配置的通道且没有明显的身份验证错误。
+- `openclaw status --all` → 完整的报告存在且可共享。
+- `openclaw gateway probe` → 预期的网关目标可达。
+- `openclaw gateway status` → `Runtime: running` 和 `RPC probe: ok`。
+- `openclaw doctor` → 没有阻塞性配置/服务错误。
+- `openclaw channels status --probe` → 通道报告 `connected` 或 `ready`。
+- `openclaw logs --follow` → 活动稳定，无重复的致命错误。
+
+## Anthropic 长上下文 429 错误
+
+如果您看到：
+`HTTP 429: rate_limit_error: Extra usage is required for long context requests`,
+请前往 [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/zh/en/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
+
+## 插件安装因缺少 openclaw 扩展而失败
+
+如果安装失败并出现 `package.json missing openclaw.extensions`，则插件包
+使用的旧格式 OpenClaw 不再接受。
+
+在插件包中修复：
+
+1. 将 `openclaw.extensions` 添加到 `package.json`。
+2. 将条目指向构建后的运行时文件（通常是 `./dist/index.js`）。
+3. 重新发布插件并再次运行 `openclaw plugins install <npm-spec>`。
+
+示例：
+
+```json
+{
+  "name": "@openclaw/my-plugin",
+  "version": "1.2.3",
+  "openclaw": {
+    "extensions": ["./dist/index.js"]
+  }
+}
 ```
 
-## 常见”出问题”情况
+参考：[/tools/plugin#distribution-npm](/zh/en/tools/plugin#distribution-npm)
 
-### `openclaw: command not found`
+## 决策树
 
-几乎总是 Node/npm PATH 问题。从这里开始：
+```mermaid
+flowchart TD
+  A[OpenClaw is not working] --> B{What breaks first}
+  B --> C[No replies]
+  B --> D[Dashboard or Control UI will not connect]
+  B --> E[Gateway will not start or service not running]
+  B --> F[Channel connects but messages do not flow]
+  B --> G[Cron or heartbeat did not fire or did not deliver]
+  B --> H[Node is paired but camera canvas screen exec fails]
+  B --> I[Browser tool fails]
 
-- [安装（Node/npm PATH 完整性检查）](/zh/install#nodejs--npm-path-sanity)
-
-### 安装程序失败（或您需要完整日志）
-
-以详细模式重新运行安装程序以查看完整跟踪和 npm 输出：
-
-```bash
-curl -fsSL https://openclaw.ai/install.sh | bash -s -- --verbose
+  C --> C1[/No replies section/]
+  D --> D1[/Control UI section/]
+  E --> E1[/Gateway section/]
+  F --> F1[/Channel flow section/]
+  G --> G1[/Automation section/]
+  H --> H1[/Node tools section/]
+  I --> I1[/Browser section/]
 ```
 
-对于 beta 安装：
+<AccordionGroup>
+  <Accordion title="无回复">
+    ```bash
+    openclaw status
+    openclaw gateway status
+    openclaw channels status --probe
+    openclaw pairing list --channel <channel> [--account <id>]
+    openclaw logs --follow
+    ```
 
-```bash
-curl -fsSL https://openclaw.ai/install.sh | bash -s -- --beta --verbose
-```
+    良好的输出如下所示：
 
-您也可以设置 `OPENCLAW_VERBOSE=1` 代替标志。
+    - `Runtime: running`
+    - `RPC probe: ok`
+    - 您的通道在 `channels status --probe` 中显示已连接/就绪
+    - 发送者显示已获批准（或 DM 策略为开放/白名单）
 
-### Gateway “unauthorized”、无法连接或不断重新连接
+    常见日志特征：
 
-- [Gateway 故障排除](/zh/gateway/troubleshooting)
-- [Gateway 身份验证](/zh/gateway/authentication)
+    - `drop guild message (mention required` → 提及门控在 Discord 中阻止了消息。
+    - `pairing request` → 发送者未获批准，正在等待 DM 配对批准。
+    - 通道日志中的 `blocked` / `allowlist` → 发送者、房间或组被过滤。
 
-### Control UI 在 HTTP 上失败（需要设备身份）
+    深入页面：
 
-- [Gateway 故障排除](/zh/gateway/troubleshooting)
-- [Control UI](/zh/web/control-ui#insecure-http)
+    - [/gateway/troubleshooting#no-replies](/zh/en/gateway/troubleshooting#no-replies)
+    - [/channels/troubleshooting](/zh/en/channels/troubleshooting)
+    - [/channels/pairing](/zh/en/channels/pairing)
 
-### `docs.openclaw.ai` shows an SSL error (Comcast/Xfinity)
+  </Accordion>
 
-某些 Comcast/Xfinity 连接通过 Xfinity Advanced Security 阻止 `docs.openclaw.ai`。
-禁用 Advanced Security 或将 `docs.openclaw.ai` 添加到允许列表，然后重试。
+  <Accordion title="仪表板或控制 UI 无法连接">
+    ```bash
+    openclaw status
+    openclaw gateway status
+    openclaw logs --follow
+    openclaw doctor
+    openclaw channels status --probe
+    ```
 
-- Xfinity Advanced Security 帮助：https://www.xfinity.com/support/articles/using-xfinity-xfi-advanced-security
-- 快速完整性检查：尝试移动热点或 VPN 以确认是 ISP 级别的过滤
+    正常的输出如下所示：
 
-### 服务显示正在运行，但 RPC 探测失败
+    - `Dashboard: http://...` 显示在 `openclaw gateway status` 中
+    - `RPC probe: ok`
+    - 日志中无认证循环
 
-- [Gateway 故障排除](/zh/gateway/troubleshooting)
-- [后台进程 / 服务](/zh/gateway/background-process)
+    常见日志特征：
 
-### 模型/身份验证失败（速率限制、计费、”all models failed”）
+    - `device identity required` → HTTP/非安全上下文无法完成设备认证。
+    - `AUTH_TOKEN_MISMATCH` 并带有重试提示 (`canRetryWithDeviceToken=true`) → 可能会自动进行一次受信任的设备令牌重试。
+    - 该重试后重复出现 `unauthorized` → 令牌/密码错误、认证模式不匹配或已过时的配对设备令牌。
+    - `gateway connect failed:` → UI 针对了错误的 URL/端口或网关不可达。
 
-- [模型](/zh/cli/models)
-- [OAuth / 身份验证概念](/zh/concepts/oauth)
+    深入页面：
 
-### `/model` says `model not allowed`
+    - [/gateway/troubleshooting#dashboard-control-ui-connectivity](/zh/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
+    - [/web/control-ui](/zh/en/web/control-ui)
+    - [/gateway/authentication](/zh/en/gateway/authentication)
 
-这通常意味着 `agents.defaults.models` 被配置为允许列表。当它非空时，
-只能选择那些提供商/模型键。
+  </Accordion>
 
-- 检查允许列表：`openclaw config get agents.defaults.models`
-- 添加您想要的模型（或清除允许列表）并重试 `/model`
-- 使用 `/models` 浏览允许的提供商/模型
-### 提交问题时
+  <Accordion title="网关无法启动或服务已安装但未运行">
+    ```bash
+    openclaw status
+    openclaw gateway status
+    openclaw logs --follow
+    openclaw doctor
+    openclaw channels status --probe
+    ```
 
-粘贴一个安全的报告：
+    正常的输出如下所示：
 
-```bash
-openclaw status --all
-```
+    - `Service: ... (loaded)`
+    - `Runtime: running`
+    - `RPC probe: ok`
 
-如果可以，请包含来自 `openclaw logs --follow` 的相关日志尾部。
+    常见日志特征：
+
+    - `Gateway start blocked: set gateway.mode=local` → 网关模式未设置/为远程模式。
+    - `refusing to bind gateway ... without auth` → 在没有令牌/密码的情况下进行非回环绑定。
+    - `another gateway instance is already listening` 或 `EADDRINUSE` → 端口已被占用。
+
+    深入页面：
+
+    - [/gateway/troubleshooting#gateway-service-not-running](/zh/en/gateway/troubleshooting#gateway-service-not-running)
+    - [/gateway/background-process](/zh/en/gateway/background-process)
+    - [/gateway/configuration](/zh/en/gateway/configuration)
+
+  </Accordion>
+
+  <Accordion title="通道已连接但消息无法传输">
+    ```bash
+    openclaw status
+    openclaw gateway status
+    openclaw logs --follow
+    openclaw doctor
+    openclaw channels status --probe
+    ```
+
+    正常的输出如下所示：
+
+    - 通道传输已连接。
+    - 配对/白名单检查通过。
+    - 在需要的地方检测到了提及。
+
+    常见日志特征：
+
+    - `mention required` → 群组提及拦截阻止了处理。
+    - `pairing` / `pending` → 直信发送者尚未被批准。
+    - `not_in_channel`，`missing_scope`，`Forbidden`，`401/403` → 通道权限令牌问题。
+
+    深度页面：
+
+    - [/gateway/troubleshooting#channel-connected-messages-not-flowing](/zh/en/gateway/troubleshooting#channel-connected-messages-not-flowing)
+    - [/channels/troubleshooting](/zh/en/channels/troubleshooting)
+
+  </Accordion>
+
+  <Accordion title="Cron or heartbeat did not fire or did not deliver">
+    ```bash
+    openclaw status
+    openclaw gateway status
+    openclaw cron status
+    openclaw cron list
+    openclaw cron runs --id <jobId> --limit 20
+    openclaw logs --follow
+    ```
+
+    正常的输出看起来像：
+
+    - `cron.status` 显示已启用并有下一次唤醒时间。
+    - `cron runs` 显示最近的 `ok` 条目。
+    - 心跳已启用且未在活跃时间之外。
+
+    常见日志特征：
+
+    - `cron: scheduler disabled; jobs will not run automatically` → cron 已禁用。
+    - `heartbeat skipped` 包含 `reason=quiet-hours` → 在配置的活跃时间之外。
+    - `requests-in-flight` → 主通道忙；心跳唤醒已推迟。
+    - `unknown accountId` → 心跳传递目标账户不存在。
+
+    深度页面：
+
+    - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/zh/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
+    - [/automation/troubleshooting](/zh/en/automation/troubleshooting)
+    - [/gateway/heartbeat](/zh/en/gateway/heartbeat)
+
+  </Accordion>
+
+  <Accordion title="Node is paired but tool fails camera canvas screen exec">
+    ```bash
+    openclaw status
+    openclaw gateway status
+    openclaw nodes status
+    openclaw nodes describe --node <idOrNameOrIp>
+    openclaw logs --follow
+    ```
+
+    正常的输出看起来像：
+
+    - 节点列为已连接，且针对角色 `node` 已配对。
+    - 您正在调用的命令存在能力。
+    - 工具的权限状态已授予。
+
+    常见日志特征：
+
+    - `NODE_BACKGROUND_UNAVAILABLE` → 将 node 应用程序置于前台。
+    - `*_PERMISSION_REQUIRED` → 操作系统权限被拒绝/缺失。
+    - `SYSTEM_RUN_DENIED: approval required` → 批准正在等待中。
+    - `SYSTEM_RUN_DENIED: allowlist miss` → 命令未在允许执行列表中。
+
+    深入页面：
+
+    - [/gateway/troubleshooting#node-paired-tool-fails](/zh/gateway/troubleshooting#node-paired-tool-fails)
+    - [/nodes/troubleshooting](/zh/nodes/troubleshooting)
+    - [/tools/exec-approvals](/zh/tools/exec-approvals)
+
+  </Accordion>
+
+  <Accordion title="浏览器工具失败">
+    ```bash
+    openclaw status
+    openclaw gateway status
+    openclaw browser status
+    openclaw logs --follow
+    openclaw doctor
+    ```
+
+    正常输出如下所示：
+
+    - 浏览器状态显示 `running: true` 和所选的浏览器/配置文件。
+    - `openclaw` 配置文件启动，或者 `chrome` 中继有附加的标签页。
+
+    常见日志特征：
+
+    - `Failed to start Chrome CDP on port` → 本地浏览器启动失败。
+    - `browser.executablePath not found` → 配置的二进制路径错误。
+    - `Chrome extension relay is running, but no tab is connected` → 扩展程序未附加。
+    - `Browser attachOnly is enabled ... not reachable` → 仅附加配置文件没有活动的 CDP 目标。
+
+    深入页面：
+
+    - [/gateway/troubleshooting#browser-tool-fails](/zh/gateway/troubleshooting#browser-tool-fails)
+    - [/tools/browser-linux-troubleshooting](/zh/tools/browser-linux-troubleshooting)
+    - [/tools/browser-wsl2-windows-remote-cdp-troubleshooting](/zh/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+    - [/tools/chrome-extension](/zh/tools/chrome-extension)
+
+  </Accordion>
+</AccordionGroup>

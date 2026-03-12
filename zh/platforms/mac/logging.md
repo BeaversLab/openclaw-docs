@@ -1,37 +1,37 @@
 ---
-title: "macOS 日志"
-summary: "OpenClaw 日志：滚动诊断文件 + 统一日志隐私标记"
+summary: "OpenClaw 日志记录：滚动诊断文件日志 + 统一日志隐私标志"
 read_when:
-  - 捕获 macOS 日志或调查私密数据日志
-  - 排查语音唤醒/会话生命周期问题
+  - Capturing macOS logs or investigating private data logging
+  - Debugging voice wake/session lifecycle issues
+title: "macOS 日志记录"
 ---
 
-# 日志（macOS）
+# 日志记录
 
-## 滚动诊断文件日志（Debug 面板）
+## 滚动诊断文件日志
 
-OpenClaw 通过 swift-log 记录 macOS 应用日志（默认使用统一日志），并在需要持久化捕获时写入本地滚动日志文件。
+OpenClaw 通过 swift-log（默认为统一日志记录）路由 macOS 应用日志，并在您需要持久化捕获时将本地滚动文件日志写入磁盘。
 
-- 详细程度：**Debug 面板 → Logs → App logging → Verbosity**
-- 启用：**Debug 面板 → Logs → App logging → “Write rolling diagnostics log (JSONL)”**
-- 位置：`~/Library/Logs/OpenClaw/diagnostics.jsonl`（自动轮转；旧文件后缀为 `.1`、`.2` …）
-- 清除：**Debug 面板 → Logs → App logging → “Clear”**
+- 详细程度：**调试面板 → 日志 → 应用日志 → 详细程度**
+- 启用：**调试面板 → 日志 → 应用日志 → “写入滚动诊断日志 (JSONL)”**
+- 位置：`~/Library/Logs/OpenClaw/diagnostics.jsonl`（自动轮换；旧文件后缀为 `.1`，`.2`，…）
+- 清除：**调试面板 → 日志 → 应用日志 → “清除”**
 
-说明：
+注意事项：
 
-- 默认 **关闭**。仅在主动调试时启用。
-- 该文件可能包含敏感信息，分享前务必审阅。
+- 此项**默认关闭**。仅在主动调试时启用。
+- 请将该文件视为敏感信息；未经审查请勿分享。
 
-## macOS 统一日志中的私密数据
+## macOS 上的统一日志记录私有数据
 
-统一日志会默认打码大多数 payload，除非子系统开启 `privacy -off`。根据 Peter 在 2025 年的文章 [logging privacy shenanigans](https://steipete.me/posts/2025/logging-privacy-shenanigans)，该行为由 `/Library/Preferences/Logging/Subsystems/` 下以子系统名命名的 plist 控制。只有新的日志条目会受该标志影响，因此请在复现问题前启用。
+除非子系统选择加入 `privacy -off`，否则统一日志记录会编辑大多数负载。根据 Peter 关于 macOS [日志记录隐私恶作剧](https://steipete.me/posts/2025/logging-privacy-shenanigans) (2025) 的文章，这是由 `/Library/Preferences/Logging/Subsystems/` 中的 plist 控制的，该 plist 以子系统名称为键。只有新的日志条目会获取该标志，因此请在重现问题之前启用它。
 
-## 为 OpenClaw 启用（`bot.molt`）
+## 为 OpenClaw (`ai.openclaw`) 启用
 
-- 先写入临时文件，再以 root 原子安装：
+- 先将 plist 写入临时文件，然后以 root 身份原子性地安装它：
 
 ```bash
-cat <<'EOF' >/tmp/bot.molt.plist
+cat <<'EOF' >/tmp/ai.openclaw.plist
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -44,14 +44,14 @@ cat <<'EOF' >/tmp/bot.molt.plist
 </dict>
 </plist>
 EOF
-sudo install -m 644 -o root -g wheel /tmp/bot.molt.plist /Library/Preferences/Logging/Subsystems/bot.molt.plist
+sudo install -m 644 -o root -g wheel /tmp/ai.openclaw.plist /Library/Preferences/Logging/Subsystems/ai.openclaw.plist
 ```
 
-- 无需重启；logd 会很快读取该文件，但只有新的日志行会包含私密内容。
-- 可用现有 helper 查看更丰富输出，例如 `./scripts/clawlog.sh --category WebChat --last 5m`。
+- 不需要重新启动；logd 会快速注意到该文件，但只有新的日志行才会包含私有负载。
+- 使用现有的辅助工具查看更丰富的输出，例如 `./scripts/clawlog.sh --category WebChat --last 5m`。
 
 ## 调试后禁用
 
-- 移除覆盖：`sudo rm /Library/Preferences/Logging/Subsystems/bot.molt.plist`。
-- 可选运行 `sudo log config --reload` 让 logd 立刻清除覆盖。
-- 此通道可能包含电话号码与消息正文；仅在确有需要时保留该 plist。
+- 移除覆盖：`sudo rm /Library/Preferences/Logging/Subsystems/ai.openclaw.plist`。
+- （可选）运行 `sudo log config --reload` 以强制 logd 立即丢弃覆盖。
+- 请记住，此界面可能包含电话号码和消息正文；仅在您主动需要额外详细信息时才保留 plist。

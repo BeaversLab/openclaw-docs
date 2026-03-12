@@ -1,112 +1,118 @@
 ---
-summary: "Agent runtime（嵌入式 pi-mono）、workspace 约定与会话引导"
+summary: "Agent 运行时（嵌入式 pi-mono）、工作区合约和会话引导"
 read_when:
-  - 需要修改 agent runtime、workspace bootstrap 或会话行为
-title: "Agent 运行时"
+  - Changing agent runtime, workspace bootstrap, or session behavior
+title: "Agent Runtime"
 ---
 
 # Agent Runtime 🤖
 
-OpenClaw 运行一个源自 **pi-mono** 的嵌入式 agent runtime。
+OpenClaw 运行单个嵌入式 agent 运行时，该运行时派生自 **pi-mono**。
 
-## Workspace（必需）
+## Workspace (required)
 
-OpenClaw 使用单一 agent workspace 目录（`agents.defaults.workspace`）作为 agent 的**唯一**工作目录（`cwd`），用于工具与上下文。
+OpenClaw 使用单个 agent 工作区目录 (`agents.defaults.workspace`) 作为 agent 的**唯一**工作目录 (`cwd`)，用于工具和上下文。
 
-建议：使用 `openclaw setup` 在缺失时创建 `~/.openclaw/openclaw.json` 并初始化 workspace 文件。
+建议：如果 `~/.openclaw/openclaw.json` 缺失，使用 `openclaw setup` 创建它并初始化工作区文件。
 
-完整 workspace 布局与备份指南见：[Agent 工作区](/zh/concepts/agent-workspace)
+完整的工作区布局 + 备份指南：[Agent workspace](/zh/en/concepts/agent-workspace)
 
-若启用 `agents.defaults.sandbox`，非主会话可使用
-`agents.defaults.sandbox.workspaceRoot` 下的按会话 workspace（见
-[Gateway 配置](/zh/gateway/configuration)）。
+如果启用了 `agents.defaults.sandbox`，非主会话可以通过 `agents.defaults.sandbox.workspaceRoot` 下的每会话工作区覆盖此设置（参见 [Gateway configuration](/zh/en/gateway/configuration)）。
 
-## Bootstrap 文件（注入）
+## Bootstrap files (injected)
 
-在 `agents.defaults.workspace` 中，OpenClaw 期望这些用户可编辑文件：
+在 `agents.defaults.workspace` 内部，OpenClaw 预期这些用户可编辑的文件：
 
-- `AGENTS.md` — 操作说明 + "memory"
-- `SOUL.md` — persona、边界、语气
+- `AGENTS.md` — 操作指令 + “记忆”
+- `SOUL.md` — 人设、边界、语气
 - `TOOLS.md` — 用户维护的工具说明（例如 `imsg`、`sag`、约定）
 - `BOOTSTRAP.md` — 一次性首次运行仪式（完成后删除）
-- `IDENTITY.md` — agent 名称/风格/emoji
+- `IDENTITY.md` — agent 名称/氛围/表情符号
 - `USER.md` — 用户档案 + 首选称呼
 
-在新会话的第一回合，OpenClaw 会将这些文件的内容直接注入 agent 上下文。
+在新会话的第一个回合，OpenClaw 将这些文件的内容直接注入到 agent 上下文中。
 
-空文件会被跳过。大文件会被裁剪并截断（带标记）以保持提示精简（完整内容请阅读文件本身）。
+空白文件将被跳过。大文件会被修剪并使用标记截断，以保持提示精简（读取文件以获取完整内容）。
 
-如果文件缺失，OpenClaw 会注入一行 “missing file” 标记（`openclaw setup` 会创建安全的默认模板）。
+如果文件缺失，OpenClaw 会注入一行“missing file”标记（并且 `openclaw setup` 将创建一个安全的默认模板）。
 
-`BOOTSTRAP.md` 只会在 **全新 workspace**（不存在其他 bootstrap 文件）时创建。完成仪式后删除它，后续重启不应再生成。
+`BOOTSTRAP.md` 仅为**全新工作区**（不存在其他引导文件）创建。如果在完成仪式后删除它，则不应在随后的重启中重新创建。
 
-若要完全禁用 bootstrap 文件创建（用于预先填充的 workspace），设置：
+要完全禁用引导文件的创建（对于预填充的工作区），请设置：
 
 ```json5
 { agent: { skipBootstrap: true } }
 ```
 
-## 内置工具
+## Built-in tools
 
-核心工具（read/exec/edit/write 及相关系统工具）始终可用，但受工具策略限制。
-`apply_patch` 是可选的，并由 `tools.exec.applyPatch` 控制。
-`TOOLS.md` **不** 控制工具是否存在；它只是*你*希望如何使用工具的指南。
+核心工具（read/exec/edit/write 和相关系统工具）始终可用，但受工具策略限制。`apply_patch` 是可选的，并由 `tools.exec.applyPatch` 控制。`TOOLS.md` **不**控制存在哪些工具；它是关于_你_希望如何使用它们的指导。
 
-## Skills
+## 技能（Skills）
 
-OpenClaw 从三个位置加载技能（重名时 workspace 优先）：
+OpenClaw 从三个位置加载技能（如果名称冲突，工作区优先）：
 
-- Bundled（随安装提供）
-- Managed/local：`~/.openclaw/skills`
-- Workspace：`<workspace>/skills`
+- 内置（随安装附送）
+- 托管/本地：`~/.openclaw/skills`
+- 工作区：`<workspace>/skills`
 
-技能可由配置/环境 gating（见 [Gateway 配置](/zh/gateway/configuration) 中的 `skills`）。
+技能可以通过配置/环境变量进行限制（请参阅 [网关配置](/zh/en/gateway/configuration) 中的 `skills`）。
 
 ## pi-mono 集成
 
-OpenClaw 复用 pi-mono 的部分代码（models/tools），但 **会话管理、发现与工具接线由 OpenClaw 负责**。
+OpenClaw 重用了 pi-mono 代码库的部分内容（模型/工具），但**会话管理、发现和工具连接由 OpenClaw 拥有**。
 
-- 不使用 pi-coding agent runtime。
-- 不读取 `~/.pi/agent` 或 `<workspace>/.pi` 设置。
+- 没有 pi-coding 代理运行时。
+- 不会查询 `~/.pi/agent` 或 `<workspace>/.pi` 设置。
 
-## Sessions
+## 会话（Sessions）
 
-会话转录以 JSONL 存储于：
+会话记录以 JSONL 格式存储在：
 
 - `~/.openclaw/agents/<agentId>/sessions/<SessionId>.jsonl`
 
-Session ID 由 OpenClaw 选择并保持稳定。
-不会读取旧的 Pi/Tau 会话目录。
+会话 ID 是稳定的，由 OpenClaw 选择。
+**不会**读取旧的 Pi/Tau 会话文件夹。
 
-## 流式输出中的转向（steer）
+## 流式传输时的引导
 
-当队列模式为 `steer` 时，入站消息会注入当前运行。
-队列会在 **每次工具调用后** 检查；若存在排队消息，当前 assistant 消息剩余的工具调用将被跳过（返回错误工具结果，内容为 "Skipped due to queued user message."），然后在下一次 assistant 回复前注入排队的用户消息。
+当队列模式为 `steer` 时，传入的消息会被注入到当前运行中。
+队列在**每次工具调用后**进行检查；如果存在排队的消息，
+当前助手消息中剩余的工具调用将被跳过（错误工具
+结果为“由于排队的用户消息而跳过。”），然后在下一个助手响应之前注入排队的用户
+消息。
 
-当队列模式为 `followup` 或 `collect` 时，入站消息会被暂存，直到当前回合结束，然后以排队 payload 启动新的 agent 回合。见 [Queue](/zh/concepts/queue) 了解模式与 debounce/cap 行为。
+当队列模式为 `followup` 或 `collect` 时，传入的消息将被保留，直到
+当前回合结束，然后使用排队的负载开始新的代理回合。请参阅
+[队列](/zh/en/concepts/queue)了解模式 + 防抖/上限行为。
 
-Block streaming 会在 assistant block 完成时立即发送；默认 **关闭**（`agents.defaults.blockStreamingDefault: "off"`）。
-可通过 `agents.defaults.blockStreamingBreak` 调整边界（`text_end` 或 `message_end`；默认 `text_end`）。
-通过 `agents.defaults.blockStreamingChunk` 控制软分块（默认 800–1200 字符；优先段落，其次换行，最后句子）。
-使用 `agents.defaults.blockStreamingCoalesce` 合并流式 chunk 以减少单行刷屏（基于 idle 的合并再发送）。非 Telegram 频道需要显式 `*.blockStreaming: true` 才启用块回复。
-Verbose 工具摘要在工具启动时发出（无 debounce）；Control UI 在可用时通过 agent 事件流式输出工具内容。
-更多细节见 [流式 + 分块](/zh/concepts/streaming)。
+块流式传输会在助手块完成后立即发送；它
+**默认关闭** (`agents.defaults.blockStreamingDefault: "off"`)。
+通过 `agents.defaults.blockStreamingBreak` 调整边界 (`text_end` vs `message_end`; 默认为 text_end)。
+使用 `agents.defaults.blockStreamingChunk` 控制软块分块 (默认为
+800–1200 字符; 优先段落换行，然后是换行符; 最后是句子)。
+使用 `agents.defaults.blockStreamingCoalesce` 合并流式块以减少
+单行垃圾消息 (发送前基于空闲的合并)。非 Telegram 频道需要
+显式设置 `*.blockStreaming: true` 以启用块回复。
+详细的工具摘要会在工具开始时发出 (无防抖); 控制界面
+在可用时通过代理事件流式传输工具输出。
+更多详情: [Streaming + chunking](/zh/en/concepts/streaming)。
 
-## Model refs
+## 模型引用
 
-配置中的 model refs（例如 `agents.defaults.model` 与 `agents.defaults.models`）按 **第一个** `/` 分割。
+配置中的模型引用 (例如 `agents.defaults.model` 和 `agents.defaults.models`) 通过在 **第一个** `/` 处拆分来解析。
 
-- 配置模型时使用 `provider/model`。
-- 若模型 ID 本身包含 `/`（OpenRouter 风格），请包含 provider 前缀（例：`openrouter/moonshotai/kimi-k2`）。
-- 若省略 provider，OpenClaw 会将输入视为 alias 或 **默认 provider** 的模型（仅当模型 ID 中不含 `/` 时有效）。
+- 配置模型时请使用 `provider/model`。
+- 如果模型 ID 本身包含 `/` (OpenRouter 风格)，请包含提供者前缀 (例如: `openrouter/moonshotai/kimi-k2`)。
+- 如果省略提供者，OpenClaw 会将输入视为别名或 **默认提供者** 的模型 (仅当模型 ID 中没有 `/` 时才有效)。
 
-## Configuration（最小）
+## 配置 (最小)
 
-最少需要设置：
+至少设置：
 
 - `agents.defaults.workspace`
-- `channels.whatsapp.allowFrom`（强烈推荐）
+- `channels.whatsapp.allowFrom` (强烈推荐)
 
 ---
 
-_下一篇：[群组聊天](/zh/concepts/group-messages)_ 🦞
+_下一节: [Group Chats](/zh/en/channels/group-messages)_ 🦞

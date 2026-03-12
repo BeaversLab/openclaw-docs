@@ -1,26 +1,34 @@
 ---
-summary: "配置 Moonshot K2 与 Kimi Coding（独立的提供商 + 密钥）"
+summary: "配置 Moonshot K2 vs Kimi Coding（独立的提供商 + 密钥）"
 read_when:
-  - "You want Moonshot K2 (Moonshot Open Platform) vs Kimi Coding setup"
-  - "You need to understand separate endpoints, keys, and model refs"
-  - "You want copy/paste config for either provider"
+  - You want Moonshot K2 (Moonshot Open Platform) vs Kimi Coding setup
+  - You need to understand separate endpoints, keys, and model refs
+  - You want copy/paste config for either provider
 title: "Moonshot AI"
 ---
 
 # Moonshot AI (Kimi)
 
-Moonshot 提供了具有 OpenAI 兼容端点的 Kimi API。配置提供商并将默认模型设置为 `moonshot/kimi-k2.5`，或使用 `kimi-coding/k2p5` 进行 Kimi Coding。
+Moonshot 提供了兼容 OpenAI 端点的 Kimi API。请配置
+提供商并将默认模型设置为 `moonshot/kimi-k2.5`，或者使用
+配合 `kimi-coding/k2p5` 的 Kimi Coding。
 
-当前 Kimi K2 模型 ID：
+当前的 Kimi K2 模型 ID：
+
+{/* markdownlint-disable MD037 */}
 
 {/_ moonshot-kimi-k2-ids:start _/ && null}
+
+{/* markdownlint-enable MD037 */}
 
 - `kimi-k2.5`
 - `kimi-k2-0905-preview`
 - `kimi-k2-turbo-preview`
 - `kimi-k2-thinking`
 - `kimi-k2-thinking-turbo`
+  {/* markdownlint-disable MD037 */}
   {/_ moonshot-kimi-k2-ids:end _/ && null}
+  {/* markdownlint-enable MD037 */}
 
 ```bash
 openclaw onboard --auth-choice moonshot-api-key
@@ -32,9 +40,9 @@ Kimi Coding：
 openclaw onboard --auth-choice kimi-code-api-key
 ```
 
-注意：Moonshot 和 Kimi Coding 是独立的提供商。密钥不可互换，端点不同，模型引用也不同（Moonshot 使用 `moonshot/...`，Kimi Coding 使用 `kimi-coding/...`）。
+注意：Moonshot 和 Kimi Coding 是独立的提供商。密钥不通用，端点不同，且模型引用也不同（Moonshot 使用 `moonshot/...`，Kimi Coding 使用 `kimi-coding/...`）。
 
-## Config snippet (Moonshot API)
+## 配置片段 (Moonshot API)
 
 ```json5
 {
@@ -131,9 +139,42 @@ openclaw onboard --auth-choice kimi-code-api-key
 }
 ```
 
-## 注意事项
+## 备注
 
 - Moonshot 模型引用使用 `moonshot/<modelId>`。Kimi Coding 模型引用使用 `kimi-coding/<modelId>`。
-- 如果需要，在 `models.providers` 中覆盖定价和上下文元数据。
-- 如果 Moonshot 为模型发布不同的上下文限制，请相应调整 `contextWindow`。
-- 使用 `https://api.moonshot.ai/v1` 作为国际端点，使用 `https://api.moonshot.cn/v1` 作为中国端点。
+- 如需要，在 `models.providers` 中覆盖定价和上下文元数据。
+- 如果 Moonshot 为模型发布了不同的上下文限制，请相应调整
+  `contextWindow`。
+- 国际端点使用 `https://api.moonshot.ai/v1`，中国端点使用 `https://api.moonshot.cn/v1`。
+
+## 原生思考模式 (Moonshot)
+
+Moonshot Kimi 支持二进制原生思考：
+
+- `thinking: { type: "enabled" }`
+- `thinking: { type: "disabled" }`
+
+通过 `agents.defaults.models.<provider/model>.params` 针对每个模型进行配置：
+
+```json5
+{
+  agents: {
+    defaults: {
+      models: {
+        "moonshot/kimi-k2.5": {
+          params: {
+            thinking: { type: "disabled" },
+          },
+        },
+      },
+    },
+  },
+}
+```
+
+OpenClaw 还为 Moonshot 映射了运行时 `/think` 级别：
+
+- `/think off` -> `thinking.type=disabled`
+- 任何非关闭的思考级别 -> `thinking.type=enabled`
+
+启用 Moonshot 思考时，`tool_choice` 必须为 `auto` 或 `none`。OpenClaw 会将不兼容的 `tool_choice` 值规范化为 `auto` 以确保兼容性。

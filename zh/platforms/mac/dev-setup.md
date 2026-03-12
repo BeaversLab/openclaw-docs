@@ -1,70 +1,70 @@
 ---
-title: "macOS 开发设置"
-summary: "OpenClaw macOS 应用的开发环境搭建指南"
+summary: "面向 OpenClaw macOS 应用开发人员的设置指南"
 read_when:
-  - 搭建 macOS 开发环境
+  - Setting up the macOS development environment
+title: "macOS 开发设置"
 ---
 
-# macOS 开发者设置
+# macOS 开发设置
 
-本指南涵盖从源码构建并运行 OpenClaw macOS 应用所需的步骤。
+本指南涵盖了从源代码构建和运行 OpenClaw macOS 应用程序所需的所有步骤。
 
-## 前置条件
+## 先决条件
 
 在构建应用之前，请确保已安装以下内容：
 
-1.  **Xcode 26.2+**：Swift 开发必需。
-2.  **Node.js 22+ & pnpm**：Gateway、CLI 与打包脚本必需。
+1. **Xcode 26.2+**：Swift 开发所必需。
+2. **Node.js 24 & pnpm**：推荐用于网关、CLI 和打包脚本。Node 22 LTS，当前为 `22.16+`，出于兼容性考虑仍受支持。
 
-## 1. 安装依赖
+## 1. 安装依赖项
 
-安装项目级依赖：
+安装项目范围内的依赖项：
 
 ```bash
 pnpm install
 ```
 
-## 2. 构建并打包应用
+## 2. 构建和打包应用
 
-构建 macOS 应用并打包到 `dist/OpenClaw.app`：
+要构建 macOS 应用并将其打包为 `dist/OpenClaw.app`，请运行：
 
 ```bash
 ./scripts/package-mac-app.sh
 ```
 
-如果你没有 Apple Developer ID 证书，脚本会自动使用 **ad-hoc 签名**（`-`）。
+如果您没有 Apple Developer ID 证书，脚本将自动使用 **ad-hoc 签名**（`-`）。
 
-关于开发运行模式、签名参数和 Team ID 排查，参见 macOS 应用 README：
-https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md
+有关开发运行模式、签名标志和 Team ID 故障排除，请参阅 macOS 应用自述文件：
+[https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md](https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md)
 
-> **注意**：ad-hoc 签名可能触发安全提示。如果应用启动即崩溃并提示 "Abort trap 6"，请参见 [故障排查](#troubleshooting)。
+> **注意**：临时签名的应用可能会触发安全提示。如果应用立即崩溃并显示 "Abort trap 6"，请参阅[故障排除](#troubleshooting)部分。
 
 ## 3. 安装 CLI
 
-macOS 应用需要全局安装 `openclaw` CLI 来管理后台任务。
+macOS 应用需要全局安装 `openclaw` CLI 才能管理后台任务。
 
-**推荐安装方式：**
+**安装（推荐）：**
 
 1. 打开 OpenClaw 应用。
-2. 进入 **General** 设置页。
+2. 转到 **通用** 设置选项卡。
 3. 点击 **"Install CLI"**。
 
-或者手动安装：
+或者，手动安装：
 
 ```bash
 npm install -g openclaw@<version>
 ```
 
-## Troubleshooting
+## 故障排除
 
 ### 构建失败：工具链或 SDK 不匹配
 
-macOS 应用构建需要最新的 macOS SDK 与 Swift 6.2 工具链。
+macOS 应用构建需要最新的 macOS SDK 和 Swift 6.2 工具链。
 
-**系统依赖（必需）：**
+**系统依赖项（必需）：**
 
-- **Software Update 中可用的最新 macOS 版本**（Xcode 26.2 SDK 需要）
-- **Xcode 26.2**（Swift 6.2 工具链）
+- **软件更新中可用的最新 macOS 版本**（Xcode 26.2 SDK 所需）
+- **Xcode 26.2** (Swift 6.2 工具链)
 
 **检查：**
 
@@ -73,23 +73,25 @@ xcodebuild -version
 xcrun swift --version
 ```
 
-如版本不匹配，请更新 macOS/Xcode 并重新构建。
+如果版本不匹配，请更新 macOS/Xcode 并重新运行构建。
 
-### 授权时应用崩溃
+### 授予权限时应用崩溃
 
-如果在允许 **Speech Recognition** 或 **Microphone** 访问时应用崩溃，可能是 TCC 缓存损坏或签名不匹配。
+如果您在尝试允许 **语音识别** 或 **麦克风** 访问时应用崩溃，这可能是由于 TCC 缓存损坏或签名不匹配造成的。
 
 **修复：**
 
 1. 重置 TCC 权限：
+
    ```bash
-   tccutil reset All bot.molt.mac.debug
+   tccutil reset All ai.openclaw.mac.debug
    ```
-2. 如果无效，可临时修改 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中的 `BUNDLE_ID`，让 macOS 视为“全新应用”。
 
-### Gateway 一直显示 "Starting..."
+2. 如果失败，请暂时更改 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中的 `BUNDLE_ID`，以强制 macOS “从头开始”。
 
-如果 Gateway 状态一直是 "Starting..."，检查是否有僵尸进程占用端口：
+### 网关一直处于“启动中...”状态
+
+如果网关状态一直停留在“启动中...”，请检查是否有僵尸进程占用了端口：
 
 ```bash
 openclaw gateway status
@@ -99,4 +101,4 @@ openclaw gateway stop
 lsof -nP -iTCP:18789 -sTCP:LISTEN
 ```
 
-如果是手动运行占用端口，请停止该进程（Ctrl+C）。最后手段可直接杀掉上面的 PID。
+如果是手动运行的进程占用了端口，请停止该进程（Ctrl+C）。作为最后手段，请终止上面找到的 PID。

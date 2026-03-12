@@ -1,87 +1,94 @@
 ---
-summary: "`openclaw dns` 命令、子命令和选项的 OpenClaw CLI 参考"
+summary: "OpenClaw CLI 参考文档，包含 `openclaw` 命令、子命令和选项"
 read_when:
-  - "Adding or modifying CLI commands or options"
-  - "Documenting new command surfaces"
-title: "CLI 参考"
+  - Adding or modifying CLI commands or options
+  - Documenting new command surfaces
+title: "CLI 参考文档"
 ---
 
-# CLI reference
+# CLI 参考文档
 
-此页面描述当前的 CLI 行为。如果命令发生更改，请更新此文档。
+此页面描述了当前的 CLI 行为。如果命令发生更改，请更新此文档。
 
 ## 命令页面
 
-- [`setup`](/zh/cli/setup)
-- [`onboard`](/zh/cli/onboard)
-- [`configure`](/zh/cli/configure)
-- [`config`](/zh/cli/config)
-- [`doctor`](/zh/cli/doctor)
-- [`dashboard`](/zh/cli/dashboard)
-- [`reset`](/zh/cli/reset)
-- [`uninstall`](/zh/cli/uninstall)
-- [`update`](/zh/cli/update)
-- [`message`](/zh/cli/message)
-- [`agent`](/zh/cli/agent)
-- [`agents`](/zh/cli/agents)
-- [`acp`](/zh/cli/acp)
-- [`status`](/zh/cli/status)
-- [`health`](/zh/cli/health)
-- [`sessions`](/zh/cli/sessions)
-- [`gateway`](/zh/cli/gateway)
-- [`logs`](/zh/cli/logs)
-- [`system`](/zh/cli/system)
-- [`models`](/zh/cli/models)
-- [`memory`](/zh/cli/memory)
-- [`nodes`](/zh/cli/nodes)
-- [`devices`](/zh/cli/devices)
-- [`node`](/zh/cli/node)
-- [`approvals`](/zh/cli/approvals)
-- [`sandbox`](/zh/cli/sandbox)
-- [`tui`](/zh/cli/tui)
-- [`browser`](/zh/cli/browser)
-- [`cron`](/zh/cli/cron)
-- [`dns`](/zh/cli/dns)
-- [`docs`](/zh/cli/docs)
-- [`hooks`](/zh/cli/hooks)
-- [`webhooks`](/zh/cli/webhooks)
-- [`pairing`](/zh/cli/pairing)
-- [(/en/gateway/discovery)](/zh/gateway/configuration) (plugin commands)
-- [`channels`](/zh/cli/channels)
-- [`security`](/zh/cli/security)
-- [`skills`](/zh/cli/skills)
-- [%%P4%%]%%P5%% (plugin; if installed)
+- [`setup`](/zh/en/cli/setup)
+- [`onboard`](/zh/en/cli/onboard)
+- [`configure`](/zh/en/cli/configure)
+- [`config`](/zh/en/cli/config)
+- [`completion`](/zh/en/cli/completion)
+- [`doctor`](/zh/en/cli/doctor)
+- [`dashboard`](/zh/en/cli/dashboard)
+- [`backup`](/zh/en/cli/backup)
+- [`reset`](/zh/en/cli/reset)
+- [`uninstall`](/zh/en/cli/uninstall)
+- [`update`](/zh/en/cli/update)
+- [`message`](/zh/en/cli/message)
+- [`agent`](/zh/en/cli/agent)
+- [`agents`](/zh/en/cli/agents)
+- [`acp`](/zh/en/cli/acp)
+- [`status`](/zh/en/cli/status)
+- [`health`](/zh/en/cli/health)
+- [`sessions`](/zh/en/cli/sessions)
+- [`gateway`](/zh/en/cli/gateway)
+- [`logs`](/zh/en/cli/logs)
+- [`system`](/zh/en/cli/system)
+- [`models`](/zh/en/cli/models)
+- [`memory`](/zh/en/cli/memory)
+- [`directory`](/zh/en/cli/directory)
+- [`nodes`](/zh/en/cli/nodes)
+- [`devices`](/zh/en/cli/devices)
+- [`node`](/zh/en/cli/node)
+- [`approvals`](/zh/en/cli/approvals)
+- [`sandbox`](/zh/en/cli/sandbox)
+- [`tui`](/zh/en/cli/tui)
+- [`browser`](/zh/en/cli/browser)
+- [`cron`](/zh/en/cli/cron)
+- [`dns`](/zh/en/cli/dns)
+- [`docs`](/zh/en/cli/docs)
+- [`hooks`](/zh/en/cli/hooks)
+- [`webhooks`](/zh/en/cli/webhooks)
+- [`pairing`](/zh/en/cli/pairing)
+- [`qr`](/zh/en/cli/qr)
+- [`plugins`](/zh/en/cli/plugins) （插件命令）
+- [`channels`](/zh/en/cli/channels)
+- [`security`](/zh/en/cli/security)
+- [`secrets`](/zh/en/cli/secrets)
+- [`skills`](/zh/en/cli/skills)
+- [`daemon`](/zh/en/cli/daemon) （网关服务命令的旧版别名）
+- [`clawbot`](/zh/en/cli/clawbot) （旧版别名命名空间）
+- [`voicecall`](/zh/en/cli/voicecall) （插件；如果已安装）
 
-## Global flags
+## 全局标志
 
-- %%P6%%: isolate state under %%P7%% and shift default ports.
-- %%P8%%: isolate state under %%P9%%.
-- %%P10%%: disable ANSI colors.
-- %%P11%%: shorthand for %%P12%% (source installs only).
-- %%P13%%, %%P14%%, %%P15%%: print version and exit.
+- `--dev`：隔离 `~/.openclaw-dev` 下的状态并移动默认端口。
+- `--profile <name>`：隔离 `~/.openclaw-<name>` 下的状态。
+- `--no-color`：禁用 ANSI 颜色。
+- `--update`：`openclaw update` 的简写（仅限源码安装）。
+- `-V`、`--version`、`-v`：打印版本并退出。
 
-## Output styling
+## 输出样式
 
-- ANSI colors and progress indicators only render in TTY sessions.
-- OSC-8 hyperlinks render as clickable links in supported terminals; otherwise we fall back to plain URLs.
-- %%P16%% (and %%P17%% where supported) disables styling for clean output.
-- %%P18%% disables ANSI styling; %%P19%% is also respected.
-- Long-running commands show a progress indicator (OSC 9;4 when supported).
+- ANSI 颜色和进度指示器仅在 TTY 会话中渲染。
+- OSC-8 超链接在支持的终端中呈现为可点击链接；否则我们回退到纯文本 URL。
+- `--json`（以及在支持的地方使用 `--plain`）禁用样式以获得干净的输出。
+- `--no-color` 禁用 ANSI 样式；`NO_COLOR=1` 也会被遵守。
+- 长时间运行的命令显示进度指示器（支持时使用 OSC 9;4）。
 
-## Color palette
+## 调色板
 
-OpenClaw uses a lobster palette for CLI output.
+OpenClaw 使用龙虾调色板进行 CLI 输出。
 
-- %%P20%% (#FF5A2D): headings, labels, primary highlights.
-- %%P21%% (#FF7A3D): command names, emphasis.
-- %%P22%% (#D14A22): secondary highlight text.
-- %%P23%% (#FF8A5B): informational values.
-- %%P24%% (#2FBF71): success states.
-- %%P25%% (#FFB020): warnings, fallbacks, attention.
-- %%P26%% (#E23D2D): errors, failures.
-- %%P27%% (#8B7F77): de-emphasis, metadata.
+- `accent` (#FF5A2D)：标题、标签、主要高亮。
+- `accentBright` (#FF7A3D)：命令名称、强调。
+- `accentDim` (#D14A22)：次要高亮文本。
+- `info` (#FF8A5B)：信息值。
+- `success` (#2FBF71)：成功状态。
+- `warn` (#FFB020)：警告、回退、注意。
+- `error` (#E23D2D)：错误、失败。
+- `muted` (#8B7F77)：弱化、元数据。
 
-Palette 真实来源：%%P28%%（又称 “lobster seam”）。
+调色板事实来源：`src/terminal/palette.ts`（又名“lobster seam”）。
 
 ## 命令树
 
@@ -94,9 +101,17 @@ openclaw [--dev] [--profile <name>] <command>
     get
     set
     unset
+  completion
   doctor
+  dashboard
+  backup
+    create
+    verify
   security
     audit
+  secrets
+    reload
+    migrate
   reset
   uninstall
   update
@@ -108,6 +123,7 @@ openclaw [--dev] [--profile <name>] <command>
     remove
     login
     logout
+  directory
   skills
     list
     info
@@ -145,6 +161,13 @@ openclaw [--dev] [--profile <name>] <command>
     stop
     restart
     run
+  daemon
+    status
+    install
+    uninstall
+    start
+    stop
+    restart
   logs
   system
     event
@@ -231,84 +254,98 @@ openclaw [--dev] [--profile <name>] <command>
   pairing
     list
     approve
+  qr
+  clawbot
+    qr
   docs
   dns
     setup
   tui
 ```
-注意：插件可以添加额外的顶级命令（例如 %%P29%%）。
+
+注意：插件可以添加额外的顶级命令（例如 `openclaw voicecall`）。
 
 ## 安全性
 
-- %%P30%% — 审计配置 + 本地状态中的常见安全隐患。
-- %%P31%% — 尽力而为的实时 Gateway 探测。
-- %%P32%% — 加强安全默认值并 chmod 状态/配置。
+- `openclaw security audit` — 审计配置 + 本地状态以查找常见的安全陷阱。
+- `openclaw security audit --deep` — 尽力而为的实时网关探测。
+- `openclaw security audit --fix` — 收紧安全默认值并对状态/配置进行 chmod。
+
+## 密钥
+
+- `openclaw secrets reload` — 重新解析引用并原子交换运行时快照。
+- `openclaw secrets audit` — 扫描明文残留、未解析的引用和优先级漂移。
+- `openclaw secrets configure` — 提供程序设置 + SecretRef 映射 + 预检/应用的交互式助手。
+- `openclaw secrets apply --from <plan.json>` — 应用先前生成的计划（支持 `--dry-run`）。
 
 ## 插件
 
 管理扩展及其配置：
 
-- %%P33%% — 发现插件（使用 %%P34%% 获取机器输出）。
-- %%P35%% — 显示插件详细信息。
-- %%P36%% — 安装插件（或向 %%P37%% 添加插件路径）。
-- %%P38%% / %%P39%% — 切换 %%P40%%。
-- %%P41%% — 报告插件加载错误。
+- `openclaw plugins list` — 发现插件（使用 `--json` 获取机器可读输出）。
+- `openclaw plugins info <id>` — 显示插件详细信息。
+- `openclaw plugins install <path|.tgz|npm-spec>` — 安装插件（或将插件路径添加到 `plugins.load.paths`）。
+- `openclaw plugins enable <id>` / `disable <id>` — 切换 `plugins.entries.<id>.enabled`。
+- `openclaw plugins doctor` — 报告插件加载错误。
 
-Most plugin changes require a gateway restart. See [/plugin]%%P42%%.
+大多数插件更改需要重启网关。请参阅 [/plugin](/zh/en/tools/plugin)。
 
-## Memory
+## 内存
 
-Vector search over %%P43%% + %%P44%%:
+针对 `MEMORY.md` + `memory/*.md` 的向量搜索：
 
-- %%P45%% — show index stats.
-- %%P46%% — reindex memory files.
-- %%P47%% — semantic search over memory.
+- `openclaw memory status` — 显示索引统计信息。
+- `openclaw memory index` — 重新索引内存文件。
+- `openclaw memory search "<query>"` (或 `--query "<query>"`) — 对内存进行语义搜索。
 
-## Chat slash commands
+## 聊天斜杠命令
 
-Chat messages support %%P48%% commands (text and native). See [/tools/slash-commands]%%P49%%.
+聊天消息支持 `/...` 命令（文本和原生）。请参阅 [/tools/slash-commands](/zh/en/tools/slash-commands)。
 
-Highlights:
+亮点：
 
-- %%P50%% for quick diagnostics.
-- %%P51%% for persisted config changes.
-- %%P52%% for runtime-only config overrides (memory, not disk; requires %%P53%%).
+- `/status` 用于快速诊断。
+- `/config` 用于持久化配置更改。
+- `/debug` 用于仅运行时配置覆盖（内存中，而非磁盘；需要 `commands.debug: true`）。
 
-## Setup + onboarding
+## 设置 + 入门
 
 ### `setup`
 
-Initialize config + workspace.
+初始化配置 + 工作区。
 
-Options:
+选项：
 
-- %%P54%%: agent workspace path (default %%P55%%).
-- %%P56%%: run the onboarding wizard.
-- %%P57%%: run wizard without prompts.
-- %%P58%%: wizard mode.
-- %%P59%%: remote Gateway URL.
-- %%P60%%: remote Gateway token.
+- `--workspace <dir>`：代理工作区路径（默认为 `~/.openclaw/workspace`）。
+- `--wizard`：运行入门向导。
+- `--non-interactive`：无提示运行向导。
+- `--mode <local|remote>`：向导模式。
+- `--remote-url <url>`：远程网关 URL。
+- `--remote-token <token>`：远程网关令牌。
 
-Wizard auto-runs when any wizard flags are present (%%P61%%, %%P62%%, %%P63%%, %%P64%%).
+当存在任何向导标志时，向导会自动运行（`--non-interactive`, `--mode`, `--remote-url`, `--remote-token`）。
 
 ### `onboard`
 
-Interactive wizard to set up gateway, workspace, and skills.
+用于设置网关、工作区和技能的交互式向导。
 
 选项：
 
 - `--workspace <dir>`
-- %%P65%%（在向导之前重置配置 + 凭证 + 会话 + 工作区）
+- `--reset` （在向导运行前重置配置 + 凭据 + 会话）
+- `--reset-scope <config|config+creds+sessions|full>` （默认为 `config+creds+sessions`；使用 `full` 同时移除工作区）
 - `--non-interactive`
 - `--mode <local|remote>`
-- %%P66%%（manual 是 advanced 的别名）
-- `--auth-choice <setup-token|token|chutes|openai-codex|openai-api-key|openrouter-api-key|ai-gateway-api-key|moonshot-api-key|moonshot-api-key-cn|kimi-code-api-key|synthetic-api-key|venice-api-key|gemini-api-key|zai-api-key|apiKey|minimax-api|minimax-api-lightning|opencode-zen|skip>`
-- %%P67%%（非交互式；与 %%P68%% 一起使用）
-- %%P69%%（非交互式；与 %%P70%% 一起使用）
-- %%P71%%（非交互式；默认：%%P72%%）
-- %%P73%%（非交互式；例如 %%P74%%、%%P75%%）
+- `--flow <quickstart|advanced|manual>` （manual 是 advanced 的别名）
+- `--auth-choice <setup-token|token|chutes|openai-codex|openai-api-key|openrouter-api-key|ai-gateway-api-key|moonshot-api-key|moonshot-api-key-cn|kimi-code-api-key|synthetic-api-key|venice-api-key|gemini-api-key|zai-api-key|mistral-api-key|apiKey|minimax-api|minimax-api-lightning|opencode-zen|opencode-go|custom-api-key|skip>`
+- `--token-provider <id>` （非交互式；与 `--auth-choice token` 一起使用）
+- `--token <token>` （非交互式；与 `--auth-choice token` 一起使用）
+- `--token-profile-id <id>` （非交互式；默认值：`<provider>:manual`）
+- `--token-expires-in <duration>` （非交互式；例如 `365d`，`12h`）
+- `--secret-input-mode <plaintext|ref>` （默认 `plaintext`；使用 `ref` 来存储提供商默认环境变量引用，而不是明文密钥）
 - `--anthropic-api-key <key>`
 - `--openai-api-key <key>`
+- `--mistral-api-key <key>`
 - `--openrouter-api-key <key>`
 - `--ai-gateway-api-key <key>`
 - `--moonshot-api-key <key>`
@@ -317,99 +354,110 @@ Interactive wizard to set up gateway, workspace, and skills.
 - `--zai-api-key <key>`
 - `--minimax-api-key <key>`
 - `--opencode-zen-api-key <key>`
+- `--opencode-go-api-key <key>`
+- `--custom-base-url <url>` （非交互式；与 `--auth-choice custom-api-key` 一起使用）
+- `--custom-model-id <id>` （非交互式；与 `--auth-choice custom-api-key` 一起使用）
+- `--custom-api-key <key>` （非交互式；可选；与 `--auth-choice custom-api-key` 一起使用；省略时回退到 `CUSTOM_API_KEY`）
+- `--custom-provider-id <id>` （非交互式；可选的自定义提供商 ID）
+- `--custom-compatibility <openai|anthropic>` （非交互式；可选；默认 `openai`）
 - `--gateway-port <port>`
 - `--gateway-bind <loopback|lan|tailnet|auto|custom>`
 - `--gateway-auth <token|password>`
 - `--gateway-token <token>`
+- `--gateway-token-ref-env <name>` （非交互式；将 `gateway.auth.token` 存储为环境变量 SecretRef；要求必须设置该环境变量；不能与 `--gateway-token` 结合使用）
 - `--gateway-password <password>`
 - `--remote-url <url>`
 - `--remote-token <token>`
 - `--tailscale <off|serve|funnel>`
 - `--tailscale-reset-on-exit`
 - `--install-daemon`
-- %%P76%%（别名：%%P77%%）
+- `--no-install-daemon` （别名：`--skip-daemon`）
 - `--daemon-runtime <node|bun>`
 - `--skip-channels`
 - `--skip-skills`
 - `--skip-health`
 - `--skip-ui`
-- %%P78%% (pnpm recommended; bun not recommended for Gateway runtime)
+- `--node-manager <npm|pnpm|bun>` （推荐使用 pnpm；不推荐在 Gateway 运行时使用 bun）
 - `--json`
 
 ### `configure`
 
-Interactive configuration wizard (models, channels, skills, gateway).
+交互式配置向导（模型、通道、技能、网关）。
 
 ### `config`
 
-Non-interactive config helpers (get/set/unset). Running %%P79%% with no
-subcommand launches the wizard.
-
-Subcommands:
-
-- %%P80%%: print a config value (dot/bracket path).
-- %%P81%%: set a value (JSON5 or raw string).
-- %%P82%%: remove a value.
-
-### `doctor`
-
-Health checks + quick fixes (config + gateway + legacy services).
-
-Options:
-
-- %%P83%%: disable workspace memory hints.
-- %%P84%%: accept defaults without prompting (headless).
-- %%P85%%: skip prompts; apply safe migrations only.
-- %%P86%%: scan system services for extra gateway installs.
-
-## Channel helpers
-
-### `channels`
-
-管理聊天频道帐户（WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost（插件）/Signal/iMessage/MS Teams）。
+非交互式配置辅助工具（获取/设置/取消设置/文件/验证）。如果不带子命令运行 `openclaw config`，将启动向导。
 
 子命令：
 
-- %%P87%%：显示已配置的频道和身份验证配置文件。
-- %%P88%%：检查 Gateway 可达性和频道健康状况（%%P89%% 运行额外检查；使用 %%P90%% 或 %%P91%% 进行 Gateway 健康探测）。
-- 提示：%%P92%% 在检测到常见错误配置时会打印带有建议修复的警告（然后指向 %%P93%%）。
-- %%P94%%：从 Gateway 日志文件显示最近的频道日志。
-- %%P95%%：不传递标志时使用向导式设置；标志切换到非交互模式。
-- %%P96%%：默认禁用；传递 %%P97%% 以无提示删除配置条目。
-- %%P98%%：交互式频道登录（仅 WhatsApp Web）。
-- %%P99%%：登出频道会话（如果支持）。
+- `config get <path>`：打印配置值（点/括号路径）。
+- `config set <path> <value>`：设置一个值（JSON5 或原始字符串）。
+- `config unset <path>`：移除一个值。
+- `config file`：打印当前配置文件的路径。
+- `config validate`：在不启动网关的情况下，根据 schema 验证当前配置。
+- `config validate --json`：输出机器可读的 JSON 格式结果。
 
-常用选项：
+### `doctor`
 
-- %%P100%%：%%P101%%
-- %%P102%%：频道帐户 ID（默认 %%P103%%）
-- %%P104%%：帐户的显示名称
+健康检查 + 快速修复（配置 + 网关 + 遗留服务）。
 
-%%P105%% options:
+选项：
 
-- %%P106%% (default %%P107%%; supports %%P108%%/%%P109%%)
+- `--no-workspace-suggestions`：禁用工作区内存提示。
+- `--yes`：不经提示直接接受默认值（无头模式）。
+- `--non-interactive`：跳过提示；仅应用安全迁移。
+- `--deep`：扫描系统服务以查找额外的网关安装。
+
+## 频道辅助工具
+
+### `channels`
+
+管理聊天频道账号（WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage/MS Teams）。
+
+子命令：
+
+- `channels list`：显示已配置的频道和身份验证配置文件。
+- `channels status`：检查网关的可达性和频道健康状况（`--probe` 会运行额外检查；使用 `openclaw health` 或 `openclaw status --deep` 进行网关健康探测）。
+- 提示：当 `channels status` 检测到常见的错误配置时，会打印带有建议修复方法的警告（然后指引您到 `openclaw doctor`）。
+- `channels logs`：从网关日志文件显示最近的频道日志。
+- `channels add`：未传递标志时使用向导式设置；传递标志则切换到非交互模式。
+  - 当向仍在使用单账号顶级配置的频道添加非默认账号时，OpenClaw 会在写入新账号之前将账号作用域的值移动到 `channels.<channel>.accounts.default` 中。
+  - 非交互式 `channels add` 不会自动创建/升级绑定；仅限频道的绑定将继续匹配默认账号。
+- `channels remove`：默认禁用；传递 `--delete` 可不经提示移除配置条目。
+- `channels login`：交互式频道登录（仅限 WhatsApp Web）。
+- `channels logout`：登出频道会话（如果支持）。
+
+通用选项：
+
+- `--channel <name>`：`whatsapp|telegram|discord|googlechat|slack|mattermost|signal|imessage|msteams`
+- `--account <id>`：渠道账号 ID（默认 `default`）
+- `--name <label>`：账号的显示名称
+
+`channels login` 选项：
+
+- `--channel <channel>`（默认 `whatsapp`；支持 `whatsapp`/`web`）
 - `--account <id>`
 - `--verbose`
 
-%%P110%% options:
+`channels logout` 选项：
 
-- %%P111%% (default %%P112%%)
+- `--channel <channel>`（默认 `whatsapp`）
 - `--account <id>`
 
-%%P113%% options:
+`channels list` 选项：
 
-- %%P114%%: skip model provider usage/quota snapshots (OAuth/API-backed only).
-- %%P115%%: output JSON (includes usage unless %%P116%% is set).
+- `--no-usage`：跳过模型提供商使用情况/配额快照（仅限 OAuth/API 支持的）。
+- `--json`：输出 JSON（除非设置了 `--no-usage`，否则包含使用情况）。
 
-%%P117%% options:
+`channels logs` 选项：
 
-- %%P118%% (default %%P119%%)
-- %%P120%% (default %%P121%%)
+- `--channel <name|all>`（默认 `all`）
+- `--lines <n>`（默认 `200`）
 - `--json`
 
-More detail: [/concepts/oauth]%%P122%%
+更多详情：[/concepts/oauth](/zh/en/concepts/oauth)
 
-Examples:
+示例：
 
 ```bash
 openclaw channels add --channel telegram --account alerts --name "Alerts Bot" --token $TELEGRAM_BOT_TOKEN
@@ -418,59 +466,75 @@ openclaw channels remove --channel discord --account work --delete
 openclaw channels status --probe
 openclaw status --deep
 ```
+
 ### `skills`
 
-List and inspect available skills plus readiness info.
+列出并检查可用技能及就绪信息。
 
-Subcommands:
+子命令：
 
-- %%P123%%: list skills (default when no subcommand).
-- %%P124%%: show details for one skill.
-- %%P125%%: summary of ready vs missing requirements.
-
-Options:
-
-- %%P126%%: show only ready skills.
-- %%P127%%: output JSON (no styling).
-- %%P128%%, %%P129%%: include missing requirements detail.
-
-提示：使用 %%P130%% 搜索、安装和同步技能。
-
-### `pairing`
-
-批准跨频道的私信配对请求。
-
-Subcommands:
-
-- `pairing list <channel> [--json]`
-- `pairing approve <channel> <code> [--notify]`
-
-### `webhooks gmail`
-
-Gmail Pub/Sub hook 设置 + 运行器。参阅 [/automation/gmail-pubsub]%%P131%%。
-
-Subcommands:
-
-- %%P132%%（需要 %%P133%%；支持 %%P134%%、%%P135%%、%%P136%%、%%P137%%、%%P138%%、%%P139%%、%%P140%%、%%P141%%、%%P142%%、%%P143%%、%%P144%%、%%P145%%、%%P146%%、%%P147%%、%%P148%%、%%P149%%、%%P150%%、%%P151%%）
-- %%P152%%（相同标志的运行时覆盖）
-
-### `dns setup`
-
-广域发现 DNS 助手（CoreDNS + Tailscale）。参阅 [/gateway/discovery]%%P153%%。
+- `skills list`：列出技能（未指定子命令时的默认操作）。
+- `skills info <name>`：显示单个技能的详细信息。
+- `skills check`：就绪与缺失需求的摘要。
 
 选项：
 
-- %%P154%%：安装/更新 CoreDNS 配置（需要 sudo；仅 macOS）。
+- `--eligible`：仅显示就绪的技能。
+- `--json`：输出 JSON（无样式）。
+- `-v`、`--verbose`：包含缺失需求的详细信息。
 
-## 消息 + 代理
+提示：使用 `npx clawhub` 来搜索、安装和同步技能。
+
+### `pairing`
+
+批准各渠道的 DM 配对请求。
+
+子命令：
+
+- `pairing list [channel] [--channel <channel>] [--account <id>] [--json]`
+- `pairing approve <channel> <code> [--account <id>] [--notify]`
+- `pairing approve --channel <channel> [--account <id>] <code> [--notify]`
+
+### `devices`
+
+管理网关设备配对条目和基于角色的设备令牌。
+
+子命令：
+
+- `devices list [--json]`
+- `devices approve [requestId] [--latest]`
+- `devices reject <requestId>`
+- `devices remove <deviceId>`
+- `devices clear --yes [--pending]`
+- `devices rotate --device <id> --role <role> [--scope <scope...>]`
+- `devices revoke --device <id> --role <role>`
+
+### `webhooks gmail`
+
+Gmail Pub/Sub hook 设置 + 运行程序。参见 [/automation/gmail-pubsub](/zh/en/automation/gmail-pubsub)。
+
+子命令：
+
+- `webhooks gmail setup`（需要 `--account <email>`；支持 `--project`、`--topic`、`--subscription`、`--label`、`--hook-url`、`--hook-token`、`--push-token`、`--bind`、`--port`、`--path`、`--include-body`、`--max-bytes`、`--renew-minutes`、`--tailscale`、`--tailscale-path`、`--tailscale-target`、`--push-endpoint`、`--json`）
+- `webhooks gmail run`（相同标志的运行时覆盖）
+
+### `dns setup`
+
+广域发现 DNS 助手（CoreDNS + Tailscale）。请参阅 [/gateway/discovery](/zh/en/gateway/discovery)。
+
+选项：
+
+- `--apply`：安装/更新 CoreDNS 配置（需要 sudo；仅限 macOS）。
+
+## 消息传递 + 代理
 
 ### `message`
 
-Unified outbound messaging + channel actions.
+统一出站消息传递 + 通道操作。
 
-See: [/cli/message]%%P155%%
+请参阅：[/cli/message](/zh/en/cli/message)
 
-Subcommands:
+子命令：
 
 - `message send|poll|react|reactions|read|edit|delete|pin|unpin|pins|permissions|search|timeout|kick|ban`
 - `message thread <create|list|reply>`
@@ -482,24 +546,24 @@ Subcommands:
 - `message voice status`
 - `message event <list|create>`
 
-Examples:
+示例：
 
 - `openclaw message send --target +15555550123 --message "Hi"`
 - `openclaw message poll --channel discord --target channel:123 --poll-question "Snack?" --poll-option Pizza --poll-option Sushi`
 
 ### `agent`
 
-Run one agent turn via the Gateway (or %%P156%% embedded).
+通过网关运行一轮代理（或嵌入式 `--local`）。
 
-Required:
+必需：
 
 - `--message <text>`
 
-Options:
+选项：
 
-- %%P157%% (for session key and optional delivery)
+- `--to <dest>`（用于会话密钥和可选投递）
 - `--session-id <id>`
-- %%P158%% (GPT-5.2 + Codex models only)
+- `--thinking <off|minimal|low|medium|high|xhigh>`（仅限 GPT-5.2 + Codex 模型）
 - `--verbose <on|full|off>`
 - `--channel <whatsapp|telegram|discord|slack|mattermost|signal|imessage|msteams>`
 - `--local`
@@ -509,35 +573,65 @@ Options:
 
 ### `agents`
 
-Manage isolated agents (workspaces + auth + routing).
+管理隔离代理（工作区 + 身份验证 + 路由）。
 
 #### `agents list`
 
-List configured agents.
+列出已配置的代理。
 
-Options:
+选项：
 
 - `--json`
 - `--bindings`
 
 #### `agents add [name]`
 
-Add a new isolated agent. Runs the guided wizard unless flags (or %%P159%%) are passed; %%P160%% is required in non-interactive mode.
+添加一个新的隔离代理。除非传递了标志（或 `--non-interactive`），否则将运行引导向导；在非交互模式下，`--workspace` 是必需的。
 
 选项：
 
 - `--workspace <dir>`
 - `--model <id>`
 - `--agent-dir <dir>`
-- %%P161%%（可重复）
+- `--bind <channel[:accountId]>`（可重复）
 - `--non-interactive`
 - `--json`
 
-绑定规范使用 %%P162%%。当 WhatsApp 省略 %%P163%% 时，使用默认帐户 ID。
+绑定规范使用 `channel[:accountId]`。当省略 `accountId` 时，OpenClaw 可以通过通道默认值/插件挂钩解析账户范围；否则这是没有显式账户范围的通道绑定。
+
+#### `agents bindings`
+
+列出路由绑定。
+
+选项：
+
+- `--agent <id>`
+- `--json`
+
+#### `agents bind`
+
+为代理添加路由绑定。
+
+选项：
+
+- `--agent <id>`
+- `--bind <channel[:accountId]>` (可重复)
+- `--json`
+
+#### `agents unbind`
+
+移除代理的路由绑定。
+
+选项：
+
+- `--agent <id>`
+- `--bind <channel[:accountId]>` (可重复)
+- `--all`
+- `--json`
 
 #### `agents delete <id>`
 
-删除代理并清理其工作区 + 状态。
+删除代理并清理其工作区和状态。
 
 选项：
 
@@ -546,50 +640,50 @@ Add a new isolated agent. Runs the guided wizard unless flags (or %%P159%%) are 
 
 ### `acp`
 
-运行将 IDE 连接到 Gateway 的 ACP 网桥。
+运行连接 IDE 与网关的 ACP 桥接。
 
-完整选项和示例请参阅 [%%P164%%]%%P165%%。
+有关完整选项和示例，请参阅 [`acp`](/zh/en/cli/acp)。
 
 ### `status`
 
-显示链接的会话健康状况和最近的接收者。
+显示链接会话的健康状况和最近的接收者。
 
 选项：
 
 - `--json`
-- %%P166%% (full diagnosis; read-only, pasteable)
-- %%P167%% (probe channels)
-- %%P168%% (show model provider usage/quota)
+- `--all` (完整诊断；只读，可粘贴)
+- `--deep` (探测通道)
+- `--usage` (显示模型提供商使用情况/配额)
 - `--timeout <ms>`
 - `--verbose`
-- %%P169%% (alias for %%P170%%)
+- `--debug` (`--verbose` 的别名)
 
-Notes:
+注：
 
-- Overview includes Gateway + node host service status when available.
+- 概述包括网关和节点主机服务状态（如果可用）。
 
-### Usage tracking
+### 使用情况跟踪
 
-OpenClaw can surface provider usage/quota when OAuth/API creds are available.
+当有 OAuth/API 凭据时，OpenClaw 可以显示提供商使用情况/配额。
 
-Surfaces:
+显示位置：
 
-- %%P171%% (adds a short provider usage line when available)
-- %%P172%% (prints full provider breakdown)
-- macOS menu bar (Usage section under Context)
+- `/status` (可用时添加简短的提供商使用情况行)
+- `openclaw status --usage` (打印完整的提供商细分)
+- macOS 菜单栏（上下文下的使用情况部分）
 
-Notes:
+注：
 
-- Data comes directly from provider usage endpoints (no estimates).
-- Providers: Anthropic, GitHub Copilot, OpenAI Codex OAuth, plus Gemini CLI/Antigravity when those provider plugins are enabled.
-- If no matching credentials exist, usage is hidden.
-- Details: see [Usage tracking]%%P173%%.
+- 数据直接来自提供商使用情况端点（非估算值）。
+- 提供商：Anthropic、GitHub Copilot、OpenAI Codex OAuth，以及当启用那些提供商插件时的 Gemini CLI/Antigravity。
+- 如果不存在匹配的凭据，使用情况将被隐藏。
+- 详情：请参阅[使用情况跟踪](/zh/en/concepts/usage-tracking)。
 
 ### `health`
 
-Fetch health from the running Gateway.
+从运行的网关获取运行状况。
 
-Options:
+选项：
 
 - `--json`
 - `--timeout <ms>`
@@ -597,22 +691,22 @@ Options:
 
 ### `sessions`
 
-List stored conversation sessions.
+列出已存储的对话会话。
 
-Options:
+选项：
 
 - `--json`
 - `--verbose`
 - `--store <path>`
 - `--active <minutes>`
 
-## Reset / Uninstall
+## 重置 / 卸载
 
 ### `reset`
 
-Reset local config/state (keeps the CLI installed).
+重置本地配置/状态（保留已安装的 CLI）。
 
-Options:
+选项：
 
 - `--scope <config|config+creds+sessions|full>`
 - `--yes`
@@ -621,11 +715,11 @@ Options:
 
 注意：
 
-- %%P174%% 需要 %%P175%% 和 %%P176%%。
+- `--non-interactive` 需要 `--scope` 和 `--yes`。
 
 ### `uninstall`
 
-卸载 Gateway 服务 + 本地数据（CLI 保留）。
+卸载网关服务 + 本地数据（保留 CLI）。
 
 选项：
 
@@ -640,13 +734,13 @@ Options:
 
 注意：
 
-- %%P177%% 需要 %%P178%% 和显式作用域（或 %%P179%%）。
+- `--non-interactive` 需要 `--yes` 和显式作用域（或 `--all`）。
 
-## Gateway
+## 网关
 
 ### `gateway`
 
-运行 WebSocket Gateway。
+运行 WebSocket 网关。
 
 选项：
 
@@ -655,50 +749,52 @@ Options:
 - `--token <token>`
 - `--auth <token|password>`
 - `--password <password>`
+- `--password-file <path>`
 - `--tailscale <off|serve|funnel>`
 - `--tailscale-reset-on-exit`
 - `--allow-unconfigured`
 - `--dev`
-- %%P180%% (reset dev config + credentials + sessions + workspace)
-- %%P181%% (kill existing listener on port)
+- `--reset`（重置开发配置 + 凭据 + 会话 + 工作区）
+- `--force`（终止端口上的现有监听器）
 - `--verbose`
 - `--claude-cli-logs`
 - `--ws-log <auto|full|compact>`
-- %%P182%% (alias for %%P183%%)
+- `--compact`（`--ws-log compact` 的别名）
 - `--raw-stream`
 - `--raw-stream-path <path>`
 
 ### `gateway service`
 
-Manage the Gateway service (launchd/systemd/schtasks).
+管理网关服务（launchd/systemd/schtasks）。
 
-Subcommands:
+子命令：
 
-- %%P184%% (probes the Gateway RPC by default)
-- %%P185%% (service install)
+- `gateway status`（默认探测网关 RPC）
+- `gateway install`（安装服务）
 - `gateway uninstall`
 - `gateway start`
 - `gateway stop`
 - `gateway restart`
 
-Notes:
+注意：
 
-- %%P186%% probes the Gateway RPC by default using the service’s resolved port/config (override with %%P187%%).
-- %%P188%% supports %%P189%%, %%P190%%, and %%P191%% for scripting.
-- %%P192%% also surfaces legacy or extra gateway services when it can detect them (%%P193%% adds system-level scans). Profile-named OpenClaw services are treated as first-class and aren't flagged as "extra".
-- %%P194%% prints which config path the CLI uses vs which config the service likely uses (service env), plus the resolved probe target URL.
-- %%P195%% support %%P196%% for scripting (default output stays human-friendly).
-- %%P197%% defaults to Node runtime; bun is **not recommended** (WhatsApp/Telegram bugs).
-- %%P198%% options: %%P199%%, %%P200%%, %%P201%%, %%P202%%, %%P203%%.
+- `gateway status` 默认使用服务的解析端口/配置探测网关 RPC（可通过 `--url/--token/--password` 覆盖）。
+- `gateway status` 支持 `--no-probe`、`--deep` 和 `--json` 以用于脚本编写。
+- 当 `gateway status` 能够检测到遗留或额外的网关服务时，也会将其显示出来（`--deep` 增加了系统级扫描）。以 Profile 命名的 OpenClaw 服务被视为一等公民，不会被标记为“额外”。
+- `gateway status` 会打印 CLI 使用的配置路径与服务可能使用的配置（服务环境变量），以及解析后的探测目标 URL。
+- 在 Linux systemd 安装中，状态令牌漂移检查包括 `Environment=` 和 `EnvironmentFile=` 单元源。
+- `gateway install|uninstall|start|stop|restart` 支持 `--json` 以便编写脚本（默认输出保持人类可读）。
+- `gateway install` 默认使用 Node 运行时；**不建议** 使用 bun（存在 WhatsApp/Telegram 错误）。
+- `gateway install` 选项：`--port`、`--runtime`、`--token`、`--force`、`--json`。
 
 ### `logs`
 
-Tail Gateway file logs via RPC.
+通过 RPC 跟踪 Gateway 文件日志。
 
-Notes:
+备注：
 
-- TTY 会话呈现彩色、结构化视图；非 TTY 回退到纯文本。
-- %%P204%% 发出行分隔的 JSON（每行一个日志事件）。
+- TTY 会话呈现彩色、结构化的视图；非 TTY 回退到纯文本。
+- `--json` 输出行分隔的 JSON（每行一个日志事件）。
 
 示例：
 
@@ -709,11 +805,12 @@ openclaw logs --plain
 openclaw logs --json
 openclaw logs --no-color
 ```
+
 ### `gateway <subcommand>`
 
-Gateway CLI 助手（使用 %%P205%%、%%P206%%、%%P207%%、%%P208%%、%%P209%% 进行 RPC 子命令）。
-当您传递 %%P210%% 时，CLI 不会自动应用配置或环境凭证。
-显式包含 %%P211%% 或 %%P212%%。缺少显式凭证是一个错误。
+Gateway CLI 辅助工具（RPC 子命令使用 `--url`、`--token`、`--password`、`--timeout`、`--expect-final`）。
+当您传递 `--url` 时，CLI 不会自动应用配置或环境凭据。
+必须显式包含 `--token` 或 `--password`。缺少显式凭据将导致错误。
 
 子命令：
 
@@ -727,35 +824,39 @@ Gateway CLI 助手（使用 %%P205%%、%%P206%%、%%P207%%、%%P208%%、%%P209%%
 
 常用 RPC：
 
-- %%P213%%（验证 + 写入配置 + 重启 + 唤醒）
-- %%P214%%（合并部分更新 + 重启 + 唤醒）
-- %%P215%%（运行更新 + 重启 + 唤醒）
+- `config.apply`（验证 + 写入配置 + 重启 + 唤醒）
+- `config.patch`（合并部分更新 + 重启 + 唤醒）
+- `update.run`（运行更新 + 重启 + 唤醒）
 
-提示：直接调用 %%P216%%/%%P217%%/%%P218%% 时，如果配置已存在，请从 %%P220%% 传递 %%P219%%。
+提示：当直接调用 `config.set`/`config.apply`/`config.patch` 时，如果配置已存在，请传递
+`config.get` 中的 `baseHash`。
 
-## Models
+## 模型
 
-See [/concepts/models]%%P221%% for fallback behavior and scanning strategy.
+有关回退行为和扫描策略，请参阅 [/concepts/models](/zh/en/concepts/models)。
 
-Preferred Anthropic auth (setup-token):
+Anthropic 设置令牌（setup-token，受支持）：
 
 ```bash
 claude setup-token
 openclaw models auth setup-token --provider anthropic
 openclaw models status
 ```
-### %%P222%% (root)
 
-%%P223%% is an alias for %%P224%%.
+策略说明：这属于技术兼容性。Anthropic 过去曾阻止在 Claude Code 之外的某些订阅使用；在生产环境中依赖 setup-token 之前，请核实当前的 Anthropic 条款。
 
-Root options:
+### `models` (根目录)
 
-- %%P225%% (alias for %%P226%%)
-- %%P227%% (alias for %%P228%%)
+`openclaw models` 是 `models status` 的别名。
+
+根目录选项：
+
+- `--status-json` (`models status --json` 的别名)
+- `--status-plain` (`models status --plain` 的别名)
 
 ### `models list`
 
-Options:
+选项：
 
 - `--all`
 - `--local`
@@ -765,34 +866,34 @@ Options:
 
 ### `models status`
 
-Options:
+选项：
 
 - `--json`
 - `--plain`
-- %%P229%% (exit 1=expired/missing, 2=expiring)
-- %%P230%% (live probe of configured auth profiles)
+- `--check` (退出码 1=已过期/缺失，2=即将过期)
+- `--probe` (对已配置的身份验证配置文件进行实时探测)
 - `--probe-provider <name>`
-- %%P231%% (repeat or comma-separated)
+- `--probe-profile <id>` (可重复或逗号分隔)
 - `--probe-timeout <ms>`
 - `--probe-concurrency <n>`
 - `--probe-max-tokens <n>`
 
-Always includes the auth overview and OAuth expiry status for profiles in the auth store.
-%%P232%% runs live requests (may consume tokens and trigger rate limits).
+始终包括身份验证存储中配置文件的身份验证概览和 OAuth 过期状态。
+`--probe` 运行实时请求（可能会消耗令牌并触发速率限制）。
 
 ### `models set <model>`
 
-Set %%P233%%.
+设置 `agents.defaults.model.primary`。
 
 ### `models set-image <model>`
 
-Set %%P234%%.
+设置 `agents.defaults.imageModel.primary`。
 
 ### `models aliases list|add|remove`
 
-Options:
+选项：
 
-- %%P241%%: %%P242%%, %%P243%%
+- `list`：`--json`，`--plain`
 - `add <alias> <model>`
 - `remove <alias>`
 
@@ -800,7 +901,7 @@ Options:
 
 选项：
 
-- %%P241%%：%%P242%%、%%P243%%
+- `list`：`--json`，`--plain`
 - `add <model>`
 - `remove <model>`
 - `clear`
@@ -809,7 +910,7 @@ Options:
 
 选项：
 
-- %%P241%%：%%P242%%、%%P243%%
+- `list`：`--json`，`--plain`
 - `add <model>`
 - `remove <model>`
 - `clear`
@@ -835,74 +936,74 @@ Options:
 
 选项：
 
-- %%P244%%: interactive auth helper
-- %%P245%%: %%P246%% (default %%P247%%), %%P248%%
-- %%P249%%: %%P250%%, %%P251%%, %%P252%%
+- `add`：交互式身份验证辅助程序
+- `setup-token`: `--provider <name>` (默认 `anthropic`), `--yes`
+- `paste-token`: `--provider <name>`, `--profile-id <id>`, `--expires-in <duration>`
 
 ### `models auth order get|set|clear`
 
-Options:
+选项：
 
-- %%P253%%: %%P254%%, %%P255%%, %%P256%%
-- %%P257%%: %%P258%%, %%P259%%, %%P260%%
-- %%P261%%: %%P262%%, %%P263%%
+- `get`: `--provider <name>`, `--agent <id>`, `--json`
+- `set`: `--provider <name>`, `--agent <id>`, `<profileIds...>`
+- `clear`: `--provider <name>`, `--agent <id>`
 
-## System
+## 系统
 
 ### `system event`
 
-Enqueue a system event and optionally trigger a heartbeat (Gateway RPC).
+将系统事件加入队列，并可选择触发心跳（网关 RPC）。
 
-Required:
+必需：
 
 - `--text <text>`
 
-Options:
+选项：
 
 - `--mode <now|next-heartbeat>`
 - `--json`
-- %%P272%%, %%P273%%, %%P274%%, %%P275%%
+- `--url`, `--token`, `--timeout`, `--expect-final`
 
 ### `system heartbeat last|enable|disable`
 
-Heartbeat controls (Gateway RPC).
+心跳控制（网关 RPC）。
 
-Options:
+选项：
 
 - `--json`
-- %%P272%%, %%P273%%, %%P274%%, %%P275%%
+- `--url`, `--token`, `--timeout`, `--expect-final`
 
 ### `system presence`
 
-List system presence entries (Gateway RPC).
+列出系统在线条目（网关 RPC）。
 
-Options:
+选项：
 
 - `--json`
-- %%P272%%, %%P273%%, %%P274%%, %%P275%%
+- `--url`, `--token`, `--timeout`, `--expect-final`
 
 ## Cron
 
-Manage scheduled jobs (Gateway RPC). See [/automation/cron-jobs]%%P276%%.
+管理计划任务（网关 RPC）。请参阅 [/automation/cron-jobs](/zh/en/automation/cron-jobs)。
 
-Subcommands:
+子命令：
 
 - `cron status [--json]`
-- %%P277%% (table output by default; use %%P278%% for raw)
-- %%P279%% (alias: %%P280%%; requires %%P281%% and exactly one of %%P282%% | %%P283%% | %%P284%%, and exactly one payload of %%P285%% | %%P286%%)
-- %%P287%% (patch fields)
-- %%P288%% (aliases: %%P289%%, %%P290%%)
+- `cron list [--all] [--json]` (默认表格输出; 使用 `--json` 获取原始输出)
+- `cron add` (别名: `create`; 需要 `--name` 以及 `--at` | `--every` | `--cron` 中的确切一个, 以及 `--system-event` | `--message` 中的确切一个有效载荷)
+- `cron edit <id>` (修补字段)
+- `cron rm <id>` (别名: `remove`, `delete`)
 - `cron enable <id>`
 - `cron disable <id>`
 - `cron runs --id <id> [--limit <n>]`
 - `cron run <id> [--force]`
 
-所有 %%P291%% 命令都接受 %%P292%%、%%P293%%、%%P294%%、%%P295%%。
+所有 `cron` 命令都接受 `--url`, `--token`, `--timeout`, `--expect-final`。
 
 ## 节点主机
 
-%%P296%% 运行**无头节点主机**或将其作为后台服务管理。参阅
-[%%P297%%]%%P298%%。
+`node` 运行 **无头节点主机** 或将其作为后台服务进行管理。请参阅
+[`openclaw node`](/zh/en/cli/node)。
 
 子命令：
 
@@ -913,13 +1014,18 @@ Subcommands:
 - `node stop`
 - `node restart`
 
+身份验证说明：
+
+- `node` 从环境/配置解析网关身份验证（无 `--token`/`--password` 标志）：`OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`，然后是 `gateway.auth.*`。在本地模式下，节点主机有意忽略 `gateway.remote.*`；在 `gateway.mode=remote` 中，`gateway.remote.*` 根据远程优先级规则参与。
+- 用于节点主机身份验证解析的旧版 `CLAWDBOT_GATEWAY_*` 环境变量将被有意忽略。
+
 ## 节点
 
-%%P299%% 与 Gateway 通信并定位配对的节点。参阅 [/nodes]%%P300%%。
+`nodes` 与网关通信并针对已配对的节点。请参阅 [/nodes](/zh/en/nodes)。
 
 常用选项：
 
-- %%P310%%、%%P311%%、%%P312%%、%%P313%%
+- `--url`、`--token`、`--timeout`、`--json`
 
 子命令：
 
@@ -931,16 +1037,16 @@ Subcommands:
 - `nodes reject <requestId>`
 - `nodes rename --node <id|name|ip> --name <displayName>`
 - `nodes invoke --node <id|name|ip> --command <command> [--params <json>] [--invoke-timeout <ms>] [--idempotency-key <key>]`
-- %%P305%% (mac node or headless node host)
-- %%P306%% (mac only)
+- `nodes run --node <id|name|ip> [--cwd <path>] [--env KEY=VAL] [--command-timeout <ms>] [--needs-screen-recording] [--invoke-timeout <ms>] <command...>`（mac 节点或无头节点主机）
+- `nodes notify --node <id|name|ip> [--title <text>] [--body <text>] [--sound <name>] [--priority <passive|active|timeSensitive>] [--delivery <system|overlay|auto>] [--invoke-timeout <ms>]`（仅限 mac）
 
-Camera:
+摄像头：
 
 - `nodes camera list --node <id|name|ip>`
 - `nodes camera snap --node <id|name|ip> [--facing front|back|both] [--device-id <id>] [--max-width <px>] [--quality <0-1>] [--delay-ms <ms>] [--invoke-timeout <ms>]`
 - `nodes camera clip --node <id|name|ip> [--facing front|back] [--device-id <id>] [--duration <ms|10s|1m>] [--no-audio] [--invoke-timeout <ms>]`
 
-Canvas + screen:
+画布 + 屏幕：
 
 - `nodes canvas snapshot --node <id|name|ip> [--format png|jpg|jpeg] [--max-width <px>] [--quality <0-1>] [--invoke-timeout <ms>]`
 - `nodes canvas present --node <id|name|ip> [--target <urlOrPath>] [--x <px>] [--y <px>] [--width <px>] [--height <px>] [--invoke-timeout <ms>]`
@@ -951,17 +1057,17 @@ Canvas + screen:
 - `nodes canvas a2ui reset --node <id|name|ip> [--invoke-timeout <ms>]`
 - `nodes screen record --node <id|name|ip> [--screen <index>] [--duration <ms|10s>] [--fps <n>] [--no-audio] [--out <path>] [--invoke-timeout <ms>]`
 
-Location:
+位置：
 
 - `nodes location get --node <id|name|ip> [--max-age <ms>] [--accuracy <coarse|balanced|precise>] [--location-timeout <ms>] [--invoke-timeout <ms>]`
 
 ## 浏览器
 
-浏览器控制 CLI（专用 Chrome/Brave/Edge/Chromium）。参阅 [%%P307%%]%%P308%% 和 [浏览器工具]%%P309%%。
+浏览器控制 CLI（专用 Chrome/Brave/Edge/Chromium）。请参阅 [`openclaw browser`](/zh/en/cli/browser) 和 [浏览器工具](/zh/en/tools/browser)。
 
 常用选项：
 
-- %%P310%%、%%P311%%、%%P312%%、%%P313%%
+- `--url`、`--token`、`--timeout`、`--json`
 - `--browser-profile <name>`
 
 管理：
@@ -1022,5 +1128,5 @@ Location:
 - `--deliver`
 - `--thinking <level>`
 - `--message <text>`
-- %%P314%%（默认为 %%P315%%）
+- `--timeout-ms <ms>` (默认为 `agents.defaults.timeoutSeconds`)
 - `--history-limit <n>`

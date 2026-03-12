@@ -19,7 +19,7 @@ Docs: [Dashboard](/en/web/dashboard) and [Control UI](/en/web/control-ui).
 
 ## Prereqs
 
-- Node 22 or newer
+- Node 24 recommended (Node 22 LTS, currently `22.16+`, still supported for compatibility)
 
 <Tip>
 Check your Node version with `node --version` if you are unsure.

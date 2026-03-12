@@ -1,47 +1,61 @@
 ---
-summary: "从 Gateway 暴露一个兼容 OpenResponses 的 /v1/responses HTTP 端点"
+summary: "从网关公开与 OpenResponses 兼容的 /v1/responses HTTP 端点"
 read_when:
-  - "Integrating clients that speak the OpenResponses API"
-  - "You want item-based inputs, client tool calls, or SSE events"
+  - Integrating clients that speak the OpenResponses API
+  - You want item-based inputs, client tool calls, or SSE events
 title: "OpenResponses API"
 ---
 
 # OpenResponses API (HTTP)
 
-OpenClaw 的 Gateway 可以提供一个兼容 OpenResponses 的 `POST /v1/responses` 端点。
+OpenClaw 的网关可以提供与 OpenResponses 兼容的 `POST /v1/responses` 端点。
 
-此端点**默认禁用**。请先在配置中启用它。
+此端点**默认处于禁用状态**。请先在配置中启用它。
 
 - `POST /v1/responses`
-- 与 Gateway 使用相同端口（WS + HTTP 多路复用）：`http://<gateway-host>:<port>/v1/responses`
+- 与网关（WS + HTTP 多路复用）使用相同的端口：`http://<gateway-host>:<port>/v1/responses`
 
-在底层，请求作为普通的 Gateway 代理运行执行（与 `openclaw agent` 相同的代码路径），因此路由/权限/配置与您的 Gateway 匹配。
+在底层，请求作为正常的网关代理运行执行（与 `openclaw agent` 的代码路径相同），因此路由/权限/配置与您的网关相匹配。
 
 ## 身份验证
 
-使用 Gateway 身份验证配置。发送 bearer token：
+使用网关身份验证配置。发送 bearer token：
 
 - `Authorization: Bearer <token>`
 
-注意事项：
+注意：
 
-- 当 `gateway.auth.mode="token"` 时，使用 `gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）。
-- 当 `gateway.auth.mode="password"` 时，使用 `gateway.auth.password`（或 `OPENCLAW_GATEWAY_PASSWORD`）。
+- 当 `gateway.auth.mode="token"` 时，使用 `gateway.auth.token` （或 `OPENCLAW_GATEWAY_TOKEN`）。
+- 当 `gateway.auth.mode="password"` 时，使用 `gateway.auth.password` （或 `OPENCLAW_GATEWAY_PASSWORD`）。
+- 如果配置了 `gateway.auth.rateLimit` 并且发生了过多的身份验证失败，端点将返回 `429` 并附带 `Retry-After`。
+
+## 安全边界（重要）
+
+将此端点视为网关实例的**完全操作员访问**接口。
+
+- 此处的 HTTP bearer 身份验证并非狭义的单用户范围模型。
+- 此端点的有效网关令牌/密码应被视为所有者/操作员凭据。
+- 请求通过受信任的操作员操作所使用的同一控制平面代理路径运行。
+- 此端点上没有单独的非所有者/每用户工具边界；一旦调用者在此处通过网关身份验证，OpenClaw 会将该调用者视为此网关的受信任操作员。
+- 如果目标代理策略允许敏感工具，此端点可以使用它们。
+- 请将此端点保持在环回/tailnet/专用入口上；不要将其直接暴露给公共互联网。
+
+请参阅 [安全性](/zh/en/gateway/security) 和 [远程访问](/zh/en/gateway/remote)。
 
 ## 选择代理
 
-无需自定义标头：在 OpenResponses `model` 字段中编码代理 id：
+无需自定义标头：在 OpenResponses `model` 字段中编码代理 ID：
 
-- `model: "openclaw:<agentId>"`（示例：`"openclaw:main"`、`"openclaw:beta"`）
-- `model: "agent:<agentId>"`（别名）
+- `model: "openclaw:<agentId>"` （例如：`"openclaw:main"`，`"openclaw:beta"`）
+- `model: "agent:<agentId>"` （别名）
 
-或者通过标头指定特定的 OpenClaw 代理：
+或者通过标头定位特定的 OpenClaw 代理：
 
-- `x-openclaw-agent-id: <agentId>`（默认：`main`）
+- `x-openclaw-agent-id: <agentId>`（默认值：`main`）
 
 高级：
 
-- 使用 `x-openclaw-session-key: <sessionKey>` 完全控制会话路由。
+- `x-openclaw-session-key: <sessionKey>` 以完全控制会话路由。
 
 ## 启用端点
 
@@ -77,23 +91,23 @@ OpenClaw 的 Gateway 可以提供一个兼容 OpenResponses 的 `POST /v1/respon
 
 ## 会话行为
 
-默认情况下，此端点是**每次请求无状态的**（每次调用都会生成新的会话密钥）。
+默认情况下，该端点是**每个请求无状态的**（每次调用都会生成新的会话密钥）。
 
-如果请求包含 OpenResponses `user` 字符串，Gateway 将从中派生一个稳定的会话密钥，因此重复调用可以共享一个代理会话。
+如果请求包含 OpenResponses `user` 字符串，网关将从中派生一个稳定的会话密钥，以便重复调用可以共享同一个代理会话。
 
-## 请求形状（支持）
+## 请求形状（已支持）
 
-该请求遵循基于项输入的 OpenResponses API。当前支持：
+该请求遵循 OpenResponses API，采用基于项目的输入。当前支持：
 
-- `input`：字符串或项对象数组。
-- `instructions`：合并到系统提示中。
+- `input`：字符串或项目对象数组。
+- `instructions`：合并到系统提示词中。
 - `tools`：客户端工具定义（函数工具）。
 - `tool_choice`：过滤或要求客户端工具。
 - `stream`：启用 SSE 流式传输。
 - `max_output_tokens`：尽力而为的输出限制（取决于提供商）。
 - `user`：稳定的会话路由。
 
-接受但**当前被忽略**：
+已接受但**当前被忽略**：
 
 - `max_tool_calls`
 - `reasoning`
@@ -102,15 +116,15 @@ OpenClaw 的 Gateway 可以提供一个兼容 OpenResponses 的 `POST /v1/respon
 - `previous_response_id`
 - `truncation`
 
-## 项（输入）
+## 项目（输入）
 
 ### `message`
 
 角色：`system`、`developer`、`user`、`assistant`。
 
-- `system` 和 `developer` 被附加到系统提示。
-- 最新的 `user` 或 `function_call_output` 项成为"当前消息"。
-- 早期的用户/助手消息作为历史记录包含在内，用于提供上下文。
+- `system` 和 `developer` 被追加到系统提示词。
+- 最近的 `user` 或 `function_call_output` 项目将成为“当前消息”。
+- 较早的用户/助手消息作为历史记录包含在上下文中。
 
 ### `function_call_output`（基于轮次的工具）
 
@@ -126,17 +140,17 @@ OpenClaw 的 Gateway 可以提供一个兼容 OpenResponses 的 `POST /v1/respon
 
 ### `reasoning` 和 `item_reference`
 
-为了架构兼容性而接受，但在构建提示时被忽略。
+出于模式兼容性考虑而被接受，但在构建提示词时被忽略。
 
 ## 工具（客户端函数工具）
 
-使用 `tools: [{ type: "function", function: { name, description?, parameters? } }]` 提供工具。
+通过 `tools: [{ type: "function", function: { name, description?, parameters? } }]` 提供工具。
 
-如果代理决定调用工具，响应将返回一个 `function_call` 输出项。然后，您发送一个带有 `function_call_output` 的后续请求以继续轮次。
+如果代理决定调用工具，响应将返回一个 `function_call` 输出项目。然后，您发送一个包含 `function_call_output` 的后续请求以继续该轮次。
 
 ## 图像（`input_image`）
 
-支持 base64 或 URL 源：
+支持 base64 或 URL 来源：
 
 ```json
 {
@@ -145,12 +159,12 @@ OpenClaw 的 Gateway 可以提供一个兼容 OpenResponses 的 `POST /v1/respon
 }
 ```
 
-允许的 MIME 类型（当前）：`image/jpeg`、`image/png`、`image/gif`、`image/webp`。
+允许的 MIME 类型（当前）：`image/jpeg`、`image/png`、`image/gif`、`image/webp`、`image/heic`、`image/heif`。
 最大大小（当前）：10MB。
 
-## 文件（`input_file`）
+## 文件 (`input_file`)
 
-支持 base64 或 URL 源：
+支持 base64 或 URL 来源：
 
 ```json
 {
@@ -171,20 +185,27 @@ OpenClaw 的 Gateway 可以提供一个兼容 OpenResponses 的 `POST /v1/respon
 
 当前行为：
 
-- 文件内容被解码并添加到**系统提示**中，而不是用户消息中，因此它保持临时性（不会持久保存在会话历史中）。
-- PDF 被解析为文本。如果发现的文本很少，前几页将被栅格化为图像并传递给模型。
+- 文件内容会被解码并添加到 **系统提示词** 中，而不是用户消息，
+  因此它是临时的（不会持久保存在会话历史中）。
+- PDF 会被解析为文本。如果发现的文本很少，前几页将被栅格化
+  为图像并传递给模型。
 
-PDF 解析使用对 Node 友好的 `pdfjs-dist` 传统构建（无 worker）。现代 PDF.js 构建需要浏览器 worker/DOM 全局变量，因此不在 Gateway 中使用。
+PDF 解析使用兼容 Node 的 `pdfjs-dist` 旧版构建（无 worker）。现代版
+PDF.js 构建期望浏览器 worker/DOM 全局变量，因此不在 Gateway 中使用。
 
 URL 获取默认值：
 
 - `files.allowUrl`：`true`
 - `images.allowUrl`：`true`
-- 请求受保护（DNS 解析、私有 IP 阻止、重定向限制、超时）。
+- `maxUrlParts`：`8`（每个请求总计基于 URL 的 `input_file` + `input_image` 部分）
+- 请求受到保护（DNS 解析、私有 IP 阻止、重定向限制、超时）。
+- 支持按输入类型（`files.urlAllowlist`、`images.urlAllowlist`）配置可选的主机名允许列表。
+  - 精确主机：`"cdn.example.com"`
+  - 通配符子域名：`"*.assets.example.com"`（不匹配顶级域名）
 
-## 文件和图像限制（配置）
+## 文件 + 图像限制（配置）
 
-默认值可以在 `gateway.http.endpoints.responses` 下调整：
+可以在 `gateway.http.endpoints.responses` 下调整默认值：
 
 ```json5
 {
@@ -194,8 +215,10 @@ URL 获取默认值：
         responses: {
           enabled: true,
           maxBodyBytes: 20000000,
+          maxUrlParts: 8,
           files: {
             allowUrl: true,
+            urlAllowlist: ["cdn.example.com", "*.assets.example.com"],
             allowedMimes: [
               "text/plain",
               "text/markdown",
@@ -216,7 +239,15 @@ URL 获取默认值：
           },
           images: {
             allowUrl: true,
-            allowedMimes: ["image/jpeg", "image/png", "image/gif", "image/webp"],
+            urlAllowlist: ["images.example.com"],
+            allowedMimes: [
+              "image/jpeg",
+              "image/png",
+              "image/gif",
+              "image/webp",
+              "image/heic",
+              "image/heif",
+            ],
             maxBytes: 10485760,
             maxRedirects: 3,
             timeoutMs: 10000,
@@ -231,6 +262,7 @@ URL 获取默认值：
 省略时的默认值：
 
 - `maxBodyBytes`：20MB
+- `maxUrlParts`：8
 - `files.maxBytes`：5MB
 - `files.maxChars`：200k
 - `files.maxRedirects`：3
@@ -241,13 +273,21 @@ URL 获取默认值：
 - `images.maxBytes`：10MB
 - `images.maxRedirects`：3
 - `images.timeoutMs`：10s
+- 接受 HEIC/HEIF `input_image` 来源，并在提供给提供商之前将其标准化为 JPEG。
 
-## 流式传输（SSE）
+安全提示：
 
-设置 `stream: true` 以接收服务器发送事件（SSE）：
+- URL 允许列表在获取之前和重定向跳转时强制执行。
+- 将主机名加入白名单并不能绕过对私有/内部 IP 的阻止。
+- 对于面向互联网的网关，除了应用级别的防护外，还应应用网络出口控制。
+  请参阅 [安全性](/zh/en/gateway/security)。
+
+## 流式传输 (SSE)
+
+设置 `stream: true` 以接收服务器发送事件 (SSE)：
 
 - `Content-Type: text/event-stream`
-- 每个事件行都是 `event: <type>` 和 `data: <json>`
+- 每一事件行均为 `event: <type>` 和 `data: <json>`
 - 流以 `data: [DONE]` 结束
 
 当前发出的事件类型：
@@ -261,15 +301,15 @@ URL 获取默认值：
 - `response.content_part.done`
 - `response.output_item.done`
 - `response.completed`
-- `response.failed`（错误时）
+- `response.failed` (出错时)
 
-## 使用情况
+## 用量
 
-当底层提供商报告令牌计数时，会填充 `usage`。
+当底层提供商报告 Token 计数时，会填充 `usage`。
 
 ## 错误
 
-错误使用类似以下的 JSON 对象：
+错误使用如下 JSON 对象表示：
 
 ```json
 { "error": { "message": "...", "type": "invalid_request_error" } }
@@ -277,13 +317,13 @@ URL 获取默认值：
 
 常见情况：
 
-- `401` 缺失/无效的身份验证
-- `400` 无效的请求正文
+- `401` 身份验证缺失/无效
+- `400` 请求正文无效
 - `405` 错误的方法
 
 ## 示例
 
-非流式：
+非流式传输：
 
 ```bash
 curl -sS http://127.0.0.1:18789/v1/responses \
@@ -296,7 +336,7 @@ curl -sS http://127.0.0.1:18789/v1/responses \
   }'
 ```
 
-流式：
+流式传输：
 
 ```bash
 curl -N http://127.0.0.1:18789/v1/responses \
@@ -309,4 +349,3 @@ curl -N http://127.0.0.1:18789/v1/responses \
     "input": "hi"
   }'
 ```
-
