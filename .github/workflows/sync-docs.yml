@@ -1,0 +1,62 @@
+name: Sync Docs from OpenClaw
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Daily at midnight UTC
+  workflow_dispatch: # Manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout crawfish-docs
+        uses: actions/checkout@v4
+
+      - name: Clone openclaw/openclaw
+        run: |
+          git clone --depth 1 https://github.com/openclaw/openclaw.git openclaw-repo
+          cd openclaw-repo
+          echo "OPENCLAW_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          echo "SYNC_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Update version.js
+        run: |
+          sed -i "s/var UPDATED_AT = \".*\";/var UPDATED_AT = \"${{ env.SYNC_DATE }}\";/" version.js
+          sed -i "s/var COMMIT = \".*\";/var COMMIT = \"${{ env.OPENCLAW_COMMIT }}\";/" version.js
+
+      - name: Copy docs to en/
+        run: |
+          mkdir -p en
+          # Copy content of openclaw-repo/docs to en/, excluding zh-CN and ja-JP
+          # We do not use --delete to avoid removing project-specific files like CNAME, style.css, etc.
+          rsync -av --exclude 'zh-CN' --exclude 'ja-JP' openclaw-repo/docs/ en/
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fix internal links in en/
+        run: |
+          # Use the existing script to add /en/ prefix to internal links
+          # It automatically detects 'en' locale for files under 'en/' folder
+          node scripts/fix-locale-links.js en/
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add en/ version.js
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: sync docs from openclaw/openclaw ${{ env.SYNC_DATE }}" -m "Commit: ${{ env.OPENCLAW_COMMIT }}"
+            git push
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: rm -rf openclaw-repo

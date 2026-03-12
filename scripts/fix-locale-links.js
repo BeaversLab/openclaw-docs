@@ -66,46 +66,51 @@ function fixUrl(url, locale) {
 
 /**
  * Process a single line, replacing links outside inline code spans.
- * Returns the modified line.
+ * Correctly handles nested or unclosed backticks without infinite loops.
  */
 function processLine(line, locale) {
-  const parts = [];
-  let cursor = 0;
-  let inBacktick = false;
-  let tickStart = -1;
+  let result = '';
+  let i = 0;
 
-  // Split line into code / non-code segments at backtick boundaries
-  const segments = [];
-  let segStart = 0;
+  while (i < line.length) {
+    const remaining = line.slice(i);
+    const match = remaining.match(/`+/);
 
-  for (let i = 0; i < line.length; i++) {
-    if (line[i] === '`') {
-      if (!inBacktick) {
-        if (i > segStart) segments.push({ text: line.slice(segStart, i), code: false });
-        inBacktick = true;
-        tickStart = i;
-      } else {
-        segments.push({ text: line.slice(tickStart, i + 1), code: true });
-        inBacktick = false;
-        segStart = i + 1;
-      }
+    if (!match) {
+      // No more backticks, process the rest of the line
+      result += replaceLinks(remaining, locale);
+      break;
+    }
+
+    const tickStartIdx = match.index;
+    const ticks = match[0];
+    const tickCount = ticks.length;
+
+    // Process text BEFORE the backticks
+    if (tickStartIdx > 0) {
+      result += replaceLinks(remaining.slice(0, tickStartIdx), locale);
+    }
+
+    // Move i to just after the opening backticks
+    i += tickStartIdx + tickCount;
+
+    // Look for closing backticks of the EXACT same length
+    const rest = line.slice(i);
+    const closingMatch = rest.match(new RegExp(`(?<!\`)(${ticks})(?!\`)`));
+
+    if (closingMatch) {
+      const closingIdx = closingMatch.index;
+      // It's a valid code span, keep it as-is
+      result += ticks + rest.slice(0, closingIdx + tickCount);
+      i += closingIdx + tickCount;
+    } else {
+      // Unclosed backticks, treat the opening ticks as literal text
+      result += replaceLinks(ticks, locale);
+      // i is already moved past the opening ticks, loop continues
     }
   }
 
-  if (inBacktick) {
-    // unmatched backtick — treat everything from tickStart as non-code
-    if (tickStart > segStart) segments.push({ text: line.slice(segStart, tickStart), code: false });
-    segments.push({ text: line.slice(tickStart), code: false });
-  } else if (segStart < line.length) {
-    segments.push({ text: line.slice(segStart), code: false });
-  }
-
-  return segments
-    .map((seg) => {
-      if (seg.code) return seg.text;
-      return replaceLinks(seg.text, locale);
-    })
-    .join('');
+  return result;
 }
 
 function replaceLinks(text, locale) {
