@@ -18,6 +18,10 @@
       "family": "DM Sans"
     }
   },
+  "banner": {
+    "dismissible": true,
+    "content": "🎉 全量中文文档现已发布！🎉 "
+  },
   "metadata":{
     "timestamp": true
   },

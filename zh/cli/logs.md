@@ -1,5 +1,5 @@
 ---
-summary: "`openclaw logs` 的 CLI 参考（通过 RPC 跟踪 Gateway 日志）"
+summary: "CLI reference for `openclaw logs` (tail gateway logs via RPC)"
 read_when:
   - You need to tail Gateway logs remotely (without SSH)
   - You want JSON log lines for tooling
@@ -8,7 +8,7 @@ title: "logs"
 
 # `openclaw logs`
 
-通过 RPC 跟踪 Gateway 文件日志（适用于远程模式）。
+通过 RPC 追踪 Gateway 文件日志（在远程模式下工作）。
 
 相关：
 
@@ -25,7 +25,7 @@ openclaw logs --local-time
 openclaw logs --follow --local-time
 ```
 
-使用 `--local-time` 以您的本地时区显示时间戳。
+使用 `--local-time` 以本地时区渲染时间戳。
 
 import zh from '/components/footer/zh.mdx';
 
