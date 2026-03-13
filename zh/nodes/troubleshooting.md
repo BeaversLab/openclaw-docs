@@ -30,7 +30,7 @@ openclaw approvals get --node <idOrNameOrIp>
 
 健康信号：
 
-- 节点已连接并已针对角色 `node` 完成配对。
+- 节点已连接并已配对用于角色 `node`。
 - `nodes describe` 包含您正在调用的功能。
 - Exec 批准显示预期的模式/允许列表。
 
@@ -50,12 +50,12 @@ openclaw logs --follow
 
 ## 权限矩阵
 
-| 功能                   | iOS                                     | Android                                      | macOS 节点应用                | 典型故障代码           |
+| Capability                   | iOS                                     | Android                                      | macOS node app                | Typical failure code           |
 | ---------------------------- | --------------------------------------- | -------------------------------------------- | ----------------------------- | ------------------------------ |
-| `camera.snap`、`camera.clip` | 相机（+ 剪辑音频麦克风）           | 相机（+ 剪辑音频麦克风）                | 相机（+ 剪辑音频麦克风） | `*_PERMISSION_REQUIRED`        |
-| `screen.record`              | 屏幕录制（+ 麦克风可选）       | 屏幕捕获提示（+ 麦克风可选）       | 屏幕录制              | `*_PERMISSION_REQUIRED`        |
-| `location.get`               | 使用时或始终（取决于模式） | 基于模式的前台/后台位置 | 位置权限           | `LOCATION_PERMISSION_REQUIRED` |
-| `system.run`                 | 不适用（节点主机路径）                    | 不适用（节点主机路径）                         | 需要 Exec 批准       | `SYSTEM_RUN_DENIED`            |
+| `camera.snap`, `camera.clip` | 相机（片段音频需要麦克风）           | 相机（片段音频需要麦克风）                | 相机（片段音频需要麦克风） | `*_PERMISSION_REQUIRED`        |
+| `screen.record`              | 屏幕录制（麦克风可选）       | 屏幕截取提示（麦克风可选）       | 屏幕录制              | `*_PERMISSION_REQUIRED`        |
+| `location.get`               | 使用时或始终（取决于模式） | 基于模式的前台/后台位置 | Location permission           | `LOCATION_PERMISSION_REQUIRED` |
+| `system.run`                 | 不适用（节点主机路径）                    | 不适用（节点主机路径）                         | 需要执行批准       | `SYSTEM_RUN_DENIED`            |
 
 ## 配对与批准
 
@@ -78,16 +78,16 @@ openclaw approvals allowlist add --node <idOrNameOrIp> "/usr/bin/uname"
 
 ## 常见节点错误代码
 
-- `NODE_BACKGROUND_UNAVAILABLE` → 应用处于后台；请将其切换至前台。
+- `NODE_BACKGROUND_UNAVAILABLE` → 应用程序处于后台；将其切换至前台。
 - `CAMERA_DISABLED` → 节点设置中禁用了相机开关。
-- `*_PERMISSION_REQUIRED` → 缺少/被拒绝操作系统权限。
+- `*_PERMISSION_REQUIRED` → 缺少/拒绝操作系统权限。
 - `LOCATION_DISABLED` → 定位模式已关闭。
 - `LOCATION_PERMISSION_REQUIRED` → 未授予请求的定位模式。
-- `LOCATION_BACKGROUND_UNAVAILABLE` → 应用处于后台，但仅存在“使用时”权限。
-- `SYSTEM_RUN_DENIED: approval required` → 执行请求需要明确批准。
+- `LOCATION_BACKGROUND_UNAVAILABLE` → 应用程序处于后台，但仅存在“使用时”权限。
+- `SYSTEM_RUN_DENIED: approval required` → exec 请求需要明确批准。
 - `SYSTEM_RUN_DENIED: allowlist miss` → 命令被允许列表模式阻止。
-  在 Windows 节点主机上，诸如 `cmd.exe /c ...` 之类的 shell 包装器形式在
-  允许列表模式下会被视为允许列表未命中，除非通过询问流程批准。
+  在 Windows 节点主机上，除非通过询问流程批准，否则像 `cmd.exe /c ...` 这样的 shell-wrapper 形式
+  在允许列表模式下被视为允许列表未命中。
 
 ## 快速恢复循环
 
@@ -107,11 +107,11 @@ openclaw logs --follow
 
 相关：
 
-- [/nodes/index](/zh/en/nodes/index)
-- [/nodes/camera](/zh/en/nodes/camera)
-- [/nodes/location-command](/zh/en/nodes/location-command)
-- [/tools/exec-approvals](/zh/en/tools/exec-approvals)
-- [/gateway/pairing](/zh/en/gateway/pairing)
+- [/nodes/index](/en/nodes/index)
+- [/nodes/camera](/en/nodes/camera)
+- [/nodes/location-command](/en/nodes/location-command)
+- [/tools/exec-approvals](/en/tools/exec-approvals)
+- [/gateway/pairing](/en/gateway/pairing)
 
 import zh from '/components/footer/zh.mdx';
 

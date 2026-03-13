@@ -8,10 +8,10 @@ title: "Ollama"
 
 # Ollama
 
-Ollama 是一个本地 LLM 运行时，可让您轻松在机器上运行开源模型。OpenClaw 集成了 Ollama 的原生 API (`/api/chat`)，支持流式传输和工具调用，并且当您选择启用 `OLLAMA_API_KEY`（或身份验证配置文件）且未定义显式的 `models.providers.ollama` 条目时，可以自动发现本地 Ollama 模型。
+Ollama 是一个本地 LLM 运行时，可让您轻松在计算机上运行开源模型。OpenClaw 集成了 Ollama 的原生 API (`/api/chat`)，支持流式传输和工具调用，并且当您选择启用 `OLLAMA_API_KEY`（或身份验证配置文件）且未定义显式的 `models.providers.ollama` 条目时，可以自动发现本地 Ollama 模型。
 
 <Warning>
-**远程 Ollama 用户**：请勿将 `/v1` OpenAI 兼容 URL (`http://host:11434/v1`) 与 OpenClaw 配合使用。这会破坏工具调用，模型可能会输出原始工具 JSON 作为纯文本。请改用原生 Ollama API URL：`baseUrl: "http://host:11434"`（不含 `/v1`）。
+**远程 Ollama 用户**：请勿在 OpenClaw 中使用 `/v1` OpenAI 兼容 URL (`http://host:11434/v1`)。这会破坏工具调用，模型可能会将原始工具 JSON 作为纯文本输出。请改用原生 Ollama API URL：`baseUrl: "http://host:11434"`（无 `/v1`）。
 </Warning>
 
 ## 快速入门
@@ -42,7 +42,7 @@ openclaw onboard
 
 - `Local`：仅限本地模型
 - `Cloud + Local`：本地模型以及 Ollama Cloud 模型
-- 诸如 `kimi-k2.5:cloud`、`minimax-m2.5:cloud` 和 `glm-5:cloud` 等 Cloud 模型**不**需要本地的 `ollama pull`
+- 诸如 `kimi-k2.5:cloud`、`minimax-m2.5:cloud` 和 `glm-5:cloud` 等云模型**不**需要本地 `ollama pull`
 
 OpenClaw 目前建议：
 
@@ -80,11 +80,11 @@ openclaw models set ollama/glm-4.7-flash
 
 ## 模型发现（隐式提供商）
 
-当您设置 `OLLAMA_API_KEY`（或身份验证配置文件）且**不**定义 `models.providers.ollama` 时，OpenClaw 会从 `http://127.0.0.1:11434` 的本地 Ollama 实例发现模型：
+当您设置 `OLLAMA_API_KEY`（或身份验证配置文件）并且**未**定义 `models.providers.ollama` 时，OpenClaw 会从 `http://127.0.0.1:11434` 的本地 Ollama 实例中发现模型：
 
 - 查询 `/api/tags`
 - 在可用时使用尽力而为的 `/api/show` 查找来读取 `contextWindow`
-- 使用模型名称启发式算法标记 `reasoning` (`r1`、`reasoning`、`think`)
+- 使用模型名称启发式方法 (`r1`、`reasoning`、`think`) 标记 `reasoning`
 - 将 `maxTokens` 设置为 OpenClaw 使用的默认 Ollama 最大 token 上限
 - 将所有成本设置为 `0`
 
@@ -105,7 +105,7 @@ ollama pull mistral
 
 新模型将被自动发现并可供使用。
 
-如果您显式设置了 `models.providers.ollama`，将跳过自动发现，您必须手动定义模型（见下文）。
+如果你显式设置了 `models.providers.ollama`，则会跳过自动发现，并且你必须手动定义模型（见下文）。
 
 ## 配置
 
@@ -150,7 +150,7 @@ export OLLAMA_API_KEY="ollama-local"
 }
 ```
 
-如果设置了 `OLLAMA_API_KEY`，您可以在 provider 条目中省略 `apiKey`，OpenClaw 将在可用性检查时自动填充它。
+如果设置了 `OLLAMA_API_KEY`，你可以在 provider 条目中省略 `apiKey`，OpenClaw 将为可用性检查填充它。
 
 ### 自定义基础 URL（显式配置）
 
@@ -171,7 +171,7 @@ export OLLAMA_API_KEY="ollama-local"
 ```
 
 <Warning>
-不要在 URL 中添加 `/v1`。`/v1` 路径使用 OpenAI 兼容模式，在此模式下工具调用不可靠。请使用不带路径后缀的基础 Ollama URL。
+不要在 URL 中添加 `/v1`。`/v1` 路径使用 OpenAI 兼容模式，其中工具调用不可靠。请使用不带路径后缀的 Ollama 基础 URL。
 </Warning>
 
 ### 模型选择
@@ -195,7 +195,7 @@ export OLLAMA_API_KEY="ollama-local"
 
 ### 推理模型
 
-OpenClaw 默认将名称中包含 `deepseek-r1`、`reasoning` 或 `think` 等的模型视为具备推理能力：
+默认情况下，OpenClaw 将名称如 `deepseek-r1`、`reasoning` 或 `think` 的模型视为具备推理能力：
 
 ```bash
 ollama pull deepseek-r1:32b
@@ -207,7 +207,7 @@ Ollama 是免费的且在本地运行，因此所有模型成本均设为 $0。
 
 ### 流式配置
 
-OpenClaw 的 Ollama 集成默认使用 **原生 Ollama API** (`/api/chat`)，完全支持同时进行流式传输和工具调用。无需特殊配置。
+OpenClaw 的 Ollama 集成默认使用 **原生 Ollama API** (`/api/chat`)，它完全支持同时进行流式传输和工具调用。无需特殊配置。
 
 #### 旧版 OpenAI 兼容模式
 
@@ -215,7 +215,7 @@ OpenClaw 的 Ollama 集成默认使用 **原生 Ollama API** (`/api/chat`)，完
 **在 OpenAI 兼容模式下工具调用不可靠。** 仅当您需要代理的 OpenAI 格式且不依赖原生工具调用行为时才使用此模式。
 </Warning>
 
-如果您需要改用 OpenAI 兼容的端点（例如，在仅支持 OpenAI 格式的代理后面），请显式设置 `api: "openai-completions"`：
+如果你需要改用 OpenAI 兼容端点（例如，在仅支持 OpenAI 格式的代理后面），请显式设置 `api: "openai-completions"`：
 
 ```json5
 {
@@ -233,9 +233,9 @@ OpenClaw 的 Ollama 集成默认使用 **原生 Ollama API** (`/api/chat`)，完
 }
 ```
 
-此模式可能无法同时支持流式传输和工具调用。您可能需要在模型配置中使用 `params: { streaming: false }` 禁用流式传输。
+此模式可能不支持同时进行流式传输和工具调用。你可能需要在模型配置中使用 `params: { streaming: false }` 禁用流式传输。
 
-当 `api: "openai-completions"` 与 Ollama 一起使用时，OpenClaw 默认会注入 `options.num_ctx`，以防止 Ollama 无提示回退到 4096 的上下文窗口。如果您的代理/上游拒绝未知的 `options` 字段，请禁用此行为：
+当将 `api: "openai-completions"` 与 Ollama 一起使用时，OpenClaw 默认会注入 `options.num_ctx`，以防 Ollama 无提示回退到 4096 上下文窗口。如果你的代理/上游拒绝未知的 `options` 字段，请禁用此行为：
 
 ```json5
 {
@@ -255,13 +255,13 @@ OpenClaw 的 Ollama 集成默认使用 **原生 Ollama API** (`/api/chat`)，完
 
 ### 上下文窗口
 
-对于自动发现的模型，OpenClaw 优先使用 Ollama 报告的上下文窗口（如果可用），否则回退到 OpenClaw 使用的默认 Ollama 上下文窗口。您可以在显式提供者配置中覆盖 `contextWindow` 和 `maxTokens`。
+对于自动发现的模型，OpenClaw 在可用时使用 Ollama 报告的上下文窗口，否则回退到 OpenClaw 使用的默认 Ollama 上下文窗口。你可以在显式 provider 配置中覆盖 `contextWindow` 和 `maxTokens`。
 
 ## 故障排除
 
 ### 未检测到 Ollama
 
-请确保 Ollama 正在运行，并且您设置了 `OLLAMA_API_KEY`（或身份验证配置文件），并且**没有**定义显式的 `models.providers.ollama` 条目：
+请确保 Ollama 正在运行，并且您设置了 `OLLAMA_API_KEY`（或认证配置文件），并且您**没有**定义显式的 `models.providers.ollama` 条目：
 
 ```bash
 ollama serve
@@ -303,9 +303,9 @@ ollama serve
 
 ## 另请参阅
 
-- [模型提供者](/zh/en/concepts/model-providers) - 所有提供者概览
-- [模型选择](/zh/en/concepts/models) - 如何选择模型
-- [配置](/zh/en/gateway/configuration) - 完整配置参考
+- [模型提供者](/en/concepts/model-providers) - 所有提供者概览
+- [模型选择](/en/concepts/models) - 如何选择模型
+- [配置](/en/gateway/configuration) - 完整配置参考
 
 import zh from '/components/footer/zh.mdx';
 

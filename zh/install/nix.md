@@ -9,7 +9,7 @@ title: "Nix"
 
 # Nix 安装
 
-推荐使用 Nix 运行 OpenClaw 的方式是通过 **[nix-openclaw](https://github.com/openclaw/nix-openclaw)** —— 一个功能齐全的 Home Manager 模块。
+使用 Nix 运行 OpenClaw 的推荐方式是通过 **[nix-openclaw](https://github.com/openclaw/nix-openclaw)** — 一个开箱即用的 Home Manager 模块。
 
 ## 快速开始
 
@@ -32,7 +32,7 @@ Reference the nix-openclaw README for module options.
 
 > **📦 完整指南：[github.com/openclaw/nix-openclaw](https://github.com/openclaw/nix-openclaw)**
 >
-> nix-openclaw 仓库是 Nix 安装的真实来源。本页面仅作简要概述。
+> nix-openclaw 仓库是 Nix 安装的事实来源。本页面只是一个快速概览。
 
 ## 您将获得
 
@@ -45,7 +45,7 @@ Reference the nix-openclaw README for module options.
 
 ## Nix 模式运行时行为
 
-当设置了 `OPENCLAW_NIX_MODE=1` 时（使用 nix-openclaw 时自动设置）：
+当设置了 `OPENCLAW_NIX_MODE=1` 时（使用 nix-openclaw 会自动设置）：
 
 OpenClaw 支持 **Nix 模式**，该模式使配置具有确定性并禁用自动安装流程。
 通过导出以下内容启用它：
@@ -64,7 +64,7 @@ defaults write ai.openclaw.mac openclaw.nixMode -bool true
 ### 配置 + 状态路径
 
 OpenClaw 从 `OPENCLAW_CONFIG_PATH` 读取 JSON5 配置，并将可变数据存储在 `OPENCLAW_STATE_DIR` 中。
-如果需要，您还可以设置 `OPENCLAW_HOME` 来控制用于内部路径解析的主目录。
+如有需要，您还可以设置 `OPENCLAW_HOME` 来控制用于内部路径解析的基本主目录。
 
 - `OPENCLAW_HOME`（默认优先级：`HOME` / `USERPROFILE` / `os.homedir()`）
 - `OPENCLAW_STATE_DIR`（默认：`~/.openclaw`）
@@ -87,15 +87,15 @@ macOS 打包流程需要位于以下位置的稳定 Info.plist 模板：
 apps/macos/Sources/OpenClaw/Resources/Info.plist
 ```
 
-[`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 将此模板复制到应用包中并修补动态字段
+[`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 将此模板复制到应用程序包中，并修补动态字段
 （Bundle ID、版本/构建号、Git SHA、Sparkle 密钥）。这使得 plist 对于 SwiftPM
-打包和 Nix 构建（它们不依赖完整的 Xcode 工具链）来说是确定性的。
+打包和 Nix 构建（不依赖完整的 Xcode 工具链）具有确定性。
 
 ## 相关
 
-- [nix-openclaw](https://github.com/openclaw/nix-openclaw) — 完整设置指南
-- [Wizard](/zh/en/start/wizard) — 非 Nix CLI 设置
-- [Docker](/zh/en/install/docker) — 容器化设置
+- [nix-openclaw](https://github.com/openclaw/nix-openclaw) — 完整的设置指南
+- [Wizard](/en/start/wizard) — 非 Nix CLI 设置
+- [Docker](/en/install/docker) — 容器化设置
 
 import zh from '/components/footer/zh.mdx';
 

@@ -1,8 +1,8 @@
 ---
-summary: "Telegram 允许列表加固：前缀 + 空白字符标准化"
+summary: "Telegram 许可名单加固：前缀 + 空格标准化"
 read_when:
   - Reviewing historical Telegram allowlist changes
-title: "Telegram 允许列表加固"
+title: "Telegram 许可名单加固"
 ---
 
 # Telegram 允许列表加固
@@ -13,8 +13,7 @@ title: "Telegram 允许列表加固"
 
 ## 摘要
 
-Telegram 允许列表现在不区分大小写地接受 `telegram:` 和 `tg:` 前缀，并容忍
-意外的空白字符。这将传入的允许列表检查与出站发送标准化保持一致。
+Telegram 许可名单现在不区分大小写地接受 `telegram:` 和 `tg:` 前缀，并且容许意外的空格。这将入站许可名单检查与出站发送标准化保持一致。
 
 ## 变更内容
 
@@ -36,8 +35,8 @@ Telegram 允许列表现在不区分大小写地接受 `telegram:` 和 `tg:` 前
 
 ## 相关文档
 
-- [群聊](/zh/en/concepts/groups)
-- [Telegram 提供商](/zh/en/channels/telegram)
+- [群聊](/en/concepts/groups)
+- [Telegram 提供商](/en/channels/telegram)
 
 import zh from '/components/footer/zh.mdx';
 

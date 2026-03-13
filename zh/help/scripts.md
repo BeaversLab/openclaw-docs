@@ -9,18 +9,18 @@ title: "脚本"
 # 脚本
 
 `scripts/` 目录包含用于本地工作流和运维任务的辅助脚本。
-当任务明确与脚本相关时，请使用这些脚本；否则优先使用 CLI。
+当任务明确与脚本相关时，请使用这些脚本；否则，首选 CLI。
 
 ## 约定
 
 - 除非文档或发布检查清单中引用，否则脚本是**可选的**。
-- 如果存在 CLI 接口，请优先使用（例如：身份验证监控使用 `openclaw models status --check`）。
+- 如果存在 CLI 界面，请优先使用它们（例如：身份监控使用 `openclaw models status --check`）。
 - 假设脚本特定于主机；在新机器上运行前请阅读它们。
 
 ## 身份验证监控脚本
 
 身份验证监控脚本在此处记录：
-[/automation/auth-monitoring](/zh/en/automation/auth-monitoring)
+[/automation/auth-monitoring](/en/automation/auth-monitoring)
 
 ## 添加脚本时
 

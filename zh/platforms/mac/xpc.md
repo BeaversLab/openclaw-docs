@@ -1,5 +1,5 @@
 ---
-summary: "适用于 OpenClaw 应用、Gateway 节点传输和 PeekabooBridge 的 macOS IPC 架构"
+summary: "OpenClaw 应用、网关节点传输和 PeekabooBridge 的 macOS IPC 架构"
 read_when:
   - Editing IPC contracts or menu bar app IPC
 title: "macOS IPC"
@@ -7,7 +7,7 @@ title: "macOS IPC"
 
 # OpenClaw macOS IPC 架构
 
-**当前模式：** 一个本地 Unix 套接字将 **节点主机服务** 连接到 **macOS 应用**，用于执行审批 + `system.run`。存在一个 `openclaw-mac` 调试 CLI 用于发现/连接检查；代理操作仍通过 Gateway WebSocket 和 `node.invoke` 流动。UI 自动化使用 PeekabooBridge。
+**当前模型：** 一个本地 Unix 套接字将 **节点主机服务 (node host service)** 连接到 **macOS 应用**，用于执行审批 + `system.run`。存在一个 `openclaw-mac` 调试 CLI 用于发现/连接检查；代理操作仍然通过网关 WebSocket 和 `node.invoke` 流式传输。UI 自动化使用 PeekabooBridge。
 
 ## 目标
 
@@ -41,12 +41,12 @@ Agent -> Gateway -> Node Service (WS)
 
 - UI 自动化使用一个名为 `bridge.sock` 的独立 UNIX 套接字和 PeekabooBridge JSON 协议。
 - 主机首选项顺序（客户端）：Peekaboo.app → Claude.app → OpenClaw.app → 本地执行。
-- 安全性：网桥主机需要允许的 TeamID；仅限 DEBUG 的同 UID 逃生舱由 `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` 守护（Peekaboo 约定）。
-- 详见：[PeekabooBridge 使用方法](/zh/en/platforms/mac/peekaboo)。
+- 安全性：网桥主机需要允许的 TeamID；仅限 DEBUG 的同 UID 逃生舱由 `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` 保护（Peekaboo 约定）。
+- 详见：[PeekabooBridge 使用方法](/en/platforms/mac/peekaboo)。
 
 ## 操作流程
 
-- 重启/重新构建：`SIGN_IDENTITY="Apple Development: <Developer Name> (<TEAMID>)" scripts/restart-mac.sh`
+- 重启/重建：`SIGN_IDENTITY="Apple Development: <Developer Name> (<TEAMID>)" scripts/restart-mac.sh`
   - 终止现有实例
   - Swift 构建 + 打包
   - 写入/引导/启动 LaunchAgent
@@ -55,10 +55,10 @@ Agent -> Gateway -> Node Service (WS)
 ## 加固说明
 
 - 优先要求所有特权接口均匹配 TeamID。
-- PeekabooBridge：`PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1`（仅限 DEBUG）可能允许同 UID 调用者以进行本地开发。
+- PeekabooBridge：`PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1`（仅限 DEBUG）可能允许同 UID 调用者进行本地开发。
 - 所有通信保持仅限本地；不暴露任何网络套接字。
 - TCC 提示仅源于 GUI 应用包；请在重新构建之间保持签名的 Bundle ID 稳定。
-- IPC 加固：套接字模式 `0600`、令牌、对等 UID 检查、HMAC 质询/响应、短 TTL。
+- IPC 加固：套接字模式 `0600`、令牌、对等 UID 检查、HMAC 挑战/响应、短 TTL。
 
 import zh from '/components/footer/zh.mdx';
 

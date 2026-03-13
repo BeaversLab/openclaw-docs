@@ -1,5 +1,5 @@
 ---
-summary: "在 GCP Compute Engine 虚拟机 (Docker) 上全天候 (24/7) 运行 OpenClaw 网关，并确保持久化状态"
+summary: "在 GCP Compute Engine 虚拟机 (Docker) 上 24/7 运行 OpenClaw 网关，并保持持久化状态"
 read_when:
   - You want OpenClaw running 24/7 on GCP
   - You want a production-grade, always-on Gateway on your own VM
@@ -22,7 +22,7 @@ title: "GCP"
 - 创建一个 Compute Engine 虚拟机
 - 安装 Docker (隔离的应用运行时)
 - 在 Docker 中启动 OpenClaw 网关
-- 在主机上持久化保存 `~/.openclaw` + `~/.openclaw/workspace` (在重启/重建后存活)
+- 在主机上持久化 `~/.openclaw` + `~/.openclaw/workspace`（在重启/重建后存活）
 - 通过 SSH 隧道从您的笔记本电脑访问控制 UI
 
 可以通过以下方式访问网关：
@@ -32,7 +32,7 @@ title: "GCP"
 
 本指南使用 GCP Compute Engine 上的 Debian。
 Ubuntu 也可以使用；请相应地映射软件包。
-有关通用 Docker 流程，请参阅 [Docker](/zh/en/install/docker)。
+有关通用 Docker 流程，请参阅 [Docker](/en/install/docker)。
 
 ---
 
@@ -80,7 +80,7 @@ gcloud auth login
 
 **选项 B: Cloud Console**
 
-所有步骤均可通过 Web 界面在 [https://console.cloud.google.com](https://console.cloud.google.com) 完成
+所有步骤均可通过位于 [https://console.cloud.google.com](https://console.cloud.google.com) 的 Web UI 完成
 
 ---
 
@@ -134,9 +134,9 @@ gcloud compute instances create openclaw-gateway \
 **控制台:**
 
 1. 转到 Compute Engine > 虚拟机实例 > 创建实例
-2. 名称: `openclaw-gateway`
-3. 地区: `us-central1`, 区域: `us-central1-a`
-4. 机器类型: `e2-small`
+2. 名称： `openclaw-gateway`
+3. 区域： `us-central1`，可用区： `us-central1-a`
+4. 机器类型： `e2-small`
 5. 启动磁盘: Debian 12, 20GB
 6. 创建
 
@@ -351,9 +351,9 @@ docker compose build
 docker compose up -d openclaw-gateway
 ```
 
-如果在 `pnpm install --frozen-lockfile` 期间因 `Killed` / `exit code 137` 导致构建失败，则说明 VM 内存不足。请至少使用 `e2-small`，或者使用 `e2-medium` 以确保首次构建更可靠。
+如果在 `pnpm install --frozen-lockfile` 期间因 `Killed` / `exit code 137` 导致构建失败，则虚拟机内存不足。请至少使用 `e2-small`，或使用 `e2-medium` 以获得更可靠的首次构建。
 
-当绑定到 LAN (`OPENCLAW_GATEWAY_BIND=lan`) 时，在继续之前配置受信任的浏览器来源：
+绑定到 LAN (`OPENCLAW_GATEWAY_BIND=lan`) 时，请先配置受信任的浏览器源：
 
 ```bash
 docker compose run --rm openclaw-cli config set gateway.controlUi.allowedOrigins '["http://127.0.0.1:18789"]' --strict-json
@@ -427,18 +427,18 @@ docker compose run --rm openclaw-cli devices approve <requestId>
 OpenClaw 在 Docker 中运行，但 Docker 并非事实来源。
 所有长期存在的状态必须在重启、重新构建和重新引导后保留。
 
-| 组件               | 位置                              | 持久化机制             | 备注                             |
+| 组件           | 位置                          | 持久化机制  | 备注                            |
 | ------------------- | --------------------------------- | ---------------------- | -------------------------------- |
-| Gateway config      | `/home/node/.openclaw/`           | 主机卷挂载             | 包括 `openclaw.json`、tokens   |
-| Model auth profiles | `/home/node/.openclaw/`           | 主机卷挂载             | OAuth 令牌、API 密钥             |
-| Skill configs       | `/home/node/.openclaw/skills/`    | 主机卷挂载             | 技能级状态                      |
-| Agent workspace     | `/home/node/.openclaw/workspace/` | 主机卷挂载             | 代码和代理制品                  |
-| WhatsApp session    | `/home/node/.openclaw/`           | 主机卷挂载             | 保留 QR 登录                     |
-| Gmail keyring       | `/home/node/.openclaw/`           | 主机卷 + 密码          | 需要 `GOG_KEYRING_PASSWORD`  |
-| External binaries   | `/usr/local/bin/`                 | Docker 镜像            | 必须在构建时烘焙                 |
-| Node runtime        | 容器文件系统                      | Docker 镜像            | 每次镜像构建都会重建             |
-| OS packages         | 容器文件系统                      | Docker 镜像            | 请勿在运行时安装                 |
-| Docker container    | 临时                              | 可重启                 | 可安全销毁                       |
+| Gateway config      | `/home/node/.openclaw/`           | 主机卷挂载      | Includes `openclaw.json`, tokens |
+| Model auth profiles | `/home/node/.openclaw/`           | 主机卷挂载      | OAuth tokens, API keys           |
+| Skill configs       | `/home/node/.openclaw/skills/`    | 主机卷挂载      | Skill-level state                |
+| Agent workspace     | `/home/node/.openclaw/workspace/` | 主机卷挂载      | Code and agent artifacts         |
+| WhatsApp session    | `/home/node/.openclaw/`           | 主机卷挂载      | Preserves QR login               |
+| Gmail keyring       | `/home/node/.openclaw/`           | 主机卷 + 密码 | Requires `GOG_KEYRING_PASSWORD`  |
+| External binaries   | `/usr/local/bin/`                 | Docker 镜像           | Must be baked at build time      |
+| Node runtime        | 容器文件系统              | Docker 镜像           | Rebuilt every image build        |
+| OS packages         | 容器文件系统              | Docker 镜像           | Do not install at runtime        |
+| Docker container    | 临时性                         | 可重启            | Safe to destroy                  |
 
 ---
 
@@ -473,7 +473,7 @@ gcloud compute os-login describe-profile
 
 **内存不足 (OOM)**
 
-如果 Docker 构建因 `Killed` 和 `exit code 137` 而失败，则表示 VM 已被 OOM 终止。请升级到 e2-small（最低）或 e2-medium（建议用于可靠的本地构建）：
+如果 Docker 构建失败并显示 `Killed` 和 `exit code 137`，说明 VM 被 OOM 杀死了。请升级到 e2-small（最低）或 e2-medium（推荐用于可靠的本地构建）：
 
 ```bash
 # Stop the VM first
@@ -513,15 +513,15 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 避免使用 Owner 角色进行自动化操作。请遵循最小权限原则。
 
-请参阅 [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google.com/iam/docs/understanding-roles) 了解 IAM 角色详细信息。
+请参阅 [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google.com/iam/docs/understanding-roles) 了解 IAM 角色的详细信息。
 
 ---
 
 ## 后续步骤
 
-- 设置消息通道：[Channels](/zh/en/channels)
-- 将本地设备配对为节点：[Nodes](/zh/en/nodes)
-- 配置网关：[Gateway configuration](/zh/en/gateway/configuration)
+- 设置消息通道：[Channels](/en/channels)
+- 将本地设备配对为节点：[Nodes](/en/nodes)
+- 配置网关：[Gateway configuration](/en/gateway/configuration)
 
 import zh from '/components/footer/zh.mdx';
 

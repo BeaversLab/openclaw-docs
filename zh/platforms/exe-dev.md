@@ -1,5 +1,5 @@
 ---
-summary: "在 exe.dev 上运行 OpenClaw 网关（VM + HTTPS 代理）以实现远程访问"
+summary: "在 exe.dev (VM + HTTPS 代理) 上运行 OpenClaw 网关以实现远程访问"
 read_when:
   - You want a cheap always-on Linux host for the Gateway
   - You want remote Control UI access without running your own VPS
@@ -8,7 +8,7 @@ title: "exe.dev"
 
 # exe.dev
 
-目标：在 exe.dev 虚拟机上运行 OpenClaw 网关，可通过以下方式从笔记本电脑访问：`https://<vm-name>.exe.xyz`
+目标：OpenClaw 网关运行在 exe.dev 虚拟机上，可通过您的笔记本电脑访问： `https://<vm-name>.exe.xyz`
 
 本页面假定使用 exe.dev 的默认 **exeuntu** 镜像。如果您选择了其他发行版，请相应地调整软件包。
 
@@ -27,7 +27,7 @@ title: "exe.dev"
 
 ## 使用 Shelley 自动安装
 
-Shelley（[exe.dev](https://exe.dev) 的代理）可以使用我们的提示立即安装 OpenClaw。使用的提示如下：
+Shelley，[exe.dev](https://exe.dev) 的代理，可以使用我们的提示立即安装 OpenClaw。使用的提示如下：
 
 ```
 Set up OpenClaw (https://docs.openclaw.ai/install) on this VM. Use the non-interactive and accept-risk flags for openclaw onboarding. Add the supplied auth or token as needed. Configure nginx to forward from the default port 18789 to the root location on the default enabled site config, making sure to enable Websocket support. Pairing is done by "openclaw devices list" and "openclaw device approve <request id>". Make sure the dashboard shows that OpenClaw's health is OK. exe.dev handles forwarding from port 8000 to port 80/443 and HTTPS for us, so the final "reachable" should be <vm-name>.exe.xyz, without port specification.
@@ -49,7 +49,7 @@ ssh exe.dev new
 ssh <vm-name>.exe.xyz
 ```
 
-提示：保持此虚拟机**有状态**。OpenClaw 将状态存储在 `~/.openclaw/` 和 `~/.openclaw/workspace/` 下。
+提示：保持此虚拟机**有状态 (stateful)**。OpenClaw 将状态存储在 `~/.openclaw/` 和 `~/.openclaw/workspace/` 下。
 
 ## 2) 安装先决条件（在虚拟机上）
 
@@ -68,7 +68,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash
 
 ## 4) 设置 nginx 以将 OpenClaw 代理到端口 8000
 
-使用以下内容编辑 `/etc/nginx/sites-enabled/default`
+编辑 `/etc/nginx/sites-enabled/default` 为
 
 ```
 server {
@@ -102,11 +102,11 @@ server {
 
 ## 5) 访问 OpenClaw 并授予权限
 
-访问 `https://<vm-name>.exe.xyz/?token=YOUR-TOKEN-FROM-TERMINAL`（请参阅入门时的控制 UI 输出）。使用 `openclaw devices list` 和 `openclaw devices approve <requestId>` 批准设备。如果有疑问，请从浏览器使用 Shelley！
+访问 `https://<vm-name>.exe.xyz/?token=YOUR-TOKEN-FROM-TERMINAL`（请参阅入门时的控制 UI 输出）。使用 `openclaw devices list` 和 `openclaw devices approve <requestId>` 批准设备。如有疑问，请从浏览器使用 Shelley！
 
 ## 远程访问
 
-远程访问由 [exe.dev](https://exe.dev) 的身份验证处理。默认情况下，来自端口 8000 的 HTTP 流量会通过电子邮件身份验证转发到 `https://<vm-name>.exe.xyz`。
+远程访问由 [exe.dev](https://exe.dev) 的身份验证处理。默认情况下，来自端口 8000 的 HTTP 流量将通过电子邮件身份验证转发到 `https://<vm-name>.exe.xyz`。
 
 ## 更新
 
@@ -117,7 +117,7 @@ openclaw gateway restart
 openclaw health
 ```
 
-指南：[更新](/zh/en/install/updating)
+指南：[更新](/en/install/updating)
 
 import zh from '/components/footer/zh.mdx';
 

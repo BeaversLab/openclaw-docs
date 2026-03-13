@@ -1,5 +1,5 @@
 ---
-summary: "在 GCP Compute Engine 虚拟机上 24/7 运行 OpenClaw 网关（Docker），并具有持久化状态"
+summary: "在 GCP Compute Engine 虚拟机上通过 Docker 全天候运行 OpenClaw 网关（具有持久状态）"
 read_when:
   - You want OpenClaw running 24/7 on GCP
   - You want a production-grade, always-on Gateway on your own VM
@@ -22,7 +22,7 @@ title: "GCP"
 - 创建 Compute Engine 虚拟机
 - 安装 Docker（隔离的应用运行时）
 - 在 Docker 中启动 OpenClaw 网关
-- 在主机上持久化 `~/.openclaw` + `~/.openclaw/workspace`（在重启/重建后保留）
+- 在主机上持久化 `~/.openclaw` + `~/.openclaw/workspace`（在重启/重建后幸存）
 - 通过 SSH 隧道从笔记本电脑访问控制 UI
 
 可以通过以下方式访问网关：
@@ -32,7 +32,7 @@ title: "GCP"
 
 本指南在 GCP Compute Engine 上使用 Debian。
 Ubuntu 也可以使用；请相应地映射软件包。
-有关通用 Docker 流程，请参阅 [Docker](/zh/en/install/docker)。
+有关通用 Docker 流程，请参阅 [Docker](/en/install/docker)。
 
 ---
 
@@ -80,7 +80,7 @@ gcloud auth login
 
 **选项 B：Cloud Console**
 
-所有步骤均可通过位于 https://console.cloud.google.com 的 Web UI 完成
+所有步骤均可通过 https://console.cloud.google.com 的 Web UI 完成
 
 ---
 
@@ -212,7 +212,7 @@ mkdir -p ~/.openclaw/workspace
 
 ## 8) 配置环境变量
 
-在仓库根目录下创建 `.env`。
+在仓库根目录中创建 `.env`。
 
 ```bash
 OPENCLAW_IMAGE=openclaw:latest
@@ -293,9 +293,9 @@ services:
 
 下面的示例仅展示了三种常见的二进制文件：
 
-- `gog` 用于 Gmail 访问
-- `goplaces` 用于 Google Places
-- `wacli` 用于 WhatsApp
+- 用于 Gmail 访问的 `gog`
+- 用于 Google Places 的 `goplaces`
+- 用于 WhatsApp 的 `wacli`
 
 这些只是示例，并非完整列表。
 您可以使用相同的模式安装所需的任意数量的二进制文件。
@@ -407,18 +407,18 @@ gcloud compute ssh openclaw-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:1
 OpenClaw 在 Docker 中运行，但 Docker 并不是真实来源。
 所有长期存在的状态必须在重启、重新构建和重新启动后存活下来。
 
-| 组件               | 位置                               | 持久化机制             | 备注                              |
-| ------------------- | ---------------------------------- | ---------------------- | --------------------------------- |
-| Gateway config      | `/home/node/.openclaw/`           | 主机卷挂载             | 包括 `openclaw.json`、令牌      |
-| Model auth profiles | `/home/node/.openclaw/`           | 主机卷挂载             | OAuth 令牌、API 密钥              |
-| Skill configs       | `/home/node/.openclaw/skills/`    | 主机卷挂载             | 技能级别状态                      |
-| Agent workspace     | `/home/node/.openclaw/workspace/` | 主机卷挂载             | 代码和代理产物                    |
-| WhatsApp session    | `/home/node/.openclaw/`           | 主机卷挂载             | 保留 QR 登录                      |
-| Gmail keyring       | `/home/node/.openclaw/`           | 主机卷 + 密码          | 需要 `GOG_KEYRING_PASSWORD`  |
-| External binaries   | `/usr/local/bin/`                 | Docker 镜像            | 必须在构建时 baked               |
-| Node runtime        | 容器文件系统                       | Docker 镜像            | 每次镜像构建时重建                |
-| OS packages         | 容器文件系统                       | Docker 镜像            | 请勿在运行时安装                 |
-| Docker container    | 临时                               | 可重启                 | 可安全销毁                        |
+| 组件           | 位置                          | 持久化机制  | 备注                            |
+| ------------------- | --------------------------------- | ---------------------- | -------------------------------- |
+| Gateway config      | `/home/node/.openclaw/`           | 主机卷挂载      | 包括 `openclaw.json`、令牌 |
+| Model auth profiles | `/home/node/.openclaw/`           | 主机卷挂载      | OAuth 令牌、API 密钥           |
+| Skill configs       | `/home/node/.openclaw/skills/`    | 主机卷挂载      | 技能级别状态                |
+| Agent workspace     | `/home/node/.openclaw/workspace/` | 主机卷挂载      | 代码和 Agent 工件         |
+| WhatsApp session    | `/home/node/.openclaw/`           | 主机卷挂载      | 保留 QR 登录               |
+| Gmail keyring       | `/home/node/.openclaw/`           | 主机卷 + 密码 | 需要 `GOG_KEYRING_PASSWORD`  |
+| External binaries   | `/usr/local/bin/`                 | Docker 镜像           | 必须在构建时打包      |
+| Node runtime        | 容器文件系统              | Docker 镜像           | 每次镜像构建时重新构建        |
+| OS packages         | 容器文件系统              | Docker 镜像           | 请勿在运行时安装        |
+| Docker container    | 临时的                         | 可重启            | 可安全销毁                  |
 
 ---
 
@@ -498,9 +498,9 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 ## 后续步骤
 
-- 设置消息通道：[通道](/zh/en/channels)
-- 将本地设备配对为节点：[节点](/zh/en/nodes)
-- 配置网关：[网关配置](/zh/en/gateway/configuration)
+- 设置消息通道：[通道](/en/channels)
+- 将本地设备配对为节点：[节点](/en/nodes)
+- 配置网关：[网关配置](/en/gateway/configuration)
 
 import zh from '/components/footer/zh.mdx';
 

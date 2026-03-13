@@ -1,5 +1,5 @@
 ---
-summary: "使用 SSH 隧道（Gateway WS）和 tailnet 进行远程访问"
+summary: "使用 SSH 隧道和 tailnet 进行远程访问"
 read_when:
   - Running or troubleshooting remote gateway setups
 title: "远程访问"
@@ -26,9 +26,9 @@ title: "远程访问"
 
 在持久主机上运行 Gateway，并通过 **Tailscale** 或 SSH 访问它。
 
-- **最佳用户体验：** 保留 `gateway.bind: "loopback"` 并对控制 UI 使用 **Tailscale Serve**。
+- **最佳用户体验：** 保持 `gateway.bind: "loopback"` 并使用 **Tailscale Serve** 来访问控制 UI。
 - **后备方案：** 保留环回 + 从任何需要访问的机器建立 SSH 隧道。
-- **示例：** [exe.dev](/zh/en/install/exe-dev)（简易虚拟机）或 [Hetzner](/zh/en/install/hetzner)（生产 VPS）。
+- **示例：** [exe.dev](/en/install/exe-dev)（简易虚拟机）或 [Hetzner](/en/install/hetzner)（生产 VPS）。
 
 当您的笔记本电脑经常休眠但您希望代理程序始终开启时，这是理想的选择。
 
@@ -39,7 +39,7 @@ title: "远程访问"
 - 使用 macOS 应用的 **通过 SSH 远程** 模式（设置 → 通用 → “OpenClaw 运行位置”）。
 - 该应用打开并管理隧道，因此 WebChat + 健康检查“即可工作”。
 
-操作手册：[macOS 远程访问](/zh/en/platforms/mac/remote)。
+操作手册：[macOS 远程访问](/en/platforms/mac/remote)。
 
 ### 3) 笔记本电脑运行 Gateway，从其他机器进行远程访问
 
@@ -48,7 +48,7 @@ title: "远程访问"
 - 从其他机器建立到笔记本电脑的 SSH 隧道，或
 - 使用 Tailscale Serve 托管控制 UI，并保持 Gateway 仅限环回访问。
 
-指南：[Tailscale](/zh/en/gateway/tailscale) 和 [Web 概述](/zh/en/web)。
+指南：[Tailscale](/en/gateway/tailscale) 和 [Web 概述](/en/web)。
 
 ## 命令流（什么在哪里运行）
 
@@ -58,12 +58,12 @@ title: "远程访问"
 
 - Telegram 消息到达 **Gateway**。
 - Gateway 运行 **agent** 并决定是否调用节点工具。
-- Gateway 通过 Gateway WebSocket（`node.*` RPC）调用 **node**。
+- Gateway 通过 Gateway WebSocket (`node.*` RPC) 调用 **node**。
 - 节点返回结果；Gateway 回复给 Telegram。
 
 备注：
 
-- **节点不运行网关服务。** 除非您有意运行隔离的配置文件（请参阅[多网关](/zh/en/gateway/multiple-gateways)），否则每台主机应仅运行一个网关。
+- **节点不运行网关服务。** 除非您有意运行隔离的配置文件（请参阅[多网关](/en/gateway/multiple-gateways)），否则每台主机应仅运行一个网关。
 - macOS 应用程序的“节点模式”只是通过 Gateway WebSocket 连接的节点客户端。
 
 ## SSH 隧道（CLI + 工具）
@@ -76,12 +76,12 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 
 隧道启动后：
 
-- `openclaw health` 和 `openclaw status --deep` 现在可以通过 `ws://127.0.0.1:18789` 访问远程网关。
-- 如果需要，`openclaw gateway {status,health,send,agent,call}` 也可以通过 `--url` 定向到转发的 URL。
+- `openclaw health` 和 `openclaw status --deep` 现在通过 `ws://127.0.0.1:18789` 访问远程 gateway。
+- 需要时，`openclaw gateway {status,health,send,agent,call}` 也可以通过 `--url` 指向转发的 URL。
 
 注意：将 `18789` 替换为您配置的 `gateway.port`（或 `--port`/`OPENCLAW_GATEWAY_PORT`）。
 注意：当您传递 `--url` 时，CLI 不会回退到配置或环境凭据。
-显式包含 `--token` 或 `--password`。缺少显式凭据将报错。
+请显式包含 `--token` 或 `--password`。缺少显式凭据将被视为错误。
 
 ## CLI 远程默认值
 
@@ -99,25 +99,25 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 }
 ```
 
-当网关仅限环回时，请将 URL 保持在 `ws://127.0.0.1:18789` 并首先打开 SSH 隧道。
+当 gateway 仅限本地环回时，请将 URL 保持在 `ws://127.0.0.1:18789` 并先打开 SSH 隧道。
 
 ## 凭据优先级
 
-网关凭据解析遵循一个跨 call/probe/status 路径和 Discord 执行批准监控的共享契约。Node-host 使用相同的基础契约，但有一个本地模式例外（它有意忽略 `gateway.remote.*`）：
+Gateway 凭据解析遵循一个跨 call/probe/status 路径和 Discord exec-approval 监控的共享契约。Node-host 使用相同的基础契约，但有一个本地模式例外（它会故意忽略 `gateway.remote.*`）：
 
 - 显式凭据（`--token`、`--password` 或工具 `gatewayToken`）在接受显式身份验证的调用路径上始终优先。
 - URL 覆盖安全性：
-  - CLI URL 覆盖 (`--url`) 绝不复用隐式配置/环境凭据。
-  - Env URL 覆盖 (`OPENCLAW_GATEWAY_URL`) 只能使用环境凭据 (`OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`)。
+  - CLI URL 覆盖（`--url`）绝不重用隐式配置/环境凭据。
+  - 环境 URL 覆盖（`OPENCLAW_GATEWAY_URL`）只能使用环境凭据（`OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`）。
 - 本地模式默认值：
-  - token: `OPENCLAW_GATEWAY_TOKEN` -> `gateway.auth.token` -> `gateway.remote.token` （仅在未设置本地 auth token 输入时应用远程回退）
-  - password: `OPENCLAW_GATEWAY_PASSWORD` -> `gateway.auth.password` -> `gateway.remote.password` （仅在未设置本地 auth password 输入时应用远程回退）
+  - token: `OPENCLAW_GATEWAY_TOKEN` -> `gateway.auth.token` -> `gateway.remote.token` （远程回退仅在本地 auth token 输入未设置时适用）
+  - password: `OPENCLAW_GATEWAY_PASSWORD` -> `gateway.auth.password` -> `gateway.remote.password` （远程回退仅在本地 auth password 输入未设置时适用）
 - 远程模式默认值：
   - token: `gateway.remote.token` -> `OPENCLAW_GATEWAY_TOKEN` -> `gateway.auth.token`
   - password: `OPENCLAW_GATEWAY_PASSWORD` -> `gateway.remote.password` -> `gateway.auth.password`
-- 节点主机本地模式例外：`gateway.remote.token` / `gateway.remote.password` 被忽略。
-- 远程探测/状态 token 检查默认是严格的：在针对远程模式时，它们仅使用 `gateway.remote.token` （无本地 token 回退）。
-- 旧版 `CLAWDBOT_GATEWAY_*` 环境变量仅由兼容性调用路径使用；探测/状态/认证解析仅使用 `OPENCLAW_GATEWAY_*`。
+- 节点主机本地模式例外：`gateway.remote.token` / `gateway.remote.password` 会被忽略。
+- 默认情况下，远程探测/状态 token 检查是严格的：在针对远程模式时，它们仅使用 `gateway.remote.token`（无本地 token 回退）。
+- 传统的 `CLAWDBOT_GATEWAY_*` 环境变量仅由兼容性调用路径使用；探测/状态/认证解析仅使用 `OPENCLAW_GATEWAY_*`。
 
 ## 通过 SSH 访问聊天 UI
 
@@ -130,27 +130,27 @@ WebChat 不再使用单独的 HTTP 端口。SwiftUI 聊天 UI 直接连接到 Ga
 
 macOS 菜单栏应用程序可以端到端驱动相同的设置（远程状态检查、WebChat 和语音唤醒转发）。
 
-操作手册：[macOS 远程访问](/zh/en/platforms/mac/remote)。
+操作手册：[macOS 远程访问](/en/platforms/mac/remote)。
 
 ## 安全规则（远程/VPN）
 
 简而言之：**保持 Gateway 仅限环回**，除非您确定需要绑定。
 
 - **环回 + SSH/Tailscale Serve** 是最安全的默认设置（无公开暴露）。
-- 纯文本 `ws://` 默认仅限环回。对于受信任的专用网络，
-  在客户端进程上设置 `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` 作为应急手段。
-- **非环回绑定** (`lan`/`tailnet`/`custom`，或在环回不可用时使用 `auto`) 必须使用身份验证令牌/密码。
-- `gateway.remote.token` / `.password` 是客户端凭据来源。它们本身**不**配置服务器身份验证。
-- 仅当未设置 `gateway.auth.*` 时，本地调用路径才可以将 `gateway.remote.*` 作为后备。
-- 如果通过 SecretRef 显式配置了 `gateway.auth.token` / `gateway.auth.password` 但未解析，解析将以失败告终（没有远程后备掩码）。
-- 使用 `wss://` 时，`gateway.remote.tlsFingerprint` 会固定远程 TLS 证书。
+- 纯文本 `ws://` 默认仅限回环。对于受信任的专用网络，
+  在客户端进程上设置 `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` 作为应急措施。
+- **非回环绑定**（`lan`/`tailnet`/`custom`，或当回环不可用时的 `auto`）必须使用 auth tokens/passwords。
+- `gateway.remote.token` / `.password` 是客户端凭证来源。它们**不**单独配置服务器认证。
+- 本地调用路径仅在 `gateway.auth.*` 未设置时，才能使用 `gateway.remote.*` 作为回退。
+- 如果 `gateway.auth.token` / `gateway.auth.password` 是通过 SecretRef 显式配置但未解析，则解析将失败并关闭（无远程回退屏蔽）。
+- `gateway.remote.tlsFingerprint` 在使用 `wss://` 时固定远程 TLS 证书。
 - **Tailscale Serve** 可以通过身份验证控制 UI/WebSocket 流量
-  标头（当 `gateway.auth.allowTailscale: true` 时）；HTTP API 端点仍然
-  需要令牌/密码身份验证。这种无令牌流程假定网关主机是
-  受信任的。如果您希望随处使用令牌/密码，请将其设置为 `false`。
+  headers 当 `gateway.auth.allowTailscale: true` 时；HTTP API 端点仍然
+  需要令牌/密码身份验证。这种无令牌流程假设网关主机是
+  受信任的。如果你希望到处都需要令牌/密码，请将其设置为 `false`。
 - 将浏览器控制视为操作员访问：仅限 tailnet + 刻意的节点配对。
 
-深度解析：[安全性](/zh/en/gateway/security)。
+深度解析：[安全性](/en/gateway/security)。
 
 import zh from '/components/footer/zh.mdx';
 

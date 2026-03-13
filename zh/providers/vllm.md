@@ -1,5 +1,5 @@
 ---
-summary: "使用 vLLM 运行 OpenClaw（OpenAI 兼容的本地服务器）"
+summary: "结合 vLLM 运行 OpenClaw（兼容 OpenAI 的本地服务器）"
 read_when:
   - You want to run OpenClaw against a local vLLM server
   - You want OpenAI-compatible /v1 endpoints with your own models
@@ -8,15 +8,15 @@ title: "vLLM"
 
 # vLLM
 
-vLLM 可以通过 **OpenAI 兼容的** HTTP API 来服务开源（以及一些自定义）模型。OpenClaw 可以使用 `openai-completions` API 连接到 vLLM。
+vLLM 可以通过 **兼容 OpenAI 的** HTTP API 来提供开源（以及某些自定义）模型服务。OpenClaw 可以使用 `openai-completions` API 连接到 vLLM。
 
-当您通过设置 `VLLM_API_KEY` 选择加入（如果您的服务器不强制身份验证，则任何值均可）且未定义显式的 `models.providers.vllm` 条目时，OpenClaw 也可以从 vLLM **自动发现**可用模型。
+当您选择使用 `VLLM_API_KEY` 加入（如果您的服务器不强制执行身份验证，任何值均可）且未定义显式的 `models.providers.vllm` 条目时，OpenClaw 还可以从 vLLM **自动发现**可用的模型。
 
 ## 快速开始
 
 1. 使用 OpenAI 兼容的服务器启动 vLLM。
 
-您的基础 URL 应暴露 `/v1` 端点（例如 `/v1/models`、`/v1/chat/completions`）。vLLM 通常运行于：
+您的基本 URL 应暴露 `/v1` 端点（例如 `/v1/models`、`/v1/chat/completions`）。vLLM 通常运行在：
 
 - `http://127.0.0.1:8000/v1`
 
@@ -40,13 +40,13 @@ export VLLM_API_KEY="vllm-local"
 
 ## 模型发现（隐式提供者）
 
-当设置了 `VLLM_API_KEY`（或存在身份验证配置文件）并且您**没有**定义 `models.providers.vllm` 时，OpenClaw 将查询：
+当设置了 `VLLM_API_KEY`（或存在身份验证配置文件）并且您 **不** 定义 `models.providers.vllm` 时，OpenClaw 将查询：
 
 - `GET http://127.0.0.1:8000/v1/models`
 
 ……并将返回的 ID 转换为模型条目。
 
-如果您显式设置了 `models.providers.vllm`，则会跳过自动发现，您必须手动定义模型。
+如果您显式设置了 `models.providers.vllm`，则将跳过自动发现，并且您必须手动定义模型。
 
 ## 显式配置（手动模型）
 
@@ -89,7 +89,7 @@ export VLLM_API_KEY="vllm-local"
 curl http://127.0.0.1:8000/v1/models
 ```
 
-- 如果请求因身份验证错误而失败，请设置与您的服务器配置匹配的真实 `VLLM_API_KEY`，或者在 `models.providers.vllm` 下显式配置提供者。
+- 如果请求因身份验证错误而失败，请设置一个与您的服务器配置匹配的真实 `VLLM_API_KEY`，或在 `models.providers.vllm` 下显式配置提供商。
 
 import zh from '/components/footer/zh.mdx';
 

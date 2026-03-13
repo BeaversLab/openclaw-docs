@@ -30,34 +30,34 @@ read_when:
 
 - 新的出站会话路由辅助工具：
   - `src/infra/outbound/outbound-session.ts`
-  - `resolveOutboundSessionRoute` 使用 `buildAgentSessionKey` (dmScope + identityLinks) 构建目标 sessionKey。
+  - `resolveOutboundSessionRoute` 使用 `buildAgentSessionKey` 构建目标 sessionKey（dmScope + identityLinks）。
   - `ensureOutboundSessionEntry` 通过 `recordSessionMetaFromInbound` 写入最小的 `MsgContext`。
-- `runMessageAction` (send) 派生目标 sessionKey 并将其传递给 `executeSendAction` 进行镜像。
-- `message-tool` 不再直接镜像；它仅从当前会话键解析 agentId。
-- 插件发送路径使用派生的 sessionKey 通过 `appendAssistantMessageToSessionTranscript` 进行镜像。
+- `runMessageAction` (发送) 推导目标 sessionKey 并将其传递给 `executeSendAction` 进行镜像。
+- `message-tool` 不再直接镜像；它仅从当前 session key 解析 agentId。
+- 插件发送路径使用推导出的 sessionKey 通过 `appendAssistantMessageToSessionTranscript` 进行镜像。
 - 网关发送在未提供会话键（默认代理）时派生目标会话键，并确保会话条目存在。
 
 ## 线程/主题处理
 
-- Slack: replyTo/threadId -> `resolveThreadSessionKeys` (后缀)。
-- Discord: threadId/replyTo -> `resolveThreadSessionKeys`，并带有 `useSuffix=false` 以匹配入站（线程通道 ID 已限定会话范围）。
-- Telegram: 主题 ID 通过 `buildTelegramGroupPeerId` 映射到 `chatId:topic:<id>`。
+- Slack：replyTo/threadId -> `resolveThreadSessionKeys` (后缀)。
+- Discord：threadId/replyTo -> `resolveThreadSessionKeys`，并带有 `useSuffix=false` 以匹配入站（线程频道 id 已限制会话范围）。
+- Telegram：主题 ID 通过 `buildTelegramGroupPeerId` 映射到 `chatId:topic:<id>`。
 
 ## 覆盖的扩展
 
 - Matrix, MS Teams, Mattermost, BlueBubbles, Nextcloud Talk, Zalo, Zalo Personal, Nostr, Tlon.
 - 备注：
-  - Mattermost 目标现在会去除 `@` 以进行 DM 会话密钥路由。
-  - Zalo Personal 对 1:1 目标使用 DM peer kind（仅当存在 `group:` 时使用群组）。
-  - BlueBubbles 群组目标会去除 `chat_*` 前缀以匹配入站会话密钥。
-  - Slack 自动线程镜像不区分大小写地匹配频道 ID。
-  - 网关发送在镜像之前会将提供的会话密钥转换为小写。
+  - Mattermost 目标现在去除 `@` 以进行 DM 会话 key 路由。
+  - Zalo Personal 对 1:1 目标使用 DM peer kind（仅当存在 `group:` 时才使用群组）。
+  - BlueBubbles 群组目标去除 `chat_*` 前缀以匹配入站 session keys。
+  - Slack 自动线程镜像不区分大小写地匹配频道 id。
+  - Gateway 发送在镜像之前将提供的 session keys 转换为小写。
 
 ## 决策
 
-- **网关发送会话推导**：如果提供了 `sessionKey`，则使用它。如果省略，则从目标 + 默认代理推导会话密钥并在那里进行镜像。
-- **会话条目创建**：始终使用 `recordSessionMetaFromInbound`，并将 `Provider/From/To/ChatType/AccountId/Originating*` 对齐到入站格式。
-- **目标规范化**：出站路由在可用时使用解析后的目标（`resolveChannelTarget` 之后）。
+- **Gateway 发送会话推导**：如果提供了 `sessionKey`，则使用它。如果省略，则从目标 + 默认 agent 推导一个 sessionKey 并在那里镜像。
+- **会话条目创建**：始终使用 `recordSessionMetaFromInbound`，且 `Provider/From/To/ChatType/AccountId/Originating*` 与入站格式保持一致。
+- **目标标准化**：出站路由在可用时使用解析后的目标（在 `resolveChannelTarget` 之后）。
 - **会话密钥大小写**：在写入和迁移期间将会话密钥规范化为小写。
 
 ## 已添加/更新的测试
@@ -73,7 +73,7 @@ read_when:
 
 ## 待办事项 / 后续跟进
 
-- 语音通话插件使用自定义 `voice:<phone>` 会话密钥。此处未标准化出站映射；如果消息工具应支持语音通话发送，请添加显式映射。
+- 语音通话插件使用自定义 `voice:<phone>` 会话密钥。此处出站映射未标准化；如果消息工具应支持语音通话发送，请添加显式映射。
 - 确认是否有任何外部插件使用捆绑集合之外的非标准 `From/To` 格式。
 
 ## 涉及的文件

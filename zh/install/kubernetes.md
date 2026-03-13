@@ -1,9 +1,9 @@
 ---
-summary: “使用 Kustomize 将 OpenClaw 网关部署到 Kubernetes 集群”
+summary: "使用 Kustomize 将 OpenClaw 网关部署到 Kubernetes 集群"
 read_when:
   - You want to run OpenClaw on a Kubernetes cluster
   - You want to test OpenClaw in a Kubernetes environment
-title: “Kubernetes”
+title: "Kubernetes"
 ---
 
 # Kubernetes 上的 OpenClaw
@@ -37,7 +37,7 @@ open http://localhost:18789
 kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.OPENCLAW_GATEWAY_TOKEN}' | base64 -d
 ```
 
-对于本地调试，`./scripts/k8s/deploy.sh --show-token` 会在部署后打印该令牌。
+对于本地调试，`./scripts/k8s/deploy.sh --show-token` 会在部署后打印令牌。
 
 ## 使用 Kind 进行本地测试
 
@@ -72,7 +72,7 @@ export <PROVIDER>_API_KEY="..."
 ./scripts/k8s/deploy.sh
 ```
 
-如果您希望将令牌打印到标准输出以便进行本地测试，请在任一命令中使用 `--show-token`。
+如果您希望令牌打印到标准输出以进行本地测试，请对任一命令使用 `--show-token`。
 
 ### 2) 访问网关
 
@@ -96,7 +96,7 @@ Namespace: openclaw (configurable via OPENCLAW_NAMESPACE)
 
 ### Agent 指令
 
-编辑 `AGENTS.md` 中的 `scripts/k8s/manifests/configmap.yaml` 并重新部署：
+编辑 `scripts/k8s/manifests/configmap.yaml` 中的 `AGENTS.md` 并重新部署：
 
 ```bash
 ./scripts/k8s/deploy.sh
@@ -104,7 +104,7 @@ Namespace: openclaw (configurable via OPENCLAW_NAMESPACE)
 
 ### Gateway 配置
 
-编辑 `openclaw.json` 中的 `scripts/k8s/manifests/configmap.yaml`。有关完整参考，请参阅 [Gateway configuration](/zh/gateway/configuration)。
+编辑 `scripts/k8s/manifests/configmap.yaml` 中的 `openclaw.json`。有关完整参考，请参阅 [网关配置](/en/gateway/configuration)。
 
 ### 添加提供商
 
@@ -143,7 +143,7 @@ image: ghcr.io/openclaw/openclaw:2026.3.1
 
 ### 超越端口转发的暴露
 
-默认清单将 gateway 绑定到 Pod 内部的环回地址。这适用于 `kubectl port-forward`，但不适用于需要访问 Pod IP 的 Kubernetes `Service` 或 Ingress 路径。
+默认清单将网关绑定到 Pod 内部的环回地址。这适用于 `kubectl port-forward`，但不适用于需要访问 Pod IP 的 Kubernetes `Service` 或 Ingress 路径。
 
 如果您想通过 Ingress 或负载均衡器暴露网关：
 
@@ -169,9 +169,9 @@ image: ghcr.io/openclaw/openclaw:2026.3.1
 
 ## 架构说明
 
-- 默认情况下，网关在 Pod 内部绑定到环回地址，因此包含的设置是用于 `kubectl port-forward`
+- 默认情况下，网关绑定到 Pod 内部的环回地址，因此包含的设置是用于 `kubectl port-forward`
 - 没有集群范围资源——所有资源都位于单个命名空间中
-- 安全性：`readOnlyRootFilesystem`，`drop: ALL` 功能，非 root 用户（UID 1000）
+- 安全性：`readOnlyRootFilesystem`，`drop: ALL` 能力，非 root 用户（UID 1000）
 - 默认配置将控制 UI 保持在更安全的本地访问路径上：环回绑定加上 `kubectl port-forward` 到 `http://127.0.0.1:18789`
 - 如果您超出 localhost 访问范围，请使用受支持的远程模型：HTTPS/Tailscale 加上适当的网关绑定和控制 UI 源设置
 - 机密是在临时目录中生成的，并直接应用到集群 —— 没有机密材料被写入到仓库检出目录

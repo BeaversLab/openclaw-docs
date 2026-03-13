@@ -12,8 +12,8 @@ title: "迁移指南"
 
 从概念上讲，迁移很简单：
 
-- 复制 **状态目录**（`$OPENCLAW_STATE_DIR`，默认为 `~/.openclaw/`）——这包括配置、身份验证、会话和通道状态。
-- 复制您的 **工作空间**（默认为 `~/.openclaw/workspace/`）——这包括您的代理文件（记忆、提示词等）。
+- 复制 **状态目录**（`$OPENCLAW_STATE_DIR`，默认：`~/.openclaw/`）——这包括配置、身份验证、会话和通道状态。
+- 复制您的 **工作区**（默认为 `~/.openclaw/workspace/`）——这包括您的代理文件（memory、prompts 等）。
 
 但是，在**配置文件**、**权限**和**部分复制**方面存在一些常见的陷阱。
 
@@ -27,7 +27,7 @@ title: "迁移指南"
 
 但如果您使用了以下内容，情况可能会有所不同：
 
-- `--profile <name>`（通常变为 `~/.openclaw-<profile>/`）
+- `--profile <name>`（通常会变为 `~/.openclaw-<profile>/`）
 - `OPENCLAW_STATE_DIR=/some/path`
 
 如果不确定，请在**旧**机器上运行：
@@ -36,16 +36,16 @@ title: "迁移指南"
 openclaw status
 ```
 
-在输出中查找提及 `OPENCLAW_STATE_DIR` / profile 的地方。如果您运行多个网关，请对每个配置文件重复此操作。
+在输出中查找关于 `OPENCLAW_STATE_DIR` / profile 的提及。如果您运行多个网关，请对每个 profile 重复此操作。
 
 ### 2) 确定您的工作空间
 
 常见的默认位置：
 
-- `~/.openclaw/workspace/`（推荐的工作空间）
+- `~/.openclaw/workspace/`（推荐的工作区）
 - 您创建的自定义文件夹
 
-您的工作空间是 `MEMORY.md`、`USER.md` 和 `memory/*.md` 等文件所在的目录。
+您的工作区是 `MEMORY.md`、`USER.md` 和 `memory/*.md` 等文件所在的目录。
 
 ### 3) 了解您将保留的内容
 
@@ -85,26 +85,26 @@ tar -czf openclaw-state.tgz .openclaw
 tar -czf openclaw-workspace.tgz .openclaw/workspace
 ```
 
-如果您有多个配置文件/状态目录（例如 `~/.openclaw-main`、`~/.openclaw-work`），请将每个都归档。
+如果您有多个 profiles/状态目录（例如 `~/.openclaw-main`、`~/.openclaw-work`），请分别归档每一个。
 
 ### 步骤 1 — 在新机器上安装 OpenClaw
 
 在**新**机器上，安装 CLI（如果需要的话也包括 Node）：
 
-- 参见：[安装](/zh/en/install)
+- 参见：[安装](/en/install)
 
-在此阶段，如果入门（onboarding）过程创建了一个新的 `~/.openclaw/` 也没关系——您将在下一步中覆盖它。
+在此阶段，如果入门流程创建了一个新的 `~/.openclaw/` 也没关系——您将在下一步中覆盖它。
 
 ### 步骤 2 — 将状态目录 + 工作区复制到新机器
 
 复制**两者**：
 
-- `$OPENCLAW_STATE_DIR`（默认为 `~/.openclaw/`）
-- 您的工作区（默认为 `~/.openclaw/workspace/`）
+- `$OPENCLAW_STATE_DIR`（默认 `~/.openclaw/`）
+- 您的工作区（默认 `~/.openclaw/workspace/`）
 
 常用方法：
 
-- `scp` tar 压缩包并解压
+- `scp` 压缩包并解压
 - 通过 SSH `rsync -a`
 - 外部驱动器
 
@@ -134,7 +134,7 @@ openclaw status
 
 ### 陷阱：配置文件 / 状态目录不匹配
 
-如果您使用某个配置文件（或 `OPENCLAW_STATE_DIR`）运行了旧网关，而新网关使用了不同的配置文件，您将看到如下症状：
+如果您使用 profile（或 `OPENCLAW_STATE_DIR`）运行旧网关，而新网关使用了不同的 profile，您将看到如下症状：
 
 - 配置更改未生效
 - 频道缺失 / 已注销
@@ -148,7 +148,7 @@ openclaw doctor
 
 ### 陷阱：仅复制 `openclaw.json`
 
-仅复制 `openclaw.json` 是不够的。许多提供商将状态存储在以下位置：
+`openclaw.json` 是不够的。许多提供程序将状态存储在以下位置：
 
 - `$OPENCLAW_STATE_DIR/credentials/`
 - `$OPENCLAW_STATE_DIR/agents/<agentId>/...`
@@ -170,7 +170,7 @@ openclaw doctor
 
 ### 常见陷阱：备份中的密钥
 
-`$OPENCLAW_STATE_DIR` 包含密钥（API 密钥、OAuth 令牌、WhatsApp 凭据）。请像对待生产环境密钥一样对待备份：
+`$OPENCLAW_STATE_DIR` 包含机密信息（API 密钥、OAuth 令牌、WhatsApp 凭据）。请像对待生产环境机密一样对待备份：
 
 - 加密存储
 - 避免通过不安全渠道共享
@@ -187,9 +187,9 @@ openclaw doctor
 
 ## 相关
 
-- [Doctor](/zh/en/gateway/doctor)
-- [网关故障排除](/zh/en/gateway/troubleshooting)
-- [OpenClaw 将其数据存储在哪里？](/zh/en/help/faq#where-does-openclaw-store-its-data)
+- [Doctor](/en/gateway/doctor)
+- [网关故障排除](/en/gateway/troubleshooting)
+- [OpenClaw 将其数据存储在哪里？](/en/help/faq#where-does-openclaw-store-its-data)
 
 import zh from '/components/footer/zh.mdx';
 

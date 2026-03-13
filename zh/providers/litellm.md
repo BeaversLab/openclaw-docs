@@ -1,5 +1,5 @@
 ---
-summary: "通过 LiteLLM 代理运行 OpenClaw，以实现统一的模型访问和成本跟踪"
+summary: "通过 LiteLLM 代理运行 OpenClaw 以实现统一的模型访问和成本跟踪"
 read_when:
   - You want to route OpenClaw through a LiteLLM proxy
   - You need cost tracking, logging, or model routing through LiteLLM
@@ -7,7 +7,7 @@ read_when:
 
 # LiteLLM
 
-[LiteLLM](https://litellm.ai) 是一个开源的 LLM 网关，为 100 多个模型提供商提供统一的 API。通过 LiteLLM 路由 OpenClaw，以获得集中的成本跟踪、日志记录，以及在无需更改 OpenClaw 配置的情况下灵活切换后端。
+[LiteLLM](https://litellm.ai) 是一个开源 LLM 网关，提供统一 API 以访问 100+ 模型提供商。通过 LiteLLM 路由 OpenClaw，即可获得集中的成本跟踪、日志记录，以及在不更改 OpenClaw 配置的情况下切换后端的灵活性。
 
 ## 为什么在 OpenClaw 中使用 LiteLLM？
 
@@ -125,7 +125,7 @@ model_list:
       api_key: os.environ/OPENAI_API_KEY
 ```
 
-OpenClaw 继续请求 `claude-opus-4-6` — LiteLLM 处理路由。
+OpenClaw 继续请求 `claude-opus-4-6` —— LiteLLM 负责处理路由。
 
 ## 查看使用情况
 
@@ -143,7 +143,7 @@ curl "http://localhost:4000/spend/logs" \
 
 ## 注意
 
-- LiteLLM 默认运行在 `http://localhost:4000` 上
+- 默认情况下，LiteLLM 运行在 `http://localhost:4000` 上
 - OpenClaw 通过兼容 OpenAI 的 `/v1/chat/completions` 端点进行连接
 - 所有 OpenClaw 功能均可通过 LiteLLM 运行 — 无任何限制
 

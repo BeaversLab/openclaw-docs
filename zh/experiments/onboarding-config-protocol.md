@@ -1,5 +1,5 @@
 ---
-summary: "关于入职向导和配置架构的 RPC 协议说明"
+summary: "RPC 协议说明，用于入职向导和配置架构"
 read_when: "更改入职向导步骤或配置架构端点"
 title: "入职与配置协议"
 ---
@@ -24,7 +24,7 @@ title: "入职与配置协议"
 - `wizard.status` 参数： `{ sessionId }`
 - `config.schema` 参数： `{}`
 - `config.schema.lookup` 参数： `{ path }`
-  - `path` 接受标准配置段以及斜杠分隔的插件 ID，例如 `plugins.entries.pack/one.config`。
+  - `path` 接受标准配置段以及用斜线分隔的插件 ID，例如 `plugins.entries.pack/one.config`。
 
 响应（形状）
 
@@ -34,7 +34,7 @@ title: "入职与配置协议"
 
 ## UI 提示
 
-- `uiHints` 按路径键入；可选元数据（标签/帮助/分组/顺序/高级/敏感/占位符）。
+- `uiHints` 按路径键控；可选元数据（标签/帮助/分组/顺序/高级/敏感/占位符）。
 - 敏感字段呈现为密码输入框；无编辑层。
 - 不支持的架构节点回退到原始 JSON 编辑器。
 

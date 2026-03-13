@@ -1,5 +1,5 @@
 ---
-summary: "`openclaw approvals`（网关或节点主机的执行审批）的 CLI 参考"
+summary: "`openclaw approvals` （网关或节点主机的执行审批）的 CLI 参考"
 read_when:
   - You want to edit exec approvals from the CLI
   - You need to manage allowlists on gateway or node hosts
@@ -8,13 +8,13 @@ title: "审批"
 
 # `openclaw approvals`
 
-管理 **本地主机**、**网关主机**或**节点主机**的执行审批。
-默认情况下，命令针对磁盘上的本地审批文件。使用 `--gateway` 指定网关，或使用 `--node` 指定特定节点。
+管理**本地主机**、**网关主机**或**节点主机**的执行审批。
+默认情况下，命令针对磁盘上的本地审批文件。使用 `--gateway` 针对网关，或使用 `--node` 针对特定节点。
 
 相关：
 
-- 执行审批：[执行审批](/zh/en/tools/exec-approvals)
-- 节点：[节点](/zh/en/nodes)
+- 执行审批：[执行审批](/en/tools/exec-approvals)
+- 节点：[节点](/en/nodes)
 
 ## 常用命令
 

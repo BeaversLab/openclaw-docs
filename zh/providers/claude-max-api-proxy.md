@@ -1,10 +1,10 @@
 ---
-summary: "将 Claude 订阅凭据暴露为 OpenAI 兼容端点的社区代理"
+summary: "社区代理，将 Claude 订阅凭据作为 OpenAI 兼容端点公开"
 read_when:
   - You want to use Claude Max subscription with OpenAI-compatible tools
   - You want a local API server that wraps Claude Code CLI
   - You want to evaluate subscription-based vs API-key-based Anthropic access
-title: "Claude Max API Proxy"
+title: "Claude Max API 代理"
 ---
 
 # Claude Max API Proxy
@@ -137,7 +137,7 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
 
 - **npm：** [https://www.npmjs.com/package/claude-max-api-proxy](https://www.npmjs.com/package/claude-max-api-proxy)
 - **GitHub：** [https://github.com/atalovesyou/claude-max-api-proxy](https://github.com/atalovesyou/claude-max-api-proxy)
-- **问题：** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
+- **问题反馈：** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
 
 ## 注意事项
 
@@ -148,8 +148,8 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
 
 ## 另请参阅
 
-- [Anthropic 提供商](/zh/en/providers/anthropic) - 使用 Claude 设置令牌或 API 密钥的 OpenClaw 原生集成
-- [OpenAI 提供商](/zh/en/providers/openai) - 用于 OpenAI/Codex 订阅
+- [Anthropic 提供商](/en/providers/anthropic) - 使用 Claude 设置令牌或 API 密钥的 OpenClaw 原生集成
+- [OpenAI 提供商](/en/providers/openai) - 用于 OpenAI/Codex 订阅
 
 import zh from '/components/footer/zh.mdx';
 

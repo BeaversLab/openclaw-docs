@@ -1,5 +1,5 @@
 ---
-summary: "Windows (WSL2) 支持与配套应用状态"
+summary: "Windows (WSL2) 支持及配套应用状态"
 read_when:
   - Installing OpenClaw on Windows
   - Looking for Windows companion app status
@@ -8,24 +8,21 @@ title: "Windows (WSL2)"
 
 # Windows (WSL2)
 
-在 Windows 上使用 OpenClaw **推荐通过 WSL2**（推荐 Ubuntu）。
-CLI 和 Gateway 在 Linux 内部运行，这保持了运行环境的一致性，并使工具链
-更加兼容（Node/Bun/pnpm、Linux 二进制文件、技能）。原生 Windows
-可能会比较棘手。WSL2 为您提供完整的 Linux 体验——只需一条命令即可安装：
-`wsl --install`。
+建议通过 **WSL2**（推荐 Ubuntu）在 Windows 上使用 OpenClaw。CLI +
+Gateway 在 Linux 内部运行，这保持了运行时的一致性，并使工具更加兼容（Node/Bun/pnpm、Linux 二进制文件、skills）。原生 Windows 可能会更棘手。WSL2 为您提供完整的 Linux 体验——只需一个命令即可安装：`wsl --install`。
 
 原生 Windows 配套应用已在计划中。
 
 ## 安装 (WSL2)
 
-- [入门指南](/zh/en/start/getting-started) （在 WSL 内使用）
-- [安装与更新](/zh/en/install/updating)
+- [入门指南](/en/start/getting-started) （在 WSL 内使用）
+- [安装与更新](/en/install/updating)
 - 官方 WSL2 指南 (Microsoft)：[https://learn.microsoft.com/windows/wsl/install](https://learn.microsoft.com/windows/wsl/install)
 
 ## Gateway
 
-- [Gateway 操作手册](/zh/en/gateway)
-- [配置](/zh/en/gateway/configuration)
+- [Gateway 操作手册](/en/gateway)
+- [配置](/en/gateway/configuration)
 
 ## Gateway 服务安装 (CLI)
 
@@ -83,7 +80,7 @@ openclaw gateway install
 schtasks /create /tn "WSL Boot" /tr "wsl.exe -d Ubuntu --exec /bin/true" /sc onstart /ru SYSTEM
 ```
 
-将 `Ubuntu` 替换为您的发行版名称，来源如下：
+将 `Ubuntu` 替换为您的发行版名称（来自）：
 
 ```powershell
 wsl --list --verbose
@@ -135,10 +132,10 @@ netsh interface portproxy add v4tov4 listenport=$ListenPort listenaddress=0.0.0.
 
 注意：
 
-- 从另一台机器进行 SSH 时，目标是 **Windows 主机 IP**（例如：`ssh user@windows-host -p 2222`）。
-- 远程节点必须指向一个**可访问的** Gateway URL（而不是 `127.0.0.1`）；使用
+- 从另一台机器进行 SSH 连接的目标是 **Windows 主机 IP**（例如：`ssh user@windows-host -p 2222`）。
+- 远程节点必须指向一个 **可访问的** Gateway URL（而不是 `127.0.0.1`）；使用
   `openclaw status --all` 进行确认。
-- 使用 `listenaddress=0.0.0.0` 进行局域网访问；`127.0.0.1` 将其保持在本地。
+- 使用 `listenaddress=0.0.0.0` 进行 LAN 访问；`127.0.0.1` 将其限制为本地访问。
 - 如果您希望自动执行此操作，请注册一个计划任务以在登录时运行刷新
   步骤。
 
@@ -193,7 +190,7 @@ pnpm build
 openclaw onboard
 ```
 
-完整指南：[入门指南](/zh/en/start/getting-started)
+完整指南：[入门指南](/en/start/getting-started)
 
 ## Windows 伴侣应用
 

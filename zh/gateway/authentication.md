@@ -12,11 +12,10 @@ OpenClaw 支持模型提供商的 OAuth 和 API 密钥。对于常驻网关
 主机，API 密钥通常是最可预测的选项。当订阅/OAuth
 流程符合您的提供商账户模型时，也支持这些流程。
 
-有关完整的 OAuth 流程和存储
-布局，请参阅 [/concepts/oauth](/zh/en/concepts/oauth)。
-对于基于 SecretRef 的身份验证（`env`/`file`/`exec` 提供商），请参阅 [机密管理](/zh/en/gateway/secrets)。
+有关完整的 OAuth 流程和存储布局，请参阅 [/concepts/oauth](/en/concepts/oauth)。
+对于基于 SecretRef 的身份验证（`env`/`file`/`exec` 提供商），请参阅 [密钥管理](/en/gateway/secrets)。
 有关 `models status --probe` 使用的凭据资格/原因代码规则，请参阅
-[身份验证凭据语义](/zh/en/auth-credential-semantics)。
+[Auth Credential Semantics](/en/auth-credential-semantics)。
 
 ## 推荐设置（API 密钥，任何提供商）
 
@@ -26,7 +25,7 @@ OpenClaw 支持模型提供商的 OAuth 和 API 密钥。对于常驻网关
 使用而不是订阅 setup-token 身份验证。
 
 1. 在您的提供商控制台中创建一个 API 密钥。
-2. 将其放在 **网关主机**（运行 `openclaw gateway` 的机器）上。
+2. 将其放置在 **gateway host**（运行 `openclaw gateway` 的机器）上。
 
 ```bash
 export <PROVIDER>_API_KEY="..."
@@ -34,7 +33,7 @@ openclaw models status
 ```
 
 3. 如果网关在 systemd/launchd 下运行，最好将密钥放在
-   `~/.openclaw/.env` 中，以便守护程序可以读取它：
+   `~/.openclaw/.env` 以便守护进程可以读取它：
 
 ```bash
 cat >> ~/.openclaw/.env <<'EOF'
@@ -49,11 +48,11 @@ openclaw models status
 openclaw doctor
 ```
 
-如果您不想自己管理环境变量，入门向导可以存储
-供守护程序使用的 API 密钥：`openclaw onboard`。
+如果您不想自己管理环境变量，入职向导可以存储
+API 密钥供守护进程使用：`openclaw onboard`。
 
-有关环境继承的详细信息（`env.shellEnv`，
-`~/.openclaw/.env`，systemd/launchd），请参阅 [帮助](/zh/en/help)。
+有关环境变量继承的详细信息（`env.shellEnv`、
+`~/.openclaw/.env`、systemd/launchd），请参阅 [帮助](/en/help)。
 
 ## Anthropic：setup-token（订阅身份验证）
 
@@ -107,7 +106,7 @@ openclaw models status --check
 ```
 
 可选的运维脚本（systemd/Termux）在此处有文档记录：
-[/automation/auth-monitoring](/zh/en/automation/auth-monitoring)
+[/automation/auth-monitoring](/en/automation/auth-monitoring)
 
 > `claude setup-token` 需要交互式 TTY。
 
@@ -123,11 +122,11 @@ openclaw doctor
 当 API 调用达到提供商速率限制时，某些提供商支持使用备用密钥重试请求。
 
 - 优先级顺序：
-  - `OPENCLAW_LIVE_<PROVIDER>_KEY` (单一覆盖)
+  - `OPENCLAW_LIVE_<PROVIDER>_KEY`（单个覆盖）
   - `<PROVIDER>_API_KEYS`
   - `<PROVIDER>_API_KEY`
   - `<PROVIDER>_API_KEY_*`
-- Google 提供商还包括 `GOOGLE_API_KEY` 作为额外的后备。
+- Google 提供商还包括 `GOOGLE_API_KEY` 作为额外的后备选项。
 - 相同的密钥列表在使用前会进行去重。
 - OpenClaw 仅针对速率限制错误使用下一个密钥重试（例如
   `429`, `rate_limit`, `quota`, `resource exhausted`)。
@@ -138,9 +137,9 @@ openclaw doctor
 
 ### 每次会话（聊天命令）
 
-使用 `/model <alias-or-id>@<profileId>` 为当前会话固定特定的提供商凭据（示例配置文件 ID：`anthropic:default`, `anthropic:work`）。
+使用 `/model <alias-or-id>@<profileId>` 为当前会话固定特定的提供商凭据（示例配置文件 ID：`anthropic:default`，`anthropic:work`）。
 
-使用 `/model`（或 `/model list`）进行紧凑选择；使用 `/model status` 查看完整视图（候选项 + 下一个身份验证配置文件，以及配置后的提供商端点详细信息）。
+使用 `/model`（或 `/model list`） 调用紧凑选择器；使用 `/model status` 查看完整视图（候选项 + 下一个身份验证配置文件，以及在配置时显示的提供商端点详细信息）。
 
 ### 每次代理（CLI 覆盖）
 
@@ -152,13 +151,13 @@ openclaw models auth order set --provider anthropic anthropic:default
 openclaw models auth order clear --provider anthropic
 ```
 
-使用 `--agent <id>` 来指定特定的代理；省略该参数以使用配置的默认代理。
+使用 `--agent <id>` 指定特定的代理；省略它以使用配置的默认代理。
 
 ## 故障排除
 
 ### “未找到凭据”
 
-如果缺少 Anthropic 令牌配置文件，请在 **网关主机** 上运行 `claude setup-token`，然后重新检查：
+如果 Anthropic 令牌配置文件丢失，请在 **gateway 主机** 上运行 `claude setup-token`，然后重新检查：
 
 ```bash
 openclaw models status
@@ -170,7 +169,7 @@ openclaw models status
 
 ## 要求
 
-- Anthropic 订阅账户（用于 `claude setup-token`）
+- Anthropic 订阅账户（适用于 `claude setup-token`）
 - 已安装 Claude Code CLI（可用 `claude` 命令）
 
 import zh from '/components/footer/zh.mdx';

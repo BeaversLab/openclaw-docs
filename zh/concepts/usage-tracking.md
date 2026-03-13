@@ -1,9 +1,9 @@
 ---
-summary: "使用情况跟踪界面和凭据要求"
+summary: "Usage tracking surfaces and credential requirements"
 read_when:
   - You are wiring provider usage/quota surfaces
   - You need to explain usage tracking behavior or auth requirements
-title: "使用情况跟踪"
+title: "Usage Tracking"
 ---
 
 # 使用情况跟踪
@@ -15,10 +15,10 @@ title: "使用情况跟踪"
 
 ## 显示位置
 
-- `/status` 在聊天中：包含会话令牌 + 估算费用（仅限 API 密钥）的丰富表情符号状态卡。提供商使用情况显示当前的模型提供商（如果可用）。
+- `/status` 在聊天中：包含会话令牌和预估成本（仅限 API 密钥）的丰富表情符号状态卡片。如果可用，将显示 **当前模型提供商** 的提供商使用情况。
 - `/usage off|tokens|full` 在聊天中：每次响应的使用情况页脚（OAuth 仅显示令牌）。
-- `/usage cost` 在聊天中：从 OpenClaw 会话日志汇总的本地费用摘要。
-- CLI：`openclaw status --usage` 打印完整的按提供商细分。
+- `/usage cost` 在聊天中：从 OpenClaw 会话日志汇总的本地成本摘要。
+- CLI：`openclaw status --usage` 打印完整的按提供商分类的细分信息。
 - CLI：`openclaw channels list` 在提供商配置旁边打印相同的使用情况快照（使用 `--no-usage` 跳过）。
 - macOS 菜单栏：上下文下的“使用情况”部分（仅在可用时）。
 

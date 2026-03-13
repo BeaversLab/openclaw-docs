@@ -1,10 +1,10 @@
 ---
-summary: "规范的支持与不支持的 SecretRef 凭证范围"
+summary: "受支持的与不受支持的 SecretRef 凭据规范定义"
 read_when:
   - Verifying SecretRef credential coverage
   - Auditing whether a credential is eligible for `secrets configure` or `secrets apply`
   - Verifying why a credential is outside the supported surface
-title: "SecretRef 凭证范围"
+title: "SecretRef 凭据定义"
 ---
 
 # SecretRef 凭证范围
@@ -87,27 +87,27 @@ title: "SecretRef 凭证范围"
 - `channels.zalo.webhookSecret`
 - `channels.zalo.accounts.*.botToken`
 - `channels.zalo.accounts.*.webhookSecret`
-- `channels.googlechat.serviceAccount` 通过同级 `serviceAccountRef`（兼容性例外）
-- `channels.googlechat.accounts.*.serviceAccount` 通过同级 `serviceAccountRef`（兼容性例外）
+- 通过同级 `serviceAccountRef` 实现 `channels.googlechat.serviceAccount`（兼容性例外）
+- 通过同级 `serviceAccountRef` 实现 `channels.googlechat.accounts.*.serviceAccount`（兼容性例外）
 
-### `auth-profiles.json` 目标 (`secrets configure` + `secrets apply` + `secrets audit`)
+### `auth-profiles.json` 目标（`secrets configure` + `secrets apply` + `secrets audit`）
 
-- `profiles.*.keyRef` (`type: "api_key"`)
-- `profiles.*.tokenRef` (`type: "token"`)
+- `profiles.*.keyRef`（`type: "api_key"`）
+- `profiles.*.tokenRef`（`type: "token"`）
 
 [//]: # "secretref-supported-list-end"
 
 备注：
 
-- Auth-profile 计划目标需要 `agentId`。
-- Plan entries target `profiles.*.key` / `profiles.*.token` and write sibling refs (`keyRef` / `tokenRef`)。
+- 身份配置文件计划目标需要 `agentId`。
+- 计划条目以 `profiles.*.key` / `profiles.*.token` 为目标，并写入同级引用（`keyRef` / `tokenRef`）。
 - Auth-profile refs are included in runtime resolution and audit coverage。
-- For SecretRef-managed model providers, generated `agents/*/agent/models.json` entries persist non-secret markers (not resolved secret values) for `apiKey`/header surfaces。
+- 对于 SecretRef 管理的模型提供商，生成的 `agents/*/agent/models.json` 条目会为 `apiKey`/header 表面保留非机密标记（而非已解析的机密值）。
 - Marker persistence is source-authoritative: OpenClaw writes markers from the active source config snapshot (pre-resolution), not from resolved runtime secret values。
 - For web search：
-  - 在显式提供程序模式下（设置了 `tools.web.search.provider`），仅选定的提供程序密钥处于活动状态。
-  - 在自动模式下（未设置 `tools.web.search.provider`），仅按优先级解析的第一个提供程序密钥处于活动状态。
-  - 在自动模式下，未选定的提供程序引用在未被选中之前被视为不活动。
+  - 在显式提供商模式下（已设置 `tools.web.search.provider`），仅所选的提供商密钥处于活动状态。
+  - 在自动模式下（未设置 `tools.web.search.provider`），仅第一个按优先级解析的提供商密钥处于活动状态。
+  - 在自动模式下，未选中的提供商引用在被选中之前被视为不活动。
 
 ## 不支持的凭据
 

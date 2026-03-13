@@ -1,5 +1,5 @@
 ---
-summary: "当您需要隔离环境或 iMessage 时，请在沙盒化的 macOS 虚拟机（本地或托管）中运行 OpenClaw"
+summary: "当您需要隔离或 iMessage 功能时，请在沙盒化的 macOS 虚拟机（本地或托管）中运行 OpenClaw"
 read_when:
   - You want OpenClaw isolated from your main macOS environment
   - You want iMessage integration (BlueBubbles) in a sandbox
@@ -12,9 +12,9 @@ title: "macOS 虚拟机"
 
 ## 推荐的默认选项（大多数用户）
 
-- 使用**小型 Linux VPS** 作为全天候在线的网关且成本低廉。请参阅 [VPS 托管](/zh/en/vps)。
+- 使用**小型 Linux VPS** 作为全天候在线的网关且成本低廉。请参阅 [VPS 托管](/en/vps)。
 - 如果您希望完全控制并拥有用于浏览器自动化的**住宅 IP**，请使用**专用硬件**（Mac mini 或 Linux 主机）。许多网站会阻止数据中心 IP，因此本地浏览通常效果更好。
-- **混合模式：** 将网关保留在便宜的 VPS 上，并在需要浏览器/UI 自动化时将 Mac 作为**节点**连接。请参阅[节点](/zh/en/nodes)和[网关远程](/zh/en/gateway/remote)。
+- **混合模式：** 将网关保留在便宜的 VPS 上，并在需要浏览器/UI 自动化时将 Mac 作为**节点**连接。请参阅[节点](/en/nodes)和[网关远程](/en/gateway/remote)。
 
 当您特别需要仅限 macOS 的功能（iMessage/BlueBubbles）或希望与您日常使用的 Mac 严格隔离时，请使用 macOS 虚拟机。
 
@@ -22,7 +22,7 @@ title: "macOS 虚拟机"
 
 ### Apple Silicon Mac 上的本地虚拟机（Lume）
 
-使用 [Lume](https://cua.ai/docs/lume) 在您现有的 Apple Silicon Mac 上受沙盒保护的 macOS 虚拟机中运行 OpenClaw。
+使用 [Lume](https://cua.ai/docs/lume) 在您现有的 Apple Silicon Mac 上的沙盒化 macOS 虚拟机中运行 OpenClaw。
 
 这为您提供：
 
@@ -35,7 +35,7 @@ title: "macOS 虚拟机"
 
 如果您想要云端 macOS，托管 Mac 提供商也可以使用：
 
-- [MacStadium](https://www.macstadium.com/)（托管 Mac）
+- [MacStadium](https://www.macstadium.com/) (托管 Mac)
 - 其他托管 Mac 供应商也可以使用；请遵循其虚拟机 + SSH 文档
 
 一旦您拥有 macOS 虚拟机的 SSH 访问权限，请继续执行下面的步骤 6。
@@ -128,7 +128,7 @@ lume get openclaw
 ssh youruser@192.168.64.X
 ```
 
-将 `youruser` 替换为您创建的账户，并将 IP 替换为您的虚拟机 IP。
+将 `youruser` 替换为您创建的账户，并将 IP 替换为您虚拟机的 IP。
 
 ---
 
@@ -223,7 +223,7 @@ ssh youruser@192.168.64.X "openclaw status"
 
 重启网关。现在您的代理可以发送和接收 iMessage 了。
 
-完整设置详情：[BlueBubbles 频道](/zh/en/channels/bluebubbles)
+完整设置详情：[BlueBubbles 频道](/en/channels/bluebubbles)
 
 ---
 
@@ -252,9 +252,9 @@ lume run openclaw --no-display
 
 - 保持 Mac 连接电源
 - 在“系统设置” → “节能”中禁用睡眠
-- 如有需要，使用 `caffeinate`
+- 如需要，使用 `caffeinate`
 
-对于真正的始终在线，请考虑专用的 Mac mini 或小型 VPS。请参阅 [VPS 托管](/zh/en/vps)。
+对于真正的始终在线，请考虑专用的 Mac mini 或小型 VPS。请参阅 [VPS 托管](/en/vps)。
 
 ---
 
@@ -262,23 +262,23 @@ lume run openclaw --no-display
 
 | 问题                  | 解决方案                                                                           |
 | ------------------------ | ---------------------------------------------------------------------------------- |
-| 无法 SSH 进入 VM        | 检查 VM 的系统设置中是否启用了“远程登录”                            |
-| 未显示 VM IP        | 等待 VM 完全启动，再次运行 `lume get openclaw`                           |
-| 找不到 Lume 命令   | 将 `~/.local/bin` 添加到您的 PATH 环境变量中                                                    |
-| WhatsApp 二维码无法扫描 | 运行 `openclaw channels login` 时确保您已登录 VM（而非主机） |
+| 无法 SSH 进入虚拟机        | 检查虚拟机的“系统设置”中是否启用了“远程登录”                            |
+| 虚拟机 IP 未显示        | 等待虚拟机完全启动，再次运行 `lume get openclaw`                           |
+| 找不到 Lume 命令   | 将 `~/.local/bin` 添加到您的 PATH                                                    |
+| WhatsApp 二维码无法扫描 | 确保在运行 `openclaw channels login` 时您已登录虚拟机（而非主机） |
 
 ---
 
 ## 相关文档
 
-- [VPS hosting](/zh/en/vps)
-- [Nodes](/zh/en/nodes)
-- [Gateway remote](/zh/en/gateway/remote)
-- [BlueBubbles channel](/zh/en/channels/bluebubbles)
-- [Lume Quickstart](https://cua.ai/docs/lume/guide/getting-started/quickstart)
-- [Lume CLI Reference](https://cua.ai/docs/lume/reference/cli-reference)
-- [Unattended VM Setup](https://cua.ai/docs/lume/guide/fundamentals/unattended-setup) (高级)
-- [Docker Sandboxing](/zh/en/install/docker) (替代隔离方案)
+- [VPS hosting](/en/vps)
+- [Nodes](/en/nodes)
+- [Gateway remote](/en/gateway/remote)
+- [BlueBubbles channel](/en/channels/bluebubbles)
+- [Lume 快速入门](https://cua.ai/docs/lume/guide/getting-started/quickstart)
+- [Lume CLI 参考](https://cua.ai/docs/lume/reference/cli-reference)
+- [无人值守虚拟机设置](https://cua.ai/docs/lume/guide/fundamentals/unattended-setup) (高级)
+- [Docker Sandboxing](/en/install/docker) (替代隔离方案)
 
 import zh from '/components/footer/zh.mdx';
 

@@ -44,8 +44,8 @@ openclaw message poll --channel msteams --target conversation:19:abc@thread.tacv
 
 选项：
 
-- `--channel`：`whatsapp`（默认），`telegram`，`discord`，或 `msteams`
-- `--poll-multi`：允许多选
+- `--channel`：`whatsapp`（默认）、`telegram`、`discord` 或 `msteams`
+- `--poll-multi`：允许选择多个选项
 - `--poll-duration-hours`：仅限 Discord（省略时默认为 24）
 - `--poll-duration-seconds`：仅限 Telegram（5-600 秒）
 - `--poll-anonymous` / `--poll-public`：仅限 Telegram 的投票可见性
@@ -58,7 +58,7 @@ openclaw message poll --channel msteams --target conversation:19:abc@thread.tacv
 
 - `to`（字符串，必需）
 - `question`（字符串，必需）
-- `options`（字符串数组，必需）
+- `options`（字符串[]，必需）
 - `maxSelections`（数字，可选）
 - `durationHours`（数字，可选）
 - `durationSeconds`（数字，可选，仅限 Telegram）
@@ -68,21 +68,21 @@ openclaw message poll --channel msteams --target conversation:19:abc@thread.tacv
 
 ## 频道差异
 
-- Telegram：2-10 个选项。通过 `threadId` 或 `:topic:` 目标支持论坛主题。使用 `durationSeconds` 而不是 `durationHours`，限制为 5-600 秒。支持匿名和公开投票。
+- Telegram：2-10 个选项。通过 `threadId` 或 `:topic:` 目标支持论坛主题。使用 `durationSeconds` 代替 `durationHours`，限制为 5-600 秒。支持匿名和公开投票。
 - WhatsApp：2-12 个选项，`maxSelections` 必须在选项数量范围内，忽略 `durationHours`。
-- Discord：2-10 个选项，`durationHours` 限制在 1-768 小时（默认 24）。`maxSelections > 1` 启用多选；Discord 不支持严格的选择数量。
+- Discord：2-10 个选项，`durationHours` 限制为 1-768 小时（默认 24）。`maxSelections > 1` 启用多选；Discord 不支持严格的选择数量。
 - MS Teams：自适应卡片投票（由 OpenClaw 管理）。没有原生投票 API；忽略 `durationHours`。
 
 ## 代理工具（消息）
 
-使用带有 `poll` 动作的 `message` 工具（`to`，`pollQuestion`，`pollOption`，可选 `pollMulti`，`pollDurationHours`，`channel`）。
+使用带有 `poll` 动作的 `message` 工具（`to`、`pollQuestion`、`pollOption`、可选的 `pollMulti`、`pollDurationHours`、`channel`）。
 
-对于 Telegram，该工具还接受 `pollDurationSeconds`，`pollAnonymous` 和 `pollPublic`。
+对于 Telegram，该工具还接受 `pollDurationSeconds`、`pollAnonymous` 和 `pollPublic`。
 
-使用 `action: "poll"` 创建投票。通过 `action: "send"` 传递的投票字段将被拒绝。
+使用 `action: "poll"` 进行投票创建。通过 `action: "send"` 传递的投票字段将被拒绝。
 
-注意：Discord 没有“恰好选择 N 项”模式；`pollMulti` 映射到多选。
-Teams 投票以自适应卡片的形式呈现，并需要网关保持在线
+注意：Discord 没有“恰好选择 N 个”模式；`pollMulti` 映射到多选模式。
+Teams 投票呈现为自适应卡片（Adaptive Cards），并要求网关保持在线状态
 以便在 `~/.openclaw/msteams-polls.json` 中记录投票。
 
 import zh from '/components/footer/zh.mdx';

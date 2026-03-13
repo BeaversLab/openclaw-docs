@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw 在渠道、路由、媒体和用户体验方面的功能。"
+summary: "OpenClaw 在渠道、路由、媒体和用户体验方面的能力。"
 read_when:
   - You want a full list of what OpenClaw supports
 title: "功能"
@@ -9,7 +9,7 @@ title: "功能"
 
 <Columns>
   <Card title="渠道" icon="message-square">
-    通过单一网关支持 WhatsApp、Telegram、Discord 和 iMessage。
+    通过单一网关使用 WhatsApp、Telegram、Discord 和 iMessage。
   </Card>
   <Card title="插件" icon="plug">
     通过扩展添加 Mattermost 等更多功能。
@@ -21,10 +21,10 @@ title: "功能"
     图片、音频和文档的输入与输出。
   </Card>
   <Card title="应用和界面" icon="monitor">
-    Web 控制界面和 macOS 伴随应用。
+    Web 控制界面和 macOS 伴侣应用。
   </Card>
   <Card title="移动节点" icon="smartphone">
-    iOS 和 Android 节点，支持配对、语音/聊天以及丰富的设备指令。
+    支持 iOS 和 Android 节点，具备配对、语音/聊天以及丰富的设备命令。
   </Card>
 </Columns>
 
@@ -39,7 +39,7 @@ title: "功能"
 - 针对长响应的流式传输和分块
 - 针对每个工作区或发送者的隔离会话的多智能体路由
 - 通过 OAuth 为 Anthropic 和 OpenAI 提供订阅身份验证
-- 会话：直接聊天合并到共享的 `main` 中；群组为隔离状态
+- 会话：直接聊天会合并到共享的 `main`；群组则是隔离的
 - 支持群聊，基于提及激活
 - 支持图片、音频和文档的媒体功能
 - 可选的语音备忘录转录钩子

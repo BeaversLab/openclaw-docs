@@ -1,5 +1,5 @@
 ---
-summary: "调试工具：监听模式、原始模型流以及跟踪推理泄露"
+summary: "调试工具：监视模式、原始模型流和追踪推理泄漏"
 read_when:
   - You need to inspect raw model output for reasoning leakage
   - You want to run the Gateway in watch mode while iterating
@@ -13,9 +13,9 @@ title: "调试"
 
 ## 运行时调试覆盖
 
-在聊天中使用 `/debug` 设置**仅限运行时**的配置覆盖（内存，非磁盘）。
-`/debug` 默认处于禁用状态；通过 `commands.debug: true` 启用。
-当您需要切换冷门设置而不编辑 `openclaw.json` 时，这非常方便。
+在聊天中使用 `/debug` 来设置**仅运行时**的配置覆盖（内存中，非磁盘）。
+`/debug` 默认是禁用的；通过 `commands.debug: true` 启用。
+当你需要在不编辑 `openclaw.json` 的情况下切换晦涩的设置时，这非常方便。
 
 示例：
 
@@ -26,7 +26,7 @@ title: "调试"
 /debug reset
 ```
 
-`/debug reset` 清除所有覆盖并返回磁盘上的配置。
+`/debug reset` 清除所有覆盖并返回到磁盘上的配置。
 
 ## 网关监听模式
 
@@ -46,12 +46,11 @@ node --watch-path src --watch-path tsconfig.json --watch-path package.json --wat
 
 ## 开发配置文件 + 开发网关 (--dev)
 
-使用开发配置文件隔离状态，并为调试启动一个安全的、一次性的设置。
-有**两个** `--dev` 标志：
+使用开发配置文件 (dev profile) 来隔离状态，并为调试启动一个安全的、一次性的设置。有**两个** `--dev` 标志：
 
-- **全局 `--dev` (profile)：** 在 `~/.openclaw-dev` 下隔离状态，并且
-  将网关端口默认为 `19001`（派生端口随之移动）。
-- **`gateway --dev`：** 告诉网关自动创建默认配置 +
+- **全局 `--dev` (profile)：** 在 `~/.openclaw-dev` 下隔离状态并
+  将网关端口默认设为 `19001`（派生端口随之偏移）。
+- **`gateway --dev`：** 告诉 Gateway 自动创建默认配置 +
   workspace** 当缺失时（并跳过 BOOTSTRAP.md）。
 
 推荐流程（开发配置文件 + 开发引导）：
@@ -61,7 +60,7 @@ pnpm gateway:dev
 OPENCLAW_PROFILE=dev openclaw tui
 ```
 
-如果您尚未进行全局安装，请通过 `pnpm openclaw ...` 运行 CLI。
+如果你还没有全局安装，请通过 `pnpm openclaw ...` 运行 CLI。
 
 其作用如下：
 
@@ -69,16 +68,16 @@ OPENCLAW_PROFILE=dev openclaw tui
    - `OPENCLAW_PROFILE=dev`
    - `OPENCLAW_STATE_DIR=~/.openclaw-dev`
    - `OPENCLAW_CONFIG_PATH=~/.openclaw-dev/openclaw.json`
-   - `OPENCLAW_GATEWAY_PORT=19001` (浏览器/画布相应移动)
+   - `OPENCLAW_GATEWAY_PORT=19001`（浏览器/canvas 相应偏移）
 
 2. **开发引导** (`gateway --dev`)
-   - 如果缺少，则写入最小配置 (`gateway.mode=local`, 绑定回环)。
+   - 如果缺失，则写入最小配置（`gateway.mode=local`，绑定回环接口）。
    - 将 `agent.workspace` 设置为开发工作区。
-   - 设置 `agent.skipBootstrap=true` (无 BOOTSTRAP.md)。
-   - 如果缺少，则为工作区文件填充种子：
-     `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`。
-   - 默认身份：**C3‑PO** (协议机器人)。
-   - 在开发模式下跳过通道提供程序 (`OPENCLAW_SKIP_CHANNELS=1`)。
+   - 设置 `agent.skipBootstrap=true`（无 BOOTSTRAP.md）。
+   - 如果缺失，则初始化工作区文件：
+     `AGENTS.md`，`SOUL.md`，`TOOLS.md`，`IDENTITY.md`，`USER.md`，`HEARTBEAT.md`。
+   - 默认身份：**C3‑PO**（礼仪机器人）。
+   - 在开发模式下跳过频道提供商（`OPENCLAW_SKIP_CHANNELS=1`）。
 
 重置流程（全新开始）：
 
@@ -86,8 +85,8 @@ OPENCLAW_PROFILE=dev openclaw tui
 pnpm gateway:dev:reset
 ```
 
-注意：`--dev` 是一个 **全局** 配置文件标志，并且会被某些运行器“吃掉”。
-如果您需要明确指定，请使用环境变量形式：
+注意：`--dev` 是一个**全局**配置文件标志，会被某些运行器“吃掉”。
+如果需要明确指定，请使用环境变量形式：
 
 ```bash
 OPENCLAW_PROFILE=dev openclaw gateway --dev --reset
@@ -151,7 +150,7 @@ PI_RAW_STREAM_PATH=~/.pi-mono/logs/raw-openai-completions.jsonl
 `~/.pi-mono/logs/raw-openai-completions.jsonl`
 
 > 注意：这仅由使用 pi-mono 的
-> `openai-completions` 提供程序的进程发出。
+> `openai-completions` 提供商的进程发出。
 
 ## 安全说明
 

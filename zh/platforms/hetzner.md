@@ -1,5 +1,5 @@
 ---
-summary: "在廉价的 Hetzner VPS (Docker) 上 24/7 运行 OpenClaw 网关，具有持久状态和内置二进制文件"
+summary: "在廉价的 Hetzner VPS (Docker) 上全天候 (24/7) 运行 OpenClaw Gateway，确保持久状态并内置二进制文件"
 read_when:
   - You want OpenClaw running 24/7 on a cloud VPS (not your laptop)
   - You want a production-grade, always-on Gateway on your own VPS
@@ -22,7 +22,7 @@ Hetzner 的价格可能会变动；选择最小的 Debian/Ubuntu VPS，如果遇
 - 租用一台小型 Linux 服务器 (Hetzner VPS)
 - 安装 Docker (隔离的应用程序运行时)
 - 在 Docker 中启动 OpenClaw 网关
-- 在主机上持久化 `~/.openclaw` + `~/.openclaw/workspace` (在重启/重建后仍然保留)
+- 在主机上持久化 `~/.openclaw` + `~/.openclaw/workspace`（在重启/重建后存活）
 - 通过 SSH 隧道从您的笔记本电脑访问控制 UI
 
 可以通过以下方式访问网关：
@@ -32,7 +32,7 @@ Hetzner 的价格可能会变动；选择最小的 Debian/Ubuntu VPS，如果遇
 
 本指南假设在 Hetzner 上使用 Ubuntu 或 Debian。  
 如果您使用的是其他 Linux VPS，请相应地映射软件包。
-有关通用的 Docker 流程，请参阅 [Docker](/zh/en/install/docker)。
+有关通用的 Docker 流程，请参阅 [Docker](/en/install/docker)。
 
 ---
 
@@ -125,7 +125,7 @@ chown -R 1000:1000 /root/.openclaw/workspace
 
 ## 5) 配置环境变量
 
-在仓库根目录下创建 `.env`。
+在仓库根目录中创建 `.env`。
 
 ```bash
 OPENCLAW_IMAGE=openclaw:latest
@@ -206,9 +206,9 @@ services:
 
 下面的示例仅展示了三种常见的二进制文件：
 
-- 用于 Gmail 访问的 `gog`
-- 用于 Google Places 的 `goplaces`
-- 用于 WhatsApp 的 `wacli`
+- `gog` 用于 Gmail 访问
+- `goplaces` 用于 Google Places
+- `wacli` 用于 WhatsApp
 
 这些只是示例，并非完整列表。
 您可以使用相同的模式安装所需数量的二进制文件。
@@ -316,18 +316,18 @@ ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
 OpenClaw 在 Docker 中运行，但 Docker 并不是事实来源。
 所有长期存在的状态都必须在重启、重新构建和系统重启后得以保留。
 
-| 组件           | 位置                          | 持久化机制  | 备注                            |
-| ------------------- | --------------------------------- | ---------------------- | -------------------------------- |
-| Gateway 配置      | `/home/node/.openclaw/`           | 主机卷挂载      | 包括 `openclaw.json`、令牌 |
-| 模型认证配置 | `/home/node/.openclaw/`           | 主机卷挂载      | OAuth 令牌、API 密钥           |
-| 技能配置       | `/home/node/.openclaw/skills/`    | 主机卷挂载      | 技能级别的状态                |
-| Agent 工作区     | `/home/node/.openclaw/workspace/` | 主机卷挂载      | 代码和 agent 产物         |
-| WhatsApp 会话    | `/home/node/.openclaw/`           | 主机卷挂载      | 保留 QR 登录               |
-| Gmail 密钥环       | `/home/node/.openclaw/`           | 主机卷 + 密码 | 需要 `GOG_KEYRING_PASSWORD`  |
-| 外部二进制文件   | `/usr/local/bin/`                 | Docker 镜像           | 必须在构建时打包      |
-| Node 运行时        | 容器文件系统              | Docker 镜像           | 每次镜像构建时重新构建        |
-| 操作系统包         | 容器文件系统              | Docker 镜像           | 请勿在运行时安装        |
-| Docker 容器    | 临时性                         | 可重启            | 可以安全销毁                  |
+| 组件               | 位置                              | 持久化机制           | 备注                             |
+| ------------------- | --------------------------------- | -------------------- | -------------------------------- |
+| Gateway 配置        | `/home/node/.openclaw/`           | 主机卷挂载          | 包括 `openclaw.json`、令牌 |
+| 模型认证配置文件     | `/home/node/.openclaw/`           | 主机卷挂载          | OAuth 令牌、API 密钥            |
+| 技能配置            | `/home/node/.openclaw/skills/`    | 主机卷挂载          | 技能级别的状态                   |
+| Agent 工作区        | `/home/node/.openclaw/workspace/` | 主机卷挂载          | 代码和 agent 制品                |
+| WhatsApp 会话       | `/home/node/.openclaw/`           | 主机卷挂载          | 保留 QR 登录                     |
+| Gmail 密钥环        | `/home/node/.openclaw/`           | 主机卷 + 密码       | 需要 `GOG_KEYRING_PASSWORD`  |
+| 外部二进制文件      | `/usr/local/bin/`                 | Docker 镜像         | 必须在构建时烘焙进去             |
+| Node 运行时         | 容器文件系统                      | Docker 镜像         | 每次镜像构建时都会重新构建       |
+| 操作系统包          | 容器文件系统                      | Docker 镜像         | 不要在运行时安装                 |
+| Docker 容器         | 临时                              | 可重启              | 可以安全销毁                     |
 
 import zh from '/components/footer/zh.mdx';
 

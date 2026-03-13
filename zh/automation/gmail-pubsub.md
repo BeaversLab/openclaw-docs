@@ -1,5 +1,5 @@
 ---
-summary: "通过 gogcli 将 Gmail Pub/Sub 推送连接到 OpenClaw Webhooks"
+summary: "通过 gogcli 将 Gmail Pub/Sub 推送接入 OpenClaw webhook"
 read_when:
   - Wiring Gmail inbox triggers to OpenClaw
   - Setting up Pub/Sub push for agent wake
@@ -12,10 +12,10 @@ title: "Gmail PubSub"
 
 ## 先决条件
 
-- 已安装并登录 `gcloud` ([安装指南](https://docs.cloud.google.com/sdk/docs/install-sdk))。
-- 已安装并针对 Gmail 帐户授权 `gog` (gogcli) ([gogcli.sh](https://gogcli.sh/))。
-- 已启用 OpenClaw hooks（参见 [Webhooks](/zh/en/automation/webhook)）。
-- 已登录 `tailscale` ([tailscale.com](https://tailscale.com/))。受支持的设置使用 Tailscale Funnel 作为公共 HTTPS 端点。
+- `gcloud` 已安装并登录（[安装指南](https://docs.cloud.google.com/sdk/docs/install-sdk)）。
+- `gog` (gogcli) 已安装且已获得 Gmail 账号的授权（[gogcli.sh](https://gogcli.sh/)）。
+- 已启用 OpenClaw hooks（参见 [Webhooks](/en/automation/webhook)）。
+- `tailscale` 已登录（[tailscale.com](https://tailscale.com/)）。受支持的设置使用 Tailscale Funnel 作为公共 HTTPS 端点。
   其他隧道服务可能可用，但属于 DIY/不受支持，需要手动连接。
   目前，我们支持 Tailscale。
 
@@ -32,7 +32,7 @@ title: "Gmail PubSub"
 }
 ```
 
-要将 Gmail 摘要发送到聊天界面，请使用映射覆盖预设
+要将 Gmail 摘要发送到聊天界面，请使用一个映射来覆盖预设，
 该映射设置 `deliver` + 可选的 `channel`/`to`：
 
 ```json5
@@ -59,13 +59,13 @@ title: "Gmail PubSub"
 }
 ```
 
-如果需要固定频道，请设置 `channel` + `to`。否则 `channel: "last"`
-将使用上次传送路由（回退到 WhatsApp）。
+如果您想要一个固定的频道，请设置 `channel` + `to`。否则 `channel: "last"`
+将使用最后一条投递路由（回退到 WhatsApp）。
 
-要强制为 Gmail 运行使用更便宜的模型，请在映射中设置 `model`
-(`provider/model` 或别名)。如果强制执行 `agents.defaults.models`，请将其包含在内。
+要强制 Gmail 运行使用更便宜的模型，请在映射中设置 `model`
+（`provider/model` 或别名）。如果您强制执行 `agents.defaults.models`，请将其包含在其中。
 
-要专门为 Gmail hooks 设置默认模型和思考级别，请在配置中添加
+要专门为 Gmail hook 设置默认模型和思考级别，请在您的配置中添加
 `hooks.gmail.model` / `hooks.gmail.thinking`：
 
 ```json5
@@ -81,14 +81,14 @@ title: "Gmail PubSub"
 
 注意事项：
 
-- 映射中针对每个 hook 的 `model`/`thinking` 仍会覆盖这些默认值。
-- 回退顺序：`hooks.gmail.model` → `agents.defaults.model.fallbacks` → 主要（身份验证/速率限制/超时）。
+- 映射中针对每个 hook 的 `model`/`thinking` 仍然会覆盖这些默认值。
+- 回退顺序：`hooks.gmail.model` → `agents.defaults.model.fallbacks` → 主要（认证/速率限制/超时）。
 - 如果设置了 `agents.defaults.models`，Gmail 模型必须在允许列表中。
 - 默认情况下，Gmail hook 内容包含在 external-content 安全边界内。
   要禁用（危险），请设置 `hooks.gmail.allowUnsafeExternalContent: true`。
 
-要进一步自定义负载处理，请添加 `hooks.mappings` 或 JS/TS 转换模块
-在 `~/.openclaw/hooks/transforms` 下（参见 [Webhooks](/zh/en/automation/webhook)）。
+要进一步自定义负载处理，请在 `~/.openclaw/hooks/transforms` 下添加 `hooks.mappings` 或 JS/TS 转换模块
+（参见 [Webhooks](/en/automation/webhook)）。
 
 ## 向导（推荐）
 
@@ -102,31 +102,31 @@ openclaw webhooks gmail setup \
 默认设置：
 
 - 使用 Tailscale Funnel 作为公共推送端点。
-- 为 `openclaw webhooks gmail run` 写入 `hooks.gmail` 配置。
-- 启用 Gmail 钩子预设 (`hooks.presets: ["gmail"]`)。
+- 为 `openclaw webhooks gmail run` 编写 `hooks.gmail` 配置。
+- 启用 Gmail hook 预设 (`hooks.presets: ["gmail"]`)。
 
-路径说明：启用 `tailscale.mode` 时，OpenClaw 会自动将
-`hooks.gmail.serve.path` 设置为 `/`，并将公共路径保持在
+路径说明：当启用 `tailscale.mode` 时，OpenClaw 会自动将
+`hooks.gmail.serve.path` 设置为 `/`，并将公共路径保留在
 `hooks.gmail.tailscale.path`（默认为 `/gmail-pubsub`），因为 Tailscale
-在代理之前会剥离设置路径的前缀。
-如果您需要后端接收带前缀的路径，请将
-`hooks.gmail.tailscale.target`（或 `--tailscale-target`）设置为完整的 URL，如
+会在代理之前去除设置路径的前缀。
+如果您需要后端接收带有前缀的路径，请将
+`hooks.gmail.tailscale.target`（或 `--tailscale-target`）设置为完整的 URL，例如
 `http://127.0.0.1:8788/gmail-pubsub`，并匹配 `hooks.gmail.serve.path`。
 
 想要自定义端点？使用 `--push-endpoint <url>` 或 `--tailscale off`。
 
-平台说明：在 macOS 上，向导通过 Homebrew 安装 `gcloud`、`gogcli` 和 `tailscale`；
-在 Linux 上，请先手动安装它们。
+平台说明：在 macOS 上，向导通过 Homebrew 安装 `gcloud`、`gogcli` 和 `tailscale`
+；在 Linux 上请先手动安装它们。
 
 网关自动启动（推荐）：
 
-- 当设置了 `hooks.enabled=true` 和 `hooks.gmail.account` 时，网关会启动
-  `gog gmail watch serve` 并在开机时自动续订监视。
-- 设置 `OPENCLAW_SKIP_GMAIL_WATCHER=1` 以选择退出（如果您自己运行守护程序，这很有用）。
+- 当设置 `hooks.enabled=true` 和 `hooks.gmail.account` 后，网关启动
+  时启动 `gog gmail watch serve` 并自动续期监听。
+- 设置 `OPENCLAW_SKIP_GMAIL_WATCHER=1` 以选择退出（如果您自己运行守护进程，这很有用）。
 - 不要同时运行手动守护程序，否则您将遇到
   `listen tcp 127.0.0.1:8788: bind: address already in use`。
 
-手动守护程序（启动 `gog gmail watch serve` + 自动续订）：
+手动守护进程（启动 `gog gmail watch serve` + 自动续期）：
 
 ```bash
 openclaw webhooks gmail run
@@ -134,7 +134,7 @@ openclaw webhooks gmail run
 
 ## 一次性设置
 
-1. 选择拥有 `gog` 使用的 OAuth 客户端的 GCP 项目。
+1. 选择 **拥有 OAuth 客户端**的 GCP 项目，该客户端由 `gog` 使用。
 
 ```bash
 gcloud auth login
@@ -197,7 +197,7 @@ gog gmail watch serve \
 - `--hook-url` 指向 OpenClaw `/hooks/gmail`（已映射；隔离运行 + 摘要发送至主程序）。
 - `--include-body` 和 `--max-bytes` 控制发送给 OpenClaw 的正文片段。
 
-推荐：`openclaw webhooks gmail run` 封装了相同的流程并自动续订监视。
+推荐：`openclaw webhooks gmail run` 封装了相同的流程并自动续期监听。
 
 ## 暴露处理程序（高级，不支持）
 
@@ -244,7 +244,7 @@ gog gmail history --account openclaw@gmail.com --since <historyId>
 
 - `Invalid topicName`：项目不匹配（主题不在 OAuth 客户端项目中）。
 - `User not authorized`：主题上缺少 `roles/pubsub.publisher`。
-- 空消息：Gmail 推送仅提供 `historyId`；通过 `gog gmail history` 获取。
+- 空消息：Gmail 推送仅提供 `historyId`；请通过 `gog gmail history` 获取。
 
 ## 清理
 

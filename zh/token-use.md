@@ -1,9 +1,9 @@
 ---
-summary: "OpenClaw 如何构建提示词上下文并报告 Token 使用量 + 成本"
+summary: "OpenClaw 如何构建提示词上下文并报告 token 使用量 + 成本"
 read_when:
   - Explaining token usage, costs, or context windows
   - Debugging context growth or compaction behavior
-title: "Token 使用与成本"
+title: "Token 使用和成本"
 ---
 
 # Token 使用与成本
@@ -15,14 +15,14 @@ OpenClaw 追踪的是 **tokens**，而不是字符。Token 取决于具体的模
 OpenClaw 在每次运行时会组装自己的系统提示词。它包括：
 
 - 工具列表 + 简短描述
-- 技能列表（仅元数据；指令会通过 `read` 按需加载）
+- 技能列表（仅元数据；指令通过 `read` 按需加载）
 - 自我更新指令
-- 工作区 + 引导文件（如有新内容，包括 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md`）。大文件会被 `agents.defaults.bootstrapMaxChars` 截断（默认：20000）。
+- 工作区 + 引导文件（`AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md`，如果是新的）。大文件会被 `agents.defaults.bootstrapMaxChars` 截断（默认：20000）。
 - 时间（UTC + 用户时区）
 - 回复标签 + 心跳行为
 - 运行时元数据（主机/操作系统/模型/思考）
 
-请参阅 [系统提示词](/zh/en/concepts/system-prompt) 了解完整细分。
+请参阅 [系统提示词](/en/concepts/system-prompt) 了解完整细分。
 
 ## 哪些内容计入上下文窗口
 
@@ -35,17 +35,17 @@ OpenClaw 在每次运行时会组装自己的系统提示词。它包括：
 - 压缩摘要和修剪产物
 - 提供商包装器或安全标头（不可见，但仍会计入）
 
-如需查看详细的细分（按注入的文件、工具、技能和系统提示词大小），请使用 `/context list` 或 `/context detail`。请参阅 [上下文](/zh/en/concepts/context)。
+要获取详细的细分信息（按注入的文件、工具、技能和系统提示词大小），请使用 `/context list` 或 `/context detail`。请参阅[上下文](/en/concepts/context)。
 
 ## 如何查看当前的 Token 使用量
 
 在聊天中使用以下命令：
 
-- `/status` → 显示包含会话模型、上下文使用量、
+- `/status` → **包含丰富 emoji 的状态卡片**，显示会话模型、上下文使用情况，
   上一次响应输入/输出 Token 以及**预估成本**（仅限 API 密钥）的**丰富 Emoji 状态卡片**。
-- `/usage off|tokens|full` → 在每次回复后附加一个**每次响应使用情况页脚**。
-  - 按会话持久化（存储为 `responseUsage`）。
-  - OAuth 认证**隐藏成本**（仅显示 Token）。
+- `/usage off|tokens|full` → 在每次回复中附加一个**每次响应的使用情况页脚**。
+  - 每个会话持续存在（存储为 `responseUsage`）。
+  - OAuth 认证**隐藏成本**（仅显示 token）。
 - `/usage cost` → 显示来自 OpenClaw 会话日志的本地成本摘要。
 
 其他界面：
@@ -63,7 +63,7 @@ models.providers.<provider>.models[].cost
 ```
 
 这些是 `input`、`output`、`cacheRead` 和
-`cacheWrite` 的 **每 100 万 token 美元价格**。如果缺少定价，OpenClaw 仅显示 token 数量。OAuth token
+`cacheWrite` 的 **每 100 万 token 美元价格**。如果缺少定价，OpenClaw 仅显示 token。OAuth token
 从不显示美元成本。
 
 ## 缓存 TTL 和修剪影响
@@ -74,16 +74,14 @@ models.providers.<provider>.models[].cost
 新缓存的上下文，而不是重新缓存完整的历史记录。这会在会话空闲超过 TTL 时
 保持较低的缓存写入成本。
 
-在 [Gateway configuration](/zh/en/gateway/configuration) 中进行配置，并查看
-[Session pruning](/zh/en/concepts/session-pruning) 中的行为详细信息。
+在 [Gateway configuration](/en/gateway/configuration) 中进行配置，并查看
+[Session pruning](/en/concepts/session-pruning) 中的行为详细信息。
 
-心跳可以在空闲间隙期间保持缓存 **热度**。如果您的模型缓存 TTL
-为 `1h`，将心跳间隔设置为略低于该值（例如 `55m`） 可以避免
-重新缓存完整提示，从而降低缓存写入成本。
+心跳可以在空闲间隙保持缓存**温暖**。如果您的模型缓存 TTL
+为 `1h`，将心跳间隔设置为略低于该值（例如 `55m`）可以避免
+重新缓存完整提示词，从而减少缓存写入成本。
 
-对于 Anthropic API 定价，缓存读取显著低于输入
-token 的价格，而缓存写入则以更高的倍率计费。请参阅 Anthropic 的
-提示缓存定价以获取最新费率和 TTL 倍数：
+对于 Anthropic API 定价，缓存读取的费用显著低于输入 token，而缓存写入则按更高的倍率计费。请参阅 Anthropic 的提示词缓存定价以获取最新费率和 TTL 倍率：
 https://docs.anthropic.com/docs/build-with-claude/prompt-caching
 
 ### 示例：使用心跳保持 1 小时缓存热度
@@ -108,7 +106,7 @@ agents:
 - 保持技能描述简短（技能列表会被注入到提示中）。
 - 对于冗长、探索性的工作，首选较小的模型。
 
-请参阅 [Skills](/zh/en/tools/skills) 以了解确切的技能列表开销公式。
+请参阅 [Skills](/en/tools/skills) 以了解确切的技能列表开销公式。
 
 import zh from '/components/footer/zh.mdx';
 

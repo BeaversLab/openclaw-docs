@@ -1,5 +1,5 @@
 ---
-summary: "用户资料记录"
+summary: "用户档案记录"
 read_when:
   - Bootstrapping a workspace manually
 ---

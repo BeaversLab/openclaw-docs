@@ -1,10 +1,10 @@
 ---
-summary: "OpenClaw 在树莓派上（经济型自建方案）"
+summary: "OpenClaw on Raspberry Pi (budget self-hosted setup)"
 read_when:
   - Setting up OpenClaw on a Raspberry Pi
   - Running OpenClaw on ARM devices
   - Building a cheap always-on personal AI
-title: "树莓派"
+title: "Raspberry Pi"
 ---
 
 # OpenClaw 在树莓派上
@@ -155,7 +155,7 @@ journalctl -u openclaw -f
 
 ## 9) 访问 OpenClaw 仪表板
 
-将 `user@gateway-host` 替换为您的 Pi 用户名、主机名或 IP 地址。
+将 `user@gateway-host` 替换为您的 Pi 用户名和主机名或 IP 地址。
 
 在您的计算机上，请求 Pi 打印一个新的仪表板 URL：
 
@@ -164,8 +164,8 @@ ssh user@gateway-host 'openclaw dashboard --no-open'
 ```
 
 该命令会打印 `Dashboard URL:`。根据 `gateway.auth.token`
-的配置方式，URL 可能是普通的 `http://127.0.0.1:18789/` 链接，或者是
-包含 `#token=...` 的链接。
+的配置方式，该 URL 可能是一个普通的 `http://127.0.0.1:18789/` 链接，也
+可能是一个包含 `#token=...` 的链接。
 
 在您计算机上的另一个终端中，创建 SSH 隧道：
 
@@ -175,10 +175,10 @@ ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
 
 然后在您的本地浏览器中打开打印出的仪表板 URL。
 
-如果 UI 要求身份验证，请将 `gateway.auth.token`
+如果 UI 要求进行身份验证，请将 `gateway.auth.token`
 （或 `OPENCLAW_GATEWAY_TOKEN`）中的令牌粘贴到 Control UI 设置中。
 
-对于始终在线的远程访问，请参阅 [Tailscale](/zh/en/gateway/tailscale)。
+对于始终在线的远程访问，请参阅 [Tailscale](/en/gateway/tailscale)。
 
 ---
 
@@ -193,7 +193,7 @@ SD 卡速度较慢且容易磨损。使用 USB SSD 可以显著提升性能：
 lsblk
 ```
 
-请参阅 [Pi USB 启动指南](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot) 了解设置方法。
+有关设置，请参阅 [Pi USB 启动指南](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-mass-storage-boot)。
 
 ### 加速 CLI 启动（模块编译缓存）
 
@@ -210,9 +210,9 @@ source ~/.bashrc
 
 注意：
 
-- `NODE_COMPILE_CACHE` 可以加快后续运行（`status`、`health`、`--help`）的速度。
-- `/var/tmp` 在重启后的持久性优于 `/tmp`。
-- `OPENCLAW_NO_RESPAWN=1` 可以避免因 CLI 自重新生成（self-respawn）而产生的额外启动开销。
+- `NODE_COMPILE_CACHE` 可以加快后续运行的速度（`status`，`health`，`--help`）。
+- 与 `/tmp` 相比，`/var/tmp` 在重启后能更好地保留状态。
+- `OPENCLAW_NO_RESPAWN=1` 避免了由 CLI 自我重启带来的额外启动开销。
 - 首次运行会预热缓存；后续运行受益最大。
 
 ### systemd 启动调优（可选）
@@ -242,7 +242,7 @@ sudo systemctl restart openclaw
 如果可能，请将 OpenClaw 状态/缓存保留在 SSD 支持的存储上，以避免冷启动期间 SD 卡随机 I/O 瓶颈。
 
 `Restart=` 策略如何帮助自动恢复：
-[systemd 可以自动恢复服务](https://www.redhat.com/en/blog/systemd-automate-recovery)。
+[systemd 可以实现服务恢复的自动化](https://www.redhat.com/en/blog/systemd-automate-recovery)。
 
 ### 减少内存使用
 
@@ -276,11 +276,11 @@ htop
 大多数 OpenClaw 功能在 ARM64 上工作，但某些外部二进制文件可能需要 ARM 版本：
 
 | 工具               | ARM64 状态 | 备注                               |
-| ------------------ | ------------ | ----------------------------------- |
-| Node.js            | ✅           | 运行良好                         |
-| WhatsApp (Baileys) | ✅           | 纯 JS，无问题                  |
-| Telegram           | ✅           | 纯 JS，无问题                  |
-| gog (Gmail CLI)    | ⚠️           | 检查是否有 ARM 版本               |
+| ------------------ | ----------- | ---------------------------------- |
+| Node.js            | ✅           | 运行良好                           |
+| WhatsApp (Baileys) | ✅           | 纯 JS，无问题                      |
+| Telegram           | ✅           | 纯 JS，无问题                      |
+| gog (Gmail CLI)    | ⚠️           | 检查是否有 ARM 版本                |
 | Chromium (browser) | ✅           | `sudo apt install chromium-browser` |
 
 如果某个技能运行失败，请检查其二进制文件是否有 ARM 版本。许多 Go/Rust 工具有，有些则没有。
@@ -349,8 +349,8 @@ free -h
 ### 性能缓慢
 
 - 使用 USB SSD 代替 SD 卡
-- 禁用未使用的服务： `sudo systemctl disable cups bluetooth avahi-daemon`
-- 检查 CPU 降频： `vcgencmd get_throttled` （应该返回 `0x0`）
+- 禁用未使用的服务：`sudo systemctl disable cups bluetooth avahi-daemon`
+- 检查 CPU 降频：`vcgencmd get_throttled` （应该返回 `0x0`）
 
 ### 服务无法启动
 
@@ -403,11 +403,11 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ## 参见
 
-- [Linux 指南](/zh/en/platforms/linux) — 通用 Linux 设置
-- [DigitalOcean 指南](/zh/en/platforms/digitalocean) — 云端替代方案
-- [Hetzner 指南](/zh/en/install/hetzner) — Docker 设置
-- [Tailscale](/zh/en/gateway/tailscale) — 远程访问
-- [节点](/zh/en/nodes) — 将您的笔记本电脑/手机与 Pi 网关配对
+- [Linux 指南](/en/platforms/linux) — 通用 Linux 设置
+- [DigitalOcean 指南](/en/platforms/digitalocean) — 云端替代方案
+- [Hetzner 指南](/en/install/hetzner) — Docker 设置
+- [Tailscale](/en/gateway/tailscale) — 远程访问
+- [节点](/en/nodes) — 将您的笔记本电脑/手机与 Pi 网关配对
 
 import zh from '/components/footer/zh.mdx';
 

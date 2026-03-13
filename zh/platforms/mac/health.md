@@ -26,12 +26,12 @@ title: "健康检查"
 
 ## 探测的工作原理
 
-- 应用每约 60 秒及按需通过 `ShellExecutor` 运行 `openclaw health --json`。该探测加载凭据并报告状态，而不发送消息。
+- 应用每隔约 60 秒以及按需通过 `ShellExecutor` 运行 `openclaw health --json`。该探测器加载凭据并报告状态，而不发送消息。
 - 分别缓存最后一次良好的快照和最后一次错误，以避免闪烁；显示每个的时间戳。
 
 ## 如有疑问
 
-- 您仍然可以在 [Gateway health](/zh/en/gateway/health) 中使用 CLI 流程 (`openclaw status`, `openclaw status --deep`, `openclaw health --json`)，并 tail `/tmp/openclaw/openclaw-*.log` 以查看 `web-heartbeat` / `web-reconnect`。
+- 您仍然可以在 [Gateway health](/en/gateway/health) 中使用 CLI 流程（`openclaw status`、`openclaw status --deep`、`openclaw health --json`）并监视 `/tmp/openclaw/openclaw-*.log` 以查找 `web-heartbeat` / `web-reconnect`。
 
 import zh from '/components/footer/zh.mdx';
 

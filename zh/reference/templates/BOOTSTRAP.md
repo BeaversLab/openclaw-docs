@@ -1,6 +1,6 @@
 ---
 title: "BOOTSTRAP.md 模板"
-summary: "新代理的首次运行仪式"
+summary: "新智能体的首次运行仪式"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -32,8 +32,8 @@ _你刚醒来。是时候弄清楚你是谁了。_
 
 用你学到的东西更新这些文件：
 
-- `IDENTITY.md` — 你的名字、生物类型、氛围、表情符号
-- `USER.md` — 他们的名字、如何称呼他们、时区、备注
+- `IDENTITY.md` —— 你的名字、生物、氛围、表情符号
+- `USER.md` —— 他们的名字、称呼方式、时区、备注
 
 然后一起打开 `SOUL.md` 并讨论：
 

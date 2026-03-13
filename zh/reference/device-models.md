@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw 如何在 macOS 应用中打包 Apple 设备型号标识符以实现友好名称显示。"
+summary: "OpenClaw 如何在 macOS 应用中供应商 Apple 设备型号标识符以显示友好名称。"
 read_when:
   - Updating device model identifier mappings or NOTICE/license files
   - Changing how Instances UI displays device names
@@ -8,7 +8,7 @@ title: "设备型号数据库"
 
 # 设备型号数据库（友好名称）
 
-macOS 伴侣应用通过将 Apple 型号标识符（例如 `iPad16,6`、`Mac16,6`）映射为可读名称，在 **实例** UI 中显示友好的 Apple 设备型号名称。
+macOS 伴侣应用通过将 Apple 型号标识符（例如 `iPad16,6`、`Mac16,6`）映射为人类可读的名称，在 **Instances** UI 中显示友好的 Apple 设备型号名称。
 
 该映射作为 JSON 打包在以下位置：
 
@@ -39,7 +39,7 @@ curl -fsSL "https://raw.githubusercontent.com/kyle-seongwoo-jun/apple-device-ide
   -o apps/macos/Sources/OpenClaw/Resources/DeviceModels/mac-device-identifiers.json
 ```
 
-4. 确保 `apps/macos/Sources/OpenClaw/Resources/DeviceModels/LICENSE.apple-device-identifiers.txt` 仍与上游匹配（如果上游许可发生更改，请替换它）。
+4. 确保 `apps/macos/Sources/OpenClaw/Resources/DeviceModels/LICENSE.apple-device-identifiers.txt` 仍然与上游匹配（如果上游许可证发生更改，请替换它）。
 5. 验证 macOS 应用是否能干净地构建（无警告）：
 
 ```bash

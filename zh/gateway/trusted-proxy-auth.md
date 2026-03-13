@@ -1,5 +1,5 @@
 ---
-summary: “将网关身份验证委托给受信任的反向代理（Pomerium、Caddy、nginx + OAuth）”
+summary: "Delegate gateway authentication to a trusted reverse proxy (Pomerium, Caddy, nginx + OAuth)"
 read_when:
   - Running OpenClaw behind an identity-aware proxy
   - Setting up Pomerium, Caddy, or nginx with OAuth in front of OpenClaw
@@ -13,12 +13,12 @@ read_when:
 
 ## 何时使用
 
-在以下情况下使用 `trusted-proxy` 身份验证模式：
+在以下情况下使用 `trusted-proxy` 认证模式：
 
 - 您在 **感知身份的代理**（Pomerium、Caddy + OAuth、nginx + oauth2-proxy、Traefik + forward auth）后面运行 OpenClaw
 - 您的代理处理所有身份验证并通过标头传递用户身份
 - 您处于 Kubernetes 或容器环境中，且代理是访问网关的唯一路径
-- 您遇到 WebSocket `1008 unauthorized` 错误，因为浏览器无法在 WS 负载中传递令牌
+- 您遇到了 WebSocket `1008 unauthorized` 错误，因为浏览器无法在 WS 负载中传递令牌
 
 ## 何时不使用
 
@@ -30,20 +30,22 @@ read_when:
 ## 工作原理
 
 1. 您的反向代理对用户进行身份验证（OAuth、OIDC、SAML 等）
-2. 代理添加一个包含经过身份验证的用户身份的标头（例如 `x-forwarded-user: nick@example.com`）
-3. OpenClaw 检查请求是否来自 **受信任的代理 IP**（在 `gateway.trustedProxies` 中配置）
+2. 代理添加一个包含已认证用户身份的请求头（例如 `x-forwarded-user: nick@example.com`）
+3. OpenClaw 检查请求是否来自**受信任的代理 IP**（在 `gateway.trustedProxies` 中配置）
 4. OpenClaw 从配置的标头中提取用户身份
 5. 如果一切检查通过，该请求即获得授权
 
 ## 控制 UI 配对行为
 
-当 `gateway.auth.mode = "trusted-proxy"` 处于活动状态且请求通过了受信任代理检查时，控制 UI WebSocket 会话无需设备配对身份即可连接。
+当 `gateway.auth.mode = "trusted-proxy"` 处于活动状态且请求通过
+受信任代理检查时，控制 UI WebSocket 会话可以在没有设备
+配对身份的情况下进行连接。
 
 影响：
 
 - 在此模式下，配对不再是控制 UI 访问的主要关卡。
-- 您的反向代理身份验证策略和 `allowUsers` 成为有效的访问控制。
-- 将网关入口仅锁定为受信任的代理 IP（`gateway.trustedProxies` + 防火墙）。
+- 您的反向代理认证策略和 `allowUsers` 将成为有效的访问控制。
+- 保持网关入口仅限于受信任的代理 IP（`gateway.trustedProxies` + 防火墙）。
 
 ## 配置
 
@@ -73,18 +75,19 @@ read_when:
 }
 ```
 
-如果 `gateway.bind` 为 `loopback`，请在 `gateway.trustedProxies` 中包含一个回环代理地址
-（`127.0.0.1`、`::1` 或等效的回环 CIDR）。
+如果 `gateway.bind` 为 `loopback`，请在
+`gateway.trustedProxies` 中包含一个环回代理地址
+（`127.0.0.1`、`::1` 或等效的环回 CIDR）。
 
 ### 配置参考
 
-| 字段                                       | 必填   | 说明                                                                 |
+| 字段                                       | 必填   | 描述                                                                 |
 | ------------------------------------------- | ------ | --------------------------------------------------------------------------- |
-| `gateway.trustedProxies`                    | 是     | 受信任的代理 IP 地址列表。来自其他 IP 的请求将被拒绝。                     |
+| `gateway.trustedProxies`                    | 是     | 要信任的代理 IP 地址列表。来自其他 IP 的请求将被拒绝。                   |
 | `gateway.auth.mode`                         | 是     | 必须为 `"trusted-proxy"`                                                   |
-| `gateway.auth.trustedProxy.userHeader`      | 是     | 包含已认证用户身份的 Header 名称                                          |
-| `gateway.auth.trustedProxy.requiredHeaders` | 否     | 请求受信任时必须存在的其他 Header                                         |
-| `gateway.auth.trustedProxy.allowUsers`      | 否     | 用户身份白名单。为空表示允许所有已认证的用户。                            |
+| `gateway.auth.trustedProxy.userHeader`      | 是     | 包含已认证用户身份的 Header 名称                                         |
+| `gateway.auth.trustedProxy.requiredHeaders` | 否     | 为使请求受信任而必须存在的其他 Header                                  |
+| `gateway.auth.trustedProxy.allowUsers`      | 否     | 用户身份白名单。为空表示允许所有已认证的用户。                           |
 
 ## TLS 终止与 HSTS
 
@@ -93,7 +96,7 @@ read_when:
 ### 推荐模式：代理 TLS 终止
 
 当您的反向代理为 `https://control.example.com` 处理 HTTPS 时，请
-在该域名的代理处设置 `Strict-Transport-Security`。
+在该域名的代理上设置 `Strict-Transport-Security`。
 
 - 适合面向互联网的部署。
 - 将证书 + HTTP 加固策略集中在一处管理。
@@ -122,13 +125,13 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains
 }
 ```
 
-`strictTransportSecurity` 接受字符串 header 值，或接受 `false` 以显式禁用。
+`strictTransportSecurity` 接受字符串 Header 值，或者设为 `false` 以显式禁用。
 
 ### 上线指导
 
-- 验证流量时，首先使用较短的 max age（例如 `max-age=300`）。
-- 仅在确认无误后，再增加到长期值（例如 `max-age=31536000`）。
-- 仅当每个子域都准备好 HTTPS 时，才添加 `includeSubDomains`。
+- 在验证流量时，首先使用较短的有效期（例如 `max-age=300`）。
+- 只有在确认无误后，才增加到长期有效的值（例如 `max-age=31536000`）。
+- 仅当每个子域名都准备好使用 HTTPS 时，才添加 `includeSubDomains`。
 - 仅当您有意为整个域名集满足预加载要求时，才使用预加载。
 - 仅限本地回环的本地开发无法从 HSTS 中受益。
 
@@ -136,7 +139,7 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 ### Pomerium
 
-Pomerium 在 `x-pomerium-claim-email`（或其他声明头）中传递身份，并在 `x-pomerium-jwt-assertion` 中传递 JWT。
+Pomerium 在 `x-pomerium-claim-email`（或其他 claim headers）中传递身份，并在 `x-pomerium-jwt-assertion` 中传递 JWT。
 
 ```json5
 {
@@ -170,7 +173,7 @@ routes:
 
 ### 使用 OAuth 的 Caddy
 
-带有 `caddy-security` 插件的 Caddy 可以对用户进行身份验证并传递身份头。
+带有 `caddy-security` 插件的 Caddy 可以对用户进行身份验证并传递身份 headers。
 
 ```json5
 {
@@ -257,13 +260,13 @@ location / {
 
 - [ ] **代理是唯一路径**：网关端口已设置防火墙，仅允许您的代理访问
 - [ ] **trustedProxies 是最小的**：仅包含您的实际代理 IP，而不是整个子网
-- [ ] **代理剥离头**：您的代理覆盖（而不是追加）来自客户端的 `x-forwarded-*` 头
+- [ ] **代理剥离 headers**：您的代理覆盖（而不是追加）来自客户端的 `x-forwarded-*` headers
 - [ ] **TLS 终止**：您的代理处理 TLS；用户通过 HTTPS 连接
 - [ ] **已设置 allowUsers**（推荐）：限制为已知用户，而不是允许任何通过身份验证的人
 
 ## 安全审计
 
-`openclaw security audit` 将标记具有 **严重**（critical）严重性发现的 trusted-proxy 身份验证。这是有意为之——这是提醒您正在将安全委托给您的代理设置。
+`openclaw security audit` 将标记具有“严重”严重性级别的可信代理身份验证。这是有意为之——这是一个提醒，您正在将安全性委托给您的代理设置。
 
 审计检查内容包括：
 
@@ -275,7 +278,7 @@ location / {
 
 ### "trusted_proxy_untrusted_source"
 
-请求并非来自 `gateway.trustedProxies` 中的 IP。请检查：
+请求未来自 `gateway.trustedProxies` 中的 IP。检查：
 
 - 代理 IP 是否正确？（Docker 容器 IP 可能会变化）
 - 代理前面是否有负载均衡器？
@@ -298,7 +301,7 @@ location / {
 
 ### "trusted_proxy_user_not_allowed"
 
-用户已通过身份验证，但不在 `allowUsers` 中。请将其添加，或者移除允许列表。
+用户已通过身份验证但不在 `allowUsers` 中。请添加他们或移除允许列表。
 
 ### WebSocket 仍然失败
 
@@ -317,14 +320,14 @@ location / {
 3. 使用受信任代理身份验证更新 OpenClaw 配置
 4. 重启 Gateway
 5. 从控制 UI 测试 WebSocket 连接
-6. 运行 `openclaw security audit` 并检查结果
+6. 运行 `openclaw security audit` 并查看发现结果
 
 ## 相关内容
 
-- [安全](/zh/en/gateway/security) — 完整的安全指南
-- [配置](/zh/en/gateway/configuration) — 配置参考
-- [远程访问](/zh/en/gateway/remote) — 其他远程访问模式
-- [Tailscale](/zh/en/gateway/tailscale) — 专用于 tailnet 访问的更简单的替代方案
+- [安全](/en/gateway/security) — 完整的安全指南
+- [配置](/en/gateway/configuration) — 配置参考
+- [远程访问](/en/gateway/remote) — 其他远程访问模式
+- [Tailscale](/en/gateway/tailscale) — 专用于 tailnet 访问的更简单的替代方案
 
 import zh from '/components/footer/zh.mdx';
 

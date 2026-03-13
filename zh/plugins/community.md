@@ -1,9 +1,9 @@
 ---
-summary: "社区插件：质量标准、托管要求和 PR 提交流程"
+summary: "Community plugins: quality bar, hosting requirements, and PR submission path"
 read_when:
   - You want to publish a third-party OpenClaw plugin
   - You want to propose a plugin for docs listing
-title: "社区插件"
+title: "Community plugins"
 ---
 
 # 社区插件
@@ -14,7 +14,7 @@ title: "社区插件"
 
 ## 列入列表的要求
 
-- 插件包发布在 npmjs 上（可通过 `openclaw plugins install <npm-spec>` 安装）。
+- Plugin package is published on npmjs (installable via `openclaw plugins install <npm-spec>`).
 - 源代码托管在 GitHub（公共仓库）。
 - 仓库包含设置/使用文档和问题追踪器。
 - 插件具有明确的维护信号（活跃的维护者、最近的更新或响应迅速的问题处理）。

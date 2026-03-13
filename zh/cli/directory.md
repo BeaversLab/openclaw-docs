@@ -12,17 +12,17 @@ title: "directory"
 
 ## 通用标志
 
-- `--channel <name>`：渠道 ID/别名（配置了多个渠道时必填；仅配置一个时自动选择）
-- `--account <id>`：账户 ID（默认：渠道默认值）
+- `--channel <name>`：频道 ID/别名（配置了多个频道时必需；仅配置一个时为自动）
+- `--account <id>`：账号 ID（默认：频道默认值）
 - `--json`：输出 JSON
 
 ## 注意事项
 
 - `directory` 旨在帮助您找到可以粘贴到其他命令（尤其是 `openclaw message send --target ...`）中的 ID。
 - 对于许多渠道，结果是基于配置的（允许列表/已配置群组），而不是实时的提供商目录。
-- 默认输出为 `id`（有时也包括 `name`），以制表符分隔；在脚本中使用 `--json`。
+- 默认输出为用制表符分隔的 `id`（有时为 `name`）；请使用 `--json` 进行脚本编写。
 
-## 将结果与 `message send` 配合使用
+## 与 `message send` 一起使用结果
 
 ```bash
 openclaw directory peers list --channel slack --query "U0"
@@ -35,10 +35,10 @@ openclaw message send --channel slack --target user:U012ABCDEF --message "hello"
 - Telegram：`@username` 或数字聊天 ID；群组为数字 ID
 - Slack：`user:U…` 和 `channel:C…`
 - Discord：`user:<id>` 和 `channel:<id>`
-- Matrix (插件)：`user:@user:server`、`room:!roomId:server` 或 `#alias:server`
-- Microsoft Teams (插件)：`user:<id>` 和 `conversation:<id>`
+- Matrix（插件）：`user:@user:server`、`room:!roomId:server` 或 `#alias:server`
+- Microsoft Teams（插件）：`user:<id>` 和 `conversation:<id>`
 - Zalo (插件)：user id (Bot API)
-- Zalo Personal / `zalouser` (插件)：来自 `zca` 的线程 ID (私信/群组) (`me`、`friend list`、`group list`)
+- Zalo 个人版 / `zalouser`（插件）：来自 `zca`（`me`、`friend list`、`group list`）的会话 ID（私信/群组）
 
 ## 自己（“我”）
 

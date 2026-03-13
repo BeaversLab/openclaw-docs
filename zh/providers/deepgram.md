@@ -1,5 +1,5 @@
 ---
-summary: "针对入站语音笔记的 Deepgram 转录"
+summary: "入站语音备注的 Deepgram 转录"
 read_when:
   - You want Deepgram speech-to-text for audio attachments
   - You need a quick Deepgram config example
@@ -8,12 +8,9 @@ title: "Deepgram"
 
 # Deepgram（音频转录）
 
-Deepgram 是一个语音转文本 API。在 OpenClaw 中，它通过 `tools.media.audio` 用于 **入站音频/语音笔记
-转录**。
+Deepgram 是一个语音转文本 API。在 OpenClaw 中，它通过 `tools.media.audio` 用于 **入站音频/语音备注转录**。
 
-启用后，OpenClaw 会将音频文件上传到 Deepgram，并将转录内容
-注入到回复管道中（`{{Transcript}}` + `[Audio]` 块）。这**不是**流式传输；
-它使用的是预录制转录端点。
+启用后，OpenClaw 会将音频文件上传到 Deepgram 并将转录内容注入到回复管线中（`{{Transcript}}` + `[Audio]` 块）。这 **不是流式传输**；它使用预录制的转录端点。
 
 网站：[https://deepgram.com](https://deepgram.com)  
 文档：[https://developers.deepgram.com](https://developers.deepgram.com)
@@ -47,7 +44,7 @@ DEEPGRAM_API_KEY=dg_...
 - `language`：语言提示（可选）
 - `tools.media.audio.providerOptions.deepgram.detect_language`：启用语言检测（可选）
 - `tools.media.audio.providerOptions.deepgram.punctuate`：启用标点符号（可选）
-- `tools.media.audio.providerOptions.deepgram.smart_format`：启用智能格式（可选）
+- `tools.media.audio.providerOptions.deepgram.smart_format`：启用智能格式化（可选）
 
 语言示例：
 
@@ -89,7 +86,7 @@ Deepgram 选项示例：
 ## 注意事项
 
 - 身份验证遵循标准提供商身份验证顺序；`DEEPGRAM_API_KEY` 是最简单的路径。
-- 使用代理时，使用 `tools.media.audio.baseUrl` 和 `tools.media.audio.headers` 覆盖端点或标头。
+- 在使用代理时，使用 `tools.media.audio.baseUrl` 和 `tools.media.audio.headers` 覆盖端点或标头。
 - 输出遵循与其他提供商相同的音频规则（大小限制、超时、转录注入）。
 
 import zh from '/components/footer/zh.mdx';

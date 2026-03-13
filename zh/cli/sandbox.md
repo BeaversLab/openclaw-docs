@@ -1,7 +1,7 @@
 ---
 title: Sandbox CLI
-summary: "管理沙箱容器并检查有效的沙箱策略"
-read_when: "您正在管理沙箱容器或调试沙箱/工具策略行为。"
+summary: "管理沙盒容器并检查有效的沙盒策略"
+read_when: "您正在管理沙盒容器或调试沙盒/工具策略行为。"
 status: active
 ---
 
@@ -11,7 +11,7 @@ status: active
 
 ## 概述
 
-OpenClaw 可以在隔离的 Docker 容器中运行代理以确保安全。`sandbox` 命令帮助您管理这些容器，特别是在更新或配置更改之后。
+OpenClaw 可以在隔离的 Docker 容器中运行代理以确保安全。`sandbox` 命令可帮助您管理这些容器，特别是在更新或配置更改之后。
 
 ## 命令
 
@@ -58,11 +58,11 @@ openclaw sandbox recreate --all --force        # Skip confirmation
 
 **选项：**
 
-- `--all`: 重新创建所有沙箱容器
-- `--session <key>`: 为特定会话重新创建容器
-- `--agent <id>`: 为特定代理重新创建容器
-- `--browser`: 仅重新创建浏览器容器
-- `--force`: 跳过确认提示
+- `--all`：重新创建所有沙盒容器
+- `--session <key>`：重新创建特定会话的容器
+- `--agent <id>`：重新创建特定代理的容器
+- `--browser`：仅重新创建浏览器容器
+- `--force`：跳过确认提示
 
 **重要：** 当下次使用代理时，容器会自动重新创建。
 
@@ -114,13 +114,13 @@ openclaw sandbox recreate --agent alfred
 - 容器仅在闲置 24 小时后被清理
 - 定期使用的代理会使旧容器无限期运行
 
-**解决方案：** 使用 `openclaw sandbox recreate` 强制移除旧容器。当下次需要时，它们将使用当前设置自动重新创建。
+**解决方案：** 使用 `openclaw sandbox recreate` 强制删除旧容器。下次需要时，它们将使用当前设置自动重新创建。
 
-提示：首选 `openclaw sandbox recreate` 而非手动 `docker rm`。它使用网关的容器命名，并在作用域/会话密钥更改时避免不匹配。
+提示：优先使用 `openclaw sandbox recreate` 而非手动 `docker rm`。它使用 Gateway 的容器命名，并在范围/会话密钥更改时避免不匹配。
 
 ## 配置
 
-Sandbox 设置位于 `agents.defaults.sandbox` 下的 `~/.openclaw/openclaw.json` 中（每个代理的覆盖设置位于 `agents.list[].sandbox`）：
+沙盒设置位于 `~/.openclaw/openclaw.json` 下的 `agents.defaults.sandbox` 中（每个代理的覆盖设置位于 `agents.list[].sandbox` 中）：
 
 ```jsonc
 {
@@ -146,9 +146,9 @@ Sandbox 设置位于 `agents.defaults.sandbox` 下的 `~/.openclaw/openclaw.json
 
 ## 另请参阅
 
-- [Sandbox 文档](/zh/en/gateway/sandboxing)
-- [代理配置](/zh/en/concepts/agent-workspace)
-- [Doctor 命令](/zh/en/gateway/doctor) - 检查 Sandbox 设置
+- [Sandbox 文档](/en/gateway/sandboxing)
+- [代理配置](/en/concepts/agent-workspace)
+- [Doctor 命令](/en/gateway/doctor) - 检查 Sandbox 设置
 
 import zh from '/components/footer/zh.mdx';
 

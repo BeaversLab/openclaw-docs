@@ -1,10 +1,10 @@
 ---
-summary: "`openclaw system` 的 CLI 参考（系统事件、心跳、在线状态）"
+summary: "CLI 参考 `openclaw system` (系统事件、心跳、在线)"
 read_when:
   - You want to enqueue a system event without creating a cron job
   - You need to enable or disable heartbeats
   - You want to inspect system presence entries
-title: "system"
+title: "系统"
 ---
 
 # `openclaw system`
@@ -23,15 +23,13 @@ openclaw system presence
 
 ## `system event`
 
-在 **主** 会话上排队一个系统事件。下一次心跳将在
-提示符中将其作为 `System:` 行注入。使用 `--mode now` 立即
-触发心跳；`next-heartbeat` 则等待下一次计划跳变。
+在 **主** 会话中排队一个系统事件。下一次心跳将在提示中将其注入为 `System:` 行。使用 `--mode now` 立即触发心跳；`next-heartbeat` 则等待下一次计划的计时。
 
 标志：
 
 - `--text <text>`：必需的系统事件文本。
-- `--mode <mode>`：`now` 或 `next-heartbeat`（默认）。
-- `--json`：机器可读输出。
+- `--mode <mode>`： `now` 或 `next-heartbeat`（默认）。
+- `--json`：机器可读的输出。
 
 ## `system heartbeat last|enable|disable`
 
@@ -43,7 +41,7 @@ openclaw system presence
 
 标志：
 
-- `--json`：机器可读输出。
+- `--json`：机器可读的输出。
 
 ## `system presence`
 
@@ -52,7 +50,7 @@ openclaw system presence
 
 标志：
 
-- `--json`：机器可读输出。
+- `--json`：机器可读的输出。
 
 ## 注意事项
 

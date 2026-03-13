@@ -13,11 +13,11 @@
 理由：
 
 - 与提供的用户配置示例匹配（`kilocode` 提供商密钥）
-- 与现有的提供商命名模式一致（例如 `openrouter`、`opencode`、`moonshot`）
+- 与现有的提供商命名模式一致（例如，`openrouter`、`opencode`、`moonshot`）
 - 简短易记
 - 避免与通用的 "kilo" 或 "gateway" 术语混淆
 
-考虑的替代方案： `kilo-gateway` - 已拒绝，因为连字符命名在代码库中不太常见，且 `kilocode` 更简洁。
+考虑过的替代方案：`kilo-gateway` - 已拒绝，因为代码库中带连字符的名称较少见，且 `kilocode` 更简洁。
 
 ### 2. 默认模型引用
 
@@ -46,7 +46,7 @@
 
 - Kilo Gateway 代理到 OpenRouter，因此模型是动态的
 - 用户可以在其配置中手动配置模型
-- 如果 Kilo Gateway 将来暴露 `/models` 端点，则可以添加扫描
+- 如果 Kilo Gateway 未来暴露 `/models` 端点，可以添加扫描功能
 
 ### 5. 特殊处理
 
@@ -55,7 +55,7 @@
 由于 Kilo Gateway 代理到 OpenRouter，应应用相同的特殊处理：
 
 - `anthropic/*` 模型的缓存 TTL 资格
-- `anthropic/*` 模型的额外参数（cacheControlTtl）
+- `anthropic/*` 模型的额外参数
 - 转录策略遵循 OpenRouter 模式
 
 ## 待修改的文件
@@ -84,7 +84,7 @@ export async function setKilocodeApiKey(key: string, agentDir?: string) {
 
 #### 2. `src/agents/model-auth.ts`
 
-添加到 `envMap` 中的 `resolveEnvApiKey()`：
+添加到 `resolveEnvApiKey()` 中的 `envMap`：
 
 ```typescript
 const envMap: Record<string, string> = {
@@ -257,7 +257,7 @@ import {
 } from "./onboard-auth.js";
 ```
 
-添加针对 `kilocode-api-key` 的处理：
+添加 `kilocode-api-key` 的处理逻辑：
 
 ```typescript
 if (authChoice === "kilocode-api-key") {
@@ -372,7 +372,7 @@ kilocodeApiKey: opts.kilocodeApiKey as string | undefined,
 
 #### 10. `src/commands/onboard-non-interactive/local/auth-choice.ts`
 
-添加针对 `kilocode-api-key` 的处理：
+添加 `kilocode-api-key` 的处理逻辑：
 
 ```typescript
 if (authChoice === "kilocode-api-key") {
@@ -492,8 +492,8 @@ const needsNonImageSanitize =
    - 测试 `resolveEnvApiKey("kilocode")` 返回正确的环境变量
 
 2. **集成测试：**
-   - 使用 `--auth-choice kilocode-api-key` 测试入门流程
-   - 使用 `--kilocode-api-key` 测试非交互式入门
+   - 使用 `--auth-choice kilocode-api-key` 测试入职流程
+   - 使用 `--kilocode-api-key` 测试非交互式入职
    - 使用 `kilocode/` 前缀测试模型选择
 
 3. **端到端测试：**
@@ -502,28 +502,28 @@ const needsNonImageSanitize =
 ## 迁移说明
 
 - 现有用户无需迁移
-- 新用户可以立即使用 `kilocode-api-key` 认证选择
-- 现有的 `kilocode` 提供商手动配置将继续工作
+- 新用户可以立即使用 `kilocode-api-key` 身份验证选项
+- 使用 `kilocode` 提供商的现有手动配置将继续有效
 
 ## 未来考虑
 
-1. **模型目录：** 如果 Kilo Gateway 公开了 `/models` 端点，请添加类似于 `scanOpenRouterModels()` 的扫描支持
+1. **模型目录：**如果 Kilo Gateway 公开了 `/models` 端点，请添加类似于 `scanOpenRouterModels()` 的扫描支持
 
 2. **OAuth 支持：** 如果 Kilo Gateway 添加了 OAuth，请相应扩展认证系统
 
 3. **速率限制：** 如有必要，考虑添加针对 Kilo Gateway 的特定速率限制处理
 
-4. **文档：** 在 `docs/providers/kilocode.md` 添加文档，解释设置和用法
+4. **文档：**在 `docs/providers/kilocode.md` 添加说明设置和用法的文档
 
 ## 变更摘要
 
 | 文件                                                        | 更改类型 | 描述                                                             |
 | ----------------------------------------------------------- | ----------- | ----------------------------------------------------------------------- |
-| `src/commands/onboard-auth.credentials.ts`                  | 添加         | `KILOCODE_DEFAULT_MODEL_REF`， `setKilocodeApiKey()`                     |
-| `src/agents/model-auth.ts`                                  | 修改      | 添加 `kilocode` 到 `envMap`                                              |
-| `src/config/io.ts`                                          | 修改      | 添加 `KILOCODE_API_KEY` 到 shell 环境变量键                                |
-| `src/commands/onboard-auth.config-core.ts`                  | 添加         | `applyKilocodeProviderConfig()`， `applyKilocodeConfig()`                |
-| `src/commands/onboard-types.ts`                             | 修改      | 添加 `kilocode-api-key` 到 `AuthChoice`，添加 `kilocodeApiKey` 到选项 |
+| `src/commands/onboard-auth.credentials.ts`                  | 添加         | `KILOCODE_DEFAULT_MODEL_REF`, `setKilocodeApiKey()`                     |
+| `src/agents/model-auth.ts`                                  | 修改      | 将 `kilocode` 添加到 `envMap`                                              |
+| `src/config/io.ts`                                          | 修改      | 将 `KILOCODE_API_KEY` 添加到 shell 环境变量键                                |
+| `src/commands/onboard-auth.config-core.ts`                  | 添加         | `applyKilocodeProviderConfig()`, `applyKilocodeConfig()`                |
+| `src/commands/onboard-types.ts`                             | 修改      | 将 `kilocode-api-key` 添加到 `AuthChoice`，将 `kilocodeApiKey` 添加到选项 |
 | `src/commands/auth-choice-options.ts`                       | 修改      | 添加 `kilocode` 组和选项                                         |
 | `src/commands/auth-choice.preferred-provider.ts`            | 修改      | 添加 `kilocode-api-key` 映射                                          |
 | `src/commands/auth-choice.apply.api-providers.ts`           | 修改      | 添加 `kilocode-api-key` 处理                                         |

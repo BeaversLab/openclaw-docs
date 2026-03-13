@@ -29,7 +29,7 @@ chromium-browser is already the newest version (2:1snap1-0ubuntu2).
 
 ### 解决方案 1：安装 Google Chrome（推荐）
 
-安装官方的 Google Chrome `.deb` 包，它不受 snap 的沙箱限制：
+安装官方的 Google Chrome `.deb` 软件包，它不受 snap 的沙箱限制：
 
 ```bash
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -93,7 +93,7 @@ RestartSec=5
 WantedBy=default.target
 ```
 
-使用以下命令启用：`systemctl --user enable --now openclaw-browser.service`
+通过以下方式启用：`systemctl --user enable --now openclaw-browser.service`
 
 ### 验证浏览器是否正常工作
 
@@ -115,16 +115,16 @@ curl -s http://127.0.0.1:18791/tabs
 | 选项                   | 描述                                                          | 默认值                                                     |
 | ------------------------ | -------------------------------------------------------------------- | ----------------------------------------------------------- |
 | `browser.enabled`        | 启用浏览器控制                                               | `true`                                                      |
-| `browser.executablePath` | 基于 Chromium 的浏览器二进制文件路径 (Chrome/Brave/Edge/Chromium) | 自动检测（当为基于 Chromium 的浏览器时，优先使用默认浏览器） |
+| `browser.executablePath` | 基于 Chromium 的浏览器二进制文件路径 (Chrome/Brave/Edge/Chromium) | 自动检测（如果是基于 Chromium 的浏览器，则首选默认浏览器） |
 | `browser.headless`       | 无 GUI 运行                                                      | `false`                                                     |
 | `browser.noSandbox`      | 添加 `--no-sandbox` 标志（某些 Linux 设置需要）               | `false`                                                     |
-| `browser.attachOnly`     | 不启动浏览器，仅连接到现有实例                        | `false`                                                     |
-| `browser.cdpPort`        | Chrome DevTools 协议端口                                        | `18800`                                                     |
+| `browser.attachOnly`     | 不启动浏览器，仅附加到现有浏览器                        | `false`                                                     |
+| `browser.cdpPort`        | Chrome DevTools Protocol 端口                                        | `18800`                                                     |
 
 ### 问题：“Chrome 扩展中继正在运行，但未连接任何标签页”
 
-您正在使用 `chrome` 配置文件（扩展中继）。它要求 OpenClaw
-浏览器扩展附加到活动标签页。
+您正在使用 `chrome` 配置文件（扩展程序中继）。它期望 OpenClaw
+浏览器扩展程序附加到活动标签页。
 
 修复选项：
 
@@ -135,8 +135,8 @@ curl -s http://127.0.0.1:18791/tabs
 
 注意：
 
-- `chrome` 配置文件在可能的情况下使用您的 **系统默认 Chromium 浏览器**。
-- 本地 `openclaw` 配置文件会自动分配 `cdpPort`/`cdpUrl`；仅在远程 CDP 时设置这些值。
+- `chrome` 配置文件尽可能使用您的**系统默认 Chromium 浏览器**。
+- 本地 `openclaw` 配置文件会自动分配 `cdpPort`/`cdpUrl`；仅针对远程 CDP 设置这些值。
 
 import zh from '/components/footer/zh.mdx';
 

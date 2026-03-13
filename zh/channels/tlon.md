@@ -107,7 +107,7 @@ openclaw plugins install ./extensions/tlon
 
 ## 访问控制
 
-私信允许列表（空 = 不允许私信，使用 `ownerShip` 进行审批流程）：
+DM 允许列表（空 = 不允许 DM，使用 `ownerShip` 进行审批流程）：
 
 ```json5
 {
@@ -156,8 +156,7 @@ openclaw plugins install ./extensions/tlon
 }
 ```
 
-所有者 ship 在**任何地方都会自动获得授权**——私信邀请会被自动接受，
-频道消息始终被允许。您无需将所有者添加到 `dmAllowlist` 或
+所有者 ship **在任何地方都会自动获得授权** —— DM 邀请会被自动接受，频道消息也始终被允许。您无需将所有者添加到 `dmAllowlist` 或
 `defaultAuthorizedShips` 中。
 
 设置后，所有者将收到以下 DM 通知：
@@ -194,14 +193,14 @@ openclaw plugins install ./extensions/tlon
 
 ## 投递目标 (CLI/cron)
 
-将这些与 `openclaw message send` 或 cron 投递配合使用：
+将这些与 `openclaw message send` 或 cron 传递一起使用：
 
 - DM：`~sampel-palnet` 或 `dm/~sampel-palnet`
 - 群组：`chat/~host-ship/channel` 或 `group:~host-ship/channel`
 
 ## 捆绑技能
 
-Tlon 插件包含一个捆绑技能 ([`@tloncorp/tlon-skill`](https://github.com/tloncorp/tlon-skill))，
+Tlon 插件包含一个捆绑技能（[`@tloncorp/tlon-skill`](https://github.com/tloncorp/tlon-skill)），
 提供对 Tlon 操作的 CLI 访问：
 
 - **联系人 (Contacts)**：获取/更新个人资料，列出联系人
@@ -239,30 +238,30 @@ openclaw doctor
 
 常见故障：
 
-- **私信被忽略**：发送者不在 `dmAllowlist` 中，且未为审批流程配置 `ownerShip`。
+- **已忽略的 DM**：发送者不在 `dmAllowlist` 中，且未配置 `ownerShip` 用于审批流程。
 - **群组消息被忽略**：未发现频道或发送者未获授权。
 - **连接错误**：检查 ship URL 是否可达；为本地 ship 启用 `allowPrivateNetwork`。
 - **认证错误**：验证登录码是否为当前有效（代码会轮换）。
 
 ## 配置参考
 
-完整配置：[Configuration](/zh/en/gateway/configuration)
+完整配置：[Configuration](/en/gateway/configuration)
 
 提供商选项：
 
-- `channels.tlon.enabled`: 启用/禁用频道启动。
-- `channels.tlon.ship`: 机器人的 Urbit 舰名（例如 `~sampel-palnet`）。
-- `channels.tlon.url`: 舰船 URL（例如 `https://sampel-palnet.tlon.network`）。
-- `channels.tlon.code`: 舰船登录代码。
-- `channels.tlon.allowPrivateNetwork`: 允许 localhost/LAN URL（SSRF 绕过）。
-- `channels.tlon.ownerShip`: 审批系统的所有者舰船（始终已授权）。
-- `channels.tlon.dmAllowlist`: 允许发送私信的舰船（空 = 无）。
-- `channels.tlon.autoAcceptDmInvites`: 自动接受来自白名单舰船的私信。
-- `channels.tlon.autoAcceptGroupInvites`: 自动接受所有群组邀请。
-- `channels.tlon.autoDiscoverChannels`: 自动发现群组频道（默认：true）。
-- `channels.tlon.groupChannels`: 手动固定的频道巢（nests）。
-- `channels.tlon.defaultAuthorizedShips`: 获得所有频道授权的舰船。
-- `channels.tlon.authorization.channelRules`: 每个频道的授权规则。
+- `channels.tlon.enabled`：启用/禁用频道启动。
+- `channels.tlon.ship`：机器人的 Urbit ship 名称（例如 `~sampel-palnet`）。
+- `channels.tlon.url`：ship URL（例如 `https://sampel-palnet.tlon.network`）。
+- `channels.tlon.code`：ship 登录码。
+- `channels.tlon.allowPrivateNetwork`：允许 localhost/LAN URL（SSRF 绕过）。
+- `channels.tlon.ownerShip`：审批系统的所有者 ship（始终已授权）。
+- `channels.tlon.dmAllowlist`：允许发送 DM 的 ship（空 = 无）。
+- `channels.tlon.autoAcceptDmInvites`：自动接受来自允许列表 ship 的 DM。
+- `channels.tlon.autoAcceptGroupInvites`：自动接受所有群组邀请。
+- `channels.tlon.autoDiscoverChannels`：自动发现群组频道（默认：true）。
+- `channels.tlon.groupChannels`: 手动固定的频道巢。
+- `channels.tlon.defaultAuthorizedShips`: 授权用于所有频道的飞船。
+- `channels.tlon.authorization.channelRules`: 每个频道的身份验证规则。
 - `channels.tlon.showModelSignature`: 将模型名称附加到消息中。
 
 ## 注意事项

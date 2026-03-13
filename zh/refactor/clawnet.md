@@ -1,5 +1,5 @@
 ---
-summary: "Clawnet refactor: 统一网络协议、角色、认证、审批和身份"
+summary: "Clawnet 重构：统一网络协议、角色、身份验证、审批和身份"
 read_when:
   - Planning a unified network protocol for nodes + operator clients
   - Reworking approvals, pairing, TLS, and presence across devices
@@ -48,7 +48,7 @@ title: "Clawnet 重构"
 
 - 完整的 API 表面：配置、频道、模型、会话、代理运行、日志、节点等。
 - 默认绑定：环回。通过 SSH/Tailscale 进行远程访问。
-- 认证：通过 `connect` 进行令牌/密码验证。
+- 身份验证：通过 `connect` 进行令牌/密码验证。
 - 无 TLS 固定（依赖环回/隧道）。
 - 代码：
   - `src/gateway/server/ws-connection/message-handler.ts`
@@ -68,7 +68,7 @@ title: "Clawnet 重构"
 
 ## 当前控制平面客户端
 
-- CLI → Gateway WS 通过 `callGateway` (`src/gateway/call.ts`)。
+- CLI → 通过 `callGateway` 连接到 Gateway WS (`src/gateway/call.ts`)。
 - macOS 应用 UI → Gateway WS (`GatewayConnection`)。
 - Web Control UI → Gateway WS。
 - ACP → Gateway WS。
@@ -76,7 +76,7 @@ title: "Clawnet 重构"
 
 ## 目前的节点
 
-- 处于节点模式的 macOS 应用连接到 Gateway bridge (`MacNodeBridgeSession`)。
+- 节点模式下的 macOS 应用连接到 Gateway 网桥 (`MacNodeBridgeSession`)。
 - iOS/Android 应用连接到 Gateway bridge。
 - 配对和每个节点的令牌存储在 gateway 上。
 
@@ -86,7 +86,7 @@ title: "Clawnet 重构"
 - Gateway 通过 bridge 调用节点。
 - 节点运行时决定是否批准。
 - 由 mac 应用显示 UI 提示（当 node == mac app 时）。
-- Node 向 Gateway 返回 `invoke-res`。
+- 节点向 Gateway 返回 `invoke-res`。
 - 多跳，UI 绑定到节点主机。
 
 ## 目前的在线状态 + 身份
@@ -117,17 +117,17 @@ title: "Clawnet 重构"
 - **角色：node**（能力主机）
 - **角色：operator**（控制平面）
 - Operator 的可选 **scope**（范围）：
-  - `operator.read`（状态 + 查看）
-  - `operator.write`（agent 运行，发送）
-  - `operator.admin`（配置，频道，模型）
+  - `operator.read` (状态 + 查看)
+  - `operator.write` (agent 运行，发送)
+  - `operator.admin` (配置，频道，模型)
 
 ### 角色行为
 
 **Node**
 
-- 可以注册能力（`caps`, `commands`, 权限）。
-- 可以接收 `invoke` 命令（`system.run`, `camera.*`, `canvas.*`, `screen.record` 等）。
-- 可以发送事件：`voice.transcript`, `agent.request`, `chat.subscribe`。
+- 可以注册功能 (`caps`，`commands`，权限)。
+- 可以接收 `invoke` 命令 (`system.run`，`camera.*`，`canvas.*`，`screen.record` 等)。
+- 可以发送事件：`voice.transcript`，`agent.request`，`chat.subscribe`。
 - 无法调用 config/models/channels/sessions/agent 控制平面 API。
 
 **Operator**
@@ -148,14 +148,14 @@ title: "Clawnet 重构"
 
 每个客户端提供：
 
-- `deviceId`（稳定，由设备密钥派生）。
-- `displayName`（人类可读名称）。
+- `deviceId` (稳定，源自设备密钥)。
+- `displayName` (人类可读名称)。
 - `role` + `scope` + `caps` + `commands`。
 
 ## 配对流程（统一）
 
 - 客户端以未认证状态连接。
-- 网关为该 `deviceId` 创建**配对请求**。
+- Gateway 为该 `deviceId` 创建一个 **配对请求**。
 - 操作员收到提示；批准/拒绝。
 - 网关颁发绑定到以下内容的凭证：
   - 设备公钥
@@ -225,10 +225,10 @@ title: "Clawnet 重构"
 
 ### 新流程
 
-1. 网关接收 `system.run` 意图（代理）。
-2. 网关创建批准记录：`approval.requested`。
+1. Gateway 接收 `system.run` 意图 (agent)。
+2. Gateway 创建审批记录：`approval.requested`。
 3. 操作员 UI 显示提示。
-4. 批准决定发送到网关：`approval.resolve`。
+4. 批准决定已发送到网关：`approval.resolve`。
 5. 如果获得批准，网关调用节点命令。
 6. 节点执行，返回 `invoke-res`。
 
@@ -237,7 +237,7 @@ title: "Clawnet 重构"
 - 广播给所有操作员；仅活动 UI 显示模态框（其他收到通知/Toast）。
 - 首次解决生效；网关拒绝后续解决，因为已处理。
 - 默认超时：N 秒后拒绝（如 60 秒），记录原因。
-- 解决需要 `operator.approvals` 作用域。
+- 解析需要 `operator.approvals` 作用域。
 
 ## 优势
 
@@ -265,9 +265,9 @@ title: "Clawnet 重构"
 
 - 始终为操作员角色。
 - 作用域由子命令推导：
-  - `status`, `logs` → read
-  - `agent`, `message` → write
-  - `config`, `channels` → admin
+  - `status`，`logs` → read
+  - `agent`，`message` → write
+  - `config`，`channels` → admin
   - approvals + pairing → `operator.approvals` / `operator.pairing`
 
 ---
@@ -285,15 +285,15 @@ title: "Clawnet 重构"
 
 仅限人工标签。
 
-- 示例：`scarlet-claw`, `saltwave`, `mantis-pinch`。
+- 示例：`scarlet-claw`、`saltwave`、`mantis-pinch`。
 - 存储在网关注册表中，可编辑。
-- 冲突处理：`-2`, `-3`。
+- 冲突处理：`-2`、`-3`。
 
 ## UI 分组
 
-角色之间相同的 `deviceId` → 单行“实例”：
+角色之间使用相同的 `deviceId` → 单个“Instance”行：
 
-- 徽章：`operator`，`node`。
+- 徽章：`operator`、`node`。
 - 显示功能 + 上次在线时间。
 
 ---
@@ -307,7 +307,7 @@ title: "Clawnet 重构"
 
 ## 阶段 1：向 WS 添加角色/范围
 
-- 使用 `role`，`scope`，`deviceId` 扩展 `connect` 参数。
+- 使用 `role`、`scope`、`deviceId` 扩展 `connect` 参数。
 - 为节点角色添加允许列表准入控制。
 
 ## 阶段 2：Bridge 兼容性

@@ -7,7 +7,7 @@ read_when:
 
 # Together AI
 
-[Together AI](https://together.ai) 通过统一的 API 提供对包括 Llama、DeepSeek、Kimi 等领先开源模型的访问。
+[Together AI](https://together.ai) 通过统一的 API 提供对领先的开源模型的访问，包括 Llama、DeepSeek、Kimi 等。
 
 - 提供商：`together`
 - 身份验证：`TOGETHER_API_KEY`
@@ -42,12 +42,12 @@ openclaw onboard --non-interactive \
   --together-api-key "$TOGETHER_API_KEY"
 ```
 
-这将把 `together/moonshotai/Kimi-K2.5` 设置为默认模型。
+这会将 `together/moonshotai/Kimi-K2.5` 设置为默认模型。
 
 ## 环境注意事项
 
-如果网关作为守护进程运行，请确保 `TOGETHER_API_KEY`
-对该进程可用（例如，在 `~/.openclaw/.env` 中或通过
+如果网关作为守护进程（launchd/systemd）运行，请确保该进程可以访问 `TOGETHER_API_KEY`
+（例如，在 `~/.openclaw/.env` 中或通过
 `env.shellEnv`）。
 
 ## 可用模型

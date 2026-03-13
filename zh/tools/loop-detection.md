@@ -1,7 +1,7 @@
 ---
 title: "工具循环检测"
-description: "配置用于防止重复或停滞的工具调用循环的可选防护措施"
-summary: "如何启用和调优检测重复工具调用循环的防护措施"
+description: "配置可选的防护机制，以防止重复或停滞的工具调用循环"
+summary: "如何启用和调整用于检测重复工具调用循环的防护机制"
 read_when:
   - A user reports agents getting stuck repeating tool calls
   - You need to tune repetitive-call protection
@@ -68,18 +68,18 @@ OpenClaw 可以防止 Agent 陷入重复的工具调用模式。
 ### 字段行为
 
 - `enabled`：主开关。`false` 表示不执行循环检测。
-- `historySize`：保留用于分析的最近工具调用次数。
-- `warningThreshold`：将模式归类为仅警告之前的阈值。
+- `historySize`：保留用于分析的最近工具调用的数量。
+- `warningThreshold`：将模式归类为仅警告前的阈值。
 - `criticalThreshold`：阻止重复循环模式的阈值。
 - `globalCircuitBreakerThreshold`：全局无进展中断器阈值。
-- `detectors.genericRepeat`：检测重复的同一工具 + 相同参数模式。
-- `detectors.knownPollNoProgress`：检测已知的无状态变化类轮询模式。
+- `detectors.genericRepeat`：检测重复的相同工具 + 相同参数模式。
+- `detectors.knownPollNoProgress`：检测已知的无状态变更的类轮询模式。
 - `detectors.pingPong`：检测交替的乒乓模式。
 
 ## 推荐设置
 
 - 从 `enabled: true` 开始，保持默认值不变。
-- 保持阈值按 `warningThreshold < criticalThreshold < globalCircuitBreakerThreshold` 排序。
+- 保持阈值顺序为 `warningThreshold < criticalThreshold < globalCircuitBreakerThreshold`。
 - 如果出现误报：
   - 提高 `warningThreshold` 和/或 `criticalThreshold`
   - （可选）提高 `globalCircuitBreakerThreshold`
@@ -96,7 +96,7 @@ OpenClaw 可以防止 Agent 陷入重复的工具调用模式。
 
 ## 注意事项
 
-- `tools.loopDetection` 已与代理级别的覆盖设置合并。
+- `tools.loopDetection` 与代理级别的覆盖项合并。
 - 每个代理的配置会完全覆盖或扩展全局值。
 - 如果不存在配置，防护措施将保持关闭状态。
 

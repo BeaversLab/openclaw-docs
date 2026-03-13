@@ -1,10 +1,10 @@
 ---
-summary: “向多个代理广播 WhatsApp 消息”
+summary: "向多个代理广播 WhatsApp 消息"
 read_when:
   - Configuring broadcast groups
   - Debugging multi-agent replies in WhatsApp
 status: 实验性
-title: “广播组”
+title: "广播组"
 ---
 
 # 广播组
@@ -70,10 +70,10 @@ Agents:
 
 ### 基本设置
 
-添加一个顶层 `broadcast` 部分（位于 `bindings` 旁边）。键为 WhatsApp 对等 ID：
+添加一个顶级 `broadcast` 部分（位于 `bindings` 旁边）。键为 WhatsApp 对等 ID：
 
-- 群组聊天：群组 JID（例如 `120363403215116621@g.us`）
-- 私信：E.164 电话号码（例如 `+15551234567`）
+- 群聊：群组 JID（例如 `120363403215116621@g.us`）
+- 私信（DM）：E.164 电话号码（例如 `+15551234567`）
 
 ```json
 {
@@ -169,7 +169,7 @@ Agents:
 
 广播组中的每个代理都保持完全独立的：
 
-- **会话密钥** (`agent:alfred:whatsapp:group:120363...` vs `agent:baerbel:whatsapp:group:120363...`)
+- **会话密钥**（`agent:alfred:whatsapp:group:120363...` 对比 `agent:baerbel:whatsapp:group:120363...`）
 - **对话历史**（代理看不到其他代理的消息）
 - **工作区**（如果配置了则为独立的沙盒）
 - **工具访问权限**（不同的允许/拒绝列表）
@@ -185,7 +185,7 @@ Agents:
 
 ### 示例：隔离的会话
 
-在组 `120363403215116621@g.us` 中，代理为 `["alfred", "baerbel"]`：
+在包含代理 `["alfred", "baerbel"]` 的群组 `120363403215116621@g.us` 中：
 
 **Alfred 的上下文：**
 
@@ -299,7 +299,7 @@ Result: Agent A and C respond, Agent B logs error
 }
 ```
 
-- `GROUP_A`：仅 alfred 响应（正常路由）
+- `GROUP_A`：仅 alfred 响应（常规路由）
 - `GROUP_B`：agent1 和 agent2 均响应（广播）
 
 **优先级：** `broadcast` 优先于 `bindings`。
@@ -310,8 +310,8 @@ Result: Agent A and C respond, Agent B logs error
 
 **检查：**
 
-1. Agent ID 存在于 `agents.list` 中
-2. Peer ID 格式正确（例如 `120363403215116621@g.us`）
+1. 代理 ID 存在于 `agents.list` 中
+2. 对等 ID 格式正确（例如 `120363403215116621@g.us`）
 3. Agent 不在拒绝列表中
 
 **调试：**
@@ -322,7 +322,7 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 
 ### 仅有一个 Agent 响应
 
-**原因：** Peer ID 可能位于 `bindings` 但不在 `broadcast` 中。
+**原因：** 对等 ID 可能位于 `bindings` 中，但不在 `broadcast` 中。
 
 **修复：** 添加到广播配置或从绑定中移除。
 
@@ -413,10 +413,10 @@ interface OpenClawConfig {
 
 ### 字段
 
-- `strategy` （可选）：如何处理 Agent
-  - `"parallel"` （默认）：所有 Agent 同时处理
-  - `"sequential"`：Agent 按数组顺序处理
-- `[peerId]`：WhatsApp 群组 JID、E.164 号码或其他 Peer ID
+- `strategy`（可选）：如何处理代理
+  - `"parallel"`（默认）：所有代理同时处理
+  - `"sequential"`：代理按数组顺序处理
+- `[peerId]`：WhatsApp 群组 JID、E.164 号码或其他对等 ID
   - 值：应该处理消息的 Agent ID 数组
 
 ## 限制
@@ -437,9 +437,9 @@ interface OpenClawConfig {
 
 ## 另请参阅
 
-- [多 Agent 配置](/zh/en/tools/multi-agent-sandbox-tools)
-- [路由配置](/zh/en/channels/channel-routing)
-- [会话管理](/zh/en/concepts/session)
+- [多 Agent 配置](/en/tools/multi-agent-sandbox-tools)
+- [路由配置](/en/channels/channel-routing)
+- [会话管理](/en/concepts/session)
 
 import zh from '/components/footer/zh.mdx';
 

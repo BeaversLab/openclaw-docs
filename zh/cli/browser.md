@@ -1,10 +1,10 @@
 ---
-summary: "`openclaw browser` 的 CLI 参考（配置文件、标签页、操作、扩展程序中继）"
+summary: "`openclaw browser` 的 CLI 参考（配置文件、标签页、操作、扩展中继）"
 read_when:
   - You use `openclaw browser` and want examples for common tasks
   - You want to control a browser running on another machine via a node host
   - You want to use the Chrome extension relay (attach/detach via toolbar button)
-title: "浏览器"
+title: "browser"
 ---
 
 # `openclaw browser`
@@ -13,16 +13,16 @@ title: "浏览器"
 
 相关内容：
 
-- 浏览器工具 + API：[Browser tool](/zh/en/tools/browser)
-- Chrome 扩展程序中继：[Chrome extension](/zh/en/tools/chrome-extension)
+- 浏览器工具 + API：[Browser tool](/en/tools/browser)
+- Chrome 扩展程序中继：[Chrome extension](/en/tools/chrome-extension)
 
 ## 通用标志
 
-- `--url <gatewayWsUrl>`：网关 WebSocket URL（默认来自配置）。
+- `--url <gatewayWsUrl>`：网关 WebSocket URL（默认为配置值）。
 - `--token <token>`：网关令牌（如果需要）。
 - `--timeout <ms>`：请求超时（毫秒）。
 - `--browser-profile <name>`：选择浏览器配置文件（默认来自配置）。
-- `--json`：机器可读输出（在支持的情况下）。
+- `--json`：机器可读输出（在支持的地方）。
 
 ## 快速入门（本地）
 
@@ -37,8 +37,8 @@ openclaw browser --browser-profile openclaw snapshot
 
 配置文件是命名了的浏览器路由配置。实际上：
 
-- `openclaw`：启动/附加到专用的 OpenClaw 管理的 Chrome 实例（隔离的用户数据目录）。
-- `chrome`：通过 Chrome 扩展程序中继控制您现有的 Chrome 标签页。
+- `openclaw`：启动/连接到由 OpenClaw 管理的专用 Chrome 实例（隔离的用户数据目录）。
+- `chrome`：通过 Chrome 扩展中继控制您现有的 Chrome 标签页。
 
 ```bash
 openclaw browser profiles
@@ -96,15 +96,15 @@ openclaw browser extension path
 
 然后 Chrome → `chrome://extensions` → 启用“开发者模式” → “加载已解压的扩展程序” → 选择打印的文件夹。
 
-完整指南：[Chrome extension](/zh/en/tools/chrome-extension)
+完整指南：[Chrome extension](/en/tools/chrome-extension)
 
 ## 远程浏览器控制（节点主机代理）
 
 如果网关在与浏览器不同的机器上运行，请在装有 Chrome/Brave/Edge/Chromium 的机器上运行 **节点主机**。网关会将浏览器操作代理到该节点（无需单独的浏览器控制服务器）。
 
-使用 `gateway.nodes.browser.mode` 控制自动路由，如果连接了多个节点，则使用 `gateway.nodes.browser.node` 固定特定节点。
+使用 `gateway.nodes.browser.mode` 控制自动路由，如果连接了多个节点，使用 `gateway.nodes.browser.node` 固定特定节点。
 
-安全 + 远程设置：[浏览器工具](/zh/en/tools/browser)，[远程访问](/zh/en/gateway/remote)，[Tailscale](/zh/en/gateway/tailscale)，[安全](/zh/en/gateway/security)
+安全 + 远程设置：[浏览器工具](/en/tools/browser)，[远程访问](/en/gateway/remote)，[Tailscale](/en/gateway/tailscale)，[安全](/en/gateway/security)
 
 import zh from '/components/footer/zh.mdx';
 

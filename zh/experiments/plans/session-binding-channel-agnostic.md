@@ -1,12 +1,12 @@
 ---
-summary: "与渠道无关的会话绑定架构及第 1 次迭代交付范围"
+summary: "Channel agnostic session binding architecture and iteration 1 delivery scope"
 read_when:
   - Refactoring channel-agnostic session routing and bindings
   - Investigating duplicate, stale, or missing session delivery across channels
 owner: "onutc"
-status: "进行中"
+status: "in-progress"
 last_updated: "2026-02-21"
-title: "与渠道无关的会话绑定计划"
+title: "Session Binding Channel Agnostic Plan"
 ---
 
 # 与渠道无关的会话绑定计划

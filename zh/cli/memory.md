@@ -1,5 +1,5 @@
 ---
-summary: "`openclaw memory` 的 CLI 参考（status/index/search）"
+summary: "`openclaw memory` (status/index/search) 的 CLI 参考"
 read_when:
   - You want to index or search semantic memory
   - You’re debugging memory availability or indexing
@@ -13,8 +13,8 @@ title: "memory"
 
 相关：
 
-- 内存概念：[Memory](/zh/en/concepts/memory)
-- 插件：[Plugins](/zh/en/tools/plugin)
+- 内存概念：[Memory](/en/concepts/memory)
+- 插件：[Plugins](/en/tools/plugin)
 
 ## 示例
 
@@ -35,13 +35,13 @@ openclaw memory index --agent main --verbose
 
 `memory status` 和 `memory index`：
 
-- `--agent <id>`：将范围限定为单个代理。如果不使用，这些命令将针对每个配置的代理运行；如果未配置代理列表，则回退到默认代理。
+- `--agent <id>`：将范围限制为单个代理。如果不使用它，这些命令将针对每个配置的代理运行；如果没有配置代理列表，它们将回退到默认代理。
 - `--verbose`：在探测和索引期间发出详细日志。
 
 `memory status`：
 
-- `--deep`：探测向量和嵌入可用性。
-- `--index`：如果存储是脏的，则运行重新索引（意味着 `--deep`）。
+- `--deep`：探测向量和嵌入的可用性。
+- `--index`：如果存储处于“脏”状态，则运行重新索引（隐含 `--deep`）。
 - `--json`：打印 JSON 输出。
 
 `memory index`：
@@ -53,14 +53,14 @@ openclaw memory index --agent main --verbose
 - 查询输入：传递位置参数 `[query]` 或 `--query <text>`。
 - 如果两者都提供，则 `--query` 优先。
 - 如果两者都未提供，该命令将以错误退出。
-- `--agent <id>`：将范围限定为单个代理（默认：默认代理）。
+- `--agent <id>`：将范围限制为单个代理（默认：默认代理）。
 - `--max-results <n>`：限制返回的结果数量。
 - `--min-score <n>`：过滤掉低分匹配项。
 - `--json`：打印 JSON 结果。
 
 注意：
 
-- `memory index --verbose` 打印每个阶段的详细信息（提供者、模型、源、批处理活动）。
+- `memory index --verbose` 打印每个阶段的详细信息（提供商、模型、来源、批次活动）。
 - `memory status` 包括通过 `memorySearch.extraPaths` 配置的任何额外路径。
 - 如果实际活动的内存远程 API 密钥字段被配置为 SecretRefs，该命令将从活动网关快照中解析这些值。如果网关不可用，该命令将快速失败。
 - 网关版本偏差说明：此命令路径需要支持 `secrets.resolve` 的网关；较旧的网关将返回未知方法错误。

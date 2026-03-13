@@ -1,9 +1,9 @@
 ---
-summary: "语音通话插件：通过 Twilio/Telnyx/Plivo 进行 outbound + inbound 通话（插件安装 + 配置 + CLI）"
+summary: "Voice Call 插件：通过 Twilio/Telnyx/Plivo 进行呼出 + 呼入（插件安装 + 配置 + CLI）"
 read_when:
   - You want to place an outbound voice call from OpenClaw
   - You are configuring or developing the voice-call plugin
-title: "语音通话插件"
+title: "Voice Call 插件"
 ---
 
 # 语音通话（插件）
@@ -13,7 +13,7 @@ title: "语音通话插件"
 当前提供商：
 
 - `twilio` (可编程语音 + 媒体流)
-- `telnyx` (通话控制 v2)
+- `telnyx` (呼叫控制 v2)
 - `plivo` (语音 API + XML 转接 + GetInput 语音)
 - `mock` (开发/无网络)
 
@@ -21,7 +21,7 @@ title: "语音通话插件"
 
 - 安装插件
 - 重启网关
-- 在 `plugins.entries.voice-call.config` 下配置
+- 在 `plugins.entries.voice-call.config` 下进行配置
 - 使用 `openclaw voicecall ...` 或 `voice_call` 工具
 
 ## 运行位置（本地与远程）
@@ -122,27 +122,29 @@ cd ./extensions/voice-call && pnpm install
 
 - Twilio/Telnyx 需要一个**可公开访问**的 webhook URL。
 - Plivo 需要一个**可公开访问**的 webhook URL。
-- `mock` 是一个本地开发提供商（无网络调用）。
-- 除非 `skipSignatureVerification` 为 true，否则 Telnyx 需要 `telnyx.publicKey`（或 `TELNYX_PUBLIC_KEY`）。
+- `mock` 是一个本地开发提供商（不进行网络调用）。
+- 除非 `skipSignatureVerification` 为 true，否则 Telnyx 需要 `telnyx.publicKey` (或 `TELNYX_PUBLIC_KEY`)。
 - `skipSignatureVerification` 仅用于本地测试。
 - 如果您使用 ngrok 免费版，请将 `publicUrl` 设置为确切的 ngrok URL；始终强制执行签名验证。
-- `tunnel.allowNgrokFreeTierLoopbackBypass: true` 仅当 `tunnel.provider="ngrok"` 且 `serve.bind` 为环回（ngrok 本地代理）时，才允许带有无效签名的 Twilio webhook。仅用于本地开发。
-- Ngrok 免费版 URL 可能会更改或添加插页行为；如果 `publicUrl` 偏离，Twilio 签名将失败。对于生产环境，建议使用稳定的域或 Tailscale funnel。
+- 仅当 `tunnel.provider="ngrok"` 和 `serve.bind` 为环回（ngrok 本地代理）时，`tunnel.allowNgrokFreeTierLoopbackBypass: true` 才允许具有无效签名的 Twilio Webhook。仅用于本地开发。
+- Ngrok 免费版 URL 可能会更改或添加插页式行为；如果 `publicUrl` 发生偏移，Twilio 签名将失败。对于生产环境，建议使用稳定的域名或 Tailscale funnel。
 - 流式传输安全默认值：
-  - `streaming.preStartTimeoutMs` 会关闭从未发送有效 `start` 帧的套接字。
-  - `streaming.maxPendingConnections` 限制未通过身份验证的预启动套接字总数。
-  - `streaming.maxPendingConnectionsPerIp` 限制每个源 IP 的未通过身份验证的预启动套接字数。
-  - `streaming.maxConnections` 限制打开的媒体流套接字总数（待处理 + 活跃）。
+  - `streaming.preStartTimeoutMs` 关闭从未发送有效 `start` 帧的套接字。
+  - `streaming.maxPendingConnections` 限制未通过身份验证的启动前套接字总数。
+  - `streaming.maxPendingConnectionsPerIp` 限制每个源 IP 的未通过身份验证的启动前套接字数量。
+  - `streaming.maxConnections` 限制处于打开状态的媒体流套接字总数（待处理 + 活跃）。
 
 ## 过期呼叫清理器
 
-使用 `staleCallReaperSeconds` 来结束从未收到终止 webhook 的呼叫（例如，从未完成的通知模式呼叫）。默认值为 `0`（已禁用）。
+使用 `staleCallReaperSeconds` 来结束从未收到终止 Webhook 的呼叫
+（例如，从未完成的 notify-mode 呼叫）。默认值为 `0`
+（已禁用）。
 
 建议范围：
 
-- **生产环境：** 通知式流程为 `120`–`300` 秒。
-- 将此值保持在 **高于 `maxDurationSeconds`**，以便正常呼叫可以
-  完成。一个好的起点是 `maxDurationSeconds + 30–60` 秒。
+- **生产环境：** 通知类流程为 `120`–`300` 秒。
+- 保持此值 **高于 `maxDurationSeconds`**，以便正常呼叫能够
+  完成。一个很好的起始点是 `maxDurationSeconds + 30–60` 秒。
 
 示例：
 
@@ -165,15 +167,16 @@ cd ./extensions/voice-call && pnpm install
 
 当代理或隧道位于网关之前时，插件会重构用于签名验证的公共 URL。这些选项控制信任哪些转发头。
 
-`webhookSecurity.allowedHosts` 将转发头中的主机加入白名单。
+`webhookSecurity.allowedHosts` 根据转发的头部允许列表主机。
 
-`webhookSecurity.trustForwardingHeaders` 信任转发头而不需要白名单。
+`webhookSecurity.trustForwardingHeaders` 在没有允许列表的情况下信任转发的头部。
 
-`webhookSecurity.trustedProxyIPs` 仅当请求远程 IP 与列表匹配时才信任转发头。
+`webhookSecurity.trustedProxyIPs` 仅在请求远程 IP 匹配列表时信任转发的头部。
 
 已为 Twilio 和 Plivo 启用 Webhook 重放保护。重放的有效 webhook 请求将得到确认，但会跳过副作用处理。
 
-Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此过期/重放的语音回调无法满足较新的待处理转录轮次。
+Twilio 对话轮次在 `<Gather>` 回调中包含每轮令牌，因此
+过时/重放的语音回调无法满足较新的待处理转录轮次。
 
 具有稳定公共主机的示例：
 
@@ -196,7 +199,9 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此过期/
 
 ## 呼叫 TTS
 
-语音呼叫使用核心 `messages.tts` 配置（OpenAI 或 ElevenLabs）在呼叫上进行流式语音传输。您可以在插件配置下使用**相同的结构**覆盖它 — 它与 `messages.tts` 进行深度合并。
+Voice Call 使用核心 `messages.tts` 配置（OpenAI 或 ElevenLabs）进行
+通话流式语音传输。您可以在插件配置下使用
+**相同的结构** 覆盖它 — 它与 `messages.tts` 深度合并。
 
 ```json5
 {
@@ -276,7 +281,7 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此过期/
 
 ## 呼入通话
 
-呼入策略默认为 `disabled`。要启用呼入通话，请设置：
+入站策略默认为 `disabled`。要启用入站呼叫，请设置：
 
 ```json5
 {
@@ -316,7 +321,7 @@ openclaw voicecall expose --mode funnel
 - `end_call` (callId)
 - `get_status` (callId)
 
-此仓库在 `skills/voice-call/SKILL.md` 提供了一个匹配的技能文档。
+此仓库在 `skills/voice-call/SKILL.md` 提供了匹配的技能文档。
 
 ## 网关 RPC
 

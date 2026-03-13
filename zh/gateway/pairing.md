@@ -1,10 +1,10 @@
 ---
-summary: "适用于 iOS 和其他远程节点的网关拥有型节点配对（选项 B）"
+summary: "适用于 iOS 和其他远程节点的网关拥有的节点配对（选项 B）"
 read_when:
   - Implementing node pairing approvals without macOS UI
   - Adding CLI flows for approving remote nodes
   - Extending gateway protocol with node management
-title: "网关拥有型配对"
+title: "网关拥有的配对"
 ---
 
 # 网关拥有型配对（选项 B）
@@ -12,8 +12,8 @@ title: "网关拥有型配对"
 在网关拥有型配对中，**网关**是决定允许哪些节点加入的唯一事实来源。UI（macOS 应用、未来的客户端）只是用于批准或拒绝待处理请求的前端。
 
 **重要提示：** WS 节点在 `connect` 期间使用 **设备配对**（角色 `node`）。
-`node.pair.*` 是一个单独的配对存储，**不**对 WS 握手进行限制。
-只有明确调用 `node.pair.*` 的客户端才使用此流程。
+`node.pair.*` 是一个单独的配对存储，**不**会限制 WS 握手。
+只有显式调用 `node.pair.*` 的客户端才会使用此流程。
 
 ## 概念
 
@@ -48,24 +48,24 @@ openclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
 
 事件：
 
-- `node.pair.requested` — 当创建新的待处理请求时发出。
+- `node.pair.requested` — 创建新的待处理请求时发出。
 - `node.pair.resolved` — 当请求被批准/拒绝/过期时发出。
 
 方法：
 
 - `node.pair.request` — 创建或重用待处理请求。
 - `node.pair.list` — 列出待处理和已配对的节点。
-- `node.pair.approve` — 批准待处理请求（颁发令牌）。
+- `node.pair.approve` — 批准待处理请求（签发令牌）。
 - `node.pair.reject` — 拒绝待处理请求。
 - `node.pair.verify` — 验证 `{ nodeId, token }`。
 
 备注：
 
-- `node.pair.request` 对每个节点是幂等的：重复调用返回相同的
+- 对于每个节点，`node.pair.request` 是幂等的：重复调用返回相同的
   待处理请求。
 - 批准 **总是** 会生成一个新令牌；永远不会从
-  `node.pair.request` 返回任何令牌。
-- 请求中可以包含 `silent: true` 作为自动批准流程的提示。
+  `node.pair.request`。
+- 请求可以包含 `silent: true` 作为自动批准流程的提示。
 
 ## 自动批准（macOS 应用）
 
@@ -83,7 +83,7 @@ openclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
 - `~/.openclaw/nodes/paired.json`
 - `~/.openclaw/nodes/pending.json`
 
-如果您覆盖了 `OPENCLAW_STATE_DIR`，`nodes/` 文件夹也会随之移动。
+如果您覆盖 `OPENCLAW_STATE_DIR`，`nodes/` 文件夹也会随之移动。
 
 安全说明：
 

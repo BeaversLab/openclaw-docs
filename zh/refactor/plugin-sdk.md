@@ -1,5 +1,5 @@
 ---
-summary: "计划：为所有消息连接器提供一个简洁的插件 SDK + runtime"
+summary: "计划：为所有消息连接器提供一个统一的插件 SDK + runtime"
 read_when:
   - Defining or refactoring the plugin architecture
   - Migrating channel connectors to the plugin SDK/runtime
@@ -8,8 +8,8 @@ title: "Plugin SDK 重构"
 
 # Plugin SDK + Runtime 重构计划
 
-目标：每个消息连接器都是使用一个稳定 API 的插件（内置或外部）。
-插件不直接从 `src/**` 导入任何内容。所有依赖项都通过 SDK 或 runtime 传递。
+目标：每个消息连接器都是一个使用稳定 API 的插件（内置或外部）。
+没有任何插件直接从 `src/**` 导入。所有依赖项都通过 SDK 或 runtime 传递。
 
 ## 为何是现在
 
@@ -25,22 +25,22 @@ title: "Plugin SDK 重构"
 内容（示例）：
 
 - 类型：`ChannelPlugin`、适配器、`ChannelMeta`、`ChannelCapabilities`、`ChannelDirectoryEntry`。
-- 配置辅助函数：`buildChannelConfigSchema`、`setAccountEnabledInConfigSection`、`deleteAccountFromConfigSection`、
+- 配置助手：`buildChannelConfigSchema`、`setAccountEnabledInConfigSection`、`deleteAccountFromConfigSection`、
   `applyAccountNameToChannelSection`。
-- 配对辅助函数：`PAIRING_APPROVED_MESSAGE`、`formatPairingApproveHint`。
-- 入门辅助函数：`promptChannelAccessConfig`、`addWildcardAllowFrom`、入门类型。
-- 工具参数辅助函数：`createActionGate`、`readStringParam`、`readNumberParam`、`readReactionParams`、`jsonResult`。
-- 文档链接辅助函数：`formatDocsLink`。
+- 配对助手：`PAIRING_APPROVED_MESSAGE`、`formatPairingApproveHint`。
+- 入职助手：`promptChannelAccessConfig`、`addWildcardAllowFrom`、入职类型。
+- 工具参数助手：`createActionGate`、`readStringParam`、`readNumberParam`、`readReactionParams`、`jsonResult`。
+- 文档链接助手：`formatDocsLink`。
 
 交付：
 
-- 作为 `openclaw/plugin-sdk` 发布（或从 `openclaw/plugin-sdk` 下的 core 导出）。
+- 发布为 `openclaw/plugin-sdk`（或从 core 的 `openclaw/plugin-sdk` 下导出）。
 - 遵循语义化版本控制 (Semver)，并提供明确的稳定性保证。
 
 ### 2) Plugin Runtime（执行接口、注入式）
 
-范围：所有涉及核心运行时行为的内容。
-通过 `OpenClawPluginApi.runtime` 访问，以便插件从不导入 `src/**`。
+范围：所有涉及核心 runtime 行为的内容。
+通过 `OpenClawPluginApi.runtime` 访问，因此插件绝不导入 `src/**`。
 
 建议的接口（最小但完整）：
 
@@ -155,7 +155,7 @@ export type PluginRuntime = {
 ### 阶段 0：搭建脚手架
 
 - 引入 `openclaw/plugin-sdk`。
-- 将上述接口添加到 `OpenClawPluginApi` 中的 `api.runtime`。
+- 将上述表面（surface）添加到 `OpenClawPluginApi` 中作为 `api.runtime`。
 - 在过渡窗口期间保留现有的导入（弃用警告）。
 
 ### 阶段 1：清理桥接器（低风险）
@@ -176,20 +176,20 @@ export type PluginRuntime = {
 
 ### 阶段 4：iMessage 插件化
 
-- 将 iMessage 移至 `extensions/imessage`。
-- 使用 `api.runtime` 替换直接核心调用。
+- 将 iMessage 移入 `extensions/imessage`。
+- 用 `api.runtime` 替换直接的 core 调用。
 - 保持配置键、CLI 行为和文档不变。
 
 ### 阶段 5：强制执行
 
-- 添加 lint 规则 / CI 检查：禁止从 `src/**` 导入 `extensions/**`。
+- 添加 lint 规则 / CI 检查：不允许从 `src/**` 导入 `extensions/**`。
 - 添加插件 SDK/版本兼容性检查（运行时 + SDK semver）。
 
 ## 兼容性和版本控制
 
 - SDK：semver，已发布，有文档记录的变更。
-- 运行时：随核心发布版本。添加 `api.runtime.version`。
-- 插件声明所需的运行时范围（例如 `openclawRuntime: ">=2026.2.0"`）。
+- Runtime：随每个 core 版本进行版本控制。添加 `api.runtime.version`。
+- 插件声明所需的 runtime 范围（例如 `openclawRuntime: ">=2026.2.0"`）。
 
 ## 测试策略
 
@@ -207,11 +207,11 @@ export type PluginRuntime = {
 ## 成功标准
 
 - 所有通道连接器都是使用 SDK + 运行时的插件。
-- 禁止从 `src/**` 导入 `extensions/**`。
+- 没有 `extensions/**` 从 `src/**` 导入。
 - 新的连接器模板仅依赖 SDK + 运行时。
 - 可以在没有核心源代码访问权限的情况下开发和更新外部插件。
 
-相关文档：[插件](/zh/en/tools/plugin)、[通道](/zh/en/channels/index)、[配置](/zh/en/gateway/configuration)。
+相关文档：[插件](/en/tools/plugin)、[通道](/en/channels/index)、[配置](/en/gateway/configuration)。
 
 import zh from '/components/footer/zh.mdx';
 

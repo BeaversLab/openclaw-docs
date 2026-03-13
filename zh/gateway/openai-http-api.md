@@ -1,5 +1,5 @@
 ---
-summary: "从网关公开一个兼容 OpenAI 的 /v1/chat/completions HTTP 端点"
+summary: "从网关暴露一个兼容 OpenAI 的 /v1/chat/completions HTTP 端点"
 read_when:
   - Integrating tools that expect OpenAI Chat Completions
 title: "OpenAI Chat Completions"
@@ -14,7 +14,7 @@ OpenClaw 的网关可以提供一个小型的兼容 OpenAI 的 Chat Completions 
 - `POST /v1/chat/completions`
 - 与网关相同的端口（WS + HTTP 多路复用）：`http://<gateway-host>:<port>/v1/chat/completions`
 
-在底层，请求作为正常的网关代理运行执行（与 `openclaw agent` 的代码路径相同），因此路由/权限/配置与您的网关匹配。
+在底层，请求作为正常的网关代理运行执行（与 `openclaw agent` 代码路径相同），因此路由/权限/配置与您的网关匹配。
 
 ## 身份验证
 
@@ -26,7 +26,7 @@ OpenClaw 的网关可以提供一个小型的兼容 OpenAI 的 Chat Completions 
 
 - 当 `gateway.auth.mode="token"` 时，使用 `gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）。
 - 当 `gateway.auth.mode="password"` 时，使用 `gateway.auth.password`（或 `OPENCLAW_GATEWAY_PASSWORD`）。
-- 如果配置了 `gateway.auth.rateLimit` 且发生过多身份验证失败，端点将返回 `429` 并带有 `Retry-After`。
+- 如果配置了 `gateway.auth.rateLimit` 并且发生了过多的身份验证失败，端点将返回 `429` 并带有 `Retry-After`。
 
 ## 安全边界（重要）
 
@@ -39,13 +39,13 @@ OpenClaw 的网关可以提供一个小型的兼容 OpenAI 的 Chat Completions 
 - 如果目标代理策略允许敏感工具，此端点可以使用它们。
 - 请将此端点保持在环回/tailnet/私有入口上；不要将其直接暴露给公共互联网。
 
-请参阅 [安全性](/zh/en/gateway/security) 和 [远程访问](/zh/en/gateway/remote)。
+请参阅 [安全性](/en/gateway/security) 和 [远程访问](/en/gateway/remote)。
 
 ## 选择代理
 
-无需自定义标头：在 OpenAI `model` 字段中编码代理 ID：
+不需要自定义标头：在 OpenAI `model` 字段中编码代理 ID：
 
-- `model: "openclaw:<agentId>"`（示例：`"openclaw:main"`，`"openclaw:beta"`）
+- `model: "openclaw:<agentId>"`（例如：`"openclaw:main"`，`"openclaw:beta"`）
 - `model: "agent:<agentId>"`（别名）
 
 或者通过标头定位特定的 OpenClaw 代理：
@@ -92,14 +92,14 @@ OpenClaw 的网关可以提供一个小型的兼容 OpenAI 的 Chat Completions 
 
 默认情况下，该端点是**每次请求无状态**的（每次调用都会生成一个新的会话密钥）。
 
-如果请求包含 OpenAI `user` 字符串，网关将从中派生一个稳定的会话密钥，以便重复调用可以共享一个代理会话。
+如果请求包含 OpenAI `user` 字符串，网关会从中派生一个稳定的会话密钥，以便重复调用可以共享代理会话。
 
 ## 流式传输 (SSE)
 
 设置 `stream: true` 以接收服务器发送事件 (SSE)：
 
 - `Content-Type: text/event-stream`
-- 每个事件行是 `data: <json>`
+- 每个事件行都是 `data: <json>`
 - 流以 `data: [DONE]` 结束
 
 ## 示例

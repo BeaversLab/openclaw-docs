@@ -1,5 +1,5 @@
 ---
-summary: "终端用户界面 (TUI)：从任意机器连接到 Gateway"
+summary: "Terminal UI (TUI)：从任意机器连接到 Gateway"
 read_when:
   - You want a beginner-friendly walkthrough of the TUI
   - You need the complete list of TUI features, commands, and shortcuts
@@ -30,7 +30,7 @@ openclaw tui
 openclaw tui --url ws://<host>:<port> --token <gateway-token>
 ```
 
-如果您的 Gateway 使用密码验证，请使用 `--password`。
+如果您的 Gateway 使用密码认证，请使用 `--password`。
 
 ## 您看到的内容
 
@@ -45,7 +45,7 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - Agent 是唯一的标识符（例如 `main`、`research`）。Gateway 会公开该列表。
 - 会话属于当前 Agent。
 - 会话密钥存储为 `agent:<agentId>:<sessionKey>`。
-  - 如果您输入 `/session main`，TUI 会将其展开为 `agent:<currentAgent>:main`。
+  - 如果您输入 `/session main`，TUI 会将其扩展为 `agent:<currentAgent>:main`。
   - 如果您输入 `/session agent:other:main`，您将显式切换到该 agent 会话。
 - 会话范围：
   - `per-sender`（默认）：每个 agent 有多个会话。
@@ -58,7 +58,7 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - 开启投递：
   - `/deliver on`
   - 或设置面板
-  - 或使用 `openclaw tui --deliver` 启动
+  - 或以 `openclaw tui --deliver` 开始
 
 ## 选择器 + 覆盖层
 
@@ -106,13 +106,13 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - `/settings`
 - `/exit`
 
-其他 Gateway 斜杠命令（例如 `/context`）将转发到 Gateway 并显示为系统输出。请参阅[斜杠命令](/zh/tools/slash-commands)。
+其他 Gateway 斜杠命令（例如 `/context`）会被转发到 Gateway 并显示为系统输出。请参阅 [斜杠命令](/en/tools/slash-commands)。
 
 ## 本地 Shell 命令
 
-- 在行首添加 `!` 以在 TUI 主机上运行本地 Shell 命令。
-- 每个会话开始时 TUI 会提示一次以允许本地执行；拒绝将在当前会话中禁用 `!`。
-- 命令在 TUI 工作目录中的一个新的非交互式 Shell 中运行（没有持久的 `cd`/env）。
+- 在行首加上 `!` 以在 TUI 主机上运行本地 shell 命令。
+- TUI 在每次会话开始时会提示一次以允许本地执行；拒绝将使 `!` 在本次会话中保持禁用状态。
+- 命令在 TUI 工作目录中一个新的非交互式 shell 中运行（没有持久的 `cd`/env）。
 - 单独的 `!` 将作为普通消息发送；前导空格不会触发本地执行。
 
 ## 工具输出
@@ -137,29 +137,32 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - `--url <url>`：Gateway WebSocket URL（默认为配置或 `ws://127.0.0.1:<port>`）
 - `--token <token>`：Gateway 令牌（如果需要）
 - `--password <password>`：Gateway 密码（如果需要）
-- `--session <key>`：会话密钥（默认：`main`，或当作用域为全局时为 `global`）
-- `--deliver`：将助手的回复传递给提供商（默认关闭）
-- `--thinking <level>`: 覆盖发送时的思考级别
-- `--timeout-ms <ms>`: 代理超时时间，单位毫秒（默认为 `agents.defaults.timeoutSeconds`）
+- `--session <key>`：会话密钥（默认为 `main`，当作用域为全局时为 `global`）
+- `--deliver`：将助手回复投递给提供商（默认关闭）
+- `--thinking <level>`：覆盖发送时的思考级别
+- `--timeout-ms <ms>`：Agent 超时时间，以毫秒为单位（默认为 `agents.defaults.timeoutSeconds`）
 
 注意：当您设置 `--url` 时，TUI 不会回退到配置文件或环境凭据。
-请显式传递 `--token` 或 `--password`。缺少显式凭据将导致错误。
+请显式传递 `--token` 或 `--password`。缺少显式凭据将报错。
 
 ## 故障排除
 
 发送消息后没有输出：
 
-- 在 TUI 中运行 `/status` 以确认 Gateway 已连接并处于空闲/忙碌状态。
+- 在 TUI 中运行 `/status` 以确认 Gateway 已连接以及处于空闲/忙碌状态。
 - 检查 Gateway 日志：`openclaw logs --follow`。
-- 确认代理可以运行：`openclaw status` 和 `openclaw models status`。
+- 确认 Agent 可以运行：`openclaw status` 和 `openclaw models status`。
 - 如果您期望在聊天频道中收到消息，请启用投递功能（`/deliver on` 或 `--deliver`）。
-- `--history-limit <n>`: 要加载的历史记录条目（默认 200）
+- `--history-limit <n>`：要加载的历史记录条目数（默认为 200）
 
 ## 故障排除
 
-- `disconnected`: 确保 Gateway 正在运行且您的 `--url/--token/--password` 正确。
-- 选择器中没有代理：请检查 `openclaw agents list` 和您的路由配置。
+- `disconnected`：确保 Gateway 正在运行且您的 `--url/--token/--password` 是正确的。
+- 选择器中没有 Agent：检查 `openclaw agents list` 和您的路由配置。
 - 会话选择器为空：您可能处于全局作用域中，或者尚未有任何会话。
+
+
+<zh />
 
 import zh from '/components/footer/zh.mdx';
 

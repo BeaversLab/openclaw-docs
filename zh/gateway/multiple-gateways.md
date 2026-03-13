@@ -3,7 +3,7 @@ summary: "在同一主机上运行多个 OpenClaw 网关（隔离、端口和配
 read_when:
   - Running more than one Gateway on the same machine
   - You need isolated config/state/ports per Gateway
-title: "多个网关"
+title: "多网关"
 ---
 
 # 多个网关（同一主机）
@@ -15,14 +15,14 @@ title: "多个网关"
 - `OPENCLAW_CONFIG_PATH` — 每个实例的配置文件
 - `OPENCLAW_STATE_DIR` — 每个实例的会话、凭据、缓存
 - `agents.defaults.workspace` — 每个实例的工作区根目录
-- `gateway.port` (或 `--port`) — 每个实例唯一
+- `gateway.port` （或 `--port`） — 每个实例唯一
 - 派生端口（浏览器/canvas）不得重叠
 
 如果共享这些资源，您将遇到配置竞争和端口冲突。
 
-## 推荐：配置文件 (`--profile`)
+## 建议：配置文件 (`--profile`)
 
-配置文件自动限定 `OPENCLAW_STATE_DIR` + `OPENCLAW_CONFIG_PATH` 的范围并添加服务名称后缀。
+配置文件自动限定 `OPENCLAW_STATE_DIR` + `OPENCLAW_CONFIG_PATH` 并为服务名称添加后缀。
 
 ```bash
 # main
@@ -76,20 +76,20 @@ openclaw --profile rescue gateway install
 
 ## 端口映射（派生）
 
-基础端口 = `gateway.port` (或 `OPENCLAW_GATEWAY_PORT` / `--port`)。
+基础端口 = `gateway.port` （或 `OPENCLAW_GATEWAY_PORT` / `--port`）。
 
 - 浏览器控制服务端口 = 基础端口 + 2（仅限环回）
-- canvas 主机由网关 HTTP 服务器提供服务（与 `gateway.port` 端口相同）
+- canvas 主机由网关 HTTP 服务器提供服务（端口与 `gateway.port` 相同）
 - 浏览器配置文件 CDP 端口从 `browser.controlPort + 9 .. + 108` 自动分配
 
 如果您在配置或环境变量中覆盖了其中任何一项，则必须为每个实例保持它们唯一。
 
 ## 浏览器/CDP 说明（常见陷阱）
 
-- 请勿在多个实例上将 `browser.cdpUrl` 固定为相同的值。
+- **不要**在多个实例中将 `browser.cdpUrl` 固定为相同的值。
 - 每个实例都需要自己的浏览器控制端口和 CDP 范围（从其网关端口派生）。
-- 如果需要显式的 CDP 端口，请为每个实例设置 `browser.profiles.<name>.cdpPort`。
-- 远程 Chrome：使用 `browser.profiles.<name>.cdpUrl`（每个配置文件，每个实例）。
+- 如果需要显式 CDP 端口，请为每个实例设置 `browser.profiles.<name>.cdpPort`。
+- 远程 Chrome：使用 `browser.profiles.<name>.cdpUrl` （每个配置文件，每个实例）。
 
 ## 手动环境变量示例
 

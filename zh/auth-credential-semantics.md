@@ -23,17 +23,17 @@
 
 ### Eligibility rules
 
-1. 当 `token` 和 `tokenRef` 均不存在时，令牌配置文件不符合资格。
+1. 当同时缺少 `token` 和 `tokenRef` 时，令牌配置文件不符合资格。
 2. `expires` 是可选的。
-3. 如果存在 `expires`，它必须是一个大于 `0` 的有限数字。
-4. 如果 `expires` 无效（`NaN`、`0`、负数、非有限值或类型错误），则该配置文件不符合资格，原因为 `invalid_expires`。
-5. 如果 `expires` 已经过去，则该配置文件不符合资格，原因为 `expired`。
+3. 如果存在 `expires`，它必须是大于 `0` 的有限数字。
+4. 如果 `expires` 无效（`NaN`、`0`、负数、非有限数或类型错误），则该配置文件因 `invalid_expires` 而不符合资格。
+5. 如果 `expires` 已过，则该配置文件因 `expired` 而不符合资格。
 6. `tokenRef` 不会绕过 `expires` 验证。
 
 ### Resolution rules
 
-1. 解析器语义与 `expires` 的资格语义相匹配。
-2. 对于符合资格的配置文件，令牌材料可以从内联值或 `tokenRef` 解析。
+1. 对于 `expires`，解析器语义与资格语义相匹配。
+2. 对于符合条件的配置文件，令牌材料可以从内联值或 `tokenRef` 解析。
 3. 无法解析的引用会在 `models status --probe` 输出中产生 `unresolved_ref`。
 
 ## Legacy-Compatible Messaging

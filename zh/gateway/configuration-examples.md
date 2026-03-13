@@ -1,15 +1,15 @@
 ---
-summary: “常见 OpenClaw 设置的符合架构的配置示例”
+summary: "常见 OpenClaw 设置的符合架构的配置示例"
 read_when:
   - Learning how to configure OpenClaw
   - Looking for configuration examples
   - Setting up OpenClaw for the first time
-title: “配置示例”
+title: "配置示例"
 ---
 
 # 配置示例
 
-以下示例与当前配置架构保持一致。有关详尽的参考和按字段的说明，请参阅[配置](/zh/en/gateway/configuration)。
+以下示例与当前配置架构保持一致。有关详尽的参考和按字段的说明，请参阅[配置](/en/gateway/configuration)。
 
 ## 快速开始
 
@@ -22,7 +22,7 @@ title: “配置示例”
 }
 ```
 
-保存到 `~/.openclaw/openclaw.json`，你就可以从该号码直接私信（DM）机器人。
+保存到 `~/.openclaw/openclaw.json`，然后您就可以通过该号码私信机器人了。
 
 ### 推荐起步配置
 
@@ -470,7 +470,7 @@ title: “配置示例”
 
 ### 安全私信模式（共享收件箱 / 多用户私信）
 
-如果不止一个人可以向你的机器人发送私信（`allowFrom` 中有多个条目，多人的配对批准，或 `dmPolicy: "open"`），请启用**安全私信模式**，以便来自不同发送者的私信默认不共享同一上下文：
+如果不止一个人可以私信您的机器人（`allowFrom` 中有多个条目，多人的配对批准，或 `dmPolicy: "open"`），请启用 **安全私信模式**，这样不同发送者的私信默认不会共享一个上下文：
 
 ```json5
 {
@@ -495,7 +495,7 @@ title: “配置示例”
 ```
 
 对于 Discord/Slack/Google Chat/MS Teams/Mattermost/IRC，发送者授权默认优先使用 ID。
-只有在你明确接受相关风险时，才可通过每个频道的 `dangerouslyAllowNameMatching: true` 启用直接的可变名称/电子邮件/昵称匹配。
+只有在您明确接受风险的情况下，才通过每个频道的 `dangerouslyAllowNameMatching: true` 启用直接的可变名称/电子邮件/昵称匹配。
 
 ### OAuth 带 API 密钥故障转移
 
@@ -629,10 +629,10 @@ title: “配置示例”
 
 ## 提示
 
-- 如果你设置了 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包含 `"*"`。
+- 如果您设置了 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包含 `"*"`。
 - 提供商 ID 各不相同（电话号码、用户 ID、频道 ID）。请使用提供商文档确认格式。
 - 稍后添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 有关更深入的设置说明，请参阅[提供商](/zh/en/providers)和[故障排除](/zh/en/gateway/troubleshooting)。
+- 有关更深入的设置说明，请参阅[提供商](/en/providers)和[故障排除](/en/gateway/troubleshooting)。
 
 import zh from '/components/footer/zh.mdx';
 

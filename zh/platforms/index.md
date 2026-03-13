@@ -1,5 +1,5 @@
 ---
-summary: "平台支持概述（网关 + 伴侣应用）"
+summary: "平台支持概览（网关 + 伴侣应用）"
 read_when:
   - Looking for OS support or install paths
   - Deciding where to run the Gateway
@@ -17,40 +17,40 @@ Linux 伴侣应用，但网关目前已获得完全支持。
 
 ## 选择您的操作系统
 
-- macOS: [macOS](/zh/en/platforms/macos)
-- iOS: [iOS](/zh/en/platforms/ios)
-- Android: [Android](/zh/en/platforms/android)
-- Windows: [Windows](/zh/en/platforms/windows)
-- Linux: [Linux](/zh/en/platforms/linux)
+- macOS: [macOS](/en/platforms/macos)
+- iOS: [iOS](/en/platforms/ios)
+- Android: [Android](/en/platforms/android)
+- Windows: [Windows](/en/platforms/windows)
+- Linux: [Linux](/en/platforms/linux)
 
 ## VPS 与托管
 
-- VPS 中心: [VPS hosting](/zh/en/vps)
-- Fly.io: [Fly.io](/zh/en/install/fly)
-- Hetzner (Docker): [Hetzner](/zh/en/install/hetzner)
-- GCP (Compute Engine): [GCP](/zh/en/install/gcp)
-- exe.dev (VM + HTTPS 代理): [exe.dev](/zh/en/install/exe-dev)
+- VPS 中心: [VPS hosting](/en/vps)
+- Fly.io: [Fly.io](/en/install/fly)
+- Hetzner (Docker): [Hetzner](/en/install/hetzner)
+- GCP (Compute Engine): [GCP](/en/install/gcp)
+- exe.dev (VM + HTTPS 代理): [exe.dev](/en/install/exe-dev)
 
 ## 常用链接
 
-- 安装指南: [Getting Started](/zh/en/start/getting-started)
-- 网关手册: [Gateway](/zh/en/gateway)
-- 网关配置: [Configuration](/zh/en/gateway/configuration)
-- 服务状态: `openclaw gateway status`
+- 安装指南: [Getting Started](/en/start/getting-started)
+- 网关手册: [Gateway](/en/gateway)
+- 网关配置: [Configuration](/en/gateway/configuration)
+- 服务状态： `openclaw gateway status`
 
 ## 网关服务安装 (CLI)
 
 使用以下方法之一（均已支持）：
 
-- 向导（推荐）：`openclaw onboard --install-daemon`
-- 直接安装：`openclaw gateway install`
-- 配置流程：`openclaw configure` → 选择 **Gateway service**
-- 修复/迁移：`openclaw doctor`（提供安装或修复服务的选项）
+- 向导（推荐）： `openclaw onboard --install-daemon`
+- 直接： `openclaw gateway install`
+- 配置流程： `openclaw configure` → 选择 **Gateway service**
+- 修复/迁移： `openclaw doctor` （提供安装或修复服务的选项）
 
 服务目标取决于操作系统：
 
-- macOS: LaunchAgent (`ai.openclaw.gateway` 或 `ai.openclaw.<profile>`; 旧版 `com.openclaw.*`)
-- Linux/WSL2: systemd 用户服务 (`openclaw-gateway[-<profile>].service`)
+- macOS： LaunchAgent （`ai.openclaw.gateway` 或 `ai.openclaw.<profile>`；旧版 `com.openclaw.*`）
+- Linux/WSL2： systemd 用户服务 （`openclaw-gateway[-<profile>].service`）
 
 import zh from '/components/footer/zh.mdx';
 

@@ -14,7 +14,7 @@ title: "ACP 线程绑定代理"
 
 相关文档：
 
-- [统一运行时流式重构计划](/zh/en/experiments/plans/acp-unified-streaming-refactor)
+- [统一运行时流式重构计划](/en/experiments/plans/acp-unified-streaming-refactor)
 
 目标用户体验：
 
@@ -46,18 +46,18 @@ OpenClaw 不应依赖纯插件拦截路径来进行路由。
 不可协商的不变量：
 
 - 每个 ACP 线程绑定都引用一个有效的 ACP 会话记录
-- 每个 ACP 会话都有显式的生命周期状态 (`creating`, `idle`, `running`, `cancelling`, `closed`, `error`)
-- 每个 ACP 运行都有显式的运行状态 (`queued`, `running`, `completed`, `failed`, `cancelled`)
+- 每个 ACP 会话都具有明确的生命周期状态（`creating`、`idle`、`running`、`cancelling`、`closed`、`error`）
+- 每个 ACP 运行都具有明确的运行状态（`queued`、`running`、`completed`、`failed`、`cancelled`）
 - 生成、绑定和初始入队是原子操作
 - 命令重试是幂等的（没有重复运行或重复的 Discord 输出）
 - 绑定线程频道输出是 ACP 运行事件的投影，绝非临时的副作用
 
 长期所有权模型：
 
-- `AcpSessionManager` 是唯一的 ACP 写入者和协调者
+- `AcpSessionManager` 是唯一的 ACP 写入器和协调器
 - 管理器首先位于网关进程中；稍后可以在同一接口后移动到专用的 sidecar
 - 对于每个 ACP 会话密钥，管理器拥有一个内存中的 Actor（序列化命令执行）
-- 适配器（`acpx`，未来的后端）仅是传输/运行时实现
+- 适配器（`acpx`、未来的后端）仅作为传输/运行时实现
 
 长期持久化模型：
 
@@ -96,7 +96,7 @@ OpenClaw 不应依赖纯插件拦截路径来进行路由。
 - 线程绑定目标支持 `subagent` 和 `acp`
 - 入站线程路由覆盖在正常调度之前通过绑定解析
 - 通过 Webhook 在回复传递中实现出站线程身份
-- `/focus` 和 `/unfocus` 流程与 ACP 目标兼容
+- `/focus` 和 `/unfocus` 流程具有 ACP 目标兼容性
 - 持久化绑定存储，并在启动时恢复
 - 在归档、删除、取消聚焦、重置和删除时执行解绑生命周期
 
@@ -110,14 +110,14 @@ OpenClaw 不应依赖纯插件拦截路径来进行路由。
 
 - 回复管道中的 ACP 会话模式调度分支
 - 传递仲裁以避免父消息加线程的重复
-- ACP 控制平面持久化（迁移期间包含 `SessionEntry.acp` 兼容性投影）
+- ACP 控制平面持久化（在迁移期间包含 `SessionEntry.acp` 兼容性投影）
 - 生命周期解绑和运行时分离语义与会话重置/删除绑定
 
 插件后端（acpx 实现）：
 
 - ACP 运行时工作器监督
 - acpx 进程调用和事件解析
-- ACP 命令处理程序（`/acp ...`）和操作员体验
+- ACP 命令处理程序（`/acp ...`）和操作员 UX
 - 后端特定的配置默认值和诊断
 
 ### 运行时所有权模型
@@ -186,7 +186,7 @@ export interface AcpRuntime {
 
 实现细节：
 
-- 第一个后端：`AcpxRuntime` 作为插件服务提供
+- 第一个后端：`AcpxRuntime` 作为插件服务发布
 - 核心通过注册表解析运行时，并在没有可用的 ACP 运行时后端时以明确的操作员错误失败
 
 ### 控制平面数据模型和持久化
@@ -194,7 +194,7 @@ export interface AcpRuntime {
 长期的唯一事实来源是专用的 ACP SQLite 数据库（WAL 模式），用于事务性更新和崩溃安全恢复：
 
 - `acp_sessions`
-  - `session_key` (pk), `backend`, `agent`, `mode`, `cwd`, `state`, `created_at`, `updated_at`, `last_error`
+  - `session_key` (pk)、`backend`、`agent`、`mode`、`cwd`、`state`、`created_at`、`updated_at`、`last_error`
 - `acp_runs`
   - `run_id` (pk), `session_key` (fk), `state`, `requester_message_id`, `idempotency_key`, `started_at`, `ended_at`, `error_code`, `error_message`
 - `acp_bindings`
@@ -204,7 +204,7 @@ export interface AcpRuntime {
 - `acp_delivery_checkpoint`
   - `run_id` (pk/fk), `last_event_seq`, `last_discord_message_id`, `updated_at`
 - `acp_idempotency`
-  - `scope`, `idempotency_key`, `result_json`, `created_at`, 唯一 `(scope, idempotency_key)`
+  - `scope`, `idempotency_key`, `result_json`, `created_at`, 唯一的 `(scope, idempotency_key)`
 
 ```ts
 export type AcpSessionMeta = {
@@ -231,7 +231,7 @@ export type AcpSessionMeta = {
 入站：
 
 - 将当前线程绑定查找保留为第一步路由
-- 如果绑定的目标是 ACP 会话，则路由到 ACP 运行时分支而不是 `getReplyFromConfig`
+- 如果绑定目标是 ACP 会话，则路由到 ACP 运行时分支而不是 `getReplyFromConfig`
 - 显式的 `/acp steer` 命令使用 `mode: "steer"`
 
 出站：
@@ -278,9 +278,9 @@ export type AcpSessionMeta = {
 
 ### 每会话 Actor 模型
 
-`AcpSessionManager` 为每个 ACP 会话密钥运行一个 actor：
+`AcpSessionManager` 为每个 ACP 会话密钥运行一个 Actor：
 
-- actor 邮箱串行化 `submit`、`cancel`、`close` 和 `stream` 副作用
+- Actor 邮箱序列化 `submit`, `cancel`, `close`, 和 `stream` 副作用
 - actor 拥有该会话的运行时句柄填充和运行时适配器进程生命周期
 - actor 在任何 Discord 投递之前按顺序写入运行事件 (`seq`)
 - actor 在成功出站发送后更新投递检查点
@@ -298,7 +298,7 @@ export type AcpSessionMeta = {
 
 投递规则：
 
-- Discord 消息源自 `acp_events` 加上 `acp_delivery_checkpoint`
+- Discord 消息来源于 `acp_events` 加上 `acp_delivery_checkpoint`
 - 重试从检查点恢复，而不重新发送已投递的分块
 - 根据投影逻辑，最终回复投递每次运行恰好一次
 
@@ -306,9 +306,9 @@ export type AcpSessionMeta = {
 
 网关启动时：
 
-- 加载非终端 ACP 会话 (`creating`、`idle`、`running`、`cancelling`、`error`)
+- 加载非终端 ACP 会话 (`creating`, `idle`, `running`, `cancelling`, `error`)
 - 在第一个入站事件上延迟重新创建 actor，或在配置上限内主动重新创建
-- 协调任何缺失心跳的 `running` 运行，并标记 `failed` 或通过适配器恢复
+- 协调任何 `running` 缺失心跳的运行，并标记 `failed` 或通过适配器恢复
 
 收到入站 Discord 线程消息时：
 
@@ -345,15 +345,15 @@ TTL 策略：
 核心键：
 
 - `acp.enabled`
-- `acp.dispatch.enabled`（独立的 ACP 路由终止开关）
-- `acp.backend`（默认 `acpx`）
+- `acp.dispatch.enabled` (独立的 ACP 路由终止开关)
+- `acp.backend` (默认 `acpx`)
 - `acp.defaultAgent`
 - `acp.allowedAgents[]`
 - `acp.maxConcurrentSessions`
 - `acp.stream.coalesceIdleMs`
 - `acp.stream.maxChunkChars`
 - `acp.runtime.ttlMinutes`
-- `acp.controlPlane.store`（`sqlite` 默认）
+- `acp.controlPlane.store` (`sqlite` 默认)
 - `acp.controlPlane.storePath`
 - `acp.controlPlane.recovery.eagerActors`
 - `acp.controlPlane.recovery.reconcileRunningAfterMs`
@@ -392,7 +392,7 @@ TTL 策略：
 兼容性桥接模块：
 
 - `src/acp/runtime/session-meta.ts`
-  - 为投影到 `SessionEntry.acp` 而暂时保留
+  - 暂时保留以投影到 `SessionEntry.acp`
   - 必须在迁移切换后停止作为事实来源
 
 ### 必需的不变量（必须在代码中强制执行）
@@ -409,9 +409,9 @@ TTL 策略：
 需要更改的核心文件：
 
 - `src/auto-reply/reply/dispatch-from-config.ts`
-  - ACP 分支调用 `AcpSessionManager.submit` 和事件投影传递
-  - 移除绕过控制平面不变量的直接 ACP 回退
-- `src/auto-reply/reply/inbound-context.ts`（或最近的标准化上下文边界）
+  - ACP 分支调用 `AcpSessionManager.submit` 和事件投影投递
+  - 移除绕过控制平面不变性的直接 ACP 回退机制
+- `src/auto-reply/reply/inbound-context.ts` (或最近的标准化上下文边界)
   - 为 ACP 控制平面公开标准化的路由键和幂等种子
 - `src/config/sessions/types.ts`
   - 将 `SessionEntry.acp` 保留为仅投影兼容性字段
@@ -425,7 +425,7 @@ TTL 策略：
   - 通过 ACP 管理器 API 路由生成/取消/关闭/引导操作
 - `src/agents/acp-spawn.ts`
   - 停止临时元数据写入；调用 ACP 管理器生成事务
-- `src/plugin-sdk/**` 和插件运行时桥接
+- `src/plugin-sdk/**` 和插件运行时桥
   - 干净地公开 ACP 后端注册和健康语义
 
 明确不替换的核心文件：
@@ -456,22 +456,21 @@ export function requireAcpRuntimeBackend(id?: string): AcpRuntimeBackend;
 
 行为：
 
-- `requireAcpRuntimeBackend` 在不可用时抛出类型化的 ACP 后端缺失错误
+- 当不可用时，`requireAcpRuntimeBackend` 会抛出类型化的 ACP 后端缺失错误
 - 插件服务在 `start` 上注册后端，并在 `stop` 上取消注册
 - 运行时查找是只读的和进程局部的
 
 ### acpx 运行时插件契约（实现细节）
 
-对于第一个生产后端（`extensions/acpx`），OpenClaw 和 acpx
-通过严格的命令契约连接：
+对于第一个生产后端 (`extensions/acpx`)，OpenClaw 和 acpx 通过严格的命令契约连接：
 
-- 后端 id：`acpx`
-- 插件服务 ID：`acpx-runtime`
-- 运行时句柄编码：`runtimeSessionName = acpx:v1:<base64url(json)>`
+- 后端 id: `acpx`
+- 插件服务 id: `acpx-runtime`
+- 运行时句柄编码: `runtimeSessionName = acpx:v1:<base64url(json)>`
 - 编码负载字段：
   - `name` (acpx 命名会话；使用 OpenClaw `sessionKey`)
   - `agent` (acpx 代理命令)
-  - `cwd` (会话工作区根目录)
+  - `cwd` (会话工作区根)
   - `mode` (`persistent | oneshot`)
 
 命令映射：
@@ -496,7 +495,7 @@ export function requireAcpRuntimeBackend(id?: string): AcpRuntimeBackend;
 
 ### 会话模式修补
 
-修补 `src/config/sessions/types.ts` 中的 `SessionEntry`：
+修补 `SessionEntry` 中的 `src/config/sessions/types.ts`：
 
 ```ts
 type SessionAcpMeta = {
@@ -517,24 +516,24 @@ type SessionAcpMeta = {
 
 迁移规则：
 
-- 阶段 A：双写 (`acp` 投影 + ACP SQLite 作为唯一真实源)
-- 阶段 B：从 ACP SQLite 主读取，从旧版 `SessionEntry.acp` 回退读取
+- 阶段 A：双写（`acp` 投影 + ACP SQLite 真实来源）
+- 阶段 B：从 ACP SQLite 读取主数据，从旧版 `SessionEntry.acp` 回退读取
 - 阶段 C：迁移命令从有效的旧版条目回填缺失的 ACP 行
 - 阶段 D：移除回退读取，并保持投影为仅用于 UX 的可选项
-- 旧版字段 (`cliSessionIds`, `claudeCliSessionId`) 保持不变
+- 旧版字段（`cliSessionIds`, `claudeCliSessionId`）保持不变
 
 ### 错误约定
 
 添加稳定的 ACP 错误代码和面向用户的消息：
 
 - `ACP_BACKEND_MISSING`
-  - 消息：`ACP runtime backend is not configured. Install and enable the acpx runtime plugin.`
+  - message: `ACP runtime backend is not configured. Install and enable the acpx runtime plugin.`
 - `ACP_BACKEND_UNAVAILABLE`
-  - 消息：`ACP runtime backend is currently unavailable. Try again in a moment.`
+  - message: `ACP runtime backend is currently unavailable. Try again in a moment.`
 - `ACP_SESSION_INIT_FAILED`
-  - 消息：`Could not initialize ACP session runtime.`
+  - message: `Could not initialize ACP session runtime.`
 - `ACP_TURN_FAILED`
-  - 消息：`ACP turn failed before completion.`
+  - message: `ACP turn failed before completion.`
 
 规则：
 
@@ -564,30 +563,30 @@ type SessionAcpMeta = {
 
 所需日志：
 
-- 由 `sessionKey`、`runId`、`backend`、`threadId`、`idempotencyKey` 键控的结构化日志
+- 按 `sessionKey`、`runId`、`backend`、`threadId`、`idempotencyKey` 键控的结构化日志
 - 会话和运行状态机的显式状态转换日志
 - 带有可安全编辑参数和退出摘要的适配器命令日志
 
 所需诊断：
 
-- `/acp sessions` 包括状态、活动运行、上次错误和绑定状态
-- `/acp doctor`（或同等项）验证后端注册、存储运行状况和过期绑定
+- `/acp sessions` 包括状态、活动运行、最后错误和绑定状态
+- `/acp doctor`（或等效项）验证后端注册、存储运行状况和过时绑定
 
 ### 配置优先级和有效值
 
 ACP 启用优先级：
 
-- 账户覆盖：`channels.discord.accounts.<id>.threadBindings.spawnAcpSessions`
+- 帐户覆盖：`channels.discord.accounts.<id>.threadBindings.spawnAcpSessions`
 - 频道覆盖：`channels.discord.threadBindings.spawnAcpSessions`
-- 全局 ACP 门控：`acp.enabled`
-- 分发门控：`acp.dispatch.enabled`
-- 后端可用性：`acp.backend` 的已注册后端
+- 全局 ACP 网关：`acp.enabled`
+- 调度网关：`acp.dispatch.enabled`
+- 后端可用性：`acp.backend` 的注册后端
 
 自动启用行为：
 
-- 当配置了 ACP（`acp.enabled=true`、`acp.dispatch.enabled=true` 或
-  `acp.backend=acpx`）时，插件自动启用会标记 `plugins.entries.acpx.enabled=true`
-  除非被列入黑名单或显式禁用
+- 当配置了 ACP 时（`acp.enabled=true`、`acp.dispatch.enabled=true` 或
+  `acp.backend=acpx`），插件自动启用将标记 `plugins.entries.acpx.enabled=true`
+  除非在黑名单中或被明确禁用
 
 TTL 有效值：
 
@@ -597,10 +596,10 @@ TTL 有效值：
 
 单元测试：
 
-- `src/acp/runtime/registry.test.ts`（新）
-- `src/auto-reply/reply/dispatch-from-config.acp.test.ts`（新）
-- `src/infra/outbound/bound-delivery-router.test.ts`（扩展 ACP 失败关闭场景）
-- `src/config/sessions/types.test.ts` 或最近的会话存储测试（ACP 元数据持久化）
+- `src/acp/runtime/registry.test.ts`（新增）
+- `src/auto-reply/reply/dispatch-from-config.acp.test.ts`（新增）
+- `src/infra/outbound/bound-delivery-router.test.ts`（扩展 ACP 失败关闭案例）
+- `src/config/sessions/types.test.ts` 或最近的会话存储测试（ACP 元数据持久性）
 
 集成测试：
 
@@ -610,19 +609,19 @@ TTL 有效值：
 
 网关端到端测试：
 
-- `src/gateway/server.sessions.gateway-server-sessions-a.e2e.test.ts` （扩展 ACP 重置/删除生命周期覆盖范围）
+- `src/gateway/server.sessions.gateway-server-sessions-a.e2e.test.ts`（扩展 ACP 重置/删除生命周期覆盖范围）
 - ACP 线程轮次端到端往返测试，涵盖生成、消息、流、取消、失焦、重启恢复
 
 ### 发布防护
 
 添加独立的 ACP 调度终止开关：
 
-- `acp.dispatch.enabled` 默认 `false` 用于首次发布
+- 首次发布的 `acp.dispatch.enabled` 默认 `false`
 - 禁用时：
   - ACP 生成/聚焦控制命令仍可能绑定会话
   - ACP 调度路径不会激活
   - 用户收到明确消息，表明 ACP 调度已被策略禁用
-- 金丝雀验证后，在后续版本中默认值可以翻转为 `true`
+- 在金丝雀验证后，可以在后续版本中将默认值切换为 `true`
 
 ## 命令和 UX 计划
 
@@ -638,14 +637,14 @@ TTL 有效值：
 
 - `/focus <sessionKey>` 继续支持 ACP 目标
 - `/unfocus` 保持当前语义
-- `/session idle` 和 `/session max-age` 取代旧的 TTL 覆盖
+- `/session idle` 和 `/session max-age` 替换旧的 TTL 覆盖
 
 ## 分阶段发布
 
 ### 阶段 0 ADR 和模式冻结
 
 - 发布关于 ACP 控制平面所有权和适配器边界的 ADR
-- 冻结数据库模式（`acp_sessions`、`acp_runs`、`acp_bindings`、`acp_events`、`acp_delivery_checkpoint`、`acp_idempotency`）
+- 冻结 DB 架构 (`acp_sessions`, `acp_runs`, `acp_bindings`, `acp_events`, `acp_delivery_checkpoint`, `acp_idempotency`)
 - 定义稳定的 ACP 错误代码、事件合约和状态转换防护
 
 ### 阶段 1 核心中的控制平面基础
@@ -665,7 +664,7 @@ TTL 有效值：
 
 ### 阶段 3 acpx 后端适配器/插件
 
-- 针对运行时契约实现 `acpx` 适配器（`ensureSession`，`submit`，`stream`，`cancel`，`close`）
+- 针对运行时合约实现 `acpx` 适配器 (`ensureSession`, `submit`, `stream`, `cancel`, `close`)
 - 添加后端健康检查以及启动/拆除（teardown）注册
 - 将 acpx nd 事件规范化为 ACP 运行时事件
 - 强制执行后端超时、进程监督以及重启/退避（backoff）策略
@@ -675,14 +674,14 @@ TTL 有效值：
 - 实现带有检查点恢复功能的事件驱动频道投影（以 Discord 为首）
 - 使用具备速率限制感知的刷新（flush）策略合并流式分块
 - 保证每次运行仅发送一次最终完成消息
-- 发布 `/acp spawn`，`/acp cancel`，`/acp steer`，`/acp close`，`/acp sessions`
+- 发布 `/acp spawn`, `/acp cancel`, `/acp steer`, `/acp close`, `/acp sessions`
 
 ### 第 5 阶段 迁移与切换
 
-- 引入对 `SessionEntry.acp` 投影及 ACP SQLite 单一事实源的双写
+- 引入对 `SessionEntry.acp` 投影加上 ACP SQLite 唯一事实源 的双写
 - 为遗留 ACP 元数据行添加迁移工具
 - 将读取路径切换至 ACP SQLite 主库
-- 移除依赖于缺失 `SessionEntry.acp` 的遗留回退路由
+- 移除依赖于缺失的 `SessionEntry.acp` 的传统后备路由
 
 ### 第 6 阶段 加固、SLO 与扩展限制
 
@@ -771,32 +770,32 @@ TTL 有效值：
 
 ### 1) 集中化 ACP 分发策略评估（已完成）
 
-- 通过 `src/acp/policy.ts` 中的共享 ACP 策略助手实现
+- 通过 `src/acp/policy.ts` 中的共享 ACP 策略辅助工具实现
 - 分发、ACP 命令生命周期处理程序和 ACP 生成路径现在使用共享策略逻辑
 
 ### 2) 按子命令域拆分 ACP 命令处理程序（已完成）
 
-- `src/auto-reply/reply/commands-acp.ts` 现在是一个精简的路由器
+- `src/auto-reply/reply/commands-acp.ts` 现在是一个精简路由器
 - 子命令行为被拆分为：
   - `src/auto-reply/reply/commands-acp/lifecycle.ts`
   - `src/auto-reply/reply/commands-acp/runtime-options.ts`
   - `src/auto-reply/reply/commands-acp/diagnostics.ts`
-  - shared helpers in `src/auto-reply/reply/commands-acp/shared.ts`
+  - `src/auto-reply/reply/commands-acp/shared.ts` 中的共享辅助工具
 
 ### 3) 按职责拆分 ACP 会话管理器（已完成）
 
 - 管理器被拆分为：
-  - `src/acp/control-plane/manager.ts` (public facade + singleton)
-  - `src/acp/control-plane/manager.core.ts` (manager implementation)
-  - `src/acp/control-plane/manager.types.ts` (manager types/deps)
-  - `src/acp/control-plane/manager.utils.ts` (normalization + helper functions)
+  - `src/acp/control-plane/manager.ts` (公共外观 + 单例)
+  - `src/acp/control-plane/manager.core.ts` (管理器实现)
+  - `src/acp/control-plane/manager.types.ts` (管理器类型/依赖)
+  - `src/acp/control-plane/manager.utils.ts` (规范化 + 辅助函数)
 
 ### 4) 可选的 acpx 运行时适配器清理
 
 - `extensions/acpx/src/runtime.ts` 可以拆分为：
 - 进程执行/监督
 - nd 事件解析/规范化
-- 运行时 API 表面 (`submit`, `cancel`, `close` 等)
+- runtime API 表面 (`submit`, `cancel`, `close` 等)
 - 提高可测试性，并使后端行为更易于审计
 
 import zh from '/components/footer/zh.mdx';

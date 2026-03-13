@@ -1,5 +1,5 @@
 ---
-summary: "入站音频/语音笔记如何被下载、转录并注入到回复中"
+summary: "传入的音频/语音笔记如何下载、转录并注入到回复中"
 read_when:
   - Changing audio transcription or media handling
 title: "音频和语音笔记"
@@ -13,26 +13,26 @@ title: "音频和语音笔记"
   1. 定位第一个音频附件（本地路径或 URL），并在需要时下载它。
   2. 在发送到每个模型条目之前强制执行 `maxBytes`。
   3. 按顺序运行第一个符合条件的模型条目（提供商或 CLI）。
-  4. 如果失败或跳过（大小/超时），它将尝试下一个条目。
+  4. 如果失败或跳过（大小/超时），它会尝试下一个条目。
   5. 成功后，它将 `Body` 替换为 `[Audio]` 块并设置 `{{Transcript}}`。
-- **命令解析**：转录成功后，`CommandBody`/`RawBody` 被设置为转录文本，因此斜杠命令仍然可以工作。
-- **详细日志记录**：在 `--verbose` 中，我们会记录何时运行转录以及何时替换正文。
+- **命令解析**：当转录成功时，`CommandBody`/`RawBody` 会被设置为转录文本，以便斜杠命令仍然可以工作。
+- **详细日志**：在 `--verbose` 中，我们会记录转录何时运行以及何时替换正文。
 
 ## 自动检测（默认）
 
-如果您**不配置模型**且 `tools.media.audio.enabled` **未**设置为 `false`，
-OpenClaw 将按此顺序自动检测并在第一个可用选项处停止：
+如果您**不配置模型**并且 `tools.media.audio.enabled` **未**设置为 `false`，
+OpenClaw 将按以下顺序自动检测并在第一个有效选项处停止：
 
 1. **本地 CLI**（如果已安装）
-   - `sherpa-onnx-offline` （需要包含 encoder/decoder/joiner/tokens 的 `SHERPA_ONNX_MODEL_DIR`）
-   - `whisper-cli` （来自 `whisper-cpp`；使用 `WHISPER_CPP_MODEL` 或捆绑的 tiny 模型）
-   - `whisper` （Python CLI；自动下载模型）
-2. **Gemini CLI** （`gemini`） 使用 `read_many_files`
+   - `sherpa-onnx-offline`（需要带有 encoder/decoder/joiner/tokens 的 `SHERPA_ONNX_MODEL_DIR`）
+   - `whisper-cli`（来自 `whisper-cpp`；使用 `WHISPER_CPP_MODEL` 或内置的 tiny 模型）
+   - `whisper`（Python CLI；自动下载模型）
+2. **Gemini CLI**（`gemini`），使用 `read_many_files`
 3. **提供商密钥** （OpenAI → Groq → Deepgram → Google）
 
 要禁用自动检测，请设置 `tools.media.audio.enabled: false`。
-要自定义，请设置 `tools.media.audio.models`。
-注意：二进制检测在 macOS/Linux/Windows 上是尽力而为的；请确保 CLI 位于 `PATH` （我们会展开 `~`），或者使用完整命令路径设置显式 CLI 模型。
+要进行自定义，请设置 `tools.media.audio.models`。
+注意：二进制文件检测在 macOS/Linux/Windows 上是尽力而为的；确保 CLI 位于 `PATH` 上（我们会展开 `~`），或者使用完整命令路径设置显式 CLI 模型。
 
 ## 配置示例
 
@@ -130,16 +130,16 @@ OpenClaw 将按此顺序自动检测并在第一个可用选项处停止：
 
 - 提供商身份验证遵循标准模型身份验证顺序（身份验证配置文件、环境变量、`models.providers.*.apiKey`）。
 - 当使用 `provider: "deepgram"` 时，Deepgram 会获取 `DEEPGRAM_API_KEY`。
-- Deepgram 设置详情：[Deepgram (audio transcription)](/zh/en/providers/deepgram)。
-- Mistral 设置详情：[Mistral](/zh/en/providers/mistral)。
+- Deepgram 设置详情：[Deepgram (audio transcription)](/en/providers/deepgram)。
+- Mistral 设置详情：[Mistral](/en/providers/mistral)。
 - 音频提供商可以通过 `tools.media.audio` 覆盖 `baseUrl`、`headers` 和 `providerOptions`。
-- 默认大小上限为 20MB（`tools.media.audio.maxBytes`）。超过大小的音频会被跳过，并尝试下一个条目。
+- 默认大小上限为 20MB (`tools.media.audio.maxBytes`)。超过大小的音频将被该模型跳过，并尝试下一个条目。
 - 小于 1024 字节的微小/空音频文件将在提供商/CLI 转录之前被跳过。
-- 音频的默认 `maxChars` 为 **未设置**（完整转录）。设置 `tools.media.audio.maxChars` 或每个条目的 `maxChars` 以修剪输出。
-- OpenAI 自动默认值是 `gpt-4o-mini-transcribe`；设置 `model: "gpt-4o-transcribe"` 以获得更高的准确性。
-- 使用 `tools.media.audio.attachments` 处理多个语音笔记（`mode: "all"` + `maxAttachments`）。
-- 转录内容作为 `{{Transcript}}` 提供给模板。
-- `tools.media.audio.echoTranscript` 默认处于关闭状态；启用它可以在代理处理之前将转录确认发送回原始聊天。
+- 音频的默认 `maxChars` 为**未设置**（完整转录）。设置 `tools.media.audio.maxChars` 或针对每个条目的 `maxChars` 以修剪输出。
+- OpenAI 自动默认值为 `gpt-4o-mini-transcribe`；设置 `model: "gpt-4o-transcribe"` 以获得更高的准确性。
+- 使用 `tools.media.audio.attachments` 处理多个语音笔记 (`mode: "all"` + `maxAttachments`)。
+- 转录内容可作为 `{{Transcript}}` 供模板使用。
+- `tools.media.audio.echoTranscript` 默认处于关闭状态；启用它可以在代理处理之前将转录确认发送回发起聊天的对话。
 - `tools.media.audio.echoFormat` 自定义回显文本（占位符：`{transcript}`）。
 - CLI stdout 有上限（5MB）；保持 CLI 输出简洁。
 
@@ -156,12 +156,12 @@ OpenClaw 将按此顺序自动检测并在第一个可用选项处停止：
 
 ## 群组中的提及检测
 
-当为群聊设置了 `requireMention: true` 时，OpenClaw 现在会在检查提及 **之前** 转录音频。这允许处理包含提及的语音笔记。
+当为群组聊天设置 `requireMention: true` 时，OpenClaw 现在会在检查提及之前转录音频。这使得即使语音笔记包含提及内容也能被处理。
 
 **工作原理：**
 
 1. 如果语音消息没有正文且群组需要提及，OpenClaw 会执行“预检”转录。
-2. 转录内容会检查提及模式（例如 `@BotName`、表情符号触发器）。
+2. 会检查转录内容中是否包含提及模式（例如，`@BotName`、表情符号触发器）。
 3. 如果发现提及，该消息将进入完整的回复流水线。
 4. 转录文本用于提及检测，以便语音笔记能够通过提及门槛。
 
@@ -172,18 +172,18 @@ OpenClaw 将按此顺序自动检测并在第一个可用选项处停止：
 
 **针对 Telegram 群组/主题的退出选项：**
 
-- 设置 `channels.telegram.groups.<chatId>.disableAudioPreflight: true` 以跳过该群组的预检转录提及检查。
+- 设置 `channels.telegram.groups.<chatId>.disableAudioPreflight: true` 以跳过该组的转录内容提及预检查。
 - 设置 `channels.telegram.groups.<chatId>.topics.<threadId>.disableAudioPreflight` 以按主题覆盖（`true` 表示跳过，`false` 表示强制启用）。
-- 默认值为 `false`（当符合提及门槛条件时启用预检）。
+- 默认为 `false`（当提及限制条件匹配时启用预检）。
 
-**示例：** 用户在一个配置了 `requireMention: true` 的 Telegram 群组中发送了一条语音笔记，内容为“嘿 @Claude，天气怎么样？”。语音笔记被转录，提及被检测到，然后代理进行回复。
+**示例：** 用户在配置了 `requireMention: true` 的 Telegram 群组中发送一条语音消息说“Hey @Claude, what's the weather?”。语音消息被转录，提及被检测到，然后代理回复。
 
 ## 注意事项
 
-- 范围规则采用首匹获胜原则。`chatType` 会被规范化为 `direct`、`group` 或 `room`。
+- 范围规则使用首次匹配优先。`chatType` 被标准化为 `direct`、`group` 或 `room`。
 - 确保您的 CLI 退出码为 0 并打印纯文本；JSON 需要通过 `jq -r .text` 进行处理。
-- 对于 `parakeet-mlx`，如果您传递 `--output-dir`，当 `--output-format` 为 `txt`（或省略）时，OpenClaw 会读取 `<output-dir>/<media-basename>.txt`；非 `txt` 输出格式将回退到 stdout 解析。
-- 保持超时时间合理（`timeoutSeconds`，默认 60 秒），以避免阻塞回复队列。
+- 对于 `parakeet-mlx`，如果您传递 `--output-dir`，OpenClaw 会在 `--output-format` 为 `txt`（或省略）时读取 `<output-dir>/<media-basename>.txt`；非 `txt` 的输出格式将回退到 stdout 解析。
+- 保持超时设置合理（`timeoutSeconds`，默认 60 秒），以避免阻塞回复队列。
 - 预检转录仅处理用于提及检测的**第一个**音频附件。额外的音频将在主媒体理解阶段进行处理。
 
 import zh from '/components/footer/zh.mdx';

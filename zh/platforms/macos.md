@@ -18,7 +18,7 @@ title: "macOS 应用"
 - 拥有 TCC 提示（通知、辅助功能、屏幕录制、麦克风、
   语音识别、自动化/AppleScript）。
 - 运行或连接到网关（本地或远程）。
-- 提供仅限 macOS 的工具（Canvas、Camera、Screen Recording、`system.run`）。
+- 暴露仅限 macOS 的工具（Canvas、Camera、Screen Recording、`system.run`）。
 - 在**远程**模式下启动本地节点主机服务（通过 launchd），并在**本地**模式下停止它。
 - 可选择托管用于 UI 自动化的 **PeekabooBridge**。
 - 根据请求通过 npm/pnpm 安装全局 CLI（`openclaw`）（不建议将 bun 用于 Gateway 运行时）。
@@ -26,7 +26,7 @@ title: "macOS 应用"
 ## 本地与远程模式
 
 - **本地**（默认）：如果存在正在运行的本地网关，应用会连接到它；
-  否则它通过 `openclaw gateway install` 启用 launchd 服务。
+否则，它通过 `openclaw gateway install` 启用 launchd 服务。
 - **远程**：应用通过 SSH/Tailscale 连接到网关，并且永不启动
   本地进程。
   应用会启动本地**节点主机服务**，以便远程网关可以访问此 Mac。
@@ -35,7 +35,7 @@ title: "macOS 应用"
 ## Launchd 控制
 
 该应用管理一个标记为 `ai.openclaw.gateway` 的每用户 LaunchAgent
-（或在使用 `--profile`/`OPENCLAW_PROFILE` 时为 `ai.openclaw.<profile>`；旧的 `com.openclaw.*` 仍会被卸载）。
+（或在使用 `--profile`/`OPENCLAW_PROFILE` 时的 `ai.openclaw.<profile>`；旧的 `com.openclaw.*` 仍会卸载）。
 
 ```bash
 launchctl kickstart -k gui/$UID/ai.openclaw.gateway
@@ -56,7 +56,7 @@ macOS 应用将自身呈现为一个节点。常用命令：
 - Screen：`screen.record`
 - System：`system.run`、`system.notify`
 
-该节点报告一个 `permissions` 映射，以便代理可以决定允许执行的操作。
+该节点报告 `permissions` 映射，以便代理可以决定允许执行哪些操作。
 
 节点服务 + 应用 IPC：
 
@@ -74,8 +74,8 @@ Gateway -> Node Service (WS)
 
 ## 执行批准 (system.run)
 
-`system.run` 由 macOS 应用中的**执行批准**（Settings → Exec approvals）控制。
-安全性 + 询问 + 允许列表均本地存储在 Mac 上的以下位置：
+`system.run` 由 macOS 应用中的 **Exec approvals**（执行批准）控制（Settings → Exec approvals）。
+Security + ask + allowlist 存储在 Mac 本地：
 
 ```
 ~/.openclaw/exec-approvals.json
@@ -103,15 +103,15 @@ Gateway -> Node Service (WS)
 说明：
 
 - `allowlist` 条目是已解析二进制路径的 glob 模式。
-- 包含 shell 控制或扩展语法（`&&`、`||`、`;`、`|`、`` ` ``, `$`, `<`, `>`, `(`, `)`) 的原始 shell 命令文本被视为允许列表未命中，需要显式批准（或将 shell 二进制文件加入允许列表）。
+- 包含 shell 控制或扩展语法（`&&`、`||`、`;`、`|`、`` ` ``, `$`, `<`, `>`, `(`, `)`)的原始 shell 命令文本被视为允许列表未命中，需要显式批准（或将 shell 二进制文件加入允许列表）。
 - 在提示中选择“始终允许”会将该命令添加到允许列表中。
-- `system.run` 环境覆盖项会被过滤（丢弃 `PATH`、`DYLD_*`、`LD_*`、`NODE_OPTIONS`、`PYTHON*`、`PERL*`、`RUBYOPT`、`SHELLOPTS`、`PS4`），然后与应用的环境合并。
-- 对于 shell 包装器（`bash|sh|zsh ... -c/-lc`），请求范围的环境覆盖项将缩减为一小部分显式允许列表（`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`）。
-- 对于允许列表模式下的“始终允许”决策，已知的分发包装器（`env`、`nice`、`nohup`、`stdbuf`、`timeout`）将持久化内部可执行文件路径而不是包装器路径。如果解包不安全，则不会自动持久化允许列表条目。
+- `system.run` 环境覆盖项会被过滤（丢弃 `PATH`、`DYLD_*`、`LD_*`、`NODE_OPTIONS`、`PYTHON*`、`PERL*`、`RUBYOPT`、`SHELLOPTS`、`PS4`），然后与应用程序的环境合并。
+- 对于 shell 封装器（`bash|sh|zsh ... -c/-lc`），请求范围的环境覆盖项会被缩减为一小部分显式允许列表（`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`）。
+- 对于允许列表模式下的“始终允许”决策，已知的分派封装器（`env`、`nice`、`nohup`、`stdbuf`、`timeout`）会持久化内部可执行文件路径，而不是封装器路径。如果解包不安全，则不会自动持久化允许列表条目。
 
 ## 深度链接
 
-该应用注册了 `openclaw://` URL 方案以用于本地操作。
+该应用程序注册了 `openclaw://` URL 方案以执行本地操作。
 
 ### `openclaw://agent`
 
@@ -126,15 +126,15 @@ open 'openclaw://agent?message=Hello%20from%20deep%20link'
 - `message`（必需）
 - `sessionKey`（可选）
 - `thinking`（可选）
-- `deliver` / `to` / `channel`（可选）
-- `timeoutSeconds`（可选）
-- `key`（可选无人值守模式密钥）
+- `deliver` / `to` / `channel` （可选）
+- `timeoutSeconds` （可选）
+- `key` （可选的无人值守模式密钥）
 
 安全性：
 
-- 如果没有 `key`，应用程序将提示进行确认。
-- 如果没有 `key`，应用程序将对确认提示强制执行短消息限制，并忽略 `deliver` / `to` / `channel`。
-- 使用有效的 `key`，运行将是无人值守的（旨在用于个人自动化）。
+- 如果没有 `key`，应用会提示确认。
+- 如果没有 `key`，应用会对确认提示强制执行短消息限制，并忽略 `deliver` / `to` / `channel`。
+- 如果提供有效的 `key`，运行将是无人值守的（旨在用于个人自动化）。
 
 ## 入门流程（典型）
 
@@ -154,7 +154,7 @@ open 'openclaw://agent?message=Hello%20from%20deep%20link'
 OPENCLAW_STATE_DIR=~/.openclaw
 ```
 
-如果 `openclaw doctor` 检测到以下位置的状态：
+如果 `openclaw doctor` 在以下位置检测到状态：
 
 - `~/Library/Mobile Documents/com~apple~CloudDocs/...`
 - `~/Library/CloudStorage/...`
@@ -164,8 +164,8 @@ OPENCLAW_STATE_DIR=~/.openclaw
 ## 构建与开发工作流程（原生）
 
 - `cd apps/macos && swift build`
-- `swift run OpenClaw`（或 Xcode）
-- 打包应用程序：`scripts/package-mac-app.sh`
+- `swift run OpenClaw` （或 Xcode）
+- 打包应用： `scripts/package-mac-app.sh`
 
 ## 调试 Gateway 连接性（macOS CLI）
 
@@ -180,19 +180,19 @@ swift run openclaw-mac discover --timeout 3000 --json
 
 连接选项：
 
-- `--url <ws://host:port>`：覆盖配置
-- `--mode <local|remote>`：从配置解析（默认：配置或本地）
-- `--probe`：强制进行新的健康探测
-- `--timeout <ms>`：请求超时（默认：`15000`）
-- `--json`：用于差异比较的结构化输出
+- `--url <ws://host:port>`： 覆盖配置
+- `--mode <local|remote>`： 从配置解析（默认：配置或本地）
+- `--probe`： 强制执行全新的健康检查
+- `--timeout <ms>`： 请求超时（默认： `15000`）
+- `--json`： 用于差异对比的结构化输出
 
 发现选项：
 
-- `--include-local`：包含将被过滤为“本地”的 Gateway
-- `--timeout <ms>`：总体发现窗口（默认：`2000`）
-- `--json`：用于比对的结构化输出
+- `--include-local`： 包含会被过滤为“本地”的网关
+- `--timeout <ms>`： 整体发现窗口（默认： `2000`）
+- `--json`： 用于差异对比的结构化输出
 
-提示：与 `openclaw gateway discover --json` 进行比对，以查看 macOS 应用的发现流程（NWBrowser + tailnet DNS‑SD 回退）是否与基于 Node CLI 的 `dns-sd` 发现有所不同。
+提示：与 `openclaw gateway discover --json` 进行比较，以查看 macOS 应用的发现管道（NWBrowser + tailnet DNS‑SD 回退）是否与 Node CLI 基于 `dns-sd` 的发现有所不同。
 
 ## 远程连接管道（SSH 隧道）
 
@@ -205,19 +205,20 @@ swift run openclaw-mac discover --timeout 3000 --json
 - **远程端口：** 远程主机上的同一 Gateway 端口。
 - **行为：** 没有随机的本地端口；应用会重用现有的健康隧道
   或在需要时重新启动它。
-- **SSH 形态：** 带有 BatchMode + 的 `ssh -N -L <local>:127.0.0.1:<remote>`
+- **SSH 形状：** 带 BatchMode 的 `ssh -N -L <local>:127.0.0.1:<remote>` +
   ExitOnForwardFailure + keepalive 选项。
 - **IP 报告：** SSH 隧道使用环回地址，因此 gateway 会看到节点
-  IP 为 `127.0.0.1`。如果希望显示真实的客户端 IP，请使用 **Direct (ws/wss)** 传输（请参阅 [macOS 远程访问](/zh/en/platforms/mac/remote)）。
+  IP 作为 `127.0.0.1`。如果您希望显示真实的客户端
+  IP，请使用 **直接 (ws/wss)** 传输（请参阅 [macOS 远程访问](/en/platforms/mac/remote)）。
 
-有关设置步骤，请参阅 [macOS 远程访问](/zh/en/platforms/mac/remote)。有关协议详细信息，请参阅 [Gateway 协议](/zh/en/gateway/protocol)。
+有关设置步骤，请参阅 [macOS 远程访问](/en/platforms/mac/remote)。有关协议详细信息，请参阅 [Gateway 协议](/en/gateway/protocol)。
 
 ## 相关文档
 
-- [Gateway 操作手册](/zh/en/gateway)
-- [Gateway (macOS)](/zh/en/platforms/mac/bundled-gateway)
-- [macOS 权限](/zh/en/platforms/mac/permissions)
-- [Canvas](/zh/en/platforms/mac/canvas)
+- [Gateway 操作手册](/en/gateway)
+- [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
+- [macOS 权限](/en/platforms/mac/permissions)
+- [Canvas](/en/platforms/mac/canvas)
 
 import zh from '/components/footer/zh.mdx';
 

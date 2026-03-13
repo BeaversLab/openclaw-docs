@@ -1,6 +1,6 @@
 ---
-title: "Vercel AI 网关"
-summary: "Vercel AI 网关设置（身份验证 + 模型选择）"
+title: "Vercel AI Gateway"
+summary: "Vercel AI Gateway 设置（身份验证 + 模型选择）"
 read_when:
   - You want to use Vercel AI Gateway with OpenClaw
   - You need the API key env var or CLI auth choice
@@ -8,12 +8,12 @@ read_when:
 
 # Vercel AI 网关
 
-[Vercel AI 网关](https://vercel.com/ai-gateway) 提供了统一的 API，用于通过单个端点访问数百种模型。
+[Vercel AI Gateway](https://vercel.com/ai-gateway) 提供了一个统一的 API，通过单一端点访问数百个模型。
 
-- 提供商： `vercel-ai-gateway`
-- 身份验证： `AI_GATEWAY_API_KEY`
+- 提供商：`vercel-ai-gateway`
+- 身份验证：`AI_GATEWAY_API_KEY`
 - API：兼容 Anthropic Messages
-- OpenClaw 会自动发现网关 `/v1/models` 目录，因此 `/models vercel-ai-gateway`
+- OpenClaw 会自动发现 Gateway `/v1/models` 目录，因此 `/models vercel-ai-gateway`
   包含当前的模型引用，例如 `vercel-ai-gateway/openai/gpt-5.4`。
 
 ## 快速入门
@@ -47,7 +47,7 @@ openclaw onboard --non-interactive \
 
 ## 环境说明
 
-如果网关作为守护程序（launchd/systemd）运行，请确保 `AI_GATEWAY_API_KEY`
+如果 Gateway 作为守护进程（launchd/systemd）运行，请确保 `AI_GATEWAY_API_KEY`
 对该进程可用（例如，在 `~/.openclaw/.env` 中或通过
 `env.shellEnv`）。
 

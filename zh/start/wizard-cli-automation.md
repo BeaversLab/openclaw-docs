@@ -1,5 +1,5 @@
 ---
-summary: "用于 OpenClaw CLI 的脚本化入职和代理设置"
+summary: "OpenClaw CLI 的脚本化入职和代理设置"
 read_when:
   - You are automating onboarding in scripts or CI
   - You need non-interactive examples for specific providers
@@ -32,11 +32,11 @@ openclaw onboard --non-interactive \
 
 添加 `--json` 以获取机器可读的摘要。
 
-使用 `--secret-input-mode ref` 在认证配置文件中存储环境变量支持的引用，而不是明文值。
-入职向导流程中提供了在环境变量引用和已配置的提供商引用（`file` 或 `exec`）之间进行交互式选择的功能。
+使用 `--secret-input-mode ref` 将环境变量支持的引用存储在身份验证配置文件中，而不是明文值。
+在入职向导流程中，可以在环境变量引用和已配置的提供商引用（`file` 或 `exec`）之间进行交互式选择。
 
-在非交互式 `ref` 模式下，提供商环境变量必须在进程环境中设置。
-如果没有匹配的环境变量，现在会立即失败，不再接受内联密钥标志。
+在非交互式 `ref` 模式下，必须在进程环境中设置提供商环境变量。
+如果没有匹配的环境变量，现在传递内联密钥标志将快速失败。
 
 示例：
 
@@ -113,7 +113,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Synthetic 示例">
+  <Accordion title="合成示例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -148,7 +148,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    `--custom-api-key` 是可选的。如果省略，入职流程将检查 `CUSTOM_API_KEY`。
+    `--custom-api-key` 是可选的。如果省略，入门流程将检查 `CUSTOM_API_KEY`。
 
     引用模式变体：
 
@@ -166,15 +166,14 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    在此模式下，入职流程将 `apiKey` 存储为 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
+    在此模式下，入门流程会将 `apiKey` 存储为 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
 
   </Accordion>
 </AccordionGroup>
 
 ## 添加另一个代理
 
-使用 `openclaw agents add <name>` 创建一个具有独立工作区、
-会话和认证配置文件的单独代理。在不带 `--workspace` 的情况下运行会启动向导。
+使用 `openclaw agents add <name>` 创建一个具有独立工作区、会话和身份验证配置文件的单独代理。如果不带 `--workspace` 运行，将启动向导。
 
 ```bash
 openclaw agents add work \
@@ -199,9 +198,9 @@ openclaw agents add work \
 
 ## 相关文档
 
-- 接入中心：[接入向导 (CLI)](/zh/en/start/wizard)
-- 完整参考：[CLI 接入参考](/zh/en/start/wizard-cli-reference)
-- 命令参考：[`openclaw onboard`](/zh/en/cli/onboard)
+- 接入中心：[接入向导 (CLI)](/en/start/wizard)
+- 完整参考：[CLI 接入参考](/en/start/wizard-cli-reference)
+- 命令参考：[`openclaw onboard`](/en/cli/onboard)
 
 import zh from '/components/footer/zh.mdx';
 

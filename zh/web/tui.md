@@ -1,5 +1,5 @@
 ---
-summary: "终端用户界面 (TUI)：从任意机器连接到 Gateway"
+summary: "终端用户界面 (TUI)：从任何机器连接到网关"
 read_when:
   - You want a beginner-friendly walkthrough of the TUI
   - You need the complete list of TUI features, commands, and shortcuts
@@ -30,7 +30,7 @@ openclaw tui
 openclaw tui --url ws://<host>:<port> --token <gateway-token>
 ```
 
-如果您的 Gateway 使用密码验证，请使用 `--password`。
+如果您的网关使用密码验证，请使用 `--password`。
 
 ## 您所看到的界面
 
@@ -42,13 +42,13 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 ## 心智模型：代理 + 会话
 
-- 代理是唯一的标识符 (例如 `main`, `research`)。Gateway 会公开该列表。
+- 代理是唯一的标识符（例如 `main`、`research`）。网关会公开该列表。
 - 会话属于当前的代理。
 - 会话密钥存储为 `agent:<agentId>:<sessionKey>`。
   - 如果您输入 `/session main`，TUI 会将其展开为 `agent:<currentAgent>:main`。
   - 如果您输入 `/session agent:other:main`，您将显式切换到该代理会话。
 - 会话范围：
-  - `per-sender` (默认)：每个代理拥有多个会话。
+  - `per-sender`（默认）：每个代理有多个会话。
   - `global`：TUI 始终使用 `global` 会话（选择器可能为空）。
 - 当前的代理和会话始终显示在页脚中。
 
@@ -57,8 +57,8 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - 消息被发送到 Gateway；传送到提供程序的功能默认处于关闭状态。
 - 开启传送：
   - `/deliver on`
-  - 或“设置”面板
-  - 或使用 `openclaw tui --deliver` 启动
+  - 或设置面板
+  - 或以 `openclaw tui --deliver` 开头
 
 ## 选择器 + 覆盖层
 
@@ -85,9 +85,9 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 - `/help`
 - `/status`
-- `/agent <id>` (或 `/agents`)
-- `/session <key>` (或 `/sessions`)
-- `/model <provider/model>` (或 `/models`)
+- `/agent <id>`（或 `/agents`）
+- `/session <key>`（或 `/sessions`）
+- `/model <provider/model>`（或 `/models`）
 
 会话控制：
 
@@ -96,24 +96,24 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - `/verbose <on|full|off>`
 - `/reasoning <on|off|stream>`
 - `/usage <off|tokens|full>`
-- `/elevated <on|off|ask|full>` (别名: `/elev`)
+- `/elevated <on|off|ask|full>`（别名：`/elev`）
 - `/activation <mention|always>`
 - `/deliver <on|off>`
 
 会话生命周期：
 
-- `/new` 或 `/reset` (重置会话)
-- `/abort` (中止当前运行)
+- `/new` 或 `/reset`（重置会话）
+- `/abort`（中止当前运行）
 - `/settings`
 - `/exit`
 
-其他 Gateway 斜杠命令 (例如, `/context`) 会被转发到 Gateway 并作为系统输出显示。参见 [Slash commands](/zh/en/tools/slash-commands)。
+其他网关斜杠命令（例如 `/context`）将被转发到网关并显示为系统输出。请参阅 [斜杠命令](/en/tools/slash-commands)。
 
 ## 本地 Shell 命令
 
-- 在行首添加 `!` 以在 TUI 宿主机上运行本地 shell 命令。
-- TUI 会在每次会话时提示一次以允许本地执行；拒绝将在该会话期间保持 `!` 禁用状态。
-- 命令在 TUI 工作目录下的一个新的非交互式 shell 中运行 (没有持久的 `cd`/env)。
+- 在行首添加 `!` 以在 TUI 主机上运行本地 Shell 命令。
+- TUI 在每次会话中提示一次以允许本地执行；拒绝将使 `!` 在本次会话中保持禁用状态。
+- 命令在 TUI 工作目录中的一个新的非交互式 shell 中运行（没有持久的 `cd`/env）。
 - 本地 shell 命令在其环境中接收 `OPENCLAW_SHELL=tui-local`。
 - 单独的 `!` 将作为普通消息发送；前导空格不会触发本地执行。
 
@@ -127,7 +127,7 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 - TUI 将助手正文文本保留在终端的默认前景色中，以便深色和浅色终端都能保持可读性。
 - 如果您的终端使用浅色背景且自动检测错误，请在启动 `openclaw tui` 之前设置 `OPENCLAW_THEME=light`。
-- 若要改用原始的深色调色板，请设置 `OPENCLAW_THEME=dark`。
+- 若要强制使用原始的深色调色板，请设置 `OPENCLAW_THEME=dark`。
 
 ## 历史记录 + 流式传输
 
@@ -137,18 +137,18 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 ## 连接详情
 
-- TUI 向 Gateway 注册为 `mode: "tui"`。
+- TUI 向网关注册为 `mode: "tui"`。
 - 重连时显示系统消息；事件间隔会在日志中显示。
 
 ## 选项
 
-- `--url <url>`：Gateway WebSocket URL（默认为配置或 `ws://127.0.0.1:<port>`）
-- `--token <token>`：Gateway 令牌（如果需要）
-- `--password <password>`：Gateway 密码（如果需要）
-- `--session <key>`：Session key（默认值：`main`；当作用域为全局时为 `global`）
-- `--deliver`：将助手回复发送给提供商（默认关闭）
-- `--thinking <level>`：覆盖发送的思考级别
-- `--timeout-ms <ms>`：Agent 超时时间，以毫秒为单位（默认为 `agents.defaults.timeoutSeconds`）
+- `--url <url>`：网关 WebSocket URL（默认为配置或 `ws://127.0.0.1:<port>`）
+- `--token <token>`：网关令牌（如果需要）
+- `--password <password>`：网关密码（如果需要）
+- `--session <key>`：会话密钥（默认：`main`，或当作用域为全局时的 `global`）
+- `--deliver`：将助手回复传递给提供商（默认关闭）
+- `--thinking <level>`：覆盖发送时的思考级别
+- `--timeout-ms <ms>`：代理超时时间，以毫秒为单位（默认为 `agents.defaults.timeoutSeconds`）
 
 注意：当您设置 `--url` 时，TUI 不会回退到配置或环境凭据。
 请显式传递 `--token` 或 `--password`。缺少显式凭据将报错。
@@ -157,15 +157,15 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 发送消息后无输出：
 
-- 在 TUI 中运行 `/status` 以确认网关已连接且处于空闲/忙碌状态。
+- 在 TUI 中运行 `/status` 以确认网关已连接并处于空闲/忙碌状态。
 - 检查网关日志：`openclaw logs --follow`。
 - 确认代理可以运行：`openclaw status` 和 `openclaw models status`。
 - 如果您期望在聊天频道中收到消息，请启用投递（`/deliver on` 或 `--deliver`）。
-- `--history-limit <n>`：要加载的历史记录条目（默认 200）
+- `--history-limit <n>`：要加载的历史记录条目（默认为 200）
 
 ## 连接故障排除
 
-- `disconnected`：确保网关正在运行，并且您的 `--url/--token/--password` 是正确的。
+- `disconnected`：确保 Gateway 正在运行并且您的 `--url/--token/--password` 是正确的。
 - 选择器中没有代理：检查 `openclaw agents list` 和您的路由配置。
 - 会话选择器为空：您可能处于全局作用域，或者还没有会话。
 

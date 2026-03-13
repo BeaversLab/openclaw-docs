@@ -1,10 +1,10 @@
 ---
-summary: "分层排查 WSL2 Gateway + Windows Chrome 远程 CDP 和扩展中继设置的问题"
+summary: "分层排查 WSL2 Gateway + Windows Chrome 远程 CDP 和 extension-relay 设置"
 read_when:
   - Running OpenClaw Gateway in WSL2 while Chrome lives on Windows
   - Seeing overlapping browser/control-ui errors across WSL2 and Windows
   - Deciding between raw remote CDP and the Chrome extension relay in split-host setups
-title: "WSL2 + Windows + 远程 Chrome CDP 故障排查"
+title: "WSL2 + Windows + 远程 Chrome CDP 故障排除"
 ---
 
 # WSL2 + Windows + 远程 Chrome CDP 故障排查
@@ -15,7 +15,7 @@ title: "WSL2 + Windows + 远程 Chrome CDP 故障排查"
 - Chrome 在 Windows 上运行
 - 浏览器控制必须跨越 WSL2/Windows 边界
 
-它还涵盖了来自 [issue #39369](https://github.com/openclaw/openclaw/issues/39369) 的分层故障模式：几个独立的问题可能同时出现，这使得错误的层级首先看起来像是坏掉了。
+它还涵盖了 [issue #39369](https://github.com/openclaw/openclaw/issues/39369) 中的分层失败模式：几个独立的问题可能会同时出现，这使得错误的层级看起来像是首先损坏的。
 
 ## 首先选择正确的浏览器模式
 
@@ -33,23 +33,23 @@ title: "WSL2 + Windows + 远程 Chrome CDP 故障排查"
 
 ### 选项 2：Chrome 扩展中继
 
-使用内置的 `chrome` 配置文件以及 OpenClaw Chrome 扩展。
+使用内置的 `chrome` 配置文件以及 OpenClaw Chrome 扩展程序。
 
 在以下情况下选择此选项：
 
 - 您想使用工具栏按钮附加到现有的 Windows Chrome 标签页
-- 您想要基于扩展的控制，而不是原始的 `--remote-debugging-port`
+- 您想要基于扩展程序的控制，而不是原始的 `--remote-debugging-port`
 - 中继本身必须可以跨越 WSL2/Windows 边界访问
 
-如果您跨命名空间使用扩展中继，`browser.relayBindHost` 是 [Browser](/zh/en/tools/browser) 和 [Chrome extension](/zh/en/tools/chrome-extension) 中引入的重要设置。
+如果您跨命名空间使用扩展程序中继，`browser.relayBindHost` 是在 [浏览器](/en/tools/browser) 和 [Chrome 扩展程序](/en/tools/chrome-extension) 中引入的重要设置。
 
 ## 工作原理架构
 
 参考架构：
 
 - WSL2 在 `127.0.0.1:18789` 上运行 Gateway
-- Windows 在普通浏览器中于 `http://127.0.0.1:18789/` 打开控制 UI
-- Windows Chrome 在端口 `9222` 上公开 CDP 端点
+- Windows 在普通浏览器中的 `http://127.0.0.1:18789/` 打开控制 UI
+- Windows Chrome 在端口 `9222` 上暴露 CDP 端点
 - WSL2 可以访问该 Windows CDP 端点
 - OpenClaw 将浏览器配置文件指向可从 WSL2 访问的地址
 
@@ -59,7 +59,7 @@ title: "WSL2 + Windows + 远程 Chrome CDP 故障排查"
 
 - WSL2 无法访问 Windows CDP 端点
 - 控制 UI 是从非安全源打开的
-- `gateway.controlUi.allowedOrigins` 与页面源不匹配
+- `gateway.controlUi.allowedOrigins` 与页面来源不匹配
 - 缺少令牌或配对
 - 浏览器配置文件指向了错误的地址
 - 当您实际需要跨命名空间访问时，扩展中继仍然是仅限环回的（loopback-only）
@@ -74,7 +74,7 @@ title: "WSL2 + Windows + 远程 Chrome CDP 故障排查"
 
 `http://127.0.0.1:18789/`
 
-不要默认为控制 UI 使用 LAN IP。在 LAN 或 tailnet 地址上的纯 HTTP 可能会触发与 CDP 本身无关的不安全源/设备认证行为。请参阅[控制 UI](/zh/en/web/control-ui)。
+不要默认为控制 UI 使用 LAN IP。在 LAN 或 tailnet 地址上的纯 HTTP 可能会触发与 CDP 本身无关的不安全源/设备认证行为。请参阅[控制 UI](/en/web/control-ui)。
 
 ## 分层验证
 
@@ -99,7 +99,7 @@ curl http://127.0.0.1:9222/json/list
 
 ### 第 2 层：验证 WSL2 能否访问该 Windows 端点
 
-在 WSL2 中，测试你计划在 `cdpUrl` 中使用的确切地址：
+在 WSL2 中，测试您计划在 `cdpUrl` 中使用的确切地址：
 
 ```bash
 curl http://WINDOWS_HOST_OR_IP:9222/json/version
@@ -108,8 +108,8 @@ curl http://WINDOWS_HOST_OR_IP:9222/json/list
 
 良好结果：
 
-- `/json/version` 返回带有 Browser / Protocol-Version 元数据的 JSON
-- `/json/list` 返回 JSON（如果没有打开页面，空数组也没关系）
+- `/json/version` 返回带有浏览器/协议版本元数据的 JSON
+- `/json/list` 返回 JSON（如果没有打开页面，空数组也可以）
 
 如果失败：
 
@@ -142,7 +142,7 @@ curl http://WINDOWS_HOST_OR_IP:9222/json/list
 注意事项：
 
 - 使用 WSL2 可访问的地址，而不是仅在 Windows 上有效的地址
-- 对于外部管理的浏览器，请保留 `attachOnly: true`
+- 对于外部管理的浏览器，保留 `attachOnly: true`
 - 在期望 OpenClaw 成功之前，使用 `curl` 测试相同的 URL
 
 ### 第 4 层：如果您改用 Chrome 扩展中继
@@ -164,7 +164,7 @@ curl http://WINDOWS_HOST_OR_IP:9222/json/list
 仅在需要时使用此方法：
 
 - 默认行为更安全，因为中继保持仅环回（loopback-only）
-- `0.0.0.0` 会扩大暴露面
+- `0.0.0.0` 扩大了暴露面
 - 保持 Gateway 身份验证、节点配对以及周围网络的私密性
 
 如果您不需要扩展程序中继，请首选上述的原始远程 CDP 配置文件。
@@ -177,13 +177,13 @@ curl http://WINDOWS_HOST_OR_IP:9222/json/list
 
 然后验证：
 
-- 页面源与 `gateway.controlUi.allowedOrigins` 期望的匹配
+- 页面来源与 `gateway.controlUi.allowedOrigins` 期望的内容相匹配
 - 令牌身份验证或配对已正确配置
 - 您没有将其作为浏览器问题来调试 Control UI 身份验证问题
 
 有用的页面：
 
-- [Control UI](/zh/en/web/control-ui)
+- [Control UI](/en/web/control-ui)
 
 ### 第 6 层：验证端到端浏览器控制
 
@@ -204,7 +204,7 @@ openclaw browser tabs --browser-profile chrome
 
 - 标签页在 Windows Chrome 中打开
 - `openclaw browser tabs` 返回目标
-- 后续操作（`snapshot`、`screenshot`、`navigate`）在同一个配置文件中工作
+- 后续操作（`snapshot`、`screenshot`、`navigate`）在同一配置文件中工作
 
 ## 常见的误导性错误
 
@@ -225,11 +225,11 @@ openclaw browser tabs --browser-profile chrome
 
 ## 快速分诊检查清单
 
-1. Windows：`curl http://127.0.0.1:9222/json/version` 工作吗？
-2. WSL2：`curl http://WINDOWS_HOST_OR_IP:9222/json/version` 工作吗？
-3. OpenClaw 配置：`browser.profiles.<name>.cdpUrl` 是否使用了该确切的 WSL2 可访问地址？
-4. Control UI：您打开的是 `http://127.0.0.1:18789/` 而不是局域网 IP 吗？
-5. 仅限扩展程序中继：您确实需要 `browser.relayBindHost` 吗？如果是，是否已明确设置？
+1. Windows: `curl http://127.0.0.1:9222/json/version` 能否工作？
+2. WSL2: `curl http://WINDOWS_HOST_OR_IP:9222/json/version` 能否工作？
+3. OpenClaw config: `browser.profiles.<name>.cdpUrl` 是否使用了确切的 WSL2 可访问地址？
+4. Control UI: 你打开的是 `http://127.0.0.1:18789/` 而不是 LAN IP 吗？
+5. Extension relay only: 你是否确实需要 `browser.relayBindHost`，如果是，是否已显式设置？
 
 ## 实践经验
 

@@ -21,7 +21,7 @@ permalink: /security/formal-verification/
 
 ## 模型所在位置
 
-模型在单独的仓库中维护：[vignesh07/openclaw-formal-models](https://github.com/vignesh07/openclaw-formal-models)。
+模型维护在一个单独的仓库中：[vignesh07/openclaw-formal-models](https://github.com/vignesh07/openclaw-formal-models)。
 
 ## 重要注意事项
 
@@ -58,11 +58,11 @@ make <target>
 - 红色（预期）：
   - `make gateway-exposure-v2-negative`
 
-另请参阅：models 仓库中的 `docs/gateway-exposure-matrix.md`。
+另请参见：模型仓库中的 `docs/gateway-exposure-matrix.md`。
 
 ### Nodes.run 流水线（最高风险能力）
 
-**声明：** `nodes.run` 需要 节点命令允许列表加上已声明的命令，以及在配置时进行的实时批准；批准已令牌化以防止重放（在模型中）。
+**声明：** `nodes.run` 需要 (a) 节点命令允许列表（allowlist）加上已声明的命令，以及 (b) 配置时的实时审批；审批已通过令牌化处理以防止重放（在模型中）。
 
 - 绿色运行：
   - `make nodes-pipeline`
@@ -106,20 +106,20 @@ make <target>
 
 ### 配对存储并发 / 幂等性
 
-**声明：** 即使在交错（即“先检查后写入”必须是原子/锁定的；刷新不应创建重复项）的情况下，配对存储也应强制执行 `MaxPending` 和幂等性。
+**声明：** 配对存储即使在交错操作下也应强制执行 `MaxPending` 和幂等性（即，“检查后写入”必须是原子/锁定的；刷新不应创建重复项）。
 
 含义：
 
-- 在并发请求下，对于特定通道您不能超过 `MaxPending`。
-- 针对同一个 `(channel, sender)` 的重复请求/刷新不应创建重复的活动待处理记录。
+- 在并发请求下，对于通道，您不能超过 `MaxPending`。
+- 针对相同 `(channel, sender)` 的重复请求/刷新不应创建重复的实时待处理行。
 
 - 绿色运行：
-  - `make pairing-race` (原子/锁定上限检查)
+  - `make pairing-race` （原子/锁定能力检查）
   - `make pairing-idempotency`
   - `make pairing-refresh`
   - `make pairing-refresh-race`
 - 红色（预期）：
-  - `make pairing-race-negative` (non-atomic begin/commit cap race)
+  - `make pairing-race-negative` （非原子 begin/commit 能力竞态）
   - `make pairing-idempotency-negative`
   - `make pairing-refresh-negative`
   - `make pairing-refresh-race-negative`

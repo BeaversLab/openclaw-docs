@@ -1,5 +1,5 @@
 ---
-summary: "开发代理工具笔记 (C-3PO)"
+summary: "Dev agent tools notes (C-3PO)"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity

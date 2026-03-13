@@ -1,5 +1,5 @@
 ---
-summary: "在便宜的 Hetzner VPS (Docker) 上全天候运行 OpenClaw Gateway，具有持久状态和内置二进制文件"
+summary: "在便宜的 Hetzner VPS (Docker) 上 24/7 运行 OpenClaw Gateway，具有持久状态和内置二进制文件"
 read_when:
   - You want OpenClaw running 24/7 on a cloud VPS (not your laptop)
   - You want a production-grade, always-on Gateway on your own VPS
@@ -23,14 +23,14 @@ Hetzner 定价可能会有所变化；选择最小的 Debian/Ubuntu VPS，如果
 - 保持严格的分离：专用的 VPS/运行时 + 专用账户；该主机上不得有个人 Apple/Google/浏览器/密码管理器配置文件。
 - 如果用户之间存在敌对关系，请按 Gateway/主机/操作系统用户进行拆分。
 
-请参阅 [安全](/zh/en/gateway/security) 和 [VPS 托管](/zh/en/vps)。
+请参阅 [安全](/en/gateway/security) 和 [VPS 托管](/en/vps)。
 
 ## 我们要做什么（简单来说）？
 
 - 租一台小型 Linux 服务器 (Hetzner VPS)
 - 安装 Docker (隔离的应用运行时)
 - 在 Docker 中启动 OpenClaw Gateway
-- 在主机上持久化 `~/.openclaw` + `~/.openclaw/workspace`（在重启/重建后仍然存在）
+- 在主机上持久化 `~/.openclaw` + `~/.openclaw/workspace`（在重启/重建后存活）
 - 通过 SSH 隧道从您的笔记本电脑访问控制 UI
 
 可以通过以下方式访问 Gateway：
@@ -40,7 +40,7 @@ Hetzner 定价可能会有所变化；选择最小的 Debian/Ubuntu VPS，如果
 
 本指南假设 Hetzner 上使用的是 Ubuntu 或 Debian。  
 如果您使用的是其他 Linux VPS，请相应地映射软件包。
-有关通用 Docker 流程，请参阅 [Docker](/zh/en/install/docker)。
+有关通用 Docker 流程，请参阅 [Docker](/en/install/docker)。
 
 ---
 
@@ -198,7 +198,7 @@ services:
       ]
 ```
 
-`--allow-unconfigured` 仅为了引导方便，它不能替代正确的网关配置。仍然要设置身份验证 (`gateway.auth.token` 或密码) 并为您的部署使用安全的绑定设置。
+`--allow-unconfigured` 仅为了引导方便，它不能替代正确的网关配置。仍然要设置身份验证（`gateway.auth.token` 或密码）并为您的部署使用安全的绑定设置。
 
 ---
 
@@ -211,9 +211,9 @@ services:
 
 下面的示例仅展示了三种常见的二进制文件：
 
-- 用于 Gmail 访问的 `gog`
-- 用于 Google Places 的 `goplaces`
-- 用于 WhatsApp 的 `wacli`
+- `gog` 用于 Gmail 访问
+- `goplaces` 用于 Google Places
+- `wacli` 用于 WhatsApp
 
 这些只是示例，并非完整列表。
 您可以使用相同的模式安装所需数量的二进制文件。
@@ -321,18 +321,18 @@ ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
 OpenClaw 在 Docker 中运行，但 Docker 不是事实来源。
 所有长期存在的状态必须在重启、重新构建和重新启动后存活下来。
 
-| 组件               | 位置                              | 持久化机制            | 备注                             |
-| ------------------- | --------------------------------- | --------------------- | -------------------------------- |
-| Gateway 配置       | `/home/node/.openclaw/`           | 主机卷挂载            | 包括 `openclaw.json`、令牌     |
-| 模型认证配置       | `/home/node/.openclaw/`           | 主机卷挂载            | OAuth 令牌、API 密钥             |
-| 技能配置           | `/home/node/.openclaw/skills/`    | 主机卷挂载            | 技能级状态                       |
-| Agent 工作区       | `/home/node/.openclaw/workspace/` | 主机卷挂载            | 代码和 agent 产物                |
-| WhatsApp 会话      | `/home/node/.openclaw/`           | 主机卷挂载            | 保留 QR 登录                     |
-| Gmail 密钥环       | `/home/node/.openclaw/`           | 主机卷 + 密码         | 需要 `GOG_KEYRING_PASSWORD`  |
-| 外部二进制文件     | `/usr/local/bin/`                 | Docker 镜像           | 必须在构建时烘焙                 |
-| Node 运行时        | 容器文件系统                     | Docker 镜像           | 每次镜像构建时重新构建           |
-| 操作系统包         | 容器文件系统                     | Docker 镜像           | 请勿在运行时安装                 |
-| Docker 容器        | 临时                             | 可重启                | 可安全销毁                       |
+| 组件           | 位置                          | 持久化机制  | 备注                            |
+| ------------------- | --------------------------------- | ---------------------- | -------------------------------- |
+| Gateway 配置      | `/home/node/.openclaw/`           | 主机卷挂载      | 包括 `openclaw.json`, tokens |
+| 模型认证配置文件 | `/home/node/.openclaw/`           | 主机卷挂载      | OAuth tokens, API keys           |
+| Skill 配置       | `/home/node/.openclaw/skills/`    | 主机卷挂载      | Skill 级别的状态                |
+| Agent 工作区     | `/home/node/.openclaw/workspace/` | 主机卷挂载      | 代码和 agent 制品         |
+| WhatsApp 会话    | `/home/node/.openclaw/`           | 主机卷挂载      | 保留 QR 登录               |
+| Gmail 密钥环       | `/home/node/.openclaw/`           | 主机卷 + 密码 | 需要 `GOG_KEYRING_PASSWORD`  |
+| 外部二进制文件   | `/usr/local/bin/`                 | Docker 镜像           | 必须在构建时烘焙      |
+| Node 运行时        | 容器文件系统              | Docker 镜像           | 每次镜像构建时重新构建        |
+| OS 软件包         | 容器文件系统              | Docker 镜像           | 不要在运行时安装        |
+| Docker 容器    | 临时                         | 可重启            | 可安全销毁                  |
 
 ---
 

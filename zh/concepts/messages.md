@@ -23,11 +23,11 @@ Inbound message
 
 关键的配置项位于配置中：
 
-- `messages.*` 用于前缀、排队和群组行为。
-- `agents.defaults.*` 用于块流式传输和分块的默认设置。
-- 通道覆盖（`channels.whatsapp.*`、`channels.telegram.*` 等）用于上限和流式传输开关。
+- `messages.*` 用于前缀、排队和组行为。
+- `agents.defaults.*` 用于块流式传输和分块默认值。
+- 频道覆盖（`channels.whatsapp.*`、`channels.telegram.*` 等）用于上限和流式传输开关。
 
-完整架构请参阅 [配置](/zh/en/gateway/configuration)。
+完整架构请参阅 [配置](/en/gateway/configuration)。
 
 ## 入站去重
 
@@ -35,7 +35,8 @@ Inbound message
 
 ## 入站防抖
 
-来自**同一发送方**的快速连续消息可以通过 `messages.inbound` 合并为单个代理轮次。防抖的作用域为每个通道 + 会话，并使用最新的消息进行回复串接/ID 识别。
+来自**同一发送者**的快速连续消息可以通过 `messages.inbound` 批处理为单个
+代理轮次。防抖范围是每个频道 + 会话，并使用最新消息进行回复线程/ID 处理。
 
 配置（全局默认值 + 每个通道的覆盖设置）：
 
@@ -69,13 +70,13 @@ Inbound message
 
 多个设备/通道可以映射到同一个会话，但历史记录不会完全同步回每个客户端。建议：对于长对话，请使用一个主设备以避免上下文分歧。控制 UI 和 TUI 始终显示网关支持的会话记录副本，因此它们是事实的来源。
 
-详情：[会话管理](/zh/en/concepts/session)。
+详情：[会话管理](/en/concepts/session)。
 
 ## 入站正文和历史上下文
 
 OpenClaw 将 **提示正文** 与 **命令正文** 分开：
 
-- `Body`：发送给代理的提示文本。这可能包括通道信封和
+- `Body`：发送给代理的提示文本。这可能包括频道信封和
   可选的历史记录包装器。
 - `CommandBody`：用于指令/命令解析的原始用户文本。
 - `RawBody`：`CommandBody` 的旧别名（为兼容性而保留）。
@@ -89,16 +90,21 @@ OpenClaw 将 **提示正文** 与 **命令正文** 分开：
 
 历史缓冲区是**仅限待处理**的：它们包含_未_触发运行的群组消息（例如，提及 gated 的消息），并**排除**已在会话记录中的消息。
 
-指令去除仅适用于**当前消息**部分，因此历史记录保持完整。包装历史记录的频道应将 `CommandBody`（或 `RawBody`）设置为原始消息文本，并将 `Body` 保留为组合提示。历史缓冲区可通过 `messages.groupChat.historyLimit`（全局默认）和每频道覆盖（如 `channels.slack.historyLimit` 或 `channels.telegram.accounts.<id>.historyLimit`，设置 `0` 以禁用）进行配置。
+指令剥离仅适用于**当前消息**部分，因此历史记录保持完整。
+包装历史记录的频道应将 `CommandBody`（或
+`RawBody`）设置为原始消息文本，并将 `Body` 保留为组合提示。
+历史缓冲区可通过 `messages.groupChat.historyLimit`（全局默认值）和每频道覆盖进行配置，例如
+`channels.slack.historyLimit` 或
+`channels.telegram.accounts.<id>.historyLimit`（设置 `0` 以禁用）。
 
 ## 排队和后续处理
 
 如果运行已处于活动状态，则可以将传入消息排队、引导至当前运行中，或为后续回合收集。
 
 - 通过 `messages.queue`（和 `messages.queue.byChannel`）进行配置。
-- 模式：`interrupt`、`steer`、`followup`、`collect`，以及积压变体。
+- 模式：`interrupt`、`steer`、`followup`、`collect` 以及积压变体。
 
-详情：[排队](/zh/en/concepts/queue)。
+详情：[排队](/en/concepts/queue)。
 
 ## 流式传输、分块和批处理
 
@@ -110,10 +116,10 @@ OpenClaw 将 **提示正文** 与 **命令正文** 分开：
 - `agents.defaults.blockStreamingBreak`（`text_end|message_end`）
 - `agents.defaults.blockStreamingChunk`（`minChars|maxChars|breakPreference`）
 - `agents.defaults.blockStreamingCoalesce`（基于空闲的批处理）
-- `agents.defaults.humanDelay`（块回复之间的人性化暂停）
+- `agents.defaults.humanDelay`（块回复之间的类人暂停）
 - 通道覆盖：`*.blockStreaming` 和 `*.blockStreamingCoalesce`（非 Telegram 通道需要显式 `*.blockStreaming: true`）
 
-详情：[流式传输 + 分块](/zh/en/concepts/streaming)。
+详情：[流式传输 + 分块](/en/concepts/streaming)。
 
 ## 推理可见性和令牌
 
@@ -123,16 +129,16 @@ OpenClaw 可以公开或隐藏模型推理：
 - 推理内容由模型生成时，仍计入令牌使用量。
 - Telegram 支持将推理流式传输到草稿气泡中。
 
-详情：[思考 + 推理指令](/zh/en/tools/thinking) 和 [令牌使用](/zh/en/reference/token-use)。
+详情：[思考 + 推理指令](/en/tools/thinking) 和 [令牌使用](/en/reference/token-use)。
 
 ## 前缀、串联回复和回复
 
 出站消息格式化集中在 `messages` 中：
 
 - `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix`（出站前缀级联），加上 `channels.whatsapp.messagePrefix`（WhatsApp 入站前缀）
-- 通过 `replyToMode` 和各通道默认值进行回复串联
+- 通过 `replyToMode` 和每个通道的默认值进行回复线程化
 
-详情：[配置](/zh/en/gateway/configuration#messages) 和通道文档。
+详情：[配置](/en/gateway/configuration#messages) 和通道文档。
 
 import zh from '/components/footer/zh.mdx';
 

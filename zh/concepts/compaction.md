@@ -1,5 +1,5 @@
 ---
-summary: "上下文窗口 + 压缩：OpenClaw 如何保持会话在模型限制内"
+summary: "上下文窗口与压缩：OpenClaw 如何保持会话在模型限制内"
 read_when:
   - You want to understand auto-compaction and /compact
   - You are debugging long sessions hitting context limits
@@ -21,10 +21,10 @@ title: "压缩"
 
 ## 配置
 
-使用 `agents.defaults.compaction` 设置在你的 `openclaw.json` 中配置压缩行为（模式、目标 Token 等）。
-压缩摘要默认保留不透明标识符（`identifierPolicy: "strict"`）。你可以用 `identifierPolicy: "off"` 覆盖它，或通过 `identifierPolicy: "custom"` 和 `identifierInstructions` 提供自定义文本。
+使用 `agents.defaults.compaction` 设置中的 `openclaw.json` 来配置压缩行为（模式、目标令牌数等）。
+压缩摘要默认保留不透明标识符（`identifierPolicy: "strict"`）。您可以使用 `identifierPolicy: "off"` 覆盖此设置，或者通过 `identifierPolicy: "custom"` 和 `identifierInstructions` 提供自定义文本。
 
-你可以通过 `agents.defaults.compaction.model` 指定不同的模型来进行压缩摘要。当你的主模型是本地模型或小模型，并且你希望由能力更强的模型生成压缩摘要时，这非常有用。该覆盖设置接受任何 `provider/model-id` 字符串：
+您可以通过 `agents.defaults.compaction.model` 为压缩摘要指定不同的模型。当您的主模型是本地模型或小型模型，并且希望由能力更强的模型生成压缩摘要时，这非常有用。该覆盖设置接受任何 `provider/model-id` 字符串：
 
 ```json
 {
@@ -60,14 +60,14 @@ title: "压缩"
 
 你会看到：
 
-- 在详细模式下的 `🧹 Auto-compaction complete`
-- 显示 `🧹 Compactions: <count>` 的 `/status`
+- `🧹 Auto-compaction complete` 在详细模式下
+- `/status` 显示 `🧹 Compactions: <count>`
 
-在压缩之前，OpenClaw 可以运行一个**静默内存刷新** 轮次，将持久化笔记存储到磁盘。有关详细信息和配置，请参阅 [内存](/zh/en/concepts/memory)。
+在压缩之前，OpenClaw 可以运行一个**静默内存刷新** 轮次，将持久化笔记存储到磁盘。有关详细信息和配置，请参阅 [内存](/en/concepts/memory)。
 
 ## 手动压缩
 
-使用 `/compact` （可选地附带指令）来强制执行一次压缩：
+使用 `/compact`（可选择附带指令）来强制执行一轮压缩：
 
 ```
 /compact Focus on decisions and open questions
@@ -82,7 +82,7 @@ title: "压缩"
 - **压缩**：进行摘要并以 JSONL 格式**持久化**。
 - **会话修剪**：仅修剪旧的**工具结果**，在**内存中**，针对每个请求。
 
-有关修剪的详细信息，请参阅 [/concepts/session-pruning](/zh/en/concepts/session-pruning)。
+有关修剪的详细信息，请参阅 [/concepts/session-pruning](/en/concepts/session-pruning)。
 
 ## OpenAI 服务端压缩
 
@@ -90,15 +90,15 @@ OpenClaw 还支持针对兼容的直接 OpenAI 模型的 OpenAI Responses 服务
 
 - 本地压缩：OpenClaw 进行摘要并持久化到会话 JSONL 中。
 - 服务端压缩：当以下条件满足时，OpenAI 在提供商侧压缩上下文：
-  `store` + `context_management` 被启用。
+  `store` + `context_management` 已启用。
 
-有关模型参数和覆盖设置，请参阅 [OpenAI provider](/zh/en/providers/openai)。
+有关模型参数和覆盖设置，请参阅 [OpenAI provider](/en/providers/openai)。
 
 ## 提示
 
-- 当会话感觉陈旧或上下文臃肿时，请使用 `/compact`。
+- 当会话感觉陈旧或上下文膨胀时，使用 `/compact`。
 - 大型工具输出已经被截断；修剪可以进一步减少工具结果的累积。
-- 如果您需要重新开始，`/new` 或 `/reset` 将启动一个新的会话 ID。
+- 如果您需要重新开始，`/new` 或 `/reset` 会启动一个新的会话 ID。
 
 import zh from '/components/footer/zh.mdx';
 

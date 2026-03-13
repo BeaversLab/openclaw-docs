@@ -15,24 +15,24 @@ Gateway 在 Linux 上受到完全支持。**Node 是推荐的运行时**。
 
 ## 新手快速入门 (VPS)
 
-1. 安装 Node 24（推荐；Node 22 LTS，目前为 `22.16+`，为了兼容性仍然有效）
+1. 安装 Node 24（推荐；Node 22 LTS，目前为 `22.16+`，出于兼容性考虑仍然可用）
 2. `npm i -g openclaw@latest`
 3. `openclaw onboard --install-daemon`
-4. 从你的笔记本电脑：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
-5. 打开 `http://127.0.0.1:18789/` 并粘贴你的令牌
+4. 在您的笔记本电脑上：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
+5. 打开 `http://127.0.0.1:18789/` 并粘贴您的令牌
 
-分步 VPS 指南：[exe.dev](/zh/en/install/exe-dev)
+分步 VPS 指南：[exe.dev](/en/install/exe-dev)
 
 ## 安装
 
-- [入门指南](/zh/en/start/getting-started)
-- [安装与更新](/zh/en/install/updating)
-- 可选流程：[Bun (实验性)](/zh/en/install/bun)、[Nix](/zh/en/install/nix)、[Docker](/zh/en/install/docker)
+- [入门指南](/en/start/getting-started)
+- [安装与更新](/en/install/updating)
+- 可选流程：[Bun (实验性)](/en/install/bun)、[Nix](/en/install/nix)、[Docker](/en/install/docker)
 
 ## Gateway
 
-- [Gateway 操作手册](/zh/en/gateway)
-- [配置](/zh/en/gateway/configuration)
+- [Gateway 操作手册](/en/gateway)
+- [配置](/en/gateway/configuration)
 
 ## Gateway 服务安装 (CLI)
 
@@ -65,7 +65,7 @@ openclaw doctor
 ## 系统控制
 
 OpenClaw 默认安装一个 systemd **用户** 服务。对于共享或永久在线的服务器，请使用 **系统**
-服务。完整的单元示例和指南位于 [Gateway 操作手册](/zh/en/gateway) 中。
+服务。完整的单元示例和指南位于 [Gateway 操作手册](/en/gateway) 中。
 
 最小化设置：
 

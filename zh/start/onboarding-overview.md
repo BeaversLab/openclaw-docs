@@ -26,14 +26,14 @@ openclaw onboard
 
 当您想要完全控制网关、工作区、频道和技能时，请使用 CLI 向导。文档：
 
-- [入门向导 (CLI)](/zh/en/start/wizard)
-- [`openclaw onboard` 命令](/zh/en/cli/onboard)
+- [入门向导 (CLI)](/en/start/wizard)
+- [`openclaw onboard` 命令](/en/cli/onboard)
 
 ## macOS 应用入门
 
 当您希望在 macOS 上进行完全引导式的设置时，请使用 OpenClaw 应用。文档：
 
-- [入门 (macOS 应用)](/zh/en/start/onboarding)
+- [入门 (macOS 应用)](/en/start/onboarding)
 
 ## 自定义提供商
 

@@ -1,5 +1,5 @@
 ---
-summary: "上下文：模型看到了什么，它是如何构建的，以及如何检查它"
+summary: "Context：模型看到的内容、构建方式以及如何检查它"
 read_when:
   - You want to understand what “context” means in OpenClaw
   - You are debugging why the model “knows” something (or forgot it)
@@ -21,13 +21,13 @@ title: "上下文"
 
 ## 快速开始（检查上下文）
 
-- `/status` → 快速查看“我的窗口有多满？” + 会话设置。
-- `/context list` → 注入了什么 + 大致大小（每个文件 + 总计）。
-- `/context detail` → 更深入的细分：每个文件、每个工具的架构大小、每个技能条目的大小以及系统提示词的大小。
-- `/usage tokens` → 将每次回复的使用情况页脚附加到正常回复中。
-- `/compact` → 将较旧的历史记录总结为紧凑条目以释放窗口空间。
+- `/status` → 快速查看“我的窗口有多满？”+ 会话设置。
+- `/context list` → 注入的内容 + 粗略大小（每个文件 + 总计）。
+- `/context detail` → 更深入的细分：每个文件、每个工具架构大小、每个技能条目大小以及系统提示词大小。
+- `/usage tokens` → 将每次回复的使用情况页脚附加到普通回复中。
+- `/compact` → 将较早的历史记录汇总为一个紧凑条目以释放窗口空间。
 
-另请参阅：[斜杠命令](/zh/en/tools/slash-commands)、[Token 使用与费用](/zh/en/reference/token-use)、[压缩](/zh/en/concepts/compaction)。
+另请参阅：[斜杠命令](/en/tools/slash-commands)、[Token 使用与费用](/en/reference/token-use)、[压缩](/en/concepts/compaction)。
 
 ## 示例输出
 
@@ -98,7 +98,7 @@ Top tools (schema size):
 - 运行时元数据（主机/操作系统/模型/思考）。
 - **项目上下文（Project Context）** 下注入的工作区引导文件。
 
-完整细分：[系统提示词](/zh/en/concepts/system-prompt)。
+完整细分：[系统提示词](/en/concepts/system-prompt)。
 
 ## 注入的工作区文件（项目上下文）
 
@@ -110,17 +110,17 @@ Top tools (schema size):
 - `IDENTITY.md`
 - `USER.md`
 - `HEARTBEAT.md`
-- `BOOTSTRAP.md`（仅在首次运行时）
+- `BOOTSTRAP.md`（仅首次运行）
 
-大文件使用 `agents.defaults.bootstrapMaxChars` 按文件截断（默认 `20000` 字符）。OpenClaw 还通过 `agents.defaults.bootstrapTotalMaxChars` 在所有文件之间强制执行引导注入总上限（默认 `150000` 字符）。`/context` 显示**原始与注入后**的大小以及是否发生了截断。
+大文件使用 `agents.defaults.bootstrapMaxChars`（默认 `20000` 个字符）按文件截断。OpenClaw 还通过 `agents.defaults.bootstrapTotalMaxChars`（默认 `150000` 个字符）对跨文件的总引导注入量实施上限。`/context` 显示 **原始大小与注入大小** 的对比以及是否发生了截断。
 
-当发生截断时，运行时可以在项目上下文下插入一个提示内警告块。通过 `agents.defaults.bootstrapPromptTruncationWarning` 配置（`off`、`once`、`always`；默认 `once`）。
+当发生截断时，运行时可以在 Project Context 下注入一个提示内警告块。使用 `agents.defaults.bootstrapPromptTruncationWarning`（`off`、`once`、`always`；默认为 `once`）进行配置。
 
 ## 技能：注入内容与按需加载内容
 
 系统提示词包含一个精简的**技能列表**（名称 + 描述 + 位置）。该列表具有实际的开销。
 
-默认情况下不包含技能说明。模型应仅在**需要时**`read` 技能的 `SKILL.md`。
+技能说明默认情况下_不_包含在内。模型应仅在需要时 `read` 技能的 `SKILL.md`。
 
 ## 工具：存在两项成本
 
@@ -129,19 +129,19 @@ Top tools (schema size):
 1. 系统提示词中的**工具列表文本**（您看到的“工具”内容）。
 2. **工具架构**（JSON）。这些内容会发送给模型以便其调用工具。尽管您无法以纯文本形式看到它们，但它们仍计入上下文。
 
-`/context detail` 细分了最大的工具架构，以便您了解哪些内容占主导地位。
+`/context detail` 会细分最大的工具架构，以便您查看占主导地位的内容。
 
 ## 命令、指令和“内联快捷方式”
 
 斜杠命令由网关处理。有几种不同的行为：
 
-- **独立命令**：仅包含 `/...` 的消息作为命令运行。
-- **指令**：`/think`、`/verbose`、`/reasoning`、`/elevated`、`/model`、`/queue` 会在模型看到消息之前被移除。
+- **独立命令**：仅包含 `/...` 的消息将作为命令运行。
+- **指令**：在模型看到消息之前，会先剥离 `/think`、`/verbose`、`/reasoning`、`/elevated`、`/model`、`/queue`。
   - 仅包含指令的消息会持久化会话设置。
   - 普通消息中的内联指令作为单条消息的提示。
-- **内联快捷方式**（仅允许的发件人）：普通消息中的某些 `/...` 标记可以立即运行（例如：“hey /status”），并在模型看到剩余文本之前被移除。
+- **内联快捷方式**（仅限白名单发送者）：普通消息内的某些 `/...` 标记可以立即运行（例如：“嘿 /status”），并且在模型看到剩余文本之前会被剥离。
 
-详情：[斜杠命令](/zh/en/tools/slash-commands)。
+详情：[斜杠命令](/en/tools/slash-commands)。
 
 ## 会话、压缩和修剪（保留内容）
 
@@ -151,20 +151,16 @@ Top tools (schema size):
 - **压缩** 会将摘要保存到记录中，并保持最近的完整消息。
 - **修剪** 会从单次运行的 _内存中_ 提示里移除旧的工具结果，但不会重写记录。
 
-文档：[会话](/zh/en/concepts/session)、[压缩](/zh/en/concepts/compaction)、[会话修剪](/zh/en/concepts/session-pruning)。
+文档：[会话](/en/concepts/session)、[压缩](/en/concepts/compaction)、[会话修剪](/en/concepts/session-pruning)。
 
-默认情况下，OpenClaw 使用内置的 `legacy` 上下文引擎进行组装和
-压缩。如果您安装了一个提供 `kind: "context-engine"` 的插件
-并通过 `plugins.slots.contextEngine` 选中它，OpenClaw 会将上下文
-组装、`/compact` 和相关的子代理上下文生命周期挂钩委托给
-该引擎。
+默认情况下，OpenClaw 使用内置的 `legacy` 上下文引擎进行组装和压缩。如果您安装了一个提供 `kind: "context-engine"` 的插件并通过 `plugins.slots.contextEngine` 选中它，OpenClaw 会将上下文组装、`/compact` 以及相关的子代理上下文生命周期钩子委托给该引擎。
 
 ## `/context` 实际报告的内容
 
-`/context` 优先使用最新的 **运行生成** 系统提示报告（如果可用）：
+如果可用，`/context` 优先使用最新的 **运行时构建** 系统提示词报告：
 
-- `System prompt (run)` = 从最后一次嵌入（具备工具能力）的运行中捕获并持久化在会话存储中。
-- `System prompt (estimate)` = 当不存在运行报告时（或通过不生成该报告的 CLI 后端运行时）动态计算。
+- `System prompt (run)` = 从上次嵌入的（具备工具能力的）运行中捕获并持久化在会话存储中。
+- `System prompt (estimate)` = 当不存在运行报告时（或通过不生成报告的 CLI 后端运行时）即时计算。
 
 无论哪种方式，它都会报告大小和主要贡献者；它 **不** 会转储完整的系统提示或工具架构。
 

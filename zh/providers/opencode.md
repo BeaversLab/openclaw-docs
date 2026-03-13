@@ -46,14 +46,14 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 
 ### Zen
 
-- 运行时提供程序：`opencode`
-- 示例模型：`opencode/claude-opus-4-6`、`opencode/gpt-5.2`、`opencode/gemini-3-pro`
+- 运行时提供商：`opencode`
+- 模型示例：`opencode/claude-opus-4-6`、`opencode/gpt-5.2`、`opencode/gemini-3-pro`
 - 最适合想要使用精心策划的 OpenCode 多模型代理时
 
 ### Go
 
-- 运行时提供程序：`opencode-go`
-- 示例模型：`opencode-go/kimi-k2.5`、`opencode-go/glm-5`、`opencode-go/minimax-m2.5`
+- 运行时提供商：`opencode-go`
+- 模型示例：`opencode-go/kimi-k2.5`、`opencode-go/glm-5`、`opencode-go/minimax-m2.5`
 - 最适合想要使用 OpenCode 托管的 Kimi/GLM/MiniMax 系列时
 
 ## 注

@@ -1,16 +1,16 @@
 ---
-summary: 跨 main、subagent 和 ACP 的统一运行时流式处理管道的“圣杯级重构计划”
-owner: onutc
-status: 草案
-last_updated: 2026-02-25
-title: 统一运行时流式重构计划
+summary: "跨 main、subagent 和 ACP 构建统一运行时流式传输管道的终极重构计划"
+owner: "onutc"
+status: "draft"
+last_updated: "2026-02-25"
+title: "Unified Runtime Streaming Refactor Plan"
 ---
 
 # 统一运行时流式重构计划
 
 ## 目标
 
-为 `main`、`subagent` 和 `acp` 提供一个共享的流式管道，以便所有运行时获得相同的合并、分块、传递顺序和崩溃恢复行为。
+为 `main`、`subagent` 和 `acp` 提供一个共享的流式传输管道，以便所有运行时都能获得相同的合并、分块、传递排序和崩溃恢复行为。
 
 ## 存在原因
 
@@ -69,7 +69,7 @@ title: 统一运行时流式重构计划
 ### 5) 迁移与切换
 
 - 阶段 1：影子模式（新管道计算输出但由旧路径发送；对比）。
-- 阶段 2：按运行时逐一切换（`acp`，然后 `subagent`，然后 `main` 或按风险反向顺序）。
+- 阶段 2：逐个运行时切换（先 `acp`，然后 `subagent`，最后 `main`，或者根据风险反向进行）。
 - 阶段 3：删除遗留的运行时特定流式传输代码。
 
 ## 非目标

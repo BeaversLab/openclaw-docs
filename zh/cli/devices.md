@@ -1,5 +1,5 @@
 ---
-summary: "`openclaw devices` 的 CLI 参考（设备配对 + 令牌轮换/吊销）"
+summary: "`openclaw devices` 的 CLI 参考（设备配对 + 令牌轮换/撤销）"
 read_when:
   - You are approving device pairing requests
   - You need to rotate or revoke device tokens
@@ -42,8 +42,7 @@ openclaw devices clear --yes --pending --json
 
 ### `openclaw devices approve [requestId] [--latest]`
 
-批准待处理的设备配对请求。如果省略了 `requestId`，OpenClaw
-将自动批准最近的一个待处理请求。
+批准待处理的设备配对请求。如果省略了 `requestId`，OpenClaw 会自动批准最新的待处理请求。
 
 ```
 openclaw devices approve
@@ -81,21 +80,20 @@ openclaw devices revoke --device <deviceId> --role node
 - `--token <token>`：网关令牌（如果需要）。
 - `--password <password>`：网关密码（密码认证）。
 - `--timeout <ms>`：RPC 超时。
-- `--json`：JSON 输出（推荐用于脚本）。
+- `--json`：JSON 输出（建议用于脚本）。
 
-注意：当您设置 `--url` 时，CLI 不会回退到配置或环境凭证。
-请显式传递 `--token` 或 `--password`。缺少显式凭证将报错。
+注意：当您设置 `--url` 时，CLI 不会回退到配置或环境凭据。请显式传递 `--token` 或 `--password`。缺少显式凭据将导致错误。
 
 ## 注意
 
 - 令牌轮换会返回一个新的令牌（敏感）。请将其视为机密处理。
 - 这些命令需要 `operator.pairing`（或 `operator.admin`）作用域。
-- `devices clear` 被 `--yes` 故意限制。
-- 如果在本地环回上不可用配对作用域（且未传递显式的 `--url`），列表/批准操作可以使用本地配对回退机制。
+- `devices clear` 受 `--yes` 的有意限制。
+- 如果在本地环回上不可用配对作用域（且未传递显式的 `--url`），列表/批准可以使用本地配对回退。
 
 ## 令牌漂移恢复检查清单
 
-当控制 UI 或其他客户端持续因 `AUTH_TOKEN_MISMATCH` 或 `AUTH_DEVICE_TOKEN_MISMATCH` 而失败时使用。
+当控制 UI 或其他客户端持续因 `AUTH_TOKEN_MISMATCH` 或 `AUTH_DEVICE_TOKEN_MISMATCH` 失败时，请使用此功能。
 
 1. 确认当前网关令牌来源：
 
@@ -127,8 +125,8 @@ openclaw devices approve <requestId>
 
 相关内容：
 
-- [Dashboard 身份验证故障排除](/zh/en/web/dashboard#if-you-see-unauthorized-1008)
-- [网关故障排除](/zh/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [Dashboard 身份验证故障排除](/en/web/dashboard#if-you-see-unauthorized-1008)
+- [网关故障排除](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
 
 import zh from '/components/footer/zh.mdx';
 

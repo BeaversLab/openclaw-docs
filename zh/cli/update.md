@@ -10,7 +10,7 @@ title: "更新"
 
 安全地更新 OpenClaw 并在稳定/测试/开发通道之间切换。
 
-如果您是通过 **npm/pnpm** 安装的（全局安装，无 git 元数据），更新将通过 [更新](/zh/en/install/updating) 中的包管理器流程进行。
+如果您是通过 **npm/pnpm** 安装的（全局安装，无 git 元数据），更新将通过 [更新](/en/install/updating) 中的包管理器流程进行。
 
 ## 用法
 
@@ -30,9 +30,9 @@ openclaw --update
 ## 选项
 
 - `--no-restart`：成功更新后跳过重启网关服务。
-- `--channel <stable|beta|dev>`：设置更新通道（git + npm；持久保存在配置中）。
-- `--tag <dist-tag|version>`：仅针对此次更新覆盖 npm dist-tag 或版本。
-- `--dry-run`：预览计划的更新操作（通道/tag/目标/重启流程），而不写入配置、安装、同步插件或重启。
+- `--channel <stable|beta|dev>`：设置更新通道（git + npm；持久化保存到配置中）。
+- `--tag <dist-tag|version>`：仅针对本次更新覆盖 npm dist-tag 或版本。
+- `--dry-run`：预览计划的更新操作（通道/标签/目标/重启流程），而不写入配置、安装、同步插件或重启。
 - `--json`：打印机器可读的 `UpdateRunResult` JSON。
 - `--timeout <seconds>`：每步超时时间（默认为 1200s）。
 
@@ -56,15 +56,15 @@ openclaw update status --timeout 10
 ## `update wizard`
 
 用于选择更新通道并确认更新后是否重启网关的交互式流程
-（默认为重启）。如果您在没有 git 检出的情况下选择 `dev`，它
+（默认为重启）。如果您在没有 git 检出副本的情况下选择 `dev`，它
 会提议创建一个。
 
 ## 它的作用
 
-当您明确切换通道（`--channel ...`）时，OpenClaw 也会保持
-安装方法一致：
+当您显式切换通道（`--channel ...`）时，OpenClaw 也会使
+安装方法保持一致：
 
-- `dev` → 确保有 git 检出（默认：`~/openclaw`，可通过 `OPENCLAW_GIT_DIR` 覆盖），
+- `dev` → 确保有 git 检出副本（默认：`~/openclaw`，可通过 `OPENCLAW_GIT_DIR` 覆盖），
   更新它，并从该检出中安装全局 CLI。
 - `stable`/`beta` → 使用匹配的 dist-tag 从 npm 安装。
 
@@ -74,8 +74,8 @@ openclaw update status --timeout 10
 
 通道：
 
-- `stable`：检出最新的非 beta tag，然后构建 + 诊断。
-- `beta`：检出最新的 `-beta` 标签，然后构建 + 运行诊断。
+- `stable`：检出最新的非 beta 标签，然后构建 + 检查。
+- `beta`：检出最新的 `-beta` 标签，然后构建 + 检查。
 - `dev`：检出 `main`，然后获取 + 变基。
 
 高层概述：
@@ -92,14 +92,14 @@ openclaw update status --timeout 10
 
 ## `--update` 简写
 
-`openclaw --update` 重写为 `openclaw update`（适用于 shell 和启动器脚本）。
+`openclaw --update` 重写为 `openclaw update`（对 Shell 和启动器脚本有用）。
 
 ## 另请参阅
 
-- `openclaw doctor`（建议在 git 检出时先运行更新）
-- [开发频道](/zh/en/install/development-channels)
-- [更新](/zh/en/install/updating)
-- [CLI 参考](/zh/en/cli)
+- `openclaw doctor`（在 git 检出时提示先运行更新）
+- [开发频道](/en/install/development-channels)
+- [更新](/en/install/updating)
+- [CLI 参考](/en/cli)
 
 import zh from '/components/footer/zh.mdx';
 

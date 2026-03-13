@@ -1,5 +1,5 @@
 ---
-summary: "日志概述：文件日志、控制台输出、CLI 追踪以及控制 UI"
+summary: "日志概述：文件日志、控制台输出、CLI 实时追踪以及控制 UI"
 read_when:
   - You need a beginner-friendly overview of logging
   - You want to configure log levels or formats
@@ -68,8 +68,8 @@ openclaw doctor
 
 ### 控制 UI (Web)
 
-控制 UI 的 **日志** 选项卡使用 `logs.tail` 追踪同一个文件。
-有关如何打开它的说明，请参阅 [/web/control-ui](/zh/en/web/control-ui)。
+控制 UI 的 **Logs** 选项卡使用 `logs.tail` 实时追踪同一个文件。
+有关如何打开它的信息，请参阅 [/web/control-ui](/en/web/control-ui)。
 
 ### 仅通道日志
 
@@ -115,27 +115,27 @@ openclaw channels logs --channel whatsapp
 
 ### 日志级别
 
-- `logging.level`：**file logs** (JSONL) 级别。
-- `logging.consoleLevel`：**console** 详细程度级别。
+- `logging.level`：**文件日志** (JSONL) 级别。
+- `logging.consoleLevel`：**控制台** 详细级别。
 
-您可以通过 **`OPENCLAW_LOG_LEVEL`** 环境变量覆盖这两者（例如 `OPENCLAW_LOG_LEVEL=debug`）。环境变量的优先级高于配置文件，因此您可以在不编辑 `openclaw.json` 的情况下提高单次运行的详细程度。您还可以传递全局 CLI 选项 **`--log-level <level>`**（例如，`openclaw --log-level debug gateway run`），它会覆盖该命令的环境变量。
+您可以通过 **`OPENCLAW_LOG_LEVEL`** 环境变量（例如 `OPENCLAW_LOG_LEVEL=debug`）覆盖这两者。环境变量的优先级高于配置文件，因此您可以在不编辑 `openclaw.json` 的情况下为单次运行提高详细程度。您还可以传递全局 CLI 选项 **`--log-level <level>`**（例如 `openclaw --log-level debug gateway run`），它会覆盖该命令的环境变量。
 
-`--verbose` 仅影响控制台输出；它不会更改文件日志级别。
+`--verbose` 仅影响控制台输出；它不会改变文件日志级别。
 
 ### 控制台样式
 
 `logging.consoleStyle`：
 
-- `pretty`：人性化、带颜色、带时间戳。
-- `compact`：更紧凑的输出（适用于长会话）。
-- `json`：每行 JSON（适用于日志处理器）。
+- `pretty`：人性化、带颜色、带有时间戳。
+- `compact`: 更紧凑的输出（最适合长时段会话）。
+- `json`: 每行 JSON 格式（用于日志处理器）。
 
 ### 编辑
 
 工具摘要可以在敏感令牌输出到控制台之前对其进行编辑：
 
-- `logging.redactSensitive`：`off` | `tools`（默认：`tools`）
-- `logging.redactPatterns`：用于覆盖默认集合的正则字符串列表
+- `logging.redactSensitive`: `off` | `tools`（默认：`tools`）
+- `logging.redactPatterns`: 用于覆盖默认集合的正则表达式字符串列表
 
 编辑仅影响**控制台输出**，不会改变文件日志。
 
@@ -155,31 +155,31 @@ openclaw channels logs --channel whatsapp
 
 - **Metrics**：计数器 + 直方图（令牌使用情况、消息流、队列）。
 - **Traces**：用于模型使用和 webhook/消息处理的 spans。
-- **Logs**：当启用 `diagnostics.otel.logs` 时通过 OTLP 导出。日志
-  量可能很大；请记住 `logging.level` 和导出器过滤器。
+- **日志 (Logs)**：当启用 `diagnostics.otel.logs` 时通过 OTLP 导出。日志
+  量可能很大；请注意 `logging.level` 和导出器过滤器。
 
 ### 诊断事件目录
 
 模型使用情况：
 
-- `model.usage`：令牌、成本、持续时间、上下文、提供商/模型/通道、会话 ID。
+- `model.usage`: tokens、成本、持续时间、上下文、提供商/模型/渠道、会话 ID。
 
 消息流：
 
-- `webhook.received`：每个通道的 webhook 入口。
-- `webhook.processed`：webhook 已处理 + 持续时间。
-- `webhook.error`：webhook 处理程序错误。
-- `message.queued`：消息已排队等待处理。
-- `message.processed`：结果 + 持续时间 + 可选错误。
+- `webhook.received`: 每个渠道的 Webhook 入口。
+- `webhook.processed`: Webhook 已处理 + 持续时间。
+- `webhook.error`: Webhook 处理程序错误。
+- `message.queued`: 消息已排队等待处理。
+- `message.processed`: 结果 + 持续时间 + 可选错误。
 
 队列 + 会话：
 
-- `queue.lane.enqueue`：命令队列通道入队 + 深度。
-- `queue.lane.dequeue`：命令队列通道出队 + 等待时间。
-- `session.state`：会话状态转换 + 原因。
-- `session.stuck`：会话卡顿警告 + 存在时间。
-- `run.attempt`：运行重试/尝试元数据。
-- `diagnostic.heartbeat`：聚合计数器（webhooks/queue/session）。
+- `queue.lane.enqueue`: 命令队列通道入队 + 深度。
+- `queue.lane.dequeue`: 命令队列通道出队 + 等待时间。
+- `session.state`: 会话状态转换 + 原因。
+- `session.stuck`: 会话卡滞警告 + 存续时间。
+- `run.attempt`: 运行重试/尝试元数据。
+- `diagnostic.heartbeat`: 聚合计数器（webhooks/queue/session）。
 
 ### 启用诊断（无导出器）
 
@@ -195,8 +195,8 @@ openclaw channels logs --channel whatsapp
 
 ### 诊断标志（定向日志）
 
-使用标志开启额外的、定向的调试日志，而无需提高 `logging.level`。
-标志不区分大小写，并支持通配符（例如 `telegram.*` 或 `*`）。
+使用标志来开启额外的、有针对性的调试日志，而无需提高 `logging.level`。
+标志不区分大小写并支持通配符（例如 `telegram.*` 或 `*`）。
 
 ```json
 {
@@ -216,11 +216,11 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 
 - 标志日志会进入标准日志文件（与 `logging.file` 相同）。
 - 输出仍会根据 `logging.redactSensitive` 进行编辑。
-- 完整指南：[/diagnostics/flags](/zh/en/diagnostics/flags)。
+- 完整指南：[/diagnostics/flags](/en/diagnostics/flags)。
 
 ### 导出到 OpenTelemetry
 
-诊断可以通过 `diagnostics-otel` 插件 (OTLP/HTTP) 导出。这
+诊断信息可以通过 `diagnostics-otel` 插件（OTLP/HTTP）导出。这
 适用于任何接受 OTLP/HTTP 的 OpenTelemetry 收集器/后端。
 
 ```json
@@ -252,13 +252,13 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 
 说明：
 
-- 您也可以使用 `openclaw plugins enable diagnostics-otel` 启用插件。
+- 您也可以使用 `openclaw plugins enable diagnostics-otel` 启用该插件。
 - `protocol` 目前仅支持 `http/protobuf`。`grpc` 会被忽略。
 - 指标包括令牌使用情况、成本、上下文大小、运行持续时间和消息流
   计数器/直方图（webhooks、排队、会话状态、队列深度/等待）。
-- 可以使用 `traces` / `metrics` 切换跟踪/指标（默认：开启）。跟踪
+- 可以使用 `traces` / `metrics` 切换追踪/指标（默认：开启）。追踪
   在启用时包括模型使用范围以及 webhook/消息处理范围。
-- 当您的收集器需要身份验证时，请设置 `headers`。
+- 当您的收集器需要身份验证时，设置 `headers`。
 - 支持的环境变量：`OTEL_EXPORTER_OTLP_ENDPOINT`，
   `OTEL_SERVICE_NAME`，`OTEL_EXPORTER_OTLP_PROTOCOL`。
 
@@ -297,7 +297,7 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 - `openclaw.queue.depth`（直方图，属性：`openclaw.lane` 或
   `openclaw.channel=heartbeat`）
 - `openclaw.queue.wait_ms`（直方图，属性：`openclaw.lane`）
-- `openclaw.session.state`（计数器，属性：`openclaw.state`，`openclaw.reason`）
+- `openclaw.session.state`（计数器，属性：`openclaw.state`, `openclaw.reason`）
 - `openclaw.session.stuck`（计数器，属性：`openclaw.state`）
 - `openclaw.session.stuck_age_ms`（直方图，属性：`openclaw.state`）
 - `openclaw.run.attempt`（计数器，属性：`openclaw.attempt`）
@@ -305,13 +305,13 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 ### 导出的跨度（名称 + 关键属性）
 
 - `openclaw.model.usage`
-  - `openclaw.channel`，`openclaw.provider`，`openclaw.model`
-  - `openclaw.sessionKey`，`openclaw.sessionId`
-  - `openclaw.tokens.*`（input/output/cache_read/cache_write/total）
+  - `openclaw.channel`, `openclaw.provider`, `openclaw.model`
+  - `openclaw.sessionKey`, `openclaw.sessionId`
+  - `openclaw.tokens.*` (input/output/cache_read/cache_write/total)
 - `openclaw.webhook.processed`
-  - `openclaw.channel`，`openclaw.webhook`，`openclaw.chatId`
+  - `openclaw.channel`, `openclaw.webhook`, `openclaw.chatId`
 - `openclaw.webhook.error`
-  - `openclaw.channel`，`openclaw.webhook`，`openclaw.chatId`，
+  - `openclaw.channel`, `openclaw.webhook`, `openclaw.chatId`,
     `openclaw.error`
 - `openclaw.message.processed`
   - `openclaw.channel`, `openclaw.outcome`, `openclaw.chatId`,
@@ -323,29 +323,29 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 
 ### 采样 + 刷新
 
-- 链路追踪采样：`diagnostics.otel.sampleRate`（0.0–1.0，仅限根 Spans）。
+- 追踪采样：`diagnostics.otel.sampleRate`（0.0–1.0，仅限根跨度）。
 - 指标导出间隔：`diagnostics.otel.flushIntervalMs`（最少 1000ms）。
 
 ### 协议说明
 
-- 可以通过 `diagnostics.otel.endpoint` 或
-  `OTEL_EXPORTER_OTLP_ENDPOINT` 设置 OTLP/HTTP 端点。
-- 如果端点已包含 `/v1/traces` 或 `/v1/metrics`，则将按原样使用。
-- 如果端点已包含 `/v1/logs`，则日志将按原样使用。
-- `diagnostics.otel.logs` 启用主日志记录器输出的 OTLP 日志导出。
+- OTLP/HTTP 端点可以通过 `diagnostics.otel.endpoint` 或
+  `OTEL_EXPORTER_OTLP_ENDPOINT` 设置。
+- 如果端点已经包含 `/v1/traces` 或 `/v1/metrics`，则按原样使用。
+- 如果端点已经包含 `/v1/logs`，则日志将按原样使用。
+- `diagnostics.otel.logs` 为主日志输出启用 OTLP 日志导出。
 
 ### 日志导出行为
 
 - OTLP 日志使用写入 `logging.file` 的相同结构化记录。
-- 遵循 `logging.level`（文件日志级别）。控制台脱敏处理 **不** 适用于
+- 遵守 `logging.level`（文件日志级别）。控制台脱敏**不**适用
   OTLP 日志。
 - 高流量安装应优先使用 OTLP 收集器采样/过滤。
 
 ## 故障排除提示
 
-- **无法访问 Gateway？** 首先运行 `openclaw doctor`。
+- **无法连接到网关？** 先运行 `openclaw doctor`。
 - **日志为空？** 检查 Gateway 是否正在运行并写入文件路径
-  `logging.file` 中的路径。
+在 `logging.file` 中。
 - **需要更多详细信息？** 将 `logging.level` 设置为 `debug` 或 `trace` 并重试。
 
 import zh from '/components/footer/zh.mdx';

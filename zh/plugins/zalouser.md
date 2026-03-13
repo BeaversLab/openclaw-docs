@@ -1,5 +1,5 @@
 ---
-summary: "Zalo Personal 插件：通过原生 zca-js 实现 QR 登录和消息传递（插件安装 + 通道配置 + 工具）"
+summary: "Zalo Personal 插件：通过原生 zca-js 实现 QR 登录 + 消息发送（插件安装 + 通道配置 + 工具）"
 read_when:
   - You want Zalo Personal (unofficial) support in OpenClaw
   - You are configuring or developing the zalouser plugin
@@ -8,13 +8,13 @@ title: "Zalo Personal 插件"
 
 # Zalo Personal（插件）
 
-通过插件为 OpenClaw 提供 Zalo Personal 支持，使用原生 `zca-js` 自动化普通的 Zalo 用户账户。
+通过插件为 OpenClaw 提供 Zalo Personal 支持，使用原生 `zca-js` 来自动化普通的 Zalo 用户账号。
 
 > **警告：** 非官方自动化可能会导致账户暂停/封禁。使用风险自负。
 
 ## 命名
 
-通道 id 为 `zalouser`，以明确表明这是自动化 **个人 Zalo 用户账户**（非官方）。我们将 `zalo` 保留给未来潜在的官方 Zalo API 集成。
+通道 ID 为 `zalouser`，以明确表明这是自动化 **个人 Zalo 账号**（非官方）。我们将 `zalo` 保留给潜在的未来官方 Zalo API 集成。
 
 ## 运行位置
 
@@ -72,9 +72,9 @@ openclaw directory peers list --channel zalouser --query "name"
 
 工具名称：`zalouser`
 
-操作：`send`， `image`， `link`， `friends`， `groups`， `me`， `status`
+动作：`send`、`image`、`link`、`friends`、`groups`、`me`、`status`
 
-通道消息操作还支持 `react` 用于消息反应。
+通道消息动作还支持 `react` 用于消息反应。
 
 import zh from '/components/footer/zh.mdx';
 

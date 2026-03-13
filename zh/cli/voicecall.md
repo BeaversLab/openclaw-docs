@@ -1,5 +1,5 @@
 ---
-summary: "`openclaw voicecall` 的 CLI 参考（voice-call 插件命令界面）"
+summary: "`openclaw voicecall`（语音通话插件命令界面）的 CLI 参考"
 read_when:
   - You use the voice-call plugin and want the CLI entry points
   - You want quick examples for `voicecall call|continue|status|tail|expose`
@@ -8,11 +8,11 @@ title: "voicecall"
 
 # `openclaw voicecall`
 
-`voicecall` 是一个由插件提供的命令。它仅在安装并启用了 voice-call 插件时才会显示。
+`voicecall` 是一个由插件提供的命令。它仅在已安装并启用语音通话插件时出现。
 
 主要文档：
 
-- Voice-call 插件：[语音通话](/zh/en/plugins/voice-call)
+- Voice-call 插件：[语音通话](/en/plugins/voice-call)
 
 ## 常用命令
 

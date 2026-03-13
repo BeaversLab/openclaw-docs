@@ -1,9 +1,9 @@
 ---
-summary: “使用千帆的统一 API 在 OpenClaw 中访问多个模型”
+summary: "使用千帆的统一 API 在 OpenClaw 中访问多种模型"
 read_when:
   - You want a single API key for many LLMs
   - You need Baidu Qianfan setup guidance
-title: “千帆”
+title: "千帆"
 ---
 
 # 千帆服务提供商指南
@@ -20,7 +20,7 @@ title: “千帆”
 
 1. 访问 [千帆控制台](https://console.bce.baidu.com/qianfan/ais/console/apiKey)
 2. 创建新应用程序或选择现有应用程序
-3. 生成 API 密钥（格式：`bce-v3/ALTAK-...`）
+3. 生成一个 API 密钥（格式：`bce-v3/ALTAK-...`）
 4. 复制 API 密钥以供 OpenClaw 使用
 
 ## CLI 设置
@@ -31,9 +31,9 @@ openclaw onboard --auth-choice qianfan-api-key
 
 ## 相关文档
 
-- [OpenClaw 配置](/zh/en/gateway/configuration)
-- [模型提供商](/zh/en/concepts/model-providers)
-- [代理设置](/zh/en/concepts/agent)
+- [OpenClaw 配置](/en/gateway/configuration)
+- [模型提供商](/en/concepts/model-providers)
+- [代理设置](/en/concepts/agent)
 - [千帆 API 文档](https://cloud.baidu.com/doc/qianfan-api/s/3m7of64lb)
 
 import zh from '/components/footer/zh.mdx';

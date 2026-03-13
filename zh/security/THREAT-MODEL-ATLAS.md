@@ -2,14 +2,14 @@
 
 ## MITRE ATLAS 框架
 
-**版本:** 1.0-draft
-**最后更新:** 2026-02-04
-**方法论:** MITRE ATLAS + 数据流图
-**框架:** [MITRE ATLAS](https://atlas.mitre.org/) (对抗性 AI 系统威胁格局)
+**版本：** 1.0-draft
+**最后更新：** 2026-02-04
+**方法论：** MITRE ATLAS + 数据流图
+**框架：** [MITRE ATLAS](https://atlas.mitre.org/) (Adversarial Threat Landscape for AI Systems)
 
 ### 框架归属
 
-此威胁模型基于 [MITRE ATLAS](https://atlas.mitre.org/) 构建，它是用于记录 AI/ML 系统对抗性威胁的行业标准框架。ATLAS 由 [MITRE](https://www.mitre.org/) 与 AI 安全社区协作维护。
+本威胁模型基于 [MITRE ATLAS](https://atlas.mitre.org/) 构建，这是记录 AI/ML 系统对抗性威胁的行业标准框架。ATLAS 由 [MITRE](https://www.mitre.org/) 与 AI 安全社区协作维护。
 
 **关键 ATLAS 资源:**
 
@@ -17,11 +17,11 @@
 - [ATLAS 策略](https://atlas.mitre.org/tactics/)
 - [ATLAS 案例研究](https://atlas.mitre.org/studies/)
 - [ATLAS GitHub](https://github.com/mitre-atlas/atlas-data)
-- [为 ATLAS 做贡献](https://atlas.mitre.org/resources/contribute)
+- [为 ATLAS 做出贡献](https://atlas.mitre.org/resources/contribute)
 
 ### 为本威胁模型做贡献
 
-这是由 OpenClaw 社区维护的活文档。有关贡献的指南，请参阅 [CONTRIBUTING-THREAT-MODEL.md](/zh/en/security/CONTRIBUTING-THREAT-MODEL):
+这是由 OpenClaw 社区维护的活文档。有关贡献的指南，请参阅 [CONTRIBUTING-THREAT-MODEL.md](/en/security/CONTRIBUTING-THREAT-MODEL):
 
 - 报告新威胁
 - 更新现有威胁
@@ -437,13 +437,13 @@
 
 ### 4.1 当前安全控制
 
-| 控制              | 实现方式              | 有效性                                        |
+| 控制              | 实现              | 有效性                                        |
 | -------------------- | --------------------------- | ---------------------------------------------------- |
-| GitHub 账号年限   | `requireGitHubAccountAge()` | 中等 - 提高了新攻击者的门槛                |
+| GitHub 账号年龄   | `requireGitHubAccountAge()` | 中等 - 提高了新攻击者的门槛                |
 | 路径清理    | `sanitizePath()`            | 高 - 防止路径遍历                       |
-| 文件类型验证 | `isTextFile()`              | 中等 - 仅限文本文件，但仍可能存在恶意 |
-| 大小限制          | 总计 50MB           | 高 - 防止资源耗尽                  |
-| 必需 SKILL.md    | 强制自述文件            | 安全价值低 - 仅供参考              |
+| 文件类型验证 | `isTextFile()`              | 中等 - 仅限文本文件，但仍可能具有恶意 |
+| 大小限制          | 总计 50MB 软件包           | 高 - 防止资源耗尽                  |
+| 必需的 SKILL.md    | 强制性自述文件            | 安全价值低 - 仅作参考              |
 | 模式审核   | moderation.ts 中的 FLAG_RULES | 低 - 容易被绕过                                |
 | 审核状态    | `moderationStatus` 字段    | 中等 - 可进行人工审查                      |
 
@@ -473,12 +473,12 @@
 
 ### 4.3 计划改进
 
-| 改进措施            | 状态                                 | 影响                                                                  |
-| ---------------------- | ------------------------------------ | --------------------------------------------------------------------- |
-| VirusTotal 集成 | 进行中                              | 高 - Code Insight 行为分析                                            |
-| 社区举报    | 部分 (`skillReports` 表存在)        | 中                                                                    |
-| 审计日志          | 部分 (`auditLogs` 表存在)           | 中                                                                    |
-| 徽章系统           | 已实施                              | 中 - `highlighted`, `official`, `deprecated`, `redactionApproved` |
+| 改进项                | 状态                                      | 影响                                                                          |
+| --------------------- | ----------------------------------------- | ----------------------------------------------------------------------------- |
+| VirusTotal 集成      | 进行中                                    | 高 - Code Insight 行为分析                                                    |
+| 社区报告             | 部分 (`skillReports` 表已存在) | 中等                                                                          |
+| 审计日志             | 部分 (`auditLogs` 表已存在)    | 中等                                                                          |
+| 徽章系统             | 已实施                                    | 中等 - `highlighted`, `official`, `deprecated`, `redactionApproved` |
 
 ---
 
@@ -574,17 +574,17 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 
 ### 7.2 关键安全文件
 
-| 路径                                | 目的                     | 风险等级   |
-| ----------------------------------- | --------------------------- | ------------ |
-| `src/infra/exec-approvals.ts`       | 命令批准逻辑      | **严重** |
-| `src/gateway/auth.ts`               | 网关认证      | **严重** |
-| `src/web/inbound/access-control.ts` | 通道访问控制      | **严重** |
-| `src/infra/net/ssrf.ts`             | SSRF 防护             | **严重** |
-| `src/security/external-content.ts`  | 提示注入缓解 | **严重** |
-| `src/agents/sandbox/tool-policy.ts` | 工具策略执行     | **严重** |
-| `convex/lib/moderation.ts`          | ClawHub 审核          | **高**     |
-| `convex/lib/skillPublish.ts`        | 技能发布流程       | **高**     |
-| `src/routing/resolve-route.ts`      | 会话隔离           | **中等**   |
+| 路径                                 | 用途                          | 风险等级   |
+| ------------------------------------ | ----------------------------- | ---------- |
+| `src/infra/exec-approvals.ts`       | 命令批准逻辑                   | **严重**   |
+| `src/gateway/auth.ts`               | 网关身份验证                   | **严重**   |
+| `src/web/inbound/access-control.ts` | 通道访问控制                   | **严重**   |
+| `src/infra/net/ssrf.ts`             | SSRF 防护                     | **严重**   |
+| `src/security/external-content.ts`  | 提示词注入缓解                 | **严重**   |
+| `src/agents/sandbox/tool-policy.ts` | 工具策略执行                   | **严重**   |
+| `convex/lib/moderation.ts`          | ClawHub 审核                   | **高**     |
+| `convex/lib/skillPublish.ts`        | 技能发布流程                   | **高**     |
+| `src/routing/resolve-route.ts`      | 会话隔离                       | **中等**   |
 
 ### 7.3 术语表
 

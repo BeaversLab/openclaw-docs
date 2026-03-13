@@ -1,5 +1,5 @@
 ---
-summary: "全局语音唤醒词（网关所有）及其在节点间的同步方式"
+summary: "全局语音唤醒词（由网关拥有）及其在各节点间的同步方式"
 read_when:
   - Changing voice wake words behavior or defaults
   - Adding new node platforms that need wake word sync

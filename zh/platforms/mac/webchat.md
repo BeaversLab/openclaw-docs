@@ -1,5 +1,5 @@
 ---
-summary: "Mac 应用程序如何嵌入网关 WebChat 以及如何调试它"
+summary: "Mac 应用如何嵌入网关 WebChat 以及如何对其进行调试"
 read_when:
   - Debugging mac WebChat view or loopback port
 title: "WebChat"
@@ -24,13 +24,13 @@ macOS 菜单栏应用程序将 WebChat UI 嵌入为原生 SwiftUI 视图。它
   dist/OpenClaw.app/Contents/MacOS/OpenClaw --webchat
   ```
 
-- 日志：`./scripts/clawlog.sh` (子系统 `ai.openclaw`，类别 `WebChatSwiftUI`)。
+- 日志：`./scripts/clawlog.sh`（子系统 `ai.openclaw`，类别 `WebChatSwiftUI`）。
 
 ## 工作原理
 
-- 数据平面：网关 WebSocket 方法 `chat.history`，`chat.send`，`chat.abort`，
+- 数据平面：网关 WS 方法 `chat.history`、`chat.send`、`chat.abort`，
   `chat.inject` 和事件 `chat`、`agent`、`presence`、`tick`、`health`。
-- 会话：默认为主会话（`main`，或者当范围为全局时为 `global` 当范围为
+- 会话：默认为主会话（`main`，或当范围为 `global` 时
   全局时）。该 UI 可以在会话之间切换。
 - 入职引导使用专用会话以将首次运行设置分开。
 

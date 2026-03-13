@@ -1,5 +1,5 @@
 ---
-summary: "针对特定调试日志的诊断标志"
+summary: "针对目标调试日志的诊断标志"
 read_when:
   - You need targeted debug logs without raising global logging levels
   - You need to capture subsystem-specific logs for support
@@ -60,7 +60,7 @@ OPENCLAW_DIAGNOSTICS=0
 /tmp/openclaw/openclaw-YYYY-MM-DD.log
 ```
 
-如果您设置了 `logging.file`，则改用该路径。日志为 JSONL 格式（每行一个 JSON 对象）。编辑仍基于 `logging.redactSensitive` 生效。
+如果您设置了 `logging.file`，请改用该路径。日志为 JSONL 格式（每行一个 JSON 对象）。根据 `logging.redactSensitive`，编辑仍然适用。
 
 ## 提取日志
 
@@ -82,13 +82,13 @@ rg "telegram http error" /tmp/openclaw/openclaw-*.log
 tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
 ```
 
-对于远程网关，您也可以使用 `openclaw logs --follow`（参见 [/cli/logs](/zh/en/cli/logs)）。
+对于远程网关，您也可以使用 `openclaw logs --follow`（请参阅 [/cli/logs](/en/cli/logs)）。
 
 ## 注意事项
 
-- 如果 `logging.level` 设置得高于 `warn`，这些日志可能会被抑制。默认 `info` 即可。
+- 如果 `logging.level` 设置得高于 `warn`，这些日志可能会被抑制。默认的 `info` 即可。
 - 保持启用标志是安全的；它们仅影响特定子系统的日志量。
-- 使用 [/logging](/zh/en/logging) 更改日志目标、级别和编辑。
+- 使用 [/logging](/en/logging) 更改日志目标、级别和编辑。
 
 import zh from '/components/footer/zh.mdx';
 

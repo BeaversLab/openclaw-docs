@@ -1,5 +1,5 @@
 ---
-summary: "代理身份记录"
+summary: "Agent identity record"
 read_when:
   - Bootstrapping a workspace manually
 ---
@@ -25,8 +25,8 @@ _请在你的第一次对话中填写此项。使其成为你自己的._
 
 备注：
 
-- 将此文件保存为 `IDENTITY.md` 在工作区根目录下。
-- 对于头像，请使用像 `avatars/openclaw.png` 这样的工作区相对路径。
+- 将此文件保存到工作区根目录，文件名为 `IDENTITY.md`。
+- 对于头像，请使用相对于工作区的路径，例如 `avatars/openclaw.png`。
 
 import zh from '/components/footer/zh.mdx';
 

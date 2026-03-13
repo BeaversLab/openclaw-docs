@@ -1,15 +1,15 @@
 ---
-summary: "网关、频道、自动化、节点和浏览器的深度故障排查手册"
+summary: "网关、通道、自动化、节点和浏览器的深度排查手册"
 read_when:
   - The troubleshooting hub pointed you here for deeper diagnosis
   - You need stable symptom based runbook sections with exact commands
-title: "故障排查"
+title: "故障排除"
 ---
 
 # 网关故障排查
 
 此页面为深度排查手册。
-如果您想先进行快速分诊流程，请从 [/help/troubleshooting](/zh/en/help/troubleshooting) 开始。
+如果您想先进行快速分诊流程，请从 [/help/troubleshooting](/en/help/troubleshooting) 开始。
 
 ## 命令阶梯
 
@@ -26,8 +26,8 @@ openclaw channels status --probe
 预期的健康信号：
 
 - `openclaw gateway status` 显示 `Runtime: running` 和 `RPC probe: ok`。
-- `openclaw doctor` 报告没有阻碍性的配置/服务问题。
-- `openclaw channels status --probe` 显示已连接/就绪的频道。
+- `openclaw doctor` 报告没有阻止性配置/服务问题。
+- `openclaw channels status --probe` 显示已连接/就绪的通道。
 
 ## Anthropic 429 长上下文需要额外使用量
 
@@ -48,15 +48,15 @@ openclaw config get agents.defaults.models
 
 修复选项：
 
-1. 禁用该模型的 `context1m` 以回退到普通上下文窗口。
+1. 为该模型禁用 `context1m` 以回退到正常的上下文窗口。
 2. 使用带有计费的 Anthropic API 密钥，或者在订阅账户上启用 Anthropic 额外使用量。
 3. 配置回退模型，以便在 Anthropic 长上下文请求被拒绝时继续运行。
 
 相关：
 
-- [/providers/anthropic](/zh/en/providers/anthropic)
-- [/reference/token-use](/zh/en/reference/token-use)
-- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/zh/en/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
+- [/providers/anthropic](/en/providers/anthropic)
+- [/reference/token-use](/en/reference/token-use)
+- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/en/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
 
 ## 无回复
 
@@ -73,20 +73,20 @@ openclaw logs --follow
 查找：
 
 - 私信发送者正在等待配对。
-- 群组提及拦截 (`requireMention`, `mentionPatterns`)。
+- 群组提及过滤 (`requireMention`, `mentionPatterns`)。
 - 频道/群组允许列表不匹配。
 
 常见特征：
 
-- `drop guild message (mention required` → 群组消息被忽略，直至被提及。
-- `pairing request` → 发送者需要审批。
-- `blocked` / `allowlist` → 发送者/频道被策略过滤。
+- `drop guild message (mention required` → 在提及之前忽略群组消息。
+- `pairing request` → 发送者需要批准。
+- `blocked` / `allowlist` → 发送者/通道被策略过滤。
 
 相关：
 
-- [/channels/troubleshooting](/zh/en/channels/troubleshooting)
-- [/channels/pairing](/zh/en/channels/pairing)
-- [/channels/groups](/zh/en/channels/groups)
+- [/channels/troubleshooting](/en/channels/troubleshooting)
+- [/channels/pairing](/en/channels/pairing)
+- [/channels/groups](/en/channels/groups)
 
 ## 仪表板控制 UI 连接性
 
@@ -110,23 +110,23 @@ openclaw gateway status --json
 
 - `device identity required` → 非安全上下文或缺少设备身份验证。
 - `device nonce required` / `device nonce mismatch` → 客户端未完成
-  基于质询的设备身份验证流程 (`connect.challenge` + `device.nonce`)。
-- `device signature invalid` / `device signature expired` → 客户端为当前握手签名了错误的
+  基于挑战的设备身份验证流程 (`connect.challenge` + `device.nonce`)。
+- `device signature invalid` / `device signature expired` → 客户端签署了错误的
   负载（或时间戳过时）。
-- `AUTH_TOKEN_MISMATCH` 附带 `canRetryWithDeviceToken=true` → 客户端可以使用缓存的设备令牌进行一次可信重试。
-- 重试后重复出现 `unauthorized` → 共享令牌/设备令牌漂移；如有需要，请刷新令牌配置并重新批准/轮换设备令牌。
+- `AUTH_TOKEN_MISMATCH` 伴随 `canRetryWithDeviceToken=true` → 客户端可以使用缓存的设备令牌进行一次可信重试。
+- 该重试后反复出现 `unauthorized` → 共享令牌/设备令牌漂移；如需要，请刷新令牌配置并重新批准/轮换设备令牌。
 - `gateway connect failed:` → 错误的主机/端口/URL 目标。
 
 ### Auth 详细代码快速映射
 
 使用失败的 `connect` 响应中的 `error.details.code` 来选择下一步操作：
 
-| 详细代码                  | 含义                                                  | 推荐操作                                                                                                                                                   |
-| ---------------------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH_TOKEN_MISSING`         | 客户端未发送所需的共享令牌。             | 在客户端中粘贴/设置令牌并重试。对于仪表盘路径：`openclaw config get gateway.auth.token` 然后粘贴到控制 UI 设置中。                          |
-| `AUTH_TOKEN_MISMATCH`        | 共享令牌与网关身份验证令牌不匹配。           | 如果 `canRetryWithDeviceToken=true`，允许一次受信任的重试。如果仍然失败，请运行 [令牌漂移恢复检查清单](/zh/en/cli/devices#token-drift-recovery-checklist)。 |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | 缓存的每设备令牌已过期或已撤销。             | 使用 [devices CLI](/zh/en/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                    |
-| `PAIRING_REQUIRED`           | 设备身份已知但未获准用于此角色。 | 批准待处理请求：`openclaw devices list` 然后 `openclaw devices approve <requestId>`。                                                                        |
+| Detail code                  | 含义                                                     | 建议的操作                                                                                                                                                               |
+| ---------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `AUTH_TOKEN_MISSING`         | 客户端未发送所需的共享令牌。                              | 在客户端中粘贴/设置令牌并重试。对于仪表板路径：`openclaw config get gateway.auth.token` 然后粘贴到 Control UI 设置中。                                                                   |
+| `AUTH_TOKEN_MISMATCH`        | 共享令牌与网关身份验证令牌不匹配。                        | 如果 `canRetryWithDeviceToken=true`，则允许一次受信任的重试。如果仍然失败，请运行 [令牌漂移恢复检查清单](/en/cli/devices#token-drift-recovery-checklist)。                               |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | 缓存的每设备令牌已过期或被吊销。                          | 使用 [devices CLI](/en/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                                  |
+| `PAIRING_REQUIRED`           | 设备身份已知，但未获批准用于此角色。                      | 批准待处理的请求：`openclaw devices list` 然后 `openclaw devices approve <requestId>`。                                                                                       |
 
 设备身份验证 v2 迁移检查：
 
@@ -140,14 +140,14 @@ openclaw gateway status
 
 1. 等待 `connect.challenge`
 2. 对绑定挑战的负载进行签名
-3. 发送带有相同挑战 nonce 的 `connect.params.device.nonce`
+3. 使用相同的挑战随机数发送 `connect.params.device.nonce`
 
 相关：
 
-- [/web/control-ui](/zh/en/web/control-ui)
-- [/gateway/authentication](/zh/en/gateway/authentication)
-- [/gateway/remote](/zh/en/gateway/remote)
-- [/cli/devices](/zh/en/cli/devices)
+- [/web/control-ui](/en/web/control-ui)
+- [/gateway/authentication](/en/gateway/authentication)
+- [/gateway/remote](/en/gateway/remote)
+- [/cli/devices](/en/cli/devices)
 
 ## 网关服务未运行
 
@@ -164,20 +164,20 @@ openclaw gateway status --deep
 查找：
 
 - `Runtime: stopped` 带有退出提示。
-- 服务配置不匹配 (`Config (cli)` 与 `Config (service)`)。
+- 服务配置不匹配（`Config (cli)` 对比 `Config (service)`）。
 - 端口/监听器冲突。
 
 常见特征：
 
-- `Gateway start blocked: set gateway.mode=local` → 未启用本地网关模式。修复方法：在配置中设置 `gateway.mode="local"`（或运行 `openclaw configure`）。如果您使用专用的 `openclaw` 用户通过 Podman 运行 OpenClaw，配置位于 `~openclaw/.openclaw/openclaw.json`。
-- `refusing to bind gateway ... without auth` → 非回环绑定且没有令牌/密码。
+- `Gateway start blocked: set gateway.mode=local` → 未启用本地网关模式。修复方法：在配置中设置 `gateway.mode="local"`（或运行 `openclaw configure`）。如果您通过 Podman 使用专用的 `openclaw` 用户运行 OpenClaw，配置文件位于 `~openclaw/.openclaw/openclaw.json`。
+- `refusing to bind gateway ... without auth` → 非环回绑定且没有令牌/密码。
 - `another gateway instance is already listening` / `EADDRINUSE` → 端口冲突。
 
 相关：
 
-- [/gateway/background-process](/zh/en/gateway/background-process)
-- [/gateway/configuration](/zh/en/gateway/configuration)
-- [/gateway/doctor](/zh/en/gateway/doctor)
+- [/gateway/background-process](/en/gateway/background-process)
+- [/gateway/configuration](/en/gateway/configuration)
+- [/gateway/doctor](/en/gateway/doctor)
 
 ## 通道已连接但消息无法流转
 
@@ -199,16 +199,16 @@ openclaw config get channels
 
 常见特征：
 
-- `mention required` → 消息被群组提及策略忽略。
-- `pairing` / 待审批追踪 → 发送者未获得批准。
-- `missing_scope`, `not_in_channel`, `Forbidden`, `401/403` → 通道认证/权限问题。
+- `mention required` → 消息因群组提及策略被忽略。
+- `pairing` / 待批准追踪 → 发送者未获批准。
+- `missing_scope`, `not_in_channel`, `Forbidden`, `401/403` → 频道认证/权限问题。
 
 相关：
 
-- [/channels/troubleshooting](/zh/en/channels/troubleshooting)
-- [/channels/whatsapp](/zh/en/channels/whatsapp)
-- [/channels/telegram](/zh/en/channels/telegram)
-- [/channels/discord](/zh/en/channels/discord)
+- [/channels/troubleshooting](/en/channels/troubleshooting)
+- [/channels/whatsapp](/en/channels/whatsapp)
+- [/channels/telegram](/en/channels/telegram)
+- [/channels/discord](/en/channels/discord)
 
 ## Cron 和心跳传递
 
@@ -225,22 +225,22 @@ openclaw logs --follow
 查找：
 
 - Cron 已启用且存在下次唤醒时间。
-- 任务运行历史状态 (`ok`, `skipped`, `error`)。
+- 作业运行历史状态 (`ok`, `skipped`, `error`)。
 - 心跳跳过原因 (`quiet-hours`, `requests-in-flight`, `alerts-disabled`)。
 
 常见特征：
 
 - `cron: scheduler disabled; jobs will not run automatically` → cron 已禁用。
-- `cron: timer tick failed` → 调度程序时钟信号失败；检查文件/日志/运行时错误。
-- `heartbeat skipped` with `reason=quiet-hours` → 超出活动时段窗口。
-- `heartbeat: unknown accountId` → 心跳发送目标的账号 ID 无效。
-- `heartbeat skipped` with `reason=dm-blocked` → 心跳目标解析为私信（DM）风格的目的地，但 `agents.defaults.heartbeat.directPolicy`（或每个代理的覆盖设置）被设置为 `block`。
+- `cron: timer tick failed` → 调度器计时失败；请检查文件/日志/运行时错误。
+- 带有 `reason=quiet-hours` 的 `heartbeat skipped` → 超出活动小时窗口。
+- `heartbeat: unknown accountId` → 心跳传递目标的账户 ID 无效。
+- 带有 `reason=dm-blocked` 的 `heartbeat skipped` → 心跳目标解析为 DM 风格的目标，而 `agents.defaults.heartbeat.directPolicy`（或每代理覆盖）设置为 `block`。
 
 相关：
 
-- [/automation/troubleshooting](/zh/en/automation/troubleshooting)
-- [/automation/cron-jobs](/zh/en/automation/cron-jobs)
-- [/gateway/heartbeat](/zh/en/gateway/heartbeat)
+- [/automation/troubleshooting](/en/automation/troubleshooting)
+- [/automation/cron-jobs](/en/automation/cron-jobs)
+- [/gateway/heartbeat](/en/gateway/heartbeat)
 
 ## 节点配对工具失败
 
@@ -262,16 +262,16 @@ openclaw status
 
 常见特征：
 
-- `NODE_BACKGROUND_UNAVAILABLE` → 节点应用必须处于前台。
+- `NODE_BACKGROUND_UNAVAILABLE` → 节点应用必须位于前台。
 - `*_PERMISSION_REQUIRED` / `LOCATION_PERMISSION_REQUIRED` → 缺少操作系统权限。
-- `SYSTEM_RUN_DENIED: approval required` → 执行审批待定。
+- `SYSTEM_RUN_DENIED: approval required` → 批准执行待处理。
 - `SYSTEM_RUN_DENIED: allowlist miss` → 命令被允许列表阻止。
 
 相关：
 
-- [/nodes/troubleshooting](/zh/en/nodes/troubleshooting)
-- [/nodes/index](/zh/en/nodes/index)
-- [/tools/exec-approvals](/zh/en/tools/exec-approvals)
+- [/nodes/troubleshooting](/en/nodes/troubleshooting)
+- [/nodes/index](/en/nodes/index)
+- [/tools/exec-approvals](/en/tools/exec-approvals)
 
 ## 浏览器工具失败
 
@@ -289,20 +289,20 @@ openclaw doctor
 
 - 有效的浏览器可执行文件路径。
 - CDP 配置文件的可达性。
-- `profile="chrome"` 的扩展中继标签页连接。
+- `profile="chrome"` 的扩展中继标签页附件。
 
 常见特征：
 
 - `Failed to start Chrome CDP on port` → 浏览器进程启动失败。
 - `browser.executablePath not found` → 配置的路径无效。
-- `Chrome extension relay is running, but no tab is connected` → 扩展中继未连接。
-- `Browser attachOnly is enabled ... not reachable` → 仅连接（attach-only）配置文件没有可达的目标。
+- `Chrome extension relay is running, but no tab is connected` → 未附加扩展中继。
+- `Browser attachOnly is enabled ... not reachable` → 仅附加配置文件没有可访问的目标。
 
 相关：
 
-- [/tools/browser-linux-troubleshooting](/zh/en/tools/browser-linux-troubleshooting)
-- [/tools/chrome-extension](/zh/en/tools/chrome-extension)
-- [/tools/browser](/zh/en/tools/browser)
+- [/tools/browser-linux-troubleshooting](/en/tools/browser-linux-troubleshooting)
+- [/tools/chrome-extension](/en/tools/chrome-extension)
+- [/tools/browser](/en/tools/browser)
 
 ## 如果升级后出现突然故障
 
@@ -319,13 +319,13 @@ openclaw config get gateway.auth.mode
 
 检查事项：
 
-- 如果 `gateway.mode=remote`，CLI 调用可能指向远程，而您的本地服务是正常的。
+- 如果 `gateway.mode=remote`，CLI 调用可能针对远程，而您的本地服务运行正常。
 - 显式的 `--url` 调用不会回退到存储的凭据。
 
 常见特征：
 
-- `gateway connect failed:` → 错误的 URL 目标。
-- `unauthorized` → 端点可达但身份验证错误。
+- `gateway connect failed:` → URL 目标错误。
+- `unauthorized` → 端点可达但认证错误。
 
 ### 2) 绑定和身份验证防护措施更加严格
 
@@ -338,13 +338,13 @@ openclaw logs --follow
 
 检查事项：
 
-- 非回环绑定 (`lan`、`tailnet`、`custom`) 需要配置身份验证。
-- 像 `gateway.token` 这样的旧键不会替换 `gateway.auth.token`。
+- 非环回绑定（`lan`、`tailnet`、`custom`）需要配置认证。
+- 像 `gateway.token` 这样的旧密钥不会替换 `gateway.auth.token`。
 
 常见特征：
 
-- `refusing to bind gateway ... without auth` → 绑定+身份验证不匹配。
-- 运行时运行时出现 `RPC probe: failed` → 网关存活但使用当前的身份验证/URL 无法访问。
+- `refusing to bind gateway ... without auth` → 绑定与认证不匹配。
+- 运行时运行时出现 `RPC probe: failed` → 网关存活但使用当前认证/URL 无法访问。
 
 ### 3) 配对和设备标识状态已更改
 
@@ -362,8 +362,8 @@ openclaw doctor
 
 常见特征：
 
-- `device identity required` → 设备身份验证未满足。
-- `pairing required` → 发送方/设备必须被批准。
+- `device identity required` → 设备认证未满足。
+- `pairing required` → 发送者/设备必须被批准。
 
 如果在检查后服务配置和运行时仍然不一致，请从同一个配置文件/状态目录重新安装服务元数据：
 
@@ -374,9 +374,9 @@ openclaw gateway restart
 
 相关：
 
-- [/gateway/pairing](/zh/en/gateway/pairing)
-- [/gateway/authentication](/zh/en/gateway/authentication)
-- [/gateway/background-process](/zh/en/gateway/background-process)
+- [/gateway/pairing](/en/gateway/pairing)
+- [/gateway/authentication](/en/gateway/authentication)
+- [/gateway/background-process](/en/gateway/background-process)
 
 import zh from '/components/footer/zh.mdx';
 

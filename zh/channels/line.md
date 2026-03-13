@@ -1,5 +1,5 @@
 ---
-summary: LINE Messaging API 插件设置、配置和使用
+summary: "LINE Messaging API 插件设置、配置和使用"
 read_when:
   - You want to connect OpenClaw to LINE
   - You need LINE webhook + credential setup
@@ -43,7 +43,7 @@ openclaw plugins install ./extensions/line
 https://gateway-host/line/webhook
 ```
 
-网关响应 LINE 的 Webhook 验证 (GET) 和传入事件 (POST)。
+网关响应 LINE 的 Webhook 验证（GET）和传入事件（POST）。
 如果您需要自定义路径，请设置 `channels.line.webhookPath` 或
 `channels.line.accounts.<id>.webhookPath` 并相应地更新 URL。
 
@@ -86,7 +86,7 @@ https://gateway-host/line/webhook
 }
 ```
 
-`tokenFile` 和 `secretFile` 必须指向常规文件。符号链接会被拒绝。
+`tokenFile` 和 `secretFile` 必须指向常规文件。拒绝符号链接。
 
 多个账户：
 
@@ -117,12 +117,12 @@ openclaw pairing approve line <CODE>
 
 允许列表与策略：
 
-- `channels.line.dmPolicy`: `pairing | allowlist | open | disabled`
-- `channels.line.allowFrom`: 私信的允许列表 LINE 用户 ID
-- `channels.line.groupPolicy`: `allowlist | open | disabled`
-- `channels.line.groupAllowFrom`: 群组的允许列表 LINE 用户 ID
-- 按群组覆盖：`channels.line.groups.<groupId>.allowFrom`
-- 运行时说明：如果完全缺少 `channels.line`，运行时将回退到 `groupPolicy="allowlist"` 进行群组检查（即使设置了 `channels.defaults.groupPolicy`）。
+- `channels.line.dmPolicy`：`pairing | allowlist | open | disabled`
+- `channels.line.allowFrom`：私信的允许访问的 LINE 用户 ID
+- `channels.line.groupPolicy`：`allowlist | open | disabled`
+- `channels.line.groupAllowFrom`：群组的允许访问的 LINE 用户 ID
+- 按组覆盖：`channels.line.groups.<groupId>.allowFrom`
+- 运行时注意：如果完全缺少 `channels.line`，运行时会回退到 `groupPolicy="allowlist"` 进行群组检查（即使设置了 `channels.defaults.groupPolicy`）。
 
 LINE ID 区分大小写。有效的 ID 如下所示：
 
@@ -141,7 +141,8 @@ LINE ID 区分大小写。有效的 ID 如下所示：
 
 ## 频道数据（富消息）
 
-使用 `channelData.line` 发送快速回复、位置、Flex 卡片或模板消息。
+使用 `channelData.line` 发送快速回复、位置、Flex 卡片或模板
+消息。
 
 ```json5
 {
@@ -174,7 +175,7 @@ LINE ID 区分大小写。有效的 ID 如下所示：
 }
 ```
 
-LINE 插件还提供了一个 `/card` 命令用于 Flex 消息预设：
+LINE 插件还附带了一个用于 Flex 消息预设的 `/card` 命令：
 
 ```
 /card info "Welcome" "Thanks for joining!"
@@ -184,9 +185,9 @@ LINE 插件还提供了一个 `/card` 命令用于 Flex 消息预设：
 
 - **Webhook 验证失败：** 请确保 Webhook URL 是 HTTPS 且
   `channelSecret` 与 LINE 控制台匹配。
-- **没有入站事件：** 请确认 Webhook 路径匹配 `channels.line.webhookPath`
+- **无传入事件：**确认 Webhook 路径与 `channels.line.webhookPath` 匹配
   并且网关可从 LINE 访问。
-- **媒体下载错误：** 如果媒体超过默认限制，则引发 `channels.line.mediaMaxMb`
+- **媒体下载错误：** 如果媒体超出限制，则引发 `channels.line.mediaMaxMb`
   默认限制。
 
 import zh from '/components/footer/zh.mdx';

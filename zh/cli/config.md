@@ -1,14 +1,15 @@
 ---
-summary: “`openclaw config` 的 CLI 参考（get/set/unset/file/validate）”
+summary: "`openclaw config` (get/set/unset/file/validate) 的 CLI 参考"
 read_when:
   - You want to read or edit config non-interactively
-title: “config”
+title: "config"
 ---
 
 # `openclaw config`
 
-配置助手：按路径 get/set/unset/validate 值并打印当前活动的配置文件。
-不带子命令运行以打开配置向导（与 `openclaw configure` 相同）。
+配置助手：按路径 get/set/unset/validate 值并打印活动
+配置文件。不带子命令运行以打开
+配置向导（与 `openclaw configure` 相同）。
 
 ## 示例
 
@@ -41,8 +42,8 @@ openclaw config set agents.list[1].tools.exec.node "node-id-or-name"
 
 ## 值
 
-值在可能的情况下被解析为 JSON5；否则它们将被视为字符串。
-使用 `--strict-json` 来强制进行 JSON5 解析。`--json` 仍作为遗留别名受到支持。
+如果可能，值将被解析为 JSON5；否则将视为字符串。
+使用 `--strict-json` 强制进行 JSON5 解析。`--json` 作为遗留别名仍然受支持。
 
 ```bash
 openclaw config set agents.defaults.heartbeat.every "0m"
@@ -52,7 +53,7 @@ openclaw config set channels.whatsapp.groups '["*"]' --strict-json
 
 ## 子命令
 
-- `config file`：打印当前活动的配置文件路径（从 `OPENCLAW_CONFIG_PATH` 解析或默认位置）。
+- `config file`：打印活动配置文件路径（从 `OPENCLAW_CONFIG_PATH` 或默认位置解析）。
 
 编辑后重启网关。
 

@@ -6,7 +6,7 @@
 
 ### 添加威胁
 
-发现了我们未涵盖的攻击向量或风险？请在 [openclaw/trust](https://github.com/openclaw/trust/issues) 上提出 issue 并用您自己的话进行描述。您不需要了解任何框架或填写每个字段——只需描述场景即可。
+发现了我们尚未涵盖的攻击向量或风险？在 [openclaw/trust](https://github.com/openclaw/trust/issues) 上提出一个 issue 并用自己的话描述它。您不需要了解任何框架或填写每个字段——只需描述该场景即可。
 
 **最好包含的内容（非必须）：**
 
@@ -17,7 +17,7 @@
 
 我们会在审查期间处理 ATLAS 映射、威胁 ID 和风险评估。如果您想包含这些详细信息，那很好——但这并不是预期的要求。
 
-> **这是用于添加到威胁模型中，而非报告实时漏洞。** 如果您发现了可利用的漏洞，请参阅我们的 [Trust 页面](https://trust.openclaw.ai) 了解负责任的披露说明。
+> **这是为了添加到威胁模型中，而不是报告实时漏洞。** 如果您发现了可利用的漏洞，请参阅我们的 [Trust 页面](https://trust.openclaw.ai) 了解负责任的披露说明。
 
 ### 建议缓解措施
 
@@ -35,11 +35,11 @@
 
 ### MITRE ATLAS
 
-此威胁模型基于 [MITRE ATLAS](https://atlas.mitre.org/)（AI 系统对抗性威胁全景），这是一个专为提示词注入、工具滥用和代理利用等 AI/ML 威胁设计的框架。您无需了解 ATLAS 即可做出贡献——我们会在审查期间将提交内容映射到该框架。
+此威胁模型基于 [MITRE ATLAS](https://atlas.mitre.org/)（AI 系统对抗性威胁全景）构建，该框架专为针对 AI/ML 的威胁（如提示注入、工具滥用和代理利用）而设计。您不需要了解 ATLAS 也能做出贡献——我们会在审查期间将提交的内容映射到该框架。
 
 ### 威胁 ID
 
-每个威胁都会获得一个类似 `T-EXEC-003` 的 ID。类别如下：
+每个威胁都有一个类似 `T-EXEC-003` 的 ID。类别包括：
 
 | 代码    | 类别                                   |
 | ------- | ------------------------------------------ |
@@ -77,12 +77,12 @@ ID 由维护者在审查期间分配。您无需选择一个。
 - [ATLAS 网站](https://atlas.mitre.org/)
 - [ATLAS 技术](https://atlas.mitre.org/techniques/)
 - [ATLAS 案例研究](https://atlas.mitre.org/studies/)
-- [OpenClaw 威胁模型](/zh/en/security/THREAT-MODEL-ATLAS)
+- [OpenClaw 威胁模型](/en/security/THREAT-MODEL-ATLAS)
 
 ## 联系方式
 
-- **安全漏洞：** 请参阅我们的[信任页面](https://trust.openclaw.ai)了解报告说明
-- **威胁模型问题：** 在 [openclaw/trust](https://github.com/openclaw/trust/issues) 上提出 issue
+- **安全漏洞：** 请参阅我们的 [Trust 页面](https://trust.openclaw.ai) 了解报告说明
+- **威胁模型相关问题：** 在 [openclaw/trust](https://github.com/openclaw/trust/issues) 上提出一个 issue
 - **常规交流：** Discord #security 频道
 
 ## 致谢

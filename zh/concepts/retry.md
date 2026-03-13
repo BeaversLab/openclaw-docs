@@ -1,9 +1,9 @@
 ---
-summary: 针对出站提供商调用的重试策略
+summary: "出站提供程序调用的重试策略"
 read_when:
   - Updating provider retry behavior or defaults
   - Debugging provider send errors or rate limits
-title: 重试策略
+title: "重试策略"
 ---
 
 # 重试策略
@@ -28,17 +28,17 @@ title: 重试策略
 ### Discord
 
 - 仅在速率限制错误（HTTP 429）时重试。
-- 如果可用，使用 Discord `retry_after`，否则使用指数退避。
+- 尽可能使用 Discord `retry_after`，否则使用指数退避。
 
 ### Telegram
 
 - 在瞬时错误（429、超时、连接/重置/关闭、暂时不可用）时重试。
-- 如果可用，使用 `retry_after`，否则使用指数退避。
+- 尽可能使用 `retry_after`，否则使用指数退避。
 - Markdown 解析错误不会重试；它们会回退到纯文本。
 
 ## 配置
 
-在 `~/.openclaw/openclaw.json` 中为每个提供商设置重试策略：
+在 `~/.openclaw/openclaw.json` 中为每个提供程序设置重试策略：
 
 ```json5
 {

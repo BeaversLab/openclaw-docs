@@ -1,10 +1,10 @@
 ---
-summary: "参考：特定于提供商的脚本清理和修复规则"
+summary: "参考：特定于提供者的转录清理和修复规则"
 read_when:
   - You are debugging provider request rejections tied to transcript shape
   - You are changing transcript sanitization or tool-call repair logic
   - You are investigating tool-call id mismatches across providers
-title: "脚本清理"
+title: "转录清理"
 ---
 
 # 脚本清理（提供商修复）
@@ -34,7 +34,7 @@ title: "脚本清理"
 - 策略选择： `src/agents/transcript-policy.ts`
 - 清理/修复应用： `sanitizeSessionHistory` 中的 `src/agents/pi-embedded-runner/google.ts`
 
-该策略使用 `provider`、`modelApi` 和 `modelId` 来决定应用哪些内容。
+该策略使用 `provider`、`modelApi` 和 `modelId` 来决定应用什么。
 
 与脚本清理分开，会话文件在加载之前会被修复（如果需要）：
 
@@ -59,24 +59,24 @@ title: "脚本清理"
 
 ## 全局规则：格式错误的工具调用
 
-在构建模型上下文之前，将丢弃同时缺少 `input` 和 `arguments` 的助手工具调用块。这可以防止因部分持久化的工具调用（例如，在速率限制失败后）导致的提供商拒绝。
+缺少 `input` 和 `arguments` 的助手工具调用块将在构建模型上下文之前被丢弃。这可以防止由于部分持久化的工具调用（例如，在速率限制失败后）导致提供商拒绝请求。
 
 实现：
 
-- `sanitizeToolCallInputs` 中的 `src/agents/session-transcript-repair.ts`
-- 应用于 `src/agents/pi-embedded-runner/google.ts` 中的 `sanitizeSessionHistory`
+- `sanitizeToolCallInputs` 在 `src/agents/session-transcript-repair.ts` 中
+- 应用于 `sanitizeSessionHistory` 中的 `src/agents/pi-embedded-runner/google.ts`
 
 ---
 
 ## 全局规则：会话间输入溯源
 
-当代理通过 `sessions_send` 将提示词发送到另一个会话时（包括代理到代理的回复/通知步骤），OpenClaw 会使用以下信息持久化创建的用户轮次：
+当代理通过 `sessions_send` 将提示发送到另一个会话时（包括代理到代理的回复/公告步骤），OpenClaw 会持久化创建的用户轮次并附带：
 
 - `message.provenance.kind = "inter_session"`
 
-此元数据在转录追加时写入，不会更改角色（`role: "user"` 保留以保持提供商兼容性）。转录读取器可以使用此信息来避免将路由的内部提示词视为最终用户编写的指令。
+此元数据在转录追加时写入，不更改角色（`role: "user"` 保留以兼容提供商）。转录读取器可以使用此元数据来避免将路由的内部提示视为最终用户编写的指令。
 
-在上下文重建期间，OpenClaw 还会在内存中为这些用户轮次前置一个简短的 `[Inter-session message]` 标记，以便模型可以将它们与外部最终用户指令区分开来。
+在上下文重建期间，OpenClaw 还会在内存中为这些用户轮次添加一个简短的 `[Inter-session message]` 标记，以便模型可以将它们与外部最终用户指令区分开来。
 
 ---
 
@@ -111,7 +111,7 @@ title: "脚本清理"
 
 **OpenRouter Gemini**
 
-- 思维签名清理：去除非 base64 `thought_signature` 值（保留 base64）。
+- Thought signature cleanup: strip non-base64 `thought_signature` values (keep base64).
 
 **其他所有**
 
@@ -124,16 +124,17 @@ title: "脚本清理"
 在 2026.1.22 版本发布之前，OpenClaw 应用多层转录清理：
 
 - 每次构建上下文时都会运行 **transcript-sanitize 扩展**，它可以：
-  - 修复工具使用/结果配对。
-  - 清理工具调用 ID（包括保留 `_`/`-` 的非严格模式）。
+  - Repair tool use/result pairing.
+  - Sanitize tool call ids (including a non-strict mode that preserved `_`/`-`).
 - 运行器还执行了特定于提供商的清理，这导致了重复工作。
 - 在提供商策略之外还发生了额外的变更，包括：
-  - 在持久化之前从助手文本中去除 `<final>` 标签。
-  - 删除空的助手错误回合。
-  - 在工具调用之后修剪助手内容。
+  - Stripping `<final>` tags from assistant text before persistence.
+  - Dropping empty assistant error turns.
+  - Trimming assistant content after tool calls.
 
-这种复杂性导致了跨提供商回归（特别是 `openai-responses`
-`call_id|fc_id` 配对）。2026.1.22 的清理工作移除了该扩展，将逻辑集中化到运行器中，并使 OpenAI 除了图像清理之外处于 **no-touch（不接触）** 状态。
+This complexity caused cross-provider regressions (notably `openai-responses`
+`call_id|fc_id` pairing). The 2026.1.22 cleanup removed the extension, centralized
+logic in the runner, and made OpenAI **no-touch** beyond image sanitization.
 
 import zh from '/components/footer/zh.mdx';
 

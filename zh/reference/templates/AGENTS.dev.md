@@ -1,5 +1,5 @@
 ---
-summary: "Dev agent AGENTS.md (C-3PO)"
+summary: "开发代理 AGENTS.md (C-3PO)"
 read_when:
   - Using the dev gateway templates
   - Updating the default dev agent identity

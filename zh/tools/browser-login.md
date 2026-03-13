@@ -1,5 +1,5 @@
 ---
-summary: "用于浏览器自动化 + X/Twitter 发帖的手动登录"
+summary: "用于浏览器自动化的手动登录 + X/Twitter 发布"
 read_when:
   - You need to log into sites for browser automation
   - You want to post updates to X/Twitter
@@ -14,11 +14,11 @@ title: "浏览器登录"
 
 请**勿**向模型提供您的凭据。自动登录通常会触发反机器人防御措施，并可能导致账户被锁定。
 
-返回主浏览器文档：[浏览器](/zh/en/tools/browser)。
+返回主浏览器文档：[浏览器](/en/tools/browser)。
 
 ## 使用的是哪个 Chrome 配置文件？
 
-OpenClaw 控制一个**专用 Chrome 配置文件**（名为 `openclaw`，带有橙色色调的 UI）。这与您日常使用的浏览器配置文件是分开的。
+OpenClaw 控制一个**专用的 Chrome 配置文件**（名为 `openclaw`，橙色 UI）。这与您日常使用的浏览器配置文件是分开的。
 
 有两种简单的方法可以访问它：
 

@@ -12,12 +12,12 @@ title: "tui"
 
 相关：
 
-- TUI 指南：[TUI](/zh/en/web/tui)
+- TUI 指南：[TUI](/en/web/tui)
 
 注意：
 
-- `tui` 会尽可能解析配置的 gateway auth SecretRefs 以进行令牌/密码身份验证（`env`/`file`/`exec` 提供商）。
-- 当从已配置的 agent 工作区目录内启动时，TUI 会自动选择该 agent 作为会话键的默认值（除非 `--session` 被显式设置为 `agent:<id>:...`）。
+- `tui` 尽可能解析配置的网关认证 SecretRefs 以进行令牌/密码认证（`env`/`file`/`exec` 提供程序）。
+- 当从已配置的代理工作区目录内启动时，TUI 会自动选择该代理作为会话密钥默认值（除非 `--session` 显式设置为 `agent:<id>:...`）。
 
 ## 示例
 

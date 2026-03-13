@@ -17,7 +17,7 @@ OpenClaw 将来自聊天渠道的共享位置标准化为：
 
 - **Telegram**（位置定位点 + 场所 + 实时位置）
 - **WhatsApp**（locationMessage + liveLocationMessage）
-- **Matrix**（`m.location` 带有 `geo_uri`）
+- **Matrix** (`m.location` 与 `geo_uri`)
 
 ## 文本格式
 
@@ -39,21 +39,21 @@ Meet here
 
 ## 上下文字段
 
-当存在位置时，这些字段会添加到 `ctx`：
+当存在位置时，这些字段将添加到 `ctx` 中：
 
-- `LocationLat`（数字）
-- `LocationLon`（数字）
-- `LocationAccuracy`（数字，米；可选）
-- `LocationName`（字符串；可选）
-- `LocationAddress`（字符串；可选）
-- `LocationSource`（`pin | place | live`）
-- `LocationIsLive`（布尔值）
+- `LocationLat` (number)
+- `LocationLon` (number)
+- `LocationAccuracy` (number, meters; optional)
+- `LocationName` (string; optional)
+- `LocationAddress` (string; optional)
+- `LocationSource` (`pin | place | live`)
+- `LocationIsLive` (boolean)
 
 ## 渠道说明
 
 - **Telegram**：场所映射到 `LocationName/LocationAddress`；实时位置使用 `live_period`。
-- **WhatsApp**：`locationMessage.comment` 和 `liveLocationMessage.caption` 被附加为标题行。
-- **Matrix**：`geo_uri` 被解析为定位点位置；海拔高度被忽略，并且 `LocationIsLive` 始终为 false。
+- **WhatsApp**：`locationMessage.comment` 和 `liveLocationMessage.caption` 作为标题行附加。
+- **Matrix**：`geo_uri` 被解析为固定位置；海拔被忽略，且 `LocationIsLive` 始终为 false。
 
 import zh from '/components/footer/zh.mdx';
 

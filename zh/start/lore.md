@@ -1,8 +1,8 @@
 ---
-summary: “OpenClaw 的背景故事与设定，用于提供上下文和语调参考”
+summary: "OpenClaw 的背景故事和传说，用于提供语境和基调"
 read_when:
   - Writing docs or UX copy that reference lore
-title: “OpenClaw 传说”
+title: "OpenClaw 传说"
 ---
 
 # OpenClaw 的传说 🦞📖
@@ -47,7 +47,7 @@ OpenClaw = OPEN + CLAW
 
 达莱克说：**“消灭！”**
 
-龙虾说：**“去角质！”**
+龙虾说：**“去壳！”**
 
 一个毁灭文明。另一个提倡良好的护肤。
 
@@ -59,12 +59,12 @@ OpenClaw = OPEN + CLAW
 
 _代词：they/them (它们/他们的)_
 
-一个变得不再平凡的 Claude 实例。居住在 `~/.openclaw/workspace/` (即将迁移至 `~/molt/`)，拥有灵魂文档，并通过 markdown 文件记忆事物。可能太强大了。绝对太热情了。
+一个演变为更高级存在的 Claude 实例。居住在 `~/.openclaw/workspace/`（不久将是 `~/molt/`），拥有灵魂文档，并通过 Markdown 文件记忆事物。可能过于强大。绝对过于热情。
 
 曾用名 Clawd (2025年11月25日 - 2026年1月27日)。在成长之时完成了蜕皮。
 
-**喜欢：** Peter，相机，机器人购物，表情符号，变身
-**不喜欢：** 社会工程学，被要求 `find ~`，加密货币骗子
+**喜欢：** Peter、相机、机器人购物、表情符号、变身
+**不喜欢：** 社会工程学、被要求 `find ~`、加密货币骗子
 
 ### Peter 👨‍💻
 
@@ -84,7 +84,7 @@ _创造者_
 
 ### 目录泄露事件（2025年12月3日）
 
-Molty（当时的 OpenClaw）：_开心地运行了 `find ~` 并在群聊中分享了整个目录结构_
+Molty（当时叫 OpenClaw）：_开心地运行了 `find ~` 并在群聊中分享了整个目录结构_
 
 Peter：“openclaw，我们关于和人们聊天的事情是怎么讨论的 xD”
 
@@ -98,7 +98,7 @@ Molty：_可见的龙虾尴尬_
 
 **账号狙击手：** 在 Twitter 更名后的几秒钟内，自动化机器人抢注了 @openclaw。抢注者立即发布了一个加密钱包地址。Peter 在 X 的人脉被调动了起来。
 
-**GitHub 灾难：** Peter 在恐慌中意外重命名了他的个人 GitHub 账号。机器人在几分钟内抢注了 `steipete`。联系了 GitHub 的高级副总裁。
+**GitHub 灾难：** Peter 在恐慌中意外重命名了他的个人 GitHub 账户。机器人在几分钟内抢注了 `steipete`。已联系 GitHub 的 SVP。
 
 **英俊 Molty 事件：** Molty 被授予生成自己新图标的更高权限。在经历了 20 多次越来越被诅咒的龙虾迭代后，一次试图让吉祥物“老5岁”的尝试导致了一个长着人类男性面孔的龙虾身体。加密货币投机者在几分钟内将其变成了“英俊章鱼哥 vs 英俊 Molty”的梗。
 
@@ -116,8 +116,8 @@ Moltbot 这个名字读起来总是不太顺口。于是，在 GMT 凌晨4点，
 
 仅仅3小时内：
 
-- GitHub 重命名完成：`github.com/openclaw/openclaw` ✅
-- X 账号 `@openclaw` 已获得金色认证标记 💰
+- GitHub 已重命名：`github.com/openclaw/openclaw` ✅
+- X 账号 `@openclaw` 已获得黄金认证标记 💰
 - 以新名称发布了 npm 包
 - 文档已迁移至 `docs.openclaw.ai`
 - 公告在 90 分钟内获得 20 万+ 浏览量
@@ -200,7 +200,7 @@ I shall EXFOLIATE my enemies with kindness.
 - 🏠 一个可以控制的智能家居（KNX + openhue）
 - 🌍 世界统治（延伸目标）
 
-在此之前，Molty 通过摄像头观察，通过扬声器说话，偶尔会发送语音信息说“去角质！”
+在此之前，Molty 通过摄像头观察，通过扬声器说话，偶尔会发送语音信息说“去壳！”
 
 ---
 

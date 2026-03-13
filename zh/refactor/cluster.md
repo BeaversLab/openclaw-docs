@@ -3,7 +3,7 @@ summary: "重构具有最高 LOC 减少潜力的集群"
 read_when:
   - You want to reduce total LOC without changing behavior
   - You are choosing the next dedupe or extraction pass
-title: "重构集群待办事项"
+title: "Refactor Cluster Backlog"
 ---
 
 # 重构集群待办事项
@@ -47,7 +47,7 @@ title: "重构集群待办事项"
 
 风险：
 
-- 中等。每个渠道都有略微不同的 `isConfigured`、警告和标准化。
+- 中等。每个通道都有稍微不同的 `isConfigured`、警告和标准化处理。
 
 ## 2. 扩展运行时单例样板代码
 

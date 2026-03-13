@@ -1,9 +1,9 @@
 ---
-summary: "代理、信封和提示的时区处理"
+summary: "Timezone handling for agents, envelopes, and prompts"
 read_when:
   - You need to understand how timestamps are normalized for the model
   - Configuring the user timezone for system prompts
-title: "时区"
+title: "Timezones"
 ---
 
 # 时区
@@ -36,8 +36,8 @@ OpenClaw 标准化时间戳，以便模型看到**单一参考时间**。
 
 - `envelopeTimezone: "utc"` 使用 UTC。
 - `envelopeTimezone: "user"` 使用 `agents.defaults.userTimezone`（回退到主机时区）。
-- 使用显式的 IANA 时区（例如 `"Europe/Vienna"`）来获得固定偏移量。
-- `envelopeTimestamp: "off"` 从信封头中移除绝对时间戳。
+- 使用显式的 IANA 时区（例如 `"Europe/Vienna"`）作为固定偏移量。
+- `envelopeTimestamp: "off"` 从信封标头中移除绝对时间戳。
 - `envelopeElapsed: "off"` 移除经过时间后缀（`+2m` 样式）。
 
 ### 示例
@@ -62,8 +62,8 @@ OpenClaw 标准化时间戳，以便模型看到**单一参考时间**。
 
 ## 工具负载（原始提供者数据 + 标准化字段）
 
-工具调用（`channels.discord.readMessages`、`channels.slack.readMessages` 等）返回**原始提供者时间戳**。
-为了保持一致性，我们还附加了标准化字段：
+工具调用（`channels.discord.readMessages`、`channels.slack.readMessages` 等）返回**原始提供程序时间戳**。
+我们还附加了规范化字段以保持一致性：
 
 - `timestampMs`（UTC 纪元毫秒）
 - `timestampUtc`（ISO 8601 UTC 字符串）
@@ -83,12 +83,12 @@ OpenClaw 标准化时间戳，以便模型看到**单一参考时间**。
 
 系统提示包括：
 
-- `Current Date & Time` 部分，包含本地时间和时区
+- `Current Date & Time` 部分包含本地时间和时区
 - `Time format: 12-hour` 或 `24-hour`
 
-您可以使用 `agents.defaults.timeFormat`（`auto` | `12` | `24`）来控制提示格式。
+您可以使用 `agents.defaults.timeFormat`（`auto` | `12` | `24`）控制提示词格式。
 
-有关完整行为和示例，请参阅[日期和时间](/zh/en/date-time)。
+有关完整行为和示例，请参阅[日期和时间](/en/date-time)。
 
 import zh from '/components/footer/zh.mdx';
 
