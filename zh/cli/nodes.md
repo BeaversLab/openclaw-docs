@@ -73,3 +73,7 @@ openclaw nodes run --agent main --node <id|name|ip> --raw "git status"
   （仅允许列表条目不会自动允许封装形式）。
 - `--agent <id>`：代理范围的批准/允许列表（默认为配置的代理）。
 - `--ask <off|on-miss|always>`, `--security <deny|allowlist|full>`: 覆盖。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

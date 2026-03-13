@@ -217,3 +217,7 @@ read_when:
 ## 使其成为您自己的
 
 这只是一个起点。当您弄清楚什么有效时，添加您自己的约定、风格和规则。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

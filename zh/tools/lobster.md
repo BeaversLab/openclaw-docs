@@ -337,3 +337,7 @@ OpenProse 与 Lobster 搭配得很好：使用 `/prose` 编排多智能体准备
 
 - 主题：[https://x.com/plattenschieber/status/2014508656335770033](https://x.com/plattenschieber/status/2014508656335770033)
 - 仓库：[https://github.com/bloomedai/brain-cli](https://github.com/bloomedai/brain-cli)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

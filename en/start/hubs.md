@@ -192,3 +192,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Testing](/en/reference/test)
 - [Release checklist](/en/reference/RELEASING)
 - [Device models](/en/reference/device-models)
+
+import en from '/components/footer/en.mdx';
+
+<en />

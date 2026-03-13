@@ -149,3 +149,7 @@ Sandbox 设置位于 `agents.defaults.sandbox` 下的 `~/.openclaw/openclaw.json
 - [Sandbox 文档](/zh/en/gateway/sandboxing)
 - [代理配置](/zh/en/concepts/agent-workspace)
 - [Doctor 命令](/zh/en/gateway/doctor) - 检查 Sandbox 设置
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

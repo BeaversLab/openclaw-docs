@@ -240,3 +240,7 @@ openclaw browser tabs --browser-profile chrome
 - 首先在本地验证 Windows Chrome 端点
 - 其次从 WSL2 验证同一端点
 - 然后再调试 OpenClaw 配置或 Control UI 身份验证
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -156,3 +156,7 @@ await web_search({
 
 有关完整的 web_search 配置，请参阅 [Web 工具](/zh/en/tools/web)。
 有关更多详细信息，请参阅 [Perplexity Search API 文档](https://docs.perplexity.ai/docs/search/quickstart)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

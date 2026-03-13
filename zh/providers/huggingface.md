@@ -207,3 +207,7 @@ GET https://router.huggingface.co/v1/models
   },
 }
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

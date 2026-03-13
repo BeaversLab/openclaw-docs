@@ -135,3 +135,7 @@ openclaw plugins install ./extensions/nextcloud-talk
 - `channels.nextcloud-talk.blockStreaming`: 禁用此通道的块流式传输。
 - `channels.nextcloud-talk.blockStreamingCoalesce`: 块流式传输合并调整。
 - `channels.nextcloud-talk.mediaMaxMb`: 入站媒体限制（MB）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

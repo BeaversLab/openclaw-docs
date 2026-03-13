@@ -40,3 +40,7 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，
 - [Qianfan](/zh/en/providers/qianfan)
 
 有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，请参阅 [模型提供商](/zh/en/concepts/model-providers)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

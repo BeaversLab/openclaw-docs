@@ -102,3 +102,7 @@ See [OpenAI provider](/en/providers/openai) for model params and overrides.
 - Use `/compact` when sessions feel stale or context is bloated.
 - Large tool outputs are already truncated; pruning can further reduce tool-result buildup.
 - If you need a fresh slate, `/new` or `/reset` starts a new session id.
+
+import en from '/components/footer/en.mdx';
+
+<en />

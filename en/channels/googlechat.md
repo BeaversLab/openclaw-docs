@@ -259,3 +259,7 @@ Related docs:
 - [Gateway configuration](/en/gateway/configuration)
 - [Security](/en/gateway/security)
 - [Reactions](/en/tools/reactions)
+
+import en from '/components/footer/en.mdx';
+
+<en />

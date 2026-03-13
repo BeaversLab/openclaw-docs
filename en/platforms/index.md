@@ -51,3 +51,7 @@ The service target depends on OS:
 
 - macOS: LaunchAgent (`ai.openclaw.gateway` or `ai.openclaw.<profile>`; legacy `com.openclaw.*`)
 - Linux/WSL2: systemd user service (`openclaw-gateway[-<profile>].service`)
+
+import en from '/components/footer/en.mdx';
+
+<en />

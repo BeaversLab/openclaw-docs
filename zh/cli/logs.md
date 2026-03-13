@@ -26,3 +26,7 @@ openclaw logs --follow --local-time
 ```
 
 使用 `--local-time` 以您的本地时区显示时间戳。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

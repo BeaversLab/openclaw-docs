@@ -218,3 +218,7 @@ swift run openclaw-mac discover --timeout 3000 --json
 - [Gateway (macOS)](/zh/en/platforms/mac/bundled-gateway)
 - [macOS 权限](/zh/en/platforms/mac/permissions)
 - [Canvas](/zh/en/platforms/mac/canvas)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

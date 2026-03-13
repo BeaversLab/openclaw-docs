@@ -33,3 +33,7 @@ title: "使用情况跟踪"
 - **z.ai**：通过 env/config/auth store 提供的 API 密钥。
 
 如果不存在匹配的 OAuth/API 凭据，使用情况将被隐藏。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

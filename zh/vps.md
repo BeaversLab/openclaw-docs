@@ -97,3 +97,7 @@ TimeoutStartSec=90
 
 `Restart=` 策略如何帮助自动恢复：
 [systemd 可以自动化服务恢复](https://www.redhat.com/en/blog/systemd-automate-recovery)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

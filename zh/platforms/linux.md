@@ -91,3 +91,7 @@ WantedBy=default.target
 ```
 systemctl --user enable --now openclaw-gateway[-<profile>].service
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

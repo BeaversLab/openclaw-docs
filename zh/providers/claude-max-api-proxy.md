@@ -150,3 +150,7 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
 
 - [Anthropic 提供商](/zh/en/providers/anthropic) - 使用 Claude 设置令牌或 API 密钥的 OpenClaw 原生集成
 - [OpenAI 提供商](/zh/en/providers/openai) - 用于 OpenAI/Codex 订阅
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

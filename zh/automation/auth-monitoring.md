@@ -42,3 +42,7 @@ openclaw models status --check
 - `scripts/termux-sync-widget.sh`：同步 Claude Code 凭据 → OpenClaw。
 
 如果您不需要手机自动化或 systemd 定时器，请跳过这些脚本。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

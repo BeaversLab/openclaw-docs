@@ -75,3 +75,7 @@ title: "Skills 配置"
 - 将环境变量 baked 到您的自定义沙盒镜像中
 
 全局 `env` 和 `skills.entries.<skill>.env/apiKey` 仅适用于**主机**运行。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

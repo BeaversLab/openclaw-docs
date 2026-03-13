@@ -226,3 +226,7 @@ If you want a minimal, still-useful version:
 - Letta / MemGPT concepts: “core memory blocks” + “archival memory” + tool-driven self-editing memory.
 - Hindsight Technical Report: “retain / recall / reflect”, four-network memory, narrative fact extraction, opinion confidence evolution.
 - SuCo: arXiv 2411.14754 (2024): “Subspace Collision” approximate nearest neighbor retrieval.
+
+import en from '/components/footer/en.mdx';
+
+<en />

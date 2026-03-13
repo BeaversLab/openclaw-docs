@@ -178,3 +178,7 @@ OpenClaw 还为 Moonshot 映射了运行时 `/think` 级别：
 - 任何非关闭的思考级别 -> `thinking.type=enabled`
 
 启用 Moonshot 思考时，`tool_choice` 必须为 `auto` 或 `none`。OpenClaw 会将不兼容的 `tool_choice` 值规范化为 `auto` 以确保兼容性。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -79,3 +79,7 @@ title: "Menu Bar"
 - Start main while other active: icon flips to main instantly.
 - Rapid tool bursts: ensure badge does not flicker (TTL grace on tool results).
 - Health row reappears once all sessions idle.
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -276,3 +276,7 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 - `--server-args <args...>`：传递给 ACP 服务器的额外参数。
 - `--server-verbose`：在 ACP 服务器上启用详细日志记录。
 - `--verbose, -v`：详细的客户端日志记录。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

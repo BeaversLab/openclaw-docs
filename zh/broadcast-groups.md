@@ -440,3 +440,7 @@ interface OpenClawConfig {
 - [多代理配置](/zh/en/multi-agent-sandbox-tools)
 - [路由配置](/zh/en/concepts/channel-routing)
 - [会话管理](/zh/en/concepts/sessions)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

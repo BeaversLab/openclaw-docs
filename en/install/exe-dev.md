@@ -124,3 +124,7 @@ openclaw health
 ```
 
 Guide: [Updating](/en/install/updating)
+
+import en from '/components/footer/en.mdx';
+
+<en />

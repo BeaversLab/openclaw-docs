@@ -20,3 +20,7 @@ title: "快速入门"
     完整的 CLI 向导参考和高级选项。
   </Card>
 </Columns>
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

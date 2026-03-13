@@ -33,3 +33,7 @@ openclaw completion --shell bash --write-state
 - `--install` 会在您的 Shell 配置文件中写入一个小的“OpenClaw 补全”块，并将其指向缓存的脚本。
 - 如果没有使用 `--install` 或 `--write-state`，该命令会将脚本打印到标准输出。
 - 生成补全会急切加载命令树，以便包含嵌套的子命令。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -33,3 +33,7 @@ sidebarTitle: “引导”
 
 - macOS 应用程序入职：[入职](/zh/en/start/onboarding)
 - 工作区布局：[代理工作区](/zh/en/concepts/agent-workspace)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

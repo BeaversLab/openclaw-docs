@@ -21,3 +21,7 @@ title: "反应"
 - **WhatsApp**：空的 `emoji` 会移除机器人的反应；`remove: true` 映射为空表情符号（仍需要 `emoji`）。
 - **Zalo 个人版 (`zalouser`)**：需要非空的 `emoji`；`remove: true` 会移除特定的表情符号反应。
 - **Signal**：当启用 `channels.signal.reactionNotifications` 时，传入的反应通知会发出系统事件。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

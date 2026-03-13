@@ -395,3 +395,7 @@ Related:
 - [Exec tool](/en/tools/exec)
 - [Elevated mode](/en/tools/elevated)
 - [Skills](/en/tools/skills)
+
+import en from '/components/footer/en.mdx';
+
+<en />

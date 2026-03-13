@@ -173,3 +173,7 @@ rejects that combination with HTTP 401.
 - Prefer smaller models for verbose, exploratory work.
 
 See [Skills](/en/tools/skills) for the exact skill list overhead formula.
+
+import en from '/components/footer/en.mdx';
+
+<en />

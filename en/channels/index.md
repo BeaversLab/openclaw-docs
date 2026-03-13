@@ -45,3 +45,7 @@ Text is supported everywhere; media and reactions vary by channel.
 - DM pairing and allowlists are enforced for safety; see [Security](/en/gateway/security).
 - Troubleshooting: [Channel troubleshooting](/en/channels/troubleshooting).
 - Model providers are documented separately; see [Model Providers](/en/providers/models).
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -304,3 +304,7 @@ will prompt to install it (npm or a local path) before it can be configured.
 - Config reference: [Gateway configuration](/en/gateway/configuration)
 - Providers: [WhatsApp](/en/channels/whatsapp), [Telegram](/en/channels/telegram), [Discord](/en/channels/discord), [Google Chat](/en/channels/googlechat), [Signal](/en/channels/signal), [BlueBubbles](/en/channels/bluebubbles) (iMessage), [iMessage](/en/channels/imessage) (legacy)
 - Skills: [Skills](/en/tools/skills), [Skills config](/en/tools/skills-config)
+
+import en from '/components/footer/en.mdx';
+
+<en />

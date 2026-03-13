@@ -373,3 +373,7 @@
   - “每个 Agent 一个频道/话题”
   - “同一 Agent 拥有多个频道/话题且具有不同的 `cwd`”
   - “团队命名模式（`codex-1`、`claude-repo-x`）”。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

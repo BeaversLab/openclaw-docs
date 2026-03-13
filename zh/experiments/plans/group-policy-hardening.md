@@ -38,3 +38,7 @@ Telegram 允许列表现在不区分大小写地接受 `telegram:` 和 `tg:` 前
 
 - [群聊](/zh/en/concepts/groups)
 - [Telegram 提供商](/zh/en/channels/telegram)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

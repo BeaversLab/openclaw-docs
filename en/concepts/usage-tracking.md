@@ -33,3 +33,7 @@ title: "Usage Tracking"
 - **z.ai**: API key via env/config/auth store.
 
 Usage is hidden if no matching OAuth/API credentials exist.
+
+import en from '/components/footer/en.mdx';
+
+<en />

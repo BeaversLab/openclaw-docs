@@ -560,3 +560,7 @@ Live/opt-in:
 - `src/agents/pi-embedded-runner-extraparams.live.test.ts` (enable `OPENCLAW_LIVE_TEST=1`)
 
 For current run commands, see [Pi Development Workflow](/en/pi-dev).
+
+import en from '/components/footer/en.mdx';
+
+<en />

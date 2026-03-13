@@ -289,3 +289,7 @@ published raw file is typically available at:
 1. Update the TypeBox schemas.
 2. Run `pnpm protocol:check`.
 3. Commit the regenerated schema + Swift models.
+
+import en from '/components/footer/en.mdx';
+
+<en />

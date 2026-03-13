@@ -654,3 +654,7 @@ Agent 获得 **一个工具** 用于浏览器自动化：
   - 如果连接了支持浏览器的节点，该工具可能会自动路由到该节点，除非您固定了 `target="host"` 或 `target="node"`。
 
 这可以保持代理的确定性，并避免使用脆弱的选择器。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

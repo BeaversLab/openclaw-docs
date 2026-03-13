@@ -1219,3 +1219,7 @@ openclaw logs --follow
 - [多代理路由](/zh/en/concepts/multi-agent)
 - [故障排除](/zh/en/channels/troubleshooting)
 - [斜杠命令](/zh/en/tools/slash-commands)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

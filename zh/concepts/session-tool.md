@@ -221,3 +221,7 @@ title: "会话工具"
 - `agent`：属于当前代理 ID 的任何会话。
 - `all`：任何会话（跨代理访问仍需 `tools.agentToAgent`）。
 - 当会话处于沙盒状态且 `sessionToolsVisibility="spawned"` 时，即使您设置了 `tools.sessions.visibility="all"`，OpenClaw 也会将可见性限制为 `tree`。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

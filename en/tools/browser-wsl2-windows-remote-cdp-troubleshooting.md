@@ -240,3 +240,7 @@ When in doubt:
 - verify the Windows Chrome endpoint locally first
 - verify the same endpoint from WSL2 second
 - only then debug OpenClaw config or Control UI auth
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -798,3 +798,7 @@ TTL 有效值：
 - nd 事件解析/规范化
 - 运行时 API 表面 (`submit`, `cancel`, `close` 等)
 - 提高可测试性，并使后端行为更易于审计
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

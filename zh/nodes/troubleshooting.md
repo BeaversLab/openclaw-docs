@@ -112,3 +112,7 @@ openclaw logs --follow
 - [/nodes/location-command](/zh/en/nodes/location-command)
 - [/tools/exec-approvals](/zh/en/tools/exec-approvals)
 - [/gateway/pairing](/zh/en/gateway/pairing)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

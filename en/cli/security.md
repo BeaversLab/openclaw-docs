@@ -69,3 +69,7 @@ openclaw security audit --fix --json | jq '{fix: .fix.ok, summary: .report.summa
 - disable tools (`gateway`, `cron`, `exec`, etc.)
 - change gateway bind/auth/network exposure choices
 - remove or rewrite plugins/skills
+
+import en from '/components/footer/en.mdx';
+
+<en />

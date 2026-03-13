@@ -532,3 +532,7 @@ const needsNonImageSanitize =
 | `src/commands/onboard-auth.ts`                              | Modify      | Export new functions                                                    |
 | `src/agents/pi-embedded-runner/cache-ttl.ts`                | Modify      | Add kilocode support                                                    |
 | `src/agents/transcript-policy.ts`                           | Modify      | Add kilocode Gemini handling                                            |
+
+import en from '/components/footer/en.mdx';
+
+<en />

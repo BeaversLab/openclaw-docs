@@ -255,3 +255,7 @@ export CLAWHUB_DISABLE_TELEMETRY=1
 - `CLAWHUB_CONFIG_PATH`: Override where the CLI stores the token/config.
 - `CLAWHUB_WORKDIR`: Override the default workdir.
 - `CLAWHUB_DISABLE_TELEMETRY=1`: Disable telemetry on `sync`.
+
+import en from '/components/footer/en.mdx';
+
+<en />

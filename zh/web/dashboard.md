@@ -50,3 +50,7 @@ Gateway 仪表板是默认在 `/` 提供的浏览器控制 UI
   - SecretRef 托管配置：解析外部秘密提供程序或在此 shell 中导出 `OPENCLAW_GATEWAY_TOKEN`，然后重新运行 `openclaw dashboard`
   - 未配置令牌：`openclaw doctor --generate-gateway-token`
 - 在仪表板设置中，将令牌粘贴到认证字段，然后连接。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -213,3 +213,7 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 - [配对](/zh/en/channels/pairing)
 - [发现](/zh/en/gateway/discovery)
 - [Bonjour](/zh/en/gateway/bonjour)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

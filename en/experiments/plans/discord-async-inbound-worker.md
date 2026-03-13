@@ -335,3 +335,7 @@ Finish this in follow-up PRs:
 4. decide whether durability is needed or explicitly document the in-memory boundary
 
 This is still a bounded follow-up if kept Discord-only and if we continue to avoid a premature cross-channel worker abstraction.
+
+import en from '/components/footer/en.mdx';
+
+<en />

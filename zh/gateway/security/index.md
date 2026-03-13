@@ -1186,3 +1186,7 @@ CI 在 `secrets` 任务中运行 `detect-secrets` pre-commit hook。
 1. 电子邮件：[security@openclaw.ai](mailto:security@openclaw.ai)
 2. 在修复之前不要公开发布
 3. 我们会致谢您（除非您选择匿名）
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

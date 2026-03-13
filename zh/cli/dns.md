@@ -21,3 +21,7 @@ title: “dns”
 openclaw dns setup
 openclaw dns setup --apply
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -150,3 +150,7 @@ Slack：
 - `partial` 可以在可用时使用 Slack 原生流式传输（`chat.startStream`/`append`/`stop`）。
 - `block` 使用追加式草稿预览。
 - `progress` 使用状态预览文本，然后是最终答案。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

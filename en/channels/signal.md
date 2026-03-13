@@ -323,3 +323,7 @@ Related global options:
 - `agents.list[].groupChat.mentionPatterns` (Signal does not support native mentions).
 - `messages.groupChat.mentionPatterns` (global fallback).
 - `messages.responsePrefix`.
+
+import en from '/components/footer/en.mdx';
+
+<en />

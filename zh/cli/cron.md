@@ -74,3 +74,7 @@ openclaw cron add \
 ```
 
 `--light-context` 仅适用于隔离的代理轮次作业。对于 cron 运行，轻量级模式将引导上下文保持为空，而不是注入完整的工作区引导集。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

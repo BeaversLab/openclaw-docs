@@ -59,3 +59,7 @@ title: "WebChat"
 - `gateway.auth.mode: "trusted-proxy"`：面向浏览器客户端的反向代理认证（参见 [可信代理认证](/zh/gateway/trusted-proxy-auth)）。
 - `gateway.remote.url`、`gateway.remote.token`、`gateway.remote.password`：远程网关目标。
 - `session.*`：会话存储和主键默认值。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

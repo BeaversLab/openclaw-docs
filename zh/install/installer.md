@@ -403,3 +403,7 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
     通常是 PATH 问题。请参阅 [Node.js 故障排除](/zh/en/install/node#troubleshooting)。
   </Accordion>
 </AccordionGroup>
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -18,3 +18,7 @@ process that owns channel connections and the WebSocket control plane.
   - `/__openclaw__/a2ui/`
     When `gateway.auth` is configured and the Gateway binds beyond loopback, these routes are protected by Gateway auth. Node clients use node-scoped capability URLs tied to their active WS session. See [Gateway configuration](/en/gateway/configuration) (`canvasHost`, `gateway`).
 - Remote use is typically SSH tunnel or tailnet VPN. See [Remote access](/en/gateway/remote) and [Discovery](/en/gateway/discovery).
+
+import en from '/components/footer/en.mdx';
+
+<en />

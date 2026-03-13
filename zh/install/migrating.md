@@ -190,3 +190,7 @@ openclaw doctor
 - [Doctor](/zh/en/gateway/doctor)
 - [网关故障排除](/zh/en/gateway/troubleshooting)
 - [OpenClaw 将其数据存储在哪里？](/zh/en/help/faq#where-does-openclaw-store-its-data)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

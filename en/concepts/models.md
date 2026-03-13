@@ -221,3 +221,7 @@ Merge mode precedence for matching provider IDs:
 
 Marker persistence is source-authoritative: OpenClaw writes markers from the active source config snapshot (pre-resolution), not from resolved runtime secret values.
 This applies whenever OpenClaw regenerates `models.json`, including command-driven paths like `openclaw agent`.
+
+import en from '/components/footer/en.mdx';
+
+<en />

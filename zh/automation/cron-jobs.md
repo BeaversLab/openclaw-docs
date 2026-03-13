@@ -679,3 +679,7 @@ openclaw system event --mode now --text "Next heartbeat: check battery."
 - 如果公告流程返回 `false`（例如请求者会话正忙），网关将重试最多3次，并通过 `announceRetryCount` 进行跟踪。
 - 超过 `endedAt` 5分钟以上的公告将被强制过期，以防止过期条目无限循环。
 - 如果日志中出现重复的公告递送，请检查子代理注册表中 `announceRetryCount` 值较高的条目。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

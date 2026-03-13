@@ -69,3 +69,7 @@ kilocode/google/gemini-3-pro-preview
 - 基础 URL：`https://api.kilo.ai/api/gateway/`
 - 有关更多模型/提供商选项，请参阅 [/concepts/model-providers](/zh/en/concepts/model-providers)。
 - Kilo Gateway 在底层使用带有您的 API 密钥的 Bearer 令牌。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

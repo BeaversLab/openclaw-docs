@@ -259,3 +259,7 @@ Related:
 - [Health](/en/gateway/health)
 - [Doctor](/en/gateway/doctor)
 - [Authentication](/en/gateway/authentication)
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -43,3 +43,7 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 
 - 有关共享的入门指南和目录概览，请使用 [OpenCode](/zh/en/providers/opencode)。
 - 运行时引用保持显式：Zen 使用 `opencode/...`，Go 使用 `opencode-go/...`。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

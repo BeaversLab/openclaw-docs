@@ -388,3 +388,7 @@ Gateway 方法：
 - `tts.convert`
 - `tts.setProvider`
 - `tts.providers`
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -294,3 +294,7 @@ OpenClaw 为 `openai/*` 和
 
 - 模型引用始终使用 `provider/model`（参见 [/concepts/models](/zh/en/concepts/models)）。
 - 身份验证详情和重用规则请参阅 [/concepts/oauth](/zh/en/concepts/oauth)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

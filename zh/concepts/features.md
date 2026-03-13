@@ -51,3 +51,7 @@ title: "功能"
 旧版 Claude、Codex、Gemini 和 Opencode 路径已被移除。Pi 是唯一
 的编码智能体路径。
 </Note>
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

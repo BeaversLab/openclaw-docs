@@ -162,3 +162,7 @@ A2UI 主机位于 `http://<gateway-host>:18789/__openclaw__/a2ui/`。
   - `contacts.search`，`contacts.add`
   - `calendar.events`，`calendar.add`
   - `motion.activity`，`motion.pedometer`
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

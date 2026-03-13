@@ -552,3 +552,7 @@ Primary reference:
 - [Troubleshooting](/en/channels/troubleshooting)
 - [Configuration](/en/gateway/configuration)
 - [Slash commands](/en/tools/slash-commands)
+
+import en from '/components/footer/en.mdx';
+
+<en />

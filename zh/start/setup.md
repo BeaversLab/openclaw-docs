@@ -163,3 +163,7 @@ sudo loginctl enable-linger $USER
 - [Discord](/zh/en/channels/discord) 和 [Telegram](/zh/en/channels/telegram) （回复标签 + replyToMode 设置）
 - [OpenClaw assistant setup](/zh/en/start/openclaw)
 - [macOS app](/zh/en/platforms/macos) （网关生命周期）
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

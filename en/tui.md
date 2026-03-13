@@ -160,3 +160,7 @@ No output after sending a message:
 - `disconnected`: ensure the Gateway is running and your `--url/--token/--password` are correct.
 - No agents in picker: check `openclaw agents list` and your routing config.
 - Empty session picker: you might be in global scope or have no sessions yet.
+
+import en from '/components/footer/en.mdx';
+
+<en />

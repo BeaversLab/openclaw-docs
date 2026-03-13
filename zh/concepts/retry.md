@@ -67,3 +67,7 @@ title: 重试策略
 
 - 重试适用于每个请求（消息发送、媒体上传、回应、投票、贴纸）。
 - 复合流程不会重试已完成的步骤。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

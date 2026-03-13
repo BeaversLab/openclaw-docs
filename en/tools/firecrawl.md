@@ -60,3 +60,7 @@ than basic-only scraping.
 3. Basic HTML cleanup (last fallback)
 
 See [Web tools](/en/tools/web) for the full web tool setup.
+
+import en from '/components/footer/en.mdx';
+
+<en />

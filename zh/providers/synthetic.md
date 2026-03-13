@@ -97,3 +97,7 @@ synthetic/hf:MiniMaxAI/MiniMax-M2.5
 - 如果您启用了模型允许列表 (`agents.defaults.models`)，请将您计划
   使用的每个模型都
 - 添加进去。有关提供商规则，请参阅 [模型提供商](/zh/en/concepts/model-providers)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

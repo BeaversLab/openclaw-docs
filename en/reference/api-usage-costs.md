@@ -140,3 +140,7 @@ Skills can store `apiKey` in `skills.entries.<name>.apiKey`. If a skill uses tha
 APIs, it can incur costs according to the skill’s provider.
 
 See [Skills](/en/tools/skills).
+
+import en from '/components/footer/en.mdx';
+
+<en />

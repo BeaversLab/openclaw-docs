@@ -133,3 +133,7 @@ OpenClaw 可以公开或隐藏模型推理：
 - 通过 `replyToMode` 和各通道默认值进行回复串联
 
 详情：[配置](/zh/en/gateway/configuration#messages) 和通道文档。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

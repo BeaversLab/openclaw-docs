@@ -154,3 +154,7 @@ Page-filtered fallback model:
   "prompt": "Extract only customer-impacting incidents"
 }
 ```
+
+import en from '/components/footer/en.mdx';
+
+<en />

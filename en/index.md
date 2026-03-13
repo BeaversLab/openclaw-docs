@@ -190,3 +190,7 @@ Example:
     Project origins, contributors, and license.
   </Card>
 </Columns>
+
+import en from '/components/footer/en.mdx';
+
+<en />

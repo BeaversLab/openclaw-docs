@@ -758,3 +758,7 @@ agents: {
 
 - `remote.*` 优先于 `models.providers.openai.*`。
 - `remote.headers` 与 OpenAI 头合并；键冲突时远程优先。省略 `remote.headers` 以使用 OpenAI 默认值。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

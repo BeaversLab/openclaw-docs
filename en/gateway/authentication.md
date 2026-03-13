@@ -177,3 +177,7 @@ is missing, rerun `claude setup-token` and paste the token again.
 
 - Anthropic subscription account (for `claude setup-token`)
 - Claude Code CLI installed (`claude` command available)
+
+import en from '/components/footer/en.mdx';
+
+<en />

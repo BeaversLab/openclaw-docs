@@ -88,3 +88,7 @@ ID 由维护者在审查期间分配。您无需选择一个。
 ## 致谢
 
 威胁模型的贡献者将在威胁模型致谢、发布说明以及 OpenClaw 安全名人堂中获得认可，以表彰其重大贡献。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

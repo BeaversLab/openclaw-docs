@@ -92,3 +92,7 @@ Enable it:
 ```
 systemctl --user enable --now openclaw-gateway[-<profile>].service
 ```
+
+import en from '/components/footer/en.mdx';
+
+<en />

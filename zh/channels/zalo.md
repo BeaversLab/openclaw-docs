@@ -204,3 +204,7 @@ Zalo 是一款专注于越南市场的消息应用程序；其 Bot API 允许网
 - `channels.zalo.accounts.<id>.webhookSecret`：每个账户的 Webhook 密钥。
 - `channels.zalo.accounts.<id>.webhookPath`：每个账户的 Webhook 路径。
 - `channels.zalo.accounts.<id>.proxy`：每个账户的代理 URL。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -35,3 +35,7 @@ openclaw onboard --auth-choice qianfan-api-key
 - [模型提供商](/zh/en/concepts/model-providers)
 - [代理设置](/zh/en/concepts/agent)
 - [千帆 API 文档](https://cloud.baidu.com/doc/qianfan-api/s/3m7of64lb)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

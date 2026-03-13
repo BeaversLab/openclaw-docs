@@ -99,3 +99,7 @@ OpenClaw 可以防止 Agent 陷入重复的工具调用模式。
 - `tools.loopDetection` 已与代理级别的覆盖设置合并。
 - 每个代理的配置会完全覆盖或扩展全局值。
 - 如果不存在配置，防护措施将保持关闭状态。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

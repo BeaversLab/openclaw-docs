@@ -7,6 +7,7 @@
     path === '/en' ||
     path === '/zh' ||
     path.startsWith('/assets/') ||
+    path.startsWith('/license') ||
     path.indexOf('.') !== -1
   ) {
     return;

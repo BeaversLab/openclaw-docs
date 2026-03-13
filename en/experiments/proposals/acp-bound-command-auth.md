@@ -87,3 +87,7 @@ This keeps the boundary explicit and minimizes accidental widening.
 
 This proposal is intentionally additive and does not delete or replace existing
 experiments documents.
+
+import en from '/components/footer/en.mdx';
+
+<en />

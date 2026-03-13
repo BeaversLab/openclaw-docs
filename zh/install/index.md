@@ -216,3 +216,7 @@ export PATH="$(npm prefix -g)/bin:$PATH"
     完全移除 OpenClaw。
   </Card>
 </CardGroup>
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

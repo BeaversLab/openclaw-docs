@@ -202,3 +202,7 @@ Notes:
 - Onboarding hub: [Onboarding Wizard (CLI)](/en/start/wizard)
 - Full reference: [CLI Onboarding Reference](/en/start/wizard-cli-reference)
 - Command reference: [`openclaw onboard`](/en/cli/onboard)
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -121,3 +121,7 @@ RPC API 以及向导写入的配置字段的完整列表，请参阅
 - 入门概述：[Onboarding Overview](/zh/en/start/onboarding-overview)
 - macOS 应用入门：[Onboarding](/zh/en/start/onboarding)
 - 代理首次运行仪式：[Agent Bootstrapping](/zh/en/start/bootstrapping)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

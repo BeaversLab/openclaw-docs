@@ -365,3 +365,7 @@ imsg send <handle> "test"
 - [网关配置](/zh/en/gateway/configuration)
 - [配对](/zh/en/channels/pairing)
 - [BlueBubbles](/zh/en/channels/bluebubbles)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

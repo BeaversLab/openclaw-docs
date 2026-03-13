@@ -104,3 +104,7 @@ openclaw secrets apply --from /tmp/openclaw-secrets-plan.json
 - [CLI `secrets`](/zh/en/cli/secrets)
 - [SecretRef Credential Surface](/zh/en/reference/secretref-credential-surface)
 - [Configuration Reference](/zh/en/gateway/configuration-reference)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

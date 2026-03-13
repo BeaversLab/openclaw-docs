@@ -156,3 +156,7 @@ openclaw agents add personal
 
 - [/concepts/model-failover](/zh/en/concepts/model-failover) (轮换 + 冷却规则)
 - [/tools/slash-commands](/zh/en/tools/slash-commands) (命令界面)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

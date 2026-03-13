@@ -133,3 +133,7 @@ Full environment variable reference: [Environment vars](/en/help/environment).
 - DM safety and approvals: [Pairing](/en/channels/pairing)
 - Connect more channels: [Channels](/en/channels)
 - Advanced workflows and from source: [Setup](/en/start/setup)
+
+import en from '/components/footer/en.mdx';
+
+<en />

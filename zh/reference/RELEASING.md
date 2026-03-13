@@ -146,3 +146,7 @@ read_when:
 - @openclaw/zalouser
 
 发行说明还必须指出 **非默认开启** 的 **新的可选捆绑插件**（例如：`tlon`）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

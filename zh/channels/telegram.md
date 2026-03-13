@@ -974,3 +974,7 @@ Telegram 特有的高权重字段：
 - [通道路由](/zh/en/channels/channel-routing)
 - [多 Agent 路由](/zh/en/concepts/multi-agent)
 - [故障排除](/zh/en/channels/troubleshooting)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

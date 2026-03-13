@@ -109,3 +109,7 @@ agents:
 - 对于冗长、探索性的工作，首选较小的模型。
 
 请参阅 [Skills](/zh/en/tools/skills) 以了解确切的技能列表开销公式。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

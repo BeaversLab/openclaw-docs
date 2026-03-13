@@ -60,3 +60,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 
 For the full provider catalog (xAI, Groq, Mistral, etc.) and advanced configuration,
 see [Model providers](/en/concepts/model-providers).
+
+import en from '/components/footer/en.mdx';
+
+<en />

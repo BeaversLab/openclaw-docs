@@ -100,3 +100,7 @@ High-level:
 - [Development channels](/en/install/development-channels)
 - [Updating](/en/install/updating)
 - [CLI reference](/en/cli)
+
+import en from '/components/footer/en.mdx';
+
+<en />

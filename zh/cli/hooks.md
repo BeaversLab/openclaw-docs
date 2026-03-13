@@ -313,3 +313,7 @@ openclaw hooks enable boot-md
 ```
 
 **参见：** [boot-md 文档](/zh/en/automation/hooks#boot-md)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

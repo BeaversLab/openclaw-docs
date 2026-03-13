@@ -18,3 +18,7 @@ openclaw reset --scope config+creds+sessions --yes --non-interactive
 ```
 
 Run `openclaw backup create` first if you want a restorable snapshot before removing local state.
+
+import en from '/components/footer/en.mdx';
+
+<en />

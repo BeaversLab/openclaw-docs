@@ -43,3 +43,7 @@ launchctl getenv OPENCLAW_GATEWAY_PASSWORD
 launchctl unsetenv OPENCLAW_GATEWAY_TOKEN
 launchctl unsetenv OPENCLAW_GATEWAY_PASSWORD
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

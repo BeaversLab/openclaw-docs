@@ -110,3 +110,7 @@ openclaw --profile main status
 openclaw --profile rescue status
 openclaw --profile rescue browser status
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

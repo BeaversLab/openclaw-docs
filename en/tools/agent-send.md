@@ -51,3 +51,7 @@ openclaw agent --agent ops --message "Generate report" --deliver --reply-channel
 - `--verbose <on|full|off>`: persist verbose level
 - `--timeout <seconds>`: override agent timeout
 - `--json`: output structured JSON
+
+import en from '/components/footer/en.mdx';
+
+<en />

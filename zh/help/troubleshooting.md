@@ -296,3 +296,7 @@ flowchart TD
 
   </Accordion>
 </AccordionGroup>
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

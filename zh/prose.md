@@ -132,3 +132,7 @@ OpenProse 程序映射到 OpenClaw 基元：
 将 `.prose` 文件像代码一样对待。运行前请进行检查。使用 OpenClaw 工具允许列表和批准门控来控制副作用。
 
 对于确定性、需要批准的工作流，请与 [Lobster](/zh/en/tools/lobster) 进行比较。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -300,3 +300,7 @@ See [Skills config](/en/tools/skills-config) for the full configuration schema.
 Browse [https://clawhub.com](https://clawhub.com).
 
 ---
+
+import en from '/components/footer/en.mdx';
+
+<en />

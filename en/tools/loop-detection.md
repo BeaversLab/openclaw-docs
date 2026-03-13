@@ -99,3 +99,7 @@ This protects users from runaway token spend and lockups while preserving normal
 - `tools.loopDetection` is merged with agent-level overrides.
 - Per-agent config fully overrides or extends global values.
 - If no config exists, guardrails stay off.
+
+import en from '/components/footer/en.mdx';
+
+<en />

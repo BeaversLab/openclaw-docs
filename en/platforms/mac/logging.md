@@ -55,3 +55,7 @@ sudo install -m 644 -o root -g wheel /tmp/ai.openclaw.plist /Library/Preferences
 - Remove the override: `sudo rm /Library/Preferences/Logging/Subsystems/ai.openclaw.plist`.
 - Optionally run `sudo log config --reload` to force logd to drop the override immediately.
 - Remember this surface can include phone numbers and message bodies; keep the plist in place only while you actively need the extra detail.
+
+import en from '/components/footer/en.mdx';
+
+<en />

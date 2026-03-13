@@ -191,3 +191,7 @@ The LINE plugin also ships a `/card` command for Flex message presets:
   and that the gateway is reachable from LINE.
 - **Media download errors:** raise `channels.line.mediaMaxMb` if media exceeds the
   default limit.
+
+import en from '/components/footer/en.mdx';
+
+<en />

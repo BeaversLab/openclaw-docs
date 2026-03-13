@@ -650,3 +650,7 @@ openclaw pairing list feishu
 - ✅ 文件
 - ✅ 音频
 - ⚠️ 富文本（部分支持）
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -69,3 +69,7 @@ openclaw onboard --non-interactive \
 ## 环境注意事项
 
 如果 Gateway 作为守护进程（launchd/systemd）运行，请确保 `CLOUDFLARE_AI_GATEWAY_API_KEY` 对该进程可用（例如，在 `~/.openclaw/.env` 中或通过 `env.shellEnv`）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

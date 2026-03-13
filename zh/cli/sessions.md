@@ -104,3 +104,7 @@ openclaw sessions cleanup --json
 相关：
 
 - 会话配置：[配置参考](/zh/en/gateway/configuration-reference#session)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

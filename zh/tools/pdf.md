@@ -154,3 +154,7 @@ read_when:
   "prompt": "Extract only customer-impacting incidents"
 }
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

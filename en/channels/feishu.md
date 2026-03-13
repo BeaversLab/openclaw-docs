@@ -652,3 +652,7 @@ Key options:
 - ✅ Files
 - ✅ Audio
 - ⚠️ Rich text (partial support)
+
+import en from '/components/footer/en.mdx';
+
+<en />

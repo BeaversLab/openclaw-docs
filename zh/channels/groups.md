@@ -377,3 +377,7 @@ otherwise -> reply
 ## WhatsApp 细节
 
 请参阅 [群组消息](/zh/en/channels/group-messages) 了解仅限 WhatsApp 的行为（历史记录注入、提及处理详情）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

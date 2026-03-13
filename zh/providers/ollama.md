@@ -306,3 +306,7 @@ ollama serve
 - [模型提供者](/zh/en/concepts/model-providers) - 所有提供者概览
 - [模型选择](/zh/en/concepts/models) - 如何选择模型
 - [配置](/zh/en/gateway/configuration) - 完整配置参考
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

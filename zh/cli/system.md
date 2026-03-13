@@ -58,3 +58,7 @@ openclaw system presence
 
 - 需要一个可通过当前配置（本地或远程）访问的运行中的网关。
 - 系统事件是临时的，不会在重启后保留。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

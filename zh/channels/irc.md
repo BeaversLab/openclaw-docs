@@ -238,3 +238,7 @@ IRC 频道有两个独立的“入口”：
 - 如果机器人已连接但从未在频道中回复，请验证 `channels.irc.groups` **以及**提及限制是否正在丢弃消息（`missing-mention`）。如果您希望它在没有 ping 的情况下回复，请为该频道设置 `requireMention:false`。
 - 如果登录失败，请验证昵称可用性和服务器密码。
 - 如果 TLS 在自定义网络上失败，请验证主机/端口和证书设置。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

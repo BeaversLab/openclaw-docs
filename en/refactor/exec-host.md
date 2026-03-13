@@ -314,3 +314,7 @@ Option B:
 - [Exec approvals](/en/tools/exec-approvals)
 - [Nodes](/en/nodes)
 - [Elevated mode](/en/tools/elevated)
+
+import en from '/components/footer/en.mdx';
+
+<en />

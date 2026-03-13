@@ -194,3 +194,7 @@ Related:
 - Browser tool overview: [Browser](/en/tools/browser)
 - Security audit: [Security](/en/gateway/security)
 - Tailscale setup: [Tailscale](/en/gateway/tailscale)
+
+import en from '/components/footer/en.mdx';
+
+<en />

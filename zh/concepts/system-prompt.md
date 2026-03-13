@@ -129,3 +129,7 @@ OpenClaw 可以在 Project Context 中注入一个警告块；通过
 用于技能发现的 ClawHub ([https://clawhub.com](https://clawhub.com))。系统提示指示模型首先查阅本地文档
 以了解 OpenClaw 的行为、命令、配置或架构，并在可能时自行运行
 `openclaw status`（仅在缺乏访问权限时询问用户）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

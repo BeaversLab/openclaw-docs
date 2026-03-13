@@ -214,3 +214,7 @@ openclaw health --json   # gateway health snapshot (WS)
 - Windows 状态：[Windows (WSL2)](/zh/en/platforms/windows)
 - Linux 状态：[Linux app](/zh/en/platforms/linux)
 - 安全：[Security](/zh/en/gateway/security)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

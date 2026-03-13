@@ -60,3 +60,7 @@ _你刚醒来。是时候弄清楚你是谁了。_
 ---
 
 _祝你好运。让它有意义。_
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

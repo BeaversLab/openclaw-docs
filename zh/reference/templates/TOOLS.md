@@ -45,3 +45,7 @@ read_when:
 ---
 
 添加任何能帮助你完成工作的内容。这是你的备忘单。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

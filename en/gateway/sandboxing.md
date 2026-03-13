@@ -257,3 +257,7 @@ See [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) for prece
 - [Sandbox Configuration](/en/gateway/configuration#agentsdefaults-sandbox)
 - [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools)
 - [Security](/en/gateway/security)
+
+import en from '/components/footer/en.mdx';
+
+<en />

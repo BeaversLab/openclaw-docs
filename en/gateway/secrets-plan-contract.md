@@ -104,3 +104,7 @@ If apply fails with an invalid target path message, regenerate the plan with `op
 - [CLI `secrets`](/en/cli/secrets)
 - [SecretRef Credential Surface](/en/reference/secretref-credential-surface)
 - [Configuration Reference](/en/gateway/configuration-reference)
+
+import en from '/components/footer/en.mdx';
+
+<en />

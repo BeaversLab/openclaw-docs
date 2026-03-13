@@ -293,3 +293,7 @@ title: "子代理"
 - 子代理上下文仅注入 `AGENTS.md` + `TOOLS.md`（不注入 `SOUL.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md` 或 `BOOTSTRAP.md`）。
 - 最大嵌套深度为 5（`maxSpawnDepth` 范围：1–5）。大多数用例建议深度为 2。
 - `maxChildrenPerAgent` 限制每个会话的活动子代理数量（默认：5，范围：1–20）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

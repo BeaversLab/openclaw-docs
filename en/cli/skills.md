@@ -24,3 +24,7 @@ openclaw skills list --eligible
 openclaw skills info <name>
 openclaw skills check
 ```
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -552,3 +552,7 @@ channels:
 - [故障排除](/zh/en/channels/troubleshooting)
 - [配置](/zh/en/gateway/configuration)
 - [斜杠命令](/zh/en/tools/slash-commands)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

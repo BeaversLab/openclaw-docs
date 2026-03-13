@@ -403,3 +403,7 @@ Use non-interactive flags/env vars for predictable runs.
     Usually a PATH issue. See [Node.js troubleshooting](/en/install/node#troubleshooting).
   </Accordion>
 </AccordionGroup>
+
+import en from '/components/footer/en.mdx';
+
+<en />

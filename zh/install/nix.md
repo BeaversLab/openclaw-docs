@@ -96,3 +96,7 @@ apps/macos/Sources/OpenClaw/Resources/Info.plist
 - [nix-openclaw](https://github.com/openclaw/nix-openclaw) — 完整设置指南
 - [Wizard](/zh/en/start/wizard) — 非 Nix CLI 设置
 - [Docker](/zh/en/install/docker) — 容器化设置
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -108,3 +108,7 @@ openclaw sessions cleanup --json
 Related:
 
 - Session config: [Configuration reference](/en/gateway/configuration-reference#session)
+
+import en from '/components/footer/en.mdx';
+
+<en />

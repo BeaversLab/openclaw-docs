@@ -202,3 +202,7 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 - 工具策略仍然适用；`allow: ["exec"]` 隐式允许 `apply_patch`。
 - 配置位于 `tools.exec.applyPatch` 下。
 - `tools.exec.applyPatch.workspaceOnly` 默认为 `true`（包含在工作区内）。仅当您有意希望 `apply_patch` 在工作区目录之外写入/删除时，才将其设置为 `false`。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -301,3 +301,7 @@ openclaw pairing list matrix
 - `channels.matrix.autoJoinAllowlist`: 允许自动加入的房间 ID/别名。
 - `channels.matrix.accounts`: 按账户 ID 键入的多账户配置（每个账户继承顶层设置）。
 - `channels.matrix.actions`: 每个动作的工具开关（表情/消息/置顶/成员信息/频道信息）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

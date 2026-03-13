@@ -116,3 +116,7 @@ Full troubleshooting: [/channels/signal#troubleshooting](/en/channels/signal#tro
 | Encrypted rooms fail                | Verify crypto module and encryption settings | Enable encryption support and rejoin/sync room. |
 
 Full troubleshooting: [/channels/matrix#troubleshooting](/en/channels/matrix#troubleshooting)
+
+import en from '/components/footer/en.mdx';
+
+<en />

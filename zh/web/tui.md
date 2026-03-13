@@ -168,3 +168,7 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - `disconnected`：确保网关正在运行，并且您的 `--url/--token/--password` 是正确的。
 - 选择器中没有代理：检查 `openclaw agents list` 和您的路由配置。
 - 会话选择器为空：您可能处于全局作用域，或者还没有会话。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

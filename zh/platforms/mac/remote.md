@@ -82,3 +82,7 @@ openclaw nodes notify --node <id> --title "Ping" --body "Remote gateway ready" -
 ```
 
 应用中不再有全局的“默认声音”开关；调用者需根据每个请求选择声音（或不选）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

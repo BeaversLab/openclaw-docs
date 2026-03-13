@@ -156,3 +156,7 @@ Related docs:
 
 - [/concepts/model-failover](/en/concepts/model-failover) (rotation + cooldown rules)
 - [/tools/slash-commands](/en/tools/slash-commands) (command surface)
+
+import en from '/components/footer/en.mdx';
+
+<en />

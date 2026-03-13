@@ -32,3 +32,7 @@ title: "健康检查"
 ## 如有疑问
 
 - 您仍然可以在 [Gateway health](/zh/en/gateway/health) 中使用 CLI 流程 (`openclaw status`, `openclaw status --deep`, `openclaw health --json`)，并 tail `/tmp/openclaw/openclaw-*.log` 以查看 `web-heartbeat` / `web-reconnect`。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

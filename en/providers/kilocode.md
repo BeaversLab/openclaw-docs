@@ -71,3 +71,7 @@ kilocode/google/gemini-3-pro-preview
 - Base URL: `https://api.kilo.ai/api/gateway/`
 - For more model/provider options, see [/concepts/model-providers](/en/concepts/model-providers).
 - Kilo Gateway uses a Bearer token with your API key under the hood.
+
+import en from '/components/footer/en.mdx';
+
+<en />

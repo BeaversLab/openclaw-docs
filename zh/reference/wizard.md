@@ -303,3 +303,7 @@ WhatsApp 凭据位于 `~/.openclaw/credentials/whatsapp/<accountId>/` 之下。
 - 配置参考：[Gateway configuration](/zh/en/gateway/configuration)
 - 提供商：[WhatsApp](/zh/en/channels/whatsapp)、[Telegram](/zh/en/channels/telegram)、[Discord](/zh/en/channels/discord)、[Google Chat](/zh/en/channels/googlechat)、[Signal](/zh/en/channels/signal)、[BlueBubbles](/zh/en/channels/bluebubbles) (iMessage)、[iMessage](/zh/en/channels/imessage)（旧版）
 - 技能：[Skills](/zh/en/tools/skills)、[Skills config](/zh/en/tools/skills-config)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

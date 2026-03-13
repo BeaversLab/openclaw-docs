@@ -224,3 +224,7 @@ Discord 适配器和运行时：
 - 在会话模式绑定运行中，主线程和子线程没有重复的完成交付
 - 对于禁用绑定生成（bound spawn）的部署，行为没有变化
 - ACP 仍显式推迟
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

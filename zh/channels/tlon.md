@@ -271,3 +271,7 @@ openclaw doctor
 - 线程回复：如果传入消息在主题中，OpenClaw 将在主题内回复。
 - 富文本：Markdown 格式（粗体、斜体、代码、标题、列表）被转换为 Tlon 的原生格式。
 - 图片：URL 被上传到 Tlon 存储并作为图片块嵌入。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

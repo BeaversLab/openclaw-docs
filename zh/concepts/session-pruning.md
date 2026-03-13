@@ -119,3 +119,7 @@ read_when:
 ```
 
 请参阅配置参考：[网关配置](/zh/en/gateway/configuration)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

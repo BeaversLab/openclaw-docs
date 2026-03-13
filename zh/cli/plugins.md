@@ -93,3 +93,7 @@ openclaw plugins update <id> --dry-run
 更新仅适用于从 npm 安装的插件（在 `plugins.installs` 中跟踪）。
 
 当存在存储的完整性哈希且获取的构件哈希发生变化时，OpenClaw 会打印警告并在继续之前请求确认。在 CI/非交互式运行中，使用全局 `--yes` 可跳过提示。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

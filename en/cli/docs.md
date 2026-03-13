@@ -13,3 +13,7 @@ Search the live docs index.
 openclaw docs browser extension
 openclaw docs sandbox allowHostControl
 ```
+
+import en from '/components/footer/en.mdx';
+
+<en />

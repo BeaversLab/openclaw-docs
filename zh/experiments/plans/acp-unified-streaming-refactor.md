@@ -94,3 +94,7 @@ title: 统一运行时流式重构计划
 - 崩溃/重启重放不会为同一交付 ID 发送重复的块。
 - 遗留的 ACP 投影器/合并路径已移除。
 - 流式配置解析是共享的，且独立于运行时。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

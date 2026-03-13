@@ -79,3 +79,7 @@ openclaw models auth paste-token
 - `setup-token` 会提示输入 setup-token 值（在任意机器上使用 `claude setup-token` 生成）。
 - `paste-token` 接受在其他地方或通过自动化生成的令牌字符串。
 - Anthropic 政策说明：对 setup-token 的支持属于技术兼容性。Anthropic 过去曾阻止部分订阅在 Claude Code 之外的使用，因此在广泛使用前请核实当前的条款。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

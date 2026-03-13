@@ -50,3 +50,7 @@ openclaw models set qwen-portal/coder-model
 - 默认基础 URL：`https://portal.qwen.ai/v1`（如果
   `models.providers.qwen-portal.baseUrl` 如果 Qwen 提供不同的端点）。
 - 有关提供商范围的规则，请参阅 [模型提供商](/zh/concepts/model-providers)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

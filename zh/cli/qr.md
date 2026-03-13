@@ -44,3 +44,7 @@ openclaw qr --url wss://gateway.example/ws
 - 扫描后，使用以下命令批准设备配对：
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

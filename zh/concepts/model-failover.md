@@ -149,3 +149,7 @@ OpenClaw 将移动到下一个模型，而不是切换配置文件。
 - `agents.defaults.imageModel` 路由
 
 参见 [Models](/zh/en/concepts/models) 了解更广泛的模型选择和回退概述。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

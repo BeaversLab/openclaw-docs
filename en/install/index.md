@@ -216,3 +216,7 @@ Then open a new terminal (or `rehash` in zsh / `hash -r` in bash).
     Remove OpenClaw completely.
   </Card>
 </CardGroup>
+
+import en from '/components/footer/en.mdx';
+
+<en />

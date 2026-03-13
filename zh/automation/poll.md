@@ -84,3 +84,7 @@ openclaw message poll --channel msteams --target conversation:19:abc@thread.tacv
 注意：Discord 没有“恰好选择 N 项”模式；`pollMulti` 映射到多选。
 Teams 投票以自适应卡片的形式呈现，并需要网关保持在线
 以便在 `~/.openclaw/msteams-polls.json` 中记录投票。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

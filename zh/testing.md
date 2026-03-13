@@ -366,3 +366,7 @@ OPENCLAW_LIVE_CLI_BACKEND=1 \
 - 优先定位能捕获该 Bug 的最小层级：
   - 提供者请求转换/重放 Bug → 直接模型测试
   - 网关会话/历史/工具流水线 Bug → 网关实时冒烟测试或 CI 安全的网关模拟测试
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

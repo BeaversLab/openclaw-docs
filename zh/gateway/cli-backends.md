@@ -217,3 +217,7 @@ OpenClaw 还为 `codex-cli` 提供了一个默认值：
 - **无会话连续性**：确保已设置 `sessionArg` 且未设置 `sessionMode`
   `none`（Codex CLI 目前无法通过 JSON 输出恢复）。
 - **忽略图像**：设置 `imageArg`（并验证 CLI 支持文件路径）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

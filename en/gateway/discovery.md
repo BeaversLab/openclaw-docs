@@ -121,3 +121,7 @@ The gateway is the source of truth for node/client admission.
 - **Gateway**: advertises discovery beacons, owns pairing decisions, and hosts the WS endpoint.
 - **macOS app**: helps you pick a gateway, shows pairing prompts, and uses SSH only as a fallback.
 - **iOS/Android nodes**: browse Bonjour as a convenience and connect to the paired Gateway WS.
+
+import en from '/components/footer/en.mdx';
+
+<en />

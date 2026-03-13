@@ -211,3 +211,7 @@ curl -X POST http://127.0.0.1:18789/hooks/gmail \
 - 默认情况下，Hook 有效载荷被视为不受信任，并包裹在安全边界中。
   如果您必须针对特定的 Hook 禁用此功能，请在该 Hook 的映射中设置 `allowUnsafeExternalContent: true`
   （危险）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

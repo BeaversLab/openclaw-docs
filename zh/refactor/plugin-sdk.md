@@ -212,3 +212,7 @@ export type PluginRuntime = {
 - 可以在没有核心源代码访问权限的情况下开发和更新外部插件。
 
 相关文档：[插件](/zh/en/tools/plugin)、[通道](/zh/en/channels/index)、[配置](/zh/en/gateway/configuration)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

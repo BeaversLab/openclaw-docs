@@ -41,3 +41,7 @@ macOS 菜单栏应用程序将 WebChat UI 嵌入为原生 SwiftUI 视图。它
 ## 已知限制
 
 - 该 UI 已针对聊天会话进行优化（并非完整的浏览器沙箱）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

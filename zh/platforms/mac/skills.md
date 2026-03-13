@@ -31,3 +31,7 @@ macOS 应用程序通过网关展示 OpenClaw skills；它不在本地解析 ski
 ## 远程模式
 
 - 安装 + 配置更新发生在网关主机上（而非本地 Mac）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

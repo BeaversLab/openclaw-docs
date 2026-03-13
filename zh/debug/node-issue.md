@@ -83,3 +83,7 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 - 在 Node 22/24 上复现以确认 Node 25 的回归。
 - 测试 `tsx` 每夜版，如果存在已知回归则锁定到早期版本。
 - 如果在 Node LTS 上复现，请向上游提交一个包含 `__name` 堆栈跟踪的最小复现。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

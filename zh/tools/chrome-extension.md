@@ -194,3 +194,7 @@ CLI 故意 **不** 打印 `node_modules` 路径。请务必先运行 `openclaw b
 - 浏览器工具概述：[Browser](/zh/tools/browser)
 - 安全审计：[Security](/zh/gateway/security)
 - Tailscale 设置：[Tailscale](/zh/gateway/tailscale)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

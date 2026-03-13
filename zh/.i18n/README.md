@@ -29,3 +29,7 @@
 
 - 词汇表条目作为**提示词指导**传递给模型（非确定性重写）。
 - 翻译记忆由 `scripts/docs-i18n` 更新。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

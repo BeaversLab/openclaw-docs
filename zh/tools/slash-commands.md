@@ -222,3 +222,7 @@ title: "斜杠命令"
 - **`/stop`** 定位到活动的聊天会话，因此它可以中止当前的运行。
 - **Slack:** `channels.slack.slashCommand` 仍然支持单一的 `/openclaw` 风格命令。如果启用 `commands.native`，您必须为每个内置命令创建一个 Slack 斜杠命令（名称与 `/help` 相同）。Slack 的命令参数菜单以临时 Block Kit 按钮的形式提供。
   - Slack 原生例外：注册 `/agentstatus` (而不是 `/status`)，因为 Slack 保留了 `/status`。文本 `/status` 在 Slack 消息中仍然有效。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

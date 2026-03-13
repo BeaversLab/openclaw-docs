@@ -92,3 +92,7 @@ export default function (api) {
 - 允许列表中使用的插件ID不得与核心工具名称冲突。
 - 对于会触发副作用或需要额外 `optional: true` 的工具，请优先使用 `optional: true`
   二进制文件/凭据。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

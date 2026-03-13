@@ -126,3 +126,7 @@ Remove-Item -Force "$env:USERPROFILE\.openclaw\gateway.cmd"
 1. 在删除代码仓库**之前**卸载网关服务（使用上面的简易路径或手动服务移除）。
 2. 删除代码仓库目录。
 3. 如上所示移除状态和工作区。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

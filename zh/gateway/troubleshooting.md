@@ -377,3 +377,7 @@ openclaw gateway restart
 - [/gateway/pairing](/zh/en/gateway/pairing)
 - [/gateway/authentication](/zh/en/gateway/authentication)
 - [/gateway/background-process](/zh/en/gateway/background-process)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

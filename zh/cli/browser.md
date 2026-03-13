@@ -105,3 +105,7 @@ openclaw browser extension path
 使用 `gateway.nodes.browser.mode` 控制自动路由，如果连接了多个节点，则使用 `gateway.nodes.browser.node` 固定特定节点。
 
 安全 + 远程设置：[浏览器工具](/zh/en/tools/browser)，[远程访问](/zh/en/gateway/remote)，[Tailscale](/zh/en/gateway/tailscale)，[安全](/zh/en/gateway/security)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

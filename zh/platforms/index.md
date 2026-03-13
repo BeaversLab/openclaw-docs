@@ -51,3 +51,7 @@ Linux 伴侣应用，但网关目前已获得完全支持。
 
 - macOS: LaunchAgent (`ai.openclaw.gateway` 或 `ai.openclaw.<profile>`; 旧版 `com.openclaw.*`)
 - Linux/WSL2: systemd 用户服务 (`openclaw-gateway[-<profile>].service`)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

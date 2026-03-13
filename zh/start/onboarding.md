@@ -86,3 +86,7 @@ Onboarding 请求以下所需的 TCC 权限：
   请参阅 [Bootstrapping](/zh/en/start/bootstrapping) 了解在首次运行代理期间网关主机上发生的情况。
 </Step>
 </Steps>
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -201,3 +201,7 @@ Full guide: [Getting Started](/en/start/getting-started)
 
 We do not have a Windows companion app yet. Contributions are welcome if you want
 contributions to make it happen.
+
+import en from '/components/footer/en.mdx';
+
+<en />

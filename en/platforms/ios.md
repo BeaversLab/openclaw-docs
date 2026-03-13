@@ -214,3 +214,7 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 - [Pairing](/en/channels/pairing)
 - [Discovery](/en/gateway/discovery)
 - [Bonjour](/en/gateway/bonjour)
+
+import en from '/components/footer/en.mdx';
+
+<en />

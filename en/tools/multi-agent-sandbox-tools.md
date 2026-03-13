@@ -395,3 +395,7 @@ After configuring multi-agent sandbox and tools:
 - [Multi-Agent Routing](/en/concepts/multi-agent)
 - [Sandbox Configuration](/en/gateway/configuration#agentsdefaults-sandbox)
 - [Session Management](/en/concepts/session)
+
+import en from '/components/footer/en.mdx';
+
+<en />

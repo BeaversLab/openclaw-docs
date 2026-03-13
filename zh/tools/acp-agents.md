@@ -620,3 +620,7 @@ openclaw config set plugins.entries.acpx.config.nonInteractivePermissions fail
 | `AcpRuntimeError: Permission prompt unavailable in non-interactive mode` | `permissionMode` 阻止在非交互式 ACP 会话中进行写入/执行。             | 将 `plugins.entries.acpx.config.permissionMode` 设置为 `approve-all` 并重启网关。请参阅[权限配置](#permission-configuration)。                 |
 | ACP 会话过早失败且输出很少                               | 权限提示被 `permissionMode`/`nonInteractivePermissions` 阻止。 | 检查网关日志中的 `AcpRuntimeError`。要获得完整权限，请设置 `permissionMode=approve-all`；要优雅降级，请设置 `nonInteractivePermissions=deny`。 |
 | ACP 会话在完成工作后无限期停滞                    | Harness 进程已完成，但 ACP 会话未报告完成。             | 使用 `ps aux \| grep acpx` 监控；手动终止陈旧进程。                                                                                                |
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

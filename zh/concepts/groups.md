@@ -371,3 +371,7 @@ otherwise -> reply
 ## WhatsApp 细节
 
 请参阅 [Group messages](/zh/en/concepts/group-messages) 了解 WhatsApp 特有的行为（历史注入、提及处理详情）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

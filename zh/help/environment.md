@@ -137,3 +137,7 @@ OpenClaw 支持两种由环境驱动的模式：
 - [网关配置](/zh/gateway/configuration)
 - [常见问题：环境变量和 .env 加载](/zh/help/faq#env-vars-and-env-loading)
 - [模型概述](/zh/concepts/models)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

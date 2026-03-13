@@ -214,3 +214,7 @@ git push
   [Channel routing](/zh/en/channels/channel-routing) 了解路由配置。
 - 如果启用了 `agents.defaults.sandbox`，非主会话可以使用每会话沙盒
   `agents.defaults.sandbox.workspaceRoot` 下的工作区。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

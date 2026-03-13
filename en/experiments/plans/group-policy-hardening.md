@@ -38,3 +38,7 @@ false negatives when deciding whether to respond in DMs or groups.
 
 - [Group Chats](/en/concepts/groups)
 - [Telegram Provider](/en/channels/telegram)
+
+import en from '/components/footer/en.mdx';
+
+<en />

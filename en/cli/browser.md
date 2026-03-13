@@ -105,3 +105,7 @@ If the Gateway runs on a different machine than the browser, run a **node host**
 Use `gateway.nodes.browser.mode` to control auto-routing and `gateway.nodes.browser.node` to pin a specific node if multiple are connected.
 
 Security + remote setup: [Browser tool](/en/tools/browser), [Remote access](/en/gateway/remote), [Tailscale](/en/gateway/tailscale), [Security](/en/gateway/security)
+
+import en from '/components/footer/en.mdx';
+
+<en />

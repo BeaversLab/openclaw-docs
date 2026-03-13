@@ -17,3 +17,7 @@ title: “网络模型”
   - `/__openclaw__/a2ui/`
     当配置了 `gateway.auth` 且网关绑定超出环回范围时，这些路由受网关身份验证保护。节点客户端使用与其活动 WS 会话关联的节点范围能力 URL。请参阅[网关配置](/zh/en/gateway/configuration) (`canvasHost`, `gateway`)。
 - 远程使用通常通过 SSH 隧道或 tailnet VPN。请参阅[远程访问](/zh/en/gateway/remote)和[发现](/zh/en/gateway/discovery)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

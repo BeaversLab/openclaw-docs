@@ -684,3 +684,7 @@ openclaw system event --mode now --text "Next heartbeat: check battery."
 - If the announce flow returns `false` (e.g. requester session is busy), the gateway retries up to 3 times with tracking via `announceRetryCount`.
 - Announces older than 5 minutes past `endedAt` are force-expired to prevent stale entries from looping indefinitely.
 - If you see repeated announce deliveries in logs, check the subagent registry for entries with high `announceRetryCount` values.
+
+import en from '/components/footer/en.mdx';
+
+<en />

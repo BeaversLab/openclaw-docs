@@ -226,3 +226,7 @@ Reflection 是一个定时任务（每天或心跳 `ultrathink`)，它：
 - Letta / MemGPT 概念：“核心内存块” + “归档内存” + 工具驱动的自编辑内存。
 - Hindsight 技术报告：“保留 / 召回 / 反思”，四网络记忆，叙事事实提取，观点信心演变。
 - SuCo: arXiv 2411.14754 (2024): “Subspace Collision”（子空间碰撞）近似最近邻检索。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

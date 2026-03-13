@@ -522,3 +522,7 @@ See [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google
 - Set up messaging channels: [Channels](/en/channels)
 - Pair local devices as nodes: [Nodes](/en/nodes)
 - Configure the Gateway: [Gateway configuration](/en/gateway/configuration)
+
+import en from '/components/footer/en.mdx';
+
+<en />

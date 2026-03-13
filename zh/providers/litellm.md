@@ -151,3 +151,7 @@ curl "http://localhost:4000/spend/logs" \
 
 - [LiteLLM 文档](https://docs.litellm.ai)
 - [模型提供商](/zh/concepts/model-providers)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -138,3 +138,7 @@ When set, `OPENCLAW_HOME` replaces the system home directory (`$HOME` / `os.home
 - [Gateway configuration](/en/gateway/configuration)
 - [FAQ: env vars and .env loading](/en/help/faq#env-vars-and-env-loading)
 - [Models overview](/en/concepts/models)
+
+import en from '/components/footer/en.mdx';
+
+<en />

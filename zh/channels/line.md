@@ -188,3 +188,7 @@ LINE 插件还提供了一个 `/card` 命令用于 Flex 消息预设：
   并且网关可从 LINE 访问。
 - **媒体下载错误：** 如果媒体超过默认限制，则引发 `channels.line.mediaMaxMb`
   默认限制。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

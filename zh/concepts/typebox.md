@@ -288,3 +288,7 @@ Swift 生成器会生成：
 1. 更新 TypeBox 模式。
 2. 运行 `pnpm protocol:check`。
 3. 提交重新生成的模式和 Swift 模型。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

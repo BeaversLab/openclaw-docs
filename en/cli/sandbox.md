@@ -150,3 +150,7 @@ Sandbox settings live in `~/.openclaw/openclaw.json` under `agents.defaults.sand
 - [Sandbox Documentation](/en/gateway/sandboxing)
 - [Agent Configuration](/en/concepts/agent-workspace)
 - [Doctor Command](/en/gateway/doctor) - Check sandbox setup
+
+import en from '/components/footer/en.mdx';
+
+<en />

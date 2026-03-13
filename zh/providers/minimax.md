@@ -212,3 +212,7 @@ openclaw onboard --auth-choice minimax-portal
 ```bash
 openclaw models list
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

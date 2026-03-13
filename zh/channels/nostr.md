@@ -231,3 +231,7 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 - 仅支持私信（不支持群聊）。
 - 不支持媒体附件。
 - 仅支持 NIP-04（计划支持 NIP-17 礼物封装）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

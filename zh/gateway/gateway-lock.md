@@ -32,3 +32,7 @@ title: “网关锁”
 
 - 如果端口被_另一个_进程占用，错误是一样的；请释放端口或使用 `openclaw gateway --port <port>` 选择另一个端口。
 - macOS 应用程序在生成网关之前仍会维护自己的轻量级 PID 守护；运行时锁由 WebSocket 绑定强制执行。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

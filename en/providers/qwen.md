@@ -51,3 +51,7 @@ from `~/.qwen/oauth_creds.json` when it loads the auth store. You still need a
 - Default base URL: `https://portal.qwen.ai/v1` (override with
   `models.providers.qwen-portal.baseUrl` if Qwen provides a different endpoint).
 - See [Model providers](/en/concepts/model-providers) for provider-wide rules.
+
+import en from '/components/footer/en.mdx';
+
+<en />

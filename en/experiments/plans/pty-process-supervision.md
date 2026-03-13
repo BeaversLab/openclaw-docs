@@ -193,3 +193,7 @@ The branch now has a coherent and safer supervision shape:
 - process-tree cancellation for child-run default kill paths
 - unified watchdog defaults
 - explicit in-memory restart boundary (no orphan reconciliation across restart in this pass)
+
+import en from '/components/footer/en.mdx';
+
+<en />

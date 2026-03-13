@@ -381,3 +381,7 @@ URL 构建行为：
 - [工具概述](/zh/tools)
 - [插件](/zh/en/tools/plugin)
 - [浏览器](/zh/en/tools/browser)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -974,3 +974,7 @@ Telegram-specific high-signal fields:
 - [Channel routing](/en/channels/channel-routing)
 - [Multi-agent routing](/en/concepts/multi-agent)
 - [Troubleshooting](/en/channels/troubleshooting)
+
+import en from '/components/footer/en.mdx';
+
+<en />

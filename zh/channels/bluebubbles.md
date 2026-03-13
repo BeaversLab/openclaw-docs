@@ -345,3 +345,7 @@ OpenClaw 可能会显示_短_消息 ID（例如 `1`、`2`）以节省令牌。
 - 有关状态/健康信息：`openclaw status --all` 或 `openclaw status --deep`。
 
 有关通用通道工作流参考，请参阅 [Channels](/zh/en/channels) 和 [Plugins](/zh/en/tools/plugin) 指南。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

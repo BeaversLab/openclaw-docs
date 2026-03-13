@@ -327,3 +327,7 @@ If you're moving from token auth to trusted-proxy:
 - [Configuration](/en/gateway/configuration) — config reference
 - [Remote Access](/en/gateway/remote) — other remote access patterns
 - [Tailscale](/en/gateway/tailscale) — simpler alternative for tailnet-only access
+
+import en from '/components/footer/en.mdx';
+
+<en />

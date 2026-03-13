@@ -381,3 +381,7 @@ Diff rendering engine:
 - [Tools overview](/en/tools)
 - [Plugins](/en/tools/plugin)
 - [Browser](/en/tools/browser)
+
+import en from '/components/footer/en.mdx';
+
+<en />

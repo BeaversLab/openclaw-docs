@@ -255,3 +255,7 @@ export CLAWHUB_DISABLE_TELEMETRY=1
 - `CLAWHUB_CONFIG_PATH`: 覆盖 CLI 存储令牌/配置的位置。
 - `CLAWHUB_WORKDIR`: 覆盖默认工作目录。
 - `CLAWHUB_DISABLE_TELEMETRY=1`: 在 `sync` 上禁用遥测。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

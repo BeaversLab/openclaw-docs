@@ -120,3 +120,7 @@ openclaw logs --follow
 - [/gateway/heartbeat](/zh/en/gateway/heartbeat)
 - [/automation/cron-vs-heartbeat](/zh/en/automation/cron-vs-heartbeat)
 - [/concepts/timezone](/zh/en/concepts/timezone)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

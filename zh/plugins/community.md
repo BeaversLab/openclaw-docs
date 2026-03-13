@@ -49,3 +49,7 @@ title: "社区插件"
   npm: `@icesword760/openclaw-wechat`
   repo: `https://github.com/icesword0760/openclaw-wechat`
   install: `openclaw plugins install @icesword760/openclaw-wechat`
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -345,3 +345,7 @@ Prefer `chat_guid` for stable routing:
 - For status/health info: `openclaw status --all` or `openclaw status --deep`.
 
 For general channel workflow reference, see [Channels](/en/channels) and the [Plugins](/en/tools/plugin) guide.
+
+import en from '/components/footer/en.mdx';
+
+<en />

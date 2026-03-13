@@ -306,3 +306,7 @@ ollama serve
 - [Model Providers](/en/concepts/model-providers) - Overview of all providers
 - [Model Selection](/en/concepts/models) - How to choose models
 - [Configuration](/en/gateway/configuration) - Full config reference
+
+import en from '/components/footer/en.mdx';
+
+<en />

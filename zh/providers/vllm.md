@@ -90,3 +90,7 @@ curl http://127.0.0.1:8000/v1/models
 ```
 
 - 如果请求因身份验证错误而失败，请设置与您的服务器配置匹配的真实 `VLLM_API_KEY`，或者在 `models.providers.vllm` 下显式配置提供者。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

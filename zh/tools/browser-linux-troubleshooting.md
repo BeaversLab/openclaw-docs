@@ -137,3 +137,7 @@ curl -s http://127.0.0.1:18791/tabs
 
 - `chrome` 配置文件在可能的情况下使用您的 **系统默认 Chromium 浏览器**。
 - 本地 `openclaw` 配置文件会自动分配 `cdpPort`/`cdpUrl`；仅在远程 CDP 时设置这些值。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

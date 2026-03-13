@@ -410,3 +410,7 @@ OPENCLAW_LIVE_CLI_BACKEND=1 \
 - SecretRef 遍历防护：
   - `src/secrets/exec-secret-ref-id-parity.test.ts` 从注册表元数据 (`listSecretTargetRegistryEntries()`) 为每个 SecretRef 类派生一个采样目标，然后断言遍历段执行 id 被拒绝。
   - 如果你在 `src/secrets/target-registry-data.ts` 中添加了新的 `includeInPlan` SecretRef 目标系列，请在相应测试中更新 `classifyTargetClass`。该测试会在未分类的目标 id 上故意失败，以确保新类不会被静默跳过。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

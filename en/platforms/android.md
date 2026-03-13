@@ -162,3 +162,7 @@ See [Camera node](/en/nodes/camera) for parameters and CLI helpers.
   - `contacts.search`, `contacts.add`
   - `calendar.events`, `calendar.add`
   - `motion.activity`, `motion.pedometer`
+
+import en from '/components/footer/en.mdx';
+
+<en />

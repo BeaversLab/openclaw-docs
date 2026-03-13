@@ -352,3 +352,7 @@ curl -N http://127.0.0.1:18789/v1/responses \
     "input": "hi"
   }'
 ```
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -215,3 +215,7 @@ Then recheck with:
 ```bash
 openclaw models list
 ```
+
+import en from '/components/footer/en.mdx';
+
+<en />

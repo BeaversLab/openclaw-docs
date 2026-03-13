@@ -150,3 +150,7 @@ title: "本地模型"
 - LM Studio 模型是否已卸载？重新加载；冷启动是常见的“挂起”原因。
 - 出现上下文错误？降低 `contextWindow` 或提高您的服务器限制。
 - 安全性：本地模型跳过提供商端的过滤器；保持代理范围狭窄并启用压缩，以限制提示注入的爆炸半径。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

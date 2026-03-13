@@ -192,3 +192,7 @@ title: "文档中心"
 - [测试](/zh/en/reference/test)
 - [发布检查清单](/zh/en/reference/RELEASING)
 - [设备型号](/zh/en/reference/device-models)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -62,3 +62,7 @@ For a complete map of the docs, see [Docs hubs](/en/start/hubs).
 - [Gmail hooks (Pub/Sub)](/en/automation/gmail-pubsub)
 - [Security](/en/gateway/security)
 - [Troubleshooting](/en/gateway/troubleshooting)
+
+import en from '/components/footer/en.mdx';
+
+<en />

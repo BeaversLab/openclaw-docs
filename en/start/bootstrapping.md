@@ -39,3 +39,7 @@ host (for example, `user@gateway-host:~/.openclaw/workspace`).
 
 - macOS app onboarding: [Onboarding](/en/start/onboarding)
 - Workspace layout: [Agent workspace](/en/concepts/agent-workspace)
+
+import en from '/components/footer/en.mdx';
+
+<en />

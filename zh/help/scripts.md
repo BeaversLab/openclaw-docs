@@ -26,3 +26,7 @@ title: "脚本"
 
 - 保持脚本专注且有文档记录。
 - 在相关文档中添加简短的条目（如果缺失则创建一个）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

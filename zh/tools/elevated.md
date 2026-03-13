@@ -61,3 +61,7 @@ title: "提升模式"
 
 - Elevated exec 调用在 info 级别进行记录。
 - 会话状态包括 elevated 模式（例如 `elevated=ask`，`elevated=full`）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -279,3 +279,7 @@ lume run openclaw --no-display
 - [Lume CLI Reference](https://cua.ai/docs/lume/reference/cli-reference)
 - [Unattended VM Setup](https://cua.ai/docs/lume/guide/fundamentals/unattended-setup) (高级)
 - [Docker Sandboxing](/zh/en/install/docker) (替代隔离方案)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

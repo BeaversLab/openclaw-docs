@@ -100,3 +100,7 @@ TimeoutStartSec=90
 
 How `Restart=` policies help automated recovery:
 [systemd can automate service recovery](https://www.redhat.com/en/blog/systemd-automate-recovery).
+
+import en from '/components/footer/en.mdx';
+
+<en />

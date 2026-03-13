@@ -297,3 +297,7 @@ title: "重构集群待办事项"
 4. 测试辅助提取
 5. 入职步骤提取
 6. 监视器生命周期辅助提取
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -69,3 +69,7 @@ openclaw security audit --fix --json | jq '{fix: .fix.ok, summary: .report.summa
 - 禁用工具（`gateway`、`cron`、`exec` 等）
 - 更改网关绑定/身份验证/网络暴露选项
 - 删除或重写插件/技能
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

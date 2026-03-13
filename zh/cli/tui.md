@@ -28,3 +28,7 @@ openclaw tui --session main --deliver
 # when run inside an agent workspace, infers that agent automatically
 openclaw tui --session bugfix
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

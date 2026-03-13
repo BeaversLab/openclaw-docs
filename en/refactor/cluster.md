@@ -297,3 +297,7 @@ Expected savings:
 4. Test-helper extraction
 5. Onboarding step extraction
 6. Monitor lifecycle helper extraction
+
+import en from '/components/footer/en.mdx';
+
+<en />

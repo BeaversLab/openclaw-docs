@@ -316,3 +316,7 @@ openclaw hooks enable boot-md
 ```
 
 **See:** [boot-md documentation](/en/automation/hooks#boot-md)
+
+import en from '/components/footer/en.mdx';
+
+<en />

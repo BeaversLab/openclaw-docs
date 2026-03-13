@@ -452,3 +452,7 @@ Some SecretInput unions are easier to configure in raw editor mode than in form 
 - Auth setup: [Authentication](/en/gateway/authentication)
 - Security posture: [Security](/en/gateway/security)
 - Environment precedence: [Environment Variables](/en/help/environment)
+
+import en from '/components/footer/en.mdx';
+
+<en />

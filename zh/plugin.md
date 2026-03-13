@@ -637,3 +637,7 @@ export default function (api) {
 
 - 仓库内的插件可以在 `src/**` 下保留 Vitest 测试（例如：`src/plugins/voice-call.plugin.test.ts`）。
 - 单独发布的插件应运行自己的 CI （lint/build/test）并验证 `openclaw.extensions` 指向构建的入口点（`dist/index.js`）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

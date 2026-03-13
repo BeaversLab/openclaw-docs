@@ -19,3 +19,7 @@ title: "clawbot"
 建议直接使用现代顶层命令：
 
 - `openclaw clawbot qr` -> `openclaw qr`
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

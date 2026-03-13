@@ -58,3 +58,7 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 - [Claude Max API Proxy](/zh/en/providers/claude-max-api-proxy) - Claude 订阅凭据的社区代理（使用前请核实 Anthropic 的政策/条款）
 
 有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，请参阅 [模型提供商](/zh/en/concepts/model-providers)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

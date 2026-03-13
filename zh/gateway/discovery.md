@@ -121,3 +121,7 @@ Bonjour 是尽力而为的，不能跨越网络。它仅用于“同一局域网
 - **网关**：发布发现信标，拥有配对决策权，并托管 WS 端点。
 - **macOS 应用**：帮助您选择网关，显示配对提示，并且仅将 SSH 作为备用手段使用。
 - **iOS/Android 节点**：为方便起见浏览 Bonjour 并连接到已配对的网关 WS。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

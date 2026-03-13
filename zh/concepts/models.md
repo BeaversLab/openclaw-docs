@@ -207,3 +207,7 @@ openclaw models status
 
 标记持久性以源为准：OpenClaw 从活动的源配置快照（解析前）写入标记，而不是从解析后的运行时密钥值写入。
 这适用于 OpenClaw 重新生成 `models.json` 的任何时候，包括像 `openclaw agent` 这样的命令驱动路径。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

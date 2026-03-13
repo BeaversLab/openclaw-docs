@@ -341,3 +341,7 @@ Exec 生命周期作为系统消息呈现：
 - [Exec 工具](/zh/en/tools/exec)
 - [提升模式](/zh/en/tools/elevated)
 - [技能](/zh/en/tools/skills)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

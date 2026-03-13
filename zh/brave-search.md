@@ -78,3 +78,7 @@ await web_search({
 - 结果默认缓存 15 分钟（可通过 `cacheTtlMinutes` 配置）。
 
 有关完整的 web_search 配置，请参阅 [Web 工具](/zh/en/tools/web)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

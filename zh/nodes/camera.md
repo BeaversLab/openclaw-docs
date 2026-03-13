@@ -160,3 +160,7 @@ openclaw nodes screen record --node <id> --duration 10s --fps 15   # prints MEDI
 注意：
 
 - 需要 macOS **屏幕录制**权限 (TCC)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

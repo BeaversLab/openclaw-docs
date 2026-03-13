@@ -259,3 +259,7 @@ openclaw health
 - [健康检查](/zh/en/gateway/health)
 - [诊断工具](/zh/en/gateway/doctor)
 - [身份验证](/zh/en/gateway/authentication)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

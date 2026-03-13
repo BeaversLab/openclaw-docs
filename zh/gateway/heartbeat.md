@@ -377,3 +377,7 @@ openclaw system event --text "Check for urgent follow-ups" --mode now
 ## 成本意识
 
 心跳运行完整的智能体轮次。较短的间隔会消耗更多的 Token。如果您只需要内部状态更新，请保持 `HEARTBEAT.md` 较小，并考虑使用更便宜的 `model` 或 `target: "none"`。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

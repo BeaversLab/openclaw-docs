@@ -1221,3 +1221,7 @@ High-signal Discord fields:
 - [Multi-agent routing](/en/concepts/multi-agent)
 - [Troubleshooting](/en/channels/troubleshooting)
 - [Slash commands](/en/tools/slash-commands)
+
+import en from '/components/footer/en.mdx';
+
+<en />

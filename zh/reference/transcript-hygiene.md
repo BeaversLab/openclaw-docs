@@ -134,3 +134,7 @@ title: "脚本清理"
 
 这种复杂性导致了跨提供商回归（特别是 `openai-responses`
 `call_id|fc_id` 配对）。2026.1.22 的清理工作移除了该扩展，将逻辑集中化到运行器中，并使 OpenAI 除了图像清理之外处于 **no-touch（不接触）** 状态。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

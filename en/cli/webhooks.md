@@ -23,3 +23,7 @@ openclaw webhooks gmail run
 ```
 
 See [Gmail Pub/Sub documentation](/en/automation/gmail-pubsub) for details.
+
+import en from '/components/footer/en.mdx';
+
+<en />

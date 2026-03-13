@@ -146,3 +146,7 @@ See [Plugins](/en/tools/plugin#plugin-hooks) for the hook API and registration d
 - AbortSignal (cancel)
 - Gateway disconnect or RPC timeout
 - `agent.wait` timeout (wait-only, does not stop agent)
+
+import en from '/components/footer/en.mdx';
+
+<en />

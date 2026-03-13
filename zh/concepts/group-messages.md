@@ -82,3 +82,7 @@ title: "群组消息"
 - 回声抑制使用组合批处理字符串；如果您在未提及的情况下两次发送相同的文本，只有第一次会收到响应。
 - 会话存储条目将在会话存储中显示为 `agent:<agentId>:whatsapp:group:<jid>`（默认为 `~/.openclaw/agents/<agentId>/sessions/sessions.json`）；缺少条目仅表示该群组尚未触发运行。
 - 群组中的输入指示器遵循 `agents.defaults.typingMode`（默认：未提及时的 `message`）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

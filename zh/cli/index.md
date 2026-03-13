@@ -1130,3 +1130,7 @@ openclaw models status
 - `--message <text>`
 - `--timeout-ms <ms>` (默认为 `agents.defaults.timeoutSeconds`)
 - `--history-limit <n>`
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

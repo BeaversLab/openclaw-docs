@@ -75,3 +75,7 @@ Beta 和 dev 版构建**可能**不包含 macOS 应用版本。这没关系：
 
 - 仍然可以发布 git 标签和 npm dist-tag。
 - 在发行说明或更新日志中注明“此 beta 版没有 macOS 构建”。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -328,3 +328,7 @@ OpenClaw 在 Docker 中运行，但 Docker 并不是事实来源。
 | Node 运行时        | 容器文件系统              | Docker 镜像           | 每次镜像构建时重新构建        |
 | 操作系统包         | 容器文件系统              | Docker 镜像           | 请勿在运行时安装        |
 | Docker 容器    | 临时性                         | 可重启            | 可以安全销毁                  |
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

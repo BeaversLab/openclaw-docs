@@ -160,3 +160,7 @@ openclaw nodes screen record --node <id> --duration 10s --fps 15   # prints MEDI
 Notes:
 
 - Requires macOS **Screen Recording** permission (TCC).
+
+import en from '/components/footer/en.mdx';
+
+<en />

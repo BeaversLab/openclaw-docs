@@ -121,3 +121,7 @@ Config sample:
   },
 }
 ```
+
+import en from '/components/footer/en.mdx';
+
+<en />

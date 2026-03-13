@@ -108,3 +108,7 @@ openclaw devices reject <requestId>
   - iMessage (legacy): [iMessage](/zh/en/channels/imessage)
   - Discord: [Discord](/zh/en/channels/discord)
   - Slack: [Slack](/zh/en/channels/slack)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

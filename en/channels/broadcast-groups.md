@@ -440,3 +440,7 @@ Planned features:
 - [Multi-Agent Configuration](/en/tools/multi-agent-sandbox-tools)
 - [Routing Configuration](/en/channels/channel-routing)
 - [Session Management](/en/concepts/session)
+
+import en from '/components/footer/en.mdx';
+
+<en />

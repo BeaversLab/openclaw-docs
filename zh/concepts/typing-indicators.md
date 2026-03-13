@@ -66,3 +66,7 @@ title: "输入指示器"
 - 无论模式如何，心跳从不显示输入。
 - `typingIntervalSeconds` 控制**刷新节奏**，而不是开始时间。
   默认值为 6 秒。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

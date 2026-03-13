@@ -206,3 +206,7 @@ openclaw channels login
 - [Docker](/zh/en/install/docker) — 容器化网关设置
 - [沙箱](/zh/en/gateway/sandboxing) — 代理沙箱配置
 - [多代理沙箱与工具](/zh/en/tools/multi-agent-sandbox-tools) — 每个代理隔离
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

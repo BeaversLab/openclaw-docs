@@ -117,3 +117,7 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 - 此次运行不会向模型公开任何工具。
 - 除非使用 `schema` 进行验证，否则请将输出视为不受信任。
 - 将审批步骤置于任何产生副作用的步骤（send、post、exec）之前。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

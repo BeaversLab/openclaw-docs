@@ -190,3 +190,7 @@ flowchart LR
     项目起源、贡献者和许可证。
   </Card>
 </Columns>
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

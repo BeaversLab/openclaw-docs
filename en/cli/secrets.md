@@ -171,3 +171,7 @@ openclaw secrets audit --check
 ```
 
 If `audit --check` still reports plaintext findings, update the remaining reported target paths and rerun audit.
+
+import en from '/components/footer/en.mdx';
+
+<en />

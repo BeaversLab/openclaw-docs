@@ -253,3 +253,7 @@ git pull
 - 再次运行 `openclaw doctor` 并仔细阅读输出（它通常会告诉您修复方法）。
 - 查看：[故障排除](/zh/en/gateway/troubleshooting)
 - 在 Discord 中提问：[https://discord.gg/clawd](https://discord.gg/clawd)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

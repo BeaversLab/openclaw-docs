@@ -18,6 +18,9 @@
       "family": "DM Sans"
     }
   },
+  "metadata":{
+    "timestamp": true
+  },
   "favicon": "/assets/pixel-lobster.svg",
   "colors": {
     "primary": "#FF5A36",
@@ -35,9 +38,9 @@
   "navbar": {
     "links": [
       {
-        "label": "Releases",
-        "href": "https://github.com/openclaw/openclaw/releases",
-        "icon": "package"
+        "label": "GitHub",
+        "href": "https://github.com/openclaw/openclaw",
+        "icon": "github"
       }
     ]
   },

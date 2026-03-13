@@ -18,3 +18,7 @@ openclaw uninstall --dry-run
 ```
 
 如果在删除状态或工作区之前需要可恢复的快照，请先运行 `openclaw backup create`。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

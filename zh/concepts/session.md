@@ -304,3 +304,7 @@ openclaw sessions cleanup --enforce
   origin 字段会为直接消息、频道和群组填充。如果连接器仅更新投递路由（例如，为了保持 DM 主会话处于新鲜状态），它仍然应该提供入站上下文，以便会话保留其解释性元数据。扩展程序可以通过在入站上下文中发送 `ConversationLabel`、
   `GroupSubject`、`GroupChannel`、`GroupSpace` 和 `SenderName` 并调用 `recordSessionMetaFromInbound`（或将相同的上下文传递给
   `updateLastRoute`）来实现这一点。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

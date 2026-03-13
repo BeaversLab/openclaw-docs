@@ -51,3 +51,7 @@ title: "网络"
 - [网关配置参考](/zh/en/gateway/configuration)
 - [故障排查](/zh/en/gateway/troubleshooting)
 - [Doctor (诊断工具)](/zh/en/gateway/doctor)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

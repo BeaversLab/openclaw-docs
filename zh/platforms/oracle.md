@@ -301,3 +301,7 @@ tar -czvf openclaw-backup.tar.gz ~/.openclaw ~/.openclaw/workspace
 - [网关配置](/zh/en/gateway/configuration) — 所有配置选项
 - [DigitalOcean 指南](/zh/en/platforms/digitalocean) — 如果您需要付费且更简单的注册流程
 - [Hetzner 指南](/zh/en/install/hetzner) — 基于 Docker 的替代方案
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

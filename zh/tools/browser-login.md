@@ -65,3 +65,7 @@ openclaw browser open https://x.com --browser-profile openclaw --target host
 ```
 
 或者为发布更新的代理禁用沙盒隔离。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

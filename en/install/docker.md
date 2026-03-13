@@ -841,3 +841,7 @@ Example:
   sources `/etc/profile` and may reset PATH. Set `docker.env.PATH` to prepend your
   custom tool paths (e.g., `/custom/bin:/usr/local/share/npm-global/bin`), or add
   a script under `/etc/profile.d/` in your Dockerfile.
+
+import en from '/components/footer/en.mdx';
+
+<en />

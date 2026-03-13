@@ -24,3 +24,7 @@ openclaw skills list --eligible
 openclaw skills info <name>
 openclaw skills check
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

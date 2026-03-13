@@ -117,3 +117,7 @@ openclaw devices approve <requestId>
 - `~/.openclaw/exec-approvals.json`
 - [执行批准](/zh/en/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>`（从 Gateway 编辑）
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

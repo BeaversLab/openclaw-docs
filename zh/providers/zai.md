@@ -34,3 +34,7 @@ openclaw onboard --zai-api-key "$ZAI_API_KEY"
   `agents.defaults.models["zai/<model>"].params.tool_stream` 为 `false` 可将其禁用。
 - 有关模型系列的概述，请参阅 [/providers/glm](/zh/en/providers/glm)。
 - Z.AI 使用您的 API 密钥进行 Bearer 身份验证。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

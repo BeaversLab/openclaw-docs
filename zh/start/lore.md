@@ -217,3 +217,7 @@ _“钳子即法律。”_
 — ELU，在“最终形态”迁移期间，2026 年 1 月 30 日
 
 🦞💙
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

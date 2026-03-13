@@ -95,3 +95,7 @@ Send stdin:
 ```json
 { "tool": "process", "action": "write", "sessionId": "<id>", "data": "y\n" }
 ```
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -136,3 +136,7 @@ export PATH="$HOME/.npm-global/bin:$PATH"
 ```
 
 将 `export PATH=...` 行添加到您的 `~/.bashrc` 或 `~/.zshrc` 以使其永久生效。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

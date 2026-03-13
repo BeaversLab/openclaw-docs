@@ -377,3 +377,7 @@ Related:
 - [/gateway/pairing](/en/gateway/pairing)
 - [/gateway/authentication](/en/gateway/authentication)
 - [/gateway/background-process](/en/gateway/background-process)
+
+import en from '/components/footer/en.mdx';
+
+<en />

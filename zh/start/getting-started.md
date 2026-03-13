@@ -132,3 +132,7 @@ title: "入门指南"
 - 私信安全和审批：[配对](/zh/en/channels/pairing)
 - 连接更多频道：[频道](/zh/en/channels)
 - 高级工作流和从源代码构建：[设置](/zh/en/start/setup)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

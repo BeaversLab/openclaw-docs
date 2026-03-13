@@ -45,3 +45,7 @@ openclaw onboard
 - 选择一个端点 ID，以便多个自定义端点可以共存。
 
 有关详细步骤，请遵循上面的 CLI 入门文档。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

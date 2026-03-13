@@ -121,3 +121,7 @@ openclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞" --ava
   },
 }
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

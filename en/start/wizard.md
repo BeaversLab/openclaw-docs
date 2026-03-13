@@ -121,3 +121,7 @@ RPC API, and a full list of config fields the wizard writes, see the
 - Onboarding overview: [Onboarding Overview](/en/start/onboarding-overview)
 - macOS app onboarding: [Onboarding](/en/start/onboarding)
 - Agent first-run ritual: [Agent Bootstrapping](/en/start/bootstrapping)
+
+import en from '/components/footer/en.mdx';
+
+<en />

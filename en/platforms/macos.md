@@ -224,3 +224,7 @@ details, see [Gateway protocol](/en/gateway/protocol).
 - [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
 - [macOS permissions](/en/platforms/mac/permissions)
 - [Canvas](/en/platforms/mac/canvas)
+
+import en from '/components/footer/en.mdx';
+
+<en />

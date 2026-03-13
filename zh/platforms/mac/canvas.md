@@ -123,3 +123,7 @@ window.location.href = "openclaw://agent?message=Review%20this%20design";
 - Canvas 方案阻止目录遍历；文件必须位于会话根目录下。
 - 本地 Canvas 内容使用自定义方案（不需要回环服务器）。
 - 仅当明确导航时，才允许外部 `http(s)` URL。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

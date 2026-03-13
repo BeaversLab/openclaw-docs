@@ -394,3 +394,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 - [多代理路由](/zh/en/concepts/multi-agent)
 - [沙箱配置](/zh/en/gateway/configuration#agentsdefaults-sandbox)
 - [会话管理](/zh/en/concepts/session)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

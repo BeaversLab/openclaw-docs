@@ -63,3 +63,7 @@ openclaw hooks enable soul-evil
 ## 另请参阅
 
 - [Hooks](/zh/en/hooks)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

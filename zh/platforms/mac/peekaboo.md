@@ -62,3 +62,7 @@ export PEEKABOO_BRIDGE_SOCKET=/path/to/bridge.sock
   已正确签名，或者仅在 **debug** 模式下使用 `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` 运行主机。
 - 如果未找到主机，请打开其中一个主机应用（Peekaboo.app 或 OpenClaw.app）
   并确认已授予权限。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

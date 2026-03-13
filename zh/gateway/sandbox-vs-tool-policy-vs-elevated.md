@@ -126,3 +126,7 @@ openclaw sandbox explain --json
 ### “我以为这是主节点，为什么被沙盒化了？”
 
 在 `"non-main"` 模式下，群组/频道键_不是_主节点。请使用主会话键（由 `sandbox explain` 显示）或将模式切换到 `"off"`。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

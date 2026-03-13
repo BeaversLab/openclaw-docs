@@ -57,3 +57,7 @@ bun pm trust @whiskeysockets/baileys protobufjs
 ## 注意事项
 
 - 某些脚本仍然硬编码 pnpm（例如 `docs:build`、`ui:*`、`protocol:check`）。请暂时通过 pnpm 运行这些脚本。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

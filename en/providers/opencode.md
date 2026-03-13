@@ -62,3 +62,7 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 - Entering one OpenCode key during onboarding stores credentials for both runtime providers.
 - You sign in to OpenCode, add billing details, and copy your API key.
 - Billing and catalog availability are managed from the OpenCode dashboard.
+
+import en from '/components/footer/en.mdx';
+
+<en />

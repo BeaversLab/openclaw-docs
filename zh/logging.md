@@ -347,3 +347,7 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 - **日志为空？** 检查 Gateway 是否正在运行并写入文件路径
   `logging.file` 中的路径。
 - **需要更多详细信息？** 将 `logging.level` 设置为 `debug` 或 `trace` 并重试。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

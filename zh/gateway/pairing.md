@@ -95,3 +95,7 @@ openclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
 - 传输层是**无状态的**；它不存储成员资格信息。
 - 如果网关离线或配对被禁用，节点无法进行配对。
 - 如果网关处于远程模式，配对仍然会针对远程网关的存储进行。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

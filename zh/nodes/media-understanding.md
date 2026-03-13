@@ -385,3 +385,7 @@ CLI 模板还可以使用:
 
 - [配置](/zh/en/gateway/configuration)
 - [图像与媒体支持](/zh/en/nodes/images)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

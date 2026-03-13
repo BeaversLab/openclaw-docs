@@ -259,3 +259,7 @@ openclaw channels status
 - [网关配置](/zh/en/gateway/configuration)
 - [安全](/zh/en/gateway/security)
 - [表情回应](/zh/en/tools/reactions)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

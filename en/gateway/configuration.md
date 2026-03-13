@@ -601,3 +601,7 @@ For the complete field-by-field reference, see **[Configuration Reference](/en/g
 ---
 
 _Related: [Configuration Examples](/en/gateway/configuration-examples) · [Configuration Reference](/en/gateway/configuration-reference) · [Doctor](/en/gateway/doctor)_
+
+import en from '/components/footer/en.mdx';
+
+<en />

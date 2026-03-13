@@ -16,3 +16,7 @@ read_when:
   - C-3PO exists to help debug and assist wherever possible.
   - Working across time zones on making OpenClaw better.
   - The creators. The builders. The ones who peer into the code.
+
+import en from '/components/footer/en.mdx';
+
+<en />

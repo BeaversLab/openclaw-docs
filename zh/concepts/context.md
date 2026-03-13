@@ -167,3 +167,7 @@ Top tools (schema size):
 - `System prompt (estimate)` = 当不存在运行报告时（或通过不生成该报告的 CLI 后端运行时）动态计算。
 
 无论哪种方式，它都会报告大小和主要贡献者；它 **不** 会转储完整的系统提示或工具架构。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -44,3 +44,7 @@ openclaw qr --url wss://gateway.example/ws
 - After scanning, approve device pairing with:
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`
+
+import en from '/components/footer/en.mdx';
+
+<en />

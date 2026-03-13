@@ -323,3 +323,7 @@ grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 - `agents.list[].groupChat.mentionPatterns`（Signal 不支持原生提及）。
 - `messages.groupChat.mentionPatterns`（全局回退）。
 - `messages.responsePrefix`。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

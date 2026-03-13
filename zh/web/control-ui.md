@@ -255,3 +255,7 @@ http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789#token=<gateway-toke
 ```
 
 远程访问设置详细信息：[远程访问](/zh/en/gateway/remote)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

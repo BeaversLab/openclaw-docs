@@ -99,3 +99,7 @@ OpenClaw 还支持针对兼容的直接 OpenAI 模型的 OpenAI Responses 服务
 - 当会话感觉陈旧或上下文臃肿时，请使用 `/compact`。
 - 大型工具输出已经被截断；修剪可以进一步减少工具结果的累积。
 - 如果您需要重新开始，`/new` 或 `/reset` 将启动一个新的会话 ID。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

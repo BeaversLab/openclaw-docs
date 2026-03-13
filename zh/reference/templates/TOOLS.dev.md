@@ -22,3 +22,7 @@ read_when:
 - 文本转语音：指定语音、目标扬声器/房间，以及是否流式传输。
 
 添加任何其他您希望助手了解的关于本地工具链的信息。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

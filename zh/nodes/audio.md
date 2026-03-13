@@ -185,3 +185,7 @@ OpenClaw 将按此顺序自动检测并在第一个可用选项处停止：
 - 对于 `parakeet-mlx`，如果您传递 `--output-dir`，当 `--output-format` 为 `txt`（或省略）时，OpenClaw 会读取 `<output-dir>/<media-basename>.txt`；非 `txt` 输出格式将回退到 stdout 解析。
 - 保持超时时间合理（`timeoutSeconds`，默认 60 秒），以避免阻塞回复队列。
 - 预检转录仅处理用于提及检测的**第一个**音频附件。额外的音频将在主媒体理解阶段进行处理。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -264,3 +264,7 @@ free -h
 - [Docker install](/en/install/docker) — containerized setup
 - [Tailscale](/en/gateway/tailscale) — secure remote access
 - [Configuration](/en/gateway/configuration) — full config reference
+
+import en from '/components/footer/en.mdx';
+
+<en />

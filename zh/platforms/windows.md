@@ -198,3 +198,7 @@ openclaw onboard
 ## Windows 伴侣应用
 
 我们还没有 Windows 伴侣应用。如果您希望通过贡献实现它，欢迎贡献代码。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

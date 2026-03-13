@@ -385,3 +385,7 @@ This shows per‑capability outcomes and the chosen provider/model when applicab
 
 - [Configuration](/en/gateway/configuration)
 - [Image & Media Support](/en/nodes/images)
+
+import en from '/components/footer/en.mdx';
+
+<en />

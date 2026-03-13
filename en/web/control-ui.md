@@ -266,3 +266,7 @@ Example:
 ```
 
 Remote access setup details: [Remote access](/en/gateway/remote).
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -283,3 +283,7 @@ openclaw cron add \
 - [Heartbeat](/zh/en/gateway/heartbeat) - 完整的心跳配置
 - [Cron jobs](/zh/en/automation/cron-jobs) - 完整的 Cron CLI 和 API 参考
 - [System](/zh/en/cli/system) - 系统事件 + 心跳控制
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

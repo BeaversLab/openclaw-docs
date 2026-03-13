@@ -52,3 +52,7 @@ Local trust:
 - [Gateway config reference](/en/gateway/configuration)
 - [Troubleshooting](/en/gateway/troubleshooting)
 - [Doctor](/en/gateway/doctor)
+
+import en from '/components/footer/en.mdx';
+
+<en />

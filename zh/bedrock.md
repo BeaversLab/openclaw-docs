@@ -166,3 +166,7 @@ openclaw models list
 当前的功能。
 - 如果您更倾向于使用托管密钥流，您也可以在 Bedrock 前面放置一个兼容
   OpenAI 的代理，并将其配置为 OpenAI 提供商。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

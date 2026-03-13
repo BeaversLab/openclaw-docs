@@ -163,3 +163,7 @@ user service (no lingering needed). See [Gateway runbook](/en/gateway) for the s
 - [Discord](/en/channels/discord) and [Telegram](/en/channels/telegram) (reply tags + replyToMode settings)
 - [OpenClaw assistant setup](/en/start/openclaw)
 - [macOS app](/en/platforms/macos) (gateway lifecycle)
+
+import en from '/components/footer/en.mdx';
+
+<en />

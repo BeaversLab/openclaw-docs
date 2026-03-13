@@ -13,3 +13,7 @@ title: "docs"
 openclaw docs browser extension
 openclaw docs sandbox allowHostControl
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -142,3 +142,7 @@ OpenClaw 有两个挂钩系统：
 - AbortSignal（取消）
 - 网关断开连接或 RPC 超时
 - `agent.wait` 超时（仅等待，不会停止 agent）
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

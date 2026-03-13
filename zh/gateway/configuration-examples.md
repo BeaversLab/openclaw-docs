@@ -633,3 +633,7 @@ title: “配置示例”
 - 提供商 ID 各不相同（电话号码、用户 ID、频道 ID）。请使用提供商文档确认格式。
 - 稍后添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
 - 有关更深入的设置说明，请参阅[提供商](/zh/en/providers)和[故障排除](/zh/en/gateway/troubleshooting)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

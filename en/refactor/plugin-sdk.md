@@ -212,3 +212,7 @@ Notes:
 - External plugins can be developed and updated without core source access.
 
 Related docs: [Plugins](/en/tools/plugin), [Channels](/en/channels/index), [Configuration](/en/gateway/configuration).
+
+import en from '/components/footer/en.mdx';
+
+<en />

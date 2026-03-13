@@ -183,3 +183,7 @@ diagnostics:
 - [Token Use and Costs](/zh/en/reference/token-use)
 - [Session Pruning](/zh/en/concepts/session-pruning)
 - [Gateway Configuration Reference](/zh/en/gateway/configuration-reference)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

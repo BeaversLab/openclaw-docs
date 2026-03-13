@@ -118,3 +118,7 @@ openclaw health
 ```
 
 指南：[更新](/zh/en/install/updating)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

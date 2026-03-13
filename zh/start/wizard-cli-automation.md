@@ -202,3 +202,7 @@ openclaw agents add work \
 - 接入中心：[接入向导 (CLI)](/zh/en/start/wizard)
 - 完整参考：[CLI 接入参考](/zh/en/start/wizard-cli-reference)
 - 命令参考：[`openclaw onboard`](/zh/en/cli/onboard)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

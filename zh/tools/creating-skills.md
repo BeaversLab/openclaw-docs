@@ -56,3 +56,7 @@ When the user asks for a greeting, use the `echo` tool to say "Hello from your c
 ## 共享技能
 
 你也可以浏览并贡献技能到 [ClawHub](https://clawhub.com)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

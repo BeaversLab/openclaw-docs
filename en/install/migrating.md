@@ -190,3 +190,7 @@ On the new machine, confirm:
 - [Doctor](/en/gateway/doctor)
 - [Gateway troubleshooting](/en/gateway/troubleshooting)
 - [Where does OpenClaw store its data?](/en/help/faq#where-does-openclaw-store-its-data)
+
+import en from '/components/footer/en.mdx';
+
+<en />

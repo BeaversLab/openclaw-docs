@@ -32,3 +32,7 @@ title: "配置"
 openclaw configure
 openclaw configure --section model --section channels
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

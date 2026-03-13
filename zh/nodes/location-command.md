@@ -96,3 +96,7 @@ UI 行为：
 - 关闭：“位置共享已禁用。”
 - 使用期间：“仅在 OpenClaw 打开时。”
 - 精确：“使用精确的 GPS 位置。关闭以分享大致位置。”
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

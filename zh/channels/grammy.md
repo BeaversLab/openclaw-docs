@@ -29,3 +29,7 @@ title: grammY
 - 如果我们遇到 Bot API 429 错误，使用可选的 grammY 插件 (throttler)。
 - 添加更多结构化的媒体测试（贴纸、语音笔记）。
 - 使 webhook 监听端口可配置（除非通过网关连接，目前固定为 8787）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

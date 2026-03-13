@@ -91,3 +91,7 @@ title: "严格配置验证"
 - 插件缺少架构 → 插件加载被阻止并显示明确的错误。
 - 配置无效 → 网关启动被阻止，诊断命令除外。
 - Doctor 试运行自动；`doctor --fix` 写入更正后的配置。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -801,3 +801,7 @@ docker build -t my-openclaw-sbx -f Dockerfile.sandbox .
   获取 `/etc/profile` 并且可能会重置 PATH。设置 `docker.env.PATH` 以将您的
   自定义工具路径（例如，`/custom/bin:/usr/local/share/npm-global/bin`）添加到前面，或者在 Dockerfile 中的 `/etc/profile.d/` 下
   添加脚本。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

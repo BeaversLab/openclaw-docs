@@ -401,3 +401,7 @@ Gateway methods:
 - `tts.convert`
 - `tts.setProvider`
 - `tts.providers`
+
+import en from '/components/footer/en.mdx';
+
+<en />

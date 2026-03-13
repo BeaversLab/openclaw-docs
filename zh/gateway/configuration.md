@@ -601,3 +601,7 @@ SecretRef 的详细信息（包括用于 `env`/`file`/`exec` 的 `secrets.provid
 ---
 
 _相关：[Configuration Examples](/zh/en/gateway/configuration-examples) · [Configuration Reference](/zh/en/gateway/configuration-reference) · [Doctor](/zh/en/gateway/doctor)_
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

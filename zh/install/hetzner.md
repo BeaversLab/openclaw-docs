@@ -354,3 +354,7 @@ OpenClaw 在 Docker 中运行，但 Docker 不是事实来源。
 这种方法通过可复现的部署、版本控制的基础架构和自动灾难恢复，补充了上述 Docker 设置。
 
 > **注意：** 社区维护。如有问题或贡献，请参阅上面的仓库链接。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

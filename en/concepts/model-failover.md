@@ -150,3 +150,7 @@ See [Gateway configuration](/en/gateway/configuration) for:
 - `agents.defaults.imageModel` routing
 
 See [Models](/en/concepts/models) for the broader model selection and fallback overview.
+
+import en from '/components/footer/en.mdx';
+
+<en />

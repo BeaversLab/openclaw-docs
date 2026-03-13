@@ -29,3 +29,7 @@ title: “菜单栏图标”
 
 - 没有用于耳朵/工作的外部 CLI/代理切换；将其保留在应用自身信号内部，以避免意外抖动。
 - 保持 TTL 较短（&lt;10s），以便如果作业挂起，图标能快速返回基线。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

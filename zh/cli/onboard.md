@@ -135,3 +135,7 @@ openclaw agents add <name>
 <Note>
 `--json` 并不意味着非交互模式。脚本请使用 `--non-interactive`。
 </Note>
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

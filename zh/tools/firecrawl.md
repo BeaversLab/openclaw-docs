@@ -59,3 +59,7 @@ OpenClaw 始终使用 `proxy: "auto"` 加上 `storeInCache: true` 来发起 Fire
 3. 基本 HTML 清理（最后回退）
 
 有关完整的 Web 工具设置，请参阅 [Web 工具](/zh/en/tools/web)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

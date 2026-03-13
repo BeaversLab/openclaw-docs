@@ -137,3 +137,7 @@ sequenceDiagram
 - 每台主机上恰好有一个 Gateway 控制单个 Baileys 会话。
 - 握手是强制性的；任何非 JSON 或非连接的首帧都将导致强制关闭。
 - 事件不会重放；客户端必须在出现间隙时进行刷新。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -66,3 +66,7 @@ You can override mode or cadence per session:
 - Heartbeats never show typing, regardless of mode.
 - `typingIntervalSeconds` controls the **refresh cadence**, not the start time.
   The default is 6 seconds.
+
+import en from '/components/footer/en.mdx';
+
+<en />

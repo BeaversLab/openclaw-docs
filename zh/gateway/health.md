@@ -33,3 +33,7 @@ title: “健康检查”
 ## 专用的“health”命令
 
 `openclaw health --json` 请求正在运行的网关提供其健康快照（CLI 不使用直接通道套接字）。它在可用时报告关联的凭据/认证时间、按通道探测摘要、会话存储摘要和探测持续时间。如果网关无法访问或探测失败/超时，它将以非零状态退出。使用 `--timeout <ms>` 覆盖默认的 10 秒设置。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

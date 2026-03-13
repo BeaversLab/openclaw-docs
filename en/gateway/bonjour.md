@@ -175,3 +175,7 @@ sequences (e.g. spaces become `\032`).
 
 - Discovery policy and transport selection: [Discovery](/en/gateway/discovery)
 - Node pairing + approvals: [Gateway pairing](/en/gateway/pairing)
+
+import en from '/components/footer/en.mdx';
+
+<en />

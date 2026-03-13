@@ -601,3 +601,7 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 ---
 
 _本威胁模型是一份动态文档。请将安全问题报告至 security@openclaw.ai_
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

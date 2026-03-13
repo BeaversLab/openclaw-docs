@@ -102,3 +102,7 @@ lsof -nP -iTCP:18789 -sTCP:LISTEN
 ```
 
 如果是手动运行的进程占用了端口，请停止该进程（Ctrl+C）。作为最后手段，请终止上面找到的 PID。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

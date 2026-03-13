@@ -52,3 +52,7 @@ Prefer localhost, Tailscale Serve, or an SSH tunnel.
   - SecretRef-managed config: resolve the external secret provider or export `OPENCLAW_GATEWAY_TOKEN` in this shell, then rerun `openclaw dashboard`
   - No token configured: `openclaw doctor --generate-gateway-token`
 - In the dashboard settings, paste the token into the auth field, then connect.
+
+import en from '/components/footer/en.mdx';
+
+<en />

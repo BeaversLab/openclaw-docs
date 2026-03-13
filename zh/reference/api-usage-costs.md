@@ -137,3 +137,7 @@ OpenClaw 可以从以下来源获取凭据：
 技能可以将 `apiKey` 存储在 `skills.entries.<name>.apiKey` 中。如果技能使用该密钥访问外部 API，则可能会根据技能的提供商产生费用。
 
 参见[技能](/zh/en/tools/skills)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

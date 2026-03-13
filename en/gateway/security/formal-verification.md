@@ -162,3 +162,7 @@ What it means:
 - Red (expected):
   - `make routing-precedence-negative`
   - `make routing-identitylinks-negative`
+
+import en from '/components/footer/en.mdx';
+
+<en />

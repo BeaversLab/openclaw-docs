@@ -488,3 +488,7 @@ ngrok 隧道在容器内运行，提供公共 webhook URL，而无需暴露 Fly 
 - 免费层包含一定的额度
 
 详情请参阅 [Fly.io 定价](https://fly.io/docs/about/pricing/)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

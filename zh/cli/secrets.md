@@ -171,3 +171,7 @@ openclaw secrets audit --check
 ```
 
 如果 `audit --check` 仍然报告明文发现，请更新剩余报告的目标路径并重新运行审计。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

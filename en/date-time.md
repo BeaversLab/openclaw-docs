@@ -126,3 +126,7 @@ If you need local time, convert it downstream using the known timezone.
 - [System Prompt](/en/concepts/system-prompt)
 - [Timezones](/en/concepts/timezone)
 - [Messages](/en/concepts/messages)
+
+import en from '/components/footer/en.mdx';
+
+<en />

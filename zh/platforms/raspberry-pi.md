@@ -408,3 +408,7 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 - [Hetzner 指南](/zh/en/install/hetzner) — Docker 设置
 - [Tailscale](/zh/en/gateway/tailscale) — 远程访问
 - [节点](/zh/en/nodes) — 将您的笔记本电脑/手机与 Pi 网关配对
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

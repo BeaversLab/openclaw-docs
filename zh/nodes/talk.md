@@ -90,3 +90,7 @@ title: "对话模式"
 - `eleven_v3` 的 `stability` 被验证为 `0.0`、`0.5` 或 `1.0`；其他模型接受 `0..1`。
 - `latency_tier` 在设置时被验证为 `0..4`。
 - Android 支持 `pcm_16000`、`pcm_22050`、`pcm_24000` 和 `pcm_44100` 输出格式，用于低延迟 AudioTrack 流式传输。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

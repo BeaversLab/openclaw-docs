@@ -99,3 +99,7 @@ openclaw channels resolve --channel matrix "Project Room"
 - 使用 `--kind user|group|auto` 强制指定目标类型。
 - 当多个条目共享相同名称时，解析优先考虑活动匹配项。
 - `channels resolve` 是只读的。如果所选帐户是通过 SecretRef 配置的，但该凭据在当前命令路径中不可用，该命令将返回带有说明的降级未解析结果，而不是中止整个运行。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

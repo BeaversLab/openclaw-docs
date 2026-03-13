@@ -87,3 +87,7 @@ Outbound sends were mirrored into the _current_ agent session (tool session key)
   - `src/infra/outbound/outbound.test.ts`
   - `src/agents/tools/message-tool.test.ts`
   - `src/gateway/server-methods/send.test.ts`
+
+import en from '/components/footer/en.mdx';
+
+<en />

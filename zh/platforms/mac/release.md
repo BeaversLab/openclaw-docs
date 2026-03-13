@@ -88,3 +88,7 @@ SPARKLE_PRIVATE_KEY_FILE=/path/to/ed25519-private-key scripts/make_appcast.sh di
   - 在先前的公共版本上，从“关于”选项卡运行“检查更新…”，并验证 Sparkle 是否正确安装了新版本。
 
 完成标准：已签名的应用程序和 appcast 已发布，更新流程在旧版本上正常运行，且发布资源已附加到 GitHub 发布版本中。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

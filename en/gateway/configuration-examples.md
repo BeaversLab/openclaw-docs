@@ -635,3 +635,7 @@ terms before depending on subscription auth.
 - Provider IDs differ (phone numbers, user IDs, channel IDs). Use the provider docs to confirm the format.
 - Optional sections to add later: `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
 - See [Providers](/en/providers) and [Troubleshooting](/en/gateway/troubleshooting) for deeper setup notes.
+
+import en from '/components/footer/en.mdx';
+
+<en />

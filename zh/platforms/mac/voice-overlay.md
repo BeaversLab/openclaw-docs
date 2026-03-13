@@ -58,3 +58,7 @@ title: “语音叠加层”
 3. 重构 `VoicePushToTalk` 以采用现有会话并在释放时调用 `endCapture`；应用运行时冷却时间。
 4. 将 `VoiceWakeOverlayController` 连接到发布器；移除来自运行时/按住说话的直接调用。
 5. 添加针对会话采用、冷却时间和空文本解除的集成测试。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

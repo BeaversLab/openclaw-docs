@@ -61,3 +61,7 @@ Recent gateway logs show repeated `cron.add` failures with invalid parameters (m
 
 - `cron.add` 是否应接受来自客户端的显式 `state`（目前架构不允许）？
 - 我们是否应该允许将 `webchat` 作为显式传递提供商（目前在传递解析中被过滤）？
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

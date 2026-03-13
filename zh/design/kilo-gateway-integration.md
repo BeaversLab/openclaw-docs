@@ -532,3 +532,7 @@ const needsNonImageSanitize =
 | `src/commands/onboard-auth.ts`                              | 修改      | 导出新函数                                                    |
 | `src/agents/pi-embedded-runner/cache-ttl.ts`                | 修改      | 添加 kilocode 支持                                                    |
 | `src/agents/transcript-policy.ts`                           | 修改      | 添加 kilocode Gemini 处理                                            |
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

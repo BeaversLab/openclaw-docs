@@ -32,3 +32,7 @@ openclaw voicecall expose --mode off
 ```
 
 安全提示：请仅将 webhook 端点暴露给您信任的网络。尽可能使用 Tailscale Serve 而不是 Funnel。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

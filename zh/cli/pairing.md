@@ -30,3 +30,7 @@ openclaw pairing approve --channel telegram --account work <code> --notify
 - `pairing list` 支持多账号频道的 `--account <accountId>`。
 - `pairing approve` 支持 `--account <accountId>` 和 `--notify`。
 - 如果仅配置了一个支持配对的频道，则允许使用 `pairing approve <code>`。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

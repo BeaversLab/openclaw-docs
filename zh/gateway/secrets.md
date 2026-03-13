@@ -451,3 +451,7 @@ OpenClaw 故意不写入包含历史明文密钥值的回滚备份。
 - 身份验证设置：[Authentication](/zh/en/gateway/authentication)
 - 安全态势：[Security](/zh/en/gateway/security)
 - 环境优先级：[Environment Variables](/zh/en/help/environment)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -45,3 +45,7 @@ DISABLE_LIBRARY_VALIDATION=1 scripts/package-mac-app.sh   # dev-only Sparkle Tea
 ## 原因
 
 TCC 权限与包标识符 _以及_ 代码签名绑定。具有变化 UUID 的未签名调试构建导致 macOS 在每次重新构建后忘记授权。对二进制文件进行签名（默认为 ad‑hoc）并保持固定的包 id/路径 (`dist/OpenClaw.app`) 可以在构建之间保留授权，这与 VibeTunnel 方法相匹配。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

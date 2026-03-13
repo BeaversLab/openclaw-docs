@@ -73,3 +73,7 @@ Optional keys:
 - If your plugin depends on native modules, document the build steps and any
   package-manager allowlist requirements (for example, pnpm `allow-build-scripts`
   - `pnpm rebuild <package>`).
+
+import en from '/components/footer/en.mdx';
+
+<en />

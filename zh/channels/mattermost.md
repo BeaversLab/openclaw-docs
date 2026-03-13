@@ -393,3 +393,7 @@ Mattermost 支持在 `channels.mattermost.accounts` 下配置多个账户：
 - 网关日志记录 `missing _token in context`：`_token` 字段不在按钮的上下文中。请确保在构建集成负载时包含了该字段。
 - 确认时显示原始 ID 而非按钮名称：`context.action_id` 与按钮的 `id` 不匹配。请将两者设置为相同的经过净化的值。
 - Agent 不知道按钮：将 `capabilities: ["inlineButtons"]` 添加到 Mattermost 通道配置中。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

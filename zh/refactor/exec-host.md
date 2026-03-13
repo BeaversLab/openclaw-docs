@@ -314,3 +314,7 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 - [Exec 批准](/zh/en/tools/exec-approvals)
 - [节点](/zh/en/nodes)
 - [提升模式](/zh/en/tools/elevated)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -65,3 +65,7 @@ openclaw browser open https://x.com --browser-profile openclaw --target host
 ```
 
 Or disable sandboxing for the agent that posts updates.
+
+import en from '/components/footer/en.mdx';
+
+<en />

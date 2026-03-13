@@ -56,3 +56,7 @@ Ask your agent to "refresh skills" or restart the gateway. OpenClaw will discove
 ## Shared Skills
 
 You can also browse and contribute skills to [ClawHub](https://clawhub.com).
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -41,3 +41,7 @@ agent (with a session switcher for other sessions).
 ## Known limitations
 
 - The UI is optimized for chat sessions (not a full browser sandbox).
+
+import en from '/components/footer/en.mdx';
+
+<en />

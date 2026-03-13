@@ -54,3 +54,7 @@ Meet here
 - **Telegram**：场所映射到 `LocationName/LocationAddress`；实时位置使用 `live_period`。
 - **WhatsApp**：`locationMessage.comment` 和 `liveLocationMessage.caption` 被附加为标题行。
 - **Matrix**：`geo_uri` 被解析为定位点位置；海拔高度被忽略，并且 `LocationIsLive` 始终为 false。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

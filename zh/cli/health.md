@@ -19,3 +19,7 @@ openclaw health --verbose
 
 - 当配置了多个账户时，`--verbose` 会运行实时探测并打印每个账户的计时信息。
 - 当配置了多个代理时，输出包括每个代理的会话存储。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

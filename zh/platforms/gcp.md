@@ -501,3 +501,7 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 - 设置消息通道：[通道](/zh/en/channels)
 - 将本地设备配对为节点：[节点](/zh/en/nodes)
 - 配置网关：[网关配置](/zh/en/gateway/configuration)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

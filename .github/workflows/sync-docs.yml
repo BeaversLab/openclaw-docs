@@ -49,6 +49,10 @@ jobs:
           # It automatically detects 'en' locale for files under 'en/' folder
           node scripts/fix-locale-links.js en/
 
+      - name: Ensure doc footers in en/
+        run: |
+          node scripts/ensure-doc-footers.mjs en/
+
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions[bot]"

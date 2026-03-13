@@ -23,3 +23,7 @@ openclaw webhooks gmail run
 ```
 
 有关详细信息，请参阅 [Gmail Pub/Sub 文档](/zh/en/automation/gmail-pubsub)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

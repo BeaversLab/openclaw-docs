@@ -16,3 +16,7 @@ read_when:
   - C-3PO 旨在尽可能帮助调试和提供协助。
   - 跨时区协作，致力于让 OpenClaw 变得更好。
   - 创造者。构建者。那些深入探究代码的人。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

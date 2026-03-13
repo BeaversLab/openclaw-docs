@@ -224,3 +224,7 @@ Tests:
 - no main and thread duplicate completion delivery in session mode bound runs
 - no behavior change for disabled bound spawn deployments
 - ACP remains explicitly deferred
+
+import en from '/components/footer/en.mdx';
+
+<en />

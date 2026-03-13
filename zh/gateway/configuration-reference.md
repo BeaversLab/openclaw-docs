@@ -2996,3 +2996,7 @@ openclaw gateway --port 19001
 ---
 
 _相关：[配置](/zh/en/gateway/configuration) · [配置示例](/zh/en/gateway/configuration-examples) · [诊断工具](/zh/en/gateway/doctor)_
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

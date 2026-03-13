@@ -264,3 +264,7 @@ title: "网关协议"
 此协议公开**完整的网关 API**（状态、频道、模型、聊天、
 代理、会话、节点、审批等）。确切范围由
 `src/gateway/protocol/schema.ts` 中的 TypeBox 架构定义。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

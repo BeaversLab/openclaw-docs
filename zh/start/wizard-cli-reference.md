@@ -290,3 +290,7 @@ Signal 设置行为：
 - 入职中心：[入职向导 (CLI)](/zh/en/start/wizard)
 - 自动化与脚本：[CLI 自动化](/zh/en/start/wizard-cli-automation)
 - 命令参考：[`openclaw onboard`](/zh/en/cli/onboard)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

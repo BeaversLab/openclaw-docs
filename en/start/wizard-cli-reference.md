@@ -292,3 +292,7 @@ Signal setup behavior:
 - Onboarding hub: [Onboarding Wizard (CLI)](/en/start/wizard)
 - Automation and scripts: [CLI Automation](/en/start/wizard-cli-automation)
 - Command reference: [`openclaw onboard`](/en/cli/onboard)
+
+import en from '/components/footer/en.mdx';
+
+<en />

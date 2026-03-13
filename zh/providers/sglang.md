@@ -100,3 +100,7 @@ curl http://127.0.0.1:30000/v1/models
 
 - 如果请求因身份验证错误而失败，请设置一个匹配的真实的 `SGLANG_API_KEY`，
   您的服务器配置，或者在 `models.providers.sglang` 下显式配置提供商。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

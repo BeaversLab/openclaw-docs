@@ -70,3 +70,7 @@ WhatsApp 渠道通过 **Baileys Web** 运行。本文档记录了目前针对发
 - 覆盖图像/音频/文档情况的发送 + 回复流程。
 - 验证图像的重新压缩（大小限制）和音频的语音备注标记。
 - 确保多媒体回复作为顺序发送分发。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

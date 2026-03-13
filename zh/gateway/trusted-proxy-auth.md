@@ -325,3 +325,7 @@ location / {
 - [配置](/zh/en/gateway/configuration) — 配置参考
 - [远程访问](/zh/en/gateway/remote) — 其他远程访问模式
 - [Tailscale](/zh/en/gateway/tailscale) — 专用于 tailnet 访问的更简单的替代方案
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -289,3 +289,7 @@ OpenClaw 作为安装（npm 包或 OpenClaw.app）的一部分，提供了一组
 浏览 [https://clawhub.com](https://clawhub.com)。
 
 ---
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

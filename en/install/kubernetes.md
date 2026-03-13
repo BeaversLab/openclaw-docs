@@ -189,3 +189,7 @@ scripts/k8s/
     ├── pvc.yaml                # 10Gi persistent storage
     └── service.yaml            # ClusterIP on 18789
 ```
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -110,3 +110,7 @@ openclaw --profile main status
 openclaw --profile rescue status
 openclaw --profile rescue browser status
 ```
+
+import en from '/components/footer/en.mdx';
+
+<en />

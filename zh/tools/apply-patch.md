@@ -48,3 +48,7 @@ title: "apply_patch 工具"
   "input": "*** Begin Patch\n*** Update File: src/index.ts\n@@\n-const foo = 1\n+const foo = 2\n*** End Patch"
 }
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

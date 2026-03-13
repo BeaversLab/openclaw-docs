@@ -49,3 +49,7 @@ CLI wizard. You will be asked to:
 - Choose an Endpoint ID so multiple custom endpoints can coexist.
 
 For detailed steps, follow the CLI onboarding docs above.
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -122,3 +122,7 @@ git commit -m "Add Clawd workspace"
 - 对于基于浏览器的验证，请使用 `openclaw browser` (标签页/状态/屏幕截图) 和 OpenClaw 管理的 Chrome 配置文件。
 - 对于 DOM 检查，请使用 `openclaw browser eval|query|dom|snapshot` (当需要机器输出时，使用 `--json`/`--out`)。
 - 对于交互，请使用 `openclaw browser click|type|hover|drag|select|upload|press|wait|navigate|back|evaluate|run` (点击/输入需要快照引用；使用 `evaluate` 来获取 CSS 选择器)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -284,3 +284,7 @@ openclaw cron add \
 - [Heartbeat](/en/gateway/heartbeat) - full heartbeat configuration
 - [Cron jobs](/en/automation/cron-jobs) - full cron CLI and API reference
 - [System](/en/cli/system) - system events + heartbeat controls
+
+import en from '/components/footer/en.mdx';
+
+<en />

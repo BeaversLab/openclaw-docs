@@ -126,3 +126,7 @@ openclaw message send --channel synology-chat --target synology-chat:123456 --te
 - 除非您明确信任自签名的本地 NAS 证书，否则请保留 `allowInsecureSsl: false`。
 - 入站 Webhook 请求已通过令牌验证，并按发送方进行了速率限制。
 - 生产环境中建议使用 `dmPolicy: "allowlist"`。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

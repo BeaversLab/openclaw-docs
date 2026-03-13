@@ -264,3 +264,7 @@ free -h
 - [Docker 安装](/zh/en/install/docker) — 容器化部署
 - [Tailscale](/zh/en/gateway/tailscale) — 安全的远程访问
 - [配置](/zh/en/gateway/configuration) — 完整配置参考
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

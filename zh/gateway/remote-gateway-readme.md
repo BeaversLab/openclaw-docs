@@ -156,3 +156,7 @@ launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
 | `RunAtLoad`                          | 加载代理时启动隧道                           |
 
 OpenClaw.app 连接到您客户端机器上的 `ws://127.0.0.1:18789`。SSH 隧道会将该连接转发到运行网关的远程机器上的端口 18789。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

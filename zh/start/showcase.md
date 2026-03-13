@@ -417,3 +417,7 @@ OpenClaw 连接到 Jira，然后即时生成了一个新技能（在它存在于
     我们会将杰出的项目添加到此页面
   </Step>
 </Steps>
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

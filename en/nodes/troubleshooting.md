@@ -112,3 +112,7 @@ Related:
 - [/nodes/location-command](/en/nodes/location-command)
 - [/tools/exec-approvals](/en/tools/exec-approvals)
 - [/gateway/pairing](/en/gateway/pairing)
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -125,3 +125,7 @@ System: [2026-01-12 12:19:17 PST] Model switched.
 - [系统提示](/zh/en/concepts/system-prompt)
 - [时区](/zh/en/concepts/timezone)
 - [消息](/zh/en/concepts/messages)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

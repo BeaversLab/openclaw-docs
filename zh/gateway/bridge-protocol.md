@@ -89,3 +89,7 @@ title: "网桥协议"
 
 桥接目前是**隐式 v1**（无最小/最大协商）。预期具有向后兼容性；
 在任何重大更改之前，添加一个桥接协议版本字段。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

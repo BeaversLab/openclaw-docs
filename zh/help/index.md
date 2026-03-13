@@ -19,3 +19,7 @@ title: "帮助"
 如果你在寻找概念性问题（不是“出了故障”）：
 
 - [常见问题（概念）](/zh/en/help/faq)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

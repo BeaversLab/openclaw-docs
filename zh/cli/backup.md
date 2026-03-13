@@ -74,3 +74,7 @@ OpenClaw 不强制执行内置的最大备份大小或单文件大小限制。
 大型工作区通常是归档大小的主要驱动因素。如果您希望备份更小或更快，请使用 `--no-include-workspace`。
 
 要获得最小的归档，请使用 `--only-config`。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

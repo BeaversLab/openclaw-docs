@@ -417,3 +417,7 @@ Have something to share? We'd love to feature it!
     We'll add standout projects to this page
   </Step>
 </Steps>
+
+import en from '/components/footer/en.mdx';
+
+<en />

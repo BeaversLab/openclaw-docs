@@ -365,3 +365,7 @@ imsg send <handle> "test"
 - [Gateway configuration](/en/gateway/configuration)
 - [Pairing](/en/channels/pairing)
 - [BlueBubbles](/en/channels/bluebubbles)
+
+import en from '/components/footer/en.mdx';
+
+<en />

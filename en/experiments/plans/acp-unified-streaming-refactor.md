@@ -94,3 +94,7 @@ Canonical event contract:
 - Crash/restart replay sends no duplicate chunk for the same delivery ID.
 - Legacy ACP projector/coalescer path is removed.
 - Streaming config resolution is shared and runtime-independent.
+
+import en from '/components/footer/en.mdx';
+
+<en />

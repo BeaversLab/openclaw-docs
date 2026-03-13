@@ -251,3 +251,7 @@ Docker 安装和容器化网关位于此处：
 - [沙箱配置](/zh/en/gateway/configuration#agentsdefaults-sandbox)
 - [多代理沙箱与工具](/zh/en/tools/multi-agent-sandbox-tools)
 - [安全性](/zh/en/gateway/security)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

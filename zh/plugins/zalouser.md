@@ -75,3 +75,7 @@ openclaw directory peers list --channel zalouser --query "name"
 操作：`send`， `image`， `link`， `friends`， `groups`， `me`， `status`
 
 通道消息操作还支持 `react` 用于消息反应。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -130,3 +130,7 @@ title: "SecretRef 凭证范围"
 基本原理：
 
 - 这些凭据属于已创建、已轮换、承载会话或 OAuth 持久类，不适合只读外部 SecretRef 解析。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

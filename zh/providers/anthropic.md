@@ -253,3 +253,7 @@ openclaw onboard --auth-choice setup-token
 - 添加另一个 Anthropic 配置文件或等待冷却结束。
 
 更多信息：[/gateway/troubleshooting](/zh/gateway/troubleshooting) 和 [/help/faq](/zh/help/faq)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -296,3 +296,7 @@ flowchart TD
 
   </Accordion>
 </AccordionGroup>
+
+import en from '/components/footer/en.mdx';
+
+<en />

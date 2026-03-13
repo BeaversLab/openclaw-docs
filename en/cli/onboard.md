@@ -136,3 +136,7 @@ openclaw agents add <name>
 <Note>
 `--json` does not imply non-interactive mode. Use `--non-interactive` for scripts.
 </Note>
+
+import en from '/components/footer/en.mdx';
+
+<en />

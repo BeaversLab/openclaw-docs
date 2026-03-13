@@ -34,3 +34,7 @@ title: "模型配置探索"
 - 配置文件的轮换应该是基于提供商还是基于模型？
 - UI 应该如何为会话展示配置文件选择？
 - 从旧版配置键迁移的最安全路径是什么？
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

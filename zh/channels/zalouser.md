@@ -179,3 +179,7 @@ openclaw directory groups list --channel zalouser --query "work"
 
 - 移除所有关于旧的外部 `zca` 进程的假设。
 - 该频道现在完全在 OpenClaw 中运行，无需外部 CLI 二进制文件。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

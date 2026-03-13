@@ -112,3 +112,7 @@ Inbound replies include:
 - Quoted context is appended to `Body` as a `[Replying to ...]` block.
 
 This is consistent across channels.
+
+import en from '/components/footer/en.mdx';
+
+<en />

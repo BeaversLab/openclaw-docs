@@ -27,3 +27,7 @@ openclaw setup --workspace ~/.openclaw/workspace
 ```bash
 openclaw setup --wizard
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

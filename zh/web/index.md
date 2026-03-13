@@ -118,3 +118,7 @@ openclaw gateway
 ```bash
 pnpm ui:build # auto-installs UI deps on first run
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

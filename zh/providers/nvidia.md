@@ -53,3 +53,7 @@ openclaw models set nvidia/nvidia/llama-3.1-nemotron-70b-instruct
 
 - 兼容 OpenAI 的 `/v1` 端点；使用来自 NVIDIA NGC 的 API 密钥。
 - 当设置 `NVIDIA_API_KEY` 时，提供程序会自动启用；使用静态默认值（131,072 令牌上下文窗口，最大 4,096 个令牌）。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -62,3 +62,7 @@ title: "文档目录"
 - [Gmail 钩子 (Pub/Sub)](/zh/en/automation/gmail-pubsub)
 - [安全](/zh/en/gateway/security)
 - [故障排查](/zh/en/gateway/troubleshooting)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

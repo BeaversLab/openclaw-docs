@@ -97,3 +97,7 @@ Other config knobs that affect tool availability:
 - Plugin ids used in allowlists must not clash with core tool names.
 - Prefer `optional: true` for tools that trigger side effects or require extra
   binaries/credentials.
+
+import en from '/components/footer/en.mdx';
+
+<en />

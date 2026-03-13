@@ -100,3 +100,7 @@ openclaw update status --timeout 10
 - [开发频道](/zh/en/install/development-channels)
 - [更新](/zh/en/install/updating)
 - [CLI 参考](/zh/en/cli)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

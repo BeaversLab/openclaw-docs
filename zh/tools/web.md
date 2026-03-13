@@ -382,3 +382,7 @@ await web_search({
 - 响应会被缓存（默认 15 分钟）以减少重复抓取。
 - 如果您使用工具配置文件/允许列表，请添加 `web_search`/`web_fetch` 或 `group:web`。
 - 如果缺少 API 密钥，`web_search` 将返回一条简短的设置提示，其中包含文档链接。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

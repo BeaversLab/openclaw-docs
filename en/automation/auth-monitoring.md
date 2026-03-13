@@ -42,3 +42,7 @@ gateway host and are tuned for systemd + Termux.
 - `scripts/termux-sync-widget.sh`: sync Claude Code creds → OpenClaw.
 
 If you don’t need phone automation or systemd timers, skip these scripts.
+
+import en from '/components/footer/en.mdx';
+
+<en />

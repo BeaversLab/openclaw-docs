@@ -64,3 +64,7 @@ openclaw config set channels.whatsapp.groups '["*"]' --strict-json
 openclaw config validate
 openclaw config validate --json
 ```
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

@@ -75,3 +75,7 @@ Tool name: `zalouser`
 Actions: `send`, `image`, `link`, `friends`, `groups`, `me`, `status`
 
 Channel message actions also support `react` for message reactions.
+
+import en from '/components/footer/en.mdx';
+
+<en />

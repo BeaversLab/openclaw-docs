@@ -41,3 +41,7 @@ title: "入职与配置协议"
 ## 说明
 
 - 本文档是跟踪入职/配置协议重构的唯一位置。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

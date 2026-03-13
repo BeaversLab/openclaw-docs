@@ -548,3 +548,7 @@ openclaw channels login --channel whatsapp --account biz
 对于群组定向，请使用 `agents.list[].groupChat.mentionPatterns`，以便 @mentions 能够清晰地映射到目标代理。
 
 有关详细示例，请参阅 [多代理沙箱和工具](/zh/en/tools/multi-agent-sandbox-tools)。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

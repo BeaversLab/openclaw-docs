@@ -308,3 +308,7 @@ Each session entry records where it came from (best-effort) in `origin`:
   `GroupSubject`, `GroupChannel`, `GroupSpace`, and `SenderName` in the inbound
   context and calling `recordSessionMetaFromInbound` (or passing the same context
   to `updateLastRoute`).
+
+import en from '/components/footer/en.mdx';
+
+<en />

@@ -111,3 +111,7 @@ openclaw gateway --verbose --ws-log full
 - **WhatsApp 消息正文**记录在 `debug`（使用 `--verbose` 查看它们）
 
 这既保持了现有文件日志的稳定，又使交互式输出易于扫描。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

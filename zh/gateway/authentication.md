@@ -172,3 +172,7 @@ openclaw models status
 
 - Anthropic 订阅账户（用于 `claude setup-token`）
 - 已安装 Claude Code CLI（可用 `claude` 命令）
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

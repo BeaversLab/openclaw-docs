@@ -49,3 +49,7 @@ openclaw daemon uninstall
 ## 推荐
 
 请使用 [`openclaw gateway`](/zh/en/cli/gateway) 查看当前文档和示例。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

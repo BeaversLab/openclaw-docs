@@ -378,3 +378,7 @@ openclaw node run --host <gateway-host> --port 18789
 
 - macOS 菜单栏应用作为节点连接到 Gateway WS 服务器（因此 `openclaw nodes …` 可针对此 Mac 工作）。
 - 在远程模式下，应用会为 Gateway 端口打开一个 SSH 隧道并连接到 `localhost`。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

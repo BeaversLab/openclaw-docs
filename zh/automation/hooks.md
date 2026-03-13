@@ -1043,3 +1043,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 - [捆绑钩子自述文件](https://github.com/openclaw/openclaw/tree/main/src/hooks/bundled)
 - [Webhook 钩子](/zh/en/automation/webhook)
 - [配置](/zh/en/gateway/configuration#hooks)
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

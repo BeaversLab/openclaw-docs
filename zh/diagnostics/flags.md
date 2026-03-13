@@ -89,3 +89,7 @@ tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
 - 如果 `logging.level` 设置得高于 `warn`，这些日志可能会被抑制。默认 `info` 即可。
 - 保持启用标志是安全的；它们仅影响特定子系统的日志量。
 - 使用 [/logging](/zh/en/logging) 更改日志目标、级别和编辑。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />

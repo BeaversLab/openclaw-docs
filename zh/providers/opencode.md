@@ -62,3 +62,7 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 - 在入门过程中输入一个 OpenCode 密钥，即可为这两个运行时提供程序存储凭证。
 - 您登录 OpenCode，添加账单详细信息，然后复制您的 API 密钥。
 - 账单和目录可用性从 OpenCode 仪表板进行管理。
+
+import zh from '/components/footer/zh.mdx';
+
+<zh />
