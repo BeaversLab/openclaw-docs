@@ -15,12 +15,12 @@ title: "configure"
 
 相关：
 
-- 网关配置参考：[Configuration](/en/gateway/configuration)
-- 配置 CLI：[Config](/en/cli/config)
+- Gateway 网关 配置参考：[Configuration](/zh/en/gateway/configuration)
+- 配置 CLI：[Config](/zh/en/cli/config)
 
 备注：
 
-- 选择 Gateway 运行的位置总是会更新 `gateway.mode`。如果这是您所需的全部操作，则可以在不选择其他部分的情况下选择“继续”。
+- 选择 Gateway 网关 运行的位置总是会更新 `gateway.mode`。如果这是您所需的全部操作，则可以在不选择其他部分的情况下选择“继续”。
 - 面向渠道的服务（Slack/Discord/Matrix/Microsoft Teams）会在设置过程中提示输入频道/房间白名单。您可以输入名称或 ID；向导会尽可能将名称解析为 ID。
 - 如果您运行守护进程安装步骤，令牌认证需要一个令牌，并且 `gateway.auth.token` 是由 SecretRef 管理的，configure 会验证 SecretRef，但不会将解析后的明文令牌值持久化到 supervisor 服务环境元数据中。
 - 如果令牌身份验证需要令牌，但配置的令牌 SecretRef 未解析，configure 会阻止守护进程安装，并提供可操作的修复指导。

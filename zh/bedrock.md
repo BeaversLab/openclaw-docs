@@ -164,7 +164,7 @@ openclaw models list
   默认的 AWS SDK 链。
 - 推理支持取决于模型；请查看 Bedrock 模型卡以了解
 当前的功能。
-- 如果您更倾向于使用托管密钥流，您也可以在 Bedrock 前面放置一个兼容
+- OpenAI 如果您更倾向于使用托管密钥流，您也可以在 Bedrock 前面放置一个OpenAI 兼容
   OpenAI 的代理，并将其配置为 OpenAI 提供商。
 
 import zh from '/components/footer/zh.mdx';

@@ -8,7 +8,7 @@ title: "node"
 
 # `openclaw node`
 
-运行一个连接到 Gateway WebSocket 并在此机器上暴露
+运行一个连接到 Gateway 网关 WebSocket 并在此机器上暴露
 `system.run` / `system.which` 的**无头节点主机**。
 
 ## 为什么要使用节点主机？
@@ -47,14 +47,14 @@ openclaw node run --host <gateway-host> --port 18789
 
 选项：
 
-- `--host <host>`：Gateway WebSocket 主机（默认值：`127.0.0.1`）
-- `--port <port>`：Gateway WebSocket 端口（默认值：`18789`）
+- `--host <host>`：Gateway 网关 WebSocket 主机（默认值：`127.0.0.1`）
+- `--port <port>`：Gateway 网关 WebSocket 端口（默认值：`18789`）
 - `--tls`：对网关连接使用 TLS
 - `--tls-fingerprint <sha256>`：预期的 TLS 证书指纹（sha256）
 - `--node-id <id>`：覆盖节点 id（清除配对令牌）
 - `--display-name <name>`：覆盖节点显示名称
 
-## 节点主机的网关身份验证
+## 节点主机的 Gateway 网关 身份验证
 
 `openclaw node run` 和 `openclaw node install` 从配置/环境变量解析网关身份验证（节点命令上没有 `--token`/`--password` 标志）：
 
@@ -75,8 +75,8 @@ openclaw node install --host <gateway-host> --port 18789
 
 选项：
 
-- `--host <host>`：Gateway WebSocket 主机（默认：`127.0.0.1`）
-- `--port <port>`：Gateway WebSocket 端口（默认：`18789`）
+- `--host <host>`：Gateway 网关 WebSocket 主机（默认：`127.0.0.1`）
+- `--port <port>`：Gateway 网关 WebSocket 端口（默认：`18789`）
 - `--tls`：对网关连接使用 TLS
 - `--tls-fingerprint <sha256>`：预期的 TLS 证书指纹（sha256）
 - `--node-id <id>`：覆盖节点 ID（清除配对令牌）
@@ -99,7 +99,7 @@ openclaw node uninstall
 
 ## 配对
 
-首次连接会在 Gateway 上创建一个待处理的设备配对请求（`role: node`）。
+首次连接会在 Gateway 网关 上创建一个待处理的设备配对请求（`role: node`）。
 通过以下方式批准：
 
 ```bash
@@ -115,8 +115,8 @@ openclaw devices approve <requestId>
 `system.run` 受本地执行批准限制：
 
 - `~/.openclaw/exec-approvals.json`
-- [执行批准](/en/tools/exec-approvals)
-- `openclaw approvals --node <id|name|ip>`（从 Gateway 编辑）
+- [执行批准](/zh/en/tools/exec-approvals)
+- `openclaw approvals --node <id|name|ip>`（从 Gateway 网关 编辑）
 
 import zh from '/components/footer/zh.mdx';
 

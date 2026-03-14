@@ -1,5 +1,5 @@
 ---
-summary: "`openclaw tui`（连接到 Gateway 的终端 UI）的 CLI 参考"
+summary: "`openclaw tui`（连接到 Gateway 网关 的终端 UI）的 CLI 参考"
 read_when:
   - You want a terminal UI for the Gateway (remote-friendly)
   - You want to pass url/token/session from scripts
@@ -8,11 +8,11 @@ title: "tui"
 
 # `openclaw tui`
 
-打开连接到 Gateway 的终端 UI。
+打开连接到 Gateway 网关 的终端 UI。
 
 相关：
 
-- TUI 指南：[TUI](/en/web/tui)
+- TUI 指南：[TUI](/zh/en/web/tui)
 
 注意：
 

@@ -8,7 +8,7 @@ title: "plugins"
 
 # `openclaw plugins`
 
-管理网关插件/扩展（进程内加载）。
+管理 Gateway 网关 插件/扩展（进程内加载）。
 
 相关内容：
 

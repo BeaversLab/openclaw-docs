@@ -1,13 +1,13 @@
 ---
-summary: "用于聊天 UI 的 Loopback WebChat 静态主机和 Gateway WS 用法"
+summary: "用于聊天 UI 的 Loopback WebChat 静态主机和 Gateway 网关 WS 用法"
 read_when:
   - Debugging or configuring WebChat access
 title: "WebChat"
 ---
 
-# WebChat（网关 WebSocket UI）
+# WebChat（Gateway 网关 WebSocket UI）
 
-状态：macOS/iOS SwiftUI 聊天 UI 直接与网关 WebSocket 通信。
+状态：macOS/iOS SwiftUI 聊天 UI 直接与 Gateway 网关 WebSocket 通信。
 
 ## 它是什么
 
@@ -23,11 +23,11 @@ title: "WebChat"
 
 ## 它是如何工作的（行为）
 
-- UI 连接到 Gateway WebSocket 并使用 `chat.history`、`chat.send` 和 `chat.inject`。
-- `chat.history` 为保持稳定性而受限：Gateway 可能会截断长文本字段、省略繁重的元数据，并用 `[chat.history omitted: message too large]` 替换超大条目。
+- UI 连接到 Gateway 网关 WebSocket 并使用 `chat.history`、`chat.send` 和 `chat.inject`。
+- `chat.history` 为保持稳定性而受限：Gateway 网关 可能会截断长文本字段、省略繁重的元数据，并用 `[chat.history omitted: message too large]` 替换超大条目。
 - `chat.inject` 将助手备注直接附加到记录并广播到 UI（不运行代理）。
 - 中止的运行可以使部分助手输出在 UI 中保持可见。
-- 当存在缓冲输出时，网关会将中止的部分助手文本保存到记录单历史记录中，并用中止元数据标记这些条目。
+- 当存在缓冲输出时，Gateway 网关 会将中止的部分助手文本保存到记录单历史记录中，并用中止元数据标记这些条目。
 - 历史记录始终从网关获取（无本地文件监视）。
 - 如果无法访问网关，WebChat 将变为只读。
 
@@ -44,7 +44,7 @@ title: "WebChat"
 - 远程模式通过 SSH/Tailscale 隧道传输网关 WebSocket。
 - 您不需要运行单独的 WebChat 服务器。
 
-## 配置参考
+## 配置参考（WebChat）
 
 完整配置：[配置](/zh/gateway/configuration)
 
@@ -56,7 +56,7 @@ title: "WebChat"
 
 - `gateway.port`、`gateway.bind`：WebSocket 主机/端口。
 - `gateway.auth.mode`、`gateway.auth.token`、`gateway.auth.password`：WebSocket 身份验证（令牌/密码）。
-- `gateway.auth.mode: "trusted-proxy"`：用于浏览器客户端的反向代理身份验证（参见 [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)）。
+- `gateway.auth.mode: "trusted-proxy"`：用于浏览器客户端的反向代理身份验证（参见 [Trusted Proxy Auth](/zh/en/gateway/trusted-proxy-auth)）。
 - `gateway.remote.url`、`gateway.remote.token`、`gateway.remote.password`：远程网关目标。
 - `session.*`：会话存储和主键默认值。
 

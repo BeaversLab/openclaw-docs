@@ -27,11 +27,11 @@ OpenProse 是一种可移植的、以 Markdown 为优先的工作流格式，用
 openclaw plugins enable open-prose
 ```
 
-启用插件后重启网关。
+启用插件后重启 Gateway 网关。
 
 开发/本地检出：`openclaw plugins install ./extensions/open-prose`
 
-相关文档：[插件](/en/tools/plugin)、[插件清单](/en/plugins/manifest)、[技能](/en/tools/skills)。
+相关文档：[插件](/zh/en/tools/plugin)、[插件清单](/zh/en/plugins/manifest)、[技能](/zh/en/tools/skills)。
 
 ## 斜杠命令
 
@@ -125,13 +125,13 @@ OpenProse 程序映射到 OpenClaw 基元：
 | 文件读/写           | `read` / `write` |
 | 网络获取                 | `web_fetch`      |
 
-如果您的工具允许列表屏蔽了这些工具，OpenProse 程序将会失败。请参阅 [技能配置](/en/tools/skills-config)。
+如果您的工具允许列表屏蔽了这些工具，OpenProse 程序将会失败。请参阅 [技能配置](/zh/en/tools/skills-config)。
 
 ## 安全性 + 批准
 
 将 `.prose` 文件视为代码。在运行前进行审查。使用 OpenClaw 工具允许列表和批准关卡来控制副作用。
 
-对于确定性、需要批准的工作流，请与 [Lobster](/en/tools/lobster) 进行比较。
+对于确定性、需要批准的工作流，请与 [Lobster](/zh/en/tools/lobster) 进行比较。
 
 import zh from '/components/footer/zh.mdx';
 

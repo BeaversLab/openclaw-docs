@@ -1,12 +1,12 @@
 ---
-summary: "使用 WebSocket 侦听器绑定的网关单例守护"
+summary: "使用 WebSocket 侦听器绑定的 Gateway 网关 单例守护"
 read_when:
   - Running or debugging the gateway process
   - Investigating single-instance enforcement
-title: "网关锁"
+title: "Gateway 网关 锁"
 ---
 
-# 网关锁
+# Gateway 网关 锁
 
 最后更新：2025-12-11
 

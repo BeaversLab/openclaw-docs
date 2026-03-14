@@ -7,15 +7,15 @@ title: "onboard"
 
 # `openclaw onboard`
 
-交互式入门向导（本地或远程 Gateway 设置）。
+交互式入门向导（本地或远程 Gateway 网关 设置）。
 
 ## 相关指南
 
-- CLI 入门中心：[入门向导 (CLI)](/en/start/wizard)
-- 入门概述：[入门概述](/en/start/onboarding-overview)
-- CLI 入门参考：[CLI 入门参考](/en/start/wizard-cli-reference)
-- CLI 自动化：[CLI 自动化](/en/start/wizard-cli-automation)
-- macOS 入门：[入门 (macOS 应用)](/en/start/onboarding)
+- CLI 入门中心：[入门向导 (CLI)](/zh/en/start/向导)
+- 入门概述：[入门概述](/zh/en/start/新手引导-overview)
+- CLI 入门参考：[CLI 入门参考](/zh/en/start/向导-cli-reference)
+- CLI 自动化：[CLI 自动化](/zh/en/start/向导-cli-automation)
+- macOS 入门：[入门 (macOS 应用)](/zh/en/start/新手引导)
 
 ## 示例
 
@@ -61,7 +61,7 @@ openclaw onboard --non-interactive \
 - 除非也设置了该环境变量，否则不要传递内联键标志（例如 `--openai-api-key`）。
 - 如果传递内联密钥标志但未设置所需的环境变量，入门将快速失败并提供指导。
 
-非交互模式下的 Gateway 令牌选项：
+非交互模式下的 Gateway 网关 令牌选项：
 
 - `--gateway-auth token --gateway-token <token>` 存储纯文本令牌。
 - `--gateway-auth token --gateway-token-ref-env <name>` 将 `gateway.auth.token` 存储为环境 SecretRef。
@@ -121,7 +121,7 @@ openclaw onboard --non-interactive \
 
 - `quickstart`：最少的提示，自动生成网关令牌。
 - `manual`：针对端口/绑定/身份验证的完整提示（`advanced` 的别名）。
-- 本地入职 DM 范围行为：[CLI Onboarding Reference](/en/start/wizard-cli-reference#outputs-and-internals)。
+- 本地入职 私信 范围行为：[CLI 新手引导 Reference](/zh/en/start/向导-cli-reference#outputs-and-internals)。
 - 最快首次聊天：`openclaw dashboard`（控制 UI，无需频道设置）。
 - 自定义提供程序：连接任何兼容 OpenAI 或 Anthropic 的端点，
   包括未列出的托管提供程序。使用 Unknown 进行自动检测。

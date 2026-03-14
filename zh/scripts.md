@@ -20,7 +20,7 @@ title: "Scripts"
 ## 身份验证监控脚本
 
 身份验证监控脚本在此处有文档说明：
-[/automation/auth-monitoring](/en/automation/auth-monitoring)
+[/automation/auth-monitoring](/zh/en/automation/auth-monitoring)
 
 ## 添加脚本时
 

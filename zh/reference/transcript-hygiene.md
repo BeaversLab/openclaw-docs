@@ -23,7 +23,7 @@ title: "转录清理"
 
 如果您需要脚本存储详细信息，请参阅：
 
-- [/reference/session-management-compaction](/zh/reference/session-management-compaction)
+- [/reference/会话-management-compaction](/zh/reference/会话-management-compaction)
 
 ---
 
@@ -124,15 +124,15 @@ title: "转录清理"
 在 2026.1.22 版本发布之前，OpenClaw 应用多层转录清理：
 
 - 每次构建上下文时都会运行 **transcript-sanitize 扩展**，它可以：
-  - Repair tool use/result pairing.
-  - Sanitize tool call ids (including a non-strict mode that preserved `_`/`-`).
+  - Repair 工具 use/result pairing.
+  - Sanitize 工具 call ids (including a non-strict mode that preserved `_`/`-`).
 - 运行器还执行了特定于提供商的清理，这导致了重复工作。
 - 在提供商策略之外还发生了额外的变更，包括：
   - Stripping `<final>` tags from assistant text before persistence.
   - Dropping empty assistant error turns.
-  - Trimming assistant content after tool calls.
+  - Trimming assistant content after 工具 calls.
 
-This complexity caused cross-provider regressions (notably `openai-responses`
+This complexity caused cross-提供商 regressions (notably `openai-responses`
 `call_id|fc_id` pairing). The 2026.1.22 cleanup removed the extension, centralized
 logic in the runner, and made OpenAI **no-touch** beyond image sanitization.
 

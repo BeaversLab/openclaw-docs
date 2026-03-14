@@ -1,6 +1,6 @@
 ---
 title: "Session Pruning"
-summary: "Session pruning: tool-result trimming to reduce context bloat"
+summary: "Session pruning: 工具-result trimming to reduce context bloat"
 read_when:
   - You want to reduce LLM context growth from tool outputs
   - You are tuning agents.defaults.contextPruning
@@ -18,7 +18,7 @@ Session pruning 会紧接在每次 LLM 调用之前从内存上下文中修剪 *
 - 为获得最佳效果，请将 `ttl` 与您的模型 `cacheRetention` 策略相匹配 (`short` = 5m, `long` = 1h)。
 - 修剪后，TTL 窗口会重置，以便后续请求保持缓存，直到 `ttl` 再次过期。
 
-## 智能默认值
+## 智能默认值（Anthropic）
 
 - **OAuth 或 setup-token** 配置文件：启用 `cache-ttl` 修剪并将心跳设置为 `1h`。
 - **API key** 配置文件：启用 `cache-ttl` 修剪，将心跳设置为 `30m`，并在 Anthropic 模型上默认 `cacheRetention: "short"`。
@@ -73,7 +73,7 @@ Session pruning 会紧接在每次 LLM 调用之前从内存上下文中修剪 *
 ## 与其他限制的交互
 
 - 内置工具已经会截断其自身的输出；会话修剪是一个额外的层，可防止长时间运行的聊天在模型上下文中积累过多的工具输出。
-- 压缩是独立的：压缩进行总结并持久化，而修剪是针对每个请求的临时操作。参见 [/concepts/compaction](/en/concepts/compaction)。
+- 压缩是独立的：压缩进行总结并持久化，而修剪是针对每个请求的临时操作。参见 [/concepts/compaction](/zh/en/concepts/compaction)。
 
 ## 默认值（启用时）
 
@@ -118,7 +118,7 @@ Session pruning 会紧接在每次 LLM 调用之前从内存上下文中修剪 *
 }
 ```
 
-请参阅配置参考：[网关配置](/en/gateway/configuration)
+请参阅配置参考：[Gateway 网关 配置](/zh/en/gateway/configuration)
 
 import zh from '/components/footer/zh.mdx';
 

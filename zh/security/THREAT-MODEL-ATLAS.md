@@ -21,7 +21,7 @@
 
 ### 为本威胁模型做贡献
 
-这是由 OpenClaw 社区维护的活文档。有关贡献的指南，请参阅 [CONTRIBUTING-THREAT-MODEL.md](/en/security/CONTRIBUTING-THREAT-MODEL):
+这是由 OpenClaw 社区维护的活文档。有关贡献的指南，请参阅 [CONTRIBUTING-THREAT-MODEL.md](/zh/en/security/CONTRIBUTING-THREAT-MODEL):
 
 - 报告新威胁
 - 更新现有威胁
@@ -38,14 +38,14 @@
 
 ### 1.2 范围
 
-| 组件              | 是否包含 | 备注                                            |
+| 组件 | 是否包含 | 备注 |
 | ---------------------- | -------- | ------------------------------------------------ |
-| OpenClaw 代理运行时 | 是      | 核心代理执行、工具调用、会话       |
-| 网关                | 是      | 身份验证、路由、渠道集成     |
-| 渠道集成   | 是      | WhatsApp, Telegram, Discord, Signal, Slack 等. |
-| ClawHub 市场    | 是      | 技能发布、审核、分发       |
-| MCP 服务器            | 是      | 外部工具提供商                          |
-| 用户设备           | 部分  | 移动应用、桌面客户端                     |
+| OpenClaw 代理运行时 | 是 | 核心代理执行、工具调用、会话 |
+| Gateway 网关 | 是 | 身份验证、路由、渠道集成 |
+| 渠道集成 | 是 | WhatsApp, Telegram, Discord, Signal, Slack 等. |
+| ClawHub 市场 | 是 | 技能发布、审核、分发 |
+| MCP 服务器 | 是 | 外部工具提供商 |
+| 用户设备 | 部分 | 移动应用、桌面客户端 |
 
 ### 1.3 范围之外
 
@@ -124,14 +124,14 @@
 
 ### 2.2 数据流
 
-| Flow | Source  | Destination | Data               | Protection           |
+| Flow | Source | Destination | Data | Protection |
 | ---- | ------- | ----------- | ------------------ | -------------------- |
-| F1   | Channel | Gateway     | 用户消息         | TLS, AllowFrom       |
-| F2   | Gateway | Agent       | 路由消息         | 会话隔离            |
-| F3   | Agent   | Tools       | 工具调用         | 策略执行            |
-| F4   | Agent   | External    | web_fetch 请求    | SSRF 阻护           |
-| F5   | ClawHub | Agent       | 技能代码          | 审核，扫描          |
-| F6   | Agent   | Channel     | 响应             | 输出过滤             |
+| F1 | Channel | Gateway 网关 | 用户消息 | TLS, AllowFrom |
+| F2 | Gateway 网关 | Agent | 路由消息 | 会话隔离 |
+| F3 | Agent | Tools | 工具调用 | 策略执行 |
+| F4 | Agent | External | web_fetch 请求 | SSRF 阻护 |
+| F5 | ClawHub | Agent | 技能代码 | 审核，扫描 |
+| F6 | Agent | Channel | 响应 | 输出过滤 |
 
 ---
 
@@ -141,15 +141,15 @@
 
 #### T-RECON-001: 代理端点发现
 
-| Attribute               | Value                                                                |
+| Attribute | Value |
 | ----------------------- | -------------------------------------------------------------------- |
-| **ATLAS ID**            | AML.T0006 - Active Scanning                                          |
-| **Description**         | 攻击者扫描暴露的 OpenClaw 网关端点                                    |
-| **Attack Vector**       | 网络扫描、Shodan 查询、DNS 枚举                                      |
-| **Affected Components** | 网关、暴露的 API 端点                                                 |
-| **Current Mitigations** | Tailscale 认证选项、默认绑定到环回地址                               |
-| **Residual Risk**       | 中等 - 公共网关可被发现                                               |
-| **Recommendations**     | 记录安全部署方式，在发现端点上添加速率限制                            |
+| **ATLAS ID** | AML.T0006 - Active Scanning |
+| **Description** | 攻击者扫描暴露的 OpenClaw 网关端点 |
+| **Attack Vector** | 网络扫描、Shodan 查询、DNS 枚举 |
+| **Affected Components** | Gateway 网关、暴露的 API 端点 |
+| **Current Mitigations** | Tailscale 认证选项、默认绑定到环回地址 |
+| **Residual Risk** | 中等 - 公共网关可被发现 |
+| **Recommendations** | 记录安全部署方式，在发现端点上添加速率限制 |
 
 #### T-RECON-002: 渠道集成探测
 
@@ -325,7 +325,7 @@
 
 ---
 
-### 3.6 Discovery (AML.TA0008)
+### 3.6 设备发现 (AML.TA0008)
 
 #### T-DISC-001: Tool Enumeration
 
@@ -409,15 +409,15 @@
 
 #### T-IMPACT-002: 资源耗尽 (DoS)
 
-| 属性                  | 值                                                  |
+| 属性 | 值 |
 | ----------------------- | -------------------------------------------------- |
-| **ATLAS ID**            | AML.T0031 - Erode AI Model Integrity               |
-| **描述**               | 攻击者耗尽 API 额度或计算资源                           |
-| **攻击向量**           | 自动消息洪泛，昂贵的工具调用                             |
-| **受影响组件**         | 网关，代理会话，API 提供商                             |
-| **当前缓解措施**       | 无                                                  |
-| **剩余风险**           | 高 - 无速率限制                                       |
-| **建议**               | 实施针对发送方的速率限制，成本预算                        |
+| **ATLAS ID** | AML.T0031 - Erode AI Model Integrity |
+| **描述** | 攻击者耗尽 API 额度或计算资源 |
+| **攻击向量** | 自动消息洪泛，昂贵的工具调用 |
+| **受影响组件** | Gateway 网关，代理会话，API 提供商 |
+| **当前缓解措施** | 无 |
+| **剩余风险** | 高 - 无速率限制 |
+| **建议** | 实施针对发送方的速率限制，成本预算 |
 
 #### T-IMPACT-003: 声誉损害
 
@@ -482,7 +482,7 @@
 
 ---
 
-## 5. 风险矩阵
+## Matrix 5. 风险Matrix
 
 ### 5.1 可能性 vs 影响
 
@@ -574,29 +574,29 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 
 ### 7.2 关键安全文件
 
-| 路径                                 | 用途                          | 风险等级   |
+| 路径 | 用途 | 风险等级 |
 | ------------------------------------ | ----------------------------- | ---------- |
-| `src/infra/exec-approvals.ts`       | 命令批准逻辑                   | **严重**   |
-| `src/gateway/auth.ts`               | 网关身份验证                   | **严重**   |
-| `src/web/inbound/access-control.ts` | 通道访问控制                   | **严重**   |
-| `src/infra/net/ssrf.ts`             | SSRF 防护                     | **严重**   |
-| `src/security/external-content.ts`  | 提示词注入缓解                 | **严重**   |
-| `src/agents/sandbox/tool-policy.ts` | 工具策略执行                   | **严重**   |
-| `convex/lib/moderation.ts`          | ClawHub 审核                   | **高**     |
-| `convex/lib/skillPublish.ts`        | 技能发布流程                   | **高**     |
-| `src/routing/resolve-route.ts`      | 会话隔离                       | **中等**   |
+| `src/infra/exec-approvals.ts` | 命令批准逻辑 | **严重** |
+| `src/gateway/auth.ts` | Gateway 网关 身份验证 | **严重** |
+| `src/web/inbound/access-control.ts` | 通道访问控制 | **严重** |
+| `src/infra/net/ssrf.ts` | SSRF 防护 | **严重** |
+| `src/security/external-content.ts` | 提示词注入缓解 | **严重** |
+| `src/agents/sandbox/tool-policy.ts` | 工具策略执行 | **严重** |
+| `convex/lib/moderation.ts` | ClawHub 审核 | **高** |
+| `convex/lib/skillPublish.ts` | 技能发布流程 | **高** |
+| `src/routing/resolve-route.ts` | 会话隔离 | **中等** |
 
 ### 7.3 术语表
 
-| 术语                 | 定义                                                |
+| 术语 | 定义 |
 | -------------------- | --------------------------------------------------------- |
-| **ATLAS**            | MITRE 针对AI系统的对抗性威胁景观       |
-| **ClawHub**          | OpenClaw 的技能市场                              |
-| **Gateway**          | OpenClaw 的消息路由和认证层       |
-| **MCP**              | 模型上下文协议 - 工具提供者接口          |
+| **ATLAS** | MITRE 针对AI系统的对抗性威胁景观 |
+| **ClawHub** | OpenClaw 的技能市场 |
+| **Gateway 网关** | OpenClaw 的消息路由和认证层 |
+| **MCP** | 模型上下文协议 - 工具提供者接口 |
 | **Prompt Injection** | 在输入中嵌入恶意指令的攻击 |
-| **Skill**            | OpenClaw 代理的可下载扩展                |
-| **SSRF**             | 服务器端请求伪造                               |
+| **Skill** | OpenClaw 代理的可下载扩展 |
+| **SSRF** | 服务器端请求伪造 |
 
 ---
 

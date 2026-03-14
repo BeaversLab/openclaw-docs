@@ -1,5 +1,5 @@
 ---
-summary: "iOS 节点应用：连接到 Gateway、配对、画布和故障排除"
+summary: "iOS 节点应用：连接到 Gateway 网关、配对、画布和故障排除"
 read_when:
   - Pairing or reconnecting the iOS node
   - Running the iOS app from source
@@ -13,13 +13,13 @@ title: "iOS App"
 
 ## 功能
 
-- 通过 WebSocket（局域网或 tailnet）连接到网关。
-- 暴露节点功能：画布、屏幕快照、相机捕获、位置、通话模式、语音唤醒。
+- 通过 WebSocket（局域网或 tailnet）连接到 Gateway 网关。
+- 暴露节点功能：Canvas、屏幕快照、相机捕获、位置、通话模式、语音唤醒。
 - 接收 `node.invoke` 命令并报告节点状态事件。
 
 ## 要求
 
-- 在另一台设备上运行的网关（macOS、Linux 或通过 WSL2 运行的 Windows）。
+- 在另一台设备上运行的 Gateway 网关（macOS、Linux 或通过 WSL2 运行的 Windows）。
 - 网络路径：
   - 通过 Bonjour 在同一局域网，**或者**
   - 通过单播 DNS-SD 在 Tailnet（示例域名：`openclaw.internal.`），**或者**
@@ -27,7 +27,7 @@ title: "iOS App"
 
 ## 快速开始 (配对 + 连接)
 
-1. 启动网关：
+1. 启动 Gateway 网关：
 
 ```bash
 openclaw gateway --port 18789
@@ -54,7 +54,7 @@ openclaw gateway call node.list --params "{}"
 官方分发的 iOS 版本使用外部推送中继，而不是将原始 APNs
 token 发布到网关。
 
-网关端要求：
+Gateway 网关 端要求：
 
 ```json5
 {
@@ -102,15 +102,13 @@ token 发布到网关。
 中继的存在是为了强制执行直接在网关上使用 APNs 无法为官方 iOS 构建提供的两个约束：
 
 - 只有通过 Apple 分发的正版 OpenClaw iOS 构建才能使用托管中继。
-- 网关只能为与该特定
+- iOS 网关只能为与该特定
   网关配对的 iOS 设备发送中继支持的推送。
 
 逐跳：
 
 1. `iOS app -> gateway`
-   - 应用程序首先通过正常的 Gateway 认证流程与网关配对。
-   - 这为应用程序提供了一个经过身份验证的节点会话以及一个经过身份验证的操作员会话。
-   - 操作员会话用于调用 `gateway.identity.get`。
+ - 应用程序首先通过正常的 Gateway 网关 认证流程与网关配对。 - 这为应用程序提供了一个经过身份验证的节点会话以及一个经过身份验证的操作员会话。 - 操作员会话用于调用 `gateway.identity.get`。
 
 2. `iOS app -> relay`
    - 应用通过 HTTPS 调用中继注册端点。
@@ -160,12 +158,12 @@ export OPENCLAW_APNS_PRIVATE_KEY_P8="$(cat /path/to/AuthKey_KEYID.p8)"
 
 ### Bonjour (局域网)
 
-网关在 `local.` 上通告 `_openclaw-gw._tcp`。iOS 应用会自动列出这些服务。
+Gateway 网关 在 `local.` 上通告 `_openclaw-gw._tcp`。iOS 应用会自动列出这些服务。
 
 ### Tailnet（跨网络）
 
 如果 mDNS 被阻止，请使用单播 DNS-SD 区域（选择一个域名；例如：`openclaw.internal.`）和 Tailscale 分割 DNS。
-有关 CoreDNS 示例，请参阅 [Bonjour](/en/gateway/bonjour)。
+有关 CoreDNS 示例，请参阅 [Bonjour](/zh/en/gateway/bonjour)。
 
 ### 手动主机/端口
 
@@ -181,8 +179,8 @@ openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"ur
 
 备注：
 
-- 网关画布主机提供 `/__openclaw__/canvas/` 和 `/__openclaw__/a2ui/`。
-- 它由网关 HTTP 服务器提供（与 `gateway.port` 端口相同，默认为 `18789`）。
+- Gateway 网关 画布主机提供 `/__openclaw__/canvas/` 和 `/__openclaw__/a2ui/`。
+- 它由 Gateway 网关 HTTP 服务器提供（与 `gateway.port` 端口相同，默认为 `18789`）。
 - 当通告了 canvas 主机 URL 时，iOS 节点会在连接时自动导航到 A2UI。
 - 使用 `canvas.navigate` 和 `{"url":""}` 返回内置脚手架。
 
@@ -204,15 +202,15 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 ## 常见错误
 
 - `NODE_BACKGROUND_UNAVAILABLE`：将 iOS 应用置于前台（画布/相机/屏幕命令需要这样做）。
-- `A2UI_HOST_NOT_CONFIGURED`：网关未通告画布主机 URL；请在 [网关配置](/en/gateway/configuration) 中检查 `canvasHost`。
+- `A2UI_HOST_NOT_CONFIGURED`：Gateway 网关 未通告画布主机 URL；请在 [Gateway 网关 配置](/zh/en/gateway/configuration) 中检查 `canvasHost`。
 - 配对提示从未出现：运行 `openclaw devices list` 并手动批准。
 - 重新安装后重连失败：钥匙串（Keychain）配对令牌已被清除；请重新配对节点。
 
 ## 相关文档
 
-- [配对](/en/channels/pairing)
-- [发现](/en/gateway/discovery)
-- [Bonjour](/en/gateway/bonjour)
+- [配对](/zh/en/channels/pairing)
+- [发现](/zh/en/gateway/discovery)
+- [Bonjour](/zh/en/gateway/bonjour)
 
 import zh from '/components/footer/zh.mdx';
 

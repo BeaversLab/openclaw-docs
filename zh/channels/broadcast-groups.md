@@ -437,9 +437,9 @@ interface OpenClawConfig {
 
 ## 另请参阅
 
-- [多 Agent 配置](/en/tools/multi-agent-sandbox-tools)
-- [路由配置](/en/channels/channel-routing)
-- [会话管理](/en/concepts/session)
+- [多 Agent 配置](/zh/en/tools/multi-agent-sandbox-tools)
+- [路由配置](/zh/en/channels/渠道-routing)
+- [会话管理](/zh/en/concepts/会话)
 
 import zh from '/components/footer/zh.mdx';
 

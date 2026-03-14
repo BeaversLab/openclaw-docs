@@ -1,13 +1,13 @@
 ---
-summary: "使用 Kilo Gateway 的统一 API 访问 OpenClaw 中的许多模型"
+summary: "使用 Kilo Gateway 网关 的统一 API 访问 OpenClaw 中的许多模型"
 read_when:
   - You want a single API key for many LLMs
   - You want to run models via Kilo Gateway in OpenClaw
 ---
 
-# Kilo Gateway
+# Kilo Gateway 网关
 
-Kilo Gateway 提供了一个**统一 API**，它将请求路由到单个端点和 API 密钥后面的许多模型。它与 OpenAI 兼容，因此大多数 OpenAI SDK 只需切换基础 URL 即可工作。
+Kilo Gateway 网关 提供了一个**统一 API**，它将请求路由到单个端点和 API 密钥后面的许多模型。它与 OpenAI 兼容，因此大多数 OpenAI SDK 只需切换基础 URL 即可工作。
 
 ## 获取 API 密钥
 
@@ -50,7 +50,7 @@ export KILOCODE_API_KEY="<your-kilocode-api-key>" # pragma: allowlist secret
 
 ## 可用模型
 
-OpenClaw 会在启动时从 Kilo Gateway 动态发现可用模型。使用
+OpenClaw 会在启动时从 Kilo Gateway 网关 动态发现可用模型。使用
 `/models kilocode` 查看您的帐户可用的完整模型列表。
 
 网关上可用的任何模型都可以与 `kilocode/` 前缀一起使用：
@@ -68,8 +68,8 @@ kilocode/google/gemini-3-pro-preview
 - 模型引用为 `kilocode/<model-id>`（例如，`kilocode/anthropic/claude-sonnet-4`）。
 - 默认模型：`kilocode/kilo/auto`
 - 基础 URL：`https://api.kilo.ai/api/gateway/`
-- 有关更多模型/提供商选项，请参阅 [/concepts/model-providers](/en/concepts/model-providers)。
-- Kilo Gateway 在底层使用带有您的 API 密钥的 Bearer 令牌。
+- 有关更多模型/提供商选项，请参阅 [/concepts/模型-providers](/zh/en/concepts/模型-providers)。
+- Kilo Gateway 网关 在底层使用带有您的 API 密钥的 Bearer 令牌。
 
 import zh from '/components/footer/zh.mdx';
 

@@ -15,10 +15,10 @@ title: "Cron Add Hardening"
 ## Goals
 
 - 通过规范化常见的包装负载并推断缺失的 `kind` 字段，来阻止 `cron.add` INVALID_REQUEST 垃圾信息。
-- Align cron provider lists across gateway schema, cron types, CLI docs, and UI forms.
-- Make agent cron tool schema explicit so the LLM produces correct job payloads.
+- Align cron 提供商 lists across gateway schema, cron types, CLI docs, and UI forms.
+- Make agent cron 工具 schema explicit so the LLM produces correct job payloads.
 - Fix the Control UI cron status job count display.
-- Add tests to cover normalization and tool behavior.
+- Add tests to cover normalization and 工具 behavior.
 
 ## Non-goals
 
@@ -31,12 +31,12 @@ title: "Cron Add Hardening"
 - 网关中的 `CronPayloadSchema` 排除了 `signal` + `imessage`，而 TS 类型包含了它们。
 - 控制 UI CronStatus 期望 `jobCount`，但网关返回 `jobs`。
 - 代理 cron 工具架构允许任意的 `job` 对象，从而启用了格式错误的输入。
-- 网关严格验证 `cron.add` 而不进行规范化，因此包装的负载会失败。
+- Gateway 网关 严格验证 `cron.add` 而不进行规范化，因此包装的负载会失败。
 
 ## What changed
 
 - `cron.add` 和 `cron.update` 现在规范化常见的包装形状并推断缺失的 `kind` 字段。
-- Agent cron tool schema matches the gateway schema, which reduces invalid payloads.
+- Agent cron 工具 schema matches the gateway schema, which reduces invalid payloads.
 - Provider 枚举在网关、CLI、UI 和 macOS 选择器之间保持一致。
 - 控制 UI 使用网关的 `jobs` 计数字段来显示状态。
 
@@ -46,7 +46,7 @@ title: "Cron Add Hardening"
 - **默认值：** 当缺失 `wakeMode` 和 `sessionTarget` 时，应用安全的默认值。
 - **提供商：** Discord/Slack/Signal/iMessage 现在在 CLI/UI 中一致地显示。
 
-有关规范化形状和示例，请参阅 [Cron jobs](/en/automation/cron-jobs)。
+有关规范化形状和示例，请参阅 [Cron jobs](/zh/en/automation/cron-jobs)。
 
 ## 验证
 

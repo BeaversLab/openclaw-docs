@@ -1,33 +1,32 @@
 ---
-summary: "Gateway 服务、生命周期和操作的运行手册"
+summary: "Gateway 网关 服务、生命周期和操作的运行手册"
 read_when:
   - Running or debugging the gateway process
-title: "Gateway 运行手册"
+title: "Gateway 网关 运行手册"
 ---
 
-# Gateway 运行手册
+# Gateway 网关 运行手册
 
-使用此页面进行 Gateway 服务的第 1 天启动和第 2 天运维。
+使用此页面进行 Gateway 网关 服务的第 1 天启动和第 2 天运维。
 
 <CardGroup cols={2}>
-  <Card title="深度排查" icon="siren" href="/en/gateway/troubleshooting">
+  <Card title="深度排查" icon="siren" href="/zh/en/gateway/troubleshooting">
     基于症状的诊断，包含确切的命令链和日志签名。
   </Card>
-  <Card title="配置" icon="sliders" href="/en/gateway/configuration">
+  <Card title="配置" icon="sliders" href="/zh/en/gateway/configuration">
     面向任务的设置指南 + 完整配置参考。
   </Card>
-  <Card title="密钥管理" icon="key-round" href="/en/gateway/secrets">
+  <Card title="密钥管理" icon="key-round" href="/zh/en/gateway/secrets">
     SecretRef 协定、运行时快照行为以及迁移/重新加载操作。
   </Card>
-  <Card title="密钥计划协定" icon="shield-check" href="/en/gateway/secrets-plan-contract">
+  <Card title="密钥计划协定" icon="shield-check" href="/zh/en/gateway/secrets-plan-contract">
     精确的 `secrets apply` target/path 规则以及仅引用 auth-profile 行为。
   </Card>
 </CardGroup>
 
 ## 5 分钟本地启动
 
-<Steps>
-  <Step title="启动 Gateway">
+<Steps> <Step title="启动 Gateway 网关">
 
 ```bash
 openclaw gateway --port 18789
@@ -61,7 +60,7 @@ openclaw channels status --probe
 </Steps>
 
 <Note>
-Gateway 配置重新加载会监视活动配置文件路径（从 profile/state 默认值解析，或设置为 `OPENCLAW_CONFIG_PATH` 时）。
+Gateway 网关 配置重新加载会监视活动配置文件路径（从 profile/state 默认值解析，或设置为 `OPENCLAW_CONFIG_PATH` 时）。
 默认模式为 `gateway.reload.mode="hybrid"`。
 </Note>
 
@@ -77,10 +76,10 @@ Gateway 配置重新加载会监视活动配置文件路径（从 profile/state 
 
 ### 端口和绑定优先级
 
-| 设置         | 解析顺序                                                      |
+| 设置 | 解析顺序 |
 | ------------ | ------------------------------------------------------------ |
-| 网关端口      | `--port` → `OPENCLAW_GATEWAY_PORT` → `gateway.port` → `18789` |
-| 绑定模式      | CLI/override → `gateway.bind` → `loopback`                    |
+| Gateway 网关 端口 | `--port` → `OPENCLAW_GATEWAY_PORT` → `gateway.port` → `18789` |
+| 绑定模式 | CLI/override → `gateway.bind` → `loopback` |
 
 ### 热重载模式
 
@@ -120,7 +119,7 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 如果配置了网关身份验证，客户端即使通过 SSH 隧道也必须发送身份验证信息（`token`/`password`）。
 </Warning>
 
-参见：[远程网关](/en/gateway/remote)、[身份验证](/en/gateway/authentication)、[Tailscale](/en/gateway/tailscale)。
+参见：[远程 Gateway 网关](/zh/en/gateway/remote)、[身份验证](/zh/en/gateway/authentication)、[Tailscale](/zh/en/gateway/tailscale)。
 
 ## 监管与服务生命周期
 
@@ -170,7 +169,7 @@ sudo systemctl enable --now openclaw-gateway[-<profile>].service
 
 ## 单主机上的多个网关
 
-大多数设置应运行 **一个** Gateway。
+大多数设置应运行 **一个** Gateway 网关。
 仅在需要严格隔离/冗余时（例如救援配置文件）才使用多个。
 
 每个实例的检查清单：
@@ -187,7 +186,7 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a opencla
 OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
 ```
 
-参见：[多网关](/en/gateway/multiple-gateways)。
+参见：[多网关](/zh/en/gateway/multiple-gateways)。
 
 ### 开发配置快速路径
 
@@ -202,7 +201,7 @@ openclaw --dev status
 ## 协议快速参考（操作员视图）
 
 - 第一个客户端帧必须是 `connect`。
-- Gateway 返回 `hello-ok` 快照（`presence`、`health`、`stateVersion`、`uptimeMs`、limits/policy）。
+- Gateway 网关 返回 `hello-ok` 快照（`presence`、`health`、`stateVersion`、`uptimeMs`、limits/policy）。
 - 请求：`req(method, params)` → `res(ok/payload|error)`。
 - 常见事件：`connect.challenge`、`agent`、`chat`、`presence`、`tick`、`health`、`heartbeat`、`shutdown`。
 
@@ -211,7 +210,7 @@ openclaw --dev status
 1. 立即接受确认（`status:"accepted"`）
 2. 最终完成响应（`status:"ok"|"error"`），其间包含流式 `agent` 事件。
 
-查看完整协议文档：[网关协议](/en/gateway/protocol)。
+查看完整协议文档：[Gateway 网关 协议](/zh/en/gateway/protocol)。
 
 ## 操作检查
 
@@ -241,11 +240,11 @@ openclaw health
 | `Gateway start blocked: set gateway.mode=local`                | 配置设置为远程模式                                  |
 | `unauthorized` during connect                                  | 客户端与网关之间的身份验证不匹配                          |
 
-要获取完整的诊断步骤，请使用 [网关故障排除](/en/gateway/troubleshooting)。
+要获取完整的诊断步骤，请使用 [Gateway 网关 故障排除](/zh/en/gateway/故障排除)。
 
 ## 安全保证
 
-- 当网关不可用时，网关协议客户端会快速失败（没有隐式的直接通道回退）。
+- 当 Gateway 网关 不可用时，Gateway 网关 协议客户端会快速失败（没有隐式的直接通道回退）。
 - 无效或非连接的首帧会被拒绝并关闭连接。
 - 正常关闭会在套接字关闭之前发出 `shutdown` 事件。
 
@@ -253,12 +252,12 @@ openclaw health
 
 相关：
 
-- [故障排查](/en/gateway/troubleshooting)
-- [后台进程](/en/gateway/background-process)
-- [配置](/en/gateway/configuration)
-- [健康检查](/en/gateway/health)
-- [诊断工具](/en/gateway/doctor)
-- [身份验证](/en/gateway/authentication)
+- [故障排查](/zh/en/gateway/故障排除)
+- [后台进程](/zh/en/gateway/background-process)
+- [配置](/zh/en/gateway/configuration)
+- [健康检查](/zh/en/gateway/health)
+- [诊断工具](/zh/en/gateway/doctor)
+- [身份验证](/zh/en/gateway/authentication)
 
 import zh from '/components/footer/zh.mdx';
 

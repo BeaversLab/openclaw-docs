@@ -95,7 +95,7 @@ OpenClaw 拥有三个 Vitest 套件（单元/集成、e2e、live）和少量的 
 Live 测试分为两层，以便我们可以隔离故障：
 
 - “直接模型”告诉我们提供商/模型是否可以使用给定密钥进行响应。
-- “网关冒烟”告诉我们完整的网关+代理流水线是否适用于该模型（会话、历史记录、工具、沙箱策略等）。
+- “Gateway 网关 冒烟”告诉我们完整的 Gateway 网关+代理流水线是否适用于该模型（会话、历史记录、工具、沙箱策略等）。
 
 ### 第 1 层：直接模型补全（无网关）
 
@@ -120,7 +120,7 @@ Live 测试分为两层，以便我们可以隔离故障：
   - 区分“提供商 API 损坏 / 密钥无效”与“网关代理流水线损坏”
   - 包含小型、独立的回归测试（例如：OpenAI Responses/Codex Responses 推理回放 + 工具调用流程）
 
-### 第 2 层：网关 + 开发代理冒烟测试（即“@openclaw”实际执行的操作）
+### 第 2 层：Gateway 网关 + 开发代理冒烟测试（即“@openclaw”实际执行的操作）
 
 - 测试：`src/gateway/gateway-models.profiles.live.test.ts`
 - 目标：
@@ -145,14 +145,7 @@ Live 测试分为两层，以便我们可以隔离故障：
 - 如何选择提供商（避免“全用 OpenRouter”）：
   - `OPENCLAW_LIVE_GATEWAY_PROVIDERS="google,google-antigravity,google-gemini-cli,openai,anthropic,zai,minimax"`（逗号允许列表）
 - 在此实时测试中，工具和图像探针始终开启：
-  - `read` 探针 + `exec+read` 探针（工具压力测试）
-  - 当模型声明支持图像输入时，运行图像探针
-  - 流程（高层级）：
-    - 测试生成一个包含“CAT” + 随机代码的微型 PNG（`src/gateway/live-image-probe.ts`）
-    - 通过 `agent` `attachments: [{ mimeType: "image/png", content: "<base64>" }]` 发送它
-    - 网关将附件解析为 `images[]`（`src/gateway/server-methods/agent.ts` + `src/gateway/chat-attachments.ts`）
-    - 嵌入式代理将多模态用户消息转发给模型
-    - 断言：回复包含 `cat` + 该代码（OCR 容差：允许轻微错误）
+- `read` 探针 + `exec+read` 探针（工具压力测试） - 当模型声明支持图像输入时，运行图像探针 - 流程（高层级）： - 测试生成一个包含“CAT” + 随机代码的微型 PNG（`src/gateway/live-image-probe.ts`） - 通过 `agent` `attachments: [{ mimeType: "image/png", content: "<base64>" }]` 发送它 - Gateway 网关 将附件解析为 `images[]`（`src/gateway/server-methods/agent.ts` + `src/gateway/chat-attachments.ts`） - 嵌入式代理将多模态用户消息转发给模型 - 断言：回复包含 `cat` + 该代码（OCR 容差：允许轻微错误）
 
 提示：要查看你可以在机器上测试的内容（以及确切的 `provider/model` id），请运行：
 
@@ -184,7 +177,7 @@ OPENCLAW_LIVE_SETUP_TOKEN=1 OPENCLAW_LIVE_SETUP_TOKEN_PROFILE=anthropic:setup-to
 ## Live：CLI 后端冒烟测试（Claude Code CLI 或其他本地 CLI）
 
 - 测试：`src/gateway/gateway-cli-backend.live.test.ts`
-- 目标：使用本地 CLI 后端验证网关 + 代理管道，而不触及你的默认配置。
+- 目标：使用本地 CLI 后端验证 Gateway 网关 + 代理管道，而不触及你的默认配置。
 - 启用：
   - `pnpm test:live`（如果直接调用 Vitest，则为 `OPENCLAW_LIVE_TEST=1`）
   - `OPENCLAW_LIVE_CLI_BACKEND=1`
@@ -314,9 +307,9 @@ OPENCLAW_LIVE_CLI_BACKEND=1 \
 这些在仓库 Docker 镜像内运行 `pnpm test:live`，挂载您的本地配置目录和工作区（并在挂载时导入 `~/.profile`）：
 
 - 直接模型：`pnpm test:docker:live-models`（脚本：`scripts/test-live-models-docker.sh`）
-- 网关 + 开发代理：`pnpm test:docker:live-gateway`（脚本：`scripts/test-live-gateway-models-docker.sh`）
+- Gateway 网关 + 开发代理：`pnpm test:docker:live-gateway`（脚本：`scripts/test-live-gateway-models-docker.sh`）
 - 入职向导（TTY，完整脚手架）：`pnpm test:docker:onboard`（脚本：`scripts/e2e/onboard-docker.sh`）
-- 网关网络（两个容器，WS 认证 + 健康）：`pnpm test:docker:gateway-network`（脚本：`scripts/e2e/gateway-network-docker.sh`）
+- Gateway 网关 网络（两个容器，WS 认证 + 健康）：`pnpm test:docker:gateway-network`（脚本：`scripts/e2e/gateway-network-docker.sh`）
 - 插件（自定义扩展加载 + 注册冒烟测试）：`pnpm test:docker:plugins`（脚本：`scripts/e2e/plugins-docker.sh`）
 
 有用的环境变量：
@@ -335,8 +328,8 @@ OPENCLAW_LIVE_CLI_BACKEND=1 \
 
 这些是不涉及真实提供商的“真实管道”回归测试：
 
-- 网关工具调用（模拟 OpenAI，真实网关 + 代理循环）：`src/gateway/gateway.tool-calling.mock-openai.test.ts`
-- 网关向导（WS `wizard.start`/`wizard.next`，写入配置 + 强制身份验证）：`src/gateway/gateway.wizard.e2e.test.ts`
+- Gateway 网关 工具调用（模拟 OpenAI，真实 Gateway 网关 + 代理循环）：`src/gateway/gateway.tool-calling.mock-openai.test.ts`
+- Gateway 网关 向导（WS `wizard.start`/`wizard.next`，写入配置 + 强制身份验证）：`src/gateway/gateway.wizard.e2e.test.ts`
 
 ## 代理可靠性评估（技能）
 
@@ -345,7 +338,7 @@ OPENCLAW_LIVE_CLI_BACKEND=1 \
 - 通过真实网关 + 代理循环进行模拟工具调用（`src/gateway/gateway.tool-calling.mock-openai.test.ts`）。
 - 验证会话接线和配置效果的端到端向导流程（`src/gateway/gateway.wizard.e2e.test.ts`）。
 
-对于技能（Skills）目前仍缺失的内容（请参阅 [Skills](/en/tools/skills)）：
+对于技能（Skills）目前仍缺失的内容（请参阅 [Skills](/zh/en/tools/skills)）：
 
 - **决策制定 (Decisioning)：** 当提示中列出了技能时，代理是否会选择正确的技能（或避免使用不相关的技能）？
 - **合规性：** 代理在使用前是否会阅读 `SKILL.md` 并遵循所需的步骤/参数？

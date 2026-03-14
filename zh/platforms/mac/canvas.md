@@ -40,7 +40,7 @@ Canvas 面板通过 **自定义 URL 方案** 提供这些文件：
 
 ## Agent API 表面
 
-Canvas 通过 **Gateway WebSocket** 公开，因此 Agent 可以：
+Canvas 通过 **Gateway 网关 WebSocket** 公开，因此 Agent 可以：
 
 - 显示/隐藏面板
 - 导航到路径或 URL
@@ -63,8 +63,8 @@ openclaw nodes canvas snapshot --node <id>
 
 ## Canvas 中的 A2UI
 
-A2UI 由 Gateway Canvas 主机托管，并在 Canvas 面板内渲染。
-当 Gateway 公告 Canvas 主机时，macOS 应用会在首次打开时自动导航到
+A2UI 由 Gateway 网关 Canvas 主机托管，并在 Canvas 面板内渲染。
+当 Gateway 网关 公告 Canvas 主机时，macOS 应用会在首次打开时自动导航到
 A2UI 主机页面。
 
 默认 A2UI 主机 URL：

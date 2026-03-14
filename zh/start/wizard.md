@@ -11,7 +11,7 @@ sidebarTitle: "入门：CLI"
 
 入门向导是在 macOS、
 Linux 或 Windows（通过 WSL2；强烈推荐）上设置 OpenClaw 的**推荐**方式。
-它在一个引导流程中配置本地网关或远程网关连接，以及渠道、技能
+它在一个引导流程中配置本地 Gateway 网关 或远程 Gateway 网关 连接，以及渠道、技能
 和工作区默认设置。
 
 ```bash
@@ -20,7 +20,7 @@ openclaw onboard
 
 <Info>
 最快的首次对话方式：打开控制 UI（无需设置频道）。运行
-`openclaw dashboard` 并在浏览器中对话。文档：[仪表板](/en/web/dashboard)。
+`openclaw dashboard` 并在浏览器中对话。文档：[仪表板](/zh/en/web/dashboard)。
 </Info>
 
 若稍后要重新配置：
@@ -38,27 +38,14 @@ openclaw agents add <name>
 入门向导包含一个网络搜索步骤，您可以选择提供商
 （Perplexity、Brave、Gemini、Grok 或 Kimi）并粘贴您的 API 密钥，以便代理
 可以使用 `web_search`。您也可以稍后使用
-`openclaw configure --section web` 进行配置。文档：[Web 工具](/en/tools/web)。
+`openclaw configure --section web` 进行配置。文档：[Web 工具](/zh/en/tools/web)。
 </Tip>
 
 ## 快速入门与高级模式对比
 
 向导从**快速入门**（默认设置）与**高级**（完全控制）开始。
 
-<Tabs>
-  <Tab title="快速开始（默认设置）">
-    - 本地网关 (loopback)
-    - 工作区默认值（或现有工作区）
-    - 网关端口 **18789**
-    - 网关认证 **Token**（自动生成，即使在环回地址上）
-    - 新本地设置的默认工具策略：`tools.profile: "coding"`（保留现有的显式配置）
-    - 默认 DM 隔离：本地入门会在未设置时写入 `session.dmScope: "per-channel-peer"`。详情：[CLI 入门参考](/en/start/wizard-cli-reference#outputs-and-internals)
-    - Tailscale 暴露 **关闭**
-    - Telegram + WhatsApp DM 默认为 **允许列表**（将提示您输入电话号码）
-  </Tab>
-  <Tab title="高级（完全控制）">
-    - 暴露每个步骤（模式、工作区、网关、频道、守护进程、技能）。
-  </Tab>
+<Tabs> <Tab title="快速开始（默认设置）"> - 本地网关 (loopback) - 工作区默认值（或现有工作区） - Gateway 网关 端口 **18789** - Gateway 网关 认证 **Token**（自动生成，即使在环回地址上） - 新本地设置的默认工具策略：`tools.profile: "coding"`（保留现有的显式配置） - 默认 私信 隔离：本地入门会在未设置时写入 `session.dmScope: "per-channel-peer"`。详情：[CLI 入门参考](/zh/en/start/向导-cli-reference#outputs-and-internals) - Tailscale 暴露 **关闭** - Telegram + WhatsApp 私信 默认为 **允许列表**（将提示您输入电话号码） </Tab> <Tab title="高级（完全控制）"> - 暴露每个步骤（模式、工作区、Gateway 网关、频道、守护进程、技能）。 </Tab>
 </Tabs>
 
 ## 向导配置的内容
@@ -72,15 +59,15 @@ openclaw agents add <name>
    在非交互式 `ref` 模式下，必须设置提供商环境变量；在没有该环境变量的情况下传递内联密钥标志会快速失败。
    在交互式运行中，选择密钥引用模式允许您指向环境变量或配置的提供商引用（`file` 或 `exec`），并在保存前进行快速预检验证。
 2. **Workspace** — 代理文件的位置（默认为 `~/.openclaw/workspace`）。植入引导文件。
-3. **网关** — 端口、绑定地址、认证模式、Tailscale 暴露。
+3. **Gateway 网关** — 端口、绑定地址、认证模式、Tailscale 暴露。
    在交互式令牌模式下，选择默认的纯文本令牌存储或选择使用 SecretRef。
    非交互式令牌 SecretRef 路径：`--gateway-token-ref-env <ENV_VAR>`。
 4. **通道** — WhatsApp、Telegram、Discord、Google Chat、Mattermost、Signal、BlueBubbles 或 iMessage。
-5. **守护进程** — 安装 LaunchAgent (macOS) 或 systemd 用户单元。
+5. **守护进程** — 安装 LaunchAgent (macOS) 或 systemd 用户单元（Linux）（WSL2）。
    如果令牌身份验证需要令牌且 `gateway.auth.token` 由 SecretRef 管理，守护进程安装会对其进行验证，但不会将解析出的令牌持久化到主管服务环境元数据中。
    如果令牌身份验证需要令牌且配置的令牌 SecretRef 未解析，守护进程安装将被阻止并提供可操作的指导。
    如果 `gateway.auth.token` 和 `gateway.auth.password` 均已配置且 `gateway.auth.mode` 未设置，守护进程安装将被阻止，直到明确设置模式。
-6. **健康检查** — 启动网关并验证其正在运行。
+6. **健康检查** — 启动 Gateway 网关 并验证其正在运行。
 7. **技能** — 安装推荐的技能和可选的依赖项。
 
 <Note>
@@ -89,7 +76,7 @@ CLI `--reset` 默认包括配置、凭据和会话；使用 `--reset-scope full`
 如果配置无效或包含旧版密钥，向导会要求您先运行 `openclaw doctor`。
 </Note>
 
-**远程模式** 仅配置本地客户端以连接到其他位置的网关。
+**远程模式** 仅配置本地客户端以连接到其他位置的 Gateway 网关。
 它**不会**在远程主机上安装或更改任何内容。
 
 ## 添加另一个代理
@@ -112,14 +99,14 @@ CLI `--reset` 默认包括配置、凭据和会话；使用 `--reset-scope full`
 
 有关详细的逐步分解、非交互式脚本、Signal 设置、
 RPC API 以及向导写入的配置字段的完整列表，请参阅
-[Wizard Reference](/en/reference/wizard)。
+[Wizard Reference](/zh/en/reference/向导)。
 
 ## 相关文档
 
-- CLI 命令参考：[`openclaw onboard`](/en/cli/onboard)
-- 入门概述：[Onboarding Overview](/en/start/onboarding-overview)
-- macOS 应用入门：[Onboarding](/en/start/onboarding)
-- 代理首次运行仪式：[Agent Bootstrapping](/en/start/bootstrapping)
+- CLI 命令参考：[`openclaw onboard`](/zh/en/cli/onboard)
+- 入门概述：[新手引导 Overview](/zh/en/start/新手引导-overview)
+- macOS 应用入门：[新手引导](/zh/en/start/新手引导)
+- 代理首次运行仪式：[Agent Bootstrapping](/zh/en/start/bootstrapping)
 
 import zh from '/components/footer/zh.mdx';
 

@@ -9,8 +9,8 @@ title: "Models CLI"
 
 # 模型 CLI
 
-请参阅 [/concepts/model-failover](/en/concepts/model-failover) 了解认证配置文件轮换、冷却时间及其与后备的交互方式。
-快速提供商概述 + 示例：[/concepts/model-providers](/en/concepts/model-providers)。
+请参阅 [/concepts/模型-failover](/zh/en/concepts/模型-failover) 了解认证配置文件轮换、冷却时间及其与后备的交互方式。
+快速提供商概述 + 示例：[/concepts/模型-providers](/zh/en/concepts/模型-providers)。
 
 ## 模型选择的工作原理
 
@@ -25,7 +25,7 @@ OpenClaw 按以下顺序选择模型：
 
 - `agents.defaults.models` 是 OpenClaw 可用模型的允许列表/目录（加上别名）。
 - `agents.defaults.imageModel` **仅当** 主模型无法接受图像时才使用。
-- 每个代理的默认值可以通过 `agents.list[].model` 加上绑定来覆盖 `agents.defaults.model`（参见 [/concepts/multi-agent](/en/concepts/multi-agent)）。
+- 每个代理的默认值可以通过 `agents.list[].model` 加上绑定来覆盖 `agents.defaults.model`（参见 [/concepts/multi-agent](/zh/en/concepts/multi-agent)）。
 
 ## 快速模型策略
 
@@ -55,7 +55,7 @@ openclaw onboard
 为 `zai/*`。
 
 提供商配置示例（包括 OpenCode）位于
-[/gateway/configuration](/en/gateway/configuration#opencode)。
+[/gateway/configuration](/zh/en/gateway/configuration#opencode)。
 
 ## “模型不被允许”（以及回复停止的原因）
 
@@ -109,7 +109,7 @@ Model "provider/model" is not allowed. Use /model to list available models.
 - 如果模型 ID 本身包含 `/`（OpenRouter 风格），则必须包含提供商前缀（例如：`/model openrouter/moonshotai/kimi-k2`）。
 - 如果省略提供商，OpenClaw 会将输入视为别名或**默认提供商**的模型（仅在模型 ID 中没有 `/` 时有效）。
 
-完整的命令行为/配置：[Slash commands](/en/tools/slash-commands)。
+完整的命令行为/配置：[Slash commands](/zh/en/tools/slash-commands)。
 
 ## CLI 命令
 
@@ -164,7 +164,7 @@ openclaw models status
 
 ## 扫描 (OpenRouter 免费模型)
 
-`openclaw models scan` 检查 OpenRouter 的 **free model catalog**（免费模型目录）并可选择探测模型以支持工具和图像。
+`openclaw models scan` 检查 OpenRouter 的 **free 模型 catalog**（免费模型目录）并可选择探测模型以支持工具和图像。
 
 关键标志：
 
@@ -188,7 +188,7 @@ openclaw models status
 输入
 
 - OpenRouter `/models` 列表（过滤器 `:free`）
-- 需要来自身份验证配置文件或 `OPENROUTER_API_KEY` 的 OpenRouter API 密钥（参见 [/environment](/en/help/environment)）
+- 需要来自身份验证配置文件或 `OPENROUTER_API_KEY` 的 OpenRouter API 密钥（参见 [/environment](/zh/en/help/environment)）
 - 可选过滤器：`--max-age-days`、`--min-params`、`--provider`、`--max-candidates`
 - 探测控制：`--timeout`、`--concurrency`
 

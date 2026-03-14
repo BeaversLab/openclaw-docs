@@ -24,7 +24,7 @@ Exec approvals 在执行主机上本地执行：
 
 信任模型说明：
 
-- 经过网关身份验证的调用者是该网关的受信任操作员。
+- 经过 Gateway 网关 身份验证的调用者是该 Gateway 网关 的受信任操作员。
 - 配对的节点将该受信任操作员能力扩展到节点主机。
 - Exec approvals 可以降低意外执行的风险，但并非每用户身份验证边界。
 - 批准的节点主机运行绑定规范执行上下文：规范 cwd、精确 argv、env
@@ -125,12 +125,12 @@ macOS 拆分：
 
 ## 自动允许技能 CLI
 
-当启用**自动允许技能 CLI** 时，已知技能引用的可执行文件被视为在节点（macOS 节点或无头节点主机）上的允许列表项。这通过网关 RPC 使用 `skills.bins` 来获取技能二进制列表。如果您需要严格的手动允许列表，请禁用此功能。
+当启用**自动允许技能 CLI** 时，已知技能引用的可执行文件被视为在节点（macOS 节点或无头节点主机）上的允许列表项。这通过 Gateway 网关 RPC 使用 `skills.bins` 来获取技能二进制列表。如果您需要严格的手动允许列表，请禁用此功能。
 
 重要信任说明：
 
 - 这是一个**隐式的便利允许列表**，与手动路径允许列表条目分开。
-- 它适用于 Gateway 和节点处于同一信任边界的受信任操作员环境。
+- 它适用于 Gateway 网关 和节点处于同一信任边界的受信任操作员环境。
 - 如果您需要严格的显式信任，请保持 `autoAllowSkills: false` 并仅使用手动路径允许列表条目。
 
 ## 安全 Bin（仅 stdin）
@@ -206,9 +206,9 @@ macOS 拆分：
 
 使用 **Control UI → Nodes → Exec approvals** 卡片来编辑默认值、每个代理的覆盖项以及允许列表。选择一个范围（Defaults 或某个代理），调整策略，添加/删除允许列表模式，然后点击 **Save**。UI 会显示每个模式的 **last used** 元数据，以便您保持列表整洁。
 
-目标选择器选择 **Gateway**（本地审批）或 **Node**。节点必须通告 `system.execApprovals.get/set`（macOS 应用程序或无头节点主机）。如果节点尚未通告执行审批，请直接编辑其本地 `~/.openclaw/exec-approvals.json`。
+目标选择器选择 **Gateway 网关**（本地审批）或 **Node**。节点必须通告 `system.execApprovals.get/set`（macOS 应用程序或无头节点主机）。如果节点尚未通告执行审批，请直接编辑其本地 `~/.openclaw/exec-approvals.json`。
 
-CLI：`openclaw approvals` 支持网关或节点编辑（请参阅 [Approvals CLI](/en/cli/approvals)）。
+CLI：`openclaw approvals` 支持网关或节点编辑（请参阅 [Approvals CLI](/zh/en/cli/approvals)）。
 
 ## 批准流程
 
@@ -295,8 +295,8 @@ Telegram 默认为批准者的私信（`target: "dm"`）。当您希望批准提
 
 参见：
 
-- [Discord](/en/channels/discord#exec-approvals-in-discord)
-- [Telegram](/en/channels/telegram#exec-approvals-in-telegram)
+- [Discord](/zh/en/channels/discord#exec-approvals-in-discord)
+- [Telegram](/zh/en/channels/telegram#exec-approvals-in-telegram)
 
 ### macOS IPC 流程
 
@@ -321,7 +321,7 @@ Exec 生命周期作为系统消息呈现：
 - `Exec finished`
 - `Exec denied`
 
-这些在节点报告事件后发布到代理的会话中。网关主机 exec 批准在命令完成时（以及可选地，当运行时间超过阈值时）发出相同的生命周期事件。需要批准的 exec 在这些消息中重用批准 id 作为 `runId`，以便于关联。
+这些在节点报告事件后发布到代理的会话中。Gateway 网关 主机 exec 批准在命令完成时（以及可选地，当运行时间超过阈值时）发出相同的生命周期事件。需要批准的 exec 在这些消息中重用批准 id 作为 `runId`，以便于关联。
 
 ## 影响
 
@@ -334,9 +334,9 @@ Exec 生命周期作为系统消息呈现：
 
 相关：
 
-- [Exec 工具](/en/tools/exec)
-- [提升模式](/en/tools/elevated)
-- [技能](/en/tools/skills)
+- [Exec 工具](/zh/en/tools/exec)
+- [提升模式](/zh/en/tools/elevated)
+- [技能](/zh/en/tools/skills)
 
 import zh from '/components/footer/zh.mdx';
 

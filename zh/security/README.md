@@ -4,8 +4,8 @@
 
 ## 文档
 
-- [威胁模型](/en/security/THREAT-MODEL-ATLAS) - 基于 MITRE ATLAS 的 OpenClaw 生态系统威胁模型
-- [贡献威胁模型](/en/security/CONTRIBUTING-THREAT-MODEL) - 如何添加威胁、缓解措施和攻击链
+- [威胁模型](/zh/en/security/THREAT-MODEL-ATLAS) - 基于 MITRE ATLAS 的 OpenClaw 生态系统威胁模型
+- [贡献威胁模型](/zh/en/security/CONTRIBUTING-THREAT-MODEL) - 如何添加威胁、缓解措施和攻击链
 
 ## 报告漏洞
 

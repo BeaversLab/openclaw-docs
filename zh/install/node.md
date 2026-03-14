@@ -9,7 +9,7 @@ read_when:
 
 # Node.js
 
-OpenClaw 需要 **Node 22.16 或更新版本**。**Node 24 是安装、CI 和发布工作流的默认及推荐运行时**。Node 22 仍然通过当前的 LTS 线路获得支持。[安装程序脚本](/en/install#install-methods) 会自动检测并安装 Node —— 本页面适用于您想要自行设置 Node 并确保一切配置正确（版本、PATH、全局安装）的情况。
+OpenClaw 需要 **Node 22.16 或更新版本**。**Node 24 是安装、CI 和发布工作流的默认及推荐运行时**。Node 22 仍然通过当前的 LTS 线路获得支持。[安装程序脚本](/zh/en/install#install-methods) 会自动检测并安装 Node —— 本页面适用于您想要自行设置 Node 并确保一切配置正确（版本、PATH、全局安装）的情况。
 
 ## 检查您的版本
 
@@ -125,7 +125,7 @@ fnm use 24
   </Step>
 </Steps>
 
-### `npm install -g` 上的权限错误
+### `npm install -g` 上的权限错误（Linux）
 
 如果您看到 `EACCES` 错误，请将 npm 的全局前缀切换到用户可写目录：
 

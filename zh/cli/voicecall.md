@@ -12,7 +12,7 @@ title: "voicecall"
 
 主要文档：
 
-- Voice-call 插件：[语音通话](/en/plugins/voice-call)
+- Voice-call 插件：[语音通话](/zh/en/plugins/voice-call)
 
 ## 常用命令
 

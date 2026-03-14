@@ -2,31 +2,28 @@
 summary: "WebSocket 网关架构、组件和客户端流程"
 read_when:
   - Working on gateway protocol, clients, or transports
-title: "网关架构"
+title: "Gateway 网关 架构"
 ---
 
-# 网关架构
+# Gateway 网关 架构
 
 最后更新时间：2026-01-22
 
 ## 概述
 
-- 单一的长生命期 **Gateway（网关）** 拥有所有的消息传递表面（WhatsApp 通过
+- 单一的长生命期 **Gateway 网关（Gateway 网关）** 拥有所有的消息传递表面（WhatsApp 通过
   Baileys、Telegram 通过 grammY、Slack、Discord、Signal、iMessage、WebChat）。
 - 控制平面客户端（macOS 应用、CLI、Web UI、自动化）连接到
-  在配置的绑定主机（默认
-  `127.0.0.1:18789`）上通过 **WebSocket** 连接网关。
+在配置的绑定主机（默认 `127.0.0.1:18789`）上通过 **WebSocket** 连接 Gateway 网关。
 - **Nodes（节点）**（macOS/iOS/Android/headless）也通过 **WebSocket** 连接，但
   使用明确的 caps/commands 声明 `role: node`。
-- 每台主机一个 Gateway；它是唯一开启 WhatsApp 会话的地方。
-- **Canvas 主机** 由 Gateway HTTP 服务器提供，位于：
-  - `/__openclaw__/canvas/` (代理可编辑的 HTML/CSS/JS)
-  - `/__openclaw__/a2ui/` (A2UI 主机)
-    它使用的端口与网关相同（默认 `18789`）。
+- 每台主机一个 Gateway 网关；它是唯一开启 WhatsApp 会话的地方。
+- **Canvas 主机** 由 Gateway 网关 HTTP 服务器提供，位于：
+- `/__openclaw__/canvas/` (代理可编辑的 HTML/CSS/JS) - `/__openclaw__/a2ui/` (A2UI 主机) 它使用的端口与 Gateway 网关 相同（默认 `18789`）。
 
 ## 组件和流程
 
-### Gateway (daemon/守护进程)
+### Gateway 网关 (daemon/守护进程)
 
 - 维护提供程序连接。
 - 暴露类型化的 WS API（请求、响应、服务器推送事件）。
@@ -48,11 +45,11 @@ title: "网关架构"
 
 协议详情：
 
-- [Gateway protocol](/en/gateway/protocol)
+- [Gateway 网关 protocol](/zh/en/gateway/protocol)
 
 ### WebChat
 
-- 使用 Gateway WS API 获取聊天记录和发送消息的静态 UI。
+- 使用 Gateway 网关 WS API 获取聊天记录和发送消息的静态 UI。
 - 在远程设置中，通过与其他客户端相同的 SSH/Tailscale 隧道进行连接
   客户端。
 
@@ -93,7 +90,7 @@ sequenceDiagram
 ## 配对 + 本地信任
 
 - 所有 WS 客户端（操作员 + 节点）都在 `connect` 上包含一个**设备身份**。
-- 新的设备 ID 需要配对批准；网关会签发一个 **设备令牌**
+- 新的设备 ID 需要配对批准；Gateway 网关 会签发一个 **设备令牌**
   用于后续连接。
 - **本地** 连接（回环或网关主机自己的 tailnet 地址）可以
   自动批准，以保持同机用户体验流畅。
@@ -102,11 +99,11 @@ sequenceDiagram
   会在重连时固定已配对的元数据，并对元数据
   变更要求修复配对。
 - **非本地** 连接仍需明确批准。
-- 网关认证（`gateway.auth.*`）仍然适用于**所有**连接，无论是本地还是
+- Gateway 网关 认证（`gateway.auth.*`）仍然适用于**所有**连接，无论是本地还是
   远程。
 
-详情：[网关协议](/en/gateway/protocol)，[配对](/en/channels/pairing)，
-[安全](/en/gateway/security)。
+详情：[Gateway 网关 协议](/zh/en/gateway/protocol)，[配对](/zh/en/channels/pairing)，
+[安全](/zh/en/gateway/security)。
 
 ## 协议类型和代码生成
 
@@ -134,7 +131,7 @@ sequenceDiagram
 
 ## 不变量
 
-- 每台主机上恰好有一个 Gateway 控制单个 Baileys 会话。
+- 每台主机上恰好有一个 Gateway 网关 控制单个 Baileys 会话。
 - 握手是强制性的；任何非 JSON 或非连接的首帧都将导致强制关闭。
 - 事件不会重放；客户端必须在出现间隙时进行刷新。
 

@@ -10,9 +10,9 @@ title: "相机捕获"
 
 OpenClaw 支持用于代理工作流的 **相机捕获**：
 
-- **iOS 节点**（通过 Gateway 配对）：通过 `node.invoke` 捕获**照片** (`jpg`) 或**短视频片段** (`mp4`，可选音频)。
-- **Android 节点**（通过 Gateway 配对）：通过 `node.invoke` 捕获**照片** (`jpg`) 或**短视频片段** (`mp4`，可选音频)。
-- **macOS 应用**（通过 Gateway 作为节点）：通过 `node.invoke` 捕获**照片** (`jpg`) 或**短视频片段** (`mp4`，可选音频)。
+- **iOS 节点**（通过 Gateway 网关 配对）：通过 `node.invoke` 捕获**照片** (`jpg`) 或**短视频片段** (`mp4`，可选音频)。
+- **Android 节点**（通过 Gateway 网关 配对）：通过 `node.invoke` 捕获**照片** (`jpg`) 或**短视频片段** (`mp4`，可选音频)。
+- **macOS 应用**（通过 Gateway 网关 作为节点）：通过 `node.invoke` 捕获**照片** (`jpg`) 或**短视频片段** (`mp4`，可选音频)。
 
 所有相机访问都受 **用户控制的设置** 限制。
 
@@ -24,7 +24,7 @@ OpenClaw 支持用于代理工作流的 **相机捕获**：
   - 默认值：**开启**（缺失的键被视为已启用）。
   - 关闭时：`camera.*` 命令返回 `CAMERA_DISABLED`。
 
-### 命令（通过 Gateway `node.invoke`）
+### 命令（通过 Gateway 网关 `node.invoke`）
 
 - `camera.list`
   - 响应负载：
@@ -100,7 +100,7 @@ openclaw nodes camera clip --node <id> --no-audio
 
 与 `canvas.*` 类似，Android 节点仅允许在 **前台** 执行 `camera.*` 命令。后台调用将返回 `NODE_BACKGROUND_UNAVAILABLE`。
 
-### Android 命令（通过 Gateway `node.invoke`）
+### Android 命令（通过 Gateway 网关 `node.invoke`）
 
 - `camera.list`
   - 响应载荷：

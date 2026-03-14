@@ -34,7 +34,7 @@ openclaw onboard --zai-api-key "$ZAI_API_KEY"
 - GLM 模型可以作为 `zai/<model>` 使用（例如：`zai/glm-5`）。
 - `tool_stream` 默认为 Z.AI 工具调用流启用。设置
   `agents.defaults.models["zai/<model>"].params.tool_stream` 为 `false` 以禁用它。
-- 有关模型系列的概述，请参阅 [/providers/glm](/en/providers/glm)。
+- 有关模型系列的概述，请参阅 [/providers/glm](/zh/en/providers/glm)。
 - Z.AI 使用您的 API 密钥进行 Bearer 身份验证。
 
 import zh from '/components/footer/zh.mdx';

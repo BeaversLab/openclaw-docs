@@ -18,11 +18,11 @@ OpenClaw 支持 Perplexity Search API 作为 `web_search` 提供商。
 
 1. 在 [https://www.perplexity.ai/settings/api](https://www.perplexity.ai/settings/api) 创建 Perplexity 账户
 2. 在仪表板中生成 API 密钥
-3. 将密钥存储在配置中，或在 Gateway 环境中设置 `PERPLEXITY_API_KEY`。
+3. 将密钥存储在配置中，或在 Gateway 网关 环境中设置 `PERPLEXITY_API_KEY`。
 
 ## OpenRouter 兼容性
 
-如果您已经在使用 OpenRouter 进行 Perplexity Sonar，请保留 `provider: "perplexity"` 并在 Gateway 环境中设置 `OPENROUTER_API_KEY`，或者在 `tools.web.search.perplexity.apiKey` 中存储 `sk-or-...` 密钥。
+如果您已经在使用 OpenRouter 进行 Perplexity Sonar，请保留 `provider: "perplexity"` 并在 Gateway 网关 环境中设置 `OPENROUTER_API_KEY`，或者在 `tools.web.search.perplexity.apiKey` 中存储 `sk-or-...` 密钥。
 
 可选的旧版控制项：
 
@@ -73,9 +73,9 @@ OpenClaw 支持 Perplexity Search API 作为 `web_search` 提供商。
 `tools.web.search.perplexity.apiKey` 下的 `~/.openclaw/openclaw.json` 中。
 该字段也接受 SecretRef 对象。
 
-**通过环境：** 在 Gateway 进程环境中设置 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。
+**通过环境：** 在 Gateway 网关 进程环境中设置 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。
 对于 gateway 安装，将其放入
-`~/.openclaw/.env`（或您的服务环境）。参见 [Env vars](/en/help/faq#how-does-openclaw-load-environment-variables)。
+`~/.openclaw/.env`（或您的服务环境）。参见 [Env vars](/zh/en/help/faq#how-does-openclaw-load-environment-variables)。
 
 如果配置了 `provider: "perplexity"` 且 Perplexity 密钥 SecretRef 未解析且没有环境变量回退，启动/重载将快速失败。
 
@@ -154,7 +154,7 @@ await web_search({
 - 使用 OpenRouter 或显式的 `baseUrl` / `model` 会将 Perplexity 切换回 Sonar 聊天补全模式以保持兼容性
 - 结果默认缓存 15 分钟（可通过 `cacheTtlMinutes` 配置）
 
-有关完整的 web_search 配置，请参阅 [Web tools](/en/tools/web)。
+有关完整的 web_search 配置，请参阅 [Web tools](/zh/en/tools/web)。
 有关更多详细信息，请参阅 [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart)。
 
 import zh from '/components/footer/zh.mdx';

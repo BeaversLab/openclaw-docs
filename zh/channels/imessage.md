@@ -9,21 +9,21 @@ title: "iMessage"
 # iMessage（旧版：imsg）
 
 <Warning>
-对于新的 iMessage 部署，请使用 <a href="/en/channels/bluebubbles">BlueBubbles</a>。
+对于新的 iMessage 部署，请使用 <a href="/zh/en/channels/bluebubbles">BlueBubbles</a>。
 
 `imsg` 集成是旧版功能，可能会在将来的版本中移除。
 </Warning>
 
-状态：旧版外部 CLI 集成。网关会生成 `imsg rpc` 并通过 stdio 上的 JSON-RPC 进行通信（没有单独的守护进程/端口）。
+状态：旧版外部 CLI 集成。Gateway 网关 会生成 `imsg rpc` 并通过 stdio 上的 JSON-RPC 进行通信（没有单独的守护进程/端口）。
 
 <CardGroup cols={3}>
-  <Card title="BlueBubbles (recommended)" icon="message-circle" href="/en/channels/bluebubbles">
+  <Card title="BlueBubbles (recommended)" icon="message-circle" href="/zh/en/channels/bluebubbles">
     新设置的首选 iMessage 方式。
   </Card>
-  <Card title="Pairing" icon="link" href="/en/channels/pairing">
+  <Card title="Pairing" icon="link" href="/zh/en/channels/pairing">
     iMessage 私信 (DM) 默认为配对模式。
   </Card>
-  <Card title="Configuration reference" icon="settings" href="/en/gateway/configuration-reference#imessage">
+  <Card title="Configuration reference" icon="settings" href="/zh/en/gateway/configuration-reference#imessage">
     完整的 iMessage 字段参考。
   </Card>
 </CardGroup>
@@ -66,7 +66,7 @@ openclaw gateway
 
       </Step>
 
-      <Step title="Approve first DM pairing (default dmPolicy)">
+      <Step title="Approve first 私信 pairing (default dmPolicy)">
 
 ```bash
 openclaw pairing list imessage
@@ -134,7 +134,7 @@ imsg send <handle> "test"
 ## 访问控制和路由
 
 <Tabs>
-  <Tab title="DM 策略">
+  <Tab title="私信 策略">
     `channels.imessage.dmPolicy` 控制直接消息：
 
     - `pairing`（默认）
@@ -316,7 +316,7 @@ openclaw channels status --probe
 
   </Accordion>
 
-  <Accordion title="DMs are ignored">
+  <Accordion title="私信 are ignored">
     检查：
 
     - `channels.imessage.dmPolicy`
@@ -361,10 +361,10 @@ imsg send <handle> "test"
 
 ## 配置参考指针
 
-- [配置参考 - iMessage](/en/gateway/configuration-reference#imessage)
-- [网关配置](/en/gateway/configuration)
-- [配对](/en/channels/pairing)
-- [BlueBubbles](/en/channels/bluebubbles)
+- [配置参考 - iMessage](/zh/en/gateway/configuration-reference#imessage)
+- [Gateway 网关 配置](/zh/en/gateway/configuration)
+- [配对](/zh/en/channels/pairing)
+- [BlueBubbles](/zh/en/channels/bluebubbles)
 
 import zh from '/components/footer/zh.mdx';
 

@@ -76,9 +76,9 @@ openclaw devices revoke --device <deviceId> --role node
 
 ## 通用选项
 
-- `--url <url>`：网关 WebSocket URL（配置时默认为 `gateway.remote.url`）。
-- `--token <token>`：网关令牌（如果需要）。
-- `--password <password>`：网关密码（密码认证）。
+- `--url <url>`：Gateway 网关 WebSocket URL（配置时默认为 `gateway.remote.url`）。
+- `--token <token>`：Gateway 网关 令牌（如果需要）。
+- `--password <password>`：Gateway 网关 密码（密码认证）。
 - `--timeout <ms>`：RPC 超时。
 - `--json`：JSON 输出（建议用于脚本）。
 
@@ -125,8 +125,8 @@ openclaw devices approve <requestId>
 
 相关内容：
 
-- [Dashboard 身份验证故障排除](/en/web/dashboard#if-you-see-unauthorized-1008)
-- [网关故障排除](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [Dashboard 身份验证故障排除](/zh/en/web/dashboard#if-you-see-unauthorized-1008)
+- [Gateway 网关 故障排除](/zh/en/gateway/故障排除#dashboard-control-ui-connectivity)
 
 import zh from '/components/footer/zh.mdx';
 

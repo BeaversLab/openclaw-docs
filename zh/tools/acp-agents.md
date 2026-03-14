@@ -60,7 +60,7 @@ OpenClaw 应采取的操作：
 | 主要命令 | `/acp ...`                            | `/subagents ...`                   |
 | 生成工具    | `sessions_spawn` 搭配 `runtime:"acp"` | `sessions_spawn` (默认运行时) |
 
-另请参阅 [Sub-agents](/en/tools/subagents)。
+另请参阅 [Sub-agents](/zh/en/tools/subagents)。
 
 ## 线程绑定会话（与通道无关）
 
@@ -342,7 +342,7 @@ ACP 会话当前在主机运行时上运行，而不是在 OpenClaw 沙盒内运
 - `--cwd <absolute-path>`
 - `--label <name>`
 
-请参阅 [斜杠命令](/en/tools/slash-commands)。
+请参阅 [斜杠命令](/zh/en/tools/slash-commands)。
 
 ## 会话目标解析
 
@@ -502,7 +502,7 @@ ACP 会话当前在主机运行时上运行，而不是在 OpenClaw 沙盒内运
 
 - Discord：`channels.discord.threadBindings.spawnAcpSessions=true`
 
-参见 [配置参考](/en/gateway/configuration-reference)。
+参见 [配置参考](/zh/en/gateway/configuration-reference)。
 
 ## acpx 后端的插件设置
 
@@ -562,7 +562,7 @@ openclaw plugins install ./extensions/acpx
 - 当 `command` 指向自定义二进制文件/路径时，将禁用插件本地的自动安装。
 - 当后端健康检查运行时，OpenClaw 启动保持非阻塞。
 
-参见 [插件](/en/tools/plugin)。
+参见 [插件](/zh/en/tools/plugin)。
 
 ## 权限配置
 

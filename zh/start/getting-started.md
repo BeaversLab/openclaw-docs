@@ -13,7 +13,7 @@ title: "入门指南"
 <Info>
 最快的聊天方式：打开控制 UI（无需设置频道）。运行 `openclaw dashboard`
 并在浏览器中聊天，或者在 <Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">网关主机</Tooltip> 上打开 `http://127.0.0.1:18789/`。
-文档：[Dashboard](/en/web/dashboard) 和 [Control UI](/en/web/control-ui)。
+文档：[Dashboard](/zh/en/web/dashboard) 和 [Control UI](/zh/en/web/control-ui)。
 </Info>
 
 ## 先决条件
@@ -47,7 +47,7 @@ title: "入门指南"
     </Tabs>
 
     <Note>
-    其他安装方法和要求：[安装](/en/install)。
+    其他安装方法和要求：[安装](/zh/en/install)。
     </Note>
 
   </Step>
@@ -57,11 +57,9 @@ title: "入门指南"
     ```
 
     该向导配置身份验证、网关设置和可选频道。
-    详情请参见 [入门向导](/en/start/wizard)。
+    详情请参见 [入门向导](/zh/en/start/向导)。
 
-  </Step>
-  <Step title="检查网关">
-    如果您安装了服务，它应该已经在运行：
+</Step> <Step title="检查 Gateway 网关"> 如果您安装了服务，它应该已经在运行：
 
     ```bash
     openclaw gateway status
@@ -76,14 +74,12 @@ title: "入门指南"
 </Steps>
 
 <Check>
-如果控制 UI 加载成功，说明您的网关已准备就绪。
+如果控制 UI 加载成功，说明您的 Gateway 网关 已准备就绪。
 </Check>
 
 ## 可选检查和附加项
 
-<AccordionGroup>
-  <Accordion title="在前台运行网关">
-    适用于快速测试或故障排除。
+<AccordionGroup> <Accordion title="在前台运行 Gateway 网关"> 适用于快速测试或故障排除。
 
     ```bash
     openclaw gateway --port 18789
@@ -108,30 +104,30 @@ title: "入门指南"
 - `OPENCLAW_STATE_DIR` 会覆盖状态目录。
 - `OPENCLAW_CONFIG_PATH` 会覆盖配置文件路径。
 
-完整的环境变量参考：[环境变量](/en/help/environment)。
+完整的环境变量参考：[环境变量](/zh/en/help/environment)。
 
 ## 深入了解
 
 <Columns>
-  <Card title="Onboarding Wizard (details)" href="/en/start/wizard">
+  <Card title="新手引导 Wizard (details)" href="/zh/en/start/wizard">
     完整的 CLI 向导参考和高级选项。
   </Card>
-  <Card title="macOS app onboarding" href="/en/start/onboarding">
+  <Card title="macOS app 新手引导" href="/zh/en/start/onboarding">
     macOS 应用的首次运行流程。
   </Card>
 </Columns>
 
 ## 你将获得
 
-- 一个正在运行的 Gateway
+- 一个正在运行的 Gateway 网关
 - 已配置的认证
 - 控制 UI 访问权限或已连接的频道
 
 ## 后续步骤
 
-- 私信安全和审批：[配对](/en/channels/pairing)
-- 连接更多频道：[频道](/en/channels)
-- 高级工作流和从源代码构建：[设置](/en/start/setup)
+- 私信安全和审批：[配对](/zh/en/channels/pairing)
+- 连接更多频道：[频道](/zh/en/channels)
+- 高级工作流和从源代码构建：[设置](/zh/en/start/setup)
 
 import zh from '/components/footer/zh.mdx';
 

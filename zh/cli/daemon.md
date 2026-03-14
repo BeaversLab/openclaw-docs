@@ -8,7 +8,7 @@ title: "daemon"
 
 # `openclaw daemon`
 
-Gateway 服务管理命令的旧别名。
+Gateway 网关 服务管理命令的旧别名。
 
 `openclaw daemon ...` 映射到与 `openclaw gateway ...` 服务命令相同的服务控制界面。
 
@@ -25,7 +25,7 @@ openclaw daemon uninstall
 
 ## 子命令
 
-- `status`：显示服务安装状态并探测网关健康状况
+- `status`：显示服务安装状态并探测 Gateway 网关 健康状况
 - `install`：安装服务 (`launchd`/`systemd`/`schtasks`)
 - `uninstall`：移除服务
 - `start`：启动服务
@@ -48,7 +48,7 @@ openclaw daemon uninstall
 
 ## 推荐
 
-有关当前的文档和示例，请使用 [`openclaw gateway`](/en/cli/gateway)。
+有关当前的文档和示例，请使用 [`openclaw gateway`](/zh/en/cli/gateway)。
 
 import zh from '/components/footer/zh.mdx';
 

@@ -17,11 +17,11 @@ OpenClaw 通过 JSON-RPC 集成外部 CLI。目前使用两种模式。
 - 健康探针：`/api/v1/check`。
 - 当 `channels.signal.autoStart=true` 时，OpenClaw 拥有生命周期控制权。
 
-有关设置和端点，请参阅 [Signal](/en/channels/signal)。
+有关设置和端点，请参阅 [Signal](/zh/en/channels/signal)。
 
 ## 模式 B：stdio 子进程（旧版：imsg）
 
-> **注意：** 对于新的 iMessage 设置，请改用 [BlueBubbles](/en/channels/bluebubbles)。
+> **注意：** 对于新的 iMessage 设置，请改用 [BlueBubbles](/zh/en/channels/bluebubbles)。
 
 - OpenClaw 生成 `imsg rpc` 作为子进程（旧版 iMessage 集成）。
 - JSON-RPC 通过 stdin/stdout 进行行分隔（每行一个 JSON 对象）。
@@ -34,11 +34,11 @@ OpenClaw 通过 JSON-RPC 集成外部 CLI。目前使用两种模式。
 - `send`
 - `chats.list` (探针/诊断)
 
-有关旧版设置和寻址，请参阅 [iMessage](/en/channels/imessage)（推荐使用 `chat_id`）。
+有关旧版设置和寻址，请参阅 [iMessage](/zh/en/channels/imessage)（推荐使用 `chat_id`）。
 
 ## 适配器指南
 
-- 网关拥有进程（启动/停止绑定到提供程序生命周期）。
+- Gateway 网关 拥有进程（启动/停止绑定到提供程序生命周期）。
 - 保持 RPC 客户端的弹性：设置超时，退出时重启。
 - 优先使用稳定的 ID（例如 `chat_id`）而非显示字符串。
 

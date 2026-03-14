@@ -21,19 +21,19 @@ title: "会话管理深入剖析"
 
 如果您想先了解更高级的概述，请从以下内容开始：
 
-- [/concepts/session](/en/concepts/session)
-- [/concepts/compaction](/en/concepts/compaction)
-- [/concepts/session-pruning](/en/concepts/session-pruning)
-- [/reference/transcript-hygiene](/en/reference/transcript-hygiene)
+- [/concepts/会话](/zh/en/concepts/会话)
+- [/concepts/compaction](/zh/en/concepts/compaction)
+- [/concepts/会话-pruning](/zh/en/concepts/会话-pruning)
+- [/reference/transcript-hygiene](/zh/en/reference/transcript-hygiene)
 
 ---
 
-## 事实来源：网关
+## 事实来源：Gateway 网关
 
-OpenClaw 围绕拥有会话状态的单一**网关进程** 进行设计。
+OpenClaw 围绕拥有会话状态的单一**Gateway 网关 进程** 进行设计。
 
-- UI（macOS 应用、Web 控制界面、TUI）应查询网关以获取会话列表和 token 计数。
-- 在远程模式下，会话文件位于远程主机上；“检查本地 Mac 文件”不会反映网关正在使用的内容。
+- UI（macOS 应用、Web 控制界面、TUI）应查询 Gateway 网关 以获取会话列表和 token 计数。
+- 在远程模式下，会话文件位于远程主机上；“检查本地 Mac 文件”不会反映 Gateway 网关 正在使用的内容。
 
 ---
 
@@ -55,7 +55,7 @@ OpenClaw 在两个层中持久化会话：
 
 ## 磁盘位置
 
-每个代理，在网关主机上：
+每个代理，在 Gateway 网关 主机上：
 
 - 存储：`~/.openclaw/agents/<agentId>/sessions/sessions.json`
 - 副本：`~/.openclaw/agents/<agentId>/sessions/<sessionId>.jsonl`
@@ -115,7 +115,7 @@ openclaw sessions cleanup --enforce
 - Cron：`cron:<job.id>`
 - Webhook：`hook:<uuid>`（除非被覆盖）
 
-标准规则记录在 [/concepts/session](/en/concepts/session) 中。
+标准规则记录在 [/concepts/会话](/zh/en/concepts/会话) 中。
 
 ---
 
@@ -156,7 +156,7 @@ openclaw sessions cleanup --enforce
 - `memoryFlushAt`：上次预压缩内存刷新的时间戳
 - `memoryFlushCompactionCount`：上次刷新运行时的压缩计数
 
-存储是可安全编辑的，但 Gateway 是权威：它可能会在会话运行时重写或重新填充条目。
+存储是可安全编辑的，但 Gateway 网关 是权威：它可能会在会话运行时重写或重新填充条目。
 
 ---
 
@@ -166,8 +166,8 @@ Transcripts 由 `@mariozechner/pi-coding-agent` 的 `SessionManager` 管理。
 
 该文件是 JSONL 格式：
 
-- 第一行：session 标头 (`type: "session"`，包含 `id`、`cwd`、`timestamp`，可选的 `parentSession`)
-- 然后：带有 `id` + `parentId`（树）的 session 条目
+- 第一行：会话 标头 (`type: "session"`，包含 `id`、`cwd`、`timestamp`，可选的 `parentSession`)
+- 然后：带有 `id` + `parentId`（树）的 会话 条目
 
 值得注意的条目类型：
 
@@ -177,7 +177,7 @@ Transcripts 由 `@mariozechner/pi-coding-agent` 的 `SessionManager` 管理。
 - `compaction`：包含 `firstKeptEntryId` 和 `tokensBefore` 的持久化压缩摘要
 - `branch_summary`：导航树分支时的持久化摘要
 
-OpenClaw 故意**不**“修正”transcripts；Gateway 使用 `SessionManager` 来读/写它们。
+OpenClaw 故意**不**“修正”transcripts；Gateway 网关 使用 `SessionManager` 来读/写它们。
 
 ---
 
@@ -193,7 +193,7 @@ OpenClaw 故意**不**“修正”transcripts；Gateway 使用 `SessionManager` 
 - 上下文窗口来自模型目录（并且可以通过配置覆盖）。
 - 存储中的 `contextTokens` 是一个运行时估算/报告值；不要将其视为严格的保证。
 
-有关更多信息，请参阅 [/token-use](/en/reference/token-use)。
+有关更多信息，请参阅 [/token-use](/zh/en/reference/token-use)。
 
 ---
 
@@ -206,7 +206,7 @@ OpenClaw 故意**不**“修正”transcripts；Gateway 使用 `SessionManager` 
 - 压缩摘要
 - `firstKeptEntryId` 之后的消息
 
-压缩是**持久性**的（与会话修剪不同）。请参阅 [/concepts/session-pruning](/en/concepts/session-pruning)。
+压缩是**持久性**的（与会话修剪不同）。请参阅 [/concepts/会话-pruning](/zh/en/concepts/会话-pruning)。
 
 ---
 
@@ -304,16 +304,16 @@ OpenClaw 使用**预阈值刷新（pre-threshold flush）**方法：
 - 刷新在每个压缩周期运行一次（在 `sessions.json` 中跟踪）。
 - 刷新仅针对嵌入式 Pi 会话运行（CLI 后端跳过它）。
 - 当会话工作区为只读（`workspaceAccess: "ro"` 或 `"none"`）时，跳过刷新。
-- 有关工作区文件布局和写入模式，请参阅 [Memory](/en/concepts/memory)。
+- 有关工作区文件布局和写入模式，请参阅 [Memory](/zh/en/concepts/memory)。
 
-Pi 还在扩展 API 中暴露了一个 `session_before_compact` 钩子，但 OpenClaw 的刷新逻辑目前位于 Gateway 端。
+Pi 还在扩展 API 中暴露了一个 `session_before_compact` 钩子，但 OpenClaw 的刷新逻辑目前位于 Gateway 网关 端。
 
 ---
 
 ## 故障排除清单
 
-- 会话密钥错误？从 [/concepts/session](/en/concepts/session) 开始，并确认 `/status` 中的 `sessionKey`。
-- 存储与记录不匹配？请从 `openclaw status` 确认 Gateway 主机和存储路径。
+- 会话密钥错误？从 [/concepts/会话](/zh/en/concepts/会话) 开始，并确认 `/status` 中的 `sessionKey`。
+- 存储与记录不匹配？请从 `openclaw status` 确认 Gateway 网关 主机和存储路径。
 - 压缩垃圾信息？检查：
   - 模型上下文窗口（过小）
   - 压缩设置（`reserveTokens` 对于模型窗口来说过高会导致提前压缩）

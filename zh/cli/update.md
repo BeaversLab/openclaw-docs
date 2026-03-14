@@ -10,7 +10,7 @@ title: "更新"
 
 安全地更新 OpenClaw 并在稳定/测试/开发通道之间切换。
 
-如果您是通过 **npm/pnpm** 安装的（全局安装，无 git 元数据），更新将通过 [更新](/en/install/updating) 中的包管理器流程进行。
+如果您是通过 **npm/pnpm** 安装的（全局安装，无 git 元数据），更新将通过 [更新](/zh/en/install/updating) 中的包管理器流程进行。
 
 ## 用法
 
@@ -29,7 +29,7 @@ openclaw --update
 
 ## 选项
 
-- `--no-restart`：成功更新后跳过重启网关服务。
+- `--no-restart`：成功更新后跳过重启 Gateway 网关 服务。
 - `--channel <stable|beta|dev>`：设置更新通道（git + npm；持久化保存到配置中）。
 - `--tag <dist-tag|version>`：仅针对本次更新覆盖 npm dist-tag 或版本。
 - `--dry-run`：预览计划的更新操作（通道/标签/目标/重启流程），而不写入配置、安装、同步插件或重启。
@@ -55,7 +55,7 @@ openclaw update status --timeout 10
 
 ## `update wizard`
 
-用于选择更新通道并确认更新后是否重启网关的交互式流程
+用于选择更新通道并确认更新后是否重启 Gateway 网关 的交互式流程
 （默认为重启）。如果您在没有 git 检出副本的情况下选择 `dev`，它
 会提议创建一个。
 
@@ -68,7 +68,7 @@ openclaw update status --timeout 10
   更新它，并从该检出中安装全局 CLI。
 - `stable`/`beta` → 使用匹配的 dist-tag 从 npm 安装。
 
-网关核心自动更新程序（当通过配置启用时）重用此相同的更新路径。
+Gateway 网关 核心自动更新程序（当通过配置启用时）重用此相同的更新路径。
 
 ## Git 检出流程
 
@@ -97,9 +97,9 @@ openclaw update status --timeout 10
 ## 另请参阅
 
 - `openclaw doctor`（在 git 检出时提示先运行更新）
-- [开发频道](/en/install/development-channels)
-- [更新](/en/install/updating)
-- [CLI 参考](/en/cli)
+- [开发频道](/zh/en/install/development-channels)
+- [更新](/zh/en/install/updating)
+- [CLI 参考](/zh/en/cli)
 
 import zh from '/components/footer/zh.mdx';
 

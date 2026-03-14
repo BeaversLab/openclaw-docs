@@ -116,14 +116,14 @@ OpenClaw 有三个 Vitest 套件（单元/集成、E2E、Live）和一小部分 
 - 可选的目标覆盖：
   - `OPENCLAW_ANDROID_NODE_ID` 或 `OPENCLAW_ANDROID_NODE_NAME`。
   - `OPENCLAW_ANDROID_GATEWAY_URL` / `OPENCLAW_ANDROID_GATEWAY_TOKEN` / `OPENCLAW_ANDROID_GATEWAY_PASSWORD`。
-- 完整的 Android 设置详情：[Android 应用](/en/platforms/android)
+- 完整的 Android 设置详情：[Android 应用](/zh/en/platforms/android)
 
 ## Live：模型冒烟测试（配置文件密钥）
 
 Live 测试分为两层，以便我们隔离故障：
 
 - “直接模型”告诉我们提供商/模型是否可以使用给定的密钥进行应答。
-- “网关冒烟测试”告诉我们完整的网关+代理流水线是否适用于该模型（会话、历史记录、工具、沙箱策略等）。
+- “Gateway 网关 冒烟测试”告诉我们完整的 Gateway 网关+代理流水线是否适用于该模型（会话、历史记录、工具、沙箱策略等）。
 
 ### 第 1 层：直接模型完成（无网关）
 
@@ -145,10 +145,10 @@ Live 测试分为两层，以便我们隔离故障：
   - 默认情况下：配置文件存储和环境变量回退
   - 设置 `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` 以强制仅使用 **配置文件存储**
 - 存在原因：
-  - 将“provider API 损坏 / 密钥无效”与“gateway agent 管道损坏”区分开来
+  - 将“提供商 API 损坏 / 密钥无效”与“gateway agent 管道损坏”区分开来
   - 包含小型、独立的回归测试（例如：OpenAI Responses/Codex Responses 推理重放 + 工具调用流程）
 
-### Layer 2: Gateway + dev agent smoke（即 “@openclaw” 实际执行的操作）
+### Layer 2: Gateway 网关 + dev agent smoke（即 “@openclaw” 实际执行的操作）
 
 - 测试：`src/gateway/gateway-models.profiles.live.test.ts`
 - Goal:
@@ -173,14 +173,7 @@ Live 测试分为两层，以便我们隔离故障：
 - How to select providers (avoid “OpenRouter everything”):
   - `OPENCLAW_LIVE_GATEWAY_PROVIDERS="google,google-antigravity,google-gemini-cli,openai,anthropic,zai,minimax"` （逗号分隔的允许列表）
 - Tool + image probes 在此 live 测试中始终开启：
-  - `read` 探测 + `exec+read` 探测（工具压力测试）
-  - 当模型声明支持图像输入时运行图像探测
-  - 流程（高层级）：
-    - 测试生成一个带有“CAT”+ 随机代码的微型 PNG（`src/gateway/live-image-probe.ts`）
-    - 通过 `agent` `attachments: [{ mimeType: "image/png", content: "<base64>" }]` 发送
-    - 网关将附件解析为 `images[]`（`src/gateway/server-methods/agent.ts` + `src/gateway/chat-attachments.ts`）
-    - 嵌入式代理将多模态用户消息转发给模型
-    - 断言：回复包含 `cat` 和代码（OCR 容差：允许微小错误）
+- `read` 探测 + `exec+read` 探测（工具压力测试） - 当模型声明支持图像输入时运行图像探测 - 流程（高层级）： - 测试生成一个带有“CAT”+ 随机代码的微型 PNG（`src/gateway/live-image-probe.ts`） - 通过 `agent` `attachments: [{ mimeType: "image/png", content: "<base64>" }]` 发送 - Gateway 网关 将附件解析为 `images[]`（`src/gateway/server-methods/agent.ts` + `src/gateway/chat-attachments.ts`） - 嵌入式代理将多模态用户消息转发给模型 - 断言：回复包含 `cat` 和代码（OCR 容差：允许微小错误）
 
 提示：要查看您可以在机器上测试的内容（以及确切的 `provider/model` id），请运行：
 
@@ -212,7 +205,7 @@ OPENCLAW_LIVE_SETUP_TOKEN=1 OPENCLAW_LIVE_SETUP_TOKEN_PROFILE=anthropic:setup-to
 ## Live：CLI 后端冒烟测试（Claude Code CLI 或其他本地 CLI）
 
 - 测试：`src/gateway/gateway-cli-backend.live.test.ts`
-- 目标：使用本地 CLI 后端验证 Gateway + 代理管道，而不触及你的默认配置。
+- 目标：使用本地 CLI 后端验证 Gateway 网关 + 代理管道，而不触及你的默认配置。
 - 启用：
   - `pnpm test:live`（如果直接调用 Vitest，则为 `OPENCLAW_LIVE_TEST=1`）
   - `OPENCLAW_LIVE_CLI_BACKEND=1`
@@ -298,19 +291,19 @@ Run gateway smoke with tools + image:
 可选的额外覆盖（最好有）：
 
 - xAI: `xai/grok-4` (or latest available)
-- Mistral: `mistral/`… (pick one “tools” capable model you have enabled)
+- Mistral: `mistral/`… (pick one “tools” capable 模型 you have enabled)
 - Cerebras: `cerebras/`… (if you have access)
-- LM Studio: `lmstudio/`… (local; tool calling depends on API mode)
+- LM Studio: `lmstudio/`… (local; 工具 calling depends on API mode)
 
 ### Vision: 图像发送 (attachment → multimodal message)
 
-Include at least one image-capable model in `OPENCLAW_LIVE_GATEWAY_MODELS` (Claude/Gemini/OpenAI vision-capable variants, etc.) to exercise the image probe.
+Include at least one image-capable 模型 in `OPENCLAW_LIVE_GATEWAY_MODELS` (Claude/Gemini/OpenAI vision-capable variants, etc.) to exercise the image probe.
 
 ### 聚合器 / 其他网关
 
 如果你已启用密钥，我们也支持通过以下方式进行测试：
 
-- OpenRouter: `openrouter/...` (hundreds of models; use `openclaw models scan` to find tool+image capable candidates)
+- OpenRouter: `openrouter/...` (hundreds of models; use `openclaw models scan` to find 工具+image capable candidates)
 - OpenCode: `opencode/...` for Zen and `opencode-go/...` for Go (auth via `OPENCODE_API_KEY` / `OPENCODE_ZEN_API_KEY`)
 
 更多可以包含在实时矩阵中的提供商（如果你有凭证/配置）：
@@ -348,9 +341,9 @@ Include at least one image-capable model in `OPENCLAW_LIVE_GATEWAY_MODELS` (Clau
 这些在仓库 Docker 镜像内运行 `pnpm test:live`，挂载你的本地配置目录和工作区（如果挂载了 `~/.profile`，也会加载它）：
 
 - 直接模型：`pnpm test:docker:live-models`（脚本：`scripts/test-live-models-docker.sh`）
-- 网关 + 开发代理：`pnpm test:docker:live-gateway`（脚本：`scripts/test-live-gateway-models-docker.sh`）
+- Gateway 网关 + 开发代理：`pnpm test:docker:live-gateway`（脚本：`scripts/test-live-gateway-models-docker.sh`）
 - 入职向导（TTY，完整脚手架）：`pnpm test:docker:onboard`（脚本：`scripts/e2e/onboard-docker.sh`）
-- 网关网络（两个容器，WS 认证 + 健康检查）：`pnpm test:docker:gateway-network`（脚本：`scripts/e2e/gateway-network-docker.sh`）
+- Gateway 网关 网络（两个容器，WS 认证 + 健康检查）：`pnpm test:docker:gateway-network`（脚本：`scripts/e2e/gateway-network-docker.sh`）
 - 插件（自定义扩展加载 + 注册冒烟测试）：`pnpm test:docker:plugins`（脚本：`scripts/e2e/plugins-docker.sh`）
 
 实时模型 Docker 运行器还将当前检出以只读方式绑定挂载，并将其暂存到容器内的临时工作目录中。这既保持运行时镜像精简，又能针对你确切的本地源码/配置运行 Vitest。
@@ -376,8 +369,8 @@ Include at least one image-capable model in `OPENCLAW_LIVE_GATEWAY_MODELS` (Clau
 
 这些是“真实流水线”的回归测试，但不使用真实的提供商：
 
-- 网关工具调用（模拟 OpenAI，真实网关 + 代理循环）：`src/gateway/gateway.test.ts` (case: "runs a mock OpenAI tool call end-to-end via gateway agent loop")
-- 网关向导（WS `wizard.start`/`wizard.next`，写入配置 + 强制执行身份验证）：`src/gateway/gateway.test.ts` (case: "runs wizard over ws and writes auth token config")
+- Gateway 网关 工具调用（模拟 OpenAI，真实 Gateway 网关 + 代理循环）：`src/gateway/gateway.test.ts` (case: "runs a mock OpenAI 工具 call end-to-end via gateway agent loop")
+- Gateway 网关 向导（WS `wizard.start`/`wizard.next`，写入配置 + 强制执行身份验证）：`src/gateway/gateway.test.ts` (case: "runs 向导 over ws and writes auth token config")
 
 ## Agent 可靠性评估（技能）
 
@@ -386,7 +379,7 @@ Include at least one image-capable model in `OPENCLAW_LIVE_GATEWAY_MODELS` (Clau
 - 通过真实网关 + 代理循环进行模拟工具调用 (`src/gateway/gateway.test.ts`)。
 - 验证会话连接和配置效果的端到端向导流程 (`src/gateway/gateway.test.ts`)。
 
-对于技能来说，目前仍然缺失的内容（参见 [技能](/en/tools/skills)）：
+对于技能来说，目前仍然缺失的内容（参见 [技能](/zh/en/tools/skills)）：
 
 - **决策制定：** 当提示中列出了技能时，Agent 是否会选择正确的技能（或避免无关的技能）？
 - **合规性：** 代理是否在使用前阅读 `SKILL.md` 并遵循所需的步骤/参数？
@@ -405,7 +398,7 @@ Include at least one image-capable model in `OPENCLAW_LIVE_GATEWAY_MODELS` (Clau
 - 如果可能，添加 CI 安全的回归测试（模拟/存根提供商，或捕获确切的请求形状转换）
 - 如果它本质上仅限实时（速率限制、身份验证策略），请保持实时测试狭窄范围，并通过环境变量选择加入
 - 优先定位能捕获该错误的最小层级：
-  - provider 请求转换/回放 bug → 直接模型测试
+  - 提供商 请求转换/回放 bug → 直接模型测试
   - gateway 会话/历史/工具流水线 bug → gateway live smoke 或 CI 安全的 gateway mock 测试
 - SecretRef 遍历防护：
   - `src/secrets/exec-secret-ref-id-parity.test.ts` 从注册表元数据 (`listSecretTargetRegistryEntries()`) 中为每个 SecretRef 类派生一个采样目标，然后断言遍历段 exec ids 被拒绝。

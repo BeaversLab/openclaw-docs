@@ -28,7 +28,7 @@ openclaw plugins install @openclaw/feishu
 
 有两种添加 Feishu 频道的方法：
 
-### Method 1: onboarding wizard (recommended)
+### Method 1: 新手引导 向导 (recommended)
 
 如果您刚刚安装 OpenClaw，请运行向导：
 
@@ -435,7 +435,7 @@ openclaw pairing list feishu
 
 > 注意：飞书尚不支持原生命令菜单，因此必须以文本形式发送命令。
 
-## 网关管理命令
+## Gateway 网关 管理命令
 
 | 命令                    | 描述                   |
 | -------------------------- | ----------------------------- |
@@ -589,7 +589,7 @@ openclaw pairing list feishu
 
 ## 配置参考
 
-完整配置：[网关配置](/en/gateway/configuration)
+完整配置：[Gateway 网关 配置](/zh/en/gateway/configuration)
 
 关键选项：
 

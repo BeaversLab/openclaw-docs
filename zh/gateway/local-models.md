@@ -9,9 +9,9 @@ title: "本地模型"
 
 # 本地模型
 
-本地部署是可行的，但 OpenClaw 需要大上下文 + 针对提示注入的强有力防御。小显卡会截断上下文并泄露安全风险。目标要高：**≥2 台满配的 Mac Studio 或同等的 GPU 集群（约 $30k+）**。单块 **24 GB** GPU 仅适用于较轻量的提示，且延迟较高。使用**你能运行的最大的 / 完整版模型变体**；激进量化的或“小”检查点会增加提示注入风险（参见[安全](/en/gateway/security)）。
+本地部署是可行的，但 OpenClaw 需要大上下文 + 针对提示注入的强有力防御。小显卡会截断上下文并泄露安全风险。目标要高：**≥2 台满配的 Mac Studio 或同等的 GPU 集群（约 $30k+）**。单块 **24 GB** GPU 仅适用于较轻量的提示，且延迟较高。使用**你能运行的最大的 / 完整版模型变体**；激进量化的或“小”检查点会增加提示注入风险（参见[安全](/zh/en/gateway/security)）。
 
-如果您想要最低摩擦力的本地设置，请从 [Ollama](/en/providers/ollama) 和 `openclaw onboard` 开始。本页面是针对高端本地堆栈和自定义 OpenAI 兼容本地服务器的观点指南。
+如果您想要最低摩擦力的本地设置，请从 [Ollama](/zh/en/providers/ollama) 和 `openclaw onboard` 开始。本页面是针对高端本地堆栈和自定义 OpenAI 兼容本地服务器的观点指南。
 
 ## 推荐：LM Studio + MiniMax M2.5（Responses API，完整版）
 
@@ -114,7 +114,7 @@ title: "本地模型"
 
 ## 其他兼容 OpenAI 的本地代理
 
-如果它们暴露了 OpenAI 风格的 `/v1` 端点，则 vLLM、LiteLLM、OAI-proxy 或自定义网关均可工作。将上面的 provider 块替换为您的端点和模型 ID：
+如果它们暴露了 OpenAI 风格的 `/v1` 端点，则 vLLM、LiteLLM、OAI-proxy 或自定义网关均可工作。将上面的 提供商 块替换为您的端点和模型 ID：
 
 ```json5
 {
@@ -146,7 +146,7 @@ title: "本地模型"
 
 ## 故障排除
 
-- 网关能访问代理吗？`curl http://127.0.0.1:1234/v1/models`。
+- Gateway 网关 能访问代理吗？`curl http://127.0.0.1:1234/v1/models`。
 - LM Studio 模型是否已卸载？重新加载；冷启动是常见的“挂起”原因。
 - 上下文错误？降低 `contextWindow` 或提高您的服务器限制。
 - 安全性：本地模型跳过提供商端的过滤器；保持代理范围狭窄并启用压缩，以限制提示注入的爆炸半径。

@@ -13,7 +13,7 @@ OpenClaw 从多个来源获取环境变量。其原则是**绝不覆盖现有值
 
 ## 优先级（从高到低）
 
-1. **进程环境**（Gateway 进程从父 shell/daemon 继承的环境）。
+1. **进程环境**（Gateway 网关 进程从父 shell/daemon 继承的环境）。
 2. **当前工作目录中的 `.env`**（dotenv 默认设置；不会覆盖现有值）。
 3. 位于 `~/.openclaw/.env` 的 **全局 `.env`**（即 `$OPENCLAW_STATE_DIR/.env`；不会覆盖）。
 4. `~/.openclaw/openclaw.json` 中的 **配置 `env` 代码块**（仅在缺失时应用）。
@@ -56,7 +56,7 @@ OpenClaw 从多个来源获取环境变量。其原则是**绝不覆盖现有值
 - `OPENCLAW_LOAD_SHELL_ENV=1`
 - `OPENCLAW_SHELL_ENV_TIMEOUT_MS=15000`
 
-## Runtime-injected env vars
+## Runtime-injected 环境变量
 
 OpenClaw 还会将上下文标记注入到生成的子进程中：
 
@@ -67,7 +67,7 @@ OpenClaw 还会将上下文标记注入到生成的子进程中：
 
 这些是运行时标记（不是必需的用户配置）。它们可以在 shell/profile 逻辑中用于应用特定于上下文的规则。
 
-## UI env vars
+## UI 环境变量
 
 - `OPENCLAW_THEME=light`：当您的终端拥有浅色背景时，强制使用浅色 TUI 调色板。
 - `OPENCLAW_THEME=dark`：强制使用深色 TUI 调色板。
@@ -89,7 +89,7 @@ OpenClaw 还会将上下文标记注入到生成的子进程中：
 }
 ```
 
-有关完整详细信息，请参阅[配置：环境变量替换](/en/gateway/configuration#env-var-substitution-in-config)。
+有关完整详细信息，请参阅[配置：环境变量替换](/zh/en/gateway/configuration#env-var-substitution-in-config)。
 
 ## Secret 引用与 `${ENV}` 字符串
 
@@ -98,7 +98,7 @@ OpenClaw 支持两种由环境驱动的模式：
 - 配置值中的 `${VAR}` 字符串替换。
 - 用于支持密钥引用的字段的 SecretRef 对象（`{ source: "env", provider: "default", id: "VAR" }`）。
 
-两者均在激活时从进程环境中解析。SecretRef 的详细信息记录在[秘密管理](/en/gateway/secrets)中。
+两者均在激活时从进程环境中解析。SecretRef 的详细信息记录在[秘密管理](/zh/en/gateway/secrets)中。
 
 ## 路径相关的环境变量
 
@@ -134,7 +134,7 @@ OpenClaw 支持两种由环境驱动的模式：
 
 ## 相关
 
-- [网关配置](/zh/gateway/configuration)
+- [Gateway 网关 配置](/zh/gateway/configuration)
 - [常见问题：环境变量和 .env 加载](/zh/help/faq#env-vars-and-env-loading)
 - [模型概述](/zh/concepts/models)
 

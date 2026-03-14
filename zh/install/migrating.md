@@ -8,7 +8,7 @@ title: "迁移指南"
 
 # 将 OpenClaw 迁移到新机器
 
-本指南将 OpenClaw 网关从一台机器迁移到另一台机器，而**无需重新进行入门配置**。
+本指南将 OpenClaw Gateway 网关 从一台机器迁移到另一台机器，而**无需重新进行入门配置**。
 
 从概念上讲，迁移很简单：
 
@@ -51,7 +51,7 @@ openclaw status
 
 如果您复制状态目录和工作空间**两者**，您将保留：
 
-- 网关配置（`openclaw.json`）
+- Gateway 网关 配置（`openclaw.json`）
 - 身份验证配置文件 / API 密钥 / OAuth 令牌
 - 会话历史记录 + 代理状态
 - 通道状态（例如 WhatsApp 登录/会话）
@@ -91,7 +91,7 @@ tar -czf openclaw-workspace.tgz .openclaw/workspace
 
 在**新**机器上，安装 CLI（如果需要的话也包括 Node）：
 
-- 参见：[安装](/en/install)
+- 参见：[安装](/zh/en/install)
 
 在此阶段，如果入门流程创建了一个新的 `~/.openclaw/` 也没关系——您将在下一步中覆盖它。
 
@@ -187,9 +187,9 @@ openclaw doctor
 
 ## 相关
 
-- [Doctor](/en/gateway/doctor)
-- [网关故障排除](/en/gateway/troubleshooting)
-- [OpenClaw 将其数据存储在哪里？](/en/help/faq#where-does-openclaw-store-its-data)
+- [Doctor](/zh/en/gateway/doctor)
+- [Gateway 网关 故障排除](/zh/en/gateway/故障排除)
+- [OpenClaw 将其数据存储在哪里？](/zh/en/help/faq#where-does-openclaw-store-its-data)
 
 import zh from '/components/footer/zh.mdx';
 

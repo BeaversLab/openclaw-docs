@@ -90,7 +90,7 @@ channels:
   分块进行分割；渲染器会在每个分块内重新打开样式。
 
 如果您需要了解有关跨渠道分块行为的更多信息，请参阅
-[Streaming + chunking](/en/concepts/streaming)。
+[Streaming + chunking](/zh/en/concepts/streaming)。
 
 ## 链接策略
 
@@ -121,7 +121,7 @@ SPOILER 样式范围。其他通道将它们视为纯文本。
 - Slack 尖括号标记（`<@U123>`、`<#C123>`、`<https://...>`）必须
   被保留；安全地转义原始 HTML。
 - Telegram HTML 需要转义标签之外的文本，以避免损坏的标记。
-- 信号样式范围依赖于UTF-16偏移量；不要使用代码点偏移量。
+- Signal Signal样式范围依赖于UTF-16偏移量；不要使用代码点偏移量。
 - 为围栏代码块保留尾随换行符，以便闭合标记位于
   它们自己的行上。
 

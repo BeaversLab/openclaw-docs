@@ -14,7 +14,7 @@ title: "ACP 线程绑定代理"
 
 相关文档：
 
-- [统一运行时流式重构计划](/en/experiments/plans/acp-unified-streaming-refactor)
+- [统一运行时流式重构计划](/zh/en/experiments/plans/acp-unified-streaming-refactor)
 
 目标用户体验：
 
@@ -607,7 +607,7 @@ TTL 有效值：
 - `src/discord/monitor/message-handler.preflight*.test.ts`（绑定的 ACP 会话密钥路由连续性）
 - 后端包中的 acpx 插件运行时测试（服务注册/启动/停止 + 事件规范化）
 
-网关端到端测试：
+Gateway 网关 端到端测试：
 
 - `src/gateway/server.sessions.gateway-server-sessions-a.e2e.test.ts`（扩展 ACP 重置/删除生命周期覆盖范围）
 - ACP 线程轮次端到端往返测试，涵盖生成、消息、流、取消、失焦、重启恢复
@@ -725,7 +725,7 @@ TTL 有效值：
 - 检查点重放在交付失败后恢复，并从最后一个事件继续
 - 插件服务注册和 ACP 运行时后端的拆除
 
-网关端到端测试：
+Gateway 网关 端到端测试：
 
 - 通过线程生成 ACP，交换多轮提示，取消聚焦
 - 使用持久化的 ACP 数据库和绑定重启网关，然后继续同一会话

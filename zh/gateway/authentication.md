@@ -12,10 +12,10 @@ OpenClaw 支持模型提供商的 OAuth 和 API 密钥。对于常驻网关
 主机，API 密钥通常是最可预测的选项。当订阅/OAuth
 流程符合您的提供商账户模型时，也支持这些流程。
 
-有关完整的 OAuth 流程和存储布局，请参阅 [/concepts/oauth](/en/concepts/oauth)。
-对于基于 SecretRef 的身份验证（`env`/`file`/`exec` 提供商），请参阅 [密钥管理](/en/gateway/secrets)。
+有关完整的 OAuth 流程和存储布局，请参阅 [/concepts/oauth](/zh/en/concepts/oauth)。
+对于基于 SecretRef 的身份验证（`env`/`file`/`exec` 提供商），请参阅 [密钥管理](/zh/en/gateway/secrets)。
 有关 `models status --probe` 使用的凭据资格/原因代码规则，请参阅
-[Auth Credential Semantics](/en/auth-credential-semantics)。
+[Auth Credential Semantics](/zh/en/auth-credential-semantics)。
 
 ## 推荐设置（API 密钥，任何提供商）
 
@@ -32,7 +32,7 @@ export <PROVIDER>_API_KEY="..."
 openclaw models status
 ```
 
-3. 如果网关在 systemd/launchd 下运行，最好将密钥放在
+3. 如果 Gateway 网关 在 systemd/launchd 下运行，最好将密钥放在
    `~/.openclaw/.env` 以便守护进程可以读取它：
 
 ```bash
@@ -41,7 +41,7 @@ cat >> ~/.openclaw/.env <<'EOF'
 EOF
 ```
 
-然后重启守护程序（或重启您的网关进程）并重新检查：
+然后重启守护程序（或重启您的 Gateway 网关 进程）并重新检查：
 
 ```bash
 openclaw models status
@@ -52,7 +52,7 @@ openclaw doctor
 API 密钥供守护进程使用：`openclaw onboard`。
 
 有关环境变量继承的详细信息（`env.shellEnv`、
-`~/.openclaw/.env`、systemd/launchd），请参阅 [帮助](/en/help)。
+`~/.openclaw/.env`、systemd/launchd），请参阅 [帮助](/zh/en/help)。
 
 ## Anthropic：setup-token（订阅身份验证）
 
@@ -106,7 +106,7 @@ openclaw models status --check
 ```
 
 可选的运维脚本（systemd/Termux）在此处有文档记录：
-[/automation/auth-monitoring](/en/automation/auth-monitoring)
+[/automation/auth-monitoring](/zh/en/automation/auth-monitoring)
 
 > `claude setup-token` 需要交互式 TTY。
 

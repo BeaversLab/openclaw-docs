@@ -8,7 +8,7 @@ title: "Agent Send"
 # `openclaw agent`（直接代理运行）
 
 `openclaw agent` 运行单个代理轮次，而无需传入聊天消息。
-默认情况下，它 **通过网关** 运行；添加 `--local` 以强制使用
+默认情况下，它 **通过 Gateway 网关** 运行；添加 `--local` 以强制使用
 当前计算机上的嵌入式运行时。
 
 ## 行为
@@ -26,7 +26,7 @@ title: "Agent Send"
 - 使用 `--deliver` + `--channel` 可选地将回复投递回频道（目标格式与 `openclaw message --target` 匹配）。
 - 使用 `--reply-channel`/`--reply-to`/`--reply-account` 覆盖投递而不更改会话。
 
-如果网关 不可达，CLI 将**回退**到嵌入式本地运行。
+如果 Gateway 网关 不可达，CLI 将**回退**到嵌入式本地运行。
 
 ## 示例
 

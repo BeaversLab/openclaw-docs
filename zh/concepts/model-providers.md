@@ -9,7 +9,7 @@ title: "模型提供商"
 # 模型提供商
 
 本页面涵盖 **LLM/模型提供商**（不包括 WhatsApp/Telegram 等聊天频道）。
-有关模型选择规则，请参阅 [/concepts/models](/en/concepts/models)。
+有关模型选择规则，请参阅 [/concepts/models](/zh/en/concepts/models)。
 
 ## 快速规则
 
@@ -135,14 +135,14 @@ OpenClaw 内置 pi‑ai 目录。这些提供商**不**需要
 - CLI：`openclaw onboard --auth-choice zai-api-key`
   - 别名：`z.ai/*` 和 `z-ai/*` 会规范化为 `zai/*`
 
-### Vercel AI Gateway
+### Vercel AI Gateway 网关
 
 - 提供商：`vercel-ai-gateway`
 - 身份验证：`AI_GATEWAY_API_KEY`
 - 示例模型：`vercel-ai-gateway/anthropic/claude-opus-4.6`
 - CLI：`openclaw onboard --auth-choice ai-gateway-api-key`
 
-### Kilo Gateway
+### Kilo Gateway 网关
 
 - 提供商：`kilocode`
 - 身份验证：`KILOCODE_API_KEY`
@@ -151,13 +151,13 @@ OpenClaw 内置 pi‑ai 目录。这些提供商**不**需要
 - 基础 URL：`https://api.kilo.ai/api/gateway/`
 - 扩展的内置目录包括 GLM-5 Free、MiniMax M2.5 Free、GPT-5.2、Gemini 3 Pro Preview、Gemini 3 Flash Preview、Grok Code Fast 1 和 Kimi K2.5。
 
-有关设置详细信息，请参阅 [/providers/kilocode](/en/providers/kilocode)。
+有关设置详细信息，请参阅 [/providers/kilocode](/zh/en/providers/kilocode)。
 
 ### 其他内置提供商
 
 - OpenRouter：`openrouter`（`OPENROUTER_API_KEY`）
 - 示例模型：`openrouter/anthropic/claude-sonnet-4-5`
-- Kilo Gateway：`kilocode`（`KILOCODE_API_KEY`）
+- Kilo Gateway 网关：`kilocode`（`KILOCODE_API_KEY`）
 - 示例模型：`kilocode/anthropic/claude-opus-4.6`
 - xAI：`xai` (`XAI_API_KEY`)
 - Mistral：`mistral` (`MISTRAL_API_KEY`)
@@ -187,7 +187,7 @@ Kimi K2 模型 ID：
 
 {/* markdownlint-disable MD037 */}
 
-{/_ moonshot-kimi-k2-model-refs:start _/ && null}
+{/_ moonshot-kimi-k2-模型-refs:start _/ && null}
 
 {/* markdownlint-enable MD037 */}
 
@@ -197,7 +197,7 @@ Kimi K2 模型 ID：
 - `moonshot/kimi-k2-thinking`
 - `moonshot/kimi-k2-thinking-turbo`
   {/* markdownlint-disable MD037 */}
-  {/_ moonshot-kimi-k2-model-refs:end _/ && null}
+  {/_ moonshot-kimi-k2-模型-refs:end _/ && null}
   {/* markdownlint-enable MD037 */}
 
 ```json5
@@ -352,7 +352,7 @@ MiniMax 通过 `models.providers` 配置，因为它使用自定义端点：
 - MiniMax（兼容 Anthropic）：`--auth-choice minimax-api`
 - 认证：`MINIMAX_API_KEY`
 
-有关设置详细信息、模型选项和配置代码段，请参阅 [/providers/minimax](/en/providers/minimax)。
+有关设置详细信息、模型选项和配置代码段，请参阅 [/providers/minimax](/zh/en/providers/minimax)。
 
 ### Ollama
 
@@ -376,7 +376,7 @@ ollama pull llama3.3
 }
 ```
 
-当您使用 `OLLAMA_API_KEY` 选择加入时，系统会在本地 `http://127.0.0.1:11434` 检测到 Ollama，并且捆绑的提供商插件会将 Ollama 直接添加到 `openclaw onboard` 和模型选择器中。有关入门、云/本地模式和自定义配置的信息，请参阅 [/providers/ollama](/en/providers/ollama)。
+当您使用 `OLLAMA_API_KEY` 选择加入时，系统会在本地 `http://127.0.0.1:11434` 检测到 Ollama，并且捆绑的提供商插件会将 Ollama 直接添加到 `openclaw onboard` 和模型选择器中。有关入门、云/本地模式和自定义配置的信息，请参阅 [/providers/ollama](/zh/en/providers/ollama)。
 
 ### vLLM
 
@@ -403,7 +403,7 @@ export VLLM_API_KEY="vllm-local"
 }
 ```
 
-详情请参阅 [/providers/vllm](/en/providers/vllm)。
+详情请参阅 [/providers/vllm](/zh/en/providers/vllm)。
 
 ### SGLang
 
@@ -431,7 +431,7 @@ export SGLANG_API_KEY="sglang-local"
 }
 ```
 
-详情请参阅 [/providers/sglang](/en/providers/sglang)。
+详情请参阅 [/providers/sglang](/zh/en/providers/sglang)。
 
 ### 本地代理（LM Studio, vLLM, LiteLLM 等）
 
@@ -490,7 +490,7 @@ openclaw models set opencode/claude-opus-4-6
 openclaw models list
 ```
 
-另请参阅：[/gateway/configuration](/en/gateway/configuration) 以获取完整的配置示例。
+另请参阅：[/gateway/configuration](/zh/en/gateway/configuration) 以获取完整的配置示例。
 
 import zh from '/components/footer/zh.mdx';
 

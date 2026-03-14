@@ -18,14 +18,14 @@ Zalo Personal 作为插件提供，不包含在核心安装中。
 
 - 通过 CLI 安装：`openclaw plugins install @openclaw/zalouser`
 - 或者从源代码检出：`openclaw plugins install ./extensions/zalouser`
-- 详情：[Plugins](/en/tools/plugin)
+- 详情：[Plugins](/zh/en/tools/plugin)
 
 不需要外部 `zca`/`openzca` CLI 二进制文件。
 
 ## 快速设置（初学者）
 
 1. 安装插件（见上文）。
-2. 登录（二维码，在网关机器上）：
+2. 登录（二维码，在 Gateway 网关 机器上）：
    - `openclaw channels login --channel zalouser`
    - 使用 Zalo 移动应用程序扫描二维码。
 3. 启用通道：
@@ -41,8 +41,8 @@ Zalo Personal 作为插件提供，不包含在核心安装中。
 }
 ```
 
-4. 重启网关（或完成入职引导）。
-5. 私信 (DM) 访问默认为配对模式；首次联系时批准配对码。
+4. 重启 Gateway 网关（或完成入职引导）。
+5. 私信 (私信) 访问默认为配对模式；首次联系时批准配对码。
 
 ## 简介
 
@@ -161,7 +161,7 @@ openclaw directory groups list --channel zalouser --query "work"
 - OpenClaw 在发送回复之前会发送正在输入事件（尽力而为）。
 - 在频道操作中，支持针对 `zalouser` 的消息反应操作 `react`。
   - 使用 `remove: true` 从消息中移除特定的反应表情符号。
-  - 反应语义：[Reactions](/en/tools/reactions)
+  - 反应语义：[Reactions](/zh/en/tools/reactions)
 - 对于包含事件元数据的入站消息，OpenClaw 会发送已送达 + 已读确认（尽力而为）。
 
 ## 故障排除

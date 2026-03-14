@@ -48,7 +48,7 @@ cd openclaw-formal-models
 make <target>
 ```
 
-### 网关暴露和开放网关错误配置
+### Gateway 网关 暴露和开放 Gateway 网关 错误配置
 
 **声明：** 在没有身份验证的情况下绑定到环回地址之外的地址可能导致远程入侵 / 增加暴露面；令牌/密码会阻止未经身份验证的攻击者（根据模型假设）。
 
@@ -71,7 +71,7 @@ make <target>
   - `make nodes-pipeline-negative`
   - `make approvals-token-negative`
 
-### 配对存储（DM 门控）
+### 配对存储（私信 门控）
 
 **声明：** 配对请求遵守 TTL 和待处理请求上限。
 
@@ -126,13 +126,13 @@ make <target>
 
 ### Ingress trace correlation / idempotency
 
-**Claim:** ingestion should preserve trace correlation across fan-out and be idempotent under provider retries.
+**Claim:** ingestion should preserve trace correlation across fan-out and be idempotent under 提供商 retries.
 
 What it means:
 
 - When one external event becomes multiple internal messages, every part keeps the same trace/event identity.
 - Retries do not result in double-processing.
-- If provider event IDs are missing, dedupe falls back to a safe key (e.g., trace ID) to avoid dropping distinct events.
+- If 提供商 event IDs are missing, dedupe falls back to a safe key (e.g., trace ID) to avoid dropping distinct events.
 
 - Green:
   - `make ingress-trace`
@@ -147,7 +147,7 @@ What it means:
 
 ### Routing dmScope precedence + identityLinks
 
-**Claim:** routing must keep DM sessions isolated by default, and only collapse sessions when explicitly configured (channel precedence + identity links).
+**Claim:** routing must keep 私信 sessions isolated by default, and only collapse sessions when explicitly configured (渠道 precedence + identity links).
 
 What it means:
 

@@ -6,10 +6,10 @@ read_when:
 title: "故障排除"
 ---
 
-# 网关故障排查
+# Gateway 网关 故障排查
 
 此页面为深度排查手册。
-如果您想先进行快速分诊流程，请从 [/help/troubleshooting](/en/help/troubleshooting) 开始。
+如果您想先进行快速分诊流程，请从 [/help/故障排除](/zh/en/help/故障排除) 开始。
 
 ## 命令阶梯
 
@@ -54,9 +54,9 @@ openclaw config get agents.defaults.models
 
 相关：
 
-- [/providers/anthropic](/en/providers/anthropic)
-- [/reference/token-use](/en/reference/token-use)
-- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/en/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
+- [/providers/anthropic](/zh/en/providers/anthropic)
+- [/reference/token-use](/zh/en/reference/token-use)
+- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/zh/en/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
 
 ## 无回复
 
@@ -84,9 +84,9 @@ openclaw logs --follow
 
 相关：
 
-- [/channels/troubleshooting](/en/channels/troubleshooting)
-- [/channels/pairing](/en/channels/pairing)
-- [/channels/groups](/en/channels/groups)
+- [/channels/故障排除](/zh/en/channels/故障排除)
+- [/channels/pairing](/zh/en/channels/pairing)
+- [/channels/groups](/zh/en/channels/groups)
 
 ## 仪表板控制 UI 连接性
 
@@ -124,8 +124,8 @@ openclaw gateway status --json
 | Detail code                  | 含义                                                     | 建议的操作                                                                                                                                                               |
 | ---------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `AUTH_TOKEN_MISSING`         | 客户端未发送所需的共享令牌。                              | 在客户端中粘贴/设置令牌并重试。对于仪表板路径：`openclaw config get gateway.auth.token` 然后粘贴到 Control UI 设置中。                                                                   |
-| `AUTH_TOKEN_MISMATCH`        | 共享令牌与网关身份验证令牌不匹配。                        | 如果 `canRetryWithDeviceToken=true`，则允许一次受信任的重试。如果仍然失败，请运行 [令牌漂移恢复检查清单](/en/cli/devices#token-drift-recovery-checklist)。                               |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | 缓存的每设备令牌已过期或被吊销。                          | 使用 [devices CLI](/en/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                                  |
+| `AUTH_TOKEN_MISMATCH`        | 共享令牌与网关身份验证令牌不匹配。                        | 如果 `canRetryWithDeviceToken=true`，则允许一次受信任的重试。如果仍然失败，请运行 [令牌漂移恢复检查清单](/zh/en/cli/devices#token-drift-recovery-checklist)。                               |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | 缓存的每设备令牌已过期或被吊销。                          | 使用 [devices CLI](/zh/en/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                                  |
 | `PAIRING_REQUIRED`           | 设备身份已知，但未获批准用于此角色。                      | 批准待处理的请求：`openclaw devices list` 然后 `openclaw devices approve <requestId>`。                                                                                       |
 
 设备身份验证 v2 迁移检查：
@@ -144,12 +144,12 @@ openclaw gateway status
 
 相关：
 
-- [/web/control-ui](/en/web/control-ui)
-- [/gateway/authentication](/en/gateway/authentication)
-- [/gateway/remote](/en/gateway/remote)
-- [/cli/devices](/en/cli/devices)
+- [/web/control-ui](/zh/en/web/control-ui)
+- [/gateway/authentication](/zh/en/gateway/authentication)
+- [/gateway/remote](/zh/en/gateway/remote)
+- [/cli/devices](/zh/en/cli/devices)
 
-## 网关服务未运行
+## Gateway 网关 服务未运行
 
 当服务已安装但进程无法保持运行时使用。
 
@@ -175,9 +175,9 @@ openclaw gateway status --deep
 
 相关：
 
-- [/gateway/background-process](/en/gateway/background-process)
-- [/gateway/configuration](/en/gateway/configuration)
-- [/gateway/doctor](/en/gateway/doctor)
+- [/gateway/background-process](/zh/en/gateway/background-process)
+- [/gateway/configuration](/zh/en/gateway/configuration)
+- [/gateway/doctor](/zh/en/gateway/doctor)
 
 ## 通道已连接但消息无法流转
 
@@ -193,7 +193,7 @@ openclaw config get channels
 
 查找：
 
-- DM 策略 (`pairing`, `allowlist`, `open`, `disabled`)。
+- 私信 策略 (`pairing`, `allowlist`, `open`, `disabled`)。
 - 群组允许列表和提及要求。
 - 缺少通道 API 权限/范围。
 
@@ -205,10 +205,10 @@ openclaw config get channels
 
 相关：
 
-- [/channels/troubleshooting](/en/channels/troubleshooting)
-- [/channels/whatsapp](/en/channels/whatsapp)
-- [/channels/telegram](/en/channels/telegram)
-- [/channels/discord](/en/channels/discord)
+- [/channels/故障排除](/zh/en/channels/故障排除)
+- [/channels/whatsapp](/zh/en/channels/whatsapp)
+- [/channels/telegram](/zh/en/channels/telegram)
+- [/channels/discord](/zh/en/channels/discord)
 
 ## Cron 和心跳传递
 
@@ -234,13 +234,13 @@ openclaw logs --follow
 - `cron: timer tick failed` → 调度器计时失败；请检查文件/日志/运行时错误。
 - 带有 `reason=quiet-hours` 的 `heartbeat skipped` → 超出活动小时窗口。
 - `heartbeat: unknown accountId` → 心跳传递目标的账户 ID 无效。
-- 带有 `reason=dm-blocked` 的 `heartbeat skipped` → 心跳目标解析为 DM 风格的目标，而 `agents.defaults.heartbeat.directPolicy`（或每代理覆盖）设置为 `block`。
+- 带有 `reason=dm-blocked` 的 `heartbeat skipped` → 心跳目标解析为 私信 风格的目标，而 `agents.defaults.heartbeat.directPolicy`（或每代理覆盖）设置为 `block`。
 
 相关：
 
-- [/automation/troubleshooting](/en/automation/troubleshooting)
-- [/automation/cron-jobs](/en/automation/cron-jobs)
-- [/gateway/heartbeat](/en/gateway/heartbeat)
+- [/automation/故障排除](/zh/en/automation/故障排除)
+- [/automation/cron-jobs](/zh/en/automation/cron-jobs)
+- [/gateway/heartbeat](/zh/en/gateway/heartbeat)
 
 ## 节点配对工具失败
 
@@ -269,9 +269,9 @@ openclaw status
 
 相关：
 
-- [/nodes/troubleshooting](/en/nodes/troubleshooting)
-- [/nodes/index](/en/nodes/index)
-- [/tools/exec-approvals](/en/tools/exec-approvals)
+- [/nodes/故障排除](/zh/en/nodes/故障排除)
+- [/nodes/index](/zh/en/nodes/index)
+- [/tools/exec-approvals](/zh/en/tools/exec-approvals)
 
 ## 浏览器工具失败
 
@@ -300,9 +300,9 @@ openclaw doctor
 
 相关：
 
-- [/tools/browser-linux-troubleshooting](/en/tools/browser-linux-troubleshooting)
-- [/tools/chrome-extension](/en/tools/chrome-extension)
-- [/tools/browser](/en/tools/browser)
+- [/tools/browser-linux-故障排除](/zh/en/tools/browser-linux-故障排除)
+- [/tools/chrome-extension](/zh/en/tools/chrome-extension)
+- [/tools/browser](/zh/en/tools/browser)
 
 ## 如果升级后出现突然故障
 
@@ -358,7 +358,7 @@ openclaw doctor
 检查事项：
 
 - 仪表板/节点的待处理设备批准。
-- 策略或身份更改后的待处理 DM 配对批准。
+- 策略或身份更改后的待处理 私信 配对批准。
 
 常见特征：
 
@@ -374,9 +374,9 @@ openclaw gateway restart
 
 相关：
 
-- [/gateway/pairing](/en/gateway/pairing)
-- [/gateway/authentication](/en/gateway/authentication)
-- [/gateway/background-process](/en/gateway/background-process)
+- [/gateway/pairing](/zh/en/gateway/pairing)
+- [/gateway/authentication](/zh/en/gateway/authentication)
+- [/gateway/background-process](/zh/en/gateway/background-process)
 
 import zh from '/components/footer/zh.mdx';
 

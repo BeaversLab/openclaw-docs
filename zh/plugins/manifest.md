@@ -11,9 +11,9 @@ title: "插件清单"
 每个插件**必须**在**插件根目录**下附带一个 `openclaw.plugin.json` 文件。
 OpenClaw 使用此清单来**在不执行插件代码的情况下**验证配置。缺少或无效的清单将被视为插件错误并阻止
 配置验证。
-请参阅完整的插件系统指南：[Plugins](/en/tools/plugin)。
+请参阅完整的插件系统指南：[Plugins](/zh/en/tools/plugin)。
 
-查看完整的插件系统指南：[插件](/en/tools/plugin)。
+查看完整的插件系统指南：[插件](/zh/en/tools/plugin)。
 
 ## 必填字段
 

@@ -8,7 +8,7 @@ title: "qr"
 
 # `openclaw qr`
 
-根据当前的网关配置生成 iOS 配对二维码和设置代码。
+根据当前的 Gateway 网关 配置生成 iOS 配对二维码和设置代码。
 
 ## 用法
 
@@ -40,7 +40,7 @@ openclaw qr --url wss://gateway.example/ws
   - 当令牌身份验证可以胜出时（显式 `gateway.auth.mode="token"` 或推断模式，其中没有密码源胜出），解析 `gateway.auth.token`。
   - 当密码身份验证可以胜出时（显式 `gateway.auth.mode="password"` 或推断模式，且没有来自 auth/env 的胜出令牌），解析 `gateway.auth.password`。
 - 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password`（包括 SecretRefs）且未设置 `gateway.auth.mode`，则在显式设置模式之前，设置代码解析将失败。
-- 网关版本偏差说明：此命令路径需要支持 `secrets.resolve` 的网关；较旧的网关会返回未知方法错误。
+- Gateway 网关 版本偏差说明：此命令路径需要支持 `secrets.resolve` 的 Gateway 网关；较旧的 Gateway 网关 会返回未知方法错误。
 - 扫描后，使用以下命令批准设备配对：
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`

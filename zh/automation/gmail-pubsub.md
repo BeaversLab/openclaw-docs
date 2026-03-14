@@ -14,7 +14,7 @@ title: "Gmail PubSub"
 
 - `gcloud` 已安装并登录（[安装指南](https://docs.cloud.google.com/sdk/docs/install-sdk)）。
 - `gog` (gogcli) 已安装且已获得 Gmail 账号的授权（[gogcli.sh](https://gogcli.sh/)）。
-- 已启用 OpenClaw hooks（参见 [Webhooks](/en/automation/webhook)）。
+- 已启用 OpenClaw hooks（参见 [Webhooks](/zh/en/automation/webhook)）。
 - `tailscale` 已登录（[tailscale.com](https://tailscale.com/)）。受支持的设置使用 Tailscale Funnel 作为公共 HTTPS 端点。
   其他隧道服务可能可用，但属于 DIY/不受支持，需要手动连接。
   目前，我们支持 Tailscale。
@@ -88,7 +88,7 @@ title: "Gmail PubSub"
   要禁用（危险），请设置 `hooks.gmail.allowUnsafeExternalContent: true`。
 
 要进一步自定义负载处理，请在 `~/.openclaw/hooks/transforms` 下添加 `hooks.mappings` 或 JS/TS 转换模块
-（参见 [Webhooks](/en/automation/webhook)）。
+（参见 [Webhooks](/zh/en/automation/webhook)）。
 
 ## 向导（推荐）
 
@@ -118,9 +118,9 @@ openclaw webhooks gmail setup \
 平台说明：在 macOS 上，向导通过 Homebrew 安装 `gcloud`、`gogcli` 和 `tailscale`
 ；在 Linux 上请先手动安装它们。
 
-网关自动启动（推荐）：
+Gateway 网关 自动启动（推荐）：
 
-- 当设置 `hooks.enabled=true` 和 `hooks.gmail.account` 后，网关启动
+- 当设置 `hooks.enabled=true` 和 `hooks.gmail.account` 后，Gateway 网关 启动
   时启动 `gog gmail watch serve` 并自动续期监听。
 - 设置 `OPENCLAW_SKIP_GMAIL_WATCHER=1` 以选择退出（如果您自己运行守护进程，这很有用）。
 - 不要同时运行手动守护程序，否则您将遇到

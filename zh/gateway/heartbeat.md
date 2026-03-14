@@ -6,14 +6,14 @@ read_when:
 title: "心跳"
 ---
 
-# 心跳（网关）
+# 心跳（Gateway 网关）
 
-> **心跳 vs 定时任务（Cron）？** 关于何时使用哪一个，请参阅 [Cron vs Heartbeat](/en/automation/cron-vs-heartbeat) 获取指导。
+> **心跳 vs 定时任务（Cron）？** 关于何时使用哪一个，请参阅 [Cron vs Heartbeat](/zh/en/automation/cron-vs-heartbeat) 获取指导。
 
 心跳在主会话中运行**周期性的代理轮次**，以便模型可以
 呈现需要注意的事项，而不会通过垃圾消息打扰您。
 
-故障排除：[/automation/troubleshooting](/en/automation/troubleshooting)
+故障排除：[/automation/故障排除](/zh/en/automation/故障排除)
 
 ## 快速入门（初学者）
 
@@ -61,7 +61,7 @@ title: "心跳"
   后续跟进（收件箱、日历、提醒、排队的工作）并呈现任何紧急事项。
 - **人工检查**：“有时在白天检查你的主人”会促使
   偶尔的轻量级“有什么需要吗？”消息，但通过使用您配置的本地时区避免夜间垃圾信息
-  （参见 [/concepts/timezone](/en/concepts/timezone)）。
+  （参见 [/concepts/timezone](/zh/en/concepts/timezone)）。
 
 如果您希望心跳执行非常具体的操作（例如“检查 Gmail PubSub 统计数据”或“验证网关健康状况”），请将 `agents.defaults.heartbeat.prompt`（或 `agents.list[].heartbeat.prompt`）设置为自定义主体（逐字发送）。
 
@@ -211,8 +211,8 @@ title: "心跳"
 - `lightContext`：为 true 时，心跳运行使用轻量级引导上下文，并且仅保留工作区引导文件中的 `HEARTBEAT.md`。
 - `session`：用于心跳运行的可选会话密钥。
   - `main` (默认): 代理主会话。
-  - 显式会话密钥 (从 `openclaw sessions --json` 复制或使用 [sessions CLI](/en/cli/sessions))。
-  - 会话密钥格式: 参见 [Sessions](/en/concepts/session) 和 [Groups](/en/channels/groups)。
+  - 显式会话密钥 (从 `openclaw sessions --json` 复制或使用 [sessions CLI](/zh/en/cli/sessions))。
+  - 会话密钥格式: 参见 [Sessions](/zh/en/concepts/会话) 和 [Groups](/zh/en/channels/groups)。
 - `target`:
   - `last`: 投送到最后使用的外部频道。
   - 显式频道: `whatsapp` / `telegram` / `discord` / `googlechat` / `slack` / `msteams` / `signal` / `imessage`。
@@ -240,7 +240,7 @@ title: "心跳"
 - `session` 仅影响运行上下文；传递由 `target` 和 `to` 控制。
 - 要传递到特定的频道/接收者，请设置 `target` + `to`。使用
   `target: "last"`，传递使用该会话的最后一个外部频道。
-- 心跳传递默认允许直接/私聊（DM）目标。设置 `directPolicy: "block"` 可以在仍运行心跳轮次的同时，抑制发送到直接目标。
+- 心跳传递默认允许直接/私聊（私信）目标。设置 `directPolicy: "block"` 可以在仍运行心跳轮次的同时，抑制发送到直接目标。
 - 如果主队列忙，心跳将被跳过并在稍后重试。
 - 如果 `target` 解析为没有外部目标，运行仍会发生，但没有
   外发消息被发送。

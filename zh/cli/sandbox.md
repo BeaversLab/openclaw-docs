@@ -1,11 +1,11 @@
 ---
-title: Sandbox CLI
+title: 沙箱 CLI
 summary: "管理沙盒容器并检查有效的沙盒策略"
 read_when: "您正在管理沙盒容器或调试沙盒/工具策略行为。"
 status: active
 ---
 
-# Sandbox CLI
+# 沙箱 CLI
 
 管理基于 Docker 的沙箱容器以隔离代理执行。
 
@@ -116,7 +116,7 @@ openclaw sandbox recreate --agent alfred
 
 **解决方案：** 使用 `openclaw sandbox recreate` 强制删除旧容器。下次需要时，它们将使用当前设置自动重新创建。
 
-提示：优先使用 `openclaw sandbox recreate` 而非手动 `docker rm`。它使用 Gateway 的容器命名，并在范围/会话密钥更改时避免不匹配。
+提示：优先使用 `openclaw sandbox recreate` 而非手动 `docker rm`。它使用 Gateway 网关 的容器命名，并在范围/会话密钥更改时避免不匹配。
 
 ## 配置
 
@@ -146,9 +146,9 @@ openclaw sandbox recreate --agent alfred
 
 ## 另请参阅
 
-- [Sandbox 文档](/en/gateway/sandboxing)
-- [代理配置](/en/concepts/agent-workspace)
-- [Doctor 命令](/en/gateway/doctor) - 检查 Sandbox 设置
+- [沙箱 文档](/zh/en/gateway/沙箱隔离)
+- [代理配置](/zh/en/concepts/agent-workspace)
+- [Doctor 命令](/zh/en/gateway/doctor) - 检查 Sandbox 设置
 
 import zh from '/components/footer/zh.mdx';
 

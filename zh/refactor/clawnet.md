@@ -44,7 +44,7 @@ title: "Clawnet 重构"
 
 ## 两种协议
 
-### 1) Gateway WebSocket（控制平面）
+### 1) Gateway 网关 WebSocket（控制平面）
 
 - 完整的 API 表面：配置、频道、模型、会话、代理运行、日志、节点等。
 - 默认绑定：环回。通过 SSH/Tailscale 进行远程访问。
@@ -68,30 +68,30 @@ title: "Clawnet 重构"
 
 ## 当前控制平面客户端
 
-- CLI → 通过 `callGateway` 连接到 Gateway WS (`src/gateway/call.ts`)。
-- macOS 应用 UI → Gateway WS (`GatewayConnection`)。
-- Web Control UI → Gateway WS。
-- ACP → Gateway WS。
+- CLI → 通过 `callGateway` 连接到 Gateway 网关 WS (`src/gateway/call.ts`)。
+- macOS 应用 UI → Gateway 网关 WS (`GatewayConnection`)。
+- Web Control UI → Gateway 网关 WS。
+- ACP → Gateway 网关 WS。
 - 浏览器控制使用其自己的 HTTP 控制服务器。
 
 ## 目前的节点
 
-- 节点模式下的 macOS 应用连接到 Gateway 网桥 (`MacNodeBridgeSession`)。
-- iOS/Android 应用连接到 Gateway bridge。
+- 节点模式下的 macOS 应用连接到 Gateway 网关 网桥 (`MacNodeBridgeSession`)。
+- iOS/Android 应用连接到 Gateway 网关 bridge。
 - 配对和每个节点的令牌存储在 gateway 上。
 
 ## 当前的审批流程 (exec)
 
-- Agent 通过 Gateway 使用 `system.run`。
-- Gateway 通过 bridge 调用节点。
+- Agent 通过 Gateway 网关 使用 `system.run`。
+- Gateway 网关 通过 bridge 调用节点。
 - 节点运行时决定是否批准。
 - 由 mac 应用显示 UI 提示（当 node == mac app 时）。
-- 节点向 Gateway 返回 `invoke-res`。
+- 节点向 Gateway 网关 返回 `invoke-res`。
 - 多跳，UI 绑定到节点主机。
 
 ## 目前的在线状态 + 身份
 
-- 来自 WS 客户端的 Gateway 在线状态条目。
+- 来自 WS 客户端的 Gateway 网关 在线状态条目。
 - 来自 bridge 的节点在线状态条目。
 - mac 应用可以为同一台机器显示两个条目（UI + 节点）。
 - 节点身份存储在配对存储中；UI 身份是分开的。
@@ -155,9 +155,9 @@ title: "Clawnet 重构"
 ## 配对流程（统一）
 
 - 客户端以未认证状态连接。
-- Gateway 为该 `deviceId` 创建一个 **配对请求**。
+- Gateway 网关 为该 `deviceId` 创建一个 **配对请求**。
 - 操作员收到提示；批准/拒绝。
-- 网关颁发绑定到以下内容的凭证：
+- Gateway 网关 颁发绑定到以下内容的凭证：
   - 设备公钥
   - 角色
   - 范围
@@ -170,7 +170,7 @@ title: "Clawnet 重构"
 
 - 设备生成一次密钥对。
 - `deviceId = fingerprint(publicKey)`。
-- 网关发送随机数；设备签名；网关验证。
+- Gateway 网关 发送随机数；设备签名；Gateway 网关 验证。
 - 令牌颁发给公钥（持证证明），而非字符串。
 
 替代方案：
@@ -225,11 +225,11 @@ title: "Clawnet 重构"
 
 ### 新流程
 
-1. Gateway 接收 `system.run` 意图 (agent)。
-2. Gateway 创建审批记录：`approval.requested`。
+1. Gateway 网关 接收 `system.run` 意图 (agent)。
+2. Gateway 网关 创建审批记录：`approval.requested`。
 3. 操作员 UI 显示提示。
 4. 批准决定已发送到网关：`approval.resolve`。
-5. 如果获得批准，网关调用节点命令。
+5. 如果获得批准，Gateway 网关 调用节点命令。
 6. 节点执行，返回 `invoke-res`。
 
 ### 批准语义（强化）
@@ -368,7 +368,7 @@ WS 控制平面适用于小消息，但节点还执行：
 # 功能 + 命令策略
 
 - 节点报告的功能/命令被视为**声明**。
-- 网关强制执行特定平台的允许列表。
+- Gateway 网关 强制执行特定平台的允许列表。
 - 任何新命令都需要操作员批准或明确的允许列表更改。
 - 使用时间戳审计更改。
 

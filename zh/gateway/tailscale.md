@@ -1,14 +1,14 @@
 ---
-summary: "集成用于 Gateway 仪表板的 Tailscale Serve/Funnel"
+summary: "集成用于 Gateway 网关 仪表板的 Tailscale Serve/Funnel"
 read_when:
   - Exposing the Gateway Control UI outside localhost
   - Automating tailnet or public dashboard access
 title: "Tailscale"
 ---
 
-# Tailscale (Gateway 仪表板)
+# Tailscale (Gateway 网关 仪表板)
 
-OpenClaw 可以为 Gateway 仪表板和 WebSocket 端口自动配置 Tailscale **Serve** (tailnet) 或 **Funnel** (公网)。这使得 Gateway 保持绑定到 loopback，同时由 Tailscale 提供 HTTPS、路由以及（对于 Serve）身份标头。
+OpenClaw 可以为 Gateway 网关 仪表板和 WebSocket 端口自动配置 Tailscale **Serve** (tailnet) 或 **Funnel** (公网)。这使得 Gateway 网关 保持绑定到 loopback，同时由 Tailscale 提供 HTTPS、路由以及（对于 Serve）身份标头。
 
 ## 模式
 
@@ -54,7 +54,7 @@ HTTP API 端点（例如 `/v1/*`、`/tools/invoke` 和 `/api/channels/*`）
 
 ### 仅限 Tailnet (绑定到 Tailnet IP)
 
-当您希望 Gateway 直接监听 Tailnet IP（不使用 Serve/Funnel）时，请使用此项。
+当您希望 Gateway 网关 直接监听 Tailnet IP（不使用 Serve/Funnel）时，请使用此项。
 
 ```json5
 {
@@ -101,14 +101,14 @@ openclaw gateway --tailscale funnel --auth password
   或 `tailscale serve` 配置，请设置 `tailscale funnel`。
 - `gateway.bind: "tailnet"` 是直接绑定到 Tailnet（无 HTTPS，无 Serve/Funnel）。
 - `gateway.bind: "auto"` 优先使用环回地址；如果您仅需要 Tailnet 访问，请使用 `tailnet`。
-- Serve/Funnel 仅暴露 **Gateway 控制界面 + WS**。节点通过
-  同一个 Gateway WS 端点连接，因此 Serve 可用于节点访问。
+- Serve/Funnel 仅暴露 **Gateway 网关 控制界面 + WS**。节点通过
+ 同一个 Gateway 网关 WS 端点连接，因此 Serve 可用于节点访问。
 
-## 浏览器控制（远程 Gateway + 本地浏览器）
+## 浏览器控制（远程 Gateway 网关 + 本地浏览器）
 
-如果您在一台机器上运行 Gateway，但想在另一台机器上驱动浏览器，
+如果您在一台机器上运行 Gateway 网关，但想在另一台机器上驱动浏览器，
 请在浏览器机器上运行 **节点主机 (node host)** 并将两者保持在同一个 tailnet 中。
-Gateway 将把浏览器操作代理到节点；不需要单独的控制服务器或 Serve URL。
+Gateway 网关 将把浏览器操作代理到节点；不需要单独的控制服务器或 Serve URL。
 
 避免在浏览器控制中使用 Funnel；将节点配对视为操作员访问。
 

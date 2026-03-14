@@ -10,10 +10,10 @@ title: "Bridge Protocol"
 # 网桥协议（旧版节点传输）
 
 网桥协议是一种**旧版**节点传输 (TCP JSONL)。新的节点客户端
-应改用统一的网关 WebSocket 协议。
+应改用统一的 Gateway 网关 WebSocket 协议。
 
 如果您正在构建运营商或节点客户端，请使用
-[网关协议](/en/gateway/protocol)。
+[Gateway 网关 协议](/zh/en/gateway/protocol)。
 
 **注意：** 目前的 OpenClaw 版本不再包含 TCP 桥接监听器；保留此文档仅供参考。旧版 `bridge.*` 配置键不再是配置架构的一部分。
 
@@ -40,18 +40,18 @@ title: "Bridge Protocol"
 1. 客户端发送 `hello`，其中包含节点元数据和令牌（如果已配对）。
 2. 如果未配对，网关回复 `error` (`NOT_PAIRED`/`UNAUTHORIZED`)。
 3. 客户端发送 `pair-request`。
-4. 网关等待批准，然后发送 `pair-ok` 和 `hello-ok`。
+4. Gateway 网关 等待批准，然后发送 `pair-ok` 和 `hello-ok`。
 
 `hello-ok` 返回 `serverName` 并且可能包含 `canvasHostUrl`。
 
 ## 帧
 
-客户端 → 网桥：
+客户端 → Gateway 网关：
 
 - `req` / `res`：作用域网关 RPC（聊天、会话、配置、健康、语音唤醒、skills.bins）
 - `event`：节点信号（语音转录、代理请求、聊天订阅、exec 生命周期）
 
-网关 → 客户端：
+Gateway 网关 → 客户端：
 
 - `invoke` / `invoke-res`：节点命令（`canvas.*`, `camera.*`, `screen.record`, 
   `location.get`, `sms.send`)

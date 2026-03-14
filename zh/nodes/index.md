@@ -9,21 +9,21 @@ title: "节点"
 
 # 节点
 
-**节点** 是一个配套设备（macOS/iOS/Android/headless），它通过 `role: "node"` 连接到网关的 **WebSocket**（与操作员使用的端口相同），并通过 `node.invoke` 暴露命令界面（例如 `canvas.*`、`camera.*`、`device.*`、`notifications.*`、`system.*`）。协议详情：[网关协议](/en/gateway/protocol)。
+**节点** 是一个配套设备（macOS/iOS/Android/headless），它通过 `role: "node"` 连接到 Gateway 网关 的 **WebSocket**（与操作员使用的端口相同），并通过 `node.invoke` 暴露命令界面（例如 `canvas.*`、`camera.*`、`device.*`、`notifications.*`、`system.*`）。协议详情：[Gateway 网关 协议](/zh/en/gateway/protocol)。
 
-旧版传输方式：[桥接协议](/en/gateway/bridge-protocol)（TCP JSONL；对于当前节点已弃用/移除）。
+旧版传输方式：[桥接协议](/zh/en/gateway/bridge-protocol)（TCP JSONL；对于当前节点已弃用/移除）。
 
-macOS 也可以运行在 **节点模式** 下：菜单栏应用连接到网关的 WS 服务器，并将其本地画布/相机命令作为节点暴露（因此 `openclaw nodes …` 可针对此 Mac 运行）。
+macOS 也可以运行在 **节点模式** 下：菜单栏应用连接到 Gateway 网关 的 WS 服务器，并将其本地画布/相机命令作为节点暴露（因此 `openclaw nodes …` 可针对此 Mac 运行）。
 
 说明：
 
 - 节点是 **外设**，不是网关。它们不运行网关服务。
 - Telegram/WhatsApp/等消息落在 **网关** 上，而不是节点上。
-- 故障排除手册：[/nodes/troubleshooting](/en/nodes/troubleshooting)
+- 故障排除手册：[/nodes/故障排除](/zh/en/nodes/故障排除)
 
 ## 配对 + 状态
 
-**WS 节点使用设备配对。** 节点在 `connect` 期间出示设备身份；网关会为 `role: node` 创建设备配对请求。通过设备 CLI（或 UI）批准。
+**WS 节点使用设备配对。** 节点在 `connect` 期间出示设备身份；Gateway 网关 会为 `role: node` 创建设备配对请求。通过设备 CLI（或 UI）批准。
 
 快速 CLI：
 
@@ -43,11 +43,11 @@ openclaw nodes describe --node <idOrNameOrIp>
 
 ## 远程节点主机
 
-当您的网关运行在一台机器上而您希望命令在另一台机器上执行时，请使用 **节点主机**。模型仍然与 **网关** 对话；当选中 `host=node` 时，网关会将 `exec` 调用转发给 **节点主机**。
+当您的网关运行在一台机器上而您希望命令在另一台机器上执行时，请使用 **节点主机**。模型仍然与 **Gateway 网关** 对话；当选中 `host=node` 时，网关会将 `exec` 调用转发给 **节点主机**。
 
 ### 运行位置
 
-- **网关主机**：接收消息，运行模型，路由工具调用。
+- **Gateway 网关 主机**：接收消息，运行模型，路由工具调用。
 - **节点主机**：在节点机器上执行 `system.run`/`system.which`。
 - **批准**：通过 `~/.openclaw/exec-approvals.json` 在节点主机上强制执行。
 
@@ -70,7 +70,7 @@ openclaw node run --host <gateway-host> --port 18789 --display-name "Build Node"
 
 ### 通过 SSH 隧道连接远程网关（环回绑定）
 
-如果网关绑定到环回地址（`gateway.bind=loopback`，本地模式下的默认值），
+如果 Gateway 网关 绑定到环回地址（`gateway.bind=loopback`，本地模式下的默认值），
 远程节点主机将无法直接连接。请创建一个 SSH 隧道，并将
 节点主机指向隧道的本地端。
 
@@ -149,9 +149,9 @@ openclaw config set tools.exec.node "<id-or-name>"
 
 相关：
 
-- [节点主机 CLI](/en/cli/node)
-- [Exec 工具](/en/tools/exec)
-- [Exec 批准](/en/tools/exec-approvals)
+- [节点主机 CLI](/zh/en/cli/node)
+- [Exec 工具](/zh/en/tools/exec)
+- [Exec 批准](/zh/en/tools/exec-approvals)
 
 ## 调用命令
 
@@ -354,7 +354,7 @@ openclaw config unset agents.list[0].tools.exec.node
 
 ## 无头节点主机（跨平台）
 
-OpenClaw 可以运行连接到 Gateway WebSocket 并公开 `system.run` / `system.which` 的 **无头节点主机**（无 UI）。这适用于 Linux/Windows 或用于在服务器旁运行最小化节点。
+OpenClaw 可以运行连接到 Gateway 网关 WebSocket 并公开 `system.run` / `system.which` 的 **无头节点主机**（无 UI）。这适用于 Linux/Windows 或用于在服务器旁运行最小化节点。
 
 启动它：
 
@@ -364,19 +364,19 @@ openclaw node run --host <gateway-host> --port 18789
 
 注意：
 
-- 仍然需要配对（Gateway 将显示设备配对提示）。
+- 仍然需要配对（Gateway 网关 将显示设备配对提示）。
 - 节点主机将其节点 ID、令牌、显示名称和网关连接信息存储在 `~/.openclaw/node.json` 中。
 - 执行批准通过 `~/.openclaw/exec-approvals.json` 在本地强制执行
-  （参见 [Exec approvals](/en/tools/exec-approvals)）。
+  （参见 [Exec approvals](/zh/en/tools/exec-approvals)）。
 - 在 macOS 上，无头节点主机默认在本地执行 `system.run`。设置
   `OPENCLAW_NODE_EXEC_HOST=app` 用于将 `system.run` 通过配套应用执行主机进行路由；添加
   `OPENCLAW_NODE_EXEC_FALLBACK=0` 以要求应用主机，并在其不可用时失败关闭。
-- 当 Gateway WS 使用 TLS 时，添加 `--tls` / `--tls-fingerprint`。
+- 当 Gateway 网关 WS 使用 TLS 时，添加 `--tls` / `--tls-fingerprint`。
 
 ## Mac 节点模式
 
-- macOS 菜单栏应用作为节点连接到 Gateway WS 服务器（因此 `openclaw nodes …` 可针对此 Mac 运行）。
-- 在远程模式下，该应用为 Gateway 端口打开一个 SSH 隧道并连接到 `localhost`。
+- macOS 菜单栏应用作为节点连接到 Gateway 网关 WS 服务器（因此 `openclaw nodes …` 可针对此 Mac 运行）。
+- 在远程模式下，该应用为 Gateway 网关 端口打开一个 SSH 隧道并连接到 `localhost`。
 
 import zh from '/components/footer/zh.mdx';
 

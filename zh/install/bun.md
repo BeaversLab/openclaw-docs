@@ -11,7 +11,7 @@ title: "Bun（实验性）"
 目标：使用 **Bun** 运行此仓库（可选，不推荐用于 WhatsApp/Telegram）
 同时不偏离 pnpm 的工作流。
 
-⚠️ **不推荐用于 Gateway 运行时**（存在 WhatsApp/Telegram 错误）。生产环境请使用 Node。
+⚠️ **不推荐用于 Gateway 网关 运行时**（存在 WhatsApp/Telegram 错误）。生产环境请使用 Node。
 
 ## 状态
 

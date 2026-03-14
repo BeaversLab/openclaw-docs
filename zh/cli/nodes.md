@@ -12,9 +12,9 @@ title: "节点"
 
 相关：
 
-- 节点概述：[Nodes](/en/nodes)
-- 相机：[Camera nodes](/en/nodes/camera)
-- 图片：[Image nodes](/en/nodes/images)
+- 节点概述：[Nodes](/zh/en/nodes)
+- 相机：[Camera nodes](/zh/en/nodes/camera)
+- 图片：[Image nodes](/zh/en/nodes/images)
 
 通用选项：
 

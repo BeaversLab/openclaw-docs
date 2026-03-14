@@ -23,7 +23,7 @@ OpenClaw “寄宿”在您自己的消息账户上。不存在单独的 WhatsAp
 
 > TL;DR
 >
-> - **DM access** is controlled by `*.allowFrom`.
+> - **私信 access** is controlled by `*.allowFrom`.
 > - **Group access** is controlled by `*.groupPolicy` + allowlists (`*.groups`, `*.groupAllowFrom`).
 > - **Reply triggering** is controlled by mention gating (`requireMention`, `/activation`).
 
@@ -48,8 +48,8 @@ If you want...
 
 ## 会话密钥
 
-- Group sessions use `agent:<agentId>:<channel>:group:<id>` session keys (rooms/channels use `agent:<agentId>:<channel>:channel:<id>`).
-- Telegram forum topics add `:topic:<threadId>` to the group id so each topic has its own session.
+- Group sessions use `agent:<agentId>:<channel>:group:<id>` 会话 keys (rooms/channels use `agent:<agentId>:<channel>:channel:<id>`).
+- Telegram forum topics add `:topic:<threadId>` to the group id so each topic has its own 会话.
 - 直接聊天使用主会话（如果已配置，则使用每个发送者的会话）。
 - 群组会话会跳过心跳检测。
 
@@ -57,14 +57,14 @@ If you want...
 
 是的——如果您的“个人”流量是 **私信**，而您的“公开”流量是 **群组**，这效果很好。
 
-Why: in single-agent mode, DMs typically land in the **main** session key (`agent:main:main`), while groups always use **non-main** session keys (`agent:main:<channel>:group:<id>`). If you enable sandboxing with `mode: "non-main"`, those group sessions run in Docker while your main DM session stays on-host.
+Why: in single-agent mode, 私信 typically land in the **main** 会话 key (`agent:main:main`), while groups always use **non-main** 会话 keys (`agent:main:<channel>:group:<id>`). If you enable 沙箱隔离 with `mode: "non-main"`, those group sessions run in Docker while your main 私信 会话 stays on-host.
 
 这为你提供了一个代理“大脑”（共享工作区 + 内存），但有两种执行姿态：
 
 - **私聊**：完整工具（主机）
 - **群组**：沙盒 + 受限工具（Docker）
 
-> 如果你需要真正分离的工作区/角色（“个人”和“公共”绝不能混合），请使用第二个代理 + 绑定。参见 [多代理路由](/en/concepts/multi-agent)。
+> 如果你需要真正分离的工作区/角色（“个人”和“公共”绝不能混合），请使用第二个代理 + 绑定。参见 [多代理路由](/zh/en/concepts/multi-agent)。
 
 示例（私聊在主机上，群组在沙盒中 + 仅限消息工具）：
 
@@ -115,9 +115,9 @@ Want “groups can only see folder X” instead of “no host access”? Keep `w
 
 相关内容：
 
-- 配置键和默认值：[网关配置](/en/gateway/configuration#agentsdefaultssandbox)
-- 调试工具被阻止的原因：[沙盒 vs 工具策略 vs 提权](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
-- 绑定挂载详情：[沙盒化](/en/gateway/sandboxing#custom-bind-mounts)
+- 配置键和默认值：[Gateway 网关 配置](/zh/en/gateway/configuration#agentsdefaultssandbox)
+- 调试工具被阻止的原因：[沙盒 vs 工具策略 vs 提权](/zh/en/gateway/sandbox-vs-工具-policy-vs-elevated)
+- 绑定挂载详情：[沙盒化](/zh/en/gateway/沙箱隔离#custom-bind-mounts)
 
 ## 显示标签
 
@@ -193,7 +193,7 @@ Want “groups can only see folder X” instead of “no host access”? Keep `w
 快速思维模型（群组消息的评估顺序）：
 
 1. `groupPolicy` (open/disabled/allowlist)
-2. 群组允许列表 (`*.groups`，`*.groupAllowFrom`，channel-specific allowlist)
+2. 群组允许列表 (`*.groups`，`*.groupAllowFrom`，渠道-specific allowlist)
 3. 提及限制 (`requireMention`，`/activation`)
 
 ## 提及拦截（默认）
@@ -261,7 +261,7 @@ Want “groups can only see folder X” instead of “no host access”? Keep `w
 3. 默认 (`"*"`) `toolsBySender` 匹配
 4. 默认 (`"*"`) `tools`
 
-示例：
+示例（Telegram）：
 
 ```json5
 {
@@ -300,7 +300,7 @@ Want “groups can only see folder X” instead of “no host access”? Keep `w
 }
 ```
 
-2. 仅允许特定群组
+2. 仅允许特定群组（WhatsApp）
 
 ```json5
 {
@@ -327,7 +327,7 @@ Want “groups can only see folder X” instead of “no host access”? Keep `w
 }
 ```
 
-4. 仅所有者可以在群组中触发
+4. 仅所有者可以在群组中触发（WhatsApp）
 
 ```json5
 {
@@ -370,7 +370,7 @@ Want “groups can only see folder X” instead of “no host access”? Keep `w
 
 ## WhatsApp 细节
 
-请参阅 [Group messages](/en/concepts/group-messages) 了解 WhatsApp 特有的行为（历史注入、提及处理详情）。
+请参阅 [Group messages](/zh/en/concepts/group-messages) 了解 WhatsApp 特有的行为（历史注入、提及处理详情）。
 
 import zh from '/components/footer/zh.mdx';
 

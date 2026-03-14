@@ -28,7 +28,7 @@ title: "调试"
 
 `/debug reset` 清除所有覆盖并恢复到磁盘上的配置。
 
-## 网关监视模式
+## Gateway 网关 监视模式
 
 为了快速迭代，请在文件监视器下运行网关：
 
@@ -51,7 +51,7 @@ tsx watch src/entry.ts gateway --force
 
 - **全局 `--dev` (profile)：** 在 `~/.openclaw-dev` 下隔离状态，并且
   将默认网关端口设为 `19001`（派生端口随之偏移）。
-- **`gateway --dev`：** 告诉 Gateway 自动创建默认配置 +
+- **`gateway --dev`：** 告诉 Gateway 网关 自动创建默认配置 +
   工作区**（并跳过 BOOTSTRAP.md）。
 
 推荐流程（开发配置文件 + 开发引导）：

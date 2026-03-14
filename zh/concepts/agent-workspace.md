@@ -12,7 +12,7 @@ title: "Agent Workspace"
 
 这与 `~/.openclaw/` 不同，后者存储配置、凭据和会话。
 
-**重要提示：** 工作区是 **默认的 cwd**，而不是严格的沙箱。工具根据工作区解析相对路径，但在未启用沙箱的情况下，绝对路径仍可访问主机上的其他位置。如果需要隔离，请使用 [`agents.defaults.sandbox`](/en/gateway/sandboxing)（和/或每个代理的沙箱配置）。
+**重要提示：** 工作区是 **默认的 cwd**，而不是严格的沙箱。工具根据工作区解析相对路径，但在未启用沙箱的情况下，绝对路径仍可访问主机上的其他位置。如果需要隔离，请使用 [`agents.defaults.sandbox`](/zh/en/gateway/沙箱隔离)（和/或每个代理的沙箱配置）。
 当启用沙箱且 `workspaceAccess` 不为 `"rw"` 时，工具将在 `~/.openclaw/sandboxes` 下的沙箱工作区内运行，而不是您的主机工作区。
 
 ## 默认位置
@@ -94,7 +94,7 @@ title: "Agent Workspace"
   - 策展过的长期记忆。
   - 仅在主要的私人会话中加载（不在共享/群组上下文中）。
 
-有关工作流程和自动记忆刷新，请参阅 [Memory](/en/concepts/memory)。
+有关工作流程和自动记忆刷新，请参阅 [Memory](/zh/en/concepts/memory)。
 
 - `skills/`（可选）
   - 特定于工作空间的技能。
@@ -123,7 +123,7 @@ title: "Agent Workspace"
 
 将工作区视为私有内存。将其放入一个**私有**的 git 仓库中，以便备份和恢复。
 
-在运行 Gateway 的机器上运行这些步骤（即工作区所在的位置）。
+在运行 Gateway 网关 的机器上运行这些步骤（即工作区所在的位置）。
 
 ### 1) 初始化仓库
 
@@ -212,7 +212,7 @@ git push
 ## 高级说明
 
 - 多代理路由可以为每个代理使用不同的工作区。请参阅
-  [Channel routing](/en/channels/channel-routing) 了解路由配置。
+  [Channel routing](/zh/en/channels/渠道-routing) 了解路由配置。
 - 如果启用了 `agents.defaults.sandbox`，非主会话可以使用每会话沙盒
   位于 `agents.defaults.sandbox.workspaceRoot` 下的工作区。
 

@@ -204,7 +204,7 @@ your-domain.com {
 - `typingIndicator` 支持 `none`、`message`（默认）和 `reaction`（表情回应需要用户 OAuth）。
 - 附件通过 Chat API 下载并存储在媒体管道中（大小受 `mediaMaxMb` 限制）。
 
-密钥引用详情：[密钥管理](/en/gateway/secrets)。
+密钥引用详情：[密钥管理](/zh/en/gateway/secrets)。
 
 ## 故障排除
 
@@ -234,7 +234,7 @@ status code: 405, reason phrase: HTTP error response: HTTP/1.1 405 Method Not Al
 
    如果显示 "disabled"（已禁用），请将 `plugins.entries.googlechat.enabled: true` 添加到您的配置中。
 
-3. **网关未重启**：添加配置后，重启网关：
+3. **Gateway 网关 未重启**：添加配置后，重启 Gateway 网关：
 
    ```bash
    openclaw gateway restart
@@ -256,9 +256,9 @@ openclaw channels status
 
 相关文档：
 
-- [网关配置](/en/gateway/configuration)
-- [安全](/en/gateway/security)
-- [表情回应](/en/tools/reactions)
+- [Gateway 网关 配置](/zh/en/gateway/configuration)
+- [安全](/zh/en/gateway/security)
+- [表情回应](/zh/en/tools/reactions)
 
 import zh from '/components/footer/zh.mdx';
 

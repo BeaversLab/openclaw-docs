@@ -20,15 +20,15 @@ title: "Voice Call 插件"
 快速思维模型：
 
 - 安装插件
-- 重启网关
+- 重启 Gateway 网关
 - 在 `plugins.entries.voice-call.config` 下进行配置
 - 使用 `openclaw voicecall ...` 或 `voice_call` 工具
 
 ## 运行位置（本地与远程）
 
-语音通话插件运行在**网关进程内部**。
+语音通话插件运行在**Gateway 网关 进程内部**。
 
-如果您使用远程网关，请在**运行网关的机器上**安装/配置该插件，然后重启网关以加载它。
+如果您使用远程 Gateway 网关，请在**运行 Gateway 网关 的机器上**安装/配置该插件，然后重启 Gateway 网关 以加载它。
 
 ## 安装
 
@@ -38,7 +38,7 @@ title: "Voice Call 插件"
 openclaw plugins install @openclaw/voice-call
 ```
 
-安装后重启网关。
+安装后重启 Gateway 网关。
 
 ### 选项 B：从本地文件夹安装（开发，不复制）
 
@@ -47,7 +47,7 @@ openclaw plugins install ./extensions/voice-call
 cd ./extensions/voice-call && pnpm install
 ```
 
-安装后重启网关。
+安装后重启 Gateway 网关。
 
 ## 配置
 
@@ -165,7 +165,7 @@ cd ./extensions/voice-call && pnpm install
 
 ## Webhook 安全性
 
-当代理或隧道位于网关之前时，插件会重构用于签名验证的公共 URL。这些选项控制信任哪些转发头。
+当代理或隧道位于 Gateway 网关 之前时，插件会重构用于签名验证的公共 URL。这些选项控制信任哪些转发头。
 
 `webhookSecurity.allowedHosts` 根据转发的头部允许列表主机。
 
@@ -323,7 +323,7 @@ openclaw voicecall expose --mode funnel
 
 此仓库在 `skills/voice-call/SKILL.md` 提供了匹配的技能文档。
 
-## 网关 RPC
+## Gateway 网关 RPC
 
 - `voicecall.initiate` (`to?`, `message`, `mode?`)
 - `voicecall.continue` (`callId`, `message`)

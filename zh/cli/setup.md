@@ -12,8 +12,8 @@ title: "安装"
 
 相关：
 
-- 入门：[入门指南](/en/start/getting-started)
-- 向导：[入门](/en/start/onboarding)
+- 入门：[入门指南](/zh/en/start/getting-started)
+- 向导：[入门](/zh/en/start/新手引导)
 
 ## 示例
 

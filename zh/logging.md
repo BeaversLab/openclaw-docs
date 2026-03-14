@@ -11,7 +11,7 @@ title: "日志"
 
 OpenClaw 在两个位置记录日志：
 
-- **文件日志**（JSON 行），由网关写入。
+- **文件日志**（JSON 行），由 Gateway 网关 写入。
 - **控制台输出**，显示在终端和控制 UI 中。
 
 本页面说明了日志的存储位置、读取方法，以及如何配置日志
@@ -19,7 +19,7 @@ OpenClaw 在两个位置记录日志：
 
 ## 日志位置
 
-默认情况下，网关会在以下路径写入滚动日志文件：
+默认情况下，Gateway 网关 会在以下路径写入滚动日志文件：
 
 `/tmp/openclaw/openclaw-YYYY-MM-DD.log`
 
@@ -60,7 +60,7 @@ openclaw logs --follow
 - `notice`：截断/轮换提示
 - `raw`：未解析的日志行
 
-如果网关无法访问，CLI 会打印一条简短提示以运行：
+如果 Gateway 网关 无法访问，CLI 会打印一条简短提示以运行：
 
 ```bash
 openclaw doctor
@@ -69,7 +69,7 @@ openclaw doctor
 ### 控制 UI (Web)
 
 控制 UI 的 **Logs** 选项卡使用 `logs.tail` 实时追踪同一个文件。
-有关如何打开它的信息，请参阅 [/web/control-ui](/en/web/control-ui)。
+有关如何打开它的信息，请参阅 [/web/control-ui](/zh/en/web/control-ui)。
 
 ### 仅通道日志
 
@@ -179,7 +179,7 @@ openclaw channels logs --channel whatsapp
 - `session.state`: 会话状态转换 + 原因。
 - `session.stuck`: 会话卡滞警告 + 存续时间。
 - `run.attempt`: 运行重试/尝试元数据。
-- `diagnostic.heartbeat`: 聚合计数器（webhooks/queue/session）。
+- `diagnostic.heartbeat`: 聚合计数器（webhooks/queue/会话）。
 
 ### 启用诊断（无导出器）
 
@@ -216,7 +216,7 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 
 - 标志日志会进入标准日志文件（与 `logging.file` 相同）。
 - 输出仍会根据 `logging.redactSensitive` 进行编辑。
-- 完整指南：[/diagnostics/flags](/en/diagnostics/flags)。
+- 完整指南：[/diagnostics/flags](/zh/en/diagnostics/flags)。
 
 ### 导出到 OpenTelemetry
 
@@ -343,8 +343,8 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 
 ## 故障排除提示
 
-- **无法连接到网关？** 先运行 `openclaw doctor`。
-- **日志为空？** 检查 Gateway 是否正在运行并写入文件路径
+- **无法连接到 Gateway 网关？** 先运行 `openclaw doctor`。
+- **日志为空？** 检查 Gateway 网关 是否正在运行并写入文件路径
 在 `logging.file` 中。
 - **需要更多详细信息？** 将 `logging.level` 设置为 `debug` 或 `trace` 并重试。
 

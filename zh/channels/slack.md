@@ -10,13 +10,13 @@ title: "Slack"
 状态：通过 Slack 应用集成，已准备好支持私信（DM）和频道。默认模式为 Socket 模式；同时也支持 HTTP Events API 模式。
 
 <CardGroup cols={3}>
-  <Card title="配对" icon="link" href="/en/channels/pairing">
+  <Card title="配对" icon="link" href="/zh/en/channels/pairing">
     Slack 私信默认采用配对模式。
   </Card>
-  <Card title="斜杠命令" icon="terminal" href="/en/tools/slash-commands">
+  <Card title="斜杠命令" icon="terminal" href="/zh/en/tools/slash-commands">
     原生命令行为和命令目录。
   </Card>
-  <Card title="频道故障排除" icon="wrench" href="/en/channels/troubleshooting">
+  <Card title="频道故障排除" icon="wrench" href="/zh/en/channels/troubleshooting">
     跨频道诊断和修复手册。
   </Card>
 </CardGroup>
@@ -136,15 +136,15 @@ openclaw gateway
 ## 访问控制和路由
 
 <Tabs>
-  <Tab title="DM 策略">
-    `channels.slack.dmPolicy` 控制直接消息 (DM) 访问（旧版：`channels.slack.dm.policy`）：
+  <Tab title="私信 策略">
+    `channels.slack.dmPolicy` 控制直接消息 (私信) 访问（旧版：`channels.slack.dm.policy`）：
 
     - `pairing` （默认）
     - `allowlist`
     - `open` （需要 `channels.slack.allowFrom` 包含 `"*"`；旧版：`channels.slack.dm.allowFrom`）
     - `disabled`
 
-    DM 标志：
+    私信 标志：
 
     - `dm.enabled` （默认为 true）
     - `channels.slack.allowFrom` （首选）
@@ -181,7 +181,7 @@ openclaw gateway
 
   </Tab>
 
-  <Tab title="Mentions and channel users">
+  <Tab title="Mentions and 渠道 users">
     频道消息默认受提及控制。
 
     提及来源：
@@ -273,7 +273,7 @@ openclaw gateway
   <Accordion title="Delivery targets">
     首选的显式目标：
 
-    - `user:<id>` 用于私信 (DMs)
+    - `user:<id>` 用于私信 (私信)
     - `channel:<id>` 用于频道
 
     当发送给用户目标时，Slack 私信通过 Slack conversation API 打开。
@@ -534,11 +534,11 @@ channels:
 
 主要参考：
 
-- [配置参考 - Slack](/en/gateway/configuration-reference#slack)
+- [配置参考 - Slack](/zh/en/gateway/configuration-reference#slack)
 
   高优先级的 Slack 字段：
   - 模式/认证：`mode`、`botToken`、`appToken`、`signingSecret`、`webhookPath`、`accounts.*`
-  - 私信 (DM) 访问：`dm.enabled`、`dmPolicy`、`allowFrom`（旧版：`dm.policy`、`dm.allowFrom`）、`dm.groupEnabled`、`dm.groupChannels`
+  - 私信 (私信) 访问：`dm.enabled`、`dmPolicy`、`allowFrom`（旧版：`dm.policy`、`dm.allowFrom`）、`dm.groupEnabled`、`dm.groupChannels`
   - 兼容性切换开关：`dangerouslyAllowNameMatching`（紧急情况；除非需要否则请关闭）
   - 频道访问：`groupPolicy`、`channels.*`、`channels.*.users`、`channels.*.requireMention`
   - 线程/历史记录：`replyToMode`、`replyToModeByChatType`、`thread.*`、`historyLimit`、`dmHistoryLimit`、`dms.*.historyLimit`
@@ -547,11 +547,11 @@ channels:
 
 ## 相关内容
 
-- [配对](/en/channels/pairing)
-- [频道路由](/en/channels/channel-routing)
-- [故障排除](/en/channels/troubleshooting)
-- [配置](/en/gateway/configuration)
-- [斜杠命令](/en/tools/slash-commands)
+- [配对](/zh/en/channels/pairing)
+- [频道路由](/zh/en/channels/渠道-routing)
+- [故障排除](/zh/en/channels/故障排除)
+- [配置](/zh/en/gateway/configuration)
+- [斜杠命令](/zh/en/tools/slash-commands)
 
 import zh from '/components/footer/zh.mdx';
 

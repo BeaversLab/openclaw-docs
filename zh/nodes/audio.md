@@ -79,7 +79,7 @@ OpenClaw 将按以下顺序自动检测并在第一个有效选项处停止：
 }
 ```
 
-### 仅提供商
+### 仅提供商（Deepgram）
 
 ```json5
 {
@@ -130,8 +130,8 @@ OpenClaw 将按以下顺序自动检测并在第一个有效选项处停止：
 
 - 提供商身份验证遵循标准模型身份验证顺序（身份验证配置文件、环境变量、`models.providers.*.apiKey`）。
 - 当使用 `provider: "deepgram"` 时，Deepgram 会获取 `DEEPGRAM_API_KEY`。
-- Deepgram 设置详情：[Deepgram (audio transcription)](/en/providers/deepgram)。
-- Mistral 设置详情：[Mistral](/en/providers/mistral)。
+- Deepgram 设置详情：[Deepgram (audio transcription)](/zh/en/providers/deepgram)。
+- Mistral 设置详情：[Mistral](/zh/en/providers/mistral)。
 - 音频提供商可以通过 `tools.media.audio` 覆盖 `baseUrl`、`headers` 和 `providerOptions`。
 - 默认大小上限为 20MB (`tools.media.audio.maxBytes`)。超过大小的音频将被该模型跳过，并尝试下一个条目。
 - 小于 1024 字节的微小/空音频文件将在提供商/CLI 转录之前被跳过。

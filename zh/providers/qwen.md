@@ -17,7 +17,7 @@ Qwen 为 Qwen Coder 和 Qwen Vision 模型提供免费层的 OAuth 流程
 openclaw plugins enable qwen-portal-auth
 ```
 
-启用后重启网关。
+启用后重启 Gateway 网关。
 
 ## 身份验证
 
@@ -50,7 +50,7 @@ openclaw models set qwen-portal/coder-model
 - 令牌会自动刷新；如果刷新失败或访问被撤销，请重新运行登录命令。
 - 默认基础 URL：`https://portal.qwen.ai/v1`（通过
   `models.providers.qwen-portal.baseUrl` 覆盖，如果 Qwen 提供不同的端点）。
-- 有关提供商范围的规则，请参阅 [模型提供商](/zh/concepts/model-providers)。
+- 有关提供商范围的规则，请参阅 [模型提供商](/zh/concepts/模型-providers)。
 
 import zh from '/components/footer/zh.mdx';
 

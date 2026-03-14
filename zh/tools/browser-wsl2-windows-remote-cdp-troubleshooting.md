@@ -1,5 +1,5 @@
 ---
-summary: "分层排查 WSL2 Gateway + Windows Chrome 远程 CDP 和 extension-relay 设置"
+summary: "分层排查 WSL2 Gateway 网关 + Windows Chrome 远程 CDP 和 extension-relay 设置"
 read_when:
   - Running OpenClaw Gateway in WSL2 while Chrome lives on Windows
   - Seeing overlapping browser/control-ui errors across WSL2 and Windows
@@ -11,7 +11,7 @@ title: "WSL2 + Windows + 远程 Chrome CDP 故障排除"
 
 本指南涵盖了常见的分主机设置，其中：
 
-- OpenClaw Gateway 在 WSL2 内部运行
+- OpenClaw Gateway 网关 在 WSL2 内部运行
 - Chrome 在 Windows 上运行
 - 浏览器控制必须跨越 WSL2/Windows 边界
 
@@ -41,13 +41,13 @@ title: "WSL2 + Windows + 远程 Chrome CDP 故障排除"
 - 您想要基于扩展程序的控制，而不是原始的 `--remote-debugging-port`
 - 中继本身必须可以跨越 WSL2/Windows 边界访问
 
-如果您跨命名空间使用扩展程序中继，`browser.relayBindHost` 是在 [浏览器](/en/tools/browser) 和 [Chrome 扩展程序](/en/tools/chrome-extension) 中引入的重要设置。
+如果您跨命名空间使用扩展程序中继，`browser.relayBindHost` 是在 [浏览器](/zh/en/tools/browser) 和 [Chrome 扩展程序](/zh/en/tools/chrome-extension) 中引入的重要设置。
 
 ## 工作原理架构
 
 参考架构：
 
-- WSL2 在 `127.0.0.1:18789` 上运行 Gateway
+- WSL2 在 `127.0.0.1:18789` 上运行 Gateway 网关
 - Windows 在普通浏览器中的 `http://127.0.0.1:18789/` 打开控制 UI
 - Windows Chrome 在端口 `9222` 上暴露 CDP 端点
 - WSL2 可以访问该 Windows CDP 端点
@@ -74,7 +74,7 @@ title: "WSL2 + Windows + 远程 Chrome CDP 故障排除"
 
 `http://127.0.0.1:18789/`
 
-不要默认为控制 UI 使用 LAN IP。在 LAN 或 tailnet 地址上的纯 HTTP 可能会触发与 CDP 本身无关的不安全源/设备认证行为。请参阅[控制 UI](/en/web/control-ui)。
+不要默认为控制 UI 使用 LAN IP。在 LAN 或 tailnet 地址上的纯 HTTP 可能会触发与 CDP 本身无关的不安全源/设备认证行为。请参阅[控制 UI](/zh/en/web/control-ui)。
 
 ## 分层验证
 
@@ -147,7 +147,7 @@ curl http://WINDOWS_HOST_OR_IP:9222/json/list
 
 ### 第 4 层：如果您改用 Chrome 扩展中继
 
-如果浏览器机器和 Gateway 被命名空间边界隔开，中继可能需要非环回绑定地址。
+如果浏览器机器和 Gateway 网关 被命名空间边界隔开，中继可能需要非环回绑定地址。
 
 示例：
 
@@ -165,7 +165,7 @@ curl http://WINDOWS_HOST_OR_IP:9222/json/list
 
 - 默认行为更安全，因为中继保持仅环回（loopback-only）
 - `0.0.0.0` 扩大了暴露面
-- 保持 Gateway 身份验证、节点配对以及周围网络的私密性
+- 保持 Gateway 网关 身份验证、节点配对以及周围网络的私密性
 
 如果您不需要扩展程序中继，请首选上述的原始远程 CDP 配置文件。
 
@@ -183,7 +183,7 @@ curl http://WINDOWS_HOST_OR_IP:9222/json/list
 
 有用的页面：
 
-- [Control UI](/en/web/control-ui)
+- [Control UI](/zh/en/web/control-ui)
 
 ### 第 6 层：验证端到端浏览器控制
 

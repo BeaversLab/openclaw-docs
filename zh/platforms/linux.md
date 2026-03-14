@@ -8,8 +8,8 @@ title: "Linux 应用"
 
 # Linux 应用
 
-Gateway 在 Linux 上受到完全支持。**Node 是推荐的运行时**。
-不推荐将 Bun 用于 Gateway（WhatsApp/Telegram 存在 Bug）。
+Gateway 网关 在 Linux 上受到完全支持。**Node 是推荐的运行时**。
+不推荐将 Bun 用于 Gateway 网关（WhatsApp/Telegram 存在 Bug）。
 
 原生 Linux 配套应用已在计划中。如果您愿意协助构建，欢迎贡献代码。
 
@@ -21,20 +21,20 @@ Gateway 在 Linux 上受到完全支持。**Node 是推荐的运行时**。
 4. 在您的笔记本电脑上：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. 打开 `http://127.0.0.1:18789/` 并粘贴您的令牌
 
-分步 VPS 指南：[exe.dev](/en/install/exe-dev)
+分步 VPS 指南：[exe.dev](/zh/en/install/exe-dev)
 
 ## 安装
 
-- [入门指南](/en/start/getting-started)
-- [安装与更新](/en/install/updating)
-- 可选流程：[Bun (实验性)](/en/install/bun)、[Nix](/en/install/nix)、[Docker](/en/install/docker)
+- [入门指南](/zh/en/start/getting-started)
+- [安装与更新](/zh/en/install/updating)
+- 可选流程：[Bun (实验性)](/zh/en/install/bun)、[Nix](/zh/en/install/nix)、[Docker](/zh/en/install/docker)
 
-## Gateway
+## Gateway 网关
 
-- [Gateway 操作手册](/en/gateway)
-- [配置](/en/gateway/configuration)
+- [Gateway 网关 操作手册](/zh/en/gateway)
+- [配置](/zh/en/gateway/configuration)
 
-## Gateway 服务安装 (CLI)
+## Gateway 网关 服务安装 (CLI)
 
 使用以下命令之一：
 
@@ -54,7 +54,7 @@ openclaw gateway install
 openclaw configure
 ```
 
-当系统提示时，选择 **Gateway service**。
+当系统提示时，选择 **Gateway 网关 service**。
 
 修复/迁移：
 
@@ -65,7 +65,7 @@ openclaw doctor
 ## 系统控制
 
 OpenClaw 默认安装一个 systemd **用户** 服务。对于共享或永久在线的服务器，请使用 **系统**
-服务。完整的单元示例和指南位于 [Gateway 操作手册](/en/gateway) 中。
+服务。完整的单元示例和指南位于 [Gateway 网关 操作手册](/zh/en/gateway) 中。
 
 最小化设置：
 

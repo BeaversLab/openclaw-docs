@@ -62,7 +62,7 @@ openclaw models set github-copilot/gpt-4o
 - Copilot 模型的可用性取决于您的计划；如果模型被拒绝，请尝试
   另一个 ID（例如 `github-copilot/gpt-4.1`）。
 - 登录会将 GitHub 令牌存储在身份验证配置文件存储中，并在 OpenClaw 运行时将其交换为
-  Copilot API 令牌。
+OpenClaw Copilot API 令牌。
 
 import zh from '/components/footer/zh.mdx';
 

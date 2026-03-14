@@ -52,7 +52,7 @@ IRC 频道有两个独立的“入口”：
 
 配置键：
 
-- DM 允许列表（DM 发送者访问权限）：`channels.irc.allowFrom`
+- 私信 允许列表（私信 发送者访问权限）：`channels.irc.allowFrom`
 - 群组发送者允许列表（频道发送者访问权限）：`channels.irc.groupAllowFrom`
 - 每个频道的控制（频道 + 发送者 + 提及规则）：`channels.irc.groups["#channel"]`
 - `channels.irc.groupPolicy="open"` 允许未配置的频道（**默认仍受提及限制**）
@@ -182,7 +182,7 @@ IRC 频道有两个独立的“入口”：
 - 传统的无前缀键仍然被接受，并且仅作为 `id:` 进行匹配。
 - 第一个匹配的发送者策略优先；`"*"` 是通配符后备。
 
-有关组访问与提及限制的更多信息（以及它们如何交互），请参阅：[/channels/groups](/en/channels/groups)。
+有关组访问与提及限制的更多信息（以及它们如何交互），请参阅：[/channels/groups](/zh/en/channels/groups)。
 
 ## NickServ
 

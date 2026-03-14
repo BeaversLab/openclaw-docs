@@ -24,7 +24,7 @@ openclaw sessions --json
 - `--all-agents`：聚合所有配置的代理存储
 - `--store <path>`：显式存储路径（不能与 `--agent` 或 `--all-agents` 组合使用）
 
-`openclaw sessions --all-agents` 读取已配置的代理存储。Gateway 和 ACP 会话发现范围更广：它们还包括在默认 `agents/` 根目录或模板化 `session.store` 根目录下发现的仅磁盘存储。这些发现的存储必须解析为代理根目录内的常规 `sessions.json` 文件；符号链接和根目录外的路径会被跳过。
+`openclaw sessions --all-agents` 读取已配置的代理存储。Gateway 网关 和 ACP 会话发现范围更广：它们还包括在默认 `agents/` 根目录或模板化 `session.store` 根目录下发现的仅磁盘存储。这些发现的存储必须解析为代理根目录内的常规 `sessions.json` 文件；符号链接和根目录外的路径会被跳过。
 
 JSON 示例：
 
@@ -62,7 +62,7 @@ openclaw sessions cleanup --json
 
 `openclaw sessions cleanup` 使用配置中的 `session.maintenance` 设置：
 
-- 范围说明：`openclaw sessions cleanup` 仅维护会话存储/记录。它不会修剪 cron 运行日志（`cron/runs/<jobId>.jsonl`），这些日志由 [Cron 配置](/en/automation/cron-jobs#configuration) 中的 `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 管理，并在 [Cron 维护](/en/automation/cron-jobs#maintenance) 中进行了解释。
+- 范围说明：`openclaw sessions cleanup` 仅维护会话存储/记录。它不会修剪 cron 运行日志（`cron/runs/<jobId>.jsonl`），这些日志由 [Cron 配置](/zh/en/automation/cron-jobs#configuration) 中的 `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 管理，并在 [Cron 维护](/zh/en/automation/cron-jobs#maintenance) 中进行了解释。
 
 - `--dry-run`：预览将修剪/封顶的条目数量而不进行写入。
   - 在文本模式下，dry-run 会打印每个会话的操作表（`Action`、`Key`、`Age`、`Model`、`Flags`），以便您查看保留与删除的内容。
@@ -103,7 +103,7 @@ openclaw sessions cleanup --json
 
 相关：
 
-- 会话配置：[配置参考](/en/gateway/configuration-reference#session)
+- 会话配置：[配置参考](/zh/en/gateway/configuration-reference#会话)
 
 import zh from '/components/footer/zh.mdx';
 

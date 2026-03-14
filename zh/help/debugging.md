@@ -28,7 +28,7 @@ title: "调试"
 
 `/debug reset` 清除所有覆盖并返回到磁盘上的配置。
 
-## 网关监听模式
+## Gateway 网关 监听模式
 
 为了快速迭代，请在文件监视器下运行网关：
 
@@ -50,7 +50,7 @@ node --watch-path src --watch-path tsconfig.json --watch-path package.json --wat
 
 - **全局 `--dev` (profile)：** 在 `~/.openclaw-dev` 下隔离状态并
   将网关端口默认设为 `19001`（派生端口随之偏移）。
-- **`gateway --dev`：** 告诉 Gateway 自动创建默认配置 +
+- **`gateway --dev`：** 告诉 Gateway 网关 自动创建默认配置 +
   workspace** 当缺失时（并跳过 BOOTSTRAP.md）。
 
 推荐流程（开发配置文件 + 开发引导）：
@@ -101,7 +101,7 @@ OPENCLAW_PROFILE=dev openclaw gateway --dev --reset
 openclaw gateway stop
 ```
 
-## 原始流日志记录
+## 原始流日志记录（OpenClaw）
 
 OpenClaw 可以在任何过滤/格式化之前记录 **原始助手流**。
 这是查看推理是否作为纯文本增量

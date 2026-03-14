@@ -31,8 +31,8 @@ status: active
 凭据在代理之间**不**共享。切勿跨代理重复使用 `agentDir`。
 如果您想共享凭据，请将 `auth-profiles.json` 复制到另一个代理的 `agentDir` 中。
 
-有关沙箱在运行时的行为方式，请参阅[沙箱](/en/gateway/sandboxing)。
-有关调试“为什么被阻止？”，请参阅[沙箱与工具策略与提权](/en/gateway/sandbox-vs-tool-policy-vs-elevated)和 `openclaw sandbox explain`。
+有关沙箱在运行时的行为方式，请参阅[沙箱](/zh/en/gateway/沙箱隔离)。
+有关调试“为什么被阻止？”，请参阅[沙箱与工具策略与提权](/zh/en/gateway/sandbox-vs-工具-policy-vs-elevated)和 `openclaw sandbox explain`。
 
 ---
 
@@ -391,9 +391,9 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 ## 另请参阅
 
-- [多代理路由](/en/concepts/multi-agent)
-- [沙箱配置](/en/gateway/configuration#agentsdefaults-sandbox)
-- [会话管理](/en/concepts/session)
+- [多代理路由](/zh/en/concepts/multi-agent)
+- [沙箱配置](/zh/en/gateway/configuration#agentsdefaults-sandbox)
+- [会话管理](/zh/en/concepts/会话)
 
 import zh from '/components/footer/zh.mdx';
 

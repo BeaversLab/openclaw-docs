@@ -8,7 +8,7 @@ title: "Signal"
 
 # Signal (signal-cli)
 
-状态：外部 CLI 集成。网关通过 HTTP JSON-RPC + SSE 与 `signal-cli` 通信。
+状态：外部 CLI 集成。Gateway 网关 通过 HTTP JSON-RPC + SSE 与 `signal-cli` 通信。
 
 ## 先决条件
 
@@ -99,7 +99,7 @@ title: "Signal"
 }
 ```
 
-多账号支持：将 `channels.signal.accounts` 与每个账号的配置一起使用，并可选择使用 `name`。有关共享模式，请参阅 [`gateway/configuration`](/en/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts)。
+多账号支持：将 `channels.signal.accounts` 与每个账号的配置一起使用，并可选择使用 `name`。有关共享模式，请参阅 [`gateway/configuration`](/zh/en/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts)。
 
 ## 设置路径 B：注册专用机器人号码 (SMS, Linux)
 
@@ -282,7 +282,7 @@ pgrep -af signal-cli
 grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 ```
 
-有关排查流程：[/channels/troubleshooting](/en/channels/troubleshooting)。
+有关排查流程：[/channels/故障排除](/zh/en/channels/故障排除)。
 
 ## 安全说明
 
@@ -293,7 +293,7 @@ grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 
 ## 配置参考 (Signal)
 
-完整配置：[Configuration](/en/gateway/configuration)
+完整配置：[Configuration](/zh/en/gateway/configuration)
 
 提供商选项：
 

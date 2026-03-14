@@ -7,11 +7,11 @@ read_when:
 title: "Raspberry Pi"
 ---
 
-# OpenClaw 在树莓派上
+# OpenClaw 在Raspberry Pi上（Raspberry Pi）
 
 ## 目标
 
-在树莓派上运行一个持久、在线的 OpenClaw 网关，一次性成本约为 **~35-80 美元**（无月费）。
+在Raspberry Pi上运行一个持久、在线的 OpenClaw Gateway 网关，一次性成本约为 **~35-80 美元**（无月费）（Raspberry Pi）。
 
 适用于：
 
@@ -35,7 +35,7 @@ title: "Raspberry Pi"
 
 ## 所需物品
 
-- 树莓派 4 或 5（推荐 2GB+ 内存）
+- Raspberry Pi 4 或 5（推荐 2GB+ 内存）
 - MicroSD 卡（16GB+）或 USB SSD（性能更好）
 - 电源（推荐使用官方 Pi 电源适配器）
 - 网络连接（以太网或 WiFi）
@@ -135,7 +135,7 @@ openclaw onboard --install-daemon
 
 按照向导操作：
 
-1. **网关模式：** 本地
+1. **Gateway 网关 模式：** 本地
 2. **认证：** 推荐使用 API 密钥（OAuth 在无头 Pi 上可能比较棘手）
 3. **频道：** Telegram 是最简单的入门选择
 4. **守护进程：** 是
@@ -178,7 +178,7 @@ ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
 如果 UI 要求进行身份验证，请将 `gateway.auth.token`
 （或 `OPENCLAW_GATEWAY_TOKEN`）中的令牌粘贴到 Control UI 设置中。
 
-对于始终在线的远程访问，请参阅 [Tailscale](/en/gateway/tailscale)。
+对于始终在线的远程访问，请参阅 [Tailscale](/zh/en/gateway/tailscale)。
 
 ---
 
@@ -298,7 +298,7 @@ uname -m
 
 ## 推荐的型号设置
 
-由于 Pi 仅作为网关（模型在云端运行），请使用基于 API 的模型：
+由于 Pi 仅作为 Gateway 网关（模型在云端运行），请使用基于 API 的模型：
 
 ```json
 {
@@ -403,11 +403,11 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ## 参见
 
-- [Linux 指南](/en/platforms/linux) — 通用 Linux 设置
-- [DigitalOcean 指南](/en/platforms/digitalocean) — 云端替代方案
-- [Hetzner 指南](/en/install/hetzner) — Docker 设置
-- [Tailscale](/en/gateway/tailscale) — 远程访问
-- [节点](/en/nodes) — 将您的笔记本电脑/手机与 Pi 网关配对
+- [Linux 指南](/zh/en/platforms/linux) — 通用 Linux 设置
+- [DigitalOcean 指南](/zh/en/platforms/digitalocean) — 云端替代方案
+- [Hetzner 指南](/zh/en/install/hetzner) — Docker 设置
+- [Tailscale](/zh/en/gateway/tailscale) — 远程访问
+- [节点](/zh/en/nodes) — 将您的笔记本电脑/手机与 Pi 网关配对
 
 import zh from '/components/footer/zh.mdx';
 

@@ -47,8 +47,7 @@ title: "Skills 配置"
 - `load.watchDebounceMs`：技能监控器事件的防抖时间，以毫秒为单位（默认：250）。
 - `install.preferBrew`：如果有可用的 brew 安装程序，则优先使用（默认：true）。
 - `install.nodeManager`：node 安装程序首选项（`npm` | `pnpm` | `yarn` | `bun`，默认：npm）。
-  这仅影响 **skill 安装**；Gateway 运行时仍应为 Node
-  (不建议将 Bun 用于 WhatsApp/Telegram)。
+ 这仅影响 **skill 安装**；Gateway 网关 运行时仍应为 Node (不建议将 Bun 用于 WhatsApp/Telegram)。
 - `entries.<skillKey>`：针对每个技能的覆盖设置。
 
 每个 skill 的字段：

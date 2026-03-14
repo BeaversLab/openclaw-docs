@@ -1,5 +1,5 @@
 ---
-summary: "CLI 参考：`openclaw agent`（通过网关发送一次 agent 轮次）"
+summary: "CLI 参考：`openclaw agent`（通过 Gateway 网关 发送一次 agent 轮次）"
 read_when:
   - You want to run one agent turn from scripts (optionally deliver reply)
 title: "agent"
@@ -7,12 +7,12 @@ title: "agent"
 
 # `openclaw agent`
 
-通过网关运行一次 agent 轮次（嵌入式使用 `--local`）。
+通过 Gateway 网关 运行一次 agent 轮次（嵌入式使用 `--local`）。
 使用 `--agent <id>` 直接定位到已配置的 agent。
 
 相关：
 
-- Agent send 工具：[Agent send](/en/tools/agent-send)
+- Agent send 工具：[Agent send](/zh/en/tools/agent-send)
 
 ## 示例
 

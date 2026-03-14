@@ -130,7 +130,7 @@ CLI 模板还可以使用:
 - 如果模型返回超过 `maxChars`，输出将被截断。
 - `prompt` 默认为简单的“描述 {media}。”加上 `maxChars` 指导（仅限图像/视频）。
 - 如果 `<capability>.enabled: true` 但未配置模型，OpenClaw 会尝试
-  **active reply model** (当前回复模型)，当其提供商支持该功能时。
+  **active reply 模型** (当前回复模型)，当其提供商支持该功能时。
 
 ### 自动检测媒体理解 (默认)
 
@@ -383,8 +383,8 @@ CLI 模板还可以使用:
 
 ## 相关文档
 
-- [配置](/en/gateway/configuration)
-- [图像与媒体支持](/en/nodes/images)
+- [配置](/zh/en/gateway/configuration)
+- [图像与媒体支持](/zh/en/nodes/images)
 
 import zh from '/components/footer/zh.mdx';
 

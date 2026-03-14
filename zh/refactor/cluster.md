@@ -96,7 +96,7 @@ title: "Refactor Cluster Backlog"
 - 解析账户 ID
 - 提示允许列表条目
 - 合并 allowFrom
-- 设置 DM 策略
+- 设置 私信 策略
 - 提示密钥
 - 补丁顶级与账户范围配置
 
@@ -140,8 +140,8 @@ title: "Refactor Cluster Backlog"
 - 账户 schema 加上：
   - `accounts: z.object({}).catchall(accountSchema).optional()`
   - `defaultAccount: z.string().optional()`
-- 重复的 DM/群组 字段
-- 重复的 markdown/tool policy 字段
+- 重复的 私信/群组 字段
+- 重复的 markdown/工具 policy 字段
 
 典型示例：
 
@@ -215,7 +215,7 @@ title: "Refactor Cluster Backlog"
   - `src/cli/daemon-cli/lifecycle.ts`
 - 重复的端口诊断渲染：
   - `src/cli/daemon-cli/restart-health.ts`
-- 重复的 session-key 构造：
+- 重复的 会话-key 构造：
   - `src/web/auto-reply/monitor/broadcast.ts`
 
 预期节省：

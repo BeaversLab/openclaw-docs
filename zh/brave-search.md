@@ -14,7 +14,7 @@ OpenClaw 支持 Brave Search API 作为 `web_search` 提供商。
 
 1. 在 [https://brave.com/search/api/](https://brave.com/search/api/) 创建 Brave Search API 账户
 2. 在仪表板中，选择 **Search** 计划并生成 API 密钥。
-3. 将密钥存储在配置中，或在 Gateway 环境中设置 `BRAVE_API_KEY`。
+3. 将密钥存储在配置中，或在 Gateway 网关 环境中设置 `BRAVE_API_KEY`。
 
 ## 配置示例
 
@@ -77,7 +77,7 @@ await web_search({
 - 搜索计划包含 LLM 上下文端点和 AI 推理权限。存储结果以训练或微调模型需要具有明确存储权限的计划。请参阅 Brave [服务条款](https://api-dashboard.search.brave.com/terms-of-service)。
 - 结果默认缓存 15 分钟（可通过 `cacheTtlMinutes` 配置）。
 
-有关完整的 web_search 配置，请参阅 [Web 工具](/en/tools/web)。
+有关完整的 web_search 配置，请参阅 [Web 工具](/zh/en/tools/web)。
 
 import zh from '/components/footer/zh.mdx';
 

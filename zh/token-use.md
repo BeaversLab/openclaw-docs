@@ -22,7 +22,7 @@ OpenClaw 在每次运行时会组装自己的系统提示词。它包括：
 - 回复标签 + 心跳行为
 - 运行时元数据（主机/操作系统/模型/思考）
 
-请参阅 [系统提示词](/en/concepts/system-prompt) 了解完整细分。
+请参阅 [系统提示词](/zh/en/concepts/system-prompt) 了解完整细分。
 
 ## 哪些内容计入上下文窗口
 
@@ -35,7 +35,7 @@ OpenClaw 在每次运行时会组装自己的系统提示词。它包括：
 - 压缩摘要和修剪产物
 - 提供商包装器或安全标头（不可见，但仍会计入）
 
-要获取详细的细分信息（按注入的文件、工具、技能和系统提示词大小），请使用 `/context list` 或 `/context detail`。请参阅[上下文](/en/concepts/context)。
+要获取详细的细分信息（按注入的文件、工具、技能和系统提示词大小），请使用 `/context list` 或 `/context detail`。请参阅[上下文](/zh/en/concepts/context)。
 
 ## 如何查看当前的 Token 使用量
 
@@ -74,8 +74,8 @@ models.providers.<provider>.models[].cost
 新缓存的上下文，而不是重新缓存完整的历史记录。这会在会话空闲超过 TTL 时
 保持较低的缓存写入成本。
 
-在 [Gateway configuration](/en/gateway/configuration) 中进行配置，并查看
-[Session pruning](/en/concepts/session-pruning) 中的行为详细信息。
+在 [Gateway 网关 configuration](/zh/en/gateway/configuration) 中进行配置，并查看
+[Session pruning](/zh/en/concepts/会话-pruning) 中的行为详细信息。
 
 心跳可以在空闲间隙保持缓存**温暖**。如果您的模型缓存 TTL
 为 `1h`，将心跳间隔设置为略低于该值（例如 `55m`）可以避免
@@ -106,7 +106,7 @@ agents:
 - 保持技能描述简短（技能列表会被注入到提示中）。
 - 对于冗长、探索性的工作，首选较小的模型。
 
-请参阅 [Skills](/en/tools/skills) 以了解确切的技能列表开销公式。
+请参阅 [Skills](/zh/en/tools/skills) 以了解确切的技能列表开销公式。
 
 import zh from '/components/footer/zh.mdx';
 

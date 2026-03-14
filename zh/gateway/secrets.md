@@ -50,7 +50,7 @@ SecretRef 仅在有效活跃的表面上进行验证。
     - 仅当密码认证可以获胜且未配置 env/auth 密码时，`gateway.remote.password` 处于活动状态。
 - 当设置了 `OPENCLAW_GATEWAY_TOKEN`（或 `CLAWDBOT_GATEWAY_TOKEN`）时，`gateway.auth.token` SecretRef 对于启动身份验证解析处于非活动状态，因为环境令牌输入在该运行时中获胜。
 
-## 网关身份验证表面诊断
+## Gateway 网关 身份验证表面诊断
 
 当在 `gateway.auth.token`、`gateway.auth.password`、
 `gateway.remote.token` 或 `gateway.remote.password` 上配置 SecretRef 时，网关启动/重新加载会显式记录
@@ -68,7 +68,7 @@ SecretRef 仅在有效活跃的表面上进行验证。
 
 - 环境变量引用：验证环境变量名称，并确认在载入期间可以看到非空值。
 - Provider 引用（`file` 或 `exec`）：验证提供商选择，解析 `id`，并检查解析的值类型。
-- 快速入门复用路径：当 `gateway.auth.token` 已经是 SecretRef 时，在探针/仪表板引导之前（针对 `env`、`file` 和 `exec` 引用），入驻（onboarding）会使用相同的快速失败（fail-fast）门对其进行解析。
+- 快速入门复用路径：当 `gateway.auth.token` 已经是 SecretRef 时，在探针/仪表板引导之前（针对 `env`、`file` 和 `exec` 引用），入驻（新手引导）会使用相同的快速失败（fail-fast）门对其进行解析。
 
 如果验证失败，载入会显示错误并允许您重试。
 
@@ -288,7 +288,7 @@ SecretRef 仅在有效活跃的表面上进行验证。
 
 标准支持和不受支持的凭据列于：
 
-- [SecretRef 凭据范围](/en/reference/secretref-credential-surface)
+- [SecretRef 凭据范围](/zh/en/reference/secretref-credential-surface)
 
 运行时创建或轮换的凭据以及 OAuth 刷新材料被有意排除在只读 SecretRef 解析之外。
 
@@ -359,7 +359,7 @@ Google Chat 兼容性行为：
 其他注意事项：
 
 - 后端密钥轮换后的快照刷新由 `openclaw secrets reload` 处理。
-- 这些命令路径使用的 Gateway RPC 方法：`secrets.resolve`。
+- 这些命令路径使用的 Gateway 网关 RPC 方法：`secrets.resolve`。
 
 ## 审计和配置工作流
 
@@ -448,9 +448,9 @@ OpenClaw 故意不写入包含历史明文密钥值的回滚备份。
 - CLI 命令：[secrets](/zh/cli/secrets)
 - 计划契约详情：[Secrets Apply Plan Contract](/zh/gateway/secrets-plan-contract)
 - 凭据范围：[SecretRef Credential Surface](/zh/reference/secretref-credential-surface)
-- 身份验证设置：[Authentication](/en/gateway/authentication)
-- 安全态势：[Security](/en/gateway/security)
-- 环境优先级：[Environment Variables](/en/help/environment)
+- 身份验证设置：[Authentication](/zh/en/gateway/authentication)
+- 安全态势：[Security](/zh/en/gateway/security)
+- 环境优先级：[Environment Variables](/zh/en/help/environment)
 
 import zh from '/components/footer/zh.mdx';
 

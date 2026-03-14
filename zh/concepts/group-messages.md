@@ -7,7 +7,7 @@ title: "群组消息"
 
 # 群组消息（WhatsApp Web 通道）
 
-目标：让 Clawd 加入 WhatsApp 群组，仅在收到呼叫时唤醒，并将该会话线程与个人 DM 会话分离开来。
+目标：让 Clawd 加入 WhatsApp 群组，仅在收到呼叫时唤醒，并将该会话线程与个人 私信 会话分离开来。
 
 注意：`agents.list[].groupChat.mentionPatterns` 现在也用于 Telegram/Discord/Slack/iMessage；本文档侧重于 WhatsApp 特有的行为。对于多代理设置，请为每个代理设置 `agents.list[].groupChat.mentionPatterns`（或使用 `messages.groupChat.mentionPatterns` 作为全局后备）。
 
@@ -15,7 +15,7 @@ title: "群组消息"
 
 - 激活模式：`mention`（默认）或 `always`。`mention` 需要一次 ping（通过 `mentionedJids` 进行的真实 WhatsApp @提及、正则表达式模式，或文本中任何位置的机器人 E.164 号码）。`always` 会在每条消息时唤醒代理，但它仅当能提供有价值的内容时才回复；否则返回静默令牌 `NO_REPLY`。默认值可在配置（`channels.whatsapp.groups`）中设置，并通过 `/activation` 按组覆盖。当设置 `channels.whatsapp.groups` 时，它还作为群组允许列表（包含 `"*"` 以允许所有）。
 - 群组策略：`channels.whatsapp.groupPolicy` 控制是否接受群组消息（`open|disabled|allowlist`）。`allowlist` 使用 `channels.whatsapp.groupAllowFrom`（后备：显式 `channels.whatsapp.allowFrom`）。默认为 `allowlist`（在您添加发送者之前阻止）。
-- 按组的会话：会话键类似于 `agent:<agentId>:whatsapp:group:<jid>`，因此诸如 `/verbose on` 或 `/think high`（作为独立消息发送）之类的命令仅限于该群组；个人 DM 状态不受影响。群组线程跳过心跳。
+- 按组的会话：会话键类似于 `agent:<agentId>:whatsapp:group:<jid>`，因此诸如 `/verbose on` 或 `/think high`（作为独立消息发送）之类的命令仅限于该群组；个人 私信 状态不受影响。群组线程跳过心跳。
 - 上下文注入：未触发运行的**仅待处理**群组消息（默认为 50 条）将作为前缀注入到 `[Chat messages since your last reply - for context]` 下，触发行则置于 `[Current message - respond to this]` 下。已在会话中的消息不会重新注入。
 - 发送者标识：每个群组批次现在都以 `[from: Sender Name (+E164)]` 结束，以便 Pi 知道谁在说话。
 - 阅后即焚/一次性查看：在提取文本/提及之前我们会解包这些消息，因此其中的 ping 仍然会触发。

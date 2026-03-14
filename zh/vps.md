@@ -12,26 +12,25 @@ title: "VPS 托管"
 
 ## 选择提供商
 
-- **Railway**（一键 + 浏览器设置）：[Railway](/en/install/railway)
-- **Northflank**（一键 + 浏览器设置）：[Northflank](/en/install/northflank)
-- **Oracle Cloud (Always Free)**: [Oracle](/en/platforms/oracle) — $0/月 (Always Free，ARM；容量/注册可能比较挑剔)
-- **Fly.io**: [Fly.io](/en/install/fly)
-- **Hetzner (Docker)**: [Hetzner](/en/install/hetzner)
-- **GCP (Compute Engine)**: [GCP](/en/install/gcp)
-- **exe.dev** (VM + HTTPS 代理)：[exe.dev](/en/install/exe-dev)
+- **Railway**（一键 + 浏览器设置）：[Railway](/zh/en/install/railway)
+- **Northflank**（一键 + 浏览器设置）：[Northflank](/zh/en/install/northflank)
+- **Oracle Cloud (Always Free)**: [Oracle](/zh/en/platforms/oracle) — $0/月 (Always Free，ARM；容量/注册可能比较挑剔)
+- **Fly.io**: [Fly.io](/zh/en/install/fly)
+- **Hetzner (Docker)**: [Hetzner](/zh/en/install/hetzner)
+- **GCP (Compute Engine)**: [GCP](/zh/en/install/gcp)
+- **exe.dev** (VM + HTTPS 代理)：[exe.dev](/zh/en/install/exe-dev)
 - **AWS (EC2/Lightsail/free tier)**: 效果也不错。视频指南：
   [https://x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
 
 ## 云设置如何工作
 
-- **Gateway 在 VPS 上运行** 并拥有状态 + 工作区。
+- **Gateway 网关 在 VPS 上运行** 并拥有状态 + 工作区。
 - 您可以通过 **Control UI** 或 **Tailscale/SSH** 从笔记本电脑/手机连接。
 - 将 VPS 视为事实来源，并**备份**状态 + 工作区。
-- 安全默认设置：将 Gateway 保持在环回地址上，并通过 SSH 隧道或 Tailscale Serve 访问它。
+- 安全默认设置：将 Gateway 网关 保持在环回地址上，并通过 SSH 隧道或 Tailscale Serve 访问它。
   如果绑定到 `lan`/`tailnet`，则需要 `gateway.auth.token` 或 `gateway.auth.password`。
 
-远程访问：[Gateway remote](/en/gateway/remote)  
-平台中心：[Platforms](/en/platforms)
+远程访问：[Gateway 网关 remote](/zh/en/gateway/remote) 平台中心：[Platforms](/zh/en/platforms)
 
 ## 在 VPS 上共享公司代理
 
@@ -41,13 +40,13 @@ title: "VPS 托管"
 - 不要将该运行时登录到个人 Apple/Google 帐户或个人浏览器/密码管理器配置文件中。
 - 如果用户之间存在敌对关系，请按 gateway/host/OS 用户进行拆分。
 
-安全模型详情：[Security](/en/gateway/security)
+安全模型详情：[Security](/zh/en/gateway/security)
 
 ## 将节点与 VPS 配合使用
 
-您可以将 Gateway 保留在云端，并在本地设备（Mac/iOS/Android/headless）上配对 **nodes**。当 Gateway 留在云端时，Nodes 提供本地屏幕/相机/canvas 和 `system.run` 功能。
+您可以将 Gateway 网关 保留在云端，并在本地设备（Mac/iOS/Android/headless）上配对 **nodes**。当 Gateway 网关 留在云端时，Nodes 提供本地屏幕/相机/canvas 和 `system.run` 功能。
 
-文档：[节点](/en/nodes)、[节点 CLI](/en/cli/nodes)
+文档：[节点](/zh/en/nodes)、[节点 CLI](/zh/en/cli/nodes)
 
 ## 针对小型虚拟机和 ARM 主机的启动优化
 
@@ -65,7 +64,7 @@ source ~/.bashrc
 - `NODE_COMPILE_CACHE` 改善了重复命令的启动时间。
 - `OPENCLAW_NO_RESPAWN=1` 避免了由自重生路径引起的额外启动开销。
 - 首次运行命令会预热缓存；后续运行会更快。
-- 有关树莓派的具体信息，请参阅 [树莓派](/en/platforms/raspberry-pi)。
+- 有关 Raspberry Pi 的具体信息，请参阅 [Raspberry Pi](/zh/en/platforms/raspberry-pi)。
 
 ### systemd 优化检查清单（可选）
 

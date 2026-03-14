@@ -50,39 +50,28 @@ openclaw onboard --non-interactive \
 
 ## 特定提供商的示例
 
-<AccordionGroup>
-  <Accordion title="Gemini 示例">
-    ```bash
+<AccordionGroup> <Accordion title="Gemini 示例"> ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice gemini-api-key \
       --gemini-api-key "$GEMINI_API_KEY" \
       --gateway-port 18789 \
       --gateway-bind loopback
-    ```
-  </Accordion>
-  <Accordion title="Z.AI 示例">
-    ```bash
+    ``` </Accordion> <Accordion title="Z.AI 示例"> ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice zai-api-key \
       --zai-api-key "$ZAI_API_KEY" \
       --gateway-port 18789 \
       --gateway-bind loopback
-    ```
-  </Accordion>
-  <Accordion title="Vercel AI Gateway 示例">
-    ```bash
+    ``` </Accordion> <Accordion title="Vercel AI Gateway 网关 示例"> ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice ai-gateway-api-key \
       --ai-gateway-api-key "$AI_GATEWAY_API_KEY" \
       --gateway-port 18789 \
       --gateway-bind loopback
-    ```
-  </Accordion>
-  <Accordion title="Cloudflare AI Gateway 示例">
-    ```bash
+    ``` </Accordion> <Accordion title="Cloudflare AI Gateway 网关 示例"> ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice cloudflare-ai-gateway-api-key \
@@ -91,39 +80,28 @@ openclaw onboard --non-interactive \
       --cloudflare-ai-gateway-api-key "$CLOUDFLARE_AI_GATEWAY_API_KEY" \
       --gateway-port 18789 \
       --gateway-bind loopback
-    ```
-  </Accordion>
-  <Accordion title="Moonshot 示例">
-    ```bash
+    ``` </Accordion> <Accordion title="Moonshot 示例"> ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice moonshot-api-key \
       --moonshot-api-key "$MOONSHOT_API_KEY" \
       --gateway-port 18789 \
       --gateway-bind loopback
-    ```
-  </Accordion>
-  <Accordion title="Mistral 示例">
-    ```bash
+    ``` </Accordion> <Accordion title="Mistral 示例"> ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice mistral-api-key \
       --mistral-api-key "$MISTRAL_API_KEY" \
       --gateway-port 18789 \
       --gateway-bind loopback
-    ```
-  </Accordion>
-  <Accordion title="合成示例">
-    ```bash
+    ``` </Accordion> <Accordion title="合成示例"> ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice synthetic-api-key \
       --synthetic-api-key "$SYNTHETIC_API_KEY" \
       --gateway-port 18789 \
       --gateway-bind loopback
-    ```
-  </Accordion>
-  <Accordion title="OpenCode example">
+    ``` </Accordion> <Accordion title="OpenCode example">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -198,8 +176,8 @@ openclaw agents add work \
 
 ## 相关文档
 
-- 接入中心：[接入向导 (CLI)](/en/start/wizard)
-- 完整参考：[CLI 接入参考](/en/start/wizard-cli-reference)
+- 接入中心：[接入向导 (CLI)](/en/start/向导)
+- 完整参考：[CLI 接入参考](/en/start/向导-cli-reference)
 - 命令参考：[`openclaw onboard`](/en/cli/onboard)
 
 import zh from '/components/footer/zh.mdx';

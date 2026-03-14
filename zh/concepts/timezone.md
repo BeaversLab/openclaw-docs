@@ -88,7 +88,7 @@ OpenClaw 标准化时间戳，以便模型看到**单一参考时间**。
 
 您可以使用 `agents.defaults.timeFormat`（`auto` | `12` | `24`）控制提示词格式。
 
-有关完整行为和示例，请参阅[日期和时间](/en/date-time)。
+有关完整行为和示例，请参阅[日期和时间](/zh/en/date-time)。
 
 import zh from '/components/footer/zh.mdx';
 

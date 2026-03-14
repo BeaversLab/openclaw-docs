@@ -15,13 +15,13 @@ title: "配对"
 1. **私信配对**（谁被允许与机器人对话）
 2. **节点配对**（允许哪些设备/节点加入网关网络）
 
-安全上下文：[安全](/en/gateway/security)
+安全上下文：[安全](/zh/en/gateway/security)
 
 ## 1) 私信配对（入站聊天访问）
 
-当频道配置了 DM 策略 `pairing` 时，未知发送者会获得一个短代码，并且在您批准之前，其消息**不会被处理**。
+当频道配置了 私信 策略 `pairing` 时，未知发送者会获得一个短代码，并且在您批准之前，其消息**不会被处理**。
 
-默认私信策略记录在：[安全](/en/gateway/security)
+默认私信策略记录在：[安全](/zh/en/gateway/security)
 
 配对代码：
 
@@ -49,7 +49,7 @@ openclaw pairing approve telegram <CODE>
 
 ## 2) 节点设备配对（iOS/Android/macOS/headless 节点）
 
-节点作为**设备**通过 `role: node` 连接到网关。网关
+节点作为**设备**通过 `role: node` 连接到 Gateway 网关。Gateway 网关
 会创建一个必须批准的设备配对请求。
 
 ### 批准节点设备
@@ -74,16 +74,16 @@ openclaw devices reject <requestId>
 
 ## 相关文档
 
-- 安全模型 + 提示注入：[安全](/en/gateway/security)
-- 安全更新（运行 doctor）：[更新](/en/install/updating)
+- 安全模型 + 提示注入：[安全](/zh/en/gateway/security)
+- 安全更新（运行 doctor）：[更新](/zh/en/install/updating)
 - 频道配置：
-  - Telegram: [Telegram](/en/channels/telegram)
-  - WhatsApp: [WhatsApp](/en/channels/whatsapp)
-  - Signal: [Signal](/en/channels/signal)
-  - BlueBubbles (iMessage): [BlueBubbles](/en/channels/bluebubbles)
-  - iMessage (legacy): [iMessage](/en/channels/imessage)
-  - Discord: [Discord](/en/channels/discord)
-  - Slack: [Slack](/en/channels/slack)
+  - Telegram: [Telegram](/zh/en/channels/telegram)
+  - WhatsApp: [WhatsApp](/zh/en/channels/whatsapp)
+  - Signal: [Signal](/zh/en/channels/signal)
+  - BlueBubbles (iMessage): [BlueBubbles](/zh/en/channels/bluebubbles)
+  - iMessage (legacy): [iMessage](/zh/en/channels/imessage)
+  - Discord: [Discord](/zh/en/channels/discord)
+  - Slack: [Slack](/zh/en/channels/slack)
 
 import zh from '/components/footer/zh.mdx';
 

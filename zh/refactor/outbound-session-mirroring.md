@@ -13,7 +13,7 @@ read_when:
 
 - 进行中。
 - 核心 + 插件通道路由已针对出站镜像进行了更新。
-- 网关发送现在会在省略 sessionKey 时派生目标会话。
+- Gateway 网关 发送现在会在省略 sessionKey 时派生目标会话。
 
 ## 背景
 
@@ -33,9 +33,9 @@ read_when:
   - `resolveOutboundSessionRoute` 使用 `buildAgentSessionKey` 构建目标 sessionKey（dmScope + identityLinks）。
   - `ensureOutboundSessionEntry` 通过 `recordSessionMetaFromInbound` 写入最小的 `MsgContext`。
 - `runMessageAction` (发送) 推导目标 sessionKey 并将其传递给 `executeSendAction` 进行镜像。
-- `message-tool` 不再直接镜像；它仅从当前 session key 解析 agentId。
+- `message-tool` 不再直接镜像；它仅从当前 会话 key 解析 agentId。
 - 插件发送路径使用推导出的 sessionKey 通过 `appendAssistantMessageToSessionTranscript` 进行镜像。
-- 网关发送在未提供会话键（默认代理）时派生目标会话键，并确保会话条目存在。
+- Gateway 网关 发送在未提供会话键（默认代理）时派生目标会话键，并确保会话条目存在。
 
 ## 线程/主题处理
 
@@ -47,15 +47,11 @@ read_when:
 
 - Matrix, MS Teams, Mattermost, BlueBubbles, Nextcloud Talk, Zalo, Zalo Personal, Nostr, Tlon.
 - 备注：
-  - Mattermost 目标现在去除 `@` 以进行 DM 会话 key 路由。
-  - Zalo Personal 对 1:1 目标使用 DM peer kind（仅当存在 `group:` 时才使用群组）。
-  - BlueBubbles 群组目标去除 `chat_*` 前缀以匹配入站 session keys。
-  - Slack 自动线程镜像不区分大小写地匹配频道 id。
-  - Gateway 发送在镜像之前将提供的 session keys 转换为小写。
+ - Mattermost 目标现在去除 `@` 以进行 私信 会话 key 路由。 - Zalo Personal 对 1:1 目标使用 私信 peer kind（仅当存在 `group:` 时才使用群组）。 - BlueBubbles 群组目标去除 `chat_*` 前缀以匹配入站 会话 keys。 - Slack 自动线程镜像不区分大小写地匹配频道 id。 - Gateway 网关 发送在镜像之前将提供的 会话 keys 转换为小写。
 
 ## 决策
 
-- **Gateway 发送会话推导**：如果提供了 `sessionKey`，则使用它。如果省略，则从目标 + 默认 agent 推导一个 sessionKey 并在那里镜像。
+- **Gateway 网关 发送会话推导**：如果提供了 `sessionKey`，则使用它。如果省略，则从目标 + 默认 agent 推导一个 sessionKey 并在那里镜像。
 - **会话条目创建**：始终使用 `recordSessionMetaFromInbound`，且 `Provider/From/To/ChatType/AccountId/Originating*` 与入站格式保持一致。
 - **目标标准化**：出站路由在可用时使用解析后的目标（在 `resolveChannelTarget` 之后）。
 - **会话密钥大小写**：在写入和迁移期间将会话密钥规范化为小写。

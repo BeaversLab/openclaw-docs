@@ -37,7 +37,7 @@ OpenClaw 使用 pi SDK 将 AI 编码代理嵌入到其消息网关架构中。Op
 | `pi-ai`           | 核心大语言模型抽象：`Model`、`streamSimple`、消息类型、提供商 API                           |
 | `pi-agent-core`   | 代理循环、工具执行、`AgentMessage` 类型                                                       |
 | `pi-coding-agent` | 高级 SDK：`createAgentSession`、`SessionManager`、`AuthStorage`、`ModelRegistry`、内置工具 |
-| `pi-tui`          | 终端 UI 组件（用于 OpenClaw 的本地 TUI 模式）                                             |
+| `pi-tui`          | 终端 UI 组件（用于 OpenClaw 的本地 TUI 模式）                                             |（LLM）
 
 ## 文件结构
 
@@ -557,7 +557,7 @@ Pi 集成覆盖范围包括以下测试套件：
 
 - `src/agents/pi-embedded-runner-extraparams.live.test.ts` (启用 `OPENCLAW_LIVE_TEST=1`)
 
-有关当前运行命令，请参阅 [Pi Development Workflow](/en/pi-dev)。
+有关当前运行命令，请参阅 [Pi Development Workflow](/zh/en/pi-dev)。
 
 import zh from '/components/footer/zh.mdx';
 

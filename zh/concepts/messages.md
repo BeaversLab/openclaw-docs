@@ -27,7 +27,7 @@ Inbound message
 - `agents.defaults.*` 用于块流式传输和分块默认值。
 - 频道覆盖（`channels.whatsapp.*`、`channels.telegram.*` 等）用于上限和流式传输开关。
 
-完整架构请参阅 [配置](/en/gateway/configuration)。
+完整架构请参阅 [配置](/zh/en/gateway/configuration)。
 
 ## 入站去重
 
@@ -70,7 +70,7 @@ Inbound message
 
 多个设备/通道可以映射到同一个会话，但历史记录不会完全同步回每个客户端。建议：对于长对话，请使用一个主设备以避免上下文分歧。控制 UI 和 TUI 始终显示网关支持的会话记录副本，因此它们是事实的来源。
 
-详情：[会话管理](/en/concepts/session)。
+详情：[会话管理](/zh/en/concepts/会话)。
 
 ## 入站正文和历史上下文
 
@@ -104,7 +104,7 @@ OpenClaw 将 **提示正文** 与 **命令正文** 分开：
 - 通过 `messages.queue`（和 `messages.queue.byChannel`）进行配置。
 - 模式：`interrupt`、`steer`、`followup`、`collect` 以及积压变体。
 
-详情：[排队](/en/concepts/queue)。
+详情：[排队](/zh/en/concepts/queue)。
 
 ## 流式传输、分块和批处理
 
@@ -119,7 +119,7 @@ OpenClaw 将 **提示正文** 与 **命令正文** 分开：
 - `agents.defaults.humanDelay`（块回复之间的类人暂停）
 - 通道覆盖：`*.blockStreaming` 和 `*.blockStreamingCoalesce`（非 Telegram 通道需要显式 `*.blockStreaming: true`）
 
-详情：[流式传输 + 分块](/en/concepts/streaming)。
+详情：[流式传输 + 分块](/zh/en/concepts/streaming)。
 
 ## 推理可见性和令牌
 
@@ -129,7 +129,7 @@ OpenClaw 可以公开或隐藏模型推理：
 - 推理内容由模型生成时，仍计入令牌使用量。
 - Telegram 支持将推理流式传输到草稿气泡中。
 
-详情：[思考 + 推理指令](/en/tools/thinking) 和 [令牌使用](/en/reference/token-use)。
+详情：[思考 + 推理指令](/zh/en/tools/thinking) 和 [令牌使用](/zh/en/reference/token-use)。
 
 ## 前缀、串联回复和回复
 
@@ -138,7 +138,7 @@ OpenClaw 可以公开或隐藏模型推理：
 - `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix`（出站前缀级联），加上 `channels.whatsapp.messagePrefix`（WhatsApp 入站前缀）
 - 通过 `replyToMode` 和每个通道的默认值进行回复线程化
 
-详情：[配置](/en/gateway/configuration#messages) 和通道文档。
+详情：[配置](/zh/en/gateway/configuration#messages) 和通道文档。
 
 import zh from '/components/footer/zh.mdx';
 

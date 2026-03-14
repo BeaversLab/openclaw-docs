@@ -7,7 +7,7 @@ status: 活跃
 
 # 多智能体路由
 
-目标：在一个运行的网关中拥有多个_隔离的_代理（独立的工作区 + `agentDir` + 会话），以及多个渠道账户（例如两个 WhatsApp）。入站消息通过绑定路由到代理。
+目标：在一个运行的 Gateway 网关 中拥有多个_隔离的_代理（独立的工作区 + `agentDir` + 会话），以及多个渠道账户（例如两个 WhatsApp）。入站消息通过绑定路由到代理。
 
 ## 什么是“一个智能体”？
 
@@ -28,14 +28,14 @@ status: 活跃
 请将 `auth-profiles.json` 复制到另一个代理的 `agentDir` 中。
 
 技能是通过每个工作区的 `skills/` 文件夹针对每个代理的，共享技能
-可从 `~/.openclaw/skills` 获取。请参阅 [技能：针对代理与共享](/en/tools/skills#per-agent-vs-shared-skills)。
+可从 `~/.openclaw/skills` 获取。请参阅 [技能：针对代理与共享](/zh/en/tools/skills#per-agent-vs-shared-skills)。
 
-Gateway 可以托管 **一个智能体**（默认）或 **许多智能体** 并行运行。
+Gateway 网关 可以托管 **一个智能体**（默认）或 **许多智能体** 并行运行。
 
 **工作区说明：** 每个智能体的工作区是 **默认 cwd**，而不是一个严格的
 沙箱。相对路径在工作区内解析，但绝对路径可以
 访问其他主机位置，除非启用了沙箱功能。参见
-[沙箱](/en/gateway/sandboxing)。
+[沙箱](/zh/en/gateway/沙箱隔离)。
 
 ## 路径（快速地图）
 
@@ -70,7 +70,7 @@ openclaw agents add work
 openclaw agents list --bindings
 ```
 
-## Quick start
+## 快速开始
 
 <Steps>
   <Step title="创建每个代理工作区">
@@ -98,7 +98,7 @@ openclaw agents add social
 openclaw channels login --channel whatsapp --account work
 ```
 
-查看频道指南：[Discord](/en/channels/discord)、[Telegram](/en/channels/telegram)、[WhatsApp](/en/channels/whatsapp)。
+查看频道指南：[Discord](/zh/en/channels/discord)、[Telegram](/zh/en/channels/telegram)、[WhatsApp](/zh/en/channels/whatsapp)。
 
   </Step>
 
@@ -127,9 +127,9 @@ openclaw channels status --probe
 - **不同的个性**（每个代理的工作区文件，如 `AGENTS.md` 和 `SOUL.md`）。
 - **独立的身份验证 + 会话**（除非明确启用，否则不会相互干扰）。
 
-这使得**多个人**可以共享一个 Gateway 服务器，同时保持其 AI“大脑”和数据隔离。
+这使得**多个人**可以共享一个 Gateway 网关 服务器，同时保持其 AI“大脑”和数据隔离。
 
-## One WhatsApp number, multiple people (DM split)
+## One WhatsApp number, multiple people (私信 split)
 
 在保持**一个 WhatsApp 账号**的同时，您可以将**不同的 WhatsApp 私信** 路由到不同的代理。使用 `peer.kind: "direct"` 匹配发送方 E.164（例如 `+15551234567`）。回复仍来自同一个 WhatsApp 号码（没有针对每个代理的发送方身份）。
 
@@ -167,7 +167,7 @@ openclaw channels status --probe
 注意：
 
 - 私信访问控制是**全局针对每个 WhatsApp 账户**的（配对/允许列表），而不是针对每个代理。
-- 对于共享群组，将该群组绑定到一个代理或使用 [Broadcast groups](/en/channels/broadcast-groups)。
+- 对于共享群组，将该群组绑定到一个代理或使用 [Broadcast groups](/zh/en/channels/broadcast-groups)。
 
 ## 路由规则（消息如何选择代理）
 
@@ -408,11 +408,11 @@ openclaw channels login --channel whatsapp --account biz
 备注：
 
 - 如果您为某个渠道拥有多个帐户，请在绑定中添加 `accountId`（例如 `{ channel: "whatsapp", accountId: "personal" }`）。
-- 要将单个 DM/群组路由到 Opus，同时将其余部分保留在聊天中，请为该对等方添加 `match.peer` 绑定；对等方匹配总是优先于全渠道规则。
+- 要将单个 私信/群组路由到 Opus，同时将其余部分保留在聊天中，请为该对等方添加 `match.peer` 绑定；对等方匹配总是优先于全渠道规则。
 
 ## 示例：同一通道，一个对等方路由到 Opus
 
-将 WhatsApp 保持在快速代理上，但将一个 DM 路由到 Opus：
+将 WhatsApp 保持在快速代理上，但将一个 私信 路由到 Opus：
 
 ```json5
 {
@@ -549,7 +549,7 @@ openclaw channels login --channel whatsapp --account biz
 如果您需要针对每个智能体的边界，请使用 `agents.list[].tools` 来拒绝 `exec`。
 对于群组定位，请使用 `agents.list[].groupChat.mentionPatterns`，以便 @mentions 能清晰地映射到预期的智能体。
 
-有关详细示例，请参阅 [多代理沙箱和工具](/en/tools/multi-agent-sandbox-tools)。
+有关详细示例，请参阅 [多代理沙箱和工具](/zh/en/tools/multi-agent-sandbox-tools)。
 
 import zh from '/components/footer/zh.mdx';
 

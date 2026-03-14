@@ -11,7 +11,7 @@ title: "Oracle Cloud"
 
 ## 目标
 
-在 Oracle Cloud 的 **Always Free** ARM 层上运行持久的 OpenClaw 网关。
+在 Oracle Cloud 的 **Always Free** ARM 层上运行持久的 OpenClaw Gateway 网关。
 
 Oracle 的免费层非常适合 OpenClaw（特别是如果您已经拥有 OCI 账户），但它也有折衷之处：
 
@@ -107,7 +107,7 @@ source ~/.bashrc
 
 > 注意：如果您遇到 ARM 原生构建问题，请先使用系统软件包（例如 `sudo apt install -y build-essential`），然后再尝试 Homebrew。
 
-## 6) 配置网关（loopback + token auth）并启用 Tailscale Serve
+## 6) 配置 Gateway 网关（loopback + token auth）并启用 Tailscale Serve
 
 默认使用 token auth。这种方式可预测，并且避免了在控制 UI 中设置任何“不安全认证（insecure auth）”标志。
 
@@ -176,7 +176,7 @@ https://openclaw.<tailnet-name>.ts.net/
 
 ## 安全性：VCN + Tailscale（推荐基线）
 
-随着 VCN 被锁定（仅开放 UDP 41641）且网关绑定到 loopback，你将获得强大的纵深防御：公网流量在网络边缘被阻止，而管理访问则通过你的 tailnet 进行。
+随着 VCN 被锁定（仅开放 UDP 41641）且 Gateway 网关 绑定到 loopback，你将获得强大的纵深防御：公网流量在网络边缘被阻止，而管理访问则通过你的 tailnet 进行。
 
 此设置通常消除了仅为了防止互联网范围的 SSH 暴力破解而对额外基于主机的防火墙规则的_需求_——但您仍应保持操作系统更新，运行 `openclaw security audit`，并验证您没有意外地在公共接口上监听。
 
@@ -246,7 +246,7 @@ sudo tailscale status
 sudo tailscale up --ssh --hostname=openclaw --reset
 ```
 
-### 网关无法启动
+### Gateway 网关 无法启动
 
 ```bash
 openclaw gateway status
@@ -296,11 +296,11 @@ tar -czvf openclaw-backup.tar.gz ~/.openclaw ~/.openclaw/workspace
 
 ## 另请参阅
 
-- [网关远程访问](/en/gateway/remote) — 其他远程访问模式
-- [Tailscale 集成](/en/gateway/tailscale) — 完整的 Tailscale 文档
-- [网关配置](/en/gateway/configuration) — 所有配置选项
-- [DigitalOcean 指南](/en/platforms/digitalocean) — 如果您需要付费且更简单的注册流程
-- [Hetzner 指南](/en/install/hetzner) — 基于 Docker 的替代方案
+- [Gateway 网关 远程访问](/zh/en/gateway/remote) — 其他远程访问模式
+- [Tailscale 集成](/zh/en/gateway/tailscale) — 完整的 Tailscale 文档
+- [Gateway 网关 配置](/zh/en/gateway/configuration) — 所有配置选项
+- [DigitalOcean 指南](/zh/en/platforms/digitalocean) — 如果您需要付费且更简单的注册流程
+- [Hetzner 指南](/zh/en/install/hetzner) — 基于 Docker 的替代方案
 
 import zh from '/components/footer/zh.mdx';
 

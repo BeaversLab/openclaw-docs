@@ -1,5 +1,5 @@
 ---
-summary: "Exec tool usage, stdin modes, and TTY support"
+summary: "Exec 工具 usage, stdin modes, and TTY support"
 read_when:
   - Using or modifying the exec tool
   - Debugging stdin or TTY behavior
@@ -40,7 +40,7 @@ title: "Exec Tool"
   然后回退到 Windows PowerShell 5.1。
 - 主机执行 (`gateway`/`node`) 拒绝 `env.PATH` 和加载器覆盖 (`LD_*`/`DYLD_*`) 以
   防止二进制劫持或代码注入。
-- OpenClaw 在生成的命令环境（包括 PTY 和沙箱执行）中设置 `OPENCLAW_SHELL=exec`，以便 shell/配置文件规则可以检测 exec-tool 上下文。
+- OpenClaw 在生成的命令环境（包括 PTY 和沙箱执行）中设置 `OPENCLAW_SHELL=exec`，以便 shell/配置文件规则可以检测 exec-工具 上下文。
 - 重要提示：沙箱**默认关闭**。如果沙箱关闭且 `host=sandbox` 被显式
   配置/请求，exec 现在将失败关闭，而不是在网关主机上静默运行。
   启用沙箱或使用带有批准的 `host=gateway`。
@@ -57,7 +57,7 @@ title: "Exec Tool"
 - `tools.exec.ask`（默认值：`on-miss`）
 - `tools.exec.node`（默认值：未设置）
 - `tools.exec.pathPrepend`：要前置到 `PATH` 用于 exec 运行的目录列表（仅限网关 + 沙箱）。
-- `tools.exec.safeBins`：无需显式允许列表条目即可运行的仅 stdin 安全二进制文件。有关行为详细信息，请参阅 [安全二进制文件](/en/tools/exec-approvals#safe-bins-stdin-only)。
+- `tools.exec.safeBins`：无需显式允许列表条目即可运行的仅 stdin 安全二进制文件。有关行为详细信息，请参阅 [安全二进制文件](/zh/en/tools/exec-approvals#safe-bins-stdin-only)。
 - `tools.exec.safeBinTrustedDirs`：用于 `safeBins` 路径检查的其他受信任显式目录。`PATH` 条目永远不会被自动信任。内置默认值为 `/bin` 和 `/usr/bin`。
 - `tools.exec.safeBinProfiles`：每个安全二进制文件的可选自定义 argv 策略（`minPositional`、`maxPositional`、`allowedValueFlags`、`deniedFlags`）。
 
@@ -97,7 +97,7 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 
 ## 会话覆盖 (`/exec`)
 
-使用 `/exec` 为 `host`、`security`、`ask` 和 `node` 设置**按会话 (per-session)** 的默认值。
+使用 `/exec` 为 `host`、`security`、`ask` 和 `node` 设置**按会话 (per-会话)** 的默认值。
 不带参数发送 `/exec` 以显示当前值。
 
 示例：
@@ -116,11 +116,11 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 ## Exec 审批（配套应用 / 节点主机）
 
 沙盒代理可以在 `exec` 于网关或节点主机上运行之前要求每次请求都获得批准。
-有关策略、允许列表和 UI 流程，请参阅 [Exec 批准](/en/tools/exec-approvals)。
+有关策略、允许列表和 UI 流程，请参阅 [Exec 批准](/zh/en/tools/exec-approvals)。
 
 当需要批准时，exec 工具会立即返回
 `status: "approval-pending"` 和一个批准 ID。一旦批准（或拒绝/超时），
-网关会发出系统事件 (`Exec finished` / `Exec denied`)。如果命令在
+Gateway 网关 会发出系统事件 (`Exec finished` / `Exec denied`)。如果命令在
 `tools.exec.approvalRunningNoticeMs` 后仍在运行，则会发出一次 `Exec running` 通知。
 
 ## 允许列表 + 安全二进制文件
@@ -144,7 +144,7 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 不要将 `safeBins` 视为通用允许列表，也不要添加解释器/运行时二进制文件（例如 `python3`、`node`、`ruby`、`bash`）。如果您需要这些，请使用显式允许列表条目并保持批准提示启用。
 `openclaw security audit` 会在解释器/运行时 `safeBins` 条目缺少显式配置文件时发出警告，而 `openclaw doctor --fix` 可以构建缺失的自定义 `safeBinProfiles` 条目。
 
-有关完整的策略详细信息和示例，请参阅 [Exec approvals](/en/tools/exec-approvals#safe-bins-stdin-only) 和 [Safe bins versus allowlist](/en/tools/exec-approvals#safe-bins-versus-allowlist)。
+有关完整的策略详细信息和示例，请参阅 [Exec approvals](/zh/en/tools/exec-approvals#safe-bins-stdin-only) 和 [Safe bins versus allowlist](/zh/en/tools/exec-approvals#safe-bins-versus-allowlist)。
 
 ## 示例
 

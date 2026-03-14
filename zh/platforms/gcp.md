@@ -1,5 +1,5 @@
 ---
-summary: "在 GCP Compute Engine 虚拟机上通过 Docker 全天候运行 OpenClaw 网关（具有持久状态）"
+summary: "在 GCP Compute Engine 虚拟机上通过 Docker 全天候运行 OpenClaw Gateway 网关（具有持久状态）"
 read_when:
   - You want OpenClaw running 24/7 on GCP
   - You want a production-grade, always-on Gateway on your own VM
@@ -11,7 +11,7 @@ title: "GCP"
 
 ## 目标
 
-使用 Docker 在 GCP Compute Engine 虚拟机上运行持久化的 OpenClaw 网关，具有持久状态、内置二进制文件和安全的重启行为。
+使用 Docker 在 GCP Compute Engine 虚拟机上运行持久化的 OpenClaw Gateway 网关，具有持久状态、内置二进制文件和安全的重启行为。
 
 如果您希望“OpenClaw 24/7 运行，费用约为每月 5-12 美元”，这是在 Google Cloud 上一个可靠的设置。
 价格因机器类型和区域而异；请选择适合您工作负载的最小虚拟机，如果遇到内存不足（OOM）再进行扩容。
@@ -21,18 +21,18 @@ title: "GCP"
 - 创建 GCP 项目并启用计费
 - 创建 Compute Engine 虚拟机
 - 安装 Docker（隔离的应用运行时）
-- 在 Docker 中启动 OpenClaw 网关
+- 在 Docker 中启动 OpenClaw Gateway 网关
 - 在主机上持久化 `~/.openclaw` + `~/.openclaw/workspace`（在重启/重建后幸存）
 - 通过 SSH 隧道从笔记本电脑访问控制 UI
 
-可以通过以下方式访问网关：
+可以通过以下方式访问 Gateway 网关：
 
 - 从笔记本电脑进行 SSH 端口转发
 - 如果您自行管理防火墙和令牌，则直接暴露端口
 
 本指南在 GCP Compute Engine 上使用 Debian。
 Ubuntu 也可以使用；请相应地映射软件包。
-有关通用 Docker 流程，请参阅 [Docker](/en/install/docker)。
+有关通用 Docker 流程，请参阅 [Docker](/zh/en/install/docker)。
 
 ---
 
@@ -372,7 +372,7 @@ docker compose exec openclaw-gateway which wacli
 
 ---
 
-## 12) 验证网关
+## 12) 验证 Gateway 网关
 
 ```bash
 docker compose logs -f openclaw-gateway
@@ -388,7 +388,7 @@ docker compose logs -f openclaw-gateway
 
 ## 13) 从您的笔记本电脑访问
 
-创建 SSH 隧道以转发网关端口：
+创建 SSH 隧道以转发 Gateway 网关 端口：
 
 ```bash
 gcloud compute ssh openclaw-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:18789
@@ -407,18 +407,18 @@ gcloud compute ssh openclaw-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:1
 OpenClaw 在 Docker 中运行，但 Docker 并不是真实来源。
 所有长期存在的状态必须在重启、重新构建和重新启动后存活下来。
 
-| 组件           | 位置                          | 持久化机制  | 备注                            |
+| 组件 | 位置 | 持久化机制 | 备注 |
 | ------------------- | --------------------------------- | ---------------------- | -------------------------------- |
-| Gateway config      | `/home/node/.openclaw/`           | 主机卷挂载      | 包括 `openclaw.json`、令牌 |
-| Model auth profiles | `/home/node/.openclaw/`           | 主机卷挂载      | OAuth 令牌、API 密钥           |
-| Skill configs       | `/home/node/.openclaw/skills/`    | 主机卷挂载      | 技能级别状态                |
-| Agent workspace     | `/home/node/.openclaw/workspace/` | 主机卷挂载      | 代码和 Agent 工件         |
-| WhatsApp session    | `/home/node/.openclaw/`           | 主机卷挂载      | 保留 QR 登录               |
-| Gmail keyring       | `/home/node/.openclaw/`           | 主机卷 + 密码 | 需要 `GOG_KEYRING_PASSWORD`  |
-| External binaries   | `/usr/local/bin/`                 | Docker 镜像           | 必须在构建时打包      |
-| Node runtime        | 容器文件系统              | Docker 镜像           | 每次镜像构建时重新构建        |
-| OS packages         | 容器文件系统              | Docker 镜像           | 请勿在运行时安装        |
-| Docker container    | 临时的                         | 可重启            | 可安全销毁                  |
+| Gateway 网关 config | `/home/node/.openclaw/` | 主机卷挂载 | 包括 `openclaw.json`、令牌 |
+| Model auth profiles | `/home/node/.openclaw/` | 主机卷挂载 | OAuth 令牌、API 密钥 |
+| Skill configs | `/home/node/.openclaw/skills/` | 主机卷挂载 | 技能级别状态 |
+| Agent workspace | `/home/node/.openclaw/workspace/` | 主机卷挂载 | 代码和 Agent 工件 |
+| WhatsApp 会话 | `/home/node/.openclaw/` | 主机卷挂载 | 保留 QR 登录 |
+| Gmail keyring | `/home/node/.openclaw/` | 主机卷 + 密码 | 需要 `GOG_KEYRING_PASSWORD` |
+| External binaries | `/usr/local/bin/` | Docker 镜像 | 必须在构建时打包 |
+| Node runtime | 容器文件系统 | Docker 镜像 | 每次镜像构建时重新构建 |
+| OS packages | 容器文件系统 | Docker 镜像 | 请勿在运行时安装 |
+| Docker container | 临时的 | 可重启 | 可安全销毁 |
 
 ---
 
@@ -498,9 +498,9 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 ## 后续步骤
 
-- 设置消息通道：[通道](/en/channels)
-- 将本地设备配对为节点：[节点](/en/nodes)
-- 配置网关：[网关配置](/en/gateway/configuration)
+- 设置消息通道：[通道](/zh/en/channels)
+- 将本地设备配对为节点：[节点](/zh/en/nodes)
+- 配置 Gateway 网关：[Gateway 网关 配置](/zh/en/gateway/configuration)
 
 import zh from '/components/footer/zh.mdx';
 

@@ -15,7 +15,7 @@ read_when:
 
 ## 快速开始
 
-1. 设置 API 密钥（推荐：将其存储在网关中）：
+1. 设置 API 密钥（推荐：将其存储在 Gateway 网关 中）：
 
 ```bash
 openclaw onboard --auth-choice together-api-key
@@ -46,7 +46,7 @@ openclaw onboard --non-interactive \
 
 ## 环境注意事项
 
-如果网关作为守护进程（launchd/systemd）运行，请确保该进程可以访问 `TOGETHER_API_KEY`
+如果 Gateway 网关 作为守护进程（launchd/systemd）运行，请确保该进程可以访问 `TOGETHER_API_KEY`
 （例如，在 `~/.openclaw/.env` 中或通过
 `env.shellEnv`）。
 

@@ -26,7 +26,7 @@ title: "语音覆盖"
    - 一次只拥有一个 `VoiceSession`。
    - API（基于令牌）：`beginWakeCapture`、`beginPushToTalk`、`updatePartial`、`endCapture`、`cancel`、`applyCooldown`。
    - 丢弃带有过时令牌的回调（防止旧的识别器重新打开覆盖层）。
-2. **VoiceSession (model)**
+2. **VoiceSession (模型)**
    - 字段：`token`、`source` (wakeWord|pushToTalk)、已提交/易失性文本、提示音标志、计时器（自动发送、空闲）、`overlayMode` (display|editing|sending)、冷却截止时间。
 3. **叠加层绑定**
    - `VoiceSessionPublisher` (`ObservableObject`) 将活动会话镜像到 SwiftUI 中。

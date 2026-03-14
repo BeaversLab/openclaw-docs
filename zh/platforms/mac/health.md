@@ -20,7 +20,7 @@ title: "健康检查"
 
 ## 设置
 
-- “通用”选项卡增加了一个健康卡片，显示：关联的 auth 有效期、session-store 路径/数量、上次检查时间、上次错误/状态码，以及运行健康检查/显示日志的按钮。
+- “通用”选项卡增加了一个健康卡片，显示：关联的 auth 有效期、会话-store 路径/数量、上次检查时间、上次错误/状态码，以及运行健康检查/显示日志的按钮。
 - 使用缓存的快照，以便 UI 瞬间加载，并在离线时优雅降级。
 - **频道选项卡** 显示 WhatsApp/Telegram 的频道状态 + 控件（登录 QR、注销、探测、上次断开连接/错误）。
 
@@ -31,7 +31,7 @@ title: "健康检查"
 
 ## 如有疑问
 
-- 您仍然可以在 [Gateway health](/en/gateway/health) 中使用 CLI 流程（`openclaw status`、`openclaw status --deep`、`openclaw health --json`）并监视 `/tmp/openclaw/openclaw-*.log` 以查找 `web-heartbeat` / `web-reconnect`。
+- 您仍然可以在 [Gateway 网关 health](/zh/en/gateway/health) 中使用 CLI 流程（`openclaw status`、`openclaw status --deep`、`openclaw health --json`）并监视 `/tmp/openclaw/openclaw-*.log` 以查找 `web-heartbeat` / `web-reconnect`。
 
 import zh from '/components/footer/zh.mdx';
 

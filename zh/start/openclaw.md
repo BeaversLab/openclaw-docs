@@ -26,7 +26,7 @@ OpenClaw 是 **Pi** 智能体的 WhatsApp + Telegram + Discord + iMessage 网关
 
 ## 先决条件
 
-- 已安装并完成 OpenClaw 入职 —— 如果您尚未完成此操作，请参阅 [入门指南](/en/start/getting-started)
+- 已安装并完成 OpenClaw 入职 —— 如果您尚未完成此操作，请参阅 [入门指南](/zh/en/start/getting-started)
 - 用于助手的第二个电话号码（SIM/eSIM/预付费）
 
 ## 双手机设置（推荐）
@@ -49,7 +49,7 @@ flowchart TB
 openclaw channels login
 ```
 
-2. 启动网关（保持其运行）：
+2. 启动 Gateway 网关（保持其运行）：
 
 ```bash
 openclaw gateway --port 18789
@@ -79,8 +79,8 @@ OpenClaw 从其工作区目录读取操作指令和“记忆”。
 openclaw setup
 ```
 
-完整的工作区布局 + 备份指南：[代理工作区](/en/concepts/agent-workspace)
-记忆工作流：[记忆](/en/concepts/memory)
+完整的工作区布局 + 备份指南：[代理工作区](/zh/en/concepts/agent-workspace)
+记忆工作流：[记忆](/zh/en/concepts/memory)
 
 可选：使用 `agents.defaults.workspace` 选择不同的工作区（支持 `~`）。
 
@@ -164,7 +164,7 @@ OpenClaw 默认使用良好的助手设置，但您通常需要调整：
 - 如果 `HEARTBEAT.md` 存在但实际上为空（仅包含空行和像 `# Heading` 这样的 markdown 标题），OpenClaw 会跳过该次心跳运行以节省 API 调用。
 - 如果文件丢失，心跳仍会运行，模型会决定做什么。
 - 如果代理回复 `HEARTBEAT_OK`（可选带有短填充；请参阅 `agents.defaults.heartbeat.ackMaxChars`），OpenClaw 将阻止该次心跳的出站传递。
-- 默认情况下，允许向 DM 风格的 `user:<id>` 目标传递心跳。设置 `agents.defaults.heartbeat.directPolicy: "block"` 以在保持心跳运行处于活动状态的同时，阻止直接目标的传递。
+- 默认情况下，允许向 私信 风格的 `user:<id>` 目标传递心跳。设置 `agents.defaults.heartbeat.directPolicy: "block"` 以在保持心跳运行处于活动状态的同时，阻止直接目标的传递。
 - 心跳运行完整的代理回合——间隔越短，消耗的 token 越多。
 
 ```json5
@@ -205,15 +205,15 @@ openclaw health --json   # gateway health snapshot (WS)
 
 ## 后续步骤
 
-- WebChat：[WebChat](/en/web/webchat)
-- 网关操作：[Gateway runbook](/en/gateway)
-- Cron + 唤醒：[Cron jobs](/en/automation/cron-jobs)
-- macOS 菜单栏伴侣：[OpenClaw macOS app](/en/platforms/macos)
-- iOS 节点应用：[iOS app](/en/platforms/ios)
-- Android 节点应用：[Android app](/en/platforms/android)
-- Windows 状态：[Windows (WSL2)](/en/platforms/windows)
-- Linux 状态：[Linux app](/en/platforms/linux)
-- 安全：[Security](/en/gateway/security)
+- WebChat：[WebChat](/zh/en/web/webchat)
+- Gateway 网关 操作：[Gateway 网关 runbook](/zh/en/gateway)
+- Cron + 唤醒：[Cron jobs](/zh/en/automation/cron-jobs)
+- macOS 菜单栏伴侣：[OpenClaw macOS app](/zh/en/platforms/macos)
+- iOS 节点应用：[iOS app](/zh/en/platforms/ios)
+- Android 节点应用：[Android app](/zh/en/platforms/android)
+- Windows 状态：[Windows (WSL2)](/zh/en/platforms/windows)
+- Linux 状态：[Linux app](/zh/en/platforms/linux)
+- 安全：[Security](/zh/en/gateway/security)
 
 import zh from '/components/footer/zh.mdx';
 

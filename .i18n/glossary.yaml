@@ -1,0 +1,2959 @@
+version: 1
+defaults:
+  source_locale: en
+  exclude_nodes:
+    - code
+    - inlineCode
+    - url
+    - htmlAttr
+entries:
+  - id: api
+    source: API
+    reason:
+      category: acronym
+      note: Industry standard
+    targets:
+      zh: API
+      zh-CN: API
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: cli
+    source: CLI
+    reason:
+      category: acronym
+      note: Industry standard
+    targets:
+      zh: CLI
+      zh-CN: CLI
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: ipc
+    source: IPC
+    reason:
+      category: acronym
+      note: Technical acronym
+    targets:
+      zh: IPC
+      zh-CN: IPC
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: llm
+    source: LLM
+    reason:
+      category: acronym
+      note: Industry standard term
+    targets:
+      zh: LLM
+      zh-CN: LLM
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: rpc
+    source: RPC
+    reason:
+      category: acronym
+      note: Technical acronym
+    targets:
+      zh: RPC
+      zh-CN: RPC
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: tui
+    source: TUI
+    reason:
+      category: acronym
+      note: Technical acronym
+    targets:
+      zh: TUI
+      zh-CN: TUI
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: brave
+    source: Brave
+    reason:
+      category: browser
+      note: Browser name
+    targets:
+      zh: Brave
+      zh-CN: Brave
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: anthropic
+    source: Anthropic
+    reason:
+      category: company
+      note: Company name
+    targets:
+      zh: Anthropic
+      zh-CN: Anthropic
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: deepgram
+    source: Deepgram
+    reason:
+      category: company
+      note: Company name
+    targets:
+      zh: Deepgram
+      zh-CN: Deepgram
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: minimax
+    source: MiniMax
+    reason:
+      category: company
+      note: Company name
+    targets:
+      zh: MiniMax
+      zh-CN: MiniMax
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: moonshot
+    source: Moonshot
+    reason:
+      category: company
+      note: Company name
+    targets:
+      zh: Moonshot
+      zh-CN: Moonshot
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: openai
+    source: OpenAI
+    reason:
+      category: company
+      note: Company name
+    targets:
+      zh: OpenAI
+      zh-CN: OpenAI
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: oracle
+    source: Oracle
+    reason:
+      category: company
+      note: Company name
+    targets:
+      zh: Oracle
+      zh-CN: Oracle
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: perplexity
+    source: Perplexity
+    reason:
+      category: company
+      note: Company name
+    targets:
+      zh: Perplexity
+      zh-CN: Perplexity
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: vercel
+    source: Vercel
+    reason:
+      category: company
+      note: Company name
+    targets:
+      zh: Vercel
+      zh-CN: Vercel
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: xiaomi
+    source: Xiaomi
+    reason:
+      category: company
+      note: Company name
+    targets:
+      zh: Xiaomi
+      zh-CN: Xiaomi
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: baileys
+    source: Baileys
+    reason:
+      category: library
+      note: Library name
+    targets:
+      zh: Baileys
+      zh-CN: Baileys
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: bolt
+    source: Bolt
+    reason:
+      category: library
+      note: Library name
+    targets:
+      zh: Bolt
+      zh-CN: Bolt
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: grammy
+    source: grammY
+    reason:
+      category: library
+      note: Library name
+    targets:
+      zh: grammY
+      zh-CN: grammY
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: typebox
+    source: TypeBox
+    reason:
+      category: library
+      note: Library name
+    targets:
+      zh: TypeBox
+      zh-CN: TypeBox
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: glm
+    source: GLM
+    reason:
+      category: model
+      note: Model name
+    targets:
+      zh: GLM
+      zh-CN: GLM
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: android
+    source: Android
+    reason:
+      category: os
+      note: OS name
+    targets:
+      zh: Android
+      zh-CN: Android
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: ios
+    source: iOS
+    reason:
+      category: os
+      note: OS name
+    targets:
+      zh: iOS
+      zh-CN: iOS
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: linux
+    source: Linux
+    reason:
+      category: os
+      note: OS name
+    targets:
+      zh: Linux
+      zh-CN: Linux
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: macos
+    source: macOS
+    reason:
+      category: os
+      note: OS name
+    targets:
+      zh: macOS
+      zh-CN: macOS
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: windows
+    source: Windows
+    reason:
+      category: os
+      note: OS name
+    targets:
+      zh: Windows
+      zh-CN: Windows
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: nix
+    source: Nix
+    reason:
+      category: package-manager
+      note: Package manager
+    targets:
+      zh: Nix
+      zh-CN: Nix
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: npm
+    source: npm
+    reason:
+      category: package-manager
+      note: Package manager
+    targets:
+      zh: npm
+      zh-CN: npm
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: digitalocean
+    source: DigitalOcean
+    reason:
+      category: platform
+      note: Platform name
+    targets:
+      zh: DigitalOcean
+      zh-CN: DigitalOcean
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: fly-io
+    source: Fly.io
+    reason:
+      category: platform
+      note: Platform name
+    targets:
+      zh: Fly.io
+      zh-CN: Fly.io
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: gcp
+    source: GCP
+    reason:
+      category: platform
+      note: Platform name
+    targets:
+      zh: GCP
+      zh-CN: GCP
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: github
+    source: GitHub
+    reason:
+      category: platform
+      note: Platform name
+    targets:
+      zh: GitHub
+      zh-CN: GitHub
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: hetzner
+    source: Hetzner
+    reason:
+      category: platform
+      note: Platform name
+    targets:
+      zh: Hetzner
+      zh-CN: Hetzner
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: matrix
+    source: Matrix
+    reason:
+      category: platform
+      note: Platform name
+    targets:
+      zh: Matrix
+      zh-CN: Matrix
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: mattermost
+    source: Mattermost
+    reason:
+      category: platform
+      note: Platform name
+    targets:
+      zh: Mattermost
+      zh-CN: Mattermost
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: nextcloud
+    source: Nextcloud
+    reason:
+      category: platform
+      note: Platform name
+    targets:
+      zh: Nextcloud
+      zh-CN: Nextcloud
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: nostr
+    source: Nostr
+    reason:
+      category: platform
+      note: Protocol/Platform
+    targets:
+      zh: Nostr
+      zh-CN: Nostr
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: tlon
+    source: Tlon
+    reason:
+      category: platform
+      note: Platform name
+    targets:
+      zh: Tlon
+      zh-CN: Tlon
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: twitch
+    source: Twitch
+    reason:
+      category: platform
+      note: Platform name
+    targets:
+      zh: Twitch
+      zh-CN: Twitch
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: bluebubbles
+    source: BlueBubbles
+    reason:
+      category: product
+      note: Product name
+    targets:
+      zh: BlueBubbles
+      zh-CN: BlueBubbles
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: canvas
+    source: Canvas
+    reason:
+      category: product
+      note: Feature name
+    targets:
+      zh: Canvas
+      zh-CN: Canvas
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: clawdhub
+    source: ClawdHub
+    reason:
+      category: product
+      note: Product feature
+    targets:
+      zh: ClawdHub
+      zh-CN: ClawdHub
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: clawhub
+    source: ClawHub
+    reason:
+      category: product
+      note: Product feature
+    targets:
+      zh: ClawHub
+      zh-CN: ClawHub
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: discord
+    source: Discord
+    reason:
+      category: product
+      note: Product name
+    targets:
+      zh: Discord
+      zh-CN: Discord
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: gateway
+    source: Gateway
+    reason:
+      category: product
+      note: Core component name
+    targets:
+      zh: Gateway 网关
+      zh-CN: Gateway 网关
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: google-chat
+    source: Google Chat
+    reason:
+      category: product
+      note: Product name
+    targets:
+      zh: Google Chat
+      zh-CN: Google Chat
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: imessage
+    source: iMessage
+    reason:
+      category: product
+      note: Apple product
+    targets:
+      zh: iMessage
+      zh-CN: iMessage
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: lobster
+    source: Lobster
+    reason:
+      category: product
+      note: Tool name
+    targets:
+      zh: Lobster
+      zh-CN: Lobster
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: microsoft-teams
+    source: Microsoft Teams
+    reason:
+      category: product
+      note: Product name
+    targets:
+      zh: Microsoft Teams
+      zh-CN: Microsoft Teams
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: ollama
+    source: Ollama
+    reason:
+      category: product
+      note: Product name
+    targets:
+      zh: Ollama
+      zh-CN: Ollama
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: openclaw
+    source: OpenClaw
+    reason:
+      category: product
+      note: Product name
+    targets:
+      zh: OpenClaw
+      zh-CN: OpenClaw
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: openprose
+    source: OpenProse
+    reason:
+      category: product
+      note: Feature name
+    targets:
+      zh: OpenProse
+      zh-CN: OpenProse
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: peekaboo
+    source: Peekaboo
+    reason:
+      category: product
+      note: Component name
+    targets:
+      zh: Peekaboo
+      zh-CN: Peekaboo
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: qwen
+    source: Qwen
+    reason:
+      category: product
+      note: Product name
+    targets:
+      zh: Qwen
+      zh-CN: Qwen
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: raspberry-pi
+    source: Raspberry Pi
+    reason:
+      category: product
+      note: Product name
+    targets:
+      zh: Raspberry Pi
+      zh-CN: Raspberry Pi
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: signal
+    source: Signal
+    reason:
+      category: product
+      note: Product name
+    targets:
+      zh: Signal
+      zh-CN: Signal
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: slack
+    source: Slack
+    reason:
+      category: product
+      note: Product name
+    targets:
+      zh: Slack
+      zh-CN: Slack
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: tailscale
+    source: Tailscale
+    reason:
+      category: product
+      note: Product name
+    targets:
+      zh: Tailscale
+      zh-CN: Tailscale
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: telegram
+    source: Telegram
+    reason:
+      category: product
+      note: Product name
+    targets:
+      zh: Telegram
+      zh-CN: Telegram
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: webchat
+    source: WebChat
+    reason:
+      category: product
+      note: Feature name
+    targets:
+      zh: WebChat
+      zh-CN: WebChat
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: whatsapp
+    source: WhatsApp
+    reason:
+      category: product
+      note: Product name
+    targets:
+      zh: WhatsApp
+      zh-CN: WhatsApp
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: oauth
+    source: OAuth
+    reason:
+      category: protocol
+      note: Industry standard protocol
+    targets:
+      zh: OAuth
+      zh-CN: OAuth
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: bun
+    source: Bun
+    reason:
+      category: runtime
+      note: Runtime name
+    targets:
+      zh: Bun
+      zh-CN: Bun
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: amazon-bedrock
+    source: Amazon Bedrock
+    reason:
+      category: service
+      note: AWS service
+    targets:
+      zh: Amazon Bedrock
+      zh-CN: Amazon Bedrock
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: firecrawl
+    source: Firecrawl
+    reason:
+      category: service
+      note: Service name
+    targets:
+      zh: Firecrawl
+      zh-CN: Firecrawl
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: openresponses
+    source: OpenResponses
+    reason:
+      category: service
+      note: Service name
+    targets:
+      zh: OpenResponses
+      zh-CN: OpenResponses
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: openrouter
+    source: OpenRouter
+    reason:
+      category: service
+      note: Service name
+    targets:
+      zh: OpenRouter
+      zh-CN: OpenRouter
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: venice
+    source: Venice
+    reason:
+      category: service
+      note: Service name
+    targets:
+      zh: Venice
+      zh-CN: Venice
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: zalo
+    source: Zalo
+    reason:
+      category: service
+      note: Service name
+    targets:
+      zh: Zalo
+      zh-CN: Zalo
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: ansible
+    source: Ansible
+    reason:
+      category: technology
+      note: Technology name
+    targets:
+      zh: Ansible
+      zh-CN: Ansible
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: bonjour
+    source: Bonjour
+    reason:
+      category: technology
+      note: Apple technology
+    targets:
+      zh: Bonjour
+      zh-CN: Bonjour
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: docker
+    source: Docker
+    reason:
+      category: technology
+      note: Technology name
+    targets:
+      zh: Docker
+      zh-CN: Docker
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: node-js
+    source: Node.js
+    reason:
+      category: technology
+      note: Technology name
+    targets:
+      zh: Node.js
+      zh-CN: Node.js
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: wsl2
+    source: WSL2
+    reason:
+      category: technology
+      note: Windows technology
+    targets:
+      zh: WSL2
+      zh-CN: WSL2
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: xpc
+    source: XPC
+    reason:
+      category: technology
+      note: macOS technology
+    targets:
+      zh: XPC
+      zh-CN: XPC
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error
+  - id: block-streaming
+    source: block streaming
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 分块流式传输
+      zh-CN: 分块流式传输
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: channel
+    source: channel
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 渠道
+      zh-CN: 渠道
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: env-var
+    source: env var
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 环境变量
+      zh-CN: 环境变量
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: env-vars
+    source: env vars
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 环境变量
+      zh-CN: 环境变量
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: environment-variable
+    source: environment variable
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 环境变量
+      zh-CN: 环境变量
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: environment-variables
+    source: environment variables
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 环境变量
+      zh-CN: 环境变量
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: expected-keys
+    source: expected keys
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 预期键名
+      zh-CN: 预期键名
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: for-full-details
+    source: for full details
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 了解详情
+      zh-CN: 了解详情
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: get-unstuck
+    source: get unstuck
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 解决问题
+      zh-CN: 解决问题
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: install-sanity
+    source: install sanity
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 安装完整性检查
+      zh-CN: 安装完整性检查
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: local-loopback
+    source: local loopback
+    reason:
+      category: generic-term
+      note: Legacy preserved term kept as normalize-only
+    targets:
+      zh: local loopback
+      zh-CN: local loopback
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: model
+    source: model
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 模型
+      zh-CN: 模型
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: onboarding
+    source: onboarding
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 新手引导
+      zh-CN: 新手引导
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: pi
+    source: Pi
+    reason:
+      category: generic-term
+      note: Legacy preserved term kept as normalize-only
+    targets:
+      zh: Pi
+      zh-CN: Pi
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: provider
+    source: provider
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 提供商
+      zh-CN: 提供商
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: sandboxed
+    source: sandboxed
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 沙箱隔离
+      zh-CN: 沙箱隔离
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: sandboxing
+    source: sandboxing
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 沙箱隔离
+      zh-CN: 沙箱隔离
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: session
+    source: session
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 会话
+      zh-CN: 会话
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: skills
+    source: Skills
+    reason:
+      category: generic-term
+      note: Legacy preserved term kept as normalize-only
+    targets:
+      zh: Skills
+      zh-CN: Skills
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: tool
+    source: tool
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 工具
+      zh-CN: 工具
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: troubleshooting
+    source: troubleshooting
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 故障排除
+      zh-CN: 故障排除
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: wizard
+    source: wizard
+    reason:
+      category: generic-term
+      note: Legacy terminology mapping
+    targets:
+      zh: 向导
+      zh-CN: 向导
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: auth-where-it-lives-important
+    source: 'Auth: where it lives (important)'
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 凭证：存储位置（重要）
+      zh-CN: 凭证：存储位置（重要）
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: block-streaming-2
+    source: Block streaming
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 分块流式传输
+      zh-CN: 分块流式传输
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: companion-apps
+    source: Companion apps
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 配套应用
+      zh-CN: 配套应用
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: credits
+    source: Credits
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 致谢
+      zh-CN: 致谢
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: discovery
+    source: Discovery
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 设备发现
+      zh-CN: 设备发现
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: discovery-transports
+    source: Discovery + transports
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 设备发现 + 传输协议
+      zh-CN: 设备发现 + 传输协议
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: dm
+    source: DM
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 私信
+      zh-CN: 私信
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: dms
+    source: DMs
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 私信
+      zh-CN: 私信
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: docs-directory
+    source: Docs directory
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 文档目录
+      zh-CN: 文档目录
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: faq
+    source: FAQ
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 常见问题
+      zh-CN: 常见问题
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: features
+    source: Features
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 功能
+      zh-CN: 功能
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: first-60-seconds
+    source: First 60 seconds
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 最初的六十秒
+      zh-CN: 最初的六十秒
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: getting-started-2
+    source: Getting started
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 入门指南
+      zh-CN: 入门指南
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: getting-started
+    source: Getting Started
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 入门指南
+      zh-CN: 入门指南
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: network-model
+    source: Network model
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 网络模型
+      zh-CN: 网络模型
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: onboarding-2
+    source: Onboarding
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 新手引导
+      zh-CN: 新手引导
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: quick-start
+    source: Quick start
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 快速开始
+      zh-CN: 快速开始
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: quick-start-2
+    source: Quick Start
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 快速开始
+      zh-CN: 快速开始
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: sandbox
+    source: Sandbox
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 沙箱
+      zh-CN: 沙箱
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: sandboxed-2
+    source: Sandboxed
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 沙箱隔离
+      zh-CN: 沙箱隔离
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: sandboxing-2
+    source: Sandboxing
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 沙箱隔离
+      zh-CN: 沙箱隔离
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: sandboxing-note
+    source: Sandboxing note
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: 沙箱注意事项
+      zh-CN: 沙箱注意事项
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: skills-config
+    source: Skills config
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: Skills 配置
+      zh-CN: Skills 配置
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn
+  - id: skills-config-2
+    source: Skills Config
+    reason:
+      category: section-title
+      note: Legacy heading or label translation
+    targets:
+      zh: Skills 配置
+      zh-CN: Skills 配置
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: normalize
+      autofix: safe
+    validate:
+      severity: warn

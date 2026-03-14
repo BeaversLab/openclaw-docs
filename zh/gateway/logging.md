@@ -8,7 +8,7 @@ title: "Logging"
 
 # 日志记录
 
-有关面向用户的概述（CLI + 控制界面 + 配置），请参阅 [/logging](/en/logging)。
+有关面向用户的概述（CLI + 控制界面 + 配置），请参阅 [/logging](/zh/en/logging)。
 
 OpenClaw 有两个日志“平面”：
 
@@ -60,7 +60,7 @@ CLI 捕获 `console.log/info/warn/error/debug/trace` 并将其写入文件日志
   - 匹配项通过保留前 6 个 + 后 4 个字符来屏蔽（长度 >= 18），否则 `***`。
   - 默认值涵盖常见的密钥分配、CLI 标志、JSON 字段、Bearer 标头、PEM 块和流行的令牌前缀。
 
-## 网关 WebSocket 日志
+## Gateway 网关 WebSocket 日志
 
 网关以两种模式打印 WebSocket 协议日志：
 

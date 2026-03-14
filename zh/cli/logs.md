@@ -8,11 +8,11 @@ title: "logs"
 
 # `openclaw logs`
 
-通过 RPC 跟踪 Gateway 文件日志（适用于远程模式）。
+通过 RPC 跟踪 Gateway 网关 文件日志（适用于远程模式）。
 
 相关：
 
-- 日志概述：[Logging](/en/logging)
+- 日志概述：[Logging](/zh/en/logging)
 
 ## 示例
 

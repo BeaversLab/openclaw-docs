@@ -11,8 +11,8 @@ title: "agents"
 
 相关：
 
-- 多代理路由：[多代理路由](/en/concepts/multi-agent)
-- 代理工作区：[代理工作区](/en/concepts/agent-workspace)
+- 多代理路由：[多代理路由](/zh/en/concepts/multi-agent)
+- 代理工作区：[代理工作区](/zh/en/concepts/agent-workspace)
 
 ## 示例
 

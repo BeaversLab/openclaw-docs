@@ -34,7 +34,7 @@ openclaw plugins install ./extensions/matrix
 如果你在配置/入职期间选择 Matrix 并检测到 git 检出，
 OpenClaw 将自动提供本地安装路径。
 
-详情：[插件](/en/tools/plugin)
+详情：[插件](/zh/en/tools/plugin)
 
 ## 设置
 
@@ -138,7 +138,7 @@ E2EE 配置（已启用端到端加密）：
 
 ## 多帐户
 
-多账号支持：使用 `channels.matrix.accounts` 配合每个账号的凭据和可选的 `name`。请参阅 [`gateway/configuration`](/en/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) 了解共享模式。
+多账号支持：使用 `channels.matrix.accounts` 配合每个账号的凭据和可选的 `name`。请参阅 [`gateway/configuration`](/zh/en/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) 了解共享模式。
 
 每个账号在任何主服务器上都作为独立的 Matrix 用户运行。每个账号的配置继承自顶层 `channels.matrix` 设置，并且可以覆盖任何选项（私信策略、群组、加密等）。
 
@@ -171,7 +171,7 @@ E2EE 配置（已启用端到端加密）：
 
 - 帐号启动已序列化，以避免并发模块导入时的竞态条件。
 - 环境变量（`MATRIX_HOMESERVER`、`MATRIX_ACCESS_TOKEN` 等）仅适用于**默认**账号。
-- 基础频道设置（DM 策略、群组策略、提及门控等）适用于所有帐号，除非针对每个帐号进行了覆盖。
+- 基础频道设置（私信 策略、群组策略、提及门控等）适用于所有帐号，除非针对每个帐号进行了覆盖。
 - 使用 `bindings[].match.accountId` 将每个账号路由到不同的代理（agent）。
 - 加密状态按帐号 + 访问令牌存储（每个帐号有单独的密钥存储）。
 
@@ -180,7 +180,7 @@ E2EE 配置（已启用端到端加密）：
 - 回复始终返回到 Matrix。
 - 私信共享代理的主会话；房间映射到群组会话。
 
-## 访问控制 (DMs)
+## 访问控制 (私信)
 
 - 默认值：`channels.matrix.dm.policy = "pairing"`。未知发送者将收到配对码。
 - 通过以下方式批准：
@@ -267,11 +267,11 @@ openclaw pairing list matrix
 - 私信被忽略：当 `channels.matrix.dm.policy="pairing"` 时，发送者待批准。
 - 加密房间失败：加密支持或加密设置不匹配。
 
-分流排查流程：[/channels/troubleshooting](/en/channels/troubleshooting)。
+分流排查流程：[/channels/故障排除](/zh/en/channels/故障排除)。
 
 ## 配置参考 (Matrix)
 
-完整配置：[Configuration](/en/gateway/configuration)
+完整配置：[Configuration](/zh/en/gateway/configuration)
 
 提供者选项：
 

@@ -7,24 +7,24 @@ title: "macOS IPC"
 
 # OpenClaw macOS IPC 架构
 
-**当前模型：** 一个本地 Unix 套接字将 **节点主机服务 (node host service)** 连接到 **macOS 应用**，用于执行审批 + `system.run`。存在一个 `openclaw-mac` 调试 CLI 用于发现/连接检查；代理操作仍然通过网关 WebSocket 和 `node.invoke` 流式传输。UI 自动化使用 PeekabooBridge。
+**当前模型：** 一个本地 Unix 套接字将 **节点主机服务 (node host service)** 连接到 **macOS 应用**，用于执行审批 + `system.run`。存在一个 `openclaw-mac` 调试 CLI 用于发现/连接检查；代理操作仍然通过 Gateway 网关 WebSocket 和 `node.invoke` 流式传输。UI 自动化使用 PeekabooBridge。
 
 ## 目标
 
 - 单一 GUI 应用实例，拥有所有面向 TCC 的工作（通知、屏幕录制、麦克风、语音、AppleScript）。
-- 小范围的自动化表面：Gateway + 节点命令，加上用于 UI 自动化的 PeekabooBridge。
+- 小范围的自动化表面：Gateway 网关 + 节点命令，加上用于 UI 自动化的 PeekabooBridge。
 - 可预测的权限：始终是相同的已签名 Bundle ID，由 launchd 启动，因此 TCC 授权会保持。
 
 ## 工作原理
 
-### Gateway + 节点传输
+### Gateway 网关 + 节点传输
 
-- 该应用运行 Gateway（本地模式）并作为节点连接到它。
+- 该应用运行 Gateway 网关（本地模式）并作为节点连接到它。
 - 代理操作通过 `node.invoke` 执行（例如 `system.run`、`system.notify`、`canvas.*`）。
 
 ### 节点服务 + 应用 IPC
 
-- 无头节点主机服务连接到 Gateway WebSocket。
+- 无头节点主机服务连接到 Gateway 网关 WebSocket。
 - `system.run` 请求通过本地 Unix 套接字转发到 macOS 应用。
 - 该应用在 UI 上下文中执行 exec，根据需要提示，并返回输出。
 
@@ -42,7 +42,7 @@ Agent -> Gateway -> Node Service (WS)
 - UI 自动化使用一个名为 `bridge.sock` 的独立 UNIX 套接字和 PeekabooBridge JSON 协议。
 - 主机首选项顺序（客户端）：Peekaboo.app → Claude.app → OpenClaw.app → 本地执行。
 - 安全性：网桥主机需要允许的 TeamID；仅限 DEBUG 的同 UID 逃生舱由 `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` 保护（Peekaboo 约定）。
-- 详见：[PeekabooBridge 使用方法](/en/platforms/mac/peekaboo)。
+- 详见：[PeekabooBridge 使用方法](/zh/en/platforms/mac/peekaboo)。
 
 ## 操作流程
 

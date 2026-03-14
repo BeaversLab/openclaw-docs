@@ -12,7 +12,7 @@ title: "security"
 
 相关：
 
-- 安全指南：[Security](/en/gateway/security)
+- 安全指南：[Security](/zh/en/gateway/security)
 
 ## 审计
 
@@ -24,7 +24,7 @@ openclaw security audit --json
 ```
 
 当多个私信发送者共享主会话时，审计会发出警告并建议使用 **安全私信模式**：对于共享收件箱，使用 `session.dmScope="per-channel-peer"`（对于多账户通道，使用 `per-account-channel-peer`）。
-这是用于协作/共享收件箱加固的。由互不信任/敌对的操作员共享单个网关不是推荐的设置；请使用独立的网关（或独立的操作系统用户/主机）来分割信任边界。
+这是用于协作/共享收件箱加固的。由互不信任/敌对的操作员共享单个 Gateway 网关 不是推荐的设置；请使用独立的 Gateway 网关（或独立的操作系统用户/主机）来分割信任边界。
 当配置暗示可能存在共享用户入口时（例如开放的私信/群组策略、配置的群组目标或通配符发送者规则），它还会发出 `security.trust_model.multi_user_heuristic`，并提醒您 OpenClaw 默认采用个人助手信任模型。
 对于有意的共享用户设置，审计指导原则是将所有会话放入沙箱、将文件系统访问限制在工作区范围内，并避免在该运行时中使用个人/私人身份或凭据。
 当小型模型（`<=300B`）在未启用沙箱的情况下使用并启用了 Web/浏览器工具时，它也会发出警告。
@@ -36,9 +36,9 @@ openclaw security audit --json
 它还会在现有的沙箱浏览器 Docker 容器缺少/过时的哈希标签（例如迁移前容器缺少 `openclaw.browserConfigEpoch`）时发出警告，并建议 `openclaw sandbox recreate --browser --all`。
 它还会在基于 npm 的插件/钩子安装记录未固定、缺少完整性元数据或与当前安装的软件包版本不一致时发出警告。
 当通道允许列表依赖可变的名称/电子邮件/标签而不是稳定的 ID 时（在适用的 Discord、Slack、Google Chat、MS Teams、Mattermost、IRC 范围内），它会发出警告。
-当 `gateway.auth.mode="none"` 导致网关 HTTP API 在没有共享密钥的情况下可访问时（`/tools/invoke` 加上任何启用的 `/v1/*` 端点），它会发出警告。
+当 `gateway.auth.mode="none"` 导致 Gateway 网关 HTTP API 在没有共享密钥的情况下可访问时（`/tools/invoke` 加上任何启用的 `/v1/*` 端点），它会发出警告。
 前缀为 `dangerous`/`dangerously` 的设置是明确的打破玻璃操作员覆盖；仅启用其中一个本身并不构成安全漏洞报告。
-有关完整的危险参数清单，请参阅 [安全性](/en/gateway/security) 中的“不安全或危险标志摘要”部分。
+有关完整的危险参数清单，请参阅 [安全性](/zh/en/gateway/security) 中的“不安全或危险标志摘要”部分。
 
 ## JSON 输出
 

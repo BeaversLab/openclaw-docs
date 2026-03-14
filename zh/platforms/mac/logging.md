@@ -6,7 +6,7 @@ read_when:
 title: "macOS 日志记录"
 ---
 
-# 日志记录
+# 日志记录（macOS）
 
 ## 滚动诊断文件日志
 

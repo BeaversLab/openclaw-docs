@@ -158,7 +158,7 @@ openclaw models list
 
 ## 注意事项
 
-- Bedrock 要求在您的 AWS 账户/区域中启用 **model access**（模型访问权限）。
+- Bedrock 要求在您的 AWS 账户/区域中启用 **模型 access**（模型访问权限）。
 - 自动发现需要 `bedrock:ListFoundationModels` 权限。
 - 如果您使用配置文件，请在网关主机上设置 `AWS_PROFILE`。
 - OpenClaw 按以下顺序获取凭证来源：`AWS_BEARER_TOKEN_BEDROCK`，

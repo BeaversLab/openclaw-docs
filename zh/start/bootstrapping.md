@@ -24,17 +24,17 @@ sidebarTitle: "Bootstrapping"
 
 ## 运行位置
 
-引导始终在**网关主机**上运行。如果 macOS 应用程序连接到远程网关，工作区和引导文件将驻留在此远程计算机上。
+引导始终在**Gateway 网关 主机**上运行。如果 macOS 应用程序连接到远程 Gateway 网关，工作区和引导文件将驻留在此远程计算机上。
 
 <Note>
-当 Gateway 在另一台机器上运行时，请在 gateway
+当 Gateway 网关 在另一台机器上运行时，请在 gateway
 主机上编辑工作区文件（例如，`user@gateway-host:~/.openclaw/workspace`）。
 </Note>
 
 ## 相关文档
 
-- macOS 应用程序入职：[入职](/en/start/onboarding)
-- 工作区布局：[代理工作区](/en/concepts/agent-workspace)
+- macOS 应用程序入职：[入职](/zh/en/start/新手引导)
+- 工作区布局：[代理工作区](/zh/en/concepts/agent-workspace)
 
 import zh from '/components/footer/zh.mdx';
 

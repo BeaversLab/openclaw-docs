@@ -86,9 +86,9 @@ read_when:
 - [ ] 构建并对 macOS 应用进行签名，然后将其打包为 zip 以供分发。
 - [ ] 生成 Sparkle appcast（HTML 说明通过 [`scripts/make_appcast.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/make_appcast.sh)）并更新 `appcast.xml`。
 - [ ] 准备好应用 zip（以及可选的 dSYM zip）以附加到 GitHub 版本中。
-- [ ] 请遵循 [macOS release](/en/platforms/mac/release) 中的确切命令和所需的环境变量。
+- [ ] 请遵循 [macOS release](/zh/en/platforms/mac/release) 中的确切命令和所需的环境变量。
   - `APP_BUILD` 必须是数字且单调递增的（不允许 `-beta`），以便 Sparkle 正确比较版本。
-  - 如果正在进行公证，请使用从 App Store Connect API 环境变量创建的 `openclaw-notary` 钥匙串配置文件（请参阅 [macOS release](/en/platforms/mac/release)）。
+  - 如果正在进行公证，请使用从 App Store Connect API 环境变量创建的 `openclaw-notary` 钥匙串配置文件（请参阅 [macOS release](/zh/en/platforms/mac/release)）。
 
 6. **发布 (npm)**
 

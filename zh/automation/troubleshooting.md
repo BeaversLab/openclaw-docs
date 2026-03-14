@@ -116,10 +116,10 @@ openclaw logs --follow
 
 相关内容：
 
-- [/automation/cron-jobs](/en/automation/cron-jobs)
-- [/gateway/heartbeat](/en/gateway/heartbeat)
-- [/automation/cron-vs-heartbeat](/en/automation/cron-vs-heartbeat)
-- [/concepts/timezone](/en/concepts/timezone)
+- [/automation/cron-jobs](/zh/en/automation/cron-jobs)
+- [/gateway/heartbeat](/zh/en/gateway/heartbeat)
+- [/automation/cron-vs-heartbeat](/zh/en/automation/cron-vs-heartbeat)
+- [/concepts/timezone](/zh/en/concepts/timezone)
 
 import zh from '/components/footer/zh.mdx';
 

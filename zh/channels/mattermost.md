@@ -31,7 +31,7 @@ openclaw plugins install ./extensions/mattermost
 如果您在配置/入职过程中选择了 Mattermost 并检测到了 git 检出，
 OpenClaw 将自动提供本地安装路径。
 
-详情：[Plugins](/en/tools/plugin)
+详情：[Plugins](/zh/en/tools/plugin)
 
 ## 快速设置
 
@@ -177,7 +177,7 @@ Mattermost 会自动回复私信。频道行为由 `chatmode` 控制：
 将这些目标格式与 `openclaw message send` 或 cron/webhooks 结合使用：
 
 - `channel:<id>` 用于频道
-- `user:<id>` 用于私信（DM）
+- `user:<id>` 用于私信（私信）
 - `@username` 用于私信（通过 Mattermost API 解析）
 
 裸露的不透明 ID（如 `64ifufp...`）在 Mattermost 中是**有歧义的**（用户 ID 与频道 ID 的区分）。
@@ -388,8 +388,8 @@ Mattermost 支持在 `channels.mattermost.accounts` 下配置多个账户：
 - 按钮显示为白框：Agent 可能发送了格式错误的按钮数据。检查每个按钮是否同时包含 `text` 和 `callback_data` 字段。
 - 按钮已渲染但点击无反应：验证 Mattermost 服务器配置中的 `AllowedUntrustedInternalConnections` 包含 `127.0.0.1 localhost`，并且 ServiceSettings 中的 `EnablePostActionIntegration` 为 `true`。
 - 点击按钮时返回 404：按钮的 `id` 可能包含连字符或下划线。Mattermost 的操作路由器会在非字母数字 ID 处中断。请仅使用 `[a-zA-Z0-9]`。
-- 网关记录 `invalid _token`：HMAC 不匹配。检查您是否对所有上下文字段（而非子集）进行了签名，使用了排序后的键，并使用了紧凑 JSON（无空格）。请参阅上面的 HMAC 部分。
-- 网关记录 `missing _token in context`：`_token` 字段不在按钮的上下文中。确保在构建集成负载时包含它。
+- Gateway 网关 记录 `invalid _token`：HMAC 不匹配。检查您是否对所有上下文字段（而非子集）进行了签名，使用了排序后的键，并使用了紧凑 JSON（无空格）。请参阅上面的 HMAC 部分。
+- Gateway 网关 记录 `missing _token in context`：`_token` 字段不在按钮的上下文中。确保在构建集成负载时包含它。
 - 确认显示原始 ID 而非按钮名称：`context.action_id` 与按钮的 `id` 不匹配。将两者设置为相同的清理后的值。
 - Agent 无法识别按钮：将 `capabilities: ["inlineButtons"]` 添加到 Mattermost 频道配置中。
 

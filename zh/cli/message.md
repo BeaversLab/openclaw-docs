@@ -178,7 +178,7 @@ openclaw message <subcommand> [flags]
 ### 广播
 
 - `broadcast`
-  - Channels: any configured channel; use `--channel all` to target all providers
+  - Channels: any configured 渠道; use `--channel all` to target all providers
   - Required: `--targets` (repeat)
   - Optional: `--message`, `--media`, `--dry-run`
 
@@ -199,7 +199,7 @@ openclaw message send --channel discord \
   --components '{"text":"Choose a path","blocks":[{"type":"actions","buttons":[{"label":"Approve","style":"success"},{"label":"Decline","style":"danger"}]}]}'
 ```
 
-完整架构请参阅 [Discord 组件](/en/channels/discord#interactive-components)。
+完整架构请参阅 [Discord 组件](/zh/en/channels/discord#interactive-components)。
 
 创建 Discord 投票:
 

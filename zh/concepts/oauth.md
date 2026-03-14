@@ -50,9 +50,9 @@ OAuth 提供商通常会在登录/刷新流程期间生成 **新的刷新令牌*
 
 - `~/.openclaw/credentials/oauth.json`（首次使用时导入到 `auth-profiles.json` 中）
 
-以上所有内容也遵循 `$OPENCLAW_STATE_DIR`（状态目录覆盖）。完整参考：[/gateway/configuration](/en/gateway/configuration#auth-storage-oauth--api-keys)
+以上所有内容也遵循 `$OPENCLAW_STATE_DIR`（状态目录覆盖）。完整参考：[/gateway/configuration](/zh/en/gateway/configuration#auth-storage-oauth--api-keys)
 
-有关静态密钥引用和运行时快照激活行为，请参阅 [密钥管理](/en/gateway/secrets)。
+有关静态密钥引用和运行时快照激活行为，请参阅 [密钥管理](/zh/en/gateway/secrets)。
 
 ## Anthropic setup-token（订阅身份验证）
 
@@ -154,8 +154,8 @@ openclaw agents add personal
 
 相关文档：
 
-- [/concepts/model-failover](/en/concepts/model-failover) (轮换 + 冷却规则)
-- [/tools/slash-commands](/en/tools/slash-commands) (命令界面)
+- [/concepts/模型-failover](/zh/en/concepts/模型-failover) (轮换 + 冷却规则)
+- [/tools/slash-commands](/zh/en/tools/slash-commands) (命令界面)
 
 import zh from '/components/footer/zh.mdx';
 

@@ -12,8 +12,8 @@ title: "hooks"
 
 相关：
 
-- Hooks: [Hooks](/en/automation/hooks)
-- 插件 hooks: [Plugins](/en/tools/plugin#plugin-hooks)
+- Hooks: [Hooks](/zh/en/automation/hooks)
+- 插件 hooks: [Plugins](/zh/en/tools/plugin#plugin-hooks)
 
 ## 列出所有 Hooks
 
@@ -248,7 +248,7 @@ openclaw hooks update --all
 
 ## 内置 Hooks
 
-### session-memory
+### 会话-memory
 
 当您发出 `/new` 时，将会话上下文保存到内存中。
 
@@ -260,7 +260,7 @@ openclaw hooks enable session-memory
 
 **输出：** `~/.openclaw/workspace/memory/YYYY-MM-DD-slug.md`
 
-**参见：** [session-memory 文档](/en/automation/hooks#session-memory)
+**参见：** [会话-memory 文档](/zh/en/automation/hooks#会话-memory)
 
 ### bootstrap-extra-files
 
@@ -272,7 +272,7 @@ openclaw hooks enable session-memory
 openclaw hooks enable bootstrap-extra-files
 ```
 
-**参见：** [bootstrap-extra-files 文档](/en/automation/hooks#bootstrap-extra-files)
+**参见：** [bootstrap-extra-files 文档](/zh/en/automation/hooks#bootstrap-extra-files)
 
 ### command-logger
 
@@ -299,7 +299,7 @@ cat ~/.openclaw/logs/commands.log | jq .
 grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 ```
 
-**参见：** [command-logger 文档](/en/automation/hooks#command-logger)
+**参见：** [command-logger 文档](/zh/en/automation/hooks#command-logger)
 
 ### boot-md
 
@@ -313,7 +313,7 @@ grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 openclaw hooks enable boot-md
 ```
 
-**参见：** [boot-md 文档](/en/automation/hooks#boot-md)
+**参见：** [boot-md 文档](/zh/en/automation/hooks#boot-md)
 
 import zh from '/components/footer/zh.mdx';
 

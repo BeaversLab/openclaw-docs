@@ -150,7 +150,7 @@ export OLLAMA_API_KEY="ollama-local"
 }
 ```
 
-如果设置了 `OLLAMA_API_KEY`，你可以在 provider 条目中省略 `apiKey`，OpenClaw 将为可用性检查填充它。
+如果设置了 `OLLAMA_API_KEY`，你可以在 提供商 条目中省略 `apiKey`，OpenClaw 将为可用性检查填充它。
 
 ### 自定义基础 URL（显式配置）
 
@@ -255,7 +255,7 @@ OpenClaw 的 Ollama 集成默认使用 **原生 Ollama API** (`/api/chat`)，它
 
 ### 上下文窗口
 
-对于自动发现的模型，OpenClaw 在可用时使用 Ollama 报告的上下文窗口，否则回退到 OpenClaw 使用的默认 Ollama 上下文窗口。你可以在显式 provider 配置中覆盖 `contextWindow` 和 `maxTokens`。
+对于自动发现的模型，OpenClaw 在可用时使用 Ollama 报告的上下文窗口，否则回退到 OpenClaw 使用的默认 Ollama 上下文窗口。你可以在显式 提供商 配置中覆盖 `contextWindow` 和 `maxTokens`。
 
 ## 故障排除
 
@@ -303,9 +303,9 @@ ollama serve
 
 ## 另请参阅
 
-- [模型提供者](/en/concepts/model-providers) - 所有提供者概览
-- [模型选择](/en/concepts/models) - 如何选择模型
-- [配置](/en/gateway/configuration) - 完整配置参考
+- [模型提供者](/zh/en/concepts/模型-providers) - 所有提供者概览
+- [模型选择](/zh/en/concepts/models) - 如何选择模型
+- [配置](/zh/en/gateway/configuration) - 完整配置参考
 
 import zh from '/components/footer/zh.mdx';
 

@@ -39,7 +39,7 @@ openclaw sandbox explain --json
 - `"non-main"`：仅非主会话会被置于沙箱中（这是群组/频道常见的“意外”）。
 - `"all"`：所有内容都置于沙箱中。
 
-有关完整矩阵（范围、工作区挂载、镜像），请参阅 [沙箱](/en/gateway/sandboxing)。
+有关完整矩阵（范围、工作区挂载、镜像），请参阅 [沙箱](/zh/en/gateway/沙箱隔离)。
 
 ### 绑定挂载（安全快速检查）
 
@@ -57,7 +57,7 @@ openclaw sandbox explain --json
 - **提供者工具配置文件**：`tools.byProvider[provider].profile` 和 `agents.list[].tools.byProvider[provider].profile`
 - **全局/每代理工具策略**：`tools.allow`/`tools.deny` 和 `agents.list[].tools.allow`/`agents.list[].tools.deny`
 - **Provider 工具策略**：`tools.byProvider[provider].allow/deny` 和 `agents.list[].tools.byProvider[provider].allow/deny`
-- **Sandbox 工具策略**（仅在沙箱化时适用）：`tools.sandbox.tools.allow`/`tools.sandbox.tools.deny` 和 `agents.list[].tools.sandbox.tools.*`
+- **沙箱 工具策略**（仅在沙箱化时适用）：`tools.sandbox.tools.allow`/`tools.sandbox.tools.deny` 和 `agents.list[].tools.sandbox.tools.*`
 
 经验法则：
 
@@ -110,7 +110,7 @@ Elevated **不会**授予额外的工具权限；它仅影响 `exec`。
 - 启用方法：`tools.elevated.enabled`（以及可选的 `agents.list[].tools.elevated.enabled`）
 - 发件人允许列表：`tools.elevated.allowFrom.<provider>`（以及可选的 `agents.list[].tools.elevated.allowFrom.<provider>`）
 
-请参阅 [Elevated Mode](/en/tools/elevated)。
+请参阅 [Elevated Mode](/zh/en/tools/elevated)。
 
 ## 常见的“沙盒监狱”修复方法
 

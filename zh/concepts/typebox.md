@@ -9,16 +9,16 @@ title: "TypeBox"
 
 最后更新：2026-01-10
 
-TypeBox 是一个优先考虑 TypeScript 的模式库。我们使用它来定义 **Gateway
+TypeBox 是一个优先考虑 TypeScript 的模式库。我们使用它来定义 **Gateway 网关
 WebSocket 协议**（握手、请求/响应、服务器事件）。这些模式驱动了 **运行时验证**、
 **JSON Schema 导出**以及 macOS 应用的 **Swift 代码生成**。唯一的事实来源；其他一切都是生成的。
 
 如果您需要更高级别的协议上下文，请从
-[Gateway 架构](/en/concepts/architecture)开始。
+[Gateway 网关 架构](/zh/en/concepts/architecture)开始。
 
 ## 思维模型（30 秒）
 
-每个 Gateway WS 消息都是以下三种帧之一：
+每个 Gateway 网关 WS 消息都是以下三种帧之一：
 
 - **请求**：`{ type: "req", id, method, params }`
 - **响应**：`{ type: "res", id, ok, payload | error }`
@@ -40,14 +40,14 @@ Client                    Gateway
 
 常用方法 + 事件：
 
-| 类别  | 示例                                                  | 备注                              |
+| 类别 | 示例 | 备注 |
 | --------- | --------------------------------------------------------- | ---------------------------------- |
-| 核心      | `connect`, `health`, `status`                             | `connect` 必须是第一个            |
-| 消息      | `send`, `poll`, `agent`, `agent.wait`                     | 副作用需要 `idempotencyKey` |
-| 聊天      | `chat.history`, `chat.send`, `chat.abort`, `chat.inject`  | WebChat 使用这些                 |
-| 会话      | `sessions.list`, `sessions.patch`, `sessions.delete`      | 会话管理                      |
-| 节点      | `node.list`, `node.invoke`, `node.pair.*`                 | Gateway WS + 节点操作          |
-| 事件      | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | 服务端推送                        |
+| 核心 | `connect`, `health`, `status` | `connect` 必须是第一个 |
+| 消息 | `send`, `poll`, `agent`, `agent.wait` | 副作用需要 `idempotencyKey` |
+| 聊天 | `chat.history`, `chat.send`, `chat.abort`, `chat.inject` | WebChat 使用这些 |
+| 会话 | `sessions.list`, `sessions.patch`, `sessions.delete` | 会话管理 |
+| 节点 | `node.list`, `node.invoke`, `node.pair.*` | Gateway 网关 WS + 节点操作 |
+| 事件 | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | 服务端推送 |
 
 权威列表位于 `src/gateway/server.ts` (`METHODS`, `EVENTS`)。
 
@@ -75,7 +75,7 @@ Client                    Gateway
   接受其参数匹配 `ConnectParams` 的 `connect` 请求。
 - **客户端**：JS 客户端在使用之前会验证事件和响应帧
   。
-- **方法表面**：Gateway 会通告支持的 `methods` 和
+- **方法表面**：Gateway 网关 会通告支持的 `methods` 和
   `hello-ok` 中的 `events`。
 
 ## 示例帧
@@ -141,7 +141,7 @@ Hello-ok 响应：
 { "type": "event", "event": "tick", "payload": { "ts": 1730000000 }, "seq": 12 }
 ```
 
-## 最小客户端
+## 最小客户端（Node.js）
 
 最小的可用流程：连接 + 健康检查。
 

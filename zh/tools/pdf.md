@@ -99,7 +99,7 @@ read_when:
 }
 ```
 
-有关完整字段详细信息，请参阅 [配置参考](/en/gateway/configuration-reference)。
+有关完整字段详细信息，请参阅 [配置参考](/zh/en/gateway/configuration-reference)。
 
 ## 输出详细信息
 

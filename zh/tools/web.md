@@ -15,7 +15,7 @@ OpenClaw 附带了两个轻量级的 Web 工具：
 - `web_fetch` — HTTP 获取 + 可读内容提取（HTML → markdown/text）。
 
 这些**不是**浏览器自动化工具。对于重度 JS 的网站或登录操作，请使用
-[浏览器工具](/en/tools/browser)。
+[浏览器工具](/zh/en/tools/browser)。
 
 ## 工作原理
 
@@ -25,7 +25,7 @@ OpenClaw 附带了两个轻量级的 Web 工具：
   （HTML → markdown/text）。它**不**执行 JavaScript。
 - `web_fetch` 默认处于启用状态（除非被明确禁用）。
 
-有关特定提供商的详细信息，请参阅 [Brave Search 设置](/en/brave-search) 和 [Perplexity Search 设置](/en/perplexity)。
+有关特定提供商的详细信息，请参阅 [Brave Search 设置](/zh/en/brave-search) 和 [Perplexity Search 设置](/zh/en/perplexity)。
 
 ## 选择搜索提供商
 
@@ -89,7 +89,7 @@ OpenClaw 附带了两个轻量级的 Web 工具：
 
 所有这些字段也都支持 SecretRef 对象。
 
-**通过环境变量：** 在 Gateway 进程环境中设置提供商的环境变量：
+**通过环境变量：** 在 Gateway 网关 进程环境中设置提供商的环境变量：
 
 - Brave: `BRAVE_API_KEY`
 - Gemini: `GEMINI_API_KEY`
@@ -97,7 +97,7 @@ OpenClaw 附带了两个轻量级的 Web 工具：
 - Kimi: `KIMI_API_KEY` 或 `MOONSHOT_API_KEY`
 - Perplexity: `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`
 
-对于网关安装，将这些放入 `~/.openclaw/.env` （或您的服务环境）中。参见 [Env vars](/en/help/faq#how-does-openclaw-load-environment-variables)。
+对于网关安装，将这些放入 `~/.openclaw/.env` （或您的服务环境）中。参见 [Env vars](/zh/en/help/faq#how-does-openclaw-load-environment-variables)。
 
 ### 配置示例
 
@@ -187,7 +187,7 @@ Gemini 模型支持内置的 [Google Search grounding](https://ai.google.dev/gem
 
 1. 前往 [Google AI Studio](https://aistudio.google.com/apikey)
 2. 创建一个 API 密钥
-3. 在网关环境中设置 `GEMINI_API_KEY`，或配置 `tools.web.search.gemini.apiKey`
+3. 在 Gateway 网关 环境中设置 `GEMINI_API_KEY`，或配置 `tools.web.search.gemini.apiKey`
 
 ### 设置 Gemini 搜索
 
@@ -209,8 +209,8 @@ Gemini 模型支持内置的 [Google Search grounding](https://ai.google.dev/gem
 }
 ```
 
-**环境变量替代方案：** 在网关环境中设置 `GEMINI_API_KEY`。
-对于网关安装，将其放入 `~/.openclaw/.env` 中。
+**环境变量替代方案：** 在 Gateway 网关 环境中设置 `GEMINI_API_KEY`。
+对于 Gateway 网关 安装，将其放入 `~/.openclaw/.env` 中。
 
 ### 注意事项
 
@@ -378,7 +378,7 @@ await web_search({
 - `maxChars` 被限制在 `tools.web.fetch.maxCharsCap`。
 - `web_fetch` 在解析之前将下载的响应正文大小限制为 `tools.web.fetch.maxResponseBytes`；超大的响应会被截断并包含警告。
 - `web_fetch` 是尽力而为的提取；某些网站将需要浏览器工具。
-- 有关密钥设置和服务详细信息，请参阅 [Firecrawl](/en/tools/firecrawl)。
+- 有关密钥设置和服务详细信息，请参阅 [Firecrawl](/zh/en/tools/firecrawl)。
 - 响应会被缓存（默认 15 分钟）以减少重复抓取。
 - 如果您使用工具配置文件/允许列表，请添加 `web_search`/`web_fetch` 或 `group:web`。
 - 如果缺少 API 密钥，`web_search` 将返回一个简短的设置提示以及文档链接。

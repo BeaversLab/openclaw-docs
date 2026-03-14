@@ -9,7 +9,7 @@ title: "macOS 应用"
 # OpenClaw macOS 伴侣（菜单栏 + 网关代理）
 
 该 macOS 应用是 OpenClaw 的**菜单栏伴侣**。它拥有权限，
-在本地管理/连接网关（通过 launchd 或手动），并将 macOS
+在本地管理/连接 Gateway 网关（通过 launchd 或手动），并将 macOS
 功能作为节点暴露给代理。
 
 ## 功能介绍
@@ -17,20 +17,18 @@ title: "macOS 应用"
 - 在菜单栏中显示原生通知和状态。
 - 拥有 TCC 提示（通知、辅助功能、屏幕录制、麦克风、
   语音识别、自动化/AppleScript）。
-- 运行或连接到网关（本地或远程）。
+- 运行或连接到 Gateway 网关（本地或远程）。
 - 暴露仅限 macOS 的工具（Canvas、Camera、Screen Recording、`system.run`）。
 - 在**远程**模式下启动本地节点主机服务（通过 launchd），并在**本地**模式下停止它。
 - 可选择托管用于 UI 自动化的 **PeekabooBridge**。
-- 根据请求通过 npm/pnpm 安装全局 CLI（`openclaw`）（不建议将 bun 用于 Gateway 运行时）。
+- 根据请求通过 npm/pnpm 安装全局 CLI（`openclaw`）（不建议将 bun 用于 Gateway 网关 运行时）。
 
 ## 本地与远程模式
 
-- **本地**（默认）：如果存在正在运行的本地网关，应用会连接到它；
+- **本地**（默认）：如果存在正在运行的本地 Gateway 网关，应用会连接到它；
 否则，它通过 `openclaw gateway install` 启用 launchd 服务。
-- **远程**：应用通过 SSH/Tailscale 连接到网关，并且永不启动
-  本地进程。
-  应用会启动本地**节点主机服务**，以便远程网关可以访问此 Mac。
-  应用不会将网关作为子进程生成。
+- **远程**：应用通过 SSH/Tailscale 连接到 Gateway 网关，并且永不启动
+本地进程。 应用会启动本地**节点主机服务**，以便远程 Gateway 网关 可以访问此 Mac。 应用不会将 Gateway 网关 作为子进程生成。
 
 ## Launchd 控制
 
@@ -60,7 +58,7 @@ macOS 应用将自身呈现为一个节点。常用命令：
 
 节点服务 + 应用 IPC：
 
-- 当无头节点主机服务正在运行（远程模式）时，它会作为一个节点连接到 Gateway WS。
+- 当无头节点主机服务正在运行（远程模式）时，它会作为一个节点连接到 Gateway 网关 WS。
 - `system.run` 在 macOS 应用（UI/TCC 上下文）中通过本地 Unix 套接字执行；提示和输出保留在应用内。
 
 图表 (SCI)：
@@ -115,7 +113,7 @@ Security + ask + allowlist 存储在 Mac 本地：
 
 ### `openclaw://agent`
 
-触发 Gateway `agent` 请求。
+触发 Gateway 网关 `agent` 请求。
 
 ```bash
 open 'openclaw://agent?message=Hello%20from%20deep%20link'
@@ -140,7 +138,7 @@ open 'openclaw://agent?message=Hello%20from%20deep%20link'
 
 1. 安装并启动 **OpenClaw.app**。
 2. 完成权限检查清单（TCC 提示）。
-3. 确保 **本地** 模式处于活动状态且 Gateway 正在运行。
+3. 确保 **本地** 模式处于活动状态且 Gateway 网关 正在运行。
 4. 如果需要终端访问，请安装 CLI。
 
 ## 状态目录位置（macOS）
@@ -169,7 +167,7 @@ OPENCLAW_STATE_DIR=~/.openclaw
 
 ## 调试 Gateway 连接性（macOS CLI）
 
-使用调试 CLI 来执行与 macOS 应用程序相同的 Gateway WebSocket 握手和发现
+使用调试 CLI 来执行与 macOS 应用程序相同的 Gateway 网关 WebSocket 握手和发现
 逻辑，而无需启动应用程序。
 
 ```bash
@@ -196,29 +194,29 @@ swift run openclaw-mac discover --timeout 3000 --json
 
 ## 远程连接管道（SSH 隧道）
 
-当 macOS 应用运行在 **远程** 模式时，它会打开一个 SSH 隧道，以便本地 UI 组件可以与远程 Gateway 通信，就像它在 localhost 上一样。
+当 macOS 应用运行在 **远程** 模式时，它会打开一个 SSH 隧道，以便本地 UI 组件可以与远程 Gateway 网关 通信，就像它在 localhost 上一样。
 
-### 控制隧道（Gateway WebSocket 端口）
+### 控制隧道（Gateway 网关 WebSocket 端口）
 
 - **目的：** 健康检查、状态、Web Chat、配置和其他控制平面调用。
-- **本地端口：** Gateway 端口（默认 `18789`），始终稳定。
-- **远程端口：** 远程主机上的同一 Gateway 端口。
+- **本地端口：** Gateway 网关 端口（默认 `18789`），始终稳定。
+- **远程端口：** 远程主机上的同一 Gateway 网关 端口。
 - **行为：** 没有随机的本地端口；应用会重用现有的健康隧道
   或在需要时重新启动它。
 - **SSH 形状：** 带 BatchMode 的 `ssh -N -L <local>:127.0.0.1:<remote>` +
   ExitOnForwardFailure + keepalive 选项。
 - **IP 报告：** SSH 隧道使用环回地址，因此 gateway 会看到节点
   IP 作为 `127.0.0.1`。如果您希望显示真实的客户端
-  IP，请使用 **直接 (ws/wss)** 传输（请参阅 [macOS 远程访问](/en/platforms/mac/remote)）。
+  IP，请使用 **直接 (ws/wss)** 传输（请参阅 [macOS 远程访问](/zh/en/platforms/mac/remote)）。
 
-有关设置步骤，请参阅 [macOS 远程访问](/en/platforms/mac/remote)。有关协议详细信息，请参阅 [Gateway 协议](/en/gateway/protocol)。
+有关设置步骤，请参阅 [macOS 远程访问](/zh/en/platforms/mac/remote)。有关协议详细信息，请参阅 [Gateway 网关 协议](/zh/en/gateway/protocol)。
 
 ## 相关文档
 
-- [Gateway 操作手册](/en/gateway)
-- [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
-- [macOS 权限](/en/platforms/mac/permissions)
-- [Canvas](/en/platforms/mac/canvas)
+- [Gateway 网关 操作手册](/zh/en/gateway)
+- [Gateway 网关 (macOS)](/zh/en/platforms/mac/bundled-gateway)
+- [macOS 权限](/zh/en/platforms/mac/permissions)
+- [Canvas](/zh/en/platforms/mac/canvas)
 
 import zh from '/components/footer/zh.mdx';
 

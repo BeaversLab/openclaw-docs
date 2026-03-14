@@ -9,7 +9,7 @@ read_when:
 
 # Fly.io 部署
 
-**目标：** OpenClaw 网关运行在 [Fly.io](https://fly.io) 机器上，具有持久化存储、自动 HTTPS 以及 Discord/频道访问权限。
+**目标：** OpenClaw Gateway 网关 运行在 [Fly.io](https://fly.io) 机器上，具有持久化存储、自动 HTTPS 以及 Discord/频道访问权限。
 
 ## 你需要准备
 
@@ -215,7 +215,7 @@ exit
 fly machine restart <machine-id>
 ```
 
-## 6) 访问网关
+## 6) 访问 Gateway 网关
 
 ### 控制界面
 
@@ -275,9 +275,9 @@ fly machine update <machine-id> --vm-memory 2048 -y
 
 **注意：** 512MB 太小了。1GB 可能可行，但在负载较大或启用详细日志时可能会发生 OOM。**建议使用 2GB。**
 
-### 网关锁定问题
+### Gateway 网关 锁定问题
 
-网关拒绝启动并提示 "already running" 错误。
+Gateway 网关 拒绝启动并提示 "already running" 错误。
 
 这种情况发生在容器重启但 PID 锁定文件仍保留在卷上时。
 

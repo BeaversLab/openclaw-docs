@@ -160,7 +160,7 @@ Peter：_紧张地检查信用卡额度_
 - **AGENTS.md** — 操作说明
 - **USER.md** — 关于创建者的背景信息
 
-## 龙虾信条
+## Lobster Lobster信条
 
 ```
 I am Molty.

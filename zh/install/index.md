@@ -9,11 +9,11 @@ title: "安装"
 
 # 安装
 
-已经按照 [快速入门](/en/start/getting-started) 操作了吗？那你已经准备好了——本页面介绍其他安装方法、特定平台的说明以及维护操作。
+已经按照 [快速入门](/zh/en/start/getting-started) 操作了吗？那你已经准备好了——本页面介绍其他安装方法、特定平台的说明以及维护操作。
 
 ## 系统要求
 
-- **[Node 24 (推荐)](/en/install/node)** (为了兼容性，目前仍然支持 Node 22 LTS，即 `22.16+`；如果缺少 Node 24，[安装脚本](#install-methods) 将会自动安装)
+- **[Node 24 (推荐)](/zh/en/install/node)** (为了兼容性，目前仍然支持 Node 22 LTS，即 `22.16+`；如果缺少 Node 24，[安装脚本](#install-methods) 将会自动安装)
 - macOS、Linux 或 Windows
 - `pnpm` 仅在从源代码构建时需要
 
@@ -65,7 +65,7 @@ title: "安装"
       </Tab>
     </Tabs>
 
-    有关所有标志、环境变量和 CI/自动化选项，请参阅 [安装程序内部机制](/en/install/installer)。
+    有关所有标志、环境变量和 CI/自动化选项，请参阅 [安装程序内部机制](/zh/en/install/installer)。
 
   </Accordion>
 
@@ -128,14 +128,14 @@ title: "安装"
 
         或者，跳过链接并通过 `pnpm openclaw ...` 在代码库内运行命令。
       </Step>
-      <Step title="Run onboarding">
+      <Step title="Run 新手引导">
         ```bash
         openclaw onboard --install-daemon
         ```
       </Step>
     </Steps>
 
-    有关更深入的开发工作流程，请参阅 [设置](/en/start/setup)。
+    有关更深入的开发工作流程，请参阅 [设置](/zh/en/start/setup)。
 
   </Accordion>
 </AccordionGroup>
@@ -143,19 +143,19 @@ title: "安装"
 ## 其他安装方法
 
 <CardGroup cols={2}>
-  <Card title="Docker" href="/en/install/docker" icon="container">
+  <Card title="Docker" href="/zh/en/install/docker" icon="container">
     容器化或无头部署。
   </Card>
-  <Card title="Podman" href="/en/install/podman" icon="container">
+  <Card title="Podman" href="/zh/en/install/podman" icon="container">
     无根容器：运行一次 `setup-podman.sh`，然后运行启动脚本。
   </Card>
-  <Card title="Nix" href="/en/install/nix" icon="snowflake">
+  <Card title="Nix" href="/zh/en/install/nix" icon="snowflake">
     通过 Nix 进行声明式安装。
   </Card>
-  <Card title="Ansible" href="/en/install/ansible" icon="server">
+  <Card title="Ansible" href="/zh/en/install/ansible" icon="server">
     自动化集群配置。
   </Card>
-  <Card title="Bun" href="/en/install/bun" icon="zap">
+  <Card title="Bun" href="/zh/en/install/bun" icon="zap">
     通过 Bun 运行时仅使用 CLI。
   </Card>
 </CardGroup>
@@ -176,7 +176,7 @@ openclaw dashboard      # open the browser UI
 - `OPENCLAW_STATE_DIR` 用于可变状态位置
 - `OPENCLAW_CONFIG_PATH` 用于配置文件位置
 
-有关优先级和完整详细信息，请参阅[环境变量](/en/help/environment)。
+有关优先级和完整详细信息，请参阅[环境变量](/zh/en/help/environment)。
 
 ## 故障排除：找不到 `openclaw`
 
@@ -206,13 +206,13 @@ export PATH="$(npm prefix -g)/bin:$PATH"
 ## 更新 / 卸载
 
 <CardGroup cols={3}>
-  <Card title="更新" href="/en/install/updating" icon="refresh-cw">
+  <Card title="更新" href="/zh/en/install/updating" icon="refresh-cw">
     保持 OpenClaw 为最新版本。
   </Card>
-  <Card title="迁移" href="/en/install/migrating" icon="arrow-right">
+  <Card title="迁移" href="/zh/en/install/migrating" icon="arrow-right">
     移动到新机器。
   </Card>
-  <Card title="卸载" href="/en/install/uninstall" icon="trash-2">
+  <Card title="卸载" href="/zh/en/install/uninstall" icon="trash-2">
     完全移除 OpenClaw。
   </Card>
 </CardGroup>

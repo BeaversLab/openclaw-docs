@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw 网关 CLI (`openclaw gateway`) — 运行、查询和发现网关"
+summary: "OpenClaw Gateway 网关 CLI (`openclaw gateway`) — 运行、查询和发现网关"
 read_when:
   - Running the Gateway from the CLI (dev or servers)
   - Debugging Gateway auth, bind modes, and connectivity
@@ -7,21 +7,21 @@ read_when:
 title: "gateway"
 ---
 
-# Gateway CLI
+# Gateway 网关 CLI
 
-Gateway 是 OpenClaw 的 WebSocket 服务器（通道、节点、会话、钩子）。
+Gateway 网关 是 OpenClaw 的 WebSocket 服务器（通道、节点、会话、钩子）。
 
 本页中的子命令位于 `openclaw gateway …` 之下。
 
 相关文档：
 
-- [/gateway/bonjour](/en/gateway/bonjour)
-- [/gateway/discovery](/en/gateway/discovery)
-- [/gateway/configuration](/en/gateway/configuration)
+- [/gateway/bonjour](/zh/en/gateway/bonjour)
+- [/gateway/discovery](/zh/en/gateway/discovery)
+- [/gateway/configuration](/zh/en/gateway/configuration)
 
-## 运行 Gateway
+## 运行 Gateway 网关
 
-运行本地 Gateway 进程：
+运行本地 Gateway 网关 进程：
 
 ```bash
 openclaw gateway
@@ -35,9 +35,9 @@ openclaw gateway run
 
 注意：
 
-- 默认情况下，除非在 `~/.openclaw/openclaw.json` 中设置了 `gateway.mode=local`，否则网关将拒绝启动。对于临时/开发运行，请使用 `--allow-unconfigured`。
+- 默认情况下，除非在 `~/.openclaw/openclaw.json` 中设置了 `gateway.mode=local`，否则 Gateway 网关 将拒绝启动。对于临时/开发运行，请使用 `--allow-unconfigured`。
 - 在未经过身份验证的情况下绑定到回环地址之外会被阻止（安全防护措施）。
-- 当获得授权时，`SIGUSR1` 会触发进程内重启（`commands.restart` 默认启用；设置 `commands.restart: false` 可阻止手动重启，但仍允许 gateway tool/config apply/update）。
+- 当获得授权时，`SIGUSR1` 会触发进程内重启（`commands.restart` 默认启用；设置 `commands.restart: false` 可阻止手动重启，但仍允许 gateway 工具/config apply/update）。
 - `SIGINT`/`SIGTERM` 处理程序会停止网关进程，但不会恢复任何自定义终端状态。如果您使用 TUI 或原始模式输入封装 CLI，请在退出前恢复终端。
 
 ### 选项
@@ -48,7 +48,7 @@ openclaw gateway run
 - `--token <token>`: 令牌覆盖（同时为该进程设置 `OPENCLAW_GATEWAY_TOKEN`）。
 - `--password <password>`: 密码覆盖。警告：内联密码可能会在本地进程列表中暴露。
 - `--password-file <path>`: 从文件读取网关密码。
-- `--tailscale <off|serve|funnel>`: 通过 Tailscale 暴露网关。
+- `--tailscale <off|serve|funnel>`: 通过 Tailscale 暴露 Gateway 网关。
 - `--tailscale-reset-on-exit`: 关闭时重置 Tailscale serve/funnel 配置。
 - `--allow-unconfigured`: 允许在没有配置 `gateway.mode=local` 的情况下启动网关。
 - `--dev`: 如果缺失，则创建开发配置 + 工作区（跳过 BOOTSTRAP.md）。
@@ -61,7 +61,7 @@ openclaw gateway run
 - `--raw-stream`：将原始模型流事件记录到 l。
 - `--raw-stream-path <path>`：原始流 l 路径。
 
-## 查询正在运行的 Gateway
+## 查询正在运行的 Gateway 网关
 
 所有查询命令均使用 WebSocket RPC。
 
@@ -73,9 +73,9 @@ openclaw gateway run
 
 共享选项（在支持的情况下）：
 
-- `--url <url>`：Gateway WebSocket URL。
-- `--token <token>`：Gateway 令牌。
-- `--password <password>`：Gateway 密码。
+- `--url <url>`：Gateway 网关 WebSocket URL。
+- `--token <token>`：Gateway 网关 令牌。
+- `--password <password>`：Gateway 网关 密码。
 - `--timeout <ms>`：超时/预算（因命令而异）。
 - `--expect-final`：等待“最终”响应（代理调用）。
 
@@ -90,7 +90,7 @@ openclaw gateway health --url ws://127.0.0.1:18789
 
 ### `gateway status`
 
-`gateway status` 显示 Gateway 服务（launchd/systemd/schtasks）以及可选的 RPC 探测。
+`gateway status` 显示 Gateway 网关 服务（launchd/systemd/schtasks）以及可选的 RPC 探测。
 
 ```bash
 openclaw gateway status
@@ -156,7 +156,7 @@ openclaw gateway call status
 openclaw gateway call logs.tail --params '{"sinceMs": 60000}'
 ```
 
-## 管理 Gateway 服务
+## 管理 Gateway 网关 服务
 
 ```bash
 openclaw gateway install
@@ -178,10 +178,10 @@ openclaw gateway uninstall
 
 ## 发现网关 (Bonjour)
 
-`gateway discover` 扫描 Gateway 信标（`_openclaw-gw._tcp`）。
+`gateway discover` 扫描 Gateway 网关 信标（`_openclaw-gw._tcp`）。
 
 - 多播 DNS-SD：`local.`
-- 单播 DNS-SD（广域 Bonjour）：选择一个域（例如：`openclaw.internal.`）并设置分离 DNS + DNS 服务器；参见 [/gateway/bonjour](/en/gateway/bonjour)
+- 单播 DNS-SD（广域 Bonjour）：选择一个域（例如：`openclaw.internal.`）并设置分离 DNS + DNS 服务器；参见 [/gateway/bonjour](/zh/en/gateway/bonjour)
 
 只有启用了 Bonjour 发现功能的网关（默认）才会广播信标。
 

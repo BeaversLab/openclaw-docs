@@ -25,7 +25,7 @@ openclaw plugins install @openclaw/twitch
 openclaw plugins install ./extensions/twitch
 ```
 
-详情：[插件](/en/tools/plugin)
+详情：[插件](/zh/en/tools/plugin)
 
 ## 快速设置（初学者）
 
@@ -62,7 +62,7 @@ openclaw plugins install ./extensions/twitch
 
 ## 它是什么
 
-- 由网关拥有的 Twitch 频道。
+- 由 Gateway 网关 拥有的 Twitch 频道。
 - 确定性路由：回复始终返回到 Twitch。
 - 每个账户映射到一个隔离的会话密钥 `agent:<agentId>:twitch:<accountName>`。
 - `username` 是机器人的账户（进行身份验证的人）， `channel` 是要加入的聊天室。
@@ -146,7 +146,7 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 
 ## 多账户支持
 
-使用 `channels.twitch.accounts` 配合每个账户的令牌。有关共享模式，请参阅 [`gateway/configuration`](/en/gateway/configuration)。
+使用 `channels.twitch.accounts` 配合每个账户的令牌。有关共享模式，请参阅 [`gateway/configuration`](/zh/en/gateway/configuration)。
 
 示例（一个机器人账号在两个频道中）：
 
@@ -376,7 +376,7 @@ Access token refreshed for user 123456 (expires in 14400s)
 
 - 每条消息**500个字符**（在单词边界处自动分块）
 - 分块前会去除Markdown格式
-- 无速率限制（使用Twitch内置的速率限制）
+- 无速率限制（使用 Twitch 内置的速率限制）
 
 import zh from '/components/footer/zh.mdx';
 

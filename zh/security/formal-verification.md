@@ -51,7 +51,7 @@ cd openclaw-formal-models
 make <target>
 ```
 
-### 网关暴露和开放网关错误配置
+### Gateway 网关 暴露和开放 Gateway 网关 错误配置
 
 **声明：** 在未经身份验证的情况下绑定到环回地址之外可能会导致远程入侵成为可能 / 增加暴露面；令牌/密码可以阻止未经身份验证的攻击者（根据模型假设）。
 
@@ -74,7 +74,7 @@ make <target>
   - `make nodes-pipeline-negative`
   - `make approvals-token-negative`
 
-### 配对存储（DM 限制）
+### 配对存储（私信 限制）
 
 **声明：** 配对请求遵守 TTL 和待处理请求上限。
 
@@ -150,7 +150,7 @@ make <target>
 
 ### 路由 dmScope 优先级 + identityLinks
 
-**声明：** 路由必须默认保持 DM 会话隔离，并且仅在显式配置时才合并会话（通道优先级 + 身份链接）。
+**声明：** 路由必须默认保持 私信 会话隔离，并且仅在显式配置时才合并会话（通道优先级 + 身份链接）。
 
 含义：
 

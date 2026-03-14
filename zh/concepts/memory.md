@@ -26,7 +26,7 @@ OpenClaw 记忆是 **代理工作区中的纯 Markdown**。文件是
   - **仅在主私有会话中加载**（绝不在群组上下文中）。
 
 这些文件位于工作空间（`agents.defaults.workspace`，默认为
-`~/.openclaw/workspace`）之下。有关完整布局，请参阅 [Agent workspace](/en/concepts/agent-workspace)。
+`~/.openclaw/workspace`）之下。有关完整布局，请参阅 [Agent workspace](/zh/en/concepts/agent-workspace)。
 
 ## 记忆工具
 
@@ -86,7 +86,7 @@ OpenClaw 为这些 Markdown 文件提供了两个面向代理的工具：
   `workspaceAccess: "ro"` 或 `"none"`，则跳过刷新。
 
 有关完整的压缩生命周期，请参阅
-[会话管理 + 压缩](/zh/reference/session-management-compaction)。
+[会话管理 + 压缩](/zh/reference/会话-management-compaction)。
 
 ## 向量内存搜索
 
@@ -202,7 +202,7 @@ QMD 进行检索。关键点：
   `commandTimeoutMs`, `updateTimeoutMs`, `embedTimeoutMs`)。
 - `limits`：限制召回负载 (`maxResults`, `maxSnippetChars`,
   `maxInjectedChars`, `timeoutMs`)。
-- `scope`：与 [`session.sendPolicy`](/en/gateway/configuration#session) 的架构相同。
+- `scope`：与 [`session.sendPolicy`](/zh/en/gateway/configuration#会话) 的架构相同。
   默认为仅限私聊（`deny` 全部，`allow` 直接聊天）；放宽此设置以在群组/频道中展示 QMD
   命中结果。
   - `match.keyPrefix` 匹配 **规范化** 的会话密钥（小写，去除任何前导 `agent:<id>:`）。例如：`discord:channel:`。
@@ -253,7 +253,7 @@ memory: {
 - `memory.citations` 适用于任何后端（`auto`/`on`/`off`）。
 - 当 `qmd` 运行时，我们会标记 `status().backend = "qmd"`，以便诊断信息显示
   engine served the results. If the QMD subprocess exits or JSON output can’t be
-  parsed, the search manager logs a warning and returns the builtin provider
+  parsed, the search manager logs a warning and returns the builtin 提供商
   (existing Markdown embeddings) until QMD recovers.
 
 ### 其他内存路径

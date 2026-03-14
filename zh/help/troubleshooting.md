@@ -38,7 +38,7 @@ openclaw logs --follow
 
 如果您看到：
 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`，
-请前往 [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/en/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
+请前往 [/gateway/故障排除#anthropic-429-extra-usage-required-for-long-context](/zh/en/gateway/故障排除#anthropic-429-extra-usage-required-for-long-context)。
 
 ## 插件安装因缺少 openclaw 扩展而失败
 
@@ -63,7 +63,7 @@ openclaw logs --follow
 }
 ```
 
-参考：[/tools/plugin#distribution-npm](/en/tools/plugin#distribution-npm)
+参考：[/tools/plugin#distribution-npm](/zh/en/tools/plugin#distribution-npm)
 
 ## 决策树
 
@@ -102,19 +102,19 @@ flowchart TD
     - `Runtime: running`
     - `RPC probe: ok`
     - 您的通道在 `channels status --probe` 中显示已连接/就绪
-    - 发件人看起来已获得批准（或 DM 策略为开放/允许列表）
+    - 发件人看起来已获得批准（或 私信 策略为开放/允许列表）
 
     常见日志特征：
 
     - `drop guild message (mention required` → 提及 gating 在 Discord 中阻止了消息。
-    - `pairing request` → 发件人未获批准，正在等待 DM 配对批准。
+    - `pairing request` → 发件人未获批准，正在等待 私信 配对批准。
     - 通道日志中的 `blocked` / `allowlist` → 发件人、房间或组已被过滤。
 
     深入页面：
 
-    - [/gateway/troubleshooting#no-replies](/en/gateway/troubleshooting#no-replies)
-    - [/channels/troubleshooting](/en/channels/troubleshooting)
-    - [/channels/pairing](/en/channels/pairing)
+    - [/gateway/故障排除#no-replies](/zh/en/gateway/故障排除#no-replies)
+    - [/channels/故障排除](/zh/en/channels/故障排除)
+    - [/channels/pairing](/zh/en/channels/pairing)
 
   </Accordion>
 
@@ -142,13 +142,13 @@ flowchart TD
 
     深入页面：
 
-    - [/gateway/troubleshooting#dashboard-control-ui-connectivity](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
-    - [/web/control-ui](/en/web/control-ui)
-    - [/gateway/authentication](/en/gateway/authentication)
+    - [/gateway/故障排除#dashboard-control-ui-connectivity](/zh/en/gateway/故障排除#dashboard-control-ui-connectivity)
+    - [/web/control-ui](/zh/en/web/control-ui)
+    - [/gateway/authentication](/zh/en/gateway/authentication)
 
   </Accordion>
 
-  <Accordion title="网关无法启动或服务已安装但未运行">
+<Accordion title="Gateway 网关 无法启动或服务已安装但未运行">
     ```bash
     openclaw status
     openclaw gateway status
@@ -171,9 +171,9 @@ flowchart TD
 
     深入页面：
 
-    - [/gateway/troubleshooting#gateway-service-not-running](/en/gateway/troubleshooting#gateway-service-not-running)
-    - [/gateway/background-process](/en/gateway/background-process)
-    - [/gateway/configuration](/en/gateway/configuration)
+    - [/gateway/故障排除#gateway-service-not-running](/zh/en/gateway/故障排除#gateway-service-not-running)
+    - [/gateway/background-process](/zh/en/gateway/background-process)
+    - [/gateway/configuration](/zh/en/gateway/configuration)
 
   </Accordion>
 
@@ -200,8 +200,8 @@ flowchart TD
 
     深度页面：
 
-    - [/gateway/troubleshooting#channel-connected-messages-not-flowing](/en/gateway/troubleshooting#channel-connected-messages-not-flowing)
-    - [/channels/troubleshooting](/en/channels/troubleshooting)
+    - [/gateway/故障排除#渠道-connected-messages-not-flowing](/zh/en/gateway/故障排除#渠道-connected-messages-not-flowing)
+    - [/channels/故障排除](/zh/en/channels/故障排除)
 
   </Accordion>
 
@@ -230,13 +230,13 @@ flowchart TD
 
     深度页面：
 
-    - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
-    - [/automation/troubleshooting](/en/automation/troubleshooting)
-    - [/gateway/heartbeat](/en/gateway/heartbeat)
+    - [/gateway/故障排除#cron-and-heartbeat-delivery](/zh/en/gateway/故障排除#cron-and-heartbeat-delivery)
+    - [/automation/故障排除](/zh/en/automation/故障排除)
+    - [/gateway/heartbeat](/zh/en/gateway/heartbeat)
 
   </Accordion>
 
-  <Accordion title="Node is paired but tool fails camera canvas screen exec">
+  <Accordion title="Node is paired but 工具 fails camera canvas screen exec">
     ```bash
     openclaw status
     openclaw gateway status
@@ -260,13 +260,13 @@ flowchart TD
 
     深入页面：
 
-    - [/gateway/troubleshooting#node-paired-tool-fails](/zh/gateway/troubleshooting#node-paired-tool-fails)
-    - [/nodes/troubleshooting](/zh/nodes/troubleshooting)
+    - [/gateway/故障排除#node-paired-工具-fails](/zh/gateway/故障排除#node-paired-工具-fails)
+    - [/nodes/故障排除](/zh/nodes/故障排除)
     - [/tools/exec-approvals](/zh/tools/exec-approvals)
 
   </Accordion>
 
-  <Accordion title="Browser tool fails">
+  <Accordion title="Browser 工具 fails">
     ```bash
     openclaw status
     openclaw gateway status
@@ -289,9 +289,9 @@ flowchart TD
 
     深入页面：
 
-    - [/gateway/troubleshooting#browser-tool-fails](/zh/gateway/troubleshooting#browser-tool-fails)
-    - [/tools/browser-linux-troubleshooting](/zh/tools/browser-linux-troubleshooting)
-    - [/tools/browser-wsl2-windows-remote-cdp-troubleshooting](/zh/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+    - [/gateway/故障排除#browser-工具-fails](/zh/gateway/故障排除#browser-工具-fails)
+    - [/tools/browser-linux-故障排除](/zh/tools/browser-linux-故障排除)
+    - [/tools/browser-wsl2-windows-remote-cdp-故障排除](/zh/tools/browser-wsl2-windows-remote-cdp-故障排除)
     - [/tools/chrome-extension](/zh/tools/chrome-extension)
 
   </Accordion>

@@ -22,7 +22,7 @@ title: "执行主机重构"
 
 - 不进行旧版允许列表迁移或旧版架构支持。
 - 不支持节点执行的 PTY/流式传输（仅限聚合输出）。
-- 除了现有的 Bridge + Gateway 之外，不添加新的网络层。
+- 除了现有的 Bridge + Gateway 网关 之外，不添加新的网络层。
 
 ## 决策（已锁定）
 
@@ -223,11 +223,11 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 选项 A (推荐)：
 
 - Runner 发送 Bridge `event` 帧 `exec.started` / `exec.finished`。
-- 网关 `handleBridgeEvent` 将这些映射到 `enqueueSystemEvent`。
+- Gateway 网关 `handleBridgeEvent` 将这些映射到 `enqueueSystemEvent`。
 
 选项 B：
 
-- 网关 `exec` 工具直接处理生命周期（仅同步）。
+- Gateway 网关 `exec` 工具直接处理生命周期（仅同步）。
 
 ## 执行流程
 
@@ -236,14 +236,14 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 - 现有的 `exec` 行为（Docker 或未沙箱化时为主机）。
 - PTY 仅在非沙箱模式下受支持。
 
-### 网关主机
+### Gateway 网关 主机
 
-- 网关进程在其自己的机器上执行。
+- Gateway 网关 进程在其自己的机器上执行。
 - 强制执行本地 `exec-approvals.json`（security/ask/allowlist）。
 
 ### 节点主机
 
-- 网关使用 `system.run` 调用 `node.invoke`。
+- Gateway 网关 使用 `system.run` 调用 `node.invoke`。
 - 运行器强制执行本地审批。
 - 运行器返回聚合的 stdout/stderr。
 - 针对开始/完成/拒绝的可选 Bridge 事件。
@@ -298,7 +298,7 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 ## 测试计划
 
 - 单元测试：allowlist 匹配（glob + 不区分大小写）。
-- 单元测试：策略解析优先级（tool param → agent override → global）。
+- 单元测试：策略解析优先级（工具 param → agent override → global）。
 - 集成测试：节点运行器拒绝/允许/询问流程。
 - Bridge 事件测试：节点事件 → 系统事件路由。
 
@@ -310,10 +310,10 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 
 ## 相关文档
 
-- [Exec 工具](/en/tools/exec)
-- [Exec 批准](/en/tools/exec-approvals)
-- [节点](/en/nodes)
-- [提升模式](/en/tools/elevated)
+- [Exec 工具](/zh/en/tools/exec)
+- [Exec 批准](/zh/en/tools/exec-approvals)
+- [节点](/zh/en/nodes)
+- [提升模式](/zh/en/tools/elevated)
 
 import zh from '/components/footer/zh.mdx';
 

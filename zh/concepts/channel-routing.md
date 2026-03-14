@@ -7,24 +7,24 @@ title: "渠道路由"
 
 # Channels & routing
 
-OpenClaw routes replies **back to the channel where a message came from**. The
-model does not choose a channel; routing is deterministic and controlled by the
+OpenClaw routes replies **back to the 渠道 where a message came from**. The
+模型 does not choose a 渠道; routing is deterministic and controlled by the
 host configuration.
 
 ## Key terms
 
 - **渠道**：`whatsapp`、`telegram`、`discord`、`slack`、`signal`、`imessage`、`webchat`。
-- **AccountId**: per‑channel account instance (when supported).
-- **AgentId**: an isolated workspace + session store (“brain”).
+- **AccountId**: per‑渠道 account instance (when supported).
+- **AgentId**: an isolated workspace + 会话 store (“brain”).
 - **SessionKey**: the bucket key used to store context and control concurrency.
 
 ## Session key shapes (examples)
 
-Direct messages collapse to the agent’s **main** session:
+Direct messages collapse to the agent’s **main** 会话:
 
 - `agent:<agentId>:<mainKey>`（默认：`agent:main:main`）
 
-Groups and channels remain isolated per channel:
+Groups and channels remain isolated per 渠道:
 
 - 群组：`agent:<agentId>:<channel>:group:<id>`
 - 频道/房间：`agent:<agentId>:<channel>:channel:<id>`
@@ -47,10 +47,10 @@ Routing picks **one agent** for each inbound message:
 2. **公会匹配**（Discord）通过 `guildId`。
 3. **团队匹配**（Slack）通过 `teamId`。
 4. **账户匹配**（渠道上的 `accountId`）。
-5. **Channel match** (any account on that channel).
+5. **Channel match** (any account on that 渠道).
 6. **默认代理**（`agents.list[].default`，否则为列表第一项，回退到 `main`）。
 
-The matched agent determines which workspace and session store are used.
+The matched agent determines which workspace and 会话 store are used.
 
 ## Broadcast groups (run multiple agents)
 
@@ -68,7 +68,7 @@ Config:
 }
 ```
 
-See: [Broadcast Groups](/en/broadcast-groups).
+See: [Broadcast Groups](/zh/en/broadcast-groups).
 
 ## Config overview
 

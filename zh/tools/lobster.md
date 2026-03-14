@@ -119,7 +119,7 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 }'
 ```
 
-有关详细信息和配置选项，请参阅 [LLM Task](/en/tools/llm-task)。
+有关详细信息和配置选项，请参阅 [LLM Task](/zh/en/tools/llm-task)。
 
 ## 工作流文件 (.lobster)
 
@@ -153,7 +153,7 @@ steps:
 
 ## 安装 Lobster
 
-在运行 OpenClaw 网关的 **同一主机** 上安装 Lobster CLI（请参阅 [Lobster 代码仓库](https://github.com/openclaw/lobster)），并确保 `lobster` 在 `PATH` 上。
+在运行 OpenClaw Gateway 网关 的 **同一主机** 上安装 Lobster CLI（请参阅 [Lobster 代码仓库](https://github.com/openclaw/lobster)），并确保 `lobster` 在 `PATH` 上。
 
 ## 启用工具
 
@@ -311,7 +311,7 @@ Lobster 返回一个具有以下三种状态之一的 JSON 信封：
 
 ## OpenProse
 
-OpenProse 与 Lobster 搭配得很好：使用 `/prose` 协调多智能体准备，然后运行 Lobster 管道进行确定性审批。如果 Prose 程序需要 Lobster，请通过 `tools.subagents.tools` 为子智能体允许 `lobster` 工具。参见 [OpenProse](/en/prose)。
+OpenProse 与 Lobster 搭配得很好：使用 `/prose` 协调多智能体准备，然后运行 Lobster 管道进行确定性审批。如果 Prose 程序需要 Lobster，请通过 `tools.subagents.tools` 为子智能体允许 `lobster` 工具。参见 [OpenProse](/zh/en/prose)。
 
 ## 安全
 

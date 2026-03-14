@@ -32,13 +32,7 @@ title: "Remote Control"
 
 1. 打开 _Settings → General_。
 2. 在 **OpenClaw runs** 下，选择 **Remote over SSH** 并设置：
-   - **传输方式**：**SSH 隧道** 或 **直接连接**。
-   - **SSH 目标**：`user@host`（可选 `:port`）。
-     - 如果网关在同一局域网内并广播 Bonjour，可以从发现列表中选择它以自动填充此字段。
-   - **网关 URL**（仅限直接连接）：`wss://gateway.example.ts.net`（或本地/LAN 使用 `ws://...`）。
-   - **身份文件**（高级）：您的密钥路径。
-   - **项目根目录**（高级）：用于命令的远程检出路径。
-   - **CLI 路径**（高级）：可运行的 `openclaw` 入口点/二进制文件的可选路径（广播时自动填充）。
+ - **传输方式**：**SSH 隧道** 或 **直接连接**。 - **SSH 目标**：`user@host`（可选 `:port`）。 - 如果网关在同一局域网内并广播 Bonjour，可以从发现列表中选择它以自动填充此字段。 - **Gateway 网关 URL**（仅限直接连接）：`wss://gateway.example.ts.net`（或本地/LAN 使用 `ws://...`）。 - **身份文件**（高级）：您的密钥路径。 - **项目根目录**（高级）：用于命令的远程检出路径。 - **CLI 路径**（高级）：可运行的 `openclaw` 入口点/二进制文件的可选路径（广播时自动填充）。
 3. 点击 **Test remote**。成功表示远程 `openclaw status --json` 运行正常。失败通常意味着 PATH/CLI 问题；退出码 127 表示在远程找不到 CLI。
 4. 健康检查和 Web 聊天现在将通过此 SSH 隧道自动运行。
 
@@ -57,8 +51,8 @@ title: "Remote Control"
 
 - 首选在远程主机上使用环回绑定，并通过 SSH 或 Tailscale 连接。
 - SSH 隧道使用严格的主机密钥检查；请先信任主机密钥，使其存在于 `~/.ssh/known_hosts` 中。
-- 如果将网关绑定到非环回接口，则要求令牌/密码认证。
-- 参见 [安全](/en/gateway/security) 和 [Tailscale](/en/gateway/tailscale)。
+- 如果将 Gateway 网关 绑定到非环回接口，则要求令牌/密码认证。
+- 参见 [安全](/zh/en/gateway/security) 和 [Tailscale](/zh/en/gateway/tailscale)。
 
 ## WhatsApp 登录流程 (远程)
 

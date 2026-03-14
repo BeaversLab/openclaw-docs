@@ -27,7 +27,7 @@ openclaw plugins install ./extensions/nextcloud-talk
 
 如果您在配置/入职期间选择了 Nextcloud Talk 且检测到 git 检出，OpenClaw 将自动提供本地安装路径。
 
-详情：[插件](/en/tools/plugin)
+详情：[插件](/zh/en/tools/plugin)
 
 ## 快速设置（初学者）
 
@@ -62,7 +62,7 @@ openclaw plugins install ./extensions/nextcloud-talk
 ## 说明
 
 - 机器人无法发起私信。用户必须先向机器人发送消息。
-- Webhook URL 必须可被网关访问；如果位于代理之后，请设置 `webhookPublicUrl`。
+- Webhook URL 必须可被 Gateway 网关 访问；如果位于代理之后，请设置 `webhookPublicUrl`。
 - 机器人 API 不支持媒体上传；媒体以 URL 形式发送。
 - Webhook 载荷不区分私信与房间；设置 `apiUser` + `apiPassword` 以启用房间类型查找（否则私信将被视为房间）。
 
@@ -107,7 +107,7 @@ openclaw plugins install ./extensions/nextcloud-talk
 
 ## 配置参考 (Nextcloud Talk)
 
-完整配置：[配置](/en/gateway/configuration)
+完整配置：[配置](/zh/en/gateway/configuration)
 
 提供商选项：
 
@@ -123,13 +123,13 @@ openclaw plugins install ./extensions/nextcloud-talk
 - `channels.nextcloud-talk.webhookPath`：Webhook 路径（默认：/nextcloud-talk-webhook）。
 - `channels.nextcloud-talk.webhookPublicUrl`：外部可访问的 Webhook URL。
 - `channels.nextcloud-talk.dmPolicy`： `pairing | allowlist | open | disabled`。
-- `channels.nextcloud-talk.allowFrom`: DM 允许列表（用户 ID）。`open` 需要 `"*"`。
+- `channels.nextcloud-talk.allowFrom`: 私信 允许列表（用户 ID）。`open` 需要 `"*"`。
 - `channels.nextcloud-talk.groupPolicy`: `allowlist | open | disabled`。
 - `channels.nextcloud-talk.groupAllowFrom`: 组允许列表（用户 ID）。
 - `channels.nextcloud-talk.rooms`: 每个房间设置和允许列表。
 - `channels.nextcloud-talk.historyLimit`: 组历史记录限制（0 表示禁用）。
-- `channels.nextcloud-talk.dmHistoryLimit`: DM 历史记录限制（0 表示禁用）。
-- `channels.nextcloud-talk.dms`: 每个 DM 覆盖（historyLimit）。
+- `channels.nextcloud-talk.dmHistoryLimit`: 私信 历史记录限制（0 表示禁用）。
+- `channels.nextcloud-talk.dms`: 每个 私信 覆盖（historyLimit）。
 - `channels.nextcloud-talk.textChunkLimit`: 出站文本块大小（字符数）。
 - `channels.nextcloud-talk.chunkMode`: `length`（默认）或 `newline` 在按长度分块之前按空行（段落边界）分割。
 - `channels.nextcloud-talk.blockStreaming`: 禁用此通道的块流式传输。

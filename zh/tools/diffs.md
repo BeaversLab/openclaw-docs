@@ -379,8 +379,8 @@ URL 构建行为：
 ## 相关文档
 
 - [工具概述](/zh/tools)
-- [插件](/en/tools/plugin)
-- [浏览器](/en/tools/browser)
+- [插件](/zh/en/tools/plugin)
+- [浏览器](/zh/en/tools/browser)
 
 import zh from '/components/footer/zh.mdx';
 

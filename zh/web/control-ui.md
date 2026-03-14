@@ -1,5 +1,5 @@
 ---
-summary: "基于浏览器的网关控制 UI（聊天、节点、配置）"
+summary: "基于浏览器的 Gateway 网关 控制 UI（聊天、节点、配置）"
 read_when:
   - You want to operate the Gateway from a browser
   - You want Tailnet access without SSH tunnels
@@ -8,20 +8,20 @@ title: "控制 UI"
 
 # 控制界面（浏览器）
 
-控制界面是由网管提供的一个小型 **Vite + Lit** 单页应用：
+控制界面是由 Gateway 网关 提供的一个小型 **Vite + Lit** 单页应用：
 
 - 默认值：`http://<host>:18789/`
 - 可选前缀：设置 `gateway.controlUi.basePath`（例如 `/openclaw`）
 
-它通过同一端口**直接与网关 WebSocket 通信**。
+它通过同一端口**直接与 Gateway 网关 WebSocket 通信**。
 
 ## 快速打开（本地）
 
-如果网关运行在同一台计算机上，请打开：
+如果 Gateway 网关 运行在同一台计算机上，请打开：
 
 - [http://127.0.0.1:18789/](http://127.0.0.1:18789/)（或 [http://localhost:18789/](http://localhost:18789/））
 
-如果页面加载失败，请先启动网关：`openclaw gateway`。
+如果页面加载失败，请先启动 Gateway 网关：`openclaw gateway`。
 
 认证在 WebSocket 握手期间通过以下方式提供：
 
@@ -32,7 +32,7 @@ title: "控制 UI"
 
 ## 设备配对（首次连接）
 
-当您从新的浏览器或设备连接到控制 UI 时，网关
+当您从新的浏览器或设备连接到控制 UI 时，Gateway 网关
 需要**一次性配对批准**——即使您位于同一个 Tailnet
 上并使用 `gateway.auth.allowTailscale: true`。这是一项防止未经授权访问的安全措施。
 
@@ -48,7 +48,7 @@ openclaw devices list
 openclaw devices approve <requestId>
 ```
 
-一旦批准，该设备会被记住，除非您使用 `openclaw devices revoke --device <id> --role <role>` 撤销它，否则无需重新批准。请参阅 [设备 CLI](/en/cli/devices) 以了解令牌轮换和撤销。
+一旦批准，该设备会被记住，除非您使用 `openclaw devices revoke --device <id> --role <role>` 撤销它，否则无需重新批准。请参阅 [设备 CLI](/zh/en/cli/devices) 以了解令牌轮换和撤销。
 
 **注意：**
 
@@ -68,7 +68,7 @@ openclaw devices approve <requestId>
 
 ## 目前的功能（今天）
 
-- 通过网关 WS 与模型聊天（`chat.history`、`chat.send`、`chat.abort`、`chat.inject`）
+- 通过 Gateway 网关 WS 与模型聊天（`chat.history`、`chat.send`、`chat.abort`、`chat.inject`）
 - 在聊天中流式传输工具调用 + 实时工具输出卡片（代理事件）
 - 频道：WhatsApp/Telegram/Discord/Slack + 插件频道（Mattermost 等）状态 + QR 登录 + 每频道配置（`channels.status`、`web.login.*`、`config.patch`）
 - 实例：在线列表 + 刷新（`system-presence`）
@@ -101,22 +101,20 @@ Cron 任务面板说明：
 
 - `chat.send` 是**非阻塞的**：它会立即使用 `{ runId, status: "started" }` 进行确认，并且响应通过 `chat` 事件流式传输。
 - 使用相同的 `idempotencyKey` 重新发送时，运行期间返回 `{ status: "in_flight" }`，完成后返回 `{ status: "ok" }`。
-- 为了 UI 安全，`chat.history` 响应的大小受到限制。当对话条目过大时，网关可能会截断长文本字段，省略繁重的元数据块，并使用占位符 (`[chat.history omitted: message too large]`) 替换过大的消息。
+- 为了 UI 安全，`chat.history` 响应的大小受到限制。当对话条目过大时，Gateway 网关 可能会截断长文本字段，省略繁重的元数据块，并使用占位符 (`[chat.history omitted: message too large]`) 替换过大的消息。
 - `chat.inject` 向会话记录添加一条助手备注，并广播 `chat` 事件以进行仅 UI 更新（不运行 agent，不投递到频道）。
 - 停止：
   - 点击 **停止**（调用 `chat.abort`）
   - 输入 `/stop`（或独立的终止短语，如 `stop`、`stop action`、`stop run`、`stop openclaw`、`please stop`）以带外中止
   - `chat.abort` 支持 `{ sessionKey }`（无 `runId`）以中止该会话的所有活动运行
 - 中止部分保留：
-  - 当运行被中止时，部分助手文本仍可在 UI 中显示
-  - 当存在缓冲输出时，网关将被中止的部分助手文本持久化到记录历史中
-  - 持久化的条目包含中止元数据，以便记录使用者可以将中止部分与正常完成输出区分开来
+- 当运行被中止时，部分助手文本仍可在 UI 中显示 - 当存在缓冲输出时，Gateway 网关 将被中止的部分助手文本持久化到记录历史中 - 持久化的条目包含中止元数据，以便记录使用者可以将中止部分与正常完成输出区分开来
 
 ## Tailnet 访问（推荐）
 
 ### 集成 Tailscale Serve（首选）
 
-将 Gateway 保持在环回地址上，并让 Tailscale Serve 使用 HTTPS 对其进行代理：
+将 Gateway 网关 保持在环回地址上，并让 Tailscale Serve 使用 HTTPS 对其进行代理：
 
 ```bash
 openclaw gateway --tailscale serve
@@ -191,11 +189,11 @@ OpenClaw **阻止** 没有设备身份的 Control UI 连接。
 
 `dangerouslyDisableDeviceAuth` 会禁用控制 UI 设备身份检查，并会导致严重的安全降级。紧急使用后请立即恢复。
 
-有关 HTTPS 设置指南，请参阅 [Tailscale](/en/gateway/tailscale)。
+有关 HTTPS 设置指南，请参阅 [Tailscale](/zh/en/gateway/tailscale)。
 
 ## 构建 UI
 
-网关从 `dist/control-ui` 提供静态文件。使用以下命令构建它们：
+Gateway 网关 从 `dist/control-ui` 提供静态文件。使用以下命令构建它们：
 
 ```bash
 pnpm ui:build # auto-installs UI deps on first run
@@ -213,11 +211,11 @@ OPENCLAW_CONTROL_UI_BASE_PATH=/openclaw/ pnpm ui:build
 pnpm ui:dev # auto-installs UI deps on first run
 ```
 
-然后将 UI 指向您的网关 WS URL（例如 `ws://127.0.0.1:18789`）。
+然后将 UI 指向您的 Gateway 网关 WS URL（例如 `ws://127.0.0.1:18789`）。
 
-## 调试/测试：开发服务器 + 远程 Gateway
+## 调试/测试：开发服务器 + 远程 Gateway 网关
 
-Control UI 由静态文件组成；WebSocket 目标是可配置的，并且可以与 HTTP 源不同。当您需要在本地使用 Vite 开发服务器但 Gateway 运行在其他地方时，这非常有用。
+Control UI 由静态文件组成；WebSocket 目标是可配置的，并且可以与 HTTP 源不同。当您需要在本地使用 Vite 开发服务器但 Gateway 网关 运行在其他地方时，这非常有用。
 
 1. 启动 UI 开发服务器：`pnpm ui:dev`
 2. 打开一个类似如下的 URL：
@@ -239,7 +237,7 @@ http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789#token=<gateway-toke
 - `password` 仅保存在内存中。
 - 当设置了 `gatewayUrl` 时，UI 不会回退到配置或环境凭据。
   显式提供 `token`（或 `password`）。缺少显式凭据则报错。
-- 当网关位于 TLS 之后（Tailscale Serve、HTTPS 代理等）时，请使用 `wss://`。
+- 当 Gateway 网关 位于 TLS 之后（Tailscale Serve、HTTPS 代理等）时，请使用 `wss://`。
 - `gatewayUrl` 仅在顶级窗口（非嵌入式）中被接受，以防止点击劫持。
 - 非环回控制 UI 部署必须设置 `gateway.controlUi.allowedOrigins`
   显式地（完整的源）。这包括远程开发设置。
@@ -258,7 +256,7 @@ http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789#token=<gateway-toke
 }
 ```
 
-远程访问设置详细信息：[远程访问](/en/gateway/remote)。
+远程访问设置详细信息：[远程访问](/zh/en/gateway/remote)。
 
 import zh from '/components/footer/zh.mdx';
 

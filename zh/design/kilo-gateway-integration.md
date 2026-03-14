@@ -1,8 +1,8 @@
-# Kilo Gateway 提供商集成设计
+# Kilo Gateway 网关 提供商集成设计
 
 ## 概述
 
-本文档概述了将 "Kilo Gateway" 作为一流提供商集成到 OpenClaw 中的设计，该设计以现有的 OpenRouter 实现为模型。Kilo Gateway 使用具有不同基础 URL 的 OpenAI 兼容补全 API。
+本文档概述了将 "Kilo Gateway 网关" 作为一流提供商集成到 OpenClaw 中的设计，该设计以现有的 OpenRouter 实现为模型。Kilo Gateway 网关 使用具有不同基础 URL 的 OpenAI 兼容补全 API。
 
 ## 设计决策
 
@@ -44,15 +44,15 @@
 
 理由：
 
-- Kilo Gateway 代理到 OpenRouter，因此模型是动态的
+- Kilo Gateway 网关 代理到 OpenRouter，因此模型是动态的
 - 用户可以在其配置中手动配置模型
-- 如果 Kilo Gateway 未来暴露 `/models` 端点，可以添加扫描功能
+- 如果 Kilo Gateway 网关 未来暴露 `/models` 端点，可以添加扫描功能
 
 ### 5. 特殊处理
 
 **建议： 继承 Anthropic 模型的 OpenRouter 行为**
 
-由于 Kilo Gateway 代理到 OpenRouter，应应用相同的特殊处理：
+由于 Kilo Gateway 网关 代理到 OpenRouter，应应用相同的特殊处理：
 
 - `anthropic/*` 模型的缓存 TTL 资格
 - `anthropic/*` 模型的额外参数
@@ -418,7 +418,7 @@ export {
 
 #### 12. `src/agents/pi-embedded-runner/cache-ttl.ts`
 
-添加 Kilo Gateway 对 Anthropic 模型的支持：
+添加 Kilo Gateway 网关 对 Anthropic 模型的支持：
 
 ```typescript
 export function isCacheTtlEligibleProvider(provider: string, modelId: string): boolean {
@@ -434,7 +434,7 @@ export function isCacheTtlEligibleProvider(provider: string, modelId: string): b
 
 #### 13. `src/agents/transcript-policy.ts`
 
-添加 Kilo Gateway 处理（类似于 OpenRouter）：
+添加 Kilo Gateway 网关 处理（类似于 OpenRouter）：
 
 ```typescript
 const isKilocodeGemini = provider === "kilocode" && modelId.toLowerCase().includes("gemini");
@@ -497,7 +497,7 @@ const needsNonImageSanitize =
    - 使用 `kilocode/` 前缀测试模型选择
 
 3. **端到端测试：**
-   - 测试通过 Kilo Gateway 的实际 API 调用（实时测试）
+ - 测试通过 Kilo Gateway 网关 的实际 API 调用（实时测试）
 
 ## 迁移说明
 
@@ -507,11 +507,11 @@ const needsNonImageSanitize =
 
 ## 未来考虑
 
-1. **模型目录：**如果 Kilo Gateway 公开了 `/models` 端点，请添加类似于 `scanOpenRouterModels()` 的扫描支持
+1. **模型目录：**如果 Kilo Gateway 网关 公开了 `/models` 端点，请添加类似于 `scanOpenRouterModels()` 的扫描支持
 
-2. **OAuth 支持：** 如果 Kilo Gateway 添加了 OAuth，请相应扩展认证系统
+2. **OAuth 支持：** 如果 Kilo Gateway 网关 添加了 OAuth，请相应扩展认证系统
 
-3. **速率限制：** 如有必要，考虑添加针对 Kilo Gateway 的特定速率限制处理
+3. **速率限制：** 如有必要，考虑添加针对 Kilo Gateway 网关 的特定速率限制处理
 
 4. **文档：**在 `docs/providers/kilocode.md` 添加说明设置和用法的文档
 

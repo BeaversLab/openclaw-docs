@@ -1,15 +1,15 @@
 ---
-summary: "Gateway WebSocket 协议：握手、帧、版本控制"
+summary: "Gateway 网关 WebSocket 协议：握手、帧、版本控制"
 read_when:
   - Implementing or updating gateway WS clients
   - Debugging protocol mismatches or connect failures
   - Regenerating protocol schema/models
-title: "网关协议"
+title: "Gateway 网关 协议"
 ---
 
-# 网关协议 (WebSocket)
+# Gateway 网关 协议 (WebSocket)
 
-网关 WS 协议是 OpenClaw 的**单一控制平面 + 节点传输**。
+Gateway 网关 WS 协议是 OpenClaw 的**单一控制平面 + 节点传输**。
 所有客户端（CLI、Web UI、macOS 应用、iOS/Android 节点、无头节点）
 均通过 WebSocket 连接，并在握手时声明其**角色** + **作用域**。
 
@@ -20,7 +20,7 @@ title: "网关协议"
 
 ## 握手 (连接)
 
-网关 → 客户端 (连接前挑战)：
+Gateway 网关 → 客户端 (连接前挑战)：
 
 ```json
 {
@@ -30,7 +30,7 @@ title: "网关协议"
 }
 ```
 
-客户端 → 网关：
+客户端 → Gateway 网关：
 
 ```json
 {
@@ -65,7 +65,7 @@ title: "网关协议"
 }
 ```
 
-网关 → 客户端：
+Gateway 网关 → 客户端：
 
 ```json
 {
@@ -158,7 +158,7 @@ Method scope 只是第一道关卡。通过 `chat.send` 访问的某些斜杠命
 - `commands`: 用于调用的命令允许列表。
 - `permissions`: 细粒度开关 (例如 `screen.record`, `camera.capture`)。
 
-网关将这些视为**声明** 并执行服务端允许列表。
+Gateway 网关 将这些视为**声明** 并执行服务端允许列表。
 
 ## 在线状态
 
@@ -198,7 +198,7 @@ Method scope 只是第一道关卡。通过 `chat.send` 访问的某些斜杠命
 
 - 如果设置了 `OPENCLAW_GATEWAY_TOKEN`（或 `--token`），`connect.params.auth.token`
   必须匹配，否则套接字将关闭。
-- 配对后，网关会颁发一个范围限定于连接角色的 **设备令牌**
+- 配对后，Gateway 网关 会颁发一个范围限定于连接角色的 **设备令牌**
   角色 + 作用域。它在 `hello-ok.auth.deviceToken` 中返回，客户端应将其持久化以便未来连接。
 - 设备令牌可以通过 `device.token.rotate` 轮换/撤销，并且
   `device.token.revoke`（需要 `operator.pairing` 作用域）。

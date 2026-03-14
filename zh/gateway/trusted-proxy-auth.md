@@ -9,7 +9,7 @@ read_when:
 
 # 受信任的代理身份验证
 
-> ⚠️ **安全敏感功能。** 此模式将身份验证完全委托给您的反向代理。配置错误可能会使您的网关暴露于未经授权的访问。在启用之前，请仔细阅读此页面。
+> ⚠️ **安全敏感功能。** 此模式将身份验证完全委托给您的反向代理。配置错误可能会使您的 Gateway 网关 暴露于未经授权的访问。在启用之前，请仔细阅读此页面。
 
 ## 何时使用
 
@@ -17,13 +17,13 @@ read_when:
 
 - 您在 **感知身份的代理**（Pomerium、Caddy + OAuth、nginx + oauth2-proxy、Traefik + forward auth）后面运行 OpenClaw
 - 您的代理处理所有身份验证并通过标头传递用户身份
-- 您处于 Kubernetes 或容器环境中，且代理是访问网关的唯一路径
+- 您处于 Kubernetes 或容器环境中，且代理是访问 Gateway 网关 的唯一路径
 - 您遇到了 WebSocket `1008 unauthorized` 错误，因为浏览器无法在 WS 负载中传递令牌
 
 ## 何时不使用
 
 - 如果您的代理不对用户进行身份验证（仅作为 TLS 终结器或负载均衡器）
-- 如果存在任何绕过代理访问网关的路径（防火墙漏洞、内部网络访问）
+- 如果存在任何绕过代理访问 Gateway 网关 的路径（防火墙漏洞、内部网络访问）
 - 如果您不确定您的代理是否正确剥离/覆盖了转发的标头
 - 如果您只需要个人单用户访问（考虑使用 Tailscale Serve + loopback 以获得更简单的设置）
 
@@ -108,7 +108,7 @@ Header 值示例：
 Strict-Transport-Security: max-age=31536000; includeSubDomains
 ```
 
-### Gateway TLS 终止
+### Gateway 网关 TLS 终止
 
 如果 OpenClaw 本身直接提供 HTTPS（无 TLS 终止代理），请设置：
 
@@ -258,7 +258,7 @@ location / {
 
 在启用 trusted-proxy 身份验证之前，请验证：
 
-- [ ] **代理是唯一路径**：网关端口已设置防火墙，仅允许您的代理访问
+- [ ] **代理是唯一路径**：Gateway 网关 端口已设置防火墙，仅允许您的代理访问
 - [ ] **trustedProxies 是最小的**：仅包含您的实际代理 IP，而不是整个子网
 - [ ] **代理剥离 headers**：您的代理覆盖（而不是追加）来自客户端的 `x-forwarded-*` headers
 - [ ] **TLS 终止**：您的代理处理 TLS；用户通过 HTTPS 连接
@@ -318,16 +318,16 @@ location / {
 1. 配置您的代理以对用户进行身份验证并传递请求头
 2. 独立测试代理设置（使用带请求头的 curl）
 3. 使用受信任代理身份验证更新 OpenClaw 配置
-4. 重启 Gateway
+4. 重启 Gateway 网关
 5. 从控制 UI 测试 WebSocket 连接
 6. 运行 `openclaw security audit` 并查看发现结果
 
 ## 相关内容
 
-- [安全](/en/gateway/security) — 完整的安全指南
-- [配置](/en/gateway/configuration) — 配置参考
-- [远程访问](/en/gateway/remote) — 其他远程访问模式
-- [Tailscale](/en/gateway/tailscale) — 专用于 tailnet 访问的更简单的替代方案
+- [安全](/zh/en/gateway/security) — 完整的安全指南
+- [配置](/zh/en/gateway/configuration) — 配置参考
+- [远程访问](/zh/en/gateway/remote) — 其他远程访问模式
+- [Tailscale](/zh/en/gateway/tailscale) — 专用于 tailnet 访问的更简单的替代方案
 
 import zh from '/components/footer/zh.mdx';
 

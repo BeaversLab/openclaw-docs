@@ -37,7 +37,7 @@ pnpm install
 有关开发运行模式、签名标志和团队 ID 故障排除，请参阅 macOS 应用 README：
 [https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md](https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md)
 
-> **注意**：临时签名的应用可能会触发安全提示。如果应用立即崩溃并显示 "Abort trap 6"，请参阅[故障排除](#troubleshooting)部分。
+> **注意**：临时签名的应用可能会触发安全提示。如果应用立即崩溃并显示 "Abort trap 6"，请参阅[故障排除](#故障排除)部分。
 
 ## 3. 安装 CLI
 
@@ -89,7 +89,7 @@ xcrun swift --version
 
 2. 如果失败，请临时在 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中更改 `BUNDLE_ID`，以强制 macOS 进行“彻底重置”。
 
-### 网关一直处于“启动中...”状态
+### Gateway 网关 一直处于“启动中...”状态
 
 如果网关状态一直停留在“启动中...”，请检查是否有僵尸进程占用了端口：
 

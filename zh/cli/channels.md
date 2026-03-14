@@ -8,12 +8,12 @@ title: "channels"
 
 # `openclaw channels`
 
-管理网关上的聊天通道账户及其运行时状态。
+管理 Gateway 网关 上的聊天通道账户及其运行时状态。
 
 相关文档：
 
-- 通道指南：[通道](/en/channels/index)
-- 网关配置：[配置](/en/gateway/configuration)
+- 通道指南：[通道](/zh/en/channels/index)
+- Gateway 网关 配置：[配置](/zh/en/gateway/configuration)
 
 ## 常用命令
 
@@ -43,7 +43,7 @@ openclaw channels remove --channel telegram --delete
 
 如果您确认现在绑定，向导会询问每个已配置的通道账户应由哪个代理拥有，并写入账户范围的路由绑定。
 
-您也可以稍后使用 `openclaw agents bindings`、`openclaw agents bind` 和 `openclaw agents unbind` 来管理相同的路由规则（请参阅 [agents](/en/cli/agents)）。
+您也可以稍后使用 `openclaw agents bindings`、`openclaw agents bind` 和 `openclaw agents unbind` 来管理相同的路由规则（请参阅 [agents](/zh/en/cli/agents)）。
 
 当您向仍在使用单账户顶级设置（尚未有 `channels.<channel>.accounts` 条目）的通道添加非默认账户时，OpenClaw 会将作用于账户的单账户顶级值移入 `channels.<channel>.accounts.default`，然后写入新账户。这在迁移到多账户结构的同时保留了原始账户行为。
 

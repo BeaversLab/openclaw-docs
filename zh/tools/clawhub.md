@@ -69,7 +69,7 @@ pnpm add -g clawhub
 默认情况下，CLI 会将技能安装到当前工作目录下的 `./skills` 中。如果配置了 OpenClaw 工作区，除非您覆盖 `--workdir`（或 `CLAWHUB_WORKDIR`），否则 `clawhub` 将回退到该工作区。OpenClaw 会从 `<workspace>/skills` 加载工作区技能，并将在 **下一次** 会话中选取它们。如果您已经使用 `~/.openclaw/skills` 或捆绑技能，则工作区技能优先。
 
 有关如何加载、共享和限制技能的更多详细信息，请参阅
-[Skills](/en/tools/skills)。
+[Skills](/zh/en/tools/skills)。
 
 ## 技能系统概览
 

@@ -15,7 +15,7 @@ Zalo 作为插件提供，不包含在核心安装中。
 
 - 通过 CLI 安装： `openclaw plugins install @openclaw/zalo`
 - 或者在入职期间选择 **Zalo** 并确认安装提示
-- 详情：[插件](/en/tools/plugin)
+- 详情：[插件](/zh/en/tools/plugin)
 
 ## 快速设置（初学者）
 
@@ -45,10 +45,10 @@ Zalo 作为插件提供，不包含在核心安装中。
 
 ## 它是什么
 
-Zalo 是一款专注于越南市场的消息应用程序；其 Bot API 允许网关运行用于 1:1 对话的机器人。
+Zalo 是一款专注于越南市场的消息应用程序；其 Bot API 允许 Gateway 网关 运行用于 1:1 对话的机器人。
 它非常适合需要确定性地路由回 Zalo 的支持或通知场景。
 
-- 由网关拥有的 Zalo Bot API 通道。
+- 由 Gateway 网关 拥有的 Zalo Bot API 通道。
 - 确定性路由：回复将发回 Zalo；模型从不选择通道。
 - 私信与代理的主会话共享。
 - 群组支持策略控制（`groupPolicy` + `groupAllowFrom`）并默认为失效时关闭的允许列表行为。
@@ -104,7 +104,7 @@ Zalo 是一款专注于越南市场的消息应用程序；其 Bot API 允许网
 - 通过以下方式批准：
   - `openclaw pairing list zalo`
   - `openclaw pairing approve zalo <CODE>`
-- 配对是默认的令牌交换方式。详情：[配对](/en/channels/pairing)
+- 配对是默认的令牌交换方式。详情：[配对](/zh/en/channels/pairing)
 - `channels.zalo.allowFrom` 接受数字用户 ID（无法进行用户名查找）。
 
 ## 访问控制（群组）
@@ -121,13 +121,7 @@ Zalo 是一款专注于越南市场的消息应用程序；其 Bot API 允许网
 
 - 默认：长轮询（不需要公共 URL）。
 - Webhook 模式：设置 `channels.zalo.webhookUrl` 和 `channels.zalo.webhookSecret`。
-  - Webhook 密钥必须为 8-256 个字符。
-  - Webhook URL 必须使用 HTTPS。
-  - Zalo 发送带有 `X-Bot-Api-Secret-Token` header 的事件以进行验证。
-  - 网关 HTTP 在 `channels.zalo.webhookPath` 处处理 webhook 请求（默认为 webhook URL 路径）。
-  - 请求必须使用 `Content-Type: application/json`（或 `+json` 媒体类型）。
-  - 重复事件（`event_name + message_id`）在短时间内重放窗口内将被忽略。
-  - 突发流量会根据路径/源进行速率限制，并可能返回 HTTP 429。
+ - Webhook 密钥必须为 8-256 个字符。 - Webhook URL 必须使用 HTTPS。 - Zalo 发送带有 `X-Bot-Api-Secret-Token` header 的事件以进行验证。 - Gateway 网关 HTTP 在 `channels.zalo.webhookPath` 处处理 webhook 请求（默认为 webhook URL 路径）。 - 请求必须使用 `Content-Type: application/json`（或 `+json` 媒体类型）。 - 重复事件（`event_name + message_id`）在短时间内重放窗口内将被忽略。 - 突发流量会根据路径/源进行速率限制，并可能返回 HTTP 429。
 
 **注意：** 根据 Zalo API 文档，getUpdates（轮询）和 webhook 互斥。
 
@@ -173,7 +167,7 @@ Zalo 是一款专注于越南市场的消息应用程序；其 Bot API 允许网
 
 ## 配置参考 (Zalo)
 
-完整配置：[Configuration](/en/gateway/configuration)
+完整配置：[Configuration](/zh/en/gateway/configuration)
 
 提供者选项：
 
@@ -181,7 +175,7 @@ Zalo 是一款专注于越南市场的消息应用程序；其 Bot API 允许网
 - `channels.zalo.botToken`：来自 Zalo Bot Platform 的 bot token。
 - `channels.zalo.tokenFile`：从常规文件路径读取 token。拒绝符号链接。
 - `channels.zalo.dmPolicy`：`pairing | allowlist | open | disabled`（默认：pairing）。
-- `channels.zalo.allowFrom`：DM 白名单（用户 ID）。`open` 需要 `"*"`。向导会询问数字 ID。
+- `channels.zalo.allowFrom`：私信 白名单（用户 ID）。`open` 需要 `"*"`。向导会询问数字 ID。
 - `channels.zalo.groupPolicy`：`open | allowlist | disabled`（默认：allowlist）。
 - `channels.zalo.groupAllowFrom`：群组发送者白名单（用户 ID）。未设置时回退到 `allowFrom`。
 - `channels.zalo.mediaMaxMb`：入站/出站媒体上限（MB，默认 5）。
@@ -196,7 +190,7 @@ Zalo 是一款专注于越南市场的消息应用程序；其 Bot API 允许网
 - `channels.zalo.accounts.<id>.tokenFile`: 每个账号的常规令牌文件。拒绝使用符号链接。
 - `channels.zalo.accounts.<id>.name`: 显示名称。
 - `channels.zalo.accounts.<id>.enabled`: 启用/禁用账号。
-- `channels.zalo.accounts.<id>.dmPolicy`: 每个账号的私信（DM）策略。
+- `channels.zalo.accounts.<id>.dmPolicy`: 每个账号的私信（私信）策略。
 - `channels.zalo.accounts.<id>.allowFrom`: 每个账号的允许列表。
 - `channels.zalo.accounts.<id>.groupPolicy`: 每个账号的群组策略。
 - `channels.zalo.accounts.<id>.groupAllowFrom`: 每个账号的群组发送者允许列表。

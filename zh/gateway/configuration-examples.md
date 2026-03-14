@@ -9,7 +9,7 @@ title: "配置示例"
 
 # 配置示例
 
-以下示例与当前配置架构保持一致。有关详尽的参考和按字段的说明，请参阅[配置](/en/gateway/configuration)。
+以下示例与当前配置架构保持一致。有关详尽的参考和按字段的说明，请参阅[配置](/zh/en/gateway/configuration)。
 
 ## 快速开始
 
@@ -632,7 +632,7 @@ title: "配置示例"
 - 如果您设置了 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包含 `"*"`。
 - 提供商 ID 各不相同（电话号码、用户 ID、频道 ID）。请使用提供商文档确认格式。
 - 稍后添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 有关更深入的设置说明，请参阅[提供商](/en/providers)和[故障排除](/en/gateway/troubleshooting)。
+- 有关更深入的设置说明，请参阅[提供商](/zh/en/providers)和[故障排除](/zh/en/gateway/故障排除)。
 
 import zh from '/components/footer/zh.mdx';
 

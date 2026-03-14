@@ -12,8 +12,8 @@ title: "模型"
 
 相关：
 
-- 提供商 + 模型：[Models](/en/providers/models)
-- 提供商认证设置：[Getting started](/en/start/getting-started)
+- 提供商 + 模型：[Models](/zh/en/providers/models)
+- 提供商认证设置：[入门指南](/zh/en/start/getting-started)
 
 ## 常用命令
 

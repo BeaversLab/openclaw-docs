@@ -7,25 +7,7 @@ title: "功能"
 
 ## 亮点
 
-<Columns>
-  <Card title="渠道" icon="message-square">
-    通过单一网关使用 WhatsApp、Telegram、Discord 和 iMessage。
-  </Card>
-  <Card title="插件" icon="plug">
-    通过扩展添加 Mattermost 等更多功能。
-  </Card>
-  <Card title="路由" icon="route">
-    具有隔离会话的多智能体路由。
-  </Card>
-  <Card title="媒体" icon="image">
-    图片、音频和文档的输入与输出。
-  </Card>
-  <Card title="应用和界面" icon="monitor">
-    Web 控制界面和 macOS 伴侣应用。
-  </Card>
-  <Card title="移动节点" icon="smartphone">
-    支持 iOS 和 Android 节点，具备配对、语音/聊天以及丰富的设备命令。
-  </Card>
+<Columns> <Card title="渠道" icon="message-square"> 通过单一 Gateway 网关 使用 WhatsApp、Telegram、Discord 和 iMessage。 </Card> <Card title="插件" icon="plug"> 通过扩展添加 Mattermost 等更多功能。 </Card> <Card title="路由" icon="route"> 具有隔离会话的多智能体路由。 </Card> <Card title="媒体" icon="image"> 图片、音频和文档的输入与输出。 </Card> <Card title="应用和界面" icon="monitor"> Web 控制界面和 macOS 伴侣应用。 </Card> <Card title="移动节点" icon="smartphone"> 支持 iOS 和 Android 节点，具备配对、语音/聊天以及丰富的设备命令。 </Card>
 </Columns>
 
 ## 完整列表
