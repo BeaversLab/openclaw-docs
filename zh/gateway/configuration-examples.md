@@ -9,7 +9,7 @@ title: "配置示例"
 
 # 配置示例
 
-以下示例与当前配置架构保持一致。有关详尽的参考和按字段的说明，请参阅[配置](/zh/en/gateway/configuration)。
+以下示例与当前的配置架构保持一致。如需详尽的参考和逐字段说明，请参阅 [Configuration](/zh/gateway/configuration)。
 
 ## 快速开始
 
@@ -48,7 +48,7 @@ title: "配置示例"
 
 ## 扩展示例（主要选项）
 
-> JSON5 允许你使用注释和尾随逗号。常规 JSON 也可以正常工作。
+> JSON5 允许您使用注释和尾随逗号。常规 JSON 也可以正常工作。
 
 ```json5
 {
@@ -530,7 +530,8 @@ title: "配置示例"
 ### Anthropic setup-token + API 密钥，MiniMax 备用
 
 <Warning>
-过去，部分用户在 Claude Code 之外使用 Anthropic setup-token 受到了限制。请将此视为用户自选风险，并在依赖订阅授权之前确认当前的 Anthropic 条款。
+  过去，部分用户在 Claude Code 之外使用 Anthropic setup-token
+  受到了限制。请将此视为用户自选风险，并在依赖订阅授权之前确认当前的 Anthropic 条款。
 </Warning>
 
 ```json5
@@ -632,7 +633,7 @@ title: "配置示例"
 - 如果您设置了 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包含 `"*"`。
 - 提供商 ID 各不相同（电话号码、用户 ID、频道 ID）。请使用提供商文档确认格式。
 - 稍后添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 有关更深入的设置说明，请参阅[提供商](/zh/en/providers)和[故障排除](/zh/en/gateway/故障排除)。
+- 有关更深入的设置说明，请参阅 [Providers](/zh/providers) 和 [Troubleshooting](/zh/gateway/troubleshooting)。
 
 import zh from '/components/footer/zh.mdx';
 

@@ -7,7 +7,7 @@ read_when:
 
 # LiteLLM
 
-[LiteLLM](https://litellm.ai) 是一个开源 LLM 网关，提供统一 API 以访问 100+ 模型提供商。通过 LiteLLM 路由 OpenClaw，即可获得集中的成本跟踪、日志记录，以及在不更改 OpenClaw 配置的情况下切换后端的灵活性。
+[LiteLLM](https://litellm.ai) 是一个开源的 LLM 网关，为 100 多个模型提供商提供统一的 API。通过 LiteLLM 路由 OpenClaw，以获得集中的成本跟踪、日志记录，以及在不更改 OpenClaw 配置的情况下切换后端的灵活性。
 
 ## 为什么在 OpenClaw 中使用 LiteLLM？
 
@@ -150,7 +150,7 @@ curl "http://localhost:4000/spend/logs" \
 ## 另请参阅
 
 - [LiteLLM 文档](https://docs.litellm.ai)
-- [模型提供商](/zh/concepts/模型-providers)
+- [模型提供商](/en/concepts/model-providers)
 
 import zh from '/components/footer/zh.mdx';
 

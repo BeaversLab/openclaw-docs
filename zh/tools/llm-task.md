@@ -112,11 +112,11 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 
 ## 安全说明
 
-- 该工具是 **仅限 JSON** 的，并指示模型仅输出 JSON （无
-  代码围栏，无注释）。
-- 此次运行不会向模型公开任何工具。
-- 除非您使用 `schema` 进行验证，否则请将输出视为不受信任。
-- 将审批步骤置于任何产生副作用的步骤（send、post、exec）之前。
+- 该工具是 **仅 JSON** 的，并指示模型仅输出 JSON（无
+  代码块，无评论）。
+- 在此次运行中，没有向模型公开任何工具。
+- 除非使用 `schema` 进行验证，否则请将输出视为不受信任的内容。
+- 在任何产生副作用的步骤（发送、发布、执行）之前放置审批流程。
 
 import zh from '/components/footer/zh.mdx';
 

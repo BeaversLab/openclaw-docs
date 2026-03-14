@@ -81,24 +81,23 @@ OpenClaw 可以防止 Agent 陷入重复的工具调用模式。
 - 从 `enabled: true` 开始，保持默认值不变。
 - 保持阈值顺序为 `warningThreshold < criticalThreshold < globalCircuitBreakerThreshold`。
 - 如果出现误报：
-  - 提高 `warningThreshold` 和/或 `criticalThreshold`
-  - （可选）提高 `globalCircuitBreakerThreshold`
+  - raise `warningThreshold` 和/或 `criticalThreshold`
+  - （可选）raise `globalCircuitBreakerThreshold`
   - 仅禁用导致问题的检测器
-  - 减少 `historySize` 以降低历史上下文的严格程度
+  - 降低 `historySize` 以放宽历史记录的严格性
 
 ## 日志和预期行为
 
-当检测到循环时，OpenClaw 会报告循环事件，并根据严重程度阻止或抑制下一个工具周期。
-这可以在保持正常工具访问的同时，保护用户免受 Token 消耗失控和系统锁定的影响。
+当检测到循环时，OpenClaw 会报告一个循环事件，并根据严重程度阻止或抑制下一个工具周期。这可以在保护用户免受失控的 token 消耗和死锁影响的同时，保留正常的工具访问权限。
 
-- 优先使用警告和暂时抑制。
-- 仅当累积了重复的证据时才升级处理。
+- 首选警告和临时抑制。
+- 仅在重复证据累积时才升级。
 
-## 注意事项
+## 说明
 
-- `tools.loopDetection` 与代理级别的覆盖项合并。
+- `tools.loopDetection` 会与代理级别的覆盖设置合并。
 - 每个代理的配置会完全覆盖或扩展全局值。
-- 如果不存在配置，防护措施将保持关闭状态。
+- 如果不存在配置，防护栏将保持关闭状态。
 
 import zh from '/components/footer/zh.mdx';
 

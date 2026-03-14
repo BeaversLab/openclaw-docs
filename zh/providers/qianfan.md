@@ -18,7 +18,7 @@ title: "千帆"
 
 ## 获取您的 API 密钥
 
-1. 访问 [千帆控制台](https://console.bce.baidu.com/qianfan/ais/console/apiKey)
+1. 访问 [Qianfan Console](https://console.bce.baidu.com/qianfan/ais/console/apiKey)
 2. 创建新应用程序或选择现有应用程序
 3. 生成一个 API 密钥（格式：`bce-v3/ALTAK-...`）
 4. 复制 API 密钥以供 OpenClaw 使用
@@ -31,10 +31,10 @@ openclaw onboard --auth-choice qianfan-api-key
 
 ## 相关文档
 
-- [OpenClaw 配置](/zh/en/gateway/configuration)
-- [模型提供商](/zh/en/concepts/模型-providers)
-- [代理设置](/zh/en/concepts/agent)
-- [千帆 API 文档](https://cloud.baidu.com/doc/qianfan-api/s/3m7of64lb)
+- [OpenClaw 配置](/en/gateway/configuration)
+- [模型提供商](/en/concepts/model-providers)
+- [Agent 设置](/en/concepts/agent)
+- [Qianfan API 文档](https://cloud.baidu.com/doc/qianfan-api/s/3m7of64lb)
 
 import zh from '/components/footer/zh.mdx';
 

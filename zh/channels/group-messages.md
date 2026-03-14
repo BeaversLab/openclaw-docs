@@ -16,7 +16,7 @@ title: "群组消息"
 - 激活模式：`mention`（默认）或 `always`。`mention` 需要一个 ping（通过 `mentionedJids` 发起的真实 WhatsApp @提及、正则表达式模式，或文本中任何位置的机器人 E.164 号码）。`always` 会在每条消息时唤醒代理，但它只应在能提供有价值的回复时回复；否则它返回静默令牌 `NO_REPLY`。默认值可以在配置（`channels.whatsapp.groups`）中设置，并通过 `/activation` 按组覆盖。当设置了 `channels.whatsapp.groups` 时，它也充当群组白名单（包含 `"*"` 以允许所有）。
 - 群组策略：`channels.whatsapp.groupPolicy` 控制是否接受群组消息（`open|disabled|allowlist`）。`allowlist` 使用 `channels.whatsapp.groupAllowFrom`（回退：显式 `channels.whatsapp.allowFrom`）。默认为 `allowlist`（在添加发送者之前被阻止）。
 - 每群组会话：会话键看起来像 `agent:<agentId>:whatsapp:group:<jid>`，因此像 `/verbose on` 或 `/think high` 这样的命令（作为独立消息发送）仅作用于该群组；个人 私信 状态不受影响。群组线程会跳过心跳检测。
-- 上下文注入：**仅待处理**的群组消息（默认 50 条）且_未_触发运行的消息会以 `[Chat messages since your last reply - for context]` 为前缀注入，触发行位于 `[Current message - respond to this]` 之下。会话中已有的消息不会重新注入。
+- 上下文注入：**仅待处理**的群组消息（默认 50 条）且*未*触发运行的消息会以 `[Chat messages since your last reply - for context]` 为前缀注入，触发行位于 `[Current message - respond to this]` 之下。会话中已有的消息不会重新注入。
 - 发送者显示：每个群组批次现在以 `[from: Sender Name (+E164)]` 结束，以便 Pi 知道谁在说话。
 - 阅后即焚/一次性查看：我们在提取文本/提及之前会解包这些消息，因此其中的 ping 仍会触发。
 - 群组系统提示词：在群组会话的第一轮（以及每当 `/activation` 更改模式时），我们会向系统提示词中注入一段简短的内容，如 `You are replying inside the WhatsApp group "<subject>". Group members: Alice (+44...), Bob (+43...), … Activation: trigger-only … Address the specific sender noted in the message context.`。如果元数据不可用，我们仍会告知代理这是群组聊天。
@@ -72,16 +72,16 @@ title: "群组消息"
 ## 测试 / 验证
 
 - 人工冒烟测试：
-  - 在群组中发送 `@openclaw` ping，并确认引用了发送者姓名的回复。
-  - 发送第二条 ping，并验证历史记录块是否包含在内，然后在下一轮中被清除。
-- 检查网关日志（使用 `--verbose` 运行）以查看显示 `from: <groupJid>` 和 `[from: …]` 后缀的 `inbound web message` 条目。
+  - 在群组中发送一个 `@openclaw` ping，并确认回复引用了发送者名称。
+  - 发送第二个 ping，并验证历史记录块是否已包含并在下一轮被清除。
+- 检查网关日志（使用 `--verbose` 运行），查看显示 `from: <groupJid>` 和 `[from: …]` 后缀的 `inbound web message` 条目。
 
 ## 已知注意事项
 
-- 为避免嘈杂的广播，故意跳过群组的心跳。
-- 回声抑制使用组合的批处理字符串；如果您在没有提及的情况下发送两次相同的文本，只有第一次会收到回复。
+- 为了避免嘈杂的广播，群组有意跳过心跳检测。
+- 回显抑制使用组合的批次字符串；如果您在不提及的情况下两次发送相同的文本，只有第一条会收到回复。
 - 会话存储条目将在会话存储中显示为 `agent:<agentId>:whatsapp:group:<jid>`（默认为 `~/.openclaw/agents/<agentId>/sessions/sessions.json`）；缺少条目仅表示该群组尚未触发运行。
-- 群组中的正在输入指示器遵循 `agents.defaults.typingMode`（未提及时默认为 `message`）。
+- 群组中的输入指示器遵循 `agents.defaults.typingMode`（默认：未被提及时为 `message`）。
 
 import zh from '/components/footer/zh.mdx';
 

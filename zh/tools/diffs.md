@@ -80,7 +80,7 @@ read_when:
 
 ## 输入示例
 
-更改前和更改后：
+变更前和变更后：
 
 ```json
 {
@@ -102,45 +102,45 @@ read_when:
 
 ## 工具输入参考
 
-除非另有说明，否则所有字段都是可选的：
+除非另有说明，所有字段都是可选的：
 
-- `before` (`string`)：原始文本。当省略 `patch` 时，与 `after` 一起为必填项。
-- `after` (`string`)：更新后的文本。当省略 `patch` 时，与 `before` 一起为必填项。
+- `before` (`string`)：原始文本。当省略 `patch` 时，与 `after` 一起使用时是必需的。
+- `after` (`string`)：更新后的文本。当省略 `patch` 时，与 `before` 一起使用时是必需的。
 - `patch` (`string`)：统一差异文本。与 `before` 和 `after` 互斥。
-- `path` (`string`)：前后模式显示文件名。
-- `lang` (`string`)：前后模式的语言覆盖提示。
+- `path` (`string`)：变更前和变更后模式的显示文件名。
+- `lang` (`string`)：变更前和变更后模式的语言覆盖提示。
 - `title` (`string`)：查看器标题覆盖。
 - `mode` (`"view" | "file" | "both"`)：输出模式。默认为插件默认值 `defaults.mode`。
 - `theme` (`"light" | "dark"`)：查看器主题。默认为插件默认值 `defaults.theme`。
 - `layout` (`"unified" | "split"`)：差异布局。默认为插件默认值 `defaults.layout`。
-- `expandUnchanged` (`boolean`)：当完整上下文可用时展开未更改的部分。仅限单次调用选项（非插件默认键）。
+- `expandUnchanged` (`boolean`)：当提供完整上下文时展开未更改的部分。仅限单次调用的选项（不是插件默认键）。
 - `fileFormat` (`"png" | "pdf"`)：渲染文件格式。默认为插件默认值 `defaults.fileFormat`。
 - `fileQuality` (`"standard" | "hq" | "print"`)：PNG 或 PDF 渲染的质量预设。
-- `fileScale` (`number`)：设备比例覆盖 (`1`-`4`)。
-- `fileMaxWidth` (`number`)：CSS 像素最大渲染宽度 (`640`-`2400`)。
+- `fileScale` (`number`)：设备缩放覆盖 (`1`-`4`)。
+- `fileMaxWidth` (`number`)：CSS 像素中的最大渲染宽度 (`640`-`2400`)。
 - `ttlSeconds` (`number`)：查看器产物生存时间（秒）。默认 1800，最大 21600。
-- `baseUrl` (`string`)：查看器 URL 源覆盖。必须是 `http` 或 `https`，无查询/哈希。
+- `baseUrl` (`string`)：查看器 URL 源覆盖。必须是 `http` 或 `https`，不带查询/哈希。
 
 验证和限制：
 
-- `before` 和 `after` 每个最大 512 KiB。
+- `before` 和 `after` 各自最大 512 KiB。
 - `patch` 最大 2 MiB。
 - `path` 最大 2048 字节。
 - `lang` 最大 128 字节。
 - `title` 最大 1024 字节。
 - 补丁复杂性上限：最多 128 个文件和 120000 行总行数。
-- `patch` 和 `before` 或 `after` 一起使用会被拒绝。
+- `patch` 和 `before` 或 `after` 同时存在会被拒绝。
 - 渲染文件安全限制（适用于 PNG 和 PDF）：
   - `fileQuality: "standard"`：最大 8 MP（8,000,000 个渲染像素）。
   - `fileQuality: "hq"`：最大 14 MP（14,000,000 个渲染像素）。
   - `fileQuality: "print"`：最大 24 MP（24,000,000 个渲染像素）。
-  - PDF 的最大页数也为 50 页。
+  - PDF 最多还有 50 页的限制。
 
-## 输出详细信息约定
+## 输出详情约定
 
 该工具在 `details` 下返回结构化元数据。
 
-用于创建查看器的模式的共享字段：
+创建查看器的模式的共享字段：
 
 - `artifactId`
 - `viewerUrl`
@@ -151,10 +151,10 @@ read_when:
 - `fileCount`
 - `mode`
 
-渲染为 PNG 或 PDF 时的文件字段：
+渲染 PNG 或 PDF 时的文件字段：
 
 - `filePath`
-- `path`（与 `filePath` 的值相同，用于消息工具兼容性）
+- `path` （值与 `filePath` 相同，用于消息工具兼容性）
 - `fileBytes`
 - `fileFormat`
 - `fileQuality`
@@ -163,16 +163,16 @@ read_when:
 
 模式行为摘要：
 
-- `mode: "view"`：仅查看器字段。
-- `mode: "file"`：仅文件字段，无查看器工件。
-- `mode: "both"`：查看器字段加上文件字段。如果文件渲染失败，查看器仍会返回并带有 `fileError`。
+- `mode: "view"`：仅限查看器字段。
+- `mode: "file"`：仅限文件字段，无查看器工件。
+- `mode: "both"`：查看器字段加文件字段。如果文件渲染失败，查看器仍会返回 `fileError`。
 
-## 折叠未更改部分
+## 折叠未更改的部分
 
-- 查看器可以显示类似 `N unmodified lines` 的行。
-- 这些行上的展开控件是有条件的，并不保证每种输入类型都有。
-- 当渲染的差异包含可展开的上下文数据时，会出现展开控件，这对于 before and after 输入来说是典型的。
-- 对于许多统一补丁输入，解析后的补丁块中无法获取省略的上下文内容，因此该行可能会在没有展开控件的情况下出现。这是预期行为。
+- 查看器可以显示像 `N unmodified lines` 这样的行。
+- 这些行上的展开控件是条件性的，并不保证每种输入类型都有。
+- 当渲染的差异具有可展开的上下文数据时，会出现展开控件，这在前后输入中很常见。
+- 对于许多统一补丁输入，解析后的补丁块中无法获得省略的上下文正文，因此该行可能会在没有展开控件的情况下出现。这是预期行为。
 - `expandUnchanged` 仅在存在可展开上下文时适用。
 
 ## 插件默认值
@@ -230,9 +230,9 @@ read_when:
 
 ## 安全配置
 
-- `security.allowRemoteViewer` (`boolean`，默认为 `false`)
-  - `false`：拒绝非环回请求访问查看器路由。
-  - `true`：如果带令牌的路径有效，则允许远程查看器。
+- `security.allowRemoteViewer` （`boolean`，默认 `false`）
+  - `false`：拒绝指向查看器路由的非环回请求。
+  - `true`：如果令牌化路径有效，则允许远程查看器。
 
 示例：
 
@@ -255,17 +255,17 @@ read_when:
 
 ## 工件生命周期和存储
 
-- 构件存储在临时子文件夹中：`$TMPDIR/openclaw-diffs`。
+- 工件存储在 temp 子文件夹下：`$TMPDIR/openclaw-diffs`。
 - 查看器工件元数据包含：
-  - 随机构件 ID（20 个十六进制字符）
+  - 随机工件 ID（20 个十六进制字符）
   - 随机令牌（48 个十六进制字符）
   - `createdAt` 和 `expiresAt`
   - 存储的 `viewer.html` 路径
 - 未指定时，默认查看器 TTL 为 30 分钟。
 - 接受的最大查看器 TTL 为 6 小时。
-- 清理在工件创建后机会性地运行。
+- 清理会在工件创建后适时运行。
 - 过期的工件将被删除。
-- 当元数据丢失时，回退清理会删除超过 24 小时的陈旧文件夹。
+- 当元数据缺失时，回退清理会移除超过 24 小时的陈旧文件夹。
 
 ## 查看器 URL 和网络行为
 
@@ -281,32 +281,32 @@ read_when:
 URL 构建行为：
 
 - 如果提供了 `baseUrl`，则会在严格验证后使用它。
-- 如果没有 `baseUrl`，查看器 URL 默认为环回地址 `127.0.0.1`。
-- 如果网关绑定模式为 `custom` 并且设置了 `gateway.customBindHost`，则使用该主机。
+- 如果没有 `baseUrl`，查看器 URL 默认为回环地址 `127.0.0.1`。
+- 如果网关绑定模式为 `custom` 且设置了 `gateway.customBindHost`，则使用该主机。
 
 `baseUrl` 规则：
 
 - 必须是 `http://` 或 `https://`。
-- 查询和哈希将被拒绝。
-- 允许源和可选的基本路径。
+- 查询和哈希会被拒绝。
+- 允许源加上可选的基本路径。
 
 ## 安全模型
 
 查看器加固：
 
 - 默认仅限回环。
-- 标记化的查看器路径，具有严格的 ID 和令牌验证。
+- 使用严格的 ID 和令牌验证的令牌化查看器路径。
 - 查看器响应 CSP：
   - `default-src 'none'`
-  - 脚本和资源仅来自自身
-  - 无出站 `connect-src`
+  - 脚本和资源仅允许来自自身
+  - 没有出站 `connect-src`
 - 启用远程访问时的远程未命中限制：
-  - 60 秒内失败 40 次
+  - 60 秒内 40 次失败
   - 60 秒锁定（`429 Too Many Requests`）
 
 文件渲染加固：
 
-- 屏幕截图浏览器请求路由默认为拒绝。
+- 屏幕截图浏览器请求路由默认拒绝。
 - 仅允许来自 `http://127.0.0.1/plugins/diffs/assets/*` 的本地查看器资源。
 - 外部网络请求被阻止。
 
@@ -327,60 +327,60 @@ URL 构建行为：
 
 - `Diff PNG/PDF rendering requires a Chromium-compatible browser...`
 
-解决方法是安装 Chrome、Chromium、Edge 或 Brave，或者设置上述可执行路径选项之一。
+通过安装 Chrome、Chromium、Edge 或 Brave，或设置上述可执行路径选项之一来修复。
 
 ## 故障排除
 
 输入验证错误：
 
 - `Provide patch or both before and after text.`
-  - 同时包含 `before` 和 `after`，或者提供 `patch`。
+  - 请同时包含 `before` 和 `after`，或提供 `patch`。
 - `Provide either patch or before/after input, not both.`
-  - 不要混合输入模式。
+  - 请勿混用输入模式。
 - `Invalid baseUrl: ...`
-  - 使用 `http(s)` 源（origin）并附带可选路径，不要包含查询参数或哈希值。
+  - 使用带有可选路径的 `http(s)` 源，不要包含查询/哈希。
 - `{field} exceeds maximum size (...)`
-  - 减少有效载荷大小。
+  - 减小负载大小。
 - 大型补丁拒绝
   - 减少补丁文件数量或总行数。
 
 查看器可访问性问题：
 
 - 查看器 URL 默认解析为 `127.0.0.1`。
-- 对于远程访问场景，请执行以下任一操作：
-  - 每次工具调用传递 `baseUrl`，或
+- 对于远程访问场景，请：
+  - 每次工具调用时传递 `baseUrl`，或
   - 使用 `gateway.bind=custom` 和 `gateway.customBindHost`
 - 仅当您打算进行外部查看器访问时，才启用 `security.allowRemoteViewer`。
 
-未修改行行没有展开按钮：
+未修改行没有展开按钮：
 
-- 对于补丁输入，当补丁不包含可展开的上下文时，可能会发生这种情况。
-- 这是预期的行为，并不表示查看器失败。
+- 当补丁不包含可展开的上下文时，补丁输入可能会发生这种情况。
+- 这是预期的，并不表示查看器故障。
 
-未找到工件：
+找不到工件：
 
-- 由于 TTL，工件已过期。
+- 工件因 TTL 过期。
 - 令牌或路径已更改。
-- 清理已删除过时数据。
+- 清理操作已删除过时数据。
 
 ## 操作指南
 
 - 对于画布中的本地交互式审查，首选 `mode: "view"`。
 - 对于需要附件的出站聊天频道，首选 `mode: "file"`。
 - 保持 `allowRemoteViewer` 禁用，除非您的部署需要远程查看器 URL。
-- 为敏感的差异文件设置明确的简短 `ttlSeconds`。
-- 在不必要时，避免在差异输入中发送机密信息。
-- 如果您的频道对图像进行激进压缩（例如 Telegram 或 WhatsApp），请首选 PDF 输出 (`fileFormat: "pdf"`)。
+- 为敏感的差异设置明确的短期 `ttlSeconds`。
+- 如无必要，请避免在 diff 输入中发送机密信息。
+- 如果您的渠道激进地压缩图片（例如 Telegram 或 WhatsApp），请首选 PDF 输出（`fileFormat: "pdf"`）。
 
-差异渲染引擎：
+Diff 渲染引擎：
 
 - 由 [Diffs](https://diffs.com) 提供支持。
 
 ## 相关文档
 
-- [工具概述](/zh/tools)
-- [插件](/zh/en/tools/plugin)
-- [浏览器](/zh/en/tools/browser)
+- [工具概览](/en/tools)
+- [插件](/en/tools/plugin)
+- [浏览器](/en/tools/browser)
 
 import zh from '/components/footer/zh.mdx';
 

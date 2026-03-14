@@ -8,7 +8,7 @@ permalink: /security/formal-verification/
 
 此页面跟踪 OpenClaw 的**形式化安全模型**（目前为 TLA+/TLC；必要时会扩展更多）。
 
-> 注意：一些旧的链接可能指的是以前的项目名称。
+> 注意：某些较旧的链接可能指向以前的项目名称。
 
 **目标（北极星）：** 提供一个经过机器检查的论证，证明在明确假设的前提下，OpenClaw 执行了其预期的安全策略（授权、会话隔离、工具门控和错误配置安全）。
 
@@ -58,11 +58,11 @@ make <target>
 - 红色（预期）：
   - `make gateway-exposure-v2-negative`
 
-另请参见：模型仓库中的 `docs/gateway-exposure-matrix.md`。
+另请参阅：模型仓库中的 `docs/gateway-exposure-matrix.md`。
 
-### Nodes.run 流水线（最高风险能力）
+### Nodes.run 管道（最高风险能力）
 
-**声明：** `nodes.run` 需要 (a) 节点命令允许列表（allowlist）加上已声明的命令，以及 (b) 配置时的实时审批；审批已通过令牌化处理以防止重放（在模型中）。
+**声明：** `nodes.run` 需要 节点命令允许列表以及已声明的命令，并且在配置时需要实时批准；批准已令牌化以防止重放（在模型中）。
 
 - 绿色运行：
   - `make nodes-pipeline`
@@ -71,7 +71,7 @@ make <target>
   - `make nodes-pipeline-negative`
   - `make approvals-token-negative`
 
-### 配对存储（私信 门控）
+### 配对存储（私信门控）
 
 **声明：** 配对请求遵守 TTL 和待处理请求上限。
 
@@ -93,71 +93,71 @@ make <target>
 
 ### 路由/会话密钥隔离
 
-**声明：** 来自不同对等方的私信不会合并到同一个会话中，除非显式链接/配置。
+**声明：** 来自不同对等方的私信不会合并到同一会话中，除非显式链接/配置。
 
 - 绿色：
   - `make routing-isolation`
 - 红色（预期）：
   - `make routing-isolation-negative`
 
-## v1++：额外的有界模型（并发、重试、跟踪正确性）
+## v1++：附加的有界模型（并发、重试、追踪正确性）
 
-这些是后续模型，它们围绕现实世界的故障模式（非原子更新、重试和消息扇出）提高了保真度。
+这些是后续模型，它们加强了围绕现实世界故障模式（非原子更新、重试和消息扇出）的保真度。
 
-### 配对存储并发 / 幂等性
+### 配对存储并发/幂等性
 
-**声明：** 配对存储即使在交错操作下也应强制执行 `MaxPending` 和幂等性（即，“检查后写入”必须是原子/锁定的；刷新不应创建重复项）。
+**声明：** 配对存储即使在交错情况下也应强制执行 `MaxPending` 和幂等性（即，“检查后写入”必须是原子/锁定的；刷新不应创建重复项）。
 
 含义：
 
-- 在并发请求下，对于通道，您不能超过 `MaxPending`。
-- 针对相同 `(channel, sender)` 的重复请求/刷新不应创建重复的实时待处理行。
+- 在并发请求下，对于某个渠道，您不能超过 `MaxPending`。
+- 针对同一 `(channel, sender)` 的重复请求/刷新不应创建重复的实时待处理行。
 
 - 绿色运行：
-  - `make pairing-race` （原子/锁定能力检查）
+  - `make pairing-race` （原子/锁定功能检查）
   - `make pairing-idempotency`
   - `make pairing-refresh`
   - `make pairing-refresh-race`
 - 红色（预期）：
-  - `make pairing-race-negative` （非原子 begin/commit 能力竞态）
+  - `make pairing-race-negative` （非原子 begin/commit cap 竞争）
   - `make pairing-idempotency-negative`
   - `make pairing-refresh-negative`
   - `make pairing-refresh-race-negative`
 
-### Ingress trace correlation / idempotency
+### 入口追踪关联 / 幂等性
 
-**Claim:** ingestion should preserve trace correlation across fan-out and be idempotent under 提供商 retries.
+**声明**：摄取过程应在分发时保留追踪关联，并在提供商重试时保持幂等。
 
-What it means:
+含义：
 
-- When one external event becomes multiple internal messages, every part keeps the same trace/event identity.
-- Retries do not result in double-processing.
-- If 提供商 event IDs are missing, dedupe falls back to a safe key (e.g., trace ID) to avoid dropping distinct events.
+- 当一个外部事件变为多个内部消息时，每个部分都保持相同的追踪/事件身份。
+- 重试不应导致双重处理。
+- 如果提供商事件 ID 缺失，去重会回退到安全密钥（例如追踪 ID），以避免丢弃不同的事件。
 
-- Green:
+- 绿色：
   - `make ingress-trace`
   - `make ingress-trace2`
   - `make ingress-idempotency`
   - `make ingress-dedupe-fallback`
-- Red (expected):
+- 红色（预期）：
   - `make ingress-trace-negative`
   - `make ingress-trace2-negative`
   - `make ingress-idempotency-negative`
   - `make ingress-dedupe-fallback-negative`
 
-### Routing dmScope precedence + identityLinks
+### 路由 dmScope 优先级 + identityLinks
 
-**Claim:** routing must keep 私信 sessions isolated by default, and only collapse sessions when explicitly configured (渠道 precedence + identity links).
+**声明**：路由必须默认保持私信 会话隔离，并且仅在显式配置时才合并会话（渠道优先级 + 身份链接）。
 
-What it means:
+含义：
 
-- Channel-specific dmScope overrides must win over global defaults.
-- identityLinks should collapse only within explicit linked groups, not across unrelated peers.
+- 特定于渠道 的 dmScope 覆盖必须优先于全局默认值。
+- identityLinks 应仅在显式链接的组内合并，而不应在不相关的对等体之间合并。
 
-- Green:
+- 绿色：
   - `make routing-precedence`
   - `make routing-identitylinks`
-- Red (expected):
+- 红色（预期）：
   - `make routing-precedence-negative`
   - `make routing-identitylinks-negative`
 

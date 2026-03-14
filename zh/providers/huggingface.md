@@ -85,21 +85,21 @@ GET https://router.huggingface.co/v1/models
 ```
 
 - **提供商/策略选择：** 在**模型 ID** 后附加一个后缀，以选择路由器如何选择后端：
-  - **`:fastest`** — 最高吞吐量（路由器选择；提供商选择已 **锁定** — 无交互式后端选择器）。
-  - **`:cheapest`** — 每个输出令牌的成本最低（路由器选择；提供商选择已 **锁定**）。
+  - **`:fastest`** — 最高吞吐量（由路由器选择；提供商选择已**锁定** — 无交互式后端选择器）。
+  - **`:cheapest`** — 每个输出 Token 成本最低（由路由器选择；提供商选择已**锁定**）。
   - **`:provider`** — 强制使用特定后端（例如 `:sambanova`、`:together`）。
 
-  当您选择 **:cheapest** 或 **:fastest**（例如在 新手引导 模型下拉菜单中）时，提供商会被锁定：路由器根据成本或速度决定，并且不会显示可选的“首选特定后端”步骤。您可以将这些作为单独的条目添加到 `models.providers.huggingface.models` 中，或使用后缀设置 `model.primary`。您也可以在 [Inference Provider settings](https://hf.co/settings/inference-providers) 中设置默认顺序（无后缀 = 使用该顺序）。
+  当您选择 **:cheapest** 或 **:fastest** 时（例如在新手引导模型下拉菜单中），提供商将被锁定：路由器根据成本或速度决定，且不会显示可选的“首选特定后端”步骤。您可以将它们作为单独的条目添加到 `models.providers.huggingface.models` 中，或使用该后缀设置 `model.primary`。您也可以在 [推理提供商设置](https://hf.co/settings/inference-providers) 中设置默认顺序（无后缀 = 使用该顺序）。
 
-- **配置合并：** 合并配置时，`models.providers.huggingface.models` 中的现有条目（例如在 `models.json` 中）会被保留。因此，您在那里设置的任何自定义 `name`、`alias` 或模型选项都将被保留。
+- **配置合并：** 当配置合并时，将保留 `models.providers.huggingface.models` 中的现有条目（例如在 `models.json` 中）。因此您在那里设置的任何自定义 `name`、`alias` 或模型选项都将被保留。
 
 ## 模型 ID 和配置示例
 
-模型引用采用 `huggingface/<org>/<model>`（Hub 风格的 ID）格式。下面的列表来自 **GET** `https://router.huggingface.co/v1/models`；您的目录中可能包含更多内容。
+模型引用采用 `huggingface/<org>/<model>` 的形式（Hub 风格 ID）。以下列表来自 **GET** `https://router.huggingface.co/v1/models`；您的目录可能包含更多内容。
 
 **示例 ID（来自推理端点）：**
 
-| Model                  | Ref (prefix with `huggingface/`)    |
+| 模型                   | 引用（前缀为 `huggingface/`）       |
 | ---------------------- | ----------------------------------- |
 | DeepSeek R1            | `deepseek-ai/DeepSeek-R1`           |
 | DeepSeek V3.2          | `deepseek-ai/DeepSeek-V3.2`         |
@@ -112,11 +112,11 @@ GET https://router.huggingface.co/v1/models
 | GLM 4.7                | `zai-org/GLM-4.7`                   |
 | Kimi K2.5              | `moonshotai/Kimi-K2.5`              |
 
-您可以将 `:fastest`、`:cheapest` 或 `:provider`（例如 `:together`、`:sambanova`）附加到模型 ID。在 [Inference Provider 设置](https://hf.co/settings/inference-providers) 中设置您的默认顺序；有关完整列表，请参阅 [Inference Providers](https://huggingface.co/docs/inference-providers) 和 **GET** `https://router.huggingface.co/v1/models`。
+您可以在模型 ID 后附加 `:fastest`、`:cheapest` 或 `:provider`（例如 `:together`、`:sambanova`）。在 [Inference Provider settings](https://hf.co/settings/inference-providers) 中设置您的默认顺序；有关完整列表，请参阅 [Inference Providers](https://huggingface.co/docs/inference-providers) 和 **GET** `https://router.huggingface.co/v1/models`。
 
 ### 完整配置示例
 
-**主要使用 DeepSeek R1，Qwen 作为回退：**
+**主要使用 DeepSeek R1，并使用 Qwen 作为回退：**
 
 ```json5
 {
@@ -135,7 +135,7 @@ GET https://router.huggingface.co/v1/models
 }
 ```
 
-**Qwen 为默认，包含 :cheapest 和 :fastest 变体：**
+**默认使用 Qwen，包含 :cheapest 和 :fastest 变体：**
 
 ```json5
 {
@@ -152,7 +152,7 @@ GET https://router.huggingface.co/v1/models
 }
 ```
 
-**DeepSeek + Llama + GPT-OSS 并带有别名：**
+**DeepSeek + Llama + GPT-OSS 及其别名：**
 
 ```json5
 {
@@ -175,7 +175,7 @@ GET https://router.huggingface.co/v1/models
 }
 ```
 
-**使用 :提供商 强制特定的后端：**
+**使用 :提供商 强制指定特定后端：**
 
 ```json5
 {
@@ -190,7 +190,7 @@ GET https://router.huggingface.co/v1/models
 }
 ```
 
-**多个带有策略后缀的 Qwen 和 DeepSeek 模型：**
+**多个 Qwen 和 DeepSeek 模型，带有策略后缀：**
 
 ```json5
 {

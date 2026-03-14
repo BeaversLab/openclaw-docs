@@ -97,17 +97,17 @@ title: "SecretRef 凭据定义"
 
 [//]: # "secretref-supported-list-end"
 
-备注：
+注意：
 
-- 身份配置文件计划目标需要 `agentId`。
-- 计划条目以 `profiles.*.key` / `profiles.*.token` 为目标，并写入同级引用（`keyRef` / `tokenRef`）。
-- Auth-profile refs are included in runtime resolution and audit coverage。
-- 对于 SecretRef 管理的模型提供商，生成的 `agents/*/agent/models.json` 条目会为 `apiKey`/header 表面保留非机密标记（而非已解析的机密值）。
-- Marker persistence is source-authoritative: OpenClaw writes markers from the active source config snapshot (pre-resolution), not from resolved runtime secret values。
-- For web search：
-  - 在显式提供商模式下（已设置 `tools.web.search.provider`），仅所选的提供商密钥处于活动状态。
-  - 在自动模式下（未设置 `tools.web.search.provider`），仅第一个按优先级解析的提供商密钥处于活动状态。
-  - 在自动模式下，未选中的提供商引用在被选中之前被视为不活动。
+- Auth-profile 计划目标需要 `agentId`。
+- 计划条目目标是 `profiles.*.key` / `profiles.*.token` 并写入同级引用（`keyRef` / `tokenRef`）。
+- Auth-profile 引用包含在运行时解析和审计覆盖范围内。
+- 对于由 SecretRef 管理的模型提供商，生成的 `agents/*/agent/models.json` 条目会为 `apiKey`/header 表面保留非机密标记（而非已解析的机密值）。
+- 标记持久性以源为准：OpenClaw 根据活动的源配置快照（解析前）写入标记，而不是根据解析后的运行时 secret 值。
+- 对于 Web 搜索：
+  - 在显式提供商模式（已设置 `tools.web.search.provider`）下，仅所选提供商密钥处于活动状态。
+  - 在自动模式（未设置 `tools.web.search.provider`）下，仅按优先级解析的第一个提供商密钥处于活动状态。
+  - 在自动模式下，未选定的提供商引用在选定之前被视为非活动状态。
 
 ## 不支持的凭据
 
@@ -129,7 +129,7 @@ title: "SecretRef 凭据定义"
 
 基本原理：
 
-- 这些凭据属于已创建、已轮换、承载会话或 OAuth 持久类，不适合只读外部 SecretRef 解析。
+- 这些凭据属于已生成、已轮换、带有会话或 OAuth 持久类型的类，不适合只读的外部 SecretRef 解析。
 
 import zh from '/components/footer/zh.mdx';
 

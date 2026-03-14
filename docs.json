@@ -530,10 +530,6 @@
       "destination": "/*/install/nix"
     },
     {
-      "source": "/*/onboarding",
-      "destination": "/*/start/onboarding"
-    },
-    {
       "source": "/*/onboarding-config-protocol",
       "destination": "/*/experiments/onboarding-config-protocol"
     },
@@ -728,22 +724,6 @@
     {
       "source": "/*/windows",
       "destination": "/*/platforms/windows"
-    },
-    {
-      "source": "/*/wizard",
-      "destination": "/*/start/wizard"
-    },
-    {
-      "source": "/*/start/wizard-cli-flow",
-      "destination": "/*/start/wizard-cli-reference"
-    },
-    {
-      "source": "/*/start/wizard-cli-auth",
-      "destination": "/*/start/wizard-cli-reference"
-    },
-    {
-      "source": "/*/start/wizard-cli-outputs",
-      "destination": "/*/start/wizard-cli-reference"
     },
     {
       "source": "/*/start/faq",
@@ -1878,10 +1858,10 @@
             ]
           },
           {
-            "tab": "网关与运维",
+            "tab": "Gateway 网关与运维",
             "groups": [
               {
-                "group": "网关(Gateway)",
+                "group": "Gateway 网关",
                 "pages": [
                   "zh/gateway/index",
                   {

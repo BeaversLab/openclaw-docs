@@ -41,7 +41,7 @@ kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.OPENCLAW_GAT
 
 ## 使用 Kind 进行本地测试
 
-如果您没有集群，可以使用 [Kind](https://kind.sigs.k8s.io/) 在本地创建一个：
+如果您没有集群，请使用 [Kind](https://kind.sigs.k8s.io/) 在本地创建一个：
 
 ```bash
 ./scripts/k8s/create-kind.sh           # auto-detects docker or podman
@@ -104,7 +104,7 @@ Namespace: openclaw (configurable via OPENCLAW_NAMESPACE)
 
 ### Gateway 网关 配置
 
-编辑 `scripts/k8s/manifests/configmap.yaml` 中的 `openclaw.json`。有关完整参考，请参阅 [Gateway 网关 配置](/zh/en/gateway/configuration)。
+在 `scripts/k8s/manifests/configmap.yaml` 中编辑 `openclaw.json`。有关完整参考，请参阅 [Gateway(网关) 配置](/en/gateway/configuration)。
 
 ### 添加提供商
 

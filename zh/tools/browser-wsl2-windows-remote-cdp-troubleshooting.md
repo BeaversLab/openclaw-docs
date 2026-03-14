@@ -15,7 +15,7 @@ title: "WSL2 + Windows + 远程 Chrome CDP 故障排除"
 - Chrome 在 Windows 上运行
 - 浏览器控制必须跨越 WSL2/Windows 边界
 
-它还涵盖了 [issue #39369](https://github.com/openclaw/openclaw/issues/39369) 中的分层失败模式：几个独立的问题可能会同时出现，这使得错误的层级看起来像是首先损坏的。
+它还涵盖了来自 [issue #39369](https://github.com/openclaw/openclaw/issues/39369) 的分层故障模式：几个独立的问题可能会同时出现，这会首先让错误的层级看起来像是坏了。
 
 ## 首先选择正确的浏览器模式
 
@@ -41,7 +41,7 @@ title: "WSL2 + Windows + 远程 Chrome CDP 故障排除"
 - 您想要基于扩展程序的控制，而不是原始的 `--remote-debugging-port`
 - 中继本身必须可以跨越 WSL2/Windows 边界访问
 
-如果您跨命名空间使用扩展程序中继，`browser.relayBindHost` 是在 [浏览器](/zh/en/tools/browser) 和 [Chrome 扩展程序](/zh/en/tools/chrome-extension) 中引入的重要设置。
+如果您跨命名空间使用扩展中继，`browser.relayBindHost` 是 [Browser](/en/tools/browser) 和 [Chrome extension](/en/tools/chrome-extension) 中引入的重要设置。
 
 ## 工作原理架构
 
@@ -74,7 +74,7 @@ title: "WSL2 + Windows + 远程 Chrome CDP 故障排除"
 
 `http://127.0.0.1:18789/`
 
-不要默认为控制 UI 使用 LAN IP。在 LAN 或 tailnet 地址上的纯 HTTP 可能会触发与 CDP 本身无关的不安全源/设备认证行为。请参阅[控制 UI](/zh/en/web/control-ui)。
+不要默认将 Control UI 设置为 LAN IP。LAN 或 tailnet 地址上的纯 HTTP 可能会触发不安全来源/设备身份验证行为，这与 CDP 本身无关。请参阅 [Control UI](/en/web/control-ui)。
 
 ## 分层验证
 
@@ -183,7 +183,7 @@ curl http://WINDOWS_HOST_OR_IP:9222/json/list
 
 有用的页面：
 
-- [Control UI](/zh/en/web/control-ui)
+- [Control UI](/en/web/control-ui)
 
 ### 第 6 层：验证端到端浏览器控制
 
@@ -211,17 +211,17 @@ openclaw browser tabs --browser-profile chrome
 将每条消息视为特定于某一层的线索：
 
 - `control-ui-insecure-auth`
-  - UI 源/安全上下文问题，而非 CDP 传输问题
+  - UI 来源/安全上下文问题，而非 CDP 传输问题
 - `token_missing`
   - 身份验证配置问题
 - `pairing required`
-  - 设备批准问题
+  - 设备审批问题
 - `Remote CDP for profile "remote" is not reachable`
   - WSL2 无法访问已配置的 `cdpUrl`
 - `gateway timeout after 1500ms`
-  - 通常仍然是 CDP 可达性或缓慢/不可访问的远程端点问题
+  - 通常仍然是 CDP 连通性或缓慢/不可用的远程端点问题
 - `Chrome extension relay is running, but no tab is connected`
-  - 已选择扩展程序中继配置文件，但尚无附加的标签页
+  - 已选择扩展中继配置文件，但尚无附加的标签页
 
 ## 快速分诊检查清单
 

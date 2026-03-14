@@ -13,8 +13,8 @@ TypeBox 是一个优先考虑 TypeScript 的模式库。我们使用它来定义
 WebSocket 协议**（握手、请求/响应、服务器事件）。这些模式驱动了 **运行时验证**、
 **JSON Schema 导出**以及 macOS 应用的 **Swift 代码生成**。唯一的事实来源；其他一切都是生成的。
 
-如果您需要更高级别的协议上下文，请从
-[Gateway 网关 架构](/zh/en/concepts/architecture)开始。
+如果您希望了解更高层的协议上下文，请从
+[Gateway(网关) 架构](/zh/concepts/architecture) 开始。
 
 ## 思维模型（30 秒）
 
@@ -40,22 +40,22 @@ Client                    Gateway
 
 常用方法 + 事件：
 
-| 类别 | 示例 | 备注 |
-| --------- | --------------------------------------------------------- | ---------------------------------- |
-| 核心 | `connect`, `health`, `status` | `connect` 必须是第一个 |
-| 消息 | `send`, `poll`, `agent`, `agent.wait` | 副作用需要 `idempotencyKey` |
-| 聊天 | `chat.history`, `chat.send`, `chat.abort`, `chat.inject` | WebChat 使用这些 |
-| 会话 | `sessions.list`, `sessions.patch`, `sessions.delete` | 会话管理 |
-| 节点 | `node.list`, `node.invoke`, `node.pair.*` | Gateway 网关 WS + 节点操作 |
-| 事件 | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | 服务端推送 |
+| 类别     | 示例                                                      | 备注                        |
+| -------- | --------------------------------------------------------- | --------------------------- |
+| 核心     | `connect`、`health`、`status`                             | `connect` 必须是第一个      |
+| 消息传递 | `send`、`poll`、`agent`、`agent.wait`                     | 副作用需要 `idempotencyKey` |
+| 聊天     | `chat.history`、`chat.send`、`chat.abort`、`chat.inject`  | WebChat 使用这些            |
+| 会话     | `sessions.list`、`sessions.patch`、`sessions.delete`      | 会话管理                    |
+| 节点     | `node.list`、`node.invoke`、`node.pair.*`                 | Gateway(网关) WS + 节点操作 |
+| 事件     | `tick`、`presence`、`agent`、`chat`、`health`、`shutdown` | 服务器推送                  |
 
-权威列表位于 `src/gateway/server.ts` (`METHODS`, `EVENTS`)。
+权威列表位于 `src/gateway/server.ts`（`METHODS`、`EVENTS`）中。
 
-## Schema 的位置
+## 模式所在的位置
 
-- 来源：`src/gateway/protocol/schema.ts`
+- 源代码：`src/gateway/protocol/schema.ts`
 - 运行时验证器 (AJV)：`src/gateway/protocol/index.ts`
-- 服务端握手 + 方法分发：`src/gateway/server.ts`
+- 服务器握手 + 方法分发：`src/gateway/server.ts`
 - 节点客户端：`src/gateway/client.ts`
 - 生成的 JSON Schema：`dist/protocol.schema.json`
 - 生成的 Swift 模型：`apps/macos/Sources/OpenClawProtocol/GatewayModels.swift`
@@ -65,18 +65,15 @@ Client                    Gateway
 - `pnpm protocol:gen`
   - 将 JSON Schema (draft‑07) 写入 `dist/protocol.schema.json`
 - `pnpm protocol:gen:swift`
-  - 生成 Swift gateway 模型
+  - 生成 Swift 网关模型
 - `pnpm protocol:check`
-  - 运行这两个生成器并验证输出已提交
+  - 运行这两个生成器并验证输出是否已提交
 
-## Schema 在运行时如何使用
+## 模式如何在运行时使用
 
-- **服务端**：每个入站帧都通过 AJV 进行验证。握手仅
-  接受其参数匹配 `ConnectParams` 的 `connect` 请求。
-- **客户端**：JS 客户端在使用之前会验证事件和响应帧
-  。
-- **方法表面**：Gateway 网关 会通告支持的 `methods` 和
-  `hello-ok` 中的 `events`。
+- **服务器端**：每个入站帧都通过 AJV 进行验证。握手仅接受参数与 `ConnectParams` 匹配的 `connect` 请求。
+- **客户端**：JS 客户端在使用事件和响应帧之前会对其进行验证。
+- **Method surface**：Gateway(网关) 在 `hello-ok` 中通告支持的 `methods` 和 `events`。
 
 ## 示例帧
 
@@ -141,9 +138,9 @@ Hello-ok 响应：
 { "type": "event", "event": "tick", "payload": { "ts": 1730000000 }, "seq": 12 }
 ```
 
-## 最小客户端（Node.js）
+## Minimal client (Node.js)
 
-最小的可用流程：连接 + 健康检查。
+最小可用流程：连接 + 健康检查。
 
 ```ts
 import { WebSocket } from "ws";
@@ -183,11 +180,11 @@ ws.on("message", (data) => {
 });
 ```
 
-## 实战示例：端到端添加一个方法
+## 演练示例：端到端添加方法
 
-示例：添加一个新的 `system.echo` 请求，返回 `{ ok: true, text }`。
+示例：添加一个新的 `system.echo` 请求，该请求返回 `{ ok: true, text }`。
 
-1. **Schema（单一事实来源）**
+1. **模式（单一真实源）**
 
 添加到 `src/gateway/protocol/schema.ts`：
 
@@ -203,7 +200,7 @@ export const SystemEchoResultSchema = Type.Object(
 );
 ```
 
-将两者都添加到 `ProtocolSchemas` 并导出类型：
+将两者添加到 `ProtocolSchemas` 并导出类型：
 
 ```ts
   SystemEchoParams: SystemEchoParamsSchema,
@@ -225,7 +222,7 @@ export const validateSystemEchoParams = ajv.compile<SystemEchoParams>(SystemEcho
 
 3. **服务器行为**
 
-在 `src/gateway/server-methods/system.ts` 中添加处理程序：
+在 `src/gateway/server-methods/system.ts` 中添加一个处理程序：
 
 ```ts
 export const systemHandlers: GatewayRequestHandlers = {
@@ -247,45 +244,46 @@ pnpm protocol:check
 
 5. **测试 + 文档**
 
-在 `src/gateway/server.*.test.ts` 中添加服务器测试并在文档中记录该方法。
+在 `src/gateway/server.*.test.ts` 中添加服务器测试，并在文档中注明该方法。
 
 ## Swift 代码生成行为
 
-Swift 生成器会生成：
+Swift 生成器生成：
 
 - 带有 `req`、`res`、`event` 和 `unknown` case 的 `GatewayFrame` 枚举
-- 强类型的 payload 结构体/枚举
+- 强类型负载结构体/枚举
 - `ErrorCode` 值和 `GATEWAY_PROTOCOL_VERSION`
 
-未知的帧类型被保留为原始 payload 以确保前向兼容性。
+未知帧类型作为原始负载保留，以确保前向兼容性。
 
 ## 版本控制 + 兼容性
 
 - `PROTOCOL_VERSION` 位于 `src/gateway/protocol/schema.ts` 中。
 - 客户端发送 `minProtocol` + `maxProtocol`；服务器拒绝不匹配的情况。
-- Swift 模型保留未知的帧类型以避免破坏旧版客户端。
+- Swift 模型保留未知的帧类型，以避免破坏旧版客户端。
 
 ## Schema 模式和约定
 
-- 大多数对象使用 `additionalProperties: false` 来处理严格的有效负载。
+- 大多数对象对严格的有效负载使用 `additionalProperties: false`。
 - `NonEmptyString` 是 ID 和方法/事件名称的默认值。
 - 顶层 `GatewayFrame` 在 `type` 上使用**鉴别器 (discriminator)**。
-- 具有副作用的函数通常需要在参数中包含 `idempotencyKey`
+- 具有副作用的方法通常在参数中需要一个 `idempotencyKey`
   （例如：`send`、`poll`、`agent`、`chat.send`）。
-- `agent` 接受可选的 `internalEvents`，用于运行时生成的编排上下文
-  （例如子代理/cron 任务完成交接）；请将其视为内部 API 表面。
+- `agent` 接受可选的 `internalEvents` 用于运行时生成的编排上下文
+  （例如子代理/定时任务完成切换）；将此视为内部 API 接口。
 
-## 实时模式 JSON
+## 实时 Schema JSON
 
-生成的 JSON Schema 位于仓库中的 `dist/protocol.schema.json`。通常可以在以下位置获取已发布的原始文件：
+生成的 JSON Schema 位于仓库的 `dist/protocol.schema.json` 中。
+发布的原始文件通常位于：
 
 - [https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json](https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json)
 
-## 更改模式时
+## 更改 Schema 时
 
-1. 更新 TypeBox 模式。
+1. 更新 TypeBox schemas。
 2. 运行 `pnpm protocol:check`。
-3. 提交重新生成的模式和 Swift 模型。
+3. 提交重新生成的 Schema + Swift 模型。
 
 import zh from '/components/footer/zh.mdx';
 

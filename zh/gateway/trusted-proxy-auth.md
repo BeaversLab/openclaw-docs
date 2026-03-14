@@ -9,7 +9,7 @@ read_when:
 
 # 受信任的代理身份验证
 
-> ⚠️ **安全敏感功能。** 此模式将身份验证完全委托给您的反向代理。配置错误可能会使您的 Gateway 网关 暴露于未经授权的访问。在启用之前，请仔细阅读此页面。
+> ⚠️ **安全敏感功能。** 此模式将身份验证完全委托给您的反向代理。配置错误可能会将您的 Gateway(网关) 暴露给未经授权的访问。启用前请仔细阅读此页面。
 
 ## 何时使用
 
@@ -81,26 +81,26 @@ read_when:
 
 ### 配置参考
 
-| 字段                                       | 必填   | 描述                                                                 |
-| ------------------------------------------- | ------ | --------------------------------------------------------------------------- |
-| `gateway.trustedProxies`                    | 是     | 要信任的代理 IP 地址列表。来自其他 IP 的请求将被拒绝。                   |
-| `gateway.auth.mode`                         | 是     | 必须为 `"trusted-proxy"`                                                   |
-| `gateway.auth.trustedProxy.userHeader`      | 是     | 包含已认证用户身份的 Header 名称                                         |
-| `gateway.auth.trustedProxy.requiredHeaders` | 否     | 为使请求受信任而必须存在的其他 Header                                  |
-| `gateway.auth.trustedProxy.allowUsers`      | 否     | 用户身份白名单。为空表示允许所有已认证的用户。                           |
+| 字段                                        | 必填 | 描述                                                   |
+| ------------------------------------------- | ---- | ------------------------------------------------------ |
+| `gateway.trustedProxies`                    | 是   | 受信任的代理 IP 地址数组。来自其他 IP 的请求将被拒绝。 |
+| `gateway.auth.mode`                         | 是   | 必须为 `"trusted-proxy"`                               |
+| `gateway.auth.trustedProxy.userHeader`      | 是   | 包含已验证用户身份的 Header 名称                       |
+| `gateway.auth.trustedProxy.requiredHeaders` | 否   | 请求受信任时必须存在的其他 Header                      |
+| `gateway.auth.trustedProxy.allowUsers`      | 否   | 用户身份白名单。为空表示允许所有经过身份验证的用户。   |
 
-## TLS 终止与 HSTS
+## TLS 终止和 HSTS
 
-仅使用一个 TLS 终止点并在该处应用 HSTS。
+使用一个 TLS 终止点并在那里应用 HSTS。
 
 ### 推荐模式：代理 TLS 终止
 
-当您的反向代理为 `https://control.example.com` 处理 HTTPS 时，请
-在该域名的代理上设置 `Strict-Transport-Security`。
+当您的反向代理处理 `https://control.example.com` 的 HTTPS 时，在该域名的代理上设置
+`Strict-Transport-Security`。
 
-- 适合面向互联网的部署。
+- 适用于面向互联网的部署。
 - 将证书 + HTTP 加固策略集中在一处管理。
-- OpenClaw 可以保持在代理后端的回环 HTTP 上运行。
+- OpenClaw 可以保留在代理后的回环 HTTP 上。
 
 Header 值示例：
 
@@ -108,7 +108,7 @@ Header 值示例：
 Strict-Transport-Security: max-age=31536000; includeSubDomains
 ```
 
-### Gateway 网关 TLS 终止
+### Gateway(网关) TLS 终止
 
 如果 OpenClaw 本身直接提供 HTTPS（无 TLS 终止代理），请设置：
 
@@ -125,13 +125,13 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains
 }
 ```
 
-`strictTransportSecurity` 接受字符串 Header 值，或者设为 `false` 以显式禁用。
+`strictTransportSecurity` 接受字符串 Header 值，或使用 `false` 显式禁用。
 
 ### 上线指导
 
-- 在验证流量时，首先使用较短的有效期（例如 `max-age=300`）。
-- 只有在确认无误后，才增加到长期有效的值（例如 `max-age=31536000`）。
-- 仅当每个子域名都准备好使用 HTTPS 时，才添加 `includeSubDomains`。
+- 在验证流量时，首先使用较短的 max age（例如 `max-age=300`）。
+- 只有在确保无误后，才增加到长期有效的值（例如 `max-age=31536000`）。
+- 仅当每个子域都准备好 HTTPS 时，才添加 `includeSubDomains`。
 - 仅当您有意为整个域名集满足预加载要求时，才使用预加载。
 - 仅限本地回环的本地开发无法从 HSTS 中受益。
 
@@ -139,7 +139,7 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains
 
 ### Pomerium
 
-Pomerium 在 `x-pomerium-claim-email`（或其他 claim headers）中传递身份，并在 `x-pomerium-jwt-assertion` 中传递 JWT。
+Pomerium 在 `x-pomerium-claim-email`（或其他声明 Header）中传递身份，并在 `x-pomerium-jwt-assertion` 中传递 JWT。
 
 ```json5
 {
@@ -171,9 +171,9 @@ routes:
     pass_identity_headers: true
 ```
 
-### 使用 OAuth 的 Caddy
+### 带有 OAuth 的 Caddy
 
-带有 `caddy-security` 插件的 Caddy 可以对用户进行身份验证并传递身份 headers。
+带有 `caddy-security` 插件的 Caddy 可以对用户进行身份验证并传递身份标头。
 
 ```json5
 {
@@ -237,7 +237,7 @@ location / {
 }
 ```
 
-### Traefik 配合 Forward Auth
+### Traefik 搭配 Forward Auth
 
 ```json5
 {
@@ -258,15 +258,15 @@ location / {
 
 在启用 trusted-proxy 身份验证之前，请验证：
 
-- [ ] **代理是唯一路径**：Gateway 网关 端口已设置防火墙，仅允许您的代理访问
-- [ ] **trustedProxies 是最小的**：仅包含您的实际代理 IP，而不是整个子网
-- [ ] **代理剥离 headers**：您的代理覆盖（而不是追加）来自客户端的 `x-forwarded-*` headers
+- [ ] **代理是唯一路径**：Gateway(网关) 端口已设置防火墙，仅允许您的代理访问
+- [ ] **trustedProxies 最小化**：仅包含您的实际代理 IP，而不是整个子网
+- [ ] **代理剥离标头**：您的代理覆盖（而非追加）来自客户端的 `x-forwarded-*` 标头
 - [ ] **TLS 终止**：您的代理处理 TLS；用户通过 HTTPS 连接
-- [ ] **已设置 allowUsers**（推荐）：限制为已知用户，而不是允许任何通过身份验证的人
+- [ ] **设置了 allowUsers**（推荐）：限制为已知用户，而不是允许任何经过身份验证的用户
 
 ## 安全审计
 
-`openclaw security audit` 将标记具有“严重”严重性级别的可信代理身份验证。这是有意为之——这是一个提醒，您正在将安全性委托给您的代理设置。
+`openclaw security audit` 将以 **严重** 严重性发现标记 trusted-proxy 身份验证。这是有意为之——旨在提醒您正在将安全性委托给您的代理设置。
 
 审计检查内容包括：
 
@@ -278,56 +278,56 @@ location / {
 
 ### "trusted_proxy_untrusted_source"
 
-请求未来自 `gateway.trustedProxies` 中的 IP。检查：
+请求并非来自 `gateway.trustedProxies` 中的 IP。请检查：
 
-- 代理 IP 是否正确？（Docker 容器 IP 可能会变化）
+- 代理 IP 是否正确？（Docker 容器 IP 可能会发生变化）
 - 代理前面是否有负载均衡器？
 - 使用 `docker inspect` 或 `kubectl get pods -o wide` 查找实际 IP
 
 ### "trusted_proxy_user_missing"
 
-用户头为空或缺失。请检查：
+用户标头为空或缺失。请检查：
 
-- 您的代理是否配置为传递身份头？
-- 头名称是否正确？（不区分大小写，但拼写很重要）
+- 您的代理是否配置为传递身份标头？
+- 标头名称是否正确？（不区分大小写，但拼写必须正确）
 - 用户是否确实在代理处通过了身份验证？
 
 ### "trusted*proxy_missing_header*\*"
 
-缺少必需的请求头。请检查：
+缺少必需的标头。请检查：
 
-- 针对这些特定请求头的代理配置
-- 请求头是否在链路中的某处被剥离
+- 针对那些特定标头的代理配置
+- 链路中是否有某处剥离了标头
 
 ### "trusted_proxy_user_not_allowed"
 
-用户已通过身份验证但不在 `allowUsers` 中。请添加他们或移除允许列表。
+用户已通过身份验证，但不在 `allowUsers` 中。请将他们添加进去或删除允许列表。
 
 ### WebSocket 仍然失败
 
-确保您的代理：
+请确保您的代理：
 
-- 支持 WebSocket 升级（`Upgrade: websocket`，`Connection: upgrade`）
-- 在 WebSocket 升级请求上传递身份请求头（不仅仅是 HTTP）
+- 支持 WebSocket 升级（`Upgrade: websocket`、`Connection: upgrade`）
+- 在 WebSocket 升级请求上传递身份标头（而不仅仅是 HTTP）
 - 没有为 WebSocket 连接设置单独的身份验证路径
 
-## 从令牌身份验证迁移
+## 从 Token 身份验证迁移
 
-如果您正在从令牌身份验证迁移到受信任代理：
+如果您正在从 token 身份验证迁移到 trusted-proxy：
 
-1. 配置您的代理以对用户进行身份验证并传递请求头
-2. 独立测试代理设置（使用带请求头的 curl）
-3. 使用受信任代理身份验证更新 OpenClaw 配置
-4. 重启 Gateway 网关
+1. 配置您的代理以验证用户并传递标头
+2. 独立测试代理设置（使用带有标头的 curl）
+3. 使用受信任的代理身份验证更新 OpenClaw 配置
+4. 重启 Gateway(网关)
 5. 从控制 UI 测试 WebSocket 连接
-6. 运行 `openclaw security audit` 并查看发现结果
+6. 运行 `openclaw security audit` 并检查结果
 
-## 相关内容
+## 相关
 
-- [安全](/zh/en/gateway/security) — 完整的安全指南
-- [配置](/zh/en/gateway/configuration) — 配置参考
-- [远程访问](/zh/en/gateway/remote) — 其他远程访问模式
-- [Tailscale](/zh/en/gateway/tailscale) — 专用于 tailnet 访问的更简单的替代方案
+- [安全性](/zh/gateway/security) — 完整的安全指南
+- [配置](/zh/gateway/configuration) — 配置参考
+- [远程访问](/zh/gateway/remote) — 其他远程访问模式
+- [Tailscale](/zh/gateway/tailscale) — 专用于 tailnet 访问的更简单的替代方案
 
 import zh from '/components/footer/zh.mdx';
 

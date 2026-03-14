@@ -43,36 +43,36 @@ openclaw update --channel dev
 
 当您使用 `--channel` **显式** 切换频道时，OpenClaw 也会对齐安装方法：
 
-- `dev` 确保进行 git 检出（默认为 `~/openclaw`，可通过 `OPENCLAW_GIT_DIR` 覆盖），
-  更新它，并从该检出中安装全局 CLI。
+- `dev` 确保 git 检出（默认为 `~/openclaw`，可通过 `OPENCLAW_GIT_DIR` 覆盖），
+  更新它，并从该检出安装全局 CLI。
 - `stable`/`beta` 使用匹配的 dist-tag 从 npm 安装。
 
-提示：如果您想同时使用稳定版和开发版，请保留两个克隆版本，并将您的网关指向稳定版。
+提示：如果您想同时使用 stable 和 dev，请保留两个克隆并将您的网关指向 stable 那个。
 
-## 插件和频道
+## 插件和渠道
 
-当您使用 `openclaw update` 切换频道时，OpenClaw 也会同步插件来源：
+当您使用 `openclaw update` 切换通道时，OpenClaw 也会同步插件源：
 
 - `dev` 优先使用来自 git 检出的捆绑插件。
-- `stable` 和 `beta` 会恢复通过 npm 安装的插件包。
+- `stable` 和 `beta` 会恢复 npm 安装的插件包。
 
-## 标记最佳实践
+## 标签最佳实践
 
-- 为您希望 git 检出定位到的发布版本打标签（stable 版本用 `vYYYY.M.D`，beta 版本用 `vYYYY.M.D-beta.N`）。
-- `vYYYY.M.D.beta.N` 也会被识别以确保兼容性，但建议首选 `-beta.N`。
-- 旧版 `vYYYY.M.D-<patch>` 标签仍被识别为稳定版（非 Beta）。
+- 为您希望 git 检出定位到的版本打上标签（stable 版用 `vYYYY.M.D`，beta 版用 `vYYYY.M.D-beta.N`）。
+- 出于兼容性考虑，也会识别 `vYYYY.M.D.beta.N`，但建议优先使用 `-beta.N`。
+- 遗留的 `vYYYY.M.D-<patch>` 标签仍会被识别为 stable（非 beta）。
 - 保持标签不可变：切勿移动或重用标签。
 - npm dist-tags 仍然是 npm 安装的事实来源：
-  - `latest` → 稳定版
-  - `beta` → 候选构建版
-  - `dev` → 主分支快照（可选）
+  - `latest` → stable
+  - `beta` → 候选版本
+  - `dev` → main 快照（可选）
 
 ## macOS 应用可用性
 
-Beta 和 dev 版构建**可能**不包含 macOS 应用版本。这没关系：
+Beta 和 dev 版本可能**不**包含 macOS 应用程序发布。这没关系：
 
-- 仍然可以发布 git 标签和 npm dist-tag。
-- 在发行说明或更新日志中注明“此 beta 版没有 macOS 构建”。
+- git 标签和 npm dist-tag 仍然可以发布。
+- 在发行说明或更新日志中指出“此 beta 版本没有 macOS 构建”。
 
 import zh from '/components/footer/zh.mdx';
 

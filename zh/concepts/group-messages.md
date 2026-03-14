@@ -72,16 +72,16 @@ title: "群组消息"
 ## 测试 / 验证
 
 - 手动冒烟测试：
-  - 在群组中发送 `@openclaw` ping 并确认回复中引用了发件人姓名。
-  - 发送第二次 ping 并验证历史记录块是否包含在内并在下一轮被清除。
-- 检查网关日志（使用 `--verbose` 运行）以查看显示 `from: <groupJid>` 和 `[from: …]` 后缀的 `inbound web message` 条目。
+  - 在群组中发送一个 `@openclaw` ping，并确认回复中引用了发送者名称。
+  - 发送第二个 ping 并验证历史记录块已包含在内，并在下一轮被清除。
+- 检查网关日志（使用 `--verbose` 运行）以查看 `inbound web message` 条目，这些条目显示 `from: <groupJid>` 和 `[from: …]` 后缀。
 
 ## 已知注意事项
 
-- 为了避免嘈杂的广播，故意跳过了群组的心跳信号。
-- 回声抑制使用组合批处理字符串；如果您在未提及的情况下两次发送相同的文本，只有第一次会收到响应。
+- 为了避免嘈杂的广播，有意跳过群组的心跳检测。
+- 回显抑制使用合并的批处理字符串；如果您在没有提及的情况下发送两次相同的文本，只有第一个会收到回复。
 - 会话存储条目将在会话存储中显示为 `agent:<agentId>:whatsapp:group:<jid>`（默认为 `~/.openclaw/agents/<agentId>/sessions/sessions.json`）；缺少条目仅表示该群组尚未触发运行。
-- 群组中的正在输入指示器遵循 `agents.defaults.typingMode`（未被提及时默认为 `message`）。
+- 群组中的正在输入指示器遵循 `agents.defaults.typingMode`（默认情况下，未被提及时为 `message`）。
 
 import zh from '/components/footer/zh.mdx';
 

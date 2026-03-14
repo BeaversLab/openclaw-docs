@@ -8,8 +8,8 @@ title: "模型提供商"
 
 # 模型提供商
 
-本页面涵盖 **LLM/模型提供商**（不包括 WhatsApp/Telegram 等聊天频道）。
-有关模型选择规则，请参阅 [/concepts/models](/zh/en/concepts/models)。
+本页面涵盖 **LLM/模型提供商**（不包括 WhatsApp/Telegram 等聊天渠道）。
+有关模型选择规则，请参阅 [/concepts/models](/zh/concepts/models)。
 
 ## 快速规则
 
@@ -21,33 +21,33 @@ title: "模型提供商"
 
 - 支持选定提供商的通用提供商轮换。
 - 通过以下方式配置多个密钥：
-  - `OPENCLAW_LIVE_<PROVIDER>_KEY`（单个实时覆盖，优先级最高）
-  - `<PROVIDER>_API_KEYS`（逗号或分号列表）
-  - `<PROVIDER>_API_KEY`（主键）
+  - `OPENCLAW_LIVE_<PROVIDER>_KEY`（单次实时覆盖，最高优先级）
+  - `<PROVIDER>_API_KEYS`（逗号或分号分隔列表）
+  - `<PROVIDER>_API_KEY`（主密钥）
   - `<PROVIDER>_API_KEY_*`（编号列表，例如 `<PROVIDER>_API_KEY_1`）
 - 对于 Google 提供商，`GOOGLE_API_KEY` 也作为回退包含在内。
-- 密钥选择顺序保留优先级并去除重复值。
-- 请求仅在遇到速率限制响应时才会使用下一个密钥重试（例如 `429`、`rate_limit`、`quota`、`resource exhausted`）。
-- 非速率限制的失败会立即失败；不尝试密钥轮换。
+- 密钥选择顺序保留优先级并去重数值。
+- 请求仅在收到速率限制响应（例如 `429`、`rate_limit`、`quota`、`resource exhausted`）时才使用下一个密钥重试。
+- 非速率限制失败会立即失败；不会尝试密钥轮换。
 - 当所有候选密钥都失败时，将返回最后一次尝试的最终错误。
 
-## 内置提供商 (pi-ai catalog)
+## 内置提供商（pi-ai 目录）
 
-OpenClaw 内置 pi‑ai 目录。这些提供商**不**需要
-`models.providers` 配置；只需设置身份验证并选择一个模型即可。
+OpenClaw 随附 pi‑ai 目录。这些提供商**不需要**
+`models.providers` 配置；只需设置 auth 并选择一个模型。
 
 ### OpenAI
 
 - 提供商：`openai`
 - 身份验证：`OPENAI_API_KEY`
-- 可选轮换：`OPENAI_API_KEYS`、`OPENAI_API_KEY_1`、`OPENAI_API_KEY_2`，以及 `OPENCLAW_LIVE_OPENAI_KEY`（单个覆盖）
+- 可选轮换：`OPENAI_API_KEYS`、`OPENAI_API_KEY_1`、`OPENAI_API_KEY_2`，以及 `OPENCLAW_LIVE_OPENAI_KEY`（单次覆盖）
 - 示例模型：`openai/gpt-5.4`、`openai/gpt-5.4-pro`
-- CLI：`openclaw onboard --auth-choice openai-api-key`
+- CLI: `openclaw onboard --auth-choice openai-api-key`
 - 默认传输方式为 `auto`（WebSocket 优先，SSE 回退）
 - 通过 `agents.defaults.models["openai/<model>"].params.transport` 按模型覆盖（`"sse"`、`"websocket"` 或 `"auto"`）
-- OpenAI Responses WebSocket 预热默认通过 `params.openaiWsWarmup` 启用（`true`/`false`）
-- 可以通过 `agents.defaults.models["openai/<model>"].params.serviceTier` 启用 OpenAI 优先处理
-- 可以通过 `agents.defaults.models["<provider>/<model>"].params.fastMode` 为每个模型启用 OpenAI 快速模式
+- OpenAI Responses WebSocket 预热默认通过 `params.openaiWsWarmup` 启用 (`true`/`false`)
+- OpenAI 优先处理可以通过 `agents.defaults.models["openai/<model>"].params.serviceTier` 启用
+- OpenAI 快速模式可以针对每个模型通过 `agents.defaults.models["<provider>/<model>"].params.fastMode` 启用
 - `openai/gpt-5.3-codex-spark` 在 OpenClaw 中被有意屏蔽，因为实时的 OpenAI API 会拒绝它；Spark 被视为仅限 Codex
 
 ```json5
@@ -59,13 +59,13 @@ OpenClaw 内置 pi‑ai 目录。这些提供商**不**需要
 ### Anthropic
 
 - 提供商：`anthropic`
-- 身份验证：`ANTHROPIC_API_KEY` 或 `claude setup-token`
-- 可选轮换：`ANTHROPIC_API_KEYS`、`ANTHROPIC_API_KEY_1`、`ANTHROPIC_API_KEY_2`，加上 `OPENCLAW_LIVE_ANTHROPIC_KEY`（单个覆盖）
+- 认证：`ANTHROPIC_API_KEY` 或 `claude setup-token`
+- 可选轮换：`ANTHROPIC_API_KEYS`、`ANTHROPIC_API_KEY_1`、`ANTHROPIC_API_KEY_2`，加上 `OPENCLAW_LIVE_ANTHROPIC_KEY`（单次覆盖）
 - 示例模型：`anthropic/claude-opus-4-6`
-- CLI：`openclaw onboard --auth-choice token`（粘贴 setup-token）或 `openclaw models auth paste-token --provider anthropic`
-- 直接 API 密钥模型支持共享的 `/fast` 开关和 `params.fastMode`；OpenClaw 将其映射到 Anthropic `service_tier`（`auto` 对比 `standard_only`）
-- 策略说明：支持 setup-token 属于技术兼容性；Anthropic 过去曾阻止在 Claude Code 之外使用某些订阅服务。请核实当前的 Anthropic 条款，并根据您的风险承受能力做出决定。
-- 建议：与订阅 setup-token 身份验证相比，Anthropic API 密钥身份验证是更安全、更推荐的路径。
+- CLI: `openclaw onboard --auth-choice token` (粘贴 setup-token) 或 `openclaw models auth paste-token --provider anthropic`
+- 直接 API 密钥模型支持共享的 `/fast` 切换开关和 `params.fastMode`；OpenClaw 将其映射到 Anthropic `service_tier`（`auto` 与 `standard_only`）
+- 政策说明：setup-token 支持属于技术兼容性；过去 Anthropic 曾阻止在 Claude Code 之外使用某些订阅。请验证当前的 Anthropic 条款，并根据您的风险承受能力做出决定。
+- 建议：相比订阅 setup-token 认证，Anthropic API 密钥认证是更安全、更推荐的路径。
 
 ```json5
 {
@@ -81,9 +81,9 @@ OpenClaw 内置 pi‑ai 目录。这些提供商**不**需要
 - CLI：`openclaw onboard --auth-choice openai-codex` 或 `openclaw models auth login --provider openai-codex`
 - 默认传输为 `auto`（WebSocket 优先，SSE 回退）
 - 通过 `agents.defaults.models["openai-codex/<model>"].params.transport` 按模型覆盖（`"sse"`、`"websocket"` 或 `"auto"`）
-- 共享与直接 `openai/*` 相同的 `/fast` 开关和 `params.fastMode` 配置
-- 当 Codex OAuth 目录公开 `openai-codex/gpt-5.3-codex-spark` 时，它仍然可用；取决于权限
-- 策略说明：OpenAI Codex OAuth 明确支持用于 OpenClaw 等外部工具/工作流。
+- 与直接的 `openai/*` 共享相同的 `/fast` 切换开关和 `params.fastMode` 配置
+- 当 Codex OAuth 目录公开 `openai-codex/gpt-5.3-codex-spark` 时，它仍然可用；取决于授权
+- 政策说明：明确支持 OpenAI Codex OAuth 用于 OpenClaw 等外部工具/工作流。
 
 ```json5
 {
@@ -96,7 +96,7 @@ OpenClaw 内置 pi‑ai 目录。这些提供商**不**需要
 - 身份验证：`OPENCODE_API_KEY`（或 `OPENCODE_ZEN_API_KEY`）
 - Zen 运行时提供商：`opencode`
 - Go 运行时提供商：`opencode-go`
-- 示例模型：`opencode/claude-opus-4-6`、`opencode-go/kimi-k2.5`
+- 示例模型：`opencode/claude-opus-4-6`，`opencode-go/kimi-k2.5`
 - CLI：`openclaw onboard --auth-choice opencode-zen` 或 `openclaw onboard --auth-choice opencode-go`
 
 ```json5
@@ -105,82 +105,82 @@ OpenClaw 内置 pi‑ai 目录。这些提供商**不**需要
 }
 ```
 
-### Google Gemini (API 密钥)
+### Google Gemini（API 密钥）
 
 - 提供商：`google`
 - 身份验证：`GEMINI_API_KEY`
-- 可选轮换：`GEMINI_API_KEYS`、`GEMINI_API_KEY_1`、`GEMINI_API_KEY_2`、`GOOGLE_API_KEY` 回退以及 `OPENCLAW_LIVE_GEMINI_KEY`（单项覆盖）
-- 示例模型：`google/gemini-3.1-pro-preview`、`google/gemini-3-flash-preview`
-- 兼容性：使用 `google/gemini-3.1-flash-preview` 的旧版 OpenClaw 配置会被规范化为 `google/gemini-3-flash-preview`
+- 可选轮换：`GEMINI_API_KEYS`，`GEMINI_API_KEY_1`，`GEMINI_API_KEY_2`，`GOOGLE_API_KEY` 回退，以及 `OPENCLAW_LIVE_GEMINI_KEY`（单次覆盖）
+- 示例模型：`google/gemini-3.1-pro-preview`，`google/gemini-3-flash-preview`
+- 兼容性：使用 `google/gemini-3.1-flash-preview` 的旧版 OpenClaw 配置被标准化为 `google/gemini-3-flash-preview`
 - CLI：`openclaw onboard --auth-choice gemini-api-key`
 
 ### Google Vertex、Antigravity 和 Gemini CLI
 
-- 提供商：`google-vertex`、`google-antigravity`、`google-gemini-cli`
+- 提供商：`google-vertex`，`google-antigravity`，`google-gemini-cli`
 - 身份验证：Vertex 使用 gcloud ADC；Antigravity/Gemini CLI 使用各自的身份验证流程
-- 注意：OpenClaw 中的 Antigravity 和 Gemini CLI OAuth 是非官方集成。一些用户报告在使用第三方客户端后 Google 账户受到限制。如果您选择继续，请查阅 Google 条款并使用非关键账户。
+- 注意：OpenClaw 中的 Antigravity 和 Gemini CLI OAuth 是非官方集成。一些用户报告称在使用第三方客户端后 Google 账户受到了限制。请查看 Google 条款，如果您选择继续，请使用非关键账户。
 - Antigravity OAuth 作为捆绑插件提供（`google-antigravity-auth`，默认禁用）。
   - 启用：`openclaw plugins enable google-antigravity-auth`
   - 登录：`openclaw models auth login --provider google-antigravity --set-default`
 - Gemini CLI OAuth 作为捆绑插件提供（`google-gemini-cli-auth`，默认禁用）。
   - 启用：`openclaw plugins enable google-gemini-cli-auth`
   - 登录：`openclaw models auth login --provider google-gemini-cli --set-default`
-  - 注意：请勿将客户端 ID 或密钥粘贴到 `openclaw.json` 中。CLI 登录流程会将令牌存储在网关主机上的身份验证配置文件中。
+  - 注意：**切勿**将客户端 ID 或密钥粘贴到 `openclaw.json` 中。CLI 登录流程会将令牌存储在网关主机的身份配置文件中。
 
 ### Z.AI (GLM)
 
 - 提供商：`zai`
-- 身份验证：`ZAI_API_KEY`
+- 认证：`ZAI_API_KEY`
 - 示例模型：`zai/glm-5`
-- CLI：`openclaw onboard --auth-choice zai-api-key`
+- CLI： `openclaw onboard --auth-choice zai-api-key`
   - 别名：`z.ai/*` 和 `z-ai/*` 会规范化为 `zai/*`
 
-### Vercel AI Gateway 网关
+### Vercel AI Gateway(网关)
 
 - 提供商：`vercel-ai-gateway`
-- 身份验证：`AI_GATEWAY_API_KEY`
+- 认证：`AI_GATEWAY_API_KEY`
 - 示例模型：`vercel-ai-gateway/anthropic/claude-opus-4.6`
-- CLI：`openclaw onboard --auth-choice ai-gateway-api-key`
+- CLI： `openclaw onboard --auth-choice ai-gateway-api-key`
 
-### Kilo Gateway 网关
+### Kilo Gateway(网关)
 
 - 提供商：`kilocode`
-- 身份验证：`KILOCODE_API_KEY`
+- 认证：`KILOCODE_API_KEY`
 - 示例模型：`kilocode/anthropic/claude-opus-4.6`
-- CLI：`openclaw onboard --kilocode-api-key <key>`
+- CLI： `openclaw onboard --kilocode-api-key <key>`
 - 基础 URL：`https://api.kilo.ai/api/gateway/`
 - 扩展的内置目录包括 GLM-5 Free、MiniMax M2.5 Free、GPT-5.2、Gemini 3 Pro Preview、Gemini 3 Flash Preview、Grok Code Fast 1 和 Kimi K2.5。
 
-有关设置详细信息，请参阅 [/providers/kilocode](/zh/en/providers/kilocode)。
+有关设置详细信息，请参阅 [/providers/kilocode](/zh/providers/kilocode)。
 
 ### 其他内置提供商
 
-- OpenRouter：`openrouter`（`OPENROUTER_API_KEY`）
+- OpenRouter： `openrouter` (`OPENROUTER_API_KEY`)
 - 示例模型：`openrouter/anthropic/claude-sonnet-4-5`
-- Kilo Gateway 网关：`kilocode`（`KILOCODE_API_KEY`）
+- Kilo Gateway(网关): `kilocode` (`KILOCODE_API_KEY`)
 - 示例模型：`kilocode/anthropic/claude-opus-4.6`
 - xAI：`xai` (`XAI_API_KEY`)
 - Mistral：`mistral` (`MISTRAL_API_KEY`)
 - 示例模型：`mistral/mistral-large-latest`
-- CLI：`openclaw onboard --auth-choice mistral-api-key`
+- CLI： `openclaw onboard --auth-choice mistral-api-key`
 - Groq：`groq` (`GROQ_API_KEY`)
 - Cerebras：`cerebras` (`CEREBRAS_API_KEY`)
   - Cerebras 上的 GLM 模型使用 ID `zai-glm-4.7` 和 `zai-glm-4.6`。
-  - OpenAI 兼容基础 URL：`https://api.cerebras.ai/v1`。
-- GitHub Copilot：`github-copilot` (`COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN`)
-- Hugging Face Inference：`huggingface` (`HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`) — OpenAI 兼容路由器；示例模型：`huggingface/deepseek-ai/DeepSeek-R1`；CLI：`openclaw onboard --auth-choice huggingface-api-key`。参见 [Hugging Face (Inference)](/zh/providers/huggingface)。
+  - OpenAI 兼容的基础 URL：`https://api.cerebras.ai/v1`。
+- GitHub Copilot: `github-copilot` (`COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN`)
+- Hugging Face Inference: `huggingface` (`HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`) — OpenAI 兼容的路由器；示例模型：`huggingface/deepseek-ai/DeepSeek-R1`；CLI：`openclaw onboard --auth-choice huggingface-api-key`。请参阅 [Hugging Face (Inference)](/zh/providers/huggingface)。
 
 ## 通过 `models.providers` 的提供商（自定义/基础 URL）
 
-使用 `models.providers` (或 `models.json`) 添加 **自定义** 提供商或
-OpenAI/Anthropic 兼容代理。
+使用 `models.providers`（或 `models.json`）来添加**自定义**提供商或
+OpenAI/Anthropic 兼容的代理。
 
 ### Moonshot AI (Kimi)
 
-Moonshot 使用 OpenAI 兼容端点，因此请将其配置为自定义提供商：
+Moonshot 使用 OpenAI 兼容的端点，因此请将其配置为自定义提供商：
 
 - 提供商：`moonshot`
-- 认证：`MOONSHOT_API_KEY`
+- 身份验证：`MOONSHOT_API_KEY`
 - 示例模型：`moonshot/kimi-k2.5`
 
 Kimi K2 模型 ID：
@@ -219,12 +219,12 @@ Kimi K2 模型 ID：
 }
 ```
 
-### Kimi 编程
+### Kimi Coding
 
-Kimi 编程使用 Moonshot AI 的 Anthropic 兼容端点：
+Kimi Coding 使用 Moonshot AI 的 Anthropic 兼容端点：
 
 - 提供商：`kimi-coding`
-- 认证：`KIMI_API_KEY`
+- 身份验证：`KIMI_API_KEY`
 - 示例模型：`kimi-coding/k2p5`
 
 ```json5
@@ -236,9 +236,9 @@ Kimi 编程使用 Moonshot AI 的 Anthropic 兼容端点：
 }
 ```
 
-### Qwen OAuth（免费层）
+### Qwen OAuth (免费层)
 
-Qwen 通过设备代码流程提供对 Qwen Coder + Vision 的 OAuth 访问。
+Qwen 提供通过设备码流程访问 Qwen Coder + Vision 的 OAuth 权限。
 启用捆绑插件，然后登录：
 
 ```bash
@@ -251,16 +251,16 @@ openclaw models auth login --provider qwen-portal --set-default
 - `qwen-portal/coder-model`
 - `qwen-portal/vision-model`
 
-有关设置详细信息和注意事项，请参阅 [/providers/qwen](/zh/providers/qwen)。
+有关设置详细信息和说明，请参阅 [/providers/qwen](/zh/providers/qwen)。
 
-### 火山引擎 (Doubao)
+### Volcano Engine (Doubao)
 
-火山引擎 提供对 Doubao 和中国其他模型的访问。
+Volcano Engine (火山引擎) 提供对中国境内的 Doubao 及其他模型的访问。
 
-- 提供商：`volcengine`（编码：`volcengine-plan`）
-- 认证：`VOLCANO_ENGINE_API_KEY`
-- 模型示例：`volcengine/doubao-seed-1-8-251228`
-- CLI：`openclaw onboard --auth-choice volcengine-api-key`
+- 提供商：`volcengine` (编码：`volcengine-plan`)
+- Auth: `VOLCANO_ENGINE_API_KEY`
+- Example 模型: `volcengine/doubao-seed-1-8-251228`
+- CLI: `openclaw onboard --auth-choice volcengine-api-key`
 
 ```json5
 {
@@ -270,7 +270,7 @@ openclaw models auth login --provider qwen-portal --set-default
 }
 ```
 
-可用模型：
+Available models:
 
 - `volcengine/doubao-seed-1-8-251228` (Doubao Seed 1.8)
 - `volcengine/doubao-seed-code-preview-251028`
@@ -278,7 +278,7 @@ openclaw models auth login --provider qwen-portal --set-default
 - `volcengine/glm-4-7-251222` (GLM 4.7)
 - `volcengine/deepseek-v3-2-251201` (DeepSeek V3.2 128K)
 
-编码模型（`volcengine-plan`）：
+Coding models (`volcengine-plan`):
 
 - `volcengine-plan/ark-code-latest`
 - `volcengine-plan/doubao-seed-code`
@@ -286,14 +286,14 @@ openclaw models auth login --provider qwen-portal --set-default
 - `volcengine-plan/kimi-k2-thinking`
 - `volcengine-plan/glm-4.7`
 
-### BytePlus (国际版)
+### BytePlus (International)
 
-BytePlus ARK 为国际用户提供与火山引擎相同的模型访问权限。
+BytePlus ARK provides access to the same models as Volcano Engine for international users.
 
-- 提供商：`byteplus`（编码：`byteplus-plan`）
-- 认证：`BYTEPLUS_API_KEY`
-- 模型示例：`byteplus/seed-1-8-251228`
-- CLI：`openclaw onboard --auth-choice byteplus-api-key`
+- Provider: `byteplus` (coding: `byteplus-plan`)
+- Auth: `BYTEPLUS_API_KEY`
+- Example 模型: `byteplus/seed-1-8-251228`
+- CLI: `openclaw onboard --auth-choice byteplus-api-key`
 
 ```json5
 {
@@ -303,13 +303,13 @@ BytePlus ARK 为国际用户提供与火山引擎相同的模型访问权限。
 }
 ```
 
-可用模型：
+Available models:
 
 - `byteplus/seed-1-8-251228` (Seed 1.8)
 - `byteplus/kimi-k2-5-260127` (Kimi K2.5)
 - `byteplus/glm-4-7-251222` (GLM 4.7)
 
-编码模型（`byteplus-plan`）：
+Coding models (`byteplus-plan`):
 
 - `byteplus-plan/ark-code-latest`
 - `byteplus-plan/doubao-seed-code`
@@ -319,12 +319,12 @@ BytePlus ARK 为国际用户提供与火山引擎相同的模型访问权限。
 
 ### Synthetic
 
-Synthetic 通过 `synthetic` 提供商提供兼容 Anthropic 的模型：
+Synthetic 在 `synthetic` 提供商后面提供了与 Anthropic 兼容的模型：
 
-- 提供商：`synthetic`
-- 认证：`SYNTHETIC_API_KEY`
-- 模型示例：`synthetic/hf:MiniMaxAI/MiniMax-M2.5`
-- CLI：`openclaw onboard --auth-choice synthetic-api-key`
+- Provider: `synthetic`
+- Auth: `SYNTHETIC_API_KEY`
+- Example 模型: `synthetic/hf:MiniMaxAI/MiniMax-M2.5`
+- CLI: `openclaw onboard --auth-choice synthetic-api-key`
 
 ```json5
 {
@@ -347,20 +347,20 @@ Synthetic 通过 `synthetic` 提供商提供兼容 Anthropic 的模型：
 
 ### MiniMax
 
-MiniMax 通过 `models.providers` 配置，因为它使用自定义端点：
+MiniMax 通过 `models.providers` 进行配置，因为它使用自定义端点：
 
-- MiniMax（兼容 Anthropic）：`--auth-choice minimax-api`
-- 认证：`MINIMAX_API_KEY`
+- MiniMax (Anthropic‑compatible): `--auth-choice minimax-api`
+- Auth: `MINIMAX_API_KEY`
 
-有关设置详细信息、模型选项和配置代码段，请参阅 [/providers/minimax](/zh/en/providers/minimax)。
+See [/providers/minimax](/zh/providers/minimax) for setup details, 模型 options, and config snippets.
 
 ### Ollama
 
-Ollama 作为内置提供商插件提供，并使用 Ollama 的原生 API：
+Ollama 作为捆绑的提供商插件提供，并使用 Ollama 的原生 API：
 
-- 提供商：`ollama`
-- 认证：无需认证 (本地服务器)
-- 模型示例：`ollama/llama3.3`
+- Provider: `ollama`
+- Auth: 无需认证（本地服务器）
+- 示例模型：`ollama/llama3.3`
 - 安装：[https://ollama.com/download](https://ollama.com/download)
 
 ```bash
@@ -376,18 +376,17 @@ ollama pull llama3.3
 }
 ```
 
-当您使用 `OLLAMA_API_KEY` 选择加入时，系统会在本地 `http://127.0.0.1:11434` 检测到 Ollama，并且捆绑的提供商插件会将 Ollama 直接添加到 `openclaw onboard` 和模型选择器中。有关入门、云/本地模式和自定义配置的信息，请参阅 [/providers/ollama](/zh/en/providers/ollama)。
+当您选择加入 `OLLAMA_API_KEY` 时，会在 `http://127.0.0.1:11434` 本地检测到 Ollama，并且捆绑的提供商插件会直接将 Ollama 添加到 `openclaw onboard` 和模型选择器中。有关新手引导、云/本地模式和自定义配置，请参阅 [/providers/ollama](/zh/providers/ollama)。
 
 ### vLLM
 
-vLLM 作为内置提供商插件提供，用于本地/自托管的 OpenAI 兼容
-服务器：
+vLLM 作为捆绑的提供商插件提供，用于本地/自托管的 OpenAI 兼容服务器：
 
 - 提供商：`vllm`
-- 认证：可选 (取决于您的服务器)
+- Auth: 可选（取决于您的服务器）
 - 默认基础 URL：`http://127.0.0.1:8000/v1`
 
-要在本地选择加入自动发现（如果您的服务器不强制执行身份验证，则任何值都可以）：
+要在本地选择加入自动发现（如果您的服务器不强制执行身份验证，则任何值均可）：
 
 ```bash
 export VLLM_API_KEY="vllm-local"
@@ -403,19 +402,17 @@ export VLLM_API_KEY="vllm-local"
 }
 ```
 
-详情请参阅 [/providers/vllm](/zh/en/providers/vllm)。
+有关详细信息，请参阅 [/providers/vllm](/zh/providers/vllm)。
 
 ### SGLang
 
-SGLang 作为捆绑的提供商插件提供，用于快速自托管的
-OpenAI 兼容服务器：
+SGLang 作为捆绑的提供商插件提供，用于快速自托管的 OpenAI 兼容服务器：
 
 - 提供商：`sglang`
-- 身份验证：可选（取决于您的服务器）
+- Auth: 可选（取决于您的服务器）
 - 默认基础 URL：`http://127.0.0.1:30000/v1`
 
-要在本地选择加入自动发现（如果您的服务器不
-强制执行身份验证，则任何值均可）：
+要在本地选择加入自动发现（如果您的服务器不强制执行身份验证，则任何值均可）：
 
 ```bash
 export SGLANG_API_KEY="sglang-local"
@@ -431,9 +428,9 @@ export SGLANG_API_KEY="sglang-local"
 }
 ```
 
-详情请参阅 [/providers/sglang](/zh/en/providers/sglang)。
+有关详细信息，请参阅 [/providers/sglang](/zh/providers/sglang)。
 
-### 本地代理（LM Studio, vLLM, LiteLLM 等）
+### 本地代理（LM Studio、vLLM、LiteLLM 等）
 
 示例（OpenAI 兼容）：
 
@@ -468,7 +465,7 @@ export SGLANG_API_KEY="sglang-local"
 }
 ```
 
-注：
+备注：
 
 - 对于自定义提供商，`reasoning`、`input`、`cost`、`contextWindow` 和 `maxTokens` 是可选的。
   如果省略，OpenClaw 默认为：
@@ -478,9 +475,9 @@ export SGLANG_API_KEY="sglang-local"
   - `contextWindow: 200000`
   - `maxTokens: 8192`
 - 建议：设置与您的代理/模型限制相匹配的显式值。
-- 对于非原生端点上的 `api: "openai-completions"`（任何主机不是 `api.openai.com` 的非空 `baseUrl`），OpenClaw 强制执行 `compat.supportsDeveloperRole: false`，以避免提供商因不支持的 `developer` 角色而返回 400 错误。
-- 如果 `baseUrl` 为空/省略，OpenClaw 将保留默认的 OpenAI 行为（该行为解析为 `api.openai.com`）。
-- 为了安全起见，显式的 `compat.supportsDeveloperRole: true` 在非原生 `openai-completions` 端点上仍会被覆盖。
+- 对于非原生端点上的 `api: "openai-completions"`（任何主机不是 `api.openai.com` 的非空 `baseUrl`），OpenClaw 会强制执行 `compat.supportsDeveloperRole: false` 以避免提供商因不支持的 `developer` 角色而返回 400 错误。
+- 如果 `baseUrl` 为空或被省略，OpenClaw 将保持默认的 OpenAI 行为（即解析为 `api.openai.com`）。
+- 出于安全考虑，在非原生的 `openai-completions` 端点上，显式的 `compat.supportsDeveloperRole: true` 仍会被覆盖。
 
 ## CLI 示例
 
@@ -490,7 +487,7 @@ openclaw models set opencode/claude-opus-4-6
 openclaw models list
 ```
 
-另请参阅：[/gateway/configuration](/zh/en/gateway/configuration) 以获取完整的配置示例。
+另请参阅：[/gateway/configuration](/zh/gateway/configuration) 以获取完整的配置示例。
 
 import zh from '/components/footer/zh.mdx';
 

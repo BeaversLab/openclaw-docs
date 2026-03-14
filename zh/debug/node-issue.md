@@ -6,7 +6,7 @@ read_when:
 title: "Node + tsx 崩溃"
 ---
 
-# Node + tsx "__name is not a function" 崩溃
+# Node + tsx "\_\_name is not a function" 崩溃
 
 ## 摘要
 

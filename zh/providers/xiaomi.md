@@ -8,7 +8,7 @@ title: "Xiaomi MiMo"
 
 # Xiaomi MiMo
 
-Xiaomi MiMo 是 **MiMo** 模型的 API 平台。它提供与 OpenAI 和 Anthropic 格式兼容的 REST API，并使用 API 密钥进行身份验证。请在 [Xiaomi MiMo 控制台](https://platform.xiaomimimo.com/#/console/api-keys) 中创建您的 API 密钥。OpenClaw 使用 `xiaomi` 提供程序配合 Xiaomi MiMo API 密钥。
+Xiaomi MiMo 是 **MiMo** 模型的 API 平台。它提供与 OpenAI 和 Anthropic 格式兼容的 REST API，并使用 API 密钥进行身份验证。请在 [Xiaomi MiMo console](https://platform.xiaomimimo.com/#/console/api-keys) 中创建您的 API 密钥。OpenClaw 使用带有 Xiaomi MiMo API 密钥的 `xiaomi` 提供商。
 
 ## 模型概览
 
@@ -58,7 +58,7 @@ openclaw onboard --auth-choice xiaomi-api-key --xiaomi-api-key "$XIAOMI_API_KEY"
 
 - 模型参考：`xiaomi/mimo-v2-flash`。
 - 当设置了 `XIAOMI_API_KEY`（或存在身份验证配置文件）时，提供程序会自动注入。
-- 有关提供商规则，请参阅 [/concepts/模型-providers](/zh/en/concepts/模型-providers)。
+- 请参阅 [/concepts/模型-providers](/en/concepts/model-providers) 了解提供商规则。
 
 import zh from '/components/footer/zh.mdx';
 

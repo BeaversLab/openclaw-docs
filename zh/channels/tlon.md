@@ -27,7 +27,7 @@ openclaw plugins install @openclaw/tlon
 openclaw plugins install ./extensions/tlon
 ```
 
-详情：[插件](/zh/tools/plugin)
+详细信息：[插件](/zh/tools/plugin)
 
 ## 设置
 
@@ -200,8 +200,7 @@ openclaw plugins install ./extensions/tlon
 
 ## 捆绑技能
 
-Tlon 插件包含一个捆绑技能（[`@tloncorp/tlon-skill`](https://github.com/tloncorp/tlon-skill)），
-提供对 Tlon 操作的 CLI 访问：
+Tlon 插件包含一个内置技能（[`@tloncorp/tlon-skill`](https://github.com/tloncorp/tlon-skill)），提供对 Tlon 操作的 CLI 访问：
 
 - **联系人 (Contacts)**：获取/更新个人资料，列出联系人
 - **频道 (Channels)**：列出、创建、发送消息、获取历史记录
@@ -214,20 +213,20 @@ Tlon 插件包含一个捆绑技能（[`@tloncorp/tlon-skill`](https://github.co
 
 ## 功能
 
-| 功能             | 状态                                   |
-| ---------------- | -------------------------------------- |
-| 私信             | ✅ 已支持                               |
-| 群组/频道        | ✅ 已支持（默认需要提及）                |
-| 线程             | ✅ 已支持（在线程中自动回复）            |
-| 富文本           | ✅ Markdown 转换为 Tlon 格式           |
-| 图片             | ✅ 上传至 Tlon 存储                    |
-| 回应             | ✅ 通过 [捆绑技能](#bundled-skill)    |
-| 投票             | ❌ 尚未支持                             |
-| 原生命令         | ✅ 已支持（默认仅限所有者）              |
+| 功能      | 状态                              |
+| --------- | --------------------------------- |
+| 私信      | ✅ 已支持                         |
+| 群组/频道 | ✅ 已支持（默认通过提及触发）     |
+| 话题串    | ✅ 已支持（在话题串中自动回复）   |
+| 富文本    | ✅ Markdown 转换为 Tlon 格式      |
+| 图片      | ✅ 已上传到 Tlon 存储             |
+| 表情反应  | ✅ 通过[内置技能](#bundled-skill) |
+| 投票      | ❌ 尚不支持                       |
+| 原生指令  | ✅ 已支持（默认仅所有者可用）     |
 
-## 故障排除
+## 故障排查
 
-首先运行此 Ladder：
+首先运行此步骤：
 
 ```bash
 openclaw status
@@ -238,38 +237,38 @@ openclaw doctor
 
 常见故障：
 
-- **已忽略的 DM**：发送者不在 `dmAllowlist` 中，且未配置 `ownerShip` 用于审批流程。
-- **群组消息被忽略**：未发现频道或发送者未获授权。
+- **私信被忽略**：发送者不在 `dmAllowlist` 中且未配置 `ownerShip` 用于审批流程。
+- **群组消息被忽略**：频道未发现或发送者未获授权。
 - **连接错误**：检查 ship URL 是否可达；为本地 ship 启用 `allowPrivateNetwork`。
-- **认证错误**：验证登录码是否为当前有效（代码会轮换）。
+- **认证错误**：验证登录码是否为最新（登录码会轮换）。
 
 ## 配置参考
 
-完整配置：[Configuration](/zh/en/gateway/configuration)
+完整配置：[Configuration](/zh/gateway/configuration)
 
-提供商选项：
+提供者选项：
 
 - `channels.tlon.enabled`：启用/禁用频道启动。
 - `channels.tlon.ship`：机器人的 Urbit ship 名称（例如 `~sampel-palnet`）。
 - `channels.tlon.url`：ship URL（例如 `https://sampel-palnet.tlon.network`）。
 - `channels.tlon.code`：ship 登录码。
 - `channels.tlon.allowPrivateNetwork`：允许 localhost/LAN URL（SSRF 绕过）。
-- `channels.tlon.ownerShip`：审批系统的所有者 ship（始终已授权）。
-- `channels.tlon.dmAllowlist`：允许发送 私信 的 ship（空 = 无）。
-- `channels.tlon.autoAcceptDmInvites`：自动接受来自允许列表 ship 的 DM。
+- `channels.tlon.ownerShip`：审批系统的所有者 ship（始终获授权）。
+- `channels.tlon.dmAllowlist`：允许发送私信的 ship（空=无）。
+- `channels.tlon.autoAcceptDmInvites`：自动接受来自白名单 ship 的私信。
 - `channels.tlon.autoAcceptGroupInvites`：自动接受所有群组邀请。
 - `channels.tlon.autoDiscoverChannels`：自动发现群组频道（默认：true）。
-- `channels.tlon.groupChannels`: 手动固定的频道巢。
-- `channels.tlon.defaultAuthorizedShips`: 授权用于所有频道的飞船。
-- `channels.tlon.authorization.channelRules`: 每个频道的身份验证规则。
-- `channels.tlon.showModelSignature`: 将模型名称附加到消息中。
+- `channels.tlon.groupChannels`：手动固定的频道巢。
+- `channels.tlon.defaultAuthorizedShips`：针对所有频道获授权的 ship。
+- `channels.tlon.authorization.channelRules`：每个渠道的认证规则。
+- `channels.tlon.showModelSignature`：将模型名称附加到消息。
 
-## 注意事项
+## 注意
 
 - 群组回复需要提及（例如 `~your-bot-ship`）才能响应。
-- 线程回复：如果传入消息在主题中，OpenClaw 将在主题内回复。
-- 富文本：Markdown 格式（粗体、斜体、代码、标题、列表）被转换为 Tlon 的原生格式。
-- 图片：URL 被上传到 Tlon 存储并作为图片块嵌入。
+- 帖子回复：如果传入消息位于帖子串中，OpenClaw 将在串内回复。
+- 富文本：Markdown 格式（粗体、斜体、代码、标题、列表）将转换为 Tlon 的原生格式。
+- 图片：URL 将上传到 Tlon 存储并作为图片块嵌入。
 
 import zh from '/components/footer/zh.mdx';
 

@@ -12,9 +12,9 @@ title: "节点"
 
 相关：
 
-- 节点概述：[Nodes](/zh/en/nodes)
-- 相机：[Camera nodes](/zh/en/nodes/camera)
-- 图片：[Image nodes](/zh/en/nodes/images)
+- 节点概述：[节点](/zh/nodes)
+- 相机：[相机节点](/zh/nodes/camera)
+- 图像：[图像节点](/zh/nodes/images)
 
 通用选项：
 
@@ -69,10 +69,10 @@ openclaw nodes run --agent main --node <id|name|ip> --raw "git status"
 - `--invoke-timeout <ms>`：节点调用超时时间（默认为 `30000`）。
 - `--needs-screen-recording`：需要屏幕录制权限。
 - `--raw <command>`: 运行 shell 字符串（`/bin/sh -lc` 或 `cmd.exe /c`）。
-  在 Windows 节点主机上的允许列表模式下，`cmd.exe /c` shell 封装程序运行需要批准
-  （仅允许列表条目不会自动允许封装程序形式）。
-- `--agent <id>`: 代理范围的批准/允许列表（默认为配置的代理）。
-- `--ask <off|on-miss|always>`, `--security <deny|allowlist|full>`: 覆盖。
+  在 Windows 节点主机上的 allowlist 模式下，`cmd.exe /c` shell-wrapper 运行需要批准
+  （仅 allowlist 条目不会自动允许 wrapper 形式）。
+- `--agent <id>`：agent-scoped 批准/allowlists（默认为配置的 agent）。
+- `--ask <off|on-miss|always>`，`--security <deny|allowlist|full>`：overrides。
 
 import zh from '/components/footer/zh.mdx';
 

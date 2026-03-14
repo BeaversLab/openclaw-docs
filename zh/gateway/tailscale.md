@@ -97,28 +97,25 @@ openclaw gateway --tailscale funnel --auth password
 
 - Tailscale Serve/Funnel 需要安装并登录 `tailscale` CLI。
 - `tailscale.mode: "funnel"` 拒绝启动，除非认证模式为 `password`，以避免公开暴露。
-- 如果您希望 OpenClaw 撤销 `tailscale serve`，请设置 `gateway.tailscale.resetOnExit`
-  或 `tailscale serve` 配置，请设置 `tailscale funnel`。
-- `gateway.bind: "tailnet"` 是直接绑定到 Tailnet（无 HTTPS，无 Serve/Funnel）。
-- `gateway.bind: "auto"` 优先使用环回地址；如果您仅需要 Tailnet 访问，请使用 `tailnet`。
-- Serve/Funnel 仅暴露 **Gateway 网关 控制界面 + WS**。节点通过
- 同一个 Gateway 网关 WS 端点连接，因此 Serve 可用于节点访问。
+- 如果您希望 OpenClaw 在关闭时撤消 `tailscale serve` 或 `tailscale funnel` 配置，请设置 `gateway.tailscale.resetOnExit`。
+- `gateway.bind: "tailnet"` 是直接的 Tailnet 绑定（无 HTTPS，无 Serve/Funnel）。
+- `gateway.bind: "auto"` 优先使用 loopback；如果您只需要 Tailnet，请使用 `tailnet`。
+- Serve/Funnel 仅公开 **Gateway(网关) 控制 UI + WS**。节点通过
+  同一 Gateway(网关) WS 端点连接，因此 Serve 可用于节点访问。
 
 ## 浏览器控制（远程 Gateway 网关 + 本地浏览器）
 
-如果您在一台机器上运行 Gateway 网关，但想在另一台机器上驱动浏览器，
-请在浏览器机器上运行 **节点主机 (node host)** 并将两者保持在同一个 tailnet 中。
-Gateway 网关 将把浏览器操作代理到节点；不需要单独的控制服务器或 Serve URL。
+如果您在一台机器上运行 Gateway(网关)，但想在另一台机器上驱动浏览器，请在浏览器所在的机器上运行一个 **node host**，并将两者保持在同一个 tailnet 中。Gateway(网关) 会将浏览器操作代理到节点；不需要单独的控制服务器或 Serve URL。
 
-避免在浏览器控制中使用 Funnel；将节点配对视为操作员访问。
+避免使用 Funnel 进行浏览器控制；将节点配对视为操作员访问。
 
 ## Tailscale 先决条件 + 限制
 
-- Serve 需要为您的 tailnet 启用 HTTPS；如果缺失，CLI 会提示。
-- Serve 注入 Tailscale 身份标头；Funnel 则不会。
+- Serve 需要为您的 tailnet 启用 HTTPS；如果缺少该功能，CLI 会提示您。
+- Serve 会注入 Tailscale 身份标头；Funnel 不会。
 - Funnel 需要 Tailscale v1.38.3+、MagicDNS、启用 HTTPS 以及一个 funnel 节点属性。
-- Funnel 仅支持通过 TLS 上的端口 `443`、`8443` 和 `10000`。
-- 在 macOS 上使用 Funnel 需要开源版本的 Tailscale 应用程序。
+- Funnel 仅通过 TLS 支持端口 `443`、`8443` 和 `10000`。
+- 在 macOS 上使用 Funnel 需要开源版本的 Tailscale 应用变体。
 
 ## 了解更多
 

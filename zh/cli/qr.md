@@ -37,10 +37,10 @@ openclaw qr --url wss://gateway.example/ws
 - 设置代码本身现在携带一个不透明的短期 `bootstrapToken`，而不是共享的网关令牌/密码。
 - 使用 `--remote` 时，如果有效活动的远程凭据被配置为 SecretRefs 且您未传递 `--token` 或 `--password`，该命令将从活动的网关快照中解析它们。如果网关不可用，该命令将快速失败。
 - 在不使用 `--remote` 的情况下，当未传递 CLI 身份验证覆盖时，将解析本地网关身份验证 SecretRefs：
-  - 当令牌身份验证可以胜出时（显式 `gateway.auth.mode="token"` 或推断模式，其中没有密码源胜出），解析 `gateway.auth.token`。
-  - 当密码身份验证可以胜出时（显式 `gateway.auth.mode="password"` 或推断模式，且没有来自 auth/env 的胜出令牌），解析 `gateway.auth.password`。
+  - 当令牌身份验证可以获胜时（显式 `gateway.auth.mode="token"` 或没有密码源获胜的推断模式），`gateway.auth.token` 解析。
+  - 当密码身份验证可以获胜时（显式 `gateway.auth.mode="password"` 或来自 auth/env 没有获胜令牌的推断模式），`gateway.auth.password` 解析。
 - 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password`（包括 SecretRefs）且未设置 `gateway.auth.mode`，则在显式设置模式之前，设置代码解析将失败。
-- Gateway 网关 版本偏差说明：此命令路径需要支持 `secrets.resolve` 的 Gateway 网关；较旧的 Gateway 网关 会返回未知方法错误。
+- Gateway(网关) 版本偏差说明：此命令路径需要支持 `secrets.resolve` 的 Gateway(网关)；较旧的 Gateway(网关) 返回 unknown-method 错误。
 - 扫描后，使用以下命令批准设备配对：
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`

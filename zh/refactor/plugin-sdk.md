@@ -25,24 +25,24 @@ title: "Plugin SDK 重构"
 内容（示例）：
 
 - 类型：`ChannelPlugin`、适配器、`ChannelMeta`、`ChannelCapabilities`、`ChannelDirectoryEntry`。
-- 配置助手：`buildChannelConfigSchema`、`setAccountEnabledInConfigSection`、`deleteAccountFromConfigSection`、
+- 配置辅助函数：`buildChannelConfigSchema`、`setAccountEnabledInConfigSection`、`deleteAccountFromConfigSection`、
   `applyAccountNameToChannelSection`。
-- 配对助手：`PAIRING_APPROVED_MESSAGE`、`formatPairingApproveHint`。
-- 入职助手：`promptChannelAccessConfig`、`addWildcardAllowFrom`、入职类型。
-- 工具参数助手：`createActionGate`、`readStringParam`、`readNumberParam`、`readReactionParams`、`jsonResult`。
-- 文档链接助手：`formatDocsLink`。
+- 配对辅助函数：`PAIRING_APPROVED_MESSAGE`、`formatPairingApproveHint`。
+- 新手引导辅助函数：`promptChannelAccessConfig`、`addWildcardAllowFrom`、新手引导类型。
+- 工具参数辅助函数：`createActionGate`、`readStringParam`、`readNumberParam`、`readReactionParams`、`jsonResult`。
+- 文档链接辅助函数：`formatDocsLink`。
 
 交付：
 
-- 发布为 `openclaw/plugin-sdk`（或从 core 的 `openclaw/plugin-sdk` 下导出）。
-- 遵循语义化版本控制 (Semver)，并提供明确的稳定性保证。
+- 作为 `openclaw/plugin-sdk` 发布（或从 core 中导出并置于 `openclaw/plugin-sdk` 下）。
+- 使用语义化版本控制，并提供明确的稳定性保证。
 
-### 2) Plugin Runtime（执行接口、注入式）
+### 2) 插件运行时（执行表面，注入式）
 
-范围：所有涉及核心 runtime 行为的内容。
-通过 `OpenClawPluginApi.runtime` 访问，因此插件绝不导入 `src/**`。
+范围：涉及核心运行时行为的所有内容。
+通过 `OpenClawPluginApi.runtime` 访问，以便插件永不导入 `src/**`。
 
-建议的接口（最小但完整）：
+建议的接口（极简但完整）：
 
 ```ts
 export type PluginRuntime = {
@@ -146,33 +146,33 @@ export type PluginRuntime = {
 
 备注：
 
-- Runtime 是访问核心行为的唯一方式。
-- SDK 旨在保持小巧和稳定。
-- 每个 runtime 方法都映射到现有的核心实现（无重复）。
+- 运行时是访问核心行为的唯一途径。
+- SDK 故意设计得小巧且稳定。
+- 每个运行时方法都映射到现有的核心实现（无重复）。
 
 ## 迁移计划（分阶段、安全）
 
 ### 阶段 0：搭建脚手架
 
 - 引入 `openclaw/plugin-sdk`。
-- 将上述表面（surface）添加到 `OpenClawPluginApi` 中作为 `api.runtime`。
-- 在过渡窗口期间保留现有的导入（弃用警告）。
+- 将 `api.runtime` 添加到 `OpenClawPluginApi` 中，包含上述接口。
+- 在过渡期内保留现有导入（弃用警告）。
 
-### 阶段 1：清理桥接器（低风险）
+### 阶段 1：清理桥接（低风险）
 
 - 用 `api.runtime` 替换每个扩展的 `core-bridge.ts`。
-- 首先迁移 BlueBubbles、Zalo、Zalo Personal（已经很接近了）。
+- 首先迁移 BlueBubbles、Zalo、Zalo Personal（已经很接近）。
 - 删除重复的桥接代码。
 
 ### 阶段 2：轻量级直接导入插件
 
 - 将 Matrix 迁移到 SDK + 运行时。
-- 验证入职引导、目录、群组提及逻辑。
+- 验证新手引导、目录、群组提及逻辑。
 
 ### 阶段 3：重量级直接导入插件
 
-- 迁移 MS Teams（最大的一组运行时辅助程序）。
-- 确保回复/正在输入语义与当前行为匹配。
+- 迁移 MS Teams（最大的一组运行时辅助函数）。
+- 确保回复/正在输入的语义与当前行为匹配。
 
 ### 阶段 4：iMessage 插件化
 
@@ -180,38 +180,38 @@ export type PluginRuntime = {
 - 用 `api.runtime` 替换直接的 core 调用。
 - 保持配置键、CLI 行为和文档不变。
 
-### 阶段 5：强制执行
+### 第 5 阶段：强制执行
 
 - 添加 lint 规则 / CI 检查：不允许从 `src/**` 导入 `extensions/**`。
-- 添加插件 SDK/版本兼容性检查（运行时 + SDK semver）。
+- 添加插件 SDK/版本兼容性检查（runtime + SDK semver）。
 
 ## 兼容性和版本控制
 
 - SDK：semver，已发布，有文档记录的变更。
-- Runtime：随每个 core 版本进行版本控制。添加 `api.runtime.version`。
+- Runtime：随每个 core 版本发布版本。添加 `api.runtime.version`。
 - 插件声明所需的 runtime 范围（例如 `openclawRuntime: ">=2026.2.0"`）。
 
 ## 测试策略
 
-- 适配器级单元测试（通过真实核心实现来运行运行时函数）。
-- 每个插件的 Golden 测试：确保没有行为偏差（路由、配对、允许列表、提及门控）。
+- 适配器级别的单元测试（使用真实的 core 实现来运行 runtime 函数）。
+- 每个插件的黄金测试：确保没有行为偏差（路由、配对、允许列表、提及限制）。
 - 在 CI 中使用单个端到端插件示例（安装 + 运行 + 冒烟测试）。
 
 ## 未决问题
 
-- 在哪里托管 SDK 类型：单独的包还是核心导出？
-- 运行时类型分发：在 SDK（仅类型）中还是在核心中？
-- 如何为捆绑插件与外部插件公开文档链接？
-- 我们是否允许过渡期间仓库内的插件有限地直接导入核心？
+- 在哪里托管 SDK 类型：单独的包还是 core 导出？
+- Runtime 类型分发：在 SDK（仅类型）中还是在 core 中？
+- 如何为打包插件与外部插件暴露文档链接？
+- 我们是否允许在过渡期间为仓库内的插件进行有限的直接 core 导入？
 
 ## 成功标准
 
-- 所有通道连接器都是使用 SDK + 运行时的插件。
-- 没有 `extensions/**` 从 `src/**` 导入。
-- 新的连接器模板仅依赖 SDK + 运行时。
-- 可以在没有核心源代码访问权限的情况下开发和更新外部插件。
+- 所有渠道连接器都是使用 SDK + runtime 的插件。
+- 不允许从 `src/**` 导入 `extensions/**`。
+- 新的连接器模板仅依赖于 SDK + runtime。
+- 可以在不访问 core 源码的情况下开发和更新外部插件。
 
-相关文档：[插件](/zh/en/tools/plugin)、[通道](/zh/en/channels/index)、[配置](/zh/en/gateway/configuration)。
+相关文档：[Plugins](/en/tools/plugin)，[Channels](/en/channels/index)，[Configuration](/en/gateway/configuration)。
 
 import zh from '/components/footer/zh.mdx';
 

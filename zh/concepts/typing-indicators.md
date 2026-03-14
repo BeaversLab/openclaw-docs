@@ -25,14 +25,11 @@ title: "输入指示器"
 将 `agents.defaults.typingMode` 设置为以下之一：
 
 - `never` — 永不显示输入指示器。
-- `instant` — 在模型循环**一开始**就开始输入，即使运行
-  随后仅返回静默回复令牌。
-- `thinking` — 在**首次推理增量**时开始输入（需要
-  运行开启 `reasoningLevel: "stream"`）。
-- `message` — 在**首次非静默文本增量**时开始输入（忽略
-  `NO_REPLY` 静默令牌）。
+- `instant` — 在**模型循环开始时**立即开始输入，即使运行稍后仅返回静默回复令牌。
+- `thinking` — 在**第一次推理增量**时开始输入（需要运行开启 `reasoningLevel: "stream"`）。
+- `message` — 在**第一次非静默文本增量**时开始输入（忽略 `NO_REPLY` 静默令牌）。
 
-“触发时机”的顺序为：
+“触发时间早晚”的顺序：
 `never` → `message` → `thinking` → `instant`
 
 ## 配置
@@ -46,7 +43,7 @@ title: "输入指示器"
 }
 ```
 
-您可以按会话覆盖模式或节奏：
+你可以按会话覆盖模式或节奏：
 
 ```json5
 {
@@ -57,15 +54,15 @@ title: "输入指示器"
 }
 ```
 
-## 注意事项
+## 说明
 
-- `message` 模式不会为仅包含静默内容的回复显示输入指示器（例如 `NO_REPLY`
-  用于抑制输出的令牌）。
+- `message` 模式不会为仅静默的回复显示输入状态（例如用于抑制输出的 `NO_REPLY`
+  令牌）。
 - `thinking` 仅在运行流式传输推理时触发（`reasoningLevel: "stream"`）。
-  如果模型未发出推理增量，输入将不会开始。
-- 无论模式如何，心跳从不显示输入。
-- `typingIntervalSeconds` 控制**刷新节奏**，而不是开始时间。
-  默认值为 6 秒。
+  如果模型未发出推理增量，则不会开始输入状态。
+- 无论处于何种模式，心跳从不显示输入状态。
+- `typingIntervalSeconds` 控制**刷新节奏**，而非开始时间。
+  默认为 6 秒。
 
 import zh from '/components/footer/zh.mdx';
 

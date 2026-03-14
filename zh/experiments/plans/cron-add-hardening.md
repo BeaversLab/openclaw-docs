@@ -46,7 +46,7 @@ title: "Cron Add Hardening"
 - **默认值：** 当缺失 `wakeMode` 和 `sessionTarget` 时，应用安全的默认值。
 - **提供商：** Discord/Slack/Signal/iMessage 现在在 CLI/UI 中一致地显示。
 
-有关规范化形状和示例，请参阅 [Cron jobs](/zh/en/automation/cron-jobs)。
+有关规范化形状和示例，请参阅 [Cron jobs](/zh/automation/cron-jobs)。
 
 ## 验证
 

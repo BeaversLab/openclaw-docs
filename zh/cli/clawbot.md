@@ -12,7 +12,7 @@ title: "clawbot"
 
 当前支持的别名：
 
-- `openclaw clawbot qr`（行为与 [`openclaw qr`](/zh/en/cli/qr) 相同）
+- `openclaw clawbot qr` （行为与 [`openclaw qr`](/zh/cli/qr) 相同）
 
 ## 迁移
 

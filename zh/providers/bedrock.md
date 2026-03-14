@@ -45,12 +45,12 @@ OpenClaw 可以通过 pi‑ai 的 **Bedrock Converse** 流式提供程序使用 
 - `region` 默认为 `AWS_REGION` 或 `AWS_DEFAULT_REGION`，然后是 `us-east-1`。
 - `providerFilter` 匹配 Bedrock 提供商名称（例如 `anthropic`）。
 - `refreshInterval` 单位为秒；设置为 `0` 可禁用缓存。
-- `defaultContextWindow`（默认：`32000`）和 `defaultMaxTokens`（默认：`4096`）
-  用于已发现的模型（如果您知道模型的限制，可以覆盖）。
+- `defaultContextWindow` (默认: `32000`) 和 `defaultMaxTokens` (默认: `4096`)
+  用于已发现的模型 (如果您知道模型的限制，可以覆盖这些设置)。
 
-## 入门
+## 新手引导
 
-1. 确保 **网关主机** 上有 AWS 凭证：
+1. 确保在 **gateway host** 上有可用的 AWS 凭证:
 
 ```bash
 export AWS_ACCESS_KEY_ID="AKIA..."
@@ -63,7 +63,7 @@ export AWS_PROFILE="your-profile"
 export AWS_BEARER_TOKEN_BEDROCK="..."
 ```
 
-2. 将 Bedrock 提供商和模型添加到您的配置中（不需要 `apiKey`）：
+2. 将 Bedrock 提供商和模型添加到您的配置中 (不需要 `apiKey`):
 
 ```json5
 {
@@ -99,7 +99,7 @@ export AWS_BEARER_TOKEN_BEDROCK="..."
 
 当在附加了 IAM 角色的 EC2 实例上运行 OpenClaw 时，AWS SDK 将自动使用实例元数据服务 (IMDS) 进行身份验证。但是，OpenClaw 的凭证检测目前仅检查环境变量，而不检查 IMDS 凭证。
 
-**变通方法：** 设置 `AWS_PROFILE=default` 以表示 AWS 凭证
+**变通方法:** 设置 `AWS_PROFILE=default` 以指示 AWS 凭证
 可用。实际身份验证仍通过 IMDS 使用实例角色。
 
 ```bash
@@ -108,15 +108,15 @@ export AWS_PROFILE=default
 export AWS_REGION=us-east-1
 ```
 
-EC2 实例角色的 **所需 IAM 权限**：
+EC2 实例角色所需的 **IAM 权限**:
 
 - `bedrock:InvokeModel`
 - `bedrock:InvokeModelWithResponseStream`
-- `bedrock:ListFoundationModels`（用于自动发现）
+- `bedrock:ListFoundationModels` (用于自动发现)
 
-或者附加托管策略 `AmazonBedrockFullAccess`。
+或附加托管策略 `AmazonBedrockFullAccess`。
 
-## 快速设置（AWS 路径）
+## 快速设置 (AWS 路径)
 
 ```bash
 # 1. Create IAM role and instance profile
@@ -156,18 +156,15 @@ source ~/.bashrc
 openclaw models list
 ```
 
-## 注意事项
+## 注意
 
-- Bedrock 要求在您的 AWS 账户/区域中启用 **模型 access**（模型访问权限）。
+- Bedrock 要求在您的 AWS 账户/区域中启用 **模型访问权限** (模型 access)。
 - 自动发现需要 `bedrock:ListFoundationModels` 权限。
-- 如果您使用配置文件，请在网关主机上设置 `AWS_PROFILE`。
-- OpenClaw 按以下顺序获取凭证来源：`AWS_BEARER_TOKEN_BEDROCK`，
-  然后 `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY`，然后 `AWS_PROFILE`，然后
-  默认的 AWS SDK 链。
-- 推理支持取决于具体的模型；请查看 Bedrock 模型卡片以了解
+- 如果您使用配置文件 (profiles)，请在 gateway host 上设置 `AWS_PROFILE`。
+- OpenClaw 按以下顺序显示凭证来源：`AWS_BEARER_TOKEN_BEDROCK`，然后是 `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY`，然后是 `AWS_PROFILE`，最后是默认的 AWS SDK 链。
+- 推理支持取决于模型；请查看 Bedrock 模型卡片以了解
   当前功能。
-- 如果您更喜欢托管密钥流程，还可以在 Bedrock 前面放置一个 OpenAI 兼容的
-  代理，并将其配置为 OpenAI 提供商。
+- 如果您更喜欢托管密钥流程，还可以在 Bedrock 前面放置一个 OpenAI 兼容的代理，并将其配置为 OpenAI 提供商。
 
 import zh from '/components/footer/zh.mdx';
 

@@ -76,10 +76,10 @@ openclaw agent --message "hi" --model codex-cli/gpt-5.4
 注意：
 
 - 如果您使用 `agents.defaults.models`（白名单），则必须包含 `claude-cli/...`。
-- 如果主要提供商失败（认证、速率限制、超时），OpenClaw 将
-  接下来尝试 CLI 后端。
+- 如果主提供商失败（身份验证、速率限制、超时），OpenClaw 将
+  尝试 CLI 后端。
 
-## 配置概述
+## 配置概览
 
 所有 CLI 后端位于：
 
@@ -87,8 +87,8 @@ openclaw agent --message "hi" --model codex-cli/gpt-5.4
 agents.defaults.cliBackends
 ```
 
-每个条目都由一个 **提供商 ID** 键控（例如 `claude-cli`、`my-cli`）。
-提供商 ID 将成为您的模型引用的左侧部分：
+每个条目以一个 **提供商 ID** 为键（例如 `claude-cli`、`my-cli`）。
+提供商 ID 会成为模型引用的左侧部分：
 
 ```
 <provider>/<model>
@@ -132,51 +132,46 @@ agents.defaults.cliBackends
 
 ## 工作原理
 
-1. **根据提供商前缀（`claude-cli/...`）选择后端**。
-2. **构建系统提示** 使用相同的 OpenClaw 提示 + 工作区上下文。
+1. 根据提供商前缀（`claude-cli/...`）**选择一个后端**。
+2. **构建系统提示**，使用相同的 OpenClaw 提示 + 工作区上下文。
 3. **执行 CLI** 并附带会话 ID（如果支持），以便历史记录保持一致。
 4. **解析输出**（JSON 或纯文本）并返回最终文本。
-5. **持久化会话 ID** 于每个后端，以便后续对话复用同一 CLI 会话。
+5. **持久化会话 ID** 于每个后端，以便后续对话重用相同的 CLI 会话。
 
 ## 会话
 
 - 如果 CLI 支持会话，请设置 `sessionArg`（例如 `--session-id`）或
-  `sessionArgs`（占位符 `{sessionId}`），当需要将 ID 插入
-  到多个标志时使用。
-- 如果 CLI 使用带有不同标志的 **resume 子命令**，请设置
-  `resumeArgs`（恢复时替换 `args`）以及可选的 `resumeOutput`
-  （用于非 JSON 恢复）。
+  `sessionArgs`（占位符 `{sessionId}`），当 ID 需要插入到
+  多个标志时。
+- 如果 CLI 使用带有不同标志的 **resume 子命令**，请设置 `resumeArgs`（在恢复时替换 `args`）以及可选的 `resumeOutput`（用于非 JSON 恢复）。
 - `sessionMode`：
-  - `always`：始终发送会话 ID（如果没有存储，则发送新的 UUID）。
+  - `always`：始终发送会话 ID（若未存储则为新 UUID）。
   - `existing`：仅当之前存储过会话 ID 时才发送。
   - `none`：从不发送会话 ID。
 
 ## 图像（透传）
 
-如果您的 CLI 接受图像路径，请设置 `imageArg`：
+如果您的 CLI 接受图片路径，请设置 `imageArg`：
 
 ```json5
 imageArg: "--image",
 imageMode: "repeat"
 ```
 
-OpenClaw 会将 base64 图像写入临时文件。如果设置了 `imageArg`，这些
-路径将作为 CLI 参数传递。如果缺少 `imageArg`，OpenClaw 会将
-文件路径附加到提示词（路径注入），这对于从普通路径自动加载
-本地文件的 CLI（Claude Code CLI 行为）来说已经足够。
+OpenClaw 会将 base64 图片写入临时文件。如果设置了 `imageArg`，这些路径将作为 CLI 参数传递。如果缺少 `imageArg`，OpenClaw 会将文件路径附加到提示词中（路径注入），这对于能够从普通路径自动加载本地文件的 CLI（Claude Code CLI 的行为）来说已经足够了。
 
 ## 输入 / 输出
 
-- `output: "json"`（默认）尝试解析 JSON 并提取文本 + 会话 ID。
-- `output: "jsonl"` 解析 JSONL 流（Codex CLI `--json`）并提取
-  最后一条代理消息以及在出现时的 `thread_id`。
+- `output: "json"`（默认）尝试解析 JSON 并提取文本和会话 ID。
+- `output: "jsonl"` 解析 JSONL 流（Codex CLI CLI `--json`）并提取
+  最后一条代理消息以及 `thread_id`（如果存在）。
 - `output: "text"` 将 stdout 视为最终响应。
 
 输入模式：
 
-- `input: "arg"` (默认) 将提示词作为最后一个 CLI 参数传递。
-- `input: "stdin"` 通过 stdin 发送提示词。
-- 如果提示词很长并且设置了 `maxPromptArgChars`，则使用 stdin。
+- `input: "arg"`（默认）将提示词作为最后一个 CLI 参数传递。
+- `input: "stdin"` 通过 stdin 发送提示。
+- 如果提示很长并且设置了 `maxPromptArgChars`，则使用 stdin。
 
 ## 默认值（内置）
 
@@ -202,24 +197,22 @@ OpenClaw 还为 `codex-cli` 提供了一个默认值：
 - `imageArg: "--image"`
 - `sessionMode: "existing"`
 
-仅在需要时覆盖（常见做法：绝对 `command` 路径）。
+仅在需要时覆盖（常见情况：`command` 的绝对路径）。
 
 ## 限制
 
-- **无 OpenClaw 工具**（CLI 后端永远不会接收工具调用）。某些 CLI
-  仍然可以运行它们自己的代理工具。
-- **不支持流式传输**（CLI 输出会被收集后再返回）。
+- **没有 OpenClaw 工具**（CLI 后端从不接收工具调用）。某些 CLI 可能仍会运行它们自己的代理工具。
+- **无流式传输**（收集 CLI 输出然后返回）。
 - **结构化输出**取决于 CLI 的 JSON 格式。
-- **Codex CLI 会话**通过文本输出恢复（无 JSONL），这比
-  比初始的 `--json` 运行更有结构。OpenClaw 会话仍然正常工作。
+- **Codex CLI 会话** 通过文本输出恢复（无 JSONL），其结构比最初的 `--json` 运行要低。OpenClaw 会话仍能正常工作。
 
 ## 故障排除
 
 - **未找到 CLI**：将 `command` 设置为完整路径。
-- **模型名称错误**：使用 `modelAliases` 将 `provider/model` 映射到 CLI 模型。
+- **错误的模型名称**：使用 `modelAliases` 将 `provider/model` 映射到 CLI CLI。
 - **无会话连续性**：确保设置了 `sessionArg` 且未设置 `sessionMode`
-  `none` (Codex CLI 目前无法通过 JSON 输出恢复)。
-- **忽略图像**：设置 `imageArg` (并验证 CLI 是否支持文件路径)。
+  `none`（Codex CLI 目前无法恢复 JSON 输出）。
+- **忽略图像**：设置 `imageArg`（并验证 CLI 是否支持文件路径）。
 
 import zh from '/components/footer/zh.mdx';
 

@@ -98,8 +98,7 @@ openclaw onboard
 curl http://127.0.0.1:30000/v1/models
 ```
 
-- 如果请求因认证错误而失败，请设置一个匹配的实际 `SGLANG_API_KEY`
-  服务器配置相匹配的真实 `SGLANG_API_KEY`，或者在 `models.providers.sglang` 下显式配置提供商。
+- 如果请求因身份验证错误而失败，请设置一个与您的服务器配置相匹配的真实 `SGLANG_API_KEY`，或者在 `models.providers.sglang` 下显式配置提供商。
 
 import zh from '/components/footer/zh.mdx';
 

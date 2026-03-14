@@ -23,7 +23,7 @@ OpenClaw 对 API 密钥和 OAuth 令牌都使用**身份配置文件**。
 - 配置 `auth.profiles` / `auth.order` 是**仅元数据 + 路由**（不包含密钥）。
 - 旧版仅导入 OAuth 文件：`~/.openclaw/credentials/oauth.json`（首次使用时导入到 `auth-profiles.json` 中）。
 
-更多详情：[/concepts/oauth](/zh/en/concepts/oauth)
+更多详情：[/concepts/oauth](/zh/concepts/oauth)
 
 凭据类型：
 
@@ -132,7 +132,7 @@ OpenClaw 将移动到下一个模型，而不是切换配置文件。
 
 ## 相关配置
 
-参见 [Gateway 网关 configuration](/zh/en/gateway/configuration) 了解：
+有关 Gateway(网关) 配置，请参阅 /en/gateway/configuration：
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
@@ -140,7 +140,7 @@ OpenClaw 将移动到下一个模型，而不是切换配置文件。
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
 - `agents.defaults.imageModel` 路由
 
-参见 [Models](/zh/en/concepts/models) 了解更广泛的模型选择和回退概述。
+有关更广泛的 模型 选择和故障转移概述，请参阅 [Models](/zh/concepts/models)。
 
 import zh from '/components/footer/zh.mdx';
 

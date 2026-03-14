@@ -492,46 +492,46 @@ const needsNonImageSanitize =
    - 测试 `resolveEnvApiKey("kilocode")` 返回正确的环境变量
 
 2. **集成测试：**
-   - 使用 `--auth-choice kilocode-api-key` 测试入职流程
-   - 使用 `--kilocode-api-key` 测试非交互式入职
+   - 使用 `--auth-choice kilocode-api-key` 测试新手引导流程
+   - 使用 `--kilocode-api-key` 测试非交互式新手引导
    - 使用 `kilocode/` 前缀测试模型选择
 
 3. **端到端测试：**
- - 测试通过 Kilo Gateway 网关 的实际 API 调用（实时测试）
+   - 通过 Kilo Gateway(网关) 测试实际的 API 调用（实时测试）
 
 ## 迁移说明
 
 - 现有用户无需迁移
-- 新用户可以立即使用 `kilocode-api-key` 身份验证选项
-- 使用 `kilocode` 提供商的现有手动配置将继续有效
+- 新用户可以立即使用 `kilocode-api-key` 认证选项
+- 现有的 `kilocode` 提供商手动配置将继续有效
 
-## 未来考虑
+## 未来考量
 
-1. **模型目录：**如果 Kilo Gateway 网关 公开了 `/models` 端点，请添加类似于 `scanOpenRouterModels()` 的扫描支持
+1. **模型目录：** 如果 Kilo Gateway(网关) 暴露了 `/models` 端点，请添加类似于 `scanOpenRouterModels()` 的扫描支持
 
-2. **OAuth 支持：** 如果 Kilo Gateway 网关 添加了 OAuth，请相应扩展认证系统
+2. **OAuth 支持：** 如果 Kilo Gateway(网关) 添加 OAuth，请相应扩展认证系统
 
-3. **速率限制：** 如有必要，考虑添加针对 Kilo Gateway 网关 的特定速率限制处理
+3. **速率限制：** 如有需要，请考虑添加专门针对 Kilo Gateway(网关) 的速率限制处理
 
-4. **文档：**在 `docs/providers/kilocode.md` 添加说明设置和用法的文档
+4. **文档：** 在 `docs/providers/kilocode.md` 添加文档，解释设置和用法
 
 ## 变更摘要
 
-| 文件                                                        | 更改类型 | 描述                                                             |
-| ----------------------------------------------------------- | ----------- | ----------------------------------------------------------------------- |
-| `src/commands/onboard-auth.credentials.ts`                  | 添加         | `KILOCODE_DEFAULT_MODEL_REF`, `setKilocodeApiKey()`                     |
-| `src/agents/model-auth.ts`                                  | 修改      | 将 `kilocode` 添加到 `envMap`                                              |
-| `src/config/io.ts`                                          | 修改      | 将 `KILOCODE_API_KEY` 添加到 shell 环境变量键                                |
-| `src/commands/onboard-auth.config-core.ts`                  | 添加         | `applyKilocodeProviderConfig()`, `applyKilocodeConfig()`                |
-| `src/commands/onboard-types.ts`                             | 修改      | 将 `kilocode-api-key` 添加到 `AuthChoice`，将 `kilocodeApiKey` 添加到选项 |
-| `src/commands/auth-choice-options.ts`                       | 修改      | 添加 `kilocode` 组和选项                                         |
-| `src/commands/auth-choice.preferred-provider.ts`            | 修改      | 添加 `kilocode-api-key` 映射                                          |
-| `src/commands/auth-choice.apply.api-providers.ts`           | 修改      | 添加 `kilocode-api-key` 处理                                         |
-| `src/cli/program/register.onboard.ts`                       | 修改      | 添加 `--kilocode-api-key` 选项                                         |
-| `src/commands/onboard-non-interactive/local/auth-choice.ts` | 修改      | 添加非交互式处理                                            |
-| `src/commands/onboard-auth.ts`                              | 修改      | 导出新函数                                                    |
-| `src/agents/pi-embedded-runner/cache-ttl.ts`                | 修改      | 添加 kilocode 支持                                                    |
-| `src/agents/transcript-policy.ts`                           | 修改      | 添加 kilocode Gemini 处理                                            |
+| 文件                                                        | 变更类型 | 描述                                                                      |
+| ----------------------------------------------------------- | -------- | ------------------------------------------------------------------------- |
+| `src/commands/onboard-auth.credentials.ts`                  | 添加     | `KILOCODE_DEFAULT_MODEL_REF`、`setKilocodeApiKey()`                       |
+| `src/agents/model-auth.ts`                                  | 修改     | 将 `kilocode` 添加到 `envMap`                                             |
+| `src/config/io.ts`                                          | 修改     | 将 `KILOCODE_API_KEY` 添加到 shell 环境键                                 |
+| `src/commands/onboard-auth.config-core.ts`                  | 添加     | `applyKilocodeProviderConfig()`、`applyKilocodeConfig()`                  |
+| `src/commands/onboard-types.ts`                             | 修改     | 将 `kilocode-api-key` 添加到 `AuthChoice`，将 `kilocodeApiKey` 添加到选项 |
+| `src/commands/auth-choice-options.ts`                       | 修改     | 添加 `kilocode` 组和选项                                                  |
+| `src/commands/auth-choice.preferred-provider.ts`            | 修改     | 添加 `kilocode-api-key` 映射                                              |
+| `src/commands/auth-choice.apply.api-providers.ts`           | 修改     | 添加 `kilocode-api-key` 处理                                              |
+| `src/cli/program/register.onboard.ts`                       | 修改     | 添加 `--kilocode-api-key` 选项                                            |
+| `src/commands/onboard-non-interactive/local/auth-choice.ts` | 修改     | 添加非交互式处理                                                          |
+| `src/commands/onboard-auth.ts`                              | 修改     | 导出新函数                                                                |
+| `src/agents/pi-embedded-runner/cache-ttl.ts`                | 修改     | 添加 kilocode 支持                                                        |
+| `src/agents/transcript-policy.ts`                           | 修改     | 添加 kilocode Gemini 处理                                                 |
 
 import zh from '/components/footer/zh.mdx';
 

@@ -38,7 +38,7 @@ title: "诊断标志"
 }
 ```
 
-更改标志后重启网关。
+更改标志后请重启网关。
 
 ## 环境变量覆盖（一次性）
 
@@ -52,15 +52,15 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 OPENCLAW_DIAGNOSTICS=0
 ```
 
-## 日志去向
+## 日志位置
 
-标志将日志输出到标准诊断日志文件中。默认情况下：
+标志会将日志输出到标准诊断日志文件中。默认情况下：
 
 ```
 /tmp/openclaw/openclaw-YYYY-MM-DD.log
 ```
 
-如果您设置了 `logging.file`，请改用该路径。日志为 JSONL 格式（每行一个 JSON 对象）。根据 `logging.redactSensitive`，编辑仍然适用。
+如果您设置了 `logging.file`，则改为使用该路径。日志采用 JSONL 格式（每行一个 JSON 对象）。根据 `logging.redactSensitive` 进行的编辑仍会生效。
 
 ## 提取日志
 
@@ -76,19 +76,19 @@ ls -t /tmp/openclaw/openclaw-*.log | head -n 1
 rg "telegram http error" /tmp/openclaw/openclaw-*.log
 ```
 
-或在复现问题时进行跟踪：
+或者在重现问题时跟踪日志：
 
 ```bash
 tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
 ```
 
-对于远程网关，您也可以使用 `openclaw logs --follow`（请参阅 [/cli/logs](/zh/en/cli/logs)）。
+对于远程网关，您也可以使用 `openclaw logs --follow`（请参阅 [/cli/logs](/zh/cli/logs)）。
 
 ## 注意事项
 
 - 如果 `logging.level` 设置得高于 `warn`，这些日志可能会被抑制。默认的 `info` 即可。
-- 保持启用标志是安全的；它们仅影响特定子系统的日志量。
-- 使用 [/logging](/zh/en/logging) 更改日志目标、级别和编辑。
+- 保持标志启用是安全的；它们仅影响特定子系统的日志量。
+- 使用 [/logging](/zh/logging) 来更改日志目标、级别和编辑。
 
 import zh from '/components/footer/zh.mdx';
 

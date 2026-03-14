@@ -31,14 +31,14 @@ status: active
 凭据在代理之间**不**共享。切勿跨代理重复使用 `agentDir`。
 如果您想共享凭据，请将 `auth-profiles.json` 复制到另一个代理的 `agentDir` 中。
 
-有关沙箱在运行时的行为方式，请参阅[沙箱](/zh/en/gateway/沙箱隔离)。
-有关调试“为什么被阻止？”，请参阅[沙箱与工具策略与提权](/zh/en/gateway/sandbox-vs-工具-policy-vs-elevated)和 `openclaw sandbox explain`。
+关于沙箱隔离在运行时的行为，请参阅[沙箱隔离](/en/gateway/sandboxing)。
+关于调试“为什么会阻止此操作？”，请参阅[沙箱 vs 工具策略 vs 提升权限](/en/gateway/sandbox-vs-tool-policy-vs-elevated)和 `openclaw sandbox explain`。
 
 ---
 
 ## 配置示例
 
-### 示例 1：个人 + 受限家庭智能体
+### 示例 1：个人 + 受限家庭代理
 
 ```json
 {
@@ -84,12 +84,12 @@ status: active
 
 **结果：**
 
-- `main` 代理：在主机上运行，拥有完整的工具访问权限
+- `main` 代理：在主机上运行，拥有完整工具访问权限
 - `family` 代理：在 Docker 中运行（每个代理一个容器），仅限 `read` 工具
 
 ---
 
-### 示例 2：具有共享沙箱的工作智能体
+### 示例 2：具有共享沙箱的工作代理
 
 ```json
 {
@@ -120,7 +120,7 @@ status: active
 
 ---
 
-### 示例 2b：全局编码配置文件 + 仅消息传递智能体
+### 示例 2b：全局编码配置文件 + 仅消息代理
 
 ```json
 {
@@ -138,12 +138,12 @@ status: active
 
 **结果：**
 
-- 默认智能体获得编码工具
-- `support` 代理仅限消息传递（+ Slack 工具）
+- 默认代理获取编码工具
+- `support` 代理仅用于消息传递（+ Slack 工具）
 
 ---
 
-### 示例 3：每个智能体不同的沙箱模式
+### 示例 3：每个代理具有不同的沙箱模式
 
 ```json
 {
@@ -183,11 +183,11 @@ status: active
 
 ## 配置优先级
 
-当同时存在全局 (`agents.defaults.*`) 和特定于代理的 (`agents.list[].*`) 配置时：
+当同时存在全局 (`agents.defaults.*`) 和代理特定 (`agents.list[].*`) 配置时：
 
 ### 沙箱配置
 
-特定智能体的设置覆盖全局设置：
+代理特定设置会覆盖全局设置：
 
 ```
 agents.list[].sandbox.mode > agents.defaults.sandbox.mode
@@ -201,7 +201,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 **注意：**
 
-- `agents.list[].sandbox.{docker,browser,prune}.*` 覆盖该代理的 `agents.defaults.sandbox.{docker,browser,prune}.*` (当沙箱范围解析为 `"shared"` 时忽略)。
+- `agents.list[].sandbox.{docker,browser,prune}.*` 会覆盖该代理的 `agents.defaults.sandbox.{docker,browser,prune}.*`（当沙箱范围解析为 `"shared"` 时忽略）。
 
 ### 工具限制
 
@@ -213,15 +213,15 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 4. **提供商工具策略** (`tools.byProvider[provider].allow/deny`)
 5. **代理特定工具策略** (`agents.list[].tools.allow/deny`)
 6. **代理提供商策略** (`agents.list[].tools.byProvider[provider].allow/deny`)
-7. **沙盒工具策略** (`tools.sandbox.tools` 或 `agents.list[].tools.sandbox.tools`)
-8. **子代理工具策略** (`tools.subagents.tools`，如适用)
+7. **沙箱工具策略** (`tools.sandbox.tools` 或 `agents.list[].tools.sandbox.tools`)
+8. **子代理工具策略** (`tools.subagents.tools`，如果适用)
 
-每一层级都可以进一步限制工具，但不能恢复之前层级中拒绝的工具。
+每一层级都可以进一步限制工具，但不能恢复之前层级中已拒绝的工具。
 如果设置了 `agents.list[].tools.sandbox.tools`，它将替换该代理的 `tools.sandbox.tools`。
 如果设置了 `agents.list[].tools.profile`，它将覆盖该代理的 `tools.profile`。
 提供商工具键接受 `provider`（例如 `google-antigravity`）或 `provider/model`（例如 `openai/gpt-5.2`）。
 
-### 工具组（简写形式）
+### 工具组（简写）
 
 工具策略（全局、代理、沙盒）支持 `group:*` 条目，这些条目可扩展为多个具体工具：
 
@@ -233,18 +233,18 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 - `group:automation`: `cron`, `gateway`
 - `group:messaging`: `message`
 - `group:nodes`: `nodes`
-- `group:openclaw`: 所有内置的 OpenClaw 工具（不包括提供商插件）
+- `group:openclaw`：所有内置的 OpenClaw 工具（不包括提供商插件）
 
 ### 提升模式
 
-`tools.elevated` 是全局基准（基于发送者的允许列表）。`agents.list[].tools.elevated` 可以针对特定代理进一步限制提升模式（两者都必须允许）。
+`tools.elevated` 是全局基线（基于发送方的允许列表）。`agents.list[].tools.elevated` 可以进一步限制特定代理的提升权限（两者都必须允许）。
 
 缓解模式：
 
-- 对于不受信任的代理，拒绝 `exec` (`agents.list[].tools.deny: ["exec"]`)
-- 避免将路由到受限代理的发件人列入允许列表
-- 如果您只想进行沙盒执行，请全局禁用提升模式 (`tools.elevated.enabled: false`)
-- 针对敏感配置文件，针对每个代理禁用提升模式 (`agents.list[].tools.elevated.enabled: false`)
+- 拒绝不受信任代理的 `exec`（`agents.list[].tools.deny: ["exec"]`）
+- 避免将路由到受限代理的发送方加入允许列表
+- 如果仅想要沙箱隔离执行，请全局禁用提升权限 (`tools.elevated.enabled: false`)
+- 对于敏感配置，请按代理禁用提升权限 (`agents.list[].tools.elevated.enabled: false`)
 
 ---
 
@@ -273,7 +273,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 }
 ```
 
-**之后（具有不同配置文件的多代理）：**
+**之后（具有不同配置的多代理）：**
 
 ```json
 {
@@ -290,7 +290,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 }
 ```
 
-传统的 `agent.*` 配置由 `openclaw doctor` 迁移；以后建议使用 `agents.defaults` + `agents.list`。
+旧的 `agent.*` 配置由 `openclaw doctor` 迁移；今后建议使用 `agents.defaults` + `agents.list`。
 
 ---
 
@@ -332,12 +332,12 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 ---
 
-## 常见陷阱：“非主”
+## 常见误区："non-main"
 
-`agents.defaults.sandbox.mode: "non-main"` 基于 `session.mainKey`（默认为 `"main"`），
-而不是代理 id。群组/频道会话总是获得自己的密钥，因此它们
-被视为非主会话，并将被沙盒化。如果您希望代理从不
-使用沙盒，请设置 `agents.list[].sandbox.mode: "off"`。
+`agents.defaults.sandbox.mode: "non-main"` 基于 `session.mainKey`（默认 `"main"`），
+而非代理 ID。群组/渠道会话总是拥有自己的密钥，因此它们
+被视为非主会话并将被沙箱隔离。如果您希望代理从不
+使用沙箱，请设置 `agents.list[].sandbox.mode: "off"`。
 
 ---
 
@@ -371,29 +371,29 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 ## 故障排除
 
-### 尽管有 `mode: "all"`，代理仍未被沙盒化
+### 尽管有 `mode: "all"`，代理仍未被沙箱隔离
 
-- 检查是否存在覆盖它的全局 `agents.defaults.sandbox.mode`
+- 检查是否有全局 `agents.defaults.sandbox.mode` 覆盖了它
 - 代理特定的配置优先级更高，因此请设置 `agents.list[].sandbox.mode: "all"`
 
 ### 尽管有拒绝列表，工具仍然可用
 
 - 检查工具过滤顺序：全局 → 代理 → 沙箱 → 子代理
-- 每一层级只能进一步限制，不能恢复权限
-- 使用日志验证：`[tools] filtering tools for agent:${agentId}`
+- 每个层级只能进一步限制，不能重新授权
+- 通过日志验证：`[tools] filtering tools for agent:${agentId}`
 
 ### 容器未按代理隔离
 
-- 在代理特定的沙盒配置中设置 `scope: "agent"`
-- 默认值为 `"session"`，这会为每个会话创建一个容器
+- 在代理特定的沙箱配置中设置 `scope: "agent"`
+- 默认值为 `"session"`，它会为每个会话创建一个容器
 
 ---
 
 ## 另请参阅
 
-- [多代理路由](/zh/en/concepts/multi-agent)
-- [沙箱配置](/zh/en/gateway/configuration#agentsdefaults-sandbox)
-- [会话管理](/zh/en/concepts/会话)
+- [多代理路由](/en/concepts/multi-agent)
+- [沙箱配置](/en/gateway/configuration#agentsdefaults-sandbox)
+- [会话管理](/en/concepts/session)
 
 import zh from '/components/footer/zh.mdx';
 

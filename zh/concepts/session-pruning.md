@@ -1,6 +1,6 @@
 ---
 title: "Session Pruning"
-summary: "Session pruning: 工具-result trimming to reduce context bloat"
+summary: "会话修剪: 工具-result trimming to reduce context bloat"
 read_when:
   - You want to reduce LLM context growth from tool outputs
   - You are tuning agents.defaults.contextPruning
@@ -8,7 +8,7 @@ read_when:
 
 # 会话剪枝
 
-Session pruning 会紧接在每次 LLM 调用之前从内存上下文中修剪 **旧的工具结果**。它 **不会** 重写磁盘上的会话历史记录 (`*.jsonl`)。
+会话修剪 会紧接在每次 LLM 调用之前从内存上下文中修剪 **旧的工具结果**。它 **不会** 重写磁盘上的会话历史记录 (`*.jsonl`)。
 
 ## 运行时机
 
@@ -59,21 +59,21 @@ Session pruning 会紧接在每次 LLM 调用之前从内存上下文中修剪 *
 ## 软修剪与硬修剪
 
 - **软修剪**：仅针对过大的工具结果。
-  - 保留头部 + 尾部，插入 `...`，并附加带有原始大小的注释。
+  - 保留头部和尾部，插入 `...`，并附加一条包含原始大小的说明。
   - 跳过包含图像块的结果。
-- **Hard-clear**：将整个工具结果替换为 `hardClear.placeholder`。
+- **硬清除 (Hard-clear)**：用 `hardClear.placeholder` 替换整个工具结果。
 
 ## 工具选择
 
 - `tools.allow` / `tools.deny` 支持 `*` 通配符。
-- 拒绝列表优先。
+- 拒绝优先。
 - 匹配不区分大小写。
-- 空的允许列表 => 允许所有工具。
+- 允许列表为空 => 允许所有工具。
 
 ## 与其他限制的交互
 
-- 内置工具已经会截断其自身的输出；会话修剪是一个额外的层，可防止长时间运行的聊天在模型上下文中积累过多的工具输出。
-- 压缩是独立的：压缩进行总结并持久化，而修剪是针对每个请求的临时操作。参见 [/concepts/compaction](/zh/en/concepts/compaction)。
+- 内置工具已经会截断自己的输出；会话修剪是一个额外的层，用于防止长时间运行的对话在模型上下文中积累过多的工具输出。
+- 压缩是独立的：压缩进行总结和持久化，而修剪是每个请求的临时行为。请参阅 [/concepts/compaction](/zh/concepts/compaction)。
 
 ## 默认值（启用时）
 
@@ -95,7 +95,7 @@ Session pruning 会紧接在每次 LLM 调用之前从内存上下文中修剪 *
 }
 ```
 
-启用基于 TTL 的修剪：
+启用 TTL 感知修剪：
 
 ```json5
 {
@@ -118,7 +118,7 @@ Session pruning 会紧接在每次 LLM 调用之前从内存上下文中修剪 *
 }
 ```
 
-请参阅配置参考：[Gateway 网关 配置](/zh/en/gateway/configuration)
+请参阅配置参考：[Gateway 网关 配置](/zh/gateway/configuration)
 
 import zh from '/components/footer/zh.mdx';
 

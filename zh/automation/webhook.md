@@ -138,30 +138,30 @@ Gateway 网关 可以暴露一个小型的 HTTP webhook 端点用于外部触发
 - `hooks.presets: ["gmail"]` 启用内置的 Gmail 映射。
 - `hooks.mappings` 允许您在配置中定义 `match`、`action` 和模板。
 - `hooks.transformsDir` + `transform.module` 加载 JS/TS 模块以实现自定义逻辑。
-  - `hooks.transformsDir`（如果设置）必须保持在 OpenClaw 配置目录下的 transforms 根目录内（通常为 `~/.openclaw/hooks/transforms`）。
+  - `hooks.transformsDir`（如果设置）必须保持在 OpenClaw 配置目录下的 transforms 根目录内（通常是 `~/.openclaw/hooks/transforms`）。
   - `transform.module` 必须在有效的 transforms 目录内解析（拒绝遍历/转义路径）。
-- 使用 `match.source` 来保持通用的接收端点（基于负载的路由）。
-- TS 转换在运行时需要 TS 加载器（例如 `bun` 或 `tsx`）或预编译的 `.js`。
+- 使用 `match.source` 来保留一个通用摄取端点（由有效负载驱动的路由）。
+- TS 转换需要一个 TS 加载器（例如 `bun` 或 `tsx`）或在运行时预编译的 `.js`。
 - 在映射上设置 `deliver: true` + `channel`/`to` 以将回复路由到聊天界面
-  （`channel` 默认为 `last`，并回退到 WhatsApp）。
+  （`channel` 默认为 `last` 并回退到 WhatsApp）。
 - `agentId` 将路由钩子到特定的代理；未知的 ID 将回退到默认代理。
 - `hooks.allowedAgentIds` 限制显式的 `agentId` 路由。省略它（或包含 `*`）以允许任何代理。设置 `[]` 以拒绝显式的 `agentId` 路由。
 - `hooks.defaultSessionKey` 在未提供显式密钥时设置钩子代理运行的默认会话。
 - `hooks.allowRequestSessionKey` 控制是否允许 `/hooks/agent` 负载设置 `sessionKey`（默认：`false`）。
 - `hooks.allowedSessionKeyPrefixes` 可选择限制请求负载和映射中的显式 `sessionKey` 值。
-- `allowUnsafeExternalContent: true` 禁用该钩子的外部内容安全包装器
-  （危险；仅限受信任的内部源）。
+- `allowUnsafeExternalContent: true` 禁用该 hook 的外部内容安全包装器
+  （危险；仅适用于受信任的内部来源）。
 - `openclaw webhooks gmail setup` 会为 `openclaw webhooks gmail run` 写入 `hooks.gmail` 配置。
-  有关完整的 Gmail watch 流程，请参阅 [Gmail Pub/Sub](/zh/en/automation/gmail-pubsub)。
+  有关完整的 Gmail 监视流程，请参阅 [Gmail Pub/Sub](/zh/automation/gmail-pubsub)。
 
 ## 响应
 
 - `/hooks/wake` 的 `200`
-- `/hooks/agent` 的 `200`（已接受异步运行）
-- 认证失败时的 `401`
-- 同一客户端反复认证失败后的 `429`（检查 `Retry-After`）
-- 有效载荷无效时的 `400`
-- 有效载荷过大时的 `413`
+- `/hooks/agent`（接受异步运行）的 `200`
+- 身份验证失败时的 `401`
+- 来自同一客户端的重复身份验证失败后的 `429`（检查 `Retry-After`）
+- 无效负载时的 `400`
+- 负载过大时的 `413`
 
 ## 示例
 
@@ -181,7 +181,7 @@ curl -X POST http://127.0.0.1:18789/hooks/agent \
 
 ### 使用不同的模型
 
-将 `model` 添加到代理有效载荷（或映射）以覆盖该运行的模型：
+将 `model` 添加到 Agent 有效负载（或映射）以覆盖该运行的模型：
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/agent \
@@ -201,16 +201,16 @@ curl -X POST http://127.0.0.1:18789/hooks/gmail \
 
 ## 安全性
 
-- 将 Hook 端点置于环回、tailnet 或可信反向代理之后。
-- 使用专用的 Hook 令牌；不要重复使用网关认证令牌。
-- 重复的认证失败会按客户端地址进行速率限制，以减缓暴力破解尝试。
-- 如果您使用多代理路由，请设置 `hooks.allowedAgentIds` 以限制显式的 `agentId` 选择。
-- 除非您需要调用者选择的会话，否则请保持 `hooks.allowRequestSessionKey=false`。
-- 如果您启用请求 `sessionKey`，请限制 `hooks.allowedSessionKeyPrefixes`（例如，`["hook:"]`）。
-- 避免在 webhook 日志中包含敏感的原始有效载荷。
-- 默认情况下，Hook 有效载荷被视为不受信任，并包裹在安全边界中。
-  如果您必须为特定挂钩禁用此功能，请在该挂钩的映射中设置 `allowUnsafeExternalContent: true`
-  （危险）。
+- 将 Hook 端点置于回环、tailnet 或受信任的反向代理之后。
+- 使用专用的 Hook 令牌；不要重复使用网关身份验证令牌。
+- 为了减缓暴力破解尝试，针对重复的身份验证失败会按客户端地址进行速率限制。
+- 如果您使用多代理路由，请设置 `hooks.allowedAgentIds` 以限制显式 `agentId` 选择。
+- 除非您需要调用方选择的会话，否则请保留 `hooks.allowRequestSessionKey=false`。
+- 如果您启用了请求 `sessionKey`，请限制 `hooks.allowedSessionKeyPrefixes`（例如，`["hook:"]`）。
+- 避免在 Webhook 日志中包含敏感的原始负载。
+- Hook 负载默认被视为不受信任，并会用安全边界进行包裹。
+  如果您必须针对特定 hook 禁用此功能，请在该 hook 的映射中设置 `allowUnsafeExternalContent: true`
+  （危险操作）。
 
 import zh from '/components/footer/zh.mdx';
 

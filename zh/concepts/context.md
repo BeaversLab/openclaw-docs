@@ -27,7 +27,7 @@ title: "上下文"
 - `/usage tokens` → 将每次回复的使用情况页脚附加到普通回复中。
 - `/compact` → 将较早的历史记录汇总为一个紧凑条目以释放窗口空间。
 
-另请参阅：[斜杠命令](/zh/en/tools/slash-commands)、[Token 使用与费用](/zh/en/reference/token-use)、[压缩](/zh/en/concepts/compaction)。
+另请参阅：[斜杠命令](/zh/tools/slash-commands)、[Token 使用与成本](/zh/reference/token-use)、[压缩](/zh/concepts/compaction)。
 
 ## 示例输出
 
@@ -98,7 +98,7 @@ Top tools (schema size):
 - 运行时元数据（主机/操作系统/模型/思考）。
 - **项目上下文（Project Context）** 下注入的工作区引导文件。
 
-完整细分：[系统提示词](/zh/en/concepts/system-prompt)。
+完整细分：[系统提示词](/zh/concepts/system-prompt)。
 
 ## 注入的工作区文件（项目上下文）
 
@@ -120,7 +120,7 @@ Top tools (schema size):
 
 系统提示词包含一个精简的**技能列表**（名称 + 描述 + 位置）。该列表具有实际的开销。
 
-技能说明默认情况下_不_包含在内。模型应仅在需要时 `read` 技能的 `SKILL.md`。
+技能说明默认情况下*不*包含在内。模型应仅在需要时 `read` 技能的 `SKILL.md`。
 
 ## 工具：存在两项成本
 
@@ -137,32 +137,36 @@ Top tools (schema size):
 
 - **独立命令**：仅包含 `/...` 的消息将作为命令运行。
 - **指令**：在模型看到消息之前，会先剥离 `/think`、`/verbose`、`/reasoning`、`/elevated`、`/model`、`/queue`。
-  - 仅包含指令的消息会持久化会话设置。
+  - 仅包含指令的消息会保留会话设置。
   - 普通消息中的内联指令作为单条消息的提示。
-- **内联快捷方式**（仅限白名单发送者）：普通消息内的某些 `/...` 标记可以立即运行（例如：“嘿 /status”），并且在模型看到剩余文本之前会被剥离。
+- **内联快捷方式**（仅限允许的发件人）：普通消息中的某些 `/...` 令牌可以立即运行（例如：“hey /status”），并且会在模型看到剩余文本之前被剥离。
 
-详情：[斜杠命令](/zh/en/tools/slash-commands)。
+详情：[斜杠命令](/zh/tools/slash-commands)。
 
-## 会话、压缩和修剪（保留内容）
+## 会话、压缩和修剪（保留的内容）
 
 跨消息保留的内容取决于机制：
 
-- **普通历史记录** 会保留在会话记录中，直到被策略压缩/修剪。
-- **压缩** 会将摘要保存到记录中，并保持最近的完整消息。
-- **修剪** 会从单次运行的 _内存中_ 提示里移除旧的工具结果，但不会重写记录。
+- **普通历史记录**保留在会话记录中，直到被策略压缩/修剪。
+- **压缩**会将摘要保留到记录中，并使最近的消息保持完整。
+- **修剪**会从一次运行的 _内存中_ 提示词中移除旧的工具结果，但不会重写记录。
 
-文档：[会话](/zh/en/concepts/会话)、[压缩](/zh/en/concepts/compaction)、[会话修剪](/zh/en/concepts/会话-pruning)。
+文档：[会话](/zh/concepts/session)、[压缩](/zh/concepts/compaction)、[会话修剪](/zh/concepts/session-pruning)。
 
-默认情况下，OpenClaw 使用内置的 `legacy` 上下文引擎进行组装和压缩。如果您安装了一个提供 `kind: "context-engine"` 的插件并通过 `plugins.slots.contextEngine` 选中它，OpenClaw 会将上下文组装、`/compact` 以及相关的子代理上下文生命周期钩子委托给该引擎。
+默认情况下，OpenClaw 使用内置的 `legacy` 上下文引擎进行组装和
+压缩。如果你安装了一个提供 `kind: "context-engine"` 的插件
+并使用 `plugins.slots.contextEngine` 选中它，OpenClaw 会将上下文
+组装、`/compact` 以及相关的子代理上下文生命周期挂钩委托给该
+引擎。
 
 ## `/context` 实际报告的内容
 
-如果可用，`/context` 优先使用最新的 **运行时构建** 系统提示词报告：
+`/context` 在可用时优先使用最新的 **运行生成** 系统提示词报告：
 
-- `System prompt (run)` = 从上次嵌入的（具备工具能力的）运行中捕获并持久化在会话存储中。
+- `System prompt (run)` = 从最后一次嵌入的（具备工具能力的）运行中捕获，并保留在会话存储中。
 - `System prompt (estimate)` = 当不存在运行报告时（或通过不生成报告的 CLI 后端运行时）即时计算。
 
-无论哪种方式，它都会报告大小和主要贡献者；它 **不** 会转储完整的系统提示或工具架构。
+无论哪种方式，它都会报告大小和主要贡献者；它**不**会转储完整的系统提示或工具架构。
 
 import zh from '/components/footer/zh.mdx';
 

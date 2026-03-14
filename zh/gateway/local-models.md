@@ -9,9 +9,9 @@ title: "本地模型"
 
 # 本地模型
 
-本地部署是可行的，但 OpenClaw 需要大上下文 + 针对提示注入的强有力防御。小显卡会截断上下文并泄露安全风险。目标要高：**≥2 台满配的 Mac Studio 或同等的 GPU 集群（约 $30k+）**。单块 **24 GB** GPU 仅适用于较轻量的提示，且延迟较高。使用**你能运行的最大的 / 完整版模型变体**；激进量化的或“小”检查点会增加提示注入风险（参见[安全](/zh/en/gateway/security)）。
+本地部署是可行的，但 OpenClaw 需要大上下文和强大的防御措施来防止提示注入。小显卡会截断上下文并导致安全漏洞。目标要高：**≥2 台满配的 Mac Studios 或等效的 GPU 设备（约 $30k+）**。单个 **24 GB** GPU 仅适用于延迟较高的轻量级提示。使用你能运行的**最大 / 全尺寸模型变体**；激进的量化或“小型”检查点会增加提示注入风险（请参阅 [安全](/zh/gateway/security)）。
 
-如果您想要最低摩擦力的本地设置，请从 [Ollama](/zh/en/providers/ollama) 和 `openclaw onboard` 开始。本页面是针对高端本地堆栈和自定义 OpenAI 兼容本地服务器的观点指南。
+如果您想要最低摩擦的本地设置，请从 [Ollama](/zh/providers/ollama) 和 `openclaw onboard` 开始。本页面是针对高端本地堆栈和自定义 OpenAI 兼容本地服务器的观点指南。
 
 ## 推荐：LM Studio + MiniMax M2.5（Responses API，完整版）
 

@@ -13,8 +13,8 @@ title: "审批"
 
 相关：
 
-- 执行审批：[执行审批](/zh/en/tools/exec-approvals)
-- 节点：[节点](/zh/en/nodes)
+- Exec 批准：[Exec 批准](/zh/tools/exec-approvals)
+- 节点：[节点](/zh/nodes)
 
 ## 常用命令
 

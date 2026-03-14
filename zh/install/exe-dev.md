@@ -27,7 +27,8 @@ title: "exe.dev"
 
 ## 使用 Shelley 自动安装
 
-Shelley，[exe.dev](https://exe.dev) 的代理，可以使用我们的提示立即安装 OpenClaw。使用的提示如下：
+Shelley，[exe.dev](https://exe.dev) 的代理，可以使用我们的
+提示立即安装 OpenClaw。使用的提示如下：
 
 ```
 Set up OpenClaw (https://docs.openclaw.ai/install) on this VM. Use the non-interactive and accept-risk flags for openclaw onboarding. Add the supplied auth or token as needed. Configure nginx to forward from the default port 18789 to the root location on the default enabled site config, making sure to enable Websocket support. Pairing is done by "openclaw devices list" and "openclaw devices approve <request id>". Make sure the dashboard shows that OpenClaw's health is OK. exe.dev handles forwarding from port 8000 to port 80/443 and HTTPS for us, so the final "reachable" should be <vm-name>.exe.xyz, without port specification.
@@ -106,7 +107,9 @@ server {
 
 ## 远程访问
 
-远程访问由 [exe.dev](https://exe.dev) 的身份验证处理。默认情况下，来自端口 8000 的 HTTP 流量将通过电子邮件身份验证转发到 `https://<vm-name>.exe.xyz`。
+远程访问由 [exe.dev](https://exe.dev) 的身份验证处理。默认
+情况下，来自端口 8000 的 HTTP 流量将通过电子邮件验证转发到
+`https://<vm-name>.exe.xyz`。
 
 ## 更新
 
@@ -117,7 +120,7 @@ openclaw gateway restart
 openclaw health
 ```
 
-指南：[Updating](/zh/en/install/updating)
+指南：[更新](/en/install/updating)
 
 import zh from '/components/footer/zh.mdx';
 

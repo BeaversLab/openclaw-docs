@@ -10,7 +10,7 @@ title: "更新"
 
 安全地更新 OpenClaw 并在稳定/测试/开发通道之间切换。
 
-如果您是通过 **npm/pnpm** 安装的（全局安装，无 git 元数据），更新将通过 [更新](/zh/en/install/updating) 中的包管理器流程进行。
+如果您通过 **npm/pnpm** 安装（全局安装，无 git 元数据），更新通过[更新](/zh/install/updating) 中的包管理器流程进行。
 
 ## 用法
 
@@ -64,42 +64,42 @@ openclaw update status --timeout 10
 当您显式切换通道（`--channel ...`）时，OpenClaw 也会使
 安装方法保持一致：
 
-- `dev` → 确保有 git 检出副本（默认：`~/openclaw`，可通过 `OPENCLAW_GIT_DIR` 覆盖），
-  更新它，并从该检出中安装全局 CLI。
+- `dev` → 确保 git checkout（默认：`~/openclaw`，可通过 `OPENCLAW_GIT_DIR` 覆盖），
+  更新它，并从该 checkout 安装全局 CLI。
 - `stable`/`beta` → 使用匹配的 dist-tag 从 npm 安装。
 
-Gateway 网关 核心自动更新程序（当通过配置启用时）重用此相同的更新路径。
+当通过配置启用时，Gateway(网关) 核心自动更新程序复用此相同的更新路径。
 
-## Git 检出流程
+## Git checkout 流程
 
-通道：
+渠道：
 
-- `stable`：检出最新的非 beta 标签，然后构建 + 检查。
-- `beta`：检出最新的 `-beta` 标签，然后构建 + 检查。
+- `stable`：检出最新的非 beta 标签，然后构建 + 诊断。
+- `beta`：检出最新的 `-beta` 标签，然后构建 + 诊断。
 - `dev`：检出 `main`，然后获取 + 变基。
 
-高层概述：
+高级概览：
 
 1. 需要干净的工作树（没有未提交的更改）。
-2. 切换到选定的频道（标签或分支）。
+2. 切换到选定的渠道（标签或分支）。
 3. 获取上游更新（仅限 dev）。
-4. 仅限 dev：在临时工作树中进行预检 lint + TypeScript 构建；如果最新提交失败，则回溯最多 10 个提交以查找最新的干净构建。
+4. 仅限 dev：在临时工作树中进行预检 lint + TypeScript 构建；如果 tip 失败，则向上回溯最多 10 次提交以查找最新的干净构建。
 5. 变基到选定的提交（仅限 dev）。
-6. 安装依赖项（首选 pnpm；备选 npm）。
+6. 安装依赖项（首选 pnpm；回退到 npm）。
 7. 构建 + 构建 Control UI。
 8. 运行 `openclaw doctor` 作为最后的“安全更新”检查。
-9. 将插件同步到活动频道（dev 使用内置扩展；stable/beta 使用 npm）并更新通过 npm 安装的插件。
+9. 将插件同步到活动渠道（dev 使用捆绑扩展；stable/beta 使用 npm）并更新 npm 安装的插件。
 
 ## `--update` 简写
 
-`openclaw --update` 重写为 `openclaw update`（对 Shell 和启动器脚本有用）。
+`openclaw --update` 重写为 `openclaw update`（适用于 shell 和启动器脚本）。
 
-## 另请参阅
+## 参见
 
-- `openclaw doctor`（在 git 检出时提示先运行更新）
-- [开发频道](/zh/en/install/development-channels)
-- [更新](/zh/en/install/updating)
-- [CLI 参考](/zh/en/cli)
+- `openclaw doctor`（在 git checkout 上提议先运行 update）
+- [开发渠道](/zh/install/development-channels)
+- [更新](/zh/install/updating)
+- [CLI 参考](/zh/cli)
 
 import zh from '/components/footer/zh.mdx';
 

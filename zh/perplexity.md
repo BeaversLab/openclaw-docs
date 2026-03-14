@@ -73,9 +73,9 @@ OpenClaw 支持 Perplexity Search API 作为 `web_search` 提供商。
 `tools.web.search.perplexity.apiKey` 下的 `~/.openclaw/openclaw.json` 中。
 该字段也接受 SecretRef 对象。
 
-**通过环境：** 在 Gateway 网关 进程环境中设置 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。
+**通过环境变量：** 在 Gateway(网关) 进程环境中设置 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。
 对于 gateway 安装，将其放入
-`~/.openclaw/.env`（或您的服务环境）。参见 [Env vars](/zh/en/help/faq#how-does-openclaw-load-environment-variables)。
+`~/.openclaw/.env` （或您的服务环境）中。请参阅 [Env vars](/en/help/faq#how-does-openclaw-load-environment-variables)。
 
 如果配置了 `provider: "perplexity"` 且 Perplexity 密钥 SecretRef 未解析且没有环境变量回退，启动/重载将快速失败。
 
@@ -83,21 +83,21 @@ OpenClaw 支持 Perplexity Search API 作为 `web_search` 提供商。
 
 这些参数适用于原生 Perplexity Search API 路径。
 
-| 参数 | 描述 |
-| --------------------- | ---------------------------------------------------- |
-| `query` | 搜索查询（必需） |
-| `count` | 返回的结果数量（1-10，默认：5） |
-| `country` | 2字母 ISO 国家代码（例如 "US", "DE"） |
-| `language` | ISO 639-1 语言代码（例如 "en", "de", "fr"） |
-| `freshness` | 时间过滤器：`day` (24小时)，`week`，`month`，或 `year` |
-| `date_after` | 仅返回在此日期之后发布的结果 (YYYY-MM-DD) |
-| `date_before` | 仅返回在此日期之前发布的结果 (YYYY-MM-DD) |
-| `domain_filter` | 域名允许列表/拒绝列表数组（最多 20 个） |
-| `max_tokens` | 总内容预算（默认：25000，最大：1000000） |
-| `max_tokens_per_page` | 每页 token 限制（默认：2048） |
+| 参数                  | 描述                                               |
+| --------------------- | -------------------------------------------------- |
+| `query`               | 搜索查询（必填）                                   |
+| `count`               | 要返回的结果数量（1-10，默认值：5）                |
+| `country`             | 两位字母 ISO 国家代码（例如 "US"、"DE"）           |
+| `language`            | ISO 639-1 语言代码（例如 "en"、"de"、"fr"）        |
+| `freshness`           | 时间过滤器：`day` (24h)、`week`、`month` 或 `year` |
+| `date_after`          | 仅限在此日期之后发布的结果 (YYYY-MM-DD)            |
+| `date_before`         | 仅限在此日期之前发布的结果 (YYYY-MM-DD)            |
+| `domain_filter`       | 域名允许列表/阻止列表数组（最多 20 个）            |
+| `max_tokens`          | 总内容预算（默认值：25000，最大值：1000000）       |
+| `max_tokens_per_page` | 每页 token 限制（默认值：2048）                    |
 
-对于旧版 Sonar/OpenRouter 兼容路径，仅支持 `query` 和 `freshness`。
-仅限搜索 API 的过滤器（如 `country`，`language`，`date_after`，`date_before`，`domain_filter`，`max_tokens` 和 `max_tokens_per_page`）将返回显式错误。
+对于传统的 Sonar/OpenRouter 兼容性路径，仅支持 `query` 和 `freshness`。
+仅限搜索 API 的过滤器，例如 `country`、`language`、`date_after`、`date_before`、`domain_filter`、`max_tokens` 和 `max_tokens_per_page`，将返回明确的错误。
 
 **示例：**
 
@@ -145,16 +145,16 @@ await web_search({
 ### 域名过滤规则
 
 - 每个过滤器最多 20 个域名
-- 不能在同一请求中混合使用允许列表和拒绝列表
-- 对拒绝列表条目使用 `-` 前缀（例如 `["-reddit.com"]`）
+- 不能在同一请求中混合使用允许列表和阻止列表
+- 对阻止列表条目使用 `-` 前缀（例如 `["-reddit.com"]`）
 
 ## 注意事项
 
-- Perplexity Search API 返回结构化的网络搜索结果（`title`，`url`，`snippet`）
-- 使用 OpenRouter 或显式的 `baseUrl` / `model` 会将 Perplexity 切换回 Sonar 聊天补全模式以保持兼容性
+- Perplexity Search API 返回结构化的网页搜索结果（`title`、`url` 和 `snippet`）
+- 使用 OpenRouter 或显式的 `baseUrl` / `model` 会将 Perplexity 切换回 Sonar 聊天补全模式以确保兼容性
 - 结果默认缓存 15 分钟（可通过 `cacheTtlMinutes` 配置）
 
-有关完整的 web_search 配置，请参阅 [Web tools](/zh/en/tools/web)。
+有关完整的 web_search 配置，请参阅 [Web tools](/en/tools/web)。
 有关更多详细信息，请参阅 [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart)。
 
 import zh from '/components/footer/zh.mdx';

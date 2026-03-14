@@ -59,10 +59,9 @@ openclaw models set github-copilot/gpt-4o
 ## 注意
 
 - 需要交互式 TTY；请直接在终端中运行它。
-- Copilot 模型的可用性取决于您的计划；如果模型被拒绝，请尝试
+- Copilot 模型的可用性取决于您的计划；如果某个模型被拒绝，请尝试
   另一个 ID（例如 `github-copilot/gpt-4.1`）。
-- 登录会将 GitHub 令牌存储在身份验证配置文件存储中，并在 OpenClaw 运行时将其交换为
-OpenClaw Copilot API 令牌。
+- 登录会在配置文件存储中保存一个 GitHub 令牌，并在 OpenClaw 运行时将其交换为 Copilot API 令牌。
 
 import zh from '/components/footer/zh.mdx';
 

@@ -11,7 +11,7 @@ title: "macOS 签名"
 
 - 设置稳定的调试包标识符：`ai.openclaw.mac.debug`
 - 使用该包 ID 写入 Info.plist（通过 `BUNDLE_ID=...` 覆盖）
-- 调用 [`scripts/codesign-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/codesign-mac-app.sh) 对主二进制文件和应用包进行签名，以便 macOS 将每次重新构建视为同一已签名包，并保留 TCC 权限（通知、辅助功能、屏幕录制、麦克风、语音）。为了权限稳定，请使用真实的签名身份；Ad-hoc 签名是可选的且不稳定（参见 [macOS 权限](/zh/en/platforms/mac/permissions)）。
+- 调用 [`scripts/codesign-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/codesign-mac-app.sh) 对主二进制文件和 App 包进行签名，以便 macOS 将每次重新构建视为相同的已签名包，并保留 TCC 权限（通知、辅助功能、屏幕录制、麦克风、语音）。为了获得稳定的权限，请使用真实的签名身份；临时签名 (ad-hoc) 是可选的且不稳定（请参阅 [macOS permissions](/en/platforms/mac/permissions)）。
 - 默认使用 `CODESIGN_TIMESTAMP=auto`；它为 Developer ID 签名启用受信任的时间戳。设置 `CODESIGN_TIMESTAMP=off` 以跳过时间戳（离线调试构建）。
 - 将构建元数据注入 Info.plist：`OpenClawBuildTimestamp` (UTC) 和 `OpenClawGitCommit` (短哈希)，以便“关于”面板可以显示构建、git 和调试/发布渠道。
 - **打包默认使用 Node 24**：该脚本运行 TS 构建和控制 UI 构建。目前为 `22.16+` 的 Node 22 LTS 仍受支持以确保兼容性。
@@ -31,7 +31,7 @@ DISABLE_LIBRARY_VALIDATION=1 scripts/package-mac-app.sh   # dev-only Sparkle Tea
 
 ### Ad-hoc 签名说明
 
-当使用 `SIGN_IDENTITY="-"`（ad-hoc）签名时，脚本会自动禁用**Hardened Runtime**（`--options runtime`）。这是必要的，可以防止应用程序在尝试加载不具有相同 Team ID 的嵌入式框架（如 Sparkle）时崩溃。Ad-hoc 签名还会破坏 TCC 权限的持久性；有关恢复步骤，请参阅 [macOS permissions](/zh/en/platforms/mac/permissions)。
+使用 `SIGN_IDENTITY="-"` (ad-hoc) 签名时，脚本会自动禁用 **Hardened Runtime** (`--options runtime`)。这是防止应用程序尝试加载不共享相同 Team ID 的嵌入式框架（如 Sparkle）时发生崩溃所必需的。Ad-hoc 签名还会破坏 TCC 权限持久性；有关恢复步骤，请参阅 [macOS permissions](/en/platforms/mac/permissions)。
 
 ## “关于”的构建元数据
 
@@ -44,7 +44,7 @@ DISABLE_LIBRARY_VALIDATION=1 scripts/package-mac-app.sh   # dev-only Sparkle Tea
 
 ## 原因
 
-TCC 权限与包标识符_和_代码签名绑定。具有变化 UUID 的未签名调试构建会导致 macOS 在每次重新构建后忘记授予的权限。对二进制文件进行签名（默认为 ad‑hoc）并保持固定的包 ID/路径（`dist/OpenClaw.app`）可以在构建之间保留权限，这与 VibeTunnel 的方法一致。
+TCC 权限与包标识符*和*代码签名绑定。具有变化 UUID 的未签名调试构建会导致 macOS 在每次重新构建后忘记授予的权限。对二进制文件进行签名（默认为 ad‑hoc）并保持固定的包 ID/路径（`dist/OpenClaw.app`）可以在构建之间保留权限，这与 VibeTunnel 的方法一致。
 
 import zh from '/components/footer/zh.mdx';
 

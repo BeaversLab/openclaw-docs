@@ -48,10 +48,10 @@ node --watch-path src --watch-path tsconfig.json --watch-path package.json --wat
 
 使用开发配置文件 (dev profile) 来隔离状态，并为调试启动一个安全的、一次性的设置。有**两个** `--dev` 标志：
 
-- **全局 `--dev` (profile)：** 在 `~/.openclaw-dev` 下隔离状态并
-  将网关端口默认设为 `19001`（派生端口随之偏移）。
-- **`gateway --dev`：** 告诉 Gateway 网关 自动创建默认配置 +
-  workspace** 当缺失时（并跳过 BOOTSTRAP.md）。
+- **全局 `--dev` (配置文件)：** 将状态隔离在 `~/.openclaw-dev` 下，
+  并将网关端口默认设置为 `19001`（派生端口随之偏移）。
+- **`gateway --dev`：告诉 Gateway(网关) 在缺失时自动创建默认配置 +
+  工作区**（并跳过 BOOTSTRAP.md）。
 
 推荐流程（开发配置文件 + 开发引导）：
 
@@ -60,24 +60,24 @@ pnpm gateway:dev
 OPENCLAW_PROFILE=dev openclaw tui
 ```
 
-如果你还没有全局安装，请通过 `pnpm openclaw ...` 运行 CLI。
+如果您还没有全局安装，请通过 `pnpm openclaw ...` 运行 CLI。
 
 其作用如下：
 
-1. **配置文件隔离** (全局 `--dev`)
+1. **配置文件隔离**（全局 `--dev`）
    - `OPENCLAW_PROFILE=dev`
    - `OPENCLAW_STATE_DIR=~/.openclaw-dev`
    - `OPENCLAW_CONFIG_PATH=~/.openclaw-dev/openclaw.json`
    - `OPENCLAW_GATEWAY_PORT=19001`（浏览器/canvas 相应偏移）
 
-2. **开发引导** (`gateway --dev`)
-   - 如果缺失，则写入最小配置（`gateway.mode=local`，绑定回环接口）。
+2. **开发引导**（`gateway --dev`）
+   - 如果缺失，写入最小配置（`gateway.mode=local`，绑定回环）。
    - 将 `agent.workspace` 设置为开发工作区。
    - 设置 `agent.skipBootstrap=true`（无 BOOTSTRAP.md）。
-   - 如果缺失，则初始化工作区文件：
+   - 如果缺失，则播种工作区文件：
      `AGENTS.md`，`SOUL.md`，`TOOLS.md`，`IDENTITY.md`，`USER.md`，`HEARTBEAT.md`。
-   - 默认身份：**C3‑PO**（礼仪机器人）。
-   - 在开发模式下跳过频道提供商（`OPENCLAW_SKIP_CHANNELS=1`）。
+   - 默认身份：**C3‑PO**（协议机器人）。
+   - 在开发模式下跳过渠道提供商（`OPENCLAW_SKIP_CHANNELS=1`）。
 
 重置流程（全新开始）：
 
@@ -85,17 +85,17 @@ OPENCLAW_PROFILE=dev openclaw tui
 pnpm gateway:dev:reset
 ```
 
-注意：`--dev` 是一个**全局**配置文件标志，会被某些运行器“吃掉”。
-如果需要明确指定，请使用环境变量形式：
+注意：`--dev` 是一个**全局**配置文件标志，会被某些运行器吞噬。
+如果您需要详细说明，请使用环境变量形式：
 
 ```bash
 OPENCLAW_PROFILE=dev openclaw gateway --dev --reset
 ```
 
-`--reset` 会清除配置、凭据、会话和开发工作区（使用
+`--reset` 会擦除配置、凭据、会话和开发工作区（使用
 `trash`，而不是 `rm`），然后重新创建默认开发设置。
 
-提示：如果非开发网关已经在运行 (launchd/systemd)，请先将其停止：
+提示：如果非开发网关已在运行（launchd/systemd），请先停止它：
 
 ```bash
 openclaw gateway stop
@@ -104,10 +104,9 @@ openclaw gateway stop
 ## 原始流日志记录（OpenClaw）
 
 OpenClaw 可以在任何过滤/格式化之前记录 **原始助手流**。
-这是查看推理是否作为纯文本增量
-（或作为单独的思考块）到达的最佳方式。
+这是查看推理是否作为纯文本增量到达（或作为单独的思考块）的最佳方式。
 
-通过 CLI 启用：
+通过 CLI 启用它：
 
 ```bash
 pnpm gateway:watch --raw-stream
@@ -130,10 +129,10 @@ OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-stream.jsonl
 
 `~/.openclaw/logs/raw-stream.jsonl`
 
-## 原始数据块日志记录
+## 原始块日志记录 (pi-mono)
 
-要在 **原始 OpenAI 兼容数据块** 被解析为块之前捕获它们，
-pi-mono 提供了一个单独的记录器：
+为了在将 **原始 OpenAI 兼容块** 解析为块之前捕获它们，
+pi-mono 暴露了一个单独的记录器：
 
 ```bash
 PI_RAW_STREAM=1
@@ -150,13 +149,13 @@ PI_RAW_STREAM_PATH=~/.pi-mono/logs/raw-openai-completions.jsonl
 `~/.pi-mono/logs/raw-openai-completions.jsonl`
 
 > 注意：这仅由使用 pi-mono 的
-> `openai-completions` 提供商的进程发出。
+> `openai-completions` 提供商 的进程发出。
 
 ## 安全说明
 
 - 原始流日志可能包含完整的提示、工具输出和用户数据。
-- 请将日志保存在本地，并在调试后将其删除。
-- 如果您共享日志，请先清除机密信息和个人身份信息 (PII)。
+- 将日志保留在本地，并在调试后将其删除。
+- 如果您共享日志，请先清除密钥和个人身份信息 (PII)。
 
 import zh from '/components/footer/zh.mdx';
 

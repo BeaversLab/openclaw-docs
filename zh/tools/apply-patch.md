@@ -36,9 +36,9 @@ title: "apply_patch 工具"
 - 在 `*** Update File:` 块中使用 `*** Move to:` 来重命名文件。
 - `*** End of File` 在需要时标记仅文件结尾（EOF）插入。
 - 实验性功能，默认禁用。使用 `tools.exec.applyPatch.enabled` 启用。
-- 仅限 OpenAI（包括 OpenAI Codex）。可选择通过模型进行限制，方式为
-  `tools.exec.applyPatch.allowModels`。
-- 配置仅位于 `tools.exec` 之下。
+- OpenAI 专属（包括 OpenAI Codex）。可通过模型通过
+  `tools.exec.applyPatch.allowModels` 进行可选控制。
+- 配置仅在 `tools.exec` 下。
 
 ## 示例
 

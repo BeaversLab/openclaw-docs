@@ -22,7 +22,7 @@ OpenClaw 会在每次运行时组装自己的系统提示词。它包括：
 - 回复标签 + 心跳行为
 - 运行时元数据（主机/操作系统/模型/思考）
 
-有关完整的细分，请参阅 [系统提示词](/zh/en/concepts/system-prompt)。
+在 [系统提示词](/en/concepts/system-prompt) 中查看完整细分。
 
 ## 什么会计入上下文窗口
 
@@ -40,17 +40,17 @@ OpenClaw 会在每次运行时组装自己的系统提示词。它包括：
 - 较低的值通常会减少视觉 token 的使用量和负载大小。
 - 较高的值会为 OCR/UI 密集的屏幕截图保留更多视觉细节。
 
-如需详细分解（按注入文件、工具、技能和系统提示词大小），请使用 `/context list` 或 `/context detail`。参见 [上下文](/zh/en/concepts/context)。
+如需查看细分信息（包括每个注入的文件、工具、技能和系统提示词大小），请使用 `/context list` 或 `/context detail`。请参阅 [上下文](/en/concepts/context)。
 
 ## 如何查看当前的 token 使用情况
 
 在聊天中使用这些命令：
 
-- `/status` → **富含 emoji 的状态卡片**，显示会话模型、上下文使用情况，
-  上一次响应的输入/输出 token，以及 **预估成本**（仅限 API key）。
-- `/usage off|tokens|full` → 在每次回复后附加 **每次响应的使用情况页脚**。
-  - 每个会话持久化（存储为 `responseUsage`）。
-  - OAuth 认证**隐藏成本**（仅显示 Token）。
+- `/status` → 包含会话模型、上下文使用情况、
+  上次响应输入/输出令牌数以及**预估成本**（仅限 API 密钥）的 **emoji 丰富的状态卡片**。
+- `/usage off|tokens|full` → 在每条回复后附加**每次响应的使用情况页脚**。
+  - 按会话持久化（存储为 `responseUsage`）。
+  - OAuth 认证**隐藏成本**（仅显示令牌数）。
 - `/usage cost` → 显示来自 OpenClaw 会话日志的本地成本摘要。
 
 其他界面：
@@ -67,27 +67,32 @@ OpenClaw 会在每次运行时组装自己的系统提示词。它包括：
 models.providers.<provider>.models[].cost
 ```
 
-这些是 `input`、`output`、`cacheRead` 和 `cacheWrite` 每 100 万个 token 的 **USD** 价格。如果缺少定价信息，OpenClaw 仅显示 token 数量。OAuth token 永远不会显示美元费用。
+这些是 `input`、`output`、`cacheRead` 和
+`cacheWrite` 的 **每 100 万令牌美元价格**。如果缺少定价，OpenClaw 仅显示令牌数。OAuth 令牌
+从不显示美元成本。
 
 ## 缓存 TTL 和修剪影响
 
-提供商提示缓存仅在缓存 TTL 时间窗口内有效。OpenClaw 可以
-选择运行 **缓存 TTL 修剪**：一旦缓存 TTL
-过期，它就会修剪会话，然后重置缓存窗口，以便后续请求可以重用
-新缓存的上下文，而不是重新缓存整个历史记录。这可以在会话空闲超过 TTL 时
-降低缓存写入成本。
+提供商提示词缓存仅在缓存 TTL 窗口内适用。OpenClaw 可以
+选择运行 **cache-ttl 修剪**：它在缓存 TTL 过期后修剪会话，
+然后重置缓存窗口，以便后续请求可以重用新缓存的上下文，
+而不是重新缓存完整历史记录。这可以在会话空闲超过 TTL 时降低
+缓存写入成本。
 
-在 [Gateway 网关 配置](/zh/en/gateway/configuration) 中进行配置，并查看 [会话修剪](/zh/en/concepts/会话-pruning) 中的行为详细信息。
+在 [Gateway(网关) configuration](/en/gateway/configuration) 中进行配置，并在 [Session pruning](/en/concepts/session-pruning) 中查看行为详细信息。
 
-心跳可以在空闲期间保持缓存 **温暖**。如果您的模型缓存 TTL 为 `1h`，将心跳间隔设置为略小于该值（例如 `55m`）可以避免重新缓存完整提示，从而降低缓存写入成本。
+Heartbeat 可以在空闲间隙中保持缓存**温暖**。如果您的模型缓存 TTL
+为 `1h`，将心跳间隔设置为略低于该值（例如 `55m`）可以避免
+重新缓存完整提示词，从而减少缓存写入成本。
 
-在多代理设置中，您可以保留一个共享的模型配置，并使用 `agents.list[].params.cacheRetention` 为每个代理调整缓存行为。
+在多代理设置中，您可以保持一个共享的模型配置，并使用 `agents.list[].params.cacheRetention` 针对每个代理调整缓存行为。
 
-有关详细的逐项指南，请参阅 [提示缓存](/zh/en/reference/prompt-caching)。
+有关详细的逐项调节指南，请参阅 [Prompt Caching](/en/reference/prompt-caching)。
 
-对于 Anthropic API 定价，缓存读取比输入 token 便宜得多，而缓存写入则按更高的倍率计费。请参阅 Anthropic 的提示词缓存定价以获取最新费率和 TTL 倍率：[https://docs.anthropic.com/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/docs/build-with-claude/prompt-caching)
+对于 Anthropic API 定价，缓存读取比输入token便宜得多，而缓存写入则以更高的倍率计费。请参阅 Anthropic 的提示缓存定价以获取最新费率和TTL倍率：
+[https://docs.anthropic.com/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/docs/build-with-claude/prompt-caching)
 
-### 示例：通过心跳保持 1 小时缓存热度
+### 示例：使用心跳保持 1 小时缓存温热
 
 ```yaml
 agents:
@@ -102,7 +107,7 @@ agents:
       every: "55m"
 ```
 
-### 示例：使用每个代理的缓存策略处理混合流量
+### 示例：使用按代理缓存策略处理混合流量
 
 ```yaml
 agents:
@@ -123,11 +128,11 @@ agents:
         cacheRetention: "none" # avoid cache writes for bursty notifications
 ```
 
-`agents.list[].params` 合并在所选模型的 `params` 之上，因此您只能覆盖 `cacheRetention` 并继承其他模型默认值而不做更改。
+`agents.list[].params` 会合并到所选模型的 `params` 之上，因此您可以仅覆盖 `cacheRetention` 并继承其他模型默认值而无需更改。
 
-### 示例：启用 Anthropic 1M 上下文 Beta 标头
+### 示例：启用 Anthropic 1M 上下文 beta 标头
 
-Anthropic 的 1M 上下文窗口目前处于 beta 限制阶段。当您在支持的 Opus 或 Sonnet 模型上启用 `context1m` 时，OpenClaw 可以注入所需的 `anthropic-beta` 值。
+Anthropic 的 1M 上下文窗口目前处于 beta 封锁状态。在支持的 Opus 或 Sonnet 模型上启用 `context1m` 时，OpenClaw 可以注入所需的 `anthropic-beta` 值。
 
 ```yaml
 agents:
@@ -142,19 +147,19 @@ agents:
 
 这仅在该模型条目上设置了 `context1m: true` 时适用。
 
-要求：凭证必须符合长上下文使用条件（API 密钥计费，或启用了额外使用量的订阅）。如果不符合，Anthropic 会响应 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`。
+要求：凭证必须符合长上下文使用条件（API 密钥计费，或已启用额外使用的订阅）。否则，Anthropic 将响应 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`。
 
-如果您使用 OAuth/订阅 token (`sk-ant-oat-*`) 对 Anthropic 进行身份验证，OpenClaw 会跳过 `context-1m-*` beta 标头，因为 Anthropic 目前会因该组合而拒绝请求并返回 HTTP 401。
+如果您使用 OAuth/订阅令牌（`sk-ant-oat-*`）对 Anthropic 进行身份验证，OpenClaw 将跳过 `context-1m-*` beta 标头，因为 Anthropic 目前拒绝该组合并返回 HTTP 401。
 
-## 减少 Token 压力的技巧
+## 减少 token 压力的技巧
 
 - 使用 `/compact` 来总结长会话。
-- 在工作流中修剪大型工具输出。
-- 对于包含大量截图的会话，降低 `agents.defaults.imageMaxDimensionPx`。
-- 保持技能描述简短（技能列表会被注入到提示中）。
+- 修剪工作流中大型工具的输出。
+- 对于包含大量截图的会话，请降低 `agents.defaults.imageMaxDimensionPx`。
+- 保持技能描述简短（技能列表会注入到提示中）。
 - 对于冗长、探索性的工作，首选较小的模型。
 
-有关确切的技能列表开销公式，请参阅 [技能](/zh/en/tools/skills)。
+有关技能列表开销的确切公式，请参阅 [Skills](/en/tools/skills)。
 
 import zh from '/components/footer/zh.mdx';
 

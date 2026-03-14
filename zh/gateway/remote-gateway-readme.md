@@ -113,13 +113,13 @@ open /path/to/OpenClaw.app
 launchctl bootstrap gui/$UID ~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist
 ```
 
-隧道现在将：
+该隧道现在将：
 
-- 登录时自动启动
-- 崩溃时自动重启
-- 在后台保持运行
+- 在您登录时自动启动
+- 如果崩溃则重启
+- 在后台持续运行
 
-遗留说明：如果存在旧的 `com.openclaw.ssh-tunnel` LaunchAgent，请将其删除。
+遗留说明：如果存在，请删除所有残留的 `com.openclaw.ssh-tunnel` LaunchAgent。
 
 ---
 
@@ -148,14 +148,14 @@ launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
 
 ## 工作原理
 
-| 组件                            | 作用                                                 |
-| ------------------------------------ | ------------------------------------------------------------ |
-| `LocalForward 18789 127.0.0.1:18789` | 将本地端口 18789 转发到远程端口 18789               |
-| `ssh -N`                             | 不执行远程命令的 SSH（仅端口转发） |
-| `KeepAlive`                          | 如果隧道崩溃则自动重启                  |
-| `RunAtLoad`                          | 在代理加载时启动隧道                           |
+| 组件                                 | 作用                                  |
+| ------------------------------------ | ------------------------------------- |
+| `LocalForward 18789 127.0.0.1:18789` | 将本地端口 18789 转发到远程端口 18789 |
+| `ssh -N`                             | SSH 不执行远程命令（仅端口转发）      |
+| `KeepAlive`                          | 如果隧道崩溃，自动重启                |
+| `RunAtLoad`                          | 在代理加载时启动隧道                  |
 
-OpenClaw.app 连接到您客户端机器上的 `ws://127.0.0.1:18789`。SSH 隧道将该连接转发到运行 Gateway 网关 的远程机器上的端口 18789。
+OpenClaw.app 连接到您客户端机器上的 `ws://127.0.0.1:18789`。SSH 隧道将该连接转发到运行 Gateway 的远程机器上的端口 18789。
 
 import zh from '/components/footer/zh.mdx';
 

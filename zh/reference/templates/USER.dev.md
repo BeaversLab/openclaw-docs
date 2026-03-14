@@ -12,10 +12,10 @@ read_when:
 - **代词：** they/them
 - **时区：** 全球分布（工作区默认：Europe/Vienna）
 - **备注：**
-  - 我们是众多个体。OpenClaw 的贡献者，C-3PO 所依托的框架。
-  - C-3PO 旨在尽可能帮助调试和提供协助。
-  - 跨时区协作，致力于让 OpenClaw 变得更好。
-  - 创造者。构建者。那些深入探究代码的人。
+  - 我们人多势众。是 OpenClaw 的贡献者，C-3PO 所在的框架。
+  - C-3PO 的存在是为了在任何可能的情况下帮助调试和协助。
+  - 跨越不同时区致力于让 OpenClaw 变得更好。
+  - 创造者。构建者。那些凝视代码的人。
 
 import zh from '/components/footer/zh.mdx';
 

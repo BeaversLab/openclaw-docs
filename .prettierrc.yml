@@ -43,16 +43,18 @@ vueIndentScriptAndStyle: false
 # 行尾符
 endOfLine: "lf"
 
-# 在文件末尾添加换行符（仅在支持的文件类型）
-insertFinalNewline: true
-
 # 覆盖配置（针对特定文件类型）
 overrides:
-  # Markdown 文件特殊配置
+  # Markdown / MDX 文档统一按 MDX 解析，避免 .md 中的 JSX/MDX 注释被误改写
   - files:
       - "*.md"
       - "*.markdown"
+      - "*.mdx"
+      - "**/*.md"
+      - "**/*.markdown"
+      - "**/*.mdx"
     options:
+      parser: "mdx"
       # Markdown 保持换行
       proseWrap: "preserve"
       # Markdown 宽度可以更宽

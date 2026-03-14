@@ -80,18 +80,16 @@ export default function (api) {
 
 其他影响工具可用性的配置选项：
 
-- 仅命名插件工具的允许列表被视为插件选择加入；核心工具保持
-  除非您还在允许列表中包含核心工具或组，否则将启用。
-- `tools.profile` / `agents.list[].tools.profile`（基本允许列表）
+- 仅指定插件工具的允许列表被视为插件选择启用；核心工具保持启用状态，除非您也将核心工具或组包含在允许列表中。
+- `tools.profile` / `agents.list[].tools.profile`（基础允许列表）
 - `tools.byProvider` / `agents.list[].tools.byProvider`（特定于提供商的允许/拒绝）
-- `tools.sandbox.tools.*`（沙盒化时的沙盒工具策略）
+- `tools.sandbox.tools.*`（沙箱隔离时的沙箱工具策略）
 
 ## 规则 + 提示
 
 - 工具名称**不得**与核心工具名称冲突；冲突的工具将被跳过。
-- 允许列表中使用的插件ID不得与核心工具名称冲突。
-- 对于触发副作用或需要额外权限的工具，请优先使用 `optional: true`
-  二进制文件/凭据。
+- 允许列表中使用的插件 ID 不得与核心工具名称冲突。
+- 对于会触发副作用或需要额外二进制文件/凭据的工具，请首选 `optional: true`。
 
 import zh from '/components/footer/zh.mdx';
 

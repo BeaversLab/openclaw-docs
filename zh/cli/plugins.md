@@ -14,7 +14,7 @@ title: "plugins"
 
 - 插件系统：[插件](/zh/tools/plugin)
 - 插件清单 + 架构：[插件清单](/zh/plugins/manifest)
-- 安全加固：[安全性](/zh/gateway/security)
+- 安全加固：[安全](/zh/gateway/security)
 
 ## 命令
 

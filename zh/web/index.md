@@ -13,13 +13,13 @@ Gateway 网关 在与 Gateway 网关 WebSocket 相同的端口上提供一个小
 - 默认：`http://<host>:18789/`
 - 可选前缀：设置 `gateway.controlUi.basePath`（例如 `/openclaw`）
 
-功能位于 [Control UI](/zh/en/web/control-ui) 中。
-本页面重点关注绑定模式、安全性和面向 web 的接口。
+功能位于[控制 UI](/en/web/control-ui)中。
+本页面重点关注绑定模式、安全性和 Web 面向的表面。
 
 ## Webhooks
 
-当 `hooks.enabled=true` 时，Gateway 网关 也在同一 HTTP 服务器上公开一个小型的 webhook 端点。
-请参阅 [Gateway 网关 configuration](/zh/en/gateway/configuration) → `hooks` 了解身份验证 + 载荷。
+当 `hooks.enabled=true` 时，Gateway(网关) 还会在同一 HTTP 服务器上暴露一个小的 Webhook 端点。
+请参阅 [Gateway(网关) 配置](/en/gateway/configuration) → `hooks` 了解身份验证 + 载荷。
 
 ## Config (default-on)
 
@@ -99,21 +99,20 @@ openclaw gateway
 - 非环回绑定仍然 **要求** 共享令牌/密码（`gateway.auth` 或环境变量）。
 - 向导默认会生成 gateway 令牌（即使在环回上）。
 - UI 发送 `connect.params.auth.token` 或 `connect.params.auth.password`。
-- 对于非环回控制 UI 部署，请设置 `gateway.controlUi.allowedOrigins`
-  显式设置（完整的源）。如果不设置，默认情况下会拒绝 gateway 启动。
+- 对于非环回控制 UI 部署，请显式设置 `gateway.controlUi.allowedOrigins`（完整源）。否则，默认情况下会拒绝网关启动。
 - `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` 启用
-  Host-header 源回退模式，但这是一种危险的安全降级。
-- 使用 Serve 时，Tailscale 身份标头可以满足 Control UI/WebSocket 认证
-  当 `gateway.auth.allowTailscale` 为 `true` 时（无需令牌/密码）。
+  Host 标头源回退模式，但这是一种危险的安全降级。
+- 使用 Serve 时，当 `gateway.auth.allowTailscale` 为 `true` 时（不需要令牌/密码），
+  Tailscale 身份标头可以满足控制 UI/WebSocket 身份验证。
   HTTP API 端点仍然需要令牌/密码。设置
-  `gateway.auth.allowTailscale: false` 以要求明确的凭据。请参阅
-  [Tailscale](/zh/en/gateway/tailscale) 和 [Security](/zh/en/gateway/security)。此
-  无令牌流程假设网关主机是受信任的。
+  `gateway.auth.allowTailscale: false` 以要求显式凭据。请参阅
+  [Tailscale](/en/gateway/tailscale) 和[安全性](/en/gateway/security)。这种
+  无令牌流程假定网关主机是受信任的。
 - `gateway.tailscale.mode: "funnel"` 需要 `gateway.auth.mode: "password"`（共享密码）。
 
 ## 构建 UI
 
-Gateway 网关 从 `dist/control-ui` 提供静态文件。使用以下命令构建它们：
+Gateway(网关) 从 `dist/control-ui` 提供静态文件。使用以下命令构建它们：
 
 ```bash
 pnpm ui:build # auto-installs UI deps on first run

@@ -52,15 +52,15 @@ title: "提升模式"
   - `username:<value>` 匹配 `SenderUsername`
   - `tag:<value>` 匹配 `SenderTag`
   - `id:<value>`、`from:<value>`、`e164:<value>` 可用于显式身份定位
-- 每个代理的开关：`agents.list[].tools.elevated.enabled`（可选；只能进一步限制）。
-- 每个代理的白名单：`agents.list[].tools.elevated.allowFrom`（可选；设置后，发送者必须**同时**匹配全局和每个代理的白名单）。
-- Discord 回退：如果省略 `tools.elevated.allowFrom.discord`，则将 `channels.discord.allowFrom` 列表用作回退（旧版：`channels.discord.dm.allowFrom`）。设置 `tools.elevated.allowFrom.discord`（即使是 `[]`）以覆盖。每个代理的白名单**不**使用回退。
-- 所有开关都必须通过；否则 elevated 将被视为不可用。
+- 每个代理的门槛：`agents.list[].tools.elevated.enabled`（可选；只能进一步限制）。
+- 每个代理的允许列表：`agents.list[].tools.elevated.allowFrom`（可选；设置时，发送者必须匹配全局和每个代理的允许列表**两者**）。
+- Discord 后备：如果省略了 `tools.elevated.allowFrom.discord`，则将 `channels.discord.allowFrom` 列表用作后备（旧版：`channels.discord.dm.allowFrom`）。设置 `tools.elevated.allowFrom.discord`（即使是 `[]`）以覆盖此项。每个代理的允许列表**不**使用后备。
+- 所有门槛都必须通过；否则提升模式将被视为不可用。
 
 ## 日志记录 + 状态
 
-- Elevated exec 调用在 info 级别进行记录。
-- 会话状态包括提升模式（例如 `elevated=ask`，`elevated=full`）。
+- 提升的 exec 调用将记录在 info 级别。
+- 会话状态包括提升模式（例如 `elevated=ask`、`elevated=full`）。
 
 import zh from '/components/footer/zh.mdx';
 

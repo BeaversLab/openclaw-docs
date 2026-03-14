@@ -11,7 +11,7 @@ permalink: /security/formal-verification/
 
 此页面追踪 OpenClaw 的**形式化安全模型**（目前为 TLA+/TLC；根据需要增加更多）。
 
-> 注意：一些较旧的链接可能指的是以前的项目名称。
+> 注意：一些旧链接可能会引用以前的项目名称。
 
 **目标（北极星）：** 提供一个经过机器检查的论据，证明 OpenClaw 在明确假设下执行其预期的安全策略（授权、会话隔离、工具门控和错误配置安全）。
 
@@ -61,11 +61,11 @@ make <target>
 - 红色（预期）：
   - `make gateway-exposure-v2-negative`
 
-另请参阅：模型代码仓库中的 `docs/gateway-exposure-matrix.md`。
+另请参阅：模型仓库中的 `docs/gateway-exposure-matrix.md`。
 
-### Nodes.run 管道（最高风险能力）
+### Nodes.run 流水线（最高风险能力）
 
-**声明：** `nodes.run` 需要 (a) 节点命令白名单以及已声明的命令，以及 (b) 配置后的实时批准；批准已进行令牌化以防止重放（在模型中）。
+**声明：** `nodes.run` 需要 (a) 节点命令允许列表以及声明的命令，并且 (b) 在配置时需要实时批准；批准已进行令牌化以防止重放（在模型中）。
 
 - 绿色运行：
   - `make nodes-pipeline`
@@ -74,7 +74,7 @@ make <target>
   - `make nodes-pipeline-negative`
   - `make approvals-token-negative`
 
-### 配对存储（私信 限制）
+### 配对存储（私信门控）
 
 **声明：** 配对请求遵守 TTL 和待处理请求上限。
 
@@ -85,9 +85,9 @@ make <target>
   - `make pairing-negative`
   - `make pairing-cap-negative`
 
-### 入口限制（提及 + 控制命令绕过）
+### 入口门控（提及 + 控制命令绕过）
 
-**声明：** 在需要提及的群组上下文中，未经授权的“控制命令”无法绕过提及限制。
+**声明：** 在需要提及的群组上下文中，未经授权的“控制命令”无法绕过提及门控。
 
 - 绿色：
   - `make ingress-gating`
@@ -96,46 +96,46 @@ make <target>
 
 ### 路由/会话密钥隔离
 
-**声明：** 来自不同对等方的 DM 不会合并到同一个会话中，除非显式链接/配置。
+**声明：** 来自不同对等方的私信不会合并到同一会话中，除非显式链接/配置。
 
 - 绿色：
   - `make routing-isolation`
 - 红色（预期）：
   - `make routing-isolation-negative`
 
-## v1++：额外的有界模型（并发、重试、跟踪正确性）
+## v1++：额外的有界模型（并发、重试、追踪正确性）
 
-这些是后续模型，它们收紧了围绕现实世界故障模式（非原子更新、重试和消息分发）的保真度。
+这些是后续模型，旨在提高对现实世界故障模式（非原子更新、重试和消息分发）的保真度。
 
 ### 配对存储并发/幂等性
 
-**声明：** 配对存储应该强制执行 `MaxPending` 和幂等性，即使在交错操作下也是如此（即，“检查后写入”必须是原子/锁定的；刷新不应创建重复项）。
+**声明：** 即使在交错操作下（即“先检查后写入”必须是原子/锁定的；刷新不应创建重复项），配对存储也应强制执行 `MaxPending` 和幂等性。
 
 含义：
 
-- 在并发请求下，对于某个通道，您不能超过 `MaxPending`。
-- 针对同一个 `(channel, sender)` 的重复请求/刷新不应创建重复的实时挂起行。
+- 在并发请求下，对于某个渠道，您不能超过 `MaxPending`。
+- 对同一 `(channel, sender)` 的重复请求/刷新不应创建重复的活动挂起行。
 
-- 绿色运行：
-  - `make pairing-race` （原子/锁定能力检查）
+- 绿色运行（Green runs）：
+  - `make pairing-race` (原子/锁定 cap 检查)
   - `make pairing-idempotency`
   - `make pairing-refresh`
   - `make pairing-refresh-race`
 - 红色（预期）：
-  - `make pairing-race-negative` （非原子开始/提交能力竞争）
+  - `make pairing-race-negative` (非原子 begin/commit cap 竞争)
   - `make pairing-idempotency-negative`
   - `make pairing-refresh-negative`
   - `make pairing-refresh-race-negative`
 
-### Ingress 追踪关联 / 幂等性
+### 入口追踪关联 / 幂等性
 
-**声明：** 摄入应在扇出过程中保持追踪关联，并在提供商重试时保持幂等。
+**声明：** 摄取应在分发过程中保留追踪关联，并且在提供商重试下具有幂等性。
 
 含义：
 
-- 当一个外部事件变为多个内部消息时，每个部分都保持相同的追踪/事件标识。
-- 重试不应导致双重处理。
-- 如果缺少提供商事件 ID，去重会回退到安全密钥（例如追踪 ID），以避免丢失不同的事件。
+- 当一个外部事件变为多个内部消息时，每个部分保持相同的追踪/事件标识。
+- 重试不会导致双重处理。
+- 如果缺少提供商事件 ID，去重会回退到安全密钥（例如追踪 ID），以避免丢弃不同的事件。
 
 - 绿色：
   - `make ingress-trace`
@@ -150,11 +150,11 @@ make <target>
 
 ### 路由 dmScope 优先级 + identityLinks
 
-**声明：** 路由必须默认保持 私信 会话隔离，并且仅在显式配置时才合并会话（通道优先级 + 身份链接）。
+**声明：** 路由必须默认保持私信会话隔离，并且仅在显式配置时才合并会话（渠道优先级 + 身份链接）。
 
 含义：
 
-- 特定于通道的 dmScope 覆盖必须优先于全局默认值。
+- 特定于渠道的 dmScope 覆盖必须优先于全局默认值。
 - identityLinks 应仅在显式链接的组内合并，而不应跨不相关的对等方合并。
 
 - 绿色：

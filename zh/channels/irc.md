@@ -177,12 +177,12 @@ IRC 频道有两个独立的“入口”：
 
 注意：
 
-- `toolsBySender` 键应使用 `id:` 作为 IRC 发送者身份值：
-  使用 `id:eigen` 或 `id:eigen!~eigen@174.127.248.171` 进行更强的匹配。
-- 传统的无前缀键仍然被接受，并且仅作为 `id:` 进行匹配。
-- 第一个匹配的发送者策略优先；`"*"` 是通配符后备。
+- `toolsBySender` 键应使用 `id:` 作为 IRC 发送者标识值：
+  使用 `id:eigen` 或 `id:eigen!~eigen@174.127.248.171` 以进行更强的匹配。
+- 旧的无前缀键仍被接受，并仅作为 `id:` 进行匹配。
+- 第一个匹配的发送者策略优先；`"*"` 是通配符后备选项。
 
-有关组访问与提及限制的更多信息（以及它们如何交互），请参阅：[/channels/groups](/zh/en/channels/groups)。
+有关组访问与提及门控（以及它们如何交互）的更多信息，请参阅：[/channels/groups](/zh/channels/groups)。
 
 ## NickServ
 
@@ -217,11 +217,11 @@ IRC 频道有两个独立的“入口”：
 }
 ```
 
-注册昵称后，禁用 `register` 以避免重复的 REGISTER 尝试。
+在昵称注册后禁用 `register`，以避免重复的 REGISTER 尝试。
 
 ## 环境变量
 
-默认账户支持：
+默认帐户支持：
 
 - `IRC_HOST`
 - `IRC_PORT`
@@ -230,15 +230,15 @@ IRC 频道有两个独立的“入口”：
 - `IRC_USERNAME`
 - `IRC_REALNAME`
 - `IRC_PASSWORD`
-- `IRC_CHANNELS`（逗号分隔）
+- `IRC_CHANNELS` (逗号分隔)
 - `IRC_NICKSERV_PASSWORD`
 - `IRC_NICKSERV_REGISTER_EMAIL`
 
 ## 故障排除
 
-- 如果机器人连接了但在频道中从不回复，请验证 `channels.irc.groups` **以及** 提及门控是否正在丢弃消息（`missing-mention`）。如果您希望它在没有被 ping 的情况下回复，请为该频道设置 `requireMention:false`。
+- 如果机器人已连接但从未在渠道中回复，请验证 `channels.irc.groups` **以及**提及门控是否正在丢弃消息 (`missing-mention`)。如果您希望它在没有 ping 的情况下回复，请为该渠道设置 `requireMention:false`。
 - 如果登录失败，请验证昵称可用性和服务器密码。
-- 如果 TLS 在自定义网络上失败，请验证主机/端口和证书设置。
+- 如果在自定义网络上 TLS 失败，请验证主机/端口和证书设置。
 
 import zh from '/components/footer/zh.mdx';
 

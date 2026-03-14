@@ -76,9 +76,9 @@ title: "Talk Mode"
 - 菜单栏开关：**Talk**
 - 配置选项卡：**Talk Mode** 组（语音 ID + 中断开关）
 - 覆盖层：
-  - **Listening（监听）**：云朵随麦克风音量脉动
-  - **Thinking（思考）**：下沉动画
-  - **Speaking（说话）**：扩散的圆环
+  - **Listening**: 云随麦克风音量律动
+  - **Thinking**: 下沉动画
+  - **Speaking**: 扩散的环状波纹
   - 点击云朵：停止说话
   - 点击 X：退出 Talk 模式
 
@@ -86,10 +86,10 @@ title: "Talk Mode"
 
 - 需要语音和麦克风权限。
 - 针对会话密钥 `main` 使用 `chat.send`。
-- TTS 使用 ElevenLabs 流式 API，配合 `ELEVENLABS_API_KEY` 并在 macOS/iOS/Android 上进行增量播放以降低延迟。
-- `stability` 用于 `eleven_v3` 时，会验证为 `0.0`、`0.5` 或 `1.0`；其他模型接受 `0..1`。
-- 设置时，`latency_tier` 会验证为 `0..4`。
-- Android 支持用于低延迟 AudioTrack 流式传输的 `pcm_16000`、`pcm_22050`、`pcm_24000` 和 `pcm_44100` 输出格式。
+- TTS 使用 ElevenLabs 流式 API（带有 `ELEVENLABS_API_KEY`），并在 macOS/iOS/Android 上通过增量播放实现更低延迟。
+- `eleven_v3` 的 `stability` 验证值为 `0.0`、`0.5` 或 `1.0`；其他模型接受 `0..1`。
+- 设置时，`latency_tier` 验证为 `0..4`。
+- Android 支持 `pcm_16000`、`pcm_22050`、`pcm_24000` 和 `pcm_44100` 输出格式，用于低延迟 AudioTrack 流式传输。
 
 import zh from '/components/footer/zh.mdx';
 

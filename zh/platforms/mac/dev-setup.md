@@ -34,10 +34,10 @@ pnpm install
 
 如果您没有 Apple Developer ID 证书，脚本将自动使用 **临时签名** (`-`)。
 
-有关开发运行模式、签名标志和团队 ID 故障排除，请参阅 macOS 应用 README：
+有关开发运行模式、签名标志和团队 ID 故障排除，请参阅 macOS 应用自述文件：
 [https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md](https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md)
 
-> **注意**：临时签名的应用可能会触发安全提示。如果应用立即崩溃并显示 "Abort trap 6"，请参阅[故障排除](#故障排除)部分。
+> **注意**：临时签名的应用可能会触发安全提示。如果应用立即崩溃并显示 "Abort trap 6"，请参阅 [故障排除](#troubleshooting) 部分。
 
 ## 3. 安装 CLI
 
@@ -87,7 +87,7 @@ xcrun swift --version
    tccutil reset All ai.openclaw.mac.debug
    ```
 
-2. 如果失败，请临时在 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中更改 `BUNDLE_ID`，以强制 macOS 进行“彻底重置”。
+2. 如果失败，请在 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中临时更改 `BUNDLE_ID`，以强制 macOS "从零开始"。
 
 ### Gateway 网关 一直处于“启动中...”状态
 

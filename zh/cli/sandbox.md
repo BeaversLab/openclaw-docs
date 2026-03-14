@@ -146,9 +146,9 @@ openclaw sandbox recreate --agent alfred
 
 ## 另请参阅
 
-- [沙箱 文档](/zh/en/gateway/沙箱隔离)
-- [代理配置](/zh/en/concepts/agent-workspace)
-- [Doctor 命令](/zh/en/gateway/doctor) - 检查 Sandbox 设置
+- [沙箱文档](/zh/gateway/sandboxing)
+- [代理配置](/zh/concepts/agent-workspace)
+- [Doctor 命令](/zh/gateway/doctor) - 检查沙箱设置
 
 import zh from '/components/footer/zh.mdx';
 

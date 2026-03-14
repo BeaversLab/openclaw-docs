@@ -9,8 +9,8 @@ title: "设置"
 # 设置
 
 <Note>
-如果您是首次设置，请从[入门指南](/zh/en/start/getting-started)开始。
-有关向导的详细信息，请参阅[入职向导](/zh/en/start/向导)。
+  如果您是首次设置，请从[入门指南](/en/start/getting-started)开始。
+  有关向导的详细信息，请参阅[新手引导向导](/en/start/wizard)。
 </Note>
 
 最后更新：2026-01-01
@@ -25,7 +25,7 @@ title: "设置"
 
 - Node `>=22`
 - `pnpm`
-- Docker（可选；仅用于容器化设置/e2e — 请参阅 [Docker](/zh/en/install/docker)）
+- Docker（可选；仅用于容器化设置/e2e — 请参阅 [Docker](/en/install/docker)）
 
 ## 定制策略（以免更新造成影响）
 
@@ -102,12 +102,12 @@ pnpm gateway:watch
 
 在 **OpenClaw.app** 中：
 
-- 连接模式：**Local (本地)**
-  应用将附加到配置端口上运行的 gateway。
+- 连接模式：**本地**
+  应用程序将连接到配置端口上运行的 Gateway 网关。
 
 ### 3) 验证
 
-- 应用内 Gateway 网关 状态应显示 **“Using existing gateway …”**
+- 应用内的 Gateway(网关) 状态应显示为 **“Using existing gateway …”**
 - 或通过 CLI：
 
 ```bash
@@ -116,53 +116,50 @@ openclaw health
 
 ### 常见陷阱
 
-- **端口错误：** Gateway 网关 WS 默认为 `ws://127.0.0.1:18789`；保持应用和 CLI 在同一端口。
+- **端口错误：** Gateway(网关) WS 默认为 `ws://127.0.0.1:18789`；请保持应用和 CLI 在同一端口。
 - **状态存储位置：**
-  - 凭证： `~/.openclaw/credentials/`
-  - 会话： `~/.openclaw/agents/<agentId>/sessions/`
-  - 日志： `/tmp/openclaw/`
+  - 凭证：`~/.openclaw/credentials/`
+  - 会话：`~/.openclaw/agents/<agentId>/sessions/`
+  - 日志：`/tmp/openclaw/`
 
 ## 凭证存储映射
 
-在调试认证或决定备份内容时使用此表：
+调试身份验证或决定要备份的内容时使用此映射：
 
-- **WhatsApp**: `~/.openclaw/credentials/whatsapp/<accountId>/creds.json`
-- **Telegram bot token**: config/env 或 `channels.telegram.tokenFile` (仅限常规文件；拒绝符号链接)
-- **Discord bot token**: config/env 或 SecretRef (env/file/exec 提供者)
-- **Slack tokens**: config/env (`channels.slack.*`)
-- **配对允许列表 (Pairing allowlists)**：
-  - `~/.openclaw/credentials/<channel>-allowFrom.json` (默认账户)
-  - `~/.openclaw/credentials/<channel>-<accountId>-allowFrom.json` (非默认账户)
-- **模型认证配置文件**: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
-- **文件支持的机密负载（可选）**: `~/.openclaw/secrets.json`
-- **旧版 OAuth 导入**: `~/.openclaw/credentials/oauth.json`
-  更多详情：[Security](/zh/en/gateway/security#credential-storage-map)。
+- **WhatsApp**：`~/.openclaw/credentials/whatsapp/<accountId>/creds.json`
+- **Telegram bot token**：config/env 或 `channels.telegram.tokenFile`（仅限常规文件；拒绝符号链接）
+- **Discord bot token**：config/env 或 SecretRef（env/file/exec 提供程序）
+- **Slack tokens**：config/env（`channels.slack.*`）
+- **配对允许列表**：
+  - `~/.openclaw/credentials/<channel>-allowFrom.json`（默认账户）
+  - `~/.openclaw/credentials/<channel>-<accountId>-allowFrom.json`（非默认账户）
+- **模型身份验证配置文件**：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+- **文件支持的秘密负载（可选）**：`~/.openclaw/secrets.json`
+- **旧版 OAuth 导入**：`~/.openclaw/credentials/oauth.json`
+  更多详情：[Security](/en/gateway/security#credential-storage-map)。
 
-## 更新（不破坏你的设置）
+## 更新（不破坏您的设置）
 
-- 将 `~/.openclaw/workspace` 和 `~/.openclaw/` 视为“你自己的东西”；不要将个人的提示词/配置放入 `openclaw` 仓库中。
-- 更新源代码：`git pull` + `pnpm install`（当 lockfile 改变时）并继续使用 `pnpm gateway:watch`。
+- 将 `~/.openclaw/workspace` 和 `~/.openclaw/` 保留为“您的内容”；不要将个人提示/配置放入 `openclaw` 仓库中。
+- 更新源代码：`git pull` + `pnpm install`（当锁定文件更改时）+ 继续使用 `pnpm gateway:watch`。
 
-## Linux (systemd 用户服务)
+## Linux（systemd 用户服务）
 
-Linux 安装使用 systemd **用户** 服务。默认情况下，systemd 在注销/空闲时停止用户
-服务，这会杀死 Gateway 网关。入职向导会尝试为你
-启用 lingering (可能需要 sudo)。如果仍然关闭，请运行：
+Linux 安装使用 systemd **用户** 服务。默认情况下，systemd 会在注销/空闲时停止用户服务，这会终止 Gateway(网关)。新手引导会尝试为您启用 linger（可能会提示输入 sudo）。如果它仍然关闭，请运行：
 
 ```bash
 sudo loginctl enable-linger $USER
 ```
 
-对于全天候或多用户服务器，请考虑使用 **系统** 服务而不是
-用户服务 (不需要 lingering)。有关 systemd 的说明，请参阅 [Gateway 网关 运维手册](/zh/en/gateway)。
+对于全天候或多用户服务器，请考虑使用 **system** 服务而不是用户服务（不需要 lingering）。有关 systemd 的说明，请参阅 [Gateway(网关) runbook](/en/gateway)。
 
 ## 相关文档
 
-- [Gateway 网关 运维手册](/zh/en/gateway) (标志、监控、端口)
-- [Gateway 网关 configuration](/zh/en/gateway/configuration) （配置架构 + 示例）
-- [Discord](/zh/en/channels/discord) 和 [Telegram](/zh/en/channels/telegram) （回复标签 + replyToMode 设置）
-- [OpenClaw assistant setup](/zh/en/start/openclaw)
-- [macOS app](/zh/en/platforms/macos) （网关生命周期）
+- [Gateway(网关) runbook](/en/gateway) (flags, supervision, ports)
+- [Gateway(网关) 配置](/en/gateway/configuration) (配置架构 + 示例)
+- [Discord](/en/channels/discord) 和 [Telegram](/en/channels/telegram)（回复标签 + replyToMode 设置）
+- [OpenClaw 助手设置](/en/start/openclaw)
+- [macOS 应用](/en/platforms/macos)（网关生命周期）
 
 import zh from '/components/footer/zh.mdx';
 

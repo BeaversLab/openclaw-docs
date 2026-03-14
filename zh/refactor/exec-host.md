@@ -197,10 +197,10 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 
 - 使用来自 Bridge 配对的现有 `nodeId`。
 - 绑定模型：
-  - `tools.exec.node` 将代理限制在特定节点。
-  - 如果未设置，代理可以选择任何节点（策略仍然强制执行默认值）。
+  - `tools.exec.node` 将代理限制在特定节点上。
+  - 如果未设置，代理可以选择任何节点（策略仍强制执行默认值）。
 - 节点选择解析：
-  - `nodeId` 完全匹配
+  - `nodeId` 精确匹配
   - `displayName`（标准化）
   - `remoteIp`
   - `nodeId` 前缀（>= 6 个字符）
@@ -209,111 +209,111 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 
 ### 谁看到事件
 
-- 系统事件是**每个会话**的，并在下一个提示中显示给代理。
-- 存储在网关内存队列中（`enqueueSystemEvent`）。
+- 系统事件是**逐会话**的，并会在下一次提示时显示给代理。
+- 存储在 Gateway 网关内存队列 (`enqueueSystemEvent`) 中。
 
 ### 事件文本
 
 - `Exec started (node=<id>, id=<runId>)`
-- `Exec finished (node=<id>, id=<runId>, code=<code>)` + 可选的输出尾部
+- `Exec finished (node=<id>, id=<runId>, code=<code>)` + 可选输出尾部
 - `Exec denied (node=<id>, id=<runId>, <reason>)`
 
 ### 传输
 
-选项 A (推荐)：
+选项 A（推荐）：
 
 - Runner 发送 Bridge `event` 帧 `exec.started` / `exec.finished`。
 - Gateway 网关 `handleBridgeEvent` 将这些映射到 `enqueueSystemEvent`。
 
 选项 B：
 
-- Gateway 网关 `exec` 工具直接处理生命周期（仅同步）。
+- Gateway 网关 `exec` 工具 直接处理生命周期（仅同步）。
 
-## 执行流程
+## 执行流
 
 ### 沙箱主机
 
-- 现有的 `exec` 行为（Docker 或未沙箱化时为主机）。
-- PTY 仅在非沙箱模式下受支持。
+- 现有的 `exec` 行为（当未沙箱化时为 Docker 或主机）。
+- 仅在非沙箱模式下支持 PTY。
 
-### Gateway 网关 主机
+### Gateway(网关) 主机
 
-- Gateway 网关 进程在其自己的机器上执行。
-- 强制执行本地 `exec-approvals.json`（security/ask/allowlist）。
+- Gateway(网关) 进程在其自己的机器上执行。
+- 强制执行本地 `exec-approvals.json`（安全/询问/允许列表）。
 
 ### 节点主机
 
-- Gateway 网关 使用 `system.run` 调用 `node.invoke`。
-- 运行器强制执行本地审批。
-- 运行器返回聚合的 stdout/stderr。
-- 针对开始/完成/拒绝的可选 Bridge 事件。
+- Gateway 网关 调用 `node.invoke` 并带有 `system.run`。
+- Runner 强制执行本地审批。
+- Runner 返回聚合的 stdout/stderr。
+- 用于开始/完成/拒绝的可选 Bridge 事件。
 
 ## 输出上限
 
-- 将合并的 stdout+stderr 上限限制在 **200k**；保留事件的 **tail 20k**。
-- 使用清晰的后缀截断（例如，`"… (truncated)"`）。
+- 合并的 stdout+stderr 上限为 **200k**；事件保留 **tail 20k**。
+- 使用明确的后缀截断（例如 `"… (truncated)"`）。
 
 ## 斜杠命令
 
 - `/exec host=<sandbox|gateway|node> security=<deny|allowlist|full> ask=<off|on-miss|always> node=<id>`
-- 针对每个代理、每个会话的覆盖；除非通过配置保存，否则不持久化。
-- `/elevated on|off|ask|full` 仍然是 `host=gateway security=full` 的快捷方式（其中 `full` 跳过批准）。
+- 按代理、按会话覆盖；除非通过配置保存，否则不持久化。
+- `/elevated on|off|ask|full` 仍然是 `host=gateway security=full` 的快捷方式（通过 `full` 跳过审批）。
 
 ## 跨平台方案
 
-- 运行器服务是可移植的执行目标。
+- Runner 服务是可移植的执行目标。
 - UI 是可选的；如果缺失，则适用 `askFallback`。
 - Windows/Linux 支持相同的审批 JSON + socket 协议。
 
 ## 实施阶段
 
-### 阶段 1：配置 + 执行路由
+### 第一阶段：配置 + 执行路由
 
 - 为 `exec.host`、`exec.security`、`exec.ask`、`exec.node` 添加配置架构。
 - 更新工具管道以遵守 `exec.host`。
 - 添加 `/exec` 斜杠命令并保留 `/elevated` 别名。
 
-### 阶段 2：审批存储 + 网关强制执行
+### 第二阶段：审批存储 + 网关强制执行
 
 - 实现 `exec-approvals.json` 读取器/写入器。
-- 对 `gateway` 主机强制执行 allowlist + ask 模式。
+- 对 `gateway` 主机强制执行允许列表 + 询问模式。
 - 添加输出上限。
 
-### 阶段 3：节点运行器强制执行
+### 第三阶段：节点运行器强制执行
 
-- 更新节点运行器以强制执行 allowlist + ask。
+- 更新节点运行器以强制执行允许列表 + 询问。
 - 将 Unix socket 提示桥接添加到 macOS 应用 UI。
 - 连接 `askFallback`。
 
-### 阶段 4：事件
+### 第四阶段：事件
 
-- 为执行生命周期添加节点 → 网关 Bridge 事件。
-- 为代理提示映射到 `enqueueSystemEvent`。
+- 为执行生命周期添加节点 → 网关桥接事件。
+- 映射到 `enqueueSystemEvent` 以用于代理提示。
 
-### 阶段 5：UI 打磨
+### 第五阶段：UI 打磨
 
-- Mac 应用：allowlist 编辑器、每个代理的切换器、ask 策略 UI。
+- Mac 应用：允许列表编辑器、每代理切换器、询问策略 UI。
 - 节点绑定控制（可选）。
 
 ## 测试计划
 
-- 单元测试：allowlist 匹配（glob + 不区分大小写）。
-- 单元测试：策略解析优先级（工具 param → agent override → global）。
+- 单元测试：允许列表匹配（glob + 不区分大小写）。
+- 单元测试：策略解析优先级（工具参数 → 代理覆盖 → 全局）。
 - 集成测试：节点运行器拒绝/允许/询问流程。
-- Bridge 事件测试：节点事件 → 系统事件路由。
+- 桥接事件测试：节点事件 → 系统事件路由。
 
 ## 开放风险
 
 - UI 不可用：确保遵守 `askFallback`。
-- 长时间运行的命令：依赖于超时和输出限制。
-- 多节点歧义：除非存在节点绑定或显式节点参数，否则报错。
+- 长时间运行的命令：依赖超时 + 输出上限。
+- 多节点歧义：除非有节点绑定或显式节点参数，否则报错。
 
 ## 相关文档
 
-- [Exec 工具](/zh/en/tools/exec)
-- [Exec 批准](/zh/en/tools/exec-approvals)
-- [节点](/zh/en/nodes)
-- [提升模式](/zh/en/tools/elevated)
+- [Exec 工具](/en/tools/exec)
+- [Exec approvals](/en/tools/exec-approvals)
+- [Nodes](/en/nodes)
+- [Elevated mode](/en/tools/elevated)
 
 import zh from '/components/footer/zh.mdx';
 

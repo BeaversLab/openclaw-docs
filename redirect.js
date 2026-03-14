@@ -1,43 +1,67 @@
 (function () {
   var path = window.location.pathname;
-  // 如果已经有前缀，或者是静态资源，则不重定向
-  if (
-    path.startsWith('/en/') ||
-    path.startsWith('/zh/') ||
-    path === '/en' ||
-    path === '/zh' ||
-    path.startsWith('/assets/') ||
-    path.startsWith('/license') ||
-    path.indexOf('.') !== -1
-  ) {
-    return;
+  var search = window.location.search || '';
+  var hash = window.location.hash || '';
+  var localeMatch = path.match(/^\/(en|zh)(\/.*)?$/);
+  var aliasMap = {
+    '/wizard': '/start/wizard',
+    '/onboarding': '/start/onboarding',
+    '/start/wizard-cli-flow': '/start/wizard-cli-reference',
+    '/start/wizard-cli-auth': '/start/wizard-cli-reference',
+    '/start/wizard-cli-outputs': '/start/wizard-cli-reference'
+  };
+
+  function isStaticPath(pathname) {
+    return (
+      pathname.startsWith('/assets/') ||
+      pathname.startsWith('/license') ||
+      pathname.indexOf('.') !== -1
+    );
   }
 
-  var saved = null;
-  try {
-    saved = localStorage.getItem('preferredLang');
-  } catch (e) {}
+  function detectPreferredLocale() {
+    var saved = null;
+    try {
+      saved = localStorage.getItem('preferredLang');
+    } catch (e) {}
 
-  var isZh = false;
-  if (saved === 'zh') {
-    isZh = true;
-  } else if (saved === 'en') {
-    isZh = false;
-  } else {
+    if (saved === 'zh') return 'zh';
+    if (saved === 'en') return 'en';
+
     var langs = navigator.languages || [navigator.language || ''];
     for (var i = 0; i < langs.length; i++) {
       if ((langs[i] || '').toLowerCase().startsWith('zh')) {
-        isZh = true;
-        break;
+        return 'zh';
       }
     }
+    return 'en';
   }
 
-  var prefix = isZh ? '/zh' : '/en';
-  // 避免根目录出现双斜杠 //
-  var newPath = prefix + (path === '/' ? '/' : path);
-  
-  if (newPath !== path) {
-    window.location.replace(newPath);
+  function applyAlias(locale, suffix) {
+    var canonicalSuffix = suffix || '';
+    if (canonicalSuffix === '') return '/' + locale;
+    return '/' + locale + (aliasMap[canonicalSuffix] || canonicalSuffix);
+  }
+
+  if (localeMatch) {
+    var locale = localeMatch[1];
+    var suffix = localeMatch[2] || '';
+    var localizedTarget = applyAlias(locale, suffix);
+    if (localizedTarget !== path) {
+      window.location.replace(localizedTarget + search + hash);
+    }
+    return;
+  }
+
+  if (isStaticPath(path)) {
+    return;
+  }
+
+  var locale = detectPreferredLocale();
+  var suffix = path === '/' ? '' : path;
+  var targetPath = applyAlias(locale, suffix);
+
+  if (targetPath !== path) {
+    window.location.replace(targetPath + search + hash);
   }
 })();

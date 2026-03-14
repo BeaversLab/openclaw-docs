@@ -20,26 +20,26 @@
 ## 目标
 
 - 支持以下对象的持久 ACP 绑定：
-  - Discord 频道/帖子
+  - Discord 渠道/线索
   - Telegram 论坛话题（群组/超级群组）
-- 使绑定事实来源由配置驱动。
-- 保持 `/acp`、`/new`、`/reset`、`/focus` 以及交付行为在 Discord 和 Telegram 之间的一致性。
+- 使绑定单一事实来源由配置驱动。
+- 在 Discord 和 Telegram 之间保持 `/acp`、`/new`、`/reset`、`/focus` 以及传递行为的一致性。
 - 保留现有的临时绑定流程以供临时使用。
 
 ## 非目标
 
-- 完全重新设计 ACP 运行时/会话内部结构。
-- 移除现有的临时绑定流程。
-- 在第一次迭代中扩展到每个频道。
-- 在此阶段实现 Telegram 频道直接消息主题 (`direct_messages_topic_id`)。
-- 在此阶段实施 Telegram 私聊话题变体。
+- 对 ACP 运行时/会话内部机制的完全重新设计。
+- 移除现有的短期绑定流程。
+- 在第一次迭代中扩展到每一个渠道。
+- 在此阶段实现 Telegram 渠道私信话题（`direct_messages_topic_id`）。
+- 在此阶段实现 Telegram 私聊话题变体。
 
-## 用户体验方向
+## UX 方向
 
 ### 1) 两种绑定类型
 
-- **持久绑定**：保存在配置中，在启动时进行协调，旨在用于“命名工作区”频道/话题。
-- **临时绑定**：仅限运行时，根据空闲/最长期限策略过期。
+- **持久绑定**：保存在配置中，启动时协调，用于“命名工作区”渠道/主题。
+- **临时绑定**：仅限运行时，根据空闲/最长时间策略过期。
 
 ### 2) 命令行为
 
@@ -48,18 +48,18 @@
   - `/acp bind [session|agent] [--persist]`
   - `/acp unbind [--persist]`
   - `/acp status` 包括绑定是 `persistent` 还是 `temporary`。
-- 在绑定的对话中，`/new` 和 `/reset` 会就地重置绑定的 ACP 会话并保持绑定附加。
+- 在绑定会话中，`/new` 和 `/reset` 就地重置绑定的 ACP 会话并保持附加的绑定。
 
-### 3) 对话身份
+### 3) 会话身份
 
-- 使用规范的对话 ID：
-  - Discord：频道/线程 ID。
-  - Telegram 主题：`chatId:topic:topicId`。
+- 使用规范会话 ID：
+  - Discord：渠道/线索 ID。
+  - Telegram 话题：`chatId:topic:topicId`。
 - 切勿仅使用原始话题 ID 作为 Telegram 绑定的键。
 
 ## 配置模型（提议）
 
-在带有显式 `type` 区分符的顶级 `bindings[]` 中统一路由和持久化 ACP 绑定配置：
+在顶层 `bindings[]` 中统一路由和持久 ACP 绑定配置，并带有显式 `type` 区分符：
 
 ```jsonc
 {
@@ -192,7 +192,7 @@
 }
 ```
 
-### 最小示例（无按绑定覆盖的 ACP 设置）
+### 最小示例（无每个绑定 ACP 覆盖）
 
 ```jsonc
 {
@@ -259,28 +259,28 @@
 }
 ```
 
-说明：
+注：
 
 - `bindings[].type` 是显式的：
-  - `route`：普通智能体路由。
-  - `acp`：用于匹配对话的持久化 ACP 接线绑定。
-- 对于 `type: "acp"`，`match.peer.id` 是规范的对话键：
-  - Discord 频道/线程：原始频道/线程 ID。
-  - Telegram 主题：`chatId:topic:topicId`。
+  - `route`：普通代理路由。
+  - `acp`：针对匹配会话的持久 ACP harness 绑定。
+- 对于 `type: "acp"`，`match.peer.id` 是规范对话键：
+  - Discord 渠道/线索：原始渠道/线索 ID。
+  - Telegram 话题：`chatId:topic:topicId`。
 - `bindings[].acp.backend` 是可选的。后端回退顺序：
   1. `bindings[].acp.backend`
   2. `agents.list[].runtime.acp.backend`
   3. 全局 `acp.backend`
 - `mode`、`cwd` 和 `label` 遵循相同的覆盖模式（`binding override -> agent runtime default -> global/default behavior`）。
 - 保留现有的 `session.threadBindings.*` 和 `channels.discord.threadBindings.*` 用于临时绑定策略。
-- 持久化条目声明所需状态；运行时协调至实际的 ACP 会话/绑定。
-- 每个对话节点一个活动的 ACP 绑定是预期模型。
+- 持久条目声明所需状态；运行时协调到实际的 ACP 会话/绑定。
+- 每个对话节点一个活动的 ACP 绑定是预期的模型。
 - 向后兼容性：对于旧条目，缺失的 `type` 被解释为 `route`。
 
 ### 后端选择
 
-- ACP 会话初始化在生成期间已经使用配置的后端选择（目前是 `acp.backend`）。
-- 本提案扩展了生成/协调逻辑，以优先使用类型化的 ACP 绑定覆盖：
+- ACP 会话初始化在生成期间（今天的 `acp.backend`）已经使用了配置的后端选择。
+- 此提议扩展了生成/协调逻辑以优先使用类型化的 ACP 绑定覆盖：
   - `bindings[].acp.backend` 用于对话本地覆盖。
   - `agents.list[].runtime.acp.backend` 用于每个代理的默认值。
 - 如果不存在覆盖，则保持当前行为（`acp.backend` 默认值）。
@@ -289,90 +289,90 @@
 
 ### 复用现有组件
 
-- `SessionBindingService` 已经支持与通道无关的对话引用。
-- ACP 生成/绑定流程已支持通过服务 API 进行绑定。
-- Telegram 已经通过 `MessageThreadId` 和 `chatId` 携带主题/线程上下文。
+- `SessionBindingService` 已经支持与渠道无关的对话引用。
+- ACP 生成/绑定流程已经支持通过服务 API 进行绑定。
+- Telegram 已经通过 `MessageThreadId` 和 `chatId` 携带话题/线索上下文。
 
-### 新增/扩展组件
+### 新增/扩展的组件
 
 - **Telegram 绑定适配器**（与 Discord 适配器并行）：
   - 为每个 Telegram 账户注册适配器，
-  - 通过规范对话 ID 进行解析/列出/绑定/解绑定/触摸（touch）。
+  - 通过规范对话 ID 进行解析/列表/绑定/解绑/接触。
 - **类型化绑定解析器/索引**：
   - 将 `bindings[]` 拆分为 `route` 和 `acp` 视图，
-  - 将 `resolveAgentRoute` 仅保留在 `route` 绑定上，
-  - 仅从 `acp` 绑定解析持久 ACP 意图。
+  - 仅在 `route` 绑定上保留 `resolveAgentRoute`，
+  - 仅从 `acp` 绑定解析持久化 ACP 意图。
 - **Telegram 的入站绑定解析**：
-  - 在路由完成之前解析绑定的会话（Discord 已经这样做了）。
+  - 在路由最终确定之前解析绑定会话（Discord 已经执行此操作）。
 - **持久化绑定协调器**：
   - 启动时：加载配置的顶级 `type: "acp"` 绑定，确保 ACP 会话存在，确保绑定存在。
   - 配置更改时：安全地应用增量。
 - **切换模型**：
-  - 不读取通道本地 ACP 绑定回退，
-  - 持久 ACP 绑定仅来源于顶级 `bindings[].type="acp"` 条目。
+  - 不读取本地渠道 ACP 绑定回退，
+  - 持久化 ACP 绑定仅源自顶级 `bindings[].type="acp"` 条目。
 
 ## 分阶段交付
 
 ### 第一阶段：类型化绑定模式基础
 
-- 扩展配置架构以支持 `bindings[].type` 区分符：
+- 扩展配置模式以支持 `bindings[].type` 区分器：
   - `route`，
-  - 带有可选 `acp` 覆盖对象的 `acp`（`mode`、`backend`、`cwd`、`label`）。
-- 扩展代理架构以使用运行时描述符来标记 ACP 原生代理 (`agents.list[].runtime.type`)。
-- 为路由绑定和 ACP 绑定添加解析器/索引器拆分。
+  - `acp`，带有可选的 `acp` 覆盖对象（`mode`、`backend`、`cwd`、`label`）。
+- 使用运行时描述符扩展代理模式，以标记 ACP 原生代理（`agents.list[].runtime.type`）。
+- 为路由与 ACP 绑定添加解析器/索引器拆分。
 
-### 第二阶段：运行时解析 + Discord/Telegram 功能对等
+### 阶段 2：运行时解析 + Discord/Telegram 对等
 
-- 从顶层 `type: "acp"` 条目解析持久的 ACP 绑定，用于：
+- 从顶级 `type: "acp"` 条目解析持久化 ACP 绑定，针对：
   - Discord 频道/线程，
-  - Telegram 论坛主题 (`chatId:topic:topicId` 规范 ID)。
-- 实现 Telegram 绑定适配器和入站绑定会话覆盖，以与 Discord 功能对等。
-- 在此阶段不包括 Telegram 直接/私人话题变体。
+  - Telegram 论坛主题（`chatId:topic:topicId` 规范 ID）。
+- 实现 Telegram 绑定适配器以及与 Discord 对等的入站绑定会话覆盖。
+- 在此阶段不要包含 Telegram 直接/私人主题变体。
 
-### 第三阶段：命令对等和重置
+### 第三阶段：命令对等性和重置
 
-- 在绑定的 Telegram/Discord 对话中统一 `/acp`、`/new`、`/reset` 和 `/focus` 的行为。
-- 确保绑定按照配置在重置流程中得以保留。
+- 在绑定 Telegram/Discord 对话中对齐 `/acp`、`/new`、`/reset` 和 `/focus` 行为。
+- 确保绑定在重置流程中按配置保持不变。
 
-### 第 4 阶段：加固
+### 第四阶段：加固
 
-- 更好的诊断 (`/acp status`，启动对齐日志)。
+- 更好的诊断（`/acp status`、启动协调日志）。
 - 冲突处理和健康检查。
 
 ## 防护措施与策略
 
-- 完全按照目前的标准遵守 ACP 启用和沙箱限制。
-- 保持显式的账户作用域 (`accountId`) 以避免跨账户泄露。
-- 在路由模棱两可时采取“失败关闭”策略。
-- 保持针对每个通道配置的提及/访问策略行为显式化。
+- 完全像今天一样遵守 ACP 启用和沙箱限制。
+- 保留显式的账户范围（`accountId`）以避免跨账户泄露。
+- 路由模糊时失败关闭。
+- 保持提及/访问策略行为按每个渠道配置显式指定。
 
 ## 测试计划
 
 - 单元测试：
-  - 对话 ID 规范化（特别是 Telegram 主题 ID），
+  - 会话 ID 标准化（尤其是 Telegram 主题 ID），
   - 协调器的创建/更新/删除路径，
   - `/acp bind --persist` 和解绑流程。
 - 集成测试：
-  - 入站 Telegram 话题 -> 已绑定 ACP 会话解析，
-  - 入站 Discord 频道/线程 -> 持久绑定优先级。
+  - 入站 Telegram 主题 -> 绑定的 ACP 会话解析，
+  - 入站 Discord 渠道/主题 -> 持久绑定优先级。
 - 回归测试：
-  - 临时绑定继续有效，
-  - 未绑定频道/话题保持当前路由行为。
+  - 临时绑定继续工作，
+  - 未绑定的渠道/主题保持当前路由行为。
 
 ## 未决问题
 
 - Telegram 主题中的 `/acp spawn --thread auto` 是否应默认为 `here`？
-- 持久绑定在绑定的对话中是否应始终绕过提及门控，还是需要显式的 `requireMention=false`？
+- 持久绑定是否应始终绕过绑定会话中的提及限制，还是需要显式的 `requireMention=false`？
 - `/focus` 是否应增加 `--persist` 作为 `/acp bind --persist` 的别名？
 
 ## 发布
 
-- 作为每个对话的选项（opt-in）发布（存在 `bindings[].type="acp"` 条目）。
-- 首先支持 Discord + Telegram。
+- 作为每个会话的选项功能发布（存在 `bindings[].type="acp"` 条目）。
+- 先从 Discord + Telegram 开始。
 - 添加包含以下示例的文档：
-  - “每个代理一个频道/主题”
-  - “同一代理的多个频道/主题具有不同的 `cwd`”
-  - “团队命名模式 (`codex-1`、`claude-repo-x`)”。
+  - “每个代理一个渠道/主题”
+  - “同一代理的多个渠道/主题，具有不同的 `cwd`”
+  - “团队命名模式（`codex-1`、`claude-repo-x`）”。
 
 import zh from '/components/footer/zh.mdx';
 

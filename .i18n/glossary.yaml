@@ -1069,8 +1069,8 @@ entries:
       category: product
       note: Core component name
     targets:
-      zh: Gateway 网关
-      zh-CN: Gateway 网关
+      zh: Gateway(网关)
+      zh-CN: Gateway(网关)
     match:
       type: exact
       case_sensitive: true

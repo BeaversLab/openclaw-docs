@@ -22,55 +22,63 @@ OpenClaw 有两个表面看起来相似但实际上截然不同的问题：
 - **Gateway 网关 WS（控制平面）**：默认情况下 `127.0.0.1:18789` 上的 WebSocket 端点；可以通过 `gateway.bind` 绑定到局域网/tailnet。
 - **直接 WS 传输**：面向局域网/tailnet 的 Gateway 网关 WS 端点（无 SSH）。
 - **SSH 传输（备用）**：通过 SSH 转发 `127.0.0.1:18789` 进行远程控制。
-- **传统 TCP 桥接（已弃用/已移除）**：较旧的节点传输（参见 [桥接协议](/zh/en/gateway/bridge-protocol)）；不再通告以供发现。
+- **Legacy TCP bridge（已弃用/已移除）**：旧版节点传输（请参阅 [Bridge protocol](/zh/gateway/bridge-protocol)）；不再广播用于设备发现。
 
 协议详情：
 
-- [Gateway 网关 协议](/zh/en/gateway/protocol)
-- [桥接协议（传统）](/zh/en/gateway/bridge-protocol)
+- [Gateway(网关) 协议](/zh/gateway/protocol)
+- [Bridge protocol (legacy)](/zh/gateway/bridge-protocol)
 
 ## 为什么我们要同时保留“直接”和 SSH
 
 - **直接 WS** 在同一网络和 tailnet 内提供最佳的用户体验：
-  - 通过 Bonjour 在局域网上自动发现
-  - 由网关拥有的配对令牌 + ACL
-  - 不需要 shell 访问权限；协议表面可以保持严格和可审计
-- **SSH** 仍然是最通用的回退方案：
-  - 在任何拥有 SSH 访问权限的地方都可以工作（甚至跨不相关的网络）
-  - 能够克服多播/mDNS 问题
-  - 除 SSH 外不需要新的入站端口
+  - 通过 Bonjour 在局域网上进行自动设备发现
+  - 配对令牌 + 由 Gateway 网关拥有的 ACL
+  - 不需要 Shell 访问权限；协议表面可以保持紧凑且可审计
+- **SSH** 仍然是通用的后备方案：
+  - 可以在任何拥有 SSH 访问权限的地方使用（甚至可以在不相关的网络之间）
+  - 能够规避多播/mDNS 问题
+  - 除了 SSH 之外不需要新的入站端口
 
-## 发现输入（客户端如何了解网关位置）
+## 设备发现输入（客户端如何获知 Gateway 网关的位置）
 
 ### 1) Bonjour / mDNS（仅限局域网）
 
-Bonjour 是尽力而为的，不能跨越网络。它仅用于“同一局域网”的便利。
+Bonjour 是尽力而为的，无法跨网络工作。它仅用于“同一局域网”的便利性。
 
 目标方向：
 
-- **网关** 通过 Bonjour 广播其 WS 端点。
-- 客户端浏览并显示“选择网关”列表，然后存储所选的端点。
+- **Gateway 网关**通过 Bonjour 广播其 WS 端点。
+- 客户端进行浏览并显示“选择一个 Gateway 网关”列表，然后存储所选的端点。
 
-故障排除和信标详情：[Bonjour](/zh/en/gateway/bonjour)。
+故障排除和信标详细信息：[Bonjour](/zh/gateway/bonjour)。
 
-#### 服务信标详情
+#### 服务信标详细信息
 
 - 服务类型：
-  - `_openclaw-gw._tcp`（网关传输信标）
+  - `_openclaw-gw._tcp`（Gateway 网关传输信标）
 - TXT 密钥（非秘密）：
- - `role=gateway` - `lanHost=<hostname>.local` - `sshPort=22`（或任何通告的内容） - `gatewayPort=18789`（Gateway 网关 WS + HTTP） - `gatewayTls=1`（仅在启用 TLS 时） - `gatewayTlsSha256=<sha256>`（仅在启用 TLS 且指纹可用时） - `canvasPort=<port>`（画布主机端口；当启用画布主机时，目前与 `gatewayPort` 相同） - `cliPath=<path>`（可选；可运行的 `openclaw` 入口点或二进制文件的绝对路径） - `tailnetDns=<magicdns>`（可选提示；当 Tailscale 可用时自动检测）
+  - `role=gateway`
+  - `lanHost=<hostname>.local`
+  - `sshPort=22`（或任何被广播的内容）
+  - `gatewayPort=18789`（Gateway 网关 WS + HTTP）
+  - `gatewayTls=1`（仅在启用 TLS 时）
+  - `gatewayTlsSha256=<sha256>`（仅在启用 TLS 且指纹可用时）
+  - `canvasPort=<port>`（canvas 主机端口；当启用 canvas 主机时，目前与 `gatewayPort` 相同）
+  - `cliPath=<path>`（可选；可运行的 `openclaw` 入口点或二进制文件的绝对路径）
+  - `tailnetDns=<magicdns>`（可选提示；当 Tailscale 可用时自动检测）
 
 安全说明：
 
-- Bonjour/mDNS TXT 记录是**未经验证的**。客户端必须仅将 TXT 值视为 UX 提示。
-- 路由（主机/端口）应优先选择 **已解析的服务端点**（SRV + A/AAAA），而不是 TXT 提供的 `lanHost`、`tailnetDns` 或 `gatewayPort`。
-- TLS 固定绝不允许通告的 `gatewayTlsSha256` 覆盖先前存储的固定值。
-- iOS/Android 节点应将基于发现的直接连接视为**仅限 TLS**，并且在存储首次固定值（带外验证）之前，需要明确的“信任此指纹”确认。
+- Bonjour/mDNS TXT 记录是**未经身份验证的**。客户端必须将 TXT 值仅视为 UX 提示。
+- 路由（主机/端口）应优先使用 **已解析的服务端点**（SRV + A/AAAA），而不是 TXT 提供的 `lanHost`、`tailnetDns` 或 `gatewayPort`。
+- TLS 固定绝不允许通过通告的 `gatewayTlsSha256` 来覆盖先前存储的固定值。
+- iOS/Android 节点应将基于发现的直接连接视为 **仅 TLS** 连接，并在存储首次 pin（带外验证）之前要求明确的“信任此指纹”确认。
 
 禁用/覆盖：
 
 - `OPENCLAW_DISABLE_BONJOUR=1` 禁用通告。
-- `gateway.bind` 在 `~/.openclaw/openclaw.json` 中控制 Gateway 网关 绑定模式。
+- `gateway.bind` 在 `~/.openclaw/openclaw.json` 中控制 Gateway(网关) 绑定模式。
 - `OPENCLAW_SSH_PORT` 覆盖 TXT 中通告的 SSH 端口（默认为 22）。
 - `OPENCLAW_TAILNET_DNS` 发布 `tailnetDns` 提示（MagicDNS）。
 - `OPENCLAW_CLI_PATH` 会覆盖通告的 CLI 路径。
@@ -81,38 +89,38 @@ Bonjour 是尽力而为的，不能跨越网络。它仅用于“同一局域网
 
 - Tailscale MagicDNS 名称（首选）或稳定的 tailnet IP。
 
-如果网关检测到自己在 Tailscale 下运行，它会发布 `tailnetDns` 作为客户端的可选提示（包括广域网信标）。
+如果 Gateway 网关检测到它在 Tailscale 下运行，它会发布 `tailnetDns` 作为供客户端使用的可选提示（包括广域信标）。
 
 ### 3) 手动 / SSH 目标
 
-当没有直连路由（或直连被禁用）时，客户端始终可以通过转发回环网关端口通过 SSH 连接。
+当没有直接路由（或直接连接被禁用）时，客户端始终可以通过转发环回 Gateway 网关端口来通过 SSH 连接。
 
-参见 [远程访问](/zh/en/gateway/remote)。
+参见 [远程访问](/zh/gateway/remote)。
 
 ## 传输选择（客户端策略）
 
 推荐的客户端行为：
 
-1. 如果配置了已配对的直连端点且可达，则使用它。
-2. 否则，如果 Bonjour 在局域网上发现了网关，提供一键“使用此网关”的选项并将其保存为直连端点。
-3. 否则，如果配置了 tailnet DNS/IP，则尝试直连。
+1. 如果配置了配对的直接端点且可达，则使用它。
+2. 否则，如果 Bonjour 在 LAN 上发现了一个 Gateway 网关，则提供一键“使用此 Gateway 网关”选项并将其保存为直接端点。
+3. 否则，如果配置了 tailnet DNS/IP，请尝试直接连接。
 4. 否则，回退到 SSH。
 
-## 配对 + 认证（直连传输）
+## 配对 + 身份验证（直接传输）
 
-网关是节点/客户端准入的事实来源。
+Gateway 网关是节点/客户端准入的单一事实来源。
 
-- 配对请求在 Gateway 网关 中创建/批准/拒绝（参见 [Gateway 网关 配对](/zh/en/gateway/pairing)）。
-- 网关强制执行：
-  - 认证（令牌 / 密钥对）
-  - 范围/ACL（网关并非每个方法的原始代理）
+- 配对请求是在 Gateway(网关) 中创建/批准/拒绝的（请参阅 [Gateway(网关) 配对](/zh/gateway/pairing)）。
+- Gateway 网关强制执行：
+  - 身份验证（令牌 / 密钥对）
+  - 作用域/ACL（Gateway 网关不是每个方法的原始代理）
   - 速率限制
 
 ## 各组件的职责
 
 - **Gateway 网关**：发布发现信标，拥有配对决策权，并托管 WS 端点。
-- **macOS 应用**：帮助您选择网关，显示配对提示，并且仅将 SSH 作为备用手段使用。
-- **iOS/Android 节点**：为方便起见浏览 Bonjour 并连接到已配对的 Gateway 网关 WS。
+- **macOS 应用**：帮助您选择 Gateway 网关，显示配对提示，并仅将 SSH 作为回退方式使用。
+- **iOS/Android 节点**：为了方便起见浏览 Bonjour，并连接到已配对的 Gateway 网关 WS。
 
 import zh from '/components/footer/zh.mdx';
 

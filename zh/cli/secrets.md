@@ -36,9 +36,9 @@ CI/闸门的退出代码说明：
 
 相关：
 
-- Secrets 指南：[Secrets 管理](/zh/en/gateway/secrets)
-- 凭据范围：[SecretRef 凭据范围](/zh/en/reference/secretref-credential-surface)
-- 安全指南：[安全](/zh/en/gateway/security)
+- Secrets 指南：[Secrets Management](/zh/gateway/secrets)
+- 凭据覆盖范围：[SecretRef Credential Surface](/zh/reference/secretref-credential-surface)
+- 安全指南：[Security](/zh/gateway/security)
 
 ## 重新加载运行时快照
 
@@ -90,9 +90,9 @@ openclaw secrets audit --json
   - `REF_SHADOWED`
   - `LEGACY_RESIDUE`
 
-## 配置（交互式助手）
+## 配置（交互式帮助程序）
 
-以交互方式构建提供者和 SecretRef 更改，运行预检，并可选择应用：
+以交互方式构建提供商和 SecretRef 更改，运行预检，并可选择应用：
 
 ```bash
 openclaw secrets configure
@@ -106,36 +106,36 @@ openclaw secrets configure --json
 
 流程：
 
-- 首先设置提供商（`add/edit/remove` 用于 `secrets.providers` 别名）。
-- 其次进行凭证映射（选择字段并分配 `{source, provider, id}` 引用）。
-- 最后是预检和可选应用。
+- 首先进行提供商设置（`add/edit/remove` 用于 `secrets.providers` 别名）。
+- 其次进行凭据映射（选择字段并分配 `{source, provider, id}` 引用）。
+- 最后进行预检和可选应用。
 
 标志：
 
-- `--providers-only`：仅配置 `secrets.providers`，跳过凭证映射。
-- `--skip-provider-setup`：跳过提供商设置，并将凭证映射到现有提供商。
+- `--providers-only`：仅配置 `secrets.providers`，跳过凭据映射。
+- `--skip-provider-setup`：跳过提供商设置，并将凭据映射到现有的提供商。
 - `--agent <id>`：将 `auth-profiles.json` 目标发现和写入范围限定为一个代理存储。
 
-注意：
+备注：
 
-- 需要一个交互式 TTY。
+- 需要交互式 TTY。
 - 您不能将 `--providers-only` 与 `--skip-provider-setup` 结合使用。
 - `configure` 针对 `openclaw.json` 中包含机密的字段以及所选代理范围的 `auth-profiles.json`。
-- `configure` 支持在选择器流程中直接创建新的 `auth-profiles.json` 映射。
-- 规范支持表面：[SecretRef Credential Surface](/zh/en/reference/secretref-credential-surface)。
+- `configure` 支持直接在选择器流程中创建新的 `auth-profiles.json` 映射。
+- 规范支持的表面：[SecretRef Credential Surface](/zh/reference/secretref-credential-surface)。
 - 它在应用之前执行预检解析。
-- 生成的计划默认启用清理选项（`scrubEnv`、`scrubAuthProfilesForProviderTargets`、`scrubLegacyAuthJson` 均已启用）。
-- 应用路径对于已清理的明文值是单向的。
+- 生成的计划默认为清理选项（`scrubEnv`、`scrubAuthProfilesForProviderTargets`、`scrubLegacyAuthJson` 均已启用）。
+- 对于已清理的纯文本值，应用路径是单向的。
 - 如果没有 `--apply`，CLI 仍会在预检后提示 `Apply this plan now?`。
-- 使用 `--apply`（且没有 `--yes`）时，CLI 会提示额外的不可逆确认。
+- 使用 `--apply`（且没有 `--yes`）时，CLI 会提示进行额外的不可逆确认。
 
-Exec 提供程序安全提示：
+Exec 提供商安全提示：
 
-- Homebrew 安装通常在 `/opt/homebrew/bin/*` 下暴露符号链接的二进制文件。
-- 仅当受信任的包管理器路径需要时才设置 `allowSymlinkCommand: true`，并将其与 `trustedDirs` 配对（例如 `["/opt/homebrew"]`）。
-- 在 Windows 上，如果提供程序路径的 ACL 验证不可用，OpenClaw 将以失败关闭。仅对于受信任的路径，在该提供程序上设置 `allowInsecurePath: true` 以绕过路径安全检查。
+- Homebrew 安装通常会在 `/opt/homebrew/bin/*` 下暴露符号链接二进制文件。
+- 仅在受信任的包管理器路径需要时设置 `allowSymlinkCommand: true`，并将其与 `trustedDirs` 配对使用（例如 `["/opt/homebrew"]`）。
+- 在 Windows 上，如果提供商路径的 ACL 验证不可用，OpenClaw 将以失败关闭。仅对于受信任的路径，可以在该提供商上设置 `allowInsecurePath: true` 以绕过路径安全检查。
 
-## 应用已保存的计划
+## 应用保存的计划
 
 应用或预检先前生成的计划：
 
@@ -147,20 +147,20 @@ openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --json
 
 计划合约详情（允许的目标路径、验证规则和失败语义）：
 
-- [Secrets 应用计划合约](/zh/en/gateway/secrets-plan-contract)
+- [Secrets Apply Plan Contract](/zh/gateway/secrets-plan-contract)
 
-`apply` 可能会更新：
+`apply` 可能更新的内容：
 
-- `openclaw.json` （SecretRef 目标 + 提供程序插入/删除）
-- `auth-profiles.json` （提供程序目标清理）
+- `openclaw.json`（SecretRef 目标 + 提供商的插入/删除）
+- `auth-profiles.json`（提供商目标清理）
 - 旧版 `auth.json` 残留
-- `~/.openclaw/.env` 已迁移值的已知密钥
+- `~/.openclaw/.env` 已迁移其值的已知密钥
 
-## 为何没有回滚备份
+## 为什么没有回滚备份
 
 `secrets apply` 故意不写入包含旧明文值的回滚备份。
 
-安全性来自于严格的预检 + 类原子的应用，并在失败时尽力进行内存中恢复。
+安全性来自严格的预检 + 原子式应用，并在失败时尽力进行内存恢复。
 
 ## 示例
 
@@ -170,7 +170,7 @@ openclaw secrets configure
 openclaw secrets audit --check
 ```
 
-如果 `audit --check` 仍然报告明文发现，请更新剩余的报告目标路径并重新运行审计。
+如果 `audit --check` 仍然报告明文发现，请更新其余报告的目标路径并重新运行审计。
 
 import zh from '/components/footer/zh.mdx';
 

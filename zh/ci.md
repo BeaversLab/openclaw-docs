@@ -13,40 +13,40 @@ CI 在每次推送到 `main` 和每个拉取请求时运行。它使用智能作
 
 ## 任务概览
 
-| 作业               | 用途                                                 | 运行时机                                      |
+| Job               | Purpose                                                 | When it runs                                      |
 | ----------------- | ------------------------------------------------------- | ------------------------------------------------- |
-| `docs-scope`      | 检测仅文档的更改                                | 始终                                            |
-| `changed-scope`   | 检测哪些区域发生了更改 (node/macos/android/windows) | 非文档 PR                                      |
-| `check`           | TypeScript 类型检查、lint、格式化                          | 推送到 `main`，或包含 Node 相关更改的 PR |
-| `check-docs`      | Markdown lint + 失效链接检查                       | 文档已更改                                      |
-| `code-analysis`   | LOC 阈值检查 (1000 行)                        | 仅 PR                                          |
-| `secrets`         | 检测泄露的机密信息                                   | 始终                                            |
-| `build-artifacts` | 构建一次 dist，与其他作业共享                  | 非文档，node 更改                            |
-| `release-check`   | 验证 npm pack 内容                              | 构建后                                       |
-| `checks`          | Node/Bun 测试 + 协议检查                         | 非文档，node 更改                            |
-| `checks-windows`  | Windows 特定测试                                  | 非文档，Windows 相关更改                |
-| `macos`           | Swift lint/build/test + TS 测试                        | 包含 macos 更改的 PR                            |
-| `android`         | Gradle build + 测试                                    | 非文档，android 更改                         |
+| `docs-scope`      | Detect docs-only changes                                | Always                                            |
+| `changed-scope`   | Detect which areas changed (node/macos/android/windows) | Non-docs PRs                                      |
+| `check`           | TypeScript types, lint, format                          | Push to `main`, or PRs with Node-relevant changes |
+| `check-docs`      | Markdown lint + broken link check                       | Docs changed                                      |
+| `code-analysis`   | LOC threshold check (1000 lines)                        | PRs only                                          |
+| `secrets`         | Detect leaked secrets                                   | Always                                            |
+| `build-artifacts` | Build dist once, share with other jobs                  | Non-docs, node changes                            |
+| `release-check`   | 验证 npm pack 内容                                      | After build                                       |
+| `checks`          | Node/Bun 测试 + 协议检查                                | Non-docs, node changes                            |
+| `checks-windows`  | Windows 特定测试                                        | Non-docs, windows-relevant changes                |
+| `macos`           | Swift lint/build/test + TS tests                        | PRs with macos changes                            |
+| `android`         | Gradle build + tests                                    | Non-docs, android changes                         |
 
-## 快速失败顺序
+## Fail-Fast Order
 
-任务经过排序，以便在运行昂贵的检查之前，让低成本的检查先失败：
+Jobs are ordered so cheap checks fail before expensive ones run:
 
-1. `docs-scope` + `code-analysis` + `check` （并行，约 1-2 分钟）
-2. `build-artifacts` （被上述任务阻塞）
-3. `checks`、`checks-windows`、`macos`、`android` （被构建阻塞）
+1. `docs-scope` + `code-analysis` + `check` (parallel, ~1-2 min)
+2. `build-artifacts` (blocked on above)
+3. `checks`, `checks-windows`, `macos`, `android` (blocked on build)
 
-范围逻辑位于 `scripts/ci-changed-scope.mjs` 中，并由 `src/scripts/ci-changed-scope.test.ts` 中的单元测试覆盖。
+Scope logic lives in `scripts/ci-changed-scope.mjs` and is covered by unit tests in `src/scripts/ci-changed-scope.test.ts`.
 
-## 运行器
+## Runners
 
-| Runner                           | Jobs                                       |
-| -------------------------------- | ------------------------------------------ |
+| Runner                           | Jobs                            |
+| -------------------------------- | ------------------------------- |
 | `blacksmith-16vcpu-ubuntu-2404`  | 大多数 Linux 任务，包括范围检测 |
-| `blacksmith-32vcpu-windows-2025` | `checks-windows`                           |
-| `macos-latest`                   | `macos`、`ios`                             |
+| `blacksmith-32vcpu-windows-2025` | `checks-windows`                |
+| `macos-latest`                   | `macos`, `ios`                  |
 
-## 本地等效项
+## Local Equivalents
 
 ```bash
 pnpm check          # types + lint + format

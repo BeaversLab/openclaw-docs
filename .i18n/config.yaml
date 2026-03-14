@@ -1,5 +1,5 @@
 batchTokens: 500
-parallelBatches: 1
+parallelBatches: 3
 
 collect:
   exclude:

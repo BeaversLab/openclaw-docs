@@ -40,7 +40,7 @@ OpenClaw 的 Gateway 网关 可以提供兼容 OpenResponses 的 `POST /v1/respo
 - 如果目标代理策略允许敏感工具，此端点可以使用它们。
 - 请将此端点保持在环回/tailnet/专用入口上；不要将其直接暴露给公共互联网。
 
-请参阅 [安全性](/zh/en/gateway/security) 和 [远程访问](/zh/en/gateway/remote)。
+请参阅 [Security](/zh/gateway/security) 和 [Remote access](/zh/gateway/remote)。
 
 ## 选择代理
 
@@ -186,23 +186,21 @@ OpenClaw 的 Gateway 网关 可以提供兼容 OpenResponses 的 `POST /v1/respo
 
 当前行为：
 
-- 文件内容会被解码并添加到 **系统提示词** 中，而不是用户消息，
-  因此它是临时的（不会持久保存在会话历史中）。
-- PDF 会被解析为文本。如果发现的文本很少，前几页将被栅格化
-  为图像并传递给模型。
+- 文件内容将被解码并添加到 **系统提示词** 中，而不是用户消息中，因此它是临时的（不会持久保存在会话历史记录中）。
+- PDF 会被解析为文本。如果找到的文本很少，前几页将被光栅化为图像并传递给模型。
 
 PDF 解析使用对 Node 友好的 `pdfjs-dist` 旧版构建（无 worker）。现代
-PDF.js 构建需要浏览器 worker/DOM 全局变量，因此不用于 Gateway 网关。
+PDF.js 构建期望浏览器 worker/DOM 全局对象，因此 Gateway 中未使用它。
 
 URL 获取默认值：
 
-- `files.allowUrl`：`true`
+- `files.allowUrl`: `true`
 - `images.allowUrl`: `true`
-- `maxUrlParts`: `8` (每个请求总共基于 URL 的 `input_file` + `input_image` 部分)
-- 请求受到保护（DNS 解析、私有 IP 阻止、重定向限制、超时）。
-- 支持按输入类型（`files.urlAllowlist`, `images.urlAllowlist`）配置可选的主机名允许列表。
+- `maxUrlParts`: `8`（每个请求基于 URL 的 `input_file` + `input_image` 部分总计）
+- 请求受保护（DNS 解析、私有 IP 阻止、重定向限制、超时）。
+- 支持按输入类型设置可选的主机名允许列表（`files.urlAllowlist`, `images.urlAllowlist`）。
   - 精确主机：`"cdn.example.com"`
-  - 通配符子域名：`"*.assets.example.com"` (不匹配顶级域名)
+  - 通配符子域：`"*.assets.example.com"`（不匹配顶级域名）
 
 ## 文件 + 图像限制（配置）
 
@@ -274,14 +272,14 @@ URL 获取默认值：
 - `images.maxBytes`: 10MB
 - `images.maxRedirects`: 3
 - `images.timeoutMs`: 10s
-- 接受 HEIC/HEIF `input_image` 源，并在发送给提供商之前将其标准化为 JPEG。
+- 接受 HEIC/HEIF `input_image` 源，并在交付给提供商之前将其标准化为 JPEG。
 
 安全提示：
 
 - URL 允许列表在获取之前和重定向跳转时强制执行。
-- 将主机名加入白名单并不能绕过对私有/内部 IP 的阻止。
-- 对于面向互联网的网关，除了应用级别的防护外，还应应用网络出口控制。
-  请参阅 [安全性](/zh/en/gateway/security)。
+- 将主机名加入允许列表并不能绕过对私有/内部 IP 的阻止。
+- 对于面向互联网的网关，除了应用级别的防护措施外，还应应用网络出口控制。
+  请参阅 [安全性](/zh/gateway/security)。
 
 ## 流式传输 (SSE)
 
@@ -302,15 +300,15 @@ URL 获取默认值：
 - `response.content_part.done`
 - `response.output_item.done`
 - `response.completed`
-- `response.failed` (出错时)
+- `response.failed` （发生错误时）
 
-## 用量
+## 使用情况
 
 当底层提供商报告 token 计数时，将填充 `usage`。
 
 ## 错误
 
-错误使用如下 JSON 对象表示：
+错误使用类似如下的 JSON 对象：
 
 ```json
 { "error": { "message": "...", "type": "invalid_request_error" } }
@@ -320,7 +318,7 @@ URL 获取默认值：
 
 - `401` 身份验证缺失/无效
 - `400` 请求正文无效
-- `405` 错误的方法
+- `405` 方法错误
 
 ## 示例
 

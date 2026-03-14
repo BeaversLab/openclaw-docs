@@ -49,7 +49,7 @@ When the user asks for a greeting, use the `echo` tool to say "Hello from your c
 
 ## 最佳实践
 
-- **保持简洁**：指示模型做_什么_，而不是如何做一个 AI。
+- **保持简洁**：指示模型做*什么*，而不是如何做一个 AI。
 - **安全第一**：如果您的技能使用 `bash`，请确保提示词不允许来自不受信任用户输入的任意命令注入。
 - **本地测试**：使用 `openclaw agent --message "use my new skill"` 进行测试。
 

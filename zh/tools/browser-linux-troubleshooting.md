@@ -112,31 +112,31 @@ curl -s http://127.0.0.1:18791/tabs
 
 ### 配置参考
 
-| 选项                   | 描述                                                          | 默认值                                                     |
-| ------------------------ | -------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `browser.enabled`        | 启用浏览器控制                                               | `true`                                                      |
-| `browser.executablePath` | 基于 Chromium 的浏览器二进制文件路径 (Chrome/Brave/Edge/Chromium) | 自动检测（如果是基于 Chromium 的浏览器，则首选默认浏览器） |
-| `browser.headless`       | 无 GUI 运行                                                      | `false`                                                     |
-| `browser.noSandbox`      | 添加 `--no-sandbox` 标志（某些 Linux 设置需要）               | `false`                                                     |
-| `browser.attachOnly`     | 不启动浏览器，仅附加到现有浏览器                        | `false`                                                     |
-| `browser.cdpPort`        | Chrome DevTools Protocol 端口                                        | `18800`                                                     |
+| 选项                     | 描述                                                              | 默认值                                          |
+| ------------------------ | ----------------------------------------------------------------- | ----------------------------------------------- |
+| `browser.enabled`        | 启用浏览器控制                                                    | `true`                                          |
+| `browser.executablePath` | 基于 Chromium 的浏览器二进制文件路径 (Chrome/Brave/Edge/Chromium) | 自动检测（如果基于 Chromium，则首选默认浏览器） |
+| `browser.headless`       | 无图形界面运行                                                    | `false`                                         |
+| `browser.noSandbox`      | 添加 `--no-sandbox` 标志（某些 Linux 设置需要）                   | `false`                                         |
+| `browser.attachOnly`     | 不启动浏览器，仅附加到现有的                                      | `false`                                         |
+| `browser.cdpPort`        | Chrome DevTools Protocol 端口                                     | `18800`                                         |
 
-### 问题：“Chrome 扩展中继正在运行，但未连接任何标签页”
+### 问题：“Chrome 扩展程序中继正在运行，但没有连接任何标签页”
 
-您正在使用 `chrome` 配置文件（扩展程序中继）。它期望 OpenClaw
-浏览器扩展程序附加到活动标签页。
+您正在使用 `chrome` 配置文件（扩展中继）。它需要将 OpenClaw
+浏览器扩展附加到活动的标签页。
 
 修复选项：
 
 1. **使用托管浏览器：** `openclaw browser start --browser-profile openclaw`
    （或设置 `browser.defaultProfile: "openclaw"`）。
-2. **使用扩展中继：** 安装扩展，打开标签页，然后点击
-   OpenClaw 扩展图标以进行附加。
+2. **使用扩展中继：** 安装扩展，打开一个标签页，然后点击
+   OpenClaw 扩展图标以将其附加。
 
-注意：
+注：
 
-- `chrome` 配置文件尽可能使用您的**系统默认 Chromium 浏览器**。
-- 本地 `openclaw` 配置文件会自动分配 `cdpPort`/`cdpUrl`；仅针对远程 CDP 设置这些值。
+- `chrome` 配置文件在可能时使用您的 **系统默认 Chromium 浏览器**。
+- 本地 `openclaw` 配置文件自动分配 `cdpPort`/`cdpUrl`；仅针对远程 CDP 设置这些。
 
 import zh from '/components/footer/zh.mdx';
 

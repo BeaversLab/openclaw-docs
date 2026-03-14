@@ -15,7 +15,7 @@ read_when:
 
 本页面涵盖了所有影响提示词重用和令牌成本的缓存相关控制项。
 
-有关 Anthropic 定价的详细信息，请参阅：
+有关 Anthropic 定价详情，请参阅：
 [https://docs.anthropic.com/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/docs/build-with-claude/prompt-caching)
 
 ## 主要控制项
@@ -69,7 +69,7 @@ agents:
       ttl: "1h"
 ```
 
-有关完整行为，请参阅 [会话修剪](/zh/en/concepts/会话-pruning)。
+有关完整行为，请参阅 [Session Pruning](/en/concepts/session-pruning)。
 
 ### 心跳保温
 
@@ -179,10 +179,10 @@ diagnostics:
 
 相关文档：
 
-- [Anthropic](/zh/en/providers/anthropic)
-- [Token Use and Costs](/zh/en/reference/token-use)
-- [Session Pruning](/zh/en/concepts/会话-pruning)
-- [Gateway 网关 Configuration Reference](/zh/en/gateway/configuration-reference)
+- [Anthropic](/en/providers/anthropic)
+- [Token Use and Costs](/en/reference/token-use)
+- [Session Pruning](/en/concepts/session-pruning)
+- [Gateway 网关 Configuration Reference](/en/gateway/configuration-reference)
 
 import zh from '/components/footer/zh.mdx';
 

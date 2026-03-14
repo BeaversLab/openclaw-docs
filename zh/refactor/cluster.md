@@ -140,8 +140,8 @@ title: "Refactor Cluster Backlog"
 - 账户 schema 加上：
   - `accounts: z.object({}).catchall(accountSchema).optional()`
   - `defaultAccount: z.string().optional()`
-- 重复的 私信/群组 字段
-- 重复的 markdown/工具 policy 字段
+- 重复的私信/群组字段
+- 重复的 markdown/工具 策略字段
 
 典型示例：
 
@@ -163,7 +163,7 @@ title: "Refactor Cluster Backlog"
 
 风险：
 
-- 低至中等。部分 schema 较简单，部分较特殊。
+- 低至中等。有些 schema 很简单，有些则比较特殊。
 
 ## 5. Webhook 和监控生命周期启动
 
@@ -177,7 +177,7 @@ title: "Refactor Cluster Backlog"
 - 启动监控
 - 等待中止
 - 清理
-- 状态 sink 更新
+- 状态接收器更新
 
 典型示例：
 
@@ -187,7 +187,7 @@ title: "Refactor Cluster Backlog"
 - `extensions/telegram/src/channel.ts`
 - `extensions/nextcloud-talk/src/channel.ts`
 
-现有的辅助接口：
+现有的辅助函数接口：
 
 - `src/plugin-sdk/channel-lifecycle.ts`
 
@@ -202,20 +202,20 @@ title: "Refactor Cluster Backlog"
 
 风险：
 
-- 中等至高。传输细节差异较大。
+- 中等至高。传输细节很快就会变得不同。
 
-## 6. 小型精确克隆清理
+## 6. 小型完全克隆清理
 
-低风险清理归类。
+低风险清理类别。
 
 示例：
 
-- 重复的 gateway argv 检测：
+- 重复的网关 argv 检测：
   - `src/infra/gateway-lock.ts`
   - `src/cli/daemon-cli/lifecycle.ts`
 - 重复的端口诊断渲染：
   - `src/cli/daemon-cli/restart-health.ts`
-- 重复的 会话-key 构造：
+- 重复的会话密钥构造：
   - `src/web/auto-reply/monitor/broadcast.ts`
 
 预期节省：
@@ -228,7 +228,7 @@ title: "Refactor Cluster Backlog"
 
 ## 测试集群
 
-### LINE webhook 事件固件
+### LINE webhook 事件夹具
 
 典型示例：
 
@@ -244,7 +244,7 @@ title: "Refactor Cluster Backlog"
 
 - 约 120-180 行代码
 
-### Telegram 原生命令授权矩阵
+### Telegram 原生命令认证矩阵
 
 典型示例：
 
@@ -255,15 +255,15 @@ title: "Refactor Cluster Backlog"
 
 - 论坛上下文构建器
 - 拒绝消息断言辅助函数
-- 表驱动的授权用例
+- 表驱动的认证用例
 
 预期节省：
 
-- 约 80-140 行代码
+- ~80-140 LOC
 
 ### Zalo 生命周期设置
 
-典型示例：
+强示例：
 
 - `extensions/zalo/src/monitor.lifecycle.test.ts`
 
@@ -273,11 +273,11 @@ title: "Refactor Cluster Backlog"
 
 预期节省：
 
-- 约 50-90 行代码
+- ~50-90 LOC
 
-### Brave llm-context 不受支持的选项测试
+### Brave llm-context 不支持的选项测试
 
-典型示例：
+强示例：
 
 - `src/agents/tools/web-tools.enabled-defaults.test.ts`
 
@@ -294,9 +294,9 @@ title: "Refactor Cluster Backlog"
 1. 运行时单例样板代码
 2. 小型精确克隆清理
 3. 配置和安全构建器提取
-4. 测试辅助提取
-5. 入职步骤提取
-6. 监视器生命周期辅助提取
+4. 测试助手提取
+5. 新手引导步骤提取
+6. 监控生命周期助手提取
 
 import zh from '/components/footer/zh.mdx';
 

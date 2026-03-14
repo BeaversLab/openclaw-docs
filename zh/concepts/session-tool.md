@@ -96,24 +96,24 @@ title: "会话工具"
 - 为主运行注入代理到代理的消息上下文。
 - 会话间消息使用 `message.provenance.kind = "inter_session"` 持久化，以便抄本读取器可以区分路由的代理指令与外部用户输入。
 - 主运行完成后，OpenClaw 运行 **回复循环**：
-  - 第2轮及以后在请求方和目标代理之间交替。
-  - 准确回复 `REPLY_SKIP` 以停止乒乓。
+  - 第2轮及以后在请求者和目标代理之间交替进行。
+  - 准确回复 `REPLY_SKIP` 以停止乒乓交互。
   - 最大回合数为 `session.agentToAgent.maxPingPongTurns`（0–5，默认为 5）。
-- 循环结束后，OpenClaw 运行 **代理到代理通知步骤**（仅限目标代理）：
+- 一旦循环结束，OpenClaw 将运行 **代理到代理公告步骤**（仅限目标代理）：
   - 准确回复 `ANNOUNCE_SKIP` 以保持静默。
-  - 任何其他回复都会发送到目标频道。
-  - 公告步骤包括原始请求 + 第1轮回复 + 最新的乒乓回复。
+  - 任何其他回复都会发送到目标渠道。
+  - 通告步骤包括原始请求 + 第1轮回复 + 最近的乒乓回复。
 
-## 频道字段
+## 渠道字段
 
-- 对于群组，`channel` 是会话条目上记录的频道。
-- 对于直接聊天，`channel` 从 `lastChannel` 映射而来。
+- 对于群组，`channel` 是记录在会话条目上的渠道。
+- 对于直接聊天，`channel` 从 `lastChannel` 映射。
 - 对于 cron/hook/node，`channel` 是 `internal`。
-- 如果缺失，`channel` 是 `unknown`。
+- 如果缺失，`channel` 为 `unknown`。
 
 ## 安全性 / 发送策略
 
-基于策略的频道/聊天类型拦截（而非基于会话 ID）。
+基于策略的阻拦，按渠道/聊天类型（而非按会话 ID）。
 
 ```json
 {
@@ -133,64 +133,64 @@ title: "会话工具"
 
 运行时覆盖（每个会话条目）：
 
-- `sendPolicy: "allow" | "deny"` （未设置 = 继承配置）
+- `sendPolicy: "allow" | "deny"`（未设置 = 继承配置）
 - 可通过 `sessions.patch` 或仅限所有者的 `/send on|off|inherit`（独立消息）进行设置。
 
 执行点：
 
-- `chat.send` / `agent` （网关）
-- 自动回复传递逻辑
+- `chat.send` / `agent`（网关）
+- 自动回复发送逻辑
 
 ## sessions_spawn
 
-在隔离的会话中生成子代理运行，并将结果公布回请求者的聊天频道。
+在隔离的会话中生成子代理运行，并将结果通告回请求者聊天渠道。
 
 参数：
 
-- `task` （必填）
-- `label?` （可选；用于日志/UI）
-- `agentId?` （可选；如果允许，则在另一个代理 ID 下生成）
-- `model?` （可选；覆盖子代理模型；无效值将报错）
-- `thinking?` （可选；覆盖子代理运行的思考级别）
-- `runTimeoutSeconds?` （设置时默认为 `agents.defaults.subagents.runTimeoutSeconds`，否则为 `0`；设置时，在 N 秒后中止子代理运行）
-- `thread?` （默认为 false；当频道/插件支持时，请求此生成绑定的线程路由）
-- `mode?` （`run|session`；默认为 `run`，但当 `thread=true` 时默认为 `session`；`mode="session"` 需要 `thread=true`）
+- `task`（必需）
+- `label?`（可选；用于日志/UI）
+- `agentId?`（可选；如果允许，则在另一个代理 ID 下生成）
+- `model?`（可选；覆盖子代理模型；无效值将报错）
+- `thinking?`（可选；覆盖子代理运行的思考级别）
+- `runTimeoutSeconds?`（设置时默认为 `agents.defaults.subagents.runTimeoutSeconds`，否则为 `0`；设置时，会在 N 秒后中止子代理运行）
+- `thread?`（默认为 false；当渠道/插件支持时，为此生成请求线程绑定路由）
+- `mode?`（`run|session`；默认为 `run`，但当 `thread=true` 时默认为 `session`；`mode="session"` 需要 `thread=true`）
 - `cleanup?`（`delete|keep`，默认 `keep`）
-- `sandbox?`（`inherit|require`，默认 `inherit`；如果目标子运行时未在沙箱中运行，`require` 会拒绝生成）
-- `attachments?`（可选的内联文件数组；仅限子代理运行时，ACP 拒绝）。每个条目：`{ name, content, encoding?: "utf8" | "base64", mimeType? }`。文件被具体化到子工作区的 `.openclaw/attachments/<uuid>/`。返回包含每个文件 sha256 的回执。
+- `sandbox?`（`inherit|require`，默认 `inherit`；`require` 拒绝生成，除非目标子运行时是沙箱隔离的）
+- `attachments?`（可选的内联文件数组；仅限子代理运行时，ACP 拒绝）。每个条目：`{ name, content, encoding?: "utf8" | "base64", mimeType? }`。文件被具体化到子工作空间的 `.openclaw/attachments/<uuid>/` 中。返回包含每个文件 sha256 的回执。
 - `attachAs?`（可选；`{ mountPath? }` 提示保留用于未来的挂载实现）
 
 允许列表：
 
-- `agents.list[].subagents.allowAgents`：允许通过 `agentId` 访问的代理 ID 列表（`["*"]` 表示允许任何代理）。默认值：仅请求者代理。
-- 沙箱继承保护：如果请求者会话在沙箱中，`sessions_spawn` 会拒绝将在非沙箱环境中运行的目标。
+- `agents.list[].subagents.allowAgents`：允许通过 `agentId` 的代理 ID 列表（`["*"]` 表示允许任意）。默认：仅请求者代理。
+- 沙箱继承保护：如果请求者会话是沙箱隔离的，`sessions_spawn` 将拒绝将以非沙箱方式运行的目标。
 
-发现：
+设备发现：
 
-- 使用 `agents_list` 来发现哪些代理 ID 被允许用于 `sessions_spawn`。
+- 使用 `agents_list` 来发现允许用于 `sessions_spawn` 的代理 ID。
 
 行为：
 
-- 使用 `deliver: false` 启动一个新的 `agent:<agentId>:subagent:<uuid>` 会话。
-- 子代理默认拥有完整的工具集**减去会话工具**（可通过 `tools.subagents.tools` 配置）。
-- 不允许子代理调用 `sessions_spawn`（禁止子代理 → 子代理生成）。
+- 启动一个新的 `agent:<agentId>:subagent:<uuid>` 会话，具有 `deliver: false`。
+- 子代理默认使用完整的工具集**减去会话工具**（可通过 `tools.subagents.tools` 配置）。
+- 子代理不允许调用 `sessions_spawn`（禁止子代理 → 子代理生成）。
 - 始终非阻塞：立即返回 `{ status: "accepted", runId, childSessionKey }`。
-- 使用 `thread=true`，通道插件可以将交付/路由绑定到线程目标（Discord 支持由 `session.threadBindings.*` 和 `channels.discord.threadBindings.*` 控制）。
-- 完成后，OpenClaw 运行子代理**公告步骤**并将结果发布到请求者聊天通道。
-  - 如果助手最终回复为空，则子代理历史记录中的最新 `toolResult` 将作为 `Result` 包含在内。
-- 在公告步骤期间准确回复 `ANNOUNCE_SKIP` 以保持静默。
+- 使用 `thread=true`，渠道插件可以将交付/路由绑定到线程目标（Discord 支持由 `session.threadBindings.*` 和 `channels.discord.threadBindings.*` 控制）。
+- 完成后，OpenClaw 会运行一个子代理的 **announce step** 并将结果发布到请求者的聊天渠道。
+  - 如果助手的最终回复为空，则子代理历史记录中的最新 `toolResult` 将作为 `Result` 被包含在内。
+- 在 announce step 期间准确回复 `ANNOUNCE_SKIP` 以保持静默。
 - Announce 回复被标准化为 `Status`/`Result`/`Notes`；`Status` 来自运行时结果（而非模型文本）。
-- 子代理会话在 `agents.defaults.subagents.archiveAfterMinutes` 后自动归档（默认值：60）。
-- 公告回复包含统计信息行（运行时间、token、sessionKey/sessionId、转录本路径和可选成本）。
+- 子代理会话在 `agents.defaults.subagents.archiveAfterMinutes` 后自动归档（默认：60）。
+- Announce 回复包括一行统计信息（运行时间、tokens、sessionKey/sessionId、转录路径以及可选的成本）。
 
 ## 沙箱会话可见性
 
-会话工具可以被限定作用域以减少跨会话访问。
+会话工具可以被设定范围以减少跨会话访问。
 
 默认行为：
 
 - `tools.sessions.visibility` 默认为 `tree`（当前会话 + 生成的子代理会话）。
-- 对于沙盒会话，`agents.defaults.sandbox.sessionToolsVisibility` 可以强制限制可见性。
+- 对于沙箱隔离的会话，`agents.defaults.sandbox.sessionToolsVisibility` 可以强制限制可见性。
 
 配置：
 
@@ -214,13 +214,13 @@ title: "会话工具"
 }
 ```
 
-注：
+注意：
 
 - `self`：仅当前会话密钥。
-- `tree`：当前会话 + 当前会话生成的会话。
+- `tree`：当前会话 + 由当前会话生成的会话。
 - `agent`：属于当前代理 ID 的任何会话。
 - `all`：任何会话（跨代理访问仍需 `tools.agentToAgent`）。
-- 当会话处于沙盒状态且 `sessionToolsVisibility="spawned"` 时，OpenClaw 会将可见性限制为 `tree`，即使您设置了 `tools.sessions.visibility="all"`。
+- 当会话处于沙箱隔离状态且 `sessionToolsVisibility="spawned"` 时，OpenClaw 会将可见性强制限制为 `tree`，即使您设置了 `tools.sessions.visibility="all"`。
 
 import zh from '/components/footer/zh.mdx';
 

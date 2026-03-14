@@ -15,13 +15,13 @@ title: "配对"
 1. **私信配对**（谁被允许与机器人对话）
 2. **节点配对**（哪些设备/节点被允许加入网关网络）
 
-安全背景：[安全](/zh/en/gateway/security)
+安全上下文：[安全](/zh/gateway/security)
 
 ## 1) 私信配对（入站聊天访问权限）
 
 当频道配置了 私信 策略 `pairing` 时，未知发送者将获得一个短代码，并且在他们获得批准之前，其消息**不会被处理**。
 
-默认的 私信 策略记录在：[安全](/zh/en/gateway/security)
+默认私信策略记录在：[安全](/zh/gateway/security)
 
 配对代码：
 
@@ -50,31 +50,31 @@ openclaw pairing approve telegram <CODE>
 账户范围行为：
 
 - 非默认账户仅读/写其范围内的允许列表文件。
-- 默认账户使用频道范围的未限定范围允许列表文件。
+- 默认账户使用渠道范围的非范围允许列表文件。
 
-将这些视为敏感信息（因为它们控制着对您助手的访问权限）。
+请将这些视为敏感信息（它们控制着对您助手的访问权限）。
 
-## 2) 节点设备配对（iOS/Android/macOS/headless 节点）
+## 2) 节点设备配对 (iOS/Android/macOS/headless 节点)
 
-节点作为**设备**通过 `role: node` 连接到 Gateway 网关。Gateway 网关
-创建一个必须批准的设备配对请求。
+节点作为 **devices** 使用 `role: node` 连接到 Gateway(网关)。Gateway(网关)
+创建一个设备配对请求，该请求必须被批准。
 
 ### 通过 Telegram 配对（推荐用于 iOS）
 
-如果您使用 `device-pair` 插件，您可以完全通过 Telegram 进行首次设备配对：
+如果您使用 `device-pair` 插件，完全可以从 Telegram 完成首次设备配对：
 
 1. 在 Telegram 中，向您的机器人发送消息：`/pair`
-2. 机器人会回复两条消息：一条说明消息和一条单独的 **setup code** 消息（在 Telegram 中易于复制/粘贴）。
-3. 在您的手机上，打开 OpenClaw iOS 应用 → 设置 → Gateway 网关。
-4. 粘贴 setup code 并连接。
-5. 回到 Telegram 中：`/pair approve`
+2. 机器人会回复两条消息：一条说明消息和一条单独的 **设置代码** 消息（在 Telegram 中易于复制/粘贴）。
+3. 在您的手机上，打开 OpenClaw iOS 应用 → 设置 → Gateway(网关)。
+4. 粘贴设置代码并连接。
+5. 回到 Telegram：`/pair approve`
 
-setup code 是一个包含以下内容的 base64 编码 JSON 载荷：
+设置代码是一个 base64 编码的 JSON 负载，其中包含：
 
-- `url`：Gateway 网关 WebSocket URL（`ws://...` 或 `wss://...`）
-- `bootstrapToken`：用于初始配对握手的短期单设备引导令牌
+- `url`：Gateway(网关) WebSocket URL（`ws://...` 或 `wss://...`）
+- `bootstrapToken`：一个短期的单设备引导令牌，用于初始配对握手
 
-在 setup code 有效期间，请将其视为密码一样妥善保管。
+在设置代码有效期间，请像对待密码一样对待它。
 
 ### 批准节点设备
 
@@ -91,23 +91,23 @@ openclaw devices reject <requestId>
 - `pending.json`（短期；待处理的请求会过期）
 - `paired.json`（已配对的设备 + 令牌）
 
-### 注意事项
+### 备注
 
-- 旧的 `node.pair.*` API（CLI：`openclaw nodes pending/approve`）是一个
-  独立的 Gateway 所有的配对存储。WS 节点仍然需要设备配对。
+- 传统的 `node.pair.*` API（CLI：`openclaw nodes pending/approve`）是一个
+  独立的由网关拥有的配对存储。WS 节点仍需要设备配对。
 
 ## 相关文档
 
-- 安全模型 + 提示词注入：[Security](/zh/en/gateway/security)
-- 安全更新（运行 doctor）：[Updating](/zh/en/install/updating)
+- 安全模型 + 提示注入：[Security](/zh/gateway/security)
+- 安全更新（运行 doctor）：[Updating](/zh/install/updating)
 - 通道配置：
-  - Telegram: [Telegram](/zh/en/channels/telegram)
-  - WhatsApp: [WhatsApp](/zh/en/channels/whatsapp)
-  - Signal: [Signal](/zh/en/channels/signal)
-  - BlueBubbles (iMessage): [BlueBubbles](/zh/en/channels/bluebubbles)
-  - iMessage (legacy): [iMessage](/zh/en/channels/imessage)
-  - Discord: [Discord](/zh/en/channels/discord)
-  - Slack: [Slack](/zh/en/channels/slack)
+  - Telegram: [Telegram](/zh/channels/telegram)
+  - WhatsApp: [WhatsApp](/zh/channels/whatsapp)
+  - Signal: [Signal](/zh/channels/signal)
+  - BlueBubbles (iMessage): [BlueBubbles](/zh/channels/bluebubbles)
+  - iMessage (legacy): [iMessage](/zh/channels/imessage)
+  - Discord: [Discord](/zh/channels/discord)
+  - Slack: [Slack](/zh/channels/slack)
 
 import zh from '/components/footer/zh.mdx';
 

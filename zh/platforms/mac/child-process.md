@@ -14,11 +14,10 @@ macOS 应用程序默认情况下 **通过 launchd 管理 Gateway 网关**，而
 
 ## 默认行为
 
-- 该应用程序安装了一个标记为 `ai.openclaw.gateway` 的每用户 LaunchAgent
-  （或在使用 `--profile`/`OPENCLAW_PROFILE` 时为 `ai.openclaw.<profile>`；支持旧版 `com.openclaw.*`）。
-- 启用本地模式时，应用会确保 LaunchAgent 已加载，
- 并在需要时启动 Gateway 网关。
-- 日志会写入到 launchd gateway 日志路径（可在调试设置中查看）。
+- 该应用程序会安装一个标有 `ai.openclaw.gateway` 的每用户 LaunchAgent
+  （在使用 `--profile`/`OPENCLAW_PROFILE` 时为 `ai.openclaw.<profile>`；支持传统的 `com.openclaw.*`）。
+- 当启用本地模式时，应用程序会确保 LaunchAgent 已加载，并在需要时启动 Gateway(网关)。
+- 日志会写入 launchd 网关日志路径（可在调试设置中查看）。
 
 常用命令：
 
@@ -29,13 +28,13 @@ launchctl bootout gui/$UID/ai.openclaw.gateway
 
 运行命名配置文件时，请将标签替换为 `ai.openclaw.<profile>`。
 
-## 未签名的开发构建
+## 未签名的开发版本
 
 `scripts/restart-mac.sh --no-sign` 用于在没有签名密钥时进行快速本地构建。为了防止 launchd 指向未签名的中继二进制文件，它会：
 
 - 写入 `~/.openclaw/disable-launchagent`。
 
-如果存在标记，`scripts/restart-mac.sh` 的已签名运行会清除此覆盖。要手动重置：
+如果存在标记，`scripts/restart-mac.sh` 的签名运行会清除此覆盖。要手动重置：
 
 ```bash
 rm ~/.openclaw/disable-launchagent
@@ -43,20 +42,24 @@ rm ~/.openclaw/disable-launchagent
 
 ## 仅附加模式
 
-若要强制 macOS 应用程序 **永不安装或管理 launchd**，请使用 `--attach-only`（或 `--no-launchd`）启动它。这将设置 `~/.openclaw/disable-launchagent`，因此应用程序仅附加到已运行的 Gateway 网关。您可以在调试设置中切换相同的行为。
+若要强制 macOS 应用**永不安装或管理 launchd**，请使用
+`--attach-only`（或 `--no-launchd`）启动它。这将设置
+`~/.openclaw/disable-launchagent`，因此该应用仅附加到正在运行的 Gateway。您可以在
+调试设置中切换相同的行为。
 
 ## 远程模式
 
-远程模式从不启动本地 Gateway 网关。应用使用到远程主机的
-SSH 隧道并通过该隧道进行连接。
+Remote mode never starts a local Gateway(网关). The app uses an SSH tunnel to the
+remote host and connects over that tunnel.
 
-## 为什么我们首选 launchd
+## 为什么我们倾向于使用 launchd
 
 - 登录时自动启动。
 - 内置的重启/KeepAlive 语义。
-- 可预测的日志和监管。
+- 可预测的日志和监控。
 
-如果将来再次需要真正的子进程模式，应将其文档化为一个单独的、明确的仅限开发者的模式。"
+如果再次需要真正的子进程模式，应将其记录为一个
+独立的、仅用于开发的显式模式。
 
 import zh from '/components/footer/zh.mdx';
 

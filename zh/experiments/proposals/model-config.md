@@ -10,9 +10,9 @@ title: "模型配置探索"
 本文档记录了未来模型配置的**构想**。这不是
 已发布的规范。有关当前行为，请参阅：
 
-- [模型](/zh/en/concepts/models)
-- [模型故障转移](/zh/en/concepts/模型-failover)
-- [OAuth + 配置文件](/zh/en/concepts/oauth)
+- [模型](/zh/concepts/models)
+- [模型故障转移](/zh/concepts/model-failover)
+- [OAuth + profiles](/zh/concepts/oauth)
 
 ## 动机
 

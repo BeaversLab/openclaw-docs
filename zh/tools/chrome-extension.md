@@ -93,7 +93,7 @@ openclaw browser create-profile \
 
 - 打开您希望 OpenClaw 控制的标签页。
 - 点击扩展图标。
-  - 附加时，徽章显示 `ON`。
+  - 附加时徽标会显示 `ON`。
 - 再次点击以分离。
 
 ## 它控制哪个标签页？
@@ -178,22 +178,22 @@ CLI 故意 **不** 打印 `node_modules` 路径。请始终先运行 `openclaw b
 - 该扩展使用 Chrome 的调试器 API (`chrome.debugger`)。附加后，模型可以：
   - 在该标签页中点击/输入/导航
   - 读取页面内容
-  - 访问该标签页已登录会话可访问的任何内容
-- **这并不像** 专用的 openclaw 管理配置文件那样是**隔离的**。
-  - 如果你连接到你的日常使用配置文件/标签页，你将授予对该账户状态的访问权限。
+  - 访问该标签页的登录会话可以访问的任何内容
+- 这不像专用的 openclaw 管理的配置文件那样是**隔离的**。
+  - 如果您附加到日常使用的配置文件/标签页，即表示您授予了对该帐户状态的访问权限。
 
 建议：
 
-- 最好使用专用的 Chrome 配置文件（与你的个人浏览分开）来进行扩展中继使用。
-- 将 Gateway 网关 和任何节点主机保持在 tailnet 内；依赖 Gateway 网关 身份验证 + 节点配对。
+- 对于扩展中继使用，请使用专用的 Chrome 配置文件（与您的个人浏览分开）。
+- 请将 Gateway(网关) 和所有节点主机限制在 tailnet 内；依靠 Gateway(网关) 认证 + 节点配对。
 - 避免通过 LAN (`0.0.0.0`) 暴露中继端口，并避免使用 Funnel（公开）。
 - 中继会阻止非扩展来源，并要求对 `/cdp` 和 `/extension` 都进行 gateway-token 身份验证。
 
-相关内容：
+相关：
 
-- 浏览器工具概述：[Browser](/zh/tools/browser)
-- 安全审计：[Security](/zh/gateway/security)
-- Tailscale 设置：[Tailscale](/zh/gateway/tailscale)
+- 浏览器工具概述：[Browser](/en/tools/browser)
+- 安全审计：[Security](/en/gateway/security)
+- Tailscale 设置：[Tailscale](/en/gateway/tailscale)
 
 import zh from '/components/footer/zh.mdx';
 

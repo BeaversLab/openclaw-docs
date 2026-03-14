@@ -11,11 +11,11 @@ title: "onboard"
 
 ## 相关指南
 
-- CLI 入门中心：[入门向导 (CLI)](/zh/en/start/向导)
-- 入门概述：[入门概述](/zh/en/start/新手引导-overview)
-- CLI 入门参考：[CLI 入门参考](/zh/en/start/向导-cli-reference)
-- CLI 自动化：[CLI 自动化](/zh/en/start/向导-cli-automation)
-- macOS 入门：[入门 (macOS 应用)](/zh/en/start/新手引导)
+- CLI 新手引导中心：[新手引导向导 (CLI)](/zh/start/wizard)
+- 新手引导概览：[新手引导概览](/zh/start/onboarding-overview)
+- CLI 新手引导参考：[CLI 新手引导参考](/zh/start/wizard-cli-reference)
+- CLI 自动化：[CLI 自动化](/zh/start/wizard-cli-automation)
+- macOS 新手引导：[新手引导 (macOS 应用)](/zh/start/onboarding)
 
 ## 示例
 
@@ -88,13 +88,13 @@ openclaw onboard --non-interactive \
 - 出现提示时，选择 **Use secret reference**（使用密钥引用）。
 - 然后选择以下任一项：
   - 环境变量
-  - 配置的密钥提供程序（`file` 或 `exec`）
-- 入职在保存引用之前会执行快速预检验证。
-  - 如果验证失败，入职会显示错误并允许您重试。
+  - 已配置的机密提供商 (`file` 或 `exec`)
+- 新手引导在保存引用之前会执行快速预检查验证。
+  - 如果验证失败，新手引导会显示错误并允许您重试。
 
 非交互式 Z.AI 端点选择：
 
-注意：`--auth-choice zai-api-key` 现在会为您的密钥自动检测最佳的 Z.AI 端点（首选带有 `zai/glm-5` 的通用 API）。
+注意：`--auth-choice zai-api-key` 现在会自动为您的密钥检测最佳的 Z.AI 端点（优先使用带有 `zai/glm-5` 的通用 API）。
 如果您特别想要 GLM Coding Plan 端点，请选择 `zai-coding-global` 或 `zai-coding-cn`。
 
 ```bash
@@ -119,12 +119,12 @@ openclaw onboard --non-interactive \
 
 流程说明：
 
-- `quickstart`：最少的提示，自动生成网关令牌。
+- `quickstart`：最少提示，自动生成网关令牌。
 - `manual`：针对端口/绑定/身份验证的完整提示（`advanced` 的别名）。
-- 本地入职 私信 范围行为：[CLI 新手引导 Reference](/zh/en/start/向导-cli-reference#outputs-and-internals)。
-- 最快首次聊天：`openclaw dashboard`（控制 UI，无需频道设置）。
-- 自定义提供程序：连接任何兼容 OpenAI 或 Anthropic 的端点，
-  包括未列出的托管提供程序。使用 Unknown 进行自动检测。
+- 本地新手引导私信范围行为：[CLI 新手引导参考](/zh/start/wizard-cli-reference#outputs-and-internals)。
+- 最快的首次聊天：`openclaw dashboard` (Control UI，无需设置渠道)。
+- 自定义提供商：连接任何 OpenAI 或 Anthropic 兼容端点，
+  包括未列出的托管提供商。使用 Unknown 进行自动检测。
 
 ## 常见后续命令
 
@@ -133,9 +133,7 @@ openclaw configure
 openclaw agents add <name>
 ```
 
-<Note>
-`--json` 并不意味着非交互模式。请使用 `--non-interactive` 进行脚本编写。
-</Note>
+<Note>`--json` 并不意味着非交互模式。请使用 `--non-interactive` 进行脚本编写。</Note>
 
 import zh from '/components/footer/zh.mdx';
 

@@ -89,7 +89,7 @@ OpenClaw 还会将上下文标记注入到生成的子进程中：
 }
 ```
 
-有关完整详细信息，请参阅[配置：环境变量替换](/zh/en/gateway/configuration#env-var-substitution-in-config)。
+请参阅 [配置：环境变量替换](/zh/gateway/configuration#env-var-substitution-in-config) 了解详情。
 
 ## Secret 引用与 `${ENV}` 字符串
 
@@ -98,29 +98,29 @@ OpenClaw 支持两种由环境驱动的模式：
 - 配置值中的 `${VAR}` 字符串替换。
 - 用于支持密钥引用的字段的 SecretRef 对象（`{ source: "env", provider: "default", id: "VAR" }`）。
 
-两者均在激活时从进程环境中解析。SecretRef 的详细信息记录在[秘密管理](/zh/en/gateway/secrets)中。
+两者均在激活时从进程环境变量中解析。SecretRef 的详细信息记录在 [密钥管理](/zh/gateway/secrets) 中。
 
 ## 路径相关的环境变量
 
-| 变量               | 用途                                                                                                                                                                          |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_HOME`        | 覆盖用于所有内部路径解析的主目录（`~/.openclaw/`、代理目录、会话、凭证）。当 OpenClaw 作为专用服务用户运行时非常有用。 |
-| `OPENCLAW_STATE_DIR`   | 覆盖状态目录（默认 `~/.openclaw`）。                                                                                                                            |
-| `OPENCLAW_CONFIG_PATH` | 覆盖配置文件路径（默认 `~/.openclaw/openclaw.json`）。                                                                                                             |
+| 变量                   | 用途                                                                                                                       |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_HOME`        | 覆盖用于所有内部路径解析的主目录（`~/.openclaw/`、agent 目录、会话、凭据）。当以专用服务用户身份运行 OpenClaw 时非常有用。 |
+| `OPENCLAW_STATE_DIR`   | 覆盖状态目录（默认 `~/.openclaw`）。                                                                                       |
+| `OPENCLAW_CONFIG_PATH` | 覆盖配置文件路径（默认 `~/.openclaw/openclaw.json`）。                                                                     |
 
 ## 日志记录
 
-| 变量             | 用途                                                                                                                                                                                      |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_LOG_LEVEL` | 覆盖文件和控​​制台的日志级别（例如 `debug`、`trace`）。优先级高于配置中的 `logging.level` 和 `logging.consoleLevel`。无效值将被忽略并发出警告。 |
+| 变量                 | 用途                                                                                                                                          |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_LOG_LEVEL` | 覆盖文件和控制台的日志级别（例如 `debug`、`trace`）。优先级高于配置中的 `logging.level` 和 `logging.consoleLevel`。无效值将被忽略并发出警告。 |
 
 ### `OPENCLAW_HOME`
 
-设置后，`OPENCLAW_HOME` 将替换所有内部路径解析的系统主目录（`$HOME` / `os.homedir()`）。这为无头服务帐户实现了完全的文件系统隔离。
+设置后，`OPENCLAW_HOME` 将替换系统主目录（`$HOME` / `os.homedir()`）用于所有内部路径解析。这为无头服务账户启用了完全的文件系统隔离。
 
 **优先级：** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
 
-**示例** (macOS LaunchDaemon)：
+**示例**（macOS LaunchDaemon）：
 
 ```xml
 <key>EnvironmentVariables</key>
@@ -130,11 +130,11 @@ OpenClaw 支持两种由环境驱动的模式：
 </dict>
 ```
 
-`OPENCLAW_HOME` 也可以设置为波浪号路径（例如 `~/svc`），该路径在使用前会使用 `$HOME` 进行展开。
+`OPENCLAW_HOME` 也可以设置为波浪号路径（例如 `~/svc`），该路径会在使用前使用 `$HOME` 进行扩展。
 
 ## 相关
 
-- [Gateway 网关 配置](/zh/gateway/configuration)
+- [Gateway(网关) 配置](/zh/gateway/configuration)
 - [常见问题：环境变量和 .env 加载](/zh/help/faq#env-vars-and-env-loading)
 - [模型概述](/zh/concepts/models)
 

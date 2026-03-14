@@ -125,8 +125,8 @@ openclaw devices approve <requestId>
 
 相关内容：
 
-- [Dashboard 身份验证故障排除](/zh/en/web/dashboard#if-you-see-unauthorized-1008)
-- [Gateway 网关 故障排除](/zh/en/gateway/故障排除#dashboard-control-ui-connectivity)
+- [Dashboard 认证故障排除](/zh/web/dashboard#if-you-see-unauthorized-1008)
+- [Gateway(网关) 网关故障排除](/zh/gateway/troubleshooting#dashboard-control-ui-connectivity)
 
 import zh from '/components/footer/zh.mdx';
 

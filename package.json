@@ -8,6 +8,7 @@
     "format:check": "prettier --check \"**/*.{md,json,yaml,yml,json5}\"",
     "format:en": "prettier --write \"en/**/*.md\"",
     "format:zh": "prettier --write \"zh/**/*.md\"",
+    "format:components": "prettier --write \"components/**/*.mdx\"",
     "format:staged": "prettier --write",
     "footers": "node scripts/ensure-doc-footers.mjs",
     "footers:check": "node scripts/ensure-doc-footers.mjs --check",

@@ -17,25 +17,25 @@ Linux 伴侣应用，但 Gateway 网关 目前已获得完全支持。
 
 ## 选择您的操作系统
 
-- macOS: [macOS](/zh/en/platforms/macos)
-- iOS: [iOS](/zh/en/platforms/ios)
-- Android: [Android](/zh/en/platforms/android)
-- Windows: [Windows](/zh/en/platforms/windows)
-- Linux: [Linux](/zh/en/platforms/linux)
+- macOS: [macOS](/en/platforms/macos)
+- iOS: [iOS](/en/platforms/ios)
+- Android: [Android](/en/platforms/android)
+- Windows: [Windows](/en/platforms/windows)
+- Linux: [Linux](/en/platforms/linux)
 
 ## VPS 与托管
 
-- VPS 中心: [VPS hosting](/zh/en/vps)
-- Fly.io: [Fly.io](/zh/en/install/fly)
-- Hetzner (Docker): [Hetzner](/zh/en/install/hetzner)
-- GCP (Compute Engine): [GCP](/zh/en/install/gcp)
-- exe.dev (VM + HTTPS 代理): [exe.dev](/zh/en/install/exe-dev)
+- VPS hub: [VPS hosting](/en/vps)
+- Fly.io: [Fly.io](/en/install/fly)
+- Hetzner (Docker): [Hetzner](/en/install/hetzner)
+- GCP (Compute Engine): [GCP](/en/install/gcp)
+- exe.dev (VM + HTTPS proxy): [exe.dev](/en/install/exe-dev)
 
 ## 常用链接
 
-- 安装指南: [入门指南](/zh/en/start/getting-started)
-- Gateway 网关 手册: [Gateway 网关](/zh/en/gateway)
-- Gateway 网关 配置: [Configuration](/zh/en/gateway/configuration)
+- Install guide: [入门指南](/en/start/getting-started)
+- Gateway 网关 runbook: [Gateway 网关](/en/gateway)
+- Gateway 网关 configuration: [Configuration](/en/gateway/configuration)
 - 服务状态： `openclaw gateway status`
 
 ## Gateway 网关 服务安装 (CLI)

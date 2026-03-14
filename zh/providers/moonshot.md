@@ -38,9 +38,9 @@ Kimi Coding：
 openclaw onboard --auth-choice kimi-code-api-key
 ```
 
-注意：Moonshot 和 Kimi Coding 是独立的提供商。密钥不可互换，端点不同，且模型引用也不同（Moonshot 使用 `moonshot/...`，Kimi Coding 使用 `kimi-coding/...`）。
+注意：Moonshot 和 Kimi Coding 是不同的提供商。密钥不可互换，端点不同，且模型引用也不同（Moonshot 使用 `moonshot/...`，Kimi Coding 使用 `kimi-coding/...`）。
 
-## 配置片段 (Moonshot API)
+## 配置片段（Moonshot API）
 
 ```json5
 {
@@ -140,19 +140,18 @@ openclaw onboard --auth-choice kimi-code-api-key
 ## 备注
 
 - Moonshot 模型引用使用 `moonshot/<modelId>`。Kimi Coding 模型引用使用 `kimi-coding/<modelId>`。
-- 如需要，请在 `models.providers` 中覆盖定价和上下文元数据。
-- 如果 Moonshot 为模型发布了不同的上下文限制，请相应调整
-  相应地 `contextWindow`。
-- 对于国际端点使用 `https://api.moonshot.ai/v1`，对于中国端点使用 `https://api.moonshot.cn/v1`。
+- 如有需要，请在 `models.providers` 中覆盖定价和上下文元数据。
+- 如果 Moonshot 发布了针对某个模型的不同上下文限制，请相应调整 `contextWindow`。
+- 国际端点使用 `https://api.moonshot.ai/v1`，中国端点使用 `https://api.moonshot.cn/v1`。
 
-## 原生思考模式 (Moonshot)
+## 原生思考模式（Moonshot）
 
 Moonshot Kimi 支持二进制原生思考：
 
 - `thinking: { type: "enabled" }`
 - `thinking: { type: "disabled" }`
 
-通过 `agents.defaults.models.<provider/model>.params` 为每个模型配置它：
+通过 `agents.defaults.models.<provider/model>.params` 为每个模型进行配置：
 
 ```json5
 {
@@ -170,12 +169,12 @@ Moonshot Kimi 支持二进制原生思考：
 }
 ```
 
-OpenClaw 还映射了 Moonshot 的运行时 `/think` 级别：
+OpenClaw 还为 Moonshot 映射了运行时 `/think` 级别：
 
 - `/think off` -> `thinking.type=disabled`
-- 任何非关闭的思考级别 -> `thinking.type=enabled`
+- 任何非关闭思考级别 -> `thinking.type=enabled`
 
-当启用 Moonshot 思考时，`tool_choice` 必须是 `auto` 或 `none`。OpenClaw 会将不兼容的 `tool_choice` 值标准化为 `auto` 以确保兼容性。
+当启用 Moonshot 思考模式时，`tool_choice` 必须为 `auto` 或 `none`。OpenClaw 会将不兼容的 `tool_choice` 值规范化为 `auto` 以确保兼容性。
 
 import zh from '/components/footer/zh.mdx';
 

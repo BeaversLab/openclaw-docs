@@ -69,34 +69,34 @@ synthetic/hf:MiniMaxAI/MiniMax-M2.5
 
 以下所有模型均使用成本 `0`（输入/输出/缓存）。
 
-| 模型 ID                                               | 上下文窗口 | 最大令牌数 | 推理能力 | 输入类型      |
-| ------------------------------------------------------ | -------------- | ---------- | --------- | ------------ |
-| `hf:MiniMaxAI/MiniMax-M2.5`                            | 192000         | 65536      | false     | 文本         |
-| `hf:moonshotai/Kimi-K2-Thinking`                       | 256000         | 8192       | true      | 文本         |
-| `hf:zai-org/GLM-4.7`                                   | 198000         | 128000     | false     | 文本         |
-| `hf:deepseek-ai/DeepSeek-R1-0528`                      | 128000         | 8192       | false     | 文本         |
-| `hf:deepseek-ai/DeepSeek-V3-0324`                      | 128000         | 8192       | false     | 文本         |
-| `hf:deepseek-ai/DeepSeek-V3.1`                         | 128000         | 8192       | false     | 文本         |
-| `hf:deepseek-ai/DeepSeek-V3.1-Terminus`                | 128000         | 8192       | false     | 文本         |
-| `hf:deepseek-ai/DeepSeek-V3.2`                         | 159000         | 8192       | false     | 文本         |
-| `hf:meta-llama/Llama-3.3-70B-Instruct`                 | 128000         | 8192       | false     | 文本         |
-| `hf:meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | 524000         | 8192       | false     | 文本         |
-| `hf:moonshotai/Kimi-K2-Instruct-0905`                  | 256000         | 8192       | false     | 文本         |
-| `hf:openai/gpt-oss-120b`                               | 128000         | 8192       | false     | 文本         |
-| `hf:Qwen/Qwen3-235B-A22B-Instruct-2507`                | 256000         | 8192       | false     | 文本         |
-| `hf:Qwen/Qwen3-Coder-480B-A35B-Instruct`               | 256000         | 8192       | false     | 文本         |
-| `hf:Qwen/Qwen3-VL-235B-A22B-Instruct`                  | 250000         | 8192       | false     | 文本 + 图像 |
-| `hf:zai-org/GLM-4.5`                                   | 128000         | 128000     | false     | 文本         |
-| `hf:zai-org/GLM-4.6`                                   | 198000         | 128000     | false     | 文本         |
-| `hf:deepseek-ai/DeepSeek-V3`                           | 128000         | 8192       | false     | 文本         |
-| `hf:Qwen/Qwen3-235B-A22B-Thinking-2507`                | 256000         | 8192       | true      | 文本         |
+| 模型 ID                                                | 上下文窗口 | 最大令牌数 | 推理  | 输入        |
+| ------------------------------------------------------ | ---------- | ---------- | ----- | ----------- |
+| `hf:MiniMaxAI/MiniMax-M2.5`                            | 192000     | 65536      | false | text        |
+| `hf:moonshotai/Kimi-K2-Thinking`                       | 256000     | 8192       | true  | text        |
+| `hf:zai-org/GLM-4.7`                                   | 198000     | 128000     | false | text        |
+| `hf:deepseek-ai/DeepSeek-R1-0528`                      | 128000     | 8192       | false | text        |
+| `hf:deepseek-ai/DeepSeek-V3-0324`                      | 128000     | 8192       | false | text        |
+| `hf:deepseek-ai/DeepSeek-V3.1`                         | 128000     | 8192       | false | text        |
+| `hf:deepseek-ai/DeepSeek-V3.1-Terminus`                | 128000     | 8192       | false | text        |
+| `hf:deepseek-ai/DeepSeek-V3.2`                         | 159000     | 8192       | false | text        |
+| `hf:meta-llama/Llama-3.3-70B-Instruct`                 | 128000     | 8192       | false | text        |
+| `hf:meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | 524000     | 8192       | false | text        |
+| `hf:moonshotai/Kimi-K2-Instruct-0905`                  | 256000     | 8192       | false | text        |
+| `hf:openai/gpt-oss-120b`                               | 128000     | 8192       | false | text        |
+| `hf:Qwen/Qwen3-235B-A22B-Instruct-2507`                | 256000     | 8192       | false | text        |
+| `hf:Qwen/Qwen3-Coder-480B-A35B-Instruct`               | 256000     | 8192       | false | text        |
+| `hf:Qwen/Qwen3-VL-235B-A22B-Instruct`                  | 250000     | 8192       | false | 文本 + 图像 |
+| `hf:zai-org/GLM-4.5`                                   | 128000     | 128000     | false | text        |
+| `hf:zai-org/GLM-4.6`                                   | 198000     | 128000     | false | text        |
+| `hf:deepseek-ai/DeepSeek-V3`                           | 128000     | 8192       | false | text        |
+| `hf:Qwen/Qwen3-235B-A22B-Thinking-2507`                | 256000     | 8192       | true  | text        |
 
-## 注意事项
+## 注意
 
 - 模型引用使用 `synthetic/<modelId>`。
-- 如果您启用了模型允许列表 (`agents.defaults.models`)，请添加每一个模型
-  使用的每个模型都
-- 添加进去。有关提供商规则，请参阅 [模型提供商](/zh/en/concepts/模型-providers)。
+- 如果您启用了模型允许列表（`agents.defaults.models`），请添加您计划
+  使用的每个模型。
+- 有关提供商规则，请参阅[模型提供商](/en/concepts/model-providers)。
 
 import zh from '/components/footer/zh.mdx';
 

@@ -12,9 +12,9 @@ title: "技能"
 
 相关：
 
-- 技能系统：[技能](/zh/en/tools/skills)
-- 技能配置：[技能配置](/zh/en/tools/skills-config)
-- ClawHub 安装：[ClawHub](/zh/en/tools/clawhub)
+- Skills 系统：[Skills](/zh/tools/skills)
+- Skills 配置：[Skills 配置](/zh/tools/skills-config)
+- ClawHub 安装：[ClawHub](/zh/tools/clawhub)
 
 ## 命令
 
