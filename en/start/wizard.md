@@ -111,8 +111,10 @@ Notes:
 
 ## Full reference
 
-For detailed step-by-step breakdowns, non-interactive scripting, Signal setup,
-RPC API, and a full list of config fields the wizard writes, see the
+For detailed step-by-step breakdowns and config outputs, see
+[CLI Onboarding Reference](/en/start/wizard-cli-reference).
+For non-interactive examples, see [CLI Automation](/en/start/wizard-cli-automation).
+For the deeper technical reference, including RPC details, see
 [Wizard Reference](/en/reference/wizard).
 
 ## Related docs
