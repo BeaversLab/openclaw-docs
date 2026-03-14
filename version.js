@@ -1,6 +1,6 @@
 (function () {
-  var UPDATED_AT = "2026-03-13";
-  var COMMIT = "ddeb4239443f9a548c7c2ac15cbcaec0d8889336";
+  var UPDATED_AT = "2026-03-14";
+  var COMMIT = "9cfc2d4618765d622833965e1866d71d385897a0";
   var SHORT_COMMIT = COMMIT.slice(0, 7);
   var COMMIT_URL = "https://github.com/openclaw/openclaw/commit/" + COMMIT;
   var META_ID = "openclaw-version-meta";
