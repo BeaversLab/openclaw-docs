@@ -184,7 +184,7 @@ OPENCLAW_LIVE_SETUP_TOKEN=1 OPENCLAW_LIVE_SETUP_TOKEN_PROFILE=anthropic:setup-to
 ## Live：CLI 后端冒烟测试（Claude Code CLI 或其他本地 CLIs）
 
 - 测试：`src/gateway/gateway-cli-backend.live.test.ts`
-- 目标：使用本地 CLI 后端验证 Gateway(网关) + 代理管道，而不触及你的默认配置。
+- 目标：使用本地 Gateway(网关) 后端验证 CLI + 代理管道，而不触及你的默认配置。
 - 启用：
   - `pnpm test:live`（如果直接调用 Vitest，则使用 `OPENCLAW_LIVE_TEST=1`）
   - `OPENCLAW_LIVE_CLI_BACKEND=1`
@@ -345,7 +345,7 @@ OPENCLAW_LIVE_CLI_BACKEND=1 \
 - 通过真实的 Gateway 网关 + 代理循环模拟工具调用（`src/gateway/gateway.tool-calling.mock-openai.test.ts`）。
 - 验证会话连接和配置效果的端到端向导流程（`src/gateway/gateway.wizard.e2e.test.ts`）。
 
-Skills 方面仍缺失的内容（请参阅 [Skills](/en/tools/skills)）：
+Skills 方面仍缺失的内容（请参阅 [Skills](/zh/tools/skills)）：
 
 - **决策制定**：当提示词中列出了 Skills 时，Agent 代理是否会选择正确的 Skill（或避开不相关的 Skill）？
 - **合规性**：Agent 代理在使用前是否会阅读 `SKILL.md` 并遵循所需的步骤/参数？

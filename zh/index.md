@@ -12,24 +12,22 @@ title: "OpenClaw"
   <img src="/assets/openclaw-logo-text.png" alt="OpenClaw" width="500" class="hidden dark:block" />
 </p>
 
-> _"EXFOLIATE! EXFOLIATE!"_ — A space lobster, probably
+> _"去壳! 去壳!"_ — A space lobster, probably
 
 <p align="center">
-  <strong>
-    适用于任何操作系统的 AI 智能体网关，支持 WhatsApp、Telegram、Discord、iMessage 等更多平台。
-  </strong>
+  <strong>适用于任何操作系统的 AI 代理网关，支持 WhatsApp、Telegram、Discord、iMessage 等。</strong>
   <br />
-  发送消息，即刻从您的口袋中获得智能体响应。插件可支持 Mattermost 等更多平台。
+  发送消息，从您的口袋中获取代理响应。插件可添加 Mattermost 等支持。
 </p>
 
 <Columns>
-  <Card title="Get Started" href="/en/start/getting-started" icon="rocket">
+  <Card title="Get Started" href="/zh/start/getting-started" icon="rocket">
     在几分钟内安装 OpenClaw 并启动 Gateway(网关)。
   </Card>
-  <Card title="运行向导" href="/en/start/wizard" icon="sparkles">
+  <Card title="运行向导" href="/zh/start/wizard" icon="sparkles">
     使用 `openclaw onboard` 和配对流程进行引导式设置。
   </Card>
-  <Card title="打开控制界面" href="/en/web/control-ui" icon="layout-dashboard">
+  <Card title="打开控制界面" href="/zh/web/control-ui" icon="layout-dashboard">
     启动浏览器仪表板以进行聊天、配置和会话管理。
   </Card>
 </Columns>

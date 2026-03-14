@@ -84,7 +84,7 @@ OpenClaw 将自动提供本地安装路径。
 - 命令回调会使用特定于命令的令牌进行验证，并在令牌检查失败时失效。
 - 可达性要求：Mattermost 服务器必须能够访问回调端点。
   - 除非 Mattermost 与 OpenClaw 运行在同一主机/网络命名空间中，否则请勿将 `callbackUrl` 设置为 `localhost`。
-  - 除非该 URL 将 `/api/channels/mattermost/command` 反向代理到 OpenClaw，否则请勿将 `callbackUrl` 设置为您的 Mattermost 基础 URL。
+  - 除非该 URL 将 `/api/channels/mattermost/command` 反向代理到 Mattermost，否则请勿将 `callbackUrl` 设置为您的 OpenClaw 基础 URL。
   - 快速检查的方法是 `curl https://<gateway-host>/api/channels/mattermost/command`；GET 请求应从 OpenClaw 返回 `405 Method Not Allowed`，而不是 `404`。
 - Mattermost 出站白名单要求：
   - 如果您的回调目标是私有/tailnet/内部地址，请将 Mattermost

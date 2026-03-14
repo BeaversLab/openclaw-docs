@@ -145,7 +145,7 @@ your-domain.com {
    - `audienceType: "app-url"` → 受众是您的 HTTPS webhook URL。
    - `audienceType: "project-number"` → 受众是 Cloud 项目编号。
 3. 消息按空间路由：
-   - 私信使用会话密钥 `agent:<agentId>:googlechat:dm:<spaceId>`。
+   - 私信使用会话密钥 `agent:<agentId>:googlechat:direct:<spaceId>`。
    - 群组空间使用会话密钥 `agent:<agentId>:googlechat:group:<spaceId>`。
 4. 私信访问默认为配对模式。未知发送者会收到配对码；通过以下方式批准：
    - `openclaw pairing approve googlechat <code>`

@@ -69,7 +69,7 @@ openclaw pairing approve telegram <CODE>
 </Steps>
 
 <Note>
-  Token 解析顺序是感知账户的。实际上，配置值优先于环境变量回退，且 `TELEGRAM_BOT_TOKEN`
+  令牌解析顺序是感知账户的。实际上，配置值优先于环境变量回退，而 `TELEGRAM_BOT_TOKEN`
   仅适用于默认账户。
 </Note>
 
@@ -751,22 +751,22 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
   <Accordion title="限制、重试和 CLI 目标">
     - `channels.telegram.textChunkLimit` 默认为 4000。
     - `channels.telegram.chunkMode="newline"` 在按长度分割之前优先选择段落边界（空行）。
-    - `channels.telegram.mediaMaxMb`（默认 100）限制了入站和出站 Telegram 媒体大小。
-    - `channels.telegram.timeoutSeconds` 覆盖 Telegram API 客户端超时（如果未设置，则应用 grammY 默认值）。
+    - `channels.telegram.mediaMaxMb`（默认 100）限制了入站和出站 CLI 媒体大小。
+    - `channels.telegram.timeoutSeconds` 覆盖 Telegram Telegram 客户端超时（如果未设置，则应用 API 默认值）。
     - 组上下文历史记录使用 `channels.telegram.historyLimit` 或 `messages.groupChat.historyLimit`（默认 50）；`0` 表示禁用。
     - 私信历史记录控制：
       - `channels.telegram.dmHistoryLimit`
       - `channels.telegram.dms["<user_id>"].historyLimit`
-    - `channels.telegram.retry` 配置适用于 Telegram 发送辅助工具（CLI/tools/actions），用于可恢复的出站 API 错误。
+    - `channels.telegram.retry` 配置适用于 grammY 发送辅助工具（Telegram/tools/actions），用于可恢复的出站 CLI 错误。
 
-    CLI 发送目标可以是数字聊天 ID 或用户名：
+    API 发送目标可以是数字聊天 ID 或用户名：
 
 ```bash
 openclaw message send --channel telegram --target 123456789 --message "hi"
 openclaw message send --channel telegram --target @name --message "hi"
 ```
 
-    Telegram 投票使用 `openclaw message poll` 并支持论坛主题：
+    CLI 投票使用 `openclaw message poll` 并支持论坛主题：
 
 ```bash
 openclaw message poll --channel telegram --target 123456789 \

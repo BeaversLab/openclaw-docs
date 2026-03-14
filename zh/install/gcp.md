@@ -1,5 +1,5 @@
 ---
-summary: "在 GCP Compute Engine 虚拟机 (Docker) 上 24/7 运行 OpenClaw Gateway 网关，并保持持久化状态"
+summary: "在 GCP Compute Engine 虚拟机 (Docker) 上全天候运行 OpenClaw Gateway(网关)，并持久化状态"
 read_when:
   - You want OpenClaw running 24/7 on GCP
   - You want a production-grade, always-on Gateway on your own VM
@@ -31,8 +31,8 @@ title: "GCP"
 - 如果您自行管理防火墙和令牌，可直接暴露端口
 
 本指南在 GCP Compute Engine 上使用 Debian。
-Ubuntu 也可以使用；请相应地映射软件包。
-有关通用的 Docker 流程，请参阅 [Docker](/en/install/docker)。
+Ubuntu 也可以用；请相应地映射软件包。
+有关通用 Docker 流程，请参阅 [Docker](/zh/install/docker)。
 
 ---
 
@@ -80,7 +80,7 @@ gcloud auth login
 
 **选项 B：Cloud Console**
 
-所有步骤均可通过 [https://console.cloud.google.com](https://console.cloud.google.com) 的 Web UI 完成
+所有步骤都可以通过 [https://console.cloud.google.com](https://console.cloud.google.com) 的 Web UI 完成
 
 ---
 
@@ -93,7 +93,7 @@ gcloud projects create my-openclaw-project --name="OpenClaw Gateway"
 gcloud config set project my-openclaw-project
 ```
 
-在 [https://console.cloud.google.com/billing](https://console.cloud.google.com/billing) 启用计费（Compute Engine 所需）。
+在 [https://console.cloud.google.com/billing](https://console.cloud.google.com/billing) 启用计费（Compute Engine 必需）。
 
 启用 Compute Engine API：
 
@@ -134,9 +134,9 @@ gcloud compute instances create openclaw-gateway \
 **Console：**
 
 1. 转到 Compute Engine > VM instances > Create instance
-2. 名称： `openclaw-gateway`
-3. 区域： `us-central1`, 可用区： `us-central1-a`
-4. 机器类型： `e2-small`
+2. 名称：`openclaw-gateway`
+3. 区域：`us-central1`，可用区：`us-central1-a`
+4. 机器类型：`e2-small`
 5. 启动盘：Debian 12, 20GB
 6. 创建
 
@@ -281,79 +281,22 @@ services:
 
 ---
 
-## 10) 将所需的二进制文件烘焙到镜像中（关键）
+## 10) 共享 Docker 虚拟机运行时步骤
 
-在正在运行的容器中安装二进制文件是一个陷阱。
-在运行时安装的任何内容都将在重启时丢失。
+使用共享运行时指南了解通用 Docker 主机流程：
 
-技能所需的所有外部二进制文件必须在镜像构建时安装。
-
-下面的示例仅显示三种常见的二进制文件：
-
-- `gog` 用于 Gmail 访问
-- `goplaces` 用于 Google Places
-- `wacli` 用于 WhatsApp
-
-这些只是示例，并非完整列表。
-您可以使用相同的模式安装所需的任意数量的二进制文件。
-
-如果您稍后添加依赖于其他二进制文件的新技能，您必须：
-
-1. 更新 Dockerfile
-2. 重新构建镜像
-3. 重启容器
-
-**示例 Dockerfile**
-
-```dockerfile
-FROM node:24-bookworm
-
-RUN apt-get update && apt-get install -y socat && rm -rf /var/lib/apt/lists/*
-
-# Example binary 1: Gmail CLI
-RUN curl -L https://github.com/steipete/gog/releases/latest/download/gog_Linux_x86_64.tar.gz \
-  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/gog
-
-# Example binary 2: Google Places CLI
-RUN curl -L https://github.com/steipete/goplaces/releases/latest/download/goplaces_Linux_x86_64.tar.gz \
-  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/goplaces
-
-# Example binary 3: WhatsApp CLI
-RUN curl -L https://github.com/steipete/wacli/releases/latest/download/wacli_Linux_x86_64.tar.gz \
-  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/wacli
-
-# Add more binaries below using the same pattern
-
-WORKDIR /app
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
-COPY ui/package.json ./ui/package.json
-COPY scripts ./scripts
-
-RUN corepack enable
-RUN pnpm install --frozen-lockfile
-
-COPY . .
-RUN pnpm build
-RUN pnpm ui:install
-RUN pnpm ui:build
-
-ENV NODE_ENV=production
-
-CMD ["node","dist/index.js"]
-```
+- [将所需的二进制文件烘焙到镜像中](/zh/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+- [构建并启动](/zh/install/docker-vm-runtime#build-and-launch)
+- [什么内容持久化在哪里](/zh/install/docker-vm-runtime#what-persists-where)
+- [更新](/zh/install/docker-vm-runtime#updates)
 
 ---
 
-## 11) 构建并启动
+## 11) GCP 特定启动说明
 
-```bash
-docker compose build
-docker compose up -d openclaw-gateway
-```
+在 GCP 上，如果在 `pnpm install --frozen-lockfile` 期间构建失败并显示 `Killed` 或 `exit code 137`，则虚拟机内存不足。至少使用 `e2-small`，或者使用 `e2-medium` 以进行更可靠的首次构建。
 
-如果在 `pnpm install --frozen-lockfile` 期间构建失败并出现 `Killed` / `exit code 137`，则虚拟机内存不足。至少使用 `e2-small`，或者使用 `e2-medium` 以获得更可靠的首次构建。
-
-绑定到 LAN (`OPENCLAW_GATEWAY_BIND=lan`) 时，请在继续之前配置受信任的浏览器来源：
+绑定到 LAN (`OPENCLAW_GATEWAY_BIND=lan`) 时，请在继续之前配置受信任的浏览器源：
 
 ```bash
 docker compose run --rm openclaw-cli config set gateway.controlUi.allowedOrigins '["http://127.0.0.1:18789"]' --strict-json
@@ -361,39 +304,7 @@ docker compose run --rm openclaw-cli config set gateway.controlUi.allowedOrigins
 
 如果您更改了网关端口，请将 `18789` 替换为您配置的端口。
 
-验证二进制文件：
-
-```bash
-docker compose exec openclaw-gateway which gog
-docker compose exec openclaw-gateway which goplaces
-docker compose exec openclaw-gateway which wacli
-```
-
-预期输出：
-
-```
-/usr/local/bin/gog
-/usr/local/bin/goplaces
-/usr/local/bin/wacli
-```
-
----
-
-## 12) 验证 Gateway 网关
-
-```bash
-docker compose logs -f openclaw-gateway
-```
-
-成功：
-
-```
-[gateway] listening on ws://0.0.0.0:18789
-```
-
----
-
-## 13) 从笔记本电脑访问
+## 12) 从您的笔记本电脑访问
 
 创建 SSH 隧道以转发 Gateway(网关) 端口：
 
@@ -420,38 +331,8 @@ docker compose run --rm openclaw-cli devices list
 docker compose run --rm openclaw-cli devices approve <requestId>
 ```
 
----
-
-## 什么内容在哪里持久化（事实来源）
-
-OpenClaw 在 Docker 中运行，但 Docker 并不是事实来源。
-所有长期存在的状态必须在重启、重新构建和重启后仍然存在。
-
-| 组件                 | 位置                              | 持久化机制    | 备注                        |
-| -------------------- | --------------------------------- | ------------- | --------------------------- |
-| Gateway(网关) 配置   | `/home/node/.openclaw/`           | 主机卷挂载    | 包括 `openclaw.json`、令牌  |
-| 模型身份验证配置文件 | `/home/node/.openclaw/`           | 主机卷挂载    | OAuth 令牌、API 密钥        |
-| 技能配置             | `/home/node/.openclaw/skills/`    | 主机卷挂载    | 技能级状态                  |
-| 代理工作区           | `/home/node/.openclaw/workspace/` | 主机卷挂载    | 代码和代理工件              |
-| WhatsApp 会话        | `/home/node/.openclaw/`           | 主机卷挂载    | 保留 QR 登录                |
-| Gmail 密钥环         | `/home/node/.openclaw/`           | 主机卷 + 密码 | 需要 `GOG_KEYRING_PASSWORD` |
-| 外部二进制文件       | `/usr/local/bin/`                 | Docker 镜像   | 必须在构建时烘焙            |
-| Node 运行时          | 容器文件系统                      | Docker 镜像   | 每次构建镜像时重新构建      |
-| 操作系统包           | 容器文件系统                      | Docker 镜像   | 不要在运行时安装            |
-| Docker 容器          | 临时的                            | 可重启的      | 可安全销毁                  |
-
----
-
-## 更新
-
-要在 VM 上更新 OpenClaw：
-
-```bash
-cd ~/openclaw
-git pull
-docker compose build
-docker compose up -d
-```
+还需要了解共享持久化和更新参考吗？
+请参阅 [Docker VM Runtime](/zh/install/docker-vm-runtime#what-persists-where) 和 [Docker VM Runtime 更新](/zh/install/docker-vm-runtime#updates)。
 
 ---
 
@@ -459,7 +340,7 @@ docker compose up -d
 
 **SSH 连接被拒绝**
 
-在创建 VM 后，SSH 密钥传播可能需要 1-2 分钟。请等待并重试。
+SSH 密钥传播可能需要在 VM 创建后 1-2 分钟。请等待并重试。
 
 **操作系统登录问题**
 
@@ -469,11 +350,11 @@ docker compose up -d
 gcloud compute os-login describe-profile
 ```
 
-确保您的帐户具有所需的 IAM 权限（Compute OS Login 或 Compute OS Admin Login）。
+确保您的帐户拥有所需的 IAM 权限（Compute OS Login 或 Compute OS Admin Login）。
 
 **内存不足 (OOM)**
 
-如果 Docker 构建失败并显示 `Killed` 和 `exit code 137`，则表示虚拟机因内存不足而被终止。请升级到 e2-small（最低）或 e2-medium（推荐用于可靠的本地构建）：
+如果 Docker 构建失败并显示 `Killed` 和 `exit code 137`，则该 VM 已被 OOM 终止。升级到 e2-small（最低）或 e2-medium（建议用于可靠的本地构建）：
 
 ```bash
 # Stop the VM first
@@ -492,7 +373,7 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 ## 服务帐户（安全最佳实践）
 
-对于个人使用，您的默认用户帐户就可以正常工作。
+对于个人使用，您的默认用户帐户即可正常工作。
 
 对于自动化或 CI/CD 流水线，请创建一个具有最小权限的专用服务帐户：
 
@@ -503,7 +384,7 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
      --display-name="OpenClaw Deployment"
    ```
 
-2. 授予 Compute Instance Admin 角色（或更精细的自定义角色）：
+2. 授予 Compute Instance Admin 角色（或更窄的自定义角色）：
 
    ```bash
    gcloud projects add-iam-policy-binding my-openclaw-project \
@@ -511,7 +392,7 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
      --role="roles/compute.instanceAdmin.v1"
    ```
 
-避免在自动化中使用 Owner 角色。请遵循最小权限原则。
+避免使用 Owner 角色进行自动化操作。请遵循最小权限原则。
 
 有关 IAM 角色的详细信息，请参阅 [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.google.com/iam/docs/understanding-roles)。
 
@@ -519,9 +400,9 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 ## 后续步骤
 
-- 设置消息通道：[通道](/en/channels)
-- 将本地设备配对为节点：[节点](/en/nodes)
-- 配置 Gateway(网关)：[Gateway(网关) 配置](/en/gateway/configuration)
+- 设置消息通道：[Channels](/zh/channels)
+- 将本地设备配对为节点：[Nodes](/zh/nodes)
+- 配置 Gateway(网关)：[Gateway(网关) configuration](/zh/gateway/configuration)
 
 import zh from '/components/footer/zh.mdx';
 

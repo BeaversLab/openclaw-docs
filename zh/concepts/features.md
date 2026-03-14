@@ -47,7 +47,7 @@ title: "功能"
 - iOS 节点，具有配对、Canvas、相机、屏幕录制、位置和语音功能
 - 具有配对功能的 Android 节点，Connect 选项卡、聊天会话、语音选项卡、Canvas/相机，以及设备、通知、联系人/日历、动作、照片和 SMS 命令
 
-<Note>旧的 Claude、Codex、Gemini 和 Opencode 路径已被移除。Pi 是唯一的 编码代理路径。</Note>
+<Note>旧版 Claude、Codex、Gemini 和 Opencode 路径已被移除。Pi 是唯一的编码代理 路径。</Note>
 
 import zh from '/components/footer/zh.mdx';
 

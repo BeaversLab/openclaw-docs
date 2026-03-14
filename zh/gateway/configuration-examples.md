@@ -530,8 +530,8 @@ title: "配置示例"
 ### Anthropic setup-token + API 密钥，MiniMax 备用
 
 <Warning>
-  过去，部分用户在 Claude Code 之外使用 Anthropic setup-token
-  受到了限制。请将此视为用户自选风险，并在依赖订阅授权之前确认当前的 Anthropic 条款。
+  过去，部分用户在 Claude Code 之外使用 Anthropic setup-token 受到了限制。
+  请将此视为用户选择的风险，在依赖订阅 身份验证之前，请验证当前的 Anthropic 条款。
 </Warning>
 
 ```json5

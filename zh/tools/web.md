@@ -15,7 +15,7 @@ OpenClaw 附带了两个轻量级的 Web 工具：
 - `web_fetch` — HTTP 获取 + 可读内容提取（HTML → markdown/text）。
 
 这些**不是**浏览器自动化。对于重度依赖 JS 的网站或需要登录的网站，请使用
-[浏览器工具](/en/tools/browser)。
+[浏览器工具](/zh/tools/browser)。
 
 ## 工作原理
 
@@ -25,7 +25,7 @@ OpenClaw 附带了两个轻量级的 Web 工具：
   (HTML → markdown/text)。它**不**执行 JavaScript。
 - `web_fetch` 默认启用（除非明确禁用）。
 
-有关特定提供商的详细信息，请参阅 [Brave 搜索设置](/en/brave-search) 和 [Perplexity 搜索设置](/en/perplexity)。
+有关特定提供商的详细信息，请参阅 [Brave 搜索设置](/zh/brave-search) 和 [Perplexity 搜索设置](/zh/perplexity)。
 
 ## 选择搜索提供商
 
@@ -65,7 +65,7 @@ OpenClaw 附带了两个轻量级的 Web 工具：
 2. 在控制台中，选择 **Search** 计划并生成一个 API 密钥。
 3. 运行 `openclaw configure --section web` 将密钥存储在配置中，或在您的环境中设置 `BRAVE_API_KEY`。
 
-每个 Brave 计划均包含 **每月 5 美元的免费额度**（可续期）。Search 计划每 1,000 次请求收费 5 美元，因此该额度覆盖每月 1,000 次查询。请在 Brave 控制台中设置您的使用限额，以避免意外收费。有关当前计划和定价，请参阅 [Brave API 门户](https://brave.com/search/api/)。
+每个 Brave 计划都包含 **每月 5 美元的免费额度**（可续期）。搜索计划的价格为每 1,000 次请求 5 美元，因此该免费额度每月可覆盖 1,000 次查询。请在 Brave 仪表盘中设置您的使用上限，以免产生意外费用。有关当前计划和定价，请参阅 [Brave API 门户](https://brave.com/search/api/)。
 
 ### Perplexity 搜索
 
@@ -73,7 +73,7 @@ OpenClaw 附带了两个轻量级的 Web 工具：
 2. 在仪表板中生成 API 密钥
 3. 运行 `openclaw configure --section web` 将密钥存储在配置中，或在您的环境中设置 `PERPLEXITY_API_KEY`。
 
-为了与旧版 Sonar/OpenRouter 兼容，请改为设置 `OPENROUTER_API_KEY`，或使用 API 密钥 `sk-or-...` 配置 `tools.web.search.perplexity.apiKey`。设置 `tools.web.search.perplexity.baseUrl` 或 `model` 也会让 Perplexity 回到 chat-completions 兼容路径。
+为了与旧版 Sonar/OpenRouter 兼容，请改为设置 `OPENROUTER_API_KEY`，或使用 Perplexity 密钥 `sk-or-...` 配置 `tools.web.search.perplexity.apiKey`。设置 `tools.web.search.perplexity.baseUrl` 或 `model` 也会让 Perplexity 回到 chat-completions 兼容路径。
 
 有关更多详细信息，请参阅 [Perplexity Search API Docs](https://docs.perplexity.ai/guides/search-quickstart)。
 
@@ -97,7 +97,7 @@ OpenClaw 附带了两个轻量级的 Web 工具：
 - Kimi：`KIMI_API_KEY` 或 `MOONSHOT_API_KEY`
 - Perplexity: `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`
 
-对于网关安装，请将这些放入 `~/.openclaw/.env`（或您的服务环境）中。请参阅 [Env vars](/en/help/faq#how-does-openclaw-load-environment-variables)。
+对于网关安装，请将这些放入 `~/.openclaw/.env`（或您的服务环境）中。请参阅 [Env vars](/zh/help/faq#how-does-openclaw-load-environment-variables)。
 
 ### 配置示例
 

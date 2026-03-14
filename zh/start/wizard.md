@@ -9,7 +9,7 @@ sidebarTitle: "新手引导：CLI"
 
 # 新手引导向导 (CLI)
 
-新手引导向导是在 macOS、Linux 或 Windows（通过 WSL2；强烈推荐）上设置 OpenClaw 的**推荐**方式。
+新手引导向导是在 OpenClaw、macOS 或 Linux（通过 Windows；强烈推荐）上设置 WSL2 的**推荐**方式。
 它在一个引导式流程中配置本地 Gateway(网关) 或远程 Gateway(网关) 连接，以及频道、技能和工作区默认值。
 
 ```bash
@@ -17,8 +17,8 @@ openclaw onboard
 ```
 
 <Info>
-  最快首次聊天：打开控制 UI（无需设置渠道）。运行 `openclaw dashboard`
-  并在浏览器中聊天。文档：[仪表板](/en/web/dashboard)。
+  最快开始聊天：打开控制 UI（无需设置渠道）。运行 `openclaw dashboard` 并
+  在浏览器中聊天。文档：[Dashboard](/zh/web/dashboard)。
 </Info>
 
 稍后重新配置：
@@ -31,9 +31,9 @@ openclaw agents add <name>
 <Note>`--json` 并不意味着非交互模式。对于脚本，请使用 `--non-interactive`。</Note>
 
 <Tip>
-  新手引导向导包含一个网络搜索步骤，您可以在其中选择一个提供商 （Perplexity、Brave、Gemini、Grok 或
-  Kimi）并粘贴您的 API 密钥，以便代理 可以使用 `web_search`。您也可以稍后使用 `openclaw configure
-  --section web` 进行配置。文档：[Web tools](/en/tools/web)。
+  新手引导向导包含网络搜索步骤，您可以在其中选择提供商（Perplexity、Brave、 Gemini、Grok 或
+  Kimi）并粘贴您的 API 密钥，以便代理可以使用 `web_search`。您也可以稍后 使用 `openclaw configure
+  --section web` 进行配置。文档：[Web tools](/zh/tools/web)。
 </Tip>
 
 ## QuickStart 与高级选项
@@ -42,12 +42,12 @@ openclaw agents add <name>
 
 <Tabs>
   <Tab title="QuickStart (defaults)">
-    - 本地网关（loopback） - 工作区默认值（或现有工作区） - Gateway(网关) 端口 **18789** -
-    Gateway(网关) 身份验证 **Token**（自动生成，即使在 loopback 上） -
-    新本地设置的工具策略默认值：`tools.profile: "coding"`（现有的显式配置将被保留） -
-    私信隔离默认值：本地新手引导在未设置时写入 `session.dmScope: "per-channel-peer"`。详情：[CLI
-    新手引导参考](/en/start/wizard-cli-reference#outputs-and-internals) - Tailscale 暴露 **Off** -
-    Telegram + WhatsApp 私信默认为 **allowlist**（系统将提示您输入电话号码）
+    - 本地 Gateway (环回) - 默认工作区（或现有工作区） - Gateway(网关) 端口 **18789** -
+    Gateway(网关) 身份验证 **Token**（自动生成，即使在环回上） - 新本地设置的
+    工具策略默认值：`tools.profile: "coding"`（保留现有的显式配置文件） - 私信隔离
+    默认值：如果未设置，本地新手引导会写入 `session.dmScope: "per-channel-peer"`。详情：[CLI
+    新手引导 Reference](/zh/start/wizard-cli-reference#outputs-and-internals) - Tailscale 暴露
+    **Off** - Telegram + WhatsApp 私信默认为 **allowlist**（将提示您输入手机 号码）
   </Tab>
   <Tab title="Advanced (full control)">
     - 显示每个步骤（模式、工作区、网关、通道、守护进程、技能）。
@@ -77,9 +77,9 @@ openclaw agents add <name>
 7. **Skills** — 安装推荐的 Skills 和可选依赖项。
 
 <Note>
-  重新运行向导**不会**清除任何内容，除非您明确选择**重置**（或传递 `--reset`）。 CLI `--reset`
-  默认包含配置、凭据和会话；使用 `--reset-scope full` 以包含工作区。
-  如果配置无效或包含旧版密钥，向导会要求您先运行 `openclaw doctor`。
+  重新运行向导**不会**清除任何内容，除非您明确选择 **Reset**（或传递 `--reset`）。CLI `--reset`
+  默认为配置、凭据和会话；使用 `--reset-scope full`
+  以包含工作区。如果配置无效或包含旧版密钥，向导会要求您先运行 `openclaw doctor`。
 </Note>
 
 **Remote mode** 仅配置本地客户端以连接到其他位置的 Gateway(网关)。
@@ -104,16 +104,18 @@ openclaw agents add <name>
 
 ## 完整参考
 
-有关详细的逐步分解、非交互式脚本、Signal 设置、
-RPC API 以及向导写入的配置字段的完整列表，请参阅
-[向导参考](/en/reference/wizard)。
+如需详细的逐步细分和配置输出，请参阅
+[CLI 新手引导参考](/zh/start/wizard-cli-reference)。
+有关非交互式示例，请参阅 [CLI 自动化](/zh/start/wizard-cli-automation)。
+有关更深入的技术参考，包括 RPC 详细信息，请参阅
+[向导参考](/zh/reference/wizard)。
 
 ## 相关文档
 
-- CLI 命令参考：[`openclaw onboard`](/en/cli/onboard)
-- 新手引导概述：[新手引导概述](/en/start/onboarding-overview)
-- macOS 应用 macOS：[新手引导](/en/start/onboarding)
-- 代理首次运行仪式：[代理引导](/en/start/bootstrapping)
+- CLI 命令参考：[`openclaw onboard`](/zh/cli/onboard)
+- 新手引导概述：[新手引导概述](/zh/start/onboarding-overview)
+- macOS 应用新手引导：[新手引导](/zh/start/onboarding)
+- Agent 首次运行仪式：[Agent 引导](/zh/start/bootstrapping)
 
 import zh from '/components/footer/zh.mdx';
 

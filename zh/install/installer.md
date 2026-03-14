@@ -13,9 +13,9 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
 
 | 脚本                               | 平台                 | 功能                                                                              |
 | ---------------------------------- | -------------------- | --------------------------------------------------------------------------------- |
-| [`install.sh`](#installsh)         | macOS / Linux / WSL  | 如果需要则安装 Node，通过 npm（默认）或 git 安装 OpenClaw，并且可以运行新手引导。 |
+| [`install.sh`](#installsh)         | macOS / Linux / WSL  | 如果需要则安装 Node，通过 OpenClaw（默认）或 git 安装 npm，并且可以运行新手引导。 |
 | [`install-cli.sh`](#install-clish) | macOS / Linux / WSL  | 将 Node + OpenClaw 安装到本地前缀 (`~/.openclaw`) 中。不需要 root 权限。          |
-| [`install.ps1`](#installps1)       | Windows (PowerShell) | 如果需要则安装 Node，通过 npm（默认）或 git 安装 OpenClaw，并且可以运行新手引导。 |
+| [`install.ps1`](#installps1)       | Windows (PowerShell) | 如果需要则安装 Node，通过 OpenClaw（默认）或 git 安装 npm，并且可以运行新手引导。 |
 
 ## 快速命令
 
@@ -53,15 +53,15 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
 </Tabs>
 
 <Note>
-  如果安装成功但在新终端中未找到 `openclaw`，请参阅 [Node.js
-  故障排除](/en/install/node#troubleshooting)。
+  如果安装成功但在新的终端中未找到 `openclaw`，请参阅 [Node.js
+  故障排除](/zh/install/node#故障排除)。
 </Note>
 
 ---
 
 ## install.sh
 
-<Tip>推荐用于大多数在 macOS/Linux/WSL 上的交互式安装。</Tip>
+<Tip>推荐用于在 macOS/Linux/WSL 上进行的大多数交互式安装。</Tip>
 
 ### 流程 (install.sh)
 
@@ -70,17 +70,17 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
     支持 macOS 和 Linux（包括 WSL）。如果检测到 macOS，如果缺少 Homebrew 则会安装。
   </Step>
   <Step title="默认确保 Node.js 24">
-    检查 Node 版本，并在需要时安装 Node 24（在 macOS 上使用 Homebrew，在 Linux apt/dnf/yum 上使用
-    NodeSource 设置脚本）。OpenClaw 仍支持 Node 22 LTS，目前为 `22.16+`，以确保兼容性。
+    检查 Node 版本并在需要时安装 Node 24（在 macOS 上通过 Homebrew，在 Linux 上通过 NodeSource
+    设置脚本 使用 apt/dnf/yum）。为了兼容性，OpenClaw 仍然支持 Node 22 LTS，目前为 `22.16+`。
   </Step>
-  <Step title="确保 Git">如果缺少 Git 则进行安装。</Step>
+  <Step title="确保 Git">如果缺失则安装 Git。</Step>
   <Step title="安装 OpenClaw">
-    - `npm` 方法（默认）：全局 npm 安装 - `git` 方法：克隆/更新仓库，使用 pnpm
-    安装依赖，构建，然后在 `~/.local/bin/openclaw` 安装包装器
+    - `npm` 方法（默认）：全局 npm 安装 - `git` 方法：克隆/更新仓库，使用 pnpm 安装依赖， 构建并在
+    `~/.local/bin/openclaw` 处安装包装器
   </Step>
   <Step title="安装后任务">
-    - 在升级和 git 安装时运行 `openclaw doctor --non-interactive`（尽力而为） -
-    在适当时尝试进行新手引导（TTY 可用、未禁用新手引导，且 bootstrap/config 检查通过） - 默认为
+    - 在升级和 git 安装时运行 `openclaw doctor --non-interactive`（尽力而为） - 在适当时
+    尝试新手引导（TTY 可用，未禁用 新手引导，且 bootstrap/config 检查 通过） - 默认
     `SHARP_IGNORE_GLOBAL_LIBVIPS=1`
   </Step>
 </Steps>
@@ -161,7 +161,7 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
 ## install-cli.sh
 
 <Info>
-  专为需要将所有内容放在本地前缀（默认为 `~/.openclaw`）下且无系统 Node 依赖的环境而设计。
+  专为需要将所有内容放在本地前缀（默认 `~/.openclaw`）下 且无系统 Node 依赖项的环境而设计。
 </Info>
 
 ### Flow (install-cli.sh)
@@ -238,16 +238,16 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
 <Steps>
   <Step title="确保 PowerShell + Windows 环境">需要 PowerShell 5+。</Step>
   <Step title="默认确保 Node.js 24">
-    如果缺失，尝试通过 winget 安装，然后是 Chocolatey，接着是 Scoop。Node 22 LTS，目前为
-    `22.16+`，为了兼容性仍然受支持。
+    如果缺失，将尝试通过 winget、Chocolatey 然后 Scoop 进行安装。目前，Node 22
+    LTS（`22.16+`）仍出于兼容性考虑而受支持。
   </Step>
   <Step title="安装 OpenClaw">
-    - `npm` 方法（默认）：使用所选的 `-Tag` 进行全局 npm 安装 - `git` 方法：克隆/更新仓库，使用 pnpm
+    - `npm` 方法（默认）：使用所选 `-Tag` 进行全局 npm 安装 - `git` 方法：克隆/更新仓库，使用 pnpm
     安装/构建，并在 `%USERPROFILE%\.local\bin\openclaw.cmd` 安装包装器
   </Step>
   <Step title="安装后任务">
-    在可能的情况下，将所需的 bin 目录添加到用户 PATH 中，然后在升级和 git 安装时运行 `openclaw
-    doctor --non-interactive`（尽力而为）。
+    尽可能将所需的 bin 目录添加到用户 PATH，然后在升级和 git 安装时运行 `openclaw doctor
+    --non-interactive`（尽力而为）。
   </Step>
 </Steps>
 
@@ -278,7 +278,7 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
 
 | 标志                      | 描述                                       |
 | ------------------------- | ------------------------------------------ |
-| `-InstallMethod npm\|git` | 安装方式（默认：`npm`）                    |
+| `-InstallMethod npm\|git` | 安装方法（默认：`npm`）                    |
 | `-Tag <tag>`              | npm dist-tag（默认：`latest`）             |
 | `-GitDir <path>`          | 检出目录（默认：`%USERPROFILE%\openclaw`） |
 | `-NoOnboard`              | 跳过新手引导                               |
@@ -289,9 +289,9 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
 
   <Accordion title="环境变量参考">
 
-| Variable                           | Description   |
+| 变量                               | 描述          |
 | ---------------------------------- | ------------- |
-| `OPENCLAW_INSTALL_METHOD=git\|npm` | 安装方法      |
+| `OPENCLAW_INSTALL_METHOD=git\|npm` | 安装方式      |
 | `OPENCLAW_GIT_DIR=<path>`          | 检出目录      |
 | `OPENCLAW_NO_ONBOARD=1`            | 跳过新手引导  |
 | `OPENCLAW_GIT_UPDATE=0`            | 禁用 git pull |
@@ -300,9 +300,7 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
   </Accordion>
 </AccordionGroup>
 
-<Note>
-  如果使用了 `-InstallMethod git` 但缺少 Git，脚本将退出并打印适用于 Windows 的 Git 链接。
-</Note>
+<Note>如果使用了 `-InstallMethod git` 且缺少 Git，脚本将退出并打印 Git for Windows 的链接。</Note>
 
 ---
 
@@ -335,12 +333,12 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
 
 <AccordionGroup>
   <Accordion title="为什么需要 Git？">
-    `git` 安装方法需要 Git。对于 `npm` 安装，仍然会检查/安装 Git，以避免当依赖项使用 git URL 时发生 `spawn git ENOENT` 失败。
+    `git` 安装方式需要 Git。对于 `npm` 安装，仍然会检查/安装 Git，以避免当依赖项使用 git URL 时发生 `spawn git ENOENT` 失败。
   </Accordion>
 
 <Accordion title="为什么 npm 在 Linux 上会遇到 EACCES？">
-  某些 Linux 设置将 npm 全局前缀指向 root 拥有的路径。`install.sh` 可以将前缀切换到 `~/.npm-global`
-  并将 PATH 导出追加到 shell rc 文件（当这些文件存在时）。
+  某些 Linux 设置将 npm 全局前缀指向 root 拥有的路径。`install.sh` 可以将前缀切换为 `~/.npm-global`
+  并将 PATH 导出内容附加到 shell rc 文件（当这些文件存在时）。
 </Accordion>
 
   <Accordion title="sharp/libvips 问题">
@@ -352,8 +350,8 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
 
   </Accordion>
 
-<Accordion title="Windows：“npm error spawn git / ENOENT”">
-  安装适用于 Windows 的 Git，重新打开 PowerShell，重新运行安装程序。
+<Accordion title='Windows："npm error spawn git / ENOENT"'>
+  安装 Git for Windows，重新打开 PowerShell，重新运行安装程序。
 </Accordion>
 
 <Accordion title='Windows: "openclaw is not recognized"'>
@@ -361,7 +359,7 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
   后缀），然后重新打开 PowerShell。
 </Accordion>
 
-  <Accordion title="Windows: 如何获取详细的安装程序输出">
+  <Accordion title="Windows: how to get verbose installer output">
     `install.ps1` 目前未公开 `-Verbose` 开关。
     使用 PowerShell 跟踪进行脚本级诊断：
 

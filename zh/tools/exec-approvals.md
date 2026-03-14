@@ -37,7 +37,7 @@ Exec approvals 在执行主机上本地执行：
 
 macOS 拆分：
 
-- **node host service** 通过本地 IPC 将 `system.run` 转发给 **macOS 应用**。
+- **node host service** 通过本地 macOS 将 `system.run` 转发给 **IPC 应用**。
 - **macOS 应用** 执行批准 + 在 UI 上下文中执行命令。
 
 ## 设置和存储
@@ -211,7 +211,7 @@ Shell 链接和重定向在允许列表模式下不会自动允许。
 目标选择器选择 **Gateway(网关)**（本地审批）或一个 **Node**。节点必须通告 `system.execApprovals.get/set`（macOS 应用或无头节点主机）。
 如果一个节点尚未通告 exec 审批，请直接编辑其本地 `~/.openclaw/exec-approvals.json`。
 
-CLI：`openclaw approvals` 支持网关或节点编辑（参见 [Approvals CLI](/en/cli/approvals)）。
+CLI: `openclaw approvals` 支持网关或节点编辑（请参阅 [批准 CLI](/zh/cli/approvals)）。
 
 ## 批准流程
 
@@ -225,28 +225,35 @@ CLI：`openclaw approvals` 支持网关或节点编辑（参见 [Approvals CLI](
 
 - 始终绑定确切的 argv/cwd/env 上下文。
 - 直接 Shell 脚本和直接运行时文件形式尽可能绑定到一个具体的本地文件快照。
-- 如果 OpenClaw 无法为解释器/运行时命令准确识别一个具体的本地文件（例如包脚本、eval 形式、特定于运行时的加载链或歧义的多文件形式），则将拒绝基于批准的执行，而不是声称其不具备的语义覆盖。
-- 对于这些工作流，首选沙箱隔离、单独的主机边界或显式的可信允许列表/完整工作流，其中操作员接受更广泛的运行时语义。
+- 仍然解析为一个直接本地文件的常见包管理器包装器形式（例如
+  `pnpm exec`、`pnpm node`、`npm exec`、`npx`）在绑定之前会被解包。
+- 如果 OpenClaw 无法为解释器/运行时命令准确识别一个具体的本地文件
+  （例如包脚本、eval 形式、特定于运行时的加载链或模糊的多文件
+  形式），将拒绝基于批准的执行，而不是声明其不具备的语义覆盖。
+- 对于这些工作流，建议优先使用沙箱隔离、独立的主机边界，或明确的受信
+  允许列表/完整工作流，其中操作员接受更广泛的运行时语义。
 
-当需要批准时，exec 工具会立即返回一个批准 ID。使用该 ID 关联后续的系统事件（`Exec finished` / `Exec denied`）。如果在超时之前没有收到决定，该请求将被视为批准超时，并作为拒绝原因显示出来。
+当需要审批时，exec 工具会立即返回一个审批 ID。使用该 ID 来
+关联后续的系统事件 (`Exec finished` / `Exec denied`)。如果在超时前
+未收到决定，该请求将被视为审批超时，并作为拒绝原因显示。
 
 确认对话框包括：
 
-- command + args
-- cwd
-- agent id
-- resolved executable path
-- host + policy metadata
+- command + args（命令 + 参数）
+- cwd（当前工作目录）
+- agent id（代理 ID）
+- resolved executable path（解析的可执行文件路径）
+- host + policy metadata（主机 + 策略元数据）
 
 操作：
 
-- **Allow once** → 立即运行
-- **Always allow** → 添加到允许列表 + 运行
-- **Deny** → 阻止
+- **允许一次** → 立即运行
+- **始终允许** → 添加到允许列表并运行
+- **拒绝** → 阻止
 
-## 批准转发到聊天渠道
+## 审批转发到聊天频道
 
-您可以将执行批准提示转发到任何聊天渠道（包括插件渠道）并使用 `/approve` 进行批准。这使用正常的出站交付管道。
+您可以将执行审批提示转发到任何聊天渠道（包括插件渠道），并使用 `/approve` 进行审批。这使用常规的出站传递管道。
 
 配置：
 
@@ -275,28 +282,28 @@ CLI：`openclaw approvals` 支持网关或节点编辑（参见 [Approvals CLI](
 /approve <id> deny
 ```
 
-### 内置聊天批准客户端
+### 内置聊天审批客户端
 
-Discord 和 Telegram 也可以作为显式的执行批准客户端，具有特定于渠道的配置。
+Discord 和 Telegram 也可以作为显式的执行审批客户端，并使用特定于渠道的配置。
 
-- Discord：`channels.discord.execApprovals.*`
-- Telegram：`channels.telegram.execApprovals.*`
+- Discord: `channels.discord.execApprovals.*`
+- Telegram: `channels.telegram.execApprovals.*`
 
-这些客户端是可选的。如果某个渠道未启用执行批准，OpenClaw 不会仅仅因为对话发生在该渠道而将其视为批准界面。
+这些客户端是可选的。如果某个渠道未启用执行审批，仅因为对话发生在该渠道，OpenClaw 不会将其视为审批界面。
 
 共享行为：
 
-- 只有配置的批准者才能批准或拒绝
-- 请求者不必是批准者
-- 启用渠道交付时，批准提示包含命令文本
-- 如果没有操作员 UI 或配置的审批客户端可以接受请求，提示将回退到 `askFallback`
+- 只有配置好的审批者才能批准或拒绝
+- 请求者无需是审批者
+- 当启用渠道投递时，批准提示包含命令文本
+- 如果没有操作员 UI 或配置的批准客户端可以接受该请求，提示将回退到 `askFallback`
 
-Telegram 默认为审批者私信 (`target: "dm"`)。当您希望审批提示也出现在发起的 Telegram 聊天/话题中时，您可以切换到 `channel` 或 `both`。对于 Telegram 论坛话题，OpenClaw 会保留审批提示和审批后跟进的话题。
+Telegram 默认为批准人私信（`target: "dm"`）。当您希望批准提示也出现在原始 Telegram 聊天/主题中时，您可以切换到 `channel` 或 `both`。对于 Telegram 论坛主题，OpenClaw 会保留批准提示和批准后后续回复的主题。
 
 参见：
 
-- [Discord](/en/channels/discord#exec-approvals-in-discord)
-- [Telegram](/en/channels/telegram#exec-approvals-in-telegram)
+- [Discord](/zh/channels/discord#exec-approvals-in-discord)
+- [Telegram](/zh/channels/telegram#exec-approvals-in-telegram)
 
 ### macOS IPC 流程
 
@@ -307,38 +314,38 @@ Gateway -> Node Service (WS)
              Mac App (UI + approvals + system.run)
 ```
 
-安全说明：
+安全注意事项：
 
-- Unix socket 模式 `0600`，token 存储在 `exec-approvals.json` 中。
-- 相同 UID 对等检查。
-- 挑战/响应 (nonce + HMAC token + 请求哈希) + 短 TTL。
+- Unix 套接字模式 `0600`，令牌存储在 `exec-approvals.json` 中。
+- Same-UID 对等检查。
+- Challenge/response (nonce + HMAC 令牌 + 请求哈希) + 短 TTL。
 
 ## 系统事件
 
-Exec 生命周期作为系统消息呈现：
+Exec 生命周期以系统消息形式展示：
 
 - `Exec running` (仅当命令超过运行通知阈值时)
 - `Exec finished`
 - `Exec denied`
 
-这些内容在节点报告事件后发布到代理的会话中。
-Gateway(网关) 托管的 exec 审批在命令完成时（以及可选的运行时间超过阈值时）发出相同的生命周期事件。
-需要审批的 exec 会在这些消息中复用审批 ID 作为 `runId`，以便于关联。
+在节点报告事件后，这些消息会被发送到代理的会话。
+Gateway(网关)-host exec 批准在命令完成时（以及可选地当运行时间超过阈值时）发出相同的生命周期事件。
+受批准控制的 exec 会在这些消息中重用批准 id 作为 `runId` 以便于关联。
 
 ## 影响
 
-- **full** 功能强大；请尽可能使用允许列表。
-- **ask** 让你随时了解情况，同时仍允许快速审批。
-- 按代理划分的允许列表可防止一个代理的审批泄露到其他代理。
-- 审批仅适用于来自**授权发送者**的主机 exec 请求。未经授权的发送者无法发出 `/exec`。
-- `/exec security=full` 是授权操作员的会话级便捷功能，设计上会跳过审批。
-  要硬性阻止主机 exec，请将审批安全性设置为 `deny` 或通过工具策略拒绝 `exec` 工具。
+- **full** 模式功能强大；如果可能，优先使用允许列表。
+- **ask** 模式让您保持知情，同时仍允许快速批准。
+- Per-agent allowlists prevent one agent’s approvals from leaking into others.
+- Approvals only apply to host exec requests from **authorized senders**. Unauthorized senders cannot issue `/exec`.
+- `/exec security=full` is a 会话-level convenience for authorized operators and skips approvals by design.
+  To hard-block host exec, set approvals security to `deny` or deny the `exec` 工具 via 工具 policy.
 
-相关：
+Related:
 
-- [Exec 工具](/en/tools/exec)
-- [提升模式](/en/tools/elevated)
-- [Skills](/en/tools/skills)
+- [Exec 工具](/zh/tools/exec)
+- [Elevated mode](/zh/tools/elevated)
+- [Skills](/zh/tools/skills)
 
 import zh from '/components/footer/zh.mdx';
 

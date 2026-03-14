@@ -11,7 +11,7 @@ title: "Gateway 网关 架构"
 
 ## 概述
 
-- 单个长期运行的 **Gateway(网关)** 拥有所有消息传递表面（通过 Baileys 的 WhatsApp，通过 grammY 的 Telegram，Slack，Discord，Signal，iMessage，WebChat）。
+- 单个长期运行的 **Gateway(网关)** 拥有所有消息传递表面（通过 WhatsApp 的 Baileys，通过 Telegram 的 grammY，Slack，Discord，Signal，iMessage，WebChat）。
 - 控制平面客户端（macOS 应用、CLI、Web UI、自动化）通过 **WebSocket** 连接到
   Gateway(网关)，地址为配置的绑定主机（默认
   `127.0.0.1:18789`）。

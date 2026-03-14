@@ -20,12 +20,12 @@ title: "macOS 应用"
 - 公开 macOS 专用工具（Canvas、Camera、Screen Recording、`system.run`）。
 - 在 **remote** 模式（launchd）下启动本地节点主机服务，并在 **local** 模式下停止它。
 - 可选择托管 **PeekabooBridge** 以进行 UI 自动化。
-- 根据请求通过 npm/pnpm 安装全局 CLI (`openclaw`)（不建议将 bun 用于 Gateway(网关) 运行时）。
+- 根据请求通过 npm/pnpm 安装全局 CLI (`openclaw`)（不建议将 bun 用于 npm 运行时）。
 
 ## Local vs remote mode
 
 - **Local** (默认)：如果存在正在运行的本地 Gateway(网关)，应用程序将附加到它；否则，它通过 `openclaw gateway install` 启用 launchd 服务。
-- **Remote（远程模式）**：该应用通过 SSH/Tailscale 连接到 Gateway(网关)，且从不启动
+- **Remote（远程模式）**：该应用通过 SSH/Gateway(网关) 连接到 Tailscale，且从不启动
   本地进程。
   该应用会启动本地 **node host service（节点主机服务）**，以便远程 Gateway(网关) 能够连接到此 Mac。
   该应用不会将 Gateway(网关) 作为子进程生成。
@@ -208,16 +208,16 @@ Node CLI 基于 `dns-sd` 的设备发现不同。
   ExitOnForwardFailure + keepalive 选项。
 - **IP 报告：** SSH 隧道使用环回地址，因此 Gateway 网关看到的节点
   IP 为 `127.0.0.1`。如果您希望显示真实的客户端
-  IP，请使用 **直接** 传输方式（请参阅 [macOS 远程访问](/en/platforms/mac/remote)）。
+  IP，请使用 **直接** 传输方式（请参阅 [macOS 远程访问](/zh/platforms/mac/remote)）。
 
-有关设置步骤，请参阅 [macOS 远程访问](/en/platforms/mac/remote)。有关协议详细信息，请参阅 [Gateway(网关) 协议](/en/gateway/protocol)。
+有关设置步骤，请参阅 [macOS 远程访问](/zh/platforms/mac/remote)。有关协议详细信息，请参阅 [Gateway(网关) 协议](/zh/gateway/protocol)。
 
 ## 相关文档
 
-- [Gateway(网关) 运行手册](/en/gateway)
-- [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
-- [macOS 权限](/en/platforms/mac/permissions)
-- [Canvas](/en/platforms/mac/canvas)
+- [Gateway(网关) 运行手册](/zh/gateway)
+- [Gateway (macOS)](/zh/platforms/mac/bundled-gateway)
+- [macOS 权限](/zh/platforms/mac/permissions)
+- [Canvas](/zh/platforms/mac/canvas)
 
 import zh from '/components/footer/zh.mdx';
 

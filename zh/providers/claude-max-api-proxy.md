@@ -12,8 +12,8 @@ title: "Claude Max API 代理"
 **claude-max-api-proxy** 是一个社区工具，可以将您的 Claude Max/Pro 订阅暴露为 OpenAI 兼容的 API 端点。这允许您在与 OpenAI API 格式兼容的任何工具中使用您的订阅。
 
 <Warning>
-  此路径仅提供技术兼容性。Anthropic 过去曾阻止部分在 Claude Code
-  之外使用订阅的行为。您必须自行决定是否使用它，并在依赖之前核实 Anthropic 的当前条款。
+  此路径仅提供技术兼容性。过去，Anthropic 曾阻止在 Claude Code
+  之外的部分订阅使用。您必须自行决定是否使用它，并在依赖之前验证 Anthropic 当前的条款。
 </Warning>
 
 ## 为什么要使用这个？
@@ -149,8 +149,8 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
 
 ## 另请参阅
 
-- [Anthropic 提供商](/en/providers/anthropic) - 原生 OpenClaw 集成，支持 Claude setup-token 或 API 密钥
-- [OpenAI 提供商](/en/providers/openai) - 适用于 OpenAI/Codex 订阅
+- [Anthropic 提供商](/zh/providers/anthropic) - 原生 OpenClaw 集成，支持 Claude setup-token 或 API 密钥
+- [OpenAI 提供商](/zh/providers/openai) - 适用于 OpenAI/Codex 订阅
 
 import zh from '/components/footer/zh.mdx';
 

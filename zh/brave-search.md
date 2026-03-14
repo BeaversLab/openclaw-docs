@@ -73,7 +73,7 @@ await web_search({
 ## 注意
 
 - OpenClaw 使用 Brave **搜索**计划。如果您有旧版订阅（例如每月 2,000 次查询的原始免费计划），它仍然有效，但不包括 LLM 上下文或更高速率限制等新功能。
-- 每个 Brave 计划都包含 **每月 5 美元的免费额度**（自动续期）。搜索计划每 1,000 次请求收费 5 美元，因此该额度涵盖每月 1,000 次查询。在 Brave 仪表板中设置您的使用限制，以避免意外费用。有关当前计划，请参阅 [Brave API 门户](https://brave.com/search/api/)。
+- 每个 Brave 计划均包含 **每月 5 美元的免费额度**（可续期）。Search 计划每 1,000 次请求收费 5 美元，因此该额度涵盖每月 1,000 次查询。请在 Brave 仪表板中设置您的使用限制，以避免意外费用。有关当前计划，请参阅 [Brave API 门户](https://brave.com/search/api/)。
 - Search 计划包括 LLM Context 端点和 AI 推理权限。存储结果以训练或微调模型需要具有明确存储权限的计划。请参阅 Brave [服务条款](https://api-dashboard.search.brave.com/terms-of-service)。
 - 结果默认缓存 15 分钟（可通过 `cacheTtlMinutes` 配置）。
 

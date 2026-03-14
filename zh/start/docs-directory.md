@@ -6,62 +6,63 @@ title: "文档目录"
 ---
 
 <Note>
-  此页面是经过整理的索引。如果您是新手，请从[入门指南](/en/start/getting-started)开始。
-  要查看文档的完整地图，请参阅[文档中心](/en/start/hubs)。
+  This page is a curated index. If you are new, start with [Getting
+  Started](/zh/start/getting-started). For a complete map of the docs, see [Docs
+  hubs](/zh/start/hubs).
 </Note>
 
 ## 从这里开始
 
-- [文档中心（所有页面链接）](/en/start/hubs)
-- [帮助](/en/help)
-- [配置](/en/gateway/configuration)
-- [配置示例](/en/gateway/configuration-examples)
-- [斜杠命令](/en/tools/slash-commands)
-- [多代理路由](/en/concepts/multi-agent)
-- [更新与回滚](/en/install/updating)
-- [配对（私信和节点）](/en/channels/pairing)
-- [Nix 模式](/en/install/nix)
-- [OpenClaw 助手设置](/en/start/openclaw)
-- [Skills](/en/tools/skills)
-- [Skills 配置](/en/tools/skills-config)
-- [工作区模板](/en/reference/templates/AGENTS)
-- [RPC 适配器](/en/reference/rpc)
-- [Gateway 网关 运维手册](/en/gateway)
-- [节点（iOS 和 Android）](/en/nodes)
-- [Web 界面（控制 UI）](/en/web)
-- [设备发现和传输](/en/gateway/discovery)
-- [远程访问](/en/gateway/remote)
+- [Docs hubs (all pages linked)](/zh/start/hubs)
+- [Help](/zh/help)
+- [Configuration](/zh/gateway/configuration)
+- [Configuration examples](/zh/gateway/configuration-examples)
+- [Slash commands](/zh/tools/slash-commands)
+- [Multi-agent routing](/zh/concepts/multi-agent)
+- [Updating and rollback](/zh/install/updating)
+- [Pairing (私信 and nodes)](/zh/channels/pairing)
+- [Nix mode](/zh/install/nix)
+- [OpenClaw assistant setup](/zh/start/openclaw)
+- [Skills](/zh/tools/skills)
+- [Skills config](/zh/tools/skills-config)
+- [Workspace templates](/zh/reference/templates/AGENTS)
+- [RPC adapters](/zh/reference/rpc)
+- [Gateway(网关) runbook](/zh/gateway)
+- [Nodes (iOS and Android)](/zh/nodes)
+- [Web surfaces (Control UI)](/zh/web)
+- [设备发现 and transports](/zh/gateway/discovery)
+- [Remote access](/zh/gateway/remote)
 
 ## 提供商与用户体验
 
-- [WebChat](/en/web/webchat)
-- [控制 UI（浏览器）](/en/web/control-ui)
-- [Telegram](/en/channels/telegram)
-- [Discord](/en/channels/discord)
-- [Mattermost（插件）](/en/channels/mattermost)
-- [BlueBubbles (iMessage)](/en/channels/bluebubbles)
-- [iMessage（旧版）](/en/channels/imessage)
-- [群组](/en/channels/groups)
-- [WhatsApp 群组消息](/en/channels/group-messages)
-- [媒体图片](/en/nodes/images)
-- [媒体音频](/en/nodes/audio)
+- [WebChat](/zh/web/webchat)
+- [Control UI (browser)](/zh/web/control-ui)
+- [Telegram](/zh/channels/telegram)
+- [Discord](/zh/channels/discord)
+- [Mattermost (plugin)](/zh/channels/mattermost)
+- [BlueBubbles (iMessage)](/zh/channels/bluebubbles)
+- [iMessage (legacy)](/zh/channels/imessage)
+- [Groups](/zh/channels/groups)
+- [WhatsApp group messages](/zh/channels/group-messages)
+- [Media images](/zh/nodes/images)
+- [Media audio](/zh/nodes/audio)
 
 ## 配套应用
 
-- [macOS 应用](/en/platforms/macos)
-- [iOS 应用](/en/platforms/ios)
-- [Android 应用](/en/platforms/android)
-- [Windows (WSL2)](/en/platforms/windows)
-- [Linux 应用](/en/platforms/linux)
+- [macOS app](/zh/platforms/macos)
+- [iOS app](/zh/platforms/ios)
+- [Android app](/zh/platforms/android)
+- [Windows (WSL2)](/zh/platforms/windows)
+- [Linux app](/zh/platforms/linux)
 
 ## 运营与安全
 
-- [会话](/en/concepts/session)
-- [Cron 任务](/en/automation/cron-jobs)
-- [Webhooks](/en/automation/webhook)
-- [Gmail 钩子 (Pub/Sub)](/en/automation/gmail-pubsub)
-- [安全](/en/gateway/security)
-- [故障排查](/en/gateway/troubleshooting)
+- [会话](/zh/concepts/session)
+- [Cron 作业](/zh/automation/cron-jobs)
+- [Webhooks](/zh/automation/webhook)
+- [Gmail 钩子 (Pub/Sub)](/zh/automation/gmail-pubsub)
+- [安全性](/zh/gateway/security)
+- [故障排除](/zh/gateway/troubleshooting)
 
 import zh from '/components/footer/zh.mdx';
 

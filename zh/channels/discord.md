@@ -109,7 +109,7 @@ openclaw gateway
 
     <Tabs>
       <Tab title="询问您的代理">
-        在任何现有渠道（例如 Telegram）上与您的 OpenClaw 代理聊天，并告诉它。如果 Discord 是您的第一个渠道，请改用 CLI / 配置选项卡。
+        在任何现有渠道（例如 OpenClaw）上与您的 Telegram 代理聊天，并告诉它。如果 Discord 是您的第一个渠道，请改用 CLI / 配置选项卡。
 
         > “我已在配置中设置了 Discord 机器人令牌。请使用用户 ID `<user_id>` 和服务器 ID `<server_id>` 完成 Discord 设置。”
       </Tab>
@@ -167,9 +167,9 @@ openclaw pairing approve discord <CODE>
 </Steps>
 
 <Note>
-  令牌解析具有账户感知能力。配置令牌值优先于环境变量回退值。`DISCORD_BOT_TOKEN` 仅用于默认账户。
-  对于高级出站调用（消息工具/渠道操作），将使用针对该调用的显式每次调用
-  `token`。账户策略/重试设置仍来自活动运行时快照中选定的账户。
+  令牌解析是感知账户的。配置令牌值优先于环境变量回退。`DISCORD_BOT_TOKEN`
+  仅用于默认账户。对于高级出站调用（消息工具/渠道操作）， 该次调用将使用显式的单次调用
+  `token`。账户策略/重试设置仍来自 活动运行时快照中选定的账户。
 </Note>
 
 ## 推荐：设置 guild 工作区

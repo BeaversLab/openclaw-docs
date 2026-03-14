@@ -59,7 +59,7 @@ Context** 而不是 **Group Chat Context**。
 - `USER.md`
 - `HEARTBEAT.md`
 - `BOOTSTRAP.md`（仅限于全新的工作区）
-- `MEMORY.md` 和/或 `memory.md`（当存在于工作区中时；可能会注入其中之一或两者）
+- 如果存在 `MEMORY.md`，否则使用 `memory.md` 作为小写后备
 
 所有这些文件都会在每一轮中**被注入到上下文窗口**中，这意味着
 它们会消耗 token。请保持简洁 —— 尤其是 `MEMORY.md`，因为它

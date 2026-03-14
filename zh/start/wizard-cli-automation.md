@@ -9,9 +9,9 @@ sidebarTitle: "CLI 自动化"
 
 # CLI 自动化
 
-使用 `--non-interactive` 来自动化 `openclaw onboard`。
+使用 `--non-interactive` 自动化 `openclaw onboard`。
 
-<Note>`--json` 并不意味着非交互模式。脚本请使用 `--non-interactive`（以及 `--workspace`）。</Note>
+<Note>`--json` 并不意味着非交互模式。在脚本中请使用 `--non-interactive`（和 `--workspace`）。</Note>
 
 ## 基准非交互式示例
 
@@ -30,11 +30,11 @@ openclaw onboard --non-interactive \
 
 添加 `--json` 以获取机器可读的摘要。
 
-使用 `--secret-input-mode ref` 在身份验证配置文件中存储环境变量支持的引用，而不是明文值。
-新手引导向导流程中提供环境变量引用与已配置提供商引用（`file` 或 `exec`）之间的交互式选择。
+使用 `--secret-input-mode ref` 在认证配置文件中存储环境变量引用，而不是明文值。
+在环境变量引用和配置的提供商引用（`file` 或 `exec`）之间进行交互式选择的功能，在新手引导向导流程中可用。
 
-在非交互式 `ref` 模式下，提供商环境变量必须在进程环境中设置。
-现在，如果在没有匹配环境变量的情况下传递内联密钥标志，将会快速失败。
+在非交互式 `ref` 模式下，必须在进程环境中设置提供商环境变量。
+如果没有匹配的环境变量，现在传递内联密钥标志将快速失败。
 
 示例：
 
@@ -121,7 +121,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Open代码示例">
+  <Accordion title="OpenCode 示例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -131,6 +131,17 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
     切换到 `--auth-choice opencode-go --opencode-go-api-key "$OPENCODE_API_KEY"` 以使用 Go 目录。
+  </Accordion>
+  <Accordion title="Ollama 示例">
+    ```bash
+    openclaw onboard --non-interactive \
+      --mode local \
+      --auth-choice ollama \
+      --custom-model-id "qwen3.5:27b" \
+      --accept-risk \
+      --gateway-port 18789 \
+      --gateway-bind loopback
+    ```
   </Accordion>
   <Accordion title="自定义提供商示例">
     ```bash
@@ -171,8 +182,8 @@ openclaw onboard --non-interactive \
 
 ## 添加另一个代理
 
-使用 `openclaw agents add <name>` 创建一个具有自己的工作区、
-会话和身份验证配置文件的独立代理。不带 `--workspace` 运行时会启动向导。
+使用 `openclaw agents add <name>` 创建一个拥有独立工作区、会话和认证配置文件的独立代理。
+如果不带 `--workspace` 运行，将启动向导。
 
 ```bash
 openclaw agents add work \
@@ -192,14 +203,14 @@ openclaw agents add work \
 备注：
 
 - 默认工作区遵循 `~/.openclaw/workspace-<agentId>`。
-- 添加 `bindings` 以路由入站消息（向导可以执行此操作）。
+- 添加 `bindings` 以路由传入消息（向导可以执行此操作）。
 - 非交互式标志：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
 
 ## 相关文档
 
-- 新手引导中心：[新手引导向导 (CLI)](/en/start/wizard)
-- 完整参考：[CLI 新手引导参考](/en/start/wizard-cli-reference)
-- 命令参考：[`openclaw onboard`](/en/cli/onboard)
+- 新手引导中心：[新手引导向导 (CLI)](/zh/start/wizard)
+- 完整参考：[CLI 新手引导参考](/zh/start/wizard-cli-reference)
+- 命令参考：[`openclaw onboard`](/zh/cli/onboard)
 
 import zh from '/components/footer/zh.mdx';
 

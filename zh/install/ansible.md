@@ -50,7 +50,7 @@ Ansible playbook 将安装和配置以下内容：
 5. **OpenClaw**（基于主机，非容器化）
 6. **Systemd 服务**（带安全加固的自动启动）
 
-注意：网关 **直接在主机上运行**（不在 Docker 中），但代理沙箱使用 Docker 进行隔离。详情请参阅 [沙箱隔离](/en/gateway/sandboxing)。
+注意：网关 **直接在主机上运行**（不在 Docker 中），但代理沙箱使用 Docker 进行隔离。详情请参阅 [沙箱隔离](/zh/gateway/sandboxing)。
 
 ## 安装后设置
 
@@ -107,7 +107,7 @@ nmap -p- YOUR_SERVER_IP
 
 安装 Docker 是为了**代理沙箱**（隔离的工具执行），而不是为了运行网关本身。网关仅绑定到 localhost 并通过 Tailscale VPN 访问。
 
-关于沙箱配置，请参阅 [多代理沙箱与工具](/en/tools/multi-agent-sandbox-tools)。
+关于沙箱配置，请参阅 [多代理沙箱与工具](/zh/tools/multi-agent-sandbox-tools)。
 
 ## 手动安装
 
@@ -133,7 +133,7 @@ ansible-galaxy collection install -r requirements.yml
 
 ## 更新 OpenClaw
 
-Ansible 安装程序将 OpenClaw 设置为手动更新。有关标准更新流程，请参阅 [更新](/en/install/updating)。
+Ansible 安装程序将 OpenClaw 设置为手动更新。有关标准更新流程，请参阅 [更新](/zh/install/updating)。
 
 要重新运行 Ansible playbook（例如，用于配置更改）：
 
@@ -203,9 +203,9 @@ openclaw channels login
 ## 相关
 
 - [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) — 完整部署指南
-- [Docker](/en/install/docker) — 容器化网关设置
-- [沙箱隔离](/en/gateway/sandboxing) — 代理沙箱配置
-- [多代理沙箱与工具](/en/tools/multi-agent-sandbox-tools) — 每个代理的隔离
+- [Docker](/zh/install/docker) — 容器化网关设置
+- [沙箱隔离](/zh/gateway/sandboxing) — 代理沙箱配置
+- [多代理沙箱与工具](/zh/tools/multi-agent-sandbox-tools) — 每个代理的隔离
 
 import zh from '/components/footer/zh.mdx';
 

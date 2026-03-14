@@ -99,7 +99,7 @@ title: "Signal"
 }
 ```
 
-多账户支持：使用 `channels.signal.accounts` 配合针对每个账户的配置和可选的 `name`。有关共享模式，请参见 [`gateway/configuration`](/zh/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts)。
+多账号支持：结合每个账号的配置及可选的 `name` 使用 `channels.signal.accounts`。有关共享模式，请参阅 [`gateway/configuration`](/zh/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts)。
 
 ## 设置路径 B：注册专用机器人号码（短信，Linux）
 
@@ -195,34 +195,36 @@ openclaw channels status --probe
 
 - `channels.signal.groupPolicy = open | allowlist | disabled`。
 - 当设置了 `allowlist` 时，`channels.signal.groupAllowFrom` 控制群组中谁可以触发。
+- `channels.signal.groups["<group-id>" | "*"]` 可以使用 `requireMention`、`tools` 和 `toolsBySender` 覆盖群组行为。
+- 在多账号设置中，使用 `channels.signal.accounts.<id>.groups` 进行针对每个账号的覆盖。
 - 运行时说明：如果完全缺少 `channels.signal`，运行时将回退到 `groupPolicy="allowlist"` 进行群组检查（即使设置了 `channels.defaults.groupPolicy`）。
 
 ## 工作原理（行为）
 
 - `signal-cli` 作为守护进程运行；网关通过 SSE 读取事件。
-- 入站消息被规范化为共享的渠道信封。
-- 回复始终路由回相同的号码或群组。
+- 传入的消息被标准化为共享渠道信封。
+- 回复总是路由回相同的号码或群组。
 
 ## 媒体 + 限制
 
 - 出站文本被分块为 `channels.signal.textChunkLimit`（默认为 4000）。
-- 可选的换行分块：设置 `channels.signal.chunkMode="newline"` 以在长度分块之前按空行（段落边界）拆分。
+- 可选的换行符分块：设置 `channels.signal.chunkMode="newline"` 以在长度分块之前按空行（段落边界）分割。
 - 支持附件（从 `signal-cli` 获取 base64）。
 - 默认媒体上限：`channels.signal.mediaMaxMb`（默认为 8）。
 - 使用 `channels.signal.ignoreAttachments` 跳过下载媒体。
-- 群组历史上下文使用 `channels.signal.historyLimit`（或 `channels.signal.accounts.*.historyLimit`），回退到 `messages.groupChat.historyLimit`。设置 `0` 以禁用（默认为 50）。
+- 群组历史上下文使用 `channels.signal.historyLimit`（或 `channels.signal.accounts.*.historyLimit`），并回退到 `messages.groupChat.historyLimit`。设置 `0` 以禁用（默认 50）。
 
 ## 正在输入 + 已读回执
 
-- **正在输入指示器**：OpenClaw 通过 `signal-cli sendTyping` 发送正在输入的信号，并在运行回复时刷新它们。
-- **已读回执**：当 `channels.signal.sendReadReceipts` 为 true 时，OpenClaw 会转发允许的私信的已读回执。
-- Signal-cli 不会公开群组的已读回执。
+- **正在输入指示器**：OpenClaw 通过 `signal-cli sendTyping` 发送正在输入信号，并在回复运行时刷新它们。
+- **已读回执**：当 `channels.signal.sendReadReceipts` 为 true 时，OpenClaw 转发允许的私信的已读回执。
+- Signal-cli 不暴露群组的已读回执。
 
-## 表情反应（消息工具）
+## 反应（消息工具）
 
 - 将 `message action=react` 与 `channel=signal` 一起使用。
-- 目标：发送者的 E.164 或 UUID（使用配对输出中的 `uuid:<id>`；单独的 UUID 也可以）。
-- `messageId` 是您要回复的消息的 Signal 时间戳。
+- 目标：发送者 E.164 或 UUID（使用配对输出中的 `uuid:<id>`；仅 UUID 也可以）。
+- `messageId` 是您要做出反应的消息的 Signal 时间戳。
 - 群组反应需要 `targetAuthor` 或 `targetAuthorUuid`。
 
 示例：
@@ -237,20 +239,20 @@ message action=react channel=signal target=signal:group:<groupId> targetAuthor=u
 
 - `channels.signal.actions.reactions`：启用/禁用反应操作（默认为 true）。
 - `channels.signal.reactionLevel`：`off | ack | minimal | extensive`。
-  - `off`/`ack` 禁用代理反应（消息 `react` 将报错）。
+  - `off`/`ack` 禁用代理反应（消息 `react` 将出错）。
   - `minimal`/`extensive` 启用代理反应并设置指导级别。
-- 按帐户覆盖：`channels.signal.accounts.<id>.actions.reactions`，`channels.signal.accounts.<id>.reactionLevel`。
+- 每个帐户的覆盖：`channels.signal.accounts.<id>.actions.reactions`、`channels.signal.accounts.<id>.reactionLevel`。
 
-## Delivery targets (CLI/cron)
+## 传递目标（CLI/cron）
 
-- 私信：`signal:+15551234567`（或纯 E.164）。
-- UUID 私信：`uuid:<id>`（或单独的 UUID）。
+- 私信：`signal:+15551234567`（或纯 E.164 格式号码）。
+- UUID 私信：`uuid:<id>`（或裸 UUID）。
 - 群组：`signal:group:<groupId>`。
-- Usernames: `username:<name>` (if supported by your Signal account).
+- 用户名：`username:<name>`（如果您的 Signal 账户支持）。
 
 ## 故障排除
 
-首先运行此梯子：
+首先运行此阶梯流程：
 
 ```bash
 openclaw status
@@ -260,7 +262,7 @@ openclaw doctor
 openclaw channels status --probe
 ```
 
-然后根据需要确认私信配对状态：
+然后，如需要，确认私信配对状态：
 
 ```bash
 openclaw pairing list signal
@@ -268,11 +270,11 @@ openclaw pairing list signal
 
 常见故障：
 
-- 守护进程可达但无回复：验证帐户/守护进程设置（`httpUrl`，`account`）和接收模式。
-- 私信被忽略：发送者正等待配对批准。
-- 群组消息被忽略：群组发送者/提及阻止了交付。
-- 编辑后出现配置验证错误：运行 `openclaw doctor --fix`。
-- Signal missing from diagnostics: confirm `channels.signal.enabled: true`.
+- 守护进程可达但无回复：验证账户/守护进程设置（`httpUrl`，`account`）和接收模式。
+- 私信被忽略：发送人等待配对批准。
+- 群组消息被忽略：群组发送者/提及权限阻止了投递。
+- 编辑后配置验证错误：运行 `openclaw doctor --fix`。
+- 诊断中缺少 Signal：确认 `channels.signal.enabled: true`。
 
 额外检查：
 
@@ -282,16 +284,16 @@ pgrep -af signal-cli
 grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 ```
 
-用于分类流程：[/channels/故障排除](/zh/channels/troubleshooting)。
+用于分流流程：[/channels/故障排除](/zh/channels/troubleshooting)。
 
 ## 安全说明
 
-- `signal-cli` 将帐户密钥存储在本地（通常是 `~/.local/share/signal-cli/data/`）。
-- Back up Signal account state before server migration or rebuild.
-- 保留 `channels.signal.dmPolicy: "pairing"`，除非您明确希望拥有更广泛的私信访问权限。
+- `signal-cli` 在本地存储账户密钥（通常是 `~/.local/share/signal-cli/data/`）。
+- 在服务器迁移或重建之前，请备份 Signal 账户状态。
+- 保持 `channels.signal.dmPolicy: "pairing"` 不变，除非您明确想要更广泛的私信访问权限。
 - SMS 验证仅在注册或恢复流程时需要，但失去对号码/账户的控制可能会使重新注册变得复杂。
 
-## Configuration reference (Signal)
+## 配置参考 (Signal)
 
 完整配置：[Configuration](/zh/gateway/configuration)
 
@@ -300,27 +302,29 @@ grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 - `channels.signal.enabled`：启用/禁用渠道启动。
 - `channels.signal.account`：机器人账户的 E.164 号码。
 - `channels.signal.cliPath`：`signal-cli` 的路径。
-- `channels.signal.httpUrl`：完整的守护进程 URL（覆盖 host/port）。
-- `channels.signal.httpHost`，`channels.signal.httpPort`：守护进程绑定地址（默认 127.0.0.1:8080）。
-- `channels.signal.autoStart`：自动生成守护进程（如果未设置 `httpUrl`，则默认为 true）。
-- `channels.signal.startupTimeoutMs`：启动等待超时时间（毫秒，上限 120000）。
-- `channels.signal.receiveMode`：`on-start | manual`。
-- `channels.signal.ignoreAttachments`：跳过附件下载。
-- `channels.signal.ignoreStories`：忽略来自守护进程的动态。
-- `channels.signal.sendReadReceipts`：转发已读回执。
-- `channels.signal.dmPolicy`：`pairing | allowlist | open | disabled`（默认：pairing）。
-- `channels.signal.allowFrom`: 私信 allowlist (E.164 or `uuid:<id>`). `open` requires `"*"`. Signal has no usernames; use phone/UUID ids.
-- `channels.signal.groupPolicy`：`open | allowlist | disabled`（默认：allowlist）。
+- `channels.signal.httpUrl`：完整的守护进程 URL（覆盖主机/端口）。
+- `channels.signal.httpHost`, `channels.signal.httpPort`: 守护进程绑定地址（默认 127.0.0.1:8080）。
+- `channels.signal.autoStart`: 自动生成守护进程（如果未设置 `httpUrl`，则默认为 true）。
+- `channels.signal.startupTimeoutMs`: 启动等待超时（毫秒，上限 120000）。
+- `channels.signal.receiveMode`: `on-start | manual`。
+- `channels.signal.ignoreAttachments`: 跳过附件下载。
+- `channels.signal.ignoreStories`: 忽略来自守护进程的“快拍”（Stories）。
+- `channels.signal.sendReadReceipts`: 转发已读回执。
+- `channels.signal.dmPolicy`: `pairing | allowlist | open | disabled`（默认：pairing）。
+- `channels.signal.allowFrom`：私信允许列表（E.164 或 `uuid:<id>`）。`open` 需要 `"*"`。Signal 没有用户名；使用电话号码/UUID ID。
+- `channels.signal.groupPolicy`：`open | allowlist | disabled`（默认：允许列表）。
 - `channels.signal.groupAllowFrom`：群组发送者允许列表。
-- `channels.signal.historyLimit`：包含在上下文中的最大群组消息数（0 表示禁用）。
-- `channels.signal.dmHistoryLimit`：私信历史记录限制（以用户轮次为单位）。每个用户的覆盖设置：`channels.signal.dms["<phone_or_uuid>"].historyLimit`。
-- `channels.signal.textChunkLimit`：出站分块大小（字符数）。
-- `channels.signal.chunkMode`：`length`（默认）或 `newline` 以在长度分块前按空行（段落边界）分割。
-- `channels.signal.mediaMaxMb`：入站/出站媒体上限（MB）。
+- `channels.signal.groups`：按 Signal 群组 ID（或 `"*"`）键入的每组覆盖设置。支持的字段：`requireMention`、`tools`、`toolsBySender`。
+- `channels.signal.accounts.<id>.groups`：用于多账户设置的 `channels.signal.groups` 的每账户版本。
+- `channels.signal.historyLimit`：作为上下文包含的最大群组消息数（0 表示禁用）。
+- `channels.signal.dmHistoryLimit`：用户轮次中的私信历史记录限制。按用户覆盖：`channels.signal.dms["<phone_or_uuid>"].historyLimit`。
+- `channels.signal.textChunkLimit`：出站块大小（字符）。
+- `channels.signal.chunkMode`：`length`（默认）或 `newline` 以在长度分块之前按空行（段落边界）分割。
+- `channels.signal.mediaMaxMb`：入站/出站媒体上限 (MB)。
 
 相关的全局选项：
 
-- `agents.list[].groupChat.mentionPatterns` (Signal does not support native mentions).
+- `agents.list[].groupChat.mentionPatterns`（Signal 不支持原生提及）。
 - `messages.groupChat.mentionPatterns`（全局回退）。
 - `messages.responsePrefix`。
 

@@ -9,9 +9,9 @@ title: "节点"
 
 # 节点
 
-**节点** 是一种配套设备（macOS/iOS/Android/headless），使用 `role: "node"` 连接到 Gateway 网关 **WebSocket**（与操作员端口相同），并通过 `node.invoke` 暴露命令界面（例如 `canvas.*`、`camera.*`、`device.*`、`notifications.*`、`system.*`）。协议详情：[Gateway 网关 协议](/en/gateway/protocol)。
+**节点** 是一种配套设备（macOS/iOS/Android/headless），使用 `role: "node"` 连接到 Gateway 网关 **WebSocket**（与操作员端口相同），并通过 `node.invoke` 暴露命令界面（例如 `canvas.*`、`camera.*`、`device.*`、`notifications.*`、`system.*`）。协议详情：[Gateway 网关 协议](/zh/gateway/protocol)。
 
-传统传输方式：[Bridge 协议](/en/gateway/bridge-protocol)（TCP JSONL；对于当前节点已弃用/移除）。
+传统传输方式：[Bridge 协议](/zh/gateway/bridge-protocol)（TCP JSONL；对于当前节点已弃用/移除）。
 
 macOS 也可以运行在 **节点模式** 下：菜单栏应用连接到 Gateway 网关 的 WS 服务器，并将其本地画布/相机命令作为节点暴露（因此 `openclaw nodes …` 可针对此 Mac 运行）。
 
@@ -19,7 +19,7 @@ macOS 也可以运行在 **节点模式** 下：菜单栏应用连接到 Gateway
 
 - 节点是 **外设**，不是网关。它们不运行网关服务。
 - Telegram/WhatsApp/等消息落在 **网关** 上，而不是节点上。
-- 故障排除运行手册：[/nodes/故障排除](/en/nodes/troubleshooting)
+- 故障排除运行手册：[/nodes/故障排除](/zh/nodes/troubleshooting)
 
 ## 配对 + 状态
 
@@ -151,9 +151,9 @@ openclaw config set tools.exec.node "<id-or-name>"
 
 相关内容：
 
-- [节点主机 CLI](/en/cli/node)
-- [执行工具](/en/tools/exec)
-- [执行批准](/en/tools/exec-approvals)
+- [节点主机 CLI](/zh/cli/node)
+- [执行工具](/zh/tools/exec)
+- [执行批准](/zh/tools/exec-approvals)
 
 ## 调用命令
 
@@ -371,7 +371,7 @@ openclaw node run --host <gateway-host> --port 18789
 - 仍需要进行配对（Gateway(网关)将显示设备配对提示）。
 - 节点主机将其节点 ID、令牌、显示名称和网关连接信息存储在 `~/.openclaw/node.json` 中。
 - 执行审批通过 `~/.openclaw/exec-approvals.json` 在本地强制执行
-  （请参阅 [执行审批](/en/tools/exec-approvals)）。
+  （请参阅 [执行审批](/zh/tools/exec-approvals)）。
 - 在 macOS 上，无头节点主机默认在本地执行 `system.run`。设置
   `OPENCLAW_NODE_EXEC_HOST=app` 以通过配套应用执行主机路由 `system.run`；添加
   `OPENCLAW_NODE_EXEC_FALLBACK=0` 以要求应用主机，并在其不可用时以失败关闭方式处理。

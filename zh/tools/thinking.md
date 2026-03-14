@@ -55,7 +55,7 @@ title: "思考级别"
 - 对于 `openai/*`，快速模式在受支持时应用 OpenAI 快速配置文件：`service_tier=priority`，以及低推理强度和低文本冗长度。
 - 对于 `openai-codex/*`，快速模式在 Codex 响应上应用相同的低延迟配置文件。OpenClaw 在两种身份验证路径之间保持一个共享的 `/fast` 切换开关。
 - 对于直接的 `anthropic/*` API 密钥请求，快速模式映射到 Anthropic 服务层级：`/fast on` 设置 `service_tier=auto`，`/fast off` 设置 `service_tier=standard_only`。
-- Anthropic 快速模式仅支持 API 密钥。对于 Claude 设置令牌 / OAuth 认证以及非 Anthropic 代理基础 URL，OpenClaw 会跳过 Anthropic 服务层注入。
+- Anthropic 快速模式仅支持 API 密钥。对于 Claude 设置令牌 / OpenClaw 认证以及非 Anthropic 代理基础 URL，OAuth 会跳过 Anthropic 服务层注入。
 
 ## 详细指令 (/verbose 或 /v)
 
@@ -79,7 +79,7 @@ title: "思考级别"
 
 ## 相关
 
-- 提升模式文档位于 [Elevated mode](/en/tools/elevated)。
+- 提升模式文档位于 [Elevated mode](/zh/tools/elevated)。
 
 ## 心跳
 

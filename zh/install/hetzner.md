@@ -1,5 +1,5 @@
 ---
-summary: "在便宜的 Hetzner VPS (Docker) 上 24/7 运行 OpenClaw Gateway 网关，具有持久状态和内置二进制文件"
+summary: "在便宜的 OpenClaw VPS (Gateway(网关)) 上全天候运行 Hetzner Docker，并具有持久状态和内置二进制文件"
 read_when:
   - You want OpenClaw running 24/7 on a cloud VPS (not your laptop)
   - You want a production-grade, always-on Gateway on your own VPS
@@ -23,14 +23,14 @@ Hetzner 定价可能会有所变化；选择最小的 Debian/Ubuntu VPS，如果
 - 保持严格的分离：专用的 VPS/运行时 + 专用账户；该主机上不得有个人 Apple/Google/浏览器/密码管理器配置文件。
 - 如果用户之间存在敌对关系，请按 Gateway/主机/操作系统用户进行拆分。
 
-参见 [安全](/en/gateway/security) 和 [VPS 托管](/en/vps)。
+请参阅 [安全性](/zh/gateway/security) 和 [VPS 托管](/zh/vps)。
 
 ## 我们要做什么（简单来说）？
 
 - 租一台小型 Linux 服务器 (Hetzner VPS)
 - 安装 Docker (隔离的应用运行时)
 - 在 Docker 中启动 OpenClaw Gateway 网关
-- 在主机上持久化 `~/.openclaw` + `~/.openclaw/workspace`（在重启/重建后存活）
+- 在主机上持久化 `~/.openclaw` + `~/.openclaw/workspace`（在重启/重建后仍然有效）
 - 通过 SSH 隧道从您的笔记本电脑访问控制 UI
 
 可以通过以下方式访问 Gateway 网关：
@@ -38,9 +38,9 @@ Hetzner 定价可能会有所变化；选择最小的 Debian/Ubuntu VPS，如果
 - 从您的笔记本电脑进行 SSH 端口转发
 - 如果您自己管理防火墙和令牌，则可以直接暴露端口
 
-本指南假定 Hetzner 上的 Ubuntu 或 Debian 系统。  
-如果您使用其他 Linux VPS，请相应地映射软件包。
-关于通用的 Docker 流程，请参阅 [Docker](/en/install/docker)。
+本指南假设在 Hetzner 上使用 Ubuntu 或 Debian。  
+如果您使用的是其他 Linux VPS，请相应地映射软件包。
+有关通用的 Docker 流程，请参阅 [Docker](/zh/install/docker)。
 
 ---
 
@@ -131,7 +131,7 @@ chown -R 1000:1000 /root/.openclaw
 
 ## 5) 配置环境变量
 
-在仓库根目录中创建 `.env`。
+在存储库根目录中创建 `.env`。
 
 ```bash
 OPENCLAW_IMAGE=openclaw:latest
@@ -198,111 +198,24 @@ services:
       ]
 ```
 
-`--allow-unconfigured` 仅用于引导便利，它不能替代适当的网关配置。仍需设置身份验证（`gateway.auth.token` 或密码）并为您的部署使用安全的绑定设置。
+`--allow-unconfigured` 仅为了引导便利，它不是正确网关配置的替代品。仍然要设置身份验证（`gateway.auth.token` 或密码）并为您的部署使用安全的绑定设置。
 
 ---
 
-## 7) 将所需的二进制文件嵌入到镜像中（关键）
+## 7) 共享 Docker VM 运行时步骤
 
-在运行的容器内安装二进制文件是一个陷阱。
-在运行时安装的任何内容都将在重启时丢失。
+使用共享运行时指南了解通用的 Docker 主机流程：
 
-技能所需的所有外部二进制文件必须在镜像构建时安装。
-
-下面的示例仅展示了三种常见的二进制文件：
-
-- `gog` 用于 Gmail 访问
-- `goplaces` 用于 Google Places
-- `wacli` 用于 WhatsApp
-
-这些只是示例，并非完整列表。
-您可以使用相同的模式安装所需的任意数量的二进制文件。
-
-如果您稍后添加依赖其他二进制文件的新技能，您必须：
-
-1. 更新 Dockerfile
-2. 重新构建镜像
-3. 重启容器
-
-**示例 Dockerfile**
-
-```dockerfile
-FROM node:24-bookworm
-
-RUN apt-get update && apt-get install -y socat && rm -rf /var/lib/apt/lists/*
-
-# Example binary 1: Gmail CLI
-RUN curl -L https://github.com/steipete/gog/releases/latest/download/gog_Linux_x86_64.tar.gz \
-  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/gog
-
-# Example binary 2: Google Places CLI
-RUN curl -L https://github.com/steipete/goplaces/releases/latest/download/goplaces_Linux_x86_64.tar.gz \
-  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/goplaces
-
-# Example binary 3: WhatsApp CLI
-RUN curl -L https://github.com/steipete/wacli/releases/latest/download/wacli_Linux_x86_64.tar.gz \
-  | tar -xz -C /usr/local/bin && chmod +x /usr/local/bin/wacli
-
-# Add more binaries below using the same pattern
-
-WORKDIR /app
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
-COPY ui/package.json ./ui/package.json
-COPY scripts ./scripts
-
-RUN corepack enable
-RUN pnpm install --frozen-lockfile
-
-COPY . .
-RUN pnpm build
-RUN pnpm ui:install
-RUN pnpm ui:build
-
-ENV NODE_ENV=production
-
-CMD ["node","dist/index.js"]
-```
+- [将所需的二进制文件构建到镜像中](/zh/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+- [构建并启动](/zh/install/docker-vm-runtime#build-and-launch)
+- [什么内容持久化在哪里](/zh/install/docker-vm-runtime#what-persists-where)
+- [更新](/zh/install/docker-vm-runtime#updates)
 
 ---
 
-## 8) 构建并启动
+## 8) Hetzner 特定的访问方式
 
-```bash
-docker compose build
-docker compose up -d openclaw-gateway
-```
-
-验证二进制文件：
-
-```bash
-docker compose exec openclaw-gateway which gog
-docker compose exec openclaw-gateway which goplaces
-docker compose exec openclaw-gateway which wacli
-```
-
-预期输出：
-
-```
-/usr/local/bin/gog
-/usr/local/bin/goplaces
-/usr/local/bin/wacli
-```
-
----
-
-## 9) 验证 Gateway(网关)
-
-```bash
-docker compose logs -f openclaw-gateway
-```
-
-成功：
-
-```
-[gateway] listening on ws://0.0.0.0:18789
-```
-
-在您的笔记本电脑上：
+在完成共享的构建和启动步骤后，从您的笔记本电脑建立隧道：
 
 ```bash
 ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
@@ -312,48 +225,30 @@ ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
 
 `http://127.0.0.1:18789/`
 
-粘贴您的 gateway token。
+粘贴您的网关令牌。
 
 ---
 
-## 什么保存在哪里（事实来源）
+共享持久化映射位于 [Docker VM Runtime](/zh/install/docker-vm-runtime#what-persists-where)。
 
-OpenClaw 在 Docker 中运行，但 Docker 不是事实的来源。
-所有长期存在的状态必须在重启、重建和重新启动后得以保留。
-
-| 组件                 | 位置                              | 持久化机制    | 备注                         |
-| -------------------- | --------------------------------- | ------------- | ---------------------------- |
-| Gateway(网关) config | `/home/node/.openclaw/`           | 主机卷挂载    | 包括 `openclaw.json`、tokens |
-| 模型认证配置文件     | `/home/node/.openclaw/`           | 主机卷挂载    | OAuth 令牌，API 密钥         |
-| 技能配置             | `/home/node/.openclaw/skills/`    | 主机卷挂载    | 技能级状态                   |
-| Agent 工作区         | `/home/node/.openclaw/workspace/` | 主机卷挂载    | 代码和 agent 产物            |
-| WhatsApp 会话        | `/home/node/.openclaw/`           | 主机卷挂载    | 保留 QR 登录                 |
-| Gmail 密钥环         | `/home/node/.openclaw/`           | 主机卷 + 密码 | 需要 `GOG_KEYRING_PASSWORD`  |
-| 外部二进制文件       | `/usr/local/bin/`                 | Docker 镜像   | 必须在构建时内置             |
-| Node 运行时          | 容器文件系统                      | Docker 镜像   | 每次镜像构建时重新构建       |
-| 操作系统软件包       | 容器文件系统                      | Docker 镜像   | 不要在运行时安装             |
-| Docker 容器          | 临时的                            | 可重启的      | 可安全销毁                   |
-
----
-
-## 基础设施即代码
+## 基础设施即代码 (Terraform)
 
 对于更喜欢基础设施即代码工作流的团队，社区维护的 Terraform 设置提供了：
 
-- 具有远程状态管理的模块化 Terraform 配置
-- 通过 cloud-init 自动化配置
+- 模块化的 Terraform 配置以及远程状态管理
+- 通过 cloud-init 自动置备
 - 部署脚本（bootstrap、deploy、backup/restore）
 - 安全加固（防火墙、UFW、仅 SSH 访问）
 - 用于网关访问的 SSH 隧道配置
 
-**仓库：**
+**代码仓库：**
 
 - 基础设施：[openclaw-terraform-hetzner](https://github.com/andreesg/openclaw-terraform-hetzner)
 - Docker 配置：[openclaw-docker-config](https://github.com/andreesg/openclaw-docker-config)
 
-此方法通过可复现的部署、版本控制的基础设施和自动灾难恢复，补充了上述的 Docker 设置。
+此方法通过可复现的部署、版本控制的基础设施和自动灾难恢复，补充了上述 Docker 设置。
 
-> **注意：** 由社区维护。如有问题或贡献，请参阅上述仓库链接。
+> **注意：** 由社区维护。有关问题或贡献，请参阅上面的存储库链接。
 
 import zh from '/components/footer/zh.mdx';
 

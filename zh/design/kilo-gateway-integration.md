@@ -497,7 +497,7 @@ const needsNonImageSanitize =
    - 使用 `kilocode/` 前缀测试模型选择
 
 3. **端到端测试：**
-   - 通过 Kilo Gateway(网关) 测试实际的 API 调用（实时测试）
+   - 通过 Kilo API 测试实际的 Gateway(网关) 调用（实时测试）
 
 ## 迁移说明
 

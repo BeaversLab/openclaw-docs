@@ -26,14 +26,14 @@ openclaw onboard
 
 当您想要完全控制 Gateway 网关、工作区、频道和技能时，请使用 CLI 向导。文档：
 
-- [新手引导向导 (CLI)](/en/start/wizard)
-- [`openclaw onboard` 命令](/en/cli/onboard)
+- [新手引导向导 (CLI)](/zh/start/wizard)
+- [`openclaw onboard` 命令](/zh/cli/onboard)
 
 ## macOS 应用入门
 
 当您希望在 macOS 上进行完全引导式的设置时，请使用 OpenClaw 应用。文档：
 
-- [新手引导 (macOS App)](/en/start/onboarding)
+- [新手引导 (macOS App)](/zh/start/onboarding)
 
 ## 自定义提供商
 

@@ -96,17 +96,16 @@ It does not install or modify anything on the remote host.
 </Steps>
 
 <Note>
-If no GUI is detected, the wizard prints SSH port-forward instructions for the Control UI instead of opening a browser.
-If Control UI assets are missing, the wizard attempts to build them; fallback is `pnpm ui:build` (auto-installs UI deps).
+  If no GUI is detected, the wizard prints SSH port-forward instructions for the Control UI instead
+  of opening a browser. If Control UI assets are missing, the wizard attempts to build them;
+  fallback is `pnpm ui:build` (auto-installs UI deps).
 </Note>
 
 ## Remote mode details
 
 Remote mode configures this machine to connect to a gateway elsewhere.
 
-<Info>
-Remote mode does not install or modify anything on the remote host.
-</Info>
+<Info>Remote mode does not install or modify anything on the remote host.</Info>
 
 What you set:
 
@@ -114,10 +113,8 @@ What you set:
 - Token if remote gateway auth is required (recommended)
 
 <Note>
-- If gateway is loopback-only, use SSH tunneling or a tailnet.
-- Discovery hints:
-  - macOS: Bonjour (`dns-sd`)
-  - Linux: Avahi (`avahi-browse`)
+  - If gateway is loopback-only, use SSH tunneling or a tailnet. - Discovery hints: - macOS: Bonjour
+  (`dns-sd`) - Linux: Avahi (`avahi-browse`)
 </Note>
 
 ## Auth and model options
@@ -241,9 +238,9 @@ Credential storage mode:
 - Existing plaintext setups continue to work unchanged.
 
 <Note>
-Headless and server tip: complete OAuth on a machine with a browser, then copy
-`~/.openclaw/credentials/oauth.json` (or `$OPENCLAW_STATE_DIR/credentials/oauth.json`)
-to the gateway host.
+  Headless and server tip: complete OAuth on a machine with a browser, then copy
+  `~/.openclaw/credentials/oauth.json` (or `$OPENCLAW_STATE_DIR/credentials/oauth.json`) to the
+  gateway host.
 </Note>
 
 ## Outputs and internals
@@ -270,8 +267,8 @@ WhatsApp credentials go under `~/.openclaw/credentials/whatsapp/<accountId>/`.
 Sessions are stored under `~/.openclaw/agents/<agentId>/sessions/`.
 
 <Note>
-Some channels are delivered as plugins. When selected during onboarding, the wizard
-prompts to install the plugin (npm or local path) before channel configuration.
+  Some channels are delivered as plugins. When selected during onboarding, the wizard prompts to
+  install the plugin (npm or local path) before channel configuration.
 </Note>
 
 Gateway wizard RPC:

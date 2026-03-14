@@ -291,7 +291,9 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此
 }
 ```
 
-自动响应使用代理系统。使用以下参数调整：
+`inboundPolicy: "allowlist"` 是一个低可信度的来电 ID 筛选器。该插件对提供商提供的 `From` 值进行标准化处理，并将其与 `allowFrom` 进行比较。Webhook 验证用于认证提供商的传递和负载完整性，但它不能证明 PSTN/VoIP 来电号码的所有权。请将 `allowFrom` 视为来电 ID 筛选，而非强来电身份验证。
+
+自动响应使用代理系统。通过以下方式调整：
 
 - `responseModel`
 - `responseSystemPrompt`
@@ -321,7 +323,7 @@ openclaw voicecall expose --mode funnel
 - `end_call` (callId)
 - `get_status` (callId)
 
-此仓库在 `skills/voice-call/SKILL.md` 处附带一个匹配的技能文档。
+此仓库在 `skills/voice-call/SKILL.md` 处附带了相应的技能文档。
 
 ## Gateway(网关) RPC
 

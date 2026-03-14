@@ -11,19 +11,19 @@ title: "入门指南"
 目标：通过最少的设置，从零开始实现首次可运行的聊天。
 
 <Info>
-  最快聊天方式：打开控制 UI（无需设置渠道）。运行 `openclaw dashboard` 并在浏览器中聊天，或者在
+  最快的聊天方式：打开控制 UI（无需设置渠道）。运行 `openclaw dashboard` 并在 浏览器中聊天，或者在
   <Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">
     网关主机
   </Tooltip>
-  上打开 `http://127.0.0.1:18789/`。 文档：[仪表盘](/en/web/dashboard) 和 [控制
-  UI](/en/web/control-ui)。
+  上打开 `http://127.0.0.1:18789/`。 文档：[Dashboard](/zh/web/dashboard) 和 [Control
+  UI](/zh/web/control-ui)。
 </Info>
 
 ## 先决条件
 
 - 推荐使用 Node 24（Node 22 LTS，目前为 `22.16+`，为兼容性仍受支持）
 
-<Tip>如果不确定，请使用 `node --version` 检查您的 Node 版本。</Tip>
+<Tip>如果您不确定，请使用 `node --version` 检查您的 Node 版本。</Tip>
 
 ## 快速设置 (CLI)
 
@@ -48,7 +48,7 @@ title: "入门指南"
     </Tabs>
 
     <Note>
-    其他安装方法和要求：[Install](/en/install)。
+    其他安装方法和要求：[Install](/zh/install)。
     </Note>
 
   </Step>
@@ -58,7 +58,7 @@ title: "入门指南"
     ```
 
     该向导会配置身份验证、网关设置以及可选渠道。
-    详情请参阅 [新手引导向导](/en/start/wizard)。
+    详情请参阅 [新手引导向导](/zh/start/wizard)。
 
   </Step>
   <Step title="检查 Gateway">
@@ -76,7 +76,7 @@ title: "入门指南"
   </Step>
 </Steps>
 
-<Check>如果控制 UI 加载成功，您的 Gateway(网关) 已准备就绪。</Check>
+<Check>如果控制 UI 加载成功，您的 Gateway(网关) 就可以使用了。</Check>
 
 ## 可选检查和附加项
 
@@ -107,15 +107,15 @@ title: "入门指南"
 - `OPENCLAW_STATE_DIR` 覆盖状态目录。
 - `OPENCLAW_CONFIG_PATH` 覆盖配置文件路径。
 
-完整的环境变量参考：[Environment vars](/en/help/environment)。
+完整的环境变量参考：[Environment vars](/zh/help/environment)。
 
 ## 深入了解
 
 <Columns>
-  <Card title="新手引导向导（详情）" href="/en/start/wizard">
+  <Card title="新手引导向导（详情）" href="/zh/start/wizard">
     完整的 CLI 向导参考和高级选项。
   </Card>
-  <Card title="macOS app 新手引导" href="/en/start/onboarding">
+  <Card title="macOS app 新手引导" href="/zh/start/onboarding">
     macOS 应用的首次运行流程。
   </Card>
 </Columns>
@@ -128,9 +128,9 @@ title: "入门指南"
 
 ## 后续步骤
 
-- 私信安全和审批：[Pairing](/en/channels/pairing)
-- 连接更多渠道：[Channels](/en/channels)
-- 高级工作流程和从源码构建：[Setup](/en/start/setup)
+- 私信安全和审批：[Pairing](/zh/channels/pairing)
+- 连接更多渠道：[Channels](/zh/channels)
+- 高级工作流程和从源码构建：[Setup](/zh/start/setup)
 
 import zh from '/components/footer/zh.mdx';
 

@@ -93,7 +93,7 @@ openclaw devices reject <requestId>
 
 ### 备注
 
-- 传统的 `node.pair.*` API（CLI：`openclaw nodes pending/approve`）是一个
+- 传统的 `node.pair.*` API（API：`openclaw nodes pending/approve`）是一个
   独立的由网关拥有的配对存储。WS 节点仍需要设备配对。
 
 ## 相关文档

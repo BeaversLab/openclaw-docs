@@ -61,8 +61,8 @@ openclaw channels status --probe
 </Steps>
 
 <Note>
-  Gateway(网关) 配置重新加载会监视活动配置文件路径（从配置文件/状态默认值解析，或者在设置时从
-  `OPENCLAW_CONFIG_PATH` 解析）。 默认模式为 `gateway.reload.mode="hybrid"`。
+  Gateway(网关) 配置重新加载监视活动配置文件路径（从配置文件/状态默认值解析， 或设置时的
+  `OPENCLAW_CONFIG_PATH`）。默认模式为 `gateway.reload.mode="hybrid"`。
 </Note>
 
 ## 运行时模型
@@ -117,7 +117,8 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 然后在本地将客户端连接到 `ws://127.0.0.1:18789`。
 
 <Warning>
-  如果配置了 Gateway 网关认证，即使通过 SSH 隧道，客户端仍必须发送认证信息（`token`/`password`）。
+  如果配置了 Gateway(网关) 身份验证，客户端仍必须发送身份验证（`token`/`password`），即使通过 SSH
+  隧道。
 </Warning>
 
 参见：[Remote Gateway](/zh/gateway/remote)，[Authentication](/zh/gateway/authentication)，[Tailscale](/zh/gateway/tailscale)。

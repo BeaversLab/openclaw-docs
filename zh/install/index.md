@@ -9,25 +9,25 @@ title: "安装"
 
 # 安装
 
-已经跟随[入门指南](/en/start/getting-started)了吗？你已经准备就绪——本页面包含替代的安装方法、特定平台的说明和维护信息。
+已经跟随[入门指南](/zh/start/getting-started)了吗？你已经准备就绪——本页面包含替代的安装方法、特定平台的说明和维护信息。
 
 ## 系统要求
 
-- **[Node 24（推荐）](/en/install/node)**（为了兼容性，目前仍支持 Node 22 LTS，当前版本为 `22.16+`；如果缺少 Node，[安装脚本](#install-methods) 将安装 Node 24）
+- **[Node 24（推荐）](/zh/install/node)**（为了兼容性，目前仍支持 Node 22 LTS，当前版本为 `22.16+`；如果缺少 Node，[安装脚本](#install-methods) 将安装 Node 24）
 - macOS、Linux 或 Windows
 - `pnpm` 仅在从源代码构建时需要
 
 <Note>
-  在 Windows 上，我们强烈建议在 [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) 下运行
-  OpenClaw。
+  在 Windows 上，我们强烈建议在 [OpenClaw](https://learn.microsoft.com/en-us/windows/wsl/install)
+  下运行 WSL2。
 </Note>
 
 ## 安装方法
 
-<Tip>**安装程序脚本**是安装 OpenClaw 的推荐方式。它会在一步中处理 Node 检测、安装和入门。</Tip>
+<Tip>**安装程序脚本** 是安装 OpenClaw 的推荐方式。它可以一步完成 Node 检测、 安装和新手引导。</Tip>
 
 <Warning>
-  对于 VPS/云主机，请尽可能避免使用第三方“一键式”市场镜像。最好使用干净的操作系统基础镜像（例如
+  对于 VPS/云主机，请尽可能避免使用第三方“一键式”市场镜像。首选一个纯净的 基础操作系统镜像（例如
   Ubuntu LTS），然后使用安装程序脚本自行安装 OpenClaw。
 </Warning>
 
@@ -65,7 +65,7 @@ title: "安装"
       </Tab>
     </Tabs>
 
-    有关所有标志、环境变量和 CI/自动化选项，请参阅 [安装程序内部原理](/en/install/installer)。
+    有关所有标志、环境变量和 CI/自动化选项，请参阅 [安装程序内部原理](/zh/install/installer)。
 
   </Accordion>
 
@@ -135,7 +135,7 @@ title: "安装"
       </Step>
     </Steps>
 
-    有关更深入的开发工作流，请参阅 [设置](/en/start/setup)。
+    有关更深入的开发工作流，请参阅 [设置](/zh/start/setup)。
 
   </Accordion>
 </AccordionGroup>
@@ -143,19 +143,19 @@ title: "安装"
 ## 其他安装方法
 
 <CardGroup cols={2}>
-  <Card title="Docker" href="/en/install/docker" icon="container">
+  <Card title="Docker" href="/zh/install/docker" icon="container">
     容器化或无头部署。
   </Card>
-  <Card title="Podman" href="/en/install/podman" icon="container">
+  <Card title="Podman" href="/zh/install/podman" icon="container">
     无根容器：运行一次 `setup-podman.sh`，然后运行启动脚本。
   </Card>
-  <Card title="Nix" href="/en/install/nix" icon="snowflake">
+  <Card title="Nix" href="/zh/install/nix" icon="snowflake">
     通过 Nix 进行声明式安装。
   </Card>
-  <Card title="Ansible" href="/en/install/ansible" icon="server">
+  <Card title="Ansible" href="/zh/install/ansible" icon="server">
     自动化集群配置。
   </Card>
-  <Card title="Bun" href="/en/install/bun" icon="zap">
+  <Card title="Bun" href="/zh/install/bun" icon="zap">
     通过 Bun 运行时仅使用 CLI。
   </Card>
 </CardGroup>
@@ -176,11 +176,11 @@ openclaw dashboard      # open the browser UI
 - `OPENCLAW_STATE_DIR` 用于可变状态位置
 - `OPENCLAW_CONFIG_PATH` 用于配置文件位置
 
-有关优先级和完整详细信息，请参阅 [环境变量](/en/help/environment)。
+有关优先级和完整详细信息，请参阅 [环境变量](/zh/help/environment)。
 
 ## 故障排除：找不到 `openclaw`
 
-<Accordion title="PATH 诊断与修复">
+<Accordion title="PATH 诊断和修复">
   快速诊断：
 
 ```bash
@@ -190,30 +190,30 @@ npm prefix -g
 echo "$PATH"
 ```
 
-如果 `$(npm prefix -g)/bin` (macOS/Linux) 或 `$(npm prefix -g)` (Windows) **不在**您的 `$PATH` 中，您的 shell 将无法找到全局 npm 二进制文件（包括 `openclaw`）。
+如果 `$(npm prefix -g)/bin` (macOS/Linux) 或 `$(npm prefix -g)` (Windows) **不在**你的 `$PATH` 中，你的 shell 将无法找到全局 npm 二进制文件（包括 `openclaw`）。
 
-修复方法 — 将其添加到您的 shell 启动文件中 (`~/.zshrc` 或 `~/.bashrc`)：
+修复方法 — 将其添加到你的 shell 启动文件中（`~/.zshrc` 或 `~/.bashrc`）：
 
 ```bash
 export PATH="$(npm prefix -g)/bin:$PATH"
 ```
 
-在 Windows 上，将 `npm prefix -g` 的输出添加到您的 PATH 中。
+在 Windows 上，将 `npm prefix -g` 的输出添加到你的 PATH 中。
 
-然后打开一个新的终端（或者在 zsh 中使用 `rehash` / 在 bash 中使用 `hash -r`）。
+然后打开一个新的终端（或者在 zsh 中执行 `rehash` / 在 bash 中执行 `hash -r`）。
 
 </Accordion>
 
 ## 更新 / 卸载
 
 <CardGroup cols={3}>
-  <Card title="更新" href="/en/install/updating" icon="refresh-cw">
+  <Card title="更新" href="/zh/install/updating" icon="refresh-cw">
     保持 OpenClaw 为最新版本。
   </Card>
-  <Card title="迁移" href="/en/install/migrating" icon="arrow-right">
+  <Card title="迁移" href="/zh/install/migrating" icon="arrow-right">
     移动到新机器。
   </Card>
-  <Card title="卸载" href="/en/install/uninstall" icon="trash-2">
+  <Card title="卸载" href="/zh/install/uninstall" icon="trash-2">
     完全移除 OpenClaw。
   </Card>
 </CardGroup>

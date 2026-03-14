@@ -57,8 +57,8 @@ OAuth 提供商通常会在登录/刷新流程期间生成 **新的刷新令牌*
 ## Anthropic setup-token (订阅授权)
 
 <Warning>
-  Anthropic setup-token 支持属于技术兼容性，而非政策保证。 Anthropic 过去曾阻止 Claude Code
-  之外的某些订阅使用。 请自行决定是否使用订阅授权，并核实 Anthropic 的当前条款。
+  Anthropic setup-token 支持属于技术兼容性，而非政策保证。Anthropic 过去曾阻止部分在 Claude Code
+  之外的订阅使用。请自行决定是否使用订阅身份验证，并核实 Anthropic 的当前条款。
 </Warning>
 
 在任何机器上运行 `claude setup-token`，然后将其粘贴到 OpenClaw 中：

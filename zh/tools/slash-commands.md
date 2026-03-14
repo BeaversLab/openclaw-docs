@@ -88,7 +88,7 @@ title: "斜杠命令"
 - `/config show|get|set|unset` (将配置持久化到磁盘，仅限所有者；需要 `commands.config: true`)
 - `/debug show|set|unset|reset` (运行时覆盖，仅限所有者；需要 `commands.debug: true`)
 - `/usage off|tokens|full|cost` (每次响应的使用页脚或本地成本摘要)
-- `/tts off|always|inbound|tagged|status|provider|limit|summary|audio` (控制 TTS；请参阅 [/tts](/en/tts))
+- `/tts off|always|inbound|tagged|status|provider|limit|summary|audio` (控制 TTS；请参阅 [/tts](/zh/tts))
   - Discord：原生命令是 `/voice`（Discord 预留了 `/tts`）；文本 `/tts` 仍然有效。
 - `/stop`
 - `/restart`
@@ -110,7 +110,7 @@ title: "斜杠命令"
 
 仅文本：
 
-- `/compact [instructions]` （参见 [/concepts/compaction](/en/concepts/compaction)）
+- `/compact [instructions]` （参见 [/concepts/compaction](/zh/concepts/compaction)）
 - `! <command>` （仅限主机；一次一个；对于长时间运行的任务，请使用 `!poll` + `!stop`）
 - `!poll` （检查输出 / 状态；接受可选的 `sessionId`；`/bash poll` 也可以使用）
 - `!stop` （停止正在运行的 bash 任务；接受可选的 `sessionId`；`/bash stop` 也可以使用）
@@ -126,7 +126,7 @@ title: "斜杠命令"
 - `/restart` 默认启用；设置 `commands.restart: false` 以将其禁用。
 - Discord 专用原生命令：`/vc join|leave|status` 控制语音渠道（需要 `channels.discord.voice` 和原生命令；不作为文本可用）。
 - Discord 线程绑定命令（`/focus`、`/unfocus`、`/agents`、`/session idle`、`/session max-age`）需要启用有效的线程绑定（`session.threadBindings.enabled` 和/或 `channels.discord.threadBindings.enabled`）。
-- ACP 命令参考和运行时行为：[ACP Agents](/en/tools/acp-agents)。
+- ACP 命令参考和运行时行为：[ACP Agents](/zh/tools/acp-agents)。
 - `/verbose` 旨在用于调试和额外的可见性；正常使用时请将其保持为 **关闭 (off)** 状态。
 - `/fast on|off` 会持久保存会话覆盖设置。使用会话 UI 的 `inherit` 选项将其清除，并回退到配置默认值。
 - 在相关时仍会显示工具失败摘要，但仅当 `/verbose` 为 `on` 或 `full` 时才会包含详细的失败文本。
@@ -141,7 +141,7 @@ title: "斜杠命令"
   - `/skill <name> [input]` 按名称运行 skill（当原生命令限制阻止每个 skill 的命令时很有用）。
   - 默认情况下，skill 命令作为正常请求转发给模型。
   - Skills 可以选择声明 `command-dispatch: tool` 以将命令直接路由到工具（确定性，无模型）。
-  - 示例：`/prose` (OpenProse 插件) — 参见 [OpenProse](/en/prose)。
+  - 示例：`/prose` (OpenProse 插件) — 参见 [OpenProse](/zh/prose)。
 - **原生命令参数：** Discord 对动态选项使用自动完成（当您省略必需参数时使用按钮菜单）。当命令支持选项且您省略参数时，Telegram 和 Slack 会显示按钮菜单。
 
 ## 使用界面（显示位置）

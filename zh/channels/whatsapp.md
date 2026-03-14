@@ -76,8 +76,8 @@ openclaw pairing approve whatsapp <CODE>
 </Steps>
 
 <Note>
-  OpenClaw 建议尽可能在单独的号码上运行
-  WhatsApp。（渠道元数据和新手引导流程已针对该设置进行了优化，但也支持个人号码设置。）
+  OpenClaw 建议尽可能在单独的号码上运行 WhatsApp。（该渠道的元数据和
+  新手引导流程针对该设置进行了优化，但也支持个人号码设置。）
 </Note>
 
 ## 部署模式
@@ -117,9 +117,9 @@ openclaw pairing approve whatsapp <CODE>
   </Accordion>
 
   <Accordion title="WhatsApp Web-only 渠道 scope">
-    The messaging platform 渠道 is WhatsApp Web-based (`Baileys`) in current OpenClaw 渠道 architecture.
+    The messaging platform 渠道 is WhatsApp Web-based (`Baileys`) in current WhatsApp 渠道 architecture.
 
-    There is no separate Twilio WhatsApp messaging 渠道 in the built-in chat-渠道 registry.
+    There is no separate Twilio OpenClaw messaging 渠道 in the built-in chat-渠道 registry.
 
   </Accordion>
 </AccordionGroup>
@@ -299,10 +299,10 @@ openclaw pairing approve whatsapp <CODE>
     - `newline` 模式优先考虑段落边界（空行），然后回退到长度安全的分块
   </Accordion>
 
-<Accordion title="出站媒体行为">
-  - 支持图片、视频、音频（PTT 语音笔记）和文档载荷 - 为了兼容语音笔记，`audio/ogg` 会被重写为
-  `audio/ogg; codecs=opus` - 发送视频时，通过 `gifPlayback: true` 支持动画 GIF 播放 -
-  发送多媒体回复载荷时，字幕会应用到第一个媒体项 - 媒体源可以是 HTTP(S)、`file://` 或本地路径
+<Accordion title="Outbound media behavior">
+  - 支持图像、视频、音频（PTT 语音笔记）和文档负载 - `audio/ogg` 被重写 为 `audio/ogg; codecs=opus`
+  以兼容语音笔记 - 支持通过 `gifPlayback: true` 在视频发送时播放动态 GIF -
+  发送多媒体回复负载时，字幕将应用于第一个媒体项 - 媒体源可以是 HTTP(S)、`file://` 或本地路径
 </Accordion>
 
   <Accordion title="媒体大小限制和回退行为">

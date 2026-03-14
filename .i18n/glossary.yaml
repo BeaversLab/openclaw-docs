@@ -2807,3 +2807,28 @@ entries:
       autofix: safe
     validate:
       severity: warn
+
+  - id: exfoliate
+    source: EXFOLIATE
+    reason:
+      category: generic-term
+      note: Specific technical term
+    targets:
+      zh: 去壳
+      zh-CN: 去壳
+    match:
+      type: exact
+      case_sensitive: true
+      word_boundary: true
+    scope:
+      nodes:
+        - heading
+        - paragraph
+        - listItem
+        - frontmatter
+        - blockquote
+        - tableCell
+    apply:
+      mode: protect
+    validate:
+      severity: error

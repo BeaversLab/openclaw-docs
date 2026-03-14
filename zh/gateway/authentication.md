@@ -84,8 +84,8 @@ This credential is only authorized for use with Claude Code and cannot be used f
 ...请改用 Anthropic API 密钥。
 
 <Warning>
-  Anthropic setup-token 支持仅限于技术兼容性。Anthropic 过去曾阻止 某些在 Claude Code
-  之外使用的订阅。仅在您确定 政策风险可接受时使用它，并请自行验证 Anthropic 的当前条款。
+  Anthropic setup-token 支持仅为技术兼容性。Anthropic 过去曾阻止在 Claude Code
+  之外使用某些订阅功能。仅在您认为政策风险可接受时使用，并请自行核实 Anthropic 的当前条款。
 </Warning>
 
 手动令牌输入（任何提供商；写入 `auth-profiles.json` 并更新配置）：

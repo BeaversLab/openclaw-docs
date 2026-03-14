@@ -38,7 +38,7 @@ openclaw logs --follow
 
 如果您看到：
 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`,
-请前往 [/gateway/故障排除#anthropic-429-extra-usage-required-for-long-context](/en/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
+请前往 [/gateway/故障排除#anthropic-429-extra-usage-required-for-long-context](/zh/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
 
 ## 插件安装因缺少 openclaw 扩展而失败
 
@@ -63,7 +63,7 @@ openclaw logs --follow
 }
 ```
 
-参考：[/tools/plugin#distribution-npm](/en/tools/plugin#distribution-npm)
+参考：[/tools/plugin#distribution-npm](/zh/tools/plugin#distribution-npm)
 
 ## 决策树
 
@@ -112,9 +112,9 @@ flowchart TD
 
     深度页面：
 
-    - [/gateway/故障排除#no-replies](/en/gateway/troubleshooting#no-replies)
-    - [/channels/故障排除](/en/channels/troubleshooting)
-    - [/channels/pairing](/en/channels/pairing)
+    - [/gateway/故障排除#no-replies](/zh/gateway/troubleshooting#no-replies)
+    - [/channels/故障排除](/zh/channels/troubleshooting)
+    - [/channels/pairing](/zh/channels/pairing)
 
   </Accordion>
 
@@ -142,9 +142,9 @@ flowchart TD
 
     深度页面：
 
-    - [/gateway/故障排除#dashboard-control-ui-connectivity](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
-    - [/web/control-ui](/en/web/control-ui)
-    - [/gateway/authentication](/en/gateway/authentication)
+    - [/gateway/故障排除#dashboard-control-ui-connectivity](/zh/gateway/troubleshooting#dashboard-control-ui-connectivity)
+    - [/web/control-ui](/zh/web/control-ui)
+    - [/gateway/authentication](/zh/gateway/authentication)
 
   </Accordion>
 
@@ -171,9 +171,9 @@ flowchart TD
 
     深度页面：
 
-    - [/gateway/故障排除#gateway-service-not-running](/en/gateway/troubleshooting#gateway-service-not-running)
-    - [/gateway/background-process](/en/gateway/background-process)
-    - [/gateway/configuration](/en/gateway/configuration)
+    - [/gateway/故障排除#gateway-service-not-running](/zh/gateway/troubleshooting#gateway-service-not-running)
+    - [/gateway/background-process](/zh/gateway/background-process)
+    - [/gateway/configuration](/zh/gateway/configuration)
 
   </Accordion>
 
@@ -200,8 +200,8 @@ flowchart TD
 
     深入页面：
 
-    - [/gateway/故障排除#渠道-connected-messages-not-flowing](/en/gateway/troubleshooting#channel-connected-messages-not-flowing)
-    - [/channels/故障排除](/en/channels/troubleshooting)
+    - [/gateway/故障排除#渠道-connected-messages-not-flowing](/zh/gateway/troubleshooting#channel-connected-messages-not-flowing)
+    - [/channels/故障排除](/zh/channels/troubleshooting)
 
   </Accordion>
 
@@ -230,9 +230,9 @@ flowchart TD
 
     深度页面：
 
-    - [/gateway/故障排除#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
-    - [/automation/故障排除](/en/automation/troubleshooting)
-    - [/gateway/heartbeat](/en/gateway/heartbeat)
+    - [/gateway/故障排除#cron-and-heartbeat-delivery](/zh/gateway/troubleshooting#cron-and-heartbeat-delivery)
+    - [/automation/故障排除](/zh/automation/troubleshooting)
+    - [/gateway/heartbeat](/zh/gateway/heartbeat)
 
   </Accordion>
 
@@ -260,9 +260,9 @@ flowchart TD
 
     深入页面：
 
-    - [/gateway/故障排除#node-paired-工具-fails](/en/gateway/troubleshooting#node-paired-tool-fails)
-    - [/nodes/故障排除](/en/nodes/troubleshooting)
-    - [/tools/exec-approvals](/en/tools/exec-approvals)
+    - [/gateway/故障排除#node-paired-工具-fails](/zh/gateway/troubleshooting#node-paired-tool-fails)
+    - [/nodes/故障排除](/zh/nodes/troubleshooting)
+    - [/tools/exec-approvals](/zh/tools/exec-approvals)
 
   </Accordion>
 
@@ -289,10 +289,10 @@ flowchart TD
 
     深入页面：
 
-    - [/gateway/故障排除#browser-工具-fails](/en/gateway/troubleshooting#browser-tool-fails)
-    - [/tools/browser-linux-故障排除](/en/tools/browser-linux-troubleshooting)
-    - [/tools/browser-wsl2-windows-remote-cdp-故障排除](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
-    - [/tools/chrome-extension](/en/tools/chrome-extension)
+    - [/gateway/故障排除#browser-工具-fails](/zh/gateway/troubleshooting#browser-tool-fails)
+    - [/tools/browser-linux-故障排除](/zh/tools/browser-linux-troubleshooting)
+    - [/tools/browser-wsl2-windows-remote-cdp-故障排除](/zh/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+    - [/tools/chrome-extension](/zh/tools/chrome-extension)
 
   </Accordion>
 </AccordionGroup>
