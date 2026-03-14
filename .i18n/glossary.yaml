@@ -1982,31 +1982,6 @@ entries:
       autofix: safe
     validate:
       severity: warn
-  - id: for-full-details
-    source: for full details
-    reason:
-      category: generic-term
-      note: Legacy terminology mapping
-    targets:
-      zh: 了解详情
-      zh-CN: 了解详情
-    match:
-      type: exact
-      case_sensitive: true
-      word_boundary: true
-    scope:
-      nodes:
-        - heading
-        - paragraph
-        - listItem
-        - frontmatter
-        - blockquote
-        - tableCell
-    apply:
-      mode: normalize
-      autofix: safe
-    validate:
-      severity: warn
   - id: get-unstuck
     source: get unstuck
     reason:
@@ -2332,31 +2307,6 @@ entries:
       autofix: safe
     validate:
       severity: warn
-  - id: wizard
-    source: wizard
-    reason:
-      category: generic-term
-      note: Legacy terminology mapping
-    targets:
-      zh: 向导
-      zh-CN: 向导
-    match:
-      type: exact
-      case_sensitive: true
-      word_boundary: true
-    scope:
-      nodes:
-        - heading
-        - paragraph
-        - listItem
-        - frontmatter
-        - blockquote
-        - tableCell
-    apply:
-      mode: normalize
-      autofix: safe
-    validate:
-      severity: warn
   - id: auth-where-it-lives-important
     source: 'Auth: where it lives (important)'
     reason:
@@ -2415,31 +2365,6 @@ entries:
     targets:
       zh: 配套应用
       zh-CN: 配套应用
-    match:
-      type: exact
-      case_sensitive: true
-      word_boundary: true
-    scope:
-      nodes:
-        - heading
-        - paragraph
-        - listItem
-        - frontmatter
-        - blockquote
-        - tableCell
-    apply:
-      mode: normalize
-      autofix: safe
-    validate:
-      severity: warn
-  - id: credits
-    source: Credits
-    reason:
-      category: section-title
-      note: Legacy heading or label translation
-    targets:
-      zh: 致谢
-      zh-CN: 致谢
     match:
       type: exact
       case_sensitive: true
@@ -2615,31 +2540,6 @@ entries:
     targets:
       zh: 功能
       zh-CN: 功能
-    match:
-      type: exact
-      case_sensitive: true
-      word_boundary: true
-    scope:
-      nodes:
-        - heading
-        - paragraph
-        - listItem
-        - frontmatter
-        - blockquote
-        - tableCell
-    apply:
-      mode: normalize
-      autofix: safe
-    validate:
-      severity: warn
-  - id: first-60-seconds
-    source: First 60 seconds
-    reason:
-      category: section-title
-      note: Legacy heading or label translation
-    targets:
-      zh: 最初的六十秒
-      zh-CN: 最初的六十秒
     match:
       type: exact
       case_sensitive: true
@@ -2890,56 +2790,6 @@ entries:
     targets:
       zh: 沙箱注意事项
       zh-CN: 沙箱注意事项
-    match:
-      type: exact
-      case_sensitive: true
-      word_boundary: true
-    scope:
-      nodes:
-        - heading
-        - paragraph
-        - listItem
-        - frontmatter
-        - blockquote
-        - tableCell
-    apply:
-      mode: normalize
-      autofix: safe
-    validate:
-      severity: warn
-  - id: skills-config
-    source: Skills config
-    reason:
-      category: section-title
-      note: Legacy heading or label translation
-    targets:
-      zh: Skills 配置
-      zh-CN: Skills 配置
-    match:
-      type: exact
-      case_sensitive: true
-      word_boundary: true
-    scope:
-      nodes:
-        - heading
-        - paragraph
-        - listItem
-        - frontmatter
-        - blockquote
-        - tableCell
-    apply:
-      mode: normalize
-      autofix: safe
-    validate:
-      severity: warn
-  - id: skills-config-2
-    source: Skills Config
-    reason:
-      category: section-title
-      note: Legacy heading or label translation
-    targets:
-      zh: Skills 配置
-      zh-CN: Skills 配置
     match:
       type: exact
       case_sensitive: true
