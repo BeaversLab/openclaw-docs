@@ -69,8 +69,7 @@ openclaw pairing approve telegram <CODE>
 </Steps>
 
 <Note>
-  Token resolution order is account-aware. In practice, config values win over env fallback, and
-  `TELEGRAM_BOT_TOKEN` only applies to the default account.
+Token resolution order is account-aware. In practice, config values win over env fallback, and `TELEGRAM_BOT_TOKEN` only applies to the default account.
 </Note>
 
 ## Telegram side settings
@@ -782,6 +781,11 @@ openclaw message poll --channel telegram --target -1001234567890:topic:42 \
     - `--poll-anonymous`
     - `--poll-public`
     - `--thread-id` for forum topics (or use a `:topic:` target)
+
+    Telegram send also supports:
+
+    - `--buttons` for inline keyboards when `channels.telegram.capabilities.inlineButtons` allows it
+    - `--force-document` to send outbound images and GIFs as documents instead of compressed photo or animated-media uploads
 
     Action gating:
 

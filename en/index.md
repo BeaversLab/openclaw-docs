@@ -8,17 +8,24 @@ title: "OpenClaw"
 # OpenClaw 🦞
 
 <p align="center">
-  <img src="/assets/openclaw-logo-text-dark.png" alt="OpenClaw" width="500" class="dark:hidden" />
-  <img src="/assets/openclaw-logo-text.png" alt="OpenClaw" width="500" class="hidden dark:block" />
+    <img
+        src="/assets/openclaw-logo-text-dark.png"
+        alt="OpenClaw"
+        width="500"
+        class="dark:hidden"
+    />
+    <img
+        src="/assets/openclaw-logo-text.png"
+        alt="OpenClaw"
+        width="500"
+        class="hidden dark:block"
+    />
 </p>
 
-> _"去壳! 去壳!"_ — A space lobster, probably
+> _"EXFOLIATE! EXFOLIATE!"_ — A space lobster, probably
 
 <p align="center">
-  <strong>
-    Any OS gateway for AI agents across WhatsApp, Telegram, Discord, iMessage, and more.
-  </strong>
-  <br />
+  <strong>Any OS gateway for AI agents across WhatsApp, Telegram, Discord, iMessage, and more.</strong><br />
   Send a message, get an agent response from your pocket. Plugins add Mattermost and more.
 </p>
 
@@ -89,10 +96,21 @@ The Gateway is the single source of truth for sessions, routing, and channel con
 ## Quick start
 
 <Steps>
-  <Step title="Install OpenClaw">```bash npm install -g openclaw@latest ```</Step>
-  <Step title="Onboard and install the service">```bash openclaw onboard --install-daemon ```</Step>
+  <Step title="Install OpenClaw">
+    ```bash
+    npm install -g openclaw@latest
+    ```
+  </Step>
+  <Step title="Onboard and install the service">
+    ```bash
+    openclaw onboard --install-daemon
+    ```
+  </Step>
   <Step title="Pair WhatsApp and start the Gateway">
-    ```bash openclaw channels login openclaw gateway --port 18789 ```
+    ```bash
+    openclaw channels login
+    openclaw gateway --port 18789
+    ```
   </Step>
 </Steps>
 

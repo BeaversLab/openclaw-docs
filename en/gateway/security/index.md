@@ -576,8 +576,7 @@ tool calls. Reduce the blast radius by:
 Prompt injection resistance is **not** uniform across model tiers. Smaller/cheaper models are generally more susceptible to tool misuse and instruction hijacking, especially under adversarial prompts.
 
 <Warning>
-  For tool-enabled agents or agents that read untrusted content, prompt-injection risk with
-  older/smaller models is often too high. Do not run those workloads on weak model tiers.
+For tool-enabled agents or agents that read untrusted content, prompt-injection risk with older/smaller models is often too high. Do not run those workloads on weak model tiers.
 </Warning>
 
 Recommendations:
