@@ -57,6 +57,629 @@
   "navigation": {
     "languages": [
       {
+        "language": "zh-Hans",
+        "tabs": [
+          {
+            "tab": "快速开始",
+            "groups": [
+              {
+                "group": "首页",
+                "pages": ["zh/index"]
+              },
+              {
+                "group": "概览",
+                "pages": ["zh/start/showcase"]
+              },
+              {
+                "group": "核心概念",
+                "pages": ["zh/concepts/features"]
+              },
+              {
+                "group": "第一步",
+                "pages": [
+                  "zh/start/getting-started",
+                  "zh/start/onboarding-overview",
+                  "zh/start/wizard",
+                  "zh/start/onboarding"
+                ]
+              },
+              {
+                "group": "指南",
+                "pages": [
+                  "zh/start/openclaw",
+                  "zh/start/wizard-cli-reference",
+                  "zh/start/wizard-cli-automation"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "安装",
+            "groups": [
+              {
+                "group": "安装概览",
+                "pages": ["zh/install/index", "zh/install/installer"]
+              },
+              {
+                "group": "其他安装方式",
+                "pages": [
+                  "zh/install/docker",
+                  "zh/install/podman",
+                  "zh/install/nix",
+                  "zh/install/ansible",
+                  "zh/install/bun"
+                ]
+              },
+              {
+                "group": "维护",
+                "pages": [
+                  "zh/install/updating",
+                  "zh/install/migrating",
+                  "zh/install/uninstall"
+                ]
+              },
+              {
+                "group": "托管与部署",
+                "pages": [
+                  "zh/vps",
+                  "zh/install/fly",
+                  "zh/install/hetzner",
+                  "zh/install/gcp",
+                  "zh/install/macos-vm",
+                  "zh/install/exe-dev",
+                  "zh/install/railway",
+                  "zh/install/render",
+                  "zh/install/northflank"
+                ]
+              },
+              {
+                "group": "高级",
+                "pages": ["zh/install/development-channels"]
+              }
+            ]
+          },
+          {
+            "tab": "消息渠道",
+            "groups": [
+              {
+                "group": "概览",
+                "pages": ["zh/channels/index"]
+              },
+              {
+                "group": "消息平台",
+                "pages": [
+                  "zh/channels/bluebubbles",
+                  "zh/channels/discord",
+                  "zh/channels/feishu",
+                  "zh/channels/googlechat",
+                  "zh/channels/imessage",
+                  "zh/channels/irc",
+                  "zh/channels/line",
+                  "zh/channels/matrix",
+                  "zh/channels/mattermost",
+                  "zh/channels/msteams",
+                  "zh/channels/nextcloud-talk",
+                  "zh/channels/nostr",
+                  "zh/channels/signal",
+                  "zh/channels/synology-chat",
+                  "zh/channels/slack",
+                  "zh/channels/telegram",
+                  "zh/channels/tlon",
+                  "zh/channels/twitch",
+                  "zh/channels/whatsapp",
+                  "zh/channels/zalo",
+                  "zh/channels/zalouser"
+                ]
+              },
+              {
+                "group": "配置",
+                "pages": [
+                  "zh/channels/pairing",
+                  "zh/channels/group-messages",
+                  "zh/channels/groups",
+                  "zh/channels/broadcast-groups",
+                  "zh/channels/channel-routing",
+                  "zh/channels/location",
+                  "zh/channels/troubleshooting"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "代理",
+            "groups": [
+              {
+                "group": "基础",
+                "pages": [
+                  "zh/pi",
+                  "zh/concepts/architecture",
+                  "zh/concepts/agent",
+                  "zh/concepts/agent-loop",
+                  "zh/concepts/system-prompt",
+                  "zh/concepts/context",
+                  "zh/concepts/agent-workspace",
+                  "zh/concepts/oauth"
+                ]
+              },
+              {
+                "group": "引导",
+                "pages": ["zh/start/bootstrapping"]
+              },
+              {
+                "group": "会话与记忆",
+                "pages": [
+                  "zh/concepts/session",
+                  "zh/concepts/session-pruning",
+                  "zh/concepts/session-tool",
+                  "zh/concepts/memory",
+                  "zh/concepts/compaction"
+                ]
+              },
+              {
+                "group": "多代理",
+                "pages": ["zh/concepts/multi-agent", "zh/concepts/presence"]
+              },
+              {
+                "group": "消息与投递",
+                "pages": [
+                  "zh/concepts/messages",
+                  "zh/concepts/streaming",
+                  "zh/concepts/retry",
+                  "zh/concepts/queue"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "工具",
+            "groups": [
+              {
+                "group": "概览",
+                "pages": ["zh/tools/index"]
+              },
+              {
+                "group": "内置工具",
+                "pages": [
+                  "zh/tools/apply-patch",
+                  "zh/brave-search",
+                  "zh/perplexity",
+                  "zh/tools/diffs",
+                  "zh/tools/pdf",
+                  "zh/tools/elevated",
+                  "zh/tools/exec",
+                  "zh/tools/exec-approvals",
+                  "zh/tools/firecrawl",
+                  "zh/tools/llm-task",
+                  "zh/tools/lobster",
+                  "zh/tools/loop-detection",
+                  "zh/tools/reactions",
+                  "zh/tools/thinking",
+                  "zh/tools/web"
+                ]
+              },
+              {
+                "group": "浏览器",
+                "pages": [
+                  "zh/tools/browser",
+                  "zh/tools/browser-login",
+                  "zh/tools/chrome-extension",
+                  "zh/tools/browser-linux-troubleshooting"
+                ]
+              },
+              {
+                "group": "代理协作",
+                "pages": [
+                  "zh/tools/agent-send",
+                  "zh/tools/subagents",
+                  "zh/tools/acp-agents",
+                  "zh/tools/multi-agent-sandbox-tools"
+                ]
+              },
+              {
+                "group": "技能",
+                "pages": [
+                  "zh/tools/creating-skills",
+                  "zh/tools/slash-commands",
+                  "zh/tools/skills",
+                  "zh/tools/skills-config",
+                  "zh/tools/clawhub",
+                  "zh/tools/plugin"
+                ]
+              },
+              {
+                "group": "扩展",
+                "pages": [
+                  "zh/plugins/community",
+                  "zh/plugins/voice-call",
+                  "zh/plugins/zalouser",
+                  "zh/plugins/manifest",
+                  "zh/plugins/agent-tools",
+                  "zh/prose"
+                ]
+              },
+              {
+                "group": "自动化",
+                "pages": [
+                  "zh/automation/hooks",
+                  "zh/automation/cron-jobs",
+                  "zh/automation/cron-vs-heartbeat",
+                  "zh/automation/troubleshooting",
+                  "zh/automation/webhook",
+                  "zh/automation/gmail-pubsub",
+                  "zh/automation/poll",
+                  "zh/automation/auth-monitoring"
+                ]
+              },
+              {
+                "group": "媒体与设备",
+                "pages": [
+                  "zh/nodes/index",
+                  "zh/nodes/troubleshooting",
+                  "zh/nodes/media-understanding",
+                  "zh/nodes/images",
+                  "zh/nodes/audio",
+                  "zh/nodes/camera",
+                  "zh/nodes/talk",
+                  "zh/nodes/voicewake",
+                  "zh/nodes/location-command",
+                  "zh/tts"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "模型",
+            "groups": [
+              {
+                "group": "概览",
+                "pages": ["zh/providers/index", "zh/providers/models"]
+              },
+              {
+                "group": "模型概念",
+                "pages": ["zh/concepts/models"]
+              },
+              {
+                "group": "配置",
+                "pages": [
+                  "zh/concepts/model-providers",
+                  "zh/concepts/model-failover"
+                ]
+              },
+              {
+                "group": "提供商",
+                "pages": [
+                  "zh/providers/anthropic",
+                  "zh/providers/bedrock",
+                  "zh/providers/cloudflare-ai-gateway",
+                  "zh/providers/claude-max-api-proxy",
+                  "zh/providers/deepgram",
+                  "zh/providers/github-copilot",
+                  "zh/providers/huggingface",
+                  "zh/providers/kilocode",
+                  "zh/providers/litellm",
+                  "zh/providers/glm",
+                  "zh/providers/minimax",
+                  "zh/providers/moonshot",
+                  "zh/providers/mistral",
+                  "zh/providers/nvidia",
+                  "zh/providers/ollama",
+                  "zh/providers/openai",
+                  "zh/providers/opencode-go",
+                  "zh/providers/opencode",
+                  "zh/providers/openrouter",
+                  "zh/providers/qianfan",
+                  "zh/providers/qwen",
+                  "zh/providers/synthetic",
+                  "zh/providers/together",
+                  "zh/providers/vercel-ai-gateway",
+                  "zh/providers/venice",
+                  "zh/providers/vllm",
+                  "zh/providers/xiaomi",
+                  "zh/providers/zai"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "平台",
+            "groups": [
+              {
+                "group": "平台概览",
+                "pages": [
+                  "zh/platforms/index",
+                  "zh/platforms/macos",
+                  "zh/platforms/linux",
+                  "zh/platforms/windows",
+                  "zh/platforms/android",
+                  "zh/platforms/ios",
+                  "zh/platforms/digitalocean",
+                  "zh/platforms/oracle",
+                  "zh/platforms/raspberry-pi"
+                ]
+              },
+              {
+                "group": "macOS 配套应用",
+                "pages": [
+                  "zh/platforms/mac/dev-setup",
+                  "zh/platforms/mac/menu-bar",
+                  "zh/platforms/mac/voicewake",
+                  "zh/platforms/mac/voice-overlay",
+                  "zh/platforms/mac/webchat",
+                  "zh/platforms/mac/canvas",
+                  "zh/platforms/mac/child-process",
+                  "zh/platforms/mac/health",
+                  "zh/platforms/mac/icon",
+                  "zh/platforms/mac/logging",
+                  "zh/platforms/mac/permissions",
+                  "zh/platforms/mac/remote",
+                  "zh/platforms/mac/signing",
+                  "zh/platforms/mac/release",
+                  "zh/platforms/mac/bundled-gateway",
+                  "zh/platforms/mac/xpc",
+                  "zh/platforms/mac/skills",
+                  "zh/platforms/mac/peekaboo"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Gateway 网关与运维",
+            "groups": [
+              {
+                "group": "Gateway 网关",
+                "pages": [
+                  "zh/gateway/index",
+                  {
+                    "group": "配置与运维",
+                    "pages": [
+                      "zh/gateway/configuration",
+                      "zh/gateway/configuration-reference",
+                      "zh/gateway/configuration-examples",
+                      "zh/gateway/authentication",
+                      "zh/auth-credential-semantics",
+                      "zh/gateway/secrets",
+                      "zh/gateway/secrets-plan-contract",
+                      "zh/gateway/trusted-proxy-auth",
+                      "zh/gateway/health",
+                      "zh/gateway/heartbeat",
+                      "zh/gateway/doctor",
+                      "zh/gateway/logging",
+                      "zh/gateway/gateway-lock",
+                      "zh/gateway/background-process",
+                      "zh/gateway/multiple-gateways",
+                      "zh/gateway/troubleshooting"
+                    ]
+                  },
+                  {
+                    "group": "安全与沙箱",
+                    "pages": [
+                      "zh/gateway/security/index",
+                      "zh/gateway/sandboxing",
+                      "zh/gateway/sandbox-vs-tool-policy-vs-elevated"
+                    ]
+                  },
+                  {
+                    "group": "协议与 API",
+                    "pages": [
+                      "zh/gateway/protocol",
+                      "zh/gateway/bridge-protocol",
+                      "zh/gateway/openai-http-api",
+                      "zh/gateway/openresponses-http-api",
+                      "zh/gateway/tools-invoke-http-api",
+                      "zh/gateway/cli-backends",
+                      "zh/gateway/local-models"
+                    ]
+                  },
+                  {
+                    "group": "网络与发现",
+                    "pages": [
+                      "zh/gateway/network-model",
+                      "zh/gateway/pairing",
+                      "zh/gateway/discovery",
+                      "zh/gateway/bonjour"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "远程访问",
+                "pages": [
+                  "zh/gateway/remote",
+                  "zh/gateway/remote-gateway-readme",
+                  "zh/gateway/tailscale"
+                ]
+              },
+              {
+                "group": "安全",
+                "pages": [
+                  "zh/security/formal-verification",
+                  "zh/security/README",
+                  "zh/security/THREAT-MODEL-ATLAS",
+                  "zh/security/CONTRIBUTING-THREAT-MODEL"
+                ]
+              },
+              {
+                "group": "Web 界面",
+                "pages": [
+                  "zh/web/index",
+                  "zh/web/control-ui",
+                  "zh/web/dashboard",
+                  "zh/web/webchat",
+                  "zh/web/tui"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "参考",
+            "groups": [
+              {
+                "group": "CLI 命令",
+                "pages": [
+                  "zh/cli/index",
+                  "zh/cli/acp",
+                  "zh/cli/agent",
+                  "zh/cli/agents",
+                  "zh/cli/approvals",
+                  "zh/cli/browser",
+                  "zh/cli/channels",
+                  "zh/cli/clawbot",
+                  "zh/cli/completion",
+                  "zh/cli/config",
+                  "zh/cli/configure",
+                  "zh/cli/cron",
+                  "zh/cli/daemon",
+                  "zh/cli/dashboard",
+                  "zh/cli/devices",
+                  "zh/cli/directory",
+                  "zh/cli/dns",
+                  "zh/cli/docs",
+                  "zh/cli/doctor",
+                  "zh/cli/gateway",
+                  "zh/cli/health",
+                  "zh/cli/hooks",
+                  "zh/cli/logs",
+                  "zh/cli/memory",
+                  "zh/cli/message",
+                  "zh/cli/models",
+                  "zh/cli/node",
+                  "zh/cli/nodes",
+                  "zh/cli/onboard",
+                  "zh/cli/pairing",
+                  "zh/cli/plugins",
+                  "zh/cli/qr",
+                  "zh/cli/reset",
+                  "zh/cli/sandbox",
+                  "zh/cli/secrets",
+                  "zh/cli/security",
+                  "zh/cli/sessions",
+                  "zh/cli/setup",
+                  "zh/cli/skills",
+                  "zh/cli/status",
+                  "zh/cli/system",
+                  "zh/cli/tui",
+                  "zh/cli/uninstall",
+                  "zh/cli/update",
+                  "zh/cli/voicecall",
+                  "zh/cli/webhooks"
+                ]
+              },
+              {
+                "group": "RPC 与 API",
+                "pages": ["zh/reference/rpc", "zh/reference/device-models"]
+              },
+              {
+                "group": "模板",
+                "pages": [
+                  "zh/reference/AGENTS.default",
+                  "zh/reference/templates/AGENTS",
+                  "zh/reference/templates/BOOT",
+                  "zh/reference/templates/BOOTSTRAP",
+                  "zh/reference/templates/HEARTBEAT",
+                  "zh/reference/templates/IDENTITY",
+                  "zh/reference/templates/SOUL",
+                  "zh/reference/templates/TOOLS",
+                  "zh/reference/templates/USER"
+                ]
+              },
+              {
+                "group": "技术参考",
+                "pages": [
+                  "zh/reference/wizard",
+                  "zh/reference/token-use",
+                  "zh/reference/secretref-credential-surface",
+                  "zh/reference/prompt-caching",
+                  "zh/reference/api-usage-costs",
+                  "zh/reference/transcript-hygiene",
+                  "zh/date-time"
+                ]
+              },
+              {
+                "group": "概念内部机制",
+                "pages": [
+                  "zh/concepts/typebox",
+                  "zh/concepts/markdown-formatting",
+                  "zh/concepts/typing-indicators",
+                  "zh/concepts/usage-tracking",
+                  "zh/concepts/timezone"
+                ]
+              },
+              {
+                "group": "项目",
+                "pages": ["zh/reference/credits"]
+              },
+              {
+                "group": "发布说明",
+                "pages": ["zh/reference/RELEASING", "zh/reference/test"]
+              },
+              {
+                "group": "实验性功能",
+                "pages": [
+                  "zh/design/kilo-gateway-integration",
+                  "zh/experiments/onboarding-config-protocol",
+                  "zh/experiments/plans/acp-thread-bound-agents",
+                  "zh/experiments/plans/acp-unified-streaming-refactor",
+                  "zh/experiments/plans/browser-evaluate-cdp-refactor",
+                  "zh/experiments/plans/openresponses-gateway",
+                  "zh/experiments/plans/pty-process-supervision",
+                  "zh/experiments/plans/session-binding-channel-agnostic",
+                  "zh/experiments/research/memory",
+                  "zh/experiments/proposals/model-config"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "帮助",
+            "groups": [
+              {
+                "group": "帮助",
+                "pages": [
+                  "zh/help/index",
+                  "zh/help/troubleshooting",
+                  "zh/help/faq"
+                ]
+              },
+              {
+                "group": "社区",
+                "pages": ["zh/start/lore"]
+              },
+              {
+                "group": "环境与调试",
+                "pages": [
+                  "zh/help/environment",
+                  "zh/help/debugging",
+                  "zh/help/testing",
+                  "zh/help/scripts",
+                  "zh/debug/node-issue",
+                  "zh/diagnostics/flags"
+                ]
+              },
+              {
+                "group": "Node 运行时",
+                "pages": ["zh/install/node"]
+              },
+              {
+                "group": "压缩机制内部参考",
+                "pages": ["zh/reference/session-management-compaction"]
+              },
+              {
+                "group": "开发者设置",
+                "pages": ["zh/start/setup", "zh/pi-dev"]
+              },
+              {
+                "group": "贡献",
+                "pages": ["zh/ci"]
+              },
+              {
+                "group": "文档元信息",
+                "pages": ["zh/start/hubs", "zh/start/docs-directory"]
+              }
+            ]
+          }
+        ]
+      },
+      {
         "language": "en",
         "tabs": [
           {
@@ -1297,629 +1920,6 @@
               {
                 "group": "Docs meta",
                 "pages": ["fr/start/hubs", "fr/start/docs-directory"]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "language": "zh-Hans",
-        "tabs": [
-          {
-            "tab": "快速开始",
-            "groups": [
-              {
-                "group": "首页",
-                "pages": ["zh/index"]
-              },
-              {
-                "group": "概览",
-                "pages": ["zh/start/showcase"]
-              },
-              {
-                "group": "核心概念",
-                "pages": ["zh/concepts/features"]
-              },
-              {
-                "group": "第一步",
-                "pages": [
-                  "zh/start/getting-started",
-                  "zh/start/onboarding-overview",
-                  "zh/start/wizard",
-                  "zh/start/onboarding"
-                ]
-              },
-              {
-                "group": "指南",
-                "pages": [
-                  "zh/start/openclaw",
-                  "zh/start/wizard-cli-reference",
-                  "zh/start/wizard-cli-automation"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "安装",
-            "groups": [
-              {
-                "group": "安装概览",
-                "pages": ["zh/install/index", "zh/install/installer"]
-              },
-              {
-                "group": "其他安装方式",
-                "pages": [
-                  "zh/install/docker",
-                  "zh/install/podman",
-                  "zh/install/nix",
-                  "zh/install/ansible",
-                  "zh/install/bun"
-                ]
-              },
-              {
-                "group": "维护",
-                "pages": [
-                  "zh/install/updating",
-                  "zh/install/migrating",
-                  "zh/install/uninstall"
-                ]
-              },
-              {
-                "group": "托管与部署",
-                "pages": [
-                  "zh/vps",
-                  "zh/install/fly",
-                  "zh/install/hetzner",
-                  "zh/install/gcp",
-                  "zh/install/macos-vm",
-                  "zh/install/exe-dev",
-                  "zh/install/railway",
-                  "zh/install/render",
-                  "zh/install/northflank"
-                ]
-              },
-              {
-                "group": "高级",
-                "pages": ["zh/install/development-channels"]
-              }
-            ]
-          },
-          {
-            "tab": "消息渠道",
-            "groups": [
-              {
-                "group": "概览",
-                "pages": ["zh/channels/index"]
-              },
-              {
-                "group": "消息平台",
-                "pages": [
-                  "zh/channels/bluebubbles",
-                  "zh/channels/discord",
-                  "zh/channels/feishu",
-                  "zh/channels/googlechat",
-                  "zh/channels/imessage",
-                  "zh/channels/irc",
-                  "zh/channels/line",
-                  "zh/channels/matrix",
-                  "zh/channels/mattermost",
-                  "zh/channels/msteams",
-                  "zh/channels/nextcloud-talk",
-                  "zh/channels/nostr",
-                  "zh/channels/signal",
-                  "zh/channels/synology-chat",
-                  "zh/channels/slack",
-                  "zh/channels/telegram",
-                  "zh/channels/tlon",
-                  "zh/channels/twitch",
-                  "zh/channels/whatsapp",
-                  "zh/channels/zalo",
-                  "zh/channels/zalouser"
-                ]
-              },
-              {
-                "group": "配置",
-                "pages": [
-                  "zh/channels/pairing",
-                  "zh/channels/group-messages",
-                  "zh/channels/groups",
-                  "zh/channels/broadcast-groups",
-                  "zh/channels/channel-routing",
-                  "zh/channels/location",
-                  "zh/channels/troubleshooting"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "代理",
-            "groups": [
-              {
-                "group": "基础",
-                "pages": [
-                  "zh/pi",
-                  "zh/concepts/architecture",
-                  "zh/concepts/agent",
-                  "zh/concepts/agent-loop",
-                  "zh/concepts/system-prompt",
-                  "zh/concepts/context",
-                  "zh/concepts/agent-workspace",
-                  "zh/concepts/oauth"
-                ]
-              },
-              {
-                "group": "引导",
-                "pages": ["zh/start/bootstrapping"]
-              },
-              {
-                "group": "会话与记忆",
-                "pages": [
-                  "zh/concepts/session",
-                  "zh/concepts/session-pruning",
-                  "zh/concepts/session-tool",
-                  "zh/concepts/memory",
-                  "zh/concepts/compaction"
-                ]
-              },
-              {
-                "group": "多代理",
-                "pages": ["zh/concepts/multi-agent", "zh/concepts/presence"]
-              },
-              {
-                "group": "消息与投递",
-                "pages": [
-                  "zh/concepts/messages",
-                  "zh/concepts/streaming",
-                  "zh/concepts/retry",
-                  "zh/concepts/queue"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "工具",
-            "groups": [
-              {
-                "group": "概览",
-                "pages": ["zh/tools/index"]
-              },
-              {
-                "group": "内置工具",
-                "pages": [
-                  "zh/tools/apply-patch",
-                  "zh/brave-search",
-                  "zh/perplexity",
-                  "zh/tools/diffs",
-                  "zh/tools/pdf",
-                  "zh/tools/elevated",
-                  "zh/tools/exec",
-                  "zh/tools/exec-approvals",
-                  "zh/tools/firecrawl",
-                  "zh/tools/llm-task",
-                  "zh/tools/lobster",
-                  "zh/tools/loop-detection",
-                  "zh/tools/reactions",
-                  "zh/tools/thinking",
-                  "zh/tools/web"
-                ]
-              },
-              {
-                "group": "浏览器",
-                "pages": [
-                  "zh/tools/browser",
-                  "zh/tools/browser-login",
-                  "zh/tools/chrome-extension",
-                  "zh/tools/browser-linux-troubleshooting"
-                ]
-              },
-              {
-                "group": "代理协作",
-                "pages": [
-                  "zh/tools/agent-send",
-                  "zh/tools/subagents",
-                  "zh/tools/acp-agents",
-                  "zh/tools/multi-agent-sandbox-tools"
-                ]
-              },
-              {
-                "group": "技能",
-                "pages": [
-                  "zh/tools/creating-skills",
-                  "zh/tools/slash-commands",
-                  "zh/tools/skills",
-                  "zh/tools/skills-config",
-                  "zh/tools/clawhub",
-                  "zh/tools/plugin"
-                ]
-              },
-              {
-                "group": "扩展",
-                "pages": [
-                  "zh/plugins/community",
-                  "zh/plugins/voice-call",
-                  "zh/plugins/zalouser",
-                  "zh/plugins/manifest",
-                  "zh/plugins/agent-tools",
-                  "zh/prose"
-                ]
-              },
-              {
-                "group": "自动化",
-                "pages": [
-                  "zh/automation/hooks",
-                  "zh/automation/cron-jobs",
-                  "zh/automation/cron-vs-heartbeat",
-                  "zh/automation/troubleshooting",
-                  "zh/automation/webhook",
-                  "zh/automation/gmail-pubsub",
-                  "zh/automation/poll",
-                  "zh/automation/auth-monitoring"
-                ]
-              },
-              {
-                "group": "媒体与设备",
-                "pages": [
-                  "zh/nodes/index",
-                  "zh/nodes/troubleshooting",
-                  "zh/nodes/media-understanding",
-                  "zh/nodes/images",
-                  "zh/nodes/audio",
-                  "zh/nodes/camera",
-                  "zh/nodes/talk",
-                  "zh/nodes/voicewake",
-                  "zh/nodes/location-command",
-                  "zh/tts"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "模型",
-            "groups": [
-              {
-                "group": "概览",
-                "pages": ["zh/providers/index", "zh/providers/models"]
-              },
-              {
-                "group": "模型概念",
-                "pages": ["zh/concepts/models"]
-              },
-              {
-                "group": "配置",
-                "pages": [
-                  "zh/concepts/model-providers",
-                  "zh/concepts/model-failover"
-                ]
-              },
-              {
-                "group": "提供商",
-                "pages": [
-                  "zh/providers/anthropic",
-                  "zh/providers/bedrock",
-                  "zh/providers/cloudflare-ai-gateway",
-                  "zh/providers/claude-max-api-proxy",
-                  "zh/providers/deepgram",
-                  "zh/providers/github-copilot",
-                  "zh/providers/huggingface",
-                  "zh/providers/kilocode",
-                  "zh/providers/litellm",
-                  "zh/providers/glm",
-                  "zh/providers/minimax",
-                  "zh/providers/moonshot",
-                  "zh/providers/mistral",
-                  "zh/providers/nvidia",
-                  "zh/providers/ollama",
-                  "zh/providers/openai",
-                  "zh/providers/opencode-go",
-                  "zh/providers/opencode",
-                  "zh/providers/openrouter",
-                  "zh/providers/qianfan",
-                  "zh/providers/qwen",
-                  "zh/providers/synthetic",
-                  "zh/providers/together",
-                  "zh/providers/vercel-ai-gateway",
-                  "zh/providers/venice",
-                  "zh/providers/vllm",
-                  "zh/providers/xiaomi",
-                  "zh/providers/zai"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "平台",
-            "groups": [
-              {
-                "group": "平台概览",
-                "pages": [
-                  "zh/platforms/index",
-                  "zh/platforms/macos",
-                  "zh/platforms/linux",
-                  "zh/platforms/windows",
-                  "zh/platforms/android",
-                  "zh/platforms/ios",
-                  "zh/platforms/digitalocean",
-                  "zh/platforms/oracle",
-                  "zh/platforms/raspberry-pi"
-                ]
-              },
-              {
-                "group": "macOS 配套应用",
-                "pages": [
-                  "zh/platforms/mac/dev-setup",
-                  "zh/platforms/mac/menu-bar",
-                  "zh/platforms/mac/voicewake",
-                  "zh/platforms/mac/voice-overlay",
-                  "zh/platforms/mac/webchat",
-                  "zh/platforms/mac/canvas",
-                  "zh/platforms/mac/child-process",
-                  "zh/platforms/mac/health",
-                  "zh/platforms/mac/icon",
-                  "zh/platforms/mac/logging",
-                  "zh/platforms/mac/permissions",
-                  "zh/platforms/mac/remote",
-                  "zh/platforms/mac/signing",
-                  "zh/platforms/mac/release",
-                  "zh/platforms/mac/bundled-gateway",
-                  "zh/platforms/mac/xpc",
-                  "zh/platforms/mac/skills",
-                  "zh/platforms/mac/peekaboo"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "Gateway 网关与运维",
-            "groups": [
-              {
-                "group": "Gateway 网关",
-                "pages": [
-                  "zh/gateway/index",
-                  {
-                    "group": "配置与运维",
-                    "pages": [
-                      "zh/gateway/configuration",
-                      "zh/gateway/configuration-reference",
-                      "zh/gateway/configuration-examples",
-                      "zh/gateway/authentication",
-                      "zh/auth-credential-semantics",
-                      "zh/gateway/secrets",
-                      "zh/gateway/secrets-plan-contract",
-                      "zh/gateway/trusted-proxy-auth",
-                      "zh/gateway/health",
-                      "zh/gateway/heartbeat",
-                      "zh/gateway/doctor",
-                      "zh/gateway/logging",
-                      "zh/gateway/gateway-lock",
-                      "zh/gateway/background-process",
-                      "zh/gateway/multiple-gateways",
-                      "zh/gateway/troubleshooting"
-                    ]
-                  },
-                  {
-                    "group": "安全与沙箱",
-                    "pages": [
-                      "zh/gateway/security/index",
-                      "zh/gateway/sandboxing",
-                      "zh/gateway/sandbox-vs-tool-policy-vs-elevated"
-                    ]
-                  },
-                  {
-                    "group": "协议与 API",
-                    "pages": [
-                      "zh/gateway/protocol",
-                      "zh/gateway/bridge-protocol",
-                      "zh/gateway/openai-http-api",
-                      "zh/gateway/openresponses-http-api",
-                      "zh/gateway/tools-invoke-http-api",
-                      "zh/gateway/cli-backends",
-                      "zh/gateway/local-models"
-                    ]
-                  },
-                  {
-                    "group": "网络与发现",
-                    "pages": [
-                      "zh/gateway/network-model",
-                      "zh/gateway/pairing",
-                      "zh/gateway/discovery",
-                      "zh/gateway/bonjour"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "远程访问",
-                "pages": [
-                  "zh/gateway/remote",
-                  "zh/gateway/remote-gateway-readme",
-                  "zh/gateway/tailscale"
-                ]
-              },
-              {
-                "group": "安全",
-                "pages": [
-                  "zh/security/formal-verification",
-                  "zh/security/README",
-                  "zh/security/THREAT-MODEL-ATLAS",
-                  "zh/security/CONTRIBUTING-THREAT-MODEL"
-                ]
-              },
-              {
-                "group": "Web 界面",
-                "pages": [
-                  "zh/web/index",
-                  "zh/web/control-ui",
-                  "zh/web/dashboard",
-                  "zh/web/webchat",
-                  "zh/web/tui"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "参考",
-            "groups": [
-              {
-                "group": "CLI 命令",
-                "pages": [
-                  "zh/cli/index",
-                  "zh/cli/acp",
-                  "zh/cli/agent",
-                  "zh/cli/agents",
-                  "zh/cli/approvals",
-                  "zh/cli/browser",
-                  "zh/cli/channels",
-                  "zh/cli/clawbot",
-                  "zh/cli/completion",
-                  "zh/cli/config",
-                  "zh/cli/configure",
-                  "zh/cli/cron",
-                  "zh/cli/daemon",
-                  "zh/cli/dashboard",
-                  "zh/cli/devices",
-                  "zh/cli/directory",
-                  "zh/cli/dns",
-                  "zh/cli/docs",
-                  "zh/cli/doctor",
-                  "zh/cli/gateway",
-                  "zh/cli/health",
-                  "zh/cli/hooks",
-                  "zh/cli/logs",
-                  "zh/cli/memory",
-                  "zh/cli/message",
-                  "zh/cli/models",
-                  "zh/cli/node",
-                  "zh/cli/nodes",
-                  "zh/cli/onboard",
-                  "zh/cli/pairing",
-                  "zh/cli/plugins",
-                  "zh/cli/qr",
-                  "zh/cli/reset",
-                  "zh/cli/sandbox",
-                  "zh/cli/secrets",
-                  "zh/cli/security",
-                  "zh/cli/sessions",
-                  "zh/cli/setup",
-                  "zh/cli/skills",
-                  "zh/cli/status",
-                  "zh/cli/system",
-                  "zh/cli/tui",
-                  "zh/cli/uninstall",
-                  "zh/cli/update",
-                  "zh/cli/voicecall",
-                  "zh/cli/webhooks"
-                ]
-              },
-              {
-                "group": "RPC 与 API",
-                "pages": ["zh/reference/rpc", "zh/reference/device-models"]
-              },
-              {
-                "group": "模板",
-                "pages": [
-                  "zh/reference/AGENTS.default",
-                  "zh/reference/templates/AGENTS",
-                  "zh/reference/templates/BOOT",
-                  "zh/reference/templates/BOOTSTRAP",
-                  "zh/reference/templates/HEARTBEAT",
-                  "zh/reference/templates/IDENTITY",
-                  "zh/reference/templates/SOUL",
-                  "zh/reference/templates/TOOLS",
-                  "zh/reference/templates/USER"
-                ]
-              },
-              {
-                "group": "技术参考",
-                "pages": [
-                  "zh/reference/wizard",
-                  "zh/reference/token-use",
-                  "zh/reference/secretref-credential-surface",
-                  "zh/reference/prompt-caching",
-                  "zh/reference/api-usage-costs",
-                  "zh/reference/transcript-hygiene",
-                  "zh/date-time"
-                ]
-              },
-              {
-                "group": "概念内部机制",
-                "pages": [
-                  "zh/concepts/typebox",
-                  "zh/concepts/markdown-formatting",
-                  "zh/concepts/typing-indicators",
-                  "zh/concepts/usage-tracking",
-                  "zh/concepts/timezone"
-                ]
-              },
-              {
-                "group": "项目",
-                "pages": ["zh/reference/credits"]
-              },
-              {
-                "group": "发布说明",
-                "pages": ["zh/reference/RELEASING", "zh/reference/test"]
-              },
-              {
-                "group": "实验性功能",
-                "pages": [
-                  "zh/design/kilo-gateway-integration",
-                  "zh/experiments/onboarding-config-protocol",
-                  "zh/experiments/plans/acp-thread-bound-agents",
-                  "zh/experiments/plans/acp-unified-streaming-refactor",
-                  "zh/experiments/plans/browser-evaluate-cdp-refactor",
-                  "zh/experiments/plans/openresponses-gateway",
-                  "zh/experiments/plans/pty-process-supervision",
-                  "zh/experiments/plans/session-binding-channel-agnostic",
-                  "zh/experiments/research/memory",
-                  "zh/experiments/proposals/model-config"
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "帮助",
-            "groups": [
-              {
-                "group": "帮助",
-                "pages": [
-                  "zh/help/index",
-                  "zh/help/troubleshooting",
-                  "zh/help/faq"
-                ]
-              },
-              {
-                "group": "社区",
-                "pages": ["zh/start/lore"]
-              },
-              {
-                "group": "环境与调试",
-                "pages": [
-                  "zh/help/environment",
-                  "zh/help/debugging",
-                  "zh/help/testing",
-                  "zh/help/scripts",
-                  "zh/debug/node-issue",
-                  "zh/diagnostics/flags"
-                ]
-              },
-              {
-                "group": "Node 运行时",
-                "pages": ["zh/install/node"]
-              },
-              {
-                "group": "压缩机制内部参考",
-                "pages": ["zh/reference/session-management-compaction"]
-              },
-              {
-                "group": "开发者设置",
-                "pages": ["zh/start/setup", "zh/pi-dev"]
-              },
-              {
-                "group": "贡献",
-                "pages": ["zh/ci"]
-              },
-              {
-                "group": "文档元信息",
-                "pages": ["zh/start/hubs", "zh/start/docs-directory"]
               }
             ]
           }
