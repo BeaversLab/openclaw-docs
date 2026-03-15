@@ -57,9 +57,9 @@ For static secret refs and runtime snapshot activation behavior, see [Secrets Ma
 ## Anthropic setup-token (subscription auth)
 
 <Warning>
-  Anthropic setup-token support is technical compatibility, not a policy guarantee. Anthropic has
-  blocked some subscription usage outside Claude Code in the past. Decide for yourself whether to
-  use subscription auth, and verify Anthropic's current terms.
+Anthropic setup-token support is technical compatibility, not a policy guarantee.
+Anthropic has blocked some subscription usage outside Claude Code in the past.
+Decide for yourself whether to use subscription auth, and verify Anthropic's current terms.
 </Warning>
 
 Run `claude setup-token` on any machine, then paste it into OpenClaw:
