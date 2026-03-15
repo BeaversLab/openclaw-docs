@@ -13,9 +13,17 @@
     "format:staged": "prettier --write",
     "footers": "node scripts/ensure-doc-footers.mjs",
     "footers:check": "node scripts/ensure-doc-footers.mjs --check",
+    "lang:add": "node scripts/manage-lang.mjs add",
+    "lang:enable": "node scripts/manage-lang.mjs enable",
+    "lang:remove": "node scripts/manage-lang.mjs remove",
+    "lang:sync": "node scripts/manage-lang.mjs sync",
     "hooks:install": "git config core.hooksPath .githooks"
   },
-  "keywords": ["documentation", "markdown", "prettier"],
+  "keywords": [
+    "documentation",
+    "markdown",
+    "prettier"
+  ],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.26.1",

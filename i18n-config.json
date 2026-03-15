@@ -1,0 +1,22 @@
+{
+  "languages": {
+    "en": {
+      "label": "English",
+      "mintlifyCode": "en",
+      "enabled": true,
+      "description": "Main source language"
+    },
+    "zh": {
+      "label": "简体中文",
+      "mintlifyCode": "zh-Hans",
+      "enabled": true,
+      "description": "Simplified Chinese translation"
+    },
+    "fr": {
+      "label": "Français",
+      "mintlifyCode": "fr",
+      "enabled": true,
+      "description": "French translation"
+    }
+  }
+}

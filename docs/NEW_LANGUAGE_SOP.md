@@ -1,8 +1,52 @@
 # 新语言添加标准化流程 (SOP)
 
-当需要为 `crawfish-docs` 添加一种新语言（例如 `es`）时，请严格按照以下步骤操作，以确保所有自动化工具和导航功能正常工作。
+当需要为 `crawfish-docs` 添加一种新语言（例如 `es`）时，请优先使用自动化脚本。该流程分为 **准备阶段 (Add)** 和 **发布阶段 (Enable)**。
 
-## 1. 初始化目录结构
+## 🚀 推荐：自动化分步流程
+
+### 1. 准备阶段 (Add)
+
+此命令会创建目录并同步基础配置，但在 `docs.json` 导航和 `redirect.js` 中默认 **禁用**。这允许你在不影响线上用户的情况下进行翻译。
+
+```bash
+npm run lang:add <lang-code> [label]
+# 例如: npm run lang:add es "Español"
+```
+
+### 2. 开发与翻译
+
+在 `es/` 目录下进行翻译，期间可以运行：
+
+- 修复链接: `node scripts/fix-locale-links.js es/`
+- 格式化: `npm run format:es`
+
+### 3. 发布阶段 (Enable)
+
+当翻译基本完成后，运行此命令将语言正式发布到官网主导航并开启自动重定向。
+
+```bash
+npm run lang:enable es
+```
+
+### 其他管理命令
+
+- **移除语言**: `npm run lang:remove es`
+- **强制同步**: `npm run lang:sync` (当手动修改了 `i18n-config.json` 或 `docs.json` 时使用)
+
+---
+
+## 🛠️ 配置文件说明 (`i18n-config.json`)
+
+项目使用 `i18n-config.json` 作为唯一的语言真相源：
+
+- `languages`: 工作区中所有存在的语言。
+- `enabled`: 是否将该语言暴露给终端用户。
+
+---
+
+## 🛠️ 手动步骤与原理说明 (供参考)
+
+...
 
 - **创建目录**: 复制 `en/` 目录并重命名为目标语言代码（例如 `es/`）。
 - **初始化内容**: 确保基础文件（如 `index.md`）存在。

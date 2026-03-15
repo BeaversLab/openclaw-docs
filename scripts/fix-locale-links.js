@@ -20,7 +20,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const LOCALE_PREFIXES = ['en', 'zh', 'fr'];
+// Load allowed locales from centralized i18n-config.json
+// This file defines ALL languages currently present in the workspace
+const I18N_CONFIG = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'i18n-config.json'), 'utf8'));
+const LOCALE_PREFIXES = Object.keys(I18N_CONFIG.languages);
+
 const LOCALE_RE = new RegExp(`^/(${LOCALE_PREFIXES.join('|')})/`);
 const SKIP_PREFIXES = [
   'http://',
@@ -35,9 +39,8 @@ const SKIP_PREFIXES = [
 
 function detectLocale(filePath, rootDir) {
   const rel = path.relative(rootDir, filePath).split(path.sep);
-  if (rel[0] === 'en') return 'en';
-  if (rel[0] === 'zh') return 'zh';
-  if (rel[0] === 'fr') return 'fr';
+  const rootPart = rel[0];
+  if (LOCALE_PREFIXES.includes(rootPart)) return rootPart;
   return null;
 }
 
