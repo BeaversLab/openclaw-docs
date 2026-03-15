@@ -152,6 +152,6 @@ curl "http://localhost:4000/spend/logs" \
 - [LiteLLM Docs](https://docs.litellm.ai)
 - [Model Providers](/en/concepts/model-providers)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

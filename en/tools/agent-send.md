@@ -52,6 +52,6 @@ openclaw agent --agent ops --message "Generate report" --deliver --reply-channel
 - `--timeout <seconds>`: override agent timeout
 - `--json`: output structured JSON
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

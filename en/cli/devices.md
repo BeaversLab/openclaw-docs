@@ -130,6 +130,6 @@ Related:
 - [Dashboard auth troubleshooting](/en/web/dashboard#if-you-see-unauthorized-1008)
 - [Gateway troubleshooting](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

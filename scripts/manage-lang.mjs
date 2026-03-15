@@ -56,11 +56,17 @@ async function syncPublished() {
   console.log(`  - Updating ${CONFIG_PATHS.redirect} redirect logic...`);
   let redirect = await fs.readFile(CONFIG_PATHS.redirect, "utf8");
   
-  // Update Regex
-  redirect = redirect.replace(
-    /match\(\/\^\\\/\(.*?\\)\(\\\/\.\*\)\?\$\/\/\)/,
-    `match(/^\\/(${enabledLangs.join('|')})(\\/.*)?$/)`
-  );
+  // Update Regex: var localeMatch = path.match(/^\/(en|zh|fr)(\/.*)?$/);
+  const regexLineStart = "var localeMatch = path.match(/^\\/(";
+  const regexLineEnd = ")(\\/.*)?$/);";
+  const lineStartIdx = redirect.indexOf(regexLineStart);
+  const lineEndIdx = redirect.indexOf(regexLineEnd, lineStartIdx);
+  
+  if (lineStartIdx !== -1 && lineEndIdx !== -1) {
+    redirect = redirect.slice(0, lineStartIdx + regexLineStart.length) + 
+               enabledLangs.join('|') + 
+               redirect.slice(lineEndIdx);
+  }
 
   // Update detectPreferredLocale (saved checks)
   const savedMarkerStart = "try {\n      saved = localStorage.getItem('preferredLang');\n    } catch (e) {}\n";

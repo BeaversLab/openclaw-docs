@@ -397,6 +397,6 @@ Mattermost supports multiple accounts under `channels.mattermost.accounts`:
 - Confirmation shows raw ID instead of button name: `context.action_id` does not match the button's `id`. Set both to the same sanitized value.
 - Agent doesn't know about buttons: add `capabilities: ["inlineButtons"]` to the Mattermost channel config.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

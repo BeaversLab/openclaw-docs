@@ -2993,6 +2993,6 @@ You can add options like `debounce:2s cap:25 drop:summarize` for followup modes.
 
 Still stuck? Ask in [Discord](https://discord.com/invite/clawd) or open a [GitHub discussion](https://github.com/openclaw/openclaw/discussions).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

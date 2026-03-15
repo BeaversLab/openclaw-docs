@@ -160,6 +160,6 @@ Current npm plugin list (update as needed):
 Release notes must also call out **new optional bundled plugins** that are **not
 on by default** (example: `tlon`).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

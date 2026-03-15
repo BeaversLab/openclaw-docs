@@ -315,6 +315,6 @@ Option B:
 - [Nodes](/en/nodes)
 - [Elevated mode](/en/tools/elevated)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -2,7 +2,7 @@
   var path = window.location.pathname;
   var search = window.location.search || '';
   var hash = window.location.hash || '';
-  var localeMatch = path.match(/^\/(en|zh|fr)(\/.*)?$/);
+  var localeMatch = path.match(/^\/(en|zh|fr|es)(\/.*)?$/);
   var aliasMap = {
     '/wizard': '/start/wizard',
     '/onboarding': '/start/onboarding',
@@ -25,15 +25,17 @@
       saved = localStorage.getItem('preferredLang');
     } catch (e) {}
 
-    if (saved === 'zh') return 'zh';
     if (saved === 'en') return 'en';
+    if (saved === 'zh') return 'zh';
     if (saved === 'fr') return 'fr';
-
+    if (saved === 'es') return 'es';
     var langs = navigator.languages || [navigator.language || ''];
     for (var i = 0; i < langs.length; i++) {
       var l = (langs[i] || '').toLowerCase();
+      if (l.startsWith('en')) return 'en';
       if (l.startsWith('zh')) return 'zh';
       if (l.startsWith('fr')) return 'fr';
+      if (l.startsWith('es')) return 'es';
     }
     return 'en';
   }

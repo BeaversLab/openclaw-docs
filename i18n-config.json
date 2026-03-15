@@ -17,6 +17,12 @@
       "mintlifyCode": "fr",
       "enabled": true,
       "description": "French translation"
+    },
+    "es": {
+      "label": "ES",
+      "mintlifyCode": "es",
+      "enabled": true,
+      "description": "Added via script on 3/16/2026"
     }
   }
 }

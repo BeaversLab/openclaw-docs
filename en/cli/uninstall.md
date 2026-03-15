@@ -19,6 +19,6 @@ openclaw uninstall --dry-run
 
 Run `openclaw backup create` first if you want a restorable snapshot before removing state or workspaces.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

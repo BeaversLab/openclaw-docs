@@ -551,6 +551,6 @@ For group targeting, use `agents.list[].groupChat.mentionPatterns` so @mentions 
 
 See [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) for detailed examples.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -122,6 +122,6 @@ The node host stores its node id, token, display name, and gateway connection in
 - [Exec approvals](/en/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>` (edit from the Gateway)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -45,6 +45,6 @@ openclaw onboard --auth-choice zai-cn
 - See [/providers/glm](/en/providers/glm) for the model family overview.
 - Z.AI uses Bearer auth with your API key.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -20,3 +20,5 @@ linkFix:
       prefix: fr/
     - dir: /zh
       prefix: zh/
+    - dir: /es
+      prefix: es/

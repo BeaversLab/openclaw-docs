@@ -121,6 +121,6 @@ Related:
 - [/automation/cron-vs-heartbeat](/en/automation/cron-vs-heartbeat)
 - [/concepts/timezone](/en/concepts/timezone)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

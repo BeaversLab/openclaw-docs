@@ -101,6 +101,6 @@ High-level:
 - [Updating](/en/install/updating)
 - [CLI reference](/en/cli)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

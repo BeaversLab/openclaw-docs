@@ -85,6 +85,6 @@ Note: Discord has no “pick exactly N” mode; `pollMulti` maps to multi-select
 Teams polls are rendered as Adaptive Cards and require the gateway to stay online
 to record votes in `~/.openclaw/msteams-polls.json`.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

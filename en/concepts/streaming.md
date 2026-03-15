@@ -154,6 +154,6 @@ Slack:
 - `block` uses append-style draft previews.
 - `progress` uses status preview text, then final answer.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

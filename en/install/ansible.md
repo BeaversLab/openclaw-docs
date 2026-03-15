@@ -207,6 +207,6 @@ For detailed security architecture and troubleshooting:
 - [Sandboxing](/en/gateway/sandboxing) — agent sandbox configuration
 - [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) — per-agent isolation
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -20,6 +20,6 @@ If you’re looking for conceptual questions (not “something broke”):
 
 - [FAQ (concepts)](/en/help/faq)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

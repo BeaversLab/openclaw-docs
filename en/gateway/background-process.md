@@ -96,6 +96,6 @@ Send stdin:
 { "tool": "process", "action": "write", "sessionId": "<id>", "data": "y\n" }
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

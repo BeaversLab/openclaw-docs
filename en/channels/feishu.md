@@ -653,6 +653,6 @@ Key options:
 - ✅ Audio
 - ⚠️ Rich text (partial support)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

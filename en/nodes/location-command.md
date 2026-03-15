@@ -97,6 +97,6 @@ Errors (stable codes):
 - While Using: “Only when OpenClaw is open.”
 - Precise: “Use precise GPS location. Toggle off to share approximate location.”
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

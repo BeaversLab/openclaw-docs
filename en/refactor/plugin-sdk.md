@@ -213,6 +213,6 @@ Notes:
 
 Related docs: [Plugins](/en/tools/plugin), [Channels](/en/channels/index), [Configuration](/en/gateway/configuration).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

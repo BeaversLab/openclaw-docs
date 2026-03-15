@@ -258,6 +258,6 @@ openclaw onboard --auth-choice setup-token
 
 More: [/gateway/troubleshooting](/en/gateway/troubleshooting) and [/help/faq](/en/help/faq).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

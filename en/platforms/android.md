@@ -165,6 +165,6 @@ See [Camera node](/en/nodes/camera) for parameters and CLI helpers.
   - `calendar.events`, `calendar.add`
   - `motion.activity`, `motion.pedometer`
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

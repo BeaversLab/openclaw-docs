@@ -75,6 +75,6 @@ Large workspaces are usually the main driver of archive size. If you want a smal
 
 For the smallest archive, use `--only-config`.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

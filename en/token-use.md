@@ -111,6 +111,6 @@ agents:
 
 See [Skills](/en/tools/skills) for the exact skill list overhead formula.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

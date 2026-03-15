@@ -184,6 +184,6 @@ Related docs:
 - [Session Pruning](/en/concepts/session-pruning)
 - [Gateway Configuration Reference](/en/gateway/configuration-reference)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -80,6 +80,6 @@ See [Configuration: Env var substitution](/en/gateway/configuration#env-var-subs
 - [FAQ: env vars and .env loading](/en/help/faq#env-vars-and-env-loading)
 - [Models overview](/en/concepts/models)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

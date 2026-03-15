@@ -90,6 +90,6 @@ You can control the prompt format with `agents.defaults.timeFormat` (`auto` | `1
 
 See [Date & Time](/en/date-time) for the full behavior and examples.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

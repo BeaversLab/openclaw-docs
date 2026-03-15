@@ -240,6 +240,6 @@ Default account supports:
 - If login fails, verify nick availability and server password.
 - If TLS fails on a custom network, verify host/port and certificate setup.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

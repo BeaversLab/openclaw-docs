@@ -250,6 +250,6 @@ This approach complements the Docker setup above with reproducible deployments, 
 
 > **Note:** Community-maintained. For issues or contributions, see the repository links above.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

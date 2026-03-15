@@ -491,6 +491,6 @@ openclaw models list
 
 See also: [/gateway/configuration](/en/gateway/configuration) for full configuration examples.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

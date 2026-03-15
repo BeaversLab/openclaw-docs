@@ -772,6 +772,6 @@ How it maps:
 
 This keeps the agent deterministic and avoids brittle selectors.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

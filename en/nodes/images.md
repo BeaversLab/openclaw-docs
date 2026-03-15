@@ -71,6 +71,6 @@ The WhatsApp channel runs via **Baileys Web**. This document captures the curren
 - Validate recompression for images (size bound) and voice-note flag for audio.
 - Ensure multi-media replies fan out as sequential sends.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -61,6 +61,6 @@ Delete this file. You don't need a bootstrap script anymore — you're you now.
 
 _Good luck out there. Make it count._
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

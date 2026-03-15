@@ -119,6 +119,6 @@ The Gateway serves static files from `dist/control-ui`. Build them with:
 pnpm ui:build # auto-installs UI deps on first run
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

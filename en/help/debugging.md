@@ -161,6 +161,6 @@ Default file:
 - Keep logs local and delete them after debugging.
 - If you share logs, scrub secrets and PII first.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

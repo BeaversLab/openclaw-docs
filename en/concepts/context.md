@@ -168,6 +168,6 @@ engine instead.
 
 Either way, it reports sizes and top contributors; it does **not** dump the full system prompt or tool schemas.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -11,6 +11,6 @@ read_when:
 
 # Add tasks below when you want the agent to check something periodically.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

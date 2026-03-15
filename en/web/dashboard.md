@@ -53,6 +53,6 @@ Prefer localhost, Tailscale Serve, or an SSH tunnel.
   - No token configured: `openclaw doctor --generate-gateway-token`
 - In the dashboard settings, paste the token into the auth field, then connect.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

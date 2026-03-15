@@ -129,6 +129,6 @@ SPOILER style ranges. Other channels treat them as plain text.
 - Preserve trailing newlines for fenced code blocks so closing markers land on
   their own line.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

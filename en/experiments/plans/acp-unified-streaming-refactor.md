@@ -95,6 +95,6 @@ Canonical event contract:
 - Legacy ACP projector/coalescer path is removed.
 - Streaming config resolution is shared and runtime-independent.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

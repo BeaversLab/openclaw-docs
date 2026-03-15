@@ -46,6 +46,6 @@ Text is supported everywhere; media and reactions vary by channel.
 - Troubleshooting: [Channel troubleshooting](/en/channels/troubleshooting).
 - Model providers are documented separately; see [Model Providers](/en/providers/models).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

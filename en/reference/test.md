@@ -87,6 +87,6 @@ Ensures `qrcode-terminal` loads under the supported Docker Node runtimes (Node 2
 pnpm test:docker:qr
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

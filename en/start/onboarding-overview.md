@@ -50,6 +50,6 @@ CLI wizard. You will be asked to:
 
 For detailed steps, follow the CLI onboarding docs above.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

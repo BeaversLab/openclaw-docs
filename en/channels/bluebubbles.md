@@ -346,6 +346,6 @@ Prefer `chat_guid` for stable routing:
 
 For general channel workflow reference, see [Channels](/en/channels) and the [Plugins](/en/tools/plugin) guide.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

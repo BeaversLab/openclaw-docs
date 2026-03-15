@@ -392,6 +392,6 @@ Heartbeats run full agent turns. Shorter intervals burn more tokens. To reduce c
 - Keep `HEARTBEAT.md` small.
 - Use `target: "none"` if you only want internal state updates.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

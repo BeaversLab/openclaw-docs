@@ -122,6 +122,6 @@ The gateway is the source of truth for node/client admission.
 - **macOS app**: helps you pick a gateway, shows pairing prompts, and uses SSH only as a fallback.
 - **iOS/Android nodes**: browse Bonjour as a convenience and connect to the paired Gateway WS.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

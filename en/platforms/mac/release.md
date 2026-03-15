@@ -89,6 +89,6 @@ Commit the updated `appcast.xml` alongside the release assets (zip + dSYM) when 
 
 Definition of done: signed app + appcast are published, update flow works from an older installed version, and release assets are attached to the GitHub release.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

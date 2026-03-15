@@ -117,6 +117,6 @@ Full troubleshooting: [/channels/signal#troubleshooting](/en/channels/signal#tro
 
 Full troubleshooting: [/channels/matrix#troubleshooting](/en/channels/matrix#troubleshooting)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

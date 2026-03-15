@@ -80,6 +80,6 @@ Notes:
 - `paste-token` accepts a token string generated elsewhere or from automation.
 - Anthropic policy note: setup-token support is technical compatibility. Anthropic has blocked some subscription usage outside Claude Code in the past, so verify current terms before using it broadly.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

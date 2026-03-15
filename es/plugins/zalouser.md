@@ -1,0 +1,81 @@
+---
+summary: "Complemento de Zalo Personal: inicio de sesión QR y mensajería mediante zca-js nativo (instalación del complemento + configuración del canal + herramienta)"
+read_when:
+  - You want Zalo Personal (unofficial) support in OpenClaw
+  - You are configuring or developing the zalouser plugin
+title: "Complemento de Zalo Personal"
+---
+
+# Zalo Personal (complemento)
+
+Soporte de Zalo Personal para OpenClaw a través de un complemento, utilizando `zca-js` nativo para automatizar una cuenta de usuario normal de Zalo.
+
+> **Advertencia:** La automatización no oficial puede dar lugar a la suspensión o prohibición de la cuenta. Úselo bajo su propia responsabilidad.
+
+## Nomenclatura
+
+El ID del canal es `zalouser` para dejar claro que esto automatiza una **cuenta de usuario personal de Zalo** (no oficial). Mantenemos `zalo` reservado para una posible futura integración con la API oficial de Zalo.
+
+## Dónde se ejecuta
+
+Este complemento se ejecuta **dentro del proceso Gateway**.
+
+Si utiliza un Gateway remoto, instálelo/configúrelo en la **máquina que ejecuta el Gateway** y luego reinicie el Gateway.
+
+No se requiere ningún binario CLI externo `zca`/`openzca`.
+
+## Instalación
+
+### Opción A: instalar desde npm
+
+```bash
+openclaw plugins install @openclaw/zalouser
+```
+
+Reinicie el Gateway después.
+
+### Opción B: instalar desde una carpeta local (desarrollo)
+
+```bash
+openclaw plugins install ./extensions/zalouser
+cd ./extensions/zalouser && pnpm install
+```
+
+Reinicie el Gateway después.
+
+## Configuración
+
+La configuración del canal se encuentra bajo `channels.zalouser` (no `plugins.entries.*`):
+
+```json5
+{
+  channels: {
+    zalouser: {
+      enabled: true,
+      dmPolicy: "pairing",
+    },
+  },
+}
+```
+
+## CLI
+
+```bash
+openclaw channels login --channel zalouser
+openclaw channels logout --channel zalouser
+openclaw channels status --probe
+openclaw message send --channel zalouser --target <threadId> --message "Hello from OpenClaw"
+openclaw directory peers list --channel zalouser --query "name"
+```
+
+## Herramienta del agente
+
+Nombre de la herramienta: `zalouser`
+
+Acciones: `send`, `image`, `link`, `friends`, `groups`, `me`, `status`
+
+Las acciones de mensajes del canal también admiten `react` para reacciones a mensajes.
+
+import es from "/components/footer/es.mdx";
+
+<es />

@@ -561,6 +561,6 @@ Live/opt-in:
 
 For current run commands, see [Pi Development Workflow](/en/pi-dev).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

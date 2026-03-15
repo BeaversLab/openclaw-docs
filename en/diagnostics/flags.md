@@ -90,6 +90,6 @@ For remote gateways, you can also use `openclaw logs --follow` (see [/cli/logs](
 - Flags are safe to leave enabled; they only affect log volume for the specific subsystem.
 - Use [/logging](/en/logging) to change log destinations, levels, and redaction.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -113,6 +113,6 @@ Inbound replies include:
 
 This is consistent across channels.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

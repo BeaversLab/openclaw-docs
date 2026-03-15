@@ -301,6 +301,6 @@ Browse [https://clawhub.com](https://clawhub.com).
 
 ---
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

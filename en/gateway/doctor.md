@@ -329,6 +329,6 @@ if the workspace is not already under git.
 See [/concepts/agent-workspace](/en/concepts/agent-workspace) for a full guide to
 workspace structure and git backup (recommended private GitHub or GitLab).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

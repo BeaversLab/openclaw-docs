@@ -29,6 +29,6 @@ openclaw tui --session main --deliver
 openclaw tui --session bugfix
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

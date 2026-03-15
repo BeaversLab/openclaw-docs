@@ -214,6 +214,6 @@ curl -X POST http://127.0.0.1:18789/hooks/gmail \
   If you must disable this for a specific hook, set `allowUnsafeExternalContent: true`
   in that hook's mapping (dangerous).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

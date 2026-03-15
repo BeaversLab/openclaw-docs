@@ -152,6 +152,6 @@ Short version: **keep the Gateway loopback-only** unless you’re sure you need 
 
 Deep dive: [Security](/en/gateway/security).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

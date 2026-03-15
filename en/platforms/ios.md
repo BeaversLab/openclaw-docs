@@ -215,6 +215,6 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 - [Discovery](/en/gateway/discovery)
 - [Bonjour](/en/gateway/bonjour)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -70,6 +70,6 @@ openclaw security audit --fix --json | jq '{fix: .fix.ok, summary: .report.summa
 - change gateway bind/auth/network exposure choices
 - remove or rewrite plugins/skills
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

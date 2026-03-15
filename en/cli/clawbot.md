@@ -20,6 +20,6 @@ Prefer modern top-level commands directly:
 
 - `openclaw clawbot qr` -> `openclaw qr`
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

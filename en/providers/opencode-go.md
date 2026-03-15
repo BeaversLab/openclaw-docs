@@ -44,6 +44,6 @@ OpenClaw handles per-model routing automatically when the model ref uses `openco
 - Use [OpenCode](/en/providers/opencode) for the shared onboarding and catalog overview.
 - Runtime refs stay explicit: `opencode/...` for Zen, `opencode-go/...` for Go.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

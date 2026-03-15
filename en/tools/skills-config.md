@@ -76,6 +76,6 @@ Use one of:
 
 Global `env` and `skills.entries.<skill>.env/apiKey` apply to **host** runs only.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

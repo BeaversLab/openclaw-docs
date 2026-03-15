@@ -60,6 +60,6 @@ Agent -> Gateway -> Node Service (WS)
 - TCC prompts originate only from the GUI app bundle; keep the signed bundle ID stable across rebuilds.
 - IPC hardening: socket mode `0600`, token, peer-UID checks, HMAC challenge/response, short TTL.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

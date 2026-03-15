@@ -52,6 +52,6 @@ from `~/.qwen/oauth_creds.json` when it loads the auth store. You still need a
   `models.providers.qwen-portal.baseUrl` if Qwen provides a different endpoint).
 - See [Model providers](/en/concepts/model-providers) for provider-wide rules.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

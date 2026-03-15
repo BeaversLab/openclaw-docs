@@ -107,6 +107,6 @@ Use `gateway.nodes.browser.mode` to control auto-routing and `gateway.nodes.brow
 
 Security + remote setup: [Browser tool](/en/tools/browser), [Remote access](/en/gateway/remote), [Tailscale](/en/gateway/tailscale), [Security](/en/gateway/security)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

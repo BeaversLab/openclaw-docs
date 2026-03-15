@@ -133,6 +133,6 @@ Treat `.prose` files like code. Review before running. Use OpenClaw tool allowli
 
 For deterministic, approval-gated workflows, compare with [Lobster](/en/tools/lobster).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

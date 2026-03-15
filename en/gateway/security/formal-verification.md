@@ -163,6 +163,6 @@ What it means:
   - `make routing-precedence-negative`
   - `make routing-identitylinks-negative`
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

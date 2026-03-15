@@ -68,6 +68,6 @@ Create `SOUL_EVIL.md` in the agent workspace root (next to `SOUL.md`).
 
 - [Hooks](/en/hooks)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

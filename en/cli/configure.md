@@ -35,6 +35,6 @@ openclaw configure
 openclaw configure --section model --section channels
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

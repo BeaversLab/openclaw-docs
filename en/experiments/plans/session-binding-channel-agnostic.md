@@ -225,6 +225,6 @@ Tests:
 - no behavior change for disabled bound spawn deployments
 - ACP remains explicitly deferred
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

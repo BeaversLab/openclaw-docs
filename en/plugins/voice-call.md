@@ -342,6 +342,6 @@ This repo ships a matching skill doc at `skills/voice-call/SKILL.md`.
 - `voicecall.end` (`callId`)
 - `voicecall.status` (`callId`)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

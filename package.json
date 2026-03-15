@@ -17,7 +17,8 @@
     "lang:enable": "node scripts/manage-lang.mjs enable",
     "lang:remove": "node scripts/manage-lang.mjs remove",
     "lang:sync": "node scripts/manage-lang.mjs sync",
-    "hooks:install": "git config core.hooksPath .githooks"
+    "hooks:install": "git config core.hooksPath .githooks",
+    "format:es": "prettier --write \"es/**/*.md\""
   },
   "keywords": [
     "documentation",
