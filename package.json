@@ -7,6 +7,7 @@
     "format": "prettier --write \"**/*.{md,json,yaml,yml,json5}\"",
     "format:check": "prettier --check \"**/*.{md,json,yaml,yml,json5}\"",
     "format:en": "prettier --write \"en/**/*.md\"",
+    "format:fr": "prettier --write \"fr/**/*.md\"",
     "format:zh": "prettier --write \"zh/**/*.md\"",
     "format:components": "prettier --write \"components/**/*.mdx\"",
     "format:staged": "prettier --write",

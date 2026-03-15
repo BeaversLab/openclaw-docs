@@ -20,7 +20,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const LOCALE_PREFIXES = ['en', 'zh'];
+const LOCALE_PREFIXES = ['en', 'zh', 'fr'];
 const LOCALE_RE = new RegExp(`^/(${LOCALE_PREFIXES.join('|')})/`);
 const SKIP_PREFIXES = [
   'http://',
@@ -37,6 +37,7 @@ function detectLocale(filePath, rootDir) {
   const rel = path.relative(rootDir, filePath).split(path.sep);
   if (rel[0] === 'en') return 'en';
   if (rel[0] === 'zh') return 'zh';
+  if (rel[0] === 'fr') return 'fr';
   return null;
 }
 

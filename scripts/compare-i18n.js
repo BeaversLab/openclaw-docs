@@ -51,7 +51,7 @@ async function findMarkdownFiles(dir, baseDir = dir) {
 }
 
 // Run quality check on a single file pair
-async function checkFile(relPath, sourceDir, targetDir) {
+async function checkFile(relPath, sourceDir, targetDir, targetLocale = 'zh') {
   const srcFile = path.join(sourceDir, relPath);
   const tgtFile = path.join(targetDir, relPath);
 
@@ -77,7 +77,7 @@ async function checkFile(relPath, sourceDir, targetDir) {
   const noTranslate = i18nDir ? await readNoTranslateConfig(i18nDir) : null;
 
   let result = runAllChecks(srcContent, tgtContent, {
-    targetLocale: 'zh',
+    targetLocale: targetLocale,
     noTranslateConfig: noTranslate,
     consistencyConfig: null,
   });
@@ -237,8 +237,15 @@ async function main() {
       : args.includes('--failures') ? 'failures'
         : 'full';
 
+  // Get target locale from args (e.g. --locale fr or -l fr), default to 'zh'
+  let targetLocale = 'zh';
+  const localeIdx = args.findIndex(a => a === '--locale' || a === '-l');
+  if (localeIdx !== -1 && args[localeIdx + 1]) {
+    targetLocale = args[localeIdx + 1];
+  }
+
   const sourceDir = path.join(PROJECT_ROOT, 'en');
-  const targetDir = path.join(PROJECT_ROOT, 'zh');
+  const targetDir = path.join(PROJECT_ROOT, targetLocale);
 
   // Silence progress output in JSON mode
   if (mode !== 'json') {
@@ -262,7 +269,8 @@ async function main() {
       process.stdout.write(`\r${colorize(`Checking... ${checked}/${sourceFiles.length}`, 'dim')}`);
     }
 
-    const result = await checkFile(relPath, sourceDir, targetDir);
+    const result = await checkFile(relPath, sourceDir, targetDir, targetLocale);
+    // Explicitly set the target locale for checks inside checkFile if needed
     results.push(result);
   }
 

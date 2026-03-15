@@ -16,5 +16,7 @@ linkFix:
   rules:
     - dir: /en
       prefix: en/
+    - dir: /fr
+      prefix: fr/
     - dir: /zh
       prefix: zh/

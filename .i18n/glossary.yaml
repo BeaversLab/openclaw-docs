@@ -13,6 +13,7 @@ entries:
       category: acronym
       note: Industry standard
     targets:
+      fr: API
       zh: API
       zh-CN: API
     match:
@@ -37,6 +38,7 @@ entries:
       category: acronym
       note: Industry standard
     targets:
+      fr: CLI
       zh: CLI
       zh-CN: CLI
     match:
@@ -61,6 +63,7 @@ entries:
       category: acronym
       note: Technical acronym
     targets:
+      fr: IPC
       zh: IPC
       zh-CN: IPC
     match:
@@ -85,6 +88,7 @@ entries:
       category: acronym
       note: Industry standard term
     targets:
+      fr: LLM
       zh: LLM
       zh-CN: LLM
     match:
@@ -109,6 +113,7 @@ entries:
       category: acronym
       note: Technical acronym
     targets:
+      fr: RPC
       zh: RPC
       zh-CN: RPC
     match:
@@ -133,6 +138,7 @@ entries:
       category: acronym
       note: Technical acronym
     targets:
+      fr: TUI
       zh: TUI
       zh-CN: TUI
     match:
@@ -157,6 +163,7 @@ entries:
       category: browser
       note: Browser name
     targets:
+      fr: Brave
       zh: Brave
       zh-CN: Brave
     match:
@@ -181,6 +188,7 @@ entries:
       category: company
       note: Company name
     targets:
+      fr: Anthropic
       zh: Anthropic
       zh-CN: Anthropic
     match:
@@ -205,6 +213,7 @@ entries:
       category: company
       note: Company name
     targets:
+      fr: Deepgram
       zh: Deepgram
       zh-CN: Deepgram
     match:
@@ -229,6 +238,7 @@ entries:
       category: company
       note: Company name
     targets:
+      fr: MiniMax
       zh: MiniMax
       zh-CN: MiniMax
     match:
@@ -253,6 +263,7 @@ entries:
       category: company
       note: Company name
     targets:
+      fr: Moonshot
       zh: Moonshot
       zh-CN: Moonshot
     match:
@@ -277,6 +288,7 @@ entries:
       category: company
       note: Company name
     targets:
+      fr: OpenAI
       zh: OpenAI
       zh-CN: OpenAI
     match:
@@ -301,6 +313,7 @@ entries:
       category: company
       note: Company name
     targets:
+      fr: Oracle
       zh: Oracle
       zh-CN: Oracle
     match:
@@ -325,6 +338,7 @@ entries:
       category: company
       note: Company name
     targets:
+      fr: Perplexity
       zh: Perplexity
       zh-CN: Perplexity
     match:
@@ -349,6 +363,7 @@ entries:
       category: company
       note: Company name
     targets:
+      fr: Vercel
       zh: Vercel
       zh-CN: Vercel
     match:
@@ -373,6 +388,7 @@ entries:
       category: company
       note: Company name
     targets:
+      fr: Xiaomi
       zh: Xiaomi
       zh-CN: Xiaomi
     match:
@@ -397,6 +413,7 @@ entries:
       category: library
       note: Library name
     targets:
+      fr: Baileys
       zh: Baileys
       zh-CN: Baileys
     match:
@@ -421,6 +438,7 @@ entries:
       category: library
       note: Library name
     targets:
+      fr: Bolt
       zh: Bolt
       zh-CN: Bolt
     match:
@@ -445,6 +463,7 @@ entries:
       category: library
       note: Library name
     targets:
+      fr: grammY
       zh: grammY
       zh-CN: grammY
     match:
@@ -469,6 +488,7 @@ entries:
       category: library
       note: Library name
     targets:
+      fr: TypeBox
       zh: TypeBox
       zh-CN: TypeBox
     match:
@@ -493,6 +513,7 @@ entries:
       category: model
       note: Model name
     targets:
+      fr: GLM
       zh: GLM
       zh-CN: GLM
     match:
@@ -517,6 +538,7 @@ entries:
       category: os
       note: OS name
     targets:
+      fr: Android
       zh: Android
       zh-CN: Android
     match:
@@ -541,6 +563,7 @@ entries:
       category: os
       note: OS name
     targets:
+      fr: iOS
       zh: iOS
       zh-CN: iOS
     match:
@@ -565,6 +588,7 @@ entries:
       category: os
       note: OS name
     targets:
+      fr: Linux
       zh: Linux
       zh-CN: Linux
     match:
@@ -589,6 +613,7 @@ entries:
       category: os
       note: OS name
     targets:
+      fr: macOS
       zh: macOS
       zh-CN: macOS
     match:
@@ -613,6 +638,7 @@ entries:
       category: os
       note: OS name
     targets:
+      fr: Windows
       zh: Windows
       zh-CN: Windows
     match:
@@ -637,6 +663,7 @@ entries:
       category: package-manager
       note: Package manager
     targets:
+      fr: Nix
       zh: Nix
       zh-CN: Nix
     match:
@@ -661,6 +688,7 @@ entries:
       category: package-manager
       note: Package manager
     targets:
+      fr: npm
       zh: npm
       zh-CN: npm
     match:
@@ -685,6 +713,7 @@ entries:
       category: platform
       note: Platform name
     targets:
+      fr: DigitalOcean
       zh: DigitalOcean
       zh-CN: DigitalOcean
     match:
@@ -709,6 +738,7 @@ entries:
       category: platform
       note: Platform name
     targets:
+      fr: Fly.io
       zh: Fly.io
       zh-CN: Fly.io
     match:
@@ -733,6 +763,7 @@ entries:
       category: platform
       note: Platform name
     targets:
+      fr: GCP
       zh: GCP
       zh-CN: GCP
     match:
@@ -757,6 +788,7 @@ entries:
       category: platform
       note: Platform name
     targets:
+      fr: GitHub
       zh: GitHub
       zh-CN: GitHub
     match:
@@ -781,6 +813,7 @@ entries:
       category: platform
       note: Platform name
     targets:
+      fr: Hetzner
       zh: Hetzner
       zh-CN: Hetzner
     match:
@@ -805,6 +838,7 @@ entries:
       category: platform
       note: Platform name
     targets:
+      fr: Matrix
       zh: Matrix
       zh-CN: Matrix
     match:
@@ -829,6 +863,7 @@ entries:
       category: platform
       note: Platform name
     targets:
+      fr: Mattermost
       zh: Mattermost
       zh-CN: Mattermost
     match:
@@ -853,6 +888,7 @@ entries:
       category: platform
       note: Platform name
     targets:
+      fr: Nextcloud
       zh: Nextcloud
       zh-CN: Nextcloud
     match:
@@ -877,6 +913,7 @@ entries:
       category: platform
       note: Protocol/Platform
     targets:
+      fr: Nostr
       zh: Nostr
       zh-CN: Nostr
     match:
@@ -901,6 +938,7 @@ entries:
       category: platform
       note: Platform name
     targets:
+      fr: Tlon
       zh: Tlon
       zh-CN: Tlon
     match:
@@ -925,6 +963,7 @@ entries:
       category: platform
       note: Platform name
     targets:
+      fr: Twitch
       zh: Twitch
       zh-CN: Twitch
     match:
@@ -949,6 +988,7 @@ entries:
       category: product
       note: Product name
     targets:
+      fr: BlueBubbles
       zh: BlueBubbles
       zh-CN: BlueBubbles
     match:
@@ -973,6 +1013,7 @@ entries:
       category: product
       note: Feature name
     targets:
+      fr: Canvas
       zh: Canvas
       zh-CN: Canvas
     match:
@@ -997,6 +1038,7 @@ entries:
       category: product
       note: Product feature
     targets:
+      fr: ClawdHub
       zh: ClawdHub
       zh-CN: ClawdHub
     match:
@@ -1021,6 +1063,7 @@ entries:
       category: product
       note: Product feature
     targets:
+      fr: ClawHub
       zh: ClawHub
       zh-CN: ClawHub
     match:
@@ -1045,6 +1088,7 @@ entries:
       category: product
       note: Product name
     targets:
+      fr: Discord
       zh: Discord
       zh-CN: Discord
     match:
@@ -1069,6 +1113,7 @@ entries:
       category: product
       note: Core component name
     targets:
+      fr: Gateway
       zh: Gateway(网关)
       zh-CN: Gateway(网关)
     match:
@@ -1093,6 +1138,7 @@ entries:
       category: product
       note: Product name
     targets:
+      fr: Google Chat
       zh: Google Chat
       zh-CN: Google Chat
     match:
@@ -1117,6 +1163,7 @@ entries:
       category: product
       note: Apple product
     targets:
+      fr: iMessage
       zh: iMessage
       zh-CN: iMessage
     match:
@@ -1141,6 +1188,7 @@ entries:
       category: product
       note: Tool name
     targets:
+      fr: Lobster
       zh: Lobster
       zh-CN: Lobster
     match:
@@ -1165,6 +1213,7 @@ entries:
       category: product
       note: Product name
     targets:
+      fr: Microsoft Teams
       zh: Microsoft Teams
       zh-CN: Microsoft Teams
     match:
@@ -1189,6 +1238,7 @@ entries:
       category: product
       note: Product name
     targets:
+      fr: Ollama
       zh: Ollama
       zh-CN: Ollama
     match:
@@ -1213,6 +1263,7 @@ entries:
       category: product
       note: Product name
     targets:
+      fr: OpenClaw
       zh: OpenClaw
       zh-CN: OpenClaw
     match:
@@ -1237,6 +1288,7 @@ entries:
       category: product
       note: Feature name
     targets:
+      fr: OpenProse
       zh: OpenProse
       zh-CN: OpenProse
     match:
@@ -1261,6 +1313,7 @@ entries:
       category: product
       note: Component name
     targets:
+      fr: Peekaboo
       zh: Peekaboo
       zh-CN: Peekaboo
     match:
@@ -1285,6 +1338,7 @@ entries:
       category: product
       note: Product name
     targets:
+      fr: Qwen
       zh: Qwen
       zh-CN: Qwen
     match:
@@ -1309,6 +1363,7 @@ entries:
       category: product
       note: Product name
     targets:
+      fr: Raspberry Pi
       zh: Raspberry Pi
       zh-CN: Raspberry Pi
     match:
@@ -1333,6 +1388,7 @@ entries:
       category: product
       note: Product name
     targets:
+      fr: Signal
       zh: Signal
       zh-CN: Signal
     match:
@@ -1357,6 +1413,7 @@ entries:
       category: product
       note: Product name
     targets:
+      fr: Slack
       zh: Slack
       zh-CN: Slack
     match:
@@ -1381,6 +1438,7 @@ entries:
       category: product
       note: Product name
     targets:
+      fr: Tailscale
       zh: Tailscale
       zh-CN: Tailscale
     match:
@@ -1405,6 +1463,7 @@ entries:
       category: product
       note: Product name
     targets:
+      fr: Telegram
       zh: Telegram
       zh-CN: Telegram
     match:
@@ -1429,6 +1488,7 @@ entries:
       category: product
       note: Feature name
     targets:
+      fr: WebChat
       zh: WebChat
       zh-CN: WebChat
     match:
@@ -1453,6 +1513,7 @@ entries:
       category: product
       note: Product name
     targets:
+      fr: WhatsApp
       zh: WhatsApp
       zh-CN: WhatsApp
     match:
@@ -1477,6 +1538,7 @@ entries:
       category: protocol
       note: Industry standard protocol
     targets:
+      fr: OAuth
       zh: OAuth
       zh-CN: OAuth
     match:
@@ -1501,6 +1563,7 @@ entries:
       category: runtime
       note: Runtime name
     targets:
+      fr: Bun
       zh: Bun
       zh-CN: Bun
     match:
@@ -1525,6 +1588,7 @@ entries:
       category: service
       note: AWS service
     targets:
+      fr: Amazon Bedrock
       zh: Amazon Bedrock
       zh-CN: Amazon Bedrock
     match:
@@ -1549,6 +1613,7 @@ entries:
       category: service
       note: Service name
     targets:
+      fr: Firecrawl
       zh: Firecrawl
       zh-CN: Firecrawl
     match:
@@ -1573,6 +1638,7 @@ entries:
       category: service
       note: Service name
     targets:
+      fr: OpenResponses
       zh: OpenResponses
       zh-CN: OpenResponses
     match:
@@ -1597,6 +1663,7 @@ entries:
       category: service
       note: Service name
     targets:
+      fr: OpenRouter
       zh: OpenRouter
       zh-CN: OpenRouter
     match:
@@ -1621,6 +1688,7 @@ entries:
       category: service
       note: Service name
     targets:
+      fr: Venice
       zh: Venice
       zh-CN: Venice
     match:
@@ -1645,6 +1713,7 @@ entries:
       category: service
       note: Service name
     targets:
+      fr: Zalo
       zh: Zalo
       zh-CN: Zalo
     match:
@@ -1669,6 +1738,7 @@ entries:
       category: technology
       note: Technology name
     targets:
+      fr: Ansible
       zh: Ansible
       zh-CN: Ansible
     match:
@@ -1693,6 +1763,7 @@ entries:
       category: technology
       note: Apple technology
     targets:
+      fr: Bonjour
       zh: Bonjour
       zh-CN: Bonjour
     match:
@@ -1717,6 +1788,7 @@ entries:
       category: technology
       note: Technology name
     targets:
+      fr: Docker
       zh: Docker
       zh-CN: Docker
     match:
@@ -1741,6 +1813,7 @@ entries:
       category: technology
       note: Technology name
     targets:
+      fr: Node.js
       zh: Node.js
       zh-CN: Node.js
     match:
@@ -1765,6 +1838,7 @@ entries:
       category: technology
       note: Windows technology
     targets:
+      fr: WSL2
       zh: WSL2
       zh-CN: WSL2
     match:
@@ -1789,6 +1863,7 @@ entries:
       category: technology
       note: macOS technology
     targets:
+      fr: XPC
       zh: XPC
       zh-CN: XPC
     match:
@@ -1813,6 +1888,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: block streaming
       zh: 分块流式传输
       zh-CN: 分块流式传输
     match:
@@ -1838,6 +1914,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: channel
       zh: 渠道
       zh-CN: 渠道
     match:
@@ -1863,6 +1940,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: env var
       zh: 环境变量
       zh-CN: 环境变量
     match:
@@ -1888,6 +1966,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: env vars
       zh: 环境变量
       zh-CN: 环境变量
     match:
@@ -1913,6 +1992,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: environment variable
       zh: 环境变量
       zh-CN: 环境变量
     match:
@@ -1938,6 +2018,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: environment variables
       zh: 环境变量
       zh-CN: 环境变量
     match:
@@ -1963,6 +2044,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: expected keys
       zh: 预期键名
       zh-CN: 预期键名
     match:
@@ -1988,6 +2070,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: get unstuck
       zh: 解决问题
       zh-CN: 解决问题
     match:
@@ -2013,6 +2096,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: install sanity
       zh: 安装完整性检查
       zh-CN: 安装完整性检查
     match:
@@ -2038,6 +2122,7 @@ entries:
       category: generic-term
       note: Legacy preserved term kept as normalize-only
     targets:
+      fr: local loopback
       zh: local loopback
       zh-CN: local loopback
     match:
@@ -2063,6 +2148,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: model
       zh: 模型
       zh-CN: 模型
     match:
@@ -2088,6 +2174,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: onboarding
       zh: 新手引导
       zh-CN: 新手引导
     match:
@@ -2113,6 +2200,7 @@ entries:
       category: generic-term
       note: Legacy preserved term kept as normalize-only
     targets:
+      fr: Pi
       zh: Pi
       zh-CN: Pi
     match:
@@ -2138,6 +2226,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: provider
       zh: 提供商
       zh-CN: 提供商
     match:
@@ -2163,6 +2252,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: sandboxed
       zh: 沙箱隔离
       zh-CN: 沙箱隔离
     match:
@@ -2188,6 +2278,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: sandboxing
       zh: 沙箱隔离
       zh-CN: 沙箱隔离
     match:
@@ -2213,6 +2304,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: session
       zh: 会话
       zh-CN: 会话
     match:
@@ -2238,6 +2330,7 @@ entries:
       category: generic-term
       note: Legacy preserved term kept as normalize-only
     targets:
+      fr: Skills
       zh: Skills
       zh-CN: Skills
     match:
@@ -2263,6 +2356,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: tool
       zh: 工具
       zh-CN: 工具
     match:
@@ -2288,6 +2382,7 @@ entries:
       category: generic-term
       note: Legacy terminology mapping
     targets:
+      fr: troubleshooting
       zh: 故障排除
       zh-CN: 故障排除
     match:
@@ -2313,6 +2408,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: 'Auth: where it lives (important)'
       zh: 凭证：存储位置（重要）
       zh-CN: 凭证：存储位置（重要）
     match:
@@ -2338,6 +2434,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Block streaming
       zh: 分块流式传输
       zh-CN: 分块流式传输
     match:
@@ -2363,6 +2460,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Companion apps
       zh: 配套应用
       zh-CN: 配套应用
     match:
@@ -2388,6 +2486,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Discovery
       zh: 设备发现
       zh-CN: 设备发现
     match:
@@ -2413,6 +2512,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Discovery + transports
       zh: 设备发现 + 传输协议
       zh-CN: 设备发现 + 传输协议
     match:
@@ -2438,6 +2538,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: DM
       zh: 私信
       zh-CN: 私信
     match:
@@ -2463,6 +2564,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: DMs
       zh: 私信
       zh-CN: 私信
     match:
@@ -2488,6 +2590,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Docs directory
       zh: 文档目录
       zh-CN: 文档目录
     match:
@@ -2513,6 +2616,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: FAQ
       zh: 常见问题
       zh-CN: 常见问题
     match:
@@ -2538,6 +2642,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Features
       zh: 功能
       zh-CN: 功能
     match:
@@ -2563,6 +2668,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Getting started
       zh: 入门指南
       zh-CN: 入门指南
     match:
@@ -2588,6 +2694,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Getting Started
       zh: 入门指南
       zh-CN: 入门指南
     match:
@@ -2613,6 +2720,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Network model
       zh: 网络模型
       zh-CN: 网络模型
     match:
@@ -2638,6 +2746,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Onboarding
       zh: 新手引导
       zh-CN: 新手引导
     match:
@@ -2663,6 +2772,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Quick start
       zh: 快速开始
       zh-CN: 快速开始
     match:
@@ -2688,6 +2798,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Quick Start
       zh: 快速开始
       zh-CN: 快速开始
     match:
@@ -2713,6 +2824,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Sandbox
       zh: 沙箱
       zh-CN: 沙箱
     match:
@@ -2738,6 +2850,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Sandboxed
       zh: 沙箱隔离
       zh-CN: 沙箱隔离
     match:
@@ -2763,6 +2876,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Sandboxing
       zh: 沙箱隔离
       zh-CN: 沙箱隔离
     match:
@@ -2788,6 +2902,7 @@ entries:
       category: section-title
       note: Legacy heading or label translation
     targets:
+      fr: Sandboxing note
       zh: 沙箱注意事项
       zh-CN: 沙箱注意事项
     match:
@@ -2814,6 +2929,7 @@ entries:
       category: generic-term
       note: Specific technical term
     targets:
+      fr: EXFOLIATE
       zh: 去壳
       zh-CN: 去壳
     match:
@@ -2832,3 +2948,4 @@ entries:
       mode: protect
     validate:
       severity: error
+

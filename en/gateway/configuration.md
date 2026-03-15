@@ -39,11 +39,17 @@ See the [full reference](/en/gateway/configuration-reference) for every availabl
 
 <Tabs>
   <Tab title="Interactive wizard">
-    ```bash openclaw onboard # full setup wizard openclaw configure # config wizard ```
+    ```bash
+    openclaw onboard # full setup wizard
+    openclaw configure # config wizard
+    ```
   </Tab>
   <Tab title="CLI (one-liners)">
-    ```bash openclaw config get agents.defaults.workspace openclaw config set
-    agents.defaults.heartbeat.every "2h" openclaw config unset tools.web.search.apiKey ```
+    ```bash
+    openclaw config get agents.defaults.workspace
+    openclaw config set agents.defaults.heartbeat.every "2h"
+    openclaw config unset tools.web.search.apiKey
+    ```
   </Tab>
   <Tab title="Control UI">
     Open [http://127.0.0.1:18789](http://127.0.0.1:18789) and use the **Config** tab. The Control UI

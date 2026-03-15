@@ -38,11 +38,19 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
 <Tabs>
   <Tab title="Interactive wizard">
-    ```bash openclaw onboard # full setup wizard openclaw configure # config wizard ```
+    ```bash
+    openclaw onboard
+    # full setup wizard
+    openclaw configure
+    # config wizard
+    ```
   </Tab>
   <Tab title="CLI (one-liners)">
-    ```bash openclaw config get agents.defaults.workspace openclaw config set
-    agents.defaults.heartbeat.every "2h" openclaw config unset tools.web.search.apiKey ```
+    ```bash
+    openclaw config get agents.defaults.workspace
+    openclaw config setagents.defaults.heartbeat.every "2h"
+    openclaw config unset tools.web.search.apiKey
+    ```
   </Tab>
   <Tab title="Control UI">
     打开 [http://127.0.0.1:18789](http://127.0.0.1:18789) 并使用 **Config** 选项卡。Control UI
