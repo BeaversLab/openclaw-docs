@@ -31,6 +31,11 @@
     "dark": "#FF5A36",
     "light": "#FF8A6B"
   },
+  "integrations": {
+    "ga4": {
+      "measurementId": "G-R6K593F80R"
+    }
+  },
   "styling": {
     "codeblocks": {
       "theme": {
@@ -59,21 +64,15 @@
             "groups": [
               {
                 "group": "Home",
-                "pages": [
-                  "en/index"
-                ]
+                "pages": ["en/index"]
               },
               {
                 "group": "Overview",
-                "pages": [
-                  "en/start/showcase"
-                ]
+                "pages": ["en/start/showcase"]
               },
               {
                 "group": "Core concepts",
-                "pages": [
-                  "en/concepts/features"
-                ]
+                "pages": ["en/concepts/features"]
               },
               {
                 "group": "First steps",
@@ -99,10 +98,7 @@
             "groups": [
               {
                 "group": "Install overview",
-                "pages": [
-                  "en/install/index",
-                  "en/install/installer"
-                ]
+                "pages": ["en/install/index", "en/install/installer"]
               },
               {
                 "group": "Other install methods",
@@ -138,9 +134,7 @@
               },
               {
                 "group": "Advanced",
-                "pages": [
-                  "en/install/development-channels"
-                ]
+                "pages": ["en/install/development-channels"]
               }
             ]
           },
@@ -149,9 +143,7 @@
             "groups": [
               {
                 "group": "Overview",
-                "pages": [
-                  "en/channels/index"
-                ]
+                "pages": ["en/channels/index"]
               },
               {
                 "group": "Messaging platforms",
@@ -211,9 +203,7 @@
               },
               {
                 "group": "Bootstrapping",
-                "pages": [
-                  "en/start/bootstrapping"
-                ]
+                "pages": ["en/start/bootstrapping"]
               },
               {
                 "group": "Sessions and memory",
@@ -227,10 +217,7 @@
               },
               {
                 "group": "Multi-agent",
-                "pages": [
-                  "en/concepts/multi-agent",
-                  "en/concepts/presence"
-                ]
+                "pages": ["en/concepts/multi-agent", "en/concepts/presence"]
               },
               {
                 "group": "Messages and delivery",
@@ -248,9 +235,7 @@
             "groups": [
               {
                 "group": "Overview",
-                "pages": [
-                  "en/tools/index"
-                ]
+                "pages": ["en/tools/index"]
               },
               {
                 "group": "Built-in tools",
@@ -347,16 +332,11 @@
             "groups": [
               {
                 "group": "Overview",
-                "pages": [
-                  "en/providers/index",
-                  "en/providers/models"
-                ]
+                "pages": ["en/providers/index", "en/providers/models"]
               },
               {
                 "group": "Model concepts",
-                "pages": [
-                  "en/concepts/models"
-                ]
+                "pages": ["en/concepts/models"]
               },
               {
                 "group": "Configuration",
@@ -586,10 +566,7 @@
               },
               {
                 "group": "RPC and API",
-                "pages": [
-                  "en/reference/rpc",
-                  "en/reference/device-models"
-                ]
+                "pages": ["en/reference/rpc", "en/reference/device-models"]
               },
               {
                 "group": "Templates",
@@ -629,16 +606,11 @@
               },
               {
                 "group": "Project",
-                "pages": [
-                  "en/reference/credits"
-                ]
+                "pages": ["en/reference/credits"]
               },
               {
                 "group": "Release notes",
-                "pages": [
-                  "en/reference/RELEASING",
-                  "en/reference/test"
-                ]
+                "pages": ["en/reference/RELEASING", "en/reference/test"]
               },
               {
                 "group": "Experiments",
@@ -670,9 +642,7 @@
               },
               {
                 "group": "Community",
-                "pages": [
-                  "en/start/lore"
-                ]
+                "pages": ["en/start/lore"]
               },
               {
                 "group": "Environment and debugging",
@@ -687,35 +657,23 @@
               },
               {
                 "group": "Node runtime",
-                "pages": [
-                  "en/install/node"
-                ]
+                "pages": ["en/install/node"]
               },
               {
                 "group": "Compaction internals",
-                "pages": [
-                  "en/reference/session-management-compaction"
-                ]
+                "pages": ["en/reference/session-management-compaction"]
               },
               {
                 "group": "Developer setup",
-                "pages": [
-                  "en/start/setup",
-                  "en/pi-dev"
-                ]
+                "pages": ["en/start/setup", "en/pi-dev"]
               },
               {
                 "group": "Contributing",
-                "pages": [
-                  "en/ci"
-                ]
+                "pages": ["en/ci"]
               },
               {
                 "group": "Docs meta",
-                "pages": [
-                  "en/start/hubs",
-                  "en/start/docs-directory"
-                ]
+                "pages": ["en/start/hubs", "en/start/docs-directory"]
               }
             ]
           }
@@ -729,21 +687,15 @@
             "groups": [
               {
                 "group": "Home",
-                "pages": [
-                  "fr/index"
-                ]
+                "pages": ["fr/index"]
               },
               {
                 "group": "Overview",
-                "pages": [
-                  "fr/start/showcase"
-                ]
+                "pages": ["fr/start/showcase"]
               },
               {
                 "group": "Core concepts",
-                "pages": [
-                  "fr/concepts/features"
-                ]
+                "pages": ["fr/concepts/features"]
               },
               {
                 "group": "First steps",
@@ -769,10 +721,7 @@
             "groups": [
               {
                 "group": "Install overview",
-                "pages": [
-                  "fr/install/index",
-                  "fr/install/installer"
-                ]
+                "pages": ["fr/install/index", "fr/install/installer"]
               },
               {
                 "group": "Other install methods",
@@ -808,9 +757,7 @@
               },
               {
                 "group": "Advanced",
-                "pages": [
-                  "fr/install/development-channels"
-                ]
+                "pages": ["fr/install/development-channels"]
               }
             ]
           },
@@ -819,9 +766,7 @@
             "groups": [
               {
                 "group": "Overview",
-                "pages": [
-                  "fr/channels/index"
-                ]
+                "pages": ["fr/channels/index"]
               },
               {
                 "group": "Messaging platforms",
@@ -881,9 +826,7 @@
               },
               {
                 "group": "Bootstrapping",
-                "pages": [
-                  "fr/start/bootstrapping"
-                ]
+                "pages": ["fr/start/bootstrapping"]
               },
               {
                 "group": "Sessions and memory",
@@ -897,10 +840,7 @@
               },
               {
                 "group": "Multi-agent",
-                "pages": [
-                  "fr/concepts/multi-agent",
-                  "fr/concepts/presence"
-                ]
+                "pages": ["fr/concepts/multi-agent", "fr/concepts/presence"]
               },
               {
                 "group": "Messages and delivery",
@@ -918,9 +858,7 @@
             "groups": [
               {
                 "group": "Overview",
-                "pages": [
-                  "fr/tools/index"
-                ]
+                "pages": ["fr/tools/index"]
               },
               {
                 "group": "Built-in tools",
@@ -1017,16 +955,11 @@
             "groups": [
               {
                 "group": "Overview",
-                "pages": [
-                  "fr/providers/index",
-                  "fr/providers/models"
-                ]
+                "pages": ["fr/providers/index", "fr/providers/models"]
               },
               {
                 "group": "Model concepts",
-                "pages": [
-                  "fr/concepts/models"
-                ]
+                "pages": ["fr/concepts/models"]
               },
               {
                 "group": "Configuration",
@@ -1256,10 +1189,7 @@
               },
               {
                 "group": "RPC and API",
-                "pages": [
-                  "fr/reference/rpc",
-                  "fr/reference/device-models"
-                ]
+                "pages": ["fr/reference/rpc", "fr/reference/device-models"]
               },
               {
                 "group": "Templates",
@@ -1299,16 +1229,11 @@
               },
               {
                 "group": "Project",
-                "pages": [
-                  "fr/reference/credits"
-                ]
+                "pages": ["fr/reference/credits"]
               },
               {
                 "group": "Release notes",
-                "pages": [
-                  "fr/reference/RELEASING",
-                  "fr/reference/test"
-                ]
+                "pages": ["fr/reference/RELEASING", "fr/reference/test"]
               },
               {
                 "group": "Experiments",
@@ -1340,9 +1265,7 @@
               },
               {
                 "group": "Community",
-                "pages": [
-                  "fr/start/lore"
-                ]
+                "pages": ["fr/start/lore"]
               },
               {
                 "group": "Environment and debugging",
@@ -1357,35 +1280,23 @@
               },
               {
                 "group": "Node runtime",
-                "pages": [
-                  "fr/install/node"
-                ]
+                "pages": ["fr/install/node"]
               },
               {
                 "group": "Compaction internals",
-                "pages": [
-                  "fr/reference/session-management-compaction"
-                ]
+                "pages": ["fr/reference/session-management-compaction"]
               },
               {
                 "group": "Developer setup",
-                "pages": [
-                  "fr/start/setup",
-                  "fr/pi-dev"
-                ]
+                "pages": ["fr/start/setup", "fr/pi-dev"]
               },
               {
                 "group": "Contributing",
-                "pages": [
-                  "fr/ci"
-                ]
+                "pages": ["fr/ci"]
               },
               {
                 "group": "Docs meta",
-                "pages": [
-                  "fr/start/hubs",
-                  "fr/start/docs-directory"
-                ]
+                "pages": ["fr/start/hubs", "fr/start/docs-directory"]
               }
             ]
           }
@@ -1399,21 +1310,15 @@
             "groups": [
               {
                 "group": "首页",
-                "pages": [
-                  "zh/index"
-                ]
+                "pages": ["zh/index"]
               },
               {
                 "group": "概览",
-                "pages": [
-                  "zh/start/showcase"
-                ]
+                "pages": ["zh/start/showcase"]
               },
               {
                 "group": "核心概念",
-                "pages": [
-                  "zh/concepts/features"
-                ]
+                "pages": ["zh/concepts/features"]
               },
               {
                 "group": "第一步",
@@ -1439,10 +1344,7 @@
             "groups": [
               {
                 "group": "安装概览",
-                "pages": [
-                  "zh/install/index",
-                  "zh/install/installer"
-                ]
+                "pages": ["zh/install/index", "zh/install/installer"]
               },
               {
                 "group": "其他安装方式",
@@ -1478,9 +1380,7 @@
               },
               {
                 "group": "高级",
-                "pages": [
-                  "zh/install/development-channels"
-                ]
+                "pages": ["zh/install/development-channels"]
               }
             ]
           },
@@ -1489,9 +1389,7 @@
             "groups": [
               {
                 "group": "概览",
-                "pages": [
-                  "zh/channels/index"
-                ]
+                "pages": ["zh/channels/index"]
               },
               {
                 "group": "消息平台",
@@ -1551,9 +1449,7 @@
               },
               {
                 "group": "引导",
-                "pages": [
-                  "zh/start/bootstrapping"
-                ]
+                "pages": ["zh/start/bootstrapping"]
               },
               {
                 "group": "会话与记忆",
@@ -1567,10 +1463,7 @@
               },
               {
                 "group": "多代理",
-                "pages": [
-                  "zh/concepts/multi-agent",
-                  "zh/concepts/presence"
-                ]
+                "pages": ["zh/concepts/multi-agent", "zh/concepts/presence"]
               },
               {
                 "group": "消息与投递",
@@ -1588,9 +1481,7 @@
             "groups": [
               {
                 "group": "概览",
-                "pages": [
-                  "zh/tools/index"
-                ]
+                "pages": ["zh/tools/index"]
               },
               {
                 "group": "内置工具",
@@ -1687,16 +1578,11 @@
             "groups": [
               {
                 "group": "概览",
-                "pages": [
-                  "zh/providers/index",
-                  "zh/providers/models"
-                ]
+                "pages": ["zh/providers/index", "zh/providers/models"]
               },
               {
                 "group": "模型概念",
-                "pages": [
-                  "zh/concepts/models"
-                ]
+                "pages": ["zh/concepts/models"]
               },
               {
                 "group": "配置",
@@ -1926,10 +1812,7 @@
               },
               {
                 "group": "RPC 与 API",
-                "pages": [
-                  "zh/reference/rpc",
-                  "zh/reference/device-models"
-                ]
+                "pages": ["zh/reference/rpc", "zh/reference/device-models"]
               },
               {
                 "group": "模板",
@@ -1969,16 +1852,11 @@
               },
               {
                 "group": "项目",
-                "pages": [
-                  "zh/reference/credits"
-                ]
+                "pages": ["zh/reference/credits"]
               },
               {
                 "group": "发布说明",
-                "pages": [
-                  "zh/reference/RELEASING",
-                  "zh/reference/test"
-                ]
+                "pages": ["zh/reference/RELEASING", "zh/reference/test"]
               },
               {
                 "group": "实验性功能",
@@ -2010,9 +1888,7 @@
               },
               {
                 "group": "社区",
-                "pages": [
-                  "zh/start/lore"
-                ]
+                "pages": ["zh/start/lore"]
               },
               {
                 "group": "环境与调试",
@@ -2027,35 +1903,23 @@
               },
               {
                 "group": "Node 运行时",
-                "pages": [
-                  "zh/install/node"
-                ]
+                "pages": ["zh/install/node"]
               },
               {
                 "group": "压缩机制内部参考",
-                "pages": [
-                  "zh/reference/session-management-compaction"
-                ]
+                "pages": ["zh/reference/session-management-compaction"]
               },
               {
                 "group": "开发者设置",
-                "pages": [
-                  "zh/start/setup",
-                  "zh/pi-dev"
-                ]
+                "pages": ["zh/start/setup", "zh/pi-dev"]
               },
               {
                 "group": "贡献",
-                "pages": [
-                  "zh/ci"
-                ]
+                "pages": ["zh/ci"]
               },
               {
                 "group": "文档元信息",
-                "pages": [
-                  "zh/start/hubs",
-                  "zh/start/docs-directory"
-                ]
+                "pages": ["zh/start/hubs", "zh/start/docs-directory"]
               }
             ]
           }
@@ -2063,8 +1927,5 @@
       }
     ]
   },
-  "scripts": [
-    "/redirect.js",
-    "/version.js"
-  ]
+  "scripts": ["/redirect.js", "/version.js"]
 }
