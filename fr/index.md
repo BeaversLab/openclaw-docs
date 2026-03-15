@@ -12,7 +12,7 @@ title: "OpenClaw"
   <img src="/assets/openclaw-logo-text.png" alt="OpenClaw" width="500" class="hidden dark:block" />
 </p>
 
-> _"去壳! 去壳!"_ — Une homard spatial, probablement
+> _"EXFOLIATE! EXFOLIATE!"_ — Une homard spatial, probablement
 
 <p align="center">
   <strong>
@@ -175,6 +175,6 @@ Exemple :
   </Card>
 </Columns>
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />
