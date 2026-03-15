@@ -69,7 +69,8 @@ openclaw pairing approve telegram <CODE>
 </Steps>
 
 <Note>
-Token resolution order is account-aware. In practice, config values win over env fallback, and `TELEGRAM_BOT_TOKEN` only applies to the default account.
+  Token resolution order is account-aware. In practice, config values win over env fallback, and
+  `TELEGRAM_BOT_TOKEN` only applies to the default account.
 </Note>
 
 ## Telegram side settings
@@ -980,6 +981,6 @@ Telegram-specific high-signal fields:
 - [Multi-agent routing](/en/concepts/multi-agent)
 - [Troubleshooting](/en/channels/troubleshooting)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

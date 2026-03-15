@@ -20,7 +20,9 @@ If the file is missing, OpenClaw uses safe defaults. Common reasons to add a con
 See the [full reference](/en/gateway/configuration-reference) for every available field.
 
 <Tip>
-**New to configuration?** Start with `openclaw onboard` for interactive setup, or check out the [Configuration Examples](/en/gateway/configuration-examples) guide for complete copy-paste configs.
+  **New to configuration?** Start with `openclaw onboard` for interactive setup, or check out the
+  [Configuration Examples](/en/gateway/configuration-examples) guide for complete copy-paste
+  configs.
 </Tip>
 
 ## Minimal config
@@ -38,8 +40,8 @@ See the [full reference](/en/gateway/configuration-reference) for every availabl
 <Tabs>
   <Tab title="Interactive wizard">
     ```bash
-    openclaw onboard       # full setup wizard
-    openclaw configure     # config wizard
+    openclaw onboard # full setup wizard
+    openclaw configure # config wizard
     ```
   </Tab>
   <Tab title="CLI (one-liners)">
@@ -50,18 +52,21 @@ See the [full reference](/en/gateway/configuration-reference) for every availabl
     ```
   </Tab>
   <Tab title="Control UI">
-    Open [http://127.0.0.1:18789](http://127.0.0.1:18789) and use the **Config** tab.
-    The Control UI renders a form from the config schema, with a **Raw JSON** editor as an escape hatch.
+    Open [http://127.0.0.1:18789](http://127.0.0.1:18789) and use the **Config** tab. The Control UI
+    renders a form from the config schema, with a **Raw JSON** editor as an escape hatch.
   </Tab>
   <Tab title="Direct edit">
-    Edit `~/.openclaw/openclaw.json` directly. The Gateway watches the file and applies changes automatically (see [hot reload](#config-hot-reload)).
+    Edit `~/.openclaw/openclaw.json` directly. The Gateway watches the file and applies changes
+    automatically (see [hot reload](#config-hot-reload)).
   </Tab>
 </Tabs>
 
 ## Strict validation
 
 <Warning>
-OpenClaw only accepts configurations that fully match the schema. Unknown keys, malformed types, or invalid values cause the Gateway to **refuse to start**. The only root-level exception is `$schema` (string), so editors can attach JSON Schema metadata.
+  OpenClaw only accepts configurations that fully match the schema. Unknown keys, malformed types,
+  or invalid values cause the Gateway to **refuse to start**. The only root-level exception is
+  `$schema` (string), so editors can attach JSON Schema metadata.
 </Warning>
 
 When validation fails:
@@ -440,13 +445,16 @@ Most fields hot-apply without downtime. In `hybrid` mode, restart-required chang
 | Infrastructure      | `discovery`, `canvasHost`, `plugins`                                 | **Yes**         |
 
 <Note>
-`gateway.reload` and `gateway.remote` are exceptions — changing them does **not** trigger a restart.
+  `gateway.reload` and `gateway.remote` are exceptions — changing them does **not** trigger a
+  restart.
 </Note>
 
 ## Config RPC (programmatic updates)
 
 <Note>
-Control-plane write RPCs (`config.apply`, `config.patch`, `update.run`) are rate-limited to **3 requests per 60 seconds** per `deviceId+clientIp`. When limited, the RPC returns `UNAVAILABLE` with `retryAfterMs`.
+  Control-plane write RPCs (`config.apply`, `config.patch`, `update.run`) are rate-limited to **3
+  requests per 60 seconds** per `deviceId+clientIp`. When limited, the RPC returns `UNAVAILABLE`
+  with `retryAfterMs`.
 </Note>
 
 <AccordionGroup>
@@ -533,6 +541,7 @@ Neither file overrides existing env vars. You can also set inline env vars in co
 ```
 
 Env var equivalent: `OPENCLAW_LOAD_SHELL_ENV=1`
+
 </Accordion>
 
 <Accordion title="Env var substitution in config values">
@@ -590,6 +599,7 @@ Rules:
 
 SecretRef details (including `secrets.providers` for `env`/`file`/`exec`) are in [Secrets Management](/en/gateway/secrets).
 Supported credential paths are listed in [SecretRef Credential Surface](/en/reference/secretref-credential-surface).
+
 </Accordion>
 
 See [Environment](/en/help/environment) for full precedence and sources.
@@ -602,6 +612,6 @@ For the complete field-by-field reference, see **[Configuration Reference](/en/g
 
 _Related: [Configuration Examples](/en/gateway/configuration-examples) · [Configuration Reference](/en/gateway/configuration-reference) · [Doctor](/en/gateway/doctor)_
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

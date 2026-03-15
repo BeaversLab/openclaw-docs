@@ -130,7 +130,9 @@ openclaw gateway
 - Optional: add `chat:write.customize` if you want outgoing messages to use the active agent identity (custom `username` and icon). `icon_emoji` uses `:emoji_name:` syntax.
 
 <Tip>
-For actions/directory reads, user token can be preferred when configured. For writes, bot token remains preferred; user-token writes are only allowed when `userTokenReadOnly: false` and bot token is unavailable.
+  For actions/directory reads, user token can be preferred when configured. For writes, bot token
+  remains preferred; user-token writes are only allowed when `userTokenReadOnly: false` and bot
+  token is unavailable.
 </Tip>
 
 ## Access control and routing
@@ -312,12 +314,13 @@ Note: `replyToMode="off"` disables **all** reply threading in Slack, including e
 
   </Accordion>
 
-  <Accordion title="Outbound text and files">
-    - text chunks use `channels.slack.textChunkLimit` (default 4000)
-    - `channels.slack.chunkMode="newline"` enables paragraph-first splitting
-    - file sends use Slack upload APIs and can include thread replies (`thread_ts`)
-    - outbound media cap follows `channels.slack.mediaMaxMb` when configured; otherwise channel sends use MIME-kind defaults from media pipeline
-  </Accordion>
+<Accordion title="Outbound text and files">
+  - text chunks use `channels.slack.textChunkLimit` (default 4000) -
+  `channels.slack.chunkMode="newline"` enables paragraph-first splitting - file sends use Slack
+  upload APIs and can include thread replies (`thread_ts`) - outbound media cap follows
+  `channels.slack.mediaMaxMb` when configured; otherwise channel sends use MIME-kind defaults from
+  media pipeline
+</Accordion>
 
   <Accordion title="Delivery targets">
     Preferred explicit targets:
@@ -513,9 +516,9 @@ openclaw pairing list slack
 
   </Accordion>
 
-  <Accordion title="Socket mode not connecting">
-    Validate bot + app tokens and Socket Mode enablement in Slack app settings.
-  </Accordion>
+<Accordion title="Socket mode not connecting">
+  Validate bot + app tokens and Socket Mode enablement in Slack app settings.
+</Accordion>
 
   <Accordion title="HTTP mode not receiving events">
     Validate:
@@ -602,6 +605,6 @@ Primary reference:
 - [Configuration](/en/gateway/configuration)
 - [Slash commands](/en/tools/slash-commands)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -128,8 +128,9 @@ For a high-level overview, see [Onboarding Wizard](/en/start/wizard).
 </Steps>
 
 <Note>
-If no GUI is detected, the wizard prints SSH port-forward instructions for the Control UI instead of opening a browser.
-If the Control UI assets are missing, the wizard attempts to build them; fallback is `pnpm ui:build` (auto-installs UI deps).
+  If no GUI is detected, the wizard prints SSH port-forward instructions for the Control UI instead
+  of opening a browser. If the Control UI assets are missing, the wizard attempts to build them;
+  fallback is `pnpm ui:build` (auto-installs UI deps).
 </Note>
 
 ## Non-interactive mode
@@ -164,7 +165,8 @@ openclaw onboard --non-interactive \
 `--gateway-token` and `--gateway-token-ref-env` are mutually exclusive.
 
 <Note>
-`--json` does **not** imply non-interactive mode. Use `--non-interactive` (and `--workspace`) for scripts.
+  `--json` does **not** imply non-interactive mode. Use `--non-interactive` (and `--workspace`) for
+  scripts.
 </Note>
 
 Provider-specific command examples live in [CLI Automation](/en/start/wizard-cli-automation#provider-specific-examples).
@@ -234,6 +236,6 @@ will prompt to install it (npm or a local path) before it can be configured.
 - Providers: [WhatsApp](/en/channels/whatsapp), [Telegram](/en/channels/telegram), [Discord](/en/channels/discord), [Google Chat](/en/channels/googlechat), [Signal](/en/channels/signal), [BlueBubbles](/en/channels/bluebubbles) (iMessage), [iMessage](/en/channels/imessage) (legacy)
 - Skills: [Skills](/en/tools/skills), [Skills config](/en/tools/skills-config)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

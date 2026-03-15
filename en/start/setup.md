@@ -9,8 +9,8 @@ title: "Setup"
 # Setup
 
 <Note>
-If you are setting up for the first time, start with [Getting Started](/en/start/getting-started).
-For wizard details, see [Onboarding Wizard](/en/start/wizard).
+  If you are setting up for the first time, start with [Getting Started](/en/start/getting-started).
+  For wizard details, see [Onboarding Wizard](/en/start/wizard).
 </Note>
 
 Last updated: 2026-01-01
@@ -164,6 +164,6 @@ user service (no lingering needed). See [Gateway runbook](/en/gateway) for the s
 - [OpenClaw assistant setup](/en/start/openclaw)
 - [macOS app](/en/platforms/macos) (gateway lifecycle)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

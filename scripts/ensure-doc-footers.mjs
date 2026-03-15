@@ -211,7 +211,7 @@ function normalizeFooter(content, config) {
     nextLines.push('');
   }
 
-  nextLines.push(`import ${config.alias} from '${config.componentPath}';`);
+  nextLines.push(`import ${config.alias} from "${config.componentPath}";`);
   nextLines.push('');
   nextLines.push(`<${config.alias} />`);
 

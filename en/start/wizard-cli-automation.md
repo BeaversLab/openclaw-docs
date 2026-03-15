@@ -12,7 +12,8 @@ sidebarTitle: "CLI automation"
 Use `--non-interactive` to automate `openclaw onboard`.
 
 <Note>
-`--json` does not imply non-interactive mode. Use `--non-interactive` (and `--workspace`) for scripts.
+  `--json` does not imply non-interactive mode. Use `--non-interactive` (and `--workspace`) for
+  scripts.
 </Note>
 
 ## Baseline non-interactive example
@@ -214,6 +215,6 @@ Notes:
 - Full reference: [CLI Onboarding Reference](/en/start/wizard-cli-reference)
 - Command reference: [`openclaw onboard`](/en/cli/onboard)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

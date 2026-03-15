@@ -530,9 +530,9 @@ Only enable direct mutable name/email/nick matching with each channel's `dangero
 ### Anthropic setup-token + API key, MiniMax fallback
 
 <Warning>
-Anthropic setup-token usage outside Claude Code has been restricted for some
-users in the past. Treat this as user-choice risk and verify current Anthropic
-terms before depending on subscription auth.
+  Anthropic setup-token usage outside Claude Code has been restricted for some users in the past.
+  Treat this as user-choice risk and verify current Anthropic terms before depending on subscription
+  auth.
 </Warning>
 
 ```json5
@@ -636,6 +636,6 @@ terms before depending on subscription auth.
 - Optional sections to add later: `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
 - See [Providers](/en/providers) and [Troubleshooting](/en/gateway/troubleshooting) for deeper setup notes.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

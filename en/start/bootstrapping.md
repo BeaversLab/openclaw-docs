@@ -31,8 +31,8 @@ a remote Gateway, the workspace and bootstrapping files live on that remote
 machine.
 
 <Note>
-When the Gateway runs on another machine, edit workspace files on the gateway
-host (for example, `user@gateway-host:~/.openclaw/workspace`).
+  When the Gateway runs on another machine, edit workspace files on the gateway host (for example,
+  `user@gateway-host:~/.openclaw/workspace`).
 </Note>
 
 ## Related docs
@@ -40,6 +40,6 @@ host (for example, `user@gateway-host:~/.openclaw/workspace`).
 - macOS app onboarding: [Onboarding](/en/start/onboarding)
 - Workspace layout: [Agent workspace](/en/concepts/agent-workspace)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

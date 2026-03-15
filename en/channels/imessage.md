@@ -12,6 +12,7 @@ title: "iMessage"
 For new iMessage deployments, use <a href="/en/channels/bluebubbles">BlueBubbles</a>.
 
 The `imsg` integration is legacy and may be removed in a future release.
+
 </Warning>
 
 Status: legacy external CLI integration. Gateway spawns `imsg rpc` and communicates over JSON-RPC on stdio (no separate daemon/port).
@@ -23,7 +24,11 @@ Status: legacy external CLI integration. Gateway spawns `imsg rpc` and communica
   <Card title="Pairing" icon="link" href="/en/channels/pairing">
     iMessage DMs default to pairing mode.
   </Card>
-  <Card title="Configuration reference" icon="settings" href="/en/gateway/configuration-reference#imessage">
+  <Card
+    title="Configuration reference"
+    icon="settings"
+    href="/en/gateway/configuration-reference#imessage"
+  >
     Full iMessage field reference.
   </Card>
 </CardGroup>
@@ -258,12 +263,10 @@ exec ssh -T bot@mac-mini.tailnet-1234.ts.net imsg "$@"
     - outbound media size uses `channels.imessage.mediaMaxMb` (default 16 MB)
   </Accordion>
 
-  <Accordion title="Outbound chunking">
-    - text chunk limit: `channels.imessage.textChunkLimit` (default 4000)
-    - chunk mode: `channels.imessage.chunkMode`
-      - `length` (default)
-      - `newline` (paragraph-first splitting)
-  </Accordion>
+<Accordion title="Outbound chunking">
+  - text chunk limit: `channels.imessage.textChunkLimit` (default 4000) - chunk mode:
+  `channels.imessage.chunkMode` - `length` (default) - `newline` (paragraph-first splitting)
+</Accordion>
 
   <Accordion title="Addressing formats">
     Preferred explicit targets:
@@ -366,6 +369,6 @@ imsg send <handle> "test"
 - [Pairing](/en/channels/pairing)
 - [BlueBubbles](/en/channels/bluebubbles)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

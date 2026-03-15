@@ -364,8 +364,8 @@ Utilisez des indicateurs/env vars non interactifs pour des exécutions prévisib
 </Accordion>
 
 <Accordion title="Windows : « openclaw n'est pas reconnu »">
-  Exécutez `npm config get prefix` et ajoutez ce répertoire à votre PATH utilisateur (aucun suffixe `\bin` n'est nécessaire sur
-  Windows), puis rouvrez PowerShell.
+  Exécutez `npm config get prefix` et ajoutez ce répertoire à votre PATH utilisateur (aucun suffixe
+  `\bin` n'est nécessaire sur Windows), puis rouvrez PowerShell.
 </Accordion>
 
   <Accordion title="Windows: comment obtenir une sortie détaillée de l'installateur">
@@ -385,6 +385,6 @@ Utilisez des indicateurs/env vars non interactifs pour des exécutions prévisib
   </Accordion>
 </AccordionGroup>
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

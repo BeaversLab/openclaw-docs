@@ -39,16 +39,14 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 <Tabs>
   <Tab title="Interactive wizard">
     ```bash
-    openclaw onboard
-    # full setup wizard
-    openclaw configure
-    # config wizard
+    openclaw onboard # full setup wizard
+    openclaw configure # config wizard
     ```
   </Tab>
   <Tab title="CLI (one-liners)">
     ```bash
     openclaw config get agents.defaults.workspace
-    openclaw config setagents.defaults.heartbeat.every "2h"
+    openclaw config set agents.defaults.heartbeat.every "2h"
     openclaw config unset tools.web.search.apiKey
     ```
   </Tab>
@@ -610,6 +608,6 @@ SecretRef 的详细信息（包括用于 `env`/`file`/`exec` 的 `secrets.provid
 
 _相关：[Configuration Examples](/zh/gateway/configuration-examples) · [Configuration Reference](/zh/gateway/configuration-reference) · [Doctor](/zh/gateway/doctor)_
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

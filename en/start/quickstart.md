@@ -8,9 +8,7 @@ title: "Quick start"
 
 # Quick start
 
-<Info>
-Quick start is now part of [Getting Started](/en/start/getting-started).
-</Info>
+<Info>Quick start is now part of [Getting Started](/en/start/getting-started).</Info>
 
 <Columns>
   <Card title="Getting Started" href="/en/start/getting-started">
@@ -21,6 +19,6 @@ Quick start is now part of [Getting Started](/en/start/getting-started).
   </Card>
 </Columns>
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

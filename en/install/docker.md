@@ -37,9 +37,9 @@ Sandboxing details: [Sandboxing](/en/gateway/sandboxing)
 ### Quick start (recommended)
 
 <Note>
-Docker defaults here assume bind modes (`lan`/`loopback`), not host aliases. Use bind
-mode values in `gateway.bind` (for example `lan` or `loopback`), not host aliases like
-`0.0.0.0` or `localhost`.
+  Docker defaults here assume bind modes (`lan`/`loopback`), not host aliases. Use bind mode values
+  in `gateway.bind` (for example `lan` or `loopback`), not host aliases like `0.0.0.0` or
+  `localhost`.
 </Note>
 
 From repo root:
@@ -842,6 +842,6 @@ Example:
   custom tool paths (e.g., `/custom/bin:/usr/local/share/npm-global/bin`), or add
   a script under `/etc/profile.d/` in your Dockerfile.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -1,4 +1,16 @@
 #!/bin/sh
 set -eu
 
+# Ensure doc footers are correct and restaged
 node scripts/ensure-doc-footers.mjs --staged --restage
+
+# Collect staged files for Prettier formatting
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(md|mdx|json|yaml|yml|json5)$' || true)
+
+if [ -n "$STAGED_FILES" ]; then
+  echo "Formatting staged files..."
+  # Run prettier through pnpm to use the project's version and config
+  pnpm prettier --write $STAGED_FILES
+  # Restage the formatted files
+  git add $STAGED_FILES
+fi
