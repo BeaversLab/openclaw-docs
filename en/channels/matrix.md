@@ -302,6 +302,6 @@ Provider options:
 - `channels.matrix.accounts`: multi-account configuration keyed by account ID (each account inherits top-level settings).
 - `channels.matrix.actions`: per-action tool gating (reactions/messages/pins/memberInfo/channelInfo).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

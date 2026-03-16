@@ -267,6 +267,6 @@ openclaw message send --channel telegram --target @mychat \
   --media ./diagram.png --force-document
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

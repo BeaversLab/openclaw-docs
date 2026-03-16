@@ -42,6 +42,6 @@ See [iMessage](/en/channels/imessage) for legacy setup and addressing (`chat_id`
 - Keep RPC clients resilient: timeouts, restart on exit.
 - Prefer stable IDs (e.g., `chat_id`) over display strings.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

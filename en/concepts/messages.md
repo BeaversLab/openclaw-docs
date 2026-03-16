@@ -153,6 +153,6 @@ Outbound message formatting is centralized in `messages`:
 
 Details: [Configuration](/en/gateway/configuration#messages) and channel docs.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

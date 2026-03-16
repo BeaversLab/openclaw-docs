@@ -1134,6 +1134,6 @@ Options:
 - `--timeout-ms <ms>` (defaults to `agents.defaults.timeoutSeconds`)
 - `--history-limit <n>`
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

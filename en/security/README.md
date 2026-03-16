@@ -16,6 +16,6 @@ See the [Trust page](https://trust.openclaw.ai) for full reporting instructions 
 - **Jamieson O'Reilly** ([@theonejvo](https://twitter.com/theonejvo)) - Security & Trust
 - Discord: #security channel
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

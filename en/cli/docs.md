@@ -14,6 +14,6 @@ openclaw docs browser extension
 openclaw docs sandbox allowHostControl
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

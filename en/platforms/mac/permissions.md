@@ -49,6 +49,6 @@ Workaround: move files into the OpenClaw workspace (`~/.openclaw/workspace`) if 
 If you are testing permissions, always sign with a real certificate. Ad-hoc
 builds are only acceptable for quick local runs where permissions do not matter.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

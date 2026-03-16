@@ -231,6 +231,6 @@ for:
 - Do we want to expose a new "nodeRef" format for advanced users, or keep `ref` only?
 - How should frame snapshots and selector scoped snapshots participate in AX mapping?
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

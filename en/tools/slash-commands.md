@@ -249,6 +249,6 @@ Example:
 See [BTW Side Questions](/en/tools/btw) for the full behavior and client UX
 details.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

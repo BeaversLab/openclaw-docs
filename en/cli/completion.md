@@ -34,6 +34,6 @@ openclaw completion --shell bash --write-state
 - Without `--install` or `--write-state`, the command prints the script to stdout.
 - Completion generation eagerly loads command trees so nested subcommands are included.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

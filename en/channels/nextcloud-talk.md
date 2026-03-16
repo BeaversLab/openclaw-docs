@@ -137,6 +137,6 @@ Provider options:
 - `channels.nextcloud-talk.blockStreamingCoalesce`: block streaming coalesce tuning.
 - `channels.nextcloud-talk.mediaMaxMb`: inbound media cap (MB).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

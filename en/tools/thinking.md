@@ -92,6 +92,6 @@ title: "Thinking Levels"
 - Picking another level applies only to the next message (`thinkingOnce`); after sending, the selector snaps back to the stored session level.
 - To change the session default, send a `/think:<level>` directive (as before); the selector will reflect it after the next reload.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

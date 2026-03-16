@@ -285,6 +285,7 @@ Available families:
 - `photos.latest`
 - `contacts.search`, `contacts.add`
 - `calendar.events`, `calendar.add`
+- `callLog.search`
 - `motion.activity`, `motion.pedometer`
 
 Example invokes:
@@ -383,6 +384,6 @@ Notes:
 - The macOS menubar app connects to the Gateway WS server as a node (so `openclaw nodes …` works against this Mac).
 - In remote mode, the app opens an SSH tunnel for the Gateway port and connects to `localhost`.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

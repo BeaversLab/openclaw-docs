@@ -202,6 +202,6 @@ Related:
 - Security audit: [Security](/en/gateway/security)
 - Tailscale setup: [Tailscale](/en/gateway/tailscale)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

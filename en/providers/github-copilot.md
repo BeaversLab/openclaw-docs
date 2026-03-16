@@ -71,6 +71,6 @@ openclaw models set github-copilot/gpt-4o
 - The login stores a GitHub token in the auth profile store and exchanges it for a
   Copilot API token when OpenClaw runs.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

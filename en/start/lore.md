@@ -218,6 +218,6 @@ _"The claw is the law."_
 
 🦞💙
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

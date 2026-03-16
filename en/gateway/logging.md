@@ -112,6 +112,6 @@ Behavior:
 
 This keeps existing file logs stable while making interactive output scannable.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

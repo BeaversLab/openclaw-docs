@@ -258,6 +258,6 @@ See [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) for prece
 - [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools)
 - [Security](/en/gateway/security)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

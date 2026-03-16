@@ -90,6 +90,6 @@ Onboarding requests TCC permissions needed for:
 </Step>
 </Steps>
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

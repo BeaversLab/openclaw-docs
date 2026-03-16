@@ -18,20 +18,17 @@ Already followed [Getting Started](/en/start/getting-started)? You're all set â€
 - `pnpm` only if you build from source
 
 <Note>
-  On Windows, we strongly recommend running OpenClaw under
-  [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install).
+On Windows, we strongly recommend running OpenClaw under [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install).
 </Note>
 
 ## Install methods
 
 <Tip>
-  The **installer script** is the recommended way to install OpenClaw. It handles Node detection,
-  installation, and onboarding in one step.
+The **installer script** is the recommended way to install OpenClaw. It handles Node detection, installation, and onboarding in one step.
 </Tip>
 
 <Warning>
-  For VPS/cloud hosts, avoid third-party "1-click" marketplace images when possible. Prefer a clean
-  base OS image (for example Ubuntu LTS), then install OpenClaw yourself with the installer script.
+For VPS/cloud hosts, avoid third-party "1-click" marketplace images when possible. Prefer a clean base OS image (for example Ubuntu LTS), then install OpenClaw yourself with the installer script.
 </Warning>
 
 <AccordionGroup>
@@ -104,6 +101,16 @@ Already followed [Getting Started](/en/start/getting-started)? You're all set â€
         </Note>
       </Tab>
     </Tabs>
+
+    Want the current GitHub `main` head with a package-manager install?
+
+    ```bash
+    npm install -g github:openclaw/openclaw#main
+    ```
+
+    ```bash
+    pnpm add -g github:openclaw/openclaw#main
+    ```
 
   </Accordion>
 
@@ -204,7 +211,6 @@ export PATH="$(npm prefix -g)/bin:$PATH"
 On Windows, add the output of `npm prefix -g` to your PATH.
 
 Then open a new terminal (or `rehash` in zsh / `hash -r` in bash).
-
 </Accordion>
 
 ## Update / uninstall

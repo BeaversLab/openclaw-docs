@@ -53,6 +53,6 @@ Local trust:
 - [Troubleshooting](/en/gateway/troubleshooting)
 - [Doctor](/en/gateway/doctor)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

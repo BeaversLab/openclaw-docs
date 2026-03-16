@@ -62,6 +62,6 @@ See [Cron jobs](/en/automation/cron-jobs) for the normalized shape and examples.
 - Should `cron.add` accept explicit `state` from clients (currently disallowed by schema)?
 - Should we allow `webchat` as an explicit delivery provider (currently filtered in delivery resolution)?
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

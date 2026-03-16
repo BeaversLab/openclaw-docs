@@ -22,6 +22,6 @@ Channel notes:
 - **Zalo Personal (`zalouser`)**: requires non-empty `emoji`; `remove: true` removes that specific emoji reaction.
 - **Signal**: inbound reaction notifications emit system events when `channels.signal.reactionNotifications` is enabled.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

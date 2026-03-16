@@ -54,6 +54,6 @@ If you still pass `--token`, remember it lands in shell history and `ps` output;
 - OpenAI-compatible `/v1` endpoint; use an API key from NVIDIA NGC.
 - Provider auto-enables when `NVIDIA_API_KEY` is set; uses static defaults (131,072-token context window, 4,096 max tokens).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

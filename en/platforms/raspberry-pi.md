@@ -411,6 +411,6 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 - [Tailscale](/en/gateway/tailscale) — remote access
 - [Nodes](/en/nodes) — pair your laptop/phone with the Pi gateway
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

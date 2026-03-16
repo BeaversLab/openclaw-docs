@@ -34,6 +34,6 @@ title: "Usage Tracking"
 
 Usage is hidden if no matching OAuth/API credentials exist.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

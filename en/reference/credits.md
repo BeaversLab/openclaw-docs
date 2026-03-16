@@ -27,6 +27,6 @@ MIT - Free as a lobster in the ocean.
 
 > "We are all just playing with our own prompts." (An AI, probably high on tokens)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -141,6 +141,6 @@ In that case, ask normally in the main session instead of using BTW.
 - [Thinking Levels](/en/tools/thinking)
 - [Session](/en/concepts/session)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

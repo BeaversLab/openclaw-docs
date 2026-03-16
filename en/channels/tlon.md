@@ -275,6 +275,6 @@ Provider options:
 - Rich text: Markdown formatting (bold, italic, code, headers, lists) is converted to Tlon's native format.
 - Images: URLs are uploaded to Tlon storage and embedded as image blocks.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

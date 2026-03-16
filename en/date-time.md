@@ -127,6 +127,6 @@ If you need local time, convert it downstream using the known timezone.
 - [Timezones](/en/concepts/timezone)
 - [Messages](/en/concepts/messages)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

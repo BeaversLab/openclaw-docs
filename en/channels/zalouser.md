@@ -180,6 +180,6 @@ Accounts map to `zalouser` profiles in OpenClaw state. Example:
 - Remove any old external `zca` process assumptions.
 - The channel now runs fully in OpenClaw without external CLI binaries.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -55,6 +55,6 @@ When a location is present, these fields are added to `ctx`:
 - **WhatsApp**: `locationMessage.comment` and `liveLocationMessage.caption` are appended as the caption line.
 - **Matrix**: `geo_uri` is parsed as a pin location; altitude is ignored and `LocationIsLive` is always false.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

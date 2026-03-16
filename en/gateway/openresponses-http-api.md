@@ -292,6 +292,6 @@ curl -N http://127.0.0.1:18789/v1/responses \
   }'
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

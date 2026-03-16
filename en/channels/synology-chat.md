@@ -127,6 +127,6 @@ Each account can override token, incoming URL, webhook path, DM policy, and limi
 - Inbound webhook requests are token-verified and rate-limited per sender.
 - Prefer `dmPolicy: "allowlist"` for production.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

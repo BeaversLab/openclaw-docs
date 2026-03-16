@@ -122,6 +122,6 @@ At minimum, set:
 
 _Next: [Group Chats](/en/channels/group-messages)_ 🦞
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

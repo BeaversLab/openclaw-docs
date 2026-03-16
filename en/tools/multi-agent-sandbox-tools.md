@@ -396,6 +396,6 @@ After configuring multi-agent sandbox and tools:
 - [Sandbox Configuration](/en/gateway/configuration#agentsdefaults-sandbox)
 - [Session Management](/en/concepts/session)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

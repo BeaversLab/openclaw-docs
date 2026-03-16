@@ -100,6 +100,6 @@ This protects users from runaway token spend and lockups while preserving normal
 - Per-agent config fully overrides or extends global values.
 - If no config exists, guardrails stay off.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

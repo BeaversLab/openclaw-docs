@@ -63,6 +63,6 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 - You sign in to OpenCode, add billing details, and copy your API key.
 - Billing and catalog availability are managed from the OpenCode dashboard.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

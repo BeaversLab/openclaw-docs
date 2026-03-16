@@ -1048,6 +1048,6 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 - [Webhook Hooks](/en/automation/webhook)
 - [Configuration](/en/gateway/configuration#hooks)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

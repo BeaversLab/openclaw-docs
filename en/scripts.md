@@ -27,6 +27,6 @@ Auth monitoring scripts are documented here:
 - Keep scripts focused and documented.
 - Add a short entry in the relevant doc (or create one if missing).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

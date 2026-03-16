@@ -79,6 +79,6 @@ await web_search({
 
 See [Web tools](/en/tools/web) for the full web_search configuration.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

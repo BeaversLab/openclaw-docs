@@ -302,6 +302,6 @@ tar -czvf openclaw-backup.tar.gz ~/.openclaw ~/.openclaw/workspace
 - [DigitalOcean guide](/en/platforms/digitalocean) — if you want paid + easier signup
 - [Hetzner guide](/en/install/hetzner) — Docker-based alternative
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

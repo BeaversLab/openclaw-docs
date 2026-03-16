@@ -441,6 +441,6 @@ Planned features:
 - [Routing Configuration](/en/concepts/channel-routing)
 - [Session Management](/en/concepts/sessions)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

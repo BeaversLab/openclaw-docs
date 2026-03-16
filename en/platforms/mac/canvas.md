@@ -124,6 +124,6 @@ The app prompts for confirmation unless a valid key is provided.
 - Local Canvas content uses a custom scheme (no loopback server required).
 - External `http(s)` URLs are allowed only when explicitly navigated.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -9,8 +9,8 @@ title: "Setup"
 # Setup
 
 <Note>
-  If you are setting up for the first time, start with [Getting Started](/en/start/getting-started).
-  For wizard details, see [Onboarding Wizard](/en/start/wizard).
+If you are setting up for the first time, start with [Getting Started](/en/start/getting-started).
+For wizard details, see [Onboarding Wizard](/en/start/wizard).
 </Note>
 
 Last updated: 2026-01-01
@@ -96,7 +96,8 @@ pnpm install
 pnpm gateway:watch
 ```
 
-`gateway:watch` runs the gateway in watch mode and reloads on TypeScript changes.
+`gateway:watch` runs the gateway in watch mode and reloads on relevant source,
+config, and bundled-plugin metadata changes.
 
 ### 2) Point the macOS app at your running Gateway
 

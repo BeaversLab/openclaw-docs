@@ -190,6 +190,6 @@ scripts/k8s/
     └── service.yaml            # ClusterIP on 18789
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

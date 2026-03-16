@@ -64,6 +64,6 @@ Together AI provides access to many popular open-source models:
 
 All models support standard chat completions and are OpenAI API compatible.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -155,6 +155,6 @@ Page-filtered fallback model:
 }
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

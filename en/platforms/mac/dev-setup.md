@@ -103,6 +103,6 @@ lsof -nP -iTCP:18789 -sTCP:LISTEN
 
 If a manual run is holding the port, stop that process (Ctrl+C). As a last resort, kill the PID you found above.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

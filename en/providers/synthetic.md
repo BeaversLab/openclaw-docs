@@ -98,6 +98,6 @@ All models below use cost `0` (input/output/cache).
   plan to use.
 - See [Model providers](/en/concepts/model-providers) for provider rules.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

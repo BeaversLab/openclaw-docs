@@ -50,6 +50,6 @@ The tool accepts a single `input` string that wraps one or more file operations:
 }
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

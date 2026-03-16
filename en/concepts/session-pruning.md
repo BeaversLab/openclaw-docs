@@ -120,6 +120,6 @@ Restrict pruning to specific tools:
 
 See config reference: [Gateway Configuration](/en/gateway/configuration)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

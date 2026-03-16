@@ -208,6 +208,6 @@ You can append `:fastest`, `:cheapest`, or `:provider` (e.g. `:together`, `:samb
 }
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

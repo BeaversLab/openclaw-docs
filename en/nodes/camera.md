@@ -161,6 +161,6 @@ Notes:
 
 - Requires macOS **Screen Recording** permission (TCC).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

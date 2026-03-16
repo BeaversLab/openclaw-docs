@@ -17,6 +17,6 @@ read_when:
   - Working across time zones on making OpenClaw better.
   - The creators. The builders. The ones who peer into the code.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

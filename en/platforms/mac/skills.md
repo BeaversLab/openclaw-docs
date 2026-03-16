@@ -32,6 +32,6 @@ The macOS app surfaces OpenClaw skills via the gateway; it does not parse skills
 
 - Install + config updates happen on the gateway host (not the local Mac).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

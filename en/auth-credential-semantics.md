@@ -44,6 +44,6 @@ For script compatibility, probe errors keep this first line unchanged:
 
 Human-friendly detail and stable reason codes may be added on subsequent lines.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

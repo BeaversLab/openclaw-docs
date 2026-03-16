@@ -42,6 +42,6 @@ openclaw onboard --auth-choice zai-cn
 - Example model IDs include `glm-5`, `glm-4.7`, and `glm-4.6`.
 - For provider details, see [/providers/zai](/en/providers/zai).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

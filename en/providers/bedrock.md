@@ -175,6 +175,6 @@ openclaw models list
 - If you prefer a managed key flow, you can also place an OpenAI‑compatible
   proxy in front of Bedrock and configure it as an OpenAI provider instead.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

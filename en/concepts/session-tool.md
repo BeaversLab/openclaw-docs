@@ -222,6 +222,6 @@ Notes:
 - `all`: any session (cross-agent access still requires `tools.agentToAgent`).
 - When a session is sandboxed and `sessionToolsVisibility="spawned"`, OpenClaw clamps visibility to `tree` even if you set `tools.sessions.visibility="all"`.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

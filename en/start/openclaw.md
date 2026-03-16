@@ -215,6 +215,6 @@ Logs live under `/tmp/openclaw/` (default: `openclaw-YYYY-MM-DD.log`).
 - Linux status: [Linux app](/en/platforms/linux)
 - Security: [Security](/en/gateway/security)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

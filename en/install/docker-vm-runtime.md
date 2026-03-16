@@ -137,6 +137,6 @@ docker compose build
 docker compose up -d
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

@@ -27,6 +27,6 @@ openclaw logs --follow --local-time
 
 Use `--local-time` to render timestamps in your local timezone.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

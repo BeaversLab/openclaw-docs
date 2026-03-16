@@ -186,6 +186,6 @@ When `requireMention: true` is set for a group chat, OpenClaw now transcribes au
 - Keep timeouts reasonable (`timeoutSeconds`, default 60s) to avoid blocking the reply queue.
 - Preflight transcription only processes the **first** audio attachment for mention detection. Additional audio is processed during the main media understanding phase.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

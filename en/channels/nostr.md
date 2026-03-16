@@ -232,6 +232,6 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 - No media attachments.
 - NIP-04 only (NIP-17 gift-wrap planned).
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

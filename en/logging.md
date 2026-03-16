@@ -351,6 +351,6 @@ Queues + sessions:
   in `logging.file`.
 - **Need more detail?** Set `logging.level` to `debug` or `trace` and retry.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

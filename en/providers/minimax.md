@@ -216,6 +216,6 @@ Then recheck with:
 openclaw models list
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

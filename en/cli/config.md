@@ -67,6 +67,6 @@ openclaw config validate
 openclaw config validate --json
 ```
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

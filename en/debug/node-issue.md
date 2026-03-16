@@ -84,6 +84,6 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 - Test `tsx` nightly or pin to earlier version if a known regression exists.
 - If reproduces on Node LTS, file a minimal repro upstream with the `__name` stack trace.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

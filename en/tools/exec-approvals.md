@@ -399,6 +399,6 @@ Related:
 - [Elevated mode](/en/tools/elevated)
 - [Skills](/en/tools/skills)
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

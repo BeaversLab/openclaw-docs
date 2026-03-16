@@ -7,6 +7,6 @@ These baseline artifacts are generated from the repo-owned OpenClaw config schem
 - Regenerate it with `pnpm config:docs:gen`.
 - Validate it in CI or locally with `pnpm config:docs:check`.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

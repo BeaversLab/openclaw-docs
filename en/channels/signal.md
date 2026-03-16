@@ -328,6 +328,6 @@ Related global options:
 - `messages.groupChat.mentionPatterns` (global fallback).
 - `messages.responsePrefix`.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

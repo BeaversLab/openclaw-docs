@@ -97,6 +97,6 @@ packaging and Nix builds (which do not rely on a full Xcode toolchain).
 - [Wizard](/en/start/wizard) — non-Nix CLI setup
 - [Docker](/en/install/docker) — containerized setup
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />

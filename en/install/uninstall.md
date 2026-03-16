@@ -127,6 +127,6 @@ If you run from a repo checkout (`git clone` + `openclaw ...` / `bun run opencla
 2. Delete the repo directory.
 3. Remove state + workspace as shown above.
 
-import en from '/components/footer/en.mdx';
+import en from "/components/footer/en.mdx";
 
 <en />
