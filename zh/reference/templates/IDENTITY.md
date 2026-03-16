@@ -28,6 +28,6 @@ _请在你的第一次对话中填写此项。使其成为你自己的._
 - 将此文件作为 `IDENTITY.md` 保存到工作区根目录。
 - 对于头像，请使用像 `avatars/openclaw.png` 这样的工作区相对路径。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

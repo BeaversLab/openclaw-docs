@@ -378,10 +378,10 @@ Diff 渲染引擎：
 
 ## 相关文档
 
-- [工具概览](/zh/tools)
-- [插件](/zh/tools/plugin)
-- [浏览器](/zh/tools/browser)
+- [工具概览](/en/tools)
+- [插件](/en/tools/plugin)
+- [浏览器](/en/tools/browser)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

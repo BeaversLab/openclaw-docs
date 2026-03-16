@@ -20,13 +20,13 @@ title: "脚本"
 ## 身份验证监控脚本
 
 身份监控脚本记录在此处：
-[/automation/auth-monitoring](/zh/automation/auth-monitoring)
+[/automation/auth-monitoring](/en/automation/auth-monitoring)
 
 ## 添加脚本时
 
 - 保持脚本专注且有文档记录。
 - 在相关文档中添加简短的条目（如果缺失则创建一个）。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

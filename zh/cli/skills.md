@@ -12,9 +12,9 @@ title: "技能"
 
 相关：
 
-- Skills 系统：[Skills](/zh/tools/skills)
-- Skills 配置：[Skills 配置](/zh/tools/skills-config)
-- ClawHub 安装：[ClawHub](/zh/tools/clawhub)
+- Skills 系统：[Skills](/en/tools/skills)
+- Skills 配置：[Skills 配置](/en/tools/skills-config)
+- ClawHub 安装：[ClawHub](/en/tools/clawhub)
 
 ## 命令
 
@@ -25,6 +25,6 @@ openclaw skills info <name>
 openclaw skills check
 ```
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

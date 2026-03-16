@@ -56,6 +56,6 @@ sudo install -m 644 -o root -g wheel /tmp/ai.openclaw.plist /Library/Preferences
 - 可以选择运行 `sudo log config --reload` 以强制 logd 立即丢弃覆盖。
 - 请记住，此界面可能包含电话号码和消息正文；仅在您主动需要额外详细信息时才保留 plist。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -75,6 +75,6 @@ OpenClaw 不强制执行内置的最大备份大小或单文件大小限制。
 
 要获得最小的存档，请使用 `--only-config`。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

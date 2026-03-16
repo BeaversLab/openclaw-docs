@@ -54,7 +54,7 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
 
 <Note>
   如果安装成功但在新的终端中未找到 `openclaw`，请参阅 [Node.js
-  故障排除](/zh/install/node#故障排除)。
+  故障排除](/en/install/node#故障排除)。
 </Note>
 
 ---
@@ -376,6 +376,6 @@ OpenClaw 附带三个安装程序脚本，由 `openclaw.ai` 提供。
   </Accordion>
 </AccordionGroup>
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

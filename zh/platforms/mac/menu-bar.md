@@ -80,6 +80,6 @@ title: "菜单栏"
 - 快速工具调用：确保徽标不闪烁（工具结果的 TTL 宽限）。
 - 所有会话空闲后，健康状态行重新出现。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

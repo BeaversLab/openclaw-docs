@@ -60,6 +60,6 @@ export PEEKABOO_BRIDGE_SOCKET=/path/to/bridge.sock
 - 如果未找到主机，请打开其中一个主机应用（Peekaboo.app 或 OpenClaw.app）
   并确认已授予权限。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

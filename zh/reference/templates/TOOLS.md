@@ -46,6 +46,6 @@ read_when:
 
 添加任何对你工作有帮助的内容。这是你的备忘单。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -11,6 +11,6 @@ read_when:
 
 # 当您希望代理定期检查某些内容时，请在下方添加任务。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

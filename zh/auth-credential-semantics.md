@@ -44,6 +44,6 @@
 
 人类可读的详细信息以及稳定的原因代码可以在后续行中添加。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

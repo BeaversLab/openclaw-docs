@@ -25,7 +25,7 @@ Note, selecting 'chromium-browser' instead of 'chromium'
 chromium-browser is already the newest version (2:1snap1-0ubuntu2).
 ```
 
-这**不是**真正的浏览器——它只是一个包装器。
+这不是真正的浏览器——它只是一个包装器。
 
 ### 解决方案 1：安装 Google Chrome（推荐）
 
@@ -123,8 +123,8 @@ curl -s http://127.0.0.1:18791/tabs
 
 ### 问题：“Chrome 扩展程序中继正在运行，但没有连接任何标签页”
 
-您正在使用 `chrome` 配置文件（扩展中继）。它需要将 OpenClaw
-浏览器扩展附加到活动的标签页。
+您正在使用扩展中继配置文件。它期望 OpenClaw
+浏览器扩展附加到一个活动的标签页。
 
 修复选项：
 
@@ -135,9 +135,9 @@ curl -s http://127.0.0.1:18791/tabs
 
 注：
 
-- `chrome` 配置文件在可能时使用您的 **系统默认 Chromium 浏览器**。
-- 本地 `openclaw` 配置文件自动分配 `cdpPort`/`cdpUrl`；仅针对远程 CDP 设置这些。
+- `chrome-relay` 配置文件在可能的情况下使用您的**系统默认 Chromium 浏览器**。
+- 本地 `openclaw` 配置文件会自动分配 `cdpPort`/`cdpUrl`；仅为远程 CDP 设置这些参数。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

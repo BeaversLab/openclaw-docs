@@ -49,6 +49,6 @@ title: "apply_patch 工具"
 }
 ```
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

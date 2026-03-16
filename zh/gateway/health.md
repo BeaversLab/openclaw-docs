@@ -34,6 +34,6 @@ title: "健康检查"
 
 `openclaw health --json` 向正在运行的 Gateway 网关 请求其健康快照（CLI 不直接使用通道套接字）。报告链接的凭据/认证寿命（如果可用）、每个通道的探测摘要、会话存储摘要以及探测持续时间。如果 Gateway 网关 无法访问或探测失败/超时，则以非零状态退出。使用 `--timeout <ms>` 覆盖 10 秒的默认值。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

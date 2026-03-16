@@ -52,6 +52,6 @@ openclaw agent --agent ops --message "Generate report" --deliver --reply-channel
 - `--timeout <seconds>`：覆盖代理超时
 - `--json`：输出结构化 JSON
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

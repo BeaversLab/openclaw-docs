@@ -81,6 +81,6 @@ git commit -m "Add agent workspace"
 - 噢感谢造物主（总是适用的）
 - Clawdributors 是友善的
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

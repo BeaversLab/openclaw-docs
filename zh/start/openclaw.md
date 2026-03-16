@@ -26,7 +26,7 @@ OpenClaw 是 **Pi** 智能体的 WhatsApp + Telegram + Discord + iMessage 网关
 
 ## 先决条件
 
-- 已安装并完成 OpenClaw 入门设置 — 如果尚未完成，请参阅[入门指南](/zh/start/getting-started)
+- 已安装并完成 OpenClaw 入门设置 — 如果尚未完成，请参阅[入门指南](/en/start/getting-started)
 - 用于助手的第二个电话号码（SIM/eSIM/预付费）
 
 ## 双手机设置（推荐）
@@ -79,8 +79,8 @@ OpenClaw 从其工作区目录读取操作指令和“记忆”。
 openclaw setup
 ```
 
-完整的工作区布局 + 备份指南：[Agent 工作区](/zh/concepts/agent-workspace)
-记忆工作流：[Memory](/zh/concepts/memory)
+完整的工作区布局 + 备份指南：[Agent 工作区](/en/concepts/agent-workspace)
+记忆工作流：[Memory](/en/concepts/memory)
 
 可选：使用 `agents.defaults.workspace` 选择不同的工作区（支持 `~`）。
 
@@ -205,16 +205,16 @@ openclaw health --json   # gateway health snapshot (WS)
 
 ## 后续步骤
 
-- WebChat：[WebChat](/zh/web/webchat)
-- Gateway ops: [Gateway runbook](/zh/gateway)
-- Cron + 唤醒：[Cron jobs](/zh/automation/cron-jobs)
-- macOS 菜单栏伴侣：[OpenClaw macOS 应用](/zh/platforms/macos)
-- iOS 节点应用：[iOS 应用](/zh/platforms/ios)
-- Android 节点应用：[Android 应用](/zh/platforms/android)
-- Windows 状态：[Windows (WSL2)](/zh/platforms/windows)
-- Linux 状态：[Linux 应用](/zh/platforms/linux)
-- 安全性：[Security](/zh/gateway/security)
+- WebChat：[WebChat](/en/web/webchat)
+- Gateway ops: [Gateway runbook](/en/gateway)
+- Cron + 唤醒：[Cron jobs](/en/automation/cron-jobs)
+- macOS 菜单栏伴侣：[OpenClaw macOS 应用](/en/platforms/macos)
+- iOS 节点应用：[iOS 应用](/en/platforms/ios)
+- Android 节点应用：[Android 应用](/en/platforms/android)
+- Windows 状态：[Windows (WSL2)](/en/platforms/windows)
+- Linux 状态：[Linux 应用](/en/platforms/linux)
+- 安全性：[Security](/en/gateway/security)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -49,6 +49,6 @@ title: "功能"
 
 <Note>旧版 Claude、Codex、Gemini 和 Opencode 路径已被移除。Pi 是唯一的编码代理 路径。</Note>
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

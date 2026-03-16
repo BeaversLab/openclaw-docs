@@ -65,6 +65,6 @@ OpenClaw 将唤醒词视为由**Gateway 网关 拥有的单一全局列表**。
 - Android 运行时/设置中当前禁用了语音唤醒。
 - Android 语音在语音选项卡中使用手动麦克风捕获，而不是唤醒词触发。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -11,7 +11,7 @@ sidebarTitle: "向导参考"
 # 新手引导向导参考
 
 这是 `openclaw onboard` CLI 向导的完整参考。
-要查看高层概览，请参阅 [新手引导向导](/zh/start/wizard)。
+要查看高层概览，请参阅 [新手引导向导](/en/start/wizard)。
 
 ## 流程详细信息（本地模式）
 
@@ -40,25 +40,25 @@ sidebarTitle: "向导参考"
     - **xAI (Grok) API 密钥**：提示输入 `XAI_API_KEY` 并将 xAI 配置为模型提供商。
     - **OpenCode**：提示输入 `OPENCODE_API_KEY`（或 `OPENCODE_ZEN_API_KEY`，请在 https://opencode.ai/auth 获取），并让您选择 Zen 或 Go 目录。
     - **Ollama**：提示输入 Ollama 基础 URL，提供 **Cloud + Local** 或 **Local** 模式，发现可用模型，并在需要时自动拉入选定的本地模型。
-    - 更多详情：[Ollama](/zh/providers/ollama)
+    - 更多详情：[Ollama](/en/providers/ollama)
     - **API 密钥**：为您存储密钥。
     - **Vercel AI Gateway(网关)（多模型代理）**：提示输入 `AI_GATEWAY_API_KEY`。
-    - 更多详情：[Vercel AI Gateway(网关)](/zh/providers/vercel-ai-gateway)
+    - 更多详情：[Vercel AI Gateway(网关)](/en/providers/vercel-ai-gateway)
     - **Cloudflare AI Gateway(网关)**：提示输入账户 ID、Gateway(网关) ID 和 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
-    - 更多详情：[Cloudflare AI Gateway(网关)](/zh/providers/cloudflare-ai-gateway)
+    - 更多详情：[Cloudflare AI Gateway(网关)](/en/providers/cloudflare-ai-gateway)
     - **MiniMax M2.5**：配置将自动写入。
-    - 更多详情：[MiniMax](/zh/providers/minimax)
+    - 更多详情：[MiniMax](/en/providers/minimax)
     - **Synthetic (Anthropic 兼容)**：提示输入 `SYNTHETIC_API_KEY`。
-    - 更多详情：[Synthetic](/zh/providers/synthetic)
+    - 更多详情：[Synthetic](/en/providers/synthetic)
     - **Moonshot (Kimi K2)**：配置将自动写入。
     - **Kimi Coding**：配置将自动写入。
-    - 更多详情：[Moonshot AI (Kimi + Kimi Coding)](/zh/providers/moonshot)
+    - 更多详情：[Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
     - **跳过**：尚未配置身份验证。
     - 从检测到的选项中选择默认模型（或手动输入提供商/模型）。为了获得最佳质量和较低的提示注入风险，请选择您的提供商堆栈中可用的最强最新一代模型。
     - 向导运行模型检查，如果配置的模型未知或缺少身份验证，则会发出警告。
     - API 密钥存储模式默认为纯文本身份验证配置文件值。使用 `--secret-input-mode ref` 来存储支持环境的引用（例如 `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`）。
     - OAuth 凭证位于 `~/.openclaw/credentials/oauth.json` 中；身份验证配置文件位于 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 中（API 密钥 + OAuth）。
-    - 更多详情：[/concepts/oauth](/zh/concepts/oauth)
+    - 更多详情：[/concepts/oauth](/en/concepts/oauth)
     <Note>
     无头/服务器提示：在带有浏览器的机器上完成 OAuth，然后将 `~/.openclaw/credentials/oauth.json`（或 `$OPENCLAW_STATE_DIR/credentials/oauth.json`）复制到网关主机。
     </Note>
@@ -66,7 +66,7 @@ sidebarTitle: "向导参考"
   <Step title="Workspace">
     - 默认 `~/.openclaw/workspace`（可配置）。
     - 为代理引导仪式所需的工作区文件提供种子。
-    - 完整的工作区布局 + 备份指南：[Agent workspace](/zh/concepts/agent-workspace)
+    - 完整的工作区布局 + 备份指南：[Agent workspace](/en/concepts/agent-workspace)
   </Step>
   <Step title="Gateway">
     - 端口、绑定、认证模式、Tailscale 暴露。
@@ -84,14 +84,14 @@ sidebarTitle: "向导参考"
     - 非回环绑定仍然需要认证。
   </Step>
   <Step title="Channels">
-    - [WhatsApp](/zh/channels/whatsapp)：可选的二维码登录。
-    - [Telegram](/zh/channels/telegram)：机器人令牌（bot token）。
-    - [Discord](/zh/channels/discord)：机器人令牌（bot token）。
-    - [Google Chat](/zh/channels/googlechat)：服务账号 JSON + Webhook 受众。
-    - [Mattermost](/zh/channels/mattermost)（插件）：机器人令牌（bot token） + 基础 URL。
-    - [Signal](/zh/channels/signal)：可选的 `signal-cli` 安装 + 账号配置。
-    - [BlueBubbles](/zh/channels/bluebubbles)：**推荐用于 iMessage**；服务器 URL + 密码 + Webhook。
-    - [iMessage](/zh/channels/imessage)：旧版 `imsg` CLI 路径 + 数据库访问权限。
+    - [WhatsApp](/en/channels/whatsapp)：可选的二维码登录。
+    - [Telegram](/en/channels/telegram)：机器人令牌（bot token）。
+    - [Discord](/en/channels/discord)：机器人令牌（bot token）。
+    - [Google Chat](/en/channels/googlechat)：服务账号 JSON + Webhook 受众。
+    - [Mattermost](/en/channels/mattermost)（插件）：机器人令牌（bot token） + 基础 URL。
+    - [Signal](/en/channels/signal)：可选的 `signal-cli` 安装 + 账号配置。
+    - [BlueBubbles](/en/channels/bluebubbles)：**推荐用于 iMessage**；服务器 URL + 密码 + Webhook。
+    - [iMessage](/en/channels/imessage)：旧版 `imsg` CLI 路径 + 数据库访问权限。
     - 私信（私信）安全性：默认为配对模式。第一条私信发送验证码；通过 `openclaw pairing approve <channel> <code>` 批准或使用允许列表。
   </Step>
   <Step title="Web search">
@@ -165,7 +165,7 @@ openclaw onboard --non-interactive \
   `--json` **不**意味着非交互模式。请使用 `--non-interactive`（以及 `--workspace`）进行 脚本编写。
 </Note>
 
-特定于提供商的命令示例位于 [CLI Automation](/zh/start/wizard-cli-automation#provider-specific-examples) 中。
+特定于提供商的命令示例位于 [CLI Automation](/en/start/wizard-cli-automation#provider-specific-examples) 中。
 请使用此参考页面了解标志语义和步骤顺序。
 
 ### 添加代理（非交互）
@@ -206,7 +206,7 @@ Gateway(网关) 通过 RPC (`wizard.start`、`wizard.next`、`wizard.cancel`、`
 - `agents.defaults.model` / `models.providers` （如果选择了 Minimax）
 - `tools.profile` （如果未设置，本地新手引导默认为 `"coding"`；保留现有的显式值）
 - `gateway.*` （模式、绑定、认证、tailscale）
-- `session.dmScope` （行为详情：[CLI 新手引导 Reference](/zh/start/wizard-cli-reference#outputs-and-internals)）
+- `session.dmScope` （行为详情：[CLI 新手引导 Reference](/en/start/wizard-cli-reference#outputs-and-internals)）
 - `channels.telegram.botToken`、`channels.discord.token`、`channels.signal.*`、`channels.imessage.*`
 - 频道允许列表（Slack/Discord/Matrix/Microsoft Teams），当您在提示期间选择加入时（名称尽可能解析为 ID）。
 - `skills.install.nodeManager`
@@ -225,12 +225,12 @@ WhatsApp 凭据位于 `~/.openclaw/credentials/whatsapp/<accountId>/` 之下。
 
 ## 相关文档
 
-- 向导概述：[新手引导向导](/zh/start/wizard)
-- macOS 应用新手引导：[新手引导](/zh/start/onboarding)
-- 配置参考：[Gateway(网关) 配置](/zh/gateway/configuration)
-- 提供商：[WhatsApp](/zh/channels/whatsapp)、[Telegram](/zh/channels/telegram)、[Discord](/zh/channels/discord)、[Google Chat](/zh/channels/googlechat)、[Signal](/zh/channels/signal)、[BlueBubbles](/zh/channels/bluebubbles) (iMessage)、[iMessage](/zh/channels/imessage) (旧版)
-- Skills：[Skills](/zh/tools/skills)、[Skills 配置](/zh/tools/skills-config)
+- 向导概述：[新手引导向导](/en/start/wizard)
+- macOS 应用新手引导：[新手引导](/en/start/onboarding)
+- 配置参考：[Gateway(网关) 配置](/en/gateway/configuration)
+- 提供商：[WhatsApp](/en/channels/whatsapp)、[Telegram](/en/channels/telegram)、[Discord](/en/channels/discord)、[Google Chat](/en/channels/googlechat)、[Signal](/en/channels/signal)、[BlueBubbles](/en/channels/bluebubbles) (iMessage)、[iMessage](/en/channels/imessage) (旧版)
+- Skills：[Skills](/en/tools/skills)、[Skills 配置](/en/tools/skills-config)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

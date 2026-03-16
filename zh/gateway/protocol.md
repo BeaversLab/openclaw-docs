@@ -250,6 +250,6 @@ Gateway 网关 将这些视为**声明** 并执行服务端允许列表。
 代理、会话、节点、审批等）。确切的功能范围由
 `src/gateway/protocol/schema.ts` 中的 TypeBox 模式定义。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

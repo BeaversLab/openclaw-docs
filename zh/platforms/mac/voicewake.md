@@ -66,6 +66,6 @@ title: "语音唤醒"
 - 开启按住通话，按住 Cmd+Fn，说话，松开：覆盖层应显示部分文本然后发送。
 - 按住时，菜单栏耳朵应保持放大（使用 `triggerVoiceEars(ttl:nil)`）；释放后它们会恢复。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

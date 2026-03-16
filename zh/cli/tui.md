@@ -12,7 +12,7 @@ title: "tui"
 
 相关：
 
-- TUI 指南：[TUI](/zh/web/tui)
+- TUI 指南：[TUI](/en/web/tui)
 
 注意：
 
@@ -29,6 +29,6 @@ openclaw tui --session main --deliver
 openclaw tui --session bugfix
 ```
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

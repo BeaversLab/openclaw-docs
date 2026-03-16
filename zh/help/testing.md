@@ -116,7 +116,7 @@ OpenClaw 有三个 Vitest 套件（单元/集成、E2E、Live）和一小部分 
 - 可选的目标覆盖：
   - `OPENCLAW_ANDROID_NODE_ID` 或 `OPENCLAW_ANDROID_NODE_NAME`。
   - `OPENCLAW_ANDROID_GATEWAY_URL` / `OPENCLAW_ANDROID_GATEWAY_TOKEN` / `OPENCLAW_ANDROID_GATEWAY_PASSWORD`。
-- 完整的 Android 设置详情：[Android 应用](/zh/platforms/android)
+- 完整的 Android 设置详情：[Android 应用](/en/platforms/android)
 
 ## Live: 模型冒烟测试 (profile keys)
 
@@ -386,7 +386,7 @@ Live 测试以与 CLI 相同的方式发现凭证。实际含义：
 - 通过真实网关 + 代理循环模拟工具调用 (`src/gateway/gateway.test.ts`)。
 - 验证会话连接和配置效果的端到端向导流程 (`src/gateway/gateway.test.ts`)。
 
-Skills 方面仍然缺少什么（请参阅 [Skills](/zh/tools/skills)）：
+Skills 方面仍然缺少什么（请参阅 [Skills](/en/tools/skills)）：
 
 - **决策制定：** 当提示中列出了 Skills 时，agent 是否会选择正确的 skill（或避开不相关的 skill）？
 - **合规性：** Agent 在使用前是否会读取 `SKILL.md` 并遵循必要的步骤/参数？
@@ -411,6 +411,6 @@ Skills 方面仍然缺少什么（请参阅 [Skills](/zh/tools/skills)）：
   - `src/secrets/exec-secret-ref-id-parity.test.ts` 从注册表元数据（`listSecretTargetRegistryEntries()`）中为每个 SecretRef 类派生一个采样目标，然后断言遍历段执行 ID 被拒绝。
   - 如果在 `src/secrets/target-registry-data.ts` 中添加了新的 `includeInPlan` SecretRef 目标系列，请在该测试中更新 `classifyTargetClass`。该测试有意在未分类的目标 ID 上失败，以便无法静默跳过新类别。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

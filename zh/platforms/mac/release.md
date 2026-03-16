@@ -89,6 +89,6 @@ SPARKLE_PRIVATE_KEY_FILE=/path/to/ed25519-private-key scripts/make_appcast.sh di
 
 完成标准：已签名的应用程序和 appcast 已发布，从旧版本开始的更新流程正常工作，且发布资源已附加到 GitHub 版本中。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

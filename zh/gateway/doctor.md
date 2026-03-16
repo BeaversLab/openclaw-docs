@@ -283,8 +283,8 @@ Doctor 会持久保存所有配置更改，并标记向导元数据以记录 Doc
 
 如果缺少工作区记忆系统，Doctor 会建议添加；如果工作区尚未由 git 管理，则会打印备份提示。
 
-有关工作区结构和 git 备份（推荐使用私有的 GitHub 或 GitLab）的完整指南，请参阅 [/concepts/agent-workspace](/zh/concepts/agent-workspace)。
+有关工作区结构和 git 备份（推荐使用私有的 GitHub 或 GitLab）的完整指南，请参阅 [/concepts/agent-workspace](/en/concepts/agent-workspace)。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

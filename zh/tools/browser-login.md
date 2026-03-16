@@ -14,16 +14,23 @@ title: "浏览器登录"
 
 请**勿**向模型提供您的凭据。自动登录通常会触发反机器人防御措施，并可能导致账户被锁定。
 
-返回主浏览器文档：[Browser](/zh/tools/browser)。
+返回主浏览器文档：[Browser](/en/tools/browser)。
 
 ## 使用的是哪个 Chrome 配置文件？
 
 OpenClaw 控制一个**专用的 Chrome 配置文件**（名为 `openclaw`，橙色 UI）。这与您日常使用的浏览器配置文件是分开的。
 
-有两种简单的方法可以访问它：
+对于代理浏览器工具调用：
+
+- 默认选择：代理应使用其隔离的 `openclaw` 浏览器。
+- 仅当现有的登录会话很重要且用户在计算机旁边以点击/批准任何附加提示时，才使用 `profile="user"`。
+- 仅对于 Chrome 扩展程序/工具栏按钮附加流程使用 `profile="chrome-relay"`。
+- 如果您有多个用户浏览器配置文件，请明确指定配置文件而不是猜测。
+
+访问它有两种简单的方法：
 
 1. **让代理打开浏览器**，然后您自己登录。
-2. **通过 CLI 打开**：
+2. **通过 CLI 打开它**：
 
 ```bash
 openclaw browser start
@@ -34,14 +41,14 @@ openclaw browser open https://x.com
 
 ## X/Twitter：推荐流程
 
-- **阅读/搜索/主题：** 使用**主机**浏览器（手动登录）。
-- **发布更新：** 使用**主机**浏览器（手动登录）。
+- **阅读/搜索/主题：** 使用 **主机** 浏览器（手动登录）。
+- **发布更新：** 使用 **主机** 浏览器（手动登录）。
 
-## 沙盒隔离 + 主机浏览器访问
+## 沙箱隔离 + 主机浏览器访问
 
-沙盒浏览器会话**更有可能**触发机器人检测。对于 X/Twitter（和其他严格的站点），首选**主机**浏览器。
+沙箱隔离的浏览器会话**更有可能**触发机器人检测。对于 X/Twitter（和其他严格的站点），首选 **主机** 浏览器。
 
-如果代理处于沙盒中，浏览器工具默认使用沙盒。要允许主机控制：
+如果代理处于沙箱隔离状态，浏览器工具默认使用沙箱。要允许主机控制：
 
 ```json5
 {
@@ -64,8 +71,8 @@ openclaw browser open https://x.com
 openclaw browser open https://x.com --browser-profile openclaw --target host
 ```
 
-或者为发布更新的代理禁用沙盒隔离。
+或为发布更新的代理禁用沙箱隔离。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

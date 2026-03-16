@@ -85,6 +85,6 @@ openclaw message poll --channel msteams --target conversation:19:abc@thread.tacv
 Teams 投票呈现为自适应卡片（Adaptive Cards），并要求网关保持在线状态
 以便在 `~/.openclaw/msteams-polls.json` 中记录投票。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

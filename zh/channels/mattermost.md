@@ -31,7 +31,7 @@ openclaw plugins install ./extensions/mattermost
 如果您在配置/入职过程中选择了 Mattermost 并检测到了 git 检出，
 OpenClaw 将自动提供本地安装路径。
 
-详情：[插件](/zh/tools/plugin)
+详情：[插件](/en/tools/plugin)
 
 ## 快速设置
 
@@ -378,6 +378,6 @@ Mattermost 在 `channels.mattermost.accounts` 下支持多个账户：
 - 确认显示原始 ID 而非按钮名称：`context.action_id` 与按钮的 `id` 不匹配。请将两者设置为相同的经过清理的值。
 - Agent 不知道按钮：在 Mattermost 渠道配置中添加 `capabilities: ["inlineButtons"]`。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

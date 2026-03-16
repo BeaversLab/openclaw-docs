@@ -79,7 +79,7 @@ title: "思考级别"
 
 ## 相关
 
-- 提升模式文档位于 [Elevated mode](/zh/tools/elevated)。
+- 提升模式文档位于 [Elevated mode](/en/tools/elevated)。
 
 ## 心跳
 
@@ -92,6 +92,6 @@ title: "思考级别"
 - 选择另一个级别仅适用于下一条消息（`thinkingOnce`）；发送后，选择器会恢复到存储的会话级别。
 - 要更改会话默认值，请发送 `/think:<level>` 指令（如前所述）；选择器将在下次重新加载后反映该值。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

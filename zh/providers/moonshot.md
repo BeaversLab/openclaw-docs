@@ -9,24 +9,19 @@ title: "Moonshot AI"
 
 # Moonshot AI (Kimi)
 
-Moonshot 提供了与 OpenAI 兼容的 Kimi API 端点。配置提供商并将默认模型设置为 `moonshot/kimi-k2.5`，或者使用 Kimi Coding 配合 `kimi-coding/k2p5`。
+Moonshot 提供了与 OpenAI 兼容的 Kimi API 端点。配置提供商并将默认模型设置为 `moonshot/kimi-k2.5`，或者使用带有 `kimi-coding/k2p5` 的 Kimi Coding。
 
 当前的 Kimi K2 模型 ID：
 
-{/* markdownlint-disable MD037 */}
-
-{/_ moonshot-kimi-k2-ids:start _/ && null}
-
-{/* markdownlint-enable MD037 */}
+[//]: # "moonshot-kimi-k2-ids:start"
 
 - `kimi-k2.5`
 - `kimi-k2-0905-preview`
 - `kimi-k2-turbo-preview`
 - `kimi-k2-thinking`
 - `kimi-k2-thinking-turbo`
-  {/* markdownlint-disable MD037 */}
-  {/_ moonshot-kimi-k2-ids:end _/ && null}
-  {/* markdownlint-enable MD037 */}
+
+[//]: # "moonshot-kimi-k2-ids:end"
 
 ```bash
 openclaw onboard --auth-choice moonshot-api-key
@@ -38,9 +33,9 @@ Kimi Coding：
 openclaw onboard --auth-choice kimi-code-api-key
 ```
 
-注意：Moonshot 和 Kimi Coding 是不同的提供商。密钥不可互换，端点不同，且模型引用也不同（Moonshot 使用 `moonshot/...`，Kimi Coding 使用 `kimi-coding/...`）。
+注意：Moonshot 和 Kimi Coding 是独立的提供商。密钥不可互换，端点不同，模型引用也不同（Moonshot 使用 `moonshot/...`，Kimi Coding 使用 `kimi-coding/...`）。
 
-## 配置片段（Moonshot API）
+## 配置片段 (Moonshot API)
 
 ```json5
 {
@@ -137,16 +132,16 @@ openclaw onboard --auth-choice kimi-code-api-key
 }
 ```
 
-## 备注
+## 注意事项
 
 - Moonshot 模型引用使用 `moonshot/<modelId>`。Kimi Coding 模型引用使用 `kimi-coding/<modelId>`。
 - 如有需要，请在 `models.providers` 中覆盖定价和上下文元数据。
-- 如果 Moonshot 发布了针对某个模型的不同上下文限制，请相应调整 `contextWindow`。
+- 如果 Moonshot 为某个模型发布了不同的上下文限制，请相应调整 `contextWindow`。
 - 国际端点使用 `https://api.moonshot.ai/v1`，中国端点使用 `https://api.moonshot.cn/v1`。
 
-## 原生思考模式（Moonshot）
+## 原生思考模式 (Moonshot)
 
-Moonshot Kimi 支持二进制原生思考：
+Moonshot Kimi 支持二元原生思考：
 
 - `thinking: { type: "enabled" }`
 - `thinking: { type: "disabled" }`
@@ -169,13 +164,13 @@ Moonshot Kimi 支持二进制原生思考：
 }
 ```
 
-OpenClaw 还为 Moonshot 映射了运行时 `/think` 级别：
+OpenClaw 还映射了 Moonshot 的运行时 `/think` 级别：
 
 - `/think off` -> `thinking.type=disabled`
-- 任何非关闭思考级别 -> `thinking.type=enabled`
+- 任何非关闭的思考级别 -> `thinking.type=enabled`
 
-当启用 Moonshot 思考模式时，`tool_choice` 必须为 `auto` 或 `none`。OpenClaw 会将不兼容的 `tool_choice` 值规范化为 `auto` 以确保兼容性。
+当启用 Moonshot 思考模式时，`tool_choice` 必须是 `auto` 或 `none`。OpenClaw 会将不兼容的 `tool_choice` 值标准化为 `auto` 以确保兼容性。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

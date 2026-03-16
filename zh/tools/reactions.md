@@ -22,6 +22,6 @@ title: "反应"
 - **Zalo 个人版 (`zalouser`)**：需要非空的 `emoji`；`remove: true` 移除特定的 emoji 反应。
 - **Signal**：当启用 `channels.signal.reactionNotifications` 时，入站反应通知会发出系统事件。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

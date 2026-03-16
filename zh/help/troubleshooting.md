@@ -28,27 +28,27 @@ openclaw logs --follow
 
 - `openclaw status` → 显示已配置的通道且没有明显的身份验证错误。
 - `openclaw status --all` → 完整的报告已存在且可共享。
-- `openclaw gateway probe` → 预期的网关目标可达。
+- `openclaw gateway probe` → 预期的网关目标可达 (`Reachable: yes`)。`RPC: limited - missing scope: operator.read` 是降级诊断，而非连接失败。
 - `openclaw gateway status` → `Runtime: running` 和 `RPC probe: ok`。
-- `openclaw doctor` → 没有阻塞的配置/服务错误。
-- `openclaw channels status --probe` → 通道报告 `connected` 或 `ready`。
-- `openclaw logs --follow` → 活动稳定，没有重复的致命错误。
+- `openclaw doctor` → 无阻塞性配置/服务错误。
+- `openclaw channels status --probe` → 渠道报告 `connected` 或 `ready`。
+- `openclaw logs --follow` → 活动稳定，无重复的致命错误。
 
 ## Anthropic 长上下文 429 错误
 
 如果您看到：
 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`,
-请前往 [/gateway/故障排除#anthropic-429-extra-usage-required-for-long-context](/zh/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
+请前往 [/gateway/故障排除#anthropic-429-extra-usage-required-for-long-context](/en/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
 
 ## 插件安装因缺少 openclaw 扩展而失败
 
-如果安装失败并出现 `package.json missing openclaw.extensions`，则说明插件包
+如果安装失败并出现 `package.json missing openclaw.extensions`，则插件包
 使用的是 OpenClaw 不再接受的旧格式。
 
 在插件包中修复：
 
 1. 将 `openclaw.extensions` 添加到 `package.json`。
-2. 将条目指向构建的运行时文件（通常是 `./dist/index.js`）。
+2. 将条目指向构建的运行时文件（通常为 `./dist/index.js`）。
 3. 重新发布插件并再次运行 `openclaw plugins install <npm-spec>`。
 
 示例：
@@ -63,7 +63,7 @@ openclaw logs --follow
 }
 ```
 
-参考：[/tools/plugin#distribution-npm](/zh/tools/plugin#distribution-npm)
+参考：[/tools/plugin#distribution-npm](/en/tools/plugin#distribution-npm)
 
 ## 决策树
 
@@ -88,7 +88,7 @@ flowchart TD
 ```
 
 <AccordionGroup>
-  <Accordion title="无回复">
+  <Accordion title="No replies">
     ```bash
     openclaw status
     openclaw gateway status
@@ -97,24 +97,24 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    正常的输出看起来像：
+    良好的输出看起来像：
 
     - `Runtime: running`
     - `RPC probe: ok`
-    - 您的渠道在 `channels status --probe` 中显示为已连接/就绪
+    - 您的渠道在 `channels status --probe` 中显示已连接/就绪
     - 发送者显示已批准（或私信策略为开放/允许列表）
 
-    常见日志特征：
+    常见日志签名：
 
     - `drop guild message (mention required` → 提及门控在 Discord 中阻止了消息。
     - `pairing request` → 发送者未获批准，正在等待私信配对批准。
-    - 渠道日志中的 `blocked` / `allowlist` → 发送者、房间或群组被过滤。
+    - 渠道日志中的 `blocked` / `allowlist` → 发送者、房间或组被过滤。
 
     深度页面：
 
-    - [/gateway/故障排除#no-replies](/zh/gateway/troubleshooting#no-replies)
-    - [/channels/故障排除](/zh/channels/troubleshooting)
-    - [/channels/pairing](/zh/channels/pairing)
+    - [/gateway/故障排除#no-replies](/en/gateway/troubleshooting#no-replies)
+    - [/channels/故障排除](/en/channels/troubleshooting)
+    - [/channels/pairing](/en/channels/pairing)
 
   </Accordion>
 
@@ -127,7 +127,7 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    正常的输出看起来像：
+    正常的输出如下所示：
 
     - `Dashboard: http://...` 显示在 `openclaw gateway status` 中
     - `RPC probe: ok`
@@ -136,19 +136,19 @@ flowchart TD
     常见日志特征：
 
     - `device identity required` → HTTP/非安全上下文无法完成设备认证。
-    - `AUTH_TOKEN_MISMATCH` 并带有重试提示 (`canRetryWithDeviceToken=true`) → 一个受信任的设备令牌重试可能会自动发生。
-    - 重试后重复出现 `unauthorized` → 令牌/密码错误、认证模式不匹配，或过时的已配对设备令牌。
-    - `gateway connect failed:` → UI 针对了错误的 URL/端口或无法访问的网关。
+    - `AUTH_TOKEN_MISMATCH` 带有重试提示 (`canRetryWithDeviceToken=true`) → 可能会自动进行一次受信任的设备令牌重试。
+    - 该重试后重复出现 `unauthorized` → 令牌/密码错误、认证模式不匹配或过时的已配对设备令牌。
+    - `gateway connect failed:` → UI 目标 URL/端口错误或网关不可达。
 
     深度页面：
 
-    - [/gateway/故障排除#dashboard-control-ui-connectivity](/zh/gateway/troubleshooting#dashboard-control-ui-connectivity)
-    - [/web/control-ui](/zh/web/control-ui)
-    - [/gateway/authentication](/zh/gateway/authentication)
+    - [/gateway/故障排除#dashboard-control-ui-connectivity](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
+    - [/web/control-ui](/en/web/control-ui)
+    - [/gateway/authentication](/en/gateway/authentication)
 
   </Accordion>
 
-  <Accordion title="Gateway(网关) 网关无法启动或服务已安装但未运行">
+  <Accordion title="Gateway(网关) 无法启动或服务已安装但未运行">
     ```bash
     openclaw status
     openclaw gateway status
@@ -157,7 +157,7 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    良好的输出看起来像：
+    正常的输出如下所示：
 
     - `Service: ... (loaded)`
     - `Runtime: running`
@@ -165,19 +165,19 @@ flowchart TD
 
     常见日志特征：
 
-    - `Gateway start blocked: set gateway.mode=local` → Gateway(网关) 网关模式未设置/为远程模式。
-    - `refusing to bind gateway ... without auth` → 非回环绑定且没有令牌/密码。
+    - `Gateway start blocked: set gateway.mode=local` → 网关模式未设置/为远程模式。
+    - `refusing to bind gateway ... without auth` → 非环回绑定且没有令牌/密码。
     - `another gateway instance is already listening` 或 `EADDRINUSE` → 端口已被占用。
 
     深度页面：
 
-    - [/gateway/故障排除#gateway-service-not-running](/zh/gateway/troubleshooting#gateway-service-not-running)
-    - [/gateway/background-process](/zh/gateway/background-process)
-    - [/gateway/configuration](/zh/gateway/configuration)
+    - [/gateway/故障排除#gateway-service-not-running](/en/gateway/troubleshooting#gateway-service-not-running)
+    - [/gateway/background-process](/en/gateway/background-process)
+    - [/gateway/configuration](/en/gateway/configuration)
 
   </Accordion>
 
-  <Accordion title="渠道已连接但消息未流动">
+  <Accordion title="渠道已连接但消息无法流转">
     ```bash
     openclaw status
     openclaw gateway status
@@ -186,7 +186,7 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    正常输出如下所示：
+    正常的输出看起来像这样：
 
     - 渠道传输已连接。
     - 配对/允许列表检查通过。
@@ -200,8 +200,8 @@ flowchart TD
 
     深入页面：
 
-    - [/gateway/故障排除#渠道-connected-messages-not-flowing](/zh/gateway/troubleshooting#channel-connected-messages-not-flowing)
-    - [/channels/故障排除](/zh/channels/troubleshooting)
+    - [/gateway/故障排除#渠道-connected-messages-not-flowing](/en/gateway/troubleshooting#channel-connected-messages-not-flowing)
+    - [/channels/故障排除](/en/channels/troubleshooting)
 
   </Accordion>
 
@@ -215,24 +215,24 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    良好的输出看起来像：
+    正常的输出看起来像这样：
 
-    - `cron.status` 显示已启用并具有下次唤醒时间。
+    - `cron.status` 显示已启用并带有下次唤醒时间。
     - `cron runs` 显示最近的 `ok` 条目。
     - 心跳已启用且不在活动时间之外。
 
-    常见日志特征：
+    常见日志签名：
 
     - `cron: scheduler disabled; jobs will not run automatically` → cron 已禁用。
     - `heartbeat skipped` 且带有 `reason=quiet-hours` → 超出配置的活动时间。
-    - `requests-in-flight` → 主通道繁忙；心跳唤醒已推迟。
-    - `unknown accountId` → 心跳投递目标帐户不存在。
+    - `requests-in-flight` → 主通道忙碌；心跳唤醒已推迟。
+    - `unknown accountId` → 心跳投递目标账户不存在。
 
-    深度页面：
+    深入页面：
 
-    - [/gateway/故障排除#cron-and-heartbeat-delivery](/zh/gateway/troubleshooting#cron-and-heartbeat-delivery)
-    - [/automation/故障排除](/zh/automation/troubleshooting)
-    - [/gateway/heartbeat](/zh/gateway/heartbeat)
+    - [/gateway/故障排除#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
+    - [/automation/故障排除](/en/automation/troubleshooting)
+    - [/gateway/heartbeat](/en/gateway/heartbeat)
 
   </Accordion>
 
@@ -247,22 +247,22 @@ flowchart TD
 
     良好的输出如下所示：
 
-    - 节点被列为已连接且已针对角色 `node` 进行配对。
-    - 您正在调用的命令存在 Capability。
-    - 工具的权限状态已获授权。
+    - 节点已列出为已连接并为角色 `node` 配对。
+    - 您调用的命令存在能力（Capability）。
+    - 工具的权限状态已获授予。
 
     常见日志特征：
 
     - `NODE_BACKGROUND_UNAVAILABLE` → 将节点应用置于前台。
-    - `*_PERMISSION_REQUIRED` → 操作系统权限被拒绝/缺失。
-    - `SYSTEM_RUN_DENIED: approval required` → 批准执行 待处理。
-    - `SYSTEM_RUN_DENIED: allowlist miss` → 命令不在执行允许列表上。
+    - `*_PERMISSION_REQUIRED` → 操作系统权限被拒绝或缺失。
+    - `SYSTEM_RUN_DENIED: approval required` → 批准执行待处理。
+    - `SYSTEM_RUN_DENIED: allowlist miss` → 命令不在执行允许列表中。
 
-    深入页面：
+    深度页面：
 
-    - [/gateway/故障排除#node-paired-工具-fails](/zh/gateway/troubleshooting#node-paired-tool-fails)
-    - [/nodes/故障排除](/zh/nodes/troubleshooting)
-    - [/tools/exec-approvals](/zh/tools/exec-approvals)
+    - [/gateway/故障排除#node-paired-工具-fails](/en/gateway/troubleshooting#node-paired-tool-fails)
+    - [/nodes/故障排除](/en/nodes/troubleshooting)
+    - [/tools/exec-approvals](/en/tools/exec-approvals)
 
   </Accordion>
 
@@ -277,26 +277,26 @@ flowchart TD
 
     良好的输出如下所示：
 
-    - 浏览器状态显示 `running: true` 和所选的浏览器/配置文件。
-    - `openclaw` 配置文件启动，或 `chrome` 中继具有附加的标签页。
+    - 浏览器状态显示 `running: true` 以及选定的浏览器/配置文件。
+    - `openclaw` 配置文件启动或 `chrome` 中继具有附加的标签页。
 
     常见日志特征：
 
     - `Failed to start Chrome CDP on port` → 本地浏览器启动失败。
     - `browser.executablePath not found` → 配置的二进制路径错误。
     - `Chrome extension relay is running, but no tab is connected` → 扩展程序未附加。
-    - `Browser attachOnly is enabled ... not reachable` → 仅附加 配置文件没有活动的 CDP 目标。
+    - `Browser attachOnly is enabled ... not reachable` → 仅附加配置文件没有实时的 CDP 目标。
 
-    深入页面：
+    深度页面：
 
-    - [/gateway/故障排除#browser-工具-fails](/zh/gateway/troubleshooting#browser-tool-fails)
-    - [/tools/browser-linux-故障排除](/zh/tools/browser-linux-troubleshooting)
-    - [/tools/browser-wsl2-windows-remote-cdp-故障排除](/zh/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
-    - [/tools/chrome-extension](/zh/tools/chrome-extension)
+    - [/gateway/故障排除#browser-工具-fails](/en/gateway/troubleshooting#browser-tool-fails)
+    - [/tools/browser-linux-故障排除](/en/tools/browser-linux-troubleshooting)
+    - [/tools/browser-wsl2-windows-remote-cdp-故障排除](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+    - [/tools/chrome-extension](/en/tools/chrome-extension)
 
   </Accordion>
 </AccordionGroup>
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

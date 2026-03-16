@@ -23,6 +23,6 @@ read_when:
 
 添加任何其他您希望助手了解的关于本地工具链的信息。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -55,6 +55,6 @@ pnpm check:docs     # docs format + lint + broken links
 pnpm release:check  # validate npm pack
 ```
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

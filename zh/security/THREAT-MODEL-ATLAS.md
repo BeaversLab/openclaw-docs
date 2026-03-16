@@ -21,7 +21,7 @@ This threat 模型 is built on [MITRE ATLAS](https://atlas.mitre.org/), the indu
 
 ### 为本威胁模型做贡献
 
-这是一份由 OpenClaw 社区维护的动态文档。请参阅 [CONTRIBUTING-THREAT-MODEL.md](/zh/security/CONTRIBUTING-THREAT-MODEL) 了解贡献指南：
+这是一份由 OpenClaw 社区维护的动态文档。请参阅 [CONTRIBUTING-THREAT-MODEL.md](/en/security/CONTRIBUTING-THREAT-MODEL) 了解贡献指南：
 
 - 报告新威胁
 - 更新现有威胁
@@ -602,6 +602,6 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 
 _本威胁模型是一份持续更新的文档。请将安全问题报告至 security@openclaw.ai_
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

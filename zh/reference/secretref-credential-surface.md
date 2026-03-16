@@ -131,6 +131,6 @@ title: "SecretRef 凭据定义"
 
 - 这些凭据属于已生成、已轮换、带有会话或 OAuth 持久类型的类，不适合只读的外部 SecretRef 解析。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -374,6 +374,6 @@
   - “同一代理的多个渠道/主题，具有不同的 `cwd`”
   - “团队命名模式（`codex-1`、`claude-repo-x`）”。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

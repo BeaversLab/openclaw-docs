@@ -36,7 +36,7 @@ openclaw plugins install ./extensions/msteams
 如果您在配置/入职期间选择了 Teams 并且检测到 git 检出，
 OpenClaw 将自动提供本地安装路径。
 
-详情：[插件](/zh/tools/plugin)
+详情：[插件](/en/tools/plugin)
 
 ## 快速设置（初学者）
 
@@ -477,7 +477,7 @@ Teams markdown 比 Slack 或 Discord 更受限制：
 
 ## 路由与会话
 
-- 会话键遵循标准代理格式（参见 [/concepts/会话](/zh/concepts/session)）：
+- 会话键遵循标准代理格式（参见 [/concepts/会话](/en/concepts/session)）：
   - 直接消息共享主会话（`agent:<agentId>:<mainKey>`）。
   - 渠道/群组消息使用对话 ID：
     - `agent:<agentId>:msteams:channel:<conversationId>`
@@ -774,6 +774,6 @@ https://teams.microsoft.com/l/channel/19%3A15bc...%40thread.tacv2/ChannelName?gr
 - [Teams 机器人文件处理](https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/bots-filesv4) （渠道/群组需要 Graph）
 - [主动消息](https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/conversations/send-proactive-messages)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

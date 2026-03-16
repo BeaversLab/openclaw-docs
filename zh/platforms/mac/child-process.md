@@ -61,6 +61,6 @@ remote host and connects over that tunnel.
 如果再次需要真正的子进程模式，应将其记录为一个
 独立的、仅用于开发的显式模式。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

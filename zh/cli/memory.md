@@ -13,8 +13,8 @@ title: "memory"
 
 相关：
 
-- 内存概念：[Memory](/zh/concepts/memory)
-- 插件：[Plugins](/zh/tools/plugin)
+- 内存概念：[Memory](/en/concepts/memory)
+- 插件：[Plugins](/en/tools/plugin)
 
 ## 示例
 
@@ -65,6 +65,6 @@ openclaw memory index --agent main --verbose
 - 如果实际活动的内存远程 API 密钥字段被配置为 SecretRefs，该命令将从活动网关快照中解析这些值。如果网关不可用，该命令将快速失败。
 - Gateway 网关 版本偏差说明：此命令路径需要支持 `secrets.resolve` 的 Gateway 网关；较旧的 Gateway 网关 将返回未知方法错误。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

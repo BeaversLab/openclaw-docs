@@ -12,8 +12,8 @@ title: "doctor"
 
 相关内容：
 
-- 故障排除：[故障排除](/zh/gateway/troubleshooting)
-- 安全审计：[安全性](/zh/gateway/security)
+- 故障排除：[故障排除](/en/gateway/troubleshooting)
+- 安全审计：[安全性](/en/gateway/security)
 
 ## 示例
 
@@ -44,6 +44,6 @@ launchctl unsetenv OPENCLAW_GATEWAY_TOKEN
 launchctl unsetenv OPENCLAW_GATEWAY_PASSWORD
 ```
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

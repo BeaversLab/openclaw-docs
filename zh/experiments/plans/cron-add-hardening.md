@@ -46,7 +46,7 @@ title: "Cron Add Hardening"
 - **默认值：** 当缺失 `wakeMode` 和 `sessionTarget` 时，应用安全的默认值。
 - **提供商：** Discord/Slack/Signal/iMessage 现在在 CLI/UI 中一致地显示。
 
-有关规范化形状和示例，请参阅 [Cron jobs](/zh/automation/cron-jobs)。
+有关规范化形状和示例，请参阅 [Cron jobs](/en/automation/cron-jobs)。
 
 ## 验证
 
@@ -62,6 +62,6 @@ title: "Cron Add Hardening"
 - `cron.add` 是否应该接受来自客户端的显式 `state`（当前架构不允许）？
 - 我们是否应该允许将 `webchat` 作为显式交付提供商（当前在交付解析中被过滤）？
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

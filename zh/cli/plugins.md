@@ -12,9 +12,9 @@ title: "plugins"
 
 相关内容：
 
-- 插件系统：[插件](/zh/tools/plugin)
-- 插件清单 + 架构：[插件清单](/zh/plugins/manifest)
-- 安全加固：[安全](/zh/gateway/security)
+- 插件系统：[插件](/en/tools/plugin)
+- 插件清单 + 架构：[插件清单](/en/plugins/manifest)
+- 安全加固：[安全](/en/gateway/security)
 
 ## 命令
 
@@ -93,6 +93,6 @@ openclaw plugins update <id> --dry-run
 
 当存在存储的完整性哈希且获取的工件哈希发生变化时，OpenClaw 会打印警告并在继续之前要求确认。使用全局 `--yes` 可在 CI/非交互式运行中跳过提示。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

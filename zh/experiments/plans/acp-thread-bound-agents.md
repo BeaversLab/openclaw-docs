@@ -14,7 +14,7 @@ title: "ACP 线程绑定代理"
 
 相关文档：
 
-- [统一运行时流式重构计划](/zh/experiments/plans/acp-unified-streaming-refactor)
+- [统一运行时流式重构计划](/en/experiments/plans/acp-unified-streaming-refactor)
 
 目标用户体验：
 
@@ -799,6 +799,6 @@ Gateway(网关) e2e tests：
 - 运行时 API 表面（`submit`、`cancel`、`close` 等）
 - 提高可测试性，并使后端行为更容易审计
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

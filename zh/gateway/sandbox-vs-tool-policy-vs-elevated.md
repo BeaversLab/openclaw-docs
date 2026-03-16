@@ -39,7 +39,7 @@ openclaw sandbox explain --json
 - `"non-main"`：仅非主会话会被置于沙箱中（这是群组/频道常见的“意外”）。
 - `"all"`：所有内容都置于沙箱中。
 
-有关完整矩阵（作用域、工作区挂载、镜像），请参阅 [沙箱隔离](/zh/gateway/sandboxing)。
+有关完整矩阵（作用域、工作区挂载、镜像），请参阅 [沙箱隔离](/en/gateway/sandboxing)。
 
 ### 绑定挂载（安全快速检查）
 
@@ -110,7 +110,7 @@ openclaw sandbox explain --json
 - 启用方式：`tools.elevated.enabled`（以及可选的 `agents.list[].tools.elevated.enabled`）
 - 发送方白名单：`tools.elevated.allowFrom.<provider>`（以及可选的 `agents.list[].tools.elevated.allowFrom.<provider>`）
 
-请参阅 [Elevated Mode](/zh/tools/elevated)。
+请参阅 [Elevated Mode](/en/tools/elevated)。
 
 ## 常见的“沙盒监狱”修复方法
 
@@ -127,6 +127,6 @@ openclaw sandbox explain --json
 
 在 `"non-main"` 模式下，群组/频道密钥*不是*主密钥。请使用主会话密钥（由 `sandbox explain` 显示）或将模式切换到 `"off"`。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

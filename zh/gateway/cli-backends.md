@@ -214,6 +214,6 @@ OpenClaw 还为 `codex-cli` 提供了一个默认值：
   `none`（Codex CLI 目前无法恢复 JSON 输出）。
 - **忽略图像**：设置 `imageArg`（并验证 CLI 是否支持文件路径）。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

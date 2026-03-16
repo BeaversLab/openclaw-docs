@@ -12,8 +12,8 @@ title: "模型"
 
 相关：
 
-- 提供商 + 模型：[Models](/zh/providers/models)
-- 提供商身份验证设置：[入门指南](/zh/start/getting-started)
+- 提供商 + 模型：[Models](/en/providers/models)
+- 提供商身份验证设置：[入门指南](/en/start/getting-started)
 
 ## 常用命令
 
@@ -80,6 +80,6 @@ openclaw models auth paste-token
 - `paste-token` 接受在其他地方或通过自动化生成的令牌字符串。
 - Anthropic 政策说明：对 setup-token 的支持属于技术兼容性。Anthropic 过去曾阻止部分订阅在 Claude Code 之外的使用，因此在广泛使用前请核实当前的条款。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

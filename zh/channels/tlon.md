@@ -27,7 +27,7 @@ openclaw plugins install @openclaw/tlon
 openclaw plugins install ./extensions/tlon
 ```
 
-详细信息：[插件](/zh/tools/plugin)
+详细信息：[插件](/en/tools/plugin)
 
 ## 设置
 
@@ -244,7 +244,7 @@ openclaw doctor
 
 ## 配置参考
 
-完整配置：[Configuration](/zh/gateway/configuration)
+完整配置：[Configuration](/en/gateway/configuration)
 
 提供者选项：
 
@@ -270,6 +270,6 @@ openclaw doctor
 - 富文本：Markdown 格式（粗体、斜体、代码、标题、列表）将转换为 Tlon 的原生格式。
 - 图片：URL 将上传到 Tlon 存储并作为图片块嵌入。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

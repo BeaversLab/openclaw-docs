@@ -10,13 +10,13 @@ title: "Slack"
 状态：通过 Slack 应用集成支持私信和渠道的生产环境。默认模式为 Socket Mode；同时也支持 HTTP Events API 模式。
 
 <CardGroup cols={3}>
-  <Card title="Pairing" icon="link" href="/zh/channels/pairing">
+  <Card title="Pairing" icon="link" href="/en/channels/pairing">
     Slack 私信默认为配对模式。
   </Card>
-  <Card title="Slash commands" icon="terminal" href="/zh/tools/slash-commands">
+  <Card title="Slash commands" icon="terminal" href="/en/tools/slash-commands">
     原生命令行为和命令目录。
   </Card>
-  <Card title="Channel 故障排除" icon="wrench" href="/zh/channels/troubleshooting">
+  <Card title="Channel 故障排除" icon="wrench" href="/en/channels/troubleshooting">
     跨渠道诊断和修复手册。
   </Card>
 </CardGroup>
@@ -583,7 +583,7 @@ channels:
 
 主要参考：
 
-- [配置参考 - Slack](/zh/gateway/configuration-reference#slack)
+- [配置参考 - Slack](/en/gateway/configuration-reference#slack)
 
   高信号 Slack 字段：
   - 模式/认证： `mode`， `botToken`， `appToken`， `signingSecret`， `webhookPath`， `accounts.*`
@@ -596,12 +596,12 @@ channels:
 
 ## 相关
 
-- [配对](/zh/channels/pairing)
-- [频道路由](/zh/channels/channel-routing)
-- [故障排除](/zh/channels/troubleshooting)
-- [配置](/zh/gateway/configuration)
-- [斜杠命令](/zh/tools/slash-commands)
+- [配对](/en/channels/pairing)
+- [频道路由](/en/channels/channel-routing)
+- [故障排除](/en/channels/troubleshooting)
+- [配置](/en/gateway/configuration)
+- [斜杠命令](/en/tools/slash-commands)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

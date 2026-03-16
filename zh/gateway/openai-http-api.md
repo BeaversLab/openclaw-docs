@@ -39,7 +39,7 @@ OpenClaw 的 Gateway 网关 可以提供一个小型的兼容 OpenAI 的 Chat Co
 - 如果目标代理策略允许敏感工具，此端点可以使用它们。
 - 请将此端点保持在环回/tailnet/私有入口上；不要将其直接暴露给公共互联网。
 
-请参阅 [安全](/zh/gateway/security) 和 [远程访问](/zh/gateway/remote)。
+请参阅 [安全](/en/gateway/security) 和 [远程访问](/en/gateway/remote)。
 
 ## 选择代理
 
@@ -131,6 +131,6 @@ curl -N http://127.0.0.1:18789/v1/chat/completions \
   }'
 ```
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -15,7 +15,7 @@ OpenClaw 附带了两个轻量级的 Web 工具：
 - `web_fetch` — HTTP 获取 + 可读内容提取（HTML → markdown/text）。
 
 这些**不是**浏览器自动化。对于重度依赖 JS 的网站或需要登录的网站，请使用
-[浏览器工具](/zh/tools/browser)。
+[浏览器工具](/en/tools/browser)。
 
 ## 工作原理
 
@@ -25,7 +25,7 @@ OpenClaw 附带了两个轻量级的 Web 工具：
   (HTML → markdown/text)。它**不**执行 JavaScript。
 - `web_fetch` 默认启用（除非明确禁用）。
 
-有关特定提供商的详细信息，请参阅 [Brave 搜索设置](/zh/brave-search) 和 [Perplexity 搜索设置](/zh/perplexity)。
+有关特定提供商的详细信息，请参阅 [Brave 搜索设置](/en/brave-search) 和 [Perplexity 搜索设置](/en/perplexity)。
 
 ## 选择搜索提供商
 
@@ -97,7 +97,7 @@ OpenClaw 附带了两个轻量级的 Web 工具：
 - Kimi：`KIMI_API_KEY` 或 `MOONSHOT_API_KEY`
 - Perplexity: `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`
 
-对于网关安装，请将这些放入 `~/.openclaw/.env`（或您的服务环境）中。请参阅 [Env vars](/zh/help/faq#how-does-openclaw-load-environment-variables)。
+对于网关安装，请将这些放入 `~/.openclaw/.env`（或您的服务环境）中。请参阅 [Env vars](/en/help/faq#how-does-openclaw-load-environment-variables)。
 
 ### 配置示例
 
@@ -383,6 +383,6 @@ await web_search({
 - 如果您使用工具配置文件/允许列表，请添加 `web_search`/`web_fetch` 或 `group:web`。
 - 如果缺少 API 密钥，`web_search` 将返回简短的操作提示和文档链接。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

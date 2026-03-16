@@ -190,6 +190,6 @@ LINE 插件还附带了用于 Flex 消息预设的 `/card` 命令：
 - **媒体下载错误：** 如果媒体超出
   默认限制，请提高 `channels.line.mediaMaxMb`。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

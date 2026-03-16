@@ -119,7 +119,7 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 }'
 ```
 
-有关详细信息和配置选项，请参阅 [LLM Task](/zh/tools/llm-task)。
+有关详细信息和配置选项，请参阅 [LLM Task](/en/tools/llm-task)。
 
 ## 工作流文件 (.lobster)
 
@@ -311,7 +311,7 @@ Lobster 返回一个具有以下三种状态之一的 JSON 信封：
 
 ## OpenProse
 
-OpenProse 与 Lobster 搭配使用效果很好：使用 `/prose` 编排多智能体准备工作，然后运行 Lobster 流水线进行确定性审批。如果 Prose 程序需要 Lobster，请通过 `tools.subagents.tools` 为子智能体允许 `lobster` 工具。请参阅 [OpenProse](/zh/prose)。
+OpenProse 与 Lobster 搭配使用效果很好：使用 `/prose` 编排多智能体准备工作，然后运行 Lobster 流水线进行确定性审批。如果 Prose 程序需要 Lobster，请通过 `tools.subagents.tools` 为子智能体允许 `lobster` 工具。请参阅 [OpenProse](/en/prose)。
 
 ## 安全
 
@@ -329,8 +329,8 @@ OpenProse 与 Lobster 搭配使用效果很好：使用 `/prose` 编排多智能
 
 ## 了解更多
 
-- [Plugins](/zh/tools/plugin)
-- [Plugin 工具 authoring](/zh/plugins/agent-tools)
+- [Plugins](/en/tools/plugin)
+- [Plugin 工具 authoring](/en/plugins/agent-tools)
 
 ## 案例研究：社区工作流
 
@@ -339,6 +339,6 @@ OpenProse 与 Lobster 搭配使用效果很好：使用 `/prose` 编排多智能
 - 主题：[https://x.com/plattenschieber/status/2014508656335770033](https://x.com/plattenschieber/status/2014508656335770033)
 - 仓库：[https://github.com/bloomedai/brain-cli](https://github.com/bloomedai/brain-cli)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -76,6 +76,6 @@ openclaw directory peers list --channel zalouser --query "name"
 
 通道消息动作还支持 `react` 用于消息反应。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

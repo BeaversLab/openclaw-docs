@@ -63,6 +63,6 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 - 您登录 OpenCode，添加账单详细信息，然后复制您的 API 密钥。
 - 账单和目录可用性从 OpenCode 仪表板进行管理。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

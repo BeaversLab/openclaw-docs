@@ -164,6 +164,6 @@ make <target>
   - `make routing-precedence-negative`
   - `make routing-identitylinks-negative`
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

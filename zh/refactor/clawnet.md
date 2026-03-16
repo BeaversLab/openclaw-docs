@@ -416,6 +416,6 @@ WS 控制平面适用于小消息，但节点还需要：
 - 提案：一种具有明确角色 + 范围的 WS 协议，统一的配对 + TLS 固定，由网关托管的批准，稳定的设备 ID + 可爱的别名。
 - 结果：更简单的用户体验，更强的安全性，更少的重复，更好的移动路由。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

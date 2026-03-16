@@ -10,7 +10,7 @@ sidebarTitle: "入门：macOS 应用"
 # 入门（macOS 应用）
 
 本文档介绍了**当前**的首次运行新手引导流程。其目标是实现流畅的“第 0 天”体验：选择 Gateway(网关) 的运行位置，连接身份验证，运行向导，然后让代理自行引导。
-如需新手引导路径的总体概述，请参阅 [新手引导概述](/zh/start/onboarding-overview)。
+如需新手引导路径的总体概述，请参阅 [新手引导概述](/en/start/onboarding-overview)。
 
 <Steps>
 <Step title="Approve macOS warning">
@@ -31,7 +31,7 @@ sidebarTitle: "入门：macOS 应用"
 安全信任模型：
 
 - 默认情况下，OpenClaw 是一个个人代理：一个受信任的操作员边界。
-- 共享/多用户设置需要锁定（分离信任边界，保持工具访问最少，并遵循 [安全](/zh/gateway/security)）。
+- 共享/多用户设置需要锁定（分离信任边界，保持工具访问最少，并遵循 [安全](/en/gateway/security)）。
 - 本地新手引导现在将新配置默认设置为 `tools.profile: "coding"`，以便新的本地设置保留文件系统/运行时工具，而无需强制执行不受限制的 `full` 配置文件。
 - 如果启用了 hooks/webhooks 或其他不受信任的内容源，请使用强大的现代模型层级，并保持严格的工具策略/沙箱隔离。
 
@@ -79,10 +79,10 @@ sidebarTitle: "入门：macOS 应用"
   应用程序可以通过 npm/pnpm 安装全局 `openclaw` CLI，以便终端工作流和 launchd 任务能够开箱即用。
 </Step>
 <Step title="新手引导聊天（专用会话）">
-  设置完成后，应用将打开一个专门的新手引导聊天会话，以便代理可以介绍自己并指导后续步骤。这将首次运行的引导与您的正常对话区分开来。有关首次运行代理期间在网关主机上发生的情况，请参阅 [引导加载](/zh/start/bootstrapping)。
+  设置完成后，应用将打开一个专门的新手引导聊天会话，以便代理可以介绍自己并指导后续步骤。这将首次运行的引导与您的正常对话区分开来。有关首次运行代理期间在网关主机上发生的情况，请参阅 [引导加载](/en/start/bootstrapping)。
 </Step>
 </Steps>
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

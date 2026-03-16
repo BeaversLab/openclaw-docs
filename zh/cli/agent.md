@@ -12,7 +12,7 @@ title: "agent"
 
 相关：
 
-- 代理发送工具：[Agent send](/zh/tools/agent-send)
+- 代理发送工具：[Agent send](/en/tools/agent-send)
 
 ## 示例
 
@@ -28,6 +28,6 @@ openclaw agent --agent ops --message "Generate report" --deliver --reply-channel
 - 当此命令触发 `models.json` 重新生成时，SecretRef 管理的提供商凭证将以非机密标记形式（例如环境变量名称、`secretref-env:ENV_VAR_NAME` 或 `secretref-managed`）持久化，而不是已解析的机密明文。
 - 标记写入具有源权威性：OpenClaw 从活动的源配置快照中持久化标记，而不是从解析后的运行时机密值中持久化。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

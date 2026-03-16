@@ -12,7 +12,7 @@ title: "logs"
 
 相关：
 
-- 日志概述：[日志](/zh/logging)
+- 日志概述：[日志](/en/logging)
 
 ## 示例
 
@@ -27,6 +27,6 @@ openclaw logs --follow --local-time
 
 使用 `--local-time` 以您的本地时区渲染时间戳。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -158,6 +158,6 @@ PI_RAW_STREAM_PATH=~/.pi-mono/logs/raw-openai-completions.jsonl
 - 将日志保留在本地，并在调试后删除它们。
 - 如果您共享日志，请先清理机密信息和 PII。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

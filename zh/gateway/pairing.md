@@ -93,6 +93,6 @@ macOS 应用可以在以下情况下尝试**静默批准**：
 - 如果 Gateway(网关) 处于离线状态或已禁用配对，节点将无法进行配对。
 - 如果 Gateway(网关) 处于远程模式，配对仍然针对远程 Gateway(网关) 的存储进行。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

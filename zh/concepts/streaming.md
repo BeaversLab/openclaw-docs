@@ -151,6 +151,6 @@ Slack：
 - `block` 使用附加式草稿预览。
 - `progress` 使用状态预览文本，然后是最终答案。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

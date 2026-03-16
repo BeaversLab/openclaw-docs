@@ -8,8 +8,8 @@ title: "故障排除"
 
 # Gateway 网关 故障排查
 
-此页面是详细的运行手册。
-如果您想先进行快速的分诊流程，请从 [/help/故障排除](/zh/help/troubleshooting) 开始。
+本页面是详细的运行手册。
+如果您想先进行快速分诊，请从 [/help/故障排除](/en/help/troubleshooting) 开始。
 
 ## 命令阶梯
 
@@ -54,9 +54,9 @@ openclaw config get agents.defaults.models
 
 相关：
 
-- [/providers/anthropic](/zh/providers/anthropic)
-- [/reference/token-use](/zh/reference/token-use)
-- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/zh/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
+- [/providers/anthropic](/en/providers/anthropic)
+- [/reference/token-use](/en/reference/token-use)
+- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/en/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
 
 ## 无回复
 
@@ -84,9 +84,9 @@ openclaw logs --follow
 
 相关：
 
-- [/channels/故障排除](/zh/channels/troubleshooting)
-- [/channels/pairing](/zh/channels/pairing)
-- [/channels/groups](/zh/channels/groups)
+- [/channels/故障排除](/en/channels/troubleshooting)
+- [/channels/pairing](/en/channels/pairing)
+- [/channels/groups](/en/channels/groups)
 
 ## 仪表板控制 UI 连接性
 
@@ -121,12 +121,12 @@ openclaw gateway status --json
 
 使用失败的 `connect` 响应中的 `error.details.code` 来选择下一步操作：
 
-| 详细代码                     | 含义                               | 建议操作                                                                                                                                                  |
-| ---------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH_TOKEN_MISSING`         | 客户端未发送所需的共享令牌。       | 在客户端中粘贴/设置令牌并重试。对于仪表板路径：`openclaw config get gateway.auth.token`，然后粘贴到控制 UI 设置中。                                       |
-| `AUTH_TOKEN_MISMATCH`        | 共享令牌与网关身份验证令牌不匹配。 | 如果是 `canRetryWithDeviceToken=true`，则允许一次可信重试。如果仍然失败，请运行[令牌不一致恢复检查清单](/zh/cli/devices#token-drift-recovery-checklist)。 |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | 缓存的每设备令牌已过期或已撤销。   | 使用 [devices CLI](/zh/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                 |
-| `PAIRING_REQUIRED`           | 设备身份已知但未获批准用于此角色。 | 批准待处理的请求：`openclaw devices list` 然后 `openclaw devices approve <requestId>`。                                                                   |
+| 详细代码                     | 含义                               | 建议操作                                                                                                                                                           |
+| ---------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `AUTH_TOKEN_MISSING`         | 客户端未发送所需的共享令牌。       | 在客户端中粘贴/设置令牌并重试。对于仪表板路径：`openclaw config get gateway.auth.token`，然后粘贴到控制 UI 设置中。                                                |
+| `AUTH_TOKEN_MISMATCH`        | 共享令牌与网关身份验证令牌不匹配。 | 如果 `canRetryWithDeviceToken=true`，允许一次受信任的重试。如果仍然失败，请运行 [token drift recovery checklist](/en/cli/devices#token-drift-recovery-checklist)。 |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | 缓存的每设备令牌已过期或已撤销。   | 使用 [devices CLI](/en/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                          |
+| `PAIRING_REQUIRED`           | 设备身份已知但未获批准用于此角色。 | 批准待处理的请求：`openclaw devices list` 然后 `openclaw devices approve <requestId>`。                                                                            |
 
 设备身份验证 v2 迁移检查：
 
@@ -144,10 +144,10 @@ openclaw gateway status
 
 相关内容：
 
-- [/web/control-ui](/zh/web/control-ui)
-- [/gateway/authentication](/zh/gateway/authentication)
-- [/gateway/remote](/zh/gateway/remote)
-- [/cli/devices](/zh/cli/devices)
+- [/web/control-ui](/en/web/control-ui)
+- [/gateway/authentication](/en/gateway/authentication)
+- [/gateway/remote](/en/gateway/remote)
+- [/cli/devices](/en/cli/devices)
 
 ## Gateway(网关) service not running
 
@@ -175,9 +175,9 @@ openclaw gateway status --deep
 
 相关内容：
 
-- [/gateway/background-process](/zh/gateway/background-process)
-- [/gateway/configuration](/zh/gateway/configuration)
-- [/gateway/doctor](/zh/gateway/doctor)
+- [/gateway/background-process](/en/gateway/background-process)
+- [/gateway/configuration](/en/gateway/configuration)
+- [/gateway/doctor](/en/gateway/doctor)
 
 ## 渠道已连接但消息无法流转
 
@@ -205,10 +205,10 @@ openclaw config get channels
 
 相关：
 
-- [/channels/故障排除](/zh/channels/troubleshooting)
-- [/channels/whatsapp](/zh/channels/whatsapp)
-- [/channels/telegram](/zh/channels/telegram)
-- [/channels/discord](/zh/channels/discord)
+- [/channels/故障排除](/en/channels/troubleshooting)
+- [/channels/whatsapp](/en/channels/whatsapp)
+- [/channels/telegram](/en/channels/telegram)
+- [/channels/discord](/en/channels/discord)
 
 ## Cron 和心跳传递
 
@@ -238,9 +238,9 @@ openclaw logs --follow
 
 相关：
 
-- [/automation/故障排除](/zh/automation/troubleshooting)
-- [/automation/cron-jobs](/zh/automation/cron-jobs)
-- [/gateway/heartbeat](/zh/gateway/heartbeat)
+- [/automation/故障排除](/en/automation/troubleshooting)
+- [/automation/cron-jobs](/en/automation/cron-jobs)
+- [/gateway/heartbeat](/en/gateway/heartbeat)
 
 ## 节点配对工具失败
 
@@ -269,9 +269,9 @@ openclaw status
 
 相关：
 
-- [/nodes/故障排除](/zh/nodes/troubleshooting)
-- [/nodes/index](/zh/nodes/index)
-- [/tools/exec-approvals](/zh/tools/exec-approvals)
+- [/nodes/故障排除](/en/nodes/troubleshooting)
+- [/nodes/index](/en/nodes/index)
+- [/tools/exec-approvals](/en/tools/exec-approvals)
 
 ## 浏览器工具失败
 
@@ -289,20 +289,20 @@ openclaw doctor
 
 - 有效的浏览器可执行文件路径。
 - CDP 配置文件的可达性。
-- `profile="chrome"` 的扩展中继选项卡附加。
+- 扩展程序中继选项卡附件（如果配置了扩展程序中继配置文件）。
 
 常见特征：
 
 - `Failed to start Chrome CDP on port` → 浏览器进程启动失败。
 - `browser.executablePath not found` → 配置的路径无效。
-- `Chrome extension relay is running, but no tab is connected` → 扩展中继未附加。
-- `Browser attachOnly is enabled ... not reachable` → 仅附加配置文件没有可访问的目标。
+- `Chrome extension relay is running, but no tab is connected` → 扩展程序中继未附加。
+- `Browser attachOnly is enabled ... not reachable` → attach-only 配置文件没有可访问的目标。
 
 相关：
 
-- [/tools/browser-linux-故障排除](/zh/tools/browser-linux-troubleshooting)
-- [/tools/chrome-extension](/zh/tools/chrome-extension)
-- [/tools/browser](/zh/tools/browser)
+- [/tools/browser-linux-故障排除](/en/tools/browser-linux-troubleshooting)
+- [/tools/chrome-extension](/en/tools/chrome-extension)
+- [/tools/browser](/en/tools/browser)
 
 ## 如果您升级后突然出现问题
 
@@ -319,12 +319,12 @@ openclaw config get gateway.auth.mode
 
 检查内容：
 
-- 如果 `gateway.mode=remote`，CLI 调用可能定位到了远程，而您的本地服务是正常的。
-- 显式 `--url` 调用不会回退到存储的凭据。
+- 如果 `gateway.mode=remote`，CLI 调用可能针对的是远程，而您的本地服务没有问题。
+- 显式的 `--url` 调用不会回退到存储的凭据。
 
 常见特征：
 
-- `gateway connect failed:` → URL 目标错误。
+- `gateway connect failed:` → 错误的 URL 目标。
 - `unauthorized` → 端点可达但身份验证错误。
 
 ### 2) 绑定和身份验证护栏更严格
@@ -338,13 +338,13 @@ openclaw logs --follow
 
 检查内容：
 
-- 非环回绑定 (`lan`、`tailnet`、`custom`) 需要配置身份验证。
-- 像 `gateway.token` 这样的旧键不会替换 `gateway.auth.token`。
+- 非环回绑定（`lan`、`tailnet`、`custom`）需要配置身份验证。
+- 像 `gateway.token` 这样的旧密钥不会替换 `gateway.auth.token`。
 
 常见特征：
 
 - `refusing to bind gateway ... without auth` → 绑定+身份验证不匹配。
-- 运行时运行时出现 `RPC probe: failed` → 网关存活但当前身份验证/URL 无法访问。
+- 运行时运行时 `RPC probe: failed` → 网关存活但使用当前身份验证/URL 无法访问。
 
 ### 3) 配对和设备身份状态已更改
 
@@ -374,10 +374,10 @@ openclaw gateway restart
 
 相关：
 
-- [/gateway/pairing](/zh/gateway/pairing)
-- [/gateway/authentication](/zh/gateway/authentication)
-- [/gateway/background-process](/zh/gateway/background-process)
+- [/gateway/pairing](/en/gateway/pairing)
+- [/gateway/authentication](/en/gateway/authentication)
+- [/gateway/background-process](/en/gateway/background-process)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

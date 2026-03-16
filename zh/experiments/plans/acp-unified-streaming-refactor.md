@@ -95,6 +95,6 @@ title: "Unified Runtime Streaming Refactor Plan"
 - 旧的 ACP 投影仪/合并路径已移除。
 - 流式传输配置解析是共享的且与运行时无关。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

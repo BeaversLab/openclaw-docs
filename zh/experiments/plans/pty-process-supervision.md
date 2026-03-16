@@ -194,6 +194,6 @@ The branch now has a coherent and safer supervision shape：
 - unified watchdog defaults
 - explicit in-memory restart boundary (no orphan reconciliation across restart in this pass)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

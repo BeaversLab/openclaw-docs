@@ -298,6 +298,6 @@ title: "Refactor Cluster Backlog"
 5. 新手引导步骤提取
 6. 监控生命周期助手提取
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

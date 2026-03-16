@@ -12,8 +12,8 @@ title: "安装"
 
 相关：
 
-- 入门指南：[入门指南](/zh/start/getting-started)
-- 向导：[新手引导](/zh/start/onboarding)
+- 入门指南：[入门指南](/en/start/getting-started)
+- 向导：[新手引导](/en/start/onboarding)
 
 ## 示例
 
@@ -28,6 +28,6 @@ openclaw setup --workspace ~/.openclaw/workspace
 openclaw setup --wizard
 ```
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

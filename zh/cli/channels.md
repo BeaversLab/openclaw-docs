@@ -12,8 +12,8 @@ title: "channels"
 
 相关文档：
 
-- 频道指南：[频道](/zh/channels/index)
-- Gateway(网关) 网关配置：[配置](/zh/gateway/configuration)
+- 频道指南：[频道](/en/channels/index)
+- Gateway(网关) 网关配置：[配置](/en/gateway/configuration)
 
 ## 常用命令
 
@@ -43,7 +43,7 @@ openclaw channels remove --channel telegram --delete
 
 如果您确认现在绑定，向导会询问每个已配置的通道账户应由哪个代理拥有，并写入账户范围的路由绑定。
 
-您稍后也可以使用 `openclaw agents bindings`、`openclaw agents bind` 和 `openclaw agents unbind` 管理相同的路由规则（请参阅 [agents](/zh/cli/agents)）。
+您稍后也可以使用 `openclaw agents bindings`、`openclaw agents bind` 和 `openclaw agents unbind` 管理相同的路由规则（请参阅 [agents](/en/cli/agents)）。
 
 当您向仍在使用单账户顶级设置（尚未有 `channels.<channel>.accounts` 条目）的通道添加非默认账户时，OpenClaw 会将作用于账户的单账户顶级值移入 `channels.<channel>.accounts.default`，然后写入新账户。这在迁移到多账户结构的同时保留了原始账户行为。
 
@@ -100,6 +100,6 @@ openclaw channels resolve --channel matrix "Project Room"
 - 当多个条目共享相同名称时，解析优先考虑活动匹配项。
 - `channels resolve` 是只读的。如果选定的帐户是通过 SecretRef 配置的，但该凭证在当前命令路径中不可用，命令将返回带有说明的降级未解析结果，而不是中止整个运行。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

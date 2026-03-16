@@ -46,7 +46,7 @@ openclaw devices list
 openclaw devices approve <requestId>
 ```
 
-一旦获得批准，设备将被记住，除非您使用 `openclaw devices revoke --device <id> --role <role>` 撤销它，否则不需要重新批准。请参阅 [设备 CLI](/zh/cli/devices) 了解令牌轮换和撤销。
+一旦获得批准，设备将被记住，除非您使用 `openclaw devices revoke --device <id> --role <role>` 撤销它，否则不需要重新批准。请参阅 [设备 CLI](/en/cli/devices) 了解令牌轮换和撤销。
 
 **注意：**
 
@@ -180,7 +180,7 @@ OpenClaw 会**阻止**没有设备身份的 Control UI 连接。
 
 `dangerouslyDisableDeviceAuth` 会禁用控制 UI 设备身份检查，并会导致严重的安全降级。紧急使用后请立即恢复。
 
-请参阅 [Tailscale](/zh/gateway/tailscale) 了解 HTTPS 设置指南。
+请参阅 [Tailscale](/en/gateway/tailscale) 了解 HTTPS 设置指南。
 
 ## 构建 UI
 
@@ -244,8 +244,8 @@ http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789#token=<gateway-toke
 }
 ```
 
-远程访问设置详细信息：[Remote access](/zh/gateway/remote)。
+远程访问设置详细信息：[Remote access](/en/gateway/remote)。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

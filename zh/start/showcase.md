@@ -423,6 +423,6 @@ OpenClaw 连接到 Jira，然后即时生成了一个新技能（在 ClawHub 上
   <Step title="获得展示">我们将把杰出的项目添加到此页面</Step>
 </Steps>
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

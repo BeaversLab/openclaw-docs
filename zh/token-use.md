@@ -22,7 +22,7 @@ OpenClaw 在每次运行时会组装自己的系统提示词。它包括：
 - 回复标签 + 心跳行为
 - 运行时元数据（主机/操作系统/模型/思考）
 
-有关完整的细分，请参阅 [系统提示词](/zh/concepts/system-prompt)。
+有关完整的细分，请参阅 [系统提示词](/en/concepts/system-prompt)。
 
 ## 哪些内容计入上下文窗口
 
@@ -35,7 +35,7 @@ OpenClaw 在每次运行时会组装自己的系统提示词。它包括：
 - 压缩摘要和修剪产物
 - 提供商包装器或安全标头（不可见，但仍会计入）
 
-如需实用的细分（按注入的文件、工具、技能和系统提示词大小），请使用 `/context list` 或 `/context detail`。请参阅 [上下文](/zh/concepts/context)。
+如需实用的细分（按注入的文件、工具、技能和系统提示词大小），请使用 `/context list` 或 `/context detail`。请参阅 [上下文](/en/concepts/context)。
 
 ## 如何查看当前的 Token 使用量
 
@@ -105,8 +105,8 @@ agents:
 - 保持技能描述简短（技能列表会被注入到提示词中）。
 - 对于冗长、探索性的工作，首选较小的模型。
 
-请参阅 [Skills](/zh/tools/skills) 以了解确切的技能列表开销公式。
+请参阅 [Skills](/en/tools/skills) 以了解确切的技能列表开销公式。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

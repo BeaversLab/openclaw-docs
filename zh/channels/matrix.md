@@ -34,7 +34,7 @@ openclaw plugins install ./extensions/matrix
 如果你在配置/入职期间选择 Matrix 并检测到 git 检出，
 OpenClaw 将自动提供本地安装路径。
 
-详情：[插件](/zh/tools/plugin)
+详情：[插件](/en/tools/plugin)
 
 ## 设置
 
@@ -137,7 +137,7 @@ E2EE 配置（已启用端到端加密）：
 
 ## 多账号
 
-多账号支持：将 `channels.matrix.accounts` 与每个账号的凭据和可选的 `name` 一起使用。有关共享模式，请参阅 [`gateway/configuration`](/zh/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts)。
+多账号支持：将 `channels.matrix.accounts` 与每个账号的凭据和可选的 `name` 一起使用。有关共享模式，请参阅 [`gateway/configuration`](/en/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts)。
 
 每个账号在任何主服务器上作为单独的 Matrix 用户运行。每个账号的配置
 从顶级 `channels.matrix` 设置继承，并且可以覆盖任何选项
@@ -268,11 +268,11 @@ openclaw pairing list matrix
 - 私信被忽略：当 `channels.matrix.dm.policy="pairing"` 时发送者等待批准。
 - 加密房间失败：加密支持或加密设置不匹配。
 
-排查流程： [/channels/故障排除](/zh/channels/troubleshooting)。
+排查流程： [/channels/故障排除](/en/channels/troubleshooting)。
 
 ## 配置参考（Matrix）
 
-完整配置： [Configuration](/zh/gateway/configuration)
+完整配置： [Configuration](/en/gateway/configuration)
 
 提供商选项：
 
@@ -301,6 +301,6 @@ openclaw pairing list matrix
 - `channels.matrix.accounts`: 按账户 ID 键入的多账户配置（每个账户继承顶层设置）。
 - `channels.matrix.actions`: 按操作的工具门控（表情反应/消息/固定/成员信息/频道信息）。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

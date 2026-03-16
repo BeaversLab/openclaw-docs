@@ -41,6 +41,6 @@ openclaw models status --check
 
 如果您不需要手机自动化或 systemd 计时器，请跳过这些脚本。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

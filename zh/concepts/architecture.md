@@ -45,7 +45,7 @@ title: "Gateway 网关 架构"
 
 协议详情：
 
-- [Gateway(网关) 协议](/zh/gateway/protocol)
+- [Gateway(网关) 协议](/en/gateway/protocol)
 
 ### WebChat
 
@@ -94,8 +94,8 @@ sequenceDiagram
 - 非本地连接仍需要显式批准。
 - Gateway(网关) 认证 (`gateway.auth.*`) 仍然适用于 **所有** 连接，无论是本地还是远程。
 
-详情：[Gateway(网关) 协议](/zh/gateway/protocol)、[配对](/zh/channels/pairing)、
-[安全性](/zh/gateway/security)。
+详情：[Gateway(网关) 协议](/en/gateway/protocol)、[配对](/en/channels/pairing)、
+[安全性](/en/gateway/security)。
 
 ## Protocol typing and codegen
 
@@ -127,6 +127,6 @@ sequenceDiagram
 - 握手是强制性的；任何非 JSON 或非 connect 的第一帧都会导致强制关闭。
 - 事件不会重放；客户端必须在出现间隙时进行刷新。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

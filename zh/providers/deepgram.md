@@ -89,6 +89,6 @@ Deepgram 选项示例：
 - 在使用代理时，使用 `tools.media.audio.baseUrl` 和 `tools.media.audio.headers` 覆盖端点或标头。
 - 输出遵循与其他提供商相同的音频规则（大小限制、超时、转录注入）。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

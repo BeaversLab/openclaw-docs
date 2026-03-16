@@ -8,7 +8,7 @@ title: "Logging"
 
 # 日志记录
 
-有关面向用户的概述（CLI + 控制 UI + 配置），请参阅 [/logging](/zh/logging)。
+有关面向用户的概述（CLI + 控制 UI + 配置），请参阅 [/logging](/en/logging)。
 
 OpenClaw 有两个日志“平面”：
 
@@ -111,6 +111,6 @@ openclaw gateway --verbose --ws-log full
 
 这既保持了现有文件日志的稳定，又使交互式输出易于浏览。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

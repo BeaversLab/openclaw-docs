@@ -34,6 +34,6 @@ title: "Usage Tracking"
 
 如果不存在匹配的 OAuth/API 凭据，使用情况将被隐藏。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

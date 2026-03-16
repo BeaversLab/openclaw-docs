@@ -19,6 +19,6 @@ openclaw reset --scope config+creds+sessions --yes --non-interactive
 
 如果要在删除本地状态之前获取可恢复的快照，请先运行 `openclaw backup create`。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

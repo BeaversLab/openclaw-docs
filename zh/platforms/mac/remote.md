@@ -58,7 +58,7 @@ title: "Remote Control"
 - 首选在远程主机上使用回环绑定，并通过 SSH 或 Tailscale 连接。
 - SSH 隧道使用严格的主机密钥检查；请先信任主机密钥，使其存在于 `~/.ssh/known_hosts` 中。
 - 如果将 Gateway(网关) 网关绑定到非回环接口，则要求令牌/密码认证。
-- 请参阅 [Security](/zh/gateway/security) 和 [Tailscale](/zh/gateway/tailscale)。
+- 请参阅 [Security](/en/gateway/security) 和 [Tailscale](/en/gateway/tailscale)。
 
 ## WhatsApp 登录流程（远程）
 
@@ -83,6 +83,6 @@ openclaw nodes notify --node <id> --title "Ping" --body "Remote gateway ready" -
 
 应用中不再有全局的“默认声音”开关；调用者在每次请求时选择声音（或无声音）。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

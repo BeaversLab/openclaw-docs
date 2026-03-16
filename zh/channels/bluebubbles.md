@@ -155,7 +155,7 @@ openclaw channels add bluebubbles --http-url http://192.168.1.100:1234 --passwor
 - 通过以下方式批准：
   - `openclaw pairing list bluebubbles`
   - `openclaw pairing approve bluebubbles <CODE>`
-- 配对是默认的令牌交换方式。详情：[配对](/zh/channels/pairing)
+- 配对是默认的令牌交换方式。详情：[配对](/en/channels/pairing)
 
 群组：
 
@@ -264,7 +264,7 @@ OpenClaw 可能会显示 _短_ 消息 ID（例如 `1`, `2`) 以节省令牌。
 - 模板：`{{MessageSidFull}}`, `{{ReplyToIdFull}}`
 - 入站载荷中 `MessageSidFull` / `ReplyToIdFull` 的上下文
 
-有关模板变量，请参阅 [配置](/zh/gateway/configuration)。
+有关模板变量，请参阅 [配置](/en/gateway/configuration)。
 
 ## 分块流式传输
 
@@ -288,7 +288,7 @@ OpenClaw 可能会显示 _短_ 消息 ID（例如 `1`, `2`) 以节省令牌。
 
 ## 配置参考
 
-完整配置：[配置](/zh/gateway/configuration)
+完整配置：[配置](/en/gateway/configuration)
 
 提供商选项：
 
@@ -331,7 +331,7 @@ OpenClaw 可能会显示 _短_ 消息 ID（例如 `1`, `2`) 以节省令牌。
 
 - Webhook 请求通过将 `guid`/`password` 查询参数或标头与 `channels.bluebubbles.password` 进行比较来验证。来自 `localhost` 的请求也被接受。
 - 请妥善保管 API 密码和 webhook 端点（将它们视为凭据）。
-- 本地主机信任意味着同主机反向代理可能会无意中绕过密码。如果您代理 Gateway(网关)，请要求在代理处进行身份验证并配置 `gateway.trustedProxies`。请参阅 [Gateway(网关) 安全性](/zh/gateway/security#reverse-proxy-configuration)。
+- 本地主机信任意味着同主机反向代理可能会无意中绕过密码。如果您代理 Gateway(网关)，请要求在代理处进行身份验证并配置 `gateway.trustedProxies`。请参阅 [Gateway(网关) 安全性](/en/gateway/security#reverse-proxy-configuration)。
 - 如果将 BlueBubbles 服务器暴露在局域网之外，请在其上启用 HTTPS 和防火墙规则。
 
 ## 故障排除
@@ -344,8 +344,8 @@ OpenClaw 可能会显示 _短_ 消息 ID（例如 `1`, `2`) 以节省令牌。
 - OpenClaw 会根据 BlueBubbles 服务器的 macOS 版本自动隐藏已知损坏的操作。如果在 macOS 26 (Tahoe) 上仍然显示编辑选项，请使用 `channels.bluebubbles.actions.edit=false` 手动将其禁用。
 - 有关状态/运行状况的信息：`openclaw status --all` 或 `openclaw status --deep`。
 
-有关一般渠道工作流程的参考，请参阅 [Channels](/zh/channels) 和 [Plugins](/zh/tools/plugin) 指南。
+有关一般渠道工作流程的参考，请参阅 [Channels](/en/channels) 和 [Plugins](/en/tools/plugin) 指南。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

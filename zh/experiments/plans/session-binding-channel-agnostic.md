@@ -225,6 +225,6 @@ Discord 适配器和运行时：
 - 对于禁用绑定生成（bound spawn）的部署，行为没有变化
 - ACP 仍显式推迟
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

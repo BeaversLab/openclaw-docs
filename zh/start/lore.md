@@ -218,6 +218,6 @@ _“爪即法则。”_
 
 🦞💙
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

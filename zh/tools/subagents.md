@@ -53,7 +53,7 @@ title: "子代理"
 - `--model` 和 `--thinking` 会覆盖该特定运行的默认设置。
 - 使用 `info`/`log` 在完成后检查详细信息和输出。
 - `/subagents spawn` 是单次模式（`mode: "run"`）。对于持久的线程绑定会话，请将 `sessions_spawn` 与 `thread: true` 和 `mode: "session"` 一起使用。
-- 对于 ACP 约束会话（Codex、Claude Code、Gemini CLI），请将 `sessions_spawn` 与 `runtime: "acp"` 一起使用，并参阅 [ACP Agents](/zh/tools/acp-agents)。
+- 对于 ACP 约束会话（Codex、Claude Code、Gemini CLI），请将 `sessions_spawn` 与 `runtime: "acp"` 一起使用，并参阅 [ACP Agents](/en/tools/acp-agents)。
 
 主要目标：
 
@@ -119,7 +119,7 @@ title: "子代理"
 - 全局默认：`session.threadBindings.enabled`，`session.threadBindings.idleHours`，`session.threadBindings.maxAgeHours`
 - 通道覆盖和生成自动绑定键特定于适配器。请参阅上面的 **支持线程的通道**。
 
-有关当前适配器的详细信息，请参阅 [配置参考](/zh/gateway/configuration-reference) 和 [斜杠命令](/zh/tools/slash-commands)。
+有关当前适配器的详细信息，请参阅 [配置参考](/en/gateway/configuration-reference) 和 [斜杠命令](/en/tools/slash-commands)。
 
 允许列表：
 
@@ -292,6 +292,6 @@ title: "子代理"
 - 最大嵌套深度为 5（`maxSpawnDepth` 范围：1–5）。对于大多数用例，建议深度为 2。
 - `maxChildrenPerAgent` 限制每个会话的活动子级数（默认：5，范围：1–20）。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

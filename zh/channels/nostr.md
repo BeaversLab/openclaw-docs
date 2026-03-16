@@ -232,6 +232,6 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 - 不支持媒体附件。
 - 仅支持 NIP-04（计划支持 NIP-17 gift-wrap）。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

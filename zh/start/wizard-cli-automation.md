@@ -208,10 +208,10 @@ openclaw agents add work \
 
 ## 相关文档
 
-- 新手引导中心：[新手引导向导 (CLI)](/zh/start/wizard)
-- 完整参考：[CLI 新手引导参考](/zh/start/wizard-cli-reference)
-- 命令参考：[`openclaw onboard`](/zh/cli/onboard)
+- 新手引导中心：[新手引导向导 (CLI)](/en/start/wizard)
+- 完整参考：[CLI 新手引导参考](/en/start/wizard-cli-reference)
+- 命令参考：[`openclaw onboard`](/en/cli/onboard)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

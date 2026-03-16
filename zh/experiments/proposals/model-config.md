@@ -10,9 +10,9 @@ title: "模型配置探索"
 本文档记录了未来模型配置的**构想**。这不是
 已发布的规范。有关当前行为，请参阅：
 
-- [模型](/zh/concepts/models)
-- [模型故障转移](/zh/concepts/model-failover)
-- [OAuth + profiles](/zh/concepts/oauth)
+- [模型](/en/concepts/models)
+- [模型故障转移](/en/concepts/model-failover)
+- [OAuth + profiles](/en/concepts/oauth)
 
 ## 动机
 
@@ -35,6 +35,6 @@ title: "模型配置探索"
 - UI 应该如何为会话展示配置文件选择？
 - 从旧版配置键迁移的最安全路径是什么？
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

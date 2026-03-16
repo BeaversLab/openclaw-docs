@@ -64,6 +64,6 @@ title: "输入指示器"
 - `typingIntervalSeconds` 控制**刷新节奏**，而非开始时间。
   默认为 6 秒。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

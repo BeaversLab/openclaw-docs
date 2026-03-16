@@ -27,7 +27,7 @@ openclaw plugins install ./extensions/nextcloud-talk
 
 如果您在配置/入职期间选择了 Nextcloud Talk 且检测到 git 检出，OpenClaw 将自动提供本地安装路径。
 
-详情：[插件](/zh/tools/plugin)
+详情：[插件](/en/tools/plugin)
 
 ## 快速设置（初学者）
 
@@ -107,7 +107,7 @@ openclaw plugins install ./extensions/nextcloud-talk
 
 ## 配置参考（Nextcloud Talk）
 
-完整配置：[配置](/zh/gateway/configuration)
+完整配置：[配置](/en/gateway/configuration)
 
 提供商选项：
 
@@ -136,6 +136,6 @@ openclaw plugins install ./extensions/nextcloud-talk
 - `channels.nextcloud-talk.blockStreamingCoalesce`：分块流式传输合并调整。
 - `channels.nextcloud-talk.mediaMaxMb`：入站媒体上限（MB）。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

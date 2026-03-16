@@ -10,16 +10,16 @@ title: "Gateway 网关 运行手册"
 使用此页面进行 Gateway 网关 服务的第 1 天启动和第 2 天运维。
 
 <CardGroup cols={2}>
-  <Card title="深度故障排除" icon="siren" href="/zh/gateway/troubleshooting">
+  <Card title="深度故障排除" icon="siren" href="/en/gateway/troubleshooting">
     基于症状的诊断，包含精确的命令阶梯和日志特征。
   </Card>
-  <Card title="配置" icon="sliders" href="/zh/gateway/configuration">
+  <Card title="配置" icon="sliders" href="/en/gateway/configuration">
     面向任务的设置指南 + 完整配置参考。
   </Card>
-  <Card title="机密管理" icon="key-round" href="/zh/gateway/secrets">
+  <Card title="机密管理" icon="key-round" href="/en/gateway/secrets">
     SecretRef 契约、运行时快照行为以及迁移/重新加载操作。
   </Card>
-  <Card title="机密计划契约" icon="shield-check" href="/zh/gateway/secrets-plan-contract">
+  <Card title="机密计划契约" icon="shield-check" href="/en/gateway/secrets-plan-contract">
     精确的 `secrets apply` 目标/路径规则以及仅引用认证配置文件行为。
   </Card>
 </CardGroup>
@@ -121,7 +121,7 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
   隧道。
 </Warning>
 
-参见：[Remote Gateway](/zh/gateway/remote)，[Authentication](/zh/gateway/authentication)，[Tailscale](/zh/gateway/tailscale)。
+参见：[Remote Gateway](/en/gateway/remote)，[Authentication](/en/gateway/authentication)，[Tailscale](/en/gateway/tailscale)。
 
 ## 监管和服务生命周期
 
@@ -188,7 +188,7 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a opencla
 OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
 ```
 
-参见：[多网关](/zh/gateway/multiple-gateways)。
+参见：[多网关](/en/gateway/multiple-gateways)。
 
 ### 开发配置文件快速路径
 
@@ -212,7 +212,7 @@ Agent 运行分为两个阶段：
 1. 立即接受的确认（`status:"accepted"`）
 2. 最终完成响应（`status:"ok"|"error"`），中间传输 `agent` 事件。
 
-查看完整的协议文档：[Gateway(网关) 协议](/zh/gateway/protocol)。
+查看完整的协议文档：[Gateway(网关) 协议](/en/gateway/protocol)。
 
 ## 操作检查
 
@@ -242,7 +242,7 @@ openclaw health
 | `Gateway start blocked: set gateway.mode=local`                | 配置设置为远程模式               |
 | 连接期间的 `unauthorized`                                      | 客户端与网关之间的身份验证不匹配 |
 
-如需完整的诊断步骤，请使用 [Gateway(网关) 故障排查](/zh/gateway/troubleshooting)。
+如需完整的诊断步骤，请使用 [Gateway(网关) 故障排查](/en/gateway/troubleshooting)。
 
 ## 安全保证
 
@@ -254,13 +254,13 @@ openclaw health
 
 相关：
 
-- [故障排查](/zh/gateway/troubleshooting)
-- [后台进程](/zh/gateway/background-process)
-- [配置](/zh/gateway/configuration)
-- [健康检查](/zh/gateway/health)
-- [诊断工具](/zh/gateway/doctor)
-- [身份验证](/zh/gateway/authentication)
+- [故障排查](/en/gateway/troubleshooting)
+- [后台进程](/en/gateway/background-process)
+- [配置](/en/gateway/configuration)
+- [健康检查](/en/gateway/health)
+- [诊断工具](/en/gateway/doctor)
+- [身份验证](/en/gateway/authentication)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

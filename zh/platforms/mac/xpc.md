@@ -42,7 +42,7 @@ Agent -> Gateway -> Node Service (WS)
 - UI 自动化使用一个名为 `bridge.sock` 的独立 UNIX 套接字和 PeekabooBridge JSON 协议。
 - 主机首选项顺序（客户端）：Peekaboo.app → Claude.app → OpenClaw.app → 本地执行。
 - 安全性：网桥主机需要允许的 TeamID；仅限 DEBUG 的同 UID 逃生舱由 `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` 保护（Peekaboo 约定）。
-- 详情请参阅：[PeekabooBridge 使用指南](/zh/platforms/mac/peekaboo)。
+- 详情请参阅：[PeekabooBridge 使用指南](/en/platforms/mac/peekaboo)。
 
 ## 操作流程
 
@@ -60,6 +60,6 @@ Agent -> Gateway -> Node Service (WS)
 - TCC 提示仅源自 GUI app 包；在重新构建期间保持签名 Bundle ID 的稳定。
 - IPC 加固：socket 模式 `0600`、令牌、对等 UID 检查、HMAC 质询/响应、短 TTL。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

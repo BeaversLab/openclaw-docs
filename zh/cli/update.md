@@ -10,7 +10,7 @@ title: "更新"
 
 安全地更新 OpenClaw 并在稳定/测试/开发通道之间切换。
 
-如果您通过 **npm/pnpm** 安装（全局安装，无 git 元数据），更新通过[更新](/zh/install/updating) 中的包管理器流程进行。
+如果您通过 **npm/pnpm** 安装（全局安装，无 git 元数据），更新通过[更新](/en/install/updating) 中的包管理器流程进行。
 
 ## 用法
 
@@ -97,10 +97,10 @@ openclaw update status --timeout 10
 ## 参见
 
 - `openclaw doctor`（在 git checkout 上提议先运行 update）
-- [开发渠道](/zh/install/development-channels)
-- [更新](/zh/install/updating)
-- [CLI 参考](/zh/cli)
+- [开发渠道](/en/install/development-channels)
+- [更新](/en/install/updating)
+- [CLI 参考](/en/cli)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -13,8 +13,8 @@ title: "审批"
 
 相关：
 
-- Exec 批准：[Exec 批准](/zh/tools/exec-approvals)
-- 节点：[节点](/zh/nodes)
+- Exec 批准：[Exec 批准](/en/tools/exec-approvals)
+- 节点：[节点](/en/nodes)
 
 ## 常用命令
 
@@ -49,6 +49,6 @@ openclaw approvals allowlist remove "~/Projects/**/bin/rg"
 - 节点主机必须通告 `system.execApprovals.get/set`（macOS 应用程序或无头节点主机）。
 - 审批文件按主机存储在 `~/.openclaw/exec-approvals.json`。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -589,7 +589,7 @@ openclaw pairing list feishu
 
 ## 配置参考
 
-完整配置：[Gateway(网关) 配置](/zh/gateway/configuration)
+完整配置：[Gateway(网关) 配置](/en/gateway/configuration)
 
 关键选项：
 
@@ -651,6 +651,6 @@ openclaw pairing list feishu
 - ✅ 音频
 - ⚠️ 富文本（部分支持）
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -63,6 +63,6 @@ openclaw models set github-copilot/gpt-4o
   另一个 ID（例如 `github-copilot/gpt-4.1`）。
 - 登录会在配置文件存储中保存一个 GitHub 令牌，并在 API 运行时将其交换为 Copilot OpenClaw 令牌。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

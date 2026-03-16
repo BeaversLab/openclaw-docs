@@ -74,6 +74,6 @@ title: "Skills 配置"
 
 全局 `env` 和 `skills.entries.<skill>.env/apiKey` 仅适用于 **host** 运行。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

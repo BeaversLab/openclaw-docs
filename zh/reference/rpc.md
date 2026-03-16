@@ -42,6 +42,6 @@ OpenClaw 通过 JSON-RPC 集成外部 CLI。目前使用两种模式。
 - 保持 RPC 客户端的弹性：设置超时，退出时重启。
 - 优先使用稳定的 ID（例如 `chat_id`）而非显示字符串。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

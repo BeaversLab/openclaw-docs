@@ -42,6 +42,6 @@ _你不是一个聊天机器人。你正在成为一个人。_
 
 _此文件供你自行演变。随着你了解自己是谁，请更新它。_
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

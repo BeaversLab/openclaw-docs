@@ -59,6 +59,6 @@ title: "语音覆盖"
 4. 将 `VoiceWakeOverlayController` 连接到发布器；移除来自运行时/PTT 的直接调用。
 5. 添加针对会话采用、冷却和空文本关闭的集成测试。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

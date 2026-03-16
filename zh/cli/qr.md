@@ -45,6 +45,6 @@ openclaw qr --url wss://gateway.example/ws
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

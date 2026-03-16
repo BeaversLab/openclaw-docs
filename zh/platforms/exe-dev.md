@@ -117,8 +117,8 @@ openclaw gateway restart
 openclaw health
 ```
 
-指南：[更新](/zh/install/updating)
+指南：[更新](/en/install/updating)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

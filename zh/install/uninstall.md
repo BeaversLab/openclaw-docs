@@ -127,6 +127,6 @@ Remove-Item -Force "$env:USERPROFILE\.openclaw\gateway.cmd"
 2. 删除代码仓库目录。
 3. 如上所示移除状态和工作区。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

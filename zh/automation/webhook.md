@@ -152,7 +152,7 @@ Gateway 网关 可以暴露一个小型的 HTTP webhook 端点用于外部触发
 - `allowUnsafeExternalContent: true` 禁用该 hook 的外部内容安全包装器
   （危险；仅适用于受信任的内部来源）。
 - `openclaw webhooks gmail setup` 会为 `openclaw webhooks gmail run` 写入 `hooks.gmail` 配置。
-  有关完整的 Gmail 监视流程，请参阅 [Gmail Pub/Sub](/zh/automation/gmail-pubsub)。
+  有关完整的 Gmail 监视流程，请参阅 [Gmail Pub/Sub](/en/automation/gmail-pubsub)。
 
 ## 响应
 
@@ -212,6 +212,6 @@ curl -X POST http://127.0.0.1:18789/hooks/gmail \
   如果您必须针对特定 hook 禁用此功能，请在该 hook 的映射中设置 `allowUnsafeExternalContent: true`
   （危险操作）。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

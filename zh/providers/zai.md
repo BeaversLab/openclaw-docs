@@ -15,9 +15,17 @@ Z.AI 是 **GLM** 模型的 API 平台。它为 GLM 提供 REST API 并使用 API
 ## CLI 设置
 
 ```bash
-openclaw onboard --auth-choice zai-api-key
-# or non-interactive
-openclaw onboard --zai-api-key "$ZAI_API_KEY"
+# Coding Plan Global, recommended for Coding Plan users
+openclaw onboard --auth-choice zai-coding-global
+
+# Coding Plan CN (China region), recommended for Coding Plan users
+openclaw onboard --auth-choice zai-coding-cn
+
+# General API
+openclaw onboard --auth-choice zai-global
+
+# General API CN (China region)
+openclaw onboard --auth-choice zai-cn
 ```
 
 ## 配置片段
@@ -34,9 +42,9 @@ openclaw onboard --zai-api-key "$ZAI_API_KEY"
 - GLM 模型可以作为 `zai/<model>` 使用（例如：`zai/glm-5`）。
 - 默认情况下，Z.AI 工具调用流式传输已启用 `tool_stream`。将
   `agents.defaults.models["zai/<model>"].params.tool_stream` 设置为 `false` 即可将其禁用。
-- 有关模型系列概览，请参阅 [/providers/glm](/zh/providers/glm)。
+- 有关模型系列概览，请参阅 [/providers/glm](/en/providers/glm)。
 - Z.AI 使用您的 API 密钥进行 Bearer 身份验证。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -18,7 +18,7 @@ openclaw onboard
 
 <Info>
   最快开始聊天：打开控制 UI（无需设置渠道）。运行 `openclaw dashboard` 并
-  在浏览器中聊天。文档：[Dashboard](/zh/web/dashboard)。
+  在浏览器中聊天。文档：[Dashboard](/en/web/dashboard)。
 </Info>
 
 稍后重新配置：
@@ -33,7 +33,7 @@ openclaw agents add <name>
 <Tip>
   新手引导向导包含网络搜索步骤，您可以在其中选择提供商（Perplexity、Brave、 Gemini、Grok 或
   Kimi）并粘贴您的 API 密钥，以便代理可以使用 `web_search`。您也可以稍后 使用 `openclaw configure
-  --section web` 进行配置。文档：[Web tools](/zh/tools/web)。
+  --section web` 进行配置。文档：[Web tools](/en/tools/web)。
 </Tip>
 
 ## QuickStart 与高级选项
@@ -46,7 +46,7 @@ openclaw agents add <name>
     Gateway(网关) 身份验证 **Token**（自动生成，即使在环回上） - 新本地设置的
     工具策略默认值：`tools.profile: "coding"`（保留现有的显式配置文件） - 私信隔离
     默认值：如果未设置，本地新手引导会写入 `session.dmScope: "per-channel-peer"`。详情：[CLI
-    新手引导 Reference](/zh/start/wizard-cli-reference#outputs-and-internals) - Tailscale 暴露
+    新手引导 Reference](/en/start/wizard-cli-reference#outputs-and-internals) - Tailscale 暴露
     **Off** - Telegram + WhatsApp 私信默认为 **allowlist**（将提示您输入手机 号码）
   </Tab>
   <Tab title="Advanced (full control)">
@@ -105,18 +105,18 @@ openclaw agents add <name>
 ## 完整参考
 
 如需详细的逐步细分和配置输出，请参阅
-[CLI 新手引导参考](/zh/start/wizard-cli-reference)。
-有关非交互式示例，请参阅 [CLI 自动化](/zh/start/wizard-cli-automation)。
+[CLI 新手引导参考](/en/start/wizard-cli-reference)。
+有关非交互式示例，请参阅 [CLI 自动化](/en/start/wizard-cli-automation)。
 有关更深入的技术参考，包括 RPC 详细信息，请参阅
-[向导参考](/zh/reference/wizard)。
+[向导参考](/en/reference/wizard)。
 
 ## 相关文档
 
-- CLI 命令参考：[`openclaw onboard`](/zh/cli/onboard)
-- 新手引导概述：[新手引导概述](/zh/start/onboarding-overview)
-- macOS 应用新手引导：[新手引导](/zh/start/onboarding)
-- Agent 首次运行仪式：[Agent 引导](/zh/start/bootstrapping)
+- CLI 命令参考：[`openclaw onboard`](/en/cli/onboard)
+- 新手引导概述：[新手引导概述](/en/start/onboarding-overview)
+- macOS 应用新手引导：[新手引导](/en/start/onboarding)
+- Agent 首次运行仪式：[Agent 引导](/en/start/bootstrapping)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

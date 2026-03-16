@@ -83,6 +83,6 @@ title: "群组消息"
 - 会话存储条目将在会话存储中显示为 `agent:<agentId>:whatsapp:group:<jid>`（默认为 `~/.openclaw/agents/<agentId>/sessions/sessions.json`）；缺少条目仅表示该群组尚未触发运行。
 - 群组中的输入指示器遵循 `agents.defaults.typingMode`（默认：未被提及时为 `message`）。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

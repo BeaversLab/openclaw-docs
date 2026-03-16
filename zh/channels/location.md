@@ -55,6 +55,6 @@ Meet here
 - **WhatsApp**：`locationMessage.comment` 和 `liveLocationMessage.caption` 作为标题行附加。
 - **Matrix**：`geo_uri` 被解析为固定位置；海拔被忽略，且 `LocationIsLive` 始终为 false。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -30,6 +30,6 @@ title: grammY
 - 添加更多结构化的媒体测试（贴纸、语音笔记）。
 - 使 webhook 监听端口可配置（除非通过网关连接，目前固定为 8787）。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

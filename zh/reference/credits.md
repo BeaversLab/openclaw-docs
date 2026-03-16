@@ -27,6 +27,6 @@ MIT - 像海洋中的龙虾一样自由。
 
 > "我们只是在玩自己的提示词。"（一个 AI，可能 Tokens 上头了）
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

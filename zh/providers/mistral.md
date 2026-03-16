@@ -52,6 +52,6 @@ openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
 - 媒体转录路径使用 `/v1/audio/transcriptions`。
 - 内存嵌入路径使用 `/v1/embeddings` (默认模型: `mistral-embed`)。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

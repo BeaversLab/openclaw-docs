@@ -84,6 +84,6 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 - 如果存在已知的回归，请测试 `tsx` 每夜版或固定到早期版本。
 - 如果在 Node LTS 上复现，请使用 `__name` 堆栈跟踪向上游提交最小复现。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

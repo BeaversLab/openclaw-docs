@@ -118,6 +118,6 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 - 除非使用 `schema` 进行验证，否则请将输出视为不受信任的内容。
 - 在任何产生副作用的步骤（发送、发布、执行）之前放置审批流程。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

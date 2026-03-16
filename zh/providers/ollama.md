@@ -351,10 +351,10 @@ ollama serve
 
 ## 另请参阅
 
-- [模型提供商](/zh/concepts/model-providers) - 所有提供商的概览
-- [模型选择](/zh/concepts/models) - 如何选择模型
-- [配置](/zh/gateway/configuration) - 完整配置参考
+- [模型提供商](/en/concepts/model-providers) - 所有提供商的概览
+- [模型选择](/en/concepts/models) - 如何选择模型
+- [配置](/en/gateway/configuration) - 完整配置参考
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

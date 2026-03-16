@@ -69,7 +69,7 @@ openclaw doctor
 ### 控制 UI (Web)
 
 控制 UI 的 **日志 (Logs)** 选项卡使用 `logs.tail` 追踪同一个文件。
-有关如何打开它的信息，请参阅 [/web/control-ui](/zh/web/control-ui)。
+有关如何打开它的信息，请参阅 [/web/control-ui](/en/web/control-ui)。
 
 ### 仅通道日志
 
@@ -216,7 +216,7 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 
 - 标志日志进入标准日志文件（与 `logging.file` 相同）。
 - 输出仍根据 `logging.redactSensitive` 进行编辑。
-- 完整指南：[/diagnostics/flags](/zh/diagnostics/flags)。
+- 完整指南：[/diagnostics/flags](/en/diagnostics/flags)。
 
 ### 导出到 OpenTelemetry
 
@@ -347,6 +347,6 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 - **Logs empty?** 检查 Gateway(网关) 是否正在运行并写入 `logging.file` 中的文件路径。
 - **需要更多详细信息？** 将 `logging.level` 设置为 `debug` 或 `trace` 并重试。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

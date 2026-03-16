@@ -222,6 +222,6 @@ title: "会话工具"
 - `all`：任何会话（跨代理访问仍需 `tools.agentToAgent`）。
 - 当会话处于沙箱隔离状态且 `sessionToolsVisibility="spawned"` 时，OpenClaw 会将可见性强制限制为 `tree`，即使您设置了 `tools.sessions.visibility="all"`。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

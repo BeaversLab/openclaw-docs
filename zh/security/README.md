@@ -4,8 +4,8 @@
 
 ## 文档
 
-- [威胁模型](/zh/security/THREAT-MODEL-ATLAS) - 基于 MITRE ATLAS 的 OpenClaw 生态系统威胁模型
-- [为威胁模型做贡献](/zh/security/CONTRIBUTING-THREAT-MODEL) - 如何添加威胁、缓解措施和攻击链
+- [威胁模型](/en/security/THREAT-MODEL-ATLAS) - 基于 MITRE ATLAS 的 OpenClaw 生态系统威胁模型
+- [为威胁模型做贡献](/en/security/CONTRIBUTING-THREAT-MODEL) - 如何添加威胁、缓解措施和攻击链
 
 ## 报告漏洞
 
@@ -16,6 +16,6 @@
 - **Jamieson O'Reilly** ([@theonejvo](https://twitter.com/theonejvo)) - 安全与信任
 - Discord：#security 频道
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

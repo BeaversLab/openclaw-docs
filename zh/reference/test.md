@@ -7,7 +7,7 @@ title: "测试"
 
 # 测试
 
-- 完整测试套件（套件、实时、Docker）：[Testing](/zh/help/testing)
+- 完整测试套件（套件、实时、Docker）：[Testing](/en/help/testing)
 
 - `pnpm test:force`：终止任何占用默认控制端口的残留网关进程，然后使用隔离的网关端口运行完整的 Vitest 测试套件，以防止服务器测试与正在运行的实例发生冲突。当之前的网关运行导致 18789 端口被占用时，请使用此方法。
 - `pnpm test:coverage`：运行带有 V8 覆盖率（通过 `vitest.unit.config.ts`）的单元测试套件。全局阈值为 70% 的行/分支/函数/语句。覆盖率排除了重集成的入口点（CLI 线路、网关/telegram 桥接、webchat 静态服务器），以使目标专注于可进行单元测试的逻辑。
@@ -87,6 +87,6 @@ scripts/e2e/onboard-docker.sh
 pnpm test:docker:qr
 ```
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

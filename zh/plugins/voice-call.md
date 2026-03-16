@@ -333,6 +333,6 @@ openclaw voicecall expose --mode funnel
 - `voicecall.end` (`callId`)
 - `voicecall.status` (`callId`)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

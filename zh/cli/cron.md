@@ -12,7 +12,7 @@ title: "cron"
 
 相关：
 
-- Cron 作业：[Cron 作业](/zh/automation/cron-jobs)
+- Cron 作业：[Cron 作业](/en/automation/cron-jobs)
 
 提示：运行 `openclaw cron --help` 查看完整的命令表面。
 
@@ -75,6 +75,6 @@ openclaw cron add \
 
 `--light-context` 仅适用于隔离的 agent-turn 作业。对于 cron 运行，轻量级模式将引导上下文保持为空，而不是注入完整的工作区引导集。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

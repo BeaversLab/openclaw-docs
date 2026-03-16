@@ -65,7 +65,7 @@ otherwise -> reply
 - **私信**：完整工具（宿主机）
 - **群组**：沙箱 + 受限工具（Docker）
 
-> 如果您需要真正独立的工作空间/角色（“个人”和“公共”绝不能混合），请使用第二个代理 + 绑定。参见[多代理路由](/zh/concepts/multi-agent)。
+> 如果您需要真正独立的工作空间/角色（“个人”和“公共”绝不能混合），请使用第二个代理 + 绑定。参见[多代理路由](/en/concepts/multi-agent)。
 
 示例（私信在宿主机上，群组沙箱隔离 + 仅消息工具）：
 
@@ -116,9 +116,9 @@ otherwise -> reply
 
 相关内容：
 
-- 配置键和默认值：[Gateway 网关 配置](/zh/gateway/configuration#agentsdefaultssandbox)
-- 调试工具被阻止的原因：[沙箱 vs 工具策略 vs 提升权限](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)
-- 绑定挂载详情：[沙箱隔离](/zh/gateway/sandboxing#custom-bind-mounts)
+- 配置键和默认值：[Gateway 网关 配置](/en/gateway/configuration#agentsdefaultssandbox)
+- 调试工具被阻止的原因：[沙箱 vs 工具策略 vs 提升权限](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- 绑定挂载详情：[沙箱隔离](/en/gateway/sandboxing#custom-bind-mounts)
 
 ## 显示标签
 
@@ -376,8 +376,8 @@ otherwise -> reply
 
 ## WhatsApp 详情
 
-请参阅 [Group messages](/zh/channels/group-messages) 了解 WhatsApp 专属行为（历史记录注入、提及处理详情）。
+请参阅 [Group messages](/en/channels/group-messages) 了解 WhatsApp 专属行为（历史记录注入、提及处理详情）。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -107,7 +107,7 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - `/settings`
 - `/exit`
 
-其他 Gateway(网关) 斜杠命令（例如，`/context`）将被转发到 Gateway(网关) 并显示为系统输出。请参阅[斜杠命令](/zh/tools/slash-commands)。
+其他 Gateway(网关) 斜杠命令（例如，`/context`）将被转发到 Gateway(网关) 并显示为系统输出。请参阅[斜杠命令](/en/tools/slash-commands)。
 
 ## 本地 Shell 命令
 
@@ -169,6 +169,6 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - 选择器中没有代理：检查 `openclaw agents list` 和您的路由配置。
 - 会话选择器为空：您可能处于全局范围或者还没有任何会话。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -23,7 +23,7 @@ title: "转录清理"
 
 如果您需要脚本存储详细信息，请参阅：
 
-- [/reference/会话-management-compaction](/zh/reference/session-management-compaction)
+- [/reference/会话-management-compaction](/en/reference/session-management-compaction)
 
 ---
 
@@ -137,6 +137,6 @@ title: "转录清理"
 这种复杂性导致了跨提供商的回归（特别是 `openai-responses`
 `call_id|fc_id` 配对）。2026.1.22 的清理工作移除了该扩展，将逻辑集中到了运行器中，并使 OpenAI 在除图片清理之外保持 **no-touch**。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -23,10 +23,10 @@ openclaw status --usage
 - 当配置了多个代理时，输出包含每个代理的会话存储。
 - 概述包含 Gateway 网关 + 节点主机服务的安装/运行状态（如果可用）。
 - 概述包含更新通道 + git SHA（针对源代码检出）。
-- 更新信息显示在概览中；如果有可用更新，status 会打印提示以运行 `openclaw update`（参见 [Updating](/zh/install/updating)）。
+- 更新信息显示在概览中；如果有可用更新，status 会打印提示以运行 `openclaw update`（参见 [Updating](/en/install/updating)）。
 - 只读状态界面（`status`、`status --json`、`status --all`）会在可能的情况下解析其目标配置路径所支持的 SecretRefs。
 - 如果配置了支持的通道 SecretRef 但在当前命令路径中不可用，status 将保持只读状态，并报告降级输出而不是崩溃。人类可读输出会显示诸如“在此命令路径中配置的令牌不可用”之类的警告，而 JSON 输出将包含 `secretDiagnostics`。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

@@ -34,6 +34,6 @@ openclaw completion --shell bash --write-state
 - 如果不使用 `--install` 或 `--write-state`，该命令会将脚本打印到标准输出。
 - 生成补全会急切加载命令树，以便包含嵌套的子命令。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

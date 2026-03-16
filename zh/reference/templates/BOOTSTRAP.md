@@ -61,6 +61,6 @@ _你刚醒来。是时候弄清楚你是谁了。_
 
 _祝你好运。珍惜当下。_
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

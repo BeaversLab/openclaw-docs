@@ -33,7 +33,7 @@ title: "WSL2 + Windows + 远程 Chrome CDP 故障排除"
 
 ### 选项 2：Chrome 扩展中继
 
-使用内置的 `chrome` 配置文件以及 OpenClaw Chrome 扩展程序。
+使用内置的 `chrome-relay` 配置文件以及 OpenClaw Chrome 扩展程序。
 
 在以下情况下选择此选项：
 
@@ -41,7 +41,7 @@ title: "WSL2 + Windows + 远程 Chrome CDP 故障排除"
 - 您想要基于扩展程序的控制，而不是原始的 `--remote-debugging-port`
 - 中继本身必须可以跨越 WSL2/Windows 边界访问
 
-如果您跨命名空间使用扩展中继，`browser.relayBindHost` 是 [Browser](/zh/tools/browser) 和 [Chrome extension](/zh/tools/chrome-extension) 中引入的重要设置。
+如果您跨命名空间使用扩展中继，`browser.relayBindHost` 是 [Browser](/en/tools/browser) 和 [Chrome extension](/en/tools/chrome-extension) 中引入的重要设置。
 
 ## 工作原理架构
 
@@ -74,7 +74,7 @@ title: "WSL2 + Windows + 远程 Chrome CDP 故障排除"
 
 `http://127.0.0.1:18789/`
 
-不要默认将 Control UI 设置为 LAN IP。LAN 或 tailnet 地址上的纯 HTTP 可能会触发不安全来源/设备身份验证行为，这与 CDP 本身无关。请参阅 [Control UI](/zh/web/control-ui)。
+不要默认将 Control UI 设置为 LAN IP。LAN 或 tailnet 地址上的纯 HTTP 可能会触发不安全来源/设备身份验证行为，这与 CDP 本身无关。请参阅 [Control UI](/en/web/control-ui)。
 
 ## 分层验证
 
@@ -155,7 +155,7 @@ curl http://WINDOWS_HOST_OR_IP:9222/json/list
 {
   browser: {
     enabled: true,
-    defaultProfile: "chrome",
+    defaultProfile: "chrome-relay",
     relayBindHost: "0.0.0.0",
   },
 }
@@ -183,7 +183,7 @@ curl http://WINDOWS_HOST_OR_IP:9222/json/list
 
 有用的页面：
 
-- [Control UI](/zh/web/control-ui)
+- [Control UI](/en/web/control-ui)
 
 ### 第 6 层：验证端到端浏览器控制
 
@@ -197,7 +197,7 @@ openclaw browser tabs --browser-profile remote
 对于扩展程序中继：
 
 ```bash
-openclaw browser tabs --browser-profile chrome
+openclaw browser tabs --browser-profile chrome-relay
 ```
 
 好的结果：
@@ -241,6 +241,6 @@ openclaw browser tabs --browser-profile chrome
 - 其次从 WSL2 验证同一端点
 - 然后再调试 OpenClaw 配置或 Control UI 身份验证
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

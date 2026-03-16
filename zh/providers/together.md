@@ -64,6 +64,6 @@ Together AI 提供对许多热门开源模型的访问：
 
 所有模型都支持标准聊天补全，并且兼容 OpenAI API。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

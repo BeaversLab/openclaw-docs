@@ -156,7 +156,7 @@ Gateway(网关) 网关在 `local.` 上发布 `_openclaw-gw._tcp`。iOS 应用会
 ### Tailnet (跨网络)
 
 如果 mDNS 被阻止，请使用单播 DNS-SD 区域（选择一个域；例如：`openclaw.internal.`）和 Tailscale 分割 DNS。
-请参阅 [Bonjour](/zh/gateway/bonjour) 获取 CoreDNS 示例。
+请参阅 [Bonjour](/en/gateway/bonjour) 获取 CoreDNS 示例。
 
 ### 手动主机/端口
 
@@ -195,16 +195,16 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 ## 常见错误
 
 - `NODE_BACKGROUND_UNAVAILABLE`：将 iOS 应用切换到前台（canvas/camera/screen 命令需要此操作）。
-- `A2UI_HOST_NOT_CONFIGURED`：Gateway(网关) 网关未通告 Canvas 主机 URL；请检查 [Gateway(网关) 配置](/zh/gateway/configuration)中的 `canvasHost`。
+- `A2UI_HOST_NOT_CONFIGURED`：Gateway(网关) 网关未通告 Canvas 主机 URL；请检查 [Gateway(网关) 配置](/en/gateway/configuration)中的 `canvasHost`。
 - 配对提示从未出现：运行 `openclaw devices list` 并手动批准。
 - 重新安装后重连失败：钥匙串（Keychain）配对令牌已被清除；请重新配对节点。
 
 ## 相关文档
 
-- [配对](/zh/channels/pairing)
-- [设备发现](/zh/gateway/discovery)
-- [Bonjour](/zh/gateway/bonjour)
+- [配对](/en/channels/pairing)
+- [设备发现](/en/gateway/discovery)
+- [Bonjour](/en/gateway/bonjour)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

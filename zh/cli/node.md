@@ -115,9 +115,9 @@ openclaw devices approve <requestId>
 `system.run` 受本地执行批准限制：
 
 - `~/.openclaw/exec-approvals.json`
-- [执行审批](/zh/tools/exec-approvals)
+- [执行审批](/en/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>`（从 Gateway 网关 编辑）
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

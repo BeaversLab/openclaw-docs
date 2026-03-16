@@ -52,7 +52,7 @@ title: "Exec Tool"
 - `tools.exec.ask`（默认值：`on-miss`）
 - `tools.exec.node`（默认值：未设置）
 - `tools.exec.pathPrepend`：要添加到 exec 运行的 `PATH` 前面的目录列表（仅限 gateway + sandbox）。
-- `tools.exec.safeBins`：无需明确的允许列表条目即可运行的仅 stdin 安全二进制文件。有关行为详细信息，请参阅 [Safe bins](/zh/tools/exec-approvals#safe-bins-stdin-only)。
+- `tools.exec.safeBins`：无需明确的允许列表条目即可运行的仅 stdin 安全二进制文件。有关行为详细信息，请参阅 [Safe bins](/en/tools/exec-approvals#safe-bins-stdin-only)。
 - `tools.exec.safeBinTrustedDirs`：用于 `safeBins` 路径检查的其他受信任显式目录。`PATH` 条目永远不会被自动信任。内置默认值为 `/bin` 和 `/usr/bin`。
 - `tools.exec.safeBinProfiles`：每个安全二进制文件的可选自定义 argv 策略（`minPositional`、`maxPositional`、`allowedValueFlags`、`deniedFlags`）。
 
@@ -108,7 +108,7 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 ## Exec approvals (companion app / node host)
 
 沙箱隔离 代理在 `exec` 于网关或节点主机上运行之前，可能需要每请求批准。
-有关策略、allowlist 和 UI 流程，请参阅 [Exec approvals](/zh/tools/exec-approvals)。
+有关策略、allowlist 和 UI 流程，请参阅 [Exec approvals](/en/tools/exec-approvals)。
 
 需要审批时，exec 工具 会立即返回 `status: "approval-pending"` 和一个审批 ID。一旦获批（或被拒绝/超时），Gateway(网关) 会发出系统事件（`Exec finished` / `Exec denied`）。如果命令在 `tools.exec.approvalRunningNoticeMs` 后仍在运行，则会发出一条 `Exec running` 通知。
 
@@ -132,7 +132,7 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 不要将 `safeBins` 视为通用允许列表，并且不要添加解释器/运行时二进制文件（例如 `python3`、`node`、`ruby`、`bash`）。如果您需要这些，请使用显式允许列表条目并保持批准提示启用。
 当解释器/运行时 `safeBins` 条目缺少显式配置文件时，`openclaw security audit` 会发出警告，并且 `openclaw doctor --fix` 可以构建缺失的自定义 `safeBinProfiles` 条目。
 
-有关完整的策略详细信息和示例，请参阅 [Exec 批准](/zh/tools/exec-approvals#safe-bins-stdin-only) 和 [安全二进制文件与允许列表](/zh/tools/exec-approvals#safe-bins-versus-allowlist)。
+有关完整的策略详细信息和示例，请参阅 [Exec 批准](/en/tools/exec-approvals#safe-bins-stdin-only) 和 [安全二进制文件与允许列表](/en/tools/exec-approvals#safe-bins-versus-allowlist)。
 
 ## 示例
 
@@ -191,6 +191,6 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 - 配置位于 `tools.exec.applyPatch` 下。
 - `tools.exec.applyPatch.workspaceOnly` 默认为 `true`（包含在工作区内）。仅在您有意让 `apply_patch` 在工作区目录之外进行写入/删除时，才将其设置为 `false`。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

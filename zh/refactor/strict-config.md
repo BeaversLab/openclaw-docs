@@ -92,6 +92,6 @@ title: "严格配置验证"
 - 配置无效 → 网关启动被阻止，诊断命令除外。
 - Doctor 干运行自动；`doctor --fix` 写入修正后的配置。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

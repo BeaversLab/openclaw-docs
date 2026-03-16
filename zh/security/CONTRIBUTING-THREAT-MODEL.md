@@ -77,7 +77,7 @@ ID 由维护者在审查期间分配。您无需选择。
 - [ATLAS 网站](https://atlas.mitre.org/)
 - [ATLAS 技术](https://atlas.mitre.org/techniques/)
 - [ATLAS 案例研究](https://atlas.mitre.org/studies/)
-- [OpenClaw 威胁模型](/zh/security/THREAT-MODEL-ATLAS)
+- [OpenClaw 威胁模型](/en/security/THREAT-MODEL-ATLAS)
 
 ## 联系方式
 
@@ -89,6 +89,6 @@ ID 由维护者在审查期间分配。您无需选择。
 
 威胁模型的贡献者将在威胁模型致谢、发行说明以及 OpenClaw 安全名人堂中因做出重大贡献而获得认可。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

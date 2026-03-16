@@ -489,6 +489,6 @@ ngrok 隧道在容器内运行，并提供公共 webhook URL，而无需暴露 F
 
 有关详细信息，请参阅 [Fly.io 定价](https://fly.io/docs/about/pricing/)。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

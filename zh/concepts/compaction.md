@@ -63,7 +63,7 @@ title: "压缩"
 - `🧹 Auto-compaction complete` 在详细模式下
 - `/status` 显示 `🧹 Compactions: <count>`
 
-在压缩之前，OpenClaw 可以运行一个 **静默内存刷新** 轮次，将持久的笔记存储到磁盘。有关详细信息和配置，请参阅 [内存](/zh/concepts/memory)。
+在压缩之前，OpenClaw 可以运行一个 **静默内存刷新** 轮次，将持久的笔记存储到磁盘。有关详细信息和配置，请参阅 [内存](/en/concepts/memory)。
 
 ## 手动压缩
 
@@ -82,7 +82,7 @@ title: "压缩"
 - **压缩**：进行摘要并以 JSONL 格式**持久化**。
 - **会话修剪**：仅修剪旧的**工具结果**，在**内存中**，针对每个请求。
 
-有关修剪的详细信息，请参阅 [/concepts/会话-pruning](/zh/concepts/session-pruning)。
+有关修剪的详细信息，请参阅 [/concepts/会话-pruning](/en/concepts/session-pruning)。
 
 ## OpenAI 服务端压缩
 
@@ -91,7 +91,7 @@ OpenClaw 还支持针对兼容的直接 OpenAI 模型的 OpenAI Responses 服务
 - 本地压缩：OpenClaw 进行摘要并持久化到会话 JSONL 中。
 - 服务器端压缩：当启用 `store` + `context_management` 时，OpenAI 会在提供商端压缩上下文。
 
-有关模型参数和覆盖设置，请参阅 [OpenAI 提供商](/zh/providers/openai)。
+有关模型参数和覆盖设置，请参阅 [OpenAI 提供商](/en/providers/openai)。
 
 ## 提示
 
@@ -99,6 +99,6 @@ OpenClaw 还支持针对兼容的直接 OpenAI 模型的 OpenAI Responses 服务
 - 大型工具输出已经被截断；修剪可以进一步减少工具结果的累积。
 - 如果您需要一个新的开始，`/new` 或 `/reset` 会启动一个新的会话 ID。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

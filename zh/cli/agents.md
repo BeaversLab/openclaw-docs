@@ -11,8 +11,8 @@ title: "agents"
 
 相关：
 
-- 多代理路由：[Multi-Agent Routing](/zh/concepts/multi-agent)
-- 代理工作区：[Agent workspace](/zh/concepts/agent-workspace)
+- 多代理路由：[Multi-Agent Routing](/en/concepts/multi-agent)
+- 代理工作区：[Agent workspace](/en/concepts/agent-workspace)
 
 ## 示例
 
@@ -122,6 +122,6 @@ openclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞" --ava
 }
 ```
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

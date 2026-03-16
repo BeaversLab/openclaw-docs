@@ -12,7 +12,7 @@ title: "security"
 
 相关：
 
-- 安全指南：[安全性](/zh/gateway/security)
+- 安全指南：[安全性](/en/gateway/security)
 
 ## 审计
 
@@ -38,7 +38,7 @@ openclaw security audit --json
 当渠道允许列表依赖可变的名称/电子邮件/标签而不是稳定的 ID（Discord、Slack、Google Chat、MS Teams、Mattermost、适用的 IRC 范围）时，它会发出警告。
 当 `gateway.auth.mode="none"` 导致 Gateway(网关) 网关 HTTP API 在没有共享密钥（`/tools/invoke` 加上任何启用的 `/v1/*` 端点）的情况下可访问时，它会发出警告。
 前缀为 `dangerous`/`dangerously` 的设置是明确的应急操作员覆盖；仅启用其中一个本身并不构成安全漏洞报告。
-有关完整的危险参数清单，请参阅 [Security](/zh/gateway/security) 中的“Insecure or dangerous flags summary”部分。
+有关完整的危险参数清单，请参阅 [Security](/en/gateway/security) 中的“Insecure or dangerous flags summary”部分。
 
 ## JSON 输出
 
@@ -70,6 +70,6 @@ openclaw security audit --fix --json | jq '{fix: .fix.ok, summary: .report.summa
 - 更改网关绑定/身份验证/网络暴露选项
 - 删除或重写插件/技能
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

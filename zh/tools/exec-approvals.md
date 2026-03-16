@@ -9,9 +9,7 @@ title: "执行审批"
 
 # Exec approvals
 
-执行审批是用于允许沙箱代理在真实主机（`gateway` 或 `node`）上运行命令的**配套应用/节点主机防护栏**。可以将其视为一种安全互锁：只有当策略 + 允许列表 + （可选）用户批准达成一致时，才允许执行命令。
-执行审批是**除了**工具策略和提升门控之外的额外措施（除非提升设置为 `full`，这会跳过审批）。
-有效策略是 `tools.exec.*` 和审批默认值中**更严格**的一个；如果省略了审批字段，则使用 `tools.exec` 值。
+Exec approvals 是 **companion app / node host guardrail**（配套应用/节点主机护栏），用于让沙箱隔离的代理在真实主机（`gateway` 或 `node`）上运行命令。可以将其视为一种安全互锁：只有当策略 + 允许列表 +（可选）用户批准达成一致时，才允许运行命令。Exec approvals 是**除了**工具策略和提升门控之外的额外机制（除非 elevated 设置为 `full`，这将跳过批准）。有效的策略是 `tools.exec.*` 和批准默认值中的**更严格**者；如果省略了批准字段，则使用 `tools.exec` 值。
 
 如果配套应用 UI **不可用**，任何需要提示的请求都将由**ask fallback**解决（默认：拒绝）。
 
@@ -19,7 +17,7 @@ title: "执行审批"
 
 Exec approvals 在执行主机上本地执行：
 
-- **网关主机** → 网关机器上的 `openclaw` 进程
+- **gateway host** → 网关机器上的 `openclaw` 进程
 - **node host** → 节点运行器（macOS 配套应用或无头节点主机）
 
 信任模型说明：
@@ -37,7 +35,7 @@ Exec approvals 在执行主机上本地执行：
 
 macOS 拆分：
 
-- **node host service** 通过本地 macOS 将 `system.run` 转发给 **IPC 应用**。
+- **node host service** 通过本地 macOS 将 `system.run` 转发到 **IPC app**。
 - **macOS 应用** 执行批准 + 在 UI 上下文中执行命令。
 
 ## 设置和存储
@@ -83,19 +81,19 @@ macOS 拆分：
 
 ## 策略调整旋钮
 
-### 安全性 (`exec.security`)
+### Security (`exec.security`)
 
 - **deny**：阻止所有主机执行请求。
 - **allowlist**：仅允许列在允许列表中的命令。
 - **full**：允许所有内容（相当于提升权限）。
 
-### 询问 (`exec.ask`)
+### Ask (`exec.ask`)
 
 - **off**：从不提示。
 - **on-miss**：仅当允许列表不匹配时提示。
 - **always**：在每个命令上提示。
 
-### 询问回退 (`askFallback`)
+### Ask fallback (`askFallback`)
 
 如果需要提示但无法访问 UI，则由回退决定：
 
@@ -105,9 +103,7 @@ macOS 拆分：
 
 ## 允许列表（每个代理）
 
-允许列表是**按代理** 的。如果存在多个代理，请在 macOS 应用中切换您正在编辑的代理。模式是 **case-insensitive glob matches**。
-模式应解析为 **binary paths**（仅基名称条目将被忽略）。
-传统的 `agents.default` 条目在加载时会迁移到 `agents.main`。
+允许列表是**针对每个代理的**。如果存在多个代理，请在 macOS 应用中切换您正在编辑的代理。模式是**不区分大小写的 glob 匹配**。模式应解析为**二进制路径**（仅基名的条目将被忽略）。旧的 `agents.default` 条目在加载时会迁移到 `agents.main`。
 
 示例：
 
@@ -124,7 +120,7 @@ macOS 拆分：
 
 ## 自动允许技能 CLI
 
-当启用 **Auto-allow skill CLIs** 时，已知技能引用的可执行文件在节点（macOS 节点或无头节点主机）上被视为已列入允许列表。这通过 Gateway(网关) RPC 使用 `skills.bins` 来获取技能二进制文件列表。如果您需要严格的手动允许列表，请禁用此功能。
+当启用 **Auto-allow skill CLIs** 时，已知技能引用的可执行文件在节点（macOS 节点或无头节点主机）上被视为已加入允许列表。这通过 Gateway(网关) RPC 使用 `skills.bins` 来获取技能 bin 列表。如果您需要严格的手动允许列表，请禁用此功能。
 
 重要信任说明：
 
@@ -134,55 +130,56 @@ macOS 拆分：
 
 ## 安全二进制文件 (仅 stdin)
 
-`tools.exec.safeBins` 定义了一小部分 **仅限 stdin** 的二进制文件（例如 `jq`），它们可以在白名单模式下运行，而**无需**显式的白名单条目。Safe bins 会拒绝位置文件参数和类似路径的标记，因此它们只能对传入的流进行操作。请将其视为流过滤器的狭窄快速路径，而不是通用的信任列表。请**勿**将解释器或运行时二进制文件（例如 `python3`、`node`、`ruby`、`bash`、`sh`、`zsh`）添加到 `safeBins` 中。如果某个命令旨在评估代码、执行子命令或读取文件，请优先使用显式白名单条目并保持批准提示启用。自定义 safe bins 必须在 `tools.exec.safeBinProfiles.<bin>` 中定义显式配置文件。验证仅基于 argv 形状进行确定性判断（不进行主机文件系统存在性检查），这可以防止因允许/拒绝差异而产生的文件存在预言行为。面向文件的选项对于默认的 safe bins 是被拒绝的（例如 `sort -o`、`sort --output`、
-`sort --files0-from`、`sort --compress-program`、`sort --random-source`、
-`sort --temporary-directory`/`-T`、`wc --files0-from`、`jq -f/--from-file`、
-`grep -f/--file`）。Safe bins 还会针对破坏仅 stdin 行为的选项强制执行显式的每个二进制文件的标记策略（例如 `sort -o/--output/--compress-program` 和 grep 递归标记）。在 safe-bin 模式下，长选项以故障关闭（fail-closed）方式进行验证：未知标记和模棱两可的缩写将被拒绝。按 safe-bin 配置文件拒绝的标记：
+`tools.exec.safeBins` 定义了一小部分 **仅 stdin** 二进制文件（例如 `jq`），这些二进制文件可以在没有显式允许列表条目的情况下以允许列表模式运行。安全二进制文件会拒绝位置文件参数和类似路径的标记，因此它们只能对传入的数据流进行操作。请将此视为流过滤器的窄快速通道，而不是通用信任列表。请**勿**将解释器或运行时二进制文件（例如 `python3`、`node`、`ruby`、`bash`、`sh`、`zsh`）添加到 `safeBins` 中。如果命令旨在计算代码、执行子命令或读取文件，请首选显式的允许列表条目并保持批准提示处于启用状态。自定义安全二进制文件必须在 `tools.exec.safeBinProfiles.<bin>` 中定义显式配置文件。验证仅基于 argv 形状进行确定性处理（不进行主机文件系统存在性检查），这可以防止通过允许/拒绝差异导致的文件存在预言行为。面向文件的选项对于默认安全二进制文件会被拒绝（例如 `sort -o`、`sort --output`、`sort --files0-from`、`sort --compress-program`、`sort --random-source`、`sort --temporary-directory`/`-T`、`wc --files0-from`、`jq -f/--from-file`、`grep -f/--file`）。安全二进制文件还会针对破坏仅 stdin 行为的选项执行显式的按二进制文件标记策略（例如 `sort -o/--output/--compress-program` 和 grep 递归标记）。在安全二进制文件模式下，长选项的验证以“故障关闭”的方式进行：未知标记和模糊缩写会被拒绝。按安全二进制文件配置文件拒绝的标记：
 
-{/* SAFE_BIN_DENIED_FLAGS:START */}
+[//]: # "SAFE_BIN_DENIED_FLAGS:START"
 
-- `grep`: `--dereference-recursive`, `--directories`, `--exclude-from`, `--file`, `--recursive`, `-R`, `-d`, `-f`, `-r`
+- `grep`：`--dereference-recursive`、`--directories`、`--exclude-from`、`--file`、`--recursive`、`-R`、`-d`、`-f`、`-r`
 - `jq`: `--argfile`, `--from-file`, `--library-path`, `--rawfile`, `--slurpfile`, `-L`, `-f`
 - `sort`: `--compress-program`, `--files0-from`, `--output`, `--random-source`, `--temporary-directory`, `-T`, `-o`
 - `wc`: `--files0-from`
-  {/* SAFE_BIN_DENIED_FLAGS:END */}
 
-Safe bins 还强制在执行时将 argv 标记视为 **字面文本**（对于仅 stdin 的片段，不进行通配符
-展开和 `$VARS` 展开），因此像 `*` 或 `$HOME/...` 这样的模式不能
-用于窃取文件读取。
-Safe bins 还必须从受信任的二进制目录解析（系统默认值加上可选的
-`tools.exec.safeBinTrustedDirs`）。`PATH` 条目永远不会自动受信。
-默认受信任的 safe-bin 目录故意设计得极少：`/bin`, `/usr/bin`。
-如果您的 safe-bin 可执行文件位于包管理器/用户路径中（例如
-`/opt/homebrew/bin`, `/usr/local/bin`, `/opt/local/bin`, `/snap/bin`），请将它们显式添加到
-`tools.exec.safeBinTrustedDirs` 中。
+[//]: # "SAFE_BIN_DENIED_FLAGS:END"
+
+安全可执行文件还会强制在执行时将 argv 标记视为**字面文本**（针对仅限 stdin 的片段，不进行通配
+和 `$VARS` 展开），因此无法使用 `*` 或 `$HOME/...` 等模式
+来窃取文件读取权限。
+安全可执行文件还必须从受信任的二进制目录（系统默认值加上可选的
+`tools.exec.safeBinTrustedDirs`）解析。`PATH` 条目永远不会被自动信任。
+默认受信任的安全可执行文件目录故意设置得最少：`/bin`, `/usr/bin`。
+如果您的安全可执行文件位于包管理器/用户路径中（例如
+`/opt/homebrew/bin`, `/usr/local/bin`, `/opt/local/bin`, `/snap/bin`），请将它们显式添加
+to `tools.exec.safeBinTrustedDirs`。
 Shell 链接和重定向在允许列表模式下不会自动允许。
 
-当每个顶层段都满足允许列表（包括安全二进制文件或技能自动允许）时，允许 Shell 链接（`&&`, `||`, `;`）。在允许列表模式下，重定向仍然不受支持。在允许列表解析期间，命令替换（`$()` / 反引号）会被拒绝，包括在双引号内；如果您需要字面意义的 `$()` 文本，请使用单引号。在 macOS 伴随应用批准中，包含 Shell 控制 or 扩展语法（`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) 的原始 Shell 文本将被视为允许列表未命中，除非 Shell 二进制文件本身在允许列表中。对于 Shell 包装器（`bash|sh|zsh ... -c/-lc`），请求作用域的环境变量覆盖将减少为一小组显式允许列表（`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`）。对于允许列表模式下的始终允许决策，已知的调度包装器（`env`, `nice`, `nohup`, `stdbuf`, `timeout`）将保留内部可执行文件路径而不是包装器路径。Shell 多路复用器（`busybox`, `toybox`）也会针对 Shell 小程序（`sh`, `ash` 等）进行解包，因此保留的是内部可执行文件而不是多路复用器二进制文件。如果无法安全地解包包装器或多路复用器，则不会自动保留任何允许列表条目。
+当每个顶层片段都满足允许列表（包括安全二进制文件或技能自动允许）时，允许 Shell 链接（`&&`、`||`、`;`）。在允许列表模式下，重定向仍然不受支持。在允许列表解析期间，命令替换（`$()` / 反引号）会被拒绝，包括在双引号内；如果您需要字面意义的 `$()` 文本，请使用单引号。
+在 macOS 伴随应用审批中，包含 Shell 控制或扩展语法（`&&`、`||`、`;`、`|`、`` ` ``, `$`, `<`, `>`, `(`, `) `）的原始 Shell 文本将被视为未命中允许列表，除非 Shell 二进制文件本身在允许列表中。
+对于 Shell 包装器（`bash|sh|zsh ... -c/-lc`），请求范围的环境变量覆盖会缩减为一个小的显式允许列表（`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`）。
+对于允许列表模式下的始终允许决策，已知的调度包装器（`env`、`nice`、`nohup`、`stdbuf`、`timeout`）会持久化内部可执行文件路径而不是包装器路径。Shell 多路复用器（`busybox`、`toybox`）也会针对 Shell 小程序（`sh`、`ash` 等）进行解包，以便持久化内部可执行文件而不是多路复用器二进制文件。如果无法安全地解包包装器或多路复用器，则不会自动持久化任何允许列表条目。
 
-默认安全 bins：`jq`、`cut`、`uniq`、`head`、`tail`、`tr`、`wc`。
+默认安全二进制文件：`jq`、`cut`、`uniq`、`head`、`tail`、`tr`、`wc`。
 
-`grep` 和 `sort` 不在默认列表中。如果你选择加入，请为它们的非 stdin 工作流保留明确的 allowlist 条目。
-对于 safe-bin 模式下的 `grep`，请使用 `-e`/`--regexp` 提供模式；位置模式形式会被拒绝，以防止文件操作数作为模糊的位置参数被混入。
+`grep` 和 `sort` 不在默认列表中。如果您选择启用，请为它们的非 stdin 工作流保留明确的允许列表条目。
+对于安全二进制模式下的 `grep`，请使用 `-e`/`--regexp` 提供模式；位置参数模式形式将被拒绝，以防止文件操作数被作为模糊的位置参数混入。
 
-### 安全 bins 与 allowlist 的对比
+### 安全二进制文件与允许列表
 
-| 主题     | `tools.exec.safeBins`                         | Allowlist (`exec-approvals.json`)       |
-| -------- | --------------------------------------------- | --------------------------------------- |
-| 目标     | 自动允许窄 stdin 过滤器                       | 显式信任特定的可执行文件                |
-| 匹配类型 | 可执行文件名称 + safe-bin argv 策略           | 已解析的可执行文件路径 glob 模式        |
-| 参数范围 | 受 safe-bin 配置文件和 literal-token 规则限制 | 仅路径匹配；参数方面由你自行负责        |
-| 典型示例 | `jq`、`head`、`tail`、`wc`                    | `python3`、`node`、`ffmpeg`、自定义 CLI |
-| 最佳用途 | 管道中的低风险文本转换                        | 任何具有更广泛行为或副作用的工具        |
+| 主题     | `tools.exec.safeBins`                        | 允许列表 (`exec-approvals.json`)        |
+| -------- | -------------------------------------------- | --------------------------------------- |
+| 目标     | 自动允许狭窄的 stdin 过滤器                  | 显式信任特定的可执行文件                |
+| 匹配类型 | 可执行文件名称 + 安全二进制文件 argv 策略    | 解析后的可执行文件路径 glob 模式        |
+| 参数范围 | 受安全二进制文件配置文件和字面量令牌规则限制 | 仅路径匹配；否则参数由您负责            |
+| 典型示例 | `jq`、`head`、`tail`、`wc`                   | `python3`、`node`、`ffmpeg`、自定义 CLI |
+| 最佳用途 | 管道中的低风险文本转换                       | 任何具有更广泛行为或副作用的工具        |
 
 配置位置：
 
-- `safeBins` 来自配置（`tools.exec.safeBins` 或 per-agent `agents.list[].tools.exec.safeBins`）。
-- `safeBinTrustedDirs` 来自配置（`tools.exec.safeBinTrustedDirs` 或 per-agent `agents.list[].tools.exec.safeBinTrustedDirs`）。
-- `safeBinProfiles` 来自配置（`tools.exec.safeBinProfiles` 或 per-agent `agents.list[].tools.exec.safeBinProfiles`）。Per-agent 配置文件键会覆盖全局键。
-- 允许列表条目位于 `~/.openclaw/exec-approvals.json` 下的主机本地 `agents.<id>.allowlist` 中（或通过 Control UI / `openclaw approvals allowlist ...`）。
+- `safeBins` 来自配置（`tools.exec.safeBins` 或每代理 `agents.list[].tools.exec.safeBins`）。
+- `safeBinTrustedDirs` 来自配置（`tools.exec.safeBinTrustedDirs` 或每代理 `agents.list[].tools.exec.safeBinTrustedDirs`）。
+- `safeBinProfiles` 来自配置（`tools.exec.safeBinProfiles` 或每代理 `agents.list[].tools.exec.safeBinProfiles`）。每代理配置文件键覆盖全局键。
+- 允许列表条目位于主机本地的 `~/.openclaw/exec-approvals.json` 下的 `agents.<id>.allowlist`（或通过 Control UI / `openclaw approvals allowlist ...`）。
 - 当解释器/运行时二进制文件在没有显式配置文件的情况下出现在 `safeBins` 中时，`openclaw security audit` 会发出 `tools.exec.safe_bins_interpreter_unprofiled` 警告。
-- `openclaw doctor --fix` 可以将缺失的自定义 `safeBinProfiles.<bin>` 条目搭建为 `{}`（请随后审查并收紧）。解释器/运行时二进制文件不会自动搭建。
+- `openclaw doctor --fix` 可以将缺失的自定义 `safeBinProfiles.<bin>` 条目构建为 `{}`（随后进行审查和收紧）。解释器/运行时二进制文件不会被自动构建。
 
 自定义配置文件示例：
 
@@ -204,56 +201,49 @@ Shell 链接和重定向在允许列表模式下不会自动允许。
 }
 ```
 
-## Control UI 编辑
+## 控制 UI 编辑
 
-使用 **Control UI → Nodes → Exec approvals** 卡片来编辑默认值、每个代理的覆盖项和允许列表。选择一个范围（Defaults 或某个代理），调整策略，添加/删除允许列表模式，然后点击 **Save**。UI 会显示每个模式的 **last used** 元数据，以便您保持列表整洁。
+使用 **控制 UI → 节点 → Exec approvals** 卡片来编辑默认值、逐个代理覆盖和允许列表。选择一个范围（Defaults 或某个代理），调整策略，添加/删除允许列表模式，然后点击 **Save**。UI 会显示每个模式的 **上次使用** 元数据，以便您保持列表整洁。
 
-目标选择器选择 **Gateway(网关)**（本地审批）或一个 **Node**。节点必须通告 `system.execApprovals.get/set`（macOS 应用或无头节点主机）。
-如果一个节点尚未通告 exec 审批，请直接编辑其本地 `~/.openclaw/exec-approvals.json`。
+目标选择器选择 **Gateway(网关)**（本地批准）或 **Node**。节点必须通告 `system.execApprovals.get/set`（macOS 应用或无头节点主机）。如果节点尚未通告 exec 批准，请直接编辑其本地 `~/.openclaw/exec-approvals.json`。
 
-CLI: `openclaw approvals` 支持网关或节点编辑（请参阅 [批准 CLI](/zh/cli/approvals)）。
+CLI：`openclaw approvals` 支持 gateway 或 node 编辑（参见 [Approvals CLI](/en/cli/approvals)）。
 
 ## 批准流程
 
-当需要提示时，网关会向操作员客户端广播 `exec.approval.requested`。控制 UI 和 macOS 应用通过 `exec.approval.resolve` 解析它，然后网关将批准的请求转发到节点主机。
+当需要提示时，gateway 会向操作员客户端广播 `exec.approval.requested`。控制 UI 和 macOS 应用通过 `exec.approval.resolve` 解析它，然后 gateway 将批准的请求转发到节点主机。
 
-对于 `host=node`，批准请求包含规范化的 `systemRunPlan` 有效载荷。在转发已批准的 `system.run` 请求时，网关使用该计划作为权威的 command/cwd/会话 上下文。
+对于 `host=node`，批准请求包含规范的 `systemRunPlan` 负载。当转发批准的 `system.run` 请求时，gateway 使用该计划作为权威的 command/cwd/会话 上下文。
 
 ## 解释器/运行时命令
 
-基于批准的解释器/运行时运行有意采用保守策略：
+基于批准的解释器/运行时运行是有意保守的：
 
-- 始终绑定确切的 argv/cwd/env 上下文。
+- 精确的 argv/cwd/env 上下文始终绑定。
 - 直接 Shell 脚本和直接运行时文件形式尽可能绑定到一个具体的本地文件快照。
-- 仍然解析为一个直接本地文件的常见包管理器包装器形式（例如
-  `pnpm exec`、`pnpm node`、`npm exec`、`npx`）在绑定之前会被解包。
-- 如果 OpenClaw 无法为解释器/运行时命令准确识别一个具体的本地文件
-  （例如包脚本、eval 形式、特定于运行时的加载链或模糊的多文件
-  形式），将拒绝基于批准的执行，而不是声明其不具备的语义覆盖。
-- 对于这些工作流，建议优先使用沙箱隔离、独立的主机边界，或明确的受信
-  允许列表/完整工作流，其中操作员接受更广泛的运行时语义。
+- 仍解析为一个直接本地文件的常见包管理器包装器形式（例如 `pnpm exec`、`pnpm node`、`npm exec`、`npx`）在绑定之前会被解包。
+- 如果 OpenClaw 无法为解释器/运行时命令准确识别一个具体的本地文件（例如包脚本、eval 形式、特定于运行时的加载链或歧义的多文件形式），则将拒绝基于批准的执行，而不是声称其不具备的语义覆盖。
+- 对于这些工作流，首选沙箱隔离、单独的主机边界或显式的可信允许列表/完整工作流，其中操作员接受更广泛的运行时语义。
 
-当需要审批时，exec 工具会立即返回一个审批 ID。使用该 ID 来
-关联后续的系统事件 (`Exec finished` / `Exec denied`)。如果在超时前
-未收到决定，该请求将被视为审批超时，并作为拒绝原因显示。
+当需要审批时，exec 工具会立即返回一个审批 ID。使用该 ID 来关联后续的系统事件（`Exec finished` / `Exec denied`）。如果在超时前没有收到决定，该请求将被视为审批超时，并作为拒绝原因呈现。
 
 确认对话框包括：
 
-- command + args（命令 + 参数）
-- cwd（当前工作目录）
-- agent id（代理 ID）
-- resolved executable path（解析的可执行文件路径）
-- host + policy metadata（主机 + 策略元数据）
+- command + args
+- cwd
+- agent id
+- resolved executable path
+- host + policy metadata
 
 操作：
 
-- **允许一次** → 立即运行
-- **始终允许** → 添加到允许列表并运行
-- **拒绝** → 阻止
+- **Allow once** → 立即运行
+- **Always allow** → 添加到允许列表 + 运行
+- **Deny** → 阻止
 
-## 审批转发到聊天频道
+## 批准转发到聊天渠道
 
-您可以将执行审批提示转发到任何聊天渠道（包括插件渠道），并使用 `/approve` 进行审批。这使用常规的出站传递管道。
+您可以将 exec 审批提示转发到任何聊天渠道（包括插件渠道），并使用 `/approve` 进行审批。这使用正常的出站交付管道。
 
 配置：
 
@@ -282,28 +272,28 @@ CLI: `openclaw approvals` 支持网关或节点编辑（请参阅 [批准 CLI](/
 /approve <id> deny
 ```
 
-### 内置聊天审批客户端
+### 内置聊天批准客户端
 
-Discord 和 Telegram 也可以作为显式的执行审批客户端，并使用特定于渠道的配置。
+Discord 和 Telegram 也可以作为显式的执行批准客户端，具有特定于渠道的配置。
 
-- Discord: `channels.discord.execApprovals.*`
-- Telegram: `channels.telegram.execApprovals.*`
+- Discord：`channels.discord.execApprovals.*`
+- Telegram：`channels.telegram.execApprovals.*`
 
-这些客户端是可选的。如果某个渠道未启用执行审批，仅因为对话发生在该渠道，OpenClaw 不会将其视为审批界面。
+这些客户端是可选的。如果某个渠道未启用执行批准，OpenClaw 不会仅仅因为对话发生在该渠道而将其视为批准界面。
 
 共享行为：
 
-- 只有配置好的审批者才能批准或拒绝
-- 请求者无需是审批者
-- 当启用渠道投递时，批准提示包含命令文本
-- 如果没有操作员 UI 或配置的批准客户端可以接受该请求，提示将回退到 `askFallback`
+- 只有配置的批准者才能批准或拒绝
+- 请求者不必是批准者
+- 启用渠道交付时，批准提示包含命令文本
+- 如果没有操作员 UI 或配置的审批客户端可以接受该请求，提示将回退到 `askFallback`
 
-Telegram 默认为批准人私信（`target: "dm"`）。当您希望批准提示也出现在原始 Telegram 聊天/主题中时，您可以切换到 `channel` 或 `both`。对于 Telegram 论坛主题，OpenClaw 会保留批准提示和批准后后续回复的主题。
+Telegram 默认为审批者私信（`target: "dm"`）。当您希望审批提示也出现在发起的 Telegram 聊天/话题中时，可以切换到 `channel` 或 `both`。对于 Telegram 论坛话题，OpenClaw 会为审批提示和审批后的跟进保留该话题。
 
 参见：
 
-- [Discord](/zh/channels/discord#exec-approvals-in-discord)
-- [Telegram](/zh/channels/telegram#exec-approvals-in-telegram)
+- [Discord](/en/channels/discord#exec-approvals-in-discord)
+- [Telegram](/en/channels/telegram#exec-approvals-in-telegram)
 
 ### macOS IPC 流程
 
@@ -314,39 +304,39 @@ Gateway -> Node Service (WS)
              Mac App (UI + approvals + system.run)
 ```
 
-安全注意事项：
+安全说明：
 
-- Unix 套接字模式 `0600`，令牌存储在 `exec-approvals.json` 中。
-- Same-UID 对等检查。
-- Challenge/response (nonce + HMAC 令牌 + 请求哈希) + 短 TTL。
+- Unix socket 模式 `0600`，令牌存储在 `exec-approvals.json` 中。
+- 相同 UID 对等检查。
+- 挑战/响应 (nonce + HMAC token + 请求哈希) + 短 TTL。
 
 ## 系统事件
 
-Exec 生命周期以系统消息形式展示：
+Exec 生命周期作为系统消息呈现：
 
-- `Exec running` (仅当命令超过运行通知阈值时)
+- `Exec running`（仅当命令超过运行通知阈值时）
 - `Exec finished`
 - `Exec denied`
 
-在节点报告事件后，这些消息会被发送到代理的会话。
-Gateway(网关)-host exec 批准在命令完成时（以及可选地当运行时间超过阈值时）发出相同的生命周期事件。
-受批准控制的 exec 会在这些消息中重用批准 id 作为 `runId` 以便于关联。
+这些在节点报告事件后发布到代理的会话中。
+Gateway 托管的 exec 审批在命令完成时（以及可选的运行时间超过阈值时）发出相同的生命周期事件。
+需要审批的 exec 在这些消息中重用审批 ID 作为 `runId`，以便于关联。
 
 ## 影响
 
-- **full** 模式功能强大；如果可能，优先使用允许列表。
-- **ask** 模式让您保持知情，同时仍允许快速批准。
-- Per-agent allowlists prevent one agent’s approvals from leaking into others.
-- Approvals only apply to host exec requests from **authorized senders**. Unauthorized senders cannot issue `/exec`.
-- `/exec security=full` is a 会话-level convenience for authorized operators and skips approvals by design.
-  To hard-block host exec, set approvals security to `deny` or deny the `exec` 工具 via 工具 policy.
+- **full** 功能强大；请尽可能使用允许列表。
+- **ask** 让你随时了解情况，同时仍允许快速审批。
+- 按代理划分的允许列表可防止一个代理的审批泄露到其他代理。
+- 审批仅适用于来自**授权发送者**的主机 exec 请求。未授权的发送者无法发出 `/exec`。
+- `/exec security=full` 是授权操作员在会话级别提供的便利，设计上跳过审批。
+  要硬性阻止主机 exec，请将审批安全设置为 `deny` 或通过工具策略拒绝 `exec` 工具。
 
-Related:
+相关：
 
-- [Exec 工具](/zh/tools/exec)
-- [Elevated mode](/zh/tools/elevated)
-- [Skills](/zh/tools/skills)
+- [Exec 工具](/en/tools/exec)
+- [提升模式](/en/tools/elevated)
+- [Skills](/en/tools/skills)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

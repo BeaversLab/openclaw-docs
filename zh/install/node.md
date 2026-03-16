@@ -9,7 +9,7 @@ read_when:
 
 # Node.js
 
-OpenClaw 需要 **Node 22.16 或更新版本**。**Node 24 是默认且推荐的运行时**，用于安装、CI 和发布工作流。Node 22 仍然通过活跃 LTS 线路获得支持。[安装脚本](/zh/install#install-methods) 将自动检测并安装 Node —— 本页面适用于您想要自行设置 Node 并确保一切配置正确（版本、PATH、全局安装）的情况。
+OpenClaw 需要 **Node 22.16 或更新版本**。**Node 24 是默认且推荐的运行时**，用于安装、CI 和发布工作流。Node 22 仍然通过活跃 LTS 线路获得支持。[安装脚本](/en/install#install-methods) 将自动检测并安装 Node —— 本页面适用于您想要自行设置 Node 并确保一切配置正确（版本、PATH、全局安装）的情况。
 
 ## 检查您的版本
 
@@ -137,6 +137,6 @@ export PATH="$HOME/.npm-global/bin:$PATH"
 
 将 `export PATH=...` 行添加到您的 `~/.bashrc` 或 `~/.zshrc` 以使其永久生效。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

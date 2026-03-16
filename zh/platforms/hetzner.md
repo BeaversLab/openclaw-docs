@@ -32,7 +32,7 @@ Hetzner 的价格可能会变动；选择最小的 Debian/Ubuntu VPS，如果遇
 
 本指南假设 Hetzner 上运行的是 Ubuntu 或 Debian。
 如果您使用的是其他 Linux VPS，请相应地调整软件包。
-有关通用的 Docker 流程，请参阅 [Docker](/zh/install/docker)。
+有关通用的 Docker 流程，请参阅 [Docker](/en/install/docker)。
 
 ---
 
@@ -329,6 +329,6 @@ OpenClaw 在 Docker 中运行，但 Docker 不是事实来源。
 | 操作系统包           | 容器文件系统                      | Docker 镜像   | 不要在运行时安装            |
 | Docker 容器          | 临时的                            | 可重启        | 可安全销毁                  |
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

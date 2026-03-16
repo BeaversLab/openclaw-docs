@@ -12,7 +12,7 @@ title: "voicecall"
 
 主要文档：
 
-- 语音通话插件：[语音通话](/zh/plugins/voice-call)
+- 语音通话插件：[语音通话](/en/plugins/voice-call)
 
 ## 常用命令
 
@@ -33,6 +33,6 @@ openclaw voicecall expose --mode off
 
 安全提示：请仅将 webhook 端点暴露给您信任的网络。尽可能使用 Tailscale Serve 而不是 Funnel。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

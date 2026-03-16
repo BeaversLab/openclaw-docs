@@ -288,7 +288,7 @@ SecretRef 仅在有效活跃的表面上进行验证。
 
 规范的支持和不支持的凭证列于：
 
-- [SecretRef 凭证范围](/zh/reference/secretref-credential-surface)
+- [SecretRef 凭证范围](/en/reference/secretref-credential-surface)
 
 运行时生成的或轮换的凭据以及 OAuth 刷新材料被有意排除在只读 SecretRef 解析之外。
 
@@ -419,7 +419,7 @@ openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run
 
 有关严格的目标/路径合约详细信息和确切的拒绝规则，请参阅：
 
-- [Secrets Apply Plan Contract](/zh/gateway/secrets-plan-contract)
+- [Secrets Apply Plan Contract](/en/gateway/secrets-plan-contract)
 
 ## 单向安全策略
 
@@ -445,13 +445,13 @@ OpenClaw 故意不写入包含历史纯文本密钥值的回滚备份。
 
 ## 相关文档
 
-- CLI 命令：[secrets](/zh/cli/secrets)
-- 计划合约详情：[Secrets Apply Plan Contract](/zh/gateway/secrets-plan-contract)
-- 凭据面：[SecretRef Credential Surface](/zh/reference/secretref-credential-surface)
-- 身份验证设置：[Authentication](/zh/gateway/authentication)
-- 安全态势：[Security](/zh/gateway/security)
-- 环境优先级：[Environment Variables](/zh/help/environment)
+- CLI 命令：[secrets](/en/cli/secrets)
+- 计划合约详情：[Secrets Apply Plan Contract](/en/gateway/secrets-plan-contract)
+- 凭据面：[SecretRef Credential Surface](/en/reference/secretref-credential-surface)
+- 身份验证设置：[Authentication](/en/gateway/authentication)
+- 安全态势：[Security](/en/gateway/security)
+- 环境优先级：[Environment Variables](/en/help/environment)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

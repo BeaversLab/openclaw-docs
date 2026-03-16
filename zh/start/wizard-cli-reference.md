@@ -10,7 +10,7 @@ sidebarTitle: "CLI 参考"
 # CLI 新手引导参考
 
 本页是 `openclaw onboard` 的完整参考。
-有关简短指南，请参阅 [新手引导向导 (CLI)](/zh/start/wizard)。
+有关简短指南，请参阅 [新手引导向导 (CLI)](/en/start/wizard)。
 
 ## 向导的功能
 
@@ -46,7 +46,7 @@ sidebarTitle: "CLI 参考"
   <Step title="Workspace">
     - 默认 `~/.openclaw/workspace`（可配置）。
     - 为首次运行的 bootstrap 仪式植入所需的工作区文件。
-    - 工作区布局：[Agent 工作区](/zh/concepts/agent-workspace)。
+    - 工作区布局：[Agent 工作区](/en/concepts/agent-workspace)。
   </Step>
   <Step title="Gateway(网关)">
     - 提示输入端口、绑定地址、认证模式和 Tailscale 暴露设置。
@@ -62,14 +62,14 @@ sidebarTitle: "CLI 参考"
     - 非回环绑定仍然需要认证。
   </Step>
   <Step title="Channels">
-    - [WhatsApp](/zh/channels/whatsapp)：可选的 QR 码登录
-    - [Telegram](/zh/channels/telegram)：机器人令牌
-    - [Discord](/zh/channels/discord)：机器人令牌
-    - [Google Chat](/zh/channels/googlechat)：服务账户 JSON + Webhook 受众
-    - [Mattermost](/zh/channels/mattermost) 插件：机器人令牌 + 基础 URL
-    - [Signal](/zh/channels/signal)：可选的 `signal-cli` 安装 + 账户配置
-    - [BlueBubbles](/zh/channels/bluebubbles)：推荐用于 iMessage；服务器 URL + 密码 + Webhook
-    - [iMessage](/zh/channels/imessage)：传统的 `imsg` CLI 路径 + 数据库访问权限
+    - [WhatsApp](/en/channels/whatsapp)：可选的 QR 码登录
+    - [Telegram](/en/channels/telegram)：机器人令牌
+    - [Discord](/en/channels/discord)：机器人令牌
+    - [Google Chat](/en/channels/googlechat)：服务账户 JSON + Webhook 受众
+    - [Mattermost](/en/channels/mattermost) 插件：机器人令牌 + 基础 URL
+    - [Signal](/en/channels/signal)：可选的 `signal-cli` 安装 + 账户配置
+    - [BlueBubbles](/en/channels/bluebubbles)：推荐用于 iMessage；服务器 URL + 密码 + Webhook
+    - [iMessage](/en/channels/imessage)：传统的 `imsg` CLI 路径 + 数据库访问权限
     - 私信安全：默认为配对。第一条私信发送一个代码；通过 `openclaw pairing approve <channel> <code>` 批准或使用允许列表。
   </Step>
   <Step title="Daemon install">
@@ -160,28 +160,28 @@ What you set:
   </Accordion>
   <Accordion title="Vercel AI Gateway(网关)">
     提示输入 `AI_GATEWAY_API_KEY`。
-    更多详情：[Vercel AI Gateway(网关)](/zh/providers/vercel-ai-gateway)。
+    更多详情：[Vercel AI Gateway(网关)](/en/providers/vercel-ai-gateway)。
   </Accordion>
   <Accordion title="Cloudflare AI Gateway(网关)">
     提示输入账户 ID、Gateway(网关) ID 和 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
-    更多详情：[Cloudflare AI Gateway(网关)](/zh/providers/cloudflare-ai-gateway)。
+    更多详情：[Cloudflare AI Gateway(网关)](/en/providers/cloudflare-ai-gateway)。
   </Accordion>
   <Accordion title="MiniMax M2.5">
     配置自动写入。
-    更多详情：[MiniMax](/zh/providers/minimax)。
+    更多详情：[MiniMax](/en/providers/minimax)。
   </Accordion>
   <Accordion title="Synthetic (Anthropic-compatible)">
     提示输入 `SYNTHETIC_API_KEY`。
-    更多详情：[Synthetic](/zh/providers/synthetic)。
+    更多详情：[Synthetic](/en/providers/synthetic)。
   </Accordion>
   <Accordion title="Ollama (Cloud and local open models)">
     提示输入基础 URL（默认为 `http://127.0.0.1:11434`），然后提供 Cloud + Local 或 Local 模式。
     发现可用模型并建议默认值。
-    更多详情：[Ollama](/zh/providers/ollama)。
+    更多详情：[Ollama](/en/providers/ollama)。
   </Accordion>
   <Accordion title="Moonshot and Kimi Coding">
     Moonshot (Kimi K2) 和 Kimi Coding 配置会自动写入。
-    更多详情：[Moonshot AI (Kimi + Kimi Coding)](/zh/providers/moonshot)。
+    更多详情：[Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)。
   </Accordion>
   <Accordion title="自定义提供商">
     适用于兼容 OpenAI 和兼容 Anthropic 的端点。
@@ -289,10 +289,10 @@ Signal 设置行为：
 
 ## 相关文档
 
-- 引导中心：[引导向导 (CLI)](/zh/start/wizard)
-- 自动化和脚本：[CLI 自动化](/zh/start/wizard-cli-automation)
-- 命令参考：[`openclaw onboard`](/zh/cli/onboard)
+- 引导中心：[引导向导 (CLI)](/en/start/wizard)
+- 自动化和脚本：[CLI 自动化](/en/start/wizard-cli-automation)
+- 命令参考：[`openclaw onboard`](/en/cli/onboard)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

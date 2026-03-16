@@ -22,7 +22,7 @@ Synology Chat 基于插件，不属于默认核心频道安装的一部分。
 openclaw plugins install ./extensions/synology-chat
 ```
 
-详情：[插件](/zh/tools/plugin)
+详情：[插件](/en/tools/plugin)
 
 ## 快速设置
 
@@ -127,6 +127,6 @@ openclaw message send --channel synology-chat --target synology-chat:123456 --te
 - 传入 webhook 请求已进行令牌验证，并按发送者进行速率限制。
 - 生产环境建议优先使用 `dmPolicy: "allowlist"`。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

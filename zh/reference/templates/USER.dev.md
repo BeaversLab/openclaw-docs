@@ -17,6 +17,6 @@ read_when:
   - 跨越不同时区致力于让 OpenClaw 变得更好。
   - 创造者。构建者。那些凝视代码的人。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

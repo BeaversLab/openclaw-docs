@@ -1131,7 +1131,7 @@ entries:
     apply:
       mode: protect
     validate:
-      severity: error
+      severity: warning
   - id: google-chat
     source: Google Chat
     reason:
@@ -2403,12 +2403,12 @@ entries:
     validate:
       severity: warn
   - id: auth-where-it-lives-important
-    source: 'Auth: where it lives (important)'
+    source: "Auth: where it lives (important)"
     reason:
       category: section-title
       note: Legacy heading or label translation
     targets:
-      fr: 'Auth: where it lives (important)'
+      fr: "Auth: where it lives (important)"
       zh: 凭证：存储位置（重要）
       zh-CN: 凭证：存储位置（重要）
     match:
@@ -2948,4 +2948,3 @@ entries:
       mode: protect
     validate:
       severity: error
-

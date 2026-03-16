@@ -12,9 +12,9 @@ title: "macOS 虚拟机"
 
 ## 推荐的默认选项（大多数用户）
 
-- **小型 Linux VPS** 用于全天候 Gateway 和低成本。请参阅 [VPS hosting](/zh/vps)。
+- **小型 Linux VPS** 用于全天候 Gateway 和低成本。请参阅 [VPS hosting](/en/vps)。
 - 如果您希望完全控制并拥有用于浏览器自动化的**住宅 IP**，请使用**专用硬件**（Mac mini 或 Linux 主机）。许多网站会阻止数据中心 IP，因此本地浏览通常效果更好。
-- **混合模式：** 将 Gateway(网关) 保留在便宜的 VPS 上，并在您需要浏览器/UI 自动化时将 Mac 作为 **节点** 连接。请参阅 [Nodes](/zh/nodes) 和 [Gateway(网关) remote](/zh/gateway/remote)。
+- **混合模式：** 将 Gateway(网关) 保留在便宜的 VPS 上，并在您需要浏览器/UI 自动化时将 Mac 作为 **节点** 连接。请参阅 [Nodes](/en/nodes) 和 [Gateway(网关) remote](/en/gateway/remote)。
 
 当您特别需要仅限 macOS 的功能（iMessage/BlueBubbles）或希望与您日常使用的 Mac 严格隔离时，请使用 macOS 虚拟机。
 
@@ -223,7 +223,7 @@ ssh youruser@192.168.64.X "openclaw status"
 
 重启 Gateway 网关。现在您的 agent 可以发送和接收 iMessages。
 
-完整的设置详情：[BlueBubbles 渠道](/zh/channels/bluebubbles)
+完整的设置详情：[BlueBubbles 渠道](/en/channels/bluebubbles)
 
 ---
 
@@ -254,7 +254,7 @@ lume run openclaw --no-display
 - 在系统设置 → 节能中禁用睡眠
 - 如果需要，使用 `caffeinate`
 
-对于真正的全天候在线，请考虑专用的 Mac mini 或小型 VPS。请参阅 [VPS 托管](/zh/vps)。
+对于真正的全天候在线，请考虑专用的 Mac mini 或小型 VPS。请参阅 [VPS 托管](/en/vps)。
 
 ---
 
@@ -271,15 +271,15 @@ lume run openclaw --no-display
 
 ## 相关文档
 
-- [VPS 托管](/zh/vps)
-- [节点](/zh/nodes)
-- [Gateway(网关) remote](/zh/gateway/remote)
-- [BlueBubbles 渠道](/zh/channels/bluebubbles)
+- [VPS 托管](/en/vps)
+- [节点](/en/nodes)
+- [Gateway(网关) remote](/en/gateway/remote)
+- [BlueBubbles 渠道](/en/channels/bluebubbles)
 - [Lume 快速入门](https://cua.ai/docs/lume/guide/getting-started/quickstart)
 - [Lume CLI 参考](https://cua.ai/docs/lume/reference/cli-reference)
 - [无人值守 VM 设置](https://cua.ai/docs/lume/guide/fundamentals/unattended-setup)（高级）
-- [Docker 沙箱隔离](/zh/install/docker)（替代隔离方法）
+- [Docker 沙箱隔离](/en/install/docker)（替代隔离方法）
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

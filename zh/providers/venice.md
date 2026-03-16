@@ -281,6 +281,6 @@ Venice API 位于 `https://api.venice.ai/api/v1`。请确保您的网络允许 H
 - [定价](https://venice.ai/pricing)
 - [状态](https://status.venice.ai)
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

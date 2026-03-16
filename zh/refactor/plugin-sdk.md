@@ -211,8 +211,8 @@ export type PluginRuntime = {
 - 新的连接器模板仅依赖于 SDK + runtime。
 - 可以在不访问 core 源码的情况下开发和更新外部插件。
 
-相关文档：[Plugins](/zh/tools/plugin)，[Channels](/zh/channels/index)，[Configuration](/zh/gateway/configuration)。
+相关文档：[Plugins](/en/tools/plugin)，[Channels](/en/channels/index)，[Configuration](/en/gateway/configuration)。
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />

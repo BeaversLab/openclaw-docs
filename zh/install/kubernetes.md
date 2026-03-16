@@ -104,7 +104,7 @@ Namespace: openclaw (configurable via OPENCLAW_NAMESPACE)
 
 ### Gateway 网关 配置
 
-在 `scripts/k8s/manifests/configmap.yaml` 中编辑 `openclaw.json`。有关完整参考，请参阅 [Gateway(网关) 配置](/zh/gateway/configuration)。
+在 `scripts/k8s/manifests/configmap.yaml` 中编辑 `openclaw.json`。有关完整参考，请参阅 [Gateway(网关) 配置](/en/gateway/configuration)。
 
 ### 添加提供商
 
@@ -190,6 +190,6 @@ scripts/k8s/
     └── service.yaml            # ClusterIP on 18789
 ```
 
-import zh from '/components/footer/zh.mdx';
+import zh from "/components/footer/zh.mdx";
 
 <zh />
