@@ -155,7 +155,6 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [macOS permissions](/en/platforms/mac/permissions)
 - [macOS remote](/en/platforms/mac/remote)
 - [macOS signing](/en/platforms/mac/signing)
-- [macOS release](/en/platforms/mac/release)
 - [macOS gateway (launchd)](/en/platforms/mac/bundled-gateway)
 - [macOS XPC](/en/platforms/mac/xpc)
 - [macOS skills](/en/platforms/mac/skills)
@@ -188,7 +187,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 ## Testing + release
 
 - [Testing](/en/reference/test)
-- [Release checklist](/en/reference/RELEASING)
+- [Release policy](/en/reference/RELEASING)
 - [Device models](/en/reference/device-models)
 
 import en from "/components/footer/en.mdx";

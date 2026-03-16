@@ -1,63 +1,45 @@
 ---
-title: "Release Checklist"
-summary: "Step-by-step release checklist for npm + macOS app"
+title: "Release Policy"
+summary: "Public release channels, version naming, and cadence"
 read_when:
-  - Cutting a new npm release
-  - Cutting a new macOS app release
-  - Verifying metadata before publishing
+  - Looking for public release channel definitions
+  - Looking for version naming and cadence
 ---
 
-# Release Checklist (npm + macOS)
+# Release Policy
 
-Use `pnpm` from the repo root with Node 24 by default. Node 22 LTS, currently `22.16+`, remains supported for compatibility. Keep the working tree clean before tagging/publishing.
+OpenClaw has three public release lanes:
 
-## Operator trigger
+- stable: tagged releases that publish to npm `latest`
+- beta: prerelease tags that publish to npm `beta`
+- dev: the moving head of `main`
 
-When the operator says “release”, immediately do this preflight (no extra questions unless blocked):
-
-- Read this doc and `docs/platforms/mac/release.md`.
-- Load env from `~/.profile` and confirm `SPARKLE_PRIVATE_KEY_FILE` + App Store Connect vars are set (SPARKLE_PRIVATE_KEY_FILE should live in `~/.profile`).
-- Use Sparkle keys from `~/Library/CloudStorage/Dropbox/Backup/Sparkle` if needed.
-
-## Versioning
-
-Current OpenClaw releases use date-based versioning.
+## Version naming
 
 - Stable release version: `YYYY.M.D`
   - Git tag: `vYYYY.M.D`
-  - Examples from repo history: `v2026.2.26`, `v2026.3.8`
 - Beta prerelease version: `YYYY.M.D-beta.N`
   - Git tag: `vYYYY.M.D-beta.N`
-  - Examples from repo history: `v2026.2.15-beta.1`, `v2026.3.8-beta.1`
-- Fallback correction tag: `vYYYY.M.D-N`
-  - Use only as a last-resort recovery tag when a published immutable release burned the original stable tag and you cannot reuse it.
-  - The npm package version stays `YYYY.M.D`; the `-N` suffix is only for the git tag and GitHub release.
-  - Prefer betas for normal pre-release iteration, then cut a clean stable tag once ready.
-- Use the same version string everywhere, minus the leading `v` where Git tags are not used:
-  - `package.json`: `2026.3.8`
-  - Git tag: `v2026.3.8`
-  - GitHub release title: `openclaw 2026.3.8`
-- Do not zero-pad month or day. Use `2026.3.8`, not `2026.03.08`.
-- Stable and beta are npm dist-tags, not separate release lines:
-  - `latest` = stable
-  - `beta` = prerelease/testing
-- Dev is the moving head of `main`, not a normal git-tagged release.
-- The tag-triggered preview run accepts stable, beta, and fallback correction tags, and rejects versions whose CalVer date is more than 2 UTC calendar days away from the release date.
+- Do not zero-pad month or day
+- `latest` means the current stable npm release
+- `beta` means the current prerelease npm release
+- Beta releases may ship before the macOS app catches up
 
-Historical note:
+## Release cadence
 
-- Older tags such as `v2026.1.11-1`, `v2026.2.6-3`, and `v2.0.0-beta2` exist in repo history.
-- Treat correction tags as a fallback-only escape hatch. New releases should still use `vYYYY.M.D` for stable and `vYYYY.M.D-beta.N` for beta.
+- Releases move beta-first
+- Stable follows only after the latest beta is validated
+- Detailed release procedure, approvals, credentials, and recovery notes are
+  maintainer-only
 
-1. **Version & metadata**
+## Public references
 
-- [ ] Bump `package.json` version (e.g., `2026.1.29`).
-- [ ] Run `pnpm plugins:sync` to align extension package versions + changelogs.
-- [ ] Update CLI/version strings in [`src/version.ts`](https://github.com/openclaw/openclaw/blob/main/src/version.ts) and the Baileys user agent in [`src/web/session.ts`](https://github.com/openclaw/openclaw/blob/main/src/web/session.ts).
-- [ ] Confirm package metadata (name, description, repository, keywords, license) and `bin` map points to [`openclaw.mjs`](https://github.com/openclaw/openclaw/blob/main/openclaw.mjs) for `openclaw`.
-- [ ] If dependencies changed, run `pnpm install` so `pnpm-lock.yaml` is current.
+- [`.github/workflows/openclaw-npm-release.yml`](https://github.com/openclaw/openclaw/blob/main/.github/workflows/openclaw-npm-release.yml)
+- [`scripts/openclaw-npm-release-check.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/openclaw-npm-release-check.ts)
 
-2. **Build & artifacts**
+Maintainers use the private release docs in
+[`openclaw/maintainers/release/README.md`](https://github.com/openclaw/maintainers/blob/main/release/README.md)
+for the actual runbook.
 
 - [ ] If A2UI inputs changed, run `pnpm canvas:a2ui:bundle` and commit any updated [`src/canvas-host/a2ui/a2ui.bundle.js`](https://github.com/openclaw/openclaw/blob/main/src/canvas-host/a2ui/a2ui.bundle.js).
 - [ ] `pnpm run build` (regenerates `dist/`).
