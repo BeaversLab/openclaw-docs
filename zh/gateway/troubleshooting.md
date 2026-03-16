@@ -121,12 +121,12 @@ openclaw gateway status --json
 
 使用失败的 `connect` 响应中的 `error.details.code` 来选择下一步操作：
 
-| 详细代码                     | 含义                               | 建议操作                                                                                                                                                           |
-| ---------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `AUTH_TOKEN_MISSING`         | 客户端未发送所需的共享令牌。       | 在客户端中粘贴/设置令牌并重试。对于仪表板路径：`openclaw config get gateway.auth.token`，然后粘贴到控制 UI 设置中。                                                |
-| `AUTH_TOKEN_MISMATCH`        | 共享令牌与网关身份验证令牌不匹配。 | 如果 `canRetryWithDeviceToken=true`，允许一次受信任的重试。如果仍然失败，请运行 [token drift recovery checklist](/en/cli/devices#token-drift-recovery-checklist)。 |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | 缓存的每设备令牌已过期或已撤销。   | 使用 [devices CLI](/en/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                          |
-| `PAIRING_REQUIRED`           | 设备身份已知但未获批准用于此角色。 | 批准待处理的请求：`openclaw devices list` 然后 `openclaw devices approve <requestId>`。                                                                            |
+| 详细代码                     | 含义                               | 建议操作                                                                                                                                                             |
+| ---------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_TOKEN_MISSING`         | 客户端未发送所需的共享令牌。       | 在客户端中粘贴/设置令牌并重试。对于仪表板路径：`openclaw config get gateway.auth.token`，然后粘贴到控制 UI 设置中。                                                  |
+| `AUTH_TOKEN_MISMATCH`        | 共享令牌与网关身份验证令牌不匹配。 | 如果是 `canRetryWithDeviceToken=true`，允许一次受信任的重试。如果仍然失败，请运行 [token drift recovery checklist](/en/cli/devices#token-drift-recovery-checklist)。 |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | 缓存的每设备令牌已过期或已撤销。   | 使用 [devices CLI](/en/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                            |
+| `PAIRING_REQUIRED`           | 设备身份已知但未获批准用于此角色。 | 批准待处理的请求：`openclaw devices list` 然后 `openclaw devices approve <requestId>`。                                                                              |
 
 设备身份验证 v2 迁移检查：
 
@@ -289,13 +289,13 @@ openclaw doctor
 
 - 有效的浏览器可执行文件路径。
 - CDP 配置文件的可达性。
-- 扩展程序中继选项卡附件（如果配置了扩展程序中继配置文件）。
+- 扩展中继选项卡附加（如果配置了扩展中继配置文件）。
 
 常见特征：
 
 - `Failed to start Chrome CDP on port` → 浏览器进程启动失败。
 - `browser.executablePath not found` → 配置的路径无效。
-- `Chrome extension relay is running, but no tab is connected` → 扩展程序中继未附加。
+- `Chrome extension relay is running, but no tab is connected` → 扩展中继未附加。
 - `Browser attachOnly is enabled ... not reachable` → attach-only 配置文件没有可访问的目标。
 
 相关：
@@ -319,13 +319,13 @@ openclaw config get gateway.auth.mode
 
 检查内容：
 
-- 如果 `gateway.mode=remote`，CLI 调用可能针对的是远程，而您的本地服务没有问题。
-- 显式的 `--url` 调用不会回退到存储的凭据。
+- 如果 `gateway.mode=remote`，CLI 调用可能指向远程，而您的本地服务正常运行。
+- 显式 `--url` 调用不会回退到存储的凭据。
 
 常见特征：
 
 - `gateway connect failed:` → 错误的 URL 目标。
-- `unauthorized` → 端点可达但身份验证错误。
+- `unauthorized` → 端点可访问但认证错误。
 
 ### 2) 绑定和身份验证护栏更严格
 
@@ -338,13 +338,13 @@ openclaw logs --follow
 
 检查内容：
 
-- 非环回绑定（`lan`、`tailnet`、`custom`）需要配置身份验证。
-- 像 `gateway.token` 这样的旧密钥不会替换 `gateway.auth.token`。
+- 非环回绑定 (`lan`, `tailnet`, `custom`) 需要配置认证。
+- 旧密钥（如 `gateway.token`）不会替换 `gateway.auth.token`。
 
 常见特征：
 
-- `refusing to bind gateway ... without auth` → 绑定+身份验证不匹配。
-- 运行时运行时 `RPC probe: failed` → 网关存活但使用当前身份验证/URL 无法访问。
+- `refusing to bind gateway ... without auth` → 绑定+认证不匹配。
+- 运行时运行时 `RPC probe: failed` → 网关活动但使用当前的 auth/url 无法访问。
 
 ### 3) 配对和设备身份状态已更改
 
@@ -362,8 +362,8 @@ openclaw doctor
 
 常见特征：
 
-- `device identity required` → 设备身份验证未满足。
-- `pairing required` → 发送方/设备必须被批准。
+- `device identity required` → 设备认证未满足。
+- `pairing required` → 发送者/设备必须被批准。
 
 如果在检查后服务配置和运行时仍然不一致，请从相同的配置文件/状态目录重新安装服务元数据：
 

@@ -50,14 +50,14 @@ title: "CLI 参考文档"
 - [`webhooks`](/en/cli/webhooks)
 - [`pairing`](/en/cli/pairing)
 - [`qr`](/en/cli/qr)
-- [`plugins`](/en/cli/plugins) (plugin commands)
+- [`plugins`](/en/cli/plugins) （插件命令）
 - [`channels`](/en/cli/channels)
 - [`security`](/en/cli/security)
 - [`secrets`](/en/cli/secrets)
 - [`skills`](/en/cli/skills)
-- [`daemon`](/en/cli/daemon) (legacy alias for gateway service commands)
-- [`clawbot`](/en/cli/clawbot) (legacy alias namespace)
-- [`voicecall`](/en/cli/voicecall) (plugin; if installed)
+- [`daemon`](/en/cli/daemon) （网关服务命令的旧别名）
+- [`clawbot`](/en/cli/clawbot) （旧别名命名空间）
+- [`voicecall`](/en/cli/voicecall) （插件；如果已安装）
 
 ## 全局标志
 
@@ -288,7 +288,7 @@ openclaw [--dev] [--profile <name>] <command>
 - `openclaw plugins enable <id>` / `disable <id>` — 切换 `plugins.entries.<id>.enabled`。
 - `openclaw plugins doctor` — 报告插件加载错误。
 
-Most plugin changes require a gateway restart. See [/plugin](/en/tools/plugin).
+大多数插件更改需要重启网关。请参阅 [/plugin](/en/tools/plugin)。
 
 ## 内存
 
@@ -300,7 +300,7 @@ Most plugin changes require a gateway restart. See [/plugin](/en/tools/plugin).
 
 ## 聊天斜杠命令
 
-Chat messages support `/...` commands (text and native). See [/tools/slash-commands](/en/tools/slash-commands).
+聊天消息支持 `/...` 命令（文本和原生）。请参阅 [/tools/slash-commands](/en/tools/slash-commands)。
 
 亮点：
 
@@ -455,7 +455,7 @@ Chat messages support `/...` commands (text and native). See [/tools/slash-comma
 - `--lines <n>`（默认 `200`）
 - `--json`
 
-More detail: [/concepts/oauth](/en/concepts/oauth)
+更多详情：[/concepts/oauth](/en/concepts/oauth)
 
 示例：
 
@@ -511,7 +511,7 @@ openclaw status --deep
 
 ### `webhooks gmail`
 
-Gmail Pub/Sub hook setup + runner. See [/automation/gmail-pubsub](/en/automation/gmail-pubsub).
+Gmail Pub/Sub hook 设置 + 运行器。请参阅 [/automation/gmail-pubsub](/en/automation/gmail-pubsub)。
 
 子命令：
 
@@ -520,7 +520,7 @@ Gmail Pub/Sub hook setup + runner. See [/automation/gmail-pubsub](/en/automation
 
 ### `dns setup`
 
-Wide-area discovery DNS helper (CoreDNS + Tailscale). See [/gateway/discovery](/en/gateway/discovery).
+广域发现 DNS 辅助工具（CoreDNS + Tailscale）。请参阅 [/gateway/discovery](/en/gateway/discovery)。
 
 选项：
 
@@ -532,7 +532,7 @@ Wide-area discovery DNS helper (CoreDNS + Tailscale). See [/gateway/discovery](/
 
 统一出站消息传递 + 渠道操作。
 
-See: [/cli/message](/en/cli/message)
+请参阅：[/cli/message](/en/cli/message)
 
 子命令：
 
@@ -642,7 +642,7 @@ See: [/cli/message](/en/cli/message)
 
 运行连接 IDE 与 Gateway(网关) 网关的 ACP 桥接器。
 
-See [`acp`](/en/cli/acp) for full options and examples.
+有关完整选项和示例，请参阅 [`acp`](/en/cli/acp)。
 
 ### `status`
 
@@ -677,7 +677,7 @@ See [`acp`](/en/cli/acp) for full options and examples.
 - 数据直接来自提供商的使用情况端点（非估算值）。
 - 提供商：Anthropic、GitHub Copilot、OpenAI Codex OAuth，以及 Gemini CLI/Antigravity（当启用这些提供商插件时）。
 - 如果不存在匹配的凭据，使用情况将被隐藏。
-- Details: see [Usage tracking](/en/concepts/usage-tracking).
+- 详情：请参阅 [Usage tracking](/en/concepts/usage-tracking)。
 
 ### `health`
 
@@ -779,12 +779,12 @@ See [`acp`](/en/cli/acp) for full options and examples.
 注意：
 
 - `gateway status` 默认使用服务的解析端口/配置探测 Gateway(网关) RPC（可用 `--url/--token/--password` 覆盖）。
-- `gateway status` 支持 `--no-probe`、`--deep`、`--require-rpc` 和 `--json` 用于脚本编写。
-- 当 `gateway status` 检测到遗留或额外的 Gateway(网关) 服务时，也会显示它们（`--deep` 会添加系统级扫描）。以配置文件命名的 OpenClaw 服务被视为一等公民，不会被标记为“额外”。
-- `gateway status` 会打印 CLI 使用的配置路径与服务可能使用的配置路径（服务环境变量）的对比，以及解析后的探测目标 URL。
-- 在 Linux systemd 安装环境中，状态令牌漂移检查包括 `Environment=` 和 `EnvironmentFile=` 单元源。
-- `gateway install|uninstall|start|stop|restart` 支持 `--json` 用于脚本编写（默认输出保持对人类友好）。
-- `gateway install` 默认使用 Node 运行时；**不建议**使用 bun（WhatsApp/Telegram 存在 bug）。
+- `gateway status` 支持 `--no-probe`、`--deep`、`--require-rpc` 和 `--json` 用于编写脚本。
+- 当检测到旧版或额外的 Gateway 服务时，`gateway status` 也会显示它们（`--deep` 会添加系统级扫描）。以配置文件命名的 OpenClaw 服务被视为一流服务，不会被标记为“额外”。
+- `gateway status` 会打印 CLI 使用的配置路径与服务可能使用的配置（服务环境变量），以及解析后的探测目标 URL。
+- 在 Linux systemd 安装中，状态令牌漂移检查包括 `Environment=` 和 `EnvironmentFile=` 单元来源。
+- `gateway install|uninstall|start|stop|restart` 支持 `--json` 用于编写脚本（默认输出保持人类可读）。
+- `gateway install` 默认使用 Node 运行时；**不建议**使用 bun（WhatsApp/Telegram 存在错误）。
 - `gateway install` 选项：`--port`、`--runtime`、`--token`、`--force`、`--json`。
 
 ### `logs`
@@ -794,7 +794,7 @@ See [`acp`](/en/cli/acp) for full options and examples.
 备注：
 
 - TTY 会话渲染彩色、结构化的视图；非 TTY 回退到纯文本。
-- `--json` 输出以行分隔的 JSON（每行一个日志事件）。
+- `--json` 输出行分隔的 JSON（每行一个日志事件）。
 
 示例：
 
@@ -808,9 +808,9 @@ openclaw logs --no-color
 
 ### `gateway <subcommand>`
 
-Gateway(网关) CLI 助手（对 RPC 子命令使用 `--url`、`--token`、`--password`、`--timeout`、`--expect-final`）。
+Gateway CLI 辅助工具（将 `--url`、`--token`、`--password`、`--timeout`、`--expect-final` 用于 RPC 子命令）。
 当您传递 `--url` 时，CLI 不会自动应用配置或环境凭据。
-请显式包含 `--token` 或 `--password`。缺少显式凭据将报错。
+必须显式包含 `--token` 或 `--password`。缺少显式凭据将被视为错误。
 
 子命令：
 
@@ -828,12 +828,12 @@ Gateway(网关) CLI 助手（对 RPC 子命令使用 `--url`、`--token`、`--pa
 - `config.patch` (合并部分更新 + 重启 + 唤醒)
 - `update.run` (运行更新 + 重启 + 唤醒)
 
-提示：直接调用 `config.set`/`config.apply`/`config.patch` 时，如果配置已存在，请传递来自
-`config.get` 的 `baseHash`。
+提示：直接调用 `config.set`/`config.apply`/`config.patch` 时，如果配置已存在，
+请从 `config.get` 传递 `baseHash`。
 
 ## 模型
 
-有关回退行为和扫描策略，请参阅 [/concepts/models](/en/concepts/models)。
+请参阅 [/concepts/models](/en/concepts/models) 了解回退行为和扫描策略。
 
 Anthropic 设置令牌（受支持）：
 
@@ -870,7 +870,7 @@ openclaw models status
 
 - `--json`
 - `--plain`
-- `--check` (退出码 1=已过期/缺失，2=即将过期)
+- `--check` (退出 1=已过期/缺失，2=即将过期)
 - `--probe` (对已配置的身份验证配置文件进行实时探测)
 - `--probe-provider <name>`
 - `--probe-profile <id>` (重复或逗号分隔)
@@ -878,7 +878,7 @@ openclaw models status
 - `--probe-concurrency <n>`
 - `--probe-max-tokens <n>`
 
-始终包括身份验证概览以及身份验证存储中配置文件的 OAuth 过期状态。
+始终包括身份验证存储中配置文件的身份验证概览和 OAuth 过期状态。
 `--probe` 运行实时请求（可能会消耗令牌并触发速率限制）。
 
 ### `models set <model>`
@@ -910,7 +910,7 @@ openclaw models status
 
 选项：
 
-- `list`： `--json`、`--plain`
+- `list`：`--json`，`--plain`
 - `add <model>`
 - `remove <model>`
 - `clear`
@@ -937,16 +937,16 @@ openclaw models status
 选项：
 
 - `add`：交互式身份验证助手
-- `setup-token`： `--provider <name>`（默认 `anthropic`）、`--yes`
-- `paste-token`： `--provider <name>`、`--profile-id <id>`、`--expires-in <duration>`
+- `setup-token`：`--provider <name>`（默认`anthropic`），`--yes`
+- `paste-token`：`--provider <name>`，`--profile-id <id>`，`--expires-in <duration>`
 
 ### `models auth order get|set|clear`
 
 选项：
 
-- `get`： `--provider <name>`、`--agent <id>`、`--json`
-- `set`： `--provider <name>`、`--agent <id>`、`<profileIds...>`
-- `clear`： `--provider <name>`、`--agent <id>`
+- `get`：`--provider <name>`，`--agent <id>`，`--json`
+- `set`：`--provider <name>`，`--agent <id>`，`<profileIds...>`
+- `clear`：`--provider <name>`，`--agent <id>`
 
 ## 系统
 
@@ -962,7 +962,7 @@ openclaw models status
 
 - `--mode <now|next-heartbeat>`
 - `--json`
-- `--url`、`--token`、`--timeout`、`--expect-final`
+- `--url`，`--token`，`--timeout`，`--expect-final`
 
 ### `system heartbeat last|enable|disable`
 
@@ -971,7 +971,7 @@ openclaw models status
 选项：
 
 - `--json`
-- `--url`、`--token`、`--timeout`、`--expect-final`
+- `--url`，`--token`，`--timeout`，`--expect-final`
 
 ### `system presence`
 
@@ -984,25 +984,25 @@ openclaw models status
 
 ## Cron
 
-管理计划作业（Gateway(网关) RPC）。请参阅 [/automation/cron-jobs](/en/automation/cron-jobs)。
+管理计划任务 (Gateway(网关) RPC)。请参阅 [/automation/cron-jobs](/en/automation/cron-jobs)。
 
 子命令：
 
 - `cron status [--json]`
-- `cron list [--all] [--json]`（默认为表格输出；使用 `--json` 获取原始输出）
-- `cron add`（别名：`create`；需要 `--name` 和 `--at` | `--every` | `--cron` 中的确切一个，以及 `--system-event` | `--message` 中的确切一个有效载荷）
-- `cron edit <id>`（修补字段）
-- `cron rm <id>`（别名：`remove`、`delete`）
+- `cron list [--all] [--json]` (默认为表格输出；使用 `--json` 获取原始输出)
+- `cron add` (别名：`create`；需要 `--name` 以及 `--at` | `--every` | `--cron` 之一，并且正好有一个 `--system-event` | `--message` 载荷)
+- `cron edit <id>` (修补字段)
+- `cron rm <id>` (别名：`remove`, `delete`)
 - `cron enable <id>`
 - `cron disable <id>`
 - `cron runs --id <id> [--limit <n>]`
 - `cron run <id> [--force]`
 
-所有 `cron` 命令都接受 `--url`、`--token`、`--timeout`、`--expect-final`。
+所有 `cron` 命令都接受 `--url`, `--token`, `--timeout`, `--expect-final`。
 
 ## 节点主机
 
-`node` 运行**无头节点主机**或将其作为后台服务进行管理。请参阅
+`node` 运行 **无头节点主机** 或将其作为后台服务进行管理。请参阅
 [`openclaw node`](/en/cli/node)。
 
 子命令：
@@ -1016,12 +1016,12 @@ openclaw models status
 
 身份验证说明：
 
-- `node` 从 env/config 解析网关身份验证（无 `--token`/`--password` 标志）：`OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`，然后 `gateway.auth.*`。在本地模式下，节点主机有意忽略 `gateway.remote.*`；在 `gateway.mode=remote` 中，`gateway.remote.*` 按远程优先级规则参与。
-- 传统的 `CLAWDBOT_GATEWAY_*` 环境变量在节点主机身份验证解析中被有意忽略。
+- `node` 从 env/config 解析 gateway auth (无 `--token`/`--password` 标志)：`OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`，然后是 `gateway.auth.*`。在本地模式下，节点主机有意忽略 `gateway.remote.*`；在 `gateway.mode=remote` 中，`gateway.remote.*` 根据远程优先级规则参与。
+- 节点主机认证解析有意忽略旧的 `CLAWDBOT_GATEWAY_*` 环境变量。
 
 ## 节点
 
-`nodes` 与 Gateway(网关) 通信并 targeting 已配对的节点。请参阅 [/nodes](/en/nodes)。
+`nodes` 与 Gateway(网关) 通信并以已配对的节点为目标。请参阅 [/nodes](/en/nodes)。
 
 常用选项：
 
@@ -1037,8 +1037,8 @@ openclaw models status
 - `nodes reject <requestId>`
 - `nodes rename --node <id|name|ip> --name <displayName>`
 - `nodes invoke --node <id|name|ip> --command <command> [--params <json>] [--invoke-timeout <ms>] [--idempotency-key <key>]`
-- `nodes run --node <id|name|ip> [--cwd <path>] [--env KEY=VAL] [--command-timeout <ms>] [--needs-screen-recording] [--invoke-timeout <ms>] <command...>`（mac 节点或无头节点主机）
-- `nodes notify --node <id|name|ip> [--title <text>] [--body <text>] [--sound <name>] [--priority <passive|active|timeSensitive>] [--delivery <system|overlay|auto>] [--invoke-timeout <ms>]`（仅限 mac）
+- `nodes run --node <id|name|ip> [--cwd <path>] [--env KEY=VAL] [--command-timeout <ms>] [--needs-screen-recording] [--invoke-timeout <ms>] <command...>` (mac 节点或无头节点主机)
+- `nodes notify --node <id|name|ip> [--title <text>] [--body <text>] [--sound <name>] [--priority <passive|active|timeSensitive>] [--delivery <system|overlay|auto>] [--invoke-timeout <ms>]` (仅限 mac)
 
 摄像头：
 
@@ -1063,7 +1063,7 @@ Canvas + 屏幕：
 
 ## 浏览器
 
-浏览器控制 CLI（专用 Chrome/Brave/Edge/Chromium）。请参阅 [`openclaw browser`](/en/cli/browser) 和 [Browser 工具](/en/tools/browser)。
+浏览器控制 CLI（专用的 Chrome/Brave/Edge/Chromium）。请参阅 [`openclaw browser`](/en/cli/browser) 和 [Browser 工具](/en/tools/browser)。
 
 常用选项：
 

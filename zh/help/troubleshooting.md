@@ -28,11 +28,11 @@ openclaw logs --follow
 
 - `openclaw status` → 显示已配置的通道且没有明显的身份验证错误。
 - `openclaw status --all` → 完整的报告已存在且可共享。
-- `openclaw gateway probe` → 预期的网关目标可达 (`Reachable: yes`)。`RPC: limited - missing scope: operator.read` 是降级诊断，而非连接失败。
+- `openclaw gateway probe` → 预期的网关目标可达 (`Reachable: yes`)。`RPC: limited - missing scope: operator.read` 是降级诊断，不是连接失败。
 - `openclaw gateway status` → `Runtime: running` 和 `RPC probe: ok`。
-- `openclaw doctor` → 无阻塞性配置/服务错误。
+- `openclaw doctor` → 没有阻塞性配置/服务错误。
 - `openclaw channels status --probe` → 渠道报告 `connected` 或 `ready`。
-- `openclaw logs --follow` → 活动稳定，无重复的致命错误。
+- `openclaw logs --follow` → 活动稳定，没有重复的致命错误。
 
 ## Anthropic 长上下文 429 错误
 
@@ -42,13 +42,13 @@ openclaw logs --follow
 
 ## 插件安装因缺少 openclaw 扩展而失败
 
-如果安装失败并出现 `package.json missing openclaw.extensions`，则插件包
-使用的是 OpenClaw 不再接受的旧格式。
+如果安装失败并显示 `package.json missing openclaw.extensions`，则插件包
+正在使用 OpenClaw 不再接受的旧格式。
 
 在插件包中修复：
 
 1. 将 `openclaw.extensions` 添加到 `package.json`。
-2. 将条目指向构建的运行时文件（通常为 `./dist/index.js`）。
+2. 将条目指向构建的运行时文件（通常是 `./dist/index.js`）。
 3. 重新发布插件并再次运行 `openclaw plugins install <npm-spec>`。
 
 示例：
@@ -102,15 +102,15 @@ flowchart TD
     - `Runtime: running`
     - `RPC probe: ok`
     - 您的渠道在 `channels status --probe` 中显示已连接/就绪
-    - 发送者显示已批准（或私信策略为开放/允许列表）
+    - 发送者显示已批准（或 私信 策略为开放/允许列表）
 
-    常见日志签名：
+    常见日志特征：
 
     - `drop guild message (mention required` → 提及门控在 Discord 中阻止了消息。
-    - `pairing request` → 发送者未获批准，正在等待私信配对批准。
-    - 渠道日志中的 `blocked` / `allowlist` → 发送者、房间或组被过滤。
+    - `pairing request` → 发送者未批准，正在等待私信配对批准。
+    - 渠道日志中的 `blocked` / `allowlist` → 发送者、房间或组已被过滤。
 
-    深度页面：
+    深入页面：
 
     - [/gateway/故障排除#no-replies](/en/gateway/troubleshooting#no-replies)
     - [/channels/故障排除](/en/channels/troubleshooting)
@@ -118,7 +118,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="仪表板或控制 UI 无法连接">
+  <Accordion title="Dashboard 或 Control UI 无法连接">
     ```bash
     openclaw status
     openclaw gateway status
@@ -127,18 +127,18 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    正常的输出如下所示：
+    正确的输出如下所示：
 
     - `Dashboard: http://...` 显示在 `openclaw gateway status` 中
     - `RPC probe: ok`
-    - 日志中没有认证循环
+    - 日志中没有身份验证循环
 
     常见日志特征：
 
-    - `device identity required` → HTTP/非安全上下文无法完成设备认证。
-    - `AUTH_TOKEN_MISMATCH` 带有重试提示 (`canRetryWithDeviceToken=true`) → 可能会自动进行一次受信任的设备令牌重试。
-    - 该重试后重复出现 `unauthorized` → 令牌/密码错误、认证模式不匹配或过时的已配对设备令牌。
-    - `gateway connect failed:` → UI 目标 URL/端口错误或网关不可达。
+    - `device identity required` → HTTP/非安全上下文无法完成设备身份验证。
+    - `AUTH_TOKEN_MISMATCH` 并带有重试提示 (`canRetryWithDeviceToken=true`) → 可能会自动进行一次受信任的设备令牌重试。
+    - 该重试后出现重复的 `unauthorized` → 令牌/密码错误、身份验证模式不匹配或过时的已配对设备令牌。
+    - `gateway connect failed:` → UI 针对的 URL/端口错误或网关不可达。
 
     深度页面：
 
@@ -157,7 +157,7 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    正常的输出如下所示：
+    正确的输出如下所示：
 
     - `Service: ... (loaded)`
     - `Runtime: running`
@@ -165,8 +165,8 @@ flowchart TD
 
     常见日志特征：
 
-    - `Gateway start blocked: set gateway.mode=local` → 网关模式未设置/为远程模式。
-    - `refusing to bind gateway ... without auth` → 非环回绑定且没有令牌/密码。
+    - `Gateway start blocked: set gateway.mode=local` → 网关模式未设置/为远程。
+    - `refusing to bind gateway ... without auth` → 没有令牌/密码的非环回绑定。
     - `another gateway instance is already listening` 或 `EADDRINUSE` → 端口已被占用。
 
     深度页面：
@@ -177,7 +177,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="渠道已连接但消息无法流转">
+  <Accordion title="渠道已连接但消息未流转">
     ```bash
     openclaw status
     openclaw gateway status
@@ -186,16 +186,16 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    正常的输出看起来像这样：
+    正常输出如下所示：
 
     - 渠道传输已连接。
-    - 配对/允许列表检查通过。
+    - 配对/白名单检查通过。
     - 在需要的地方检测到了提及。
 
-    常见日志签名：
+    常见日志特征：
 
     - `mention required` → 群组提及拦截阻止了处理。
-    - `pairing` / `pending` → 私信发送者尚未获得批准。
+    - `pairing` / `pending` → 私信发送者尚未被批准。
     - `not_in_channel`, `missing_scope`, `Forbidden`, `401/403` → 渠道权限令牌问题。
 
     深入页面：
@@ -215,17 +215,17 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    正常的输出看起来像这样：
+    正常输出如下所示：
 
-    - `cron.status` 显示已启用并带有下次唤醒时间。
+    - `cron.status` 显示已启用并带有下一次唤醒时间。
     - `cron runs` 显示最近的 `ok` 条目。
-    - 心跳已启用且不在活动时间之外。
+    - 心跳已启用且未在活动时间之外。
 
-    常见日志签名：
+    常见日志特征：
 
     - `cron: scheduler disabled; jobs will not run automatically` → cron 已禁用。
-    - `heartbeat skipped` 且带有 `reason=quiet-hours` → 超出配置的活动时间。
-    - `requests-in-flight` → 主通道忙碌；心跳唤醒已推迟。
+    - `heartbeat skipped` 且 `reason=quiet-hours` → 在配置的活动时间之外。
+    - `requests-in-flight` → 主通道繁忙；心跳唤醒已延迟。
     - `unknown accountId` → 心跳投递目标账户不存在。
 
     深入页面：
@@ -247,18 +247,18 @@ flowchart TD
 
     良好的输出如下所示：
 
-    - 节点已列出为已连接并为角色 `node` 配对。
-    - 您调用的命令存在能力（Capability）。
-    - 工具的权限状态已获授予。
+    - 节点被列为已连接并已配对角色 `node`。
+    - 您正在调用的命令存在 Capability。
+    - 工具的权限状态已获授权。
 
-    常见日志特征：
+    常见日志签名：
 
     - `NODE_BACKGROUND_UNAVAILABLE` → 将节点应用置于前台。
-    - `*_PERMISSION_REQUIRED` → 操作系统权限被拒绝或缺失。
-    - `SYSTEM_RUN_DENIED: approval required` → 批准执行待处理。
-    - `SYSTEM_RUN_DENIED: allowlist miss` → 命令不在执行允许列表中。
+    - `*_PERMISSION_REQUIRED` → OS 权限被拒绝/缺失。
+    - `SYSTEM_RUN_DENIED: approval required` → exec 批准待定。
+    - `SYSTEM_RUN_DENIED: allowlist miss` → 命令未在 exec 允许列表中。
 
-    深度页面：
+    深入页面：
 
     - [/gateway/故障排除#node-paired-工具-fails](/en/gateway/troubleshooting#node-paired-tool-fails)
     - [/nodes/故障排除](/en/nodes/troubleshooting)
@@ -277,17 +277,17 @@ flowchart TD
 
     良好的输出如下所示：
 
-    - 浏览器状态显示 `running: true` 以及选定的浏览器/配置文件。
+    - 浏览器状态显示 `running: true` 和所选的浏览器/配置文件。
     - `openclaw` 配置文件启动或 `chrome` 中继具有附加的标签页。
 
-    常见日志特征：
+    常见日志签名：
 
     - `Failed to start Chrome CDP on port` → 本地浏览器启动失败。
     - `browser.executablePath not found` → 配置的二进制路径错误。
     - `Chrome extension relay is running, but no tab is connected` → 扩展程序未附加。
-    - `Browser attachOnly is enabled ... not reachable` → 仅附加配置文件没有实时的 CDP 目标。
+    - `Browser attachOnly is enabled ... not reachable` → 仅附加配置文件没有活动的 CDP 目标。
 
-    深度页面：
+    深入页面：
 
     - [/gateway/故障排除#browser-工具-fails](/en/gateway/troubleshooting#browser-tool-fails)
     - [/tools/browser-linux-故障排除](/en/tools/browser-linux-troubleshooting)
