@@ -186,6 +186,6 @@ Lorsque `requireMention: true` est défini pour une conversation de groupe, Open
 - Gardez des délais d'expiration raisonnables (`timeoutSeconds`, 60 s par défaut) pour éviter de bloquer la file de réponse.
 - La transcription préliminaire ne traite que la **première** pièce jointe audio pour la détection des mentions. L'audio supplémentaire est traité lors de la phase principale de compréhension des médias.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

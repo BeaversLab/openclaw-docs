@@ -180,6 +180,6 @@ Les comptes correspondent aux profils `zalouser` dans l'état de OpenClaw. Exemp
 - Supprimez toutes les anciennes hypothèses de processus externe `zca`.
 - Le channel fonctionne désormais entièrement dans OpenClaw sans binaires CLI externes.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

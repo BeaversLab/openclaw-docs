@@ -130,6 +130,6 @@ Les réponses entrantes incluent :
 
 Ceci est cohérent sur tous les canaux.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

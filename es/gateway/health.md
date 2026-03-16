@@ -24,15 +24,24 @@ Guía breve para verificar la conectividad del canal sin conjeturas.
 - Almacén de sesiones: `ls -l ~/.openclaw/agents/<agentId>/sessions/sessions.json` (la ruta se puede anular en la configuración). El recuento y los destinatarios recientes se muestran a través de `status`.
 - Flujo de revinculación: `openclaw channels logout && openclaw channels login --verbose` cuando aparecen códigos de estado 409–515 o `loggedOut` en los registros. (Nota: el flujo de inicio de sesión QR se reinicia automáticamente una vez para el estado 515 después del emparejamiento).
 
+## Configuración del monitor de salud
+
+- `gateway.channelHealthCheckMinutes`: con qué frecuencia la puerta de enlace verifica el estado del canal. Predeterminado: `5`. Establezca `0` para desactivar globalmente los reinicios del monitor de salud.
+- `gateway.channelStaleEventThresholdMinutes`: cuánto tiempo puede permanecer inactivo un canal conectado antes de que el monitor de salud lo considere obsoleto y lo reinicie. Predeterminado: `30`. Mantenga esto mayor o igual a `gateway.channelHealthCheckMinutes`.
+- `gateway.channelMaxRestartsPerHour`: límite móvil de una hora para los reinicios del monitor de salud por canal/cuenta. Predeterminado: `10`.
+- `channels.<provider>.healthMonitor.enabled`: desactiva los reinicios del monitor de salud para un canal específico mientras se deja activado el monitoreo global.
+- `channels.<provider>.accounts.<accountId>.healthMonitor.enabled`: anulación multicuenta que tiene prioridad sobre la configuración a nivel de canal.
+- Estas anulaciones por canal se aplican a los monitores de canal integrados que actualmente las exponen: Discord, Google Chat, iMessage, Microsoft Teams, Signal, Slack, Telegram y WhatsApp.
+
 ## Cuando algo falla
 
-- `logged out` o estado 409–515 → revincular con `openclaw channels logout` y luego `openclaw channels login`.
+- `logged out` o estado 409–515 → volver a vincular con `openclaw channels logout` y luego `openclaw channels login`.
 - Puerta de enlace inalcanzable → iníciela: `openclaw gateway --port 18789` (use `--force` si el puerto está ocupado).
-- Sin mensajes entrantes → confirme que el teléfono vinculado está en línea y que el remitente está permitido (`channels.whatsapp.allowFrom`); para chats grupales, asegúrese de que las reglas de lista blanca + mención coincidan (`channels.whatsapp.groups`, `agents.list[].groupChat.mentionPatterns`).
+- Sin mensajes entrantes → confirme que el teléfono vinculado está en línea y que el remitente está permitido (`channels.whatsapp.allowFrom`); para chats grupales, asegúrese de que las reglas de lista de permitidos + mención coincidan (`channels.whatsapp.groups`, `agents.list[].groupChat.mentionPatterns`).
 
 ## Comando dedicado "health"
 
-`openclaw health --json` solicita al Gateway en ejecución su instantánea de estado (sin sockets directos de canal desde la CLI). Informa la antigüedad de las credenciales/enlaces de autenticación cuando está disponible, resúmenes de sondas por canal, resumen del almacén de sesiones y una duración de la sonda. Sale con un valor distinto de cero si el Gateway es inalcanzable o si la sonda falla/caduca. Use `--timeout <ms>` para anular el valor predeterminado de 10s.
+`openclaw health --json` solicita a la Gateway en ejecución su instantánea de salud (sin sockets directos de canal desde la CLI). Informa la antigüedad de las credenciales/autenticación vinculadas cuando está disponible, resúmenes de sondas por canal, resumen del almacén de sesiones y una duración de sonda. Sale con un valor distinto de cero si la Gateway es inalcanzable o si la sonda falla/agota el tiempo de espera. Use `--timeout <ms>` para anular el valor predeterminado de 10 s.
 
 import es from "/components/footer/es.mdx";
 

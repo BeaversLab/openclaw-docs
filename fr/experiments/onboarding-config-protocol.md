@@ -42,6 +42,6 @@ Réponses (forme)
 
 - Ce document est l'endroit unique pour suivre les refactorisations du protocole pour l'onboarding/la configuration.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

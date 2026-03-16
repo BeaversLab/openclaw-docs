@@ -117,6 +117,6 @@ Dépannage complet : [/channels/signal#troubleshooting](/fr/channels/signal#trou
 
 Dépannage complet : [/channels/matrix#troubleshooting](/fr/channels/matrix#troubleshooting)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

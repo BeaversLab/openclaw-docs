@@ -84,6 +84,6 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 - Testez la version nightly de `tsx` ou verrouillez une version antérieure si une régression connue existe.
 - Si cela se reproduit sur Node LTS, signalez un problème minimal en amont avec la trace de la pile `__name`.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

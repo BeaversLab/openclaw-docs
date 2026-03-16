@@ -18,6 +18,6 @@ La plupart des opérations passent par le Gateway (`openclaw gateway`), un proce
     Lorsque `gateway.auth` est configuré et que le Gateway est lié au-delà du bouclage, ces routes sont protégées par l'authentification du Gateway. Les clients nœud utilisent des URL de capacité avec portée de nœud liées à leur session WS active. Voir [Gateway configuration](/fr/gateway/configuration) (`canvasHost`, `gateway`).
 - L'utilisation à distance se fait généralement via un tunnel SSH ou un VPN tailnet. Voir [Remote access](/fr/gateway/remote) et [Discovery](/fr/gateway/discovery).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -100,6 +100,6 @@ Cela protège les utilisateurs contre des dépenses de jetons excessives et des 
 - La configuration par agent remplace complètement ou étend les valeurs globales.
 - Si aucune configuration n'existe, les garde-fous restent désactivés.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

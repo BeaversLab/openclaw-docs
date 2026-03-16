@@ -315,6 +315,6 @@ Option B :
 - [Nœuds](/fr/nodes)
 - [Mode élevé](/fr/tools/elevated)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

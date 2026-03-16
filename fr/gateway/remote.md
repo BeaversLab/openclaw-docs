@@ -151,6 +151,6 @@ Version courte : **gardez le Gateway en loopback uniquement** sauf si vous êtes
 
 Approfondissement : [Sécurité](/fr/gateway/security).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

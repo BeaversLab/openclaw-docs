@@ -20,6 +20,6 @@ Notes :
 - `--verbose` exécute des sondes en direct et imprime les timings par compte lorsque plusieurs comptes sont configurés.
 - La sortie inclut les magasins de session par agent lorsque plusieurs agents sont configurés.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

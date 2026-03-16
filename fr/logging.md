@@ -344,6 +344,6 @@ Files d'attente + sessions :
   indiqué dans `logging.file`.
 - **Besoin de plus de détails ?** Définissez `logging.level` sur `debug` ou `trace` et réessayez.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

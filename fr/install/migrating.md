@@ -191,6 +191,6 @@ Sur la nouvelle machine, confirmez :
 - [Dépannage du Gateway](/fr/gateway/troubleshooting)
 - [Où OpenClaw stocke-t-il ses données ?](/fr/help/faq#where-does-openclaw-store-its-data)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -111,6 +111,6 @@ Cela permet de maintenir le prompt de base petit tout en permettant une utilisat
 
 Lorsqu'elle est disponible, le prompt système inclut une section **Documentation** qui pointe vers le répertoire de documentation local OpenClaw (soit `docs/` dans l'espace de travail du dépôt soit les docs du package npm groupé) et note également le miroir public, le dépôt source, la communauté Discord et ClawHub ([https://clawhub.com](https://clawhub.com)) pour la découverte de compétences. Le prompt instruit le modèle de consulter d'abord la documentation locale pour le comportement, les commandes, la configuration ou l'architecture d'OpenClaw, et d'exécuter `openclaw status` lui-même lorsque cela est possible (en demandant à l'utilisateur uniquement lorsqu'il n'y a pas d'accès).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

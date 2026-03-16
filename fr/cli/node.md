@@ -122,6 +122,6 @@ L'hôte de nœud stocke son ID de nœud, son jeton, son nom d'affichage et les i
 - [Approbations d'exécution](/fr/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>` (modifier depuis le Gateway)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

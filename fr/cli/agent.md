@@ -28,6 +28,6 @@ openclaw agent --agent ops --message "Generate report" --deliver --reply-channel
 - Lorsque cette commande déclenche la régénération de `models.json`, les identifiants provider gérés par SecretRef sont conservés sous forme de marqueurs non secrets (par exemple, noms de env var, `secretref-env:ENV_VAR_NAME` ou `secretref-managed`), et non en tant que texte brut secret résolu.
 - Les écritures de marqueurs sont autoritaires par la source : OpenClaw conserve les marqueurs provenant de l'instantané de la configuration source active, et non des valeurs de secret d'exécution résolues.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

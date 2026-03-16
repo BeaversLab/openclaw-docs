@@ -111,6 +111,6 @@ Comportement :
 
 Cela permet de garder les fichiers de journaux existants stables tout en rendant la sortie interactive analysable.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -153,6 +153,6 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
 - [Fournisseur Anthropic](/fr/providers/anthropic) - Intégration native OpenClaw avec le jeton de configuration Claude ou les clés API
 - [Fournisseur OpenAI](/fr/providers/openai) - Pour les abonnements OpenAI/Codex
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

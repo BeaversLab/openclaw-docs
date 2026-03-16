@@ -173,6 +173,6 @@ est manquant, réexécutez `claude setup-token` et collez à nouveau le jeton.
 - Compte d'abonnement Anthropic (pour `claude setup-token`)
 - Claude Code CLI installé (commande `claude` disponible)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

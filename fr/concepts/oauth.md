@@ -158,6 +158,6 @@ Documentation connexe :
 - [/concepts/model-failover](/fr/concepts/model-failover) (règles de rotation + temps de recharge)
 - [/tools/slash-commands](/fr/tools/slash-commands) (surface de commande)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -59,6 +59,6 @@ Options globales associées :
 - `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password` : cible de passerelle distante.
 - `session.*` : stockage de session et valeurs par défaut de la clé principale.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

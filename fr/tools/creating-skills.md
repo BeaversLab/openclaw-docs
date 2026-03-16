@@ -57,6 +57,6 @@ Demandez à votre agent d'« actualiser les skills » ou redémarrez la passerel
 
 Vous pouvez également parcourir et contribuer aux skills sur [ClawHub](https://clawhub.com).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

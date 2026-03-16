@@ -453,6 +453,6 @@ Certaines unions SecretInput sont plus faciles à configurer en mode éditeur br
 - Posture de sécurité : [Sécurité](/fr/gateway/security)
 - Priorité de l'environnement : [Variables d'environnement](/fr/help/environment)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

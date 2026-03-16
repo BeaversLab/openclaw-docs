@@ -136,6 +136,6 @@ Détails : [Protocole Gateway](/fr/gateway/protocol), [Appairage](/fr/channels/p
 - Le handshake est obligatoire ; toute première trame non JSON ou non connect est une fermeture brutale.
 - Les événements ne sont pas rejoués ; les clients doivent rafraîchir en cas de trous.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

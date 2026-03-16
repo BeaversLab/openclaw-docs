@@ -620,6 +620,6 @@ Redémarrez la passerelle après avoir modifié ces valeurs.
 | La session ACP échoue rapidement avec peu de sortie                      | Les invites d'autorisation sont bloquées par `permissionMode`/`nonInteractivePermissions`. | Vérifiez les journaux de la passerelle pour `AcpRuntimeError`. Pour des autorisations complètes, définissez `permissionMode=approve-all` ; pour une dégradation gracieuse, définissez `nonInteractivePermissions=deny`. |
 | La session ACP se bloque indéfiniment après avoir terminé le travail     | Le processus du harnais est terminé mais la session ACP n'a pas signalé la fin.            | Surveillez avec `ps aux \| grep acpx` ; tuez manuellement les processus périmés.                                                                                                                                        |
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

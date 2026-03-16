@@ -34,6 +34,6 @@ title: "Suivi de l'utilisation"
 
 L'utilisation est masquée si aucune identification OAuth/API correspondante n'existe.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

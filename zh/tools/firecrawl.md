@@ -56,7 +56,7 @@ OpenClaw 在 Firecrawl 请求中始终使用 `proxy: "auto"` 加上 `storeInCach
 2. Firecrawl（如果已配置）
 3. 基本 HTML 清理（最后回退）
 
-有关完整的 Web 工具设置，请参阅 [Web 工具](/en/tools/web)。
+有关完整的 Web 工具设置，请参阅 [Web 工具](/zh/tools/web)。
 
 import zh from "/components/footer/zh.mdx";
 

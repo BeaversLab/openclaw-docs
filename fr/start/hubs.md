@@ -21,7 +21,7 @@ Utilisez ces hubs pour découvrir chaque page, y compris les analyses approfondi
 - [Onboarding](/fr/start/onboarding)
 - [Assistant](/fr/start/wizard)
 - [Configuration](/fr/start/setup)
-- [Tableau de bord (Gateway locale)](http://127.0.0.1:18789/)
+- [Tableau de bord (Gateway local)](http://127.0.0.1:18789/)
 - [Aide](/fr/help)
 - [Docs directory](/fr/start/docs-directory)
 - [Configuration](/fr/gateway/configuration)
@@ -157,17 +157,16 @@ Utilisez ces hubs pour découvrir chaque page, y compris les analyses approfondi
 - [autorisations macOS](/fr/platforms/mac/permissions)
 - [contrôle à distance macOS](/fr/platforms/mac/remote)
 - [signature macOS](/fr/platforms/mac/signing)
-- [version macOS](/fr/platforms/mac/release)
 - [passerelle macOS (launchd)](/fr/platforms/mac/bundled-gateway)
-- [XPC macOS](/fr/platforms/mac/xpc)
-- [Compétences macOS](/fr/platforms/mac/skills)
-- [Peekaboo macOS](/fr/platforms/mac/peekaboo)
+- [macOS XPC](/fr/platforms/mac/xpc)
+- [Skills macOS](/fr/platforms/mac/skills)
+- [macOS Peekaboo](/fr/platforms/mac/peekaboo)
 
 ## Espace de travail + modèles
 
-- [Compétences](/fr/tools/skills)
+- [Skills](/fr/tools/skills)
 - [ClawHub](/fr/tools/clawhub)
-- [Configuration des Compétences](/fr/tools/skills-config)
+- [Configuration des Skills](/fr/tools/skills-config)
 - [AGENTS par défaut](/fr/reference/AGENTS.default)
 - [Modèles : AGENTS](/fr/reference/templates/AGENTS)
 - [Modèles : BOOTSTRAP](/fr/reference/templates/BOOTSTRAP)
@@ -175,9 +174,9 @@ Utilisez ces hubs pour découvrir chaque page, y compris les analyses approfondi
 - [Modèles : IDENTITY](/fr/reference/templates/IDENTITY)
 - [Modèles : SOUL](/fr/reference/templates/SOUL)
 - [Modèles : TOOLS](/fr/reference/templates/TOOLS)
-- [Modèles : USER](/fr/reference/templates/USER)
+- [Modèles : UTILISATEUR](/fr/reference/templates/USER)
 
-## Expériences (exploratoire)
+## Expériences (exploratoires)
 
 - [Protocole de configuration Onboarding](/fr/experiments/onboarding-config-protocol)
 - [Recherche : mémoire](/fr/experiments/research/memory)
@@ -187,12 +186,12 @@ Utilisez ces hubs pour découvrir chaque page, y compris les analyses approfondi
 
 - [Crédits](/fr/reference/credits)
 
-## Tests + version
+## Tests + publication
 
 - [Tests](/fr/reference/test)
-- [Liste de vérification de version](/fr/reference/RELEASING)
-- [Modèles d'appareils](/fr/reference/device-models)
+- [Politique de publication](/fr/reference/RELEASING)
+- [Modèles d'appareil](/fr/reference/device-models)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

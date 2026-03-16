@@ -90,6 +90,6 @@ Pour les passerelles distantes, vous pouvez également utiliser `openclaw logs -
 - Il est possible de laisser les indicateurs activés ; ils n'affectent que le volume des journaux pour le sous-système spécifique.
 - Utilisez [/logging](/fr/logging) pour modifier les destinations des journaux, les niveaux et la suppression des informations sensibles.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

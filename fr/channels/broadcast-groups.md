@@ -441,6 +441,6 @@ Fonctionnalités prévues :
 - [Configuration du routage](/fr/channels/channel-routing)
 - [Gestion des sessions](/fr/concepts/session)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

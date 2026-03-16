@@ -280,6 +280,6 @@ Pour une disponibilité 24h/24, envisagez un Mac mini dédié ou un petit VPS. V
 - [Configuration de VM sans assistance](https://cua.ai/docs/lume/guide/fundamentals/unattended-setup) (avancé)
 - [Sandboxing Docker](/fr/install/docker) (méthode d'isolation alternative)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -61,6 +61,6 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 - Vous vous connectez à OpenCode, ajoutez les détails de facturation et copiez votre clé API.
 - La facturation et la disponibilité des catalogues sont gérées depuis le tableau de bord OpenCode.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

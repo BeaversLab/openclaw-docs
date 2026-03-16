@@ -208,6 +208,6 @@ Vous pouvez ajouter `:fastest`, `:cheapest` ou `:provider` (par exemple `:togeth
 }
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

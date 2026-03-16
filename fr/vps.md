@@ -100,6 +100,6 @@ TimeoutStartSec=90
 Comment les stratégies `Restart=` aident à la récupération automatisée :
 [systemd peut automatiser la récupération de service](https://www.redhat.com/en/blog/systemd-automate-recovery).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

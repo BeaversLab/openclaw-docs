@@ -404,6 +404,6 @@ Voir [https://cloud.google.com/iam/docs/understanding-roles](https://cloud.googl
 - Associer les appareils locaux en tant que nœuds : [Nœuds](/fr/nodes)
 - Configurer le Gateway : [configuration Gateway](/fr/gateway/configuration)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

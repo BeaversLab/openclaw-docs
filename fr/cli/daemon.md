@@ -50,6 +50,6 @@ Remarques :
 
 Utilisez [`openclaw gateway`](/fr/cli/gateway) pour la documentation actuelle et les exemples.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -72,6 +72,6 @@ Ensuite :
 openclaw gateway call health --url ws://127.0.0.1:18999 --timeout 3000
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

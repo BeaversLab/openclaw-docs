@@ -79,6 +79,6 @@ Notes :
 - `paste-token` accepte une chaîne de token générée ailleurs ou via l'automatisation.
 - Remarque sur la politique Anthropic : la prise en charge du setup-token est une compatibilité technique. Anthropic a bloqué certaines utilisations d'abonnement en dehors de Claude Code dans le passé, vérifiez donc les conditions actuelles avant une utilisation généralisée.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

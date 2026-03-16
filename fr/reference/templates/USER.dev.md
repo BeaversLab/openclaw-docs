@@ -17,6 +17,6 @@ read_when:
   - Travaillant à travers les fuseaux horaires pour améliorer OpenClaw.
   - Les créateurs. Les constructeurs. Ceux qui scrutent le code.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

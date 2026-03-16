@@ -346,6 +346,6 @@ Privilégiez `chat_guid` pour un routage stable :
 
 Pour une référence générale sur le flux de travail des channels, consultez [Channels](/fr/channels) et le guide [Plugins](/fr/tools/plugin).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

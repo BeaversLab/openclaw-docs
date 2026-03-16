@@ -1197,6 +1197,6 @@ Vous avez trouvé une vulnérabilité dans OpenClaw ? Veuillez la signaler de ma
 2. Ne publiez pas publiquement avant la correction
 3. Nous vous créditerons (sauf si vous préférez l'anonymat)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

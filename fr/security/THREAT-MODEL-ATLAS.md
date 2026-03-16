@@ -602,6 +602,6 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 
 _Ce modèle de menace est un document vivant. Signalez les problèmes de sécurité à security@openclaw.ai_
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

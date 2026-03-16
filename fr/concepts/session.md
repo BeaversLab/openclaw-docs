@@ -52,7 +52,7 @@ Notes :
 - L'intégration locale du CLI écrit `session.dmScope: "per-channel-peer"` par défaut lorsqu'elle n'est pas définie (les valeurs explicites existantes sont conservées).
 - Pour les boîtes de réception multi-comptes sur le même canal, préférez `per-account-channel-peer`.
 - Si la même personne vous contacte sur plusieurs canaux, utilisez `session.identityLinks` pour regrouper ses sessions de DM en une identité canonique.
-- Vous pouvez vérifier vos paramètres de DM avec `openclaw security audit` (voir [sécurité](/fr/cli/security)).
+- Vous pouvez vérifier vos paramètres DM avec `openclaw security audit` (voir [sécurité](/fr/cli/security)).
 
 ## Gateway est la source de vérité
 
@@ -176,14 +176,14 @@ openclaw sessions cleanup --enforce
 
 ## Session pruning
 
-OpenClaw trims **old tool results** from the in-memory context right before LLM calls by default.
-This does **not** rewrite JSONL history. See [/concepts/session-pruning](/fr/concepts/session-pruning).
+OpenClaw supprime les **anciens résultats d'outils** du contexte en mémoire juste avant les appels LLM par défaut.
+Cela ne **réécrit pas** l'historique JSONL. Voir [/concepts/session-pruning](/fr/concepts/session-pruning).
 
 ## Pre-compaction memory flush
 
-When a session nears auto-compaction, OpenClaw can run a **silent memory flush**
-turn that reminds the model to write durable notes to disk. This only runs when
-the workspace is writable. See [Memory](/fr/concepts/memory) and
+Lorsqu'une session approche de la compactage automatique, OpenClaw peut exécuter un **vidage silencieux de la mémoire**
+tour qui rappelle au modèle d'écrire des notes durables sur le disque. Cela ne s'exécute que lorsque
+l'espace de travail est accessible en écriture. Voir [Memory](/fr/concepts/memory) et
 [Compaction](/fr/concepts/compaction).
 
 ## Mapping transports → session keys
@@ -200,21 +200,21 @@ the workspace is writable. See [Memory](/fr/concepts/memory) and
   - Les clés `group:<id>` héritées sont toujours reconnues pour la migration.
 - Les contextes entrants peuvent encore utiliser `group:<id>` ; le canal est déduit de `Provider` et normalisé sous la forme canonique `agent:<agentId>:<channel>:group:<id>`.
 - Autres sources :
-  - Tâches cron : `cron:<job.id>`
-  - Webhooks : `hook:<uuid>` (sauf si défini explicitement par le hook)
+  - Tâches Cron : `cron:<job.id>` (isolé) ou personnalisé `session:<custom-id>` (persistant)
+  - Webhooks : `hook:<uuid>` (sauf si explicitement défini par le hook)
   - Exécutions de nœud : `node-<nodeId>`
 
 ## Cycle de vie
 
 - Politique de réinitialisation : les sessions sont réutilisées jusqu'à leur expiration, et l'expiration est évaluée lors du prochain message entrant.
 - Réinitialisation quotidienne : par défaut à **4:00 AM heure locale sur l'hôte de la passerelle**. Une session est périmée dès que sa dernière mise à jour est antérieure à l'heure de la réinitialisation quotidienne la plus récente.
-- Réinitialisation par inactivité (optionnelle) : `idleMinutes` ajoute une fenêtre d'inactivité glissante. Lorsque les réinitialisations quotidiennes et par inactivité sont configurées, **celle qui expire en premier** force une nouvelle session.
-- Hérité inactivité uniquement : si vous définissez `session.idleMinutes` sans aucune configuration `session.reset`/`resetByType`, OpenClaw reste en mode inactivité uniquement pour la rétrocompatibilité.
-- Remplacements par type (facultatif) : `resetByType` vous permet de remplacer la stratégie pour les sessions `direct`, `group` et `thread` (thread = fils de discussion Slack/Discord, sujets Telegram, fils de discussion Matrix lorsqu'ils sont fournis par le connecteur).
-- Remplacements par canal (facultatif) : `resetByChannel` remplace la stratégie de réinitialisation pour un canal (s'applique à tous les types de session pour ce canal et prend la priorité sur `reset`/`resetByType`).
-- Déclencheurs de réinitialisation : `/new` ou `/reset` exacts (plus les extras dans `resetTriggers`) lancent un nouvel identifiant de session et transmettent le reste du message. `/new <model>` accepte un alias de modèle, `provider/model`, ou un nom de fournisseur (correspondance floue) pour définir le modèle de la nouvelle session. Si `/new` ou `/reset` est envoyé seul, OpenClaw exécute un bref tour de salutation « bonjour » pour confirmer la réinitialisation.
+- Réinitialisation inactive (optionnelle) : `idleMinutes` ajoute une fenêtre d'inactivité glissante. Lorsque les réinitialisations quotidiennes et inactives sont toutes deux configurées, **celle qui expire en premier** force une nouvelle session.
+- Mode inactif uniquement hérité : si vous définissez `session.idleMinutes` sans aucune configuration `session.reset`/`resetByType`, OpenClaw reste en mode inactif uniquement pour la rétrocompatibilité.
+- Remplacements par type (optionnels) : `resetByType` vous permet de remplacer la stratégie pour les sessions `direct`, `group` et `thread` (thread = fils Slack/Discord, sujets Telegram, fils Matrix lorsqu'ils sont fournis par le connecteur).
+- Remplacements par canal (en option) : `resetByChannel` remplace la stratégie de réinitialisation pour un canal (s'applique à tous les types de session pour ce canal et prévaut sur `reset`/`resetByType`).
+- Déclencheurs de réinitialisation : `/new` exact ou `/reset` (plus tout ajout dans `resetTriggers`) démarre un identifiant de session frais et transmet le reste du message. `/new <model>` accepte un alias de modèle, `provider/model`, ou un nom de fournisseur (correspondance approximative) pour définir le modèle de la nouvelle session. Si `/new` ou `/reset` est envoyé seul, OpenClaw exécute un court tour de salutation « hello » pour confirmer la réinitialisation.
 - Réinitialisation manuelle : supprimez les clés spécifiques du magasin ou retirez la transcription JSONL ; le message suivant les recrée.
-- Les tâches cron isolées créent toujours un nouveau `sessionId` à chaque exécution (pas de réutilisation en attente).
+- Les tâches cron isolées créent toujours un frais `sessionId` à chaque exécution (pas de réutilisation en veille).
 
 ## Stratégie d'envoi (facultatif)
 
@@ -240,8 +240,8 @@ Remplacement à l'exécution (propriétaire uniquement) :
 
 - `/send on` → autoriser pour cette session
 - `/send off` → refuser pour cette session
-- `/send inherit` → effacer le remplacement et utiliser les règles de configuration
-  Envoyez-les en tant que messages autonomes pour qu'ils soient enregistrés.
+- `/send inherit` → effacer la priorité et utiliser les règles de configuration
+  Envoyez-les sous forme de messages autonomes pour qu'ils soient enregistrés.
 
 ## Configuration (exemple de renommage facultatif)
 
@@ -279,11 +279,11 @@ Remplacement à l'exécution (propriétaire uniquement) :
 ## Inspection
 
 - `openclaw status` — affiche le chemin du magasin et les sessions récentes.
-- `openclaw sessions --json` — vide chaque entrée (filtrez avec `--active <minutes>`).
-- `openclaw gateway call sessions.list --params '{}'` — récupérer les sessions de la passerelle en cours d'exécution (utilisez `--url`/`--token` pour l'accès distant à la passerelle).
-- Envoyez `/status` comme message autonome dans le chat pour voir si l'agent est joignable, quelle quantité du contexte de session est utilisée, les bascules actuelles thinking/fast/verbose, et quand vos identifiants web WhatsApp ont été actualisés pour la dernière fois (aide à détecter les besoins de reconnexion).
-- Envoyez `/context list` ou `/context detail` pour voir ce qu'il y a dans le prompt système et les fichiers d'espace de travail injectés (ainsi que les plus grands contributeurs au contexte).
-- Envoyez `/stop` (ou des phrases d'abandon autonomes comme `stop`, `stop action`, `stop run`, `stop openclaw`) pour annuler l'exécution actuelle, effacer les suivis en file d'attente pour cette session, et arrêter toutes les exécutions de sous-agents lancées à partir de celle-ci (la réponse inclut le nombre d'arrêts).
+- `openclaw sessions --json` — vide chaque entrée (filtrer avec `--active <minutes>`).
+- `openclaw gateway call sessions.list --params '{}'` — récupère les sessions de la passerelle en cours d'exécution (utiliser `--url`/`--token` pour l'accès à la passerelle distante).
+- Envoyez `/status` comme message autonome dans le chat pour voir si l'agent est joignable, combien du contexte de session est utilisé, les bascules actuelles thinking/fast/verbose, et quand vos identifiants web WhatsApp ont été actualisés pour la dernière fois (aide à détecter les besoins de reconnexion).
+- Envoyez `/context list` ou `/context detail` pour voir ce qu'il y a dans le système d'invite et les fichiers d'espace de travail injectés (ainsi que les plus gros contributeurs de contexte).
+- Envoyez `/stop` (ou des phrases d'abandon autonomes comme `stop`, `stop action`, `stop run`, `stop openclaw`) pour abandonner l'exécution actuelle, effacer les suites en file d'attente pour cette session, et arrêter toutes les exécutions de sous-agents lancées à partir de celle-ci (la réponse inclut le nombre arrêté).
 - Envoyez `/compact` (instructions optionnelles) comme message autonome pour résumer l'ancien contexte et libérer de l'espace dans la fenêtre. Voir [/concepts/compaction](/fr/concepts/compaction).
 - Les transcriptions JSONL peuvent être ouvertes directement pour examiner les tours complets.
 
@@ -294,21 +294,18 @@ Remplacement à l'exécution (propriétaire uniquement) :
 
 ## Métadonnées d'origine de session
 
-Chaque entrée de session enregistre d'où elle vient (au mieux) dans `origin` :
+Chaque entrée de session enregistre sa provenance (au mieux) dans `origin` :
 
-- `label` : label humain (résolu à partir du label de conversation + sujet de groupe/channel)
+- `label` : libellé humain (résolu à partir du libellé de la conversation + du sujet du groupe/channel)
 - `provider` : id de channel normalisé (y compris les extensions)
-- `from`/`to` : ids de routage bruts de l'enveloppe entrante
-- `accountId` : id de compte fournisseur (lorsqu'il est multi-compte)
-- `threadId` : id du fil/sujet lorsque le channel le prend en charge
-  Les champs d'origine sont renseignés pour les messages directs, les channels et les groupes. Si un
-  connecteur ne met à jour que le routage de remise (par exemple, pour garder une session principale de DM
-  à jour), il doit tout de même fournir le contexte entrant afin que la session conserve ses
-  métadonnées explicatives. Les extensions peuvent le faire en envoyant `ConversationLabel`,
+- `from`/`to` : ids de routage bruts depuis l'enveloppe entrante
+- `accountId` : id de compte provider (lorsque multi-compte)
+- `threadId` : id de fil/sujet lorsque le channel le prend en charge
+  Les champs d'origine sont renseignés pour les messages directs, les channels et les groupes. Si un connecteur ne met à jour que le routage de livraison (par exemple, pour garder une session principale DM active), il doit tout de même fournir le contexte entrant pour que la session conserve ses métadonnées explicatives. Les extensions peuvent le faire en envoyant `ConversationLabel`,
   `GroupSubject`, `GroupChannel`, `GroupSpace` et `SenderName` dans le contexte
   entrant et en appelant `recordSessionMetaFromInbound` (ou en passant le même contexte
   à `updateLastRoute`).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -42,6 +42,6 @@ Voir [iMessage](/fr/channels/imessage) pour la configuration héritée et l'adre
 - Rendez les clients RPC résilients : délais d'attente, redémarrage à la sortie.
 - Préférez les ID stables (par ex., `chat_id`) aux chaînes d'affichage.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

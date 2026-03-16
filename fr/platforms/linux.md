@@ -93,6 +93,6 @@ Activez-le :
 systemctl --user enable --now openclaw-gateway[-<profile>].service
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

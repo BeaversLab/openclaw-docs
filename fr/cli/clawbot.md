@@ -20,6 +20,6 @@ Privilégiez directement les commandes modernes de premier niveau :
 
 - `openclaw clawbot qr` -> `openclaw qr`
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

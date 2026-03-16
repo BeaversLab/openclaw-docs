@@ -59,6 +59,6 @@ Public : contributeurs à l'application macOS. Objectif : garder la superpositio
 4. Wire `VoiceWakeOverlayController` to the publisher; remove direct calls from runtime/PTT.
 5. Add integration tests for session adoption, cooldown, and empty-text dismissal.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -113,6 +113,6 @@ Les marqueurs de divulgachis (`||spoiler||`) sont analysés uniquement pour Sign
 - Conservez les sauts de ligne de fin pour les blocs de code clôturés afin que les marqueurs de fermeture se trouvent sur
   leur propre ligne.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

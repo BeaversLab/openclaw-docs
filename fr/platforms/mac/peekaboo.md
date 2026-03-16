@@ -55,6 +55,6 @@ Les instantanés sont stockés en mémoire et expirent automatiquement après un
 - Si aucun hôte n'est trouvé, ouvrez l'une des applications hôte (Peekaboo.app ou OpenClaw.app)
   et vérifiez que les permissions sont accordées.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

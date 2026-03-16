@@ -137,6 +137,6 @@ export PATH="$HOME/.npm-global/bin:$PATH"
 
 Ajoutez la ligne `export PATH=...` à votre `~/.bashrc` ou `~/.zshrc` pour rendre la modification permanente.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

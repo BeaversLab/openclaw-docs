@@ -281,6 +281,6 @@ L'Venice API se trouve à `https://api.venice.ai/api/v1`. Assurez-vous que votre
 - [Tarifs](https://venice.ai/pricing)
 - [Statut](https://status.venice.ai)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

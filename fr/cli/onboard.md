@@ -156,6 +156,6 @@ openclaw agents add <name>
   `--json` n'implique pas le mode non interactif. Utilisez `--non-interactive` pour les scripts.
 </Note>
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

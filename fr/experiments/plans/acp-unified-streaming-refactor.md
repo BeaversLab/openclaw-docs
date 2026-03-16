@@ -95,6 +95,6 @@ Contrat d'événement canonique :
 - Le chemin du projecteur/fusionneur ACP hérité est supprimé.
 - La résolution de configuration de streaming est partagée et indépendante du runtime.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

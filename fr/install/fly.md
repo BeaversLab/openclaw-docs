@@ -489,6 +489,6 @@ Avec la configuration recommandée (`shared-cpu-2x`, 2 Go de RAM) :
 
 Voir la [tarification Fly.io](https://fly.io/docs/about/pricing/) pour plus de détails.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

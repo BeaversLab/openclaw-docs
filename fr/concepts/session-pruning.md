@@ -120,6 +120,6 @@ Limiter l'élagage à des outils spécifiques :
 
 Voir la référence de configuration : [Configuration du Gateway](/fr/gateway/configuration)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

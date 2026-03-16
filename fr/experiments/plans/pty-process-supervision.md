@@ -194,6 +194,6 @@ La branche possède désormais une forme de supervision plus cohérente et plus 
 - valeurs par défaut unifiées du chien de garde
 - limite de redémarrage explicite en mémoire (aucune réconciliation des orphelins lors des redémarrages dans cette passe)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

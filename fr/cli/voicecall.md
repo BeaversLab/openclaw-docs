@@ -33,6 +33,6 @@ openclaw voicecall expose --mode off
 
 Note de sécurité : n'exposez le point de terminaison du webhook qu'à des réseaux de confiance. Préférez Tailscale Serve à Funnel lorsque cela est possible.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

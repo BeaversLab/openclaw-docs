@@ -799,6 +799,6 @@ These are non-blocking follow-ups to keep the ACP path maintainable after the cu
 - surface de l'API d'exécution (`submit`, `cancel`, `close`, etc.)
 - améliore la testabilité et rend le comportement du backend plus facile à auditer
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

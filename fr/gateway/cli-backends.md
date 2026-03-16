@@ -224,6 +224,6 @@ Ne modifier que si nécessaire (courant : chemin absolu `command`).
   `none` (Codex CLI ne peut actuellement pas reprendre avec une sortie JSON).
 - **Images ignorées** : définissez `imageArg` (et vérifiez que le CLI prend en charge les chemins de fichiers).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

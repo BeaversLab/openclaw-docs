@@ -105,6 +105,6 @@ Si l'application échoue avec un message de chemin cible invalide, régénérez 
 - [Surface des informations d'identification SecretRef](/fr/reference/secretref-credential-surface)
 - [Référence de configuration](/fr/gateway/configuration-reference)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

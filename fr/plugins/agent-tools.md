@@ -98,6 +98,6 @@ Autres paramètres de configuration affectant la disponibilité des outils :
 - Privilégiez `optional: true` pour les outils qui déclenchent des effets secondaires ou nécessitent des
   binaires/identifiants supplémentaires.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

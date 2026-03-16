@@ -372,6 +372,6 @@ Le prompt système de l'agent inclut une introduction de groupe au premier tour 
 
 Voir [Group messages](/fr/concepts/group-messages) pour les comportements exclusifs à WhatsApp (injection de l'historique, détails de la gestion des mentions).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

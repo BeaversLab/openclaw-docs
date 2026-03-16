@@ -58,6 +58,6 @@ Ordre d'extraction `web_fetch` :
 
 Voir [Web tools](/fr/tools/web) pour la configuration complète de l'outil Web.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

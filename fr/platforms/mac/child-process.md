@@ -67,6 +67,6 @@ Le mode distant ne démarre jamais de Gateway local. L'application utilise un tu
 
 Si un véritable mode processus enfant est un jour nécessaire à nouveau, il doit être documenté comme un mode distinct et explicite réservé aux développeurs.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

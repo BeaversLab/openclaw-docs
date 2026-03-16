@@ -27,6 +27,6 @@ MIT - Libre comme un homard dans l'océan.
 
 > "Nous jouons tous simplement avec nos propres invites." (Une IA, probablement défoncée aux jetons)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

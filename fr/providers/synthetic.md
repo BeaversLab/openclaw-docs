@@ -98,6 +98,6 @@ Tous les models ci-dessous utilisent le coût `0` (entrée/sortie/cache).
   prévoyez d'utiliser.
 - Voir [Model providers](/fr/concepts/model-providers) pour les règles du provider.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

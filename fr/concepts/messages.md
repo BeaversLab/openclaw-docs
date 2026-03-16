@@ -143,6 +143,6 @@ Le formatage des messages sortants est centralisé dans `messages` :
 
 Détails : [Configuration](/fr/gateway/configuration#messages) et documentation des channels.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

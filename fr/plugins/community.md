@@ -50,6 +50,6 @@ Utilisez ce format lors de l'ajout d'entrées :
   repo : `https://github.com/icesword0760/openclaw-wechat`
   install : `openclaw plugins install @icesword760/openclaw-wechat`
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -88,6 +88,6 @@ Les envois sortants étaient mis en miroir dans la session de l'agent _actuel_ (
   - `src/agents/tools/message-tool.test.ts`
   - `src/gateway/server-methods/send.test.ts`
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -122,6 +122,6 @@ Exemple de configuration :
 }
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

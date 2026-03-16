@@ -66,6 +66,6 @@ Renforcement :
 - Activez l'appui-parler, maintenez Cmd+Fn, parlez, relâchez : la superposition doit afficher les partiels puis envoyer.
 - Tout en maintenant, les oreilles de la barre de menu doivent rester agrandies (utilise `triggerVoiceEars(ttl:nil)`); elles disparaissent après le relâchement.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

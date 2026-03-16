@@ -416,6 +416,6 @@ Choisir une option avant la mise en œuvre pour éviter toute dérive.
 - Proposition : un protocole WS avec des rôles + portées explicites, appairage unifié + épinglage TLS, approbations hébergées par la passerelle, IDs d'appareil stables + slugs mignons.
 - Résultat : UX plus simple, sécurité renforcée, moins de duplication, meilleur routage mobile.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -65,6 +65,6 @@ Qui le reçoit :
 - Voice Wake est actuellement désactivé dans le runtime/les paramètres Android.
 - La voix Android utilise une capture manuelle du microphone dans l'onglet Voice au lieu des déclencheurs de mots de réveil.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

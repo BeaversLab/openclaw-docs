@@ -96,7 +96,8 @@ pnpm install
 pnpm gateway:watch
 ```
 
-`gateway:watch` ejecuta el gateway en modo de observación y se recarga ante cambios en TypeScript.
+`gateway:watch` ejecuta la puerta de enlace en modo de observación y se recarga ante cambios relevantes en el código fuente,
+la configuración y los metadatos de los plugins empaquetados.
 
 ### 2) Apunte la app de macOS a su Gateway en ejecución
 

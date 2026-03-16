@@ -160,6 +160,6 @@ Default file:
 - Keep logs local and delete them after debugging.
 - If you share logs, scrub secrets and PII first.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

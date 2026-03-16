@@ -8,7 +8,7 @@ title: "Dépannage"
 
 # Dépannage de la passerelle
 
-Cette page est le guide de dépannage approfondi.
+Cette page est le runbook détaillé.
 Commencez par [/help/troubleshooting](/fr/help/troubleshooting) si vous souhaitez d'abord suivre le flux de triage rapide.
 
 ## Échelle de commande
@@ -121,12 +121,12 @@ Signatures courantes :
 
 Utilisez `error.details.code` de la réponse `connect` échouée pour choisir l'action suivante :
 
-| Code de détail               | Signification                                                                    | Action recommandée                                                                                                                                                                                                             |
-| ---------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `AUTH_TOKEN_MISSING`         | Le client n'a pas envoyé un jeton partagé requis.                                | Collez/définissez le jeton dans le client et réessayez. Pour les chemins du tableau de bord : `openclaw config get gateway.auth.token` puis collez dans les paramètres de l'interface utilisateur de contrôle.                 |
-| `AUTH_TOKEN_MISMATCH`        | Le jeton partagé ne correspond pas au jeton d'authentification de la passerelle. | Si `canRetryWithDeviceToken=true`, autorisez une nouvelle tentative de confiance. Si cela échoue toujours, exécutez la [liste de contrôle de récupération de dérive de jeton](/fr/cli/devices#token-drift-recovery-checklist). |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | Le jeton mis en cache par appareil est périmé ou révoqué.                        | Faites pivoter/réapprouvez le jeton d'appareil à l'aide de [devices CLI](/fr/cli/devices), puis reconnectez-vous.                                                                                                              |
-| `PAIRING_REQUIRED`           | L'identité de l'appareil est connue mais n'est pas approuvée pour ce rôle.       | Approuver la demande en attente : `openclaw devices list` puis `openclaw devices approve <requestId>`.                                                                                                                         |
+| Code de détail               | Signification                                                                    | Action recommandée                                                                                                                                                                                                      |
+| ---------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_TOKEN_MISSING`         | Le client n'a pas envoyé un jeton partagé requis.                                | Collez/définissez le jeton dans le client et réessayez. Pour les chemins du tableau de bord : `openclaw config get gateway.auth.token` puis collez dans les paramètres de l'interface utilisateur de contrôle.          |
+| `AUTH_TOKEN_MISMATCH`        | Le jeton partagé ne correspond pas au jeton d'authentification de la passerelle. | Si `canRetryWithDeviceToken=true`, autorisez une nouvelle tentative de confiance. Si cela échoue toujours, exécutez la [checklist de récupération de dérive de jetons](/fr/cli/devices#token-drift-recovery-checklist). |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | Le jeton mis en cache par appareil est périmé ou révoqué.                        | Faites pivoter/réapprouver le jeton de l'appareil en utilisant le [CLI des appareils](/fr/cli/devices), puis reconnectez-vous.                                                                                          |
+| `PAIRING_REQUIRED`           | L'identité de l'appareil est connue mais n'est pas approuvée pour ce rôle.       | Approuver la demande en attente : `openclaw devices list` puis `openclaw devices approve <requestId>`.                                                                                                                  |
 
 Vérification de la migration de l'authentification d'appareil v2 :
 
@@ -289,14 +289,14 @@ Recherchez :
 
 - Chemin d'exécutable du navigateur valide.
 - Accessibilité du profil CDP.
-- Attachement de l'onglet relais d'extension pour `profile="chrome"`.
+- Pièce jointe de l'onglet relais d'extension (si un profil de relais d'extension est configuré).
 
 Signatures courantes :
 
-- `Failed to start Chrome CDP on port` → échec du lancement du processus navigateur.
+- `Failed to start Chrome CDP on port` → le processus du navigateur n'a pas pu démarrer.
 - `browser.executablePath not found` → le chemin configuré n'est pas valide.
-- `Chrome extension relay is running, but no tab is connected` → le relais de l'extension n'est pas attaché.
-- `Browser attachOnly is enabled ... not reachable` → le profil d'attachement uniquement n'a aucune cible accessible.
+- `Chrome extension relay is running, but no tab is connected` → le relais d'extension n'est pas attaché.
+- `Browser attachOnly is enabled ... not reachable` → le profil attach-only n'a aucune cible accessible.
 
 Connexes :
 
@@ -319,8 +319,8 @@ openclaw config get gateway.auth.mode
 
 Ce qu'il faut vérifier :
 
-- Si `gateway.mode=remote`, les appels CLI peuvent cibler le distant alors que votre service local est fonctionnel.
-- Les appels explicites `--url` ne reviennent pas aux identifiants stockés.
+- Si `gateway.mode=remote`, les appels CLI peuvent cibler une instance distante alors que votre service local est fonctionnel.
+- Les appels explicites `--url` ne reviennent pas aux informations d'identification stockées.
 
 Signatures courantes :
 
@@ -338,7 +338,7 @@ openclaw logs --follow
 
 Ce qu'il faut vérifier :
 
-- Les liaisons non-boucle (`lan`, `tailnet`, `custom`) nécessitent une authentification configurée.
+- Les liaisons non-bouclage (`lan`, `tailnet`, `custom`) nécessitent une authentification configurée.
 - Les anciennes clés comme `gateway.token` ne remplacent pas `gateway.auth.token`.
 
 Signatures courantes :
@@ -378,6 +378,6 @@ Connexe :
 - [/gateway/authentication](/fr/gateway/authentication)
 - [/gateway/background-process](/fr/gateway/background-process)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

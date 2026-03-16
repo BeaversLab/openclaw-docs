@@ -55,6 +55,6 @@ Lorsqu'une localisation est présente, ces champs sont ajoutés à `ctx` :
 - **WhatsApp** : `locationMessage.comment` et `liveLocationMessage.caption` sont ajoutés comme ligne de légende.
 - **Matrix** : `geo_uri` est analysé comme une localisation épinglée ; l'altitude est ignorée et `LocationIsLive` est toujours faux.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

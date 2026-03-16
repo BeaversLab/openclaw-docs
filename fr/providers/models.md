@@ -41,6 +41,6 @@ OpenClaw peut utiliser de nombreux fournisseurs LLM. Choisissez-en un, authentif
 
 Pour le catalogue complet des fournisseurs (xAI, Groq, Mistral, etc.) et la configuration avancée, consultez [Fournisseurs de modèles](/fr/concepts/model-providers).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -218,6 +218,6 @@ _"La pince est la loi."_
 
 🦞💙
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

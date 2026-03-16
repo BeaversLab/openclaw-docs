@@ -105,6 +105,6 @@ Connexes :
 
 - Configuration de session : [Référence de configuration](/fr/gateway/configuration-reference#session)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -27,7 +27,7 @@ Connexes :
 ## Quick start (local)
 
 ```bash
-openclaw browser --browser-profile chrome tabs
+openclaw browser profiles
 openclaw browser --browser-profile openclaw start
 openclaw browser --browser-profile openclaw open https://example.com
 openclaw browser --browser-profile openclaw snapshot
@@ -38,7 +38,8 @@ openclaw browser --browser-profile openclaw snapshot
 Les profils sont des configurations de routage de navigateur nommées. En pratique :
 
 - `openclaw` : lance/attache à une instance Chrome dédiée gérée par OpenClaw (répertoire de données utilisateur isolé).
-- `chrome` : contrôle vos onglets Chrome existants via le relais d'extension Chrome.
+- `user` : contrôle votre session Chrome connectée existante via Chrome DevTools MCP.
+- `chrome-relay` : contrôle vos onglets Chrome existants via le relais de l'extension Chrome.
 
 ```bash
 openclaw browser profiles
@@ -75,7 +76,7 @@ Capture d'écran :
 openclaw browser screenshot
 ```
 
-Naviguer/cliquer/saisir (automatisation de l'interface utilisateur basée sur des références) :
+Navigation / clic / saisie (automatisation de l'interface utilisateur basée sur des références) :
 
 ```bash
 openclaw browser navigate https://example.com
@@ -87,25 +88,25 @@ openclaw browser type <ref> "hello"
 
 Ce mode permet à l'agent de contrôler un onglet Chrome existant que vous attachez manuellement (il ne s'attache pas automatiquement).
 
-Installer l'extension décompressée sur un chemin stable :
+Installez l'extension décompressée dans un chemin stable :
 
 ```bash
 openclaw browser extension install
 openclaw browser extension path
 ```
 
-Ensuite, Chrome → `chrome://extensions` → activer "Mode développeur" → "Charger l'extension non compressée" → sélectionner le dossier imprimé.
+Ensuite Chrome → `chrome://extensions` → activer « Mode développeur » → « Charger l'extension non empaquetée » → sélectionner le dossier imprimé.
 
 Guide complet : [Extension Chrome](/fr/tools/chrome-extension)
 
-## Contrôle distant du navigateur (proxy node host)
+## Contrôle distant du navigateur (proxy hôte de nœud)
 
-Si la Gateway s'exécute sur une machine différente de celle du navigateur, exécutez un **node host** sur la machine qui dispose de Chrome/Brave/Edge/Chromium. La Gateway transmettra les actions du navigateur à ce nœud (aucun serveur de contrôle de navigateur distinct requis).
+Si la Gateway s'exécute sur une machine différente de celle du navigateur, exécutez un **node host** sur la machine qui dispose de Chrome/Brave/Edge/Chromium. La Gateway proxera les actions du navigateur vers ce nœud (aucun serveur de contrôle de navigateur distinct n'est requis).
 
 Utilisez `gateway.nodes.browser.mode` pour contrôler le routage automatique et `gateway.nodes.browser.node` pour épingler un nœud spécifique si plusieurs sont connectés.
 
-Sécurité + configuration à distance : [Browser tool](/fr/tools/browser), [Remote access](/fr/gateway/remote), [Tailscale](/fr/gateway/tailscale), [Security](/fr/gateway/security)
+Sécurité + configuration à distance : [Outil de navigateur](/fr/tools/browser), [Accès à distance](/fr/gateway/remote), [Tailscale](/fr/gateway/tailscale), [Sécurité](/fr/gateway/security)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

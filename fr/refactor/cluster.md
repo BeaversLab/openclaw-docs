@@ -298,6 +298,6 @@ Gain estimé :
 5. Extraction des étapes d'intégration
 6. Extraction de l'assistant du cycle de vie du moniteur
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

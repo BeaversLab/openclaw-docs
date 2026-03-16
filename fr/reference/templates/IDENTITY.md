@@ -28,6 +28,6 @@ Notes :
 - Enregistrez ce fichier à la racine de l'espace de travail sous `IDENTITY.md`.
 - Pour les avatars, utilisez un chemin relatif à l'espace de travail comme `avatars/openclaw.png`.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

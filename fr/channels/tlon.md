@@ -269,6 +269,6 @@ Options du fournisseur :
 - Texte enrichi : le formatage Markdown (gras, italique, code, en-têtes, listes) est converti au format natif de Tlon.
 - Images : les URL sont téléchargées vers le stockage de Tlon et intégrées sous forme de blocs d'image.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -10,6 +10,6 @@ read_when:
 Ajoutez des instructions courtes et explicites sur ce que OpenClaw doit faire au démarrage (activer `hooks.internal.enabled`).
 Si la tâche envoie un message, utilisez le message tool puis répondez avec NO_REPLY.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -70,6 +70,6 @@ openclaw security audit --fix --json | jq '{fix: .fix.ok, summary: .report.summa
 - changer les choix de liaison/authentification/exposition réseau de la passerelle
 - supprimer ou réécrire les plugins/compétences
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

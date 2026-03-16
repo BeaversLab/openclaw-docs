@@ -207,6 +207,6 @@ Pour une architecture de sécurité détaillée et le dépannage :
 - [Sandboxing](/fr/gateway/sandboxing) — configuration du bac à sable de l'agent
 - [Multi-Agent Sandbox & Tools](/fr/tools/multi-agent-sandbox-tools) — isolation par agent
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

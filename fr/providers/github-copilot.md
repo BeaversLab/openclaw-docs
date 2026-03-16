@@ -71,6 +71,6 @@ openclaw models set github-copilot/gpt-4o
 - La connexion stocke un jeton GitHub dans le magasin de profils d'authentification et l'échange contre un
   jeton de l'API Copilot lorsque OpenClaw s'exécute.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

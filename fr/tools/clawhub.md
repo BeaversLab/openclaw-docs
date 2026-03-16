@@ -256,6 +256,6 @@ export CLAWHUB_DISABLE_TELEMETRY=1
 - `CLAWHUB_WORKDIR` : Remplace le répertoire de travail par défaut.
 - `CLAWHUB_DISABLE_TELEMETRY=1` : Désactive la télémétrie sur `sync`.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

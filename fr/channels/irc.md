@@ -240,6 +240,6 @@ Le compte par défaut prend en charge :
 - Si la connexion échoue, vérifiez la disponibilité du pseudo et le mot de passe du serveur.
 - Si TLS échoue sur un réseau personnalisé, vérifiez l'hôte/le port et la configuration du certificat.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

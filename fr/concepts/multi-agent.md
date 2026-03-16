@@ -551,6 +551,6 @@ Pour le ciblage de groupe, utilisez `agents.list[].groupChat.mentionPatterns` af
 
 Voir [Multi-Agent Sandbox & Tools](/fr/tools/multi-agent-sandbox-tools) pour des exemples détaillés.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

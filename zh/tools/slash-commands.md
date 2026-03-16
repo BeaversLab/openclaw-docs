@@ -76,7 +76,7 @@ title: "斜杠命令"
 - `/allowlist`（列出/添加/移除允许列表条目）
 - `/approve <id> allow-once|allow-always|deny`（解决执行批准提示）
 - `/context [list|detail|json]`（解释“上下文”；`detail` 显示每个文件 + 每个工具 + 每个技能 + 系统提示词大小）
-- `/btw <question>`（询问关于当前会话的一次性附带问题，而不改变未来的会话上下文；参见 [/tools/btw](/en/tools/btw)）
+- `/btw <question>`（询问关于当前会话的一次性附带问题，而不改变未来的会话上下文；参见 [/tools/btw](/zh/tools/btw)）
 - `/export-session [path]`（别名：`/export`）（将当前会话导出为包含完整系统提示词的 HTML）
 - `/whoami`（显示您的发送者 ID；别名：`/id`）
 - `/session idle <duration|off>`（管理焦点线程绑定的非活动自动取消焦点）
@@ -92,7 +92,7 @@ title: "斜杠命令"
 - `/config show|get|set|unset`（将配置持久化到磁盘，仅所有者；需要 `commands.config: true`）
 - `/debug show|set|unset|reset`（运行时覆盖，仅所有者；需要 `commands.debug: true`）
 - `/usage off|tokens|full|cost`（每次响应的使用情况页脚或本地成本摘要）
-- `/tts off|always|inbound|tagged|status|provider|limit|summary|audio`（控制 TTS；参见 [/tts](/en/tts)）
+- `/tts off|always|inbound|tagged|status|provider|limit|summary|audio`（控制 TTS；参见 [/tts](/zh/tts)）
   - Discord：原生命令是 `/voice`（Discord 预留了 `/tts`）；文本 `/tts` 仍然有效。
 - `/stop`
 - `/restart`
@@ -114,7 +114,7 @@ title: "斜杠命令"
 
 仅文本：
 
-- `/compact [instructions]` （参见 [/concepts/compaction](/en/concepts/compaction)）
+- `/compact [instructions]` （参见 [/concepts/compaction](/zh/concepts/compaction)）
 - `! <command>` （仅限主机；一次一个；对于长时间运行的任务，使用 `!poll` + `!stop`）
 - `!poll` （检查输出 / 状态；接受可选的 `sessionId`；`/bash poll` 也可用）
 - `!stop` （停止正在运行的 bash 作业；接受可选的 `sessionId`；`/bash stop` 也可以）
@@ -130,7 +130,7 @@ title: "斜杠命令"
 - `/restart` 默认已启用；设置 `commands.restart: false` 可将其禁用。
 - Discord 专用本机命令：`/vc join|leave|status` 控制语音渠道（需要 `channels.discord.voice` 和本机命令；不以文本形式提供）。
 - Discord 线程绑定命令（`/focus`、`/unfocus`、`/agents`、`/session idle`、`/session max-age`）要求启用有效的线程绑定（`session.threadBindings.enabled` 和/或 `channels.discord.threadBindings.enabled`）。
-- ACP 命令参考和运行时行为：[ACP Agents](/en/tools/acp-agents)。
+- ACP 命令参考和运行时行为：[ACP Agents](/zh/tools/acp-agents)。
 - `/verbose` 旨在用于调试和额外的可见性；正常使用时请将其保持**关闭**。
 - `/fast on|off` 持久化会话覆盖。使用会话 UI `inherit` 选项清除它并回退到配置默认值。
 - 在相关时仍会显示工具失败摘要，但仅当 `/verbose` 为 `on` 或 `full` 时才包含详细的失败文本。
@@ -145,7 +145,7 @@ title: "斜杠命令"
   - `/skill <name> [input]` 按名称运行技能（当原生命令限制阻止每个技能拥有独立命令时很有用）。
   - 默认情况下，技能命令作为普通请求转发给模型。
   - 技能可以选择声明 `command-dispatch: tool`，以将命令直接路由到工具（确定性，不涉及模型）。
-  - 示例：`/prose`（OpenProse 插件）——参见 [OpenProse](/en/prose)。
+  - 示例：`/prose`（OpenProse 插件）——参见 [OpenProse](/zh/prose)。
 - **原生命令参数：** Discord 使用自动补全来处理动态选项（当您省略必需参数时会显示按钮菜单）。当命令支持选项且您省略参数时，Telegram 和 Slack 会显示按钮菜单。
 
 ## 使用界面（显示位置）
@@ -246,7 +246,7 @@ Example:
 /btw what are we doing right now?
 ```
 
-See [BTW Side Questions](/en/tools/btw) for the full behavior and client UX
+See [BTW Side Questions](/zh/tools/btw) for the full behavior and client UX
 details.
 
 import zh from "/components/footer/zh.mdx";

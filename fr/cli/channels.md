@@ -100,6 +100,6 @@ Notes :
 - La résolution préfère les correspondances actives lorsque plusieurs entrées partagent le même nom.
 - `channels resolve` est en lecture seule. Si un compte sélectionné est configuré via SecretRef mais que cet identifiant n'est pas disponible dans le chemin de commande actuel, la commande renvoie des résultats dégradés non résolus avec des notes au lieu d'interrompre l'exécution entière.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

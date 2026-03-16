@@ -85,6 +85,6 @@ Stocké sous `~/.openclaw/devices/` :
   - Discord : [Discord](/fr/channels/discord)
   - Slack : [Slack](/fr/channels/slack)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

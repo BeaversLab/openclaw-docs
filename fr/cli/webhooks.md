@@ -24,6 +24,6 @@ openclaw webhooks gmail run
 
 Consultez la [documentation Gmail Pub/Sub](/fr/automation/gmail-pubsub) pour plus de détails.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

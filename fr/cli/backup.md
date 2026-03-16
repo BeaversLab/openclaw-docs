@@ -75,6 +75,6 @@ Les espaces de travail volumineux sont généralement le facteur principal de la
 
 Pour la plus petite archive, utilisez `--only-config`.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

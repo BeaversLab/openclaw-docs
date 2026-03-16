@@ -9,11 +9,11 @@ title: "Instalar"
 
 # Instalar
 
-¿Ya seguiste [Introducción](/es/start/getting-started)? Ya estás listo — esta página es para métodos de instalación alternativos, instrucciones específicas de la plataforma y mantenimiento.
+¿Ya seguiste [Introducción](/es/start/getting-started)? Todo listo — esta página es para métodos de instalación alternativos, instrucciones específicas de la plataforma y mantenimiento.
 
 ## Requisitos del sistema
 
-- **[Node 24 (recomendado)](/es/install/node)** (Node 22 LTS, actualmente `22.16+`, todavía tiene soporte por compatibilidad; el [script de instalación](#install-methods) instalará Node 24 si no está presente)
+- **[Node 24 (recomendado)](/es/install/node)** (Node 22 LTS, actualmente `22.16+`, todavía es compatible por compatibilidad; el [script de instalación](#install-methods) instalará Node 24 si no está presente)
 - macOS, Linux o Windows
 - `pnpm` solo si compilas desde el código fuente
 
@@ -37,7 +37,7 @@ title: "Instalar"
 
 <AccordionGroup>
   <Accordion title="Script de instalación" icon="rocket" defaultOpen>
-    Descarga la CLI, la instala globalmente a través de npm e inicia el asistente de configuración.
+    Descarga la CLI, la instala globalmente a través de npm e inicia el asistente de incorporación.
 
     <Tabs>
       <Tab title="macOS / Linux / WSL2">
@@ -52,9 +52,9 @@ title: "Instalar"
       </Tab>
     </Tabs>
 
-    Eso es todo: el script maneja la detección de Node, la instalación y el inicio.
+    Eso es todo: el script se encarga de la detección de Node, la instalación y la incorporación.
 
-    Para omitir el inicio y solo instalar el binario:
+    Para omitir la incorporación y solo instalar el binario:
 
     <Tabs>
       <Tab title="macOS / Linux / WSL2">
@@ -69,7 +69,7 @@ title: "Instalar"
       </Tab>
     </Tabs>
 
-    Para ver todas las flags, variables de entorno y opciones de CI/automatización, consulte [Aspectos internos del instalador](/es/install/installer).
+    Para ver todas las opciones de indicadores, variables de entorno y CI/automatización, consulta [Detalles del instalador](/es/install/installer).
 
   </Accordion>
 
@@ -90,7 +90,7 @@ title: "Instalar"
           SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
           ```
 
-          Si ves `sharp: Please add node-gyp to your dependencies`, instala las herramientas de compilación (macOS: Xcode CLT + `npm install -g node-gyp`) o usa la variable de entorno anterior.
+          Si ves `sharp: Please add node-gyp to your dependencies`, instala herramientas de compilación (macOS: Xcode CLT + `npm install -g node-gyp`) o usa la variable de entorno mencionada arriba.
         </Accordion>
       </Tab>
       <Tab title="pnpm">
@@ -105,6 +105,16 @@ title: "Instalar"
         </Note>
       </Tab>
     </Tabs>
+
+    ¿Quieres la versión `main` head actual de GitHub con una instalación mediante un gestor de paquetes?
+
+    ```bash
+    npm install -g github:openclaw/openclaw#main
+    ```
+
+    ```bash
+    pnpm add -g github:openclaw/openclaw#main
+    ```
 
   </Accordion>
 
@@ -123,7 +133,7 @@ title: "Instalar"
         pnpm build
         ```
       </Step>
-      <Step title="Vincular la CLI">
+      <Step title="Enlazar la CLI">
         Haz que el comando `openclaw` esté disponible globalmente:
 
         ```bash
@@ -132,7 +142,7 @@ title: "Instalar"
 
         Alternativamente, omite el enlace y ejecuta comandos a través de `pnpm openclaw ...` desde dentro del repositorio.
       </Step>
-      <Step title="Ejecutar onboarding">
+      <Step title="Ejecutar el onboarding">
         ```bash
         openclaw onboard --install-daemon
         ```
@@ -148,10 +158,10 @@ title: "Instalar"
 
 <CardGroup cols={2}>
   <Card title="Docker" href="/es/install/docker" icon="container">
-    Despliegues en contenedores o sin cabeza.
+    Implementaciones en contenedores o sin interfaz gráfica.
   </Card>
   <Card title="Podman" href="/es/install/podman" icon="container">
-    Contenedor sin root: ejecute `setup-podman.sh` una vez, luego el script de lanzamiento.
+    Contenedor sin root: ejecute `setup-podman.sh` una vez y luego el script de lanzamiento.
   </Card>
   <Card title="Nix" href="/es/install/nix" icon="snowflake">
     Instalación declarativa mediante Nix.
@@ -160,7 +170,7 @@ title: "Instalar"
     Aprovisionamiento automatizado de flotas.
   </Card>
   <Card title="Bun" href="/es/install/bun" icon="zap">
-    Uso solo de CLI mediante el runtime Bun.
+    Uso solo de CLI a través del tiempo de ejecución Bun.
   </Card>
 </CardGroup>
 
@@ -180,7 +190,7 @@ Si necesita rutas de tiempo de ejecución personalizadas, use:
 - `OPENCLAW_STATE_DIR` para la ubicación del estado mutable
 - `OPENCLAW_CONFIG_PATH` para la ubicación del archivo de configuración
 
-Consulte [Variables de entorno](/es/help/environment) para conocer la precedencia y detalles completos.
+Consulte [Variables de entorno](/es/help/environment) para conocer la precedencia y los detalles completos.
 
 ## Solución de problemas: `openclaw` no encontrado
 
@@ -194,7 +204,7 @@ npm prefix -g
 echo "$PATH"
 ```
 
-Si `$(npm prefix -g)/bin` (macOS/Linux) o `$(npm prefix -g)` (Windows) **no** están en su `$PATH`, su shell no puede encontrar los binarios globales de npm (incluyendo `openclaw`).
+Si `$(npm prefix -g)/bin` (macOS/Linux) o `$(npm prefix -g)` (Windows) **no** está en su `$PATH`, su shell no puede encontrar los binarios globales de npm (incluyendo `openclaw`).
 
 Solución: agréguelo a su archivo de inicio de shell (`~/.zshrc` o `~/.bashrc`):
 
@@ -212,13 +222,13 @@ Luego abra una nueva terminal (o ejecute `rehash` en zsh / `hash -r` en bash).
 
 <CardGroup cols={3}>
   <Card title="Actualizando" href="/es/install/updating" icon="refresh-cw">
-    Mantener OpenClaw actualizado.
+    Mantenga OpenClaw actualizado.
   </Card>
   <Card title="Migrating" href="/es/install/migrating" icon="arrow-right">
     Moverse a una nueva máquina.
   </Card>
   <Card title="Uninstall" href="/es/install/uninstall" icon="trash-2">
-    Eliminar OpenClaw completamente.
+    Eliminar OpenClaw por completo.
   </Card>
 </CardGroup>
 

@@ -260,6 +260,6 @@ Documentation associée :
 - [Sécurité](/fr/gateway/security)
 - [Réactions](/fr/tools/reactions)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

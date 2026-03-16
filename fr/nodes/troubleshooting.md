@@ -113,6 +113,6 @@ Connexes :
 - [/tools/exec-approvals](/fr/tools/exec-approvals)
 - [/gateway/pairing](/fr/gateway/pairing)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -52,6 +52,6 @@ entrée `models.providers.qwen-portal` (utilisez la commande de connexion ci-des
   `models.providers.qwen-portal.baseUrl` si Qwen fournit un point de terminaison différent).
 - Voir [Modèles de fournisseurs](/fr/concepts/model-providers) pour les règles générales des fournisseurs.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

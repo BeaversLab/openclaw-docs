@@ -80,6 +80,6 @@ Voir [Configuration : Substitution de variable d'environnement](/fr/gateway/conf
 - [FAQ : env vars et chargement .env](/fr/help/faq#env-vars-and-env-loading)
 - [Aperçu des modèles](/fr/concepts/models)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

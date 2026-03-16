@@ -96,6 +96,6 @@ Envoyer stdin :
 { "tool": "process", "action": "write", "sessionId": "<id>", "data": "y\n" }
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

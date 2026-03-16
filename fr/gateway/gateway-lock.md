@@ -33,6 +33,6 @@ Dernière mise à jour : 2025-12-11
 - Si le port est occupé par un _autre_ processus, l'erreur est la même ; libérez le port ou choisissez-en un autre avec `openclaw gateway --port <port>`.
 - L'application macOS maintient toujours son propre garde de PID léger avant de lancer la gateway ; le verrouillage d'exécution est appliqué par la liaison WebSocket.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

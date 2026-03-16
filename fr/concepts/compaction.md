@@ -100,6 +100,6 @@ Consultez [provider OpenAI](/fr/providers/openai) pour les paramètres et les re
 - Les sorties d'outils volumineuses sont déjà tronquées ; l'élagage peut réduire davantage l'accumulation des résultats d'outils.
 - Si vous avez besoin de repartir à zéro, `/new` ou `/reset` lance un nouvel identifiant de session.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

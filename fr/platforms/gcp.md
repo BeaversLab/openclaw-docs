@@ -502,6 +502,6 @@ Consultez https://cloud.google.com/iam/docs/understanding-roles pour plus de dé
 - Associez les appareils locaux en tant que nœuds : [Nœuds](/fr/nodes)
 - Configurez le Gateway : [Configuration Gateway](/fr/gateway/configuration)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

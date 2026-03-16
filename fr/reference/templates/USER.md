@@ -22,6 +22,6 @@ _(À quoi tiennent-ils ? Sur quels projets travaillent-ils ? Qu'est-ce qui les a
 
 Plus vous en savez, mieux vous pourrez aider. Mais n'oubliez pas — vous apprenez à connaître une personne, vous ne constituez pas un dossier. Respectez la différence.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

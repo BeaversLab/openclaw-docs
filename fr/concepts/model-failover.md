@@ -150,6 +150,6 @@ Voir la [configuration Gateway](/fr/gateway/configuration) pour :
 
 Voir [Models](/fr/concepts/models) pour l'aperçu global de la sélection et du basculement de model.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

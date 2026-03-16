@@ -225,6 +225,6 @@ Tests :
 - aucun changement de comportement pour les déploiements de génération liée désactivée
 - l'ACP reste explicitement différée
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

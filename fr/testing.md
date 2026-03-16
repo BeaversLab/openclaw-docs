@@ -367,6 +367,6 @@ Lorsque vous corrigez un problème de fournisseur/modèle découvert en direct :
   - bogue de conversion/relecture de requête fournisseur → test direct des modèles
   - bogue de pipeline session/historique/outil de la Gateway → test de fumée en direct de la Gateway ou test simulé compatible CI de la Gateway
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

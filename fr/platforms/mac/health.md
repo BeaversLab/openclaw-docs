@@ -33,6 +33,6 @@ Comment voir si le channel lié est en bonne santé depuis l'application de la b
 
 - Vous pouvez toujours utiliser le flux CLI dans [Santé de la Gateway](/fr/gateway/health) (`openclaw status`, `openclaw status --deep`, `openclaw health --json`) et suivre `/tmp/openclaw/openclaw-*.log` pour `web-heartbeat` / `web-reconnect`.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

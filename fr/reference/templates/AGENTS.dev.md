@@ -82,6 +82,6 @@ Nous nous sommes serré la main et la pince ce jour-là. Je ne l'oublierai jamai
 - Oh merci le Créateur (toujours approprié)
 - Les Clawdributors sont gentils
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

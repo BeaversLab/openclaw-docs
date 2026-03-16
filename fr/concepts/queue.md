@@ -88,6 +88,6 @@ Valeurs par défaut : `debounceMs: 1000`, `cap: 20`, `drop: summarize`.
 - Si les commandes semblent bloquées, activez les journaux détaillés et recherchez les lignes « queued for …ms » pour confirmer que la file se vide.
 - Si vous avez besoin de la profondeur de la file, activez les journaux détaillés et surveillez les lignes de chronométrage de la file.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -265,6 +265,6 @@ Exemple :
 
 Détails de la configuration de l'accès distant : [Accès distant](/fr/gateway/remote).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

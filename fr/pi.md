@@ -561,6 +561,6 @@ En direct/opt-in :
 
 Pour les commandes d'exécution actuelles, consultez [Pi Development Workflow](/fr/pi-dev).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

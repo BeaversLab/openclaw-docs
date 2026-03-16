@@ -11,6 +11,6 @@ read_when:
 
 # Ajoutez des tâches ci-dessous lorsque vous souhaitez que l'agent vérifie quelque chose périodiquement.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

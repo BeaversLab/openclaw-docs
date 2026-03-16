@@ -9,19 +9,19 @@ title: "Android 应用"
 
 # Android 应用（节点）
 
-> **注意：** Android 应用尚未公开发布。源代码可在 [OpenClaw 代码库](https://github.com/openclaw/openclaw) 中找到，采用 `apps/android` 许可证。您可以使用 Java 17 和 Android SDK (`./gradlew :app:assembleDebug`) 自行构建。请参阅 [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md) 了解构建说明。
+> **注意：** Android 应用尚未公开发布。源代码可在 Android 仓库 [OpenClaw repository](https://github.com/openclaw/openclaw) 中 `apps/android` 下找到。您可以使用 Java 17 和 Android SDK (`./gradlew :app:assembleDebug`) 自行构建。有关构建说明，请参阅 [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md)。
 
 ## 支持快照
 
 - 角色：伴随节点应用 (Android 不托管 Gateway(网关))。
 - 需要 Gateway(网关)：是 (在 macOS、Linux 上运行，或通过 Windows 运行)。
 - 安装：[入门指南](/en/start/getting-started) + [配对](/en/channels/pairing)。
-- Gateway(网关)：[运行手册](/en/gateway) + [配置](/en/gateway/configuration)。
-  - 协议：[Gateway(网关) 协议](/en/gateway/protocol) (节点 + 控制平面)。
+- 网关：[Runbook](/en/gateway) + [配置](/en/gateway/configuration)。
+  - 协议：[网关协议](/en/gateway/protocol)（节点 + 控制平面）。
 
 ## 系统控制
 
-系统控制 (launchd/systemd) 位于 Gateway(网关) 主机上。请参阅 [Gateway(网关)](/en/gateway)。
+系统控制 位于网关主机上。请参阅 [网关](/en/gateway)。
 
 ## 连接运行手册
 
@@ -70,7 +70,7 @@ Android NSD/mDNS discovery won’t cross networks. If your Android node and the 
 1. Set up a DNS-SD zone (example `openclaw.internal.`) on the gateway host and publish `_openclaw-gw._tcp` records.
 2. Configure Tailscale split DNS for your chosen domain pointing at that DNS server.
 
-Details and example CoreDNS config: [Bonjour](/en/gateway/bonjour).
+详细信息和 CoreDNS 配置示例：[Bonjour](/en/gateway/bonjour)。
 
 ### 3) Connect from Android
 
@@ -96,7 +96,7 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-Pairing details: [Pairing](/en/channels/pairing).
+配对详细信息：[配对](/en/channels/pairing)。
 
 ### 5) Verify the node is connected
 
@@ -151,7 +151,7 @@ Canvas 命令（仅限前台）：
 - `camera.snap` (jpg)
 - `camera.clip` (mp4)
 
-有关参数和 CLI 辅助工具，请参阅 [相机节点](/en/nodes/camera)。
+有关参数和 CLI 助手，请参阅 [Camera node](/en/nodes/camera)。
 
 ### 8) 语音 + 扩展的 Android 命令界面
 
@@ -163,7 +163,8 @@ Canvas 命令（仅限前台）：
   - `photos.latest`
   - `contacts.search`、`contacts.add`
   - `calendar.events`、`calendar.add`
-  - `motion.activity`、`motion.pedometer`
+  - `callLog.search`
+  - `motion.activity`, `motion.pedometer`
 
 import zh from "/components/footer/zh.mdx";
 

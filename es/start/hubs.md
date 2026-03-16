@@ -19,7 +19,7 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 - [Incorporación](/es/start/onboarding)
 - [Asistente](/es/start/wizard)
 - [Configuración](/es/start/setup)
-- [Panel (Gateway local)](http://127.0.0.1:18789/)
+- [Panel de control (Gateway local)](http://127.0.0.1:18789/)
 - [Ayuda](/es/help)
 - [Directorio de documentos](/es/start/docs-directory)
 - [Configuración](/es/gateway/configuration)
@@ -155,11 +155,10 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 - [Permisos de macOS](/es/platforms/mac/permissions)
 - [control remoto macOS](/es/platforms/mac/remote)
 - [firma macOS](/es/platforms/mac/signing)
-- [lanzamiento macOS](/es/platforms/mac/release)
-- [puerta de enlace macOS (launchd)](/es/platforms/mac/bundled-gateway)
-- [XPC macOS](/es/platforms/mac/xpc)
-- [habilidades macOS](/es/platforms/mac/skills)
-- [Peekaboo macOS](/es/platforms/mac/peekaboo)
+- [gateway de macOS (launchd)](/es/platforms/mac/bundled-gateway)
+- [XPC de macOS](/es/platforms/mac/xpc)
+- [habilidades de macOS](/es/platforms/mac/skills)
+- [Peekaboo de macOS](/es/platforms/mac/peekaboo)
 
 ## Espacio de trabajo + plantillas
 
@@ -175,11 +174,11 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 - [Plantillas: TOOLS](/es/reference/templates/TOOLS)
 - [Plantillas: USER](/es/reference/templates/USER)
 
-## Experimentos (exploratorio)
+## Experimentos (exploratorios)
 
 - [Protocolo de configuración de incorporación](/es/experiments/onboarding-config-protocol)
 - [Investigación: memoria](/es/experiments/research/memory)
-- [Exploración de configuración de modelo](/es/experiments/proposals/model-config)
+- [Exploración de configuración del modelo](/es/experiments/proposals/model-config)
 
 ## Proyecto
 
@@ -188,7 +187,7 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 ## Pruebas + lanzamiento
 
 - [Pruebas](/es/reference/test)
-- [Lista de verificación de lanzamiento](/es/reference/RELEASING)
+- [Política de lanzamiento](/es/reference/RELEASING)
 - [Modelos de dispositivos](/es/reference/device-models)
 
 import es from "/components/footer/es.mdx";

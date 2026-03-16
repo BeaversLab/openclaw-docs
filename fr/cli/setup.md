@@ -28,6 +28,6 @@ Pour exécuter l'assistant via setup :
 openclaw setup --wizard
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -84,6 +84,6 @@ Utilisez `action: "poll"` pour la création de sondages. Les champs de sondage t
 Remarque : Discord n'a pas de mode « choisir exactement N » ; `pollMulti` correspond à la sélection multiple.
 Les sondages Teams sont rendus sous forme de cartes adaptatives et nécessitent que la passerelle reste en ligne pour enregistrer les votes dans `~/.openclaw/msteams-polls.json`.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

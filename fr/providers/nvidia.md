@@ -54,6 +54,6 @@ Si vous passez encore `--token`, gardez à l'esprit qu'elle atterrit dans l'hist
 - Point de terminaison `/v1` compatible OpenAI ; utilisez une clé API de NVIDIA NGC.
 - Le fournisseur s'active automatiquement lorsque `NVIDIA_API_KEY` est défini ; utilise des valeurs statiques par défaut (fenêtre de contexte de 131 072 jetons, 4 096 jetons maximum).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

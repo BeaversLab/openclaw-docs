@@ -1,5 +1,5 @@
 ---
-summary: "安装 OpenClaw — 安装脚本、npm/pnpm、从源代码构建、Docker 等"
+summary: "安装 OpenClaw — 安装程序脚本、npm/pnpm、从源代码、Docker 等方式"
 read_when:
   - You need an install method other than the Getting Started quickstart
   - You want to deploy to a cloud platform
@@ -9,13 +9,13 @@ title: "安装"
 
 # 安装
 
-已经跟随[入门指南](/en/start/getting-started)了吗？你已经准备就绪——本页面包含替代的安装方法、特定平台的说明和维护信息。
+已经遵循了[入门指南](/en/start/getting-started)吗？你已经设置好了——此页面适用于其他安装方法、特定于平台的说明和维护。
 
 ## 系统要求
 
-- **[Node 24（推荐）](/en/install/node)**（为了兼容性，目前仍支持 Node 22 LTS，当前版本为 `22.16+`；如果缺少 Node，[安装脚本](#install-methods) 将安装 Node 24）
+- **[Node 24（推荐）](/en/install/node)**（Node 22 LTS，目前为 `22.16+`，为了兼容性仍然受支持；如果缺少 Node 24，[安装程序脚本](#install-methods) 将会安装它）
 - macOS、Linux 或 Windows
-- `pnpm` 仅在从源代码构建时需要
+- 仅当你从源代码构建时才需要 `pnpm`
 
 <Note>
   在 Windows 上，我们强烈建议在 [OpenClaw](https://learn.microsoft.com/en-us/windows/wsl/install)
@@ -32,7 +32,7 @@ title: "安装"
 </Warning>
 
 <AccordionGroup>
-  <Accordion title="安装脚本" icon="rocket" defaultOpen>
+  <Accordion title="安装程序脚本" icon="rocket" defaultOpen>
     下载 CLI，通过 npm 全局安装，并启动新手引导向导。
 
     <Tabs>
@@ -48,7 +48,7 @@ title: "安装"
       </Tab>
     </Tabs>
 
-    就是这样 —— 脚本会处理 Node 检测、安装和新手引导。
+    就是这样——该脚本会处理 Node 检测、安装和新手引导。
 
     要跳过新手引导并仅安装二进制文件：
 
@@ -65,12 +65,12 @@ title: "安装"
       </Tab>
     </Tabs>
 
-    有关所有标志、环境变量和 CI/自动化选项，请参阅 [安装程序内部原理](/en/install/installer)。
+    有关所有标志、环境变量和 CI/自动化选项，请参阅[安装程序内部机制](/en/install/installer)。
 
   </Accordion>
 
   <Accordion title="npm / pnpm" icon="package">
-    如果您已经自行管理 Node，我们推荐使用 Node 24。为了兼容性，OpenClaw 仍然支持 Node 22 LTS，目前是 `22.16+`：
+    如果您自己管理 Node，我们推荐 Node 24。为了兼容性，OpenClaw 仍支持 Node 22 LTS，目前是 `22.16+`：
 
     <Tabs>
       <Tab title="npm">
@@ -80,13 +80,13 @@ title: "安装"
         ```
 
         <Accordion title="sharp 构建错误？">
-          如果您全局安装了 libvips（在 macOS 上通过 Homebrew 安装很常见）并且 `sharp` 失败，请强制使用预构建的二进制文件：
+          如果您全局安装了 libvips（在 macOS 上通过 Homebrew 很常见）并且 `sharp` 失败，请强制使用预构建二进制文件：
 
           ```bash
           SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
           ```
 
-          如果您看到 `sharp: Please add node-gyp to your dependencies`，请安装构建工具（macOS：Xcode CLT + `npm install -g node-gyp`）或使用上面的环境变量。
+          如果您看到 `sharp: Please add node-gyp to your dependencies`，请安装构建工具（macOS：Xcode CLT + `npm install -g node-gyp`）或使用上述环境变量。
         </Accordion>
       </Tab>
       <Tab title="pnpm">
@@ -102,10 +102,20 @@ title: "安装"
       </Tab>
     </Tabs>
 
+    想通过包管理器安装当前的 GitHub `main` head 版本？
+
+    ```bash
+    npm install -g github:openclaw/openclaw#main
+    ```
+
+    ```bash
+    pnpm add -g github:openclaw/openclaw#main
+    ```
+
   </Accordion>
 
   <Accordion title="从源代码" icon="github">
-    适用于贡献者或任何想要从本地检出运行的人。
+    面向贡献者或任何想要从本地检出运行的人。
 
     <Steps>
       <Step title="克隆并构建">
@@ -126,7 +136,7 @@ title: "安装"
         pnpm link --global
         ```
 
-        或者，跳过链接并通过仓库内的 `pnpm openclaw ...` 运行命令。
+        或者，跳过链接步骤，直接在仓库内通过 `pnpm openclaw ...` 运行命令。
       </Step>
       <Step title="运行新手引导">
         ```bash
@@ -176,11 +186,11 @@ openclaw dashboard      # open the browser UI
 - `OPENCLAW_STATE_DIR` 用于可变状态位置
 - `OPENCLAW_CONFIG_PATH` 用于配置文件位置
 
-有关优先级和完整详细信息，请参阅 [环境变量](/en/help/environment)。
+有关优先级和完整详细信息，请参阅[环境变量](/en/help/environment)。
 
-## 故障排除：找不到 `openclaw`
+## 故障排除：未找到 `openclaw`
 
-<Accordion title="PATH 诊断和修复">
+<Accordion title="PATH 诊断与修复">
   快速诊断：
 
 ```bash
@@ -190,17 +200,17 @@ npm prefix -g
 echo "$PATH"
 ```
 
-如果 `$(npm prefix -g)/bin` (macOS/Linux) 或 `$(npm prefix -g)` (Windows) **不在**你的 `$PATH` 中，你的 shell 将无法找到全局 npm 二进制文件（包括 `openclaw`）。
+如果 `$(npm prefix -g)/bin` (macOS/Linux) 或 `$(npm prefix -g)` (Windows) **不**在您的 `$PATH` 中，您的 Shell 将无法找到全局 npm 二进制文件（包括 `openclaw`）。
 
-修复方法 — 将其添加到你的 shell 启动文件中（`~/.zshrc` 或 `~/.bashrc`）：
+修复 — 将其添加到您的 Shell 启动文件（`~/.zshrc` 或 `~/.bashrc`）中：
 
 ```bash
 export PATH="$(npm prefix -g)/bin:$PATH"
 ```
 
-在 Windows 上，将 `npm prefix -g` 的输出添加到你的 PATH 中。
+在 Windows 上，将 `npm prefix -g` 的输出添加到您的 PATH 中。
 
-然后打开一个新的终端（或者在 zsh 中执行 `rehash` / 在 bash 中执行 `hash -r`）。
+然后打开一个新的终端（或者在 zsh 中运行 `rehash` / 在 bash 中运行 `hash -r`）。
 
 </Accordion>
 
@@ -208,7 +218,7 @@ export PATH="$(npm prefix -g)/bin:$PATH"
 
 <CardGroup cols={3}>
   <Card title="更新" href="/en/install/updating" icon="refresh-cw">
-    保持 OpenClaw 为最新版本。
+    保持 OpenClaw 为最新。
   </Card>
   <Card title="迁移" href="/en/install/migrating" icon="arrow-right">
     移动到新机器。

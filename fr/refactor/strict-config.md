@@ -92,6 +92,6 @@ Tout le reste doit échouer brutalement avec : « Config invalid. Run `openclaw 
 - Configuration non valide → démarrage de la passerelle bloqué, à l'exception des commandes de diagnostic.
 - Doctor dry-run auto ; `doctor --fix` écrit la configuration corrigée.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

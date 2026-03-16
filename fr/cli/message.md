@@ -1,5 +1,5 @@
 ---
-summary: "Référence de la CLI pour `openclaw message` (envoi + actions de channel)"
+summary: "Référence CLI pour `openclaw message` (envoi + actions de canal)"
 read_when:
   - Adding or modifying message CLI actions
   - Changing outbound channel behavior
@@ -19,33 +19,33 @@ openclaw message <subcommand> [flags]
 
 Sélection du channel :
 
-- `--channel` requis si plus d'un channel est configuré.
+- `--channel` requis si plus d'un canal est configuré.
 - Si exactement un channel est configuré, il devient celui par défaut.
 - Valeurs : `whatsapp|telegram|discord|googlechat|slack|mattermost|signal|imessage|msteams` (Mattermost nécessite un plugin)
 
 Formats cibles (`--target`) :
 
 - WhatsApp : E.164 ou JID de groupe
-- Telegram : id de chat ou `@username`
-- Discord : `channel:<id>` ou `user:<id>` (ou mention `<@id>` ; les identifiants numériques bruts sont traités comme des channels)
+- Telegram : identifiant de discussion ou `@username`
+- Discord : `channel:<id>` ou `user:<id>` (ou mention `<@id>` ; les identifiants numériques bruts sont traités comme des canaux)
 - Google Chat : `spaces/<spaceId>` ou `users/<userId>`
-- Slack : `channel:<id>` ou `user:<id>` (l'id de channel brut est accepté)
-- Mattermost (plugin) : `channel:<id>`, `user:<id>`, ou `@username` (les ids simples sont traités comme des channels)
+- Slack : `channel:<id>` ou `user:<id>` (l'identifiant de canal brut est accepté)
+- Mattermost (plugin) : `channel:<id>`, `user:<id>`, ou `@username` (les identifiants nus sont traités comme des canaux)
 - Signal : `+E.164`, `group:<id>`, `signal:+E.164`, `signal:group:<id>`, ou `username:<name>`/`u:<name>`
 - iMessage : identifiant, `chat_id:<id>`, `chat_guid:<guid>`, ou `chat_identifier:<id>`
-- MS Teams : id de conversation (`19:...@thread.tacv2`) ou `conversation:<id>` ou `user:<aad-object-id>`
+- MS Teams : identifiant de conversation (`19:...@thread.tacv2`) ou `conversation:<id>` ou `user:<aad-object-id>`
 
 Recherche par nom :
 
-- Pour les providers pris en charge (Discord/Slack/etc.), les noms de channel comme `Help` ou `#help` sont résolus via le cache de répertoire.
+- Pour les fournisseurs pris en charge (Discord/Slack/etc), les noms de canal comme `Help` ou `#help` sont résolus via le cache de répertoire.
 - En cas d'échec du cache, OpenClaw tentera une recherche de répertoire en direct si le provider le prend en charge.
 
 ## Drapeaux communs
 
 - `--channel <name>`
 - `--account <id>`
-- `--target <dest>` (channel ou utilisateur cible pour send/poll/read/etc)
-- `--targets <name>` (répéter ; diffusion uniquement)
+- `--target <dest>` (canal ou utilisateur cible pour l'envoi/sondage/lecture/etc)
+- `--targets <name>` (répéter ; diffusion uniquement)
 - `--json`
 - `--dry-run`
 - `--verbose`
@@ -56,89 +56,90 @@ Recherche par nom :
 
 - `send`
   - Channels : WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage/MS Teams
-  - Obligatoire : `--target`, plus `--message` ou `--media`
-  - Optionnel : `--media`, `--reply-to`, `--thread-id`, `--gif-playback`
-  - Telegram uniquement : `--buttons` (nécessite `channels.telegram.capabilities.inlineButtons` pour l'autoriser)
-  - Telegram uniquement : `--thread-id` (id du sujet de forum)
-  - Slack uniquement : `--thread-id` (horodatage du fil de discussion ; `--reply-to` utilise le même champ)
-  - WhatsApp uniquement : `--gif-playback`
+  - Obligatoire : `--target`, plus `--message` ou `--media`
+  - Optionnel : `--media`, `--reply-to`, `--thread-id`, `--gif-playback`
+  - Telegram uniquement : `--buttons` (nécessite `channels.telegram.capabilities.inlineButtons` pour l'autoriser)
+  - Telegram uniquement : `--force-document` (envoyer les images et les GIF comme documents pour éviter la compression Telegram)
+  - Telegram uniquement : `--thread-id` (id du sujet du forum)
+  - Slack uniquement : `--thread-id` (horodatage du fil ; `--reply-to` utilise le même champ)
+  - WhatsApp uniquement : `--gif-playback`
 
 - `poll`
-  - Channels : WhatsApp/Telegram/Discord/Matrix/MS Teams
-  - Obligatoire : `--target`, `--poll-question`, `--poll-option` (répéter)
-  - Optionnel : `--poll-multi`
-  - Discord uniquement : `--poll-duration-hours`, `--silent`, `--message`
-  - Telegram uniquement : `--poll-duration-seconds` (5-600), `--silent`, `--poll-anonymous` / `--poll-public`, `--thread-id`
+  - Canaux : WhatsApp/Telegram/Discord/Matrix/MS Teams
+  - Obligatoire : `--target`, `--poll-question`, `--poll-option` (répéter)
+  - Optionnel : `--poll-multi`
+  - Discord uniquement : `--poll-duration-hours`, `--silent`, `--message`
+  - Telegram uniquement : `--poll-duration-seconds` (5-600), `--silent`, `--poll-anonymous` / `--poll-public`, `--thread-id`
 
 - `react`
-  - Channels : Discord/Google Chat/Slack/Telegram/WhatsApp/Signal
-  - Obligatoire : `--message-id`, `--target`
-  - Optionnel : `--emoji`, `--remove`, `--participant`, `--from-me`, `--target-author`, `--target-author-uuid`
-  - Note : `--remove` nécessite `--emoji` (omettez `--emoji` pour effacer vos propres réactions lorsque cette fonctionnalité est prise en charge ; voir /tools/reactions)
+  - Canaux : Discord/Google Chat/Slack/Telegram/WhatsApp/Signal
+  - Obligatoire : `--message-id`, `--target`
+  - Optionnel : `--emoji`, `--remove`, `--participant`, `--from-me`, `--target-author`, `--target-author-uuid`
+  - Remarque : `--remove` nécessite `--emoji` (omettez `--emoji` pour effacer vos propres réactions lorsque cela est pris en charge ; voir /tools/reactions)
   - WhatsApp uniquement : `--participant`, `--from-me`
   - Réactions de groupe Signal : `--target-author` ou `--target-author-uuid` requis
 
 - `reactions`
-  - Channels : Discord/Google Chat/Slack
-  - Requis : `--message-id`, `--target`
-  - Facultatif : `--limit`
+  - Canaux : Discord/Google Chat/Slack
+  - Obligatoire : `--message-id`, `--target`
+  - Optionnel : `--limit`
 
 - `read`
-  - Channels : Discord/Slack
-  - Requis : `--target`
-  - Facultatif : `--limit`, `--before`, `--after`
+  - Canaux : Discord/Slack
+  - Obligatoire : `--target`
+  - Optionnel : `--limit`, `--before`, `--after`
   - Discord uniquement : `--around`
 
 - `edit`
-  - Channels : Discord/Slack
-  - Requis : `--message-id`, `--message`, `--target`
+  - Chaînes : Discord/Slack
+  - Obligatoire : `--message-id`, `--message`, `--target`
 
 - `delete`
-  - Channels : Discord/Slack/Telegram
-  - Requis : `--message-id`, `--target`
+  - Chaînes : Discord/Slack/Telegram
+  - Obligatoire : `--message-id`, `--target`
 
 - `pin` / `unpin`
-  - Channels : Discord/Slack
-  - Requis : `--message-id`, `--target`
+  - Chaînes : Discord/Slack
+  - Obligatoire : `--message-id`, `--target`
 
 - `pins` (liste)
-  - Channels : Discord/Slack
-  - Requis : `--target`
+  - Chaînes : Discord/Slack
+  - Obligatoire : `--target`
 
 - `permissions`
-  - Channels : Discord
-  - Requis : `--target`
+  - Chaînes : Discord
+  - Obligatoire : `--target`
 
 - `search`
-  - Channels : Discord
-  - Requis : `--guild-id`, `--query`
-  - Facultatif : `--channel-id`, `--channel-ids` (répéter), `--author-id`, `--author-ids` (répéter), `--limit`
+  - Chaînes : Discord
+  - Obligatoire : `--guild-id`, `--query`
+  - Optionnel : `--channel-id`, `--channel-ids` (répéter), `--author-id`, `--author-ids` (répéter), `--limit`
 
-### Threads
+### Fils de discussion
 
 - `thread create`
-  - Channels : Discord
-  - Requis : `--thread-name`, `--target` (identifiant de channel)
+  - Chaînes : Discord
+  - Obligatoire : `--thread-name`, `--target` (id de chaîne)
   - Optionnel : `--message-id`, `--message`, `--auto-archive-min`
 
 - `thread list`
-  - Canaux : Discord
+  - Chaînes : Discord
   - Obligatoire : `--guild-id`
   - Optionnel : `--channel-id`, `--include-archived`, `--before`, `--limit`
 
 - `thread reply`
-  - Canaux : Discord
-  - Obligatoire : `--target` (identifiant de fil), `--message`
+  - Chaînes : Discord
+  - Obligatoire : `--target` (id de fil), `--message`
   - Optionnel : `--media`, `--reply-to`
 
-### Emojis
+### Émojis
 
 - `emoji list`
   - Discord : `--guild-id`
   - Slack : aucun indicateur supplémentaire
 
 - `emoji upload`
-  - Canaux : Discord
+  - Chaînes : Discord
   - Obligatoire : `--guild-id`, `--emoji-name`, `--media`
   - Optionnel : `--role-ids` (répéter)
 
@@ -170,7 +171,7 @@ Recherche par nom :
 
 ### Modération (Discord)
 
-- `timeout` : `--guild-id`, `--user-id` (optionnel `--duration-min` ou `--until` ; omettez les deux pour effacer le temps d'attente)
+- `timeout` : `--guild-id`, `--user-id` (optionnel `--duration-min` ou `--until` ; omettre les deux pour effacer le timeout)
 - `kick` : `--guild-id`, `--user-id` (+ `--reason`)
 - `ban` : `--guild-id`, `--user-id` (+ `--delete-days`, `--reason`)
   - `timeout` prend également en charge `--reason`
@@ -178,8 +179,8 @@ Recherche par nom :
 ### Diffusion
 
 - `broadcast`
-  - Chaînes : n'importe quelle chaîne configurée ; utilisez `--channel all` pour cibler tous les fournisseurs
-  - Obligatoire : `--targets` (à répéter)
+  - Channels : n'importe quel channel configuré ; utilisez `--channel all` pour cibler tous les fournisseurs
+  - Obligatoire : `--targets` (répéter)
   - Optionnel : `--message`, `--media`, `--dry-run`
 
 ## Exemples
@@ -259,6 +260,13 @@ openclaw message send --channel telegram --target @mychat --message "Choose:" \
   --buttons '[ [{"text":"Yes","callback_data":"cmd:yes"}], [{"text":"No","callback_data":"cmd:no"}] ]'
 ```
 
-import fr from '/components/footer/fr.mdx';
+Envoyer une image Telegram en tant que document pour éviter la compression :
+
+```bash
+openclaw message send --channel telegram --target @mychat \
+  --media ./diagram.png --force-document
+```
+
+import fr from "/components/footer/fr.mdx";
 
 <fr />

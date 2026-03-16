@@ -218,6 +218,6 @@ L'objectif : Soyez utile sans être agaçant. Vérifiez quelques fois par jour, 
 
 C'est un point de départ. Ajoutez vos propres conventions, style et règles à mesure que vous déterminez ce qui fonctionne.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

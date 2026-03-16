@@ -35,6 +35,6 @@ L'initialisation s'exécute toujours sur l'**hôte de passerelle**. Si l'applica
 - Onboarding de l'application macOS : [Onboarding](/fr/start/onboarding)
 - Disposition de l'espace de travail : [Espace de travail de l'agent](/fr/concepts/agent-workspace)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -370,6 +370,6 @@ imsg send <handle> "test"
 - [Appariement](/fr/channels/pairing)
 - [BlueBubbles](/fr/channels/bluebubbles)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -168,6 +168,6 @@ moteur à la place.
 
 Dans les deux cas, il signale les tailles et les principaux contributeurs ; il **ne** vide **pas** le prompt système complet ni les schémas d'outils.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

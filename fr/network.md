@@ -51,6 +51,6 @@ Confiance locale :
 - [Dépannage](/fr/gateway/troubleshooting)
 - [Doctor](/fr/gateway/doctor)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

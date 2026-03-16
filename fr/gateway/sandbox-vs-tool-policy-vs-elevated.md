@@ -127,6 +127,6 @@ Clés de réparation (en choisir une) :
 
 En mode `"non-main"`, les clés de groupe/channel ne sont _pas_ main. Utilisez la clé de session principale (affichée par `sandbox explain`) ou basculez le mode sur `"off"`.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -119,6 +119,6 @@ L'application demande confirmation sauf si une clé valide est fournie.
 - Le contenu Canvas local utilise un schéma personnalisé (aucun serveur de bouclage requis).
 - Les URLs `http(s)` externes sont autorisées uniquement lorsqu'elles sont explicitement naviguées.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -46,6 +46,6 @@ Les compétences sont partagées. Votre configuration vous appartient. Les garde
 
 Ajoutez tout ce qui vous aide à faire votre travail. C'est votre antisèche.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

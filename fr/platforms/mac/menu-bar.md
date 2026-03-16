@@ -80,6 +80,6 @@ title: "Barre de menus"
 - Rafales d'outils rapides : s'assurer que le badge ne clignote pas (délai de grâce TTL sur les résultats des outils).
 - La ligne de santé réapparaît une fois toutes les sessions inactives.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

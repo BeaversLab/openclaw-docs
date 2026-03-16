@@ -13,7 +13,17 @@ GLM est une **famille de modèles** (et non une entreprise) disponible via la pl
 ## Configuration CLI
 
 ```bash
-openclaw onboard --auth-choice zai-api-key
+# Coding Plan Global, recommended for Coding Plan users
+openclaw onboard --auth-choice zai-coding-global
+
+# Coding Plan CN (China region), recommended for Coding Plan users
+openclaw onboard --auth-choice zai-coding-cn
+
+# General API
+openclaw onboard --auth-choice zai-global
+
+# General API CN (China region)
+openclaw onboard --auth-choice zai-cn
 ```
 
 ## Extrait de configuration
@@ -31,6 +41,6 @@ openclaw onboard --auth-choice zai-api-key
 - Les IDs de modèle incluent notamment `glm-5`, `glm-4.7` et `glm-4.6`.
 - Pour plus de détails sur le provider, voir [/providers/zai](/fr/providers/zai).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

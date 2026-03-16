@@ -53,6 +53,6 @@ openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
 - Le chemin de transcription des médias utilise `/v1/audio/transcriptions`.
 - Le chemin des embeddings de mémoire utilise `/v1/embeddings` (modèle par défaut : `mistral-embed`).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

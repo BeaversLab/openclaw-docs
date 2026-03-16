@@ -33,7 +33,7 @@ Choisissez cette option lorsque :
 
 ### Option 2 : Relais de l'extension Chrome
 
-Utilisez le profil intégré `chrome` plus l'extension Chrome OpenClaw.
+Utilisez le profil intégré `chrome-relay` ainsi que l'extension Chrome OpenClaw.
 
 Choisissez cette option lorsque :
 
@@ -155,7 +155,7 @@ Exemple :
 {
   browser: {
     enabled: true,
-    defaultProfile: "chrome",
+    defaultProfile: "chrome-relay",
     relayBindHost: "0.0.0.0",
   },
 }
@@ -197,7 +197,7 @@ openclaw browser tabs --browser-profile remote
 Pour le relais d'extension :
 
 ```bash
-openclaw browser tabs --browser-profile chrome
+openclaw browser tabs --browser-profile chrome-relay
 ```
 
 Bon résultat :
@@ -241,6 +241,6 @@ En cas de doute :
 - vérifiez le même point de terminaison depuis WSL2 ensuite
 - et seulement ensuite déboguez la configuration OpenClaw ou l'authentification de l'interface de contrôle
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

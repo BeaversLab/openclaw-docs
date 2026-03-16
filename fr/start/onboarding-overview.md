@@ -50,6 +50,6 @@ assistant CLI. Il vous sera demandé de :
 
 Pour les étapes détaillées, suivez la documentation d'onboarding CLI ci-dessus.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

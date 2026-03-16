@@ -87,6 +87,6 @@ S'assure que `qrcode-terminal` se charge sous les runtimes Node Docker pris en c
 pnpm test:docker:qr
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

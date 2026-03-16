@@ -607,6 +607,6 @@ Référence principale :
 - [Configuration](/fr/gateway/configuration)
 - [Commandes slash](/fr/tools/slash-commands)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -131,6 +131,6 @@ Rationale :
 
 - Ces identifiants sont des classes créées, pivotées, portant une session ou durables OAuth qui ne correspondent pas à la résolution externe en lecture seule de SecretRef.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

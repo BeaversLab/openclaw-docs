@@ -121,6 +121,6 @@ Pour ajouter quadlet **après** une installation initiale qui ne l'utilisait pas
 
 Pour exécuter la passerelle en tant qu'utilisateur normal (pas d'utilisateur openclaw dédié) : construisez l'image, créez `~/.openclaw/.env` avec `OPENCLAW_GATEWAY_TOKEN`, et lancez le conteneur avec `--userns=keep-id` et des montages vers votre `~/.openclaw`. Le script de lancement est conçu pour le flux avec l'utilisateur openclaw ; pour une configuration mono-utilisateur, vous pouvez plutôt exécuter la commande `podman run` du script manuellement, en dirigeant la configuration et l'espace de travail vers votre répertoire personnel. Recommandé pour la plupart des utilisateurs : utilisez `setup-podman.sh` et exécutez en tant qu'utilisateur openclaw pour que la configuration et le processus soient isolés.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

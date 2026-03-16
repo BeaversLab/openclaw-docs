@@ -68,6 +68,6 @@ Définissez la stratégie de réessai par provider dans `~/.openclaw/openclaw.js
 - Les tentatives s'appliquent par requête (envoi de message, téléchargement de média, réaction, sondage, sticker).
 - Les flux composites ne réessayent pas les étapes terminées.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

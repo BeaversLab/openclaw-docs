@@ -19,7 +19,7 @@ title: "Docs Hubs"
 - [新手引导](/en/start/onboarding)
 - [向导](/en/start/wizard)
 - [设置](/en/start/setup)
-- [Dashboard (本地 Gateway(网关))](http://127.0.0.1:18789/)
+- [仪表板（本地Gateway(网关)）](http://127.0.0.1:18789/)
 - [帮助](/en/help)
 - [文档目录](/en/start/docs-directory)
 - [配置](/en/gateway/configuration)
@@ -155,10 +155,9 @@ title: "Docs Hubs"
 - [macOS 权限](/en/platforms/mac/permissions)
 - [macOS 远程控制](/en/platforms/mac/remote)
 - [macOS 签名](/en/platforms/mac/signing)
-- [macOS 版本发布](/en/platforms/mac/release)
-- [macOS 网关 (launchd)](/en/platforms/mac/bundled-gateway)
+- [macOS Gateway(网关) (launchd)](/en/platforms/mac/bundled-gateway)
 - [macOS XPC](/en/platforms/mac/xpc)
-- [macOS 技能](/en/platforms/mac/skills)
+- [macOS Skills](/en/platforms/mac/skills)
 - [macOS Peekaboo](/en/platforms/mac/peekaboo)
 
 ## 工作区 + 模板
@@ -178,17 +177,17 @@ title: "Docs Hubs"
 ## 实验（探索性）
 
 - [新手引导配置协议](/en/experiments/onboarding-config-protocol)
-- [研究：内存](/en/experiments/research/memory)
+- [研究：记忆](/en/experiments/research/memory)
 - [模型配置探索](/en/experiments/proposals/model-config)
 
 ## 项目
 
-- [致谢](/en/reference/credits)
+- [贡献者](/en/reference/credits)
 
 ## 测试 + 发布
 
 - [测试](/en/reference/test)
-- [发布检查清单](/en/reference/RELEASING)
+- [发布政策](/en/reference/RELEASING)
 - [设备型号](/en/reference/device-models)
 
 import zh from "/components/footer/zh.mdx";

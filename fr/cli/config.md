@@ -63,6 +63,6 @@ openclaw config validate
 openclaw config validate --json
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

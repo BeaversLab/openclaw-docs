@@ -74,6 +74,6 @@ Options :
 - `--agent <id>` : approbations/listes blanches limitées à l’agent (par défaut l’agent configuré).
 - `--ask <off|on-miss|always>`, `--security <deny|allowlist|full>` : substitutions.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

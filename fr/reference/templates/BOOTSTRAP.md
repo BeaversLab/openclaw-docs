@@ -61,6 +61,6 @@ Supprimez ce fichier. Vous n'avez plus besoin de script d'amorçage — vous êt
 
 _Bonne chance là-bas. Faites que cela compte._
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

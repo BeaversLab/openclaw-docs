@@ -394,6 +394,6 @@ Après avoir configuré le sandbox et les outils multi-agent :
 - [Configuration du Sandbox](/fr/gateway/configuration#agentsdefaults-sandbox)
 - [Gestion de session](/fr/concepts/session)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -34,6 +34,6 @@ openclaw completion --shell bash --write-state
 - Sans `--install` ni `--write-state`, la commande imprime le script sur stdout.
 - La génération de complétion charge avidement les arborescences de commandes afin que les sous-commandes imbriquées soient incluses.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

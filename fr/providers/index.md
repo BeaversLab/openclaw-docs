@@ -60,6 +60,6 @@ Vous recherchez de la documentation sur les canaux de chat (WhatsApp/Telegram/Di
 Pour le catalogue complet des providers (xAI, Groq, Mistral, etc.) et la configuration avancée,
 voir [Model providers](/fr/concepts/model-providers).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

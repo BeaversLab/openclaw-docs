@@ -220,7 +220,7 @@ macOS 拆分：
 
 目标选择器选择 **Gateway(网关)**（本地审批）或 **Node**。节点必须通告 `system.execApprovals.get/set`（macOS 应用或无头节点主机）。如果节点尚未通告 exec approvals，请直接编辑其本地 `~/.openclaw/exec-approvals.json`。
 
-CLI：`openclaw approvals` 支持网关或节点编辑（参见 [Approvals CLI](/en/cli/approvals)）。
+CLI：`openclaw approvals` 支持网关或节点编辑（参见 [Approvals CLI](/zh/cli/approvals)）。
 
 ## 审批流程
 
@@ -305,8 +305,8 @@ Telegram 默认为批准人私信（`target: "dm"`）。当您希望批准提示
 
 参见：
 
-- [Discord](/en/channels/discord#exec-approvals-in-discord)
-- [Telegram](/en/channels/telegram#exec-approvals-in-telegram)
+- [Discord](/zh/channels/discord#exec-approvals-in-discord)
+- [Telegram](/zh/channels/telegram#exec-approvals-in-telegram)
 
 ### macOS IPC 流程
 
@@ -346,9 +346,9 @@ Gateway 托管的 exec 批准在命令完成时（以及可选地在运行时间
 
 相关：
 
-- [Exec 工具](/en/tools/exec)
-- [提升模式](/en/tools/elevated)
-- [Skills](/en/tools/skills)
+- [Exec 工具](/zh/tools/exec)
+- [提升模式](/zh/tools/elevated)
+- [Skills](/zh/tools/skills)
 
 import zh from "/components/footer/zh.mdx";
 

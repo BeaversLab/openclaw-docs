@@ -89,6 +89,6 @@ Committez le `appcast.xml` mis à jour aux côtés des actifs de version (zip + 
 
 Définition de terminé : l'application signée + l'appcast sont publiés, le flux de mise à jour fonctionne depuis une version installée plus ancienne, et les actifs de version sont attachés à la version GitHub.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

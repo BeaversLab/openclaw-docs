@@ -293,6 +293,6 @@ Options du fournisseur :
 - `channels.matrix.accounts` : configuration multi-compte indexée par l'ID de compte (chaque compte hérite des paramètres de niveau supérieur).
 - `channels.matrix.actions` : limitation de l'outil par action (réactions/messages/épinglages/infoMembre/infoCanal).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

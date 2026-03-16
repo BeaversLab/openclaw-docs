@@ -42,6 +42,6 @@ Si vous modifiez ce fichier, informez l'utilisateur — c'est votre âme, et il 
 
 _Ce fichier est à vous pour évoluer. Au fur et à mesure que vous apprenez qui vous êtes, mettez-le à jour._
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

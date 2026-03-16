@@ -294,6 +294,6 @@ Les sous-agents utilisent une file d'attente dédiée en processus :
 - La profondeur d'imbrication maximale est de 5 (plage `maxSpawnDepth` : 1–5). Une profondeur de 2 est recommandée pour la plupart des cas d'utilisation.
 - `maxChildrenPerAgent` limite le nombre d'enfants actifs par session (par défaut : 5, plage : 1–20).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

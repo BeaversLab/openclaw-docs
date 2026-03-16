@@ -109,6 +109,6 @@ curl -sS http://127.0.0.1:18789/tools/invoke \
   }'
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

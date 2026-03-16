@@ -16,6 +16,6 @@ Consultez la [page de confiance](https://trust.openclaw.ai) pour obtenir les ins
 - **Jamieson O'Reilly** ([@theonejvo](https://twitter.com/theonejvo)) - Sécurité et Confiance
 - Discord : #security channel
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

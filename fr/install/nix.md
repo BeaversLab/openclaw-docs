@@ -97,6 +97,6 @@ et les builds Nix (qui ne reposent pas sur une chaîne d'outils Xcode complète)
 - [Wizard](/fr/start/wizard) — configuration Nix sans CLI
 - [Docker](/fr/install/docker) — configuration conteneurisée
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

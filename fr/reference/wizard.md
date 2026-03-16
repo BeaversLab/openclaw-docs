@@ -236,6 +236,6 @@ vous demandera de l'installer (npm ou un chemin local) avant qu'il puisse être 
 - Fournisseurs : [WhatsApp](/fr/channels/whatsapp), [Telegram](/fr/channels/telegram), [Discord](/fr/channels/discord), [Google Chat](/fr/channels/googlechat), [Signal](/fr/channels/signal), [BlueBubbles](/fr/channels/bluebubbles) (iMessage), [iMessage](/fr/channels/imessage) (ancien)
 - Compétences : [Skills](/fr/tools/skills), [Skills config](/fr/tools/skills-config)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

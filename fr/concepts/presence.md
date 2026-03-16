@@ -94,6 +94,6 @@ L'application macOS affiche la sortie de `system-presence` et applique un petit 
   - confirmez que les balises périodiques utilisent le même `instanceId`
   - vérifiez si l'entrée dérivée de la connexion manque `instanceId` (les doublons sont attendus)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

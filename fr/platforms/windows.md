@@ -239,6 +239,6 @@ Guide complet : [Getting Started](/fr/start/getting-started)
 Nous n'avons pas encore d'application compagnon Windows. Les contributions sont les bienvenues si vous souhaitez
 contribuer à sa réalisation.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

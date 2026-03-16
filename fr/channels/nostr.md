@@ -232,6 +232,6 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 - Aucune pièce jointe média.
 - NIP-04 uniquement (emballage cadeau NIP-17 prévu).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

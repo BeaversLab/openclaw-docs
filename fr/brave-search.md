@@ -79,6 +79,6 @@ await web_search({
 
 Voir [Outils Web](/fr/tools/web) pour la configuration complète de web_search.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

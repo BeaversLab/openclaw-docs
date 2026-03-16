@@ -58,6 +58,6 @@ bun pm trust @whiskeysockets/baileys protobufjs
 
 - Certains scripts codent toujours pnpm en dur (ex. `docs:build`, `ui:*`, `protocol:check`). Exécutez-les via pnpm pour l'instant.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

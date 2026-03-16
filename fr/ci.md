@@ -55,6 +55,6 @@ pnpm check:docs     # docs format + lint + broken links
 pnpm release:check  # validate npm pack
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

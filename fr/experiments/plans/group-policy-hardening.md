@@ -37,6 +37,6 @@ Le copier-coller à partir des journaux ou des ID de discussion inclut souvent d
 - [Discussions de groupe](/fr/concepts/groups)
 - [Fournisseur Telegram](/fr/channels/telegram)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

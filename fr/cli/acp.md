@@ -281,6 +281,6 @@ Note de sécurité :
 - `--server-verbose` : activer la journalisation détaillée sur le serveur ACP.
 - `--verbose, -v` : journalisation détaillée du client.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

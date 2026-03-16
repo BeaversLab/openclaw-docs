@@ -169,6 +169,6 @@ Pas de sortie après l'envoi d'un message :
 - Aucun agent dans le sélecteur : vérifiez `openclaw agents list` et votre configuration de routage.
 - Sélecteur de session vide : vous pourriez être dans la portée globale ou ne pas avoir encore de sessions.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

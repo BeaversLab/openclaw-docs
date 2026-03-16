@@ -35,6 +35,6 @@ Les opérateurs souhaitent :
 - Comment l'interface utilisateur doit-elle présenter la sélection de profil pour une session ?
 - Quel est le chemin de migration le plus sûr à partir des clés de configuration héritées ?
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

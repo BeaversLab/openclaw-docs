@@ -127,6 +127,6 @@ Si vous exécutez à partir d'une extraction du dépôt (`git clone` + `openclaw
 2. Supprimez le répertoire du dépôt.
 3. Supprimez l'état + l'espace de travail comme indiqué ci-dessus.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

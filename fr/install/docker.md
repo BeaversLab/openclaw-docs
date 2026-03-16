@@ -796,6 +796,6 @@ Exemple :
   chemins d'outils personnalisés (p. ex., `/custom/bin:/usr/local/share/npm-global/bin`), ou ajoutez
   un script sous `/etc/profile.d/` dans votre Dockerfile.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -258,6 +258,6 @@ Consultez [Multi-Agent Sandbox & Tools](/fr/tools/multi-agent-sandbox-tools) pou
 - [Sandbox et Outils Multi-Agents](/fr/tools/multi-agent-sandbox-tools)
 - [Sécurité](/fr/gateway/security)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

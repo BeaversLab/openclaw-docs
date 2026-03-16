@@ -22,6 +22,6 @@ openclaw dns setup
 openclaw dns setup --apply
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

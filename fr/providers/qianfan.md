@@ -37,6 +37,6 @@ openclaw onboard --auth-choice qianfan-api-key
 - [Configuration de l'agent](/fr/concepts/agent)
 - [Documentation de l'API Qianfan](https://cloud.baidu.com/doc/qianfan-api/s/3m7of64lb)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -357,6 +357,6 @@ ollama serve
 - [Sélection de modèle](/fr/concepts/models) - Comment choisir les modèles
 - [Configuration](/fr/gateway/configuration) - Référence complète de la configuration
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -62,6 +62,6 @@ title: "Mode élevé"
 - Les appels exec élevés sont journalisés au niveau info.
 - Le statut de la session inclut le mode élevé (p. ex. `elevated=ask`, `elevated=full`).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

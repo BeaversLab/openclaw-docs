@@ -172,6 +172,6 @@ openclaw secrets audit --check
 
 Si `audit --check` signale encore des résultats en texte brut, mettez à jour les chemins cible signalés restants et relancez l'audit.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

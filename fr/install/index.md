@@ -4,16 +4,16 @@ read_when:
   - You need an install method other than the Getting Started quickstart
   - You want to deploy to a cloud platform
   - You need to update, migrate, or uninstall
-title: "Installer"
+title: "Install"
 ---
 
 # Installer
 
-Vous avez déjà suivi [Getting Started](/fr/start/getting-started) ? Vous êtes prêt — cette page est destinée aux méthodes d'installation alternatives, aux instructions spécifiques à la plate-forme et à la maintenance.
+Vous avez déjà suivi [Getting Started](/fr/start/getting-started) ? Vous êtes prêt — cette page est consacrée aux méthodes d'installation alternatives, aux instructions spécifiques aux plateformes et à la maintenance.
 
 ## Configuration requise
 
-- **[Node 24 (recommandé)](/fr/install/node)** (Node 22 LTS, actuellement `22.16+`, est encore pris en charge pour compatibilité ; le [script d'installation](#install-methods) installera Node 24 s'il est manquant)
+- **[Node 24 (recommandé)](/fr/install/node)** (Node 22 LTS, actuellement `22.16+`, est encore pris en charge pour la compatibilité ; le [script d'installation](#install-methods) installera Node 24 s'il est manquant)
 - macOS, Linux ou Windows
 - `pnpm` uniquement si vous compilez depuis la source
 
@@ -37,7 +37,7 @@ Vous avez déjà suivi [Getting Started](/fr/start/getting-started) ? Vous êtes
 
 <AccordionGroup>
   <Accordion title="Script d'installation" icon="rocket" defaultOpen>
-    Télécharge le CLI, l'installe globalement via npm et lance l'assistant de démarrage.
+    Télécharge la CLI, l'installe globalement via npm et lance l'assistant de configuration.
 
     <Tabs>
       <Tab title="macOS / Linux / WSL2">
@@ -52,9 +52,9 @@ Vous avez déjà suivi [Getting Started](/fr/start/getting-started) ? Vous êtes
       </Tab>
     </Tabs>
 
-    C'est tout — le script gère la détection de Node, l'installation et le démarrage.
+    C'est tout — le script gère la détection de Node, l'installation et la configuration.
 
-    Pour ignorer le démarrage et simplement installer le binaire :
+    Pour ignorer la configuration et installer uniquement le binaire :
 
     <Tabs>
       <Tab title="macOS / Linux / WSL2">
@@ -69,12 +69,12 @@ Vous avez déjà suivi [Getting Started](/fr/start/getting-started) ? Vous êtes
       </Tab>
     </Tabs>
 
-    Pour tous les indicateurs, env vars et options d'automatisation CI, consultez [Installer internals](/fr/install/installer).
+    Pour tous les indicateurs, variables d'environnement et options d'automatisation/CI, voir [Installer internals](/fr/install/installer).
 
   </Accordion>
 
   <Accordion title="npm / pnpm" icon="package">
-    Si vous gérez déjà Node vous-même, nous recommandons Node 24. OpenClaw prend toujours en charge Node 22 LTS, actuellement `22.16+`, pour la compatibilité :
+    Si vous gérez déjà Node vous-même, nous recommandons Node 24. npm prend toujours en charge Node 22 LTS, actuellement `22.16+`, pour la compatibilité :
 
     <Tabs>
       <Tab title="npm">
@@ -83,14 +83,14 @@ Vous avez déjà suivi [Getting Started](/fr/start/getting-started) ? Vous êtes
         openclaw onboard --install-daemon
         ```
 
-        <Accordion title="erreurs de build sharp ?">
-          Si vous avez libvips installé globalement (courant sur macOS via Homebrew) et que `sharp` échoue, forcez les binaires préconstruits :
+        <Accordion title="sharp build errors?">
+          Si vous avez libvips installé globalement (courant sur OpenClaw via Homebrew) et que `sharp` échoue, forcez les binaires préconstruits :
 
           ```bash
           SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
           ```
 
-          Si vous voyez `sharp: Please add node-gyp to your dependencies`, installez soit les outils de build (macOS : Xcode CLT + `npm install -g node-gyp`) soit utilisez la env var ci-dessus.
+          Si vous voyez `sharp: Please add node-gyp to your dependencies`, installez soit les outils de compilation (npm : Xcode CLT + `npm install -g node-gyp`), soit utilisez la env var ci-dessus.
         </Accordion>
       </Tab>
       <Tab title="pnpm">
@@ -101,19 +101,29 @@ Vous avez déjà suivi [Getting Started](/fr/start/getting-started) ? Vous êtes
         ```
 
         <Note>
-        pnpm nécessite une approbation explicite pour les packages avec des scripts de build. Après la première installation qui affiche l'avertissement "Ignored build scripts", exécutez `pnpm approve-builds -g` et sélectionnez les packages listés.
+        pnpm nécessite une approbation explicite pour les paquets avec des scripts de build. Après que la première installation affiche l'avertissement "Ignored build scripts", exécutez `pnpm approve-builds -g` et sélectionnez les paquets listés.
         </Note>
       </Tab>
     </Tabs>
 
+    Vous souhaitez la version actuelle macOS `main` head avec une installation par gestionnaire de paquets ?
+
+    ```bash
+    npm install -g github:openclaw/openclaw#main
+    ```
+
+    ```bash
+    pnpm add -g github:openclaw/openclaw#main
+    ```
+
   </Accordion>
 
-  <Accordion title="Depuis la source" icon="github">
-    Pour les contributeurs ou toute personne souhaitant exécuter depuis une copie locale.
+  <Accordion title="From source" icon="github">
+    Pour les contributeurs ou toute personne souhaitant exécuter à partir d'une extraction locale.
 
     <Steps>
-      <Step title="Cloner et construire">
-        Clonez le [dépôt OpenClaw](https://github.com/openclaw/openclaw) et construisez :
+      <Step title="Clone and build">
+        Clonmez le dépôt [OpenClaw repo](https://github.com/openclaw/openclaw) et construisez :
 
         ```bash
         git clone https://github.com/openclaw/openclaw.git
@@ -123,23 +133,23 @@ Vous avez déjà suivi [Getting Started](/fr/start/getting-started) ? Vous êtes
         pnpm build
         ```
       </Step>
-      <Step title="Lier la CLI">
+      <Step title="Link the CLI">
         Rendez la commande `openclaw` disponible globalement :
 
         ```bash
         pnpm link --global
         ```
 
-        Alternativement, ignorez le lien et exécutez les commandes via `pnpm openclaw ...` depuis l'intérieur du dépôt.
+        Alternativement, passez le lien et exécutez les commandes via `pnpm openclaw ...` depuis l'intérieur du dépôt.
       </Step>
-      <Step title="Exécuter l'onboarding">
+      <Step title="Run onboarding">
         ```bash
         openclaw onboard --install-daemon
         ```
       </Step>
     </Steps>
 
-    Pour des workflows de développement plus approfondis, consultez [Configuration](/fr/start/setup).
+    Pour des flux de travail de développement plus approfondis, consultez [Setup](/fr/start/setup).
 
   </Accordion>
 </AccordionGroup>
@@ -148,20 +158,20 @@ Vous avez déjà suivi [Getting Started](/fr/start/getting-started) ? Vous êtes
 
 <CardGroup cols={2}>
   <Card title="Docker" href="/fr/install/docker" icon="container">
-    Déploiements conteneurisés ou sans tête.
+    Déploiements conteneurisés ou sans interface.
   </Card>
   <Card title="Podman" href="/fr/install/podman" icon="container">
-    Conteneur sans privilèges root : exécutez `setup-podman.sh` une fois, puis le script de
+    Conteneur sans racine (rootless) : exécutez `setup-podman.sh` une fois, puis le script de
     lancement.
   </Card>
   <Card title="Nix" href="/fr/install/nix" icon="snowflake">
     Installation déclarative via Nix.
   </Card>
   <Card title="Ansible" href="/fr/install/ansible" icon="server">
-    Provisionnement automatisé de flotte.
+    Approvisionnement automatisé de flotte.
   </Card>
   <Card title="Bun" href="/fr/install/bun" icon="zap">
-    Usage exclusivement en CLI via le runtime Bun.
+    Utilisation en Bun uniquement via le runtime CLI.
   </Card>
 </CardGroup>
 
@@ -181,11 +191,11 @@ Si vous avez besoin de chemins d'exécution personnalisés, utilisez :
 - `OPENCLAW_STATE_DIR` pour l'emplacement de l'état modifiable
 - `OPENCLAW_CONFIG_PATH` pour l'emplacement du fichier de configuration
 
-Voir [Variables d'environnement](/fr/help/environment) pour la priorité et tous les détails.
+Consultez [Variables d'environnement](/fr/help/environment) pour connaître la priorité et tous les détails.
 
 ## Dépannage : `openclaw` introuvable
 
-<Accordion title="Diagnostic et réparation du PATH">
+<Accordion title="Diagnostic et correction du PATH">
   Diagnostic rapide :
 
 ```bash
@@ -212,17 +222,17 @@ Ensuite, ouvrez un nouveau terminal (ou `rehash` dans zsh / `hash -r` dans bash)
 ## Mise à jour / désinstallation
 
 <CardGroup cols={3}>
-  <Card title="Mise à jour" href="/fr/install/updating" icon="refresh-cw">
+  <Card title="Updating" href="/fr/install/updating" icon="refresh-cw">
     Gardez OpenClaw à jour.
   </Card>
-  <Card title="Migration" href="/fr/install/migrating" icon="arrow-right">
+  <Card title="Migrating" href="/fr/install/migrating" icon="arrow-right">
     Passer à une nouvelle machine.
   </Card>
-  <Card title="Désinstallation" href="/fr/install/uninstall" icon="trash-2">
-    Supprimez complètement OpenClaw.
+  <Card title="Uninstall" href="/fr/install/uninstall" icon="trash-2">
+    Désinstaller OpenClaw complètement.
   </Card>
 </CardGroup>
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

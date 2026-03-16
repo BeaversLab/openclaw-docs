@@ -119,6 +119,6 @@ Le Gateway sert des fichiers statiques depuis `dist/control-ui`. Construisez-les
 pnpm ui:build # auto-installs UI deps on first run
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -123,6 +123,6 @@ Points clés extraits :
 - Ajouter une nouvelle page de documentation pour l'utilisation et les exemples de `/v1/responses`.
 - Mettre à jour `/gateway/openai-http-api` avec une note d'obsolètes et un pointeur vers `/v1/responses`.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

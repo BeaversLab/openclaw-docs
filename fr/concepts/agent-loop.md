@@ -143,6 +143,6 @@ Voir [Plugins](/fr/tools/plugin#plugin-hooks) pour l'API des hooks et les détai
 - Déconnexion du Gateway ou délai d'expiration RPC
 - Délai d'expiration `agent.wait` (attente uniquement, n'arrête pas l'agent)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

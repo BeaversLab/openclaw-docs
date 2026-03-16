@@ -227,6 +227,6 @@ Si vous souhaitez une version minimale, mais toujours utile :
 - Rapport technique Hindsight : « retain / recall / reflect », mémoire à quatre réseaux, extraction narrative de faits, évolution de la confiance des opinions.
 - SuCo : arXiv 2411.14754 (2024) : récupération des plus proches voisins « Subspace Collision » approximative.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

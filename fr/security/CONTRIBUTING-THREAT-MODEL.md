@@ -89,6 +89,6 @@ Si vous n'êtes pas sûr du niveau de risque, décrivez simplement l'impact et n
 
 Les contributeurs au modèle de menace sont reconnus dans les remerciements du modèle de menace, les notes de version et le tableau d'honneur de la sécurité OpenClaw pour leurs contributions importantes.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

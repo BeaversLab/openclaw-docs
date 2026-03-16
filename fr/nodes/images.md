@@ -71,6 +71,6 @@ Le channel WhatsApp fonctionne via **Baileys Web**. Ce document capture les règ
 - Valider la recompression pour les images (limite de taille) et l'indicateur de note vocale pour l'audio.
 - S'assurer que les réponses multimédias multiples sont distribuées sous forme d'envois séquentiels.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

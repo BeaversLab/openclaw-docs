@@ -62,6 +62,6 @@ Voir [Tâches cron](/fr/automation/cron-jobs) pour la forme normalisée et les e
 - `cron.add` doit-il accepter `state` explicite de la part des clients (actuellement interdit par le schéma) ?
 - Devons-nous autoriser `webchat` comme fournisseur de livraison explicite (actuellement filtré lors de la résolution de livraison) ?
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

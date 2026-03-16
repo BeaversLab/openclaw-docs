@@ -93,6 +93,6 @@ Notes de sécurité :
 - Si le Gateway est hors ligne ou si l'appariement est désactivé, les nœuds ne peuvent pas s'apparier.
 - Si le Gateway est en mode distant, l'appariement s'effectue toujours par rapport au stockage du Gateway distant.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

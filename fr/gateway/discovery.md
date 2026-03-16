@@ -122,6 +122,6 @@ La passerelle est la source de vérité pour l'admission des nœuds/clients.
 - **Application macOS** : vous aide à choisir une passerelle, affiche les invites de couplage et utilise SSH uniquement en repli.
 - **Nœuds iOS/Android** : explorent Bonjour par commodité et se connectent au WS de la Gateway couplée.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

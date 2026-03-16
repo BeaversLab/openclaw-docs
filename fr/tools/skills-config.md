@@ -74,6 +74,6 @@ Utilisez l'une des options suivantes :
 
 Les `env` et `skills.entries.<skill>.env/apiKey` globaux ne s'appliquent qu'aux exécutions sur l'**hôte**.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

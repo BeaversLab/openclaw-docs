@@ -323,6 +323,6 @@ vidage d'OpenClaw réside aujourd'hui du côté de la Gateway.
   - gonflement des résultats de tool : activez/réglez le nettoyage des sessions
 - Fuites de tours silencieux ? Confirmez que la réponse commence par `NO_REPLY` (token exact) et que vous êtes sur une version qui inclut la correction de la suppression du streaming.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -215,6 +215,6 @@ Les journaux se trouvent sous `/tmp/openclaw/` (par défaut : `openclaw-YYYY-MM-
 - Statut Linux : [Application Linux](/fr/platforms/linux)
 - Sécurité : [Sécurité](/fr/gateway/security)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

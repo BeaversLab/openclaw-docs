@@ -184,6 +184,6 @@ Documentation connexe :
 - [Nettoyage de session](/fr/concepts/session-pruning)
 - [Référence de configuration de la Gateway](/fr/gateway/configuration-reference)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

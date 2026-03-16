@@ -152,6 +152,6 @@ curl "http://localhost:4000/spend/logs" \
 - [Documentation LiteLLM](https://docs.litellm.ai)
 - [Fournisseurs de modèles](/fr/concepts/model-providers)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

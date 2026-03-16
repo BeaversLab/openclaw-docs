@@ -216,6 +216,6 @@ Priorité du mode de fusion pour les ID de provider correspondants :
 La persistance des marqueurs est soumise à l'autorité de la source : OpenClaw écrit les marqueurs à partir de l'instantané de la configuration source active (pré-résolution), et non à partir des valeurs de secret d'exécution résolues.
 Cela s'applique chaque fois que OpenClaw régénère `models.json`, y compris les chemins pilotés par commande tels que `openclaw agent`.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

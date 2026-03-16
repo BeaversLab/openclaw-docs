@@ -297,6 +297,6 @@ Comportement de configuration Signal :
 - Automatisation et scripts : [Automatisation CLI](/fr/start/wizard-cli-automation)
 - Référence de commande : [`openclaw onboard`](/fr/cli/onboard)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

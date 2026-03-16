@@ -110,6 +110,6 @@ Au minimum, définissez :
 
 _Suite : [Group Chats](/fr/channels/group-messages)_ 🦞
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -19,6 +19,6 @@ openclaw reset --scope config+creds+sessions --yes --non-interactive
 
 Exécutez d'abord `openclaw backup create` si vous souhaitez une snapshot restaurable avant de supprimer l'état local.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

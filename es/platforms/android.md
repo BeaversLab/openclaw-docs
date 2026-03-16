@@ -9,19 +9,19 @@ title: "Aplicación de Android"
 
 # Aplicación de Android (Nodo)
 
-> **Nota:** La aplicación de Android aún no se ha publicado públicamente. El código fuente está disponible en el [repositorio OpenClaw](https://github.com/openclaw/openclaw) bajo `apps/android`. Puede compilarla usted mismo usando Java 17 y el SDK de Android (`./gradlew :app:assembleDebug`). Consulte [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md) para obtener instrucciones de compilación.
+> **Nota:** La aplicación de Android aún no se ha lanzado públicamente. El código fuente está disponible en el [repositorio OpenClaw](https://github.com/openclaw/openclaw) bajo `apps/android`. Puedes compilarla tú mismo usando Java 17 y el SDK de Android (`./gradlew :app:assembleDebug`). Consulta [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md) para obtener instrucciones de compilación.
 
 ## Instantánea de compatibilidad
 
 - Rol: aplicación de nodo complementario (Android no aloja el Gateway).
 - Gateway requerido: sí (ejecútelo en macOS, Linux o Windows a través de WSL2).
-- Instalación: [Introducción](/es/start/getting-started) + [Emparejamiento](/es/channels/pairing).
-- Gateway: [Manual](/es/gateway) + [Configuración](/es/gateway/configuration).
-  - Protocolos: [Protocolo de Gateway](/es/gateway/protocol) (nodos + plano de control).
+- Instalación: [Guía de inicio](/es/start/getting-started) + [Emparejamiento](/es/channels/pairing).
+- Puerta de enlace: [Manual de operaciones](/es/gateway) + [Configuración](/es/gateway/configuration).
+  - Protocolos: [Protocolo de puerta de enlace](/es/gateway/protocol) (nodos + plano de control).
 
 ## Control del sistema
 
-El control del sistema (launchd/systemd) reside en el host del Gateway. Consulte [Gateway](/es/gateway).
+El control del sistema (launchd/systemd) reside en el host de la puerta de enlace. Consulte [Puerta de enlace](/es/gateway).
 
 ## Manual de conexión
 
@@ -151,7 +151,7 @@ Comandos de cámara (solo en primer plano; restringidos por permisos):
 - `camera.snap` (jpg)
 - `camera.clip` (mp4)
 
-Consulte [Camera node](/es/nodes/camera) para ver los parámetros y los auxiliares de CLI.
+Consulte [Nodo de cámara](/es/nodes/camera) para obtener parámetros y ayudantes de CLI.
 
 ### 8) Voz + superficie de comandos de Android ampliada
 
@@ -163,6 +163,7 @@ Consulte [Camera node](/es/nodes/camera) para ver los parámetros y los auxiliar
   - `photos.latest`
   - `contacts.search`, `contacts.add`
   - `calendar.events`, `calendar.add`
+  - `callLog.search`
   - `motion.activity`, `motion.pedometer`
 
 import es from "/components/footer/es.mdx";

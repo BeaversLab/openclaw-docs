@@ -446,6 +446,6 @@ Champs WhatsApp à fort signal :
 - [Routage multi-agent](/fr/concepts/multi-agent)
 - [Dépannage](/fr/channels/troubleshooting)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

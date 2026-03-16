@@ -9,24 +9,19 @@ title: "Moonshot AI"
 
 # Moonshot AI (Kimi)
 
-Moonshot fournit l'API Kimi avec des points de terminaison compatibles OpenAI. Configurez le fournisseur et définissez le modèle par défaut sur `moonshot/kimi-k2.5`, ou utilisez Kimi Coding avec `kimi-coding/k2p5`.
+Moonshot fournit l'API Kimi avec des points de terminaison compatibles avec OpenAI. Configurez le fournisseur et définissez le modèle par défaut sur `moonshot/kimi-k2.5`, ou utilisez Kimi Coding avec `kimi-coding/k2p5`.
 
 IDs actuels des modèles Kimi K2 :
 
-{/* markdownlint-disable MD037 */}
-
-{/_ moonshot-kimi-k2-ids:start _/ && null}
-
-{/* markdownlint-enable MD037 */}
+[//]: # "moonshot-kimi-k2-ids:start"
 
 - `kimi-k2.5`
 - `kimi-k2-0905-preview`
 - `kimi-k2-turbo-preview`
 - `kimi-k2-thinking`
 - `kimi-k2-thinking-turbo`
-  {/* markdownlint-disable MD037 */}
-  {/_ moonshot-kimi-k2-ids:end _/ && null}
-  {/* markdownlint-enable MD037 */}
+
+[//]: # "moonshot-kimi-k2-ids:end"
 
 ```bash
 openclaw onboard --auth-choice moonshot-api-key
@@ -140,9 +135,9 @@ Remarque : Moonshot et Kimi Coding sont des fournisseurs distincts. Les clés ne
 ## Notes
 
 - Les références de modèle Moonshot utilisent `moonshot/<modelId>`. Les références de modèle Kimi Coding utilisent `kimi-coding/<modelId>`.
-- Remplacez la tarification et les métadonnées de contexte dans `models.providers` si nécessaire.
+- Remplacez les tarifs et les métadonnées de contexte dans `models.providers` si nécessaire.
 - Si Moonshot publie des limites de contexte différentes pour un modèle, ajustez `contextWindow` en conséquence.
-- Utilisez `https://api.moonshot.ai/v1` pour le point de terminaison international et `https://api.moonshot.cn/v1` pour le point de terminaison en Chine.
+- Utilisez `https://api.moonshot.ai/v1` pour le point de terminaison international et `https://api.moonshot.cn/v1` pour le point de terminaison Chine.
 
 ## Mode de réflexion natif (Moonshot)
 
@@ -169,13 +164,13 @@ Configurez-le par modèle via `agents.defaults.models.<provider/model>.params` :
 }
 ```
 
-OpenClaw mappe également les niveaux de réflexion (thinking) d'exécution `/think` pour Moonshot :
+OpenClaw mappe également les niveaux d'exécution `/think` pour Moonshot :
 
 - `/think off` -> `thinking.type=disabled`
-- tout niveau de réflexion (thinking) autre que off -> `thinking.type=enabled`
+- tout niveau de réflexion autre que désactivé -> `thinking.type=enabled`
 
-Lorsque la réflexion Moonshot est activée, `tool_choice` doit être `auto` ou `none`. OpenClaw normalise les valeurs `tool_choice` incompatibles en `auto` pour la compatibilité.
+Lorsque la réflexion Moonshot est activée, `tool_choice` doit être `auto` ou `none`. OpenClaw normalise les valeurs `tool_choice` incompatibles à `auto` pour la compatibilité.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

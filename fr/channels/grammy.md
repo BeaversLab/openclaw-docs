@@ -30,6 +30,6 @@ Questions ouvertes
 - Ajouter plus de tests de médias structurés (autocollants, notes vocales).
 - Rendre le port d'écoute du webhook configurable (actuellement fixé à 8787 sauf s'il est connecté via la passerelle).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

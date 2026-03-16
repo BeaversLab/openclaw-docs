@@ -111,6 +111,6 @@ openclaw --profile rescue status
 openclaw --profile rescue browser status
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -13,9 +13,17 @@ Z.AI est la plateforme API pour les modèles **GLM**. Elle fournit des API REST 
 ## Configuration CLI
 
 ```bash
-openclaw onboard --auth-choice zai-api-key
-# or non-interactive
-openclaw onboard --zai-api-key "$ZAI_API_KEY"
+# Coding Plan Global, recommended for Coding Plan users
+openclaw onboard --auth-choice zai-coding-global
+
+# Coding Plan CN (China region), recommended for Coding Plan users
+openclaw onboard --auth-choice zai-coding-cn
+
+# General API
+openclaw onboard --auth-choice zai-global
+
+# General API CN (China region)
+openclaw onboard --auth-choice zai-cn
 ```
 
 ## Extrait de configuration
@@ -34,6 +42,6 @@ openclaw onboard --zai-api-key "$ZAI_API_KEY"
 - Voir [/providers/glm](/fr/providers/glm) pour la vue d'ensemble de la famille de modèles.
 - Z.AI utilise l'authentification Bearer avec votre clé API.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

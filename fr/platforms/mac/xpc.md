@@ -60,6 +60,6 @@ Agent -> Gateway -> Node Service (WS)
 - Les invites TCC proviennent uniquement du bundle de l'application GUI ; gardez l'ID de bundle signé stable lors des reconstructions.
 - Durcissement de l'IPC : mode de socket `0600`, jeton, vérifications de l'UID homologue, défi/réponse HMAC, TTL court.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

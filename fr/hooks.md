@@ -912,6 +912,6 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 - [Webhook Hooks](/fr/automation/webhook)
 - [Configuration](/fr/gateway/configuration#hooks)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

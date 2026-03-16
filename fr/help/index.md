@@ -20,6 +20,6 @@ Si vous cherchez des réponses à des questions conceptuelles (pas « quelque ch
 
 - [FAQ (concepts)](/fr/help/faq)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -378,6 +378,6 @@ Exemple :
 - Le Markdown est supprimé avant le découpage
 - Aucune limitation de débit (utilise les limitations de débit intégrées de Twitch)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

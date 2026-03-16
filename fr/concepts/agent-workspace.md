@@ -234,6 +234,6 @@ Starter `.gitignore` suggéré :
 - Si `agents.defaults.sandbox` est activé, les sessions non principales peuvent utiliser des espaces de travail sandbox par session
   sous `agents.defaults.sandbox.workspaceRoot`.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

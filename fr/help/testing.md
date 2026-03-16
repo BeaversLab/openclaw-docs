@@ -411,6 +411,6 @@ Lorsque vous corrigez un problème de provider/model découvert en direct :
   - `src/secrets/exec-secret-ref-id-parity.test.ts` dérive une cible échantillonnée par classe SecretRef à partir des métadonnées du registre (`listSecretTargetRegistryEntries()`), puis affirme que les ids d'exécution de segment de traversée sont rejetés.
   - Si vous ajoutez une nouvelle `includeInPlan` famille de cibles SecretRef dans `src/secrets/target-registry-data.ts`, mettez à jour `classifyTargetClass` dans ce test. Le test échoue intentionnellement sur les ids de cibles non classés afin que les nouvelles classes ne puissent pas être ignorées silencieusement.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

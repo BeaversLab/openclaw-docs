@@ -48,6 +48,6 @@ L'tool accepte une seule chaîne `input` qui encapsule une ou plusieurs opérati
 }
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

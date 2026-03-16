@@ -431,6 +431,6 @@ Vous avez quelque chose à partager ? Nous aimerions le mettre en avant !
   <Step title="Soyez mis en avant">Nous ajouterons les projets remarquables à cette page</Step>
 </Steps>
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

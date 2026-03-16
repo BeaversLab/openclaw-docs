@@ -228,6 +228,6 @@ pour :
 - Voulons-nous exposer un nouveau format « nodeRef » pour les utilisateurs avancés, ou garder uniquement `ref` ?
 - Comment les instantanés de frame et les instantanés délimités par sélecteur doivent-ils participer au mappage AX ?
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

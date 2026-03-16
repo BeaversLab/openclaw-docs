@@ -44,6 +44,6 @@ OpenClaw gère le routage par model automatiquement lorsque la référence du mo
 - Utilisez [OpenCode](/fr/providers/opencode) pour l'onboarding partagé et la vue d'ensemble du catalogue.
 - Les références d'exécution restent explicites : `opencode/...` pour Zen, `opencode-go/...` pour Go.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

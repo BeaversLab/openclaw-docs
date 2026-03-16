@@ -83,6 +83,6 @@ openclaw nodes notify --node <id> --title "Ping" --body "Remote gateway ready" -
 
 Il n'y a plus de bouton global « son par défaut » dans l'application ; les appelants choisissent un son (ou aucun) pour chaque requête.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

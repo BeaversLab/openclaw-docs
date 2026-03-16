@@ -53,6 +53,6 @@ Privilégiez localhost, Tailscale Serve ou un tunnel SSH.
   - Aucun jeton configuré : `openclaw doctor --generate-gateway-token`
 - Dans les paramètres du tableau de bord, collez le jeton dans le champ d'authentification, puis connectez-vous.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

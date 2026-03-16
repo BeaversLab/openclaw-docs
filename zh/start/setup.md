@@ -96,7 +96,7 @@ pnpm install
 pnpm gateway:watch
 ```
 
-`gateway:watch` 在监视模式下运行 gateway，并在 TypeScript 更改时重新加载。
+`gateway:watch` 以监视模式运行网关，并在相关的源代码、配置和打包插件元数据更改时重新加载。
 
 ### 2) 指向 macOS 应用到你运行的 Gateway 网关
 

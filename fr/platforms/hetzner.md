@@ -329,6 +329,6 @@ Tout l'état de longue durée doit survivre aux redémarrages, reconstructions e
 | Paquets OS                           | Système de fichiers du conteneur  | Image Docker                    | Ne pas installer à l'exécution          |
 | Conteneur Docker                     | Éphémère                          | Redémarrable                    | Destruction sans risque                 |
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

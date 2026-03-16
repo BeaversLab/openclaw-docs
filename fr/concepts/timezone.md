@@ -90,6 +90,6 @@ Vous pouvez contrôler le format de l'invite avec `agents.defaults.timeFormat` (
 
 Voir [Date & Heure](/fr/date-time) pour le comportement complet et les exemples.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

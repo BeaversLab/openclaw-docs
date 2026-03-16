@@ -52,6 +52,6 @@ openclaw agent --agent ops --message "Generate report" --deliver --reply-channel
 - `--timeout <seconds>` : remplacer le délai d'attente de l'agent
 - `--json` : afficher du JSON structuré
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

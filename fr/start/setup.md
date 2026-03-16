@@ -97,7 +97,8 @@ pnpm install
 pnpm gateway:watch
 ```
 
-`gateway:watch` exécute la passerelle en mode surveillance et se recharge lors des modifications TypeScript.
+`gateway:watch` exécute la passerelle en mode surveillance et se recharge lors des modifications pertinentes de la source,
+de la configuration et des métadonnées des plugins groupés.
 
 ### 2) Pointer l'application macOS vers votre Gateway en cours d'exécution
 
@@ -162,6 +163,6 @@ Pour les serveurs toujours actifs ou multi-utilisateurs, envisagez un service **
 - [OpenClaw assistant setup](/fr/start/openclaw)
 - [Application macOS](/fr/platforms/macos) (cycle de vie de la passerelle)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

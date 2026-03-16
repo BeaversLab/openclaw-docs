@@ -21,6 +21,6 @@ Notes :
 - Pour les jetons gérés par SecretRef (résolus ou non résolus), `dashboard` imprime/copie/ouvre une URL sans jeton pour éviter d'exposer des secrets externes dans la sortie du terminal, l'historique du presse-papiers ou les arguments de lancement du navigateur.
 - Si `gateway.auth.token` est géré par SecretRef mais non résolu dans ce chemin de commande, la commande imprime une URL sans jeton et des instructions de remédiation explicites au lieu d'insérer un espace réservé de jeton non valide.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

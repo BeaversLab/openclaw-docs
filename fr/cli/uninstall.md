@@ -19,6 +19,6 @@ openclaw uninstall --dry-run
 
 Exécutez d'abord `openclaw backup create` si vous souhaitez une restauration par instantané avant de supprimer l'état ou les espaces de travail.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -39,6 +39,6 @@ L'application de la barre de menus macOS intègre l'interface utilisateur WebCha
 
 - L'interface utilisateur est optimisée pour les sessions de chat (et non pour un bac à sable de navigateur complet).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

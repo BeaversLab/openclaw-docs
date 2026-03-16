@@ -382,6 +382,6 @@ Moteur de rendu diff :
 - [Plugins](/fr/tools/plugin)
 - [Navigateur](/fr/tools/browser)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

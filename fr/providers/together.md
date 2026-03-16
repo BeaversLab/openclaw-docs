@@ -64,6 +64,6 @@ Together AI donne accès à de nombreux modèles open source populaires :
 
 Tous les modèles prennent en charge les achèvements de chat standard et sont compatibles avec l'OpenAI API.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

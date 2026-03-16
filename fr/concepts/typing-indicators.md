@@ -67,6 +67,6 @@ Vous pouvez remplacer le mode ou la cadence par session :
 - `typingIntervalSeconds` contrôle la **cadence de rafraîchissement**, et non l'heure de début.
   La valeur par défaut est de 6 secondes.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

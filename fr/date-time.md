@@ -127,6 +127,6 @@ Si vous avez besoin de l'heure locale, convertissez-la en aval en utilisant le f
 - [Fuseaux horaires](/fr/concepts/timezone)
 - [Messages](/fr/concepts/messages)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -154,6 +154,6 @@ Slack :
 - `block` utilise des aperçus d'ébauches de type ajout.
 - `progress` utilise le texte d'aperçu d'état, puis la réponse finale.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

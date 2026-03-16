@@ -265,6 +265,6 @@ En relation :
 - [Docteur](/fr/gateway/doctor)
 - [Authentification](/fr/gateway/authentication)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

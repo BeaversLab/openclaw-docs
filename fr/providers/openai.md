@@ -284,6 +284,6 @@ Les modèles OpenAI Responses directs forcent toujours `store: true` sauf si la 
 - Les références de modèle utilisent toujours `provider/model` (voir [/concepts/models](/fr/concepts/models)).
 - Les détails d'authentification + les règles de réutilisation sont dans [/concepts/oauth](/fr/concepts/oauth).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

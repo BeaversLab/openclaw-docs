@@ -23,6 +23,6 @@ Il ne définit pas les outils existants ; OpenClaw fournit des outils intégrés
 
 Ajoutez tout ce que vous souhaitez que l'assistant sache sur votre chaîne d'outils locale.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

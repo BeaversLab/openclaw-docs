@@ -924,7 +924,7 @@ dig +short api.telegram.org AAAA
   - `channels.telegram.groups.<id>.topics.<threadId>.agentId`：将此主题路由到特定代理（覆盖群组级别和绑定路由）。
 - `channels.telegram.groups.<id>.topics.<threadId>.groupPolicy`：groupPolicy（`open | allowlist | disabled`）的每主题覆盖设置。
 - `channels.telegram.groups.<id>.topics.<threadId>.requireMention`：每主题提及门控覆盖设置。
-- `bindings[]` 中的顶级 `bindings[]`，带有 `type: "acp"` 和规范主题 id `chatId:topic:topicId`：持久化 ACP 主题绑定字段（请参阅 [ACP Agents](/en/tools/acp-agents#channel-specific-settings)）。
+- `bindings[]` 顶级字段包含 `type: "acp"` 和规范主题 ID `chatId:topic:topicId` 在 `match.peer.id` 中：持久化 ACP 主题绑定字段（参见 [ACP Agents](/en/tools/acp-agents#channel-specific-settings)）。
 - `channels.telegram.direct.<id>.topics.<threadId>.agentId`：将私信主题路由到特定代理（行为与论坛主题相同）。
 - `channels.telegram.execApprovals.enabled`：为此帐户启用 Telegram 作为基于聊天的 exec 审批客户端。
 - `channels.telegram.execApprovals.approvers`：允许批准或拒绝 exec 请求的 Telegram 用户 ID。启用 exec 批准时为必需项。

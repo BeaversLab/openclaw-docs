@@ -267,6 +267,6 @@ free -h
 - [Tailscale](/fr/gateway/tailscale) — accès distant sécurisé
 - [Configuration](/fr/gateway/configuration) — référence complète de la configuration
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

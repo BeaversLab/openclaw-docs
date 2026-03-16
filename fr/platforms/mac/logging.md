@@ -56,6 +56,6 @@ sudo install -m 644 -o root -g wheel /tmp/ai.openclaw.plist /Library/Preferences
 - Exécutez éventuellement `sudo log config --reload` pour forcer logd à abandonner immédiatement la substitution.
 - N'oubliez pas que cette surface peut inclure des numéros de téléphone et le corps des messages ; ne conservez le plist en place que tant que vous avez activement besoin du détail supplémentaire.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

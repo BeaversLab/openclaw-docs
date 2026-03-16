@@ -76,6 +76,6 @@ Les versions bêta et dev peuvent **ne pas** inclure une version de l'applicatio
 - La balise git et le dist-tag npm peuvent toujours être publiés.
 - Indiquez « pas de build macOS pour cette bêta » dans les notes de version ou le journal des modifications.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

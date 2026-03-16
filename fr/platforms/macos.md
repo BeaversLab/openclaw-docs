@@ -220,6 +220,6 @@ Pour les étapes de configuration, voir [macOS accès à distance](/fr/platforms
 - [Autorisations macOS](/fr/platforms/mac/permissions)
 - [Canvas](/fr/platforms/mac/canvas)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

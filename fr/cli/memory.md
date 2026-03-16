@@ -65,6 +65,6 @@ Notes :
 - Si les champs de clé d'API distante de mémoire active effective sont configurés en tant que SecretRefs, la commande résout ces valeurs à partir du snapshot de la passerelle active. Si la passerelle est indisponible, la commande échoue rapidement.
 - Note de décalage de version de la passerelle : ce chemin de commande nécessite une passerelle qui prend en charge `secrets.resolve` ; les passerelles plus anciennes renvoient une erreur de méthode inconnue.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

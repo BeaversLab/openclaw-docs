@@ -243,7 +243,7 @@ Responder a un mensaje de bot cuenta como una mención implícita (cuando el can
 
 Notas:
 
-- `mentionPatterns` son expresiones regulares que no distinguen entre mayúsculas y minúsculas.
+- `mentionPatterns` son patrones de regex seguros que no distinguen mayúsculas de minúsculas; los patrones no válidos y las formas de repetición anidada inseguras se ignoran.
 - Las superficies que proporcionan menciones explícitas aún pasan; los patrones son un respaldo.
 - Anulación por agente: `agents.list[].groupChat.mentionPatterns` (útil cuando varios agentes comparten un grupo).
 - El filtrado de menciones solo se aplica cuando es posible la detección de menciones (las menciones nativas o `mentionPatterns` están configuradas).

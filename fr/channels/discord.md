@@ -1225,6 +1225,6 @@ Champs Discord à signal fort :
 - [Dépannage](/fr/channels/troubleshooting)
 - [Commandes slash](/fr/tools/slash-commands)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -12,7 +12,7 @@ title: "OpenClaw"
   <img src="/assets/openclaw-logo-text.png" alt="OpenClaw" width="500" class="hidden dark:block" />
 </p>
 
-> _"EXFOLIATE! EXFOLIATE!"_ — Une homard spatial, probablement
+> _"EXFOLIATE! EXFOLIATE!"_ — Une homarde spatiale, probablement
 
 <p align="center">
   <strong>

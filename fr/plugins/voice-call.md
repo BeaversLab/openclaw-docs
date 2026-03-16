@@ -341,6 +341,6 @@ Ce dépôt inclut un document de compétence correspondant à `skills/voice-call
 - `voicecall.end` (`callId`)
 - `voicecall.status` (`callId`)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

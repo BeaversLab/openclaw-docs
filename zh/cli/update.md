@@ -10,7 +10,7 @@ title: "更新"
 
 安全地更新 OpenClaw 并在稳定/测试/开发通道之间切换。
 
-如果您通过 **npm/pnpm** 安装（全局安装，无 git 元数据），更新通过[更新](/en/install/updating) 中的包管理器流程进行。
+如果您通过 **npm/pnpm** 安装（全局安装，无 git 元数据），更新会通过 [更新](/en/install/updating) 中的包管理器流程进行。
 
 ## 用法
 
@@ -21,6 +21,7 @@ openclaw update wizard
 openclaw update --channel beta
 openclaw update --channel dev
 openclaw update --tag beta
+openclaw update --tag main
 openclaw update --dry-run
 openclaw update --no-restart
 openclaw update --json
@@ -31,10 +32,10 @@ openclaw --update
 
 - `--no-restart`：成功更新后跳过重启 Gateway 网关 服务。
 - `--channel <stable|beta|dev>`：设置更新通道（git + npm；持久化保存到配置中）。
-- `--tag <dist-tag|version>`：仅针对本次更新覆盖 npm dist-tag 或版本。
-- `--dry-run`：预览计划的更新操作（通道/标签/目标/重启流程），而不写入配置、安装、同步插件或重启。
+- `--tag <dist-tag|version|spec>`：仅为此次更新覆盖软件包目标。对于软件包安装，`main` 映射到 `github:openclaw/openclaw#main`。
+- `--dry-run`：预览计划的更新操作（渠道/tag/目标/重启流程），而不写入配置、安装、同步插件或重启。
 - `--json`：打印机器可读的 `UpdateRunResult` JSON。
-- `--timeout <seconds>`：每步超时时间（默认为 1200s）。
+- `--timeout <seconds>`：每步超时（默认为 1200s）。
 
 注意：降级需要确认，因为旧版本可能会破坏配置。
 
@@ -51,21 +52,17 @@ openclaw update status --timeout 10
 选项：
 
 - `--json`：打印机器可读的状态 JSON。
-- `--timeout <seconds>`：检查超时时间（默认为 3s）。
+- `--timeout <seconds>`：检查超时（默认为 3s）。
 
 ## `update wizard`
 
-用于选择更新通道并确认更新后是否重启 Gateway 网关 的交互式流程
-（默认为重启）。如果您在没有 git 检出副本的情况下选择 `dev`，它
-会提议创建一个。
+交互式流程以选择更新渠道并确认更新后是否重启 Gateway(网关)（默认为重启）。如果您在没有 git checkout 的情况下选择 `dev`，它会提议创建一个。
 
 ## 它的作用
 
-当您显式切换通道（`--channel ...`）时，OpenClaw 也会使
-安装方法保持一致：
+当您显式切换渠道（`--channel ...`）时，OpenClaw 还会保持安装方法一致：
 
-- `dev` → 确保 git checkout（默认：`~/openclaw`，可通过 `OPENCLAW_GIT_DIR` 覆盖），
-  更新它，并从该 checkout 安装全局 CLI。
+- `dev` → 确保有 git checkout（默认：`~/openclaw`，可通过 `OPENCLAW_GIT_DIR` 覆盖），更新它，并从该 checkout 安装全局 CLI。
 - `stable`/`beta` → 使用匹配的 dist-tag 从 npm 安装。
 
 当通过配置启用时，Gateway(网关) 核心自动更新程序复用此相同的更新路径。
@@ -74,9 +71,9 @@ openclaw update status --timeout 10
 
 渠道：
 
-- `stable`：检出最新的非 beta 标签，然后构建 + 诊断。
-- `beta`：检出最新的 `-beta` 标签，然后构建 + 诊断。
-- `dev`：检出 `main`，然后获取 + 变基。
+- `stable`：检出最新的非 beta tag，然后构建 + doctor。
+- `beta`：检出最新的 `-beta` tag，然后构建 + doctor。
+- `dev`：检出 `main`，然后 fetch + rebase。
 
 高级概览：
 
@@ -87,7 +84,7 @@ openclaw update status --timeout 10
 5. 变基到选定的提交（仅限 dev）。
 6. 安装依赖项（首选 pnpm；回退到 npm）。
 7. 构建 + 构建 Control UI。
-8. 运行 `openclaw doctor` 作为最后的“安全更新”检查。
+8. 运行 `openclaw doctor` 作为最终的“安全更新”检查。
 9. 将插件同步到活动渠道（dev 使用捆绑扩展；stable/beta 使用 npm）并更新 npm 安装的插件。
 
 ## `--update` 简写
@@ -96,7 +93,7 @@ openclaw update status --timeout 10
 
 ## 参见
 
-- `openclaw doctor`（在 git checkout 上提议先运行 update）
+- `openclaw doctor`（提议在 git checkouts 上先运行更新）
 - [开发渠道](/en/install/development-channels)
 - [更新](/en/install/updating)
 - [CLI 参考](/en/cli)

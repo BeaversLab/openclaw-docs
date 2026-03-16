@@ -315,6 +315,6 @@ openclaw hooks enable boot-md
 
 **Voir :** [documentation boot-md](/fr/automation/hooks#boot-md)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

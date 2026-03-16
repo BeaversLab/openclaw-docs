@@ -27,6 +27,6 @@ Les scripts de surveillance d'authentification sont documentés ici :
 - Gardez les scripts concentrés et documentés.
 - Ajoutez une courte entrée dans la documentation pertinente (ou créez-en une si elle manque).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

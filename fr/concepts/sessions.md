@@ -9,6 +9,6 @@ title: "Sessions"
 
 La documentation canonique sur la gestion de session se trouve dans [Gestion de session](/fr/concepts/session).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

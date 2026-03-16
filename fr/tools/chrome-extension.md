@@ -13,10 +13,7 @@ L'extension Chrome OpenClaw permet à l'agent de contrôler vos **onglets Chrome
 
 L'attachement/détachement s'effectue via un **bouton unique de la barre d'outils Chrome**.
 
-Si vous préférez le flux officiel d'attachement MCP DevTools de Chrome plutôt que le relais de l'extension OpenClaw, utilisez plutôt un `existing-session` profil de navigateur. Voir
-[Browser](/fr/tools/browser#chrome-existing-session-via-mcp). Pour la documentation de configuration de Chrome, voir [Chrome for Developers: Use Chrome DevTools MCP with your
-browser session](https://developer.chrome.com/blog/chrome-devtools-mcp-debug-your-browser-session)
-et le [Chrome DevTools MCP README](https://github.com/ChromeDevTools/chrome-devtools-mcp).
+Si vous préférez le flux officiel de connexion MCP DevTools de Chrome au lieu du relais de l'extension OpenClaw, utilisez plutôt un profil de navigateur `existing-session`. Voir [Navigateur](/fr/tools/browser#chrome-existing-session-via-mcp). Pour la documentation de configuration propre à Chrome, consultez [Chrome pour les développeurs : Utiliser Chrome DevTools MCP avec votre session de navigateur](https://developer.chrome.com/blog/chrome-devtools-mcp-debug-your-browser-session) et le [README Chrome DevTools MCP](https://github.com/ChromeDevTools/chrome-devtools-mcp).
 
 ## Ce que c'est (concept)
 
@@ -60,19 +57,14 @@ Après la mise à niveau d'OpenClaw :
 
 ## Utilisation (définir le jeton Gateway une seule fois)
 
-OpenClaw est fourni avec un profil de navigateur intégré nommé `chrome` qui cible le relais de l'extension sur le port par défaut.
+Pour utiliser le relais de l'extension, créez un profil de navigateur pour celui-ci :
 
 Avant la première connexion, ouvrez les Options de l'extension et définissez :
 
 - `Port` (par défaut `18792`)
 - `Gateway token` (doit correspondre à `gateway.auth.token` / `OPENCLAW_GATEWAY_TOKEN`)
 
-Utilisation :
-
-- CLI : `openclaw browser --browser-profile chrome tabs`
-- Agent tool : `browser` avec `profile="chrome"`
-
-Si vous souhaitez un nom différent ou un port de relais différent, créez votre propre profil :
+Créez ensuite un profil :
 
 ```bash
 openclaw browser create-profile \
@@ -82,6 +74,11 @@ openclaw browser create-profile \
   --color "#00AA00"
 ```
 
+Utilisez-le :
+
+- CLI : `openclaw browser --browser-profile my-chrome tabs`
+- Outil de l'agent : `browser` avec `profile="my-chrome"`
+
 ### Ports Gateway personnalisés
 
 Si vous utilisez un port Gateway personnalisé, le port du relais de l'extension est automatiquement dérivé :
@@ -90,7 +87,7 @@ Si vous utilisez un port Gateway personnalisé, le port du relais de l'extension
 
 Exemple : si `gateway.port: 19001`, alors :
 
-- Port du relais de l'extension : `19004` (gateway + 3)
+- Port de relais de l'extension : `19004` (passerelle + 3)
 
 Configurez l'extension pour utiliser le port de relais dérivé dans la page des Options de l'extension.
 
@@ -111,7 +108,7 @@ Configurez l'extension pour utiliser le port de relais dérivé dans la page des
 
 - `ON` : attaché ; OpenClaw peut piloter cet onglet.
 - `…` : connexion au relais local.
-- `!` : relais inaccessible/non authentifié (le plus fréquent : serveur de relais non démarré, ou jeton gateway manquant/incorrect).
+- `!` : relais inaccessible ou non authentifié (le plus souvent : le serveur de relais n'est pas en cours d'exécution, ou le jeton de passerelle est manquant ou incorrect).
 
 Si vous voyez `!` :
 
@@ -134,9 +131,9 @@ Si plusieurs nœuds sont connectés, épinglez-en un avec `gateway.nodes.browser
 
 ## Sandboxing (conteneurs d'outils)
 
-Si votre session d'agent est sandboxée (`agents.defaults.sandbox.mode != "off"`), l'outil `browser` peut être restreint :
+Si votre session d'agent est Gateway (`agents.defaults.sandbox.mode != "off"`), l'Gateway `browser` peut être restreint :
 
-- Par défaut, les sessions sandboxées ciblent souvent le **navigateur sandbox** (`target="sandbox"`), et non votre Chrome hôte.
+- Par défaut, les sessions Gateway ciblent souvent le **navigateur de bac à sable** (`target="sandbox"`), et non votre Chrome hôte.
 - La prise de contrôle par relais de l'extension Chrome nécessite de contrôler le serveur de contrôle du navigateur **hôte**.
 
 Options :
@@ -158,21 +155,21 @@ Options :
 }
 ```
 
-Assurez-vous ensuite que l'outil n'est pas refusé par la stratégie d'outils, et (si nécessaire) appelez `browser` avec `target="host"`.
+Assurez-vous ensuite que l'outil n'est pas refusé par la stratégie de l'outil, et (si nécessaire) appelez `browser` avec `target="host"`.
 
 Débogage : `openclaw sandbox explain`
 
 ## Conseils d'accès à distance
 
 - Gardez le Gateway et l'hôte nœud sur le même tailnet ; évitez d'exposer les ports de relais au LAN ou à l'Internet public.
-- Associez les nœuds intentionnellement ; désactivez le routage du proxy navigateur si vous ne voulez pas de contrôle à distance (`gateway.nodes.browser.mode="off"`).
-- Laissez le relais en loopback à moins que vous n'ayez un véritable besoin inter-espaces de noms. Pour WSL2 ou des configurations similaires d'hôte fractionné, définissez `browser.relayBindHost` sur une adresse de liaison explicite telle que `0.0.0.0`, puis restreignez l'accès avec l'authentification Gateway, le jumelage de nœuds et un réseau privé.
+- Associez intentionnellement les nœuds ; désactivez le routage du proxy du navigateur si vous ne souhaitez pas de contrôle à distance (`gateway.nodes.browser.mode="off"`).
+- Laissez le relais en boucle locale (loopback) sauf si vous avez un véritable besoin inter-espace de noms. Pour WSL2 ou des configurations d'hôte partagé similaires, définissez `browser.relayBindHost` sur une adresse de liaison explicite telle que `0.0.0.0`, puis restreignez l'accès avec l'authentification Gateway, l'association de nœuds et un réseau privé.
 
 ## Fonctionnement du « chemin de l'extension »
 
-`openclaw browser extension path` affiche le répertoire sur disque **installé** contenant les fichiers de l'extension.
+`openclaw browser extension path` imprime le répertoire sur disque **installé** contenant les fichiers de l'extension.
 
-La CLI n'affiche volontairement **pas** un chemin `node_modules`. Exécutez toujours d'abord `openclaw browser extension install` pour copier l'extension vers un emplacement stable dans votre répertoire d'état OpenClaw.
+La CLI n'affiche intentionnellement **pas** de chemin `node_modules`. Exécutez toujours `openclaw browser extension install` d'abord pour copier l'extension vers un emplacement stable dans votre répertoire d'état OpenClaw.
 
 Si vous déplacez ou supprimez ce répertoire d'installation, Chrome marquera l'extension comme cassée jusqu'à ce que vous la rechargiez à partir d'un chemin valide.
 
@@ -191,15 +188,15 @@ Recommandations :
 
 - Préférez un profil Chrome dédié (séparé de votre navigation personnelle) pour l'utilisation du relais d'extension.
 - Gardez le Gateway et tous les hôtes de nœuds uniquement sur le tailnet ; comptez sur l'authentification Gateway + le jumelage de nœuds.
-- Évitez d'exposer les ports de relais sur le LAN (`0.0.0.0`) et évitez Funnel (public).
-- Le relais bloque les origines non-extension et nécessite une authentification par jeton de passerelle pour `/cdp` et `/extension`.
+- Évitez d'exposer les ports de relais sur le réseau local (`0.0.0.0`) et évitez Funnel (public).
+- Le relais bloque les origines autres que celles de l'extension et nécessite une authentification par jeton de passerelle pour à la fois `/cdp` et `/extension`.
 
 Connexes :
 
-- Aperçu de l'outil de navigateur : [Navigateur](/fr/tools/browser)
+- Aperçu de l'outil de navigation : [Navigateur](/fr/tools/browser)
 - Audit de sécurité : [Sécurité](/fr/gateway/security)
 - Configuration Tailscale : [Tailscale](/fr/gateway/tailscale)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -137,6 +137,6 @@ Options du fournisseur :
 - `channels.nextcloud-talk.blockStreamingCoalesce` : réglage de la coalescence du block streaming.
 - `channels.nextcloud-talk.mediaMaxMb` : limite de média entrant (Mo).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

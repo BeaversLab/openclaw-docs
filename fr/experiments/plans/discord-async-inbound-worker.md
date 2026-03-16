@@ -336,6 +336,6 @@ Terminer cela dans les PRs suivantes :
 
 Il s'agit toujours d'un suivi délimité s'il est réservé à Discord et si nous continuons à éviter une abstraction prématurée de worker inter-canal.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

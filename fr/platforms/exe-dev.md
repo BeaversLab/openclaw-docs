@@ -124,6 +124,6 @@ openclaw health
 
 Guide : [Mise à jour](/fr/install/updating)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -328,6 +328,6 @@ Si vous passez de l'authentification par jeton au proxy de confiance :
 - [Accès à distance](/fr/gateway/remote) — autres modèles d'accès à distance
 - [Tailscale](/fr/gateway/tailscale) — alternative plus simple pour l'accès exclusif au tailnet
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

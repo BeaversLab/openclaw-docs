@@ -139,6 +139,6 @@ Lorsqu'elle est définie, `OPENCLAW_HOME` remplace le répertoire personnel du s
 - [FAQ : env vars et chargement .env](/fr/help/faq#env-vars-and-env-loading)
 - [Aperçu des modèles](/fr/concepts/models)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

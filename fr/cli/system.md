@@ -59,6 +59,6 @@ Indicateurs :
 - Nécessite une Gateway en cours d'exécution accessible par votre configuration actuelle (locale ou distante).
 - Les événements système sont éphémères et ne sont pas persistants après les redémarrages.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

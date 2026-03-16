@@ -213,6 +213,6 @@ Notes :
 
 Documentation connexe : [Plugins](/fr/tools/plugin), [Channels](/fr/channels/index), [Configuration](/fr/gateway/configuration).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

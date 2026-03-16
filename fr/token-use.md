@@ -111,6 +111,6 @@ agents:
 
 Voir [Skills](/fr/tools/skills) pour la formule exacte de la surcharge de la liste des compétences.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

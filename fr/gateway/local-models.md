@@ -151,6 +151,6 @@ Conservez `models.mode: "merge"` afin que les modèles hébergés restent dispon
 - Erreurs de contexte ? Abaissez `contextWindow` ou augmentez la limite de votre serveur.
 - Sécurité : les modèles locaux ignorent les filtres côté fournisseur ; gardez les agents restreints et la compactage activé pour limiter le rayon d'impact de l'injection de prompt.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -392,6 +392,6 @@ Mattermost prend en charge plusieurs comptes sous `channels.mattermost.accounts`
 - La confirmation affiche l'ID brut au lieu du nom du bouton : `context.action_id` ne correspond pas au `id` du bouton. Définissez les deux sur la même valeur nettoyée.
 - L'agent ne connaît pas les boutons : ajoutez `capabilities: ["inlineButtons"]` à la configuration du channel Mattermost.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

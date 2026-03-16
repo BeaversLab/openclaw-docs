@@ -219,13 +219,13 @@ Voir [Lobster](/fr/tools/lobster) pour l'utilisation complète et les exemples.
 
 Le heartbeat et le cron peuvent tous deux interagir avec la session principale, mais de manière différente :
 
-|            | Heartbeat                      | Cron (main)                  | Cron (isolated)                  |
-| ---------- | ------------------------------ | ---------------------------- | -------------------------------- |
-| Session    | Main                           | Main (via system event)      | `cron:<jobId>`                   |
-| Historique | Shared                         | Shared                       | Nouveau à chaque exécution       |
-| Contexte   | Full                           | Full                         | Aucun (commence proprement)      |
-| Modèle     | Modèle de session principale   | Modèle de session principale | Peut être remplacé               |
-| Sortie     | Délivrée si non `HEARTBEAT_OK` | Heartbeat prompt + event     | Résumé de l'annonce (par défaut) |
+|            | Heartbeat                      | Cron (main)                  | Cron (isolated)                                                   |
+| ---------- | ------------------------------ | ---------------------------- | ----------------------------------------------------------------- |
+| Session    | Main                           | Main (via system event)      | `cron:<jobId>` ou session personnalisée                           |
+| Historique | Shared                         | Shared                       | Fraîche à chaque exécution (isolée) / Persistante (personnalisée) |
+| Contexte   | Full                           | Full                         | Aucune (isolée) / Cumulative (personnalisée)                      |
+| Modèle     | Modèle de session principale   | Modèle de session principale | Peut être remplacé                                                |
+| Sortie     | Délivrée si non `HEARTBEAT_OK` | Heartbeat prompt + event     | Résumé de l'annonce (par défaut)                                  |
 
 ### Quand utiliser le cron de session principale
 
@@ -285,6 +285,6 @@ openclaw cron add \
 - [Tâches cron](/fr/automation/cron-jobs) - référence complète de la CLI et de l'API cron
 - [Système](/fr/cli/system) - événements système + contrôles heartbeat
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

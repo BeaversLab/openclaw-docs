@@ -215,6 +215,6 @@ Notes :
 - Référence complète : [Référence de l'intégration CLI](/fr/start/wizard-cli-reference)
 - Référence de la commande : [`openclaw onboard`](/fr/cli/onboard)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -46,6 +46,6 @@ Le texte est pris en charge partout ; les médias et les réactions varient selo
 - Dépannage : [Channel troubleshooting](/fr/channels/troubleshooting).
 - Les fournisseurs de modèles sont documentés séparément ; voir [Model Providers](/fr/providers/models).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

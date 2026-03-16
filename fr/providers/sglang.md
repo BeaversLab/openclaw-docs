@@ -103,6 +103,6 @@ curl http://127.0.0.1:30000/v1/models
   à la configuration de votre serveur, ou configurez le provider explicitement sous
   `models.providers.sglang`.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -25,7 +25,7 @@ Note, selecting 'chromium-browser' instead of 'chromium'
 chromium-browser is already the newest version (2:1snap1-0ubuntu2).
 ```
 
-Ce n'est PAS un vrai navigateur — c'est juste un wrapper.
+Ce n'est PAS un vrai navigateur - ce n'est qu'un wrapper.
 
 ### Solution 1 : Installer Google Chrome (Recommandé)
 
@@ -123,20 +123,20 @@ curl -s http://127.0.0.1:18791/tabs
 
 ### Problème : "Le relais de l'extension Chrome fonctionne, mais aucun onglet n'est connecté"
 
-Vous utilisez le profil `chrome` (relais d'extension). Il attend que l'extension de navigateur OpenClaw soit attachée à un onglet actif.
+Vous utilisez un profil de relais d'extension. Il s'attend à ce que l'extension de navigateur OpenClaw soit attachée à un onglet actif.
 
 Options de correction :
 
-1. **Utiliser le navigateur géré :** `openclaw browser start --browser-profile openclaw`
+1. **Utilisez le navigateur géré :** `openclaw browser start --browser-profile openclaw`
    (ou définissez `browser.defaultProfile: "openclaw"`).
 2. **Utiliser le relais d'extension :** installez l'extension, ouvrez un onglet et cliquez sur
    l'icône de l'extension OpenClaw pour l'attacher.
 
 Notes :
 
-- Le profil `chrome` utilise votre **navigateur Chromium par défaut du système** lorsque cela est possible.
+- Le profil `chrome-relay` utilise votre **navigateur système Chromium par défaut** lorsque cela est possible.
 - Les profils `openclaw` locaux attribuent automatiquement `cdpPort`/`cdpUrl` ; ne définissez ces valeurs que pour le CDP distant.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

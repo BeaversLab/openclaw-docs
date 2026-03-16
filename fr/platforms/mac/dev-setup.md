@@ -103,6 +103,6 @@ lsof -nP -iTCP:18789 -sTCP:LISTEN
 
 Si une exécution manuelle occupe le port, arrêtez ce processus (Ctrl+C). En dernier recours, tuez le PID que vous avez trouvé ci-dessus.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

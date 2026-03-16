@@ -755,7 +755,7 @@ Gemini CLI 使用的是 **插件身份验证流程**，而不是 `openclaw.json`
 
 步骤：
 
-1. 启用插件：`openclaw plugins enable google-gemini-cli-auth`
+1. 启用插件：`openclaw plugins enable google`
 2. 登录：`openclaw models auth login --provider google-gemini-cli --set-default`
 
 这会将 OAuth 令牌存储在网关主机的身份验证配置文件中。详细信息：[模型提供商](/en/concepts/model-providers)。

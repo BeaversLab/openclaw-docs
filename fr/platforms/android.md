@@ -15,13 +15,13 @@ title: "Application Android"
 
 - Rôle : application de nœud compagnon (Android n'héberge pas le Gateway).
 - Gateway requis : oui (exécutez-le sur macOS, Linux ou Windows via WSL2).
-- Installation : [Getting Started](/fr/start/getting-started) + [Appairage](/fr/channels/pairing).
-- Gateway : [Manuel](/fr/gateway) + [Configuration](/fr/gateway/configuration).
-  - Protocoles : [Protocole Gateway](/fr/gateway/protocol) (nœuds + plan de contrôle).
+- Installer : [Getting Started](/fr/start/getting-started) + [Pairing](/fr/channels/pairing).
+- Gateway : [Runbook](/fr/gateway) + [Configuration](/fr/gateway/configuration).
+  - Protocoles : [protocole Gateway](/fr/gateway/protocol) (nœuds + plan de contrôle).
 
 ## Contrôle système
 
-Le contrôle système (launchd/systemd) réside sur l'hôte du Gateway. Voir [Gateway](/fr/gateway).
+Le contrôle système (launchd/systemd) réside sur l'hôte Gateway. Voir [Gateway](/fr/gateway).
 
 ## Manuel de connexion
 
@@ -96,7 +96,7 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-Détails de l'appairage : [Appairage](/fr/channels/pairing).
+Détails sur l'appairage : [Pairing](/fr/channels/pairing).
 
 ### 5) Vérifier que le nœud est connecté
 
@@ -151,7 +151,7 @@ Commandes de caméra (premier plan uniquement ; soumises aux permissions) :
 - `camera.snap` (jpg)
 - `camera.clip` (mp4)
 
-Voir [Camera node](/fr/nodes/camera) pour les paramètres et les aides CLI.
+Consultez [Camera node](/fr/nodes/camera) pour les paramètres et les assistants CLI.
 
 ### 8) Voix + surface de commande Android étendue
 
@@ -163,8 +163,9 @@ Voir [Camera node](/fr/nodes/camera) pour les paramètres et les aides CLI.
   - `photos.latest`
   - `contacts.search`, `contacts.add`
   - `calendar.events`, `calendar.add`
+  - `callLog.search`
   - `motion.activity`, `motion.pedometer`
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -127,6 +127,6 @@ Chaque compte peut remplacer le jeton, l'URL entrante, le chemin du webhook, la 
 - Les demandes de webhook entrantes sont vérifiées par jeton et limitées par taux par expéditeur.
 - Préférez `dmPolicy: "allowlist"` pour la production.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

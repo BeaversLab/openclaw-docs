@@ -250,6 +250,6 @@ Cette approche complète la configuration Docker ci-dessus avec des déploiement
 
 > **Remarque :** Entretenu par la communauté. Pour les problèmes ou les contributions, consultez les liens de dépôt ci-dessus.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

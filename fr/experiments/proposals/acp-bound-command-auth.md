@@ -87,6 +87,6 @@ Cela garde la limite explicite et minimise l'élargissement accidentel.
 
 Cette proposition est intentionnellement additive et ne supprime ni ne remplace les documents d'expériences existants.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -31,6 +31,6 @@ openclaw pairing approve --channel telegram --account work <code> --notify
 - `pairing approve` prend en charge `--account <accountId>` et `--notify`.
 - Si un seul channel compatible avec l'appariement est configuré, `pairing approve <code>` est autorisé.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -150,6 +150,6 @@ Cette complexité a provoqué des régressions inter-fournisseurs (notamment le 
 `call_id|fc_id`). Le nettoyage de la version 2026.1.22 a supprimé l'extension, centralisé
 la logique dans le runner et rendu OpenAI **sans intervention** au-delà de la sanitisation des images.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

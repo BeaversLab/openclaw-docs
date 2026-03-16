@@ -16,7 +16,7 @@ Si vous utilisez `OPENROUTER_API_KEY`, une clé `sk-or-...` dans `tools.web.sear
 
 ## Obtenir une clé API Perplexity
 
-1. Créez un compte Perplexity sur [https://www.perplexity.ai/settings/api](https://www.perplexity.ai/settings/api)
+1. Créez un compte Perplexity sur [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api)
 2. Générez une clé API dans le tableau de bord
 3. Stockez la clé dans la configuration ou définissez `PERPLEXITY_API_KEY` dans l'environnement de la passerelle.
 
@@ -157,6 +157,6 @@ await web_search({
 Voir [Web tools](/fr/tools/web) pour la configuration complète de web_search.
 Voir [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) pour plus de détails.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

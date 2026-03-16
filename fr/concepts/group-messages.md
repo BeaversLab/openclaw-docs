@@ -83,6 +83,6 @@ Seul le numéro de propriétaire (issu de `channels.whatsapp.allowFrom`, ou l'E.
 - Les entrées du magasin de session apparaîtront sous la forme `agent:<agentId>:whatsapp:group:<jid>` dans le magasin de session (`~/.openclaw/agents/<agentId>/sessions/sessions.json` par défaut) ; une entrée manquante signifie simplement que le groupe n'a pas encore déclenché d'exécution.
 - Les indicateurs de frappe dans les groupes suivent `agents.defaults.typingMode` (par défaut : `message` lorsqu'il n'y a pas de mention).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -383,6 +383,6 @@ Notes :
 - Si vous utilisez des profils/listes d'autorisation de outils, ajoutez `web_search`/`web_fetch` ou `group:web`.
 - Si la clé API est manquante, `web_search` renvoie un court indice de configuration avec un lien vers la documentation.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

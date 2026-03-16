@@ -111,6 +111,6 @@ Les réponses entrantes incluent :
 
 Ceci est cohérent d'un channel à l'autre.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

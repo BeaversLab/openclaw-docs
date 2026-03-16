@@ -79,7 +79,7 @@ title: "思考级别"
 
 ## 相关
 
-- 提升模式文档位于 [Elevated mode](/en/tools/elevated)。
+- 提升模式文档位于 [Elevated mode](/zh/tools/elevated)。
 
 ## 心跳
 

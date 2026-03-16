@@ -72,6 +72,6 @@ kilocode/google/gemini-3-pro-preview
 - Pour plus d'options de modèle/fournisseur, voir [/concepts/model-providers](/fr/concepts/model-providers).
 - Kilo Gateway utilise un jeton Bearer avec votre clé API en arrière-plan.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -128,6 +128,6 @@ Pour la référence technique approfondie, incluant les détails RPC, voir
 - Onboarding de l'application macOS : [Onboarding](/fr/start/onboarding)
 - Rituel de premier exécution de l'agent : [Agent Bootstrapping](/fr/start/bootstrapping)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

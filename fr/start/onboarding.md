@@ -90,6 +90,6 @@ L'onboarding demande les autorisations TCC nécessaires pour :
 </Step>
 </Steps>
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

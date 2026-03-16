@@ -137,6 +137,6 @@ docker compose build
 docker compose up -d
 ```
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -43,6 +43,6 @@ de la passerelle et sont réglés pour systemd + Termux.
 
 Si vous n'avez pas besoin d'automatisation sur téléphone ou de minuteries systemd, ignorez ces scripts.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

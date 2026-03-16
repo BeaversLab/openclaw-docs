@@ -138,6 +138,6 @@ externes, elle peut engendrer des coûts selon le provider de la skill.
 
 Voir [Skills](/fr/tools/skills).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

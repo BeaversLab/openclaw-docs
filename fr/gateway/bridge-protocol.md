@@ -90,6 +90,6 @@ Champs de charge utile (tous facultatifs sauf indication contraire) :
 Bridge est actuellement **implicit v1** (sans négociation min/max). La rétrocompatibilité
 est attendue ; ajoutez un champ de version du protocole de pont avant toute modification cassante.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

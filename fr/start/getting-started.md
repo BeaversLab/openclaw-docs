@@ -133,6 +133,6 @@ Référence complète des variables d'environnement : [Environment vars](/fr/hel
 - Connecter plus de chaînes : [Channels](/fr/channels)
 - Workflows avancés et à partir de la source : [Setup](/fr/start/setup)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

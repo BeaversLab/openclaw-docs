@@ -133,6 +133,6 @@ Traitez les fichiers `.prose` comme du code. Révisez-les avant exécution. Util
 
 Pour des flux de travail déterministes et soumis à approbation, comparer avec [Lobster](/fr/tools/lobster).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -311,6 +311,6 @@ Doctor suggère un système de mémoire d'espace de travail lorsqu'il est manqua
 
 Voir [/concepts/agent-workspace](/fr/concepts/agent-workspace) pour un guide complet sur la structure de l'espace de travail et la sauvegarde git (GitHub ou GitLab privé recommandé).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

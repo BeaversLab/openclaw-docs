@@ -170,6 +170,6 @@ openclaw models list
 - Si vous préférez un flux de clé gérée, vous pouvez également placer un proxy
   compatible avec OpenAI devant Bedrock et le configurer en tant que fournisseur OpenAI.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -243,7 +243,7 @@ Répondre à un message bot compte comme une mention implicite (lorsque le chann
 
 Notes :
 
-- Les `mentionPatterns` sont des expressions régulières insensibles à la casse.
+- `mentionPatterns` sont des motifs regex sûrs insensibles à la casse ; les motifs non valides et les formes de répétition imbriquées non sécurisées sont ignorés.
 - Les surfaces qui fournissent des mentions explicites passent toujours ; les motifs servent de solution de repli.
 - Remplacement par agent : `agents.list[].groupChat.mentionPatterns` (utile lorsque plusieurs agents partagent un groupe).
 - Le filtrage par mention n'est appliqué que lorsque la détection de mention est possible (les mentions natives ou les `mentionPatterns` sont configurées).
@@ -378,6 +378,6 @@ L'invite système de l'agent inclut une introduction de groupe au premier tour d
 
 Voir [Messages de groupe](/fr/channels/group-messages) pour les comportements spécifiques à WhatsApp (injection d'historique, détails de gestion des mentions).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

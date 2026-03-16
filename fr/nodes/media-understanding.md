@@ -386,6 +386,6 @@ Cela montre les résultats par capacité et le fournisseur/modèle choisi le cas
 - [Configuration](/fr/gateway/configuration)
 - [Prise en charge des images et des médias](/fr/nodes/images)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

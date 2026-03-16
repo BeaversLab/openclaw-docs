@@ -130,6 +130,6 @@ Connexe :
 - [Dépannage de l'authentification du tableau de bord](/fr/web/dashboard#if-you-see-unauthorized-1008)
 - [Gateway troubleshooting](/fr/gateway/troubleshooting#dashboard-control-ui-connectivity)
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

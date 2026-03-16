@@ -775,7 +775,7 @@ La CLI de Gemini utiliza un **flujo de autenticación de complementos**, no un I
 
 Pasos:
 
-1. Habilita el complemento: `openclaw plugins enable google-gemini-cli-auth`
+1. Habilita el complemento: `openclaw plugins enable google`
 2. Inicia sesión: `openclaw models auth login --provider google-gemini-cli --set-default`
 
 Esto almacena los tokens de OAuth en perfiles de autenticación en el host de la puerta de enlace. Detalles: [Proveedores de modelos](/es/concepts/model-providers).

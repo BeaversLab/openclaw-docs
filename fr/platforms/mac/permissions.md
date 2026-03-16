@@ -55,6 +55,6 @@ si vous souhaitez éviter d'accorder des autorisations pour chaque dossier.
 
 Si vous testez les autorisations, signez toujours avec un vrai certificat. Les builds ad-hoc ne sont acceptables que pour des exécutions locales rapides où les autorisations n'ont pas d'importance.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

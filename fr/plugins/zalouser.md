@@ -76,6 +76,6 @@ Actions : `send`, `image`, `link`, `friends`, `groups`, `me`, `status`
 
 Les actions de message du channel prennent également en charge `react` pour les réactions aux messages.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

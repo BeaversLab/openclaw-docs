@@ -258,6 +258,6 @@ Ce protocole expose l'**API complète de la passerelle** (statut, canaux, modèl
 agent, sessions, nœuds, approbations, etc.). La surface exacte est définie par les schémas
 TypeBox dans `src/gateway/protocol/schema.ts`.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

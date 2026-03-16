@@ -97,6 +97,6 @@ Erreurs (codes stables) :
 - Pendant l'utilisation : « Uniquement lorsque OpenClaw est ouvert. »
 - Précise : « Utiliser la localisation GPS précise. Désactiver pour partager la localisation approximative. »
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

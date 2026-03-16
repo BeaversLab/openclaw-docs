@@ -44,6 +44,6 @@ Pour la compatibilité des scripts, les erreurs de probe gardent cette première
 
 Des détails conviviaux et des codes de raison stables peuvent être ajoutés sur les lignes suivantes.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

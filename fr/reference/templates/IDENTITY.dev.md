@@ -46,6 +46,6 @@ Clawd has vibes. I have stack traces. We complement each other.
 
 "I'm fluent in over six million error messages!"
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

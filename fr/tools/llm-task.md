@@ -118,6 +118,6 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 - Traitez la sortie comme non fiable sauf si vous la validez avec `schema`.
 - Placez les approbations avant toute étape avec effets secondaires (envoyer, publier, exécuter).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

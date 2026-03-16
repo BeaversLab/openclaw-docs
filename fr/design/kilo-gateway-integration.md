@@ -533,6 +533,6 @@ const needsNonImageSanitize =
 | `src/agents/pi-embedded-runner/cache-ttl.ts`                | Modifier             | Ajouter la prise en charge de kilocode                                          |
 | `src/agents/transcript-policy.ts`                           | Modifier             | Ajouter la gestion Gemini de kilocode                                           |
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

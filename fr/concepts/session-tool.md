@@ -222,6 +222,6 @@ Notes :
 - `all` : n'importe quelle session (l'accès inter-agents nécessite toujours `tools.agentToAgent`).
 - Lorsqu'une session est en mode bac à sable et `sessionToolsVisibility="spawned"`, OpenClaw limite la visibilité à `tree` même si vous définissez `tools.sessions.visibility="all"`.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

@@ -411,6 +411,6 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 - [Tailscale](/fr/gateway/tailscale) — accès à distance
 - [Nœuds](/fr/nodes) — associez votre ordinateur portable/téléphone à la passerelle Pi
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

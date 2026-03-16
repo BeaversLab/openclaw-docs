@@ -243,7 +243,7 @@ otherwise -> reply
 
 备注：
 
-- `mentionPatterns` 是不区分大小写的正则表达式。
+- `mentionPatterns` 是不区分大小写的安全正则表达式模式；无效的模式和不安全的嵌套重复形式会被忽略。
 - 提供显式提及的表面仍然通过；模式是备用方案。
 - 每个代理的覆盖：`agents.list[].groupChat.mentionPatterns`（当多个代理共享一个组时很有用）。
 - 提及 gating 仅在可以检测到提及时强制执行（配置了原生提及或 `mentionPatterns`）。

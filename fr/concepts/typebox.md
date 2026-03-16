@@ -290,6 +290,6 @@ fichier brut publié est généralement disponible à l'adresse :
 2. Exécutez `pnpm protocol:check`.
 3. Validez le schéma régénéré + les modèles Swift.
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />

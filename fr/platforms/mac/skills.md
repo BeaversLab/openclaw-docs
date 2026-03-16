@@ -32,6 +32,6 @@ L'application macOS expose les skills OpenClaw via la passerelle ; elle ne les a
 
 - L'installation et les mises à jour de configuration se produisent sur l'hôte de la passerelle (et non sur le Mac local).
 
-import fr from '/components/footer/fr.mdx';
+import fr from "/components/footer/fr.mdx";
 
 <fr />
