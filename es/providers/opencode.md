@@ -57,7 +57,7 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 ## Notas
 
 - `OPENCODE_ZEN_API_KEY` también es compatible.
-- Ingresar una clave de OpenCode durante la incorporación almacena las credenciales para ambos proveedores de tiempo de ejecución.
+- Ingresar una clave de OpenCode durante la configuración guarda las credenciales para ambos proveedores de tiempo de ejecución.
 - Inicia sesión en OpenCode, añade los detalles de facturación y copia tu clave de API.
 - La facturación y la disponibilidad de los catálogos se gestionan desde el panel de OpenCode.
 

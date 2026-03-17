@@ -736,7 +736,7 @@ En mode minimal, le Gateway diffuse toujours suffisamment d'informations pour la
 L'authentification du Gateway est **requise par défaut**. Si aucun jeton/mot de passe n'est configuré,
 le Gateway refuse les connexions WebSocket (échec sécurisé).
 
-L'assistant de configuration génère un jeton par défaut (même pour la boucle locale) afin que
+L'onboarding génère un jeton par défaut (même pour la boucle locale), donc
 les clients locaux doivent s'authentifier.
 
 Définissez un jeton pour que **tous** les clients WS doivent s'authentifier :
@@ -982,10 +982,9 @@ accéder à ces comptes et ces données. Traitez les profils de navigateur comme
 - Traitez les téléchargements du navigateur comme une entrée non fiable ; préférez un répertoire de téléchargement isolé.
 - Désactivez la synchronisation du navigateur / les gestionnaires de mots de passe dans le profil de l'agent si possible (réduit le rayon d'impact).
 - Pour les passerelles distantes, supposez que le "contrôle du navigateur" équivaut à un "accès opérateur" à tout ce que ce profil peut atteindre.
-- Gardez le Gateway et les hôtes de nœuds en mode tailnet uniquement ; évitez d'exposer les ports de relais/contrôle au réseau local ou à l'Internet public.
-- Le point de terminaison CDP du relais de l'extension Chrome est protégé par une authentification ; seuls les clients OpenClaw peuvent se connecter.
-- Désactivez le routage du proxy du navigateur lorsque vous n'en avez pas besoin (`gateway.nodes.browser.mode="off"`).
-- Le mode relais de l'extension Chrome n'est **pas** « plus sûr » ; il peut prendre le contrôle de vos onglets Chrome existants. Supposez qu'il peut agir comme vous dans tout ce que cet onglet/profil peut atteindre.
+- Gardez le Gateway et les hôtes de nœuds uniquement sur le tailnet ; évitez d'exposer les ports de contrôle du navigateur au LAN ou à l'Internet public.
+- Désactivez le routage du proxy navigateur lorsque vous n'en avez pas besoin (`gateway.nodes.browser.mode="off"`).
+- Le mode de session existante de Chrome MCP n'est **pas** plus « sûr » ; il peut agir en votre nom sur tout ce que le profil Chrome de cet hôte peut atteindre.
 
 ### Stratégie SSRF du navigateur (trusted-network par défaut)
 
@@ -995,7 +994,7 @@ La stratégie réseau du navigateur de OpenClaw est par défaut basée sur le mo
 - Alias hérité : `browser.ssrfPolicy.allowPrivateNetwork` est toujours accepté pour la compatibilité.
 - Mode strict : définissez `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork: false` pour bloquer par défaut les destinations privées/internes/à usage spécial.
 - En mode strict, utilisez `hostnameAllowlist` (modèles comme `*.example.com`) et `allowedHostnames` (exceptions d'hôte exactes, y compris les noms bloqués comme `localhost`) pour les exceptions explicites.
-- La navigation est vérifiée avant la requête et revérifiée par un best-effort sur l'URL finale `http(s)` après la navigation pour réduire les pivots basés sur les redirections.
+- La navigation est vérifiée avant la requête et revérifiée au mieux sur l'URL finale `http(s)` après la navigation pour réduire les pivots basés sur des redirections.
 
 Exemple de stratégie stricte :
 
@@ -1013,7 +1012,7 @@ Exemple de stratégie stricte :
 
 ## Profils d'accès par agent (multi-agent)
 
-Avec le routage multi-agent, chaque agent peut avoir sa propre stratégie de sandbox + outil :
+Avec le routage multi-agent, chaque agent peut avoir sa propre stratégie de bac à sable (sandbox) + d'outils :
 utilisez ceci pour donner un **accès complet**, un **accès en lecture seule**, ou **aucun accès** par agent.
 Voir [Multi-Agent Sandbox & Tools](/fr/tools/multi-agent-sandbox-tools) pour tous les détails
 et les règles de priorité.
@@ -1021,8 +1020,8 @@ et les règles de priorité.
 Cas d'usage courants :
 
 - Agent personnel : accès complet, pas de sandbox
-- Agent famille/travail : sandboxé + outils en lecture seule
-- Agent public : sandboxé + aucun outil de système de fichiers/shell
+- Agent famille/travail : sandbox + outils en lecture seule
+- Agent public : sandbox + pas d'outils système de fichiers/shell
 
 ### Exemple : accès complet (pas de sandbox)
 
@@ -1064,7 +1063,7 @@ Cas d'usage courants :
 }
 ```
 
-### Exemple : aucun accès système de fichiers/shell (messagerie du provider autorisée)
+### Exemple : aucun accès système de fichiers/shell (messagerie provider autorisée)
 
 ```json5
 {
@@ -1115,9 +1114,9 @@ Cas d'usage courants :
 }
 ```
 
-## Que dire à votre IA
+## Ce qu'il faut dire à votre IA
 
-Incluez des directives de sécurité dans le prompt système de votre agent :
+Incluez des lignes directrices de sécurité dans le prompt système de votre agent :
 
 ```
 ## Security Rules
@@ -1135,35 +1134,37 @@ Si votre IA fait quelque chose de mal :
 ### Confiner
 
 1. **Arrêtez-la :** arrêtez l'application macOS (si elle supervise le Gateway) ou terminez votre processus `openclaw gateway`.
-2. **Fermez l'exposition :** définissez `gateway.bind: "loopback"` (ou désactivez Tailscale Funnel/Serve) jusqu'à ce que vous compreniez ce qui s'est passé.
-3. **Gel de l'accès :** passez les DMs/groupes risqués en `dmPolicy: "disabled"` / exigez des mentions, et supprimez les entrées allow-all `"*"` si vous en aviez.
+2. **Fermer l'exposition :** définissez `gateway.bind: "loopback"` (ou désactivez Tailscale Funnel/Serve) jusqu'à ce que vous compreniez ce qui s'est passé.
+3. **Geler l'accès :** passez les DMs/groupes à risque en `dmPolicy: "disabled"` / exigez des mentions, et supprimez les entrées `"*"` autorisant tout si vous en aviez.
 
 ### Faire une rotation (supposer une compromission si des secrets ont fui)
 
-1. Faites une rotation de l'auth Gateway (`gateway.auth.token` / `OPENCLAW_GATEWAY_PASSWORD`) et redémarrez.
-2. Faites une rotation des secrets des clients distants (`gateway.remote.token` / `.password`) sur toute machine pouvant appeler le Gateway.
-3. Faites une rotation des identifiants provider/API (identifiants WhatsApp, jetons Slack/Discord, clés model/API dans `auth-profiles.json`, et valeurs de payload de secrets chiffrés lorsqu'elles sont utilisées).
+1. Faire une rotation de l'authentification Gateway (`gateway.auth.token` / `OPENCLAW_GATEWAY_PASSWORD`) et redémarrer.
+2. Faire une rotation des secrets des clients distants (`gateway.remote.token` / `.password`) sur toute machine pouvant appeler le Gateway.
+3. Faire une rotation des identifiants provider/API (identifiants WhatsApp, jetons Slack/Discord, clés model/API dans `auth-profiles.json`, et les valeurs de payload des secrets chiffrés lorsque utilisés).
 
 ### Audit
 
-1. Vérifiez les logs du Gateway : `/tmp/openclaw/openclaw-YYYY-MM-DD.log` (ou `logging.file`).
-2. Examinez la/les transcription(s) pertinente(s) : `~/.openclaw/agents/<agentId>/sessions/*.jsonl`.
-3. Passez en revue les récentes modifications de configuration (tout ce qui aurait pu élargir l'accès : `gateway.bind`, `gateway.auth`, stratégies de dm/groupe, `tools.elevated`, modifications de plugins).
-4. Relancez `openclaw security audit --deep` et confirmez que les résultats critiques sont résolus.
+1. Vérifier les journaux Gateway : `/tmp/openclaw/openclaw-YYYY-MM-DD.log` (ou `logging.file`).
+2. Revoir la/les transcription(s) pertinente(s) : `~/.openclaw/agents/<agentId>/sessions/*.jsonl`.
+3. Revoir les changements de configuration récents (tout ce qui aurait pu élargir l'accès : `gateway.bind`, `gateway.auth`, politiques dm/groupes, `tools.elevated`, changements de plugins).
+4. Relancer `openclaw security audit --deep` et confirmer que les résultats critiques sont résolus.
 
 ### Collecter pour un rapport
 
-- Horodatage, système d'exploitation de l'hôte de la passerelle + version OpenClaw
-- La(les) transcription(s) de session + une fin courte de journal (après masquage)
+- Horodatage, OS hôte OpenClaw + version OpenClaw
+- La/les transcription(s) de session + une courte fin de journal (après masquage)
 - Ce que l'attaquant a envoyé + ce que l'agent a fait
-- Si la Gateway était exposée au-delà de la boucle locale (LAN/Tunnel Tailscale/Serve)
+- Si le Gateway a été exposé au-delà de boucle locale (LAN/Tailscale Funnel/Serve)
 
-## Analyse de secrets (detect-secrets)
+## Secret Scanning (detect-secrets)
 
-L'IC exécute le hook de pré-commit `detect-secrets` dans la tâche `secrets`.
-Les poussées vers `main` exécutent toujours une analyse de tous les fichiers. Les demandes de tirage utilisent un chemin rapide pour les fichiers modifiés lorsqu'un commit de base est disponible, et reviennent à une analyse de tous les fichiers sinon. Si cela échoue, il y a de nouveaux candidats qui ne sont pas encore dans la base de référence.
+La CI exécute le hook de pré-commit `detect-secrets` dans la tâche `secrets`.
+Les poussées vers `main` exécutent toujours une analyse de tous les fichiers. Les Pull Requests utilisent un chemin rapide
+fichiers modifiés lorsqu'un commit de base est disponible, et reviennent à une analyse de tous les fichiers
+sinon. Si cela échoue, il y a de nouveaux candidats qui ne sont pas encore dans la ligne de base.
 
-### Si l'IC échoue
+### Si la CI échoue
 
 1. Reproduire localement :
 
@@ -1172,11 +1173,11 @@ Les poussées vers `main` exécutent toujours une analyse de tous les fichiers. 
    ```
 
 2. Comprendre les outils :
-   - `detect-secrets` dans pre-commit exécute `detect-secrets-hook` avec la base de référence
+   - `detect-secrets` dans le pré-commit exécute `detect-secrets-hook` avec la ligne de base
      et les exclusions du dépôt.
-   - `detect-secrets audit` ouvre une révision interactive pour marquer chaque élément de
-     la base de référence comme réel ou faux positif.
-3. Pour les secrets réels : faites-les pivoter/supprimez-les, puis relancez l'analyse pour mettre à jour la base de référence.
+   - `detect-secrets audit` ouvre une révision interactive pour marquer chaque élément de la ligne de base
+     comme réel ou faux positif.
+3. Pour de vrais secrets : faites-les pivoter/supprimez, puis relancez l'analyse pour mettre à jour la base de référence.
 4. Pour les faux positifs : lancez l'audit interactif et marquez-les comme faux :
 
    ```bash
@@ -1187,7 +1188,7 @@ Les poussées vers `main` exécutent toujours une analyse de tous les fichiers. 
    base de référence avec les indicateurs correspondants `--exclude-files` / `--exclude-lines` (le fichier de
    configuration est uniquement pour référence ; detect-secrets ne le lit pas automatiquement).
 
-Validez la `.secrets.baseline` mise à jour une fois qu'elle reflète l'état souhaité.
+Validez (commit) le `.secrets.baseline` mis à jour une fois qu'il reflète l'état souhaité.
 
 ## Signaler des problèmes de sécurité
 
@@ -1195,7 +1196,7 @@ Vous avez trouvé une vulnérabilité dans OpenClaw ? Veuillez la signaler de ma
 
 1. E-mail : [security@openclaw.ai](mailto:security@openclaw.ai)
 2. Ne publiez pas publiquement avant la correction
-3. Nous vous créditerons (sauf si vous préférez l'anonymat)
+3. Nous vous citerons (sauf si vous préférez l'anonymat)
 
 import fr from "/components/footer/fr.mdx";
 

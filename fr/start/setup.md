@@ -10,8 +10,8 @@ title: "Configuration"
 
 <Note>
   Si vous configurez pour la première fois, commencez par [Getting
-  Started](/fr/start/getting-started). Pour les détails de l'assistant, voir [Onboarding
-  Wizard](/fr/start/wizard).
+  Started](/fr/start/getting-started). Pour les détails sur l'onboarding, consultez [Onboarding
+  (CLI)](/fr/start/wizard).
 </Note>
 
 Dernière mise à jour : 2026-01-01

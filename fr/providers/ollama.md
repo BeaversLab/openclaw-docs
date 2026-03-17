@@ -19,15 +19,15 @@ Ollama est un runtime LLM local qui facilite l'exécution de modèles open-sourc
 
 ## Quick start
 
-### Assistant de configuration (recommandé)
+### Onboarding (recommandé)
 
-Le moyen le plus rapide de configurer Ollama passe par l'assistant de configuration :
+Le moyen le plus rapide de configurer Ollama passe par l'onboarding :
 
 ```bash
 openclaw onboard
 ```
 
-Sélectionnez **Ollama** dans la liste des providers. L'assistant va :
+Sélectionnez **Ollama** dans la liste des providers. L'onboarding va :
 
 1. Demander l'URL de base de Ollama où votre instance peut être atteinte (par défaut `http://127.0.0.1:11434`).
 2. Vous laisser choisir **Cloud + Local** (modèles cloud et modèles locaux) ou **Local** (modèles locaux uniquement).
@@ -235,7 +235,7 @@ Une fois configuré, tous vos modèles Ollama sont disponibles :
 
 Les modèles cloud vous permettent d'exécuter des modèles hébergés dans le cloud (par exemple `kimi-k2.5:cloud`, `minimax-m2.5:cloud`, `glm-5:cloud`) aux côtés de vos modèles locaux.
 
-Pour utiliser les modèles cloud, sélectionnez le mode **Cloud + Local** lors de l'intégration. L'assistant vérifie si vous êtes connecté et ouvre un flux de connexion dans le navigateur si nécessaire. Si l'authentification ne peut pas être vérifiée, l'assistant revient aux paramètres par défaut des modèles locaux.
+Pour utiliser des modèles cloud, sélectionnez le mode **Cloud + Local** lors de la configuration. L'assistant vérifie si vous êtes connecté et ouvre un flux de connexion dans le navigateur si nécessaire. Si l'authentification ne peut pas être vérifiée, l'assistant revient aux paramètres par défaut des modèles locaux.
 
 Vous pouvez également vous connecter directement à [ollama.com/signin](https://ollama.com/signin).
 

@@ -12,8 +12,8 @@ title: "doctor"
 
 相关内容：
 
-- 故障排除：[故障排除](/en/gateway/troubleshooting)
-- 安全审计：[安全性](/en/gateway/security)
+- 故障排除：[故障排除](/zh/gateway/troubleshooting)
+- 安全审计：[安全性](/zh/gateway/security)
 
 ## 示例
 
@@ -31,10 +31,11 @@ openclaw doctor --deep
 - Doctor 还会扫描 `~/.openclaw/cron/jobs.json` (或 `cron.store`) 中的旧版 cron 作业格式，并可以在调度器需要在运行时自动规范化它们之前就地重写这些格式。
 - Doctor 包含内存搜索就绪检查，并在缺少嵌入凭据时建议使用 `openclaw configure --section model`。
 - 如果启用了沙盒模式但 Docker 不可用，doctor 会报告一个高信号警告并提供补救措施 (`install Docker` 或 `openclaw config set agents.defaults.sandbox.mode off`)。
+- 如果 `gateway.auth.token`/`gateway.auth.password` 由 SecretRef 管理并且在当前命令路径中不可用，doctor 会报告只读警告并且不会写入纯文本回退凭据。
 
 ## macOS: `launchctl` 环境变量覆盖
 
-如果您之前运行过 `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...` (或 `...PASSWORD`)，该值将覆盖您的配置文件，并可能导致持续的“unauthorized”错误。
+如果您之前运行过 `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...`（或 `...PASSWORD`），该值将覆盖您的配置文件，并可能导致持续的“未授权”错误。
 
 ```bash
 launchctl getenv OPENCLAW_GATEWAY_TOKEN

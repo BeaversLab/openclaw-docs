@@ -57,7 +57,7 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 ## Notes
 
 - `OPENCODE_ZEN_API_KEY` est également pris en charge.
-- Saisir une seule clé OpenCode lors de l'onboarding stocke les informations d'identification pour les deux providers d'exécution.
+- Saisir une clé OpenCode lors de la configuration stocke les identifiants pour les deux fournisseurs d'exécution.
 - Vous vous connectez à OpenCode, ajoutez les détails de facturation et copiez votre clé API.
 - La facturation et la disponibilité des catalogues sont gérées depuis le tableau de bord OpenCode.
 

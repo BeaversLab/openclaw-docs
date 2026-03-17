@@ -14,7 +14,7 @@ Statut : expérimental. Les DMs sont pris en charge. La section [Capabilities](#
 Zalo est fourni sous forme de plugin et n'est pas inclus dans l'installation de base.
 
 - Installer via CLI : `openclaw plugins install @openclaw/zalo`
-- Ou sélectionnez **Zalo** lors de l'intégration et confirmez l'invite d'installation
+- Ou sélectionnez **Zalo** lors de la configuration et confirmez la invite d'installation
 - Détails : [Plugins](/fr/tools/plugin)
 
 ## Configuration rapide (débutant)
@@ -22,11 +22,11 @@ Zalo est fourni sous forme de plugin et n'est pas inclus dans l'installation de 
 1. Installer le plugin Zalo :
    - À partir d'une source extraite : `openclaw plugins install ./extensions/zalo`
    - À partir de npm (si publié) : `openclaw plugins install @openclaw/zalo`
-   - Ou choisissez **Zalo** lors de l'intégration et confirmez l'invite d'installation
+   - Ou choisissez **Zalo** dans la configuration et confirmez la invite d'installation
 2. Définir le jeton :
    - Env : `ZALO_BOT_TOKEN=...`
    - Ou config : `channels.zalo.accounts.default.botToken: "..."`.
-3. Redémarrez la passerelle (ou terminez l'intégration).
+3. Redémarrez la passerelle (ou terminez la configuration).
 4. L'accès DM est couplé par défaut ; approuvez le code de couplage lors du premier contact.
 
 Configuration minimale :

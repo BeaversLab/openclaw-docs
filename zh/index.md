@@ -21,13 +21,13 @@ title: "OpenClaw"
 </p>
 
 <Columns>
-  <Card title="Get Started" href="/en/start/getting-started" icon="rocket">
+  <Card title="Get Started" href="/zh/start/getting-started" icon="rocket">
     在几分钟内安装 OpenClaw 并启动 Gateway(网关)。
   </Card>
-  <Card title="运行向导" href="/en/start/wizard" icon="sparkles">
+  <Card title="运行新手引导" href="/zh/start/wizard" icon="sparkles">
     使用 `openclaw onboard` 和配对流程进行引导式设置。
   </Card>
-  <Card title="打开控制界面" href="/en/web/control-ui" icon="layout-dashboard">
+  <Card title="打开控制界面" href="/zh/web/control-ui" icon="layout-dashboard">
     启动浏览器仪表板以进行聊天、配置和会话管理。
   </Card>
 </Columns>

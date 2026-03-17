@@ -53,13 +53,13 @@ Objectif : passer de zéro à un premier chat fonctionnel avec une configuration
     </Note>
 
   </Step>
-  <Step title="Exécuter l'assistant de démarrage">
+  <Step title="Exécuter l'onboarding">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    L'assistant configure l'authentification, les paramètres de la passerelle et les canaux optionnels.
-    Voir [Assistant de démarrage](/fr/start/wizard) pour plus de détails.
+    L'onboarding configure l'authentification, les paramètres de la passerelle et les canaux facultatifs.
+    Voir [Onboarding (CLI)](/fr/start/wizard) pour plus de détails.
 
   </Step>
   <Step title="Vérifier la Gateway">
@@ -113,8 +113,8 @@ Référence complète des variables d'environnement : [Environment vars](/fr/hel
 ## Pour aller plus loin
 
 <Columns>
-  <Card title="Assistant d'intégration (détails)" href="/fr/start/wizard">
-    Référence complète de l'assistant CLI et options avancées.
+  <Card title="Onboarding (CLI)" href="/fr/start/wizard">
+    Référence complète de l'onboarding CLI et options avancées.
   </Card>
   <Card title="Intégration de l'application macOS" href="/fr/start/onboarding">
     Flux de première exécution pour l'application macOS.

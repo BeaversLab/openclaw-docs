@@ -1,5 +1,5 @@
 ---
-summary: "Referencia de CLI para `openclaw onboard` (asistente de integración interactivo)"
+summary: "Referencia de CLI para `openclaw onboard` (incorporación interactiva)"
 read_when:
   - You want guided setup for gateway, workspace, auth, channels, and skills
 title: "integración"
@@ -7,13 +7,13 @@ title: "integración"
 
 # `openclaw onboard`
 
-Asistente de integración interactivo (configuración local o remota de Gateway).
+Incorporación interactiva para la configuración de Gateway local o remota.
 
 ## Guías relacionadas
 
-- Centro de integración de CLI: [Asistente de integración (CLI)](/es/start/wizard)
+- Centro de incorporación de la CLI: [Incorporación (CLI)](/es/start/wizard)
 - Descripción general de la integración: [Descripción general de la integración](/es/start/onboarding-overview)
-- Referencia de integración de CLI: [Referencia de integración de CLI](/es/start/wizard-cli-reference)
+- Referencia de incorporación de la CLI: [Referencia de configuración de la CLI](/es/start/wizard-cli-reference)
 - Automatización de CLI: [Automatización de CLI](/es/start/wizard-cli-automation)
 - Integración en macOS: [Integración (Aplicación macOS)](/es/start/onboarding)
 
@@ -140,7 +140,7 @@ Notas sobre el flujo:
 
 - `quickstart`: indicaciones mínimas, genera automáticamente un token de puerta de enlace.
 - `manual`: indicaciones completas para puerto/vínculo/autenticación (alias de `advanced`).
-- Comportamiento del alcance del MD de incorporación local: [Referencia de incorporación de CLI](/es/start/wizard-cli-reference#outputs-and-internals).
+- Comportamiento del alcance de MD en la incorporación local: [Referencia de configuración de la CLI](/es/start/wizard-cli-reference#outputs-and-internals).
 - El primer chat más rápido: `openclaw dashboard` (UI de control, sin configuración de canal).
 - Proveedor personalizado: conecte cualquier punto final compatible con OpenAI o Anthropic,
   incluidos los proveedores alojados que no figuran en la lista. Use Unknown para detectar automáticamente.

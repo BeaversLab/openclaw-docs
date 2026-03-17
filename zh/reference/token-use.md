@@ -22,7 +22,7 @@ OpenClaw 会在每次运行时组装自己的系统提示词。它包括：
 - 回复标签 + 心跳行为
 - 运行时元数据（主机/操作系统/模型/思考）
 
-在 [系统提示词](/en/concepts/system-prompt) 中查看完整细分。
+在 [系统提示词](/zh/concepts/system-prompt) 中查看完整细分。
 
 ## 什么会计入上下文窗口
 
@@ -40,7 +40,7 @@ OpenClaw 会在每次运行时组装自己的系统提示词。它包括：
 - 较低的值通常会减少视觉 token 的使用量和负载大小。
 - 较高的值会为 OCR/UI 密集的屏幕截图保留更多视觉细节。
 
-如需查看细分信息（包括每个注入的文件、工具、技能和系统提示词大小），请使用 `/context list` 或 `/context detail`。请参阅 [上下文](/en/concepts/context)。
+如需查看细分信息（包括每个注入的文件、工具、技能和系统提示词大小），请使用 `/context list` 或 `/context detail`。请参阅 [上下文](/zh/concepts/context)。
 
 ## 如何查看当前的 token 使用情况
 
@@ -79,7 +79,7 @@ models.providers.<provider>.models[].cost
 而不是重新缓存完整历史记录。这可以在会话空闲超过 TTL 时降低
 缓存写入成本。
 
-在 [Gateway(网关) configuration](/en/gateway/configuration) 中进行配置，并在 [Session pruning](/en/concepts/session-pruning) 中查看行为详细信息。
+在 [Gateway(网关) configuration](/zh/gateway/configuration) 中进行配置，并在 [Session pruning](/zh/concepts/session-pruning) 中查看行为详细信息。
 
 Heartbeat 可以在空闲间隙中保持缓存**温暖**。如果您的模型缓存 TTL
 为 `1h`，将心跳间隔设置为略低于该值（例如 `55m`）可以避免
@@ -87,7 +87,7 @@ Heartbeat 可以在空闲间隙中保持缓存**温暖**。如果您的模型缓
 
 在多代理设置中，您可以保持一个共享的模型配置，并使用 `agents.list[].params.cacheRetention` 针对每个代理调整缓存行为。
 
-有关详细的逐项调节指南，请参阅 [Prompt Caching](/en/reference/prompt-caching)。
+有关详细的逐项调节指南，请参阅 [Prompt Caching](/zh/reference/prompt-caching)。
 
 对于 Anthropic API 定价，缓存读取比输入token便宜得多，而缓存写入则以更高的倍率计费。请参阅 Anthropic 的提示缓存定价以获取最新费率和TTL倍率：
 [https://docs.anthropic.com/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/docs/build-with-claude/prompt-caching)
@@ -159,7 +159,7 @@ agents:
 - 保持技能描述简短（技能列表会注入到提示中）。
 - 对于冗长、探索性的工作，首选较小的模型。
 
-有关技能列表开销的确切公式，请参阅 [Skills](/en/tools/skills)。
+有关技能列表开销的确切公式，请参阅 [Skills](/zh/tools/skills)。
 
 import zh from "/components/footer/zh.mdx";
 

@@ -31,8 +31,8 @@ Repositorio local (al ejecutar desde un repositorio git):
 openclaw plugins install ./extensions/matrix
 ```
 
-Si eliges Matrix durante la configuración/integración y se detecta un repositorio git,
-OpenClaw ofrecerá la ruta de instalación local automáticamente.
+Si eliges Matrix durante la configuración y se detecta una copia de trabajo de git,
+OpenClaw ofrecerá automáticamente la ruta de instalación local.
 
 Detalles: [Complementos](/es/tools/plugin)
 
@@ -72,7 +72,7 @@ Detalles: [Complementos](/es/tools/plugin)
    - Si ambos están establecidos, la configuración tiene prioridad.
    - Con token de acceso: el ID de usuario se obtiene automáticamente a través de `/whoami`.
    - Cuando se establece, `channels.matrix.userId` debe ser el ID completo de Matrix (ejemplo: `@bot:example.org`).
-5. Reinicia la puerta de enlace (o termina la integración).
+5. Reinicia la puerta de enlace (o termina la configuración).
 6. Inicia un MD con el bot o invítalo a una sala desde cualquier cliente de Matrix
    (Element, Beeper, etc.; ver [https://matrix.org/ecosystem/clients/](https://matrix.org/ecosystem/clients/)). Beeper requiere E2EE,
    así que establece `channels.matrix.encryption: true` y verifica el dispositivo.

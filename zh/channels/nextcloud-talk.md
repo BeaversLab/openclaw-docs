@@ -25,9 +25,10 @@ openclaw plugins install @openclaw/nextcloud-talk
 openclaw plugins install ./extensions/nextcloud-talk
 ```
 
-如果您在配置/入职期间选择了 Nextcloud Talk 且检测到 git 检出，OpenClaw 将自动提供本地安装路径。
+如果在设置期间选择了 Nextcloud Talk 并且检测到了 git checkout，
+OpenClaw 将自动提供本地安装路径。
 
-详情：[插件](/en/tools/plugin)
+详情：[插件](/zh/tools/plugin)
 
 ## 快速设置（初学者）
 
@@ -42,7 +43,7 @@ openclaw plugins install ./extensions/nextcloud-talk
 4. 配置 OpenClaw：
    - 配置：`channels.nextcloud-talk.baseUrl` + `channels.nextcloud-talk.botSecret`
    - 或环境变量：`NEXTCLOUD_TALK_BOT_SECRET`（仅限默认账户）
-5. 重启 Gateway 网关（或完成新手引导）。
+5. 重启网关（或完成设置）。
 
 最小配置：
 
@@ -107,7 +108,7 @@ openclaw plugins install ./extensions/nextcloud-talk
 
 ## 配置参考（Nextcloud Talk）
 
-完整配置：[配置](/en/gateway/configuration)
+完整配置：[配置](/zh/gateway/configuration)
 
 提供商选项：
 

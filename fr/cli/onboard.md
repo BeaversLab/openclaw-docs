@@ -1,5 +1,5 @@
 ---
-summary: "Référence CLI pour `openclaw onboard` (assistant d'onboarding interactif)"
+summary: "Référence CLI pour `openclaw onboard` (onboarding interactif)"
 read_when:
   - You want guided setup for gateway, workspace, auth, channels, and skills
 title: "onboard"
@@ -7,13 +7,13 @@ title: "onboard"
 
 # `openclaw onboard`
 
-Assistant d'onboarding interactif (configuration locale ou distante du Gateway).
+Onboarding interactif pour la configuration locale ou distante de Gateway.
 
 ## Guides connexes
 
-- Centre d'onboarding CLI : [Assistant d'onboarding (CLI)](/fr/start/wizard)
+- Hub d'onboarding CLI : [Onboarding (CLI)](/fr/start/wizard)
 - Aperçu de l'onboarding : [Aperçu de l'onboarding](/fr/start/onboarding-overview)
-- Référence de l'onboarding CLI : [Référence de l'onboarding CLI](/fr/start/wizard-cli-reference)
+- Référence d'onboarding CLI : [Référence de configuration CLI](/fr/start/wizard-cli-reference)
 - Automatisation CLI : [Automatisation CLI](/fr/start/wizard-cli-automation)
 - Onboarding macOS : [Onboarding (Application macOS)](/fr/start/onboarding)
 
@@ -140,7 +140,7 @@ Notes de flux :
 
 - `quickstart` : invites minimales, génère automatiquement un jeton de passerelle.
 - `manual` : invites complètes pour le port/liaison/auth (alias de `advanced`).
-- Comportement de la portée CLI pour l'onboarding local : [Référence de l'onboarding CLI](/fr/start/wizard-cli-reference#outputs-and-internals).
+- Comportement de la portée DM pour l'onboarding local : [Référence de configuration CLI](/fr/start/wizard-cli-reference#outputs-and-internals).
 - Premier chat le plus rapide : `openclaw dashboard` (Interface de contrôle, aucune configuration de canal).
 - Fournisseur personnalisé : connectez n'importe quel point de terminaison compatible OpenAI ou Anthropic,
   y compris les fournisseurs hébergés non répertoriés. Utilisez Inconnu pour détecter automatiquement.

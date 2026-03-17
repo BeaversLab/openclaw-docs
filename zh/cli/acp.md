@@ -239,7 +239,7 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 }
 ```
 
-在 [/concepts/会话](/en/concepts/session) 了解有关会话密钥的更多信息。
+在 [/concepts/会话](/zh/concepts/session) 了解有关会话密钥的更多信息。
 
 ## 选项
 

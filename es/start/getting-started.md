@@ -54,13 +54,13 @@ Objetivo: pasar de cero a un primer chat funcional con una configuración mínim
     </Note>
 
   </Step>
-  <Step title="Ejecutar el asistente de incorporación">
+  <Step title="Ejecutar integración">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    El asistente configura la autenticación, la configuración de la puerta de enlace (gateway) y canales opcionales.
-    Consulta [Asistente de incorporación](/es/start/wizard) para obtener más detalles.
+    La integración configura la autenticación, la configuración de la puerta de enlace y los canales opcionales.
+    Consulte [Integración (CLI)](/es/start/wizard) para obtener más detalles.
 
   </Step>
   <Step title="Verificar la puerta de enlace (Gateway)">
@@ -117,8 +117,8 @@ Referencia completa de variables de entorno: [Variables de entorno](/es/help/env
 ## Profundizar
 
 <Columns>
-  <Card title="Asistente de incorporación (detalles)" href="/es/start/wizard">
-    Referencia completa del asistente de CLI y opciones avanzadas.
+  <Card title="Integración (CLI)" href="/es/start/wizard">
+    Referencia completa de la integración por CLI y opciones avanzadas.
   </Card>
   <Card title="Incorporación de la app de macOS" href="/es/start/onboarding">
     Flujo de primera ejecución para la aplicación de macOS.

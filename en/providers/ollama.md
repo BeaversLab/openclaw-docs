@@ -11,7 +11,9 @@ title: "Ollama"
 Ollama is a local LLM runtime that makes it easy to run open-source models on your machine. OpenClaw integrates with Ollama's native API (`/api/chat`), supports streaming and tool calling, and can auto-discover local Ollama models when you opt in with `OLLAMA_API_KEY` (or an auth profile) and do not define an explicit `models.providers.ollama` entry.
 
 <Warning>
-**Remote Ollama users**: Do not use the `/v1` OpenAI-compatible URL (`http://host:11434/v1`) with OpenClaw. This breaks tool calling and models may output raw tool JSON as plain text. Use the native Ollama API URL instead: `baseUrl: "http://host:11434"` (no `/v1`).
+  **Remote Ollama users**: Do not use the `/v1` OpenAI-compatible URL (`http://host:11434/v1`) with
+  OpenClaw. This breaks tool calling and models may output raw tool JSON as plain text. Use the
+  native Ollama API URL instead: `baseUrl: "http://host:11434"` (no `/v1`).
 </Warning>
 
 ## Quick start
@@ -207,7 +209,8 @@ If Ollama is running on a different host or port (explicit config disables auto-
 ```
 
 <Warning>
-Do not add `/v1` to the URL. The `/v1` path uses OpenAI-compatible mode, where tool calling is not reliable. Use the base Ollama URL without a path suffix.
+  Do not add `/v1` to the URL. The `/v1` path uses OpenAI-compatible mode, where tool calling is not
+  reliable. Use the base Ollama URL without a path suffix.
 </Warning>
 
 ### Model selection
@@ -256,7 +259,8 @@ OpenClaw's Ollama integration uses the **native Ollama API** (`/api/chat`) by de
 #### Legacy OpenAI-Compatible Mode
 
 <Warning>
-**Tool calling is not reliable in OpenAI-compatible mode.** Use this mode only if you need OpenAI format for a proxy and do not depend on native tool calling behavior.
+  **Tool calling is not reliable in OpenAI-compatible mode.** Use this mode only if you need OpenAI
+  format for a proxy and do not depend on native tool calling behavior.
 </Warning>
 
 If you need to use the OpenAI-compatible endpoint instead (e.g., behind a proxy that only supports OpenAI format), set `api: "openai-completions"` explicitly:

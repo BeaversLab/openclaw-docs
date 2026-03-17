@@ -27,8 +27,8 @@ L'authentification est fournie lors de la poignée de main WebSocket via :
 
 - `connect.params.auth.token`
 - `connect.params.auth.password`
-  Le panneau des paramètres du tableau de bord conserve un jeton pour la session de l'onglet du navigateur actuel et l'URL de la passerelle sélectionnée ; les mots de passe ne sont pas persistants.
-  L'assistant de configuration génère un jeton de passerelle par défaut, collez-le ici lors de la première connexion.
+  Le panneau des paramètres du tableau de bord conserve un jeton pour l'onglet de navigateur actuel et l'URL de la passerelle sélectionnée ; les mots de passe ne sont pas persistants.
+  L'onboarding génère par défaut un jeton de passerelle, collez-le donc ici lors de la première connexion.
 
 ## Appareillage des périphériques (première connexion)
 

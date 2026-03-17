@@ -24,31 +24,30 @@ Pour les appels d'outil de navigateur de l'agent :
 
 - Choix par défaut : l'agent doit utiliser son navigateur `openclaw` isolé.
 - Utilisez `profile="user"` uniquement lorsque les sessions de connexion existantes sont importantes et que l'utilisateur est devant l'ordinateur pour cliquer/approuver toute invite d'attachement.
-- Utilisez `profile="chrome-relay"` uniquement pour le flux d'attachement via l'extension Chrome / le bouton de la barre d'outils.
-- Si vous avez plusieurs profils de navigateur utilisateur, spécifiez le profil explicitement au lieu de deviner.
+- Si vous avez plusieurs profils utilisateur-navigateur, spécifiez le profil explicitement au lieu de deviner.
 
 Deux moyens simples d'y accéder :
 
-1. **Demandez à l'agent d'ouvrir le navigateur** puis connectez-vous vous-même.
-2. **Ouvrez-le via la CLI** :
+1. **Demandez à l'agent d'ouvrir le navigateur** et connectez-vous vous-même.
+2. **Ouvrez-le via CLI** :
 
 ```bash
 openclaw browser start
 openclaw browser open https://x.com
 ```
 
-Si vous avez plusieurs profils, passez `--browser-profile <name>` (le défaut est `openclaw`).
+Si vous avez plusieurs profils, passez `--browser-profile <name>` (la valeur par défaut est `openclaw`).
 
 ## X/Twitter : flux recommandé
 
-- **Lire/rechercher/fils :** utilisez le navigateur **hôte** (connexion manuelle).
+- **Lecture/recherche/fils :** utilisez le navigateur **hôte** (connexion manuelle).
 - **Publier des mises à jour :** utilisez le navigateur **hôte** (connexion manuelle).
 
 ## Sandboxing + accès au navigateur hôte
 
 Les sessions de navigateur sandboxed sont **plus susceptibles** de déclencher la détection de bots. Pour X/Twitter (et d'autres sites stricts), privilégiez le navigateur **hôte**.
 
-Si l'agent est sandboxed, l'outil de navigateur utilise par défaut le bac à sable. Pour autoriser le contrôle de l'hôte :
+Si l'agent est sandboxed, l'outil de navigateur utilise par défaut le bac à sable. Pour autoriser le contrôle hôte :
 
 ```json5
 {

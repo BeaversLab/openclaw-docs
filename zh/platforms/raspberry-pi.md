@@ -178,7 +178,7 @@ ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
 如果 UI 要求身份验证，请将 `gateway.auth.token`
 （或 `OPENCLAW_GATEWAY_TOKEN`）中的令牌粘贴到控制 UI 设置中。
 
-如需始终在线的远程访问，请参阅 [Tailscale](/en/gateway/tailscale)。
+如需始终在线的远程访问，请参阅 [Tailscale](/zh/gateway/tailscale)。
 
 ---
 
@@ -319,7 +319,7 @@ uname -m
 
 ## 开机自启动
 
-新手向导会自动设置此项，但若要验证：
+新手引导会设置此项，但为了验证：
 
 ```bash
 # Check service is enabled
@@ -403,11 +403,11 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ## 另请参阅
 
-- [Linux 指南](/en/platforms/linux) — 常规 Linux 设置
-- [DigitalOcean 指南](/en/platforms/digitalocean) — 云端替代方案
-- [Hetzner 指南](/en/install/hetzner) — Docker 设置
-- [Tailscale](/en/gateway/tailscale) — 远程访问
-- [节点](/en/nodes) — 将您的笔记本电脑/手机与 Pi 网关联动
+- [Linux 指南](/zh/platforms/linux) — 常规 Linux 设置
+- [DigitalOcean 指南](/zh/platforms/digitalocean) — 云端替代方案
+- [Hetzner 指南](/zh/install/hetzner) — Docker 设置
+- [Tailscale](/zh/gateway/tailscale) — 远程访问
+- [节点](/zh/nodes) — 将您的笔记本电脑/手机与 Pi 网关联动
 
 import zh from "/components/footer/zh.mdx";
 

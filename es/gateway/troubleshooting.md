@@ -8,8 +8,8 @@ title: "Solución de problemas"
 
 # Solución de problemas de la puerta de enlace
 
-Esta página es el manual de procedimientos profundo.
-Comience en [/help/troubleshooting](/es/help/troubleshooting) si primero desea el flujo de triaje rápido.
+Esta página es el manual de procedimientos detallado.
+Comience en [/help/troubleshooting](/es/help/troubleshooting) si desea el flujo de triaje rápido primero.
 
 ## Escalera de comandos
 
@@ -26,7 +26,7 @@ openclaw channels status --probe
 Señales saludables esperadas:
 
 - `openclaw gateway status` muestra `Runtime: running` y `RPC probe: ok`.
-- `openclaw doctor` informa que no hay problemas de configuración/servicio de bloqueo.
+- `openclaw doctor` no informa problemas de configuración/servicio que bloqueen.
 - `openclaw channels status --probe` muestra canales conectados/listos.
 
 ## Uso adicional de Anthropic 429 requerido para contexto largo
@@ -111,22 +111,22 @@ Firmas comunes:
 - `device identity required` → contexto no seguro o autenticación de dispositivo faltante.
 - `device nonce required` / `device nonce mismatch` → el cliente no está completando el
   flujo de autenticación de dispositivo basado en desafío (`connect.challenge` + `device.nonce`).
-- `device signature invalid` / `device signature expired` → el cliente firmó la carga útil incorrecta
-  (o una marca de tiempo obsoleta) para el protocolo de enlace actual.
-- `AUTH_TOKEN_MISMATCH` con `canRetryWithDeviceToken=true` → el cliente puede realizar un reintento de confianza con el token de dispositivo en caché.
-- `unauthorized` repetido después de ese reintento → deriva del token compartido/token del dispositivo; actualice la configuración del token y vuelva a aprobar/rotar el token del dispositivo si es necesario.
-- `gateway connect failed:` → host/puerto/url de destino incorrectos.
+- `device signature invalid` / `device signature expired` → el cliente firmó la carga útil
+  incorrecta (o marca de tiempo obsoleta) para el handshake actual.
+- `AUTH_TOKEN_MISMATCH` con `canRetryWithDeviceToken=true` → el cliente puede hacer un reintento de confianza con el token de dispositivo en caché.
+- `unauthorized` repetido después de ese reintento → desviación del token compartido/token de dispositivo; actualice la configuración del token y reapruebe/rote el token de dispositivo si es necesario.
+- `gateway connect failed:` → objetivo de host/puerto/url incorrecto.
 
 ### Mapa rápido de códigos de detalles de autenticación
 
-Use `error.details.code` de la respuesta fallida `connect` para elegir la siguiente acción:
+Use `error.details.code` de la respuesta `connect` fallida para elegir la siguiente acción:
 
-| Código de detalle            | Significado                                                                            | Acción recomendada                                                                                                                                                                                              |
-| ---------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH_TOKEN_MISSING`         | El cliente no envió un token compartido requerido.                                     | Pegue/establezca el token en el cliente y vuelva a intentarlo. Para rutas del panel: `openclaw config get gateway.auth.token` y luego pegue en la configuración de la interfaz de usuario de control.           |
-| `AUTH_TOKEN_MISMATCH`        | El token compartido no coincidió con el token de autenticación de la puerta de enlace. | Si `canRetryWithDeviceToken=true`, permita un reinterno de confianza. Si sigue fallando, ejecute la [lista de verificación de recuperación de deriva de token](/es/cli/devices#token-drift-recovery-checklist). |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | El token por dispositivo en caché está obsoleto o revocado.                            | Rote/vuelva a aprobar el token del dispositivo usando la [CLI de dispositivos](/es/cli/devices), luego vuelva a conectar.                                                                                       |
-| `PAIRING_REQUIRED`           | La identidad del dispositivo es conocida pero no aprobada para este rol.               | Apruebe la solicitud pendiente: `openclaw devices list` y luego `openclaw devices approve <requestId>`.                                                                                                         |
+| Código de detalle            | Significado                                                                            | Acción recomendada                                                                                                                                                                                                     |
+| ---------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_TOKEN_MISSING`         | El cliente no envió un token compartido requerido.                                     | Pegue/establezca el token en el cliente y vuelva a intentarlo. Para las rutas del panel: `openclaw config get gateway.auth.token` y luego pegue en la configuración de Control UI.                                     |
+| `AUTH_TOKEN_MISMATCH`        | El token compartido no coincidió con el token de autenticación de la puerta de enlace. | Si `canRetryWithDeviceToken=true`, permita un reintento de confianza. Si continúa fallando, ejecute la [lista de verificación de recuperación de desviación de token](/es/cli/devices#token-drift-recovery-checklist). |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | El token por dispositivo en caché está obsoleto o revocado.                            | Rote/ruebe el token del dispositivo usando [devices CLI](/es/cli/devices), luego vuelva a conectar.                                                                                                                    |
+| `PAIRING_REQUIRED`           | La identidad del dispositivo es conocida pero no aprobada para este rol.               | Aprove la solicitud pendiente: `openclaw devices list` y luego `openclaw devices approve <requestId>`.                                                                                                                 |
 
 Verificación de migración de autenticación de dispositivo v2:
 
@@ -163,14 +163,14 @@ openclaw gateway status --deep
 
 Busque:
 
-- `Runtime: stopped` con sugerencias de salida.
-- Discrepancia en la configuración del servicio (`Config (cli)` vs `Config (service)`).
+- `Runtime: stopped` con pistas de salida.
+- Discordancia en la configuración del servicio (`Config (cli)` frente a `Config (service)`).
 - Conflictos de puerto/listener.
 
 Firmas comunes:
 
 - `Gateway start blocked: set gateway.mode=local` → el modo de puerta de enlace local no está habilitado. Solución: establezca `gateway.mode="local"` en su configuración (o ejecute `openclaw configure`). Si está ejecutando OpenClaw a través de Podman usando el usuario dedicado `openclaw`, la configuración se encuentra en `~openclaw/.openclaw/openclaw.json`.
-- `refusing to bind gateway ... without auth` → enlace que no es de bucle local sin token/contraseña.
+- `refusing to bind gateway ... without auth` → enlace no de bucle invertido sin token/contraseña.
 - `another gateway instance is already listening` / `EADDRINUSE` → conflicto de puerto.
 
 Relacionado:
@@ -193,7 +193,7 @@ openclaw config get channels
 
 Busque:
 
-- Política de MD (`pairing`, `allowlist`, `open`, `disabled`).
+- Política DM (`pairing`, `allowlist`, `open`, `disabled`).
 - Lista de permitidos de grupos y requisitos de mención.
 - Permisos/ámbitos de API del canal faltantes.
 
@@ -225,16 +225,16 @@ openclaw logs --follow
 Busque:
 
 - Cron habilitado y siguiente despertar presente.
-- Estado del historial de ejecución del trabajo (`ok`, `skipped`, `error`).
-- Razones para omitir latidos (`quiet-hours`, `requests-in-flight`, `alerts-disabled`).
+- Estado del historial de ejecuciones del trabajo (`ok`, `skipped`, `error`).
+- Razones de omisión de latido (`quiet-hours`, `requests-in-flight`, `alerts-disabled`).
 
 Firmas comunes:
 
-- `cron: scheduler disabled; jobs will not run automatically` → cron deshabilitado.
-- `cron: timer tick failed` → falló el tic del programador; verifique errores de archivo/log/runtime.
+- `cron: scheduler disabled; jobs will not run automatically` → cron desactivado.
+- `cron: timer tick failed` → falló el tick del programador; verifique los errores de archivo/log/runtime.
 - `heartbeat skipped` con `reason=quiet-hours` → fuera de la ventana de horas activas.
-- `heartbeat: unknown accountId` → id de cuenta no válida para el destino de entrega del latido.
-- `heartbeat skipped` con `reason=dm-blocked` → el destino del latido se resolvió en un destino estilo DM mientras `agents.defaults.heartbeat.directPolicy` (o invalidación por agente) está configurado en `block`.
+- `heartbeat: unknown accountId` → id de cuenta no válido para el destino de entrega de latido.
+- `heartbeat skipped` con `reason=dm-blocked` → el destino de latido se resolvió a un destino estilo DM mientras que `agents.defaults.heartbeat.directPolicy` (o el override por agente) está establecido en `block`.
 
 Relacionado:
 
@@ -262,10 +262,10 @@ Busque:
 
 Firmas comunes:
 
-- `NODE_BACKGROUND_UNAVAILABLE` → la aplicación del nodo debe estar en primer plano.
-- `*_PERMISSION_REQUIRED` / `LOCATION_PERMISSION_REQUIRED` → falta permiso del sistema operativo.
+- `NODE_BACKGROUND_UNAVAILABLE` → la aplicación de nodos debe estar en primer plano.
+- `*_PERMISSION_REQUIRED` / `LOCATION_PERMISSION_REQUIRED` → falta el permiso del sistema operativo.
 - `SYSTEM_RUN_DENIED: approval required` → aprobación de ejecución pendiente.
-- `SYSTEM_RUN_DENIED: allowlist miss` → comando bloqueado por la lista blanca.
+- `SYSTEM_RUN_DENIED: allowlist miss` → comando bloqueado por la lista de permitidos.
 
 Relacionado:
 
@@ -289,26 +289,25 @@ Busque:
 
 - Ruta válida al ejecutable del navegador.
 - Accesibilidad del perfil CDP.
-- Adjunto de la pestaña de retransmisión de extensiones (si se ha configurado un perfil de retransmisión de extensiones).
+- Disponibilidad local de Chrome para perfiles `existing-session` / `user`.
 
 Firmas comunes:
 
-- `Failed to start Chrome CDP on port` → falló el inicio del proceso del navegador.
+- `Failed to start Chrome CDP on port` → error al iniciar el proceso del navegador.
 - `browser.executablePath not found` → la ruta configurada no es válida.
-- `Chrome extension relay is running, but no tab is connected` → la retransmisión de extensiones no está adjunta.
-- `Browser attachOnly is enabled ... not reachable` → el perfil de solo adjunto no tiene un objetivo accesible.
+- `No Chrome tabs found for profile="user"` → el perfil de conexión MCP de Chrome no tiene pestañas locales de Chrome abiertas.
+- `Browser attachOnly is enabled ... not reachable` → el perfil de solo conexión no tiene un objetivo alcanzable.
 
 Relacionado:
 
 - [/tools/browser-linux-troubleshooting](/es/tools/browser-linux-troubleshooting)
-- [/tools/chrome-extension](/es/tools/chrome-extension)
 - [/tools/browser](/es/tools/browser)
 
-## Si actualizó y algo dejó de funcionar repentinamente
+## Si actualizaste y algo se rompió repentinamente
 
-La mayoría de las fallas posteriores a la actualización se deben a una deriva de la configuración o a valores predeterminados más estrictos que ahora se aplican.
+La mayoría de las roturas tras una actualización se deben a una desviación de la configuración o a valores predeterminados más estrictos que ahora se aplican.
 
-### 1) Cambió el comportamiento de invalidación de autenticación y URL
+### 1) Cambió el comportamiento de anulación de autenticación y URL
 
 ```bash
 openclaw gateway status
@@ -319,15 +318,15 @@ openclaw config get gateway.auth.mode
 
 Qué verificar:
 
-- Si `gateway.mode=remote`, las llamadas de la CLI pueden estar apuntando a un servidor remoto mientras su servicio local está bien.
-- Las llamadas explícitas a `--url` no vuelven a las credenciales almacenadas.
+- Si `gateway.mode=remote`, las llamadas de la CLI pueden estar apuntando a un servidor remoto mientras tu servicio local está bien.
+- Las llamadas explícitas a `--url` no recurren a las credenciales almacenadas.
 
 Firmas comunes:
 
 - `gateway connect failed:` → objetivo de URL incorrecto.
-- `unauthorized` → punto de conexión accesible pero con autenticación incorrecta.
+- `unauthorized` → endpoint accesible pero autenticación incorrecta.
 
-### 2) Las barreras de seguridad de enlace y autenticación son más estrictas
+### 2) Las salvaguardas de enlace y autenticación son más estrictas
 
 ```bash
 openclaw config get gateway.bind
@@ -338,13 +337,13 @@ openclaw logs --follow
 
 Qué verificar:
 
-- Los enlaces que no son de bucle invertido (`lan`, `tailnet`, `custom`) necesitan autenticación configurada.
-- Las claves antiguas como `gateway.token` no reemplazan `gateway.auth.token`.
+- Los enlaces que no son de bucle local (`lan`, `tailnet`, `custom`) necesitan autenticación configurada.
+- Las claves antiguas como `gateway.token` no reemplazan a `gateway.auth.token`.
 
 Firmas comunes:
 
-- `refusing to bind gateway ... without auth` → discrepancia de enlace y autenticación.
-- `RPC probe: failed` mientras el tiempo de ejecución está en ejecución → la puerta de enlace está activa pero inaccesible con la autenticación/url actual.
+- `refusing to bind gateway ... without auth` → desajuste de enlace+autenticación.
+- `RPC probe: failed` mientras el runtime se está ejecutando → la puerta de enlace está activa pero es inaccesible con la auth/url actual.
 
 ### 3) Cambió el estado de emparejamiento e identidad del dispositivo
 
@@ -358,14 +357,14 @@ openclaw doctor
 Qué verificar:
 
 - Aprobaciones de dispositivos pendientes para el panel/nodos.
-- Aprobaciones de emparejamiento DM pendientes después de cambios de política o identidad.
+- Aprobaciones de emparejamiento DM pendientes después de cambios en la política o identidad.
 
 Firmas comunes:
 
 - `device identity required` → autenticación del dispositivo no satisfecha.
-- `pairing required` → el remitente/dispositivo debe estar aprobado.
+- `pairing required` → el remitente/dispositivo debe ser aprobado.
 
-Si la configuración y el tiempo de ejecución del servicio aún no coinciden después de las comprobaciones, reinstale los metadatos del servicio desde el mismo directorio de perfil/estado:
+Si la configuración del servicio y el runtime aún no coinciden después de las comprobaciones, reinstala los metadatos del servicio desde el mismo directorio de perfil/estado:
 
 ```bash
 openclaw gateway install --force

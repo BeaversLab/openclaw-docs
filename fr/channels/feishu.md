@@ -28,9 +28,9 @@ openclaw plugins install @openclaw/feishu
 
 Il existe deux méthodes pour ajouter le channel Feishu :
 
-### Méthode 1 : assistant de prise en main (recommandé)
+### Méthode 1 : onboarding (recommandé)
 
-Si vous venez d'installer OpenClaw, exécutez l'assistant :
+Si vous venez d'installer OpenClaw, exécutez l'onboarding :
 
 ```bash
 openclaw onboard
@@ -71,7 +71,7 @@ Choisissez **Feishu**, puis entrez l'ID d'application (App ID) et le secret de l
 
 Visitez [Feishu Open Platform](https://open.feishu.cn/app) et connectez-vous.
 
-Les clients Lark (mondial) doivent utiliser [https://open.larksuite.com/app](https://open.larksuite.com/app) et définir `domain: "lark"` dans la configuration Feishu.
+Les locataires Lark (global) doivent utiliser [https://open.larksuite.com/app](https://open.larksuite.com/app) et définir `domain: "lark"` dans la configuration Feishu.
 
 ### 2. Créer une application
 
@@ -133,7 +133,7 @@ Dans **App Capability** (Capacité de l'application) > **Bot** :
 1. Activer la capacité du bot
 2. Définir le nom du bot
 
-![Activer la capacité du bot](../images/feishu-step5-bot-capability.png)
+![Activer la fonctionnalité du bot](../images/feishu-step5-bot-capability.png)
 
 ### 6. Configurer l'abonnement aux événements
 
@@ -652,13 +652,13 @@ Champs de routage :
 - `match.peer.kind` : `"direct"` ou `"group"`
 - `match.peer.id` : ID Open de l'utilisateur (`ou_xxx`) ou ID de groupe (`oc_xxx`)
 
-Voir [Obtenir les IDs de groupe/utilisateur](#get-groupuser-ids) pour des conseils de recherche.
+Voir [Obtenir les identifiants de groupe/utilisateur](#get-groupuser-ids) pour des conseils de recherche.
 
 ---
 
 ## Référence de configuration
 
-Configuration complète : [Configuration Gateway](/fr/gateway/configuration)
+Configuration complète : [configuration Gateway](/fr/gateway/configuration)
 
 Options clés :
 
@@ -709,7 +709,7 @@ Options clés :
 - ✅ Images
 - ✅ Files
 - ✅ Audio
-- ✅ Video
+- ✅ Vidéo/médias
 - ✅ Stickers
 
 ### Send
@@ -718,7 +718,31 @@ Options clés :
 - ✅ Images
 - ✅ Files
 - ✅ Audio
-- ⚠️ Rich text (partial support)
+- ✅ Vidéo/médias
+- ✅ Cartes interactives
+- ⚠️ Texte enrichi (formatage de style article et cartes, non pas les fonctionnalités d'édition arbitraires de Feishu)
+
+### Fils de discussion et réponses
+
+- ✅ Réponses en ligne
+- ✅ Réponses aux fils de discussion par sujet où Feishu expose `reply_in_thread`
+- ✅ Les réponses média conservent le contexte du fil lors d'une réponse à un message de fil/sujet
+
+## Surface d'action à l'exécution
+
+Feishu expose actuellement ces actions à l'exécution :
+
+- `send`
+- `read`
+- `edit`
+- `thread-reply`
+- `pin`
+- `list-pins`
+- `unpin`
+- `member-info`
+- `channel-info`
+- `channel-list`
+- `react` et `reactions` lorsque les réactions sont activées dans la configuration
 
 import fr from "/components/footer/fr.mdx";
 

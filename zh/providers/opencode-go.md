@@ -8,7 +8,7 @@ title: "OpenCode Go"
 
 # OpenCode Go
 
-OpenCode Go 是 [OpenCode](/en/providers/opencode) 中的 Go 目录。
+OpenCode Go 是 [OpenCode](/zh/providers/opencode) 中的 Go 目录。
 它使用与 Zen 目录相同的 `OPENCODE_API_KEY`，但保留运行时
 提供商 ID `opencode-go`，以便上游的按模型路由保持正确。
 
@@ -41,7 +41,7 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 
 ## 注意
 
-- 有关共享的新手引导和目录概述，请使用 [OpenCode](/en/providers/opencode)。
+- 有关共享的新手引导和目录概述，请使用 [OpenCode](/zh/providers/opencode)。
 - 运行时引用保持显式：Zen 用 `opencode/...`，Go 用 `opencode-go/...`。
 
 import zh from "/components/footer/zh.mdx";

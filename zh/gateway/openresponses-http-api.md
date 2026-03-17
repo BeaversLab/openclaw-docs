@@ -19,7 +19,7 @@ OpenClaw 的 Gateway(网关)可以提供一个 OpenResponses 兼容的 `POST /v1
 
 ## 身份验证、安全和路由
 
-操作行为与 [OpenAI Chat Completions](/en/gateway/openai-http-api) 相匹配：
+操作行为与 [OpenAI Chat Completions](/zh/gateway/openai-http-api) 相匹配：
 
 - 使用 `Authorization: Bearer <token>` 配合正常的 Gateway(网关) 身份验证配置
 - 将该端点视为对 gateway 实例的完整操作员访问权限
@@ -217,7 +217,7 @@ URL 获取默认值：
 
 - URL 允许列表在获取之前以及重定向跳转时强制执行。
 - 将主机名加入允许列表并不能绕过私有/内部 IP 阻止。
-- 对于暴露于互联网的 Gateway，除了应用级防护外，还应应用网络出口控制。请参阅[安全性](/en/gateway/security)。
+- 对于暴露于互联网的 Gateway，除了应用级防护外，还应应用网络出口控制。请参阅[安全性](/zh/gateway/security)。
 
 ## 流式传输（SSE）
 

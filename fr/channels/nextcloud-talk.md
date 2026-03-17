@@ -25,7 +25,7 @@ Extraction locale (lors de l'exécution depuis un dépôt git) :
 openclaw plugins install ./extensions/nextcloud-talk
 ```
 
-Si vous choisissez Nextcloud Talk lors de la configuration/onboarding et qu'une extraction git est détectée,
+Si vous choisissez Nextcloud Talk lors de la configuration et qu'une extraction git est détectée,
 OpenClaw proposera automatiquement le chemin d'installation local.
 
 Détails : [Plugins](/fr/tools/plugin)
@@ -43,7 +43,7 @@ Détails : [Plugins](/fr/tools/plugin)
 4. Configurez OpenClaw :
    - Config : `channels.nextcloud-talk.baseUrl` + `channels.nextcloud-talk.botSecret`
    - Ou env : `NEXTCLOUD_TALK_BOT_SECRET` (compte par défaut uniquement)
-5. Redémarrez la passerelle (ou terminez l'onboarding).
+5. Redémarrez la passerelle (ou terminez la configuration).
 
 Configuration minimale :
 

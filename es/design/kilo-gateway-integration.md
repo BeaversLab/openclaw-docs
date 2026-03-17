@@ -492,8 +492,8 @@ const needsNonImageSanitize =
    - Probar que `resolveEnvApiKey("kilocode")` devuelve la variable de entorno correcta
 
 2. **Pruebas de Integración:**
-   - Probar el flujo de incorporación con `--auth-choice kilocode-api-key`
-   - Probar la incorporación no interactiva con `--kilocode-api-key`
+   - Probar el flujo de configuración con `--auth-choice kilocode-api-key`
+   - Probar la configuración no interactiva con `--kilocode-api-key`
    - Probar la selección de modelos con el prefijo `kilocode/`
 
 3. **Pruebas E2E:**

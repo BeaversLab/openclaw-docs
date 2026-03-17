@@ -33,8 +33,7 @@ openclaw onboard --non-interactive \
 
 Añada `--json` para obtener un resumen legible por máquina.
 
-Use `--secret-input-mode ref` para almacenar referencias respaldadas por variables de entorno en perfiles de autenticación en lugar de valores en texto plano.
-La selección interactiva entre referencias de entorno y referencias de proveedor configuradas (`file` o `exec`) está disponible en el flujo del asistente de incorporación.
+Use `--secret-input-mode ref` para almacenar referencias respaldadas por entorno en perfiles de autenticación en lugar de valores de texto plano. La selección interactiva entre referencias de entorno y referencias de proveedor configuradas (`file` o `exec`) está disponible en el flujo de incorporación.
 
 En el modo `ref` no interactivo, las variables de entorno del proveedor deben establecerse en el entorno del proceso.
 Pasar indicadores de clave en línea sin la variable de entorno correspondiente ahora falla rápidamente.
@@ -211,8 +210,8 @@ Notas:
 
 ## Documentos relacionados
 
-- Centro de incorporación: [Asistente de incorporación (CLI)](/es/start/wizard)
-- Referencia completa: [Referencia de incorporación por CLI](/es/start/wizard-cli-reference)
+- Centro de incorporación: [Onboarding (CLI)](/es/start/wizard)
+- Referencia completa: [CLI Setup Reference](/es/start/wizard-cli-reference)
 - Referencia de comandos: [`openclaw onboard`](/es/cli/onboard)
 
 import es from "/components/footer/es.mdx";

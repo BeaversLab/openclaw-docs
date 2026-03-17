@@ -28,28 +28,28 @@ Buena salida en una línea:
 
 - `openclaw status` → muestra los canales configurados y ningún error de autenticación obvio.
 - `openclaw status --all` → el informe completo está presente y se puede compartir.
-- `openclaw gateway probe` → el objetivo de puerta de enlace esperado es alcanzable (`Reachable: yes`). `RPC: limited - missing scope: operator.read` es un diagnóstico degradado, no un fallo de conexión.
+- `openclaw gateway probe` → el destino de puerta de enlace esperado es alcanzable (`Reachable: yes`). `RPC: limited - missing scope: operator.read` es un diagnóstico degradado, no un fallo de conexión.
 - `openclaw gateway status` → `Runtime: running` y `RPC probe: ok`.
 - `openclaw doctor` → sin errores de configuración/servicio bloqueantes.
 - `openclaw channels status --probe` → los canales reportan `connected` o `ready`.
-- `openclaw logs --follow` → actividad constante, sin errores fatales repetidos.
+- `openclaw logs --follow` → actividad constante, sin errores fatales repetitivos.
 
 ## Contexto largo de Anthropic 429
 
-Si ve:
+Si ves:
 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`,
-vaya a [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/es/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context).
+ve a [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/es/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context).
 
 ## La instalación del complemento falla con extensiones de openclaw faltantes
 
-Si la instalación falla con `package.json missing openclaw.extensions`, el paquete del complemento
-está usando una forma antigua que OpenClaw ya no acepta.
+Si la instalación falla con `package.json missing openclaw.extensions`, el paquete del plugin
+está usando un formato antiguo que OpenClaw ya no acepta.
 
 Solución en el paquete del complemento:
 
-1. Agregue `openclaw.extensions` a `package.json`.
-2. Apunte las entradas a los archivos de tiempo de ejecución construidos (generalmente `./dist/index.js`).
-3. Vuelva a publicar el complemento y ejecute `openclaw plugins install <npm-spec>` nuevamente.
+1. Añade `openclaw.extensions` a `package.json`.
+2. Apunta las entradas a los archivos de tiempo de ejecución construidos (generalmente `./dist/index.js`).
+3. Republica el plugin y ejecuta `openclaw plugins install <npm-spec>` de nuevo.
 
 Ejemplo:
 
@@ -102,13 +102,13 @@ flowchart TD
     - `Runtime: running`
     - `RPC probe: ok`
     - Tu canal muestra conectado/listo en `channels status --probe`
-    - El remitente aparece aprobado (o la política de MD está abierta/en lista de permitidos)
+    - El remitente aparece aprobado (o la política de DM está abierta/en lista de permitidos)
 
     Firmas de registro comunes:
 
-    - `drop guild message (mention required` → mention gating bloqueó el mensaje en Discord.
-    - `pairing request` → el remitente no está aprobado y está esperando la aprobación de emparejamiento de MD.
-    - `blocked` / `allowlist` en los registros del canal → el remitente, la sala o el grupo están filtrados.
+    - `drop guild message (mention required` → el filtrado de menciones bloqueó el mensaje en Discord.
+    - `pairing request` → el remitente no está aprobado y está esperando la aprobación de emparejamiento DM.
+    - `blocked` / `allowlist` en los registros del canal → el remitente, la sala o el grupo está filtrado.
 
     Páginas profundas:
 
@@ -118,7 +118,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="El Panel de Control o la IU de Control no se conectan">
+  <Accordion title="El panel o la interfaz de control no se conectan">
     ```bash
     openclaw status
     openclaw gateway status
@@ -133,14 +133,14 @@ flowchart TD
     - `RPC probe: ok`
     - Sin bucle de autenticación en los registros
 
-    Firmas de registro comunes:
+    Firmas comunes de registros:
 
-    - `device identity required` → el contexto HTTP/no seguro no puede completar la autenticación del dispositivo.
-    - `AUTH_TOKEN_MISMATCH` con sugerencias de reintento (`canRetryWithDeviceToken=true`) → puede producirse automáticamente un reintento de token de dispositivo de confianza.
-    - `unauthorized` repetido después de ese reintento → token/contraseña incorrectos, discrepancia en el modo de autenticación o token de dispositivo emparejado obsoleto.
-    - `gateway connect failed:` → la IU está apuntando a la URL/puerto incorrectos o a una puerta de enlace inalcanzable.
+    - `device identity required` → El contexto HTTP/no seguro no puede completar la autenticación del dispositivo.
+    - `AUTH_TOKEN_MISMATCH` con sugerencias de reintento (`canRetryWithDeviceToken=true`) → puede ocurrir automáticamente un reintento de token de dispositivo de confianza.
+    - `unauthorized` repetido después de ese reintento → token/contraseña incorrectos, desajuste en el modo de autenticación o token de dispositivo emparejado obsoleto.
+    - `gateway connect failed:` → La interfaz de usuario está apuntando a la URL/puerto incorrecto o a una puerta de enlace inalcanzable.
 
-    Páginas profundas:
+    Páginas en profundidad:
 
     - [/gateway/troubleshooting#dashboard-control-ui-connectivity](/es/gateway/troubleshooting#dashboard-control-ui-connectivity)
     - [/web/control-ui](/es/web/control-ui)
@@ -148,7 +148,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="La puerta de enlace no se inició o el servicio está instalado pero no se está ejecutando">
+  <Accordion title="La puerta de enlace no se inicia o el servicio está instalado pero no se está ejecutando">
     ```bash
     openclaw status
     openclaw gateway status
@@ -157,19 +157,19 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    La salida correcta se ve así:
+    El resultado correcto se ve así:
 
     - `Service: ... (loaded)`
     - `Runtime: running`
     - `RPC probe: ok`
 
-    Firmas de registro comunes:
+    Firmas comunes de registros:
 
-    - `Gateway start blocked: set gateway.mode=local` → el modo de puerta de enlace no está configurado o es remoto.
-    - `refusing to bind gateway ... without auth` → enlace que no es de bucle local sin token/contraseña.
+    - `Gateway start blocked: set gateway.mode=local` → el modo de puerta de enlace no está configurado/es remoto.
+    - `refusing to bind gateway ... without auth` → enlace no de bucle invertido sin token/contraseña.
     - `another gateway instance is already listening` o `EADDRINUSE` → puerto ya en uso.
 
-    Páginas profundas:
+    Páginas en profundidad:
 
     - [/gateway/troubleshooting#gateway-service-not-running](/es/gateway/troubleshooting#gateway-service-not-running)
     - [/gateway/background-process](/es/gateway/background-process)
@@ -186,15 +186,15 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    La salida correcta se ve así:
+    El resultado correcto se ve así:
 
     - El transporte del canal está conectado.
-    - Las comprobaciones de emparejamiento/lista blanca se pasan.
-    - Las menciones se detectan donde se requiere.
+    - Las comprobaciones de emparejamiento/lista blanca se realizan correctamente.
+    - Las menciones se detectan donde se requieren.
 
     Firmas de registro comunes:
 
-    - `mention required` → el filtrado de menciones de grupo bloqueó el procesamiento.
+    - `mention required` → el filtrado por mención de grupo bloqueó el procesamiento.
     - `pairing` / `pending` → el remitente del MD aún no está aprobado.
     - `not_in_channel`, `missing_scope`, `Forbidden`, `401/403` → problema con el token de permisos del canal.
 
@@ -205,7 +205,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="Cron o latido no se ejecutó o no se entregó">
+  <Accordion title="El cron o el latido no se activaron o no se entregaron">
     ```bash
     openclaw status
     openclaw gateway status
@@ -217,15 +217,15 @@ flowchart TD
 
     El resultado correcto se ve así:
 
-    - `cron.status` muestra que está habilitado con un siguiente despertar.
-    - `cron runs` muestra entradas `ok` recientes.
-    - El latido está habilitado y no está fuera del horario activo.
+    - `cron.status` muestra que está habilitado con una próxima activación.
+    - `cron runs` muestra entradas recientes de `ok`.
+    - El latido está habilitado y no está fuera de las horas activas.
 
     Firmas de registro comunes:
 
-    - `cron: scheduler disabled; jobs will not run automatically` → cron está deshabilitado.
-    - `heartbeat skipped` con `reason=quiet-hours` → fuera del horario activo configurado.
-    - `requests-in-flight` → carril principal ocupado; el despertar del latido se retrasó.
+    - `cron: scheduler disabled; jobs will not run automatically` → el cron está deshabilitado.
+    - `heartbeat skipped` con `reason=quiet-hours` → fuera de las horas activas configuradas.
+    - `requests-in-flight` → carril principal ocupado; la activación del latido se retrasó.
     - `unknown accountId` → la cuenta de destino de entrega del latido no existe.
 
     Páginas profundas:
@@ -236,7 +236,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="El nodo está emparejado pero la herramienta falla cámara lienzo pantalla exec">
+  <Accordion title="El nodo está emparejado pero la herramienta falla en cámara, lienzo, pantalla o ejecución">
     ```bash
     openclaw status
     openclaw gateway status
@@ -245,20 +245,20 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    El resultado correcto se ve así:
+    La salida correcta se ve así:
 
-    - El nodo aparece como conectado y emparejado para el rol `node`.
+    - El nodo figura como conectado y emparejado para el rol `node`.
     - Existe la capacidad para el comando que estás invocando.
     - El estado de permiso está otorgado para la herramienta.
 
     Firmas de registro comunes:
 
     - `NODE_BACKGROUND_UNAVAILABLE` → traer la aplicación del nodo al primer plano.
-    - `*_PERMISSION_REQUIRED` → el permiso del SO fue denegado o falta.
+    - `*_PERMISSION_REQUIRED` → el permiso del sistema operativo fue denegado o falta.
     - `SYSTEM_RUN_DENIED: approval required` → la aprobación de ejecución está pendiente.
-    - `SYSTEM_RUN_DENIED: allowlist miss` → comando no está en la lista de permitidos para exec.
+    - `SYSTEM_RUN_DENIED: allowlist miss` → el comando no está en la lista de permitidos para ejecución.
 
-    Páginas profundas:
+    Páginas en profundidad:
 
     - [/gateway/troubleshooting#node-paired-tool-fails](/es/gateway/troubleshooting#node-paired-tool-fails)
     - [/nodes/troubleshooting](/es/nodes/troubleshooting)
@@ -266,7 +266,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="Browser tool fails">
+  <Accordion title="La herramienta del navegador falla">
     ```bash
     openclaw status
     openclaw gateway status
@@ -275,24 +275,23 @@ flowchart TD
     openclaw doctor
     ```
 
-    El resultado correcto se ve así:
+    La salida correcta se ve así:
 
     - El estado del navegador muestra `running: true` y un navegador/perfil elegido.
-    - El perfil `openclaw` se inicia o el relé `chrome` tiene una pestaña adjunta.
+    - `openclaw` se inicia, o `user` puede ver las pestañas locales de Chrome.
 
     Firmas de registro comunes:
 
-    - `Failed to start Chrome CDP on port` → error al iniciar el navegador local.
-    - `browser.executablePath not found` → la ruta del binario configurada es incorrecta.
-    - `Chrome extension relay is running, but no tab is connected` → extensión no adjunta.
-    - `Browser attachOnly is enabled ... not reachable` → el perfil de solo adjuntar no tiene un destino CDP activo.
+    - `Failed to start Chrome CDP on port` → falló el inicio del navegador local.
+    - `browser.executablePath not found` → la ruta binaria configurada es incorrecta.
+    - `No Chrome tabs found for profile="user"` → el perfil de conexión de Chrome MCP no tiene pestañas locales de Chrome abiertas.
+    - `Browser attachOnly is enabled ... not reachable` → el perfil de solo conexión no tiene un objetivo CDP activo.
 
-    Páginas profundas:
+    Páginas en profundidad:
 
     - [/gateway/troubleshooting#browser-tool-fails](/es/gateway/troubleshooting#browser-tool-fails)
     - [/tools/browser-linux-troubleshooting](/es/tools/browser-linux-troubleshooting)
     - [/tools/browser-wsl2-windows-remote-cdp-troubleshooting](/es/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
-    - [/tools/chrome-extension](/es/tools/chrome-extension)
 
   </Accordion>
 </AccordionGroup>

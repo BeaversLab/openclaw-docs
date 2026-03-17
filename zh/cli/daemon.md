@@ -34,21 +34,23 @@ openclaw daemon uninstall
 
 ## 通用选项
 
-- `status`：`--url`、`--token`、`--password`、`--timeout`、`--no-probe`、`--deep`、`--json`
+- `status`：`--url`、`--token`、`--password`、`--timeout`、`--no-probe`、`--require-rpc`、`--deep`、`--json`
 - `install`：`--port`、`--runtime <node|bun>`、`--token`、`--force`、`--json`
 - lifecycle (`uninstall|start|stop|restart`)：`--json`
 
 备注：
 
-- `status` 会尽可能解析配置的探测认证 SecretRefs。
-- 在 Linux systemd 安装上，`status` 的令牌漂移检查包括 `Environment=` 和 `EnvironmentFile=` 单元源。
-- 当令牌认证需要令牌且 `gateway.auth.token` 由 SecretRef 管理时，`install` 会验证 SecretRef 是否可解析，但不会将解析出的令牌持久化到服务环境元数据中。
-- 如果令牌身份验证需要令牌且配置的令牌 SecretRef 未解析，则安装将以失败告终。
-- 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password` 且未设置 `gateway.auth.mode`，则安装将被阻止，直到明确设置模式为止。
+- `status` 在可能的情况下解析探针身份验证配置的 SecretRefs。
+- 如果在此命令路径中未解析所需的身份验证 SecretRef，则在探针连接/身份验证失败时 `daemon status --json` 会报告 `rpc.authWarning`；请显式传递 `--token`/`--password` 或先解析密钥源。
+- 如果探针成功，将抑制未解析的 auth-ref 警告以避免误报。
+- 在 Linux systemd 安装上，`status` 令牌漂移检查包括 `Environment=` 和 `EnvironmentFile=` 单元源。
+- 当令牌身份验证需要令牌且 `gateway.auth.token` 由 SecretRef 管理时，`install` 会验证 SecretRef 是否可解析，但不会将解析出的令牌持久化到服务环境元数据中。
+- 如果令牌身份验证需要令牌但配置的令牌 SecretRef 未解析，则安装将失败并关闭。
+- 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password` 且未设置 `gateway.auth.mode`，则安装将被阻止，直到显式设置模式。
 
-## 推荐
+## 首选
 
-请使用 [`openclaw gateway`](/en/cli/gateway) 查看当前文档和示例。
+请使用 [`openclaw gateway`](/zh/cli/gateway) 查看当前文档和示例。
 
 import zh from "/components/footer/zh.mdx";
 

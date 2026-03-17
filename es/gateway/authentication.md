@@ -45,8 +45,8 @@ openclaw models status
 openclaw doctor
 ```
 
-Si prefiere no administrar las variables de entorno usted mismo, el asistente de incorporación puede almacenar
-claves de API para uso del demonio: `openclaw onboard`.
+Si prefieres no gestionar las variables de entorno tú mismo, el proceso de incorporación puede almacenar
+claves API para uso del demonio: `openclaw onboard`.
 
 Consulte [Ayuda](/es/help) para obtener detalles sobre la herencia de entorno (`env.shellEnv`,
 `~/.openclaw/.env`, systemd/launchd).

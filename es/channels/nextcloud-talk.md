@@ -25,7 +25,7 @@ Repositorio local (cuando se ejecuta desde un repositorio git):
 openclaw plugins install ./extensions/nextcloud-talk
 ```
 
-Si eliges Nextcloud Talk durante la configuración/inicio y se detecta un repositorio git,
+Si eliges Nextcloud Talk durante la configuración y se detecta una comprobación de git,
 OpenClaw ofrecerá la ruta de instalación local automáticamente.
 
 Detalles: [Plugins](/es/tools/plugin)
@@ -43,7 +43,7 @@ Detalles: [Plugins](/es/tools/plugin)
 4. Configura OpenClaw:
    - Config: `channels.nextcloud-talk.baseUrl` + `channels.nextcloud-talk.botSecret`
    - O env: `NEXTCLOUD_TALK_BOT_SECRET` (solo cuenta predeterminada)
-5. Reinicia la puerta de enlace (o termina el proceso de incorporación).
+5. Reinicia la puerta de enlace (o termina la configuración).
 
 Configuración mínima:
 

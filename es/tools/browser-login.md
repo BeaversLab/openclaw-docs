@@ -14,7 +14,7 @@ Cuando un sitio requiera inicio de sesión, **inicie sesión manualmente** en el
 
 **No** proporcione sus credenciales al modelo. Los inicios de sesión automatizados a menudo activan defensas anti-bot y pueden bloquear la cuenta.
 
-Volver a la documentación principal del navegador: [Navegador](/es/tools/browser).
+Volver a la documentación principal del navegador: [Browser](/es/tools/browser).
 
 ## ¿Qué perfil de Chrome se utiliza?
 
@@ -24,29 +24,28 @@ Para las llamadas a herramientas de navegador del agente:
 
 - Elección predeterminada: el agente debe usar su navegador aislado `openclaw`.
 - Use `profile="user"` solo cuando importen las sesiones iniciadas existentes y el usuario esté en la computadora para hacer clic/aprobar cualquier mensaje de adjunto.
-- Use `profile="chrome-relay"` solo para el flujo de adjunto de la extensión de Chrome / botón de la barra de herramientas.
-- Si tiene varios perfiles de navegador de usuario, especifique el perfil explícitamente en lugar de adivinar.
+- Si tienes varios perfiles de navegador de usuario, especifica el perfil explícitamente en lugar de adivinar.
 
 Dos formas fáciles de acceder a él:
 
-1. **Pídale al agente que abra el navegador** y luego inicie sesión usted mismo.
-2. **Abrirlo a través de CLI**:
+1. **Pídele al agente que abra el navegador** y luego inicia sesión tú mismo.
+2. **Ábrelo a través de la CLI**:
 
 ```bash
 openclaw browser start
 openclaw browser open https://x.com
 ```
 
-Si tiene varios perfiles, pase `--browser-profile <name>` (el valor predeterminado es `openclaw`).
+Si tienes varios perfiles, pasa `--browser-profile <name>` (el predeterminado es `openclaw`).
 
 ## X/Twitter: flujo recomendado
 
-- **Leer/buscar/hilos:** use el navegador **host** (inicio de sesión manual).
-- **Publicar actualizaciones:** use el navegador **host** (inicio de sesión manual).
+- **Leer/buscar/hilos:** usa el navegador **host** (inicio de sesión manual).
+- **Publicar actualizaciones:** usa el navegador **host** (inicio de sesión manual).
 
-## Sandboxeo + acceso al navegador host
+## Sandboxing + acceso al navegador host
 
-Las sesiones de navegador en sandbox tienen **más probabilidades** de activar la detección de bots. Para X/Twitter (y otros sitios estrictos), prefiera el navegador **host**.
+Las sesiones de navegador en sandbox **son más propensas** a activar la detección de bots. Para X/Twitter (y otros sitios estrictos), prefiere el navegador **host**.
 
 Si el agente está en sandbox, la herramienta del navegador usa el sandbox de forma predeterminada. Para permitir el control del host:
 
@@ -65,13 +64,13 @@ Si el agente está en sandbox, la herramienta del navegador usa el sandbox de fo
 }
 ```
 
-Luego apunte al navegador host:
+Luego apunta al navegador host:
 
 ```bash
 openclaw browser open https://x.com --browser-profile openclaw --target host
 ```
 
-O desactive el sandboxeo para el agente que publica actualizaciones.
+O deshabilita el sandboxing para el agente que publica actualizaciones.
 
 import es from "/components/footer/es.mdx";
 

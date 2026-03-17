@@ -27,8 +27,8 @@ La autenticación se proporciona durante el protocolo de enlace WebSocket a trav
 
 - `connect.params.auth.token`
 - `connect.params.auth.password`
-  El panel de configuración del panel de control mantiene un token para la sesión actual de la pestaña del navegador y la URL de la gateway seleccionada; las contraseñas no se guardan.
-  El asistente de configuración genera un token de gateway de manera predeterminada, así que péguelo aquí en la primera conexión.
+  El panel de configuración del panel de control mantiene un token para la sesión actual de la pestaña del navegador y la URL de la puerta de enlace seleccionada; las contraseñas no se persisten.
+  El onboarding genera un token de puerta de enlace de manera predeterminada, así que péguelo aquí en la primera conexión.
 
 ## Emparejamiento de dispositivos (primera conexión)
 

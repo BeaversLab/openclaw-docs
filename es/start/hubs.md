@@ -17,7 +17,7 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 - [Introducción](/es/start/getting-started)
 - [Inicio rápido](/es/start/quickstart)
 - [Incorporación](/es/start/onboarding)
-- [Asistente](/es/start/wizard)
+- [Incorporación (CLI)](/es/start/wizard)
 - [Configuración](/es/start/setup)
 - [Panel de control (Gateway local)](http://127.0.0.1:18789/)
 - [Ayuda](/es/help)

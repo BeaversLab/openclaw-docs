@@ -12,10 +12,10 @@ OpenClaw 支持模型提供商的 OAuth 和 API 密钥。对于常驻网关
 主机，API 密钥通常是最可预测的选项。当订阅/OAuth
 流程符合您的提供商账户模型时，也支持这些流程。
 
-有关完整的 OAuth 流程和存储布局，请参阅 [/concepts/oauth](/en/concepts/oauth)。
-对于基于 SecretRef 的身份验证（`env`/`file`/`exec` 提供商），请参阅 [密钥管理](/en/gateway/secrets)。
+有关完整的 OAuth 流程和存储布局，请参阅 [/concepts/oauth](/zh/concepts/oauth)。
+对于基于 SecretRef 的身份验证（`env`/`file`/`exec` 提供商），请参阅 [密钥管理](/zh/gateway/secrets)。
 有关 `models status --probe` 使用的凭据资格/原因代码规则，请参阅
-[身份验证凭据语义](/en/auth-credential-semantics)。
+[身份验证凭据语义](/zh/auth-credential-semantics)。
 
 ## 推荐设置（API 密钥，任何提供商）
 
@@ -48,10 +48,9 @@ openclaw models status
 openclaw doctor
 ```
 
-如果您不想自己管理环境变量，新手引导向导可以存储
-API 密钥供守护程序使用：`openclaw onboard`。
+如果您不想自己管理环境变量，新手引导可以为守护进程存储 API 密钥：`openclaw onboard`。
 
-有关环境继承的详细信息，请参阅 [帮助](/en/help)（`env.shellEnv`,
+有关环境继承的详细信息，请参阅 [帮助](/zh/help)（`env.shellEnv`,
 `~/.openclaw/.env`、systemd/launchd）。
 
 ## Anthropic：setup-token（订阅身份验证）
@@ -107,7 +106,7 @@ openclaw models status --check
 ```
 
 此处记录了可选的运维脚本（systemd/Termux）：
-[/automation/auth-monitoring](/en/automation/auth-monitoring)
+[/automation/auth-monitoring](/zh/automation/auth-monitoring)
 
 > `claude setup-token` 需要交互式 TTY。
 

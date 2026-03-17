@@ -1,5 +1,5 @@
 ---
-summary: "Feishu 机器人概述、功能和配置"
+summary: "飞书机器人概述、功能和配置"
 read_when:
   - You want to connect a Feishu/Lark bot
   - You are configuring the Feishu channel
@@ -28,9 +28,9 @@ openclaw plugins install @openclaw/feishu
 
 添加 Feishu 渠道有两种方法：
 
-### 方法 1：新手引导向导（推荐）
+### 方法 1：新手引导（推荐）
 
-如果您刚刚安装了 OpenClaw，请运行向导：
+如果您刚刚安装了 OpenClaw，请运行新手引导：
 
 ```bash
 openclaw onboard
@@ -71,7 +71,7 @@ openclaw channels add
 
 访问 [飞书开放平台](https://open.feishu.cn/app) 并登录。
 
-Lark（海外版）租户应使用 [https://open.larksuite.com/app](https://open.larksuite.com/app) 并在 Feishu 配置中设置 `domain: "lark"`。
+Lark（海外版）租户应使用 [https://open.larksuite.com/app](https://open.larksuite.com/app) 并在飞书配置中设置 `domain: "lark"`。
 
 ### 2. 创建应用
 
@@ -139,7 +139,7 @@ Lark（海外版）租户应使用 [https://open.larksuite.com/app](https://open
 
 ⚠️ **重要提示：** 在设置事件订阅之前，请确保：
 
-1. 您已经为 Feishu 运行了 `openclaw channels add`
+1. 您已经为飞书运行了 `openclaw channels add`
 2. 网关正在运行（`openclaw gateway status`）
 
 在 **事件订阅** 中：
@@ -191,11 +191,11 @@ openclaw channels add
 }
 ```
 
-如果您使用 `connectionMode: "webhook"`，请同时设置 `verificationToken` 和 `encryptKey`。Feishu webhook 服务器默认绑定到 `127.0.0.1`；仅当您有意需要不同的绑定地址时才设置 `webhookHost`。
+如果您使用 `connectionMode: "webhook"`，请同时设置 `verificationToken` 和 `encryptKey`。飞书 Webhook 服务器默认绑定到 `127.0.0.1`；仅当您有意需要不同的绑定地址时才设置 `webhookHost`。
 
 #### 验证令牌和加密密钥 (webhook 模式)
 
-使用 webhook 模式时，请在配置中同时设置 `channels.feishu.verificationToken` 和 `channels.feishu.encryptKey`。要获取这些值：
+使用 Webhook 模式时，请在配置中同时设置 `channels.feishu.verificationToken` 和 `channels.feishu.encryptKey`。要获取这些值：
 
 1. 在飞书开放平台中，打开您的应用
 2. 前往 **开发配置** → **事件与回调** (Development → Events & Callbacks)
@@ -215,7 +215,7 @@ export FEISHU_APP_SECRET="xxx"
 
 ### Lark (全球) 域名
 
-如果您的租户在 Lark（国际版），请将域名设置为 `lark`（或完整的域名字符串）。您可以在 `channels.feishu.domain` 或按账户（`channels.feishu.accounts.<id>.domain`）设置它。
+如果您的租户位于 Lark（国际版），请将域名设置为 `lark`（或完整的域名字符串）。您可以在 `channels.feishu.domain` 或每个账户（`channels.feishu.accounts.<id>.domain`）处进行设置。
 
 ```json5
 {
@@ -237,8 +237,8 @@ export FEISHU_APP_SECRET="xxx"
 
 您可以使用两个可选标志来减少 Feishu API 的使用量：
 
-- `typingIndicator`（默认 `true`）：当 `false` 时，跳过正在输入反应调用。
-- `resolveSenderNames`（默认 `true`）：当 `false` 时，跳过发送者资料查找调用。
+- `typingIndicator`（默认 `true`）：当 `false` 时，跳正在输入反应调用。
+- `resolveSenderNames`（默认 `true`）：当 `false` 时，跳发送者资料查询调用。
 
 在顶层或每个帐户设置它们：
 
@@ -300,7 +300,7 @@ openclaw pairing approve feishu <CODE>
 
 ### 私信
 
-- **默认值**：`dmPolicy: "pairing"`（未知用户将获得配对码）
+- **默认**：`dmPolicy: "pairing"`（未知用户会获得配对码）
 - **批准配对**：
 
   ```bash
@@ -308,17 +308,17 @@ openclaw pairing approve feishu <CODE>
   openclaw pairing approve feishu <CODE>
   ```
 
-- **Allowlist mode**：设置 `channels.feishu.allowFrom` 填写允许的 Open IDs
+- **白名单模式**：设置 `channels.feishu.allowFrom` 为允许的 Open ID
 
 ### 群聊
 
-**1. 群组策略** (`channels.feishu.groupPolicy`)：
+**1. 群组策略**（`channels.feishu.groupPolicy`）：
 
 - `"open"` = 允许群组中的所有人（默认）
 - `"allowlist"` = 仅允许 `groupAllowFrom`
 - `"disabled"` = 禁用群组消息
 
-**2. 提及要求** (`channels.feishu.groups.<chat_id>.requireMention`)：
+**2. 提及要求**（`channels.feishu.groups.<chat_id>.requireMention`）：
 
 - `true` = 需要 @提及（默认）
 - `false` = 无需提及即可回复
@@ -370,7 +370,7 @@ openclaw pairing approve feishu <CODE>
 
 ### 限制群组中哪些发送者可以发送消息（发送者白名单）
 
-除了允许群组本身外，该群组中的**所有消息**均受发送者 open_id 限制：只有列在 `groups.<chat_id>.allowFrom` 中的用户的消息会被处理；其他成员的消息将被忽略（这是完整的发送者级别限制，不仅适用于 /reset 或 /new 等控制命令）。
+除了允许该群组本身外，该群组中的**所有消息**还受发送者 open_id 的限制：只有列在 `groups.<chat_id>.allowFrom` 中的用户的消息会被处理；来自其他成员的消息将被忽略（这是完整的发送者级别限制，不仅限于 /reset 或 /new 等控制命令）。
 
 ```json5
 {
@@ -395,7 +395,7 @@ openclaw pairing approve feishu <CODE>
 
 ### 群组 ID (chat_id)
 
-群组 ID 的格式如 `oc_xxx`。
+群组 ID 看起来像 `oc_xxx`。
 
 **方法 1（推荐）**
 
@@ -408,7 +408,7 @@ openclaw pairing approve feishu <CODE>
 
 ### 用户 ID (open_id)
 
-用户 ID 的格式如 `ou_xxx`。
+用户 ID 看起来像 `ou_xxx`。
 
 **方法 1（推荐）**
 
@@ -453,7 +453,7 @@ openclaw pairing list feishu
 
 1. 确保机器人已添加到群组中
 2. 确保您 @提及 了机器人（默认行为）
-3. 检查 `groupPolicy` 未设置为 `"disabled"`
+3. 检查 `groupPolicy` 是否未设置为 `"disabled"`
 4. 检查日志：`openclaw logs --follow`
 
 ### 机器人未收到消息
@@ -506,11 +506,11 @@ openclaw pairing list feishu
 }
 ```
 
-当出站 API 未明确指定 `accountId` 时，`defaultAccount` 控制使用哪个飞书账号。
+`defaultAccount` 控制出站 API 未显式指定 `accountId` 时使用哪个飞书账号。
 
 ### 消息限制
 
-- `textChunkLimit`：出站文本块大小（默认：2000 个字符）
+- `textChunkLimit`：出站文本块大小（默认：2000 字符）
 - `mediaMaxMb`：媒体上传/下载限制（默认：30MB）
 
 ### 流式传输
@@ -528,20 +528,20 @@ openclaw pairing list feishu
 }
 ```
 
-设置 `streaming: false` 以在发送前等待完整回复。
+设置 `streaming: false` 在发送之前等待完整回复。
 
 ### ACP 会话
 
-飞书支持 ACP 用于：
+飞书支持以下场景的 ACP：
 
 - 私信
-- 群主题话题
+- 群话题
 
-Feishu ACP 由文本命令驱动。没有原生平铺命令菜单，因此请直接在对话中使用 `/acp ...` 消息。
+飞书 ACP 由文本命令驱动。没有原生的斜杠命令菜单，因此请直接在对话中使用 `/acp ...` 消息。
 
 #### 持久化 ACP 绑定
 
-使用顶层类型的 ACP 绑定将飞书私信或主题话题固定到持久化的 ACP 会话。
+使用顶层类型的 ACP 绑定将飞书私信或话题会话固定到持久化 ACP 会话。
 
 ```json5
 {
@@ -585,19 +585,19 @@ Feishu ACP 由文本命令驱动。没有原生平铺命令菜单，因此请直
 }
 ```
 
-#### 从聊天生成的线程绑定 ACP
+#### 从聊天中生成线程绑定 ACP
 
-在飞书私信或主题话题中，您可以就地生成并绑定一个 ACP 会话：
+在飞书私信或话题会话中，您可以直接生成并绑定一个 ACP 会话：
 
 ```text
 /acp spawn codex --thread here
 ```
 
-备注：
+注意：
 
 - `--thread here` 适用于私信和飞书话题。
-- 绑定的私信/话题中的后续消息会直接路由到该 ACP 会话。
-- v1 不针对通用的非话题群聊。
+- 绑定私信/话题中的后续消息直接路由到该 ACP 会话。
+- v1 不针对通用的非话题群组聊天。
 
 ### 多智能体路由
 
@@ -648,28 +648,28 @@ Feishu ACP 由文本命令驱动。没有原生平铺命令菜单，因此请直
 
 路由字段：
 
-- `match.channel`: `"feishu"`
-- `match.peer.kind`: `"direct"` 或 `"group"`
-- `match.peer.id`: 用户 Open ID (`ou_xxx`) 或群组 ID (`oc_xxx`)
+- `match.channel`：`"feishu"`
+- `match.peer.kind`：`"direct"` 或 `"group"`
+- `match.peer.id`：用户 Open ID (`ou_xxx`) 或群组 ID (`oc_xxx`)
 
-查看 [Get group/user IDs](#get-groupuser-ids) 了解查找提示。
+有关查找提示，请参阅 [获取群组/用户 ID](#get-groupuser-ids)。
 
 ---
 
 ## 配置参考
 
-完整配置：[Gateway(网关) configuration](/en/gateway/configuration)
+完整配置：[Gateway(网关) 配置](/zh/gateway/configuration)
 
 关键选项：
 
 | 设置                                              | 描述                            | 默认值           |
 | ------------------------------------------------- | ------------------------------- | ---------------- |
 | `channels.feishu.enabled`                         | 启用/禁用渠道                   | `true`           |
-| `channels.feishu.domain`                          | API 域名 (`feishu` 或 `lark`)   | `feishu`         |
+| `channels.feishu.domain`                          | API 域 (`feishu` 或 `lark`)     | `feishu`         |
 | `channels.feishu.connectionMode`                  | 事件传输模式                    | `websocket`      |
 | `channels.feishu.defaultAccount`                  | 出站路由的默认账户 ID           | `default`        |
-| `channels.feishu.verificationToken`               | Webhook 模式必填                | -                |
-| `channels.feishu.encryptKey`                      | Webhook 模式必填                | -                |
+| `channels.feishu.verificationToken`               | Webhook 模式必需                | -                |
+| `channels.feishu.encryptKey`                      | Webhook 模式必需                | -                |
 | `channels.feishu.webhookPath`                     | Webhook 路由路径                | `/feishu/events` |
 | `channels.feishu.webhookHost`                     | Webhook 绑定主机                | `127.0.0.1`      |
 | `channels.feishu.webhookPort`                     | Webhook 绑定端口                | `3000`           |
@@ -693,9 +693,9 @@ Feishu ACP 由文本命令驱动。没有原生平铺命令菜单，因此请直
 
 | 值            | 行为                                            |
 | ------------- | ----------------------------------------------- |
-| `"pairing"`   | **默认值。** 未知用户会收到配对码；必须获得批准 |
+| `"pairing"`   | **默认值。** 未知用户会获取配对码；必须经过批准 |
 | `"allowlist"` | 仅 `allowFrom` 中的用户可以聊天                 |
-| `"open"`      | 允许所有用户（allowFrom 中需要 `"*"`）          |
+| `"open"`      | 允许所有用户（要求 allowFrom 中包含 `"*"`）     |
 | `"disabled"`  | 禁用私信                                        |
 
 ---
@@ -709,8 +709,8 @@ Feishu ACP 由文本命令驱动。没有原生平铺命令菜单，因此请直
 - ✅ 图片
 - ✅ 文件
 - ✅ 音频
-- ✅ 视频
-- ✅ 表情包
+- ✅ 视频/媒体
+- ✅ 表情贴纸
 
 ### 发送
 
@@ -718,7 +718,31 @@ Feishu ACP 由文本命令驱动。没有原生平铺命令菜单，因此请直
 - ✅ 图片
 - ✅ 文件
 - ✅ 音频
-- ⚠️ 富文本（部分支持）
+- ✅ 视频/媒体
+- ✅ 交互式卡片
+- ⚠️ 富文本（帖子风格的格式和卡片，而非飞书任意的创作功能）
+
+### 主题和回复
+
+- ✅ 内联回复
+- ✅ 飞书暴露 `reply_in_thread` 时的主题线程回复
+- ✅ 回复主题/消息时，媒体回复保持线程感知
+
+## 运行时操作界面
+
+飞书目前暴露了以下运行时操作：
+
+- `send`
+- `read`
+- `edit`
+- `thread-reply`
+- `pin`
+- `list-pins`
+- `unpin`
+- `member-info`
+- `channel-info`
+- `channel-list`
+- 当在配置中启用了反应时，`react` 和 `reactions`
 
 import zh from "/components/footer/zh.mdx";
 

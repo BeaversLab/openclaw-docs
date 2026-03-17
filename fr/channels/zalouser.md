@@ -41,7 +41,7 @@ Aucun binaire externe `zca`/`openzca` CLI n'est requis.
 }
 ```
 
-4. Redémarrez la Gateway (ou terminez l'intégration).
+4. Redémarrez le Gateway (ou terminez la configuration).
 5. L'accès DM est par défaut en mode jumelage ; approuvez le code de jumelage lors du premier contact.
 
 ## Ce que c'est
@@ -74,7 +74,7 @@ openclaw directory groups list --channel zalouser --query "work"
 
 `channels.zalouser.dmPolicy` prend en charge : `pairing | allowlist | open | disabled` (par défaut : `pairing`).
 
-`channels.zalouser.allowFrom` accepte les identifiants ou les noms d'utilisateurs. Pendant l'onboarding, les noms sont résolus en identifiants en utilisant la recherche de contacts en cours de processus du plugin.
+`channels.zalouser.allowFrom` accepte les identifiants ou les noms d'utilisateur. Lors de la configuration, les noms sont résolus en identifiants à l'aide de la recherche de contacts intégrée du plugin.
 
 Approuver via :
 

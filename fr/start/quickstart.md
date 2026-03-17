@@ -14,8 +14,8 @@ title: "Quick start"
   <Card title="Getting Started" href="/fr/start/getting-started">
     Installez OpenClaw et lancez votre premier chat en quelques minutes.
   </Card>
-  <Card title="Onboarding Wizard" href="/fr/start/wizard">
-    Référence complète de l'assistant CLI et options avancées.
+  <Card title="Onboarding (CLI)" href="/fr/start/wizard">
+    Guide complet sur l'onboarding CLI et options avancées.
   </Card>
 </Columns>
 

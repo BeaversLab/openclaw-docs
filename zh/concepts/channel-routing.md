@@ -68,7 +68,7 @@ Config:
 }
 ```
 
-请参阅：[广播组](/en/broadcast-groups)。
+请参阅：[广播组](/zh/broadcast-groups)。
 
 ## Config overview
 

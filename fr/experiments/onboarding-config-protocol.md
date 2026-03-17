@@ -1,6 +1,6 @@
 ---
-summary: "Notes du protocole RPC pour l'assistant d'onboarding et le schéma de configuration"
-read_when: "Modification des étapes de l'assistant d'onboarding ou des points de terminaison du schéma de configuration"
+summary: "Notes du protocole RPC pour l'assistant de configuration et le schéma de configuration"
+read_when: "Modification des étapes de l'assistant de configuration ou des points de terminaison du schéma de configuration"
 title: "Protocole d'onboarding et de configuration"
 ---
 

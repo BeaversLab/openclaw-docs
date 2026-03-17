@@ -492,8 +492,8 @@ const needsNonImageSanitize =
    - Tester que `resolveEnvApiKey("kilocode")` renvoie la variable d'environnement correcte
 
 2. **Tests d'intégration :**
-   - Tester le flux d'intégration avec `--auth-choice kilocode-api-key`
-   - Tester l'intégration non interactive avec `--kilocode-api-key`
+   - Tester le flux de configuration avec `--auth-choice kilocode-api-key`
+   - Tester la configuration non interactive avec `--kilocode-api-key`
    - Tester la sélection du modèle avec le préfixe `kilocode/`
 
 3. **Tests E2E :**

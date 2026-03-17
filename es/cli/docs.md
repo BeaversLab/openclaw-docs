@@ -10,7 +10,7 @@ title: "docs"
 Buscar el índice de documentación en vivo.
 
 ```bash
-openclaw docs browser extension
+openclaw docs browser existing-session
 openclaw docs sandbox allowHostControl
 ```
 

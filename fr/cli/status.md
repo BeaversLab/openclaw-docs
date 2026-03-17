@@ -26,6 +26,7 @@ Notes :
 - Les informations de mise à jour s'affichent dans la vue d'ensemble ; si une mise à jour est disponible, le status affiche un conseil pour exécuter `openclaw update` (voir [Mise à jour](/fr/install/updating)).
 - Les surfaces de statut en lecture seule (`status`, `status --json`, `status --all`) résolvent les SecretRefs pris en charge pour leurs chemins de configuration ciblés lorsque cela est possible.
 - Si un SecretRef de channel pris en charge est configuré mais indisponible dans le chemin de commande actuel, le status reste en lecture seule et signale une sortie dégradée au lieu de planter. La sortie humaine affiche des avertissements tels que « configured token unavailable in this command path », et la sortie JSON inclut `secretDiagnostics`.
+- Lorsque la résolution de SecretRef locale à la commande réussit, le statut privilégie le snapshot résolu et supprime les marqueurs de channel « secret indisponible » transitoires de la sortie finale.
 
 import fr from "/components/footer/fr.mdx";
 

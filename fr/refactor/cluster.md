@@ -87,11 +87,11 @@ Risque :
 
 - Faible
 
-## 3. Onboarding prompt and config-patch steps
+## 3. Configuration des invites (prompt) et des étapes de correctifs de configuration (config-patch)
 
 Grande surface.
 
-De nombreux fichiers d'onboarding répètent :
+De nombreux fichiers de configuration se répètent :
 
 - résoudre l'ID de compte
 - demander les entrées de la liste d'autorisation
@@ -102,18 +102,18 @@ De nombreux fichiers d'onboarding répètent :
 
 Exemples forts :
 
-- `extensions/bluebubbles/src/onboarding.ts`
-- `extensions/googlechat/src/onboarding.ts`
-- `extensions/msteams/src/onboarding.ts`
-- `extensions/zalo/src/onboarding.ts`
-- `extensions/zalouser/src/onboarding.ts`
-- `extensions/nextcloud-talk/src/onboarding.ts`
-- `extensions/matrix/src/onboarding.ts`
-- `extensions/irc/src/onboarding.ts`
+- `extensions/bluebubbles/src/setup-surface.ts`
+- `extensions/googlechat/src/setup-surface.ts`
+- `extensions/msteams/src/setup-surface.ts`
+- `extensions/zalo/src/setup-surface.ts`
+- `extensions/zalouser/src/setup-surface.ts`
+- `extensions/nextcloud-talk/src/setup-surface.ts`
+- `extensions/matrix/src/setup-surface.ts`
+- `extensions/irc/src/setup-surface.ts`
 
 Helper seam existant :
 
-- `src/channels/plugins/onboarding/helpers.ts`
+- `src/channels/plugins/setup-wizard-helpers.ts`
 
 Forme d'extraction probable :
 

@@ -38,7 +38,7 @@ MiniMax destaca estas mejoras en M2.5:
 Habilite el complemento OAuth incluido y autentíquese:
 
 ```bash
-openclaw plugins enable minimax-portal-auth  # skip if already loaded.
+openclaw plugins enable minimax  # skip if already loaded.
 openclaw gateway restart  # restart if gateway is already running
 openclaw onboard --auth-choice minimax-portal
 ```
@@ -48,7 +48,7 @@ Se le pedirá que seleccione un punto final:
 - **Global** - Usuarios internacionales (`api.minimax.io`)
 - **CN** - Usuarios en China (`api.minimaxi.com`)
 
-Consulte el [README del complemento MiniMax OAuth](https://github.com/openclaw/openclaw/tree/main/extensions/minimax-portal-auth) para obtener detalles.
+Consulte el [README del complemento MiniMax](https://github.com/openclaw/openclaw/tree/main/extensions/minimax) para obtener más detalles.
 
 ### MiniMax M2.5 (clave de API)
 

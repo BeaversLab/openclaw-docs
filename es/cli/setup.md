@@ -1,7 +1,7 @@
 ---
 summary: "Referencia de CLI para `openclaw setup` (inicializar configuración + espacio de trabajo)"
 read_when:
-  - You’re doing first-run setup without the full onboarding wizard
+  - You’re doing first-run setup without full CLI onboarding
   - You want to set the default workspace path
 title: "configuración"
 ---
@@ -13,7 +13,7 @@ Inicializa `~/.openclaw/openclaw.json` y el espacio de trabajo del agente.
 Relacionado:
 
 - Para empezar: [Para empezar](/es/start/getting-started)
-- Asistente: [Incorporación](/es/start/onboarding)
+- Incorporación a la CLI: [Incorporación (CLI)](/es/start/wizard)
 
 ## Ejemplos
 
@@ -22,7 +22,7 @@ openclaw setup
 openclaw setup --workspace ~/.openclaw/workspace
 ```
 
-Para ejecutar el asistente mediante la configuración:
+Para ejecutar la incorporación mediante la configuración:
 
 ```bash
 openclaw setup --wizard

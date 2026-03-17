@@ -34,17 +34,19 @@ openclaw daemon uninstall
 
 ## Opciones comunes
 
-- `status`: `--url`, `--token`, `--password`, `--timeout`, `--no-probe`, `--deep`, `--json`
+- `status`: `--url`, `--token`, `--password`, `--timeout`, `--no-probe`, `--require-rpc`, `--deep`, `--json`
 - `install`: `--port`, `--runtime <node|bun>`, `--token`, `--force`, `--json`
-- ciclo de vida (`uninstall|start|stop|restart`): `--json`
+- lifecycle (`uninstall|start|stop|restart`): `--json`
 
 Notas:
 
-- `status` resuelve los SecretRefs de autenticación configurados para la autenticación de sonda cuando es posible.
-- En las instalaciones de Linux systemd, las comprobaciones de deriva de tokens `status` incluyen ambas fuentes de unidades `Environment=` y `EnvironmentFile=`.
-- Cuando la autenticación de token requiere un token y `gateway.auth.token` está gestionado por SecretRef, `install` valida que el SecretRef se pueda resolver, pero no persiste el token resuelto en los metadatos del entorno del servicio.
-- Si la autenticación de token requiere un token y el SecretRef del token configurado no se resuelve, la instalación falla cerrada.
-- Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está definido, la instalación se bloquea hasta que el modo se establezca explícitamente.
+- `status` resuelve las SecretRefs de autenticación configuradas para la autenticación de sonda cuando es posible.
+- Si una SecretRef de autenticación requerida no se resuelve en esta ruta de comando, `daemon status --json` informa `rpc.authWarning` cuando falla la conectividad/autenticación de la sonda; pase `--token`/`--password` explícitamente o resuelva primero el origen del secreto.
+- Si la sonda tiene éxito, se suprimen las advertencias de auth-ref no resueltas para evitar falsos positivos.
+- En las instalaciones de Linux systemd, las comprobaciones de token-drift de `status` incluyen los orígenes de la unidad tanto `Environment=` como `EnvironmentFile=`.
+- Cuando la autenticación de token requiere un token y `gateway.auth.token` está administrado por SecretRef, `install` valida que el SecretRef sea resoluble, pero no persiste el token resuelto en los metadatos del entorno de servicio.
+- Si la autenticación de token requiere un token y la SecretRef del token configurado no se resuelve, la instalación falla de forma cerrada.
+- Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está establecido, la instalación se bloquea hasta que el modo se establece explícitamente.
 
 ## Preferir
 

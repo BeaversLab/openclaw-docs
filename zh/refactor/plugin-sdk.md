@@ -28,7 +28,7 @@ title: "Plugin SDK 重构"
 - 配置辅助函数：`buildChannelConfigSchema`、`setAccountEnabledInConfigSection`、`deleteAccountFromConfigSection`、
   `applyAccountNameToChannelSection`。
 - 配对辅助函数：`PAIRING_APPROVED_MESSAGE`、`formatPairingApproveHint`。
-- 新手引导辅助函数：`promptChannelAccessConfig`、`addWildcardAllowFrom`、新手引导类型。
+- 设置入口点：宿主拥有的 `setup` + `setupWizard`；避免广泛的新手引导辅助。
 - 工具参数辅助函数：`createActionGate`、`readStringParam`、`readNumberParam`、`readReactionParams`、`jsonResult`。
 - 文档链接辅助函数：`formatDocsLink`。
 
@@ -211,7 +211,31 @@ export type PluginRuntime = {
 - 新的连接器模板仅依赖于 SDK + runtime。
 - 可以在不访问 core 源码的情况下开发和更新外部插件。
 
-相关文档：[Plugins](/en/tools/plugin)，[Channels](/en/channels/index)，[Configuration](/en/gateway/configuration)。
+相关文档：[插件](/zh/tools/plugin)、[渠道](/zh/channels/index)、[配置](/zh/gateway/configuration)。
+
+## 已实现的渠道拥有的接缝
+
+最近的重构工作拓宽了渠道插件契约，因此核心可以不再拥有
+渠道特定的 UX 和路由行为：
+
+- `messaging.buildCrossContextComponents`：渠道拥有的跨上下文 UI 标记
+  （例如 Discord 组件 v2 容器）
+- `messaging.enableInteractiveReplies`：渠道拥有的回复规范化切换
+  （例如 Slack 交互式回复）
+- `messaging.resolveOutboundSessionRoute`：渠道拥有的出站会话路由
+- `status.formatCapabilitiesProbe` / `status.buildCapabilitiesDiagnostics`：渠道拥有的
+  `/channels capabilities` 探针显示和额外的审计/范围
+- `threading.resolveAutoThreadId`：渠道拥有的同一对话自动线程化
+- `threading.resolveReplyTransport`：渠道拥有的回复与线程传递映射
+- `actions.requiresTrustedRequesterSender`：渠道拥有的特权操作信任门控
+- `execApprovals.*`：渠道拥有的执行审批界面状态、转发抑制、
+  待处理载荷 UX 和传递前挂钩
+- `lifecycle.onAccountConfigChanged` / `lifecycle.onAccountRemoved`：渠道拥有的
+  配置变更/移除时的清理
+- `allowlist.supportsScope`：渠道拥有的允许列表范围通告
+
+应优先使用这些挂钩，而不是在共享核心流中添加新的 `channel === "discord"` / `telegram`
+分支。
 
 import zh from "/components/footer/zh.mdx";
 

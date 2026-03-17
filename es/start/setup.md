@@ -9,8 +9,8 @@ title: "Configuración"
 # Configuración
 
 <Note>
-  Si está configurando por primera vez, comience con [Introducción](/es/start/getting-started). Para
-  obtener detalles sobre el asistente, consulte [Asistente de incorporación](/es/start/wizard).
+  Si está configurando por primera vez, comience con [Getting Started](/es/start/getting-started).
+  Para más detalles sobre la incorporación, consulte [Onboarding (CLI)](/es/start/wizard).
 </Note>
 
 Última actualización: 2026-01-01

@@ -30,8 +30,8 @@ openclaw onboard --non-interactive \
 
 添加 `--json` 以获取机器可读的摘要。
 
-使用 `--secret-input-mode ref` 在认证配置文件中存储环境变量引用，而不是明文值。
-在环境变量引用和配置的提供商引用（`file` 或 `exec`）之间进行交互式选择的功能，在新手引导向导流程中可用。
+使用 `--secret-input-mode ref` 在身份验证配置文件中存储环境变量支持的引用，而不是明文值。
+在环境变量引用和配置的提供商引用（`file` 或 `exec`）之间进行交互式选择的功能，在引导流程中可用。
 
 在非交互式 `ref` 模式下，必须在进程环境中设置提供商环境变量。
 如果没有匹配的环境变量，现在传递内联密钥标志将快速失败。
@@ -208,9 +208,9 @@ openclaw agents add work \
 
 ## 相关文档
 
-- 新手引导中心：[新手引导向导 (CLI)](/en/start/wizard)
-- 完整参考：[CLI 新手引导参考](/en/start/wizard-cli-reference)
-- 命令参考：[`openclaw onboard`](/en/cli/onboard)
+- 新手引导中心：[CLI (CLI)](/zh/start/wizard)
+- 完整参考：[CLI 设置参考](/zh/start/wizard-cli-reference)
+- 命令参考：[`openclaw onboard`](/zh/cli/onboard)
 
 import zh from "/components/footer/zh.mdx";
 

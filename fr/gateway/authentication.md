@@ -44,8 +44,8 @@ openclaw models status
 openclaw doctor
 ```
 
-Si vous préférez ne pas gérer les variables d'environnement vous-même, l'assistant de configuration (onboarding wizard) peut stocker
-les clés API pour une utilisation par le démon : `openclaw onboard`.
+Si vous préférez ne pas gérer les env vars vous-même, onboarding peut stocker
+les clés API pour l'utilisation du démon : `openclaw onboard`.
 
 Voir [Aide](/fr/help) pour plus de détails sur l'héritage des variables d'environnement (`env.shellEnv`,
 `~/.openclaw/.env`, systemd/launchd).

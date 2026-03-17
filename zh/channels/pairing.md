@@ -15,13 +15,13 @@ title: "配对"
 1. **私信配对**（谁被允许与机器人对话）
 2. **节点配对**（哪些设备/节点被允许加入网关网络）
 
-安全上下文：[安全](/en/gateway/security)
+安全上下文：[安全](/zh/gateway/security)
 
 ## 1) 私信配对（入站聊天访问权限）
 
 当频道配置了 私信 策略 `pairing` 时，未知发送者将获得一个短代码，并且在他们获得批准之前，其消息**不会被处理**。
 
-默认私信策略记录在：[安全](/en/gateway/security)
+默认私信策略记录在：[安全](/zh/gateway/security)
 
 配对代码：
 
@@ -98,16 +98,16 @@ openclaw devices reject <requestId>
 
 ## 相关文档
 
-- 安全模型 + 提示注入：[Security](/en/gateway/security)
-- 安全更新（运行 doctor）：[Updating](/en/install/updating)
+- 安全模型 + 提示注入：[Security](/zh/gateway/security)
+- 安全更新（运行 doctor）：[Updating](/zh/install/updating)
 - 通道配置：
-  - Telegram: [Telegram](/en/channels/telegram)
-  - WhatsApp: [WhatsApp](/en/channels/whatsapp)
-  - Signal: [Signal](/en/channels/signal)
-  - BlueBubbles (iMessage): [BlueBubbles](/en/channels/bluebubbles)
-  - iMessage (legacy): [iMessage](/en/channels/imessage)
-  - Discord: [Discord](/en/channels/discord)
-  - Slack: [Slack](/en/channels/slack)
+  - Telegram: [Telegram](/zh/channels/telegram)
+  - WhatsApp: [WhatsApp](/zh/channels/whatsapp)
+  - Signal: [Signal](/zh/channels/signal)
+  - BlueBubbles (iMessage): [BlueBubbles](/zh/channels/bluebubbles)
+  - iMessage (legacy): [iMessage](/zh/channels/imessage)
+  - Discord: [Discord](/zh/channels/discord)
+  - Slack: [Slack](/zh/channels/slack)
 
 import zh from "/components/footer/zh.mdx";
 

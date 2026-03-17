@@ -1,16 +1,16 @@
 ---
-summary: "Referencia completa para el flujo de integración de CLI, configuración de autenticación/modelo, resultados e elementos internos"
+summary: "Referencia completa del flujo de configuración de la CLI, configuración de autenticación/modelo, salidas e internos"
 read_when:
   - You need detailed behavior for openclaw onboard
   - You are debugging onboarding results or integrating onboarding clients
-title: "Referencia de integración de CLI"
+title: "Referencia de configuración de la CLI"
 sidebarTitle: "Referencia de CLI"
 ---
 
-# Referencia de integración de CLI
+# Referencia de configuración de la CLI
 
-Esta página es la referencia completa de `openclaw onboard`.
-Para ver la guía breve, consulte [Asistente de integración (CLI)](/es/start/wizard).
+Esta página es la referencia completa para `openclaw onboard`.
+Para la guía breve, consulte [Incorporación (CLI)](/es/start/wizard).
 
 ## Lo que hace el asistente
 
@@ -48,17 +48,17 @@ No instala ni modifica nada en el host remoto.
     - Siembra archivos de espacio de trabajo necesarios para el ritual de arranque inicial.
     - Diseño del espacio de trabajo: [Agent workspace](/es/concepts/agent-workspace).
   </Step>
-  <Step title="Gateway">
-    - Solicita puerto, enlace, modo de autenticación y exposición a tailscale.
-    - Recomendado: mantener la autenticación por token habilitada incluso para el bucle local (loopback) para que los clientes WS locales deban autenticarse.
-    - En modo token, la incorporación interactiva ofrece:
+  <Step title="Puerta de enlace">
+    - Solicita puerto, enlace, modo de autenticación y exposición de tailscale.
+    - Recomendado: mantenga la autenticación por token habilitada incluso para el bucle local (loopback) para que los clientes WS locales deban autenticarse.
+    - En modo token, la configuración interactiva ofrece:
       - **Generar/guardar token en texto plano** (predeterminado)
       - **Usar SecretRef** (opcional)
-    - En modo contraseña, la incorporación interactiva también admite almacenamiento en texto plano o SecretRef.
+    - En modo contraseña, la configuración interactiva también admite almacenamiento en texto plano o SecretRef.
     - Ruta de SecretRef de token no interactivo: `--gateway-token-ref-env <ENV_VAR>`.
       - Requiere una variable de entorno no vacía en el entorno del proceso de incorporación.
       - No se puede combinar con `--gateway-token`.
-    - Desactive la autenticación solo si confía completamente en todos los procesos locales.
+    - Desactive la autenticación solo si confía plenamente en cada proceso local.
     - Los enlaces que no son de bucle local (non-loopback) aún requieren autenticación.
   </Step>
   <Step title="Channels">
@@ -219,8 +219,8 @@ Rutas de credenciales y perfiles:
 Modo de almacenamiento de credenciales:
 
 - El comportamiento de incorporación predeterminado persiste las claves de API como valores de texto sin formato en los perfiles de autenticación.
-- `--secret-input-mode ref` habilita el modo de referencia en lugar del almacenamiento de clave de texto sin formato.
-  En la incorporación interactiva, puede elegir:
+- `--secret-input-mode ref` habilita el modo de referencia en lugar del almacenamiento de claves en texto plano.
+  En la configuración interactiva, puede elegir:
   - referencia de variable de entorno (por ejemplo, `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`)
   - referencia de proveedor configurado (`file` o `exec`) con alias de proveedor + id
 - El modo de referencia interactiva ejecuta una validación previa rápida antes de guardar.
@@ -232,7 +232,7 @@ Modo de almacenamiento de credenciales:
   - Las banderas de clave en línea (por ejemplo, `--openai-api-key`) requieren que se establezca esa variable de entorno; de lo contrario, la incorporación falla rápidamente.
   - Para proveedores personalizados, el modo `ref` no interactivo almacena `models.providers.<id>.apiKey` como `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
   - En ese caso de proveedor personalizado, `--custom-api-key` requiere que se establezca `CUSTOM_API_KEY`; de lo contrario, la incorporación falla rápidamente.
-- Las credenciales de autenticación de Gateway admiten opciones de texto sin formato y SecretRef en la incorporación interactiva:
+- Las credenciales de autenticación de la puerta de enlace admiten opciones de texto plano y SecretRef en la configuración interactiva:
   - Modo de token: **Generar/almacenar token de texto sin formato** (predeterminado) o **Usar SecretRef**.
   - Modo de contraseña: texto sin formato o SecretRef.
 - Ruta de SecretRef de token no interactivo: `--gateway-token-ref-env <ENV_VAR>`.
@@ -268,8 +268,9 @@ Las credenciales de WhatsApp se guardan en `~/.openclaw/credentials/whatsapp/<ac
 Las sesiones se almacenan en `~/.openclaw/agents/<agentId>/sessions/`.
 
 <Note>
-  Algunos canales se entregan como complementos. Cuando se seleccionan durante el onboarding, el
-  asistente solicita instalar el complemento (npm o ruta local) antes de la configuración del canal.
+  Algunos canales se entregan como complementos (plugins). Cuando se seleccionan durante la
+  configuración, el asistente solicita instalar el complemento (npm o ruta local) antes de la
+  configuración del canal.
 </Note>
 
 RPC del asistente de puerta de enlace:
@@ -292,7 +293,7 @@ Comportamiento de configuración de Signal:
 
 ## Documentos relacionados
 
-- Centro de onboarding: [Asistente de onboarding (CLI)](/es/start/wizard)
+- Centro de incorporación: [Incorporación (CLI)](/es/start/wizard)
 - Automatización y scripts: [Automatización de CLI](/es/start/wizard-cli-automation)
 - Referencia de comandos: [`openclaw onboard`](/es/cli/onboard)
 

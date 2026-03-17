@@ -310,10 +310,10 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 
 ## 相关文档
 
-- [Exec 工具](/en/tools/exec)
-- [Exec approvals](/en/tools/exec-approvals)
-- [Nodes](/en/nodes)
-- [Elevated mode](/en/tools/elevated)
+- [Exec 工具](/zh/tools/exec)
+- [Exec approvals](/zh/tools/exec-approvals)
+- [Nodes](/zh/nodes)
+- [Elevated mode](/zh/tools/elevated)
 
 import zh from "/components/footer/zh.mdx";
 

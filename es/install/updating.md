@@ -20,7 +20,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash
 
 Notas:
 
-- Añada `--no-onboard` si no quiere que el asistente de configuración inicial se ejecute de nuevo.
+- Agregue `--no-onboard` si no quiere que se ejecute la incorporación nuevamente.
 - Para **instalaciones desde fuente**, use:
 
   ```bash

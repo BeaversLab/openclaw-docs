@@ -27,7 +27,8 @@ Extraction locale (lors de l'exécution depuis un dépôt git) :
 openclaw plugins install ./extensions/matrix
 ```
 
-Si vous choisissez Matrix lors de la configuration/intégration et qu'une extraction git est détectée, OpenClaw proposera automatiquement le chemin d'installation local.
+Si vous choisissez Matrix lors de la configuration et qu'une extraction git est détectée,
+OpenClaw proposera automatiquement le chemin d'installation local.
 
 Détails : [Plugins](/fr/tools/plugin)
 
@@ -65,7 +66,7 @@ Détails : [Plugins](/fr/tools/plugin)
    - Si les deux sont définis, la configuration prend le pas.
    - Avec un jeton d'accès : l'ID utilisateur est récupéré automatiquement via `/whoami`.
    - Une fois défini, `channels.matrix.userId` doit être l'ID Matrix complet (exemple : `@bot:example.org`).
-5. Redémarrez la passerelle (ou terminez l'intégration).
+5. Redémarrez la passerelle (ou terminez la configuration).
 6. Démarrez une discussion privée avec le bot ou invitez-le dans une salle depuis n'importe quel client Matrix
    (Element, Beeper, etc. ; voir [https://matrix.org/ecosystem/clients/](https://matrix.org/ecosystem/clients/)). Beeper nécessite le chiffrement de bout en bout,
    alors définissez `channels.matrix.encryption: true` et vérifiez l'appareil.

@@ -8,7 +8,7 @@ title: "Logging"
 
 # 日志记录
 
-有关面向用户的概述（CLI + 控制 UI + 配置），请参阅 [/logging](/en/logging)。
+有关面向用户的概述（CLI + 控制 UI + 配置），请参阅 [/logging](/zh/logging)。
 
 OpenClaw 有两个日志“平面”：
 

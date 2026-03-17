@@ -106,11 +106,11 @@ openclaw logs --follow
 
 相关：
 
-- [/nodes/index](/en/nodes/index)
-- [/nodes/camera](/en/nodes/camera)
-- [/nodes/location-command](/en/nodes/location-command)
-- [/tools/exec-approvals](/en/tools/exec-approvals)
-- [/gateway/pairing](/en/gateway/pairing)
+- [/nodes/index](/zh/nodes/index)
+- [/nodes/camera](/zh/nodes/camera)
+- [/nodes/location-command](/zh/nodes/location-command)
+- [/tools/exec-approvals](/zh/tools/exec-approvals)
+- [/gateway/pairing](/zh/gateway/pairing)
 
 import zh from "/components/footer/zh.mdx";
 

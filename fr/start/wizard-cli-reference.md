@@ -1,16 +1,16 @@
 ---
-summary: "Référence complète pour le flux d'onboarding CLI, la configuration auth/modèle, les sorties et les éléments internes"
+summary: "Référence complète pour le flux de configuration CLI, la configuration auth/modèle, les sorties et les éléments internes"
 read_when:
   - You need detailed behavior for openclaw onboard
   - You are debugging onboarding results or integrating onboarding clients
-title: "CLI Onboarding Reference"
+title: "Référence de configuration CLI"
 sidebarTitle: "CLI reference"
 ---
 
-# CLI Onboarding Reference
+# Référence de configuration CLI
 
 Cette page est la référence complète pour `openclaw onboard`.
-Pour le guide court, consultez [Onboarding Wizard (CLI)](/fr/start/wizard).
+Pour le guide court, consultez [Onboarding (CLI)](/fr/start/wizard).
 
 ## Ce que fait l'assistant
 
@@ -49,16 +49,16 @@ Il n'installe ni ne modifie quoi que ce soit sur l'hôte distant.
     - Structure de l'espace de travail : [Agent workspace](/fr/concepts/agent-workspace).
   </Step>
   <Step title="Gateway">
-    - Demande le port, la liaison, le mode d'authentification et l'exposition Tailscale.
+    - Invite à entrer le port, la liaison, le mode d'authentification et l'exposition Tailscale.
     - Recommandé : gardez l'authentification par jeton activée même pour le bouclage local afin que les clients WS locaux doivent s'authentifier.
-    - En mode jeton, l'onboarding interactif offre :
-      - **Générer/stocker un jeton en texte brut** (par défaut)
+    - En mode jeton, la configuration interactive offre :
+      - **Générer/stocker un jeton en texte clair** (par défaut)
       - **Utiliser SecretRef** (optionnel)
-    - En mode mot de passe, l'onboarding interactif prend également en charge le stockage en texte brut ou par SecretRef.
-    - Chemin SecretRef pour jeton non interactif : `--gateway-token-ref-env <ENV_VAR>`.
-      - Nécessite une env var non vide dans l'environnement du processus d'onboarding.
+    - En mode mot de passe, la configuration interactive prend également en charge le stockage en texte clair ou SecretRef.
+    - Chemin SecretRef de jeton non interactif : `--gateway-token-ref-env <ENV_VAR>`.
+      - Nécessite une variable d'environnement non vide dans l'environnement de processus d'onboarding.
       - Ne peut pas être combiné avec `--gateway-token`.
-    - Désactivez l'authentification uniquement si vous faites entièrement confiance à chaque processus local.
+    - Désactivez l'authentification uniquement si vous faites pleinement confiance à chaque processus local.
     - Les liaisons non bouclage local nécessitent toujours une authentification.
   </Step>
   <Step title="Chaînes">
@@ -219,8 +219,8 @@ Chemins des identifiants et des profils :
 Mode de stockage des informations d'identification :
 
 - Le comportement d'onboarding par défaut enregistre les clés API en tant que valeurs en clair dans les profils d'auth.
-- `--secret-input-mode ref` active le mode référence au lieu du stockage de clé en clair.
-  Lors de l'onboarding interactif, vous pouvez choisir :
+- `--secret-input-mode ref` active le mode de référence au lieu du stockage de clé en texte clair.
+  Dans la configuration interactive, vous pouvez choisir :
   - réf de variable d'environnement (par exemple `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`)
   - réf de provider configuré (`file` ou `exec`) avec l'alias + l'identifiant du provider
 - Le mode référence interactif exécute une validation préliminaire rapide avant l'enregistrement.
@@ -232,7 +232,7 @@ Mode de stockage des informations d'identification :
   - Les indicateurs de clé en ligne (par exemple `--openai-api-key`) nécessitent que cette variable d'environnement soit définie ; sinon, l'onboarding échoue rapidement.
   - Pour les providers personnalisés, le mode `ref` non interactif stocke `models.providers.<id>.apiKey` sous la forme `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
   - Dans ce cas de provider personnalisé, `--custom-api-key` nécessite que `CUSTOM_API_KEY` soit défini ; sinon, l'onboarding échoue rapidement.
-- Les informations d'auth du Gateway prennent en charge les choix en clair et SecretRef lors de l'onboarding interactif :
+- Les identifiants d'authentification Gateway prennent en charge les choix en texte clair et SecretRef dans la configuration interactive :
   - Mode Jeton : **Générer/stocker le jeton en clair** (par défaut) ou **Utiliser SecretRef**.
   - Mode Mot de passe : en clair ou SecretRef.
 - Chemin SecretRef pour jeton non interactif : `--gateway-token-ref-env <ENV_VAR>`.
@@ -268,8 +268,8 @@ Les identifiants WhatsApp sont placés sous `~/.openclaw/credentials/whatsapp/<a
 Les sessions sont stockées sous `~/.openclaw/agents/<agentId>/sessions/`.
 
 <Note>
-  Certains canaux sont fournis sous forme de plugins. Lorsqu'ils sont sélectionnés lors de
-  l'onboarding, l'assistant invite à installer le plugin (npm ou chemin local) avant la
+  Certains canaux sont fournis sous forme de plugins. Lorsqu'ils sont sélectionnés lors de la
+  configuration, l'assistant invite à installer le plugin (npm ou chemin local) avant la
   configuration du canal.
 </Note>
 
@@ -293,7 +293,7 @@ Comportement de configuration Signal :
 
 ## Documentation connexe
 
-- Hub d'onboarding : [Assistant d'onboarding (CLI)](/fr/start/wizard)
+- Hub d'onboarding : [Onboarding (CLI)](/fr/start/wizard)
 - Automatisation et scripts : [Automatisation CLI](/fr/start/wizard-cli-automation)
 - Référence de commande : [`openclaw onboard`](/fr/cli/onboard)
 

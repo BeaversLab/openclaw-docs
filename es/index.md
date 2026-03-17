@@ -28,8 +28,8 @@ title: "OpenClaw"
   <Card title="Empezar" href="/es/start/getting-started" icon="rocket">
     Instala OpenClaw y pon en marcha la puerta de enlace en minutos.
   </Card>
-  <Card title="Ejecutar el asistente" href="/es/start/wizard" icon="sparkles">
-    Configuración guiada con `openclaw onboard` y flujos de emparejamiento.
+  <Card title="Ejecutar incorporación" href="/es/start/wizard" icon="sparkles">
+    Configuración guiada con `openclaw onboard` y flujos de vinculación.
   </Card>
   <Card title="Abrir la interfaz de control" href="/es/web/control-ui" icon="layout-dashboard">
     Inicia el tablero del navegador para chatear, configurar y gestionar sesiones.

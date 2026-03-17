@@ -200,7 +200,7 @@ openclaw message send --channel discord \
   --components '{"text":"Choose a path","blocks":[{"type":"actions","buttons":[{"label":"Approve","style":"success"},{"label":"Decline","style":"danger"}]}]}'
 ```
 
-查看 [Discord 组件](/en/channels/discord#interactive-components) 以获取完整架构。
+查看 [Discord 组件](/zh/channels/discord#interactive-components) 以获取完整架构。
 
 创建 Discord 投票：
 

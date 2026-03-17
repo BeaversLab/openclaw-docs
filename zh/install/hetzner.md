@@ -23,7 +23,7 @@ Hetzner 定价可能会有所变化；选择最小的 Debian/Ubuntu VPS，如果
 - 保持严格的分离：专用的 VPS/运行时 + 专用账户；该主机上不得有个人 Apple/Google/浏览器/密码管理器配置文件。
 - 如果用户之间存在敌对关系，请按 Gateway/主机/操作系统用户进行拆分。
 
-请参阅 [安全性](/en/gateway/security) 和 [VPS 托管](/en/vps)。
+请参阅 [安全性](/zh/gateway/security) 和 [VPS 托管](/zh/vps)。
 
 ## 我们要做什么（简单来说）？
 
@@ -40,7 +40,7 @@ Hetzner 定价可能会有所变化；选择最小的 Debian/Ubuntu VPS，如果
 
 本指南假设在 Hetzner 上使用 Ubuntu 或 Debian。  
 如果您使用的是其他 Linux VPS，请相应地映射软件包。
-有关通用的 Docker 流程，请参阅 [Docker](/en/install/docker)。
+有关通用的 Docker 流程，请参阅 [Docker](/zh/install/docker)。
 
 ---
 
@@ -206,10 +206,10 @@ services:
 
 使用共享运行时指南了解通用的 Docker 主机流程：
 
-- [将所需的二进制文件构建到镜像中](/en/install/docker-vm-runtime#bake-required-binaries-into-the-image)
-- [构建并启动](/en/install/docker-vm-runtime#build-and-launch)
-- [什么内容持久化在哪里](/en/install/docker-vm-runtime#what-persists-where)
-- [更新](/en/install/docker-vm-runtime#updates)
+- [将所需的二进制文件构建到镜像中](/zh/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+- [构建并启动](/zh/install/docker-vm-runtime#build-and-launch)
+- [什么内容持久化在哪里](/zh/install/docker-vm-runtime#what-persists-where)
+- [更新](/zh/install/docker-vm-runtime#updates)
 
 ---
 
@@ -229,7 +229,7 @@ ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
 
 ---
 
-共享持久化映射位于 [Docker VM Runtime](/en/install/docker-vm-runtime#what-persists-where)。
+共享持久化映射位于 [Docker VM Runtime](/zh/install/docker-vm-runtime#what-persists-where)。
 
 ## 基础设施即代码 (Terraform)
 

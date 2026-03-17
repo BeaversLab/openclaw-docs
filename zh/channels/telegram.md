@@ -10,13 +10,13 @@ title: "Telegram"
 状态：通过 grammY 实现的机器人私信和群组功能已可用于生产环境。长轮询是默认模式；Webhook 模式是可选的。
 
 <CardGroup cols={3}>
-  <Card title="Pairing" icon="link" href="/en/channels/pairing">
+  <Card title="Pairing" icon="link" href="/zh/channels/pairing">
     Telegram 的默认私信策略是配对。
   </Card>
-  <Card title="Channel 故障排除" icon="wrench" href="/en/channels/troubleshooting">
+  <Card title="Channel 故障排除" icon="wrench" href="/zh/channels/troubleshooting">
     跨渠道诊断和修复手册。
   </Card>
-  <Card title="Gateway configuration" icon="settings" href="/en/gateway/configuration">
+  <Card title="Gateway configuration" icon="settings" href="/zh/gateway/configuration">
     完整的渠道配置模式和示例。
   </Card>
 </CardGroup>
@@ -106,7 +106,7 @@ openclaw pairing approve telegram <CODE>
 ## 访问控制和激活
 
 <Tabs>
-  <Tab title="私信 policy">
+  <Tab title="私信策略">
     `channels.telegram.dmPolicy` 控制私信访问权限：
 
     - `pairing`（默认）
@@ -114,19 +114,19 @@ openclaw pairing approve telegram <CODE>
     - `open`（要求 `allowFrom` 包含 `"*"`）
     - `disabled`
 
-    `channels.telegram.allowFrom` 接受数值形式的 Telegram 用户 ID。接受并标准化 `telegram:` / `tg:` 前缀。
-    如果 `allowFrom` 为空，`dmPolicy: "allowlist"` 将阻止所有私信，并且会被配置验证拒绝。
-    新手引导向导接受 `@username` 输入并将其解析为数值 ID。
-    如果您升级了配置且其中包含 `@username` 白名单条目，请运行 `openclaw doctor --fix` 进行解析（尽力而为；需要 Telegram 机器人令牌）。
-    如果您之前依赖配对存储白名单文件，`openclaw doctor --fix` 可以在白名单流程中将条目恢复到 `channels.telegram.allowFrom`（例如当 `dmPolicy: "allowlist"` 尚无明确 ID 时）。
+    `channels.telegram.allowFrom` 接受数字 Telegram 用户 ID。接受 `telegram:` / `tg:` 前缀并进行标准化。
+    带有空 `allowFrom` 的 `dmPolicy: "allowlist"` 会阻止所有私信，且会被配置验证拒绝。
+    新手引导接受 `@username` 输入并将其解析为数字 ID。
+    如果您已升级且配置包含 `@username` 白名单条目，请运行 `openclaw doctor --fix` 来解析它们（尽力而为；需要 Telegram bot 令牌）。
+    如果您之前依赖 pairing-store 白名单文件，`openclaw doctor --fix` 可以在白名单流程中将条目恢复到 `channels.telegram.allowFrom` 中（例如当 `dmPolicy: "allowlist"` 尚无明确 ID 时）。
 
-    对于单人拥有的机器人，建议使用带有明确数值 `allowFrom` ID 的 `dmPolicy: "allowlist"`，以使配置中的访问策略持久化（而不是依赖之前的配对批准）。
+    对于单一所有者的 bot，首选带有明确数字 `allowFrom` ID 的 `dmPolicy: "allowlist"`，以在配置中保持访问策略持久（而不是依赖之前的配对批准）。
 
     ### 查找您的 Telegram 用户 ID
 
-    更安全（无第三方机器人）：
+    更安全的方法（无第三方 bot）：
 
-    1. 向您的机器人发送私信。
+    1. 向您的 bot 发送私信。
     2. 运行 `openclaw logs --follow`。
     3. 阅读 `from.id`。
 
@@ -349,7 +349,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     2. 将代码粘贴到 iOS 应用中
     3. `/pair approve` 批准最新的待处理请求
 
-    更多详情：[配对](/en/channels/pairing#pair-via-telegram-recommended-for-ios)。
+    更多详情：[配对](/zh/channels/pairing#pair-via-telegram-recommended-for-ios)。
 
   </Accordion>
 
@@ -440,7 +440,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     注意：`edit` 和 `topic-create` 目前默认已启用，并且没有单独的 `channels.telegram.actions.*` 开关。
     运行时发送使用活动的配置/机密快照（启动/重新加载），因此操作路径不会在每次发送时执行临时的 SecretRef 重新解析。
 
-    反应移除语义：[/tools/reactions](/en/tools/reactions)
+    反应移除语义：[/tools/reactions](/zh/tools/reactions)
 
   </Accordion>
 
@@ -819,7 +819,7 @@ openclaw message poll --channel telegram --target -1001234567890:topic:42 \
 
     内联批准按钮还取决于 `channels.telegram.capabilities.inlineButtons` 是否允许目标界面 (`dm`、`group` 或 `all`)。
 
-    相关文档：[Exec approvals](/en/tools/exec-approvals)
+    相关文档：[Exec approvals](/zh/tools/exec-approvals)
 
   </Accordion>
 </AccordionGroup>
@@ -892,7 +892,7 @@ dig +short api.telegram.org AAAA
   </Accordion>
 </AccordionGroup>
 
-更多帮助：[渠道故障排除](/en/channels/troubleshooting)。
+更多帮助：[渠道故障排除](/zh/channels/troubleshooting)。
 
 ## Telegram 配置参考指针
 
@@ -924,7 +924,7 @@ dig +short api.telegram.org AAAA
   - `channels.telegram.groups.<id>.topics.<threadId>.agentId`：将此主题路由到特定代理（覆盖群组级别和绑定路由）。
 - `channels.telegram.groups.<id>.topics.<threadId>.groupPolicy`：groupPolicy（`open | allowlist | disabled`）的每主题覆盖设置。
 - `channels.telegram.groups.<id>.topics.<threadId>.requireMention`：每主题提及门控覆盖设置。
-- `bindings[]` 顶级字段包含 `type: "acp"` 和规范主题 ID `chatId:topic:topicId` 在 `match.peer.id` 中：持久化 ACP 主题绑定字段（参见 [ACP Agents](/en/tools/acp-agents#channel-specific-settings)）。
+- `bindings[]` 顶级字段包含 `type: "acp"` 和规范主题 ID `chatId:topic:topicId` 在 `match.peer.id` 中：持久化 ACP 主题绑定字段（参见 [ACP Agents](/zh/tools/acp-agents#channel-specific-settings)）。
 - `channels.telegram.direct.<id>.topics.<threadId>.agentId`：将私信主题路由到特定代理（行为与论坛主题相同）。
 - `channels.telegram.execApprovals.enabled`：为此帐户启用 Telegram 作为基于聊天的 exec 审批客户端。
 - `channels.telegram.execApprovals.approvers`：允许批准或拒绝 exec 请求的 Telegram 用户 ID。启用 exec 批准时为必需项。
@@ -957,7 +957,7 @@ dig +short api.telegram.org AAAA
 - `channels.telegram.reactionNotifications`：`off | own | all` —— 控制哪些反应触发系统事件（未设置时默认：`own`）。
 - `channels.telegram.reactionLevel`：`off | ack | minimal | extensive` —— 控制代理的反应能力（未设置时默认：`minimal`）。
 
-- [配置参考 - Telegram](/en/gateway/configuration-reference#telegram)
+- [配置参考 - Telegram](/zh/gateway/configuration-reference#telegram)
 
 Telegram 特有的高信噪比字段：
 
@@ -976,10 +976,10 @@ Telegram 特有的高信噪比字段：
 
 ## 相关
 
-- [配对](/en/channels/pairing)
-- [通道路由](/en/channels/channel-routing)
-- [多智能体路由](/en/concepts/multi-agent)
-- [故障排除](/en/channels/troubleshooting)
+- [配对](/zh/channels/pairing)
+- [通道路由](/zh/channels/channel-routing)
+- [多智能体路由](/zh/concepts/multi-agent)
+- [故障排除](/zh/channels/troubleshooting)
 
 import zh from "/components/footer/zh.mdx";
 

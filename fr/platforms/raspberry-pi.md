@@ -321,7 +321,7 @@ Puisque le Pi n'est que le Gateway (les modèles tournent dans le cloud), utilis
 
 ## Démarrage automatique au démarrage
 
-L'assistant de configuration (onboarding) configure cela, mais pour vérifier :
+L'onboarding configure cela, mais pour vérifier :
 
 ```bash
 # Check service is enabled

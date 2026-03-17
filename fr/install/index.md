@@ -37,7 +37,7 @@ Vous avez déjà suivi [Getting Started](/fr/start/getting-started) ? Vous êtes
 
 <AccordionGroup>
   <Accordion title="Script d'installation" icon="rocket" defaultOpen>
-    Télécharge la CLI, l'installe globalement via npm et lance l'assistant de configuration.
+    Télécharge le CLI, l'installe globalement via npm et lance l'onboarding.
 
     <Tabs>
       <Tab title="macOS / Linux / WSL2">
@@ -52,9 +52,9 @@ Vous avez déjà suivi [Getting Started](/fr/start/getting-started) ? Vous êtes
       </Tab>
     </Tabs>
 
-    C'est tout — le script gère la détection de Node, l'installation et la configuration.
+    C'est tout — le script gère la détection de Node, l'installation et l'onboarding.
 
-    Pour ignorer la configuration et installer uniquement le binaire :
+    Pour ignorer l'onboarding et simplement installer le binaire :
 
     <Tabs>
       <Tab title="macOS / Linux / WSL2">
@@ -69,7 +69,7 @@ Vous avez déjà suivi [Getting Started](/fr/start/getting-started) ? Vous êtes
       </Tab>
     </Tabs>
 
-    Pour tous les indicateurs, variables d'environnement et options d'automatisation/CI, voir [Installer internals](/fr/install/installer).
+    Pour tous les drapeaux, variables d'environnement et options d'automatisation CI, consultez [Installer internals](/fr/install/installer).
 
   </Accordion>
 

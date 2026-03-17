@@ -121,21 +121,21 @@ curl -s http://127.0.0.1:18791/tabs
 | `browser.attachOnly`     | Ne pas lancer le navigateur, s'attacher uniquement à un existant                      | `false`                                                                               |
 | `browser.cdpPort`        | Port du protocole Chrome DevTools                                                     | `18800`                                                                               |
 
-### Problème : "Le relais de l'extension Chrome fonctionne, mais aucun onglet n'est connecté"
+### Problème : « Aucun onglet Chrome trouvé pour profile=\"user\" »
 
-Vous utilisez un profil de relais d'extension. Il s'attend à ce que l'extension de navigateur OpenClaw soit attachée à un onglet actif.
+Vous utilisez un profil `existing-session` / Chrome MCP. OpenClaw peut voir le Chrome local,
+mais il n'y a aucun onglet ouvert auquel se connecter.
 
 Options de correction :
 
-1. **Utilisez le navigateur géré :** `openclaw browser start --browser-profile openclaw`
+1. **Utiliser le navigateur géré :** `openclaw browser start --browser-profile openclaw`
    (ou définissez `browser.defaultProfile: "openclaw"`).
-2. **Utiliser le relais d'extension :** installez l'extension, ouvrez un onglet et cliquez sur
-   l'icône de l'extension OpenClaw pour l'attacher.
+2. **Utiliser Chrome MCP :** assurez-vous que le Chrome local est en cours d'exécution avec au moins un onglet ouvert, puis réessayez avec `--browser-profile user`.
 
 Notes :
 
-- Le profil `chrome-relay` utilise votre **navigateur système Chromium par défaut** lorsque cela est possible.
-- Les profils `openclaw` locaux attribuent automatiquement `cdpPort`/`cdpUrl` ; ne définissez ces valeurs que pour le CDP distant.
+- `user` est réservé à l'hôte. Pour les serveurs Linux, les conteneurs ou les hôtes distants, préférez les profils CDP.
+- Les profils locaux `openclaw` attribuent automatiquement `cdpPort`/`cdpUrl` ; ne définissez ces valeurs que pour le CDP distant.
 
 import fr from "/components/footer/fr.mdx";
 

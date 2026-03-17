@@ -321,7 +321,7 @@ Dado que la Pi es solo la Gateway (los modelos se ejecutan en la nube), utiliza 
 
 ## Inicio Automático al Arrancar
 
-El asistente de configuración inicial (onboarding) lo configura, pero para verificar:
+La incorporación lo configura, pero para verificar:
 
 ```bash
 # Check service is enabled

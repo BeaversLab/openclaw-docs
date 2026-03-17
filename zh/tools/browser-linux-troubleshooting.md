@@ -121,21 +121,20 @@ curl -s http://127.0.0.1:18791/tabs
 | `browser.attachOnly`     | 不启动浏览器，仅附加到现有的                                      | `false`                                         |
 | `browser.cdpPort`        | Chrome DevTools Protocol 端口                                     | `18800`                                         |
 
-### 问题：“Chrome 扩展程序中继正在运行，但没有连接任何标签页”
+### 问题："未找到 profile=\"user\" 的 Chrome 标签页"
 
-您正在使用扩展中继配置文件。它需要将 OpenClaw 浏览器扩展附加到一个活跃的标签页。
+您正在使用一个 `existing-session` / Chrome MCP 配置文件。OpenClaw 可以看到本地 Chrome，但没有打开的标签页可供附加。
 
 修复选项：
 
 1. **使用托管浏览器：** `openclaw browser start --browser-profile openclaw`
    （或设置 `browser.defaultProfile: "openclaw"`）。
-2. **使用扩展中继：** 安装扩展，打开一个标签页，然后点击
-   OpenClaw 扩展图标以将其附加。
+2. **使用 Chrome MCP：** 确保本地 Chrome 正在运行且至少打开了一个标签页，然后使用 `--browser-profile user` 重试。
 
 注：
 
-- `chrome-relay` 配置文件在可能的情况下会使用您的**系统默认 Chromium 浏览器**。
-- 本地 `openclaw` 配置文件会自动分配 `cdpPort`/`cdpUrl`；仅针对远程 CDP 设置这些项。
+- `user` 仅限主机。对于 Linux 服务器、容器或远程主机，建议使用 CDP 配置文件。
+- 本地 `openclaw` 配置文件会自动分配 `cdpPort`/`cdpUrl`；仅在远程 CDP 时设置这些参数。
 
 import zh from "/components/footer/zh.mdx";
 

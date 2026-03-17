@@ -28,7 +28,7 @@ Descarga local (al ejecutar desde un repositorio git):
 openclaw plugins install ./extensions/mattermost
 ```
 
-Si elige Mattermost durante la configuración/incorporación y se detecta una descarga de git,
+Si eliges Mattermost durante la configuración y se detecta una comprobación de git,
 OpenClaw ofrecerá la ruta de instalación local automáticamente.
 
 Detalles: [Plugins](/es/tools/plugin)

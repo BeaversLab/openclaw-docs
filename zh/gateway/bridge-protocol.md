@@ -13,7 +13,7 @@ title: "Bridge Protocol"
 应改用统一的 Gateway 网关 WebSocket 协议。
 
 如果您正在构建 operator 或 node client，请使用
-[Gateway 网关 protocol](/en/gateway/protocol)。
+[Gateway 网关 protocol](/zh/gateway/protocol)。
 
 **注意：** 目前的 OpenClaw 版本不再包含 TCP 桥接监听器；保留此文档仅供参考。旧版 `bridge.*` 配置键不再是配置架构的一部分。
 

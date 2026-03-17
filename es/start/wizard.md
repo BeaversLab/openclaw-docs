@@ -1,17 +1,17 @@
 ---
-summary: "Asistente de incorporación por CLI: configuración guiada para puerta de enlace, espacio de trabajo, canales y habilidades"
+summary: "Incorporación (CLI): configuración guiada para puerta de enlace, espacio de trabajo, canales y habilidades"
 read_when:
-  - Running or configuring the onboarding wizard
+  - Running or configuring CLI onboarding
   - Setting up a new machine
-title: "Asistente de incorporación (CLI)"
+title: "Incorporación (CLI)"
 sidebarTitle: "Incorporación: CLI"
 ---
 
-# Asistente de incorporación (CLI)
+# Incorporación (CLI)
 
-El asistente de incorporación es la forma **recomendada** de configurar OpenClaw en macOS,
-Linux o Windows (vía WSL2; muy recomendado).
-Configura una puerta de enlace local o una conexión de puerta de enlace remota, además de canales, habilidades
+La incorporación mediante CLI es la forma **recomendada** de configurar OpenClaw en macOS,
+Linux o Windows (a través de WSL2; muy recomendado).
+Configura una puerta de enlace local o una conexión a una puerta de enlace remota, además de canales, habilidades
 y valores predeterminados del espacio de trabajo en un flujo guiado.
 
 ```bash
@@ -36,34 +36,34 @@ openclaw agents add <name>
 </Note>
 
 <Tip>
-  El asistente de incorporación incluye un paso de búsqueda web donde puedes elegir un proveedor
-  (Perplexity, Brave, Gemini, Grok o Kimi) y pegar tu clave API para que el agente pueda usar
-  `web_search`. También puedes configurar esto más adelante con `openclaw configure --section web`.
+  La incorporación mediante CLI incluye un paso de búsqueda web donde puede elegir un proveedor
+  (Perplexity, Brave, Gemini, Grok o Kimi) y pegar su clave API para que el agente pueda usar
+  `web_search`. También puede configurar esto más tarde con `openclaw configure --section web`.
   Documentación: [Herramientas web](/es/tools/web).
 </Tip>
 
 ## Inicio rápido frente a Avanzado
 
-El asistente comienza con **Inicio rápido** (valores predeterminados) frente a **Avanzado** (control total).
+La incorporación comienza con **QuickStart** (valores predeterminados) frente a **Advanced** (control total).
 
 <Tabs>
-  <Tab title="Inicio rápido (valores predeterminados)">
-    - Puerta de enlace local (bucle local) - Espacio de trabajo predeterminado (o espacio de trabajo
+  <Tab title="QuickStart (valores predeterminados)">
+    - Puerta de enlace local (bucle) - Espacio de trabajo predeterminado (o espacio de trabajo
     existente) - Puerto de puerta de enlace **18789** - Autenticación de puerta de enlace **Token**
-    (generado automáticamente, incluso en bucle local) - Política de herramientas predeterminada
-    para nuevas configuraciones locales: `tools.profile: "coding"` (se conserva el perfil explícito
-    existente) - Aislamiento de MD predeterminado: la incorporación local escribe `session.dmScope:
-    "per-channel-peer"` cuando no está establecido. Detalles: [Referencia de incorporación por
+    (generado automáticamente, incluso en bucle) - Política de herramientas predeterminada para
+    nuevas configuraciones locales: `tools.profile: "coding"` (se conserva el perfil explícito
+    existente) - Aislamiento de DM predeterminado: la incorporación local escribe `session.dmScope:
+    "per-channel-peer"` cuando no está configurado. Detalles: [Referencia de configuración de
     CLI](/es/start/wizard-cli-reference#outputs-and-internals) - Exposición de Tailscale
-    **Desactivada** - Los MD de Telegram + WhatsApp predeterminan a **lista de permitidos** (se te
-    pedirá tu número de teléfono)
+    **Desactivada** - Los DM de Telegram + WhatsApp se establecen de forma predeterminada en **lista
+    de permitidos** (se le pedirá su número de teléfono)
   </Tab>
   <Tab title="Avanzado (control total)">
     - Expone cada paso (modo, espacio de trabajo, puerta de enlace, canales, demonio, habilidades).
   </Tab>
 </Tabs>
 
-## Lo que configura el asistente
+## Qué configura la incorporación
 
 **Modo local (predeterminado)** le guía a través de estos pasos:
 
@@ -86,10 +86,11 @@ El asistente comienza con **Inicio rápido** (valores predeterminados) frente a 
 7. **Habilidades** — Instala las habilidades recomendadas y dependencias opcionales.
 
 <Note>
-  Volver a ejecutar el asistente **no** borra nada a menos que elija explícitamente **Restablecer**
-  (o pase `--reset`). El CLI `--reset` por defecto incluye configuración, credenciales y sesiones;
-  use `--reset-scope full` para incluir el espacio de trabajo. Si la configuración no es válida o
-  contiene claves heredadas, el asistente le pedirá que ejecute `openclaw doctor` primero.
+  Volver a ejecutar la incorporación **no** borra nada a menos que elija explícitamente
+  **Restablecer** (o pase `--reset`). La CLI `--reset` se usa de forma predeterminada para
+  configuración, credenciales y sesiones; use `--reset-scope full` para incluir el espacio de
+  trabajo. Si la configuración no es válida o contiene claves heredadas, la incorporación le pedirá
+  que ejecute `openclaw doctor` primero.
 </Note>
 
 El **modo remoto** solo configura el cliente local para conectarse a un Gateway en otro lugar.
@@ -98,7 +99,7 @@ El **modo remoto** solo configura el cliente local para conectarse a un Gateway 
 ## Añadir otro agente
 
 Use `openclaw agents add <name>` para crear un agente separado con su propio espacio de trabajo,
-sesiones y perfiles de autenticación. Ejecutar sin `--workspace` inicia el asistente.
+sesiones y perfiles de autenticación. Ejecutar sin `--workspace` inicia la incorporación.
 
 Lo que configura:
 
@@ -109,16 +110,16 @@ Lo que configura:
 Notas:
 
 - Los espacios de trabajo predeterminados siguen `~/.openclaw/workspace-<agentId>`.
-- Añada `bindings` para enrutar mensajes entrantes (el asistente puede hacer esto).
+- Agregue `bindings` para enrutar mensajes entrantes (la incorporación puede hacer esto).
 - Opciones no interactivas: `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
 
 ## Referencia completa
 
 Para ver desgloses detallados paso a paso y salidas de configuración, consulte
-[Referencia de incorporación de CLI](/es/start/wizard-cli-reference).
+[Referencia de configuración de CLI](/es/start/wizard-cli-reference).
 Para ver ejemplos no interactivos, consulte [Automatización de CLI](/es/start/wizard-cli-automation).
-Para la referencia técnica más profunda, incluidos los detalles de RPC, consulte
-[Referencia del asistente](/es/reference/wizard).
+Para obtener la referencia técnica más profunda, incluidos los detalles de RPC, consulte
+[Referencia de incorporación](/es/reference/wizard).
 
 ## Documentos relacionados
 

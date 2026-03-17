@@ -39,7 +39,7 @@ Consulte la [referencia completa](/es/gateway/configuration-reference) para ver 
 
 <Tabs>
   <Tab title="Interactive wizard">
-    ```bash openclaw onboard # full setup wizard openclaw configure # config wizard ```
+    ```bash openclaw onboard # full onboarding flow openclaw configure # config wizard ```
   </Tab>
   <Tab title="CLI (one-liners)">
     ```bash openclaw config get agents.defaults.workspace openclaw config set

@@ -28,7 +28,7 @@ Contenido (ejemplos):
 - Ayudantes de configuración: `buildChannelConfigSchema`, `setAccountEnabledInConfigSection`, `deleteAccountFromConfigSection`,
   `applyAccountNameToChannelSection`.
 - Ayudantes de emparejamiento: `PAIRING_APPROVED_MESSAGE`, `formatPairingApproveHint`.
-- Ayudantes de incorporación: `promptChannelAccessConfig`, `addWildcardAllowFrom`, tipos de incorporación.
+- Configurar los puntos de entrada: `setup` + `setupWizard` propiedad del host; evite asistentes de incorporación pública amplia.
 - Ayudantes de parámetros de herramientas: `createActionGate`, `readStringParam`, `readNumberParam`, `readReactionParams`, `jsonResult`.
 - Ayudante de enlace a documentos: `formatDocsLink`.
 
@@ -212,6 +212,30 @@ Notas:
 - Los complementos externos pueden desarrollarse y actualizarse sin acceso al código fuente del núcleo.
 
 Documentos relacionados: [Plugins](/es/tools/plugin), [Canales](/es/channels/index), [Configuración](/es/gateway/configuration).
+
+## Costuras propiedad del canal implementadas
+
+El trabajo de refactorización reciente amplió el contrato del complemento del canal para que el núcleo pueda dejar de ser propietario
+del comportamiento de enrutamiento y UX específico del canal:
+
+- `messaging.buildCrossContextComponents`: marcadores de interfaz de usuario entre contextos propiedad del canal
+  (por ejemplo, contenedores de componentes de Discord v2)
+- `messaging.enableInteractiveReplies`: interruptores de normalización de respuestas propiedad del canal
+  (por ejemplo, respuestas interactivas de Slack)
+- `messaging.resolveOutboundSessionRoute`: enrutamiento de sesión de salida propiedad del canal
+- `status.formatCapabilitiesProbe` / `status.buildCapabilitiesDiagnostics`: propiedad del canal
+  visualización del sondeo `/channels capabilities` y auditorías/ámbitos adicionales
+- `threading.resolveAutoThreadId`: hilos automáticos de la misma conversación propiedad del canal
+- `threading.resolveReplyTransport`: mapeo de entrega de respuesta frente a hilo propiedad del canal
+- `actions.requiresTrustedRequesterSender`: puertas de confianza de acciones privilegiadas propiedad del canal
+- `execApprovals.*`: estado de la superficie de aprobación de ejecución propiedad del canal, supresión de reenvío,
+  UX de carga pendiente y ganchos de preentrega
+- `lifecycle.onAccountConfigChanged` / `lifecycle.onAccountRemoved`: limpieza propiedad del canal al
+  mutar/eliminar la configuración
+- `allowlist.supportsScope`: anuncio de ámbito de lista de permitidos propiedad del canal
+
+Estos ganchos deben preferirse sobre nuevas `channel === "discord"` / `telegram`
+ramas en flujos centrales compartidos.
 
 import es from "/components/footer/es.mdx";
 

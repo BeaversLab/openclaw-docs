@@ -111,18 +111,19 @@ Opciones:
 Notas:
 
 - `gateway status` resuelve los SecretRefs de autenticación configurados para la autenticación de sondeo cuando es posible.
-- Si un SecretRef de autenticación requerido no se resuelve en esta ruta de comando, la autenticación de sondeo puede fallar; pase `--token`/`--password` explícitamente o resuelva primero la fuente del secreto.
-- Use `--require-rpc` en scripts y automatización cuando un servicio a la escucha no es suficiente y necesita que el Gateway RPC en sí esté saludable.
-- En las instalaciones de Linux systemd, las comprobaciones de deriva de autenticación del servicio leen tanto los valores `Environment=` como `EnvironmentFile=` de la unidad (incluyendo `%h`, rutas entre comillas, múltiples archivos y archivos `-` opcionales).
+- Si una SecretRef de autenticación requerida no se resuelve en esta ruta de comando, `gateway status --json` informa `rpc.authWarning` cuando falla la sonda de conectividad/autenticación; pase `--token`/`--password` explícitamente o resuelva primero la fuente del secreto.
+- Si la sonda tiene éxito, las advertencias de auth-ref no resueltas se suprimen para evitar falsos positivos.
+- Use `--require-rpc` en scripts y automatización cuando un servicio de escucha no es suficiente y necesita que el propio Gateway RPC esté sano.
+- En instalaciones de Linux systemd, las comprobaciones de deriva de autenticación del servicio leen ambos valores `Environment=` y `EnvironmentFile=` de la unidad (incluyendo `%h`, rutas entre comillas, múltiples archivos y opcionales archivos `-`).
 
 ### `gateway probe`
 
 `gateway probe` es el comando "depurar todo". Siempre sondea:
 
 - su puerta de enlace remota configurada (si está configurada), y
-- localhost (bucle) **incluso si el remoto está configurado**.
+- localhost (bucle local) **incluso si se configura el remoto**.
 
-Si se pueden alcanzar varias puertas de enlace, imprime todas. Se admiten varias puertas de enlace cuando usa perfiles/puertos aislados (por ejemplo, un bot de rescate), pero la mayoría de las instalaciones todavía ejecutan una sola puerta de enlace.
+Si se pueden alcanzar varias puertas de enlace, imprime todas. Se admiten varias puertas de enlace cuando usa perfiles/puertos aislados (por ejemplo, un robot de rescate), pero la mayoría de las instalaciones aún ejecutan una sola puerta de enlace.
 
 ```bash
 openclaw gateway probe
@@ -132,25 +133,25 @@ openclaw gateway probe --json
 Interpretación:
 
 - `Reachable: yes` significa que al menos un objetivo aceptó una conexión WebSocket.
-- `RPC: ok` significa que las llamadas RPC detalladas (`health`/`status`/`system-presence`/`config.get`) también tuvieron éxito.
-- `RPC: limited - missing scope: operator.read` significa que la conexión tuvo éxito pero la RPC detallada está limitada en el alcance. Esto se informa como accesibilidad **degradada**, no como falla total.
-- El código de salida es distinto de cero solo cuando ningún objetivo sondado es alcanzable.
+- `RPC: ok` significa que las llamadas RPC de detalle (`health`/`status`/`system-presence`/`config.get`) también tuvieron éxito.
+- `RPC: limited - missing scope: operator.read` significa que la conexión tuvo éxito pero que el RPC de detalle tiene un alcance limitado. Esto se informa como accesibilidad **degradada**, no como falla total.
+- El código de salida es distinto de cero solo cuando ningún objetivo sondeado es accesible.
 
 Notas JSON (`--json`):
 
 - Nivel superior:
-  - `ok`: al menos un objetivo es alcanzable.
-  - `degraded`: al menos un objetivo tuvo RPC detallada con alcance limitado.
+  - `ok`: al menos un objetivo es accesible.
+  - `degraded`: al menos un objetivo tuvo un RPC de detalle con alcance limitado.
 - Por objetivo (`targets[].connect`):
-  - `ok`: accesibilidad después de la conexión + clasificación degradada.
-  - `rpcOk`: éxito de RPC con todos los detalles.
-  - `scopeLimited`: error de RPC de detalles debido a la falta de alcance del operador.
+  - `ok`: alcance después de la conexión + clasificación degradada.
+  - `rpcOk`: éxito de RPC con detalle completo.
+  - `scopeLimited`: fallo de RPC de detalles debido a falta de alcance de operador.
 
-#### Remoto a través de SSH (paridad con la aplicación Mac)
+#### Remoto a través de SSH (paridad de la aplicación Mac)
 
 El modo "Remoto a través de SSH" de la aplicación macOS utiliza un reenvío de puerto local para que la puerta de enlace remota (que puede estar vinculada solo al bucle local) sea accesible en `ws://127.0.0.1:<port>`.
 
-Equivalente en CLI:
+Equivalente de CLI:
 
 ```bash
 openclaw gateway probe --ssh user@gateway-host
@@ -160,16 +161,16 @@ Opciones:
 
 - `--ssh <target>`: `user@host` o `user@host:port` (el puerto predeterminado es `22`).
 - `--ssh-identity <path>`: archivo de identidad.
-- `--ssh-auto`: elegir el primer host de puerta de enlace descubierto como objetivo SSH (solo LAN/WAB).
+- `--ssh-auto`: seleccionar el primer host de puerta de enlace descubierto como destino SSH (solo LAN/WAB).
 
-Configuración (opcional, se usa como predeterminada):
+Configuración (opcional, se usa como valores predeterminados):
 
 - `gateway.remote.sshTarget`
 - `gateway.remote.sshIdentity`
 
 ### `gateway call <method>`
 
-Ayudante RPC de bajo nivel.
+Ayudante de RPC de bajo nivel.
 
 ```bash
 openclaw gateway call status
@@ -188,32 +189,32 @@ openclaw gateway uninstall
 
 Notas:
 
-- `gateway install` es compatible con `--port`, `--runtime`, `--token`, `--force`, `--json`.
+- `gateway install` admite `--port`, `--runtime`, `--token`, `--force`, `--json`.
 - Cuando la autenticación por token requiere un token y `gateway.auth.token` está administrado por SecretRef, `gateway install` valida que el SecretRef se pueda resolver, pero no persiste el token resuelto en los metadatos del entorno del servicio.
-- Si la autenticación por token requiere un token y el SecretRef del token configurado no está resuelto, la instalación falla de forma cerrada en lugar de persistir texto plano de respaldo.
-- Para la autenticación con contraseña en `gateway run`, se prefiere `OPENCLAW_GATEWAY_PASSWORD`, `--password-file` o un `gateway.auth.password` respaldado por SecretRef en lugar de `--password` en línea.
-- En el modo de autenticación inferida, el `OPENCLAW_GATEWAY_PASSWORD`/`CLAWDBOT_GATEWAY_PASSWORD` solo de shell no relaja los requisitos del token de instalación; use una configuración duradera (`gateway.auth.password` o configuración `env`) al instalar un servicio administrado.
-- Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está establecido, la instalación se bloquea hasta que se establezca el modo explícitamente.
-- Los comandos de ciclo de vida aceptan `--json` para scripts.
+- Si la autenticación por token requiere un token y el SecretRef del token configurado no está resuelto, la instalación falla de forma segura en lugar de persistir el texto plano de reserva.
+- Para la autenticación con contraseña en `gateway run`, se prefiere `OPENCLAW_GATEWAY_PASSWORD`, `--password-file` o un `gateway.auth.password` respaldado por SecretRef antes que `--password` en línea.
+- En el modo de autenticación inferida, `OPENCLAW_GATEWAY_PASSWORD`/`CLAWDBOT_GATEWAY_PASSWORD` solo de shell no relaja los requisitos del token de instalación; use la configuración duradera (`gateway.auth.password` o configuración `env`) al instalar un servicio administrado.
+- Si están configurados tanto `gateway.auth.token` como `gateway.auth.password` y `gateway.auth.mode` no está definido, la instalación se bloquea hasta que se establezca explícitamente el modo.
+- Los comandos de ciclo de vida aceptan `--json` para secuencias de comandos (scripting).
 
 ## Descubrir gateways (Bonjour)
 
-`gateway discover` escucha beacones de Gateway (`_openclaw-gw._tcp`).
+`gateway discover` escucha balizas de Gateway (`_openclaw-gw._tcp`).
 
 - Multicast DNS-SD: `local.`
 - Unicast DNS-SD (Bonjour de área amplia): elija un dominio (ejemplo: `openclaw.internal.`) y configure DNS dividido + un servidor DNS; consulte [/gateway/bonjour](/es/gateway/bonjour)
 
-Solo los gateways con el descubrimiento Bonjour habilitado (predeterminado) anuncian el beacon.
+Solo los gateways con el descubrimiento Bonjour habilitado (por defecto) anuncian la baliza.
 
 Los registros de descubrimiento de área amplia incluyen (TXT):
 
-- `role` (sugerencia de rol de gateway)
-- `transport` (sugerencia de transporte, p. ej. `gateway`)
+- `role` (pista de rol de gateway)
+- `transport` (pista de transporte, p. ej. `gateway`)
 - `gatewayPort` (puerto WebSocket, generalmente `18789`)
-- `sshPort` (puerto SSH; predeterminado a `22` si no está presente)
+- `sshPort` (puerto SSH; por defecto es `22` si no está presente)
 - `tailnetDns` (nombre de host MagicDNS, cuando está disponible)
 - `gatewayTls` / `gatewayTlsSha256` (TLS habilitado + huella digital del certificado)
-- `cliPath` (sugerencia opcional para instalaciones remotas)
+- `cliPath` (pista opcional para instalaciones remotas)
 
 ### `gateway discover`
 
@@ -223,8 +224,8 @@ openclaw gateway discover
 
 Opciones:
 
-- `--timeout <ms>`: tiempo de espera por comando (exploración/resolución); predeterminado `2000`.
-- `--json`: salida legible por máquina (también deshabilita el estilo/spinner).
+- `--timeout <ms>`: tiempo de espera por comando (exploración/resolución); por defecto `2000`.
+- `--json`: salida legible por máquina (también deshabilita el estilo/indicador de carga).
 
 Ejemplos:
 

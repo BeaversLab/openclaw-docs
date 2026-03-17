@@ -23,7 +23,7 @@ La sortie détaillée et `openclaw plugins info <id>` affichent également le so
 
 Connexe :
 
-- Aperçu du système de plugins : [Plugins](/fr/tools/plugin)
+- Vue d'ensemble du système de plugins : [Plugins](/fr/tools/plugin)
 - Flux d'installation/liste CLI : [plugins](/fr/cli/plugins)
 - Schéma de manifeste natif : [Plugin manifest](/fr/plugins/manifest)
 
@@ -253,11 +253,15 @@ openclaw plugins install ./my-codex-bundle
 openclaw plugins install ./my-claude-bundle
 openclaw plugins install ./my-cursor-bundle
 openclaw plugins install ./my-bundle.tgz
+openclaw plugins marketplace list <marketplace-name>
+openclaw plugins install <plugin-name>@<marketplace-name>
 openclaw plugins info my-bundle
 ```
 
 Si le répertoire est un plugin/colis OpenClaw natif, le chemin d'installation natif
 l'emporte toujours.
+
+Pour les noms du marketplace Claude, OpenClaw lit le registre local known-marketplace de Claude à `~/.claude/plugins/known_marketplaces.json`. Les entrées du marketplace peuvent correspondre à des répertoires/archives compatibles avec les bundles ou à des sources de plugins natifs ; après résolution, les règles d'installation normales s'appliquent toujours.
 
 ## Dépannage
 
@@ -265,24 +269,22 @@ l'emporte toujours.
 
 Vérifiez `openclaw plugins info <id>`.
 
-Si la capacité est répertoriée mais que OpenClaw indique qu'elle n'est pas encore connectée, c'est une
-limite réelle du produit, et non une installation défectueuse.
+Si la capacité est listée mais que OpenClaw indique qu'elle n'est pas encore connectée, c'est une réelle limite du produit, et non une installation défectueuse.
 
 ### Les fichiers de commande Claude n'apparaissent pas
 
-Assurez-vous que le bundle est activé et que les fichiers markdown se trouvent dans une racine
-`commands` détectée ou une racine `skills` détectée.
+Assurez-vous que le bundle est activé et que les fichiers markdown se trouvent dans une racine `commands` détectée ou une racine `skills` détectée.
 
 ### Les paramètres Claude ne s'appliquent pas
 
-La prise en charge actuelle est limitée aux paramètres Pi intégrés provenant de `settings.json`.
+Le support actuel est limité aux paramètres Pi intégrés provenant de `settings.json`.
 OpenClaw ne traite pas les paramètres de bundle comme des correctifs de configuration OpenClaw bruts.
 
 ### Les hooks Claude ne s'exécutent pas
 
-`hooks/hooks.json` n'est détélécté qu'aujourd'hui.
+`hooks/hooks.json` est uniquement détecté aujourd'hui.
 
-Si vous avez besoin de hooks de bundle exécutables aujourd'hui, utilisez la disposition normale des hook-packs OpenClaw via une racine de hook Codex prise en charge ou livrez un plugin natif OpenClaw.
+Si vous avez besoin de hooks de bundle exécutables aujourd'hui, utilisez la disposition normale de hook-pack OpenClaw via une racine de hook Codex prise en charge ou fournissez un plugin natif OpenClaw.
 
 import fr from "/components/footer/fr.mdx";
 

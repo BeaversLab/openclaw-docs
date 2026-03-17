@@ -76,9 +76,9 @@ openclaw pairing approve whatsapp <CODE>
 </Steps>
 
 <Note>
-  OpenClaw recommande d'exécuter WhatsApp sur un numéro distinct lorsque cela est possible. (Les
-  métadonnées du channel et le flux d'intégration sont optimisés pour cette configuration, mais les
-  configurations avec numéro personnel sont également prises en charge.)
+  OpenClaw recommande d'exécuter WhatsApp sur un numéro distinct si possible. (Les métadonnées du
+  canal et le processus de configuration sont optimisés pour cette configuration, mais les
+  configurations sur numéro personnel sont également prises en charge.)
 </Note>
 
 ## Modèles de déploiement

@@ -1,18 +1,18 @@
 ---
-summary: "Assistant d'intégration CLI : configuration guidée pour la passerelle, l'espace de travail, les canaux et les compétences"
+summary: "L'onboarding CLI : installation guidée pour la passerelle, l'espace de travail, les canaux et les compétences"
 read_when:
-  - Running or configuring the onboarding wizard
+  - Running or configuring CLI onboarding
   - Setting up a new machine
-title: "Assistant d'intégration (CLI)"
+title: "Onboarding (CLI)"
 sidebarTitle: "Intégration : CLI"
 ---
 
-# Assistant d'intégration (CLI)
+# Onboarding (CLI)
 
-L'assistant d'intégration est la méthode **recommandée** pour configurer OpenClaw sur macOS,
+L'onboarding via CLI est la méthode **recommandée** pour configurer OpenClaw sur macOS,
 Linux ou Windows (via WSL2 ; fortement recommandé).
-Il configure une passerelle locale ou une connexion à une passerelle distante, ainsi que les canaux, les compétences
-et les valeurs par défaut de l'espace de travail dans un flux guidé unique.
+Il configure une passerelle (Gateway) locale ou une connexion à une passerelle distante, ainsi que les canaux, les compétences
+et les valeurs par défaut de l'espace de travail dans un processus guidé unique.
 
 ```bash
 openclaw onboard
@@ -36,26 +36,26 @@ openclaw agents add <name>
 </Note>
 
 <Tip>
-  L'assistant d'intégration comprend une étape de recherche web où vous pouvez choisir un
-  fournisseur (Perplexity, Brave, Gemini, Grok ou Kimi) et coller votre clé API afin que l'agent
-  puisse utiliser `web_search`. Vous pouvez également configurer cela plus tard avec `openclaw
-  configure --section web`. Documentation : [Outils web](/fr/tools/web).
+  L'onboarding CLI comprend une étape de recherche Web où vous pouvez choisir un fournisseur
+  (Perplexity, Brave, Gemini, Grok ou Kimi) et coller votre clé API afin que l'agent puisse utiliser
+  `web_search`. Vous pouvez également configurer cela ultérieurement avec `openclaw configure
+  --section web`. Documentation : [Web tools](/fr/tools/web).
 </Tip>
 
 ## Démarrage rapide vs Avancé
 
-L'assistant commence par **Démarrage rapide** (valeurs par défaut) ou **Avancé** (contrôle total).
+L'onboarding commence par **QuickStart** (valeurs par défaut) ou **Advanced** (contrôle total).
 
 <Tabs>
-  <Tab title="QuickStart (défauts)">
-    - Passerelle locale (boucle locale) - Espace de travail par défaut (ou espace de travail
-    existant) - Port de la Gateway **18789** - Authentification de la Gateway par **Jeton**
-    (auto‑généré, même en boucle locale) - Stratégie d'outil par défaut pour les nouvelles
-    configurations locales : `tools.profile: "coding"` (le profil explicite existant est préservé) -
-    Isolement des DM par défaut : l'onboarding local écrit `session.dmScope: "per-channel-peer"` si
-    non défini. Détails : [Référence de l'CLI
-    Onboarding](/fr/start/wizard-cli-reference#outputs-and-internals) - Exposition Tailscale
-    **Désactivée** - Les DM Telegram + WhatsApp sont par défaut en **liste blanche** (vous serez
+  <Tab title="QuickStart (defaults)">
+    - Passerelle (Gateway) locale (boucle locale) - Espace de travail par défaut (ou espace de
+    travail existant) - Port de la passerelle **18789** - Authentification de la passerelle par
+    **Jeton** (généré automatiquement, même en boucle locale) - Stratégie d'outil par défaut pour
+    les nouvelles configurations locales : `tools.profile: "coding"` (le profil explicite existant
+    est préservé) - Isolation par DM par défaut : l'onboarding local écrit `session.dmScope:
+    "per-channel-peer"` s'il n'est pas défini. Détails : [Référence de l'installation
+    CLI](/fr/start/wizard-cli-reference#outputs-and-internals) - Exposition Tailscale **Désactivée**
+    - Les DM Telegram + WhatsApp sont paramétrés par défaut sur **liste d'autorisation** (vous serez
     invité à entrer votre numéro de téléphone)
   </Tab>
   <Tab title="Avancé (contrôle total)">
@@ -63,7 +63,7 @@ L'assistant commence par **Démarrage rapide** (valeurs par défaut) ou **Avanc�
   </Tab>
 </Tabs>
 
-## Ce que l'assistant configure
+## Ce que configure l'onboarding
 
 **Le mode local (par défaut)** vous guide à travers ces étapes :
 
@@ -86,11 +86,11 @@ L'assistant commence par **Démarrage rapide** (valeurs par défaut) ou **Avanc�
 7. **Skills** — Installe les compétences recommandées et les dépendances facultatives.
 
 <Note>
-  Le fait de relancer l'assistant ne supprime **rien** à moins que vous ne choisissiez explicitement
-  **Reset** (ou ne passiez `--reset`). La commande CLI `--reset` concerne par défaut la
-  configuration, les identifiants et les sessions ; utilisez `--reset-scope full` pour inclure
-  l'espace de travail. Si la configuration n'est pas valide ou contient des clés héritées,
-  l'assistant vous demande d'exécuter d'abord `openclaw doctor`.
+  Le fait de relancer l'onboarding ne **supprime** rien, sauf si vous choisissez explicitement
+  **Réinitialiser** (ou si vous transmettez `--reset`). La commande `--reset` de la CLI concerne par
+  défaut la configuration, les identifiants et les sessions ; utilisez `--reset-scope full` pour
+  inclure l'espace de travail. Si la configuration n'est pas valide ou contient des clés héritées,
+  l'onboarding vous invite à exécuter d'abord `openclaw doctor`.
 </Note>
 
 Le **Remote mode** ne configure que le client local pour se connecter à un Gateway situé ailleurs.
@@ -99,7 +99,7 @@ Il n'**installe** ou ne **modifie** rien sur l'hôte distant.
 ## Ajouter un autre agent
 
 Utilisez `openclaw agents add <name>` pour créer un agent distinct avec son propre espace de travail,
-sessions et profils d'authentification. L'exécution sans `--workspace` lance l'assistant.
+sessions et profils d'authentification. L'exécuter sans `--workspace` lance l'onboarding.
 
 Ce qu'il définit :
 
@@ -110,16 +110,16 @@ Ce qu'il définit :
 Notes :
 
 - Les espaces de travail par défaut suivent `~/.openclaw/workspace-<agentId>`.
-- Ajoutez `bindings` pour acheminer les messages entrants (l'assistant peut le faire).
+- Ajoutez `bindings` pour router les messages entrants (l'onboarding peut le faire).
 - Indicateurs non interactifs : `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
 
 ## Référence complète
 
 Pour des descriptions détaillées étape par étape et les sorties de configuration, voir
-[CLI Onboarding Reference](/fr/start/wizard-cli-reference).
-Pour des exemples non interactifs, voir [CLI Automation](/fr/start/wizard-cli-automation).
+[Référence de la configuration CLI](/fr/start/wizard-cli-reference).
+Pour des exemples non interactifs, voir [Automatisation CLI](/fr/start/wizard-cli-automation).
 Pour la référence technique approfondie, incluant les détails RPC, voir
-[Wizard Reference](/fr/reference/wizard).
+[Référence Onboarding](/fr/reference/wizard).
 
 ## Documentation connexe
 

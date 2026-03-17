@@ -23,9 +23,9 @@ La salida detallada y `openclaw plugins info <id>` también muestran el subtipo
 
 Relacionado:
 
-- Resumen del sistema de plugins: [Plugins](/es/tools/plugin)
-- Flujos de instalación y lista de CLI: [plugins](/es/cli/plugins)
-- Esquema de manifiesto nativo: [Manifiesto de plugin](/es/plugins/manifest)
+- Resumen del sistema de complementos: [Complementos](/es/tools/plugin)
+- Flujos de instalación/lista de CLI: [complementos](/es/cli/plugins)
+- Esquema de manifiesto nativo: [Manifiesto de complemento](/es/plugins/manifest)
 
 ## Qué es un paquete
 
@@ -253,36 +253,44 @@ openclaw plugins install ./my-codex-bundle
 openclaw plugins install ./my-claude-bundle
 openclaw plugins install ./my-cursor-bundle
 openclaw plugins install ./my-bundle.tgz
+openclaw plugins marketplace list <marketplace-name>
+openclaw plugins install <plugin-name>@<marketplace-name>
 openclaw plugins info my-bundle
 ```
 
 Si el directorio es un complemento/paquete nativo de OpenClaw, la ruta de instalación nativa
 todavía gana.
 
+Para los nombres del mercado de Claude, OpenClaw lee el registro local de
+mercado conocido de Claude en `~/.claude/plugins/known_marketplaces.json`. Las entradas del
+mercado pueden resolver a directorios/archivos compatibles con paquetes o a fuentes de
+complementos nativos; después de la resolución, las reglas normales de instalación aún se aplican.
+
 ## Solución de problemas
 
-### El paquete se detecta pero las capacidades no se ejecutan
+### Se detecta el paquete pero las capacidades no se ejecutan
 
-Verifica `openclaw plugins info <id>`.
+Verifique `openclaw plugins info <id>`.
 
-Si la capacidad está listada pero OpenClaw dice que aún no está conectada, eso es un
-límite real del producto, no una instalación rota.
+Si la capacidad está listada pero OpenClaw dice que aún no está conectada, eso es
+un límite real del producto, no una instalación rota.
 
 ### Los archivos de comandos de Claude no aparecen
 
-Asegúrate de que el paquete esté habilitado y que los archivos markdown estén dentro de una raíz
-`commands` detectada o una raíz `skills`.
+Asegúrese de que el paquete esté habilitado y que los archivos markdown estén dentro de una raíz
+`commands` detectada o una raíz `skills` detectada.
 
 ### La configuración de Claude no se aplica
 
 El soporte actual se limita a la configuración Pi incrustada de `settings.json`.
 OpenClaw no trata la configuración del paquete como parches de configuración sin procesar de OpenClaw.
 
-### Los hooks de Claude no se ejecutan
+### Los ganchos de Claude no se ejecutan
 
-`hooks/hooks.json` solo se detecta hoy.
+Solo se detecta `hooks/hooks.json` hoy en día.
 
-Si necesita hooks de bundle ejecutables hoy, use el diseño normal de pack de hooks de OpenClaw a través de una raíz de hooks de Codex compatible o envíe un plugin nativo de OpenClaw.
+Si necesita ganchos de paquete ejecutables hoy, use el diseño normal de paquete de ganchos
+de OpenClaw a través de una raíz de ganchos Codex compatible o envíe un complemento nativo de OpenClaw.
 
 import es from "/components/footer/es.mdx";
 

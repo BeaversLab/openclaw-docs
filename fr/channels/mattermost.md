@@ -28,7 +28,7 @@ Extraction locale (lors de l'exécution depuis un dépôt git) :
 openclaw plugins install ./extensions/mattermost
 ```
 
-Si vous choisissez Mattermost lors de la configuration/onboarding et qu'une extraction git est détectée,
+Si vous choisissez Mattermost lors de la configuration et qu'une extraction git est détectée,
 OpenClaw proposera automatiquement le chemin d'installation local.
 
 Détails : [Plugins](/fr/tools/plugin)

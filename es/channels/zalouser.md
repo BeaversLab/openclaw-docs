@@ -41,7 +41,7 @@ No se requiere ningún binario CLI externo `zca`/`openzca`.
 }
 ```
 
-4. Reinicie el Gateway (o finalice la incorporación).
+4. Reinicie el Gateway (o termine la configuración).
 5. El acceso a DM se predetermina al emparejamiento; apruebe el código de emparejamiento en el primer contacto.
 
 ## Qué es
@@ -74,7 +74,7 @@ openclaw directory groups list --channel zalouser --query "work"
 
 `channels.zalouser.dmPolicy` admite: `pairing | allowlist | open | disabled` (predeterminado: `pairing`).
 
-`channels.zalouser.allowFrom` acepta ID o nombres de usuario. Durante la incorporación, los nombres se resuelven en ID utilizando la búsqueda de contactos en proceso del complemento.
+`channels.zalouser.allowFrom` acepta IDs o nombres de usuario. Durante la configuración, los nombres se resuelven a IDs utilizando la búsqueda de contactos en proceso del complemento.
 
 Aprobar vía:
 

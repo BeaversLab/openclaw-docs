@@ -38,7 +38,7 @@ MiniMax 重点强调了 M2.5 中的这些改进：
 启用随附的 OAuth 插件并进行身份验证：
 
 ```bash
-openclaw plugins enable minimax-portal-auth  # skip if already loaded.
+openclaw plugins enable minimax  # skip if already loaded.
 openclaw gateway restart  # restart if gateway is already running
 openclaw onboard --auth-choice minimax-portal
 ```
@@ -48,7 +48,7 @@ openclaw onboard --auth-choice minimax-portal
 - **Global** - 国际用户 (`api.minimax.io`)
 - **CN** - 中国用户 (`api.minimaxi.com`)
 
-详情请参阅 [MiniMax OAuth 插件自述文件](https://github.com/openclaw/openclaw/tree/main/extensions/minimax-portal-auth)。
+有关详细信息，请参阅 [MiniMax 插件自述文件](https://github.com/openclaw/openclaw/tree/main/extensions/minimax)。
 
 ### MiniMax M2.5 (API 密钥)
 
@@ -184,7 +184,7 @@ openclaw onboard --auth-choice minimax-portal
 - Coding Plan 使用 API：`https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains`（需要 coding plan 密钥）。
 - 如果您需要精确的成本跟踪，请更新 `models.json` 中的定价值。
 - MiniMax Coding Plan 的推荐链接（9折）：[https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)
-- 有关提供商规则，请参阅 [/concepts/模型-providers](/en/concepts/model-providers)。
+- 有关提供商规则，请参阅 [/concepts/模型-providers](/zh/concepts/model-providers)。
 - 使用 `openclaw models list` 和 `openclaw models set minimax/MiniMax-M2.5` 进行切换。
 
 ## 故障排除

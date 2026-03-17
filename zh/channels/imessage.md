@@ -9,7 +9,7 @@ title: "iMessage"
 # iMessage（旧版：imsg）
 
 <Warning>
-对于新的 iMessage 部署，请使用 <a href="/en/channels/bluebubbles">BlueBubbles</a>。
+对于新的 iMessage 部署，请使用 <a href="/zh/channels/bluebubbles">BlueBubbles</a>。
 
 `imsg` 集成是旧版功能，可能会在未来的版本中移除。
 
@@ -18,13 +18,13 @@ title: "iMessage"
 状态：旧版外部 CLI 集成。Gateway(网关) 生成 `imsg rpc` 并通过 stdio 上的 JSON-RPC 进行通信（没有单独的守护进程/端口）。
 
 <CardGroup cols={3}>
-  <Card title="BlueBubbles (推荐)" icon="message-circle" href="/en/channels/bluebubbles">
+  <Card title="BlueBubbles (推荐)" icon="message-circle" href="/zh/channels/bluebubbles">
     新设置首选的 BlueBubbles 路径。
   </Card>
-  <Card title="配对" icon="link" href="/en/channels/pairing">
+  <Card title="配对" icon="link" href="/zh/channels/pairing">
     iMessage 私信默认为配对模式。
   </Card>
-  <Card title="配置参考" icon="settings" href="/en/gateway/configuration-reference#imessage">
+  <Card title="配置参考" icon="settings" href="/zh/gateway/configuration-reference#imessage">
     Full iMessage field reference.
   </Card>
 </CardGroup>
@@ -360,10 +360,10 @@ imsg send <handle> "test"
 
 ## 配置参考指针
 
-- [配置参考 - iMessage](/en/gateway/configuration-reference#imessage)
-- [Gateway(网关) 配置](/en/gateway/configuration)
-- [配对](/en/channels/pairing)
-- [BlueBubbles](/en/channels/bluebubbles)
+- [配置参考 - iMessage](/zh/gateway/configuration-reference#imessage)
+- [Gateway(网关) 配置](/zh/gateway/configuration)
+- [配对](/zh/channels/pairing)
+- [BlueBubbles](/zh/channels/bluebubbles)
 
 import zh from "/components/footer/zh.mdx";
 

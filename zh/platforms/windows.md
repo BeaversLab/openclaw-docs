@@ -14,8 +14,8 @@ title: "Windows (WSL2)"
 
 ## 安装 (WSL2)
 
-- [入门指南](/en/start/getting-started)（在 WSL 内部使用）
-- [安装与更新](/en/install/updating)
+- [入门指南](/zh/start/getting-started)（在 WSL 内部使用）
+- [安装与更新](/zh/install/updating)
 - 官方 WSL2 指南：[https://learn.microsoft.com/windows/wsl/install](https://learn.microsoft.com/windows/wsl/install)
 
 ## 原生 Windows 状态
@@ -58,8 +58,8 @@ openclaw gateway status --json
 
 ## Gateway(网关)
 
-- [Gateway(网关) runbook](/en/gateway)
-- [配置](/en/gateway/configuration)
+- [Gateway(网关) runbook](/zh/gateway)
+- [配置](/zh/gateway/configuration)
 
 ## Gateway(网关) 服务安装 (CLI)
 
@@ -223,7 +223,7 @@ pnpm build
 openclaw onboard
 ```
 
-完整指南：[入门指南](/en/start/getting-started)
+完整指南：[入门指南](/zh/start/getting-started)
 
 ## Windows 伴侣应用
 

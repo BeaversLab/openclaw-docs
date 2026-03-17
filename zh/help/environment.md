@@ -89,7 +89,7 @@ OpenClaw 还会将上下文标记注入到生成的子进程中：
 }
 ```
 
-请参阅 [配置：环境变量替换](/en/gateway/configuration#env-var-substitution-in-config) 了解详情。
+请参阅 [配置：环境变量替换](/zh/gateway/configuration#env-var-substitution-in-config) 了解详情。
 
 ## Secret 引用与 `${ENV}` 字符串
 
@@ -98,7 +98,7 @@ OpenClaw 支持两种由环境驱动的模式：
 - 配置值中的 `${VAR}` 字符串替换。
 - 用于支持密钥引用的字段的 SecretRef 对象（`{ source: "env", provider: "default", id: "VAR" }`）。
 
-两者均在激活时从进程环境变量中解析。SecretRef 的详细信息记录在 [密钥管理](/en/gateway/secrets) 中。
+两者均在激活时从进程环境变量中解析。SecretRef 的详细信息记录在 [密钥管理](/zh/gateway/secrets) 中。
 
 ## 路径相关的环境变量
 
@@ -134,9 +134,9 @@ OpenClaw 支持两种由环境驱动的模式：
 
 ## 相关
 
-- [Gateway(网关) 配置](/en/gateway/configuration)
-- [常见问题：环境变量和 .env 加载](/en/help/faq#env-vars-and-env-loading)
-- [模型概述](/en/concepts/models)
+- [Gateway(网关) 配置](/zh/gateway/configuration)
+- [常见问题：环境变量和 .env 加载](/zh/help/faq#env-vars-and-env-loading)
+- [模型概述](/zh/concepts/models)
 
 import zh from "/components/footer/zh.mdx";
 

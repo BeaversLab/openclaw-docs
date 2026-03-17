@@ -208,16 +208,16 @@ Node CLI 基于 `dns-sd` 的设备发现不同。
   ExitOnForwardFailure + keepalive 选项。
 - **IP 报告：** SSH 隧道使用环回地址，因此 Gateway 网关看到的节点
   IP 为 `127.0.0.1`。如果您希望显示真实的客户端
-  IP，请使用 **直接** 传输方式（请参阅 [macOS 远程访问](/en/platforms/mac/remote)）。
+  IP，请使用 **直接** 传输方式（请参阅 [macOS 远程访问](/zh/platforms/mac/remote)）。
 
-有关设置步骤，请参阅 [macOS 远程访问](/en/platforms/mac/remote)。有关协议详细信息，请参阅 [Gateway(网关) 协议](/en/gateway/protocol)。
+有关设置步骤，请参阅 [macOS 远程访问](/zh/platforms/mac/remote)。有关协议详细信息，请参阅 [Gateway(网关) 协议](/zh/gateway/protocol)。
 
 ## 相关文档
 
-- [Gateway(网关) 运行手册](/en/gateway)
-- [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
-- [macOS 权限](/en/platforms/mac/permissions)
-- [Canvas](/en/platforms/mac/canvas)
+- [Gateway(网关) 运行手册](/zh/gateway)
+- [Gateway (macOS)](/zh/platforms/mac/bundled-gateway)
+- [macOS 权限](/zh/platforms/mac/permissions)
+- [Canvas](/zh/platforms/mac/canvas)
 
 import zh from "/components/footer/zh.mdx";
 

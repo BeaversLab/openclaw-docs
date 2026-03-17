@@ -6,8 +6,9 @@ title: "Docs directory"
 ---
 
 <Note>
-This page is a curated index. If you are new, start with [Getting Started](/en/start/getting-started).
-For a complete map of the docs, see [Docs hubs](/en/start/hubs).
+  This page is a curated index. If you are new, start with [Getting
+  Started](/en/start/getting-started). For a complete map of the docs, see [Docs
+  hubs](/en/start/hubs).
 </Note>
 
 ## Start here

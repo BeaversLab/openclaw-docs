@@ -27,13 +27,17 @@ Détails : [Plugins](/fr/tools/plugin)
 ## Installation rapide
 
 1. Installez et activez le plugin Synology Chat.
+   - `openclaw onboard` affiche désormais Synology Chat dans la même liste de configuration de channel que `openclaw channels add`.
+   - Configuration non interactive : `openclaw channels add --channel synology-chat --token <token> --url <incoming-webhook-url>`
 2. Dans les intégrations Synology Chat :
    - Créez un webhook entrant et copiez son URL.
    - Créez un webhook sortant avec votre jeton secret.
-3. Faites pointer l'URL du webhook sortant vers votre passerelle OpenClaw :
+3. Pointez l'URL du webhook sortant vers votre passerelle OpenClaw :
    - `https://gateway-host/webhook/synology` par défaut.
    - Ou votre `channels.synology-chat.webhookPath` personnalisé.
-4. Configurez `channels.synology-chat` dans OpenClaw.
+4. Terminez la configuration dans OpenClaw.
+   - Guidé : `openclaw onboard`
+   - Direct : `openclaw channels add --channel synology-chat --token <token> --url <incoming-webhook-url>`
 5. Redémarrez la passerelle et envoyez un DM au bot Synology Chat.
 
 Configuration minimale :
@@ -62,18 +66,18 @@ Pour le compte par défaut, vous pouvez utiliser les env vars :
 - `SYNOLOGY_CHAT_TOKEN`
 - `SYNOLOGY_CHAT_INCOMING_URL`
 - `SYNOLOGY_NAS_HOST`
-- `SYNOLOGY_ALLOWED_USER_IDS` (séparé par des virgules)
+- `SYNOLOGY_ALLOWED_USER_IDS` (séparés par des virgules)
 - `SYNOLOGY_RATE_LIMIT`
 - `OPENCLAW_BOT_NAME`
 
 Les valeurs de configuration remplacent les env vars.
 
-## Stratégie de DM et contrôle d'accès
+## Politique de DM et contrôle d'accès
 
 - `dmPolicy: "allowlist"` est la valeur par défaut recommandée.
 - `allowedUserIds` accepte une liste (ou une chaîne séparée par des virgules) d'ID utilisateur Synology.
-- En mode `allowlist`, une liste `allowedUserIds` vide est traitée comme une erreur de configuration et la route du webhook ne démarrera pas (utilisez `dmPolicy: "open"` pour tout autoriser).
-- `dmPolicy: "open"` permet à n'importe quel expéditeur.
+- En mode `allowlist`, une liste `allowedUserIds` vide est considérée comme une mauvaise configuration et la route du webhook ne démarrera pas (utilisez `dmPolicy: "open"` pour tout autoriser).
+- `dmPolicy: "open"` autorise n'importe quel expéditeur.
 - `dmPolicy: "disabled"` bloque les DMs.
 - Les approbations d'appariement fonctionnent avec :
   - `openclaw pairing list synology-chat`
@@ -81,7 +85,7 @@ Les valeurs de configuration remplacent les env vars.
 
 ## Livraison sortante
 
-Utilisez les ID numériques des utilisateurs Synology Chat comme cibles.
+Utilisez les ID utilisateur numériques Synology Chat comme cibles.
 
 Exemples :
 
@@ -90,12 +94,12 @@ openclaw message send --channel synology-chat --target 123456 --text "Hello from
 openclaw message send --channel synology-chat --target synology-chat:123456 --text "Hello again"
 ```
 
-Les envois de médias sont pris en charge via la livraison de fichiers par URL.
+Les envois de médias sont pris en charge par la livraison de fichiers basée sur l'URL.
 
 ## Multi-compte
 
 Plusieurs comptes Synology Chat sont pris en charge sous `channels.synology-chat.accounts`.
-Chaque compte peut remplacer le jeton, l'URL entrante, le chemin du webhook, la politique DM et les limites.
+Chaque compte peut remplacer le jeton, l'URL entrante, le chemin du webhook, la politique de DM et les limites.
 
 ```json5
 {
@@ -122,10 +126,10 @@ Chaque compte peut remplacer le jeton, l'URL entrante, le chemin du webhook, la 
 
 ## Notes de sécurité
 
-- Gardez `token` secret et faites-le tourner en cas de fuite.
+- Gardez `token` secret et faites-le tourner s'il est divulgué.
 - Gardez `allowInsecureSsl: false` sauf si vous faites explicitement confiance à un certificat NAS local auto-signé.
-- Les demandes de webhook entrantes sont vérifiées par jeton et limitées par taux par expéditeur.
-- Préférez `dmPolicy: "allowlist"` pour la production.
+- Les demandes de webhook entrantes sont vérifiées par jeton et limitées en débit par expéditeur.
+- Privilégiez `dmPolicy: "allowlist"` pour la production.
 
 import fr from "/components/footer/fr.mdx";
 

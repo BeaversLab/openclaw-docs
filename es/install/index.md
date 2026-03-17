@@ -37,7 +37,7 @@ title: "Instalar"
 
 <AccordionGroup>
   <Accordion title="Script de instalación" icon="rocket" defaultOpen>
-    Descarga la CLI, la instala globalmente a través de npm e inicia el asistente de incorporación.
+    Descarga la CLI, la instala globalmente a través de npm e inicia el onboarding.
 
     <Tabs>
       <Tab title="macOS / Linux / WSL2">
@@ -52,9 +52,9 @@ title: "Instalar"
       </Tab>
     </Tabs>
 
-    Eso es todo: el script se encarga de la detección de Node, la instalación y la incorporación.
+    Eso es todo: el script maneja la detección de Node, la instalación y el onboarding.
 
-    Para omitir la incorporación y solo instalar el binario:
+    Para omitir el onboarding y solo instalar el binario:
 
     <Tabs>
       <Tab title="macOS / Linux / WSL2">
@@ -69,7 +69,7 @@ title: "Instalar"
       </Tab>
     </Tabs>
 
-    Para ver todas las opciones de indicadores, variables de entorno y CI/automatización, consulta [Detalles del instalador](/es/install/installer).
+    Para todas las opciones de flags, variables de entorno y CI/automatización, consulta [Aspectos internos del instalador](/es/install/installer).
 
   </Accordion>
 

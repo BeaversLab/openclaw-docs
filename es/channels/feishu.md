@@ -30,9 +30,9 @@ openclaw plugins install @openclaw/feishu
 
 Hay dos formas de agregar el canal Feishu:
 
-### Método 1: asistente de incorporación (recomendado)
+### Método 1: incorporación (recomendado)
 
-Si acaba de instalar OpenClaw, ejecute el asistente:
+Si acaba de instalar OpenClaw, ejecute la incorporación:
 
 ```bash
 openclaw onboard
@@ -71,9 +71,9 @@ Elija **Feishu** y luego ingrese el ID de la aplicación y el secreto de la apli
 
 ### 1. Abrir la plataforma abierta Feishu
 
-Visite la [Plataforma abierta de Feishu](https://open.feishu.cn/app) e inicie sesión.
+Visite [Feishu Open Platform](https://open.feishu.cn/app) e inicie sesión.
 
-Los inquilinos de Lark (global) deben usar [https://open.larksuite.com/app](https://open.larksuite.com/app) y configurar `domain: "lark"` en la configuración de Feishu.
+Los inquilinos de Lark (global) deben usar [https://open.larksuite.com/app](https://open.larksuite.com/app) y establecer `domain: "lark"` en la configuración de Feishu.
 
 ### 2. Crear una aplicación
 
@@ -660,7 +660,7 @@ Consulte [Obtener IDs de grupo/usuario](#get-groupuser-ids) para obtener consejo
 
 ## Referencia de configuración
 
-Configuración completa: [Configuración de Gateway](/es/gateway/configuration)
+Configuración completa: [Configuración de puerta de enlace](/es/gateway/configuration)
 
 Opciones clave:
 
@@ -711,7 +711,7 @@ Opciones clave:
 - ✅ Imágenes
 - ✅ Archivos
 - ✅ Audio
-- ✅ Vídeo
+- ✅ Vídeo/medios
 - ✅ Pegatinas
 
 ### Enviar
@@ -720,7 +720,31 @@ Opciones clave:
 - ✅ Imágenes
 - ✅ Archivos
 - ✅ Audio
-- ⚠️ Texto enriquecido (soporte parcial)
+- ✅ Vídeo/medios
+- ✅ Tarjetas interactivas
+- ⚠️ Texto enriquecido (formato de estilo de publicación y tarjetas, no características de autoría arbitrarias de Feishu)
+
+### Hilos y respuestas
+
+- ✅ Respuestas en línea
+- ✅ Respuestas de hilos de temas donde Feishu expone `reply_in_thread`
+- ✅ Las respuestas de medios mantienen el conocimiento del hilo al responder a un mensaje de hilo/tema
+
+## Superficie de acción de tiempo de ejecución
+
+Feishu actualmente expone estas acciones de tiempo de ejecución:
+
+- `send`
+- `read`
+- `edit`
+- `thread-reply`
+- `pin`
+- `list-pins`
+- `unpin`
+- `member-info`
+- `channel-info`
+- `channel-list`
+- `react` y `reactions` cuando las reacciones están habilitadas en la configuración
 
 import es from "/components/footer/es.mdx";
 

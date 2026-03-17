@@ -1,6 +1,6 @@
 ---
-summary: "Notas del protocolo RPC para el asistente de incorporación y el esquema de configuración"
-read_when: "Cambio de pasos del asistente de incorporación o endpoints del esquema de configuración"
+summary: "Notas del protocolo RPC para el asistente de configuración y el esquema de configuración"
+read_when: "Cambiar los pasos del asistente de configuración o los endpoints del esquema de configuración"
 title: "Protocolo de incorporación y configuración"
 ---
 

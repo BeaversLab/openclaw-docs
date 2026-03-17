@@ -33,8 +33,8 @@ openclaw onboard --non-interactive \
 
 Ajoutez `--json` pour un résumé lisible par machine.
 
-Utilisez `--secret-input-mode ref` pour stocker des refs basées sur des env dans les profils d'auth au lieu de valeurs en texte clair.
-La sélection interactive entre les refs d'env et les refs de provider configurées (`file` ou `exec`) est disponible dans le flux de l'assistant d'onboarding.
+Utilisez `--secret-input-mode ref` pour stocker les références basées sur des variables d'environnement dans les profils d'authentification au lieu des valeurs en texte clair.
+Une sélection interactive entre les références d'environnement et les références de fournisseur configurées (`file` ou `exec`) est disponible dans le flux d'onboarding.
 
 En mode `ref` non interactif, les env vars de provider doivent être définies dans l'environnement du processus.
 Le passage de flags de clé en ligne sans la env var correspondante échoue désormais rapidement.
@@ -211,8 +211,8 @@ Notes :
 
 ## Documentation connexe
 
-- Hub d'intégration : [Assistant d'intégration (CLI)](/fr/start/wizard)
-- Référence complète : [Référence de l'intégration CLI](/fr/start/wizard-cli-reference)
+- Hub d'onboarding : [Onboarding (CLI)](/fr/start/wizard)
+- Référence complète : [CLI Setup Reference](/fr/start/wizard-cli-reference)
 - Référence de la commande : [`openclaw onboard`](/fr/cli/onboard)
 
 import fr from "/components/footer/fr.mdx";

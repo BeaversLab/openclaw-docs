@@ -23,24 +23,24 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，
 
 ## 支持的提供商（入门套件）
 
-- [OpenAI (API + Codex)](/en/providers/openai)
-- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
-- [OpenRouter](/en/providers/openrouter)
-- [Vercel AI Gateway(网关)](/en/providers/vercel-ai-gateway)
-- [Cloudflare AI Gateway(网关)](/en/providers/cloudflare-ai-gateway)
-- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
-- [Mistral](/en/providers/mistral)
-- [Synthetic](/en/providers/synthetic)
-- [OpenCode (Zen + Go)](/en/providers/opencode)
-- [Z.AI](/en/providers/zai)
-- [GLM models](/en/providers/glm)
-- [MiniMax](/en/providers/minimax)
-- [Venice (Venice AI)](/en/providers/venice)
-- [Amazon Bedrock](/en/providers/bedrock)
-- [Qianfan](/en/providers/qianfan)
+- [OpenAI (API + Codex)](/zh/providers/openai)
+- [Anthropic (API + Claude Code CLI)](/zh/providers/anthropic)
+- [OpenRouter](/zh/providers/openrouter)
+- [Vercel AI Gateway(网关)](/zh/providers/vercel-ai-gateway)
+- [Cloudflare AI Gateway(网关)](/zh/providers/cloudflare-ai-gateway)
+- [Moonshot AI (Kimi + Kimi Coding)](/zh/providers/moonshot)
+- [Mistral](/zh/providers/mistral)
+- [Synthetic](/zh/providers/synthetic)
+- [OpenCode (Zen + Go)](/zh/providers/opencode)
+- [Z.AI](/zh/providers/zai)
+- [GLM models](/zh/providers/glm)
+- [MiniMax](/zh/providers/minimax)
+- [Venice (Venice AI)](/zh/providers/venice)
+- [Amazon Bedrock](/zh/providers/bedrock)
+- [Qianfan](/zh/providers/qianfan)
 
 如需查看完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
-请参阅 [Model providers](/en/concepts/model-providers)。
+请参阅 [Model providers](/zh/concepts/model-providers)。
 
 import zh from "/components/footer/zh.mdx";
 

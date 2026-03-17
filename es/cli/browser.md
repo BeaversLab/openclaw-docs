@@ -1,9 +1,9 @@
 ---
-summary: "Referencia de la CLI para `openclaw browser` (perfiles, pestañas, acciones, relé de extensiones)"
+summary: "Referencia de la CLI para `openclaw browser` (perfiles, pestañas, acciones, Chrome MCP y CDP)"
 read_when:
   - You use `openclaw browser` and want examples for common tasks
   - You want to control a browser running on another machine via a node host
-  - You want to use the Chrome extension relay (attach/detach via toolbar button)
+  - You want to attach to your local signed-in Chrome via Chrome MCP
 title: "navegador"
 ---
 
@@ -14,15 +14,14 @@ Administre el servidor de control del navegador de OpenClaw y ejecute acciones d
 Relacionado:
 
 - Herramienta de navegador + API: [Herramienta de navegador](/es/tools/browser)
-- Relé de extensión de Chrome: [Extensión de Chrome](/es/tools/chrome-extension)
 
 ## Opciones comunes
 
-- `--url <gatewayWsUrl>`: URL de WebSocket de la puerta de enlace (predeterminado de la configuración).
+- `--url <gatewayWsUrl>`: URL de WebSocket de la puerta de enlace (predeterminado: configuración).
 - `--token <token>`: token de la puerta de enlace (si es necesario).
-- `--timeout <ms>`: tiempo de espera de solicitud (ms).
-- `--browser-profile <name>`: elija un perfil de navegador (predeterminado de la configuración).
-- `--json`: salida legible por máquina (donde sea compatible).
+- `--timeout <ms>`: tiempo de espera de la solicitud (ms).
+- `--browser-profile <name>`: elige un perfil de navegador (predeterminado de la configuración).
+- `--json`: salida legible por máquina (cuando sea compatible).
 
 ## Inicio rápido (local)
 
@@ -37,17 +36,18 @@ openclaw browser --browser-profile openclaw snapshot
 
 Los perfiles son configuraciones de enrutamiento del navegador con nombre. En la práctica:
 
-- `openclaw`: inicia/se adjunta a una instancia de Chrome administrada por OpenClaw dedicada (directorio de datos de usuario aislado).
-- `user`: controla su sesión de Chrome existente con sesión iniciada a través de Chrome DevTools MCP.
-- `chrome-relay`: controla sus pestañas de Chrome existentes a través del relé de extensiones de Chrome.
+- `openclaw`: inicia o se adjunta a una instancia de Chrome administrada por OpenClaw dedicada (directorio de datos de usuario aislado).
+- `user`: controla tu sesión de Chrome existente iniciada a través de Chrome DevTools MCP.
+- perfiles CDP personalizados: apuntan a un punto de conexión CDP local o remoto.
 
 ```bash
 openclaw browser profiles
 openclaw browser create-profile --name work --color "#FF5A36"
+openclaw browser create-profile --name chrome-live --driver existing-session
 openclaw browser delete-profile --name work
 ```
 
-Usar un perfil específico:
+Usa un perfil específico:
 
 ```bash
 openclaw browser --browser-profile work tabs
@@ -84,28 +84,26 @@ openclaw browser click <ref>
 openclaw browser type <ref> "hello"
 ```
 
-## Relé de extensión de Chrome (adjuntar mediante el botón de la barra de herramientas)
+## Chrome existente a través de MCP
 
-Este modo permite que el agente controle una pestaña de Chrome existente que usted adjunta manualmente (no se adjunta automáticamente).
-
-Instale la extensión descomprimida en una ruta estable:
+Usa el perfil integrado `user` o crea tu propio perfil `existing-session`:
 
 ```bash
-openclaw browser extension install
-openclaw browser extension path
+openclaw browser --browser-profile user tabs
+openclaw browser create-profile --name chrome-live --driver existing-session
+openclaw browser create-profile --name brave-live --driver existing-session --user-data-dir "~/Library/Application Support/BraveSoftware/Brave-Browser"
+openclaw browser --browser-profile chrome-live tabs
 ```
 
-Luego Chrome → `chrome://extensions` → habilitar “Modo de desarrollador” → “Cargar descomprimida” → seleccione la carpeta impresa.
-
-Guía completa: [Extensión de Chrome](/es/tools/chrome-extension)
+Esta ruta es solo para el host. Para Docker, servidores sin cabeza, Browserless u otras configuraciones remotas, utiliza un perfil CDP en su lugar.
 
 ## Control remoto del navegador (proxy de host de nodo)
 
-Si la puerta de enlace se ejecuta en una máquina diferente a la del navegador, ejecute un **host de nodo** en la máquina que tiene Chrome/Brave/Edge/Chromium. La puerta de enlace will proxy las acciones del navegador a ese nodo (no se requiere un servidor de control del navegador separado).
+Si la puerta de enlace se ejecuta en una máquina diferente a la del navegador, ejecuta un **node host** en la máquina que tenga Chrome/Brave/Edge/Chromium. La puerta de enlace enviará mediante proxy las acciones del navegador a ese nodo (no se requiere un servidor de control del navegador separado).
 
-Use `gateway.nodes.browser.mode` to control auto-routing and `gateway.nodes.browser.node` to pin a specific node if multiple are connected.
+Usa `gateway.nodes.browser.mode` para controlar el enrutamiento automático y `gateway.nodes.browser.node` para anclar un nodo específico si hay varios conectados.
 
-Security + remote setup: [Browser tool](/es/tools/browser), [Remote access](/es/gateway/remote), [Tailscale](/es/gateway/tailscale), [Security](/es/gateway/security)
+Seguridad + configuración remota: [Herramienta de navegador](/es/tools/browser), [Acceso remoto](/es/gateway/remote), [Tailscale](/es/gateway/tailscale), [Seguridad](/es/gateway/security)
 
 import es from "/components/footer/es.mdx";
 

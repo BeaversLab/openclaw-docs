@@ -12,8 +12,8 @@ title: "channels"
 
 相关文档：
 
-- 频道指南：[频道](/en/channels/index)
-- Gateway(网关) 网关配置：[配置](/en/gateway/configuration)
+- 频道指南：[频道](/zh/channels/index)
+- Gateway(网关) 网关配置：[配置](/zh/gateway/configuration)
 
 ## 常用命令
 
@@ -30,10 +30,11 @@ openclaw channels logs --channel all
 
 ```bash
 openclaw channels add --channel telegram --token <bot-token>
+openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY"
 openclaw channels remove --channel telegram --delete
 ```
 
-提示：`openclaw channels add --help` 显示每个通道的标志（令牌、应用令牌、signal-cli 路径等）。
+提示：`openclaw channels add --help` 显示各渠道的标志（令牌、私钥、应用令牌、signal-cli 路径等）。
 
 当您不带标志运行 `openclaw channels add` 时，交互式向导可以提示：
 
@@ -43,7 +44,7 @@ openclaw channels remove --channel telegram --delete
 
 如果您确认现在绑定，向导会询问每个已配置的通道账户应由哪个代理拥有，并写入账户范围的路由绑定。
 
-您稍后也可以使用 `openclaw agents bindings`、`openclaw agents bind` 和 `openclaw agents unbind` 管理相同的路由规则（请参阅 [agents](/en/cli/agents)）。
+您稍后也可以使用 `openclaw agents bindings`、`openclaw agents bind` 和 `openclaw agents unbind` 管理相同的路由规则（请参阅 [agents](/zh/cli/agents)）。
 
 当您向仍在使用单账户顶级设置（尚未有 `channels.<channel>.accounts` 条目）的通道添加非默认账户时，OpenClaw 会将作用于账户的单账户顶级值移入 `channels.<channel>.accounts.default`，然后写入新账户。这在迁移到多账户结构的同时保留了原始账户行为。
 

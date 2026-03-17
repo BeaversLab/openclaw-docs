@@ -34,9 +34,9 @@ Relacionado:
 - Use respaldos para tareas sensibles al costo/latencia y chat de menor riesgo.
 - Para agentes con herramientas habilitadas o entradas no confiables, evite niveles de modelos más antiguos/débiles.
 
-## Asistente de configuración (recomendado)
+## Incorporación (recomendado)
 
-Si no desea editar la configuración manualmente, ejecute el asistente de incorporación:
+Si no deseas editar la configuración manualmente, ejecuta la incorporación:
 
 ```bash
 openclaw onboard

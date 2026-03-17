@@ -87,11 +87,11 @@ title: "Refactor Cluster Backlog"
 
 - 低
 
-## 3. 入门提示和配置补丁步骤
+## 3. 设置提示和配置补丁步骤
 
 覆盖面广。
 
-许多入门文件重复：
+许多设置文件重复：
 
 - 解析账户 ID
 - 提示允许列表条目
@@ -102,18 +102,18 @@ title: "Refactor Cluster Backlog"
 
 典型示例：
 
-- `extensions/bluebubbles/src/onboarding.ts`
-- `extensions/googlechat/src/onboarding.ts`
-- `extensions/msteams/src/onboarding.ts`
-- `extensions/zalo/src/onboarding.ts`
-- `extensions/zalouser/src/onboarding.ts`
-- `extensions/nextcloud-talk/src/onboarding.ts`
-- `extensions/matrix/src/onboarding.ts`
-- `extensions/irc/src/onboarding.ts`
+- `extensions/bluebubbles/src/setup-surface.ts`
+- `extensions/googlechat/src/setup-surface.ts`
+- `extensions/msteams/src/setup-surface.ts`
+- `extensions/zalo/src/setup-surface.ts`
+- `extensions/zalouser/src/setup-surface.ts`
+- `extensions/nextcloud-talk/src/setup-surface.ts`
+- `extensions/matrix/src/setup-surface.ts`
+- `extensions/irc/src/setup-surface.ts`
 
 现有的辅助接缝：
 
-- `src/channels/plugins/onboarding/helpers.ts`
+- `src/channels/plugins/setup-wizard-helpers.ts`
 
 可能的提取形式：
 

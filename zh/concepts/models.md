@@ -9,8 +9,8 @@ title: "Models CLI"
 
 # 模型 CLI
 
-请参阅 [/concepts/模型-failover](/en/concepts/model-failover) 了解身份配置轮换、冷却时间以及其与回退机制的交互方式。
-快速提供商概览 + 示例：[/concepts/模型-providers](/en/concepts/model-providers)。
+请参阅 [/concepts/模型-failover](/zh/concepts/model-failover) 了解身份配置轮换、冷却时间以及其与回退机制的交互方式。
+快速提供商概览 + 示例：[/concepts/模型-providers](/zh/concepts/model-providers)。
 
 ## 模型选择的工作原理
 
@@ -24,7 +24,7 @@ OpenClaw 按以下顺序选择模型：
 
 - `agents.defaults.models` 是 OpenClaw 可以使用的模型的允许列表/目录（以及别名）。
 - `agents.defaults.imageModel` **仅当** 主模型无法接受图像时才会使用。
-- 每个代理的默认值可以通过 `agents.list[].model` 加上绑定来覆盖 `agents.defaults.model`（请参阅 [/concepts/multi-agent](/en/concepts/multi-agent)）。
+- 每个代理的默认值可以通过 `agents.list[].model` 加上绑定来覆盖 `agents.defaults.model`（请参阅 [/concepts/multi-agent](/zh/concepts/multi-agent)）。
 
 ## 快速模型策略
 
@@ -32,9 +32,9 @@ OpenClaw 按以下顺序选择模型：
 - 针对成本/延迟敏感的任务和低风险聊天使用回退模型。
 - 对于启用了工具的代理或不受信任的输入，请避免使用较旧/较弱的模型层级。
 
-## 设置向导（推荐）
+## 新手引导（推荐）
 
-如果您不想手动编辑配置，请运行新手引导向导：
+如果您不想手动编辑配置，请运行新手引导：
 
 ```bash
 openclaw onboard
@@ -54,7 +54,7 @@ openclaw onboard
 为 `zai/*`。
 
 提供商配置示例（包括 OpenCode）位于
-[/gateway/configuration](/en/gateway/configuration#opencode)。
+[/gateway/configuration](/zh/gateway/configuration#opencode)。
 
 ## “模型不被允许”（以及回复停止的原因）
 
@@ -106,7 +106,7 @@ Model "provider/model" is not allowed. Use /model to list available models.
 - 如果模型 ID 本身包含 `/`（OpenRouter 风格），则必须包含提供商前缀（例如：`/model openrouter/moonshotai/kimi-k2`）。
 - 如果省略提供商，OpenClaw 会将输入视为 **默认提供商** 的别名或模型（仅在模型 ID 中没有 `/` 时有效）。
 
-完整的命令行为/配置：[Slash commands](/en/tools/slash-commands)。
+完整的命令行为/配置：[Slash commands](/zh/tools/slash-commands)。
 
 ## CLI 命令
 
@@ -185,7 +185,7 @@ openclaw models status
 输入
 
 - OpenRouter `/models` 列表（筛选 `:free`）
-- 需要来自身份验证配置文件或 `OPENROUTER_API_KEY` 的 OpenRouter API 密钥（参见 [/environment](/en/help/environment)）
+- 需要来自身份验证配置文件或 `OPENROUTER_API_KEY` 的 OpenRouter API 密钥（参见 [/environment](/zh/help/environment)）
 - 可选筛选器：`--max-age-days`、`--min-params`、`--provider`、`--max-candidates`
 - 探测控制：`--timeout`、`--concurrency`
 

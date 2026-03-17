@@ -28,14 +28,14 @@ status: 活跃
 请将 `auth-profiles.json` 复制到另一个代理的 `agentDir` 中。
 
 Skills 是按每个代理分配的，通过每个工作区的 `skills/` 文件夹，同时共享的 Skills
-可从 `~/.openclaw/skills` 获取。请参阅 [Skills: per-agent vs shared](/en/tools/skills#per-agent-vs-shared-skills)。
+可从 `~/.openclaw/skills` 获取。请参阅 [Skills: per-agent vs shared](/zh/tools/skills#per-agent-vs-shared-skills)。
 
 Gateway 网关 可以托管 **一个智能体**（默认）或 **许多智能体** 并行运行。
 
 **工作区说明：** 每个代理的工作区是 **默认 cwd**，而不是一个严格的
 沙箱。相对路径在工作区内解析，但绝对路径可以
 到达其他主机位置，除非启用了沙箱隔离。请参阅
-[沙箱隔离](/en/gateway/sandboxing)。
+[沙箱隔离](/zh/gateway/sandboxing)。
 
 ## 路径（快速地图）
 
@@ -98,7 +98,7 @@ openclaw agents add social
 openclaw channels login --channel whatsapp --account work
 ```
 
-请参阅渠道指南：[Discord](/en/channels/discord)、[Telegram](/en/channels/telegram)、[WhatsApp](/en/channels/whatsapp)。
+请参阅渠道指南：[Discord](/zh/channels/discord)、[Telegram](/zh/channels/telegram)、[WhatsApp](/zh/channels/whatsapp)。
 
   </Step>
 
@@ -167,7 +167,7 @@ openclaw channels status --probe
 注意事项：
 
 - 私信访问控制在**每个 WhatsApp 账户范围内是全局的**（配对/允许列表），而不是针对每个代理。
-- 对于共享群组，将群组绑定到一个代理或使用[广播群组](/en/channels/broadcast-groups)。
+- 对于共享群组，将群组绑定到一个代理或使用[广播群组](/zh/channels/broadcast-groups)。
 
 ## 路由规则（消息如何选择代理）
 
@@ -547,7 +547,7 @@ openclaw channels login --channel whatsapp --account biz
 如果需要每个代理的边界，请使用 `agents.list[].tools` 来拒绝 `exec`。
 对于群组定位，请使用 `agents.list[].groupChat.mentionPatterns`，以便 @mentions 能清晰地映射到预期的代理。
 
-有关详细示例，请参阅 [Multi-Agent 沙箱 & Tools](/en/tools/multi-agent-sandbox-tools)。
+有关详细示例，请参阅 [Multi-Agent 沙箱 & Tools](/zh/tools/multi-agent-sandbox-tools)。
 
 import zh from "/components/footer/zh.mdx";
 

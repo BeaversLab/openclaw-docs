@@ -62,7 +62,7 @@ openclaw hooks enable soul-evil
 
 ## 另请参阅
 
-- [挂钩](/en/hooks)
+- [挂钩](/zh/hooks)
 
 import zh from "/components/footer/zh.mdx";
 

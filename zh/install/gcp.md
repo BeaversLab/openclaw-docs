@@ -32,7 +32,7 @@ title: "GCP"
 
 本指南在 GCP Compute Engine 上使用 Debian。
 Ubuntu 也可以用；请相应地映射软件包。
-有关通用 Docker 流程，请参阅 [Docker](/en/install/docker)。
+有关通用 Docker 流程，请参阅 [Docker](/zh/install/docker)。
 
 ---
 
@@ -285,10 +285,10 @@ services:
 
 使用共享运行时指南了解通用 Docker 主机流程：
 
-- [将所需的二进制文件烘焙到镜像中](/en/install/docker-vm-runtime#bake-required-binaries-into-the-image)
-- [构建并启动](/en/install/docker-vm-runtime#build-and-launch)
-- [什么内容持久化在哪里](/en/install/docker-vm-runtime#what-persists-where)
-- [更新](/en/install/docker-vm-runtime#updates)
+- [将所需的二进制文件烘焙到镜像中](/zh/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+- [构建并启动](/zh/install/docker-vm-runtime#build-and-launch)
+- [什么内容持久化在哪里](/zh/install/docker-vm-runtime#what-persists-where)
+- [更新](/zh/install/docker-vm-runtime#updates)
 
 ---
 
@@ -332,7 +332,7 @@ docker compose run --rm openclaw-cli devices approve <requestId>
 ```
 
 还需要了解共享持久化和更新参考吗？
-请参阅 [Docker VM Runtime](/en/install/docker-vm-runtime#what-persists-where) 和 [Docker VM Runtime 更新](/en/install/docker-vm-runtime#updates)。
+请参阅 [Docker VM Runtime](/zh/install/docker-vm-runtime#what-persists-where) 和 [Docker VM Runtime 更新](/zh/install/docker-vm-runtime#updates)。
 
 ---
 
@@ -400,9 +400,9 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 ## 后续步骤
 
-- 设置消息通道：[Channels](/en/channels)
-- 将本地设备配对为节点：[Nodes](/en/nodes)
-- 配置 Gateway(网关)：[Gateway(网关) configuration](/en/gateway/configuration)
+- 设置消息通道：[Channels](/zh/channels)
+- 将本地设备配对为节点：[Nodes](/zh/nodes)
+- 配置 Gateway(网关)：[Gateway(网关) configuration](/zh/gateway/configuration)
 
 import zh from "/components/footer/zh.mdx";
 

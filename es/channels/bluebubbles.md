@@ -126,7 +126,7 @@ launchctl load ~/Library/LaunchAgents/com.user.poke-messages.plist
 
 ## Incorporación
 
-BlueBubbles está disponible en el asistente de configuración interactiva:
+BlueBubbles está disponible en la incorporación interactiva:
 
 ```
 openclaw onboard

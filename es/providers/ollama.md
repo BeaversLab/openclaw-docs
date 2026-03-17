@@ -19,15 +19,15 @@ Ollama es un tiempo de ejecución de LLM local que facilita la ejecución de mod
 
 ## Inicio rápido
 
-### Asistente de incorporación (recomendado)
+### Incorporación (recomendado)
 
-La forma más rápida de configurar Ollama es a través del asistente de incorporación:
+La forma más rápida de configurar Ollama es a través de la incorporación:
 
 ```bash
 openclaw onboard
 ```
 
-Selecciona **Ollama** de la lista de proveedores. El asistente:
+Seleccione **Ollama** de la lista de proveedores. La incorporación:
 
 1. Solicitará la URL base de Ollama donde se puede alcanzar tu instancia (por defecto `http://127.0.0.1:11434`).
 2. Te permitirá elegir **Nube + Local** (modelos en la nube y modelos locales) o **Local** (solo modelos locales).
@@ -235,7 +235,7 @@ Una vez configurados, todos sus modelos de Ollama están disponibles:
 
 Los modelos en la nube le permiten ejecutar modelos alojados en la nube (por ejemplo `kimi-k2.5:cloud`, `minimax-m2.5:cloud`, `glm-5:cloud`) junto con sus modelos locales.
 
-Para utilizar modelos en la nube, seleccione el modo **Nube + Local** durante la incorporación. El asistente verifica si ha iniciado sesión y abre un flujo de inicio de sesión en el navegador cuando sea necesario. Si no se puede verificar la autenticación, el asistente recurre a los valores predeterminados del modelo local.
+Para usar modelos en la nube, seleccione el modo **Nube + Local** durante la configuración. El asistente verifica si ha iniciado sesión y abre un flujo de inicio de sesión en el navegador cuando es necesario. Si no se puede verificar la autenticación, el asistente recurre a los modelos locales predeterminados.
 
 También puede iniciar sesión directamente en [ollama.com/signin](https://ollama.com/signin).
 

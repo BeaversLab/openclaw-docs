@@ -33,8 +33,8 @@ Descarga local (al ejecutar desde un repositorio git):
 openclaw plugins install ./extensions/msteams
 ```
 
-Si eliges Teams durante la configuración/incorporación y se detecta una descarga de git,
-OpenClaw ofrecerá la ruta de instalación local automáticamente.
+Si eliges Teams durante la configuración y se detecta una extracción de git,
+OpenClaw ofrecerá automáticamente la ruta de instalación local.
 
 Detalles: [Plugins](/es/tools/plugin)
 

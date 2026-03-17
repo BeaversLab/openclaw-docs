@@ -204,7 +204,7 @@ your-domain.com {
 - `typingIndicator` 支持 `none`、`message`（默认）和 `reaction`（回应需要用户 OAuth）。
 - 附件通过 Chat API 下载并存储在媒体管道中（大小由 `mediaMaxMb` 限制）。
 
-Secrets 引用详情：[Secrets Management](/en/gateway/secrets)。
+Secrets 引用详情：[Secrets Management](/zh/gateway/secrets)。
 
 ## 故障排除
 
@@ -256,9 +256,9 @@ openclaw channels status
 
 相关文档：
 
-- [Gateway(网关) 配置](/en/gateway/configuration)
-- [安全](/en/gateway/security)
-- [回应](/en/tools/reactions)
+- [Gateway(网关) 配置](/zh/gateway/configuration)
+- [安全](/zh/gateway/security)
+- [回应](/zh/tools/reactions)
 
 import zh from "/components/footer/zh.mdx";
 

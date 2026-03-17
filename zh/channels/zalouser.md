@@ -18,7 +18,7 @@ Zalo Personal 作为插件提供，不包含在核心安装中。
 
 - 通过 CLI 安装：`openclaw plugins install @openclaw/zalouser`
 - 或者从源代码检出：`openclaw plugins install ./extensions/zalouser`
-- 详情：[插件](/en/tools/plugin)
+- 详情：[插件](/zh/tools/plugin)
 
 不需要外部 `zca`/`openzca` CLI 二进制文件。
 
@@ -41,7 +41,7 @@ Zalo Personal 作为插件提供，不包含在核心安装中。
 }
 ```
 
-4. 重启 Gateway(网关)（或完成新手引导）。
+4. 重新启动 Gateway(网关)（或完成设置）。
 5. 私信访问默认为配对模式；首次联系时请批准配对码。
 
 ## 简介
@@ -74,7 +74,7 @@ openclaw directory groups list --channel zalouser --query "work"
 
 `channels.zalouser.dmPolicy` 支持：`pairing | allowlist | open | disabled`（默认：`pairing`）。
 
-`channels.zalouser.allowFrom` 接受用户 ID 或名称。在新手引导期间，名称将通过插件的进程内联系人查找解析为 ID。
+`channels.zalouser.allowFrom` 接受用户 ID 或名称。在设置过程中，会使用插件的进程内联系人查找功能将名称解析为 ID。
 
 通过以下方式批准：
 
@@ -161,7 +161,7 @@ openclaw directory groups list --channel zalouser --query "work"
 - OpenClaw 在发送回复之前会发送正在输入事件（尽力而为）。
 - 渠道操作中支持针对 `zalouser` 的消息反应操作 `react`。
   - 使用 `remove: true` 从消息中移除特定的反应表情符号。
-  - 反应语义：[Reactions](/en/tools/reactions)
+  - 反应语义：[Reactions](/zh/tools/reactions)
 - 对于包含事件元数据的传入消息，OpenClaw 会发送已送达和已读回执（尽力而为）。
 
 ## 故障排除

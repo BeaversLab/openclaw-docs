@@ -1,5 +1,5 @@
 ---
-summary: "CLI 参考，适用于 `openclaw onboard`（交互式新手引导向导）"
+summary: "CLI 参考文档 `openclaw onboard`（交互式新手引导）"
 read_when:
   - You want guided setup for gateway, workspace, auth, channels, and skills
 title: "onboard"
@@ -7,15 +7,15 @@ title: "onboard"
 
 # `openclaw onboard`
 
-交互式入门向导（本地或远程 Gateway 网关 设置）。
+用于本地或远程 Gateway(网关) 设置的交互式新手引导。
 
 ## 相关指南
 
-- CLI 新手引导中心：[新手引导向导 (CLI)](/en/start/wizard)
-- 新手引导概述：[新手引导概述](/en/start/onboarding-overview)
-- CLI 新手引导参考：[CLI 新手引导参考](/en/start/wizard-cli-reference)
-- CLI 自动化：[CLI 自动化](/en/start/wizard-cli-automation)
-- macOS 新手引导：[新手引导 (macOS 应用)](/en/start/onboarding)
+- CLI 新手引导中心：[新手引导 (CLI)](/zh/start/wizard)
+- 新手引导概述：[新手引导概述](/zh/start/onboarding-overview)
+- CLI 新手引导参考：[CLI Setup Reference](/zh/start/wizard-cli-reference)
+- CLI 自动化：[CLI 自动化](/zh/start/wizard-cli-automation)
+- macOS 新手引导：[新手引导 (macOS 应用)](/zh/start/onboarding)
 
 ## 示例
 
@@ -139,7 +139,7 @@ Flow 备注：
 
 - `quickstart`：最少的提示，自动生成网关令牌。
 - `manual`：针对端口/绑定/身份验证的完整提示（`advanced` 的别名）。
-- 本地新手引导私信范围行为：[CLI 新手引导 Reference](/en/start/wizard-cli-reference#outputs-and-internals)。
+- 本地新手引导私信作用域行为：[CLI Setup Reference](/zh/start/wizard-cli-reference#outputs-and-internals)。
 - 最快的首次聊天：`openclaw dashboard`（控制 UI，无需渠道设置）。
 - 自定义提供商：连接任何 OpenAI 或 Anthropic 兼容端点，包括未列出的托管提供商。使用 Unknown 进行自动检测。
 

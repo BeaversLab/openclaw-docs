@@ -14,21 +14,21 @@ de cómo prefieras configurar los proveedores.
 
 ## Elige tu ruta de incorporación
 
-- **Asistente de CLI** para macOS, Linux y Windows (a través de WSL2).
+- **Incorporación mediante CLI** para macOS, Linux y Windows (mediante WSL2).
 - **Aplicación macOS** para una primera ejecución guiada en Mac con Apple silicon o Intel.
 
-## Asistente de incorporación de CLI
+## Incorporación mediante CLI
 
-Ejecuta el asistente en una terminal:
+Ejecute la incorporación en una terminal:
 
 ```bash
 openclaw onboard
 ```
 
-Usa el asistente de CLI cuando quieras tener control total del Gateway, espacio de trabajo,
-canales y habilidades. Documentos:
+Utilice la incorporación mediante CLI cuando desee tener control total de la Gateway, el área de trabajo,
+los canales y las aptitudes. Documentación:
 
-- [Asistente de incorporación (CLI)](/es/start/wizard)
+- [Incorporación (CLI)](/es/start/wizard)
 - [comando `openclaw onboard`](/es/cli/onboard)
 
 ## Incorporación con la aplicación macOS
@@ -39,9 +39,9 @@ Usa la aplicación OpenClaw cuando quieras una configuración totalmente guiada 
 
 ## Proveedor personalizado
 
-Si necesitas un punto final que no esté en la lista, incluidos los proveedores alojados que
-expongan API estándar de OpenAI o Anthropic, elige **Proveedor personalizado** en el
-asistente de CLI. Se te pedirá que:
+Si necesita un punto de conexión que no esté en la lista, incluidos los proveedores alojados que
+exponen API estándar de OpenAI o Anthropic, elija **Proveedor personalizado** en la
+incorporación mediante CLI. Se le pedirá que:
 
 - Elijas compatible con OpenAI, compatible con Anthropic o **Desconocido** (detectar automáticamente).
 - Ingreses una URL base y una clave de API (si el proveedor lo requiere).

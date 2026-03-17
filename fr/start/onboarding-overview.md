@@ -14,21 +14,21 @@ et la manière dont vous préférez configurer les providers.
 
 ## Choisissez votre parcours d'onboarding
 
-- **Assistant CLI** pour macOS, Linux et Windows (via WSL2).
+- **CLI onboarding** pour macOS, Linux et Windows (via WSL2).
 - **Application macOS** pour une première exécution guidée sur Mac Apple silicon ou Intel.
 
-## Assistant d'onboarding CLI
+## CLI onboarding
 
-Exécutez l'assistant dans un terminal :
+Exécutez l'onboarding dans un terminal :
 
 ```bash
 openclaw onboard
 ```
 
-Utilisez l'assistant CLI lorsque vous souhaitez un contrôle total du Gateway, de l'espace de travail,
+Utilisez l'onboarding CLI lorsque vous souhaitez un contrôle total du Gateway, de l'espace de travail,
 des canaux et des compétences. Documentation :
 
-- [Assistant d'onboarding (CLI)](/fr/start/wizard)
+- [Onboarding (CLI)](/fr/start/wizard)
 - [commande `openclaw onboard`](/fr/cli/onboard)
 
 ## Onboarding de l'application macOS
@@ -39,9 +39,9 @@ Utilisez l'application OpenClaw lorsque vous souhaitez une configuration entièr
 
 ## Provider personnalisé
 
-Si vous avez besoin d'un point de terminaison qui n'est pas répertorié, y compris les providers hébergés qui
-exposent des API standard OpenAI ou Anthropic, choisissez **Provider personnalisé** dans l'
-assistant CLI. Il vous sera demandé de :
+Si vous avez besoin d'un point de terminaison qui n'est pas répertorié, y compris les fournisseurs hébergés qui
+exposent des API standard OpenAI ou Anthropic, choisissez **Fournisseur personnalisé** dans l'
+CLI onboarding. Il vous sera demandé de :
 
 - Choisir OpenAI-compatible, Anthropic-compatible ou **Inconnu** (détection automatique).
 - Entrer une URL de base et une clé API (si requis par le provider).

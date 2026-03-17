@@ -121,22 +121,21 @@ curl -s http://127.0.0.1:18791/tabs
 | `browser.attachOnly`     | No iniciar el navegador, solo adjuntarse al existente                                | `false`                                                                             |
 | `browser.cdpPort`        | Puerto del Protocolo de Chrome DevTools                                              | `18800`                                                                             |
 
-### Problema: "El relé de la extensión de Chrome se está ejecutando, pero no hay ninguna pestaña conectada"
+### Problema: "No se encontraron pestañas de Chrome para profile=\"user\""
 
-Estás utilizando un perfil de relé de extensión. Se espera que la
-extensión del navegador de OpenClaw esté adjunta a una pestaña activa.
+Estás utilizando un perfil `existing-session` / Chrome MCP. OpenClaw puede ver el Chrome local,
+pero no hay pestañas abiertas disponibles para adjuntar.
 
 Opciones de solución:
 
-1. **Usar el navegador gestionado:** `openclaw browser start --browser-profile openclaw`
-   (o establecer `browser.defaultProfile: "openclaw"`).
-2. **Usar el relé de extensión:** instala la extensión, abre una pestaña y haz clic en el
-   icono de la extensión de OpenClaw para adjuntarla.
+1. **Use el navegador administrado:** `openclaw browser start --browser-profile openclaw`
+   (o configure `browser.defaultProfile: "openclaw"`).
+2. **Use Chrome MCP:** asegúrese de que Chrome local se esté ejecutando con al menos una pestaña abierta, luego reintente con `--browser-profile user`.
 
 Notas:
 
-- El perfil `chrome-relay` utiliza tu **navegador Chromium predeterminado del sistema** cuando sea posible.
-- Los perfiles `openclaw` locales asignan automáticamente `cdpPort`/`cdpUrl`; solo establece esos valores para CDP remoto.
+- `user` es solo para el host. Para servidores Linux, contenedores o hosts remotos, prefiera los perfiles CDP.
+- Los perfiles `openclaw` locales asignan automáticamente `cdpPort`/`cdpUrl`; solo configure esos para CDP remoto.
 
 import es from "/components/footer/es.mdx";
 

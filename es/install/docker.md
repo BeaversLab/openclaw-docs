@@ -14,7 +14,7 @@ Docker es **opcional**. Úselo solo si desea una puerta de enlace contenerizada 
 
 - **Sí**: desea un entorno de puerta de enlace aislado y desechable o ejecutar OpenClaw en un host sin instalaciones locales.
 - **No**: está ejecutando en su propia máquina y solo desea el bucle de desarrollo más rápido. Use el flujo de instalación normal en su lugar.
-- **Nota sobre el aislamiento (sandboxing)**: el aislamiento de agentes también usa Docker, pero **no** requiere que toda la puerta de enlace se ejecute en Docker. Consulte [Sandboxing](/es/gateway/sandboxing).
+- **Nota sobre el aislamiento (Sandboxing)**: el aislamiento del agente también utiliza Docker, pero **no** requiere que toda la pasarela se ejecute en Docker. Consulte [Sandboxing](/es/gateway/sandboxing).
 
 Esta guía cubre:
 
@@ -29,7 +29,7 @@ Detalles del aislamiento: [Sandboxing](/es/gateway/sandboxing)
 - Al menos 2 GB de RAM para la compilación de la imagen (`pnpm install` puede ser terminado por OOM en hosts de 1 GB con salida 137)
 - Suficiente espacio en disco para imágenes + registros
 - Si se ejecuta en un VPS/host público, revise
-  [Endurecimiento de seguridad para la exposición a la red](/es/gateway/security#04-network-exposure-bind--port--firewall),
+  [Endurecimiento de seguridad para la exposición de red](/es/gateway/security#04-network-exposure-bind--port--firewall),
   especialmente la política de firewall de Docker `DOCKER-USER`.
 
 ## Puerta de enlace contenerizada (Docker Compose)
@@ -51,7 +51,7 @@ Desde la raíz del repositorio:
 Este script:
 
 - construye la imagen de la puerta de enlace localmente (o extrae una imagen remota si `OPENCLAW_IMAGE` está configurado)
-- ejecuta el asistente de incorporación
+- ejecuta el onboarding
 - imprime sugerencias de configuración opcionales del proveedor
 - inicia la puerta de enlace a través de Docker Compose
 - genera un token de puerta de enlace y lo escribe en `.env`
@@ -143,7 +143,7 @@ Escribe config/workspace en el host:
 - `~/.openclaw/`
 - `~/.openclaw/workspace`
 
-¿Ejecutándose en un VPS? Consulte [Hetzner (Docker VPS)](/es/install/hetzner).
+¿Ejecutando en un VPS? Consulte [Hetzner (Docker VPS)](/es/install/hetzner).
 
 ### Usar una imagen remota (omitir compilación local)
 
@@ -218,7 +218,7 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 
 Luego use `clawdock-start`, `clawdock-stop`, `clawdock-dashboard`, etc. Ejecute `clawdock-help` para todos los comandos.
 
-Consulte el [README de los asistentes de `ClawDock`](https://github.com/openclaw/openclaw/blob/main/scripts/shell-helpers/README.md) para obtener más detalles.
+Consulte el [README del asistente `ClawDock`](https://github.com/openclaw/openclaw/blob/main/scripts/shell-helpers/README.md) para obtener más detalles.
 
 ### Flujo manual (compose)
 
@@ -247,7 +247,7 @@ docker compose run --rm openclaw-cli devices list
 docker compose run --rm openclaw-cli devices approve <requestId>
 ```
 
-Más detalles: [Panel](/es/web/dashboard), [Dispositivos](/es/cli/devices).
+Más detalles: [Panel de control](/es/web/dashboard), [Dispositivos](/es/cli/devices).
 
 ### Montajes adicionales (opcional)
 
@@ -566,7 +566,8 @@ Si utiliza el enrutamiento multiagente, cada agente puede anular la configuraci�
 - Herramientas de solo lectura + espacio de trabajo de solo lectura (agente familiar/de trabajo)
 - Sin herramientas de sistema de archivos/shell (agente público)
 
-Consulte [Sandbox y herramientas multiagente](/es/tools/multi-agent-sandbox-tools) para ver ejemplos, precedencia y solución de problemas.
+Consulte [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para ver ejemplos,
+prioridad y resolución de problemas.
 
 ### Comportamiento predeterminado
 
@@ -707,13 +708,14 @@ un observador noVNC opcional (con interfaz gráfica a través de Xvfb).
 
 Notas:
 
+- Docker y otros flujos de navegador headless/contenedor se mantienen en CDP sin procesar. Chrome MCP `existing-session` es para Chrome local al host, no para la toma de control del contenedor.
 - Headful (Xvfb) reduce el bloqueo de bots en comparación con headless.
-- Headless aún se puede usar configurando `agents.defaults.sandbox.browser.headless=true`.
+- Todavía se puede usar headless configurando `agents.defaults.sandbox.browser.headless=true`.
 - No se necesita un entorno de escritorio completo (GNOME); Xvfb proporciona la pantalla.
-- Los contenedores del navegador utilizan de forma predeterminada una red dedicada de Docker (`openclaw-sandbox-browser`) en lugar de `bridge` global.
-- Opcional `agents.defaults.sandbox.browser.cdpSourceRange` restringe el ingreso de CDP en el borde del contenedor por CIDR (por ejemplo, `172.21.0.1/32`).
-- El acceso del observador noVNC está protegido por contraseña de forma predeterminada; OpenClaw proporciona una URL de token de observador de corta duración que sirve una página de arranque local y mantiene la contraseña en el fragmento de la URL (en lugar de la consulta de la URL).
-- Los valores predeterminados de inicio del contenedor del navegador son conservadores para cargas de trabajo compartidas/en contenedores, incluyendo:
+- Los contenedores del navegador usan por defecto una red Docker dedicada (`openclaw-sandbox-browser`) en lugar del `bridge` global.
+- Opcional `agents.defaults.sandbox.browser.cdpSourceRange` restringe el ingreso de CDP en el borde del contenedor por CIDR (por ejemplo `172.21.0.1/32`).
+- El acceso de observador noVNC está protegido con contraseña por defecto; OpenClaw proporciona una URL de token de observador de corta duración que sirve una página de arranque local y mantiene la contraseña en el fragmento de la URL (en lugar de la consulta de la URL).
+- Los valores predeterminados de inicio del contenedor del navegador son conservadores para cargas de trabajo compartidas/de contenedor, incluyendo:
   - `--remote-debugging-address=127.0.0.1`
   - `--remote-debugging-port=<derived from OPENCLAW_BROWSER_CDP_PORT>`
   - `--user-data-dir=${HOME}/.chrome`
@@ -731,20 +733,20 @@ Notas:
   - `--renderer-process-limit=2`
   - `--no-zygote`
   - `--disable-extensions`
-  - Si `agents.defaults.sandbox.browser.noSandbox` está configurado, `--no-sandbox` y
-    `--disable-setuid-sandbox` también se agregan.
-  - Las tres banderas de endurecimiento de gráficos anteriores son opcionales. Si su carga de trabajo necesita
-    WebGL/3D, configure `OPENCLAW_BROWSER_DISABLE_GRAPHICS_FLAGS=0` para ejecutar sin
+  - Si `agents.defaults.sandbox.browser.noSandbox` está establecido, `--no-sandbox` y
+    `--disable-setuid-sandbox` también se añaden.
+  - Los tres indicadores de endurecimiento de gráficos anteriores son opcionales. Si su carga de trabajo necesita
+    WebGL/3D, establezca `OPENCLAW_BROWSER_DISABLE_GRAPHICS_FLAGS=0` para ejecutar sin
     `--disable-3d-apis`, `--disable-software-rasterizer` y `--disable-gpu`.
-  - El comportamiento de la extensión se controla mediante `--disable-extensions` y se puede desactivar
-    (habilita las extensiones) a través de `OPENCLAW_BROWSER_DISABLE_EXTENSIONS=0` para
-    páginas dependientes de extensiones o flujos de trabajo con muchas extensiones.
+  - El comportamiento de la extensión está controlado por `--disable-extensions` y se puede desactivar
+    (habilita extensiones) mediante `OPENCLAW_BROWSER_DISABLE_EXTENSIONS=0` para
+    páginas dependientes de extensiones o flujos de trabajo intensivos en extensiones.
   - `--renderer-process-limit=2` también es configurable con
-    `OPENCLAW_BROWSER_RENDERER_PROCESS_LIMIT`; configure `0` para dejar que Chromium elija su
+    `OPENCLAW_BROWSER_RENDERER_PROCESS_LIMIT`; establezca `0` para permitir que Chromium elija su
     límite de proceso predeterminado cuando sea necesario ajustar la concurrencia del navegador.
 
 Los valores predeterminados se aplican de forma predeterminada en la imagen incluida. Si necesita diferentes
-banderas de Chromium, use una imagen de navegador personalizada y proporcione su propio punto de entrada.
+indicadores de Chromium, use una imagen de navegador personalizada y proporcione su propio punto de entrada.
 
 Usar configuración:
 
@@ -777,8 +779,8 @@ Cuando está habilitado, el agente recibe:
 - una URL de control del navegador sandbox (para la herramienta `browser`)
 - una URL noVNC (si está habilitado y headless=false)
 
-Recuerde: si usa una lista de permitidos para herramientas, agregue `browser` (y elimínela de
-deny) o la herramienta permanecerá bloqueada.
+Recuerde: si usa una lista de permitidos para herramientas, agregue `browser` (y elimínelo de
+denylist) o la herramienta permanecerá bloqueada.
 Las reglas de poda (`agents.defaults.sandbox.prune`) también se aplican a los contenedores del navegador.
 
 ### Imagen sandbox personalizada
@@ -801,13 +803,13 @@ docker build -t my-openclaw-sbx -f Dockerfile.sandbox .
 
 ### Política de herramientas (permitir/denegar)
 
-- `deny` prevalece sobre `allow`.
-- Si `allow` está vacío: todas las herramientas (excepto las denegadas) están disponibles.
+- `deny` tiene prioridad sobre `allow`.
+- Si `allow` está vacío: todas las herramientas (excepto denegadas) están disponibles.
 - Si `allow` no está vacío: solo las herramientas en `allow` están disponibles (menos las denegadas).
 
-### Estrategia de poda
+### Estrategia de poda (pruning)
 
-Dos perillas:
+Dos controles:
 
 - `prune.idleHours`: eliminar contenedores no usados en X horas (0 = desactivar)
 - `prune.maxAgeDays`: eliminar contenedores antiguos de más de X días (0 = desactivar)
@@ -816,24 +818,24 @@ Ejemplo:
 
 - Mantener sesiones ocupadas pero limitar su vida útil:
   `idleHours: 24`, `maxAgeDays: 7`
-- Nunca limpiar (prune):
+- Nunca podar:
   `idleHours: 0`, `maxAgeDays: 0`
 
 ### Notas de seguridad
 
-- El límite estricto (hard wall) solo se aplica a las **herramientas** (exec/read/write/edit/apply_patch).
-- Las herramientas solo de host como navegador/cámara/canvas están bloqueadas por defecto.
+- El muro duro solo se aplica a las **herramientas** (exec/read/write/edit/apply_patch).
+- Las herramientas solo para el host como navegador/cámara/lienzo están bloqueadas por defecto.
 - Permitir `browser` en el sandbox **rompe el aislamiento** (el navegador se ejecuta en el host).
 
 ## Solución de problemas
 
-- Imagen no encontrada: compila con [`scripts/sandbox-setup.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/sandbox-setup.sh) o establece `agents.defaults.sandbox.docker.image`.
-- Contenedor no ejecutándose: se creará automáticamente por sesión bajo demanda.
-- Errores de permisos en el sandbox: establece `docker.user` a un UID:GID que coincida con
-  la propiedad de tu espacio de trabajo montado (o cambia el propietario de la carpeta del espacio de trabajo).
+- Falta la imagen: compila con [`scripts/sandbox-setup.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/sandbox-setup.sh) o establece `agents.defaults.sandbox.docker.image`.
+- Contenedor no en ejecución: se creará automáticamente por sesión bajo demanda.
+- Errores de permiso en el sandbox: establece `docker.user` a un UID:GID que coincida con el
+  propietario de tu espacio de trabajo montado (o haz chown a la carpeta del espacio de trabajo).
 - Herramientas personalizadas no encontradas: OpenClaw ejecuta comandos con `sh -lc` (shell de inicio de sesión), lo cual
-  ejecuta `/etc/profile` y puede restablecer PATH. Establece `docker.env.PATH` para anteponer tus
-  rutas de herramientas personalizadas (por ejemplo, `/custom/bin:/usr/local/share/npm-global/bin`), o añade
+  obtiene `/etc/profile` y puede restablecer PATH. Establece `docker.env.PATH` para anteponer tus
+  rutas de herramientas personalizadas (ej., `/custom/bin:/usr/local/share/npm-global/bin`), o añade
   un script bajo `/etc/profile.d/` en tu Dockerfile.
 
 import es from "/components/footer/es.mdx";

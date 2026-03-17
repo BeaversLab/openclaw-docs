@@ -96,7 +96,7 @@ synthetic/hf:MiniMaxAI/MiniMax-M2.5
 - 模型引用使用 `synthetic/<modelId>`。
 - 如果您启用了模型允许列表（`agents.defaults.models`），请添加您计划
   使用的每个模型。
-- 有关提供商规则，请参阅[模型提供商](/en/concepts/model-providers)。
+- 有关提供商规则，请参阅[模型提供商](/zh/concepts/model-providers)。
 
 import zh from "/components/footer/zh.mdx";
 

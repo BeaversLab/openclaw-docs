@@ -10,7 +10,7 @@ title: "docs"
 Rechercher dans l'index de la documentation en direct.
 
 ```bash
-openclaw docs browser extension
+openclaw docs browser existing-session
 openclaw docs sandbox allowHostControl
 ```
 

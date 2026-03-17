@@ -87,11 +87,11 @@ Riesgo:
 
 - Bajo
 
-## 3. Pasos de incorporación y parches de configuración
+## 3. Configuración del prompt y pasos del parche de configuración
 
 Gran área de superficie.
 
-Muchos archivos de incorporación repiten:
+Muchos archivos de configuración se repiten:
 
 - resolver ID de cuenta
 - solicitar entradas de lista blanca
@@ -102,18 +102,18 @@ Muchos archivos de incorporación repiten:
 
 Ejemplos sólidos:
 
-- `extensions/bluebubbles/src/onboarding.ts`
-- `extensions/googlechat/src/onboarding.ts`
-- `extensions/msteams/src/onboarding.ts`
-- `extensions/zalo/src/onboarding.ts`
-- `extensions/zalouser/src/onboarding.ts`
-- `extensions/nextcloud-talk/src/onboarding.ts`
-- `extensions/matrix/src/onboarding.ts`
-- `extensions/irc/src/onboarding.ts`
+- `extensions/bluebubbles/src/setup-surface.ts`
+- `extensions/googlechat/src/setup-surface.ts`
+- `extensions/msteams/src/setup-surface.ts`
+- `extensions/zalo/src/setup-surface.ts`
+- `extensions/zalouser/src/setup-surface.ts`
+- `extensions/nextcloud-talk/src/setup-surface.ts`
+- `extensions/matrix/src/setup-surface.ts`
+- `extensions/irc/src/setup-surface.ts`
 
 Punto de unión del asistente existente:
 
-- `src/channels/plugins/onboarding/helpers.ts`
+- `src/channels/plugins/setup-wizard-helpers.ts`
 
 Forma probable de extracción:
 

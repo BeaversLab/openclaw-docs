@@ -30,10 +30,11 @@ openclaw channels logs --channel all
 
 ```bash
 openclaw channels add --channel telegram --token <bot-token>
+openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY"
 openclaw channels remove --channel telegram --delete
 ```
 
-Conseil : `openclaw channels add --help` affiche les indicateurs par channel (jeton, jeton d'application, chemins signal-cli, etc.).
+Astuce : `openclaw channels add --help` affiche les indicateurs par channel (jeton, clé privée, jeton d'application, chemins signal-cli, etc).
 
 Lorsque vous exécutez `openclaw channels add` sans indicateurs, l'assistant interactif peut demander :
 

@@ -740,8 +740,8 @@ En modo mínimo, el Gateway aún transmite lo suficiente para el descubrimiento 
 La autenticación del Gateway es **requerida por defecto**. Si no se configura ningún token/contraseña,
 el Gateway rechaza las conexiones WebSocket (fail‑closed).
 
-El asistente de configuración genera un token por defecto (incluso para loopback) para que
-los clientes locales deban autenticarse.
+La incorporación genera un token por defecto (incluso para loopback), por lo que
+los clientes locales deben autenticarse.
 
 Establezca un token para que **todos** los clientes de WS deban autenticarse:
 
@@ -992,19 +992,18 @@ acceder a esas cuentas y datos. Trate los perfiles del navegador como **estado c
 - Trate las descargas del navegador como entrada que no es de confianza; prefiera un directorio de descargas aislado.
 - Deshabilite la sincronización del navegador/gestores de contraseñas en el perfil del agente si es posible (reduce el radio de explosión).
 - Para puertas de enlace remotas, asuma que el "control del navegador" es equivalente al "acceso del operador" a todo lo que ese perfil puede alcanzar.
-- Mantenga los hosts de la puerta de enlace y de los nodos solo en tailnet; evite exponer los puertos de retransmisión/control a la LAN o a Internet pública.
-- El punto final CDP del relé de la extensión de Chrome está protegido por autenticación; solo los clientes de OpenClaw pueden conectarse.
+- Mantenga el Gateway y los hosts de nodos solo en tailnet; evite exponer los puertos de control del navegador a la LAN o a Internet pública.
 - Deshabilite el enrutamiento del proxy del navegador cuando no lo necesite (`gateway.nodes.browser.mode="off"`).
-- El modo de retransmisión de la extensión de Chrome **no** es «más seguro»; puede tomar el control de sus pestañas existentes de Chrome. Asuma que puede actuar como usted en cualquier lugar al que esa pestaña/perfil pueda acceder.
+- El modo de sesión existente de Chrome MCP **no** es "más seguro"; puede actuar como usted en cualquier cosa a la que el perfil de Chrome de ese host pueda acceder.
 
-### Política de SSRF del navegador (predeterminado: red de confianza)
+### Política de SSRF del navegador (valor predeterminado: red confiable)
 
-La política de red del navegador de OpenClaw tiene como valor predeterminado el modelo de operador de confianza: se permiten los destinos privados/internos a menos que los deshabilite explícitamente.
+La política de red del navegador de OpenClaw tiene como valor predeterminado el modelo de operador confiable: se permiten los destinos privados/internos a menos que los deshabilite explícitamente.
 
-- Predeterminado: `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork: true` (implícito si no se establece).
+- Predeterminado: `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork: true` (implícito si no está configurado).
 - Alias heredado: `browser.ssrfPolicy.allowPrivateNetwork` todavía se acepta por compatibilidad.
-- Modo estricto: establezca `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork: false` para bloquear los destinos privados/internos/de uso especial de forma predeterminada.
-- En modo estricto, use `hostnameAllowlist` (patrones como `*.example.com`) y `allowedHostnames` (excepciones de host exactas, incluyendo nombres bloqueados como `localhost`) para excepciones explícitas.
+- Modo estricto: configure `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork: false` para bloquear destinos privados/internos/de uso especial por defecto.
+- En modo estricto, use `hostnameAllowlist` (patrones como `*.example.com`) y `allowedHostnames` (excepciones exactas de host, incluidos nombres bloqueados como `localhost`) para excepciones explícitas.
 - La navegación se verifica antes de la solicitud y se vuelve a verificar con el mejor esfuerzo en la URL final `http(s)` después de la navegación para reducir los pivotes basados en redirecciones.
 
 Ejemplo de política estricta:
@@ -1023,16 +1022,16 @@ Ejemplo de política estricta:
 
 ## Perfiles de acceso por agente (multiagente)
 
-Con el enrutamiento multiagente, cada agente puede tener su propia política de entorno limitado (sandbox) + herramientas:
-use esto para dar **acceso completo**, **solo lectura** o **sin acceso** por agente.
-Consulte [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para obtener detalles completos
+Con el enrutamiento multiagente, cada agente puede tener su propio sandbox + política de herramientas:
+úselo para otorgar **acceso completo**, **solo lectura** o **sin acceso** por agente.
+Vea [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para obtener detalles completos
 y reglas de precedencia.
 
 Casos de uso comunes:
 
 - Agente personal: acceso completo, sin sandbox
-- Agente familiar/laboral: sandboxed + herramientas de solo lectura
-- Agente público: sandboxed + sin herramientas de sistema de archivos/shell
+- Agente familiar/trabajo: sandbox + herramientas de solo lectura
+- Agente público: sandbox + sin herramientas de sistema de archivos/shell
 
 ### Ejemplo: acceso completo (sin sandbox)
 
@@ -1074,7 +1073,7 @@ Casos de uso comunes:
 }
 ```
 
-### Ejemplo: sin acceso al sistema de archivos/shell (mensajería del proveedor permitida)
+### Ejemplo: sin acceso a sistema de archivos/shell (mensajería del proveedor permitida)
 
 ```json5
 {
@@ -1144,34 +1143,34 @@ Si su IA hace algo malo:
 
 ### Contener
 
-1. **Deténgalo:** detenga la aplicación de macOS (si supervisa la puerta de enlace) o finalice su proceso `openclaw gateway`.
+1. **Deténgalo:** detenga la aplicación de macOS (si supervisa el Gateway) o termine su proceso `openclaw gateway`.
 2. **Cerrar la exposición:** establezca `gateway.bind: "loopback"` (o deshabilite Tailscale Funnel/Serve) hasta que entienda qué sucedió.
-3. **Congelar acceso:** cambiar los MDs/grupos de riesgo a `dmPolicy: "disabled"` / requerir menciones, y eliminar las entradas de permitir todo de `"*"` si las tenía.
+3. **Congelar el acceso:** cambie los MDs/grupos arriesgados a `dmPolicy: "disabled"` / exija menciones y elimine las entradas de permitir todo `"*"` si las tenía.
 
 ### Rotar (asumir compromiso si se filtraron secretos)
 
 1. Rotar la autenticación del Gateway (`gateway.auth.token` / `OPENCLAW_GATEWAY_PASSWORD`) y reiniciar.
 2. Rotar los secretos del cliente remoto (`gateway.remote.token` / `.password`) en cualquier máquina que pueda llamar al Gateway.
-3. Rotar las credenciales del proveedor/API (credenciales de WhatsApp, tokens de Slack/Discord, claves de modelo/API en `auth-profiles.json`, y valores de carga útil de secretos cifrados cuando se usen).
+3. Rotar las credenciales del proveedor/API (credenciales de WhatsApp, tokens de Slack/Discord, claves de modelo/API en `auth-profiles.json` y valores de carga útil de secretos cifrados cuando se usan).
 
 ### Auditoría
 
 1. Verificar los registros del Gateway: `/tmp/openclaw/openclaw-YYYY-MM-DD.log` (o `logging.file`).
 2. Revisar la(s) transcripción(es) relevante(s): `~/.openclaw/agents/<agentId>/sessions/*.jsonl`.
-3. Revisar los cambios recientes de configuración (cualquier cosa que pudiera haber ampliado el acceso: `gateway.bind`, `gateway.auth`, políticas de dm/grupo, `tools.elevated`, cambios de complementos).
-4. Volver a ejecutar `openclaw security audit --deep` y confirmar que los hallazgos críticos están resueltos.
+3. Revisar los cambios recientes en la configuración (cualquier cosa que podría haber ampliado el acceso: `gateway.bind`, `gateway.auth`, políticas de dm/grupo, `tools.elevated`, cambios de complementos).
+4. Vuelva a ejecutar `openclaw security audit --deep` y confirme que los hallazgos críticos estén resueltos.
 
 ### Recopilar para un informe
 
-- Marca de tiempo, sistema operativo del host del Gateway + versión de OpenClaw
-- La(s) transcripción(es) de la sesión + un registro corto de la cola (después de redactar)
-- Qué envió el atacante + qué hizo el agente
+- Marca de tiempo, sistema operativo host del Gateway + versión de OpenClaw
+- La(s) transcripción(es) de la sesión + una cola de registro corta (después de redactar)
+- Lo que envió el atacante + lo que hizo el agente
 - Si el Gateway estaba expuesto más allá del loopback (LAN/Tailscale Funnel/Serve)
 
 ## Escaneo de secretos (detect-secrets)
 
-La CI ejecuta el gancho de pre-commit `detect-secrets` en el trabajo `secrets`.
-Los envíos a `main` siempre ejecutan un escaneo de todos los archivos. Las solicitudes de extracción utilizan una ruta rápida de archivos modificados
+CI ejecuta el gancho de pre-commit `detect-secrets` en el trabajo `secrets`.
+Las confirmaciones enviadas a `main` siempre ejecutan un escaneo de todos los archivos. Las solicitudes de extracción usan una ruta rápida de archivos cambiados
 cuando hay una confirmación base disponible y recurren a un escaneo de todos los archivos
 en caso contrario. Si falla, hay nuevos candidatos que aún no están en la línea base.
 
@@ -1189,19 +1188,21 @@ en caso contrario. Si falla, hay nuevos candidatos que aún no están en la lín
    - `detect-secrets audit` abre una revisión interactiva para marcar cada elemento de la línea base
      como real o falso positivo.
 3. Para secretos reales: rótelos/elimínelos y luego vuelva a ejecutar el escaneo para actualizar la línea base.
-4. Para falsos positivos: ejecute la auditoría interactiva márquelos como falsos:
+4. Para falsos positivos: ejecute la auditoría interactiva y márquelos como falsos:
 
    ```bash
    detect-secrets audit .secrets.baseline
    ```
 
-5. Si necesita nuevas exclusiones, agréguelas a `.detect-secrets.cfg` y regenere la línea base con los indicadores `--exclude-files` / `--exclude-lines` coincidentes (el archivo de configuración es solo de referencia; detect-secrets no lo lee automáticamente).
+5. Si necesita nuevas exclusiones, agréguelas a `.detect-secrets.cfg` y regenere
+   la línea base con las marcas `--exclude-files` / `--exclude-lines` coincidentes (el archivo de
+   configuración es solo de referencia; detect-secrets no lo lee automáticamente).
 
-Confirme el `.secrets.baseline` actualizado una vez que refleje el estado previsto.
+Confirme el `.secrets.baseline` actualizado una vez que refleje el estado deseado.
 
-## Reportar problemas de seguridad
+## Informar de problemas de seguridad
 
-¿Encontró una vulnerabilidad en OpenClaw? Por favor, repórtela de manera responsable:
+¿Encontró una vulnerabilidad en OpenClaw? Por favor, infórmela de forma responsable:
 
 1. Correo electrónico: [security@openclaw.ai](mailto:security@openclaw.ai)
 2. No lo publique públicamente hasta que se solucione

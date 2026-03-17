@@ -31,6 +31,7 @@ Notes :
 - Doctor analyse également `~/.openclaw/cron/jobs.json` (ou `cron.store`) à la recherche de formes de tâches cron héritées et peut les réécrire sur place avant que le planificateur ait à les normaliser automatiquement lors de l'exécution.
 - Doctor inclut une vérification de disponibilité de la recherche mémoire et peut recommander `openclaw configure --section model` lorsque les identifiants d'intégration sont manquants.
 - Si le mode bac à sable est activé mais que Docker n'est pas disponible, doctor signale un avertissement à fort signal avec une solution de contournement (`install Docker` ou `openclaw config set agents.defaults.sandbox.mode off`).
+- Si `gateway.auth.token`/`gateway.auth.password` sont gérés par SecretRef et indisponibles dans le chemin de commande actuel, doctor signale un avertissement en lecture seule et n'écrit pas d'informations d'identification de repli en texte brut.
 
 ## macOS : `launchctl` env overrides
 

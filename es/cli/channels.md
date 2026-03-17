@@ -30,10 +30,11 @@ openclaw channels logs --channel all
 
 ```bash
 openclaw channels add --channel telegram --token <bot-token>
+openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY"
 openclaw channels remove --channel telegram --delete
 ```
 
-Sugerencia: `openclaw channels add --help` muestra las marcas específicas de cada canal (token, token de aplicación, rutas de signal-cli, etc.).
+Consejo: `openclaw channels add --help` muestra las banderas por canal (token, clave privada, token de aplicación, rutas de signal-cli, etc).
 
 Al ejecutar `openclaw channels add` sin marcas, el asistente interactivo puede solicitar:
 

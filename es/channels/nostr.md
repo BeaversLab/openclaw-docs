@@ -16,7 +16,7 @@ Nostr es un protocolo descentralizado para redes sociales. Este canal permite a 
 
 ### Incorporación (recomendado)
 
-- El asistente de incorporación (`openclaw onboard`) y `openclaw channels add` enumeran los complementos de canal opcionales.
+- Onboarding (`openclaw onboard`) y `openclaw channels add` listan los complementos de canal opcionales.
 - Seleccionar Nostr le pedirá que instale el complemento bajo demanda.
 
 Valores predeterminados de instalación:
@@ -40,6 +40,15 @@ openclaw plugins install --link <path-to-openclaw>/extensions/nostr
 
 Reinicie la puerta de enlace (Gateway) después de instalar o activar complementos.
 
+### Configuración no interactiva
+
+```bash
+openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY"
+openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY" --relay-urls "wss://relay.damus.io,wss://relay.primal.net"
+```
+
+Use `--use-env` para mantener `NOSTR_PRIVATE_KEY` en el entorno en lugar de almacenar la clave en la configuración.
+
 ## Configuración rápida
 
 1. Genere un par de claves Nostr (si es necesario):
@@ -49,7 +58,7 @@ Reinicie la puerta de enlace (Gateway) después de instalar o activar complement
 nak key generate
 ```
 
-2. Agregar a la configuración:
+2. Añadir a la configuración:
 
 ```json
 {
@@ -67,23 +76,23 @@ nak key generate
 export NOSTR_PRIVATE_KEY="nsec1..."
 ```
 
-4. Reinicie la puerta de enlace (Gateway).
+4. Reinicie el Gateway.
 
 ## Referencia de configuración
 
-| Clave        | Tipo                | Predeterminado                              | Descripción                                   |
-| ------------ | ------------------- | ------------------------------------------- | --------------------------------------------- |
-| `privateKey` | cadena (string)     | requerido                                   | Clave privada en formato `nsec` o hexadecimal |
-| `relays`     | cadena[] (string[]) | `['wss://relay.damus.io', 'wss://nos.lol']` | URL de Retransmisión (Relay) (WebSocket)      |
-| `dmPolicy`   | cadena (string)     | `pairing`                                   | Política de acceso DM                         |
-| `allowFrom`  | cadena[] (string[]) | `[]`                                        | Claves públicas de remitentes permitidos      |
-| `enabled`    | booleano            | `true`                                      | Activar/desactivar canal                      |
-| `name`       | cadena (string)     | -                                           | Nombre para mostrar                           |
-| `profile`    | objeto              | -                                           | Metadatos del perfil NIP-01                   |
+| Clave        | Tipo     | Predeterminado                              | Descripción                                   |
+| ------------ | -------- | ------------------------------------------- | --------------------------------------------- |
+| `privateKey` | string   | requerido                                   | Clave privada en formato `nsec` o hexadecimal |
+| `relays`     | string[] | `['wss://relay.damus.io', 'wss://nos.lol']` | URLs de relay (WebSocket)                     |
+| `dmPolicy`   | string   | `pairing`                                   | Política de acceso DM                         |
+| `allowFrom`  | string[] | `[]`                                        | Claves públicas de remitentes permitidos      |
+| `enabled`    | boolean  | `true`                                      | Habilitar/deshabilitar canal                  |
+| `name`       | string   | -                                           | Nombre para mostrar                           |
+| `profile`    | object   | -                                           | Metadatos de perfil NIP-01                    |
 
-## Metadatos del perfil
+## Metadatos de perfil
 
-Los datos del perfil se publican como un evento NIP-01 `kind:0`. Puede administrarlos desde la interfaz de usuario de control (Canales -> Nostr -> Perfil) o configurarlos directamente en el archivo de configuración.
+Los datos del perfil se publican como un evento NIP-01 `kind:0`. Puede gestionarlos desde la UI de Control (Channels -> Nostr -> Profile) o establecerlos directamente en la configuración.
 
 Ejemplo:
 
@@ -109,17 +118,17 @@ Ejemplo:
 
 Notas:
 
-- Las URL de perfil deben usar `https://`.
-- La importación desde retransmisores (relays) combina campos y conserva las anulaciones locales.
+- Las URLs de perfil deben usar `https://`.
+- La importación desde relays fusiona los campos y conserva las anulaciones locales.
 
 ## Control de acceso
 
 ### Políticas de DM
 
-- **vinculación** (pairing) (predeterminado): los remitentes desconocidos reciben un código de vinculación.
-- **lista blanca** (allowlist): solo las claves públicas en `allowFrom` pueden enviar DM.
-- **open**: MD entrantes públicos (requiere `allowFrom: ["*"]`).
-- **disabled**: ignorar MD entrantes.
+- **pairing** (predeterminado): los remitentes desconocidos reciben un código de emparejamiento.
+- **allowlist**: solo las claves públicas en `allowFrom` pueden enviar DM.
+- **open**: DM entrantes públicos (requiere `allowFrom: ["*"]`).
+- **disabled**: ignorar DM entrantes.
 
 ### Ejemplo de lista blanca
 
@@ -142,9 +151,9 @@ Formatos aceptados:
 - **Clave privada:** `nsec...` o hexadecimal de 64 caracteres
 - **Claves públicas (`allowFrom`):** `npub...` o hexadecimal
 
-## Relés
+## Relays
 
-Por defecto: `relay.damus.io` y `nos.lol`.
+Predeterminados: `relay.damus.io` y `nos.lol`.
 
 ```json
 {
@@ -159,10 +168,10 @@ Por defecto: `relay.damus.io` y `nos.lol`.
 
 Consejos:
 
-- Use 2-3 relés para redundancia.
-- Evite demasiados relés (latencia, duplicación).
-- Los relés de pago pueden mejorar la confiabilidad.
-- Los relés locales están bien para pruebas (`ws://localhost:7777`).
+- Use 2-3 relays para redundancia.
+- Evita demasiados relés (latencia, duplicación).
+- Los relés de pago pueden mejorar la fiabilidad.
+- Los relés locales son adecuados para pruebas (`ws://localhost:7777`).
 
 ## Soporte de protocolo
 
@@ -170,8 +179,8 @@ Consejos:
 | ------ | ----------- | ----------------------------------------------- |
 | NIP-01 | Compatible  | Formato básico de eventos + metadatos de perfil |
 | NIP-04 | Compatible  | MD cifrados (`kind:4`)                          |
-| NIP-17 | Planificado | MD envueltos como regalo (Gift-wrap)            |
-| NIP-44 | Planificado | Cifrado con versiones                           |
+| NIP-17 | Planificado | MD envueltos (gift-wrapped)                     |
+| NIP-44 | Planificado | Cifrado con versión                             |
 
 ## Pruebas
 
@@ -195,25 +204,25 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ### Prueba manual
 
-1. Anote la clave pública del bot (npub) de los registros.
-2. Abra un cliente de Nostr (Damus, Amethyst, etc.).
-3. Envíe un MD a la clave pública del bot.
-4. Verifique la respuesta.
+1. Anota la clave pública del bot (npub) de los registros.
+2. Abre un cliente de Nostr (Damus, Amethyst, etc.).
+3. Envía un MD a la clave pública del bot.
+4. Verifica la respuesta.
 
 ## Solución de problemas
 
 ### No se reciben mensajes
 
-- Verifique que la clave privada sea válida.
-- Asegúrese de que las URL de los relés sean accesibles y usen `wss://` (o `ws://` para locales).
-- Confirme que `enabled` no sea `false`.
-- Revise los registros de Gateway para ver errores de conexión de relé.
+- Verifica que la clave privada sea válida.
+- Asegúrate de que las URL de los relés sean accesibles y usen `wss://` (o `ws://` para local).
+- Confirma que `enabled` no sea `false`.
+- Revisa los registros de Gateway para ver errores de conexión de relé.
 
 ### No se envían respuestas
 
-- Compruebe que el relé acepte escrituras.
-- Verifique la conectividad saliente.
-- Vigile los límites de velocidad del relé.
+- Comprueba que el relé acepte escrituras.
+- Verifica la conectividad saliente.
+- Vigila los límites de tasa del relé.
 
 ### Respuestas duplicadas
 
@@ -222,15 +231,15 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ## Seguridad
 
-- Nunca confirme claves privadas.
-- Use variables de entorno para las claves.
-- Considere `allowlist` para bots de producción.
+- Nunca confirmes claves privadas.
+- Usa variables de entorno para las claves.
+- Considera `allowlist` para bots en producción.
 
 ## Limitaciones (MVP)
 
 - Solo mensajes directos (sin chats grupales).
-- Sin archivos adjuntos de medios.
-- Solo NIP-04 (NIP-17 gift-wrap planificado).
+- Sin archivos adjuntos multimedia.
+- Solo NIP-04 (gift-wrap NIP-17 planificado).
 
 import es from "/components/footer/es.mdx";
 

@@ -28,7 +28,7 @@ Contenu (exemples) :
 - Assistants de configuration : `buildChannelConfigSchema`, `setAccountEnabledInConfigSection`, `deleteAccountFromConfigSection`,
   `applyAccountNameToChannelSection`.
 - Assistants d'appariement : `PAIRING_APPROVED_MESSAGE`, `formatPairingApproveHint`.
-- Assistants d'onboarding : `promptChannelAccessConfig`, `addWildcardAllowFrom`, types d'onboarding.
+- Configuration des points d'entrée : `setup` + `setupWizard` détenus par l'hôte ; éviter les helpers d'onboarding publics larges.
 - Assistants de paramètres d'outil : `createActionGate`, `readStringParam`, `readNumberParam`, `readReactionParams`, `jsonResult`.
 - Assistant de lien vers la documentation : `formatDocsLink`.
 
@@ -211,7 +211,31 @@ Notes :
 - Les nouveaux modèles de connecteurs ne dépendent que du SDK + runtime.
 - Les plugins externes peuvent être développés et mis à jour sans accès au code source du noyau.
 
-Documentation connexe : [Plugins](/fr/tools/plugin), [Channels](/fr/channels/index), [Configuration](/fr/gateway/configuration).
+Documentation connexe : [Plugins](/fr/tools/plugin), [Canaux](/fr/channels/index), [Configuration](/fr/gateway/configuration).
+
+## Coutures détenues par le canal implémentées
+
+Le travail de refactorisation récent a élargi le contrat du plugin de canal afin que le cœur puisse cesser de posséder
+l'UX et le comportement de routage spécifiques au canal :
+
+- `messaging.buildCrossContextComponents` : marqueurs d'UI inter-contextes détenus par le canal
+  (par exemple conteneurs de composants v2 Discord)
+- `messaging.enableInteractiveReplies` : commutateurs de normalisation des réponses détenus par le canal
+  (par exemple réponses interactives Slack)
+- `messaging.resolveOutboundSessionRoute` : routage de session sortant détenu par le canal
+- `status.formatCapabilitiesProbe` / `status.buildCapabilitiesDiagnostics` : affichage de la sonde `/channels capabilities`
+  et audits/scopes supplémentaires détenus par le canal
+- `threading.resolveAutoThreadId` : auto-filtrage au sein de la même conversation détenu par le canal
+- `threading.resolveReplyTransport` : mappage de livraison réponse-vs-fil détenu par le canal
+- `actions.requiresTrustedRequesterSender` : portes de confiance pour les actions privilégiées détenues par le canal
+- `execApprovals.*` : état de la surface d'approbation d'exécution, suppression du transfert,
+  UX de payload en attente et hooks de pré-livraison détenus par le canal
+- `lifecycle.onAccountConfigChanged` / `lifecycle.onAccountRemoved` : nettoyage détenu par le canal lors
+  de la mutation/suppression de la configuration
+- `allowlist.supportsScope` : publicité de portée de la liste d'autorisation détenue par le canal
+
+Ces hooks doivent être préférés aux nouvelles branches `channel === "discord"` / `telegram`
+dans les flux cœur partagés.
 
 import fr from "/components/footer/fr.mdx";
 

@@ -166,15 +166,15 @@ Exemple (autoriser uniquement les outils de fichier + navigateur) :
 ## Plugins + outils
 
 Les plugins peuvent enregistrer des **tools supplémentaires** (et des commandes CLI) au-delà de l'ensemble de base.
-Voir [Plugins](/fr/tools/plugin) pour l'installation et la configuration, et [Skills](/fr/tools/skills) pour savoir
-comment les conseils d'utilisation des tools sont injectés dans les invites. Certains plugins incluent leurs propres skills
+Voir [Plugins](/fr/tools/plugin) pour l'installation + la configuration, et [Skills](/fr/tools/skills) pour savoir comment
+les conseils d'utilisation des tools sont injectés dans les invites. Certains plugins incluent leurs propres skills
 avec les tools (par exemple, le plugin d'appel vocal).
 
 Outils de plugin facultatifs :
 
-- [Lobster](/fr/tools/lobster) : runtime de workflow typé avec approbations reprises (nécessite le Lobster CLI sur l'hôte de la passerelle).
-- [Tâche LLM](/fr/tools/llm-task) : étape LLM JSON uniquement pour la sortie de workflow structurée (validation de schéma facultative).
-- [Diffs](/fr/tools/diffs) : visualiseur de diff en lecture seule et moteur de rendu de fichiers PNG ou PDF pour le texte avant/après ou les correctifs unifiés.
+- [Lobster](/fr/tools/lobster) : environnement d'exécution de workflow typé avec approbations reprises (nécessite le CLI Lobster sur l'hôte de la passerelle).
+- [Tâche LLM](/fr/tools/llm-task) : étape LLM JSON uniquement pour la sortie de workflow structurée (validation de schéma optionnelle).
+- [Diffs](/fr/tools/diffs) : visionneuse de diff en lecture seule et moteur de rendu de fichiers PNG ou PDF pour le texte avant/après ou les correctifs unifiés.
 
 ## Inventaire des outils
 
@@ -194,7 +194,7 @@ Paramètres principaux :
 - `yieldMs` (arrière-plan automatique après expiration, par défaut 10000)
 - `background` (arrière-plan immédiat)
 - `timeout` (secondes ; tue le processus s'il est dépassé, par défaut 1800)
-- `elevated` (booléen ; exécuter sur l'hôte si le mode élevé est activé/autorisé ; ne change le comportement que lorsque l'agent est CLI)
+- `elevated` (booléen ; exécuter sur l'hôte si le mode élevé est activé/autorisé ; ne change le comportement que lorsque l'agent est Lobster)
 - `host` (`sandbox | gateway | node`)
 - `security` (`deny | allowlist | full`)
 - `ask` (`off | on-miss | always`)
@@ -209,7 +209,7 @@ Notes :
 - `elevated` est conditionné par `tools.elevated` ainsi que toute substitution `agents.list[].tools.elevated` (les deux doivent autoriser) et est un alias pour `host=gateway` + `security=full`.
 - `elevated` ne modifie le comportement que lorsque l'agent est sandboxé (sinon, c'est une opération sans effet).
 - `host=node` peut cibler une application compagnon macOS ou un hôte de nœud sans tête (`openclaw node run`).
-- approbations et listes d'autorisation passerelle/nœud : [Approbations Exec](/fr/tools/exec-approvals).
+- approbations et listes d'autorisation de passerelle/nœud : [Approbations Exec](/fr/tools/exec-approvals).
 
 ### `process`
 
@@ -256,7 +256,7 @@ Activez avec `tools.loopDetection.enabled: true` (par défaut `false`).
 
 ### `web_search`
 
-Rechercher sur le web en utilisant Perplexity, Brave, Gemini, Grok ou Kimi.
+Rechercher sur le Web en utilisant Brave, Firecrawl, Gemini, Grok, Kimi ou Perplexity.
 
 Paramètres principaux :
 
@@ -287,7 +287,7 @@ Notes :
 - Les réponses sont mises en cache (par défaut 15 min).
 - Pour les sites fortement dépendants de JS, préférez le tool navigateur.
 - Voir [Web tools](/fr/tools/web) pour la configuration.
-- Voir [Firecrawl](/fr/tools/firecrawl) pour le repli anti-bot facultatif.
+- Voir [Firecrawl](/fr/tools/firecrawl) pour le repli anti-bot optionnel.
 
 ### `browser`
 
@@ -318,45 +318,44 @@ Paramètres communs :
 - Toutes les actions acceptent le paramètre facultatif `profile` pour la prise en charge multi-instance.
 - Omettez `profile` pour l'option sécurisée par défaut : navigateur isolé géré par OpenClaw (`openclaw`).
 - Utilisez `profile="user"` pour le véritable navigateur de l'hôte local lorsque les connexions/cookies existants importent et que l'utilisateur est présent pour cliquer/approuver toute invite d'attachement.
-- Utilisez `profile="chrome-relay"` uniquement pour le flux d'attachement via l'extension Chrome / le bouton de la barre d'outils.
-- `profile="user"` et `profile="chrome-relay"` sont réservés à l'hôte ; ne les combinez pas avec les cibles sandbox/node.
+- `profile="user"` est réservé à l'hôte ; ne le combinez pas avec les cibles de sandbox/nœud.
 - Lorsque `profile` est omis, utilise `browser.defaultProfile` (par défaut `openclaw`).
-- Noms de profil : uniquement des caractères alphanumériques en minuscules et des traits d'union (max 64 caractères).
+- Noms de profil : uniquement alphanumériques en minuscules + traits d'union (max 64 caractères).
 - Plage de ports : 18800-18899 (~100 profils max).
 - Les profils distants sont en attachement uniquement (pas de démarrage/arrêt/réinitialisation).
-- Si un nœud compatible navigateur est connecté, l'outil peut lui être acheminé automatiquement (sauf si vous épinglez `target`).
-- `snapshot` correspond par défaut à `ai` lorsque Playwright est installé ; utilisez `aria` pour l'arbre d'accessibilité.
-- `snapshot` prend également en charge les options de rôle-instantané (`interactive`, `compact`, `depth`, `selector`) qui renvoient des références comme `e12`.
-- `act` nécessite `ref` de `snapshot` (`12` numérique depuis les instantanés IA, ou `e12` depuis les instantanés de rôle) ; utilisez `evaluate` pour les rares besoins de sélecteur CSS.
-- Évitez `act` → `wait` par défaut ; ne l'utilisez que dans des cas exceptionnels (aucun état d'interface utilisateur fiable sur lequel attendre).
-- `upload` peut éventuellement transmettre un `ref` pour un clic automatique après l'armement.
-- `upload` prend également en charge `inputRef` (référence aria) ou `element` (sélecteur CSS) pour définir `<input type="file">` directement.
+- Si un nœud compatible navigateur est connecté, l'outil peut s'y acheminer automatiquement (sauf si vous épinglez `target`).
+- `snapshot` est par défaut `ai` lorsque Playwright est installé ; utilisez `aria` pour l'arborescence d'accessibilité.
+- `snapshot` prend également en charge les options de capture instantanée de rôle (`interactive`, `compact`, `depth`, `selector`) qui renvoient des références comme `e12`.
+- `act` nécessite `ref` de `snapshot` (`12` numérique depuis les snapshots IA, ou `e12` depuis les snapshots de rôle) ; utilisez `evaluate` pour les besoins rares de sélecteurs CSS.
+- Évitez `act` → `wait` par défaut ; ne l'utilisez que dans des cas exceptionnels (aucun état d'interface utilisateur fiable à attendre).
+- `upload` peut éventuellement passer un `ref` pour cliquer automatiquement après l'armement.
+- `upload` prend également en charge `inputRef` (réf aria) ou `element` (sélecteur CSS) pour définir `<input type="file">` directement.
 
 ### `canvas`
 
-Pilotez le node Canvas (présent, eval, snapshot, A2UI).
+Pilotez le Canvas de nœuds (présentation, évaluation, snapshot, A2UI).
 
 Actions principales :
 
 - `present`, `hide`, `navigate`, `eval`
-- `snapshot` (renvoie un bloc image + `MEDIA:<path>`)
+- `snapshot` (renvoie un bloc d'image + `MEDIA:<path>`)
 - `a2ui_push`, `a2ui_reset`
 
 Notes :
 
-- Utilise la passerelle `node.invoke` en arrière-plan.
+- Utilise le `node.invoke` de la passerelle en arrière-plan.
 - Si aucun `node` n'est fourni, l'outil choisit une valeur par défaut (nœud unique connecté ou nœud mac local).
-- A2UI est uniquement en v0.8 (pas de `createSurface`) ; le CLI rejette le JSONL v0.9 avec des erreurs de ligne.
+- A2UI est uniquement en v0.8 (pas de `createSurface`) ; la CLI rejette le JSONL v0.9 avec des erreurs de ligne.
 - Test rapide : `openclaw nodes canvas a2ui push --node <id> --text "Hello from A2UI"`.
 
 ### `nodes`
 
-Découvrez et ciblez les nœuds couplés ; envoyez des notifications ; capturez la caméra/l'écran.
+Découvrez et ciblez les nœuds appariés ; envoyez des notifications ; capturez l'appareil photo/l'écran.
 
 Actions principales :
 
 - `status`, `describe`
-- `pending`, `approve`, `reject` (couplage)
+- `pending`, `approve`, `reject` (appairage)
 - `notify` (macOS `system.notify`)
 - `run` (macOS `system.run`)
 - `camera_list`, `camera_snap`, `camera_clip`, `screen_record`
@@ -365,11 +364,11 @@ Actions principales :
 
 Notes :
 
-- Les commandes de caméra/écran nécessitent que l'application nœud soit au premier plan.
+- Les commandes caméra/écran nécessitent que l'application nœud soit au premier plan.
 - Les images renvoient des blocs d'image + `MEDIA:<path>`.
 - Les vidéos renvoient `FILE:<path>` (mp4).
-- L'emplacement renvoie une charge utile JSON (lat/lon/accuracy/timestamp).
-- `run` paramètres : tableau `command` argv ; `cwd`, `env` (`KEY=VAL`), `commandTimeoutMs`, `invokeTimeoutMs`, `needsScreenRecording` facultatifs.
+- L'emplacement renvoie une charge utile JSON (lat/lon/précision/horodatage).
+- Paramètres `run` : tableau argv `command` ; `cwd` facultatif, `env` (`KEY=VAL`), `commandTimeoutMs`, `invokeTimeoutMs`, `needsScreenRecording`.
 
 Exemple (`run`) :
 
@@ -398,18 +397,18 @@ Paramètres principaux :
 
 Notes :
 
-- Disponible uniquement lorsque `agents.defaults.imageModel` est configuré (principal ou secours), ou lorsqu'un modèle d'image implicite peut être déduit de votre modèle par défaut + authentification configurée (couplage de meilleur effort).
-- Utilise directement le modèle d'image (indépendamment du modèle de chat principal).
+- Disponible uniquement lorsque `agents.defaults.imageModel` est configuré (principal ou secours), ou lorsqu'un modèle d'image implicite peut être déduit de votre modèle par défaut + auth configurée (appariement de meilleure effort).
+- Utilise le modèle d'image directement (indépendamment du modèle de chat principal).
 
 ### `pdf`
 
 Analyser un ou plusieurs documents PDF.
 
-Pour le comportement complet, les limites, la configuration et les exemples, consultez [PDF tool](/fr/tools/pdf).
+Pour le comportement complet, les limites, la configuration et les exemples, consultez [outil PDF](/fr/tools/pdf).
 
 ### `message`
 
-Envoyer des messages et des actions de chaîne sur Discord/Google Chat/Slack/Telegram/WhatsApp/Signal/iMessage/MS Teams.
+Envoyer des messages et des actions de canal sur Discord/Google Chat/Slack/Telegram/WhatsApp/Signal/iMessage/MS Teams.
 
 Actions principales :
 
@@ -431,9 +430,9 @@ Actions principales :
 
 Notes :
 
-- `send` achemine WhatsApp via le Gateway ; les autres canaux sont directs.
-- `poll` utilise le Gateway pour WhatsApp et MS Teams ; les sondages Discord sont directs.
-- Lorsqu'un appel d'outil de message est lié à une session de chat active, les envois sont limités à la cible de cette session pour éviter les fuites inter-contextes.
+- `send` route WhatsApp via le Gateway ; d'autres canaux vont en direct.
+- `poll` utilise le Gateway pour WhatsApp et MS Teams ; les sondages Discord vont en direct.
+- Lorsqu'un appel d'outil de message est lié à une session de chat active, les envois sont limités à la cible de cette session pour éviter les fuites entre contextes.
 
 ### `cron`
 
@@ -443,7 +442,7 @@ Actions principales :
 
 - `status`, `list`
 - `add`, `update`, `remove`, `run`, `runs`
-- `wake` (mettre en file d'attente l'événement système + battement de cœur immédiat en option)
+- `wake` (mettre en file d'attente un événement système + battement de cœur immédiat optionnel)
 
 Notes :
 
@@ -452,78 +451,78 @@ Notes :
 
 ### `gateway`
 
-Redémarrez ou appliquez les mises à jour au processus Gateway en cours d'exécution (in-place).
+Redémarrer ou appliquer des mises à jour au processus Gateway en cours d'exécution (sur place).
 
 Actions principales :
 
-- `restart` (autorise + envoie `SIGUSR1` pour redémarrage en cours de processus ; `openclaw gateway` redémarre in-place)
-- `config.schema.lookup` (inspecter un chemin de configuration à la fois sans charger le schéma complet dans le contexte du prompt)
+- `restart` (autorise + envoie `SIGUSR1` pour le redémarrage en cours de processus ; `openclaw gateway` redémarre sur place)
+- `config.schema.lookup` (inspect one config path at a time without loading the full schema into prompt context)
 - `config.get`
-- `config.apply` (valider + écrire la config + redémarrer + réveiller)
-- `config.patch` (fusionner la mise à jour partielle + redémarrer + réveiller)
-- `update.run` (exécuter la mise à jour + redémarrer + réveiller)
+- `config.apply` (validate + write config + restart + wake)
+- `config.patch` (merge partial update + restart + wake)
+- `update.run` (run update + restart + wake)
 
 Notes :
 
-- `config.schema.lookup` attend un chemin de configuration ciblé tel que `gateway.auth` ou `agents.list.*.heartbeat`.
-- Les chemins peuvent inclure des identifiants de plugin séparés par des barres obliques lors de l'adressage de `plugins.entries.<id>`, par exemple `plugins.entries.pack/one.config`.
-- Utilisez `delayMs` (par défaut 2000) pour éviter d'interrompre une réponse en cours.
-- `config.schema` reste disponible pour les flux internes de l'interface utilisateur de contrôle et n'est pas exposé via l'outil `gateway` de l'agent.
-- `restart` est activé par défaut ; définissez `commands.restart: false` pour le désactiver.
+- `config.schema.lookup` expects a targeted config path such as `gateway.auth` or `agents.list.*.heartbeat`.
+- Paths may include slash-delimited plugin ids when addressing `plugins.entries.<id>`, for example `plugins.entries.pack/one.config`.
+- Use `delayMs` (defaults to 2000) to avoid interrupting an in-flight reply.
+- `config.schema` remains available to internal Control UI flows and is not exposed through the agent `gateway` tool.
+- `restart` is enabled by default; set `commands.restart: false` to disable it.
 
 ### `sessions_list` / `sessions_history` / `sessions_send` / `sessions_spawn` / `session_status`
 
-Lister les sessions, inspecter l'historique des transcriptions ou envoyer à une autre session.
+List sessions, inspect transcript history, or send to another session.
 
-Paramètres principaux :
+Core parameters :
 
-- `sessions_list` : `kinds?`, `limit?`, `activeMinutes?`, `messageLimit?` (0 = aucun)
-- `sessions_history` : `sessionKey` (ou `sessionId`), `limit?`, `includeTools?`
-- `sessions_send` : `sessionKey` (ou `sessionId`), `message`, `timeoutSeconds?` (0 = fire-and-forget)
-- `sessions_spawn` : `task` , `label?` , `runtime?` , `agentId?` , `model?` , `thinking?` , `cwd?` , `runTimeoutSeconds?` , `thread?` , `mode?` , `cleanup?` , `sandbox?` , `streamTo?` , `attachments?` , `attachAs?`
-- `session_status` : `sessionKey?` (défaut actuel ; accepte `sessionId` ), `model?` ( `default` efface la substitution)
+- `sessions_list`: `kinds?`, `limit?`, `activeMinutes?`, `messageLimit?` (0 = none)
+- `sessions_history`: `sessionKey` (or `sessionId`), `limit?`, `includeTools?`
+- `sessions_send`: `sessionKey` (or `sessionId`), `message`, `timeoutSeconds?` (0 = fire-and-forget)
+- `sessions_spawn` : `task`, `label?`, `runtime?`, `agentId?`, `model?`, `thinking?`, `cwd?`, `runTimeoutSeconds?`, `thread?`, `mode?`, `cleanup?`, `sandbox?`, `streamTo?`, `attachments?`, `attachAs?`
+- `session_status` : `sessionKey?` (par défaut actuel ; accepte `sessionId`), `model?` (`default` efface la priorité)
 
 Notes :
 
-- `main` est la clé de chat direct canonique ; global/inconnu sont masqués.
+- `main` est la clé de chat direct canonique ; global/unknown sont masqués.
 - `messageLimit > 0` récupère les N derniers messages par session (messages d'outil filtrés).
-- Le ciblage de session est contrôlé par `tools.sessions.visibility` (défaut `tree` : session actuelle + sessions de sous-agent générées). Si vous exécutez un agent partagé pour plusieurs utilisateurs, envisagez de définir `tools.sessions.visibility: "self"` pour éviter la navigation inter-sessions.
-- `sessions_send` attend l'achèvement final lorsque `timeoutSeconds > 0` .
-- La livraison/annonce se produit après l'achèvement et est au mieux effort ; `status: "ok"` confirme que l'exécution de l'agent est terminée, et non que l'annonce a été livrée.
-- `sessions_spawn` prend en charge `runtime: "subagent" | "acp"` ( `subagent` par défaut). Pour le comportement d'exécution ACP, voir [Agents ACP](/fr/tools/acp-agents).
+- Le ciblage de session est contrôlé par `tools.sessions.visibility` (par défaut `tree` : session actuelle + sessions de sous-agents générés). Si vous exécutez un agent partagé pour plusieurs utilisateurs, envisagez de définir `tools.sessions.visibility: "self"` pour empêcher la navigation inter-sessions.
+- `sessions_send` attend l'achèvement final lorsque `timeoutSeconds > 0`.
+- La livraison/l'annonce se produit après l'achèvement et est au mieux effort ; `status: "ok"` confirme que l'exécution de l'agent est terminée, et non que l'annonce a été livrée.
+- `sessions_spawn` prend en charge `runtime: "subagent" | "acp"` (`subagent` par défaut). Pour le comportement d'exécution ACP, voir [ACP Agents](/fr/tools/acp-agents).
 - Pour le runtime ACP, `streamTo: "parent"` achemine les résumés de progression de l'exécution initiale vers la session du demandeur sous forme d'événements système au lieu d'une livraison directe de l'enfant.
-- `sessions_spawn` démarre une exécution de sous-agent et publie une réponse d'annonce vers le chat du demandeur.
-  - Prend en charge le mode ponctuel ( `mode: "run"` ) et le mode persistant lié au fil ( `mode: "session"` avec `thread: true` ).
+- `sessions_spawn` lance une exécution de sous-agent et publie une réponse d'annonce vers le chat du demandeur.
+  - Prend en charge le mode ponctuel (`mode: "run"`) et le mode persistant lié au fil de discussion (`mode: "session"` avec `thread: true`).
   - Si `thread: true` et `mode` sont omis, le mode par défaut est `session`.
   - `mode: "session"` nécessite `thread: true`.
-  - Si `runTimeoutSeconds` est omis, OpenClaw utilise `agents.defaults.subagents.runTimeoutSeconds` si défini; sinon, le délai d'expiration par défaut est `0` (pas de délai d'expiration).
+  - Si `runTimeoutSeconds` est omis, OpenClaw utilise `agents.defaults.subagents.runTimeoutSeconds` s'il est défini ; sinon, le délai d'attente par défaut est `0` (pas de délai d'attente).
   - Les flux liés aux fils de discussion Discord dépendent de `session.threadBindings.*` et `channels.discord.threadBindings.*`.
-  - Le format de réponse inclut `Status`, `Result` et des statistiques compactes.
-  - `Result` est le texte de complétion de l'assistant; si absent, le dernier `toolResult` est utilisé en secours.
-- Le mode de complétion Manuel lance l'envoi directement en premier, avec une file d'attente de secours et une nouvelle tentative en cas d'échecs temporaires (`status: "ok"` signifie exécution terminée, pas annonce livrée).
-- `sessions_spawn` prend en charge les pièces jointes de fichiers en ligne pour le runtime du sous-agent uniquement (l'ACP les rejette). Chaque pièce jointe a `name`, `content`, et `encoding` en option (`utf8` ou `base64`) et `mimeType`. Les fichiers sont matérialisés dans l'espace de travail enfant à `.openclaw/attachments/<uuid>/` avec un fichier de métadonnées `.manifest.json`. L'outil renvoie un reçu avec `count`, `totalBytes`, `sha256` par fichier, et `relDir`. Le contenu des pièces jointes est automatiquement expurgé de la persistance des transcriptions.
+  - Le format de réponse comprend `Status`, `Result` et des statistiques compactes.
+  - `Result` est le texte de complétion de l'assistant ; si absent, le dernier `toolResult` est utilisé en secours.
+- Le mode de complétion manuelle envoie d'abord directement, avec repli sur la file d'attente et nouvelle tentative en cas d'échecs temporaires (`status: "ok"` signifie que l'exécution est terminée, et non que l'annonce a été livrée).
+- `sessions_spawn` prend en charge les pièces jointes de fichiers en ligne uniquement pour le runtime du sous-agent (l'ACP les rejette). Chaque pièce jointe possède `name`, `content` et `encoding` en option (`utf8` ou `base64`) et `mimeType`. Les fichiers sont matérialisés dans l'espace de travail enfant à `.openclaw/attachments/<uuid>/` avec un fichier de métadonnées `.manifest.json`. L'outil renvoie un reçu avec `count`, `totalBytes`, `sha256` par fichier et `relDir`. Le contenu de la pièce jointe est automatiquement expurgé de la persistance de la transcription.
   - Configurez les limites via `tools.sessions_spawn.attachments` (`enabled`, `maxTotalBytes`, `maxFiles`, `maxFileBytes`, `retainOnSessionKeep`).
-  - `attachAs.mountPath` est une indication réservée pour les futures implémentations de montage.
+  - `attachAs.mountPath` est un indice réservé pour les futures implémentations de montage.
 - `sessions_spawn` est non bloquant et renvoie `status: "accepted"` immédiatement.
-- Les réponses `streamTo: "parent"` de l'ACP peuvent inclure `streamLogPath` (`*.acp-stream.jsonl` avec portée de session) pour suivre l'historique des progrès.
-- `sessions_send` exécute un ping-pong de réponse (répondez `REPLY_SKIP` pour arrêter ; max tours via `session.agentToAgent.maxPingPongTurns`, 0–5).
-- Après le ping-pong, l'agent cible exécute une **étape d'annonce** ; répondez `ANNOUNCE_SKIP` pour supprimer l'annonce.
-- Étranglement de bac à sable (Sandbox clamp) : lorsque la session actuelle est isolée et `agents.defaults.sandbox.sessionToolsVisibility: "spawned"`, OpenClaw limite `tools.sessions.visibility` à `tree`.
+- Les réponses ACP `streamTo: "parent"` peuvent inclure `streamLogPath` (portée session `*.acp-stream.jsonl`) pour suivre l'historique des progrès.
+- `sessions_send` exécute un ping-pong de réponse (répondre `REPLY_SKIP` pour arrêter ; max tours via `session.agentToAgent.maxPingPongTurns`, 0–5).
+- Après le ping-pong, l'agent cible exécute une **étape d'annonce** ; répondre `ANNOUNCE_SKIP` pour supprimer l'annonce.
+- Verrouillage du bac à sable : lorsque la session actuelle est sandboxée et `agents.defaults.sandbox.sessionToolsVisibility: "spawned"`, OpenClaw verrouille `tools.sessions.visibility` à `tree`.
 
 ### `agents_list`
 
-Lister les identifiants d'agents que la session actuelle peut cibler avec `sessions_spawn`.
+Lister les identifiants des agents que la session actuelle peut cibler avec `sessions_spawn`.
 
 Notes :
 
-- Le résultat est limité aux listes d'autorisation par agent (`agents.list[].subagents.allowAgents`).
+- Le résultat est restreint aux listes d'autorisation par agent (`agents.list[].subagents.allowAgents`).
 - Lorsque `["*"]` est configuré, l'outil inclut tous les agents configurés et marque `allowAny: true`.
 
 ## Paramètres (communs)
 
-Outils pris en charge par Gateway (`canvas`, `nodes`, `cron`) :
+Outils soutenus par Gateway (`canvas`, `nodes`, `cron`) :
 
-- `gatewayUrl` (par défaut `ws://127.0.0.1:18789`)
+- `gatewayUrl` (défaut `ws://127.0.0.1:18789`)
 - `gatewayToken` (si auth activée)
 - `timeoutMs`
 
@@ -532,12 +531,12 @@ ou d'environnement pour les substitutions, et l'absence d'identifiants explicite
 
 Outil de navigateur :
 
-- `profile` (facultatif ; par défaut `browser.defaultProfile`)
+- `profile` (optionnel ; par défaut `browser.defaultProfile`)
 - `target` (`sandbox` | `host` | `node`)
-- `node` (facultatif ; épingler un ID/nom de nœud spécifique)
+- `node` (optionnel ; épingle un id/nom de nœud spécifique)
 - Guides de dépannage :
   - Problèmes de démarrage/CDP Linux : [Dépannage du navigateur (Linux)](/fr/tools/browser-linux-troubleshooting)
-  - WSL2 Gateway + Chrome distant CDP Windows : [Dépannage WSL2 + Windows + Chrome distant CDP](/fr/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+  - WSL2 Gateway + CDP Chrome distant Windows : [Dépannage WSL2 + Windows + CDP Chrome distant](/fr/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
 
 ## Flux d'agents recommandés
 
@@ -564,16 +563,16 @@ Ciblage de nœud :
 
 - Évitez `system.run` direct ; utilisez `nodes` → `run` uniquement avec le consentement explicite de l'utilisateur.
 - Respectez le consentement de l'utilisateur pour la capture de caméra/écran.
-- Utilisez `status/describe` pour vous assurer des autorisations avant d'invoquer des commandes média.
+- Utilisez `status/describe` pour vous assurer des permissions avant d'invoquer les commandes multimédia.
 
-## Présentation des tools à l'agent
+## Présentation des outils à l'agent
 
-Les tools sont exposés sur deux canaux parallèles :
+Les outils sont exposés via deux canaux parallèles :
 
-1. **Texte du prompt système** : une liste lisible par l'homme + des conseils.
-2. **Schéma de tool** : les définitions de fonctions structurées envoyées à l'API de model.
+1. **Texte du prompt système** : une liste lisible par l'homme + des instructions.
+2. **Schéma d'outil** : les définitions de fonctions structurées envoyées à l'API du modèle.
 
-Cela signifie que l'agent voit à la fois « quels tools existent » et « comment les appeler ». Si un tool n'apparaît pas dans le prompt système ou le schéma, le model ne peut pas l'appeler.
+Cela signifie que l'agent voit à la fois « quels outils existent » et « comment les appeler ». Si un outil n'apparaît pas dans le prompt système ou le schéma, le modèle ne peut pas l'appeler.
 
 import fr from "/components/footer/fr.mdx";
 

@@ -28,8 +28,8 @@ title: "OpenClaw"
   <Card title="Commencer" href="/fr/start/getting-started" icon="rocket">
     Installez OpenClaw et lancez la passerelle en quelques minutes.
   </Card>
-  <Card title="Lancer l'assistant" href="/fr/start/wizard" icon="sparkles">
-    Configuration guidée avec `openclaw onboard` et les flux d'appariement.
+  <Card title="Exécuter l'onboarding" href="/fr/start/wizard" icon="sparkles">
+    Configuration guidée avec `openclaw onboard` et les flux de couplage.
   </Card>
   <Card title="Ouvrir l'interface de contrôle" href="/fr/web/control-ui" icon="layout-dashboard">
     Lancez le tableau de bord du navigateur pour le chat, la configuration et les sessions.

@@ -31,7 +31,7 @@ openclaw plugins enable open-prose
 
 开发/本地检出：`openclaw plugins install ./extensions/open-prose`
 
-相关文档：[插件](/en/tools/plugin)、[插件清单](/en/plugins/manifest)、[Skills](/en/tools/skills)。
+相关文档：[插件](/zh/tools/plugin)、[插件清单](/zh/plugins/manifest)、[Skills](/zh/tools/skills)。
 
 ## 斜杠命令
 
@@ -125,13 +125,13 @@ OpenProse 程序映射到 OpenClaw 基元：
 | 文件读取/写入       | `read` / `write` |
 | Web 获取            | `web_fetch`      |
 
-如果您的工具允许列表屏蔽了这些工具，OpenProse 程序将会失败。请参阅 [Skills 配置](/en/tools/skills-config)。
+如果您的工具允许列表屏蔽了这些工具，OpenProse 程序将会失败。请参阅 [Skills 配置](/zh/tools/skills-config)。
 
 ## 安全性 + 审批
 
 将 `.prose` 文件视为代码。运行前请先审查。使用 OpenClaw 工具允许列表和审批门来控制副作用。
 
-对于确定性、有审批门的工作流，请与 [Lobster](/en/tools/lobster) 进行比较。
+对于确定性、有审批门的工作流，请与 [Lobster](/zh/tools/lobster) 进行比较。
 
 import zh from "/components/footer/zh.mdx";
 

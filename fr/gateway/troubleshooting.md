@@ -8,8 +8,8 @@ title: "Dépannage"
 
 # Dépannage de la passerelle
 
-Cette page est le runbook détaillé.
-Commencez par [/help/troubleshooting](/fr/help/troubleshooting) si vous souhaitez d'abord suivre le flux de triage rapide.
+Cette page est le guide d'exécution détaillé.
+Commencez par [/help/troubleshooting](/fr/help/troubleshooting) si vous souhaitez d'abord le flux de triage rapide.
 
 ## Échelle de commande
 
@@ -26,7 +26,7 @@ openclaw channels status --probe
 Signaux sains attendus :
 
 - `openclaw gateway status` affiche `Runtime: running` et `RPC probe: ok`.
-- `openclaw doctor` ne signale aucun problème de blocage lié à la configuration ou au service.
+- `openclaw doctor` ne signale aucun problème bloquant de configuration/service.
 - `openclaw channels status --probe` affiche les canaux connectés/prêts.
 
 ## Anthropic 429 utilisation supplémentaire requise pour le contexte long
@@ -42,13 +42,13 @@ openclaw config get agents.defaults.models
 
 Recherchez :
 
-- Le modèle Anthropic Opus/Sonnet sélectionné dispose de `params.context1m: true`.
+- Le modèle Anthropic Opus/Sonnet sélectionné a `params.context1m: true`.
 - Les identifiants Anthropic actuels ne sont pas éligibles pour l'utilisation à contexte long.
 - Les requêtes échouent uniquement sur les longues sessions/exécutions de modèle qui nécessitent le chemin bêta 1M.
 
 Options de correction :
 
-1. Désactivez `context1m` pour ce modèle afin de revenir à la fenêtre de contexte normale.
+1. Désactivez `context1m` pour ce modèle pour revenir à la fenêtre de contexte normale.
 2. Utilisez une clé API Anthropic avec facturation, ou activez l'Extra Usage Anthropic sur le compte d'abonnement.
 3. Configurez des modèles de secours afin que les exécutions continuent lorsque les requêtes à contexte long d'Anthropic sont rejetées.
 
@@ -80,7 +80,7 @@ Signatures courantes :
 
 - `drop guild message (mention required` → message de groupe ignoré jusqu'à la mention.
 - `pairing request` → l'expéditeur a besoin d'une approbation.
-- `blocked` / `allowlist` → expéditeur/channel a été filtré par la stratégie.
+- `blocked` / `allowlist` → l'expéditeur/le canal a été filtré par la stratégie.
 
 Connexe :
 
@@ -108,25 +108,25 @@ Rechercher :
 
 Signatures courantes :
 
-- `device identity required` → contexte non sécurisé ou authentification d'appareil manquante.
+- `device identity required` → contexte non sécurisé ou authentification de l'appareil manquante.
 - `device nonce required` / `device nonce mismatch` → le client ne termine pas le
-  flux d'authentification d'appareil basé sur le défi (`connect.challenge` + `device.nonce`).
+  flux d'authentification de l'appareil basé sur un défi (`connect.challenge` + `device.nonce`).
 - `device signature invalid` / `device signature expired` → le client a signé la mauvaise
   charge utile (ou horodatage périmé) pour la poignée de main actuelle.
 - `AUTH_TOKEN_MISMATCH` avec `canRetryWithDeviceToken=true` → le client peut effectuer une nouvelle tentative de confiance avec le jeton d'appareil mis en cache.
-- `unauthorized` répété après cette nouvelle tentative → dérive du jeton partagé/jeton d'appareil ; actualisez la configuration du jeton et approuvez à nouveau/faites tourner le jeton d'appareil si nécessaire.
+- `unauthorized` répété après cette nouvelle tentative → dérive du jeton partagé/jeton d'appareil ; actualisez la configuration du jeton et réapprouvez/faites pivoter le jeton d'appareil si nécessaire.
 - `gateway connect failed:` → mauvaise cible hôte/port/url.
 
 ### Carte rapide des codes de détail d'authentification
 
 Utilisez `error.details.code` de la réponse `connect` échouée pour choisir l'action suivante :
 
-| Code de détail               | Signification                                                                    | Action recommandée                                                                                                                                                                                                      |
-| ---------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH_TOKEN_MISSING`         | Le client n'a pas envoyé un jeton partagé requis.                                | Collez/définissez le jeton dans le client et réessayez. Pour les chemins du tableau de bord : `openclaw config get gateway.auth.token` puis collez dans les paramètres de l'interface utilisateur de contrôle.          |
-| `AUTH_TOKEN_MISMATCH`        | Le jeton partagé ne correspond pas au jeton d'authentification de la passerelle. | Si `canRetryWithDeviceToken=true`, autorisez une nouvelle tentative de confiance. Si cela échoue toujours, exécutez la [checklist de récupération de dérive de jetons](/fr/cli/devices#token-drift-recovery-checklist). |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | Le jeton mis en cache par appareil est périmé ou révoqué.                        | Faites pivoter/réapprouver le jeton de l'appareil en utilisant le [CLI des appareils](/fr/cli/devices), puis reconnectez-vous.                                                                                          |
-| `PAIRING_REQUIRED`           | L'identité de l'appareil est connue mais n'est pas approuvée pour ce rôle.       | Approuver la demande en attente : `openclaw devices list` puis `openclaw devices approve <requestId>`.                                                                                                                  |
+| Code de détail               | Signification                                                                    | Action recommandée                                                                                                                                                                                                               |
+| ---------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_TOKEN_MISSING`         | Le client n'a pas envoyé un jeton partagé requis.                                | Collez/définissez le jeton dans le client et réessayez. Pour les chemins du tableau de bord : `openclaw config get gateway.auth.token` puis collez dans les paramètres de l'interface de contrôle.                               |
+| `AUTH_TOKEN_MISMATCH`        | Le jeton partagé ne correspond pas au jeton d'authentification de la passerelle. | Si `canRetryWithDeviceToken=true`, autorisez une nouvelle tentative de confiance. En cas d'échec persistant, exécutez la [liste de contrôle de récupération de dérive de jeton](/fr/cli/devices#token-drift-recovery-checklist). |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | Le jeton mis en cache par appareil est périmé ou révoqué.                        | Faites pivoter/réapprouvez le jeton de l'appareil en utilisant le CLI des appareils [devices CLI](/fr/cli/devices), puis reconnectez-vous.                                                                                       |
+| `PAIRING_REQUIRED`           | L'identité de l'appareil est connue mais n'est pas approuvée pour ce rôle.       | Approuver la demande en attente : `openclaw devices list` puis `openclaw devices approve <requestId>`.                                                                                                                           |
 
 Vérification de la migration de l'authentification d'appareil v2 :
 
@@ -140,7 +140,7 @@ Si les journaux indiquent des erreurs de nonce/signature, mettez à jour le clie
 
 1. attend `connect.challenge`
 2. signe la charge utile liée au challenge
-3. envoie `connect.params.device.nonce` avec le même nonce de challenge
+3. envoie `connect.params.device.nonce` avec le même nonce de défi
 
 Connexes :
 
@@ -163,14 +163,14 @@ openclaw gateway status --deep
 
 Recherchez :
 
-- `Runtime: stopped` avec des indications de sortie.
-- Inadéquation de la configuration du service (`Config (cli)` vs `Config (service)`).
+- `Runtime: stopped` avec des indicateurs de sortie.
+- Inadéquation de la configuration du service (`Config (cli)` contre `Config (service)`).
 - Conflits de port/d'écoute.
 
 Signatures courantes :
 
-- `Gateway start blocked: set gateway.mode=local` → le mode passerelle locale n'est pas activé. Correctif : définissez `gateway.mode="local"` dans votre configuration (ou exécutez `openclaw configure`). Si vous exécutez OpenClaw via Podman en utilisant l'utilisateur dédié `openclaw`, la configuration se trouve à `~openclaw/.openclaw/openclaw.json`.
-- `refusing to bind gateway ... without auth` → liaison non bouclée sans jeton/mot de passe.
+- `Gateway start blocked: set gateway.mode=local` → le mode de passerelle local n'est pas activé. Correctif : définissez `gateway.mode="local"` dans votre configuration (ou exécutez `openclaw configure`). Si vous exécutez OpenClaw via Podman en utilisant l'utilisateur dédié `openclaw`, la configuration se trouve à `~openclaw/.openclaw/openclaw.json`.
+- `refusing to bind gateway ... without auth` → liaison non-bouclage sans jeton/mot de passe.
 - `another gateway instance is already listening` / `EADDRINUSE` → conflit de port.
 
 Connexes :
@@ -193,7 +193,7 @@ openclaw config get channels
 
 Recherchez :
 
-- Stratégie de DM (`pairing`, `allowlist`, `open`, `disabled`).
+- Stratégie DM (`pairing`, `allowlist`, `open`, `disabled`).
 - Liste blanche de groupe et exigences de mention.
 - Autorisations/portées de l'API du channel manquantes.
 
@@ -225,16 +225,16 @@ openclaw logs --follow
 Rechercher :
 
 - Cron activé et prochain réveil présent.
-- Statut de l'historique d'exécution de la tâche (`ok`, `skipped`, `error`).
-- Raisons de l'omission du heartbeat (`quiet-hours`, `requests-in-flight`, `alerts-disabled`).
+- Statut de l'historique des exécutions de tâches (`ok`, `skipped`, `error`).
+- Raisons de l'absence de battement de cœur (`quiet-hours`, `requests-in-flight`, `alerts-disabled`).
 
 Signatures courantes :
 
 - `cron: scheduler disabled; jobs will not run automatically` → cron désactivé.
-- `cron: timer tick failed` → échec du tick du planificateur ; vérifiez les erreurs de fichier/journal/runtime.
+- `cron: timer tick failed` → échec du top du planificateur (scheduler tick) ; vérifiez les erreurs de fichier/journal/exécution.
 - `heartbeat skipped` avec `reason=quiet-hours` → en dehors de la fenêtre d'heures actives.
-- `heartbeat: unknown accountId` → id de compte invalide pour la cible de livraison du heartbeat.
-- `heartbeat skipped` avec `reason=dm-blocked` → la cible du heartbeat a été résolue vers une destination de style DM alors que `agents.defaults.heartbeat.directPolicy` (ou la substitution par agent) est défini sur `block`.
+- `heartbeat: unknown accountId` → identifiant de compte invalide pour la cible de livraison du battement de cœur.
+- `heartbeat skipped` avec `reason=dm-blocked` → la cible du battement de cœur a été résolue vers une destination de style DM alors que `agents.defaults.heartbeat.directPolicy` (ou la priorité par agent) est défini sur `block`.
 
 Connexes :
 
@@ -262,10 +262,10 @@ Recherchez :
 
 Signatures courantes :
 
-- `NODE_BACKGROUND_UNAVAILABLE` → l'application du nœud doit être au premier plan.
+- `NODE_BACKGROUND_UNAVAILABLE` → l'application de nœud (node app) doit être au premier plan.
 - `*_PERMISSION_REQUIRED` / `LOCATION_PERMISSION_REQUIRED` → autorisation OS manquante.
 - `SYSTEM_RUN_DENIED: approval required` → approbation d'exécution en attente.
-- `SYSTEM_RUN_DENIED: allowlist miss` → commande bloquée par la liste autorisée.
+- `SYSTEM_RUN_DENIED: allowlist miss` → commande bloquée par la liste d'autorisation.
 
 Connexes :
 
@@ -289,26 +289,25 @@ Recherchez :
 
 - Chemin d'exécutable du navigateur valide.
 - Accessibilité du profil CDP.
-- Pièce jointe de l'onglet relais d'extension (si un profil de relais d'extension est configuré).
+- Disponibilité locale de Chrome pour les profils `existing-session` / `user`.
 
 Signatures courantes :
 
-- `Failed to start Chrome CDP on port` → le processus du navigateur n'a pas pu démarrer.
-- `browser.executablePath not found` → le chemin configuré n'est pas valide.
-- `Chrome extension relay is running, but no tab is connected` → le relais d'extension n'est pas attaché.
+- `Failed to start Chrome CDP on port` → échec du lancement du processus du navigateur.
+- `browser.executablePath not found` → le chemin configuré est invalide.
+- `No Chrome tabs found for profile="user"` → le profil de attachement Chrome MCP n'a aucun onglet Chrome local ouvert.
 - `Browser attachOnly is enabled ... not reachable` → le profil attach-only n'a aucune cible accessible.
 
 Connexes :
 
 - [/tools/browser-linux-troubleshooting](/fr/tools/browser-linux-troubleshooting)
-- [/tools/chrome-extension](/fr/tools/chrome-extension)
 - [/tools/browser](/fr/tools/browser)
 
 ## Si vous avez effectué une mise à niveau et que quelque chose s'est soudainement brisé
 
-La plupart des dysfonctionnements après mise à niveau sont dus à une dérive de la configuration ou à des paramètres par défaut plus stricts désormais appliqués.
+La plupart des pannes post-mise à niveau sont dues à une dérive de la configuration ou à des valeurs par défaut plus strictes désormais appliquées.
 
-### 1) Comportement de remplacement de l'authentification et de l'URL modifié
+### 1) Le comportement de remplacement de l'authentification et de l'URL a changé
 
 ```bash
 openclaw gateway status
@@ -319,8 +318,8 @@ openclaw config get gateway.auth.mode
 
 Ce qu'il faut vérifier :
 
-- Si `gateway.mode=remote`, les appels CLI peuvent cibler une instance distante alors que votre service local est fonctionnel.
-- Les appels explicites `--url` ne reviennent pas aux informations d'identification stockées.
+- Si `gateway.mode=remote`, les appels CLI peuvent cibler le distant alors que votre service local est correct.
+- Les appels explicites `--url` ne reviennent pas aux identifiants stockés.
 
 Signatures courantes :
 
@@ -338,15 +337,15 @@ openclaw logs --follow
 
 Ce qu'il faut vérifier :
 
-- Les liaisons non-bouclage (`lan`, `tailnet`, `custom`) nécessitent une authentification configurée.
+- Les liaisons non-boucle (`lan`, `tailnet`, `custom`) nécessitent une authentification configurée.
 - Les anciennes clés comme `gateway.token` ne remplacent pas `gateway.auth.token`.
 
 Signatures courantes :
 
 - `refusing to bind gateway ... without auth` → inadéquation liaison+auth.
-- `RPC probe: failed` alors que le runtime est en cours d'exécution → passerelle active mais inaccessible avec l'auth/url actuelle.
+- `RPC probe: failed` alors que le runtime est en cours d'exécution → passerelle active mais inaccessible avec l'authentification/URL actuelle.
 
-### 3) L'état de l'appairage et de l'identité de l'appareil a changé
+### 3) L'état du jumelage et de l'identité de l'appareil a changé
 
 ```bash
 openclaw devices list
@@ -357,8 +356,8 @@ openclaw doctor
 
 Ce qu'il faut vérifier :
 
-- Approbations d'appareil en attente pour le tableau de bord/les nœuds.
-- Approbations d'appairage DM en attente après des modifications de stratégie ou d'identité.
+- Approbations d'appareils en attente pour le tableau de bord/les nœuds.
+- Approbations de jumelage DM en attente après des modifications de stratégie ou d'identité.
 
 Signatures courantes :
 
@@ -372,7 +371,7 @@ openclaw gateway install --force
 openclaw gateway restart
 ```
 
-Connexe :
+Connexes :
 
 - [/gateway/pairing](/fr/gateway/pairing)
 - [/gateway/authentication](/fr/gateway/authentication)

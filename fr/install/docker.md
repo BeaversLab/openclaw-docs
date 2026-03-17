@@ -14,21 +14,21 @@ Docker est **optionnel**. Utilisez-le uniquement si vous souhaitez une passerell
 
 - **Oui** : vous souhaitez un environnement de passerelle isolé et éphémère ou exécuter OpenClaw sur un hôte sans installation locale.
 - **Non** : vous exécutez sur votre propre machine et vous voulez simplement la boucle de dev la plus rapide. Utilisez plutôt le flux d'installation normal.
-- **Note sur le sandboxing** : le sandboxing de l'agent utilise également Docker, mais cela **ne** nécessite **pas** que la passerelle complète s'exécute dans Docker. Voir [Sandboxing](/fr/gateway/sandboxing).
+- **Note sur le sandboxing** : le sandboxing des agents utilise également Docker, mais cela ne nécessite **pas** que la totalité de la passerelle s'exécute dans Docker. Voir [Sandboxing](/fr/gateway/sandboxing).
 
 Ce guide couvre :
 
 - Passerelle conteneurisée (OpenClaw complet dans Docker)
 - Agent Sandbox par session (passerelle hôte + outils d'agent isolés par Docker)
 
-Détails du sandboxing : [Sandboxing](/fr/gateway/sandboxing)
+Détails sur le sandboxing : [Sandboxing](/fr/gateway/sandboxing)
 
 ## Configuration requise
 
 - Docker Desktop (ou Docker Engine) + Docker Compose v2
 - Au moins 2 Go de RAM pour la build de l'image (`pnpm install` peut être tué par OOM sur des hôtes de 1 Go avec le code de sortie 137)
 - Assez d'espace disque pour les images + les journaux
-- Si vous l'exécutez sur un VPS/hôte public, consultez
+- Si vous utilisez un VPS/hôte public, consultez
   [Durcissement de la sécurité pour l'exposition réseau](/fr/gateway/security#04-network-exposure-bind--port--firewall),
   en particulier la stratégie de pare-feu Docker `DOCKER-USER`.
 
@@ -51,7 +51,7 @@ Depuis la racine du dépôt :
 Ce script :
 
 - construit localement l'image de la passerelle (ou tire une image distante si `OPENCLAW_IMAGE` est défini)
-- exécute l'assistant d'onboarding
+- exécute l'onboarding
 - affiche des conseils de configuration optionnels pour le provider
 - démarre la passerelle via Docker Compose
 - génère un jeton de passerelle et l'écrit dans `.env`
@@ -143,13 +143,13 @@ Il écrit config/workspace sur l'hôte :
 - `~/.openclaw/`
 - `~/.openclaw/workspace`
 
-Vous exécutez sur un VPS ? Voir [Hetzner (Docker VPS)](/fr/install/hetzner).
+Exécution sur un VPS ? Voir [Hetzner (VPS Docker)](/fr/install/hetzner).
 
 ### Utiliser une image distante (ignorer la construction locale)
 
 Les images officielles préconstruites sont publiées à :
 
-- [Package GitHub Container Registry](https://github.com/openclaw/openclaw/pkgs/container/openclaw)
+- [Package du Container Registry GitHub](https://github.com/openclaw/openclaw/pkgs/container/openclaw)
 
 Utilisez le nom d'image `ghcr.io/openclaw/openclaw` (et non les images Docker Hub
 au nom similaire).
@@ -216,7 +216,7 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 
 Utilisez ensuite `clawdock-start`, `clawdock-stop`, `clawdock-dashboard`, etc. Exécutez `clawdock-help` pour toutes les commandes.
 
-Consultez le [README de l'assistant `ClawDock`](https://github.com/openclaw/openclaw/blob/main/scripts/shell-helpers/README.md) pour plus de détails.
+Voir le [README de l'assistant `ClawDock`](https://github.com/openclaw/openclaw/blob/main/scripts/shell-helpers/README.md) pour plus de détails.
 
 ### Flux manuel (compose)
 
@@ -504,7 +504,7 @@ docker compose run --rm openclaw-cli devices list --url ws://127.0.0.1:18789
 
 ## Sandbox d'agent (passerelle hôte + outils Docker)
 
-Pour aller plus loin : [Sandboxing](/fr/gateway/sandboxing)
+Approfondissement : [Sandboxing](/fr/gateway/sandboxing)
 
 ### Ce qu'il fait
 
@@ -529,7 +529,7 @@ Si vous utilisez le routage multi-agent, chaque agent peut remplacer les paramè
 - Aucun outil de système de fichiers/shell (agent public)
 
 Voir [Sandbox et outils multi-agents](/fr/tools/multi-agent-sandbox-tools) pour des exemples,
-l'ordre de priorité et le dépannage.
+la priorité et le dépannage.
 
 ### Comportement par défaut
 
@@ -670,13 +670,14 @@ un observateur noVNC facultatif (headful via Xvfb).
 
 Remarques :
 
+- Docker et autres flux de navigateur headless/conteneur restent sur CDP brut. Le `existing-session` Chrome MCP est pour Chrome local à l'hôte, pas pour la prise de contrôle de conteneur.
 - Headful (Xvfb) réduit le blocage des bots par rapport à headless.
 - Headless peut toujours être utilisé en définissant `agents.defaults.sandbox.browser.headless=true`.
 - Aucun environnement de bureau complet (GNOME) n'est nécessaire ; Xvfb fournit l'affichage.
 - Les conteneurs de navigateur utilisent par défaut un réseau Docker dédié (`openclaw-sandbox-browser`) au lieu du `bridge` global.
-- L'option `agents.defaults.sandbox.browser.cdpSourceRange` facultative restreint l'ingress CDP au niveau du conteneur par CIDR (par exemple `172.21.0.1/32`).
-- L'accès observateur noVNC est protégé par mot de passe par défaut ; OpenClaw fournit une URL de jeton d'observateur à courte durée de vie qui sert une page d'amorçage locale et conserve le mot de passe dans le fragment d'URL (au lieu de la requête URL).
-- Les valeurs par défaut de démarrage du conteneur de navigateur sont prudentes pour les charges de travail partagées/conteneurisées, notamment :
+- Le `agents.defaults.sandbox.browser.cdpSourceRange` optionnel restreint l'ingress CDP au bord du conteneur par CIDR (par exemple `172.21.0.1/32`).
+- L'accès observateur noVNC est protégé par mot de passe par défaut ; OpenClaw fournit une URL de jeton observateur éphémère qui sert une page d'amorçage locale et conserve le mot de passe dans le fragment d'URL (au lieu de la requête d'URL).
+- Les valeurs par défaut de démarrage des conteneurs de navigateur sont conservatrices pour les charges de travail partagées/conteneurisées, y compris :
   - `--remote-debugging-address=127.0.0.1`
   - `--remote-debugging-port=<derived from OPENCLAW_BROWSER_CDP_PORT>`
   - `--user-data-dir=${HOME}/.chrome`
@@ -701,14 +702,15 @@ Remarques :
     `--disable-3d-apis`, `--disable-software-rasterizer` et `--disable-gpu`.
   - Le comportement des extensions est contrôlé par `--disable-extensions` et peut être désactivé
     (active les extensions) via `OPENCLAW_BROWSER_DISABLE_EXTENSIONS=0` pour
-    les pages dépendantes des extensions ou les workflows lourds en extensions.
+    les pages dépendant des extensions ou les workflows fortement utilisant des extensions.
   - `--renderer-process-limit=2` est également configurable avec
-    `OPENCLAW_BROWSER_RENDERER_PROCESS_LIMIT` ; définissez `0` pour laisser Chromium choisir sa
-    limite de processus par défaut lorsque la concurrence du navigateur doit être ajustée.
+    `OPENCLAW_BROWSER_RENDERER_PROCESS_LIMIT`; définissez `0` pour laisser Chromium choisir sa
+    limite de processus par défaut lorsque la concurrence du navigateur nécessite un réglage.
 
-Les valeurs par défaut sont appliquées par défaut dans l'image groupée. Si vous avez besoin de drapeaux Chromium différents, utilisez une image de navigateur personnalisée et fournissez votre propre point d'entrée.
+Les valeurs par défaut sont appliquées par défaut dans l'image groupée. Si vous avez besoin d'indicateurs
+Chromium différents, utilisez une image de navigateur personnalisée et fournissez votre propre point d'entrée.
 
-Utiliser la config :
+Utiliser la configuration :
 
 ```json5
 {
@@ -736,13 +738,14 @@ Image de navigateur personnalisée :
 
 Lorsqu'il est activé, l'agent reçoit :
 
-- une URL de contrôle du navigateur de bac à sable (pour l'outil `browser`)
+- une URL de contrôle du navigateur de sandbox (pour l'`browser` tool)
 - une URL noVNC (si activé et headless=false)
 
-Rappelez-vous : si vous utilisez une liste d'autorisation pour les outils, ajoutez `browser` (et supprimez-le de deny) sinon l'outil reste bloqué.
+Rappelez-vous : si vous utilisez une liste d'autorisation pour les outils, ajoutez `browser` (et supprimez-le de
+deny) sinon l'outil reste bloqué.
 Les règles de nettoyage (`agents.defaults.sandbox.prune`) s'appliquent également aux conteneurs de navigateur.
 
-### Image de bac à sable personnalisée
+### Image de sandbox personnalisée
 
 Créez votre propre image et pointez la configuration vers celle-ci :
 
@@ -760,40 +763,41 @@ docker build -t my-openclaw-sbx -f Dockerfile.sandbox .
 }
 ```
 
-### Stratégie d'outil (autoriser/refuser)
+### Stratégie d'outil (allow/deny)
 
-- `deny` prime sur `allow`.
+- `deny` l'emporte sur `allow`.
 - Si `allow` est vide : tous les outils (sauf deny) sont disponibles.
-- Si `allow` n'est pas vide : seuls les outils dans `allow` sont disponibles (moins deny).
+- Si `allow` n'est pas vide : seuls les outils dans `allow` sont disponibles (moins ceux refusés).
 
 ### Stratégie de nettoyage
 
-Deux commandes :
+Deux paramètres :
 
 - `prune.idleHours` : supprimer les conteneurs non utilisés depuis X heures (0 = désactiver)
-- `prune.maxAgeDays` : supprimer les conteneurs âgés de plus de X jours (0 = désactiver)
+- `prune.maxAgeDays` : supprimer les conteneurs plus vieux que X jours (0 = désactiver)
 
 Exemple :
 
-- Garder les sessions occupées mais limiter la durée de vie :
+- Garder les sessions actives mais limiter la durée de vie :
   `idleHours: 24`, `maxAgeDays: 7`
 - Ne jamais nettoyer :
   `idleHours: 0`, `maxAgeDays: 0`
 
 ### Notes de sécurité
 
-- Le mur rigide ne s'applique qu'aux **outils** (exec/read/write/edit/apply_patch).
-- Les outils réservés à l'hôte tels que navigateur/caméra/canvas sont bloqués par défaut.
+- La barrière stricte s'applique uniquement aux **outils** (exec/read/write/edit/apply_patch).
+- Les outils exclusifs à l'hôte tels que navigateur/caméra/canvas sont bloqués par défaut.
 - Autoriser `browser` dans le bac à sable **brise l'isolement** (le navigateur s'exécute sur l'hôte).
 
 ## Dépannage
 
 - Image manquante : construisez avec [`scripts/sandbox-setup.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/sandbox-setup.sh) ou définissez `agents.defaults.sandbox.docker.image`.
-- Conteneur non en cours d'exécution : il sera créé automatiquement à la demande par session.
-- Erreurs de permission dans le bac à sable : définissez `docker.user` sur un UID:GID correspondant à la propriété de votre espace de travail monté (ou faites un chown du dossier de l'espace de travail).
+- Conteneur non démarré : il sera créé automatiquement à la demande pour chaque session.
+- Erreurs de permission dans le bac à sable : définissez `docker.user` sur un UID:GID correspondant à la propriété
+  de votre espace de travail monté (ou faites un chown du dossier de l'espace de travail).
 - Outils personnalisés introuvables : OpenClaw exécute les commandes avec `sh -lc` (shell de connexion), ce qui
-  approvisionne `/etc/profile` et peut réinitialiser PATH. Définissez `docker.env.PATH` pour ajouter en préambule vos
-  chemins d'outils personnalisés (p. ex., `/custom/bin:/usr/local/share/npm-global/bin`), ou ajoutez
+  sourc `/etc/profile` et peut réinitialiser le PATH. Définissez `docker.env.PATH` pour préfixer vos
+  chemins d'outils personnalisés (par ex., `/custom/bin:/usr/local/share/npm-global/bin`), ou ajoutez
   un script sous `/etc/profile.d/` dans votre Dockerfile.
 
 import fr from "/components/footer/fr.mdx";

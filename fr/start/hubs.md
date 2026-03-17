@@ -19,7 +19,7 @@ Utilisez ces hubs pour découvrir chaque page, y compris les analyses approfondi
 - [Getting Started](/fr/start/getting-started)
 - [Quick start](/fr/start/quickstart)
 - [Onboarding](/fr/start/onboarding)
-- [Assistant](/fr/start/wizard)
+- [Onboarding (CLI)](/fr/start/wizard)
 - [Configuration](/fr/start/setup)
 - [Tableau de bord (Gateway local)](http://127.0.0.1:18789/)
 - [Aide](/fr/help)

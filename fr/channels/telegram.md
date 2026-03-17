@@ -107,7 +107,7 @@ openclaw pairing approve telegram <CODE>
 ## Contrôle d'accès et activation
 
 <Tabs>
-  <Tab title="DM policy">
+  <Tab title="Stratégie de DM">
     `channels.telegram.dmPolicy` contrôle l'accès aux messages directs :
 
     - `pairing` (par défaut)
@@ -115,13 +115,13 @@ openclaw pairing approve telegram <CODE>
     - `open` (nécessite que `allowFrom` inclue `"*"`)
     - `disabled`
 
-    `channels.telegram.allowFrom` accepte les IDs numériques d'utilisateur Telegram. Les préfixes `telegram:` / `tg:` sont acceptés et normalisés.
+    `channels.telegram.allowFrom` accepte les IDs numériques des utilisateurs Telegram. Les préfixes `telegram:` / `tg:` sont acceptés et normalisés.
     `dmPolicy: "allowlist"` avec `allowFrom` vide bloque tous les DMs et est rejeté par la validation de la configuration.
-    L'assistant de configuration accepte les entrées `@username` et les résout en IDs numériques.
-    Si vous avez effectué une mise à niveau et que votre configuration contient des entrées de liste d'autorisation `@username`, exécutez `openclaw doctor --fix` pour les résoudre (au mieux ; nécessite un token de bot Telegram).
-    Si vous utilisiez précédemment des fichiers de liste d'autorisation de stockage d'appariement, `openclaw doctor --fix` peut récupérer les entrées dans `channels.telegram.allowFrom` lors des flux de liste d'autorisation (par exemple lorsque `dmPolicy: "allowlist"` n'a pas encore d'IDs explicites).
+    L'intégration accepte les entrées `@username` et les résout en IDs numériques.
+    Si vous avez mis à jour et que votre configuration contient des entrées de liste d'autorisation `@username`, exécutez `openclaw doctor --fix` pour les résoudre (au mieux ; nécessite un jeton de bot Telegram).
+    Si vous utilisiez précédemment des fichiers de liste d'autorisation de stockage d'appairage, `openclaw doctor --fix` peut récupérer les entrées dans `channels.telegram.allowFrom` lors des flux de liste d'autorisation (par exemple lorsque `dmPolicy: "allowlist"` n'a pas encore d'IDs explicites).
 
-    Pour les bots à propriétaire unique, privilégiez `dmPolicy: "allowlist"` avec des IDs numériques explicites `allowFrom` pour rendre la politique d'accès durable dans la configuration (au lieu de dépendre des approbations d'appariement précédentes).
+    Pour les bots à propriétaire unique, préférez `dmPolicy: "allowlist"` avec des IDs numériques `allowFrom` explicites pour garder la stratégie d'accès durable dans la configuration (au lieu de dépendre des approbations d'appariement précédentes).
 
     ### Trouver votre ID d'utilisateur Telegram
 

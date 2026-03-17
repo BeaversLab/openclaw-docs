@@ -1,5 +1,5 @@
 ---
-summary: "Flux d'intégration au premier démarrage pour OpenClaw (application macOS)"
+summary: "Flux de configuration du premier démarrage pour OpenClaw (application macOS)"
 read_when:
   - Designing the macOS onboarding assistant
   - Implementing auth or identity setup
@@ -9,10 +9,10 @@ sidebarTitle: "Onboarding : application macOS"
 
 # Onboarding (application macOS)
 
-Ce document décrit le flux d'intégration **actuel** au premier démarrage. L'objectif est une
-expérience fluide du « jour 0 » : choisir l'emplacement d'exécution du Gateway, connecter l'authentification, lancer
+Ce document décrit le flux de configuration du **premier** démarrage. L'objectif est une
+expérience fluide « jour 0 » : choisir où le Gateway s'exécute, connecter l'authentification, exécuter
 l'assistant et laisser l'agent s'initialiser.
-Pour un aperçu général des chemins d'intégration, consultez [Vue d'ensemble de l'onboarding](/fr/start/onboarding-overview).
+Pour une vue d'ensemble des chemins d'onboarding, voir [Onboarding Overview](/fr/start/onboarding-overview).
 
 <Steps>
 <Step title="Approve macOS warning">

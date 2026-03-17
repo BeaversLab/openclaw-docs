@@ -34,9 +34,9 @@ Connexes :
 - Utilisez les replis pour les tâches sensibles aux coûts/à la latence et pour les discussions à faible enjeu.
 - Pour les agents compatibles avec les outils ou les entrées non fiables, évitez les niveaux de modèles plus anciens ou plus faibles.
 
-## Assistant de configuration (recommandé)
+## Onboarding (recommandé)
 
-Si vous ne souhaitez pas modifier la configuration à la main, exécutez l'assistant de configuration :
+Si vous ne souhaitez pas modifier la configuration à la main, exécutez l'onboarding :
 
 ```bash
 openclaw onboard

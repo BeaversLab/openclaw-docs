@@ -69,7 +69,7 @@ agents:
       ttl: "1h"
 ```
 
-有关完整行为，请参阅 [Session Pruning](/en/concepts/session-pruning)。
+有关完整行为，请参阅 [Session Pruning](/zh/concepts/session-pruning)。
 
 ### 心跳保温
 
@@ -179,10 +179,10 @@ diagnostics:
 
 相关文档：
 
-- [Anthropic](/en/providers/anthropic)
-- [Token Use and Costs](/en/reference/token-use)
-- [Session Pruning](/en/concepts/session-pruning)
-- [Gateway 网关 Configuration Reference](/en/gateway/configuration-reference)
+- [Anthropic](/zh/providers/anthropic)
+- [Token Use and Costs](/zh/reference/token-use)
+- [Session Pruning](/zh/concepts/session-pruning)
+- [Gateway 网关 Configuration Reference](/zh/gateway/configuration-reference)
 
 import zh from "/components/footer/zh.mdx";
 

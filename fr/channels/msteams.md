@@ -33,7 +33,7 @@ Local checkout (when running from a git repo) :
 openclaw plugins install ./extensions/msteams
 ```
 
-Si vous choisissez Teams lors de la configuration/onboarding et qu'un checkout git est détecté,
+Si vous choisissez Teams lors de la configuration et qu'une extraction git est détectée,
 OpenClaw proposera automatiquement le chemin d'installation local.
 
 Details: [Plugins](/fr/tools/plugin)
