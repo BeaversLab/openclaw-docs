@@ -9,6 +9,7 @@
     "format:en": "prettier --write \"en/**/*.md\"",
     "format:fr": "prettier --write \"fr/**/*.md\"",
     "format:zh": "prettier --write \"zh/**/*.md\"",
+    "format:es": "prettier --write \"es/**/*.md\"",
     "format:components": "prettier --write \"components/**/*.mdx\"",
     "format:staged": "prettier --write",
     "footers": "node scripts/ensure-doc-footers.mjs",
@@ -17,8 +18,7 @@
     "lang:enable": "node scripts/manage-lang.mjs enable",
     "lang:remove": "node scripts/manage-lang.mjs remove",
     "lang:sync": "node scripts/manage-lang.mjs sync",
-    "hooks:install": "git config core.hooksPath .githooks",
-    "format:es": "prettier --write \"es/**/*.md\""
+    "hooks:install": "git config core.hooksPath .githooks"
   },
   "keywords": [
     "documentation",
