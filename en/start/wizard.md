@@ -1,15 +1,15 @@
 ---
-summary: "CLI onboarding wizard: guided setup for gateway, workspace, channels, and skills"
+summary: "CLI onboarding: guided setup for gateway, workspace, channels, and skills"
 read_when:
-  - Running or configuring the onboarding wizard
+  - Running or configuring CLI onboarding
   - Setting up a new machine
-title: "Onboarding Wizard (CLI)"
+title: "Onboarding (CLI)"
 sidebarTitle: "Onboarding: CLI"
 ---
 
-# Onboarding Wizard (CLI)
+# Onboarding (CLI)
 
-The onboarding wizard is the **recommended** way to set up OpenClaw on macOS,
+CLI onboarding is the **recommended** way to set up OpenClaw on macOS,
 Linux, or Windows (via WSL2; strongly recommended).
 It configures a local Gateway or a remote Gateway connection, plus channels, skills,
 and workspace defaults in one guided flow.
@@ -19,8 +19,8 @@ openclaw onboard
 ```
 
 <Info>
-  Fastest first chat: open the Control UI (no channel setup needed). Run `openclaw dashboard` and
-  chat in the browser. Docs: [Dashboard](/en/web/dashboard).
+Fastest first chat: open the Control UI (no channel setup needed). Run
+`openclaw dashboard` and chat in the browser. Docs: [Dashboard](/en/web/dashboard).
 </Info>
 
 To reconfigure later:
@@ -30,34 +30,38 @@ openclaw configure
 openclaw agents add <name>
 ```
 
-<Note>`--json` does not imply non-interactive mode. For scripts, use `--non-interactive`.</Note>
+<Note>
+`--json` does not imply non-interactive mode. For scripts, use `--non-interactive`.
+</Note>
 
 <Tip>
-  The onboarding wizard includes a web search step where you can pick a provider (Perplexity, Brave,
-  Gemini, Grok, or Kimi) and paste your API key so the agent can use `web_search`. You can also
-  configure this later with `openclaw configure --section web`. Docs: [Web tools](/en/tools/web).
+CLI onboarding includes a web search step where you can pick a provider
+(Perplexity, Brave, Gemini, Grok, or Kimi) and paste your API key so the agent
+can use `web_search`. You can also configure this later with
+`openclaw configure --section web`. Docs: [Web tools](/en/tools/web).
 </Tip>
 
 ## QuickStart vs Advanced
 
-The wizard starts with **QuickStart** (defaults) vs **Advanced** (full control).
+Onboarding starts with **QuickStart** (defaults) vs **Advanced** (full control).
 
 <Tabs>
   <Tab title="QuickStart (defaults)">
-    - Local gateway (loopback) - Workspace default (or existing workspace) - Gateway port **18789**
-    - Gateway auth **Token** (auto‑generated, even on loopback) - Tool policy default for new local
-    setups: `tools.profile: "coding"` (existing explicit profile is preserved) - DM isolation
-    default: local onboarding writes `session.dmScope: "per-channel-peer"` when unset. Details: [CLI
-    Onboarding Reference](/en/start/wizard-cli-reference#outputs-and-internals) - Tailscale exposure
-    **Off** - Telegram + WhatsApp DMs default to **allowlist** (you'll be prompted for your phone
-    number)
+    - Local gateway (loopback)
+    - Workspace default (or existing workspace)
+    - Gateway port **18789**
+    - Gateway auth **Token** (auto‑generated, even on loopback)
+    - Tool policy default for new local setups: `tools.profile: "coding"` (existing explicit profile is preserved)
+    - DM isolation default: local onboarding writes `session.dmScope: "per-channel-peer"` when unset. Details: [CLI Setup Reference](/en/start/wizard-cli-reference#outputs-and-internals)
+    - Tailscale exposure **Off**
+    - Telegram + WhatsApp DMs default to **allowlist** (you'll be prompted for your phone number)
   </Tab>
   <Tab title="Advanced (full control)">
     - Exposes every step (mode, workspace, gateway, channels, daemon, skills).
   </Tab>
 </Tabs>
 
-## What the wizard configures
+## What onboarding configures
 
 **Local mode (default)** walks you through these steps:
 
@@ -80,10 +84,9 @@ The wizard starts with **QuickStart** (defaults) vs **Advanced** (full control).
 7. **Skills** — Installs recommended skills and optional dependencies.
 
 <Note>
-  Re-running the wizard does **not** wipe anything unless you explicitly choose **Reset** (or pass
-  `--reset`). CLI `--reset` defaults to config, credentials, and sessions; use `--reset-scope full`
-  to include workspace. If the config is invalid or contains legacy keys, the wizard asks you to run
-  `openclaw doctor` first.
+Re-running onboarding does **not** wipe anything unless you explicitly choose **Reset** (or pass `--reset`).
+CLI `--reset` defaults to config, credentials, and sessions; use `--reset-scope full` to include workspace.
+If the config is invalid or contains legacy keys, onboarding asks you to run `openclaw doctor` first.
 </Note>
 
 **Remote mode** only configures the local client to connect to a Gateway elsewhere.
@@ -92,7 +95,7 @@ It does **not** install or change anything on the remote host.
 ## Add another agent
 
 Use `openclaw agents add <name>` to create a separate agent with its own workspace,
-sessions, and auth profiles. Running without `--workspace` launches the wizard.
+sessions, and auth profiles. Running without `--workspace` launches onboarding.
 
 What it sets:
 
@@ -103,16 +106,16 @@ What it sets:
 Notes:
 
 - Default workspaces follow `~/.openclaw/workspace-<agentId>`.
-- Add `bindings` to route inbound messages (the wizard can do this).
+- Add `bindings` to route inbound messages (onboarding can do this).
 - Non-interactive flags: `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
 
 ## Full reference
 
 For detailed step-by-step breakdowns and config outputs, see
-[CLI Onboarding Reference](/en/start/wizard-cli-reference).
+[CLI Setup Reference](/en/start/wizard-cli-reference).
 For non-interactive examples, see [CLI Automation](/en/start/wizard-cli-automation).
 For the deeper technical reference, including RPC details, see
-[Wizard Reference](/en/reference/wizard).
+[Onboarding Reference](/en/reference/wizard).
 
 ## Related docs
 

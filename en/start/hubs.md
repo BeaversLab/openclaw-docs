@@ -7,7 +7,9 @@ title: "Docs Hubs"
 
 # Docs hubs
 
-<Note>If you are new to OpenClaw, start with [Getting Started](/en/start/getting-started).</Note>
+<Note>
+If you are new to OpenClaw, start with [Getting Started](/en/start/getting-started).
+</Note>
 
 Use these hubs to discover every page, including deep dives and reference docs that don’t appear in the left nav.
 
@@ -17,7 +19,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Getting Started](/en/start/getting-started)
 - [Quick start](/en/start/quickstart)
 - [Onboarding](/en/start/onboarding)
-- [Wizard](/en/start/wizard)
+- [Onboarding (CLI)](/en/start/wizard)
 - [Setup](/en/start/setup)
 - [Dashboard (local Gateway)](http://127.0.0.1:18789/)
 - [Help](/en/help)

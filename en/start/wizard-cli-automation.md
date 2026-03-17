@@ -12,8 +12,7 @@ sidebarTitle: "CLI automation"
 Use `--non-interactive` to automate `openclaw onboard`.
 
 <Note>
-  `--json` does not imply non-interactive mode. Use `--non-interactive` (and `--workspace`) for
-  scripts.
+`--json` does not imply non-interactive mode. Use `--non-interactive` (and `--workspace`) for scripts.
 </Note>
 
 ## Baseline non-interactive example
@@ -34,7 +33,7 @@ openclaw onboard --non-interactive \
 Add `--json` for a machine-readable summary.
 
 Use `--secret-input-mode ref` to store env-backed refs in auth profiles instead of plaintext values.
-Interactive selection between env refs and configured provider refs (`file` or `exec`) is available in the onboarding wizard flow.
+Interactive selection between env refs and configured provider refs (`file` or `exec`) is available in the onboarding flow.
 
 In non-interactive `ref` mode, provider env vars must be set in the process environment.
 Passing inline key flags without the matching env var now fails fast.
@@ -211,8 +210,8 @@ Notes:
 
 ## Related docs
 
-- Onboarding hub: [Onboarding Wizard (CLI)](/en/start/wizard)
-- Full reference: [CLI Onboarding Reference](/en/start/wizard-cli-reference)
+- Onboarding hub: [Onboarding (CLI)](/en/start/wizard)
+- Full reference: [CLI Setup Reference](/en/start/wizard-cli-reference)
 - Command reference: [`openclaw onboard`](/en/cli/onboard)
 
 import en from "/components/footer/en.mdx";

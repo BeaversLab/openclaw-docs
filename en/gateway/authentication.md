@@ -49,7 +49,7 @@ openclaw models status
 openclaw doctor
 ```
 
-If you’d rather not manage env vars yourself, the onboarding wizard can store
+If you’d rather not manage env vars yourself, onboarding can store
 API keys for daemon use: `openclaw onboard`.
 
 See [Help](/en/help) for details on env inheritance (`env.shellEnv`,
@@ -85,9 +85,9 @@ This credential is only authorized for use with Claude Code and cannot be used f
 …use an Anthropic API key instead.
 
 <Warning>
-  Anthropic setup-token support is technical compatibility only. Anthropic has blocked some
-  subscription usage outside Claude Code in the past. Use it only if you decide the policy risk is
-  acceptable, and verify Anthropic's current terms yourself.
+Anthropic setup-token support is technical compatibility only. Anthropic has blocked
+some subscription usage outside Claude Code in the past. Use it only if you decide
+the policy risk is acceptable, and verify Anthropic's current terms yourself.
 </Warning>
 
 Manual token entry (any provider; writes `auth-profiles.json` + updates config):

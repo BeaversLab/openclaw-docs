@@ -11,19 +11,19 @@ title: "Getting Started"
 Goal: go from zero to a first working chat with minimal setup.
 
 <Info>
-  Fastest chat: open the Control UI (no channel setup needed). Run `openclaw dashboard` and chat in
-  the browser, or open `http://127.0.0.1:18789/` on the
-  <Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">
-    gateway host
-  </Tooltip>
-  . Docs: [Dashboard](/en/web/dashboard) and [Control UI](/en/web/control-ui).
+Fastest chat: open the Control UI (no channel setup needed). Run `openclaw dashboard`
+and chat in the browser, or open `http://127.0.0.1:18789/` on the
+<Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">gateway host</Tooltip>.
+Docs: [Dashboard](/en/web/dashboard) and [Control UI](/en/web/control-ui).
 </Info>
 
 ## Prereqs
 
 - Node 24 recommended (Node 22 LTS, currently `22.16+`, still supported for compatibility)
 
-<Tip>Check your Node version with `node --version` if you are unsure.</Tip>
+<Tip>
+Check your Node version with `node --version` if you are unsure.
+</Tip>
 
 ## Quick setup (CLI)
 
@@ -52,13 +52,13 @@ Goal: go from zero to a first working chat with minimal setup.
     </Note>
 
   </Step>
-  <Step title="Run the onboarding wizard">
+  <Step title="Run onboarding">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    The wizard configures auth, gateway settings, and optional channels.
-    See [Onboarding Wizard](/en/start/wizard) for details.
+    Onboarding configures auth, gateway settings, and optional channels.
+    See [Onboarding (CLI)](/en/start/wizard) for details.
 
   </Step>
   <Step title="Check the Gateway">
@@ -76,7 +76,9 @@ Goal: go from zero to a first working chat with minimal setup.
   </Step>
 </Steps>
 
-<Check>If the Control UI loads, your Gateway is ready for use.</Check>
+<Check>
+If the Control UI loads, your Gateway is ready for use.
+</Check>
 
 ## Optional checks and extras
 
@@ -112,8 +114,8 @@ Full environment variable reference: [Environment vars](/en/help/environment).
 ## Go deeper
 
 <Columns>
-  <Card title="Onboarding Wizard (details)" href="/en/start/wizard">
-    Full CLI wizard reference and advanced options.
+  <Card title="Onboarding (CLI)" href="/en/start/wizard">
+    Full CLI onboarding reference and advanced options.
   </Card>
   <Card title="macOS app onboarding" href="/en/start/onboarding">
     First run flow for the macOS app.

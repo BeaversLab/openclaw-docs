@@ -8,17 +8,24 @@ title: "OpenClaw"
 # OpenClaw 🦞
 
 <p align="center">
-  <img src="/assets/openclaw-logo-text-dark.png" alt="OpenClaw" width="500" class="dark:hidden" />
-  <img src="/assets/openclaw-logo-text.png" alt="OpenClaw" width="500" class="hidden dark:block" />
+    <img
+        src="/assets/openclaw-logo-text-dark.png"
+        alt="OpenClaw"
+        width="500"
+        class="dark:hidden"
+    />
+    <img
+        src="/assets/openclaw-logo-text.png"
+        alt="OpenClaw"
+        width="500"
+        class="hidden dark:block"
+    />
 </p>
 
 > _"EXFOLIATE! EXFOLIATE!"_ — A space lobster, probably
 
 <p align="center">
-  <strong>
-    Any OS gateway for AI agents across WhatsApp, Telegram, Discord, iMessage, and more.
-  </strong>
-  <br />
+  <strong>Any OS gateway for AI agents across WhatsApp, Telegram, Discord, iMessage, and more.</strong><br />
   Send a message, get an agent response from your pocket. Plugins add Mattermost and more.
 </p>
 
@@ -26,7 +33,7 @@ title: "OpenClaw"
   <Card title="Get Started" href="/en/start/getting-started" icon="rocket">
     Install OpenClaw and bring up the Gateway in minutes.
   </Card>
-  <Card title="Run the Wizard" href="/en/start/wizard" icon="sparkles">
+  <Card title="Run Onboarding" href="/en/start/wizard" icon="sparkles">
     Guided setup with `openclaw onboard` and pairing flows.
   </Card>
   <Card title="Open the Control UI" href="/en/web/control-ui" icon="layout-dashboard">
@@ -89,10 +96,21 @@ The Gateway is the single source of truth for sessions, routing, and channel con
 ## Quick start
 
 <Steps>
-  <Step title="Install OpenClaw">```bash npm install -g openclaw@latest ```</Step>
-  <Step title="Onboard and install the service">```bash openclaw onboard --install-daemon ```</Step>
+  <Step title="Install OpenClaw">
+    ```bash
+    npm install -g openclaw@latest
+    ```
+  </Step>
+  <Step title="Onboard and install the service">
+    ```bash
+    openclaw onboard --install-daemon
+    ```
+  </Step>
   <Step title="Pair WhatsApp and start the Gateway">
-    ```bash openclaw channels login openclaw gateway --port 18789 ```
+    ```bash
+    openclaw channels login
+    openclaw gateway --port 18789
+    ```
   </Step>
 </Steps>
 
