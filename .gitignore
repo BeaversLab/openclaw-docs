@@ -2,6 +2,8 @@
 node_modules/
 en/zh-CN/
 en/ja-JP/
+en/.generated/
+en/.i18n/*.tm.jsonl
 .claude/settings.local.json
 .i18n/logs/
 .i18n/.env
