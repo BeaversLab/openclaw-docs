@@ -1,0 +1,726 @@
+---
+summary: "整合的瀏覽器控制服務 + 動作指令"
+read_when:
+  - Adding agent-controlled browser automation
+  - Debugging why openclaw is interfering with your own Chrome
+  - Implementing browser settings + lifecycle in the macOS app
+title: "瀏覽器 (OpenClaw 管理)"
+---
+
+# 瀏覽器 (openclaw-managed)
+
+OpenClaw 可以執行一個由代理程式控制的 **專屬 Chrome/Brave/Edge/Chromium 設定檔**。
+它與您的個人瀏覽器隔離，並透過 Gateway 內的一個小型本機
+控制服務進行管理（僅限回環）。
+
+初學者視角：
+
+- 將其視為一個 **獨立的、僅供代理程式使用的瀏覽器**。
+- `openclaw` 設定檔**不會**碰觸您的個人瀏覽器設定檔。
+- 代理程式可以在安全的管道中 **開啟分頁、閱讀頁面、點擊和輸入**。
+- 內建的 `user` 設定檔會透過 Chrome MCP 附加到您真實且已登入的 Chrome 工作階段。
+
+## 您將獲得
+
+- 一個名為 **openclaw** 的獨立瀏覽器設定檔（預設為橘色強調）。
+- 確定性的分頁控制（列出/開啟/聚焦/關閉）。
+- 代理程式動作（點擊/輸入/拖曳/選取）、快照、截圖、PDF。
+- 選用的多設定檔支援（`openclaw`、`work`、`remote` ...）。
+
+此瀏覽器**不是**您日常使用的瀏覽器。它是用於
+代理程式自動化和驗證的安全、隔離介面。
+
+## 快速入門
+
+```bash
+openclaw browser --browser-profile openclaw status
+openclaw browser --browser-profile openclaw start
+openclaw browser --browser-profile openclaw open https://example.com
+openclaw browser --browser-profile openclaw snapshot
+```
+
+如果您收到「已停用瀏覽器」，請在設定中啟用它（見下文）並重新啟動
+Gateway。
+
+## 設定檔：`openclaw` vs `user`
+
+- `openclaw`：受管理、隔離的瀏覽器（不需要擴充功能）。
+- `user`：內建的 Chrome MCP 附加設定檔，用於您的 **真實已登入 Chrome**
+  工作階段。
+
+對於代理程式瀏覽器工具呼叫：
+
+- 預設值：使用隔離的 `openclaw` 瀏覽器。
+- 當現有的已登入工作階段很重要，且使用者
+  在電腦前以點擊/核准任何附加提示時，請優先使用 `profile="user"`。
+- 當您想要特定的瀏覽器模式時，`profile` 是明確的覆蓋設定。
+
+如果您預設想要受管理模式，請設定 `browser.defaultProfile: "openclaw"`。
+
+## 設定
+
+瀏覽器設定位於 `~/.openclaw/openclaw.json`。
+
+```json5
+{
+  browser: {
+    enabled: true, // default: true
+    ssrfPolicy: {
+      dangerouslyAllowPrivateNetwork: true, // default trusted-network mode
+      // allowPrivateNetwork: true, // legacy alias
+      // hostnameAllowlist: ["*.example.com", "example.com"],
+      // allowedHostnames: ["localhost"],
+    },
+    // cdpUrl: "http://127.0.0.1:18792", // legacy single-profile override
+    remoteCdpTimeoutMs: 1500, // remote CDP HTTP timeout (ms)
+    remoteCdpHandshakeTimeoutMs: 3000, // remote CDP WebSocket handshake timeout (ms)
+    defaultProfile: "openclaw",
+    color: "#FF4500",
+    headless: false,
+    noSandbox: false,
+    attachOnly: false,
+    executablePath: "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
+    profiles: {
+      openclaw: { cdpPort: 18800, color: "#FF4500" },
+      work: { cdpPort: 18801, color: "#0066CC" },
+      user: {
+        driver: "existing-session",
+        attachOnly: true,
+        color: "#00AA00",
+      },
+      brave: {
+        driver: "existing-session",
+        attachOnly: true,
+        userDataDir: "~/Library/Application Support/BraveSoftware/Brave-Browser",
+        color: "#FB542B",
+      },
+      remote: { cdpUrl: "http://10.0.0.42:9222", color: "#00AA00" },
+    },
+  },
+}
+```
+
+備註：
+
+- 瀏覽器控制服務會綁定到回環介面上的某個連接埠，該連接埠源自 `gateway.port`（預設：`18791`，即 gateway + 2）。
+- 如果您覆寫 Gateway 連接埠（`gateway.port` 或 `OPENCLAW_GATEWAY_PORT`），衍生出的瀏覽器連接埠會跟進調整，以保持在同一個「系列」中。
+- 若未設定，`cdpUrl` 預設為受管理的本機 CDP 連接埠。
+- `remoteCdpTimeoutMs` 適用於遠端（非回環）CDP 連線能力檢查。
+- `remoteCdpHandshakeTimeoutMs` 適用於遠端 CDP WebSocket 連線能力檢查。
+- 瀏覽器導航/開啟分頁會在導航前進行 SSRF 防護，並在導航後對最終的 `http(s)` URL 進行盡力檢查。
+- 在嚴格 SSRF 模式下，也會檢查遠端 CDP 端點探索/探測（`cdpUrl`，包括 `/json/version` 查詢）。
+- `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork` 預設為 `true`（受信任網路模式）。將其設定為 `false` 以進行嚴格的僅公開瀏覽。
+- `browser.ssrfPolicy.allowPrivateNetwork` 作為相容性的舊版別名，仍受支援。
+- `attachOnly: true` 表示「永不啟動本機瀏覽器；僅在已執行時附加。」
+- `color` + 各設定檔的 `color` 會為瀏覽器 UI 著色，讓您能看出目前使用的是哪個設定檔。
+- 預設設定檔為 `openclaw`（由 OpenClaw 管理的獨立瀏覽器）。使用 `defaultProfile: "user"` 以選用已登入使用者的瀏覽器。
+- 自動偵測順序：如果預設瀏覽器是 Chromium 瀏覽器則優先使用；否則為 Chrome → Brave → Edge → Chromium → Chrome Canary。
+- 本機 `openclaw` 設定檔會自動指定 `cdpPort`/`cdpUrl`——僅針對遠端 CDP 設定這些值。
+- `driver: "existing-session"` 使用 Chrome DevTools MCP 而非原始 CDP。請勿為該驅動程式設定 `cdpUrl`。
+- 當現有工作階段設定檔應附加到非預設的 Chromium 使用者設定檔（例如 Brave 或 Edge）時，請設定 `browser.profiles.<name>.userDataDir`。
+
+## 使用 Brave（或其他基於 Chromium 的瀏覽器）
+
+如果您的 **系統預設** 瀏覽器是基於 Chromium 的（Chrome/Brave/Edge 等），
+OpenClaw 會自動使用它。設定 `browser.executablePath` 以覆寫
+自動偵測：
+
+CLI 範例：
+
+```bash
+openclaw config set browser.executablePath "/usr/bin/google-chrome"
+```
+
+```json5
+// macOS
+{
+  browser: {
+    executablePath: "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"
+  }
+}
+
+// Windows
+{
+  browser: {
+    executablePath: "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
+  }
+}
+
+// Linux
+{
+  browser: {
+    executablePath: "/usr/bin/brave-browser"
+  }
+}
+```
+
+## 本地與遠端控制
+
+- **本地控制（預設）：** Gateway 會啟動迴路控制服務，並可啟動本地瀏覽器。
+- **遠端控制（node host）：** 在擁有瀏覽器的機器上執行 node host；Gateway 將瀏覽器動作代理至該主機。
+- **遠端 CDP：** 設定 `browser.profiles.<name>.cdpUrl`（或 `browser.cdpUrl`） 以
+  連線到遠端的基於 Chromium 的瀏覽器。在這種情況下，OpenClaw 將不會啟動本地瀏覽器。
+
+遠端 CDP URL 可以包含認證：
+
+- 查詢權杖（例如 `https://provider.example?token=<token>`）
+- HTTP Basic 認證（例如 `https://user:pass@provider.example`）
+
+當呼叫 `/json/*` 端點以及連線
+到 CDP WebSocket 時，OpenClaw 會保留認證。對於權杖，建議優先使用環境變數或秘密管理工具，
+而不是將其提交到設定檔中。
+
+## 節點瀏覽器代理（零設定預設值）
+
+如果您在擁有瀏覽器的機器上執行 **node host**，OpenClaw 可以
+自動將瀏覽器工具呼叫路由傳送至該節點，而不需要任何額外的瀏覽器設定。
+這是遠端 gateway 的預設路徑。
+
+注意事項：
+
+- Node host 透過 **proxy command** 公開其本地瀏覽器控制伺服器。
+- 設定檔來自節點自己的 `browser.profiles` 設定（與本地相同）。
+- 如果您不想要此功能，請停用：
+  - 在節點上：`nodeHost.browserProxy.enabled=false`
+  - 在 gateway 上：`gateway.nodes.browser.mode="off"`
+
+## Browserless（託管的遠端 CDP）
+
+[Browserless](https://browserless.io) 是一項透過 HTTPS 公開
+CDP 端點的託管 Chromium 服務。您可以將 OpenClaw 瀏覽器設定檔指向
+Browserless 的區域端點，並使用您的 API 金鑰進行驗證。
+
+範例：
+
+```json5
+{
+  browser: {
+    enabled: true,
+    defaultProfile: "browserless",
+    remoteCdpTimeoutMs: 2000,
+    remoteCdpHandshakeTimeoutMs: 4000,
+    profiles: {
+      browserless: {
+        cdpUrl: "https://production-sfo.browserless.io?token=<BROWSERLESS_API_KEY>",
+        color: "#00AA00",
+      },
+    },
+  },
+}
+```
+
+注意事項：
+
+- 請將 `<BROWSERLESS_API_KEY>` 替換為您實際的 Browserless 權杖。
+- 選擇與您的 Browserless 帳戶相符的區域端點（請參閱其文件）。
+
+## 直接 WebSocket CDP 提供者
+
+某些託管瀏覽器服務公開 **直接 WebSocket** 端點，而不是
+標準的基於 HTTP 的 CDP 探索（`/json/version`）。OpenClaw 支援這兩者：
+
+- **HTTP(S) 端點**（例如 Browserless）— OpenClaw 呼叫 `/json/version` 來
+  探索 WebSocket 偵錯器 URL，然後進行連線。
+- **WebSocket 端點** (`ws://` / `wss://`) — OpenClaw 直接連線，
+  跳過 `/json/version`。請將此用於像
+  [Browserbase](https://www.browserbase.com) 這類的服務，或任何提供
+  WebSocket URL 的提供者。
+
+### Browserbase
+
+[Browserbase](https://www.browserbase.com) 是一個用於執行
+無頭瀏覽器的雲端平台，具備內建的 CAPTCHA 解決、隱身模式和住宅
+代理伺服器。
+
+```json5
+{
+  browser: {
+    enabled: true,
+    defaultProfile: "browserbase",
+    remoteCdpTimeoutMs: 3000,
+    remoteCdpHandshakeTimeoutMs: 5000,
+    profiles: {
+      browserbase: {
+        cdpUrl: "wss://connect.browserbase.com?apiKey=<BROWSERBASE_API_KEY>",
+        color: "#F97316",
+      },
+    },
+  },
+}
+```
+
+備註：
+
+- [註冊](https://www.browserbase.com/sign-up) 並從 [Overview dashboard](https://www.browserbase.com/overview) 複製您的 **API 金鑰**
+  。
+- 將 `<BROWSERBASE_API_KEY>` 取換為您真實的 Browserbase API 金鑰。
+- Browserbase 會在 WebSocket 連線時自動建立瀏覽器階段，因此
+  不需要手動建立階段的步驟。
+- 免費層級允許一個併發階段和每月一個瀏覽器小時。
+  請參閱 [定價](https://www.browserbase.com/pricing) 以了解付費方案的限制。
+- 請參閱 [Browserbase 文件](https://docs.browserbase.com) 以取得完整的 API
+  參考、SDK 指南和整合範例。
+
+## 安全性
+
+重點概念：
+
+- 瀏覽器控制僅限於回送 (loopback)；存取流程會透過 Gateway 的驗證或節點配對。
+- 如果啟用了瀏覽器控制且未設定驗證，OpenClaw 會在啟動時自動產生 `gateway.auth.token` 並將其保存至設定中。
+- 請將 Gateway 和任何節點主機保持在私人網路 (Tailscale) 上；避免公開暴露。
+- 請將遠端 CDP URL/權杖視為機密；優先使用環境變數或機密管理員。
+
+遠端 CDP 提示：
+
+- 盡可能偏好加密端點 (HTTPS 或 WSS) 和短期有效的權杖。
+- 避免將長期有效的權杖直接嵌入設定檔中。
+
+## 設定檔 (多瀏覽器)
+
+OpenClaw 支援多個命名設定檔 (路由設定)。設定檔可以是：
+
+- **openclaw-managed**：具備自己使用者資料目錄 + CDP 連接埠的專屬 Chromium 瀏覽器執行個體
+- **remote**：明確的 CDP URL (在其他地方執行的 Chromium 瀏覽器)
+- **existing session**：透過 Chrome DevTools MCP 自動連線連接您現有的 Chrome 設定檔
+
+預設值：
+
+- 如果缺少 `openclaw` 設定檔，將會自動建立。
+- `user` 設定檔內建用於 Chrome MCP 現有工作階段連接。
+- 除了 `user` 之外，現有工作階段設定檔屬於選用功能；請使用 `--driver existing-session` 建立它們。
+- 本機 CDP 連接埠預設從 **18800–18899** 分配。
+- 刪除設定檔會將其本機資料目錄移至垃圾桶。
+
+所有控制端點都接受 `?profile=<name>`；CLI 使用 `--browser-profile`。
+
+## 透過 Chrome DevTools MCP 使用現有工作階段
+
+OpenClaw 也可以透過官方 Chrome DevTools MCP 伺服器連接到正在執行的 Chromium 型瀏覽器設定檔。這會重複使用該瀏覽器設定檔中已開啟的分頁和登入狀態。
+
+官方背景和設定參考資料：
+
+- [Chrome for Developers: Use Chrome DevTools MCP with your browser session](https://developer.chrome.com/blog/chrome-devtools-mcp-debug-your-browser-session)
+- [Chrome DevTools MCP README](https://github.com/ChromeDevTools/chrome-devtools-mcp)
+
+內建設定檔：
+
+- `user`
+
+選用：如果您想要不同的名稱、顏色或瀏覽器資料目錄，請建立您自己的自訂現有工作階段設定檔。
+
+預設行為：
+
+- 內建的 `user` 設定檔使用 Chrome MCP 自動連接，其目標是
+  預設的本機 Google Chrome 設定檔。
+
+針對 Brave、Edge、Chromium 或非預設的 Chrome 設定檔，請使用 `userDataDir`：
+
+```json5
+{
+  browser: {
+    profiles: {
+      brave: {
+        driver: "existing-session",
+        attachOnly: true,
+        userDataDir: "~/Library/Application Support/BraveSoftware/Brave-Browser",
+        color: "#FB542B",
+      },
+    },
+  },
+}
+```
+
+然後在相符的瀏覽器中：
+
+1. 開啟該瀏覽器的檢查頁面以進行遠端偵錯。
+2. 啟用遠端偵錯。
+3. 讓瀏覽器保持執行，並在 OpenClaw 連接時核准連接提示。
+
+常見的檢查頁面：
+
+- Chrome： `chrome://inspect/#remote-debugging`
+- Brave： `brave://inspect/#remote-debugging`
+- Edge： `edge://inspect/#remote-debugging`
+
+即時連接冒煙測試：
+
+```bash
+openclaw browser --browser-profile user start
+openclaw browser --browser-profile user status
+openclaw browser --browser-profile user tabs
+openclaw browser --browser-profile user snapshot --format ai
+```
+
+成功的樣貌：
+
+- `status` 顯示 `driver: existing-session`
+- `status` 顯示 `transport: chrome-mcp`
+- `status` 顯示 `running: true`
+- `tabs` 列出您已開啟的瀏覽器分頁
+- `snapshot` 從選取的即時分頁返回參照
+
+如果連接無法作用，請檢查：
+
+- 目標 Chromium 型瀏覽器版本為 `144+`
+- 已在該瀏覽器的檢查頁面中啟用遠端偵錯
+- 瀏覽器已顯示並且您接受了附加連線同意提示
+- `openclaw doctor` 會遷移舊的擴充功能型瀏覽器設定，並檢查本機是否
+  已安裝 Chrome 以用於預設自動連線設定檔，但它無法
+  為您啟用瀏覽器端的遠端偵錯
+
+代理程式用途：
+
+- 當您需要使用者的已登入瀏覽器狀態時，請使用 `profile="user"`。
+- 如果您使用自訂的現有工作階段設定檔，請傳入該明確的設定檔名稱。
+- 僅當使用者在電腦前以批准附加連線提示時，
+  才選擇此模式。
+- Gateway 或節點主機可以產生 `npx chrome-devtools-mcp@latest --autoConnect`
+
+備註：
+
+- 此途徑的風險高於隔離的 `openclaw` 設定檔，因為它可以在
+  您的已登入瀏覽器工作階段中進行操作。
+- OpenClaw 不會為此驅動程式啟動瀏覽器；它僅附加至
+  現有的工作階段。
+- OpenClaw 在此使用官方的 Chrome DevTools MCP `--autoConnect` 流程。如果
+  設定了 `userDataDir`，OpenClaw 會將其傳遞以鎖定該明確的
+  Chromium 使用者資料目錄。
+- 現有工作階段的螢幕擷圖支援頁面擷取和來自快照的 `--ref` 元素
+  擷取，但不支援 CSS `--element` 選擇器。
+- 現有工作階段的 `wait --url` 支援精確、子字串和全域模式，
+  就像其他瀏覽器驅動程式一樣。尚不支援 `wait --load networkidle`。
+- 某些功能仍需要受管理的瀏覽器途徑，例如 PDF 匯出和
+  下載攔截。
+- 現有工作階段是主機本機的。如果 Chrome 位於不同的機器或
+  不同的網路命名空間，請改用遠端 CDP 或節點主機。
+
+## 隔離保證
+
+- **專用使用者資料目錄**：絕不會接觸您的個人瀏覽器設定檔。
+- **專用連接埠**：避免 `9222` 以防止與開發工作流程發生衝突。
+- **決定性分頁控制**：透過 `targetId` 鎖定分頁，而非「上一個分頁」。
+
+## 瀏覽器選擇
+
+在本機啟動時，OpenClaw 會選擇第一個可用的：
+
+1. Chrome
+2. Brave
+3. Edge
+4. Chromium
+5. Chrome Canary
+
+您可以使用 `browser.executablePath` 覆蓋。
+
+平台：
+
+- macOS：檢查 `/Applications` 和 `~/Applications`。
+- Linux：尋找 `google-chrome`、`brave`、`microsoft-edge`、`chromium` 等。
+- Windows：檢查常見的安裝位置。
+
+## 控制 API（選用）
+
+僅供本機整合使用，閘道會公開一個小型回送 HTTP API：
+
+- 狀態/啟動/停止：`GET /`、`POST /start`、`POST /stop`
+- 分頁：`GET /tabs`、`POST /tabs/open`、`POST /tabs/focus`、`DELETE /tabs/:targetId`
+- 快照/螢幕截圖：`GET /snapshot`、`POST /screenshot`
+- 動作：`POST /navigate`、`POST /act`
+- 掛鉤：`POST /hooks/file-chooser`、`POST /hooks/dialog`
+- 下載：`POST /download`、`POST /wait/download`
+- 偵錯：`GET /console`、`POST /pdf`
+- 偵錯：`GET /errors`、`GET /requests`、`POST /trace/start`、`POST /trace/stop`、`POST /highlight`
+- 網路：`POST /response/body`
+- 狀態：`GET /cookies`、`POST /cookies/set`、`POST /cookies/clear`
+- 狀態：`GET /storage/:kind`、`POST /storage/:kind/set`、`POST /storage/:kind/clear`
+- 設定：`POST /set/offline`、`POST /set/headers`、`POST /set/credentials`、`POST /set/geolocation`、`POST /set/media`、`POST /set/timezone`、`POST /set/locale`、`POST /set/device`
+
+所有端點皆接受 `?profile=<name>`。
+
+如果已設定閘道驗證，瀏覽器 HTTP 路由也需要驗證：
+
+- `Authorization: Bearer <gateway token>`
+- `x-openclaw-password: <gateway password>` 或使用該密碼進行 HTTP 基本驗證
+
+### Playwright 需求
+
+部分功能（導覽/動作/AI 快照/角色快照、元素截圖、PDF）需要
+Playwright。如果未安裝 Playwright，這些端點會回傳明確的 501
+錯誤。ARIA 快照和基本截圖在 OpenClaw 管理的 Chrome 上仍然可用。
+
+如果您看到 `Playwright is not available in this gateway build`，請安裝完整的
+Playwright 套件（而不是 `playwright-core`）並重新啟動 gateway，或是重新安裝
+支援瀏覽器的 OpenClaw。
+
+#### Docker Playwright 安裝
+
+如果您的 Gateway 在 Docker 中執行，請避免使用 `npx playwright`（npm 覆蓋衝突）。
+請改用內建的 CLI：
+
+```bash
+docker compose run --rm openclaw-cli \
+  node /app/node_modules/playwright-core/cli.js install chromium
+```
+
+若要保存瀏覽器下載檔案，請設定 `PLAYWRIGHT_BROWSERS_PATH`（例如，
+`/home/node/.cache/ms-playwright`）並確保 `/home/node` 透過
+`OPENCLAW_HOME_VOLUME` 或 bind mount 來保存。請參閱 [Docker](/zh-Hant/install/docker)。
+
+## 運作方式（內部）
+
+高層級流程：
+
+- 一個小型的 **控制伺服器** 接受 HTTP 請求。
+- 它透過 **CDP** 連接到基於 Chromium 的瀏覽器（Chrome/Brave/Edge/Chromium）。
+- 對於進階操作（點擊/輸入/快照/PDF），它在 CDP 之上
+  使用 **Playwright**。
+- 當缺少 Playwright 時，僅提供非 Playwright 的操作。
+
+此設計讓 agent 保持穩定、確定的介面，同時讓
+您可以交換本地/遠端瀏覽器和設定檔。
+
+## CLI 快速參考
+
+所有指令都接受 `--browser-profile <name>` 以指定特定的設定檔。
+所有指令也都接受 `--json` 以取得機器可讀的輸出（穩定的承載）。
+
+基礎：
+
+- `openclaw browser status`
+- `openclaw browser start`
+- `openclaw browser stop`
+- `openclaw browser tabs`
+- `openclaw browser tab`
+- `openclaw browser tab new`
+- `openclaw browser tab select 2`
+- `openclaw browser tab close 2`
+- `openclaw browser open https://example.com`
+- `openclaw browser focus abcd1234`
+- `openclaw browser close abcd1234`
+
+檢查：
+
+- `openclaw browser screenshot`
+- `openclaw browser screenshot --full-page`
+- `openclaw browser screenshot --ref 12`
+- `openclaw browser screenshot --ref e12`
+- `openclaw browser snapshot`
+- `openclaw browser snapshot --format aria --limit 200`
+- `openclaw browser snapshot --interactive --compact --depth 6`
+- `openclaw browser snapshot --efficient`
+- `openclaw browser snapshot --labels`
+- `openclaw browser snapshot --selector "#main" --interactive`
+- `openclaw browser snapshot --frame "iframe#main" --interactive`
+- `openclaw browser console --level error`
+- `openclaw browser errors --clear`
+- `openclaw browser requests --filter api --clear`
+- `openclaw browser pdf`
+- `openclaw browser responsebody "**/api" --max-chars 5000`
+
+操作：
+
+- `openclaw browser navigate https://example.com`
+- `openclaw browser resize 1280 720`
+- `openclaw browser click 12 --double`
+- `openclaw browser click e12 --double`
+- `openclaw browser type 23 "hello" --submit`
+- `openclaw browser press Enter`
+- `openclaw browser hover 44`
+- `openclaw browser scrollintoview e12`
+- `openclaw browser drag 10 11`
+- `openclaw browser select 9 OptionA OptionB`
+- `openclaw browser download e12 report.pdf`
+- `openclaw browser waitfordownload report.pdf`
+- `openclaw browser upload /tmp/openclaw/uploads/file.pdf`
+- `openclaw browser fill --fields '[{"ref":"1","type":"text","value":"Ada"}]'`
+- `openclaw browser dialog --accept`
+- `openclaw browser wait --text "Done"`
+- `openclaw browser wait "#main" --url "**/dash" --load networkidle --fn "window.ready===true"`
+- `openclaw browser evaluate --fn '(el) => el.textContent' --ref 7`
+- `openclaw browser highlight e12`
+- `openclaw browser trace start`
+- `openclaw browser trace stop`
+
+狀態：
+
+- `openclaw browser cookies`
+- `openclaw browser cookies set session abc123 --url "https://example.com"`
+- `openclaw browser cookies clear`
+- `openclaw browser storage local get`
+- `openclaw browser storage local set theme dark`
+- `openclaw browser storage session clear`
+- `openclaw browser set offline on`
+- `openclaw browser set headers --headers-json '{"X-Debug":"1"}'`
+- `openclaw browser set credentials user pass`
+- `openclaw browser set credentials --clear`
+- `openclaw browser set geo 37.7749 -122.4194 --origin "https://example.com"`
+- `openclaw browser set geo --clear`
+- `openclaw browser set media dark`
+- `openclaw browser set timezone America/New_York`
+- `openclaw browser set locale en-US`
+- `openclaw browser set device "iPhone 14"`
+
+備註：
+
+- `upload` 和 `dialog` 是**準備**呼叫；請在觸發選擇器/對話方塊的點擊/按下之前執行它們。
+- 下載和追蹤輸出路徑被限制在 OpenClaw 臨時根目錄：
+  - 追蹤： `/tmp/openclaw` (後備： `${os.tmpdir()}/openclaw`)
+  - 下載： `/tmp/openclaw/downloads` (後備： `${os.tmpdir()}/openclaw/downloads`)
+- 上傳路徑被限制在 OpenClaw 臨時上傳根目錄：
+  - uploads: `/tmp/openclaw/uploads` (後備：`${os.tmpdir()}/openclaw/uploads`)
+- `upload` 也可以直接透過 `--input-ref` 或 `--element` 設定檔案輸入。
+- `snapshot`：
+  - `--format ai` (安裝 Playwright 時的預設值)：傳回包含數字參照 (`aria-ref="<n>"`) 的 AI 快照。
+  - `--format aria`：傳回無障礙樹 (無參照；僅供檢查)。
+  - `--efficient` (或 `--mode efficient`)：精簡角色快照預設 (interactive + compact + depth + lower maxChars)。
+  - 組態預設值 (僅適用於工具/CLI)：設定 `browser.snapshotDefaults.mode: "efficient"` 以在呼叫端未傳遞模式時使用高效快照 (請參閱 [Gateway 組態](/zh-Hant/gateway/configuration#browser-openclaw-managed-browser))。
+  - 角色快照選項 (`--interactive`、`--compact`、`--depth`、`--selector`) 會強制使用以角色為基礎的快照，並使用如 `ref=e12` 的參照。
+  - `--frame "<iframe selector>"` 將角色快照限制在 iframe 範圍內 (與如 `e12` 的角色參照搭配使用)。
+  - `--interactive` 輸出一個扁平、易於挑選的互動元素清單 (最適合驅動動作)。
+  - `--labels` 新增僅視口的螢幕截圖，並覆蓋參照標籤 (列印 `MEDIA:<path>`)。
+- `click`/`type`/等等需要來自 `snapshot` 的 `ref` (可以是數字 `12` 或角色參照 `e12`)。
+  動作刻意不支援 CSS 選擇器。
+
+## 快照與參照
+
+OpenClaw 支援兩種「快照」樣式：
+
+- **AI 快照 (數字參照)**：`openclaw browser snapshot` (預設；`--format ai`)
+  - 輸出：包含數字參照的文字快照。
+  - 動作：`openclaw browser click 12`、`openclaw browser type 23 "hello"`。
+  - 在內部，參照是透過 Playwright 的 `aria-ref` 解析。
+
+- **角色快照（角色參考如 `e12`）**：`openclaw browser snapshot --interactive`（或 `--compact`、`--depth`、`--selector`、`--frame`）
+  - 輸出：基於角色的列表/樹狀結構，帶有 `[ref=e12]`（以及可選的 `[nth=1]`）。
+  - 動作：`openclaw browser click e12`、`openclaw browser highlight e12`。
+  - 在內部，參考通過 `getByRole(...)` 解析（對於重複項則加上 `nth()`）。
+  - 加入 `--labels` 以包含覆蓋了 `e12` 標籤的視口截圖。
+
+參考行為：
+
+- 參考 **在導航之間不是穩定的**；如果操作失敗，請重新執行 `snapshot` 並使用新的參考。
+- 如果角色快照是使用 `--frame` 拍攝的，則角色參考的範圍僅限於該 iframe，直到下一次角色快照為止。
+
+## 等待增強功能
+
+您可以等待的不僅僅是時間/文字：
+
+- 等待 URL（支援 Playwright 的 Glob 模式）：
+  - `openclaw browser wait --url "**/dash"`
+- 等待載入狀態：
+  - `openclaw browser wait --load networkidle`
+- 等待 JS 述詞：
+  - `openclaw browser wait --fn "window.ready===true"`
+- 等待選擇器變為可見：
+  - `openclaw browser wait "#main"`
+
+這些可以組合使用：
+
+```bash
+openclaw browser wait "#main" \
+  --url "**/dash" \
+  --load networkidle \
+  --fn "window.ready===true" \
+  --timeout-ms 15000
+```
+
+## 除錯工作流程
+
+當動作失敗時（例如「不可見」、「嚴格模式違規」、「被覆蓋」）：
+
+1. `openclaw browser snapshot --interactive`
+2. 使用 `click <ref>` / `type <ref>`（在互動模式下建議使用角色參考）
+3. 如果仍然失敗：`openclaw browser highlight <ref>` 以查看 Playwright 的目標是什麼
+4. 如果頁面行為異常：
+   - `openclaw browser errors --clear`
+   - `openclaw browser requests --filter api --clear`
+5. 進行深度除錯：記錄追蹤：
+   - `openclaw browser trace start`
+   - 重現問題
+   - `openclaw browser trace stop`（會列印 `TRACE:<path>`）
+
+## JSON 輸出
+
+`--json` 適用於編寫腳本和結構化工具。
+
+範例：
+
+```bash
+openclaw browser status --json
+openclaw browser snapshot --interactive --json
+openclaw browser requests --filter api --json
+openclaw browser cookies --json
+```
+
+JSON 中的角色快照包含 `refs` 加上一個小的 `stats` 區塊（行/字元/參考/互動），以便工具能推斷負載大小和密度。
+
+## 狀態與環境控制選項
+
+這些對於「讓網站像 X 一樣運作」的工作流程很有用：
+
+- Cookies：`cookies`、`cookies set`、`cookies clear`
+- Storage：`storage local|session get|set|clear`
+- 離線模式：`set offline on|off`
+- Headers：`set headers --headers-json '{"X-Debug":"1"}'`（舊版 `set headers --json '{"X-Debug":"1"}'` 仍支援）
+- HTTP 基本驗證：`set credentials user pass`（或 `--clear`）
+- 地理位置：`set geo <lat> <lon> --origin "https://example.com"`（或 `--clear`）
+- 媒體：`set media dark|light|no-preference|none`
+- 時區 / 地區設定：`set timezone ...`、`set locale ...`
+- 裝置 / 視口：
+  - `set device "iPhone 14"`（Playwright 裝置預設值）
+  - `set viewport 1280 720`
+
+## 安全性與隱私
+
+- OpenClaw 瀏覽器設定檔可能包含已登入的工作階段；請將其視為敏感資料處理。
+- `browser act kind=evaluate` / `openclaw browser evaluate` 和 `wait --fn`
+  會在頁面語境中執行任意 JavaScript。提示注入可以操縱此行為。如果您不需要這些功能，請使用 `browser.evaluateEnabled=false` 將其停用。
+- 關於登入和防機器人備註（X/Twitter 等），請參閱 [Browser login + X/Twitter posting](/zh-Hant/tools/browser-login)。
+- 請保持 Gateway/node 主機私密（僅限 loopback 或 tailnet）。
+- 遠端 CDP 端點功能強大；請對其進行通道傳輸並加以保護。
+
+嚴格模式範例（預設封鎖私人/內部目的地）：
+
+```json5
+{
+  browser: {
+    ssrfPolicy: {
+      dangerouslyAllowPrivateNetwork: false,
+      hostnameAllowlist: ["*.example.com", "example.com"],
+      allowedHostnames: ["localhost"], // optional exact allow
+    },
+  },
+}
+```
+
+## 疑難排解
+
+關於 Linux 特定問題（特別是 snap Chromium），請參閱
+[Browser troubleshooting](/zh-Hant/tools/browser-linux-troubleshooting)。
+
+關於 WSL2 Gateway + Windows Chrome 分離主機設定，請參閱
+[WSL2 + Windows + remote Chrome CDP troubleshooting](/zh-Hant/tools/browser-wsl2-windows-remote-cdp-troubleshooting)。
+
+## Agent 工具 + 控制運作方式
+
+Agent 獲得 **一個工具** 用於瀏覽器自動化：
+
+- `browser` — status/start/stop/tabs/open/focus/close/snapshot/screenshot/navigate/act
+
+對應方式如下：
+
+- `browser snapshot` 會傳回穩定的 UI 樹狀結構（AI 或 ARIA）。
+- `browser act` 使用快照 `ref` ID 來進行點擊/輸入/拖曳/選取。
+- `browser screenshot` 擷取像素（完整頁面或元素）。
+- `browser` 接受：
+  - `profile` 用於選擇命名瀏覽器設定檔（openclaw、chrome 或遠端 CDP）。
+  - `target` (`sandbox` | `host` | `node`) 以選擇瀏覽器所在位置。
+  - 在沙盒化工作階段中，`target: "host"` 需要 `agents.defaults.sandbox.browser.allowHostControl=true`。
+  - 如果省略 `target`：沙盒化工作階段預設為 `sandbox`，非沙盒工作階段預設為 `host`。
+  - 如果連接了具備瀏覽器功能的節點，除非您釘選 `target="host"` 或 `target="node"`，否則該工具可能會自動路由至該節點。
+
+這能保持代理程式的確定性，並避免使用脆弱的選擇器。
+
+import footerZhHant from "/components/footer/zh-Hant.mdx";
+
+<footerZhHant />

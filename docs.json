@@ -20,7 +20,7 @@
   },
   "banner": {
     "dismissible": true,
-    "content": "🎉 La documentation française complète est maintenant disponible ! 🎉"
+    "content": "🎉 已支持英语、简体中文、法语、西班牙语、繁体中文！ 🎉"
   },
   "metadata": {
     "timestamp": true
@@ -47,8 +47,13 @@
   "navbar": {
     "links": [
       {
+        "label": "BeaversLab",
+        "href": "https://beaverslab.xyz",
+        "icon": "home"
+      },
+      {
         "label": "GitHub",
-        "href": "https://github.com/openclaw/openclaw",
+        "href": "https://github.com/BeaversLab/crawfish",
         "icon": "github"
       }
     ]
@@ -493,7 +498,7 @@
                 "group": "Security",
                 "pages": [
                   "en/security/formal-verification",
-                  "en/security/README",
+                  "en/security/",
                   "en/security/THREAT-MODEL-ATLAS",
                   "en/security/CONTRIBUTING-THREAT-MODEL"
                 ]
@@ -1116,7 +1121,7 @@
                 "group": "Security",
                 "pages": [
                   "zh/security/formal-verification",
-                  "zh/security/README",
+                  "zh/security/",
                   "zh/security/THREAT-MODEL-ATLAS",
                   "zh/security/CONTRIBUTING-THREAT-MODEL"
                 ]
@@ -1739,7 +1744,7 @@
                 "group": "Security",
                 "pages": [
                   "fr/security/formal-verification",
-                  "fr/security/README",
+                  "fr/security/",
                   "fr/security/THREAT-MODEL-ATLAS",
                   "fr/security/CONTRIBUTING-THREAT-MODEL"
                 ]
@@ -2362,7 +2367,7 @@
                 "group": "Security",
                 "pages": [
                   "es/security/formal-verification",
-                  "es/security/README",
+                  "es/security/",
                   "es/security/THREAT-MODEL-ATLAS",
                   "es/security/CONTRIBUTING-THREAT-MODEL"
                 ]
@@ -2543,6 +2548,638 @@
               {
                 "group": "Docs meta",
                 "pages": ["es/start/hubs", "es/start/docs-directory"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "zh-Hant",
+        "tabs": [
+          {
+            "tab": "Get started",
+            "groups": [
+              {
+                "group": "Home",
+                "pages": ["zh-Hant/index"]
+              },
+              {
+                "group": "Overview",
+                "pages": ["zh-Hant/start/showcase"]
+              },
+              {
+                "group": "Core concepts",
+                "pages": ["zh-Hant/concepts/features"]
+              },
+              {
+                "group": "First steps",
+                "pages": [
+                  "zh-Hant/start/getting-started",
+                  "zh-Hant/start/onboarding-overview",
+                  "zh-Hant/start/wizard",
+                  "zh-Hant/start/onboarding"
+                ]
+              },
+              {
+                "group": "Guides",
+                "pages": [
+                  "zh-Hant/start/openclaw",
+                  "zh-Hant/start/wizard-cli-reference",
+                  "zh-Hant/start/wizard-cli-automation"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Install",
+            "groups": [
+              {
+                "group": "Install overview",
+                "pages": ["zh-Hant/install/index", "zh-Hant/install/installer"]
+              },
+              {
+                "group": "Other install methods",
+                "pages": [
+                  "zh-Hant/install/docker",
+                  "zh-Hant/install/podman",
+                  "zh-Hant/install/nix",
+                  "zh-Hant/install/ansible",
+                  "zh-Hant/install/bun"
+                ]
+              },
+              {
+                "group": "Maintenance",
+                "pages": [
+                  "zh-Hant/install/updating",
+                  "zh-Hant/install/migrating",
+                  "zh-Hant/install/uninstall"
+                ]
+              },
+              {
+                "group": "Hosting and deployment",
+                "pages": [
+                  "zh-Hant/vps",
+                  "zh-Hant/install/fly",
+                  "zh-Hant/install/hetzner",
+                  "zh-Hant/install/gcp",
+                  "zh-Hant/install/macos-vm",
+                  "zh-Hant/install/exe-dev",
+                  "zh-Hant/install/railway",
+                  "zh-Hant/install/render",
+                  "zh-Hant/install/northflank"
+                ]
+              },
+              {
+                "group": "Advanced",
+                "pages": ["zh-Hant/install/development-channels"]
+              }
+            ]
+          },
+          {
+            "tab": "Channels",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": ["zh-Hant/channels/index"]
+              },
+              {
+                "group": "Messaging platforms",
+                "pages": [
+                  "zh-Hant/channels/bluebubbles",
+                  "zh-Hant/channels/discord",
+                  "zh-Hant/channels/feishu",
+                  "zh-Hant/channels/googlechat",
+                  "zh-Hant/channels/imessage",
+                  "zh-Hant/channels/irc",
+                  "zh-Hant/channels/line",
+                  "zh-Hant/channels/matrix",
+                  "zh-Hant/channels/mattermost",
+                  "zh-Hant/channels/msteams",
+                  "zh-Hant/channels/nextcloud-talk",
+                  "zh-Hant/channels/nostr",
+                  "zh-Hant/channels/signal",
+                  "zh-Hant/channels/synology-chat",
+                  "zh-Hant/channels/slack",
+                  "zh-Hant/channels/telegram",
+                  "zh-Hant/channels/tlon",
+                  "zh-Hant/channels/twitch",
+                  "zh-Hant/channels/whatsapp",
+                  "zh-Hant/channels/zalo",
+                  "zh-Hant/channels/zalouser"
+                ]
+              },
+              {
+                "group": "Configuration",
+                "pages": [
+                  "zh-Hant/channels/pairing",
+                  "zh-Hant/channels/group-messages",
+                  "zh-Hant/channels/groups",
+                  "zh-Hant/channels/broadcast-groups",
+                  "zh-Hant/channels/channel-routing",
+                  "zh-Hant/channels/location",
+                  "zh-Hant/channels/troubleshooting"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Agents",
+            "groups": [
+              {
+                "group": "Fundamentals",
+                "pages": [
+                  "zh-Hant/pi",
+                  "zh-Hant/concepts/architecture",
+                  "zh-Hant/concepts/agent",
+                  "zh-Hant/concepts/agent-loop",
+                  "zh-Hant/concepts/system-prompt",
+                  "zh-Hant/concepts/context",
+                  "zh-Hant/concepts/agent-workspace",
+                  "zh-Hant/concepts/oauth"
+                ]
+              },
+              {
+                "group": "Bootstrapping",
+                "pages": ["zh-Hant/start/bootstrapping"]
+              },
+              {
+                "group": "Sessions and memory",
+                "pages": [
+                  "zh-Hant/concepts/session",
+                  "zh-Hant/concepts/session-pruning",
+                  "zh-Hant/concepts/session-tool",
+                  "zh-Hant/concepts/memory",
+                  "zh-Hant/concepts/compaction"
+                ]
+              },
+              {
+                "group": "Multi-agent",
+                "pages": [
+                  "zh-Hant/concepts/multi-agent",
+                  "zh-Hant/concepts/presence"
+                ]
+              },
+              {
+                "group": "Messages and delivery",
+                "pages": [
+                  "zh-Hant/concepts/messages",
+                  "zh-Hant/concepts/streaming",
+                  "zh-Hant/concepts/retry",
+                  "zh-Hant/concepts/queue"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Tools",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": ["zh-Hant/tools/index"]
+              },
+              {
+                "group": "Built-in tools",
+                "pages": [
+                  "zh-Hant/tools/apply-patch",
+                  "zh-Hant/brave-search",
+                  "zh-Hant/perplexity",
+                  "zh-Hant/tools/diffs",
+                  "zh-Hant/tools/pdf",
+                  "zh-Hant/tools/elevated",
+                  "zh-Hant/tools/exec",
+                  "zh-Hant/tools/exec-approvals",
+                  "zh-Hant/tools/firecrawl",
+                  "zh-Hant/tools/llm-task",
+                  "zh-Hant/tools/lobster",
+                  "zh-Hant/tools/loop-detection",
+                  "zh-Hant/tools/reactions",
+                  "zh-Hant/tools/thinking",
+                  "zh-Hant/tools/web"
+                ]
+              },
+              {
+                "group": "Browser",
+                "pages": [
+                  "zh-Hant/tools/browser",
+                  "zh-Hant/tools/browser-login",
+                  "zh-Hant/tools/chrome-extension",
+                  "zh-Hant/tools/browser-linux-troubleshooting"
+                ]
+              },
+              {
+                "group": "Agent coordination",
+                "pages": [
+                  "zh-Hant/tools/agent-send",
+                  "zh-Hant/tools/subagents",
+                  "zh-Hant/tools/acp-agents",
+                  "zh-Hant/tools/multi-agent-sandbox-tools"
+                ]
+              },
+              {
+                "group": "Skills",
+                "pages": [
+                  "zh-Hant/tools/creating-skills",
+                  "zh-Hant/tools/slash-commands",
+                  "zh-Hant/tools/skills",
+                  "zh-Hant/tools/skills-config",
+                  "zh-Hant/tools/clawhub",
+                  "zh-Hant/tools/plugin"
+                ]
+              },
+              {
+                "group": "Extensions",
+                "pages": [
+                  "zh-Hant/plugins/community",
+                  "zh-Hant/plugins/voice-call",
+                  "zh-Hant/plugins/zalouser",
+                  "zh-Hant/plugins/manifest",
+                  "zh-Hant/plugins/agent-tools",
+                  "zh-Hant/prose"
+                ]
+              },
+              {
+                "group": "Automation",
+                "pages": [
+                  "zh-Hant/automation/hooks",
+                  "zh-Hant/automation/cron-jobs",
+                  "zh-Hant/automation/cron-vs-heartbeat",
+                  "zh-Hant/automation/troubleshooting",
+                  "zh-Hant/automation/webhook",
+                  "zh-Hant/automation/gmail-pubsub",
+                  "zh-Hant/automation/poll",
+                  "zh-Hant/automation/auth-monitoring"
+                ]
+              },
+              {
+                "group": "Media and devices",
+                "pages": [
+                  "zh-Hant/nodes/index",
+                  "zh-Hant/nodes/troubleshooting",
+                  "zh-Hant/nodes/media-understanding",
+                  "zh-Hant/nodes/images",
+                  "zh-Hant/nodes/audio",
+                  "zh-Hant/nodes/camera",
+                  "zh-Hant/nodes/talk",
+                  "zh-Hant/nodes/voicewake",
+                  "zh-Hant/nodes/location-command",
+                  "zh-Hant/tts"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Models",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": ["zh-Hant/providers/index", "zh-Hant/providers/models"]
+              },
+              {
+                "group": "Model concepts",
+                "pages": ["zh-Hant/concepts/models"]
+              },
+              {
+                "group": "Configuration",
+                "pages": [
+                  "zh-Hant/concepts/model-providers",
+                  "zh-Hant/concepts/model-failover"
+                ]
+              },
+              {
+                "group": "Providers",
+                "pages": [
+                  "zh-Hant/providers/anthropic",
+                  "zh-Hant/providers/bedrock",
+                  "zh-Hant/providers/cloudflare-ai-gateway",
+                  "zh-Hant/providers/claude-max-api-proxy",
+                  "zh-Hant/providers/deepgram",
+                  "zh-Hant/providers/github-copilot",
+                  "zh-Hant/providers/huggingface",
+                  "zh-Hant/providers/kilocode",
+                  "zh-Hant/providers/litellm",
+                  "zh-Hant/providers/glm",
+                  "zh-Hant/providers/minimax",
+                  "zh-Hant/providers/moonshot",
+                  "zh-Hant/providers/mistral",
+                  "zh-Hant/providers/nvidia",
+                  "zh-Hant/providers/ollama",
+                  "zh-Hant/providers/openai",
+                  "zh-Hant/providers/opencode-go",
+                  "zh-Hant/providers/opencode",
+                  "zh-Hant/providers/openrouter",
+                  "zh-Hant/providers/qianfan",
+                  "zh-Hant/providers/qwen",
+                  "zh-Hant/providers/synthetic",
+                  "zh-Hant/providers/together",
+                  "zh-Hant/providers/vercel-ai-gateway",
+                  "zh-Hant/providers/venice",
+                  "zh-Hant/providers/vllm",
+                  "zh-Hant/providers/xiaomi",
+                  "zh-Hant/providers/zai"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Platforms",
+            "groups": [
+              {
+                "group": "Platforms overview",
+                "pages": [
+                  "zh-Hant/platforms/index",
+                  "zh-Hant/platforms/macos",
+                  "zh-Hant/platforms/linux",
+                  "zh-Hant/platforms/windows",
+                  "zh-Hant/platforms/android",
+                  "zh-Hant/platforms/ios",
+                  "zh-Hant/platforms/digitalocean",
+                  "zh-Hant/platforms/oracle",
+                  "zh-Hant/platforms/raspberry-pi"
+                ]
+              },
+              {
+                "group": "macOS companion app",
+                "pages": [
+                  "zh-Hant/platforms/mac/dev-setup",
+                  "zh-Hant/platforms/mac/menu-bar",
+                  "zh-Hant/platforms/mac/voicewake",
+                  "zh-Hant/platforms/mac/voice-overlay",
+                  "zh-Hant/platforms/mac/webchat",
+                  "zh-Hant/platforms/mac/canvas",
+                  "zh-Hant/platforms/mac/child-process",
+                  "zh-Hant/platforms/mac/health",
+                  "zh-Hant/platforms/mac/icon",
+                  "zh-Hant/platforms/mac/logging",
+                  "zh-Hant/platforms/mac/permissions",
+                  "zh-Hant/platforms/mac/remote",
+                  "zh-Hant/platforms/mac/signing",
+                  "zh-Hant/platforms/mac/release",
+                  "zh-Hant/platforms/mac/bundled-gateway",
+                  "zh-Hant/platforms/mac/xpc",
+                  "zh-Hant/platforms/mac/skills",
+                  "zh-Hant/platforms/mac/peekaboo"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Gateway & Ops",
+            "groups": [
+              {
+                "group": "Gateway",
+                "pages": [
+                  "zh-Hant/gateway/index",
+                  {
+                    "group": "Configuration and operations",
+                    "pages": [
+                      "zh-Hant/gateway/configuration",
+                      "zh-Hant/gateway/configuration-reference",
+                      "zh-Hant/gateway/configuration-examples",
+                      "zh-Hant/gateway/authentication",
+                      "zh-Hant/auth-credential-semantics",
+                      "zh-Hant/gateway/secrets",
+                      "zh-Hant/gateway/secrets-plan-contract",
+                      "zh-Hant/gateway/trusted-proxy-auth",
+                      "zh-Hant/gateway/health",
+                      "zh-Hant/gateway/heartbeat",
+                      "zh-Hant/gateway/doctor",
+                      "zh-Hant/gateway/logging",
+                      "zh-Hant/gateway/gateway-lock",
+                      "zh-Hant/gateway/background-process",
+                      "zh-Hant/gateway/multiple-gateways",
+                      "zh-Hant/gateway/troubleshooting"
+                    ]
+                  },
+                  {
+                    "group": "Security and sandboxing",
+                    "pages": [
+                      "zh-Hant/gateway/security/index",
+                      "zh-Hant/gateway/sandboxing",
+                      "zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated"
+                    ]
+                  },
+                  {
+                    "group": "Protocols and APIs",
+                    "pages": [
+                      "zh-Hant/gateway/protocol",
+                      "zh-Hant/gateway/bridge-protocol",
+                      "zh-Hant/gateway/openai-http-api",
+                      "zh-Hant/gateway/openresponses-http-api",
+                      "zh-Hant/gateway/tools-invoke-http-api",
+                      "zh-Hant/gateway/cli-backends",
+                      "zh-Hant/gateway/local-models"
+                    ]
+                  },
+                  {
+                    "group": "Networking and discovery",
+                    "pages": [
+                      "zh-Hant/gateway/network-model",
+                      "zh-Hant/gateway/pairing",
+                      "zh-Hant/gateway/discovery",
+                      "zh-Hant/gateway/bonjour"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Remote access",
+                "pages": [
+                  "zh-Hant/gateway/remote",
+                  "zh-Hant/gateway/remote-gateway-readme",
+                  "zh-Hant/gateway/tailscale"
+                ]
+              },
+              {
+                "group": "Security",
+                "pages": [
+                  "zh-Hant/security/formal-verification",
+                  "zh-Hant/security/",
+                  "zh-Hant/security/THREAT-MODEL-ATLAS",
+                  "zh-Hant/security/CONTRIBUTING-THREAT-MODEL"
+                ]
+              },
+              {
+                "group": "Web interfaces",
+                "pages": [
+                  "zh-Hant/web/index",
+                  "zh-Hant/web/control-ui",
+                  "zh-Hant/web/dashboard",
+                  "zh-Hant/web/webchat",
+                  "zh-Hant/web/tui"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Reference",
+            "groups": [
+              {
+                "group": "CLI commands",
+                "pages": [
+                  "zh-Hant/cli/index",
+                  "zh-Hant/cli/acp",
+                  "zh-Hant/cli/agent",
+                  "zh-Hant/cli/agents",
+                  "zh-Hant/cli/approvals",
+                  "zh-Hant/cli/browser",
+                  "zh-Hant/cli/channels",
+                  "zh-Hant/cli/clawbot",
+                  "zh-Hant/cli/completion",
+                  "zh-Hant/cli/config",
+                  "zh-Hant/cli/configure",
+                  "zh-Hant/cli/cron",
+                  "zh-Hant/cli/daemon",
+                  "zh-Hant/cli/dashboard",
+                  "zh-Hant/cli/devices",
+                  "zh-Hant/cli/directory",
+                  "zh-Hant/cli/dns",
+                  "zh-Hant/cli/docs",
+                  "zh-Hant/cli/doctor",
+                  "zh-Hant/cli/gateway",
+                  "zh-Hant/cli/health",
+                  "zh-Hant/cli/hooks",
+                  "zh-Hant/cli/logs",
+                  "zh-Hant/cli/memory",
+                  "zh-Hant/cli/message",
+                  "zh-Hant/cli/models",
+                  "zh-Hant/cli/node",
+                  "zh-Hant/cli/nodes",
+                  "zh-Hant/cli/onboard",
+                  "zh-Hant/cli/pairing",
+                  "zh-Hant/cli/plugins",
+                  "zh-Hant/cli/qr",
+                  "zh-Hant/cli/reset",
+                  "zh-Hant/cli/sandbox",
+                  "zh-Hant/cli/secrets",
+                  "zh-Hant/cli/security",
+                  "zh-Hant/cli/sessions",
+                  "zh-Hant/cli/setup",
+                  "zh-Hant/cli/skills",
+                  "zh-Hant/cli/status",
+                  "zh-Hant/cli/system",
+                  "zh-Hant/cli/tui",
+                  "zh-Hant/cli/uninstall",
+                  "zh-Hant/cli/update",
+                  "zh-Hant/cli/voicecall",
+                  "zh-Hant/cli/webhooks"
+                ]
+              },
+              {
+                "group": "RPC and API",
+                "pages": [
+                  "zh-Hant/reference/rpc",
+                  "zh-Hant/reference/device-models"
+                ]
+              },
+              {
+                "group": "Templates",
+                "pages": [
+                  "zh-Hant/reference/AGENTS.default",
+                  "zh-Hant/reference/templates/AGENTS",
+                  "zh-Hant/reference/templates/BOOT",
+                  "zh-Hant/reference/templates/BOOTSTRAP",
+                  "zh-Hant/reference/templates/HEARTBEAT",
+                  "zh-Hant/reference/templates/IDENTITY",
+                  "zh-Hant/reference/templates/SOUL",
+                  "zh-Hant/reference/templates/TOOLS",
+                  "zh-Hant/reference/templates/USER"
+                ]
+              },
+              {
+                "group": "Technical reference",
+                "pages": [
+                  "zh-Hant/reference/wizard",
+                  "zh-Hant/reference/token-use",
+                  "zh-Hant/reference/secretref-credential-surface",
+                  "zh-Hant/reference/prompt-caching",
+                  "zh-Hant/reference/api-usage-costs",
+                  "zh-Hant/reference/transcript-hygiene",
+                  "zh-Hant/date-time"
+                ]
+              },
+              {
+                "group": "Concept internals",
+                "pages": [
+                  "zh-Hant/concepts/typebox",
+                  "zh-Hant/concepts/markdown-formatting",
+                  "zh-Hant/concepts/typing-indicators",
+                  "zh-Hant/concepts/usage-tracking",
+                  "zh-Hant/concepts/timezone"
+                ]
+              },
+              {
+                "group": "Project",
+                "pages": ["zh-Hant/reference/credits"]
+              },
+              {
+                "group": "Release notes",
+                "pages": [
+                  "zh-Hant/reference/RELEASING",
+                  "zh-Hant/reference/test"
+                ]
+              },
+              {
+                "group": "Experiments",
+                "pages": [
+                  "zh-Hant/design/kilo-gateway-integration",
+                  "zh-Hant/experiments/onboarding-config-protocol",
+                  "zh-Hant/experiments/plans/acp-thread-bound-agents",
+                  "zh-Hant/experiments/plans/acp-unified-streaming-refactor",
+                  "zh-Hant/experiments/plans/browser-evaluate-cdp-refactor",
+                  "zh-Hant/experiments/plans/openresponses-gateway",
+                  "zh-Hant/experiments/plans/pty-process-supervision",
+                  "zh-Hant/experiments/plans/session-binding-channel-agnostic",
+                  "zh-Hant/experiments/research/memory",
+                  "zh-Hant/experiments/proposals/model-config"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Help",
+            "groups": [
+              {
+                "group": "Help",
+                "pages": [
+                  "zh-Hant/help/index",
+                  "zh-Hant/help/troubleshooting",
+                  "zh-Hant/help/faq"
+                ]
+              },
+              {
+                "group": "Community",
+                "pages": ["zh-Hant/start/lore"]
+              },
+              {
+                "group": "Environment and debugging",
+                "pages": [
+                  "zh-Hant/help/environment",
+                  "zh-Hant/help/debugging",
+                  "zh-Hant/help/testing",
+                  "zh-Hant/help/scripts",
+                  "zh-Hant/debug/node-issue",
+                  "zh-Hant/diagnostics/flags"
+                ]
+              },
+              {
+                "group": "Node runtime",
+                "pages": ["zh-Hant/install/node"]
+              },
+              {
+                "group": "Compaction internals",
+                "pages": ["zh-Hant/reference/session-management-compaction"]
+              },
+              {
+                "group": "Developer setup",
+                "pages": ["zh-Hant/start/setup", "zh-Hant/pi-dev"]
+              },
+              {
+                "group": "Contributing",
+                "pages": ["zh-Hant/ci"]
+              },
+              {
+                "group": "Docs meta",
+                "pages": ["zh-Hant/start/hubs", "zh-Hant/start/docs-directory"]
               }
             ]
           }

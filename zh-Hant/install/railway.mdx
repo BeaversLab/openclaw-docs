@@ -1,0 +1,103 @@
+---
+title: 在 Railway 上部署
+---
+
+使用一鍵範本在 Railway 上部署 OpenClaw，並在瀏覽器中完成設定。
+這是最簡單的「伺服器無需終端機」途徑：Railway 會為您執行 Gateway，
+而您可以透過 `/setup` 網頁精靈來設定所有項目。
+
+## 快速檢查清單（新使用者）
+
+1. 點擊 **Deploy on Railway**（下方）。
+2. 新增一個掛載於 `/data` 的 **Volume**。
+3. 設定必要的 **Variables**（至少 `SETUP_PASSWORD`）。
+4. 在連接埠 `8080` 上啟用 **HTTP Proxy**。
+5. 開啟 `https://<your-railway-domain>/setup` 並完成精靈設定。
+
+## 一鍵部署
+
+<a href="https://railway.com/deploy/clawdbot-railway-template" target="_blank" rel="noreferrer">
+  在 Railway 上部署
+</a>
+
+部署後，在 **Railway → 您的服務 → Settings → Domains** 中尋找您的公開 URL。
+
+Railway 將會：
+
+- 提供一個產生的網域（通常是 `https://<something>.up.railway.app`），或
+- 如果您附加了自訂網域，則使用您的自訂網域。
+
+然後開啟：
+
+- `https://<your-railway-domain>/setup` — 網頁設定（受密碼保護）
+- `https://<your-railway-domain>/openclaw` — 控制介面
+
+## 您將獲得
+
+- 託管的 OpenClaw Gateway + 控制介面
+- 位於 `/setup` 的網頁設定（無需終端機指令）
+- 透過 Railway Volume (`/data`) 進行持久儲存，讓設定/憑證/工作區能在重新部署後保留
+- 位於 `/setup/export` 的備份匯出，以便稍後從 Railway 遷移
+
+## 必要的 Railway 設定
+
+### 公網連線
+
+為該服務啟用 **HTTP Proxy**。
+
+- 連接埠：`8080`
+
+### 儲存空間 (必填)
+
+附加一個掛載於以下路徑的儲存空間：
+
+- `/data`
+
+### 變數
+
+在服務上設定這些變數：
+
+- `SETUP_PASSWORD` (必填)
+- `PORT=8080` (必填 — 必須與 Public Networking 中的連接埠相符)
+- `OPENCLAW_STATE_DIR=/data/.openclaw` (建議)
+- `OPENCLAW_WORKSPACE_DIR=/data/workspace` (建議)
+- `OPENCLAW_GATEWAY_TOKEN` (建議；將其視為管理員密碼)
+
+## 設定流程
+
+1. 造訪 `https://<your-railway-domain>/setup` 並輸入您的 `SETUP_PASSWORD`。
+2. 選擇一個模型/驗證提供者並貼上您的金鑰。
+3. （選用）新增 Telegram/Discord/Slack 權杖。
+4. 點擊 **Run setup**。
+
+如果 Telegram 私訊設為配對模式，網頁設定可以核准配對碼。
+
+## 取得聊天代幣
+
+### Telegram 機器人代幣
+
+1. 在 Telegram 中傳送訊息給 `@BotFather`
+2. 執行 `/newbot`
+3. 複製代幣（看起來像 `123456789:AA...`）
+4. 將其貼上至 `/setup`
+
+### Discord 機器人代幣
+
+1. 前往 [https://discord.com/developers/applications](https://discord.com/developers/applications)
+2. **New Application** → 選擇名稱
+3. **Bot** → **Add Bot**
+4. 在 Bot → Privileged Gateway Intents 下啟用 **MESSAGE CONTENT INTENT**（必須啟用，否則機器人啟動時會當機）
+5. 複製 **Bot Token** 並貼上至 `/setup`
+6. 邀請機器人至您的伺服器（OAuth2 URL Generator；scopes：`bot`、`applications.commands`）
+
+## 備份與遷移
+
+在以下位置下載備份：
+
+- `https://<your-railway-domain>/setup/export`
+
+這會匯出您的 OpenClaw 狀態與工作區，以便您遷移至其他主機而不會遺失設定或記憶。
+
+import footerZhHant from "/components/footer/zh-Hant.mdx";
+
+<footerZhHant />

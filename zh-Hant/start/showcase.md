@@ -1,0 +1,427 @@
+---
+title: "展示"
+description: "來自社群的真實 OpenClaw 專案"
+summary: "由社群建構並由 OpenClaw 驅動的專案與整合"
+read_when:
+  - Looking for real OpenClaw usage examples
+  - Updating community project highlights
+---
+
+# 展示
+
+來自社群的真實專案。看看大家正在用 OpenClaw 建構什麼。
+
+<Info>
+  **想要被精選展示嗎？** 在 Discord 的 [#showcase](https://discord.gg/clawd) 分享您的專案，或在 X 上
+  [標記 @openclaw](https://x.com/openclaw)。
+</Info>
+
+## 🎥 OpenClaw 實戰
+
+完整設定教學（28 分鐘），由 VelvetShark 製作。
+
+<div
+  style={{
+    position: "relative",
+    paddingBottom: "56.25%",
+    height: 0,
+    overflow: "hidden",
+    borderRadius: 16,
+  }}
+>
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/SaWSPZoPX34"
+    title="OpenClaw: The self-hosted AI that Siri should have been (Full setup)"
+    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+    frameBorder="0"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  />
+</div>
+
+[在 YouTube 上觀看](https://www.youtube.com/watch?v=SaWSPZoPX34)
+
+<div
+  style={{
+    position: "relative",
+    paddingBottom: "56.25%",
+    height: 0,
+    overflow: "hidden",
+    borderRadius: 16,
+  }}
+>
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/mMSKQvlmFuQ"
+    title="OpenClaw showcase video"
+    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+    frameBorder="0"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  />
+</div>
+
+[在 YouTube 上觀看](https://www.youtube.com/watch?v=mMSKQvlmFuQ)
+
+<div
+  style={{
+    position: "relative",
+    paddingBottom: "56.25%",
+    height: 0,
+    overflow: "hidden",
+    borderRadius: 16,
+  }}
+>
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/5kkIJNUGFho"
+    title="OpenClaw community showcase"
+    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+    frameBorder="0"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  />
+</div>
+
+[在 YouTube 上觀看](https://www.youtube.com/watch?v=5kkIJNUGFho)
+
+## 🆕 Discord 最新精選
+
+<CardGroup cols={2}>
+
+<Card title="PR 審查 → Telegram 回饋" icon="code-pull-request" href="https://x.com/i/status/2010878524543131691">
+  **@bangnokia** • `review` `github` `telegram`
+
+OpenCode 完成變更 → 開啟 PR → OpenClaw 審查差異並在 Telegram 回覆「小幅建議」以及明確的合併裁決（包含需先套用的關鍵修正）。
+
+  <img src="/assets/showcase/pr-review-telegram.jpg" alt="OpenClaw PR review feedback delivered in Telegram" />
+</Card>
+
+<Card title="數分鐘建立酒窖技能" icon="wine-glass" href="https://x.com/i/status/2010916352454791216">
+  **@prades_maxime** • `skills` `local` `csv`
+
+向「Robby」(@openclaw) 要求一個本機酒窖技能。它會要求提供 CSV 匯出範例與儲存位置，然後快速建置/測試該技能（範例中包含 962 瓶酒）。
+
+  <img src="/assets/showcase/wine-cellar-skill.jpg" alt="OpenClaw building a local wine cellar skill from CSV" />
+</Card>
+
+<Card title="Tesco Shop Autopilot" icon="cart-shopping" href="https://x.com/i/status/2009724862470689131">
+  **@marchattonhere** • `automation` `browser` `shopping`
+
+每週菜單計劃 → 常購清單 → 預訂配送時段 → 確認訂單。無需 API，僅透過瀏覽器控制。
+
+  <img src="/assets/showcase/tesco-shop.jpg" alt="Tesco shop automation via chat" />
+</Card>
+
+<Card title="SNAG Screenshot-to-Markdown" icon="scissors" href="https://github.com/am-will/snag">
+  **@am-will** • `devtools` `screenshots` `markdown`
+
+熱鍵擷取螢幕區域 → Gemini 視覺 → 即時複製 Markdown 到剪貼板。
+
+  <img src="/assets/showcase/snag.png" alt="SNAG screenshot-to-markdown tool" />
+</Card>
+
+<Card title="Agents UI" icon="window-maximize" href="https://releaseflow.net/kitze/agents-ui">
+  **@kitze** • `ui` `skills` `sync`
+
+用於管理 Agents、Claude、Codex 和 OpenClaw 技能/指令的桌面應用程式。
+
+  <img src="/assets/showcase/agents-ui.jpg" alt="Agents UI app" />
+</Card>
+
+<Card title="Telegram Voice Notes (papla.media)" icon="microphone" href="https://papla.media/docs">
+  **Community** • `voice` `tts` `telegram`
+
+封裝 papla.media TTS 並將結果發送為 Telegram 語音訊息（無煩人的自動播放）。
+
+  <img src="/assets/showcase/papla-tts.jpg" alt="Telegram voice note output from TTS" />
+</Card>
+
+<Card title="CodexMonitor" icon="eye" href="https://clawhub.com/odrobnik/codexmonitor">
+  **@odrobnik** • `devtools` `codex` `brew`
+
+透過 Homebrew 安裝的輔助工具，用於列出/檢查/監看本機的 OpenAI Codex 會話（CLI + VS Code）。
+
+  <img src="/assets/showcase/codexmonitor.png" alt="CodexMonitor on ClawHub" />
+</Card>
+
+<Card title="Bambu 3D Printer Control" icon="print" href="https://clawhub.com/tobiasbischoff/bambu-cli">
+  **@tobiasbischoff** • `hardware` `3d-printing` `skill`
+
+控制並排除 BambuLab 印表機故障：狀態、工作、相機、AMS、校準等等。
+
+  <img src="/assets/showcase/bambu-cli.png" alt="Bambu CLI skill on ClawHub" />
+</Card>
+
+<Card title="Vienna Transport (Wiener Linien)" icon="train" href="https://clawhub.com/hjanuschka/wienerlinien">
+  **@hjanuschka** • `travel` `transport` `skill`
+
+維也納大眾運輸的即時發車、中斷資訊、電梯狀態與路線規劃。
+
+  <img src="/assets/showcase/wienerlinien.png" alt="Wiener Linien skill on ClawHub" />
+</Card>
+
+<Card title="ParentPay School Meals" icon="utensils" href="#">
+  **@George5562** • `automation` `browser` `parenting`
+
+透過 ParentPay 自動預約英國學校營養午餐。使用滑鼠座標確保表格點擊的可靠性。
+
+</Card>
+
+<Card title="R2 Upload (Send Me My Files)" icon="cloud-arrow-up" href="https://clawhub.com/skills/r2-upload">
+  **@julianengel** • `files` `r2` `presigned-urls`
+
+上傳至 Cloudflare R2/S3 並產生安全的預簽名下載連結。非常適合遠端 OpenClaw 實例。
+
+</Card>
+
+<Card title="iOS App via Telegram" icon="mobile" href="#">
+  **@coard** • `ios` `xcode` `testflight`
+
+構建了一個完整的 iOS 應用程式，包含地圖和錄音功能，完全透過 Telegram 聊天部署到 TestFlight。
+
+  <img src="/assets/showcase/ios-testflight.jpg" alt="iOS app on TestFlight" />
+</Card>
+
+<Card title="Oura Ring Health Assistant" icon="heart-pulse" href="#">
+  **@AS** • `health` `oura` `calendar`
+
+個人 AI 健康助理，整合 Oura 指環資料與日曆、預約和健身時間表。
+
+  <img src="/assets/showcase/oura-health.png" alt="Oura ring health assistant" />
+</Card>
+<Card title="Kev's Dream Team (14+ Agents)" icon="robot" href="https://github.com/adam91holt/orchestrated-ai-articles">
+  **@adam91holt** • `multi-agent` `orchestration` `architecture` `manifesto`
+
+14 個以上的代理程式在同一個閘道下，由 Opus 4.5 編排器協調給 Codex 工作程式。涵蓋夢幻隊伍名單、模型選擇、沙盒、網路鉤子、心跳和委派流程的完整[技術文章](https://github.com/adam91holt/orchestrated-ai-articles)。用於代理程式沙盒的 [Clawdspace](https://github.com/adam91holt/clawdspace)。[部落格文章](https://adams-ai-journey.ghost.io/2026-the-year-of-the-orchestrator/)。
+
+</Card>
+
+<Card title="Linear CLI" icon="terminal" href="https://github.com/Finesssee/linear-cli">
+  **@NessZerra** • `devtools` `linear` `cli` `issues`
+
+Linear 的 CLI，與代理工作流程（Claude Code、OpenClaw）整合。從終端機管理問題、專案和工作流程。首個外部 PR 已合併！
+
+</Card>
+
+<Card title="Beeper CLI" icon="message" href="https://github.com/blqke/beepcli">
+  **@jules** • `messaging` `beeper` `cli` `automation`
+
+透過 Beeper Desktop 讀取、傳送和封存訊息。使用 Beeper 本地 MCP API，讓代理可以在一個地方管理您所有的聊天（iMessage、WhatsApp 等）。
+
+</Card>
+
+</CardGroup>
+
+## 🤖 自動化與工作流程
+
+<CardGroup cols={2}>
+
+<Card title="Winix Air Purifier Control" icon="wind" href="https://x.com/antonplex/status/2010518442471006253">
+  **@antonplex** • `automation` `hardware` `air-quality`
+
+Claude Code 發現並確認了空氣清淨機的控制功能，然後由 OpenClaw 接手管理室內空氣品質。
+
+  <img src="/assets/showcase/winix-air-purifier.jpg" alt="Winix air purifier control via OpenClaw" />
+</Card>
+
+<Card title="Pretty Sky Camera Shots" icon="camera" href="https://x.com/signalgaining/status/2010523120604746151">
+  **@signalgaining** • `automation` `camera` `skill` `images`
+
+由屋頂攝影機觸發：只要天空看起來很美，就要求 OpenClaw 拍一張天空照片 —— 它設計了一個技能並拍下了照片。
+
+  <img src="/assets/showcase/roof-camera-sky.jpg" alt="Roof camera sky snapshot captured by OpenClaw" />
+</Card>
+
+<Card title="視覺化晨間簡報場景" icon="robot" href="https://x.com/buddyhadry/status/2010005331925954739">
+  **@buddyhadry** • `automation` `briefing` `images` `telegram`
+
+透過 OpenClaw 角色，預定的提示每早生成一張單一的「場景」圖像（天氣、任務、日期、喜歡的帖子/引言）。
+
+</Card>
+
+<Card title="Padel 球場預訂" icon="calendar-check" href="https://github.com/joshp123/padel-cli">
+  **@joshp123** • `automation` `booking` `cli` Playtomic 可用性檢查器 + 預訂
+  CLI。再也不會錯過空檔球場了。
+  <img src="/assets/showcase/padel-screenshot.jpg" alt="padel-cli screenshot" />
+</Card>
+
+<Card title="會計資料收集" icon="file-invoice-dollar">
+  **社群** • `automation` `email` `pdf` 從電子郵件收集 PDF，為稅務顧問準備文件。每月會計作業自動化。
+</Card>
+
+<Card title="沙發馬鈴薯開發模式" icon="couch" href="https://davekiss.com">
+  **@davekiss** • `telegram` `website` `migration` `astro`
+
+在 Netflix 看片時透過 Telegram 重建整個個人網站 —— Notion → Astro，遷移了 18 篇文章，DNS 轉移至 Cloudflare。全程沒打開過筆電。
+
+</Card>
+
+<Card title="求職代理人" icon="briefcase">
+  **@attol8** • `automation` `api` `skill`
+
+搜尋職缺列表，根據 CV 關鍵字比對，並傳回附有連結的相關機會。使用 JSearch API 在 30 分鐘內建構完成。
+
+</Card>
+
+<Card title="Jira 技能構建器" icon="diagram-project" href="https://x.com/jdrhyne/status/2008336434827002232">
+  **@jdrhyne** • `automation` `jira` `skill` `devtools`
+
+OpenClaw 連接到 Jira，然後即時生成了一個新技能（甚至在它出現在 ClawHub 上之前）。
+
+</Card>
+
+<Card title="透過 Telegram 的 Todoist 技能" icon="list-check" href="https://x.com/iamsubhrajyoti/status/2009949389884920153">
+  **@iamsubhrajyoti** • `automation` `todoist` `skill` `telegram`
+
+自動化 Todoist 任務，並讓 OpenClaw 直接在 Telegram 聊天中生成技能。
+
+</Card>
+
+<Card title="TradingView 分析" icon="chart-line">
+  **@bheem1798** • `finance` `browser` `automation`
+
+透過瀏覽器自動化登入 TradingView，擷取圖表，並根據需求執行技術分析。不需要 API——只需瀏覽器控制。
+
+</Card>
+
+<Card title="Slack 自動支援" icon="slack">
+  **@henrymascot** • `slack` `automation` `support`
+
+監看公司 Slack 頻道，提供有幫助的回應，並將通知轉發至 Telegram。在未經要求下，自主修復了已部署應用程式中的生環境錯誤。
+
+</Card>
+
+</CardGroup>
+
+## 🧠 知識與記憶
+
+<CardGroup cols={2}>
+
+<Card title="xuezh 中文學習" icon="language" href="https://github.com/joshp123/xuezh">
+  **@joshp123** • `learning` `voice` `skill` 透過 OpenClaw 提供發音回饋和學習流程的中文學習引擎。
+  <img src="/assets/showcase/xuezh-pronunciation.jpeg" alt="xuezh 發音回饋" />
+</Card>
+
+<Card title="WhatsApp Memory Vault" icon="vault">
+  **Community** • `memory` `transcription` `indexing` 攝取完整的 WhatsApp 匯出資料，轉錄 1k+
+  則語音備忘錄， 與 git 記錄交叉比對，輸出連結的 Markdown 報告。
+</Card>
+
+<Card
+  title="Karakeep Semantic Search"
+  icon="magnifying-glass"
+  href="https://github.com/jamesbrooksco/karakeep-semantic-search"
+>
+  **@jamesbrooksco** • `search` `vector` `bookmarks` 使用 Qdrant + OpenAI/Ollama 嵌入 為 Karakeep
+  書籤加入向量搜尋功能。
+</Card>
+
+<Card title="Inside-Out-2 Memory" icon="brain">
+  **Community** • `memory` `beliefs` `self-model` 獨立的記憶管理器，將會話檔案 轉化為記憶 → 信念 →
+  演進的自我模型。
+</Card>
+
+</CardGroup>
+
+## 🎙️ Voice & Phone
+
+<CardGroup cols={2}>
+
+<Card
+  title="Clawdia Phone Bridge"
+  icon="phone"
+  href="https://github.com/alejandroOPI/clawdia-bridge"
+>
+  **@alejandroOPI** • `voice` `vapi` `bridge` Vapi 語音助理 ↔ OpenClaw HTTP 橋接器。與您的 Agent
+  進行近乎 即時的電話通話。
+</Card>
+
+<Card title="OpenRouter Transcription" icon="microphone" href="https://clawhub.com/obviyus/openrouter-transcribe">
+  **@obviyus** • `transcription` `multilingual` `skill`
+
+透過 OpenRouter (Gemini 等) 進行多語音音訊轉錄。可於 ClawHub 取得。
+
+</Card>
+
+</CardGroup>
+
+## 🏗️ Infrastructure & Deployment
+
+<CardGroup cols={2}>
+
+<Card
+  title="Home Assistant 附加元件"
+  icon="home"
+  href="https://github.com/ngutman/openclaw-ha-addon"
+>
+  **@ngutman** • `homeassistant` `docker` `raspberry-pi` 在 Home Assistant OS 上執行的 OpenClaw
+  閘道， 支援 SSH 通道與持續性狀態。
+</Card>
+
+<Card title="Home Assistant 技能" icon="toggle-on" href="https://clawhub.com/skills/homeassistant">
+  **ClawHub** • `homeassistant` `skill` `automation` 透過自然語言 控制與自動化 Home Assistant 裝置。
+</Card>
+
+<Card title="Nix 打包" icon="snowflake" href="https://github.com/openclaw/nix-openclaw">
+  **@openclaw** • `nix` `packaging` `deployment` 功能齊全的 nix 化 OpenClaw 設定，
+  用於可重現的部署。
+</Card>
+
+<Card title="CalDAV 日曆" icon="calendar" href="https://clawhub.com/skills/caldav-calendar">
+  **ClawHub** • `calendar` `caldav` `skill` 使用 khal/vdirsyncer 的日曆技能。 自託管的日曆整合。
+</Card>
+
+</CardGroup>
+
+## 🏠 家庭與硬體
+
+<CardGroup cols={2}>
+
+<Card title="GoHome 自動化" icon="house-signal" href="https://github.com/joshp123/gohome">
+  **@joshp123** • `home` `nix` `grafana` 以 Nix 為原生的家庭自動化系統， 並以 OpenClaw
+  作為介面，附上精美的 Grafana 儀表板。
+  <img src="/assets/showcase/gohome-grafana.png" alt="GoHome Grafana 儀表板" />
+</Card>
+
+<Card
+  title="Roborock 吸塵器"
+  icon="robot"
+  href="https://github.com/joshp123/gohome/tree/main/plugins/roborock"
+>
+  **@joshp123** • `vacuum` `iot` `plugin` 透過自然對話控制您的 Roborock 機器人吸塵器。
+  <img src="/assets/showcase/roborock-screenshot.jpg" alt="Roborock status" />
+</Card>
+
+</CardGroup>
+
+## 🌟 社群專案
+
+<CardGroup cols={2}>
+
+<Card title="StarSwap Marketplace" icon="star" href="https://star-swap.com/">
+  **Community** • `marketplace` `astronomy` `webapp` 完整的天文設備市集。使用/圍繞 OpenClaw
+  生態系統建構。
+</Card>
+
+</CardGroup>
+
+---
+
+## 提交您的專案
+
+有東西想分享嗎？我們很希望能展示它！
+
+<Steps>
+  <Step title="分享">
+    在 [Discord 上的 #showcase](https://discord.gg/clawd) 發布或 [推文給
+    @openclaw](https://x.com/openclaw)
+  </Step>
+  <Step title="包含詳情">告訴我們它的用途，連結到 repo/demo，如果有截圖也請分享</Step>
+  <Step title="獲得選登">我們會將傑出的專案加入此頁面</Step>
+</Steps>
+
+import footerZhHant from "/components/footer/zh-Hant.mdx";
+
+<footerZhHant />

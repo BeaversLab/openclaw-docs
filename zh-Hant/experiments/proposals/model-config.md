@@ -1,0 +1,40 @@
+---
+summary: "探索：模型設定、驗證設定檔與後援行為"
+read_when:
+  - Exploring future model selection + auth profile ideas
+title: "模型設定探索"
+---
+
+# 模型設定（探索）
+
+本文件記錄了未來模型設定的**構想**。這並非
+正式發布的規格。若要了解目前的行為，請參閱：
+
+- [模型](/zh-Hant/concepts/models)
+- [模型故障轉移](/zh-Hant/concepts/model-failover)
+- [OAuth + 設定檔](/zh-Hant/concepts/oauth)
+
+## 動機
+
+操作員希望：
+
+- 每個供應商擁有多個驗證設定檔（個人與工作）。
+- 簡單的 `/model` 選擇，並具有可預測的後援機制。
+- 在文字模型與支援影像的模型之間有明確的區分。
+
+## 可能的方向（高層次）
+
+- 保持模型選擇簡單：`provider/model` 搭配選用的別名。
+- 讓供應商擁有多個驗證設定檔，並具有明確的順序。
+- 使用全域後援清單，讓所有工作階段都能一致地進行故障轉移。
+- 僅在明確設定時，才覆寫影像路由。
+
+## 未解決的問題
+
+- 設定檔輪替應依供應商還是依模型進行？
+- UI 應如何呈現工作階段的設定檔選擇？
+- 從舊版設定金鑰遷移的最安全路徑為何？
+
+import footerZhHant from "/components/footer/zh-Hant.mdx";
+
+<footerZhHant />

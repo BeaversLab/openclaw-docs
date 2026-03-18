@@ -59,6 +59,4 @@ CHANGELOG.md
 .i18n/translation-plan.yaml.bak
 
 # Skip configuration files with complex JSX/Markdown nesting
-en/gateway/configuration.md
-fr/gateway/configuration.md
-zh/gateway/configuration.md
+*/gateway/configuration.md

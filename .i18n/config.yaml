@@ -24,3 +24,5 @@ linkFix:
       prefix: zh/
     - dir: /es
       prefix: es/
+    - dir: /zh-Hant
+      prefix: zh-Hant/

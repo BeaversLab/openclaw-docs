@@ -1,0 +1,57 @@
+---
+title: 在 Northflank 上部署
+---
+
+使用一鍵範本在 Northflank 上部署 OpenClaw，並在瀏覽器中完成設定。
+這是最簡單的「伺服器無需終端機」途徑：Northflank 會為您運行 Gateway，
+您可以透過 `/setup` 網頁精靈設定所有內容。
+
+## 如何開始
+
+1. 點擊 [Deploy OpenClaw](https://northflank.com/stacks/deploy-openclaw) 以開啟範本。
+2. 如果還沒有帳戶，請建立一個 [Northflank 帳戶](https://app.northflank.com/signup)。
+3. 點擊 **Deploy OpenClaw now**。
+4. 設定所需的環境變數：`SETUP_PASSWORD`。
+5. 點擊 **Deploy stack** 來建構並執行 OpenClaw 範本。
+6. 等待部署完成，然後點擊 **View resources**。
+7. 開啟 OpenClaw 服務。
+8. 開啟公開的 OpenClaw URL 並在 `/setup` 完成設定。
+9. 在 `/openclaw` 開啟控制介面。
+
+## 您將獲得
+
+- 託管的 OpenClaw Gateway + 控制介面
+- 位於 `/setup` 的網頁設定精靈（無需終端機指令）
+- 透過 Northflank Volume (`/data`) 提供的永續儲存空間，讓設定/憑證/工作區在重新部署後仍能保留
+
+## 設定流程
+
+1. 造訪 `https://<your-northflank-domain>/setup` 並輸入您的 `SETUP_PASSWORD`。
+2. 選擇模型/驗證提供者並貼上您的金鑰。
+3. （選用）新增 Telegram/Discord/Slack 權杖。
+4. 點擊 **Run setup**。
+5. 在 `https://<your-northflank-domain>/openclaw` 開啟控制介面
+
+如果 Telegram 私訊設定為配對模式，設定精靈可以核准配對碼。
+
+## 取得聊天權杖
+
+### Telegram 機器人權杖
+
+1. 在 Telegram 中傳送訊息給 `@BotFather`
+2. 執行 `/newbot`
+3. 複製權杖（看起來像 `123456789:AA...`）
+4. 將其貼上至 `/setup`
+
+### Discord 機器人權杖
+
+1. 前往 https://discord.com/developers/applications
+2. **New Application** → 選擇名稱
+3. **Bot** → **Add Bot**
+4. 在 Bot → Privileged Gateway Intents 下啟用 **Enable MESSAGE CONTENT INTENT**（必須啟用，否則機器人啟動時會當機）
+5. 複製 **Bot Token** 並貼上至 `/setup`
+6. 邀請機器人至您的伺服器（OAuth2 URL Generator；範圍：`bot`, `applications.commands`）
+
+import footerZhHant from "/components/footer/zh-Hant.mdx";
+
+<footerZhHant />

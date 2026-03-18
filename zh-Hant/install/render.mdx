@@ -1,0 +1,162 @@
+---
+title: Deploy on Render
+---
+
+使用基礎設施即代碼在 Render 上部署 OpenClaw。包含的 `render.yaml` 藍圖以聲明式方式定義了您的整個技術堆疊，包括服務、磁碟和環境變量，因此您可以透過單擊進行部署，並將您的基礎設施與代碼一起進行版本控制。
+
+## 先決條件
+
+- 一個 [Render 帳號](https://render.com) (提供免費層級)
+- 來自您首選 [模型供應商](/zh-Hant/providers) 的 API 金鑰
+
+## 使用 Render 藍圖進行部署
+
+[部署至 Render](https://render.com/deploy?repo=https://github.com/openclaw/openclaw)
+
+點擊此連結將：
+
+1. 根據此儲存庫根目錄中的 `render.yaml` 藍圖建立一個新的 Render 服務。
+2. 提示您設定 `SETUP_PASSWORD`
+3. 建置 Docker 映像檔並進行部署
+
+部署完成後，您的服務 URL 將遵循 `https://<service-name>.onrender.com` 的模式。
+
+## 理解藍圖
+
+Render 藍圖是定義您基礎設施的 YAML 檔案。此儲存庫中的
+`render.yaml` 配置了執行 OpenClaw 所需的一切：
+
+```yaml
+services:
+  - type: web
+    name: openclaw
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: SETUP_PASSWORD
+        sync: false # prompts during deploy
+      - key: OPENCLAW_STATE_DIR
+        value: /data/.openclaw
+      - key: OPENCLAW_WORKSPACE_DIR
+        value: /data/workspace
+      - key: OPENCLAW_GATEWAY_TOKEN
+        generateValue: true # auto-generates a secure token
+    disk:
+      name: openclaw-data
+      mountPath: /data
+      sizeGB: 1
+```
+
+使用的關鍵藍圖功能：
+
+| 功能                  | 用途                                             |
+| --------------------- | ------------------------------------------------ |
+| `runtime: docker`     | 從儲存庫的 Dockerfile 建置                       |
+| `healthCheckPath`     | Render 監控 `/health` 並重新啟動不健康的執行個體 |
+| `sync: false`         | 在部署期間提示輸入值 (機密)                      |
+| `generateValue: true` | 自動產生密碼學安全的值                           |
+| `disk`                | 在重新部署後仍然存在的持久性儲存                 |
+
+## 選擇方案
+
+| 方案  | 休眠           | 磁碟     | 最適合             |
+| ----- | -------------- | -------- | ------------------ |
+| 免費  | 閒置 15 分鐘後 | 無法使用 | 測試、演示         |
+| 入門  | 永不           | 1GB+     | 個人使用、小團隊   |
+| 標準+ | 永不           | 1GB+     | 生產環境、多個頻道 |
+
+藍圖預設為 `starter`。若要使用免費層級，請在您 fork 的
+`render.yaml` 中變更 `plan: free` (但請注意：沒有持久磁碟意味著每次部署時都會重置配置)。
+
+## 部署完成後
+
+### 完成網頁設定
+
+1. 導航至 `https://<your-service>.onrender.com/setup`
+2. 輸入您的 `SETUP_PASSWORD`
+3. 選擇模型供應商並貼上您的 API 金鑰
+4. 選擇性地配置訊息頻道 (Telegram、Discord、Slack)
+5. 點擊 **執行設定**
+
+### 存取控制介面
+
+Web 儀表板可在 `https://<your-service>.onrender.com/openclaw` 存取。
+
+## Render 儀表板功能
+
+### 日誌
+
+在 **Dashboard → your service → Logs** 中檢視即時日誌。篩選條件：
+
+- 建置日誌 (Docker 映像檔建立)
+- 部署日誌 (服務啟動)
+- 執行時期日誌 (應用程式輸出)
+
+### Shell 存取權
+
+為了進行除錯，請透過 **Dashboard → your service → Shell** 開啟 Shell 工作階段。永續磁碟已掛載於 `/data`。
+
+### 環境變數
+
+在 **Dashboard → your service → Environment** 中修改變數。變更會觸發自動重新部署。
+
+### 自動部署
+
+如果您使用原始的 OpenClaw 存儲庫，Render 將不會自動部署您的 OpenClaw。若要更新它，請從儀表板執行手動 Blueprint 同步。
+
+## 自訂網域
+
+1. 前往 **Dashboard → your service → Settings → Custom Domains**
+2. 新增您的網域
+3. 按照指示設定 DNS (CNAME 到 `*.onrender.com`)
+4. Render 會自動佈建 TLS 憑證
+
+## 擴展
+
+Render 支援水平和垂直擴展：
+
+- **垂直**：變更方案以獲得更多 CPU/RAM
+- **水平**：增加執行個體數量 (Standard 方案及以上)
+
+對於 OpenClaw，垂直擴展通常已足夠。水平擴展需要黏性工作階段或外部狀態管理。
+
+## 備份與移轉
+
+隨時匯出您的設定與工作區：
+
+```
+https://<your-service>.onrender.com/setup/export
+```
+
+這會下載一個可攜式備份，您可以在任何 OpenClaw 主機上還原。
+
+## 疑難排解
+
+### 服務無法啟動
+
+請檢查 Render 儀表板中的部署日誌。常見問題：
+
+- 缺少 `SETUP_PASSWORD` — Blueprint 會提示您輸入此內容，但請驗證是否已設定
+- 連接埠不符 — 確保 `PORT=8080` 符合 Dockerfile 中公開的連接埠
+
+### 冷啟動緩慢 (免費方案)
+
+免費方案的服務會在閒置 15 分鐘後進入休眠。休眠後的第一個請求需要幾秒鐘的時間，因為容器正在啟動。升級至 Starter 方案可保持服務永遠在線。
+
+### 重新部署後資料遺失
+
+這發生在免費方案上 (沒有永續磁碟)。升級至付費方案，或者定期透過 `/setup/export` 匯出您的設定。
+
+### 健康檢查失敗
+
+Render 預期在 30 秒內從 `/health` 收到 200 回應。如果建置成功但部署失敗，可能是服務啟動時間過長。請檢查：
+
+- 建置日誌中的錯誤
+- 無論容器是否透過 `docker build && docker run` 在本機執行
+
+import footerZhHant from "/components/footer/zh-Hant.mdx";
+
+<footerZhHant />

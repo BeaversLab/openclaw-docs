@@ -23,6 +23,12 @@
       "mintlifyCode": "es",
       "enabled": true,
       "description": "Added via script on 3/16/2026"
+    },
+    "zh-Hant": {
+      "label": "繁體中文",
+      "mintlifyCode": "zh-Hant",
+      "enabled": true,
+      "description": "Added via script on 3/18/2026"
     }
   }
 }
