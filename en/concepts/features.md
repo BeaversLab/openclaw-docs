@@ -48,8 +48,8 @@ title: "Features"
 - Android node with pairing, Connect tab, chat sessions, voice tab, Canvas/camera, plus device, notifications, contacts/calendar, motion, photos, and SMS commands
 
 <Note>
-  Legacy Claude, Codex, Gemini, and Opencode paths have been removed. Pi is the only coding agent
-  path.
+Legacy Claude, Codex, Gemini, and Opencode paths have been removed. Pi is the only
+coding agent path.
 </Note>
 
 import en from "/components/footer/en.mdx";

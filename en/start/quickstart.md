@@ -8,7 +8,9 @@ title: "Quick start"
 
 # Quick start
 
-<Info>Quick start is now part of [Getting Started](/en/start/getting-started).</Info>
+<Info>
+Quick start is now part of [Getting Started](/en/start/getting-started).
+</Info>
 
 <Columns>
   <Card title="Getting Started" href="/en/start/getting-started">

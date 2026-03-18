@@ -7,7 +7,9 @@ title: "Docs Hubs"
 
 # Docs hubs
 
-<Note>If you are new to OpenClaw, start with [Getting Started](/en/start/getting-started).</Note>
+<Note>
+If you are new to OpenClaw, start with [Getting Started](/en/start/getting-started).
+</Note>
 
 Use these hubs to discover every page, including deep dives and reference docs that don’t appear in the left nav.
 
@@ -173,12 +175,6 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Templates: SOUL](/en/reference/templates/SOUL)
 - [Templates: TOOLS](/en/reference/templates/TOOLS)
 - [Templates: USER](/en/reference/templates/USER)
-
-## Experiments (exploratory)
-
-- [Onboarding config protocol](/en/experiments/onboarding-config-protocol)
-- [Research: memory](/en/experiments/research/memory)
-- [Model config exploration](/en/experiments/proposals/model-config)
 
 ## Project
 

@@ -11,19 +11,19 @@ title: "Getting Started"
 Goal: go from zero to a first working chat with minimal setup.
 
 <Info>
-  Fastest chat: open the Control UI (no channel setup needed). Run `openclaw dashboard` and chat in
-  the browser, or open `http://127.0.0.1:18789/` on the
-  <Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">
-    gateway host
-  </Tooltip>
-  . Docs: [Dashboard](/en/web/dashboard) and [Control UI](/en/web/control-ui).
+Fastest chat: open the Control UI (no channel setup needed). Run `openclaw dashboard`
+and chat in the browser, or open `http://127.0.0.1:18789/` on the
+<Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">gateway host</Tooltip>.
+Docs: [Dashboard](/en/web/dashboard) and [Control UI](/en/web/control-ui).
 </Info>
 
 ## Prereqs
 
 - Node 24 recommended (Node 22 LTS, currently `22.16+`, still supported for compatibility)
 
-<Tip>Check your Node version with `node --version` if you are unsure.</Tip>
+<Tip>
+Check your Node version with `node --version` if you are unsure.
+</Tip>
 
 ## Quick setup (CLI)
 
@@ -76,7 +76,9 @@ Goal: go from zero to a first working chat with minimal setup.
   </Step>
 </Steps>
 
-<Check>If the Control UI loads, your Gateway is ready for use.</Check>
+<Check>
+If the Control UI loads, your Gateway is ready for use.
+</Check>
 
 ## Optional checks and extras
 

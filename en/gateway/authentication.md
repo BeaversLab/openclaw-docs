@@ -85,9 +85,9 @@ This credential is only authorized for use with Claude Code and cannot be used f
 …use an Anthropic API key instead.
 
 <Warning>
-  Anthropic setup-token support is technical compatibility only. Anthropic has blocked some
-  subscription usage outside Claude Code in the past. Use it only if you decide the policy risk is
-  acceptable, and verify Anthropic's current terms yourself.
+Anthropic setup-token support is technical compatibility only. Anthropic has blocked
+some subscription usage outside Claude Code in the past. Use it only if you decide
+the policy risk is acceptable, and verify Anthropic's current terms yourself.
 </Warning>
 
 Manual token entry (any provider; writes `auth-profiles.json` + updates config):
@@ -159,7 +159,7 @@ Use `--agent <id>` to target a specific agent; omit it to use the configured def
 
 ## Troubleshooting
 
-### “No credentials found”
+### "No credentials found"
 
 If the Anthropic token profile is missing, run `claude setup-token` on the
 **gateway host**, then re-check:

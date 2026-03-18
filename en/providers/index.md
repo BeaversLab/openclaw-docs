@@ -3,7 +3,7 @@ summary: "Model providers (LLMs) supported by OpenClaw"
 read_when:
   - You want to choose a model provider
   - You need a quick overview of supported LLM backends
-title: "Model Providers"
+title: "Provider Directory"
 ---
 
 # Model Providers
@@ -47,6 +47,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
 - [Venice (Venice AI, privacy-focused)](/en/providers/venice)
 - [vLLM (local models)](/en/providers/vllm)
+- [xAI](/en/providers/xai)
 - [Xiaomi](/en/providers/xiaomi)
 - [Z.AI](/en/providers/zai)
 

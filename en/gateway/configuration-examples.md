@@ -434,7 +434,7 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
       nodeManager: "npm",
     },
     entries: {
-      "nano-banana-pro": {
+      "image-lab": {
         enabled: true,
         apiKey: "GEMINI_KEY_HERE",
         env: { GEMINI_API_KEY: "GEMINI_KEY_HERE" },
@@ -530,9 +530,9 @@ Only enable direct mutable name/email/nick matching with each channel's `dangero
 ### Anthropic setup-token + API key, MiniMax fallback
 
 <Warning>
-  Anthropic setup-token usage outside Claude Code has been restricted for some users in the past.
-  Treat this as user-choice risk and verify current Anthropic terms before depending on subscription
-  auth.
+Anthropic setup-token usage outside Claude Code has been restricted for some
+users in the past. Treat this as user-choice risk and verify current Anthropic
+terms before depending on subscription auth.
 </Warning>
 
 ```json5

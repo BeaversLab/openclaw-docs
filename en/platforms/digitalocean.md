@@ -41,8 +41,7 @@ If you want a $0/month option and don’t mind ARM + provider-specific setup, se
 ## 1) Create a Droplet
 
 <Warning>
-  Use a clean base image (Ubuntu 24.04 LTS). Avoid third-party Marketplace 1-click images unless you
-  have reviewed their startup scripts and firewall defaults.
+Use a clean base image (Ubuntu 24.04 LTS). Avoid third-party Marketplace 1-click images unless you have reviewed their startup scripts and firewall defaults.
 </Warning>
 
 1. Log into [DigitalOcean](https://cloud.digitalocean.com/)
@@ -232,7 +231,7 @@ For the full setup guide, see [Oracle Cloud](/en/platforms/oracle). For signup t
 
 ## Troubleshooting
 
-### Gateway won't start
+### Gateway will not start
 
 ```bash
 openclaw gateway status

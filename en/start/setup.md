@@ -9,8 +9,8 @@ title: "Setup"
 # Setup
 
 <Note>
-  If you are setting up for the first time, start with [Getting Started](/en/start/getting-started).
-  For onboarding details, see [Onboarding (CLI)](/en/start/wizard).
+If you are setting up for the first time, start with [Getting Started](/en/start/getting-started).
+For onboarding details, see [Onboarding (CLI)](/en/start/wizard).
 </Note>
 
 Last updated: 2026-01-01
@@ -27,7 +27,7 @@ Last updated: 2026-01-01
 - `pnpm`
 - Docker (optional; only for containerized setup/e2e — see [Docker](/en/install/docker))
 
-## Tailoring strategy (so updates don’t hurt)
+## Tailoring strategy (so updates do not hurt)
 
 If you want “100% tailored to me” _and_ easy updates, keep your customization in:
 
