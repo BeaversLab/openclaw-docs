@@ -29,6 +29,7 @@ Native companion apps for Windows are also planned; the Gateway is recommended v
 - Fly.io: [Fly.io](/en/install/fly)
 - Hetzner (Docker): [Hetzner](/en/install/hetzner)
 - GCP (Compute Engine): [GCP](/en/install/gcp)
+- Azure (Linux VM): [Azure](/en/install/azure)
 - exe.dev (VM + HTTPS proxy): [exe.dev](/en/install/exe-dev)
 
 ## Common links

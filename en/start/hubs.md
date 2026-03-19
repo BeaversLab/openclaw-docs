@@ -162,6 +162,18 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [macOS skills](/en/platforms/mac/skills)
 - [macOS Peekaboo](/en/platforms/mac/peekaboo)
 
+## Extensions + plugins
+
+- [Plugins overview](/en/tools/plugin)
+- [Building extensions](/en/plugins/building-extensions)
+- [Plugin manifest](/en/plugins/manifest)
+- [Agent tools](/en/plugins/agent-tools)
+- [Plugin bundles](/en/plugins/bundles)
+- [Community plugins](/en/plugins/community)
+- [Capability cookbook](/en/tools/capability-cookbook)
+- [Voice call plugin](/en/plugins/voice-call)
+- [Zalo user plugin](/en/plugins/zalouser)
+
 ## Workspace + templates
 
 - [Skills](/en/tools/skills)

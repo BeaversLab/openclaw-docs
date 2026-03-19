@@ -168,7 +168,7 @@ Each plugin is classified by what it actually registers at runtime:
 - **hook-only** — only hooks, no capabilities or surfaces
 - **non-capability** — tools/commands/services but no capabilities
 
-See [Plugins](/en/tools/plugin#plugin-shapes) for more on the capability model.
+See [Plugin shapes](/en/plugins/architecture#plugin-shapes) for more on the capability model.
 
 The `--json` flag outputs a machine-readable report suitable for scripting and
 auditing.

@@ -127,6 +127,12 @@ Fix-it keys (pick one):
 
 In `"non-main"` mode, group/channel keys are _not_ main. Use the main session key (shown by `sandbox explain`) or switch mode to `"off"`.
 
+## See also
+
+- [Sandboxing](/en/gateway/sandboxing) -- full sandbox reference (modes, scopes, backends, images)
+- [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) -- per-agent overrides and precedence
+- [Elevated Mode](/en/tools/elevated)
+
 import en from "/components/footer/en.mdx";
 
 <en />

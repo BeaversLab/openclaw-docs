@@ -5,6 +5,8 @@ read_when:
 title: "Docs directory"
 ---
 
+# Docs Directory
+
 <Note>
 This page is a curated index. If you are new, start with [Getting Started](/en/start/getting-started).
 For a complete map of the docs, see [Docs hubs](/en/start/hubs).
