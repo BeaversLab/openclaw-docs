@@ -2,8 +2,8 @@
 summary: "Contenu du prompt système OpenClaw et comment il est assemblé"
 read_when:
   - Modification du texte du prompt système, de la liste des outils ou des sections de temps/heartbeat
-Modification du comportement d'amorçage de l'espace de travail ou d'injection de compétences
-  - title: "System Prompt"
+  - Modification du comportement d'amorçage de l'espace de travail ou d'injection de compétences
+title: "System Prompt"
 ---
 
 # System Prompt

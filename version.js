@@ -3,7 +3,6 @@
   var UPDATED_AT = "2026-03-20";
   var COMMIT = "4c60956d8e54c01a0942fa2af5dd182c5cfc24e7";
   var SHORT_COMMIT = COMMIT.slice(0, 7);
-  var COMMIT_URL = "https://github.com/openclaw/openclaw/commit/" + COMMIT;
   var META_ID = "openclaw-version-meta";
   var STYLE_ID = "openclaw-version-style";
 
@@ -53,7 +52,6 @@
     var isZh = (location.pathname || "").toLowerCase().startsWith("/zh");
     var versionText = isZh ? "版本" : "Version";
     var updatedText = isZh ? "更新" : "Updated";
-    var commitText = isZh ? "提交" : "Commit";
     var tagUrl = TAG ? "https://github.com/openclaw/openclaw/releases/tag/" + TAG : "";
 
     var wrapper = document.createElement("div");
@@ -69,11 +67,11 @@
       versionNode = document.createElement("a");
       versionNode.className = "meta-link";
       versionNode.href = tagUrl;
-      versionNode.textContent = TAG;
+      versionNode.textContent = TAG + " (" + SHORT_COMMIT + ")";
     } else {
       versionNode = document.createElement("span");
       versionNode.className = "meta-value";
-      versionNode.textContent = "dev";
+      versionNode.textContent = "dev (" + SHORT_COMMIT + ")";
     }
 
     var sep1 = document.createElement("span");
@@ -89,27 +87,11 @@
     updatedValue.setAttribute("datetime", UPDATED_AT);
     updatedValue.textContent = UPDATED_AT;
 
-    var sep2 = document.createElement("span");
-    sep2.className = "meta-sep";
-    sep2.textContent = "·";
-
-    var commitLabel = document.createElement("span");
-    commitLabel.className = "meta-label";
-    commitLabel.textContent = commitText;
-
-    var commitLink = document.createElement("a");
-    commitLink.className = "meta-link";
-    commitLink.href = COMMIT_URL;
-    commitLink.textContent = SHORT_COMMIT;
-
     wrapper.appendChild(versionLabel);
     wrapper.appendChild(versionNode);
     wrapper.appendChild(sep1);
     wrapper.appendChild(updatedLabel);
     wrapper.appendChild(updatedValue);
-    wrapper.appendChild(sep2);
-    wrapper.appendChild(commitLabel);
-    wrapper.appendChild(commitLink);
     return wrapper;
   }
 

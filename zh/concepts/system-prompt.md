@@ -2,7 +2,6 @@
 summary: "OpenClaw 系统提示词包含的内容及其组装方式"
 read_when:
   - 编辑系统提示词文本、工具列表或时间/心跳部分
-更改工作区引导或 Skills 注入行为
   - 更改工作区引导或 Skills 注入行为
 title: "System Prompt"
 ---

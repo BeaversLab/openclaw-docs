@@ -1,5 +1,5 @@
 ---
-summary: "Referencia de la CLI para `openclaw approvals` (aprobaciones de ejecución para hosts de puerta de enlace o nodos)
+summary: "Referencia de la CLI para `openclaw approvals` (aprobaciones de ejecución para hosts de puerta de enlace o nodos)"
 read_when:
   - Deseas editar las aprobaciones de ejecución desde la CLI
   - Necesitas gestionar las listas de permitidos (allowlists) en hosts de puerta de enlace o nodos

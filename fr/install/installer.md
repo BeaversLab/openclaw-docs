@@ -372,9 +372,10 @@ Utilisez des indicateurs/variables d'environnement non interactifs pour des exé
   Installez Git pour Windows, rouvrez PowerShell, relancez le programme d'installation.
 </Accordion>
 
-  <Accordion title='Windows : « openclaw n'est pas reconnu »'>
-    Exécutez `npm config get prefix` et ajoutez ce répertoire à votre PATH utilisateur (pas de suffixe `\bin` nécessaire sur Windows), puis rouvrez PowerShell.
-  </Accordion>
+<Accordion title="Windows : « openclaw n'est pas reconnu »">
+  Exécutez `npm config get prefix` et ajoutez ce répertoire à votre PATH utilisateur (pas de suffixe
+  `\bin` nécessaire sur Windows), puis rouvrez PowerShell.
+</Accordion>
 
   <Accordion title="Windows : comment obtenir une sortie détaillée de l'installateur">
     `install.ps1` n'expose pas actuellement de commutateur `-Verbose`.
