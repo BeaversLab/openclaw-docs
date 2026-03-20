@@ -1046,7 +1046,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 - [CLI Reference: hooks](/en/cli/hooks)
 - [Bundled Hooks README](https://github.com/openclaw/openclaw/tree/main/src/hooks/bundled)
 - [Webhook Hooks](/en/automation/webhook)
-- [Configuration](/en/gateway/configuration#hooks)
+- [Configuration](/en/gateway/configuration-reference#hooks)
 
 import en from "/components/footer/en.mdx";
 

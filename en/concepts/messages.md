@@ -151,7 +151,7 @@ Outbound message formatting is centralized in `messages`:
 - `messages.responsePrefix`, `channels.<channel>.responsePrefix`, and `channels.<channel>.accounts.<id>.responsePrefix` (outbound prefix cascade), plus `channels.whatsapp.messagePrefix` (WhatsApp inbound prefix)
 - Reply threading via `replyToMode` and per-channel defaults
 
-Details: [Configuration](/en/gateway/configuration#messages) and channel docs.
+Details: [Configuration](/en/gateway/configuration-reference#messages) and channel docs.
 
 import en from "/components/footer/en.mdx";
 

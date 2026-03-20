@@ -65,14 +65,14 @@ marketplace source with `--marketplace`.
 
 These are published to npm and installed with `openclaw plugins install`:
 
-| Plugin          | Package                | Docs                               |
-| --------------- | ---------------------- | ---------------------------------- |
-| Matrix          | `@openclaw/matrix`     | [Matrix](/en/channels/matrix)         |
-| Microsoft Teams | `@openclaw/msteams`    | [MS Teams](/en/channels/msteams)      |
-| Nostr           | `@openclaw/nostr`      | [Nostr](/en/channels/nostr)           |
-| Voice Call      | `@openclaw/voice-call` | [Voice Call](/en/plugins/voice-call)  |
-| Zalo            | `@openclaw/zalo`       | [Zalo](/en/channels/zalo)             |
-| Zalo Personal   | `@openclaw/zalouser`   | [Zalo Personal](/en/plugins/zalouser) |
+| Plugin          | Package                | Docs                                 |
+| --------------- | ---------------------- | ------------------------------------ |
+| Matrix          | `@openclaw/matrix`     | [Matrix](/en/channels/matrix)           |
+| Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/en/channels/msteams) |
+| Nostr           | `@openclaw/nostr`      | [Nostr](/en/channels/nostr)             |
+| Voice Call      | `@openclaw/voice-call` | [Voice Call](/en/plugins/voice-call)    |
+| Zalo            | `@openclaw/zalo`       | [Zalo](/en/channels/zalo)               |
+| Zalo Personal   | `@openclaw/zalouser`   | [Zalo Personal](/en/plugins/zalouser)   |
 
 Microsoft Teams is plugin-only as of 2026.1.15.
 
@@ -286,7 +286,7 @@ openclaw plugins install ./plugin.zip           # install from a local zip
 openclaw plugins install -l ./extensions/voice-call # link (no copy) for dev
 openclaw plugins install @openclaw/voice-call   # install from npm
 openclaw plugins install @openclaw/voice-call --pin # store exact resolved name@version
-openclaw plugins update <id>
+openclaw plugins update <id-or-npm-spec>
 openclaw plugins update --all
 openclaw plugins enable <id>
 openclaw plugins disable <id>

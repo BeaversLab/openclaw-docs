@@ -17,7 +17,6 @@ Use these hubs to discover every page, including deep dives and reference docs t
 
 - [Index](/en/)
 - [Getting Started](/en/start/getting-started)
-- [Quick start](/en/start/quickstart)
 - [Onboarding](/en/start/onboarding)
 - [Onboarding (CLI)](/en/start/wizard)
 - [Setup](/en/start/setup)
