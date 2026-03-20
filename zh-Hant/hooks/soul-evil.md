@@ -8,21 +8,25 @@ title: "SOUL Evil Hook"
 
 # SOUL Evil Hook
 
-SOUL Evil hook 會在清除視窗或隨機機制運作時，將 **注入** 的 `SOUL.md` 內容替換為 `SOUL_EVIL.md`。它 **不會** 修改磁碟上的檔案。
+The SOUL Evil hook swaps the **injected** `SOUL.md` content with `SOUL_EVIL.md` during
+a purge window or by random chance. It does **not** modify files on disk.
 
-## 運作原理
+## How It Works
 
-當 `agent:bootstrap` 執行時，該 hook 可以在組裝系統提示之前，替換記憶體中的 `SOUL.md` 內容。如果 `SOUL_EVIL.md` 遺失或為空，OpenClaw 會記錄警告並保留正常的 `SOUL.md`。
+When `agent:bootstrap` runs, the hook can replace the `SOUL.md` content in memory
+before the system prompt is assembled. If `SOUL_EVIL.md` is missing or empty,
+OpenClaw logs a warning and keeps the normal `SOUL.md`.
 
-Sub-agent 執行 **不會** 在其啟動檔案中包含 `SOUL.md`，因此此 hook 對 sub-agents 沒有影響。
+Sub-agent runs do **not** include `SOUL.md` in their bootstrap files, so this hook
+has no effect on sub-agents.
 
-## 啟用
+## Enable
 
 ```bash
 openclaw hooks enable soul-evil
 ```
 
-然後設定配置：
+Then set the config:
 
 ```json
 {
@@ -42,25 +46,25 @@ openclaw hooks enable soul-evil
 }
 ```
 
-在 agent 工作區根目錄（`SOUL.md` 旁）建立 `SOUL_EVIL.md`。
+Create `SOUL_EVIL.md` in the agent workspace root (next to `SOUL.md`).
 
-## 選項
+## Options
 
-- `file` (字串)：替代 SOUL 檔名 (預設：`SOUL_EVIL.md`)
-- `chance` (數字 0–1)：每次執行時使用 `SOUL_EVIL.md` 的隨機機率
-- `purge.at` (HH:mm)：每日清除開始時間 (24小時制)
-- `purge.duration` (持續時間)：視窗長度 (例如 `30s`、`10m`、`1h`)
+- `file` (string): alternate SOUL filename (default: `SOUL_EVIL.md`)
+- `chance` (number 0–1): random chance per run to use `SOUL_EVIL.md`
+- `purge.at` (HH:mm): daily purge start (24-hour clock)
+- `purge.duration` (duration): window length (e.g. `30s`, `10m`, `1h`)
 
-**優先順序：** 清除視窗優先於隨機機率。
+**Precedence:** purge window wins over chance.
 
-**時區：** 設定後使用 `agents.defaults.userTimezone`；否則使用主機時區。
+**Timezone:** uses `agents.defaults.userTimezone` when set; otherwise host timezone.
 
-## 備註
+## Notes
 
-- 磁碟上不會寫入或修改任何檔案。
-- 如果 `SOUL.md` 不在啟動清單中，該 hook 不會執行任何操作。
+- No files are written or modified on disk.
+- If `SOUL.md` is not in the bootstrap list, the hook does nothing.
 
-## 參見
+## See Also
 
 - [Hooks](/zh-Hant/hooks)
 

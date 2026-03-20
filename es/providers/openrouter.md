@@ -1,15 +1,14 @@
 ---
 summary: "Usa la API unificada de OpenRouter para acceder a muchos modelos en OpenClaw"
 read_when:
-  - You want a single API key for many LLMs
-  - You want to run models via OpenRouter in OpenClaw
+  - Quieres una sola clave API para muchos LLM
+  - Quieres ejecutar modelos a través de OpenRouter en OpenClaw
 title: "OpenRouter"
 ---
 
 # OpenRouter
 
-OpenRouter proporciona una **API unificada** que enruta las solicitudes a muchos modelos detrás de un único
-endpoint y clave de API. Es compatible con OpenAI, por lo que la mayoría de los SDK de OpenAI funcionan simplemente cambiando la URL base.
+OpenRouter proporciona una **API unificada** que enruta las solicitudes a muchos modelos detrás de un solo punto de conexión (endpoint) y clave API. Es compatible con OpenAI, por lo que la mayoría de los SDK de OpenAI funcionan cambiando la URL base.
 
 ## Configuración de CLI
 
@@ -32,9 +31,9 @@ openclaw onboard --auth-choice apiKey --token-provider openrouter --token "$OPEN
 
 ## Notas
 
-- Las referencias de modelos son `openrouter/<provider>/<model>`.
+- Las referencias de modelo son `openrouter/<provider>/<model>`.
 - Para más opciones de modelos/proveedores, consulta [/concepts/model-providers](/es/concepts/model-providers).
-- OpenRouter utiliza un token Bearer con tu clave de API entre bambalinas.
+- OpenRouter utiliza un token Bearer con tu clave API internamente.
 
 import es from "/components/footer/es.mdx";
 

@@ -1,8 +1,8 @@
 ---
-title: "SOUL.md 模板"
-summary: "SOUL.md 的工作區模板"
+title: "SOUL.md 範本"
+summary: "SOUL.md 的工作區範本"
 read_when:
-  - Bootstrapping a workspace manually
+  - 手動引導工作區
 ---
 
 # SOUL.md - 你是誰

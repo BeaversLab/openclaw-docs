@@ -1,7 +1,7 @@
 ---
 summary: "Origen del proyecto, colaboradores y licencia."
 read_when:
-  - You want the project backstory or contributor credits
+  - Quieres conocer la historia del proyecto o los créditos de los colaboradores
 title: "Créditos"
 ---
 
@@ -12,14 +12,14 @@ OpenClaw = CLAW + TARDIS, porque cada langosta espacial necesita una máquina de
 ## Créditos
 
 - **Peter Steinberger** ([@steipete](https://x.com/steipete)) - Creador, susurrador de langostas
-- **Mario Zechner** ([@badlogicc](https://x.com/badlogicgames)) - Creador de Pi, probador de seguridad de penetración
+- **Mario Zechner** ([@badlogicc](https://x.com/badlogicgames)) - Creador de Pi, probador de penetración de seguridad
 - **Clawd** - La langosta espacial que exigió un mejor nombre
 
 ## Colaboradores principales
 
 - **Maxim Vovshin** (@Hyaxia, [36747317+Hyaxia@users.noreply.github.com](mailto:36747317+Hyaxia@users.noreply.github.com)) - Habilidad Blogwatcher
 - **Nacho Iacovino** (@nachoiacovino, [nacho.iacovino@gmail.com](mailto:nacho.iacovino@gmail.com)) - Análisis de ubicación (Telegram y WhatsApp)
-- **Vincent Koc** ([@vincentkoc](https://github.com/vincentkoc), [@vincent_koc](https://x.com/vincent_koc)) - Agentes, Telemetría, Ganchos, Seguridad
+- **Vincent Koc** ([@vincentkoc](https://github.com/vincentkoc), [@vincent_koc](https://x.com/vincent_koc)) - Agentes, Telemetría, Hooks, Seguridad
 
 ## Licencia
 

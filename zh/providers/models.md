@@ -1,16 +1,17 @@
 ---
 summary: "OpenClaw 支持的模型提供商 (LLM)"
 read_when:
-  - You want to choose a model provider
-  - You want quick setup examples for LLM auth + model selection
+  - 您想要选择一个模型提供商
+  - 您想要 LLM 认证 + 模型选择的快速设置示例
 title: "模型提供商快速入门"
 ---
 
 # 模型提供商
 
-OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，然后将默认模型设置为 `provider/model`。
+OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，然后将默认
+模型设置为 `provider/model`。
 
-## 快速入门（两步）
+## 快速开始 (两个步骤)
 
 1. 与提供商进行身份验证（通常通过 `openclaw onboard`）。
 2. 设置默认模型：
@@ -33,14 +34,15 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，
 - [Synthetic](/zh/providers/synthetic)
 - [OpenCode (Zen + Go)](/zh/providers/opencode)
 - [Z.AI](/zh/providers/zai)
-- [GLM models](/zh/providers/glm)
+- [GLM 模型](/zh/providers/glm)
 - [MiniMax](/zh/providers/minimax)
 - [Venice (Venice AI)](/zh/providers/venice)
 - [Amazon Bedrock](/zh/providers/bedrock)
 - [Qianfan](/zh/providers/qianfan)
+- [xAI](/zh/providers/xai)
 
-如需查看完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
-请参阅 [Model providers](/zh/concepts/model-providers)。
+有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
+请参阅 [模型提供商](/zh/concepts/model-providers)。
 
 import zh from "/components/footer/zh.mdx";
 

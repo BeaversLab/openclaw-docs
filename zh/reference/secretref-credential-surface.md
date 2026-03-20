@@ -1,24 +1,24 @@
 ---
-summary: "受支持的与不受支持的 SecretRef 凭据规范定义"
+summary: "Canonical supported vs unsupported SecretRef credential surface"
 read_when:
   - Verifying SecretRef credential coverage
   - Auditing whether a credential is eligible for `secrets configure` or `secrets apply`
   - Verifying why a credential is outside the supported surface
-title: "SecretRef 凭据定义"
+title: "SecretRef Credential Surface"
 ---
 
-# SecretRef 凭证范围
+# SecretRef credential surface
 
-本页面定义了规范的 SecretRef 凭证范围。
+This page defines the canonical SecretRef credential surface.
 
-范围意图：
+Scope intent:
 
-- 范围内：严格限于 OpenClaw 不创建或轮换的用户提供的凭证。
-- 范围外：运行时创建或轮换的凭证、OAuth 刷新材料以及类似会话的工件。
+- In scope: strictly user-supplied credentials that OpenClaw does not mint or rotate.
+- Out of scope: runtime-minted or rotating credentials, OAuth refresh material, and 会话-like artifacts.
 
-## 支持的凭证
+## Supported credentials
 
-### `openclaw.json` 目标 (`secrets configure` + `secrets apply` + `secrets audit`)
+### `openclaw.json` targets (`secrets configure` + `secrets apply` + `secrets audit`)
 
 [//]: # "secretref-supported-list-start"
 
@@ -32,11 +32,12 @@ title: "SecretRef 凭据定义"
 - `messages.tts.elevenlabs.apiKey`
 - `messages.tts.openai.apiKey`
 - `tools.web.fetch.firecrawl.apiKey`
-- `tools.web.search.apiKey`
-- `tools.web.search.gemini.apiKey`
-- `tools.web.search.grok.apiKey`
-- `tools.web.search.kimi.apiKey`
-- `tools.web.search.perplexity.apiKey`
+- `plugins.entries.brave.config.webSearch.apiKey`
+- `plugins.entries.google.config.webSearch.apiKey`
+- `plugins.entries.xai.config.webSearch.apiKey`
+- `plugins.entries.moonshot.config.webSearch.apiKey`
+- `plugins.entries.perplexity.config.webSearch.apiKey`
+- `plugins.entries.firecrawl.config.webSearch.apiKey`
 - `gateway.auth.password`
 - `gateway.auth.token`
 - `gateway.remote.token`
@@ -87,8 +88,8 @@ title: "SecretRef 凭据定义"
 - `channels.zalo.webhookSecret`
 - `channels.zalo.accounts.*.botToken`
 - `channels.zalo.accounts.*.webhookSecret`
-- 通过同级 `serviceAccountRef` 实现 `channels.googlechat.serviceAccount`（兼容性例外）
-- 通过同级 `serviceAccountRef` 实现 `channels.googlechat.accounts.*.serviceAccount`（兼容性例外）
+- `channels.googlechat.serviceAccount` 通过同级 `serviceAccountRef`（兼容性例外）
+- `channels.googlechat.accounts.*.serviceAccount` 通过同级 `serviceAccountRef`（兼容性例外）
 
 ### `auth-profiles.json` 目标（`secrets configure` + `secrets apply` + `secrets audit`）
 
@@ -100,14 +101,15 @@ title: "SecretRef 凭据定义"
 注意：
 
 - Auth-profile 计划目标需要 `agentId`。
-- 计划条目目标是 `profiles.*.key` / `profiles.*.token` 并写入同级引用（`keyRef` / `tokenRef`）。
+- 计划条目目标为 `profiles.*.key` / `profiles.*.token` 并写入同级引用（`keyRef` / `tokenRef`）。
 - Auth-profile 引用包含在运行时解析和审计覆盖范围内。
-- 对于由 SecretRef 管理的模型提供商，生成的 `agents/*/agent/models.json` 条目会为 `apiKey`/header 表面保留非机密标记（而非已解析的机密值）。
-- 标记持久性以源为准：OpenClaw 根据活动的源配置快照（解析前）写入标记，而不是根据解析后的运行时 secret 值。
-- 对于 Web 搜索：
-  - 在显式提供商模式（已设置 `tools.web.search.provider`）下，仅所选提供商密钥处于活动状态。
-  - 在自动模式（未设置 `tools.web.search.provider`）下，仅按优先级解析的第一个提供商密钥处于活动状态。
-  - 在自动模式下，未选定的提供商引用在选定之前被视为非活动状态。
+- 对于由 SecretRef 托管的模型提供商，生成的 `agents/*/agent/models.json` 条目会为 `apiKey`/header 表面保留非机密标记（而非已解析的机密值）。
+- 标记持久性以源为准：OpenClaw 会从活动的源配置快照（解析前）写入标记，而非从已解析的运行时机密值写入。
+- 对于网络搜索：
+  - 在显式提供商模式下（设置了 `tools.web.search.provider`），仅选定的提供商密钥处于活动状态。
+  - 在自动模式下（未设置 `tools.web.search.provider`），仅按优先级解析的第一个提供商密钥处于活动状态。
+  - 在自动模式下，未选定的提供商引用在被选中之前被视为非活动状态。
+  - 旧版 `tools.web.search.*` 提供商路径在兼容性窗口期间仍然会解析，但规范的 SecretRef 表面是 `plugins.entries.<plugin>.config.webSearch.*`。
 
 ## 不支持的凭据
 
@@ -129,7 +131,7 @@ title: "SecretRef 凭据定义"
 
 基本原理：
 
-- 这些凭据属于已生成、已轮换、带有会话或 OAuth 持久类型的类，不适合只读的外部 SecretRef 解析。
+- 这些凭据是已创建、轮换、承载会话或 OAuth 持久类的凭据，不适合只读的外部 SecretRef 解析。
 
 import zh from "/components/footer/zh.mdx";
 

@@ -1,8 +1,8 @@
 ---
 summary: "OpenClaw CLI 的脚本化新手引导和代理设置"
 read_when:
-  - You are automating onboarding in scripts or CI
-  - You need non-interactive examples for specific providers
+  - 您正在脚本或 CI 中自动化新手引导
+  - 您需要特定提供商的非交互式示例
 title: "CLI 自动化"
 sidebarTitle: "CLI 自动化"
 ---
@@ -11,7 +11,7 @@ sidebarTitle: "CLI 自动化"
 
 使用 `--non-interactive` 自动化 `openclaw onboard`。
 
-<Note>`--json` 并不意味着非交互模式。在脚本中请使用 `--non-interactive`（和 `--workspace`）。</Note>
+<Note>`--json` 并不意味着非交互模式。请为脚本使用 `--non-interactive`（以及 `--workspace`）。</Note>
 
 ## 基准非交互式示例
 
@@ -30,11 +30,11 @@ openclaw onboard --non-interactive \
 
 添加 `--json` 以获取机器可读的摘要。
 
-使用 `--secret-input-mode ref` 在身份验证配置文件中存储环境变量支持的引用，而不是明文值。
-在环境变量引用和配置的提供商引用（`file` 或 `exec`）之间进行交互式选择的功能，在引导流程中可用。
+使用 `--secret-input-mode ref` 将环境变量支持的引用存储在身份配置文件中，而不是明文值。
+新手引导流程中提供在环境引用和配置的提供商引用（`file` 或 `exec`）之间进行交互式选择的功能。
 
-在非交互式 `ref` 模式下，必须在进程环境中设置提供商环境变量。
-如果没有匹配的环境变量，现在传递内联密钥标志将快速失败。
+在非交互式 `ref` 模式下，提供商环境变量必须在进程环境中设置。
+现在，如果传递内联密钥标志但没有匹配的环境变量，系统将快速失败。
 
 示例：
 
@@ -175,15 +175,15 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    在此模式下，新手引导将 `apiKey` 存储为 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
+    在此模式下，新手引导会将 `apiKey` 存储为 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
 
   </Accordion>
 </AccordionGroup>
 
 ## 添加另一个代理
 
-使用 `openclaw agents add <name>` 创建一个拥有独立工作区、会话和认证配置文件的独立代理。
-如果不带 `--workspace` 运行，将启动向导。
+使用 `openclaw agents add <name>` 创建一个具有自己的工作空间、
+会话和身份配置文件的独立代理。在不带 `--workspace` 的情况下运行将启动向导。
 
 ```bash
 openclaw agents add work \
@@ -202,13 +202,13 @@ openclaw agents add work \
 
 备注：
 
-- 默认工作区遵循 `~/.openclaw/workspace-<agentId>`。
+- 默认工作空间遵循 `~/.openclaw/workspace-<agentId>`。
 - 添加 `bindings` 以路由传入消息（向导可以执行此操作）。
 - 非交互式标志：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
 
 ## 相关文档
 
-- 新手引导中心：[CLI (CLI)](/zh/start/wizard)
+- 新手引导中心：[新手引导 (CLI)](/zh/start/wizard)
 - 完整参考：[CLI 设置参考](/zh/start/wizard-cli-reference)
 - 命令参考：[`openclaw onboard`](/zh/cli/onboard)
 

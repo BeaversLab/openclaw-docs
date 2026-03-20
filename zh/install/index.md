@@ -1,21 +1,21 @@
 ---
-summary: "安装 OpenClaw — 安装程序脚本、npm/pnpm、从源码、Docker 等方式"
+summary: "安装 OpenClaw — 安装程序脚本、npm/pnpm、从源码、Docker 等"
 read_when:
-  - You need an install method other than the Getting Started quickstart
-  - You want to deploy to a cloud platform
-  - You need to update, migrate, or uninstall
+  - 您需要除入门指南快速入门之外的安装方法
+  - 您想要部署到云平台
+  - 您需要更新、迁移或卸载
 title: "安装"
 ---
 
 # 安装
 
-已经跟随[入门指南](/zh/start/getting-started)了吗？你已经准备好了 — 本页面介绍其他安装方法、特定平台的说明以及维护。
+已经跟随[入门指南](/zh/start/getting-started)操作了吗？您已经准备就绪了 — 本页面介绍其他安装方法、特定平台的说明以及维护工作。
 
 ## 系统要求
 
-- **[Node 24（推荐）](/zh/install/node)**（为了兼容性，目前仍支持 Node 22 LTS，即 `22.16+`；[安装程序脚本](#install-methods) 会在缺少时安装 Node 24）
+- **[Node 24（推荐）](/zh/install/node)**（为了兼容性，目前仍支持 Node 22 LTS，即 `22.16+`；如果缺少 Node 24，[安装程序脚本](#install-methods) 将会安装它）
 - macOS、Linux 或 Windows
-- 仅当你从源码构建时才需要 `pnpm`
+- 仅当您从源码构建时才需要 `pnpm`
 
 <Note>
   在 Windows 上，我们强烈建议在 [OpenClaw](https://learn.microsoft.com/en-us/windows/wsl/install)
@@ -24,11 +24,11 @@ title: "安装"
 
 ## 安装方法
 
-<Tip>**安装程序脚本** 是安装 OpenClaw 的推荐方式。它可以一步完成 Node 检测、 安装和新手引导。</Tip>
+<Tip>**安装程序脚本** 是安装 OpenClaw 的推荐方式。它一步即可完成 Node 检测、安装和引导。</Tip>
 
 <Warning>
-  对于 VPS/云主机，请尽可能避免使用第三方“一键式”市场镜像。首选一个纯净的 基础操作系统镜像（例如
-  Ubuntu LTS），然后使用安装程序脚本自行安装 OpenClaw。
+  对于 VPS/云主机，请尽可能避免使用第三方“一键式”市场镜像。首选纯净的基础操作系统镜像（例如 Ubuntu
+  LTS），然后使用安装程序脚本自行安装 OpenClaw。
 </Warning>
 
 <AccordionGroup>
@@ -48,7 +48,7 @@ title: "安装"
       </Tab>
     </Tabs>
 
-    就是这样 — 脚本会处理 Node 检测、安装和新手引导。
+    就是这样 —— 脚本会处理 Node 检测、安装和新手引导。
 
     要跳过新手引导并仅安装二进制文件：
 
@@ -70,7 +70,7 @@ title: "安装"
   </Accordion>
 
   <Accordion title="npm / pnpm" icon="package">
-    如果您自己管理 Node，我们推荐 Node 24。为了兼容性，OpenClaw 仍然支持 Node 22 LTS，目前是 `22.16+`：
+    如果您自己管理 Node，我们建议使用 Node 24。为了兼容性，OpenClaw 仍支持当前的 Node 22 LTS `22.16+`：
 
     <Tabs>
       <Tab title="npm">
@@ -79,8 +79,8 @@ title: "安装"
         openclaw onboard --install-daemon
         ```
 
-        <Accordion title="sharp 构建错误？">
-          如果您全局安装了 libvips（在 macOS 上通过 Homebrew 安装很常见）并且 `sharp` 失败，请强制使用预构建的二进制文件：
+        <Accordion title="编译错误？">
+          如果您全局安装了 libvips（在 macOS 上通过 Homebrew 很常见）并且 `sharp` 失败，请强制使用预构建的二进制文件：
 
           ```bash
           SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
@@ -97,12 +97,12 @@ title: "安装"
         ```
 
         <Note>
-        pnpm 需要显式批准包含构建脚本的包。首次安装显示“Ignored build scripts”警告后，运行 `pnpm approve-builds -g` 并选择列出的包。
+        pnpm 需要明确批准包含构建脚本的包。首次安装显示“Ignored build scripts”警告后，运行 `pnpm approve-builds -g` 并选择列出的包。
         </Note>
       </Tab>
     </Tabs>
 
-    想要通过包管理器安装获取当前的 GitHub `main` 主分支版本吗？
+    想要使用包管理器安装当前 GitHub `main` head 版本？
 
     ```bash
     npm install -g github:openclaw/openclaw#main
@@ -114,8 +114,8 @@ title: "安装"
 
   </Accordion>
 
-  <Accordion title="从源代码" icon="github">
-    适用于贡献者或任何希望从本地检出运行的人。
+  <Accordion title="从源码安装" icon="github">
+    适用于贡献者或任何想要从本地检出运行的人。
 
     <Steps>
       <Step title="克隆并构建">
@@ -130,13 +130,13 @@ title: "安装"
         ```
       </Step>
       <Step title="链接 CLI">
-        使 `openclaw` 命令在全局可用：
+        使 `openclaw` 命令全局可用：
 
         ```bash
         pnpm link --global
         ```
 
-        或者，跳过链接步骤，直接在仓库内部通过 `pnpm openclaw ...` 运行命令。
+        或者，跳过链接并通过仓库内的 `pnpm openclaw ...` 运行命令。
       </Step>
       <Step title="运行新手引导">
         ```bash
@@ -145,7 +145,7 @@ title: "安装"
       </Step>
     </Steps>
 
-    有关更深入的开发工作流，请参阅 [设置](/zh/start/setup)。
+    有关更深入的开发工作流，请参阅 [Setup](/zh/start/setup)。
 
   </Accordion>
 </AccordionGroup>
@@ -157,7 +157,7 @@ title: "安装"
     容器化或无头部署。
   </Card>
   <Card title="Podman" href="/zh/install/podman" icon="container">
-    无根容器：运行一次 `setup-podman.sh`，然后运行启动脚本。
+    Rootless 容器：运行一次 `setup-podman.sh`，然后运行启动脚本。
   </Card>
   <Card title="Nix" href="/zh/install/nix" icon="snowflake">
     通过 Nix 进行声明式安装。
@@ -166,7 +166,7 @@ title: "安装"
     自动化集群配置。
   </Card>
   <Card title="Bun" href="/zh/install/bun" icon="zap">
-    通过 Bun 运行时仅使用 CLI。
+    通过 Bun 运行时进行 CLI 专用操作。
   </Card>
 </CardGroup>
 
@@ -186,9 +186,9 @@ openclaw dashboard      # open the browser UI
 - `OPENCLAW_STATE_DIR` 用于可变状态位置
 - `OPENCLAW_CONFIG_PATH` 用于配置文件位置
 
-有关优先级和详细信息，请参阅 [环境变量](/zh/help/environment)。
+有关优先级和完整详细信息，请参阅 [环境变量](/zh/help/environment)。
 
-## 故障排除：未找到 `openclaw`
+## 故障排除：找不到 `openclaw`
 
 <Accordion title="PATH 诊断与修复">
   快速诊断：
@@ -202,7 +202,7 @@ echo "$PATH"
 
 如果 `$(npm prefix -g)/bin` (macOS/Linux) 或 `$(npm prefix -g)` (Windows) **不**在您的 `$PATH` 中，您的 shell 将无法找到全局 npm 二进制文件（包括 `openclaw`）。
 
-修复 — 将其添加到您的 shell 启动文件（`~/.zshrc` 或 `~/.bashrc`）中：
+修复方法 — 将其添加到您的 shell 启动文件（`~/.zshrc` 或 `~/.bashrc`）中：
 
 ```bash
 export PATH="$(npm prefix -g)/bin:$PATH"
@@ -210,20 +210,20 @@ export PATH="$(npm prefix -g)/bin:$PATH"
 
 在 Windows 上，将 `npm prefix -g` 的输出添加到您的 PATH 中。
 
-然后打开一个新的终端（或在 zsh 中运行 `rehash` / 在 bash 中运行 `hash -r`）。
+然后打开一个新的终端（在 zsh 中执行 `rehash` 或在 bash 中执行 `hash -r`）。
 
 </Accordion>
 
 ## 更新 / 卸载
 
 <CardGroup cols={3}>
-  <Card title="更新" href="/zh/install/updating" icon="refresh-cw">
+  <Card title="Updating" href="/zh/install/updating" icon="refresh-cw">
     保持 OpenClaw 为最新状态。
   </Card>
-  <Card title="迁移" href="/zh/install/migrating" icon="arrow-right">
-    移至新机器。
+  <Card title="Migrating" href="/zh/install/migrating" icon="arrow-right">
+    迁移到新机器。
   </Card>
-  <Card title="卸载" href="/zh/install/uninstall" icon="trash-2">
+  <Card title="Uninstall" href="/zh/install/uninstall" icon="trash-2">
     完全移除 OpenClaw。
   </Card>
 </CardGroup>

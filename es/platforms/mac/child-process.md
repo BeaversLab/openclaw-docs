@@ -1,27 +1,26 @@
 ---
 summary: "Ciclo de vida de Gateway en macOS (launchd)"
 read_when:
-  - Integrating the mac app with the gateway lifecycle
+  - Integración de la app de Mac con el ciclo de vida de Gateway
 title: "Ciclo de vida de Gateway"
 ---
 
 # Ciclo de vida de Gateway en macOS
 
-De forma predeterminada, la aplicación de macOS **gestiona el Gateway a través de launchd** y no genera
-el Gateway como proceso secundario. Primero intenta conectarse a un Gateway
-ya en ejecución en el puerto configurado; si no es accesible, habilita el servicio
-launchd a través de la CLI externa `openclaw` (sin tiempo de ejecución integrado). Esto le proporciona
-un inicio de sesión automático fiable y un reinicio en caso de fallos.
+La app de macOS **gestiona el Gateway a través de launchd** de forma predeterminada y no genera
+el Gateway como un proceso secundario. Primero intenta conectarse a un Gateway
+ya en ejecución en el puerto configurado; si no hay ninguno accesible, habilita el servicio
+launchd a través de la CLI externa `openclaw` (sin tiempo de ejecución integrado). Esto le ofrece
+un inicio de sesión automático confiable y un reinicio en caso de fallos.
 
-El modo de proceso secundario (Gateway generado directamente por la aplicación) **no está en uso**
-hoy en día.
+El modo de proceso secundario (Gateway generado directamente por la app) **no está en uso** hoy en día.
 Si necesita una integración más estrecha con la interfaz de usuario, ejecute el Gateway manualmente en una terminal.
 
 ## Comportamiento predeterminado (launchd)
 
-- La aplicación instala un LaunchAgent por usuario etiquetado como `ai.openclaw.gateway`
-  (o `ai.openclaw.<profile>` cuando se usa `--profile`/`OPENCLAW_PROFILE`; se admite el `com.openclaw.*` heredado).
-- Cuando el modo Local está habilitado, la aplicación asegura que el LaunchAgent esté cargado e
+- La app instala un LaunchAgent por usuario etiquetado como `ai.openclaw.gateway`
+  (o `ai.openclaw.<profile>` al usar `--profile`/`OPENCLAW_PROFILE`; se admite el `com.openclaw.*` heredado).
+- Cuando el modo Local está habilitado, la app se asegura de que el LaunchAgent esté cargado y
   inicia el Gateway si es necesario.
 - Los registros se escriben en la ruta del registro de gateway de launchd (visible en Configuración de depuración).
 
@@ -41,8 +40,8 @@ claves de firma. Para evitar que launchd apunte a un binario de retransmisión s
 
 - Escribe `~/.openclaw/disable-launchagent`.
 
-Las ejecuciones firmadas de `scripts/restart-mac.sh` borran esta anulación si el marcador
-está presente. Para restablecer manualmente:
+Las ejecuciones firmadas de `scripts/restart-mac.sh` borran esta anulación si el marcador está
+presente. Para restablecer manualmente:
 
 ```bash
 rm ~/.openclaw/disable-launchagent
@@ -50,14 +49,14 @@ rm ~/.openclaw/disable-launchagent
 
 ## Modo solo conexión
 
-Para forzar a la aplicación de macOS a que **nunca instale o gestione launchd**, iníciela con
+Para forzar a la app de macOS a que **nunca instale ni gestione launchd**, iníciela con
 `--attach-only` (o `--no-launchd`). Esto establece `~/.openclaw/disable-launchagent`,
-por lo que la aplicación solo se conecta a un Gateway que ya se esté ejecutando. Puede alternar el mismo
+por lo que la app solo se conecta a un Gateway ya en ejecución. Puede alternar el mismo
 comportamiento en Configuración de depuración.
 
 ## Modo remoto
 
-El modo remoto nunca inicia un Gateway local. La aplicación usa un túnel SSH al
+El modo remoto nunca inicia un Gateway local. La app usa un túnel SSH al
 host remoto y se conecta a través de ese túnel.
 
 ## Por qué preferimos launchd
@@ -66,7 +65,8 @@ host remoto y se conecta a través de ese túnel.
 - Semánticas de reinicio/KeepAlive integradas.
 - Registros y supervisión predecibles.
 
-Si alguna vez vuelve a ser necesario un modo de proceso secundario real, se debe documentar como un modo separado y explícito solo para desarrolladores.
+Si alguna vez vuelve a ser necesario un modo de proceso secundario real, debe documentarse como un
+modo separado y explícito solo para desarrolladores.
 
 import es from "/components/footer/es.mdx";
 

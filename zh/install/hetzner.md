@@ -1,73 +1,73 @@
 ---
-summary: "在便宜的 OpenClaw VPS (Gateway(网关)) 上全天候运行 Hetzner Docker，并具有持久状态和内置二进制文件"
+summary: "Run OpenClaw Gateway(网关) 24/7 on a cheap Hetzner VPS (Docker) with durable state and baked-in binaries"
 read_when:
   - You want OpenClaw running 24/7 on a cloud VPS (not your laptop)
-  - You want a production-grade, always-on Gateway on your own VPS
+  - You want a production-grade, always-on Gateway(网关) on your own VPS
   - You want full control over persistence, binaries, and restart behavior
-  - You are running OpenClaw in Docker on Hetzner or a similar provider
+  - You are running OpenClaw in Docker on Hetzner or a similar 提供商
 title: "Hetzner"
 ---
 
 # OpenClaw on Hetzner (Docker, Production VPS Guide)
 
-## 目标
+## Goal
 
-在 Hetzner VPS 上使用 Docker 运行持久化的 OpenClaw Gateway 网关，具有持久状态、内置二进制文件和安全的重启行为。
+Run a persistent OpenClaw Gateway(网关) on a Hetzner VPS using Docker, with durable state, baked-in binaries, and safe restart behavior.
 
-如果您想要“以约 5 美元的价格全天候运行 OpenClaw”，这是最简单可靠的设置。
-Hetzner 定价可能会有所变化；选择最小的 Debian/Ubuntu VPS，如果遇到 OOM（内存不足）则进行扩容。
+If you want “OpenClaw 24/7 for ~$5”, this is the simplest reliable setup.
+Hetzner pricing changes; pick the smallest Debian/Ubuntu VPS and scale up if you hit OOMs.
 
-安全模型提醒：
+Security 模型 reminder:
 
-- 当每个人都处于同一信任边界且运行时仅用于业务时，公司共享的代理是可以的。
-- 保持严格的分离：专用的 VPS/运行时 + 专用账户；该主机上不得有个人 Apple/Google/浏览器/密码管理器配置文件。
-- 如果用户之间存在敌对关系，请按 Gateway/主机/操作系统用户进行拆分。
+- Company-shared agents are fine when everyone is in the same trust boundary and the runtime is business-only.
+- Keep strict separation: dedicated VPS/runtime + dedicated accounts; no personal Apple/Google/browser/password-manager profiles on that host.
+- If users are adversarial to each other, split by gateway/host/OS user.
 
-请参阅 [安全性](/zh/gateway/security) 和 [VPS 托管](/zh/vps)。
+See [Security](/zh/gateway/security) and [VPS hosting](/zh/vps).
 
-## 我们要做什么（简单来说）？
+## What are we doing (simple terms)?
 
-- 租一台小型 Linux 服务器 (Hetzner VPS)
-- 安装 Docker (隔离的应用运行时)
-- 在 Docker 中启动 OpenClaw Gateway 网关
-- 在主机上持久化 `~/.openclaw` + `~/.openclaw/workspace`（在重启/重建后仍然有效）
-- 通过 SSH 隧道从您的笔记本电脑访问控制 UI
+- Rent a small Linux server (Hetzner VPS)
+- Install Docker (isolated app runtime)
+- Start the OpenClaw Gateway(网关) in Docker
+- Persist `~/.openclaw` + `~/.openclaw/workspace` on the host (survives restarts/rebuilds)
+- Access the Control UI from your laptop via an SSH tunnel
 
-可以通过以下方式访问 Gateway 网关：
+The Gateway(网关) can be accessed via:
 
-- 从您的笔记本电脑进行 SSH 端口转发
-- 如果您自己管理防火墙和令牌，则可以直接暴露端口
+- SSH port forwarding from your laptop
+- Direct port exposure if you manage firewalling and tokens yourself
 
-本指南假设在 Hetzner 上使用 Ubuntu 或 Debian。  
-如果您使用的是其他 Linux VPS，请相应地映射软件包。
-有关通用的 Docker 流程，请参阅 [Docker](/zh/install/docker)。
+This guide assumes Ubuntu or Debian on Hetzner.  
+If you are on another Linux VPS, map packages accordingly.
+For the generic Docker flow, see [Docker](/zh/install/docker).
 
 ---
 
-## 快速路径（经验丰富的操作员）
+## Quick path (experienced operators)
 
-1. 配置 Hetzner VPS
-2. 安装 Docker
-3. 克隆 OpenClaw 仓库
-4. 创建持久化主机目录
-5. 配置 `.env` 和 `docker-compose.yml`
-6. 将所需的二进制文件嵌入到镜像中
+1. Provision Hetzner VPS
+2. Install Docker
+3. Clone OpenClaw repository
+4. Create persistent host directories
+5. Configure `.env` and `docker-compose.yml`
+6. Bake required binaries into the image
 7. `docker compose up -d`
-8. 验证持久性和 Gateway(网关) 访问
+8. Verify persistence and Gateway(网关) access
 
 ---
 
-## 所需条件
+## What you need
 
-- 具有 root 访问权限的 Hetzner VPS
-- 来自您的笔记本电脑的 SSH 访问权限
-- 具备基本的 SSH + 复制/粘贴操作能力
-- 约 20 分钟
+- Hetzner VPS with root access
+- SSH access from your laptop
+- Basic comfort with SSH + copy/paste
+- ~20 分钟
 - Docker 和 Docker Compose
-- 模型身份验证凭据
+- 模型认证凭据
 - 可选的提供商凭据
-  - WhatsApp 二维码
-  - Telegram 机器人令牌
+  - WhatsApp QR
+  - Telegram bot token
   - Gmail OAuth
 
 ---
@@ -83,7 +83,7 @@ ssh root@YOUR_VPS_IP
 ```
 
 本指南假设 VPS 是有状态的。
-不要将其视为一次性基础设施。
+请勿将其视为一次性基础设施。
 
 ---
 
@@ -111,14 +111,14 @@ git clone https://github.com/openclaw/openclaw.git
 cd openclaw
 ```
 
-本指南假设您将构建自定义镜像以确保二进制文件的持久化。
+本指南假设您将构建自定义镜像以保证二进制文件的持久性。
 
 ---
 
 ## 4) 创建持久化主机目录
 
 Docker 容器是临时的。
-所有长期存在的状态必须保存在主机上。
+所有长期保存的状态必须驻留在主机上。
 
 ```bash
 mkdir -p /root/.openclaw/workspace
@@ -131,7 +131,7 @@ chown -R 1000:1000 /root/.openclaw
 
 ## 5) 配置环境变量
 
-在存储库根目录中创建 `.env`。
+在仓库根目录中创建 `.env`。
 
 ```bash
 OPENCLAW_IMAGE=openclaw:latest
@@ -198,7 +198,7 @@ services:
       ]
 ```
 
-`--allow-unconfigured` 仅为了引导便利，它不是正确网关配置的替代品。仍然要设置身份验证（`gateway.auth.token` 或密码）并为您的部署使用安全的绑定设置。
+`--allow-unconfigured` 仅为了引导方便，它不能替代正确的网关配置。仍然要设置认证（`gateway.auth.token` 或密码）并为您的部署使用安全的绑定设置。
 
 ---
 
@@ -206,16 +206,16 @@ services:
 
 使用共享运行时指南了解通用的 Docker 主机流程：
 
-- [将所需的二进制文件构建到镜像中](/zh/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+- [将所需的二进制文件烘焙到镜像中](/zh/install/docker-vm-runtime#bake-required-binaries-into-the-image)
 - [构建并启动](/zh/install/docker-vm-runtime#build-and-launch)
-- [什么内容持久化在哪里](/zh/install/docker-vm-runtime#what-persists-where)
+- [什么内容会持久化在哪里](/zh/install/docker-vm-runtime#what-persists-where)
 - [更新](/zh/install/docker-vm-runtime#updates)
 
 ---
 
-## 8) Hetzner 特定的访问方式
+## 8) Hetzner 特定的访问
 
-在完成共享的构建和启动步骤后，从您的笔记本电脑建立隧道：
+在完成共享的构建和启动步骤后，从您的笔记本电脑进行隧道连接：
 
 ```bash
 ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
@@ -231,24 +231,24 @@ ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
 
 共享持久化映射位于 [Docker VM Runtime](/zh/install/docker-vm-runtime#what-persists-where)。
 
-## 基础设施即代码 (Terraform)
+## 基础设施即代码
 
-对于更喜欢基础设施即代码工作流的团队，社区维护的 Terraform 设置提供了：
+对于偏好基础设施即代码工作流的团队，社区维护的 Terraform 设置提供了：
 
-- 模块化的 Terraform 配置以及远程状态管理
-- 通过 cloud-init 自动置备
+- 模块化的 Terraform 配置，具有远程状态管理
+- 通过 cloud-init 自动配置
 - 部署脚本（bootstrap、deploy、backup/restore）
 - 安全加固（防火墙、UFW、仅 SSH 访问）
 - 用于网关访问的 SSH 隧道配置
 
-**代码仓库：**
+**仓库：**
 
 - 基础设施：[openclaw-terraform-hetzner](https://github.com/andreesg/openclaw-terraform-hetzner)
 - Docker 配置：[openclaw-docker-config](https://github.com/andreesg/openclaw-docker-config)
 
-此方法通过可复现的部署、版本控制的基础设施和自动灾难恢复，补充了上述 Docker 设置。
+此方法通过可复现的部署、版本控制的基础架构和自动化灾难恢复，补充了上述 Docker 设置。
 
-> **注意：** 由社区维护。有关问题或贡献，请参阅上面的存储库链接。
+> **注意：** 由社区维护。如有问题或贡献，请参阅上面的仓库链接。
 
 import zh from "/components/footer/zh.mdx";
 

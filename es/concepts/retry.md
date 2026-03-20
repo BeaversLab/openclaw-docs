@@ -1,8 +1,8 @@
 ---
-summary: "Política de reintentos para llamadas salientes al proveedor"
+summary: "Política de reintentos para llamadas al proveedor de salida"
 read_when:
-  - Updating provider retry behavior or defaults
-  - Debugging provider send errors or rate limits
+  - Actualizar el comportamiento de reintentos del proveedor o los valores predeterminados
+  - Depurar errores de envío del proveedor o límites de tasa
 title: "Política de reintentos"
 ---
 
@@ -11,14 +11,14 @@ title: "Política de reintentos"
 ## Objetivos
 
 - Reintentar por cada solicitud HTTP, no por cada flujo de varios pasos.
-- Mantener el orden reintentando solo el paso actual.
+- Conservar el orden reintentando solo el paso actual.
 - Evitar duplicar operaciones no idempotentes.
 
 ## Valores predeterminados
 
 - Intentos: 3
 - Límite máximo de retraso: 30000 ms
-- Jitter: 0,1 (10 por ciento)
+- Jitter: 0.1 (10 por ciento)
 - Valores predeterminados del proveedor:
   - Retraso mínimo de Telegram: 400 ms
   - Retraso mínimo de Discord: 500 ms
@@ -27,14 +27,14 @@ title: "Política de reintentos"
 
 ### Discord
 
-- Solo reintentos en errores de límite de velocidad (HTTP 429).
-- Usa el `retry_after` de Discord cuando está disponible; de lo contrario, retroceso exponencial.
+- Reintenta solo en errores de límite de tasa (HTTP 429).
+- Usa el `retry_after` de Discord cuando está disponible; de lo contrario, usa retroceso exponencial.
 
 ### Telegram
 
-- Reintentos en errores transitorios (429, tiempo de espera, conexión/restablecimiento/cierre, no disponible temporalmente).
-- Usa `retry_after` cuando está disponible; de lo contrario, retroceso exponencial.
-- Los errores de análisis de Markdown no se reintentan; cambian a texto sin formato.
+- Reintenta en errores transitorios (429, tiempo de espera, conexión/restablecimiento/cierre, no disponible temporalmente).
+- Usa `retry_after` cuando está disponible; de lo contrario, usa retroceso exponencial.
+- Los errores de análisis de Markdown no se reintentan; vuelven al texto sin formato.
 
 ## Configuración
 

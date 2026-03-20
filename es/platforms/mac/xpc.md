@@ -1,13 +1,13 @@
 ---
 summary: "Arquitectura IPC de macOS para la aplicación OpenClaw, transporte del nodo de puerta de enlace y PeekabooBridge"
 read_when:
-  - Editing IPC contracts or menu bar app IPC
+  - Edición de contratos IPC o IPC de la aplicación de la barra de menús
 title: "macOS IPC"
 ---
 
 # Arquitectura IPC de macOS de OpenClaw
 
-**Modelo actual:** un socket Unix local conecta el **servicio host del nodo** con la **aplicación macOS** para aprobaciones de ejecución + `system.run`. Existe un CLI de depuración `openclaw-mac` para comprobaciones de descubrimiento/conexión; las acciones del agente todavía fluyen a través del WebSocket de la puerta de enlace y `node.invoke`. La automatización de la interfaz de usuario usa PeekabooBridge.
+**Modelo actual:** un socket Unix local conecta el **servicio de host del nodo** con la **aplicación macOS** para aprobaciones de ejecución + `system.run`. Existe una CLI de depuración `openclaw-mac` para verificación de descubrimiento/conexión; las acciones del agente aún fluyen a través del WebSocket de la puerta de enlace y `node.invoke`. La automatización de la interfaz de usuario usa PeekabooBridge.
 
 ## Objetivos
 
@@ -39,10 +39,10 @@ Agent -> Gateway -> Node Service (WS)
 
 ### PeekabooBridge (automatización de la interfaz de usuario)
 
-- La automatización de la interfaz de usuario utiliza un socket UNIX separado llamado `bridge.sock` y el protocolo JSON PeekabooBridge.
+- La automatización de la interfaz de usuario usa un socket UNIX separado llamado `bridge.sock` y el protocolo JSON PeekabooBridge.
 - Orden de preferencia del host (lado del cliente): Peekaboo.app → Claude.app → OpenClaw.app → ejecución local.
-- Seguridad: los hosts del puente requieren un TeamID permitido; la salida de emergencia del mismo UID solo para DEBUG está protegida por `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` (convención de Peekaboo).
-- Consulte: [Uso de PeekabooBridge](/es/platforms/mac/peekaboo) para obtener más detalles.
+- Seguridad: los hosts del puente requieren un TeamID permitido; la vía de escape del mismo UID solo para DEBUG está protegida por `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` (convención de Peekaboo).
+- Consulte: [Uso de PeekabooBridge](/es/platforms/mac/peekaboo) para obtener detalles.
 
 ## Flujos operativos
 
@@ -55,10 +55,10 @@ Agent -> Gateway -> Node Service (WS)
 ## Notas de endurecimiento (Hardening)
 
 - Preferir exigir una coincidencia de TeamID para todas las superficies privilegiadas.
-- PeekabooBridge: `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` (SOLO DEBUG) puede permitir llamadores con el mismo UID para el desarrollo local.
+- PeekabooBridge: `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` (solo DEBUG) puede permitir llamadores con el mismo UID para el desarrollo local.
 - Toda la comunicación permanece solo local; no se exponen sockets de red.
 - Las solicitudes de TCC se originan solo desde el paquete de la aplicación GUI; mantenga estable el ID de paquete firmado entre reconstrucciones.
-- Endurecimiento de IPC: modo de socket `0600`, token, verificaciones de UID del par, desafío/respuesta HMAC, TTL corto.
+- Endurecimiento de IPC: modo de socket `0600`, token, verificaciones de UID de pares, desafío/respuesta HMAC, TTL corto.
 
 import es from "/components/footer/es.mdx";
 

@@ -1,27 +1,31 @@
 ---
-summary: "Usa modelos de Amazon Bedrock (API de conversación) con OpenClaw"
+summary: "Usa modelos de Amazon Bedrock (API Converse) con OpenClaw"
 read_when:
-  - You want to use Amazon Bedrock models with OpenClaw
-  - You need AWS credential/region setup for model calls
+  - Quieres usar modelos de Amazon Bedrock con OpenClaw
+  - Necesitas configuración de credenciales/región de AWS para las llamadas al modelo
 title: "Amazon Bedrock"
 ---
 
 # Amazon Bedrock
 
-OpenClaw puede utilizar modelos de **Amazon Bedrock** a través del proveedor de transmisión **Bedrock Converse** de pi‑ai. La autenticación de Bedrock utiliza la **cadena de credenciales predeterminada del SDK de AWS**, no una clave de API.
+OpenClaw puede usar modelos de **Amazon Bedrock** a través del proveedor de
+transmisión **Bedrock Converse** de pi‑ai. La autenticación de Bedrock utiliza la
+**cadena de credenciales predeterminada del SDK de AWS**, no una clave de API.
 
-## Lo que admite pi‑ai
+## Lo que admite pi-ai
 
 - Proveedor: `amazon-bedrock`
 - API: `bedrock-converse-stream`
-- Autenticación: credenciales de AWS (variables de entorno, configuración compartida o rol de instancia)
+- Autenticación: Credenciales de AWS (variables de entorno, configuración compartida o rol de instancia)
 - Región: `AWS_REGION` o `AWS_DEFAULT_REGION` (predeterminado: `us-east-1`)
 
 ## Descubrimiento automático de modelos
 
-Si se detectan credenciales de AWS, OpenClaw puede descubrir automáticamente modelos de Bedrock que admitan **transmisión** y **salida de texto**. El descubrimiento utiliza `bedrock:ListFoundationModels` y se almacena en caché (predeterminado: 1 hora).
+Si se detectan credenciales de AWS, OpenClaw puede descubrir automáticamente los
+modelos de Bedrock que admiten **transmisión** y **salida de texto**. El descubrimiento
+utiliza `bedrock:ListFoundationModels` y se almacena en caché (predeterminado: 1 hora).
 
-Las opciones de configuración se encuentran en `models.bedrockDiscovery`:
+Las opciones de configuración se encuentran bajo `models.bedrockDiscovery`:
 
 ```json5
 {
@@ -40,12 +44,12 @@ Las opciones de configuración se encuentran en `models.bedrockDiscovery`:
 
 Notas:
 
-- `enabled` el valor predeterminado es `true` cuando hay credenciales de AWS presentes.
-- `region` el valor predeterminado es `AWS_REGION` o `AWS_DEFAULT_REGION`, luego `us-east-1`.
+- `enabled` se establece de forma predeterminada en `true` cuando hay credenciales de AWS presentes.
+- `region` se establece de forma predeterminada en `AWS_REGION` o `AWS_DEFAULT_REGION`, luego `us-east-1`.
 - `providerFilter` coincide con los nombres de los proveedores de Bedrock (por ejemplo, `anthropic`).
-- `refreshInterval` son segundos; establézcalo en `0` para desactivar el almacenamiento en caché.
-- `defaultContextWindow` (predeterminado: `32000`) y `defaultMaxTokens` (predeterminado: `4096`)
-  se utilizan para los modelos descubiertos (anule si conoce los límites de su modelo).
+- `refreshInterval` está en segundos; establézcalo en `0` para desactivar el almacenamiento en caché.
+- `defaultContextWindow` (predeterminado: `32000`) y `defaultMaxTokens` (predeterminado:
+  `4096`) se usan para los modelos descubiertos (anúlelos si conoce los límites de su modelo).
 
 ## Incorporación
 
@@ -96,10 +100,13 @@ export AWS_BEARER_TOKEN_BEDROCK="..."
 
 ## Roles de instancia de EC2
 
-Al ejecutar OpenClaw en una instancia de EC2 con un rol de IAM adjunto, el SDK de AWS utilizará automáticamente el servicio de metadatos de la instancia (IMDS) para la autenticación. Sin embargo, la detección de credenciales de OpenClaw actualmente solo verifica las variables de entorno, no las credenciales IMDS.
+Al ejecutar OpenClaw en una instancia de EC2 con un rol de IAM adjunto, el SDK de
+AWS utilizará automáticamente el servicio de metadatos de instancia (IMDS) para la
+autenticación. Sin embargo, la detección de credenciales de OpenClaw actualmente solo
+verifica las variables de entorno, no las credenciales de IMDS.
 
-**Solución alternativa:** Establezca `AWS_PROFILE=default` para señalar que las credenciales de AWS están
-available. La autenticación real todavía usa el rol de instancia a través de IMDS.
+**Solución alternativa:** Establezca `AWS_PROFILE=default` para indicar que las credenciales de AWS están
+disponibles. La autenticación real todavía utiliza el rol de instancia a través de IMDS.
 
 ```bash
 # Add to ~/.bashrc or your shell profile
@@ -107,13 +114,13 @@ export AWS_PROFILE=default
 export AWS_REGION=us-east-1
 ```
 
-**Permisos IAM requeridos** para el rol de instancia de EC2:
+**Permisos IAM requeridos** para el rol de instancia EC2:
 
 - `bedrock:InvokeModel`
 - `bedrock:InvokeModelWithResponseStream`
 - `bedrock:ListFoundationModels` (para descubrimiento automático)
 
-O adjunte la política gestionada `AmazonBedrockFullAccess`.
+O adjunte la política administrada `AmazonBedrockFullAccess`.
 
 ## Configuración rápida (ruta AWS)
 
@@ -157,16 +164,16 @@ openclaw models list
 
 ## Notas
 
-- Bedrock requiere **acceso al modelo** habilitado en su cuenta/región de AWS.
+- Bedrock requiere que el **acceso al modelo** esté habilitado en su cuenta/región de AWS.
 - El descubrimiento automático necesita el permiso `bedrock:ListFoundationModels`.
-- Si usa perfiles, establezca `AWS_PROFILE` en el host de puerta de enlace.
+- Si utiliza perfiles, establezca `AWS_PROFILE` en el host de la puerta de enlace (gateway host).
 - OpenClaw expone la fuente de credenciales en este orden: `AWS_BEARER_TOKEN_BEDROCK`,
-  luego `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY`, luego `AWS_PROFILE` y luego la
+  luego `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY`, luego `AWS_PROFILE`, y luego la
   cadena predeterminada del SDK de AWS.
-- La compatibilidad con el razonamiento depende del modelo; consulte la ficha del modelo de Bedrock para
+- La compatibilidad con el razonamiento depende del modelo; consulte la tarjeta del modelo de Bedrock para
   conocer las capacidades actuales.
-- Si prefiere un flujo de clave gestionada, también puede colocar un proxy compatible con OpenAI
-  delante de Bedrock y configurarlo como proveedor de OpenAI en su lugar.
+- Si prefiere un flujo de clave administrada, también puede colocar un proxy compatible con OpenAI
+  delante de Bedrock y configurarlo como un proveedor de OpenAI.
 
 import es from "/components/footer/es.mdx";
 

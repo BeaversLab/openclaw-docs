@@ -1,149 +1,149 @@
 ---
-summary: "可靠互動式程序監督（PTY 與非 PTY）的生產計畫，具備明確所有權、統一生命週期與確定性清理機制"
+summary: "針對可靠互動式程序監督（PTY + 非 PTY）的生產計劃，具有明確的所有權、統一的生命週期以及確定性清理"
 read_when:
-  - Working on exec/process lifecycle ownership and cleanup
-  - Debugging PTY and non-PTY supervision behavior
+  - 正在處理 exec/process 生命週期所有權與清理
+  - 除錯 PTY 與非 PTY 監督行為
 owner: "openclaw"
-status: "進行中"
+status: "in-progress"
 last_updated: "2026-02-15"
-title: "PTY 與程序監督計畫"
+title: "PTY 與程序監督計劃"
 ---
 
-# PTY 與程序監督計畫
+# PTY 與程序監督計劃
 
 ## 1. 問題與目標
 
-我們需要一個可靠的生命週期，以適用於以下長時間執行的命令執行：
+我們需要一個可靠的生命週期來處理跨以下情境的長期命令執行：
 
 - `exec` 前景執行
 - `exec` 背景執行
-- `process` 後續動作 (`poll`、`log`、`send-keys`、`paste`、`submit`、`kill`、`remove`)
+- `process` 後續動作（`poll`、`log`、`send-keys`、`paste`、`submit`、`kill`、`remove`）
 - CLI agent runner 子程序
 
-目標不僅僅是支援 PTY。目標是實現可預測的所有權、取消、逾時和清理，而不使用不安全的程序匹配啟發式方法。
+目標不僅僅是支援 PTY。目標是實現可預測的所有權、取消、逾時和清理，且不使用不安全的程序匹配啟發式方法。
 
 ## 2. 範圍與邊界
 
 - 將實作保留在 `src/process/supervisor` 內部。
-- 請勿為此建立新的套件。
-- 在實務可行的情況下，保持與目前行為的相容性。
-- 請勿將範圍擴大至終端機重播或 tmux 風格的工作階段持久化。
+- 不要为此創建新的套件。
+- 在實際可行的情況下，保持目前行為的相容性。
+- 不要將範圍擴大到終端機重播或 tmux 風格的會話持久性。
 
-## 3. 此分支中已實作
+## 3. 本分支已實作內容
 
-### Supervisor 基線已存在
+### 監督器基準已存在
 
-- Supervisor 模組已置於 `src/process/supervisor/*` 下。
-- Exec runtime 與 CLI runner 已透過 supervisor spawn 與 wait 進行路由。
-- Registry 最終處理具冪等性。
+- 監督器模組已置於 `src/process/supervisor/*` 之下。
+- Exec 執行時與 CLI runner 已經透過監督器產生 (spawn) 與等待 (wait) 進行路由。
+- 註冊表的最終處理具備等冪性。
 
 ### 此階段已完成
 
 1. 明確的 PTY 命令合約
 
-- `SpawnInput` 現在是 `src/process/supervisor/types.ts` 中的辨別聯集。
-- PTY 執行需要 `ptyCommand`，而非重複使用通用的 `argv`。
-- Supervisor 不再於 `src/process/supervisor/supervisor.ts` 中從 argv 連接重建 PTY 命令字串。
-- Exec runtime 現在直接在 `src/agents/bash-tools.exec-runtime.ts` 中傳遞 `ptyCommand`。
+- `SpawnInput` 現在是 `src/process/supervisor/types.ts` 中的一個辨別聯集。
+- PTY 執行需要 `ptyCommand`，而不是重用通用的 `argv`。
+- 監督器不再在 `src/process/supervisor/supervisor.ts` 中從 argv 連接重新建構 PTY 命令字串。
+- Exec 執行時現在會在 `src/agents/bash-tools.exec-runtime.ts` 中直接傳遞 `ptyCommand`。
 
 2. 程序層級類型解耦
 
-- Supervisor 類型不再從 agents 導入 `SessionStdin`。
-- Process 本地 stdin 合約位於 `src/process/supervisor/types.ts` (`ManagedRunStdin`)。
-- Adapters 現在僅依賴 process 層級的類型：
+- 監督器類型不再從 agents 匯入 `SessionStdin`。
+- Process local stdin contract lives in `src/process/supervisor/types.ts` (`ManagedRunStdin`)。
+- Adapters now depend only on process level types:
   - `src/process/supervisor/adapters/child.ts`
   - `src/process/supervisor/adapters/pty.ts`
 
-3. Process 工具生命週期所有權改進
+3. Process tool lifecycle ownership improvement
 
-- `src/agents/bash-tools.process.ts` 現在首先通過 supervisor 請求取消。
-- `process kill/remove` 現在在 supervisor 查找失敗時使用 process-tree 後備終止。
-- `remove` 通過在請求終止後立即刪除正在運行的會話條目，保持了確定性的刪除行為。
+- `src/agents/bash-tools.process.ts` now requests cancellation through supervisor first.
+- `process kill/remove` now use process-tree fallback termination when supervisor lookup misses.
+- `remove` keeps deterministic remove behavior by dropping running session entries immediately after termination is requested.
 
-4. 單一來源看門預設值
+4. Single source watchdog defaults
 
-- 在 `src/agents/cli-watchdog-defaults.ts` 中添加了共享預設值。
-- `src/agents/cli-backends.ts` 使用共享預設值。
-- `src/agents/cli-runner/reliability.ts` 使用相同的共享預設值。
+- Added shared defaults in `src/agents/cli-watchdog-defaults.ts`.
+- `src/agents/cli-backends.ts` consumes the shared defaults.
+- `src/agents/cli-runner/reliability.ts` consumes the same shared defaults.
 
-5. 失效的 helper 清理
+5. Dead helper cleanup
 
-- 從 `src/agents/bash-tools.shared.ts` 中移除了未使用的 `killSession` helper 路徑。
+- Removed unused `killSession` helper path from `src/agents/bash-tools.shared.ts`.
 
-6. 添加了直接的 supervisor 路徑測試
+6. Direct supervisor path tests added
 
-- 添加了 `src/agents/bash-tools.process.supervisor.test.ts` 以涵蓋通過 supervisor 取消進行的 kill 和 remove 路由。
+- Added `src/agents/bash-tools.process.supervisor.test.ts` to cover kill and remove routing through supervisor cancellation.
 
-7. 可靠性缺口修復已完成
+7. Reliability gap fixes completed
 
-- `src/agents/bash-tools.process.ts` 現在在 supervisor 查找失敗時回退到真實的 OS 層級進程終止。
-- `src/process/supervisor/adapters/child.ts` 現在對預設的 cancel/timeout kill 路徑使用 process-tree 終止語義。
-- 在 `src/process/kill-tree.ts` 中添加了共享的 process-tree 工具程式。
+- `src/agents/bash-tools.process.ts` now falls back to real OS-level process termination when supervisor lookup misses.
+- `src/process/supervisor/adapters/child.ts` now uses process-tree termination semantics for default cancel/timeout kill paths.
+- Added shared process-tree utility in `src/process/kill-tree.ts`.
 
-8. 添加了 PTY 合約邊緣情況覆蓋
+8. PTY contract edge-case coverage added
 
-- 添加了 `src/process/supervisor/supervisor.pty-command.test.ts` 用於逐字的 PTY 指令轉發和空指令拒絕。
-- 添加了 `src/process/supervisor/adapters/child.test.ts` 用於子 adapter 取消中的 process-tree kill 行為。
+- Added `src/process/supervisor/supervisor.pty-command.test.ts` for verbatim PTY command forwarding and empty-command rejection.
+- Added `src/process/supervisor/adapters/child.test.ts` for process-tree kill behavior in child adapter cancellation.
 
-## 4. 剩餘的缺口和決策
+## 4. Remaining gaps and decisions
 
-### 可靠性狀態
+### Reliability status
 
-此階段所需的兩個可靠性缺口現已關閉：
+The two required reliability gaps for this pass are now closed:
 
-- `process kill/remove` 現在在 supervisor 查找失敗時具有真實的 OS 終止後備方案。
-- 子 cancel/timeout 現在對預設 kill 路徑使用 process-tree kill 語義。
-- 為這兩種行為添加了回歸測試。
+- `process kill/remove` now has a real OS termination fallback when supervisor lookup misses.
+- child cancel/timeout now uses process-tree kill semantics for default kill path.
+- Regression tests were added for both behaviors.
 
-### 持久性和啟動協調
+### Durability and startup reconciliation
 
-重新啟動行為現在被明確定義為僅記憶體內生命週期。
+Restart behavior is now explicitly defined as in-memory lifecycle only.
 
-- `reconcileOrphans()` 依設計在 `src/process/supervisor/supervisor.ts` 中仍為無操作。
-- 程序重啟後不會恢復執行中的運行。
-- 此邊界對於此實作階段是刻意的，以避免部分持久化的風險。
+- `reconcileOrphans()` remains a no-op in `src/process/supervisor/supervisor.ts` by design.
+- 程序重新啟動後，不會復原活躍的執行（run）。
+- 對此實作階段而言，此邊界是有意為之的，以避免部分持久化的風險。
 
-### 可維護性後續跟進
+### 後續維護事項
 
-1. `runExecProcess` 在 `src/agents/bash-tools.exec-runtime.ts` 中仍處理多項職責，可在後續跟進中拆分為專注的輔助程式。
+1. `runExecProcess` 在 `src/agents/bash-tools.exec-runtime.ts` 中仍處理多項職責，且可在後續工作中拆分為專注的輔助函式。
 
 ## 5. 實作計畫
 
-所需可靠性和合約項目的實作階段已完成。
+所需可靠性與合約項目的實作階段已完成。
 
-已完成：
+已完成項目：
 
-- `process kill/remove` 後備真實終止
-- 子介面卡預設殺出路徑的程序樹取消
-- 後備殺死和子介面卡殺出路徑的回歸測試
-- 明確 `ptyCommand` 下的 PTY 指令邊緣情況測試
-- 明確的記憶體重啟邊界，依設計 `reconcileOrphans()` 為無操作
+- `process kill/remove` 備援真實終止
+- 用於子配接器預設終止路徑的程序樹取消
+- 備援終止與子配接器終止路徑的回歸測試
+- 明確 `ptyCommand` 下的 PTY 指令邊緣案例測試
+- 明確的記憶體內重新啟動邊界，其中 `reconcileOrphans()` 依設計為無操作
 
-可選後續跟進：
+選用後續事項：
 
-- 將 `runExecProcess` 拆分為專注的輔助程式，且行為無變異
+- 將 `runExecProcess` 拆分為專注的輔助函式且無行為差異
 
-## 6. 檔案對照表
+## 6. 檔案對應
 
 ### 程序監督器
 
-- `src/process/supervisor/types.ts` 已更新，包含可辨別的生成輸入和程序本地 stdin 合約。
-- `src/process/supervisor/supervisor.ts` 已更新以使用明確的 `ptyCommand`。
-- `src/process/supervisor/adapters/child.ts` 和 `src/process/supervisor/adapters/pty.ts` 從代理程式類型解耦。
-- `src/process/supervisor/registry.ts` 幾等最終處理保持不變並予以保留。
+- `src/process/supervisor/types.ts` 已更新，具備可辨別的生成輸入與程序本地 stdin 合約。
+- `src/process/supervisor/supervisor.ts` 已更新，以使用明確的 `ptyCommand`。
+- `src/process/supervisor/adapters/child.ts` 與 `src/process/supervisor/adapters/pty.ts` 已與代理程式類型解耦。
+- `src/process/supervisor/registry.ts` 的等幂最終化保持不變並予以保留。
 
-### 執行和程序整合
+### Exec 與程序整合
 
-- `src/agents/bash-tools.exec-runtime.ts` 已更新以明確傳遞 PTY 指令並保留後備路徑。
-- `src/agents/bash-tools.process.ts` 已更新以透過監督器取消，並使用真實程序樹後備終止。
-- `src/agents/bash-tools.shared.ts` 移除了直接殺死輔助路徑。
+- `src/agents/bash-tools.exec-runtime.ts` 已更新，以明確傳遞 PTY 指令並保留備援路徑。
+- `src/agents/bash-tools.process.ts` 已更新，透過監督器取消，並具備真實程序樹備援終止。
+- `src/agents/bash-tools.shared.ts` 已移除直接終止輔助路徑。
 
 ### CLI 可靠性
 
-- `src/agents/cli-watchdog-defaults.ts` 已新增為共用基準。
-- `src/agents/cli-backends.ts` 和 `src/agents/cli-runner/reliability.ts` 現在使用相同的預設值。
+- `src/agents/cli-watchdog-defaults.ts` 已新增作為共用基準。
+- `src/agents/cli-backends.ts` 與 `src/agents/cli-runner/reliability.ts` 現在使用相同的預設值。
 
-## 7. 本階段驗證運行
+## 7. 本階段的驗證執行
 
 單元測試：
 
@@ -162,37 +162,37 @@ E2E 目標：
 - `pnpm vitest src/agents/cli-runner.test.ts`
 - `pnpm vitest run src/agents/bash-tools.exec.pty-fallback.test.ts src/agents/bash-tools.exec.background-abort.test.ts src/agents/bash-tools.process.send-keys.test.ts`
 
-型別檢查說明：
+Typecheck 註記：
 
-- 在此 repo 中使用 `pnpm build`（以及 `pnpm check` 以進行完整的 lint/docs 檢查）。提及 `pnpm tsgo` 的舊說明已過時。
+- 在本 repo 中使用 `pnpm build`（以及 `pnpm check` 進行完整的 lint/docs 檢查）。提及 `pnpm tsgo` 的較舊註記已過時。
 
-## 8. 保留的運作保證
+## 8. 保留的操作保證
 
-- Exec env 加固行為保持不變。
+- Exec env 硬化行為保持不變。
 - 核准與允許清單流程保持不變。
 - 輸出清理與輸出上限保持不變。
-- PTY 配接器仍然保證在強制終止和監聽器處置時等待結算。
+- PTY 配接器仍保證在強制終止與監聽器處置時等待結算。
 
 ## 9. 完成定義
 
-1. Supervisor 是受控執行的生命週期擁有者。
-2. PTY 產生使用明確的命令契約，不進行 argv 重構。
-3. Process 層對於 agent 層的 supervisor stdin 契約沒有型別相依性。
-4. Watchdog 預設值為單一來源。
-5. 目標單元測試和 e2e 測試保持綠燈（通過）。
-6. 重新啟動持久性邊界已明確記錄或完全實作。
+1. Supervisor 是受管理執行的生命週期擁有者。
+2. PTY spawn 使用明確的命令合約，不進行 argv 重建。
+3. Process 層對於 supervisor stdin 合約在型別上不依賴 agent 層。
+4. Watchdog 預設值是單一來源。
+5. 目標的 unit 與 e2e 測試保持綠燈。
+6. 重新啟動的持久性邊界已明確記載或完整實作。
 
 ## 10. 總結
 
-此分支現具有連貫且更安全的監督形狀：
+此分支現在具備連貫且更安全的監督架構：
 
-- 明確的 PTY 契約
-- 更乾淨的程序分層
-- supervisor 驅動的程序操作取消路徑
-- 當 supervisor 查找失敗時的真實後備終止
-- 子執行預設終止路徑的程序樹取消
+- 明確的 PTY 合約
+- 更乾淨的 process 分層
+- 由 supervisor 驅動的程序操作取消路徑
+- 當 supervisor 查詢落空時的真正備援終止
+- 用於 child-run 預設 kill 路徑的程序樹取消
 - 統一的 watchdog 預設值
-- 明確的記憶體內重新啟動邊界（此階段不進行跨重新啟動的孤兒調解）
+- 明確的記憶體內重新啟動邊界（此階段不進行跨重新啟動的孤立程序協調）
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

@@ -1,14 +1,14 @@
 ---
-summary: "Referencia de CLI para `openclaw tui` (interfaz de usuario de terminal conectada a la Gateway)"
+summary: "Referencia de la CLI para `openclaw tui` (interfaz de terminal conectada a la Gateway)"
 read_when:
-  - You want a terminal UI for the Gateway (remote-friendly)
-  - You want to pass url/token/session from scripts
+  - Deseas una interfaz de terminal para la Gateway (compatible con control remoto)
+  - Deseas pasar url/token/sesión desde scripts
 title: "tui"
 ---
 
 # `openclaw tui`
 
-Abre la interfaz de usuario de terminal conectada a la Gateway.
+Abre la interfaz de terminal conectada a la Gateway.
 
 Relacionado:
 
@@ -16,8 +16,8 @@ Relacionado:
 
 Notas:
 
-- `tui` resuelve los SecretRefs de autenticación de la puerta de enlace configurados para la autenticación por token/contraseña cuando es posible (proveedores `env`/`file`/`exec`).
-- Cuando se inicia desde dentro de un directorio del espacio de trabajo de un agente configurado, la TUI selecciona automáticamente ese agente como predeterminado para la clave de sesión (a menos que `--session` se establezca explícitamente en `agent:<id>:...`).
+- `tui` resuelve los SecretRefs de autenticación de la gateway configurados para la autenticación por token/contraseña cuando es posible (proveedores `env`/`file`/`exec`).
+- Cuando se inicia desde dentro de un directorio de espacio de trabajo del agente configurado, la TUI selecciona automáticamente ese agente para el valor predeterminado de la clave de sesión (a menos que `--session` sea explícitamente `agent:<id>:...`).
 
 ## Ejemplos
 

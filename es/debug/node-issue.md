@@ -1,16 +1,16 @@
 ---
-summary: Notas y soluciones para el fallo "__name is not a function" en Node + tsx
+summary: Node + tsx "__name is not a function" notas de fallos y soluciones temporales
 read_when:
-  - Debugging Node-only dev scripts or watch mode failures
-  - Investigating tsx/esbuild loader crashes in OpenClaw
+  - Depuración de scripts de desarrollo solo de Node o fallos en modo observación
+  - Investigando fallos del cargador tsx/esbuild en OpenClaw
 title: "Fallo de Node + tsx"
 ---
 
-# Fallo "\_\_name is not a function" en Node + tsx
+# Fallo de Node + tsx "\_\_name is not a function"
 
 ## Resumen
 
-Ejecutar OpenClaw a través de Node con `tsx` falla al inicio con:
+Ejecutar OpenClaw mediante Node con `tsx` falla al inicio con:
 
 ```
 [openclaw] Failed to start CLI: TypeError: __name is not a function
@@ -24,7 +24,7 @@ Esto comenzó después de cambiar los scripts de desarrollo de Bun a `tsx` (comm
 
 - Node: v25.x (observado en v25.3.0)
 - tsx: 4.21.0
-- SO: macOS (es probable que también se reproduzca en otras plataformas que ejecuten Node 25)
+- SO: macOS (la reproducción también es probable en otras plataformas que ejecuten Node 25)
 
 ## Reproducción (solo Node)
 
@@ -41,7 +41,7 @@ node --import tsx src/entry.ts status
 node --import tsx scripts/repro/tsx-name-repro.ts
 ```
 
-## Comprobación de versión de Node
+## Verificación de versión de Node
 
 - Node 25.3.0: falla
 - Node 22.22.0 (Homebrew `node@22`): falla
@@ -49,14 +49,14 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 
 ## Notas / hipótesis
 
-- `tsx` utiliza esbuild para transformar TS/ESM. El `keepNames` de esbuild emite un helper `__name` y envuelve las definiciones de funciones con `__name(...)`.
-- El fallo indica que `__name` existe pero no es una función en tiempo de ejecución, lo que implica que el helper falta o ha sido sobrescrito para este módulo en la ruta del cargador de Node 25.
-- Se han reportado problemas similares con el helper `__name` en otros consumidores de esbuild cuando el helper falta o es reescrito.
+- `tsx` usa esbuild para transformar TS/ESM. El `keepNames` de esbuild emite un auxiliar `__name` y envuelve las definiciones de funciones con `__name(...)`.
+- El fallo indica que `__name` existe pero no es una función en tiempo de ejecución, lo que implica que el auxiliar falta o se ha sobrescrito para este módulo en la ruta del cargador de Node 25.
+- Se han informado problemas similares con el auxiliar `__name` en otros consumidores de esbuild cuando el auxiliar falta o se reescribe.
 
 ## Historial de regresiones
 
 - `2871657e` (2026-01-06): scripts cambiados de Bun a tsx para hacer que Bun sea opcional.
-- Antes de eso (ruta con Bun), `openclaw status` y `gateway:watch` funcionaban.
+- Antes de eso (ruta Bun), `openclaw status` y `gateway:watch` funcionaban.
 
 ## Soluciones temporales
 
@@ -69,7 +69,7 @@ node --import tsx scripts/repro/tsx-name-repro.ts
   ```
 
 - Confirmado localmente: `pnpm exec tsc -p tsconfig.json` + `node openclaw.mjs status` funciona en Node 25.
-- Deshabilitar esbuild keepNames en el cargador TS si es posible (evita la inserción del helper `__name`); tsx actualmente no expone esto.
+- Deshabilitar esbuild keepNames en el cargador TS si es posible (evita la inserción del auxiliar `__name`); tsx actualmente no expone esto.
 - Probar Node LTS (22/24) con `tsx` para ver si el problema es específico de Node 25.
 
 ## Referencias
@@ -81,8 +81,8 @@ node --import tsx scripts/repro/tsx-name-repro.ts
 ## Próximos pasos
 
 - Reproducir en Node 22/24 para confirmar la regresión en Node 25.
-- Prueba `tsx` nightly o fija una versión anterior si existe una regresión conocida.
-- Si se reproduce en Node LTS, envía un repro mínimo upstream con el stack trace `__name`.
+- Probar `tsx` nightly o fijar a una versión anterior si existe una regresión conocida.
+- Si se reproduce en Node LTS, enviar un caso de reproducción mínimo aguas arriba con el seguimiento de la pila `__name`.
 
 import es from "/components/footer/es.mdx";
 

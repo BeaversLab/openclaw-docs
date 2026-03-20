@@ -1,13 +1,13 @@
 ---
-summary: "Alias pour la documentation de gestion de session"
+summary: "Alias pour la documentation de gestion des sessions"
 read_when:
-  - You looked for docs/sessions.md; canonical doc lives in docs/session.md
+  - Vous avez cherché docs/sessions.md; le document canonique se trouve dans docs/session.md
 title: "Sessions"
 ---
 
 # Sessions
 
-La documentation canonique sur la gestion de session se trouve dans [Gestion de session](/fr/concepts/session).
+La documentation canonique sur la gestion des sessions se trouve dans [Gestion des sessions](/fr/concepts/session).
 
 import fr from "/components/footer/fr.mdx";
 

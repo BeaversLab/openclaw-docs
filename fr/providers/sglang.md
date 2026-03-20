@@ -1,19 +1,19 @@
 ---
 summary: "Exécuter OpenClaw avec SGLang (serveur auto-hébergé compatible OpenAI)"
 read_when:
-  - You want to run OpenClaw against a local SGLang server
-  - You want OpenAI-compatible /v1 endpoints with your own models
+  - Vous souhaitez exécuter OpenClaw sur un serveur SGLang local
+  - Vous souhaitez des points de terminaison /v1 compatibles OpenAI avec vos propres modèles
 title: "SGLang"
 ---
 
 # SGLang
 
-SGLang peut servir des modèles open source via une OpenAI HTTP compatible **API**.
+SGLang peut servir des modèles open source via une API HTTP compatible **OpenAI**.
 OpenClaw peut se connecter à SGLang en utilisant l'API `openai-completions`.
 
 OpenClaw peut également **découvrir automatiquement** les modèles disponibles depuis SGLang lorsque vous activez
 l'option avec `SGLANG_API_KEY` (n'importe quelle valeur fonctionne si votre serveur n'applique pas l'authentification)
-et que vous ne définissez pas explicitement d'entrée `models.providers.sglang`.
+et que vous ne définissez pas d'entrée `models.providers.sglang` explicite.
 
 ## Quick start
 
@@ -30,7 +30,7 @@ Votre URL de base doit exposer des points de terminaison `/v1` (par exemple `/v1
 export SGLANG_API_KEY="sglang-local"
 ```
 
-3. Exécutez l'onboarding et choisissez `SGLang`, ou définissez directement un modèle :
+3. Exécutez l'intégration (onboarding) et choisissez `SGLang`, ou définissez un modèle directement :
 
 ```bash
 openclaw onboard
@@ -53,7 +53,7 @@ définissez **pas** `models.providers.sglang`, OpenClaw interrogera :
 
 - `GET http://127.0.0.1:30000/v1/models`
 
-et convertira les IDs renvoyés en entrées de modèles.
+et convertira les ID renvoyés en entrées de modèle.
 
 Si vous définissez `models.providers.sglang` explicitement, la découverte automatique est ignorée et
 vous devez définir les modèles manuellement.
@@ -64,7 +64,7 @@ Utilisez une configuration explicite lorsque :
 
 - SGLang s'exécute sur un hôte/port différent.
 - Vous souhaitez épingler les valeurs `contextWindow`/`maxTokens`.
-- Votre serveur nécessite une vraie clé API (ou vous souhaitez contrôler les en-têtes).
+- Votre serveur nécessite une véritable clé API (ou vous souhaitez contrôler les en-têtes).
 
 ```json5
 {
@@ -99,8 +99,8 @@ Utilisez une configuration explicite lorsque :
 curl http://127.0.0.1:30000/v1/models
 ```
 
-- Si les requêtes échouent avec des erreurs d'authentification, définissez une vraie valeur `SGLANG_API_KEY` correspondant
-  à la configuration de votre serveur, ou configurez le provider explicitement sous
+- Si les requêtes échouent avec des erreurs d'authentification, définissez une véritable `SGLANG_API_KEY` correspondant à
+  la configuration de votre serveur, ou configurez le fournisseur explicitement sous
   `models.providers.sglang`.
 
 import fr from "/components/footer/fr.mdx";

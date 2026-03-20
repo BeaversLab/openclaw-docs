@@ -2,7 +2,7 @@
 title: "Modèle TOOLS.md"
 summary: "Modèle d'espace de travail pour TOOLS.md"
 read_when:
-  - Bootstrapping a workspace manually
+  - Initialisation manuelle d'un espace de travail
 ---
 
 # TOOLS.md - Notes locales

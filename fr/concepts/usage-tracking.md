@@ -1,24 +1,24 @@
 ---
-summary: "Surfaces de suivi de l'utilisation et exigences d'identification"
+summary: "Surfaces de suivi d'utilisation et exigences d'identification"
 read_when:
-  - You are wiring provider usage/quota surfaces
-  - You need to explain usage tracking behavior or auth requirements
-title: "Suivi de l'utilisation"
+  - Vous câblez les surfaces de quota/utilisation des providers
+  - Vous devez expliquer le comportement du suivi d'utilisation ou les exigences d'authentification
+title: "Suivi d'utilisation"
 ---
 
-# Suivi de l'utilisation
+# Suivi d'utilisation
 
 ## Ce que c'est
 
-- Récupère l'utilisation/le quota du provider directement depuis leurs points de terminaison d'utilisation.
-- Aucun coût estimé ; uniquement les fenêtres déclarées par le provider.
+- Récupère directement l'utilisation/le quota des providers via leurs points de terminaison d'utilisation.
+- Aucun coût estimé ; uniquement les fenêtres déclarées par les providers.
 
-## Où cela s'affiche
+## Où cela apparaît
 
-- `/status` dans les chats : carte d'état riche en émojis avec les jetons de session + coût estimé (clé API uniquement). L'utilisation du provider s'affiche pour le **provider de modèle actuel** lorsque disponible.
+- `/status` dans les chats : carte de statut riche en emojis avec les jetons de session + coût estimé (clé API uniquement). L'utilisation du provider s'affiche pour le **provider de modèle actuel** si disponible.
 - `/usage off|tokens|full` dans les chats : pied de page d'utilisation par réponse (OAuth affiche uniquement les jetons).
 - `/usage cost` dans les chats : résumé des coûts locaux agrégé à partir des journaux de session OpenClaw.
-- CLI : `openclaw status --usage` affiche une ventilation complète par provider.
+- CLI : `openclaw status --usage` affiche une répartition complète par provider.
 - CLI : `openclaw channels list` affiche le même instantané d'utilisation à côté de la configuration du provider (utilisez `--no-usage` pour ignorer).
 - Barre de menu macOS : section « Utilisation » sous Contexte (uniquement si disponible).
 
@@ -32,7 +32,7 @@ title: "Suivi de l'utilisation"
 - **MiniMax** : clé API (clé de plan de codage ; `MINIMAX_CODE_PLAN_KEY` ou `MINIMAX_API_KEY`) ; utilise la fenêtre du plan de codage de 5 heures.
 - **z.ai** : clé API via env/config/auth store.
 
-L'utilisation est masquée si aucune identification OAuth/API correspondante n'existe.
+L'utilisation est masquée si aucune information d'identification OAuth/API correspondante n'existe.
 
 import fr from "/components/footer/fr.mdx";
 

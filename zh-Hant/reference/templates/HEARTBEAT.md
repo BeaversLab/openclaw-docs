@@ -1,8 +1,8 @@
 ---
-title: "HEARTBEAT.md 範本"
-summary: "HEARTBEAT.md 的工作區範本"
+title: "HEARTBEAT.md 模板"
+summary: "HEARTBEAT.md 的工作區模板"
 read_when:
-  - Bootstrapping a workspace manually
+  - 手動引導工作區
 ---
 
 # HEARTBEAT.md

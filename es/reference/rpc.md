@@ -1,16 +1,16 @@
 ---
 summary: "Adaptadores RPC para CLIs externos (signal-cli, imsg heredado) y patrones de puerta de enlace"
 read_when:
-  - Adding or changing external CLI integrations
-  - Debugging RPC adapters (signal-cli, imsg)
+  - Agregar o cambiar integraciones de CLI externas
+  - Depuración de adaptadores RPC (signal-cli, imsg)
 title: "Adaptadores RPC"
 ---
 
 # Adaptadores RPC
 
-OpenClaw integra CLIs externos a través de JSON-RPC. Hoy se utilizan dos patrones.
+OpenClaw integra CLIs externos a través de JSON-RPC. Hoy en día se utilizan dos patrones.
 
-## Patrón A: demonio HTTP (signal-cli)
+## Patrón A: Demonio HTTP (signal-cli)
 
 - `signal-cli` se ejecuta como un demonio con JSON-RPC sobre HTTP.
 - El flujo de eventos es SSE (`/api/v1/events`).
@@ -19,13 +19,13 @@ OpenClaw integra CLIs externos a través de JSON-RPC. Hoy se utilizan dos patron
 
 Consulte [Signal](/es/channels/signal) para la configuración y los puntos finales.
 
-## Patrón B: proceso hijo stdio (heredado: imsg)
+## Patrón B: Proceso secundario stdio (heredado: imsg)
 
 > **Nota:** Para nuevas configuraciones de iMessage, use [BlueBubbles](/es/channels/bluebubbles) en su lugar.
 
-- OpenClaw genera `imsg rpc` como un proceso hijo (integración heredada de iMessage).
+- OpenClaw genera `imsg rpc` como un proceso secundario (integración heredada de iMessage).
 - JSON-RPC está delimitado por líneas sobre stdin/stdout (un objeto JSON por línea).
-- No se requiere puerto TCP, ni demonio.
+- No se requiere puerto TCP ni demonio.
 
 Métodos principales utilizados:
 
@@ -36,7 +36,7 @@ Métodos principales utilizados:
 
 Consulte [iMessage](/es/channels/imessage) para la configuración heredada y el direccionamiento (se prefiere `chat_id`).
 
-## Pautas del adaptador
+## Directrices del adaptador
 
 - La puerta de enlace posee el proceso (inicio/parada vinculado al ciclo de vida del proveedor).
 - Mantenga los clientes RPC resilientes: tiempos de espera, reinicio al salir.

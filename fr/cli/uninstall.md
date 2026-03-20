@@ -1,14 +1,14 @@
 ---
-summary: "Référence CLI pour `openclaw uninstall` (supprimer le service de passerelle + les données locales)"
+summary: "Référence de la CLI pour `openclaw uninstall` (supprimer le service passerelle + données locales)"
 read_when:
-  - You want to remove the gateway service and/or local state
-  - You want a dry-run first
+  - Vous souhaitez supprimer le service passerelle et/ou l'état local
+  - Vous souhaitez d'abord effectuer un essai à blanc
 title: "uninstall"
 ---
 
 # `openclaw uninstall`
 
-Désinstaller le service de passerelle + les données locales (le CLI reste).
+Désinstaller le service passerelle + les données locales (la CLI reste installée).
 
 ```bash
 openclaw backup create
@@ -17,7 +17,7 @@ openclaw uninstall --all --yes
 openclaw uninstall --dry-run
 ```
 
-Exécutez d'abord `openclaw backup create` si vous souhaitez une restauration par instantané avant de supprimer l'état ou les espaces de travail.
+Exécutez d'abord `openclaw backup create` si vous souhaitez une snapshot restaurable avant de supprimer l'état ou les espaces de travail.
 
 import fr from "/components/footer/fr.mdx";
 

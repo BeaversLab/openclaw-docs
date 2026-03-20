@@ -1,27 +1,27 @@
 ---
-summary: "Guardia de singleton de puerta de enlace que utiliza el enlace del escucha de WebSocket"
+summary: "Guardián singleton de Gateway utilizando el enlace del escucha WebSocket"
 read_when:
-  - Running or debugging the gateway process
-  - Investigating single-instance enforcement
-title: "Bloqueo de puerta de enlace"
+  - Ejecutando o depurando el proceso de gateway
+  - Investigando la aplicación de instancia única
+title: "Bloqueo de Gateway"
 ---
 
-# Bloqueo de puerta de enlace
+# Bloqueo de Gateway
 
 Última actualización: 2025-12-11
 
 ## Por qué
 
-- Asegurar que solo se ejecute una instancia de puerta de enlace por puerto base en el mismo host; las puertas de enlace adicionales deben usar perfiles aislados y puertos únicos.
-- Sobrevivir a fallos/SIGKILL sin dejar archivos de bloqueo obsoletos.
-- Fallar rápidamente con un error claro cuando el puerto de control ya está ocupado.
+- Asegurar que solo se ejecute una instancia de gateway por puerto base en el mismo host; las gateways adicionales deben usar perfiles aislados y puertos únicos.
+- Sobrevivir a bloqueos/SIGKILL sin dejar archivos de bloqueo obsoletos.
+- Fallo rápido con un error claro cuando el puerto de control ya está ocupado.
 
 ## Mecanismo
 
-- La puerta de enlace vincula el escucha de WebSocket (por defecto `ws://127.0.0.1:18789`) inmediatamente al inicio utilizando un escucha TCP exclusivo.
+- El gateway vincula el escucha WebSocket (por defecto `ws://127.0.0.1:18789`) inmediatamente al inicio utilizando un escucha TCP exclusivo.
 - Si el enlace falla con `EADDRINUSE`, el inicio lanza `GatewayLockError("another gateway instance is already listening on ws://127.0.0.1:<port>")`.
-- El sistema operativo libera el escucha automáticamente en cualquier salida del proceso, incluyendo fallos y SIGKILL; no se necesita un archivo de bloqueo separado ni un paso de limpieza.
-- Al apagar, la puerta de enlace cierra el servidor WebSocket y el servidor HTTP subyacente para liberar el puerto rápidamente.
+- El sistema operativo libera el escucha automáticamente en cualquier salida del proceso, incluidos bloqueos y SIGKILL; no se necesita ningún archivo de bloqueo ni paso de limpieza por separado.
+- Al apagarse, el gateway cierra el servidor WebSocket y el servidor HTTP subyacente para liberar el puerto rápidamente.
 
 ## Superficie de error
 
@@ -31,7 +31,7 @@ title: "Bloqueo de puerta de enlace"
 ## Notas operativas
 
 - Si el puerto está ocupado por _otro_ proceso, el error es el mismo; libere el puerto o elija otro con `openclaw gateway --port <port>`.
-- La aplicación de macOS todavía mantiene su propia guardia de PID ligera antes de generar la puerta de enlace; el bloqueo en tiempo de ejecución se aplica mediante el enlace de WebSocket.
+- La aplicación de macOS aún mantiene su propio guardián de PID ligero antes de generar el gateway; el bloqueo en tiempo de ejecución se aplica mediante el enlace WebSocket.
 
 import es from "/components/footer/es.mdx";
 

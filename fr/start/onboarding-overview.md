@@ -1,16 +1,16 @@
 ---
-summary: "Aperçu des options et flux d'onboarding OpenClaw"
+summary: "Aperçu des options et des flux d'onboarding OpenClaw"
 read_when:
   - Choosing an onboarding path
   - Setting up a new environment
-title: "Aperçu de l'onboarding"
-sidebarTitle: "Aperçu de l'onboarding"
+title: "Onboarding Overview"
+sidebarTitle: "Onboarding Overview"
 ---
 
 # Aperçu de l'onboarding
 
-OpenClaw prend en charge plusieurs parcours d'onboarding selon l'emplacement d'exécution du Gateway
-et la manière dont vous préférez configurer les providers.
+OpenClaw supports multiple onboarding paths depending on where the Gateway runs
+and how you prefer to configure providers.
 
 ## Choisissez votre parcours d'onboarding
 
@@ -25,23 +25,23 @@ Exécutez l'onboarding dans un terminal :
 openclaw onboard
 ```
 
-Utilisez l'onboarding CLI lorsque vous souhaitez un contrôle total du Gateway, de l'espace de travail,
-des canaux et des compétences. Documentation :
+Use CLI onboarding when you want full control of the Gateway, workspace,
+channels, and skills. Docs:
 
 - [Onboarding (CLI)](/fr/start/wizard)
-- [commande `openclaw onboard`](/fr/cli/onboard)
+- [`openclaw onboard` command](/fr/cli/onboard)
 
 ## Onboarding de l'application macOS
 
 Utilisez l'application OpenClaw lorsque vous souhaitez une configuration entièrement guidée sur macOS. Documentation :
 
-- [Onboarding (application macOS)](/fr/start/onboarding)
+- [Onboarding (macOS App)](/fr/start/onboarding)
 
 ## Provider personnalisé
 
-Si vous avez besoin d'un point de terminaison qui n'est pas répertorié, y compris les fournisseurs hébergés qui
-exposent des API standard OpenAI ou Anthropic, choisissez **Fournisseur personnalisé** dans l'
-CLI onboarding. Il vous sera demandé de :
+If you need an endpoint that is not listed, including hosted providers that
+expose standard OpenAI or Anthropic APIs, choose **Custom Provider** in the
+CLI onboarding. You will be asked to:
 
 - Choisir OpenAI-compatible, Anthropic-compatible ou **Inconnu** (détection automatique).
 - Entrer une URL de base et une clé API (si requis par le provider).

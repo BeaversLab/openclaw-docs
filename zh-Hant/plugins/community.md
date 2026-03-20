@@ -1,51 +1,51 @@
 ---
-summary: "Community plugins: quality bar, hosting requirements, and PR submission path"
+summary: "社群外掛：品質門檻、託管要求以及 PR 提交流程"
 read_when:
-  - You want to publish a third-party OpenClaw plugin
-  - You want to propose a plugin for docs listing
-title: "Community plugins"
+  - 您想要發布第三方 OpenClaw 外掛
+  - 您想要提案將外掛列入文件
+title: "社群外掛"
 ---
 
-# Community plugins
+# 社群外掛
 
-This page tracks high-quality **community-maintained plugins** for OpenClaw.
+本頁面追蹤 OpenClaw 的高品質**社群維護外掛**。
 
-We accept PRs that add community plugins here when they meet the quality bar.
+我們接受符合品質門檻、在此新增社群外掛的 PR。
 
-## Required for listing
+## 列入條件
 
-- Plugin package is published on npmjs (installable via `openclaw plugins install <npm-spec>`).
-- Source code is hosted on GitHub (public repository).
-- Repository includes setup/use docs and an issue tracker.
-- Plugin has a clear maintenance signal (active maintainer, recent updates, or responsive issue handling).
+- 外掛套件已發布於 npmjs（可透過 `openclaw plugins install <npm-spec>` 安裝）。
+- 原始碼託管於 GitHub（公開儲存庫）。
+- 儲存庫包含設定/使用文件與問題追蹤器。
+- 外掛具有明確的維護信號（積極的維護者、最近的更新，或對問題的快速回應）。
 
-## How to submit
+## 如何提交
 
-Open a PR that adds your plugin to this page with:
+開啟一個 PR，並包含以下資訊將您的 新增至本頁面：
 
-- Plugin name
-- npm package name
-- GitHub repository URL
-- One-line description
-- Install command
+- 外掛名稱
+- npm 套件名稱
+- GitHub 儲存庫 URL
+- 一句話描述
+- 安裝指令
 
-## Review bar
+## 審查門檻
 
-We prefer plugins that are useful, documented, and safe to operate.
-Low-effort wrappers, unclear ownership, or unmaintained packages may be declined.
+我們偏好實用、文件齊全且操作安全的外掛。
+低品質的包裝、不明確的所有權或未維護的套件可能會被拒絕。
 
-## Candidate format
+## 候選格式
 
-Use this format when adding entries:
+新增條目時請使用此格式：
 
-- **Plugin Name** — short description
+- **外掛名稱** — 簡短描述
   npm: `@scope/package`
   repo: `https://github.com/org/repo`
   install: `openclaw plugins install @scope/package`
 
-## Listed plugins
+## 已列入的外掛
 
-- **WeChat** — Connect OpenClaw to WeChat personal accounts via WeChatPadPro (iPad protocol). Supports text, image, and file exchange with keyword-triggered conversations.
+- **WeChat** — 透過 WeChatPadPro（iPad 協定）將 OpenClaw 連接至微信個人帳號。支援文字、圖片與檔案傳輸，以及關鍵字觸發的對話。
   npm: `@icesword760/openclaw-wechat`
   repo: `https://github.com/icesword0760/openclaw-wechat`
   install: `openclaw plugins install @icesword760/openclaw-wechat`

@@ -1,34 +1,34 @@
 ---
-summary: "Backends CLI : repli texte uniquement via les CLI IA locales"
+summary: "CLI backends: repli texte uniquement via des CLI IA locales"
 read_when:
-  - You want a reliable fallback when API providers fail
-  - You are running Claude Code CLI or other local AI CLIs and want to reuse them
-  - You need a text-only, tool-free path that still supports sessions and images
+  - Vous souhaitez un repli fiable lorsque les fournisseurs API échouent
+  - Vous exécutez Claude Code CLI ou d'autres CLI IA locales et souhaitez les réutiliser
+  - Vous avez besoin d'un chemin sans outil, texte uniquement, qui prend toujours en charge les sessions et les images
 title: "Backends CLI"
 ---
 
-# Backends CLI (runtime de repli)
+# CLI backends (runtime de repli)
 
-OpenClaw peut exécuter des **CLI IA locales** en tant que **repli texte uniquement** lorsque les fournisseurs d'API sont en panne,
-limité en débit, ou temporairement défaillants. C'est intentionnellement conservateur :
+OpenClaw peut exécuter des **CLI IA locales** comme un **repli texte uniquement** lorsque les fournisseurs API sont en panne,
+limités en débit ou temporairement défaillants. C'est intentionnellement conservateur :
 
-- **Les outils sont désactivés** (pas d'appels d'outils).
-- **Texte en → texte out** (fiable).
+- **Les outils sont désactivés** (pas d'appels d'outil).
+- **Texte entrant → texte sortant** (fiable).
 - **Les sessions sont prises en charge** (afin que les tours de suivi restent cohérents).
-- **Les images peuvent être transmises** si la CLI accepte les chemins d'images.
+- **Les images peuvent être transmises** si la CLI accepte les chemins d'image.
 
-Ceci est conçu comme un **filet de sécurité** plutôt que comme un chemin principal. Utilisez-le lorsque vous
-voulez des réponses texte « fonctionne toujours » sans dépendre d'API externes.
+Il est conçu comme un **filet de sécurité** plutôt que comme un chemin principal. Utilisez-le lorsque vous
+souhaitez des réponses texte « toujours fonctionnelles » sans dépendre d'API externes.
 
 ## Démarrage rapide adapté aux débutants
 
-Vous pouvez utiliser la CLI Claude Code **sans aucune configuration** (OpenClaw est livré avec une valeur par défaut intégrée) :
+Vous pouvez utiliser Claude Code CLI **sans aucune configuration** (OpenClaw fournit une valeur par défaut intégrée) :
 
 ```bash
 openclaw agent --message "hi" --model claude-cli/opus-4.6
 ```
 
-La CLI Codex fonctionne également hors de la boîte :
+Codex CLI fonctionne également directement :
 
 ```bash
 openclaw agent --message "hi" --model codex-cli/gpt-5.4
@@ -51,11 +51,11 @@ chemin de la commande :
 }
 ```
 
-C'est tout. Pas de clés, pas de configuration d'auth supplémentaire nécessaire au-delà de la CLI elle-même.
+C'est tout. Aucune clé, aucune configuration d'auth supplémentaire n'est nécessaire au-delà de la CLI elle-même.
 
-## Utilisation en tant que repli
+## Utilisation comme repli
 
-Ajoutez un backend CLI à votre liste de repli pour qu'il ne s'exécute que lorsque les modèles principaux échouent :
+Ajoutez un backend CLI à votre liste de repli afin qu'il ne s'exécute que lorsque les modèles principaux échouent :
 
 ```json5
 {
@@ -75,11 +75,11 @@ Ajoutez un backend CLI à votre liste de repli pour qu'il ne s'exécute que lors
 }
 ```
 
-Remarques :
+Notes :
 
 - Si vous utilisez `agents.defaults.models` (liste d'autorisation), vous devez inclure `claude-cli/...`.
-- Si le fournisseur principal échoue (auth, limites de débit, délais d'attente), OpenClaw essaiera
-  ensuite le backend CLI.
+- Si le fournisseur principal échoue (auth, limites de débit, délais d'attente), OpenClaw
+  essaiera ensuite le backend CLI.
 
 ## Aperçu de la configuration
 
@@ -89,8 +89,8 @@ Tous les backends CLI se trouvent sous :
 agents.defaults.cliBackends
 ```
 
-Chaque entrée est indexée par un **id de fournisseur** (ex. `claude-cli`, `my-cli`).
-L'id de fournisseur devient le côté gauche de votre référence de modèle :
+Chaque entrée est indexée par un **id de fournisseur** (par ex. `claude-cli`, `my-cli`).
+L'id du fournisseur devient le côté gauche de votre référence de modèle :
 
 ```
 <provider>/<model>
@@ -134,28 +134,28 @@ L'id de fournisseur devient le côté gauche de votre référence de modèle :
 
 ## Fonctionnement
 
-1. **Sélectionne un backend** basé sur le préfixe du fournisseur (`claude-cli/...`).
+1. **Sélectionne un backend** en fonction du préfixe du fournisseur (`claude-cli/...`).
 2. **Construit un prompt système** en utilisant le même prompt OpenClaw + contexte de l'espace de travail.
-3. **Exécute la CLI** avec un id de session (si pris en charge) pour que l'historique reste cohérent.
+3. **Exécute la CLI** avec un id de session (si pris en charge) afin que l'historique reste cohérent.
 4. **Analyse la sortie** (JSON ou texte brut) et renvoie le texte final.
-5. **Conserve les identifiants de session** par backend, afin que les suites réutilisent la même session CLI.
+5. **Conserve les ids de session** par backend, afin que les suites réutilisent la même session CLI.
 
 ## Sessions
 
-- Si la CLI prend en charge les sessions, définissez `sessionArg` (par exemple `--session-id`) ou
-  `sessionArgs` (espace réservé `{sessionId}`) lorsque l'identifiant doit être inséré
+- Si le CLI prend en charge les sessions, définissez `sessionArg` (p. ex. `--session-id`) ou
+  `sessionArgs` (espace réservé `{sessionId}`) lorsque l'ID doit être inséré
   dans plusieurs indicateurs.
-- Si la CLI utilise une **sous-commande de reprise** avec des indicateurs différents, définissez
+- Si le CLI utilise une **sous-commande de reprise** avec des indicateurs différents, définissez
   `resumeArgs` (remplace `args` lors de la reprise) et facultativement `resumeOutput`
   (pour les reprises non JSON).
 - `sessionMode` :
-  - `always` : envoyez toujours un identifiant de session (nouvel UUID si aucun n'est stocké).
-  - `existing` : envoyez un identifiant de session uniquement si l'un a été stocké précédemment.
-  - `none` : n'envoyez jamais d'identifiant de session.
+  - `always` : envoyez toujours un id de session (nouvel UUID si aucun n'est stocké).
+  - `existing` : envoyez un id de session uniquement si un a été stocké précédemment.
+  - `none` : n'envoyez jamais un id de session.
 
-## Images (pass-through)
+## Images (transfert direct)
 
-Si votre CLI accepte les chemins d'image, définissez `imageArg` :
+Si votre CLI accepte les chemins d'images, définissez `imageArg` :
 
 ```json5
 imageArg: "--image",
@@ -163,26 +163,26 @@ imageMode: "repeat"
 ```
 
 OpenClaw écrira des images base64 dans des fichiers temporaires. Si `imageArg` est défini, ces
-chemins sont transmis comme arguments CLI. Si `imageArg` est manquant, OpenClaw ajoute les
-chemins de fichiers au prompt (injection de chemin), ce qui suffit pour les CLI qui chargent
+chemins sont transmis comme arguments de CLI. Si `imageArg` est manquant, OpenClaw ajoute les
+chemins de fichiers à l'invite (injection de chemin), ce qui suffit pour les CLI qui chargent
 automatiquement les fichiers locaux à partir de chemins simples (comportement du CLI Claude Code).
 
 ## Entrées / sorties
 
-- `output: "json"` (par défaut) essaie d'analyser le JSON et d'extraire le texte + l'identifiant de session.
+- `output: "json"` (par défaut) essaie d'analyser le JSON et d'extraire le texte + l'id de session.
 - `output: "jsonl"` analyse les flux JSONL (Codex CLI `--json`) et extrait le
-  dernier message de l'agent ainsi que `thread_id` lorsqu'il est présent.
+  dernier message de l'agent plus `thread_id` lorsqu'il est présent.
 - `output: "text"` traite stdout comme la réponse finale.
 
 Modes d'entrée :
 
-- `input: "arg"` (par défaut) transmet le prompt comme dernier argument CLI.
-- `input: "stdin"` envoie le prompt via stdin.
-- Si le prompt est très long et que `maxPromptArgChars` est défini, stdin est utilisé.
+- `input: "arg"` (par défaut) transmet l'invite comme dernier argument CLI.
+- `input: "stdin"` envoie l'invite via stdin.
+- Si l'invite est très longue et que `maxPromptArgChars` est défini, stdin est utilisé.
 
 ## Valeurs par défaut (intégrées)
 
-OpenClaw est fourni avec une valeur par défaut pour `claude-cli` :
+OpenClaw fournit une valeur par défaut pour `claude-cli` :
 
 - `command: "claude"`
 - `args: ["-p", "--output-format", "json", "--permission-mode", "bypassPermissions"]`
@@ -193,7 +193,7 @@ OpenClaw est fourni avec une valeur par défaut pour `claude-cli` :
 - `systemPromptWhen: "first"`
 - `sessionMode: "always"`
 
-OpenClaw est également livré avec une valeur par défaut pour `codex-cli` :
+OpenClaw fournit également une valeur par défaut pour `codex-cli` :
 
 - `command: "codex"`
 - `args: ["exec","--json","--color","never","--sandbox","read-only","--skip-git-repo-check"]`
@@ -204,25 +204,21 @@ OpenClaw est également livré avec une valeur par défaut pour `codex-cli` :
 - `imageArg: "--image"`
 - `sessionMode: "existing"`
 
-Ne modifier que si nécessaire (courant : chemin absolu `command`).
+Ne remplacer que si nécessaire (courant : chemin absolu `command`).
 
 ## Limitations
 
-- **Pas d'outils OpenClaw** (le backend CLI ne reçoit jamais d'appels d'outils). Certains CLI
-  peuvent toujours exécuter leurs propres outils d'agent.
+- **Pas d'outils OpenClaw** (le backend CLI ne reçoit jamais d'appels d'outils). Certaines CLI peuvent toujours exécuter leurs propres outils d'agent.
 - **Pas de streaming** (la sortie CLI est collectée puis renvoyée).
-- **Sorties structurées** dépendent du format JSON du CLI.
-- **Sessions Codex CLI** reprennent via la sortie texte (pas de JSONL), ce qui est moins
-  structuré que l'exécution initiale `--json`. Les sessions OpenClaw fonctionnent toujours
-  normalement.
+- **Les sorties structurées** dépendent du format JSON de la CLI.
+- **Les sessions Codex CLI** reprennent via la sortie texte (pas de JSONL), ce qui est moins structuré que l'exécution initiale `--json`. Les sessions OpenClaw fonctionnent toujours normalement.
 
 ## Dépannage
 
 - **CLI introuvable** : définissez `command` sur un chemin complet.
-- **Nom de CLI incorrect** : utilisez `modelAliases` pour mapper `provider/model` → CLI.
-- **Pas de continuité de session** : assurez-vous que `sessionArg` est défini et que `sessionMode` n'est pas
-  `none` (Codex CLI ne peut actuellement pas reprendre avec une sortie JSON).
-- **Images ignorées** : définissez `imageArg` (et vérifiez que le CLI prend en charge les chemins de fichiers).
+- **Mauvais nom de model** : utilisez `modelAliases` pour mapper `provider/model` → model CLI.
+- **Pas de continuité de session** : assurez-vous que `sessionArg` est défini et que `sessionMode` n'est pas `none` (Codex CLI ne peut actuellement pas reprendre avec une sortie JSON).
+- **Images ignorées** : définissez `imageArg` (et vérifiez que la CLI prend en charge les chemins de fichiers).
 
 import fr from "/components/footer/fr.mdx";
 

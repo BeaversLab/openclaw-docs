@@ -17,7 +17,7 @@ Hooks are small scripts that run when something happens. There are two kinds:
 - **Hooks** (this page): run inside the Gateway when agent events fire, like `/new`, `/reset`, `/stop`, or lifecycle events.
 - **Webhooks**: external HTTP webhooks that let other systems trigger work in OpenClaw. See [Webhook Hooks](/en/automation/webhook) or use `openclaw webhooks` for Gmail helper commands.
 
-Hooks can also be bundled inside plugins; see [Plugins](/en/tools/plugin#plugin-hooks).
+Hooks can also be bundled inside plugins; see [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks).
 
 Common uses:
 
@@ -1046,7 +1046,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 - [CLI Reference: hooks](/en/cli/hooks)
 - [Bundled Hooks README](https://github.com/openclaw/openclaw/tree/main/src/hooks/bundled)
 - [Webhook Hooks](/en/automation/webhook)
-- [Configuration](/en/gateway/configuration#hooks)
+- [Configuration](/en/gateway/configuration-reference#hooks)
 
 import en from "/components/footer/en.mdx";
 

@@ -1,26 +1,26 @@
 ---
-summary: "使用 Kustomize 将 OpenClaw Gateway 网关 部署到 Kubernetes 集群"
+summary: "使用 Kustomize 将 OpenClaw Gateway(网关) 部署到 Kubernetes 集群"
 read_when:
-  - You want to run OpenClaw on a Kubernetes cluster
-  - You want to test OpenClaw in a Kubernetes environment
+  - 您想要在 Kubernetes 集群上运行 OpenClaw
+  - 您想要在 Kubernetes 环境中测试 OpenClaw
 title: "Kubernetes"
 ---
 
 # Kubernetes 上的 OpenClaw
 
-在 Kubernetes 上运行 OpenClaw 的一个最低起点——并非可用于生产环境的部署。它涵盖了核心资源，旨在根据您的环境进行调整。
+在 Kubernetes 上运行 OpenClaw 的一个最小起点——并非生产就绪的部署。它涵盖了核心资源，旨在适应您的环境。
 
-## 为什么不用 Helm？
+## 为什么不使用 Helm？
 
-OpenClaw 是一个带有一些配置文件的单容器。有趣的定制在于代理内容（markdown 文件、技能、配置覆盖），而不是基础架构模板。Kustomize 无需 Helm chart 的开销即可处理叠加层。如果您的部署变得更加复杂，可以在这些清单之上分层 Helm chart。
+OpenClaw 是一个带有一些配置文件的单容器。有趣的自定义在于 Agent 内容（markdown 文件、技能、配置覆盖），而不是基础架构模板。Kustomize 处理覆盖层，而无需 Helm chart 的开销。如果您的部署变得更加复杂，可以在此类清单之上添加 Helm chart。
 
 ## 您需要什么
 
 - 一个正在运行的 Kubernetes 集群（AKS、EKS、GKE、k3s、kind、OpenShift 等）
-- `kubectl` 已连接到您的集群
+- 已连接到您集群的 `kubectl`
 - 至少一个模型提供商的 API 密钥
 
-## 快速入门
+## 快速开始
 
 ```bash
 # Replace with your provider: ANTHROPIC, GEMINI, OPENAI, or OPENROUTER
@@ -31,7 +31,7 @@ kubectl port-forward svc/openclaw 18789:18789 -n openclaw
 open http://localhost:18789
 ```
 
-获取网关令牌并将其粘贴到控制界面中：
+获取网关令牌并将其粘贴到控制 UI 中：
 
 ```bash
 kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.OPENCLAW_GATEWAY_TOKEN}' | base64 -d
@@ -50,11 +50,11 @@ kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.OPENCLAW_GAT
 
 然后照常使用 `./scripts/k8s/deploy.sh` 进行部署。
 
-## 分步说明
+## 分步指南
 
 ### 1) 部署
 
-**选项 A** — API 密钥在环境中（一步到位）：
+**选项 A** — 环境中的 API 密钥（一步完成）：
 
 ```bash
 # Replace with your provider: ANTHROPIC, GEMINI, OPENAI, or OPENROUTER
@@ -62,9 +62,9 @@ export <PROVIDER>_API_KEY="..."
 ./scripts/k8s/deploy.sh
 ```
 
-该脚本会使用 API 密钥和自动生成的网关令牌创建一个 Kubernetes Secret，然后进行部署。如果 Secret 已存在，它将保留当前的网关令牌以及任何未更改的提供商密钥。
+该脚本使用 API 密钥和自动生成的网关令牌创建一个 Kubernetes Secret，然后进行部署。如果 Secret 已存在，它将保留当前的网关令牌以及任何未更改的提供商密钥。
 
-**选项 B** — 单独创建 secret：
+**选项 B** — 单独创建密钥：
 
 ```bash
 export <PROVIDER>_API_KEY="..."
@@ -72,7 +72,7 @@ export <PROVIDER>_API_KEY="..."
 ./scripts/k8s/deploy.sh
 ```
 
-如果您希望令牌打印到标准输出以进行本地测试，请对任一命令使用 `--show-token`。
+如果您希望将令牌打印到标准输出以进行本地测试，请将 `--show-token` 与任一命令一起使用。
 
 ### 2) 访问网关
 
@@ -81,7 +81,7 @@ kubectl port-forward svc/openclaw 18789:18789 -n openclaw
 open http://localhost:18789
 ```
 
-## 部署内容
+## 部署的内容
 
 ```
 Namespace: openclaw (configurable via OPENCLAW_NAMESPACE)
@@ -102,13 +102,13 @@ Namespace: openclaw (configurable via OPENCLAW_NAMESPACE)
 ./scripts/k8s/deploy.sh
 ```
 
-### Gateway 网关 配置
+### Gateway(网关) 配置
 
-在 `scripts/k8s/manifests/configmap.yaml` 中编辑 `openclaw.json`。有关完整参考，请参阅 [Gateway(网关) 配置](/zh/gateway/configuration)。
+编辑 `scripts/k8s/manifests/configmap.yaml` 中的 `openclaw.json`。有关完整参考，请参阅 [Gateway(网关) 配置](/zh/gateway/configuration)。
 
 ### 添加提供商
 
-导出额外的密钥后重新运行：
+导出其他密钥后重新运行：
 
 ```bash
 export ANTHROPIC_API_KEY="..."
@@ -117,7 +117,7 @@ export OPENAI_API_KEY="..."
 ./scripts/k8s/deploy.sh
 ```
 
-除非您覆盖它们，否则现有的提供商密钥将保留在 Secret 中。
+现有的提供商密钥保留在 Secret 中，除非您覆盖它们。
 
 或者直接修补 Secret：
 
@@ -141,15 +141,15 @@ OPENCLAW_NAMESPACE=my-namespace ./scripts/k8s/deploy.sh
 image: ghcr.io/openclaw/openclaw:2026.3.1
 ```
 
-### 超越端口转发的暴露
+### 超越端口转发进行暴露
 
 默认清单将网关绑定到 Pod 内部的环回地址。这适用于 `kubectl port-forward`，但不适用于需要访问 Pod IP 的 Kubernetes `Service` 或 Ingress 路径。
 
 如果您想通过 Ingress 或负载均衡器暴露网关：
 
-- 将 `scripts/k8s/manifests/configmap.yaml` 中的网关绑定地址从 `loopback` 更改为符合您的部署模型的非环回绑定地址
-- 保持网关身份验证已启用，并使用适当的 TLS 终止入口点
-- 使用支持的 Web 安全模型（例如 HTTPS/Tailscale Serve 和必要时显式允许的源）配置控制 UI 以进行远程访问
+- 将 `scripts/k8s/manifests/configmap.yaml` 中的网关绑定从 `loopback` 更改为与您的部署模型匹配的非环回绑定
+- 保持网关身份验证处于启用状态，并使用适当的 TLS 终止入口点
+- 使用支持的 Web 安全模型（例如 HTTPS/Tailscale Serve 以及必要时明确的允许来源）配置控制 UI 以进行远程访问
 
 ## 重新部署
 
@@ -157,7 +157,7 @@ image: ghcr.io/openclaw/openclaw:2026.3.1
 ./scripts/k8s/deploy.sh
 ```
 
-这将应用所有清单并重启 Pod 以获取任何配置或 Secret 的更改。
+这将应用所有清单并重启 Pod，以获取任何配置或密钥的更改。
 
 ## 拆除
 
@@ -169,12 +169,12 @@ image: ghcr.io/openclaw/openclaw:2026.3.1
 
 ## 架构说明
 
-- 默认情况下，网关绑定到 Pod 内部的环回地址，因此包含的设置是用于 `kubectl port-forward`
-- 没有集群范围资源——所有资源都位于单个命名空间中
-- 安全性：`readOnlyRootFilesystem`，`drop: ALL` 能力，非 root 用户（UID 1000）
+- 默认情况下，网关绑定到 Pod 内部的环回地址，因此包含的设置是用于 `kubectl port-forward` 的
+- 没有集群范围的资源——所有资源都位于单个命名空间中
+- 安全性：`readOnlyRootFilesystem`，`drop: ALL` 功能，非 root 用户 (UID 1000)
 - 默认配置将控制 UI 保持在更安全的本地访问路径上：环回绑定加上 `kubectl port-forward` 到 `http://127.0.0.1:18789`
-- 如果您超出 localhost 访问范围，请使用受支持的远程模型：HTTPS/Tailscale 加上适当的网关绑定和控制 UI 源设置
-- 机密是在临时目录中生成的，并直接应用到集群 —— 没有机密材料被写入到仓库检出目录
+- 如果您超越本地主机访问，请使用支持的远程模型：HTTPS/Tailscale 以及适当的网关绑定和控制 UI 源设置
+- 密钥在临时目录中生成并直接应用到集群——没有密钥材料写入到代码仓库检出中
 
 ## 文件结构
 

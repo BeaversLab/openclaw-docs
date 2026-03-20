@@ -8,13 +8,13 @@ title: "Refactor Cluster Backlog"
 
 # Refactor Cluster Backlog
 
-Classé par la réduction probable de LOC, la sécurité et l'étendue.
+Ranked by likely LOC reduction, safety, and breadth.
 
-## 1. Configuration du plugin de canal et échafaudage de sécurité
+## 1. Channel plugin config and security scaffolding
 
-Cluster à plus forte valeur.
+Highest-value cluster.
 
-Formes répétées dans de nombreux plugins de canal :
+Repeated shapes across many channel plugins:
 
 - `config.listAccountIds`
 - `config.resolveAccount`
@@ -24,7 +24,7 @@ Formes répétées dans de nombreux plugins de canal :
 - `config.describeAccount`
 - `security.resolveDmPolicy`
 
-Exemples forts :
+Strong examples:
 
 - `extensions/telegram/src/channel.ts`
 - `extensions/googlechat/src/channel.ts`
@@ -35,31 +35,31 @@ Exemples forts :
 - `extensions/signal/src/channel.ts`
 - `extensions/mattermost/src/channel.ts`
 
-Forme d'extraction probable :
+Likely extraction shape:
 
 - `buildChannelConfigAdapter(...)`
 - `buildMultiAccountConfigAdapter(...)`
 - `buildDmSecurityAdapter(...)`
 
-Économies attendues :
+Expected savings:
 
 - ~250-450 LOC
 
-Risque :
+Risk:
 
-- Moyen. Chaque canal a un `isConfigured` légèrement différent, des avertissements et une normalisation.
+- Medium. Each channel has slightly different `isConfigured`, warnings, and normalization.
 
-## 2. Boilerplate singleton d'exécution d'extension
+## 2. Extension runtime singleton boilerplate
 
-Très sûr.
+Very safe.
 
-Presque chaque extension possède le même détenteur d'exécution :
+Nearly every extension has the same runtime holder:
 
 - `let runtime: PluginRuntime | null = null`
 - `setXRuntime`
 - `getXRuntime`
 
-Exemples forts :
+Strong examples:
 
 - `extensions/telegram/src/runtime.ts`
 - `extensions/matrix/src/runtime.ts`
@@ -69,38 +69,38 @@ Exemples forts :
 - `extensions/imessage/src/runtime.ts`
 - `extensions/twitch/src/runtime.ts`
 
-Variantes de cas particuliers :
+Special-case variants:
 
 - `extensions/bluebubbles/src/runtime.ts`
 - `extensions/line/src/runtime.ts`
 - `extensions/synology-chat/src/runtime.ts`
 
-Forme d'extraction probable :
+Likely extraction shape:
 
 - `createPluginRuntimeStore<T>(errorMessage)`
 
-Économies attendues :
+Expected savings:
 
 - ~180-260 LOC
 
-Risque :
+Risk:
 
-- Faible
+- Low
 
-## 3. Configuration des invites (prompt) et des étapes de correctifs de configuration (config-patch)
+## 3. Setup prompt and config-patch steps
 
-Grande surface.
+Large surface area.
 
-De nombreux fichiers de configuration se répètent :
+Many setup files repeat:
 
-- résoudre l'ID de compte
-- demander les entrées de la liste d'autorisation
-- fusionner allowFrom
-- définir la politique DM
-- demander les secrets
-- patch de configuration de premier niveau vs portée compte
+- resolve account id
+- prompt allowlist entries
+- merge allowFrom
+- set DM policy
+- prompt secrets
+- patch top-level vs account-scoped config
 
-Exemples forts :
+Strong examples:
 
 - `extensions/bluebubbles/src/setup-surface.ts`
 - `extensions/googlechat/src/setup-surface.ts`
@@ -111,11 +111,11 @@ Exemples forts :
 - `extensions/matrix/src/setup-surface.ts`
 - `extensions/irc/src/setup-surface.ts`
 
-Helper seam existant :
+Point de raccord pour l'assistant existant :
 
 - `src/channels/plugins/setup-wizard-helpers.ts`
 
-Forme d'extraction probable :
+Forme probable de l'extraction :
 
 - `promptAllowFromList(...)`
 - `buildDmPolicyAdapter(...)`
@@ -128,13 +128,13 @@ Forme d'extraction probable :
 
 Risque :
 
-- Moyen. Facile de trop généraliser ; gardez les helpers étroits et composables.
+- Moyen. Il est facile de trop généraliser ; gardez les assistants ciblés et composables.
 
 ## 4. Fragments de schéma de configuration multi-compte
 
-Fragments de schéma répétés à travers les extensions.
+Fragments de schéma répétés entre les extensions.
 
-Motifs courants :
+Modèles courants :
 
 - `const allowFromEntry = z.union([z.string(), z.number()])`
 - schéma de compte plus :
@@ -143,7 +143,7 @@ Motifs courants :
 - champs DM/groupe répétés
 - champs de stratégie markdown/tool répétés
 
-Exemples forts :
+Exemples probants :
 
 - `extensions/bluebubbles/src/config-schema.ts`
 - `extensions/zalo/src/config-schema.ts`
@@ -151,7 +151,7 @@ Exemples forts :
 - `extensions/matrix/src/config-schema.ts`
 - `extensions/nostr/src/config-schema.ts`
 
-Forme d'extraction probable :
+Forme probable de l'extraction :
 
 - `AllowFromEntrySchema`
 - `buildMultiAccountChannelSchema(accountSchema)`
@@ -165,21 +165,21 @@ Risque :
 
 - Faible à moyen. Certains schémas sont simples, d'autres sont spéciaux.
 
-## 5. Démarrage du cycle de vie webhook et moniteur
+## 5. Démarrage du cycle de vie des webhooks et des moniteurs
 
 Bon cluster de valeur moyenne.
 
-Motifs de configuration `startAccount` / moniteur répétés :
+Modèles de configuration `startAccount` / monitor répétés :
 
 - résoudre le compte
 - calculer le chemin du webhook
 - journaliser le démarrage
 - démarrer le moniteur
-- attendre l'annulation
+- attendre l'abandon
 - nettoyage
 - mises à jour du statut sink
 
-Exemples forts :
+Exemples probants :
 
 - `extensions/googlechat/src/channel.ts`
 - `extensions/bluebubbles/src/channel.ts`
@@ -187,14 +187,14 @@ Exemples forts :
 - `extensions/telegram/src/channel.ts`
 - `extensions/nextcloud-talk/src/channel.ts`
 
-Helper seam existant :
+Point de raccord pour l'assistant existant :
 
 - `src/plugin-sdk/channel-lifecycle.ts`
 
-Forme d'extraction probable :
+Forme probable de l'extraction :
 
-- helper pour le cycle de vie du moniteur de compte
-- helper pour le démarrage de compte avec webhook
+- assistant pour le cycle de vie du moniteur de compte
+- assistant pour le démarrage de compte avec webhook
 
 Économies attendues :
 
@@ -204,21 +204,21 @@ Risque :
 
 - Moyen à élevé. Les détails de transport divergent rapidement.
 
-## 6. Nettoyage des petits clones exacts
+## 6. Nettoyage des clones exacts mineurs
 
-Catégorie de nettoyage à faible risque.
+Corbeille de nettoyage à faible risque.
 
 Exemples :
 
-- détection dupliquée de l'argv de passerelle :
+- détection argv de passerelle en double :
   - `src/infra/gateway-lock.ts`
   - `src/cli/daemon-cli/lifecycle.ts`
-- rendu dupliqué des diagnostics de port :
+- rendu des diagnostics de port dupliqués :
   - `src/cli/daemon-cli/restart-health.ts`
-- construction dupliquée de clé de session :
+- construction de clé de session dupliquée :
   - `src/web/auto-reply/monitor/broadcast.ts`
 
-Gain estimé :
+Économies attendues :
 
 - ~30-60 LOC
 
@@ -230,7 +230,7 @@ Risque :
 
 ### Fixtures d'événements webhook LINE
 
-Exemples probants :
+Exemples marquants :
 
 - `src/line/bot-handlers.test.ts`
 
@@ -240,13 +240,13 @@ Extraction probable :
 - `runLineEvent(...)`
 - `makeLineAccount(...)`
 
-Gain estimé :
+Économies attendues :
 
 - ~120-180 LOC
 
-### Telegram matrice d'auth de commande native
+### Matrice d'authentification des commandes natives Telegram
 
-Exemples probants :
+Exemples marquants :
 
 - `src/telegram/bot-native-commands.group-auth.test.ts`
 - `src/telegram/bot-native-commands.plugin-auth.test.ts`
@@ -254,16 +254,16 @@ Exemples probants :
 Extraction probable :
 
 - constructeur de contexte de forum
-- assistant d'assertion de message refusé
-- cas d'auth en tableau (table-driven)
+- assistant d'assertion denied-message
+- cas d'authentification table-driven
 
-Gain estimé :
+Économies attendues :
 
 - ~80-140 LOC
 
-### configuration du cycle de vie Zalo
+### Configuration du cycle de vie Zalo
 
-Exemples probants :
+Exemples marquants :
 
 - `extensions/zalo/src/monitor.lifecycle.test.ts`
 
@@ -271,13 +271,13 @@ Extraction probable :
 
 - harnais de configuration de moniteur partagé
 
-Gain estimé :
+Économies attendues :
 
 - ~50-90 LOC
 
-### tests d'option non prise en charge llm-context Brave
+### Tests d'option non prise en charge llm-context Brave
 
-Exemples probants :
+Exemples marquants :
 
 - `src/agents/tools/web-tools.enabled-defaults.test.ts`
 
@@ -285,18 +285,18 @@ Extraction probable :
 
 - matrice `it.each(...)`
 
-Gain estimé :
+Économies attendues :
 
 - ~30-50 LOC
 
 ## Ordre suggéré
 
-1. Boilerplate singleton d'exécution
-2. Nettoyage des clones exacts mineurs
-3. Extraction du constructeur de configuration et de sécurité
-4. Extraction d'assistants de test
-5. Extraction des étapes d'intégration
-6. Extraction de l'assistant du cycle de vie du moniteur
+1. Boilerplate de singleton d'exécution
+2. Petit nettoyage de clones exacts
+3. Extraction du générateur de configuration et de sécurité
+4. Extraction de l'assistant de test
+5. Extraction de l'étape Onboarding
+6. Extraction de l'assistant de cycle de vie du moniteur
 
 import fr from "/components/footer/fr.mdx";
 

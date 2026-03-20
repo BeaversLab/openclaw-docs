@@ -1,62 +1,62 @@
 ---
-summary: "Strict config validation + doctor-only migrations"
+summary: "嚴格配置驗證 + 僅限 Doctor 的遷移"
 read_when:
-  - Designing or implementing config validation behavior
-  - Working on config migrations or doctor workflows
-  - Handling plugin config schemas or plugin load gating
-title: "Strict Config Validation"
+  - 設計或實作配置驗證行為
+  - 處理配置遷移或 Doctor 工作流程
+  - 處理外掛配置綱要或外掛載入閘門
+title: "嚴格配置驗證"
 ---
 
-# Strict config validation (doctor-only migrations)
+# 嚴格配置驗證（僅限 Doctor 的遷移）
 
-## Goals
+## 目標
 
-- **Reject unknown config keys everywhere** (root + nested), except root `$schema` metadata.
-- **Reject plugin config without a schema**; don’t load that plugin.
-- **Remove legacy auto-migration on load**; migrations run via doctor only.
-- **Auto-run doctor (dry-run) on startup**; if invalid, block non-diagnostic commands.
+- **到處拒絕未知的配置金鑰**（根層級 + 巢狀層級），根層級 `$schema` 元資料除外。
+- **拒絕沒有綱要的外掛配置**；不要載入該外掛。
+- **移除載入時的舊版自動遷移**；遷移僅透過 Doctor 執行。
+- **在啟動時自動執行 Doctor（試運行）**；如果無效，封鎖非診斷指令。
 
-## Non-goals
+## 非目標
 
-- Backward compatibility on load (legacy keys do not auto-migrate).
-- Silent drops of unrecognized keys.
+- 載入時的向後相容性（舊版金鑰不會自動遷移）。
+- 靜默捨棄無法識別的金鑰。
 
-## Strict validation rules
+## 嚴格驗證規則
 
-- Config must match the schema exactly at every level.
-- Unknown keys are validation errors (no passthrough at root or nested), except root `$schema` when it is a string.
-- `plugins.entries.<id>.config` must be validated by the plugin’s schema.
-  - If a plugin lacks a schema, **reject plugin load** and surface a clear error.
-- Unknown `channels.<id>` keys are errors unless a plugin manifest declares the channel id.
-- Plugin manifests (`openclaw.plugin.json`) are required for all plugins.
+- 配置必須在每個層級都完全符合綱要。
+- 未知金鑰是驗證錯誤（根層級或巢狀層級都不允許通過），當根層級 `$schema` 是字串時除外。
+- `plugins.entries.<id>.config` 必須由外掛的綱要進行驗證。
+  - 如果外掛缺少綱要，**拒絕載入外掛**並顯示清楚的錯誤訊息。
+- 未知的 `channels.<id>` 金鑰是錯誤，除非外掛清單宣告了頻道 ID。
+- 外掛清單（`openclaw.plugin.json`）是所有外掛都需要的。
 
-## Plugin schema enforcement
+## 外掛綱要執行
 
-- Each plugin provides a strict JSON Schema for its config (inline in the manifest).
-- Plugin load flow:
-  1. Resolve plugin manifest + schema (`openclaw.plugin.json`).
-  2. Validate config against the schema.
-  3. If missing schema or invalid config: block plugin load, record error.
-- Error message includes:
-  - Plugin id
-  - Reason (missing schema / invalid config)
-  - Path(s) that failed validation
-- Disabled plugins keep their config, but Doctor + logs surface a warning.
+- 每個外掛都為其配置提供嚴格的 JSON Schema（內嵌於清單中）。
+- 外掛載入流程：
+  1. 解析外掛清單 + 綱要（`openclaw.plugin.json`）。
+  2. 根據綱要驗證配置。
+  3. 如果缺少綱要或配置無效：封鎖外掛載入，記錄錯誤。
+- 錯誤訊息包含：
+  - 外掛 ID
+  - 原因（缺少綱要 / 無效配置）
+  - 驗證失敗的路徑
+- 已停用的外掛會保留其配置，但 Doctor + 日誌會顯示警告。
 
-## Doctor flow
+## Doctor 流程
 
-- Doctor runs **every time** config is loaded (dry-run by default).
-- If config invalid:
-  - Print a summary + actionable errors.
-  - Instruct: `openclaw doctor --fix`.
-- `openclaw doctor --fix`:
-  - Applies migrations.
-  - Removes unknown keys.
-  - Writes updated config.
+- 每次載入配置時 Doctor 都會**執行**（預設為試運行）。
+- 如果配置無效：
+  - 列印摘要 + 可採取行動的錯誤。
+  - 指示：`openclaw doctor --fix`。
+- `openclaw doctor --fix`：
+  - 套用遷移。
+  - 移除未知金鑰。
+  - 寫入更新後的配置。
 
-## Command gating (when config is invalid)
+## 指令閘門（當配置無效時）
 
-Allowed (diagnostic-only):
+允許（僅限診斷）：
 
 - `openclaw doctor`
 - `openclaw logs`
@@ -65,32 +65,32 @@ Allowed (diagnostic-only):
 - `openclaw status`
 - `openclaw gateway status`
 
-其他所有操作必須強制失敗並顯示：“Config invalid. Run `openclaw doctor --fix`”。
+其他所有項目必須徹底失敗並顯示：“Config invalid. Run `openclaw doctor --fix`。”
 
 ## 錯誤 UX 格式
 
 - 單一摘要標頭。
-- 分組部分：
-  - 未知金鑰（完整路徑）
-  - 舊版金鑰 / 需要遷移
+- 分組區段：
+  - 未知鍵（完整路徑）
+  - 舊版鍵 / 需要遷移
   - 外掛程式載入失敗（外掛程式 ID + 原因 + 路徑）
 
 ## 實作接觸點
 
-- `src/config/zod-schema.ts`：移除根層級直通；全面使用嚴格物件。
-- `src/config/zod-schema.providers.ts`：確保嚴格的通道 Schema。
-- `src/config/validation.ts`：遇到未知金鑰時失敗；不要套用舊版遷移。
+- `src/config/zod-schema.ts`：移除根層級傳遞；到處使用嚴格物件。
+- `src/config/zod-schema.providers.ts`：確保嚴格的通道架構。
+- `src/config/validation.ts`：遇到未知鍵時失敗；不套用舊版遷移。
 - `src/config/io.ts`：移除舊版自動遷移；總是執行 doctor dry-run。
-- `src/config/legacy*.ts`：將使用僅限於 doctor。
-- `src/plugins/*`：新增 Schema 註冊表 + 閘道。
+- `src/config/legacy*.ts`：將使用方式移至僅限 doctor。
+- `src/plugins/*`：新增架構登錄檔 + 閘道。
 - `src/cli` 中的 CLI 指令閘道。
 
 ## 測試
 
-- 未知金鑰拒絕（根層級 + 巢狀）。
-- 外掛程式缺少 Schema → 阻止外掛程式載入並顯示明確錯誤。
-- 無效設定 → 阻止閘道啟動，診斷指令除外。
-- Doctor 自動 dry-run；`doctor --fix` 寫入更正後的設定。
+- 未知鍵拒絕（根層級 + 巢狀）。
+- 外掛程式缺少架構 → 外掛程式載入被阻擋並顯示清楚的錯誤。
+- 無效設定 → 閘道啟動被阻擋，診斷指令除外。
+- Doctor dry-run 自動；`doctor --fix` 寫入更正後的設定。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

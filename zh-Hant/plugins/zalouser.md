@@ -1,24 +1,24 @@
 ---
-summary: "Zalo Personal 外掛程式：透過原生 zca-js 進行 QR 登入與訊息傳遞（外掛程式安裝 + 頻道設定 + 工具）"
+summary: "Zalo Personal 外掛程式：透過原生 zca-js 進行 QR 登入 + 傳訊（外掛程式安裝 + 頻道設定 + 工具）"
 read_when:
-  - You want Zalo Personal (unofficial) support in OpenClaw
-  - You are configuring or developing the zalouser plugin
+  - 您想要在 OpenClaw 中獲得 Zalo Personal（非官方）支援
+  - 您正在設定或開發 zalouser 外掛程式
 title: "Zalo Personal 外掛程式"
 ---
 
 # Zalo Personal (外掛程式)
 
-透過外掛程式為 OpenClaw 提供 Zalo Personal 支援，使用原生 `zca-js` 自動化一般的 Zalo 使用者帳戶。
+透過外掛程式為 OpenClaw 提供 Zalo Personal 支援，使用原生 `zca-js` 來自動化一般的 Zalo 使用者帳戶。
 
-> **警告：** 非官方的自動化可能導致帳戶暫停或封鎖。使用風險請自行承擔。
+> **警告：** 非官方的自動化可能導致帳戶暫停或封鎖。使用風險自負。
 
 ## 命名
 
-頻道 ID 為 `zalouser`，以明確表示此自動化對象為 **Zalo 個人帳戶**（非官方）。我們將 `zalo` 保留給未來可能推出的官方 Zalo API 整合。
+頻道 ID 為 `zalouser`，以明確表示此自動化對象為 **個人 Zalo 使用者帳戶**（非官方）。我們保留 `zalo` 給未來可能推出的官方 Zalo API 整合。
 
 ## 執行位置
 
-此外掛程式在 **Gateway 處理程序內部** 執行。
+此外掛程式執行 **於 Gateway 程序內部**。
 
 如果您使用遠端 Gateway，請在 **執行 Gateway 的機器** 上安裝/設定它，然後重新啟動 Gateway。
 
@@ -32,7 +32,7 @@ title: "Zalo Personal 外掛程式"
 openclaw plugins install @openclaw/zalouser
 ```
 
-之後請重新啟動 Gateway。
+之後重新啟動 Gateway。
 
 ### 選項 B：從本機資料夾安裝（開發用）
 
@@ -41,7 +41,7 @@ openclaw plugins install ./extensions/zalouser
 cd ./extensions/zalouser && pnpm install
 ```
 
-之後請重新啟動 Gateway。
+之後重新啟動 Gateway。
 
 ## 設定
 
@@ -68,7 +68,7 @@ openclaw message send --channel zalouser --target <threadId> --message "Hello fr
 openclaw directory peers list --channel zalouser --query "name"
 ```
 
-## 代理程式工具
+## Agent 工具
 
 工具名稱：`zalouser`
 

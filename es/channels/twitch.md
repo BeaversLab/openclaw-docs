@@ -1,7 +1,7 @@
 ---
 summary: "Configuración y configuración del bot de chat de Twitch"
 read_when:
-  - Setting up Twitch chat integration for OpenClaw
+  - Configuración de la integración del chat de Twitch para OpenClaw
 title: "Twitch"
 ---
 
@@ -30,7 +30,7 @@ Detalles: [Plugins](/es/tools/plugin)
 ## Configuración rápida (principiante)
 
 1. Cree una cuenta de Twitch dedicada para el bot (o use una cuenta existente).
-2. Genere credenciales: [Twitch Token Generator](https://twitchtokengenerator.com/)
+2. Generar credenciales: [Generador de tokens de Twitch](https://twitchtokengenerator.com/)
    - Seleccione **Bot Token**
    - Verifique que los alcances `chat:read` y `chat:write` estén seleccionados
    - Copie el **Client ID** y el **Access Token**
@@ -41,7 +41,7 @@ Detalles: [Plugins](/es/tools/plugin)
    - Si se establecen ambos, la configuración tiene prioridad (el respaldo del entorno es solo para la cuenta predeterminada).
 5. Inicie la puerta de enlace.
 
-**⚠️ Importante:** Agregue control de acceso (`allowFrom` o `allowedRoles`) para evitar que usuarios no autorizados activen el bot. `requireMention` por defecto es `true`.
+**⚠️ Importante:** Agregue control de acceso (`allowFrom` o `allowedRoles`) para evitar que usuarios no autorizados activen el bot. `requireMention` se establece de forma predeterminada en `true`.
 
 Configuración mínima:
 
@@ -71,7 +71,7 @@ Configuración mínima:
 
 ### Generar credenciales
 
-Use [Twitch Token Generator](https://twitchtokengenerator.com/):
+Use [Generador de tokens de Twitch](https://twitchtokengenerator.com/):
 
 - Seleccione **Bot Token**
 - Verifique que los alcances `chat:read` y `chat:write` estén seleccionados
@@ -117,7 +117,7 @@ Si se establecen tanto el entorno como la configuración, la configuración tien
 }
 ```
 
-Prefiera `allowFrom` para una lista blanca estricta. Use `allowedRoles` en su lugar si desea un acceso basado en roles.
+Prefiera `allowFrom` para una lista de permitidos estricta. Use `allowedRoles` en su lugar si desea acceso basado en roles.
 
 **Roles disponibles:** `"moderator"`, `"owner"`, `"vip"`, `"subscriber"`, `"all"`.
 
@@ -127,9 +127,9 @@ Encuentre su ID de usuario de Twitch: [https://www.streamweasels.com/tools/conve
 
 ## Actualización de token (opcional)
 
-Los tokens de [Twitch Token Generator](https://twitchtokengenerator.com/) no se pueden actualizar automáticamente; regenérelos cuando caduquen.
+Los tokens de [Generador de tokens de Twitch](https://twitchtokengenerator.com/) no se pueden actualizar automáticamente; regenérelos cuando caduquen.
 
-Para la actualización automática de tokens, cree su propia aplicación de Twitch en [Twitch Developer Console](https://dev.twitch.tv/console) y agréguela a la configuración:
+Para la actualización automática de tokens, cree su propia aplicación de Twitch en [Consola para desarrolladores de Twitch](https://dev.twitch.tv/console) y agréguela a la configuración:
 
 ```json5
 {
@@ -146,7 +146,7 @@ El bot actualiza automáticamente los tokens antes de que caduquen y registra lo
 
 ## Soporte multicuenta
 
-Use `channels.twitch.accounts` con tokens por cuenta. Consulte [`gateway/configuration`](/es/gateway/configuration) para ver el patrón compartido.
+Use `channels.twitch.accounts` con tokens por cuenta. Consulte [`gateway/configuration`](/es/gateway/configuration) para el patrón compartido.
 
 Ejemplo (una cuenta de bot en dos canales):
 
@@ -211,8 +211,8 @@ Ejemplo (una cuenta de bot en dos canales):
 
 ### Acceso basado en roles (alternativa)
 
-`allowFrom` es una lista blanca estricta. Cuando se establece, solo se permiten esos ID de usuario.
-Si desea un acceso basado en roles, deje `allowFrom` sin establecer y configure `allowedRoles` en su lugar:
+`allowFrom` es una lista de permitidos estricta. Cuando se configura, solo se permiten esos ID de usuario.
+Si desea acceso basado en roles, deje `allowFrom` sin configurar y configure `allowedRoles` en su lugar:
 
 ```json5
 {
@@ -267,7 +267,7 @@ openclaw channels status --probe
 **"Error al conectar" o errores de autenticación:**
 
 - Verifique que `accessToken` sea el valor del token de acceso OAuth (generalmente comienza con el prefijo `oauth:`)
-- Verifique que el token tenga los ámbitos `chat:read` y `chat:write`
+- Compruebe que el token tiene los alcances `chat:read` y `chat:write`
 - Si utiliza la actualización del token, verifique que `clientSecret` y `refreshToken` estén configurados
 
 ### La actualización del token no funciona
@@ -290,12 +290,12 @@ Si ve "token refresh disabled (no refresh token)":
 
 - `username` - Nombre de usuario del bot
 - `accessToken` - Token de acceso OAuth con `chat:read` y `chat:write`
-- `clientId` - ID de cliente de Twitch (del Generador de tokens o su aplicación)
+- `clientId` - ID de cliente de Twitch (del generador de tokens o de su aplicación)
 - `channel` - Canal al que unirse (obligatorio)
 - `enabled` - Habilitar esta cuenta (predeterminado: `true`)
 - `clientSecret` - Opcional: Para la actualización automática del token
 - `refreshToken` - Opcional: Para la actualización automática del token
-- `expiresIn` - Expiración del token en segundos
+- `expiresIn` - Caducidad del token en segundos
 - `obtainmentTimestamp` - Marca de tiempo de obtención del token
 - `allowFrom` - Lista de permitidos de ID de usuario
 - `allowedRoles` - Control de acceso basado en roles (`"moderator" | "owner" | "vip" | "subscriber" | "all"`)
@@ -304,10 +304,10 @@ Si ve "token refresh disabled (no refresh token)":
 **Opciones del proveedor:**
 
 - `channels.twitch.enabled` - Habilitar/deshabilitar el inicio del canal
-- `channels.twitch.username` - Nombre de usuario del bot (configuración simplificada de cuenta única)
-- `channels.twitch.accessToken` - Token de acceso OAuth (configuración simplificada de cuenta única)
-- `channels.twitch.clientId` - ID de cliente de Twitch (configuración simplificada de cuenta única)
-- `channels.twitch.channel` - Canal al que unirse (configuración simplificada de cuenta única)
+- `channels.twitch.username` - Nombre de usuario del bot (configuración simplificada de una sola cuenta)
+- `channels.twitch.accessToken` - Token de acceso OAuth (configuración simplificada de una sola cuenta)
+- `channels.twitch.clientId` - ID de cliente de Twitch (configuración simplificada de una sola cuenta)
+- `channels.twitch.channel` - Canal al que unirse (configuración simplificada de una sola cuenta)
 - `channels.twitch.accounts.<accountName>` - Configuración multicuenta (todos los campos de cuenta anteriores)
 
 Ejemplo completo:

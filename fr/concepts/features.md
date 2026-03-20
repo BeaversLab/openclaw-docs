@@ -1,30 +1,30 @@
 ---
-summary: "Capacités d'OpenClaw sur les canaux, le routage, les médias et l'UX."
+summary: "Capacités d'OpenClaw pour les canaux, le routage, les médias et l'UX."
 read_when:
-  - You want a full list of what OpenClaw supports
-title: "Fonctionnalités"
+  - Vous souhaitez une liste complète de ce que OpenClaw prend en charge
+title: "Features"
 ---
 
 ## Points forts
 
 <Columns>
-  <Card title="Canaux" icon="message-square">
-    WhatsApp, Telegram, Discord et iMessage avec une seule passerelle.
+  <Card title="Channels" icon="message-square">
+    WhatsApp, Telegram, Discord et iMessage avec un seul Gateway.
   </Card>
   <Card title="Plugins" icon="plug">
-    Ajoutez Mattermost et plus encore avec des extensions.
+    Ajoutez Mattermost et plus encore grâce aux extensions.
   </Card>
-  <Card title="Routage" icon="route">
+  <Card title="Routing" icon="route">
     Routage multi-agent avec sessions isolées.
   </Card>
-  <Card title="Médias" icon="image">
+  <Card title="Media" icon="image">
     Images, audio et documents en entrée et en sortie.
   </Card>
-  <Card title="Apps et interface utilisateur" icon="monitor">
+  <Card title="Apps and UI" icon="monitor">
     Interface utilisateur de contrôle Web et application compagnon macOS.
   </Card>
-  <Card title="Nœuds mobiles" icon="smartphone">
-    Nœuds iOS et Android avec appairage, voix/chat et commandes riches.
+  <Card title="Mobile nodes" icon="smartphone">
+    Nœuds iOS et Android avec appairage, voix/discussion et commandes riches de périphérique.
   </Card>
 </Columns>
 
@@ -39,7 +39,7 @@ title: "Fonctionnalités"
 - Diffusion et découpage pour les longues réponses
 - Routage multi-agent pour des sessions isolées par espace de travail ou expéditeur
 - Authentification par abonnement pour Anthropic et OpenAI via OAuth
-- Sessions : les chats directs sont fusionnés dans un `main` partagé ; les groupes sont isolés
+- Sessions : les discussions directes s'effondrent dans un `main` partagé ; les groupes sont isolés
 - Support des discussions de groupe avec activation basée sur les mentions
 - Support multimédia pour les images, l'audio et les documents
 - Crochet optionnel de transcription des notes vocales

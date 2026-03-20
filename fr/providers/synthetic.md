@@ -1,5 +1,5 @@
 ---
-summary: "Utilisez l'API compatible Anthropic de Synthetic dans API"
+summary: "Use Synthetic's Anthropic-compatible API in OpenClaw"
 read_when:
   - You want to use Synthetic as a model provider
   - You need a Synthetic API key or base URL setup
@@ -8,25 +8,25 @@ title: "Synthetic"
 
 # Synthetic
 
-Synthetic expose des points de terminaison compatibles Anthropic. OpenClaw l'enregistre en tant que
-`synthetic` provider et utilise l'API Messages de Anthropic.
+Synthetic exposes Anthropic-compatible endpoints. OpenClaw registers it as the
+`synthetic` provider and uses the Anthropic Messages API.
 
-## Configuration rapide
+## Quick setup
 
-1. Définissez `SYNTHETIC_API_KEY` (ou exécutez l'assistant ci-dessous).
-2. Exécuter l'onboarding :
+1. Set `SYNTHETIC_API_KEY` (or run the wizard below).
+2. Run onboarding:
 
 ```bash
 openclaw onboard --auth-choice synthetic-api-key
 ```
 
-Le model par défaut est défini sur :
+The default model is set to:
 
 ```
 synthetic/hf:MiniMaxAI/MiniMax-M2.5
 ```
 
-## Exemple de configuration
+## Config example
 
 ```json5
 {
@@ -61,42 +61,41 @@ synthetic/hf:MiniMaxAI/MiniMax-M2.5
 }
 ```
 
-Remarque : Le client OpenClaw de Anthropic ajoute `/v1` à l'URL de base, utilisez donc
-`https://api.synthetic.new/anthropic` (pas `/anthropic/v1`). Si Synthetic modifie
-son URL de base, redéfinissez `models.providers.synthetic.baseUrl`.
+Note: OpenClaw's Anthropic client appends `/v1` to the base URL, so use
+`https://api.synthetic.new/anthropic` (not `/anthropic/v1`). If Synthetic changes
+its base URL, override `models.providers.synthetic.baseUrl`.
 
-## Catalogue de models
+## Model catalog
 
-Tous les models ci-dessous utilisent le coût `0` (entrée/sortie/cache).
+All models below use cost `0` (input/output/cache).
 
-| ID du model                                            | Fenêtre de contexte | Max tokens | Raisonnement | Entrée        |
-| ------------------------------------------------------ | ------------------- | ---------- | ------------ | ------------- |
-| `hf:MiniMaxAI/MiniMax-M2.5`                            | 192000              | 65536      | false        | texte         |
-| `hf:moonshotai/Kimi-K2-Thinking`                       | 256000              | 8192       | true         | texte         |
-| `hf:zai-org/GLM-4.7`                                   | 198000              | 128000     | false        | texte         |
-| `hf:deepseek-ai/DeepSeek-R1-0528`                      | 128000              | 8192       | false        | texte         |
-| `hf:deepseek-ai/DeepSeek-V3-0324`                      | 128000              | 8192       | false        | texte         |
-| `hf:deepseek-ai/DeepSeek-V3.1`                         | 128000              | 8192       | false        | texte         |
-| `hf:deepseek-ai/DeepSeek-V3.1-Terminus`                | 128000              | 8192       | false        | texte         |
-| `hf:deepseek-ai/DeepSeek-V3.2`                         | 159000              | 8192       | false        | texte         |
-| `hf:meta-llama/Llama-3.3-70B-Instruct`                 | 128000              | 8192       | false        | texte         |
-| `hf:meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | 524000              | 8192       | false        | texte         |
-| `hf:moonshotai/Kimi-K2-Instruct-0905`                  | 256000              | 8192       | false        | texte         |
-| `hf:openai/gpt-oss-120b`                               | 128000              | 8192       | false        | texte         |
-| `hf:Qwen/Qwen3-235B-A22B-Instruct-2507`                | 256000              | 8192       | false        | texte         |
-| `hf:Qwen/Qwen3-Coder-480B-A35B-Instruct`               | 256000              | 8192       | false        | texte         |
-| `hf:Qwen/Qwen3-VL-235B-A22B-Instruct`                  | 250000              | 8192       | false        | texte + image |
-| `hf:zai-org/GLM-4.5`                                   | 128000              | 128000     | false        | texte         |
-| `hf:zai-org/GLM-4.6`                                   | 198000              | 128000     | false        | texte         |
-| `hf:deepseek-ai/DeepSeek-V3`                           | 128000              | 8192       | false        | texte         |
-| `hf:Qwen/Qwen3-235B-A22B-Thinking-2507`                | 256000              | 8192       | true         | texte         |
+| Model ID                                               | Context window | Max tokens | Reasoning | Input        |
+| ------------------------------------------------------ | -------------- | ---------- | --------- | ------------ |
+| `hf:MiniMaxAI/MiniMax-M2.5`                            | 192000         | 65536      | false     | text         |
+| `hf:moonshotai/Kimi-K2-Thinking`                       | 256000         | 8192       | true      | text         |
+| `hf:zai-org/GLM-4.7`                                   | 198000         | 128000     | false     | text         |
+| `hf:deepseek-ai/DeepSeek-R1-0528`                      | 128000         | 8192       | false     | text         |
+| `hf:deepseek-ai/DeepSeek-V3-0324`                      | 128000         | 8192       | false     | text         |
+| `hf:deepseek-ai/DeepSeek-V3.1`                         | 128000         | 8192       | false     | text         |
+| `hf:deepseek-ai/DeepSeek-V3.1-Terminus`                | 128000         | 8192       | false     | text         |
+| `hf:deepseek-ai/DeepSeek-V3.2`                         | 159000         | 8192       | false     | text         |
+| `hf:meta-llama/Llama-3.3-70B-Instruct`                 | 128000         | 8192       | false     | text         |
+| `hf:meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | 524000         | 8192       | false     | text         |
+| `hf:moonshotai/Kimi-K2-Instruct-0905`                  | 256000         | 8192       | false     | text         |
+| `hf:openai/gpt-oss-120b`                               | 128000         | 8192       | false     | text         |
+| `hf:Qwen/Qwen3-235B-A22B-Instruct-2507`                | 256000         | 8192       | false     | text         |
+| `hf:Qwen/Qwen3-Coder-480B-A35B-Instruct`               | 256000         | 8192       | false     | text         |
+| `hf:Qwen/Qwen3-VL-235B-A22B-Instruct`                  | 250000         | 8192       | false     | text + image |
+| `hf:zai-org/GLM-4.5`                                   | 128000         | 128000     | false     | text         |
+| `hf:zai-org/GLM-4.6`                                   | 198000         | 128000     | false     | text         |
+| `hf:deepseek-ai/DeepSeek-V3`                           | 128000         | 8192       | false     | text         |
+| `hf:Qwen/Qwen3-235B-A22B-Thinking-2507`                | 256000         | 8192       | true      | text         |
 
 ## Notes
 
-- Les références de models utilisent `synthetic/<modelId>`.
-- Si vous activez une liste blanche de modèles (`agents.defaults.models`), ajoutez chaque modèle que vous
-  prévoyez d'utiliser.
-- Voir [Model providers](/fr/concepts/model-providers) pour les règles du provider.
+- Model refs use `synthetic/<modelId>`.
+- Si vous activez une liste d'autorisation de modèles (`agents.defaults.models`), ajoutez chaque modèle que vous prévoyez d'utiliser.
+- Consultez [Fournisseurs de modèles](/fr/concepts/model-providers) pour connaître les règles du provider.
 
 import fr from "/components/footer/fr.mdx";
 

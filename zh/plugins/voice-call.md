@@ -1,34 +1,35 @@
 ---
-summary: "Voice Call 插件：通过 Twilio/Telnyx/Plivo 进行呼出 + 呼入（插件安装 + 配置 + CLI）"
+summary: "Voice Call 插件：通过 Twilio/Telnyx/Plivo 进行呼出 + 呼入通话（插件安装 + 配置 + CLI）"
 read_when:
-  - You want to place an outbound voice call from OpenClaw
-  - You are configuring or developing the voice-call plugin
-title: "Voice Call 插件"
+  - 您想从 OpenClaw 拨打语音电话
+  - 您正在配置或开发 voice-call 插件
+title: "Voice Call Plugin"
 ---
 
-# 语音通话（插件）
+# Voice Call (插件)
 
-通过插件为 OpenClaw 提供语音通话功能。支持通过 inbound 策略进行 outbound 通知和多轮对话。
+通过插件为 OpenClaw 提供语音通话功能。支持呼出通知和
+基于呼入策略的多轮对话。
 
-当前提供商：
+当前的提供商：
 
-- `twilio` (可编程语音 + 媒体流)
-- `telnyx` (呼叫控制 v2)
-- `plivo` (语音 API + XML 转接 + GetInput 语音)
-- `mock` (开发/无网络)
+- `twilio` (Programmable Voice + Media Streams)
+- `telnyx` (Call Control v2)
+- `plivo` (Voice API + XML transfer + GetInput speech)
+- `mock` (dev/no network)
 
 快速思维模型：
 
 - 安装插件
-- 重启 Gateway 网关
+- 重启 Gateway(网关)
 - 在 `plugins.entries.voice-call.config` 下进行配置
 - 使用 `openclaw voicecall ...` 或 `voice_call` 工具
 
-## 运行位置（本地与远程）
+## 运行位置（本地 vs 远程）
 
-语音通话插件运行在**Gateway 网关 进程内部**。
+Voice Call 插件在 **Gateway(网关)进程内部** 运行。
 
-如果您使用远程 Gateway 网关，请在**运行 Gateway 网关 的机器上**安装/配置该插件，然后重启 Gateway 网关 以加载它。
+如果您使用远程 Gateway(网关)，请在 **运行 Gateway(网关) 的机器上** 安装/配置插件，然后重启 Gateway(网关) 以加载它。
 
 ## 安装
 
@@ -38,16 +39,16 @@ title: "Voice Call 插件"
 openclaw plugins install @openclaw/voice-call
 ```
 
-安装后重启 Gateway 网关。
+之后重启 Gateway(网关)。
 
-### 选项 B：从本地文件夹安装（开发，不复制）
+### 选项 B：从本地文件夹安装（开发版，不复制）
 
 ```bash
 openclaw plugins install ./extensions/voice-call
 cd ./extensions/voice-call && pnpm install
 ```
 
-安装后重启 Gateway 网关。
+之后重启 Gateway(网关)。
 
 ## 配置
 
@@ -118,33 +119,33 @@ cd ./extensions/voice-call && pnpm install
 }
 ```
 
-注意：
+备注：
 
-- Twilio/Telnyx 需要一个**可公开访问**的 webhook URL。
-- Plivo 需要一个**可公开访问**的 webhook URL。
-- `mock` 是一个本地开发提供商（不进行网络调用）。
+- Twilio/Telnyx 需要一个**可公开访问的** Webhook URL。
+- Plivo 需要一个**可公开访问的** Webhook URL。
+- `mock` 是一个本地开发提供商（无网络调用）。
 - 除非 `skipSignatureVerification` 为 true，否则 Telnyx 需要 `telnyx.publicKey` (或 `TELNYX_PUBLIC_KEY`)。
 - `skipSignatureVerification` 仅用于本地测试。
 - 如果您使用 ngrok 免费版，请将 `publicUrl` 设置为确切的 ngrok URL；始终强制执行签名验证。
-- 仅当 `tunnel.provider="ngrok"` 和 `serve.bind` 为环回（ngrok 本地代理）时，`tunnel.allowNgrokFreeTierLoopbackBypass: true` 才允许具有无效签名的 Twilio Webhook。仅用于本地开发。
-- Ngrok 免费版 URL 可能会更改或添加插页式行为；如果 `publicUrl` 发生偏移，Twilio 签名将失败。对于生产环境，建议使用稳定的域名或 Tailscale funnel。
+- `tunnel.allowNgrokFreeTierLoopbackBypass: true` 仅在 `tunnel.provider="ngrok"` 且 `serve.bind` 为环回（ngrok 本地代理）时才允许具有无效签名的 Twilio Webhook。仅用于本地开发。
+- Ngrok 免费版 URL 可能会变更或添加插页行为；如果 `publicUrl` 发生偏移，Twilio 签名将验证失败。在生产环境中，建议使用稳定的域名或 Tailscale funnel。
 - 流式传输安全默认值：
-  - `streaming.preStartTimeoutMs` 关闭从未发送有效 `start` 帧的套接字。
-  - `streaming.maxPendingConnections` 限制未通过身份验证的启动前套接字总数。
-  - `streaming.maxPendingConnectionsPerIp` 限制每个源 IP 的未通过身份验证的启动前套接字数量。
-  - `streaming.maxConnections` 限制打开的媒体流套接字（待处理 + 活动）总数。
+  - `streaming.preStartTimeoutMs` 会关闭从未发送有效 `start` 帧的 socket。
+  - `streaming.maxPendingConnections` 限制未通过身份验证的启动前 socket 总数。
+  - `streaming.maxPendingConnectionsPerIp` 限制每个源 IP 的未通过身份验证的启动前 socket 数量。
+  - `streaming.maxConnections` 限制打开的媒体流 socket 总数（包括待处理和活动状态）。
 
-## 过期呼叫清理器
+## 过期通话清理器
 
-使用 `staleCallReaperSeconds` 来结束从未收到终止性 Webhook 的呼叫
-（例如，从未完成的通知模式呼叫）。默认值为 `0`
+使用 `staleCallReaperSeconds` 结束从未收到最终 webho​​ok 的通话
+（例如，从未完成的通知模式通话）。默认值为 `0`
 （已禁用）。
 
-建议范围：
+推荐范围：
 
-- **生产环境：** 通知风格流程为 `120`–`300` 秒。
-- 将此值保持**高于 `maxDurationSeconds`**，以便正常呼叫能够
-  完成。一个很好的起点是 `maxDurationSeconds + 30–60` 秒。
+- **生产环境：** 通知类流程建议 `120`–`300` 秒。
+- 保持此值 **高于 `maxDurationSeconds`**，以便正常通话能够
+  完成。一个好的起点是 `maxDurationSeconds + 30–60` 秒。
 
 示例：
 
@@ -165,22 +166,19 @@ cd ./extensions/voice-call && pnpm install
 
 ## Webhook 安全性
 
-当代理或隧道位于 Gateway(网关) 前面时，插件会重构用于签名验证的公开 URL。这些选项控制信任哪些转发的标头。
+当代理或隧道位于 Gateway(网关) 前面时，插件会重建用于签名验证的公共 URL。这些选项控制信任哪些转发的标头。
 
-`webhookSecurity.allowedHosts` 将转发标头中的主机列入允许列表。
+`webhookSecurity.allowedHosts` 将转发标头中的主机列入白名单。
 
-`webhookSecurity.trustForwardingHeaders` 信任没有允许列表的转发标头。
+`webhookSecurity.trustForwardingHeaders` 在没有白名单的情况下信任转发标头。
 
-`webhookSecurity.trustedProxyIPs` 仅在请求
-远程 IP 与列表匹配时信任转发标头。
+`webhookSecurity.trustedProxyIPs` 仅在请求的远程 IP 与列表匹配时才信任转发标头。
 
-Twilio 和 Plivo 已启用 Webhook 重放保护。重播的有效 Webhook
-请求将被确认，但会跳过副作用。
+已为 Twilio 和 Plivo 启用 Webhook 重放保护。重放的有效 webhook 请求将被确认，但会跳过副作用处理。
 
-Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此
-过期/重播的语音回调无法满足较新的待处理转录轮次。
+Twilio 对话轮次在 `<Gather>` 回调中包含每轮令牌，因此过时/重放的语音回调无法满足较新的待处理转录轮次。
 
-具有稳定公共主机的示例：
+使用稳定公共主机的示例：
 
 ```json5
 {
@@ -199,9 +197,10 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此
 }
 ```
 
-## 呼叫的 TTS
+## 通话 TTS
 
-语音通话使用核心 `messages.tts` 配置（OpenAI 或 ElevenLabs）在通话中流式传输语音。您可以在插件配置下使用**相同的结构**覆盖它——它会与 `messages.tts` 进行深度合并。
+Voice Call 使用核心 `messages.tts` 配置进行通话的流式语音传输。您可以在插件配置下使用
+**相同的结构** 覆盖它 —— 它会与 `messages.tts` 进行深度合并。
 
 ```json5
 {
@@ -217,8 +216,8 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此
 
 注意：
 
-- **语音通话忽略 Edge TTS**（电话音频需要 PCM；Edge 输出不可靠）。
-- 当启用 Twilio 媒体流时使用核心 TTS；否则通话回退到提供商原生语音。
+- **语音通话会忽略 Microsoft 语音**（电话音频需要 PCM；当前的 Microsoft 传输不公开电话 PCM 输出）。
+- 当启用 Twilio 媒体流时使用核心 TTS；否则通话回退到提供商的原生语音。
 
 ### 更多示例
 
@@ -258,7 +257,7 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此
 }
 ```
 
-仅覆盖通话的 OpenAI 模型（深度合并示例）：
+仅针对通话覆盖 OpenAI 模型（深度合并示例）：
 
 ```json5
 {
@@ -291,9 +290,9 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此
 }
 ```
 
-`inboundPolicy: "allowlist"` 是一个低可信度的来电 ID 筛选器。该插件对提供商提供的 `From` 值进行标准化处理，并将其与 `allowFrom` 进行比较。Webhook 验证用于认证提供商的传递和负载完整性，但它不能证明 PSTN/VoIP 来电号码的所有权。请将 `allowFrom` 视为来电 ID 筛选，而非强来电身份验证。
+`inboundPolicy: "allowlist"` 是一种低保证的来电者 ID 筛选。插件会对提供商提供的 `From` 值进行规范化，并将其与 `allowFrom` 进行比较。Webhook 验证可以验证提供商的交付和载荷完整性，但不能证明 PSTN/VoIP 来电者号码的所有权。请将 `allowFrom` 视为来电者 ID 筛选，而不是强有力的来电者身份。
 
-自动响应使用代理系统。通过以下方式调整：
+自动响应使用 agent 系统。使用以下参数进行调整：
 
 - `responseModel`
 - `responseSystemPrompt`
@@ -311,7 +310,7 @@ openclaw voicecall tail
 openclaw voicecall expose --mode funnel
 ```
 
-## 代理工具
+## Agent 工具
 
 工具名称：`voice_call`
 
@@ -323,9 +322,9 @@ openclaw voicecall expose --mode funnel
 - `end_call` (callId)
 - `get_status` (callId)
 
-此仓库在 `skills/voice-call/SKILL.md` 处附带了相应的技能文档。
+此仓库在 `skills/voice-call/SKILL.md` 处附带了一个匹配的技能文档。
 
-## Gateway(网关) RPC
+## 网关 RPC
 
 - `voicecall.initiate` (`to?`, `message`, `mode?`)
 - `voicecall.continue` (`callId`, `message`)

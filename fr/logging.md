@@ -1,22 +1,22 @@
 ---
-summary: "Aperçu de la journalisation : journaux de fichiers, sortie console, suivi en direct via CLI et l'interface de contrôle"
+summary: "Vue d'ensemble de la journalisation : journaux de fichiers, sortie console, suivi via CLI, et l'interface de contrôle"
 read_when:
-  - You need a beginner-friendly overview of logging
-  - You want to configure log levels or formats
-  - You are troubleshooting and need to find logs quickly
+  - Vous avez besoin d'une vue d'ensemble de la journalisation adaptée aux débutants
+  - Vous souhaitez configurer les niveaux ou formats de journalisation
+  - Vous êtes en phase de résolution de problèmes et devez trouver les journaux rapidement
 title: "Journalisation"
 ---
 
 # Journalisation
 
-OpenClaw enregistre les journaux à deux endroits :
+OpenClaw journalise en deux endroits :
 
 - **Journaux de fichiers** (lignes JSON) écrits par le Gateway.
 - **Sortie console** affichée dans les terminaux et l'interface de contrôle.
 
-Cette page explique où se trouvent les journaux, comment les lire et comment configurer les niveaux et formats de journalisation.
+Cette page explique où se trouvent les journaux, comment les lire, et comment configurer les niveaux et formats de journalisation.
 
-## Emplacement des journaux
+## Où se trouvent les journaux
 
 Par défaut, le Gateway écrit un fichier journal rotatif sous :
 
@@ -24,7 +24,7 @@ Par défaut, le Gateway écrit un fichier journal rotatif sous :
 
 La date utilise le fuseau horaire local de l'hôte de la passerelle.
 
-Vous pouvez remplacer cela dans `~/.openclaw/openclaw.json` :
+Vous pouvez modifier cela dans `~/.openclaw/openclaw.json` :
 
 ```json
 {
@@ -34,11 +34,11 @@ Vous pouvez remplacer cela dans `~/.openclaw/openclaw.json` :
 }
 ```
 
-## Lire les journaux
+## Comment lire les journaux
 
 ### CLI : suivi en direct (recommandé)
 
-Utilisez la CLI pour suivre le fichier journal de la passerelle via RPC :
+Utilisez le CLI pour suivre le fichier journal de la passerelle via RPC :
 
 ```bash
 openclaw logs --follow
@@ -46,49 +46,50 @@ openclaw logs --follow
 
 Modes de sortie :
 
-- **Sessions TTY** : lignes de journalisation structurées, colorées et élégantes.
+- **Sessions TTY** : lignes de journal jolies, colorées et structurées.
 - **Sessions non-TTY** : texte brut.
 - `--json` : JSON délimité par des lignes (un événement de journal par ligne).
 - `--plain` : forcer le texte brut dans les sessions TTY.
 - `--no-color` : désactiver les couleurs ANSI.
 
-En mode JSON, la CLI émet des objets balisés `type` :
+En mode JSON, le CLI émet des objets balisés `type` :
 
 - `meta` : métadonnées du flux (fichier, curseur, taille)
 - `log` : entrée de journal analysée
-- `notice` : indices de troncation / rotation
+- `notice` : indications de troncation / rotation
 - `raw` : ligne de journal non analysée
 
-Si le Gateway est injoignable, la CLI imprime un court conseil pour exécuter :
+Si le Gateway est inaccessible, le CLI imprime une courte indication pour exécuter :
 
 ```bash
 openclaw doctor
 ```
 
-### Interface de contrôle (web)
+### Control UI (web)
 
-L'onglet **Logs** de l'interface de contrôle suit le même fichier en utilisant `logs.tail`.
+L'onglet **Logs** de l'interface de contrôle effectue le suivi du même fichier en utilisant `logs.tail`.
 Voir [/web/control-ui](/fr/web/control-ui) pour savoir comment l'ouvrir.
 
-### Journaux de canal uniquement
+### Journaux exclusifs au channel
 
-Pour filtrer l'activité du canal (WhatsApp/Telegram/etc), utilisez :
+Pour filtrer l'activité du channel (WhatsApp/Telegram/etc), utilisez :
 
 ```bash
 openclaw channels logs --channel whatsapp
 ```
 
-## Formats de journalisation
+## Formats de journal
 
-### Journaux de fichiers (JSONL)
+### Fichiers de journal (JSONL)
 
-Chaque ligne du fichier journal est un objet JSON. La CLI et l'interface de contrôle analysent ces entrées pour afficher une sortie structurée (heure, niveau, sous-système, message).
+Chaque ligne du fichier journal est un objet JSON. Le CLI et l'interface de contrôle (Control UI) analysent ces
+entrées pour afficher une sortie structurée (heure, niveau, sous-système, message).
 
 ### Sortie console
 
-Les journaux de la console sont **sensibles au TTY** et formatés pour la lisibilité :
+Les journaux de la console sont **conscients du TTY** (TTY-aware) et formatés pour une meilleure lisibilité :
 
-- Préfixes de sous-système (ex. `gateway/channels/whatsapp`)
+- Préfixes de sous-système (par ex. `gateway/channels/whatsapp`)
 - Coloration par niveau (info/warn/error)
 - Mode compact ou JSON facultatif
 
@@ -113,10 +114,10 @@ Toute la configuration de la journalisation se trouve sous `logging` dans `~/.op
 
 ### Niveaux de journalisation
 
-- `logging.level` : niveau des **journaux de fichiers** (JSONL).
+- `logging.level` : niveau des **fichiers de journal** (JSONL).
 - `logging.consoleLevel` : niveau de verbosité de la **console**.
 
-Vous pouvez remplacer les deux via la variable d'environnement **`OPENCLAW_LOG_LEVEL`** (par exemple `OPENCLAW_LOG_LEVEL=debug`). La variable d'environnement a priorité sur le fichier de configuration, vous pouvez donc augmenter la verbosité pour une seule exécution sans modifier `openclaw.json`. Vous pouvez également passer l'option globale CLI **`--log-level <level>`** (par exemple, `openclaw --log-level debug gateway run`), qui remplace la variable d'environnement pour cette commande.
+Vous pouvez remplacer les deux via la variable d'environnement **`OPENCLAW_LOG_LEVEL`** (par ex. `OPENCLAW_LOG_LEVEL=debug`). La variable d'environnement a priorité sur le fichier de configuration, vous pouvez donc augmenter la verbosité pour une seule exécution sans modifier `openclaw.json`. Vous pouvez également passer l'option globale CLI **`--log-level <level>`** (par exemple, `openclaw --log-level debug gateway run`), qui remplace la variable d'environnement pour cette commande.
 
 `--verbose` n'affecte que la sortie de la console ; il ne modifie pas les niveaux de journalisation des fichiers.
 
@@ -124,49 +125,50 @@ Vous pouvez remplacer les deux via la variable d'environnement **`OPENCLAW_LOG_L
 
 `logging.consoleStyle` :
 
-- `pretty` : convivial pour l'humain, coloré, avec horodatages.
-- `compact` : sortie plus compacte (idéal pour les sessions longues).
+- `pretty` : convivial, coloré, avec horodatages.
+- `compact` : sortie plus compacte (idéal pour les longues sessions).
 - `json` : JSON par ligne (pour les processeurs de journaux).
 
-### Masquage
+### Rédaction
 
-Les résumés d'outils peuvent masquer les jetons sensibles avant qu'ils n'atteignent la console :
+Les résumés d'outils peuvent masquer des jetons sensibles avant qu'ils n'atteignent la console :
 
 - `logging.redactSensitive` : `off` | `tools` (par défaut : `tools`)
 - `logging.redactPatterns` : liste de chaînes regex pour remplacer l'ensemble par défaut
 
-Le masquage affecte **uniquement la sortie de la console** et ne modifie pas les journaux de fichiers.
+Le masquage affecte uniquement la **sortie console** et ne modifie pas les journaux de fichiers.
 
 ## Diagnostics + OpenTelemetry
 
-Les diagnostics sont des événements structurés, lisibles par machine pour les exécutions de modèle **et**
-la télémétrie du flux de messages (webhooks, mise en file d'attente, état de session). Ils ne **remplacent pas**
+Les diagnostics sont des événements structurés lisibles par machine pour les exécutions de modèle **et**
+la télémétrie du flux de messages (webhooks, mise en file d'attente, état de session). Ils ne remplacent **pas**
 les journaux ; ils existent pour alimenter les métriques, les traces et autres exportateurs.
 
-Les événements de diagnostic sont émis en processus, mais les exportateurs ne s'attachent que lorsque le diagnostic et le module d'exportation sont activés.
+Les événements de diagnostic sont émis en cours de processus, mais les exportateurs ne s'attachent que lorsque
+les diagnostics et le plugin d'exportation sont activés.
 
-### OpenTelemetry contre OTLP
+### OpenTelemetry vs OTLP
 
-- **OpenTelemetry (OTel)** : le modèle de données + les SDK pour les traces, les métriques et les journaux.
-- **OTLP** : le protocole filaire utilisé pour exporter les données OTel vers un collecteur/un backend.
-- OpenClaw exporte via **OTLP/HTTP (protobuf)** aujourd'hui.
+- **OpenTelemetry (OTel)** : le modèle de données + SDK pour les traces, les métriques et les journaux.
+- **OTLP** : le protocole réseau utilisé pour exporter les données OTel vers un collecteur/un backend.
+- OpenClaw exporte aujourd'hui via **OTLP/HTTP (protobuf)**.
 
 ### Signaux exportés
 
 - **Métriques** : compteurs + histogrammes (utilisation des jetons, flux des messages, mise en file d'attente).
-- **Traces** : intervalles pour l'utilisation du modèle + le traitement des webhooks/messages.
-- **Journaux** : exportés via OTLP lorsque `diagnostics.otel.logs` est activé. Le volume de journaux peut être élevé ; gardez à l'esprit `logging.level` et les filtres de l'exportateur.
+- **Traces** : spans pour l'utilisation du modèle + le traitement des webhooks/messages.
+- **Journaux** : exportés via OTLP lorsque `diagnostics.otel.logs` est activé. Le volume des journaux peut être élevé ; gardez `logging.level` et les filtres de l'exportateur à l'esprit.
 
 ### Catalogue des événements de diagnostic
 
 Utilisation du modèle :
 
-- `model.usage` : jetons, coût, durée, contexte, provider/model/channel, identifiants de session.
+- `model.usage` : jetons, coût, durée, contexte, fournisseur/modèle/canal, identifiants de session.
 
 Flux des messages :
 
-- `webhook.received` : entrée webhook par channel.
-- `webhook.processed` : webhook géré + durée.
+- `webhook.received` : entrée webhook par canal.
+- `webhook.processed` : webhook traité + durée.
 - `webhook.error` : erreurs du gestionnaire de webhook.
 - `message.queued` : message mis en file d'attente pour traitement.
 - `message.processed` : résultat + durée + erreur facultative.
@@ -177,12 +179,12 @@ File d'attente + session :
 - `queue.lane.dequeue` : retrait de la voie de la file de commandes + temps d'attente.
 - `session.state` : transition de l'état de la session + raison.
 - `session.stuck` : avertissement de session bloquée + âge.
-- `run.attempt` : métadonnées de nouvelle tentative/tentative d'exécution.
+- `run.attempt` : métadonnées de tentative/nouvelle tentative d'exécution.
 - `diagnostic.heartbeat` : compteurs agrégés (webhooks/file d'attente/session).
 
-### Activer le diagnostic (sans exportateur)
+### Activer le diagnostic (pas d'exportateur)
 
-Utilisez ceci si vous souhaitez que les événements de diagnostic soient disponibles pour les modules ou les récepteurs personnalisés :
+Utilisez cette option si vous souhaitez que les événements de diagnostic soient disponibles pour les plugins ou les récepteurs personnalisés :
 
 ```json
 {
@@ -195,7 +197,7 @@ Utilisez ceci si vous souhaitez que les événements de diagnostic soient dispon
 ### Indicateurs de diagnostic (journaux ciblés)
 
 Utilisez des indicateurs pour activer des journaux de débogage supplémentaires et ciblés sans augmenter `logging.level`.
-Les indicateurs ne sont pas sensibles à la casse et prennent en charge les caractères génériques (par exemple `telegram.*` ou `*`).
+Les indicateurs ne sont pas sensibles à la casse et prennent en charge les caractères génériques (par ex. `telegram.*` ou `*`).
 
 ```json
 {
@@ -205,21 +207,22 @@ Les indicateurs ne sont pas sensibles à la casse et prennent en charge les cara
 }
 ```
 
-Substitution d'environnement ( ponctuelle) :
+Surcharge de variable d'environnement (ponctuelle) :
 
 ```
 OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 ```
 
-Notes :
+Remarques :
 
-- Les journaux des indicateurs (Flag logs) vont vers le fichier journal standard (identique à `logging.file`).
+- Les journaux d'indicateurs sont envoyés vers le fichier journal standard (identique à `logging.file`).
 - La sortie est toujours masquée conformément à `logging.redactSensitive`.
 - Guide complet : [/diagnostics/flags](/fr/diagnostics/flags).
 
 ### Exporter vers OpenTelemetry
 
-Les diagnostics peuvent être exportés via le plugin `diagnostics-otel` (OTLP/HTTP). Cela fonctionne avec tout collecteur ou backend OpenTelemetry acceptant OTLP/HTTP.
+Les diagnostics peuvent être exportés via le plugin `diagnostics-otel` (OTLP/HTTP). Cela
+fonctionne avec n'importe quel collecteur ou backend OpenTelemetry acceptant OTLP/HTTP.
 
 ```json
 {
@@ -248,12 +251,13 @@ Les diagnostics peuvent être exportés via le plugin `diagnostics-otel` (OTLP/H
 }
 ```
 
-Notes :
+Remarques :
 
 - Vous pouvez également activer le plugin avec `openclaw plugins enable diagnostics-otel`.
 - `protocol` prend actuellement uniquement en charge `http/protobuf`. `grpc` est ignoré.
-- Les métriques incluent l'utilisation des jetons, le coût, la taille du contexte, la durée d'exécution et les compteurs/histogrammes de flux de messages (webhooks, mise en file d'attente, état de la session, profondeur d'attente/attente).
-- Les traces/métriques peuvent être activées ou désactivées avec `traces` / `metrics` (par défaut : activé). Les traces incluent les spans d'utilisation du modèle ainsi que les spans de traitement des webhooks/messages lorsqu'elles sont activées.
+- Les métriques incluent l'utilisation des jetons, le coût, la taille du contexte, la durée d'exécution, ainsi que les
+  compteurs/histogrammes de flux de messages (webhooks, mise en file d'attente, état de la session, profondeur/attente de la file).
+- Les traces/métriques peuvent être activées/désactivées avec `traces` / `metrics` (par défaut : activé). Les traces incluent les spans d'utilisation du modèle ainsi que les spans de traitement des webhooks/messages lorsqu'elles sont activées.
 - Définissez `headers` lorsque votre collecteur nécessite une authentification.
 - Variables d'environnement prises en charge : `OTEL_EXPORTER_OTLP_ENDPOINT`,
   `OTEL_SERVICE_NAME`, `OTEL_EXPORTER_OTLP_PROTOCOL`.
@@ -266,9 +270,9 @@ Utilisation du modèle :
   `openclaw.provider`, `openclaw.model`)
 - `openclaw.cost.usd` (compteur, attributs : `openclaw.channel`, `openclaw.provider`,
   `openclaw.model`)
-- `openclaw.run.duration_ms` (histogramme, attributs : `openclaw.channel`,
+- `openclaw.run.duration_ms` (histogramme, attrs : `openclaw.channel`,
   `openclaw.provider`, `openclaw.model`)
-- `openclaw.context.tokens` (histogramme, attributs : `openclaw.context`,
+- `openclaw.context.tokens` (histogramme, attrs : `openclaw.context`,
   `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
 
 Flux de messages :
@@ -295,15 +299,15 @@ Files d'attente + sessions :
 - `openclaw.queue.wait_ms` (histogramme, attrs : `openclaw.lane`)
 - `openclaw.session.state` (compteur, attrs : `openclaw.state`, `openclaw.reason`)
 - `openclaw.session.stuck` (compteur, attrs : `openclaw.state`)
-- `openclaw.session.stuck_age_ms` (histogramme, attrs : `openclaw.state`)
-- `openclaw.run.attempt` (compteur, attrs : `openclaw.attempt`)
+- `openclaw.session.stuck_age_ms` (histogram, attrs : `openclaw.state`)
+- `openclaw.run.attempt` (counter, attrs : `openclaw.attempt`)
 
 ### Spans exportés (noms + attributs clés)
 
 - `openclaw.model.usage`
   - `openclaw.channel`, `openclaw.provider`, `openclaw.model`
   - `openclaw.sessionKey`, `openclaw.sessionId`
-  - `openclaw.tokens.*` (entrée/sorture/cache*lecture/cache*écriture/total)
+  - `openclaw.tokens.*` (input/output/cache_read/cache_write/total)
 - `openclaw.webhook.processed`
   - `openclaw.channel`, `openclaw.webhook`, `openclaw.chatId`
 - `openclaw.webhook.error`
@@ -317,10 +321,10 @@ Files d'attente + sessions :
   - `openclaw.state`, `openclaw.ageMs`, `openclaw.queueDepth`,
     `openclaw.sessionKey`, `openclaw.sessionId`
 
-### Échantillonnage + vidage
+### Échantillonnage et vidage
 
-- Échantillonnage des traces : `diagnostics.otel.sampleRate` (0,0–1,0, spans racines uniquement).
-- Intervalle d'export des métriques : `diagnostics.otel.flushIntervalMs` (min 1000 ms).
+- Échantillonnage des traces : `diagnostics.otel.sampleRate` (0.0–1.0, spans racines uniquement).
+- Intervalle d'exportation des métriques : `diagnostics.otel.flushIntervalMs` (min 1000 ms).
 
 ### Notes sur le protocole
 
@@ -328,20 +332,18 @@ Files d'attente + sessions :
   `OTEL_EXPORTER_OTLP_ENDPOINT`.
 - Si le point de terminaison contient déjà `/v1/traces` ou `/v1/metrics`, il est utilisé tel quel.
 - Si le point de terminaison contient déjà `/v1/logs`, il est utilisé tel quel pour les journaux.
-- `diagnostics.otel.logs` active l'export des journaux OTLP pour la sortie de l'enregistreur principal.
+- `diagnostics.otel.logs` active l'export des journaux OTLP pour la sortie de journalisation principale.
 
 ### Comportement d'export des journaux
 
 - Les journaux OTLP utilisent les mêmes enregistrements structurés que ceux écrits dans `logging.file`.
-- Respecter `logging.level` (niveau de journal fichier). Le masquage de la console ne s'applique **pas**
-  aux journaux OTLP.
-- Les installations à fort volume devraient privilégier l'échantillonnage/filtrage du collecteur OTLP.
+- Respecter `logging.level` (niveau de journalisation fichier). La rédaction de la console ne **s'applique pas** aux journaux OTLP.
+- Les installations à fort volume devraient privilégier l'échantillonnage/le filtrage du collecteur OTLP.
 
 ## Conseils de dépannage
 
 - **Gateway injoignable ?** Exécutez d'abord `openclaw doctor`.
-- **Journaux vides ?** Vérifiez que le Gateway est en cours d'exécution et écrit dans le chemin de fichier
-  indiqué dans `logging.file`.
+- **Journaux vides ?** Vérifiez que le Gateway est en cours d'exécution et qu'il écrit dans le chemin de fichier spécifié dans `logging.file`.
 - **Besoin de plus de détails ?** Définissez `logging.level` sur `debug` ou `trace` et réessayez.
 
 import fr from "/components/footer/fr.mdx";

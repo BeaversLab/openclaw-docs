@@ -1,51 +1,47 @@
 ---
 summary: "macOS 上的 Gateway 執行時（外部 launchd 服務）"
 read_when:
-  - Packaging OpenClaw.app
-  - Debugging the macOS gateway launchd service
-  - Installing the gateway CLI for macOS
+  - 封裝 OpenClaw.app
+  - 偵錯 macOS gateway launchd 服務
+  - 安裝 macOS 的 gateway CLI
 title: "macOS 上的 Gateway"
 ---
 
 # macOS 上的 Gateway（外部 launchd）
 
-OpenClaw.app 不再捆綁 Node/Bun 或 Gateway 執行時。macOS 應用程式
-期望安裝 **外部** `openclaw` CLI，不會將 Gateway 生成為
-子進程，而是管理一個每使用者 launchd 服務以保持 Gateway
-運行（如果已有本地 Gateway 正在運行，則連接至該進程）。
+OpenClaw.app 不再內建 Node/Bun 或 Gateway 執行時。macOS app 預期安裝**外部** `openclaw` CLI，不會將 Gateway 作為子程序生成，而是管理一個每個使用者的 launchd 服務以保持 Gateway 運行（如果已經有本機 Gateway 在運行，則會連接至該 Gateway）。
 
-## 安裝 CLI（本地模式所需）
+## 安裝 CLI（本機模式所需）
 
-Mac 上的預設執行時為 Node 24。目前為 `22.16+` 的 Node 22 LTS 仍可用於相容性。然後全域安裝 `openclaw`：
+Mac 上的預設執行時為 Node 24。目前的 `22.16+` 之 Node 22 LTS 仍可用於相容性。然後全域安裝 `openclaw`：
 
 ```bash
 npm install -g openclaw@<version>
 ```
 
-macOS 應用程式的 **安裝 CLI** 按鈕透過 npm/pnpm 執行相同的流程（不建議將 bun 用於 Gateway 執行時）。
+macOS app 的 **Install CLI** 按鈕會透過 npm/pnpm 執行相同的流程（不建議將 bun 用於 Gateway 執行時）。
 
 ## Launchd（Gateway 作為 LaunchAgent）
 
 標籤：
 
-- `ai.openclaw.gateway` （或 `ai.openclaw.<profile>`；舊版 `com.openclaw.*` 可能會保留）
+- `ai.openclaw.gateway`（或 `ai.openclaw.<profile>`；舊版 `com.openclaw.*` 可能仍會保留）
 
-Plist 位置（每使用者）：
+Plist 位置（每個使用者）：
 
 - `~/Library/LaunchAgents/ai.openclaw.gateway.plist`
   （或 `~/Library/LaunchAgents/ai.openclaw.<profile>.plist`）
 
-管理器：
+管理員：
 
-- macOS 應用程式負責在本地模式下安裝/更新 LaunchAgent。
+- macOS app 在本機模式中擁有 LaunchAgent 的安裝/更新權限。
 - CLI 也可以安裝它：`openclaw gateway install`。
 
 行為：
 
 - 「OpenClaw Active」會啟用/停用 LaunchAgent。
-- 結束應用程式 **不會** 停止 gateway（launchd 會使其保持運行）。
-- 如果 Gateway 已在設定的連接埠上運行，應用程式將
-  連接至它，而不是啟動新的進程。
+- 結束 App **不會**停止 gateway（launchd 會讓它保持運行）。
+- 如果 Gateway 已經在設定的連接埠上運行，app 將會連接至它，而不是啟動新的 Gateway。
 
 日誌記錄：
 
@@ -53,10 +49,9 @@ Plist 位置（每使用者）：
 
 ## 版本相容性
 
-macOS 應用程式會檢查 gateway 版本與自身版本是否相符。如果它們
-不相容，請更新全域 CLI 以符合應用程式版本。
+macOS app 會檢查 gateway 版本與其本身版本的相容性。如果彼此不相容，請更新全域 CLI 以符合 app 版本。
 
-## 冒煙測試
+## 基本檢查
 
 ```bash
 openclaw --version

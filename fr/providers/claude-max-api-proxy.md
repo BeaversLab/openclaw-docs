@@ -1,13 +1,13 @@
 ---
 summary: "Proxy communautaire pour exposer les identifiants d'abonnement Claude en tant que point de terminaison compatible OpenAI"
 read_when:
-  - You want to use Claude Max subscription with OpenAI-compatible tools
-  - You want a local API server that wraps Claude Code CLI
-  - You want to evaluate subscription-based vs API-key-based Anthropic access
-title: "Proxy API de Claude Max"
+  - Vous souhaitez utiliser votre abonnement Claude Max avec des outils compatibles OpenAI
+  - Vous souhaitez un serveur API local qui encapsule le CLI Claude Code
+  - Vous souhaitez évaluer l'accès par abonnement versus l'accès par clé API chez Anthropic
+title: "Proxy API Claude Max"
 ---
 
-# Proxy API de Claude Max
+# Proxy API Claude Max
 
 **claude-max-api-proxy** est un outil communautaire qui expose votre abonnement Claude Max/Pro en tant que point de terminaison OpenAI compatible API. Cela vous permet d'utiliser votre abonnement avec n'importe quel outil prenant en charge le format OpenAI API.
 
@@ -19,12 +19,12 @@ title: "Proxy API de Claude Max"
 
 ## Pourquoi l'utiliser ?
 
-| Approche              | Coût                                                           | Idéal pour                                            |
-| --------------------- | -------------------------------------------------------------- | ----------------------------------------------------- |
-| Anthropic API         | Payez par jeton (~15 $/M d'entrée, 75 $/M de sortie pour Opus) | Applications de production, volume élevé              |
-| Abonnement Claude Max | Forfait mensuel de 200 $                                       | Usage personnel, développement, utilisation illimitée |
+| Approche              | Coût                                                              | Idéal pour                                     |
+| --------------------- | ----------------------------------------------------------------- | ---------------------------------------------- |
+| Anthropic API         | Paiement par jeton (~15 $/M d'entrée, 75 $/M de sortie pour Opus) | Applications de production, volume élevé       |
+| Abonnement Claude Max | 200 $/mois forfaitaire                                            | Usage personnel, développement, usage illimité |
 
-Si vous disposez d'un abonnement Claude Max et souhaitez l'utiliser avec des outils compatibles OpenAI, ce proxy peut réduire les coûts pour certains workflows. Les clés API restent la voie la plus claire en termes de politique pour une utilisation en production.
+Si vous avez un abonnement Claude Max et souhaitez l'utiliser avec des outils compatibles OpenAI, ce proxy peut réduire les coûts pour certains workflows. Les clés API restent la voie la plus claire en termes de politique pour un usage en production.
 
 ## Fonctionnement
 
@@ -36,7 +36,7 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
 Le proxy :
 
 1. Accepte les requêtes au format OpenAI à `http://localhost:3456/v1/chat/completions`
-2. Les convertit en commandes CLI de Claude Code
+2. Les convertit en commandes CLI Claude Code
 3. Renvoie les réponses au format OpenAI (streaming pris en charge)
 
 ## Installation
@@ -143,15 +143,15 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
 
 ## Notes
 
-- C'est un **outil communautaire**, non officiellement pris en charge par Anthropic ou OpenClaw
-- Nécessite un abonnement Claude Max/Pro actif avec Claude Code CLI authentifié
+- Il s'agit d'un **outil communautaire**, non officiellement pris en charge par Anthropic ou OpenClaw
+- Nécessite un abonnement Claude Max/Pro actif avec le CLI Claude Code authentifié
 - Le proxy s'exécute localement et n'envoie aucune donnée à des serveurs tiers
 - Les réponses en streaming sont entièrement prises en charge
 
 ## Voir aussi
 
-- [Fournisseur Anthropic](/fr/providers/anthropic) - Intégration native OpenClaw avec le jeton de configuration Claude ou les clés API
-- [Fournisseur OpenAI](/fr/providers/openai) - Pour les abonnements OpenAI/Codex
+- [provider Anthropic](/fr/providers/anthropic) - Intégration native OpenClaw avec le jeton de configuration Claude ou les clés API
+- [provider OpenAI](/fr/providers/openai) - Pour les abonnements OpenAI/Codex
 
 import fr from "/components/footer/fr.mdx";
 

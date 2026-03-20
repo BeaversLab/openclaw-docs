@@ -1,5 +1,5 @@
 ---
-title: 在 Render 上部署
+title: 部署到 Render
 ---
 
 使用基础设施即代码在 Render 上部署 OpenClaw。包含的 `render.yaml` Blueprint 以声明方式定义了您的整个堆栈，包括服务、磁盘、环境变量，因此您可以一键部署，并将基础设施与代码一起进行版本控制。
@@ -29,7 +29,7 @@ title: 在 Render 上部署
 
 ## 了解 Blueprint
 
-Render Blueprints 是用于定义基础设施的 YAML 文件。此仓库中的 `render.yaml` 配置了运行 OpenClaw 所需的一切：
+Render 蓝图是用于定义基础设施的 YAML 文件。本仓库中的 `render.yaml` 配置了运行 OpenClaw 所需的一切：
 
 ```yaml
 services:
@@ -73,7 +73,7 @@ services:
 | 入门         | 从不           | 1GB+   | 个人使用、小团队   |
 | 标准版及以上 | 从不           | 1GB+   | 生产环境、多个频道 |
 
-该 Blueprint 默认为 `starter`。要使用免费层级，请在您 fork 仓库的 `render.yaml` 中更改 `plan: free`（但请注意：没有持久磁盘意味着每次部署时配置都会重置）。
+该蓝图默认为 `starter`。要使用免费套餐，请在你的 fork 仓库的 `render.yaml` 中修改 `plan: free`（但请注意：无持久化磁盘意味着每次部署时配置会重置）。
 
 ## 部署后
 
@@ -152,8 +152,7 @@ https://<your-service>.onrender.com/setup/export
 
 ### 重新部署后数据丢失
 
-这发生在免费套餐（无持久化磁盘）上。升级到付费套餐，或
-定期通过 `/setup/export` 导出您的配置。
+这种情况发生在免费套餐上（无持久化磁盘）。升级到付费套餐，或者定期通过 `/setup/export` 导出你的配置。
 
 ### 健康检查失败
 

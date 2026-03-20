@@ -1,10 +1,10 @@
 ---
-summary: "Enviar un mensaje de WhatsApp a múltiples agentes"
+summary: "Transmitir un mensaje de WhatsApp a múltiples agentes"
 read_when:
-  - Configuring broadcast groups
-  - Debugging multi-agent replies in WhatsApp
+  - Configuración de grupos de transmisión
+  - Depuración de respuestas de múltiples agentes en WhatsApp
 status: experimental
-title: "Grupos de difusión"
+title: "Broadcast Groups"
 ---
 
 # Grupos de difusión
@@ -70,10 +70,10 @@ Agents:
 
 ### Configuración básica
 
-Añada una sección `broadcast` de nivel superior (junto a `bindings`). Las claves son identificadores de pares de WhatsApp:
+Añada una sección de nivel superior `broadcast` (junto a `bindings`). Las claves son IDs de pares de WhatsApp:
 
 - chats de grupo: JID de grupo (ej. `120363403215116621@g.us`)
-- Mensajes directos: número de teléfono E.164 (ej. `+15551234567`)
+- MDs: número de teléfono E.164 (ej. `+15551234567`)
 
 ```json
 {
@@ -155,7 +155,7 @@ Los agentes procesan en orden (uno espera a que el anterior termine):
 ### Flujo de mensajes
 
 1. Un **mensaje entrante** llega a un grupo de WhatsApp
-2. **Verificación de difusión**: El sistema verifica si el ID del par está en `broadcast`
+2. **Verificación de transmisión:** El sistema comprueba si el ID del par está en `broadcast`
 3. **Si está en la lista de difusión**:
    - Todos los agentes listados procesan el mensaje
    - Cada agente tiene su propia clave de sesión y contexto aislado
@@ -220,7 +220,7 @@ Diseñe cada agente con una única y clara responsabilidad:
 ```
 
 ✅ **Bueno:** Cada agente tiene un trabajo  
-❌ **Malo:** Un agente genérico de "ayuda-desarrollo"
+❌ **Malo:** Un agente genérico "dev-helper"
 
 ### 2. Usar Nombres Descriptivos
 
@@ -257,7 +257,7 @@ Dé a los agentes solo las herramientas que necesitan:
 
 Con muchos agentes, considere:
 
-- Usar `"strategy": "parallel"` (por defecto) para mayor velocidad
+- Usar `"strategy": "parallel"` (por defecto) para velocidad
 - Limitar los grupos de difusión a 5-10 agentes
 - Usar modelos más rápidos para agentes más simples
 
@@ -300,7 +300,7 @@ Los grupos de difusión funcionan junto con el enrutamiento existente:
 ```
 
 - `GROUP_A`: Solo alfred responde (enrutamiento normal)
-- `GROUP_B`: agent1 Y agent2 responden (difusión)
+- `GROUP_B`: agent1 Y agent2 responden (transmisión)
 
 **Precedencia:** `broadcast` tiene prioridad sobre `bindings`.
 
@@ -322,7 +322,7 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 
 ### Solo Responde Un Agente
 
-**Causa:** Es posible que el ID del par esté en `bindings` pero no en `broadcast`.
+**Causa:** El ID de par podría estar en `bindings` pero no en `broadcast`.
 
 **Solución:** Agréguelo a la configuración de transmisión o elimínelo de los enlaces.
 
@@ -378,7 +378,7 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 - code-formatter: "Sangría corregida y sugerencias de tipo agregadas"
 - security-scanner: "⚠️ Vulnerabilidad de inyección SQL en la línea 12"
 - test-coverage: "La cobertura es del 45%, faltan pruebas para casos de error"
-- docs-checker: "Falta docstring para la función `process_data`"
+- docs-checker: "Falta el docstring para la función `process_data`"
 
 ### Ejemplo 2: Soporte multilingüe
 
@@ -414,8 +414,8 @@ interface OpenClawConfig {
 ### Campos
 
 - `strategy` (opcional): Cómo procesar los agentes
-  - `"parallel"` (predeterminado): Todos los agentes procesan simultáneamente
-  - `"sequential"`: Los agentes procesan en orden de matriz
+  - `"parallel"` (por defecto): Todos los agentes procesan simultáneamente
+  - `"sequential"`: Los agentes procesan en el orden del array
 - `[peerId]`: JID de grupo de WhatsApp, número E.164 u otro ID de par
   - Valor: Matriz de ID de agentes que deben procesar mensajes
 
@@ -437,9 +437,9 @@ Funciones planificadas:
 
 ## Ver también
 
-- [Configuración multiagente](/es/tools/multi-agent-sandbox-tools)
-- [Configuración de enrutamiento](/es/channels/channel-routing)
-- [Gestión de sesiones](/es/concepts/session)
+- [Configuración de Multiagente](/es/tools/multi-agent-sandbox-tools)
+- [Configuración de Enrutamiento](/es/channels/channel-routing)
+- [Gestión de Sesiones](/es/concepts/session)
 
 import es from "/components/footer/es.mdx";
 

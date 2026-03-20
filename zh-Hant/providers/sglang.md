@@ -1,35 +1,35 @@
 ---
-summary: "使用 SGLang 執行 OpenClaw（OpenAI 相容的自託管伺服器）"
+summary: "使用 SGLang (OpenAI 相容的自託管伺服器) 執行 OpenClaw"
 read_when:
-  - You want to run OpenClaw against a local SGLang server
-  - You want OpenAI-compatible /v1 endpoints with your own models
+  - 您想要對本機 SGLang 伺服器執行 OpenClaw
+  - 您想要使用自己的模型獲得 OpenAI 相容的 /v1 端點
 title: "SGLang"
 ---
 
 # SGLang
 
-SGLang 可以透過 **OpenAI 相容** 的 HTTP API 服務開源模型。
-OpenClaw 可以使用 `openai-completions` API 連接到 SGLang。
+SGLang 可以透過 **OpenAI 相容** 的 HTTP API 提供開源模型。
+OpenClaw 可以使用 `openai-completions` API 連線到 SGLang。
 
-當您使用 `SGLANG_API_KEY` 加入選用（如果您的伺服器不強制執行驗證，則任何值皆有效）
-且未定義明確的 `models.providers.sglang` 項目時，OpenClaw 也可以從 SGLang **自動探索** 可用模型。
+當您使用 `SGLANG_API_KEY` 選擇加入時（如果您的伺服器不強制執行驗證，則任何值皆可），
+且未定義明確的 `models.providers.sglang` 項目，OpenClaw 也可以從 SGLang **自動探索** 可用的模型。
 
 ## 快速開始
 
 1. 使用 OpenAI 相容伺服器啟動 SGLang。
 
 您的基底 URL 應公開 `/v1` 端點（例如 `/v1/models`、
-`/v1/chat/completions`）。SGLang 通常運行於：
+`/v1/chat/completions`）。SGLang 通常運作於：
 
 - `http://127.0.0.1:30000/v1`
 
-2. 加入選用（如果未設定驗證，任何值皆有效）：
+2. 選擇加入（如果未設定驗證，則任何值皆可）：
 
 ```bash
 export SGLANG_API_KEY="sglang-local"
 ```
 
-3. 執行上架程式並選擇 `SGLang`，或直接設定模型：
+3. 執行上架引導並選擇 `SGLang`，或直接設定模型：
 
 ```bash
 openclaw onboard
@@ -47,7 +47,7 @@ openclaw onboard
 
 ## 模型探索（隱含提供者）
 
-當設定 `SGLANG_API_KEY`（或存在驗證設定檔）且您 **不**
+當設定了 `SGLANG_API_KEY`（或存在驗證設定檔）且您**未**
 定義 `models.providers.sglang` 時，OpenClaw 將會查詢：
 
 - `GET http://127.0.0.1:30000/v1/models`
@@ -59,11 +59,11 @@ openclaw onboard
 
 ## 明確設定（手動模型）
 
-在以下情況使用明確設定：
+在下列情況使用明確設定：
 
-- SGLang 運行於不同的主機/連接埠。
+- SGLang 運作於不同的主機/連接埠。
 - 您想要固定 `contextWindow`/`maxTokens` 值。
-- 您的伺服器需要真實的 API 金鑰（或您想要控制標頭）。
+- 您的伺服器需要真實的 API 金鑰（或者您想要控制標頭）。
 
 ```json5
 {
@@ -98,8 +98,9 @@ openclaw onboard
 curl http://127.0.0.1:30000/v1/models
 ```
 
-- 如果請求因驗證錯誤而失敗，請設定符合您伺服器設定的真實 `SGLANG_API_KEY`，
-  或在 `models.providers.sglang` 下明確設定提供者。
+- 如果請求因驗證錯誤而失敗，請設定符合
+  伺服器設定的真實 `SGLANG_API_KEY`，或在
+  `models.providers.sglang` 下明確設定提供者。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

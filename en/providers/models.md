@@ -39,6 +39,7 @@ model as `provider/model`.
 - [Venice (Venice AI)](/en/providers/venice)
 - [Amazon Bedrock](/en/providers/bedrock)
 - [Qianfan](/en/providers/qianfan)
+- [xAI](/en/providers/xai)
 
 For the full provider catalog (xAI, Groq, Mistral, etc.) and advanced configuration,
 see [Model providers](/en/concepts/model-providers).

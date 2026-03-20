@@ -1,8 +1,8 @@
 ---
-summary: "WebSocket 网关架构、组件和客户端流程"
+summary: "WebSocket gateway architecture, components, and client flows"
 read_when:
   - Working on gateway protocol, clients, or transports
-title: "Gateway 网关 架构"
+title: "Gateway Architecture"
 ---
 
 # Gateway 网关 架构
@@ -11,16 +11,18 @@ title: "Gateway 网关 架构"
 
 ## 概述
 
-- 单个长期运行的 **Gateway(网关)** 拥有所有消息传递表面（通过 WhatsApp 的 Baileys，通过 Telegram 的 grammY，Slack，Discord，Signal，iMessage，WebChat）。
-- 控制平面客户端（macOS 应用、CLI、Web UI、自动化）通过 **WebSocket** 连接到
-  Gateway(网关)，地址为配置的绑定主机（默认
-  `127.0.0.1:18789`）。
-- **节点**（macOS/iOS/Android/headless）也通过 **WebSocket** 连接，但使用显式的功能/命令声明 `role: node`。
+- A single long‑lived **Gateway** owns all messaging surfaces (WhatsApp via
+  Baileys, Telegram via grammY, Slack, Discord, Signal, iMessage, WebChat).
+- Control-plane clients (macOS app, CLI, web UI, automations) connect to the
+  Gateway over **WebSocket** on the configured bind host (default
+  `127.0.0.1:18789`).
+- **Nodes** (macOS/iOS/Android/headless) also connect over **WebSocket**, but
+  declare `role: node` with explicit caps/commands.
 - 每个主机一个 Gateway(网关)；它是唯一打开 WhatsApp 会话的地方。
 - **canvas host** 由 Gateway(网关) HTTP 服务器提供，位于：
-  - `/__openclaw__/canvas/`（代理可编辑的 HTML/CSS/JS）
-  - `/__openclaw__/a2ui/` (A2UI 主机)
-    它使用与 Gateway(网关) 相同的端口（默认为 `18789`）。
+  - `/__openclaw__/canvas/` (agent-editable HTML/CSS/JS)
+  - `/__openclaw__/a2ui/` (A2UI host)
+    It uses the same port as the Gateway (default `18789`).
 
 ## 组件和流程
 
@@ -29,28 +31,30 @@ title: "Gateway 网关 架构"
 - 维护提供商连接。
 - 公开类型化的 WS API（请求、响应、服务器推送事件）。
 - 根据 JSON Schema 验证传入帧。
-- 发出事件，如 `agent`、`chat`、`presence`、`health`、`heartbeat`、`cron`。
+- Emits events like `agent`, `chat`, `presence`, `health`, `heartbeat`, `cron`.
 
 ### 客户端（mac 应用 / CLI / Web 管理后台）
 
 - 每个客户端一个 WS 连接。
-- 发送请求（`health`、`status`、`send`、`agent`、`system-presence`）。
-- 订阅事件（`tick`、`agent`、`presence`、`shutdown`）。
+- Send requests (`health`, `status`, `send`, `agent`, `system-presence`).
+- Subscribe to events (`tick`, `agent`, `presence`, `shutdown`).
 
 ### 节点（macOS / iOS / Android / 无头模式）
 
-- 使用 `role: node` 连接到 **同一个 WS 服务器**。
-- 在 `connect` 中提供设备身份；配对是 **基于设备的**（角色 `node`），并且批准存储在设备配对存储中。
-- 公开 `canvas.*`、`camera.*`、`screen.record`、`location.get` 等命令。
+- Connect to the **same WS server** with `role: node`.
+- Provide a device identity in `connect`; pairing is **device‑based** (role `node`) and
+  approval lives in the device pairing store.
+- Expose commands like `canvas.*`, `camera.*`, `screen.record`, `location.get`.
 
 协议详情：
 
-- [Gateway(网关) 协议](/zh/gateway/protocol)
+- [Gateway protocol](/zh/gateway/protocol)
 
 ### WebChat
 
 - 使用 Gateway(网关) WS API 获取聊天记录和发送消息的静态 UI。
-- 在远程设置中，通过与其他客户端相同的 SSH/Tailscale 隧道进行连接。
+- In remote setups, connects through the same SSH/Tailscale tunnel as other
+  clients.
 
 ## 连接生命周期（单个客户端）
 
@@ -76,26 +80,27 @@ sequenceDiagram
 ## 线路协议（摘要）
 
 - 传输方式：WebSocket，包含 JSON 负载的文本帧。
-- 第一帧**必须**是 `connect`。
+- First frame **must** be `connect`.
 - 握手之后：
-  - 请求：`{type:"req", id, method, params}` → `{type:"res", id, ok, payload|error}`
-  - 事件：`{type:"event", event, payload, seq?, stateVersion?}`
-- 如果设置了 `OPENCLAW_GATEWAY_TOKEN`（或 `--token`），`connect.params.auth.token` 必须匹配，否则套接字将关闭。
-- 具有副作用的方法（`send`、`agent`）需要幂等性密钥以安全重试；服务器保留短期去重缓存。
-- 节点必须在 `connect` 中包含 `role: "node"` 以及功能/命令/权限。
+  - Requests: `{type:"req", id, method, params}` → `{type:"res", id, ok, payload|error}`
+  - Events: `{type:"event", event, payload, seq?, stateVersion?}`
+- 如果设置了 `OPENCLAW_GATEWAY_TOKEN`（或 `--token`），则 `connect.params.auth.token`
+  必须匹配，否则套接字将关闭。
+- 为了避免副作用方法（`send`、`agent`）安全重试，需要幂等键；服务器会保留一个短期的去重缓存。
+- 节点必须在 `connect` 中包含 `role: "node"` 以及 caps/commands/permissions。
 
 ## 配对 + 本地信任
 
-- 所有 WS 客户端（操作员 + 节点）都在 `connect` 上包含**设备身份**。
-- 新的设备 ID 需要配对批准；Gateway 为后续连接颁发一个 **device token**。
-- 本地连接（环回或网关主机自己的 tailnet 地址）可以自动批准，以保持同主机体验流畅。
-- 所有连接都必须对 `connect.challenge` nonce 进行签名。
-- 签名负载 `v3` 还绑定了 `platform` + `deviceFamily`；网关在重新连接时会锁定已配对的元数据，如果元数据发生变化则需要修复配对。
+- 所有 WS 客户端（操作员 + 节点）都会在 `connect` 上包含一个 **设备身份**。
+- 新的设备 ID 需要配对批准；Gateway 会为后续连接颁发一个 **设备令牌**。
+- **本地**连接（环回或网关主机自己的 tailnet 地址）可以自动批准，以保持同主机体验的流畅。
+- 所有连接必须对 `connect.challenge` nonce 进行签名。
+- 签名载荷 `v3` 还绑定了 `platform` + `deviceFamily`；网关在重连时会固定已配对的元数据，如果元数据发生更改，则需要修复配对。
 - 非本地连接仍需要显式批准。
-- Gateway(网关) 认证 (`gateway.auth.*`) 仍然适用于 **所有** 连接，无论是本地还是远程。
+- Gateway 认证（`gateway.auth.*`）仍然适用于 **所有** 连接，无论是本地还是远程。
 
-详情：[Gateway(网关) 协议](/zh/gateway/protocol)、[配对](/zh/channels/pairing)、
-[安全性](/zh/gateway/security)。
+详情：[Gateway 协议](/zh/gateway/protocol)、[配对](/zh/channels/pairing)、
+[安全](/zh/gateway/security)。
 
 ## Protocol typing and codegen
 
@@ -118,7 +123,7 @@ sequenceDiagram
 ## Operations snapshot
 
 - 启动：`openclaw gateway`（前台，日志输出到 stdout）。
-- 健康检查：通过 WS 使用 `health`（也包含在 `hello-ok` 中）。
+- 健康检查：通过 WS 进行 `health`（也包含在 `hello-ok` 中）。
 - 监控：使用 launchd/systemd 进行自动重启。
 
 ## Invariants

@@ -1,16 +1,16 @@
 ---
-summary: "Appliquer des correctifs multi-fichiers avec le tool apply_patch"
+summary: "Appliquer des correctifs multi-fichiers avec l'outil apply_patch"
 read_when:
-  - You need structured file edits across multiple files
-  - You want to document or debug patch-based edits
-title: "Tool apply_patch"
+  - Vous avez besoin de modifications de fichiers structurées sur plusieurs fichiers
+  - Vous souhaitez documenter ou déboguer des modifications basées sur des correctifs
+title: "Outil apply_patch"
 ---
 
-# tool apply_patch
+# outil apply_patch
 
-Appliquer des modifications de fichiers à l'aide d'un format de correctif structuré. C'est idéal pour les modifications multi-fichiers ou multi-hunk où un seul appel `edit` serait fragile.
+Appliquer des modifications de fichiers en utilisant un format de correctif structuré. C'est idéal pour des modifications multi-fichiers ou multi-hunks où un seul appel `edit` serait fragile.
 
-L'tool accepte une seule chaîne `input` qui encapsule une ou plusieurs opérations de fichiers :
+L'outil accepte une seule chaîne `input` qui encapsule une ou plusieurs opérations de fichiers :
 
 ```
 *** Begin Patch
@@ -27,16 +27,16 @@ L'tool accepte une seule chaîne `input` qui encapsule une ou plusieurs opérati
 
 ## Paramètres
 
-- `input` (requis) : Contenu complet du correctif, y compris `*** Begin Patch` et `*** End Patch`.
+- `input` (requis) : Contenu complet du correctif incluant `*** Begin Patch` et `*** End Patch`.
 
 ## Notes
 
 - Les chemins de correctif prennent en charge les chemins relatifs (à partir du répertoire de l'espace de travail) et les chemins absolus.
-- `tools.exec.applyPatch.workspaceOnly` est défini par défaut sur `true` (contenu dans l'espace de travail). Définissez-le sur `false` uniquement si vous souhaitez intentionnellement que `apply_patch` écrive/supprime en dehors du répertoire de l'espace de travail.
+- `tools.exec.applyPatch.workspaceOnly` est `true` par défaut (limité à l'espace de travail). Définissez-le sur `false` uniquement si vous souhaitez volontairement que `apply_patch` écrive/supprime en dehors du répertoire de l'espace de travail.
 - Utilisez `*** Move to:` dans un hunk `*** Update File:` pour renommer des fichiers.
-- `*** End of File` marque une insertion en fin de fichier (EOF uniquement) si nécessaire.
-- Expérimental et désactivé par défaut. Activez avec `tools.exec.applyPatch.enabled`.
-- OpenAI uniquement (y compris OpenAI Codex). Optionnellement limité par le modèle via `tools.exec.applyPatch.allowModels`.
+- `*** End of File` marque une insertion en fin de fichier uniquement si nécessaire.
+- Expérimental et désactivé par défaut. Activez-le avec `tools.exec.applyPatch.enabled`.
+- OpenAI-uniquement (y compris OpenAI Codex). Optionnellement restreindre par modèle via `tools.exec.applyPatch.allowModels`.
 - La configuration se trouve uniquement sous `tools.exec`.
 
 ## Exemple

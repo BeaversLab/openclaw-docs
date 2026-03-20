@@ -1,7 +1,7 @@
 ---
 summary: "Origine du projet, contributeurs et licence."
 read_when:
-  - You want the project backstory or contributor credits
+  - Vous souhaitez connaître les origines du projet ou les crédits des contributeurs
 title: "Crédits"
 ---
 
@@ -11,8 +11,8 @@ OpenClaw = CLAW + TARDIS, car chaque homard de l'espace a besoin d'une machine s
 
 ## Crédits
 
-- **Peter Steinberger** ([@steipete](https://x.com/steipete)) - Créateur, souffleur d'homards
-- **Mario Zechner** ([@badlogicc](https://x.com/badlogicgames)) - Créateur de Pi, testeur de pénétration de sécurité
+- **Peter Steinberger** ([@steipete](https://x.com/steipete)) - Créateur, chuchoteur de homards
+- **Mario Zechner** ([@badlogicc](https://x.com/badlogicgames)) - Créateur de Pi, testeur de pénération de sécurité
 - **Clawd** - L'homard de l'espace qui a exigé un meilleur nom
 
 ## Contributeurs principaux

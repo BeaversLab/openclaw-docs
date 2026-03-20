@@ -1,14 +1,14 @@
 ---
-summary: "Référence de la CLI pour `openclaw reset` (réinitialiser l'état/la configuration locale)"
+summary: "Référence de la CLI pour `openclaw reset` (réinitialiser l'état/config local)"
 read_when:
-  - You want to wipe local state while keeping the CLI installed
-  - You want a dry-run of what would be removed
+  - Vous souhaitez effacer l'état local tout en gardant la CLI installée
+  - Vous souhaitez un essai à blanc (dry-run) de ce qui serait supprimé
 title: "reset"
 ---
 
 # `openclaw reset`
 
-Réinitialiser la configuration/l'état locaux (garde la CLI installée).
+Réinitialise la configuration/l'état local (garde la CLI installée).
 
 ```bash
 openclaw backup create
@@ -17,7 +17,7 @@ openclaw reset --dry-run
 openclaw reset --scope config+creds+sessions --yes --non-interactive
 ```
 
-Exécutez d'abord `openclaw backup create` si vous souhaitez une snapshot restaurable avant de supprimer l'état local.
+Exécutez `openclaw backup create` d'abord si vous souhaitez une instantanée (snapshot) restorable avant de supprimer l'état local.
 
 import fr from "/components/footer/fr.mdx";
 

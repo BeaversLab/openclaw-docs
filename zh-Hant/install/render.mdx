@@ -1,5 +1,5 @@
 ---
-title: Deploy on Render
+title: 在 Render 上部署
 ---
 
 使用基礎設施即代碼在 Render 上部署 OpenClaw。包含的 `render.yaml` 藍圖以聲明式方式定義了您的整個技術堆疊，包括服務、磁碟和環境變量，因此您可以透過單擊進行部署，並將您的基礎設施與代碼一起進行版本控制。
@@ -23,8 +23,8 @@ title: Deploy on Render
 
 ## 理解藍圖
 
-Render 藍圖是定義您基礎設施的 YAML 檔案。此儲存庫中的
-`render.yaml` 配置了執行 OpenClaw 所需的一切：
+Render Blueprints 是定義您基礎架構的 YAML 檔案。此存放庫中的 `render.yaml`
+設定執行 OpenClaw 所需的一切：
 
 ```yaml
 services:
@@ -68,8 +68,8 @@ services:
 | 入門  | 永不           | 1GB+     | 個人使用、小團隊   |
 | 標準+ | 永不           | 1GB+     | 生產環境、多個頻道 |
 
-藍圖預設為 `starter`。若要使用免費層級，請在您 fork 的
-`render.yaml` 中變更 `plan: free` (但請注意：沒有持久磁碟意味著每次部署時都會重置配置)。
+Blueprint 預設為 `starter`。若要使用免費層，請在您 fork 的
+`render.yaml` 中變更 `plan: free`（但請注意：沒有持久化磁碟意味著每次部署時設定都會重置）。
 
 ## 部署完成後
 
@@ -148,7 +148,7 @@ https://<your-service>.onrender.com/setup/export
 
 ### 重新部署後資料遺失
 
-這發生在免費方案上 (沒有永續磁碟)。升級至付費方案，或者定期透過 `/setup/export` 匯出您的設定。
+這發生在免費層（無持續性磁碟）。升級到付費方案，或定期透過 `/setup/export` 匯出您的設定。
 
 ### 健康檢查失敗
 

@@ -1,8 +1,8 @@
 ---
-title: "TOOLS.md 範本"
-summary: "TOOLS.md 的工作區範本"
+title: "TOOLS.md 模板"
+summary: "TOOLS.md 的工作區模板"
 read_when:
-  - Bootstrapping a workspace manually
+  - 手動啟動工作區
 ---
 
 # TOOLS.md - 本地端備註

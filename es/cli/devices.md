@@ -1,20 +1,20 @@
 ---
-summary: "Referencia de CLI para `openclaw devices` (emparejamiento de dispositivos + rotación/revocación de tokens)"
+summary: "Referencia de CLI para `openclaw devices` (emparejamiento de dispositivos + rotación/revocación de token)"
 read_when:
-  - You are approving device pairing requests
-  - You need to rotate or revoke device tokens
-title: "dispositivos"
+  - Estás aprobando solicitudes de emparejamiento de dispositivos
+  - Necesitas rotar o revocar tokens de dispositivo
+title: "devices"
 ---
 
 # `openclaw devices`
 
-Administre las solicitudes de emparejamiento de dispositivos y los tokens con alcance de dispositivo.
+Administra las solicitudes de emparejamiento de dispositivos y los tokens con ámbito de dispositivo.
 
 ## Comandos
 
 ### `openclaw devices list`
 
-Enumere las solicitudes de emparejamiento pendientes y los dispositivos emparejados.
+Enumera las solicitudes de emparejamiento pendientes y los dispositivos emparejados.
 
 ```
 openclaw devices list
@@ -23,7 +23,7 @@ openclaw devices list --json
 
 ### `openclaw devices remove <deviceId>`
 
-Elimine una entrada de dispositivo emparejado.
+Elimina una entrada de dispositivo emparejado.
 
 ```
 openclaw devices remove <deviceId>
@@ -32,7 +32,7 @@ openclaw devices remove <deviceId> --json
 
 ### `openclaw devices clear --yes [--pending]`
 
-Limpiar dispositivos emparejados en masa.
+Borra dispositivos emparejados en masa.
 
 ```
 openclaw devices clear --yes
@@ -42,7 +42,7 @@ openclaw devices clear --yes --pending --json
 
 ### `openclaw devices approve [requestId] [--latest]`
 
-Aprobar una solicitud de emparejamiento de dispositivo pendiente. Si se omite `requestId`, OpenClaw
+Aprueba una solicitud de emparejamiento de dispositivo pendiente. Si se omite `requestId`, OpenClaw
 aprueba automáticamente la solicitud pendiente más reciente.
 
 ```
@@ -53,7 +53,7 @@ openclaw devices approve --latest
 
 ### `openclaw devices reject <requestId>`
 
-Rechazar una solicitud de emparejamiento de dispositivo pendiente.
+Rechaza una solicitud de emparejamiento de dispositivo pendiente.
 
 ```
 openclaw devices reject <requestId>
@@ -61,7 +61,7 @@ openclaw devices reject <requestId>
 
 ### `openclaw devices rotate --device <id> --role <role> [--scope <scope...>]`
 
-Rote un token de dispositivo para un rol específico (opcionalmente actualizando los alcances).
+Rota un token de dispositivo para un rol específico (opcionalmente actualizando los alcances).
 
 ```
 openclaw devices rotate --device <deviceId> --role operator --scope operator.read --scope operator.write
@@ -69,7 +69,7 @@ openclaw devices rotate --device <deviceId> --role operator --scope operator.rea
 
 ### `openclaw devices revoke --device <id> --role <role>`
 
-Revocar un token de dispositivo para un rol específico.
+Revoca un token de dispositivo para un rol específico.
 
 ```
 openclaw devices revoke --device <deviceId> --role node
@@ -77,25 +77,25 @@ openclaw devices revoke --device <deviceId> --role node
 
 ## Opciones comunes
 
-- `--url <url>`: URL de WebSocket de Gateway (el valor predeterminado es `gateway.remote.url` cuando está configurado).
-- `--token <token>`: Token de puerta de enlace (si es necesario).
-- `--password <password>`: Contraseña de puerta de enlace (autenticación por contraseña).
+- `--url <url>`: URL de WebSocket de la puerta de enlace (por defecto es `gateway.remote.url` cuando está configurado).
+- `--token <token>`: Token de la puerta de enlace (si es necesario).
+- `--password <password>`: Contraseña de la puerta de enlace (autenticación por contraseña).
 - `--timeout <ms>`: Tiempo de espera de RPC.
-- `--json`: Salida JSON (recomendado para secuencias de comandos).
+- `--json`: Salida JSON (recomendado para scripts).
 
-Nota: cuando establece `--url`, la CLI no recurre a credenciales de configuración o de entorno.
-Pase `--token` o `--password` explícitamente. La falta de credenciales explícitas es un error.
+Nota: cuando configuras `--url`, la CLI no recurre a las credenciales de configuración o del entorno.
+Pasa `--token` o `--password` explícitamente. Faltar credenciales explícitas es un error.
 
 ## Notas
 
-- La rotación de tokens devuelve un nuevo token (confidencial). Trátelo como un secreto.
+- La rotación de tokens devuelve un nuevo token (sensible). Trátalo como un secreto.
 - Estos comandos requieren el alcance `operator.pairing` (o `operator.admin`).
-- `devices clear` está intencionalmente limitado por `--yes`.
-- Si el alcance de emparejamiento no está disponible en el bucle invertido local (y no se pasa ningún `--url` explícito), la lista/aprobación puede usar una reserva de emparejamiento local.
+- `devices clear` está limitado intencionalmente por `--yes`.
+- Si el alcance de emparejamiento no está disponible en el bucle local (y no se pasa `--url` explícito), listar/aprobar puede usar una alternativa de emparejamiento local.
 
-## Lista de verificación de recuperación de deriva de tokens
+## Lista de verificación de recuperación de desviación de token
 
-Use esto cuando la interfaz de usuario de control u otros clientes siguen fallando con `AUTH_TOKEN_MISMATCH` o `AUTH_DEVICE_TOKEN_MISMATCH`.
+Usa esto cuando la interfaz de usuario de Control u otros clientes sigan fallando con `AUTH_TOKEN_MISMATCH` o `AUTH_DEVICE_TOKEN_MISMATCH`.
 
 1. Confirmar el origen actual del token de la puerta de enlace:
 
@@ -103,7 +103,7 @@ Use esto cuando la interfaz de usuario de control u otros clientes siguen fallan
 openclaw config get gateway.auth.token
 ```
 
-2. Listar los dispositivos emparejados e identificar el ID del dispositivo afectado:
+2. Listar los dispositivos emparejados e identificar el id del dispositivo afectado:
 
 ```bash
 openclaw devices list
@@ -127,7 +127,7 @@ openclaw devices approve <requestId>
 
 Relacionado:
 
-- [Solución de problemas de autenticación del Dashboard](/es/web/dashboard#if-you-see-unauthorized-1008)
+- [Solución de problemas de autenticación del Panel](/es/web/dashboard#if-you-see-unauthorized-1008)
 - [Solución de problemas de la puerta de enlace](/es/gateway/troubleshooting#dashboard-control-ui-connectivity)
 
 import es from "/components/footer/es.mdx";

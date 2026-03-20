@@ -1,19 +1,19 @@
 ---
-summary: "Écrire des outils d'agent dans un plugin (schémas, outils facultatifs, listes d'autorisation)"
+summary: "Écrire des outils d'agent dans un plugin (schémas, outils optionnels, listes d'autorisation)"
 read_when:
-  - You want to add a new agent tool in a plugin
-  - You need to make a tool opt-in via allowlists
-title: "Outils d'agent de plugin"
+  - Vous souhaitez ajouter un nouvel outil d'agent dans un plugin
+  - Vous devez rendre un outil optionnel via des listes d'autorisation
+title: "Plugin Agent Tools"
 ---
 
 # Outils d'agent de plugin
 
 Les plugins OpenClaw peuvent enregistrer des **outils d'agent** (fonctions JSON‑schema) qui sont exposés
 au LLM lors des exécutions d'agent. Les outils peuvent être **requis** (toujours disponibles) ou
-**facultatifs** (opt‑in).
+**optionnels** (opt‑in).
 
 Les outils d'agent sont configurés sous `tools` dans la configuration principale, ou par agent sous
-`agents.list[].tools`. La stratégie de liste d'autorisation/liste de refus contrôle les outils que l'agent
+`agents.list[].tools`. La stratégie de liste d'autorisation/de refus contrôle les outils que l'agent
 peut appeler.
 
 ## Outil de base
@@ -35,10 +35,10 @@ export default function (api) {
 }
 ```
 
-## Outil facultatif (opt‑in)
+## Outil optionnel (opt-in)
 
-Les outils facultatifs ne sont **jamais** activés automatiquement. Les utilisateurs doivent les ajouter à une liste
-d'autorisation d'agent.
+Les outils optionnels ne sont **jamais** activés automatiquement. Les utilisateurs doivent les ajouter à une
+liste d'autorisation d'agent.
 
 ```ts
 export default function (api) {
@@ -62,7 +62,7 @@ export default function (api) {
 }
 ```
 
-Activer les outils facultatifs dans `agents.list[].tools.allow` (ou `tools.allow` global) :
+Activer les outils optionnels dans `agents.list[].tools.allow` (ou `tools.allow` global) :
 
 ```json5
 {
@@ -85,16 +85,16 @@ Activer les outils facultatifs dans `agents.list[].tools.allow` (ou `tools.allow
 
 Autres paramètres de configuration affectant la disponibilité des outils :
 
-- Les listes d'autorisation qui ne nomment que des outils de plugin sont traitées comme des opt-ins de plugin ; les outils de base restent
-  activés sauf si vous incluez également des outils ou groupes de base dans la liste d'autorisation.
+- Les listes d'autorisation qui ne nomment que des outils de plugin sont traitées comme des opt-ins de plugin ; les outils principaux restent
+  activés sauf si vous incluez également des outils ou groupes principaux dans la liste d'autorisation.
 - `tools.profile` / `agents.list[].tools.profile` (liste d'autorisation de base)
-- `tools.byProvider` / `agents.list[].tools.byProvider` (autorisation/refus spécifique au fournisseur)
-- `tools.sandbox.tools.*` (stratégie d'outil de bac à sable lors de l'utilisation en bac à sable)
+- `tools.byProvider` / `agents.list[].tools.byProvider` (autorisation/refus spécifique au provider)
+- `tools.sandbox.tools.*` (stratégie d'outil de bac à sable lorsque sandboxed)
 
-## Règles + astuces
+## Règles + conseils
 
-- Les noms d'outils ne doivent **pas** entrer en conflit avec les noms des outils de base ; les outils en conflit sont ignorés.
-- Les identifiants de plugin utilisés dans les listes d'autorisation ne doivent pas entrer en conflit avec les noms des outils de base.
+- Les noms d'outils ne doivent **pas** entrer en conflit avec les noms des outils principaux ; les outils en conflit sont ignorés.
+- Les IDs de plugin utilisés dans les listes d'autorisation ne doivent pas entrer en conflit avec les noms des outils principaux.
 - Privilégiez `optional: true` pour les outils qui déclenchent des effets secondaires ou nécessitent des
   binaires/identifiants supplémentaires.
 

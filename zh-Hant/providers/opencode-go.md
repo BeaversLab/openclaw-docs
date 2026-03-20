@@ -1,5 +1,5 @@
 ---
-summary: "使用共用 OpenCode 設定的 OpenCode Go 目錄"
+summary: "Use the OpenCode Go catalog with the shared OpenCode setup"
 read_when:
   - You want the OpenCode Go catalog
   - You need the runtime model refs for Go-hosted models
@@ -8,9 +8,9 @@ title: "OpenCode Go"
 
 # OpenCode Go
 
-OpenCode Go 是 [OpenCode](/zh-Hant/providers/opencode) 內的 Go 目錄。
-它使用與 Zen 目錄相同的 `OPENCODE_API_KEY`，但保留運行時
-提供者 ID `opencode-go`，以便上游的按模型路由保持正確。
+OpenCode Go 是 [OpenCode](/zh-Hant/providers/opencode) 中的 Go 目錄。
+它使用與 Zen 目錄相同的 `OPENCODE_API_KEY`，但保留執行時
+提供者 ID `opencode-go`，以便上游的逐模型路由保持正確。
 
 ## 支援的模型
 
@@ -37,12 +37,12 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 
 ## 路由行為
 
-當模型參考使用 `opencode-go/...` 時，OpenClaw 會自動處理按模型的路由。
+當模型參照使用 `opencode-go/...` 時，OpenClaw 會自動處理逐模型路由。
 
-## 注意事項
+## 備註
 
-- 請參閱 [OpenCode](/zh-Hant/providers/opencode) 以了解共用的入門指南和目錄概覽。
-- 運行時參考保持明確：Zen 使用 `opencode/...`，Go 使用 `opencode-go/...`。
+- 請使用 [OpenCode](/zh-Hant/providers/opencode) 了解共用的入門和目錄概覽。
+- 執行時參照保持明確：Zen 為 `opencode/...`，Go 為 `opencode-go/...`。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

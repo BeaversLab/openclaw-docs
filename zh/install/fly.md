@@ -1,15 +1,15 @@
 ---
 title: Fly.io
-description: 在 Fly.io 上部署 OpenClaw
-summary: "在 Fly.io 上逐步部署 OpenClaw，包含持久化存储和 HTTPS"
+description: 在 OpenClaw 上部署 Fly.io
+summary: "带有持久存储和 HTTPS 的 Fly.io 分步 OpenClaw 部署"
 read_when:
-  - Deploying OpenClaw on Fly.io
-  - Setting up Fly volumes, secrets, and first-run config
+  - 在 OpenClaw 上部署 Fly.io
+  - 设置 Fly 卷、机密和首次运行配置
 ---
 
 # Fly.io 部署
 
-**目标：** 在 [Fly.io](https://fly.io) 机器上运行的 OpenClaw Gateway 网关，具有持久化存储、自动 HTTPS 以及 Discord/渠道 访问权限。
+**目标：** 在一台带有持久存储、自动 HTTPS 和 OpenClaw/渠道访问权限的 [Gateway(网关)](https://fly.io) 机器上运行 Fly.io Discord。
 
 ## 你需要准备
 
@@ -39,13 +39,13 @@ fly apps create my-openclaw
 fly volumes create openclaw_data --size 1 --region iad
 ```
 
-**提示：** 选择一个离你较近的区域。常见选项：`lhr` (伦敦)、`iad` (弗吉尼亚)、`sjc` (圣何塞)。
+**提示：** 选择一个靠近您的区域。常见选项：`lhr`（伦敦）、`iad`（弗吉尼亚）、`sjc`（圣何塞）。
 
 ## 2) 配置 fly.toml
 
 编辑 `fly.toml` 以匹配您的应用名称和要求。
 
-**安全提示：** 默认配置会暴露一个公共 URL。对于没有公共 IP 的加固部署，请参阅 [Private Deployment](#private-deployment-hardened) 或使用 `fly.private.toml`。
+**安全提示：** 默认配置会暴露一个公开 URL。如要进行没有公网 IP 的加固部署，请参阅[私有部署](#private-deployment-hardened)或使用 `fly.private.toml`。
 
 ```toml
 app = "my-openclaw"  # Your app name
@@ -82,13 +82,13 @@ primary_region = "iad"
 
 **关键设置：**
 
-| 设置                           | 原因                                                                          |
-| ------------------------------ | ----------------------------------------------------------------------------- |
-| `--bind lan`                   | 绑定到 `0.0.0.0` 以便 Fly 的代理可以访问 Gateway 网关                         |
-| `--allow-unconfigured`         | 在没有配置文件的情况下启动（稍后您将创建一个）                                |
-| `internal_port = 3000`         | 必须与 `--port 3000`（或 `OPENCLAW_GATEWAY_PORT`）匹配，以便进行 Fly 健康检查 |
-| `memory = "2048mb"`            | 512MB 太小；推荐 2GB                                                          |
-| `OPENCLAW_STATE_DIR = "/data"` | 在卷上持久化状态                                                              |
+| 设置                           | 原因                                                                      |
+| ------------------------------ | ------------------------------------------------------------------------- |
+| `--bind lan`                   | 绑定到 `0.0.0.0` 以便 Fly 的代理可以访问网关                              |
+| `--allow-unconfigured`         | 在没有配置文件的情况下启动（稍后您将创建一个）                            |
+| `internal_port = 3000`         | 必须匹配 `--port 3000`（或 `OPENCLAW_GATEWAY_PORT`）以便通过 Fly 健康检查 |
+| `memory = "2048mb"`            | 512MB 太小；推荐 2GB                                                      |
+| `OPENCLAW_STATE_DIR = "/data"` | 在卷上持久化状态                                                          |
 
 ## 3) 设置密钥
 
@@ -111,7 +111,7 @@ fly secrets set DISCORD_BOT_TOKEN=MTQ...
 
 - 出于安全考虑，非环回绑定 (`--bind lan`) 需要 `OPENCLAW_GATEWAY_TOKEN`。
 - 请将这些令牌视为密码。
-- **对于所有 API 密钥和令牌，优先使用环境变量而不是配置文件。** 这样可以防止密钥出现在 `openclaw.json` 中，从而避免意外泄露或被记录。
+- **相比配置文件，优先使用环境变量** 来处理所有 API 密钥和令牌。这样可以避免机密信息意外暴露或记录在 `openclaw.json` 中。
 
 ## 4) 部署
 
@@ -203,10 +203,10 @@ EOF
 
 **注意：** Discord 令牌可以来自以下任一来源：
 
-- 环境变量：`DISCORD_BOT_TOKEN`（推荐用于存储密钥）
+- 环境变量：`DISCORD_BOT_TOKEN`（建议用于机密信息）
 - 配置文件：`channels.discord.token`
 
-如果使用环境变量，则无需在配置中添加令牌。Gateway 网关会自动读取 `DISCORD_BOT_TOKEN`。
+如果使用环境变量，则无需将令牌添加到配置中。网关会自动读取 `DISCORD_BOT_TOKEN`。
 
 重启以应用更改：
 
@@ -227,7 +227,7 @@ fly open
 
 或访问 `https://my-openclaw.fly.dev/`
 
-粘贴您的 Gateway 网关令牌（来自 `OPENCLAW_GATEWAY_TOKEN` 的那个）以进行身份验证。
+粘贴您的网关令牌（来自 `OPENCLAW_GATEWAY_TOKEN` 的那个）以进行身份验证。
 
 ### 日志
 
@@ -246,19 +246,19 @@ fly ssh console
 
 ### "App is not listening on expected address"
 
-Gateway 网关正在绑定到 `127.0.0.1` 而不是 `0.0.0.0`。
+网关绑定到 `127.0.0.1` 而不是 `0.0.0.0`。
 
-**修复方法：** 将 `--bind lan` 添加到您在 `fly.toml` 中的进程命令中。
+**修复方法：** 在 `fly.toml` 的进程命令中添加 `--bind lan`。
 
 ### 健康检查失败 / 连接被拒绝
 
 Fly 无法在配置的端口上访问 Gateway 网关。
 
-**修复方法：** 确保 `internal_port` 与 Gateway 网关端口匹配（设置 `--port 3000` 或 `OPENCLAW_GATEWAY_PORT=3000`）。
+**修复方法：** 确保 `internal_port` 与网关端口匹配（设置 `--port 3000` 或 `OPENCLAW_GATEWAY_PORT=3000`）。
 
 ### 内存溢出 (OOM) / 内存问题
 
-容器不断重启或被终止。迹象：`SIGABRT`、`v8::internal::Runtime_AllocateInYoungGeneration` 或静默重启。
+容器不断重启或被杀死。迹象：`SIGABRT`、`v8::internal::Runtime_AllocateInYoungGeneration` 或静默重启。
 
 **修复方法：** 在 `fly.toml` 中增加内存：
 
@@ -288,11 +288,11 @@ fly ssh console --command "rm -f /data/gateway.*.lock"
 fly machine restart <machine-id>
 ```
 
-锁定文件位于 `/data/gateway.*.lock`（不在子目录中）。
+锁文件位于 `/data/gateway.*.lock`（不在子目录中）。
 
 ### 配置未读取
 
-如果使用 `--allow-unconfigured`，Gateway 网关会创建一个最小配置。您在 `/data/openclaw.json` 的自定义配置应在重启时被读取。
+如果使用 `--allow-unconfigured`，网关会创建一个最小配置。重启时应读取位于 `/data/openclaw.json` 的自定义配置。
 
 验证配置是否存在：
 
@@ -302,7 +302,7 @@ fly ssh console --command "cat /data/openclaw.json"
 
 ### 通过 SSH 写入配置
 
-`fly ssh console -C` 命令不支持 Shell 重定向。要写入配置文件：
+`fly ssh console -C` 命令不支持 shell 重定向。要写入配置文件：
 
 ```bash
 # Use echo + tee (pipe from local to remote)
@@ -323,7 +323,7 @@ fly ssh console --command "rm /data/openclaw.json"
 
 如果在重启后丢失凭证或会话，说明状态目录正在写入容器文件系统。
 
-**修复方法：** 确保在 `fly.toml` 中设置了 `OPENCLAW_STATE_DIR=/data` 并重新部署。
+**修复方法：** 确保 `OPENCLAW_STATE_DIR=/data` 在 `fly.toml` 中已设置并重新部署。
 
 ## 更新
 
@@ -358,7 +358,7 @@ fly machine update <machine-id> --vm-memory 2048 --command "node dist/index.js g
 
 ## 私有部署（强化版）
 
-默认情况下，Fly 会分配公共 IP，使您的网关可以通过 `https://your-app.fly.dev` 访问。这很方便，但意味着您的部署会被互联网扫描器（Shodan、Censys 等）发现。
+默认情况下，Fly 会分配公共 IP，使您的网关可以在 `https://your-app.fly.dev` 访问。这很方便，但也意味着您的部署可以被互联网扫描器（Shodan、Censys 等）发现。
 
 要进行**无公开暴露**的强化部署，请使用私有模板。
 
@@ -461,7 +461,7 @@ fly ssh console -a my-openclaw
 }
 ```
 
-ngrok 隧道在容器内运行，并提供公共 webhook URL，而无需暴露 Fly 应用本身。将 `webhookSecurity.allowedHosts` 设置为公共隧道主机名，以便接受转发的主机标头。
+ngrok 隧道在容器内运行，并提供公共 webhook URL，而无需暴露 Fly 应用本身。将 `webhookSecurity.allowedHosts` 设置为公共隧道主机名，以便接受转发的主机头。
 
 ### 安全优势
 
@@ -477,12 +477,12 @@ ngrok 隧道在容器内运行，并提供公共 webhook URL，而无需暴露 F
 - Fly.io 使用 **x86 架构**（非 ARM）
 - Dockerfile 兼容这两种架构
 - 对于 WhatsApp/Telegram 新手引导，请使用 `fly ssh console`
-- 持久化数据位于卷的 `/data`
+- 持久化数据位于卷上的 `/data`
 - Signal 需要 Java + signal-cli；请使用自定义镜像并将内存保持在 2GB 以上。
 
 ## 费用
 
-使用推荐配置（`shared-cpu-2x`，2GB RAM）：
+使用推荐的配置（`shared-cpu-2x`，2GB RAM）：
 
 - 根据使用情况约 10-15 美元/月
 - 免费层级包含一定配额

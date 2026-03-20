@@ -1,8 +1,8 @@
 ---
-summary: "Nostr 渠道，通过 NIP-04 加密消息实现"
+summary: "Nostr 私信渠道，通过 NIP-04 加密消息实现"
 read_when:
-  - You want OpenClaw to receive DMs via Nostr
-  - You're setting up decentralized messaging
+  - 您希望 OpenClaw 通过 Nostr 接收私信
+  - 您正在设置去中心化消息传递
 title: "Nostr"
 ---
 
@@ -10,19 +10,19 @@ title: "Nostr"
 
 **状态：** 可选插件（默认禁用）。
 
-Nostr 是一个去中心化的社交网络协议。此频道使 OpenClaw 能够通过 NIP-04 接收和回复加密的直连消息 (DM)。
+Nostr 是一个去中心化的社交网络协议。该渠道使 OpenClaw 能够通过 NIP-04 接收并回复加密的私信（私信）。
 
-## 安装（按需）
+## 按需安装
 
-### 入门向导（推荐）
+### 新手引导（推荐）
 
-- 新手引导 (`openclaw onboard`) 和 `openclaw channels add` 列出了可选的渠道插件。
+- 新手引导（`openclaw onboard`）和 `openclaw channels add` 列出了可选的渠道插件。
 - 选择 Nostr 会提示您按需安装该插件。
 
-安装默认设置：
+安装默认值：
 
-- **开发频道 + 可用 git 检出：** 使用本地插件路径。
-- **稳定版/Beta 版：** 从 npm 下载。
+- **Dev 渠道 + git checkout available：** 使用本地插件路径。
+- **Stable/Beta：** 从 npm 下载。
 
 您始终可以覆盖提示中的选择。
 
@@ -38,7 +38,7 @@ openclaw plugins install @openclaw/nostr
 openclaw plugins install --link <path-to-openclaw>/extensions/nostr
 ```
 
-安装或启用插件后，重启 Gateway 网关。
+安装或启用插件后，请重启 Gateway（网关）。
 
 ### 非交互式设置
 
@@ -47,7 +47,7 @@ openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY"
 openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY" --relay-urls "wss://relay.damus.io,wss://relay.primal.net"
 ```
 
-使用 `--use-env` 将 `NOSTR_PRIVATE_KEY` 保留在环境中，而不是将密钥存储在配置文件中。
+使用 `--use-env` 将 `NOSTR_PRIVATE_KEY` 保存在环境中，而不是将密钥存储在配置中。
 
 ## 快速设置
 
@@ -76,15 +76,15 @@ nak key generate
 export NOSTR_PRIVATE_KEY="nsec1..."
 ```
 
-4. 重启 Gateway(网关)。
+4. 重启 Gateway（网关）。
 
 ## 配置参考
 
-| Key          | Type     | Default                                     | Description                 |
+| 密钥         | 类型     | 默认值                                      | 描述                        |
 | ------------ | -------- | ------------------------------------------- | --------------------------- |
-| `privateKey` | string   | required                                    | `nsec` 或十六进制格式的私钥 |
-| `relays`     | string[] | `['wss://relay.damus.io', 'wss://nos.lol']` | Relay URL (WebSocket)       |
-| `dmPolicy`   | string   | `pairing`                                   | 私信 访问策略               |
+| `privateKey` | string   | 必填                                        | `nsec` 或十六进制格式的私钥 |
+| `relays`     | string[] | `['wss://relay.damus.io', 'wss://nos.lol']` | 中继 URL (WebSocket)        |
+| `dmPolicy`   | string   | `pairing`                                   | 私信访问策略                |
 | `allowFrom`  | string[] | `[]`                                        | 允许的发送者公钥            |
 | `enabled`    | boolean  | `true`                                      | 启用/禁用渠道               |
 | `name`       | string   | -                                           | 显示名称                    |
@@ -92,7 +92,7 @@ export NOSTR_PRIVATE_KEY="nsec1..."
 
 ## 个人资料元数据
 
-个人资料数据作为 NIP-01 `kind:0` 事件发布。您可以从控制 UI (渠道 -> Nostr -> Profile) 管理它，或直接在配置中设置它。
+个人资料数据作为 NIP-01 `kind:0` 事件发布。您可以在控制 UI（Channels -> Nostr -> Profile）中管理它，或者直接在配置中设置。
 
 示例：
 
@@ -123,14 +123,14 @@ export NOSTR_PRIVATE_KEY="nsec1..."
 
 ## 访问控制
 
-### 私信 策略
+### 私信策略
 
-- **pairing** (默认)：未知发送者会收到配对码。
+- **pairing**（默认）：未知发送者会收到配对码。
 - **allowlist**：只有 `allowFrom` 中的公钥可以发送私信。
-- **open**：公开的入站私信 (需要 `allowFrom: ["*"]`)。
+- **open**：公开入站私信（需要 `allowFrom: ["*"]`）。
 - **disabled**：忽略入站私信。
 
-### 允许列表示例
+### Allowlist 示例
 
 ```json
 {
@@ -148,7 +148,7 @@ export NOSTR_PRIVATE_KEY="nsec1..."
 
 接受的格式：
 
-- **私钥：** `nsec...` 或 64字符十六进制
+- **私钥：** `nsec...` 或 64 字符的十六进制
 - **公钥 (`allowFrom`)：** `npub...` 或十六进制
 
 ## 中继
@@ -169,9 +169,9 @@ export NOSTR_PRIVATE_KEY="nsec1..."
 提示：
 
 - 使用 2-3 个中继以实现冗余。
-- 避免使用过多中继（延迟、重复）。
+- 避免使用太多中继（延迟、重复）。
 - 付费中继可以提高可靠性。
-- 本地中继适用于测试 (`ws://localhost:7777`)。
+- 本地中继适合测试（`ws://localhost:7777`）。
 
 ## 协议支持
 
@@ -179,7 +179,7 @@ export NOSTR_PRIVATE_KEY="nsec1..."
 | ------ | ------ | ----------------------------- |
 | NIP-01 | 支持   | 基本事件格式 + 个人资料元数据 |
 | NIP-04 | 支持   | 加密私信 (`kind:4`)           |
-| NIP-17 | 计划中 | 礼品包装私信                  |
+| NIP-17 | 计划中 | Gift-wrapped 私信             |
 | NIP-44 | 计划中 | 版本化加密                    |
 
 ## 测试
@@ -204,9 +204,9 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ### 手动测试
 
-1. 从日志中记下机器人公钥 (npub)。
+1. 从日志中记下 bot 公钥 (npub)。
 2. 打开一个 Nostr 客户端（Damus、Amethyst 等）。
-3. 向机器人公钥发送私信。
+3. 向 bot 公钥发送私信。
 4. 验证响应。
 
 ## 故障排除
@@ -214,32 +214,32 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 ### 未收到消息
 
 - 验证私钥是否有效。
-- 确保中继 URL 可访问，并使用 `wss://`（本地则使用 `ws://`）。
-- 确认 `enabled` 未被 `false`。
-- 检查 Gateway(网关) 日志中的中继连接错误。
+- 确保中继 URL 可访问，并使用 `wss://`（本地环境使用 `ws://`）。
+- 确认 `enabled` 未设置为 `false`。
+- 检查 Gateway(网关) 日志中是否存在中继连接错误。
 
 ### 未发送响应
 
 - 检查中继是否接受写入。
 - 验证出站连接。
-- 留意中继速率限制。
+- 注意中继速率限制。
 
 ### 重复响应
 
-- 使用多个中继时属于预期行为。
-- 消息通过事件 ID 去重；仅第一次投递会触发响应。
+- 使用多个中继时属于预期情况。
+- 消息按事件 ID 去重；仅首次投递会触发响应。
 
-## 安全
+## 安全性
 
 - 切勿提交私钥。
 - 使用环境变量存储密钥。
-- 生产环境的机器人建议考虑使用 `allowlist`。
+- 生产环境的 bot 建议使用 `allowlist`。
 
-## 限制（MVP）
+## 限制 (MVP)
 
-- 仅限直接消息（无群组聊天）。
+- 仅限直接消息（无群聊）。
 - 无媒体附件。
-- 仅限 NIP-04（计划支持 NIP-17 礼品包装）。
+- 仅支持 NIP-04（计划支持 NIP-17 gift-wrap）。
 
 import zh from "/components/footer/zh.mdx";
 

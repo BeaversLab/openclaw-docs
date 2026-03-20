@@ -1,15 +1,15 @@
 ---
 summary: "Ejemplos de configuración precisos al esquema para configuraciones comunes de OpenClaw"
 read_when:
-  - Learning how to configure OpenClaw
-  - Looking for configuration examples
-  - Setting up OpenClaw for the first time
+  - Aprender a configurar OpenClaw
+  - Buscando ejemplos de configuración
+  - Configurando OpenClaw por primera vez
 title: "Ejemplos de configuración"
 ---
 
 # Ejemplos de configuración
 
-Los ejemplos a continuación se alinean con el esquema de configuración actual. Para obtener la referencia exhaustiva y notas por campo, consulte [Configuración](/es/gateway/configuration).
+Los siguientes ejemplos están alineados con el esquema de configuración actual. Para la referencia exhaustiva y notas por campo, consulte [Configuración](/es/gateway/configuration).
 
 ## Inicio rápido
 
@@ -22,7 +22,7 @@ Los ejemplos a continuación se alinean con el esquema de configuración actual.
 }
 ```
 
-Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot desde ese número.
+Guárdelo en `~/.openclaw/openclaw.json` y podrá enviar mensajes privados al bot desde ese número.
 
 ### Inicio recomendado
 
@@ -48,7 +48,7 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
 
 ## Ejemplo expandido (opciones principales)
 
-> JSON5 le permite usar comentarios y comas finales. El JSON normal también funciona.
+> JSON5 le permite usar comentarios y comas finales. El JSON regular también funciona.
 
 ```json5
 {
@@ -434,7 +434,7 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
       nodeManager: "npm",
     },
     entries: {
-      "nano-banana-pro": {
+      "image-lab": {
         enabled: true,
         apiKey: "GEMINI_KEY_HERE",
         env: { GEMINI_API_KEY: "GEMINI_KEY_HERE" },
@@ -468,9 +468,9 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
 }
 ```
 
-### Modo de MD seguro (bandeja de entrada compartida / MD multiusuario)
+### Modo de mensaje privado seguro (bandeja de entrada compartida / mensajes privados multiusuario)
 
-Si más de una persona puede enviar MD a su bot (múltiples entradas en `allowFrom`, aprobaciones de emparejamiento para múltiples personas, o `dmPolicy: "open"`), habilite el **modo de MD seguro** para que los MD de diferentes remitentes no compartan un contexto de forma predeterminada:
+Si más de una persona puede enviar mensajes privados a su bot (múltiples entradas en `allowFrom`, aprobaciones de emparejamiento para varias personas, o `dmPolicy: "open"`), active el **modo de mensaje privado seguro** para que, de forma predeterminada, los mensajes privados de diferentes remitentes no compartan un contexto:
 
 ```json5
 {
@@ -494,10 +494,10 @@ Si más de una persona puede enviar MD a su bot (múltiples entradas en `allowFr
 }
 ```
 
-Para Discord/Slack/Google Chat/MS Teams/Mattermost/IRC, la autorización del remitente se basa en la ID de forma predeterminada.
-Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutable con `dangerouslyAllowNameMatching: true` de cada canal si acepta explícitamente ese riesgo.
+Para Discord/Slack/Google Chat/MS Teams/Mattermost/IRC, la autorización del remitente es primero por ID de forma predeterminada.
+Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutable con el `dangerouslyAllowNameMatching: true` de cada canal si acepta explícitamente ese riesgo.
 
-### OAuth con conmutación por error de clave API
+### OAuth con conmutación por error de clave de API
 
 ```json5
 {
@@ -527,12 +527,12 @@ Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutabl
 }
 ```
 
-### Token de configuración de Anthropic + clave API, conmutación por error a MiniMax
+### Token de configuración de Anthropic + clave de API, conmutación por error a MiniMax
 
 <Warning>
-  El uso del token de configuración de Anthropic fuera de Claude Code se ha restringido para algunos
-  usuarios en el pasado. Trate esto como un riesgo de elección del usuario y verifique los términos
-  actuales de Anthropic antes de depender de la autenticación por suscripción.
+  El uso del token de configuración de Anthropic fuera de Claude Code ha sido restringido para
+  algunos usuarios en el pasado. Considere esto como un riesgo de elección del usuario y verifique
+  los términos actuales de Anthropic antes de depender de la autenticación de suscripción.
 </Warning>
 
 ```json5
@@ -632,7 +632,7 @@ Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutabl
 ## Consejos
 
 - Si establece `dmPolicy: "open"`, la lista `allowFrom` coincidente debe incluir `"*"`.
-- Los ID del proveedor difieren (números de teléfono, ID de usuario, ID de canal). Use la documentación del proveedor para confirmar el formato.
+- Los ID de proveedores difieren (números de teléfono, ID de usuario, ID de canal). Use la documentación del proveedor para confirmar el formato.
 - Secciones opcionales para agregar más tarde: `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
 - Consulte [Proveedores](/es/providers) y [Solución de problemas](/es/gateway/troubleshooting) para obtener notas de configuración más detalladas.
 

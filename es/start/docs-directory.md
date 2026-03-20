@@ -1,19 +1,19 @@
 ---
 summary: "Enlaces curados a los documentos de OpenClaw más utilizados."
 read_when:
-  - You want quick access to key docs pages
+  - Deseas acceso rápido a páginas clave de la documentación
 title: "Directorio de documentos"
 ---
 
 <Note>
-  Esta página es un índice curado. Si es nuevo, comience con [Primeros
-  pasos](/es/start/getting-started). Para ver un mapa completo de los documentos, consulte [Centros
-  de documentos](/es/start/hubs).
+  Esta página es un índice curado. Si eres nuevo, comienza con [Getting
+  Started](/es/start/getting-started). Para ver un mapa completo de la documentación, consulta [Docs
+  hubs](/es/start/hubs).
 </Note>
 
 ## Comience aquí
 
-- [Centros de documentos (todas las páginas vinculadas)](/es/start/hubs)
+- [Docs hubs (all pages linked)](/es/start/hubs)
 - [Ayuda](/es/help)
 - [Configuración](/es/gateway/configuration)
 - [Ejemplos de configuración](/es/gateway/configuration-examples)
@@ -27,23 +27,23 @@ title: "Directorio de documentos"
 - [Configuración de habilidades](/es/tools/skills-config)
 - [Plantillas de espacio de trabajo](/es/reference/templates/AGENTS)
 - [Adaptadores RPC](/es/reference/rpc)
-- [Manual de Gateway](/es/gateway)
+- [Manual de la pasarela](/es/gateway)
 - [Nodos (iOS y Android)](/es/nodes)
-- [Superficies web (Interfaz de control)](/es/web)
+- [Superficies web (Control UI)](/es/web)
 - [Descubrimiento y transportes](/es/gateway/discovery)
 - [Acceso remoto](/es/gateway/remote)
 
 ## Proveedores y experiencia de usuario
 
 - [WebChat](/es/web/webchat)
-- [Interfaz de control (navegador)](/es/web/control-ui)
+- [Control UI (navegador)](/es/web/control-ui)
 - [Telegram](/es/channels/telegram)
 - [Discord](/es/channels/discord)
-- [Mattermost (plugin)](/es/channels/mattermost)
+- [Mattermost (complemento)](/es/channels/mattermost)
 - [BlueBubbles (iMessage)](/es/channels/bluebubbles)
 - [iMessage (heredado)](/es/channels/imessage)
 - [Grupos](/es/channels/groups)
-- [Mensajes grupales de WhatsApp](/es/channels/group-messages)
+- [Mensajes de grupo de WhatsApp](/es/channels/group-messages)
 - [Imágenes multimedia](/es/nodes/images)
 - [Audio multimedia](/es/nodes/audio)
 
@@ -58,7 +58,7 @@ title: "Directorio de documentos"
 ## Operaciones y seguridad
 
 - [Sesiones](/es/concepts/session)
-- [Trabajos Cron](/es/automation/cron-jobs)
+- [Trabajos programados (Cron jobs)](/es/automation/cron-jobs)
 - [Webhooks](/es/automation/webhook)
 - [Gmail hooks (Pub/Sub)](/es/automation/gmail-pubsub)
 - [Seguridad](/es/gateway/security)

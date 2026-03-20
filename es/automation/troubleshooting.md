@@ -1,9 +1,9 @@
 ---
-summary: "Solucionar problemas de programación y entrega de cron y heartbeat"
+summary: "Solucione problemas de programación y entrega de cron y heartbeat"
 read_when:
-  - Cron did not run
-  - Cron ran but no message was delivered
-  - Heartbeat seems silent or skipped
+  - Cron no se ejecutó
+  - Cron se ejecutó pero no se entregó ningún mensaje
+  - Heartbeat parece silencioso o omitido
 title: "Solución de problemas de automatización"
 ---
 
@@ -21,7 +21,7 @@ openclaw doctor
 openclaw channels status --probe
 ```
 
-Luego ejecute comprobaciones de automatización:
+Luego ejecute verificaciones de automatización:
 
 ```bash
 openclaw cron status
@@ -29,7 +29,7 @@ openclaw cron list
 openclaw system heartbeat last
 ```
 
-## Cron no se ejecuta
+## Cron no se activa
 
 ```bash
 openclaw cron status
@@ -38,19 +38,19 @@ openclaw cron runs --id <jobId> --limit 20
 openclaw logs --follow
 ```
 
-Una buena salida se ve así:
+La salida correcta se ve así:
 
 - `cron status` informa habilitado y un `nextWakeAtMs` futuro.
-- El trabajo está habilitado y tiene una zona horaria/programación válida.
+- El trabajo está habilitado y tiene una programación/zona horaria válida.
 - `cron runs` muestra `ok` o un motivo explícito de omisión.
 
 Firmas comunes:
 
 - `cron: scheduler disabled; jobs will not run automatically` → cron deshabilitado en config/env.
-- `cron: timer tick failed` → el tick del programador falló; inspeccione el contexto de pila/log circundante.
-- `reason: not-due` en la salida de ejecución → se llamó a la ejecución manual sin `--force` y el trabajo aún no vence.
+- `cron: timer tick failed` → el tick del programador falló; inspeccione el contexto de la pila/registros circundantes.
+- `reason: not-due` en la salida de ejecución → ejecución manual llamada sin `--force` y el trabajo aún no vence.
 
-## Cron se ejecutó pero no hay entrega
+## Cron se activó pero no hubo entrega
 
 ```bash
 openclaw cron runs --id <jobId> --limit 20
@@ -59,19 +59,19 @@ openclaw channels status --probe
 openclaw logs --follow
 ```
 
-Una buena salida se ve así:
+La salida correcta se ve así:
 
 - El estado de ejecución es `ok`.
 - El modo/objetivo de entrega están configurados para trabajos aislados.
-- El sondeo del canal informa que el canal objetivo está conectado.
+- El sondeo del canal informa que el canal de destino está conectado.
 
 Firmas comunes:
 
 - La ejecución se realizó correctamente pero el modo de entrega es `none` → no se espera ningún mensaje externo.
-- Objetivo de entrega faltante/no válido (`channel`/`to`) → la ejecución puede tener éxito internamente pero omitir el envío saliente.
+- Objetivo de entrega faltante/no válido (`channel`/`to`) → la ejecución puede tener éxito internamente pero omitir el tráfico saliente.
 - Errores de autenticación del canal (`unauthorized`, `missing_scope`, `Forbidden`) → entrega bloqueada por credenciales/permisos del canal.
 
-## Latido (heartbeat) suprimido u omitido
+## Heartbeat suprimido u omitido
 
 ```bash
 openclaw system heartbeat last
@@ -80,16 +80,16 @@ openclaw config get agents.defaults.heartbeat
 openclaw channels status --probe
 ```
 
-Una buena salida se ve así:
+La salida correcta se ve así:
 
-- Latido habilitado con intervalo distinto de cero.
-- El resultado del último latido es `ran` (o se entiende el motivo de la omisión).
+- Heartbeat habilitado con intervalo distinto de cero.
+- El resultado del último heartbeat es `ran` (o se entiende el motivo de la omisión).
 
 Firmas comunes:
 
 - `heartbeat skipped` con `reason=quiet-hours` → fuera de `activeHours`.
-- `requests-in-flight` → carril principal ocupado; latido diferido.
-- `empty-heartbeat-file` → latido de intervalo omitido porque `HEARTBEAT.md` no tiene contenido procesable y no hay ningún evento cron etiquetado en cola.
+- `requests-in-flight` → carril principal ocupado; heartbeat diferido.
+- `empty-heartbeat-file` → heartbeat de intervalo omitido porque `HEARTBEAT.md` no tiene contenido procesable y no hay ningún evento de cron etiquetado en cola.
 - `alerts-disabled` → la configuración de visibilidad suprime los mensajes de latido salientes.
 
 ## Problemas de zona horaria y activeHours
@@ -105,14 +105,14 @@ openclaw logs --follow
 Reglas rápidas:
 
 - `Config path not found: agents.defaults.userTimezone` significa que la clave no está establecida; el latido vuelve a la zona horaria del host (o a `activeHours.timezone` si está establecida).
-- Cron sin `--tz` utiliza la zona horaria del host de la puerta de enlace.
-- El latido `activeHours` utiliza la resolución de zona horaria configurada (`user`, `local` o zona horaria IANA explícita).
+- Cron sin `--tz` usa la zona horaria del host de la pasarela.
+- El latido `activeHours` usa la resolución de zona horaria configurada (`user`, `local`, o zona horaria IANA explícita).
 - Las marcas de tiempo ISO sin zona horaria se tratan como UTC para las programaciones cron `at`.
 
 Firmas comunes:
 
-- Los trabajos se ejecutan a la hora incorrecta del reloj después de los cambios de zona horaria del host.
-- El latido siempre se omite durante el día porque `activeHours.timezone` es incorrecto.
+- Los trabajos se ejecutan a la hora del reloj incorrecta después de cambios en la zona horaria del host.
+- El latido siempre se omite durante su horario diurno porque `activeHours.timezone` es incorrecto.
 
 Relacionado:
 

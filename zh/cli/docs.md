@@ -1,7 +1,7 @@
 ---
-summary: "`openclaw docs` 的 CLI 参考（搜索实时文档索引）"
+summary: "CLI 参考，适用于 `openclaw docs` （搜索实时文档索引）"
 read_when:
-  - You want to search the live OpenClaw docs from the terminal
+  - 您想从终端搜索实时 OpenClaw 文档
 title: "docs"
 ---
 

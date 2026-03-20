@@ -1,10 +1,10 @@
 ---
-summary: "用於 OpenClaw CLI 的指令碼化入門與 Agent 設定"
+summary: "OpenClaw CLI 的腳本化入門與代理程式設定"
 read_when:
-  - You are automating onboarding in scripts or CI
-  - You need non-interactive examples for specific providers
-title: "CLI 自動化"
-sidebarTitle: "CLI 自動化"
+  - 您正在腳本或 CI 中自動化入門流程
+  - 您需要特定提供者的非互動式範例
+title: "CLI Automation"
+sidebarTitle: "CLI automation"
 ---
 
 # CLI 自動化
@@ -12,7 +12,7 @@ sidebarTitle: "CLI 自動化"
 使用 `--non-interactive` 來自動化 `openclaw onboard`。
 
 <Note>
-  `--json` 並不代表非互動模式。請在指令碼中使用 `--non-interactive` (以及 `--workspace`)。
+  `--json` 並不意味著非互動模式。請使用 `--non-interactive` (以及 `--workspace`) 來撰寫腳本。
 </Note>
 
 ## 基準非互動範例
@@ -32,11 +32,11 @@ openclaw onboard --non-interactive \
 
 新增 `--json` 以取得機器可讀的摘要。
 
-使用 `--secret-input-mode ref` 將環境變數參照儲存在設定檔中，而非明文值。
-在入門流程中，可以選擇使用環境變數參照或已設定的 Provider 參照 (`file` 或 `exec`)。
+使用 `--secret-input-mode ref` 在認證設定檔中儲存環境變數參照，而非明文值。
+在入門流程中，可進行環境變數參照與已設定提供者參照 (`file` 或 `exec`) 之間的互動式選擇。
 
-在非互動 `ref` 模式下，必須在程序環境中設定 Provider 環境變數。
-若傳遞內聯金鑰旗標但沒有對應的環境變數，現在會快速失敗。
+在非互動式 `ref` 模式下，必須在程序環境中設定提供者環境變數。
+若未設定對應的環境變數，直接傳遞內聯金鑰標誌將會立即失敗。
 
 範例：
 
@@ -145,7 +145,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="自訂 Provider 範例">
+  <Accordion title="自訂提供者範例">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -159,9 +159,9 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    `--custom-api-key` 是選用的。如果省略，入門流程會檢查 `CUSTOM_API_KEY`。
+    `--custom-api-key` 為選填。若省略，onboarding 會檢查 `CUSTOM_API_KEY`。
 
-    參照模式變體：
+    Ref 模式變體：
 
     ```bash
     export CUSTOM_API_KEY="your-key"
@@ -177,15 +177,14 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    在此模式下，入門流程會將 `apiKey` 儲存為 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
+    在此模式下，onboarding 會將 `apiKey` 儲存為 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
 
   </Accordion>
 </AccordionGroup>
 
 ## 新增另一個 Agent
 
-使用 `openclaw agents add <name>` 建立一個擁有自己工作空間、
-工作階段和設定檔的獨立 Agent。在不加 `--workspace` 的情況下執行會啟動精靈。
+使用 `openclaw agents add <name>` 建立擁有自己工作區、階段作業與 auth 設定檔的獨立代理程式。若不使用 `--workspace` 執行，則會啟動精靈。
 
 ```bash
 openclaw agents add work \
@@ -205,13 +204,13 @@ openclaw agents add work \
 備註：
 
 - 預設工作區遵循 `~/.openclaw/workspace-<agentId>`。
-- 新增 `bindings` 以路由傳入訊息（精靈可以執行此操作）。
-- 非互動式旗標：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
+- 新增 `bindings` 以路由傳送傳入訊息（精靈可執行此動作）。
+- 非互動式標誌：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
 
 ## 相關文件
 
-- 入門中心：[Onboarding (CLI)](/zh-Hant/start/wizard)
-- 完整參考：[CLI Setup Reference](/zh-Hant/start/wizard-cli-reference)
+- 入職中心：[入職 (CLI)](/zh-Hant/start/wizard)
+- 完整參考：[CLI 設定參考](/zh-Hant/start/wizard-cli-reference)
 - 指令參考：[`openclaw onboard`](/zh-Hant/cli/onboard)
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";

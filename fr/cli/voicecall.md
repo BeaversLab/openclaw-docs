@@ -1,8 +1,8 @@
 ---
-summary: "Référence CLI pour `openclaw voicecall` (surface de commande du plugin voice-call)"
+summary: "Référence de la CLI pour `openclaw voicecall` (interface de commande du plugin voice-call)"
 read_when:
-  - You use the voice-call plugin and want the CLI entry points
-  - You want quick examples for `voicecall call|continue|status|tail|expose`
+  - Vous utilisez le plugin voice-call et souhaitez connaître les points d'entrée CLI
+  - Vous souhaitez des exemples rapides pour `voicecall call|continue|status|tail|expose`
 title: "voicecall"
 ---
 
@@ -31,7 +31,7 @@ openclaw voicecall expose --mode funnel
 openclaw voicecall expose --mode off
 ```
 
-Note de sécurité : n'exposez le point de terminaison du webhook qu'à des réseaux de confiance. Préférez Tailscale Serve à Funnel lorsque cela est possible.
+Note de sécurité : n'exposez le point de terminaison du webhook qu'aux réseaux de confiance. Privilégiez Tailscale Serve à Funnel lorsque c'est possible.
 
 import fr from "/components/footer/fr.mdx";
 

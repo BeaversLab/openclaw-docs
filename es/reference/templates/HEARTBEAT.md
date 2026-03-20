@@ -1,8 +1,8 @@
 ---
 title: "Plantilla HEARTBEAT.md"
-summary: "Plantilla del espacio de trabajo para HEARTBEAT.md"
+summary: "Plantilla de espacio de trabajo para HEARTBEAT.md"
 read_when:
-  - Bootstrapping a workspace manually
+  - Inicializar manualmente un espacio de trabajo
 ---
 
 # HEARTBEAT.md

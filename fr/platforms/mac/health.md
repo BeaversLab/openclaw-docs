@@ -1,8 +1,8 @@
 ---
 summary: "Comment l'application macOS signale les états de santé de la passerelle/Baileys"
 read_when:
-  - Debugging mac app health indicators
-title: "Health Checks"
+  - Débogage des indicateurs de santé de l'application mac
+title: "Contrôles de santé (macOS)"
 ---
 
 # Health Checks sur macOS
@@ -26,12 +26,12 @@ Comment voir si le channel lié est en bonne santé depuis l'application de la b
 
 ## Fonctionnement de la sonde
 
-- L'application exécute `openclaw health --json` via `ShellExecutor` toutes les ~60 s et à la demande. La sonde charge les identifiants et signale l'état sans envoyer de messages.
+- L'application exécute `openclaw health --json` via `ShellExecutor` toutes les ~60 s et à la demande. La sonde charge les identifiants et signale le statut sans envoyer de messages.
 - Mettre en cache séparément le dernier bon instantané et la dernière erreur pour éviter le scintillement ; afficher l'horodatage de chacun.
 
 ## En cas de doute
 
-- Vous pouvez toujours utiliser le flux CLI dans [Santé de la Gateway](/fr/gateway/health) (`openclaw status`, `openclaw status --deep`, `openclaw health --json`) et suivre `/tmp/openclaw/openclaw-*.log` pour `web-heartbeat` / `web-reconnect`.
+- Vous pouvez toujours utiliser le flux CLI dans [Santé de la Gateway](/fr/gateway/health) (`openclaw status`, `openclaw status --deep`, `openclaw health --json`) et surveiller `/tmp/openclaw/openclaw-*.log` pour `web-heartbeat` / `web-reconnect`.
 
 import fr from "/components/footer/fr.mdx";
 

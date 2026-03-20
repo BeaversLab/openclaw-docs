@@ -1,28 +1,28 @@
 ---
-title: "Prompt Caching"
-summary: "Controles de caché de prompts, orden de fusión, comportamiento del proveedor y patrones de ajuste"
+title: "Caché de prompt"
+summary: "Controles de caché de prompt, orden de fusión, comportamiento del proveedor y patrones de ajuste"
 read_when:
-  - You want to reduce prompt token costs with cache retention
-  - You need per-agent cache behavior in multi-agent setups
-  - You are tuning heartbeat and cache-ttl pruning together
+  - Deseas reducir los costos de tokens de prompt con la retención de caché
+  - Necesitas comportamiento de caché por agente en configuraciones de múltiples agentes
+  - Estás ajustando el latido y la poda de cache-ttl juntos
 ---
 
-# Caché de prompts
+# Caché de prompt
 
-El caché de prompts significa que el proveedor del modelo puede reutilizar prefijos de prompts sin cambios (generalmente instrucciones del sistema/desarrollador y otro contexto estable) a lo largo de los turnos en lugar de reprocesarlos cada vez. La primera solicitud coincidente escribe tokens de caché (`cacheWrite`), y las solicitudes coincidentes posteriores pueden leerlos (`cacheRead`).
+El caché de prompt significa que el proveedor del modelo puede reutilizar prefijos de prompt sin cambios (generalmente instrucciones del sistema/desarrollador y otro contexto estable) en turnos en lugar de procesarlos nuevamente cada vez. La primera solicitud coincidente escribe tokens de caché (`cacheWrite`), y las solicitudes coincidentes posteriores pueden leerlos de nuevo (`cacheRead`).
 
-Por qué es importante: menor costo de tokens, respuestas más rápidas y un rendimiento más predecible para sesiones de larga duración. Sin caché, los prompts repetidos pagan el costo completo del prompt en cada turno incluso cuando la mayor parte de la entrada no cambió.
+Por qué esto es importante: menor costo de tokens, respuestas más rápidas y un rendimiento más predecible para sesiones de larga duración. Sin caché, los prompts repetidos pagan el costo total del prompt en cada turno incluso cuando la mayor parte de la entrada no cambió.
 
 Esta página cubre todos los controles relacionados con el caché que afectan la reutilización de prompts y el costo de tokens.
 
-Para obtener detalles sobre precios de Anthropic, consulte:
+Para detalles de precios de Anthropic, consulta:
 [https://docs.anthropic.com/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/docs/build-with-claude/prompt-caching)
 
 ## Controles principales
 
 ### `cacheRetention` (modelo y por agente)
 
-Establezca la retención de caché en los parámetros del modelo:
+Establecer la retención de caché en los parámetros del modelo:
 
 ```yaml
 agents:
@@ -55,11 +55,11 @@ Los valores heredados aún se aceptan y asignan:
 - `5m` -> `short`
 - `1h` -> `long`
 
-Prefiera `cacheRetention` para configuraciones nuevas.
+Prefiere `cacheRetention` para nueva configuración.
 
 ### `contextPruning.mode: "cache-ttl"`
 
-Poda el contexto de resultados de herramientas antiguos después de las ventanas TTL del caché para que las solicitudes posteriores a la inactividad no vuelvan a almacenar en caché un historial demasiado grande.
+Poda el contexto de resultados de herramientas antiguos después de las ventanas de TTL del caché para que las solicitudes posteriores a la inactividad no vuelvan a almacenar en caché un historial demasiado grande.
 
 ```yaml
 agents:
@@ -69,11 +69,11 @@ agents:
       ttl: "1h"
 ```
 
-Consulte [Poda de sesiones](/es/concepts/session-pruning) para obtener el comportamiento completo.
+Consulta [Poda de sesiones](/es/concepts/session-pruning) para el comportamiento completo.
 
-### Mantenimiento de caché con latido (Heartbeat keep-warm)
+### Mantenimiento de latido (Heartbeat keep-warm)
 
-El latido puede mantener las ventanas de caché activas y reducir las escrituras de caché repetidas después de períodos de inactividad.
+El latido puede mantener las ventanas de caché calientes y reducir escrituras de caché repetidas después de períodos de inactividad.
 
 ```yaml
 agents:
@@ -82,18 +82,18 @@ agents:
       every: "55m"
 ```
 
-Se admite el latido por agente en `agents.list[].heartbeat`.
+El latido por agente es compatible en `agents.list[].heartbeat`.
 
 ## Comportamiento del proveedor
 
 ### Anthropic (API directa)
 
 - `cacheRetention` es compatible.
-- Con perfiles de autenticación de clave de API de Anthropic, OpenClaw inicializa `cacheRetention: "short"` para las referencias de modelos de Anthropic cuando no está establecido.
+- Con perfiles de autenticación de clave de API de Anthropic, OpenClaw inicializa `cacheRetention: "short"` para las referencias de modelos de Anthropic cuando no está configurado.
 
 ### Amazon Bedrock
 
-- Las referencias de modelos de Anthropic Claude (`amazon-bedrock/*anthropic.claude*`) soportan el paso directo explícito de `cacheRetention`.
+- Las referencias de modelos de Anthropic Claude (`amazon-bedrock/*anthropic.claude*`) soportan el paso explícito de `cacheRetention`.
 - Los modelos de Bedrock que no son de Anthropic se ven forzados a `cacheRetention: "none"` en tiempo de ejecución.
 
 ### Modelos de Anthropic de OpenRouter
@@ -108,7 +108,7 @@ Si el proveedor no soporta este modo de caché, `cacheRetention` no tiene ningú
 
 ### Tráfico mixto (predeterminado recomendado)
 
-Mantenga una línea base de larga duración en su agente principal, desactive el almacenamiento en caché en los agentes de notificación efímeros:
+Mantenga una línea base de larga duración en su agente principal, desactive el almacenamiento en caché en los agentes de notificación intermitentes:
 
 ```yaml
 agents:
@@ -129,15 +129,15 @@ agents:
         cacheRetention: "none"
 ```
 
-### Línea base con prioridad de costes
+### Línea base centrada en el costo
 
 - Establezca la línea base `cacheRetention: "short"`.
 - Active `contextPruning.mode: "cache-ttl"`.
 - Mantenga el latido por debajo de su TTL solo para los agentes que se benefician de cachés calientes.
 
-## Diagnósticos de caché
+## Diagnóstico de caché
 
-OpenClaw expone diagnósticos dedicados de rastreo de caché para ejecuciones de agentes integrados.
+OpenClaw expone diagnósticos de seguimiento de caché dedicados para ejecuciones de agentes integrados.
 
 ### configuración `diagnostics.cacheTrace`
 
@@ -158,9 +158,9 @@ Valores predeterminados:
 - `includePrompt`: `true`
 - `includeSystem`: `true`
 
-### Interruptores de entorno (depuración única)
+### Interruptores de entorno (depuración puntual)
 
-- `OPENCLAW_CACHE_TRACE=1` activa el rastreo de caché.
+- `OPENCLAW_CACHE_TRACE=1` activa el seguimiento de caché.
 - `OPENCLAW_CACHE_TRACE_FILE=/path/to/cache-trace.jsonl` anula la ruta de salida.
 - `OPENCLAW_CACHE_TRACE_MESSAGES=0|1` activa la captura completa de la carga útil del mensaje.
 - `OPENCLAW_CACHE_TRACE_PROMPT=0|1` activa la captura de texto del prompt.
@@ -168,21 +168,21 @@ Valores predeterminados:
 
 ### Qué inspeccionar
 
-- Los eventos de rastreo de caché son JSONL e incluyen instantáneas por etapas como `session:loaded`, `prompt:before`, `stream:context` y `session:after`.
-- El impacto de los tokens de caché por turno es visible en las superficies de uso normal a través de `cacheRead` y `cacheWrite` (por ejemplo `/usage full` y resúmenes de uso de la sesión).
+- Los eventos de seguimiento de caché son JSONL e incluyen instantáneas por etapas como `session:loaded`, `prompt:before`, `stream:context` y `session:after`.
+- El impacto de tokens de caché por turno es visible en las superficies de uso normal a través de `cacheRead` y `cacheWrite` (por ejemplo `/usage full` y resúmenes de uso de sesión).
 
 ## Solución rápida de problemas
 
-- `cacheWrite` alto en la mayoría de turnos: verifique si hay entradas de system-prompt volátiles y confirme que el modelo/proveedor admite su configuración de caché.
+- Alto `cacheWrite` en la mayoría de los turnos: compruebe si hay entradas de system prompt volátiles y verifique que el modelo/proveedor sea compatible con su configuración de caché.
 - Sin efecto de `cacheRetention`: confirme que la clave del modelo coincide con `agents.defaults.models["provider/model"]`.
-- Solicitudes de Bedrock Nova/Mistral con configuración de caché: se espera que el tiempo de ejecución fuerce a `none`.
+- Solicitudes de Bedrock Nova/Mistral con configuración de caché: se espera una fuerza de ejecución para `none`.
 
-Documentos relacionados:
+Documentación relacionada:
 
 - [Anthropic](/es/providers/anthropic)
-- [Uso de tokens y costos](/es/reference/token-use)
+- [Uso de tokens y costes](/es/reference/token-use)
 - [Poda de sesiones](/es/concepts/session-pruning)
-- [Referencia de configuración de Gateway](/es/gateway/configuration-reference)
+- [Referencia de configuración de la puerta de enlace](/es/gateway/configuration-reference)
 
 import es from "/components/footer/es.mdx";
 

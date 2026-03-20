@@ -1,29 +1,29 @@
 ---
-summary: "Talk mode : conversations vocales continues avec ElevenLabs TTS"
+summary: "Talk mode: continuous speech conversations with ElevenLabs TTS"
 read_when:
   - Implementing Talk mode on macOS/iOS/Android
   - Changing voice/TTS/interrupt behavior
-title: "Mode Talk"
+title: "Talk Mode"
 ---
 
-# Mode Talk
+# Talk Mode
 
-Le mode Talk est une boucle de conversation vocale continue :
+Talk mode is a continuous voice conversation loop:
 
-1. Écouter la parole
-2. Envoyer la transcription au modèle (session principale, chat.send)
-3. Attendre la réponse
-4. La lire via ElevenLabs (lecture en continu)
+1. Listen for speech
+2. Send transcript to the model (main session, chat.send)
+3. Wait for the response
+4. Speak it via ElevenLabs (streaming playback)
 
-## Comportement (macOS)
+## Behavior (macOS)
 
-- **Superposition toujours active** tant que le mode Talk est activé.
-- Transitions de phase **Écoute → Réflexion → Parole**.
-- Lors d'une **courte pause** (fenêtre de silence), la transcription actuelle est envoyée.
-- Les réponses sont **écrites dans WebChat** (identique à la frappe).
-- **Interruption à la parole** (activé par défaut) : si l'utilisateur commence à parler pendant que l'assistant parle, nous arrêtons la lecture et notons l'horodatage de l'interruption pour la prochaine invite.
+- **Always-on overlay** while Talk mode is enabled.
+- **Listening → Thinking → Speaking** phase transitions.
+- On a **short pause** (silence window), the current transcript is sent.
+- Replies are **written to WebChat** (same as typing).
+- **Interrupt on speech** (default on): if the user starts talking while the assistant is speaking, we stop playback and note the interruption timestamp for the next prompt.
 
-## Directives vocales dans les réponses
+## Voice directives in replies
 
 L'assistant peut préfixer sa réponse par une **ligne JSON unique** pour contrôler la voix :
 
@@ -62,19 +62,19 @@ Clés prises en charge :
 }
 ```
 
-Valeurs par défaut :
+Par défaut :
 
 - `interruptOnSpeech` : true
-- `silenceTimeoutMs` : si non défini, Talk conserve la fenêtre de pause par défaut de la plateforme avant d'envoyer la transcription (`700 ms on macOS and Android, 900 ms on iOS`)
+- `silenceTimeoutMs` : lorsqu'il n'est pas défini, Talk conserve la fenêtre de pause par défaut de la plateforme avant l'envoi de la transcription (`700 ms on macOS and Android, 900 ms on iOS`)
 - `voiceId` : revient à `ELEVENLABS_VOICE_ID` / `SAG_VOICE_ID` (ou à la première voix ElevenLabs lorsque la clé API est disponible)
-- `modelId` : défaut à `eleven_v3` si non défini
-- `apiKey` : revient à `ELEVENLABS_API_KEY` (ou au profil shell de la passerelle si disponible)
-- `outputFormat` : défaut à `pcm_44100` sur macOS/iOS et `pcm_24000` sur Android (définir `mp3_*` pour forcer le streaming MP3)
+- `modelId` : correspond par défaut à `eleven_v3` si non défini
+- `apiKey` : revient à `ELEVENLABS_API_KEY` (ou au profil de shell de passerelle si disponible)
+- `outputFormat` : valeur par défaut `pcm_44100` sur macOS/iOS et `pcm_24000` sur Android (définir `mp3_*` pour forcer le streaming MP3)
 
 ## Interface macOS
 
-- Bouton de la barre de menus : **Talk**
-- Onglet Config : groupe **Talk Mode** (id de voix + interrupteur d'interruption)
+- Bascule de la barre de menus : **Talk**
+- Onglet Config : groupe **Talk Mode** (id de voix + bascule d'interruption)
 - Superposition :
   - **Écoute** : le nuage pulse avec le niveau du microphone
   - **Réflexion** : animation d'enfoncement
@@ -84,11 +84,11 @@ Valeurs par défaut :
 
 ## Notes
 
-- Nécessite les permissions Speech + Microphone.
-- Utilise `chat.send` contre la clé de session `main`.
-- Le TTS utilise l'API de streaming ElevenLabs avec `ELEVENLABS_API_KEY` et la lecture incrémentale sur API/macOS/iOS pour une latence plus faible.
-- `stability` pour `eleven_v3` est validé à `0.0`, `0.5`, ou `1.0` ; les autres modèles acceptent `0..1`.
-- `latency_tier` est validé à `0..4` lorsqu'il est défini.
+- Nécessite les autorisations de reconnaissance vocale et de microphone.
+- Utilise `chat.send` avec la clé de session `main`.
+- Le TTS utilise l'API de streaming ElevenLabs avec `ELEVENLABS_API_KEY` et une lecture incrémentale sur macOS/iOS/Android pour une latence plus faible.
+- `stability` pour `eleven_v3` est validé par rapport à `0.0`, `0.5` ou `1.0` ; d'autres modèles acceptent `0..1`.
+- `latency_tier` est validé par rapport à `0..4` lorsqu'il est défini.
 - Android prend en charge les formats de sortie `pcm_16000`, `pcm_22050`, `pcm_24000` et `pcm_44100` pour le streaming AudioTrack à faible latence.
 
 import fr from "/components/footer/fr.mdx";

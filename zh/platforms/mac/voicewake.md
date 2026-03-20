@@ -1,15 +1,15 @@
 ---
-summary: "Mac 应用中的语音唤醒和按键通话模式以及路由详细信息"
+summary: "语音唤醒和按住说话模式以及 Mac 应用中的路由详情"
 read_when:
-  - Working on voice wake or PTT pathways
-title: "语音唤醒"
+  - 处理语音唤醒或按住说话路径
+title: "Voice Wake (macOS)"
 ---
 
 # 语音唤醒与按住通话
 
 ## 模式
 
-- **唤醒词模式**（默认）：始终开启的语音识别器等待触发令牌（`swabbleTriggerWords`）。匹配后，它开始捕获，显示带有部分文本的覆盖层，并在静音后自动发送。
+- **唤醒词模式**（默认）：始终开启的语音识别器等待触发令牌（`swabbleTriggerWords`）。匹配时，它开始捕获，显示带有部分文本的覆盖层，并在静音后自动发送。
 - **按住通话（按住右 Option 键）**：按住右 Option 键立即进行捕获——无需触发。按住时显示覆盖层；松开后经过短暂延迟以完成并转发，以便您调整文本。
 
 ## 运行时行为（唤醒词）
@@ -19,7 +19,7 @@ title: "语音唤醒"
 - 静音窗口：语音流畅时为 2.0 秒，如果只听到触发词则为 5.0 秒。
 - 强制停止：120 秒以防止会话失控。
 - 会话之间的防抖：350 毫秒。
-- 覆盖层通过 `VoiceWakeOverlayController` 驱动，并带有已提交/易失性着色。
+- 覆盖层由 `VoiceWakeOverlayController` 驱动，并带有已提交/易失性着色。
 - 发送后，识别器会干净地重新启动以监听下一个触发词。
 
 ## 生命周期不变性
@@ -34,11 +34,11 @@ title: "语音唤醒"
 加固：
 
 - 唤醒运行时重新启动不再被覆盖层可见性阻止。
-- 覆盖层关闭完成通过 `VoiceSessionCoordinator` 触发 `VoiceWakeRuntime.refresh(...)`，因此手动 X 关闭总是恢复监听。
+- 覆盖层关闭完成会通过 `VoiceSessionCoordinator` 触发 `VoiceWakeRuntime.refresh(...)`，因此手动 X 关闭始终会恢复监听。
 
 ## 按住通话细节
 
-- 热键检测使用全局 `.flagsChanged` 监视器来监视 **右 Option** 键（`keyCode 61` + `.option`）。我们仅观察事件（不拦截）。
+- 热键检测使用全局 `.flagsChanged` 监视器来监视 **右 Option** 键（`keyCode 61` + `.option`）。我们仅观察事件（不进行拦截）。
 - 捕获管道位于 `VoicePushToTalk` 中：立即启动语音，将部分结果流式传输到覆盖层，并在释放时调用 `VoiceWakeForwarder`。
 - 当按住通话开始时，我们会暂停唤醒词运行时以避免音频采集冲突；它会在释放后自动重启。
 - 权限：需要麦克风 + 语音识别权限；查看事件需要辅助功能/输入监控批准。
@@ -50,7 +50,7 @@ title: "语音唤醒"
 - **Hold Cmd+Fn to talk**（按住 Cmd+Fn 通话）：启用按住通话监视器。在 macOS < 26 上禁用。
 - 语言和麦克风选择器、实时电平表、触发词表、测试器（仅本地；不转发）。
 - 如果设备断开连接，麦克风选择器会保留上次的选择，显示断开连接提示，并暂时回退到系统默认设置，直到设备恢复。
-- **声音**：在检测到触发和发送时发出提示音；默认为 macOS “Glass” 系统声音。您可以为每个事件选择任何 `NSSound` 可加载文件（例如 MP3/WAV/AIFF）或选择 **无声音**。
+- **声音**：在检测到触发和发送时发出提示音；默认为 macOS “Glass”系统声音。您可以为每个事件选择任何 `NSSound` 可加载的文件（例如 MP3/WAV/AIFF），或选择 **无声音**。
 
 ## 转发行为
 
@@ -59,12 +59,12 @@ title: "语音唤醒"
 
 ## 转发负载
 
-- `VoiceWakeForwarder.prefixedTranscript(_:)` 在发送前预置机器提示。在唤醒词和按键通话路径之间共享。
+- `VoiceWakeForwarder.prefixedTranscript(_:)` 在发送前添加机器提示。在唤醒词和按住说话路径之间共享。
 
 ## 快速验证
 
 - 开启按住通话，按住 Cmd+Fn，说话，松开：覆盖层应显示部分文本然后发送。
-- 按住时，菜单栏耳朵应保持放大（使用 `triggerVoiceEars(ttl:nil)`）；释放后它们会恢复。
+- 按住时，菜单栏耳朵应保持放大状态（使用 `triggerVoiceEars(ttl:nil)`）；释放后它们会缩小。
 
 import zh from "/components/footer/zh.mdx";
 

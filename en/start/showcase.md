@@ -1,6 +1,5 @@
 ---
 title: "Showcase"
-description: "Real-world OpenClaw projects from the community"
 summary: "Community-built projects and integrations powered by OpenClaw"
 read_when:
   - Looking for real OpenClaw usage examples
@@ -237,7 +236,7 @@ Triggered by a roof camera: ask OpenClaw to snap a sky photo whenever it looks p
 <Card title="Visual Morning Briefing Scene" icon="robot" href="https://x.com/buddyhadry/status/2010005331925954739">
   **@buddyhadry** • `automation` `briefing` `images` `telegram`
 
-A scheduled prompt generates a single "scene" image each morning (weather, tasks, date, favorite post/quote) via a OpenClaw persona.
+A scheduled prompt generates a single "scene" image each morning (weather, tasks, date, favorite post/quote) via an OpenClaw persona.
 
 </Card>
 

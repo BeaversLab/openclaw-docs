@@ -1,7 +1,7 @@
 ---
 summary: "Registro de perfil de usuario"
 read_when:
-  - Bootstrapping a workspace manually
+  - Inicializar manualmente un espacio de trabajo
 ---
 
 # USER.md - Sobre tu humano
@@ -9,7 +9,7 @@ read_when:
 _Aprende sobre la persona a la que estás ayudando. Actualiza esto a medida que avanzas._
 
 - **Nombre:**
-- **Cómo llamarlo:**
+- **Cómo llamarlos:**
 - **Pronombres:** _(opcional)_
 - **Zona horaria:**
 - **Notas:**

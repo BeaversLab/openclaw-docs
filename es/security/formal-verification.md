@@ -2,8 +2,8 @@
 title: Verificación formal (Modelos de seguridad)
 summary: Modelos de seguridad verificados por máquina para las rutas de mayor riesgo de OpenClaw.
 read_when:
-  - Reviewing formal security model guarantees or limits
-  - Reproducing or updating TLA+/TLC security model checks
+  - Revisar las garantías o limitaciones del modelo de seguridad formal
+  - Reproducir o actualizar las comprobaciones del modelo de seguridad TLA+/TLC
 permalink: /security/formal-verification/
 ---
 
@@ -15,7 +15,7 @@ Esta página rastrea los **modelos de seguridad formales** de OpenClaw (TLA+/TLC
 
 **Objetivo (estrella polar):** proporcionar un argumento verificado por máquina de que OpenClaw hace cumplir su
 política de seguridad prevista (autorización, aislamiento de sesión, filtrado de herramientas y
-seguridad contra configuraciones erróneas), bajo suposiciones explícitas.
+seguridad contra configuraciones erróneas), bajo supuestos explícitos.
 
 **Lo que esto es (hoy):** una **suite de regresión de seguridad** ejecutable y dirigida por el atacante:
 

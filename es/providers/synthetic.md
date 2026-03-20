@@ -1,26 +1,26 @@
 ---
-summary: "Use la API compatible con Anthropic de Synthetic en OpenClaw"
+summary: "Usa la API compatible con Anthropic de Synthetic en OpenClaw"
 read_when:
-  - You want to use Synthetic as a model provider
-  - You need a Synthetic API key or base URL setup
+  - Quieres usar Synthetic como proveedor de modelos
+  - Necesitas una configuración de clave de API o URL base de Synthetic
 title: "Synthetic"
 ---
 
 # Synthetic
 
-Synthetic expone endpoints compatibles con Anthropic. OpenClaw lo registra como el proveedor
-`synthetic` y utiliza la API de Anthropic Messages.
+Synthetic expone endpoints compatibles con Anthropic. OpenClaw lo registra como el
+proveedor `synthetic` y usa la API de Mensajes de Anthropic.
 
 ## Configuración rápida
 
-1. Establezca `SYNTHETIC_API_KEY` (o ejecute el asistente a continuación).
-2. Ejecutar la incorporación:
+1. Establece `SYNTHETIC_API_KEY` (o ejecuta el asistente a continuación).
+2. Ejecuta la incorporación:
 
 ```bash
 openclaw onboard --auth-choice synthetic-api-key
 ```
 
-El modelo predeterminado se establece en:
+El modelo predeterminado está establecido en:
 
 ```
 synthetic/hf:MiniMaxAI/MiniMax-M2.5
@@ -61,13 +61,13 @@ synthetic/hf:MiniMaxAI/MiniMax-M2.5
 }
 ```
 
-Nota: El cliente de Anthropic de OpenClaw añade `/v1` a la URL base, por lo que debe usar
+Nota: El cliente Anthropic de OpenClaw añade `/v1` a la URL base, así que usa
 `https://api.synthetic.new/anthropic` (no `/anthropic/v1`). Si Synthetic cambia
-su URL base, anule `models.providers.synthetic.baseUrl`.
+su URL base, anula `models.providers.synthetic.baseUrl`.
 
 ## Catálogo de modelos
 
-Todos los modelos de abajo usan el costo `0` (entrada/salida/caché).
+Todos los modelos a continuación usan costo `0` (entrada/salida/caché).
 
 | ID del modelo                                          | Ventana de contexto | Tokens máximos | Razonamiento | Entrada        |
 | ------------------------------------------------------ | ------------------- | -------------- | ------------ | -------------- |
@@ -94,9 +94,9 @@ Todos los modelos de abajo usan el costo `0` (entrada/salida/caché).
 ## Notas
 
 - Las referencias de modelos usan `synthetic/<modelId>`.
-- Si habilitas una lista de permitidos de modelos (`agents.defaults.models`), añade cada modelo que
-  planees usar.
-- Consulta [Model providers](/es/concepts/model-providers) para conocer las reglas de los proveedores.
+- Si habilitas una lista de permitidos de modelos (`agents.defaults.models`), añade todos los modelos que
+  planeas usar.
+- Consulta [Proveedores de modelos](/es/concepts/model-providers) para conocer las reglas de los proveedores.
 
 import es from "/components/footer/es.mdx";
 

@@ -1,8 +1,8 @@
 ---
-summary: "Exploración: configuración del modelo, perfiles de autenticación y comportamiento de respaldo"
+summary: "Exploración: configuración del modelo, perfiles de autenticación y comportamiento de reserva"
 read_when:
-  - Exploring future model selection + auth profile ideas
-title: "Exploración de la configuración del modelo"
+  - Explorando ideas futuras de selección de modelos + perfiles de autenticación
+title: "Exploración de configuración de modelos"
 ---
 
 # Configuración del modelo (Exploración)
@@ -11,7 +11,7 @@ Este documento captura **ideas** para la configuración futura del modelo. No es
 especificación de lanzamiento. Para el comportamiento actual, consulte:
 
 - [Modelos](/es/concepts/models)
-- [Conmutación por error del modelo](/es/concepts/model-failover)
+- [Conmutación por error de modelo](/es/concepts/model-failover)
 - [OAuth + perfiles](/es/concepts/oauth)
 
 ## Motivación
@@ -19,12 +19,12 @@ especificación de lanzamiento. Para el comportamiento actual, consulte:
 Los operadores desean:
 
 - Múltiples perfiles de autenticación por proveedor (personal vs. trabajo).
-- Selección simple de `/model` con respaldos predecibles.
+- Selección sencilla de `/model` con reservas previsibles.
 - Separación clara entre modelos de texto y modelos con capacidad de imagen.
 
 ## Posible dirección (alto nivel)
 
-- Mantener la selección del modelo simple: `provider/model` con alias opcionales.
+- Mantenga la selección del modelo sencilla: `provider/model` con alias opcionales.
 - Permitir que los proveedores tengan múltiples perfiles de autenticación, con un orden explícito.
 - Utilizar una lista global de respaldo para que todas las sesiones conmuten por error de manera consistente.
 - Anular el enrutamiento de imágenes solo cuando se configure explícitamente.

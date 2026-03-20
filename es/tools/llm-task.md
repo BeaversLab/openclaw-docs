@@ -1,17 +1,17 @@
 ---
-summary: "Tareas de LLM solo JSON para flujos de trabajo (herramienta de complemento opcional)"
+summary: "Tareas LLM solo JSON para flujos de trabajo (herramienta de complemento opcional)"
 read_when:
-  - You want a JSON-only LLM step inside workflows
-  - You need schema-validated LLM output for automation
-title: "Tarea de LLM"
+  - Deseas un paso LLM solo JSON dentro de los flujos de trabajo
+  - Necesitas salida LLM validada por esquema para automatización
+title: "Tarea LLM"
 ---
 
-# Tarea de LLM
+# Tarea LLM
 
-`llm-task` es una **herramienta de complemento opcional** que ejecuta una tarea de LLM solo JSON y
+`llm-task` es una **herramienta de complemento opcional** que ejecuta una tarea LLM solo JSON y
 devuelve salida estructurada (opcionalmente validada contra JSON Schema).
 
-Esto es ideal para motores de flujo de trabajo como Lobster: puedes agregar un solo paso de LLM
+Esto es ideal para motores de flujo de trabajo como Lobster: puedes agregar un solo paso LLM
 sin escribir código OpenClaw personalizado para cada flujo de trabajo.
 
 ## Habilitar el complemento
@@ -28,7 +28,7 @@ sin escribir código OpenClaw personalizado para cada flujo de trabajo.
 }
 ```
 
-2. Añadir la herramienta a la lista de permitidos (está registrada con `optional: true`):
+2. Permite la herramienta (está registrada con `optional: true`):
 
 ```json
 {
@@ -70,8 +70,8 @@ fuera de la lista es rechazada.
 
 ## Parámetros de la herramienta
 
-- `prompt` (cadena, obligatorio)
-- `input` (cualquiera, opcional)
+- `prompt` (cadena, requerido)
+- `input` (cualquier, opcional)
 - `schema` (objeto, esquema JSON opcional)
 - `provider` (cadena, opcional)
 - `model` (cadena, opcional)
@@ -112,11 +112,11 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 
 ## Notas de seguridad
 
-- La herramienta es **solo JSON** e instruye al modelo para que genere solo JSON (sin
+- La herramienta es **solo JSON** e indica al modelo que solo produzca JSON (sin
   vallas de código, sin comentarios).
 - No se exponen herramientas al modelo para esta ejecución.
-- Trate la salida como que no es de confianza a menos que valide con `schema`.
-- Coloque aprobaciones antes de cualquier paso con efectos secundarios (send, post, exec).
+- Trata la salida como no confiable a menos que valides con `schema`.
+- Coloca aprobaciones antes de cualquier paso con efectos secundarios (enviar, publicar, ejecutar).
 
 import es from "/components/footer/es.mdx";
 

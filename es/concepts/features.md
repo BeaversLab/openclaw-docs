@@ -1,18 +1,18 @@
 ---
-summary: "Capacidades de OpenClaw a través de canales, enrutamiento, medios y UX."
+summary: "Capacidades de OpenClaw en canales, enrutamiento, medios y UX."
 read_when:
-  - You want a full list of what OpenClaw supports
-title: "Características"
+  - Deseas ver la lista completa de lo que OpenClaw admite
+title: "Funciones"
 ---
 
 ## Destacados
 
 <Columns>
   <Card title="Canales" icon="message-square">
-    WhatsApp, Telegram, Discord e iMessage con una sola puerta de enlace.
+    WhatsApp, Telegram, Discord e iMessage con una única pasarela.
   </Card>
   <Card title="Complementos" icon="plug">
-    Añada Mattermost y más con extensiones.
+    Añade Mattermost y más con extensiones.
   </Card>
   <Card title="Enrutamiento" icon="route">
     Enrutamiento multiagente con sesiones aisladas.
@@ -20,8 +20,8 @@ title: "Características"
   <Card title="Medios" icon="image">
     Imágenes, audio y documentos de entrada y salida.
   </Card>
-  <Card title="Aplicaciones e interfaz de usuario" icon="monitor">
-    Interfaz de usuario de control web y aplicación complementaria para macOS.
+  <Card title="Aplicaciones e interfaz" icon="monitor">
+    Interfaz de control web y aplicación complementaria para macOS.
   </Card>
   <Card title="Nodos móviles" icon="smartphone">
     Nodos iOS y Android con emparejamiento, voz/chat y comandos de dispositivo enriquecidos.
@@ -39,7 +39,7 @@ title: "Características"
 - Transmisión y fragmentación para respuestas largas
 - Enrutamiento multiagente para sesiones aisladas por espacio de trabajo o remitente
 - Autenticación de suscripción para Anthropic y OpenAI a través de OAuth
-- Sesiones: los chats directos se colapsan en un `main` compartido; los grupos están aislados
+- Sesiones: los chats directos se colapsan en `main` compartidos; los grupos están aislados
 - Soporte de chat grupal con activación basada en menciones
 - Soporte de medios para imágenes, audio y documentos
 - Gancho opcional de transcripción de notas de voz
@@ -48,7 +48,7 @@ title: "Características"
 - Nodo Android con emparejamiento, pestaña Conectar, sesiones de chat, pestaña de voz, Canvas/cámara, además de dispositivo, notificaciones, contactos/calendario, movimiento, fotos y comandos SMS
 
 <Note>
-  Se han eliminado las rutas heredadas de Claude, Codex, Gemini y Opencode. Pi es la única ruta de
+  Se han eliminado las rutas heredadas de Claude, Codex, Gemini y Opencode. Pi es la única ruta del
   agente de codificación.
 </Note>
 

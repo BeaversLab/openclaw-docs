@@ -1,41 +1,41 @@
 ---
-summary: "OpenProse：OpenClaw 中的 .prose 工作流、斜線指令與狀態"
+summary: "OpenProse：OpenClaw 中的 .prose 工作流程、斜線指令和狀態"
 read_when:
-  - You want to run or write .prose workflows
-  - You want to enable the OpenProse plugin
-  - You need to understand state storage
+  - 您想要執行或撰寫 .prose 工作流程
+  - 您想要啟用 OpenProse 外掛程式
+  - 您需要了解狀態儲存
 title: "OpenProse"
 ---
 
 # OpenProse
 
-OpenProse 是一種可攜式、以 Markdown 為優先的工作流格式，用於協調 AI 會話。在 OpenClaw 中，它以插件形式提供，會安裝 OpenProse 技能套件以及一個 `/prose` 斜線指令。程式存放於 `.prose` 檔案中，並可透過明確的控制流程產生多個子代理程式。
+OpenProse 是一種便攜、優先使用 Markdown 的工作流程格式，用於協調 AI 會話。在 OpenClaw 中，它作為一個外掛程式隨附，該外掛程式安裝了 OpenProse 技能套件以及一個 `/prose` 斜線指令。程式位於 `.prose` 檔案中，並可以透過明確的控制流程生成多個子代理程式。
 
-官方網站：[https://www.prose.md](https://www.prose.md)
+官方網站： [https://www.prose.md](https://www.prose.md)
 
 ## 功能
 
-- 具有明確平行處理的多代理程式研究與綜合。
-- 可重複、安全的審核工作流（程式碼審查、事件分類、內容管道）。
+- 具有明確並行性的多代理程式研究 + 綜合。
+- 可重複且安全的審核工作流程 (程式碼審查、事件分類、內容管線)。
 - 可重複使用的 `.prose` 程式，您可以在支援的代理程式執行環境中執行。
 
-## 安裝與啟用
+## 安裝 + 啟用
 
-套件隨附的插件預設為停用。請啟用 OpenProse：
+隨附的外掛程式預設為停用。啟用 OpenProse：
 
 ```bash
 openclaw plugins enable open-prose
 ```
 
-啟用插件後，請重新啟動 Gateway。
+啟用外掛程式後，請重新啟動 Gateway。
 
-開發/本機簽出：`openclaw plugins install ./extensions/open-prose`
+開發/本機結帳： `openclaw plugins install ./extensions/open-prose`
 
-相關文件：[Plugins](/zh-Hant/tools/plugin)、[Plugin manifest](/zh-Hant/plugins/manifest)、[Skills](/zh-Hant/tools/skills)。
+相關文件： [外掛程式](/zh-Hant/tools/plugin)、[外掛程式清單](/zh-Hant/plugins/manifest)、[技能](/zh-Hant/tools/skills)。
 
 ## 斜線指令
 
-OpenProse 將 `/prose` 註冊為使用者可叫用的技能指令。它會路由至 OpenProse VM 指令，並在底層使用 OpenClaw 工具。
+OpenProse 註冊 `/prose` 為使用者可叫用的技能指令。它會路由到 OpenProse VM 指令，並在底層使用 OpenClaw 工具。
 
 常用指令：
 
@@ -49,7 +49,7 @@ OpenProse 將 `/prose` 註冊為使用者可叫用的技能指令。它會路由
 /prose update
 ```
 
-## 範例：簡單的 `.prose` 檔案
+## 範例：一個簡單的 `.prose` 檔案
 
 ```prose
 # Research + synthesis with two agents running in parallel.
@@ -76,7 +76,7 @@ context: { findings, draft }
 
 ## 檔案位置
 
-OpenProse 將狀態儲存在您工作區的 `.prose/` 下：
+OpenProse 將狀態保存在您工作區的 `.prose/` 下：
 
 ```
 .prose/
@@ -90,7 +90,7 @@ OpenProse 將狀態儲存在您工作區的 `.prose/` 下：
 └── agents/
 ```
 
-使用者層級的持久化代理程式位於：
+使用者層級的持久代理程式位於：
 
 ```
 ~/.prose/agents/
@@ -100,38 +100,38 @@ OpenProse 將狀態儲存在您工作區的 `.prose/` 下：
 
 OpenProse 支援多種狀態後端：
 
-- **filesystem** (預設)：`.prose/runs/...`
-- **in-context**：暫時性的，用於小型程式
+- **filesystem** (預設)： `.prose/runs/...`
+- **in-context**：暫時性，適用於小型程式
 - **sqlite** (實驗性)：需要 `sqlite3` 二進位檔案
 - **postgres** (實驗性)：需要 `psql` 和連線字串
 
 備註：
 
-- sqlite/postgres 為選用且實驗性的功能。
-- postgres 憑證會流向子代理程式日誌；請使用專用且權限最小的資料庫。
+- sqlite/postgres 為自選加入且具實驗性質。
+- postgres 憑證會流入子代理程式日誌；請使用專用的、權限最小的資料庫。
 
 ## 遠端程式
 
 `/prose run <handle/slug>` 解析為 `https://p.prose.md/<handle>/<slug>`。
-直接 URL 將按原樣獲取。這使用 `web_fetch` 工具（或用於 POST 的 `exec`）。
+直接 URL 會按原樣獲取。這使用 `web_fetch` 工具（或用於 POST 的 `exec`）。
 
-## OpenClaw 執行時對應
+## OpenClaw 執行時映射
 
-OpenProse 程式對應到 OpenClaw 基本指令：
+OpenProse 程式映射到 OpenClaw 原語：
 
-| OpenProse 概念          | OpenClaw 工具    |
-| ----------------------- | ---------------- |
-| 產生工作階段 / 任務工具 | `sessions_spawn` |
-| 檔案讀取/寫入           | `read` / `write` |
-| 網頁擷取                | `web_fetch`      |
+| OpenProse 概念      | OpenClaw 工具    |
+| ------------------- | ---------------- |
+| 生成會話 / 任務工具 | `sessions_spawn` |
+| 檔案讀寫            | `read` / `write` |
+| 網路獲取            | `web_fetch`      |
 
 如果您的工具允許清單封鎖了這些工具，OpenProse 程式將會失敗。請參閱 [Skills config](/zh-Hant/tools/skills-config)。
 
 ## 安全性 + 審核
 
-將 `.prose` 檔案視為程式碼。執行前請先檢閱。使用 OpenClaw 工具允許清單和審核閘道來控制副作用。
+將 `.prose` 檔案視為程式碼。執行前請先審查。使用 OpenClaw 工具允許清單和審核閘道來控制副作用。
 
-對於確定性、經審核閘道的工作流程，請與 [Lobster](/zh-Hant/tools/lobster) 比較。
+對於確定性、需審核的工作流程，請與 [Lobster](/zh-Hant/tools/lobster) 比較。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

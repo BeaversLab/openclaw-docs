@@ -1,19 +1,16 @@
 ---
 summary: "Transcription Deepgram pour les notes vocales entrantes"
 read_when:
-  - You want Deepgram speech-to-text for audio attachments
-  - You need a quick Deepgram config example
+  - Vous voulez Deepgram speech-to-text pour les pièces jointes audio
+  - Vous avez besoin d'un exemple de configuration rapide Deepgram
 title: "Deepgram"
 ---
 
-# Deepgram (Transcription Audio)
+# Deepgram (Transcription audio)
 
-Deepgram est une API de reconnaissance vocale. Dans API, elle est utilisée pour la **transcription de fichiers audio/notes vocales
-entrants** via `tools.media.audio`.
+Deepgram est une API speech-to-text. Dans OpenClaw, elle est utilisée pour la **transcription de notes audio/voix entrantes** via `tools.media.audio`.
 
-Lorsqu'elle est activée, OpenClaw télécharge le fichier audio vers Deepgram et injecte la transcription
-dans le pipeline de réponse (bloc `{{Transcript}}` + `[Audio]`). Ce n'est **pas un streaming**;
-il utilise le point de terminaison de transcription préenregistrée.
+Lorsqu'elle est activée, OpenClaw télécharge le fichier audio vers Deepgram et injecte la transcription dans le pipeline de réponse (bloc `{{Transcript}}` + `[Audio]`). Ce n'est **pas un flux continu** ; elle utilise le point de terminaison de transcription préenregistrée.
 
 Site Web : [https://deepgram.com](https://deepgram.com)  
 Docs : [https://developers.deepgram.com](https://developers.deepgram.com)
@@ -26,7 +23,7 @@ Docs : [https://developers.deepgram.com](https://developers.deepgram.com)
 DEEPGRAM_API_KEY=dg_...
 ```
 
-2. Activez le fournisseur :
+2. Activez le provider :
 
 ```json5
 {
@@ -43,7 +40,7 @@ DEEPGRAM_API_KEY=dg_...
 
 ## Options
 
-- `model` : id du modèle Deepgram (par défaut : `nova-3`)
+- `model` : id du Deepgram Deepgram (par défaut : `nova-3`)
 - `language` : indication de langue (facultatif)
 - `tools.media.audio.providerOptions.deepgram.detect_language` : activer la détection de langue (facultatif)
 - `tools.media.audio.providerOptions.deepgram.punctuate` : activer la ponctuation (facultatif)
@@ -88,9 +85,9 @@ Exemple avec les options Deepgram :
 
 ## Notes
 
-- L'authentification suit l'ordre d'authentification standard des fournisseurs ; `DEEPGRAM_API_KEY` est le chemin le plus simple.
-- Remplacez les points de terminaison ou les en-têtes avec `tools.media.audio.baseUrl` et `tools.media.audio.headers` lors de l'utilisation d'un proxy.
-- La sortie suit les mêmes règles audio que les autres fournisseurs (limites de taille, délais d'attente, injection de transcription).
+- L'authentification suit l'ordre d'authentification standard des providers ; `DEEPGRAM_API_KEY` est le chemin le plus simple.
+- Remplacez les points de terminaison ou les en-têtes par `tools.media.audio.baseUrl` et `tools.media.audio.headers` lors de l'utilisation d'un proxy.
+- La sortie suit les mêmes règles audio que les autres providers (limites de taille, délais d'attente, injection de transcription).
 
 import fr from "/components/footer/fr.mdx";
 

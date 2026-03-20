@@ -1,7 +1,7 @@
 ---
 summary: "Durcissement de la liste d'autorisation Telegram : normalisation du préfixe et des espaces blancs"
 read_when:
-  - Reviewing historical Telegram allowlist changes
+  - Révision des historiques des changements de la liste d'autorisation Telegram
 title: "Durcissement de la liste d'autorisation Telegram"
 ---
 
@@ -13,7 +13,8 @@ title: "Durcissement de la liste d'autorisation Telegram"
 
 ## Résumé
 
-Les listes d'autorisation Telegram acceptent désormais les préfixes `telegram:` et `tg:` sans distinction de casse et tolèrent les espaces blancs accidentels. Cela aligne les contrôles de la liste d'autorisation entrante avec la normalisation de l'envoi sortant.
+Les listes d'autorisation Telegram acceptent désormais les préfixes `telegram:` et `tg:` sans tenir compte de la casse, et tolèrent
+les espaces blancs accidentels. Cela aligne les contrôles de liste d'autorisation entrants avec la normalisation de l'envoi sortant.
 
 ## Ce qui a changé
 
@@ -30,7 +31,8 @@ Tous les éléments suivants sont acceptés pour le même ID :
 
 ## Pourquoi c'est important
 
-Le copier-coller à partir des journaux ou des ID de discussion inclut souvent des préfixes et des espaces blancs. La normalisation évite les faux négatifs lors de la décision de répondre dans les DMs ou les groupes.
+Le copier/coller à partir des journaux ou des ID de discussion inclut souvent des préfixes et des espaces blancs. La normalisation évite
+les faux négatifs lors de la décision de répondre dans les DMs ou les groupes.
 
 ## Documentation connexe
 

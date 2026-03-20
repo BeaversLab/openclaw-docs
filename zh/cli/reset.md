@@ -1,8 +1,8 @@
 ---
-summary: "`openclaw reset`（重置本地状态/配置）的 CLI 参考"
+summary: "CLI 参考文档 `openclaw reset`（重置本地状态/配置）"
 read_when:
-  - You want to wipe local state while keeping the CLI installed
-  - You want a dry-run of what would be removed
+  - 您希望在保留已安装的 CLI 的同时清除本地状态
+  - 您希望预演将要删除的内容
 title: "reset"
 ---
 
@@ -17,7 +17,7 @@ openclaw reset --dry-run
 openclaw reset --scope config+creds+sessions --yes --non-interactive
 ```
 
-如果要在删除本地状态之前获取可恢复的快照，请先运行 `openclaw backup create`。
+如果您希望在删除本地状态之前获取可恢复的快照，请先运行 `openclaw backup create`。
 
 import zh from "/components/footer/zh.mdx";
 

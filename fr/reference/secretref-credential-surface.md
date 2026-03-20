@@ -1,9 +1,9 @@
 ---
-summary: "Surface d'identification SecretRef canonique prise en charge vs non prise en charge"
+summary: "Surface d'identification SecretRef prise en charge canonique vs non prise en charge"
 read_when:
-  - Verifying SecretRef credential coverage
-  - Auditing whether a credential is eligible for `secrets configure` or `secrets apply`
-  - Verifying why a credential is outside the supported surface
+  - Vérification de la couverture des identifiants SecretRef
+  - Audit pour déterminer si un identifiant est éligible pour `secrets configure` ou `secrets apply`
+  - Vérification de la raison pour laquelle un identifiant est en dehors de la surface prise en charge
 title: "Surface d'identification SecretRef"
 ---
 
@@ -13,8 +13,8 @@ Cette page définit la surface d'identification SecretRef canonique.
 
 Intention de la portée :
 
-- Dans la portée : strictement les identifiants fournis par l'utilisateur que OpenClaw ne crée ni ne fait pivoter.
-- Hors de la portée : identifiants créés ou pivotant au moment de l'exécution, éléments d'actualisation OAuth et artefacts de type session.
+- Dans la portée : identifiants fournis strictement par l'utilisateur que OpenClaw ne génère ni ne fait pivoter.
+- Hors portée : identifiants générés au moment de l'exécution ou rotatifs, matériel de rafraîchissement OAuth et artefacts de type session.
 
 ## Identifiants pris en charge
 
@@ -32,11 +32,12 @@ Intention de la portée :
 - `messages.tts.elevenlabs.apiKey`
 - `messages.tts.openai.apiKey`
 - `tools.web.fetch.firecrawl.apiKey`
-- `tools.web.search.apiKey`
-- `tools.web.search.gemini.apiKey`
-- `tools.web.search.grok.apiKey`
-- `tools.web.search.kimi.apiKey`
-- `tools.web.search.perplexity.apiKey`
+- `plugins.entries.brave.config.webSearch.apiKey`
+- `plugins.entries.google.config.webSearch.apiKey`
+- `plugins.entries.xai.config.webSearch.apiKey`
+- `plugins.entries.moonshot.config.webSearch.apiKey`
+- `plugins.entries.perplexity.config.webSearch.apiKey`
+- `plugins.entries.firecrawl.config.webSearch.apiKey`
 - `gateway.auth.password`
 - `gateway.auth.token`
 - `gateway.remote.token`
@@ -104,14 +105,15 @@ Notes :
 - Auth-profile refs are included in runtime resolution and audit coverage.
 - For SecretRef-managed model providers, generated `agents/*/agent/models.json` entries persist non-secret markers (not resolved secret values) for `apiKey`/header surfaces.
 - Marker persistence is source-authoritative: OpenClaw writes markers from the active source config snapshot (pre-resolution), not from resolved runtime secret values.
-- Pour la recherche web :
+- For web search :
   - En mode fournisseur explicite (`tools.web.search.provider` défini), seule la clé de fournisseur sélectionnée est active.
   - En mode automatique (`tools.web.search.provider` non défini), seule la première clé de fournisseur résolue par priorité est active.
   - En mode automatique, les références de fournisseur non sélectionnées sont traitées comme inactives jusqu'à ce qu'elles soient sélectionnées.
+  - Les chemins de fournisseur `tools.web.search.*` hérités sont toujours résolus pendant la fenêtre de compatibilité, mais la surface SecretRef canonique est `plugins.entries.<plugin>.config.webSearch.*`.
 
 ## Identifiants non pris en charge
 
-Les identifiants hors portée incluent :
+Les identifiants hors scope incluent :
 
 [//]: # "secretref-unsupported-list-start"
 
@@ -127,9 +129,9 @@ Les identifiants hors portée incluent :
 
 [//]: # "secretref-unsupported-list-end"
 
-Rationale :
+Justification :
 
-- Ces identifiants sont des classes créées, pivotées, portant une session ou durables OAuth qui ne correspondent pas à la résolution externe en lecture seule de SecretRef.
+- Ces identifiants sont des classes créées, pivotées, porteuses de session ou durables via OAuth qui ne correspondent pas à une résolution SecretRef externe en lecture seule.
 
 import fr from "/components/footer/fr.mdx";
 

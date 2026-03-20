@@ -1,7 +1,7 @@
 ---
 summary: "適用於 OpenClaw macOS 應用程式開發人員的設定指南"
 read_when:
-  - Setting up the macOS development environment
+  - 設定 macOS 開發環境
 title: "macOS 開發設定"
 ---
 
@@ -14,7 +14,7 @@ title: "macOS 開發設定"
 在建置應用程式之前，請確保您已安裝以下項目：
 
 1. **Xcode 26.2+**：Swift 開發所需。
-2. **Node.js 24 和 pnpm**：建議用於 Gateway、CLI 和打包腳本。目前為 `22.16+` 的 Node 22 LTS 仍為了相容性而受到支援。
+2. **Node.js 24 & pnpm**：建議用於 Gateway、CLI 和打包腳本。目前仍支援 Node 22 LTS（即 `22.16+`）以保持相容性。
 
 ## 1. 安裝相依套件
 
@@ -26,22 +26,22 @@ pnpm install
 
 ## 2. 建置並打包應用程式
 
-若要建置 macOS 應用程式並將其打包成 `dist/OpenClaw.app`，請執行：
+若要建構 macOS 應用程式並將其打包為 `dist/OpenClaw.app`，請執行：
 
 ```bash
 ./scripts/package-mac-app.sh
 ```
 
-如果您沒有 Apple 開發者 ID 憑證，腳本將自動使用 **臨時簽署** (`-`)。
+如果您沒有 Apple Developer ID 憑證，該腳本將自動使用 **ad-hoc 簽署**（`-`）。
 
-有關開發執行模式、簽署旗標和團隊 ID 疑難排解，請參閱 macOS 應用程式 README：
+如需了解開發執行模式、簽署標誌和 Team ID 故障排除，請參閱 macOS 應用程式 README：
 [https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md](https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md)
 
-> **注意**：臨時簽署的應用程式可能會觸發安全性提示。如果應用程式立即崩潰並顯示 "Abort trap 6"，請參閱 [疑難排解](#troubleshooting) 區段。
+> **注意**：Ad-hoc 簽署的應用程式可能會觸發安全性提示。如果應用程式立即崩潰並顯示 "Abort trap 6"，請參閱 [故障排除](#troubleshooting) 部分。
 
 ## 3. 安裝 CLI
 
-macOS 應用程式需要安裝全域 `openclaw` CLI 才能管理背景任務。
+macOS 應用程式預期需安裝全域 `openclaw` CLI 以管理背景任務。
 
 **若要安裝 (建議)：**
 
@@ -87,7 +87,7 @@ xcrun swift --version
    tccutil reset All ai.openclaw.mac.debug
    ```
 
-2. 如果失敗，請暫時在 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中更改 `BUNDLE_ID`，以強制 macOS 從頭開始。
+2. 如果失敗，請暫時在 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中變更 `BUNDLE_ID`，以強制 macOS 進行「全新安裝」。
 
 ### 閘道「正在啟動...」無限期持續
 
@@ -97,7 +97,7 @@ xcrun swift --version
 openclaw gateway status
 openclaw gateway stop
 
-# If you’re not using a LaunchAgent (dev mode / manual runs), find the listener:
+# If you're not using a LaunchAgent (dev mode / manual runs), find the listener:
 lsof -nP -iTCP:18789 -sTCP:LISTEN
 ```
 

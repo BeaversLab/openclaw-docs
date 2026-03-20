@@ -1,14 +1,14 @@
 ---
-summary: "Esquema de configuración de habilidades y ejemplos"
+summary: "Esquema y ejemplos de configuración de habilidades"
 read_when:
-  - Adding or modifying skills config
-  - Adjusting bundled allowlist or install behavior
+  - Agregar o modificar la configuración de habilidades
+  - Ajustar la lista de permitidos agrupados o el comportamiento de instalación
 title: "Configuración de habilidades"
 ---
 
 # Configuración de habilidades
 
-Toda la configuración relacionada con las habilidades reside bajo `skills` en `~/.openclaw/openclaw.json`.
+Toda la configuración relacionada con habilidades reside bajo `skills` en `~/.openclaw/openclaw.json`.
 
 ```json5
 {
@@ -24,7 +24,7 @@ Toda la configuración relacionada con las habilidades reside bajo `skills` en `
       nodeManager: "npm", // npm | pnpm | yarn | bun (Gateway runtime still Node; bun not recommended)
     },
     entries: {
-      "nano-banana-pro": {
+      "image-lab": {
         enabled: true,
         apiKey: { source: "env", provider: "default", id: "GEMINI_API_KEY" }, // or plaintext string
         env: {
@@ -38,23 +38,32 @@ Toda la configuración relacionada con las habilidades reside bajo `skills` en `
 }
 ```
 
+Para la generación/edición de imágenes integrada, prefiera `agents.defaults.imageGenerationModel`
+junto con la herramienta principal `image_generate`. `skills.entries.*` es solo para flujos de trabajo de habilidades personalizados
+o de terceros.
+
+Ejemplos:
+
+- Configuración nativa estilo Nano Banana: `agents.defaults.imageGenerationModel.primary: "google/gemini-3-pro-image-preview"`
+- Configuración nativa de fal: `agents.defaults.imageGenerationModel.primary: "fal/fal-ai/flux/dev"`
+
 ## Campos
 
-- `allowBundled`: lista de permitidos opcional solo para habilidades **incluidas**. Cuando se establece, solo
-  las habilidades incluidas en la lista son elegibles (las habilidades gestionadas/del espacio de trabajo no se ven afectadas).
-- `load.extraDirs`: directorios de habilidades adicionales para escanear (menor prioridad).
+- `allowBundled`: lista de permitidos opcional solo para habilidades **agrupadas**. Cuando se establece, solo
+  las habilidades agrupadas de la lista son elegibles (las habilidades administradas/del espacio de trabajo no se ven afectadas).
+- `load.extraDirs`: directorios de habilidades adicionales para escanear (precedencia más baja).
 - `load.watch`: vigila las carpetas de habilidades y actualiza la instantánea de habilidades (predeterminado: true).
-- `load.watchDebounceMs`: tiempo de espera para los eventos del observador de habilidades en milisegundos (predeterminado: 250).
-- `install.preferBrew`: prefiere instaladores brew cuando estén disponibles (predeterminado: true).
+- `load.watchDebounceMs`: tiempo de rebote para los eventos del observador de habilidades en milisegundos (predeterminado: 250).
+- `install.preferBrew`: preferir instaladores de brew cuando estén disponibles (predeterminado: true).
 - `install.nodeManager`: preferencia del instalador de node (`npm` | `pnpm` | `yarn` | `bun`, predeterminado: npm).
-  Esto solo afecta las **instalaciones de habilidades**; el tiempo de ejecución del Gateway todavía debe ser Node
-  (no se recomienda Bun para WhatsApp/Telegram).
+  Esto solo afecta las **instalaciones de habilidades**; el tiempo de ejecución de Gateway aún debe ser Node
+  (Bun no recomendado para WhatsApp/Telegram).
 - `entries.<skillKey>`: anulaciones por habilidad.
 
 Campos por habilidad:
 
-- `enabled`: establezca `false` para deshabilitar una habilidad incluso si está incluida/instalada.
-- `env`: variables de entorno inyectadas para la ejecución del agente (solo si no están establecidas previamente).
+- `enabled`: establezca `false` para deshabilitar una habilidad incluso si está agrupada/instalada.
+- `env`: variables de entorno inyectadas para la ejecución del agente (solo si aún no están establecidas).
 - `apiKey`: conveniencia opcional para habilidades que declaran una variable de entorno principal.
   Admite cadena de texto sin formato u objeto SecretRef (`{ source, provider, id }`).
 
@@ -66,15 +75,14 @@ Campos por habilidad:
 
 ### Habilidades en sandbox + variables de entorno
 
-Cuando una sesión está en **sandbox**, los procesos de habilidad se ejecutan dentro de Docker. El sandbox
-**no** hereda el `process.env` del host.
+Cuando una sesión está **en sandbox**, los procesos de las habilidades se ejecutan dentro de Docker. El sandbox **no** hereda el `process.env` del host.
 
-Utilice uno de:
+Utilice uno de los siguientes:
 
 - `agents.defaults.sandbox.docker.env` (o por agente `agents.list[].sandbox.docker.env`)
 - incorpore las variables de entorno en su imagen de sandbox personalizada
 
-El `env` y `skills.entries.<skill>.env/apiKey` globales se aplican solo a ejecuciones de **host**.
+Las `env` y `skills.entries.<skill>.env/apiKey` globales solo se aplican a las ejecuciones en el **host**.
 
 import es from "/components/footer/es.mdx";
 

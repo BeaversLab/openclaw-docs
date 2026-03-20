@@ -1,8 +1,8 @@
 ---
-summary: "Use el catálogo de OpenCode Go con la configuración compartida de OpenCode"
+summary: "Use el catálogo OpenCode Go con la configuración compartida de OpenCode"
 read_when:
-  - You want the OpenCode Go catalog
-  - You need the runtime model refs for Go-hosted models
+  - Quiere el catálogo OpenCode Go
+  - Necesita las referencias del modelo en tiempo de ejecución para los modelos alojados en Go
 title: "OpenCode Go"
 ---
 
@@ -11,7 +11,7 @@ title: "OpenCode Go"
 OpenCode Go es el catálogo Go dentro de [OpenCode](/es/providers/opencode).
 Utiliza el mismo `OPENCODE_API_KEY` que el catálogo Zen, pero mantiene el id
 del proveedor de tiempo de ejecución `opencode-go` para que el enrutamiento
-por modelo aguas arriba se mantenga correcto.
+por modelo ascendente siga siendo correcto.
 
 ## Modelos compatibles
 

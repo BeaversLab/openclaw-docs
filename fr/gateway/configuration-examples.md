@@ -1,19 +1,19 @@
 ---
 summary: "Exemples de configuration conformes au schéma pour les configurations courantes d'OpenClaw"
 read_when:
-  - Learning how to configure OpenClaw
-  - Looking for configuration examples
-  - Setting up OpenClaw for the first time
-title: "Exemples de configuration"
+  - Apprendre à configurer OpenClaw
+  - Recherche d'exemples de configuration
+  - Configuration d'OpenClaw pour la première fois
+title: "Configuration Examples"
 ---
 
-# Exemples de configuration
+# Configuration Examples
 
 Les exemples ci-dessous sont alignés sur le schéma de configuration actuel. Pour la référence exhaustive et les notes par champ, voir [Configuration](/fr/gateway/configuration).
 
 ## Quick start
 
-### Minimum absolu
+### Absolute minimum
 
 ```json5
 {
@@ -22,9 +22,9 @@ Les exemples ci-dessous sont alignés sur le schéma de configuration actuel. Po
 }
 ```
 
-Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot depuis ce numéro.
+Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
 
-### Starter recommandé
+### Recommended starter
 
 ```json5
 {
@@ -46,9 +46,9 @@ Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot
 }
 ```
 
-## Exemple développé (options principales)
+## Expanded example (major options)
 
-> JSON5 vous permet d'utiliser des commentaires et des virgules finales. Le JSON standard fonctionne également.
+> JSON5 lets you use comments and trailing commas. Regular JSON works too.
 
 ```json5
 {
@@ -434,7 +434,7 @@ Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot
       nodeManager: "npm",
     },
     entries: {
-      "nano-banana-pro": {
+      "image-lab": {
         enabled: true,
         apiKey: "GEMINI_KEY_HERE",
         env: { GEMINI_API_KEY: "GEMINI_KEY_HERE" },
@@ -445,9 +445,9 @@ Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot
 }
 ```
 
-## Modèles courants
+## Common patterns
 
-### Configuration multiplateforme
+### Multi-platform setup
 
 ```json5
 {
@@ -468,9 +468,9 @@ Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot
 }
 ```
 
-### Mode DM sécurisé (boîte de réception partagée / DMs multi-utilisateurs)
+### Secure DM mode (shared inbox / multi-user DMs)
 
-Si plus d'une personne peut envoyer un DM à votre bot (plusieurs entrées dans `allowFrom`, approbations d'appariement pour plusieurs personnes, ou `dmPolicy: "open"`), activez le **mode DM sécurisé** afin que les DMs d'expéditeurs différents ne partagent pas un même contexte par défaut :
+If more than one person can DM your bot (multiple entries in `allowFrom`, pairing approvals for multiple people, or `dmPolicy: "open"`), enable **secure DM mode** so DMs from different senders don’t share one context by default:
 
 ```json5
 {
@@ -494,10 +494,10 @@ Si plus d'une personne peut envoyer un DM à votre bot (plusieurs entrées dans 
 }
 ```
 
-Pour Discord/Slack/Google Chat/MS Teams/Mattermost/IRC, l'autorisation de l'expéditeur est basée sur l'ID par défaut.
-N'activez la correspondance directe mutable par nom/email/pseudo via le `dangerouslyAllowNameMatching: true` de chaque canal que si vous acceptez explicitement ce risque.
+For Discord/Slack/Google Chat/MS Teams/Mattermost/IRC, sender authorization is ID-first by default.
+Only enable direct mutable name/email/nick matching with each channel's `dangerouslyAllowNameMatching: true` if you explicitly accept that risk.
 
-### OAuth avec basculement de clé API
+### OAuth with API key failover
 
 ```json5
 {
@@ -527,13 +527,12 @@ N'activez la correspondance directe mutable par nom/email/pseudo via le `dangero
 }
 ```
 
-### Jeton de configuration Anthropic + clé API, repli MiniMax
+### Anthropic setup-token + API key, MiniMax fallback
 
 <Warning>
-  L'utilisation du jeton de configuration Anthropic hors de Claude Code a été restreinte pour
-  certains utilisateurs par le passé. Considérez ceci comme un risque lié au choix de l'utilisateur
-  et vérifiez les conditions actuelles de Anthropic avant de dépendre de l'authentification par
-  abonnement.
+  Anthropic setup-token usage outside Claude Code has been restricted for some users in the past.
+  Treat this as user-choice risk and verify current Anthropic terms before depending on subscription
+  auth.
 </Warning>
 
 ```json5
@@ -573,7 +572,7 @@ N'activez la correspondance directe mutable par nom/email/pseudo via le `dangero
 }
 ```
 
-### Bot de travail (accès restreint)
+### Work bot (restricted access)
 
 ```json5
 {
@@ -598,7 +597,7 @@ N'activez la correspondance directe mutable par nom/email/pseudo via le `dangero
 }
 ```
 
-### Modèles locaux uniquement
+### Local models only
 
 ```json5
 {
@@ -630,12 +629,12 @@ N'activez la correspondance directe mutable par nom/email/pseudo via le `dangero
 }
 ```
 
-## Conseils
+## Tips
 
-- Si vous définissez `dmPolicy: "open"`, la liste `allowFrom` correspondante doit inclure `"*"`.
-- Les IDs de fournisseur diffèrent (numéros de téléphone, IDs utilisateur, IDs de canal). Consultez la documentation du fournisseur pour confirmer le format.
-- Sections facultatives à ajouter plus tard : `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
-- Voir [Fournisseurs](/fr/providers) et [Dépannage](/fr/gateway/troubleshooting) pour des notes de configuration plus approfondies.
+- If you set `dmPolicy: "open"`, the matching `allowFrom` list must include `"*"`.
+- Provider IDs differ (phone numbers, user IDs, channel IDs). Use the provider docs to confirm the format.
+- Optional sections to add later: `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
+- Voir [Fournisseurs](/fr/providers) et [Dépannage](/fr/gateway/troubleshooting) pour des notes de configuration plus détaillées.
 
 import fr from "/components/footer/fr.mdx";
 

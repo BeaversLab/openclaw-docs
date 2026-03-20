@@ -1,18 +1,18 @@
 ---
 summary: "Escribir herramientas de agente en un complemento (esquemas, herramientas opcionales, listas de permitidos)"
 read_when:
-  - You want to add a new agent tool in a plugin
-  - You need to make a tool opt-in via allowlists
+  - Desea agregar una nueva herramienta de agente en un complemento
+  - Necesita hacer que una herramienta sea opcional mediante listas de permitidos
 title: "Herramientas de agente de complemento"
 ---
 
 # Herramientas de agente de complemento
 
 Los complementos de OpenClaw pueden registrar **herramientas de agente** (funciones de esquema JSON) que se exponen
-al LLM durante las ejecuciones del agente. Las herramientas pueden ser **obligatorias** (siempre disponibles) u
+al LLM durante las ejecuciones de agentes. Las herramientas pueden ser **requeridas** (siempre disponibles) u
 **opcionales** (optativas).
 
-Las herramientas de agente se configuran bajo `tools` en la configuración principal, o por agente bajo
+Las herramientas de agente se configuran en `tools` en la configuración principal, o por agente en
 `agents.list[].tools`. La política de lista de permitidos/denegados controla qué herramientas puede invocar el agente.
 
 ## Herramienta básica
@@ -34,7 +34,7 @@ export default function (api) {
 }
 ```
 
-## Herramienta opcional (optativa)
+## Herramienta opcional (opt-in)
 
 Las herramientas opcionales **nunca** se habilitan automáticamente. Los usuarios deben agregarlas a una
 lista de permitidos del agente.
@@ -61,7 +61,7 @@ export default function (api) {
 }
 ```
 
-Habilite las herramientas opcionales en `agents.list[].tools.allow` (o global `tools.allow`):
+Habilite herramientas opcionales en `agents.list[].tools.allow` (o en `tools.allow` global):
 
 ```json5
 {
@@ -82,19 +82,19 @@ Habilite las herramientas opcionales en `agents.list[].tools.allow` (o global `t
 }
 ```
 
-Otros ajustes de configuración que afectan la disponibilidad de herramientas:
+Otras opciones de configuración que afectan la disponibilidad de herramientas:
 
-- Las listas de permitidos que solo nombran herramientas de complemento se tratan como optativas de complemento; las herramientas básicas permanecen
-  habilitadas a menos que también incluya herramientas básicas o grupos en la lista de permitidos.
+- Las listas de permitidos que nombran solo herramientas de complemento se tratan como activaciones opcionales de complementos; las herramientas principales permanecen
+  habilitadas a menos que también incluya herramientas principales o grupos en la lista de permitidos.
 - `tools.profile` / `agents.list[].tools.profile` (lista de permitidos base)
 - `tools.byProvider` / `agents.list[].tools.byProvider` (permitir/denegar específico del proveedor)
-- `tools.sandbox.tools.*` (política de herramientas de espacio aislado cuando está en espacio aislado)
+- `tools.sandbox.tools.*` (política de herramienta de sandbox cuando se está en sandbox)
 
 ## Reglas + consejos
 
-- Los nombres de las herramientas **no** deben entrar en conflicto con los nombres de las herramientas básicas; se omiten las herramientas conflictivas.
-- Los ids de complemento utilizados en las listas de permitidos no deben entrar en conflicto con los nombres de las herramientas básicas.
-- Prefiera `optional: true` para las herramientas que desencadenan efectos secundarios o requieren
+- Los nombres de las herramientas **no** deben entrar en conflicto con los nombres de las herramientas principales; las herramientas conflictivas se omiten.
+- Los identificadores de complemento utilizados en las listas de permitidos no deben entrar en conflicto con los nombres de las herramientas principales.
+- Prefiera `optional: true` para herramientas que desencadenan efectos secundarios o requieren
   binarios/credenciales adicionales.
 
 import es from "/components/footer/es.mdx";

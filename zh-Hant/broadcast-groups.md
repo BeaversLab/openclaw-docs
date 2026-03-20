@@ -1,16 +1,16 @@
 ---
-summary: "將 WhatsApp 訊息廣播給多個代理"
+summary: "將 WhatsApp 訊息廣播給多個代理程式"
 read_when:
-  - Configuring broadcast groups
-  - Debugging multi-agent replies in WhatsApp
-status: 實驗性
-title: "廣播群組"
+  - 設定廣播群組
+  - 偵錯 WhatsApp 中的多代理程式回覆
+status: experimental
+title: "Broadcast Groups"
 ---
 
 # 廣播群組
 
 **狀態：** 實驗性  
-**版本：** 新增於 2026.1.9
+**版本：** 於 2026.1.9 新增
 
 ## 概覽
 
@@ -70,10 +70,10 @@ Agents:
 
 ### 基本設定
 
-新增一個頂層 `broadcast` 區塊（在 `bindings` 旁邊）。鍵值為 WhatsApp 對端 ID：
+新增一個頂層 `broadcast` 區段（位於 `bindings` 旁）。鍵值為 WhatsApp 對等 ID：
 
 - 群組聊天：群組 JID（例如 `120363403215116621@g.us`）
-- DM：E.164 電話號碼（例如 `+15551234567`）
+- 私訊：E.164 電話號碼（例如 `+15551234567`）
 
 ```json
 {
@@ -155,7 +155,7 @@ Agents:
 ### 訊息流程
 
 1. **傳入訊息** 到達 WhatsApp 群組
-2. **廣播檢查**：系統檢查對端 ID 是否在 `broadcast` 中
+2. **廣播檢查**：系統檢查對等 ID 是否在 `broadcast` 中
 3. **如果在廣播清單中**：
    - 所有列出的代理處理該訊息
    - 每個代理都有自己的金鑰和隔離的上下文
@@ -169,7 +169,7 @@ Agents:
 
 廣播群組中的每個智能體都維護完全獨立的：
 
-- **Session keys** (`agent:alfred:whatsapp:group:120363...` vs `agent:baerbel:whatsapp:group:120363...`)
+- **Session 金鑰**（`agent:alfred:whatsapp:group:120363...` vs `agent:baerbel:whatsapp:group:120363...`）
 - **Conversation history** (智能體看不見其他智能體的訊息)
 - **Workspace** (若已設定，則為獨立的沙盒)
 - **Tool access** (不同的允許/拒絕清單)
@@ -185,7 +185,7 @@ Agents:
 
 ### 範例：隔離的工作階段
 
-在群組 `120363403215116621@g.us` 中，包含智能體 `["alfred", "baerbel"]`：
+在包含代理程式 `["alfred", "baerbel"]` 的群組 `120363403215116621@g.us` 中：
 
 **Alfred's context:**
 
@@ -219,8 +219,8 @@ Tools: read only
 }
 ```
 
-✅ **Good:** 每個智能體只有一項工作  
-❌ **Bad:** 一個通用的 "dev-helper" 智能體
+✅ **良好：** 每個代理程式有一項工作  
+❌ **不良：** 一個通用的 "dev-helper" 代理程式
 
 ### 2. 使用描述性名稱
 
@@ -257,7 +257,7 @@ Tools: read only
 
 隨著智能體數量增加，請考慮：
 
-- 使用 `"strategy": "parallel"` (預設) 以提升速度
+- 使用 `"strategy": "parallel"`（預設）以提升速度
 - 將廣播群組限制在 5-10 個智能體
 - 為較簡單的智能體使用更快的模型
 
@@ -299,10 +299,10 @@ Result: Agent A and C respond, Agent B logs error
 }
 ```
 
-- `GROUP_A`: 只有 alfred 回應 (正常路由)
-- `GROUP_B`: agent1 與 agent2 回應 (廣播)
+- `GROUP_A`：僅 alfred 回應（正常路由）
+- `GROUP_B`：agent1 與 agent2 均回應（廣播）
 
-**Precedence:** `broadcast` 優先於 `bindings`。
+**優先順序：** `broadcast` 優先於 `bindings`。
 
 ## 疑難排解
 
@@ -310,8 +310,8 @@ Result: Agent A and C respond, Agent B logs error
 
 **檢查：**
 
-1. Agent ID 存在於 `agents.list` 中
-2. Peer ID 格式正確 (例如 `120363403215116621@g.us`)
+1. 代理程式 ID 存在於 `agents.list`
+2. 對等 ID 格式正確（例如 `120363403215116621@g.us`）
 3. 智能體不在拒絕清單中
 
 **除錯：**
@@ -322,7 +322,7 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 
 ### 只有一個智能體回應
 
-**原因：** Peer ID 可能位於 `bindings` 中，但不在 `broadcast` 中。
+**原因：** 對等 ID 可能存在於 `bindings` 但不存在於 `broadcast`。
 
 **修復：** 新增至廣播設定或從綁定中移除。
 
@@ -378,7 +378,7 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 - code-formatter: "修復了縮排並新增了類型提示"
 - security-scanner: "⚠️ 第 12 行存在 SQL 注入漏洞"
 - test-coverage: "覆蓋率為 45%，缺少錯誤情況的測試"
-- docs-checker: "函式 `process_data` 缺少 docstring"
+- docs-checker: "函式 `process_data` 缺少文件字串"
 
 ### 範例 2：多語言支援
 
@@ -413,10 +413,10 @@ interface OpenClawConfig {
 
 ### 欄位
 
-- `strategy` (選用)：如何處理代理程式
-  - `"parallel"` (預設值)：所有代理程式同時處理
+- `strategy`（選用）：如何處理代理程式
+  - `"parallel"`（預設）：所有代理程式同時處理
   - `"sequential"`：代理程式依陣列順序處理
-- `[peerId]`：WhatsApp 群組 JID、E.164 號碼或其他 Peer ID
+- `[peerId]`：WhatsApp 群組 JID、E.164 號碼或其他對等 ID
   - 值：應處理訊息的代理程式 ID 陣列
 
 ## 限制
@@ -439,7 +439,7 @@ interface OpenClawConfig {
 
 - [多代理程式設定](/zh-Hant/multi-agent-sandbox-tools)
 - [路由設定](/zh-Hant/concepts/channel-routing)
-- [工作階段管理](/zh-Hant/concepts/sessions)
+- [Session 管理](/zh-Hant/concepts/sessions)
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

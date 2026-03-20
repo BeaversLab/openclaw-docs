@@ -1,8 +1,8 @@
 ---
-title: "SOUL.md Template"
+title: "Plantilla SOUL.md"
 summary: "Plantilla de espacio de trabajo para SOUL.md"
 read_when:
-  - Bootstrapping a workspace manually
+  - Inicializar manualmente un espacio de trabajo
 ---
 
 # SOUL.md - Quién eres

@@ -1,26 +1,26 @@
 ---
 title: Fly.io
-description: Déployez OpenClaw sur Fly.io
-summary: "Guide de déploiement pas à pas de Fly.io pour OpenClaw avec stockage persistant et HTTPS"
+description: Déployer OpenClaw sur Fly.io
+summary: "Déploiement pas à pas d'OpenClaw sur Fly.io avec stockage persistant et HTTPS"
 read_when:
-  - Deploying OpenClaw on Fly.io
-  - Setting up Fly volumes, secrets, and first-run config
+  - Déploiement d'OpenClaw sur Fly.io
+  - Configuration des volumes Fly, des secrets et de la configuration du premier lancement
 ---
 
 # Déploiement Fly.io
 
-**Objectif :** La passerelle OpenClaw Gateway fonctionnant sur une machine [Fly.io](https://fly.io) avec stockage persistant, HTTPS automatique et l'accès Discord/channel.
+**Objectif :** OpenClaw Gateway fonctionnant sur une machine [Fly.io](https://fly.io) avec stockage persistant, HTTPS automatique et accès Discord/chaîne.
 
 ## Ce dont vous avez besoin
 
-- [CLI flyctl](https://fly.io/docs/hands-on/install-flyctl/) installé
+- [flyctl CLI](https://fly.io/docs/hands-on/install-flyctl/) installé
 - Compte Fly.io (le niveau gratuit fonctionne)
 - Authentification du modèle : clé API pour votre fournisseur de modèle choisi
 - Identifiants de channel : jeton de bot Discord, jeton Telegram, etc.
 
 ## Chemin rapide pour débutant
 
-1. Cloner le dépôt → personnaliser `fly.toml`
+1. Cloner le repo → personnaliser `fly.toml`
 2. Créer une application + un volume → définir les secrets
 3. Déployer avec `fly deploy`
 4. Se connecter en SSH pour créer la configuration ou utiliser l'interface de contrôle
@@ -39,13 +39,13 @@ fly apps create my-openclaw
 fly volumes create openclaw_data --size 1 --region iad
 ```
 
-**Conseil :** Choisissez une région proche de chez vous. Options courantes : `lhr` (Londres), `iad` (Virginie), `sjc` (San José).
+**Astuce :** Choisissez une région proche de chez vous. Options courantes : `lhr` (Londres), `iad` (Virginie), `sjc` (San José).
 
 ## 2) Configurer fly.toml
 
 Modifiez `fly.toml` pour qu'il corresponde au nom de votre application et à vos exigences.
 
-**Note de sécurité :** La configuration par défaut expose une URL publique. Pour un déploiement renforcé sans adresse IP publique, consultez [Déploiement privé](#private-deployment-hardened) ou utilisez `fly.private.toml`.
+**Note de sécurité :** La configuration par défaut expose une URL publique. Pour un déploiement sécurisé sans adresse IP publique, voir [Private Deployment](#private-deployment-hardened) ou utiliser `fly.private.toml`.
 
 ```toml
 app = "my-openclaw"  # Your app name
@@ -109,9 +109,9 @@ fly secrets set DISCORD_BOT_TOKEN=MTQ...
 
 **Notes :**
 
-- Les liaisons non-bouclage (`--bind lan`) nécessitent `OPENCLAW_GATEWAY_TOKEN` pour la sécurité.
+- Les liaisons non bouclées (`--bind lan`) nécessitent `OPENCLAW_GATEWAY_TOKEN` pour la sécurité.
 - Traitez ces jetons comme des mots de passe.
-- **Préférez les env vars au fichier de configuration** pour toutes les clés et jetons d'API. Cela permet de garder les secrets hors de `openclaw.json` où ils pourraient être accidentellement exposés ou enregistrés.
+- **Privilégiez les env vars au fichier de configuration** pour toutes les clés API et les jetons. Cela permet de garder les secrets hors de `openclaw.json` où ils pourraient être accidentellement exposés ou consignés.
 
 ## 4) Déployer
 
@@ -206,7 +206,7 @@ EOF
 - Variable d'environnement : `DISCORD_BOT_TOKEN` (recommandé pour les secrets)
 - Fichier de configuration : `channels.discord.token`
 
-Si vous utilisez une env var, il n'est pas nécessaire d'ajouter le jeton à la configuration. La passerelle lit `DISCORD_BOT_TOKEN` automatiquement.
+Si vous utilisez la variable d'environnement, il n'est pas nécessaire d'ajouter le jeton à la configuration. La passerelle lit `DISCORD_BOT_TOKEN` automatiquement.
 
 Redémarrez pour appliquer :
 
@@ -227,7 +227,7 @@ fly open
 
 Ou visitez `https://my-openclaw.fly.dev/`
 
-Collez votre jeton de passerelle (celui provenant de `OPENCLAW_GATEWAY_TOKEN`) pour vous authentifier.
+Collez votre jeton de passerelle (celui de `OPENCLAW_GATEWAY_TOKEN`) pour vous authentifier.
 
 ### Journaux (Logs)
 
@@ -258,7 +258,7 @@ Fly ne peut pas atteindre la passerelle sur le port configuré.
 
 ### Problèmes de mémoire / OOM
 
-Le conteneur redémarre constamment ou se fait tuer. Signes : `SIGABRT`, `v8::internal::Runtime_AllocateInYoungGeneration`, ou des redémarrages silencieux.
+Le conteneur redémarre en continu ou est arrêté de force. Signes : `SIGABRT`, `v8::internal::Runtime_AllocateInYoungGeneration`, ou redémarrages silencieux.
 
 **Correction :** Augmentez la mémoire dans `fly.toml` :
 
@@ -323,7 +323,7 @@ fly ssh console --command "rm /data/openclaw.json"
 
 Si vous perdez des identifiants ou des sessions après un redémarrage, le répertoire d'état est en écriture sur le système de fichiers du conteneur.
 
-**Solution :** Assurez-vous que `OPENCLAW_STATE_DIR=/data` est défini dans `fly.toml` et redéployez.
+**Correction :** Assurez-vous que `OPENCLAW_STATE_DIR=/data` est défini dans `fly.toml` et redéployez.
 
 ## Mises à jour
 
@@ -354,11 +354,11 @@ fly machine update <machine-id> --command "node dist/index.js gateway --port 300
 fly machine update <machine-id> --vm-memory 2048 --command "node dist/index.js gateway --port 3000 --bind lan" -y
 ```
 
-**Remarque :** Après `fly deploy`, la commande de machine peut réinitialiser à ce qui est dans `fly.toml`. Si vous avez apporté des modifications manuelles, réappliquez-les après le déploiement.
+**Remarque :** Après `fly deploy`, la commande machine peut être réinitialisée à ce qui est dans `fly.toml`. Si vous avez apporté des modifications manuelles, réappliquez-les après le déploiement.
 
 ## Déploiement privé (renforcé)
 
-Par défaut, Fly alloue des adresses IP publiques, rendant votre passerelle accessible sur `https://your-app.fly.dev`. C'est pratique mais cela signifie que votre déploiement est découvrable par des scanners internet (Shodan, Censys, etc.).
+Par défaut, Fly alloue des IP publiques, rendant votre passerelle accessible via `https://your-app.fly.dev`. C'est pratique mais cela signifie que votre déploiement peut être découvert par des scanners internet (Shodan, Censys, etc.).
 
 Pour un déploiement renforcé avec **aucune exposition publique**, utilisez le modèle privé.
 
@@ -396,7 +396,7 @@ fly deploy -c fly.private.toml
 fly ips allocate-v6 --private -a my-openclaw
 ```
 
-Après cela, `fly ips list` ne devrait afficher qu'une adresse IP de type `private` :
+Après cela, `fly ips list` ne devrait afficher qu'une IP de type `private` :
 
 ```
 VERSION  IP                   TYPE             REGION
@@ -461,7 +461,7 @@ Exemple de configuration d'appel vocal avec ngrok :
 }
 ```
 
-Le tunnel ngrok s'exécute à l'intérieur du conteneur et fournit une URL publique de webhook sans exposer l'application Fly elle-même. Définissez `webhookSecurity.allowedHosts` sur le nom d'hôte du tunnel public afin que les en-têtes d'hôte transférés soient acceptés.
+Le tunnel ngrok s'exécute à l'intérieur du conteneur et fournit une URL de webhook publique sans exposer l'application Fly elle-même. Définissez `webhookSecurity.allowedHosts` sur le nom d'hôte du tunnel public afin que les en-têtes d'hôte transférés soient acceptés.
 
 ### Avantages en matière de sécurité
 
@@ -476,7 +476,7 @@ Le tunnel ngrok s'exécute à l'intérieur du conteneur et fournit une URL publi
 
 - Fly.io utilise une **architecture x86** (et non ARM)
 - Le Dockerfile est compatible avec les deux architectures
-- Pour l'onboarding WhatsApp/Telegram, utilisez `fly ssh console`
+- Pour l'intégration WhatsApp/Telegram, utilisez `fly ssh console`
 - Les données persistantes résident sur le volume à `/data`
 - Signal nécessite Java + signal-cli ; utilisez une image personnalisée et conservez une mémoire de 2 Go ou plus.
 
@@ -487,7 +487,7 @@ Avec la configuration recommandée (`shared-cpu-2x`, 2 Go de RAM) :
 - Environ 10 à 15 $/mois selon l'utilisation
 - La version gratuite inclut un certain quota
 
-Voir la [tarification Fly.io](https://fly.io/docs/about/pricing/) pour plus de détails.
+Consultez la tarification Fly.io(https://fly.io/docs/about/pricing/) pour plus de détails.
 
 import fr from "/components/footer/fr.mdx";
 

@@ -1,8 +1,8 @@
 ---
-summary: "Endurecimiento de la lista de permitidos de Telegram: prefijo + normalización de espacios en blanco"
+summary: "Endurecimiento de la lista blanca de Telegram: normalización de prefijos + espacios en blanco"
 read_when:
-  - Reviewing historical Telegram allowlist changes
-title: "Endurecimiento de la lista de permitidos de Telegram"
+  - Revisar los cambios históricos en la lista blanca de Telegram
+title: "Endurecimiento de la lista blanca de Telegram"
 ---
 
 # Endurecimiento de la lista de permitidos de Telegram
@@ -13,12 +13,12 @@ title: "Endurecimiento de la lista de permitidos de Telegram"
 
 ## Resumen
 
-Las listas de permitidos de Telegram ahora aceptan los prefijos `telegram:` y `tg:` sin distinguir mayúsculas de minúsculas, y toleran
-espacios en blanco accidentales. Esto alinea las comprobaciones de entrada de la lista de permitidos con la normalización del envío de salida.
+Las listas blancas de Telegram ahora aceptan prefijos `telegram:` y `tg:` sin distinción entre mayúsculas y minúsculas, y toleran
+espacios en blanco accidentales. Esto alinea las comprobaciones de listas blancas entrantes con la normalización del envío saliente.
 
 ## Qué cambió
 
-- Los prefijos `telegram:` y `tg:` se tratan igual (sin distinción de mayúsculas y minúsculas).
+- Los prefijos `telegram:` y `tg:` se tratan de la misma manera (sin distinción entre mayúsculas y minúsculas).
 - Las entradas de la lista de permitidos se recortan; se ignoran las entradas vacías.
 
 ## Ejemplos
@@ -31,8 +31,8 @@ Todos estos se aceptan para el mismo ID:
 
 ## Por qué es importante
 
-Copiar/pegar de registros o IDs de chat a menudo incluye prefijos y espacios en blanco. La normalización evita
-falsos negativos al decidir si responder en MDs o grupos.
+Copiar/pegar de registros o ID de chat a menudo incluye prefijos y espacios en blanco. La normalización evita
+falsos negativos al decidir si responder en MD o grupos.
 
 ## Documentos relacionados
 

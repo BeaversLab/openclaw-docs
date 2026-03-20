@@ -1,19 +1,19 @@
 ---
-summary: "常见 OpenClaw 设置的符合架构的配置示例"
+summary: "常见 OpenClaw 设置的架构准确配置示例"
 read_when:
-  - Learning how to configure OpenClaw
-  - Looking for configuration examples
-  - Setting up OpenClaw for the first time
+  - 学习如何配置 OpenClaw
+  - 查找配置示例
+  - 首次设置 OpenClaw
 title: "配置示例"
 ---
 
 # 配置示例
 
-以下示例与当前的配置架构保持一致。如需详尽的参考和逐字段说明，请参阅 [Configuration](/zh/gateway/configuration)。
+以下示例与当前配置架构一致。有关详尽的参考和每个字段的说明，请参阅 [配置](/zh/gateway/configuration)。
 
 ## 快速开始
 
-### 绝对最小配置
+### 绝对最小化
 
 ```json5
 {
@@ -22,9 +22,9 @@ title: "配置示例"
 }
 ```
 
-保存到 `~/.openclaw/openclaw.json`，然后您就可以通过该号码私信机器人了。
+保存到 `~/.openclaw/openclaw.json`，您就可以从该号码向机器人发送私信。
 
-### 推荐起步配置
+### 推荐的入门配置
 
 ```json5
 {
@@ -48,7 +48,7 @@ title: "配置示例"
 
 ## 扩展示例（主要选项）
 
-> JSON5 允许您使用注释和尾随逗号。常规 JSON 也可以正常工作。
+> JSON5 允许您使用注释和尾随逗号。常规 JSON 也可以工作。
 
 ```json5
 {
@@ -434,7 +434,7 @@ title: "配置示例"
       nodeManager: "npm",
     },
     entries: {
-      "nano-banana-pro": {
+      "image-lab": {
         enabled: true,
         apiKey: "GEMINI_KEY_HERE",
         env: { GEMINI_API_KEY: "GEMINI_KEY_HERE" },
@@ -470,7 +470,7 @@ title: "配置示例"
 
 ### 安全私信模式（共享收件箱 / 多用户私信）
 
-如果不止一个人可以私信您的机器人（`allowFrom` 中有多个条目，多人的配对批准，或 `dmPolicy: "open"`），请启用 **安全私信模式**，这样不同发送者的私信默认不会共享一个上下文：
+如果不止一个人可以向您的机器人发送私信（`allowFrom` 中有多个条目，多人的配对审批，或 `dmPolicy: "open"`），请启用**安全私信模式**，以便来自不同发送者的私信默认不共享同一个上下文：
 
 ```json5
 {
@@ -494,10 +494,10 @@ title: "配置示例"
 }
 ```
 
-对于 Discord/Slack/Google Chat/MS Teams/Mattermost/IRC，发送者授权默认优先使用 ID。
-只有在您明确接受风险的情况下，才通过每个频道的 `dangerouslyAllowNameMatching: true` 启用直接的可变名称/电子邮件/昵称匹配。
+对于 Discord/Slack/Google Chat/MS Teams/Mattermost/IRC，发送者授权默认优先采用 ID。
+只有当您明确接受该风险时，才在每个渠道的 `dangerouslyAllowNameMatching: true` 中启用直接的可变名称/电子邮件/昵称匹配。
 
-### OAuth 带 API 密钥故障转移
+### OAuth 配合 API 密钥故障转移
 
 ```json5
 {
@@ -527,11 +527,11 @@ title: "配置示例"
 }
 ```
 
-### Anthropic setup-token + API 密钥，MiniMax 备用
+### Anthropic setup-token + API 密钥，MiniMax 回退
 
 <Warning>
-  过去，部分用户在 Claude Code 之外使用 Anthropic setup-token 受到了限制。
-  请将此视为用户选择的风险，在依赖订阅 身份验证之前，请验证当前的 Anthropic 条款。
+  过去，部分用户在 Claude Code 之外使用 Anthropic setup-token
+  受到了限制。请将此视为用户自选风险，并在依赖订阅授权之前验证当前的 Anthropic 条款。
 </Warning>
 
 ```json5
@@ -631,9 +631,9 @@ title: "配置示例"
 ## 提示
 
 - 如果您设置了 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包含 `"*"`。
-- 提供商 ID 各不相同（电话号码、用户 ID、频道 ID）。请使用提供商文档确认格式。
-- 稍后添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 有关更深入的设置说明，请参阅 [Providers](/zh/providers) 和 [Troubleshooting](/zh/gateway/troubleshooting)。
+- 提供商 ID 各不相同（电话号码、用户 ID、渠道 ID）。请查阅提供商文档以确认格式。
+- 稍后要添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
+- 有关更深入的设置说明，请参阅[提供商](/zh/providers)和[故障排除](/zh/gateway/troubleshooting)。
 
 import zh from "/components/footer/zh.mdx";
 

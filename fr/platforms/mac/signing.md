@@ -2,21 +2,21 @@
 summary: "Étapes de signature pour les versions de débogage macOS générées par les scripts de packaging"
 read_when:
   - Building or signing mac debug builds
-title: "macOS Signature"
+title: "macOS Signing"
 ---
 
 # signature mac (versions de débogage)
 
-Cette application est généralement construite à partir de [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh), qui maintenant :
+This app is usually built from [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh), which now:
 
-- définit un identifiant de bundle de débogage stable : `ai.openclaw.mac.debug`
-- écrit le Info.plist avec cet identifiant de bundle (remplacer via `BUNDLE_ID=...`)
-- appelle [`scripts/codesign-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/codesign-mac-app.sh) pour signer le binaire principal et le bundle de l'application afin que macOS traite chaque reconstruction comme le même bundle signé et conserve les autorisations TCC (notifications, accessibilité, enregistrement d'écran, microphone, reconnaissance vocale). Pour des autorisations stables, utilisez une véritable identité de signature ; la signature ad-hoc est optionnelle et fragile (voir [macOS permissions](/fr/platforms/mac/permissions)).
-- utilise `CODESIGN_TIMESTAMP=auto` par défaut ; il active les horodatages de confiance pour les signatures d'ID de développeur. Définissez `CODESIGN_TIMESTAMP=off` pour ignorer l'horodatage (versions de débogage hors ligne).
-- injecte les métadonnées de construction dans le Info.plist : `OpenClawBuildTimestamp` (UTC) et `OpenClawGitCommit` (hash court) afin que le panneau À propos puisse afficher la version, git, et le channel de débogage/release.
-- **Le packaging utilise par défaut Node 24** : le script exécute les builds TS et le build de l'UI de contrôle. Node 22 LTS, actuellement `22.16+`, reste pris en charge pour la compatibilité.
-- lit `SIGN_IDENTITY` depuis l'environnement. Ajoutez `export SIGN_IDENTITY="Apple Development: Your Name (TEAMID)"` (ou votre certificat d'application d'ID de développeur) à votre fichier rc de shell pour toujours signer avec votre certificat. La signature ad-hoc nécessite une adhésion explicite via `ALLOW_ADHOC_SIGNING=1` ou `SIGN_IDENTITY="-"` (non recommandé pour les tests d'autorisations).
-- exécute un audit d'ID d'équipe après la signature et échoue si un Mach-O dans le bundle de l'application est signé par un ID d'équipe différent. Définissez `SKIP_TEAM_ID_CHECK=1` pour contourner.
+- sets a stable debug bundle identifier: `ai.openclaw.mac.debug`
+- writes the Info.plist with that bundle id (override via `BUNDLE_ID=...`)
+- calls [`scripts/codesign-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/codesign-mac-app.sh) to sign the main binary and app bundle so macOS treats each rebuild as the same signed bundle and keeps TCC permissions (notifications, accessibility, screen recording, mic, speech). For stable permissions, use a real signing identity; ad-hoc is opt-in and fragile (see [macOS permissions](/fr/platforms/mac/permissions)).
+- uses `CODESIGN_TIMESTAMP=auto` by default; it enables trusted timestamps for Developer ID signatures. Set `CODESIGN_TIMESTAMP=off` to skip timestamping (offline debug builds).
+- inject build metadata into Info.plist: `OpenClawBuildTimestamp` (UTC) and `OpenClawGitCommit` (short hash) so the About pane can show build, git, and debug/release channel.
+- **Packaging defaults to Node 24**: the script runs TS builds and the Control UI build. Node 22 LTS, currently `22.16+`, remains supported for compatibility.
+- reads `SIGN_IDENTITY` from the environment. Add `export SIGN_IDENTITY="Apple Development: Your Name (TEAMID)"` (or your Developer ID Application cert) to your shell rc to always sign with your cert. Ad-hoc signing requires explicit opt-in via `ALLOW_ADHOC_SIGNING=1` or `SIGN_IDENTITY="-"` (not recommended for permission testing).
+- runs a Team ID audit after signing and fails if any Mach-O inside the app bundle is signed by a different Team ID. Set `SKIP_TEAM_ID_CHECK=1` to bypass.
 
 ## Utilisation
 
@@ -31,20 +31,20 @@ DISABLE_LIBRARY_VALIDATION=1 scripts/package-mac-app.sh   # dev-only Sparkle Tea
 
 ### Note sur la signature ad-hoc
 
-Lors de la signature avec `SIGN_IDENTITY="-"` (ad-hoc), le script désactive automatiquement le **Hardened Runtime** (`--options runtime`). Cela est nécessaire pour éviter les plantages lorsque l'application tente de charger des frameworks intégrés (comme Sparkle) qui ne partagent pas le même identifiant d'équipe. Les signatures ad-hoc cassent également la persistance des permissions TCC ; consultez [permissions macOS](/fr/platforms/mac/permissions) pour les étapes de récupération.
+Lors de la signature avec `SIGN_IDENTITY="-"` (ad-hoc), le script désactive automatiquement le **Hardened Runtime** (`--options runtime`). Cela est nécessaire pour éviter les plantages lorsque l'application tente de charger des frameworks intégrés (comme Sparkle) qui ne partagent pas le même Team ID. Les signatures ad-hoc brisent également la persistance des permissions TCC ; consultez [permissions macOS](/fr/platforms/mac/permissions) pour les étapes de récupération.
 
 ## Métadonnées de build pour À propos
 
-`package-mac-app.sh` appose le bundle avec :
+`package-mac-app.sh` appose le tampon suivant sur le bundle :
 
-- `OpenClawBuildTimestamp` : ISO8601 UTC au moment du package
-- `OpenClawGitCommit` : hachage git court (ou `unknown` si indisponible)
+- `OpenClawBuildTimestamp` : ISO8601 UTC au moment de la création du package
+- `OpenClawGitCommit` : court hash git (ou `unknown` si indisponible)
 
-L'onglet À propos lit ces clés pour afficher la version, la date de build, le commit git et s'il s'agit d'une build de débogage (via `#if DEBUG`). Exécutez le packageur pour rafraîchir ces valeurs après les modifications de code.
+L'onglet À propos lit ces clés pour afficher la version, la date de build, le commit git, et s'il s'agit d'une version de débogage (via `#if DEBUG`). Exécutez le packager pour actualiser ces valeurs après des modifications de code.
 
 ## Pourquoi
 
-Les permissions TCC sont liées à l'identifiant du bundle _et_ à la signature du code. Les builds de débogage non signées avec des UUID changeants faisaient oublier les autorisations par macOS après chaque rebuild. La signature des binaires (ad‑hoc par défaut) et le maintien d'un identifiant/chemin de bundle fixe (`dist/OpenClaw.app`) préservent les autorisations entre les builds, correspondant à l'approche VibeTunnel.
+Les permissions TCC sont liées à l'identifiant du bundle _et_ à la signature du code. Les versions de débogage non signées avec des UUID changeantes faisaient oublier les autorisations par macOS après chaque reconstruction. La signature des binaires (ad‑hoc par défaut) et le maintien d'un identifiant/chemin de bundle fixe (`dist/OpenClaw.app`) préservent les autorisations entre les builds, correspondant à l'approche VibeTunnel.
 
 import fr from "/components/footer/fr.mdx";
 

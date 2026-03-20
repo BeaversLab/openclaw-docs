@@ -1,5 +1,5 @@
 ---
-summary: "CLI 參考手冊：`openclaw skills` (list/info/check) 與技能相容性"
+summary: "CLI reference for `openclaw skills` (list/info/check) and skill eligibility"
 read_when:
   - You want to see which skills are available and ready to run
   - You want to debug missing binaries/env/config for skills
@@ -8,15 +8,15 @@ title: "skills"
 
 # `openclaw skills`
 
-檢查技能（內建 + 工作區 + 管理的覆蓋）並查看哪些符合資格與缺少需求。
+Inspect skills (bundled + workspace + managed overrides) and see what’s eligible vs missing requirements.
 
 相關：
 
-- 技能系統：[Skills](/zh-Hant/tools/skills)
-- 技能配置：[Skills config](/zh-Hant/tools/skills-config)
-- ClawHub 安裝：[ClawHub](/zh-Hant/tools/clawhub)
+- Skills system: [Skills](/zh-Hant/tools/skills)
+- Skills config: [Skills config](/zh-Hant/tools/skills-config)
+- ClawHub installs: [ClawHub](/zh-Hant/tools/clawhub)
 
-## 指令
+## 命令
 
 ```bash
 openclaw skills list

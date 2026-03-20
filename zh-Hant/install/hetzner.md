@@ -1,10 +1,10 @@
 ---
-summary: "在廉價的 Hetzner VPS (Docker) 上 24/7 執行 OpenClaw Gateway，具備持久狀態和內建二進位檔"
+summary: "在便宜的 Hetzner VPS (Docker) 上 24/7 執行 OpenClaw Gateway，具有持久狀態和內置的二進制文件"
 read_when:
-  - You want OpenClaw running 24/7 on a cloud VPS (not your laptop)
-  - You want a production-grade, always-on Gateway on your own VPS
-  - You want full control over persistence, binaries, and restart behavior
-  - You are running OpenClaw in Docker on Hetzner or a similar provider
+  - 您希望在雲端 VPS 上 24/7 執行 OpenClaw（而不是在您的筆記型電腦上）
+  - 您希望在自己的 VPS 上擁有一個生產級別、始終運行的 Gateway
+  - 您希望對持久性、二進制文件和重啟行為擁有完全控制權
+  - 您正在 Hetzner 或類似提供商上使用 Docker 執行 OpenClaw
 title: "Hetzner"
 ---
 
@@ -12,69 +12,69 @@ title: "Hetzner"
 
 ## 目標
 
-使用 Docker 在 Hetzner VPS 上執行持久的 OpenClaw Gateway，具備耐用狀態、內建二進位檔和安全的重啟行為。
+使用 Docker 在 Hetzner VPS 上執行持久化的 OpenClaw Gateway，具有持久的狀態、內置的二進制文件和安全的重啟行為。
 
-如果您想要「大約 5 美元的 OpenClaw 24/7 服務」，這是最簡單可靠的設定。
-Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果遇到 OOM (記憶體不足) 再進行升級。
+如果您想要「以約 $5 的價格 24/7 執行 OpenClaw」，這是最簡單可靠的設定。
+Hetzner 的定價可能會變動；選擇最小的 Debian/Ubuntu VPS，如果遇到 OOM（記憶體不足）再進行升級。
 
 安全模型提醒：
 
-- 當所有人都在同一信任邊界內且執行環境僅用於業務時，公司共用的代理程式是可以的。
-- 保持嚴格的分離：專用 VPS/執行環境 + 專用帳戶；該主機上不得有個人的 Apple/Google/瀏覽器/密碼管理員設定檔。
-- 如果使用者之間存在對抗關係，請依據 Gateway/主機/OS 使用者進行分割。
+- 當每個人都在同一信任邊界內並且執行環境僅用於業務時，公司共用的代理是可以接受的。
+- 保持嚴格的隔離：專用 VPS/執行環境 + 專用帳戶；該主機上不得有個人 Apple/Google/瀏覽器/密碼管理器設定檔。
+- 如果使用者之間存在對抗關係，請按 gateway/host/OS 使用者進行拆分。
 
 請參閱 [安全性](/zh-Hant/gateway/security) 和 [VPS 託管](/zh-Hant/vps)。
 
-## 我們在做什麼 (簡單來說)？
+## 我們正在做什麼（簡單來說）？
 
-- 租用一台小型 Linux 伺服器 (Hetzner VPS)
+- 租賃一台小型 Linux 伺服器 (Hetzner VPS)
 - 安裝 Docker (隔離的應用程式執行環境)
 - 在 Docker 中啟動 OpenClaw Gateway
-- 將 `~/.openclaw` + `~/.openclaw/workspace` 持久化在主機上 (在重啟/重建後仍會保留)
-- 透過 SSH 通道從您的筆記型電腦存取控制 UI
+- 在主機上持久化 `~/.openclaw` + `~/.openclaw/workspace`（在重啟/重建後仍然保留）
+- 透過 SSH 隧道從您的筆記型電腦存取控制 UI
 
-您可以透過以下方式存取 Gateway：
+可以透過以下方式存取 Gateway：
 
 - 從您的筆記型電腦進行 SSH 連接埠轉發
-- 如果您自行管理防火牆和權杖，可直接開放連接埠
+- 如果您自行管理防火牆和令牌，則可以直接暴露連接埠
 
 本指南假設 Hetzner 上使用的是 Ubuntu 或 Debian。
-如果您使用其他的 Linux VPS，請對應調整套件。
+如果您使用的是其他 Linux VPS，請相應地映射軟體包。
 關於通用的 Docker 流程，請參閱 [Docker](/zh-Hant/install/docker)。
 
 ---
 
-## 快速路徑 (經驗豐富的操作人員)
+## 快速途徑（經驗豐富的操作人員）
 
 1. 佈建 Hetzner VPS
 2. 安裝 Docker
-3. 複製 OpenClaw 程式庫
-4. 建立持久的主機目錄
-5. 設定 `.env` 和 `docker-compose.yml`
-6. 將所需的二進位檔內建至映像檔中
+3. Clone OpenClaw 儲存庫
+4. 建立持久化的主機目錄
+5. 配置 `.env` 和 `docker-compose.yml`
+6. 將所需的二進制文件內置到映像中
 7. `docker compose up -d`
-8. 驗證持久性和 Gateway 存取權
+8. 驗證持久性和 Gateway 存取
 
 ---
 
 ## 您需要什麼
 
-- 具有 root 存取權的 Hetzner VPS
+- 具有 root 存取權限的 Hetzner VPS
 - 從您的筆記型電腦進行 SSH 存取
-- 具備基本的 SSH + 複製/貼上操作能力
+- 具備 SSH + 複製/貼上的基本操作能力
 - 約 20 分鐘
-- Docker 和 Docker Compose
-- 模型驗證憑證
-- 選用的供應商憑證
-  - WhatsApp QR 碼
-  - Telegram Bot 權杖
+- Docker 與 Docker Compose
+- 模型驗證認證
+- 選用的供應商認證
+  - WhatsApp QR
+  - Telegram bot token
   - Gmail OAuth
 
 ---
 
-## 1) 佈建 VPS
+## 1) 配置 VPS
 
-在 Hetzner 中建立 Ubuntu 或 Debian VPS。
+在 Hetzner 中建立一個 Ubuntu 或 Debian VPS。
 
 以 root 身份連線：
 
@@ -82,12 +82,12 @@ Hetzner 的價格可能會變動；請選擇最小的 Debian/Ubuntu VPS，如果
 ssh root@YOUR_VPS_IP
 ```
 
-本指南假設 VPS 是有狀態的。
-請勿將其視為一次性基礎設施。
+本指南假設 VPS 具有狀態。
+請勿將其視為可拋棄的基礎設施。
 
 ---
 
-## 2) 安裝 Docker（在 VPS 上）
+## 2) 安裝 Docker (在 VPS 上)
 
 ```bash
 apt-get update
@@ -111,13 +111,13 @@ git clone https://github.com/openclaw/openclaw.git
 cd openclaw
 ```
 
-本指南假設您將建置自訂映像檔，以確保二進位檔的持久性。
+本指南假設您將建構自訂映像檔，以確保二進位檔案的持久性。
 
 ---
 
 ## 4) 建立持久化主機目錄
 
-Docker 容器是短暫的。
+Docker 容器是暫時性的。
 所有長期存在的狀態都必須存在於主機上。
 
 ```bash
@@ -146,13 +146,13 @@ GOG_KEYRING_PASSWORD=change-me-now
 XDG_CONFIG_HOME=/home/node/.openclaw
 ```
 
-產生強式密碼：
+產生強式祕密：
 
 ```bash
 openssl rand -hex 32
 ```
 
-**請勿提交此檔案。**
+**不要提交此檔案。**
 
 ---
 
@@ -198,24 +198,24 @@ services:
       ]
 ```
 
-`--allow-unconfigured` 僅為了方便啟動，並非適當的 Gateway 設定的替代品。仍需設定驗證（`gateway.auth.token` 或密碼），並為您的部署使用安全的綁定設定。
+`--allow-unconfigured` 僅為了啟動便利性，它不能取代適當的 gateway 設定。仍然要設定驗證 (`gateway.auth.token` 或密碼)，並為您的部署使用安全的綁定設定。
 
 ---
 
-## 7) 共用 Docker VM 執行時步驟
+## 7) 共用 Docker VM 執行時段步驟
 
-請使用共用執行時指南以了解常見的 Docker 主機流程：
+請使用共用執行時段指南來了解一般 Docker 主機流程：
 
-- [將所需的二進位檔嵌入映像檔中](/zh-Hant/install/docker-vm-runtime#bake-required-binaries-into-the-image)
-- [建置並啟動](/zh-Hant/install/docker-vm-runtime#build-and-launch)
-- [什麼內容會持久化在哪裡](/zh-Hant/install/docker-vm-runtime#what-persists-where)
+- [將所需的二進位檔案建構至映像檔中](/zh-Hant/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+- [建構與啟動](/zh-Hant/install/docker-vm-runtime#build-and-launch)
+- [什麼內容在哪裡持久化](/zh-Hant/install/docker-vm-runtime#what-persists-where)
 - [更新](/zh-Hant/install/docker-vm-runtime#updates)
 
 ---
 
 ## 8) Hetzner 專屬存取
 
-在完成共用的建置和啟動步驟後，從您的筆記型電腦建立通道：
+在完成共用的建構與啟動步驟後，從您的筆記型電腦建立通道：
 
 ```bash
 ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
@@ -229,16 +229,16 @@ ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
 
 ---
 
-共用的持久化對應圖位於 [Docker VM Runtime](/zh-Hant/install/docker-vm-runtime#what-persists-where) 中。
+共用的持久化對應表位於 [Docker VM Runtime](/zh-Hant/install/docker-vm-runtime#what-persists-where)。
 
 ## 基礎設施即程式碼
 
-對於偏好基礎設施即程式碼工作流程的團隊，社群維護的 Terraform 設定提供了：
+對於偏好基礎設施即程式碼工作流程的團隊，社群維護的 Terraform 設定提供：
 
 - 具備遠端狀態管理的模組化 Terraform 設定
-- 透過 cloud-init 自動佈建
-- 部署腳本（bootstrap、deploy、backup/restore）
-- 安全性強化（防火牆、UFW、僅限 SSH 存取）
+- 透過 cloud-init 自動化配置
+- 部署腳本 (bootstrap, deploy, backup/restore)
+- 安全性強化 (防火牆、UFW、僅限 SSH 存取)
 - 用於 gateway 存取的 SSH 通道設定
 
 **程式庫：**
@@ -246,9 +246,9 @@ ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
 - 基礎設施：[openclaw-terraform-hetzner](https://github.com/andreesg/openclaw-terraform-hetzner)
 - Docker 設定：[openclaw-docker-config](https://github.com/andreesg/openclaw-docker-config)
 
-此方法透過可重現的部署、版本控制的基礎設施和自動災難恢復，補充了上述的 Docker 設定。
+此方法在上述 Docker 設定的基礎上，補充了可重現的部署、版本控制的基礎架構以及自動化的災難恢復。
 
-> **注意：** 由社群維護。如遇問題或欲貢獻，請參閱上方存放庫連結。
+> **注意：** 由社群維護。如有問題或貢獻，請參閱上方的儲存庫連結。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

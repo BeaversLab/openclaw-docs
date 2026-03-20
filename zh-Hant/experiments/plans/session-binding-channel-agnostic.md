@@ -1,5 +1,5 @@
 ---
-summary: "與管道無關的會話綁定架構與第 1 次交付範圍"
+summary: "Channel agnostic session binding architecture and iteration 1 delivery scope"
 read_when:
   - Refactoring channel-agnostic session routing and bindings
   - Investigating duplicate, stale, or missing session delivery across channels
@@ -9,41 +9,41 @@ last_updated: "2026-02-21"
 title: "Session Binding Channel Agnostic Plan"
 ---
 
-# 與管道無關的會話綁定計劃
+# Session Binding Channel Agnostic Plan
 
-## 概覽
+## Overview
 
-本文件定義了長期的與管道無關的會話綁定模型，以及下一次實作迭代的具體範圍。
+This document defines the long term channel agnostic session binding model and the concrete scope for the next implementation iteration.
 
-目標：
+Goal:
 
-- 讓子代理綁定會話路由成為一項核心能力
-- 將特定管道的行為保留在適配器中
-- 避免在正常 Discord 行為上出現回歸
+- make subagent bound session routing a core capability
+- keep channel specific behavior in adapters
+- avoid regressions in normal Discord behavior
 
-## 為何存在
+## Why this exists
 
-當前行為混合了：
+Current behavior mixes:
 
-- 完成內容政策
-- 目的地路由政策
-- Discord 特定細節
+- completion content policy
+- destination routing policy
+- Discord specific details
 
-這導致了諸如以下邊緣情況：
+This caused edge cases such as:
 
-- 併發執行時重複的主貼文和執行緒交付
-- 重複使用綁定管理器時使用過時的 Token
-- 遺漏 Webhook 發送的活動記錄
+- duplicate main and thread delivery under concurrent runs
+- stale token usage on reused binding managers
+- missing activity accounting for webhook sends
 
-## 第 1 次迭代範圍
+## Iteration 1 scope
 
-本迭代特意受到限制。
+This iteration is intentionally limited.
 
-### 1. 新增與管道無關的核心介面
+### 1. Add channel agnostic core interfaces
 
-新增用於綁定和路由的核心類型與服務介面。
+Add core types and service interfaces for bindings and routing.
 
-提議的核心類型：
+Proposed core types:
 
 ```ts
 export type BindingTargetKind = "subagent" | "session";
@@ -68,7 +68,7 @@ export type SessionBindingRecord = {
 };
 ```
 
-核心服務合約：
+Core service contract:
 
 ```ts
 export interface SessionBindingService {
@@ -91,11 +91,11 @@ export interface SessionBindingService {
 }
 ```
 
-### 2. 新增一個用於子代理完成的核心交付路由器
+### 2. Add one core delivery router for subagent completions
 
-為完成事件新增單一的目的地解析路徑。
+Add a single destination resolution path for completion events.
 
-路由器合約：
+Router contract:
 
 ```ts
 export interface BoundDeliveryRouter {
@@ -112,100 +112,100 @@ export interface BoundDeliveryRouter {
 }
 ```
 
-對於本次迭代：
+For this iteration:
 
-- 僅有 `task_completion` 透過此新路徑進行路由
-- 其他事件類型的現有路徑保持不變
+- only `task_completion` is routed through this new path
+- existing paths for other event kinds remain as-is
 
-### 3. 將 Discord 保留為適配器
+### 3. Keep Discord as adapter
 
-Discord 仍然是第一個適配器實作。
+Discord remains the first adapter implementation.
 
-適配器職責：
+Adapter responsibilities:
 
-- 建立/重複使用執行緒對話
-- 透過 Webhook 或管道發送發送綁定訊息
-- 驗證執行緒狀態（已封存/已刪除）
-- 對應適配器中繼資料（Webhook 身份、執行緒 ID）
+- create/reuse thread conversations
+- send bound messages via webhook or channel send
+- validate thread state (archived/deleted)
+- map adapter metadata (webhook identity, thread ids)
 
-### 4. 修復目前已知的正確性問題
+### 4. Fix currently known correctness issues
 
-本次迭代必須完成：
+Required in this iteration:
 
-- 重複使用現有執行緒綁定管理器時更新 Token 使用
-- 記錄基於 Webhook 的 Discord 發送的出站活動
-- 當為會話模式完成選擇綁定執行緒目的地時，停止隱含的主管道回退
+- refresh token usage when reusing existing thread binding manager
+- record outbound activity for webhook based Discord sends
+- stop implicit main channel fallback when a bound thread destination is selected for session mode completion
 
-### 5. 保留當前的執行時安全預設值
+### 5. Preserve current runtime safety defaults
 
-對於停用了線程綁定生成的用戶，行為沒有變化。
+No behavior change for users with thread bound spawn disabled.
 
-預設值保持：
+Defaults stay:
 
 - `channels.discord.threadBindings.spawnSubagentSessions = false`
 
-結果：
+Result:
 
-- 普通 Discord 用戶保持當前行為
-- 新的核心路徑僅在已啟用的綁定會話完成路由中生效
+- 一般的 Discord 使用者維持目前的行為
+- 新的核心路徑僅影響啟用後的綁定會話完成路由
 
-## 不在第 1 次迭代中
+## 不在第一次迭代中
 
-明確推遲：
+明確延後：
 
 - ACP 綁定目標 (`targetKind: "acp"`)
 - Discord 以外的新通道適配器
-- 全局替換所有傳遞路徑 (`spawn_ack`，未來的 `subagent_message`)
-- 協議級別的更改
-- 針對所有綁定持久化的存儲遷移/版本控制重新設計
+- 全面替換所有傳遞路徑 (`spawn_ack`，未來的 `subagent_message`)
+- 協議層級的變更
+- 針對所有綁定持久化的儲存遷移/版本控制重新設計
 
-關於 ACP 的註記：
+關於 ACP 的備註：
 
-- 接口設計為 ACP 預留了空間
-- ACP 的實施不在此迭代中開始
+- 介面設計為 ACP 預留空間
+- ACP 實作不會在此迭代中啟動
 
 ## 路由不變性
 
-這些不變性對於第 1 次迭代是強制性的。
+這些不變性對於第一次迭代是強制性的。
 
-- 目標選擇和內容生成是分開的步驟
-- 如果會話模式完成解析為活躍的綁定目標，傳遞必須以該目標為對象
-- 沒有從綁定目標到主通道的隱式重新路由
-- 後備行為必須是明確且可觀察的
+- 目的端選擇和內容生成是分開的步驟
+- 如果會話模式完成解析為作用中的綁定目的端，傳遞必須以該目的端為目標
+- 不得從綁定目的端隱性地重新路由到主頻道
+- 後援行為必須是明確且可觀察的
 
-## 兼容性和推出
+## 相容性和推出
 
-兼容性目標：
+相容性目標：
 
-- 對於關閉了線程綁定生成的用戶沒有回歸
-- 在此迭代中，非 Discord 通道沒有變更
+- 對於關閉執行緒綁定生成的使用者，不得有回歸
+- 在此迭代中不變更非 Discord 頻道
 
-推出：
+推出計畫：
 
-1. 在當前功能門控後落地接口和路由器。
-2. 將 Discord 完成模式綁定傳遞路由通過路由器。
-3. 為非綁定流程保留舊路徑。
-4. 通過定向測試和金絲雀運行時日誌進行驗證。
+1. 在現有的功能開關後方實作介面和路由器。
+2. 透過路由器路由 Discord 完成模式綁定的傳遞。
+3. 為非綁定流程保留舊版路徑。
+4. 透過目標測試和金絲雀執行階段日誌進行驗證。
 
-## 第 1 次迭代中所需的測試
+## 第一次迭代中所需的測試
 
-需要單元和集成覆蓋：
+需要單元和整合覆蓋率：
 
-- 管理器令牌輪換在管理器重用後使用最新令牌
-- webhook 發送更新通道活動時間戳
-- 同一請求者通道中的兩個活躍綁定會話不會重複到主通道
-- 綁定會話模式運行的完成僅解析為線程目標
-- 停用的生成標誌使舊行為保持不變
+- 管理器權杖輪換在管理器重複使用後會使用最新的權杖
+- webhook 發送更新頻道活動時間戳記
+- 同一個請求者頻道中的兩個作用中綁定會話不會重複到主頻道
+- 綁定會話模式執行的完成僅解析為執行緒目的端
+- 停用的生成旗標會維持舊版行為不變
 
-## 建議的實施文件
+## 提議的實作檔案
 
 核心：
 
 - `src/infra/outbound/session-binding-service.ts` (新增)
 - `src/infra/outbound/bound-delivery-router.ts` (新增)
-- `src/agents/subagent-announce.ts` (完成目標解析集成)
+- `src/agents/subagent-announce.ts` (完成目的端解析整合)
 
-Discord 適配器和運行時：
+Discord 適配器和執行階段：
 
 - `src/discord/monitor/thread-bindings.manager.ts`
 - `src/discord/monitor/reply-delivery.ts`
@@ -217,13 +217,13 @@ Discord 適配器和運行時：
 - `src/discord/monitor/reply-delivery.test.ts`
 - `src/agents/subagent-announce.format.test.ts`
 
-## 迭代 1 的完成標準
+## 第一次迭代的完成準則
 
-- 核心介面已存在並已連接用於完成路由
+- 核心介面已存在並已完成完成路由的連接
 - 上述的正確性修復已與測試合併
-- 在會話模式綁定執行中，沒有主執行緒和執行緒重複的完成傳遞
-- 對於停用綁定生成的部署，沒有行為變更
-- ACP 保持明確延遲
+- 「在繫結執行的會話模式下，不會有主訊息和執行緒重複的完成內容傳遞」
+- 「已停用繫結生成部署的行為不變」
+- 「ACP 仍然明確延後」
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

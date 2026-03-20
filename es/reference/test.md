@@ -1,23 +1,23 @@
 ---
 summary: "Cómo ejecutar pruebas localmente (vitest) y cuándo usar los modos force/coverage"
 read_when:
-  - Running or fixing tests
+  - Ejecutar o corregir pruebas
 title: "Pruebas"
 ---
 
 # Pruebas
 
-- Kit de pruebas completo (suites, en vivo, Docker): [Testing](/es/help/testing)
+- Kit de pruebas completo (suites, live, Docker): [Testing](/es/help/testing)
 
-- `pnpm test:force`: Mata cualquier proceso de gateway residual que mantenga el puerto de control predeterminado y luego ejecuta la suite completa de Vitest con un puerto de gateway aislado para que las pruebas del servidor no colisionen con una instancia en ejecución. Use esto cuando una ejecución previa del gateway dejó el puerto 18789 ocupado.
-- `pnpm test:coverage`: Ejecuta la suite unitaria con cobertura V8 (vía `vitest.unit.config.ts`). Los umbrales globales son del 70% para líneas/ramas/funciones/sentencias. La cobertura excluye los puntos de entrada con mucha integración (cableado CLI, puentes gateway/telegram, servidor estático webchat) para mantener el objetivo enfocado en la lógica susceptible de pruebas unitarias.
-- `pnpm test` en Node 22, 23 y 24 usa Vitest `vmForks` de forma predeterminada para un inicio más rápido. Node 25+ vuelve a `forks` hasta que se vuelva a validar. Puede forzar el comportamiento con `OPENCLAW_TEST_VM_FORKS=0|1`.
+- `pnpm test:force`: Mata cualquier proceso de puerta de enlace persistente que tenga el puerto de control predeterminado, luego ejecuta la suite completa de Vitest con un puerto de puerta de enlace aislado para que las pruebas del servidor no colisionen con una instancia en ejecución. Úselo cuando una ejecución anterior de la puerta de enlace dejó el puerto 18789 ocupado.
+- `pnpm test:coverage`: Ejecuta la suite unitaria con cobertura V8 (vía `vitest.unit.config.ts`). Los umbrales globales son del 70% en líneas/ramas/funciones/declaraciones. La cobertura excluye los puntos de entrada con mucha integración (cableado de CLI, puentes de puerta de enlace/telegram, servidor estático de webchat) para mantener el objetivo centrado en la lógica comprobable por unidades.
+- `pnpm test` en Node 22, 23 y 24 usa Vitest `vmForks` de forma predeterminada para un inicio más rápido. Node 25+ vuelve a `forks` hasta que se valide nuevamente. Puede forzar el comportamiento con `OPENCLAW_TEST_VM_FORKS=0|1`.
 - `pnpm test`: ejecuta el carril unitario central rápido de forma predeterminada para obtener comentarios locales rápidos.
-- `pnpm test:channels`: ejecuta suites con muchas operaciones de canal.
-- `pnpm test:extensions`: ejecuta suites de extensiones/plugins.
-- Integración de Gateway: participación opcional mediante `OPENCLAW_TEST_INCLUDE_GATEWAY=1 pnpm test` o `pnpm test:gateway`.
-- `pnpm test:e2e`: Ejecuta pruebas de humo de extremo a extremo del gateway (emparejamiento WS/HTTP/nodo de múltiples instancias). Por defecto a `vmForks` + trabajadores adaptativos en `vitest.e2e.config.ts`; ajustar con `OPENCLAW_E2E_WORKERS=<n>` y establecer `OPENCLAW_E2E_VERBOSE=1` para registros detallados.
-- `pnpm test:live`: Ejecuta pruebas en vivo de proveedores (minimax/zai). Requiere claves de API y `LIVE=1` (o `*_LIVE_TEST=1` específico del proveedor) para no omitir.
+- `pnpm test:channels`: ejecuta suites con muchas canalizaciones (channels).
+- `pnpm test:extensions`: ejecuta suites de extensiones/complementos.
+- Integración de puerta de enlace: participación opcional a través de `OPENCLAW_TEST_INCLUDE_GATEWAY=1 pnpm test` o `pnpm test:gateway`.
+- `pnpm test:e2e`: Ejecuta pruebas de humo de extremo a extremo de la puerta de enlace (emparejamiento WS/HTTP/nodo de varias instancias). Por defecto es `vmForks` + trabajadores adaptables en `vitest.e2e.config.ts`; ajuste con `OPENCLAW_E2E_WORKERS=<n>` y configure `OPENCLAW_E2E_VERBOSE=1` para registros detallados.
+- `pnpm test:live`: Ejecuta pruebas en vivo del proveedor (minimax/zai). Requiere claves API y `LIVE=1` (o `*_LIVE_TEST=1` específico del proveedor) para no omitir.
 
 ## Puerta de PR local
 
@@ -28,7 +28,7 @@ Para las comprobaciones de aterrizaje/puerta de PR locales, ejecute:
 - `pnpm test`
 - `pnpm check:docs`
 
-Si `pnpm test` falla en un host cargado, vuelva a ejecutarlo una vez antes de tratarlo como una regresión, luego aíslelo con `pnpm vitest run <path/to/test>`. Para hosts con memoria limitada, use:
+Si `pnpm test` falla intermitentemente en un host cargado, vuelva a ejecutarlo una vez antes de tratarlo como una regresión, y luego aíslelo con `pnpm vitest run <path/to/test>`. Para hosts con restricciones de memoria, use:
 
 - `OPENCLAW_TEST_PROFILE=low OPENCLAW_TEST_SERIAL_GATEWAY=1 pnpm test`
 
@@ -39,7 +39,7 @@ Script: [`scripts/bench-model.ts`](https://github.com/openclaw/openclaw/blob/mai
 Uso:
 
 - `source ~/.profile && pnpm tsx scripts/bench-model.ts --runs 10`
-- Env opc: `MINIMAX_API_KEY`, `MINIMAX_BASE_URL`, `MINIMAX_MODEL`, `ANTHROPIC_API_KEY`
+- Env opcional: `MINIMAX_API_KEY`, `MINIMAX_BASE_URL`, `MINIMAX_MODEL`, `ANTHROPIC_API_KEY`
 - Prompt predeterminado: “Responde con una sola palabra: ok. Sin puntuación ni texto extra.”
 
 Última ejecución (2025-12-31, 20 ejecuciones):
@@ -77,11 +77,11 @@ Flujo completo de inicio en frío en un contenedor Linux limpio:
 scripts/e2e/onboard-docker.sh
 ```
 
-Este script controla el asistente interactivo a través de un pseudo-tty, verifica los archivos de configuración/espacio de trabajo/sesión, y luego inicia el gateway y ejecuta `openclaw health`.
+Este script ejecuta el asistente interactivo a través de un pseudo-tty, verifica los archivos de configuración/espacio de trabajo/sesión, luego inicia la puerta de enlace y ejecuta `openclaw health`.
 
 ## Prueba de humeo de importación QR (Docker)
 
-Asegura que `qrcode-terminal` se cargue bajo los tiempos de ejecución de Docker Node compatibles (Node 24 predeterminado, Node 22 compatible):
+Asegura que `qrcode-terminal` se cargue bajo los tiempos de ejecución de Docker Node compatibles (Node 24 por defecto, Node 22 compatible):
 
 ```bash
 pnpm test:docker:qr

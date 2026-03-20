@@ -1,13 +1,13 @@
 ---
 summary: "Cuándo OpenClaw muestra los indicadores de escritura y cómo ajustarlos"
 read_when:
-  - Changing typing indicator behavior or defaults
+  - Cambiar el comportamiento o los valores predeterminados de los indicadores de escritura
 title: "Indicadores de escritura"
 ---
 
 # Indicadores de escritura
 
-Los indicadores de escritura se envían al canal de chat mientras una ejecución está activa. Use
+Los indicadores de escritura se envían al canal de chat mientras se activa una ejecución. Use
 `agents.defaults.typingMode` para controlar **cuándo** comienza la escritura y `typingIntervalSeconds`
 para controlar **con qué frecuencia** se actualiza.
 
@@ -22,17 +22,17 @@ Cuando `agents.defaults.typingMode` está **sin establecer**, OpenClaw mantiene 
 
 ## Modos
 
-Establezca `agents.defaults.typingMode` en uno de:
+Establezca `agents.defaults.typingMode` en uno de los siguientes:
 
-- `never` — ningún indicador de escritura, nunca.
-- `instant` — comenzar a escribir **tan pronto como el bucle del modelo comience**, incluso si la ejecución
-  luego devuelve solo el token de respuesta silenciosa.
+- `never` — sin indicador de escritura, nunca.
+- `instant` — comenzar a escribir **tan pronto como comience el bucle del modelo**, incluso si la ejecución
+  más tarde devuelve solo el token de respuesta silenciosa.
 - `thinking` — comenzar a escribir en el **primer delta de razonamiento** (requiere
   `reasoningLevel: "stream"` para la ejecución).
 - `message` — comenzar a escribir en el **primer delta de texto no silencioso** (ignora
   el token silencioso `NO_REPLY`).
 
-Orden de “qué tan pronto se activa”:
+Orden de "qué tan pronto se activa":
 `never` → `message` → `thinking` → `instant`
 
 ## Configuración
@@ -59,12 +59,12 @@ Puede anular el modo o el cadencia por sesión:
 
 ## Notas
 
-- El modo `message` no mostrará escritura para respuestas solo silenciosas (ej. el token `NO_REPLY`
-  utilizado para suprimir la salida).
+- El modo `message` no mostrará escritura para respuestas solo silenciosas (p. ej., el `NO_REPLY`
+  token utilizado para suprimir la salida).
 - `thinking` solo se activa si la ejecución transmite razonamiento (`reasoningLevel: "stream"`).
   Si el modelo no emite deltas de razonamiento, la escritura no comenzará.
 - Los latidos (heartbeats) nunca muestran escritura, independientemente del modo.
-- `typingIntervalSeconds` controla la **cadencia de actualización**, no la hora de inicio.
+- `typingIntervalSeconds` controla el **ritmo de actualización**, no la hora de inicio.
   El valor predeterminado es 6 segundos.
 
 import es from "/components/footer/es.mdx";

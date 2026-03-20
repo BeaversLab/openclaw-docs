@@ -1,41 +1,45 @@
 ---
 summary: "Usar MiniMax M2.5 en OpenClaw"
 read_when:
-  - You want MiniMax models in OpenClaw
-  - You need MiniMax setup guidance
+  - Quieres modelos MiniMax en OpenClaw
+  - Necesitas orientación para la configuración de MiniMax
 title: "MiniMax"
 ---
 
 # MiniMax
 
-MiniMax es una empresa de IA que crea la familia de modelos **M2/M2.5**. El lanzamiento actual centrado en codificación es **MiniMax M2.5** (23 de diciembre de 2025), diseñado para tareas complejas del mundo real.
+MiniMax es una empresa de inteligencia artificial que desarrolla la familia de modelos **M2/M2.5**. El lanzamiento actual
+centrado en la programación es **MiniMax M2.5** (23 de diciembre de 2025), diseñado para
+tareas complejas del mundo real.
 
-Fuente: [Nota de lanzamiento de MiniMax M2.5](https://www.minimax.io/news/minimax-m25)
+Fuente: [MiniMax M2.5 release note](https://www.minimax.io/news/minimax-m25)
 
 ## Resumen del modelo (M2.5)
 
 MiniMax destaca estas mejoras en M2.5:
 
-- **Codificación en varios idiomas** más fuerte (Rust, Java, Go, C++, Kotlin, Objective-C, TS/JS).
-- Mejor **desarrollo de web/aplicaciones** y calidad de salida estética (incluyendo móviles nativos).
-- Manejo mejorado de **instrucciones compuestas** para flujos de trabajo de estilo oficina, basándose en pensamiento entrelazado y ejecución integrada de restricciones.
-- **Respuestas más concisas** con menor uso de tokens y bucles de iteración más rápidos.
-- Compatibilidad y gestión de contexto más fuertes con **marcos de herramientas/agentes** (Claude Code, Droid/Factory AI, Cline, Kilo Code, Roo Code, BlackBox).
-- Salidas de **diálogo y redacción técnica** de mayor calidad.
+- Mayor capacidad de **programación en múltiples idiomas** (Rust, Java, Go, C++, Kotlin, Objective-C, TS/JS).
+- Mejor **desarrollo web/aplicaciones** y calidad estética de la salida (incluido el móvil nativo).
+- Manejo mejorado de **instrucciones compuestas** para flujos de trabajo de tipo oficina, basándose en
+  el pensamiento entrelazado y la ejecución integrada de restricciones.
+- **Respuestas más concisas** con un menor uso de tokens y bucles de iteración más rápidos.
+- Mayor compatibilidad con **marcos de herramientas/agentes** y gestión del contexto (Claude Code,
+  Droid/Factory AI, Cline, Kilo Code, Roo Code, BlackBox).
+- Salidas de **diálogo y escritura técnica** de mayor calidad.
 
 ## MiniMax M2.5 vs MiniMax M2.5 Highspeed
 
 - **Velocidad:** `MiniMax-M2.5-highspeed` es el nivel rápido oficial en la documentación de MiniMax.
-- **Costo:** La lista de precios de MiniMax indica el mismo costo de entrada y un costo de salida más alto para highspeed.
-- **ID de modelos actuales:** use `MiniMax-M2.5` o `MiniMax-M2.5-highspeed`.
+- **Coste:** La tarificación de MiniMax indica el mismo coste de entrada y un coste de salida mayor para highspeed.
+- **Identificadores de modelo actuales:** usa `MiniMax-M2.5` o `MiniMax-M2.5-highspeed`.
 
 ## Elegir una configuración
 
-### MiniMax OAuth (Plan de Codificación) — recomendado
+### MiniMax OAuth (Coding Plan) - recomendado
 
-**Lo mejor para:** configuración rápida con el Plan de Codificación de MiniMax a través de OAuth, no se requiere clave de API.
+**Lo mejor para:** configuración rápida con MiniMax Coding Plan a través de OAuth, no se requiere clave de API.
 
-Habilite el complemento OAuth incluido y autentíquese:
+Habilita el plugin OAuth incluido y autentícate:
 
 ```bash
 openclaw plugins enable minimax  # skip if already loaded.
@@ -43,22 +47,22 @@ openclaw gateway restart  # restart if gateway is already running
 openclaw onboard --auth-choice minimax-portal
 ```
 
-Se le pedirá que seleccione un punto final:
+Se te pedirá que selecciones un punto de conexión:
 
 - **Global** - Usuarios internacionales (`api.minimax.io`)
 - **CN** - Usuarios en China (`api.minimaxi.com`)
 
-Consulte el [README del complemento MiniMax](https://github.com/openclaw/openclaw/tree/main/extensions/minimax) para obtener más detalles.
+Consulta el [README del plugin MiniMax](https://github.com/openclaw/openclaw/tree/main/extensions/minimax) para más detalles.
 
 ### MiniMax M2.5 (clave de API)
 
 **Lo mejor para:** MiniMax alojado con API compatible con Anthropic.
 
-Configurar a través de CLI:
+Configurar a través de la CLI:
 
-- Ejecutar `openclaw configure`
-- Seleccione **Modelo/autorización**
-- Elija **MiniMax M2.5**
+- Ejecuta `openclaw configure`
+- Selecciona **Model/auth**
+- Elige **MiniMax M2.5**
 
 ```json5
 {
@@ -97,10 +101,10 @@ Configurar a través de CLI:
 }
 ```
 
-### MiniMax M2.5 como alternativa (ejemplo)
+### MiniMax M2.5 como respaldo (ejemplo)
 
-**Lo mejor para:** mantener su modelo más fuerte de última generación como principal, pasar a MiniMax M2.5 como alternativa.
-El siguiente ejemplo usa Opus como un principal concreto; cámbielo por su modelo principal de última generación preferido.
+**Lo mejor para:** mantener tu modelo de última generación más potente como principal, cambiar a MiniMax M2.5 como respaldo.
+El ejemplo de abajo usa Opus como un principal concreto; cambia a tu modelo principal de última generación preferido.
 
 ```json5
 {
@@ -120,13 +124,13 @@ El siguiente ejemplo usa Opus como un principal concreto; cámbielo por su model
 }
 ```
 
-### Opcional: Local vía LM Studio (manual)
+### Opcional: Local a través de LM Studio (manual)
 
-**Lo mejor para:** inferencia local con LM Studio.
-Hemos visto resultados sólidos con MiniMax M2.5 en hardware potente (p. ej. un
+**Mejor para:** inferencia local con LM Studio.
+Hemos observado resultados sólidos con MiniMax M2.5 en hardware potente (p. ej., un
 escritorio/servidor) usando el servidor local de LM Studio.
 
-Configure manualmente vía `openclaw.json`:
+Configure manualmente a través de `openclaw.json`:
 
 ```json5
 {
@@ -160,9 +164,9 @@ Configure manualmente vía `openclaw.json`:
 }
 ```
 
-## Configurar vía `openclaw configure`
+## Configure a través de `openclaw configure`
 
-Use el asistente de configuración interactivo para configurar MiniMax sin editar JSON:
+Use el asistente de configuración interactivo para establecer MiniMax sin editar JSON:
 
 1. Ejecute `openclaw configure`.
 2. Seleccione **Model/auth**.
@@ -175,36 +179,38 @@ Use el asistente de configuración interactivo para configurar MiniMax sin edita
 - `models.providers.minimax.api`: prefiera `anthropic-messages`; `openai-completions` es opcional para cargas útiles compatibles con OpenAI.
 - `models.providers.minimax.apiKey`: clave de API de MiniMax (`MINIMAX_API_KEY`).
 - `models.providers.minimax.models`: defina `id`, `name`, `reasoning`, `contextWindow`, `maxTokens`, `cost`.
-- `agents.defaults.models`: asigne alias a los modelos que desee en la lista de permitidos.
+- `agents.defaults.models`: use alias para los modelos que desee en la lista de permitidos.
 - `models.mode`: mantenga `merge` si desea agregar MiniMax junto con los integrados.
 
 ## Notas
 
-- Las referencias del modelo son `minimax/<model>`.
-- ID de modelo recomendados: `MiniMax-M2.5` y `MiniMax-M2.5-highspeed`.
-- API de uso de Coding Plan: `https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains` (requiere una clave de plan de código).
-- Actualice los valores de precios en `models.json` si necesita un seguimiento exacto de los costos.
-- Enlace de referencia para MiniMax Coding Plan (10% de descuento): [https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)
-- Consulte [/concepts/model-providers](/es/concepts/model-providers) para conocer las reglas del proveedor.
+- Las referencias de modelo son `minimax/<model>`.
+- IDs de modelo recomendados: `MiniMax-M2.5` y `MiniMax-M2.5-highspeed`.
+- API de uso del Coding Plan: `https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains` (requiere una clave de plan de código).
+- Actualice los valores de precios en `models.json` si necesita un seguimiento exacto de costos.
+- Enlace de referencia para el MiniMax Coding Plan (10% de descuento): [https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)
+- Vea [/concepts/model-providers](/es/concepts/model-providers) para las reglas del proveedor.
 - Use `openclaw models list` y `openclaw models set minimax/MiniMax-M2.5` para cambiar.
 
 ## Solución de problemas
 
-### “Unknown model: minimax/MiniMax-M2.5”
+### "Unknown model: minimax/MiniMax-M2.5"
 
-Esto generalmente significa que el **proveedor de MiniMax no está configurado** (no se encontró ninguna entrada de proveedor ni ninguna clave de perfil/env de autenticación de MiniMax). Una solución para esta detección está en la versión **2026.1.12** (no publicada en el momento de escribir esto). Solución mediante:
+Esto generalmente significa que el **proveedor MiniMax no está configurado** (no se encontró ninguna entrada de proveedor
+ni ningún perfil de autenticación/clave de entorno de MiniMax). Una corrección para esta detección está en
+**2026.1.12** (no publicada en el momento de escribir esto). Corrija mediante:
 
-- Actualizar a la versión **2026.1.12** (o ejecutar desde el código fuente `main`) y luego reiniciar la puerta de enlace.
+- Actualizar a **2026.1.12** (o ejecutar desde el código fuente `main`) y luego reiniciar la puerta de enlace.
 - Ejecutar `openclaw configure` y seleccionar **MiniMax M2.5**, o
 - Añadir el bloque `models.providers.minimax` manualmente, o
 - Configurar `MINIMAX_API_KEY` (o un perfil de autenticación de MiniMax) para que se pueda inyectar el proveedor.
 
-Asegúrese de que el id del modelo sea **sensible a mayúsculas y minúsculas**:
+Asegúrese de que el identificador del modelo sea **sensible a mayúsculas y minúsculas**:
 
 - `minimax/MiniMax-M2.5`
 - `minimax/MiniMax-M2.5-highspeed`
 
-Luego verifique nuevamente con:
+Luego verifique de nuevo con:
 
 ```bash
 openclaw models list

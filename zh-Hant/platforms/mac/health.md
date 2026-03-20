@@ -1,8 +1,8 @@
 ---
-summary: "macOS 應用程式如何回報 gateway/Baileys 健康狀態"
+summary: "macOS 應用程式如何回報閘道/Baileys 健康狀態"
 read_when:
-  - Debugging mac app health indicators
-title: "健康檢查"
+  - 除錯 Mac 應用程式健康指標
+title: "健康檢查 (macOS)"
 ---
 
 # macOS 上的健康檢查
@@ -26,12 +26,12 @@ title: "健康檢查"
 
 ## 偵測運作方式
 
-- 應用程式每約 60 秒及按需透過 `ShellExecutor` 執行 `openclaw health --json`。偵測會載入憑證並回報狀態，而不會發送訊息。
+- 應用程式每約 60 秒以及根據需求透過 `ShellExecutor` 執行 `openclaw health --json`。探針會載入憑證並回報狀態，而不會傳送訊息。
 - 分別快取上次良好的快照與上次錯誤，以避免閃爍；並顯示各自的時間戳記。
 
 ## 若有疑慮
 
-- 您仍可使用 [Gateway health](/zh-Hant/gateway/health) 中的 CLI 流程 (`openclaw status`、`openclaw status --deep`、`openclaw health --json`)，並追蹤 `/tmp/openclaw/openclaw-*.log` 以尋找 `web-heartbeat` / `web-reconnect`。
+- 您仍可以在 [閘道健康狀態](/zh-Hant/gateway/health) 中使用 CLI 流程 (`openclaw status`, `openclaw status --deep`, `openclaw health --json`)，並針對 `web-heartbeat` / `web-reconnect` 追蹤 `/tmp/openclaw/openclaw-*.log`。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

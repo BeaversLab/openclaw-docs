@@ -89,14 +89,29 @@ The Gateway is the single source of truth for sessions, routing, and channel con
 ## Quick start
 
 <Steps>
-  <Step title="Install OpenClaw">```bash npm install -g openclaw@latest ```</Step>
-  <Step title="Onboard and install the service">```bash openclaw onboard --install-daemon ```</Step>
-  <Step title="Pair WhatsApp and start the Gateway">
-    ```bash openclaw channels login openclaw gateway --port 18789 ```
+  <Step title="Install OpenClaw">
+    ```bash
+    npm install -g openclaw@latest
+    ```
+  </Step>
+  <Step title="Onboard and install the service">
+    ```bash
+    openclaw onboard --install-daemon
+    ```
+  </Step>
+  <Step title="Chat">
+    Open the Control UI in your browser and send a message:
+
+    ```bash
+    openclaw dashboard
+    ```
+
+    Or connect a channel ([Telegram](/en/channels/telegram) is fastest) and chat from your phone.
+
   </Step>
 </Steps>
 
-Need the full install and dev setup? See [Quick start](/en/start/quickstart).
+Need the full install and dev setup? See [Getting Started](/en/start/getting-started).
 
 ## Dashboard
 

@@ -2,7 +2,7 @@
 title: "HEARTBEAT.md 模板"
 summary: "HEARTBEAT.md 的工作区模板"
 read_when:
-  - Bootstrapping a workspace manually
+  - 手动引导工作区
 ---
 
 # HEARTBEAT.md

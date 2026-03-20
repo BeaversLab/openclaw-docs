@@ -2,7 +2,7 @@
 title: "SOUL.md 模板"
 summary: "SOUL.md 的工作区模板"
 read_when:
-  - Bootstrapping a workspace manually
+  - 手动引导工作区
 ---
 
 # SOUL.md - 你是谁

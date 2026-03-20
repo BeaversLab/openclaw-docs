@@ -1,9 +1,9 @@
 ---
 summary: "OpenClaw sur Oracle Cloud (Always Free ARM)"
 read_when:
-  - Setting up OpenClaw on Oracle Cloud
-  - Looking for low-cost VPS hosting for OpenClaw
-  - Want 24/7 OpenClaw on a small server
+  - Configuration d'OpenClaw sur Oracle Cloud
+  - Recherche d'un hébergement VPS à faible coût pour OpenClaw
+  - Vouloir OpenClaw 24h/24 sur un petit serveur
 title: "Oracle Cloud"
 ---
 
@@ -13,7 +13,7 @@ title: "Oracle Cloud"
 
 Exécuter une passerelle OpenClaw persistante sur le niveau ARM **Always Free** d'Oracle Cloud.
 
-Le niveau gratuit d'Oracle peut être un bon choix pour OpenClaw (surtout si vous avez déjà un compte OCI), mais il présente des compromis :
+Le niveau gratuit d'Oracle peut être un excellent choix pour OpenClaw (surtout si vous avez déjà un compte OCI), mais il présente des compromis :
 
 - Architecture ARM (la plupart des choses fonctionnent, mais certains binaires peuvent être uniquement x86)
 - La capacité et l'inscription peuvent être capricieuses
@@ -32,7 +32,7 @@ Le niveau gratuit d'Oracle peut être un bon choix pour OpenClaw (surtout si vou
 
 ## Prérequis
 
-- Compte Oracle Cloud ([inscription](https://www.oracle.com/cloud/free/)) — consultez le [guide d'inscription communautaire](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd) en cas de problème
+- Compte Oracle Cloud ([inscription](https://www.oracle.com/cloud/free/)) — consultez le [guide d'inscription communautaire](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd) si vous rencontrez des problèmes
 - Compte Tailscale (gratuit sur [tailscale.com](https://tailscale.com))
 - ~30 minutes
 
@@ -86,7 +86,7 @@ curl -fsSL https://tailscale.com/install.sh | sh
 sudo tailscale up --ssh --hostname=openclaw
 ```
 
-Cela active le SSH Tailscale, vous permettant ainsi de vous connecter via `ssh openclaw` depuis n'importe quel appareil de votre tailnet — aucune adresse IP publique n'est nécessaire.
+Cela active le SSH Tailscale, vous pouvez donc vous connecter via `ssh openclaw` depuis n'importe quel appareil de votre tailnet — aucune IP publique nécessaire.
 
 Vérifier :
 
@@ -103,13 +103,13 @@ curl -fsSL https://openclaw.ai/install.sh | bash
 source ~/.bashrc
 ```
 
-Lorsqu'on vous demande « How do you want to hatch your bot? », sélectionnez **« Do this later »**.
+Lorsqu'on vous demande « How do you want to hatch your bot? », sélectionnez **"Do this later"**.
 
-> Remarque : Si vous rencontrez des problèmes de compilation natifs ARM, commencez par les paquets système (ex. `sudo apt install -y build-essential`) avant d'utiliser Homebrew.
+> Remarque : Si vous rencontrez des problèmes de compilation natifs ARM, commencez par les paquets système (ex. : `sudo apt install -y build-essential`) avant d'utiliser Homebrew.
 
-## 6) Configurer Gateway (loopback + auth par token) et activer Tailscale Serve
+## 6) Configurez Gateway (boucle locale + auth par jeton) et activez Tailscale Serve
 
-Utilisez l'authentification par token par défaut. Elle est prévisible et évite d'avoir besoin de drapeaux « insecure auth » dans l'interface de contrôle.
+Utilisez l'authentification par jeton par défaut. Elle est prévisible et évite d'avoir besoin de drapeaux d'interface de contrôle « insecure auth ».
 
 ```bash
 # Keep the Gateway private on the VM
@@ -144,21 +144,21 @@ curl http://localhost:18789
 
 ## 8) Verrouiller la sécurité du VCN
 
-Maintenant que tout fonctionne, verrouillez le VCN pour bloquer tout le trafic sauf Tailscale. Le réseau cloud virtuel (VCN) d'OCI agit comme un pare-feu à la périphérie du réseau — le trafic est bloqué avant d'atteindre votre instance.
+Maintenant que tout fonctionne, verrouillez le VCN pour bloquer tout le trafic sauf Tailscale. Le réseau cloud virtuel (VCN) d'OCI agit comme un pare-feu à la limite du réseau — le trafic est bloqué avant d'atteindre votre instance.
 
-1. Allez dans **Networking → Virtual Cloud Networks** dans la console OCI
-2. Cliquez sur votre VCN → **Security Lists** → Default Security List
-3. **Supprimez** toutes les règles d'ingress sauf :
+1. Allez dans **Réseau → Réseaux cloud virtuels** dans la console OCI
+2. Cliquez sur votre VCN → **Listes de sécurité** → Liste de sécurité par défaut
+3. **Supprimez** toutes les règles d'entrée sauf :
    - `0.0.0.0/0 UDP 41641` (Tailscale)
-4. Conservez les règles d'egress par défaut (autoriser tout le trafic sortant)
+4. Conservez les règles de sortie par défaut (autoriser tout le trafic sortant)
 
-Cela bloque le SSH sur le port 22, HTTP, HTTPS et tout autre chose à la périphérie du réseau. Désormais, vous ne pouvez vous connecter que via Tailscale.
+Cela bloque le SSH sur le port 22, HTTP, HTTPS et tout autre élément à la limite du réseau. Désormais, vous ne pouvez vous connecter que via Tailscale.
 
 ---
 
 ## Accéder à l'interface de contrôle
 
-Depuis n'importe quel appareil sur votre réseau Tailscale :
+Depuis n'importe quel appareil de votre réseau Tailscale :
 
 ```
 https://openclaw.<tailnet-name>.ts.net/
@@ -176,11 +176,11 @@ Aucun tunnel SSH nécessaire. Tailscale fournit :
 
 ## Sécurité : VCN + Tailscale (ligne de base recommandée)
 
-Avec le VCN verrouillé (seul le port UDP 41641 ouvert) et le Gateway lié au loopback, vous bénéficiez d'une défense en profondeur robuste : le trafic public est bloqué à la périphérie du réseau et l'accès administrateur s'effectue via votre tailnet.
+Avec le VCN verrouillé (seul le port UDP 41641 ouvert) et le Gateway lié à la boucle locale, vous obtenez une défense en profondeur solide : le trafic public est bloqué à la limite du réseau et l'accès administrateur s'effectue via votre tailnet.
 
-Cette configuration élimine souvent le _besoin_ de règles de pare-feu basées sur l'hôte supplémentaires uniquement pour arrêter les attaques par force brute SSH sur tout Internet — mais vous devez quand même garder le système à jour, exécuter `openclaw security audit`, et vérifier que vous n'écoutez pas accidentellement sur des interfaces publiques.
+Cette configuration élimine souvent le _besoin_ de règles de pare-feu supplémentaires basées sur l'hôte uniquement pour arrêter les attaques par force brute SSH sur l'ensemble d'Internet — mais vous devriez tout de même garder le système à jour, exécuter `openclaw security audit`, et vérifier que vous n'écoutez pas accidentellement sur des interfaces publiques.
 
-### Ce qui est déjà protégé
+### Déjà protégé
 
 | Étape traditionnelle                    | Nécessaire ?       | Pourquoi                                                                                 |
 | --------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------- |
@@ -195,7 +195,7 @@ Cette configuration élimine souvent le _besoin_ de règles de pare-feu basées 
 
 - **Autorisations des informations d'identification :** `chmod 700 ~/.openclaw`
 - **Audit de sécurité :** `openclaw security audit`
-- **Mises à jour système :** `sudo apt update && sudo apt upgrade` régulièrement
+- **Mises à jour du système :** `sudo apt update && sudo apt upgrade` régulièrement
 - **Surveiller Tailscale :** Consultez les appareils dans la [console d'administration Tailscale](https://login.tailscale.com/admin)
 
 ### Vérifier la posture de sécurité
@@ -213,7 +213,7 @@ sudo systemctl disable --now ssh
 
 ---
 
-## Solution de secours : Tunnel SSH
+## Solution de repli : Tunnel SSH
 
 Si Tailscale Serve ne fonctionne pas, utilisez un tunnel SSH :
 
@@ -230,13 +230,13 @@ Ensuite, ouvrez `http://localhost:18789`.
 
 ### Échec de la création de l'instance ("Out of capacity")
 
-Les instances ARM de niveau gratuit sont populaires. Essayez :
+Les instances ARM de la offre gratuite sont populaires. Essayez :
 
 - Un domaine de disponibilité différent
-- Réessayez hors des heures de pointe (tôt le matin)
-- Utilisez le filtre "Always Free" lors de la sélection de la forme
+- Réessayez en dehors des heures de pointe (tôt le matin)
+- Utilisez le filtre "Toujours gratuit" lors de la sélection de la forme
 
-### Tailscale ne se connecte pas
+### Tailscale ne se connectera pas
 
 ```bash
 # Check status
@@ -246,7 +246,7 @@ sudo tailscale status
 sudo tailscale up --ssh --hostname=openclaw --reset
 ```
 
-### Gateway ne démarre pas
+### Gateway ne démarrera pas
 
 ```bash
 openclaw gateway status
@@ -269,13 +269,13 @@ systemctl --user restart openclaw-gateway
 
 ### Problèmes de binaire ARM
 
-Certains outils n'ont peut-être pas de versions ARM. Vérifiez :
+Certains outils peuvent ne pas avoir de versions ARM. Vérifiez :
 
 ```bash
 uname -m  # Should show aarch64
 ```
 
-La plupart des paquets npm fonctionnent bien. Pour les binaires, recherchez les versions `linux-arm64` ou `aarch64`.
+La plupart des paquets npm fonctionnent correctement. Pour les binaires, recherchez les versions `linux-arm64` ou `aarch64`.
 
 ---
 
@@ -283,7 +283,7 @@ La plupart des paquets npm fonctionnent bien. Pour les binaires, recherchez les 
 
 Tout l'état réside dans :
 
-- `~/.openclaw/` — config, informations d'identification, données de session
+- `~/.openclaw/` — configuration, identifiants, données de session
 - `~/.openclaw/workspace/` — espace de travail (SOUL.md, mémoire, artefacts)
 
 Sauvegardez périodiquement :
@@ -297,10 +297,10 @@ tar -czvf openclaw-backup.tar.gz ~/.openclaw ~/.openclaw/workspace
 ## Voir aussi
 
 - [Accès distant Gateway](/fr/gateway/remote) — autres modèles d'accès distant
-- [intégration Tailscale](/fr/gateway/tailscale) — documentation complète Tailscale
-- [configuration Gateway](/fr/gateway/configuration) — toutes les options de configuration
-- [guide DigitalOcean](/fr/platforms/digitalocean) — si vous souhaitez une solution payante + inscription plus facile
-- [guide Hetzner](/fr/install/hetzner) — alternative basée sur Docker
+- [Intégration Tailscale](/fr/gateway/tailscale) — documentation complète Tailscale
+- [Configuration Gateway](/fr/gateway/configuration) — toutes les options de configuration
+- [Guide DigitalOcean](/fr/platforms/digitalocean) — si vous souhaitez une version payante + un inscription plus facile
+- [Guide Hetzner](/fr/install/hetzner) — alternative basée sur Docker
 
 import fr from "/components/footer/fr.mdx";
 

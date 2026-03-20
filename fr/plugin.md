@@ -1,5 +1,5 @@
 ---
-summary: "Plugins/extensions d'OpenClaw : découverte, configuration et sécurité"
+summary: "OpenClaw plugins/extensions: discovery, config, and safety"
 read_when:
   - Adding or modifying plugins/extensions
   - Documenting plugin install or load rules
@@ -8,48 +8,48 @@ title: "Plugins"
 
 # Plugins (Extensions)
 
-## Quick start (nouveau avec les plugins ?)
+## Quick start (new to plugins?)
 
-Un plugin est simplement un **petit module de code** qui étend OpenClaw avec des
-fonctionnalités supplémentaires (commandes, outils et Gateway RPC).
+A plugin is just a **small code module** that extends OpenClaw with extra
+features (commands, tools, and Gateway RPC).
 
-La plupart du temps, vous utiliserez des plugins lorsque vous voudrez une fonctionnalité qui n'est pas encore
-intégrée au cœur d'OpenClaw (ou si vous souhaitez garder les fonctionnalités optionnelles hors de votre
-installation principale).
+Most of the time, you’ll use plugins when you want a feature that’s not built
+into core OpenClaw yet (or you want to keep optional features out of your main
+install).
 
-Chemin rapide :
+Fast path:
 
-1. Voir ce qui est déjà chargé :
+1. See what’s already loaded:
 
 ```bash
 openclaw plugins list
 ```
 
-2. Installer un plugin officiel (exemple : Voice Call) :
+2. Install an official plugin (example: Voice Call):
 
 ```bash
 openclaw plugins install @openclaw/voice-call
 ```
 
-3. Redémarrez la Gateway, puis configurez sous `plugins.entries.<id>.config`.
+3. Restart the Gateway, then configure under `plugins.entries.<id>.config`.
 
-Voir [Voice Call](/fr/plugins/voice-call) pour un exemple concret de plugin.
+See [Voice Call](/fr/plugins/voice-call) for a concrete example plugin.
 
-## Plugins disponibles (officiels)
+## Available plugins (official)
 
-- Microsoft Teams est disponible uniquement sous forme de plugin depuis le 15/01/2026 ; installez `@openclaw/msteams` si vous utilisez Teams.
-- Mémoire (Core) — plugin de recherche de mémoire inclus (activé par défaut via `plugins.slots.memory`)
-- Mémoire (LanceDB) — plugin de mémoire à long terme inclus (rappel/capture automatique ; définissez `plugins.slots.memory = "memory-lancedb"`)
+- Microsoft Teams is plugin-only as of 2026.1.15; install `@openclaw/msteams` if you use Teams.
+- Memory (Core) — bundled memory search plugin (enabled by default via `plugins.slots.memory`)
+- Memory (LanceDB) — bundled long-term memory plugin (auto-recall/capture; set `plugins.slots.memory = "memory-lancedb"`)
 - [Voice Call](/fr/plugins/voice-call) — `@openclaw/voice-call`
 - [Zalo Personal](/fr/plugins/zalouser) — `@openclaw/zalouser`
 - [Matrix](/fr/channels/matrix) — `@openclaw/matrix`
 - [Nostr](/fr/channels/nostr) — `@openclaw/nostr`
 - [Zalo](/fr/channels/zalo) — `@openclaw/zalo`
 - [Microsoft Teams](/fr/channels/msteams) — `@openclaw/msteams`
-- Google Antigravity OAuth (auth provider) — inclus sous la forme `google-antigravity-auth` (désactivé par défaut)
-- Gemini CLI OAuth (auth provider) — inclus sous la forme `google-gemini-cli-auth` (désactivé par défaut)
-- Qwen OAuth (auth provider) — inclus sous la forme `qwen-portal-auth` (désactivé par défaut)
-- Copilot Proxy (authentification du fournisseur) — pont proxy local Copilot VS Code ; distinct de la connexion de l'appareil `github-copilot` intégrée (regroupée, désactivée par défaut)
+- Google Antigravity OAuth (provider auth) — bundled as `google-antigravity-auth` (disabled by default)
+- Gemini CLI OAuth (provider auth) — bundled as `google-gemini-cli-auth` (disabled by default)
+- Qwen OAuth (provider auth) — bundled as `qwen-portal-auth` (disabled by default)
+- Copilot Proxy (provider auth) — local VS Code Copilot Proxy bridge; distinct from built-in `github-copilot` device login (bundled, disabled by default)
 
 Les plugins OpenClaw sont des **modules TypeScript** chargés au moment de l'exécution via jiti. **La validation de la configuration n'exécute pas le code du plugin** ; elle utilise à la place le manifeste du plugin et le schéma JSON. Voir [Plugin manifest](/fr/plugins/manifest).
 
@@ -62,9 +62,9 @@ Les plugins peuvent enregistrer :
 - Services d'arrière-plan
 - Validation de configuration facultative
 - **Skills** (en listant les répertoires `skills` dans le manifeste du plugin)
-- **Commandes de réponse automatique** (s'exécutent sans invoquer l'agent IA)
+- **Commandes de réponse automatique** (exécuter sans invoquer l'agent IA)
 
-Les plugins s'exécutent **en cours de processus** avec le Gateway, traitez-les donc comme du code de confiance.
+Les plugins s'exécutent **in‑process** avec le Gateway, traitez-les donc comme un code de confiance.
 Guide de création d'outils : [Plugin agent tools](/fr/plugins/agent-tools).
 
 ## Assistants d'exécution
@@ -80,13 +80,13 @@ const result = await api.runtime.tts.textToSpeechTelephony({
 
 Notes :
 
-- Utilise la configuration principale `messages.tts` (OpenAI ou ElevenLabs).
-- Renvoie le tampon audio PCM + le taux d'échantillonnage. Les plugins doivent rééchantillonner/encoder pour les fournisseurs.
+- Utilise la configuration `messages.tts` principale (OpenAI ou ElevenLabs).
+- Renvoie un tampon audio PCM + taux d'échantillonnage. Les plugins doivent rééchantillonner/encoder pour les fournisseurs.
 - Edge TTS n'est pas pris en charge pour la téléphonie.
 
-## Discovery & precedence
+## Découverte et précédence
 
-OpenClaw scanne, dans l'ordre :
+OpenClaw numérote, dans l'ordre :
 
 1. Chemins de configuration
 
@@ -102,19 +102,20 @@ OpenClaw scanne, dans l'ordre :
 - `~/.openclaw/extensions/*.ts`
 - `~/.openclaw/extensions/*/index.ts`
 
-4. Extensions regroupées (livrées avec OpenClaw, **désactivées par défaut**)
+4. Extensions groupées (livrées avec OpenClaw, **désactivées par défaut**)
 
 - `<openclaw>/extensions/*`
 
-Les plugins regroupés doivent être activés explicitement via `plugins.entries.<id>.enabled`
+Les plugins groupés doivent être explicitement activés via `plugins.entries.<id>.enabled`
 ou `openclaw plugins enable <id>`. Les plugins installés sont activés par défaut,
 mais peuvent être désactivés de la même manière.
 
 Chaque plugin doit inclure un fichier `openclaw.plugin.json` à sa racine. Si un chemin
-pointe vers un fichier, la racine du plugin est le répertoire du fichier et doit contenir le
+désigne un fichier, la racine du plugin est le répertoire du fichier et doit contenir le
 manifeste.
 
-Si plusieurs plugins résolvent vers le même identifiant, la première correspondance selon l'ordre ci-dessus l'emporte et les copies de moindre priorité sont ignorées.
+Si plusieurs plugins correspondent au même identifiant, la première correspondance dans l'ordre ci-dessus
+l'emporte et les copies de moindre précédence sont ignorées.
 
 ### Packs de packages
 
@@ -129,13 +130,14 @@ Un répertoire de plugins peut inclure un `package.json` avec `openclaw.extensio
 }
 ```
 
-Chaque entrée devient un plugin. Si le pack liste plusieurs extensions, l'identifiant du plugin devient `name/<fileBase>`.
+Chaque entrée devient un plugin. Si le pack liste plusieurs extensions, l'identifiant du plugin
+devient `name/<fileBase>`.
 
-Si votre plugin importe des dépendances npm, installez-les dans ce répertoire afin que `node_modules` soit disponible (`npm install` / `pnpm install`).
+Si votre plugin importe des dépendances npm, installez-les dans ce répertoire pour que `node_modules` soit disponible (`npm install` / `pnpm install`).
 
 ### Métadonnées du catalogue de canaux
 
-Les plugins de canal peuvent publier des métadonnées d'intégration via `openclaw.channel` et des indices d'installation via `openclaw.install`. Cela maintient le catalogue principal exempt de données.
+Les plugins de canal peuvent annoncer des métadonnées d'intégration via `openclaw.channel` et des indices d'installation via `openclaw.install`. Cela maintient le catalogue principal sans données.
 
 Exemple :
 
@@ -163,7 +165,7 @@ Exemple :
 }
 ```
 
-OpenClaw peut également fusionner des catalogues de canaux externes (par exemple, un export de registre MPM). Déposez un fichier JSON à l'un des emplacements suivants :
+OpenClaw peut également fusionner des **catalogues de canaux externes** (par exemple, un export de registre MPM). Déposez un fichier JSON à l'un des emplacements suivants :
 
 - `~/.openclaw/mpm/plugins.json`
 - `~/.openclaw/mpm/catalog.json`
@@ -175,12 +177,12 @@ Ou pointez `OPENCLAW_PLUGIN_CATALOG_PATHS` (ou `OPENCLAW_MPM_CATALOG_PATHS`) ver
 
 Identifiants de plugin par défaut :
 
-- Packs de packages : `package.json` `name`
+- Paquets de packages : `package.json` `name`
 - Fichier autonome : nom de base du fichier (`~/.../voice-call.ts` → `voice-call`)
 
-Si un plugin exporte `id`, OpenClaw l'utilise mais avertit s'il ne correspond pas à l'identifiant configuré.
+Si un plugin exporte `id`, OpenClaw l'utilise mais avertit lorsqu'il ne correspond pas à l'identifiant configuré.
 
-## Configuration
+## Config
 
 ```json5
 {
@@ -199,23 +201,24 @@ Si un plugin exporte `id`, OpenClaw l'utilise mais avertit s'il ne correspond pa
 Champs :
 
 - `enabled` : interrupteur principal (par défaut : true)
-- `allow` : liste d'autorisation (optionnel)
-- `deny` : liste de refus (optionnel ; le refus prime)
+- `allow` : liste d'autorisation (facultatif)
+- `deny` : liste de refus (facultatif ; le refus prime)
 - `load.paths` : fichiers/répertoires de plugins supplémentaires
-- `entries.<id>` : interrupteurs + configuration par plugin
+- `entries.<id>` : interrupteurs + config par plugin
 
 Les modifications de la configuration **nécessitent un redémarrage de la passerelle**.
 
 Règles de validation (strictes) :
 
-- Les IDs de plugin inconnus dans `entries`, `allow`, `deny` ou `slots` sont des **erreurs**.
-- Les clés `channels.<id>` inconnues sont des **erreurs**, sauf si un manifeste de plugin déclare l'ID de channel.
-- La configuration du plugin est validée à l'aide du JSON Schema intégré dans `openclaw.plugin.json` (`configSchema`).
+- Les identifiants de plugin inconnus dans `entries`, `allow`, `deny` ou `slots` sont des **erreurs**.
+- Les clés `channels.<id>` inconnues sont des **erreurs**, sauf si un manifeste de plugin déclare l'identifiant de canal.
+- La configuration du plugin est validée à l'aide du schéma JSON intégré dans `openclaw.plugin.json` (`configSchema`).
 - Si un plugin est désactivé, sa configuration est conservée et un **avertissement** est émis.
 
 ## Emplacements de plugin (catégories exclusives)
 
-Certaines catégories de plugins sont **exclusives** (une seule active à la fois). Utilisez `plugins.slots` pour sélectionner quel plugin possède l'emplacement :
+Certaines catégories de plugins sont **exclusives** (une seule active à la fois). Utilisez
+`plugins.slots` pour sélectionner quel plugin possède l'emplacement :
 
 ```json5
 {
@@ -227,19 +230,21 @@ Certaines catégories de plugins sont **exclusives** (une seule active à la foi
 }
 ```
 
-Si plusieurs plugins déclarent `kind: "memory"`, seul celui sélectionné est chargé. Les autres sont désactivés avec des diagnostics.
+Si plusieurs plugins déclarent `kind: "memory"`, seul celui qui est sélectionné est chargé. Les autres
+sont désactivés avec des diagnostics.
 
 ## Interface de contrôle (schéma + étiquettes)
 
-L'interface de contrôle utilise `config.schema` (JSON Schema + `uiHints`) pour afficher de meilleurs formulaires.
+L'interface de contrôle utilise `config.schema` (Schéma JSON + `uiHints`) pour afficher de meilleurs formulaires.
 
-OpenClaw augmente `uiHints` à l'exécution en fonction des plugins découverts :
+OpenClaw complète `uiHints` à l'exécution en fonction des plugins découverts :
 
 - Ajoute des étiquettes par plugin pour `plugins.entries.<id>` / `.enabled` / `.config`
-- Fusionne les indications de champ de configuration optionnelles fournies par le plugin sous :
+- Fusionne les indications facultatives de champs de configuration fournies par le plugin sous :
   `plugins.entries.<id>.config.<field>`
 
-Si vous souhaitez que les champs de configuration de votre plugin affichent de bonnes étiquettes/espaces réservés (et marquer les secrets comme sensibles), fournissez `uiHints` avec votre JSON Schema dans le manifeste du plugin.
+Si vous souhaitez que les champs de configuration de votre plugin affichent de bonnes étiquettes/espaces réservés (et marquer les secrets comme sensibles),
+fournissez `uiHints` aux côtés de votre schéma JSON dans le manifeste du plugin.
 
 Exemple :
 
@@ -281,18 +286,19 @@ openclaw plugins doctor
 
 `plugins update` ne fonctionne que pour les installations npm suivies sous `plugins.installs`.
 
-Les plugins peuvent également enregistrer leurs propres commandes de premier niveau (exemple : `openclaw voicecall`).
+Les plugins peuvent également enregistrer leurs propres commandes de niveau supérieur (exemple : `openclaw voicecall`).
 
-## API de plugin (aperçu)
+## Plugin API (aperçu)
 
 Les plugins exportent soit :
 
 - Une fonction : `(api) => { ... }`
 - Un objet : `{ id, name, configSchema, register(api) { ... } }`
 
-## Points d'ancrage de plugin
+## Points d' crochet (hooks) du plugin
 
-Les plugins peuvent fournir des points d'ancrage (hooks) et les enregistrer au moment de l'exécution. Cela permet à un plugin de regrouper l'automatisation pilotée par les événements sans installation séparée d'un pack de points d'ancrage.
+Les plugins peuvent inclure des points d' crochet (hooks) et les enregistrer lors de l'exécution. Cela permet à un plugin de regrouper
+l'automatisation basée sur les événements sans installation de pack de hooks séparé.
 
 ### Exemple
 
@@ -306,18 +312,18 @@ export default function register(api) {
 
 Notes :
 
-- Les répertoires de hooks suivent la structure de hook normale (`HOOK.md` + `handler.ts`).
+- Les répertoires de hooks suivent la structure normale des hooks (`HOOK.md` + `handler.ts`).
 - Les règles d'éligibilité des hooks s'appliquent toujours (exigences OS/bins/env/config).
-- Les hooks gérés par des plugins apparaissent dans `openclaw hooks list` avec `plugin:<id>`.
-- Vous ne pouvez pas activer/désactiver les hooks gérés par des plugins via `openclaw hooks` ; activez/désactivez plutôt le plugin.
+- Les hooks gérés par le plugin apparaissent dans `openclaw hooks list` avec `plugin:<id>`.
+- Vous ne pouvez pas activer/désactiver les hooks gérés par le plugin via `openclaw hooks` ; activez/désactivez plutôt le plugin.
 
-## Plugins de fournisseur (auth model)
+## Plugins de fournisseur (auth du modèle)
 
-Les plugins peuvent enregistrer des flux d'**authentification de fournisseur de model** afin que les utilisateurs puissent exécuter OAuth ou
+Les plugins peuvent enregistrer des flux d' **authentification de fournisseur de modèle** afin que les utilisateurs puissent exécuter OAuth ou
 la configuration de clé API dans OpenClaw (aucun script externe nécessaire).
 
 Enregistrez un fournisseur via `api.registerProvider(...)`. Chaque fournisseur expose une
-ou plusieurs méthodes d'authentification (OAuth, clé API, code d'appareil, etc.). Ces méthodes alimentent :
+ou plusieurs méthodes d'authentification (OAuth, clé API, code d'appareil, etc.). Ces méthodes permettent :
 
 - `openclaw models auth login --provider <id> [--method <id>]`
 
@@ -357,16 +363,16 @@ api.registerProvider({
 
 Notes :
 
-- `run` reçoit un `ProviderAuthContext` avec les aides `prompter`, `runtime`,
+- `run` reçoit un `ProviderAuthContext` avec les assistants `prompter`, `runtime`,
   `openUrl` et `oauth.createVpsAwareHandlers`.
-- Retournez `configPatch` lorsque vous devez ajouter des modèles par défaut ou une configuration de fournisseur.
-- Retournez `defaultModel` afin que `--set-default` puisse mettre à jour les valeurs par défaut de l'agent.
+- Retournez `configPatch` lorsque vous devez ajouter des modèles par défaut ou une configuration de provider.
+- Retournez `defaultModel` pour que `--set-default` puisse mettre à jour les valeurs par défaut de l'agent.
 
 ### Enregistrer un channel de messagerie
 
 Les plugins peuvent enregistrer des **plugins de channel** qui se comportent comme des channels intégrés
-(WhatsApp, Telegram, etc.). La configuration du channel réside sous `channels.<id>` et est
-validée par le code de votre plugin de channel.
+(WhatsApp, Telegram, etc.). La configuration du channel se trouve sous `channels.<id>` et est
+validée par votre code de plugin de channel.
 
 ```ts
 const myChannel = {
@@ -403,25 +409,25 @@ Notes :
 - Placez la configuration sous `channels.<id>` (et non `plugins.entries`).
 - `meta.label` est utilisé pour les étiquettes dans les listes CLI/UI.
 - `meta.aliases` ajoute des identifiants alternatifs pour la normalisation et les entrées CLI.
-- `meta.preferOver` répertorie les identifiants de channel à sauter lors de l'auto-activation lorsque les deux sont configurés.
+- `meta.preferOver` liste les identifiants de channel à ignorer pour l'activation automatique lorsque les deux sont configurés.
 - `meta.detailLabel` et `meta.systemImage` permettent aux UI d'afficher des étiquettes/icônes de channel plus riches.
 
 ### Écrire un nouveau channel de messagerie (étape par étape)
 
-Utilisez ceci lorsque vous souhaitez une **nouvelle interface de chat** (un « channel de messagerie »), et non un fournisseur de modèle.
-La documentation du fournisseur de modèle se trouve sous `/providers/*`.
+Utilisez ceci lorsque vous voulez une **nouvelle surface de chat** (un « channel de messagerie »), et non un provider de modèle.
+La documentation du provider de modèle se trouve sous `/providers/*`.
 
-1. Choisissez un identifiant + une structure de configuration
+1. Choisir un identifiant + une forme de configuration
 
-- Toute la configuration du channel se trouve sous `channels.<id>`.
+- Toute la configuration de channel se trouve sous `channels.<id>`.
 - Privilégiez `channels.<id>.accounts.<accountId>` pour les configurations multi-comptes.
 
 2. Définir les métadonnées du channel
 
-- `meta.label`, `meta.selectionLabel`, `meta.docsPath` et `meta.blurb` contrôlent les listes CLI/UI.
+- `meta.label`, `meta.selectionLabel`, `meta.docsPath`, `meta.blurb` contrôlent les listes CLI/UI.
 - `meta.docsPath` doit pointer vers une page de documentation comme `/channels/<id>`.
 - `meta.preferOver` permet à un plugin de remplacer un autre channel (l'activation automatique le privilégie).
-- `meta.detailLabel` et `meta.systemImage` sont utilisés par les interfaces pour le texte détaillé/les icônes.
+- `meta.detailLabel` et `meta.systemImage` sont utilisés par les UI pour le texte de détail/les icônes.
 
 3. Implémenter les adaptateurs requis
 
@@ -429,13 +435,13 @@ La documentation du fournisseur de modèle se trouve sous `/providers/*`.
 - `capabilities` (types de chat, médias, fils de discussion, etc.)
 - `outbound.deliveryMode` + `outbound.sendText` (pour l'envoi basique)
 
-4. Ajouter des adaptateurs optionnels si nécessaire
+4. Ajoutez des adaptateurs optionnels selon les besoins
 
-- `setup` (assistant), `security` (politique DM), `status` (santé/diagnostiques)
+- `setup` (assistant), `security` (stratégie DM), `status` (santé/diagnostic)
 - `gateway` (démarrage/arrêt/connexion), `mentions`, `threading`, `streaming`
 - `actions` (actions de message), `commands` (comportement de commande native)
 
-5. Enregistrer le channel dans votre plugin
+5. Enregistrez le canal dans votre plugin
 
 - `api.registerChannel({ plugin })`
 
@@ -453,7 +459,7 @@ Exemple de configuration minimale :
 }
 ```
 
-Plugin de channel minimal (sortie uniquement) :
+Plugin de canal minimal (sortie uniquement) :
 
 ```ts
 const plugin = {
@@ -493,9 +499,9 @@ puis configurez `channels.<id>` dans votre configuration.
 
 ### Outils d'agent
 
-Voir le guide dédié : [Plugin agent tools](/fr/plugins/agent-tools).
+Voir le guide dédié : [Outils d'agent de plugin](/fr/plugins/agent-tools).
 
-### Enregistrer une méthode de passerelle RPC
+### Enregistrer une méthode RPC de passerelle
 
 ```ts
 export default function (api) {
@@ -522,7 +528,9 @@ export default function (api) {
 
 ### Enregistrer les commandes de réponse automatique
 
-Les plugins peuvent enregistrer des commandes slash personnalisées qui s'exécutent **sans invoquer l'agent IA**. C'est utile pour les commandes de basculement, les vérifications de statut ou les actions rapides qui ne nécessitent pas de traitement LLM.
+Les plugins peuvent enregistrer des commandes slash personnalisées qui s'exécutent **sans appeler
+l'agent IA**. C'est utile pour les commandes de basculement, les vérifications de statut ou les actions rapides
+qui ne nécessitent pas de traitement LLM.
 
 ```ts
 export default function (api) {
@@ -539,17 +547,17 @@ export default function (api) {
 Contexte du gestionnaire de commande :
 
 - `senderId` : L'ID de l'expéditeur (si disponible)
-- `channel` : Le channel où la commande a été envoyée
+- `channel` : Le canal où la commande a été envoyée
 - `isAuthorizedSender` : Si l'expéditeur est un utilisateur autorisé
 - `args` : Arguments passés après la commande (si `acceptsArgs: true`)
 - `commandBody` : Le texte complet de la commande
-- `config` : La configuration actuelle de OpenClaw
+- `config` : La configuration actuelle d'OpenClaw
 
 Options de commande :
 
-- `name` : Nom de la commande (sans le `/` de début)
+- `name` : Nom de la commande (sans le `/` au début)
 - `description` : Texte d'aide affiché dans les listes de commandes
-- `acceptsArgs` : Si la commande accepte des arguments (par défaut : false). Si false et que des arguments sont fournis, la commande ne correspondra pas et le message passera aux autres gestionnaires
+- `acceptsArgs` : Si la commande accepte des arguments (par défaut : false). Si c'est false et que des arguments sont fournis, la commande ne correspondra pas et le message sera transmis aux autres gestionnaires
 - `requireAuth` : S'il faut exiger un expéditeur autorisé (par défaut : true)
 - `handler` : Fonction qui renvoie `{ text: string }` (peut être asynchrone)
 
@@ -571,12 +579,12 @@ api.registerCommand({
 
 Notes :
 
-- Les commandes du plugin sont traitées **avant** les commandes intégrées et l'agent IA
-- Les commandes sont enregistrées globalement et fonctionnent sur tous les channels
+- Les commandes des plugins sont traitées **avant** les commandes intégrées et l'agent IA
+- Les commandes sont enregistrées globalement et fonctionnent sur tous les canaux
 - Les noms de commandes ne sont pas sensibles à la casse (`/MyStatus` correspond à `/mystatus`)
 - Les noms de commandes doivent commencer par une lettre et contenir uniquement des lettres, des chiffres, des traits d'union et des traits de soulignement
-- Les noms de commandes réservés (comme `help`, `status`, `reset`, etc.) ne peuvent pas être remplacés par des plugins
-- L'enregistrement en double de commandes entre plusieurs plugins échouera avec une erreur de diagnostic
+- Les noms de commandes réservés (tels que `help`, `status`, `reset`, etc.) ne peuvent pas être remplacés par des plugins
+- L'enregistrement de commandes en double entre plusieurs plugins échouera avec une erreur de diagnostic
 
 ### Enregistrer les services d'arrière-plan
 
@@ -590,7 +598,7 @@ export default function (api) {
 }
 ```
 
-## Conventions de dénomination
+## Conventions de nommage
 
 - Méthodes du Gateway : `pluginId.action` (exemple : `voicecall.status`)
 - Outils : `snake_case` (exemple : `voice_call`)
@@ -598,52 +606,52 @@ export default function (api) {
 
 ## Skills
 
-Les plugins peuvent inclure un skill dans le dépôt (`skills/<name>/SKILL.md`).
-Activez-le avec `plugins.entries.<id>.enabled` (ou d'autres portes de configuration) et assurez-vous
-qu'il est présent dans vos emplacements de skills gérés/espace de travail.
+Les plugins peuvent inclure une compétence (skill) dans le dépôt (`skills/<name>/SKILL.md`).
+Activez-la avec `plugins.entries.<id>.enabled` (ou d'autres portes de configuration) et assurez-vous
+qu'elle est présente dans vos espaces de travail/emplacements de compétences gérés.
 
 ## Distribution (npm)
 
 Empaquetage recommandé :
 
-- Package principal : `openclaw` (ce dépôt)
-- Plugins : packages npm séparés sous `@openclaw/*` (exemple : `@openclaw/voice-call`)
+- Paquet principal : `openclaw` (ce dépôt)
+- Plugins : paquets npm distincts sous `@openclaw/*` (exemple : `@openclaw/voice-call`)
 
 Contrat de publication :
 
 - Le `package.json` du plugin doit inclure `openclaw.extensions` avec un ou plusieurs fichiers d'entrée.
 - Les fichiers d'entrée peuvent être `.js` ou `.ts` (jiti charge le TS à l'exécution).
 - `openclaw plugins install <npm-spec>` utilise `npm pack`, l'extrait dans `~/.openclaw/extensions/<id>/` et l'active dans la configuration.
-- Stabilité de la clé de configuration : les packages avec portée sont normalisés vers l'identifiant **sans portée** pour `plugins.entries.*`.
+- Stabilité des clés de configuration : les paquets portés (scoped) sont normalisés vers l'id **non porté** pour `plugins.entries.*`.
 
 ## Exemple de plugin : Appel vocal
 
-Ce dépôt comprend un plugin d'appel vocal (Twilio ou repli sur journal) :
+Ce dépôt comprend un plugin d'appel vocal (Twilio ou secours par journalisation) :
 
 - Source : `extensions/voice-call`
-- Skill : `skills/voice-call`
+- Compétence (Skill) : `skills/voice-call`
 - CLI : `openclaw voicecall start|status`
 - Outil : `voice_call`
 - RPC : `voicecall.start`, `voicecall.status`
-- Config (twilio) : `provider: "twilio"` + `twilio.accountSid/authToken/from` (optionnel `statusCallbackUrl`, `twimlUrl`)
+- Config (twilio) : `provider: "twilio"` + `twilio.accountSid/authToken/from` (`statusCallbackUrl` facultatif, `twimlUrl`)
 - Config (dev) : `provider: "log"` (pas de réseau)
 
-Voir [Appel vocal](/fr/plugins/voice-call) et `extensions/voice-call/README.md` pour la configuration et l'utilisation.
+Voir [Voice Call](/fr/plugins/voice-call) et `extensions/voice-call/README.md` pour la configuration et l'utilisation.
 
-## Notes de sécurité
+## Remarques de sécurité
 
 Les plugins s'exécutent dans le même processus que le Gateway. Traitez-les comme du code de confiance :
 
-- N'installez que des plugins en qui vous avez confiance.
-- Préférez les listes blanches (allowlists) `plugins.allow`.
-- Redémarrez le Gateway après les modifications.
+- N'installez que les plugins auxquels vous faites confiance.
+- Privilégiez les listes blanches `plugins.allow`.
+- Redémarrez le Gateway après avoir effectué des modifications.
 
 ## Tester les plugins
 
 Les plugins peuvent (et doivent) inclure des tests :
 
 - Les plugins dans le dépôt peuvent conserver les tests Vitest sous `src/**` (exemple : `src/plugins/voice-call.plugin.test.ts`).
-- Les plugins publiés séparément doivent exécuter leur propre CI (lint/build/test) et vérifier que `openclaw.extensions` pointe vers le point d'entrée construit (`dist/index.js`).
+- Les plugins publiés séparément doivent exécuter leur propre CI (lint/build/test) et valider que `openclaw.extensions` pointe vers le point d'entrée construit (`dist/index.js`).
 
 import fr from "/components/footer/fr.mdx";
 

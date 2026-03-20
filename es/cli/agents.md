@@ -1,7 +1,7 @@
 ---
-summary: "Referencia de CLI para `openclaw agents` (list/add/delete/bindings/bind/unbind/set identity)"
+summary: "Referencia de la CLI para `openclaw agents` (list/add/delete/bindings/bind/unbind/set identity)"
 read_when:
-  - You want multiple isolated agents (workspaces + routing + auth)
+  - Deseas múltiples agentes aislados (espacios de trabajo + enrutamiento + autenticación)
 title: "agents"
 ---
 
@@ -45,13 +45,13 @@ Añadir bindings:
 openclaw agents bind --agent work --bind telegram:ops --bind discord:guild-a
 ```
 
-Si omite `accountId` (`--bind <channel>`), OpenClaw lo resuelve desde los valores predeterminados del canal y los enlaces de configuración de complementos cuando están disponibles.
+Si omites `accountId` (`--bind <channel>`), OpenClaw lo resuelve desde los valores predeterminados del canal y los ganchos de configuración del complemento cuando están disponibles.
 
 ### Comportamiento del ámbito del binding
 
-- Un binding sin `accountId` coincide solo con la cuenta predeterminada del canal.
-- `accountId: "*"` es la alternativa de todo el canal (todas las cuentas) y es menos específica que un binding de cuenta explícito.
-- Si el mismo agente ya tiene un binding de canal coincidente sin `accountId`, y luego lo vincula con un `accountId` explícito o resuelto, OpenClaw actualiza ese binding existente en su lugar en lugar de agregar un duplicado.
+- Un enlace sin `accountId` coincide solo con la cuenta predeterminada del canal.
+- `accountId: "*"` es la alternativa de todo el canal (todas las cuentas) y es menos específica que un enlace de cuenta explícito.
+- Si el mismo agente ya tiene un enlace de canal coincidente sin `accountId`, y posteriormente haces un enlace con un `accountId` explícito o resuelto, OpenClaw actualiza ese enlace existente en lugar de agregar un duplicado.
 
 Ejemplo:
 
@@ -63,7 +63,7 @@ openclaw agents bind --agent work --bind telegram
 openclaw agents bind --agent work --bind telegram:ops
 ```
 
-Después de la actualización, el enrutamiento de ese binding tiene como ámbito `telegram:ops`. Si también desea un enrutamiento a la cuenta predeterminada, agréguelo explícitamente (por ejemplo `--bind telegram:default`).
+Después de la actualización, el enrutamiento de ese enlace se limita a `telegram:ops`. Si también deseas el enrutamiento de cuenta predeterminada, agrégalo explícitamente (por ejemplo `--bind telegram:default`).
 
 Eliminar bindings:
 

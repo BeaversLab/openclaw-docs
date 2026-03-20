@@ -2,7 +2,7 @@
 title: "TOOLS.md 模板"
 summary: "TOOLS.md 的工作区模板"
 read_when:
-  - Bootstrapping a workspace manually
+  - 手动引导工作区
 ---
 
 # TOOLS.md - 本地笔记

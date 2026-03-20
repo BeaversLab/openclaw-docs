@@ -1,9 +1,9 @@
 ---
 title: 形式化驗證（安全模型）
-summary: 針對 OpenClaw 最高風險路徑的機器檢查安全模型。
+summary: OpenClaw 最高風險路徑的機器檢查安全模型。
 read_when:
-  - Reviewing formal security model guarantees or limits
-  - Reproducing or updating TLA+/TLC security model checks
+  - 審查形式化安全模型保證或限制
+  - 重現或更新 TLA+/TLC 安全模型檢查
 permalink: /security/formal-verification/
 ---
 
@@ -13,7 +13,9 @@ permalink: /security/formal-verification/
 
 > 注意：某些較舊的連結可能會參照先前的專案名稱。
 
-**目標（北極星）：** 提供一個機器檢查的論證，證明 OpenClaw 在明確假設下執行其預期的安全策略（授權、會話隔離、工具閘控與錯誤配置安全）。
+**目標（北極星）：** 在明確假設下，提供一個機器檢查的論證，證明 OpenClaw 執行了其
+預期的安全策略（授權、會話隔離、工具閘控以及
+錯誤配置安全）。
 
 **目前狀態：** 一個可執行的、攻擊者驅動的 **安全回歸測試套件**：
 

@@ -1,22 +1,22 @@
 ---
-summary: "Centre d'aide : solutions courantes, install sanity et où regarder en cas de problème"
+summary: "Centre d'aide : correctifs courants, install sanity, et où regarder quand quelque chose ne fonctionne pas"
 read_when:
-  - You’re new and want the “what do I click/run” guide
-  - Something broke and you want the fastest path to a fix
+  - Vous êtes nouveau et vous voulez le guide "que dois-je cliquer/exécuter"
+  - Quelque chose ne fonctionne pas et vous voulez le chemin le plus rapide vers une solution
 title: "Aide"
 ---
 
 # Aide
 
-Si vous souhaitez un processus rapide pour « get unstuck », commencez ici :
+Si vous voulez un processus rapide pour "get unstuck", commencez ici :
 
-- **Troubleshooting :** [Commencez ici](/fr/help/troubleshooting)
-- **Install sanity (Node/npm/PATH) :** [Install](/fr/install#nodejs--npm-path-sanity)
-- **Problèmes de Gateway :** [Gateway troubleshooting](/fr/gateway/troubleshooting)
-- **Journaux :** [Logging](/fr/logging) et [Gateway logging](/fr/gateway/logging)
-- **Réparations :** [Doctor](/fr/gateway/doctor)
+- **Troubleshooting :** [Commencer ici](/fr/help/troubleshooting)
+- **Install sanity (Node/npm/PATH) :** [Installer](/fr/install#nodejs--npm-path-sanity)
+- **Problèmes liés à la Gateway :** [Gateway troubleshooting](/fr/gateway/troubleshooting)
+- **Journaux :** [Journalisation](/fr/logging) et [Gateway logging](/fr/gateway/logging)
+- **Réparations :** [Docteur](/fr/gateway/doctor)
 
-Si vous cherchez des réponses à des questions conceptuelles (pas « quelque chose ne marche pas ») :
+Si vous cherchez des réponses à des questions conceptuelles (pas "quelque chose ne fonctionne pas") :
 
 - [FAQ (concepts)](/fr/help/faq)
 

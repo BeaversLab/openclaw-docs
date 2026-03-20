@@ -1,19 +1,19 @@
 ---
-summary: "Outils de débogage : mode watch, flux bruts du modèle et traçage des fuites de raisonnement"
+summary: "Outils de débogage : mode watch, flux bruts du modèle, et traçage des fuites de raisonnement"
 read_when:
-  - You need to inspect raw model output for reasoning leakage
-  - You want to run the Gateway in watch mode while iterating
-  - You need a repeatable debugging workflow
+  - Vous devez inspecter la sortie brute du modèle pour détecter des fuites de raisonnement
+  - Vous souhaitez exécuter la Gateway en mode watch pendant les itérations
+  - Vous avez besoin d'un workflow de débogage reproductible
 title: "Débogage"
 ---
 
 # Débogage
 
-Cette page couvre les aides au débogage pour la sortie en flux continu (streaming), en particulier lorsqu'un fournisseur mélange du raisonnement dans du texte normal.
+Cette page couvre les assistants de débogage pour la sortie en flux continu, en particulier lorsqu'un fournisseur mélange le raisonnement au texte normal.
 
-## Remplacements de configuration de débogage à l'exécution
+## Remplacements de débogage à l'exécution
 
-Utilisez `/debug` dans le chat pour définir des remplacements de configuration **uniquement à l'exécution** (en mémoire, pas sur le disque).
+Utilisez `/debug` dans le chat pour définir des remplacements de configuration **uniquement à l'exécution** (en mémoire, pas sur disque).
 `/debug` est désactivé par défaut ; activez-le avec `commands.debug: true`.
 C'est pratique lorsque vous devez basculer des paramètres obscurs sans modifier `openclaw.json`.
 
@@ -26,9 +26,9 @@ Exemples :
 /debug reset
 ```
 
-`/debug reset` efface tous les remplacements et retourne à la configuration sur disque.
+`/debug reset` efface tous les remplacements et revient à la configuration sur disque.
 
-## Mode watch du Gateway
+## Mode watch de Gateway
 
 Pour une itération rapide, exécutez la passerelle sous le surveillateur de fichiers :
 
@@ -45,15 +45,15 @@ tsx watch src/entry.ts gateway --force
 Ajoutez tous les indicateurs CLI de la passerelle après `gateway:watch` et ils seront transmis
 à chaque redémarrage.
 
-## Profil de développement + passerelle de développement (--dev)
+## Profil dev + passerelle dev (--dev)
 
-Utilisez le profil de développement pour isoler l'état et lancer une configuration sûre et éphémère pour
+Utilisez le profil dev pour isoler l'état et lancer une configuration sûre et jetable pour
 le débogage. Il y a **deux** indicateurs `--dev` :
 
-- **`--dev` Global (profil) :** isole l'état sous `~/.openclaw-dev` et
+- **Global `--dev` (profile) :** isole l'état sous `~/.openclaw-dev` et
   définit le port de la passerelle par défaut à `19001` (les ports dérivés se décalent avec lui).
-- **`gateway --dev` : indique au Gateway de créer automatiquement une configuration par défaut +
-  un espace de travail** s'ils sont manquants (et ignore BOOTSTRAP.md).
+- **`gateway --dev` :** indique à la Gateway de créer automatiquement une configuration par défaut +
+  un espace de travail\*\* lorsqu'ils sont manquants (et ignore BOOTSTRAP.md).
 
 Flux recommandé (profil dev + amorçage dev) :
 
@@ -62,103 +62,103 @@ pnpm gateway:dev
 OPENCLAW_PROFILE=dev openclaw tui
 ```
 
-Si vous n'avez pas encore d'installation globale, exécutez le CLI via `pnpm openclaw ...`.
+Si vous n'avez pas encore d'installation globale, exécutez la CLI via `pnpm openclaw ...`.
 
 Ce que cela fait :
 
-1. **Isolation du profil** (`--dev` global)
+1. **Isolement de profil** (global `--dev`)
    - `OPENCLAW_PROFILE=dev`
    - `OPENCLAW_STATE_DIR=~/.openclaw-dev`
    - `OPENCLAW_CONFIG_PATH=~/.openclaw-dev/openclaw.json`
-   - `OPENCLAW_GATEWAY_PORT=19001` (le navigateur/canvas se décale en conséquence)
+   - `OPENCLAW_GATEWAY_PORT=19001` (navigateur/canvas se décalent en conséquence)
 
 2. **Amorçage dev** (`gateway --dev`)
-   - Writes a minimal config if missing (`gateway.mode=local`, bind loopback).
-   - Sets `agent.workspace` to the dev workspace.
-   - Sets `agent.skipBootstrap=true` (no BOOTSTRAP.md).
-   - Seeds the workspace files if missing:
+   - Écrit une configuration minimale si elle est manquante (`gateway.mode=local`, liaison loopback).
+   - Définit `agent.workspace` à l'espace de travail dev.
+   - Définit `agent.skipBootstrap=true` (pas de BOOTSTRAP.md).
+   - Génère les fichiers de l'espace de travail s'ils sont manquants:
      `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`.
-   - Default identity: **C3‑PO** (protocol droid).
-   - Skips channel providers in dev mode (`OPENCLAW_SKIP_CHANNELS=1`).
+   - Identité par défaut : **C3‑PO** (droïde de protocole).
+   - Ignore les fournisseurs de channel en mode dev (`OPENCLAW_SKIP_CHANNELS=1`).
 
-Reset flow (fresh start):
+Réinitialiser le flux (nouveau départ) :
 
 ```bash
 pnpm gateway:dev:reset
 ```
 
-Note: `--dev` is a **global** profile flag and gets eaten by some runners.
-If you need to spell it out, use the env var form:
+Remarque : `--dev` est un indicateur de profil **global** et est consommé par certains lanceurs.
+Si vous devez l'épeler, utilisez la forme de variable d'environnement :
 
 ```bash
 OPENCLAW_PROFILE=dev openclaw gateway --dev --reset
 ```
 
-`--reset` wipes config, credentials, sessions, and the dev workspace (using
-`trash`, not `rm`), then recreates the default dev setup.
+`--reset` efface la configuration, les identifiants, les sessions et l'espace de travail de développement (en utilisant
+`trash`, et non `rm`), puis recrée la configuration de développement par défaut.
 
-Tip: if a non‑dev gateway is already running (launchd/systemd), stop it first:
+Astuce : si une passerelle non-dev est déjà en cours d'exécution (launchd/systemd), arrêtez-la d'abord :
 
 ```bash
 openclaw gateway stop
 ```
 
-## Raw stream logging (OpenClaw)
+## Journalisation du flux brut (OpenClaw)
 
-OpenClaw can log the **raw assistant stream** before any filtering/formatting.
-This is the best way to see whether reasoning is arriving as plain text deltas
-(or as separate thinking blocks).
+OpenClaw peut journaliser le **flux brut de l'assistant** avant tout filtrage/formatage.
+C'est le meilleur moyen de voir si le raisonnement arrive sous forme de deltas de texte brut
+(ou sous forme de blocs de réflexion distincts).
 
-Enable it via CLI:
+Activez-le via CLI :
 
 ```bash
 pnpm gateway:watch --force --raw-stream
 ```
 
-Optional path override:
+Remplacement de chemin facultatif :
 
 ```bash
 pnpm gateway:watch --force --raw-stream --raw-stream-path ~/.openclaw/logs/raw-stream.jsonl
 ```
 
-Equivalent env vars:
+Variables d'environnement équivalentes :
 
 ```bash
 OPENCLAW_RAW_STREAM=1
 OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-stream.jsonl
 ```
 
-Default file:
+Fichier par défaut :
 
 `~/.openclaw/logs/raw-stream.jsonl`
 
-## Raw chunk logging (pi-mono)
+## Journalisation des chunks bruts (pi-mono)
 
-To capture **raw OpenAI-compat chunks** before they are parsed into blocks,
-pi-mono exposes a separate logger:
+Pour capturer les **chunks bruts compatibles OpenAI** avant qu'ils ne soient analysés en blocs,
+pi-mono expose un enregistreur séparé :
 
 ```bash
 PI_RAW_STREAM=1
 ```
 
-Optional path:
+Chemin facultatif :
 
 ```bash
 PI_RAW_STREAM_PATH=~/.pi-mono/logs/raw-openai-completions.jsonl
 ```
 
-Default file:
+Fichier par défaut :
 
 `~/.pi-mono/logs/raw-openai-completions.jsonl`
 
-> Note: this is only emitted by processes using pi-mono’s
-> `openai-completions` provider.
+> Remarque : cela n'est émis que par les processus utilisant le
+> fournisseur `openai-completions` de pi-mono.
 
-## Safety notes
+## Notes de sécurité
 
-- Raw stream logs can include full prompts, tool output, and user data.
-- Keep logs local and delete them after debugging.
-- If you share logs, scrub secrets and PII first.
+- Les journaux de flux bruts peuvent inclure des invites complètes, des sorties d'outils et des données utilisateur.
+- Gardez les journaux en local et supprimez-les après le débogage.
+- Si vous partagez des journaux, nettoyez d'abord les secrets et les données personnelles.
 
 import fr from "/components/footer/fr.mdx";
 

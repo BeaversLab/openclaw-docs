@@ -1,9 +1,9 @@
 ---
 summary: "Référence CLI pour `openclaw memory` (status/index/search)"
 read_when:
-  - You want to index or search semantic memory
-  - You’re debugging memory availability or indexing
-title: "mémoire"
+  - Vous souhaitez indexer ou rechercher dans la mémoire sémantique
+  - Vous déboguez la disponibilité ou l'indexation de la mémoire
+title: "memory"
 ---
 
 # `openclaw memory`
@@ -11,9 +11,9 @@ title: "mémoire"
 Gérer l'indexation et la recherche de la mémoire sémantique.
 Fourni par le plugin de mémoire actif (par défaut : `memory-core` ; définissez `plugins.slots.memory = "none"` pour désactiver).
 
-Connexes :
+Connexe :
 
-- Concept de mémoire : [Mémoire](/fr/concepts/memory)
+- Concept de Mémoire : [Mémoire](/fr/concepts/memory)
 - Plugins : [Plugins](/fr/tools/plugin)
 
 ## Exemples
@@ -36,11 +36,11 @@ openclaw memory index --agent main --verbose
 `memory status` et `memory index` :
 
 - `--agent <id>` : limiter à un seul agent. Sans cela, ces commandes s'exécutent pour chaque agent configuré ; si aucune liste d'agents n'est configurée, elles reviennent à l'agent par défaut.
-- `--verbose` : émettre des journaux détaillés pendant les sondages et l'indexation.
+- `--verbose` : émettre des journaux détaillés lors des sondages et de l'indexation.
 
 `memory status` :
 
-- `--deep` : sonder la disponibilité des vecteurs et des incorporations.
+- `--deep` : sonder la disponibilité des vecteurs + des incorporations.
 - `--index` : exécuter une réindexation si le stockage est sale (implique `--deep`).
 - `--json` : afficher la sortie JSON.
 
@@ -50,20 +50,20 @@ openclaw memory index --agent main --verbose
 
 `memory search` :
 
-- Entrée de requête : passer soit `[query]` positionnel, soit `--query <text>`.
-- Si les deux sont fournis, `--query` prévaut.
+- Entrée de requête : passez soit le `[query]` positionnel soit `--query <text>`.
+- Si les deux sont fournis, `--query` l'emporte.
 - Si aucun n'est fourni, la commande se termine avec une erreur.
 - `--agent <id>` : limiter à un seul agent (par défaut : l'agent par défaut).
 - `--max-results <n>` : limiter le nombre de résultats renvoyés.
 - `--min-score <n>` : filtrer les correspondances à faible score.
 - `--json` : afficher les résultats JSON.
 
-Notes :
+Remarques :
 
 - `memory index --verbose` imprime les détails par phase (provider, model, sources, activité par lot).
 - `memory status` inclut tous les chemins supplémentaires configurés via `memorySearch.extraPaths`.
-- Si les champs de clé d'API distante de mémoire active effective sont configurés en tant que SecretRefs, la commande résout ces valeurs à partir du snapshot de la passerelle active. Si la passerelle est indisponible, la commande échoue rapidement.
-- Note de décalage de version de la passerelle : ce chemin de commande nécessite une passerelle qui prend en charge `secrets.resolve` ; les passerelles plus anciennes renvoient une erreur de méthode inconnue.
+- Si les champs de clé d'API distante de mémoire active effective sont configurés en tant que SecretRefs, la commande résout ces valeurs à partir de l'instantané de la passerelle active. Si la passerelle n'est pas disponible, la commande échoue rapidement.
+- Remarque sur la différence de version de la Gateway : ce chemin de commande nécessite une passerelle qui prend en charge `secrets.resolve` ; les passerelles plus anciennes renvoient une erreur de méthode inconnue.
 
 import fr from "/components/footer/fr.mdx";
 

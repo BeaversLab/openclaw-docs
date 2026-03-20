@@ -74,8 +74,8 @@ Características clave del Blueprint utilizadas:
 | Inicial   | Nunca                            | 1GB+          | Uso personal, equipos pequeños |
 | Estándar+ | Nunca                            | 1GB+          | Producción, múltiples canales  |
 
-El Blueprint por defecto es `starter`. Para usar el nivel gratuito, cambie `plan: free` en el
-`render.yaml` de su bifurcación (pero nota: sin disco persistente la configuración se reinicia en cada despliegue).
+El Blueprint utiliza por defecto `starter`. Para usar el nivel gratuito, cambie `plan: free` en el `render.yaml` de su fork
+(pero nota: sin disco persistente, la configuración se restablece en cada despliegue).
 
 ## Después del despliegue
 
@@ -154,8 +154,8 @@ Los servicios de nivel gratuito se apagan después de 15 minutos de inactividad.
 
 ### Pérdida de datos después del redespliegue
 
-Esto ocurre en el nivel gratuito (sin disco persistente). Actualice a un plan de pago, o
-exporte regularmente su configuración a través de `/setup/export`.
+Esto sucede en el nivel gratuito (sin disco persistente). Actualice a un plan de pago o
+exporte regularmente su configuración mediante `/setup/export`.
 
 ### Fallos en las comprobaciones de estado
 

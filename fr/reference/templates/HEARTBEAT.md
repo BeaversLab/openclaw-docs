@@ -2,7 +2,7 @@
 title: "Modèle HEARTBEAT.md"
 summary: "Modèle d'espace de travail pour HEARTBEAT.md"
 read_when:
-  - Bootstrapping a workspace manually
+  - Initialisation manuelle d'un espace de travail
 ---
 
 # HEARTBEAT.md

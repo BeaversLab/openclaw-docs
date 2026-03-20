@@ -1,27 +1,27 @@
 ---
 summary: "Referencia de la CLI para `openclaw browser` (perfiles, pestañas, acciones, Chrome MCP y CDP)"
 read_when:
-  - You use `openclaw browser` and want examples for common tasks
-  - You want to control a browser running on another machine via a node host
-  - You want to attach to your local signed-in Chrome via Chrome MCP
-title: "navegador"
+  - Usas `openclaw browser` y quieres ejemplos de tareas comunes
+  - Quieres controlar un navegador que se ejecuta en otra máquina a través de un host de nodo
+  - Quieres adjuntarte a tu Chrome local con sesión iniciada a través de Chrome MCP
+title: "browser"
 ---
 
 # `openclaw browser`
 
-Administre el servidor de control del navegador de OpenClaw y ejecute acciones del navegador (pestañas, instantáneas, capturas de pantalla, navegación, clics, escritura).
+Administra el servidor de control del navegador de OpenClaw y ejecuta acciones del navegador (pestañas, instantáneas, capturas de pantalla, navegación, clics, escritura).
 
 Relacionado:
 
-- Herramienta de navegador + API: [Herramienta de navegador](/es/tools/browser)
+- Herramienta de navegador + API: [Browser tool](/es/tools/browser)
 
-## Opciones comunes
+## Marcas comunes
 
-- `--url <gatewayWsUrl>`: URL de WebSocket de la puerta de enlace (predeterminado: configuración).
-- `--token <token>`: token de la puerta de enlace (si es necesario).
-- `--timeout <ms>`: tiempo de espera de la solicitud (ms).
+- `--url <gatewayWsUrl>`: URL de WebSocket de Gateway (predeterminado: configuración).
+- `--token <token>`: token de Gateway (si es necesario).
+- `--timeout <ms>`: tiempo de espera de solicitud (ms).
 - `--browser-profile <name>`: elige un perfil de navegador (predeterminado de la configuración).
-- `--json`: salida legible por máquina (cuando sea compatible).
+- `--json`: salida legible por máquina (donde sea compatible).
 
 ## Inicio rápido (local)
 
@@ -36,9 +36,9 @@ openclaw browser --browser-profile openclaw snapshot
 
 Los perfiles son configuraciones de enrutamiento del navegador con nombre. En la práctica:
 
-- `openclaw`: inicia o se adjunta a una instancia de Chrome administrada por OpenClaw dedicada (directorio de datos de usuario aislado).
-- `user`: controla tu sesión de Chrome existente iniciada a través de Chrome DevTools MCP.
-- perfiles CDP personalizados: apuntan a un punto de conexión CDP local o remoto.
+- `openclaw`: inicia o se adjunta a una instancia de Chrome dedicada administrada por OpenClaw (directorio de datos de usuario aislado).
+- `user`: controla tu sesión de Chrome existente con sesión iniciada a través de Chrome DevTools MCP.
+- perfiles CDP personalizados: apunta a un punto final CDP local o remoto.
 
 ```bash
 openclaw browser profiles
@@ -47,7 +47,7 @@ openclaw browser create-profile --name chrome-live --driver existing-session
 openclaw browser delete-profile --name work
 ```
 
-Usa un perfil específico:
+Usar un perfil específico:
 
 ```bash
 openclaw browser --browser-profile work tabs
@@ -76,7 +76,7 @@ Captura de pantalla:
 openclaw browser screenshot
 ```
 
-Navegar/clic/escribir (automatización de interfaz de usuario basada en referencias):
+Navegar/clic/escribir (automatización de IU basada en referencias):
 
 ```bash
 openclaw browser navigate https://example.com
@@ -86,7 +86,7 @@ openclaw browser type <ref> "hello"
 
 ## Chrome existente a través de MCP
 
-Usa el perfil integrado `user` o crea tu propio perfil `existing-session`:
+Usa el perfil incorporado `user` o crea tu propio perfil `existing-session`:
 
 ```bash
 openclaw browser --browser-profile user tabs
@@ -99,11 +99,11 @@ Esta ruta es solo para el host. Para Docker, servidores sin cabeza, Browserless 
 
 ## Control remoto del navegador (proxy de host de nodo)
 
-Si la puerta de enlace se ejecuta en una máquina diferente a la del navegador, ejecuta un **node host** en la máquina que tenga Chrome/Brave/Edge/Chromium. La puerta de enlace enviará mediante proxy las acciones del navegador a ese nodo (no se requiere un servidor de control del navegador separado).
+Si el Gateway se ejecuta en una máquina diferente a la del navegador, ejecuta un **node host** en la máquina que tenga Chrome/Brave/Edge/Chromium. El Gateway enviará por proxy las acciones del navegador a ese nodo (no se requiere un servidor de control del navegador separado).
 
-Usa `gateway.nodes.browser.mode` para controlar el enrutamiento automático y `gateway.nodes.browser.node` para anclar un nodo específico si hay varios conectados.
+Usa `gateway.nodes.browser.mode` para controlar el enrutamiento automático y `gateway.nodes.browser.node` para fijar un nodo específico si hay varios conectados.
 
-Seguridad + configuración remota: [Herramienta de navegador](/es/tools/browser), [Acceso remoto](/es/gateway/remote), [Tailscale](/es/gateway/tailscale), [Seguridad](/es/gateway/security)
+Seguridad y configuración remota: [Herramienta de navegador](/es/tools/browser), [Acceso remoto](/es/gateway/remote), [Tailscale](/es/gateway/tailscale), [Seguridad](/es/gateway/security)
 
 import es from "/components/footer/es.mdx";
 

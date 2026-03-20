@@ -1,31 +1,31 @@
 ---
-summary: "安裝 OpenClaw 並在幾分鐘內執行您的第一次聊天。"
+summary: "在幾分鐘內安裝 OpenClaw 並執行您的第一次聊天。"
 read_when:
-  - First time setup from zero
-  - You want the fastest path to a working chat
-title: "快速入門"
+  - 首次從零開始設定
+  - 您想要通往可運作聊天的最快路徑
+title: "入門指南"
 ---
 
-# 快速入門
+# 入門指南
 
-目標：從零開始，以最少的設定進行第一次可運作的聊天。
+目標：從零開始，以最少的設定完成第一次可運作的聊天。
 
 <Info>
-  最快聊天方式：開啟控制 UI (無須設定通道)。執行 `openclaw dashboard` 並在 瀏覽器中聊天，或在
+  最快聊天方式：開啟控制介面（無需設定頻道）。執行 `openclaw dashboard` 並在瀏覽器中聊天，或在
   <Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">
-    gateway host
+    閘道主機
   </Tooltip>
-  上開啟 `http://127.0.0.1:18789/`。 文件：[Dashboard](/zh-Hant/web/dashboard) 和 [Control
-  UI](/zh-Hant/web/control-ui)。
+  上開啟 `http://127.0.0.1:18789/`。 文件：[儀表板](/zh-Hant/web/dashboard) 和
+  [控制介面](/zh-Hant/web/control-ui)。
 </Info>
 
 ## 先決條件
 
-- 建議使用 Node 24 (Node 22 LTS，目前為 `22.16+`，仍為相容性提供支援)
+- 建議使用 Node 24（Node 22 LTS，目前為 `22.16+`，為了相容性仍支援）
 
 <Tip>如果不確定，請使用 `node --version` 檢查您的 Node 版本。</Tip>
 
-## 快速設定 (CLI)
+## 快速設定（CLI）
 
 <Steps>
   <Step title="安裝 OpenClaw (建議)">
@@ -52,45 +52,47 @@ title: "快速入門"
     </Note>
 
   </Step>
+
   <Step title="執行入門引導">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    入門引導會設定驗證、閘道設定和選用通道。
-    詳情請參閱 [入門引導 (CLI)](/zh-Hant/start/wizard)。
+    入門引導會配置身份驗證、網關設定和可選頻道。
+    詳情請參閱 [Onboarding (CLI)](/zh-Hant/start/wizard)。
 
   </Step>
-  <Step title="檢查閘道">
-    如果您安裝了服務，它應該已經在執行中：
+
+  <Step title="Check the Gateway">
+    如果您已安裝該服務，它應該已經在運行：
 
     ```bash
     openclaw gateway status
     ```
 
   </Step>
-  <Step title="開啟控制 UI">
+  <Step title="Open the Control UI">
     ```bash
     openclaw dashboard
     ```
   </Step>
 </Steps>
 
-<Check>如果控制 UI 載入成功，表示您的閘道已準備就緒。</Check>
+<Check>如果控制 UI 加載成功，表示您的閘道已準備就緒。</Check>
 
-## 選用檢查和額外功能
+## 可選檢查與額外功能
 
 <AccordionGroup>
-  <Accordion title="在前台執行 Gateway">
-    適用於快速測試或疑難排解。
+  <Accordion title="Run the Gateway in the foreground">
+    適用於快速測試或故障排除。
 
     ```bash
     openclaw gateway --port 18789
     ```
 
   </Accordion>
-  <Accordion title="傳送測試訊息">
-    需要一個已設定的頻道。
+  <Accordion title="Send a test message">
+    需要已配置的頻道。
 
     ```bash
     openclaw message send --target +15555550123 --message "Hello from OpenClaw"
@@ -101,36 +103,36 @@ title: "快速入門"
 
 ## 實用的環境變數
 
-如果您將 OpenClaw 作為服務帳戶執行，或者想要自訂設定/狀態位置：
+如果您以服務帳戶運行 OpenClaw，或想要自訂設定/狀態位置：
 
-- `OPENCLAW_HOME` 設定用於內部路徑解析的家目錄。
+- `OPENCLAW_HOME` 設定用於內部路徑解析的主目錄。
 - `OPENCLAW_STATE_DIR` 覆寫狀態目錄。
 - `OPENCLAW_CONFIG_PATH` 覆寫設定檔路徑。
 
-完整的環境變數參考：[Environment vars](/zh-Hant/help/environment)。
+完整的環境變數參考：[環境變數](/zh-Hant/help/environment)。
 
-## 深入瞭解
+## 深入了解
 
 <Columns>
-  <Card title="Onboarding (CLI)" href="/zh-Hant/start/wizard">
-    完整的 CLI 上線參考和進階選項。
+  <Card title="CLI 入門指南" href="/zh-Hant/start/wizard">
+    完整的 CLI 入門參考和高級選項。
   </Card>
-  <Card title="macOS app onboarding" href="/zh-Hant/start/onboarding">
-    macOS 應用程式的初次執行流程。
+  <Card title="macOS 應用程式入門" href="/zh-Hant/start/onboarding">
+    macOS 應用程式的首次執行流程。
   </Card>
 </Columns>
 
-## 您將會擁有
+## 您將擁有
 
-- 執行中的 Gateway
-- 已設定的驗證 (Auth)
-- Control UI 存取權或已連線的頻道
+- 一個運行中的 Gateway
+- 已配置的認證
+- 控制 UI 存取權或已連接的頻道
 
-## 接下來
+## 後續步驟
 
-- DM 安全性和核准：[Pairing](/zh-Hant/channels/pairing)
+- DM 安全性與核准：[配對](/zh-Hant/channels/pairing)
 - 連接更多頻道：[Channels](/zh-Hant/channels)
-- 進階工作流程和從原始碼：[Setup](/zh-Hant/start/setup)
+- 進階工作流程與從原始碼安裝：[Setup](/zh-Hant/start/setup)
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

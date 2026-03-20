@@ -2,49 +2,49 @@
 summary: "Runtime Gateway sur macOS (service launchd externe)"
 read_when:
   - Packaging OpenClaw.app
-  - Debugging the macOS gateway launchd service
-  - Installing the gateway CLI for macOS
+  - Débogage du service launchd gateway macOS
+  - Installation du CLI gateway pour macOS
 title: "Gateway sur macOS"
 ---
 
 # Gateway sur macOS (launchd externe)
 
 OpenClaw.app n'inclut plus Node/Bun ni le runtime Gateway. L'application macOS
-s'attend à une installation `openclaw` CLI **externe**, ne lance pas le Gateway en tant que
+s'attend à une installation CLI `openclaw` **externe**, ne lance pas le Gateway en tant que
 processus enfant, et gère un service launchd par utilisateur pour garder le Gateway
-actif (ou se connecte à un Gateway local existant si un est déjà en cours d'exécution).
+en cours d'exécution (ou s'attache à un Gateway local existant si un est déjà en cours d'exécution).
 
 ## Installer le CLI (requis pour le mode local)
 
-Node 24 est le runtime par défaut sur le Mac. Node 22 LTS, actuellement `22.16+`, fonctionne toujours pour la compatibilité. Installez ensuite `openclaw` globalement :
+Node 24 est le runtime par défaut sur Mac. Node 22 LTS, actuellement `22.16+`, fonctionne toujours pour la compatibilité. Installez ensuite `openclaw` globalement :
 
 ```bash
 npm install -g openclaw@<version>
 ```
 
-Le bouton **Installer le CLI** de l'application macOS exécute le même processus via npm/pnpm (bun n'est pas recommandé pour le runtime Gateway).
+Le bouton **Installer macOS** de l'application CLI exécute le même flux via npm/pnpm (bun non recommandé pour le runtime Gateway).
 
 ## Launchd (Gateway en tant que LaunchAgent)
 
 Label :
 
-- `ai.openclaw.gateway` (ou `ai.openclaw.<profile>` ; l'ancien `com.openclaw.*` peut subsister)
+- `ai.openclaw.gateway` (ou `ai.openclaw.<profile>` ; l'ancien `com.openclaw.*` peut rester)
 
-Emplacement du plist (par utilisateur) :
+Emplacement du Plist (par utilisateur) :
 
 - `~/Library/LaunchAgents/ai.openclaw.gateway.plist`
   (ou `~/Library/LaunchAgents/ai.openclaw.<profile>.plist`)
 
 Gestionnaire :
 
-- L'application macOS gère l'installation/mise à jour de LaunchAgent en mode Local.
+- L'application macOS gère l'installation/mise à jour du LaunchAgent en mode Local.
 - Le CLI peut également l'installer : `openclaw gateway install`.
 
 Comportement :
 
-- « OpenClaw Actif » active/désactive le LaunchAgent.
-- Quitter l'application n'arrête **pas** le gateway (launchd le maintient en vie).
-- Si un Gateway est déjà en cours d'exécution sur le port configuré, l'application s'y connecte
+- « OpenClaw actif » active/désactive le LaunchAgent.
+- Quitter l'application n'arrête **pas** la gateway (launchd la maintient en vie).
+- Si un Gateway est déjà en cours d'exécution sur le port configuré, l'application s'y attache
   au lieu d'en démarrer un nouveau.
 
 Journalisation :
@@ -53,7 +53,7 @@ Journalisation :
 
 ## Compatibilité des versions
 
-L'application macOS vérifie la version du gateway par rapport à sa propre version. Si elles sont
+L'application macOS vérifie la version de la gateway par rapport à sa propre version. Si elles sont
 incompatibles, mettez à jour le CLI global pour qu'il corresponde à la version de l'application.
 
 ## Vérification rapide

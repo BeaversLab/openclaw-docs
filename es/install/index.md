@@ -1,19 +1,19 @@
 ---
 summary: "Instalar OpenClaw — script de instalación, npm/pnpm, desde el código fuente, Docker y más"
 read_when:
-  - You need an install method other than the Getting Started quickstart
-  - You want to deploy to a cloud platform
-  - You need to update, migrate, or uninstall
+  - Necesitas un método de instalación diferente al inicio rápido de Primeros pasos
+  - Quieres desplegar en una plataforma en la nube
+  - Necesitas actualizar, migrar o desinstalar
 title: "Instalar"
 ---
 
 # Instalar
 
-¿Ya seguiste [Introducción](/es/start/getting-started)? Todo listo — esta página es para métodos de instalación alternativos, instrucciones específicas de la plataforma y mantenimiento.
+¿Ya seguiste [Primeros pasos](/es/start/getting-started)? Ya estás listo — esta página es para métodos de instalación alternativos, instrucciones específicas de la plataforma y mantenimiento.
 
 ## Requisitos del sistema
 
-- **[Node 24 (recomendado)](/es/install/node)** (Node 22 LTS, actualmente `22.16+`, todavía es compatible por compatibilidad; el [script de instalación](#install-methods) instalará Node 24 si no está presente)
+- **[Node 24 (recomendado)](/es/install/node)** (Node 22 LTS, actualmente `22.16+`, todavía es compatible por compatibilidad; el [script de instalación](#install-methods) instalará Node 24 si falta)
 - macOS, Linux o Windows
 - `pnpm` solo si compilas desde el código fuente
 
@@ -26,18 +26,18 @@ title: "Instalar"
 
 <Tip>
   El **script de instalación** es la forma recomendada de instalar OpenClaw. Maneja la detección de
-  Node, la instalación y el inicio en un solo paso.
+  Node, la instalación y el incorporamiento en un solo paso.
 </Tip>
 
 <Warning>
-  Para hosts VPS/en la nube, evite las imágenes de mercado de "un clic" de terceros cuando sea
-  posible. Prefiera una imagen base de sistema operativo limpia (por ejemplo Ubuntu LTS) y luego
-  instale OpenClaw usted mismo con el script de instalación.
+  Para hosts VPS/nube, evita las imágenes de mercado de "un clic" de terceros cuando sea posible.
+  Prefiere una imagen base de sistema operativo limpia (por ejemplo Ubuntu LTS) y luego instala
+  OpenClaw tú mismo con el script de instalación.
 </Warning>
 
 <AccordionGroup>
   <Accordion title="Script de instalación" icon="rocket" defaultOpen>
-    Descarga la CLI, la instala globalmente a través de npm e inicia el onboarding.
+    Descarga la CLI, la instala globalmente mediante npm e inicia el proceso de incorporación.
 
     <Tabs>
       <Tab title="macOS / Linux / WSL2">
@@ -52,9 +52,9 @@ title: "Instalar"
       </Tab>
     </Tabs>
 
-    Eso es todo: el script maneja la detección de Node, la instalación y el onboarding.
+    Eso es todo: el script se encarga de la detección de Node, la instalación y el proceso de incorporación.
 
-    Para omitir el onboarding y solo instalar el binario:
+    Para omitir el proceso de incorporación y simplemente instalar el binario:
 
     <Tabs>
       <Tab title="macOS / Linux / WSL2">
@@ -69,12 +69,12 @@ title: "Instalar"
       </Tab>
     </Tabs>
 
-    Para todas las opciones de flags, variables de entorno y CI/automatización, consulta [Aspectos internos del instalador](/es/install/installer).
+    Para ver todas las opciones de indicadores, variables de entorno y CI/automatización, consulte [Detalles del instalador](/es/install/installer).
 
   </Accordion>
 
   <Accordion title="npm / pnpm" icon="package">
-    Si ya gestionas Node por tu cuenta, recomendamos Node 24. OpenClaw todavía es compatible con Node 22 LTS, actualmente `22.16+`, por compatibilidad:
+    Si ya gestionas Node por tu cuenta, recomendamos Node 24. OpenClaw aún es compatible con Node 22 LTS, actualmente `22.16+`, por compatibilidad:
 
     <Tabs>
       <Tab title="npm">
@@ -90,7 +90,7 @@ title: "Instalar"
           SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
           ```
 
-          Si ves `sharp: Please add node-gyp to your dependencies`, instala herramientas de compilación (macOS: Xcode CLT + `npm install -g node-gyp`) o usa la variable de entorno mencionada arriba.
+          Si ves `sharp: Please add node-gyp to your dependencies`, instala las herramientas de compilación (macOS: Xcode CLT + `npm install -g node-gyp`) o usa la variable de entorno anterior.
         </Accordion>
       </Tab>
       <Tab title="pnpm">
@@ -106,7 +106,7 @@ title: "Instalar"
       </Tab>
     </Tabs>
 
-    ¿Quieres la versión `main` head actual de GitHub con una instalación mediante un gestor de paquetes?
+    ¿Quieres el head actual de `main` en GitHub con una instalación mediante gestor de paquetes?
 
     ```bash
     npm install -g github:openclaw/openclaw#main
@@ -133,7 +133,7 @@ title: "Instalar"
         pnpm build
         ```
       </Step>
-      <Step title="Enlazar la CLI">
+      <Step title="Vincular la CLI">
         Haz que el comando `openclaw` esté disponible globalmente:
 
         ```bash
@@ -142,7 +142,7 @@ title: "Instalar"
 
         Alternativamente, omite el enlace y ejecuta comandos a través de `pnpm openclaw ...` desde dentro del repositorio.
       </Step>
-      <Step title="Ejecutar el onboarding">
+      <Step title="Ejecutar onboarding">
         ```bash
         openclaw onboard --install-daemon
         ```
@@ -161,7 +161,7 @@ title: "Instalar"
     Implementaciones en contenedores o sin interfaz gráfica.
   </Card>
   <Card title="Podman" href="/es/install/podman" icon="container">
-    Contenedor sin root: ejecute `setup-podman.sh` una vez y luego el script de lanzamiento.
+    Contenedor sin root: ejecute `setup-podman.sh` una vez y luego el script de inicio.
   </Card>
   <Card title="Nix" href="/es/install/nix" icon="snowflake">
     Instalación declarativa mediante Nix.
@@ -170,7 +170,7 @@ title: "Instalar"
     Aprovisionamiento automatizado de flotas.
   </Card>
   <Card title="Bun" href="/es/install/bun" icon="zap">
-    Uso solo de CLI a través del tiempo de ejecución Bun.
+    Uso solo de CLI mediante el runtime Bun.
   </Card>
 </CardGroup>
 
@@ -184,15 +184,15 @@ openclaw status         # gateway status
 openclaw dashboard      # open the browser UI
 ```
 
-Si necesita rutas de tiempo de ejecución personalizadas, use:
+Si necesita rutas de runtime personalizadas, use:
 
 - `OPENCLAW_HOME` para rutas internas basadas en el directorio de inicio
 - `OPENCLAW_STATE_DIR` para la ubicación del estado mutable
 - `OPENCLAW_CONFIG_PATH` para la ubicación del archivo de configuración
 
-Consulte [Variables de entorno](/es/help/environment) para conocer la precedencia y los detalles completos.
+Consulte [Variables de entorno](/es/help/environment) para obtener precedencia y detalles completos.
 
-## Solución de problemas: `openclaw` no encontrado
+## Solución de problemas: no se encontró `openclaw`
 
 <Accordion title="Diagnóstico y solución de PATH">
   Diagnóstico rápido:
@@ -204,7 +204,7 @@ npm prefix -g
 echo "$PATH"
 ```
 
-Si `$(npm prefix -g)/bin` (macOS/Linux) o `$(npm prefix -g)` (Windows) **no** está en su `$PATH`, su shell no puede encontrar los binarios globales de npm (incluyendo `openclaw`).
+Si `$(npm prefix -g)/bin` (macOS/Linux) o `$(npm prefix -g)` (Windows) **no** está en su `$PATH`, su shell no puede encontrar los binarios globales de npm (incluido `openclaw`).
 
 Solución: agréguelo a su archivo de inicio de shell (`~/.zshrc` o `~/.bashrc`):
 
@@ -212,7 +212,7 @@ Solución: agréguelo a su archivo de inicio de shell (`~/.zshrc` o `~/.bashrc`)
 export PATH="$(npm prefix -g)/bin:$PATH"
 ```
 
-En Windows, agregue la salida de `npm prefix -g` a su PATH.
+En Windows, añada la salida de `npm prefix -g` a su PATH.
 
 Luego abra una nueva terminal (o ejecute `rehash` en zsh / `hash -r` en bash).
 
@@ -221,14 +221,14 @@ Luego abra una nueva terminal (o ejecute `rehash` en zsh / `hash -r` en bash).
 ## Actualizar / desinstalar
 
 <CardGroup cols={3}>
-  <Card title="Actualizando" href="/es/install/updating" icon="refresh-cw">
-    Mantenga OpenClaw actualizado.
+  <Card title="Actualización" href="/es/install/updating" icon="refresh-cw">
+    Mantén OpenClaw actualizado.
   </Card>
-  <Card title="Migrating" href="/es/install/migrating" icon="arrow-right">
-    Moverse a una nueva máquina.
+  <Card title="Migración" href="/es/install/migrating" icon="arrow-right">
+    Cambia a una nueva máquina.
   </Card>
-  <Card title="Uninstall" href="/es/install/uninstall" icon="trash-2">
-    Eliminar OpenClaw por completo.
+  <Card title="Desinstalación" href="/es/install/uninstall" icon="trash-2">
+    Elimina OpenClaw completamente.
   </Card>
 </CardGroup>
 

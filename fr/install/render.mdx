@@ -23,8 +23,8 @@ Une fois déployé, l'URL de votre service suit le modèle `https://<service-nam
 
 ## Comprendre le Blueprint
 
-Les Render Blueprints sont des fichiers YAML qui définissent votre infrastructure. Le `render.yaml` de ce
-dépôt configure tout ce dont OpenClaw a besoin pour fonctionner :
+Les Blueprint Render sont des fichiers YAML qui définissent votre infrastructure. Le `render.yaml` dans ce
+dépôt configure tout ce dont vous avez besoin pour exécuter OpenClaw :
 
 ```yaml
 services:
@@ -68,7 +68,7 @@ Fonctions clés du Blueprint utilisées :
 | Starter   | Jamais                    | 1Go et plus    | Usage personnel, petites équipes |
 | Standard+ | Jamais                    | 1Go et plus    | Production, canaux multiples     |
 
-Le Blueprint est par défaut réglé sur `starter`. Pour utiliser l'offre gratuite, modifiez `plan: free` dans le
+Le Blueprint est par défaut configuré sur `starter`. Pour utiliser le niveau gratuit, modifiez `plan: free` dans le
 `render.yaml` de votre fork (mais notez : l'absence de disque persistant signifie que la configuration est réinitialisée à chaque déploiement).
 
 ## Après le déploiement
@@ -148,7 +148,7 @@ Les services de l'offre gratuite s'arrêtent après 15 minutes d'inactivité. La
 
 ### Perte de données après redéploiement
 
-Cela arrive sur l'offre gratuite (pas de disque persistant). Passez à un plan payant, ou
+Cela se produit sur le niveau gratuit (pas de disque persistant). Passez à un plan payant, ou
 exportez régulièrement votre configuration via `/setup/export`.
 
 ### Échecs des contrôles de santé

@@ -1,14 +1,13 @@
 ---
-summary: "探索：模型設定、驗證設定檔與後援行為"
+summary: "探索：模型配置、身分驗證設定檔與後備行為"
 read_when:
-  - Exploring future model selection + auth profile ideas
-title: "模型設定探索"
+  - 探索未來的模型選擇 + 身分驗證設定檔概念
+title: "模型配置探索"
 ---
 
 # 模型設定（探索）
 
-本文件記錄了未來模型設定的**構想**。這並非
-正式發布的規格。若要了解目前的行為，請參閱：
+本文件記錄了未來模型配置的**構想**。這並非正式發布規格。若要了解目前的行為，請參閱：
 
 - [模型](/zh-Hant/concepts/models)
 - [模型故障轉移](/zh-Hant/concepts/model-failover)

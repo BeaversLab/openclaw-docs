@@ -1,8 +1,9 @@
 ---
+title: "Together AI"
 summary: "Configuración de Together AI (autenticación + selección de modelo)"
 read_when:
-  - You want to use Together AI with OpenClaw
-  - You need the API key env var or CLI auth choice
+  - Quieres usar Together AI con OpenClaw
+  - Necesitas la variable de entorno de la clave API o la elección de autenticación por CLI
 ---
 
 # Together AI
@@ -15,13 +16,13 @@ read_when:
 
 ## Inicio rápido
 
-1. Establezca la clave API (recomendado: guárdela para el Gateway):
+1. Establezca la clave API (se recomienda: guárdela para el Gateway):
 
 ```bash
 openclaw onboard --auth-choice together-api-key
 ```
 
-2. Establezca un modelo predeterminado:
+2. Establecer un modelo predeterminado:
 
 ```json5
 {
@@ -58,11 +59,11 @@ Together AI proporciona acceso a muchos modelos de código abierto populares:
 - **Llama 3.3 70B Instruct Turbo** - Seguimiento de instrucciones rápido y eficiente
 - **Llama 4 Scout** - Modelo de visión con comprensión de imágenes
 - **Llama 4 Maverick** - Visión avanzada y razonamiento
-- **DeepSeek V3.1** - Modelo potente de codificación y razonamiento
+- **DeepSeek V3.1** - Potente modelo de codificación y razonamiento
 - **DeepSeek R1** - Modelo de razonamiento avanzado
 - **Kimi K2 Instruct** - Modelo de alto rendimiento con ventana de contexto de 262K
 
-Todos los modelos admiten completaciones de chat estándar y son compatibles con la API de OpenAI.
+Todos los modelos soportan finalizaciones de chat estándar y son compatibles con la API de OpenAI.
 
 import es from "/components/footer/es.mdx";
 

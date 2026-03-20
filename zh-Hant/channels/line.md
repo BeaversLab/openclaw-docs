@@ -1,5 +1,5 @@
 ---
-summary: "LINE Messaging API 外掛程式設定、配置與使用"
+summary: "LINE Messaging API plugin setup, config, and usage"
 read_when:
   - You want to connect OpenClaw to LINE
   - You need LINE webhook + credential setup
@@ -7,53 +7,54 @@ read_when:
 title: LINE
 ---
 
-# LINE (外掛程式)
+# LINE (plugin)
 
-LINE 透過 LINE Messaging API 連線至 OpenClaw。此外掛程式在閘道上作為 webhook
-接收器運行，並使用您的頻道存取權杖 + 頻道金鑰進行
-驗證。
+LINE connects to OpenClaw via the LINE Messaging API. The plugin runs as a webhook
+receiver on the gateway and uses your channel access token + channel secret for
+authentication.
 
-狀態：透過外掛程式支援。支援直接訊息、群組聊天、媒體、位置、Flex
-訊息、範本訊息和快速回覆。不支援反應和主題串。
+Status: supported via plugin. Direct messages, group chats, media, locations, Flex
+messages, template messages, and quick replies are supported. Reactions and threads
+are not supported.
 
-## 需要外掛程式
+## Plugin required
 
-安裝 LINE 外掛程式：
+Install the LINE plugin:
 
 ```bash
 openclaw plugins install @openclaw/line
 ```
 
-本機結帳 (從 git 儲存庫執行時)：
+Local checkout (when running from a git repo):
 
 ```bash
 openclaw plugins install ./extensions/line
 ```
 
-## 設定
+## Setup
 
-1. 建立 LINE 開發者帳號並開啟控制台：
+1. Create a LINE Developers account and open the Console:
    [https://developers.line.biz/console/](https://developers.line.biz/console/)
-2. 建立 (或選擇) 一個供應商並新增一個 **Messaging API** 頻道。
-3. 從頻道設定中複製 **Channel access token** (頻道存取權杖) 和 **Channel secret** (頻道金鑰)。
-4. 在 Messaging API 設定中啟用 **Use webhook** (使用 Webhook)。
-5. 將 webhook URL 設定為您的閘道端點 (需要 HTTPS)：
+2. Create (or pick) a Provider and add a **Messaging API** channel.
+3. Copy the **Channel access token** and **Channel secret** from the channel settings.
+4. Enable **Use webhook** in the Messaging API settings.
+5. Set the webhook URL to your gateway endpoint (HTTPS required):
 
 ```
 https://gateway-host/line/webhook
 ```
 
-閘道會回應 LINE 的 webhook 驗證 (GET) 和傳入事件 (POST)。
-如果您需要自訂路徑，請設定 `channels.line.webhookPath` 或
-`channels.line.accounts.<id>.webhookPath` 並相應地更新 URL。
+The gateway responds to LINE’s webhook verification (GET) and inbound events (POST).
+If you need a custom path, set `channels.line.webhookPath` or
+`channels.line.accounts.<id>.webhookPath` and update the URL accordingly.
 
-安全提示：
+Security note:
 
-- LINE 簽章驗證取決於內文 (對原始內文的 HMAC)，因此 OpenClaw 在驗證之前會對未認證前的內文套用嚴格的限制和逾時設定。
+- LINE signature verification is body-dependent (HMAC over the raw body), so OpenClaw applies strict pre-auth body limits and timeout before verification.
 
-## 設定
+## Configure
 
-基本設定：
+Minimal config:
 
 ```json5
 {
@@ -68,12 +69,12 @@ https://gateway-host/line/webhook
 }
 ```
 
-環境變數 (僅限預設帳號)：
+Env vars (default account only):
 
 - `LINE_CHANNEL_ACCESS_TOKEN`
 - `LINE_CHANNEL_SECRET`
 
-權杖/金鑰檔案：
+Token/secret files:
 
 ```json5
 {
@@ -86,9 +87,9 @@ https://gateway-host/line/webhook
 }
 ```
 
-`tokenFile` 和 `secretFile` 必須指向一般檔案。系統會拒絕符號連結。
+`tokenFile` and `secretFile` must point to regular files. Symlinks are rejected.
 
-多個帳號：
+Multiple accounts:
 
 ```json5
 {
@@ -106,39 +107,39 @@ https://gateway-host/line/webhook
 }
 ```
 
-## 存取控制
+## Access control
 
-直接訊息預設為配對模式。未知的發送者會收到配對碼，其
-訊息將在獲得核准前被忽略。
+Direct messages default to pairing. Unknown senders get a pairing code and their
+messages are ignored until approved.
 
 ```bash
 openclaw pairing list line
 openclaw pairing approve line <CODE>
 ```
 
-允許清單與原則：
+Allowlists and policies:
 
 - `channels.line.dmPolicy`: `pairing | allowlist | open | disabled`
-- `channels.line.allowFrom`: 直接訊息的允許清單 LINE 使用者 ID
+- `channels.line.allowFrom`: allowlisted LINE user IDs for DMs
 - `channels.line.groupPolicy`: `allowlist | open | disabled`
-- `channels.line.groupAllowFrom`: 群組的允許清單 LINE 使用者 ID
-- 各群組覆寫： `channels.line.groups.<groupId>.allowFrom`
-- 運行時備註：如果 `channels.line` 完全缺失，運行時會回退到 `groupPolicy="allowlist"` 進行群組檢查（即使設定了 `channels.defaults.groupPolicy`）。
+- `channels.line.groupAllowFrom`: allowlisted LINE user IDs for groups
+- Per-group overrides: `channels.line.groups.<groupId>.allowFrom`
+- 執行時注意：如果 `channels.line` 完全缺失，執行時會回退到 `groupPolicy="allowlist"` 進行群組檢查（即使已設定 `channels.defaults.groupPolicy`）。
 
 LINE ID 區分大小寫。有效的 ID 如下所示：
 
-- 用戶：`U` + 32 個十六進制字元
-- 群組：`C` + 32 個十六進制字元
-- 房間：`R` + 32 個十六進制字元
+- 使用者：`U` + 32 個十六進位字元
+- 群組：`C` + 32 個十六進位字元
+- 聊天室：`R` + 32 個十六進位字元
 
 ## 訊息行為
 
 - 文字會在 5000 個字元處進行分塊。
-- Markdown 格式會被移除；程式碼區塊和表格會盡可能轉換為 Flex 卡片。
-- 串流回應會被緩衝；在代理運作時，LINE 會收到帶有載入動畫的完整分塊。
-- 媒體下載數量受 `channels.line.mediaMaxMb` 限制（預設為 10）。
+- Markdown 格式會被移除；程式碼區塊和表格會在可能的情況下轉換為 Flex 卡片。
+- 串流回應會進行緩衝；當代理程式運作時，LINE 會接收完整分塊並顯示載入動畫。
+- 媒體下載數量受限於 `channels.line.mediaMaxMb`（預設為 10）。
 
-## 頻道資料（豐富訊息）
+## 頻道資料 (豐富訊息)
 
 使用 `channelData.line` 來發送快速回覆、位置、Flex 卡片或範本訊息。
 
@@ -181,9 +182,9 @@ LINE 外掛還提供了一個 `/card` 指令，用於 Flex 訊息預設：
 
 ## 疑難排解
 
-- **Webhook 驗證失敗：** 確保 webhook URL 是 HTTPS，且 `channelSecret` 與 LINE 控制台相符。
-- **沒有傳入事件：** 確認 webhook 路徑符合 `channels.line.webhookPath`，且 LINE 可以連線到閘道。
-- **媒體下載錯誤：** 如果媒體超過預設限制，請調高 `channels.line.mediaMaxMb`。
+- **Webhook 驗證失敗：** 確保 webhook URL 是 HTTPS，並且 `channelSecret` 與 LINE 主控台相符。
+- **沒有收到事件：** 確認 webhook 路徑符合 `channels.line.webhookPath`，且 LINE 可以存取該閘道。
+- **媒體下載錯誤：** 如果媒體超過預設限制，請提高 `channels.line.mediaMaxMb`。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

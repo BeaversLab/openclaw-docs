@@ -1,8 +1,8 @@
 ---
 summary: "Descripción general de las opciones y flujos de incorporación de OpenClaw"
 read_when:
-  - Choosing an onboarding path
-  - Setting up a new environment
+  - Elegir una ruta de incorporación
+  - Configurar un nuevo entorno
 title: "Descripción general de la incorporación"
 sidebarTitle: "Descripción general de la incorporación"
 ---
@@ -10,7 +10,7 @@ sidebarTitle: "Descripción general de la incorporación"
 # Descripción general de la incorporación
 
 OpenClaw admite múltiples rutas de incorporación dependiendo de dónde se ejecute el Gateway
-de cómo prefieras configurar los proveedores.
+y de cómo prefieras configurar los proveedores.
 
 ## Elige tu ruta de incorporación
 
@@ -25,8 +25,8 @@ Ejecute la incorporación en una terminal:
 openclaw onboard
 ```
 
-Utilice la incorporación mediante CLI cuando desee tener control total de la Gateway, el área de trabajo,
-los canales y las aptitudes. Documentación:
+Utiliza la incorporación por CLI cuando desees tener control total del Gateway, el espacio de trabajo,
+los canales y las habilidades. Documentos:
 
 - [Incorporación (CLI)](/es/start/wizard)
 - [comando `openclaw onboard`](/es/cli/onboard)
@@ -35,13 +35,13 @@ los canales y las aptitudes. Documentación:
 
 Usa la aplicación OpenClaw cuando quieras una configuración totalmente guiada en macOS. Documentos:
 
-- [Incorporación (Aplicación macOS)](/es/start/onboarding)
+- [Incorporación (aplicación macOS)](/es/start/onboarding)
 
 ## Proveedor personalizado
 
-Si necesita un punto de conexión que no esté en la lista, incluidos los proveedores alojados que
-exponen API estándar de OpenAI o Anthropic, elija **Proveedor personalizado** en la
-incorporación mediante CLI. Se le pedirá que:
+Si necesitas un punto de conexión que no esté listado, incluidos proveedores alojados que
+expongan API estándar de OpenAI o Anthropic, elige **Proveedor personalizado** en la
+incorporación por CLI. Se te pedirá que:
 
 - Elijas compatible con OpenAI, compatible con Anthropic o **Desconocido** (detectar automáticamente).
 - Ingreses una URL base y una clave de API (si el proveedor lo requiere).

@@ -1,7 +1,7 @@
 ---
-summary: "Loopback WebChat 靜態主機與 Gateway WS 用於聊天 UI"
+summary: "Loopback WebChat 靜態主機與閘道 WS 用於聊天 UI 的使用方式"
 read_when:
-  - Debugging or configuring WebChat access
+  - 偵錯或設定 WebChat 存取
 title: "WebChat"
 ---
 
@@ -23,9 +23,9 @@ title: "WebChat"
 
 ## 運作方式 (行為)
 
-- UI 連線至 Gateway WebSocket 並使用 `chat.history`、`chat.send` 與 `chat.inject`。
-- `chat.history` 為維護穩定性而有上限：閘道可能會截斷長文字欄位、省略繁重中繼資料，並以 `[chat.history omitted: message too large]` 取代過大項目。
-- `chat.inject` 會將助理備註直接附加到逐字稿並廣播至 UI（無 agent 執行）。
+- UI 連線至閘道 WebSocket 並使用 `chat.history`、`chat.send` 和 `chat.inject`。
+- `chat.history` 為了穩定性而有界限：閘道可能會截斷長文字欄位、省略龐大的元資料，並將過大的項目替換為 `[chat.history omitted: message too large]`。
+- `chat.inject` 會直接將助理註解附加到對話記錄，並將其廣播至 UI (不執行代理程式)。
 - 已中止的執行可讓部分助理輸出在 UI 中保持可見。
 - 當存在緩衝輸出時，閘道會將中止的部分助理文字儲存到逐字稿歷史，並以中止中繼資料標記這些項目。
 - 歷史記錄一律從閘道擷取（不監看本機檔案）。
@@ -33,11 +33,11 @@ title: "WebChat"
 
 ## Control UI agents tools panel
 
-- Control UI `/agents` Tools 面板透過 `tools.catalog` 擷取執行時期目錄，並將每個
-  工具標記為 `core` 或 `plugin:<id>`（外加選用外掛工具的 `optional`）。
-- 如果無法使用 `tools.catalog`，面板會退回至內建的靜態清單。
-- 面板會編輯 profile 與覆寫設定，但實際執行時期存取仍遵循原則
-  優先順序（`allow`/`deny`、個別 agent 與 provider/channel 覆寫）。
+- 控制 UI `/agents` 工具面板會透過 `tools.catalog` 取得執行階段目錄，並將每個
+  工具標記為 `core` 或 `plugin:<id>` (對於選用外掛程式工具則加上 `optional`)。
+- 如果無法使用 `tools.catalog`，面板會改用內建的靜態清單。
+- 面板會編輯設定檔與覆寫設定，但有效的執行階段存取仍遵循原則
+  優先順序 (`allow`/`deny`，各代理程式與供應商/通道覆寫)。
 
 ## 遠端使用
 
@@ -46,19 +46,19 @@ title: "WebChat"
 
 ## 配置參考 (WebChat)
 
-完整配置：[配置](/zh-Hant/gateway/configuration)
+完整設定：[設定](/zh-Hant/gateway/configuration)
 
 通道選項：
 
-- 沒有專用的 `webchat.*` 區塊。WebChat 使用下方的網關端點 + 身分驗證設定。
+- 沒有專用的 `webchat.*` 區塊。WebChat 使用下列的閘道端點與驗證設定。
 
 相關的全域選項：
 
-- `gateway.port`, `gateway.bind`：WebSocket 主機/連接埠。
-- `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password`：WebSocket 身分驗證 (token/password)。
-- `gateway.auth.mode: "trusted-proxy"`：瀏覽器客戶端的反向代理身分驗證 (請參閱 [Trusted Proxy Auth](/zh-Hant/gateway/trusted-proxy-auth))。
-- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password`：遠端網關目標。
-- `session.*`：會話儲存和主金鑰預設值。
+- `gateway.port`、`gateway.bind`：WebSocket 主機/連接埠。
+- `gateway.auth.mode`、`gateway.auth.token`、`gateway.auth.password`：WebSocket 驗證 (權杖/密碼)。
+- `gateway.auth.mode: "trusted-proxy"`：瀏覽器用戶端的反向代理驗證 (請參閱 [信任的代理驗證](/zh-Hant/gateway/trusted-proxy-auth))。
+- `gateway.remote.url`、`gateway.remote.token`、`gateway.remote.password`：遠端閘道目標。
+- `session.*`：會話儲存與主要金鑰預設值。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

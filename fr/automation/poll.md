@@ -1,19 +1,19 @@
 ---
-summary: "Envoi de sondage via la passerelle + CLI"
+summary: "Poll sending via gateway + CLI"
 read_when:
   - Adding or modifying poll support
   - Debugging poll sends from the CLI or gateway
-title: "Sondages"
+title: "Polls"
 ---
 
-# Sondages
+# Polls
 
-## Canaux pris en charge
+## Supported channels
 
 - Telegram
-- WhatsApp (channel Web)
+- WhatsApp (web channel)
 - Discord
-- MS Teams (Cartes adaptatives)
+- MS Teams (Adaptive Cards)
 
 ## CLI
 
@@ -42,47 +42,48 @@ openclaw message poll --channel msteams --target conversation:19:abc@thread.tacv
   --poll-question "Lunch?" --poll-option "Pizza" --poll-option "Sushi"
 ```
 
-Options :
+Options:
 
-- `--channel` : `whatsapp` (par défaut), `telegram`, `discord` ou `msteams`
-- `--poll-multi` : autoriser la sélection de plusieurs options
-- `--poll-duration-hours` : Discord uniquement (24 par défaut si omis)
-- `--poll-duration-seconds` : Telegram uniquement (5-600 secondes)
-- `--poll-anonymous` / `--poll-public` : visibilité du sondage Telegram uniquement
+- `--channel`: `whatsapp` (default), `telegram`, `discord`, or `msteams`
+- `--poll-multi`: allow selecting multiple options
+- `--poll-duration-hours`: Discord-only (defaults to 24 when omitted)
+- `--poll-duration-seconds`: Telegram-only (5-600 seconds)
+- `--poll-anonymous` / `--poll-public`: Telegram-only poll visibility
 
 ## Gateway RPC
 
-Méthode : `poll`
+Method: `poll`
 
-Paramètres :
+Params:
 
-- `to` (chaîne, obligatoire)
-- `question` (chaîne, obligatoire)
-- `options` (chaîne[], obligatoire)
-- `maxSelections` (nombre, facultatif)
-- `durationHours` (nombre, facultatif)
-- `durationSeconds` (nombre, facultatif, Telegram uniquement)
-- `isAnonymous` (booléen, facultatif, Telegram uniquement)
-- `channel` (chaîne, facultatif, par défaut : `whatsapp`)
-- `idempotencyKey` (chaîne, obligatoire)
+- `to` (string, required)
+- `question` (string, required)
+- `options` (string[], required)
+- `maxSelections` (number, optional)
+- `durationHours` (number, optional)
+- `durationSeconds` (number, optional, Telegram-only)
+- `isAnonymous` (boolean, optional, Telegram-only)
+- `channel` (string, optional, default: `whatsapp`)
+- `idempotencyKey` (string, required)
 
-## Différences de canal
+## Channel differences
 
-- Telegram : 2-10 options. Prend en charge les sujets de forum via `threadId` ou `:topic:` cibles. Utilise `durationSeconds` au lieu de `durationHours`, limité à 5-600 secondes. Prend en charge les sondages anonymes et publics.
-- WhatsApp : 2-12 options, `maxSelections` doit être dans le nombre d'options, ignore `durationHours`.
-- Discord : 2-10 options, `durationHours` limité à 1-768 heures (24 par défaut). `maxSelections > 1` active la multi-sélection ; Discord ne prend pas en charge un nombre de sélections strict.
-- MS Teams : sondages via Adaptive Card (gérés par OpenClaw). Pas d'API de sondage native ; `durationHours` est ignoré.
+- Telegram: 2-10 options. Supports forum topics via `threadId` or `:topic:` targets. Uses `durationSeconds` instead of `durationHours`, limited to 5-600 seconds. Supports anonymous and public polls.
+- WhatsApp: 2-12 options, `maxSelections` must be within option count, ignores `durationHours`.
+- Discord: 2-10 options, `durationHours` clamped to 1-768 hours (default 24). `maxSelections > 1` enables multi-select; Discord does not support a strict selection count.
+- MS Teams: Adaptive Card polls (OpenClaw-managed). No native poll API; `durationHours` is ignored.
 
 ## Agent tool (Message)
 
-Utilisez l'`message` tool avec l'action `poll` (`to`, `pollQuestion`, `pollOption`, `pollMulti` facultatif, `pollDurationHours`, `channel`).
+Utilisez le tool `message` avec l'action `poll` (`to`, `pollQuestion`, `pollOption`, `pollMulti` facultatif, `pollDurationHours`, `channel`).
 
-Pour Telegram, l'outil accepte également `pollDurationSeconds`, `pollAnonymous` et `pollPublic`.
+Pour Telegram, le tool accepte également `pollDurationSeconds`, `pollAnonymous` et `pollPublic`.
 
 Utilisez `action: "poll"` pour la création de sondages. Les champs de sondage transmis avec `action: "send"` sont rejetés.
 
 Remarque : Discord n'a pas de mode « choisir exactement N » ; `pollMulti` correspond à la sélection multiple.
-Les sondages Teams sont rendus sous forme de cartes adaptatives et nécessitent que la passerelle reste en ligne pour enregistrer les votes dans `~/.openclaw/msteams-polls.json`.
+Les sondages Teams sont rendus sous forme de cartes adaptatives et nécessitent que la passerelle reste en ligne
+pour enregistrer les votes dans `~/.openclaw/msteams-polls.json`.
 
 import fr from "/components/footer/fr.mdx";
 

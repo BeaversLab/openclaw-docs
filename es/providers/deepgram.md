@@ -1,23 +1,23 @@
 ---
 summary: "Transcripción de Deepgram para notas de voz entrantes"
 read_when:
-  - You want Deepgram speech-to-text for audio attachments
-  - You need a quick Deepgram config example
+  - Quieres convertir voz a texto de Deepgram para archivos de audio adjuntos
+  - Necesitas un ejemplo rápido de configuración de Deepgram
 title: "Deepgram"
 ---
 
 # Deepgram (Transcripción de audio)
 
-Deepgram es una API de voz a texto. En OpenClaw se utiliza para la **transcripción de audio/ notas de voz entrantes** a través de `tools.media.audio`.
+Deepgram es una API de voz a texto. En OpenClaw se utiliza para la **transcripción de notas de voz/audio entrantes** mediante `tools.media.audio`.
 
-Cuando está habilitado, OpenClaw carga el archivo de audio en Deepgram e inyecta la transcripción en la canalización de respuesta (bloque `{{Transcript}}` + `[Audio]`). Esto **no es streaming**; utiliza el punto final de transcripción pregrabada.
+Cuando está habilitado, OpenClaw sube el archivo de audio a Deepgram e inyecta la transcripción en la canalización de respuesta (bloque `{{Transcript}}` + `[Audio]`). Esto **no es en streaming**; utiliza el punto final de transcripción pregrabada.
 
 Sitio web: [https://deepgram.com](https://deepgram.com)  
 Documentos: [https://developers.deepgram.com](https://developers.deepgram.com)
 
 ## Inicio rápido
 
-1. Configure su clave API:
+1. Establezca su clave de API:
 
 ```
 DEEPGRAM_API_KEY=dg_...
@@ -85,8 +85,8 @@ Ejemplo con opciones de Deepgram:
 
 ## Notas
 
-- La autenticación sigue el orden de autenticación estándar del proveedor; `DEEPGRAM_API_KEY` es la ruta más sencilla.
-- Anule los puntos finales o los encabezados con `tools.media.audio.baseUrl` y `tools.media.audio.headers` al utilizar un proxy.
+- La autenticación sigue el orden de autenticación estándar de proveedores; `DEEPGRAM_API_KEY` es la ruta más sencilla.
+- Anule los puntos finales o encabezados con `tools.media.audio.baseUrl` y `tools.media.audio.headers` al usar un proxy.
 - La salida sigue las mismas reglas de audio que otros proveedores (límites de tamaño, tiempos de espera, inyección de transcripción).
 
 import es from "/components/footer/es.mdx";

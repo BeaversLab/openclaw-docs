@@ -1,14 +1,14 @@
 ---
-summary: "`openclaw clawbot`（旧版别名命名空间）的 CLI 参考"
+summary: "CLI 参考，适用于 `openclaw clawbot`（旧版别名命名空间）"
 read_when:
-  - You maintain older scripts using `openclaw clawbot ...`
-  - You need migration guidance to current commands
+  - 您使用 `openclaw clawbot ...` 维护旧脚本
+  - 您需要迁移到当前命令的指导
 title: "clawbot"
 ---
 
 # `openclaw clawbot`
 
-保留旧版别名命名空间以实现向后兼容。
+保留的传统别名命名空间，用于向后兼容。
 
 当前支持的别名：
 

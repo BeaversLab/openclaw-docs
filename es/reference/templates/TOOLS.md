@@ -1,8 +1,8 @@
 ---
-title: "Plantilla de TOOLS.md"
-summary: "Plantilla del espacio de trabajo para TOOLS.md"
+title: "Plantilla TOOLS.md"
+summary: "Plantilla de espacio de trabajo para TOOLS.md"
 read_when:
-  - Bootstrapping a workspace manually
+  - Inicializar manualmente un espacio de trabajo
 ---
 
 # TOOLS.md - Notas Locales

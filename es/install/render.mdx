@@ -1,5 +1,5 @@
 ---
-title: Desplegar en Render
+title: Implementar en Render
 ---
 
 Despliega OpenClaw en Render utilizando Infraestructura como Código. El Blueprint `render.yaml` incluido define todo tu stack declarativamente, servicio, disco, variables de entorno, para que puedas desplegar con un solo clic y versionar tu infraestructura junto con tu código.
@@ -68,8 +68,8 @@ Características clave del Blueprint utilizadas:
 | Inicial   | Nunca                            | 1GB+          | Uso personal, equipos pequeños |
 | Estándar+ | Nunca                            | 1GB+          | Producción, múltiples canales  |
 
-El Blueprint por defecto es `starter`. Para usar la capa gratuita, cambia `plan: free` en el
-`render.yaml` de tu bifurcación (pero nota: sin disco persistente la configuración se restablece en cada despliegue).
+El Blueprint usa por defecto `starter`. Para usar la capa gratuita, cambia `plan: free` en el `render.yaml` de tu fork
+(pero ten en cuenta: no tener disco persistente significa que la configuración se restablece en cada despliegue).
 
 ## Después del despliegue
 
@@ -135,7 +135,7 @@ Esto descarga una copia de seguridad portátil que puede restaurar en cualquier 
 
 ## Solución de problemas
 
-### El servicio no se inicia
+### El servicio no se iniciará
 
 Revise los registros de despliegue en el panel de Render. Problemas comunes:
 
@@ -148,8 +148,8 @@ Los servicios de nivel gratuito se detienen después de 15 minutos de inactivida
 
 ### Pérdida de datos después de volver a desplegar
 
-Esto ocurre en el nivel gratuito (sin disco persistente). Actualice a un plan de pago o
-exporte regularmente su configuración a través de `/setup/export`.
+Esto ocurre en la capa gratuita (sin disco persistente). Actualiza a un plan de pago, o
+exporta regularmente tu configuración mediante `/setup/export`.
 
 ### Fallos en las comprobaciones de estado
 

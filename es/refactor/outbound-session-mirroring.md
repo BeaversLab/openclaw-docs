@@ -1,10 +1,10 @@
 ---
-title: Reestructuración de la duplicación de sesión saliente (Incidencia #1520)
-description: Rastrear las notas, decisiones, pruebas y elementos pendientes de la reestructuración de la duplicación de sesión saliente.
-summary: "Notas de reestructuración para duplicar envíos salientes en sesiones de canal objetivo"
+title: Refactorización de la duplicación de sesión saliente (Issue #1520)
+description: Rastrear notas, decisiones, pruebas y elementos abiertos de la refactorización de la duplicación de sesión saliente.
+summary: "Notas de refactorización para duplicar envíos salientes en sesiones de canal de destino"
 read_when:
-  - Working on outbound transcript/session mirroring behavior
-  - Debugging sessionKey derivation for send/message tool paths
+  - Trabajando en el comportamiento de duplicación de transcripción/sesión saliente
+  - Depuración de la derivación de sessionKey para rutas de herramientas de envío/mensaje
 ---
 
 # Reestructuración de la duplicación de sesión saliente (Incidencia #1520)
@@ -30,34 +30,34 @@ Los envíos salientes se duplicaban en la sesión del agente _actual_ (clave de 
 
 - Nuevo asistente de enrutamiento de sesión saliente:
   - `src/infra/outbound/outbound-session.ts`
-  - `resolveOutboundSessionRoute` construye la sessionKey objetivo usando `buildAgentSessionKey` (dmScope + identityLinks).
-  - `ensureOutboundSessionEntry` escribe un `MsgContext` mínimo a través de `recordSessionMetaFromInbound`.
-- `runMessageAction` (enviar) deriva la sessionKey objetivo y la pasa a `executeSendAction` para su duplicación.
-- `message-tool` ya no duplica directamente; solo resuelve agentId desde la clave de sesión actual.
+  - `resolveOutboundSessionRoute` construye la sessionKey de destino usando `buildAgentSessionKey` (dmScope + identityLinks).
+  - `ensureOutboundSessionEntry` escribe `MsgContext` mínima a través de `recordSessionMetaFromInbound`.
+- `runMessageAction` (enviar) deriva la sessionKey de destino y la pasa a `executeSendAction` para su duplicación.
+- `message-tool` ya no duplica directamente; solo resuelve el agentId desde la clave de sesión actual.
 - La ruta de envío del complemento duplica a través de `appendAssistantMessageToSessionTranscript` usando la sessionKey derivada.
 - El envío de la puerta de enlace deriva una clave de sesión objetivo cuando no se proporciona ninguna (agente predeterminado) y asegura una entrada de sesión.
 
 ## Manejo de hilos/temas
 
 - Slack: replyTo/threadId -> `resolveThreadSessionKeys` (sufijo).
-- Discord: threadId/replyTo -> `resolveThreadSessionKeys` con `useSuffix=false` para coincidir con la entrada (el id del canal del hilo ya tiene el ámbito de sesión).
-- Telegram: los IDs de tema se asignan a `chatId:topic:<id>` a través de `buildTelegramGroupPeerId`.
+- Discord: threadId/replyTo -> `resolveThreadSessionKeys` con `useSuffix=false` para coincidir con la entrada (el id del canal del hilo ya delimita la sesión).
+- Telegram: los IDs de tema se mapean a `chatId:topic:<id>` a través de `buildTelegramGroupPeerId`.
 
 ## Extensiones cubiertas
 
 - Matrix, MS Teams, Mattermost, BlueBubbles, Nextcloud Talk, Zalo, Zalo Personal, Nostr, Tlon.
 - Notas:
-  - Los destinos de Mattermost ahora eliminan `@` para el enrutamiento de claves de sesión de MD.
-  - Zalo Personal usa el tipo de par MD para destinos 1:1 (grupo solo cuando está presente `group:`).
-  - Los destinos de grupo de BlueBubbles eliminan los prefijos `chat_*` para coincidir con las claves de sesión entrantes.
+  - Los destinos de Mattermost ahora eliminan `@` para el enrutamiento de claves de sesión DM.
+  - Zalo Personal usa el tipo de par DM para destinos 1:1 (solo grupo cuando `group:` está presente).
+  - Los destinos de grupo de BlueBubbles eliminan los prefijos `chat_*` para coincidir con las claves de sesión de entrada.
   - La réplica automática de hilos de Slack coincide con los ids de canal sin distinción de mayúsculas y minúsculas.
   - El envío de Gateway pone en minúsculas las claves de sesión proporcionadas antes de la réplica.
 
 ## Decisiones
 
-- **Derivación de sesión de envío de Gateway**: si se proporciona `sessionKey`, úselo. Si se omite, derive una sessionKey del objetivo + agente predeterminado y replique allí.
-- **Creación de entrada de sesión**: siempre use `recordSessionMetaFromInbound` con `Provider/From/To/ChatType/AccountId/Originating*` alineado con los formatos entrantes.
-- **Normalización de objetivos**: el enrutamiento saliente usa objetivos resueltos (post `resolveChannelTarget`) cuando están disponibles.
+- **Derivación de sesión de envío de Gateway**: si se proporciona `sessionKey`, úsela. Si se omite, derive una sessionKey del destino + agente predeterminado y duplique allí.
+- **Creación de entrada de sesión**: siempre use `recordSessionMetaFromInbound` con `Provider/From/To/ChatType/AccountId/Originating*` alineados con los formatos de entrada.
+- **Normalización de destinos**: el enrutamiento saliente usa destinos resueltos (post `resolveChannelTarget`) cuando están disponibles.
 - **Uso de mayúsculas en clave de sesión**: canonicice las claves de sesión a minúsculas al escribir y durante las migraciones.
 
 ## Pruebas Añadidas/Actualizadas
@@ -73,8 +73,8 @@ Los envíos salientes se duplicaban en la sesión del agente _actual_ (clave de 
 
 ## Elementos Abiertos / Seguimientos
 
-- El complemento de llamada de voz usa claves de sesión personalizadas `voice:<phone>`. La asignación saliente no está estandarizada aquí; si message-tool debe admitir envíos de llamada de voz, agregue una asignación explícita.
-- Confirme si algún complemento externo usa formatos `From/To` no estándar más allá del conjunto incluido.
+- El complemento de llamadas de voz utiliza claves de sesión `voice:<phone>` personalizadas. La asignación saliente no está estandarizada aquí; si message-tool debe admitir envíos de llamadas de voz, agregue una asignación explícita.
+- Confirme si algún complemento externo utiliza formatos `From/To` no estándar más allá del conjunto incluido.
 
 ## Archivos Modificados
 

@@ -29,7 +29,7 @@ Protocol details:
 - [Gateway protocol](/en/gateway/protocol)
 - [Bridge protocol (legacy)](/en/gateway/bridge-protocol)
 
-## Why we keep both “direct” and SSH
+## Why we keep both "direct" and SSH
 
 - **Direct WS** is the best UX on the same network and within a tailnet:
   - auto-discovery on LAN via Bonjour

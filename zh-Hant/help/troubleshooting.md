@@ -1,18 +1,18 @@
 ---
 summary: "OpenClaw 的症狀優先故障排除中心"
 read_when:
-  - OpenClaw is not working and you need the fastest path to a fix
-  - You want a triage flow before diving into deep runbooks
-title: "故障排除"
+  - OpenClaw 無法正常運作，且您需要最快速的解決方案
+  - 您希望在深入詳盡的運行手冊之前先進行分類流程
+title: "一般故障排除"
 ---
 
 # 故障排除
 
-如果您只有 2 分鐘，請將此頁面作為分診入口使用。
+如果您只有 2 分鐘，請將此頁面作為分類診斷的入口。
 
 ## 前 60 秒
 
-按順序執行以下確切的步驟：
+請依序執行這個確切的檢查步驟：
 
 ```bash
 openclaw status
@@ -24,17 +24,17 @@ openclaw channels status --probe
 openclaw logs --follow
 ```
 
-一行顯示的良好輸出：
+一行指令的良好輸出結果：
 
-- `openclaw status` → 顯示已配置的通道且無明顯的身份驗證錯誤。
-- `openclaw status --all` → 完整報告已存在且可共用。
-- `openclaw gateway probe` → 預期的網關目標可達 (`Reachable: yes`)。`RPC: limited - missing scope: operator.read` 表示診斷降級，而非連線失敗。
+- `openclaw status` → 顯示已設定的通道，且無明顯的驗證錯誤。
+- `openclaw status --all` → 完整報告存在且可分享。
+- `openclaw gateway probe` → 預期的閘道目標可連線 (`Reachable: yes`)。`RPC: limited - missing scope: operator.read` 表示診斷功能降級，並非連線失敗。
 - `openclaw gateway status` → `Runtime: running` 和 `RPC probe: ok`。
-- `openclaw doctor` → 無阻塞性配置/服務錯誤。
+- `openclaw doctor` → 無阻斷性的設定/服務錯誤。
 - `openclaw channels status --probe` → 通道回報 `connected` 或 `ready`。
-- `openclaw logs --follow` → 活動穩定，無重複的致命錯誤。
+- `openclaw logs --follow` → 活動穩定，無重複的嚴重錯誤。
 
-## Anthropic 長上下文 429
+## Anthropic 長內文 429
 
 如果您看到：
 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`，
@@ -42,13 +42,13 @@ openclaw logs --follow
 
 ## 外掛程式安裝因缺少 openclaw 擴充功能而失敗
 
-如果安裝失敗並出現 `package.json missing openclaw.extensions`，則表示外掛程式套件
+如果安裝失敗並出現 `package.json missing openclaw.extensions`，表示外掛程式套件
 使用的是 OpenClaw 不再接受的舊格式。
 
-在外掛程式套件中修復：
+請在外掛程式套件中修復：
 
-1. 將 `openclaw.extensions` 新增至 `package.json`。
-2. 將項目指向建置後的執行時期檔案 (通常是 `./dist/index.js`)。
+1. 將 `openclaw.extensions` 加入 `package.json`。
+2. 將項目指向已建置的執行時期檔案 (通常是 `./dist/index.js`)。
 3. 重新發佈外掛程式並再次執行 `openclaw plugins install <npm-spec>`。
 
 範例：
@@ -88,7 +88,7 @@ flowchart TD
 ```
 
 <AccordionGroup>
-  <Accordion title="沒有回覆">
+  <Accordion title="No replies">
     ```bash
     openclaw status
     openclaw gateway status
@@ -97,20 +97,20 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    良好的輸出如下所示：
+    Good output looks like:
 
     - `Runtime: running`
     - `RPC probe: ok`
-    - 您的頻道在 `channels status --probe` 中顯示為已連線/就緒
-    - 寄件者顯示為已批准（或 DM 政策為開放/白名單）
+    - Your channel shows connected/ready in `channels status --probe`
+    - Sender appears approved (or DM policy is open/allowlist)
 
-    常見的日誌特徵：
+    Common log signatures:
 
-    - `drop guild message (mention required` → 提及閘門阻擋了 Discord 中的訊息。
-    - `pairing request` → 寄件者未獲批准，正在等待 DM 配對批准。
-    - 頻道日誌中的 `blocked` / `allowlist` → 寄件者、房間或群組已被過濾。
+    - `drop guild message (mention required` → mention gating blocked the message in Discord.
+    - `pairing request` → sender is unapproved and waiting for DM pairing approval.
+    - `blocked` / `allowlist` in channel logs → sender, room, or group is filtered.
 
-    深入頁面：
+    Deep pages:
 
     - [/gateway/troubleshooting#no-replies](/zh-Hant/gateway/troubleshooting#no-replies)
     - [/channels/troubleshooting](/zh-Hant/channels/troubleshooting)
@@ -118,7 +118,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="儀表板或控制 UI 無法連線">
+  <Accordion title="Dashboard or Control UI will not connect">
     ```bash
     openclaw status
     openclaw gateway status
@@ -127,20 +127,20 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    良好的輸出如下所示：
+    Good output looks like:
 
-    - `Dashboard: http://...` 顯示於 `openclaw gateway status` 中
+    - `Dashboard: http://...` is shown in `openclaw gateway status`
     - `RPC probe: ok`
-    - 日誌中沒有驗證迴圈
+    - No auth loop in logs
 
-    常見的日誌特徵：
+    Common log signatures:
 
-    - `device identity required` → HTTP/非安全語境無法完成裝置驗證。
-    - `AUTH_TOKEN_MISMATCH` 伴隨重試提示 (`canRetryWithDeviceToken=true`) → 可能會自動進行一次信任的裝置權杖重試。
-    - 該次重試後重複出現 `unauthorized` → 錯誤的權杖/密碼、驗證模式不符，或過期的已配對裝置權杖。
-    - `gateway connect failed:` → UI 目標指向錯誤的 URL/連接埠或無法連線的閘道。
+    - `device identity required` → HTTP/non-secure context cannot complete device auth.
+    - `AUTH_TOKEN_MISMATCH` with retry hints (`canRetryWithDeviceToken=true`) → one trusted device-token retry may occur automatically.
+    - repeated `unauthorized` after that retry → wrong token/password, auth mode mismatch, or stale paired device token.
+    - `gateway connect failed:` → UI is targeting the wrong URL/port or unreachable gateway.
 
-    深入頁面：
+    Deep pages:
 
     - [/gateway/troubleshooting#dashboard-control-ui-connectivity](/zh-Hant/gateway/troubleshooting#dashboard-control-ui-connectivity)
     - [/web/control-ui](/zh-Hant/web/control-ui)
@@ -157,7 +157,7 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    正常輸出如下所示：
+    良好的輸出看起來像：
 
     - `Service: ... (loaded)`
     - `Runtime: running`
@@ -165,11 +165,11 @@ flowchart TD
 
     常見日誌特徵：
 
-    - `Gateway start blocked: set gateway.mode=local` → gateway mode is unset/remote.
-    - `refusing to bind gateway ... without auth` → non-loopback bind without token/password.
-    - `another gateway instance is already listening` 或 `EADDRINUSE` → port already taken.
+    - `Gateway start blocked: set gateway.mode=local` → 閘道模式未設定/遠端。
+    - `refusing to bind gateway ... without auth` → 非迴路綁定且沒有 token/密碼。
+    - `another gateway instance is already listening` 或 `EADDRINUSE` → 連接埠已被佔用。
 
-    深入頁面：
+    深度頁面：
 
     - [/gateway/troubleshooting#gateway-service-not-running](/zh-Hant/gateway/troubleshooting#gateway-service-not-running)
     - [/gateway/background-process](/zh-Hant/gateway/background-process)
@@ -186,26 +186,26 @@ flowchart TD
     openclaw channels status --probe
     ```
 
-    正常輸出如下所示：
+    良好的輸出看起來像：
 
-    - Channel transport is connected.
-    - Pairing/allowlist checks pass.
-    - Mentions are detected where required.
+    - 頻道傳輸已連線。
+    - 配對/允許清單檢查通過。
+    - 在需要的地方檢測到提及。
 
     常見日誌特徵：
 
-    - `mention required` → group mention gating blocked processing.
-    - `pairing` / `pending` → DM sender is not approved yet.
-    - `not_in_channel`, `missing_scope`, `Forbidden`, `401/403` → channel permission token issue.
+    - `mention required` → 群組提及閘門阻擋了處理。
+    - `pairing` / `pending` → DM 傳送者尚未被核准。
+    - `not_in_channel`, `missing_scope`, `Forbidden`, `401/403` → 頻道權限 token 問題。
 
-    深入頁面：
+    深度頁面：
 
     - [/gateway/troubleshooting#channel-connected-messages-not-flowing](/zh-Hant/gateway/troubleshooting#channel-connected-messages-not-flowing)
     - [/channels/troubleshooting](/zh-Hant/channels/troubleshooting)
 
   </Accordion>
 
-  <Accordion title="Cron or heartbeat did not fire or did not deliver">
+  <Accordion title="Cron 或心跳未觸發或未傳送">
     ```bash
     openclaw status
     openclaw gateway status
@@ -215,17 +215,17 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    良好的輸出如下所示：
+    正常的輸出看起來像：
 
-    - `cron.status` 顯示已啟用且有下次喚醒時間。
-    - `cron runs` 顯示最近的 `ok` 項目。
-    - 心跳已啟用且未處於非啟用時段。
+    - `cron.status` 顯示已啟用並有下次喚醒時間。
+    - `cron runs` 顯示最近的 `ok` 條目。
+    - 心跳已啟用且未處於非活動時段。
 
     常見日誌特徵：
 
     - `cron: scheduler disabled; jobs will not run automatically` → cron 已停用。
-    - `heartbeat skipped` 搭配 `reason=quiet-hours` → 在設定的啟用時段之外。
-    - `requests-in-flight` → 主通道忙碌；心跳喚醒已延遲。
+    - `heartbeat skipped` 且含有 `reason=quiet-hours` → 在設定的活動時段之外。
+    - `requests-in-flight` → 主線道忙碌；心跳喚醒已延遲。
     - `unknown accountId` → 心跳傳送目標帳戶不存在。
 
     深入頁面：
@@ -236,7 +236,7 @@ flowchart TD
 
   </Accordion>
 
-  <Accordion title="Node is paired but tool fails camera canvas screen exec">
+  <Accordion title="Node 已配對但工具失敗 (相機、畫布、螢幕、執行)">
     ```bash
     openclaw status
     openclaw gateway status
@@ -245,18 +245,18 @@ flowchart TD
     openclaw logs --follow
     ```
 
-    良好的輸出如下所示：
+    正常的輸出看起來像：
 
-    - 節點顯示為已連線，且已針對角色 `node` 完成配對。
-    - 您正在叫用的指令具有對應功能。
-    - 工具的權限狀態已授予。
+    - Node 被列為已連線並已針對角色 `node` 進行配對。
+    - 您正在叫用的指令存在能力。
+    - 工具的權限狀態已授權。
 
     常見日誌特徵：
 
-    - `NODE_BACKGROUND_UNAVAILABLE` → 將節點應用程式帶到前景。
-    - `*_PERMISSION_REQUIRED` → OS 權限遭拒/遺失。
-    - `SYSTEM_RUN_DENIED: approval required` → 執行認可待處理。
-    - `SYSTEM_RUN_DENIED: allowlist miss` → 指令未在執行許可清單上。
+    - `NODE_BACKGROUND_UNAVAILABLE` → 將 node 應用程式帶到前景。
+    - `*_PERMISSION_REQUIRED` → OS 權限被拒絕或遺失。
+    - `SYSTEM_RUN_DENIED: approval required` → 執行審核待處理。
+    - `SYSTEM_RUN_DENIED: allowlist miss` → 指令未在執行允許清單上。
 
     深入頁面：
 

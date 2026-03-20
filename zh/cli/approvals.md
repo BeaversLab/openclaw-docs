@@ -1,19 +1,19 @@
 ---
-summary: "`openclaw approvals` （网关或节点主机的执行审批）的 CLI 参考"
+summary: "CLI 参考文档 `openclaw approvals`（用于网关或节点主机的执行审批）"
 read_when:
-  - You want to edit exec approvals from the CLI
-  - You need to manage allowlists on gateway or node hosts
-title: "审批"
+  - 您想通过 CLI 编辑执行审批
+  - 您需要管理网关或节点主机上的允许列表
+title: "approvals"
 ---
 
 # `openclaw approvals`
 
-管理**本地主机**、**网关主机**或**节点主机**的执行审批。
+管理 **本地主机**、**网关主机** 或 **节点主机** 的执行审批。
 默认情况下，命令针对磁盘上的本地审批文件。使用 `--gateway` 针对网关，或使用 `--node` 针对特定节点。
 
 相关：
 
-- Exec 批准：[Exec 批准](/zh/tools/exec-approvals)
+- 执行审批：[执行审批](/zh/tools/exec-approvals)
 - 节点：[节点](/zh/nodes)
 
 ## 常用命令
@@ -46,7 +46,7 @@ openclaw approvals allowlist remove "~/Projects/**/bin/rg"
 
 - `--node` 使用与 `openclaw nodes` 相同的解析器（id、name、ip 或 id 前缀）。
 - `--agent` 默认为 `"*"`，这适用于所有代理。
-- 节点主机必须通告 `system.execApprovals.get/set`（macOS 应用程序或无头节点主机）。
+- 节点主机必须通告 `system.execApprovals.get/set`（macOS 应用或无头节点主机）。
 - 审批文件按主机存储在 `~/.openclaw/exec-approvals.json`。
 
 import zh from "/components/footer/zh.mdx";
