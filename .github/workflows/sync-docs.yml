@@ -15,45 +15,66 @@ jobs:
       - name: Checkout crawfish-docs
         uses: actions/checkout@v4
 
-      - name: Clone openclaw/openclaw
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Get latest tag and check against npm
         run: |
-          git clone --depth 1 https://github.com/openclaw/openclaw.git openclaw-repo
+          LATEST_TAG=$(git ls-remote --tags https://github.com/openclaw/openclaw.git | awk '{print $2}' | grep '^refs/tags/v[0-9]' | sed 's|refs/tags/||' | grep -v '\^{}' | sort -V | tail -1)
+          TAG_VER="${LATEST_TAG#v}"
+          NPM_VER=$(npm view openclaw version --userconfig "$(mktemp)" 2>/dev/null || echo "")
+          if [[ -z "$LATEST_TAG" || -z "$NPM_VER" || "$TAG_VER" != "$NPM_VER" ]]; then
+            echo "Skipping sync: latest tag=$LATEST_TAG (ver=$TAG_VER), npm latest=$NPM_VER"
+            echo "SHOULD_SYNC=false" >> $GITHUB_ENV
+          else
+            echo "OPENCLAW_TAG=$LATEST_TAG" >> $GITHUB_ENV
+            echo "SYNC_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+            echo "SHOULD_SYNC=true" >> $GITHUB_ENV
+          fi
+
+      - name: Clone openclaw/openclaw at tag
+        if: env.SHOULD_SYNC == 'true'
+        run: |
+          git clone --depth 1 --branch ${{ env.OPENCLAW_TAG }} https://github.com/openclaw/openclaw.git openclaw-repo
           cd openclaw-repo
           echo "OPENCLAW_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
-          echo "SYNC_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
       - name: Update version.js
+        if: env.SHOULD_SYNC == 'true'
         run: |
+          sed -i "s/var TAG = \".*\";/var TAG = \"${{ env.OPENCLAW_TAG }}\";/" version.js
           sed -i "s/var UPDATED_AT = \".*\";/var UPDATED_AT = \"${{ env.SYNC_DATE }}\";/" version.js
           sed -i "s/var COMMIT = \".*\";/var COMMIT = \"${{ env.OPENCLAW_COMMIT }}\";/" version.js
 
       - name: Copy docs to en/
+        if: env.SHOULD_SYNC == 'true'
         run: |
           mkdir -p en
           # Copy content of openclaw-repo/docs to en/, excluding zh-CN and ja-JP
           # We do not use --delete to avoid removing project-specific files like CNAME, style.css, etc.
           rsync -av --exclude 'zh-CN' --exclude 'ja-JP' openclaw-repo/docs/ en/
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
       - name: Fix MDX compatibility in en/
+        if: env.SHOULD_SYNC == 'true'
         run: |
           node scripts/fix-mdx-compat.js en/
 
       - name: Fix internal links in en/
+        if: env.SHOULD_SYNC == 'true'
         run: |
           # Use the existing script to add /en/ prefix to internal links
           # It automatically detects 'en' locale for files under 'en/' folder
           node scripts/fix-locale-links.js en/
 
       - name: Ensure doc footers in en/
+        if: env.SHOULD_SYNC == 'true'
         run: |
           node scripts/ensure-doc-footers.mjs en/
 
       - name: Commit and push changes
+        if: env.SHOULD_SYNC == 'true'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -61,9 +82,21 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "chore: sync docs from openclaw/openclaw ${{ env.SYNC_DATE }}" -m "Commit: ${{ env.OPENCLAW_COMMIT }}"
+            git commit -m "chore: sync docs from openclaw/openclaw ${{ env.SYNC_DATE }}" -m "Version: ${{ env.OPENCLAW_TAG }}"
             git push
           fi
+
+      - name: Create and push version tag
+        if: env.SHOULD_SYNC == 'true' && env.OPENCLAW_TAG != ''
+        run: |
+          if git rev-parse --verify "${{ env.OPENCLAW_TAG }}" >/dev/null 2>&1; then
+            if [[ "$(git rev-parse ${{ env.OPENCLAW_TAG }})" == "$(git rev-parse HEAD)" ]]; then
+              echo "Tag ${{ env.OPENCLAW_TAG }} already exists and points to HEAD, skipping"
+              exit 0
+            fi
+          fi
+          git tag -a "${{ env.OPENCLAW_TAG }}" -m "Docs for OpenClaw ${{ env.OPENCLAW_TAG }}"
+          git push origin "${{ env.OPENCLAW_TAG }}"
 
       - name: Cleanup
         if: always()

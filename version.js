@@ -1,6 +1,7 @@
 (function () {
-  var UPDATED_AT = "2026-03-17";
-  var COMMIT = "ad05cd9ab2fa94128566a8c28dd5d076bad45575";
+  var TAG = "v2026.3.13-1";
+  var UPDATED_AT = "2026-03-19";
+  var COMMIT = "61d171ab0b2fe4abc9afe89c518586274b4b76c2";
   var SHORT_COMMIT = COMMIT.slice(0, 7);
   var COMMIT_URL = "https://github.com/openclaw/openclaw/commit/" + COMMIT;
   var META_ID = "openclaw-version-meta";
@@ -50,12 +51,34 @@
 
   function buildMetaNode() {
     var isZh = (location.pathname || "").toLowerCase().startsWith("/zh");
+    var versionText = isZh ? "版本" : "Version";
     var updatedText = isZh ? "更新" : "Updated";
     var commitText = isZh ? "提交" : "Commit";
+    var tagUrl = TAG ? "https://github.com/openclaw/openclaw/releases/tag/" + TAG : "";
 
     var wrapper = document.createElement("div");
     wrapper.id = META_ID;
     wrapper.setAttribute("aria-label", "Documentation build metadata");
+
+    var versionLabel = document.createElement("span");
+    versionLabel.className = "meta-label";
+    versionLabel.textContent = versionText;
+
+    var versionNode;
+    if (TAG && tagUrl) {
+      versionNode = document.createElement("a");
+      versionNode.className = "meta-link";
+      versionNode.href = tagUrl;
+      versionNode.textContent = TAG;
+    } else {
+      versionNode = document.createElement("span");
+      versionNode.className = "meta-value";
+      versionNode.textContent = "dev";
+    }
+
+    var sep1 = document.createElement("span");
+    sep1.className = "meta-sep";
+    sep1.textContent = "·";
 
     var updatedLabel = document.createElement("span");
     updatedLabel.className = "meta-label";
@@ -66,9 +89,9 @@
     updatedValue.setAttribute("datetime", UPDATED_AT);
     updatedValue.textContent = UPDATED_AT;
 
-    var sep = document.createElement("span");
-    sep.className = "meta-sep";
-    sep.textContent = "·";
+    var sep2 = document.createElement("span");
+    sep2.className = "meta-sep";
+    sep2.textContent = "·";
 
     var commitLabel = document.createElement("span");
     commitLabel.className = "meta-label";
@@ -79,9 +102,12 @@
     commitLink.href = COMMIT_URL;
     commitLink.textContent = SHORT_COMMIT;
 
+    wrapper.appendChild(versionLabel);
+    wrapper.appendChild(versionNode);
+    wrapper.appendChild(sep1);
     wrapper.appendChild(updatedLabel);
     wrapper.appendChild(updatedValue);
-    wrapper.appendChild(sep);
+    wrapper.appendChild(sep2);
     wrapper.appendChild(commitLabel);
     wrapper.appendChild(commitLink);
     return wrapper;
