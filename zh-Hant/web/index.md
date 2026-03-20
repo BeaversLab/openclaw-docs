@@ -103,22 +103,21 @@ Open:
   explicitly (full origins). Without it, gateway startup is refused by default.
 - `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` enables
   Host-header origin fallback mode, but is a dangerous security downgrade.
-- 使用 Serve 時，當 `gateway.auth.allowTailscale` 為 `true` 時，Tailscale 身份標頭可以滿足控制 UI/WebSocket 身份驗證
-  （無需令牌/密碼）。
-  HTTP API 端點仍需令牌/密碼。設定
+- 使用 Serve 時，當 `gateway.auth.allowTailscale` 為 `true` 時（不需要 token/密碼），Tailscale 身份標頭可以滿足 Control UI/WebSocket 驗證。
+  HTTP API 端點仍然需要 token/密碼。設定
   `gateway.auth.allowTailscale: false` 以要求明確的憑證。請參閱
   [Tailscale](/zh-Hant/gateway/tailscale) 和 [安全性](/zh-Hant/gateway/security)。此
-  無令牌流程假設閘道主機是受信任的。
-- `gateway.tailscale.mode: "funnel"` 需要 `gateway.auth.mode: "password"`（共用密碼）。
+  無 token 流程假設閘道主機是受信任的。
+- `gateway.tailscale.mode: "funnel"` 需要 `gateway.auth.mode: "password"`（共享密碼）。
 
 ## 建置 UI
 
-閘道從 `dist/control-ui` 提供靜態檔案。請使用以下方式建置：
+Gateway 從 `dist/control-ui` 提供靜態檔案。使用以下方式建置：
 
 ```bash
 pnpm ui:build # auto-installs UI deps on first run
 ```
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

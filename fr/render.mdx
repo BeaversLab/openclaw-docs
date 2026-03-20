@@ -29,7 +29,8 @@ Une fois déployé, l'URL de votre service suit le modèle `https://<service-nam
 
 ## Comprendre le Blueprint
 
-Les Blueprints Render sont des fichiers YAML qui définissent votre infrastructure. Le `render.yaml` dans ce référentiel configure tout ce qui est nécessaire pour exécuter OpenClaw :
+Les Blueprints Render sont des fichiers YAML qui définissent votre infrastructure. Le `render.yaml` dans ce
+dépôt configure tout ce qui est nécessaire pour exécuter OpenClaw :
 
 ```yaml
 services:
@@ -57,24 +58,24 @@ services:
 
 Fonctionnalités clés du Blueprint utilisées :
 
-| Fonctionnalité        | Objectif                                                         |
-| --------------------- | ---------------------------------------------------------------- |
-| `runtime: docker`     | Construit à partir du Dockerfile du dépôt                        |
+| Fonctionnalité               | Objectif                                                    |
+| --------------------- | ---------------------------------------------------------- |
+| `runtime: docker`     | Construit à partir du Dockerfile du dépôt                          |
 | `healthCheckPath`     | Render surveille `/health` et redémarre les instances non saines |
-| `sync: false`         | Demande une valeur lors du déploiement (secrets)                 |
-| `generateValue: true` | Génère automatiquement une valeur sécurisée cryptographiquement  |
-| `disk`                | Stockage persistant qui survit aux redéploiements                |
+| `sync: false`         | Demande une valeur lors du déploiement (secrets)                  |
+| `generateValue: true` | Génère automatiquement une valeur sécurisée cryptographiquement            |
+| `disk`                | Stockage persistant qui survit aux redéploiements                 |
 
 ## Choisir un plan
 
-| Plan      | Mise en veille            | Disque         | Idéal pour                       |
-| --------- | ------------------------- | -------------- | -------------------------------- |
-| Gratuit   | Après 15 min d'inactivité | Non disponible | Tests, démos                     |
-| Starter   | Jamais                    | 1Go+           | Usage personnel, petites équipes |
-| Standard+ | Jamais                    | 1 Go+          | Production, canaux multiples     |
+| Plan      | Mise en veille         | Disque          | Idéal pour                      |
+| --------- | ----------------- | ------------- | ----------------------------- |
+| Gratuit      | Après 15 min d'inactivité | Non disponible | Tests, démos                |
+| Starter   | Jamais             | 1Go+          | Usage personnel, petites équipes     |
+| Standard+ | Jamais             | 1 Go+          | Production, canaux multiples |
 
-Le Blueprint utilise par défaut `starter`. Pour utiliser le niveau gratuit, modifiez `plan: free` dans le
-`render.yaml` de votre fork (mais notez l'absence de disque persistant signifie que la configuration est réinitialisée à chaque déploiement).
+Le Blueprint est configuré par défaut sur `starter`. Pour utiliser le niveau gratuit, modifiez `plan: free` dans le `render.yaml` de votre fork
+(mais notez : l'absence de disque persistant signifie que la configuration est réinitialisée à chaque déploiement).
 
 ## Après le déploiement
 
@@ -163,6 +164,6 @@ Render s'attend à une réponse 200 de `/health` dans les 30 secondes. Si les bu
 - Les journaux de build pour les erreurs
 - Si le conteneur fonctionne localement avec `docker build && docker run`
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

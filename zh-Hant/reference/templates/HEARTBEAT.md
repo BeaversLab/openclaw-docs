@@ -1,8 +1,8 @@
 ---
-title: "HEARTBEAT.md 範本"
-summary: "HEARTBEAT.md 的工作區範本"
+title: "HEARTBEAT.md 模板"
+summary: "HEARTBEAT.md 的工作區模板"
 read_when:
-  - Bootstrapping a workspace manually
+  - 手動引導工作區
 ---
 
 # HEARTBEAT.md
@@ -11,6 +11,6 @@ read_when:
 
 # 當您希望代理程式定期檢查某些事項時，請在下方新增工作。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

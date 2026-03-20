@@ -1,19 +1,19 @@
 ---
-summary: "Configurar Moonshot K2 vs Kimi Coding (proveedores y claves separados)"
+summary: "Configurar Moonshot K2 vs Kimi Coding (proveedores separados + claves)"
 read_when:
-  - You want Moonshot K2 (Moonshot Open Platform) vs Kimi Coding setup
-  - You need to understand separate endpoints, keys, and model refs
-  - You want copy/paste config for either provider
+  - Deseas configurar Moonshot K2 (Plataforma abierta Moonshot) vs Kimi Coding
+  - Necesitas comprender los endpoints, claves y referencias de modelo separadas
+  - Deseas configuración de copiar/pegar para cualquier proveedor
 title: "Moonshot AI"
 ---
 
 # Moonshot AI (Kimi)
 
-Moonshot proporciona la API de Kimi con endpoints compatibles con OpenAI. Configure el
-proveedor y establezca el modelo predeterminado en `moonshot/kimi-k2.5`, o use
+Moonshot proporciona la API Kimi con endpoints compatibles con OpenAI. Configura el
+proveedor y establece el modelo predeterminado en `moonshot/kimi-k2.5`, o usa
 Kimi Coding con `kimi-coding/k2p5`.
 
-IDs de modelos actuales de Kimi K2:
+IDs de modelo actuales de Kimi K2:
 
 [//]: # "moonshot-kimi-k2-ids:start"
 
@@ -136,7 +136,7 @@ Nota: Moonshot y Kimi Coding son proveedores separados. Las claves no son interc
 
 ## Notas
 
-- Las referencias de modelos de Moonshot usan `moonshot/<modelId>`. Las referencias de modelos de Kimi Coding usan `kimi-coding/<modelId>`.
+- Las referencias de modelo de Moonshot usan `moonshot/<modelId>`. Las referencias de modelo de Kimi Coding usan `kimi-coding/<modelId>`.
 - Anule los metadatos de precios y contexto en `models.providers` si es necesario.
 - Si Moonshot publica diferentes límites de contexto para un modelo, ajuste
   `contextWindow` en consecuencia.
@@ -144,7 +144,7 @@ Nota: Moonshot y Kimi Coding son proveedores separados. Las claves no son interc
 
 ## Modo de pensamiento nativo (Moonshot)
 
-Moonshot Kimi soporta pensamiento nativo binario:
+Moonshot Kimi admite pensamiento nativo binario:
 
 - `thinking: { type: "enabled" }`
 - `thinking: { type: "disabled" }`
@@ -167,13 +167,13 @@ Configúrelo por modelo a través de `agents.defaults.models.<provider/model>.pa
 }
 ```
 
-OpenClaw también mapea los niveles de `/think` en tiempo de ejecución para Moonshot:
+OpenClaw también asigna niveles de tiempo de ejecución `/think` para Moonshot:
 
 - `/think off` -> `thinking.type=disabled`
-- cualquier nivel de pensamiento no off -> `thinking.type=enabled`
+- cualquier nivel de pensamiento no apagado -> `thinking.type=enabled`
 
-Cuando el pensamiento de Moonshot está habilitado, `tool_choice` debe ser `auto` o `none`. OpenClaw normaliza los valores incompatibles de `tool_choice` a `auto` para compatibilidad.
+Cuando el pensamiento de Moonshot está habilitado, `tool_choice` debe ser `auto` o `none`. OpenClaw normaliza los valores incompatibles de `tool_choice` a `auto` para mayor compatibilidad.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

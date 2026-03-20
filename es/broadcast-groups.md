@@ -1,10 +1,10 @@
 ---
 summary: "Enviar un mensaje de WhatsApp a múltiples agentes"
 read_when:
-  - Configuring broadcast groups
-  - Debugging multi-agent replies in WhatsApp
+  - Configuración de grupos de difusión
+  - Depuración de respuestas de múltiples agentes en WhatsApp
 status: experimental
-title: "Grupos de difusión"
+title: "Broadcast Groups"
 ---
 
 # Grupos de difusión
@@ -70,10 +70,10 @@ Agents:
 
 ### Configuración básica
 
-Añade una sección `broadcast` de nivel superior (junto a `bindings`). Las claves son IDs de pares de WhatsApp:
+Añada una sección de nivel superior `broadcast` (junto a `bindings`). Las claves son ids de pares de WhatsApp:
 
-- chats de grupo: JID de grupo (ej. `120363403215116621@g.us`)
-- DMs: número de teléfono E.164 (ej. `+15551234567`)
+- chats de grupo: JID de grupo (p. ej., `120363403215116621@g.us`)
+- MDs: número de teléfono E.164 (p. ej., `+15551234567`)
 
 ```json
 {
@@ -257,7 +257,7 @@ Dé a los agentes solo las herramientas que necesitan:
 
 Con muchos agentes, considere:
 
-- Usar `"strategy": "parallel"` (predeterminado) para velocidad
+- Usar `"strategy": "parallel"` (predeterminado) para mayor velocidad
 - Limitar los grupos de transmisión a 5-10 agentes
 - Usar modelos más rápidos para agentes más simples
 
@@ -300,7 +300,7 @@ Los grupos de transmisión funcionan junto con el enrutamiento existente:
 ```
 
 - `GROUP_A`: Solo alfred responde (enrutamiento normal)
-- `GROUP_B`: agent1 Y agent2 responden (transmisión)
+- `GROUP_B`: agent1 Y agent2 responden (difusión)
 
 **Precedencia:** `broadcast` tiene prioridad sobre `bindings`.
 
@@ -311,7 +311,7 @@ Los grupos de transmisión funcionan junto con el enrutamiento existente:
 **Verificar:**
 
 1. Los IDs de agente existen en `agents.list`
-2. El formato del ID del par es correcto (ej., `120363403215116621@g.us`)
+2. El formato del ID del par es correcto (p. ej., `120363403215116621@g.us`)
 3. Los agentes no están en listas de denegación
 
 **Depurar:**
@@ -322,7 +322,7 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 
 ### Solo Un Agente Responde
 
-**Causa:** Es posible que el ID del par esté en `bindings` pero no en `broadcast`.
+**Causa:** El ID del par podría estar en `bindings` pero no en `broadcast`.
 
 **Solución:** Agregar a la configuración de difusión o eliminar de los enlaces.
 
@@ -372,13 +372,13 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 }
 ```
 
-**El usuario envía:** Fragmento de código  
+**Usuario envía:** Fragmento de código  
 **Respuestas:**
 
 - code-formatter: "Sangría corregida y sugerencias de tipo añadidas"
 - security-scanner: "⚠️ Vulnerabilidad de inyección SQL en la línea 12"
 - test-coverage: "La cobertura es del 45%, faltan pruebas para casos de error"
-- docs-checker: "Falta el docstring para la función `process_data`"
+- docs-checker: "Falta docstring para la función `process_data`"
 
 ### Ejemplo 2: Soporte multilingüe
 
@@ -413,9 +413,9 @@ interface OpenClawConfig {
 
 ### Campos
 
-- `strategy` (opcional): Cómo procesar los agentes
+- `strategy` (opcional): Cómo procesar agentes
   - `"parallel"` (predeterminado): Todos los agentes procesan simultáneamente
-  - `"sequential"`: Los agentes procesan en orden de matriz
+  - `"sequential"`: Los agentes procesan en el orden del array
 - `[peerId]`: JID de grupo de WhatsApp, número E.164 u otro ID de par
   - Valor: Matriz de IDs de agentes que deben procesar mensajes
 
@@ -437,10 +437,10 @@ Funcionalidades planificadas:
 
 ## Véase también
 
-- [Configuración de multiagente](/es/multi-agent-sandbox-tools)
-- [Configuración de enrutamiento](/es/concepts/channel-routing)
-- [Gestión de sesiones](/es/concepts/sessions)
+- [Configuración de Multiagente](/es/multi-agent-sandbox-tools)
+- [Configuración de Enrutamiento](/es/concepts/channel-routing)
+- [Gestión de Sesiones](/es/concepts/sessions)
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

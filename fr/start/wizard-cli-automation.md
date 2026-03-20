@@ -12,8 +12,7 @@ sidebarTitle: "CLI automation"
 Utilisez `--non-interactive` pour automatiser `openclaw onboard`.
 
 <Note>
-  `--json` n'implique pas le mode non interactif. Utilisez `--non-interactive` (et `--workspace`)
-  pour les scripts.
+`--json` n'implique pas le mode non interactif. Utilisez `--non-interactive` (et `--workspace`) pour les scripts.
 </Note>
 
 ## Exemple de base non interactif
@@ -33,11 +32,11 @@ openclaw onboard --non-interactive \
 
 Ajoutez `--json` pour un résumé lisible par machine.
 
-Utilisez `--secret-input-mode ref` pour stocker les références basées sur des variables d'environnement dans les profils d'authentification au lieu des valeurs en texte clair.
-Une sélection interactive entre les références d'environnement et les références de fournisseur configurées (`file` ou `exec`) est disponible dans le flux d'onboarding.
+Utilisez `--secret-input-mode ref` pour stocker les références basées sur des env vars dans les profils d'authentification au lieu des valeurs en texte clair.
+La sélection interactive entre les références d'env vars et les références de provider configurées (`file` ou `exec`) est disponible dans le processus d'onboarding.
 
-En mode `ref` non interactif, les env vars de provider doivent être définies dans l'environnement du processus.
-Le passage de flags de clé en ligne sans la env var correspondante échoue désormais rapidement.
+En mode `ref` non interactif, les env vars du provider doivent être définies dans l'environnement du processus.
+Le passage de indicateurs de clé en ligne sans la variable d'environnement correspondante échoue désormais rapidement.
 
 Exemple :
 
@@ -160,9 +159,9 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    `--custom-api-key` est optionnel. Si omis, l'onboarding vérifie `CUSTOM_API_KEY`.
+    `--custom-api-key` est facultatif. S'il est omis, l'onboarding vérifie `CUSTOM_API_KEY`.
 
-    Variante en mode ref :
+    Variante mode Ref :
 
     ```bash
     export CUSTOM_API_KEY="your-key"
@@ -178,7 +177,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    Dans ce mode, l'onboarding stocke `apiKey` sous la forme `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
+    Dans ce mode, l'onboarding stocke `apiKey` en tant que `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
 
   </Accordion>
 </AccordionGroup>
@@ -206,15 +205,15 @@ Ce qu'il définit :
 Notes :
 
 - Les espaces de travail par défaut suivent `~/.openclaw/workspace-<agentId>`.
-- Ajoutez `bindings` pour router les messages entrants (l'assistant peut le faire).
+- Ajoutez `bindings` pour acheminer les messages entrants (l'assistant peut le faire).
 - Indicateurs non interactifs : `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
 
 ## Documentation connexe
 
 - Hub d'onboarding : [Onboarding (CLI)](/fr/start/wizard)
 - Référence complète : [CLI Setup Reference](/fr/start/wizard-cli-reference)
-- Référence de la commande : [`openclaw onboard`](/fr/cli/onboard)
+- Référence de commande : [`openclaw onboard`](/fr/cli/onboard)
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

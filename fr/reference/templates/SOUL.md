@@ -2,7 +2,7 @@
 title: "Modèle SOUL.md"
 summary: "Modèle d'espace de travail pour SOUL.md"
 read_when:
-  - Bootstrapping a workspace manually
+  - Initialisation manuelle d'un espace de travail
 ---
 
 # SOUL.md - Qui vous êtes
@@ -42,6 +42,6 @@ Si vous modifiez ce fichier, informez l'utilisateur — c'est votre âme, et il 
 
 _Ce fichier est à vous pour évoluer. Au fur et à mesure que vous apprenez qui vous êtes, mettez-le à jour._
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

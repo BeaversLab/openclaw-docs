@@ -1,18 +1,18 @@
 ---
-summary: "CLI 參考資料：`openclaw voicecall` (voice-call 外掛程式指令介面)"
+summary: "`openclaw voicecall` 的 CLI 參考（語音通話外掛命令介面）"
 read_when:
-  - You use the voice-call plugin and want the CLI entry points
-  - You want quick examples for `voicecall call|continue|status|tail|expose`
+  - 您使用語音通話外掛並且需要 CLI 進入點
+  - 您想要 `voicecall call|continue|status|tail|expose` 的快速範例
 title: "voicecall"
 ---
 
 # `openclaw voicecall`
 
-`voicecall` 是外掛程式提供的指令。只有在安裝並啟用 voice-call 外掛程式時才會出現。
+`voicecall` 是一個由外掛提供的命令。它僅在安裝並啟用語音通話外掛後才會出現。
 
 主要文件：
 
-- Voice-call 外掛程式：[Voice Call](/zh-Hant/plugins/voice-call)
+- 語音通話外掛：[語音通話](/zh-Hant/plugins/voice-call)
 
 ## 常用指令
 
@@ -31,8 +31,8 @@ openclaw voicecall expose --mode funnel
 openclaw voicecall expose --mode off
 ```
 
-安全提示：僅將 webhook 端點公開給您信任的網路。可能的話，優先使用 Tailscale Serve 而非 Funnel。
+安全性提醒：僅將 webhook 端點公開給您信任的網路。可能的話，優先使用 Tailscale Serve 而非 Funnel。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

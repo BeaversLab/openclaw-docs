@@ -1,19 +1,19 @@
 ---
-summary: "CLI 參考資料 for `openclaw webhooks` (webhook helpers + Gmail Pub/Sub)"
+summary: "`openclaw webhooks` 的 CLI 參考（webhook 輔助程式 + Gmail Pub/Sub）"
 read_when:
-  - You want to wire Gmail Pub/Sub events into OpenClaw
-  - You want webhook helper commands
+  - 您想將 Gmail Pub/Sub 事件連接到 OpenClaw
+  - 您需要 webhook 輔助指令
 title: "webhooks"
 ---
 
 # `openclaw webhooks`
 
-Webhook helper 與整合 (Gmail Pub/Sub, webhook helpers)。
+Webhook 輔助程式與整合（Gmail Pub/Sub、webhook 輔助程式）。
 
-相關：
+相關連結：
 
-- Webhooks: [Webhook](/zh-Hant/automation/webhook)
-- Gmail Pub/Sub: [Gmail Pub/Sub](/zh-Hant/automation/gmail-pubsub)
+- Webhooks：[Webhook](/zh-Hant/automation/webhook)
+- Gmail Pub/Sub：[Gmail Pub/Sub](/zh-Hant/automation/gmail-pubsub)
 
 ## Gmail
 
@@ -22,8 +22,8 @@ openclaw webhooks gmail setup --account you@example.com
 openclaw webhooks gmail run
 ```
 
-詳見 [Gmail Pub/Sub 文件](/zh-Hant/automation/gmail-pubsub)。
+詳情請參閱 [Gmail Pub/Sub 文件](/zh-Hant/automation/gmail-pubsub)。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

@@ -1,38 +1,38 @@
 ---
 summary: "Pasos de tiempo de ejecución compartidos de Docker VM para hosts OpenClaw Gateway de larga duración"
 read_when:
-  - You are deploying OpenClaw on a cloud VM with Docker
-  - You need the shared binary bake, persistence, and update flow
-title: "Tiempo de ejecución de Docker VM"
+  - Estás desplegando OpenClaw en una VM en la nube con Docker
+  - Necesitas el flujo de compilación (bake), persistencia y actualización de binarios compartidos
+title: "Docker VM Runtime"
 ---
 
-# Tiempo de ejecución de Docker VM
+# Docker VM Runtime
 
-Pasos de tiempo de ejecución compartidos para instalaciones de Docker basadas en VM, como GCP, Hetzner y proveedores de VPS similares.
+Pasos de tiempo de ejecución compartidos para instalaciones de Docker basadas en VM como GCP, Hetzner y proveedores de VPS similares.
 
-## Incluir los binarios necesarios en la imagen
+## Bake required binaries into the image
 
 Instalar binarios dentro de un contenedor en ejecución es una trampa.
 Cualquier cosa instalada en tiempo de ejecución se perderá al reiniciar.
 
-Todos los binarios externos requeridos por las habilidades deben instalarse en el momento de la compilación de la imagen.
+Todos los binarios externos requeridos por las habilidades (skills) deben instalarse en el momento de la compilación de la imagen.
 
 Los ejemplos a continuación muestran solo tres binarios comunes:
 
-- `gog` para acceso a Gmail
+- `gog` para el acceso a Gmail
 - `goplaces` para Google Places
 - `wacli` para WhatsApp
 
 Estos son ejemplos, no una lista completa.
-Puede instalar tantos binarios como sea necesario utilizando el mismo patrón.
+Puedes instalar tantos binarios como sea necesario utilizando el mismo patrón.
 
-Si agrega nuevas habilidades más tarde que dependen de binarios adicionales, debe:
+Si agregas nuevas habilidades (skills) más adelante que dependen de binarios adicionales, debes:
 
 1. Actualizar el Dockerfile
 2. Reconstruir la imagen
 3. Reiniciar los contenedores
 
-**Ejemplo de Dockerfile**
+**Dockerfile de ejemplo**
 
 ```dockerfile
 FROM node:24-bookworm
@@ -71,7 +71,7 @@ ENV NODE_ENV=production
 CMD ["node","dist/index.js"]
 ```
 
-## Compilar e iniciar
+## Construir y lanzar
 
 ```bash
 docker compose build
@@ -79,7 +79,7 @@ docker compose up -d openclaw-gateway
 ```
 
 Si la compilación falla con `Killed` o `exit code 137` durante `pnpm install --frozen-lockfile`, la VM se quedó sin memoria.
-Use una clase de máquina más grande antes de reintentar.
+Utiliza una clase de máquina más grande antes de reintentar.
 
 Verificar binarios:
 
@@ -109,23 +109,23 @@ Salida esperada:
 [gateway] listening on ws://0.0.0.0:18789
 ```
 
-## Qué persiste y dónde
+## Qué persiste dónde
 
 OpenClaw se ejecuta en Docker, pero Docker no es la fuente de verdad.
-Todo el estado de larga duración debe sobrevivir a reinicios, reconstrucciones y reinicios del sistema.
+Todo el estado de larga duración debe sobrevivir a reinicios, reconstrucciones y rearranques.
 
-| Componente                           | Ubicación                          | Mecanismo de persistencia     | Notas                                          |
-| ------------------------------------ | ---------------------------------- | ----------------------------- | ---------------------------------------------- |
-| Configuración de Gateway             | `/home/node/.openclaw/`            | Montaje de volumen del host   | Incluye `openclaw.json`, tokens                |
-| Perfiles de autenticación de modelos | `/home/node/.openclaw/`            | Montaje de volumen del host   | Tokens de OAuth, claves de API                 |
-| Configuraciones de habilidades       | `/home/node/.openclaw/skills/`     | Montaje de volumen del host   | Estado de nivel de habilidad                   |
-| Espacio de trabajo del agente        | `/home/node/.openclaw/workspace/`  | Montaje de volumen del host   | Código y artefactos del agente                 |
-| Sesión de WhatsApp                   | `/home/node/.openclaw/`            | Montaje de volumen del host   | Conserva el inicio de sesión QR                |
-| Llavero de Gmail                     | `/home/node/.openclaw/`            | Volumen del host + contraseña | Requiere `GOG_KEYRING_PASSWORD`                |
-| Binarios externos                    | `/usr/local/bin/`                  | Imagen Docker                 | Debe incluirse en el momento de la compilación |
-| Tiempo de ejecución de Node          | Sistema de archivos del contenedor | Imagen Docker                 | Reconstruida en cada compilación de imagen     |
-| Paquetes del SO                      | Sistema de archivos del contenedor | Imagen Docker                 | No instalar en tiempo de ejecución             |
-| Contenedor Docker                    | Efímero                            | Reiniciable                   | Seguro de destruir                             |
+| Componente           | Ubicación                          | Mecanismo de persistencia  | Notas                            |
+| ------------------- | --------------------------------- | ---------------------- | -------------------------------- |
+| Configuración del Gateway      | `/home/node/.openclaw/`           | Montaje de volumen del host      | Incluye `openclaw.json`, tokens |
+| Perfiles de autenticación de modelos | `/home/node/.openclaw/`           | Montaje de volumen del host      | Tokens de OAuth, claves de API           |
+| Configuraciones de habilidades (skills)       | `/home/node/.openclaw/skills/`    | Montaje de volumen del host      | Estado a nivel de habilidad (skill)                |
+| Espacio de trabajo del agente     | `/home/node/.openclaw/workspace/` | Montaje de volumen del host      | Código y artefactos del agente         |
+| Sesión de WhatsApp    | `/home/node/.openclaw/`           | Montaje de volumen del host      | Conserva el inicio de sesión QR               |
+| Llavero de Gmail       | `/home/node/.openclaw/`           | Volumen del host + contraseña | Requiere `GOG_KEYRING_PASSWORD`  |
+| Binarios externos   | `/usr/local/bin/`                 | Imagen de Docker           | Debe estar incluido (baked) en el momento de la compilación      |
+| Tiempo de ejecución de Node        | Sistema de archivos del contenedor              | Imagen de Docker           | Reconstruido en cada compilación de imagen        |
+| Paquetes del sistema operativo         | Sistema de archivos del contenedor              | Imagen de Docker           | No instalar en tiempo de ejecución        |
+| Contenedor de Docker    | Efímero                         | Reiniciable            | Seguro de destruir                  |
 
 ## Actualizaciones
 
@@ -137,6 +137,6 @@ docker compose build
 docker compose up -d
 ```
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

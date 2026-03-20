@@ -1,24 +1,26 @@
 ---
 summary: "Inicio rápido se ha movido a Introducción."
 read_when:
-  - You are looking for the fastest setup steps
-  - You were sent here from an older link
+  - Buscas los pasos de configuración más rápidos
+  - Llegaste aquí desde un enlace anterior
 title: "Inicio rápido"
 ---
 
 # Inicio rápido
 
-<Info>Inicio rápido ahora forma parte de [Introducción](/es/start/getting-started).</Info>
+<Info>
+Inicio rápido ahora forma parte de [Introducción](/es/start/getting-started).
+</Info>
 
 <Columns>
-  <Card title="Getting Started" href="/es/start/getting-started">
+  <Card title="Introducción" href="/es/start/getting-started">
     Instala OpenClaw y ejecuta tu primer chat en minutos.
   </Card>
-  <Card title="Onboarding (CLI)" href="/es/start/wizard">
-    Referencia completa de integración de la CLI y opciones avanzadas.
+  <Card title="Incorporación (CLI)" href="/es/start/wizard">
+    Referencia completa de incorporación por CLI y opciones avanzadas.
   </Card>
 </Columns>
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

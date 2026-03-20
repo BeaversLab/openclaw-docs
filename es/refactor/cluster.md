@@ -1,12 +1,12 @@
 ---
-summary: "Refactorizar clústeres con el mayor potencial de reducción de LOC"
+summary: "Refactorizar clústeres con mayor potencial de reducción de LOC"
 read_when:
-  - You want to reduce total LOC without changing behavior
-  - You are choosing the next dedupe or extraction pass
-title: "Backlog de refactorización de clústeres"
+  - Quieres reducir el total de LOC sin cambiar el comportamiento
+  - Estás eligiendo el siguiente pase de deduplicación o extracción
+title: "Refactorizar Backlog del Clúster"
 ---
 
-# Backlog de refactorización de clústeres
+# Refactorizar Backlog del Clúster
 
 Clasificados por probable reducción de LOC, seguridad y amplitud.
 
@@ -14,7 +14,7 @@ Clasificados por probable reducción de LOC, seguridad y amplitud.
 
 Clúster de mayor valor.
 
-Formas repetidas en muchos complementos de canales:
+Formas repetidas en muchos complementos de canal:
 
 - `config.listAccountIds`
 - `config.resolveAccount`
@@ -49,11 +49,11 @@ Riesgo:
 
 - Medio. Cada canal tiene `isConfigured`, advertencias y normalización ligeramente diferentes.
 
-## 2. Código repetitivo de singleton de tiempo de ejecución de extensiones
+## 2. Andamiaje de singleton de tiempo de ejecución de extensión
 
 Muy seguro.
 
-Casi todas las extensiones tienen el mismo titular de tiempo de ejecución:
+Casi todas las extensiones tienen el mismo soporte de tiempo de ejecución:
 
 - `let runtime: PluginRuntime | null = null`
 - `setXRuntime`
@@ -69,7 +69,7 @@ Ejemplos sólidos:
 - `extensions/imessage/src/runtime.ts`
 - `extensions/twitch/src/runtime.ts`
 
-Variantes de casos especiales:
+Variantes de caso especial:
 
 - `extensions/bluebubbles/src/runtime.ts`
 - `extensions/line/src/runtime.ts`
@@ -87,18 +87,18 @@ Riesgo:
 
 - Bajo
 
-## 3. Configuración del prompt y pasos del parche de configuración
+## 3. Pasos de aviso de configuración y parche de configuración
 
 Gran área de superficie.
 
-Muchos archivos de configuración se repiten:
+Muchos archivos de configuración repiten:
 
-- resolver ID de cuenta
+- resolver id de cuenta
 - solicitar entradas de lista blanca
 - fusionar allowFrom
-- establecer política de MD
+- establecer política DM
 - solicitar secretos
-- parchear configuración de nivel superior frente a configuración con alcance de cuenta
+- parchear configuración de nivel superior vs. alcance de cuenta
 
 Ejemplos sólidos:
 
@@ -111,7 +111,7 @@ Ejemplos sólidos:
 - `extensions/matrix/src/setup-surface.ts`
 - `extensions/irc/src/setup-surface.ts`
 
-Punto de unión del asistente existente:
+Costura de ayuda existente:
 
 - `src/channels/plugins/setup-wizard-helpers.ts`
 
@@ -128,11 +128,11 @@ Ahorros esperados:
 
 Riesgo:
 
-- Medio. Es fácil generalizar en exceso; mantenga los asistentes limitados y componibles.
+- Medio. Es fácil generalizar en exceso; mantenga las ayudas estrechas y componibles.
 
 ## 4. Fragmentos de esquema de configuración multicuenta
 
-Fragmentos de esquema repetidos en extensiones.
+Fragmentos de esquema repetidos en todas las extensiones.
 
 Patrones comunes:
 
@@ -140,8 +140,8 @@ Patrones comunes:
 - esquema de cuenta más:
   - `accounts: z.object({}).catchall(accountSchema).optional()`
   - `defaultAccount: z.string().optional()`
-- campos de MD/grupo repetidos
-- campos de política de herramientas/markdown repetidos
+- campos DM/grupo repetidos
+- campos de política de markdown/herramienta repetidos
 
 Ejemplos sólidos:
 
@@ -172,12 +172,12 @@ Buen clúster de valor medio.
 Patrones de configuración de `startAccount` / monitor repetidos:
 
 - resolver cuenta
-- calcular ruta del webhook
-- inicio de sesión
+- calcular ruta de webhook
+- registro de inicio
 - iniciar monitor
 - esperar para abortar
 - limpieza
-- actualizaciones del receptor de estado
+- actualizaciones del sumidero de estado
 
 Ejemplos sólidos:
 
@@ -187,14 +187,14 @@ Ejemplos sólidos:
 - `extensions/telegram/src/channel.ts`
 - `extensions/nextcloud-talk/src/channel.ts`
 
-Punto de unión del asistente existente:
+Costura de ayuda existente:
 
 - `src/plugin-sdk/channel-lifecycle.ts`
 
 Forma probable de extracción:
 
-- asistente para el ciclo de vida del monitor de cuenta
-- asistente para el inicio de cuenta respaldado por webhook
+- ayuda para el ciclo de vida del monitor de cuenta
+- ayuda para el inicio de cuenta respaldado por webhook
 
 Ahorros esperados:
 
@@ -206,7 +206,7 @@ Riesgo:
 
 ## 6. Limpieza de clones exactos pequeños
 
-Cubo de limpieza de bajo riesgo.
+Depósito de limpieza de bajo riesgo.
 
 Ejemplos:
 
@@ -228,7 +228,7 @@ Riesgo:
 
 ## Clústeres de prueba
 
-### Accesorios de eventos de webhook de LINE
+### Accesorios de eventos de webhook LINE
 
 Ejemplos sólidos:
 
@@ -254,8 +254,8 @@ Ejemplos sólidos:
 Extracción probable:
 
 - constructor de contexto de foro
-- asistente de aserción de mensaje de denegación
-- casos de autenticación controlados por tablas
+- ayudante de aserción de mensaje de denied
+- casos de autenticación dirigidos por tabla
 
 Ahorros esperados:
 
@@ -275,7 +275,7 @@ Ahorros esperados:
 
 - ~50-90 LOC
 
-### Pruebas de opciones no admitidas de llm-context de Brave
+### Pruebas de opción no admitida de llm-context de Brave
 
 Ejemplos sólidos:
 
@@ -294,10 +294,10 @@ Ahorros esperados:
 1. Boilerplate de singleton de tiempo de ejecución
 2. Limpieza de clones exactos pequeños
 3. Extracción de constructor de configuración y seguridad
-4. Extracción de asistentes de prueba
-5. Extracción de pasos de incorporación
-6. Extracción de asistentes del ciclo de vida del monitor
+4. Extracción de ayudante de prueba
+5. Extracción de paso de incorporación
+6. Extracción de ayudante del ciclo de vida del monitor
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

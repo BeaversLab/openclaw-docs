@@ -1,32 +1,32 @@
 ---
-title: "Création de Skills"
-summary: "Créez et testez des skills d'espace de travail personnalisés avec SKILL.md"
+title: "Creating Skills"
+summary: "Build and test custom workspace skills with SKILL.md"
 read_when:
   - You are creating a new custom skill in your workspace
   - You need a quick starter workflow for SKILL.md-based skills
 ---
 
-# Créer des Skills personnalisés 🛠
+# Creating Custom Skills 🛠
 
-OpenClaw est conçu pour être facilement extensible. Les « Skills » constituent le moyen principal d'ajouter de nouvelles capacités à votre assistant.
+OpenClaw is designed to be easily extensible. "Skills" are the primary way to add new capabilities to your assistant.
 
-## Qu'est-ce qu'un Skill ?
+## What is a Skill?
 
-Un skill est un répertoire contenant un fichier `SKILL.md` (qui fournit des instructions et des définitions d'outils au LLM) et éventuellement des scripts ou des ressources.
+A skill is a directory containing a `SKILL.md` file (which provides instructions and tool definitions to the LLM) and optionally some scripts or resources.
 
-## Étape par étape : Votre premier Skill
+## Step-by-Step: Your First Skill
 
-### 1. Créer le répertoire
+### 1. Create the Directory
 
-Les Skills résident dans votre espace de travail, généralement `~/.openclaw/workspace/skills/`. Créez un nouveau dossier pour votre skill :
+Skills live in your workspace, usually `~/.openclaw/workspace/skills/`. Create a new folder for your skill:
 
 ```bash
 mkdir -p ~/.openclaw/workspace/skills/hello-world
 ```
 
-### 2. Définir le `SKILL.md`
+### 2. Define the `SKILL.md`
 
-Créez un fichier `SKILL.md` dans ce répertoire. Ce fichier utilise l'en-tête YAML pour les métadonnées et le Markdown pour les instructions.
+Create a `SKILL.md` file in that directory. This file uses YAML frontmatter for metadata and Markdown for instructions.
 
 ```markdown
 ---
@@ -39,24 +39,24 @@ description: A simple skill that says hello.
 When the user asks for a greeting, use the `echo` tool to say "Hello from your custom skill!".
 ```
 
-### 3. Ajouter des outils (Facultatif)
+### 3. Add Tools (Optional)
 
-Vous pouvez définir des outils personnalisés dans l'en-tête ou demander à l'agent d'utiliser les outils système existants (comme `bash` ou `browser`).
+You can define custom tools in the frontmatter or instruct the agent to use existing system tools (like `bash` or `browser`).
 
-### 4. Actualiser OpenClaw
+### 4. Refresh OpenClaw
 
-Demandez à votre agent d'« actualiser les skills » ou redémarrez la passerelle. OpenClaw découvrira le nouveau répertoire et indexera le `SKILL.md`.
+Ask your agent to "refresh skills" or restart the gateway. OpenClaw will discover the new directory and index the `SKILL.md`.
 
-## Bonnes pratiques
+## Best Practices
 
-- **Soyez concis** : Indiquez au modèle _quoi_ faire, pas comment être une IA.
-- **Sécurité d'abord** : Si votre skill utilise `bash`, assurez-vous que les invites n'autorisent pas l'injection arbitraire de commandes provenant d'une entrée utilisateur non fiable.
-- **Tester localement** : Utilisez `openclaw agent --message "use my new skill"` pour tester.
+- **Be Concise**: Instruct the model on _what_ to do, not how to be an AI.
+- **Safety First**: If your skill uses `bash`, ensure the prompts don't allow arbitrary command injection from untrusted user input.
+- **Test Locally**: Use `openclaw agent --message "use my new skill"` to test.
 
-## Skills partagés
+## Shared Skills
 
-Vous pouvez également parcourir et contribuer aux skills sur [ClawHub](https://clawhub.com).
+You can also browse and contribute skills to [ClawHub](https://clawhub.com).
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

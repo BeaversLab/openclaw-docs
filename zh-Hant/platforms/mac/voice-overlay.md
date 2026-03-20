@@ -1,5 +1,5 @@
 ---
-summary: "當喚醒詞與按壓對話重疊時的語音覆疊生命週期"
+summary: "Voice overlay lifecycle when wake-word and push-to-talk overlap"
 read_when:
   - Adjusting voice overlay behavior
 title: "Voice Overlay"
@@ -18,27 +18,27 @@ title: "Voice Overlay"
 
 - 覆疊工作階段現在會為每次擷取（喚醒詞或按壓對話）攜帶一個權杖。當權杖不符時，部分/最終/發送/關閉/音量更新會被捨棄，以避免過時的回呼。
 - 按壓對話會將任何可見的覆疊文字作為前綴採用（因此當喚醒覆疊顯示時按下熱鍵會保留文字並附加新的語音內容）。它會等待最終轉錄文字最長 1.5 秒，之後才會回退至目前的文字。
-- 提示音/覆疊記錄會在 `info` 發出，分類為 `voicewake.overlay`、`voicewake.ptt` 和 `voicewake.chime` (工作階段開始、部分、最終、發送、關閉、提示音原因)。
+- Chime/overlay logging is emitted at `info` in categories `voicewake.overlay`, `voicewake.ptt`, and `voicewake.chime` (session start, partial, final, send, dismiss, chime reason).
 
 ## 下一步
 
 1. **VoiceSessionCoordinator (actor)**
-   - 一次僅擁有一個 `VoiceSession`。
-   - API (基於權杖)：`beginWakeCapture`、`beginPushToTalk`、`updatePartial`、`endCapture`、`cancel`、`applyCooldown`。
+   - Owns exactly one `VoiceSession` at a time.
+   - API (token-based): `beginWakeCapture`, `beginPushToTalk`, `updatePartial`, `endCapture`, `cancel`, `applyCooldown`.
    - 捨棄攜帶過時權杖的回呼（防止舊的辨識器重新開啟覆疊）。
 2. **VoiceSession (model)**
-   - 欄位：`token`、`source` (wakeWord|pushToTalk)、已認可/揮發性文字、提示音旗標、計時器 (自動發送、閒置)、`overlayMode` (display|editing|sending)、冷卻期限。
+   - Fields: `token`, `source` (wakeWord|pushToTalk), committed/volatile text, chime flags, timers (auto-send, idle), `overlayMode` (display|editing|sending), cooldown deadline.
 3. **覆疊綁定**
-   - `VoiceSessionPublisher` (`ObservableObject`) 將活動工作階段映射到 SwiftUI。
-   - `VoiceWakeOverlayView` 僅透過發佈者渲染；它從不直接變更全域單例。
-   - Overlay 使用者操作 (`sendNow`、`dismiss`、`edit`) 會使用 session token 回呼到協調器。
+   - `VoiceSessionPublisher` (`ObservableObject`) mirrors the active session into SwiftUI.
+   - `VoiceWakeOverlayView` renders only via the publisher; it never mutates global singletons directly.
+   - Overlay user actions (`sendNow`, `dismiss`, `edit`) call back into the coordinator with the session token.
 4. **統一發送路徑**
-   - 在 `endCapture` 上：如果去除空白後的文字為空 → 解除；否則 `performSend(session:)` (播放發送提示音一次、轉發、解除)。
+   - On `endCapture`: if trimmed text is empty → dismiss; else `performSend(session:)` (plays send chime once, forwards, dismisses).
    - 按住講話：無延遲；喚醒詞：自動發送的選用延遲。
    - 在按住講話結束後對喚醒執行時間套用短暫冷卻，以免喚醒詞立即重新觸發。
 5. **日誌記錄**
-   - 協調器在 subsystem `ai.openclaw` 中發出 `.info` 日誌，類別為 `voicewake.overlay` 和 `voicewake.chime`。
-   - 關鍵事件：`session_started`、`adopted_by_push_to_talk`、`partial`、`finalized`、`send`、`dismiss`、`cancel`、`cooldown`。
+   - Coordinator emits `.info` logs in subsystem `ai.openclaw`, categories `voicewake.overlay` and `voicewake.chime`.
+   - Key events: `session_started`, `adopted_by_push_to_talk`, `partial`, `finalized`, `send`, `dismiss`, `cancel`, `cooldown`.
 
 ## 除錯檢查清單
 
@@ -49,16 +49,16 @@ title: "Voice Overlay"
   ```
 
 - 驗證只有一個作用中的 session token；過時的回呼應由協調器捨棄。
-- 確保按住講話放開時總是使用作用中的 token 呼叫 `endCapture`；如果文字為空，預期會有 `dismiss` 而沒有提示音或發送。
+- Ensure push-to-talk release always calls `endCapture` with the active token; if text is empty, expect `dismiss` without chime or send.
 
 ## 遷移步驟 (建議)
 
-1. 新增 `VoiceSessionCoordinator`、`VoiceSession` 和 `VoiceSessionPublisher`。
-2. 重構 `VoiceWakeRuntime` 以建立/更新/結束 sessions，而不是直接觸碰 `VoiceWakeOverlayController`。
-3. 重構 `VoicePushToTalk` 以採用現有的 sessions 並在放開時呼叫 `endCapture`；套用執行時間冷卻。
-4. 將 `VoiceWakeOverlayController` 連結至發佈者；移除來自 runtime/PTT 的直接呼叫。
+1. Add `VoiceSessionCoordinator`, `VoiceSession`, and `VoiceSessionPublisher`.
+2. 重構 `VoiceWakeRuntime` 以建立/更新/結束工作階段，而不是直接觸及 `VoiceWakeOverlayController`。
+3. 重構 `VoicePushToTalk` 以採用現有的工作階段，並在釋放時呼叫 `endCapture`；套用執行時期冷卻。
+4. 將 `VoiceWakeOverlayController` 連接至發布器；移除來自執行時期/PTT 的直接呼叫。
 5. 新增 session 採用、冷卻和空文字解除的整合測試。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

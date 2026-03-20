@@ -1,7 +1,7 @@
 ---
-summary: "CLI 参考（`openclaw health` (gateway health endpoint via RPC)"
+summary: "CLI 参考，用于 `openclaw health`（通过 RPC 的网关健康端点）"
 read_when:
-  - You want to quickly check the running Gateway’s health
+  - 您想要快速检查运行中的 Gateway(网关) 的健康状况
 title: "health"
 ---
 
@@ -20,6 +20,6 @@ openclaw health --verbose
 - `--verbose` 运行实时探测，并在配置了多个账户时打印每个账户的计时信息。
 - 当配置了多个代理时，输出包括每个代理的会话存储。
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

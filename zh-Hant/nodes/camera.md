@@ -1,71 +1,71 @@
 ---
-summary: "相機擷取（iOS/Android 節點 + macOS 應用程式）供代理程式使用：照片（jpg）和短影片片段（mp4）"
+summary: "Camera capture (iOS/Android nodes + macOS app) for agent use: photos (jpg) and short video clips (mp4)"
 read_when:
   - Adding or modifying camera capture on iOS/Android nodes or macOS
   - Extending agent-accessible MEDIA temp-file workflows
-title: "相機擷取"
+title: "Camera Capture"
 ---
 
-# 相機擷取（代理程式）
+# Camera capture (agent)
 
-OpenClaw 支援用於代理程式工作流程的**相機擷取**：
+OpenClaw supports **camera capture** for agent workflows:
 
-- **iOS 節點**（透過 Gateway 配對）：透過 `node.invoke` 擷取**照片** (`jpg`) 或**短影片片段** (`mp4`，可選音訊)。
-- **Android 節點**（透過 Gateway 配對）：透過 `node.invoke` 擷取**照片** (`jpg`) 或**短影片片段** (`mp4`，可選音訊)。
-- **macOS 應用程式**（透過 Gateway 作為節點）：透過 `node.invoke` 擷取**照片** (`jpg`) 或**短影片片段** (`mp4`，可選音訊)。
+- **iOS node** (paired via Gateway): capture a **photo** (`jpg`) or **short video clip** (`mp4`, with optional audio) via `node.invoke`.
+- **Android node** (paired via Gateway): capture a **photo** (`jpg`) or **short video clip** (`mp4`, with optional audio) via `node.invoke`.
+- **macOS app** (node via Gateway): capture a **photo** (`jpg`) or **short video clip** (`mp4`, with optional audio) via `node.invoke`.
 
-所有相機存取都受限於**使用者控制的設定**。
+All camera access is gated behind **user-controlled settings**.
 
-## iOS 節點
+## iOS node
 
-### 使用者設定（預設開啟）
+### User setting (default on)
 
-- iOS 設定分頁 → **相機** → **允許相機** (`camera.enabled`)
-  - 預設：**開啟**（缺少的金鑰會被視為已啟用）。
-  - 關閉時：`camera.*` 指令會傳回 `CAMERA_DISABLED`。
+- iOS Settings tab → **Camera** → **Allow Camera** (`camera.enabled`)
+  - Default: **on** (missing key is treated as enabled).
+  - When off: `camera.*` commands return `CAMERA_DISABLED`.
 
-### 指令（透過 Gateway `node.invoke`）
+### Commands (via Gateway `node.invoke`)
 
 - `camera.list`
-  - 回應承載：
-    - `devices`: `{ id, name, position, deviceType }` 的陣列
+  - Response payload:
+    - `devices`: array of `{ id, name, position, deviceType }`
 
 - `camera.snap`
-  - 參數：
-    - `facing`: `front|back`（預設值：`front`）
-    - `maxWidth`: 數字（可選；iOS 節點上預設為 `1600`）
-    - `quality`: `0..1`（可選；預設 `0.9`）
-    - `format`: 目前 `jpg`
-    - `delayMs`: 數字（可選；預設 `0`）
-    - `deviceId`: 字串（可選；來自 `camera.list`）
-  - 回應承載：
+  - Params:
+    - `facing`: `front|back` (default: `front`)
+    - `maxWidth`: number (optional; default `1600` on the iOS node)
+    - `quality`: `0..1` (optional; default `0.9`)
+    - `format`: currently `jpg`
+    - `delayMs`: number (optional; default `0`)
+    - `deviceId`: string (optional; from `camera.list`)
+  - Response payload:
     - `format: "jpg"`
     - `base64: "<...>"`
     - `width`, `height`
-  - Payload 防護：照片會被重新壓縮，以將 base64 payload 控制在 5 MB 以下。
+  - Payload guard：照片會被重新壓縮，以將 base64 payload 保持在 5 MB 以下。
 
 - `camera.clip`
-  - 參數：
-    - `facing`: `front|back` (預設: `front`)
-    - `durationMs`: 數字 (預設 `3000`，限制最大值為 `60000`)
-    - `includeAudio`: 布林值 (預設 `true`)
-    - `format`: 目前 `mp4`
-    - `deviceId`: 字串 (選用; 來自 `camera.list`)
-  - 回應 payload：
+  - Params：
+    - `facing`: `front|back` (default: `front`)
+    - `durationMs`: number (default `3000`, clamped to a max of `60000`)
+    - `includeAudio`: boolean (default `true`)
+    - `format`: currently `mp4`
+    - `deviceId`: string (optional; from `camera.list`)
+  - Response payload：
     - `format: "mp4"`
     - `base64: "<...>"`
     - `durationMs`
     - `hasAudio`
 
-### 前景需求
+### Foreground requirement
 
-與 `canvas.*` 類似，iOS 節點僅允許在 **前景** 執行 `camera.*` 指令。背景呼叫會傳回 `NODE_BACKGROUND_UNAVAILABLE`。
+Like `canvas.*`, the iOS node only allows `camera.*` commands in the **foreground**. Background invocations return `NODE_BACKGROUND_UNAVAILABLE`.
 
-### CLI 輔助工具 (暫存檔案 + MEDIA)
+### CLI helper (temp files + MEDIA)
 
-取得附件最簡單的方法是透過 CLI 輔助工具，它會將解碼後的媒體寫入暫存檔案並列印 `MEDIA:<path>`。
+The easiest way to get attachments is via the CLI helper, which writes decoded media to a temp file and prints `MEDIA:<path>`.
 
-範例：
+Examples：
 
 ```bash
 openclaw nodes camera snap --node <id>               # default: both front + back (2 MEDIA lines)
@@ -74,37 +74,37 @@ openclaw nodes camera clip --node <id> --duration 3000
 openclaw nodes camera clip --node <id> --no-audio
 ```
 
-備註：
+Notes：
 
-- `nodes camera snap` 預設值為 **both** (兩者)，以提供代理程式雙向視圖。
-- 除非您自行建立包裝程式，否則輸出檔案為暫時性的 (位於 OS 暫存目錄中)。
+- `nodes camera snap` defaults to **both** facings to give the agent both views.
+- Output files are temporary (in the OS temp directory) unless you build your own wrapper.
 
 ## Android 節點
 
-### Android 使用者設定 (預設為開啟)
+### Android 使用者設定（預設開啟）
 
-- Android 設定頁面 → **相機** → **允許相機** (`camera.enabled`)
-  - 預設值：**on** (缺少鍵值會被視為已啟用)。
-  - 關閉時：`camera.*` 指令會傳回 `CAMERA_DISABLED`。
+- Android Settings sheet → **Camera** → **Allow Camera** (`camera.enabled`)
+  - Default: **on** (missing key is treated as enabled).
+  - When off: `camera.*` commands return `CAMERA_DISABLED`.
 
-### 權限
+### Permissions
 
-- Android 需要執行時期權限：
-  - 針對 `camera.snap` 和 `camera.clip` 兩者都需要 `CAMERA`。
-  - 當 `includeAudio=true` 時，針對 `camera.clip` 需要 `RECORD_AUDIO`。
+- Android requires runtime permissions:
+  - `CAMERA` for both `camera.snap` and `camera.clip`.
+  - `RECORD_AUDIO` for `camera.clip` when `includeAudio=true`.
 
-如果缺少權限，應用程式會盡可能提示；如果拒絕，`camera.*` 請求將會失敗並回傳
-`*_PERMISSION_REQUIRED` 錯誤。
+If permissions are missing, the app will prompt when possible; if denied, `camera.*` requests fail with a
+`*_PERMISSION_REQUIRED` error.
 
-### Android 前景需求
+### Android foreground requirement
 
-與 `canvas.*` 相同，Android 節點僅允許在**前景**中執行 `camera.*` 指令。背景調用會傳回 `NODE_BACKGROUND_UNAVAILABLE`。
+就像 `canvas.*` 一樣，Android 節點只允許在 **前景 (foreground)** 中執行 `camera.*` 指令。背景呼叫會傳回 `NODE_BACKGROUND_UNAVAILABLE`。
 
-### Android 指令（透過 Gateway `node.invoke`）
+### Android 指令 (透過 Gateway `node.invoke`)
 
 - `camera.list`
   - 回應 Payload：
-    - `devices`：`{ id, name, position, deviceType }` 的陣列
+    - `devices`: `{ id, name, position, deviceType }` 的陣列
 
 ### Payload 防護
 
@@ -112,15 +112,15 @@ openclaw nodes camera clip --node <id> --no-audio
 
 ## macOS 應用程式
 
-### 使用者設定（預設關閉）
+### 使用者設定 (預設關閉)
 
-macOS 伴隨應用程式顯示一個核取方塊：
+macOS 伴隨應用程式提供了一個核取方塊：
 
 - **Settings → General → Allow Camera** (`openclaw.cameraEnabled`)
-  - 預設：**關閉**
-  - 關閉時：相機請求會傳回「Camera disabled by user」。
+  - 預設：**關閉 (off)**
+  - 當關閉時：相機請求會傳回「Camera disabled by user」。
 
-### CLI 輔助工具（節點調用）
+### CLI 輔助工具 (節點呼叫)
 
 使用主要的 `openclaw` CLI 在 macOS 節點上叫用相機指令。
 
@@ -140,18 +140,18 @@ openclaw nodes camera clip --node <id> --no-audio
 
 備註：
 
-- 除非有覆寫，否則 `openclaw nodes camera snap` 預設為 `maxWidth=1600`。
-- 在 macOS 上，`camera.snap` 會在暖機/曝光穩定後等待 `delayMs`（預設 2000ms） 再進行拍攝。
-- 照片 payload 會經過重新壓縮，以將 base64 保持在 5 MB 以下。
+- `openclaw nodes camera snap` 預設為 `maxWidth=1600`，除非另有覆寫。
+- 在 macOS 上，`camera.snap` 會在暖機/曝光穩定後等待 `delayMs` (預設 2000ms) 再進行擷取。
+- 照片 Payload 會經過重新壓縮，以將 base64 保持在 5 MB 以下。
 
-## 安全性與實際限制
+## 安全性 + 實務限制
 
-- 存取相機和麥克風會觸發標準的 OS 權限提示（並且需要在 Info.plist 中加入使用說明字串）。
-- 影片片段會有長度上限（目前為 `<= 60s`），以避免節點 payload 過大（base64 開銷 + 訊息限制）。
+- 相機和麥克風存取會觸發標準的 OS 權限提示 (並且需要在 Info.plist 中提供使用說明字串)。
+- 影片片段設有上限 (目前為 `<= 60s`)，以避免過大的節點 payload (base64 開銷 + 訊息限制)。
 
-## macOS 螢幕影片（OS 層級）
+## macOS 螢幕影片 (OS 層級)
 
-若要錄製「螢幕」影片（而非相機），請使用 macOS 伴隨應用程式：
+對於 _螢幕_ 影片 (非相機)，請使用 macOS 伴隨應用程式：
 
 ```bash
 openclaw nodes screen record --node <id> --duration 10s --fps 15   # prints MEDIA:<path>
@@ -161,6 +161,6 @@ openclaw nodes screen record --node <id> --duration 10s --fps 15   # prints MEDI
 
 - 需要 macOS **Screen Recording** 權限 (TCC)。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

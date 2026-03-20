@@ -1,8 +1,8 @@
 ---
-title: "Plantilla de TOOLS.md"
-summary: "Plantilla del espacio de trabajo para TOOLS.md"
+title: "Plantilla TOOLS.md"
+summary: "Plantilla de espacio de trabajo para TOOLS.md"
 read_when:
-  - Bootstrapping a workspace manually
+  - Inicializar manualmente un espacio de trabajo
 ---
 
 # TOOLS.md - Notas Locales
@@ -46,6 +46,6 @@ Las habilidades se comparten. Tu configuración es tuya. Mantenerlas separadas s
 
 Añade lo que te ayude a hacer tu trabajo. Esta es tu chuleta.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

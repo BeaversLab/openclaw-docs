@@ -374,6 +374,6 @@ Notas:
   - "múltiples canales/temas por el mismo agente con diferentes `cwd`"
   - "patrones de nomenclatura de equipos (`codex-1`, `claude-repo-x`)".
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

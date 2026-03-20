@@ -1,16 +1,16 @@
 ---
-summary: "Usa los modelos de Mistral y la transcripción de Voxtral con OpenClaw"
+summary: "Usa modelos de Mistral y transcripción de Voxtral con OpenClaw"
 read_when:
-  - You want to use Mistral models in OpenClaw
-  - You need Mistral API key onboarding and model refs
+  - Quieres usar modelos de Mistral en OpenClaw
+  - Necesitas la incorporación de la clave API de Mistral y referencias de modelos
 title: "Mistral"
 ---
 
 # Mistral
 
-OpenClaw soporta Mistral tanto para el enrutamiento de modelos de texto/imagen (`mistral/...`) como para
-la transcripción de audio mediante Voxtral en la comprensión de medios.
-Mistral también se puede utilizar para incrustaciones de memoria (`memorySearch.provider = "mistral"`).
+OpenClaw es compatible con Mistral tanto para el enrutamiento de modelos de texto/imagen (`mistral/...`) como para
+la transcripción de audio a través de Voxtral en la comprensión de medios.
+Mistral también se puede usar para incrustaciones de memoria (`memorySearch.provider = "mistral"`).
 
 ## Configuración de CLI
 
@@ -47,12 +47,12 @@ openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
 ## Notas
 
 - La autenticación de Mistral usa `MISTRAL_API_KEY`.
-- La URL base del proveedor por defecto es `https://api.mistral.ai/v1`.
+- La URL base del proveedor es `https://api.mistral.ai/v1` de forma predeterminada.
 - El modelo predeterminado de incorporación es `mistral/mistral-large-latest`.
-- El modelo de audio predeterminado de comprensión de medios para Mistral es `voxtral-mini-latest`.
+- El modelo de audio predeterminado para la comprensión de medios de Mistral es `voxtral-mini-latest`.
 - La ruta de transcripción de medios usa `/v1/audio/transcriptions`.
 - La ruta de incrustaciones de memoria usa `/v1/embeddings` (modelo predeterminado: `mistral-embed`).
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

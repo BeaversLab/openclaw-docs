@@ -1,8 +1,8 @@
 ---
-summary: "Referencia de CLI para `openclaw voicecall` (superficie de comandos del complemento de llamada de voz)"
+summary: "Referencia de la CLI para `openclaw voicecall` (superficie de comando del complemento de llamada de voz)"
 read_when:
-  - You use the voice-call plugin and want the CLI entry points
-  - You want quick examples for `voicecall call|continue|status|tail|expose`
+  - Usas el complemento de llamada de voz y quieres los puntos de entrada de la CLI
+  - Quieres ejemplos rápidos para `voicecall call|continue|status|tail|expose`
 title: "voicecall"
 ---
 
@@ -12,7 +12,7 @@ title: "voicecall"
 
 Documentación principal:
 
-- Complemento de llamada de voz: [Voice Call](/es/plugins/voice-call)
+- Complemento de llamada de voz: [Llamada de voz](/es/plugins/voice-call)
 
 ## Comandos comunes
 
@@ -31,8 +31,8 @@ openclaw voicecall expose --mode funnel
 openclaw voicecall expose --mode off
 ```
 
-Nota de seguridad: solo exponga el endpoint del webhook a redes en las que confíe. Prefiera Tailscale Serve sobre Funnel cuando sea posible.
+Nota de seguridad: solo expon el endpoint del webhook a redes en las que confíes. Prefiere Tailscale Serve sobre Funnel cuando sea posible.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

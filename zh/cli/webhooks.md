@@ -1,14 +1,14 @@
 ---
-summary: "CLI 参考 for `openclaw webhooks` (webhook helpers + Gmail Pub/Sub)"
+summary: "CLI 参考 `openclaw webhooks` （webhook 帮助程序 + Gmail Pub/Sub）"
 read_when:
-  - You want to wire Gmail Pub/Sub events into OpenClaw
-  - You want webhook helper commands
+  - 您希望将 Gmail Pub/Sub 事件连接到 OpenClaw
+  - 您希望使用 webhook 帮助程序命令
 title: "webhooks"
 ---
 
 # `openclaw webhooks`
 
-Webhook 辅助工具和集成（Gmail Pub/Sub、webhook 辅助工具）。
+Webhook 帮助程序和集成（Gmail Pub/Sub、webhook 帮助程序）。
 
 相关：
 
@@ -24,6 +24,6 @@ openclaw webhooks gmail run
 
 有关详细信息，请参阅 [Gmail Pub/Sub 文档](/zh/automation/gmail-pubsub)。
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

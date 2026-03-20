@@ -1,8 +1,8 @@
 ---
 summary: "Canal DM de Nostr a través de mensajes cifrados NIP-04"
 read_when:
-  - You want OpenClaw to receive DMs via Nostr
-  - You're setting up decentralized messaging
+  - Quieres que OpenClaw reciba DMs a través de Nostr
+  - Estás configurando la mensajería descentralizada
 title: "Nostr"
 ---
 
@@ -10,21 +10,21 @@ title: "Nostr"
 
 **Estado:** Complemento opcional (desactivado por defecto).
 
-Nostr es un protocolo descentralizado para redes sociales. Este canal permite a OpenClaw recibir y responder a mensajes directos cifrados (DM) a través de NIP-04.
+Nostr es un protocolo descentralizado para redes sociales. Este canal permite a OpenClaw recibir y responder a mensajes directos (DMs) cifrados a través de NIP-04.
 
-## Instalación (bajo demanda)
+## Instalar (bajo demanda)
 
 ### Incorporación (recomendado)
 
-- Onboarding (`openclaw onboard`) y `openclaw channels add` listan los complementos de canal opcionales.
-- Seleccionar Nostr le pedirá que instale el complemento bajo demanda.
+- La incorporación (`openclaw onboard`) y `openclaw channels add` enumeran los complementos de canal opcionales.
+- Seleccionar Nostr te solicita instalar el complemento bajo demanda.
 
 Valores predeterminados de instalación:
 
-- **Canal de desarrollo + git checkout disponible:** utiliza la ruta local del complemento.
+- **Canal de desarrollo + git checkout disponible:** usa la ruta local del complemento.
 - **Estable/Beta:** descargas desde npm.
 
-Siempre puede anular la elección en el mensaje.
+Siempre puedes anular la elección en el mensaje.
 
 ### Instalación manual
 
@@ -32,13 +32,13 @@ Siempre puede anular la elección en el mensaje.
 openclaw plugins install @openclaw/nostr
 ```
 
-Use un checkout local (flujos de trabajo de desarrollo):
+Usar un checkout local (flujos de trabajo de desarrollo):
 
 ```bash
 openclaw plugins install --link <path-to-openclaw>/extensions/nostr
 ```
 
-Reinicie la puerta de enlace (Gateway) después de instalar o activar complementos.
+Reinicia el Gateway después de instalar o habilitar complementos.
 
 ### Configuración no interactiva
 
@@ -47,11 +47,11 @@ openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY"
 openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY" --relay-urls "wss://relay.damus.io,wss://relay.primal.net"
 ```
 
-Use `--use-env` para mantener `NOSTR_PRIVATE_KEY` en el entorno en lugar de almacenar la clave en la configuración.
+Usa `--use-env` para mantener `NOSTR_PRIVATE_KEY` en el entorno en lugar de almacenar la clave en la configuración.
 
 ## Configuración rápida
 
-1. Genere un par de claves Nostr (si es necesario):
+1. Genera un par de claves Nostr (si es necesario):
 
 ```bash
 # Using nak
@@ -76,23 +76,23 @@ nak key generate
 export NOSTR_PRIVATE_KEY="nsec1..."
 ```
 
-4. Reinicie el Gateway.
+4. Reinicia el Gateway.
 
 ## Referencia de configuración
 
-| Clave        | Tipo     | Predeterminado                              | Descripción                                   |
-| ------------ | -------- | ------------------------------------------- | --------------------------------------------- |
-| `privateKey` | string   | requerido                                   | Clave privada en formato `nsec` o hexadecimal |
-| `relays`     | string[] | `['wss://relay.damus.io', 'wss://nos.lol']` | URLs de relay (WebSocket)                     |
-| `dmPolicy`   | string   | `pairing`                                   | Política de acceso DM                         |
-| `allowFrom`  | string[] | `[]`                                        | Claves públicas de remitentes permitidos      |
-| `enabled`    | boolean  | `true`                                      | Habilitar/deshabilitar canal                  |
-| `name`       | string   | -                                           | Nombre para mostrar                           |
-| `profile`    | object   | -                                           | Metadatos de perfil NIP-01                    |
+| Clave          | Tipo     | Predeterminado                                     | Descripción                         |
+| ------------ | -------- | ------------------------------------------- | ----------------------------------- |
+| `privateKey` | string   | requerido                                    | Clave privada en formato `nsec` o hexadecimal |
+| `relays`     | string[] | `['wss://relay.damus.io', 'wss://nos.lol']` | URLs de Relay (WebSocket)              |
+| `dmPolicy`   | string   | `pairing`                                   | Política de acceso DM                    |
+| `allowFrom`  | string[] | `[]`                                        | Claves públicas de remitentes permitidos              |
+| `enabled`    | boolean  | `true`                                      | Habilitar/deshabilitar canal              |
+| `name`       | string   | -                                           | Nombre para mostrar                        |
+| `profile`    | object   | -                                           | Metadatos del perfil NIP-01             |
 
-## Metadatos de perfil
+## Metadatos del perfil
 
-Los datos del perfil se publican como un evento NIP-01 `kind:0`. Puede gestionarlos desde la UI de Control (Channels -> Nostr -> Profile) o establecerlos directamente en la configuración.
+Los datos del perfil se publican como un evento `kind:0` de NIP-01. Puedes gestionarlo desde la UI de Control (Canales -> Nostr -> Perfil) o configurarlo directamente en el archivo de configuración.
 
 Ejemplo:
 
@@ -125,12 +125,12 @@ Notas:
 
 ### Políticas de DM
 
-- **pairing** (predeterminado): los remitentes desconocidos reciben un código de emparejamiento.
-- **allowlist**: solo las claves públicas en `allowFrom` pueden enviar DM.
-- **open**: DM entrantes públicos (requiere `allowFrom: ["*"]`).
-- **disabled**: ignorar DM entrantes.
+- **emparejamiento** (predeterminado): los remitentes desconocidos obtienen un código de emparejamiento.
+- **lista de permitidos**: solo las claves públicas en `allowFrom` pueden enviar MD.
+- **abierto**: MD entrantes públicos (requiere `allowFrom: ["*"]`).
+- **deshabilitado**: ignorar los MD entrantes.
 
-### Ejemplo de lista blanca
+### Ejemplo de lista de permitidos
 
 ```json
 {
@@ -151,7 +151,7 @@ Formatos aceptados:
 - **Clave privada:** `nsec...` o hexadecimal de 64 caracteres
 - **Claves públicas (`allowFrom`):** `npub...` o hexadecimal
 
-## Relays
+## Retransmisores
 
 Predeterminados: `relay.damus.io` y `nos.lol`.
 
@@ -168,23 +168,23 @@ Predeterminados: `relay.damus.io` y `nos.lol`.
 
 Consejos:
 
-- Use 2-3 relays para redundancia.
-- Evita demasiados relés (latencia, duplicación).
-- Los relés de pago pueden mejorar la fiabilidad.
-- Los relés locales son adecuados para pruebas (`ws://localhost:7777`).
+- Use 2-3 retransmisores para redundancia.
+- Evite demasiados retransmisores (latencia, duplicación).
+- Los retransmisores de pago pueden mejorar la confiabilidad.
+- Los retransmisores locales son adecuados para pruebas (`ws://localhost:7777`).
 
 ## Soporte de protocolo
 
-| NIP    | Estado      | Descripción                                     |
-| ------ | ----------- | ----------------------------------------------- |
-| NIP-01 | Compatible  | Formato básico de eventos + metadatos de perfil |
-| NIP-04 | Compatible  | MD cifrados (`kind:4`)                          |
-| NIP-17 | Planificado | MD envueltos (gift-wrapped)                     |
-| NIP-44 | Planificado | Cifrado con versión                             |
+| NIP    | Estado    | Descripción                           |
+| ------ | --------- | ------------------------------------- |
+| NIP-01 | Compatible | Formato de evento básico + metadatos de perfil |
+| NIP-04 | Soportado | MD cifrados (`kind:4`)              |
+| NIP-17 | Planificado   | MD envueltos (gift-wrapped)                      |
+| NIP-44 | Planificado   | Cifrado con versión                  |
 
 ## Pruebas
 
-### Relé local
+### Retransmisor local
 
 ```bash
 # Start strfry
@@ -204,43 +204,43 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ### Prueba manual
 
-1. Anota la clave pública del bot (npub) de los registros.
-2. Abre un cliente de Nostr (Damus, Amethyst, etc.).
-3. Envía un MD a la clave pública del bot.
-4. Verifica la respuesta.
+1. Anote la clave pública del bot (npub) de los registros.
+2. Abra un cliente de Nostr (Damus, Amethyst, etc.).
+3. Envíe un MD a la clave pública del bot.
+4. Verifique la respuesta.
 
 ## Solución de problemas
 
-### No se reciben mensajes
+### No recibe mensajes
 
-- Verifica que la clave privada sea válida.
-- Asegúrate de que las URL de los relés sean accesibles y usen `wss://` (o `ws://` para local).
-- Confirma que `enabled` no sea `false`.
-- Revisa los registros de Gateway para ver errores de conexión de relé.
+- Verifique que la clave privada sea válida.
+- Asegúrese de que las URL de los retransmisores sean accesibles y usen `wss://` (o `ws://` para locales).
+- Confirme que `enabled` no sea `false`.
+- Verifique los registros de Gateway para ver errores de conexión del retransmisor.
 
-### No se envían respuestas
+### No envía respuestas
 
-- Comprueba que el relé acepte escrituras.
-- Verifica la conectividad saliente.
-- Vigila los límites de tasa del relé.
+- Compruebe que el retransmisor acepte escrituras.
+- Verifique la conectividad saliente.
+- Vigile los límites de velocidad del retransmisor.
 
 ### Respuestas duplicadas
 
-- Esperado al usar múltiples relés.
+- Esperado al utilizar varios retransmisores.
 - Los mensajes se deduplican por ID de evento; solo la primera entrega activa una respuesta.
 
 ## Seguridad
 
-- Nunca confirmes claves privadas.
-- Usa variables de entorno para las claves.
-- Considera `allowlist` para bots en producción.
+- Nunca confirme claves privadas.
+- Use variables de entorno para las claves.
+- Considere `allowlist` para bots de producción.
 
 ## Limitaciones (MVP)
 
 - Solo mensajes directos (sin chats grupales).
-- Sin archivos adjuntos multimedia.
-- Solo NIP-04 (gift-wrap NIP-17 planificado).
+- Sin archivos multimedia adjuntos.
+- Solo NIP-04 (se planea NIP-17 gift-wrap).
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

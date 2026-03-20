@@ -374,6 +374,6 @@ Notes :
   - « plusieurs channels/topics pour le même agent avec différents `cwd` »
   - « modèles de nommage d'équipe (`codex-1`, `claude-repo-x`) ».
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

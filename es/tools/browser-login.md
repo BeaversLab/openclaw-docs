@@ -1,35 +1,35 @@
 ---
-summary: "Manual logins para la automatización del navegador + publicaciones en X/Twitter"
+summary: "Inicio de sesión manual para la automatización del navegador + publicación en X/Twitter"
 read_when:
-  - You need to log into sites for browser automation
-  - You want to post updates to X/Twitter
+  - Necesitas iniciar sesión en sitios para la automatización del navegador
+  - Quieres publicar actualizaciones en X/Twitter
 title: "Inicio de sesión en el navegador"
 ---
 
-# Inicio de sesión en el navegador + publicaciones en X/Twitter
+# Inicio de sesión en el navegador + publicación en X/Twitter
 
 ## Inicio de sesión manual (recomendado)
 
-Cuando un sitio requiera inicio de sesión, **inicie sesión manualmente** en el perfil del navegador **host** (el navegador openclaw).
+Cuando un sitio requiera inicio de sesión, **inicia sesión manualmente** en el perfil del navegador **host** (el navegador openclaw).
 
-**No** proporcione sus credenciales al modelo. Los inicios de sesión automatizados a menudo activan defensas anti-bot y pueden bloquear la cuenta.
+**No** le des tus credenciales al modelo. Los inicios de sesión automatizados a menudo activan defensas anti-bot y pueden bloquear la cuenta.
 
-Volver a la documentación principal del navegador: [Browser](/es/tools/browser).
+Volver a los documentos principales del navegador: [Browser](/es/tools/browser).
 
 ## ¿Qué perfil de Chrome se utiliza?
 
-OpenClaw controla un **perfil dedicado de Chrome** (denominado `openclaw`, interfaz de usuario de tono naranja). Esto es independiente de su perfil de navegador diario.
+OpenClaw controla un **perfil de Chrome dedicado** (con el nombre `openclaw`, interfaz de usuario de tono naranja). Esto está separado de tu perfil de navegador diario.
 
-Para las llamadas a herramientas de navegador del agente:
+Para las llamadas a herramientas del navegador del agente:
 
 - Elección predeterminada: el agente debe usar su navegador aislado `openclaw`.
-- Use `profile="user"` solo cuando importen las sesiones iniciadas existentes y el usuario esté en la computadora para hacer clic/aprobar cualquier mensaje de adjunto.
-- Si tienes varios perfiles de navegador de usuario, especifica el perfil explícitamente en lugar de adivinar.
+- Usa `profile="user"` solo cuando las sesiones iniciadas existentes importen y el usuario esté en la computadora para hacer clic/aprobar cualquier mensaje de adjuntar.
+- Si tiene varios perfiles de navegador de usuario, especifique el perfil explícitamente en lugar de adivinar.
 
 Dos formas fáciles de acceder a él:
 
-1. **Pídele al agente que abra el navegador** y luego inicia sesión tú mismo.
-2. **Ábrelo a través de la CLI**:
+1. **Pídale al agente que abra el navegador** y luego inicie sesión usted mismo.
+2. **Abrirlo a través de CLI**:
 
 ```bash
 openclaw browser start
@@ -40,12 +40,12 @@ Si tienes varios perfiles, pasa `--browser-profile <name>` (el predeterminado es
 
 ## X/Twitter: flujo recomendado
 
-- **Leer/buscar/hilos:** usa el navegador **host** (inicio de sesión manual).
-- **Publicar actualizaciones:** usa el navegador **host** (inicio de sesión manual).
+- **Leer/buscar/hilos:** use el navegador **host** (inicio de sesión manual).
+- **Publicar actualizaciones:** use el navegador **host** (inicio de sesión manual).
 
-## Sandboxing + acceso al navegador host
+## Sandboxeo + acceso al navegador host
 
-Las sesiones de navegador en sandbox **son más propensas** a activar la detección de bots. Para X/Twitter (y otros sitios estrictos), prefiere el navegador **host**.
+Las sesiones de navegador en sandbox tienen **más probabilidades** de activar la detección de bots. Para X/Twitter (y otros sitios estrictos), prefiera el navegador **host**.
 
 Si el agente está en sandbox, la herramienta del navegador usa el sandbox de forma predeterminada. Para permitir el control del host:
 
@@ -64,14 +64,14 @@ Si el agente está en sandbox, la herramienta del navegador usa el sandbox de fo
 }
 ```
 
-Luego apunta al navegador host:
+Luego apunte al navegador host:
 
 ```bash
 openclaw browser open https://x.com --browser-profile openclaw --target host
 ```
 
-O deshabilita el sandboxing para el agente que publica actualizaciones.
+O desactive el sandboxeo para el agente que publica actualizaciones.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

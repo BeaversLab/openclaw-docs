@@ -1,33 +1,36 @@
 ---
-summary: "Appariement de nœuds détenu par Gateway (Option B) pour iOS et d'autres nœuds distants"
+summary: "Jumelage de nœuds possédés par Gateway (Option B) pour iOS et autres nœuds distants"
 read_when:
-  - Implementing node pairing approvals without macOS UI
-  - Adding CLI flows for approving remote nodes
-  - Extending gateway protocol with node management
-title: "Appariement détenu par Gateway"
+  - Implémentation des approbations de jumelage de nœuds sans l'interface utilisateur macOS
+  - Ajout de flux CLI pour l'approbation des nœuds distants
+  - Extension du protocole de passerelle avec la gestion des nœuds
+title: "Jumelage possédé par Gateway"
 ---
 
-# Appariement détenu par Gateway (Option B)
+# Jumelage possédé par Gateway (Option B)
 
-Dans l'appariement détenu par Gateway, la **Gateway** est la source de vérité pour les nœuds autorisés à rejoindre. Les interfaces utilisateur (application macOS, futurs clients) ne sont que des interfaces qui approuvent ou rejettent les demandes en attente.
+Dans le jumelage possédé par Gateway, le **Gateway** est la source de vérité pour les nœuds
+autorisés à rejoindre. Les interfaces utilisateur (application macOS, clients futurs) ne sont que des interfaces frontales qui
+approuvent ou rejettent les demandes en attente.
 
-**Important :** Les nœuds WS utilisent l'**appareillage d'appareil** (rôle `node`) pendant `connect`.
-`node.pair.*` est un magasin d'appariement distinct et ne verrouille **pas** la poignée de main WS.
+**Important :** Les nœuds WS utilisent le **jumelage d'appareil** (rôle `node`) pendant `connect`.
+`node.pair.*` est un magasin de jumelage distinct et ne **bloque pas** la poignée de main WS.
 Seuls les clients qui appellent explicitement `node.pair.*` utilisent ce flux.
 
 ## Concepts
 
 - **Demande en attente** : un nœud a demandé à rejoindre ; nécessite une approbation.
-- **Nœud appairé** : nœud approuvé avec un jeton d'authentification émis.
-- **Transport** : le point de terminaison WS de la Gateway transfère les demandes mais ne décide pas de l'appartenance. (La prise en charge du pont TCP hérité est obsolète/supprimée.)
+- **Nœud jumelé** : nœud approuvé avec un jeton d'authentification émis.
+- **Transport** : le point de terminaison WS Gateway transfère les demandes mais ne décide pas
+  de l'appartenance. (La prise en charge du pont TCP hérité est obsolète/supprimée.)
 
-## Fonctionnement de l'appariement
+## Fonctionnement du jumelage
 
-1. Un nœud se connecte au WS de la Gateway et demande l'appariement.
-2. La Gateway stocke une **demande en attente** et émet `node.pair.requested`.
+1. Un nœud se connecte au WS Gateway et demande le jumelage.
+2. Le Gateway stocke une **demande en attente** et émet `node.pair.requested`.
 3. Vous approuvez ou rejetez la demande (CLI ou interface utilisateur).
-4. Lors de l'approbation, la Gateway émet un **nouveau jeton** (les jetons sont remplacés lors du ré-appariement).
-5. Le nœud se reconnecte à l'aide du jeton et est désormais « appairé ».
+4. Lors de l'approbation, le Gateway émet un **nouveau jeton** (les jetons sont alternés lors du ré‑jumelage).
+5. Le nœud se reconnecte à l'aide du jeton et est désormais « jumelé ».
 
 Les demandes en attente expirent automatiquement après **5 minutes**.
 
@@ -41,24 +44,24 @@ openclaw nodes status
 openclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
 ```
 
-`nodes status` affiche les nœuds appairés/connectés et leurs capacités.
+`nodes status` affiche les nœuds jumelés/connectés et leurs capacités.
 
-## Surface de l'API (protocole de passerelle)
+## Surface API (protocole de passerelle)
 
 Événements :
 
 - `node.pair.requested` — émis lorsqu'une nouvelle demande en attente est créée.
-- `node.pair.resolved` — émis lorsqu'une demande est approuvée/rejetée/expirée.
+- `node.pair.resolved` — émis lorsqu'une demande est approuvée/rejetée/expire.
 
 Méthodes :
 
 - `node.pair.request` — créer ou réutiliser une demande en attente.
-- `node.pair.list` — lister les nœuds en attente + appairés.
+- `node.pair.list` — lister les nœuds en attente + jumelés.
 - `node.pair.approve` — approuver une demande en attente (émet un jeton).
 - `node.pair.reject` — rejeter une demande en attente.
 - `node.pair.verify` — vérifier `{ nodeId, token }`.
 
-Remarques :
+Notes :
 
 - `node.pair.request` est idempotent par nœud : les appels répétés renvoient la même demande en attente.
 - L'approbation génère **toujours** un nouveau jeton ; aucun jeton n'est jamais renvoyé par `node.pair.request`.
@@ -75,12 +78,12 @@ Si l'approbation silencieuse échoue, elle revient à l'invite normale « Approu
 
 ## Stockage (local, privé)
 
-L'état de l'appariement est stocké dans le répertoire d'état du Gateway (par défaut `~/.openclaw`) :
+L'état de jumelage est stocké dans le répertoire d'état de la passerelle (par défaut `~/.openclaw`) :
 
 - `~/.openclaw/nodes/paired.json`
 - `~/.openclaw/nodes/pending.json`
 
-Si vous remplacez `OPENCLAW_STATE_DIR`, le dossier `nodes/` se déplace avec lui.
+Si vous remplacez `OPENCLAW_STATE_DIR`, le dossier `nodes/` se déplace avec.
 
 Notes de sécurité :
 
@@ -90,9 +93,9 @@ Notes de sécurité :
 ## Comportement du transport
 
 - Le transport est **sans état** ; il ne stocke pas l'appartenance.
-- Si le Gateway est hors ligne ou si l'appariement est désactivé, les nœuds ne peuvent pas s'apparier.
-- Si le Gateway est en mode distant, l'appariement s'effectue toujours par rapport au stockage du Gateway distant.
+- Si la passerelle est hors ligne ou si le jumelage est désactivé, les nœuds ne peuvent pas se jumeler.
+- Si la passerelle est en mode distant, le jumelage s'effectue toujours par rapport au magasin de la passerelle distante.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

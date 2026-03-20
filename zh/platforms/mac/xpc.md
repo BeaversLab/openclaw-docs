@@ -1,13 +1,13 @@
 ---
-summary: "OpenClaw 应用、网关节点传输和 PeekabooBridge 的 macOS IPC 架构"
+summary: "macOS IPC 架构，用于 OpenClaw 应用、Gateway 节点传输和 PeekabooBridge"
 read_when:
-  - Editing IPC contracts or menu bar app IPC
+  - 编辑 IPC 契约或菜单栏应用 IPC
 title: "macOS IPC"
 ---
 
 # OpenClaw macOS IPC 架构
 
-**当前模型：** 一个本地 Unix 套接字将 **节点主机服务 (node host service)** 连接到 **macOS 应用**，用于执行审批 + `system.run`。存在一个 `openclaw-mac` 调试 CLI 用于发现/连接检查；代理操作仍然通过 Gateway 网关 WebSocket 和 `node.invoke` 流式传输。UI 自动化使用 PeekabooBridge。
+**当前模型：** 一个本地 Unix 套接字将 **节点主机服务** 连接到 **macOS 应用**，用于执行批准 + `system.run`。存在一个 `openclaw-mac` 调试 CLI 用于发现/连接检查；代理操作仍通过 Gateway(网关) WebSocket 和 `node.invoke` 流动。UI 自动化使用 PeekabooBridge。
 
 ## 目标
 
@@ -39,14 +39,14 @@ Agent -> Gateway -> Node Service (WS)
 
 ### PeekabooBridge (UI 自动化)
 
-- UI 自动化使用一个名为 `bridge.sock` 的独立 UNIX 套接字和 PeekabooBridge JSON 协议。
+- UI 自动化使用名为 `bridge.sock` 的独立 UNIX 套接字和 PeekabooBridge JSON 协议。
 - 主机首选项顺序（客户端）：Peekaboo.app → Claude.app → OpenClaw.app → 本地执行。
-- 安全性：网桥主机需要允许的 TeamID；仅限 DEBUG 的同 UID 逃生舱由 `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` 保护（Peekaboo 约定）。
-- 详情请参阅：[PeekabooBridge 使用指南](/zh/platforms/mac/peekaboo)。
+- 安全性：网桥主机需要允许的 TeamID；仅限 DEBUG 的同 UID 逃生舱由 `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1`（Peekaboo 约定）保护。
+- 参见：[PeekabooBridge 使用](/zh/platforms/mac/peekaboo) 了解详情。
 
 ## 操作流程
 
-- 重启/重建：`SIGN_IDENTITY="Apple Development: <Developer Name> (<TEAMID>)" scripts/restart-mac.sh`
+- 重启/重新构建：`SIGN_IDENTITY="Apple Development: <Developer Name> (<TEAMID>)" scripts/restart-mac.sh`
   - 终止现有实例
   - Swift 构建与打包
   - 写入/引导/启动 LaunchAgent
@@ -55,11 +55,11 @@ Agent -> Gateway -> Node Service (WS)
 ## 加固说明
 
 - 对于所有特权接口，优先要求 TeamID 匹配。
-- PeekabooBridge：`PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1`（仅限 DEBUG）可能出于本地开发目的允许具有相同 UID 的调用者。
+- PeekabooBridge：`PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1`（仅限 DEBUG）可能允许同 UID 调用者进行本地开发。
 - 所有通信保持仅限本地；不暴露任何网络套接字。
 - TCC 提示仅源自 GUI app 包；在重新构建期间保持签名 Bundle ID 的稳定。
-- IPC 加固：socket 模式 `0600`、令牌、对等 UID 检查、HMAC 质询/响应、短 TTL。
+- IPC 加固：套接字模式 `0600`、令牌、对等 UID 检查、HMAC 挑战/响应、短 TTL。
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

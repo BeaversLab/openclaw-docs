@@ -1,8 +1,8 @@
 ---
 summary: "Ejecutar OpenClaw con vLLM (servidor local compatible con OpenAI)"
 read_when:
-  - You want to run OpenClaw against a local vLLM server
-  - You want OpenAI-compatible /v1 endpoints with your own models
+  - Quieres ejecutar OpenClaw contra un servidor vLLM local
+  - Quieres endpoints /v1 compatibles con OpenAI con tus propios modelos
 title: "vLLM"
 ---
 
@@ -10,23 +10,23 @@ title: "vLLM"
 
 vLLM puede servir modelos de código abierto (y algunos personalizados) a través de una API HTTP **compatible con OpenAI**. OpenClaw puede conectarse a vLLM utilizando la API `openai-completions`.
 
-OpenClaw también puede **detectar automáticamente** los modelos disponibles en vLLM cuando se habilita con `VLLM_API_KEY` (cualquier valor funciona si su servidor no exige autenticación) y no define una entrada `models.providers.vllm` explícita.
+OpenClaw también puede **descubrir automáticamente** los modelos disponibles en vLLM cuando te suscribes con `VLLM_API_KEY` (cualquier valor funciona si tu servidor no aplica autenticación) y no defines una entrada `models.providers.vllm` explícita.
 
 ## Inicio rápido
 
 1. Inicie vLLM con un servidor compatible con OpenAI.
 
-Su URL base debe exponer endpoints `/v1` (por ejemplo, `/v1/models`, `/v1/chat/completions`). vLLM se ejecuta comúnmente en:
+Su URL base debe exponer endpoints `/v1` (por ejemplo, `/v1/models`, `/v1/chat/completions`). vLLM comúnmente se ejecuta en:
 
 - `http://127.0.0.1:8000/v1`
 
-2. Optar por participar (cualquier valor funciona si no se ha configurado autenticación):
+2. Suscribirse (cualquier valor funciona si no hay autenticación configurada):
 
 ```bash
 export VLLM_API_KEY="vllm-local"
 ```
 
-3. Seleccione un modelo (reemplácelo con uno de sus IDs de modelos vLLM):
+3. Seleccione un modelo (reemplazar con uno de sus IDs de modelos vLLM):
 
 ```json5
 {
@@ -40,21 +40,21 @@ export VLLM_API_KEY="vllm-local"
 
 ## Descubrimiento de modelos (proveedor implícito)
 
-Cuando se establece `VLLM_API_KEY` (o existe un perfil de autenticación) y **no** define `models.providers.vllm`, OpenClaw consultará:
+Cuando `VLLM_API_KEY` está configurado (o existe un perfil de autenticación) y **no** defines `models.providers.vllm`, OpenClaw consultará:
 
 - `GET http://127.0.0.1:8000/v1/models`
 
-...y convertirá los IDs devueltos en entradas de modelo.
+...y convertirá los IDs devueltos en entradas de modelos.
 
-Si establece `models.providers.vllm` explícitamente, se omitirá el descubrimiento automático y deberá definir los modelos manualmente.
+Si configuras `models.providers.vllm` explícitamente, el descubrimiento automático se omite y debes definir los modelos manualmente.
 
 ## Configuración explícita (modelos manuales)
 
 Use configuración explícita cuando:
 
 - vLLM se ejecuta en un host/puerto diferente.
-- Desea fijar los valores de `contextWindow`/`maxTokens`.
-- Su servidor requiere una clave de API real (o desea controlar los encabezados).
+- Quieres fijar los valores `contextWindow`/`maxTokens`.
+- Su servidor requiere una clave de API real (o quieres controlar los encabezados).
 
 ```json5
 {
@@ -83,14 +83,14 @@ Use configuración explícita cuando:
 
 ## Solución de problemas
 
-- Compruebe que el servidor es accesible:
+- Compruebe que el servidor sea accesible:
 
 ```bash
 curl http://127.0.0.1:8000/v1/models
 ```
 
-- Si las solicitudes fallan con errores de autenticación, establezca una `VLLM_API_KEY` real que coincida con la configuración de su servidor, o configure el proveedor explícitamente bajo `models.providers.vllm`.
+- Si las solicitudes fallan con errores de autenticación, configure una `VLLM_API_KEY` real que coincida con la configuración de su servidor, o configure el proveedor explícitamente bajo `models.providers.vllm`.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

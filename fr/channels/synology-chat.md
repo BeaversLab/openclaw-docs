@@ -1,8 +1,8 @@
 ---
-summary: "Configuration du webhook Synology Chat et configuration OpenClaw"
+summary: "Configuration du webhook Synology Chat et de OpenClaw"
 read_when:
-  - Setting up Synology Chat with OpenClaw
-  - Debugging Synology Chat webhook routing
+  - Configuration de Synology Chat avec OpenClaw
+  - Débogage du routage des webhooks Synology Chat
 title: "Synology Chat"
 ---
 
@@ -14,9 +14,9 @@ via un webhook entrant Synology Chat.
 
 ## Plugin requis
 
-Synology Chat est basé sur un plugin et ne fait pas partie de l'installation par défaut des channel de base.
+Synology Chat est basé sur un plugin et ne fait pas partie de l'installation des channels core par défaut.
 
-Installer depuis une copie locale :
+Installer à partir d'une copie locale :
 
 ```bash
 openclaw plugins install ./extensions/synology-chat
@@ -24,7 +24,7 @@ openclaw plugins install ./extensions/synology-chat
 
 Détails : [Plugins](/fr/tools/plugin)
 
-## Installation rapide
+## Configuration rapide
 
 1. Installez et activez le plugin Synology Chat.
    - `openclaw onboard` affiche désormais Synology Chat dans la même liste de configuration de channel que `openclaw channels add`.
@@ -70,13 +70,13 @@ Pour le compte par défaut, vous pouvez utiliser les env vars :
 - `SYNOLOGY_RATE_LIMIT`
 - `OPENCLAW_BOT_NAME`
 
-Les valeurs de configuration remplacent les env vars.
+Les valeurs de configuration prévalent sur les env vars.
 
-## Politique de DM et contrôle d'accès
+## Stratégie DM et contrôle d'accès
 
 - `dmPolicy: "allowlist"` est la valeur par défaut recommandée.
 - `allowedUserIds` accepte une liste (ou une chaîne séparée par des virgules) d'ID utilisateur Synology.
-- En mode `allowlist`, une liste `allowedUserIds` vide est considérée comme une mauvaise configuration et la route du webhook ne démarrera pas (utilisez `dmPolicy: "open"` pour tout autoriser).
+- En mode `allowlist`, une liste `allowedUserIds` vide est considérée comme une mauvaise configuration et la route webhook ne démarrera pas (utilisez `dmPolicy: "open"` pour tout autoriser).
 - `dmPolicy: "open"` autorise n'importe quel expéditeur.
 - `dmPolicy: "disabled"` bloque les DMs.
 - Les approbations d'appariement fonctionnent avec :
@@ -85,7 +85,7 @@ Les valeurs de configuration remplacent les env vars.
 
 ## Livraison sortante
 
-Utilisez les ID utilisateur numériques Synology Chat comme cibles.
+Utilisez les ID numériques des utilisateurs Synology Chat comme cibles.
 
 Exemples :
 
@@ -99,7 +99,7 @@ Les envois de médias sont pris en charge par la livraison de fichiers basée su
 ## Multi-compte
 
 Plusieurs comptes Synology Chat sont pris en charge sous `channels.synology-chat.accounts`.
-Chaque compte peut remplacer le jeton, l'URL entrante, le chemin du webhook, la politique de DM et les limites.
+Chaque compte peut remplacer le jeton, l'URL entrante, le chemin du webhook, la politique DM et les limites.
 
 ```json5
 {
@@ -128,9 +128,9 @@ Chaque compte peut remplacer le jeton, l'URL entrante, le chemin du webhook, la 
 
 - Gardez `token` secret et faites-le tourner s'il est divulgué.
 - Gardez `allowInsecureSsl: false` sauf si vous faites explicitement confiance à un certificat NAS local auto-signé.
-- Les demandes de webhook entrantes sont vérifiées par jeton et limitées en débit par expéditeur.
-- Privilégiez `dmPolicy: "allowlist"` pour la production.
+- Les demandes de webhook entrantes sont vérifiées par jeton et limitées en taux par expéditeur.
+- Préférez `dmPolicy: "allowlist"` pour la production.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

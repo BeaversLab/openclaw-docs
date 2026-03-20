@@ -1,26 +1,26 @@
 ---
-summary: "使用 Qianfan 的統一 API 在 OpenClaw 中存取多種模型"
+summary: "使用 Qianfan 的統一 API 來存取 OpenClaw 中的多種模型"
 read_when:
-  - You want a single API key for many LLMs
-  - You need Baidu Qianfan setup guidance
+  - 您想要單一 API 金鑰用於多個 LLM
+  - 您需要 Baidu Qianfan 設定指引
 title: "Qianfan"
 ---
 
 # Qianfan 提供者指南
 
-Qianfan 是百度的 MaaS 平台，提供了一個 **統一 API**，可透過單一端點和 API 金鑰將請求路由到許多模型。它與 OpenAI 相容，因此大多數 OpenAI SDK 只需切換基礎 URL 即可運作。
+Qianfan 是百度 的 MaaS 平台，提供一個 **統一 API**，可以將請求路由到單一端點和 API 金鑰背後的許多模型。它與 OpenAI 相容，因此大多數 OpenAI SDK 只需切換基礎 URL 即可使用。
 
 ## 先決條件
 
-1. 具備 Qianfan API 存取權限的百度雲端帳戶
-2. 來自 Qianfan 控制台的 API 金鑰
-3. 系統上已安裝 OpenClaw
+1. 一個具備 Qianfan API 存取權限的百度雲帳號
+2. 從 Qianfan 控制台取得的 API 金鑰
+3. 您的系統上已安裝 OpenClaw
 
 ## 取得您的 API 金鑰
 
-1. 造訪 [Qianfan 控制台](https://console.bce.baidu.com/qianfan/ais/console/apiKey)
-2. 建立新應用程式或選取現有應用程式
-3. 產生 API 金鑰（格式：`bce-v3/ALTAK-...`）
+1. 造訪 [Qianfan Console](https://console.bce.baidu.com/qianfan/ais/console/apiKey)
+2. 建立一個新的應用程式或選擇現有的應用程式
+3. 產生 API 金鑰 (格式：`bce-v3/ALTAK-...`)
 4. 複製 API 金鑰以供 OpenClaw 使用
 
 ## CLI 設定
@@ -31,11 +31,11 @@ openclaw onboard --auth-choice qianfan-api-key
 
 ## 相關文件
 
-- [OpenClaw 設定](/zh-Hant/gateway/configuration)
-- [模型提供者](/zh-Hant/concepts/model-providers)
-- [Agent 設定](/zh-Hant/concepts/agent)
-- [Qianfan API 文件](https://cloud.baidu.com/doc/qianfan-api/s/3m7of64lb)
+- [OpenClaw Configuration](/zh-Hant/gateway/configuration)
+- [Model Providers](/zh-Hant/concepts/model-providers)
+- [Agent Setup](/zh-Hant/concepts/agent)
+- [Qianfan API Documentation](https://cloud.baidu.com/doc/qianfan-api/s/3m7of64lb)
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

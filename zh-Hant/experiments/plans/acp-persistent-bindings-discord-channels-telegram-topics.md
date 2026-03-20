@@ -374,6 +374,6 @@
   - 「同一代理程式對應多個頻道/主題，且具有不同的 `cwd`」
   - 「團隊命名模式 (`codex-1`, `claude-repo-x`)」。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

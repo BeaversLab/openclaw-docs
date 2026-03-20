@@ -1,18 +1,18 @@
 ---
-summary: "面向工作流的纯 JSON LLM 任务（可选插件工具）"
+summary: "用于工作流的仅 JSON LLM 任务（可选插件工具）"
 read_when:
-  - You want a JSON-only LLM step inside workflows
-  - You need schema-validated LLM output for automation
+  - 您希望在工作流中包含一个仅 JSON 的 LLM 步骤
+  - 您需要经过架构验证的 LLM 输出以实现自动化
 title: "LLM 任务"
 ---
 
-# LLM Task
+# LLM 任务
 
-`llm-task` 是一个**可选的插件工具**，用于运行纯 JSON LLM 任务并
-返回结构化输出（可选择根据 JSON Schema 进行验证）。
+`llm-task` 是一个**可选的插件工具**，用于运行仅 JSON 的 LLM 任务并
+返回结构化输出（可选择通过 JSON 架构进行验证）。
 
-这非常适合像 Lobster 这样工作流引擎：您可以添加单个 LLM 步骤，
-而无需为每个工作流编写自定义 OpenClaw 代码。
+这对于像 Lobster 这样的工作流引擎来说是理想的选择：您可以添加单个 LLM 步骤
+而无需为每个工作流编写自定义的 LLM 代码。
 
 ## 启用插件
 
@@ -28,7 +28,7 @@ title: "LLM 任务"
 }
 ```
 
-2. 将该工具列入白名单（它注册于 `optional: true`）：
+2. 将该工具加入白名单（它注册为 `optional: true`）：
 
 ```json
 {
@@ -65,14 +65,14 @@ title: "LLM 任务"
 }
 ```
 
-`allowedModels` 是 `provider/model` 字符串的白名单。如果设置，则列表之外的任何请求
-都会被拒绝。
+`allowedModels` 是 `provider/model` 字符串的白名单。如果设置了该列表，则任何
+超出该列表的请求都会被拒绝。
 
 ## 工具参数
 
 - `prompt`（字符串，必填）
 - `input`（任意类型，可选）
-- `schema`（对象，可选的 JSON Schema）
+- `schema`（对象，可选的 JSON 架构）
 - `provider`（字符串，可选）
 - `model`（字符串，可选）
 - `thinking`（字符串，可选）
@@ -85,8 +85,8 @@ title: "LLM 任务"
 
 ## 输出
 
-返回包含解析后的 JSON 的 `details.json`（并在提供时
-对照 `schema` 进行验证）。
+返回 `details.json`，其中包含已解析的 JSON（并在提供时
+针对 `schema` 进行验证）。
 
 ## 示例：Lobster 工作流步骤
 
@@ -112,12 +112,12 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 
 ## 安全说明
 
-- 该工具是 **仅 JSON** 的，并指示模型仅输出 JSON（无
-  代码块，无评论）。
-- 在此次运行中，没有向模型公开任何工具。
-- 除非使用 `schema` 进行验证，否则请将输出视为不受信任的内容。
-- 在任何产生副作用的步骤（发送、发布、执行）之前放置审批流程。
+- 该工具为**仅 JSON**，并指示模型仅输出 JSON（无
+  代码围栏，无注释）。
+- 在此运行中，没有工具暴露给模型。
+- 除非使用 `schema` 进行验证，否则请将输出视为不受信任。
+- 将审批步骤置于任何产生副作用的步骤（发送、发布、执行）之前。
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

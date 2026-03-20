@@ -1,8 +1,8 @@
 ---
-summary: "Adaptateurs RPC pour les CLI externes (signal-cli, imsg hérité) et modèles de passerelle"
+summary: "Adaptateurs RPC pour CLI externes (signal-cli, imsg hérité) et modèles de passerelle"
 read_when:
-  - Adding or changing external CLI integrations
-  - Debugging RPC adapters (signal-cli, imsg)
+  - Ajout ou modification des intégrations CLI externes
+  - Débogage des adaptateurs RPC (signal-cli, imsg)
 title: "Adaptateurs RPC"
 ---
 
@@ -19,11 +19,11 @@ OpenClaw intègre des CLI externes via JSON-RPC. Deux modèles sont utilisés au
 
 Voir [Signal](/fr/channels/signal) pour la configuration et les points de terminaison.
 
-## Modèle B : Processus enfant stdio (hérité : imsg)
+## Modèle B : processus enfant stdio (hérité : imsg)
 
-> **Remarque :** Pour les nouvelles configurations iMessage, utilisez [BlueBubbles](/fr/channels/bluebubbles) à la place.
+> **Remarque :** Pour les nouvelles configurations iMessage, utilisez plutôt [BlueBubbles](/fr/channels/bluebubbles).
 
-- OpenClaw génère `imsg rpc` en tant que processus enfant (intégration iMessage héritée).
+- OpenClaw lance `imsg rpc` en tant que processus enfant (intégration iMessage héritée).
 - JSON-RPC est délimité par ligne sur stdin/stdout (un objet JSON par ligne).
 - Pas de port TCP, pas de démon requis.
 
@@ -36,12 +36,12 @@ Méthodes principales utilisées :
 
 Voir [iMessage](/fr/channels/imessage) pour la configuration héritée et l'adressage (`chat_id` préféré).
 
-## Directives pour les adaptateurs
+## Directives pour l'adaptateur
 
-- La passerelle possède le processus (démarrage/arrêt lié au cycle de vie du fournisseur).
+- La passerelle gère le processus (démarrage/arrêt lié au cycle de vie du provider).
 - Rendez les clients RPC résilients : délais d'attente, redémarrage à la sortie.
-- Préférez les ID stables (par ex., `chat_id`) aux chaînes d'affichage.
+- Préférez les ID stables (par ex. `chat_id`) aux chaînes d'affichage.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

@@ -1,8 +1,8 @@
 ---
 summary: "Referencia de la CLI para `openclaw pairing` (aprobar/listar solicitudes de emparejamiento)"
 read_when:
-  - You’re using pairing-mode DMs and need to approve senders
-title: "emparejamiento"
+  - Estás usando DMs en modo de emparejamiento y necesitas aprobar remitentes
+title: "pairing"
 ---
 
 # `openclaw pairing`
@@ -29,8 +29,8 @@ openclaw pairing approve --channel telegram --account work <code> --notify
 - Entrada de canal: pásalo posicionalmente (`pairing list telegram`) o con `--channel <channel>`.
 - `pairing list` admite `--account <accountId>` para canales multicuenta.
 - `pairing approve` admite `--account <accountId>` y `--notify`.
-- Si solo hay un canal capaz de emparejamiento configurado, se permite `pairing approve <code>`.
+- Si solo hay un canal con capacidad de emparejamiento configurado, se permite `pairing approve <code>`.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

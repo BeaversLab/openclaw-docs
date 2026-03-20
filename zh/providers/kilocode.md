@@ -1,33 +1,35 @@
 ---
-summary: "使用 Kilo Gateway 网关 的统一 API 访问 OpenClaw 中的许多模型"
+title: "Kilo Gateway(网关)"
+summary: "Use Kilo Gateway(网关)'s unified API to access many models in OpenClaw"
 read_when:
   - You want a single API key for many LLMs
-  - You want to run models via Kilo Gateway in OpenClaw
+  - You want to run models via Kilo Gateway(网关) in OpenClaw
 ---
 
-# Kilo Gateway 网关
+# Kilo Gateway(网关)
 
-Kilo Gateway 网关 提供了一个**统一 API**，它将请求路由到单个端点和 API 密钥后面的许多模型。它与 OpenAI 兼容，因此大多数 OpenAI SDK 只需切换基础 URL 即可工作。
+Kilo Gateway(网关) provides a **unified API** that routes requests to many models behind a single
+endpoint and API key. It is OpenAI-compatible, so most OpenAI SDKs work by switching the base URL.
 
-## 获取 API 密钥
+## Getting an API key
 
-1. 前往 [app.kilo.ai](https://app.kilo.ai)
-2. 登录或创建账户
-3. 导航至 API Keys 并生成一个新密钥
+1. Go to [app.kilo.ai](https://app.kilo.ai)
+2. Sign in or create an account
+3. Navigate to API Keys and generate a new key
 
-## CLI 设置
+## CLI setup
 
 ```bash
 openclaw onboard --kilocode-api-key <key>
 ```
 
-或设置环境变量：
+Or set the 环境变量:
 
 ```bash
 export KILOCODE_API_KEY="<your-kilocode-api-key>" # pragma: allowlist secret
 ```
 
-## 配置片段
+## Config snippet
 
 ```json5
 {
@@ -40,20 +42,20 @@ export KILOCODE_API_KEY="<your-kilocode-api-key>" # pragma: allowlist secret
 }
 ```
 
-## 默认模型
+## Default 模型
 
-默认模型是 `kilocode/kilo/auto`，这是一种智能路由模型，会根据任务自动选择
-最佳的底层模型：
+The default 模型 is `kilocode/kilo/auto`, a smart routing 模型 that automatically selects
+the best underlying 模型 based on the task:
 
-- 规划、调试和编排任务路由至 Claude Opus
-- 代码编写和探索任务路由至 Claude Sonnet
+- Planning, debugging, and orchestration tasks route to Claude Opus
+- Code writing and exploration tasks route to Claude Sonnet
 
-## 可用模型
+## Available models
 
-OpenClaw 会在启动时从 Kilo Gateway 网关 动态发现可用模型。使用
-`/models kilocode` 查看您的帐户可用的完整模型列表。
+OpenClaw dynamically discovers available models from the Kilo Gateway(网关) at startup. Use
+`/models kilocode` to see the full list of models available with your account.
 
-网关上可用的任何模型都可以与 `kilocode/` 前缀一起使用：
+Any 模型 available on the gateway can be used with the `kilocode/` prefix:
 
 ```
 kilocode/kilo/auto              (default - smart routing)
@@ -63,14 +65,14 @@ kilocode/google/gemini-3-pro-preview
 ...and many more
 ```
 
-## 备注
+## Notes
 
-- 模型引用为 `kilocode/<model-id>`（例如，`kilocode/anthropic/claude-sonnet-4`）。
-- 默认模型：`kilocode/kilo/auto`
-- 基础 URL：`https://api.kilo.ai/api/gateway/`
-- 有关更多模型/提供商选项，请参阅 [/concepts/模型-providers](/zh/concepts/model-providers)。
-- Kilo Gateway 网关 在底层使用带有您的 API 密钥的 Bearer 令牌。
+- Model refs are `kilocode/<model-id>` (e.g., `kilocode/anthropic/claude-sonnet-4`).
+- Default 模型: `kilocode/kilo/auto`
+- Base URL: `https://api.kilo.ai/api/gateway/`
+- For more 模型/提供商 options, see [/concepts/模型-providers](/zh/concepts/model-providers).
+- Kilo Gateway(网关) uses a Bearer token with your API key under the hood.
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

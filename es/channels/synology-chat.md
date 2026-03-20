@@ -1,20 +1,20 @@
 ---
 summary: "Configuración del webhook de Synology Chat y configuración de OpenClaw"
 read_when:
-  - Setting up Synology Chat with OpenClaw
-  - Debugging Synology Chat webhook routing
+  - Configuración de Synology Chat con OpenClaw
+  - Depuración del enrutamiento del webhook de Synology Chat
 title: "Synology Chat"
 ---
 
 # Synology Chat (plugin)
 
-Estado: soportado a través de un plugin como un canal de mensaje directo utilizando los webhooks de Synology Chat.
-El plugin acepta mensajes entrantes de los webhooks salientes de Synology Chat y envía respuestas
+Estado: compatible a través de un plugin como canal de mensajes directos utilizando webhooks de Synology Chat.
+El plugin acepta mensajes entrantes de webhooks salientes de Synology Chat y envía respuestas
 a través de un webhook entrante de Synology Chat.
 
 ## Plugin requerido
 
-Synology Chat está basado en un plugin y no forma parte de la instalación del canal principal predeterminado.
+Synology Chat se basa en un plugin y no forma parte de la instalación del canal principal predeterminado.
 
 Instalar desde una copia local:
 
@@ -29,16 +29,16 @@ Detalles: [Plugins](/es/tools/plugin)
 1. Instale y habilite el plugin de Synology Chat.
    - `openclaw onboard` ahora muestra Synology Chat en la misma lista de configuración de canales que `openclaw channels add`.
    - Configuración no interactiva: `openclaw channels add --channel synology-chat --token <token> --url <incoming-webhook-url>`
-2. En las integraciones de Synology Chat:
+2. En integraciones de Synology Chat:
    - Cree un webhook entrante y copie su URL.
    - Cree un webhook saliente con su token secreto.
 3. Apunte la URL del webhook saliente a su puerta de enlace OpenClaw:
-   - `https://gateway-host/webhook/synology` por defecto.
+   - `https://gateway-host/webhook/synology` de forma predeterminada.
    - O su `channels.synology-chat.webhookPath` personalizado.
 4. Finalice la configuración en OpenClaw.
    - Guiado: `openclaw onboard`
    - Directo: `openclaw channels add --channel synology-chat --token <token> --url <incoming-webhook-url>`
-5. Reinicie la puerta de enlace y envíe un MD al bot de Synology Chat.
+5. Reinicie la puerta de enlace y envíe un mensaje directo al bot de Synology Chat.
 
 Configuración mínima:
 
@@ -61,7 +61,7 @@ Configuración mínima:
 
 ## Variables de entorno
 
-Para la cuenta predeterminada, puede usar las variables de entorno:
+Para la cuenta predeterminada, puede usar variables de entorno:
 
 - `SYNOLOGY_CHAT_TOKEN`
 - `SYNOLOGY_CHAT_INCOMING_URL`
@@ -75,17 +75,17 @@ Los valores de configuración sobrescriben las variables de entorno.
 ## Política de MD y control de acceso
 
 - `dmPolicy: "allowlist"` es el valor predeterminado recomendado.
-- `allowedUserIds` acepta una lista (o cadena separada por comas) de IDs de usuario de Synology.
-- En el modo `allowlist`, una lista vacía de `allowedUserIds` se trata como una configuración incorrecta y la ruta del webhook no se iniciará (use `dmPolicy: "open"` para permitir todo).
+- `allowedUserIds` acepta una lista (o cadena separada por comas) de ID de usuario de Synology.
+- En el modo `allowlist`, una lista `allowedUserIds` vacía se trata como una configuración incorrecta y la ruta del webhook no se iniciará (use `dmPolicy: "open"` para permitir todo).
 - `dmPolicy: "open"` permite cualquier remitente.
-- `dmPolicy: "disabled"` bloquea los MD.
+- `dmPolicy: "disabled"` bloquea los mensajes directos.
 - Las aprobaciones de emparejamiento funcionan con:
   - `openclaw pairing list synology-chat`
   - `openclaw pairing approve synology-chat <CODE>`
 
 ## Entrega saliente
 
-Use los IDs numéricos de usuario de Synology Chat como destinos.
+Use IDs de usuario numéricos de Synology Chat como destinos.
 
 Ejemplos:
 
@@ -98,8 +98,8 @@ Los envíos de medios son compatibles con la entrega de archivos basada en URL.
 
 ## Multicuenta
 
-Se admiten múltiples cuentas de Synology Chat en `channels.synology-chat.accounts`.
-Cada cuenta puede sobrescribir el token, la URL entrante, la ruta del webhook, la política de MD y los límites.
+Se admiten varias cuentas de Synology Chat en `channels.synology-chat.accounts`.
+Cada cuenta puede anular el token, la URL entrante, la ruta del webhook, la política de MD y los límites.
 
 ```json5
 {
@@ -128,9 +128,9 @@ Cada cuenta puede sobrescribir el token, la URL entrante, la ruta del webhook, l
 
 - Mantenga `token` en secreto y rótelo si se filtra.
 - Mantenga `allowInsecureSsl: false` a menos que confíe explícitamente en un certificado NAS local autofirmado.
-- Las solicitudes entrantes del webhook se verifican por token y tienen límites de velocidad por remitente.
-- Se prefiere `dmPolicy: "allowlist"` para producción.
+- Las solicitudes webhook entrantes se verifican por token y tienen límites de tasa por remitente.
+- Prefiera `dmPolicy: "allowlist"` para producción.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

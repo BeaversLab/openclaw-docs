@@ -1,14 +1,14 @@
 ---
-summary: "Referencia de la CLI para `openclaw completion` (generar/instalar scripts de completado de shell)"
+summary: "Referencia de la CLI para `openclaw completion` (generar/instalar scripts de finalización de shell)"
 read_when:
-  - You want shell completions for zsh/bash/fish/PowerShell
-  - You need to cache completion scripts under OpenClaw state
-title: "completado"
+  - Deseas finalizaciones de shell para zsh/bash/fish/PowerShell
+  - Necesitas almacenar en caché los scripts de finalización bajo el estado de OpenClaw
+title: "completion"
 ---
 
 # `openclaw completion`
 
-Genera scripts de completado de shell y opcionalmente los instala en tu perfil de shell.
+Genera scripts de finalización de shell y opcionalmente los instala en tu perfil de shell.
 
 ## Uso
 
@@ -23,17 +23,17 @@ openclaw completion --shell bash --write-state
 
 ## Opciones
 
-- `-s, --shell <shell>`: destino del shell (`zsh`, `bash`, `powershell`, `fish`; por defecto: `zsh`)
-- `-i, --install`: instala el completado añadiendo una línea de origen a tu perfil de shell
-- `--write-state`: escribe el/los script(s) de completado en `$OPENCLAW_STATE_DIR/completions` sin imprimir en stdout
+- `-s, --shell <shell>`: destino de shell (`zsh`, `bash`, `powershell`, `fish`; predeterminado: `zsh`)
+- `-i, --install`: instala la finalización añadiendo una línea de origen a tu perfil de shell
+- `--write-state`: escribe los scripts de finalización en `$OPENCLAW_STATE_DIR/completions` sin imprimir en stdout
 - `-y, --yes`: omite los avisos de confirmación de instalación
 
 ## Notas
 
-- `--install` escribe un pequeño bloque "OpenClaw Completion" en tu perfil de shell y lo apunta al script en caché.
+- `--install` escribe un pequeño bloque "OpenClaw Completion" en tu perfil de shell y lo apunta al script almacenado en caché.
 - Sin `--install` o `--write-state`, el comando imprime el script en stdout.
-- La generación de completado carga con avidez los árboles de comandos para que se incluyan los subcomandos anidados.
+- La generación de finalización carga ansiosamente los árboles de comandos para que se incluyan los subcomandos anidados.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

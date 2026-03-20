@@ -1,8 +1,8 @@
 ---
-summary: "Envío de encuestas a través de la puerta de enlace + CLI"
+summary: "Envío de encuestas mediante gateway + CLI"
 read_when:
-  - Adding or modifying poll support
-  - Debugging poll sends from the CLI or gateway
+  - Agregar o modificar la compatibilidad con encuestas
+  - Depuración de envíos de encuestas desde la CLI o el gateway
 title: "Encuestas"
 ---
 
@@ -45,10 +45,10 @@ openclaw message poll --channel msteams --target conversation:19:abc@thread.tacv
 Opciones:
 
 - `--channel`: `whatsapp` (predeterminado), `telegram`, `discord` o `msteams`
-- `--poll-multi`: permitir seleccionar múltiples opciones
-- `--poll-duration-hours`: solo para Discord (el valor predeterminado es 24 si se omite)
+- `--poll-multi`: permite seleccionar varias opciones
+- `--poll-duration-hours`: solo para Discord (predeterminado a 24 si se omite)
 - `--poll-duration-seconds`: solo para Telegram (5-600 segundos)
-- `--poll-anonymous` / `--poll-public`: visibilidad de la encuesta, solo para Telegram
+- `--poll-anonymous` / `--poll-public`: visibilidad de la encuesta solo para Telegram
 
 ## Gateway RPC
 
@@ -68,10 +68,10 @@ Parámetros:
 
 ## Diferencias de canal
 
-- Telegram: de 2 a 10 opciones. Admite temas del foro a través de destinos `threadId` o `:topic:`. Usa `durationSeconds` en lugar de `durationHours`, limitado a 5-600 segundos. Admite encuestas anónimas y públicas.
-- WhatsApp: de 2 a 12 opciones, `maxSelections` debe estar dentro del recuento de opciones, ignora `durationHours`.
-- Discord: de 2 a 10 opciones, `durationHours` limitado a 1-768 horas (predeterminado 24). `maxSelections > 1` habilita la selección múltiple; Discord no admite un recuento de selección estricto.
-- MS Teams: encuestas de tarjetas adaptables (administradas por OpenClaw). Sin API de encuesta nativa; `durationHours` se ignora.
+- Telegram: 2-10 opciones. Admite temas del foro mediante destinos `threadId` o `:topic:`. Usa `durationSeconds` en lugar de `durationHours`, limitado a 5-600 segundos. Admite encuestas anónimas y públicas.
+- WhatsApp: 2-12 opciones, `maxSelections` debe estar dentro del conteo de opciones, ignora `durationHours`.
+- Discord: 2-10 opciones, `durationHours` limitado a 1-768 horas (predeterminado 24). `maxSelections > 1` habilita la selección múltiple; Discord no admite un conteo de selección estricto.
+- MS Teams: Encuestas de Tarjetas adaptables (administradas por OpenClaw). Sin API de encuestas nativa; se ignora `durationHours`.
 
 ## Herramienta de agente (Mensaje)
 
@@ -82,9 +82,9 @@ Para Telegram, la herramienta también acepta `pollDurationSeconds`, `pollAnonym
 Use `action: "poll"` para la creación de encuestas. Los campos de encuesta pasados con `action: "send"` son rechazados.
 
 Nota: Discord no tiene modo de "elegir exactamente N"; `pollMulti` se asigna a selección múltiple.
-Las encuestas de Teams se representan como tarjetas adaptables y requieren que la puerta de enlace permanezca en línea
+Las encuestas de Teams se representan como tarjetas adaptables (Adaptive Cards) y requieren que la puerta de enlace se mantenga en línea
 para registrar los votos en `~/.openclaw/msteams-polls.json`.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

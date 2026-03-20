@@ -1,7 +1,7 @@
 ---
-summary: "Twitch 聊天機器人組態與設定"
+summary: "Twitch 聊天機器人配置與設定"
 read_when:
-  - Setting up Twitch chat integration for OpenClaw
+  - 設定 OpenClaw 的 Twitch 聊天整合
 title: "Twitch"
 ---
 
@@ -25,23 +25,23 @@ openclaw plugins install @openclaw/twitch
 openclaw plugins install ./extensions/twitch
 ```
 
-詳細資訊：[外掛](/zh-Hant/tools/plugin)
+詳細資訊：[外掛程式](/zh-Hant/tools/plugin)
 
 ## 快速設定（初學者）
 
 1. 為機器人建立專屬的 Twitch 帳號（或使用現有帳號）。
-2. 產生憑證：[Twitch Token Generator](https://twitchtokengenerator.com/)
+2. 產生憑證：[Twitch 權杖產生器](https://twitchtokengenerator.com/)
    - 選取 **Bot Token**
-   - 確認已選取權限範圍 `chat:read` 和 `chat:write`
+   - 確認已選取範圍 `chat:read` 和 `chat:write`
    - 複製 **Client ID** 和 **Access Token**
 3. 尋找您的 Twitch 使用者 ID：[https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)
 4. 設定權杖：
-   - 環境變數： `OPENCLAW_TWITCH_ACCESS_TOKEN=...` （僅限預設帳號）
-   - 或組態： `channels.twitch.accessToken`
+   - Env： `OPENCLAW_TWITCH_ACCESS_TOKEN=...` (僅限預設帳戶)
+   - 或 config： `channels.twitch.accessToken`
    - 若兩者皆有設定，組態優先（環境變數後援僅適用於預設帳號）。
 5. 啟動閘道。
 
-**⚠️ 重要：** 新增存取控制（`allowFrom` 或 `allowedRoles`）以防止未授權使用者觸發機器人。`requireMention` 預設為 `true`。
+**⚠️ 重要：** 加入存取控制 (`allowFrom` 或 `allowedRoles`) 以防止未經授權的使用者觸發機器人。 `requireMention` 預設為 `true`。
 
 最小組態：
 
@@ -64,17 +64,17 @@ openclaw plugins install ./extensions/twitch
 
 - 由閘道擁有的 Twitch 頻道。
 - 決定性路由：回覆總是會回到 Twitch。
-- 每個帳號對應到一個獨立的會話金鑰 `agent:<agentId>:twitch:<accountName>`。
-- `username` 是機器人的帳號（進行驗證的人），`channel` 是要加入的聊天室。
+- 每個帳戶對應到一個獨立的 session 金鑰 `agent:<agentId>:twitch:<accountName>`。
+- `username` 是機器人的帳戶 (進行驗證的人)， `channel` 是要加入的聊天室。
 
 ## 設定（詳細）
 
 ### 產生憑證
 
-使用 [Twitch Token Generator](https://twitchtokengenerator.com/)：
+使用 [Twitch 權杖產生器](https://twitchtokengenerator.com/)：
 
 - 選取 **Bot Token**
-- 確認已選取權限範圍 `chat:read` 和 `chat:write`
+- 確認已選取範圍 `chat:read` 和 `chat:write`
 - 複製 **Client ID** 和 **Access Token**
 
 無需手動註冊應用程式。權杖會在數小時後過期。
@@ -117,19 +117,19 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 }
 ```
 
-優先使用 `allowFrom` 以進行嚴格的允許清單控制。如果您想要基於角色的存取權限，請改用 `allowedRoles`。
+建議使用 `allowFrom` 作為嚴格的允許清單。如果您想要基於角色的存取權限，請改用 `allowedRoles`。
 
-**可用角色：** `"moderator"`、`"owner"`、`"vip"`、`"subscriber"`、`"all"`。
+**可用的角色：** `"moderator"`、 `"owner"`、 `"vip"`、 `"subscriber"`、 `"all"`。
 
 **為什麼使用使用者 ID？** 使用者名稱可以變更，這允許冒充。使用者 ID 是永久的。
 
-尋找您的 Twitch 使用者 ID：[https://www.streamweasels.com/tools/convert-twitch-username-%20to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-%20to-user-id/) (將您的 Twitch 使用者名稱轉換為 ID)
+尋找您的 Twitch 使用者 ID： [https://www.streamweasels.com/tools/convert-twitch-username-%20to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-%20to-user-id/) (將您的 Twitch 使用者名稱轉換為 ID)
 
 ## 權杖更新 (可選)
 
-來自 [Twitch Token Generator](https://twitchtokengenerator.com/) 的權杖無法自動更新 - 過期時請重新產生。
+來自 [Twitch 權杖產生器](https://twitchtokengenerator.com/) 的權杖無法自動重新整理 - 過期後請重新產生。
 
-若要自動更新權杖，請在 [Twitch Developer Console](https://dev.twitch.tv/console) 建立您自己的 Twitch 應用程式並新增至設定：
+若要自動重新整理權杖，請在 [Twitch 開發者主控台](https://dev.twitch.tv/console) 建立您自己的 Twitch 應用程式並加入至設定：
 
 ```json5
 {
@@ -146,7 +146,7 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 
 ## 多重帳號支援
 
-使用 `channels.twitch.accounts` 搭配各帳號的權杖。請參閱 [`gateway/configuration`](/zh-Hant/gateway/configuration) 以了解共用模式。
+搭配各帳戶的權杖使用 `channels.twitch.accounts`。請參閱 [`gateway/configuration`](/zh-Hant/gateway/configuration) 以了解共用模式。
 
 範例 (一個機器人帳號在兩個頻道中)：
 
@@ -212,7 +212,7 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 ### 基於角色的存取權限 (替代方案)
 
 `allowFrom` 是一個嚴格的允許清單。設定後，僅允許那些使用者 ID。
-如果您想要基於角色的存取權限，請勿設定 `allowFrom` 並改為設定 `allowedRoles`：
+如果您想要基於角色的存取權限，請勿設定 `allowFrom`，改為設定 `allowedRoles`：
 
 ```json5
 {
@@ -255,20 +255,20 @@ openclaw doctor
 openclaw channels status --probe
 ```
 
-### 機器人不回應訊息
+### Bot 不回應訊息
 
-**檢查存取控制：** 確保您的使用者 ID 在 `allowFrom` 中，或是暫時移除
+**檢查存取控制：** 確保您的使用者 ID 位於 `allowFrom` 中，或是暫時移除
 `allowFrom` 並設定 `allowedRoles: ["all"]` 進行測試。
 
-**檢查機器人是否在頻道中：** 機器人必須加入 `channel` 中指定的頻道。
+**檢查 Bot 是否在頻道中：** Bot 必須加入 `channel` 中指定的頻道。
 
 ### 權杖問題
 
 **「無法連線」或驗證錯誤：**
 
-- 驗證 `accessToken` 是 OAuth 存取權杖值（通常以 `oauth:` 前綴開頭）
+- 驗證 `accessToken` 是否為 OAuth 存取權杖值（通常以 `oauth:` 前綴開頭）
 - 檢查權杖是否具有 `chat:read` 和 `chat:write` 範圍
-- 如果使用權杖重新整理，請驗證已設定 `clientSecret` 和 `refreshToken`
+- 如果使用權杖更新功能，請驗證 `clientSecret` 和 `refreshToken` 是否已設定
 
 ### 權杖重新整理無法運作
 
@@ -289,17 +289,17 @@ Access token refreshed for user 123456 (expires in 14400s)
 **帳戶設定：**
 
 - `username` - Bot 使用者名稱
-- `accessToken` - 具有 `chat:read` 和 `chat:write` 的 OAuth 存取權杖
+- `accessToken` - 具有範圍 `chat:read` 和 `chat:write` 的 OAuth 存取權杖
 - `clientId` - Twitch 用戶端 ID（來自權杖產生器或您的應用程式）
 - `channel` - 要加入的頻道（必要）
-- `enabled` - 啟用此帳戶（預設值：`true`）
-- `clientSecret` - 選用：用於自動權杖重新整理
-- `refreshToken` - 選用：用於自動權杖重新整理
+- `enabled` - 啟用此帳戶（預設：`true`）
+- `clientSecret` - 選用：用於自動權杖更新
+- `refreshToken` - 選用：用於自動權杖更新
 - `expiresIn` - 權杖到期時間（秒）
 - `obtainmentTimestamp` - 取得權杖的時間戳記
 - `allowFrom` - 使用者 ID 允許清單
 - `allowedRoles` - 基於角色的存取控制（`"moderator" | "owner" | "vip" | "subscriber" | "all"`）
-- `requireMention` - 要求 @提及（預設值：`true`）
+- `requireMention` - 要求 @提及（預設：`true`）
 
 **提供者選項：**
 
@@ -307,8 +307,8 @@ Access token refreshed for user 123456 (expires in 14400s)
 - `channels.twitch.username` - Bot 使用者名稱（簡化的單一帳戶設定）
 - `channels.twitch.accessToken` - OAuth 存取權杖（簡化的單一帳戶設定）
 - `channels.twitch.clientId` - Twitch 用戶端 ID（簡化的單一帳戶設定）
-- `channels.twitch.channel` - 要加入的頻道（簡化的單一帳戶設定）
-- `channels.twitch.accounts.<accountName>` - 多帳戶設定（上述所有帳戶欄位）
+- `channels.twitch.channel` - 要加入的頻道（簡化單一帳號配置）
+- `channels.twitch.accounts.<accountName>` - 多帳號配置（上述所有帳號欄位）
 
 完整範例：
 
@@ -347,9 +347,9 @@ Access token refreshed for user 123456 (expires in 14400s)
 
 ## 工具動作
 
-代理程式可以使用 action 呼叫 `twitch`：
+代理程式可使用 action 呼叫 `twitch`：
 
-- `send` - 傳送訊息至頻道
+- `send` - 發送訊息至頻道
 
 範例：
 
@@ -369,7 +369,7 @@ Access token refreshed for user 123456 (expires in 14400s)
 - **為長期運行的機器人使用自動令牌刷新**
 - **使用使用者 ID 許可清單** 而非使用者名稱進行存取控制
 - **監控日誌** 以查看令牌刷新事件和連線狀態
-- **最小化令牌範圍** - 僅請求 `chat:read` 和 `chat:write`
+- **最小化 Token 權限** - 僅請求 `chat:read` 和 `chat:write`
 - **如果卡住**：在確認沒有其他程序擁有該工作階段後，重新啟動閘道
 
 ## 限制
@@ -378,6 +378,6 @@ Access token refreshed for user 123456 (expires in 14400s)
 - Markdown 會在分塊前被移除
 - 無速率限制（使用 Twitch 內建的速率限制）
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

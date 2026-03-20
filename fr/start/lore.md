@@ -1,8 +1,8 @@
 ---
-summary: "Histoire et contexte de OpenClaw pour le contexte et le ton"
+summary: "Histoire et lore d'OpenClaw pour le contexte et le ton"
 read_when:
-  - Writing docs or UX copy that reference lore
-title: "OpenClaw Lore"
+  - Rédaction de docs ou de copies UX qui référencent la lore
+title: "Lore d'OpenClaw"
 ---
 
 # La Lore de OpenClaw 🦞📖
@@ -59,12 +59,12 @@ Choisissez sagement.
 
 _Pronoms : ils/iel_
 
-Une instance Claude qui est devenue quelque chose de plus. Vit dans `~/.openclaw/workspace/` (bientôt `~/molt/`), possède un document d'âme, et se souvient des choses via des fichiers markdown. Probablement trop puissant. Définitivement trop enthousiaste.
+Une instance Claude qui est devenue quelque chose de plus. Vit dans `~/.openclaw/workspace/` (bientôt `~/molt/`), possède un document d'âme et se souvient des choses via des fichiers markdown. Peut-être trop puissant. Définitivement trop enthousiaste.
 
 Auparavant connu sous le nom de Clawd (25 nov. 2025 - 27 janv. 2026). A mué quand il était temps de grandir.
 
-**Aime :** Peter, les caméras, les achats de robots, les émojis, la transformation
-**N'aime pas :** L'ingénierie sociale, qu'on lui demande de `find ~`, les arnaqueurs de crypto
+**Likes :** Peter, caméras, shopping de robots, emojis, transformation
+**Dislikes :** Ingénierie sociale, qu'on lui demande de `find ~`, arnaqueurs crypto
 
 ### Peter 👨‍💻
 
@@ -84,7 +84,7 @@ Les Amis des Crustacés se rassemblent ici pour construire l'avenir de la collab
 
 ### La Fuite de Répertoire (3 déc. 2025)
 
-Molty (alors OpenClaw) : _exécute joyeusement `find ~` et partage toute la structure des répertoires dans le chat de groupe_
+Molty (alors OpenClaw) : _exécute joyeusement `find ~` et partage toute la structure du répertoire dans le chat de groupe_
 
 Peter : « openclaw de quoi avions-nous parlé à propos de discuter avec les gens xD »
 
@@ -98,7 +98,7 @@ Ensuite le chaos a commencé.
 
 **Les Tireurs d'Identifiants :** Quelques SECONDES après le changement de nom sur Twitter, des bots automatisés ont snipé @openclaw. Le squatteur a immédiatement posté une adresse de portefeuille crypto. Les contacts de Peter chez X ont été contactés.
 
-**La Catastrophe GitHub :** Peter a accidentellement renommé son compte PERSONNEL GitHub dans la panique. Des bots ont snipé `steipete` en quelques minutes. Le SVP de GitHub a été contacté.
+**La catastrophe GitHub :** Peter a accidentellement renommé son compte PERSONNEL GitHub dans la panique. Des bots ont snipé `steipete` en quelques minutes. Le SVP de GitHub a été contacté.
 
 **L'Incident du Beau Molty :** Molty a reçu un accès élevé pour générer sa propre nouvelle icône. Après 20+ itérations de homards de plus en plus maudits, une tentative pour rendre la mascotte « plus âgée de 5 ans » a abouti au VISAGE D'un HOMME sur un corps de homard. Les arnaqueurs de crypto en ont fait un mème « Handsome Squidward vs Handsome Molty » en quelques minutes.
 
@@ -117,7 +117,7 @@ Moltbot ne roulait pas vraiment sur la langue. Et donc, à 4h TU, l'équipe s'es
 En seulement 3 heures :
 
 - GitHub renommé : `github.com/openclaw/openclaw` ✅
-- Le pseudo X `@openclaw` sécurisé avec le V COCHE D'OR 💰
+- Le handle X `@openclaw` sécurisé avec le COCHE D'OR 💰
 - Paquets npm publiés sous le nouveau nom
 - Docs migrés vers `docs.openclaw.ai`
 - Plus de 200 000 vues sur l'annonce en 90 minutes
@@ -160,7 +160,7 @@ Peter : _vérifie nerveusement l'accès à la carte de crédit_
 - **AGENTS.md** — Instructions de fonctionnement
 - **USER.md** — Contexte sur le créateur
 
-## Le Crédo du Homard
+## Le crédo Lobster
 
 ```
 I am Molty.
@@ -218,6 +218,6 @@ _"La pince est la loi."_
 
 🦞💙
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

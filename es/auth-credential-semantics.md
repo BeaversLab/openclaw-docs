@@ -1,3 +1,11 @@
+---
+title: "Semántica de credenciales de autenticación"
+summary: "Semántica canónica de elegibilidad y resolución de credenciales para perfiles de autenticación"
+read_when:
+  - Trabajar en la resolución de perfiles de autenticación o el enrutamiento de credenciales
+  - Depuración de fallos de autenticación de modelos o el orden de perfiles
+---
+
 # Semántica de credenciales de autenticación
 
 Este documento define la semántica canónica de elegibilidad y resolución de credenciales utilizada en:
@@ -7,7 +15,7 @@ Este documento define la semántica canónica de elegibilidad y resolución de c
 - `models status --probe`
 - `doctor-auth`
 
-El objetivo es mantener el comportamiento de tiempo de selección y tiempo de ejecución alineados.
+El objetivo es mantener alineados los comportamientos de selección y tiempo de ejecución.
 
 ## Códigos de razón estables
 
@@ -33,17 +41,17 @@ Las credenciales de token (`type: "token"`) admiten `token` en línea y/o `token
 ### Reglas de resolución
 
 1. La semántica del solucionador coincide con la semántica de elegibilidad para `expires`.
-2. Para los perfiles elegibles, el material del token se puede resolver desde el valor en línea o `tokenRef`.
-3. Las referencias no resolubles producen `unresolved_ref` en la salida `models status --probe`.
+2. Para los perfiles elegibles, el material del token puede resolverse desde el valor en línea o `tokenRef`.
+3. Las referencias no resolubles producen `unresolved_ref` en la salida de `models status --probe`.
 
-## Mensajes compatibles con versiones anteriores
+## Mensajes compatibles con sistemas heredados
 
-Para la compatibilidad con scripts, los errores de sonda mantienen esta primera línea sin cambios:
+Para la compatibilidad de secuencias de comandos, los errores de sonda mantienen esta primera línea sin cambios:
 
 `Auth profile credentials are missing or expired.`
 
 Se pueden agregar detalles amigables para humanos y códigos de razón estables en las líneas siguientes.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

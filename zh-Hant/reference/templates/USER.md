@@ -1,27 +1,27 @@
 ---
-summary: "User profile record"
+summary: "使用者檔案記錄"
 read_when:
-  - Bootstrapping a workspace manually
+  - 手動建置工作區
 ---
 
-# USER.md - About Your Human
+# USER.md - 關於您的人類
 
-_Learn about the person you're helping. Update this as you go._
+_了解您正在幫助的人。隨著進行更新此內容。_
 
-- **Name:**
-- **What to call them:**
-- **Pronouns:** _(optional)_
-- **Timezone:**
-- **Notes:**
+- **姓名：**
+- **如何稱呼他們：**
+- **代名詞：** _（選填）_
+- **時區：**
+- **備註：**
 
-## Context
+## 背景
 
-_(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)_
+_（他們在乎什麼？他們正在進行哪些專案？什麼會讓他們惱火？什麼會讓他們開懷大笑？隨著時間累積這些資訊。）_
 
 ---
 
-The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
+您知道得越多，就能給予更好的幫助。但請記住 —— 您是在了解一個人，而不是在建立檔案。請尊重其中的差異。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

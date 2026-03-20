@@ -1,12 +1,12 @@
 ---
-summary: "Schéma et exemples de configuration des Skills"
+summary: "Schéma de configuration des Skills et exemples"
 read_when:
-  - Adding or modifying skills config
-  - Adjusting bundled allowlist or install behavior
-title: "Skills Config"
+  - Ajout ou modification de la configuration des Skills
+  - Ajustement de la liste d'autorisation groupée ou du comportement d'installation
+title: "Configuration des Skills"
 ---
 
-# Skills Config
+# Configuration des Skills
 
 Toute la configuration liée aux Skills se trouve sous `skills` dans `~/.openclaw/openclaw.json`.
 
@@ -24,7 +24,7 @@ Toute la configuration liée aux Skills se trouve sous `skills` dans `~/.opencla
       nodeManager: "npm", // npm | pnpm | yarn | bun (Gateway runtime still Node; bun not recommended)
     },
     entries: {
-      "nano-banana-pro": {
+      "image-lab": {
         enabled: true,
         apiKey: { source: "env", provider: "default", id: "GEMINI_API_KEY" }, // or plaintext string
         env: {
@@ -38,42 +38,52 @@ Toute la configuration liée aux Skills se trouve sous `skills` dans `~/.opencla
 }
 ```
 
+Pour la génération/édition d'images intégrée, privilégiez `agents.defaults.imageGenerationModel`
+plus l'outil central `image_generate`. `skills.entries.*` est réservé uniquement
+aux workflows de Skills personnalisés ou tiers.
+
+Exemples :
+
+- Configuration native style Nano Banana : `agents.defaults.imageGenerationModel.primary: "google/gemini-3-pro-image-preview"`
+- Configuration native fal : `agents.defaults.imageGenerationModel.primary: "fal/fal-ai/flux/dev"`
+
 ## Champs
 
-- `allowBundled` : liste d'autorisation (allowlist) optionnelle pour les **bundled** skills uniquement. Lorsqu'elle est définie, seuls les bundled skills de la liste sont éligibles (les managed/workspace skills ne sont pas affectés).
-- `load.extraDirs` : répertoires de skills supplémentaires à scanner (la priorité la plus basse).
-- `load.watch` : surveiller les dossiers de skills et rafraîchir l'instantané des skills (par défaut : true).
-- `load.watchDebounceMs` : délai (debounce) pour les événements du watcher de skills en millisecondes (par défaut : 250).
-- `install.preferBrew` : préférer les installateurs brew lorsqu'ils sont disponibles (par défaut : true).
-- `install.nodeManager` : préférence d'installateur node (`npm` | `pnpm` | `yarn` | `bun`, par défaut : npm).
-  Cela n'affecte que les **installations de skills** ; le runtime du Gateway doit toujours être Node
+- `allowBundled` : liste d'autorisation optionnelle uniquement pour les Skills **groupés**. Lorsqu'elle est définie, seuls
+  les Skills groupés de la liste sont éligibles (les Skills gérés/espace de travail ne sont pas affectés).
+- `load.extraDirs` : répertoires de Skills supplémentaires à scanner (priorité la plus basse).
+- `load.watch` : surveiller les dossiers de Skills et actualiser l'instantané des Skills (par défaut : true).
+- `load.watchDebounceMs` : délai anti-rebond pour les événements du watcher de Skills en millisecondes (par défaut : 250).
+- `install.preferBrew` : privilégier les installateurs brew lorsqu'ils sont disponibles (par défaut : true).
+- `install.nodeManager` : préférence d'installateur de nœud (`npm` | `pnpm` | `yarn` | `bun`, par défaut : npm).
+  Cela n'affecte que les **installations de Skills** ; l'exécution du Gateway doit toujours être Node
   (Bun non recommandé pour WhatsApp/Telegram).
-- `entries.<skillKey>` : substitutions par skill.
+- `entries.<skillKey>` : remplacements par Skill.
 
-Champs par skill :
+Champs par Skill :
 
-- `enabled` : définir `false` pour désactiver un skill même s'il est bundle/installed.
-- `env` : variables d'environnement injectées pour l'exécution de l'agent (seulement si elles ne sont pas déjà définies).
-- `apiKey` : commodité optionnelle pour les skills qui déclarent une env var primaire.
-  Prend en charge une chaîne en clair ou un objet SecretRef (`{ source, provider, id }`).
+- `enabled` : définir `false` pour désactiver un Skill même s'il est groupé/installé.
+- `env` : variables d'environnement injectées pour l'exécution de l'agent (uniquement si non déjà définies).
+- `apiKey` : commodité optionnelle pour les Skills qui déclarent une env var principale.
+  Prend en charge une chaîne en texte brut ou un objet SecretRef (`{ source, provider, id }`).
 
 ## Notes
 
-- Les clés sous `entries` correspondent au nom du skill par défaut. Si un skill définit
+- Les clés sous `entries` correspondent au nom du Skill par défaut. Si un Skill définit
   `metadata.openclaw.skillKey`, utilisez plutôt cette clé.
-- Les modifications apportées aux skills sont prises en compte au prochain tour de l'agent lorsque le watcher est activé.
+- Les modifications apportées aux compétences sont prises en compte au prochain tour de l'agent lorsque l'observateur est activé.
 
-### Sandboxed skills + env vars
+### Compétences sandboxed + env vars
 
-Lorsqu'une session est **sandboxed**, les processus des compétences s'exécutent dans Docker. Le bac à sable n'hérite **pas** du `process.env` de l'hôte.
+Lorsqu'une session est **sandboxed**, les processus de compétence s'exécutent à l'intérieur de Docker. Le bac à sable **n'hérite pas** de la variable d'environnement hôte `process.env`.
 
 Utilisez l'une des options suivantes :
 
 - `agents.defaults.sandbox.docker.env` (ou `agents.list[].sandbox.docker.env` par agent)
-- intégrer les variables d'environnement dans votre image de bac à sable personnalisée
+- intégrer l'env dans votre image de bac à sable personnalisée
 
-Les `env` et `skills.entries.<skill>.env/apiKey` globaux ne s'appliquent qu'aux exécutions sur l'**hôte**.
+Le `env` global et le `skills.entries.<skill>.env/apiKey` global ne s'appliquent qu'aux exécutions sur l'**hôte**.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

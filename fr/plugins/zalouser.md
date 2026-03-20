@@ -1,30 +1,30 @@
 ---
-summary: "Plugin Zalo Personal : connexion QR + messagerie via zca-js natif (installation du plugin + configuration du channel + tool)"
+summary: "Plugin personnel Zalo : connexion QR + messagerie via zca-js natif (installation du plugin + configuration du channel + tool)"
 read_when:
-  - You want Zalo Personal (unofficial) support in OpenClaw
-  - You are configuring or developing the zalouser plugin
-title: "Plugin Zalo Personnel"
+  - Vous souhaitez un support personnel Zalo (non officiel) dans OpenClaw
+  - Vous configurez ou développez le plugin zalouser
+title: "Plugin personnel Zalo"
 ---
 
 # Zalo Personnel (plugin)
 
-Support Zalo Personnel pour OpenClaw via un plugin, utilisant `zca-js` natif pour automatiser un compte utilisateur Zalo normal.
+Support personnel Zalo pour OpenClaw via un plugin, utilisant `zca-js` natif pour automatiser un compte utilisateur normal Zalo.
 
-> **Avertissement :** L'automatisation non officielle peut entraîner une suspension ou un bannissement de compte. Utilisation à vos propres risques.
+> **Avertissement :** L'automatisation non officielle peut entraîner la suspension ou le bannissement du compte. Utilisation à vos propres risques.
 
-## Nommage
+## Dénomination
 
-L'ID de channel est `zalouser` pour préciser explicitement que cela automatise un **compte utilisateur Zalo personnel** (non officiel). Nous conservons `zalo` réservé pour une future intégration officielle de l'API Zalo.
+L'ID de channel est `zalouser` pour indiquer explicitement que cela automatisera un **compte utilisateur personnel Zalo** (non officiel). Nous gardons `zalo` réservé pour une future intégration officielle de l'Zalo API.
 
-## Où il s'exécute
+## Emplacement d'exécution
 
-Ce plugin s'exécute **dans le processus Gateway**.
+Ce plugin s'exécute **à l'intérieur du processus Gateway**.
 
 Si vous utilisez une Gateway distante, installez/configurez-la sur la **machine exécutant la Gateway**, puis redémarrez la Gateway.
 
-Aucun binaire CLI `zca`/`openzca` externe n'est requis.
+Aucun binaire CLI externe `zca`/`openzca` n'est requis.
 
-## Installation
+## Installer
 
 ### Option A : installer depuis npm
 
@@ -32,7 +32,7 @@ Aucun binaire CLI `zca`/`openzca` externe n'est requis.
 openclaw plugins install @openclaw/zalouser
 ```
 
-Redémarrez la Gateway ensuite.
+Redémarrez la Gateway par la suite.
 
 ### Option B : installer depuis un dossier local (dev)
 
@@ -41,11 +41,11 @@ openclaw plugins install ./extensions/zalouser
 cd ./extensions/zalouser && pnpm install
 ```
 
-Redémarrez la Gateway ensuite.
+Redémarrez la Gateway par la suite.
 
-## Configuration
+## Config
 
-La configuration du channel se trouve sous `channels.zalouser` (et non `plugins.entries.*`) :
+La config du channel se trouve sous `channels.zalouser` (et non `plugins.entries.*`) :
 
 ```json5
 {
@@ -68,14 +68,14 @@ openclaw message send --channel zalouser --target <threadId> --message "Hello fr
 openclaw directory peers list --channel zalouser --query "name"
 ```
 
-## Outil d'agent
+## Tool d'agent
 
-Nom de l'outil : `zalouser`
+Nom du tool : `zalouser`
 
 Actions : `send`, `image`, `link`, `friends`, `groups`, `me`, `status`
 
-Les actions de message du channel prennent également en charge `react` pour les réactions aux messages.
+Les actions de message de channel prennent également en charge `react` pour les réactions aux messages.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

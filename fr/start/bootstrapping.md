@@ -4,37 +4,42 @@ read_when:
   - Understanding what happens on the first agent run
   - Explaining where bootstrapping files live
   - Debugging onboarding identity setup
-title: "Initialisation de l'agent"
-sidebarTitle: "Initialisation"
+title: "Agent Bootstrapping"
+sidebarTitle: "Bootstrapping"
 ---
 
-# Initialisation de l'agent
+# Agent Bootstrapping
 
-L'initialisation est le rituel du **premier démarrage** qui prépare un espace de travail pour l'agent et collecte les détails d'identité. Cela se produit après l'onboarding, lorsque l'agent démarre pour la première fois.
+Bootstrapping is the **first‑run** ritual that prepares an agent workspace and
+collects identity details. It happens after onboarding, when the agent starts
+for the first time.
 
-## Rôle de l'initialisation
+## What bootstrapping does
 
-Lors de la première exécution de l'agent, OpenClaw initialise l'espace de travail (défaut `~/.openclaw/workspace`) :
+On the first agent run, OpenClaw bootstraps the workspace (default
+`~/.openclaw/workspace`):
 
-- Crée les graines pour `AGENTS.md`, `BOOTSTRAP.md`, `IDENTITY.md`, `USER.md`.
-- Exécute un rituel de questions-réponses court (une question à la fois).
-- Écrit l'identité et les préférences dans `IDENTITY.md`, `USER.md`, `SOUL.md`.
-- Supprime `BOOTSTRAP.md` une fois terminé afin qu'il ne s'exécute qu'une seule fois.
+- Seeds `AGENTS.md`, `BOOTSTRAP.md`, `IDENTITY.md`, `USER.md`.
+- Runs a short Q&A ritual (one question at a time).
+- Writes identity + preferences to `IDENTITY.md`, `USER.md`, `SOUL.md`.
+- Removes `BOOTSTRAP.md` when finished so it only runs once.
 
-## Lieu d'exécution
+## Where it runs
 
-L'initialisation s'exécute toujours sur l'**hôte de passerelle**. Si l'application macOS se connecte à une Gateway distante, l'espace de travail et les fichiers d'initialisation résident sur cette machine distante.
+Bootstrapping always runs on the **gateway host**. If the macOS app connects to
+a remote Gateway, the workspace and bootstrapping files live on that remote
+machine.
 
 <Note>
-  Lorsque la Gateway s'exécute sur une autre machine, modifiez les fichiers de l'espace de travail
-  sur l'hôte de la passerelle (par exemple, `user@gateway-host:~/.openclaw/workspace`).
+When the Gateway runs on another machine, edit workspace files on the gateway
+host (for example, `user@gateway-host:~/.openclaw/workspace`).
 </Note>
 
-## Documentation connexe
+## Related docs
 
-- Onboarding de l'application macOS : [Onboarding](/fr/start/onboarding)
-- Disposition de l'espace de travail : [Espace de travail de l'agent](/fr/concepts/agent-workspace)
+- macOS app onboarding: [Onboarding](/fr/start/onboarding)
+- Workspace layout: [Agent workspace](/fr/concepts/agent-workspace)
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

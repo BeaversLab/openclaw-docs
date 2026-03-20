@@ -1,10 +1,10 @@
 ---
-summary: "Recherche, scraping Firecrawl et repli web_fetch"
+summary: "Recherche Firecrawl, scraping, et repli web_fetch"
 read_when:
-  - You want Firecrawl-backed web extraction
-  - You need a Firecrawl API key
-  - You want Firecrawl as a web_search provider
-  - You want anti-bot extraction for web_fetch
+  - Vous souhaitez une extraction web soutenue par Firecrawl
+  - Vous avez besoin d'une clé Firecrawl API
+  - Vous souhaitez Firecrawl en tant que fournisseur web_search
+  - Vous souhaitez une extraction anti-bot pour web_fetch
 title: "Firecrawl"
 ---
 
@@ -28,20 +28,22 @@ ce qui aide pour les sites lourds en JS ou les pages qui bloquent les récupéra
 
 ```json5
 {
-  plugins: {
-    entries: {
-      firecrawl: {
-        enabled: true,
-      },
-    },
-  },
   tools: {
     web: {
       search: {
         provider: "firecrawl",
-        firecrawl: {
-          apiKey: "FIRECRAWL_API_KEY_HERE",
-          baseUrl: "https://api.firecrawl.dev",
+      },
+    },
+  },
+  plugins: {
+    entries: {
+      firecrawl: {
+        enabled: true,
+        config: {
+          webSearch: {
+            apiKey: "FIRECRAWL_API_KEY_HERE",
+            baseUrl: "https://api.firecrawl.dev",
+          },
         },
       },
     },
@@ -51,7 +53,7 @@ ce qui aide pour les sites lourds en JS ou les pages qui bloquent les récupéra
 
 Notes :
 
-- Choisir Firecrawl lors de l'intégration ou `openclaw configure --section web` active automatiquement le plugin Firecrawl inclus.
+- Choisir Firecrawl lors de l'onboarding ou `openclaw configure --section web` active automatiquement le plugin Firecrawl groupé.
 - `web_search` avec Firecrawl prend en charge `query` et `count`.
 - Pour les contrôles spécifiques à Firecrawl comme `sources`, `categories`, ou le scraping de résultats, utilisez `firecrawl_search`.
 
@@ -84,9 +86,9 @@ Notes :
 
 Notes :
 
-- `firecrawl.enabled` est par défaut `true` sauf s'il est défini explicitement à `false`.
+- `firecrawl.enabled` par défaut est `true` sauf s'il est explicitement défini sur `false`.
 - Les tentatives de repli Firecrawl ne s'exécutent que lorsqu'une clé API est disponible (`tools.web.fetch.firecrawl.apiKey` ou `FIRECRAWL_API_KEY`).
-- `maxAgeMs` contrôle l'ancienneté des résultats mis en cache (ms). La valeur par défaut est de 2 jours.
+- `maxAgeMs` contrôle l'ancienneté maximale des résultats mis en cache (ms). La valeur par défaut est de 2 jours.
 
 `firecrawl_scrape` réutilise les mêmes paramètres `tools.web.fetch.firecrawl.*` et variables d'environnement.
 
@@ -107,7 +109,7 @@ Paramètres principaux :
 
 ### `firecrawl_scrape`
 
-Utilisez ceci pour les pages riches en JS ou protégées par des bots où le simple `web_fetch` est faible.
+Utilisez ceci pour les pages fortement basées sur JS ou protégées par des bots où un simple `web_fetch` est faible.
 
 Paramètres principaux :
 
@@ -125,7 +127,7 @@ Paramètres principaux :
 Firecrawl expose un paramètre de **mode proxy** pour le contournement des bots (`basic`, `stealth` ou `auto`).
 OpenClaw utilise toujours `proxy: "auto"` plus `storeInCache: true` pour les requêtes Firecrawl.
 Si le proxy est omis, Firecrawl utilise par défaut `auto`. `auto` réessaie avec des proxies furtifs si une tentative de base échoue, ce qui peut utiliser plus de crédits
-que le scraping basique uniquement.
+qu'un scraping basique uniquement.
 
 ## Comment `web_fetch` utilise Firecrawl
 
@@ -135,8 +137,8 @@ Ordre d'extraction `web_fetch` :
 2. Firecrawl (si configuré)
 3. Nettoyage HTML basique (dernier recours)
 
-Voir [Outils Web](/fr/tools/web) pour la configuration complète des outils web.
+Voir [Outils Web](/fr/tools/web) pour la configuration complète de l'outil Web.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

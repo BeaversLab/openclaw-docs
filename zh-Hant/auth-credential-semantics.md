@@ -1,15 +1,23 @@
-# 驗證憑證語意
+---
+title: "Auth Credential Semantics"
+summary: "用於 auth profiles 的 canonical credential eligibility and resolution semantics"
+read_when:
+  - 正在處理 auth profile 解析或 credential 路由
+  - 偵錯 model auth 失敗或 profile 順序
+---
 
-本文定義了以下範圍使用的標準憑證資格判定與解析語意：
+# Auth Credential Semantics
+
+本文件定義了用於以下內容的 canonical credential eligibility and resolution semantics：
 
 - `resolveAuthProfileOrder`
 - `resolveApiKeyForProfile`
 - `models status --probe`
 - `doctor-auth`
 
-目標是保持選取時間與執行時期的行為一致。
+目標是保持選擇時間和執行階段的行為一致。
 
-## 穩定原因代碼
+## Stable Reason Codes
 
 - `ok`
 - `missing_credential`
@@ -17,33 +25,33 @@
 - `expired`
 - `unresolved_ref`
 
-## 權杖憑證
+## Token Credentials
 
-權杖憑證 (`type: "token"`) 支援內聯 `token` 和/或 `tokenRef`。
+Token 憑證 (`type: "token"`) 支援內聯 `token` 和/或 `tokenRef`。
 
-### 資格規則
+### Eligibility rules
 
-1. 當同時缺少 `token` 和 `tokenRef` 時，權杖設定檔不符合資格。
+1. 當同時缺少 `token` 和 `tokenRef` 時，token profile 為不符合資格。
 2. `expires` 為選用。
-3. 如果存在 `expires`，則其必須是大於 `0` 的有限數字。
-4. 如果 `expires` 無效（`NaN`、`0`、負數、非有限值或類型錯誤），則該設定檔因 `invalid_expires` 而不符合資格。
-5. 如果 `expires` 已過去，則該設定檔因 `expired` 而不符合資格。
+3. 如果存在 `expires`，它必須是大於 `0` 的有限數字。
+4. 如果 `expires` 無效（`NaN`、`0`、負數、非有限值或類型錯誤），則 profile 不符合資格，並帶有 `invalid_expires`。
+5. 如果 `expires` 已過去，則 profile 不符合資格，並帶有 `expired`。
 6. `tokenRef` 不會略過 `expires` 驗證。
 
-### 解析規則
+### Resolution rules
 
-1. 解析器語意與 `expires` 的資格判定語意相符。
-2. 對於符合資格的設定檔，可以從內聯值或 `tokenRef` 解析權杖素材。
+1. 解析器語義符合 `expires` 的資格語義。
+2. 對於符合資格的 profile，token 材質可以從內聯值或 `tokenRef` 解析。
 3. 無法解析的參照會在 `models status --probe` 輸出中產生 `unresolved_ref`。
 
-## 相容舊版的訊息傳遞
+## Legacy-Compatible Messaging
 
-為了與腳本相容，探錯訊息會保留第一行不變：
+為了腳本相容性，probe 錯誤會保持第一行不變：
 
 `Auth profile credentials are missing or expired.`
 
-人類易讀的詳細資訊與穩定原因代碼可以新增在後續行中。
+後續行可以加入人類可讀的詳細資訊和穩定的原因代碼。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

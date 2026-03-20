@@ -1,14 +1,14 @@
 ---
-summary: "Alias de la documentación de gestión de sesiones"
+summary: "Alias para la documentación de gestión de sesiones"
 read_when:
-  - You looked for docs/sessions.md; canonical doc lives in docs/session.md
-title: "Sesiones"
+  - Buscaste docs/sessions.md; el documento canónico está en docs/session.md
+title: "Sessions"
 ---
 
 # Sesiones
 
-La documentación canónica de la gestión de sesiones se encuentra en [Gestión de sesiones](/es/concepts/session).
+La documentación canónica de gestión de sesiones está en [Gestión de sesiones](/es/concepts/session).
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

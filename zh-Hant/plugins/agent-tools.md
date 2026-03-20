@@ -1,5 +1,5 @@
 ---
-summary: "在插件中撰寫代理工具（schemas、選用工具、允許清單）"
+summary: "Write agent tools in a plugin (schemas, optional tools, allowlists)"
 read_when:
   - You want to add a new agent tool in a plugin
   - You need to make a tool opt-in via allowlists
@@ -8,9 +8,13 @@ title: "Plugin Agent Tools"
 
 # Plugin agent tools
 
-OpenClaw 外掛程式可以註冊 **agent tools**（JSON-schema 函數），這些工具會在代理程式執行期間暴露給 LLM。工具可以是 **required**（始終可用）或 **optional**（選用/加入）。
+OpenClaw plugins can register **agent tools** (JSON‑schema functions) that are exposed
+to the LLM during agent runs. Tools can be **required** (always available) or
+**optional** (opt‑in).
 
-Agent tools 是在主設定檔的 `tools` 下設定，或在個別代理程式的 `agents.list[].tools` 下設定。允許清單/拒絕清單原則會控制代理程式可以呼叫哪些工具。
+Agent tools are configured under `tools` in the main config, or per‑agent under
+`agents.list[].tools`. The allowlist/denylist policy controls which tools the agent
+can call.
 
 ## Basic tool
 
@@ -31,9 +35,10 @@ export default function (api) {
 }
 ```
 
-## Optional tool (opt‑in)
+## Optional tool (opt-in)
 
-選用工具 **永不** 會自動啟用。使用者必須將它們加入到代理程式的允許清單中。
+Optional tools are **never** auto‑enabled. Users must add them to an agent
+allowlist.
 
 ```ts
 export default function (api) {
@@ -57,7 +62,7 @@ export default function (api) {
 }
 ```
 
-在 `agents.list[].tools.allow` 中啟用選用工具（或全域 `tools.allow`）：
+Enable optional tools in `agents.list[].tools.allow` (or global `tools.allow`):
 
 ```json5
 {
@@ -78,19 +83,21 @@ export default function (api) {
 }
 ```
 
-其他影響工具可用性的設定選項：
+Other config knobs that affect tool availability:
 
-- 僅列出外掛程式工具的允許清單會被視為外掛程式選用項；核心工具會保持啟用，除非您在允許清單中同時包含核心工具或群組。
+- Allowlists that only name plugin tools are treated as plugin opt-ins; core tools remain
+  enabled unless you also include core tools or groups in the allowlist.
 - `tools.profile` / `agents.list[].tools.profile` (base allowlist)
 - `tools.byProvider` / `agents.list[].tools.byProvider` (provider‑specific allow/deny)
 - `tools.sandbox.tools.*` (sandbox tool policy when sandboxed)
 
 ## Rules + tips
 
-- 工具名稱 **不得** 與核心工具名稱衝突；有衝突的工具會被跳過。
-- 允許清單中使用的外掛程式 ID 不得與核心工具名稱衝突。
-- 對於會觸發副作用或需要額外二進位檔/憑證的工具，建議使用 `optional: true`。
+- Tool names must **not** clash with core tool names; conflicting tools are skipped.
+- Plugin ids used in allowlists must not clash with core tool names.
+- Prefer `optional: true` for tools that trigger side effects or require extra
+  binaries/credentials.
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

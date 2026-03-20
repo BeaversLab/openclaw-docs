@@ -16,6 +16,6 @@
 - **Jamieson O'Reilly** ([@theonejvo](https://twitter.com/theonejvo)) - 安全与信任
 - Discord：#security 频道
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

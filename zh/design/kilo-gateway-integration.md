@@ -517,22 +517,22 @@ const needsNonImageSanitize =
 
 ## 变更摘要
 
-| 文件                                                        | 变更类型 | 描述                                                                      |
-| ----------------------------------------------------------- | -------- | ------------------------------------------------------------------------- |
-| `src/commands/onboard-auth.credentials.ts`                  | 添加     | `KILOCODE_DEFAULT_MODEL_REF`、`setKilocodeApiKey()`                       |
-| `src/agents/model-auth.ts`                                  | 修改     | 将 `kilocode` 添加到 `envMap`                                             |
-| `src/config/io.ts`                                          | 修改     | 将 `KILOCODE_API_KEY` 添加到 shell 环境键                                 |
-| `src/commands/onboard-auth.config-core.ts`                  | 添加     | `applyKilocodeProviderConfig()`、`applyKilocodeConfig()`                  |
-| `src/commands/onboard-types.ts`                             | 修改     | 将 `kilocode-api-key` 添加到 `AuthChoice`，将 `kilocodeApiKey` 添加到选项 |
-| `src/commands/auth-choice-options.ts`                       | 修改     | 添加 `kilocode` 组和选项                                                  |
-| `src/commands/auth-choice.preferred-provider.ts`            | 修改     | 添加 `kilocode-api-key` 映射                                              |
-| `src/commands/auth-choice.apply.api-providers.ts`           | 修改     | 添加 `kilocode-api-key` 处理                                              |
-| `src/cli/program/register.onboard.ts`                       | 修改     | 添加 `--kilocode-api-key` 选项                                            |
-| `src/commands/onboard-non-interactive/local/auth-choice.ts` | 修改     | 添加非交互式处理                                                          |
-| `src/commands/onboard-auth.ts`                              | 修改     | 导出新函数                                                                |
-| `src/agents/pi-embedded-runner/cache-ttl.ts`                | 修改     | 添加 kilocode 支持                                                        |
-| `src/agents/transcript-policy.ts`                           | 修改     | 添加 kilocode Gemini 处理                                                 |
+| 文件                                                        | 变更类型 | 描述                                                             |
+| ----------------------------------------------------------- | ----------- | ----------------------------------------------------------------------- |
+| `src/commands/onboard-auth.credentials.ts`                  | 添加         | `KILOCODE_DEFAULT_MODEL_REF`、`setKilocodeApiKey()`                     |
+| `src/agents/model-auth.ts`                                  | 修改      | 将 `kilocode` 添加到 `envMap`                                              |
+| `src/config/io.ts`                                          | 修改      | 将 `KILOCODE_API_KEY` 添加到 shell 环境键                                |
+| `src/commands/onboard-auth.config-core.ts`                  | 添加         | `applyKilocodeProviderConfig()`、`applyKilocodeConfig()`                |
+| `src/commands/onboard-types.ts`                             | 修改      | 将 `kilocode-api-key` 添加到 `AuthChoice`，将 `kilocodeApiKey` 添加到选项 |
+| `src/commands/auth-choice-options.ts`                       | 修改      | 添加 `kilocode` 组和选项                                         |
+| `src/commands/auth-choice.preferred-provider.ts`            | 修改      | 添加 `kilocode-api-key` 映射                                          |
+| `src/commands/auth-choice.apply.api-providers.ts`           | 修改      | 添加 `kilocode-api-key` 处理                                         |
+| `src/cli/program/register.onboard.ts`                       | 修改      | 添加 `--kilocode-api-key` 选项                                         |
+| `src/commands/onboard-non-interactive/local/auth-choice.ts` | 修改      | 添加非交互式处理                                            |
+| `src/commands/onboard-auth.ts`                              | 修改      | 导出新函数                                                    |
+| `src/agents/pi-embedded-runner/cache-ttl.ts`                | 修改      | 添加 kilocode 支持                                                    |
+| `src/agents/transcript-policy.ts`                           | 修改      | 添加 kilocode Gemini 处理                                            |
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

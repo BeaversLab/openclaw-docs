@@ -1,7 +1,7 @@
 ---
 summary: "Référence CLI pour `openclaw agents` (list/add/delete/bindings/bind/unbind/set identity)"
 read_when:
-  - You want multiple isolated agents (workspaces + routing + auth)
+  - Vous souhaitez plusieurs agents isolés (espaces de travail + routage + auth)
 title: "agents"
 ---
 
@@ -45,13 +45,13 @@ Ajouter des liaisons :
 openclaw agents bind --agent work --bind telegram:ops --bind discord:guild-a
 ```
 
-Si vous omettez `accountId` (`--bind <channel>`), OpenClaw le résout à partir des valeurs par défaut du channel et des hooks de configuration des plugins lorsque disponibles.
+Si vous omettez `accountId` (`--bind <channel>`), OpenClaw le résout à partir des valeurs par défaut du channel et des hooks de configuration du plugin lorsqu'ils sont disponibles.
 
 ### Comportement de la portée de liaison
 
 - Une liaison sans `accountId` correspond uniquement au compte par défaut du channel.
 - `accountId: "*"` est le repli à l'échelle du channel (tous les comptes) et est moins spécifique qu'une liaison de compte explicite.
-- Si le même agent possède déjà une liaison de channel correspondante sans `accountId`, et que vous liez ultérieurement avec un `accountId` explicite ou résolu, OpenClaw met à niveau cette liaison existante sur place au lieu d'ajouter un doublon.
+- Si le même agent possède déjà une liaison de channel correspondante sans `accountId`, et que vous effectuez ensuite une liaison avec un `accountId` explicite ou résolu, OpenClaw met à niveau cette liaison existante sur place au lieu d'ajouter un doublon.
 
 Exemple :
 
@@ -63,7 +63,7 @@ openclaw agents bind --agent work --bind telegram
 openclaw agents bind --agent work --bind telegram:ops
 ```
 
-Après la mise à niveau, le routage pour cette liaison est délimité à `telegram:ops`. Si vous souhaitez également un routage par compte par défaut, ajoutez-le explicitement (par exemple `--bind telegram:default`).
+Après la mise à niveau, le routage pour cette liaison est délimité à `telegram:ops`. Si vous souhaitez également un routage pour le compte par défaut, ajoutez-le explicitement (par exemple `--bind telegram:default`).
 
 Supprimer les liaisons :
 
@@ -83,14 +83,14 @@ Les chemins des avatars sont résolus par rapport à la racine de l'espace de tr
 
 ## Définir l'identité
 
-`set-identity` écrit les champs dans `agents.list[].identity` :
+`set-identity` écrit des champs dans `agents.list[].identity` :
 
 - `name`
 - `theme`
 - `emoji`
 - `avatar` (chemin relatif à l'espace de travail, URL http(s) ou URI de données)
 
-Charger depuis `IDENTITY.md` :
+Charger à partir de `IDENTITY.md` :
 
 ```bash
 openclaw agents set-identity --workspace ~/.openclaw/workspace --from-identity
@@ -122,6 +122,6 @@ Exemple de configuration :
 }
 ```
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

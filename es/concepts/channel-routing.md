@@ -1,13 +1,13 @@
 ---
 summary: "Reglas de enrutamiento por canal (WhatsApp, Telegram, Discord, Slack) y contexto compartido"
 read_when:
-  - Changing channel routing or inbox behavior
+  - Cambiar el enrutamiento del canal o el comportamiento de la bandeja de entrada
 title: "Enrutamiento de canales"
 ---
 
 # Canales y enrutamiento
 
-OpenClaw envía las respuestas **de vuelta al canal desde donde provino el mensaje**. El
+OpenClaw enruta las respuestas **de vuelta al canal de donde provino el mensaje**. El
 modelo no elige un canal; el enrutamiento es determinista y está controlado por la
 configuración del host.
 
@@ -22,7 +22,7 @@ configuración del host.
 
 Los mensajes directos se agrupan en la sesión **principal** del agente:
 
-- `agent:<agentId>:<mainKey>` (por defecto: `agent:main:main`)
+- `agent:<agentId>:<mainKey>` (predeterminado: `agent:main:main`)
 
 Los grupos y canales permanecen aislados por canal:
 
@@ -32,7 +32,7 @@ Los grupos y canales permanecen aislados por canal:
 Hilos:
 
 - Los hilos de Slack/Discord añaden `:thread:<threadId>` a la clave base.
-- Los temas del foro de Telegram incorporan `:topic:<topicId>` en la clave de grupo.
+- Los temas del foro de Telegram incrustan `:topic:<topicId>` en la clave de grupo.
 
 Ejemplos:
 
@@ -48,7 +48,7 @@ El enrutamiento elige **un agente** para cada mensaje entrante:
 3. **Coincidencia de equipo** (Slack) a través de `teamId`.
 4. **Coincidencia de cuenta** (`accountId` en el canal).
 5. **Coincidencia de canal** (cualquier cuenta en ese canal).
-6. **Agente predeterminado** (`agents.list[].default`, si no, primera entrada de la lista, retorno a `main`).
+6. **Agente predeterminado** (`agents.list[].default`, si no, primera entrada de la lista, recurso a `main`).
 
 El agente coincidente determina qué espacio de trabajo y almacén de sesiones se utilizan.
 
@@ -68,12 +68,12 @@ Configuración:
 }
 ```
 
-Ver: [Grupos de difusión](/es/broadcast-groups).
+Ver: [Broadcast Groups](/es/broadcast-groups).
 
 ## Resumen de configuración
 
-- `agents.list`: definiciones de agente con nombre (espacio de trabajo, modelo, etc.).
-- `bindings`: asignar canales/cuentares/pares entrantes a agentes.
+- `agents.list`: definiciones de agentes con nombre (espacio de trabajo, modelo, etc.).
+- `bindings`: asigna canales/cuentares/pares entrantes a agentes.
 
 Ejemplo:
 
@@ -91,28 +91,28 @@ Ejemplo:
 
 ## Almacenamiento de sesión
 
-Los almacenes de sesión residen en el directorio de estado (por defecto `~/.openclaw`):
+Los almacenes de sesión residen en el directorio de estado (predeterminado `~/.openclaw`):
 
 - `~/.openclaw/agents/<agentId>/sessions/sessions.json`
 - Las transcripciones JSONL residen junto al almacén
 
-Puede anular la ruta del almacén mediante el uso de plantillas `session.store` y `{agentId}`.
+Puedes sobrescribir la ruta del almacén mediante `session.store` y plantillas `{agentId}`.
 
 ## Comportamiento de WebChat
 
 WebChat se adjunta al **agente seleccionado** y de manera predeterminada a la sesión principal
-del agente. Debido a esto, WebChat le permite ver el contexto entre canales para ese
+del agente. Debido a esto, WebChat te permite ver el contexto multi-canal para ese
 agente en un solo lugar.
 
 ## Contexto de respuesta
 
 Las respuestas entrantes incluyen:
 
-- `ReplyToId`, `ReplyToBody` y `ReplyToSender` cuando están disponibles.
-- El contexto citado se agrega a `Body` como un bloque `[Replying to ...]`.
+- `ReplyToId`, `ReplyToBody` y `ReplyToSender` cuando estén disponibles.
+- El contexto citado se anexa a `Body` como un bloque `[Replying to ...]`.
 
 Esto es consistente en todos los canales.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

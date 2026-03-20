@@ -1,8 +1,8 @@
 ---
-summary: "Referencia de la CLI para `openclaw daemon` (alias heredado para la gestión del servicio de Gateway)"
+summary: "Referencia de la CLI para `openclaw daemon` (alias heredado para la gestión del servicio de gateway)"
 read_when:
-  - You still use `openclaw daemon ...` in scripts
-  - You need service lifecycle commands (install/start/stop/restart/status)
+  - Aún usa `openclaw daemon ...` en scripts
+  - Necesita comandos del ciclo de vida del servicio (install/start/stop/restart/status)
 title: "daemon"
 ---
 
@@ -10,7 +10,7 @@ title: "daemon"
 
 Alias heredado para los comandos de gestión del servicio Gateway.
 
-`openclaw daemon ...` se asigna a la misma superficie de control de servicio que los comandos del servicio `openclaw gateway ...`.
+`openclaw daemon ...` se asigna a la misma superficie de control de servicio que los comandos de servicio `openclaw gateway ...`.
 
 ## Uso
 
@@ -25,33 +25,33 @@ openclaw daemon uninstall
 
 ## Subcomandos
 
-- `status`: muestra el estado de instalación del servicio y sondea el estado de salud de Gateway
-- `install`: instala el servicio (`launchd`/`systemd`/`schtasks`)
-- `uninstall`: elimina el servicio
-- `start`: inicia el servicio
-- `stop`: detiene el servicio
-- `restart`: reinicia el servicio
+- `status`: mostrar el estado de instalación del servicio y sondear el estado de Gateway
+- `install`: instalar servicio (`launchd`/`systemd`/`schtasks`)
+- `uninstall`: eliminar servicio
+- `start`: iniciar servicio
+- `stop`: detener servicio
+- `restart`: reiniciar servicio
 
 ## Opciones comunes
 
 - `status`: `--url`, `--token`, `--password`, `--timeout`, `--no-probe`, `--require-rpc`, `--deep`, `--json`
 - `install`: `--port`, `--runtime <node|bun>`, `--token`, `--force`, `--json`
-- lifecycle (`uninstall|start|stop|restart`): `--json`
+- ciclo de vida (`uninstall|start|stop|restart`): `--json`
 
 Notas:
 
-- `status` resuelve las SecretRefs de autenticación configuradas para la autenticación de sonda cuando es posible.
-- Si una SecretRef de autenticación requerida no se resuelve en esta ruta de comando, `daemon status --json` informa `rpc.authWarning` cuando falla la conectividad/autenticación de la sonda; pase `--token`/`--password` explícitamente o resuelva primero el origen del secreto.
-- Si la sonda tiene éxito, se suprimen las advertencias de auth-ref no resueltas para evitar falsos positivos.
-- En las instalaciones de Linux systemd, las comprobaciones de token-drift de `status` incluyen los orígenes de la unidad tanto `Environment=` como `EnvironmentFile=`.
-- Cuando la autenticación de token requiere un token y `gateway.auth.token` está administrado por SecretRef, `install` valida que el SecretRef sea resoluble, pero no persiste el token resuelto en los metadatos del entorno de servicio.
-- Si la autenticación de token requiere un token y la SecretRef del token configurado no se resuelve, la instalación falla de forma cerrada.
-- Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está establecido, la instalación se bloquea hasta que el modo se establece explícitamente.
+- `status` resuelve los SecretRefs de autenticación configurados para la autenticación de sonda cuando es posible.
+- Si un SecretRef de autenticación requerido no se resuelve en esta ruta de comando, `daemon status --json` informa `rpc.authWarning` cuando falla la conectividad/autenticación de la sonda; pase `--token`/`--password` explícitamente o resuelva primero la fuente del secreto.
+- Si la sonda tiene éxito, las advertencias de auth-ref no resueltas se suprimen para evitar falsos positivos.
+- En las instalaciones de Linux systemd, las comprobaciones de deriva de tokens de `status` incluyen ambas fuentes de unidad `Environment=` y `EnvironmentFile=`.
+- Cuando la autenticación por token requiere un token y `gateway.auth.token` está gestionado por SecretRef, `install` valida que el SecretRef se pueda resolver pero no persiste el token resuelto en los metadatos del entorno de servicio.
+- Si la autenticación por token requiere un token y el token configurado SecretRef no está resuelto, la instalación falla de forma segura.
+- Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está establecido, la instalación se bloquea hasta que el modo se establezca explícitamente.
 
 ## Preferir
 
 Use [`openclaw gateway`](/es/cli/gateway) para la documentación y los ejemplos actuales.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

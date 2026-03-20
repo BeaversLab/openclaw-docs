@@ -2,7 +2,7 @@
 title: "HEARTBEAT.md 模板"
 summary: "HEARTBEAT.md 的工作区模板"
 read_when:
-  - Bootstrapping a workspace manually
+  - 手动引导工作区
 ---
 
 # HEARTBEAT.md
@@ -11,6 +11,6 @@ read_when:
 
 # 当您希望代理定期检查某些内容时，请在下方添加任务。
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

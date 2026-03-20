@@ -1,27 +1,27 @@
 ---
-summary: "Déplacer (migrer) une installation OpenClaw d'une machine à une autre"
+summary: "Move (migrate) an OpenClaw install from one machine to another"
 read_when:
   - You are moving OpenClaw to a new laptop/server
   - You want to preserve sessions, auth, and channel logins (WhatsApp, etc.)
-title: "Guide de migration"
+title: "Migration Guide"
 ---
 
-# Migration de OpenClaw vers une nouvelle machine
+# Migrating OpenClaw to a new machine
 
-Ce guide migre un OpenClaw Gateway d'une machine à une autre **sans refaire l'intégration**.
+This guide migrates an OpenClaw Gateway from one machine to another **without redoing onboarding**.
 
-La migration est simple sur le plan conceptuel :
+The migration is simple conceptually:
 
-- Copiez le **répertoire d'état** (`$OPENCLAW_STATE_DIR`, par défaut : `~/.openclaw/`) — cela inclut la configuration, l'authentification, les sessions et l'état du canal.
-- Copiez votre **espace de travail** (`~/.openclaw/workspace/` par défaut) — cela inclut vos fichiers d'agent (mémoire, invites, etc.).
+- Copy the **state directory** (`$OPENCLAW_STATE_DIR`, default: `~/.openclaw/`) — this includes config, auth, sessions, and channel state.
+- Copy your **workspace** (`~/.openclaw/workspace/` by default) — this includes your agent files (memory, prompts, etc.).
 
-Mais il existe des pièges courants liés aux **profils**, aux **autorisations** et aux **copies partielles**.
+But there are common footguns around **profiles**, **permissions**, and **partial copies**.
 
-## Avant de commencer (ce que vous migratez)
+## Before you start (what you are migrating)
 
-### 1) Identifier votre répertoire d'état
+### 1) Identify your state directory
 
-La plupart des installations utilisent la valeur par défaut :
+Most installs use the default:
 
 - **Répertoire d'état :** `~/.openclaw/`
 
@@ -30,7 +30,7 @@ Mais il peut être différent si vous utilisez :
 - `--profile <name>` (devient souvent `~/.openclaw-<profile>/`)
 - `OPENCLAW_STATE_DIR=/some/path`
 
-Si vous n'êtes pas sûr, exécutez la commande sur l'**ancienne** machine :
+Si vous n'êtes pas sûr, exécutez sur l'**ancienne** machine :
 
 ```bash
 openclaw status
@@ -38,38 +38,38 @@ openclaw status
 
 Recherchez les mentions de `OPENCLAW_STATE_DIR` / profil dans la sortie. Si vous exécutez plusieurs passerelles, répétez l'opération pour chaque profil.
 
-### 2) Identifier votre espace de travail
+### 2) Identifiez votre espace de travail
 
 Valeurs par défaut courantes :
 
 - `~/.openclaw/workspace/` (espace de travail recommandé)
 - un dossier personnalisé que vous avez créé
 
-Votre espace de travail est l'endroit où résident des fichiers tels que `MEMORY.md`, `USER.md` et `memory/*.md`.
+Votre espace de travail est l'endroit où résident des fichiers comme `MEMORY.md`, `USER.md` et `memory/*.md`.
 
-### 3) Comprendre ce que vous allez conserver
+### 3) Comprendre ce que vous allez préserver
 
-Si vous copiez **les deux** (le répertoire d'état et l'espace de travail), vous conservez :
+Si vous copiez **le deux** le répertoire d'état et l'espace de travail, vous conservez :
 
-- Configuration du Gateway (`openclaw.json`)
+- Configuration de Gateway (`openclaw.json`)
 - Profils d'authentification / clés API / jetons OAuth
 - Historique des sessions + état de l'agent
-- État du canal (par exemple, connexion/session WhatsApp)
+- État du channel (p. ex. connexion/session WhatsApp)
 - Vos fichiers d'espace de travail (mémoire, notes de compétences, etc.)
 
-Si vous copiez **uniquement** l'espace de travail (par exemple, via Git), vous ne conservez **pas** :
+Si vous copiez **uniquement** l'espace de travail (p. ex., via Git), vous ne conservez **pas** :
 
-- les sessions
-- les identifiants
-- les connexions aux canaux
+- sessions
+- identifiants
+- connexions channel
 
-Ceux-ci se trouvent sous `$OPENCLAW_STATE_DIR`.
+Ils se trouvent sous `$OPENCLAW_STATE_DIR`.
 
 ## Étapes de migration (recommandées)
 
-### Étape 0 — Effectuer une sauvegarde (ancienne machine)
+### Étape 0 - Effectuer une sauvegarde (ancienne machine)
 
-Sur l'**ancienne** machine, arrêtez d'abord la passerelle afin que les fichiers ne changent pas pendant la copie :
+Sur l'**ancienne** machine, arrêtez d'abord la passerelle afin que les fichiers ne changent pas en cours de copie :
 
 ```bash
 openclaw gateway stop
@@ -85,17 +85,17 @@ tar -czf openclaw-state.tgz .openclaw
 tar -czf openclaw-workspace.tgz .openclaw/workspace
 ```
 
-Si vous avez plusieurs profils/répertoires d'état (par ex. `~/.openclaw-main`, `~/.openclaw-work`), archivez chacun d'eux.
+Si vous avez plusieurs profils/répertoires d'état (p. ex. `~/.openclaw-main`, `~/.openclaw-work`), archivez chacun d'eux.
 
-### Étape 1 — Installer OpenClaw sur la nouvelle machine
+### Étape 1 - Installer OpenClaw sur la nouvelle machine
 
 Sur la **nouvelle** machine, installez le CLI (et Node si nécessaire) :
 
-- Voir : [Install](/fr/install)
+- Voir : [Installer](/fr/install)
 
-À ce stade, il est normal que l'onboarding crée un nouveau `~/.openclaw/` — vous le remplacerez à l'étape suivante.
+À ce stade, il est acceptable que l'onboarding crée un nouveau `~/.openclaw/` — vous l'écraserez à l'étape suivante.
 
-### Étape 2 — Copier le répertoire d'état + l'espace de travail vers la nouvelle machine
+### Étape 2 - Copier le répertoire d'état et l'espace de travail vers la nouvelle machine
 
 Copiez **les deux** :
 
@@ -104,16 +104,16 @@ Copiez **les deux** :
 
 Approches courantes :
 
-- `scp` les archives tar et extrayez-les
+- `scp` les archives tar et extraire
 - `rsync -a` via SSH
 - disque externe
 
 Après la copie, assurez-vous que :
 
-- Les répertoires cachés ont été inclus (par ex. `.openclaw/`)
+- Les répertoires cachés ont été inclus (ex. `.openclaw/`)
 - La propriété des fichiers est correcte pour l'utilisateur exécutant la passerelle
 
-### Étape 3 — Exécuter Doctor (migrations + réparation de service)
+### Étape 3 - Exécuter Doctor (migrations + réparation de service)
 
 Sur la **nouvelle** machine :
 
@@ -132,7 +132,7 @@ openclaw status
 
 ## Pièges courants (et comment les éviter)
 
-### Piège : inadéquation profil / répertoire d'état
+### Piège : inadéquation entre le profil et le répertoire d'état
 
 Si vous avez exécuté l'ancienne passerelle avec un profil (ou `OPENCLAW_STATE_DIR`) et que la nouvelle passerelle en utilise un différent, vous verrez des symptômes tels que :
 
@@ -140,7 +140,7 @@ Si vous avez exécuté l'ancienne passerelle avec un profil (ou `OPENCLAW_STATE_
 - canaux manquants / déconnectés
 - historique de session vide
 
-Correction : exécutez la passerelle/le service en utilisant le **même** profil/répertoire d'état que celui que vous avez migré, puis relancez :
+Correctif : exécutez la passerelle/le service en utilisant le **même** profil/répertoire d'état que celui que vous avez migré, puis réexécutez :
 
 ```bash
 openclaw doctor
@@ -155,24 +155,24 @@ openclaw doctor
 
 Migrez toujours l'intégralité du dossier `$OPENCLAW_STATE_DIR`.
 
-### Piège : autorisations / propriété
+### Piège : permissions / propriété
 
-Si vous avez copié en tant que root ou changé d'utilisateur, le gateway peut échouer à lire les identifiants/sessions.
+Si vous avez copié en tant que root ou changé d'utilisateurs, la passerelle risque de ne pas pouvoir lire les informations d'identification/sessions.
 
-Solution : assurez-vous que le répertoire d'état + l'espace de travail appartiennent à l'utilisateur exécutant le gateway.
+Correctif : assurez-vous que le répertoire d'état + l'espace de travail appartiennent à l'utilisateur exécutant la passerelle.
 
 ### Piège : migration entre les modes distant/local
 
-- Si votre interface utilisateur (WebUI/TUI) pointe vers un gateway **distant**, l'hôte distant possède le magasin de sessions + l'espace de travail.
-- Migrer votre ordinateur portable ne déplacera pas l'état du gateway distant.
+- Si votre interface utilisateur (WebUI/TUI) pointe vers une passerelle **distante**, l'hôte distant possède le magasin de sessions + l'espace de travail.
+- Migrer votre ordinateur portable ne déplacera pas l'état de la passerelle distante.
 
-Si vous êtes en mode distant, migrez l'**hôte du gateway**.
+Si vous êtes en mode distant, migrez l'**hôte de la passerelle**.
 
-### Piège : secrets dans les sauvegardes
+### Pied-de-biche : secrets dans les sauvegardes
 
 `$OPENCLAW_STATE_DIR` contient des secrets (clés API, jetons OAuth, identifiants WhatsApp). Traitez les sauvegardes comme des secrets de production :
 
-- stocker chiffré
+- stocker de manière chiffrée
 - éviter de partager via des canaux non sécurisés
 - faire pivoter les clés si vous soupçonnez une exposition
 
@@ -180,17 +180,17 @@ Si vous êtes en mode distant, migrez l'**hôte du gateway**.
 
 Sur la nouvelle machine, confirmez :
 
-- `openclaw status` affiche le gateway en cours d'exécution
-- Vos canaux sont toujours connectés (ex. WhatsApp ne nécessite pas de nouveau couplage)
+- `openclaw status` affiche la passerelle en cours d'exécution
+- Vos canaux sont toujours connectés (par exemple, WhatsApp ne nécessite pas de nouvel appairage)
 - Le tableau de bord s'ouvre et affiche les sessions existantes
-- Vos fichiers d'espace de travail (mémoire, configs) sont présents
+- Vos fichiers d'espace de travail (mémoire, configurations) sont présents
 
 ## Connexes
 
 - [Doctor](/fr/gateway/doctor)
-- [Dépannage du Gateway](/fr/gateway/troubleshooting)
+- [Dépannage de la Gateway](/fr/gateway/troubleshooting)
 - [Où OpenClaw stocke-t-il ses données ?](/fr/help/faq#where-does-openclaw-store-its-data)
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

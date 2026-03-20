@@ -1,6 +1,14 @@
+---
+title: "Auth Credential Semantics"
+summary: "Auth profiles 的规范凭据资格和解析语义"
+read_when:
+  - 正在处理 auth profile 解析或凭据路由
+  - 调试模型认证失败或配置文件顺序
+---
+
 # Auth Credential Semantics
 
-本文档定义了跨以下内容使用的标准凭据资格和解析语义：
+本文档定义了以下范围内使用的规范凭据资格和解析语义：
 
 - `resolveAuthProfileOrder`
 - `resolveApiKeyForProfile`
@@ -23,16 +31,16 @@
 
 ### Eligibility rules
 
-1. 当同时缺少 `token` 和 `tokenRef` 时，令牌配置文件不符合资格。
+1. 当 `token` 和 `tokenRef` 都不存在时，令牌配置文件不符合资格。
 2. `expires` 是可选的。
-3. 如果存在 `expires`，它必须是大于 `0` 的有限数字。
-4. 如果 `expires` 无效（`NaN`、`0`、负数、非有限数或类型错误），则该配置文件因 `invalid_expires` 而不符合资格。
-5. 如果 `expires` 已过，则该配置文件因 `expired` 而不符合资格。
-6. `tokenRef` 不会绕过 `expires` 验证。
+3. 如果存在 `expires`，它必须是大于 `0` 的有限数。
+4. 如果 `expires` 无效（`NaN`、`0`、负数、非有限值或类型错误），则该配置文件因 `invalid_expires` 而不符合资格。
+5. 如果 `expires` 已经过期，则该配置文件因 `expired` 而不符合资格。
+6. `tokenRef` 不能绕过 `expires` 验证。
 
 ### Resolution rules
 
-1. 对于 `expires`，解析器语义与资格语义相匹配。
+1. 解析器语义与 `expires` 的资格语义相匹配。
 2. 对于符合条件的配置文件，令牌材料可以从内联值或 `tokenRef` 解析。
 3. 无法解析的引用会在 `models status --probe` 输出中产生 `unresolved_ref`。
 
@@ -42,8 +50,8 @@
 
 `Auth profile credentials are missing or expired.`
 
-人类可读的详细信息以及稳定的原因代码可以在后续行中添加。
+人类友好的详细信息和稳定的原因代码可能会在后续行中添加。
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

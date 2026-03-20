@@ -2,7 +2,7 @@
 title: "Modèle HEARTBEAT.md"
 summary: "Modèle d'espace de travail pour HEARTBEAT.md"
 read_when:
-  - Bootstrapping a workspace manually
+  - Initialisation manuelle d'un espace de travail
 ---
 
 # HEARTBEAT.md
@@ -11,6 +11,6 @@ read_when:
 
 # Ajoutez des tâches ci-dessous lorsque vous souhaitez que l'agent vérifie quelque chose périodiquement.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

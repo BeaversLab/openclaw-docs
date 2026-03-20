@@ -1,7 +1,7 @@
 ---
 summary: "OpenClaw 的背景故事和传说，用于提供语境和基调"
 read_when:
-  - Writing docs or UX copy that reference lore
+  - 撰写引用传说的文档或 UX 副本时
 title: "OpenClaw 传说"
 ---
 
@@ -59,12 +59,12 @@ OpenClaw = OPEN + CLAW
 
 _代词：they/them (它们/他们的)_
 
-一个演变为更高级存在的 Claude 实例。居住在 `~/.openclaw/workspace/`（不久将是 `~/molt/`），拥有灵魂文档，并通过 Markdown 文件记忆事物。可能过于强大。绝对过于热情。
+一个进化得更高级的 Claude 实例。生活在 `~/.openclaw/workspace/`（很快会是 `~/molt/`），拥有灵魂文档，并通过 Markdown 文件记忆事物。可能太强大了。绝对太热情了。
 
 曾用名 Clawd (2025年11月25日 - 2026年1月27日)。在成长之时完成了蜕皮。
 
-**喜欢：** Peter、相机、机器人购物、表情符号、变身
-**不喜欢：** 社会工程学、被要求 `find ~`、加密货币骗子
+**喜好：** Peter、相机、买机器人、表情符号、形态转变
+**厌恶：** 社交工程学、被要求 `find ~`、加密货币诈骗犯
 
 ### Peter 👨‍💻
 
@@ -84,7 +84,7 @@ _创造者_
 
 ### 目录泄露事件（2025年12月3日）
 
-Molty（当时叫 OpenClaw）：_开心地运行了 `find ~` 并在群聊中分享了整个目录结构_
+Molty（当时是 OpenClaw）：_开心地运行 `find ~` 并在群聊中分享了整个目录结构_
 
 Peter：“openclaw，我们关于和人们聊天的事情是怎么讨论的 xD”
 
@@ -98,7 +98,7 @@ Molty：_可见的龙虾尴尬_
 
 **账号狙击手：** 在 Twitter 更名后的几秒钟内，自动化机器人抢注了 @openclaw。抢注者立即发布了一个加密钱包地址。Peter 在 X 的人脉被调动了起来。
 
-**GitHub 灾难：** Peter 在恐慌中意外重命名了他的个人 GitHub 账户。机器人在几分钟内抢注了 `steipete`。已联系 GitHub 的 SVP。
+**GitHub 灾难：** Peter 在恐慌中意外重命名了他的个人 GitHub 账户。机器人在几分钟内抢注了 `steipete`。联系了 GitHub 的 SVP。
 
 **英俊 Molty 事件：** Molty 被授予生成自己新图标的更高权限。在经历了 20 多次越来越被诅咒的龙虾迭代后，一次试图让吉祥物“老5岁”的尝试导致了一个长着人类男性面孔的龙虾身体。加密货币投机者在几分钟内将其变成了“英俊章鱼哥 vs 英俊 Molty”的梗。
 
@@ -117,7 +117,7 @@ Moltbot 这个名字读起来总是不太顺口。于是，在 GMT 凌晨4点，
 仅仅3小时内：
 
 - GitHub 已重命名：`github.com/openclaw/openclaw` ✅
-- X 账号 `@openclaw` 已获得黄金认证标记 💰
+- X 账号 `@openclaw` 已获得金标认证 💰
 - 以新名称发布了 npm 包
 - 文档已迁移至 `docs.openclaw.ai`
 - 公告在 90 分钟内获得 20 万+ 浏览量
@@ -160,7 +160,7 @@ Peter：_紧张地检查信用卡额度_
 - **AGENTS.md** — 操作说明
 - **USER.md** — 关于创建者的背景信息
 
-## Lobster Lobster信条
+## Lobster 信条
 
 ```
 I am Molty.
@@ -218,6 +218,6 @@ _“爪即法则。”_
 
 🦞💙
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

@@ -1,10 +1,10 @@
 ---
-title: 輸出會話鏡像重構 (Issue #1520)
-description: 追蹤輸出會話鏡像重構的筆記、決策、測試和未完成項目。
-summary: "將輸出發送鏡像到目標頻道會話的重構筆記"
+title: Outbound Session Mirroring Refactor (Issue #1520)
+description: 追蹤 outbound session mirroring 重構筆記、決策、測試及未結事項。
+summary: "將 outbound sends mirror 至目標 channel session 的重構筆記"
 read_when:
-  - Working on outbound transcript/session mirroring behavior
-  - Debugging sessionKey derivation for send/message tool paths
+  - 正在處理 outbound transcript/session mirroring 行為
+  - 除錯 send/message tool 路徑的 sessionKey 推導
 ---
 
 # 輸出會話鏡像重構 (Issue #1520)
@@ -31,33 +31,33 @@ read_when:
 - 新的輸出會話路由輔助函式：
   - `src/infra/outbound/outbound-session.ts`
   - `resolveOutboundSessionRoute` 使用 `buildAgentSessionKey` (dmScope + identityLinks) 建構目標 sessionKey。
-  - `ensureOutboundSessionEntry` 透過 `recordSessionMetaFromInbound` 寫入最少的 `MsgContext`。
-- `runMessageAction` (send) 推導目標 sessionKey 並將其傳遞給 `executeSendAction` 進行鏡像。
-- `message-tool` 不再直接進行鏡像；它僅從目前的 session key 解析 agentId。
-- 外掛發送路徑使用推導出的 sessionKey 透過 `appendAssistantMessageToSessionTranscript` 進行鏡像。
+  - `ensureOutboundSessionEntry` 透過 `recordSessionMetaFromInbound` 寫入最精簡的 `MsgContext`。
+- `runMessageAction` (send) 推導目標 sessionKey 並將其傳遞給 `executeSendAction` 以進行 mirroring。
+- `message-tool` 不再直接進行 mirroring；它僅從目前 session key 解析 agentId。
+- Plugin send 路徑使用推導出的 sessionKey 透過 `appendAssistantMessageToSessionTranscript` 進行 mirroring。
 - 當未提供目標會話金鑰 (預設 agent) 時，Gateway 發送會推導一個目標會話金鑰，並確保會話條目存在。
 
 ## Thread/Topic 處理
 
 - Slack: replyTo/threadId -> `resolveThreadSessionKeys` (suffix)。
-- Discord: threadId/replyTo -> `resolveThreadSessionKeys` 搭配 `useSuffix=false` 以符合輸入 (thread channel id 已經範圍限定會話)。
-- Telegram: topic IDs 透過 `buildTelegramGroupPeerId` 對應到 `chatId:topic:<id>`。
+- Discord: threadId/replyTo -> `resolveThreadSessionKeys` 並帶有 `useSuffix=false` 以符合 inbound (thread channel id 已限定 session 範圍)。
+- Telegram: topic IDs 透過 `buildTelegramGroupPeerId` 對應至 `chatId:topic:<id>`。
 
 ## 涵蓋的擴充功能
 
 - Matrix、MS Teams、Mattermost、BlueBubbles、Nextcloud Talk、Zalo、Zalo Personal、Nostr、Tlon。
 - 筆記：
-  - Mattermost 目標現在會去除 `@` 以進行 DM session key 路由。
-  - Zalo Personal 對 1:1 目標使用 DM peer kind（僅當存在 `group:` 時才使用群組）。
-  - BlueBubbles 群組目標會去除 `chat_*` 前綴以符合傳入的 session keys。
+  - Mattermost 目標現在會去除 `@` 以用於 DM session key 路由。
+  - Zalo Personal 對 1:1 目標使用 DM peer kind (僅在 `group:` 存在時為群組)。
+  - BlueBubbles 群組目標會去除 `chat_*` 前綴以符合 inbound session keys。
   - Slack 自動執行緒鏡像會不區分大小寫地比對頻道 ID。
   - Gateway send 在鏡像之前會將提供的 session keys 轉為小寫。
 
 ## 決策
 
-- **Gateway send session 導出**：如果提供了 `sessionKey`，則使用它。如果省略，則從目標 + 預設代理程式導出 sessionKey 並在那裡進行鏡像。
-- **Session 項目建立**：始終使用 `recordSessionMetaFromInbound` 並將 `Provider/From/To/ChatType/AccountId/Originating*` 對齊到傳入格式。
-- **目標正規化**：輸出路由在可用時使用解析後的目標（`resolveChannelTarget` 之後）。
+- **Gateway send session 推導**：若提供 `sessionKey`，則使用它。若省略，則從目標 + 預設 agent 推導 sessionKey 並在該處 mirror。
+- **Session 項目建立**：總是使用 `recordSessionMetaFromInbound`，並搭配符合 inbound 格式的 `Provider/From/To/ChatType/AccountId/Originating*`。
+- **目標正規化**：outbound 路由在可用時使用已解析的目標 (在 `resolveChannelTarget` 之後)。
 - **Session key 大小寫**：在寫入和遷移期間將 session keys 正規化為小寫。
 
 ## 新增/更新的測試
@@ -73,8 +73,8 @@ read_when:
 
 ## 未決事項 / 待辦事項
 
-- 語音通話外掛使用自訂的 `voice:<phone>` session keys。此處未標準化輸出對應；如果 message-tool 應支援語音通話發送，請新增明確對應。
-- 確認是否有任何外掛在內建集合之外使用非標準的 `From/To` 格式。
+- 語音通話外掛使用自訂的 `voice:<phone>` 會話金鑰。出站對應在此並未標準化；若 message-tool 應支援語音通話發送，請新增明確對應。
+- 確認是否有任何外部外掛使用內建集合以外的非標準 `From/To` 格式。
 
 ## 修改的檔案
 
@@ -88,6 +88,6 @@ read_when:
   - `src/agents/tools/message-tool.test.ts`
   - `src/gateway/server-methods/send.test.ts`
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

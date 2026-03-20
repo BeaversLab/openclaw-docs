@@ -517,22 +517,22 @@ const needsNonImageSanitize =
 
 ## 變更摘要
 
-| 檔案                                                        | 變更類型 | 說明                                                                        |
-| ----------------------------------------------------------- | -------- | --------------------------------------------------------------------------- |
-| `src/commands/onboard-auth.credentials.ts`                  | 新增     | `KILOCODE_DEFAULT_MODEL_REF`, `setKilocodeApiKey()`                         |
-| `src/agents/model-auth.ts`                                  | 修改     | 將 `kilocode` 新增到 `envMap`                                               |
-| `src/config/io.ts`                                          | 修改     | 將 `KILOCODE_API_KEY` 新增到 shell 環境變數金鑰                             |
-| `src/commands/onboard-auth.config-core.ts`                  | 新增     | `applyKilocodeProviderConfig()`, `applyKilocodeConfig()`                    |
-| `src/commands/onboard-types.ts`                             | 修改     | 將 `kilocode-api-key` 新增至 `AuthChoice`，並將 `kilocodeApiKey` 新增至選項 |
-| `src/commands/auth-choice-options.ts`                       | 修改     | 新增 `kilocode` 群組與選項                                                  |
-| `src/commands/auth-choice.preferred-provider.ts`            | 修改     | 新增 `kilocode-api-key` 對應                                                |
-| `src/commands/auth-choice.apply.api-providers.ts`           | 修改     | 新增 `kilocode-api-key` 處理                                                |
-| `src/cli/program/register.onboard.ts`                       | 修改     | 新增 `--kilocode-api-key` 選項                                              |
-| `src/commands/onboard-non-interactive/local/auth-choice.ts` | 修改     | 新增非互動式處理                                                            |
-| `src/commands/onboard-auth.ts`                              | 修改     | 匯出新函數                                                                  |
-| `src/agents/pi-embedded-runner/cache-ttl.ts`                | 修改     | 新增 kilocode 支援                                                          |
-| `src/agents/transcript-policy.ts`                           | 修改     | 新增 kilocode Gemini 處理                                                   |
+| 檔案                                                        | 變更類型 | 說明                                                             |
+| ----------------------------------------------------------- | ----------- | ----------------------------------------------------------------------- |
+| `src/commands/onboard-auth.credentials.ts`                  | 新增         | `KILOCODE_DEFAULT_MODEL_REF`, `setKilocodeApiKey()`                     |
+| `src/agents/model-auth.ts`                                  | 修改      | 將 `kilocode` 新增到 `envMap`                                              |
+| `src/config/io.ts`                                          | 修改      | 將 `KILOCODE_API_KEY` 新增到 shell 環境變數金鑰                                |
+| `src/commands/onboard-auth.config-core.ts`                  | 新增         | `applyKilocodeProviderConfig()`, `applyKilocodeConfig()`                |
+| `src/commands/onboard-types.ts`                             | 修改      | 將 `kilocode-api-key` 新增至 `AuthChoice`，並將 `kilocodeApiKey` 新增至選項 |
+| `src/commands/auth-choice-options.ts`                       | 修改      | 新增 `kilocode` 群組與選項                                         |
+| `src/commands/auth-choice.preferred-provider.ts`            | 修改      | 新增 `kilocode-api-key` 對應                                          |
+| `src/commands/auth-choice.apply.api-providers.ts`           | 修改      | 新增 `kilocode-api-key` 處理                                         |
+| `src/cli/program/register.onboard.ts`                       | 修改      | 新增 `--kilocode-api-key` 選項                                         |
+| `src/commands/onboard-non-interactive/local/auth-choice.ts` | 修改      | 新增非互動式處理                                            |
+| `src/commands/onboard-auth.ts`                              | 修改      | 匯出新函數                                                    |
+| `src/agents/pi-embedded-runner/cache-ttl.ts`                | 修改      | 新增 kilocode 支援                                                    |
+| `src/agents/transcript-policy.ts`                           | 修改      | 新增 kilocode Gemini 處理                                            |
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

@@ -1,19 +1,19 @@
 ---
-summary: "Étapes d'exécution partagées de VM Docker pour les hôtes OpenClaw Gateway à longue durée de vie"
+summary: "Étapes d'exécution de VM Docker partagées pour les hôtes OpenClaw Gateway longue durée"
 read_when:
-  - You are deploying OpenClaw on a cloud VM with Docker
-  - You need the shared binary bake, persistence, and update flow
-title: "Docker VM Runtime"
+  - Vous déployez OpenClaw sur un VM cloud avec Docker
+  - Vous avez besoin du processus de préparation (bake) binaire partagé, de la persistance et du flux de mises à jour
+title: "Runtime VM Docker"
 ---
 
-# Docker VM Runtime
+# Runtime VM Docker
 
-Étapes d'exécution partagées pour les installations Docker basées sur une VM telles que GCP, Hetzner et des fournisseurs de VPS similaires.
+Étapes d'exécution partagées pour les installations Docker basées sur VM telles que GCP, Hetzner et les fournisseurs VPS similaires.
 
 ## Intégrer les binaires requis dans l'image
 
-Installer des binaires dans un conteneur en cours d'exécution est un piège.
-Tout ce qui est installé au moment de l'exécution sera perdu au redémarrage.
+Installer des binaires à l'intérieur d'un conteneur en cours d'exécution est un piège.
+Tout ce qui est installé lors de l'exécution sera perdu au redémarrage.
 
 Tous les binaires externes requis par les compétences (skills) doivent être installés au moment de la construction de l'image.
 
@@ -97,7 +97,7 @@ Sortie attendue :
 /usr/local/bin/wacli
 ```
 
-Vérifier la Gateway :
+Vérifier le Gateway :
 
 ```bash
 docker compose logs -f openclaw-gateway
@@ -112,20 +112,20 @@ Sortie attendue :
 ## Ce qui persiste et où
 
 OpenClaw s'exécute dans Docker, mais Docker n'est pas la source de vérité.
-Tout état à longue durée de vie doit survivre aux redémarrages, reconstructions et reboots.
+Tout l'état longue durée doit survivre aux redémarrages, reconstructions et reboots.
 
-| Composant                              | Emplacement                       | Mécanisme de persistance   | Notes                                                 |
-| -------------------------------------- | --------------------------------- | -------------------------- | ----------------------------------------------------- |
-| Configuration de la Gateway            | `/home/node/.openclaw/`           | Montage de volume hôte     | Inclut `openclaw.json`, jetons                        |
-| Profils d'authentification de modèle   | `/home/node/.openclaw/`           | Montage de volume hôte     | Jeton OAuth, clés API                                 |
-| Configurations de compétences (skills) | `/home/node/.openclaw/skills/`    | Montage de volume hôte     | État au niveau de la compétence                       |
-| Espace de travail de l'agent           | `/home/node/.openclaw/workspace/` | Montage de volume hôte     | Code et artefacts de l'agent                          |
-| Session WhatsApp                       | `/home/node/.openclaw/`           | Montage de volume hôte     | Préserve la connexion QR                              |
-| Trousseau de clés Gmail                | `/home/node/.openclaw/`           | Volume hôte + mot de passe | Nécessite `GOG_KEYRING_PASSWORD`                      |
-| Binaires externes                      | `/usr/local/bin/`                 | Image Docker               | Doit être inclus (baked) au moment de la construction |
-| Runtime Node                           | Système de fichiers du conteneur  | Image Docker               | Reconstruit à chaque build d'image                    |
-| Paquets OS                             | Système de fichiers du conteneur  | Image Docker               | Ne pas installer au moment de l'exécution             |
-| Conteneur Docker                       | Éphémère                          | Redémarrable               | Sans risque de destruction                            |
+| Composant           | Emplacement                          | Mécanisme de persistance  | Notes                            |
+| ------------------- | --------------------------------- | ---------------------- | -------------------------------- |
+| Config Gateway      | `/home/node/.openclaw/`           | Montage de volume hôte      | Inclut `openclaw.json`, jetons |
+| Profils d'authentification de modèle | `/home/node/.openclaw/`           | Montage de volume hôte      | Jeton OAuth, clés API           |
+| Configs de compétences       | `/home/node/.openclaw/skills/`    | Montage de volume hôte      | État au niveau des compétences                |
+| Espace de travail de l'agent     | `/home/node/.openclaw/workspace/` | Montage de volume hôte      | Code et artefacts d'agent         |
+| Session WhatsApp    | `/home/node/.openclaw/`           | Montage de volume hôte      | Préserve la connexion QR               |
+| Trousseau de clés Gmail       | `/home/node/.openclaw/`           | Volume hôte + mot de passe | Nécessite `GOG_KEYRING_PASSWORD`  |
+| Binaires externes   | `/usr/local/bin/`                 | Image Docker           | Doit être préparé (baked) au moment de la construction      |
+| Runtime Node        | Système de fichiers du conteneur              | Image Docker           | Reconstruite à chaque construction d'image        |
+| Paquets du système d'exploitation         | Système de fichiers du conteneur              | Image Docker           | Ne pas installer à l'exécution        |
+| Conteneur Docker    | Éphémère                         | Redémarrable            | Sans risque de destruction                  |
 
 ## Mises à jour
 
@@ -137,6 +137,6 @@ docker compose build
 docker compose up -d
 ```
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

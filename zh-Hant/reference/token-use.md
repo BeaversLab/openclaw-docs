@@ -1,98 +1,98 @@
 ---
-summary: "How OpenClaw builds prompt context and reports token usage + costs"
+summary: "OpenClaw 如何建構提示詞上下文並回報 token 使用量與成本"
 read_when:
-  - Explaining token usage, costs, or context windows
-  - Debugging context growth or compaction behavior
-title: "Token Use and Costs"
+  - 說明 token 使用量、成本或上下文視窗
+  - 偵錯上下文增長或壓縮行為
+title: "Token 使用與成本"
 ---
 
-# Token use & costs
+# Token 使用與成本
 
-OpenClaw tracks **tokens**, not characters. Tokens are model-specific, but most
-OpenAI-style models average ~4 characters per token for English text.
+OpenClaw 追蹤的是 **tokens**（token），而非字元。Token 因模型而異，但大多數
+OpenAI 風格的模型對於英文文字平均每個 token 約為 4 個字元。
 
-## How the system prompt is built
+## 系統提示詞的建構方式
 
-OpenClaw assembles its own system prompt on every run. It includes:
+OpenClaw 每次執行時都會組裝自己的系統提示詞。它包含：
 
-- Tool list + short descriptions
-- Skills list (only metadata; instructions are loaded on demand with `read`)
-- Self-update instructions
-- Workspace + bootstrap files (`AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md` when new, plus `MEMORY.md` when present or `memory.md` as a lowercase fallback). Large files are truncated by `agents.defaults.bootstrapMaxChars` (default: 20000), and total bootstrap injection is capped by `agents.defaults.bootstrapTotalMaxChars` (default: 150000). `memory/*.md` files are on-demand via memory tools and are not auto-injected.
-- Time (UTC + user timezone)
-- Reply tags + heartbeat behavior
-- Runtime metadata (host/OS/model/thinking)
+- 工具列表 + 簡短描述
+- 技能列表（僅中繼資料；指令會透過 `read` 按需載入）
+- 自我更新指令
+- 工作區 + 引導檔案（當為新檔案時 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md`，加上存在時的 `MEMORY.md` 或作為小寫後備的 `memory.md`）。大檔案會被 `agents.defaults.bootstrapMaxChars` 截斷（預設值：20000），且總引導注入量受到 `agents.defaults.bootstrapTotalMaxChars` 上限限制（預設值：150000）。`memory/*.md` 檔案是透過記憶工具按需取得，不會自動注入。
+- 時間（UTC + 使用者時區）
+- 回覆標籤 + 心跳行為
+- 執行時期中繼資料（主機/作業系統/模型/思考）
 
-See the full breakdown in [System Prompt](/zh-Hant/concepts/system-prompt).
+請參閱 [系統提示詞](/zh-Hant/concepts/system-prompt) 了解完整細分。
 
-## What counts in the context window
+## 上下文視窗中計入的項目
 
-Everything the model receives counts toward the context limit:
+模型接收到的所有內容都會計入上下文限制：
 
-- System prompt (all sections listed above)
-- Conversation history (user + assistant messages)
-- Tool calls and tool results
-- Attachments/transcripts (images, audio, files)
-- Compaction summaries and pruning artifacts
-- Provider wrappers or safety headers (not visible, but still counted)
+- 系統提示詞（上述列出的所有部分）
+- 對話歷史（使用者 + 助手訊息）
+- 工具呼叫與工具結果
+- 附件/逐字稿（圖片、音訊、檔案）
+- 壓縮摘要與修剪產生的資料
+- 提供者包裝函式或安全標頭（不可見，但仍會計入）
 
-For images, OpenClaw downscales transcript/tool image payloads before provider calls.
-Use `agents.defaults.imageMaxDimensionPx` (default: `1200`) to tune this:
+對於圖片，OpenClaw 會在呼叫提供者前縮小逐字稿/工具圖片酬載。
+使用 `agents.defaults.imageMaxDimensionPx`（預設值：`1200`） 進行調整：
 
-- Lower values usually reduce vision-token usage and payload size.
-- Higher values preserve more visual detail for OCR/UI-heavy screenshots.
+- 較低的值通常會減少視覺 token 的使用量與酬載大小。
+- 較高的值會保留更多視覺細節，適合 OCR 或 UI 密集型的螢幕截圖。
 
-如需實用的細分（按每個注入的檔案、工具、技能和系統提示大小），請使用 `/context list` 或 `/context detail`。請參閱[Context](/zh-Hant/concepts/context)。
+如需實用細分（按注入的檔案、工具、技能和系統提示詞大小），請使用 `/context list` 或 `/context detail`。請參閱 [Context](/zh-Hant/concepts/context)。
 
-## 如何查看目前的 Token 使用量
+## 如何查看目前 Token 使用量
 
 在聊天中使用這些：
 
-- `/status` → **豐富表情符號的狀態卡片**，包含會話模型、內容使用量、
-  上次回應的輸入/輸出 Token，以及**預估成本**（僅限 API 金鑰）。
-- `/usage off|tokens|full` → 在每次回覆附加**單一回應使用量頁尾**。
-  - 每個會話持續存在（儲存為 `responseUsage`）。
-  - OAuth 驗證**隱藏成本**（僅顯示 Token）。
-- `/usage cost` → 顯示來自 OpenClaw 會話日誌的本機成本摘要。
+- `/status` → 顯示包含工作階段模型、內容使用量、
+  上次回應輸入/輸出 Token 和 **預估成本**（僅限 API 金鑰）的 **豐富表情符號狀態卡**。
+- `/usage off|tokens|full` → 在每個回覆附加 **每次回應使用量頁尾**。
+  - 每個工作階段持續存在（儲存為 `responseUsage`）。
+  - OAuth 驗證會**隱藏成本**（僅顯示 Token）。
+- `/usage cost` → 顯示來自 OpenClaw 工作階段日誌的本機成本摘要。
 
 其他介面：
 
 - **TUI/Web TUI：** 支援 `/status` + `/usage`。
 - **CLI：** `openclaw status --usage` 和 `openclaw channels list` 顯示
-  提供商配額視窗（非單一回應成本）。
+  提供者配額視窗（而非每次回應的成本）。
 
 ## 成本估算（顯示時）
 
-成本是根據您的模型定價設定估算：
+成本是根據您的模型定價設定估算的：
 
 ```
 models.providers.<provider>.models[].cost
 ```
 
 這些是 `input`、`output`、`cacheRead` 和
-`cacheWrite` 的 **每百萬 Token 美元價格**。如果缺少定價，OpenClaw 只顯示 Token。OAuth Token
+`cacheWrite` 的 **每 100 萬個 Token 的美元價格**。如果缺少定價，OpenClaw 僅顯示 Token。OAuth Token
 永遠不會顯示美元成本。
 
 ## 快取 TTL 和修剪影響
 
-提供商提示快取僅在快取 TTL 視窗內適用。OpenClaw 可以
-選擇執行 **cache-ttl 修剪**：它在快取 TTL
-過期後修剪會話，然後重設快取視窗，以便後續請求可以重複使用
-新快取的內容，而不是重新快取完整歷史記錄。這能在會話閒置超過 TTL 時
-降低快取寫入成本。
+提供者提示詞快取僅適用於快取 TTL 視窗內。OpenClaw 可以
+選擇性地執行 **cache-ttl 修剪**：它在快取 TTL
+過期後修剪工作階段，然後重設快取視窗，以便後續請求可以重用
+新快取的內容，而不是重新快取完整歷史記錄。這能夠在
+工作階段閒置超過 TTL 時保持較低的快取寫入成本。
 
-在 [Gateway configuration](/zh-Hant/gateway/configuration) 中進行設定，並在 [Session pruning](/zh-Hant/concepts/session-pruning) 中查看
-行為詳細資訊。
+請在 [Gateway configuration](/zh-Hant/gateway/configuration) 中進行配置，並在 [Session pruning](/zh-Hant/concepts/session-pruning) 中查看
+行為詳情。
 
-Heartbeat 可以在閒置間隔中保持快取 **warm**。如果您的模型快取 TTL
-是 `1h`，將心跳間隔設定為略低於該值（例如 `55m`） 可以避免
-重新快取完整提示，從而降低快取寫入成本。
+Heartbeat 可以讓快取在閒置間隔中保持 **暖機** 狀態。如果您的模型快取 TTL
+是 `1h`，將心跳間隔設定在略低於該值（例如 `55m`）可以避免
+重新快取完整提示詞，從而減少快取寫入成本。
 
-在多代理設定中，您可以保留一個共享的模型配置，並使用 `agents.list[].params.cacheRetention` 針對每個代理調整快取行為。
+在多代理設定中，您可以保留一個共用的模型配置，並使用 `agents.list[].params.cacheRetention` 針對每個代理調整快取行為。
 
-如需完整的逐步指南，請參閱 [提示快取](/zh-Hant/reference/prompt-caching)。
+如需完整的逐步指南，請參閱 [Prompt Caching](/zh-Hant/reference/prompt-caching)。
 
-關於 Anthropic API 的定價，快取讀取的費用顯著低於輸入 Token，而快取寫入則以更高的倍率計費。請參閱 Anthropic 的提示快取定價以獲取最新費率和 TTL 倍率：
+對於 Anthropic API 定價，快取讀取比輸入 token 便宜許多，而快取寫入則以較高的倍率計費。請參閱 Anthropic 的提示快取定價以取得最新費率和 TTL 倍率：
 [https://docs.anthropic.com/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/docs/build-with-claude/prompt-caching)
 
 ### 範例：使用心跳保持 1 小時快取溫熱
@@ -110,7 +110,7 @@ agents:
       every: "55m"
 ```
 
-### 範例：使用每代理快取策略處理混合流量
+### 範例：混合流量搭配每個代理的快取策略
 
 ```yaml
 agents:
@@ -131,11 +131,11 @@ agents:
         cacheRetention: "none" # avoid cache writes for bursty notifications
 ```
 
-`agents.list[].params` 會合併在所選模型的 `params` 之上，因此您可以只覆寫 `cacheRetention` 並繼承其他模型預設值而不變。
+`agents.list[].params` 會在選定模型的 `params` 之上進行合併，因此您可以只覆寫 `cacheRetention` 並繼承其他模型預設值而不變更。
 
-### 範例：啟用 Anthropic 1M 語境 Beta 標頭
+### 範例：啟用 Anthropic 1M 語境 beta 標頭
 
-Anthropic 的 1M 語境視窗目前處於 Beta 階段並受限制。當您在支援的 Opus 或 Sonnet 模型上啟用 `context1m` 時，OpenClaw 可以注入所需的 `anthropic-beta` 值。
+Anthropic 的 1M 語境視窗目前僅限 beta 測試。當您在支援的 Opus 或 Sonnet 模型上啟用 `context1m` 時，OpenClaw 可以插入所需的 `anthropic-beta` 值。
 
 ```yaml
 agents:
@@ -146,24 +146,25 @@ agents:
           context1m: true
 ```
 
-這對應到 Anthropic 的 `context-1m-2025-08-07` Beta 標頭。
+這對應到 Anthropic 的 `context-1m-2025-08-07` beta 標頭。
 
-這僅適用於在該模型項目上設定了 `context1m: true` 時。
+這僅適用於在該模型項目上設定 `context1m: true` 時。
 
-需求：憑證必須符合使用長語境的資格（API 金鑰付費，或已啟用額外使用量的訂閱）。如果不符合，Anthropic 將回應 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`。
+需求：憑證必須具備使用長語境的資格 (API 金鑰計費，或已啟用額外使用量的訂閱)。若未符合，Anthropic 將回應 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`。
 
-如果您使用 OAuth/訂閱權杖 (`sk-ant-oat-*`) 來驗證 Anthropic，OpenClaw 將跳過 `context-1m-*` Beta 標頭，因為 Anthropic 目前會以 HTTP 401 拒絕該組合。
+如果您使用 OAuth/訂閱 token (`sk-ant-oat-*`) 對 Anthropic 進行驗證，
+OpenClaw 將會跳過 `context-1m-*` beta 標頭，因為 Anthropic 目前會以 HTTP 401 拒絕該組合。
 
-## 減少 Token 壓力的提示
+## 降低 token 壓力的技巧
 
-- 使用 `/compact` 來摘要長對話。
+- 使用 `/compact` 來摘要長時間的對話。
 - 在您的工作流程中修剪大型工具輸出。
-- 對於包含大量截圖的對話，請降低 `agents.defaults.imageMaxDimensionPx`。
-- 保持技能描述簡短（技能列表會注入到提示中）。
-- 對於冗長的探索性工作，請優先使用較小的模型。
+- 對於包含大量螢幕擷圖的對話，請降低 `agents.defaults.imageMaxDimensionPx`。
+- 保持技能描述簡短 (技能列表會插入到提示中)。
+- 對於冗長的探索性工作，請優先選擇較小的模型。
 
-關於確切的技能列表開銷公式，請參閱 [技能](/zh-Hant/tools/skills)。
+請參閱 [Skills](/zh-Hant/tools/skills) 以了解確切的技能列表額外負載公式。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

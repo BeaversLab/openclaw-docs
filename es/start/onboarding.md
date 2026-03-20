@@ -1,8 +1,8 @@
 ---
 summary: "Flujo de configuración de primera ejecución para OpenClaw (aplicación macOS)"
 read_when:
-  - Designing the macOS onboarding assistant
-  - Implementing auth or identity setup
+  - Diseño del asistente de incorporación de macOS
+  - Implementación de la autenticación o configuración de identidad
 title: "Incorporación (aplicación macOS)"
 sidebarTitle: "Incorporación: aplicación macOS"
 ---
@@ -10,9 +10,9 @@ sidebarTitle: "Incorporación: aplicación macOS"
 # Incorporación (aplicación macOS)
 
 Este documento describe el flujo de configuración de primera ejecución **actual**. El objetivo es una
-experiencia fluida de "día 0": elegir dónde se ejecuta el Gateway, conectar la autenticación, ejecutar el
-asistente y dejar que el agente se inicie automáticamente.
-Para obtener una descripción general de las rutas de incorporación, consulte [Información general sobre la incorporación](/es/start/onboarding-overview).
+experiencia fluida del "día 0": elegir dónde se ejecuta el Gateway, conectar la autenticación, ejecutar el
+asistente y permitir que el agente se inicie automáticamente.
+Para una visión general de las rutas de incorporación, consulte [Información general sobre la incorporación](/es/start/onboarding-overview).
 
 <Steps>
 <Step title="Approve macOS warning">
@@ -32,29 +32,31 @@ Para obtener una descripción general de las rutas de incorporación, consulte [
 
 Modelo de confianza de seguridad:
 
-- De forma predeterminada, OpenClaw es un agente personal: un límite de un operador de confianza.
-- Las configuraciones compartidas/multiusuario requieren bloqueo (dividir los límites de confianza, mantener el acceso a las herramientas al mínimo y seguir [Seguridad](/es/gateway/security)).
+- De forma predeterminada, OpenClaw es un agente personal: un límite de operador de confianza.
+- Las configuraciones compartidas/multiusuario requieren un bloqueo (límites de confianza divididos, mantener el acceso a las herramientas al mínimo y seguir [Seguridad](/es/gateway/security)).
 - La incorporación local ahora establece de forma predeterminada las nuevas configuraciones en `tools.profile: "coding"` para que las configuraciones locales nuevas mantengan las herramientas de sistema de archivos/ejecución sin forzar el perfil `full` sin restricciones.
-- Si se habilitan hooks/webhooks u otras fuentes de contenido que no son de confianza, utilice un nivel de modelo moderno y sólido y mantenga una política estricta de herramientas y sandbox.
+- Si están habilitados los hooks/webhooks u otras fuentes de contenido que no son de confianza, use un nivel de modelo moderno fuerte y mantenga una política/herramientas estrictas y un aislamiento (sandboxing).
 
 </Step>
-<Step title="Local vs. Remoto">
+<Step title="Local versus Remoto">
 <Frame>
 <img src="/assets/macos-onboarding/04-choose-gateway.png" alt="" />
 </Frame>
 
 ¿Dónde se ejecuta el **Gateway**?
 
-- **Este Mac (solo local):** la incorporación puede configurar la autenticación y escribir las credenciales localmente.
-- **Remoto (a través de SSH/Tailnet):** la incorporación **no** configura la autenticación local; las credenciales deben existir en el host de la puerta de enlace.
+- **Este Mac (solo local):** la incorporación puede configurar la autenticación y escribir las credenciales
+  localmente.
+- **Remoto (a través de SSH/Tailnet):** la incorporación **no** configura la autenticación local;
+  las credenciales deben existir en el host de puerta de enlace.
 - **Configurar más tarde:** omita la configuración y deje la aplicación sin configurar.
 
 <Tip>
-**Consejo de autenticación de Gateway:**
+**Sugerencia de autenticación de Gateway:**
 
-- El asistente ahora genera un **token** incluso para el bucle invertido, por lo que los clientes WS locales deben autenticarse.
-- Si deshabilita la autenticación, cualquier proceso local puede conectarse; úselo solo en máquinas de total confianza.
-- Use un **token** para el acceso a varias máquinas o enlaces que no sean de bucle invertido.
+- El asistente ahora genera un **token** incluso para el bucle invertido (loopback), por lo que los clientes WS locales deben autenticarse.
+- Si deshabilita la autenticación, cualquier proceso local puede conectarse; use eso solo en máquinas de total confianza.
+- Use un **token** para el acceso multi-máquina o enlaces no de bucle invertido.
 
 </Tip>
 </Step>
@@ -77,13 +79,13 @@ La incorporación solicita los permisos TCC necesarios para:
 </Step>
 <Step title="CLI">
   <Info>Este paso es opcional</Info>
-  La aplicación puede instalar la `openclaw` CLI global a través de npm/pnpm para que los flujos de trabajo de la terminal y las tareas de launchd funcionen de inmediato.
+  La aplicación puede instalar la CLI global `openclaw` mediante npm/pnpm para que los flujos de trabajo de la terminal y las tareas de launchd funcionen directamente.
 </Step>
 <Step title="Chat de incorporación (sesión dedicada)">
-  Después de la configuración, la aplicación abre una sesión de chat de incorporación dedicada para que el agente pueda presentarse y guiar los siguientes pasos. Esto mantiene la orientación de la primera ejecución separada de su conversación normal. Consulte [Inicialización](/es/start/bootstrapping) para obtener información sobre lo que sucede en el host de la puerta de enlace durante la primera ejecución del agente.
+  Después de la configuración, la aplicación abre una sesión de chat de incorporación dedicada para que el agente pueda presentarse y guiar los siguientes pasos. Esto mantiene la orientación de la primera ejecución separada de su conversación normal. Consulte [Inicialización](/es/start/bootstrapping) para ver qué sucede en el host de puerta de enlace durante la primera ejecución del agente.
 </Step>
 </Steps>
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

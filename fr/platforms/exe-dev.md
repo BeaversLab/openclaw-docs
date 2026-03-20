@@ -1,8 +1,8 @@
 ---
-summary: "Exécuter OpenClaw Gateway sur exe.dev (VM + proxy HTTPS) pour un accès distant"
+summary: "Exécuter le OpenClaw Gateway sur exe.dev (VM + proxy HTTPS) pour un accès à distance"
 read_when:
-  - You want a cheap always-on Linux host for the Gateway
-  - You want remote Control UI access without running your own VPS
+  - Vous souhaitez un hôte Linux peu coûteux et toujours actif pour le Gateway
+  - Vous souhaitez un accès à distance à l'interface de contrôle sans exécuter votre propre VPS
 title: "exe.dev"
 ---
 
@@ -10,12 +10,12 @@ title: "exe.dev"
 
 Objectif : OpenClaw Gateway fonctionnant sur une VM exe.dev, accessible depuis votre ordinateur portable via : `https://<vm-name>.exe.xyz`
 
-Cette page suppose l'image par défaut **exeuntu** d'exe.dev. Si vous avez choisi une autre distribution, adaptez les packages en conséquence.
+Cette page suppose l'image par défaut d'exe.dev, **exeuntu**. Si vous avez choisi une autre distribution, adaptez les packages en conséquence.
 
 ## Chemin rapide pour débutants
 
 1. [https://exe.new/openclaw](https://exe.new/openclaw)
-2. Remplissez votre clé/jeton d'authentification si nécessaire
+2. Remplissez votre clé d'authentification/jeton si nécessaire
 3. Cliquez sur "Agent" à côté de votre VM, et attendez...
 4. ???
 5. Profit
@@ -23,7 +23,7 @@ Cette page suppose l'image par défaut **exeuntu** d'exe.dev. Si vous avez chois
 ## Ce dont vous avez besoin
 
 - compte exe.dev
-- Accès `ssh exe.dev` aux machines virtuelles [exe.dev](https://exe.dev) (facultatif)
+- Accès `ssh exe.dev` aux machines virtuelles [exe.dev](https://exe.dev) (optionnel)
 
 ## Installation automatisée avec Shelley
 
@@ -44,13 +44,13 @@ Depuis votre appareil :
 ssh exe.dev new
 ```
 
-Puis connectez-vous :
+Connectez-vous ensuite :
 
 ```bash
 ssh <vm-name>.exe.xyz
 ```
 
-Conseil : gardez cette VM **avec état**. OpenClaw stocke l'état sous `~/.openclaw/` et `~/.openclaw/workspace/`.
+Astuce : gardez cette VM **avec état**. OpenClaw stocke l'état sous `~/.openclaw/` et `~/.openclaw/workspace/`.
 
 ## 2) Installer les prérequis (sur la VM)
 
@@ -67,7 +67,7 @@ Exécutez le script d'installation OpenClaw :
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-## 4) Configurer nginx pour proxyer OpenClaw vers le port 8000
+## 4) Configurer nginx pour proxifier OpenClaw vers le port 8000
 
 Modifiez `/etc/nginx/sites-enabled/default` avec
 
@@ -103,15 +103,15 @@ server {
 
 ## 5) Accéder à OpenClaw et accorder les privilèges
 
-Accédez à `https://<vm-name>.exe.xyz/?token=YOUR-TOKEN-FROM-TERMINAL` (voir la sortie de l'interface utilisateur de contrôle lors de l'intégration). Approuvez
+Accédez à `https://<vm-name>.exe.xyz/?token=YOUR-TOKEN-FROM-TERMINAL` (voir la sortie de l'interface de contrôle lors de l'onboarding). Approuvez
 les appareils avec `openclaw devices list` et `openclaw devices approve <requestId>`. En cas de doute,
 utilisez Shelley depuis votre navigateur !
 
 ## Accès à distance
 
 L'accès à distance est géré par l'authentification d'[exe.dev](https://exe.dev). Par
-défaut, le trafic HTTP du port 8000 est transmis à `https://<vm-name>.exe.xyz`
-avec authentification par e-mail.
+défaut, le trafic HTTP du port 8000 est transféré vers `https://<vm-name>.exe.xyz`
+avec une authentification par e-mail.
 
 ## Mise à jour
 
@@ -124,6 +124,6 @@ openclaw health
 
 Guide : [Mise à jour](/fr/install/updating)
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

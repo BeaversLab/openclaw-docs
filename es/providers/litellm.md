@@ -1,25 +1,26 @@
 ---
-summary: "Ejecuta OpenClaw a través del proxy LiteLLM para el acceso unificado a modelos y el seguimiento de costos"
+title: "LiteLLM"
+summary: "Ejecuta OpenClaw a través del proxy LiteLLM para acceso unificado a modelos y seguimiento de costos"
 read_when:
-  - You want to route OpenClaw through a LiteLLM proxy
-  - You need cost tracking, logging, or model routing through LiteLLM
+  - Quieres enrutar OpenClaw a través de un proxy LiteLLM
+  - Necesitas seguimiento de costos, registro o enrutamiento de modelos a través de LiteLLM
 ---
 
 # LiteLLM
 
-[LiteLLM](https://litellm.ai) es una puerta de enlace (gateway) de LLM de código abierto que proporciona una API unificada a más de 100 proveedores de modelos. Redirige OpenClaw a través de LiteLLM para obtener un seguimiento centralizado de costos, registro y la flexibilidad de cambiar de backend sin modificar tu configuración de OpenClaw.
+[LiteLLM](https://litellm.ai) es una puerta de enlace de LLM de código abierto que proporciona una API unificada a más de 100 proveedores de modelos. Enruta OpenClaw a través de LiteLLM para obtener un seguimiento centralizado de costos, registros y la flexibilidad de cambiar de backends sin modificar la configuración de OpenClaw.
 
 ## ¿Por qué usar LiteLLM con OpenClaw?
 
-- **Seguimiento de costos** — Vea exactamente lo que gasta OpenClaw en todos los modelos
-- **Enrutamiento de modelos** — Cambie entre Claude, GPT-4, Gemini, Bedrock sin cambios en la configuración
+- **Seguimiento de costos** — Vea exactamente en qué gasta OpenClaw en todos los modelos
+- **Enrutamiento de modelos** — Cambie entre Claude, GPT-4, Gemini, Bedrock sin cambiar la configuración
 - **Claves virtuales** — Cree claves con límites de gasto para OpenClaw
 - **Registro** — Registros completos de solicitud/respuesta para depuración
-- **Respaldo (Fallbacks)** — Conmutación por error automática si su proveedor principal cae
+- **Respaldo (Fallbacks)** — Conmutación por error automática si su proveedor principal está caído
 
 ## Inicio rápido
 
-### A través de incorporación
+### Vía incorporación
 
 ```bash
 openclaw onboard --auth-choice litellm-api-key
@@ -27,14 +28,14 @@ openclaw onboard --auth-choice litellm-api-key
 
 ### Configuración manual
 
-1. Iniciar el proxy LiteLLM:
+1. Inicie el proxy LiteLLM:
 
 ```bash
 pip install 'litellm[proxy]'
 litellm --model claude-opus-4-6
 ```
 
-2. Apuntar OpenClaw a LiteLLM:
+2. Apunte OpenClaw a LiteLLM:
 
 ```bash
 export LITELLM_API_KEY="your-litellm-key"
@@ -42,7 +43,7 @@ export LITELLM_API_KEY="your-litellm-key"
 openclaw
 ```
 
-Eso es todo. OpenClaw ahora se enruta a través de LiteLLM.
+Eso es todo. Ahora OpenClau se enruta a través de LiteLLM.
 
 ## Configuración
 
@@ -110,7 +111,7 @@ Use la clave generada como `LITELLM_API_KEY`.
 
 ## Enrutamiento de modelos
 
-LiteLLM puede enrutar solicitudes de modelos a diferentes backends. Configúrelo en su `config.yaml` de LiteLLM:
+LiteLLM puede enrutar las solicitudes del modelo a diferentes backends. Configúrelo en su `config.yaml` de LiteLLM:
 
 ```yaml
 model_list:
@@ -125,11 +126,11 @@ model_list:
       api_key: os.environ/OPENAI_API_KEY
 ```
 
-OpenClaw sigue solicitando `claude-opus-4-6` — LiteLLM maneja el enrutamiento.
+OpenClaw sigue solicitando `claude-opus-4-6` — LiteLLM se encarga del enrutamiento.
 
 ## Ver uso
 
-Verifique el panel o la API de LiteLLM:
+Consulte el panel de control o la API de LiteLLM:
 
 ```bash
 # Key info
@@ -144,14 +145,14 @@ curl "http://localhost:4000/spend/logs" \
 ## Notas
 
 - LiteLLM se ejecuta en `http://localhost:4000` de forma predeterminada
-- OpenClaw se conecta a través del punto final (endpoint) `/v1/chat/completions` compatible con OpenAI
+- OpenClaw se conecta a través del punto final `/v1/chat/completions` compatible con OpenAI
 - Todas las funciones de OpenClaw funcionan a través de LiteLLM — sin limitaciones
 
-## Véase también
+## Ver también
 
 - [Documentación de LiteLLM](https://docs.litellm.ai)
 - [Proveedores de modelos](/es/concepts/model-providers)
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

@@ -1,31 +1,31 @@
 ---
 summary: "Comando de ubicación para nodos (location.get), modos de permiso y comportamiento en primer plano de Android"
 read_when:
-  - Adding location node support or permissions UI
-  - Designing Android location permissions or foreground behavior
+  - Agregar soporte de nodo de ubicación o IU de permisos
+  - Diseñar permisos de ubicación de Android o comportamiento en primer plano
 title: "Comando de ubicación"
 ---
 
 # Comando de ubicación (nodos)
 
-## TL;DR
+## Resumen
 
 - `location.get` es un comando de nodo (vía `node.invoke`).
-- Desactivado por defecto.
-- Los ajustes de la aplicación de Android usan un selector: Desactivado / Mientras se usa.
+- Desactivado de forma predeterminada.
+- La configuración de la aplicación de Android usa un selector: Desactivado / Mientras se usa.
 - Interruptor separado: Ubicación precisa.
 
-## Por qué un selector (no solo un interruptor)
+## Por qué un selector (y no solo un interruptor)
 
-Los permisos del SO son multinivel. Podemos exponer un selector en la aplicación, pero el SO aún decide la concesión real.
+Los permisos del SO son multinivel. Podemos exponer un selector en la aplicación, pero el SO sigue decidiendo la concesión real.
 
-- iOS/macOS puede exponer **Mientras se usa** o **Siempre** en los indicadores del sistema/ajustes.
-- La aplicación de Android actualmente solo admite ubicación en primer plano.
-- La ubicación precisa es una concesión separada (iOS 14+ “Precise”, Android “fine” vs “coarse”).
+- iOS/macOS puede exponer **Mientras se usa** o **Siempre** en los indicadores del sistema/Configuración.
+- La aplicación de Android actualmente solo admite la ubicación en primer plano.
+- La ubicación precisa es una concesión separada (iOS 14+ "Precisa", Android "fine" vs "coarse").
 
-El selector en la IU controla nuestro modo solicitado; la concesión real reside en los ajustes del SO.
+El selector en la IU impulsa nuestro modo solicitado; la concesión real vive en la configuración del SO.
 
-## Modelo de ajustes
+## Modelo de configuración
 
 Por dispositivo de nodo:
 
@@ -35,15 +35,15 @@ Por dispositivo de nodo:
 Comportamiento de la IU:
 
 - Seleccionar `whileUsing` solicita permiso en primer plano.
-- Si el SO deniega el nivel solicitado, volver al nivel más alto concedido y mostrar el estado.
+- Si el SO niega el nivel solicitado, vuelve al nivel más alto concedido y muestra el estado.
 
 ## Asignación de permisos (node.permissions)
 
-Opcional. El nodo macOS informa `location` a través del mapa de permisos; iOS/Android pueden omitirlo.
+Opcional. El nodo de macOS informa `location` a través del mapa de permisos; iOS/Android pueden omitirlo.
 
 ## Comando: `location.get`
 
-Llamado vía `node.invoke`.
+Llamado a través de `node.invoke`.
 
 Parámetros (sugeridos):
 
@@ -55,7 +55,7 @@ Parámetros (sugeridos):
 }
 ```
 
-Respuesta:
+Carga útil de respuesta:
 
 ```json
 {
@@ -76,12 +76,12 @@ Errores (códigos estables):
 - `LOCATION_DISABLED`: el selector está desactivado.
 - `LOCATION_PERMISSION_REQUIRED`: falta el permiso para el modo solicitado.
 - `LOCATION_BACKGROUND_UNAVAILABLE`: la aplicación está en segundo plano pero solo se permite Mientras se usa.
-- `LOCATION_TIMEOUT`: sin fijación a tiempo.
+- `LOCATION_TIMEOUT`: sin solución a tiempo.
 - `LOCATION_UNAVAILABLE`: fallo del sistema / sin proveedores.
 
 ## Comportamiento en segundo plano
 
-- La aplicación de Android deniega `location.get` mientras está en segundo plano.
+- La aplicación de Android niega `location.get` mientras está en segundo plano.
 - Mantenga OpenClaw abierto al solicitar la ubicación en Android.
 - Otras plataformas de nodos pueden diferir.
 
@@ -89,14 +89,14 @@ Errores (códigos estables):
 
 - Superficie de la herramienta: la herramienta `nodes` añade la acción `location_get` (se requiere nodo).
 - CLI: `openclaw nodes location get --node <id>`.
-- Directrices del agente: solo llamar cuando el usuario haya activado la ubicación y entienda el alcance.
+- Directrices del agente: llamar solo cuando el usuario haya habilitado la ubicación y comprenda el alcance.
 
-## Texto de UX (sugerido)
+## Texto de la interfaz de usuario (sugerido)
 
-- Desactivado: “El uso compartido de ubicación está desactivado.”
-- Mientras se usa: “Solo cuando OpenClaw está abierto.”
-- Precisa: “Usar ubicación GPS precisa. Desactívela para compartir la ubicación aproximada.”
+- Desactivado: "El uso compartido de la ubicación está desactivado".
+- Mientras se usa: "Solo cuando OpenClaw está abierto".
+- Precisa: "Usar ubicación GPS precisa. Desactivar para compartir la ubicación aproximada".
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

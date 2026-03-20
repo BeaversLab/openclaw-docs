@@ -1,42 +1,42 @@
 ---
 summary: "Linux 支援 + 伴隨應用程式狀態"
 read_when:
-  - Looking for Linux companion app status
-  - Planning platform coverage or contributions
-title: "Linux 應用程式"
+  - 尋找 Linux 伴隨應用程式狀態
+  - 規劃平台涵蓋範圍或貢獻
+title: "Linux App"
 ---
 
-# Linux 應用程式
+# Linux App
 
-Gateway 在 Linux 上獲得完整支援。**Node 是建議的執行時期**。
-不建議在 Gateway 上使用 Bun（存在 WhatsApp/Telegram 錯誤）。
+Gateway 在 Linux 上獲得完全支援。**Node 是推薦的執行環境**。
+不建議在 Gateway 上使用 Bun（WhatsApp/Telegram 有錯誤）。
 
-原生 Linux 伴隨應用程式已在計畫中。如果您願意協助建構，歡迎貢獻。
+原生 Linux 伴隨應用程式正在計畫中。如果您願意協助建構其中一個，歡迎貢獻。
 
-## 初學者快速途徑 (VPS)
+## 新手快速途徑 (VPS)
 
-1. 安裝 Node 24（建議；目前為 `22.16+` 的 Node 22 LTS 仍可用於相容性）
+1. 安裝 Node 24（推薦；Node 22 LTS，目前 `22.16+`，仍可相容使用）
 2. `npm i -g openclaw@latest`
 3. `openclaw onboard --install-daemon`
 4. 從您的筆記型電腦：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
-5. 開啟 `http://127.0.0.1:18789/` 並貼上您的權杖
+5. 開啟 `http://127.0.0.1:18789/` 並貼上您的 token
 
 逐步 VPS 指南：[exe.dev](/zh-Hant/install/exe-dev)
 
 ## 安裝
 
-- [開始使用](/zh-Hant/start/getting-started)
+- [快速入門](/zh-Hant/start/getting-started)
 - [安裝與更新](/zh-Hant/install/updating)
-- 選用流程：[Bun（實驗性）](/zh-Hant/install/bun)、[Nix](/zh-Hant/install/nix)、[Docker](/zh-Hant/install/docker)
+- 其他選項：[Bun (實驗性)](/zh-Hant/install/bun)、[Nix](/zh-Hant/install/nix)、[Docker](/zh-Hant/install/docker)
 
 ## Gateway
 
-- [Gateway 手冊](/zh-Hant/gateway)
-- [組態設定](/zh-Hant/gateway/configuration)
+- [Gateway 操作手冊](/zh-Hant/gateway)
+- [設定](/zh-Hant/gateway/configuration)
 
 ## Gateway 服務安裝 (CLI)
 
-使用其中一項：
+使用其中之一：
 
 ```
 openclaw onboard --install-daemon
@@ -54,7 +54,7 @@ openclaw gateway install
 openclaw configure
 ```
 
-當系統提示時，選取 **Gateway service**。
+系統提示時選擇 **Gateway service**。
 
 修復/遷移：
 
@@ -64,11 +64,11 @@ openclaw doctor
 
 ## 系統控制 (systemd 使用者單元)
 
-OpenClaw 預設安裝 systemd **user** 服務。請針對共用或
-24/7 運作的伺服器使用 **system** 服務。完整的單元範例
-與指南位於 [Gateway 手冊](/zh-Hant/gateway)。
+OpenClaw 預設會安裝一個 systemd **使用者** 服務。請使用 **系統**
+服務來應對共用或永遠線上的伺服器。完整的單元範例和指導
+位於 [Gateway 操作手冊](/zh-Hant/gateway)。
 
-最簡設定：
+最精簡設定：
 
 建立 `~/.config/systemd/user/openclaw-gateway[-<profile>].service`：
 
@@ -93,6 +93,6 @@ WantedBy=default.target
 systemctl --user enable --now openclaw-gateway[-<profile>].service
 ```
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

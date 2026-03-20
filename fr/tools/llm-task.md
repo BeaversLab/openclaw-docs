@@ -1,18 +1,18 @@
 ---
-summary: "Tâches LLM JSON uniquement pour les flux de travail (outil de plugin facultatif)"
+summary: "Tâches LLM en JSON uniquement pour les workflows (outil de plugin optionnel)"
 read_when:
-  - You want a JSON-only LLM step inside workflows
-  - You need schema-validated LLM output for automation
+  - Vous souhaitez une étape LLM en JSON uniquement à l'intérieur des workflows
+  - Vous avez besoin d'une sortie LLM validée par un schéma pour l'automatisation
 title: "Tâche LLM"
 ---
 
 # Tâche LLM
 
-`llm-task` est un **outil de plugin facultatif** qui exécute une tâche LLM JSON uniquement et
-renvoie une sortie structurée (éventuellement validée par rapport au schéma JSON).
+`llm-task` est un **outil de plugin optionnel** qui exécute une tâche LLM en JSON uniquement et
+retourne une sortie structurée (validée en option contre un schéma JSON).
 
-C'est idéal pour les moteurs de flux de travail comme Lobster : vous pouvez ajouter une seule étape LLM
-sans écrire de code OpenClaw personnalisé pour chaque flux de travail.
+C'est idéal pour les moteurs de workflow comme Lobster : vous pouvez ajouter une seule étape LLM
+sans écrire de code OpenClaw personnalisé pour chaque workflow.
 
 ## Activer le plugin
 
@@ -65,13 +65,13 @@ sans écrire de code OpenClaw personnalisé pour chaque flux de travail.
 }
 ```
 
-`allowedModels` est une liste autorisée de chaînes `provider/model`. Si défini, toute demande
+`allowedModels` est une liste autorisée de chaînes `provider/model`. Si elle est définie, toute requête
 en dehors de la liste est rejetée.
 
 ## Paramètres de l'outil
 
-- `prompt` (chaîne, requis)
-- `input` (tout, facultatif)
+- `prompt` (chaîne, obligatoire)
+- `input` (n'importe quel type, facultatif)
 - `schema` (objet, schéma JSON facultatif)
 - `provider` (chaîne, facultatif)
 - `model` (chaîne, facultatif)
@@ -85,10 +85,10 @@ en dehors de la liste est rejetée.
 
 ## Sortie
 
-Renvoie `details.json` contenant le JSON analysé (et valide par rapport à
-`schema` lorsque fourni).
+Retourne `details.json` contenant le JSON analysé (et valide par rapport à
+`schema` lorsqu'il est fourni).
 
-## Exemple : étape de flux de travail Lobster
+## Exemple : étape de workflow Lobster
 
 ```lobster
 openclaw.invoke --tool llm-task --action json --args-json '{
@@ -112,12 +112,12 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 
 ## Notes de sécurité
 
-- L'outil est **JSON uniquement** et instruit le modèle pour qu'il ne produise que du JSON (pas
-  de clôtures de code, pas de commentaire).
+- L'outil est **JSON uniquement** et instruit le modèle de ne produire que du JSON (sans
+  blocs de code, sans commentaire).
 - Aucun outil n'est exposé au modèle pour cette exécution.
 - Traitez la sortie comme non fiable sauf si vous la validez avec `schema`.
-- Placez les approbations avant toute étape avec effets secondaires (envoyer, publier, exécuter).
+- Placez les approbations avant toute étape avec effets de bord (send, post, exec).
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

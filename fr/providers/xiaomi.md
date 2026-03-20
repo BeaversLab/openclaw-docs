@@ -1,18 +1,21 @@
 ---
 summary: "Utiliser Xiaomi MiMo (mimo-v2-flash) avec OpenClaw"
 read_when:
-  - You want Xiaomi MiMo models in OpenClaw
-  - You need XIAOMI_API_KEY setup
+  - Vous souhaitez des modèles Xiaomi MiMo dans OpenClaw
+  - Vous avez besoin de la configuration de XIAOMI_API_KEY
 title: "Xiaomi MiMo"
 ---
 
 # Xiaomi MiMo
 
-Xiaomi MiMo est la plateforme API pour les modèles **MiMo**. Elle fournit des API REST compatibles avec les formats OpenAI et Anthropic et utilise des clés API pour l'authentification. Créez votre clé API dans la [console Xiaomi MiMo](https://platform.xiaomimimo.com/#/console/api-keys). OpenClaw utilise le provider `xiaomi` avec une clé API Xiaomi MiMo.
+Xiaomi MiMo est la plateforme API pour les modèles **MiMo**. Elle fournit des API REST compatibles avec
+les formats OpenAI et Anthropic et utilise des clés API pour l'authentification. Créez votre clé API
+dans la [console Xiaomi MiMo](https://platform.xiaomimimo.com/#/console/api-keys). OpenClaw utilise
+le provider `xiaomi` avec une clé API Xiaomi MiMo.
 
-## Aperçu du modèle
+## Présentation des modèles
 
-- **mimo-v2-flash** : fenêtre de contexte de 262144 tokens, compatible avec l'API Messages Anthropic.
+- **mimo-v2-flash**: fenêtre de contexte de 262144 tokens, compatible avec l'API de messages Anthropic.
 - URL de base : `https://api.xiaomimimo.com/anthropic`
 - Autorisation : `Bearer $XIAOMI_API_KEY`
 
@@ -56,10 +59,10 @@ openclaw onboard --auth-choice xiaomi-api-key --xiaomi-api-key "$XIAOMI_API_KEY"
 
 ## Notes
 
-- Référence du modèle : `xiaomi/mimo-v2-flash`.
-- Le provider est injecté automatiquement lorsque `XIAOMI_API_KEY` est défini (ou qu'un profil d'authentification existe).
-- Voir [/concepts/model-providers](/fr/concepts/model-providers) pour les règles du provider.
+- Réf. modèle : `xiaomi/mimo-v2-flash`.
+- Le provider est injecté automatiquement lorsque `XIAOMI_API_KEY` est défini (ou si un profil d'authentification existe).
+- Voir [/concepts/model-providers](/fr/concepts/model-providers) pour les règles de provider.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

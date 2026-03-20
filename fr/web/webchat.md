@@ -1,7 +1,7 @@
 ---
 summary: "Hôte statique Loopback WebChat et utilisation WS Gateway pour l'interface de chat"
 read_when:
-  - Debugging or configuring WebChat access
+  - Débogage ou configuration de l'accès WebChat
 title: "WebChat"
 ---
 
@@ -23,9 +23,9 @@ Statut : l'interface de conversation SwiftUI macOS/iOS communique directement av
 
 ## Fonctionnement (comportement)
 
-- L'interface utilisateur se connecte au WebSocket Gateway et utilise `chat.history`, `chat.send` et `chat.inject`.
-- `chat.history` est limité pour la stabilité : Gateway peut tronquer les champs de texte longs, omettre les métadonnées lourdes et remplacer les entrées trop volumineuses par `[chat.history omitted: message too large]`.
-- `chat.inject` ajoute une note d'assistant directement à la transcription et la diffuse à l'interface utilisateur (pas d'exécution d'agent).
+- L'interface se connecte au WebSocket Gateway et utilise `chat.history`, `chat.send` et `chat.inject`.
+- `chat.history` est limitée pour la stabilité : Gateway peut tronquer les champs de texte longs, omettre les métadonnées volumineuses et remplacer les entrées trop grandes par `[chat.history omitted: message too large]`.
+- `chat.inject` ajoute une note d'assistant directement à la transcription et la diffuse à l'interface (pas d'exécution d'agent).
 - Les exécutions abandonnées peuvent garder la sortie partielle de l'assistant visible dans l'interface utilisateur.
 - Gateway enregistre le texte partiel de l'assistant abandonné dans l'historique des transcriptions lorsqu'une sortie tamponnée existe, et marque ces entrées avec des métadonnées d'abandon.
 - L'historique est toujours récupéré depuis la passerelle (pas de surveillance de fichiers locaux).
@@ -33,10 +33,11 @@ Statut : l'interface de conversation SwiftUI macOS/iOS communique directement av
 
 ## Panneau des outils des agents de l'interface de contrôle
 
-- Le panneau des outils `/agents` de l'interface de contrôle récupère un catalogue d'exécution via `tools.catalog` et étiquette chaque
+- Le panneau Outils `/agents` de l'interface de contrôle récupère un catalogue d'exécution via `tools.catalog` et étiquette chaque
   outil comme `core` ou `plugin:<id>` (ainsi que `optional` pour les outils de plugin optionnels).
 - Si `tools.catalog` n'est pas disponible, le panneau revient à une liste statique intégrée.
-- Le panneau modifie le profil et la configuration de substitution, mais l'accès effectif à l'exécution suit toujours la priorité de la stratégie (`allow`/`deny`, substitutions par agent et fournisseur/channel).
+- Le panneau modifie le profil et la configuration de substitution, mais l'accès effectif à l'exécution suit toujours la priorité
+  de la stratégie (`allow`/`deny`, substitutions par agent et par fournisseur/channel).
 
 ## Utilisation à distance
 
@@ -59,6 +60,6 @@ Options globales associées :
 - `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password` : cible de passerelle distante.
 - `session.*` : stockage de session et valeurs par défaut de la clé principale.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

@@ -1,30 +1,30 @@
 ---
-summary: "直接的 `openclaw agent` CLI 執行（可選傳遞）"
+summary: "Direct `openclaw agent` CLI runs (with optional delivery)"
 read_when:
   - Adding or modifying the agent CLI entrypoint
 title: "Agent Send"
 ---
 
-# `openclaw agent` (直接 agent 執行)
+# `openclaw agent` (direct agent runs)
 
-`openclaw agent` 執行單一 agent 週期，而無需傳入聊天訊息。
-預設情況下它會 **通過 Gateway**；新增 `--local` 以強制在
-當前機器上使用嵌入式 runtime。
+`openclaw agent` runs a single agent turn without needing an inbound chat message.
+By default it goes **through the Gateway**; add `--local` to force the embedded
+runtime on the current machine.
 
 ## 行為
 
-- 必要：`--message <text>`
+- Required: `--message <text>`
 - Session 選擇：
-  - `--to <dest>` 推導 session 金鑰（群組/頻道目標保持隔離；直接聊天折疊為 `main`），**或**
-  - `--session-id <id>` 透過 ID 重複使用現有 session，**或**
-  - `--agent <id>` 直接鎖定已設定的 agent（使用該 agent 的 `main` session 金鑰）
+  - `--to <dest>` derives the session key (group/channel targets preserve isolation; direct chats collapse to `main`), **or**
+  - `--session-id <id>` reuses an existing session by id, **or**
+  - `--agent <id>` targets a configured agent directly (uses that agent's `main` session key)
 - 執行與一般傳入回覆相同的嵌入式 agent runtime。
 - Thinking/verbose 標記會持續保留到 session 存儲中。
 - 輸出：
-  - 預設：列印回覆文字（加上 `MEDIA:<url>` 行）
-  - `--json`：列印結構化 payload + 元數據
-- 可選透過 `--deliver` + `--channel` 傳遞回頻道（目標格式符合 `openclaw message --target`）。
-- 使用 `--reply-channel`/`--reply-to`/`--reply-account` 覆蓋傳遞設定而不變更 session。
+  - default: prints reply text (plus `MEDIA:<url>` lines)
+  - `--json`: prints structured payload + metadata
+- Optional delivery back to a channel with `--deliver` + `--channel` (target formats match `openclaw message --target`).
+- Use `--reply-channel`/`--reply-to`/`--reply-account` to override delivery without changing the session.
 
 如果 Gateway 無法連線，CLI 將 **回退** 到嵌入式本機執行。
 
@@ -41,17 +41,17 @@ openclaw agent --agent ops --message "Generate report" --deliver --reply-channel
 
 ## 標記
 
-- `--local`：在本機執行（需要在您的 shell 中提供模型提供者 API 金鑰）
-- `--deliver`：將回覆發送到選定的頻道
-- `--channel`：傳遞頻道（`whatsapp|telegram|discord|googlechat|slack|signal|imessage`，預設：`whatsapp`）
-- `--reply-to`：傳遞目標覆蓋
-- `--reply-channel`：傳遞頻道覆蓋
-- `--reply-account`：傳遞帳戶 ID 覆蓋
-- `--thinking <off|minimal|low|medium|high|xhigh>`：持續保留思考層級（僅限 GPT-5.2 + Codex 模型）
-- `--verbose <on|full|off>`：保留詳細輸出層級
-- `--timeout <seconds>`：覆寫代理逾時
-- `--json`：輸出結構化 JSON
+- `--local`: run locally (requires model provider API keys in your shell)
+- `--deliver`: send the reply to the chosen channel
+- `--channel`: delivery channel (`whatsapp|telegram|discord|googlechat|slack|signal|imessage`, default: `whatsapp`)
+- `--reply-to`: delivery target override
+- `--reply-channel`: delivery channel override
+- `--reply-account`: delivery account id override
+- `--thinking <off|minimal|low|medium|high|xhigh>`: persist thinking level (GPT-5.2 + Codex models only)
+- `--verbose <on|full|off>`: persist verbose level
+- `--timeout <seconds>`: override agent timeout
+- `--json`: output structured JSON
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

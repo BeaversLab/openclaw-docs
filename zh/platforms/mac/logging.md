@@ -1,34 +1,34 @@
 ---
-summary: "OpenClaw 日志记录：滚动诊断文件日志 + 统一日志隐私标志"
+summary: "OpenClaw logging: rolling diagnostics file log + unified log privacy flags"
 read_when:
   - Capturing macOS logs or investigating private data logging
-  - Debugging voice wake/session lifecycle issues
-title: "macOS 日志记录"
+  - Debugging voice wake/会话 lifecycle issues
+title: "macOS Logging"
 ---
 
-# 日志记录（macOS）
+# Logging (macOS)
 
-## 滚动诊断文件日志
+## Rolling diagnostics file log (Debug pane)
 
-OpenClaw 通过 swift-log（默认为统一日志记录）路由 macOS 应用日志，并在您需要持久化捕获时将本地滚动文件日志写入磁盘。
+OpenClaw routes macOS app logs through swift-log (unified logging by default) and can write a local, rotating file log to disk when you need a durable capture.
 
-- 详细程度：**调试面板 → 日志 → 应用日志 → 详细程度**
-- 启用：**调试面板 → 日志 → 应用日志 → “写入滚动诊断日志 (JSONL)”**
-- 位置：`~/Library/Logs/OpenClaw/diagnostics.jsonl`（自动轮换；旧文件后缀为 `.1`、`.2` …）
-- 清除：**调试面板 → 日志 → 应用日志 → “清除”**
+- Verbosity: **Debug pane → Logs → App logging → Verbosity**
+- Enable: **Debug pane → Logs → App logging → “Write rolling diagnostics log (JSONL)”**
+- Location: `~/Library/Logs/OpenClaw/diagnostics.jsonl` (rotates automatically; old files are suffixed with `.1`, `.2`, …)
+- Clear: **Debug pane → Logs → App logging → “Clear”**
 
-注意事项：
+Notes:
 
-- 此项**默认关闭**。仅在主动调试时启用。
-- 请将该文件视为敏感信息；未经审查请勿分享。
+- This is **off by default**. Enable only while actively debugging.
+- Treat the file as sensitive; don’t share it without review.
 
-## macOS 上的统一日志记录私有数据
+## Unified logging private data on macOS
 
-统一日志会编辑大多数有效负载，除非子系统选择加入 `privacy -off`。根据 Peter 关于 macOS [日志隐私恶作剧](https://steipete.me/posts/2025/logging-privacy-shenanigans) (2025) 的文章，这由 `/Library/Preferences/Logging/Subsystems/` 中的 plist 控制，以子系统名称为键。只有新的日志条目会获取该标志，因此请在重现问题之前启用它。
+Unified logging redacts most payloads unless a subsystem opts into `privacy -off`. Per Peter's write-up on macOS [logging privacy shenanigans](https://steipete.me/posts/2025/logging-privacy-shenanigans) (2025) this is controlled by a plist in `/Library/Preferences/Logging/Subsystems/` keyed by the subsystem name. Only new log entries pick up the flag, so enable it before reproducing an issue.
 
-## 为 OpenClaw (`ai.openclaw`) 启用
+## Enable for OpenClaw (`ai.openclaw`)
 
-- 先将 plist 写入临时文件，然后以 root 身份原子性地安装它：
+- Write the plist to a temp file first, then install it atomically as root:
 
 ```bash
 cat <<'EOF' >/tmp/ai.openclaw.plist
@@ -47,15 +47,15 @@ EOF
 sudo install -m 644 -o root -g wheel /tmp/ai.openclaw.plist /Library/Preferences/Logging/Subsystems/ai.openclaw.plist
 ```
 
-- 不需要重新启动；logd 会快速注意到该文件，但只有新的日志行才会包含私有负载。
-- 使用现有的帮助程序查看更丰富的输出，例如 `./scripts/clawlog.sh --category WebChat --last 5m`。
+- No reboot is required; logd notices the file quickly, but only new log lines will include private payloads.
+- View the richer output with the existing helper, e.g. `./scripts/clawlog.sh --category WebChat --last 5m`.
 
-## 调试后禁用
+## Disable after debugging
 
-- 移除覆盖：`sudo rm /Library/Preferences/Logging/Subsystems/ai.openclaw.plist`。
-- 可以选择运行 `sudo log config --reload` 以强制 logd 立即丢弃覆盖。
-- 请记住，此界面可能包含电话号码和消息正文；仅在您主动需要额外详细信息时才保留 plist。
+- Remove the override: `sudo rm /Library/Preferences/Logging/Subsystems/ai.openclaw.plist`.
+- Optionally run `sudo log config --reload` to force logd to drop the override immediately.
+- Remember this surface can include phone numbers and message bodies; keep the plist in place only while you actively need the extra detail.
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

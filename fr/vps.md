@@ -1,16 +1,16 @@
 ---
-summary: "Hub d'hébergement VPS pour OpenClaw (Oracle/Fly/Hetzner/GCP/exe.dev)"
+summary: "Centre d'hébergement VPS pour OpenClaw (Oracle/Fly/Hetzner/GCP/exe.dev)"
 read_when:
-  - You want to run the Gateway in the cloud
-  - You need a quick map of VPS/hosting guides
+  - Vous souhaitez exécuter la Gateway dans le cloud
+  - Vous avez besoin d'une cartographie rapide des guides VPS/hébergement
 title: "Hébergement VPS"
 ---
 
 # Hébergement VPS
 
-Ce hub pointe vers les guides d'hébergement VPS pris en charge et explique le fonctionnement des déploiements cloud dans les grandes lignes.
+Ce centre relie les guides d'hébergement VPS pris en charge et explique le fonctionnement des déploiements dans le cloud à un niveau élevé.
 
-## Choisir un provider
+## Choisir un fournisseur
 
 - **Railway** (configuration en un clic + navigateur) : [Railway](/fr/install/railway)
 - **Northflank** (configuration en un clic + navigateur) : [Northflank](/fr/install/northflank)
@@ -19,41 +19,41 @@ Ce hub pointe vers les guides d'hébergement VPS pris en charge et explique le f
 - **Hetzner (Docker)** : [Hetzner](/fr/install/hetzner)
 - **GCP (Compute Engine)** : [GCP](/fr/install/gcp)
 - **exe.dev** (VM + proxy HTTPS) : [exe.dev](/fr/install/exe-dev)
-- **AWS (EC2/Lightsail/free tier)** : fonctionne également très bien. Guide vidéo :
+- **AWS (EC2/Lightsail/offre gratuite)** : fonctionne également très bien. Guide vidéo :
   [https://x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
 
 ## Fonctionnement des configurations cloud
 
-- Le **Gateway s'exécute sur le VPS** et gère l'état + l'espace de travail.
-- Vous vous connectez depuis votre ordinateur/téléphone via l'**Interface de contrôle** ou **Tailscale/SSH**.
+- La **Gateway s'exécute sur le VPS** et gère l'état + l'espace de travail.
+- Vous vous connectez depuis votre ordinateur portable/téléphone via l'**interface de contrôle** ou **Tailscale/SSH**.
 - Considérez le VPS comme la source de vérité et **sauvegardez** l'état + l'espace de travail.
-- Sécurité par défaut : gardez le Gateway en loopback et accédez-y via un tunnel SSH ou Tailscale Serve.
+- Sécurité par défaut : gardez la Gateway sur le bouclage (loopback) et accédez-y via un tunnel SSH ou Tailscale Serve.
   Si vous vous liez à `lan`/`tailnet`, exigez `gateway.auth.token` ou `gateway.auth.password`.
 
-Accès à distance : [Gateway remote](/fr/gateway/remote)  
-Hub des plateformes : [Platforms](/fr/platforms)
+Accès à distance : [Gateway distant](/fr/gateway/remote)  
+Centre des plateformes : [Plateformes](/fr/platforms)
 
-## Agent partagé d'entreprise sur un VPS
+## Agent d'entreprise partagé sur un VPS
 
-C'est une configuration valide lorsque les utilisateurs se trouvent dans une même limite de confiance (par exemple une équipe d'entreprise) et que l'agent est uniquement destiné à un usage professionnel.
+Il s'agit d'une configuration valide lorsque les utilisateurs se trouvent dans une même limite de confiance (par exemple, une équipe d'entreprise) et que l'agent est exclusivement professionnel.
 
-- Gardez-le sur un environnement d'exécution dédié (VPS/VM/conteneur + utilisateur/comptes OS dédiés).
+- Gardez-le sur un environnement d'exécution dédié (VPS/VM/conteneur + utilisateur OS/comptes dédiés).
 - Ne connectez pas cet environnement d'exécution à des comptes personnels Apple/Google ou à des profils personnels de navigateur/gestionnaire de mots de passe.
-- Si les utilisateurs sont antagonistes entre eux, séparez-les par passerelle/hôte/utilisateur OS.
+- Si les utilisateurs sont adversaires les uns envers les autres, séparez-les par passerelle/hôte/utilisateur OS.
 
-Détails du modèle de sécurité : [Security](/fr/gateway/security)
+Détails du modèle de sécurité : [Sécurité](/fr/gateway/security)
 
-## Utiliser des nœuds avec un VPS
+## Utilisation des nœuds avec un VPS
 
-Vous pouvez conserver la Gateway dans le cloud et jumeler des **nœuds** sur vos appareils locaux
-(Mac/iOS/Android/headless). Les nœuds fournissent des capacités d'écran/caméra/canvas locales et `system.run`
-tandis que la Gateway reste dans le cloud.
+Vous pouvez conserver le Gateway dans le cloud et associer des **nœuds** sur vos appareils locaux
+(Mac/iOS/Android/headless). Les nœuds fournissent des capacités d'écran/caméra/canevas local et `system.run`
+pendant que le Gateway reste dans le cloud.
 
-Documentation : [Nodes](/fr/nodes), [Nodes CLI](/fr/cli/nodes)
+Docs : [Nodes](/fr/nodes), [Nodes CLI](/fr/cli/nodes)
 
-## Réglages de démarrage pour les petits VM et les hôtes ARM
+## Réglage du démarrage pour les petits VM et les hôtes ARM
 
-Si les commandes CLI semblent lentes sur les VM faibles (ou hôtes ARM), activez le cache de compilation des modules de Node :
+Si les commandes CLI semblent lentes sur les VM de faible puissance (ou les hôtes ARM), activez le cache de compilation des modules de Node :
 
 ```bash
 grep -q 'NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF'
@@ -67,9 +67,9 @@ source ~/.bashrc
 - `NODE_COMPILE_CACHE` améliore les temps de démarrage des commandes répétées.
 - `OPENCLAW_NO_RESPAWN=1` évite la surcharge de démarrage supplémentaire d'un chemin de auto-redémarrage.
 - La première exécution de la commande réchauffe le cache ; les exécutions suivantes sont plus rapides.
-- Pour les spécificités Raspberry Pi, voir [Raspberry Pi](/fr/platforms/raspberry-pi).
+- Pour les spécificités du Raspberry Pi, voir [Raspberry Pi](/fr/platforms/raspberry-pi).
 
-### Liste de contrôle du réglage systemd (facultatif)
+### Liste de contrôle du réglage systemd (optionnel)
 
 Pour les hôtes VM utilisant `systemd`, envisagez :
 
@@ -80,7 +80,7 @@ Pour les hôtes VM utilisant `systemd`, envisagez :
   - `Restart=always`
   - `RestartSec=2`
   - `TimeoutStartSec=90`
-- Privilégiez les disques SSD pour les chemins d'état/de cache afin de réduire les pénalités de démarrage à froid liées aux E/S aléatoires.
+- Préférez les disques sauvegardés par SSD pour les chemins d'état/de cache afin de réduire les pénalités de démarrage à froid liées aux E/S aléatoires.
 
 Exemple :
 
@@ -97,9 +97,9 @@ RestartSec=2
 TimeoutStartSec=90
 ```
 
-Comment les stratégies `Restart=` aident à la récupération automatisée :
+Comment les politiques `Restart=` aident à la récupération automatisée :
 [systemd peut automatiser la récupération de service](https://www.redhat.com/en/blog/systemd-automate-recovery).
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

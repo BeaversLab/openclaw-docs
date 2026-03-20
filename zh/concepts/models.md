@@ -1,35 +1,36 @@
 ---
-summary: "Models CLI：list、set、aliases、fallbacks、scan、status"
+summary: "模型 CLI：list, set, aliases, fallbacks, scan, status"
 read_when:
-  - Adding or modifying models CLI (models list/set/scan/aliases/fallbacks)
-  - Changing model fallback behavior or selection UX
-  - Updating model scan probes (tools/images)
-title: "Models CLI"
+  - 添加或修改模型 CLI（models list/set/scan/aliases/fallbacks）
+  - 更改模型回退行为或选择用户体验
+  - 更新模型扫描探测器（工具/图像）
+title: "模型 CLI"
 ---
 
 # 模型 CLI
 
-请参阅 [/concepts/模型-failover](/zh/concepts/model-failover) 了解身份配置轮换、冷却时间以及其与回退机制的交互方式。
-快速提供商概览 + 示例：[/concepts/模型-providers](/zh/concepts/model-providers)。
+请参阅 [/concepts/模型-failover](/zh/concepts/model-failover) 以了解身份验证配置文件轮换、冷却期以及其与回退的交互方式。
+快速提供商概述 + 示例：[/concepts/模型-providers](/zh/concepts/model-providers)。
 
-## 模型选择的工作原理
+## 模型选择如何工作
 
 OpenClaw 按以下顺序选择模型：
 
-1. **主要** 模型 (`agents.defaults.model.primary` 或 `agents.defaults.model`)。
-2. `agents.defaults.model.fallbacks` 中的 **Fallbacks**（按顺序）。
-3. **提供商身份故障转移** 在移动到下一个模型之前，会在提供商内部发生。
+1. **主要**模型（`agents.defaults.model.primary` 或 `agents.defaults.model`）。
+2. `agents.defaults.model.fallbacks` 中的**回退**（按顺序）。
+3. **提供商身份验证故障转移**在移动到下一个模型之前发生在提供商内部。
 
-相关内容：
+相关：
 
-- `agents.defaults.models` 是 OpenClaw 可以使用的模型的允许列表/目录（以及别名）。
-- `agents.defaults.imageModel` **仅当** 主模型无法接受图像时才会使用。
-- 每个代理的默认值可以通过 `agents.list[].model` 加上绑定来覆盖 `agents.defaults.model`（请参阅 [/concepts/multi-agent](/zh/concepts/multi-agent)）。
+- `agents.defaults.models` 是 OpenClaw 可以使用的模型的允许列表/目录（加上别名）。
+- `agents.defaults.imageModel` **仅当**主模型无法接受图像时才使用。
+- `agents.defaults.imageGenerationModel` 由共享图像生成功能使用。如果省略，`image_generate` 仍然可以从兼容的身份验证支持的图像生成插件中推断出提供商默认值。
+- 每个代理的默认值可以通过 `agents.list[].model` 加上绑定覆盖 `agents.defaults.model`（请参阅 [/concepts/multi-agent](/zh/concepts/multi-agent)）。
 
 ## 快速模型策略
 
-- 将您的主要设置为您可用的最强最新一代模型。
-- 针对成本/延迟敏感的任务和低风险聊天使用回退模型。
+- 将您的主模型设置为可用的最强最新一代模型。
+- 将回退用于成本/延迟敏感的任务和低风险聊天。
 - 对于启用了工具的代理或不受信任的输入，请避免使用较旧/较弱的模型层级。
 
 ## 新手引导（推荐）
@@ -40,33 +41,32 @@ OpenClaw 按以下顺序选择模型：
 openclaw onboard
 ```
 
-它可以为常见的提供商设置模型 + 认证，包括 **OpenAI Code (Codex)
+它可以为常见的提供商设置模型 + 身份验证，包括 **OpenAI Code (Codex)
 订阅**（OAuth）和 **Anthropic**（API 密钥或 `claude setup-token`）。
 
-## 配置键（概览）
+## 配置键（概述）
 
 - `agents.defaults.model.primary` 和 `agents.defaults.model.fallbacks`
 - `agents.defaults.imageModel.primary` 和 `agents.defaults.imageModel.fallbacks`
+- `agents.defaults.imageGenerationModel.primary` 和 `agents.defaults.imageGenerationModel.fallbacks`
 - `agents.defaults.models`（允许列表 + 别名 + 提供商参数）
-- `models.providers`（写入 `models.json` 的自定义提供商）
+- `models.providers` （写入 `models.json` 的自定义提供商）
 
-模型引用会规范化为小写。提供商别名如 `z.ai/*` 会规范化
-为 `zai/*`。
+模型引用会规范化为小写。提供商别名（如 `z.ai/*`）会规范化为 `zai/*`。
 
-提供商配置示例（包括 OpenCode）位于
-[/gateway/configuration](/zh/gateway/configuration#opencode)。
+提供商配置示例（包括 OpenCode）位于 [/gateway/configuration](/zh/gateway/configuration#opencode)。
 
-## “模型不被允许”（以及回复停止的原因）
+## "不允许使用该模型"（以及回复停止的原因）
 
-如果设置了 `agents.defaults.models`，它将成为 `/model` 和会话覆盖的 **允许列表**。当用户选择不在该允许列表中的模型时，OpenClaw 返回：
+如果设置了 `agents.defaults.models`，它将成为 `/model` 和会话覆盖的 **允许列表**。当用户选择的模型不在该允许列表中时，OpenClaw 会返回：
 
 ```
 Model "provider/model" is not allowed. Use /model to list available models.
 ```
 
-这发生在生成正常回复 **之前**，因此消息可能看起来像是“没有响应”。解决方法是：
+这会在生成正常回复 **之前** 发生，因此消息可能会让人觉得“没有回应”。解决方法是：
 
-- 将该模型添加到 `agents.defaults.models`，或者
+- 将模型添加到 `agents.defaults.models`，或者
 - 清除允许列表（移除 `agents.defaults.models`），或者
 - 从 `/model list` 中选择一个模型。
 
@@ -86,7 +86,7 @@ Model "provider/model" is not allowed. Use /model to list available models.
 
 ## 在聊天中切换模型 (`/model`)
 
-您可以在不重启的情况下为当前会话切换模型：
+您可以在不重新启动的情况下为当前会话切换模型：
 
 ```
 /model
@@ -96,17 +96,17 @@ Model "provider/model" is not allowed. Use /model to list available models.
 /model status
 ```
 
-注意：
+说明：
 
-- `/model`（以及 `/model list`）是一个紧凑的编号选择器（模型系列 + 可用的提供商）。
+- `/model` （和 `/model list`）是一个紧凑的编号选择器（模型系列 + 可用提供商）。
 - 在 Discord 上，`/model` 和 `/models` 会打开一个交互式选择器，其中包含提供商和模型下拉菜单以及提交步骤。
 - `/model <#>` 从该选择器中进行选择。
-- `/model status` 是详细视图（身份验证候选者，以及在配置时，提供商端点 `baseUrl` + `api` 模式）。
-- 模型引用通过在 **第一个** `/` 处分割来解析。在输入 `/model <ref>` 时使用 `provider/model`。
+- `/model status` 是详细视图（身份验证候选者，以及配置后的提供商端点 `baseUrl` + `api` 模式）。
+- 模型引用通过在 **第一个** `/` 处分割进行解析。在输入 `/model <ref>` 时请使用 `provider/model`。
 - 如果模型 ID 本身包含 `/`（OpenRouter 风格），则必须包含提供商前缀（例如：`/model openrouter/moonshotai/kimi-k2`）。
-- 如果省略提供商，OpenClaw 会将输入视为 **默认提供商** 的别名或模型（仅在模型 ID 中没有 `/` 时有效）。
+- 如果省略提供商，OpenClaw 会将输入视为别名或 **默认提供商** 的模型（仅当模型 ID 中没有 `/` 时有效）。
 
-完整的命令行为/配置：[Slash commands](/zh/tools/slash-commands)。
+完整的命令行为/配置：[斜杠命令](/zh/tools/slash-commands)。
 
 ## CLI 命令
 
@@ -137,22 +137,22 @@ openclaw models image-fallbacks clear
 
 默认显示已配置的模型。有用的标志：
 
-- `--all`: 完整目录
-- `--local`: 仅本地提供商
-- `--provider <name>`: 按提供商筛选
-- `--plain`: 每行一个模型
-- `--json`: 机器可读输出
+- `--all`：完整目录
+- `--local`：仅本地提供商
+- `--provider <name>`：按提供商筛选
+- `--plain`：每行一个模型
+- `--json`：机器可读输出
 
 ### `models status`
 
-显示已解析的主模型、后备模型、图像模型以及已配置提供商的认证概览。它还会显示在认证存储中找到的配置文件的 OAuth 过期状态（默认在 24 小时内发出警告）。`--plain` 仅打印已解析的主模型。
-OAuth 状态始终显示（并包含在 `--json` 输出中）。如果已配置的提供商没有凭据，`models status` 会打印一个 **缺少认证 (Missing auth)** 部分。
-JSON 包括 `auth.oauth`（警告窗口 + 配置文件）和 `auth.providers`（每个提供商的有效认证）。
-请使用 `--check` 进行自动化（当缺失/过期时退出 `1`，即将过期时退出 `2`）。
+显示解析后的主要模型、备用、图像模型以及已配置提供商的身份验证概览。它还会显示在身份验证存储中找到的配置文件的 OAuth 到期状态（默认在 24 小时内发出警告）。`--plain` 仅打印解析后的主要模型。
+OAuth 状态始终显示（并包含在 `--json` 输出中）。如果已配置的提供商没有凭据，`models status` 会打印一个 **Missing auth** 部分。
+JSON 包括 `auth.oauth`（警告窗口 + 配置文件）和 `auth.providers`（每个提供商的有效身份验证）。
+使用 `--check` 进行自动化（当缺失/过期时退出 `1`，即将过期时退出 `2`）。
 
-认证方式取决于提供商/账户。对于常驻网关主机，API 密钥通常是最可预测的；同时也支持订阅令牌流程。
+身份验证的选择取决于提供商/账户。对于常驻网关主机，API 密钥通常是最可预测的；同时也支持订阅令牌流程。
 
-示例（Anthropic 设置令牌）：
+示例（Anthropic setup-token）：
 
 ```bash
 claude setup-token
@@ -161,21 +161,22 @@ openclaw models status
 
 ## 扫描（OpenRouter 免费模型）
 
-`openclaw models scan` 会检查 OpenRouter 的 **免费模型目录**，并可选择探测模型是否支持工具和图像。
+`openclaw models scan` 会检查 OpenRouter 的 **免费模型目录**，并可选择性地探测模型的工具和图像支持。
 
 主要标志：
 
-- `--no-probe`: 跳过实时探测（仅限元数据）
-- `--min-params <b>`: 最小参数大小（十亿）
-- `--max-age-days <days>`: 跳过较旧的模型
-- `--provider <name>`: 提供商前缀筛选器
-- `--max-candidates <n>`: 后备列表大小
-- `--set-default`: 将 `agents.defaults.model.primary` 设置为第一个选择
-- `--set-image`: 将 `agents.defaults.imageModel.primary` 设置为第一个图像选择
+- `--no-probe`：跳过实时探测（仅元数据）
+- `--min-params <b>`：最小参数大小（十亿）
+- `--max-age-days <days>`：跳过旧模型
+- `--provider <name>`：提供商前缀筛选器
+- `--max-candidates <n>`：备用列表大小
+- `--set-default`：将 `agents.defaults.model.primary` 设置为第一个选择
+- `--set-image`：将 `agents.defaults.imageModel.primary` 设置为第一个图像选择
 
-探测需要 OpenRouter API 密钥（来自身份验证配置文件或 `OPENROUTER_API_KEY`）。如果没有密钥，请使用 `--no-probe` 仅列出候选项。
+探测需要 OpenRouter API 密钥（来自身份验证配置文件或
+`OPENROUTER_API_KEY`）。如果没有密钥，请使用 `--no-probe` 仅列出候选模型。
 
-扫描结果按以下条件排序：
+扫描结果按以下标准排序：
 
 1. 图像支持
 2. 工具延迟
@@ -184,29 +185,30 @@ openclaw models status
 
 输入
 
-- OpenRouter `/models` 列表（筛选 `:free`）
+- OpenRouter `/models` 列表（过滤器 `:free`）
 - 需要来自身份验证配置文件或 `OPENROUTER_API_KEY` 的 OpenRouter API 密钥（参见 [/environment](/zh/help/environment)）
-- 可选筛选器：`--max-age-days`、`--min-params`、`--provider`、`--max-candidates`
+- 可选过滤器：`--max-age-days`、`--min-params`、`--provider`、`--max-candidates`
 - 探测控制：`--timeout`、`--concurrency`
 
-在 TTY 中运行时，您可以交互式地选择后备模型。在非交互模式下，传递 `--yes` 以接受默认值。
+在 TTY 中运行时，您可以交互式地选择回退模型。在非交互
+模式下，传递 `--yes` 以接受默认值。
 
 ## 模型注册表 (`models.json`)
 
-`models.providers` 中的自定义提供商会被写入代理目录（默认为 `~/.openclaw/agents/<agentId>/agent/models.json`）下的 `models.json` 中。除非将 `models.mode` 设置为 `replace`，否则默认会合并此文件。
+`models.providers` 中的自定义提供商会写入到 agent 目录下的 `models.json` 中（默认为 `~/.openclaw/agents/<agentId>/agent/models.json`）。除非将 `models.mode` 设置为 `replace`，否则默认会合并此文件。
 
 匹配提供商 ID 的合并模式优先级：
 
-- 代理 `models.json` 中已存在的非空 `baseUrl` 优先。
-- 代理 `models.json` 中的非空 `apiKey` 仅在该提供商在当前配置/身份验证配置文件上下文中未由 SecretRef 管理时优先。
-- SecretRef 管理的提供商 `apiKey` 值将从源标记（环境引用为 `ENV_VAR_NAME`，文件/exec 引用为 `secretref-managed`）刷新，而不是持久化解析出的密钥。
-- SecretRef 管理的提供商标头值将从源标记（环境引用为 `secretref-env:ENV_VAR_NAME`，文件/exec 引用为 `secretref-managed`）刷新。
-- 如果代理 `apiKey`/`baseUrl` 为空或缺失，则回退到配置 `models.providers`。
-- 其他提供商字段会从配置和标准化的目录数据中刷新。
+- agent `models.json` 中已存在的非空 `baseUrl` 优先。
+- agent `models.json` 中的非空 `apiKey` 仅当该提供商在当前配置/身份验证配置文件上下文中不受 SecretRef 管理时才优先。
+- SecretRef 管理的提供商 `apiKey` 值将从源标记刷新（环境引用为 `ENV_VAR_NAME`，文件/exec 引用为 `secretref-managed`），而不是持久化已解析的机密。
+- SecretRef 管理的提供商标头值将从源标记刷新（环境引用为 `secretref-env:ENV_VAR_NAME`，文件/exec 引用为 `secretref-managed`）。
+- 为空或缺失的 agent `apiKey`/`baseUrl` 将回退到配置 `models.providers`。
+- 其他提供商字段将从配置和规范化目录数据中刷新。
 
-标记持久性以源为准：OpenClaw 从活动的源配置快照（解析前）写入标记，而不是从解析后的运行时密钥值写入。
-每当 OpenClaw 重新生成 `models.json` 时都适用此规则，包括像 `openclaw agent` 这样的命令驱动路径。
+Marker persistence is source-authoritative: OpenClaw writes markers from the active source config snapshot (pre-resolution), not from resolved runtime secret values.
+This applies whenever OpenClaw regenerates `models.json`, including command-driven paths like `openclaw agent`.
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

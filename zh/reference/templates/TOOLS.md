@@ -2,12 +2,12 @@
 title: "TOOLS.md 模板"
 summary: "TOOLS.md 的工作区模板"
 read_when:
-  - Bootstrapping a workspace manually
+  - 手动引导工作区
 ---
 
 # TOOLS.md - 本地笔记
 
-技能定义了工具*如何*工作。此文件用于*你的*具体细节——即对你设置而言独特的内容。
+技能定义了工具_如何_工作。此文件用于_你的_具体细节——即对你设置而言独特的内容。
 
 ## 这里放什么
 
@@ -46,6 +46,6 @@ read_when:
 
 添加任何对你工作有帮助的内容。这是你的备忘单。
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

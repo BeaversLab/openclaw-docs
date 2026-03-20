@@ -1,19 +1,20 @@
 ---
+title: "Together AI"
 summary: "Configuration de Together AI (auth + sélection de modèle)"
 read_when:
-  - You want to use Together AI with OpenClaw
-  - You need the API key env var or CLI auth choice
+  - Vous souhaitez utiliser Together AI avec OpenClaw
+  - Vous avez besoin de la clé d'env var API ou du choix d'auth CLI
 ---
 
 # Together AI
 
-[Together AI](https://together.ai) fournit l'accès aux principaux modèles open source, notamment Llama, DeepSeek, Kimi, et plus encore, via une API unifiée.
+[Together AI](https://together.ai) fournit l'accès aux principaux modèles open source, notamment Llama, DeepSeek, Kimi, et bien d'autres, via une API unifiée.
 
 - Fournisseur : `together`
 - Auth : `TOGETHER_API_KEY`
 - API : compatible OpenAI
 
-## Démarrage rapide
+## Quick start
 
 1. Définissez la clé API (recommandé : stockez-la pour le Gateway) :
 
@@ -44,7 +45,7 @@ openclaw onboard --non-interactive \
 
 Cela définira `together/moonshotai/Kimi-K2.5` comme modèle par défaut.
 
-## Remarque sur l'environnement
+## Note sur l'environnement
 
 Si le Gateway s'exécute en tant que démon (launchd/systemd), assurez-vous que `TOGETHER_API_KEY`
 est disponible pour ce processus (par exemple, dans `~/.openclaw/.env` ou via
@@ -58,12 +59,12 @@ Together AI donne accès à de nombreux modèles open source populaires :
 - **Llama 3.3 70B Instruct Turbo** - Suivi rapide et efficace des instructions
 - **Llama 4 Scout** - Modèle de vision avec compréhension d'image
 - **Llama 4 Maverick** - Vision avancée et raisonnement
-- **DeepSeek V3.1** - Modèle puissant pour le codage et le raisonnement
-- **DeepSeek R1** - Modèle de raisonnement avancé
+- **DeepSeek V3.1** - Modèle puissant de codage et de raisonnement
+- **DeepSeek R1** - Modèle avancé de raisonnement
 - **Kimi K2 Instruct** - Modèle haute performance avec une fenêtre de contexte de 262K
 
-Tous les modèles prennent en charge les achèvements de chat standard et sont compatibles avec l'OpenAI API.
+Tous les modèles prennent en charge les complétions de chat standard et sont compatibles avec l'OpenAI API.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

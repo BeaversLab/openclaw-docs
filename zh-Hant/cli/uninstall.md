@@ -1,14 +1,14 @@
 ---
-summary: "`openclaw uninstall` （移除閘道服務 + 本機資料）的 CLI 參考資料"
+summary: "`openclaw uninstall` 的 CLI 參考（移除 gateway service + 本地資料）"
 read_when:
-  - You want to remove the gateway service and/or local state
-  - You want a dry-run first
-title: "解除安裝"
+  - 您想要移除 gateway service 和/或本地狀態
+  - 您想要先進行 dry-run
+title: "uninstall"
 ---
 
 # `openclaw uninstall`
 
-解除安裝閘道服務 + 本機資料（CLI 會保留）。
+解除安裝 gateway service + 本地資料（CLI 會保留）。
 
 ```bash
 openclaw backup create
@@ -17,8 +17,8 @@ openclaw uninstall --all --yes
 openclaw uninstall --dry-run
 ```
 
-如果您在移除狀態或工作區之前需要可還原的快照，請先執行 `openclaw backup create`。
+如果您在移除狀態或工作區之前想要一個可還原的快照，請先執行 `openclaw backup create`。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

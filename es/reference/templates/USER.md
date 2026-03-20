@@ -1,7 +1,7 @@
 ---
 summary: "Registro de perfil de usuario"
 read_when:
-  - Bootstrapping a workspace manually
+  - Inicializar manualmente un espacio de trabajo
 ---
 
 # USER.md - Sobre tu humano
@@ -9,7 +9,7 @@ read_when:
 _Aprende sobre la persona a la que estás ayudando. Actualiza esto a medida que avanzas._
 
 - **Nombre:**
-- **Cómo llamarlo:**
+- **Cómo llamarlos:**
 - **Pronombres:** _(opcional)_
 - **Zona horaria:**
 - **Notas:**
@@ -22,6 +22,6 @@ _(¿Qué les importa? ¿En qué proyectos están trabajando? ¿Qué les molesta?
 
 Cuanto más sepas, mejor podrás ayudar. Pero recuerda: estás aprendiendo sobre una persona, no construyendo un expediente. Respeta la diferencia.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

@@ -1,19 +1,19 @@
 ---
-summary: "針對常見 OpenClaw 設定的符合架構的配置範例"
+summary: "常見 OpenClaw 設定的精確結構配置範例"
 read_when:
-  - Learning how to configure OpenClaw
-  - Looking for configuration examples
-  - Setting up OpenClaw for the first time
+  - 正在學習如何設定 OpenClaw
+  - 尋找設定範例
+  - 首次設定 OpenClaw
 title: "配置範例"
 ---
 
 # 配置範例
 
-以下範例與目前的設定架構一致。如需完整的參考資料與各欄位說明，請參閱 [配置](/zh-Hant/gateway/configuration)。
+以下範例已與目前的配置架構同步。如需完整的參考資料及各欄位說明，請參閱[配置](/zh-Hant/gateway/configuration)。
 
-## 快速開始
+## 快速入門
 
-### 絕對最小設定
+### 絕對最小值
 
 ```json5
 {
@@ -22,9 +22,9 @@ title: "配置範例"
 }
 ```
 
-儲存至 `~/.openclaw/openclaw.json`，您即可從該號碼傳送私訊給機器人。
+儲存至 `~/.openclaw/openclaw.json`，您即可透過該號碼傳送私人訊息給機器人。
 
-### 建議的起始設定
+### 建議的入門設定
 
 ```json5
 {
@@ -48,7 +48,7 @@ title: "配置範例"
 
 ## 擴充範例（主要選項）
 
-> JSON5 允許您使用註解與尾隨逗號。標準 JSON 亦可正常運作。
+> JSON5 允許您使用註解與尾隨逗號。標準 JSON 亦可運作。
 
 ```json5
 {
@@ -434,7 +434,7 @@ title: "配置範例"
       nodeManager: "npm",
     },
     entries: {
-      "nano-banana-pro": {
+      "image-lab": {
         enabled: true,
         apiKey: "GEMINI_KEY_HERE",
         env: { GEMINI_API_KEY: "GEMINI_KEY_HERE" },
@@ -468,9 +468,9 @@ title: "配置範例"
 }
 ```
 
-### 安全私訊模式（共用收件匣 / 多使用者私訊）
+### 安全私人訊息模式（共用收件匣 / 多使用者私人訊息）
 
-如果不只一人能傳送私訊給您的機器人（`allowFrom` 中有多個條目、多人的配對批准，或 `dmPolicy: "open"`），請啟用 **安全私訊模式**，如此不同寄件者的私訊預設便不會共用同一個上下文：
+如果超過一人能傳送私人訊息給您的機器人（`allowFrom` 中有多個項目、多人的配對批准，或 `dmPolicy: "open"`），請啟用**安全私人訊息模式**，讓不同傳送者的私人訊息預設不會共用同一個脈絡：
 
 ```json5
 {
@@ -494,10 +494,10 @@ title: "配置範例"
 }
 ```
 
-對於 Discord/Slack/Google Chat/MS Teams/Mattermost/IRC，預設情況下寄件者授權優先採用 ID 比對。
-唯有在您明確接受風險的情況下，才應透過各頻道的 `dangerouslyAllowNameMatching: true` 啟用直接的可變名稱/電子郵件/暱稱比對。
+對於 Discord/Slack/Google Chat/MS Teams/Mattermost/IRC，傳送者授權預設優先採用 ID。
+只有在您明確接受風險的情況下，才啟用各頻道的 `dangerouslyAllowNameMatching: true` 進行直接可變的名稱/電子郵件/暱稱比對。
 
-### OAuth 搭配 API 金鑰備援
+### 搭配 API 金鑰備援的 OAuth
 
 ```json5
 {
@@ -530,8 +530,7 @@ title: "配置範例"
 ### Anthropic setup-token + API 金鑰，MiniMax 備援
 
 <Warning>
-  過去已有部分使用者被限制在 Claude Code 之外使用 Anthropic setup-token。
-  請將此視為使用者自行選擇的風險，並在依賴訂閱驗證前確認目前的 Anthropic 條款。
+Anthropic setup-token 在 Claude Code 之外的使用過去曾對部分使用者受限。請將此視為使用者自選風險，並在依賴訂閱授權前確認目前的 Anthropic 條款。
 </Warning>
 
 ```json5
@@ -571,7 +570,7 @@ title: "配置範例"
 }
 ```
 
-### 工作機器人（限制存取）
+### 工作機器人（受限存取）
 
 ```json5
 {
@@ -596,7 +595,7 @@ title: "配置範例"
 }
 ```
 
-### 僅使用本地模型
+### 僅限本機模型
 
 ```json5
 {
@@ -630,11 +629,11 @@ title: "配置範例"
 
 ## 提示
 
-- 如果您設定了 `dmPolicy: "open"`，對應的 `allowFrom` 清單必須包含 `"*"`。
-- 供應商 ID 各有不同（電話號碼、使用者 ID、頻道 ID）。請參閱供應商文件以確認格式。
-- 稍後可新增的選用區段：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 參閱 [提供商](/zh-Hant/providers) 和 [疑難排解](/zh-Hant/gateway/troubleshooting) 以深入了解設定說明。
+- 如果您設定 `dmPolicy: "open"`，對應的 `allowFrom` 清單必須包含 `"*"`。
+- 提供者 ID 各不相同（電話號碼、使用者 ID、頻道 ID）。請參閱提供者文件以確認格式。
+- 稍後可新增的選用章節：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
+- 請參閱[提供者](/zh-Hant/providers)和[疑難排解](/zh-Hant/gateway/troubleshooting)以獲取更深入的設定說明。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

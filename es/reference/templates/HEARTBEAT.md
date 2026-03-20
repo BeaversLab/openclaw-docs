@@ -1,8 +1,8 @@
 ---
 title: "Plantilla HEARTBEAT.md"
-summary: "Plantilla del espacio de trabajo para HEARTBEAT.md"
+summary: "Plantilla de espacio de trabajo para HEARTBEAT.md"
 read_when:
-  - Bootstrapping a workspace manually
+  - Inicializar manualmente un espacio de trabajo
 ---
 
 # HEARTBEAT.md
@@ -11,6 +11,6 @@ read_when:
 
 # Añada tareas a continuación cuando desee que el agente verifique algo periódicamente.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

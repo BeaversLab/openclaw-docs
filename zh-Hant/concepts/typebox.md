@@ -49,18 +49,18 @@ Common methods + events:
 | Chat      | `chat.history`, `chat.send`, `chat.abort`, `chat.inject`  | WebChat uses these                 |
 | Sessions  | `sessions.list`, `sessions.patch`, `sessions.delete`      | session admin                      |
 | Nodes     | `node.list`, `node.invoke`, `node.pair.*`                 | Gateway WS + node actions          |
-| Events    | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | 伺服器推送                         |
+| Events    | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | 伺服器推送                        |
 
-權威列表位於 `src/gateway/server.ts` (`METHODS`, `EVENTS`) 中。
+Authoritative list lives in `src/gateway/server.ts` (`METHODS`, `EVENTS`).
 
 ## Schemas 所在位置
 
-- 來源：`src/gateway/protocol/schema.ts`
-- 執行時期驗證器 (AJV)：`src/gateway/protocol/index.ts`
-- 伺服器握手 + 方法分發：`src/gateway/server.ts`
+- Source: `src/gateway/protocol/schema.ts`
+- Runtime validators (AJV): `src/gateway/protocol/index.ts`
+- 伺服器握手 + 方法分派：`src/gateway/server.ts`
 - Node 客戶端：`src/gateway/client.ts`
-- 生成的 JSON Schema：`dist/protocol.schema.json`
-- 生成的 Swift 模型：`apps/macos/Sources/OpenClawProtocol/GatewayModels.swift`
+- 產生的 JSON Schema：`dist/protocol.schema.json`
+- 產生的 Swift 模型：`apps/macos/Sources/OpenClawProtocol/GatewayModels.swift`
 
 ## 目前管線
 
@@ -73,9 +73,9 @@ Common methods + events:
 
 ## Schemas 如何在執行時期被使用
 
-- **伺服器端**：每個傳入的幀都會透過 AJV 進行驗證。握手僅接受參數符合 `ConnectParams` 的 `connect` 請求。
-- **客戶端**：JS 客戶端會在使用事件和回應幀之前先進行驗證。
-- **方法表面**：Gateway 會在 `hello-ok` 中公告支援的 `methods` 和 `events`。
+- **伺服器端**：每個傳入的幀都會經過 AJV 驗證。握手僅接受參數符合 `ConnectParams` 的 `connect` 請求。
+- **客戶端**：JS 客戶端會在使用事件和回應幀之前對其進行驗證。
+- **方法表面**：Gateway 在 `hello-ok` 中通告支援的 `methods` 和 `events`。
 
 ## 範例幀
 
@@ -182,9 +182,9 @@ ws.on("message", (data) => {
 });
 ```
 
-## 實作範例：端對端新增一個方法
+## 實作範例：端對端新增方法
 
-範例：新增一個傳回 `{ ok: true, text }` 的 `system.echo` 請求。
+範例：新增一個傳回 `{ ok: true, text }` 的新 `system.echo` 請求。
 
 1. **Schema (唯一真實來源)**
 
@@ -224,7 +224,7 @@ export const validateSystemEchoParams = ajv.compile<SystemEchoParams>(SystemEcho
 
 3. **伺服器行為**
 
-在 `src/gateway/server-methods/system.ts` 中新增一個處理器：
+在 `src/gateway/server-methods/system.ts` 中新增處理程式：
 
 ```ts
 export const systemHandlers: GatewayRequestHandlers = {
@@ -235,8 +235,8 @@ export const systemHandlers: GatewayRequestHandlers = {
 };
 ```
 
-在 `src/gateway/server-methods.ts` 中註冊它（已合併 `systemHandlers`），
-然後將 `"system.echo"` 加入 `src/gateway/server.ts` 中的 `METHODS`。
+在 `src/gateway/server-methods.ts` 中註冊 (已合併 `systemHandlers`)，
+然後將 `"system.echo"` 新增至 `METHODS` 中的 `src/gateway/server.ts`。
 
 4. **重新生成**
 
@@ -246,38 +246,38 @@ pnpm protocol:check
 
 5. **測試 + 文件**
 
-在 `src/gateway/server.*.test.ts` 中新增伺服器測試，並在文件中註記該方法。
+在 `src/gateway/server.*.test.ts` 中新增伺服器測試並在文件中註記該方法。
 
 ## Swift codegen 行為
 
 Swift 生成器會輸出：
 
-- 包含 `req`、`res`、`event` 和 `unknown` case 的 `GatewayFrame` enum
+- 具有 `req`、`res`、`event` 和 `unknown` 案例 (cases) 的 `GatewayFrame` 列舉
 - 強型別 payload structs/enums
-- `ErrorCode` 值與 `GATEWAY_PROTOCOL_VERSION`
+- `ErrorCode` 值和 `GATEWAY_PROTOCOL_VERSION`
 
 未知的 frame types 會保留為原始 payload 以維持向前相容性。
 
 ## 版本控制 + 相容性
 
-- `PROTOCOL_VERSION` 位於 `src/gateway/protocol/schema.ts`。
+- `PROTOCOL_VERSION` 位於 `src/gateway/protocol/schema.ts` 中。
 - 客戶端發送 `minProtocol` + `maxProtocol`；伺服器會拒絕不相符的請求。
 - Swift 模型會保留未知的 frame types，以避免破壞舊版客戶端。
 
 ## Schema 模式與慣例
 
-- 大多數物件使用 `additionalProperties: false` 來定義嚴格的 payload。
-- `NonEmptyString` 是 ID 與 method/event 名稱的預設值。
-- 頂層 `GatewayFrame` 使用 `type` 作為 **discriminator**。
-- 具有副作用的方法通常需要在 params 中包含 `idempotencyKey`
+- 大多數物件使用 `additionalProperties: false` 來處理嚴格的 payloads。
+- `NonEmptyString` 是 ID 和方法/事件名稱的預設值。
+- 頂層 `GatewayFrame` 在 `type` 上使用鑑別器 (**discriminator**)。
+- 具有副作用的方法通常在參數中需要 `idempotencyKey`
   （例如：`send`、`poll`、`agent`、`chat.send`）。
-- `agent` 接受選用的 `internalEvents`，用於執行時期產生的編排語境
-  （例如 subagent/cron 任務完成移交）；請將此視為內部 API 表面。
+- `agent` 接受可選的 `internalEvents` 用於運行時生成的編排上下文
+  （例如子代理/ cron 任務完成移交）；請將其視為內部 API 表面。
 
 ## 即時 Schema JSON
 
-生成的 JSON Schema 位於 repo 中的 `dist/protocol.schema.json`。發布的
-原始檔案通常可於以下位置取得：
+生成的 JSON Schema 位於儲存庫的 `dist/protocol.schema.json`。已發布的
+原始檔案通常可在以下位置取得：
 
 - [https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json](https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json)
 
@@ -287,6 +287,6 @@ Swift 生成器會輸出：
 2. 執行 `pnpm protocol:check`。
 3. 提交重新生成的 schema 與 Swift 模型。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

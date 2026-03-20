@@ -16,6 +16,6 @@ Consulte la [página de confianza](https://trust.openclaw.ai) para obtener instr
 - **Jamieson O'Reilly** ([@theonejvo](https://twitter.com/theonejvo)) - Seguridad y Confianza
 - Discord: canal #security
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

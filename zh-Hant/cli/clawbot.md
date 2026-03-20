@@ -1,25 +1,25 @@
 ---
-summary: "CLI 參考資料：`openclaw clawbot` (舊版別名命名空間)"
+summary: "`openclaw clawbot` 的 CLI 參考（舊版別名命名空間）"
 read_when:
-  - You maintain older scripts using `openclaw clawbot ...`
-  - You need migration guidance to current commands
+  - 您維護使用 `openclaw clawbot ...` 的舊版腳本
+  - 您需要遷移至當前指令的指導
 title: "clawbot"
 ---
 
 # `openclaw clawbot`
 
-保留舊版別名命名空間以維持向後相容性。
+保留用於向後相容性的舊版別名命名空間。
 
 目前支援的別名：
 
-- `openclaw clawbot qr` (行為與 [`openclaw qr`](/zh-Hant/cli/qr) 相同)
+- `openclaw clawbot qr`（行為與 [`openclaw qr`](/zh-Hant/cli/qr) 相同）
 
-## 移轉
+## 遷移
 
-請直接優先使用現代化的頂層指令：
+優先直接使用現代頂層指令：
 
 - `openclaw clawbot qr` -> `openclaw qr`
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

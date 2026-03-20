@@ -1,8 +1,8 @@
 ---
 summary: "Installez OpenClaw et lancez votre premier chat en quelques minutes."
 read_when:
-  - First time setup from zero
-  - You want the fastest path to a working chat
+  - Première configuration à partir de zéro
+  - Vous souhaitez le chemin le plus rapide vers un chat fonctionnel
 title: "Getting Started"
 ---
 
@@ -11,22 +11,21 @@ title: "Getting Started"
 Objectif : passer de zéro à un premier chat fonctionnel avec une configuration minimale.
 
 <Info>
-  Chat le plus rapide : ouvrez l'interface de contrôle (aucune configuration de canal nécessaire).
-  Exécutez `openclaw dashboard` et chattez dans le navigateur, ou ouvrez `http://127.0.0.1:18789/`
-  sur le
-  <Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">
-    hôte de la passerelle
-  </Tooltip>
-  . Docs : [Tableau de bord](/fr/web/dashboard) et [Interface de contrôle](/fr/web/control-ui).
+Chat le plus rapide : ouvrez l'interface de contrôle (aucune configuration de canal nécessaire). Lancez `openclaw dashboard`
+et discutez dans le navigateur, ou ouvrez `http://127.0.0.1:18789/` sur le
+<Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">hôte de la passerelle</Tooltip>.
+Docs : [Tableau de bord](/fr/web/dashboard) et [Interface de contrôle](/fr/web/control-ui).
 </Info>
 
 ## Prérequis
 
-- Node 24 recommandé (Node 22 LTS, actuellement `22.16+`, encore pris en charge pour la compatibilité)
+- Node 24 recommandé (Node 22 LTS, actuellement `22.16+`, encore pris en charge pour compatibilité)
 
-<Tip>Vérifiez votre version de Node avec `node --version` si vous n'êtes pas sûr.</Tip>
+<Tip>
+Vérifiez votre version de Node avec `node --version` en cas de doute.
+</Tip>
 
-## Installation rapide (CLI)
+## Configuration rapide (CLI)
 
 <Steps>
   <Step title="Installer OpenClaw (recommandé)">
@@ -49,20 +48,20 @@ Objectif : passer de zéro à un premier chat fonctionnel avec une configuration
     </Tabs>
 
     <Note>
-    Autres méthodes d'installation et exigences : [Install](/fr/install).
+    Autres méthodes d'installation et prérequis : [Installer](/fr/install).
     </Note>
 
   </Step>
-  <Step title="Exécuter l'onboarding">
+  <Step title="Exécuter l'intégration">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    L'onboarding configure l'authentification, les paramètres de la passerelle et les canaux facultatifs.
-    Voir [Onboarding (CLI)](/fr/start/wizard) pour plus de détails.
+    L'intégration configure l'authentification, les paramètres de la passerelle et les canaux optionnels.
+    Voir [Intégration (CLI)](/fr/start/wizard) pour plus de détails.
 
   </Step>
-  <Step title="Vérifier la Gateway">
+  <Step title="Vérifier la passerelle">
     Si vous avez installé le service, il devrait déjà être en cours d'exécution :
 
     ```bash
@@ -77,13 +76,15 @@ Objectif : passer de zéro à un premier chat fonctionnel avec une configuration
   </Step>
 </Steps>
 
-<Check>Si l'interface de contrôle se charge, votre Gateway est prêt à être utilisé.</Check>
+<Check>
+Si l'interface de contrôle se charge, votre passerelle est prête à être utilisée.
+</Check>
 
-## Vérifications et extras facultatifs
+## Vérifications optionnelles et extras
 
 <AccordionGroup>
-  <Accordion title="Exécuter la passerelle au premier plan">
-    Utile pour les tests rapides ou le dépannage.
+  <Accordion title="Exécuter le Gateway au premier plan">
+    Utile pour des tests rapides ou le dépannage.
 
     ```bash
     openclaw gateway --port 18789
@@ -91,7 +92,7 @@ Objectif : passer de zéro à un premier chat fonctionnel avec une configuration
 
   </Accordion>
   <Accordion title="Envoyer un message de test">
-    Nécessite une chaîne configurée.
+    Nécessite un channel configuré.
 
     ```bash
     openclaw message send --target +15555550123 --message "Hello from OpenClaw"
@@ -108,31 +109,31 @@ Si vous exécutez OpenClaw en tant que compte de service ou si vous souhaitez de
 - `OPENCLAW_STATE_DIR` remplace le répertoire d'état.
 - `OPENCLAW_CONFIG_PATH` remplace le chemin du fichier de configuration.
 
-Référence complète des variables d'environnement : [Environment vars](/fr/help/environment).
+Référence complète des variables d'environnement : [Variables d'environnement](/fr/help/environment).
 
-## Pour aller plus loin
+## Approfondir
 
 <Columns>
   <Card title="Onboarding (CLI)" href="/fr/start/wizard">
     Référence complète de l'onboarding CLI et options avancées.
   </Card>
-  <Card title="Intégration de l'application macOS" href="/fr/start/onboarding">
+  <Card title="Onboarding de l'application macOS" href="/fr/start/onboarding">
     Flux de première exécution pour l'application macOS.
   </Card>
 </Columns>
 
 ## Ce que vous aurez
 
-- Une Gateway en cours d'exécution
+- Un Gateway en cours d'exécution
 - Auth configurée
-- Accès à l'interface de contrôle ou une chaîne connectée
+- Accès à l'interface de contrôle ou un channel connecté
 
 ## Étapes suivantes
 
-- Sécurité et approbations des messages privés : [Pairing](/fr/channels/pairing)
-- Connecter plus de chaînes : [Channels](/fr/channels)
-- Workflows avancés et à partir de la source : [Setup](/fr/start/setup)
+- Sécurité des DM et approbations : [Appairage](/fr/channels/pairing)
+- Connecter plus de channels : [Channels](/fr/channels)
+- Workflows avancés et à partir du code source : [Configuration](/fr/start/setup)
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

@@ -1,16 +1,16 @@
 ---
 summary: "Usa Z.AI (modelos GLM) con OpenClaw"
 read_when:
-  - You want Z.AI / GLM models in OpenClaw
-  - You need a simple ZAI_API_KEY setup
+  - Quieres modelos Z.AI / GLM en OpenClaw
+  - Necesitas una configuración sencilla de ZAI_API_KEY
 title: "Z.AI"
 ---
 
 # Z.AI
 
-Z.AI es la plataforma de API para modelos **GLM**. Proporciona API REST para GLM y usa claves de API
-para la autenticación. Crea tu clave de API en la consola de Z.AI. OpenClaw usa el proveedor `zai`
-con una clave de API de Z.AI.
+Z.AI es la plataforma API para modelos **GLM**. Proporciona API REST para GLM y utiliza claves API
+para la autenticación. Crea tu clave API en la consola de Z.AI. OpenClaw usa el proveedor `zai`
+con una clave API de Z.AI.
 
 ## Configuración de CLI
 
@@ -40,11 +40,11 @@ openclaw onboard --auth-choice zai-cn
 ## Notas
 
 - Los modelos GLM están disponibles como `zai/<model>` (ejemplo: `zai/glm-5`).
-- `tool_stream` está habilitado por defecto para la transmisión de llamadas a herramientas de Z.AI. Establece
-  `agents.defaults.models["zai/<model>"].params.tool_stream` en `false` para desactivarlo.
-- Consulta [/providers/glm](/es/providers/glm) para obtener una descripción general de la familia de modelos.
-- Z.AI utiliza autenticación Bearer con tu clave de API.
+- `tool_stream` está habilitado por defecto para el streaming de llamadas a herramientas de Z.AI. Establece
+  `agents.defaults.models["zai/<model>"].params.tool_stream` en `false` para deshabilitarlo.
+- Consulta [/providers/glm](/es/providers/glm) para ver la descripción general de la familia de modelos.
+- Z.AI usa autenticación Bearer con tu clave API.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

@@ -1,8 +1,8 @@
 ---
-title: "TOOLS.md 範本"
-summary: "TOOLS.md 的工作區範本"
+title: "TOOLS.md 模板"
+summary: "TOOLS.md 的工作區模板"
 read_when:
-  - Bootstrapping a workspace manually
+  - 手動啟動工作區
 ---
 
 # TOOLS.md - 本地端備註
@@ -46,6 +46,6 @@ read_when:
 
 新增任何有助於你完成工作的內容。這是你的小抄。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

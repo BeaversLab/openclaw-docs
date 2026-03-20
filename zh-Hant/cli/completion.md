@@ -1,14 +1,14 @@
 ---
-summary: "CLI 參考手冊，適用於 `openclaw completion`（生成/安裝 Shell 自動補全腳本）"
+summary: "`openclaw completion` 的 CLI 參考（生成/安裝 Shell 自動補全腳本）"
 read_when:
-  - You want shell completions for zsh/bash/fish/PowerShell
-  - You need to cache completion scripts under OpenClaw state
+  - 您想要 zsh/bash/fish/PowerShell 的 Shell 自動補全功能
+  - 您需要在 OpenClaw 狀態下快取自動補全腳本
 title: "completion"
 ---
 
 # `openclaw completion`
 
-生成 Shell 自動補全腳本，並可選擇將其安裝至您的 Shell 設定檔中。
+生成 Shell 自動補全腳本，並選擇性地將其安裝到您的 Shell 設定檔中。
 
 ## 用法
 
@@ -23,17 +23,17 @@ openclaw completion --shell bash --write-state
 
 ## 選項
 
-- `-s, --shell <shell>`：Shell 目標（`zsh`、`bash`、`powershell`、`fish`；預設值：`zsh`）
-- `-i, --install`：透過在您的 Shell 設定檔中加入 source 指令來安裝自動補全
-- `--write-state`：將自動補全腳本寫入 `$OPENCLAW_STATE_DIR/completions` 而不輸出至標準輸出
+- `-s, --shell <shell>`: Shell 目標（`zsh`、`bash`、`powershell`、`fish`；預設：`zsh`）
+- `-i, --install`：透過在 Shell 設定檔中新增 source 指令行來安裝自動補全
+- `--write-state`：將自動補全腳本寫入 `$OPENCLAW_STATE_DIR/completions` 而不列印到標準輸出
 - `-y, --yes`：略過安裝確認提示
 
-## 備註
+## 注意事項
 
-- `--install` 會在您的 Shell 設定檔中寫入一個小型的「OpenClaw Completion」區塊，並將其指向快取的腳本。
-- 若未使用 `--install` 或 `--write-state`，該指令會將腳本輸出至標準輸出。
-- 自動補全的產生會預先載入指令樹，以便包含巢狀的子指令。
+- `--install` 會將一個小型的「OpenClaw Completion」區塊寫入您的 shell 設定檔，並將其指向快取的腳本。
+- 如果沒有 `--install` 或 `--write-state`，此指令會將腳本列印到標準輸出。
+- 補全產生功能會積極載入指令樹，以便包含巢狀子指令。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

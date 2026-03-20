@@ -1,13 +1,13 @@
 ---
 summary: "Contrato para planes `secrets apply`: validación de destino, coincidencia de rutas y alcance de destino `auth-profiles.json`"
 read_when:
-  - Generating or reviewing `openclaw secrets apply` plans
-  - Debugging `Invalid plan target path` errors
-  - Understanding target type and path validation behavior
-title: "Contrato de plan de aplicación de Secrets"
+  - Generar o revisar planes `openclaw secrets apply`
+  - Depuración de errores `Invalid plan target path`
+  - Comprensión del tipo de destino y el comportamiento de validación de ruta
+title: "Contrato del plan de aplicación de secretos"
 ---
 
-# Contrato de plan de aplicación de Secrets
+# Contrato del plan de aplicación de secretos
 
 Esta página define el contrato estricto impuesto por `openclaw secrets apply`.
 
@@ -42,7 +42,7 @@ Si un destino no coincide con estas reglas, la aplicación falla antes de mutar 
 
 ## Alcance de destino admitido
 
-Los destinos de plan se aceptan para rutas de credenciales admitidas en:
+Se aceptan destinos de plan para rutas de credenciales admitidas en:
 
 - [Superficie de credenciales SecretRef](/es/reference/secretref-credential-surface)
 
@@ -58,7 +58,7 @@ Los alias de compatibilidad siguen siendo aceptados para los planes existentes:
 - `skills.entries.apiKey`
 - `channels.googlechat.serviceAccount`
 
-## Reglas de validación de rutas
+## Reglas de validación de ruta
 
 Cada destino se valida con todo lo siguiente:
 
@@ -81,12 +81,18 @@ Invalid plan target path for models.providers.apiKey: models.providers.openai.ba
 
 No se confirman escrituras para un plan no válido.
 
+## Comportamiento de consentimiento del proveedor exec
+
+- `--dry-run` omite las comprobaciones exec SecretRef de forma predeterminada.
+- Los planes que contienen proveedores/exec SecretRefs se rechazan en modo de escritura a menos que se establezca `--allow-exec`.
+- Al validar/aplicar planes que contienen exec, pase `--allow-exec` tanto en los comandos de ejecución en seco (dry-run) como de escritura.
+
 ## Notas sobre el alcance de tiempo de ejecución y auditoría
 
-- Las entradas solo de referencia (`auth-profiles.json`) (`keyRef`/`tokenRef`) se incluyen en la resolución en tiempo de ejecución y la cobertura de auditoría.
-- `secrets apply` escribe objetivos `openclaw.json` compatibles, objetivos `auth-profiles.json` compatibles y objetivos de limpieza opcionales.
+- Las entradas de solo referencia `auth-profiles.json` (`keyRef`/`tokenRef`) se incluyen en la resolución de tiempo de ejecución y la cobertura de auditoría.
+- `secrets apply` escribe destinos `openclaw.json` compatibles, destinos `auth-profiles.json` compatibles y destinos de limpieza (scrub) opcionales.
 
-## Comprobaciones del operador
+## Verificaciones del operador
 
 ```bash
 # Validate plan without writes
@@ -94,9 +100,13 @@ openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run
 
 # Then apply for real
 openclaw secrets apply --from /tmp/openclaw-secrets-plan.json
+
+# For exec-containing plans, opt in explicitly in both modes
+openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-exec
+openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
 ```
 
-Si la aplicación falla con un mensaje de ruta de objetivo no válida, regenere el plan con `openclaw secrets configure` o corrija la ruta del objetivo a una forma compatible anterior.
+Si la aplicación falla con un mensaje de ruta de destino no válida, regenere el plan con `openclaw secrets configure` o corrija la ruta de destino a una forma compatible anterior.
 
 ## Documentos relacionados
 
@@ -105,6 +115,6 @@ Si la aplicación falla con un mensaje de ruta de objetivo no válida, regenere 
 - [Superficie de credenciales SecretRef](/es/reference/secretref-credential-surface)
 - [Referencia de configuración](/es/gateway/configuration-reference)
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

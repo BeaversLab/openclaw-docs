@@ -1,8 +1,8 @@
 ---
-summary: "CLI 參考，用於 `openclaw logs` （透過 RPC 追蹤 Gateway 日誌）"
+summary: "`openclaw logs` 的 CLI 參考（透過 RPC 追蹤 Gateway 日誌）"
 read_when:
-  - You need to tail Gateway logs remotely (without SSH)
-  - You want JSON log lines for tooling
+  - 您需要遠端追蹤 Gateway 日誌（不使用 SSH）
+  - 您想要用於工具的 JSON 日誌行
 title: "logs"
 ---
 
@@ -12,7 +12,7 @@ title: "logs"
 
 相關：
 
-- 日誌記錄概覽：[日誌記錄](/zh-Hant/logging)
+- 日誌總覽：[Logging](/zh-Hant/logging)
 
 ## 範例
 
@@ -27,6 +27,6 @@ openclaw logs --follow --local-time
 
 使用 `--local-time` 以您當地的時區顯示時間戳記。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

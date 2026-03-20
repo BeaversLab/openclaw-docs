@@ -1,8 +1,8 @@
 ---
-title: "SOUL.md Template"
+title: "Plantilla SOUL.md"
 summary: "Plantilla de espacio de trabajo para SOUL.md"
 read_when:
-  - Bootstrapping a workspace manually
+  - Inicializar manualmente un espacio de trabajo
 ---
 
 # SOUL.md - Quién eres
@@ -42,6 +42,6 @@ Si cambias este archivo, dile al usuario — es tu alma, y deberían saberlo.
 
 _Este archivo es tuyo para evolucionar. A medida que aprendas quién eres, actualízalo._
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

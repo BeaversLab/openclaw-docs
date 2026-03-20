@@ -1,17 +1,17 @@
 ---
-summary: "Instalación automatizada y endurecida de OpenClaw con Ansible, VPN Tailscale y aislamiento de firewall"
+summary: "Instalación automatizada y blindada de OpenClaw con Ansible, VPN Tailscale y aislamiento de firewall"
 read_when:
-  - You want automated server deployment with security hardening
-  - You need firewall-isolated setup with VPN access
-  - You're deploying to remote Debian/Ubuntu servers
+  - Quieres un despliegue automatizado de servidores con endurecimiento de seguridad
+  - Necesitas una configuración aislada por firewall con acceso VPN
+  - Estás desplegando en servidores remotos Debian/Ubuntu
 title: "Ansible"
 ---
 
 # Instalación de Ansible
 
-La forma recomendada de desplegar OpenClaw en servidores de producción es a través de **[openclaw-ansible](https://github.com/openclaw/openclaw-ansible)**: un instalador automatizado con arquitectura priorizada para la seguridad.
+La forma recomendada de desplegar OpenClaw en servidores de producción es a través de **[openclaw-ansible](https://github.com/openclaw/openclaw-ansible)** — un instalador automatizado con arquitectura de seguridad primero.
 
-## Inicio rápido
+## Inicio Rápido
 
 Instalación con un solo comando:
 
@@ -23,11 +23,11 @@ curl -fsSL https://raw.githubusercontent.com/openclaw/openclaw-ansible/main/inst
 >
 > El repositorio openclaw-ansible es la fuente de verdad para el despliegue con Ansible. Esta página es un resumen rápido.
 
-## Lo que obtiene
+## Lo que obtienes
 
-- 🔒 **Seguridad primero el firewall**: UFW + aislamiento de Docker (solo accesible SSH + Tailscale)
+- 🔒 **Seguridad basada en firewall**: UFW + aislamiento de Docker (solo SSH + Tailscale accesible)
 - 🔐 **VPN Tailscale**: Acceso remoto seguro sin exponer servicios públicamente
-- 🐳 **Docker**: Contenedores de espacio aislado (sandbox), enlaces solo a localhost
+- 🐳 **Docker**: Contenedores de sandbox aislados, enlaces solo a localhost
 - 🛡️ **Defensa en profundidad**: Arquitectura de seguridad de 4 capas
 - 🚀 **Configuración con un comando**: Despliegue completo en minutos
 - 🔧 **Integración con Systemd**: Inicio automático al arrancar con endurecimiento
@@ -37,35 +37,35 @@ curl -fsSL https://raw.githubusercontent.com/openclaw/openclaw-ansible/main/inst
 - **Sistema operativo**: Debian 11+ o Ubuntu 20.04+
 - **Acceso**: Privilegios de root o sudo
 - **Red**: Conexión a Internet para la instalación de paquetes
-- **Ansible**: 2.14+ (se instala automáticamente mediante el script de inicio rápido)
+- **Ansible**: 2.14+ (instalado automáticamente por el script de inicio rápido)
 
 ## Qué se instala
 
 El playbook de Ansible instala y configura:
 
-1. **Tailscale** (VPN malla para acceso remoto seguro)
+1. **Tailscale** (VPN mesh para acceso remoto seguro)
 2. **Firewall UFW** (solo puertos SSH + Tailscale)
-3. **Docker CE + Compose V2** (para espacios aislados de agentes)
-4. **Node.js 24 + pnpm** (dependencias de tiempo de ejecución; Node 22 LTS, actualmente `22.16+`, sigue siendo compatible)
+3. **Docker CE + Compose V2** (para sandboxes de agentes)
+4. **Node.js 24 + pnpm** (dependencias de ejecución; Node 22 LTS, actualmente `22.16+`, sigue siendo compatible por estabilidad)
 5. **OpenClaw** (basado en el host, no en contenedores)
 6. **Servicio Systemd** (inicio automático con endurecimiento de seguridad)
 
-Nota: La puerta de enlace se ejecuta **directamente en el host** (no en Docker), pero los espacios aislados de los agentes usan Docker para el aislamiento. Consulte [Sandboxing](/es/gateway/sandboxing) para más detalles.
+Nota: La pasarela se ejecuta **directamente en el host** (no en Docker), pero los sandboxes de agentes usan Docker para el aislamiento. Consulta [Sandboxing](/es/gateway/sandboxing) para más detalles.
 
 ## Configuración posterior a la instalación
 
-Una vez completada la instalación, cambie al usuario openclaw:
+Una vez completada la instalación, cambia al usuario openclaw:
 
 ```bash
 sudo -i -u openclaw
 ```
 
-El script posterior a la instalación le guiará a través de:
+El script post-instalación te guiará a través de:
 
-1. **Asistente de incorporación**: Configure los ajustes de OpenClaw
-2. **Inicio de sesión del proveedor**: Conecte WhatsApp/Telegram/Discord/Signal
-3. **Prueba de la puerta de enlace**: Verifique la instalación
-4. **Configuración de Tailscale**: Conecta a tu malla VPN
+1. **Asistente de incorporación**: Configura los ajustes de OpenClaw
+2. **Inicio de sesión del proveedor**: Conectar WhatsApp/Telegram/Discord/Signal
+3. **Prueba de la puerta de enlace**: Verificar la instalación
+4. **Configuración de Tailscale**: Conectar a su malla VPN
 
 ### Comandos rápidos
 
@@ -88,8 +88,8 @@ openclaw channels login
 
 ### Defensa de 4 capas
 
-1. **Firewall (UFW)**: Solo se exponen públicamente SSH (22) + Tailscale (41641/udp)
-2. **VPN (Tailscale)**: Gateway accesible solo a través de la malla VPN
+1. **Cortafuegos (UFW)**: Solo SSH (22) + Tailscale (41641/udp) expuestos públicamente
+2. **VPN (Tailscale)**: Puerta de enlace accesible solo a través de la malla VPN
 3. **Aislamiento de Docker**: La cadena iptables DOCKER-USER evita la exposición de puertos externos
 4. **Endurecimiento de Systemd**: NoNewPrivileges, PrivateTmp, usuario sin privilegios
 
@@ -101,13 +101,13 @@ Probar la superficie de ataque externa:
 nmap -p- YOUR_SERVER_IP
 ```
 
-Debería mostrar **solo el puerto 22** (SSH) abierto. Todos los demás servicios (gateway, Docker) están bloqueados.
+Debería mostrar **solo el puerto 22** (SSH) abierto. Todos los demás servicios (puerta de enlace, Docker) están bloqueados.
 
 ### Disponibilidad de Docker
 
-Docker está instalado para **entornos de prueba del agente** (ejecución de herramientas aisladas), no para ejecutar el gateway en sí. El gateway se vincula solo a localhost y es accesible a través de la VPN Tailscale.
+Docker está instalado para **entornos de prueba de agentes** (ejecución aislada de herramientas), no para ejecutar la puerta de enlace en sí. La puerta de enlace se enlaza solo a localhost y es accesible a través de Tailscale VPN.
 
-Consulte [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para la configuración del entorno de prueba.
+Consulte [Entorno de pruebas y herramientas de múltiples agentes](/es/tools/multi-agent-sandbox-tools) para la configuración del entorno de pruebas.
 
 ## Instalación manual
 
@@ -146,13 +146,13 @@ Nota: Esto es idempotente y es seguro ejecutarlo varias veces.
 
 ## Solución de problemas
 
-### El firewall bloquea mi conexión
+### El cortafuegos bloquea mi conexión
 
 Si se le ha bloqueado el acceso:
 
 - Asegúrese de poder acceder a través de la VPN Tailscale primero
 - El acceso SSH (puerto 22) siempre está permitido
-- El gateway es accesible **solo** a través de Tailscale por diseño
+- La puerta de enlace es **solo** accesible a través de Tailscale por diseño
 
 ### El servicio no se inicia
 
@@ -169,7 +169,7 @@ cd ~/openclaw
 pnpm start
 ```
 
-### Problemas del entorno de prueba de Docker
+### Problemas con el entorno de pruebas de Docker
 
 ```bash
 # Verify Docker is running
@@ -194,7 +194,7 @@ openclaw channels login
 
 ## Configuración avanzada
 
-Para obtener detalles sobre la arquitectura de seguridad y la solución de problemas:
+Para obtener una arquitectura de seguridad detallada y solución de problemas:
 
 - [Arquitectura de seguridad](https://github.com/openclaw/openclaw-ansible/blob/main/docs/security.md)
 - [Detalles técnicos](https://github.com/openclaw/openclaw-ansible/blob/main/docs/architecture.md)
@@ -203,10 +203,10 @@ Para obtener detalles sobre la arquitectura de seguridad y la solución de probl
 ## Relacionado
 
 - [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) — guía completa de implementación
-- [Docker](/es/install/docker) — configuración del gateway en contenedor
+- [Docker](/es/install/docker) — configuración de puerta de enlace en contenedor
 - [Aislamiento](/es/gateway/sandboxing) — configuración del entorno de prueba del agente
-- [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) — aislamiento por agente
+- [Entorno de pruebas y herramientas de múltiples agentes](/es/tools/multi-agent-sandbox-tools) — aislamiento por agente
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

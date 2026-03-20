@@ -1,7 +1,7 @@
 ---
-summary: "Référence CLI pour `openclaw docs` (rechercher dans l'index de la documentation en direct)"
+summary: "Référence de la CLI pour `openclaw docs` (rechercher dans l'index de la documentation en ligne)"
 read_when:
-  - You want to search the live OpenClaw docs from the terminal
+  - Vous souhaitez rechercher dans la documentation OpenClaw en ligne à partir du terminal
 title: "docs"
 ---
 
@@ -14,6 +14,6 @@ openclaw docs browser existing-session
 openclaw docs sandbox allowHostControl
 ```
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

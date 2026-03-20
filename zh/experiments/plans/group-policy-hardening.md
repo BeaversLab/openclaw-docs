@@ -1,8 +1,8 @@
 ---
-summary: "Telegram 许可名单加固：前缀 + 空格标准化"
+summary: "Telegram allowlist hardening: prefix + whitespace normalization"
 read_when:
   - Reviewing historical Telegram allowlist changes
-title: "Telegram 许可名单加固"
+title: "Telegram Allowlist Hardening"
 ---
 
 # Telegram 允许列表加固
@@ -13,7 +13,8 @@ title: "Telegram 许可名单加固"
 
 ## 摘要
 
-Telegram 许可名单现在不区分大小写地接受 `telegram:` 和 `tg:` 前缀，并且容许意外的空格。这将入站许可名单检查与出站发送标准化保持一致。
+Telegram allowlists 现在不区分大小写地接受 `telegram:` 和 `tg:` 前缀，并容忍
+意外的空白字符。这使入站 allowlist 检查与出站发送规范化保持一致。
 
 ## 变更内容
 
@@ -30,14 +31,14 @@ Telegram 许可名单现在不区分大小写地接受 `telegram:` 和 `tg:` 前
 
 ## 为何重要
 
-从日志或聊天 ID 复制粘贴的内容通常包含前缀和空白字符。标准化可以避免
-在决定是否响应私信或群组时出现漏判。
+从日志或聊天 ID 复制/粘贴通常包含前缀和空白字符。规范化可以避免
+在决定是否在 私信 或群组中回复时出现漏判。
 
 ## 相关文档
 
-- [群聊](/zh/concepts/groups)
-- [Telegram 提供商](/zh/channels/telegram)
+- [群组聊天](/zh/concepts/groups)
+- [Telegram Provider](/zh/channels/telegram)
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

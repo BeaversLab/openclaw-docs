@@ -1,5 +1,5 @@
 ---
-summary: "Exécuter la passerelle OpenClaw 24/7 sur un VPS Gateway peu coûteux (Hetzner) avec un état durable et des binaires intégrés"
+summary: "Run OpenClaw Gateway 24/7 on a cheap Hetzner VPS (Docker) with durable state and baked-in binaries"
 read_when:
   - You want OpenClaw running 24/7 on a cloud VPS (not your laptop)
   - You want a production-grade, always-on Gateway on your own VPS
@@ -8,67 +8,67 @@ read_when:
 title: "Hetzner"
 ---
 
-# OpenClaw sur Hetzner (Docker, Guide VPS de production)
+# OpenClaw on Hetzner (Docker, Production VPS Guide)
 
-## Objectif
+## Goal
 
-Exécuter une passerelle OpenClaw Gateway persistante sur un VPS Hetzner en utilisant Docker, avec un état durable, des binaires intégrés et un comportement de redémarrage sécurisé.
+Run a persistent OpenClaw Gateway on a Hetzner VPS using Docker, with durable state, baked-in binaries, and safe restart behavior.
 
-Si vous souhaitez « OpenClaw 24/7 pour environ 5 $ », c'est la configuration fiable la plus simple.
-Les tarifs de Hetzner changent ; choisissez le plus petit VPS Debian/Ubuntu et augmentez l'échelle si vous rencontrez des erreurs de mémoire insuffisante (OOM).
+If you want “OpenClaw 24/7 for ~$5”, this is the simplest reliable setup.
+Hetzner pricing changes; pick the smallest Debian/Ubuntu VPS and scale up if you hit OOMs.
 
-Rappel du modèle de sécurité :
+Security model reminder:
 
-- Les agents partagés par l'entreprise sont acceptables lorsque tout le monde se trouve dans la même limite de confiance et que l'environnement d'exécution est uniquement professionnel.
-- Maintenez une séparation stricte : VPS/environnement d'exécution dédié + comptes dédiés ; aucun profil personnel Apple/Google/navigateur/gestionnaire de mots de passe sur cet hôte.
-- Si les utilisateurs sont antagonistes les uns envers les autres, séparez par passerelle/hôte/utilisateur du système d'exploitation.
+- Company-shared agents are fine when everyone is in the same trust boundary and the runtime is business-only.
+- Keep strict separation: dedicated VPS/runtime + dedicated accounts; no personal Apple/Google/browser/password-manager profiles on that host.
+- If users are adversarial to each other, split by gateway/host/OS user.
 
-Voir [Sécurité](/fr/gateway/security) et [Hébergement VPS](/fr/vps).
+See [Security](/fr/gateway/security) and [VPS hosting](/fr/vps).
 
-## Que faisons-nous (en termes simples) ?
+## What are we doing (simple terms)?
 
-- Louer un petit serveur Linux (VPS Hetzner)
-- Installer Docker (environnement d'exécution d'application isolé)
-- Démarrer la passerelle OpenClaw Gateway dans Docker
-- Persister `~/.openclaw` + `~/.openclaw/workspace` sur l'hôte (survit aux redémarrages/reconstructions)
-- Accéder à l'interface de contrôle depuis votre ordinateur portable via un tunnel SSH
+- Rent a small Linux server (Hetzner VPS)
+- Install Docker (isolated app runtime)
+- Start the OpenClaw Gateway in Docker
+- Persist `~/.openclaw` + `~/.openclaw/workspace` on the host (survives restarts/rebuilds)
+- Access the Control UI from your laptop via an SSH tunnel
 
-La passerelle Gateway est accessible via :
+The Gateway can be accessed via:
 
-- Transfert de port SSH depuis votre ordinateur portable
-- Exposition directe du port si vous gérez vous-même le pare-feu et les jetons
+- SSH port forwarding from your laptop
+- Direct port exposure if you manage firewalling and tokens yourself
 
-Ce guide suppose Ubuntu ou Debian sur Hetzner.
-Si vous êtes sur un autre VPS Linux, mappez les packages en conséquence.
-Pour le flux générique Docker, voir [Docker](/fr/install/docker).
+This guide assumes Ubuntu or Debian on Hetzner.  
+If you are on another Linux VPS, map packages accordingly.
+For the generic Docker flow, see [Docker](/fr/install/docker).
 
 ---
 
-## Chemin rapide (opérateurs expérimentés)
+## Quick path (experienced operators)
 
-1. Provisionner le VPS Hetzner
-2. Installer Docker
-3. Cloner le dépôt OpenClaw
-4. Créer des répertoires hôtes persistants
-5. Configurer `.env` et `docker-compose.yml`
-6. Intégrer les binaires requis dans l'image
+1. Provision Hetzner VPS
+2. Install Docker
+3. Clone OpenClaw repository
+4. Create persistent host directories
+5. Configure `.env` and `docker-compose.yml`
+6. Bake required binaries into the image
 7. `docker compose up -d`
-8. Vérifier la persistance et l'accès à la passerelle Gateway
+8. Verify persistence and Gateway access
 
 ---
 
-## Ce dont vous avez besoin
+## What you need
 
-- VPS Hetzner avec accès root
-- Accès SSH depuis votre ordinateur portable
-- Une certaine aisance avec SSH + copier/coller
+- Hetzner VPS with root access
+- SSH access from your laptop
+- Basic comfort with SSH + copy/paste
 - ~20 minutes
 - Docker et Docker Compose
 - Identifiants d'authentification du modèle
-- Identifiants du fournisseur facultatifs
+- Identifiants du fournisseur optionnels
   - QR WhatsApp
   - Jeton de bot Telegram
-  - OAuth Gmail
+  - Gmail OAuth
 
 ---
 
@@ -82,7 +82,7 @@ Connectez-vous en tant que root :
 ssh root@YOUR_VPS_IP
 ```
 
-Ce guide suppose que le VPS est avec état.
+Ce guide suppose que le VPS est persistant.
 Ne le traitez pas comme une infrastructure éphémère.
 
 ---
@@ -115,7 +115,7 @@ Ce guide suppose que vous allez construire une image personnalisée pour garanti
 
 ---
 
-## 4) Créer des répertoires persistants sur l'hôte
+## 4) Créer des répertoires hôtes persistants
 
 Les conteneurs Docker sont éphémères.
 Tout état de longue durée doit résider sur l'hôte.
@@ -152,7 +152,7 @@ Générez des secrets robustes :
 openssl rand -hex 32
 ```
 
-**Ne commitez pas ce fichier.**
+**Ne commettez pas ce fichier.**
 
 ---
 
@@ -202,9 +202,9 @@ services:
 
 ---
 
-## 7) Étapes d'exécution partagées pour VM Docker
+## 7) Étapes d'exécution de VM partagée Docker
 
-Utilisez le guide d'exécution partagé pour le flux commun de l'hôte Docker :
+Utilisez le guide d'exécution partagé pour le flux d'hôte Docker commun :
 
 - [Intégrer les binaires requis dans l'image](/fr/install/docker-vm-runtime#bake-required-binaries-into-the-image)
 - [Construire et lancer](/fr/install/docker-vm-runtime#build-and-launch)
@@ -215,7 +215,7 @@ Utilisez le guide d'exécution partagé pour le flux commun de l'hôte Docker :
 
 ## 8) Accès spécifique à Hetzner
 
-Après les étapes de construction et de lancement partagées, créez un tunnel depuis votre ordinateur portable :
+Après les étapes de construction et de lancement partagées, établissez un tunnel depuis votre ordinateur portable :
 
 ```bash
 ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
@@ -229,17 +229,17 @@ Collez votre jeton de passerelle.
 
 ---
 
-La carte de persistance partagée se trouve dans [Runtime de VM Docker](/fr/install/docker-vm-runtime#what-persists-where).
+La carte de persistance partagée se trouve dans [Docker VM Runtime](/fr/install/docker-vm-runtime#what-persists-where).
 
 ## Infrastructure as Code (Terraform)
 
-Pour les équipes préférant les workflows d'infrastructure-as-code, une configuration Terraform maintenue par la communauté fournit :
+Pour les équipes préférant les flux de travail infrastructure-as-code, une configuration Terraform maintenue par la communauté fournit :
 
-- Configuration Terraform modulaire avec gestion d'état distante
+- Configuration Terraform modulaire avec gestion d'état à distance
 - Provisionnement automatisé via cloud-init
 - Scripts de déploiement (amorçage, déploiement, sauvegarde/restauration)
 - Durcissement de la sécurité (pare-feu, UFW, accès SSH uniquement)
-- Configuration du tunnel SSH pour l'accès à la passerelle
+- Configuration de tunnel SSH pour l'accès à la passerelle
 
 **Dépôts :**
 
@@ -248,8 +248,8 @@ Pour les équipes préférant les workflows d'infrastructure-as-code, une config
 
 Cette approche complète la configuration Docker ci-dessus avec des déploiements reproductibles, une infrastructure versionnée et une récupération automatisée en cas de sinistre.
 
-> **Remarque :** Entretenu par la communauté. Pour les problèmes ou les contributions, consultez les liens de dépôt ci-dessus.
+> **Remarque :** Entretenu par la communauté. Pour les problèmes ou les contributions, consultez les liens vers les dépôts ci-dessus.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

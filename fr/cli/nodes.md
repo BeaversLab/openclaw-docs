@@ -1,20 +1,20 @@
 ---
-summary: "Référence CLI pour `openclaw nodes` (list/status/approve/invoke, camera/canvas/screen)"
+summary: "Référence de la CLI pour `openclaw nodes` (list/status/approve/invoke, camera/canvas/screen)"
 read_when:
-  - You’re managing paired nodes (cameras, screen, canvas)
-  - You need to approve requests or invoke node commands
+  - Vous gérez des nœuds appairés (caméras, écran, canvas)
+  - Vous devez approuver des demandes ou invoquer des commandes de nœuds
 title: "nodes"
 ---
 
 # `openclaw nodes`
 
-Gérer les nœuds jumelés (appareils) et appeler les capacités des nœuds.
+Gérer les nœuds appairés (appareils) et invoquer les capacités des nœuds.
 
-Connexes :
+Connexe :
 
 - Aperçu des nœuds : [Nœuds](/fr/nodes)
-- Caméra : [Nœuds caméra](/fr/nodes/camera)
-- Images : [Nœuds image](/fr/nodes/images)
+- Caméra : [Nœuds de caméra](/fr/nodes/camera)
+- Images : [Nœuds d'image](/fr/nodes/images)
 
 Options courantes :
 
@@ -33,11 +33,11 @@ openclaw nodes status --connected
 openclaw nodes status --last-connected 24h
 ```
 
-`nodes list` affiche les tableaux en attente/jumelés. Les lignes jumelées incluent la durée écoulée depuis la connexion la plus récente (Dernière connexion).
+`nodes list` affiche les tableaux des nœuds en attente/appairés. Les lignes appairées incluent la durée depuis la connexion la plus récente (Dernière connexion).
 Utilisez `--connected` pour afficher uniquement les nœuds actuellement connectés. Utilisez `--last-connected <duration>` pour
-filtrer les nœuds qui se sont connectés dans une durée donnée (ex. `24h`, `7d`).
+filtrer les nœuds qui se sont connectés dans une durée donnée (par ex. `24h`, `7d`).
 
-## Appeler / exécuter
+## Invoke / run
 
 ```bash
 openclaw nodes invoke --node <id|name|ip> --command <command> --params <json>
@@ -46,34 +46,34 @@ openclaw nodes run --raw "git status"
 openclaw nodes run --agent main --node <id|name|ip> --raw "git status"
 ```
 
-Options d'appel :
+Invoke flags :
 
 - `--params <json>` : chaîne d'objet JSON (par défaut `{}`).
-- `--invoke-timeout <ms>` : délai d'attente d'appel du nœud (par défaut `15000`).
+- `--invoke-timeout <ms>` : délai d'expiration de l'appel du nœud (par défaut `15000`).
 - `--idempotency-key <key>` : clé d'idempotence facultative.
 
-### Valeurs par défaut style Exec
+### Exec-style defaults
 
-`nodes run` reflète le comportement exec du modèle (valeurs par défaut + approbations) :
+`nodes run` reflète le comportement exec du modèle (défauts + approbations) :
 
 - Lit `tools.exec.*` (plus les remplacements `agents.list[].tools.exec.*`).
-- Utilise les approbations exec (`exec.approval.request`) avant d'appeler `system.run`.
+- Utilise les approbations exec (`exec.approval.request`) avant d'invoquer `system.run`.
 - `--node` peut être omis lorsque `tools.exec.node` est défini.
 - Nécessite un nœud qui annonce `system.run` (application compagnon macOS ou hôte de nœud headless).
 
-Options :
+Flags :
 
 - `--cwd <path>` : répertoire de travail.
-- `--env <key=val>` : substitution de variable d’environnement (répétable). Remarque : les hôtes de nœuds ignorent les substitutions de `PATH` (et `tools.exec.pathPrepend` n’est pas appliqué aux hôtes de nœuds).
-- `--command-timeout <ms>` : délai d’attente de la commande.
-- `--invoke-timeout <ms>` : délai d’attente d’appel de nœud (par défaut `30000`).
-- `--needs-screen-recording` : exiger la permission d’enregistrement d’écran.
-- `--raw <command>` : exécuter une chaîne de shell (`/bin/sh -lc` ou `cmd.exe /c`).
-  En mode liste blanche sur les hôtes de nœuds Windows, les exécutions du wrapper de shell `cmd.exe /c` nécessitent une approbation
-  (une entrée de liste blanche seule n’autorise pas automatiquement la forme wrapper).
-- `--agent <id>` : approbations/listes blanches limitées à l’agent (par défaut l’agent configuré).
-- `--ask <off|on-miss|always>`, `--security <deny|allowlist|full>` : substitutions.
+- `--env <key=val>` : remplacement env (répétable). Remarque : les hôtes de nœuds ignorent les remplacements `PATH` (et `tools.exec.pathPrepend` n'est pas appliqué aux hôtes de nœuds).
+- `--command-timeout <ms>` : délai d'expiration de la commande.
+- `--invoke-timeout <ms>` : délai d'expiration d'appel de nœud (par défaut `30000`).
+- `--needs-screen-recording` : nécessite la permission d'enregistrement d'écran.
+- `--raw <command>` : exécuter une chaîne shell (`/bin/sh -lc` ou `cmd.exe /c`).
+  En mode liste blanche sur les hôtes de nœuds Windows, les exécutions du shell-wrapper `cmd.exe /c` nécessitent une approbation
+  (une entrée de liste blanche n'autorise pas automatiquement le formulaire wrapper).
+- `--agent <id>` : approbations/listes blanches limitées à l'agent (par défaut l'agent configuré).
+- `--ask <off|on-miss|always>`, `--security <deny|allowlist|full>` : substitutions.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

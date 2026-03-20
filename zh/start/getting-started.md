@@ -1,29 +1,29 @@
 ---
-summary: "在几分钟内安装 OpenClaw 并运行您的首次聊天。"
+summary: "在几分钟内安装 OpenClaw 并运行您的第一次聊天。"
 read_when:
-  - First time setup from zero
-  - You want the fastest path to a working chat
+  - 首次从零开始设置
+  - 您希望最快获得可用的聊天体验
 title: "入门指南"
 ---
 
 # 入门指南
 
-目标：通过最少的设置，从零开始实现首次可运行的聊天。
+目标：以最少的设置从零开始实现第一次可用的聊天。
 
 <Info>
-  最快的聊天方式：打开控制 UI（无需设置渠道）。运行 `openclaw dashboard` 并在 浏览器中聊天，或者在
-  <Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">
-    网关主机
-  </Tooltip>
-  上打开 `http://127.0.0.1:18789/`。 文档：[Dashboard](/zh/web/dashboard) 和 [Control
-  UI](/zh/web/control-ui)。
+最快的聊天方式：打开控制 UI（无需设置渠道）。运行 `openclaw dashboard`
+并在浏览器中聊天，或者在
+<Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">Gateway(网关)主机</Tooltip>上打开 `http://127.0.0.1:18789/`。
+文档：[仪表板](/zh/web/dashboard) 和 [控制 UI](/zh/web/control-ui)。
 </Info>
 
 ## 先决条件
 
-- 推荐使用 Node 24（Node 22 LTS，目前为 `22.16+`，为兼容性仍受支持）
+- 推荐使用 Node 24（目前为 `22.16+` 的 Node 22 LTS 出于兼容性考虑仍受支持）
 
-<Tip>如果您不确定，请使用 `node --version` 检查您的 Node 版本。</Tip>
+<Tip>
+如果不确定，请使用 `node --version` 检查您的 Node 版本。
+</Tip>
 
 ## 快速设置 (CLI)
 
@@ -36,7 +36,7 @@ title: "入门指南"
         ```
         <img
   src="/assets/install-script.svg"
-  alt="Install Script Process"
+  alt="安装脚本流程"
   className="rounded-lg"
 />
       </Tab>
@@ -48,7 +48,7 @@ title: "入门指南"
     </Tabs>
 
     <Note>
-    其他安装方法和要求：[Install](/zh/install)。
+    其他安装方法和要求：[安装](/zh/install)。
     </Note>
 
   </Step>
@@ -57,12 +57,12 @@ title: "入门指南"
     openclaw onboard --install-daemon
     ```
 
-    新手引导会配置身份验证、网关设置和可选频道。
-    详情请参阅 [新手引导 (CLI)](/zh/start/wizard)。
+    新手引导会配置身份验证、Gateway(网关)设置以及可选渠道。
+    详见 [新手引导 (CLI)](/zh/start/wizard)。
 
   </Step>
-  <Step title="检查 Gateway">
-    如果您已安装该服务，它应该已经在运行了：
+  <Step title="检查 Gateway(网关)">
+    如果您安装了该服务，它应该已经在运行：
 
     ```bash
     openclaw gateway status
@@ -76,9 +76,11 @@ title: "入门指南"
   </Step>
 </Steps>
 
-<Check>如果控制 UI 加载成功，您的 Gateway(网关) 就可以使用了。</Check>
+<Check>
+如果控制 UI 加载成功，您的 Gateway(网关)已准备就绪。
+</Check>
 
-## 可选检查和附加项
+## 可选检查和额外内容
 
 <AccordionGroup>
   <Accordion title="在前台运行 Gateway">
@@ -101,7 +103,7 @@ title: "入门指南"
 
 ## 有用的环境变量
 
-如果你以服务帐户身份运行 OpenClaw 或想要自定义配置/状态位置：
+如果您以服务帐户运行 OpenClaw 或希望自定义配置/状态位置：
 
 - `OPENCLAW_HOME` 设置用于内部路径解析的主目录。
 - `OPENCLAW_STATE_DIR` 覆盖状态目录。
@@ -113,25 +115,25 @@ title: "入门指南"
 
 <Columns>
   <Card title="新手引导 (CLI)" href="/zh/start/wizard">
-    完整的 CLI 新手引导参考及高级选项。
+    完整的 CLI 新手引导参考和高级选项。
   </Card>
-  <Card title="macOS app 新手引导" href="/zh/start/onboarding">
+  <Card title="macOS 应用新手引导" href="/zh/start/onboarding">
     macOS 应用的首次运行流程。
   </Card>
 </Columns>
 
 ## 您将拥有
 
-- 正在运行的 Gateway
-- 已配置认证
+- 一个运行中的 Gateway
+- 已配置身份验证
 - 控制 UI 访问权限或已连接的渠道
 
 ## 后续步骤
 
 - 私信安全和审批：[Pairing](/zh/channels/pairing)
 - 连接更多渠道：[Channels](/zh/channels)
-- 高级工作流程和从源码构建：[Setup](/zh/start/setup)
+- 高级工作流程和从源代码构建：[Setup](/zh/start/setup)
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

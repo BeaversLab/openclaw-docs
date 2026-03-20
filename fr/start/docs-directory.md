@@ -1,14 +1,13 @@
 ---
 summary: "Liens organisés vers la documentation OpenClaw la plus utilisée."
 read_when:
-  - You want quick access to key docs pages
+  - Vous souhaitez accéder rapidement aux pages clés de la documentation
 title: "Docs directory"
 ---
 
 <Note>
-  Cette page est un index organisé. Si vous êtes nouveau, commencez par [Getting
-  Started](/fr/start/getting-started). Pour une carte complète de la documentation, consultez [Docs
-  hubs](/fr/start/hubs).
+Cette page est un index organisé. Si vous êtes nouveau, commencez par [Getting Started](/fr/start/getting-started).
+Pour une carte complète de la documentation, voir [Docs hubs](/fr/start/hubs).
 </Note>
 
 ## Commencer ici
@@ -27,10 +26,10 @@ title: "Docs directory"
 - [Configuration des Skills](/fr/tools/skills-config)
 - [Modèles d'espace de travail](/fr/reference/templates/AGENTS)
 - [Adaptateurs RPC](/fr/reference/rpc)
-- [Manuel d'exploitation Gateway](/fr/gateway)
+- [Guide de fonctionnement du Gateway](/fr/gateway)
 - [Nœuds (iOS et Android)](/fr/nodes)
 - [Interfaces Web (UI de contrôle)](/fr/web)
-- [Découverte et transports](/fr/gateway/discovery)
+- [Discovery et transports](/fr/gateway/discovery)
 - [Accès à distance](/fr/gateway/remote)
 
 ## Fournisseurs et UX
@@ -44,8 +43,8 @@ title: "Docs directory"
 - [iMessage (ancien)](/fr/channels/imessage)
 - [Groupes](/fr/channels/groups)
 - [Messages de groupe WhatsApp](/fr/channels/group-messages)
-- [Images média](/fr/nodes/images)
-- [Audio média](/fr/nodes/audio)
+- [Images médias](/fr/nodes/images)
+- [Audio médias](/fr/nodes/audio)
 
 ## Companion apps
 
@@ -58,12 +57,12 @@ title: "Docs directory"
 ## Opérations et sécurité
 
 - [Sessions](/fr/concepts/session)
-- [Tâches Cron](/fr/automation/cron-jobs)
+- [Tâches cron](/fr/automation/cron-jobs)
 - [Webhooks](/fr/automation/webhook)
 - [Gmail hooks (Pub/Sub)](/fr/automation/gmail-pubsub)
 - [Sécurité](/fr/gateway/security)
 - [Dépannage](/fr/gateway/troubleshooting)
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

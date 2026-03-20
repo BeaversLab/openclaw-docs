@@ -1,25 +1,25 @@
 ---
-title: "Flux de développement Pi"
-summary: "Flux de travail développeur pour l'intégration Pi : build, test et validation en direct"
+title: "Pi Development Workflow"
+summary: "Developer workflow for Pi integration: build, test, and live validation"
 read_when:
   - Working on Pi integration code or tests
   - Running Pi-specific lint, typecheck, and live test flows
 ---
 
-# Flux de développement Pi
+# Pi Development Workflow
 
-Ce guide résume un flux de travail sain pour travailler sur l'intégration pi dans OpenClaw.
+This guide summarizes a sane workflow for working on the pi integration in OpenClaw.
 
-## Vérification de type et Linting
+## Type Checking and Linting
 
-- Vérification de type et build : `pnpm build`
-- Lint : `pnpm lint`
-- Vérification du formatage : `pnpm format`
-- Passage complet avant le push : `pnpm lint && pnpm build && pnpm test`
+- Type check and build: `pnpm build`
+- Lint: `pnpm lint`
+- Format check: `pnpm format`
+- Full gate before pushing: `pnpm lint && pnpm build && pnpm test`
 
-## Exécution des tests Pi
+## Running Pi Tests
 
-Exécutez la série de tests axés sur Pi directement avec Vitest :
+Run the Pi-focused test set directly with Vitest:
 
 ```bash
 pnpm test -- \
@@ -31,13 +31,13 @@ pnpm test -- \
   "src/agents/pi-extensions/**/*.test.ts"
 ```
 
-Pour inclure l'exercice du provider en direct :
+To include the live provider exercise:
 
 ```bash
 OPENCLAW_LIVE_TEST=1 pnpm test -- src/agents/pi-embedded-runner-extraparams.live.test.ts
 ```
 
-Cela couvre les principales suites unitaires Pi :
+This covers the main Pi unit suites:
 
 - `src/agents/pi-*.test.ts`
 - `src/agents/pi-embedded-*.test.ts`
@@ -46,39 +46,39 @@ Cela couvre les principales suites unitaires Pi :
 - `src/agents/pi-tool-definition-adapter.test.ts`
 - `src/agents/pi-extensions/*.test.ts`
 
-## Tests manuels
+## Manual Testing
 
-Flux recommandé :
+Recommended flow:
 
-- Lancez la passerelle en mode dev :
+- Run the gateway in dev mode:
   - `pnpm gateway:dev`
-- Déclenchez l'agent directement :
+- Trigger the agent directly:
   - `pnpm openclaw agent --message "Hello" --thinking low`
-- Utilisez le TUI pour le débogage interactif :
+- Use the TUI for interactive debugging:
   - `pnpm tui`
 
-Pour le comportement des appels tool, demandez une action `read` ou `exec` afin de voir le streaming tool et la gestion des payloads.
+For tool call behavior, prompt for a `read` or `exec` action so you can see tool streaming and payload handling.
 
-## Réinitialisation complète
+## Clean Slate Reset
 
-L'état réside dans le répertoire d'état OpenClaw. La valeur par défaut est `~/.openclaw`. Si `OPENCLAW_STATE_DIR` est défini, utilisez ce répertoire à la place.
+State lives under the OpenClaw state directory. Default is `~/.openclaw`. If `OPENCLAW_STATE_DIR` is set, use that directory instead.
 
-Pour tout réinitialiser :
+To reset everything:
 
-- `openclaw.json` pour la configuration
-- `credentials/` pour les profils d'authentification et les jetons
-- `agents/<agentId>/sessions/` pour l'historique des session agent
-- `agents/<agentId>/sessions.json` pour l'index des sessions
-- `sessions/` si des chemins hérités existent
-- `workspace/` si vous souhaitez un espace de travail vierge
+- `openclaw.json` for config
+- `credentials/` for auth profiles and tokens
+- `agents/<agentId>/sessions/` for agent session history
+- `agents/<agentId>/sessions.json` for the session index
+- `sessions/` if legacy paths exist
+- `workspace/` if you want a blank workspace
 
-Si vous ne souhaitez réinitialiser que les sessions, supprimez `agents/<agentId>/sessions/` et `agents/<agentId>/sessions.json` pour cet agent. Conservez `credentials/` si vous ne souhaitez pas vous réauthentifier.
+If you only want to reset sessions, delete `agents/<agentId>/sessions/` and `agents/<agentId>/sessions.json` for that agent. Keep `credentials/` if you do not want to reauthenticate.
 
-## Références
+## References
 
-- [https://docs.openclaw.ai/testing](https://docs.openclaw.ai/testing)
-- [https://docs.openclaw.ai/start/getting-started](https://docs.openclaw.ai/start/getting-started)
+- [Testing](/fr/help/testing)
+- [Getting Started](/fr/start/getting-started)
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

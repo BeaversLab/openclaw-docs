@@ -1,15 +1,15 @@
 ---
 summary: "Installer OpenClaw de manière déclarative avec Nix"
 read_when:
-  - You want reproducible, rollback-able installs
-  - You're already using Nix/NixOS/Home Manager
-  - You want everything pinned and managed declaratively
+  - Vous souhaitez des installations reproductibles et annulables
+  - Vous utilisez déjà Nix/NixOS/Home Manager
+  - Vous souhaitez que tout soit épinglé et géré de manière déclarative
 title: "Nix"
 ---
 
 # Installation Nix
 
-La méthode recommandée pour exécuter OpenClaw avec Nix est via **[nix-openclaw](https://github.com/openclaw/nix-openclaw)** — un module Home Manager complet.
+La méthode recommandée pour exécuter OpenClaw avec Nix est via **[nix-openclaw](https://github.com/openclaw/nix-openclaw)** — un module Home Manager tout-en-un.
 
 ## Démarrage rapide
 
@@ -36,10 +36,10 @@ Reference the nix-openclaw README for module options.
 
 ## Ce que vous obtenez
 
-- Passerelle + application macOS + outils (whisper, spotify, caméras) — tous épinglés
-- Service Launchd qui survit aux redémarrages
+- Gateway + application macOS + outils (whisper, spotify, cameras) — tout est épinglé
+- Service Launchd qui survive aux redémarrages
 - Système de plugins avec configuration déclarative
-- Retour immédiat (rollback) : `home-manager switch --rollback`
+- Retour immédiat : `home-manager switch --rollback`
 
 ---
 
@@ -55,48 +55,48 @@ OPENCLAW_NIX_MODE=1
 ```
 
 Sur macOS, l'application GUI n'hérite pas automatiquement des variables d'environnement du shell. Vous pouvez
-également activer le mode Nix via les valeurs par défaut :
+également activer le mode Nix via les paramètres par défaut :
 
 ```bash
 defaults write ai.openclaw.mac openclaw.nixMode -bool true
 ```
 
-### Chemins de configuration + d'état
+### Config + chemins d'état
 
-OpenClaw lit la configuration JSON5 depuis `OPENCLAW_CONFIG_PATH` et stocke les données mutables dans `OPENCLAW_STATE_DIR`.
-Si nécessaire, vous pouvez également définir `OPENCLAW_HOME` pour contrôler le répertoire base personnel utilisé pour la résolution des chemins internes.
+OpenClaw lit la configuration JSON5 depuis `OPENCLAW_CONFIG_PATH` et stocke les données modifiables dans `OPENCLAW_STATE_DIR`.
+Si nécessaire, vous pouvez également définir `OPENCLAW_HOME` pour contrôler le répertoire personnel de base utilisé pour la résolution des chemins internes.
 
 - `OPENCLAW_HOME` (priorité par défaut : `HOME` / `USERPROFILE` / `os.homedir()`)
 - `OPENCLAW_STATE_DIR` (par défaut : `~/.openclaw`)
-- `OPENCLAW_CONFIG_PATH` (par défaut : `$OPENCLAW_STATE_DIR/openclaw.json`)
+- `OPENCLAW_CONFIG_PATH` (par défaut : `$OPENCLAW_STATE_DIR/openclaw.json`)
 
-Lorsqu'il est exécuté sous Nix, définissez-les explicitement sur des emplacements gérés par Nix afin que l'état d'exécution et la configuration
-restent en dehors du magasin immuable.
+Lors de l'exécution sous Nix, définissez-les explicitement sur des emplacements gérés par Nix afin que l'état d'exécution et la configuration
+ne se trouvent pas dans le magasin immuable.
 
 ### Comportement d'exécution en mode Nix
 
 - Les flux d'installation automatique et d'auto-mutation sont désactivés
 - Les dépendances manquantes affichent des messages de correction spécifiques à Nix
-- L'interface affiche une bannière de mode Nix en lecture seule lorsqu'elle est présente
+- L'interface utilisateur affiche une bannière de mode Nix en lecture seule lorsque présente
 
 ## Note de packaging (macOS)
 
-Le flux de packaging macOS s'attend à un modèle Info.plist stable à :
+Le flux de packaging macOS s'attend à ce qu'un modèle Info.plist stable se trouve à :
 
 ```
 apps/macos/Sources/OpenClaw/Resources/Info.plist
 ```
 
-[`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) copie ce modèle dans le bundle de l'application et corrige les champs dynamiques
-(bundle ID, version/build, Git SHA, clés Sparkle). Cela permet de garder le plist déterministe pour le packaging SwiftPM
+[`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) copie ce modèle dans le bundle de l'application et modifie les champs dynamiques
+(ID de bundle, version/build, Git SHA, clés Sparkle). Cela permet de garder le plist déterministe pour le packaging SwiftPM
 et les builds Nix (qui ne reposent pas sur une chaîne d'outils Xcode complète).
 
 ## Connexes
 
-- [nix-openclaw](https://github.com/openclaw/nix-openclaw) — guide de configuration complet
-- [Wizard](/fr/start/wizard) — configuration Nix sans CLI
+- [nix-openclaw](https://github.com/openclaw/nix-openclaw) — guide d'installation complet
+- [Assistant](/fr/start/wizard) — configuration Nix sans CLI
 - [Docker](/fr/install/docker) — configuration conteneurisée
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

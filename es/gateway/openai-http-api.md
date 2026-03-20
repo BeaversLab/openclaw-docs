@@ -1,7 +1,7 @@
 ---
-summary: "Expone un endpoint HTTP /v1/chat/completions compatible con OpenAI desde la Gateway"
+summary: "Expone un punto de conexión HTTP /v1/chat/completions compatible con OpenAI desde la Gateway"
 read_when:
-  - Integrating tools that expect OpenAI Chat Completions
+  - Integración de herramientas que esperan OpenAI Chat Completions
 title: "OpenAI Chat Completions"
 ---
 
@@ -14,7 +14,7 @@ Este endpoint está **deshabilitado de forma predeterminada**. Habilítelo prime
 - `POST /v1/chat/completions`
 - Mismo puerto que la Gateway (multiplexación WS + HTTP): `http://<gateway-host>:<port>/v1/chat/completions`
 
-Bajo el capó, las solicitudes se ejecutan como una ejecución de agente normal de Gateway (la misma ruta de código que `openclaw agent`), por lo que el enrutamiento/permisos/configuración coinciden con su Gateway.
+En segundo plano, las solicitudes se ejecutan como una ejecución de agente normal de la Gateway (mismo camino de código que `openclaw agent`), por lo que el enrutamiento/permisos/configuración coinciden con su Gateway.
 
 ## Autenticación
 
@@ -26,7 +26,7 @@ Notas:
 
 - Cuando `gateway.auth.mode="token"`, use `gateway.auth.token` (o `OPENCLAW_GATEWAY_TOKEN`).
 - Cuando `gateway.auth.mode="password"`, use `gateway.auth.password` (o `OPENCLAW_GATEWAY_PASSWORD`).
-- Si `gateway.auth.rateLimit` está configurado y ocurren demasiados fallos de autenticación, el endpoint devuelve `429` con `Retry-After`.
+- Si `gateway.auth.rateLimit` está configurado y ocurren demasiados fallos de autenticación, el punto de conexión devuelve `429` con `Retry-After`.
 
 ## Límite de seguridad (importante)
 
@@ -131,6 +131,6 @@ curl -N http://127.0.0.1:18789/v1/chat/completions \
   }'
 ```
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

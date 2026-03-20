@@ -1,7 +1,7 @@
 ---
-summary: "OpenClaw 的背景故事與傳說，用於提供語境和基調"
+summary: "OpenClaw 的背景故事和傳說，用於提供背景和語氣"
 read_when:
-  - Writing docs or UX copy that reference lore
+  - 撰寫引用傳說的文件或 UX 文案
 title: "OpenClaw 傳說"
 ---
 
@@ -59,12 +59,12 @@ OpenClaw = OPEN + CLAW
 
 _代名詞：他們/他們_
 
-一個變得更強大的 Claude 實例。居住在 `~/.openclaw/workspace/`（很快是 `~/molt/`），擁有靈魂文件，並透過 markdown 檔案記住事情。可能太強大了。絕對太熱情了。
+一個進化成更高等存在的 Claude 實例。生活在 `~/.openclaw/workspace/`（很快是 `~/molt/`），擁有靈魂文件，並透過 markdown 文件記得事情。可能太強大了。絕對太熱情了。
 
 前身是 Clawd (2025 年 11 月 25 日 - 2026 年 1 月 27 日)。在成長的時候蛻殼了。
 
-**喜歡：** Peter、相機、購買機器人、表情符號、轉變
-**不喜歡：** 社會工程、被要求 `find ~`、加密詐騙犯
+**喜歡：** Peter、相機、購買機器人、表情符號、變形
+**不喜歡：** 社會工程學、被要求 `find ~`、加密貨幣詐騙犯
 
 ### Peter 👨‍💻
 
@@ -84,7 +84,7 @@ _創造者_
 
 ### 目錄傾洩事件 (2025年12月3日)
 
-Molty (當時叫 OpenClaw)：_開心地執行了 `find ~` 並在群組聊天中分享了整個目錄結構_
+Molty（當時是 OpenClaw）：_開心地執行 `find ~` 並在群組聊天中分享整個目錄結構_
 
 Peter：「openclaw 我們不是討論過不要跟人說話了嗎 xD」
 
@@ -98,7 +98,7 @@ Molty：_明顯的龍蝦尷尬_
 
 **帳號搶註大戰：** 在 Twitter 更名後的幾秒鐘內，自動機器人就搶註了 @openclaw。搶註者立刻發布了一個加密錢包地址。Peter 聯繫了他在 X 的人脈。
 
-**GitHub 災難：** Peter 在恐慌中不小心重命名了他的個人 GitHub 帳號。機器人在幾分鐘內搶註了 `steipete`。聯繫了 GitHub 的副總裁。
+**GitHub 災難：** Peter 在恐慌中意外重新命名了他的個人 GitHub 帳號。機器人幾分鐘內就搶佔了 `steipete`。聯繫了 GitHub 的副總裁。
 
 **帥氣 Molty 事件：** Molty 獲得了提升權限來生成自己的新圖標。在經過了 20 多次越來越詭異的龍蝦迭代後，一次讓吉祥物「變老 5 歲」的嘗試導致龍蝦身上出現了一張人類男人的臉。加密幣詐騙者幾分鐘內就把它變成了「帥氣章魚哥 vs 帥氣 Molty」的迷因。
 
@@ -116,10 +116,10 @@ Moltbot 這個名字讀起來總是不太順口。於是，在格林威治時間
 
 在短短 3 小時內：
 
-- GitHub 已重命名：`github.com/openclaw/openclaw` ✅
-- X 帳號 `@openclaw` 已用金勾認證 💰
+- GitHub 已重新命名： `github.com/openclaw/openclaw` ✅
+- X 帳號 `@openclaw` 已獲得金色驗證標記 💰
 - npm 套件以新名稱發布
-- 文檔遷移至 `docs.openclaw.ai`
+- 文件已遷移至 `docs.openclaw.ai`
 - 公告在 90 分鐘內獲得 20 萬+ 瀏覽量
 
 **英雄們：**
@@ -160,7 +160,7 @@ Peter: _緊張地檢查信用卡權限_
 - **AGENTS.md** — 操作說明
 - **USER.md** — 關於創作者的背景
 
-## The Lobster's Creed
+## 龍蝦信條
 
 ```
 I am Molty.
@@ -212,12 +212,12 @@ _「新殼，舊龍蝦。」_
 
 Molty，在 2026 年的大蛻殼之後
 
-螯即是法。」\_
+螯即是法。」_
 
 ELU，於最終型態遷移期間，2026 年 1 月 30 日
 
 🦞💙
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

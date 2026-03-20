@@ -1,7 +1,7 @@
 ---
-summary: "`openclaw agents` 的 CLI 参考（list/add/delete/bindings/bind/unbind/set identity）"
+summary: "CLI 参考 for `openclaw agents` (list/add/delete/bindings/bind/unbind/set identity)"
 read_when:
-  - You want multiple isolated agents (workspaces + routing + auth)
+  - 您需要多个隔离的代理（工作区 + 路由 + 身份验证）
 title: "agents"
 ---
 
@@ -11,8 +11,8 @@ title: "agents"
 
 相关：
 
-- 多代理路由：[Multi-Agent Routing](/zh/concepts/multi-agent)
-- 代理工作区：[Agent workspace](/zh/concepts/agent-workspace)
+- 多代理路由：[多代理路由](/zh/concepts/multi-agent)
+- 代理工作区：[代理工作区](/zh/concepts/agent-workspace)
 
 ## 示例
 
@@ -45,13 +45,13 @@ openclaw agents bindings --json
 openclaw agents bind --agent work --bind telegram:ops --bind discord:guild-a
 ```
 
-如果省略 `accountId`（`--bind <channel>`），OpenClaw 会在可用时从频道默认值和插件设置钩子解析它。
+如果省略 `accountId` (`--bind <channel>`)，OpenClaw 会在可用时从渠道默认值和插件设置钩子中解析它。
 
 ### 绑定范围行为
 
-- 没有 `accountId` 的绑定仅匹配频道默认账户。
-- `accountId: "*"` 是频道范围的回退（所有账户），比显式账户绑定更不具体。
-- 如果同一个代理已经有一个匹配的通道绑定但没有 `accountId`，而您稍后使用显式或解析出的 `accountId` 进行绑定，OpenClaw 将就地升级该现有绑定，而不是添加重复项。
+- 没有 `accountId` 的绑定仅匹配渠道默认账户。
+- `accountId: "*"` 是渠道范围的回退（所有账户），并且比显式账户绑定的具体性低。
+- 如果同一代理已经有一个没有 `accountId` 的匹配渠道绑定，并且您稍后使用显式或解析出的 `accountId` 进行绑定，OpenClaw 将就地升级该现有绑定，而不是添加重复项。
 
 示例：
 
@@ -63,7 +63,7 @@ openclaw agents bind --agent work --bind telegram
 openclaw agents bind --agent work --bind telegram:ops
 ```
 
-升级后，该绑定的路由将限定为 `telegram:ops`。如果您还希望默认账户路由，请显式添加它（例如 `--bind telegram:default`）。
+升级后，该绑定的路由将限定于 `telegram:ops`。如果您还需要默认账户路由，请显式添加它（例如 `--bind telegram:default`）。
 
 移除绑定：
 
@@ -74,7 +74,7 @@ openclaw agents unbind --agent work --all
 
 ## 身份文件
 
-每个代理工作区可以在工作区根目录下包含一个 `IDENTITY.md`：
+每个代理工作区可以在工作区根目录包含一个 `IDENTITY.md`：
 
 - 示例路径：`~/.openclaw/workspace/IDENTITY.md`
 - `set-identity --from-identity` 从工作区根目录（或显式的 `--identity-file`）读取
@@ -88,7 +88,7 @@ openclaw agents unbind --agent work --all
 - `name`
 - `theme`
 - `emoji`
-- `avatar`（工作区相对路径、http(s) URL 或 data URI）
+- `avatar` (工作区相对路径、http(s) URL 或数据 URI)
 
 从 `IDENTITY.md` 加载：
 
@@ -122,6 +122,6 @@ openclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞" --ava
 }
 ```
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

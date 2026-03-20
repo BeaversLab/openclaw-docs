@@ -89,10 +89,10 @@ Common signatures:
 
 - `heartbeat skipped` with `reason=quiet-hours` → outside `activeHours`.
 - `requests-in-flight` → main lane busy; heartbeat deferred.
-- `empty-heartbeat-file` → interval heartbeat ignoré car `HEARTBEAT.md` n'a pas de contenu actionnable et aucun événement cron étiqueté n'est en file d'attente.
+- `empty-heartbeat-file` → interval heartbeat skipped because `HEARTBEAT.md` has no actionable content and no tagged cron event is queued.
 - `alerts-disabled` → les paramètres de visibilité suppriment les messages heartbeat sortants.
 
-## Pièges liés au fuseau horaire et aux activeHours
+## Pièges liés au fuseau horaire et aux heures d'activité
 
 ```bash
 openclaw config get agents.defaults.heartbeat.activeHours
@@ -106,13 +106,13 @@ Règles rapides :
 
 - `Config path not found: agents.defaults.userTimezone` signifie que la clé n'est pas définie ; le heartbeat revient au fuseau horaire de l'hôte (ou `activeHours.timezone` si défini).
 - Cron sans `--tz` utilise le fuseau horaire de l'hôte de la passerelle.
-- Le heartbeat `activeHours` utilise la résolution de fuseau horaire configurée (`user`, `local` ou tz IANA explicite).
+- Le heartbeat `activeHours` utilise la résolution de fuseau horaire configurée (`user`, `local`, ou fuseau horaire IANA explicite).
 - Les horodatages ISO sans fuseau horaire sont traités comme UTC pour les planifications cron `at`.
 
 Signatures courantes :
 
-- Les tâches s'exécutent à la mauvaise heure horloge après un changement de fuseau horaire de l'hôte.
-- Le heartbeat est toujours ignoré pendant la journée car `activeHours.timezone` est incorrect.
+- Les tâches s'exécutent à la mauvaise heure réelle après le changement de fuseau horaire de l'hôte.
+- Le heartbeat est toujours ignoré pendant vos heures de journée car `activeHours.timezone` est incorrect.
 
 Connexes :
 
@@ -121,6 +121,6 @@ Connexes :
 - [/automation/cron-vs-heartbeat](/fr/automation/cron-vs-heartbeat)
 - [/concepts/timezone](/fr/concepts/timezone)
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

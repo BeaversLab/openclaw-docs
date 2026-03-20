@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw sur Raspberry Pi (configuration auto-hébergée économique)"
+summary: "OpenClaw on Raspberry Pi (budget self-hosted setup)"
 read_when:
   - Setting up OpenClaw on a Raspberry Pi
   - Running OpenClaw on ARM devices
@@ -7,55 +7,55 @@ read_when:
 title: "Raspberry Pi"
 ---
 
-# OpenClaw sur Raspberry Pi
+# OpenClaw on Raspberry Pi
 
-## Objectif
+## Goal
 
-Exécuter une passerelle OpenClaw Gateway persistante et toujours active sur un Raspberry Pi pour un coût unique d'environ **35-80 $** (sans frais mensuels).
+Run a persistent, always-on OpenClaw Gateway on a Raspberry Pi for **~$35-80** one-time cost (no monthly fees).
 
-Parfait pour :
+Perfect for:
 
-- Assistant IA personnel 24/7
-- Centre de domotique
-- Bot Telegram/WhatsApp à faible consommation et toujours disponible
+- 24/7 personal AI assistant
+- Home automation hub
+- Low-power, always-available Telegram/WhatsApp bot
 
-## Configuration matérielle requise
+## Hardware Requirements
 
-| Modèle de Pi    | RAM       | Fonctionne ?   | Notes                                         |
-| --------------- | --------- | -------------- | --------------------------------------------- |
-| **Pi 5**        | 4 Go/8 Go | ✅ Le meilleur | Le plus rapide, recommandé                    |
-| **Pi 4**        | 4 Go      | ✅ Bon         | Idéal pour la plupart des utilisateurs        |
-| **Pi 4**        | 2 Go      | ✅ OK          | Fonctionne, ajoutez un swap                   |
-| **Pi 4**        | 1 Go      | ⚠️ Juste       | Possible avec un swap, configuration minimale |
-| **Pi 3B+**      | 1 Go      | ⚠️ Lent        | Fonctionne mais est lent                      |
-| **Pi Zero 2 W** | 512 Mo    | ❌             | Non recommandé                                |
+| Pi Model        | RAM     | Works?   | Notes                              |
+| --------------- | ------- | -------- | ---------------------------------- |
+| **Pi 5**        | 4GB/8GB | ✅ Best  | Fastest, recommended               |
+| **Pi 4**        | 4GB     | ✅ Good  | Sweet spot for most users          |
+| **Pi 4**        | 2GB     | ✅ OK    | Works, add swap                    |
+| **Pi 4**        | 1GB     | ⚠️ Tight | Possible with swap, minimal config |
+| **Pi 3B+**      | 1GB     | ⚠️ Slow  | Works but sluggish                 |
+| **Pi Zero 2 W** | 512MB   | ❌       | Not recommended                    |
 
-**Configuration minimale :** 1 Go de RAM, 1 cœur, 500 Mo d'espace disque  
-**Recommandé :** 2 Go+ de RAM, OS 64 bits, carte SD de 16 Go+ (ou SSD USB)
+**Minimum specs:** 1GB RAM, 1 core, 500MB disk  
+**Recommended:** 2GB+ RAM, 64-bit OS, 16GB+ SD card (or USB SSD)
 
-## Ce dont vous aurez besoin
+## What you need
 
-- Raspberry Pi 4 ou 5 (2 Go+ recommandés)
-- Carte MicroSD (16 Go+) ou SSD USB (meilleures performances)
-- Alimentation (bloc d'alimentation officiel Pi recommandé)
-- Connexion réseau (Ethernet ou WiFi)
+- Raspberry Pi 4 or 5 (2GB+ recommended)
+- MicroSD card (16GB+) or USB SSD (better performance)
+- Power supply (official Pi PSU recommended)
+- Network connection (Ethernet or WiFi)
 - ~30 minutes
 
-## 1) Flasher le système d'exploitation
+## 1) Flash the OS
 
-Utilisez **Raspberry Pi OS Lite (64 bits)** — aucun bureau n'est nécessaire pour un serveur sans tête.
+Use **Raspberry Pi OS Lite (64-bit)** — no desktop needed for a headless server.
 
-1. Téléchargez [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
-2. Choisir le système d'exploitation : **Raspberry Pi OS Lite (64 bits)**
-3. Cliquez sur l'icône d'engrenage (⚙️) pour pré-configurer :
-   - Définir le nom d'hôte : `gateway-host`
-   - Activer SSH
-   - Définir le nom d'utilisateur/mot de passe
-   - Configurer le WiFi (si vous n'utilisez pas Ethernet)
-4. Flasher sur votre carte SD / lecteur USB
-5. Insérer et démarrer le Pi
+1. Download [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+2. Choose OS: **Raspberry Pi OS Lite (64-bit)**
+3. Click the gear icon (⚙️) to pre-configure:
+   - Set hostname: `gateway-host`
+   - Enable SSH
+   - Set username/password
+   - Configure WiFi (if not using Ethernet)
+4. Flash to your SD card / USB drive
+5. Insert and boot the Pi
 
-## 2) Se connecter via SSH
+## 2) Connect via SSH
 
 ```bash
 ssh user@gateway-host
@@ -63,7 +63,7 @@ ssh user@gateway-host
 ssh user@192.168.x.x
 ```
 
-## 3) Configuration du système
+## 3) System Setup
 
 ```bash
 # Update system
@@ -76,7 +76,7 @@ sudo apt install -y git curl build-essential
 sudo timedatectl set-timezone America/Chicago  # Change to your timezone
 ```
 
-## 4) Installer Node.js 24 (ARM64)
+## 4) Install Node.js 24 (ARM64)
 
 ```bash
 # Install Node.js via NodeSource
@@ -88,9 +88,9 @@ node --version  # Should show v24.x.x
 npm --version
 ```
 
-## 5) Ajouter du swap (Important pour 2 Go ou moins)
+## 5) Add Swap (Important for 2GB or less)
 
-Le swap empêche les plantages dus à un manque de mémoire :
+Swap prevents out-of-memory crashes:
 
 ```bash
 # Create 2GB swap file
@@ -107,15 +107,15 @@ echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
 ```
 
-## 6) Installer OpenClaw
+## 6) Install OpenClaw
 
-### Option A : Installation standard (Recommandée)
+### Option A: Standard Install (Recommended)
 
 ```bash
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-### Option B : Installation modifiable (Pour le bricolage)
+### Option B: Hackable Install (For tinkering)
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -125,22 +125,22 @@ npm run build
 npm link
 ```
 
-L'installation modifiable vous donne un accès direct aux journaux et au code — utile pour le débogage des problèmes spécifiques à l'ARM.
+The hackable install gives you direct access to logs and code — useful for debugging ARM-specific issues.
 
-## 7) Exécuter Onboarding
+## 7) Run Onboarding
 
 ```bash
 openclaw onboard --install-daemon
 ```
 
-Suivez l'assistant :
+Follow the wizard:
 
-1. **Mode passerelle :** Local
-2. **Authentification :** Clés API recommandées (OAuth peut être capricieux sur un Pi sans tête)
-3. **Canaux :** Telegram est le plus simple pour commencer
-4. **Démon :** Oui (systemd)
+1. **Gateway mode:** Local
+2. **Auth:** API keys recommended (OAuth can be finicky on headless Pi)
+3. **Channels:** Telegram is easiest to start with
+4. **Daemon:** Yes (systemd)
 
-## 8) Vérifier l'installation
+## 8) Verify Installation
 
 ```bash
 # Check status
@@ -153,9 +153,9 @@ sudo systemctl status openclaw
 journalctl -u openclaw -f
 ```
 
-## 9) Accéder au tableau de bord OpenClaw
+## 9) Access the OpenClaw Dashboard
 
-Remplacez `user@gateway-host` par votre nom d'utilisateur Pi et votre nom d'hôte ou adresse IP.
+Replace `user@gateway-host` with your Pi username and hostname or IP address.
 
 Sur votre ordinateur, demandez au Pi d'afficher une nouvelle URL de tableau de bord :
 
@@ -163,8 +163,8 @@ Sur votre ordinateur, demandez au Pi d'afficher une nouvelle URL de tableau de b
 ssh user@gateway-host 'openclaw dashboard --no-open'
 ```
 
-La commande affiche `Dashboard URL:`. Selon la manière dont `gateway.auth.token`
-est configuré, l'URL peut être un lien `http://127.0.0.1:18789/` brut ou un
+La commande affiche `Dashboard URL:`. Selon la façon dont `gateway.auth.token`
+est configuré, l'URL peut être un lien `http://127.0.0.1:18789/` simple ou un
 qui inclut `#token=...`.
 
 Dans un autre terminal sur votre ordinateur, créez le tunnel SSH :
@@ -173,7 +173,7 @@ Dans un autre terminal sur votre ordinateur, créez le tunnel SSH :
 ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
 ```
 
-Ensuite, ouvrez l'URL du tableau de bord affichée dans votre navigateur local.
+Ouvrez ensuite l'URL du tableau de bord affichée dans votre navigateur local.
 
 Si l'interface utilisateur demande une authentification, collez le jeton de `gateway.auth.token`
 (ou `OPENCLAW_GATEWAY_TOKEN`) dans les paramètres de l'interface de contrôle.
@@ -184,7 +184,7 @@ Pour un accès à distance permanent, voir [Tailscale](/fr/gateway/tailscale).
 
 ## Optimisations des performances
 
-### Utiliser un SSD USB (Amélioration majeure)
+### Utiliser un SSD USB (Amélioration considérable)
 
 Les cartes SD sont lentes et s'usent. Un SSD USB améliore considérablement les performances :
 
@@ -208,17 +208,17 @@ EOF
 source ~/.bashrc
 ```
 
-Remarques :
+Notes :
 
-- `NODE_COMPILE_CACHE` accélère les exécutions ultérieures (`status`, `health`, `--help`).
+- `NODE_COMPILE_CACHE` accélère les exécutions suivantes (`status`, `health`, `--help`).
 - `/var/tmp` survit mieux aux redémarrages que `/tmp`.
-- `OPENCLAW_NO_RESPAWN=1` évite le coût de démarrage supplémentaire du redémarrage automatique du CLI.
+- `OPENCLAW_NO_RESPAWN=1` évite le coût de démarrage supplémentaire dû au redémarrage automatique du CLI.
 - La première exécution réchauffe le cache ; les exécutions ultérieures en profitent le plus.
 
 ### réglage du démarrage systemd (optionnel)
 
-Si ce Pi exécute principalement OpenClaw, ajoutez un drop-in de service pour réduire la gigue
-de redémarrage et garder l'environnement de démarrage stable :
+Si ce Pi exécute principalement OpenClaw, ajoutez une instruction de service pour réduire la gigue de redémarrage
+et garder l'environnement de démarrage stable :
 
 ```bash
 sudo systemctl edit openclaw
@@ -233,15 +233,15 @@ RestartSec=2
 TimeoutStartSec=90
 ```
 
-Puis appliquez :
+Appliquez ensuite :
 
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl restart openclaw
 ```
 
-Si possible, conservez l'état/le cache de OpenClaw sur un stockage SSD pour éviter les goulots d'étranglement
-E/S aléatoires de la carte SD lors des démarrages à froid.
+Si possible, gardez l'état/le cache de OpenClaw sur un stockage SSD pour éviter les goulots d'étranglement des E/S aléatoires de la carte SD
+lors des démarrages à froid.
 
 Comment les stratégies `Restart=` aident à la récupération automatisée :
 [systemd peut automatiser la récupération de service](https://www.redhat.com/en/blog/systemd-automate-recovery).
@@ -275,19 +275,19 @@ htop
 
 ### Compatibilité binaire
 
-La plupart des fonctionnalités d'OpenClaw fonctionnent sur ARM64, mais certains binaires externes peuvent nécessiter des versions ARM :
+La plupart des fonctionnalités de OpenClaw fonctionnent sur ARM64, mais certains binaires externes peuvent nécessiter des builds ARM :
 
-| Outil                 | État ARM64 | Notes                                       |
-| --------------------- | ---------- | ------------------------------------------- |
-| Node.js               | ✅         | Fonctionne très bien                        |
-| WhatsApp (Baileys)    | ✅         | JS pur, aucun problème                      |
-| Telegram              | ✅         | JS pur, aucun problème                      |
-| gog (Gmail CLI)       | ⚠️         | Vérifier la disponibilité d'une version ARM |
-| Chromium (navigateur) | ✅         | `sudo apt install chromium-browser`         |
+| Outil               | Statut ARM64 | Notes                               |
+| ------------------ | ------------ | ----------------------------------- |
+| Node.js            | ✅           | Fonctionne parfaitement                         |
+| WhatsApp (Baileys) | ✅           | JS pur, aucun problème                  |
+| Telegram           | ✅           | JS pur, aucun problème                  |
+| gog (Gmail CLI)    | ⚠️           | Vérifier la disponibilité d'une version ARM               |
+| Chromium (navigateur) | ✅           | `sudo apt install chromium-browser` |
 
-Si une compétence échoue, vérifiez si son binaire dispose d'une version ARM. De nombreux outils Go/Rust en ont ; certains non.
+Si une compétence échoue, vérifiez si son binaire possède une version ARM. Beaucoup d'outils Go/Rust en ont ; certains non.
 
-### 32 bits contre 64 bits
+### 32 bits vs 64 bits
 
 **Utilisez toujours un OS 64 bits.** Node.js et de nombreux outils modernes l'exigent. Vérifiez avec :
 
@@ -300,7 +300,7 @@ uname -m
 
 ## Configuration de modèle recommandée
 
-Puisque le Pi n'est que le Gateway (les modèles tournent dans le cloud), utilisez des modèles basés sur l'API :
+Puisque le Pi n'est que la Gateway (les modèles s'exécutent dans le cloud), utilisez des modèles basés sur API :
 
 ```json
 {
@@ -319,7 +319,7 @@ Puisque le Pi n'est que le Gateway (les modèles tournent dans le cloud), utilis
 
 ---
 
-## Démarrage automatique au démarrage
+## Démarrage automatique au boot
 
 L'onboarding configure cela, mais pour vérifier :
 
@@ -350,9 +350,9 @@ free -h
 
 ### Performances lentes
 
-- Utiliser un SSD USB au lieu d'une carte SD
-- Désactiver les services inutilisés : `sudo systemctl disable cups bluetooth avahi-daemon`
-- Vérifier le bridage du CPU : `vcgencmd get_throttled` (devrait renvoyer `0x0`)
+- Utilisez un SSD USB au lieu d'une carte SD
+- Désactivez les services inutilisés : `sudo systemctl disable cups bluetooth avahi-daemon`
+- Vérifiez le throttling du CPU : `vcgencmd get_throttled` (devrait retourner `0x0`)
 
 ### Le service ne démarre pas
 
@@ -376,7 +376,7 @@ Si une compétence échoue avec l'erreur "exec format error" :
 
 ### Déconnexions WiFi
 
-Pour les Pi sans écran (headless) sur WiFi :
+Pour les Pi sans écran en WiFi :
 
 ```bash
 # Disable WiFi power management
@@ -390,27 +390,27 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ## Comparaison des coûts
 
-| Configuration   | Coût unique | Coût mensuel | Notes                         |
-| --------------- | ----------- | ------------ | ----------------------------- |
-| **Pi 4 (2 Go)** | ~45 $       | 0 $          | + électricité (~5 $/an)       |
-| **Pi 4 (4 Go)** | ~55 $       | 0 $          | Recommandé                    |
-| **Pi 5 (4 Go)** | ~60 $       | 0 $          | Meilleures performances       |
-| **Pi 5 (8 Go)** | ~80 $       | 0 $          | Surdimensionné mais futuriste |
-| DigitalOcean    | 0 $         | 6 $/mois     | 72 $/an                       |
-| Hetzner         | 0 $         | 3,79 €/mois  | ~50 $/an                      |
+| Installation          | Coût unique | Coût mensuel | Notes                     |
+| -------------- | ------------- | ------------ | ------------------------- |
+| **Pi 4 (2GB)** | ~$45          | $0           | + électricité (~$5/an)          |
+| **Pi 4 (4GB)** | ~$55          | $0           | Recommandé               |
+| **Pi 5 (4GB)** | ~$60          | $0           | Meilleures performances          |
+| **Pi 5 (8GB)** | ~$80          | $0           | Surdimensionné mais futuriste |
+| DigitalOcean   | $0            | $6/mois        | $72/an                  |
+| Hetzner        | $0            | €3.79/mois     | ~$50/an                 |
 
-**Seuil de rentabilité :** Un Pi s'autofinance en ~6 à 12 mois par rapport à un VPS cloud.
+**Rentabilité :** Un Pi se rentabilise en ~6-12 mois par rapport à un VPS cloud.
 
 ---
 
 ## Voir aussi
 
-- [Guide Linux](/fr/platforms/linux) — configuration générale Linux
+- [Guide Linux](/fr/platforms/linux) — configuration Linux générale
 - [Guide DigitalOcean](/fr/platforms/digitalocean) — alternative cloud
 - [Guide Hetzner](/fr/install/hetzner) — configuration Docker
 - [Tailscale](/fr/gateway/tailscale) — accès à distance
-- [Nœuds](/fr/nodes) — associez votre ordinateur portable/téléphone à la passerelle Pi
+- [Nœuds](/fr/nodes) — couplez votre ordinateur portable/téléphone avec la passerelle Pi
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

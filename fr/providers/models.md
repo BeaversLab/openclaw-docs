@@ -1,19 +1,20 @@
 ---
-summary: "Fournisseurs de modèles (LLM) pris en charge par OpenClaw"
+summary: "Model providers (LLMs) supported by OpenClaw"
 read_when:
   - You want to choose a model provider
   - You want quick setup examples for LLM auth + model selection
-title: "Démarrage rapide du fournisseur de modèles"
+title: "Model Provider Quickstart"
 ---
 
-# Fournisseurs de modèles
+# Model Providers
 
-OpenClaw peut utiliser de nombreux fournisseurs LLM. Choisissez-en un, authentifiez-vous, puis définissez le modèle par défaut sur `provider/model`.
+OpenClaw can use many LLM providers. Pick one, authenticate, then set the default
+model as `provider/model`.
 
-## Démarrage rapide (deux étapes)
+## Quick start (two steps)
 
-1. Authentifiez-vous auprès du fournisseur (généralement via `openclaw onboard`).
-2. Définir le modèle par défaut :
+1. Authenticate with the provider (usually via `openclaw onboard`).
+2. Set the default model:
 
 ```json5
 {
@@ -21,7 +22,7 @@ OpenClaw peut utiliser de nombreux fournisseurs LLM. Choisissez-en un, authentif
 }
 ```
 
-## Fournisseurs pris en charge (ensemble de démarrage)
+## Supported providers (starter set)
 
 - [OpenAI (API + Codex)](/fr/providers/openai)
 - [Anthropic (API + Claude Code CLI)](/fr/providers/anthropic)
@@ -33,14 +34,16 @@ OpenClaw peut utiliser de nombreux fournisseurs LLM. Choisissez-en un, authentif
 - [Synthetic](/fr/providers/synthetic)
 - [OpenCode (Zen + Go)](/fr/providers/opencode)
 - [Z.AI](/fr/providers/zai)
-- [Modèles GLM](/fr/providers/glm)
+- [GLM models](/fr/providers/glm)
 - [MiniMax](/fr/providers/minimax)
 - [Venice (Venice AI)](/fr/providers/venice)
 - [Amazon Bedrock](/fr/providers/bedrock)
 - [Qianfan](/fr/providers/qianfan)
+- [xAI](/fr/providers/xai)
 
-Pour le catalogue complet des fournisseurs (xAI, Groq, Mistral, etc.) et la configuration avancée, consultez [Fournisseurs de modèles](/fr/concepts/model-providers).
+For the full provider catalog (xAI, Groq, Mistral, etc.) and advanced configuration,
+see [Model providers](/fr/concepts/model-providers).
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

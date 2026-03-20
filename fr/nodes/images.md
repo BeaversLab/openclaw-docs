@@ -1,11 +1,11 @@
 ---
-summary: "Règles de gestion des images et des médias pour l'envoi, la passerelle et les réponses des agents"
+summary: "Règles de gestion des images et des médias pour l'envoi, la passerelle et les réponses de l'agent"
 read_when:
-  - Modifying media pipeline or attachments
-title: "Prise en charge des images et des médias"
+  - Modification du pipeline média ou des pièces jointes
+title: "Support des images et des médias"
 ---
 
-# Prise en charge des images et des médias — 2025-12-05
+# Support des images et des médias (2025-12-05)
 
 Le channel WhatsApp fonctionne via **Baileys Web**. Ce document capture les règles actuelles de gestion des médias pour l'envoi, la passerelle et les réponses des agents.
 
@@ -19,19 +19,19 @@ Le channel WhatsApp fonctionne via **Baileys Web**. Ce document capture les règ
 
 - `openclaw message send --media <path-or-url> [--message <caption>]`
   - `--media` facultatif ; la légende peut être vide pour les envois de médias uniquement.
-  - `--dry-run` affiche la charge utile résolue ; `--json` émet `{ channel, to, messageId, mediaUrl, caption }`.
+  - `--dry-run` imprime la charge utile résolue ; `--json` émet `{ channel, to, messageId, mediaUrl, caption }`.
 
 ## Comportement du channel Web WhatsApp
 
 - Entrée : chemin d'accès au fichier local **ou** URL HTTP(S).
 - Flux : charger dans un tampon (Buffer), détecter le type de média et construire la charge utile correcte :
-  - **Images :** redimensionner et recompresser en JPEG (côté max 2048px) en ciblant `agents.defaults.mediaMaxMb` (par défaut 5 Mo), plafonné à 6 Mo.
-  - **Audio/Voix/Vidéo :** transfert direct jusqu'à 16 Mo ; l'audio est envoyé sous forme de note vocale (`ptt: true`).
+  - **Images :** redimensionner et recompresser en JPEG (côté max 2048 px) en visant `agents.defaults.mediaMaxMb` (par défaut 5 Mo), plafonné à 6 Mo.
+  - **Audio/Voix/Vidéo :** transfert jusqu'à 16 Mo ; l'audio est envoyé sous forme de note vocale (`ptt: true`).
   - **Documents :** tout le reste, jusqu'à 100 Mo, avec le nom de fichier conservé si disponible.
-- Lecture style GIF WhatsApp : envoyer un MP4 avec `gifPlayback: true` (CLI : `--gif-playback`) afin que les clients mobiles bouclent en ligne.
+- Lecture en boucle style GIF WhatsApp : envoyer un MP4 avec `gifPlayback: true` (CLI : `--gif-playback`) pour que les clients mobiles bouclent en ligne.
 - La détection MIME privilégie les octets magiques, puis les en-têtes, puis l'extension de fichier.
 - La légende provient de `--message` ou `reply.text` ; une légende vide est autorisée.
-- Journalisation : non verbeux affiche `↩️`/`✅` ; verbeux inclut la taille et le chemin d'accès/URL source.
+- Journalisation : non détaillé montre `↩️`/`✅` ; détaillé inclut la taille et le chemin d'accès source ou l'URL.
 
 ## Pipeline de réponse automatique
 
@@ -42,13 +42,13 @@ Le channel WhatsApp fonctionne via **Baileys Web**. Ce document capture les règ
 ## Médias entrants vers les commandes (Pi)
 
 - Lorsque les messages web entrants incluent des médias, OpenClaw les télécharge dans un fichier temporaire et expose des variables de modèle :
-  - `{{MediaUrl}}` pseudo-URL pour les médias entrants.
-  - `{{MediaPath}}` chemin temporaire local écrit avant l'exécution de la commande.
+  - Pseudo-URL `{{MediaUrl}}` pour les médias entrants.
+  - Chemin temporaire local `{{MediaPath}}` écrit avant l'exécution de la commande.
 - Lorsqu'un bac à sable Docker par session est activé, les médias entrants sont copiés dans l'espace de travail du bac à sable et `MediaPath`/`MediaUrl` sont réécrits dans un chemin relatif comme `media/inbound/<filename>`.
-- La compréhension des médias (si configurée via `tools.media.*` ou `tools.media.models` partagé) s'exécute avant le modèle et peut insérer des blocs `[Image]`, `[Audio]` et `[Video]` dans `Body`.
+- La compréhension des médias (si configurée via `tools.media.*` ou `tools.media.models` partagé) s'exécute avant le templating et peut insérer des blocs `[Image]`, `[Audio]` et `[Video]` dans `Body`.
   - L'audio définit `{{Transcript}}` et utilise la transcription pour l'analyse des commandes, afin que les commandes slash fonctionnent toujours.
   - Les descriptions vidéo et image préservent tout le texte de légende pour l'analyse des commandes.
-- Par défaut, seule la première pièce jointe image/audio/vidéo correspondante est traitée ; définissez `tools.media.<cap>.attachments` pour traiter plusieurs pièces jointes.
+- Par défaut, seule la première pièce jointe correspondante (image/audio/vidéo) est traitée ; définissez `tools.media.<cap>.attachments` pour traiter plusieurs pièces jointes.
 
 ## Limites et erreurs
 
@@ -60,7 +60,7 @@ Le channel WhatsApp fonctionne via **Baileys Web**. Ce document capture les règ
 
 **Limites de compréhension des médias (transcription/description)**
 
-- Image par défaut : 10 Mo (`tools.media.image.maxBytes`).
+- Défaut pour l'image : 10 Mo (`tools.media.image.maxBytes`).
 - Audio par défaut : 20 Mo (`tools.media.audio.maxBytes`).
 - Vidéo par défaut : 50 Mo (`tools.media.video.maxBytes`).
 - Les médias trop volumineux sautent l'étape de compréhension, mais les réponses sont toujours envoyées avec le corps d'origine.
@@ -71,6 +71,6 @@ Le channel WhatsApp fonctionne via **Baileys Web**. Ce document capture les règ
 - Valider la recompression pour les images (limite de taille) et l'indicateur de note vocale pour l'audio.
 - S'assurer que les réponses multimédias multiples sont distribuées sous forme d'envois séquentiels.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

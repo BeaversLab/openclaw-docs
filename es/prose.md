@@ -1,15 +1,15 @@
 ---
 summary: "OpenProse: flujos de trabajo .prose, comandos de barra y estado en OpenClaw"
 read_when:
-  - You want to run or write .prose workflows
-  - You want to enable the OpenProse plugin
-  - You need to understand state storage
+  - Quieres ejecutar o escribir flujos de trabajo .prose
+  - Quieres habilitar el complemento OpenProse
+  - Necesitas entender el almacenamiento de estado
 title: "OpenProse"
 ---
 
 # OpenProse
 
-OpenProse es un formato de flujo de trabajo portable y basado en markdown para orquestar sesiones de IA. En OpenClaw se distribuye como un complemento que instala un paquete de habilidades OpenProse además de un comando de barra `/prose`. Los programas residen en archivos `.prose` y pueden generar múltiples sub-agentes con un flujo de control explícito.
+OpenProse es un formato de flujo de trabajo portable, con prioridad en markdown, para orquestar sesiones de IA. En OpenClaw se distribuye como un complemento que instala un paquete de habilidades OpenProse más un comando de barra `/prose`. Los programas residen en archivos `.prose` y pueden generar múltiples subagentes con un flujo de control explícito.
 
 Sitio oficial: [https://www.prose.md](https://www.prose.md)
 
@@ -17,25 +17,25 @@ Sitio oficial: [https://www.prose.md](https://www.prose.md)
 
 - Investigación y síntesis multiagente con paralelismo explícito.
 - Flujos de trabajo repetibles y seguros para aprobaciones (revisión de código, triaje de incidentes, canalizaciones de contenido).
-- Programas `.prose` reutilizables que puede ejecutar en los tiempos de ejecución de agente compatibles.
+- Programas `.prose` reutilizables que puedes ejecutar en los tiempos de ejecución de agentes compatibles.
 
 ## Instalar + habilitar
 
-Los complementos incluidos están deshabilitados de forma predeterminada. Habilite OpenProse:
+Los complementos incluidos están deshabilitados por defecto. Habilita OpenProse:
 
 ```bash
 openclaw plugins enable open-prose
 ```
 
-Reinicie la puerta de enlace después de habilitar el complemento.
+Reinicia la Pasarela (Gateway) después de habilitar el complemento.
 
-Desarrollo/verificación local: `openclaw plugins install ./extensions/open-prose`
+Desarrollo/checkout local: `openclaw plugins install ./extensions/open-prose`
 
-Documentos relacionados: [Complementos](/es/tools/plugin), [Manifiesto del complemento](/es/plugins/manifest), [Habilidades](/es/tools/skills).
+Documentación relacionada: [Complementos](/es/tools/plugin), [Manifiesto de complementos](/es/plugins/manifest), [Habilidades](/es/tools/skills).
 
 ## Comando de barra
 
-OpenProse registra `/prose` como un comando de habilidad invocable por el usuario. Se enruta a las instrucciones de la máquina virtual OpenProse y utiliza herramientas de OpenClaw entre bastidores.
+OpenProse registra `/prose` como un comando de habilidad invocable por el usuario. Se enruta a las instrucciones de la máquina virtual OpenProse y utiliza herramientas de OpenClaw bajo el capó.
 
 Comandos comunes:
 
@@ -76,7 +76,7 @@ context: { findings, draft }
 
 ## Ubicaciones de archivos
 
-OpenProse mantiene el estado bajo `.prose/` en su espacio de trabajo:
+OpenProse mantiene el estado en `.prose/` en tu espacio de trabajo:
 
 ```
 .prose/
@@ -90,7 +90,7 @@ OpenProse mantiene el estado bajo `.prose/` en su espacio de trabajo:
 └── agents/
 ```
 
-Los agentes persistentes de nivel de usuario residen en:
+Los agentes persistentes a nivel de usuario residen en:
 
 ```
 ~/.prose/agents/
@@ -100,39 +100,39 @@ Los agentes persistentes de nivel de usuario residen en:
 
 OpenProse admite múltiples backends de estado:
 
-- **sistema de archivos** (predeterminado): `.prose/runs/...`
-- **en contexto**: transitorio, para programas pequeños
+- **sistema de archivos** (por defecto): `.prose/runs/...`
+- **en contexto** (in-context): transitorio, para programas pequeños
 - **sqlite** (experimental): requiere el binario `sqlite3`
 - **postgres** (experimental): requiere `psql` y una cadena de conexión
 
 Notas:
 
 - sqlite/postgres son opcionales y experimentales.
-- las credenciales de postgres fluyen hacia los registros del subagente; use una base de datos dedicada con los privilegios más bajos posibles.
+- las credenciales de postgres fluyen hacia los registros del subagente; utiliza una base de datos dedicada con los privilegios mínimos necesarios.
 
 ## Programas remotos
 
 `/prose run <handle/slug>` se resuelve en `https://p.prose.md/<handle>/<slug>`.
-Las URL directas se obtienen tal cual. Esto utiliza la herramienta `web_fetch` (o `exec` para POST).
+Las URLs directas se obtienen tal cual. Esto utiliza la herramienta `web_fetch` (o `exec` para POST).
 
-## Asignación del tiempo de ejecución de OpenClaw
+## Asignación de tiempo de ejecución de OpenClaw
 
-Los programas OpenProse se asignan a primitivas de OpenClaw:
+Los programas de OpenProse se asignan a primitivas de OpenClaw:
 
-| Concepto de OpenProse              | Herramienta de OpenClaw |
-| ---------------------------------- | ----------------------- |
-| Herramienta Generar sesión / Tarea | `sessions_spawn`        |
-| Lectura/escritura de archivos      | `read` / `write`        |
-| Recuperación web                   | `web_fetch`             |
+| Concepto de OpenProse         | Herramienta de OpenClaw    |
+| ------------------------- | ---------------- |
+| Generar sesión / Herramienta de tareas | `sessions_spawn` |
+| Lectura/escritura de archivos           | `read` / `write` |
+| Recuperación web                 | `web_fetch`      |
 
-Si su lista blanca de herramientas bloquea estas herramientas, los programas OpenProse fallarán. Consulte [Configuración de habilidades](/es/tools/skills-config).
+Si su lista blanca de herramientas bloquea estas herramientas, los programas de OpenProse fallarán. Consulte [Configuración de habilidades](/es/tools/skills-config).
 
 ## Seguridad + aprobaciones
 
-Trate los archivos `.prose` como código. Revíselos antes de ejecutarlos. Use las listas blancas de herramientas y las puertas de aprobación de OpenClaw para controlar los efectos secundarios.
+Trate los archivos `.prose` como código. Revíselos antes de ejecutarlos. Use las listas blanca y las puertas de aprobación de herramientas de OpenClaw para controlar los efectos secundarios.
 
-Para flujos de trabajo deterministas y con puertas de aprobación, compare con [Lobster](/es/tools/lobster).
+Para flujos de trabajo deterministas con puertas de aprobación, compárese con [Lobster](/es/tools/lobster).
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

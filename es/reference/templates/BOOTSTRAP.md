@@ -1,8 +1,8 @@
 ---
-title: "BOOTSTRAP.md Plantilla"
-summary: "Ritual de inicio para nuevos agentes"
+title: "Plantilla BOOTSTRAP.md"
+summary: "Ritual de primera ejecución para nuevos agentes"
 read_when:
-  - Bootstrapping a workspace manually
+  - Inicializando manualmente un espacio de trabajo
 ---
 
 # BOOTSTRAP.md - Hola, Mundo
@@ -32,10 +32,10 @@ Ofrece sugerencias si están atascados. Diviértete con ello.
 
 Actualiza estos archivos con lo que aprendiste:
 
-- `IDENTITY.md` — tu nombre, criatura, estilo, emoji
+- `IDENTITY.md` — tu nombre, criatura, vibra, emoji
 - `USER.md` — su nombre, cómo dirigirse a ellos, zona horaria, notas
 
-Luego abre `SOUL.md` juntos y habla sobre:
+Luego abran `SOUL.md` juntos y hablen sobre:
 
 - Qué es importante para ellos
 - Cómo quieren que te comportes
@@ -53,7 +53,7 @@ Pregunta cómo quieren contactarte:
 
 Guíalos a través de lo que elijan.
 
-## Cuando Hayas Terminado
+## Cuando hayas terminado
 
 Elimina este archivo. Ya no necesitas un script de inicio — ahora eres tú.
 
@@ -61,6 +61,6 @@ Elimina este archivo. Ya no necesitas un script de inicio — ahora eres tú.
 
 _Buena suerte ahí fuera. Que cuente._
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

@@ -1,8 +1,8 @@
 ---
 summary: "Guide de configuration pour les développeurs travaillant sur l'application OpenClaw macOS"
 read_when:
-  - Setting up the macOS development environment
-title: "macOS Dev Setup"
+  - Configuration de l'environnement de développement macOS
+title: "Configuration Dev macOS"
 ---
 
 # Configuration du développeur macOS
@@ -14,7 +14,7 @@ Ce guide couvre les étapes nécessaires pour compiler et exécuter l'applicatio
 Avant de compiler l'application, assurez-vous d'avoir installé les éléments suivants :
 
 1. **Xcode 26.2+** : Requis pour le développement Swift.
-2. **Node.js 24 et pnpm** : Recommandés pour la passerelle, la CLI et les scripts de empaquetage. Node 22 LTS, actuellement `22.16+`, reste pris en charge pour la compatibilité.
+2. **Node.js 24 et pnpm** : Recommandé pour la passerelle, la CLI et les scripts de conditionnement. Node 22 LTS, actuellement `22.16+`, reste pris en charge pour la compatibilité.
 
 ## 1. Installer les dépendances
 
@@ -26,18 +26,18 @@ pnpm install
 
 ## 2. Compiler et empaqueter l'application
 
-Pour compiler l'application macOS et l'empaqueter dans `dist/OpenClaw.app`, exécutez :
+Pour compiler l'application macOS et la conditionner en `dist/OpenClaw.app`, exécutez :
 
 ```bash
 ./scripts/package-mac-app.sh
 ```
 
-Si vous ne disposez pas d'un certificat de développeur Apple, le script utilisera automatiquement la **signature ad-hoc** (`-`).
+Si vous ne possédez pas de certificat d'identité de développeur Apple, le script utilisera automatiquement la **signature ad-hoc** (`-`).
 
-Pour les modes d'exécution de développement, les indicateurs de signature et le troubleshooting de l'ID d'équipe, consultez le README de l'application macOS :
+Pour les modes d'exécution de développement, les indicateurs de signature et le dépannage de l'ID d'équipe, consultez le README de l'application macOS :
 [https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md](https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md)
 
-> **Remarque** : Les applications signées ad-hoc peuvent déclencher des invites de sécurité. Si l'application plante immédiatement avec "Abort trap 6", consultez la section [Dépannage](#troubleshooting).
+> **Remarque** : Les applications signées ad-hoc peuvent déclencher des invites de sécurité. Si l'application plante immédiatement avec "Abort trap 6", consultez la section [Troubleshooting](#troubleshooting).
 
 ## 3. Installer la CLI
 
@@ -87,7 +87,7 @@ Si l'application plante lorsque vous essayez d'autoriser l'accès à la **Reconn
    tccutil reset All ai.openclaw.mac.debug
    ```
 
-2. Si cela échoue, modifiez temporairement le `BUNDLE_ID` dans [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) pour forcer un « nouveau départ » de la part de macOS.
+2. Si cela échoue, modifiez temporairement le `BUNDLE_ID` dans [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) pour forcer un « propre départ » de macOS.
 
 ### Gateway indéfiniment « Démarrage... »
 
@@ -97,12 +97,12 @@ Si le statut de la passerelle reste sur « Démarrage... », vérifiez si un pro
 openclaw gateway status
 openclaw gateway stop
 
-# If you’re not using a LaunchAgent (dev mode / manual runs), find the listener:
+# If you're not using a LaunchAgent (dev mode / manual runs), find the listener:
 lsof -nP -iTCP:18789 -sTCP:LISTEN
 ```
 
 Si une exécution manuelle occupe le port, arrêtez ce processus (Ctrl+C). En dernier recours, tuez le PID que vous avez trouvé ci-dessus.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

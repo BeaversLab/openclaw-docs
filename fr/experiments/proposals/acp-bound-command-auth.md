@@ -1,8 +1,8 @@
 ---
 summary: "Proposition : modèle d'autorisation des commandes à long terme pour les conversations liées à l'ACP"
 read_when:
-  - Designing native command auth behavior in Telegram/Discord ACP-bound channels/topics
-title: "Autorisation des commandes liées à l'ACP (Proposition)"
+  - Conception du comportement natif d'autorisation des commandes dans les canaux/sujets liés à l'ACP Telegram/Discord
+title: "Autorisation de commande liée à l'ACP (Proposition)"
 ---
 
 # Autorisation des commandes liées à l'ACP (Proposition)
@@ -10,7 +10,7 @@ title: "Autorisation des commandes liées à l'ACP (Proposition)"
 Statut : Proposé, **pas encore implémenté**.
 
 Ce document décrit un modèle d'autorisation à long terme pour les commandes natives dans
-les conversations liées à l'ACP. C'est une proposition d'expérimentation et ne remplace pas
+les conversations liées à l'ACP. C'est une proposition d'expériences et ne remplace pas
 le comportement actuel en production.
 
 Pour le comportement implémenté, consultez la source et les tests dans :
@@ -22,12 +22,12 @@ Pour le comportement implémenté, consultez la source et les tests dans :
 ## Problème
 
 Aujourd'hui, nous avons des vérifications spécifiques aux commandes (par exemple `/new` et `/reset`) qui
-doivent fonctionner dans les salons/sujets liés à l'ACP même lorsque les listes blanches sont vides.
-Cela résout des problèmes d'UX immédiats, mais les exceptions basées sur les noms de commandes ne passent pas à l'échelle.
+doivent fonctionner dans les canaux/sujets liés à l'ACP même lorsque les listes d'autorisation sont vides.
+Cela résout des problèmes d'UX immédiats, mais les exceptions basées sur les noms de commande ne passent pas à l'échelle.
 
 ## Forme à long terme
 
-Déplacer l'autorisation des commandes de la logique ad hoc du gestionnaire vers les métadonnées de commande et un
+Déplacer l'autorisation des commandes de la logique de gestionnaire ad hoc vers les métadonnées de commande plus un
 évaluateur de stratégie partagé.
 
 ### 1) Ajouter des métadonnées de stratégie d'auth aux définitions de commandes
@@ -52,13 +52,13 @@ Introduire une fonction d'aide qui évalue l'auth de commande en utilisant :
 - l'état d'autorisation de l'expéditeur
 - l'état de liaison résolu de la conversation
 
-Les gestionnaires natifs de Telegram et Discord doivent tous deux appeler la même fonction d'aide pour éviter
+Les gestionnaires natifs Telegram et Discord devraient tous deux appeler le même assistant pour éviter
 une dérive du comportement.
 
 ### 3) Utiliser binding-match comme limite de contournement
 
-Lorsque la stratégie autorise le contournement de l'ACP liée, n'autoriser que si une correspondance de liaison
-configurée a été résolue pour la conversation actuelle (et pas seulement parce que la clé de
+Lorsque la stratégie autorise le contournement de l'ACP lié, autoriser uniquement si une correspondance de liaison
+configurée a été résolue pour la conversation actuelle (pas seulement parce que la clé de
 session actuelle ressemble à une ACP).
 
 Cela garde la limite explicite et minimise l'élargissement accidentel.
@@ -85,8 +85,9 @@ Cela garde la limite explicite et minimise l'élargissement accidentel.
 
 ## Remarque
 
-Cette proposition est intentionnellement additive et ne supprime ni ne remplace les documents d'expériences existants.
+Cette proposition est intentionnellement additive et ne supprime ni ne remplace les documents
+d'expériences existants.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

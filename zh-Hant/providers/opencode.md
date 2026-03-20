@@ -1,8 +1,8 @@
 ---
-summary: "使用 OpenCode Zen 和 Go 目錄搭配 OpenClaw"
+summary: "在 OpenClaw 中使用 OpenCode Zen 和 Go 目錄"
 read_when:
-  - You want OpenCode-hosted model access
-  - You want to pick between the Zen and Go catalogs
+  - 您想要存取 OpenCode 託管的模型
+  - 您想要在 Zen 和 Go 目錄之間進行選擇
 title: "OpenCode"
 ---
 
@@ -13,7 +13,9 @@ OpenCode 在 OpenClaw 中公開了兩個託管目錄：
 - `opencode/...` 用於 **Zen** 目錄
 - `opencode-go/...` 用於 **Go** 目錄
 
-這兩個目錄使用相同的 OpenCode API 金鑰。OpenClaw 將運行時提供者 ID 分開，以保持上游各模型的路由正確，但在上手和文件中，它們被視為一個 OpenCode 設定。
+這兩個目錄使用相同的 OpenCode API 金鑰。OpenClaw 將執行時提供者 ID
+分開，以便上游的各個模型路由保持正確，但在入門與文件中將它們
+視為一個 OpenCode 設定。
 
 ## CLI 設定
 
@@ -44,23 +46,23 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 
 ### Zen
 
-- 運行時提供者：`opencode`
+- 執行時提供者：`opencode`
 - 範例模型：`opencode/claude-opus-4-6`、`opencode/gpt-5.2`、`opencode/gemini-3-pro`
-- 當您需要經過策劃的 OpenCode 多模型代理時最佳
+- 當您想要經過策劃的 OpenCode 多模型代理時的最佳選擇
 
 ### Go
 
-- 運行時提供者：`opencode-go`
+- 執行時提供者：`opencode-go`
 - 範例模型：`opencode-go/kimi-k2.5`、`opencode-go/glm-5`、`opencode-go/minimax-m2.5`
-- 當您需要 OpenCode 託管的 Kimi/GLM/MiniMax 產品線時最佳
+- 當您想要 OpenCode 託管的 Kimi/GLM/MiniMax 系列時的最佳選擇
 
 ## 備註
 
-- `OPENCODE_ZEN_API_KEY` 也受支援。
-- 在設定期間輸入一個 OpenCode 金鑰，即可儲存兩個運行時提供者的憑證。
+- `OPENCODE_ZEN_API_KEY` 也受到支援。
+- 在設定期間輸入一個 OpenCode 金鑰即可為兩個執行時提供者儲存憑證。
 - 您登入 OpenCode，新增帳單詳細資訊，並複製您的 API 金鑰。
-- 帳單和目錄可用性是透過 OpenCode 儀表板管理的。
+- 帳單和目錄可用性是透過 OpenCode 儀表板進行管理。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

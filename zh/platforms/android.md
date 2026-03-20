@@ -1,42 +1,42 @@
 ---
-summary: "Android 应用（节点）：连接手册 + 连接/聊天/语音/Canvas 命令界面"
+summary: "Android app (node): connection runbook + Connect/Chat/Voice/Canvas command surface"
 read_when:
-  - Pairing or reconnecting the Android node
-  - Debugging Android gateway discovery or auth
-  - Verifying chat history parity across clients
-title: "Android 应用"
+  - 配对或重新连接 Android 节点
+  - 调试 Android Gateway(网关) 发现或身份验证
+  - 验证客户端间的聊天记录一致性
+title: "Android App"
 ---
 
-# Android 应用（节点）
+# Android App (Node)
 
-> **注意：** Android 应用尚未公开发布。源代码可在 [OpenClaw 代码仓库](https://github.com/openclaw/openclaw) 中的 `apps/android` 下获取。您可以使用 Java 17 和 Android SDK (`./gradlew :app:assembleDebug`) 自行构建。有关构建说明，请参阅 [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md)。
+> **注意：** Android 应用尚未公开发布。源代码可在 [OpenClaw 代码库](https://github.com/openclaw/openclaw) 中找到，遵循 `apps/android` 协议。您可以使用 Java 17 和 Android SDK (`./gradlew :app:assembleDebug`) 自己构建它。有关构建说明，请参阅 [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md)。
 
 ## 支持快照
 
-- 角色：伴随节点应用 (Android 不托管 Gateway(网关))。
-- 需要 Gateway(网关)：是 (在 macOS、Linux 上运行，或通过 Windows 运行)。
+- 角色：伴随节点应用（Android 不承载 Gateway(网关)）。
+- Gateway(网关) 必需：是（在 macOS、Linux 或通过 WSL2 的 Windows 上运行）。
 - 安装：[入门指南](/zh/start/getting-started) + [配对](/zh/channels/pairing)。
-- Gateway(网关)：[Runbook](/zh/gateway) + [配置](/zh/gateway/configuration)。
+- Gateway(网关)：[Runbook](/zh/gateway) + [Configuration](/zh/gateway/configuration)。
   - 协议：[Gateway(网关) 协议](/zh/gateway/protocol)（节点 + 控制平面）。
 
 ## 系统控制
 
 系统控制（launchd/systemd）位于 Gateway(网关) 主机上。请参阅 [Gateway(网关)](/zh/gateway)。
 
-## 连接运行手册
+## 连接 Runbook
 
 Android 节点应用 ⇄ (mDNS/NSD + WebSocket) ⇄ **Gateway(网关)**
 
-Android 直接连接到 Gateway(网关) WebSocket (默认 `ws://<host>:18789`) 并使用设备配对 (`role: node`)。
+Android 直接连接到 Gateway(网关) WebSocket（默认 `ws://<host>:18789`）并使用设备配对（`role: node`）。
 
 ### 先决条件
 
-- 您可以在“主机”机器上运行 Gateway(网关)。
-- Android 设备/模拟器可以访问网关 WebSocket：
-  - 使用 mDNS/NSD 的同一局域网，**或**
-  - 使用广域 Tailscale / 单播 DNS-SD 的同一 Bonjour Tailnet (见下文)，**或**
-  - 手动网关主机/端口 (回退选项)
-- 您可以在网关机器上 (或通过 SSH) 运行 CLI (`openclaw`)。
+- 您可以在“主控”机器上运行 Gateway(网关)。
+- Android 设备/模拟器可以访问 Gateway(网关) WebSocket：
+  - 同一局域网 (LAN) 使用 mDNS/NSD，**或者**
+  - 同一 Tailscale tailnet 使用广域 Bonjour / 单播 DNS-SD（见下文），**或者**
+  - 手动指定 Gateway(网关) 主机/端口（回退方案）
+- 您可以在 Gateway(网关) 机器上（或通过 SSH）运行 CLI (`openclaw`)。
 
 ### 1) 启动 Gateway(网关)
 
@@ -48,14 +48,14 @@ openclaw gateway --port 18789 --verbose
 
 - `listening on ws://0.0.0.0:18789`
 
-对于仅 Tailnet 的设置 (推荐用于 Vienna ⇄ London)，将网关绑定到 Tailnet IP：
+对于仅 Tailnet 的设置（建议用于 Vienna ⇄ London），将 Gateway(网关) 绑定到 tailnet IP：
 
-- 在网关主机的 `~/.openclaw/openclaw.json` 中设置 `gateway.bind: "tailnet"`。
+- 在 Gateway(网关) 主机的 `~/.openclaw/openclaw.json` 中设置 `gateway.bind: "tailnet"`。
 - 重启 Gateway(网关) / macOS 菜单栏应用。
 
-### 2) 验证发现 (可选)
+### 2) 验证发现（可选）
 
-从网关机器：
+从 Gateway(网关) 机器上：
 
 ```bash
 dns-sd -B _openclaw-gw._tcp local.
@@ -63,32 +63,32 @@ dns-sd -B _openclaw-gw._tcp local.
 
 更多调试说明：[Bonjour](/zh/gateway/bonjour)。
 
-#### Tailnet (Vienna ⇄ London) discovery via unicast DNS-SD
+#### 通过单播 DNS-SD 进行 Tailnet (Vienna ⇄ London) 发现
 
-Android NSD/mDNS discovery won’t cross networks. If your Android node and the gateway are on different networks but connected via Tailscale, use Wide-Area Bonjour / unicast DNS-SD instead:
+Android NSD/mDNS 发现无法跨越网络。如果您的 Android 节点和 Gateway(网关) 位于不同的网络但通过 Tailscale 连接，请改用广域 Bonjour / 单播 DNS-SD：
 
-1. Set up a DNS-SD zone (example `openclaw.internal.`) on the gateway host and publish `_openclaw-gw._tcp` records.
-2. Configure Tailscale split DNS for your chosen domain pointing at that DNS server.
+1. 在 Gateway(网关) 主机上设置 DNS-SD 区域（例如 `openclaw.internal.`）并发布 `_openclaw-gw._tcp` 记录。
+2. 配置 Tailscale 的分割 DNS，将您选择的域指向该 DNS 服务器。
 
 详细信息和 CoreDNS 配置示例：[Bonjour](/zh/gateway/bonjour)。
 
-### 3) Connect from Android
+### 3) 从 Android 连接
 
-In the Android app:
+在 Android 应用中：
 
-- The app keeps its gateway connection alive via a **foreground service** (persistent notification).
-- Open the **Connect** tab.
-- Use **Setup Code** or **Manual** mode.
-- If discovery is blocked, use manual host/port (and TLS/token/password when required) in **Advanced controls**.
+- 该应用通过**前台服务**（持久通知）保持其 Gateway(网关) 连接处于活动状态。
+- 打开 **Connect**（连接）标签页。
+- 使用 **Setup Code**（设置代码）或 **Manual**（手动）模式。
+- 如果发现被阻止，请在 **Advanced controls**（高级控制）中使用手动主机/端口（并在需要时使用 TLS/令牌/密码）。
 
-After the first successful pairing, Android auto-reconnects on launch:
+首次成功配对后，Android 会在启动时自动重新连接：
 
-- Manual endpoint (if enabled), otherwise
-- The last discovered gateway (best-effort).
+- 手动端点（如果已启用），否则
+- 最后发现的 Gateway(网关)（尽力而为）。
 
-### 4) Approve pairing (CLI)
+### 4) 批准配对 (CLI)
 
-On the gateway machine:
+在 Gateway(网关) 机器上：
 
 ```bash
 openclaw devices list
@@ -96,41 +96,41 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-配对详细信息：[配对](/zh/channels/pairing)。
+配对详细信息：[Pairing](/zh/channels/pairing)。
 
-### 5) Verify the node is connected
+### 5) 验证节点已连接
 
-- Via nodes status:
+- 通过节点状态：
 
   ```bash
   openclaw nodes status
   ```
 
-- Via Gateway(网关):
+- 通过 Gateway(网关)：
 
   ```bash
   openclaw gateway call node.list --params "{}"
   ```
 
-### 6) Chat + history
+### 6) 聊天 + 历史记录
 
-The Android Chat tab supports 会话 selection (default `main`, plus other existing sessions):
+Android 聊天标签页支持选择会话（默认为 `main`，以及其他现有会话）：
 
-- History: `chat.history`
-- Send: `chat.send`
-- Push updates (best-effort): `chat.subscribe` → `event:"chat"`
+- 历史记录：`chat.history`
+- 发送：`chat.send`
+- 推送更新（尽力而为）：`chat.subscribe` → `event:"chat"`
 
-### 7) Canvas + camera
+### 7) Canvas + 相机
 
-#### Gateway(网关) Canvas Host (recommended for web content)
+#### Gateway Canvas Host（推荐用于 Web 内容）
 
-If you want the node to show real HTML/CSS/JS that the agent can edit on disk, point the node at the Gateway(网关) canvas host.
+如果您希望节点显示代理可以在磁盘上编辑的真实 HTML/CSS/JS，请将节点指向 Gateway canvas host。
 
-Note: nodes load canvas from the Gateway(网关) HTTP server (same port as `gateway.port`, default `18789`).
+注意：节点从 Gateway HTTP 服务器加载 canvas（与 `gateway.port` 端口相同，默认为 `18789`）。
 
-1. Create `~/.openclaw/workspace/canvas/index.html` on the gateway host.
+1. 在 Gateway 主机上创建 `~/.openclaw/workspace/canvas/index.html`。
 
-2. Navigate the node to it (LAN):
+2. 将节点导航至该地址（LAN）：
 
 ```bash
 openclaw nodes invoke --node "<Android Node>" --command canvas.navigate --params '{"url":"http://<gateway-hostname>.local:18789/__openclaw__/canvas/"}'
@@ -138,34 +138,34 @@ openclaw nodes invoke --node "<Android Node>" --command canvas.navigate --params
 
 Tailnet（可选）：如果两台设备都在 Tailscale 上，请使用 MagicDNS 名称或 tailnet IP 代替 `.local`，例如 `http://<gateway-magicdns>:18789/__openclaw__/canvas/`。
 
-此服务器将实时重载客户端注入到 HTML 中，并在文件更改时重新加载。
+此服务器将一个实时重载客户端注入 HTML，并在文件更改时重载。
 A2UI 主机位于 `http://<gateway-host>:18789/__openclaw__/a2ui/`。
 
-Canvas 命令（仅限前台）：
+Canvas 命令（仅前台）：
 
-- `canvas.eval`、`canvas.snapshot`、`canvas.navigate`（使用 `{"url":""}` 或 `{"url":"/"}` 返回默认脚手架）。`canvas.snapshot` 返回 `{ format, base64 }`（默认 `format="jpeg"`）。
-- A2UI：`canvas.a2ui.push`、`canvas.a2ui.reset`（`canvas.a2ui.pushJSONL` 旧版别名）
+- `canvas.eval`, `canvas.snapshot`, `canvas.navigate`（使用 `{"url":""}` 或 `{"url":"/"}` 返回默认脚手架）。`canvas.snapshot` 返回 `{ format, base64 }`（默认 `format="jpeg"`）。
+- A2UI: `canvas.a2ui.push`, `canvas.a2ui.reset`（`canvas.a2ui.pushJSONL` 旧版别名）
 
-相机命令（仅限前台；受权限限制）：
+相机命令（仅前台；受权限限制）：
 
 - `camera.snap` (jpg)
 - `camera.clip` (mp4)
 
-有关参数和 CLI 助手的信息，请参阅 [相机节点](/zh/nodes/camera)。
+有关参数和 CLI 助手，请参阅 [Camera node](/zh/nodes/camera)。
 
 ### 8) 语音 + 扩展的 Android 命令界面
 
-- 语音：Android 在语音标签页中使用单个麦克风开/关流程，并具有转录捕获和 TTS 播放功能（配置时使用 ElevenLabs，否则回退到系统 TTS）。当应用离开前台时，语音会停止。
-- 语音唤醒/交谈模式切换开关目前已从 Android UX/运行时中移除。
-- 额外的 Android 命令系列（可用性取决于设备 + 权限）：
-  - `device.status`、`device.info`、`device.permissions`、`device.health`
-  - `notifications.list`、`notifications.actions`
+- 语音：Android 在语音标签页中使用单一麦克风开/关流程，并具有转录捕获和 TTS 播放功能（如果配置了 ElevenLabs 则使用它，否则回退到系统 TTS）。当应用离开前台时，语音会停止。
+- 语音唤醒/对话模式切换开关目前已从 Android UX/运行时中移除。
+- 其他 Android 命令系列（可用性取决于设备和权限）：
+  - `device.status`, `device.info`, `device.permissions`, `device.health`
+  - `notifications.list`, `notifications.actions`
   - `photos.latest`
-  - `contacts.search`、`contacts.add`
-  - `calendar.events`、`calendar.add`
+  - `contacts.search`, `contacts.add`
+  - `calendar.events`, `calendar.add`
   - `callLog.search`
-  - `motion.activity`， `motion.pedometer`
+  - `motion.activity`, `motion.pedometer`
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

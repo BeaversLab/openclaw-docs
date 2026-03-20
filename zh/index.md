@@ -1,34 +1,43 @@
 ---
-summary: "OpenClaw 是一个适用于任何操作系统的 AI 智能体多渠道网关。"
+summary: "OpenClaw 是一个可在任何操作系统上运行的多渠道 AI agents Gateway。"
 read_when:
-  - Introducing OpenClaw to newcomers
+  - 向新手介绍 OpenClaw
 title: "OpenClaw"
 ---
 
 # OpenClaw 🦞
 
 <p align="center">
-  <img src="/assets/openclaw-logo-text-dark.png" alt="OpenClaw" width="500" class="dark:hidden" />
-  <img src="/assets/openclaw-logo-text.png" alt="OpenClaw" width="500" class="hidden dark:block" />
+    <img
+        src="/assets/openclaw-logo-text-dark.png"
+        alt="OpenClaw"
+        width="500"
+        class="dark:hidden"
+    />
+    <img
+        src="/assets/openclaw-logo-text.png"
+        alt="OpenClaw"
+        width="500"
+        class="hidden dark:block"
+    />
 </p>
 
 > _"EXFOLIATE! EXFOLIATE!"_ — A space lobster, probably
 
 <p align="center">
-  <strong>适用于任何操作系统的 AI 代理网关，支持 WhatsApp、Telegram、Discord、iMessage 等。</strong>
-  <br />
-  发送消息，从您的口袋中获取代理响应。插件可添加 Mattermost 等支持。
+  <strong>适用于任何操作系统的 AI agents Gateway，支持 WhatsApp、Telegram、Discord、iMessage 等多种渠道。</strong><br />
+  发送消息，即可从您的口袋中获得 agent 的响应。插件可支持 Mattermost 和更多渠道。
 </p>
 
 <Columns>
   <Card title="Get Started" href="/zh/start/getting-started" icon="rocket">
-    在几分钟内安装 OpenClaw 并启动 Gateway(网关)。
+    安装 OpenClaw 并在几分钟内启动 Gateway(网关)。
   </Card>
-  <Card title="运行新手引导" href="/zh/start/wizard" icon="sparkles">
+  <Card title="Run 新手引导" href="/zh/start/wizard" icon="sparkles">
     使用 `openclaw onboard` 和配对流程进行引导式设置。
   </Card>
-  <Card title="打开控制界面" href="/zh/web/control-ui" icon="layout-dashboard">
-    启动浏览器仪表板以进行聊天、配置和会话管理。
+  <Card title="Open the Control UI" href="/zh/web/control-ui" icon="layout-dashboard">
+    启动浏览器仪表板，进行聊天、配置和会话管理。
   </Card>
 </Columns>
 
@@ -45,7 +54,7 @@ OpenClaw 是一个**自托管网关**，它将您喜爱的聊天应用 —— Wh
 - **原生代理**：专为使用工具、会话、记忆和多代理路由的编码代理构建
 - **开源**：MIT 许可，社区驱动
 
-**您需要什么？** Node 24（推荐），或 Node 22 LTS (`22.16+`) 以确保兼容性，来自所选提供商的 API 密钥，以及 5 分钟。为了获得最佳质量和安全性，请使用可用的最强最新一代模型。
+**您需要什么？** Node 24（推荐），或 Node 22 LTS (`22.16+`) 以确保兼容性，一个来自您所选提供商的 API 密钥，以及 5 分钟时间。为了获得最佳质量和安全性，请使用可用的最强最新一代模型。
 
 ## 工作原理
 
@@ -65,13 +74,13 @@ Gateway(网关) 是会话、路由和渠道连接的唯一事实来源。
 
 <Columns>
   <Card title="Multi-渠道 gateway" icon="network">
-    通过一个 Gateway(网关) 进程支持 WhatsApp、Telegram、Discord 和 iMessage。
+    单一 Gateway(网关) 进程即可支持 WhatsApp、Telegram、Discord 和 iMessage。
   </Card>
-  <Card title="插件渠道" icon="plug">
-    通过扩展包添加 Mattermost 等。
+  <Card title="Plugin channels" icon="plug">
+    使用扩展包添加 Mattermost 和更多渠道。
   </Card>
-  <Card title="多智能体路由" icon="route">
-    为每个智能体、工作区或发送方提供隔离的会话。
+  <Card title="Multi-agent routing" icon="route">
+    每个 agent、工作区或发送者的独立会话。
   </Card>
   <Card title="媒体支持" icon="image">
     发送和接收图片、音频和文档。
@@ -80,28 +89,39 @@ Gateway(网关) 是会话、路由和渠道连接的唯一事实来源。
     用于聊天、配置、会话和节点的浏览器仪表板。
   </Card>
   <Card title="移动节点" icon="smartphone">
-    配对 iOS 和 Android 节点，用于 Canvas、相机和启用语音的工作流程。
+    配对 iOS 和 Android 节点，用于 Canvas、相机和启用语音的工作流。
   </Card>
 </Columns>
 
 ## 快速开始
 
 <Steps>
-  <Step title="Install OpenClaw">```bash npm install -g openclaw@latest ```</Step>
-  <Step title="Onboard and install the service">```bash openclaw onboard --install-daemon ```</Step>
+  <Step title="Install OpenClaw">
+    ```bash
+    npm install -g openclaw@latest
+    ```
+  </Step>
+  <Step title="Onboard and install the service">
+    ```bash
+    openclaw onboard --install-daemon
+    ```
+  </Step>
   <Step title="Pair WhatsApp and start the Gateway">
-    ```bash openclaw channels login openclaw gateway --port 18789 ```
+    ```bash
+    openclaw channels login
+    openclaw gateway --port 18789
+    ```
   </Step>
 </Steps>
 
-需要完整的安装和开发设置？请参阅[快速开始](/en/start/quickstart)。
+需要完整的安装和开发设置？请参阅 [快速开始](/zh/start/quickstart)。
 
 ## 仪表板
 
 Gateway(网关) 网关启动后，打开浏览器控制 UI。
 
-- 本地默认地址：[http://127.0.0.1:18789/](http://127.0.0.1:18789/)
-- 远程访问：[Web surfaces](/en/web) 和 [Tailscale](/en/gateway/tailscale)
+- 本地默认：[http://127.0.0.1:18789/](http://127.0.0.1:18789/)
+- 远程访问：[Web 界面](/zh/web) 和 [Tailscale](/zh/gateway/tailscale)
 
 <p align="center">
   <img src="/whatsapp-openclaw.jpg" alt="OpenClaw" width="420" />
@@ -112,7 +132,7 @@ Gateway(网关) 网关启动后，打开浏览器控制 UI。
 配置文件位于 `~/.openclaw/openclaw.json`。
 
 - 如果您**不做任何操作**，OpenClaw 将使用捆绑的 Pi 二进制文件，在 RPC 模式下运行，并启用按发送方会话功能。
-- 如果您想锁定配置，请从 `channels.whatsapp.allowFrom` 开始，并（针对群组）设置提及规则。
+- 如果您想锁定它，请从 `channels.whatsapp.allowFrom` 和（针对群组）提及规则开始。
 
 示例：
 
@@ -131,46 +151,46 @@ Gateway(网关) 网关启动后，打开浏览器控制 UI。
 ## 从这里开始
 
 <Columns>
-  <Card title="文档中心" href="/en/start/hubs" icon="book-open">
+  <Card title="文档中心" href="/zh/start/hubs" icon="book-open">
     所有文档和指南，按用例组织。
   </Card>
-  <Card title="Configuration" href="/en/gateway/configuration" icon="settings">
+  <Card title="配置" href="/zh/gateway/configuration" icon="settings">
     核心 Gateway(网关) 设置、令牌和提供商配置。
   </Card>
-  <Card title="Remote access" href="/en/gateway/remote" icon="globe">
+  <Card title="远程访问" href="/zh/gateway/remote" icon="globe">
     SSH 和 tailnet 访问模式。
   </Card>
-  <Card title="Channels" href="/en/channels/telegram" icon="message-square">
-    WhatsApp、Telegram、Discord 等渠道的特定设置。
+  <Card title="频道" href="/zh/channels/telegram" icon="message-square">
+    针对 WhatsApp、Telegram、Discord 等的特定频道设置。
   </Card>
-  <Card title="Nodes" href="/en/nodes" icon="smartphone">
-    iOS 和 Android 节点，支持配对、Canvas、摄像头和设备操作。
+  <Card title="节点" href="/zh/nodes" icon="smartphone">
+    支持 配对、iOS、相机和设备操作的 Android 和 Canvas 节点。
   </Card>
-  <Card title="Help" href="/en/help" icon="life-buoy">
-    常见修复和故障排除入口。
+  <Card title="Help" href="/zh/help" icon="life-buoy">
+    常见修复和WhatsApp入口。
   </Card>
 </Columns>
 
 ## 了解更多
 
 <Columns>
-  <Card title="Full feature list" href="/en/concepts/features" icon="list">
-    完整的渠道、路由和媒体功能。
+  <Card title="Full feature list" href="/zh/concepts/features" icon="list">
+    完整的Discord、路由和媒体功能。
   </Card>
-  <Card title="Multi-agent routing" href="/en/concepts/multi-agent" icon="route">
-    工作区隔离和每个代理的会话。
+  <Card title="Multi-agent routing" href="/zh/concepts/multi-agent" icon="route">
+    工作区隔离和按代理划分的会话。
   </Card>
-  <Card title="Security" href="/en/gateway/security" icon="shield">
+  <Card title="Security" href="/zh/gateway/security" icon="shield">
     令牌、允许列表和安全控制。
   </Card>
-  <Card title="Troubleshooting" href="/en/gateway/troubleshooting" icon="wrench">
-    Gateway(网关) 网关诊断和常见错误。
+  <Card title="Troubleshooting" href="/zh/gateway/troubleshooting" icon="wrench">
+    Gateway(网关)诊断和常见错误。
   </Card>
-  <Card title="About and credits" href="/en/reference/credits" icon="info">
+  <Card title="About and credits" href="/zh/reference/credits" icon="info">
     项目起源、贡献者和许可证。
   </Card>
 </Columns>
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

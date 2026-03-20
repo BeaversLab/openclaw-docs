@@ -1,28 +1,28 @@
 ---
-summary: "Ventana contextual + compactación: cómo OpenClaw mantiene las sesiones dentro de los límites del modelo"
+summary: "Context window + compaction: how OpenClaw keeps sessions under model limits"
 read_when:
   - You want to understand auto-compaction and /compact
   - You are debugging long sessions hitting context limits
-title: "Compactación"
+title: "Compaction"
 ---
 
-# Ventana contextual y compactación
+# Ventana de contexto y compactación
 
-Cada modelo tiene una **ventana contextual** (máximo de tokens que puede ver). Los chats de larga duración acumulan mensajes y resultados de herramientas; una vez que la ventana se ajusta, OpenClaw **compacta** el historial anterior para mantenerse dentro de los límites.
+Cada modelo tiene una **ventana de contexto** (máximo de tokens que puede ver). Los chats de larga duración acumulan mensajes y resultados de herramientas; una vez que la ventana se ajusta, OpenClaw **compacta** el historial antiguo para mantenerse dentro de los límites.
 
 ## Qué es la compactación
 
 La compactación **resume la conversación anterior** en una entrada de resumen compacta y mantiene los mensajes recientes intactos. El resumen se almacena en el historial de la sesión, por lo que las solicitudes futuras utilizan:
 
-- El resumen de compactación
+- El resumen de la compactación
 - Mensajes recientes después del punto de compactación
 
 La compactación **persiste** en el historial JSONL de la sesión.
 
 ## Configuración
 
-Use la configuración `agents.defaults.compaction` en su `openclaw.json` para configurar el comportamiento de la compactación (modo, tokens de destino, etc.).
-El resumen de compactación conserva los identificadores opacos por defecto (`identifierPolicy: "strict"`). Puede anular esto con `identifierPolicy: "off"` o proporcionar texto personalizado con `identifierPolicy: "custom"` y `identifierInstructions`.
+Use la configuración `agents.defaults.compaction` en su `openclaw.json` para configurar el comportamiento de compactación (modo, tokens objetivo, etc.).
+El resumen de compactación conserva identificadores opacos por defecto (`identifierPolicy: "strict"`). Puede anular esto con `identifierPolicy: "off"` o proporcionar texto personalizado con `identifierPolicy: "custom"` y `identifierInstructions`.
 
 Opcionalmente, puede especificar un modelo diferente para el resumen de compactación a través de `agents.defaults.compaction.model`. Esto es útil cuando su modelo principal es un modelo local o pequeño y desea que los resúmenes de compactación sean producidos por un modelo más capaz. La anulación acepta cualquier cadena `provider/model-id`:
 
@@ -54,53 +54,74 @@ Esto también funciona con modelos locales, por ejemplo, un segundo modelo Ollam
 
 Cuando no está configurado, la compactación utiliza el modelo principal del agente.
 
-## Auto-compactación (activada por defecto)
+## Auto-compactación (activado por defecto)
 
-Cuando una sesión se acerca o excede la ventana contextual del modelo, OpenClaw activa la auto-compactación y puede reintentar la solicitud original utilizando el contexto compactado.
+Cuando una sesión se acerca o excede la ventana de contexto del modelo, OpenClaw activa la auto-compactación y puede reintentar la solicitud original utilizando el contexto compactado.
 
 Verá:
 
 - `🧹 Auto-compaction complete` en modo detallado
 - `/status` mostrando `🧹 Compactions: <count>`
 
-Antes de la compactación, OpenClaw puede ejecutar un turno de **vaciamiento silencioso de memoria** para almacenar
-notas duraderas en el disco. Consulte [Memoria](/es/concepts/memory) para obtener detalles y configuración.
+Antes de la compactación, OpenClaw puede ejecutar un turno de **flush de memoria silencioso** para guardar
+notas duraderas en el disco. Consulte [Memory](/es/concepts/memory) para obtener detalles y configuración.
 
 ## Compactación manual
 
-Use `/compact` (opcionalmente con instrucciones) para forzar un paso de compactación:
+Use `/compact` (opcionalmente con instrucciones) para forzar un pase de compactación:
 
 ```
 /compact Focus on decisions and open questions
 ```
 
-## Fuente de la ventana de contexto
+## Context window source
 
-La ventana de contexto es específica del modelo. OpenClaw utiliza la definición del modelo del catálogo de proveedores configurado para determinar los límites.
+Context window is model-specific. OpenClaw uses the model definition from the configured provider catalog to determine limits.
 
-## Compactación vs. poda
+## Compaction vs pruning
 
-- **Compactación**: resume y **persiste** en JSONL.
-- **Poda de sesión**: recorta antiguos **resultados de herramientas** solo, **en memoria**, por solicitud.
+- **Compaction**: summarises and **persists** in JSONL.
+- **Session pruning**: trims old **tool results** only, **in-memory**, per request.
 
-Consulte [/concepts/session-pruning](/es/concepts/session-pruning) para obtener detalles sobre la poda.
+See [/concepts/session-pruning](/es/concepts/session-pruning) for pruning details.
 
-## Compactación del lado del servidor de OpenAI
+## OpenAI server-side compaction
 
-OpenClaw también admite sugerencias de compactación del lado del servidor de OpenAI Responses para modelos directos de OpenAI compatibles. Esto está separado de la compactación local de OpenClaw y puede ejecutarse simultáneamente.
+OpenClaw also supports OpenAI Responses server-side compaction hints for
+compatible direct OpenAI models. This is separate from local OpenClaw
+compaction and can run alongside it.
 
-- Compactación local: OpenClaw resume y persiste en el JSONL de la sesión.
-- Compactación del lado del servidor: OpenAI compacta el contexto en el lado del proveedor cuando
-  `store` + `context_management` están habilitados.
+- Local compaction: OpenClaw summarizes and persists into session JSONL.
+- Server-side compaction: OpenAI compacts context on the provider side when
+  `store` + `context_management` are enabled.
 
-Consulte [OpenAI provider](/es/providers/openai) para obtener parámetros y anulaciones del modelo.
+See [OpenAI provider](/es/providers/openai) for model params and overrides.
 
-## Consejos
+## Custom context engines
 
-- Use `/compact` cuando las sesiones se sientan obsoletas o el contexto esté hinchado.
-- Las grandes salidas de herramientas ya están truncadas; la poda puede reducir aún más la acumulación de resultados de herramientas.
-- Si necesita una pizarra limpia, `/new` o `/reset` inicia una nueva identificación de sesión.
+Compaction behavior is owned by the active
+[context engine](/es/concepts/context-engine). The legacy engine uses the built-in
+summarization described above. Plugin engines (selected via
+`plugins.slots.contextEngine`) can implement any compaction strategy — DAG
+summaries, vector retrieval, incremental condensation, etc.
 
-import es from "/components/footer/es.mdx";
+When a plugin engine sets `ownsCompaction: true`, OpenClaw delegates all
+compaction decisions to the engine and does not run built-in auto-compaction.
 
-<es />
+When `ownsCompaction` is `false` or unset, OpenClaw may still use Pi's
+built-in in-attempt auto-compaction, but the active engine's `compact()` method
+still handles `/compact` and overflow recovery. There is no automatic fallback
+to the legacy engine's compaction path.
+
+If you are building a non-owning context engine, implement `compact()` by
+calling `delegateCompactionToRuntime(...)` from `openclaw/plugin-sdk/core`.
+
+## Tips
+
+- Use `/compact` when sessions feel stale or context is bloated.
+- Large tool outputs are already truncated; pruning can further reduce tool-result buildup.
+- Si necesitas empezar de cero, `/new` o `/reset` inicia una nueva id de sesión.
+
+import en from "/components/footer/en.mdx";
+
+<en />

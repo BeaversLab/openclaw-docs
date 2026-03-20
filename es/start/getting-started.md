@@ -1,31 +1,29 @@
 ---
 summary: "Instala OpenClaw y ejecuta tu primer chat en minutos."
 read_when:
-  - First time setup from zero
-  - You want the fastest path to a working chat
-title: "Para comenzar"
+  - Primera configuración desde cero
+  - Quieres la ruta más rápida hacia un chat funcional
+title: "Introducción"
 ---
 
-# Para comenzar
+# Introducción
 
 Objetivo: pasar de cero a un primer chat funcional con una configuración mínima.
 
 <Info>
-  El chat más rápido: abre la interfaz de control (Control UI) (no se necesita configuración de
-  canal). Ejecuta `openclaw dashboard` y chatea en el navegador, o abre `http://127.0.0.1:18789/` en
-  el
-  <Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">
-    host de la puerta de enlace
-  </Tooltip>
-  . Documentación: [Panel de control (Dashboard)](/es/web/dashboard) e [Interfaz de control (Control
-  UI)](/es/web/control-ui).
+El chat más rápido: abre la Interfaz de Control (no se necesita configuración de canales). Ejecuta `openclaw dashboard`
+y chatea en el navegador, o abre `http://127.0.0.1:18789/` en el
+<Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">host de la puerta de enlace</Tooltip>.
+Docs: [Panel de control](/es/web/dashboard) y [Interfaz de Control](/es/web/control-ui).
 </Info>
 
 ## Requisitos previos
 
-- Se recomienda Node 24 (Node 22 LTS, actualmente `22.16+`, todavía compatible por estabilidad)
+- Se recomienda Node 24 (Node 22 LTS, actualmente `22.16+`, sigue siendo compatible por compatibilidad)
 
-<Tip>Verifica tu versión de Node con `node --version` si no estás seguro.</Tip>
+<Tip>
+Comprueba tu versión de Node con `node --version` si no estás seguro.
+</Tip>
 
 ## Configuración rápida (CLI)
 
@@ -54,16 +52,16 @@ Objetivo: pasar de cero a un primer chat funcional con una configuración mínim
     </Note>
 
   </Step>
-  <Step title="Ejecutar integración">
+  <Step title="Ejecutar la incorporación">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    La integración configura la autenticación, la configuración de la puerta de enlace y los canales opcionales.
-    Consulte [Integración (CLI)](/es/start/wizard) para obtener más detalles.
+    La incorporación configura la autenticación, la configuración de la puerta de enlace y los canales opcionales.
+    Consulta [Incorporación (CLI)](/es/start/wizard) para obtener más detalles.
 
   </Step>
-  <Step title="Verificar la puerta de enlace (Gateway)">
+  <Step title="Comprobar la puerta de enlace">
     Si instalaste el servicio, ya debería estar ejecutándose:
 
     ```bash
@@ -71,7 +69,7 @@ Objetivo: pasar de cero a un primer chat funcional con una configuración mínim
     ```
 
   </Step>
-  <Step title="Abrir la interfaz de control (Control UI)">
+  <Step title="Abrir la interfaz de control">
     ```bash
     openclaw dashboard
     ```
@@ -79,14 +77,13 @@ Objetivo: pasar de cero a un primer chat funcional con una configuración mínim
 </Steps>
 
 <Check>
-  Si la interfaz de control (Control UI) se carga, tu puerta de enlace (Gateway) está lista para
-  usarse.
+Si la interfaz de control se carga, tu puerta de enlace está lista para usarse.
 </Check>
 
-## Verificaciones opcionales y extras
+## Comprobaciones opcionales y extras
 
 <AccordionGroup>
-  <Accordion title="Ejecutar el Gateway en primer plano">
+  <Accordion title="Ejecutar la puerta de enlace en primer plano">
     Útil para pruebas rápidas o solución de problemas.
 
     ```bash
@@ -106,9 +103,9 @@ Objetivo: pasar de cero a un primer chat funcional con una configuración mínim
 
 ## Variables de entorno útiles
 
-Si ejecutas OpenClaw como una cuenta de servicio o deseas ubicaciones personalizadas para la configuración/estado:
+Si ejecuta OpenClaw como una cuenta de servicio o desea ubicaciones personalizadas de configuración/estado:
 
-- `OPENCLAW_HOME` establece el directorio home utilizado para la resolución de rutas internas.
+- `OPENCLAW_HOME` establece el directorio de inicio utilizado para la resolución de rutas internas.
 - `OPENCLAW_STATE_DIR` anula el directorio de estado.
 - `OPENCLAW_CONFIG_PATH` anula la ruta del archivo de configuración.
 
@@ -117,19 +114,19 @@ Referencia completa de variables de entorno: [Variables de entorno](/es/help/env
 ## Profundizar
 
 <Columns>
-  <Card title="Integración (CLI)" href="/es/start/wizard">
-    Referencia completa de la integración por CLI y opciones avanzadas.
+  <Card title="Incorporación (CLI)" href="/es/start/wizard">
+    Referencia completa de incorporación por CLI y opciones avanzadas.
   </Card>
-  <Card title="Incorporación de la app de macOS" href="/es/start/onboarding">
-    Flujo de primera ejecución para la aplicación de macOS.
+  <Card title="Incorporación de la app macOS" href="/es/start/onboarding">
+    Flujo de primera ejecución para la aplicación macOS.
   </Card>
 </Columns>
 
-## Lo que tendrás
+## Lo que tendrá
 
-- Un Gateway en ejecución
+- Una puerta de enlace en ejecución
 - Autenticación configurada
-- Acceso a la Interfaz de Control o un canal conectado
+- Acceso a la interfaz de control o un canal conectado
 
 ## Próximos pasos
 
@@ -137,6 +134,6 @@ Referencia completa de variables de entorno: [Variables de entorno](/es/help/env
 - Conectar más canales: [Canales](/es/channels)
 - Flujos de trabajo avanzados y desde el código fuente: [Configuración](/es/start/setup)
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

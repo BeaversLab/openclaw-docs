@@ -1,13 +1,13 @@
 ---
 summary: "Règles de routage par canal (WhatsApp, Telegram, Discord, Slack) et contexte partagé"
 read_when:
-  - Changing channel routing or inbox behavior
-title: "Routage des canaux"
+  - Modification du routage de canal ou du comportement de la boîte de réception
+title: "Routage de canal"
 ---
 
 # Canaux et routage
 
-OpenClaw route les réponses **vers le canal d'où provient le message**. Le
+OpenClaw achemine les réponses **vers le canal d'où provient le message**. Le
 model ne choisit pas de canal ; le routage est déterministe et contrôlé par la
 configuration de l'hôte.
 
@@ -27,12 +27,12 @@ Les messages directs réduisent vers la session **principale** de l'agent :
 Les groupes et les canaux restent isolés par canal :
 
 - Groupes : `agent:<agentId>:<channel>:group:<id>`
-- Canaux/salons : `agent:<agentId>:<channel>:channel:<id>`
+- Canaux/salles : `agent:<agentId>:<channel>:channel:<id>`
 
 Fils de discussion :
 
 - Les fils de discussion Slack/Discord ajoutent `:thread:<threadId>` à la clé de base.
-- Les sujets de forum Telegram intègrent `:topic:<topicId>` dans la clé de groupe.
+- Les sujets du forum Telegram intègrent `:topic:<topicId>` dans la clé de groupe.
 
 Exemples :
 
@@ -43,10 +43,10 @@ Exemples :
 
 Le routage choisit **un agent** pour chaque message entrant :
 
-1. **Correspondance exacte des pairs** (`bindings` avec `peer.kind` + `peer.id`).
+1. **Correspondance exacte de pair** (`bindings` avec `peer.kind` + `peer.id`).
 2. **Correspondance de guilde** (Discord) via `guildId`.
 3. **Correspondance d'équipe** (Slack) via `teamId`.
-4. **Correspondance de compte** (`accountId` sur le canal).
+4. **Correspondance de compte** (`accountId` sur le channel).
 5. **Correspondance de canal** (n'importe quel compte sur ce canal).
 6. **Agent par défaut** (`agents.list[].default`, sinon première entrée de la liste, repli sur `main`).
 
@@ -73,7 +73,7 @@ Voir : [Groupes de diffusion](/fr/broadcast-groups).
 ## Aperçu de la configuration
 
 - `agents.list` : définitions d'agents nommées (espace de travail, model, etc.).
-- `bindings` : faire correspondre les channels/comptes/pairs entrants aux agents.
+- `bindings` : faire correspondre les canaux/comptes/pairs entrants aux agents.
 
 Exemple :
 
@@ -100,7 +100,9 @@ Vous pouvez remplacer le chemin du magasin via le modèle `session.store` et `{a
 
 ## Comportement WebChat
 
-WebChat se rattache à l'**agent sélectionné** et utilise par défaut la session principale de cet agent. De ce fait, WebChat vous permet de voir le contexte inter-canal pour cet agent en un seul endroit.
+WebChat se connecte à l'**agent sélectionné** et utilise par défaut la session principale
+de l'agent. De ce fait, WebChat vous permet de voir le contexte inter-canal pour cet
+agent au même endroit.
 
 ## Contexte de réponse
 
@@ -111,6 +113,6 @@ Les réponses entrantes incluent :
 
 Ceci est cohérent d'un channel à l'autre.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

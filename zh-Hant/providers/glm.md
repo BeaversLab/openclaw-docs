@@ -1,14 +1,14 @@
 ---
-summary: "GLM 模型系列總覽以及在 OpenClaw 中使用的方法"
+summary: "GLM 模型系列概覽 + 如何在 OpenClaw 中使用"
 read_when:
-  - You want GLM models in OpenClaw
-  - You need the model naming convention and setup
+  - 您想要在 OpenClaw 中使用 GLM 模型
+  - 您需要了解模型命名慣例和設定
 title: "GLM 模型"
 ---
 
 # GLM 模型
 
-GLM 是一個透過 Z.AI 平台提供的 **模型系列**（並非公司）。在 OpenClaw 中，GLM 模型是透過 `zai` 提供者和像 `zai/glm-5` 這樣的模型 ID 來存取的。
+GLM 是透過 Z.AI 平台提供的**模型系列**（並非公司）。在 OpenClaw 中，GLM 模型是透過 `zai` 提供者和類似 `zai/glm-5` 的模型 ID 來存取的。
 
 ## CLI 設定
 
@@ -35,12 +35,12 @@ openclaw onboard --auth-choice zai-cn
 }
 ```
 
-## 註記
+## 註解
 
-- GLM 版本和可用性可能會變更；請查看 Z.AI 的文件以取得最新資訊。
-- 範例模型 ID 包括 `glm-5`、`glm-4.7` 和 `glm-4.6`。
+- GLM 版本和可用性可能會變更；請查看 Z.AI 文件以取得最新資訊。
+- 模型 ID 範例包括 `glm-5`、`glm-4.7` 和 `glm-4.6`。
 - 如需提供者詳細資訊，請參閱 [/providers/zai](/zh-Hant/providers/zai)。
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

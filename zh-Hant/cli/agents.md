@@ -1,7 +1,7 @@
 ---
-summary: "CLI 參考資料 `openclaw agents` (list/add/delete/bindings/bind/unbind/set identity)"
+summary: "`openclaw agents` 的 CLI 參考（list/add/delete/bindings/bind/unbind/set identity）"
 read_when:
-  - You want multiple isolated agents (workspaces + routing + auth)
+  - 您需要多個隔離的代理程式（工作區 + 路由 + 驗證）
 title: "agents"
 ---
 
@@ -11,8 +11,8 @@ title: "agents"
 
 相關連結：
 
-- 多重代理程式路由：[多重代理程式路由](/zh-Hant/concepts/multi-agent)
-- 代理程式工作區：[代理程式工作區](/zh-Hant/concepts/agent-workspace)
+- 多代理程式路由：[Multi-Agent Routing](/zh-Hant/concepts/multi-agent)
+- 代理程式工作區：[Agent workspace](/zh-Hant/concepts/agent-workspace)
 
 ## 範例
 
@@ -45,13 +45,13 @@ openclaw agents bindings --json
 openclaw agents bind --agent work --bind telegram:ops --bind discord:guild-a
 ```
 
-如果您省略 `accountId` (`--bind <channel>`)，OpenClaw 會在可用時從通道預設值和外掛程式設置鉤子解析它。
+如果您省略 `accountId` (`--bind <channel>`)，OpenClaw 會在可用時從通道預設值和外掛程式設定掛鈎解析它。
 
 ### 綁定範圍行為
 
 - 沒有 `accountId` 的綁定僅符合通道預設帳戶。
-- `accountId: "*"` 是通道範圍的後備（所有帳戶），且比明確的帳戶綁定更不具體。
-- 如果同一個代理程式已經有一個沒有 `accountId` 的相符通道綁定，而您稍後使用明確或解析的 `accountId` 進行綁定，OpenClaw 會就地升級該現有綁定，而不是新增重複項。
+- `accountId: "*"` 是通道範圍的後備值（所有帳戶），且比明確的帳戶綁定更不具體。
+- 如果同一個代理程式已經有一個沒有 `accountId` 的符合通道綁定，而您稍後使用明確或解析的 `accountId` 進行綁定，OpenClaw 會就地升級該現有綁定，而不是新增重複項目。
 
 範例：
 
@@ -63,7 +63,7 @@ openclaw agents bind --agent work --bind telegram
 openclaw agents bind --agent work --bind telegram:ops
 ```
 
-升級後，該綁定的路由範圍會限制在 `telegram:ops`。如果您也希望有預設帳戶路由，請明確新增（例如 `--bind telegram:default`）。
+升級後，該綁定的路由範圍限定於 `telegram:ops`。如果您也需要預設帳戶路由，請明確新增（例如 `--bind telegram:default`）。
 
 移除綁定：
 
@@ -88,7 +88,7 @@ openclaw agents unbind --agent work --all
 - `name`
 - `theme`
 - `emoji`
-- `avatar` (相對於工作區的路徑、http(s) URL 或 data URI)
+- `avatar`（相對於工作區的路徑、http(s) URL 或 data URI）
 
 從 `IDENTITY.md` 載入：
 
@@ -122,6 +122,6 @@ openclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞" --ava
 }
 ```
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

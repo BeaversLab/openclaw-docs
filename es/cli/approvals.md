@@ -1,15 +1,15 @@
 ---
-summary: "Referencia de la CLI para `openclaw approvals` (aprobaciones de ejecución para hosts de puerta de enlace o nodos)"
+summary: "Referencia de la CLI para `openclaw approvals` (aprobaciones de ejecución para hosts de puerta de enlace o nodos)
 read_when:
-  - You want to edit exec approvals from the CLI
-  - You need to manage allowlists on gateway or node hosts
-title: "aprobaciones"
+  - Deseas editar las aprobaciones de ejecución desde la CLI
+  - Necesitas gestionar las listas de permitidos (allowlists) en hosts de puerta de enlace o nodos
+title: "approvals"
 ---
 
 # `openclaw approvals`
 
-Administra las aprobaciones de ejecución para el **host local**, el **host de puerta de enlace** o un **host de nodo**.
-De forma predeterminada, los comandos se dirigen al archivo de aprobaciones local en el disco. Usa `--gateway` para dirigirte a la puerta de enlace, o `--node` para dirigirte a un nodo específico.
+Gestiona las aprobaciones de ejecución para el **host local**, el **host de la puerta de enlace** o un **host de nodo**.
+De forma predeterminada, los comandos tienen como objetivo el archivo de aprobaciones local en el disco. Usa `--gateway` para apuntar a la puerta de enlace o `--node` para apuntar a un nodo específico.
 
 Relacionado:
 
@@ -44,11 +44,11 @@ openclaw approvals allowlist remove "~/Projects/**/bin/rg"
 
 ## Notas
 
-- `--node` utiliza el mismo resolutor que `openclaw nodes` (id, nombre, ip o prefijo de id).
-- `--agent` es `"*"` de forma predeterminada, lo cual se aplica a todos los agentes.
-- El host del nodo debe anunciar `system.execApprovals.get/set` (aplicación macOS o host de nodo sin interfaz gráfica).
+- `--node` usa el mismo solucionador que `openclaw nodes` (id, nombre, ip o prefijo de id).
+- `--agent` por defecto es `"*"`, lo cual se aplica a todos los agentes.
+- El host del nodo debe anunciar `system.execApprovals.get/set` (aplicación macOS o host de nodo headless).
 - Los archivos de aprobaciones se almacenan por host en `~/.openclaw/exec-approvals.json`.
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

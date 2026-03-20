@@ -1,5 +1,5 @@
 ---
-title: Déployer sur Render
+title : Déployer sur Render
 ---
 
 Déployez OpenClaw sur Render en utilisant l'Infrastructure as Code. Le Blueprint `render.yaml` inclus définit l'intégralité de votre pile de manière déclarative, service, disque, variables d'environnement, afin que vous puissiez déployer en un clic et versionner votre infrastructure aux côtés de votre code.
@@ -23,8 +23,8 @@ Une fois déployé, l'URL de votre service suit le modèle `https://<service-nam
 
 ## Comprendre le Blueprint
 
-Les Render Blueprints sont des fichiers YAML qui définissent votre infrastructure. Le `render.yaml` de ce
-dépôt configure tout ce dont OpenClaw a besoin pour fonctionner :
+Les Blueprint Render sont des fichiers YAML qui définissent votre infrastructure. Le `render.yaml` dans ce
+dépôt configure tout ce dont vous avez besoin pour exécuter OpenClaw :
 
 ```yaml
 services:
@@ -52,23 +52,23 @@ services:
 
 Fonctions clés du Blueprint utilisées :
 
-| Fonctionnalité        | Objectif                                                         |
-| --------------------- | ---------------------------------------------------------------- |
-| `runtime: docker`     | Construit à partir du Dockerfile du dépôt                        |
+| Fonctionnalité               | Objectif                                                    |
+| --------------------- | ---------------------------------------------------------- |
+| `runtime: docker`     | Construit à partir du Dockerfile du dépôt                          |
 | `healthCheckPath`     | Render surveille `/health` et redémarre les instances non saines |
-| `sync: false`         | Demande une valeur lors du déploiement (secrets)                 |
-| `generateValue: true` | Génère automatiquement une valeur sécurisée cryptographiquement  |
-| `disk`                | Stockage persistant qui survit aux redéploiements                |
+| `sync: false`         | Demande une valeur lors du déploiement (secrets)                  |
+| `generateValue: true` | Génère automatiquement une valeur sécurisée cryptographiquement            |
+| `disk`                | Stockage persistant qui survit aux redéploiements                 |
 
 ## Choisir un plan
 
-| Plan      | Mise en veille            | Disque         | Idéal pour                       |
-| --------- | ------------------------- | -------------- | -------------------------------- |
-| Gratuit   | Après 15 min d'inactivité | Non disponible | Tests, démos                     |
-| Starter   | Jamais                    | 1Go et plus    | Usage personnel, petites équipes |
-| Standard+ | Jamais                    | 1Go et plus    | Production, canaux multiples     |
+| Plan      | Mise en veille         | Disque          | Idéal pour                      |
+| --------- | ----------------- | ------------- | ----------------------------- |
+| Gratuit      | Après 15 min d'inactivité | Non disponible | Tests, démos                |
+| Starter   | Jamais             | 1Go et plus          | Usage personnel, petites équipes     |
+| Standard+ | Jamais             | 1Go et plus          | Production, canaux multiples |
 
-Le Blueprint est par défaut réglé sur `starter`. Pour utiliser l'offre gratuite, modifiez `plan: free` dans le
+Le Blueprint est par défaut configuré sur `starter`. Pour utiliser le niveau gratuit, modifiez `plan: free` dans le
 `render.yaml` de votre fork (mais notez : l'absence de disque persistant signifie que la configuration est réinitialisée à chaque déploiement).
 
 ## Après le déploiement
@@ -148,7 +148,7 @@ Les services de l'offre gratuite s'arrêtent après 15 minutes d'inactivité. La
 
 ### Perte de données après redéploiement
 
-Cela arrive sur l'offre gratuite (pas de disque persistant). Passez à un plan payant, ou
+Cela se produit sur le niveau gratuit (pas de disque persistant). Passez à un plan payant, ou
 exportez régulièrement votre configuration via `/setup/export`.
 
 ### Échecs des contrôles de santé
@@ -158,6 +158,6 @@ Render s'attend à une réponse 200 de `/health` dans les 30 secondes. Si les co
 - Build logs pour les erreurs
 - Si le conteneur fonctionne localement avec `docker build && docker run`
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

@@ -1,16 +1,16 @@
 ---
-summary: "Référence CLI pour `openclaw webhooks` (helpers de webhook + Gmail Pub/Sub)"
+summary: "Référence CLI pour `openclaw webhooks` (helpers webhook + Gmail Pub/Sub)"
 read_when:
-  - You want to wire Gmail Pub/Sub events into OpenClaw
-  - You want webhook helper commands
+  - Vous souhaitez connecter les événements Gmail Pub/Sub à OpenClaw
+  - Vous souhaitez les commandes helper webhook
 title: "webhooks"
 ---
 
 # `openclaw webhooks`
 
-Helpers de webhook et intégrations (Gmail Pub/Sub, helpers de webhook).
+Helpers webhook et intégrations (Gmail Pub/Sub, helpers webhook).
 
-Connexes :
+Connexe :
 
 - Webhooks : [Webhook](/fr/automation/webhook)
 - Gmail Pub/Sub : [Gmail Pub/Sub](/fr/automation/gmail-pubsub)
@@ -22,8 +22,8 @@ openclaw webhooks gmail setup --account you@example.com
 openclaw webhooks gmail run
 ```
 
-Consultez la [documentation Gmail Pub/Sub](/fr/automation/gmail-pubsub) pour plus de détails.
+Voir [documentation Gmail Pub/Sub](/fr/automation/gmail-pubsub) pour plus de détails.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

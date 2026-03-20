@@ -1,7 +1,7 @@
 ---
-summary: " `openclaw sessions` 的 CLI 參考（列出儲存的會話 + 用法）"
+summary: "`openclaw sessions` 的 CLI 參考（列出已儲存的會話 + 用法）"
 read_when:
-  - You want to list stored sessions and see recent activity
+  - 您想要列出已儲存的會話並查看最近的活動
 title: "sessions"
 ---
 
@@ -20,11 +20,12 @@ openclaw sessions --json
 範圍選擇：
 
 - default：配置的預設代理程式儲存
-- `--agent <id>`：一個配置的代理程式儲存
-- `--all-agents`：彙總所有配置的代理程式儲存
-- `--store <path>`：明確的儲存路徑（無法與 `--agent` 或 `--all-agents` 結合使用）
+- `--agent <id>`：一個已設定的代理程式存放區
+- `--all-agents`：匯總所有已設定的代理程式存放區
+- `--store <path>`：明確的存放區路徑（無法與 `--agent` 或 `--all-agents` 結合使用）
 
-`openclaw sessions --all-agents` 會讀取配置的代理程式儲存。Gateway 和 ACP 會話探索範圍更廣：它們還包括在預設 `agents/` 根目錄或樣板 `session.store` 根目錄下找到的僅磁碟儲存。這些探索到的儲存必須解析為代理程式根目錄內的一般 `sessions.json` 檔案；符號連結和根目錄外的路徑會被略過。
+`openclaw sessions --all-agents` 會讀取已設定的代理程式存放區。Gateway 和 ACP
+會話探索的範圍更廣：它們也包括在預設的 `agents/` 根目錄或範本化的 `session.store` 根目錄下找到的僅磁碟存放區。這些探索到的存放區必須解析為代理程式根目錄內的常規 `sessions.json` 檔案；符號連結和根目錄外的路徑會被跳過。
 
 JSON 範例：
 
@@ -60,20 +61,20 @@ openclaw sessions cleanup --enforce --active-key "agent:main:telegram:direct:123
 openclaw sessions cleanup --json
 ```
 
-`openclaw sessions cleanup` 使用配置中的 `session.maintenance` 設定：
+`openclaw sessions cleanup` 使用設定中的 `session.maintenance` 設定：
 
-- 範圍說明：`openclaw sessions cleanup` 僅維護會話儲存/文字紀錄。它不會修剪 cron 執行日誌 (`cron/runs/<jobId>.jsonl`)，這些是由 [Cron configuration](/zh-Hant/automation/cron-jobs#configuration) 中的 `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 管理，並於 [Cron maintenance](/zh-Hant/automation/cron-jobs#maintenance) 中說明。
+- 範圍說明：`openclaw sessions cleanup` 僅維護會話存放區/逐字稿。它不會修剪 cron 執行記錄 (`cron/runs/<jobId>.jsonl`)，這些記錄是由 [Cron 設定](/zh-Hant/automation/cron-jobs#configuration) 中的 `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 管理，並在 [Cron 維護](/zh-Hant/automation/cron-jobs#maintenance) 中進行說明。
 
-- `--dry-run`：預覽會修剪/限制多少項目而不進行寫入。
-  - 在文字模式中，dry-run 會列印每個會話的動作表格 (`Action`、`Key`、`Age`、`Model`、`Flags`)，讓您查看會保留或移除的內容。
-- `--enforce`：即使 `session.maintenance.mode` 為 `warn` 仍套用維護。
-- `--active-key <key>`：保護特定動態金鑰免於磁碟預算驅逐。
-- `--agent <id>`：針對一個設定的代理程式存放區執行清理。
-- `--all-agents`：針對所有設定的代理程式存放區執行清理。
-- `--store <path>`：針對特定的 `sessions.json` 檔案執行。
-- `--json`：列印 JSON 摘要。使用 `--all-agents` 時，輸出會包含每個存放區的摘要。
+- `--dry-run`：預覽將會修剪/封存的項目數量，而不進行寫入。
+  - 在文字模式下，dry-run 會列印每個會話的動作表 (`Action`、`Key`、`Age`、`Model`、`Flags`)，以便您查看將保留與移除的內容。
+- `--enforce`：即使當 `session.maintenance.mode` 為 `warn` 時，也執行維護。
+- `--active-key <key>`：保護特定的活動金鑰免於被磁碟預算逐出。
+- `--agent <id>`：對一個已設定的代理程式存放區執行清理。
+- `--all-agents`：對所有已設定的代理程式存放區執行清理。
+- `--store <path>`: 針對特定的 `sessions.json` 檔案執行。
+- `--json`: 列印 JSON 摘要。使用 `--all-agents` 時，輸出會包含每個儲存區的摘要。
 
-`openclaw sessions cleanup --all-agents --dry-run --json`：
+`openclaw sessions cleanup --all-agents --dry-run --json`:
 
 ```json
 {
@@ -103,8 +104,8 @@ openclaw sessions cleanup --json
 
 相關：
 
-- Session config: [Configuration reference](/zh-Hant/gateway/configuration-reference#session)
+- Session config：[Configuration reference](/zh-Hant/gateway/configuration-reference#session)
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

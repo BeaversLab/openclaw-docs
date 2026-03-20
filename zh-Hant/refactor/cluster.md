@@ -1,20 +1,20 @@
 ---
-summary: "重構具有最高 LOC 減少潛力的叢集"
+summary: "Refactor clusters with highest LOC reduction potential"
 read_when:
   - You want to reduce total LOC without changing behavior
   - You are choosing the next dedupe or extraction pass
-title: "重構叢集待辦事項"
+title: "Refactor Cluster Backlog"
 ---
 
-# 重構叢集待辦事項
+# Refactor Cluster Backlog
 
-依據可能的 LOC 減少量、安全性與廣度排名。
+Ranked by likely LOC reduction, safety, and breadth.
 
-## 1. 通道外掛程式配置與安全腳手架
+## 1. Channel plugin config and security scaffolding
 
-價值最高的叢集。
+Highest-value cluster.
 
-許多通道外掛程式中重複的結構：
+Repeated shapes across many channel plugins:
 
 - `config.listAccountIds`
 - `config.resolveAccount`
@@ -24,7 +24,7 @@ title: "重構叢集待辦事項"
 - `config.describeAccount`
 - `security.resolveDmPolicy`
 
-強力範例：
+Strong examples:
 
 - `extensions/telegram/src/channel.ts`
 - `extensions/googlechat/src/channel.ts`
@@ -35,31 +35,31 @@ title: "重構叢集待辦事項"
 - `extensions/signal/src/channel.ts`
 - `extensions/mattermost/src/channel.ts`
 
-可能的提取結構：
+Likely extraction shape:
 
 - `buildChannelConfigAdapter(...)`
 - `buildMultiAccountConfigAdapter(...)`
 - `buildDmSecurityAdapter(...)`
 
-預期節省：
+Expected savings:
 
 - ~250-450 LOC
 
-風險：
+Risk:
 
-- 中等。每個通道都有略微不同的 `isConfigured`、警告和正規化處理。
+- Medium. Each channel has slightly different `isConfigured`, warnings, and normalization.
 
-## 2. 擴充功能執行時期單例樣板程式碼
+## 2. Extension runtime singleton boilerplate
 
-非常安全。
+Very safe.
 
-幾乎每個擴充功能都有相同的執行時期持有者：
+Nearly every extension has the same runtime holder:
 
 - `let runtime: PluginRuntime | null = null`
 - `setXRuntime`
 - `getXRuntime`
 
-強力範例：
+Strong examples:
 
 - `extensions/telegram/src/runtime.ts`
 - `extensions/matrix/src/runtime.ts`
@@ -69,38 +69,38 @@ title: "重構叢集待辦事項"
 - `extensions/imessage/src/runtime.ts`
 - `extensions/twitch/src/runtime.ts`
 
-特殊情況變體：
+Special-case variants:
 
 - `extensions/bluebubbles/src/runtime.ts`
 - `extensions/line/src/runtime.ts`
 - `extensions/synology-chat/src/runtime.ts`
 
-可能的提取結構：
+Likely extraction shape:
 
 - `createPluginRuntimeStore<T>(errorMessage)`
 
-預期節省：
+Expected savings:
 
 - ~180-260 LOC
 
-風險：
+Risk:
 
-- 低
+- Low
 
-## 3. 設定提示與配置修補步驟
+## 3. Setup prompt and config-patch steps
 
-涵蓋面積大。
+Large surface area.
 
-許多設定檔案重複：
+Many setup files repeat:
 
-- 解析帳戶 ID
-- 提示允許清單項目
-- 合併 allowFrom
-- 設定 DM 政策
-- 提示機密
-- 修補頂層與帳戶範圍配置
+- resolve account id
+- prompt allowlist entries
+- merge allowFrom
+- set DM policy
+- prompt secrets
+- patch top-level vs account-scoped config
 
-強力範例：
+Strong examples:
 
 - `extensions/bluebubbles/src/setup-surface.ts`
 - `extensions/googlechat/src/setup-surface.ts`
@@ -111,7 +111,7 @@ title: "重構叢集待辦事項"
 - `extensions/matrix/src/setup-surface.ts`
 - `extensions/irc/src/setup-surface.ts`
 
-現有的輔助縫隙：
+現有的輔助縫合點：
 
 - `src/channels/plugins/setup-wizard-helpers.ts`
 
@@ -124,20 +124,20 @@ title: "重構叢集待辦事項"
 
 預期節省：
 
-- ~300-600 LOC
+- 約 300-600 行程式碼
 
 風險：
 
-- 中等。容易過度概括；請保持輔助函式的狹窄與可組合性。
+- 中等。容易過度泛化；請保持輔助函式的狹窄與可組合性。
 
 ## 4. 多帳號 config-schema 片段
 
-擴充功能間重複的 schema 片段。
+跨擴充功能重複的 schema 片段。
 
 常見模式：
 
 - `const allowFromEntry = z.union([z.string(), z.number()])`
-- 帳號 schema 加上：
+- account schema 加上：
   - `accounts: z.object({}).catchall(accountSchema).optional()`
   - `defaultAccount: z.string().optional()`
 - 重複的 DM/群組欄位
@@ -159,15 +159,15 @@ title: "重構叢集待辦事項"
 
 預期節省：
 
-- ~120-220 LOC
+- 約 120-220 行程式碼
 
 風險：
 
-- 低至中等。有些 schema 很簡單，有些則很特殊。
+- 低至中等。部分 schema 很簡單，部分則較特殊。
 
 ## 5. Webhook 與監控器生命週期啟動
 
-不錯的中價值群組。
+良好的中等價值叢集。
 
 重複的 `startAccount` / 監控器設定模式：
 
@@ -187,26 +187,26 @@ title: "重構叢集待辦事項"
 - `extensions/telegram/src/channel.ts`
 - `extensions/nextcloud-talk/src/channel.ts`
 
-現有的輔助縫隙：
+現有的輔助縫合點：
 
 - `src/plugin-sdk/channel-lifecycle.ts`
 
 可能的提取形狀：
 
 - 帳號監控器生命週期的輔助函式
-- 由 webhook 支援的帳號啟動輔助函式
+- 基於 webhook 的帳號啟動輔助函式
 
 預期節省：
 
-- ~150-300 LOC
+- 約 150-300 行程式碼
 
 風險：
 
-- 中至高。傳輸細節很快會出現分歧。
+- 中至高。傳輸細節很容易快速分歧。
 
-## 6. 小型完全複製清理
+## 6. 小型完全克隆清理
 
-低風險清理分組。
+低風險清理分類。
 
 範例：
 
@@ -220,7 +220,7 @@ title: "重構叢集待辦事項"
 
 預期節省：
 
-- 約 30-60 行程式碼
+- ~30-60 LOC
 
 風險：
 
@@ -228,13 +228,13 @@ title: "重構叢集待辦事項"
 
 ## 測試叢集
 
-### LINE webhook 事件範例
+### LINE webhook 事件 fixtures
 
 強力範例：
 
 - `src/line/bot-handlers.test.ts`
 
-可能的提取項：
+可能的提取：
 
 - `makeLineEvent(...)`
 - `runLineEvent(...)`
@@ -242,7 +242,7 @@ title: "重構叢集待辦事項"
 
 預期節省：
 
-- 約 120-180 行程式碼
+- ~120-180 LOC
 
 ### Telegram 原生命令授權矩陣
 
@@ -251,53 +251,53 @@ title: "重構叢集待辦事項"
 - `src/telegram/bot-native-commands.group-auth.test.ts`
 - `src/telegram/bot-native-commands.plugin-auth.test.ts`
 
-可能的提取項：
+可能的提取：
 
-- 論壇上下文建構器
-- 拒絕訊息斷言輔助函式
-- 表驅動授權案例
+- 論壇 context builder
+- denied-message assertion helper
+- table-driven auth cases
 
 預期節省：
 
-- 約 80-140 行程式碼
+- ~80-140 LOC
 
-### Zalo 生命週期設定
+### Zalo lifecycle 設定
 
 強力範例：
 
 - `extensions/zalo/src/monitor.lifecycle.test.ts`
 
-可能的提取項：
+可能的提取：
 
-- 共享監控設定線束
+- shared monitor setup harness
 
 預期節省：
 
-- 約 50-90 行程式碼
+- ~50-90 LOC
 
-### Brave llm-context 不支援選項測試
+### Brave llm-context unsupported-option 測試
 
 強力範例：
 
 - `src/agents/tools/web-tools.enabled-defaults.test.ts`
 
-可能的提取項：
+可能的提取：
 
 - `it.each(...)` 矩陣
 
 預期節省：
 
-- 約 30-50 行程式碼
+- ~30-50 LOC
 
 ## 建議順序
 
 1. Runtime singleton boilerplate
-2. 小型精確複製清理
-3. 設定與安全性建構器提取
-4. 測試輔助函式提取
-5. Onboarding 步驟提取
-6. 監控生命週期輔助函式提取
+2. Small exact-clone cleanup
+3. Config and security builder extraction
+4. Test-helper extraction
+5. Onboarding step extraction
+6. Monitor lifecycle helper extraction
 
-import footerZhHant from "/components/footer/zh-Hant.mdx";
+import en from "/components/footer/en.mdx";
 
-<footerZhHant />
+<en />

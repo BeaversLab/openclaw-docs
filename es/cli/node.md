@@ -1,29 +1,29 @@
 ---
-summary: "Referencia de CLI para `openclaw node` (host de nodo sin interfaz)"
+summary: "Referencia de CLI para `openclaw node` (host de nodo sin cabeza)"
 read_when:
-  - Running the headless node host
-  - Pairing a non-macOS node for system.run
+  - Ejecutar el host de nodo sin cabeza
+  - Emparejar un nodo que no sea macOS para system.run
 title: "node"
 ---
 
 # `openclaw node`
 
-Ejecuta un **host de nodo sin interfaz** que se conecta al WebSocket de Gateway y expone
+Ejecuta un **host de nodo sin cabeza** que se conecta al WebSocket de Gateway y expone
 `system.run` / `system.which` en esta máquina.
 
 ## ¿Por qué usar un host de nodo?
 
 Use un host de nodo cuando desee que los agentes **ejecuten comandos en otras máquinas** en su
-red sin instalar una aplicación complementaria completa de macOS allí.
+red sin instalar una aplicación complementaria macOS completa allí.
 
 Casos de uso comunes:
 
-- Ejecutar comandos en cajas remotas de Linux/Windows (servidores de compilación, máquinas de laboratorio, NAS).
+- Ejecutar comandos en equipos Linux/Windows remotos (servidores de compilación, máquinas de laboratorio, NAS).
 - Mantener exec **en sandbox** en la puerta de enlace, pero delegar las ejecuciones aprobadas a otros hosts.
-- Proporcionar un objetivo de ejecución ligero y sin interfaz para nodos de automatización o CI.
+- Proporcionar un objetivo de ejecución ligero y sin cabeza para nodos de automatización o CI.
 
-La ejecución aún está protegida por **aprobaciones de ejecución** y listas de permitidos por agente en el
-host del nodo, por lo que puede mantener el acceso a los comandos limitado y explícito.
+La ejecución aún está protegida por **aprobaciones de exec** y listas de permitidos por agente en el
+host de nodo, por lo que puede mantener el acceso a los comandos limitado y explícito.
 
 ## Proxy del navegador (sin configuración)
 
@@ -31,7 +31,7 @@ Los hosts de nodo anuncian automáticamente un proxy del navegador si `browser.e
 deshabilitado en el nodo. Esto permite que el agente use la automatización del navegador en ese nodo
 sin configuración adicional.
 
-Deshabilítelo en el nodo si es necesario:
+Desactívelo en el nodo si es necesario:
 
 ```json5
 {
@@ -43,7 +43,7 @@ Deshabilítelo en el nodo si es necesario:
 }
 ```
 
-## Ejecutar (en primer plano)
+## Ejecutar (primer plano)
 
 ```bash
 openclaw node run --host <gateway-host> --port 18789
@@ -55,23 +55,23 @@ Opciones:
 - `--port <port>`: Puerto de WebSocket de Gateway (predeterminado: `18789`)
 - `--tls`: Usar TLS para la conexión de puerta de enlace
 - `--tls-fingerprint <sha256>`: Huella digital del certificado TLS esperada (sha256)
-- `--node-id <id>`: Anular el id. del nodo (borra el token de emparejamiento)
+- `--node-id <id>`: Anular el id del nodo (borra el token de emparejamiento)
 - `--display-name <name>`: Anular el nombre para mostrar del nodo
 
-## Autenticación de puerta de enlace para el host de nodo
+## Autenticación de puerta de enlace para host de nodo
 
-`openclaw node run` y `openclaw node install` resuelven la autenticación de la puerta de enlace desde la configuración/entorno (sin marcas `--token`/`--password` en los comandos de nodo):
+`openclaw node run` y `openclaw node install` resuelven la autenticación de puerta de enlace desde config/env (sin marcas `--token`/`--password` en los comandos de nodo):
 
 - `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD` se verifican primero.
 - Luego, respaldo de configuración local: `gateway.auth.token` / `gateway.auth.password`.
-- En el modo local, el host del nodo intencionalmente no hereda `gateway.remote.token` / `gateway.remote.password`.
-- Si `gateway.auth.token` / `gateway.auth.password` se configura explícitamente a través de SecretRef y no se resuelve, la resolución de autenticación del nodo falla de forma cerrada (sin máscara de reserva remota).
+- En modo local, el host de nodo intencionalmente no hereda `gateway.remote.token` / `gateway.remote.password`.
+- Si `gateway.auth.token` / `gateway.auth.password` están configurados explícitamente mediante SecretRef y no se resuelven, la resolución de autenticación del nodo falla cerrada (sin enmascaramiento de reserva remota).
 - En `gateway.mode=remote`, los campos del cliente remoto (`gateway.remote.token` / `gateway.remote.password`) también son elegibles según las reglas de precedencia remota.
-- Las variables de entorno heredadas `CLAWDBOT_GATEWAY_*` se ignoran para la resolución de autenticación del host del nodo.
+- Las variables de entorno heredadas de `CLAWDBOT_GATEWAY_*` se ignoran para la resolución de autenticación del host del nodo.
 
-## Servicio (segundo plano)
+## Servicio (en segundo plano)
 
-Instale un host de nodo sin interfaz (headless) como un servicio de usuario.
+Instale un host de nodo sin cabeza como servicio de usuario.
 
 ```bash
 openclaw node install --host <gateway-host> --port 18789
@@ -79,9 +79,9 @@ openclaw node install --host <gateway-host> --port 18789
 
 Opciones:
 
-- `--host <host>`: Host del WebSocket de Gateway (predeterminado: `127.0.0.1`)
-- `--port <port>`: Puerto del WebSocket de Gateway (predeterminado: `18789`)
-- `--tls`: Usar TLS para la conexión de puerta de enlace
+- `--host <host>`: Host WebSocket de la puerta de enlace (predeterminado: `127.0.0.1`)
+- `--port <port>`: Puerto WebSocket de la puerta de enlace (predeterminado: `18789`)
+- `--tls`: Usar TLS para la conexión de la puerta de enlace
 - `--tls-fingerprint <sha256>`: Huella digital del certificado TLS esperada (sha256)
 - `--node-id <id>`: Anular el id del nodo (borra el token de emparejamiento)
 - `--display-name <name>`: Anular el nombre para mostrar del nodo
@@ -103,7 +103,7 @@ Los comandos de servicio aceptan `--json` para una salida legible por máquina.
 
 ## Emparejamiento
 
-La primera conexión crea una solicitud de emparejamiento de dispositivo pendiente (`role: node`) en la Gateway.
+La primera conexión crea una solicitud de emparejamiento de dispositivo pendiente (`role: node`) en la puerta de enlace.
 Apruébela a través de:
 
 ```bash
@@ -111,17 +111,17 @@ openclaw devices list
 openclaw devices approve <requestId>
 ```
 
-El host del nodo almacena su id de nodo, token, nombre para mostrar e información de conexión de puerta de enlace en
+El host del nodo almacena su id de nodo, token, nombre para mostrar e información de conexión de la puerta de enlace en
 `~/.openclaw/node.json`.
 
 ## Aprobaciones de ejecución
 
-`system.run` está limitado por las aprobaciones de ejecución locales:
+`system.run` está limitado por aprobaciones de ejecución local:
 
 - `~/.openclaw/exec-approvals.json`
 - [Aprobaciones de ejecución](/es/tools/exec-approvals)
-- `openclaw approvals --node <id|name|ip>` (editar desde la Gateway)
+- `openclaw approvals --node <id|name|ip>` (editar desde la puerta de enlace)
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

@@ -1,30 +1,30 @@
 ---
-title: "Vercel AI Gateway 网关"
-summary: "Vercel AI Gateway 网关 设置（身份验证 + 模型选择）"
+title: "Vercel AI Gateway(网关)"
+summary: "Vercel AI Gateway(网关) setup (auth + 模型 selection)"
 read_when:
-  - You want to use Vercel AI Gateway with OpenClaw
-  - You need the API key env var or CLI auth choice
+  - You want to use Vercel AI Gateway(网关) with OpenClaw
+  - You need the API key 环境变量 or CLI auth choice
 ---
 
-# Vercel AI Gateway 网关
+# Vercel AI Gateway(网关)
 
-[Vercel AI Gateway 网关](https://vercel.com/ai-gateway) 提供了一个统一的 API，通过单一端点访问数百个模型。
+The [Vercel AI Gateway(网关)](https://vercel.com/ai-gateway) provides a unified API to access hundreds of models through a single endpoint.
 
-- 提供商：`vercel-ai-gateway`
-- 身份验证：`AI_GATEWAY_API_KEY`
-- API：兼容 Anthropic Messages
-- OpenClaw 会自动发现 Gateway(网关) `/v1/models` 目录，因此 `/models vercel-ai-gateway`
-  包含当前的模型引用，例如 `vercel-ai-gateway/openai/gpt-5.4`。
+- Provider: `vercel-ai-gateway`
+- Auth: `AI_GATEWAY_API_KEY`
+- API: Anthropic Messages compatible
+- OpenClaw auto-discovers the Gateway(网关) `/v1/models` catalog, so `/models vercel-ai-gateway`
+  includes current 模型 refs such as `vercel-ai-gateway/openai/gpt-5.4`.
 
 ## 快速开始
 
-1. 设置 API 密钥（建议：为 Gateway(网关) 存储）：
+1. Set the API key (recommended: store it for the Gateway(网关)):
 
 ```bash
 openclaw onboard --auth-choice ai-gateway-api-key
 ```
 
-2. 设置默认模型：
+2. Set a default 模型:
 
 ```json5
 {
@@ -36,7 +36,7 @@ openclaw onboard --auth-choice ai-gateway-api-key
 }
 ```
 
-## 非交互式示例
+## Non-interactive example
 
 ```bash
 openclaw onboard --non-interactive \
@@ -45,19 +45,20 @@ openclaw onboard --non-interactive \
   --ai-gateway-api-key "$AI_GATEWAY_API_KEY"
 ```
 
-## 环境说明
+## Environment note
 
-如果 Gateway(网关) 作为守护进程（launchd/systemd）运行，请确保 `AI_GATEWAY_API_KEY`
-对该进程可用（例如，在 `~/.openclaw/.env` 中或通过
-`env.shellEnv`）。
+If the Gateway(网关) runs as a daemon (launchd/systemd), make sure `AI_GATEWAY_API_KEY`
+is available to that process (for example, in `~/.openclaw/.env` or via
+`env.shellEnv`).
 
-## 模型 ID 简写
+## Model ID shorthand
 
-OpenClaw 接受 Vercel Claude 简写模型引用，并在运行时对其进行标准化：
+OpenClaw accepts Vercel Claude shorthand 模型 refs and normalizes them at
+runtime:
 
 - `vercel-ai-gateway/claude-opus-4.6` -> `vercel-ai-gateway/anthropic/claude-opus-4.6`
 - `vercel-ai-gateway/opus-4.6` -> `vercel-ai-gateway/anthropic/claude-opus-4-6`
 
-import zh from "/components/footer/zh.mdx";
+import en from "/components/footer/en.mdx";
 
-<zh />
+<en />

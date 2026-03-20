@@ -517,22 +517,22 @@ const needsNonImageSanitize =
 
 ## Resumen de Cambios
 
-| Archivo                                                     | Tipo de Cambio | Descripción                                                                      |
-| ----------------------------------------------------------- | -------------- | -------------------------------------------------------------------------------- |
-| `src/commands/onboard-auth.credentials.ts`                  | Añadir         | `KILOCODE_DEFAULT_MODEL_REF`, `setKilocodeApiKey()`                              |
-| `src/agents/model-auth.ts`                                  | Modificar      | Añadir `kilocode` a `envMap`                                                     |
-| `src/config/io.ts`                                          | Modificar      | Añadir `KILOCODE_API_KEY` a las claves de entorno de shell                       |
-| `src/commands/onboard-auth.config-core.ts`                  | Añadir         | `applyKilocodeProviderConfig()`, `applyKilocodeConfig()`                         |
+| Archivo                                                        | Tipo de Cambio | Descripción                                                             |
+| ----------------------------------------------------------- | ----------- | ----------------------------------------------------------------------- |
+| `src/commands/onboard-auth.credentials.ts`                  | Añadir         | `KILOCODE_DEFAULT_MODEL_REF`, `setKilocodeApiKey()`                     |
+| `src/agents/model-auth.ts`                                  | Modificar      | Añadir `kilocode` a `envMap`                                              |
+| `src/config/io.ts`                                          | Modificar      | Añadir `KILOCODE_API_KEY` a las claves de entorno de shell                                |
+| `src/commands/onboard-auth.config-core.ts`                  | Añadir         | `applyKilocodeProviderConfig()`, `applyKilocodeConfig()`                |
 | `src/commands/onboard-types.ts`                             | Modificar      | Añadir `kilocode-api-key` a `AuthChoice`, añadir `kilocodeApiKey` a las opciones |
-| `src/commands/auth-choice-options.ts`                       | Modificar      | Añadir grupo y opción de `kilocode`                                              |
-| `src/commands/auth-choice.preferred-provider.ts`            | Modificar      | Añadir mapeo de `kilocode-api-key`                                               |
-| `src/commands/auth-choice.apply.api-providers.ts`           | Modificar      | Añadir manejo de `kilocode-api-key`                                              |
-| `src/cli/program/register.onboard.ts`                       | Modificar      | Añadir opción `--kilocode-api-key`                                               |
-| `src/commands/onboard-non-interactive/local/auth-choice.ts` | Modificar      | Añadir manejo no interactivo                                                     |
-| `src/commands/onboard-auth.ts`                              | Modificar      | Exportar nuevas funciones                                                        |
-| `src/agents/pi-embedded-runner/cache-ttl.ts`                | Modificar      | Añadir soporte para kilocode                                                     |
+| `src/commands/auth-choice-options.ts`                       | Modificar      | Añadir grupo y opción de `kilocode`                                         |
+| `src/commands/auth-choice.preferred-provider.ts`            | Modificar      | Añadir mapeo de `kilocode-api-key`                                          |
+| `src/commands/auth-choice.apply.api-providers.ts`           | Modificar      | Añadir manejo de `kilocode-api-key`                                         |
+| `src/cli/program/register.onboard.ts`                       | Modificar      | Añadir opción `--kilocode-api-key`                                         |
+| `src/commands/onboard-non-interactive/local/auth-choice.ts` | Modificar      | Añadir manejo no interactivo                                            |
+| `src/commands/onboard-auth.ts`                              | Modificar      | Exportar nuevas funciones                                                    |
+| `src/agents/pi-embedded-runner/cache-ttl.ts`                | Modificar      | Añadir soporte para kilocode                                                    |
 | `src/agents/transcript-policy.ts`                           | Modificar      | Añadir manejo de Gemini para kilocode                                            |
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

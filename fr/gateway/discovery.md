@@ -1,5 +1,5 @@
 ---
-summary: "Découverte de nœuds et transports (Bonjour, Tailscale, SSH) pour trouver la passerelle"
+summary: "Node discovery and transports (Bonjour, Tailscale, SSH) for finding the gateway"
 read_when:
   - Implementing or changing Bonjour discovery/advertising
   - Adjusting remote connection modes (direct vs SSH)
@@ -9,104 +9,104 @@ title: "Discovery and Transports"
 
 # Discovery & transports
 
-OpenClaw présente deux problèmes distincts qui semblent similaires en surface :
+OpenClaw has two distinct problems that look similar on the surface:
 
-1. **Contrôle à distance de l'opérateur** : l'application de la barre de menus macOS contrôlant une passerelle exécutée ailleurs.
-2. **Appairage de nœuds** : iOS/Android (et futurs nœuds) trouvant une passerelle et s'appariant de manière sécurisée.
+1. **Operator remote control**: the macOS menu bar app controlling a gateway running elsewhere.
+2. **Node pairing**: iOS/Android (and future nodes) finding a gateway and pairing securely.
 
-L'objectif de conception est de conserver toute la découverte/publicité réseau dans la **Node Gateway** (`openclaw gateway`) et de garder les clients (application Mac, iOS) en tant que consommateurs.
+The design goal is to keep all network discovery/advertising in the **Node Gateway** (`openclaw gateway`) and keep clients (mac app, iOS) as consumers.
 
 ## Terms
 
-- **Gateway** : un processus de passerée unique et de longue durée qui possède l'état (sessions, appariement, registre de nœuds) et exécute des canaux. La plupart des configurations en utilisent une par hôte ; les configurations multi-passereles isolées sont possibles.
-- **Gateway WS (plan de contrôle)** : le point de terminaison WebSocket sur `127.0.0.1:18789` par défaut ; peut être lié au réseau local/tailnet via `gateway.bind`.
-- **Transport WS direct** : un point de terminaison Gateway WS orienté réseau local/tailnet (pas de SSH).
-- **Transport SSH (secours)** : contrôle à distance en transférant `127.0.0.1:18789` via SSH.
-- **Pont TCP hérité (déprécié/supprimé)** : ancien transport de nœud (voir [Protocole de pont](/fr/gateway/bridge-protocol)) ; n'est plus annoncé pour la découverte.
+- **Gateway**: a single long-running gateway process that owns state (sessions, pairing, node registry) and runs channels. Most setups use one per host; isolated multi-gateway setups are possible.
+- **Gateway WS (control plane)**: the WebSocket endpoint on `127.0.0.1:18789` by default; can be bound to LAN/tailnet via `gateway.bind`.
+- **Direct WS transport**: a LAN/tailnet-facing Gateway WS endpoint (no SSH).
+- **SSH transport (fallback)**: remote control by forwarding `127.0.0.1:18789` over SSH.
+- **Legacy TCP bridge (deprecated/removed)**: older node transport (see [Bridge protocol](/fr/gateway/bridge-protocol)); no longer advertised for discovery.
 
 Protocol details:
 
-- [Protocole de Gateway](/fr/gateway/protocol)
-- [Protocole de pont (hérité)](/fr/gateway/bridge-protocol)
+- [Gateway protocol](/fr/gateway/protocol)
+- [Bridge protocol (legacy)](/fr/gateway/bridge-protocol)
 
-## Why we keep both “direct” and SSH
+## Why we keep both "direct" and SSH
 
-- **Direct WS** offre la meilleure expérience utilisateur sur le même réseau et au sein d'un tailnet :
-  - découverte automatique sur le réseau local via Bonjour
-  - jetons d'appariement + ACL détenus par la passerelle
-  - aucun accès shell requis ; la surface du protocole peut rester restreinte et auditable
-- **SSH** reste le secours universel :
-  - fonctionne partout où vous avez un accès SSH (même sur des réseaux non liés)
-  - survit aux problèmes de multidiffusion/mDNS
-  - ne nécessite aucun nouveau port entrant en plus de SSH
+- **Direct WS** is the best UX on the same network and within a tailnet:
+  - auto-discovery on LAN via Bonjour
+  - pairing tokens + ACLs owned by the gateway
+  - no shell access required; protocol surface can stay tight and auditable
+- **SSH** remains the universal fallback:
+  - works anywhere you have SSH access (even across unrelated networks)
+  - survives multicast/mDNS issues
+  - requires no new inbound ports besides SSH
 
 ## Discovery inputs (how clients learn where the gateway is)
 
 ### 1) Bonjour / mDNS (LAN only)
 
-Bonjour est un best-effort et ne traverse pas les réseaux. Il n'est utilisé que pour la commodité du « même LAN ».
+Bonjour is best-effort and does not cross networks. It is only used for “same LAN” convenience.
 
-Direction de la cible :
+Target direction:
 
-- La **passerelle** annonce son point de terminaison WS via Bonjour.
-- Les clients naviguent et affichent une liste « choisir une passerelle », puis stockent le point de terminaison choisi.
+- Le **Gateway** publie son point de terminaison WS via Bonjour.
+- Les clients naviguent et affichent une liste « choisir un Gateway », puis stockent le point de terminaison choisi.
 
 Dépannage et détails de la balise : [Bonjour](/fr/gateway/bonjour).
 
 #### Détails de la balise de service
 
 - Types de services :
-  - `_openclaw-gw._tcp` (balise de transport de la passerelle)
+  - `_openclaw-gw._tcp` (balise de transport Gateway)
 - Clés TXT (non secrètes) :
   - `role=gateway`
   - `lanHost=<hostname>.local`
-  - `sshPort=22` (ou ce qui est annoncé)
+  - `sshPort=22` (ou tout ce qui est publié)
   - `gatewayPort=18789` (Gateway WS + HTTP)
   - `gatewayTls=1` (uniquement lorsque TLS est activé)
   - `gatewayTlsSha256=<sha256>` (uniquement lorsque TLS est activé et que l'empreinte digitale est disponible)
-  - `canvasPort=<port>` (port d'hôte de canevas ; actuellement le même que `gatewayPort` lorsque l'hôte de canevas est activé)
-  - `cliPath=<path>` (facultatif ; chemin absolu vers un point d'entrée `openclaw` exécutable ou un binaire)
-  - `tailnetDns=<magicdns>` (indice facultatif ; détecté automatiquement lorsque Tailscale est disponible)
+  - `canvasPort=<port>` (port hôte du canvas ; actuellement le même que `gatewayPort` lorsque l'hôte du canvas est activé)
+  - `cliPath=<path>` (optionnel ; chemin absolu vers un point d'entrée `openclaw` exécutable ou un binaire)
+  - `tailnetDns=<magicdns>` (indice optionnel ; détecté automatiquement lorsque Tailscale est disponible)
 
 Notes de sécurité :
 
 - Les enregistrements TXT Bonjour/mDNS sont **non authentifiés**. Les clients doivent traiter les valeurs TXT uniquement comme des indices UX.
-- Le routage (hôte/port) doit préférer le **point de terminaison de service résolu** (SRV + A/AAAA) par rapport aux `lanHost`, `tailnetDns` ou `gatewayPort` fournis par TXT.
-- L'épinglage TLS ne doit jamais permettre à un `gatewayTlsSha256` annoncé de remplacer une épingle précédemment stockée.
-- Les nœuds iOS/Android doivent traiter les connexions directes basées sur la découverte comme **TLS uniquement** et exiger une confirmation explicite « faire confiance à cette empreinte digitale » avant de stocker une épingle pour la première fois (vérification hors bande).
+- Le routage (hôte/port) doit préférer le **point de terminaison de service résolu** (SRV + A/AAAA) aux `lanHost`, `tailnetDns`, ou `gatewayPort` fournis par TXT.
+- L'épinglage TLS ne doit jamais permettre à un `gatewayTlsSha256` annoncé de remplacer un épinglage précédemment stocké.
+- Les nœuds iOS/Android doivent traiter les connexions directes basées sur la découverte comme **TLS uniquement** et exiger une confirmation explicite « faire confiance à cette empreinte digitale » avant de stocker un premier épinglage (vérification hors bande).
 
 Désactiver/remplacer :
 
-- `OPENCLAW_DISABLE_BONJOUR=1` désactive la publicité.
-- `gateway.bind` dans `~/.openclaw/openclaw.json` contrôle le mode de liaison de la Gateway.
+- `OPENCLAW_DISABLE_BONJOUR=1` désactive la publication.
+- `gateway.bind` dans `~/.openclaw/openclaw.json` contrôle le mode de liaison Gateway.
 - `OPENCLAW_SSH_PORT` remplace le port SSH annoncé dans TXT (par défaut 22).
 - `OPENCLAW_TAILNET_DNS` publie un indice `tailnetDns` (MagicDNS).
 - `OPENCLAW_CLI_PATH` remplace le chemin CLI annoncé.
 
 ### 2) Tailnet (inter-réseau)
 
-Pour les configurations de type Londres/Vienne, Bonjour ne sera pas utile. La cible « directe » recommandée est :
+Pour les configurations de style Londres/Vienne, Bonjour ne sera d'aucune aide. La cible « directe » recommandée est :
 
 - Nom MagicDNS Tailscale (préféré) ou une IP tailnet stable.
 
-Si la passerelle peut détecter qu'elle fonctionne sous Tailscale, elle publie `tailnetDns` comme indice facultatif pour les clients (y compris les balises de zone étendue).
+Si la passerelle peut détecter qu'elle fonctionne sous Tailscale, elle publie `tailnetDns` comme indicatif facultatif pour les clients (y compris les balises grande zone).
 
 ### 3) Manuel / Cible SSH
 
-Lorsqu'il n'y a pas de route directe (ou que le mode direct est désactivé), les clients peuvent toujours se connecter via SSH en transférant le port de passerelle de bouclage.
+Lorsqu'il n'y a pas d'itinéraire direct (ou que le mode direct est désactivé), les clients peuvent toujours se connecter via SSH en transférant le port de bouclage de la passerelle.
 
-Voir [Accès distant](/fr/gateway/remote).
+Voir [Accès à distance](/fr/gateway/remote).
 
 ## Sélection du transport (politique client)
 
 Comportement recommandé du client :
 
 1. Si un point de terminaison direct couplé est configuré et accessible, utilisez-le.
-2. Sinon, si Bonjour trouve une passerelle sur le réseau local, proposez un choix en un clic « Utiliser cette passerelle » et enregistrez-la en tant que point de terminaison direct.
+2. Sinon, si Bonjour trouve une passerelle sur le réseau local, proposez un choix « Utiliser cette passerelle » en un appui et enregistrez-la comme point de terminaison direct.
 3. Sinon, si un DNS/IP tailnet est configuré, essayez en mode direct.
-4. Sinon, repliez-vous sur SSH.
+4. Sinon, revenez à SSH.
 
-## Couplage + auth (transport direct)
+## Couplage + authentification (transport direct)
 
 La passerelle est la source de vérité pour l'admission des nœuds/clients.
 
@@ -114,14 +114,14 @@ La passerelle est la source de vérité pour l'admission des nœuds/clients.
 - La passerelle applique :
   - auth (jeton / paire de clés)
   - portées/ACL (la passerelle n'est pas un proxy brut vers chaque méthode)
-  - limites de débit
+  - limites de taux
 
 ## Responsabilités par composant
 
 - **Gateway** : publie des balises de découverte, possède les décisions de couplage et héberge le point de terminaison WS.
-- **Application macOS** : vous aide à choisir une passerelle, affiche les invites de couplage et utilise SSH uniquement en repli.
-- **Nœuds iOS/Android** : explorent Bonjour par commodité et se connectent au WS de la Gateway couplée.
+- **Application macOS** : vous aide à choisir une passerelle, affiche les invites de couplage et utilise SSH uniquement en secours.
+- **Nœuds iOS/Android** : naviguent sur Bonjour pour plus de commodité et se connectent au WS de la Gateway couplée.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

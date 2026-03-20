@@ -1,6 +1,6 @@
 ---
 title: Vérification formelle (Modèles de sécurité)
-summary: Modèles de sécurité vérifiés par machine pour les chemins à plus haut risque d'OpenClaw.
+summary: Modèles de sécurité vérifiés par machine pour les chemins les plus à risque d'OpenClaw.
 permalink: /security/formal-verification/
 ---
 
@@ -10,14 +10,14 @@ Cette page suit les **modèles de sécurité formels** d'OpenClaw (TLA+/TLC aujo
 
 > Remarque : certains liens plus anciens peuvent faire référence au nom précédent du projet.
 
-**Objectif (étoile du nord) :** fournir un argument vérifié par machine qu'OpenClaw applique sa
-politique de sécurité prévue (autorisation, isolation de session, contrôle des outils, et
+**Objectif (étoile polaire) :** fournir un argument vérifié par machine qu'OpenClaw applique sa
+politique de sécurité prévue (autorisation, isolation de session, filtrage d'outils et
 sécurité contre la mauvaise configuration), sous des hypothèses explicites.
 
 **Ce que c'est (aujourd'hui) :** une **suite de régression de sécurité** exécutable, pilotée par l'attaquant :
 
-- Chaque affirmation dispose d'une vérification de modèle exécutable sur un espace d'états fini.
-- De nombreuses affirmations disposent d'un **modèle négatif** associé qui produit une trace de contre-exemple pour une classe de bugs réaliste.
+- Chaque revendication fait l'objet d'une vérification de modèle exécutable sur un espace d'états fini.
+- De nombreuses revendications disposent d'un **modèle négatif** associé qui produit une trace de contre-exemple pour une classe de bogues réaliste.
 
 **Ce que ce n'est pas (encore) :** une preuve qu'« OpenClaw est sécurisé à tous égards » ou que l'implémentation TypeScript complète est correcte.
 
@@ -27,13 +27,13 @@ Les modèles sont maintenus dans un dépôt séparé : [vignesh07/openclaw-forma
 
 ## Mises en garde importantes
 
-- Ce sont des **modèles**, et non l'implémentation TypeScript complète. Une dérive entre le modèle et le code est possible.
+- Il s'agit de **modèles**, et non de l'implémentation TypeScript complète. Une dérive entre le modèle et le code est possible.
 - Les résultats sont limités par l'espace d'états exploré par TLC ; « vert » n'implique pas la sécurité au-delà des hypothèses et limites modélisées.
-- Certaines affirmations reposent sur des hypothèses environnementales explicites (par exemple, déploiement correct, entrées de configuration correctes).
+- Certaines revendications reposent sur des hypothèses environnementales explicites (par exemple, déploiement correct, entrées de configuration correctes).
 
 ## Reproduction des résultats
 
-Aujourd'hui, les résultats sont reproduits en clonant le dépôt de modèles localement et en exécutant TLC (voir ci-dessous). Une future itération pourrait offrir :
+Aujourd'hui, les résultats sont reproduits en clonant le dépôt des modèles localement et en exécutant TLC (voir ci-dessous). Une future itération pourrait offrir :
 
 - Des modèles exécutés par CI avec des artefacts publics (traces de contre-exemples, journaux d'exécution)
 - un workflow hébergé « exécuter ce modèle » pour de petites vérifications bornées
@@ -50,9 +50,9 @@ cd openclaw-formal-models
 make <target>
 ```
 
-### Exposition de Gateway et mauvaise configuration de la passerelle ouverte
+### Exposition du Gateway et mauvaise configuration de la passerelle ouverte
 
-**Affirmation :** une liaison au-delà de boucle locale sans authentification peut rendre une compromission à distance possible / augmenter l'exposition ; le jeton/mot de passe bloque les attaquants non authentifiés (selon les hypothèses du modèle).
+**Revendication :** la liaison au-delà du bouclage sans authentification peut rendre la compromission à distance possible / augmenter l'exposition ; le jeton/mot de passe bloque les attaquants non authentifiés (selon les hypothèses du modèle).
 
 - Exécutions vertes :
   - `make gateway-exposure-v2`
@@ -62,79 +62,79 @@ make <target>
 
 Voir aussi : `docs/gateway-exposure-matrix.md` dans le dépôt des modèles.
 
-### Pipeline Nodes.run (capacité à plus haut risque)
+### Pipeline Nodes.run (capacité la plus risquée)
 
-**Revendication :** `nodes.run` nécessite (a) une liste blanche de commandes de nœud plus des commandes déclarées et (b) une approbation en direct lorsque configuré ; les approbations sont tokenisées pour empêcher la relecture (dans le modèle).
+**Claim :** `nodes.run` nécessite (a) une liste blanche de commandes de nœud plus des commandes déclarées et (b) une approbation en direct lorsqu'il est configuré ; les approbations sont tokenisées pour empêcher la réexécution (dans le modèle).
 
-- Exécutions vertes :
+- Exécutions réussies :
   - `make nodes-pipeline`
   - `make approvals-token`
 - Rouge (attendu) :
   - `make nodes-pipeline-negative`
   - `make approvals-token-negative`
 
-### Magasin d'appairage (filtrage DM)
+### Magasin de couplage (blocage DM)
 
-**Revendication :** les demandes d'appairage respectent le TTL et les limites de demandes en attente.
+**Claim :** les demandes de couplage respectent le TTL et les limites de demandes en attente.
 
-- Exécutions vertes :
+- Exécutions réussies :
   - `make pairing`
   - `make pairing-cap`
 - Rouge (attendu) :
   - `make pairing-negative`
   - `make pairing-cap-negative`
 
-### Filtrage d'entrée (mentions + contournement de commande de contrôle)
+### Blocage d'entrée (mentions + contournement des commandes de contrôle)
 
-**Revendication :** dans les contextes de groupe nécessitant une mention, une « commande de contrôle » non autorisée ne peut pas contourner le filtrage par mention.
+**Claim :** dans les contextes de groupe nécessitant une mention, une « commande de contrôle » non autorisée ne peut pas contourner le blocage par mention.
 
-- Vert :
+- Réussi :
   - `make ingress-gating`
 - Rouge (attendu) :
   - `make ingress-gating-negative`
 
 ### Isolement de routage/clé de session
 
-**Revendication :** les DMs de pairs distincts ne fusionnent pas dans la même session sauf s'ils sont explicitement liés/configurés.
+**Claim :** les DMs provenant de pairs distincts ne fusionnent pas dans la même session sauf s'ils sont explicitement liés/configurés.
 
-- Vert :
+- Réussi :
   - `make routing-isolation`
 - Rouge (attendu) :
   - `make routing-isolation-negative`
 
-## v1++ : modèles bornés supplémentaires (concurrence, nouvelles tentatives, correction des traces)
+## v1++ : modèles bornés supplémentaires (concurrence, nouvelles tentatives, correction de trace)
 
-Il s'agit de modèles de suite qui ressèrent la fidélité autour des modes de défaillance réels (mises à jour non atomiques, nouvelles tentatives et diffusion des messages).
+Il s'agit de modèles de suivi qui resserrent la fidélité autour des modes de défaillance réels (mises à jour non atomiques, nouvelles tentatives et diffusion de messages).
 
-### Magasin d'appairage concurrence / idempotence
+### Concurrence du magasin de couplage / idempotence
 
-**Revendication :** un magasin d'appairage doit appliquer `MaxPending` et l'idempotence même sous entrelacement (c'est-à-dire que « vérifier puis écrire » doit être atomique / verrouillé ; l'actualisation ne doit pas créer de doublons).
+**Claim :** un magasin de couplage doit appliquer `MaxPending` et l'idempotence même sous les entrelacements (c'est-à-dire que « vérifier puis écrire » doit être atomique/verrouillé ; l'actualisation ne doit pas créer de doublons).
 
 Ce que cela signifie :
 
-- Sous des demandes simultanées, vous ne pouvez pas dépasser `MaxPending` pour un channel.
-- Les demandes/actualisations répétées pour le même `(channel, sender)` ne doivent pas créer de lignes en double en attente en direct.
+- Sous des requêtes simultanées, vous ne pouvez pas dépasser `MaxPending` pour un channel.
+- Les demandes/actualisations répétées pour le même `(channel, sender)` ne doivent pas créer de lignes en attente en double.
 
-- Exécutions vertes :
-  - `make pairing-race` (vérification de capacité atomique/verrouillée)
+- Exécutions réussies :
+  - `make pairing-race` (vérification de limite atomique/verrouillée)
   - `make pairing-idempotency`
   - `make pairing-refresh`
   - `make pairing-refresh-race`
 - Rouge (attendu) :
-  - `make pairing-race-negative` (condition de course de capacité begin/commit non atomique)
+  - `make pairing-race-negative` (course de limites begin/commit non atomique)
   - `make pairing-idempotency-negative`
   - `make pairing-refresh-negative`
   - `make pairing-refresh-race-negative`
 
-### Corrélation de trace d'entrée / idempotence
+### Corrélation de traces d'entrée / idempotence
 
-**Revendication :** l'ingestion doit préserver la corrélation des traces lors de la répartition et être idempotente lors des nouvelles tentatives du provider.
+**Affirmation :** l'ingestion doit préserver la corrélation des traces lors de l'éclatement (fan-out) et être idempotente face aux nouvelles tentatives du provider.
 
-Ce que cela signifie :
+Signification :
 
-- Lorsqu'un événement externe devient plusieurs messages internes, chaque partie conserve la même identité de trace/événement.
+- Lorsqu'un événement externe devient plusieurs messages internes, chaque partie conserve la même identité de trace/d'événement.
 - Les nouvelles tentatives n'entraînent pas de double traitement.
-- Si les ID d'événement du provider sont manquants, la déduplication revient à une clé sécurisée (par exemple, ID de trace) pour éviter de supprimer des événements distincts.
+- Si les ID d'événements du provider sont manquants, la déduplication revient à une clé sûre (par exemple, ID de trace) pour éviter de supprimer des événements distincts.
 
 - Vert :
   - `make ingress-trace`
@@ -147,14 +147,14 @@ Ce que cela signifie :
   - `make ingress-idempotency-negative`
   - `make ingress-dedupe-fallback-negative`
 
-### Priorité dmScope de routage + identityLinks
+### Routage de la priorité dmScope + identityLinks
 
-**Revendication :** le routage doit garder les sessions DM isolées par défaut, et ne regrouper les sessions que lorsqu'elles sont explicitement configurées (priorité de channel + liens d'identité).
+**Affirmation :** le routage doit garder les sessions DM isolées par défaut, et ne fusionner les sessions que lorsqu'elles sont explicitement configurées (priorité du channel + identity links).
 
-Ce que cela signifie :
+Signification :
 
-- Les remplacements dmScope spécifiques au canal doivent primer sur les valeurs par défaut globales.
-- identityLinks ne doit regrouper que dans les groupes liés explicitement, et non entre pairs non liés.
+- Les remplacements spécifiques au channel de dmScope doivent primer sur les valeurs par défaut globales.
+- Les identityLinks ne doivent fusionner qu'au sein de groupes liés explicitement, et non entre pairs non liés.
 
 - Vert :
   - `make routing-precedence`
@@ -163,6 +163,6 @@ Ce que cela signifie :
   - `make routing-precedence-negative`
   - `make routing-identitylinks-negative`
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />

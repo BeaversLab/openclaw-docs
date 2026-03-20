@@ -1,8 +1,8 @@
 ---
-summary: "Tiempo de ejecución del agente (pi-mono integrado), contrato del espacio de trabajo e inicio de sesión"
+summary: "Tiempo de ejecución del agente (pi-mono incrustado), contrato del espacio de trabajo e inicio de sesión"
 read_when:
-  - Changing agent runtime, workspace bootstrap, or session behavior
-title: "Tiempo de ejecución del agente"
+  - Cambiar el tiempo de ejecución del agente, el inicio del espacio de trabajo o el comportamiento de la sesión
+title: "Agent Runtime"
 ---
 
 # Tiempo de ejecución del agente 🤖
@@ -11,24 +11,24 @@ OpenClaw ejecuta un único tiempo de ejecución de agente integrado derivado de 
 
 ## Espacio de trabajo (requerido)
 
-OpenClaw utiliza un directorio de espacio de trabajo de agente único (`agents.defaults.workspace`) como el **único** directorio de trabajo (`cwd`) del agente para herramientas y contexto.
+OpenClaw utiliza un único directorio de espacio de trabajo del agente (`agents.defaults.workspace`) como el directorio de trabajo **único** (`cwd`) para herramientas y contexto.
 
-Recomendado: utilice `openclaw setup` para crear `~/.openclaw/openclaw.json` si falta e inicialice los archivos del espacio de trabajo.
+Recomendado: usar `openclaw setup` para crear `~/.openclaw/openclaw.json` si falta e inicializar los archivos del espacio de trabajo.
 
-Guía completa del diseño del espacio de trabajo + copia de seguridad: [Espacio de trabajo del agente](/es/concepts/agent-workspace)
+Diseño completo del espacio de trabajo + guía de copia de seguridad: [Agent workspace](/es/concepts/agent-workspace)
 
-Si `agents.defaults.sandbox` está habilitado, las sesiones que no son principales pueden anular esto con
+Si `agents.defaults.sandbox` está habilitado, las sesiones que no sean principales pueden anular esto con
 espacios de trabajo por sesión bajo `agents.defaults.sandbox.workspaceRoot` (ver
-[Configuración de la pasarela](/es/gateway/configuration)).
+[Gateway configuration](/es/gateway/configuration)).
 
 ## Archivos de inicio (inyectados)
 
 Dentro de `agents.defaults.workspace`, OpenClaw espera estos archivos editables por el usuario:
 
-- `AGENTS.md` — instrucciones de operación + "memoria"
+- `AGENTS.md` — instrucciones de funcionamiento + "memoria"
 - `SOUL.md` — persona, límites, tono
-- `TOOLS.md` — notas de herramientas mantenidas por el usuario (p. ej., `imsg`, `sag`, convenciones)
-- `BOOTSTRAP.md` — ritual de primera ejecución única (eliminado después de completarse)
+- `TOOLS.md` — notas sobre herramientas mantenidas por el usuario (p. ej., `imsg`, `sag`, convenciones)
+- `BOOTSTRAP.md` — ritual de primer uso único (eliminado después de completarse)
 - `IDENTITY.md` — nombre/vibración/emoji del agente
 - `USER.md` — perfil de usuario + dirección preferida
 
@@ -38,7 +38,7 @@ Se omiten los archivos en blanco. Los archivos grandes se recortan y truncan con
 
 Si falta un archivo, OpenClaw inyecta una sola línea de marcador de "archivo faltante" (e `openclaw setup` creará una plantilla predeterminada segura).
 
-`BOOTSTRAP.md` solo se crea para un **espacio de trabajo totalmente nuevo** (no hay otros archivos de inicio presentes). Si lo elimina después de completar el ritual, no debería volver a crearse en reinicios posteriores.
+`BOOTSTRAP.md` solo se crea para un **espacio de trabajo totalmente nuevo** (sin otros archivos de inicio presentes). Si lo elimina después de completar el ritual, no debería recrearse en reinicios posteriores.
 
 Para deshabilitar completamente la creación de archivos de inicio (para espacios de trabajo presembrados), establezca:
 
@@ -48,24 +48,27 @@ Para deshabilitar completamente la creación de archivos de inicio (para espacio
 
 ## Herramientas integradas
 
-Las herramientas principales (read/exec/edit/write y herramientas del sistema relacionadas) siempre están disponibles, sujetas a la política de herramientas. `apply_patch` es opcional y está controlado por `tools.exec.applyPatch`. `TOOLS.md` **no** controla qué herramientas existen; es una guía sobre cómo desea que se usen.
+Las herramientas principales (read/exec/edit/write y herramientas del sistema relacionadas) siempre están disponibles,
+sujetas a la política de herramientas. `apply_patch` es opcional y está restringida por
+`tools.exec.applyPatch`. `TOOLS.md` **no** controla qué herramientas existen; es
+una guía sobre cómo _usted_ quiere que se usen.
 
 ## Habilidades
 
 OpenClaw carga habilidades desde tres ubicaciones (el espacio de trabajo prevalece en caso de conflicto de nombres):
 
 - Incluidas (enviadas con la instalación)
-- Administradas locales: `~/.openclaw/skills`
+- Gestionada/local: `~/.openclaw/skills`
 - Espacio de trabajo: `<workspace>/skills`
 
-Las habilidades pueden estar controladas por configuración/entorno (consulte `skills` en [Configuración de Gateway](/es/gateway/configuration)).
+Las habilidades pueden estar limitadas por config/env (ver `skills` en [Gateway configuration](/es/gateway/configuration)).
 
 ## integración pi-mono
 
 OpenClaw reutiliza partes del código base de pi-mono (modelos/herramientas), pero **la gestión de sesiones, el descubrimiento y el cableado de herramientas son propiedad de OpenClaw**.
 
 - No hay tiempo de ejecución del agente pi-coding.
-- No se consultan las configuraciones `~/.pi/agent` ni `<workspace>/.pi`.
+- No se consultan las configuraciones de `~/.pi/agent` ni `<workspace>/.pi`.
 
 ## Sesiones
 
@@ -73,36 +76,36 @@ Las transcripciones de sesión se almacenan como JSONL en:
 
 - `~/.openclaw/agents/<agentId>/sessions/<SessionId>.jsonl`
 
-El ID de sesión es estable y lo elige OpenClaw.
+El ID de sesión es estable y es elegido por OpenClaw.
 Las carpetas de sesión heredadas de Pi/Tau **no** se leen.
 
 ## Direccionamiento durante la transmisión
 
 Cuando el modo de cola es `steer`, los mensajes entrantes se inyectan en la ejecución actual.
-La cola se verifica **después de cada llamada a herramienta**; si hay un mensaje en cola,
-las llamadas a herramientas restantes del mensaje actual del asistente se omiten (resultados de
-herramienta de error con "Omitido debido a un mensaje en cola del usuario"), y luego el mensaje
-en cola del usuario se inyecta antes de la siguiente respuesta del asistente.
+La cola se verifica **después de cada llamada de herramienta**; si hay un mensaje en cola,
+se omiten las llamadas de herramientas restantes del mensaje del asistente actual (resultados de
+herramienta de error con "Skipped due to queued user message."), y luego el mensaje de usuario
+en cola se inyecta antes de la siguiente respuesta del asistente.
 
 Cuando el modo de cola es `followup` o `collect`, los mensajes entrantes se retienen hasta que
-termina el turno actual, luego comienza un nuevo turno de agente con las cargas útiles en cola. Consulte
-[Cola](/es/concepts/queue) para conocer el comportamiento del modo + antirrebote/limite.
+termina el turno actual, luego comienza un nuevo turno de agente con las cargas en cola. Véase
+[Queue](/es/concepts/queue) para el comportamiento del modo + debounce/cap.
 
-Block streaming envía bloques completados del asistente tan pronto como terminan; está
-**desactivado por defecto** (`agents.defaults.blockStreamingDefault: "off"`).
-Ajuste el límite mediante `agents.defaults.blockStreamingBreak` (`text_end` frente a `message_end`; por defecto es text_end).
-Controle la fragmentación de bloques suaves con `agents.defaults.blockStreamingChunk` (por defecto es
-800–1200 caracteres; prefiere saltos de párrafo, luego saltos de línea; las oraciones al final).
+La transmisión en bloques envía bloques completados del asistente tan pronto como terminan; está
+**desactivada por defecto** (`agents.defaults.blockStreamingDefault: "off"`).
+Ajuste el límite mediante `agents.defaults.blockStreamingBreak` (`text_end` vs `message_end`; por defecto es text_end).
+Controle la fragmentación de bloques suaves con `agents.defaults.blockStreamingChunk` (por defecto
+800–1200 caracteres; prefiere saltos de párrafo, luego nuevas líneas; oraciones al final).
 Fusione los fragmentos transmitidos con `agents.defaults.blockStreamingCoalesce` para reducir
-el spam de una sola línea (fusión basada en inactividad antes del envío). Los canales que no sean de Telegram requieren
-un `*.blockStreaming: true` explícito para habilitar las respuestas en bloque.
-Los resúmenes detallados de herramientas se emiten al inicio de la herramienta (sin antirrebote); la interfaz de Control
-transmite el resultado de la herramienta a través de eventos del agente cuando está disponible.
+el spam de una sola línea (fusión basada en inactividad antes del envío). Los canales que no sean Telegram requieren
+`*.blockStreaming: true` explícito para habilitar las respuestas en bloque.
+Los resúmenes detallados de herramientas se emiten al inicio de la herramienta (sin debounce); la interfaz de Control
+transmite la salida de la herramienta a través de eventos del agente cuando están disponibles.
 Más detalles: [Streaming + chunking](/es/concepts/streaming).
 
 ## Model refs
 
-Las referencias de modelo en la configuración (por ejemplo `agents.defaults.model` y `agents.defaults.models`) se analizan dividiendo en el **primer** `/`.
+Las referencias de modelo en la configuración (por ejemplo `agents.defaults.model` y `agents.defaults.models`) se analizan dividiendo por el **primer** `/`.
 
 - Use `provider/model` al configurar modelos.
 - Si el ID del modelo mismo contiene `/` (estilo OpenRouter), incluya el prefijo del proveedor (ejemplo: `openrouter/moonshotai/kimi-k2`).
@@ -113,12 +116,12 @@ Las referencias de modelo en la configuración (por ejemplo `agents.defaults.mod
 Como mínimo, configure:
 
 - `agents.defaults.workspace`
-- `channels.whatsapp.allowFrom` (altamente recomendado)
+- `channels.whatsapp.allowFrom` (muy recomendado)
 
 ---
 
-_Siguiente: [Group Chats](/es/channels/group-messages)_ 🦞
+_Siguiente: [Chats grupales](/es/channels/group-messages)_ 🦞
 
-import es from "/components/footer/es.mdx";
+import en from "/components/footer/en.mdx";
 
-<es />
+<en />

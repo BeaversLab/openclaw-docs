@@ -1,16 +1,16 @@
 ---
-summary: "Référence CLI pour `openclaw system` (événements système, battement de cœur, présence)"
+summary: "Référence CLI pour `openclaw system` (événements système, heartbeat, présence)"
 read_when:
-  - You want to enqueue a system event without creating a cron job
-  - You need to enable or disable heartbeats
-  - You want to inspect system presence entries
+  - Vous souhaitez mettre en file d'attente un événement système sans créer de tâche cron
+  - Vous devez activer ou désactiver les heartbeats
+  - Vous souhaitez inspecter les entrées de présence système
 title: "system"
 ---
 
 # `openclaw system`
 
-Aides de niveau système pour la Gateway : mettre en file d'attente des événements système, contrôler les battements de cœur,
-et afficher la présence.
+Helpers de niveau système pour le Gateway : mettre en file d'attente des événements système, contrôler les heartbeats,
+et voir la présence.
 
 ## Commandes courantes
 
@@ -23,9 +23,9 @@ openclaw system presence
 
 ## `system event`
 
-Met en file d'attente un événement système sur la session **principale**. Le prochain battement de cœur l'injectera
-en tant que ligne `System:` dans l'invite. Utilisez `--mode now` pour déclencher le battement de cœur
-immédiatement ; `next-heartbeat` attend le prochain cycle programmé.
+Met en file d'attente un événement système sur la session **main**. Le prochain heartbeat l'injectera
+comme une ligne `System:` dans l'invite. Utilisez `--mode now` pour déclencher le heartbeat
+immédiatement ; `next-heartbeat` attend le prochain tick programmé.
 
 Indicateurs :
 
@@ -35,11 +35,11 @@ Indicateurs :
 
 ## `system heartbeat last|enable|disable`
 
-Contrôles du battement de cœur :
+Contrôles de heartbeat :
 
-- `last` : afficher le dernier événement de battement de cœur.
-- `enable` : réactiver les battements de cœur (à utiliser s'ils ont été désactivés).
-- `disable` : suspendre les battements de cœur.
+- `last` : afficher le dernier événement de heartbeat.
+- `enable` : réactiver les heartbeats (à utiliser s'ils ont été désactivés).
+- `disable` : mettre en pause les heartbeats.
 
 Indicateurs :
 
@@ -47,7 +47,7 @@ Indicateurs :
 
 ## `system presence`
 
-Lister les entrées de présence système actuelles que la Gateway connaît (nœuds,
+Lister les entrées de présence système actuelles que le Gateway connaît (nœuds,
 instances et lignes d'état similaires).
 
 Indicateurs :
@@ -56,9 +56,9 @@ Indicateurs :
 
 ## Notes
 
-- Nécessite une Gateway en cours d'exécution accessible par votre configuration actuelle (locale ou distante).
-- Les événements système sont éphémères et ne sont pas persistants après les redémarrages.
+- Nécessite un Gateway en cours d'exécution accessible via votre configuration actuelle (locale ou distante).
+- Les événements système sont éphémères et ne sont pas persistants après redémarrage.
 
-import fr from "/components/footer/fr.mdx";
+import en from "/components/footer/en.mdx";
 
-<fr />
+<en />
