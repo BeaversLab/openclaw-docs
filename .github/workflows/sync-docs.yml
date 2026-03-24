@@ -20,18 +20,17 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Get latest tag and check against npm
+      - name: Get latest tag and check against recorded version
         run: |
           LATEST_TAG=$(git ls-remote --tags https://github.com/openclaw/openclaw.git | awk '{print $2}' | grep '^refs/tags/v[0-9]' | sed 's|refs/tags/||' | grep -v '\^{}' | sort -V | tail -1)
-          TAG_VER="${LATEST_TAG#v}"
-          NPM_VER=$(npm view openclaw version --userconfig "$(mktemp)" 2>/dev/null || echo "")
-          if [[ -z "$LATEST_TAG" || -z "$NPM_VER" || "$TAG_VER" != "$NPM_VER" ]]; then
-            echo "Skipping sync: latest tag=$LATEST_TAG (ver=$TAG_VER), npm latest=$NPM_VER"
-            echo "SHOULD_SYNC=false" >> $GITHUB_ENV
-          else
+          CURRENT_TAG=$(grep "var TAG =" version.js | sed 's/.*var TAG = "\(.*\)";/\1/')
+          if [[ -n "$LATEST_TAG" && "$LATEST_TAG" != "$CURRENT_TAG" ]]; then
             echo "OPENCLAW_TAG=$LATEST_TAG" >> $GITHUB_ENV
             echo "SYNC_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
             echo "SHOULD_SYNC=true" >> $GITHUB_ENV
+          else
+            echo "Skipping sync: latest tag=$LATEST_TAG, recorded tag=$CURRENT_TAG"
+            echo "SHOULD_SYNC=false" >> $GITHUB_ENV
           fi
 
       - name: Clone openclaw/openclaw at tag
