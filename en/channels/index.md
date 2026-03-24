@@ -26,11 +26,12 @@ Text is supported everywhere; media and reactions vary by channel.
 - [Nextcloud Talk](/en/channels/nextcloud-talk) — Self-hosted chat via Nextcloud Talk (plugin, installed separately).
 - [Nostr](/en/channels/nostr) — Decentralized DMs via NIP-04 (plugin, installed separately).
 - [Signal](/en/channels/signal) — signal-cli; privacy-focused.
-- [Synology Chat](/en/channels/synology-chat) — Synology NAS Chat via outgoing+incoming webhooks (plugin, installed separately).
 - [Slack](/en/channels/slack) — Bolt SDK; workspace apps.
+- [Synology Chat](/en/channels/synology-chat) — Synology NAS Chat via outgoing+incoming webhooks (plugin, installed separately).
 - [Telegram](/en/channels/telegram) — Bot API via grammY; supports groups.
 - [Tlon](/en/channels/tlon) — Urbit-based messenger (plugin, installed separately).
 - [Twitch](/en/channels/twitch) — Twitch chat via IRC connection (plugin, installed separately).
+- [Voice Call](/en/plugins/voice-call) — Telephony via Plivo or Twilio (plugin, installed separately).
 - [WebChat](/en/web/webchat) — Gateway WebChat UI over WebSocket.
 - [WhatsApp](/en/channels/whatsapp) — Most popular; uses Baileys and requires QR pairing.
 - [Zalo](/en/channels/zalo) — Zalo Bot API; Vietnam's popular messenger (plugin, installed separately).

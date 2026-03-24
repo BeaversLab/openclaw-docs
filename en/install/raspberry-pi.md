@@ -37,7 +37,11 @@ Run a persistent, always-on OpenClaw Gateway on a Raspberry Pi. Since the Pi is 
 
   </Step>
 
-<Step title="Connect via SSH">```bash ssh user@gateway-host ```</Step>
+  <Step title="Connect via SSH">
+    ```bash
+    ssh user@gateway-host
+    ```
+  </Step>
 
   <Step title="Update the system">
     ```bash
@@ -50,10 +54,13 @@ Run a persistent, always-on OpenClaw Gateway on a Raspberry Pi. Since the Pi is 
 
   </Step>
 
-<Step title="Install Node.js 24">
-  ```bash curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash - sudo apt install -y
-  nodejs node --version ```
-</Step>
+  <Step title="Install Node.js 24">
+    ```bash
+    curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+    sudo apt install -y nodejs
+    node --version
+    ```
+  </Step>
 
   <Step title="Add swap (important for 2 GB or less)">
     ```bash
@@ -70,7 +77,11 @@ Run a persistent, always-on OpenClaw Gateway on a Raspberry Pi. Since the Pi is 
 
   </Step>
 
-<Step title="Install OpenClaw">```bash curl -fsSL https://openclaw.ai/install.sh | bash ```</Step>
+  <Step title="Install OpenClaw">
+    ```bash
+    curl -fsSL https://openclaw.ai/install.sh | bash
+    ```
+  </Step>
 
   <Step title="Run onboarding">
     ```bash
@@ -81,9 +92,13 @@ Run a persistent, always-on OpenClaw Gateway on a Raspberry Pi. Since the Pi is 
 
   </Step>
 
-<Step title="Verify">
-  ```bash openclaw status sudo systemctl status openclaw journalctl -u openclaw -f ```
-</Step>
+  <Step title="Verify">
+    ```bash
+    openclaw status
+    sudo systemctl status openclaw
+    journalctl -u openclaw -f
+    ```
+  </Step>
 
   <Step title="Access the Control UI">
     On your computer, get a dashboard URL from the Pi:

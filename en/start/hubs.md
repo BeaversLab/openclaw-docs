@@ -7,7 +7,9 @@ title: "Docs Hubs"
 
 # Docs hubs
 
-<Note>If you are new to OpenClaw, start with [Getting Started](/en/start/getting-started).</Note>
+<Note>
+If you are new to OpenClaw, start with [Getting Started](/en/start/getting-started).
+</Note>
 
 Use these hubs to discover every page, including deep dives and reference docs that don’t appear in the left nav.
 
@@ -162,9 +164,9 @@ Use these hubs to discover every page, including deep dives and reference docs t
 ## Extensions + plugins
 
 - [Plugins overview](/en/tools/plugin)
-- [Building extensions](/en/plugins/building-extensions)
+- [Building plugins](/en/plugins/building-plugins)
 - [Plugin manifest](/en/plugins/manifest)
-- [Agent tools](/en/plugins/agent-tools)
+- [Agent tools](/en/plugins/building-plugins#registering-agent-tools)
 - [Plugin bundles](/en/plugins/bundles)
 - [Community plugins](/en/plugins/community)
 - [Capability cookbook](/en/tools/capability-cookbook)

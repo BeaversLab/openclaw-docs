@@ -303,6 +303,20 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
         },
       },
     },
+    list: [
+      {
+        id: "main",
+        default: true,
+        thinkingDefault: "high", // per-agent thinking override
+        reasoningDefault: "on", // per-agent reasoning visibility
+        fastModeDefault: false, // per-agent fast mode
+      },
+      {
+        id: "quick",
+        fastModeDefault: true, // this agent always runs fast
+        thinkingDefault: "off",
+      },
+    ],
   },
 
   tools: {
@@ -530,9 +544,9 @@ Only enable direct mutable name/email/nick matching with each channel's `dangero
 ### Anthropic setup-token + API key, MiniMax fallback
 
 <Warning>
-  Anthropic setup-token usage outside Claude Code has been restricted for some users in the past.
-  Treat this as user-choice risk and verify current Anthropic terms before depending on subscription
-  auth.
+Anthropic setup-token usage outside Claude Code has been restricted for some
+users in the past. Treat this as user-choice risk and verify current Anthropic
+terms before depending on subscription auth.
 </Warning>
 
 ```json5

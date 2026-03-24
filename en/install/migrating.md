@@ -41,10 +41,10 @@ Custom profiles use `~/.openclaw-<profile>/` or a path set via `OPENCLAW_STATE_D
 
   </Step>
 
-<Step title="Install OpenClaw on the new machine">
-  [Install](/en/install) the CLI (and Node if needed) on the new machine. It is fine if onboarding
-  creates a fresh `~/.openclaw/` -- you will overwrite it next.
-</Step>
+  <Step title="Install OpenClaw on the new machine">
+    [Install](/en/install) the CLI (and Node if needed) on the new machine.
+    It is fine if onboarding creates a fresh `~/.openclaw/` -- you will overwrite it next.
+  </Step>
 
   <Step title="Copy state directory and workspace">
     Transfer the archive via `scp`, `rsync -a`, or an external drive, then extract:
@@ -79,21 +79,20 @@ Custom profiles use `~/.openclaw-<profile>/` or a path set via `OPENCLAW_STATE_D
     Launch the gateway with the **same** profile or state-dir you migrated, then rerun `openclaw doctor`.
   </Accordion>
 
-<Accordion title="Copying only openclaw.json">
-  The config file alone is not enough. Credentials live under `credentials/`, and agent state lives
-  under `agents/`. Always migrate the **entire** state directory.
-</Accordion>
+  <Accordion title="Copying only openclaw.json">
+    The config file alone is not enough. Credentials live under `credentials/`, and agent
+    state lives under `agents/`. Always migrate the **entire** state directory.
+  </Accordion>
 
-<Accordion title="Permissions and ownership">
-  If you copied as root or switched users, the gateway may fail to read credentials. Ensure the
-  state directory and workspace are owned by the user running the gateway.
-</Accordion>
+  <Accordion title="Permissions and ownership">
+    If you copied as root or switched users, the gateway may fail to read credentials.
+    Ensure the state directory and workspace are owned by the user running the gateway.
+  </Accordion>
 
-<Accordion title="Remote mode">
-  If your UI points at a **remote** gateway, the remote host owns sessions and workspace. Migrate
-  the gateway host itself, not your local laptop. See
-  [FAQ](/en/help/faq#where-does-openclaw-store-its-data).
-</Accordion>
+  <Accordion title="Remote mode">
+    If your UI points at a **remote** gateway, the remote host owns sessions and workspace.
+    Migrate the gateway host itself, not your local laptop. See [FAQ](/en/help/faq#where-does-openclaw-store-its-data).
+  </Accordion>
 
   <Accordion title="Secrets in backups">
     The state directory contains API keys, OAuth tokens, and channel credentials.

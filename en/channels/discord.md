@@ -92,7 +92,7 @@ You will need to create a new application with a bot, add the bot to your server
 
   </Step>
 
-  <Step title="Step 0: Set your bot token securely (do not send it in chat)">
+  <Step title="Set your bot token securely (do not send it in chat)">
     Your Discord bot token is a secret (like a password). Set it on the machine running OpenClaw before messaging your agent.
 
 ```bash
@@ -173,11 +173,8 @@ openclaw pairing approve discord <CODE>
 </Steps>
 
 <Note>
-  Token resolution is account-aware. Config token values win over env fallback. `DISCORD_BOT_TOKEN`
-  is only used for the default account. For advanced outbound calls (message tool/channel actions),
-  an explicit per-call `token` is used for that call. This applies to send and read/probe-style
-  actions (for example read/search/fetch/thread/pins/permissions). Account policy/retry settings
-  still come from the selected account in the active runtime snapshot.
+Token resolution is account-aware. Config token values win over env fallback. `DISCORD_BOT_TOKEN` is only used for the default account.
+For advanced outbound calls (message tool/channel actions), an explicit per-call `token` is used for that call. This applies to send and read/probe-style actions (for example read/search/fetch/thread/pins/permissions). Account policy/retry settings still come from the selected account in the active runtime snapshot.
 </Note>
 
 ## Recommended: Set up a guild workspace
@@ -585,6 +582,7 @@ Default slash command settings:
     OpenClaw can stream draft replies by sending a temporary message and editing it as text arrives.
 
     - `channels.discord.streaming` controls preview streaming (`off` | `partial` | `block` | `progress`, default: `off`).
+    - Default stays `off` because Discord preview edits can hit rate limits quickly, especially when multiple bots or gateways share the same account or guild traffic.
     - `progress` is accepted for cross-channel consistency and maps to `partial` on Discord.
     - `channels.discord.streamMode` is a legacy alias and is auto-migrated.
     - `partial` edits a single preview message as tokens arrive.

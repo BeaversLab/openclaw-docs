@@ -18,9 +18,10 @@ and a working chat session.
 - **An API key** from a model provider (Anthropic, OpenAI, Google, etc.) — onboarding will prompt you
 
 <Tip>
-  Check your Node version with `node --version`. **Windows users:** both native Windows and WSL2 are
-  supported. WSL2 is more stable and recommended for the full experience. See
-  [Windows](/en/platforms/windows). Need to install Node? See [Node setup](/en/install/node).
+Check your Node version with `node --version`.
+**Windows users:** both native Windows and WSL2 are supported. WSL2 is more
+stable and recommended for the full experience. See [Windows](/en/platforms/windows).
+Need to install Node? See [Node setup](/en/install/node).
 </Tip>
 
 ## Quick setup
@@ -112,7 +113,6 @@ and a working chat session.
 - `OPENCLAW_CONFIG_PATH` — override the config file path
 
 Full reference: [Environment variables](/en/help/environment).
-
 </Accordion>
 
 import en from "/components/footer/en.mdx";

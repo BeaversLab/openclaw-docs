@@ -122,7 +122,11 @@ Tips:
 | Search with depth, topic, AI answers | `tavily_search`  |
 | Extract content from specific URLs   | `tavily_extract` |
 
-See [Web tools](/en/tools/web) for the full web tool setup and provider comparison.
+## Related
+
+- [Web Search overview](/en/tools/web) -- all providers and auto-detection
+- [Firecrawl](/en/tools/firecrawl) -- search + scraping with content extraction
+- [Exa Search](/en/tools/exa-search) -- neural search with content extraction
 
 import en from "/components/footer/en.mdx";
 

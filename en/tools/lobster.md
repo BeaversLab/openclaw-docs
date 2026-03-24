@@ -330,7 +330,7 @@ OpenProse pairs well with Lobster: use `/prose` to orchestrate multi-agent prep,
 ## Learn more
 
 - [Plugins](/en/tools/plugin)
-- [Plugin tool authoring](/en/plugins/agent-tools)
+- [Plugin tool authoring](/en/plugins/building-plugins#registering-agent-tools)
 
 ## Case study: community workflows
 

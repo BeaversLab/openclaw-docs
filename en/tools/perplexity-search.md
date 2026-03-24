@@ -91,7 +91,7 @@ That field also accepts SecretRef objects.
 
 **Via environment:** set `PERPLEXITY_API_KEY` or `OPENROUTER_API_KEY`
 in the Gateway process environment. For a gateway install, put it in
-`~/.openclaw/.env` (or your service environment). See [Env vars](/en/help/faq#how-does-openclaw-load-environment-variables).
+`~/.openclaw/.env` (or your service environment). See [Env vars](/en/help/faq#env-vars-and-env-loading).
 
 If `provider: "perplexity"` is configured and the Perplexity key SecretRef is unresolved with no env fallback, startup/reload fails fast.
 
@@ -170,8 +170,12 @@ await web_search({
 - OpenRouter or explicit `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` switches Perplexity back to Sonar chat completions for compatibility
 - Results are cached for 15 minutes by default (configurable via `cacheTtlMinutes`)
 
-See [Web tools](/en/tools/web) for the full web_search configuration.
-See [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) for more details.
+## Related
+
+- [Web Search overview](/en/tools/web) -- all providers and auto-detection
+- [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) -- official Perplexity documentation
+- [Brave Search](/en/tools/brave-search) -- structured results with country/language filters
+- [Exa Search](/en/tools/exa-search) -- neural search with content extraction
 
 import en from "/components/footer/en.mdx";
 

@@ -251,7 +251,7 @@ When validation fails:
 
     Build the image first: `scripts/sandbox-setup.sh`
 
-    See [Sandboxing](/en/gateway/sandboxing) for the full guide and [full reference](/en/gateway/configuration-reference#agents-defaults-sandbox) for all options.
+    See [Sandboxing](/en/gateway/sandboxing) for the full guide and [full reference](/en/gateway/configuration-reference#agentsdefaultssandbox) for all options.
 
   </Accordion>
 

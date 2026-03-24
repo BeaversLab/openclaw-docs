@@ -115,7 +115,7 @@ Full troubleshooting: [/channels/signal#troubleshooting](/en/channels/signal#tro
 | DMs do not process                  | `openclaw pairing list matrix`               | Approve sender or adjust DM policy.             |
 | Encrypted rooms fail                | Verify crypto module and encryption settings | Enable encryption support and rejoin/sync room. |
 
-Full troubleshooting: [/channels/matrix#troubleshooting](/en/channels/matrix#troubleshooting)
+Full setup and config: [Matrix](/en/channels/matrix)
 
 import en from "/components/footer/en.mdx";
 

@@ -360,7 +360,7 @@ After configuring multi-agent sandbox and tools:
 - [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- debugging "why is this blocked?"
 - [Elevated Mode](/en/tools/elevated)
 - [Multi-Agent Routing](/en/concepts/multi-agent)
-- [Sandbox Configuration](/en/gateway/configuration-reference#agents-defaults-sandbox)
+- [Sandbox Configuration](/en/gateway/configuration-reference#agentsdefaultssandbox)
 - [Session Management](/en/concepts/session)
 
 import en from "/components/footer/en.mdx";
