@@ -1,30 +1,30 @@
 ---
 summary: "Hugging Face Inference 設定（驗證 + 模型選擇）"
 read_when:
-  - 您想搭配 OpenClaw 使用 Hugging Face Inference
-  - 您需要 HF token 環境變數或 CLI 驗證選項
-title: "Hugging Face (Inference)"
+  - You want to use Hugging Face Inference with OpenClaw
+  - You need the HF token env var or CLI auth choice
+title: "Hugging Face (推論)"
 ---
 
-# Hugging Face (Inference)
+# Hugging Face (推論)
 
-[Hugging Face Inference Providers](https://huggingface.co/docs/inference-providers) 透過單一路由器 API 提供 OpenAI 相容的聊天完成功能。您可以使用一個 token 存取多種模型（DeepSeek、Llama 等）。OpenClaw 使用 **OpenAI 相容端點**（僅限聊天完成）；若需文字轉圖片、嵌入或語音功能，請直接使用 [HF inference clients](https://huggingface.co/docs/api-inference/quicktour)。
+[Hugging Face Inference Providers](https://huggingface.co/docs/inference-providers) 透過單一路由器 API 提供相容 OpenAI 的聊天完成。您可以使用一個權杖存取許多模型（DeepSeek、Llama 等）。OpenClaw 使用 **相容 OpenAI 的端點**（僅限聊天完成）；若需文字轉圖片、嵌入或語音功能，請直接使用 [HF inference clients](https://huggingface.co/docs/api-inference/quicktour)。
 
-- 供應商：`huggingface`
-- 驗證：`HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`（具有 **Make calls to Inference Providers** 權限的精細權限 token）
-- API：OpenAI 相容 (`https://router.huggingface.co/v1`)
-- 計費：單一 HF token；[定價](https://huggingface.co/docs/inference-providers/pricing) 依供應商費率計算，並提供免費層級。
+- 提供者：`huggingface`
+- 驗證：`HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`（具有 **呼叫推論提供者** 權限的細顆粒權杖）
+- API：相容 OpenAI (`https://router.huggingface.co/v1`)
+- 計費：單一 HF 權杖；[價格](https://huggingface.co/docs/inference-providers/pricing) 遵循供應商費率並提供免費層級。
 
 ## 快速開始
 
-1. 在 [Hugging Face → Settings → Tokens](https://huggingface.co/settings/tokens/new?ownUserPermissions=inference.serverless.write&tokenType=fineGrained) 建立一個具有 **Make calls to Inference Providers** 權限的精細權限 token。
-2. 執行上架 (onboarding) 並在供應商下拉式選單中選擇 **Hugging Face**，然後在提示時輸入您的 API 金鑰：
+1. 在 [Hugging Face → Settings → Tokens](https://huggingface.co/settings/tokens/new?ownUserPermissions=inference.serverless.write&tokenType=fineGrained) 建立一個精細權杖，並具備 **Make calls to Inference Providers** 權限。
+2. 執行引導程式並在供應商下拉選單中選擇 **Hugging Face**，然後在提示時輸入您的 API 金鑰：
 
 ```bash
 openclaw onboard --auth-choice huggingface-api-key
 ```
 
-3. 在 **Default Hugging Face model** 下拉式選單中，選擇您想要的模型（當您擁有有效的 token 時，清單會從 Inference API 載入；否則會顯示內建清單）。您的選擇會儲存為預設模型。
+3. 在 **Default Hugging Face model** 下拉選單中，選擇您想要的模型（當您擁有有效權杖時，清單會從 Inference API 載入；否則會顯示內建清單）。您的選擇會儲存為預設模型。
 4. 您也可以稍後在設定中設定或變更預設模型：
 
 ```json5
@@ -46,29 +46,29 @@ openclaw onboard --non-interactive \
   --huggingface-api-key "$HF_TOKEN"
 ```
 
-這會將 `huggingface/deepseek-ai/DeepSeek-R1` 設定為預設模型。
+這將會把 `huggingface/deepseek-ai/DeepSeek-R1` 設定為預設模型。
 
 ## 環境注意事項
 
-如果 Gateway 以背景服務 (daemon) (launchd/systemd) 執行，請確保 `HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`
-可供該程序使用（例如，在 `~/.openclaw/.env` 中或透過
+如果 Gateway 作為守護程序 (launchd/systemd) 運行，請確保 `HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`
+對該程序可用（例如，在 `~/.openclaw/.env` 中或透過
 `env.shellEnv`）。
 
-## 模型探索與上架下拉式選單
+## 模型探索與入門下拉選單
 
-OpenClaw 透過直接呼叫 **Inference endpoint** 來探索模型：
+OpenClaw 透過直接呼叫 **推論端點 (Inference endpoint)** 來探索模型：
 
 ```bash
 GET https://router.huggingface.co/v1/models
 ```
 
-(選用：傳送 `Authorization: Bearer $HUGGINGFACE_HUB_TOKEN` 或 `$HF_TOKEN` 以取得完整清單；部分端點在未經驗證的情況下會傳回子集。) 回應為 OpenAI 風格的 `{ "object": "list", "data": [ { "id": "Qwen/Qwen3-8B", "owned_by": "Qwen", ... }, ... ] }`。
+（可選：發送 `Authorization: Bearer $HUGGINGFACE_HUB_TOKEN` 或 `$HF_TOKEN` 以取得完整列表；部分端點在未經授權的情況下會傳回子集。）回應為 OpenAI 風格的 `{ "object": "list", "data": [ { "id": "Qwen/Qwen3-8B", "owned_by": "Qwen", ... }, ... ] }`。
 
-當您設定 Hugging Face API 金鑰（透過 onboarding、`HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`）時，OpenClaw 會使用此 GET 要求來探索可用的聊天完成模型。在**互動式設定**期間，輸入您的權杖後，您會看到一個**預設 Hugging Face 模型**下拉式選單，其中的選項來自該清單（如果要求失敗，則來自內建目錄）。在執行時（例如 Gateway 啟動時），當存在金鑰時，OpenClaw 會再次呼叫 **GET** `https://router.huggingface.co/v1/models` 來重新整理目錄。該清單會與內建目錄合併（用於內容視窗和成本等中繼資料）。如果要求失敗或未設定金鑰，則僅使用內建目錄。
+當您配置 Hugging Face API 金鑰（透過 onboarding、`HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`）時，OpenClaw 會使用此 GET 請求來探索可用的聊天完成模型。在 **互動式設定** 期間，輸入您的 token 後，您會看到一個從該列表填充的 **預設 Hugging Face 模型** 下拉選單（如果請求失敗，則使用內建目錄）。在執行時（例如 Gateway 啟動時），如果存在金鑰，OpenClaw 會再次呼叫 **GET** `https://router.huggingface.co/v1/models` 來重新整理目錄。該列表會與內建目錄合併（用於上下文視窗和成本等元數據）。如果請求失敗或未設定金鑰，則僅使用內建目錄。
 
-## 模型名稱和可編輯選項
+## 模型名稱與可編輯選項
 
-- **來自 API 的名稱：** 當 API 傳回 `name`、`title` 或 `display_name` 時，模型顯示名稱會**從 GET /v1/models 填充**；否則它是從模型 ID 推導而來（例如 `deepseek-ai/DeepSeek-R1` → “DeepSeek R1”）。
+- **來自 API 的名稱：** 當 API 返回 `name`、`title` 或 `display_name` 時，模型顯示名稱是 **從 GET /v1/models 填充** 的；否則它衍生自模型 id（例如 `deepseek-ai/DeepSeek-R1` → “DeepSeek R1”）。
 - **覆寫顯示名稱：** 您可以在設定中為每個模型設定自訂標籤，使其在 CLI 和 UI 中以您想要的方式顯示：
 
 ```json5
@@ -84,22 +84,22 @@ GET https://router.huggingface.co/v1/models
 }
 ```
 
-- **供應商 / 政策選擇：** 將後綴附加到**模型 ID** 以選擇路由器選擇後端的方式：
-  - **`:fastest`** — 最高輸送量（由路由器選擇；供應商選擇已**鎖定** — 沒有互動式後端選擇器）。
-  - **`:cheapest`** — 每個輸出權杖的最低成本（由路由器選擇；供應商選擇已**鎖定**）。
-  - **`:provider`** — 強制使用特定後端（例如 `:sambanova`、`:together`）。
+- **供應商 / 政策選擇：** 附加後綴到 **模型 id** 以選擇路由器如何挑選後端：
+  - **`:fastest`** — 最高吞吐量（由路由器挑選；供應商選擇已 **鎖定** — 沒有互動式後端挑選器）。
+  - **`:cheapest`** — 每個輸出 token 的最低成本（由路由器挑選；供應商選擇已 **鎖定**）。
+  - **`:provider`** — 強制指定特定的後端（例如 `:sambanova`、`:together`）。
 
-  當您選擇 **:cheapest** 或 **:fastest**（例如在 onboarding 模型下拉式選單中）時，供應商會被鎖定：路由器會根據成本或速度決定，並且不會顯示可選的「偏好特定後端」步驟。您可以將這些作為單獨的項目新增到 `models.providers.huggingface.models` 或使用後綴設定 `model.primary`。您也可以在 [Inference Provider settings](https://hf.co/settings/inference-providers) 中設定您的預設順序（無後綴 = 使用該順序）。
+  當您選擇 **:cheapest** 或 **:fastest**（例如在入門模型下拉選單中）時，提供者會被鎖定：路由器會根據成本或速度進行決策，且不會顯示可選的「偏好特定後端」步驟。您可以將這些作為獨立條目新增到 `models.providers.huggingface.models` 中，或是使用該後綴設定 `model.primary`。您也可以在 [Inference Provider 設定](https://hf.co/settings/inference-providers) 中設定您的預設順序（無後綴 = 使用該順序）。
 
-- **配置合併：** 當合併配置時，會保留 `models.providers.huggingface.models` 中的現有條目（例如在 `models.json` 中）。因此，您在那裡設定的任何自訂 `name`、`alias` 或模型選項都會被保留。
+- **設定合併：** 當設定合併時，`models.providers.huggingface.models` 中的現有條目（例如在 `models.json` 中）會被保留。因此，您在那裡設定的任何自訂 `name`、`alias` 或模型選項都將被保存。
 
-## 模型 ID 與配置範例
+## Model IDs 與設定範例
 
-模型參照使用 `huggingface/<org>/<model>` 的格式（Hub 風格的 ID）。以下列表來自 **GET** `https://router.huggingface.co/v1/models`；您的目錄可能包含更多內容。
+模型參考使用 `huggingface/<org>/<model>` 格式（Hub 風格 ID）。下列清單來自 **GET** `https://router.huggingface.co/v1/models`；您的目錄可能包含更多內容。
 
-**範例 ID（來自推論端點）：**
+**範例 ID（來自推理端點）：**
 
-| 模型                   | 參照（加上 `huggingface/` 前綴）    |
+| 模型                   | 參考（前綴 `huggingface/`）         |
 | ---------------------- | ----------------------------------- |
 | DeepSeek R1            | `deepseek-ai/DeepSeek-R1`           |
 | DeepSeek V3.2          | `deepseek-ai/DeepSeek-V3.2`         |
@@ -112,11 +112,11 @@ GET https://router.huggingface.co/v1/models
 | GLM 4.7                | `zai-org/GLM-4.7`                   |
 | Kimi K2.5              | `moonshotai/Kimi-K2.5`              |
 
-您可以將 `:fastest`、`:cheapest` 或 `:provider`（例如 `:together`、`:sambanova`）附加到模型 ID。在 [推論提供者設定](https://hf.co/settings/inference-providers) 中設定您的預設順序；請參閱 [推論提供者](https://huggingface.co/docs/inference-providers) 和 **GET** `https://router.huggingface.co/v1/models` 以取得完整列表。
+您可以將 `:fastest`、`:cheapest` 或 `:provider`（例如 `:together`、`:sambanova`）附加到模型 ID。在 [Inference Provider settings](https://hf.co/settings/inference-providers) 中設定您的預設順序；有關完整列表，請參閱 [Inference Providers](https://huggingface.co/docs/inference-providers) 和 **GET** `https://router.huggingface.co/v1/models`。
 
-### 完整配置範例
+### 完整設定範例
 
-**主要使用 DeepSeek R1，Qwen 作為備援：**
+**主要使用 DeepSeek R1，並以 Qwen 作為備援：**
 
 ```json5
 {
@@ -135,7 +135,7 @@ GET https://router.huggingface.co/v1/models
 }
 ```
 
-**預設使用 Qwen，並包含 :cheapest 和 :fastest 變體：**
+**預設為 Qwen，並包含 :cheapest 和 :fastest 變體：**
 
 ```json5
 {
@@ -152,7 +152,7 @@ GET https://router.huggingface.co/v1/models
 }
 ```
 
-**DeepSeek + Llama + GPT-OSS 配合別名：**
+**DeepSeek + Llama + GPT-OSS 並使用別名：**
 
 ```json5
 {
@@ -175,7 +175,7 @@ GET https://router.huggingface.co/v1/models
 }
 ```
 
-**使用 :provider 強制指定後端：**
+**使用 :provider 強制指定特定後端：**
 
 ```json5
 {
@@ -190,7 +190,7 @@ GET https://router.huggingface.co/v1/models
 }
 ```
 
-**多個 Qwen 和 DeepSeek 模型配帶有策略後綴：**
+**多個 Qwen 和 DeepSeek 模型並帶有策略後綴：**
 
 ```json5
 {

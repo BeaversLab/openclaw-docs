@@ -1,8 +1,8 @@
 ---
 summary: "使用裝置流程從 OpenClaw 登入 GitHub Copilot"
 read_when:
-  - 您想要使用 GitHub Copilot 作為模型供應商
-  - 您需要 `openclaw models auth login-github-copilot` 流程
+  - You want to use GitHub Copilot as a model provider
+  - You need the `openclaw models auth login-github-copilot` flow
 title: "GitHub Copilot"
 ---
 
@@ -10,19 +10,22 @@ title: "GitHub Copilot"
 
 ## 什麼是 GitHub Copilot？
 
-GitHub Copilot 是 GitHub 的 AI 程式碼撰寫助理。它根據您的 GitHub 帳戶和方案提供存取 Copilot 模型的權限。OpenClaw 可以透過兩種不同的方式使用 Copilot 作為模型供應商。
+GitHub Copilot 是 GitHub 的 AI 程式碼助理。它能根據您的 GitHub 帳號和計畫提供
+存取 Copilot 模組的權限。OpenClaw 可以透過兩種不同的方式將 Copilot 作為
+模型提供者。
 
 ## 在 OpenClaw 中使用 Copilot 的兩種方式
 
-### 1) 內建的 GitHub Copilot 供應商 (`github-copilot`)
+### 1) 內建的 GitHub Copilot 提供者 (`github-copilot`)
 
-使用原生的裝置登入流程取得 GitHub 權杖，然後在 OpenClaw 執行時將其交換為 Copilot API 權杖。這是**預設**且最簡單的路徑，因為它不需要 VS Code。
+使用原生的裝置登入流程來取得 GitHub token，然後在 OpenClaw 執行時將其
+交換為 Copilot API token。這是**預設**且最簡單的途徑，因為它不需要 VS Code。
 
 ### 2) Copilot Proxy 外掛程式 (`copilot-proxy`)
 
-使用 **Copilot Proxy** VS Code 擴充功能作為本機橋接器。OpenClaw 與 Proxy 的 `/v1` 端點通訊，並使用您在那裡設定的模型清單。當您已經在 VS Code 中執行 Copilot Proxy 或需要透過它進行路由時，請選擇此選項。您必須啟用外掛程式並保持 VS Code 擴充功能執行。
+使用 **Copilot Proxy** VS Code 擴充功能作為本地橋接器。OpenClaw 與代理的 `/v1` 端點通訊，並使用您在那裡設定的模型清單。當您已經在 VS Code 中執行 Copilot Proxy 或需要透過它進行路由時，請選擇此選項。您必須啟用外掛程式並保持 VS Code 擴充功能運作。
 
-使用 GitHub Copilot 作為模型供應商 (`github-copilot`)。登入指令會執行 GitHub 裝置流程、儲存驗證設定檔，並更新您的組態以使用該設定檔。
+使用 GitHub Copilot 作為模型提供者 (`github-copilot`)。登入指令會執行 GitHub 裝置流程，儲存認證設定檔，並更新您的設定以使用該設定檔。
 
 ## CLI 設定
 
@@ -30,7 +33,7 @@ GitHub Copilot 是 GitHub 的 AI 程式碼撰寫助理。它根據您的 GitHub 
 openclaw models auth login-github-copilot
 ```
 
-系統會提示您造訪 URL 並輸入一次性代碼。請保持終端機開啟，直到它完成為止。
+系統會提示您造訪網址並輸入一次性代碼。在完成之前，請保持終端機開啟。
 
 ### 選用旗標
 
@@ -45,7 +48,7 @@ openclaw models auth login-github-copilot --yes
 openclaw models set github-copilot/gpt-4o
 ```
 
-### 組態程式碼片段
+### 設定範例
 
 ```json5
 {
@@ -55,9 +58,9 @@ openclaw models set github-copilot/gpt-4o
 
 ## 備註
 
-- 需要互動式 TTY；請直接在終端機中執行它。
-- Copilot 模型的可用性取決於您的方案；如果模型被拒絕，請嘗試另一個 ID (例如 `github-copilot/gpt-4.1`)。
-- 登入程序會將 GitHub 權杖儲存在驗證設定檔存放區中，並在 OpenClaw 執行時將其交換為 Copilot API 權杖。
+- 需要互動式 TTY；請直接在終端機中執行。
+- Copilot 模型的可用性取決於您的方案；如果模型被拒絕，請嘗試其他 ID（例如 `github-copilot/gpt-4.1`）。
+- 登入程式會將 GitHub 權杖儲存在認證設定檔存放區中，並在 OpenClaw 執行時將其交換為 Copilot API 權杖。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

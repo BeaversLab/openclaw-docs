@@ -1,31 +1,31 @@
 ---
 summary: "macOS 上的 Gateway 執行時（外部 launchd 服務）"
 read_when:
-  - 封裝 OpenClaw.app
-  - 偵錯 macOS gateway launchd 服務
-  - 安裝 macOS 的 gateway CLI
+  - Packaging OpenClaw.app
+  - Debugging the macOS gateway launchd service
+  - Installing the gateway CLI for macOS
 title: "macOS 上的 Gateway"
 ---
 
 # macOS 上的 Gateway（外部 launchd）
 
-OpenClaw.app 不再內建 Node/Bun 或 Gateway 執行時。macOS app 預期安裝**外部** `openclaw` CLI，不會將 Gateway 作為子程序生成，而是管理一個每個使用者的 launchd 服務以保持 Gateway 運行（如果已經有本機 Gateway 在運行，則會連接至該 Gateway）。
+OpenClaw.app 不再內建 Node/Bun 或 Gateway 執行時。macOS 應用程式需要**外部**安裝 `openclaw` CLI，不會將 Gateway 作為子程序生成，而是管理一個使用者層級的 launchd 服務以保持 Gateway 運作（如果已有本機 Gateway 正在執行，則會連線至該程序）。
 
-## 安裝 CLI（本機模式所需）
+## 安裝 CLI（本地模式所需）
 
-Mac 上的預設執行時為 Node 24。目前的 `22.16+` 之 Node 22 LTS 仍可用於相容性。然後全域安裝 `openclaw`：
+Mac 上預設的執行時是 Node 24。目前為 `22.16+` 的 Node 22 LTS 仍可用於相容性。接著全域安裝 `openclaw`：
 
 ```bash
 npm install -g openclaw@<version>
 ```
 
-macOS app 的 **Install CLI** 按鈕會透過 npm/pnpm 執行相同的流程（不建議將 bun 用於 Gateway 執行時）。
+macOS 應用程式的 **Install CLI** 按鈕會透過 npm/pnpm 執行相同的流程（不建議對 Gateway 執行時使用 bun）。
 
 ## Launchd（Gateway 作為 LaunchAgent）
 
 標籤：
 
-- `ai.openclaw.gateway`（或 `ai.openclaw.<profile>`；舊版 `com.openclaw.*` 可能仍會保留）
+- `ai.openclaw.gateway`（或 `ai.openclaw.<profile>`；舊版 `com.openclaw.*` 可能會保留）
 
 Plist 位置（每個使用者）：
 
@@ -34,14 +34,15 @@ Plist 位置（每個使用者）：
 
 管理員：
 
-- macOS app 在本機模式中擁有 LaunchAgent 的安裝/更新權限。
-- CLI 也可以安裝它：`openclaw gateway install`。
+- macOS 應用程式負責在本機模式中安裝/更新 LaunchAgent。
+- CLI 也可以進行安裝：`openclaw gateway install`。
 
 行為：
 
 - 「OpenClaw Active」會啟用/停用 LaunchAgent。
-- 結束 App **不會**停止 gateway（launchd 會讓它保持運行）。
-- 如果 Gateway 已經在設定的連接埠上運行，app 將會連接至它，而不是啟動新的 Gateway。
+- 結束應用程式**不會**停止 Gateway（launchd 會使其保持執行）。
+- 如果 Gateway 已在設定的連接埠上執行，應用程式將附加至該 Gateway，
+  而不是啟動新的 Gateway。
 
 日誌記錄：
 
@@ -49,9 +50,10 @@ Plist 位置（每個使用者）：
 
 ## 版本相容性
 
-macOS app 會檢查 gateway 版本與其本身版本的相容性。如果彼此不相容，請更新全域 CLI 以符合 app 版本。
+macOS 應用程式會檢查 gateway 版本與其自身版本是否相符。如果
+版本不相容，請更新全域 CLI 以符合應用程式版本。
 
-## 基本檢查
+## 冒煙測試
 
 ```bash
 openclaw --version

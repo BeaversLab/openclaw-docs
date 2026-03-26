@@ -2,14 +2,16 @@
 title: "Modèle HEARTBEAT.md"
 summary: "Modèle d'espace de travail pour HEARTBEAT.md"
 read_when:
-  - Initialisation manuelle d'un espace de travail
+  - Bootstrapping a workspace manually
 ---
 
-# HEARTBEAT.md
+# Modèle HEARTBEAT.md
 
-# Gardez ce fichier vide (ou avec uniquement des commentaires) pour sauter les appels à l'API heartbeat API.
+```markdown
+# Keep this file empty (or with only comments) to skip heartbeat API calls.
 
-# Ajoutez des tâches ci-dessous lorsque vous souhaitez que l'agent vérifie quelque chose périodiquement.
+# Add tasks below when you want the agent to check something periodically.
+```
 
 import fr from "/components/footer/fr.mdx";
 

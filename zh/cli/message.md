@@ -1,50 +1,50 @@
 ---
-summary: "CLI reference for `openclaw message` (send + 渠道 actions)"
+summary: "CLI 参考，用于 `openclaw message`（发送 + 渠道操作）"
 read_when:
   - Adding or modifying message CLI actions
-  - Changing outbound 渠道 behavior
+  - Changing outbound channel behavior
 title: "message"
 ---
 
 # `openclaw message`
 
-Single outbound command for sending messages and 渠道 actions
-(Discord/Google Chat/Slack/Mattermost (plugin)/Telegram/WhatsApp/Signal/iMessage/MS Teams).
+用于发送消息和渠道操作的单个出站命令
+(Discord/Google Chat/Slack/Mattermost (plugin)/Telegram/WhatsApp/Signal/iMessage/Microsoft Teams)。
 
-## Usage
+## 用法
 
 ```
 openclaw message <subcommand> [flags]
 ```
 
-Channel selection:
+频道选择：
 
-- `--channel` required if more than one 渠道 is configured.
-- If exactly one 渠道 is configured, it becomes the default.
-- Values: `whatsapp|telegram|discord|googlechat|slack|mattermost|signal|imessage|msteams` (Mattermost requires plugin)
+- 如果配置了多个渠道，则需要 `--channel`。
+- 如果恰好配置了一个频道，它将成为默认频道。
+- 值：`whatsapp|telegram|discord|googlechat|slack|mattermost|signal|imessage|msteams`（Mattermost 需要插件）
 
-Target formats (`--target`):
+目标格式 (`--target`)：
 
-- WhatsApp: E.164 or group JID
-- Telegram: chat id or `@username`
-- Discord: `channel:<id>` or `user:<id>` (or `<@id>` mention; raw numeric ids are treated as channels)
-- Google Chat: `spaces/<spaceId>` or `users/<userId>`
-- Slack: `channel:<id>` or `user:<id>` (raw 渠道 id is accepted)
-- Mattermost (plugin): `channel:<id>`, `user:<id>`, or `@username` (bare ids are treated as channels)
-- Signal: `+E.164`, `group:<id>`, `signal:+E.164`, `signal:group:<id>`, or `username:<name>`/`u:<name>`
-- iMessage: handle, `chat_id:<id>`, `chat_guid:<guid>`, or `chat_identifier:<id>`
-- MS Teams: conversation id (`19:...@thread.tacv2`) or `conversation:<id>` or `user:<aad-object-id>`
+- WhatsApp：E.164 或群组 JID
+- Telegram：聊天 ID 或 `@username`
+- Discord：`channel:<id>` 或 `user:<id>`（或 `<@id>` 提及；原始数字 ID 被视为渠道）
+- Google Chat：`spaces/<spaceId>` 或 `users/<userId>`
+- Slack：`channel:<id>` 或 `user:<id>`（接受原始渠道 ID）
+- Mattermost（插件）：`channel:<id>`、`user:<id>` 或 `@username`（纯 ID 被视为渠道）
+- Signal：`+E.164`、`group:<id>`、`signal:+E.164`、`signal:group:<id>` 或 `username:<name>`/`u:<name>`
+- iMessage：handle、`chat_id:<id>`、`chat_guid:<guid>` 或 `chat_identifier:<id>`
+- Microsoft Teams：对话 ID (`19:...@thread.tacv2`) 或 `conversation:<id>` 或 `user:<aad-object-id>`
 
-Name lookup:
+名称查找：
 
-- For supported providers (Discord/Slack/etc), 渠道 names like `Help` or `#help` are resolved via the directory cache.
-- On cache miss, OpenClaw will attempt a live directory lookup when the 提供商 supports it.
+- 对于受支持的提供商（Discord/Slack/etc），诸如 `Help` 或 `#help` 之类的渠道名称将通过目录缓存进行解析。
+- 如果缓存未命中，当提供商支持时，OpenClaw 将尝试实时目录查找。
 
-## Common flags
+## 通用标志
 
 - `--channel <name>`
 - `--account <id>`
-- `--target <dest>` (target 渠道 or user for send/poll/read/etc)
+- `--target <dest>`（用于发送/轮询/读取等的目标渠道或用户）
 - `--targets <name>`（重复；仅限广播）
 - `--json`
 - `--dry-run`
@@ -52,157 +52,157 @@ Name lookup:
 
 ## SecretRef 行为
 
-- `openclaw message` 在运行所选操作之前会解析支持的渠道 SecretRef。
-- 解析范围在可能的情况下限定为当前操作目标：
-  - 当设置了 `--channel` 时（或从带有前缀的目标（如 `discord:...`）推断出时），范围为渠道限定
-  - 当设置了 `--account` 时，范围为账户限定（渠道全局变量 + 选定的账户表面）
-  - 当省略 `--account` 时，OpenClaw 不会强制 `default` 账户 SecretRef 范围
+- `openclaw message` 会在运行所选操作之前解析受支持的渠道 SecretRef。
+- 解析范围尽可能限定为当前操作的目标：
+  - 设置 `--channel` 时限定为渠道范围（或从带前缀的目标如 `discord:...` 推断）
+  - 设置 `--account` 时限定为账户范围（渠道全局变量 + 所选账户接口）
+  - 如果省略 `--account`，OpenClaw 不会强制 `default` 账户 SecretRef 的作用域
 - 不相关渠道上未解析的 SecretRef 不会阻止针对特定渠道的消息操作。
-- 如果所选渠道/账户的 SecretRef 未解析，则该操作的命令将失败并关闭。
+- 如果所选渠道/账户的 SecretRef 未解析，该命令将在该操作上以失败方式关闭（fail closed）。
 
 ## 操作
 
 ### 核心
 
 - `send`
-  - 渠道：WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost（插件）/Signal/iMessage/MS Teams
-  - 必填：`--target`，外加 `--message` 或 `--media`
+  - 渠道：WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage/Microsoft Teams
+  - 必需：`--target`，以及 `--message` 或 `--media`
   - 可选：`--media`、`--reply-to`、`--thread-id`、`--gif-playback`
-  - 仅限 Telegram：`--buttons`（需要 `channels.telegram.capabilities.inlineButtons` 允许使用）
+  - 仅限 Telegram：`--buttons`（需要 `channels.telegram.capabilities.inlineButtons` 允许）
   - 仅限 Telegram：`--force-document`（将图片和 GIF 作为文档发送以避免 Telegram 压缩）
   - 仅限 Telegram：`--thread-id`（论坛主题 ID）
-  - 仅限 Slack：`--thread-id`（线程时间戳；`--reply-to` 使用相同的字段）
+  - 仅限 Slack：`--thread-id`（线程时间戳；`--reply-to` 使用同一字段）
   - 仅限 WhatsApp：`--gif-playback`
 
 - `poll`
-  - 渠道：WhatsApp/Telegram/Discord/Matrix/MS Teams
-  - 必填：`--target`、`--poll-question`、`--poll-option`（可重复）
+  - 渠道：WhatsApp/Telegram/Discord/Matrix/Microsoft Teams
+  - 必需：`--target`、`--poll-question`、`--poll-option`（可重复）
   - 可选：`--poll-multi`
   - 仅限 Discord：`--poll-duration-hours`、`--silent`、`--message`
-  - 仅限 Telegram：`--poll-duration-seconds` (5-600), `--silent`, `--poll-anonymous` / `--poll-public`, `--thread-id`
+  - 仅限 Telegram：`--poll-duration-seconds` (5-600)、`--silent`、`--poll-anonymous` / `--poll-public`、`--thread-id`
 
 - `react`
   - 频道：Discord/Google Chat/Slack/Telegram/WhatsApp/Signal
-  - 必需：`--message-id`, `--target`
-  - 可选：`--emoji`, `--remove`, `--participant`, `--from-me`, `--target-author`, `--target-author-uuid`
-  - 注意：`--remove` 需要 `--emoji`（如果支持，省略 `--emoji` 以清除自己的反应；参见 /tools/reactions）
-  - 仅限 WhatsApp：`--participant`, `--from-me`
-  - Signal 组反应：需要 `--target-author` 或 `--target-author-uuid`
+  - 必需：`--message-id`、`--target`
+  - 可选：`--emoji`、`--remove`、`--participant`、`--from-me`、`--target-author`、`--target-author-uuid`
+  - 注意：`--remove` 需要 `--emoji`（如果支持，省略 `--emoji` 以清除自己的反应；请参阅 /tools/reactions）
+  - 仅限 WhatsApp：`--participant`、`--from-me`
+  - Signal 群组反应：必需 `--target-author` 或 `--target-author-uuid`
 
 - `reactions`
   - 频道：Discord/Google Chat/Slack
-  - 必需：`--message-id`, `--target`
+  - 必需：`--message-id`、`--target`
   - 可选：`--limit`
 
 - `read`
   - 频道：Discord/Slack
   - 必需：`--target`
-  - 可选：`--limit`, `--before`, `--after`
+  - 可选：`--limit`、`--before`、`--after`
   - 仅限 Discord：`--around`
 
 - `edit`
-  - 渠道：Discord/Slack
-  - 必需：`--message-id`, `--message`, `--target`
+  - 频道：Discord/Slack
+  - 必需：`--message-id`、`--message`、`--target`
 
 - `delete`
   - 频道：Discord/Slack/Telegram
-  - 必需：`--message-id`, `--target`
+  - 必需：`--message-id`、`--target`
 
 - `pin` / `unpin`
   - 频道：Discord/Slack
-  - 必需：`--message-id`, `--target`
+  - 必需：`--message-id`、`--target`
 
 - `pins` (列表)
   - 频道：Discord/Slack
   - 必需：`--target`
 
 - `permissions`
-  - 频道：Discord
-  - 必需：`--target`
+  - 渠道：Discord
+  - 必填：`--target`
 
 - `search`
   - 渠道：Discord
-  - 必填：`--guild-id`，`--query`
-  - 可选：`--channel-id`，`--channel-ids` (repeat)，`--author-id`，`--author-ids` (repeat)，`--limit`
+  - 必填：`--guild-id`, `--query`
+  - 可选：`--channel-id`, `--channel-ids` (repeat), `--author-id`, `--author-ids` (repeat), `--limit`
 
-### 主题
+### Threads
 
 - `thread create`
   - 渠道：Discord
-  - 必填：`--thread-name`，`--target` (渠道 id)
-  - 可选：`--message-id`，`--message`，`--auto-archive-min`
+  - 必填：`--thread-name`, `--target` (渠道 id)
+  - 可选：`--message-id`, `--message`, `--auto-archive-min`
 
 - `thread list`
   - 渠道：Discord
   - 必填：`--guild-id`
-  - 可选：`--channel-id`，`--include-archived`，`--before`，`--limit`
+  - 可选：`--channel-id`, `--include-archived`, `--before`, `--limit`
 
 - `thread reply`
   - 渠道：Discord
-  - 必填：`--target` (thread id)，`--message`
-  - 可选：`--media`，`--reply-to`
+  - 必填：`--target` (thread id), `--message`
+  - 可选：`--media`, `--reply-to`
 
-### 表情符号
+### Emojis
 
 - `emoji list`
-  - Discord：`--guild-id`
-  - Slack：无额外标志
+  - Discord: `--guild-id`
+  - Slack: no extra flags
 
 - `emoji upload`
-  - 频道：Discord
-  - 必填：`--guild-id`，`--emoji-name`，`--media`
+  - 渠道：Discord
+  - 必填：`--guild-id`, `--emoji-name`, `--media`
   - 可选：`--role-ids` (repeat)
 
-### 贴纸
+### Stickers
 
 - `sticker send`
   - 渠道：Discord
-  - 必填：`--target`，`--sticker-id` (repeat)
+  - 必填：`--target`, `--sticker-id` (repeat)
   - 可选：`--message`
 
 - `sticker upload`
   - 渠道：Discord
-  - 必填：`--guild-id`，`--sticker-name`，`--sticker-desc`，`--sticker-tags`，`--media`
+  - 必填：`--guild-id`, `--sticker-name`, `--sticker-desc`, `--sticker-tags`, `--media`
 
-### 角色 / 渠道 / 成员 / 语音
+### Roles / Channels / Members / Voice
 
-- `role info` (Discord)：`--guild-id`
-- `role add` / `role remove` (Discord)：`--guild-id`，`--user-id`，`--role-id`
-- `channel info` (Discord)：`--target`
+- `role info` (Discord): `--guild-id`
+- `role add` / `role remove` (Discord): `--guild-id`, `--user-id`, `--role-id`
+- `channel info` (Discord): `--target`
 - `channel list` (Discord): `--guild-id`
-- `member info` (Discord/Slack): `--user-id` (+ `--guild-id` for Discord)
+- `member info` (Discord/Slack): `--user-id` (+ `--guild-id` 用于 Discord)
 - `voice status` (Discord): `--guild-id`, `--user-id`
 
-### Events
+### 事件
 
 - `event list` (Discord): `--guild-id`
 - `event create` (Discord): `--guild-id`, `--event-name`, `--start-time`
-  - 可选: `--end-time`, `--desc`, `--channel-id`, `--location`, `--event-type`
+  - 可选：`--end-time`, `--desc`, `--channel-id`, `--location`, `--event-type`
 
-### Moderation (Discord)
+### 管理 (Discord)
 
-- `timeout`: `--guild-id`, `--user-id` (optional `--duration-min` or `--until`; omit both to clear timeout)
+- `timeout`: `--guild-id`, `--user-id` (可选 `--duration-min` 或 `--until`; 省略两者以清除超时)
 - `kick`: `--guild-id`, `--user-id` (+ `--reason`)
 - `ban`: `--guild-id`, `--user-id` (+ `--delete-days`, `--reason`)
-  - `timeout` also supports `--reason`
+  - `timeout` 也支持 `--reason`
 
-### Broadcast
+### 广播
 
 - `broadcast`
-  - 渠道: any configured 渠道; use `--channel all` to target all providers
-  - Required: `--targets` (repeat)
-  - 可选: `--message`, `--media`, `--dry-run`
+  - 渠道：任何已配置的渠道；使用 `--channel all` 来定位所有提供商
+  - 必填：`--targets` (可重复)
+  - 可选：`--message`, `--media`, `--dry-run`
 
-## Examples
+## 示例
 
-Send a Discord reply:
+发送 Discord 回复：
 
 ```
 openclaw message send --channel discord \
   --target channel:123 --message "hi" --reply-to 456
 ```
 
-Send a Discord message with components:
+发送带有组件的 Discord 消息：
 
 ```
 openclaw message send --channel discord \
@@ -210,9 +210,9 @@ openclaw message send --channel discord \
   --components '{"text":"Choose a path","blocks":[{"type":"actions","buttons":[{"label":"Approve","style":"success"},{"label":"Decline","style":"danger"}]}]}'
 ```
 
-See [Discord components](/zh/channels/discord#interactive-components) for the full schema.
+有关完整架构，请参阅 [Discord 组件](/zh/channels/discord#interactive-components)。
 
-Create a Discord poll:
+创建 Discord 投票：
 
 ```
 openclaw message poll --channel discord \
@@ -222,7 +222,7 @@ openclaw message poll --channel discord \
   --poll-multi --poll-duration-hours 48
 ```
 
-Create a Telegram poll (auto-close in 2 minutes):
+创建 Telegram 投票（2 分钟后自动关闭）：
 
 ```
 openclaw message poll --channel telegram \
@@ -232,14 +232,14 @@ openclaw message poll --channel telegram \
   --poll-duration-seconds 120 --silent
 ```
 
-Send a Teams proactive message:
+发送 Teams 主动消息：
 
 ```
 openclaw message send --channel msteams \
   --target conversation:19:abc@thread.tacv2 --message "hi"
 ```
 
-Create a Teams poll:
+创建 Teams 投票：
 
 ```
 openclaw message poll --channel msteams \
@@ -248,14 +248,14 @@ openclaw message poll --channel msteams \
   --poll-option Pizza --poll-option Sushi
 ```
 
-React in Slack:
+在 Slack 中做出反应：
 
 ```
 openclaw message react --channel slack \
   --target C123 --message-id 456 --emoji "✅"
 ```
 
-React in a Signal group:
+在 Signal 群组中做出反应：
 
 ```
 openclaw message react --channel signal \
@@ -263,14 +263,14 @@ openclaw message react --channel signal \
   --emoji "✅" --target-author-uuid 123e4567-e89b-12d3-a456-426614174000
 ```
 
-Send Telegram inline buttons:
+发送 Telegram 内联按钮：
 
 ```
 openclaw message send --channel telegram --target @mychat --message "Choose:" \
   --buttons '[ [{"text":"Yes","callback_data":"cmd:yes"}], [{"text":"No","callback_data":"cmd:no"}] ]'
 ```
 
-Send a Telegram image as a document to avoid compression:
+将 Telegram 图片作为文档发送以避免压缩：
 
 ```bash
 openclaw message send --channel telegram --target @mychat \

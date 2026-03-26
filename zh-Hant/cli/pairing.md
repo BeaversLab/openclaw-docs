@@ -1,8 +1,8 @@
 ---
-summary: "`openclaw pairing` 的 CLI 參考資料（核准/列出配對請求）"
+summary: "`openclaw pairing`（核准/列出配對請求）的 CLI 參考資料"
 read_when:
-  - 您正在使用配對模式 DM，並且需要核准傳送者
-title: "pairing"
+  - You’re using pairing-mode DMs and need to approve senders
+title: "配對"
 ---
 
 # `openclaw pairing`
@@ -24,12 +24,12 @@ openclaw pairing approve telegram <code>
 openclaw pairing approve --channel telegram --account work <code> --notify
 ```
 
-## 備註
+## 注意事項
 
-- 通道輸入：以位置方式 (`pairing list telegram`) 或使用 `--channel <channel>` 傳遞。
-- `pairing list` 支援 `--account <accountId>` 以用於多帳號通道。
+- 頻道輸入：以位置參數傳遞 (`pairing list telegram`) 或使用 `--channel <channel>`。
+- `pairing list` 針對多帳號頻道支援 `--account <accountId>`。
 - `pairing approve` 支援 `--account <accountId>` 和 `--notify`。
-- 如果僅設定了一個具備配對功能的通道，則允許 `pairing approve <code>`。
+- 如果僅設定一個支援配對的頻道，則允許使用 `pairing approve <code>`。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

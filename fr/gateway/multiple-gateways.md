@@ -1,19 +1,19 @@
 ---
-summary: "Exécuter plusieurs OpenClaw OpenClaw sur un même hôte (isolement, ports et profils)"
+summary: "Exécuter plusieurs OpenClaw Gateways sur un même hôte (isolement, ports et profils)"
 read_when:
-  - Exécuter plusieurs Gateway sur la même machine
-  - Vous avez besoin d'une config, d'un état et de ports isolés par Gateway
-title: "Multiple Gateways"
+  - Running more than one Gateway on the same machine
+  - You need isolated config/state/ports per Gateway
+title: "Gateways multiples"
 ---
 
-# Passerelles multiples (même hôte)
+# Gateways multiples (même hôte)
 
-La plupart des configurations devraient utiliser un seul Gateway car un seul Gateway peut gérer plusieurs connexions de messagerie et agents. Si vous avez besoin d'un isolement ou d'une redondance plus forte (par exemple, un bot de secours), exécutez des passerelles distinctes avec des profils/ports isolés.
+La plupart des configurations devraient utiliser un seul Gateway car un seul Gateway peut gérer plusieurs connexions de messagerie et agents. Si vous avez besoin d'un isolement plus fort ou d'une redondance (par exemple, un robot de secours), exécutez des Gateways distincts avec des profils/ports isolés.
 
 ## Liste de contrôle d'isolement (requis)
 
 - `OPENCLAW_CONFIG_PATH` — fichier de configuration par instance
-- `OPENCLAW_STATE_DIR` — sessions, identifiants et caches par instance
+- `OPENCLAW_STATE_DIR` — sessions, identifiants, caches par instance
 - `agents.defaults.workspace` — racine de l'espace de travail par instance
 - `gateway.port` (ou `--port`) — unique par instance
 - Les ports dérivés (navigateur/canvas) ne doivent pas se chevaucher
@@ -41,20 +41,20 @@ openclaw --profile main gateway install
 openclaw --profile rescue gateway install
 ```
 
-## Guide du bot de secours
+## Guide du robot de secours
 
 Exécutez un deuxième Gateway sur le même hôte avec son propre :
 
-- profil/config
+- profil/configuration
 - répertoire d'état
 - espace de travail
-- port de base (plus ports dérivés)
+- port de base (plus les ports dérivés)
 
-Cela permet de garder le bot de secours isolé du bot principal afin qu'il puisse déboguer ou appliquer des modifications de configuration si le bot principal est en panne.
+Cela maintient le robot de secours isolé du robot principal afin qu'il puisse déboguer ou appliquer des modifications de configuration si le robot principal est en panne.
 
-Espacement des ports : laissez au moins 20 ports entre les ports de base afin que les ports dérivés navigateur/canvas/CDP ne entrent jamais en collision.
+Espacement des ports : laissez au moins 20 ports entre les ports de base afin que les ports dérivés navigateur/canvas/CDP ne se heurtent jamais.
 
-### Comment installer (bot de secours)
+### Comment installer (robot de secours)
 
 ```bash
 # Main bot (existing or fresh, without --profile param)
@@ -79,15 +79,15 @@ openclaw --profile rescue gateway install
 Port de base = `gateway.port` (ou `OPENCLAW_GATEWAY_PORT` / `--port`).
 
 - port du service de contrôle du navigateur = base + 2 (boucle locale uniquement)
-- l'hôte du canvas est servi sur le serveur HTTP du Gateway (même port que `gateway.port`)
+- l'hôte canvas est servi sur le serveur HTTP du Gateway (même port que `gateway.port`)
 - Les ports CDP du profil du navigateur s'allouent automatiquement à partir de `browser.controlPort + 9 .. + 108`
 
 Si vous remplacez l'un d'eux dans la configuration ou l'environnement, vous devez les garder uniques par instance.
 
 ## Notes sur le navigateur/CDP (piège courant)
 
-- Ne **fixez pas** `browser.cdpUrl` aux mêmes valeurs sur plusieurs instances.
-- Chaque instance a besoin de son propre port de contrôle du navigateur et de sa plage CDP (dérivée de son port de passerelle).
+- Ne **pas** attribuer `browser.cdpUrl` aux mêmes valeurs sur plusieurs instances.
+- Chaque instance a besoin de son propre port de contrôle du navigateur et de sa propre plage CDP (dérivée de son port de passerelle).
 - Si vous avez besoin de ports CDP explicites, définissez `browser.profiles.<name>.cdpPort` par instance.
 - Chrome distant : utilisez `browser.profiles.<name>.cdpUrl` (par profil, par instance).
 

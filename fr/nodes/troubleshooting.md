@@ -1,14 +1,14 @@
 ---
-summary: "Dépannage de l'appairage des nœuds, des exigences de premier plan, des autorisations et des échecs des outils"
+summary: "Dépannage de l'appairage de nœud, des exigences de premier plan, des autorisations et des échecs de tool"
 read_when:
-  - Le nœud est connecté mais les outils de caméra/toile/écran/exec échouent
-  - Vous avez besoin du modèle mental d'appairage versus approbations des nœuds
-title: "Dépannage des nœuds"
+  - Node is connected but camera/canvas/screen/exec tools fail
+  - You need the node pairing versus approvals mental model
+title: "Dépannage de nœud"
 ---
 
-# Dépannage des nœuds
+# Dépannage de nœud
 
-Utilisez cette page lorsqu'un nœud est visible dans le statut mais que les outils du nœud échouent.
+Utilisez cette page lorsqu'un nœud est visible dans l'état mais que les tools du nœud échouent.
 
 ## Échelle de commande
 
@@ -30,15 +30,15 @@ openclaw approvals get --node <idOrNameOrIp>
 
 Signaux sains :
 
-- Le nœud est connecté et apparié pour le rôle `node`.
+- Le nœud est connecté et appairé pour le rôle `node`.
 - `nodes describe` inclut la capacité que vous appelez.
-- Les approbations Exec affichent le mode/la liste d'autorisation attendus.
+- Les approbations Exec affichent le mode/liste d'autorisation attendu.
 
 ## Exigences de premier plan
 
-`canvas.*`, `camera.*` et `screen.*` sont en premier plan uniquement sur les nœuds iOS/Android.
+`canvas.*`, `camera.*` et `screen.*` sont uniquement au premier plan sur les nœuds iOS/Android.
 
-Vérification et correction rapides :
+Vérification rapide et correctif :
 
 ```bash
 openclaw nodes describe --node <idOrNameOrIp>
@@ -46,22 +46,22 @@ openclaw nodes canvas snapshot --node <idOrNameOrIp>
 openclaw logs --follow
 ```
 
-Si vous voyez `NODE_BACKGROUND_UNAVAILABLE`, mettez l'application du nœud au premier plan et réessayez.
+Si vous voyez `NODE_BACKGROUND_UNAVAILABLE`, amenez l'application du nœud au premier plan et réessayez.
 
 ## Matrice des autorisations
 
-| Capacité                     | iOS                                                | Android                                              | application de nœud macOS             | Code d'échec typique           |
-| ---------------------------- | -------------------------------------------------- | ---------------------------------------------------- | ------------------------------------- | ------------------------------ |
-| `camera.snap`, `camera.clip` | Caméra (+ micro pour l'audio du clip)              | Caméra (+ micro pour l'audio du clip)                | Caméra (+ micro pour l'audio du clip) | `*_PERMISSION_REQUIRED`        |
-| `screen.record`              | Enregistrement d'écran (+ micro en option)         | Invite de capture d'écran (+ micro en option)        | Enregistrement d'écran                | `*_PERMISSION_REQUIRED`        |
-| `location.get`               | Pendant l'utilisation ou Toujours (dépend du mode) | Localisation Premier plan/Arrière-plan selon le mode | Autorisation de localisation          | `LOCATION_PERMISSION_REQUIRED` |
-| `system.run`                 | n/a (chemin de l'hôte du nœud)                     | n/a (chemin de l'hôte du nœud)                       | Approbations Exec requises            | `SYSTEM_RUN_DENIED`            |
+| Capacité                     | iOS                                               | Android                                                 | Application de nœud macOS             | Code d'échec typique           |
+| ---------------------------- | ------------------------------------------------- | ------------------------------------------------------- | ------------------------------------- | ------------------------------ |
+| `camera.snap`, `camera.clip` | Caméra (+ micro pour l'audio du clip)             | Caméra (+ micro pour l'audio du clip)                   | Caméra (+ micro pour l'audio du clip) | `*_PERMISSION_REQUIRED`        |
+| `screen.record`              | Enregistrement d'écran (+ micro en option)        | Invite de capture d'écran (+ micro en option)           | Enregistrement d'écran                | `*_PERMISSION_REQUIRED`        |
+| `location.get`               | Pendant l'utilisation ou Toujours (selon le mode) | Localisation en premier plan/arrière-plan selon le mode | Autorisation de localisation          | `LOCATION_PERMISSION_REQUIRED` |
+| `system.run`                 | n/a (chemin de l'hôte du nœud)                    | n/a (chemin de l'hôte du nœud)                          | Approbations Exec requises            | `SYSTEM_RUN_DENIED`            |
 
-## Appairage versus approbations
+## Appairage par rapport aux approbations
 
 Il s'agit de différentes portes :
 
-1. **Appairage de l'appareil** : ce nœud peut-il se connecter à la passerelle ?
+1. **Appareil appairé** : ce nœud peut-il se connecter à la passerelle ?
 2. **Approbations Exec** : ce nœud peut-il exécuter une commande shell spécifique ?
 
 Vérifications rapides :
@@ -78,16 +78,16 @@ Si l'appairage est correct mais que `system.run` échoue, corrigez les approbati
 
 ## Codes d'erreur de nœud courants
 
-- `NODE_BACKGROUND_UNAVAILABLE` → l'application est en arrière-plan ; mettez-la au premier plan.
-- `CAMERA_DISABLED` → le bouton de basculement de la caméra est désactivé dans les paramètres du nœud.
-- `*_PERMISSION_REQUIRED` → autorisation OS manquante/refusée.
+- `NODE_BACKGROUND_UNAVAILABLE` → l'application est en arrière-plan ; amenez-la au premier plan.
+- `CAMERA_DISABLED` → bascule de caméra désactivée dans les paramètres du nœud.
+- `*_PERMISSION_REQUIRED` → permission OS manquante/refusée.
 - `LOCATION_DISABLED` → le mode de localisation est désactivé.
-- `LOCATION_PERMISSION_REQUIRED` → le mode de localisation demandé n'est pas accordé.
-- `LOCATION_BACKGROUND_UNAVAILABLE` → l'application est en arrière-plan mais seule la autorisation « Pendant l'utilisation » existe.
-- `SYSTEM_RUN_DENIED: approval required` → la requête exec nécessite une approbation explicite.
+- `LOCATION_PERMISSION_REQUIRED` → le mode de localisation demandé n'a pas été accordé.
+- `LOCATION_BACKGROUND_UNAVAILABLE` → l'application est en arrière-plan mais seule la permission « Pendant l'utilisation » existe.
+- `SYSTEM_RUN_DENIED: approval required` → la requête d'exécution nécessite une approbation explicite.
 - `SYSTEM_RUN_DENIED: allowlist miss` → commande bloquée par le mode liste autorisée.
-  Sur les hôtes de nœud Windows, les formes d'enveloppe de shell comme `cmd.exe /c ...` sont traitées comme des absences de liste autorisée en
-  mode liste autorisée, sauf si elles sont approuvées via le flux de demande.
+  Sur les hôtes de nœud Windows, les formulaires d'enveloppe de shell comme `cmd.exe /c ...` sont traités comme des absences de la liste autorisée en
+  mode liste autorisée, sauf s'ils sont approuvés via le flux de demande.
 
 ## Boucle de récupération rapide
 
@@ -98,14 +98,14 @@ openclaw approvals get --node <idOrNameOrIp>
 openclaw logs --follow
 ```
 
-Si toujours bloqué :
+Si toujours bloqué :
 
-- Réapprouver l'appairage de l'appareil.
+- Approuver à nouveau le jumelage de l'appareil.
 - Rouvrir l'application de nœud (premier plan).
-- Accorder à nouveau les autorisations du système d'exploitation.
-- Recréer/ajuster la politique d'approbation exec.
+- Accorder à nouveau les permissions OS.
+- Recréer/ajuster la politique d'approbation d'exécution.
 
-Connexes :
+Connexes :
 
 - [/nodes/index](/fr/nodes/index)
 - [/nodes/camera](/fr/nodes/camera)

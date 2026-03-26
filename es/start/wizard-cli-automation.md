@@ -1,18 +1,18 @@
 ---
-summary: "Incorporación mediante scripts y configuración de agentes para la CLI de OpenClaw"
+summary: "Incorporación mediante script y configuración de agentes para la CLI de OpenClaw"
 read_when:
-  - Estás automatizando la incorporación en scripts o CI
-  - Necesitas ejemplos no interactivos para proveedores específicos
+  - You are automating onboarding in scripts or CI
+  - You need non-interactive examples for specific providers
 title: "Automatización de CLI"
 sidebarTitle: "Automatización de CLI"
 ---
 
 # Automatización de CLI
 
-Usa `--non-interactive` para automatizar `openclaw onboard`.
+Use `--non-interactive` para automatizar `openclaw onboard`.
 
 <Note>
-  `--json` no implica el modo no interactivo. Usa `--non-interactive` (y `--workspace`) para
+  `--json` no implica el modo no interactivo. Use `--non-interactive` (y `--workspace`) para
   scripts.
 </Note>
 
@@ -31,12 +31,11 @@ openclaw onboard --non-interactive \
   --skip-skills
 ```
 
-Añade `--json` para obtener un resumen legible por máquina.
+Añada `--json` para obtener un resumen legible por máquina.
 
-Usa `--secret-input-mode ref` para almacenar referencias respaldadas por variables de entorno en perfiles de autenticación en lugar de valores de texto plano.
-La selección interactiva entre referencias de entorno y referencias de proveedores configuradas (`file` o `exec`) está disponible en el flujo de incorporación.
+Use `--secret-input-mode ref` para almacenar referencias respaldadas por entorno en perfiles de autenticación en lugar de valores de texto plano. La selección interactiva entre referencias de entorno y referencias de proveedor configuradas (`file` o `exec`) está disponible en el flujo de incorporación.
 
-En el modo no interactivo `ref`, las variables de entorno del proveedor deben establecerse en el entorno del proceso.
+En el modo `ref` no interactivo, las variables de entorno del proveedor deben establecerse en el entorno del proceso.
 Pasar indicadores de clave en línea sin la variable de entorno correspondiente ahora falla rápidamente.
 
 Ejemplo:
@@ -124,7 +123,7 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="Ejemplo de OpenCode">
+  <Accordion title="Ejemplo de código abierto">
     ```bash
     openclaw onboard --non-interactive \
       --mode local \
@@ -133,7 +132,7 @@ openclaw onboard --non-interactive \
       --gateway-port 18789 \
       --gateway-bind loopback
     ```
-    Cambia a `--auth-choice opencode-go --opencode-go-api-key "$OPENCODE_API_KEY"` para el catálogo de Go.
+    Cambie a `--auth-choice opencode-go --opencode-go-api-key "$OPENCODE_API_KEY"` para el catálogo de Go.
   </Accordion>
   <Accordion title="Ejemplo de Ollama">
     ```bash
@@ -185,7 +184,7 @@ openclaw onboard --non-interactive \
 
 ## Añadir otro agente
 
-Usa `openclaw agents add <name>` para crear un agente separado con su propio espacio de trabajo,
+Use `openclaw agents add <name>` para crear un agente separado con su propio espacio de trabajo,
 sesiones y perfiles de autenticación. Ejecutar sin `--workspace` inicia el asistente.
 
 ```bash
@@ -206,13 +205,13 @@ Lo que establece:
 Notas:
 
 - Los espacios de trabajo predeterminados siguen `~/.openclaw/workspace-<agentId>`.
-- Añade `bindings` para enrutar mensajes entrantes (el asistente puede hacer esto).
-- Marcas no interactivas: `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
+- Añade `bindings` para enrutar los mensajes entrantes (el asistente puede hacer esto).
+- Opciones no interactivas: `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
 
 ## Documentos relacionados
 
-- Centro de incorporación: [Incorporación (CLI)](/es/start/wizard)
-- Referencia completa: [Referencia de configuración de la CLI](/es/start/wizard-cli-reference)
+- Centro de incorporación: [Onboarding (CLI)](/es/start/wizard)
+- Referencia completa: [CLI Setup Reference](/es/start/wizard-cli-reference)
 - Referencia de comandos: [`openclaw onboard`](/es/cli/onboard)
 
 import es from "/components/footer/es.mdx";

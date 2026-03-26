@@ -1,36 +1,32 @@
 ---
 summary: "Cookbook para agregar una nueva capacidad compartida a OpenClaw"
 read_when:
-  - Agregar una nueva capacidad central y superficie de registro de complementos
-  - Decidir si el código pertenece al núcleo, un complemento de proveedor o un complemento de características
-  - Conectar un nuevo asistente de tiempo de ejecución para canales o herramientas
+  - Adding a new core capability and plugin registration surface
+  - Deciding whether code belongs in core, a vendor plugin, or a feature plugin
+  - Wiring a new runtime helper for channels or tools
 title: "Capability Cookbook"
 ---
 
 # Capability Cookbook
 
-Use esto cuando OpenClaw necesite un nuevo dominio como generación de imágenes, generación de video
-o alguna área de características futura respaldada por el proveedor.
+Use esto cuando OpenClaw necesite un nuevo dominio como la generación de imágenes, generación de videos o alguna área de características futura respaldada por un proveedor.
 
 La regla:
 
-- complemento = límite de propiedad
-- capacidad = contrato central compartido
+- plugin = límite de propiedad
+- capability = contrato central compartido
 
-Eso significa que no debes comenzar conectando un proveedor directamente a un canal o una
-herramienta. Comienza definiendo la capacidad.
+Eso significa que no debe comenzar conectando directamente un proveedor a un canal o una herramienta. Comience definiendo la capacidad.
 
 ## Cuándo crear una capacidad
 
-Cree una nueva capacidad cuando todos estos sean ciertos:
+Cree una nueva capacidad cuando todo esto sea cierto:
 
-1. más de un proveedor podría implementarlo de manera plausible
-2. los canales, herramientas o complementos de características deben consumirlo sin importarles
-   el proveedor
-3. el núcleo debe ser propietario del comportamiento de reserva, política, configuración o entrega
+1. más de un proveedor podría implementarla plausiblemente
+2. los canales, herramientas o complementos de características deben consumirla sin importar el proveedor
+3. el núcleo debe poseer el comportamiento de reserva, política, configuración o entrega
 
-Si el trabajo es solo del proveedor y aún no existe un contrato compartido, deténgase y defina
-primero el contrato.
+Si el trabajo es solo del proveedor y aún no existe un contrato compartido, deténgase y defina el contrato primero.
 
 ## La secuencia estándar
 
@@ -61,7 +57,7 @@ Complemento de proveedor:
 
 Complemento de características/canal:
 
-- llama a `api.runtime.*` o al asistente `plugin-sdk/*-runtime` coincidente
+- llama a `api.runtime.*` o al asistente `plugin-sdk/*-runtime` correspondiente
 - nunca llama a una implementación de proveedor directamente
 
 ## Lista de verificación de archivos
@@ -79,7 +75,7 @@ Para una nueva capacidad, espere tocar estas áreas:
 - `src/plugin-sdk/<capability>.ts`
 - `src/plugin-sdk/<capability>-runtime.ts`
 - uno o más `extensions/<vendor>/...`
-- config/docs/tests
+- config/documentación/pruebas
 
 ## Ejemplo: generación de imágenes
 
@@ -88,27 +84,27 @@ La generación de imágenes sigue la forma estándar:
 1. core define `ImageGenerationProvider`
 2. core expone `registerImageGenerationProvider(...)`
 3. core expone `runtime.imageGeneration.generate(...)`
-4. los plugins `openai` y `google` registran implementaciones respaldadas por proveedores
-5. los proveedores futuros pueden registrar el mismo contrato sin cambiar canales/herramientas
+4. los complementos `openai` y `google` registran implementaciones respaldadas por proveedores
+5. futuros proveedores pueden registrar el mismo contrato sin cambiar canales/herramientas
 
 La clave de configuración es independiente del enrutamiento de análisis de visión:
 
 - `agents.defaults.imageModel` = analizar imágenes
 - `agents.defaults.imageGenerationModel` = generar imágenes
 
-Manténgalos separados para que la reserva y la política sigan siendo explícitas.
+Mantenga esos elementos separados para que la reserva y la política sigan siendo explícitas.
 
-## Lista de verificación de revisión
+## Lista de revisión
 
 Antes de lanzar una nueva capacidad, verifique:
 
 - ningún canal/herramienta importa código de proveedor directamente
-- el asistente de tiempo de ejecución es la ruta compartida
+- el asistente de ejecución (runtime helper) es la ruta compartida
 - al menos una prueba de contrato afirma la propiedad agrupada
 - los documentos de configuración nombran la nueva clave de modelo/configuración
 - los documentos del complemento explican el límite de propiedad
 
-Si un PR omite la capa de capacidad y codifica el comportamiento del proveedor en un canal/herramienta, devuélvalo y defina el contrato primero.
+Si un PR omite la capa de capacidad y codifica el comportamiento del proveedor en un canal/herramienta, devuélvalo y defina primero el contrato.
 
 import es from "/components/footer/es.mdx";
 

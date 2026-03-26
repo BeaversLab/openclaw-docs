@@ -1,8 +1,8 @@
 ---
 summary: "OpenClaw sur DigitalOcean (option VPS payante simple)"
 read_when:
-  - Configuration d'OpenClaw sur DigitalOcean
-  - Recherche d'un hébergement VPS pas cher pour OpenClaw
+  - Setting up OpenClaw on DigitalOcean
+  - Looking for cheap VPS hosting for OpenClaw
 title: "DigitalOcean"
 ---
 
@@ -10,49 +10,49 @@ title: "DigitalOcean"
 
 ## Objectif
 
-Faire tourner une OpenClaw Gateway persistante sur DigitalOcean pour **6 $/mois** (ou 4 $/mois avec tarification réservée).
+Exécuter un OpenClaw Gateway persistant sur DigitalOcean pour **6 $/mois** (ou 4 $/mois avec tarification réservée).
 
-Si vous souhaitez une option à 0 $/mois et ne craignez pas ARM + une configuration spécifique au fournisseur, consultez le [guide Oracle Cloud](/fr/platforms/oracle).
+Si vous souhaitez une option à 0 $/mois et que vous ne craignez pas ARM + une configuration spécifique au fournisseur, consultez le [guide Oracle Cloud](/fr/platforms/oracle).
 
 ## Comparaison des coûts (2026)
 
-| Fournisseur  | Plan            | Spécifications               | Prix/mois     | Notes                                             |
-| ------------ | --------------- | ---------------------------- | ------------- | ------------------------------------------------- |
-| Oracle Cloud | Always Free ARM | jusqu'à 4 OCPU, 24 Go de RAM | 0 $           | ARM, capacité limitée / bizarreries d'inscription |
-| Hetzner      | CX22            | 2 vCPU, 4 Go de RAM          | 3,79 € (~4 $) | Option payante la moins chère                     |
-| DigitalOcean | Basic           | 1 vCPU, 1 Go de RAM          | 6 $           | Interface facile, bonne documentation             |
-| Vultr        | Cloud Compute   | 1 vCPU, 1 Go de RAM          | 6 $           | De nombreux emplacements                          |
-| Linode       | Nanode          | 1 vCPU, 1 Go de RAM          | 5 $           | Fait désormais partie d'Akamai                    |
+| Fournisseur  | Plan            | Spécifications               | Prix/mois     | Notes                                                |
+| ------------ | --------------- | ---------------------------- | ------------- | ---------------------------------------------------- |
+| Oracle Cloud | Always Free ARM | jusqu'à 4 OCPU, 24 Go de RAM | 0 $           | ARM, capacité limitée / particularités d'inscription |
+| Hetzner      | CX22            | 2 vCPU, 4 Go de RAM          | 3,79 € (~4 $) | Option payante la moins chère                        |
+| DigitalOcean | Basic           | 1 vCPU, 1 Go de RAM          | 6 $           | Interface simple, bonne documentation                |
+| Vultr        | Cloud Compute   | 1 vCPU, 1 Go de RAM          | 6 $           | De nombreux emplacements                             |
+| Linode       | Nanode          | 1 vCPU, 1 Go de RAM          | 5 $           | Désormais partie d'Akamai                            |
 
 **Choisir un fournisseur :**
 
-- DigitalOcean : UX la plus simple + configuration prévisible (ce guide)
-- Hetzner : bon rapport qualité/prix (voir le [guide Hetzner](/fr/install/hetzner))
-- Oracle Cloud : peut être gratuit ($0/mois), mais est plus capricieux et uniquement ARM (voir le [guide Oracle](/fr/platforms/oracle))
+- DigitalOcean : interface UX la plus simple + configuration prévisible (ce guide)
+- Hetzner : excellent rapport qualité/prix (voir le [guide Hetzner](/fr/install/hetzner))
+- Oracle Cloud : peut être gratuit (0 $/mois), mais est plus capricieux et uniquement ARM (voir le [guide Oracle](/fr/platforms/oracle))
 
 ---
 
 ## Prérequis
 
-- Compte DigitalOcean ([inscription avec 200$ de crédit gratuit](https://m.do.co/c/signup))
+- Compte DigitalOcean ([inscription avec 200 $ de crédit gratuit](https://m.do.co/c/signup))
 - Paire de clés SSH (ou volonté d'utiliser l'authentification par mot de passe)
 - ~20 minutes
 
 ## 1) Créer un Droplet
 
 <Warning>
-  Utilisez une image de base propre (Ubuntu 24.04 LTS). Évitez les images en 1 clic du Marketplace
-  tiers, sauf si vous avez examiné leurs scripts de démarrage et les paramètres par défaut du
+  Utilisez une image de base propre (Ubuntu 24.04 LTS). Évitez les images en un clic tiers du
+  Marketplace, sauf si vous avez examiné leurs scripts de démarrage et les paramètres par défaut du
   pare-feu.
 </Warning>
 
 1. Connectez-vous à [DigitalOcean](https://cloud.digitalocean.com/)
 2. Cliquez sur **Create → Droplets**
-3. Choisissez :
-   - **Région :** La plus proche de chez vous (ou de vos utilisateurs)
-   - **Image :** Ubuntu 24.04 LTS
-   - **Taille :** Basic → Regular → **$6/mois** (1 vCPU, 1Go RAM, 25Go SSD)
-   - **Authentification :** clé SSH (recommandée) ou mot de passe
+3. Choisissez :
+   - **Region :** La plus proche de chez vous (ou de vos utilisateurs)
+   - **Image :** Ubuntu 24.04 LTS
+   - **Size :** Basic → Regular → **6 $/mois** (1 vCPU, 1 Go de RAM, 25 Go SSD)
+   - **Authentication :** Clé SSH (recommandé) ou mot de passe
 4. Cliquez sur **Create Droplet**
 5. Notez l'adresse IP
 
@@ -62,7 +62,7 @@ Si vous souhaitez une option à 0 $/mois et ne craignez pas ARM + une configurat
 ssh root@YOUR_DROPLET_IP
 ```
 
-## 3) Installez OpenClaw
+## 3) Installer OpenClaw
 
 ```bash
 # Update system
@@ -79,7 +79,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash
 openclaw --version
 ```
 
-## 4) Lancez l'intégration
+## 4) Exécuter l'intégration (Onboarding)
 
 ```bash
 openclaw onboard --install-daemon
@@ -92,7 +92,7 @@ L'assistant vous guidera à travers :
 - Jeton Gateway (généré automatiquement)
 - Installation du démon (systemd)
 
-## 5) Vérifiez la Gateway
+## 5) Vérifier le Gateway
 
 ```bash
 # Check status
@@ -105,9 +105,9 @@ systemctl --user status openclaw-gateway.service
 journalctl --user -u openclaw-gateway.service -f
 ```
 
-## 6) Accédez au tableau de bord
+## 6) Accéder au Tableau de bord
 
-La passerelle se lie à la boucle locale par défaut. Pour accéder à l'interface de contrôle :
+Le gateway se lie à loopback par défaut. Pour accéder à l'interface de contrôle :
 
 **Option A : Tunnel SSH (recommandé)**
 
@@ -118,7 +118,7 @@ ssh -L 18789:localhost:18789 root@YOUR_DROPLET_IP
 # Then open: http://localhost:18789
 ```
 
-**Option B : Tailscale Serve (HTTPS, boucle locale uniquement)**
+**Option B : Tailscale Serve (HTTPS, loopback uniquement)**
 
 ```bash
 # On the droplet
@@ -130,14 +130,14 @@ openclaw config set gateway.tailscale.mode serve
 openclaw gateway restart
 ```
 
-Ouvrez : `https://<magicdns>/`
+Ouvrir : `https://<magicdns>/`
 
-Remarques :
+Notes :
 
-- Keep maintient la Gateway en boucle locale uniquement et authentifie le trafic de l'interface de contrôle/WebSocket via les en-têtes d'identité Tailscale (l'authentification sans jeton suppose un hôte de passerelle de confiance ; les API HTTP nécessitent toujours un jeton/mot de passe).
+- Serve maintient le Gateway en loopback uniquement et authentifie le trafic de l'interface de contrôle/WebSocket via les en-têtes d'identité Tailscale (l'authentification sans jeton suppose un hôte de gateway fiable ; les API HTTP nécessitent toujours un jeton/mot de passe).
 - Pour exiger un jeton/mot de passe à la place, définissez `gateway.auth.allowTailscale: false` ou utilisez `gateway.auth.mode: "password"`.
 
-**Option C : Tailnet bind (sans Serve)**
+**Option C : Liaison Tailnet (pas de Serve)**
 
 ```bash
 openclaw config set gateway.bind tailnet
@@ -146,7 +146,7 @@ openclaw gateway restart
 
 Ouvrir : `http://<tailscale-ip>:18789` (jeton requis).
 
-## 7) Connectez vos canaux
+## 7) Connecter vos canaux
 
 ### Telegram
 
@@ -168,7 +168,7 @@ Voir [Canaux](/fr/channels) pour les autres fournisseurs.
 
 ## Optimisations pour 1 Go de RAM
 
-Le droplet à 6 $ n'a que 1 Go de RAM. Pour garder le système fluide :
+Le droplet à 6 $ n'a que 1 Go de RAM. Pour garder les choses fluides :
 
 ### Ajouter du swap (recommandé)
 
@@ -180,12 +180,12 @@ swapon /swapfile
 echo '/swapfile none swap sw 0 0' >> /etc/fstab
 ```
 
-### Utiliser un model plus léger
+### Utiliser un modèle plus léger
 
 Si vous rencontrez des erreurs OOM, envisagez :
 
-- Utiliser des models basés sur une API (Claude, GPT) au lieu de models locaux
-- Définir `agents.defaults.model.primary` sur un model plus petit
+- Utiliser des modèles basés sur l'API (Claude, GPT) au lieu de modèles locaux
+- Définir `agents.defaults.model.primary` sur un modèle plus petit
 
 ### Surveiller la mémoire
 
@@ -198,12 +198,12 @@ htop
 
 ## Persistance
 
-Tout l'état réside dans :
+Tout l'état se trouve dans :
 
 - `~/.openclaw/` — configuration, identifiants, données de session
 - `~/.openclaw/workspace/` — espace de travail (SOUL.md, mémoire, etc.)
 
-Ceci survive aux redémarrages. Sauvegardez-les périodiquement :
+Ces éléments survivent aux redémarrages. Sauvegardez-les périodiquement :
 
 ```bash
 tar -czvf openclaw-backup.tar.gz ~/.openclaw ~/.openclaw/workspace
@@ -213,27 +213,27 @@ tar -czvf openclaw-backup.tar.gz ~/.openclaw ~/.openclaw/workspace
 
 ## Alternative gratuite Oracle Cloud
 
-Oracle Cloud propose des instances ARM **Always Free** (toujours gratuites) significativement plus puissantes que n'importe quelle option payante ici — pour 0 $/mois.
+Oracle Cloud propose des instances ARM **Always Free** (toujours gratuites) qui sont significativement plus puissantes que toute option payante ici — pour 0 $/mois.
 
 | Ce que vous obtenez       | Spécifications                  |
 | ------------------------- | ------------------------------- |
-| **4 OCPUs**               | ARM Ampere A1                   |
+| **4 OCPU**                | ARM Ampere A1                   |
 | **24 Go de RAM**          | Plus que suffisant              |
 | **200 Go de stockage**    | Volume de blocs                 |
-| **Gratuit pour toujours** | Aucuns frais de carte de crédit |
+| **Gratuit pour toujours** | Aucune frais de carte de crédit |
 
 **Mises en garde :**
 
 - L'inscription peut être capricieuse (réessayez en cas d'échec)
 - Architecture ARM — la plupart des choses fonctionnent, mais certains binaires nécessitent des versions ARM
 
-Pour le guide d'installation complet, consultez Oracle Cloud](/fr/platforms/oracle). Pour des conseils d'inscription et la résolution des problèmes lors du processus d'inscription, consultez ce guide communautaire](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
+Pour le guide de configuration complet, voir [Oracle Cloud](/fr/platforms/oracle). Pour des conseils d'inscription et le dépannage du processus d'inscription, voir ce [guide communautaire](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
 
 ---
 
 ## Dépannage
 
-### Gateway ne démarre pas
+### Gateway ne démarrera pas
 
 ```bash
 openclaw gateway status
@@ -248,7 +248,7 @@ lsof -i :18789
 kill <PID>
 ```
 
-### Manque de mémoire
+### Mémoire insuffisante
 
 ```bash
 # Check memory
@@ -262,10 +262,10 @@ free -h
 
 ## Voir aussi
 
-- Hetzner guide](/fr/install/hetzner) — moins cher, plus puissant
-- Docker install](/fr/install/docker) — installation conteneurisée
-- Tailscale](/fr/gateway/tailscale) — accès à distance sécurisé
-- Configuration](/fr/gateway/configuration) — référence complète de la configuration
+- [Guide Hetzner](/fr/install/hetzner) — moins cher, plus puissant
+- [Installation de Docker](/fr/install/docker) — configuration conteneurisée
+- [Tailscale](/fr/gateway/tailscale) — accès distant sécurisé
+- [Configuration](/fr/gateway/configuration) — référence complète de la configuration
 
 import fr from "/components/footer/fr.mdx";
 

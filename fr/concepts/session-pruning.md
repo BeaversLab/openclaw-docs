@@ -1,51 +1,51 @@
 ---
-title: "Session Pruning"
-summary: "Session pruning : réduction des résultats d'outils pour limiter l'encombrement du contexte"
+title: "Élagage de session"
+summary: "Élagage de session : réduction des résultats des outils pour limiter l'expansion du contexte"
 read_when:
-  - Vous souhaitez réduire la croissance du contexte du LLM due aux sorties des outils
-  - Vous réglez agents.defaults.contextPruning
+  - You want to reduce LLM context growth from tool outputs
+  - You are tuning agents.defaults.contextPruning
 ---
 
-# Session Pruning
+# Élagage de session
 
-Le session pruning supprime les **anciens résultats d'outils** du contexte en mémoire juste avant chaque appel au LLM. Cela ne réécrit **pas** l'historique de session sur disque (`*.jsonl`).
+L'élagage de session supprime les **anciens résultats des outils** du contexte en mémoire juste avant chaque appel LLM. Cela ne **réécrit pas** l'historique de session sur disque (`*.jsonl`).
 
-## Quand cela s'exécute
+## Quand il s'exécute
 
-- Lorsque `mode: "cache-ttl"` est activé et que le dernier appel Anthropic pour la session est plus ancien que `ttl`.
-- N'affecte que les messages envoyés au model pour cette requête.
-- Actif uniquement pour les appels à l'Anthropic API (et les models OpenRouter Anthropic).
-- Pour de meilleurs résultats, faites correspondre `ttl` à la politique de `cacheRetention` de votre model (`short` = 5 min, `long` = 1 h).
-- Après une réduction, la fenêtre TTL est réinitialisée afin que les requêtes ultérieures conservent le cache jusqu'à ce que `ttl` expire à nouveau.
+- Lorsque `mode: "cache-ttl"` est activé et que le dernier appel Anthropic pour la session est antérieur à `ttl`.
+- N'affecte que les messages envoyés au modèle pour cette demande.
+- Actif uniquement pour les appels Anthropic API (et les modèles OpenRouter Anthropic).
+- Pour de meilleurs résultats, faites correspondre `ttl` à votre stratégie de `cacheRetention` du modèle (`short` = 5 m, `long` = 1 h).
+- Après un élagage, la fenêtre TTL est réinitialisée, de sorte que les demandes ultérieures conservent le cache jusqu'à ce que `ttl` expire à nouveau.
 
 ## Valeurs par défaut intelligentes (Anthropic)
 
-- **Profils OAuth ou setup-token** : activez la réduction `cache-ttl` et définissez le heartbeat sur `1h`.
-- **Profils clé d'API** : activez la réduction `cache-ttl`, définissez le heartbeat sur `30m`, et `cacheRetention: "short"` par défaut sur les models Anthropic.
+- Profils **OAuth ou setup-token** : activez l'élagage `cache-ttl` et définissez le heartbeat sur `1h`.
+- Profils **clé API** : activez l'élagage `cache-ttl`, définissez le heartbeat sur `30m` et `cacheRetention: "short"` par défaut sur les modèles Anthropic.
 - Si vous définissez explicitement l'une de ces valeurs, OpenClaw ne les remplacera pas.
 
 ## Ce que cela améliore (coût + comportement du cache)
 
-- **Pourquoi réduire :** le cache de prompt Anthropic ne s'applique que dans le cadre de la TTL. Si une session reste inactive au-delà de la TTL, la requête suivante remet en cache le prompt complet, sauf si vous le réduisez d'abord.
-- **Ce qui devient moins cher :** la réduction diminue la taille du **cacheWrite** pour cette première requête après l'expiration de la TTL.
-- **Pourquoi la réinitialisation de la TTL est importante :** une fois la réduction effectuée, la fenêtre de cache est réinitialisée, afin que les requêtes de suivi puissent réutiliser le prompt nouvellement mis en cache au lieu de remettre en cache l'historique complet.
-- **Ce que cela ne fait pas :** la réduction n'ajoute pas de tokens ni de coûts « doubles » ; elle modifie uniquement ce qui est mis en cache lors de cette première requête après expiration de la TTL.
+- **Pourquoi élaguer :** la mise en cache du prompt Anthropic ne s'applique que dans la limite du TTL. Si une session reste inactive au-delà du TTL, la prochaine demande remet en cache le prompt complet, sauf si vous le réduisez d'abord.
+- **Ce qui devient moins cher :** l'élagage réduit la taille **cacheWrite** pour cette première demande après l'expiration du TTL.
+- **Pourquoi la réinitialisation du TTL est importante :** une fois l'élagage effectué, la fenêtre de cache est réinitialisée, ce qui permet aux demandes suivantes de réutiliser le prompt fraîchement mis en cache au lieu de remettre en cache l'historique complet.
+- **Ce qu'il ne fait pas :** l'élagage n'ajoute pas de jetons ou de coûts « doubles » ; il modifie uniquement ce qui est mis en cache lors de cette première demande post‑TTL.
 
-## Ce qui peut être réduit
+## Ce qui peut être élagué
 
-- Uniquement les messages `toolResult`.
-- Les messages utilisateur et assistant ne sont **jamais** modifiés.
-- Les derniers `keepLastAssistants` messages de l'assistant sont protégés ; les résultats des outils après cette limite ne sont pas élagués.
-- S'il n'y a pas assez de messages de l'assistant pour établir la limite, l'élagage est ignoré.
-- Les résultats des outils contenant des **blocs d'image** sont ignorés (jamais coupés/effacés).
+- Seulement les messages `toolResult`.
+- Les messages utilisateur + assistant ne sont **jamais** modifiés.
+- Les derniers messages de l'assistant `keepLastAssistants` sont protégés ; les résultats des outils après cette limite ne sont pas élagués.
+- S'il n'y a pas assez de messages d'assistant pour établir la limite, l'élagage est ignoré.
+- Les résultats des outils contenant des **blocs d'image** sont ignorés (jamais taillés/effacés).
 
-## Estimation de la fenêtre de contexte
+## Estimation de la fenêtre contextuelle
 
-L'élagage utilise une fenêtre de contexte estimée (caractères ≈ tokens × 4). La fenêtre de base est résolue dans cet ordre :
+L'élagage utilise une fenêtre contextuelle estimée (caractères ≈ jetons × 4). La fenêtre de base est résolue dans cet ordre :
 
-1. `models.providers.*.models[].contextWindow` priorité.
+1. Remplacement `models.providers.*.models[].contextWindow`.
 2. Définition du modèle `contextWindow` (à partir du registre de modèles).
-3. Par défaut `200000` tokens.
+3. `200000` jetons par défaut.
 
 Si `agents.defaults.contextTokens` est défini, il est traité comme une limite (min) sur la fenêtre résolue.
 
@@ -54,26 +54,26 @@ Si `agents.defaults.contextTokens` est défini, il est traité comme une limite 
 ### cache-ttl
 
 - L'élagage ne s'exécute que si le dernier appel Anthropic est antérieur à `ttl` (par défaut `5m`).
-- Lorsqu'il s'exécute : même comportement de coupe douce et de suppression totale qu'auparavant.
+- Lorsqu'il s'exécute : même comportement de découpage souple + effacement dur qu'auparavant.
 
-## Élagage doux vs dur
+## Élagage souple vs dur
 
-- **Coupe douce** : uniquement pour les résultats d'outils trop volumineux.
-  - Conserve le début et la fin, insère `...` et ajoute une note avec la taille d'origine.
-  - Ignore les résultats contenant des blocs d'image.
-- **Suppression totale** : remplace l'intégralité du résultat de l'outil par `hardClear.placeholder`.
+- **Découpage souple** : uniquement pour les résultats d' outils trop volumineux.
+  - Conserve le début + la fin, insère `...`, et ajoute une note avec la taille originale.
+  - Ignore les résultats avec des blocs d'image.
+- **Effacement dur** : remplace tout le résultat de l'outil par `hardClear.placeholder`.
 
 ## Sélection d'outils
 
 - `tools.allow` / `tools.deny` prennent en charge les caractères génériques `*`.
-- La liste de refus l'emporte.
+- Le refus l'emporte.
 - La correspondance ne tient pas compte de la casse.
 - Liste d'autorisation vide => tous les outils autorisés.
 
 ## Interaction avec d'autres limites
 
-- Les outils intégrés tronquent déjà leur propre sortie ; l'élagage de session est une couche supplémentaire qui empêche les conversations longues d'accumuler trop de sorties d'outils dans le contexte du modèle.
-- La compression est séparée : la compression résume et persiste, l'élagage est transitoire par requête. Voir [/concepts/compaction](/fr/concepts/compaction).
+- Les outils intégrés tronquent déjà leur propre sortie ; l'élagage de session est une couche supplémentaire qui empêche les conversations de longue durée d'accumuler trop de résultats d'outils dans le contexte du modèle.
+- La compaction est distincte : la compaction résume et rend persistant, tandis que l'élagage est transitoire par requête. Voir [/concepts/compaction](/fr/concepts/compaction).
 
 ## Valeurs par défaut (lorsqu'activé)
 
@@ -95,7 +95,7 @@ Par défaut (désactivé) :
 }
 ```
 
-Activer l'élagage prenant en compte le TTL :
+Activer l'élagage sensible au TTL :
 
 ```json5
 {
@@ -118,7 +118,7 @@ Limiter l'élagage à des outils spécifiques :
 }
 ```
 
-Voir la référence de configuration : [Configuration de Gateway](/fr/gateway/configuration)
+Voir la référence de configuration : [Configuration du Gateway](/fr/gateway/configuration)
 
 import fr from "/components/footer/fr.mdx";
 

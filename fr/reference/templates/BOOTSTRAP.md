@@ -1,8 +1,8 @@
 ---
 title: "Modèle BOOTSTRAP.md"
-summary: "Rituel de première exécution pour les nouveaux agents"
+summary: "Rituel de premier lancement pour les nouveaux agents"
 read_when:
-  - Amorcer manuellement un espace de travail
+  - Bootstrapping a workspace manually
 ---
 
 # BOOTSTRAP.md - Bonjour le monde
@@ -33,7 +33,7 @@ Faites des suggestions s'ils bloquent. Amusez-vous.
 Mettez à jour ces fichiers avec ce que vous avez appris :
 
 - `IDENTITY.md` — votre nom, créature, ambiance, emoji
-- `USER.md` — leur nom, comment les adresser, fuseau horaire, notes
+- `USER.md` — leur nom, comment s'adresser à eux, fuseau horaire, notes
 
 Ensuite, ouvrez `SOUL.md` ensemble et discutez de :
 

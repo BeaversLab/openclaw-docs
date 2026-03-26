@@ -1,10 +1,10 @@
 ---
 summary: "向多个代理广播 WhatsApp 消息"
 read_when:
-  - 配置广播组
-  - 在 WhatsApp 中调试多代理回复
-status: experimental
-title: "Broadcast Groups"
+  - Configuring broadcast groups
+  - Debugging multi-agent replies in WhatsApp
+status: 实验性
+title: "广播组"
 ---
 
 # 广播组
@@ -70,10 +70,10 @@ Agents:
 
 ### 基本设置
 
-添加一个顶层 `broadcast` 部分（位于 `bindings` 旁边）。键为 WhatsApp 对等 ID：
+添加一个顶级 `broadcast` 部分（位于 `bindings` 旁边）。键为 WhatsApp 对等 ID：
 
-- group chats: 组 JID（例如 `120363403215116621@g.us`）
-- 私信: E.164 电话号码（例如 `+15551234567`）
+- 群聊：群组 JID（例如 `120363403215116621@g.us`）
+- 私信（DM）：E.164 电话号码（例如 `+15551234567`）
 
 ```json
 {
@@ -155,7 +155,7 @@ Agents:
 ### 消息流
 
 1. **传入消息**到达 WhatsApp 群组
-2. **广播检查：** 系统检查对等 ID 是否位于 `broadcast` 中
+2. **广播检查**：系统检查对等 ID 是否在 `broadcast` 中
 3. **如果在广播列表中**：
    - 所有列出的代理都会处理该消息
    - 每个代理都有自己独立的会话键和隔离的上下文
@@ -169,7 +169,7 @@ Agents:
 
 广播组中的每个代理都保持完全独立的：
 
-- **会话键**（`agent:alfred:whatsapp:group:120363...` 对比 `agent:baerbel:whatsapp:group:120363...`）
+- **会话键** (`agent:alfred:whatsapp:group:120363...` vs `agent:baerbel:whatsapp:group:120363...`)
 - **对话历史**（代理看不到其他代理的消息）
 - **工作区**（如果已配置，则为独立的沙箱）
 - **工具访问**（不同的允许/拒绝列表）
@@ -185,7 +185,7 @@ Agents:
 
 ### 示例：隔离的会话
 
-在包含代理 `["alfred", "baerbel"]` 的组 `120363403215116621@g.us` 中：
+在拥有代理 `["alfred", "baerbel"]` 的组 `120363403215116621@g.us` 中：
 
 **Alfred 的上下文**：
 
@@ -219,8 +219,8 @@ Tools: read only
 }
 ```
 
-✅ **好：** 每个代理有一项工作  
-❌ **坏：** 一个通用的 "dev-helper" 代理
+✅ **好**：每个代理有一项工作  
+❌ **坏**：一个通用的 "dev-helper" 代理
 
 ### 2. 使用描述性名称
 
@@ -257,7 +257,7 @@ Tools: read only
 
 对于许多代理，请考虑：
 
-- 使用 `"strategy": "parallel"`（默认）以提升速度
+- 使用 `"strategy": "parallel"`（默认）以提高速度
 - 将广播组限制为 5-10 个代理
 - 为更简单的代理使用更快的模型
 
@@ -299,8 +299,8 @@ Result: Agent A and C respond, Agent B logs error
 }
 ```
 
-- `GROUP_A`: 仅 alfred 响应（正常路由）
-- `GROUP_B`: agent1 和 agent2 都响应（广播）
+- `GROUP_A`：仅 alfred 响应（正常路由）
+- `GROUP_B`：agent1 和 agent2 均响应（广播）
 
 **优先级：** `broadcast` 优先于 `bindings`。
 
@@ -311,7 +311,7 @@ Result: Agent A and C respond, Agent B logs error
 **检查：**
 
 1. 代理 ID 存在于 `agents.list` 中
-2. 对等 ID 格式正确（例如 `120363403215116621@g.us`）
+2. Peer ID 格式正确（例如 `120363403215116621@g.us`）
 3. 代理未在拒绝列表中
 
 **调试：**
@@ -322,7 +322,7 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 
 ### 仅有一个代理响应
 
-**原因：** 对等 ID 可能位于 `bindings` 中，但不在 `broadcast` 中。
+**原因：** Peer ID 可能位于 `bindings` 中，但不在 `broadcast` 中。
 
 **修复：** 添加到广播配置中或从绑定中移除。
 
@@ -416,7 +416,7 @@ interface OpenClawConfig {
 - `strategy`（可选）：如何处理代理
   - `"parallel"`（默认）：所有代理同时处理
   - `"sequential"`：代理按数组顺序处理
-- `[peerId]`: WhatsApp 组 JID、E.164 号码或其他对等 ID
+- `[peerId]`：WhatsApp 群组 JID、E.164 号码或其他对端 ID
   - 值：应该处理消息的代理 ID 数组
 
 ## 限制

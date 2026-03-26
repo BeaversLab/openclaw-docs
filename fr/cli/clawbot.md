@@ -1,14 +1,14 @@
 ---
-summary: "Référence de la CLI pour `openclaw clawbot` (espace de noms d'alias hérité)"
+summary: "Référence CLI pour `openclaw clawbot` (espace de noms d'alias hérité)"
 read_when:
-  - Vous maintenez des scripts plus anciens utilisant `openclaw clawbot ...`
-  - Vous avez besoin de conseils de migration vers les commandes actuelles
+  - You maintain older scripts using `openclaw clawbot ...`
+  - You need migration guidance to current commands
 title: "clawbot"
 ---
 
 # `openclaw clawbot`
 
-Espace de noms d'alias hérité conservé pour la rétrocompatibilité.
+Espace de noms d'alias hérité conservé pour la compatibilité descendante.
 
 Alias actuellement pris en charge :
 
@@ -16,7 +16,7 @@ Alias actuellement pris en charge :
 
 ## Migration
 
-Préférez directement les commandes modernes de premier niveau :
+Privilégiez directement les commandes modernes de premier niveau :
 
 - `openclaw clawbot qr` -> `openclaw qr`
 

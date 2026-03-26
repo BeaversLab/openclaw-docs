@@ -1,17 +1,17 @@
 ---
 summary: "Exploration : configuration du model, profils d'authentification et comportement de repli"
 read_when:
-  - Exploration des futures idées de sélection de model + profil d'authentification
-title: "Exploration de la configuration du model"
+  - Exploring future model selection + auth profile ideas
+title: "Exploration de la configuration du modèle"
 ---
 
 # Configuration du modèle (Exploration)
 
-Ce document capture des **idées** pour la configuration future du model. Ce n'est pas
-une spécification finale. Pour le comportement actuel, voir :
+Ce document capture des **idées** pour la configuration future des modèles. Ce n'est pas une
+spécification finale. Pour le comportement actuel, consultez :
 
 - [Modèles](/fr/concepts/models)
-- [Basculement de model](/fr/concepts/model-failover)
+- [Basculement de modèle](/fr/concepts/model-failover)
 - [OAuth + profils](/fr/concepts/oauth)
 
 ## Motivation
@@ -19,12 +19,12 @@ une spécification finale. Pour le comportement actuel, voir :
 Les opérateurs souhaitent :
 
 - Plusieurs profils d'authentification par fournisseur (personnel vs travail).
-- Sélection simple de `/model` avec des replis prévisibles.
+- Une sélection `/model` simple avec des replis prévisibles.
 - Une séparation claire entre les modèles de texte et les modèles capables d'images.
 
 ## Direction possible (haut niveau)
 
-- Garder la sélection du model simple : `provider/model` avec des alias optionnels.
+- Garder la sélection du modèle simple : `provider/model` avec des alias optionnels.
 - Permettre aux fournisseurs d'avoir plusieurs profils d'authentification, avec un ordre explicite.
 - Utiliser une liste de repli globale pour que toutes les sessions basculent de manière cohérente.
 - Ne remplacer le routage des images que lorsqu'il est explicitement configuré.

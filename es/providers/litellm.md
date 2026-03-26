@@ -1,26 +1,26 @@
 ---
 title: "LiteLLM"
-summary: "Ejecuta OpenClaw a través del proxy LiteLLM para acceso unificado a modelos y seguimiento de costos"
+summary: "Ejecute OpenClaw a través del proxy LiteLLM para un acceso unificado a modelos y seguimiento de costos"
 read_when:
-  - Quieres enrutar OpenClaw a través de un proxy LiteLLM
-  - Necesitas seguimiento de costos, registro o enrutamiento de modelos a través de LiteLLM
+  - You want to route OpenClaw through a LiteLLM proxy
+  - You need cost tracking, logging, or model routing through LiteLLM
 ---
 
 # LiteLLM
 
-[LiteLLM](https://litellm.ai) es una puerta de enlace de LLM de código abierto que proporciona una API unificada a más de 100 proveedores de modelos. Enruta OpenClaw a través de LiteLLM para obtener un seguimiento centralizado de costos, registros y la flexibilidad de cambiar de backends sin modificar la configuración de OpenClaw.
+[LiteLLM](https://litellm.ai) es una puerta de enlace (gateway) de LLM de código abierto que proporciona una API unificada para más de 100 proveedores de modelos. Enruta OpenClaw a través de LiteLLM para obtener un seguimiento centralizado de costos, registro de logs y la flexibilidad de cambiar de backends sin modificar la configuración de OpenClaw.
 
 ## ¿Por qué usar LiteLLM con OpenClaw?
 
-- **Seguimiento de costos** — Vea exactamente en qué gasta OpenClaw en todos los modelos
-- **Enrutamiento de modelos** — Cambie entre Claude, GPT-4, Gemini, Bedrock sin cambiar la configuración
+- **Seguimiento de costos** — Vea exactamente en qué gasta OpenClam en todos los modelos
+- **Enrutamiento de modelos** — Cambie entre Claude, GPT-4, Gemini, Bedrock sin cambios en la configuración
 - **Claves virtuales** — Cree claves con límites de gasto para OpenClaw
-- **Registro** — Registros completos de solicitud/respuesta para depuración
+- **Registro (Logging)** — Registros completos de solicitud/respuesta para depuración
 - **Respaldo (Fallbacks)** — Conmutación por error automática si su proveedor principal está caído
 
 ## Inicio rápido
 
-### Vía incorporación
+### A través de la incorporación
 
 ```bash
 openclaw onboard --auth-choice litellm-api-key
@@ -43,7 +43,7 @@ export LITELLM_API_KEY="your-litellm-key"
 openclaw
 ```
 
-Eso es todo. Ahora OpenClau se enruta a través de LiteLLM.
+Eso es todo. Ahora OpenClaw enruta a través de LiteLLM.
 
 ## Configuración
 
@@ -111,7 +111,7 @@ Use la clave generada como `LITELLM_API_KEY`.
 
 ## Enrutamiento de modelos
 
-LiteLLM puede enrutar las solicitudes del modelo a diferentes backends. Configúrelo en su `config.yaml` de LiteLLM:
+LiteLLM puede enrutar solicitudes de modelos a diferentes backends. Configure en su `config.yaml` de LiteLLM:
 
 ```yaml
 model_list:
@@ -126,11 +126,11 @@ model_list:
       api_key: os.environ/OPENAI_API_KEY
 ```
 
-OpenClaw sigue solicitando `claude-opus-4-6` — LiteLLM se encarga del enrutamiento.
+OpenClaw sigue solicitando `claude-opus-4-6` — LiteLLM maneja el enrutamiento.
 
 ## Ver uso
 
-Consulte el panel de control o la API de LiteLLM:
+Consulte el panel o la API de LiteLLM:
 
 ```bash
 # Key info
@@ -144,9 +144,9 @@ curl "http://localhost:4000/spend/logs" \
 
 ## Notas
 
-- LiteLLM se ejecuta en `http://localhost:4000` de forma predeterminada
-- OpenClaw se conecta a través del punto final `/v1/chat/completions` compatible con OpenAI
-- Todas las funciones de OpenClaw funcionan a través de LiteLLM — sin limitaciones
+- LiteLLM se ejecuta en `http://localhost:4000` por defecto
+- OpenClaw se conecta a través del endpoint `/v1/chat/completions` compatible con OpenAI
+- Todas las funciones de OpenClaw funcionan a través de LiteLLM: sin limitaciones
 
 ## Ver también
 

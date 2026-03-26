@@ -1,7 +1,7 @@
 ---
-summary: "OpenClaw macOS 应用程序开发者设置指南"
+summary: "适用于 OpenClaw macOS 应用开发人员的设置指南"
 read_when:
-  - 设置 macOS 开发环境
+  - Setting up the macOS development environment
 title: "macOS 开发设置"
 ---
 
@@ -14,7 +14,7 @@ title: "macOS 开发设置"
 在构建应用之前，请确保已安装以下内容：
 
 1. **Xcode 26.2+**：Swift 开发所必需。
-2. **Node.js 24 和 pnpm**：推荐用于网关、CLI 和打包脚本。目前，Node 22 LTS（`22.16+`）出于兼容性考虑仍受支持。
+2. **Node.js 24 & pnpm**：推荐用于网关、CLI 和打包脚本。为了兼容性，目前仍支持 Node 22 LTS (`22.16+`)。
 
 ## 1. 安装依赖项
 
@@ -32,16 +32,16 @@ pnpm install
 ./scripts/package-mac-app.sh
 ```
 
-如果您没有 Apple Developer ID 证书，该脚本将自动使用 **临时签名**（`-`）。
+如果您没有 Apple Developer ID 证书，脚本将自动使用 **临时签名** (`-`)。
 
 有关开发运行模式、签名标志和团队 ID 故障排除，请参阅 macOS 应用自述文件：
 [https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md](https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md)
 
-> **注意**：临时签名的应用可能会触发安全提示。如果应用立即崩溃并显示“Abort trap 6”，请参阅 [故障排除](#troubleshooting) 部分。
+> **注意**：临时签名的应用可能会触发安全提示。如果应用立即崩溃并显示 "Abort trap 6"，请参阅 [故障排除](#troubleshooting) 部分。
 
 ## 3. 安装 CLI
 
-macOS 应用需要全局安装 `openclaw` CLI 来管理后台任务。
+macOS 应用期望安装全局 `openclaw` CLI 来管理后台任务。
 
 **安装（推荐）：**
 
@@ -87,7 +87,7 @@ xcrun swift --version
    tccutil reset All ai.openclaw.mac.debug
    ```
 
-2. 如果失败，请在 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中临时更改 `BUNDLE_ID`，以强制 macOS 生成“全新状态”。
+2. 如果失败，请在 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中临时更改 `BUNDLE_ID`，以强制 macOS "从零开始"。
 
 ### Gateway 网关 一直处于“启动中...”状态
 

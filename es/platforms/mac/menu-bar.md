@@ -1,7 +1,7 @@
 ---
 summary: "Lógica de estado de la barra de menús y lo que se muestra a los usuarios"
 read_when:
-  - Ajustar la interfaz de usuario del menú de Mac o la lógica de estado
+  - Tweaking mac menu UI or status logic
 title: "Barra de menús"
 ---
 
@@ -11,7 +11,7 @@ title: "Barra de menús"
 
 - Mostramos el estado de trabajo actual del agente en el icono de la barra de menús y en la primera fila de estado del menú.
 - El estado de salud se oculta mientras hay trabajo activo; vuelve a aparecer cuando todas las sesiones están inactivas.
-- El bloque “Nodos” en el menú lista solo **dispositivos** (nodos vinculados mediante `node.list`), no entradas de cliente/presencia.
+- El bloque “Nodes” en el menú lista solo **dispositivos** (nodos emparejados a través de `node.list`), no entradas de cliente/presencia.
 - Aparece una sección “Usage” (Uso) debajo de Contexto cuando hay instantáneas de uso del proveedor disponibles.
 
 ## Modelo de estado
@@ -42,7 +42,7 @@ title: "Barra de menús"
 
 - `idle`: criatura normal.
 - `workingMain`: insignia con glifo, tinte completo, animación de pata “trabajando”.
-- `workingOther`: insignia con glifo, tinte silenciado, sin carrera.
+- `workingOther`: insignia con glifo, tinte silenciado, sin movimiento rápido.
 - `overridden`: usa el glifo/tinte elegido independientemente de la actividad.
 
 ## Texto de fila de estado (menú)
@@ -53,14 +53,14 @@ title: "Barra de menús"
 
 ## Ingestión de eventos
 
-- Fuente: eventos `agent` del canal de control (`ControlChannel.handleAgentEvent`).
+- Fuente: eventos `agent` del control‑channel (`ControlChannel.handleAgentEvent`).
 - Campos analizados:
   - `stream: "job"` con `data.state` para iniciar/detener.
   - `stream: "tool"` con `data.phase`, `name`, `meta`/`args` opcionales.
 - Etiquetas:
   - `exec`: primera línea de `args.command`.
-  - `read`/`write`: ruta acortada.
-  - `edit`: ruta más tipo de cambio inferido de `meta`/conteos de diferencias.
+  - `read`/`write`: ruta abreviada.
+  - `edit`: ruta más tipo de cambio inferido de `meta`/recuentos de diferencias.
   - alternativo (fallback): nombre de la herramienta.
 
 ## Anulación de depuración
@@ -70,7 +70,7 @@ title: "Barra de menús"
   - `Working: main` (por tipo de herramienta)
   - `Working: other` (por tipo de herramienta)
   - `Idle`
-- Almacenado mediante `@AppStorage("iconOverride")`; asignado a `IconState.overridden`.
+- Almacenado mediante `@AppStorage("iconOverride")`; mapeado a `IconState.overridden`.
 
 ## Lista de comprobación de pruebas
 

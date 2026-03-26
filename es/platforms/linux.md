@@ -1,17 +1,17 @@
 ---
 summary: "Soporte de Linux + estado de la aplicación complementaria"
 read_when:
-  - Buscando el estado de la aplicación complementaria de Linux
-  - Planificando la cobertura de la plataforma o contribuciones
-title: "Linux App"
+  - Looking for Linux companion app status
+  - Planning platform coverage or contributions
+title: "Aplicación de Linux"
 ---
 
-# Linux App
+# Aplicación de Linux
 
-El Gateway es totalmente compatible con Linux. **Node es el tiempo de ejecución recomendado**.
-No se recomienda Bun para el Gateway (errores de WhatsApp/Telegram).
+El Gateway es totalmente compatible con Linux. **Node es el runtime recomendado**.
+Bun no se recomienda para el Gateway (errores de WhatsApp/Telegram).
 
-Se planean aplicaciones complementarias nativas de Linux. Las contribuciones son bienvenidas si deseas ayudar a construir una.
+Las aplicaciones complementarias nativas de Linux están planeadas. Las contribuciones son bienvenidas si deseas ayudar a construir una.
 
 ## Ruta rápida para principiantes (VPS)
 
@@ -21,9 +21,9 @@ Se planean aplicaciones complementarias nativas de Linux. Las contribuciones son
 4. Desde tu portátil: `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. Abre `http://127.0.0.1:18789/` y pega tu token
 
-Guía paso a paso de VPS: [exe.dev](/es/install/exe-dev)
+Guía completa del servidor Linux: [Linux Server](/es/vps). Ejemplo paso a paso de VPS: [exe.dev](/es/install/exe-dev)
 
-## Instalar
+## Instalación
 
 - [Introducción](/es/start/getting-started)
 - [Instalación y actualizaciones](/es/install/updating)
@@ -31,7 +31,7 @@ Guía paso a paso de VPS: [exe.dev](/es/install/exe-dev)
 
 ## Gateway
 
-- [Manual del Gateway](/es/gateway)
+- [Manual de Gateway](/es/gateway)
 - [Configuración](/es/gateway/configuration)
 
 ## Instalación del servicio Gateway (CLI)
@@ -54,9 +54,9 @@ O:
 openclaw configure
 ```
 
-Selecciona **Gateway service** cuando se te solicite.
+Selecciona **Servicio Gateway** cuando se te solicite.
 
-Reparación/migración:
+Reparar/migrar:
 
 ```
 openclaw doctor
@@ -64,9 +64,7 @@ openclaw doctor
 
 ## Control del sistema (unidad de usuario systemd)
 
-OpenClaw instala un servicio de **usuario** systemd de forma predeterminada. Usa un servicio de **sistema**
-para servidores compartidos o siempre activos. El ejemplo completo de unidad y la guía
-se encuentran en el [Manual del Gateway](/es/gateway).
+OpenClaw instala un servicio de **usuario** de systemd por defecto. Use un servicio de **sistema** para servidores compartidos o siempre activos. El ejemplo completo de la unidad y la guía se encuentran en el [Gateway runbook](/es/gateway).
 
 Configuración mínima:
 

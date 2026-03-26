@@ -1,5 +1,5 @@
 ---
-summary: "CLI 参考 for `openclaw doctor` (health checks + guided repairs)"
+summary: "`openclaw doctor` (health checks + guided repairs) 的 CLI 参考"
 read_when:
   - You have connectivity/auth issues and want guided fixes
   - You updated and want a sanity check
@@ -8,9 +8,9 @@ title: "doctor"
 
 # `openclaw doctor`
 
-针对网关和渠道的运行状况检查 + 快速修复。
+针对网关和通道的健康检查 + 快速修复。
 
-相关：
+相关内容：
 
 - 故障排除：[故障排除](/zh/gateway/troubleshooting)
 - 安全审计：[安全](/zh/gateway/security)
@@ -25,19 +25,19 @@ openclaw doctor --deep
 
 说明：
 
-- Interactive prompts (like keychain/OAuth fixes) only run when stdin is a TTY and `--non-interactive` is **not** set. Headless runs (cron, Telegram, no terminal) will skip prompts.
-- `--fix` (alias for `--repair`) writes a backup to `~/.openclaw/openclaw.json.bak` and drops unknown config keys, listing each removal.
-- State integrity checks now detect orphan transcript files in the sessions directory and can archive them as `.deleted.<timestamp>` to reclaim space safely.
-- Doctor also scans `~/.openclaw/cron/jobs.json` (or `cron.store`) for legacy cron job shapes and can rewrite them in place before the scheduler has to auto-normalize them at runtime.
-- Doctor includes a memory-search readiness check and can recommend `openclaw configure --section model` when embedding credentials are missing.
-- If sandbox mode is enabled but Docker is unavailable, doctor reports a high-signal warning with remediation (`install Docker` or `openclaw config set agents.defaults.sandbox.mode off`).
-- If `gateway.auth.token`/`gateway.auth.password` are SecretRef-managed and unavailable in the current command path, doctor reports a read-only warning and does not write plaintext fallback credentials.
-- If 渠道 SecretRef inspection fails in a fix path, doctor continues and reports a warning instead of exiting early.
-- Telegram `allowFrom` username auto-resolution (`doctor --fix`) requires a resolvable Telegram token in the current command path. If token inspection is unavailable, doctor reports a warning and skips auto-resolution for that pass.
+- 交互式提示（如钥匙串/OAuth 修复）仅在 stdin 为 TTY 且未设置 `--non-interactive` 时运行。无头运行（cron、Telegram、无终端）将跳过提示。
+- `--fix` (`--repair` 的别名) 会将备份写入 `~/.openclaw/openclaw.json.bak` 并删除未知的配置键，列出每一项删除内容。
+- 状态完整性检查现在可以检测会话目录中的孤立转录文件，并将其归档为 `.deleted.<timestamp>` 以安全回收空间。
+- Doctor 还会扫描 `~/.openclaw/cron/jobs.json` (或 `cron.store`) 中的旧版 cron 作业格式，并可以在调度器需要在运行时自动规范化它们之前就地重写这些格式。
+- Doctor 包含内存搜索就绪检查，并在缺少嵌入凭据时建议使用 `openclaw configure --section model`。
+- 如果启用了沙盒模式但 Docker 不可用，doctor 会报告一个高信号警告并提供补救措施 (`install Docker` 或 `openclaw config set agents.defaults.sandbox.mode off`)。
+- 如果 `gateway.auth.token`/`gateway.auth.password` 由 SecretRef 管理并且在当前命令路径中不可用，doctor 会报告只读警告并且不会写入纯文本回退凭据。
+- 如果渠道 SecretRef 检查在修复路径中失败，doctor 将继续并报告警告，而不是提前退出。
+- Telegram `allowFrom` 用户名自动解析 (`doctor --fix`) 需要在当前命令路径中有一个可解析的 Telegram 令牌。如果令牌检查不可用，doctor 将报告警告并在该次传递中跳过自动解析。
 
-## macOS: `launchctl` env overrides
+## macOS：`launchctl` env overrides
 
-如果您之前运行了 `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...`（或 `...PASSWORD`），该值将覆盖您的配置文件，并可能导致持续的“未授权”错误。
+如果您之前运行过 `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...` (或 `...PASSWORD`)，该值将覆盖您的配置文件，并可能导致持续的“unauthorized”错误。
 
 ```bash
 launchctl getenv OPENCLAW_GATEWAY_TOKEN

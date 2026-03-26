@@ -1,28 +1,28 @@
 ---
 summary: "Referencia de CLI para `openclaw directory` (yo, pares, grupos)"
 read_when:
-  - Deseas buscar IDs de contactos/grupos/yo para un canal
-  - Estás desarrollando un adaptador de directorio de canal
+  - You want to look up contacts/groups/self ids for a channel
+  - You are developing a channel directory adapter
 title: "directorio"
 ---
 
 # `openclaw directory`
 
-Búsquedas en el directorio para canales que las soportan (contactos/pares, grupos y "yo").
+Consultas de directorio para canales que lo soportan (contactos/pares, grupos y “yo”).
 
 ## Opciones comunes
 
-- `--channel <name>`: ID/alias del canal (requerido cuando hay varios canales configurados; automático cuando solo hay uno configurado)
-- `--account <id>`: ID de cuenta (predeterminado: predeterminado del canal)
+- `--channel <name>`: id/alias del canal (obligatorio cuando hay varios canales configurados; automático cuando solo hay uno configurado)
+- `--account <id>`: id de cuenta (predeterminado: predeterminado del canal)
 - `--json`: salida JSON
 
 ## Notas
 
 - `directory` está diseñado para ayudarte a encontrar los IDs que puedes pegar en otros comandos (especialmente `openclaw message send --target ...`).
-- Para muchos canales, los resultados están respaldados por la configuración (listas de permisos / grupos configurados) en lugar de un directorio en vivo del proveedor.
-- La salida predeterminada es `id` (y a veces `name`) separados por una tabulación; usa `--json` para scripts.
+- Para muchos canales, los resultados están respaldados por la configuración (listas permitidas / grupos configurados) en lugar de un directorio en vivo del proveedor.
+- La salida predeterminada es `id` (y a veces `name`) separados por un tabulador; usa `--json` para scripts.
 
-## Usar resultados con `message send`
+## Usar los resultados con `message send`
 
 ```bash
 openclaw directory peers list --channel slack --query "U0"
@@ -32,15 +32,15 @@ openclaw message send --channel slack --target user:U012ABCDEF --message "hello"
 ## Formatos de ID (por canal)
 
 - WhatsApp: `+15551234567` (MD), `1234567890-1234567890@g.us` (grupo)
-- Telegram: `@username` o ID de chat numérico; los grupos son IDs numéricos
+- Telegram: `@username` o id numérico del chat; los grupos son ids numéricos
 - Slack: `user:U…` y `channel:C…`
 - Discord: `user:<id>` y `channel:<id>`
 - Matrix (complemento): `user:@user:server`, `room:!roomId:server` o `#alias:server`
 - Microsoft Teams (complemento): `user:<id>` y `conversation:<id>`
-- Zalo (complemento): ID de usuario (Bot API)
-- Zalo Personal / `zalouser` (complemento): ID de hilo (MD/grupo) de `zca` (`me`, `friend list`, `group list`)
+- Zalo (complemento): id de usuario (API de Bot)
+- Zalo Personal / `zalouser` (complemento): id de hilo (MD/grupo) de `zca` (`me`, `friend list`, `group list`)
 
-## Propio ("yo")
+## Uno mismo ("me")
 
 ```bash
 openclaw directory self --channel zalouser

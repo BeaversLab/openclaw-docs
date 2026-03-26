@@ -1,26 +1,22 @@
 ---
-summary: "SOUL Evil hook (swap SOUL.md with SOUL_EVIL.md)"
+summary: "Crochet SOUL Evil (échange SOUL.md avec SOUL_EVIL.md)"
 read_when:
-  - Vous souhaitez activer ou régler le hook SOUL Evil
-  - Vous souhaitez une fenêtre de purge ou un échange de personnalité aléatoire
-title: "SOUL Evil Hook"
+  - You want to enable or tune the SOUL Evil hook
+  - You want a purge window or random-chance persona swap
+title: "Crochet SOUL Evil"
 ---
 
-# SOUL Evil Hook
+# Crochet SOUL Evil
 
-Le hook SOUL Evil remplace le contenu `SOUL.md` **injecté** par `SOUL_EVIL.md` durant
-une fenêtre de purge ou par hasard. Il ne modifie **pas** les fichiers sur le disque.
+Le crochet SOUL Evil remplace le contenu **injecté** `SOUL.md` par `SOUL_EVIL.md` durant une fenêtre de purge ou au hasard. Il ne modifie **pas** les fichiers sur le disque.
 
 ## Fonctionnement
 
-Lorsque `agent:bootstrap` s'exécute, le hook peut remplacer le contenu `SOUL.md` en mémoire
-avant que le prompt système ne soit assemblé. Si `SOUL_EVIL.md` est manquant ou vide,
-OpenClaw enregistre un avertissement et conserve le `SOUL.md` normal.
+Lorsque `agent:bootstrap` s'exécute, le crochet peut remplacer le contenu `SOUL.md` en mémoire avant que le prompt système ne soit assemblé. Si `SOUL_EVIL.md` est manquant ou vide, OpenClaw enregistre un avertissement et conserve le `SOUL.md` normal.
 
-Les exécutions de sous-agents n'incluent **pas** `SOUL.md` dans leurs fichiers d'amorçage, donc ce hook
-n'a aucun effet sur les sous-agents.
+Les exécutions de sous-agents n'incluent **pas** `SOUL.md` dans leurs fichiers d'amorçage, donc ce crochet n'a aucun effet sur les sous-agents.
 
-## Activer
+## Activation
 
 ```bash
 openclaw hooks enable soul-evil
@@ -55,18 +51,18 @@ Créez `SOUL_EVIL.md` à la racine de l'espace de travail de l'agent (à côté 
 - `purge.at` (HH:mm) : début de la purge quotidienne (horloge 24 heures)
 - `purge.duration` (durée) : longueur de la fenêtre (ex. `30s`, `10m`, `1h`)
 
-**Priorité :** la fenêtre de purge l'emporte sur le hasard.
+**Priorité :** la fenêtre de purge prime sur le hasard.
 
-**Fuseau horaire :** utilise `agents.defaults.userTimezone` si défini ; sinon le fuseau horaire de l'hôte.
+**Fuseau horaire :** utilise `agents.defaults.userTimezone` s'il est défini ; sinon le fuseau horaire de l'hôte.
 
 ## Notes
 
 - Aucun fichier n'est écrit ou modifié sur le disque.
-- Si `SOUL.md` n'est pas dans la liste d'amorçage, le hook ne fait rien.
+- Si `SOUL.md` n'est pas dans la liste d'amorçage, le crochet ne fait rien.
 
 ## Voir aussi
 
-- [Hooks](/fr/hooks)
+- [Crochets](/fr/hooks)
 
 import fr from "/components/footer/fr.mdx";
 

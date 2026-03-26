@@ -1,33 +1,33 @@
 ---
-summary: "Aperçu de l'appairage : approuver qui peut vous envoyer un DM + quels nœuds peuvent rejoindre"
+summary: "Aperçu du couplage : approuver qui peut vous envoyer un DM + quels nœuds peuvent rejoindre"
 read_when:
-  - Configuration du contrôle d'accès par DM
-  - Appairage d'un nouveau nœud iOS/Android
-  - Examen de la posture de sécurité de OpenClaw
-title: "Appairage"
+  - Setting up DM access control
+  - Pairing a new iOS/Android node
+  - Reviewing OpenClaw security posture
+title: "Couplage"
 ---
 
-# Appairage
+# Couplage
 
-L'« appairage » est l'étape d'**approbation explicite par le propriétaire** de OpenClaw.
+Le « couplage » est l’étape d’**approbation explicite par le propriétaire** d’OpenClaw.
 Il est utilisé à deux endroits :
 
-1. **Appairage DM** (qui est autorisé à parler au bot)
-2. **Appairage de nœud** (quels appareils/nœuds sont autorisés à rejoindre le réseau de la passerelle)
+1. **Couplage DM** (qui est autorisé à parler au bot)
+2. **Couplage de nœuds** (quels appareils/nœuds sont autorisés à rejoindre le réseau Gateway)
 
 Contexte de sécurité : [Sécurité](/fr/gateway/security)
 
-## 1) Appairage DM (accès à la discussion entrante)
+## 1) Couplage DM (accès aux messages entrants)
 
-Lorsqu'un canal est configuré avec la stratégie de DM `pairing`, les expéditeurs inconnus reçoivent un code court et leur message n'est **pas traité** jusqu'à ce que vous l'approuviez.
+Lorsqu’un canal est configuré avec la stratégie de DM `pairing`, les expéditeurs inconnus reçoivent un code court et leur message est **non traité** jusqu’à votre approbation.
 
-Les stratégies de DM par défaut sont documentées dans : [Sécurité](/fr/gateway/security)
+Les stratégies DM par défaut sont documentées dans : [Sécurité](/fr/gateway/security)
 
-Codes d'appairage :
+Codes de couplage :
 
 - 8 caractères, majuscules, sans caractères ambigus (`0O1I`).
-- **Expire après 1 heure**. Le bot n'envoie le message d'appairage que lorsqu'une nouvelle demande est créée (environ une fois par heure par expéditeur).
-- Les demandes d'appairage DM en attente sont limitées à **3 par canal** par défaut ; les demandes supplémentaires sont ignorées jusqu'à ce que l'une expire ou soit approuvée.
+- **Expire après 1 heure**. Le bot n’envoie le message de couplage que lorsqu’une nouvelle demande est créée (environ une fois par heure par expéditeur).
+- Les demandes de couplage DM en attente sont limitées à **3 par canal** par défaut ; les demandes supplémentaires sont ignorées jusqu’à ce que l’une expire ou soit approuvée.
 
 ### Approuver un expéditeur
 
@@ -38,19 +38,19 @@ openclaw pairing approve telegram <CODE>
 
 Canaux pris en charge : `telegram`, `whatsapp`, `signal`, `imessage`, `discord`, `slack`.
 
-### Où se trouve l'état
+### Où l’état est stocké
 
 Stocké sous `~/.openclaw/credentials/` :
 
 - Demandes en attente : `<channel>-pairing.json`
-- Stockage de la liste d'autorisation approuvée : `<channel>-allowFrom.json`
+- Stockage de la liste d’autorisation approuvée : `<channel>-allowFrom.json`
 
-Traitez-les comme sensibles (ils contrôlent l'accès à votre assistant).
+Traitez-les comme sensibles (ils contrôlent l’accès à votre assistant).
 
-## 2) Appairage d'appareil nœud (nœuds iOS/Android/macOS/headless)
+## 2) Couplage d’appareils nœuds (iOS/Android/macOS/nœuds headless)
 
 Les nœuds se connectent à la Gateway en tant qu'**appareils** avec `role: node`. La Gateway
-crée une demande d'appairage d'appareil qui doit être approuvée.
+crée une demande de couplage d’appareil qui doit être approuvée.
 
 ### Approuver un appareil nœud
 
@@ -60,23 +60,23 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-### Où se trouve l'état
+### Où l’état est stocké
 
 Stocké sous `~/.openclaw/devices/` :
 
-- `pending.json` (à courte durée de vie ; les demandes en attente expirent)
-- `paired.json` (appareils appariés + jetons)
+- `pending.json` (à court terme ; les demandes en attente expirent)
+- `paired.json` (appareils appairés + jetons)
 
-### Remarques
+### Notes
 
-- L'ancienne API `node.pair.*` (CLI : `openclaw nodes pending/approve`) est un
-  magasin d'appairage distinct appartenant à la passerelle. Les nœuds WS nécessitent toujours un appairage d'appareil.
+- L'`node.pair.*` API héritée (CLI : `openclaw nodes pending/approve`) est un
+  magasin d'appairage distinct détenu par la passerelle. Les nœuds WS nécessitent toujours l'appairage des appareils.
 
 ## Documentation connexe
 
 - Modèle de sécurité + injection de prompt : [Sécurité](/fr/gateway/security)
-- Mise à jour en toute sécurité (exécuter le doctor) : [Mise à jour](/fr/install/updating)
-- Configurations de canal :
+- Mise à jour en toute sécurité (exécuter doctor) : [Mise à jour](/fr/install/updating)
+- Configurations des canaux :
   - Telegram : [Telegram](/fr/channels/telegram)
   - WhatsApp : [WhatsApp](/fr/channels/whatsapp)
   - Signal : [Signal](/fr/channels/signal)

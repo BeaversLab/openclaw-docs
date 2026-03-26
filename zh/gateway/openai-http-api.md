@@ -1,7 +1,7 @@
 ---
-summary: "从 Gateway(网关) 暴露一个兼容 OpenAI 的 /v1/chat/completions HTTP 端点"
+summary: "从 Gateway 网关 暴露一个兼容 OpenAI 的 /v1/chat/completions HTTP 端点"
 read_when:
-  - 集成期望 OpenAI Chat Completions 的工具
+  - Integrating tools that expect OpenAI Chat Completions
 title: "OpenAI Chat Completions"
 ---
 
@@ -12,9 +12,9 @@ OpenClaw 的 Gateway 网关 可以提供一个小型的兼容 OpenAI 的 Chat Co
 该端点**默认处于禁用状态**。请先在配置中启用它。
 
 - `POST /v1/chat/completions`
-- 与 Gateway(网关) (WS + HTTP 多路复用) 端口相同：`http://<gateway-host>:<port>/v1/chat/completions`
+- 与 Gateway 网关 相同的端口（WS + HTTP 多路复用）：`http://<gateway-host>:<port>/v1/chat/completions`
 
-在底层，请求作为正常的 Gateway(网关) 代理运行执行（与 `openclaw agent` 代码路径相同），因此路由/权限/配置与您的 Gateway(网关) 匹配。
+在底层，请求作为正常的 Gateway 网关 代理运行执行（与 `openclaw agent` 代码路径相同），因此路由/权限/配置与您的 Gateway 网关 匹配。
 
 ## 身份验证
 
@@ -26,7 +26,7 @@ OpenClaw 的 Gateway 网关 可以提供一个小型的兼容 OpenAI 的 Chat Co
 
 - 当 `gateway.auth.mode="token"` 时，使用 `gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）。
 - 当 `gateway.auth.mode="password"` 时，使用 `gateway.auth.password`（或 `OPENCLAW_GATEWAY_PASSWORD`）。
-- 如果配置了 `gateway.auth.rateLimit` 并且发生太多身份验证失败，端点将返回带有 `Retry-After` 的 `429`。
+- 如果配置了 `gateway.auth.rateLimit` 并且发生了过多的身份验证失败，端点将返回 `429` 并带有 `Retry-After`。
 
 ## 安全边界（重要）
 
@@ -45,7 +45,7 @@ OpenClaw 的 Gateway 网关 可以提供一个小型的兼容 OpenAI 的 Chat Co
 
 不需要自定义标头：在 OpenAI `model` 字段中编码代理 ID：
 
-- `model: "openclaw:<agentId>"`（例如：`"openclaw:main"`、`"openclaw:beta"`）
+- `model: "openclaw:<agentId>"`（例如：`"openclaw:main"`，`"openclaw:beta"`）
 - `model: "agent:<agentId>"`（别名）
 
 或者通过标头定位特定的 OpenClaw 代理：
@@ -92,7 +92,7 @@ OpenClaw 的 Gateway 网关 可以提供一个小型的兼容 OpenAI 的 Chat Co
 
 默认情况下，该端点是**每次请求无状态**的（每次调用都会生成一个新的会话密钥）。
 
-如果请求包含 OpenAI `user` 字符串，Gateway(网关) 将从中派生一个稳定的会话密钥，因此重复调用可以共享一个代理会话。
+如果请求包含 OpenAI `user` 字符串，Gateway 网关 会从中派生一个稳定的会话密钥，以便重复调用可以共享代理会话。
 
 ## 流式传输 (SSE)
 

@@ -8,25 +8,21 @@ title: "SOUL Evil Hook"
 
 # SOUL Evil Hook
 
-The SOUL Evil hook swaps the **injected** `SOUL.md` content with `SOUL_EVIL.md` during
-a purge window or by random chance. It does **not** modify files on disk.
+SOUL Evil hook 會在清除窗口期間或隨機將 **注入** 的 `SOUL.md` 內容與 `SOUL_EVIL.md` 交換。它 **不** 會修改磁碟上的檔案。
 
-## How It Works
+## 運作原理
 
-When `agent:bootstrap` runs, the hook can replace the `SOUL.md` content in memory
-before the system prompt is assembled. If `SOUL_EVIL.md` is missing or empty,
-OpenClaw logs a warning and keeps the normal `SOUL.md`.
+當 `agent:bootstrap` 運行時，該 hook 可以在組裝系統提示之前替換記憶體中的 `SOUL.md` 內容。如果 `SOUL_EVIL.md` 遺失或為空，OpenClaw 會記錄警告並保留正常的 `SOUL.md`。
 
-Sub-agent runs do **not** include `SOUL.md` in their bootstrap files, so this hook
-has no effect on sub-agents.
+子代理運行在其啟動檔案中 **不** 包含 `SOUL.md`，因此此 hook 對子代理沒有影響。
 
-## Enable
+## 啟用
 
 ```bash
 openclaw hooks enable soul-evil
 ```
 
-Then set the config:
+然後設定配置：
 
 ```json
 {
@@ -46,25 +42,25 @@ Then set the config:
 }
 ```
 
-Create `SOUL_EVIL.md` in the agent workspace root (next to `SOUL.md`).
+在代理工作區根目錄（即 `SOUL.md` 旁）中建立 `SOUL_EVIL.md`。
 
-## Options
+## 選項
 
-- `file` (string): alternate SOUL filename (default: `SOUL_EVIL.md`)
-- `chance` (number 0–1): random chance per run to use `SOUL_EVIL.md`
-- `purge.at` (HH:mm): daily purge start (24-hour clock)
-- `purge.duration` (duration): window length (e.g. `30s`, `10m`, `1h`)
+- `file` (字串)：備用的 SOUL 檔案名稱 (預設：`SOUL_EVIL.md`)
+- `chance` (數字 0–1)：每次執行時使用 `SOUL_EVIL.md` 的隨機機率
+- `purge.at` (HH:mm)：每日清除開始時間 (24 小時制)
+- `purge.duration` (持續時間)：視窗長度 (例如 `30s`、`10m`、`1h`)
 
-**Precedence:** purge window wins over chance.
+**優先順序：** 清除視窗優先於隨機機率。
 
-**Timezone:** uses `agents.defaults.userTimezone` when set; otherwise host timezone.
+**時區：** 若已設定則使用 `agents.defaults.userTimezone`；否則使用主機時區。
 
-## Notes
+## 備註
 
-- No files are written or modified on disk.
-- If `SOUL.md` is not in the bootstrap list, the hook does nothing.
+- 不會寫入或修改磁碟上的任何檔案。
+- 如果 `SOUL.md` 不在引導清單中，此掛鉤不會執行任何動作。
 
-## See Also
+## 參見
 
 - [Hooks](/zh-Hant/hooks)
 

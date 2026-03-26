@@ -1,30 +1,30 @@
 ---
-summary: "Superficies web de Gateway: interfaz de usuario de control, modos de enlace y seguridad"
+summary: "Superficies web de Gateway: Interfaz de usuario de control, modos de enlace y seguridad"
 read_when:
-  - Deseas acceder al Gateway a través de Tailscale
-  - Deseas la interfaz de usuario de control del navegador y la edición de configuración
+  - You want to access the Gateway over Tailscale
+  - You want the browser Control UI and config editing
 title: "Web"
 ---
 
 # Web (Gateway)
 
-El Gateway sirve una pequeña **interfaz de usuario de control del navegador** (Vite + Lit) desde el mismo puerto que el WebSocket del Gateway:
+El Gateway sirve una pequeña **Interfaz de usuario de control del navegador** (Vite + Lit) desde el mismo puerto que el WebSocket del Gateway:
 
 - predeterminado: `http://<host>:18789/`
-- prefijo opcional: establecer `gateway.controlUi.basePath` (p. ej., `/openclaw`)
+- prefijo opcional: configure `gateway.controlUi.basePath` (por ejemplo, `/openclaw`)
 
 Las capacidades residen en [Control UI](/es/web/control-ui).
-Esta página se centra en los modos de enlace, la seguridad y las superficies web.
+Esta página se centra en los modos de enlace, seguridad y superficies web.
 
 ## Webhooks
 
 Cuando `hooks.enabled=true`, el Gateway también expone un pequeño endpoint de webhook en el mismo servidor HTTP.
-Consulta [Gateway configuration](/es/gateway/configuration) → `hooks` para obtener información sobre la autenticación y las cargas útiles.
+Consulte [Gateway configuration](/es/gateway/configuration) → `hooks` para obtener información sobre la autenticación y las cargas útiles.
 
-## Config (predeterminado activado)
+## Configuración (activada de forma predeterminada)
 
-La interfaz de usuario de control está **habilitada de forma predeterminada** cuando los recursos están presentes (`dist/control-ui`).
-Puedes controlarla a través de la configuración:
+La interfaz de usuario de control está **activada de forma predeterminada** cuando los activos están presentes (`dist/control-ui`).
+Puede controlarla mediante la configuración:
 
 ```json5
 {
@@ -36,9 +36,9 @@ Puedes controlarla a través de la configuración:
 
 ## Acceso a Tailscale
 
-### Serve integrado (recomendado)
+### Servicio integrado (recomendado)
 
-Mantén el Gateway en el bucle local (loopback) y deja que Tailscale Sirve (Serve) actúe como proxy:
+Mantenga el Gateway en loopback y deje que Tailscale Serve actúe como proxy:
 
 ```json5
 {
@@ -49,7 +49,7 @@ Mantén el Gateway en el bucle local (loopback) y deja que Tailscale Sirve (Serv
 }
 ```
 
-Luego inicia el gateway:
+Luego inicie el gateway:
 
 ```bash
 openclaw gateway
@@ -57,9 +57,9 @@ openclaw gateway
 
 Abrir:
 
-- `https://<magicdns>/` (o tu `gateway.controlUi.basePath` configurado)
+- `https://<magicdns>/` (o su `gateway.controlUi.basePath` configurado)
 
-### Enlace de Tailnet + token
+### Enlace a Tailnet + token
 
 ```json5
 {
@@ -71,7 +71,7 @@ Abrir:
 }
 ```
 
-Luego inicia el gateway (se requiere token para enlaces que no sean de bucle local):
+Luego inicie el gateway (se requiere token para enlaces no loopback):
 
 ```bash
 openclaw gateway
@@ -79,9 +79,9 @@ openclaw gateway
 
 Abrir:
 
-- `http://<tailscale-ip>:18789/` (o tu `gateway.controlUi.basePath` configurado)
+- `http://<tailscale-ip>:18789/` (o su `gateway.controlUi.basePath` configurado)
 
-### Internet pública (Funnel)
+### Internet público (Funnel)
 
 ```json5
 {
@@ -95,25 +95,25 @@ Abrir:
 
 ## Notas de seguridad
 
-- La autenticación del Gateway es obligatoria de forma predeterminada (token/contraseña o encabezados de identidad de Tailscale).
-- Los enlaces que no son de bucle local aún **requieren** un token/contraseña compartido (`gateway.auth` o variables de entorno).
-- El asistente genera un token de gateway de forma predeterminada (incluso en el bucle local).
+- La autenticación del Gateway se requiere de forma predeterminada (token/contraseña o encabezados de identidad de Tailscale).
+- Los enlaces no loopback todavía **requieren** un token/contraseña compartido (`gateway.auth` o variable de entorno).
+- El asistente genera un token de gateway de forma predeterminada (incluso en loopback).
 - La interfaz de usuario envía `connect.params.auth.token` o `connect.params.auth.password`.
-- Para despliegues de la interfaz de usuario de control que no sean de bucle local, establece `gateway.controlUi.allowedOrigins`
+- Para implementaciones de interfaz de usuario de control no loopback, configure `gateway.controlUi.allowedOrigins`
   explícitamente (orígenes completos). Sin esto, el inicio del gateway se rechaza de forma predeterminada.
 - `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` habilita
-  el modo de reserva de origen del encabezado Host, pero es una degradación peligrosa de la seguridad.
-- Con Serve, los encabezados de identidad de Tailscale pueden satisfacer la autenticación de Control UI/WebSocket
+  el modo de reserva de origen del encabezado Host, pero es una degradación de seguridad peligrosa.
+- Con Serve, los encabezados de identidad de Tailscale pueden satisfacer la autenticación de la interfaz de usuario de control/WebSocket
   cuando `gateway.auth.allowTailscale` es `true` (no se requiere token/contraseña).
-  Los endpoints de la API HTTP aún requieren token/contraseña. Configure
+  Los endpoints de la API HTTP aún requieren token/contraseña. Establezca
   `gateway.auth.allowTailscale: false` para requerir credenciales explícitas. Consulte
-  [Tailscale](/es/gateway/tailscale) y [Security](/es/gateway/security). Este
+  [Tailscale](/es/gateway/tailscale) y [Seguridad](/es/gateway/security). Este
   flujo sin token asume que el host de la puerta de enlace es confiable.
 - `gateway.tailscale.mode: "funnel"` requiere `gateway.auth.mode: "password"` (contraseña compartida).
 
 ## Construcción de la interfaz de usuario
 
-El Gateway sirve archivos estáticos desde `dist/control-ui`. Compílelos con:
+La Gateway sirve archivos estáticos desde `dist/control-ui`. Constrúyalos con:
 
 ```bash
 pnpm ui:build # auto-installs UI deps on first run

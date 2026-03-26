@@ -1,37 +1,37 @@
 ---
-summary: "macOS 應用程式如何回報閘道/Baileys 健康狀態"
+summary: "macOS 應用程式如何報告 Gateway/Baileys 健康狀態"
 read_when:
-  - 除錯 Mac 應用程式健康指標
-title: "健康檢查 (macOS)"
+  - Debugging mac app health indicators
+title: "健康檢查"
 ---
 
 # macOS 上的健康檢查
 
-如何從選單列應用程式查看連結的頻道是否健康。
+如何從選單列應用程式中查看連結的頻道是否健康。
 
 ## 選單列
 
-- 狀態指示點現已反映 Baileys 的健康狀況：
-  - 綠色：已連結 + socket 最近已開啟。
-  - 橘色：連線中/重試中。
-  - 紅色：已登出或偵測失敗。
-- 第二行顯示「linked · auth 12m」或顯示失敗原因。
-- 「執行健康檢查」選單項目會觸發按需偵測。
+- 狀態指示點現在會反映 Baileys 的健康狀態：
+  - 綠色：已連結 + Socket 最近已開啟。
+  - 橘色：正在連線/重試中。
+  - 紅色：已登出或探測失敗。
+- 次行文字會顯示「linked · auth 12m」或顯示失敗原因。
+- 「執行健康檢查」選單項目會觸發隨需探測。
 
 ## 設定
 
-- 一般分頁會新增一個健康狀態卡片，顯示：連結的驗證時間、session-store 路徑/數量、上次檢查時間、上次錯誤/狀態碼，以及執行健康檢查/顯示記錄檔的按鈕。
-- 使用快照快取，讓 UI 能即時載入，並在離線時優雅地降級。
-- 「頻道」分頁會顯示頻道狀態，以及 WhatsApp/Telegram 的控制項（登入 QR、登出、偵測、上次斷線/錯誤）。
+- 一般標籤新增了一張健康資訊卡，顯示：連結的授權時間、session-store 路徑/數量、上次檢查時間、上次錯誤/狀態碼，以及「執行健康檢查」/「顯示記錄檔」按鈕。
+- 使用快照快取，讓 UI 即時載入，並在離線時能優雅降級。
+- **Channels 分頁**會顯示 WhatsApp/Telegram 的頻道狀態與控制選項（登入 QR、登出、探測、上次斷線/錯誤）。
 
-## 偵測運作方式
+## 探測運作方式
 
-- 應用程式每約 60 秒以及根據需求透過 `ShellExecutor` 執行 `openclaw health --json`。探針會載入憑證並回報狀態，而不會傳送訊息。
-- 分別快取上次良好的快照與上次錯誤，以避免閃爍；並顯示各自的時間戳記。
+- 應用程式會透過 `ShellExecutor` 每約 60 秒以及按需執行 `openclaw health --json`。探測會載入憑證並回報狀態，而不會傳送訊息。
+- 分別快取最後的完好快照與最後的錯誤以避免閃爍；並顯示各自的時間戳記。
 
-## 若有疑慮
+## 若有疑問
 
-- 您仍可以在 [閘道健康狀態](/zh-Hant/gateway/health) 中使用 CLI 流程 (`openclaw status`, `openclaw status --deep`, `openclaw health --json`)，並針對 `web-heartbeat` / `web-reconnect` 追蹤 `/tmp/openclaw/openclaw-*.log`。
+- 您仍可使用 [Gateway health](/zh-Hant/gateway/health) 中的 CLI 流程 (`openclaw status`, `openclaw status --deep`, `openclaw health --json`)，並監看 `/tmp/openclaw/openclaw-*.log` 以檢視 `web-heartbeat` / `web-reconnect`。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

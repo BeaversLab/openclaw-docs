@@ -1,14 +1,14 @@
 ---
-summary: "Referencia de la CLI para `openclaw doctor` (verificaciones de estado + reparaciones guiadas)"
+summary: "Referencia de CLI para `openclaw doctor` (comprobaciones de estado + reparaciones guiadas)"
 read_when:
-  - Tienes problemas de conectividad/autenticación y deseas correcciones guiadas
-  - Actualizaste y deseas una verificación de cordura
+  - You have connectivity/auth issues and want guided fixes
+  - You updated and want a sanity check
 title: "doctor"
 ---
 
 # `openclaw doctor`
 
-Verificaciones de estado + soluciones rápidas para la puerta de enlace y los canales.
+Comprobaciones de estado + soluciones rápidas para la puerta de enlace y los canales.
 
 Relacionado:
 
@@ -25,19 +25,19 @@ openclaw doctor --deep
 
 Notas:
 
-- Las indicaciones interactivas (como las correcciones de llavero/OAuth) solo se ejecutan cuando stdin es un TTY y `--non-interactive` **no** está configurado. Las ejecuciones sin interfaz gráfica (cron, Telegram, sin terminal) omitirán las indicaciones.
+- Las indicaciones interactivas (como las correcciones de llavero/OAuth) solo se ejecutan cuando stdin es un TTY y `--non-interactive` **no** está establecido. Las ejecuciones sin interfaz (cron, Telegram, sin terminal) omitirán las indicaciones.
 - `--fix` (alias para `--repair`) escribe una copia de seguridad en `~/.openclaw/openclaw.json.bak` y elimina las claves de configuración desconocidas, listando cada eliminación.
-- Las comprobaciones de integridad del estado ahora detectan archivos de transcripción huérfanos en el directorio de sesiones y pueden archivarlos como `.deleted.<timestamp>` para recuperar espacio de forma segura.
-- Doctor también escanea `~/.openclaw/cron/jobs.json` (o `cron.store`) en busca de formas de trabajos cron heredadas y puede reescribirlas en su lugar antes de que el planificador tenga que normalizarlas automáticamente en tiempo de ejecución.
+- Las comprobaciones de integridad del estado ahora detectan archivos de transcripciones huérfanas en el directorio de sesiones y pueden archivarlas como `.deleted.<timestamp>` para recuperar espacio de forma segura.
+- Doctor también escanea `~/.openclaw/cron/jobs.json` (o `cron.store`) en busca de formas de trabajos cron heredadas y puede reescribirlas in situ antes de que el planificador tenga que normalizarlas automáticamente en tiempo de ejecución.
 - Doctor incluye una comprobación de preparación para la búsqueda de memoria y puede recomendar `openclaw configure --section model` cuando faltan las credenciales incrustadas.
 - Si el modo sandbox está habilitado pero Docker no está disponible, doctor informa una advertencia de alta señal con una solución (`install Docker` o `openclaw config set agents.defaults.sandbox.mode off`).
-- Si `gateway.auth.token`/`gateway.auth.password` están gestionados por SecretRef y no están disponibles en la ruta de comando actual, doctor informa una advertencia de solo lectura y no escribe credenciales de reserva en texto plano.
+- Si `gateway.auth.token`/`gateway.auth.password` están gestionados por SecretRef y no están disponibles en la ruta de comandos actual, doctor informa una advertencia de solo lectura y no escribe credenciales de respaldo en texto plano.
 - Si la inspección de SecretRef del canal falla en una ruta de corrección, doctor continúa e informa una advertencia en lugar de salir antes de tiempo.
-- La auto-resolución del nombre de usuario de Telegram `allowFrom` (`doctor --fix`) requiere un token de Telegram resoluble en la ruta de comando actual. Si la inspección del token no está disponible, doctor informa una advertencia y omite la auto-resolución para ese pase.
+- La auto-resolución del nombre de usuario de Telegram `allowFrom` (`doctor --fix`) requiere un token de Telegram resolvable en la ruta del comando actual. Si la inspección del token no está disponible, doctor informa una advertencia y omite la auto-resolución para ese paso.
 
-## macOS: anulaciones de entorno `launchctl`
+## macOS: `launchctl` anulaciones de env
 
-Si anteriormente ejecutaste `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...` (o `...PASSWORD`), ese valor anula tu archivo de configuración y puede provocar errores persistentes de "no autorizado".
+Si anteriormente ejecutó `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...` (o `...PASSWORD`), ese valor anula su archivo de configuración y puede causar errores persistentes de "no autorizado".
 
 ```bash
 launchctl getenv OPENCLAW_GATEWAY_TOKEN

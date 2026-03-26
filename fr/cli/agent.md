@@ -1,18 +1,18 @@
 ---
-summary: "Référence de la CLI pour `openclaw agent` (envoyer un tour d'agent via la Gateway)"
+summary: "Référence CLI pour `openclaw agent` (envoyer un tour d'agent via le Gateway)"
 read_when:
-  - Vous souhaitez exécuter un tour d'agent à partir de scripts (fournir éventuellement une réponse)
+  - You want to run one agent turn from scripts (optionally deliver reply)
 title: "agent"
 ---
 
 # `openclaw agent`
 
-Exécuter un tour d'agent via la Gateway (utiliser `--local` pour l'intégration).
+Exécuter un tour d'agent via le Gateway (utilisez `--local` pour intégré).
 Utilisez `--agent <id>` pour cibler directement un agent configuré.
 
 Connexe :
 
-- Outil d'envoi d'agent : [Agent send](/fr/tools/agent-send)
+- Outil Agent send : [Agent send](/fr/tools/agent-send)
 
 ## Exemples
 
@@ -25,7 +25,7 @@ openclaw agent --agent ops --message "Generate report" --deliver --reply-channel
 
 ## Notes
 
-- Lorsque cette commande déclenche la régénération de `models.json`, les identifiants de fournisseur gérés par SecretRef sont conservés sous forme de marqueurs non secrets (par exemple, noms de variables d'environnement, `secretref-env:ENV_VAR_NAME` ou `secretref-managed`), et non sous forme de texte en clair de secret résolu.
+- Lorsque cette commande déclenche la régénération de `models.json`, les identifiants provider gérés par SecretRef sont conservés sous forme de marqueurs non secrets (par exemple, noms de env var, `secretref-env:ENV_VAR_NAME` ou `secretref-managed`), et non en tant que texte brut secret résolu.
 - Les écritures de marqueurs sont autoritaires par la source : OpenClaw conserve les marqueurs provenant de l'instantané de la configuration source active, et non des valeurs de secret d'exécution résolues.
 
 import fr from "/components/footer/fr.mdx";

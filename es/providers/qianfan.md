@@ -1,19 +1,19 @@
 ---
 summary: "Use la API unificada de Qianfan para acceder a muchos modelos en OpenClaw"
 read_when:
-  - Desea una sola clave de API para muchos LLM
-  - Necesita orientación sobre la configuración de Baidu Qianfan
+  - You want a single API key for many LLMs
+  - You need Baidu Qianfan setup guidance
 title: "Qianfan"
 ---
 
 # Guía del proveedor Qianfan
 
-Qianfan es la plataforma MaaS de Baidu, proporciona una **API unificada** que enruta las solicitudes a muchos modelos detrás de un solo punto de conexión (endpoint) y clave de API. Es compatible con OpenAI, por lo que la mayoría de los SDK de OpenAI funcionan cambiando la URL base.
+Qianfan es la plataforma MaaS de Baidu, que proporciona una **API unificada** que enruta las solicitudes a muchos modelos detrás de un único punto de conexión y clave de API. Es compatible con OpenAI, por lo que la mayoría de los SDK de OpenAI funcionan cambiando la URL base.
 
 ## Requisitos previos
 
 1. Una cuenta de Baidu Cloud con acceso a la API de Qianfan
-2. Una clave de API de la consola de Qianfan
+2. Una clave de API desde la consola de Qianfan
 3. OpenClaw instalado en su sistema
 
 ## Obtener su clave de API

@@ -1,8 +1,8 @@
 ---
 summary: "Referencia de la CLI para `openclaw clawbot` (espacio de nombres de alias heredado)"
 read_when:
-  - Mantiene scripts antiguos que usan `openclaw clawbot ...`
-  - Necesita orientación de migración a los comandos actuales
+  - You maintain older scripts using `openclaw clawbot ...`
+  - You need migration guidance to current commands
 title: "clawbot"
 ---
 
@@ -10,7 +10,7 @@ title: "clawbot"
 
 Espacio de nombres de alias heredado mantenido para compatibilidad con versiones anteriores.
 
-Alias compatible actualmente:
+Alias admitido actualmente:
 
 - `openclaw clawbot qr` (mismo comportamiento que [`openclaw qr`](/es/cli/qr))
 

@@ -1,13 +1,15 @@
 ---
-summary: "Hubs that link to every OpenClaw doc"
+summary: "Hubs pointant vers chaque document OpenClaw"
 read_when:
   - You want a complete map of the documentation
-title: "Docs Hubs"
+title: "Hubs de documentation"
 ---
 
 # Hubs de documentation
 
-<Note>If you are new to OpenClaw, start with [Getting Started](/fr/start/getting-started).</Note>
+<Note>
+  Si vous débutez avec OpenClaw, commencez par [Getting Started](/fr/start/getting-started).
+</Note>
 
 Utilisez ces hubs pour découvrir chaque page, y compris les analyses approfondies et les docs de référence qui n'apparaissent pas dans la navigation de gauche.
 
@@ -15,7 +17,6 @@ Utilisez ces hubs pour découvrir chaque page, y compris les analyses approfondi
 
 - [Index](/fr/)
 - [Getting Started](/fr/start/getting-started)
-- [Quick start](/fr/start/quickstart)
 - [Onboarding](/fr/start/onboarding)
 - [Onboarding (CLI)](/fr/start/wizard)
 - [Setup](/fr/start/setup)
@@ -28,14 +29,14 @@ Utilisez ces hubs pour découvrir chaque page, y compris les analyses approfondi
 - [Showcase](/fr/start/showcase)
 - [Lore](/fr/start/lore)
 
-## Installation + mises à jour
+## Installation + updates
 
 - [Docker](/fr/install/docker)
 - [Nix](/fr/install/nix)
 - [Updating / rollback](/fr/install/updating)
 - [Bun workflow (experimental)](/fr/install/bun)
 
-## Concepts fondamentaux
+## Core concepts
 
 - [Architecture](/fr/concepts/architecture)
 - [Features](/fr/concepts/features)
@@ -64,10 +65,10 @@ Utilisez ces hubs pour découvrir chaque page, y compris les analyses approfondi
 - [Model failover](/fr/concepts/model-failover)
 - [OAuth](/fr/concepts/oauth)
 
-## Fournisseurs + ingress
+## Providers + ingress
 
-- [Chat channels hub](/fr/channels)
-- [Model providers hub](/fr/providers/models)
+- [Hub des canaux de discussion](/fr/channels)
+- [Hub des fournisseurs de modèles](/fr/providers/models)
 - [WhatsApp](/fr/channels/whatsapp)
 - [Telegram](/fr/channels/telegram)
 - [Slack](/fr/channels/slack)
@@ -76,113 +77,125 @@ Utilisez ces hubs pour découvrir chaque page, y compris les analyses approfondi
 - [Signal](/fr/channels/signal)
 - [BlueBubbles (iMessage)](/fr/channels/bluebubbles)
 - [iMessage (legacy)](/fr/channels/imessage)
-- [Location parsing](/fr/channels/location)
+- [Analyse de localisation](/fr/channels/location)
 - [WebChat](/fr/web/webchat)
 - [Webhooks](/fr/automation/webhook)
 - [Gmail Pub/Sub](/fr/automation/gmail-pubsub)
 
 ## Gateway + opérations
 
-- [Gateway runbook](/fr/gateway)
-- [Network model](/fr/gateway/network-model)
-- [Gateway pairing](/fr/gateway/pairing)
-- [Gateway lock](/fr/gateway/gateway-lock)
-- [Background process](/fr/gateway/background-process)
-- [Health](/fr/gateway/health)
-- [Heartbeat](/fr/gateway/heartbeat)
-- [Doctor](/fr/gateway/doctor)
-- [Logging](/fr/gateway/logging)
-- [Sandboxing](/fr/gateway/sandboxing)
-- [Dashboard](/fr/web/dashboard)
-- [Control UI](/fr/web/control-ui)
-- [Remote access](/fr/gateway/remote)
-- [Remote gateway README](/fr/gateway/remote-gateway-readme)
+- [Guide opérationnel de la passerelle](/fr/gateway)
+- [Modèle réseau](/fr/gateway/network-model)
+- [Appairage de passerelle](/fr/gateway/pairing)
+- [Verrouillage de passerelle](/fr/gateway/gateway-lock)
+- [Processus en arrière-plan](/fr/gateway/background-process)
+- [Santé](/fr/gateway/health)
+- [Battement de cœur](/fr/gateway/heartbeat)
+- [Docteur](/fr/gateway/doctor)
+- [Journalisation](/fr/gateway/logging)
+- [Bac à sable](/fr/gateway/sandboxing)
+- [Tableau de bord](/fr/web/dashboard)
+- [Interface de contrôle](/fr/web/control-ui)
+- [Accès à distance](/fr/gateway/remote)
+- [README de la passerelle distante](/fr/gateway/remote-gateway-readme)
 - [Tailscale](/fr/gateway/tailscale)
-- [Security](/fr/gateway/security)
-- [Troubleshooting](/fr/gateway/troubleshooting)
+- [Sécurité](/fr/gateway/security)
+- [Dépannage](/fr/gateway/troubleshooting)
 
 ## Outils + automatisation
 
-- [Tools surface](/fr/tools)
+- [Surface des outils](/fr/tools)
 - [OpenProse](/fr/prose)
-- [CLI reference](/fr/cli)
-- [Exec tool](/fr/tools/exec)
-- [PDF tool](/fr/tools/pdf)
-- [Elevated mode](/fr/tools/elevated)
+- [Référence de la CLI](/fr/cli)
+- [Outil Exec](/fr/tools/exec)
+- [Outil PDF](/fr/tools/pdf)
+- [Mode élevé](/fr/tools/elevated)
 - [Tâches Cron](/fr/automation/cron-jobs)
-- [Cron vs Heartbeat](/fr/automation/cron-vs-heartbeat)
-- [Thinking + verbose](/fr/tools/thinking)
+- [Cron vs Battement de cœur](/fr/automation/cron-vs-heartbeat)
+- [Réflexion + mode verbeux](/fr/tools/thinking)
 - [Modèles](/fr/concepts/models)
 - [Sous-agents](/fr/tools/subagents)
 - [Agent send CLI](/fr/tools/agent-send)
-- [Interface terminal](/fr/web/tui)
-- [Contrôle du navigateur](/fr/tools/browser)
-- [Navigateur (Linux troubleshooting)](/fr/tools/browser-linux-troubleshooting)
-- [Sondages](/fr/automation/poll)
+- [Terminal UI](/fr/web/tui)
+- [Browser control](/fr/tools/browser)
+- [Browser (Linux troubleshooting)](/fr/tools/browser-linux-troubleshooting)
+- [Polls](/fr/automation/poll)
 
-## Nœuds, média, voix
+## Nodes, media, voice
 
-- [Vue d'ensemble des nœuds](/fr/nodes)
-- [Caméra](/fr/nodes/camera)
+- [Nodes overview](/fr/nodes)
+- [Camera](/fr/nodes/camera)
 - [Images](/fr/nodes/images)
 - [Audio](/fr/nodes/audio)
-- [Commande de localisation](/fr/nodes/location-command)
-- [Réveil vocal](/fr/nodes/voicewake)
-- [Mode Talk](/fr/nodes/talk)
+- [Location command](/fr/nodes/location-command)
+- [Voice wake](/fr/nodes/voicewake)
+- [Talk mode](/fr/nodes/talk)
 
-## Plateformes
+## Platforms
 
-- [Vue d'ensemble des plateformes](/fr/platforms)
+- [Platforms overview](/fr/platforms)
 - [macOS](/fr/platforms/macos)
 - [iOS](/fr/platforms/ios)
 - [Android](/fr/platforms/android)
 - [Windows (WSL2)](/fr/platforms/windows)
 - [Linux](/fr/platforms/linux)
-- [Surfaces Web](/fr/web)
+- [Web surfaces](/fr/web)
 
-## Application compagnon macOS (avancé)
+## macOS companion app (advanced)
 
-- [Configuration dev macOS](/fr/platforms/mac/dev-setup)
-- [Barre de menu macOS](/fr/platforms/mac/menu-bar)
-- [Réveil vocal macOS](/fr/platforms/mac/voicewake)
-- [Superposition vocale macOS](/fr/platforms/mac/voice-overlay)
+- [macOS dev setup](/fr/platforms/mac/dev-setup)
+- [macOS menu bar](/fr/platforms/mac/menu-bar)
+- [macOS voice wake](/fr/platforms/mac/voicewake)
+- [macOS voice overlay](/fr/platforms/mac/voice-overlay)
 - [macOS WebChat](/fr/platforms/mac/webchat)
 - [macOS Canvas](/fr/platforms/mac/canvas)
-- [Processus enfant macOS](/fr/platforms/mac/child-process)
-- [Santé macOS](/fr/platforms/mac/health)
-- [Icône macOS](/fr/platforms/mac/icon)
-- [Journalisation macOS](/fr/platforms/mac/logging)
-- [Autorisations macOS](/fr/platforms/mac/permissions)
-- [Distant macOS](/fr/platforms/mac/remote)
-- [Signature macOS](/fr/platforms/mac/signing)
-- [Passerelle macOS (launchd)](/fr/platforms/mac/bundled-gateway)
+- [macOS child process](/fr/platforms/mac/child-process)
+- [macOS health](/fr/platforms/mac/health)
+- [macOS icon](/fr/platforms/mac/icon)
+- [macOS logging](/fr/platforms/mac/logging)
+- [macOS permissions](/fr/platforms/mac/permissions)
+- [macOS remote](/fr/platforms/mac/remote)
+- [macOS signing](/fr/platforms/mac/signing)
+- [macOS gateway (launchd)](/fr/platforms/mac/bundled-gateway)
 - [macOS XPC](/fr/platforms/mac/xpc)
-- [Skills macOS](/fr/platforms/mac/skills)
+- [macOS skills](/fr/platforms/mac/skills)
 - [macOS Peekaboo](/fr/platforms/mac/peekaboo)
+
+## Extensions + plugins
+
+- [Plugins overview](/fr/tools/plugin)
+- [Building extensions](/fr/plugins/building-extensions)
+- [Plugin manifest](/fr/plugins/manifest)
+- [Agent tools](/fr/plugins/agent-tools)
+- [Plugins groupés](/fr/plugins/bundles)
+- [Plugins communautaires](/fr/plugins/community)
+- [Livre de recettes des fonctionnalités](/fr/tools/capability-cookbook)
+- [Plugin d'appel vocal](/fr/plugins/voice-call)
+- [Plugin utilisateur Zalo](Zalo)(/en/plugins/zalouser)
 
 ## Espace de travail + modèles
 
 - [Skills](/fr/tools/skills)
-- [ClawHub](/fr/tools/clawhub)
-- [Skills config](/fr/tools/skills-config)
-- [Default AGENTS](/fr/reference/AGENTS.default)
-- [Templates: AGENTS](/fr/reference/templates/AGENTS)
-- [Templates: BOOTSTRAP](/fr/reference/templates/BOOTSTRAP)
-- [Templates: HEARTBEAT](/fr/reference/templates/HEARTBEAT)
-- [Templates: IDENTITY](/fr/reference/templates/IDENTITY)
-- [Templates: SOUL](/fr/reference/templates/SOUL)
-- [Templates: TOOLS](/fr/reference/templates/TOOLS)
-- [Templates: USER](/fr/reference/templates/USER)
+- [ClawHub](ClawHub)](/fr/tools/clawhub)
+- [Config Skills](/fr/tools/skills-config)
+- [AGENTS par défaut](/fr/reference/AGENTS.default)
+- [Modèles : AGENTS](/fr/reference/templates/AGENTS)
+- [Modèles : BOOTSTRAP](/fr/reference/templates/BOOTSTRAP)
+- [Modèles : HEARTBEAT](/fr/reference/templates/HEARTBEAT)
+- [Modèles : IDENTITY](/fr/reference/templates/IDENTITY)
+- [Modèles : SOUL](/fr/reference/templates/SOUL)
+- [Modèles : TOOLS](/fr/reference/templates/TOOLS)
+- [Modèles : USER](/fr/reference/templates/USER)
 
 ## Projet
 
-- [Credits](/fr/reference/credits)
+- [Crédits](/fr/reference/credits)
 
-## Test + version
+## Tests + publication
 
-- [Testing](/fr/reference/test)
-- [Release policy](/fr/reference/RELEASING)
-- [Device models](/fr/reference/device-models)
+- [Tests](/fr/reference/test)
+- [Politique de publication](/fr/reference/RELEASING)
+- [Modèles d'appareils](/fr/reference/device-models)
 
 import fr from "/components/footer/fr.mdx";
 

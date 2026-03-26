@@ -1,67 +1,67 @@
 ---
-title: 部署到 Railway
+title: Deploy on Railway
 ---
 
 使用一鍵範本在 Railway 上部署 OpenClaw，並在瀏覽器中完成設定。
-這是最簡單的「伺服器上無需終端機」途徑：Railway 會為您執行 Gateway，
-而您可以透過 `/setup` 網頁精靈來設定所有項目。
+這是最簡單的「伺服器上無需終端機」途徑：Railway 會幫您執行 Gateway，
+而您可以透過 `/setup` 網頁精靈來設定一切。
 
 ## 快速檢查清單（新使用者）
 
 1. 點擊 **Deploy on Railway**（下方）。
-2. 新增掛載於 `/data` 的 **Volume**。
+2. 新增一個掛載於 `/data` 的 **Volume**。
 3. 設定必要的 **Variables**（至少 `SETUP_PASSWORD`）。
-4. 在連接埠 `8080` 上啟用 **HTTP Proxy**。
+4. 在連接埠 `8080` 啟用 **HTTP Proxy**。
 5. 開啟 `https://<your-railway-domain>/setup` 並完成精靈設定。
 
 ## 一鍵部署
 
 <a href="https://railway.com/deploy/clawdbot-railway-template" target="_blank" rel="noreferrer">
-  部署到 Railway
+  Deploy on Railway
 </a>
 
-部署後，請在 **Railway → 您的服務 → Settings → Domains** 中尋找您的公開 URL。
+部署後，在 **Railway → your service → Settings → Domains** 中尋找您的公開 URL。
 
 Railway 將會：
 
-- 提供您一個產生的網域（通常是 `https://<something>.up.railway.app`），或
-- 如果您附加了自訂網域，請使用它。
+- 提供一個產生的網域（通常是 `https://<something>.up.railway.app`），或是
+- 如果您綁定了自訂網域，請使用您的自訂網域。
 
-然後打開：
+然後開啟：
 
-- `https://<your-railway-domain>/setup` — 設定精靈（受密碼保護）
+- `https://<your-railway-domain>/setup` — 安裝精靈（受密碼保護）
 - `https://<your-railway-domain>/openclaw` — 控制介面
 
-## 您會獲得什麼
+## 您會獲得
 
 - 託管的 OpenClaw Gateway + 控制介面
-- 位於 `/setup` 的網頁設定精靈（無需終端機指令）
-- 透過 Railway Volume (`/data`) 提供的持久儲存空間，讓設定/憑證/工作區在重新部署後得以保留
-- 位於 `/setup/export` 的備份匯出功能，以便稍後遷移出 Railway
+- 位於 `/setup` 的網頁安裝精靈（無需終端機指令）
+- 透過 Railway Volume (`/data`) 提供的持續性儲存，讓設定/憑證/工作區在重新部署後保留
+- 位於 `/setup/export` 的備份匯出功能，以便日後從 Railway 遷移
 
-## 必要的 Railway 設定
+## 必填的 Railway 設定
 
-### 公開網路
+### 公眾網路
 
-為服務啟用 **HTTP Proxy**。
+為該服務啟用 **HTTP Proxy**。
 
 - 連接埠：`8080`
 
-### Volume（必要）
+### Volume（必填）
 
-附加掛載於以下位置的 Volume：
+掛載一個位於以下路徑的 Volume：
 
 - `/data`
 
 ### 變數
 
-在服務上設定這些變數：
+在服務上設定以下變數：
 
-- `SETUP_PASSWORD`（必要）
-- `PORT=8080`（必要 — 必須與公開網路中的連接埠相符）
+- `SETUP_PASSWORD`（必填）
+- `PORT=8080`（必填 — 必須與「公眾網路」中的連接埠一致）
 - `OPENCLAW_STATE_DIR=/data/.openclaw` （推薦）
 - `OPENCLAW_WORKSPACE_DIR=/data/workspace` （推薦）
-- `OPENCLAW_GATEWAY_TOKEN` （推薦；請將其視為管理員密鑰）
+- `OPENCLAW_GATEWAY_TOKEN` （推薦；將其視為管理員密鑰）
 
 ## 設定流程
 
@@ -70,13 +70,13 @@ Railway 將會：
 3. （選用）新增 Telegram/Discord/Slack 權杖。
 4. 點擊 **Run setup**。
 
-如果 Telegram 私訊設為配對，設定精靈可以核准配對碼。
+如果 Telegram 私訊設定為配對模式，設定精靈可以核准配對碼。
 
 ## 取得聊天權杖
 
 ### Telegram 機器人權杖
 
-1. 在 Telegram 傳送 `@BotFather`
+1. 在 Telegram 中傳訊息給 `@BotFather`
 2. 執行 `/newbot`
 3. 複製權杖（看起來像 `123456789:AA...`）
 4. 將其貼上到 `/setup`
@@ -84,19 +84,19 @@ Railway 將會：
 ### Discord 機器人權杖
 
 1. 前往 https://discord.com/developers/applications
-2. **New Application** → 選擇名稱
+2. **New Application** → 選擇一個名稱
 3. **Bot** → **Add Bot**
-4. 在 Bot → Privileged Gateway Intents 下啟用 **Enable MESSAGE CONTENT INTENT**（必填，否則機器人啟動時會當機）
+4. 在 Bot → Privileged Gateway Intents 下啟用 **MESSAGE CONTENT INTENT**（必填，否則機器人將在啟動時崩潰）
 5. 複製 **Bot Token** 並貼上到 `/setup`
-6. 邀請機器人至您的伺服器（OAuth2 URL Generator；scopes：`bot`、`applications.commands`）
+6. 邀請機器人到您的伺服器（OAuth2 URL Generator；範圍：`bot`, `applications.commands`）
 
 ## 備份與遷移
 
-在以下位置下載備份：
+下載備份位於：
 
 - `https://<your-railway-domain>/setup/export`
 
-這會匯出您的 OpenClaw 狀態 + 工作區，讓您可以遷移到其他主機而不會遺失設定或記憶。
+這會匯出您的 OpenClaw 狀態與工作區，以便您遷移到另一台主機而不會遺失設定或記憶。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

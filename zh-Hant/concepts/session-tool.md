@@ -1,13 +1,13 @@
 ---
 summary: "用於列出工作階段、擷取歷史記錄以及傳送跨工作階段訊息的 Agent 工作階段工具"
 read_when:
-  - 新增或修改工作階段工具
+  - Adding or modifying session tools
 title: "Session Tools"
 ---
 
 # Session Tools
 
-目標：提供一個小巧、難以誤用的工具集，讓 Agent 可以列出工作階段、擷取歷史記錄，並發送訊息至另一個工作階段。
+目標：提供一套小巧且難以誤用的工具集，讓 Agent 能夠列出工作階段、擷取歷史記錄，並傳送訊息至其他工作階段。
 
 ## 工具名稱
 
@@ -18,102 +18,121 @@ title: "Session Tools"
 
 ## 金鑰模型
 
-- 主要直接聊天值區始終是字面鍵 `"main"`（解析為目前 agent 的主要鍵）。
-- 群組聊天使用 `agent:<agentId>:<channel>:group:<id>` 或 `agent:<agentId>:<channel>:channel:<id>`（傳遞完整鍵）。
+- 主要的直接聊天貯體永遠是字面金鑰 `"main"`（解析為目前 Agent 的主要金鑰）。
+- 群組聊天使用 `agent:<agentId>:<channel>:group:<id>` 或 `agent:<agentId>:<channel>:channel:<id>`（傳遞完整金鑰）。
 - Cron 作業使用 `cron:<job.id>`。
-- Hook 使用 `hook:<uuid>`，除非另有明確設定。
-- 節點工作階段使用 `node-<nodeId>`，除非另有明確設定。
+- 除非另有明確設定，否則 Hook 使用 `hook:<uuid>`。
+- 節點會話使用 `node-<nodeId>`，除非另有明確設定。
 
-`global` 和 `unknown` 是保留值，永遠不會被列出。如果 `session.scope = "global"`，我們會將其別名為 `main` 以適用於所有工具，因此呼叫者永遠不會看到 `global`。
+`global` 和 `unknown` 是保留值，從不列出。如果是 `session.scope = "global"`，我們會為所有工具將其別名為 `main`，以便呼叫者永遠不會看到 `global`。
 
 ## sessions_list
 
-將工作階段以列陣列形式列出。
+將會話列為行的陣列。
 
 參數：
 
-- `kinds?: string[]` 篩選：`"main" | "group" | "cron" | "hook" | "node" | "other"` 中的任一項
-- `limit?: number` 最大行數（預設：伺服器預設值，限制例如 200）
-- `activeMinutes?: number` 僅包含在 N 分鐘內更新的工作階段
-- `messageLimit?: number` 0 = 無訊息（預設為 0）；>0 = 包含最後 N 則訊息
+- `kinds?: string[]` 篩選器：`"main" | "group" | "cron" | "hook" | "node" | "other"` 中的任何一個
+- `limit?: number` 最大行數（預設：伺服器預設，限制例如 200）
+- `activeMinutes?: number` 僅包含在 N 分鐘內更新的會話
+- `messageLimit?: number` 0 = 無訊息（預設 0）；>0 = 包含最後 N 則訊息
 
 行為：
 
-- `messageLimit > 0` 會擷取每個工作階段的 `chat.history` 並包含最後 N 則訊息。
-- 工具結果會在列表輸出中被過濾掉；請使用 `sessions_history` 取得工具訊息。
-- 在 **沙盒化 (sandboxed)** Agent 工作階段中執行時，工作階段工具預設為 **僅顯示衍生的工作階段**（見下文）。
+- `messageLimit > 0` 擷取每個會話的 `chat.history` 並包含最後 N 則訊息。
+- 工具結果會在列表輸出中被過濾掉；請使用 `sessions_history` 來處理工具訊息。
+- 當在 **沙盒化** 的代理程式工作階段中執行時，工作階段工具預設為 **僅衍生可見性** (spawned-only visibility) (見下文)。
 
-列的形狀 (JSON)：
+列形狀 (JSON)：
 
-- `key`：工作階段鍵 (string)
-- `kind`：`main | group | cron | hook | node | other`
-- `channel`：`whatsapp | telegram | discord | signal | imessage | webchat | internal | unknown`
-- `displayName`（群組顯示標籤，如果有的話）
-- `updatedAt` (ms)
+- `key`：工作階段金鑰 (字串)
+- `kind`： `main | group | cron | hook | node | other`
+- `channel`： `whatsapp | telegram | discord | signal | imessage | webchat | internal | unknown`
+- `displayName` (群組顯示標籤，如果有的話)
+- `updatedAt` (毫秒)
 - `sessionId`
-- `model`、`contextTokens`、`totalTokens`
-- `thinkingLevel`、`verboseLevel`、`systemSent`、`abortedLastRun`
-- `sendPolicy`（如果已設定工作階段覆寫）
-- `lastChannel`、`lastTo`
-- `deliveryContext`（可用時標準化為 `{ channel, to, accountId }`）
-- `transcriptPath`（根據儲存目錄 + sessionId 導出的最佳路徑）
-- `messages?`（僅當 `messageLimit > 0` 時）
+- `model`, `contextTokens`, `totalTokens`
+- `thinkingLevel`, `verboseLevel`, `systemSent`, `abortedLastRun`
+- `sendPolicy` (工作階段覆寫，如果已設定)
+- `lastChannel`, `lastTo`
+- `deliveryContext` （如有可用，則為標準化的 `{ channel, to, accountId }`）
+- `transcriptPath` （從儲存目錄 + sessionId 推導出的最合適路徑）
+- `messages?` （僅當 `messageLimit > 0` 時）
 
 ## sessions_history
 
-擷取單一工作階段的對話紀錄。
+取得單一會話的文字記錄。
 
 參數：
 
-- `sessionKey`（必填；接受來自 `sessions_list` 的 session key 或 `sessionId`）
-- `limit?: number` 則最多幾則訊息（伺服器端限制）
-- `includeTools?: boolean`（預設為 false）
+- `sessionKey` （必填；接受來自 `sessions_list` 的會話金鑰或 `sessionId`）
+- `limit?: number` 則訊息數上限（伺服器會限制）
+- `includeTools?: boolean` （預設為 false）
 
 行為：
 
 - `includeTools=false` 會過濾 `role: "toolResult"` 訊息。
-- 以原始對話紀錄格式傳回訊息陣列。
-- 當給定 `sessionId` 時，OpenClaw 會將其解析為對應的 session key（缺少 id 則報錯）。
+- 以原始文字記錄格式傳回訊息陣列。
+- 當給定一個 `sessionId` 時，OpenClaw 會將其解析為對應的 session 金鑰（缺少 ids 會報錯）。
+
+## Gateway session 歷史記錄和即時逐字稿 API
+
+控制 UI 和 gateway 客戶端可以直接使用底層的歷史記錄和即時逐字稿介面。
+
+HTTP：
+
+- `GET /sessions/{sessionKey}/history`
+- 查詢參數：`limit`、`cursor`、`includeTools=1`、`follow=1`
+- 未知的 session 會傳回 HTTP `404` 並帶有 `error.type = "not_found"`
+- `follow=1` 會將回應升級為該 session 逐字稿更新的 SSE 串流
+
+WebSocket：
+
+- `sessions.subscribe` 會訂閱客戶端可見的所有 session 生命週期和逐字稿事件
+- `sessions.messages.subscribe { key }` 僅訂閱一個會話的 `session.message` 事件
+- `sessions.messages.unsubscribe { key }` 移除該目標逐字稿訂閱
+- `session.message` 載有附加的逐字稿訊息以及可用時的即時使用量元資料
+- `sessions.changed` 針對逐字稿附加發出 `phase: "message"`，以便會話列表能重新整理計數器和預覽
 
 ## sessions_send
 
-傳送訊息至另一個工作階段。
+傳送訊息至另一個會話。
 
 參數：
 
-- `sessionKey`（必填；接受來自 `sessions_list` 的 session key 或 `sessionId`）
-- `message`（必填）
-- `timeoutSeconds?: number`（預設 >0；0 = 發後即忘）
+- `sessionKey` （必要；接受來自 `sessions_list` 的會話金鑰或 `sessionId`）
+- `message` （必要）
+- `timeoutSeconds?: number` （預設值 >0；0 = 即發即棄）
 
 行為：
 
-- `timeoutSeconds = 0`：加入佇列並返回 `{ runId, status: "accepted" }`。
-- `timeoutSeconds > 0`：最多等待 N 秒以完成，然後返回 `{ runId, status: "ok", reply }`。
-- 如果等待逾時：`{ runId, status: "timeout", error }`。執行繼續；稍後呼叫 `sessions_history`。
-- 如果執行失敗：`{ runId, status: "error", error }`。
-- 公告的傳遞執行在主要執行完成後進行且為最佳努力；`status: "ok"` 不保證公告已傳遞。
+- `timeoutSeconds = 0`：加入佇列並傳回 `{ runId, status: "accepted" }`。
+- `timeoutSeconds > 0`：等待最多 N 秒以完成，然後返回 `{ runId, status: "ok", reply }`。
+- 如果等待超時：`{ runId, status: "timeout", error }`。運行繼續；稍後呼叫 `sessions_history`。
+- 如果運行失敗：`{ runId, status: "error", error }`。
+- 公告傳送在主運行完成後執行並屬於盡力而為；`status: "ok"` 不保證公告已傳送。
 - 透過閘道 `agent.wait`（伺服器端）等待，因此重新連線不會導致等待中斷。
-- 主要執行階段會注入 Agent 對 Agent 的訊息上下文。
-- 跨會話訊息會使用 `message.provenance.kind = "inter_session"` 持久化，以便文字記錄讀取器可以區分路由的代理指令與外部使用者輸入。
-- 主要執行完成後，OpenClaw 會執行**回覆循環 (reply-back loop)**：
-  - 第 2 輪及之後在請求者與目標 Agent 之間交替進行。
-  - 請準確回覆 `REPLY_SKIP` 以停止乒乓迴圈。
-  - 最大回合數為 `session.agentToAgent.maxPingPongTurns`（0–5，預設為 5）。
-- 循環結束後，OpenClaw 會執行 **Agent 對 Agent 通告步驟 (agent‑to‑agent announce step)**（僅限目標 Agent）：
-  - 請準確回覆 `ANNOUNCE_SKIP` 以保持靜默。
-  - 任何其他回覆都會傳送至目標頻道。
-  - 通告步驟包含原始請求 + 第 1 輪回覆 + 最新的乒乓回覆。
+- 代理程式之間的訊息上下文會為主運行注入。
+- 跨工作階段訊息會與 `message.provenance.kind = "inter_session"` 一起保存，以便逐字稿讀者可以區分路由的代理程式指令與外部使用者輸入。
+- 主運行完成後，OpenClaw 會執行 **reply-back loop**（回覆迴圈）：
+  - 第 2 輪及之後的輪次在請求者和目標代理程式之間交替。
+  - 準確回覆 `REPLY_SKIP` 以停止 ping‑pong。
+  - 最大輪次為 `session.agentToAgent.maxPingPongTurns`（0–5，預設為 5）。
+- 迴圈結束後，OpenClaw 會執行 **agent‑to‑agent announce step**（僅限目標代理程式）：
+  - 準確回覆 `ANNOUNCE_SKIP` 以保持靜默。
+  - 任何其他回覆都會傳送到目標頻道。
+  - 公告步驟包括原始請求 + 第一輪回覆 + 最新的 ping‑pong 回覆。
 
 ## 頻道欄位
 
-- 對於群組，`channel` 是記錄在會話條目上的頻道。
-- 對於直接聊天，`channel` 是從 `lastChannel` 映射而來。
+- 對於群組，`channel` 是記錄在會話項目上的頻道。
+- 對於直接聊天，`channel` 是從 `lastChannel` 對應而來。
 - 對於 cron/hook/node，`channel` 是 `internal`。
-- 如果缺失，`channel` 為 `unknown`。
+- 如果缺少，`channel` 是 `unknown`。
 
 ## 安全性 / 傳送原則
 
-基於原則的封鎖，依據頻道/聊天類型（而非每個會話 ID）。
+依據頻道/聊天類型的封鎖原則（而非根據每個會話 ID）。
 
 ```json
 {
@@ -131,66 +150,66 @@ title: "Session Tools"
 }
 ```
 
-執行時期覆寫（每個會話條目）：
+運行時覆寫（每個會話項）：
 
-- `sendPolicy: "allow" | "deny"`（未設定 = 繼承設定）
-- 可透過 `sessions.patch` 或僅限擁有者的 `/send on|off|inherit`（獨立訊息）進行設定。
+- `sendPolicy: "allow" | "deny"` （未設定 = 繼承設定）
+- 可透過 `sessions.patch` 或僅限擁有者的 `/send on|off|inherit` （獨立訊息）設定。
 
 執行點：
 
-- `chat.send` / `agent`（閘道）
+- `chat.send` / `agent` （閘道）
 - 自動回覆傳遞邏輯
 
 ## sessions_spawn
 
-在隔離的會話中產生子 Agent 執行，並將結果通告回請求者的聊天頻道。
+在獨立會話中生成子代理執行，並將結果宣佈回請求者聊天頻道。
 
 參數：
 
-- `task`（必填）
-- `label?`（選填；用於日誌/UI）
-- `agentId?`（選填；如果允許，在另一個 agent id 下生成）
-- `model?`（選填；覆寫子代理模型；無效值會報錯）
-- `thinking?`（選填；為子代理執行覆寫思考層級）
-- `runTimeoutSeconds?`（設定時預設為 `agents.defaults.subagents.runTimeoutSeconds`，否則為 `0`；設定後，會在 N 秒後中止子代理執行）
-- `thread?`（預設為 false；當通道/外掛支援時，請求此生成過程的執行緒繫結路由）
-- `mode?`（`run|session`；預設為 `run`，但在 `thread=true` 時預設為 `session`；`mode="session"` 需要 `thread=true`）
-- `cleanup?`（`delete|keep`，預設 `keep`）
-- `sandbox?`（`inherit|require`，預設 `inherit`；`require` 會拒絕生成，除非目標子執行環境為沙盒）
-- `attachments?`（選填的內聯檔案陣列；僅限子代理執行環境，ACP 會拒絕）。每個項目：`{ name, content, encoding?: "utf8" | "base64", mimeType? }`。檔案會實體化到子工作區的 `.openclaw/attachments/<uuid>/`。返回包含每個檔案 sha256 的回執。
-- `attachAs?`（選填；`{ mountPath? }` 提示保留給未來的掛載實作）
+- `task` （必填）
+- `label?` （選填；用於日誌/UI）
+- `agentId?` （選填；如果允許，在另一個代理 ID 下生成）
+- `model?` （選填；覆寫子代理模型；無效值會報錯）
+- `thinking?` （選填；覆寫子代理執行的思考層級）
+- `runTimeoutSeconds?` (設置時默認為 `agents.defaults.subagents.runTimeoutSeconds`，否則為 `0`；設置後，在 N 秒後中止子代理運行)
+- `thread?` (默認為 false；當通道/插件支援時，請求此生成的執行緒繫結路由)
+- `mode?` (`run|session`；默認為 `run`，但當 `thread=true` 時默認為 `session`；`mode="session"` 需要 `thread=true`)
+- `cleanup?` (`delete|keep`，默認 `keep`)
+- `sandbox?` (`inherit|require`，預設 `inherit`；`require` 拒絕產生，除非目標子執行環境已沙箱化)
+- `attachments?` (選用的內聯檔案陣列；僅限 subagent 執行環境，ACP 拒絕)。每個項目：`{ name, content, encoding?: "utf8" | "base64", mimeType? }`。檔案會具象化至子工作區的 `.openclaw/attachments/<uuid>/`。傳回包含每個檔案 sha256 的收據。
+- `attachAs?` (選用；`{ mountPath? }` 提示保留給未來的掛載實作)
 
 允許清單：
 
-- `agents.list[].subagents.allowAgents`：允許透過 `agentId` 的代理 ID 列表（使用 `["*"]` 允許任何 ID）。預設值：僅請求者代理。
-- 沙箱繼承保護：如果請求者會話位於沙箱中，`sessions_spawn` 將拒絕以非沙箱模式執行的目標。
+- `agents.list[].subagents.allowAgents`：允許透過 `agentId` 存取的代理程式 ID 清單 (`["*"]` 表示允許任何)。預設：僅限請求者代理程式。
+- 沙盒繼承保護：如果請求者的會話處於沙盒中，`sessions_spawn` 會拒絕將以非沙盒方式運行的目標。
 
 探索：
 
-- 使用 `agents_list` 來發現允許用於 `sessions_spawn` 的代理 ID。
+- 使用 `agents_list` 來探索哪些代理 ID 允許用於 `sessions_spawn`。
 
 行為：
 
 - 使用 `deliver: false` 啟動新的 `agent:<agentId>:subagent:<uuid>` 會話。
-- 子代理預設使用完整工具組**減去會話工具**（可透過 `tools.subagents.tools` 配置）。
-- 子代理不允許呼叫 `sessions_spawn`（不允許子代理 → 子代理衍生）。
-- 始終為非阻塞：立即傳回 `{ status: "accepted", runId, childSessionKey }`。
-- 使用 `thread=true` 時，頻道外掛可以將傳送/路由綁定到執行緒目標（Discord 支援由 `session.threadBindings.*` 和 `channels.discord.threadBindings.*` 控制）。
-- 完成後，OpenClaw 會執行子代理程式的 **announce step**，並將結果張貼到請求者的聊天頻道。
-  - 如果助手的最終回覆為空，則來自子代理歷史記錄的最新 `toolResult` 將包含為 `Result`。
-- 在公告步驟期間回覆準確的 `ANNOUNCE_SKIP` 以保持靜默。
-- 公告回覆被標準化為 `Status`/`Result`/`Notes`；`Status` 來自執行時結果（而非模型文字）。
-- 子代理會話將在 `agents.defaults.subagents.archiveAfterMinutes` 後自動封存（預設值：60）。
-- Announce 回覆包含一個統計行（執行時間、Token、sessionKey/sessionId、文字記錄路徑和可選的成本）。
+- 子代理預設使用完整的工具集**減去**會話工具（可透過 `tools.subagents.tools` 進行設定）。
+- 子代理不允許呼叫 `sessions_spawn`（不允許子代理 → 子代理生成）。
+- 始終為非阻斷式：立即返回 `{ status: "accepted", runId, childSessionKey }`。
+- 透過 `thread=true`，頻道外掛可以將傳送/路由綁定到執行緒目標（Discord 支援由 `session.threadBindings.*` 和 `channels.discord.threadBindings.*` 控制）。
+- 完成後，OpenClaw 執行子代理**公告步驟**並將結果發佈到請求者的聊天頻道。
+  - 如果助理的最終回覆為空，則會包含子代理歷史記錄中最新的 `toolResult` 作為 `Result`。
+- 在公告步驟期間回覆 `ANNOUNCE_SKIP` 以保持靜默。
+- 公告回覆會被正規化為 `Status`/`Result`/`Notes`；`Status` 來自執行時結果（而非模型文本）。
+- 子代理會話會在 `agents.defaults.subagents.archiveAfterMinutes` 後自動封存（預設值：60）。
+- 公告回覆包含統計資訊行（執行時間、Token 數、sessionKey/sessionId、逐字稿路徑及可選的成本）。
 
-## 沙箱工作階段可見性
+## 沙箱會話可見性
 
-工作階段工具可以被設定範圍以減少跨工作階段的存取。
+會話工具可以設定範圍以減少跨會話存取。
 
 預設行為：
 
-- `tools.sessions.visibility` 預設為 `tree`（目前會話 + 衍生的子代理會話）。
-- 對於沙箱會話，`agents.defaults.sandbox.sessionToolsVisibility` 可以硬性限制可見性。
+- `tools.sessions.visibility` 預設為 `tree`（目前工作階段 + 產生的子代理工作階段）。
+- 對於沙箱化的工作階段，`agents.defaults.sandbox.sessionToolsVisibility` 可以強制限制可見性。
 
 設定：
 
@@ -214,13 +233,13 @@ title: "Session Tools"
 }
 ```
 
-註記：
+備註：
 
-- `self`：僅限目前會話金鑰。
-- `tree`：目前會話 + 由目前會話衍生的會話。
-- `agent`：屬於目前代理 ID 的任何會話。
-- `all`：任何會話（跨代理存取仍需 `tools.agentToAgent`）。
-- 當會話處於沙盒模式且為 `sessionToolsVisibility="spawned"` 時，OpenClaw 會將可見性限制為 `tree`，即使您設定了 `tools.sessions.visibility="all"`。
+- `self`：僅限目前的工作階段金鑰。
+- `tree`：目前工作階段 + 由目前工作階段產生的工作階段。
+- `agent`：屬於目前代理 ID 的任何工作階段。
+- `all`：任何工作階段（跨代理存取仍需 `tools.agentToAgent`）。
+- 當工作階段被沙箱化且 `sessionToolsVisibility="spawned"` 時，OpenClaw 會將可見性限制為 `tree`，即使您設定了 `tools.sessions.visibility="all"` 也是如此。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

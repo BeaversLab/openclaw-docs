@@ -1,8 +1,8 @@
 ---
-summary: "Plugins/extensibles de OpenClaw: descubrimiento, configuración y seguridad"
+summary: "Plugins/extensions de OpenClaw: descubrimiento, configuración y seguridad"
 read_when:
-  - Agregar o modificar plugins/extensibles
-  - Documentar las reglas de instalación o carga de plugins
+  - Adding or modifying plugins/extensions
+  - Documenting plugin install or load rules
 title: "Plugins"
 ---
 
@@ -10,9 +10,12 @@ title: "Plugins"
 
 ## Inicio rápido (¿nuevo en los plugins?)
 
-Un plugin es simplemente un **módulo de código pequeño** que amplía OpenClaw con funciones adicionales (comandos, herramientas y RPC de Gateway).
+Un plugin es simplemente un **pequeño módulo de código** que extiende OpenClaw con funciones adicionales
+(comandos, herramientas y RPC de Gateway).
 
-La mayoría de las veces, usarás plugins cuando desees una función que aún no esté integrada en OpenClaw principal (o cuando quieras mantener las funciones opcionales fuera de tu instalación principal).
+La mayor parte del tiempo, usarás plugins cuando quieras una función que aún no está integrada
+en el núcleo de OpenClaw (o quieres mantener las funciones opcionales fuera de tu instalación
+principal).
 
 Ruta rápida:
 
@@ -22,33 +25,33 @@ Ruta rápida:
 openclaw plugins list
 ```
 
-2. Instalar un plugin oficial (ejemplo: Voice Call):
+2. Instalar un plugin oficial (ejemplo: Llamada de voz):
 
 ```bash
 openclaw plugins install @openclaw/voice-call
 ```
 
-3. Reinicie el Gateway y luego configure bajo `plugins.entries.<id>.config`.
+3. Reinicie el Gateway, luego configure bajo `plugins.entries.<id>.config`.
 
-Consulte [Voice Call](/es/plugins/voice-call) para ver un ejemplo concreto de plugin.
+Consulte [Llamada de voz](/es/plugins/voice-call) para ver un ejemplo concreto de plugin.
 
 ## Plugins disponibles (oficiales)
 
-- Microsoft Teams solo está disponible como plugin a partir del 15.01.2026; instale `@openclaw/msteams` si usa Teams.
-- Memoria (Core): plugin de búsqueda de memoria incluido (habilitado de forma predeterminada a través de `plugins.slots.memory`)
-- Memoria (LanceDB): plugin de memoria a largo plazo incluido (recordatorio/captura automática; establecer `plugins.slots.memory = "memory-lancedb"`)
-- [Voice Call](/es/plugins/voice-call) — `@openclaw/voice-call`
+- Microsoft Teams es solo plugin a partir del 15.01.2026; instale `@openclaw/msteams` si usa Teams.
+- Memoria (Core) — plugin de búsqueda de memoria incluido (habilitado por defecto a través de `plugins.slots.memory`)
+- Memoria (LanceDB) — plugin de memoria a largo plazo incluido (recuperación/captura automática; configure `plugins.slots.memory = "memory-lancedb"`)
+- [Llamada de voz](/es/plugins/voice-call) — `@openclaw/voice-call`
 - [Zalo Personal](/es/plugins/zalouser) — `@openclaw/zalouser`
 - [Matrix](/es/channels/matrix) — `@openclaw/matrix`
 - [Nostr](/es/channels/nostr) — `@openclaw/nostr`
 - [Zalo](/es/channels/zalo) — `@openclaw/zalo`
 - [Microsoft Teams](/es/channels/msteams) — `@openclaw/msteams`
-- Google Antigravity OAuth (autenticación del proveedor): incluido como `google-antigravity-auth` (deshabilitado de forma predeterminada)
-- Gemini CLI OAuth (autenticación del proveedor): incluido como `google-gemini-cli-auth` (deshabilitado de forma predeterminada)
-- Qwen OAuth (autenticación del proveedor): incluido como `qwen-portal-auth` (deshabilitado de forma predeterminada)
-- Copilot Proxy (autenticación del proveedor): puente local para VS Code Copilot Proxy; distinto del inicio de sesión de dispositivo integrado `github-copilot` (incluido, deshabilitado de forma predeterminada)
+- Google Antigravity OAuth (autenticación del proveedor) — incluido como `google-antigravity-auth` (desactivado por defecto)
+- Gemini CLI OAuth (autenticación del proveedor) — incluido como `google-gemini-cli-auth` (desactivado por defecto)
+- Qwen OAuth (autenticación del proveedor) — incluido como `qwen-portal-auth` (desactivado por defecto)
+- Copilot Proxy (autenticación del proveedor) — puente local VS Code Copilot Proxy; distinto del inicio de sesión de dispositivo integrado `github-copilot` (incluido, desactivado por defecto)
 
-Los complementos de OpenClaw son **módulos de TypeScript** cargados en tiempo de ejecución mediante jiti. **La validación de la configuración no ejecuta el código del complemento**; en su lugar, utiliza el manifiesto del complemento y el esquema JSON. Consulte [Plugin manifest](/es/plugins/manifest).
+Los complementos de OpenClaw son **módulos de TypeScript** cargados en tiempo de ejecución a través de jiti. **La validación de la configuración no ejecuta el código del complemento**; en su lugar, utiliza el manifiesto del complemento y el esquema JSON. Consulte [Manifiesto del complemento](/es/plugins/manifest).
 
 Los complementos pueden registrar:
 
@@ -57,15 +60,15 @@ Los complementos pueden registrar:
 - Herramientas de agente
 - Comandos de CLI
 - Servicios en segundo plano
-- Validación opcional de configuración
-- **Habilidades** (enumerando los directorios `skills` en el manifiesto del complemento)
+- Validación de configuración opcional
+- **Habilidades** (mediante la listado de directorios `skills` en el manifiesto del complemento)
 - **Comandos de respuesta automática** (se ejecutan sin invocar al agente de IA)
 
-Los complementos se ejecutan **en proceso** con el Gateway, así que trátelos como código de confianza. Guía de creación de herramientas: [Plugin agent tools](/es/plugins/agent-tools).
+Los complementos se ejecutan **en el mismo proceso** que el Gateway, por lo que debe tratarlos como código de confianza. Guía de creación de herramientas: [Herramientas de agente de complemento](/es/plugins/agent-tools).
 
 ## Asistentes de tiempo de ejecución
 
-Los complementos pueden acceder a ciertos asistentes centrales a través de `api.runtime`. Para TTS de telefonía:
+Los complementos pueden acceder a ciertos asistentes principales a través de `api.runtime`. Para TTS de telefonía:
 
 ```ts
 const result = await api.runtime.tts.textToSpeechTelephony({
@@ -76,8 +79,8 @@ const result = await api.runtime.tts.textToSpeechTelephony({
 
 Notas:
 
-- Utiliza la configuración central `messages.tts` (OpenAI o ElevenLabs).
-- Devuelve un búfer de audio PCM + frecuencia de muestreo. Los complementos deben volver a muestrear/codificar para los proveedores.
+- Utiliza la configuración `messages.tts` central (OpenAI o ElevenLabs).
+- Devuelve un búfer de audio PCM + tasa de muestreo. Los complementos deben remuestrear/codificar para los proveedores.
 - Edge TTS no es compatible con telefonía.
 
 ## Descubrimiento y precedencia
@@ -106,11 +109,11 @@ Los complementos incluidos deben habilitarse explícitamente a través de `plugi
 o `openclaw plugins enable <id>`. Los complementos instalados están habilitados de forma predeterminada,
 pero se pueden deshabilitar de la misma manera.
 
-Cada complemento debe incluir un archivo `openclaw.plugin.json` en su raíz. Si una ruta
-apunta a un archivo, la raíz del complemento es el directorio del archivo y debe contener el
+Cada complemento debe incluir un archivo `openclaw.plugin.json` en su directorio raíz. Si una ruta
+apunta a un archivo, el directorio raíz del complemento es el directorio del archivo y debe contener el
 manifiesto.
 
-Si varios complementos se resuelven al mismo id, la primera coincidencia en el orden anterior
+Si varios complementos se resuelven con el mismo id, la primera coincidencia en el orden anterior
 gana y se ignoran las copias de menor precedencia.
 
 ### Paquetes de paquetes
@@ -134,8 +137,8 @@ Si su complemento importa dependencias de npm, instálelas en ese directorio par
 
 ### Metadatos del catálogo de canales
 
-Los complementos de canal pueden anunciar metadatos de integración a través de `openclaw.channel` y
-sugerencias de instalación a través de `openclaw.install`. Esto mantiene el catálogo principal libre de datos.
+Los complementos de canal pueden anunciar metadatos de incorporación a través de `openclaw.channel` y
+sugerencias de instalación a través de `openclaw.install`. Esto mantiene el catálogo central libre de datos.
 
 Ejemplo:
 
@@ -164,7 +167,7 @@ Ejemplo:
 ```
 
 OpenClaw también puede fusionar **catálogos de canales externos** (por ejemplo, una exportación
-de registro MPM). Coloque un archivo JSON en uno de:
+del registro MPM). Coloque un archivo JSON en uno de:
 
 - `~/.openclaw/mpm/plugins.json`
 - `~/.openclaw/mpm/catalog.json`
@@ -208,21 +211,21 @@ Campos:
 - `load.paths`: archivos/directorios de complementos adicionales
 - `entries.<id>`: interruptores por complemento + configuración
 
-Los cambios en la configuración **requieren un reinicio de la puerta de enlace**.
+Los cambios de configuración **requieren un reinicio de la puerta de enlace**.
 
 Reglas de validación (estrictas):
 
-- Los IDs de complementos desconocidos en `entries`, `allow`, `deny` o `slots` son **errores**.
+- Los IDs de complementos desconocidos en `entries`, `allow`, `deny`, o `slots` son **errores**.
 - Las claves `channels.<id>` desconocidas son **errores** a menos que un manifiesto de complemento declare
-  el ID del canal.
-- La configuración del complemento se valida mediante el esquema JSON incrustado en
+  el id del canal.
+- La configuración del complemento se valida usando el esquema JSON incrustado en
   `openclaw.plugin.json` (`configSchema`).
 - Si un complemento está deshabilitado, su configuración se conserva y se emite una **advertencia**.
 
 ## Ranuras de complementos (categorías exclusivas)
 
 Algunas categorías de complementos son **exclusivas** (solo una activa a la vez). Use
-`plugins.slots` para seleccionar qué complemento es dueño del ranuro:
+`plugins.slots` para seleccionar qué complemento posee el espacio:
 
 ```json5
 {
@@ -239,15 +242,15 @@ se deshabilitan con diagnósticos.
 
 ## Interfaz de usuario de control (esquema + etiquetas)
 
-La interfaz de usuario de control usa `config.schema` (JSON Schema + `uiHints`) para renderizar mejores formularios.
+La interfaz de usuario de control usa `config.schema` (JSON Schema + `uiHints`) para representar mejores formularios.
 
-OpenClaw aumenta `uiHints` en tiempo de ejecución basándose en complementos descubiertos:
+OpenClaw mejora `uiHints` en tiempo de ejecución basándose en complementos descubiertos:
 
 - Agrega etiquetas por complemento para `plugins.entries.<id>` / `.enabled` / `.config`
 - Fusiona sugerencias opcionales de campos de configuración proporcionadas por el complemento bajo:
   `plugins.entries.<id>.config.<field>`
 
-Si desea que los campos de configuración de su complemento muestren buenas etiquetas/marcadores de posición (y marcar los secretos como sensibles),
+Si desea que los campos de configuración de su complemento muestren buenas etiquetas/marcadores de posición (y marcar secretos como confidenciales),
 proporcione `uiHints` junto con su JSON Schema en el manifiesto del complemento.
 
 Ejemplo:
@@ -294,15 +297,15 @@ Los complementos también pueden registrar sus propios comandos de nivel superio
 
 ## API de complementos (resumen)
 
-Los complementos exportan ya sea:
+Los complementos exportan:
 
 - Una función: `(api) => { ... }`
 - Un objeto: `{ id, name, configSchema, register(api) { ... } }`
 
-## Ganchos de complemento
+## Ganchos (hooks) de complementos
 
-Los complementos pueden enviar ganchos y registrarlos en tiempo de ejecución. Esto permite que un complemento agrupe
-automatización basada en eventos sin una instalación separada de un paquete de ganchos.
+Los complementos pueden incluir ganchos y registrarlos en tiempo de ejecución. Esto permite que un complemento incluya
+automatización impulsada por eventos sin una instalación separada de paquete de ganchos.
 
 ### Ejemplo
 
@@ -317,17 +320,17 @@ export default function register(api) {
 Notas:
 
 - Los directorios de ganchos siguen la estructura normal de ganchos (`HOOK.md` + `handler.ts`).
-- Las reglas de elegibilidad de los ganchos todavía se aplican (requisitos de OS/bins/env/config).
-- Los ganchos administrados por complementos aparecen en `openclaw hooks list` con `plugin:<id>`.
-- No puede habilitar/deshabilitar los ganchos administrados por complementos a través de `openclaw hooks`; en su lugar, habilite/deshabilite el complemento.
+- Las reglas de elegibilidad de ganchos aún se aplican (requisitos de SO/bins/entorno/configuración).
+- Los ganchos gestionados por complementos aparecen en `openclaw hooks list` con `plugin:<id>`.
+- No puede habilitar/deshabilitar los ganchos gestionados por complementos a través de `openclaw hooks`; en su lugar, habilite/deshabilite el complemento.
 
 ## Complementos de proveedor (autenticación de modelo)
 
-Los complementos pueden registrar flujos de **autenticación de proveedor de modelos** para que los usuarios puedan ejecutar OAuth o
-configuración de clave de API dentro de OpenClaw (no se necesitan scripts externos).
+Los complementos pueden registrar flujos de **autenticación de proveedores de modelos** para que los usuarios puedan ejecutar OAuth o
+configuración de clave API dentro de OpenClaw (no se necesitan scripts externos).
 
 Registre un proveedor a través de `api.registerProvider(...)`. Cada proveedor expone uno
-o más métodos de autenticación (OAuth, clave de API, código de dispositivo, etc.). Estos métodos potencian:
+o más métodos de autenticación (OAuth, clave API, código de dispositivo, etc.). Estos métodos alimentan:
 
 - `openclaw models auth login --provider <id> [--method <id>]`
 
@@ -367,15 +370,15 @@ api.registerProvider({
 
 Notas:
 
-- `run` recibe un `ProviderAuthContext` con los auxiliares `prompter`, `runtime`,
-  `openUrl` y `oauth.createVpsAwareHandlers`.
-- Devuelva `configPatch` cuando necesite agregar modelos predeterminados o configuración del proveedor.
+- `run` recibe un `ProviderAuthContext` con `prompter`, `runtime`,
+  `openUrl` y auxiliares `oauth.createVpsAwareHandlers`.
+- Devuelva `configPatch` cuando necesite agregar modelos predeterminados o configuración de proveedor.
 - Devuelva `defaultModel` para que `--set-default` pueda actualizar los valores predeterminados del agente.
 
 ### Registrar un canal de mensajería
 
-Los complementos pueden registrar **complementos de canal** que se comportan como los canales integrados
-(WhatsApp, Telegram, etc.). La configuración del canal reside en `channels.<id>` y es
+Los complementos pueden registrar **complementos de canal** que se comportan como canales integrados
+(WhatsApp, Telegram, etc.). La configuración del canal vive bajo `channels.<id>` y es
 validada por el código de su complemento de canal.
 
 ```ts
@@ -410,28 +413,28 @@ export default function (api) {
 
 Notas:
 
-- Coloque la configuración en `channels.<id>` (no en `plugins.entries`).
-- `meta.label` se usa para las etiquetas en las listas de CLI/interfaz de usuario.
-- `meta.aliases` agrega identificadores alternativos para la normalización y las entradas de la CLI.
+- Ponga la configuración bajo `channels.<id>` (no `plugins.entries`).
+- `meta.label` se usa para etiquetas en listas de CLI/interfaz de usuario.
+- `meta.aliases` agrega identificadores alternativos para normalización y entradas de CLI.
 - `meta.preferOver` enumera los identificadores de canal para omitir la habilitación automática cuando ambos están configurados.
-- `meta.detailLabel` y `meta.systemImage` permiten que las interfaces de usuario muestren etiquetas/iconos de canal más enriquecidos.
+- `meta.detailLabel` y `meta.systemImage` permiten que las interfaces de usuario muestren etiquetas/iconos de canal más ricos.
 
 ### Escribir un nuevo canal de mensajería (paso a paso)
 
 Use esto cuando desee una **nueva superficie de chat** (un "canal de mensajería"), no un proveedor de modelos.
-La documentación del proveedor de modelos se encuentra en `/providers/*`.
+La documentación del proveedor de modelos vive bajo `/providers/*`.
 
 1. Elija un identificador + forma de configuración
 
-- Toda la configuración del canal reside en `channels.<id>`.
-- Prefiera `channels.<id>.accounts.<accountId>` para configuraciones de varias cuentas.
+- Toda la configuración del canal vive bajo `channels.<id>`.
+- Prefiera `channels.<id>.accounts.<accountId>` para configuraciones multicuenta.
 
 2. Definir los metadatos del canal
 
 - `meta.label`, `meta.selectionLabel`, `meta.docsPath`, `meta.blurb` controlan las listas de CLI/interfaz de usuario.
 - `meta.docsPath` debe apuntar a una página de documentación como `/channels/<id>`.
 - `meta.preferOver` permite que un complemento reemplace otro canal (la habilitación automática lo prefiere).
-- `meta.detailLabel` y `meta.systemImage` son utilizados por las interfaces de usuario para texto/iconos de detalles.
+- `meta.detailLabel` y `meta.systemImage` son utilizados por las interfaces de usuario para texto de detalle/iconos.
 
 3. Implementar los adaptadores requeridos
 
@@ -445,7 +448,7 @@ La documentación del proveedor de modelos se encuentra en `/providers/*`.
 - `gateway` (iniciar/detener/iniciar sesión), `mentions`, `threading`, `streaming`
 - `actions` (acciones de mensaje), `commands` (comportamiento de comando nativo)
 
-5. Registre el canal en su complemento
+5. Registrar el canal en su complemento
 
 - `api.registerChannel({ plugin })`
 
@@ -463,7 +466,7 @@ Ejemplo de configuración mínima:
 }
 ```
 
-Complemento de canal mínimo (solo saliente):
+Complemento de canal mínimo (solo salida):
 
 ```ts
 const plugin = {
@@ -530,10 +533,10 @@ export default function (api) {
 }
 ```
 
-### Registrar comandos de respuesta automática
+### Registrar comandos de auto-respuesta
 
-Los complementos pueden registrar comandos de barra personalizados que se ejecuten **sin invocar al
-agente de IA**. Esto es útil para comandos de alternancia, verificaciones de estado o acciones rápidas
+Los complementos pueden registrar comandos de barra personalizados que se ejecutan **sin invocar al
+agente de IA**. Esto es útil para comandos de alternancia, comprobaciones de estado o acciones rápidas
 que no necesitan procesamiento LLM.
 
 ```ts
@@ -562,7 +565,7 @@ Opciones de comando:
 - `name`: Nombre del comando (sin el `/` inicial)
 - `description`: Texto de ayuda que se muestra en las listas de comandos
 - `acceptsArgs`: Si el comando acepta argumentos (predeterminado: false). Si es false y se proporcionan argumentos, el comando no coincidirá y el mensaje pasará a otros controladores
-- `requireAuth`: Si se requiere un remitente autorizado (predeterminado: true)
+- `requireAuth`: Si se requiere remitente autorizado (predeterminado: true)
 - `handler`: Función que devuelve `{ text: string }` (puede ser asíncrona)
 
 Ejemplo con autorización y argumentos:
@@ -583,12 +586,12 @@ api.registerCommand({
 
 Notas:
 
-- Los comandos del complemento se procesan **antes** que los comandos integrados y el agente de IA
+- Los comandos de los complementos se procesan **antes** que los comandos integrados y el agente de IA
 - Los comandos se registran globalmente y funcionan en todos los canales
 - Los nombres de los comandos no distinguen entre mayúsculas y minúsculas (`/MyStatus` coincide con `/mystatus`)
 - Los nombres de los comandos deben comenzar con una letra y contener solo letras, números, guiones y guiones bajos
 - Los nombres de comandos reservados (como `help`, `status`, `reset`, etc.) no pueden ser anulados por los complementos
-- El registro de comandos duplicados en varios complementos fallará con un error de diagnóstico
+- El registro de comandos duplicados en los complementos fallará con un error de diagnóstico
 
 ### Registrar servicios en segundo plano
 
@@ -604,15 +607,15 @@ export default function (api) {
 
 ## Convenciones de nomenclatura
 
-- Métodos de puerta de enlace: `pluginId.action` (ejemplo: `voicecall.status`)
+- Métodos de Gateway: `pluginId.action` (ejemplo: `voicecall.status`)
 - Herramientas: `snake_case` (ejemplo: `voice_call`)
-- Comandos de CLI: kebab o camel, pero evite entrar en conflicto con los comandos principales
+- Comandos de CLI: kebab o camel, pero evite conflictos con los comandos principales
 
 ## Habilidades
 
 Los complementos pueden incluir una habilidad en el repositorio (`skills/<name>/SKILL.md`).
-Actívela con `plugins.entries.<id>.enabled` (u otras puertas de configuración) y asegúrese
-que esté presente en sus ubicaciones de habilidades administradas/espacio de trabajo.
+Actívela con `plugins.entries.<id>.enabled` (u otros umbrales de configuración) y asegúrese
+de que esté presente en sus ubicaciones de habilidades administradas o del espacio de trabajo.
 
 ## Distribución (npm)
 
@@ -626,11 +629,11 @@ Contrato de publicación:
 - El complemento `package.json` debe incluir `openclaw.extensions` con uno o más archivos de entrada.
 - Los archivos de entrada pueden ser `.js` o `.ts` (jiti carga TS en tiempo de ejecución).
 - `openclaw plugins install <npm-spec>` usa `npm pack`, extrae en `~/.openclaw/extensions/<id>/` y lo habilita en la configuración.
-- Estabilidad de la clave de configuración: los paquetes con alcance se normalizan al id **sin alcance** para `plugins.entries.*`.
+- Estabilidad de la clave de configuración: los paquetes con ámbito se normalizan al id **sin ámbito** para `plugins.entries.*`.
 
 ## Complemento de ejemplo: Llamada de voz
 
-Este repositorio incluye un complemento de llamada de voz (Twilio o respaldo de registro):
+Este repositorio incluye un complemento de llamada de voz (Twilio o registro de respaldo):
 
 - Fuente: `extensions/voice-call`
 - Habilidad: `skills/voice-call`
@@ -644,18 +647,18 @@ Consulte [Voice Call](/es/plugins/voice-call) y `extensions/voice-call/README.md
 
 ## Notas de seguridad
 
-Los complementos se ejecutan en proceso con la Gateway. Trátelos como código de confianza:
+Los complementos se ejecutan en el mismo proceso que el Gateway. Trátelos como código de confianza:
 
 - Solo instale complementos en los que confíe.
 - Prefiera listas de permitidos `plugins.allow`.
-- Reinicie la Gateway después de realizar cambios.
+- Reinicie el Gateway después de realizar cambios.
 
 ## Prueba de complementos
 
-Los complementos pueden (y deben) incluir pruebas:
+Los complementos pueden (y deberían) incluir pruebas:
 
-- Los complementos en el repositorio pueden mantener las pruebas de Vitest bajo `src/**` (ejemplo: `src/plugins/voice-call.plugin.test.ts`).
-- Los complementos publicados por separado deben ejecutar su propio CI (lint/build/test) y validar que `openclaw.extensions` apunte al punto de entrada compilado (`dist/index.js`).
+- Los complementos en el repositorio pueden mantener las pruebas de Vitest en `src/**` (ejemplo: `src/plugins/voice-call.plugin.test.ts`).
+- Los complementos publicados por separado deben ejecutar su propio CI (lint/build/test) y validar que `openclaw.extensions` apunte al punto de entrada construido (`dist/index.js`).
 
 import es from "/components/footer/es.mdx";
 

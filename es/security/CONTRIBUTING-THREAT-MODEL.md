@@ -1,53 +1,53 @@
 ---
-title: "Contributing to the Threat Model"
-summary: "How to contribute to the OpenClaw threat model"
+title: "Contribuir al modelo de amenazas"
+summary: "Cómo contribuir al modelo de amenazas de OpenClaw"
 read_when:
   - You want to contribute security findings or threat scenarios
   - Reviewing or updating the threat model
 ---
 
-# Contributing to the OpenClaw Threat Model
+# Contribuir al modelo de amenazas de OpenClaw
 
-Thanks for helping make OpenClaw more secure. This threat model is a living document and we welcome contributions from anyone - you don't need to be a security expert.
+Gracias por ayudar a que OpenClaw sea más seguro. Este modelo de amenazas es un documento vivo y aceptamos contribuciones de cualquier persona; no es necesario ser un experto en seguridad.
 
-## Ways to Contribute
+## Formas de contribuir
 
-### Add a Threat
+### Añadir una amenaza
 
-Spotted an attack vector or risk we haven't covered? Open an issue on [openclaw/trust](https://github.com/openclaw/trust/issues) and describe it in your own words. You don't need to know any frameworks or fill in every field - just describe the scenario.
+¿Has detectado un vector de ataque o un riesgo que no hemos cubierto? Abre un issue en [openclaw/trust](https://github.com/openclaw/trust/issues) y descríbelo con tus propias palabras. No necesitas conocer ningún marco ni rellenar todos los campos; simplemente describe el escenario.
 
-**Helpful to include (but not required):**
+**Es útil incluir (pero no obligatorio):**
 
-- The attack scenario and how it could be exploited
-- Which parts of OpenClaw are affected (CLI, gateway, channels, ClawHub, MCP servers, etc.)
-- How severe you think it is (low / medium / high / critical)
-- Any links to related research, CVEs, or real-world examples
+- El escenario de ataque y cómo podría explotarse
+- Qué partes de OpenClaw se ven afectadas (CLI, puerta de enlace, canales, ClawHub, servidores MCP, etc.)
+- Qué tan grave crees que es (baja / media / alta / crítica)
+- Cualquier enlace a investigaciones relacionadas, CVEs o ejemplos del mundo real
 
-We'll handle the ATLAS mapping, threat IDs, and risk assessment during review. If you want to include those details, great - but it's not expected.
+Nos encargaremos de la asignación a ATLAS, los IDs de amenaza y la evaluación de riesgos durante la revisión. Si deseas incluir esos detalles, genial; pero no se espera.
 
-> **This is for adding to the threat model, not reporting live vulnerabilities.** If you've found an exploitable vulnerability, see our [Trust page](https://trust.openclaw.ai) for responsible disclosure instructions.
+> **Esto es para añadir al modelo de amenazas, no para reportar vulnerabilidades en vivo.** Si has encontrado una vulnerabilidad explotable, consulta nuestra [página de confianza](https://trust.openclaw.ai) para obtener instrucciones sobre divulgación responsable.
 
-### Suggest a Mitigation
+### Sugerir una mitigación
 
-Have an idea for how to address an existing threat? Open an issue or PR referencing the threat. Useful mitigations are specific and actionable - for example, "per-sender rate limiting of 10 messages/minute at the gateway" is better than "implement rate limiting."
+¿Tienes una idea sobre cómo abordar una amenaza existente? Abre un issue o una PR que haga referencia a la amenaza. Las mitigaciones útiles son específicas y accionables; por ejemplo, "limitación de velocidad por remitente de 10 mensajes/minuto en la puerta de enlace" es mejor que "implementar limitación de velocidad".
 
-### Propose an Attack Chain
+### Proponer una cadena de ataque
 
-Attack chains show how multiple threats combine into a realistic attack scenario. If you see a dangerous combination, describe the steps and how an attacker would chain them together. A short narrative of how the attack unfolds in practice is more valuable than a formal template.
+Las cadenas de ataque muestran cómo se combinan múltiples amenazas en un escenario de ataque realista. Si ves una combinación peligrosa, describe los pasos y cómo un atacante los encadenaría. Una breve narración de cómo se desarrolla el ataque en la práctica es más valiosa que una plantilla formal.
 
-### Fix or Improve Existing Content
+### Corregir o mejorar el contenido existente
 
-Typos, clarifications, outdated info, better examples - PRs welcome, no issue needed.
+Errores tipográficos, aclaraciones, información desactualizada, mejores ejemplos: las PRs son bienvenidas, no es necesario abrir un issue.
 
-## What We Use
+## Lo que utilizamos
 
 ### MITRE ATLAS
 
-Este modelo de amenazas se basa en [MITRE ATLAS](https://atlas.mitre.org/) (Adversarial Threat Landscape for AI Systems), un marco diseñado específicamente para amenazas de IA/ML como la inyección de prompts, el uso indebido de herramientas y la explotación de agentes. No necesitas conocer ATLAS para contribuir - nosotros mapeamos las envíos al marco durante la revisión.
+Este modelo de amenazas se basa en [MITRE ATLAS](https://atlas.mitre.org/) (Adversarial Threat Landscape for AI Systems), un marco diseñado específicamente para amenazas de IA/ML como la inyección de indicaciones, el uso indebido de herramientas y la explotación de agentes. No necesitas conocer ATLAS para contribuir - mapeamos las envíos al marco durante la revisión.
 
-### IDs de Amenazas
+### ID de Amenazas
 
-Cada amenaza obtiene un ID como `T-EXEC-003`. Las categorías son:
+Cada amenaza recibe un ID como `T-EXEC-003`. Las categorías son:
 
 | Código  | Categoría                                    |
 | ------- | -------------------------------------------- |
@@ -55,12 +55,12 @@ Cada amenaza obtiene un ID como `T-EXEC-003`. Las categorías son:
 | ACCESS  | Acceso inicial - obtener entrada             |
 | EXEC    | Ejecución - ejecutar acciones maliciosas     |
 | PERSIST | Persistencia - mantener el acceso            |
-| EVADE   | Evasión de defensa - evitar la detección     |
+| EVADE   | Evasión de defensas - evitar la detección    |
 | DISC    | Descubrimiento - aprender sobre el entorno   |
-| EXFIL   | Exfiltración - robo de datos                 |
+| EXFIL   | Exfiltración - robar datos                   |
 | IMPACT  | Impacto - daño o interrupción                |
 
-Los IDs son asignados por los mantenedores durante la revisión. No necesitas elegir uno.
+Los ID son asignados por los mantenedores durante la revisión. No necesitas elegir uno.
 
 ### Niveles de Riesgo
 
@@ -68,29 +68,29 @@ Los IDs son asignados por los mantenedores durante la revisión. No necesitas el
 | ----------- | ---------------------------------------------------------------------- |
 | **Crítico** | Compromiso total del sistema, o alta probabilidad + impacto crítico    |
 | **Alto**    | Daños significativos probables, o probabilidad media + impacto crítico |
-| **Medio**   | Riesgo moderado, o baja probabilidad + impacto alto                    |
+| **Medio**   | Riesgo moderado, o baja probabilidad + alto impacto                    |
 | **Bajo**    | Poco probable y de impacto limitado                                    |
 
-Si no estás seguro del nivel de riesgo, simplemente describe el impacto y lo evaluaremos.
+Si no estás seguro del nivel de riesgo, simplemente describe el impacto y nosotros lo evaluaremos.
 
 ## Proceso de Revisión
 
 1. **Triaje** - Revisamos los nuevos envíos dentro de las 48 horas
 2. **Evaluación** - Verificamos la viabilidad, asignamos el mapeo ATLAS y el ID de amenaza, validamos el nivel de riesgo
 3. **Documentación** - Nos aseguramos de que todo esté formateado y completo
-4. Fusión\*\* - Se añade al modelo de amenazas y la visualización
+4. Fusión\*\* - Se agrega al modelo de amenazas y la visualización
 
 ## Recursos
 
 - [Sitio web de ATLAS](https://atlas.mitre.org/)
 - [Técnicas de ATLAS](https://atlas.mitre.org/techniques/)
 - [Estudios de caso de ATLAS](https://atlas.mitre.org/studies/)
-- [Modelo de amenazas OpenClaw](/es/security/THREAT-MODEL-ATLAS)
+- [Modelo de amenazas de OpenClaw](/es/security/THREAT-MODEL-ATLAS)
 
 ## Contacto
 
-- **Vulnerabilidades de seguridad:** Consulta nuestra [página de Trust](https://trust.openclaw.ai) para obtener instrucciones de reporte
-- **Preguntas sobre el modelo de amenazas:** Abre un issue en [openclaw/trust](https://github.com/openclaw/trust/issues)
+- **Vulnerabilidades de seguridad:** Consulte nuestra [página de Confianza](https://trust.openclaw.ai) para obtener instrucciones de reporte
+- **Preguntas sobre el modelo de amenazas:** Abra un issue en [openclaw/trust](https://github.com/openclaw/trust/issues)
 - **Chat general:** Canal #security de Discord
 
 ## Reconocimiento

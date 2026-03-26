@@ -1,19 +1,19 @@
 ---
-summary: "`openclaw models` 的 CLI 參考（status/list/set/scan、別名、備援、auth）"
+summary: " `openclaw models` 的 CLI 參考手冊（status/list/set/scan、別名、備援、驗證）"
 read_when:
-  - 您想要變更預設模型或查看提供者 auth 狀態
-  - 您想要掃描可用的模型/提供者並除錯 auth 設定檔
+  - You want to change default models or view provider auth status
+  - You want to scan available models/providers and debug auth profiles
 title: "models"
 ---
 
 # `openclaw models`
 
-模型探索、掃描與設定（預設模型、備援、auth 設定檔）。
+模型探索、掃描與設定（預設模型、備援、驗證設定檔）。
 
-相關：
+相關連結：
 
-- 提供者 + 模型：[Models](/zh-Hant/providers/models)
-- 提供者 auth 設定：[Getting started](/zh-Hant/start/getting-started)
+- 供應商 + 模型：[模型](/zh-Hant/providers/models)
+- 供應商驗證設定：[快速入門](/zh-Hant/start/getting-started)
 
 ## 常用指令
 
@@ -24,21 +24,21 @@ openclaw models set <model-or-alias>
 openclaw models scan
 ```
 
-`openclaw models status` 顯示解析後的預設值/備援值以及驗證概覽。
-當提供者使用情況快照可用時，OAuth/token 狀態部分會包含
-提供者使用情況標頭。
-新增 `--probe` 以對每個設定的提供者設定檔執行即時驗證探測。
+`openclaw models status` 會顯示解析後的預設/後備以及驗證概覽。
+當可供提供者使用快照時，OAuth/token 狀態部分會包含
+提供者使用標頭。
+新增 `--probe` 以對每個已配置的提供者設定檔執行即時驗證探測。
 探測是真實請求（可能會消耗 token 並觸發速率限制）。
-使用 `--agent <id>` 檢視已設定代理程式的模型/驗證狀態。若省略，
-指令會使用 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`（若已設定），否則使用
-設定的預設代理程式。
+使用 `--agent <id>` 來檢查已配置代理程式的 model/auth 狀態。如果省略，
+該指令會使用 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`（如果已設定），否則為
+已配置的預設代理程式。
 
 備註：
 
 - `models set <model-or-alias>` 接受 `provider/model` 或別名。
-- 模型參照通過在**第一個** `/` 處分割來解析。如果模型 ID 包含 `/`（OpenRouter 風格），請包含提供者前綴（例如 `openrouter/moonshotai/kimi-k2`）。
-- 如果您省略提供者，OpenClaw 會將輸入視為別名或**預設提供者**的模型（僅在模型 ID 中沒有 `/` 時有效）。
-- `models status` 可能會在非機密佔位符的認證輸出中顯示 `marker(<value>)`（例如 `OPENAI_API_KEY`、`secretref-managed`、`minimax-oauth`、`qwen-oauth`、`ollama-local`），而不是將它們作為機密進行遮罩。
+- 模型參照通過在**第一個** `/` 處分割來解析。如果模型 ID 包含 `/`（OpenRouter 風格），請包含提供者前綴（例如：`openrouter/moonshotai/kimi-k2`）。
+- 如果您省略提供者，OpenClaw 會將輸入視為別名或**預設提供者**的模型（僅當模型 ID 中沒有 `/` 時才有效）。
+- `models status` 可能會在身份驗證輸出中為非機密佔位符（例如 `OPENAI_API_KEY`、`secretref-managed`、`minimax-oauth`、`qwen-oauth`、`ollama-local`）顯示 `marker(<value>)`，而不是將它們作為機密遮罩。
 
 ### `models status`
 
@@ -46,14 +46,14 @@ openclaw models scan
 
 - `--json`
 - `--plain`
-- `--check` (exit 1=已過期/遺失，2=即將過期)
-- `--probe` (對已設定的認證設定檔進行即時探測)
+- `--check` (exit 1=已過期/缺失，2=即將過期)
+- `--probe` (即時探測已配置的驗證設定檔)
 - `--probe-provider <name>` (探測單一提供者)
 - `--probe-profile <id>` (重複或以逗號分隔的設定檔 ID)
 - `--probe-timeout <ms>`
 - `--probe-concurrency <n>`
 - `--probe-max-tokens <n>`
-- `--agent <id>` (已設定的代理程式 ID；覆寫 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`)
+- `--agent <id>` (已配置的代理程式 ID；會覆寫 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`)
 
 ## 別名 + 備援
 
@@ -62,7 +62,7 @@ openclaw models aliases list
 openclaw models fallbacks list
 ```
 
-## 認證設定檔
+## 驗證設定檔
 
 ```bash
 openclaw models auth add
@@ -71,14 +71,14 @@ openclaw models auth setup-token
 openclaw models auth paste-token
 ```
 
-`models auth login` 會執行提供者外掛程式的認證流程 (OAuth/API 金鑰)。使用
-`openclaw plugins list` 查看已安裝哪些提供者。
+`models auth login` 會執行提供者外掛程式的驗證流程 (OAuth/API 金鑰)。請使用
+`openclaw plugins list` 來查看已安裝哪些提供者。
 
 備註：
 
-- `setup-token` 會提示輸入 setup-token 值 (在任何機器上使用 `claude setup-token` 產生)。
-- `paste-token` 接受在其他地方產生或由自動化程式產生的權杖字串。
-- Anthropic 政策說明：setup-token 支援屬於技術相容性。Anthropic 過去曾在 Claude Code 之外封鎖部分訂閱使用，因此在廣泛使用前請確認目前的條款。
+- `setup-token` 會提示輸入 setup-token 的值 (請在任意機器上使用 `claude setup-token` 產生)。
+- `paste-token` 接受在其他地方或由自動化產生的 token 字串。
+- Anthropic 政策提示：對 setup-token 的支援屬於技術相容性。Anthropic 過去曾阻止在 Claude Code 之外的某些訂閱使用，因此在廣泛使用前請確認目前的條款。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

@@ -1,14 +1,14 @@
 ---
-summary: "`openclaw reset` 的 CLI 參考（重設本機狀態/組態）"
+summary: " `openclaw reset` 的 CLI 參考（重設本地狀態/設定）"
 read_when:
-  - 您想要清除本機狀態同時保留已安裝的 CLI
-  - 您想要預先執行會移除內容的模擬執行
-title: "reset"
+  - You want to wipe local state while keeping the CLI installed
+  - You want a dry-run of what would be removed
+title: "重設"
 ---
 
 # `openclaw reset`
 
-重設本機組態/狀態（保留已安裝的 CLI）。
+重設本地設定/狀態（保留已安裝的 CLI）。
 
 ```bash
 openclaw backup create
@@ -17,7 +17,7 @@ openclaw reset --dry-run
 openclaw reset --scope config+creds+sessions --yes --non-interactive
 ```
 
-如果您在移除本機狀態之前想要可還原的快照，請先執行 `openclaw backup create`。
+如果您想在移除本地狀態之前取得可還原的快照，請先執行 `openclaw backup create`。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

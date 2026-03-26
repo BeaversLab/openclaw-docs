@@ -1,19 +1,19 @@
 ---
 summary: "Marcas de diagnóstico para registros de depuración específicos"
 read_when:
-  - Necesitas registros de depuración específicos sin elevar los niveles de registro globales
-  - Necesitas capturar registros específicos del subsistema para soporte
-title: "Diagnostics Flags"
+  - You need targeted debug logs without raising global logging levels
+  - You need to capture subsystem-specific logs for support
+title: "Marcas de Diagnóstico"
 ---
 
-# Marcas de diagnóstico
+# Marcas de Diagnóstico
 
-Las marcas de diagnóstico te permiten habilitar registros de depuración específicos sin activar el registro detallado en todas partes. Las marcas son opcionales y no tienen ningún efecto a menos que un subsistema las verifique.
+Las marcas de diagnóstico le permiten habilitar registros de depuración específicos sin activar el registro detallado en todas partes. Las marcas son optativas y no tienen ningún efecto a menos que un subsistema las verifique.
 
 ## Cómo funciona
 
 - Las marcas son cadenas (no distinguen entre mayúsculas y minúsculas).
-- Puedes habilitar las marcas en la configuración o mediante una invalidación de variable de entorno.
+- Puede habilitar marcas en la configuración o mediante una anulación de variable de entorno.
 - Se admiten comodines:
   - `telegram.*` coincide con `telegram.http`
   - `*` habilita todas las marcas
@@ -38,9 +38,9 @@ Múltiples marcas:
 }
 ```
 
-Reinicia la puerta de enlace después de cambiar las marcas.
+Reinicie la puerta de enlace después de cambiar las marcas.
 
-## Invalidación de variable de entorno (única)
+## Anulación de variable de entorno (única)
 
 ```bash
 OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
@@ -60,35 +60,35 @@ Las marcas emiten registros en el archivo de registro de diagnóstico estándar.
 /tmp/openclaw/openclaw-YYYY-MM-DD.log
 ```
 
-Si configuras `logging.file`, usa esa ruta en su lugar. Los registros están en formato JSONL (un objeto JSON por línea). La redacción todavía se aplica según `logging.redactSensitive`.
+Si establece `logging.file`, use esa ruta en su lugar. Los registros están en formato JSONL (un objeto JSON por línea). La redacción todavía se aplica basándose en `logging.redactSensitive`.
 
 ## Extraer registros
 
-Elige el archivo de registro más reciente:
+Seleccione el archivo de registro más reciente:
 
 ```bash
 ls -t /tmp/openclaw/openclaw-*.log | head -n 1
 ```
 
-Filtrar para diagnósticos HTTP de Telegram:
+Filtrar diagnósticos HTTP de Telegram:
 
 ```bash
 rg "telegram http error" /tmp/openclaw/openclaw-*.log
 ```
 
-O usar tail mientras se reproduce:
+O haga un seguimiento mientras reproduce:
 
 ```bash
 tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
 ```
 
-Para puertas de enlace remotas, también puedes usar `openclaw logs --follow` (consulta [/cli/logs](/es/cli/logs)).
+Para puertas de enlace remotas, también puede usar `openclaw logs --follow` (consulte [/cli/logs](/es/cli/logs)).
 
 ## Notas
 
-- Si `logging.level` está configurado más alto que `warn`, estos registros pueden suprimirse. El valor predeterminado `info` está bien.
+- Si `logging.level` se establece más alto que `warn`, estos registros pueden suprimirse. El valor predeterminado `info` está bien.
 - Es seguro dejar las marcas habilitadas; solo afectan el volumen de registros para el subsistema específico.
-- Usa [/logging](/es/logging) para cambiar los destinos de los registros, los niveles y la redacción.
+- Use [/logging](/es/logging) para cambiar destinos de registros, niveles y redacción.
 
 import es from "/components/footer/es.mdx";
 

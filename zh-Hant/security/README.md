@@ -9,9 +9,9 @@
 
 ## 回報漏洞
 
-請參閱 [信任頁面](https://trust.openclaw.ai) 以取得涵蓋所有儲存庫的完整回報指示。
+請參閱 [信任頁面](https://trust.openclaw.ai) 以取得涵蓋所有存放庫的完整回報指示。
 
-## 聯絡資訊
+## 聯絡我們
 
 - **Jamieson O'Reilly** ([@theonejvo](https://twitter.com/theonejvo)) - 安全與信任
 - Discord：#security 頻道

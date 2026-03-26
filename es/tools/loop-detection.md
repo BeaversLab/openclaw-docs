@@ -1,25 +1,24 @@
 ---
 title: "Detección de bucles de herramientas"
-description: "Configure protecciones opcionales para evitar bucles de llamadas a herramientas repetitivas o bloqueadas"
-summary: "Cómo activar y ajustar las protecciones que detectan bucles de llamadas a herramientas repetitivas"
+summary: "Cómo activar y ajustar las barreras de protección que detectan bucles repetitivos de llamadas a herramientas"
 read_when:
-  - Un usuario informa que los agentes se quedan atascados repitiendo llamadas a herramientas
-  - Necesitas ajustar la protección de llamadas repetitivas
-  - Estás editando las políticas de herramientas/tiempo de ejecución del agente
+  - A user reports agents getting stuck repeating tool calls
+  - You need to tune repetitive-call protection
+  - You are editing agent tool/runtime policies
 ---
 
 # Detección de bucles de herramientas
 
-OpenClaw puede evitar que los agentes se queden atascados en patrones de llamadas a herramientas repetitivas.
-La protección está **desactivada por defecto**.
+OpenClaw puede evitar que los agentes se queden atrapados en patrones repetitivos de llamadas a herramientas.
+El protector está **desactivado por defecto**.
 
-Actívala solo donde sea necesario, ya que puede bloquear llamadas repetitivas legítimas con configuraciones estrictas.
+Actívelo solo donde sea necesario, ya que puede bloquear llamadas repetitivas legítimas con configuraciones estrictas.
 
 ## Por qué existe esto
 
-- Detecta secuencias repetitivas que no progresan.
-- Detecta bucles de alta frecuencia sin resultados (misma herramienta, mismas entradas, errores repetidos).
-- Detecta patrones de llamadas repetitivos específicos para herramientas de sondeo conocidas.
+- Detectar secuencias repetitivas que no avanzan.
+- Detectar bucles de alta frecuencia sin resultados (misma herramienta, mismas entradas, errores repetidos).
+- Detectar patrones específicos de llamadas repetidas para herramientas de sondeo conocidas.
 
 ## Bloque de configuración
 
@@ -44,7 +43,7 @@ Valores predeterminados globales:
 }
 ```
 
-Anulación por agente (opcional):
+Invalidación por agente (opcional):
 
 ```json5
 {
@@ -67,38 +66,38 @@ Anulación por agente (opcional):
 
 ### Comportamiento del campo
 
-- `enabled`: Interruptor maestro. `false` significa que no se realiza la detección de bucles.
-- `historySize`: número de llamadas a herramientas recientes que se guardan para el análisis.
+- `enabled`: Interruptor maestro. `false` significa que no se realiza ninguna detección de bucle.
+- `historySize`: número de llamadas recientes a herramientas mantenidas para el análisis.
 - `warningThreshold`: umbral antes de clasificar un patrón como solo de advertencia.
-- `criticalThreshold`: umbral para bloquear patrones de bucles repetitivos.
+- `criticalThreshold`: umbral para bloquear patrones de bucle repetitivos.
 - `globalCircuitBreakerThreshold`: umbral global del interruptor de sin progreso.
-- `detectors.genericRepeat`: detecta patrones repetidos de misma herramienta + mismos parámetros.
+- `detectors.genericRepeat`: detecta patrones repetitivos de misma herramienta + mismos parámetros.
 - `detectors.knownPollNoProgress`: detecta patrones conocidos de tipo sondeo sin cambio de estado.
 - `detectors.pingPong`: detecta patrones de ping-pong alternantes.
 
 ## Configuración recomendada
 
-- Empieza con `enabled: true`, valores predeterminados sin cambios.
-- Mantén los umbrales ordenados como `warningThreshold < criticalThreshold < globalCircuitBreakerThreshold`.
-- Si se producen falsos positivos:
-  - aumenta `warningThreshold` y/o `criticalThreshold`
-  - (opcionalmente) aumenta `globalCircuitBreakerThreshold`
-  - desactiva solo el detector que cause problemas
-  - reduce `historySize` para un contexto histórico menos estricto
+- Comience con `enabled: true`, valores predeterminados sin cambios.
+- Mantenga los umbrales ordenados como `warningThreshold < criticalThreshold < globalCircuitBreakerThreshold`.
+- Si ocurren falsos positivos:
+  - aumente `warningThreshold` y/o `criticalThreshold`
+  - (opcionalmente) aumente `globalCircuitBreakerThreshold`
+  - desactive solo el detector que cause problemas
+  - reduzca `historySize` para un contexto histórico menos estricto
 
 ## Registros y comportamiento esperado
 
 Cuando se detecta un bucle, OpenClaw informa de un evento de bucle y bloquea o amortigua el siguiente ciclo de herramientas según la gravedad.
-Esto protege a los usuarios de un gasto descontrolado de tokens y de bloqueos, al tiempo que preserva el acceso normal a las herramientas.
+Esto protege a los usuarios contra gastos descontrolados de tokens y bloqueos, preservando al mismo tiempo el acceso normal a las herramientas.
 
-- Prefiere primero las advertencias y la supresión temporal.
-- Escala solo cuando se acumulen pruebas repetidas.
+- Prefiera la advertencia y la supresión temporal primero.
+- Escale solo cuando se acumule evidencia repetida.
 
 ## Notas
 
-- `tools.loopDetection` se combina con las anulaciones a nivel de agente.
-- La configuración por agente anula o extiende completamente los valores globales.
-- Si no existe configuración, las salvaguardas permanecen desactivadas.
+- `tools.loopDetection` se combina con las invalidaciones a nivel de agente.
+- La configuración por agente anula o amplía completamente los valores globales.
+- Si no existe configuración, las protecciones permanecen desactivadas.
 
 import es from "/components/footer/es.mdx";
 

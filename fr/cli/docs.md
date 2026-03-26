@@ -1,7 +1,7 @@
 ---
-summary: "Référence de la CLI pour `openclaw docs` (rechercher dans l'index de la documentation en ligne)"
+summary: "Référence CLI pour `openclaw docs` (rechercher dans l'index de la documentation en direct)"
 read_when:
-  - Vous souhaitez rechercher dans la documentation OpenClaw en ligne à partir du terminal
+  - You want to search the live OpenClaw docs from the terminal
 title: "docs"
 ---
 

@@ -1,58 +1,88 @@
 ---
-summary: "Centro de alojamiento VPS para OpenClaw (Oracle/Fly/Hetzner/GCP/exe.dev)"
+summary: "Ejecutar OpenClaw en un servidor Linux o VPS en la nube — selector de proveedor, arquitectura y ajustes"
 read_when:
-  - Quieres ejecutar el Gateway en la nube
-  - Necesitas un mapa rápido de guías de VPS/hosting
-title: "Alojamiento VPS"
+  - You want to run the Gateway on a Linux server or cloud VPS
+  - You need a quick map of hosting guides
+  - You want generic Linux server tuning for OpenClaw
+title: "Servidor Linux"
+sidebarTitle: "Servidor Linux"
 ---
 
-# Alojamiento VPS
+# Servidor Linux
 
-Este centro enlaza con las guías de VPS/hosting compatibles y explica cómo
-funcionan los despliegues en la nube a alto nivel.
+Ejecute el OpenClaw Gateway en cualquier servidor Linux o VPS en la nube. Esta página le ayuda a elegir un proveedor, explica cómo funcionan las implementaciones en la nube y cubre el ajuste genérico de Linux que se aplica en todas partes.
 
 ## Elegir un proveedor
 
-- **Railway** (un clic + configuración en el navegador): [Railway](/es/install/railway)
-- **Northflank** (un clic + configuración en el navegador): [Northflank](/es/install/northflank)
-- **Oracle Cloud (Always Free)**: [Oracle](/es/platforms/oracle) — $0/mes (Always Free, ARM; la capacidad/registro puede ser delicado)
-- **Fly.io**: [Fly.io](/es/install/fly)
-- **Hetzner (Docker)**: [Hetzner](/es/install/hetzner)
-- **GCP (Compute Engine)**: [GCP](/es/install/gcp)
-- **exe.dev** (VM + proxy HTTPS): [exe.dev](/es/install/exe-dev)
-- **AWS (EC2/Lightsail/tier gratuito)**: también funciona bien. Guía en vídeo:
-  [https://x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
+<CardGroup cols={2}>
+  <Card title="Railway" href="/es/install/railway">
+    Configuración con un solo clic en el navegador
+  </Card>
+  <Card title="Northflank" href="/es/install/northflank">
+    Configuración con un solo clic en el navegador
+  </Card>
+  <Card title="DigitalOcean" href="/es/install/digitalocean">
+    VPS de pago sencillo
+  </Card>
+  <Card title="Oracle Cloud" href="/es/install/oracle">
+    Nivel ARM Always Free
+  </Card>
+  <Card title="Fly.io" href="/es/install/fly">
+    Fly Machines
+  </Card>
+  <Card title="Hetzner" href="/es/install/hetzner">
+    Docker en VPS de Hetzner
+  </Card>
+  <Card title="GCP" href="/es/install/gcp">
+    Compute Engine
+  </Card>
+  <Card title="Azure" href="/es/install/azure">
+    Máquina virtual Linux
+  </Card>
+  <Card title="exe.dev" href="/es/install/exe-dev">
+    MV con proxy HTTPS
+  </Card>
+  <Card title="Raspberry Pi" href="/es/install/raspberry-pi">
+    ARM autoalojado
+  </Card>
+</CardGroup>
+
+**AWS (EC2 / Lightsail / nivel gratuito)** también funciona bien.
+Un video tutorial de la comunidad está disponible en
+[x.com/techfrenAJ/status/2014934471095812547](https://x.com/techfrenAJ/status/2014934471095812547)
+(recurso de la comunidad -- podría dejar de estar disponible).
 
 ## Cómo funcionan las configuraciones en la nube
 
-- El **Gateway se ejecuta en el VPS** y posee el estado + el espacio de trabajo.
-- Te conectas desde tu portátil/teléfono a través de la **Interfaz de control (Control UI)** o **Tailscale/SSH**.
-- Trata el VPS como la fuente de verdad y haz una **copia de seguridad** del estado + espacio de trabajo.
-- Valor predeterminado seguro: mantén el Gateway en loopback y accede a través de túnel SSH o Tailscale Serve.
-  Si enlazas a `lan`/`tailnet`, exige `gateway.auth.token` o `gateway.auth.password`.
+- El **Gateway se ejecuta en el VPS** y es propietario del estado + del espacio de trabajo.
+- Te conectas desde tu portátil o teléfono mediante la **Interfaz de control (Control UI)** o **Tailscale/SSH**.
+- Trata el VPS como la fuente de verdad y haz **copias de seguridad** del estado + del espacio de trabajo regularmente.
+- Predeterminado seguro: mantén el Gateway en loopback y accede a él mediante túnel SSH o Tailscale Serve.
+  Si te enlazas a `lan` o `tailnet`, requiere `gateway.auth.token` o `gateway.auth.password`.
 
-Acceso remoto: [Gateway remote](/es/gateway/remote)  
-Centro de plataformas: [Platforms](/es/platforms)
+Páginas relacionadas: [acceso remoto a Gateway](/es/gateway/remote), [centro de plataformas](/es/platforms).
 
-## Agente compartido de la empresa en un VPS
+## Agente empresarial compartido en un VPS
 
-Esta es una configuración válida cuando los usuarios están dentro de un mismo límite de confianza (por ejemplo, un equipo de una empresa) y el agente es solo para uso empresarial.
+Ejecutar un solo agente para un equipo es una configuración válida cuando cada usuario está dentro del mismo límite de confianza y el agente es exclusivamente para el negocio.
 
-- Mantenlo en un tiempo de ejecución dedicado (VPS/VM/contenedor + usuario/cuentas de sistema dedicadas).
-- No inicies sesión en ese tiempo de ejecución con cuentas personales de Apple/Google ni con perfiles personales de navegador/gestor de contraseñas.
-- Si los usuarios son adversarios entre sí, sepáralos por gateway/host/usuario del sistema operativo.
+- Manténlo en un tiempo de ejecución dedicado (VPS/VM/contenedor + usuario de sistema/cuentas dedicado).
+- No inicies sesión en ese tiempo de ejecución con cuentas personales de Apple/Google ni perfiles personales de navegador/gestor de contraseñas.
+- Si los usuarios son adversarios entre sí, sepáralos por gateway/host/usuario del SO.
 
-Detalles del modelo de seguridad: [Security](/es/gateway/security)
+Detalles del modelo de seguridad: [Seguridad](/es/gateway/security).
 
-## Usar nodos con un VPS
+## Uso de nodos con un VPS
 
-Puedes mantener la puerta de enlace (Gateway) en la nube y emparejar **nodos** en tus dispositivos locales (Mac/iOS/Android/sin interfaz gráfica). Los nodos proporcionan capacidades de pantalla/cámara/canvas locales y `system.run` mientras la puerta de enlace permanece en la nube.
+Puede mantener el Gateway en la nube y emparejar **nodos** en sus dispositivos locales
+(Mac/iOS/Android/headless). Los nodos proporcionan capacidades de pantalla/cámara/lienzo y `system.run`
+locales mientras el Gateway permanece en la nube.
 
-Documentos: [Nodos](/es/nodes), [CLI de Nodos](/es/cli/nodes)
+Documentación: [Nodos](/es/nodes), [CLI de Nodos](/es/cli/nodes).
 
 ## Ajustes de inicio para máquinas virtuales pequeñas y hosts ARM
 
-Si los comandos de la CLI parecen lentos en máquinas virtuales de baja potencia (o hosts ARM), habilita la caché de compilación de módulos de Node:
+Si los comandos de la CLI parecen lentos en máquinas virtuales de baja potencia (o hosts ARM), habilite el caché de compilación de módulos de Node:
 
 ```bash
 grep -q 'NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF'
@@ -65,21 +95,21 @@ source ~/.bashrc
 
 - `NODE_COMPILE_CACHE` mejora los tiempos de inicio de comandos repetidos.
 - `OPENCLAW_NO_RESPAWN=1` evita la sobrecarga de inicio adicional de una ruta de auto-reinicio.
-- La primera ejecución del comando calienta la caché; las ejecuciones posteriores son más rápidas.
-- Para detalles específicos de Raspberry Pi, consulta [Raspberry Pi](/es/platforms/raspberry-pi).
+- La primera ejecución del comando calienta el caché; las ejecuciones posteriores son más rápidas.
+- Para detalles específicos de Raspberry Pi, consulte [Raspberry Pi](/es/install/raspberry-pi).
 
-### Lista de verificación de ajustes de systemd (opcional)
+### lista de verificación de ajustes de systemd (opcional)
 
-Para hosts de máquinas virtuales que usan `systemd`, considera:
+Para hosts de VM que usan `systemd`, considere:
 
-- Añade variables de entorno de servicio para una ruta de inicio estable:
+- Añadir variable de entorno al servicio para una ruta de inicio estable:
   - `OPENCLAW_NO_RESPAWN=1`
   - `NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache`
-- Mantén el comportamiento de reinicio explícito:
+- Mantener el comportamiento de reinicio explícito:
   - `Restart=always`
   - `RestartSec=2`
   - `TimeoutStartSec=90`
-- Prefiere discos con respaldo SSD para las rutas de estado/caché para reducir las penalizaciones de inicio en frío por E/S aleatoria.
+- Se prefieren discos con respaldo SSD para rutas de estado/caché a fin de reducir las penalizaciones de arranque en frío por E/S aleatoria.
 
 Ejemplo:
 

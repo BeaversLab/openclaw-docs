@@ -1,7 +1,7 @@
 ---
-summary: "CLI 参考，用于 `openclaw health`（通过 RPC 的网关健康端点）"
+summary: "CLI 参考（`openclaw health` (gateway health endpoint via RPC)"
 read_when:
-  - 您想要快速检查运行中的 Gateway(网关) 的健康状况
+  - You want to quickly check the running Gateway’s health
 title: "health"
 ---
 

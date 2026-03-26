@@ -1,42 +1,42 @@
 ---
-summary: "Linux 支持 + 伴生应用状态"
+summary: "Linux 支持与配套应用状态"
 read_when:
-  - 查找 Linux 伴生应用状态
-  - 规划平台覆盖范围或贡献
+  - Looking for Linux companion app status
+  - Planning platform coverage or contributions
 title: "Linux 应用"
 ---
 
 # Linux 应用
 
-Gateway(网关)在 Linux 上得到完全支持。**Node 是推荐的运行时**。
-Bun 不推荐用于 Gateway(网关)（WhatsApp/Telegram 错误）。
+Gateway 网关 在 Linux 上受到完全支持。**Node 是推荐的运行时**。
+不推荐将 Bun 用于 Gateway 网关（WhatsApp/Telegram 存在 Bug）。
 
-正在计划原生 Linux 伴生应用。如果您想帮助构建一个，欢迎贡献。
+原生 Linux 配套应用已在计划中。如果您愿意协助构建，欢迎贡献代码。
 
-## 新手快速路径 (VPS)
+## 新手快速入门 (VPS)
 
-1. 安装 Node 24（推荐；Node 22 LTS，目前为 `22.16+`，为了兼容性仍然有效）
+1. 安装 Node 24（推荐；Node 22 LTS，目前为 `22.16+`，出于兼容性考虑仍然可用）
 2. `npm i -g openclaw@latest`
 3. `openclaw onboard --install-daemon`
-4. 从您的笔记本电脑：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
+4. 在您的笔记本电脑上：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. 打开 `http://127.0.0.1:18789/` 并粘贴您的令牌
 
-分步 VPS 指南：[exe.dev](/zh/install/exe-dev)
+完整的 Linux 服务器指南：[Linux Server](/zh/vps)。分步 VPS 示例：[exe.dev](/zh/install/exe-dev)
 
 ## 安装
 
 - [入门指南](/zh/start/getting-started)
 - [安装与更新](/zh/install/updating)
-- 可选流程：[Bun (实验性)](/zh/install/bun)、[Nix](/zh/install/nix)、[Docker](/zh/install/docker)
+- 可选流程：[Bun（实验性）](/zh/install/bun)、[Nix](/zh/install/nix)、[Docker](/zh/install/docker)
 
-## Gateway(网关)
+## Gateway 网关
 
-- [Gateway(网关) 运维手册](/zh/gateway)
+- [Gateway(网关) 运行手册](/zh/gateway)
 - [配置](/zh/gateway/configuration)
 
-## Gateway(网关) 服务安装 (CLI)
+## Gateway 网关 服务安装 (CLI)
 
-使用以下之一：
+使用以下命令之一：
 
 ```
 openclaw onboard --install-daemon
@@ -54,7 +54,7 @@ openclaw gateway install
 openclaw configure
 ```
 
-当被提示时，选择 **Gateway(网关) 服务**。
+当系统提示时，选择 **Gateway 网关 service**。
 
 修复/迁移：
 
@@ -62,10 +62,10 @@ openclaw configure
 openclaw doctor
 ```
 
-## 系统控制 (systemd 用户单元)
+## 系统控制
 
-OpenClaw 默认安装一个 systemd **用户** 服务。为共享或常开服务器使用**系统**
-服务。完整的单元示例和指南位于 [Gateway(网关) 运维手册](/zh/gateway)。
+OpenClaw 默认安装一个 systemd **用户** 服务。为共享或全天候服务器使用 **系统**
+服务。完整的单元示例和指南位于 [Gateway(网关) 运行手册](/zh/gateway)。
 
 最小化设置：
 

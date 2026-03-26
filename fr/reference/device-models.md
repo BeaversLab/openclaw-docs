@@ -1,30 +1,30 @@
 ---
-summary: "Comment OpenClaw intègre les identifiants de modèles d'appareils Apple avec des noms conviviaux dans l'application OpenClaw."
+summary: "Comment OpenClaw fournit les identifiants de modèle d'appareil Apple pour les noms conviviaux dans l'application OpenClaw."
 read_when:
-  - Mise à jour des mappages d'identifiants de modèles d'appareil ou des fichiers NOTICE/licence
-  - Modification de la manière dont l'interface utilisateur d'Instances affiche les noms des appareils
-title: "Base de données des modèles d'appareil"
+  - Updating device model identifier mappings or NOTICE/license files
+  - Changing how Instances UI displays device names
+title: "Base de données de modèles d'appareil"
 ---
 
-# Base de données des modèles d'appareil (noms conviviaux)
+# Base de données de modèles d'appareil (noms conviviaux)
 
-L'application compagnon macOS affiche des noms conviviaux de modèles d'appareils Apple dans l'interface utilisateur **Instances** en mappant les identifiants de modèles Apple (ex. : `iPad16,6`, `Mac16,6`) à des noms lisibles par l'homme.
+L'application compagnon macOS affiche les noms conviviaux des modèles d'appareil Apple dans l'interface utilisateur **Instances** en mappant les identifiants de modèle Apple (par exemple, `iPad16,6`, `Mac16,6`) à des noms lisibles par l'homme.
 
-Le mappage est fourni en JSON sous :
+Le mappage fourni au format JSON se trouve sous :
 
 - `apps/macos/Sources/OpenClaw/Resources/DeviceModels/`
 
 ## Source des données
 
-Nous intégrons actuellement le mappage à partir du dépôt sous licence MIT :
+Nous fournissons actuellement le mappage à partir du dépôt sous licence MIT :
 
 - `kyle-seongwoo-jun/apple-device-identifiers`
 
-Pour garder les builds déterministes, les fichiers JSON sont épinglés à des commits amont spécifiques (enregistrés dans `apps/macos/Sources/OpenClaw/Resources/DeviceModels/NOTICE.md`).
+Pour garder les constructions déterministes, les fichiers JSON sont épinglés à des commits amont spécifiques (enregistrés dans `apps/macos/Sources/OpenClaw/Resources/DeviceModels/NOTICE.md`).
 
 ## Mise à jour de la base de données
 
-1. Choisissez les commits amont auxquels vous voulez épingler (un pour iOS, un pour macOS).
+1. Choisissez les commits amont auxquels vous souhaitez vous épingler (un pour iOS, un pour macOS).
 2. Mettez à jour les hachages de commit dans `apps/macos/Sources/OpenClaw/Resources/DeviceModels/NOTICE.md`.
 3. Téléchargez à nouveau les fichiers JSON, épinglés à ces commits :
 

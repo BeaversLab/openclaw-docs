@@ -1,7 +1,7 @@
 ---
 summary: "Sémantique des réactions partagée entre les canaux"
 read_when:
-  - Travailler sur les réactions dans n'importe quel canal
+  - Working on reactions in any channel
 title: "Réactions"
 ---
 
@@ -10,17 +10,17 @@ title: "Réactions"
 Sémantique des réactions partagée entre les canaux :
 
 - `emoji` est requis lors de l'ajout d'une réaction.
-- `emoji=""` supprime la/les réaction(s) du bot lorsque cela est pris en charge.
-- `remove: true` supprime l'emoji spécifié lorsque cela est pris en charge (nécessite `emoji`).
+- `emoji=""` supprime la ou les réactions du bot lorsque pris en charge.
+- `remove: true` supprime l'émoji spécifié lorsque pris en charge (nécessite `emoji`).
 
 Notes sur les canaux :
 
-- **Discord/Slack** : `emoji` vide supprime toutes les réactions du bot sur le message ; `remove: true` supprime uniquement cet emoji.
-- **Google Chat** : `emoji` vide supprime les réactions de l'application sur le message ; `remove: true` supprime uniquement cet emoji.
-- **Telegram** : `emoji` vide supprime les réactions du bot ; `remove: true` supprime également les réactions mais nécessite tout de même un `emoji` non vide pour la validation de l'outil.
-- **WhatsApp** : `emoji` vide supprime la réaction du bot ; `remove: true` correspond à un emoji vide (nécessite tout de même `emoji`).
-- **Zalo Personnel (`zalouser`)** : nécessite un `emoji` non vide ; `remove: true` supprime cette réaction emoji spécifique.
-- **Signal** : les notifications de réactions entrantes émettent des événements système lorsque `channels.signal.reactionNotifications` est activé.
+- **Discord/Slack** : un `emoji` vide supprime toutes les réactions du bot sur le message ; `remove: true` supprime uniquement cet émoji.
+- **Google Chat** : un `emoji` vide supprime les réactions de l'application sur le message ; `remove: true` supprime uniquement cet émoji.
+- **Telegram** : un `emoji` vide supprime les réactions du bot ; `remove: true` supprime également les réactions mais nécessite toujours un `emoji` non vide pour la validation de l'outil.
+- **WhatsApp** : un `emoji` vide supprime la réaction du bot ; `remove: true` correspond à un émoji vide (nécessite toujours `emoji`).
+- **Zalo Personnel (`zalouser`)** : nécessite un `emoji` non vide ; `remove: true` supprime cette réaction émoji spécifique.
+- **Signal** : les notifications de réaction entrantes émettent des événements système lorsque `channels.signal.reactionNotifications` est activé.
 
 import fr from "/components/footer/fr.mdx";
 

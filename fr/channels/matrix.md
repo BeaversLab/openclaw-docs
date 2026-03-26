@@ -1,83 +1,70 @@
 ---
-summary: "État du support Matrix, capacités et configuration"
+summary: "Statut du support Matrix, configuration et exemples de configuration"
 read_when:
-  - Travailler sur les fonctionnalités du canal Matrix
+  - Setting up Matrix in OpenClaw
+  - Configuring Matrix E2EE and verification
 title: "Matrix"
 ---
 
 # Matrix (plugin)
 
-Matrix est un protocole de messagerie ouvert et décentralisé. OpenClaw se connecte en tant qu'**utilisateur** Matrix
-sur n'importe quel serveur d'accueil, vous avez donc besoin d'un compte Matrix pour le bot. Une fois connecté, vous pouvez envoyer un DM
-au bot directement ou l'inviter dans des salons (Matrix "groupes"). Beeper est également une option client valide,
-mais elle nécessite l'activation de l'E2EE.
-
-Statut : pris en charge via le plugin (@vector-im/matrix-bot-sdk). Messages directs, salons, fils de discussion, médias, réactions,
-sondages (envoi + poll-start en tant que texte), position et E2EE (avec prise en charge du chiffrement).
+Matrix est le plugin de canal Matrix pour OpenClaw.
+Il utilise le `matrix-js-sdk` officiel et prend en charge les DMs, les salons, les fils, les médias, les réactions, les sondages, la localisation et E2EE.
 
 ## Plugin requis
 
-Matrix est fourni en tant que plugin et n'est pas inclus avec l'installation de base.
+Matrix est un plugin et n'est pas inclus avec le cœur d'OpenClaw.
 
-Installer via CLI (registre npm) :
+Installer depuis npm :
 
 ```bash
 openclaw plugins install @openclaw/matrix
 ```
 
-Extraction locale (lors de l'exécution depuis un dépôt git) :
+Installer depuis une copie locale :
 
 ```bash
 openclaw plugins install ./extensions/matrix
 ```
 
-Si vous choisissez Matrix lors de la configuration et qu'une extraction git est détectée,
-OpenClaw proposera automatiquement le chemin d'installation local.
-
-Détails : [Plugins](/fr/tools/plugin)
+Voir [Plugins](/fr/tools/plugin) pour le comportement des plugins et les règles d'installation.
 
 ## Configuration
 
-1. Installer le plugin Matrix :
-   - Depuis npm : `openclaw plugins install @openclaw/matrix`
-   - Depuis une extraction locale : `openclaw plugins install ./extensions/matrix`
-2. Créer un compte Matrix sur un serveur d'accueil :
-   - Parcourir les options d'hébergement sur [https://matrix.org/ecosystem/hosting/](https://matrix.org/ecosystem/hosting/)
-   - Ou hébergez-le vous-même.
-3. Obtenir un jeton d'accès pour le compte du bot :
-   - Utilisez l'Matrix de connexion API avec `curl` sur votre serveur d'accueil :
+1. Installez le plugin.
+2. Créez un compte Matrix sur votre serveur d'accueil.
+3. Configurez `channels.matrix` avec soit :
+   - `homeserver` + `accessToken`, ou
+   - `homeserver` + `userId` + `password`.
+4. Redémarrez la passerelle.
+5. Démarrez un DM avec le bot ou invitez-le dans un salon.
 
-   ```bash
-   curl --request POST \
-     --url https://matrix.example.org/_matrix/client/v3/login \
-     --header 'Content-Type: application/json' \
-     --data '{
-     "type": "m.login.password",
-     "identifier": {
-       "type": "m.id.user",
-       "user": "your-user-name"
-     },
-     "password": "your-password"
-   }'
-   ```
+Chemins de configuration interactifs :
 
-   - Remplacez `matrix.example.org` par l'URL de votre serveur d'accueil.
-   - Ou définissez `channels.matrix.userId` + `channels.matrix.password` : OpenClaw appelle le même
-     point de terminaison de connexion, stocke le jeton d'accès dans `~/.openclaw/credentials/matrix/credentials.json`,
-     et le réutilise au prochain démarrage.
+```bash
+openclaw channels add
+openclaw configure --section channels
+```
 
-4. Configurer les identifiants :
-   - Env : `MATRIX_HOMESERVER`, `MATRIX_ACCESS_TOKEN` (ou `MATRIX_USER_ID` + `MATRIX_PASSWORD`)
-   - Ou config : `channels.matrix.*`
-   - Si les deux sont définis, la configuration prend le pas.
-   - Avec le jeton d'accès : l'ID utilisateur est récupéré automatiquement via `/whoami`.
-   - Lorsqu'il est défini, `channels.matrix.userId` doit être l'ID complet Matrix (exemple : `@bot:example.org`).
-5. Redémarrez la passerelle (ou terminez la configuration).
-6. Démarrez un DM avec le bot ou invitez-le dans un salon depuis n'importe quel client Matrix
-   (Element, Beeper, etc. ; voir [https://matrix.org/ecosystem/clients/](https://matrix.org/ecosystem/clients/)). Beeper nécessite l'E2EE,
-   définissez donc `channels.matrix.encryption: true` et vérifiez l'appareil.
+Ce que l'assistant Matrix demande réellement :
 
-Configuration minimale (jeton d'accès, ID utilisateur récupéré automatiquement) :
+- URL du serveur d'accueil
+- méthode d'authentification : jeton d'accès ou mot de passe
+- ID utilisateur uniquement lorsque vous choisissez l'authentification par mot de passe
+- nom d'appareil facultatif
+- s'il faut activer E2EE
+- s'il faut configurer l'accès aux salons Matrix maintenant
+
+Comportement important de l'assistant :
+
+- Si les variables d'environnement d'authentification Matrix existent déjà pour le compte sélectionné et que ce compte n'a pas déjà d'authentification sauvegardée dans la configuration, l'assistant propose un raccourci d'environnement et n'écrit que `enabled: true` pour ce compte.
+- Lorsque vous ajoutez un autre compte Matrix de manière interactive, le nom de compte saisi est normalisé dans l'ID de compte utilisé dans la configuration et les variables d'environnement. Par exemple, `Ops Bot` devient `ops-bot`.
+- Les invites de liste d'autorisation DM acceptent immédiatement les valeurs `@user:server` complètes. Les noms d'affichage ne fonctionnent que si la recherche en direct dans l'annuaire trouve une correspondance exacte ; sinon, l'assistant vous demande de réessayer avec un ID Matrix complet.
+- Les invites de liste d'autorisation de salon acceptent directement les ID de salon et les alias. Ils peuvent également résoudre les noms de salons rejoints en direct, mais les noms non résolus ne sont conservés tels qu'ils ont été saisis lors de la configuration et sont ignorés plus tard par la résolution de la liste d'autorisation au moment de l'exécution. Préférez `!room:server` ou `#alias:server`.
+- L'identité de salle/session d'exécution utilise l'ID de salle stable Matrix. Les alias déclarés par la salle sont utilisés uniquement comme entrées de recherche, et non comme clé de session à long terme ou identité de groupe stable.
+- Pour résoudre les noms de salle avant de les enregistrer, utilisez `openclaw channels resolve --channel matrix "Project Room"`.
+
+Configuration minimale basée sur un jeton :
 
 ```json5
 {
@@ -85,14 +72,14 @@ Configuration minimale (jeton d'accès, ID utilisateur récupéré automatiqueme
     matrix: {
       enabled: true,
       homeserver: "https://matrix.example.org",
-      accessToken: "syt_***",
+      accessToken: "syt_xxx",
       dm: { policy: "pairing" },
     },
   },
 }
 ```
 
-Configuration E2EE (chiffrement de bout en bout activé) :
+Configuration basée sur un mot de passe (le jeton est mis en cache après la connexion) :
 
 ```json5
 {
@@ -100,7 +87,121 @@ Configuration E2EE (chiffrement de bout en bout activé) :
     matrix: {
       enabled: true,
       homeserver: "https://matrix.example.org",
-      accessToken: "syt_***",
+      userId: "@bot:example.org",
+      password: "replace-me", // pragma: allowlist secret
+      deviceName: "OpenClaw Gateway",
+    },
+  },
+}
+```
+
+Matrix stocke les informations d'identification mises en cache dans `~/.openclaw/credentials/matrix/`.
+Le compte par défaut utilise `credentials.json` ; les comptes nommés utilisent `credentials-<account>.json`.
+
+Équivalents de variables d'environnement (utilisés lorsque la clé de configuration n'est pas définie) :
+
+- `MATRIX_HOMESERVER`
+- `MATRIX_ACCESS_TOKEN`
+- `MATRIX_USER_ID`
+- `MATRIX_PASSWORD`
+- `MATRIX_DEVICE_ID`
+- `MATRIX_DEVICE_NAME`
+
+Pour les comptes non par défaut, utilisez des variables d'environnement avec portée de compte :
+
+- `MATRIX_<ACCOUNT_ID>_HOMESERVER`
+- `MATRIX_<ACCOUNT_ID>_ACCESS_TOKEN`
+- `MATRIX_<ACCOUNT_ID>_USER_ID`
+- `MATRIX_<ACCOUNT_ID>_PASSWORD`
+- `MATRIX_<ACCOUNT_ID>_DEVICE_ID`
+- `MATRIX_<ACCOUNT_ID>_DEVICE_NAME`
+
+Exemple pour le compte `ops` :
+
+- `MATRIX_OPS_HOMESERVER`
+- `MATRIX_OPS_ACCESS_TOKEN`
+
+Pour l'ID de compte normalisé `ops-bot`, utilisez :
+
+- `MATRIX_OPS_BOT_HOMESERVER`
+- `MATRIX_OPS_BOT_ACCESS_TOKEN`
+
+L'assistant interactif propose le raccourci de variable d'environnement uniquement lorsque ces variables d'environnement d'authentification sont déjà présentes et que le compte sélectionné n'a pas déjà d'authentification Matrix enregistrée dans la configuration.
+
+## Exemple de configuration
+
+Il s'agit d'une configuration de base pratique avec l'appairage DM, la liste d'autorisation des salles et l'E2EE activé :
+
+```json5
+{
+  channels: {
+    matrix: {
+      enabled: true,
+      homeserver: "https://matrix.example.org",
+      accessToken: "syt_xxx",
+      encryption: true,
+
+      dm: {
+        policy: "pairing",
+      },
+
+      groupPolicy: "allowlist",
+      groupAllowFrom: ["@admin:example.org"],
+      groups: {
+        "!roomid:example.org": {
+          requireMention: true,
+        },
+      },
+
+      autoJoin: "allowlist",
+      autoJoinAllowlist: ["!roomid:example.org"],
+      threadReplies: "inbound",
+      replyToMode: "off",
+    },
+  },
+}
+```
+
+## Configuration de l'E2EE
+
+## Salles de bot à bot
+
+Par défaut, les messages Matrix provenant d'autres comptes OpenClaw Matrix configurés sont ignorés.
+
+Utilisez `allowBots` lorsque vous souhaitez intentionnellement le trafic Matrix inter-agent :
+
+```json5
+{
+  channels: {
+    matrix: {
+      allowBots: "mentions", // true | "mentions"
+      groups: {
+        "!roomid:example.org": {
+          requireMention: true,
+        },
+      },
+    },
+  },
+}
+```
+
+- `allowBots: true` accepte les messages d'autres comptes bot Matrix configurés dans les salles autorisées et les DMs.
+- `allowBots: "mentions"` n'accepte ces messages que lorsqu'ils mentionnent visiblement ce bot dans les salles. Les DMs sont toujours autorisés.
+- `groups.<room>.allowBots` remplace le paramètre au niveau du compte pour une salle.
+- OpenClaw ignore toujours les messages provenant du même ID utilisateur Matrix pour éviter les boucles de réponse automatique.
+- Matrix n'expose pas ici de flag de bot natif ; OpenClaw traite « rédigé par un bot » comme « envoyé par un autre compte Matrix configuré sur cette passerelle OpenClaw ».
+
+Utilisez des listes d'autorisation de salles strictes et des exigences de mention lors de l'activation du trafic bot-à-bot dans les salons partagés.
+
+Activer le chiffrement :
+
+```json5
+{
+  channels: {
+    matrix: {
+      enabled: true,
+      homeserver: "https://matrix.example.org",
+      accessToken: "syt_xxx",
       encryption: true,
       dm: { policy: "pairing" },
     },
@@ -108,60 +209,374 @@ Configuration E2EE (chiffrement de bout en bout activé) :
 }
 ```
 
-## Chiffrement (E2EE)
+Vérifier le statut de vérification :
 
-Le chiffrement de bout en bout est **pris en charge** via le SDK crypto Rust.
+```bash
+openclaw matrix verify status
+```
 
-Activer avec `channels.matrix.encryption: true` :
+Statut détaillé (diagnostics complets) :
 
-- Si le module de chiffrement se charge, les salles chiffrées sont déchiffrées automatiquement.
-- Les médias sortants sont chiffrés lors de l'envoi vers des salles chiffrées.
-- Lors de la première connexion, OpenClaw demande une vérification de l'appareil depuis vos autres sessions.
-- Vérifiez l'appareil dans un autre client Matrix (Element, etc.) pour activer le partage de clés.
-- Si le module de chiffrement ne peut pas être chargé, l'E2EE est désactivé et les salons chiffrés ne seront pas déchiffrés ;
-  OpenClaw enregistre un avertissement.
-- Si vous voyez des erreurs de module crypto manquant (par exemple, `@matrix-org/matrix-sdk-crypto-nodejs-*`),
-  autorisez les scripts de build pour `@matrix-org/matrix-sdk-crypto-nodejs` et exécutez
-  `pnpm rebuild @matrix-org/matrix-sdk-crypto-nodejs` ou récupérez le binaire avec
-  `node node_modules/@matrix-org/matrix-sdk-crypto-nodejs/download-lib.js`.
+```bash
+openclaw matrix verify status --verbose
+```
 
-L'état du chiffrement est stocké par compte + jeton d'accès dans
-`~/.openclaw/matrix/accounts/<account>/<homeserver>__<user>/<token-hash>/crypto/`
-(base de données SQLite). L'état de synchronisation réside à côté dans `bot-storage.json`.
-Si le jeton d'accès (appareil) change, un nouveau magasin est créé et le bot doit être
-vérifié à nouveau pour les salons chiffrés.
+Inclure la clé de récupération stockée dans la sortie lisible par machine :
 
-**Vérification de l'appareil :**
-Lorsque le chiffrement de bout en bout (E2EE) est activé, le bot demandera une vérification à vos autres sessions au démarrage.
-Ouvrez Element (ou un autre client) et approuvez la demande de vérification pour établir la confiance.
-Une fois vérifié, le bot peut déchiffrer les messages dans les salons chiffrés.
+```bash
+openclaw matrix verify status --include-recovery-key --json
+```
 
-## Multi-compte
+Initialiser la signature croisée et l'état de vérification :
 
-Prise en charge multi-compte : utilisez `channels.matrix.accounts` avec des identifiants par compte et `name` en option. Voir [`gateway/configuration`](/fr/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) pour le modèle partagé.
+```bash
+openclaw matrix verify bootstrap
+```
 
-Chaque compte fonctionne en tant qu'utilisateur Matrix distinct sur n'importe quel serveur d'accueil. La configuration par compte
-hérite des paramètres `channels.matrix` de premier niveau et peut remplacer n'importe quelle option
-politique de DM, groupes, chiffrement, etc.).
+Support multi-compte : utilisez `channels.matrix.accounts` avec des identifiants par compte et `name` en option. Voir [Référence de configuration](/fr/gateway/configuration-reference#multi-account-all-channels) pour le modèle partagé.
+
+Diagnostics d'initialisation détaillés :
+
+```bash
+openclaw matrix verify bootstrap --verbose
+```
+
+Forcer une réinitialisation fraîche de l'identité de signature croisée avant l'initialisation :
+
+```bash
+openclaw matrix verify bootstrap --force-reset-cross-signing
+```
+
+Vérifier cet appareil avec une clé de récupération :
+
+```bash
+openclaw matrix verify device "<your-recovery-key>"
+```
+
+Détails de vérification d'appareil détaillés :
+
+```bash
+openclaw matrix verify device "<your-recovery-key>" --verbose
+```
+
+Vérifier l'état de santé de la sauvegarde des clés de salon :
+
+```bash
+openclaw matrix verify backup status
+```
+
+Diagnostics de santé de la sauvegarde détaillés :
+
+```bash
+openclaw matrix verify backup status --verbose
+```
+
+Restaurer les clés de salon depuis la sauvegarde serveur :
+
+```bash
+openclaw matrix verify backup restore
+```
+
+Diagnostics de restauration détaillés :
+
+```bash
+openclaw matrix verify backup restore --verbose
+```
+
+Supprimer la sauvegarde serveur actuelle et créer une nouvelle base de sauvegarde :
+
+```bash
+openclaw matrix verify backup reset --yes
+```
+
+Toutes les commandes `verify` sont concises par défaut (y compris avec la journalisation interne calme du SDK) et n'affichent des diagnostics détaillés qu'avec `--verbose`.
+Utilisez `--json` pour une sortie complète lisible par machine lors de scripts.
+
+Dans les configurations multi-comptes, les commandes Matrix CLI utilisent le compte Matrix par défaut implicite, sauf si vous passez `--account <id>`.
+Si vous configurez plusieurs comptes nommés, définissez `channels.matrix.defaultAccount` d'abord, sinon ces opérations CLI implicites s'arrêteront et vous demanderont de choisir explicitement un compte.
+Utilisez `--account` chaque fois que vous souhaitez que les opérations de vérification ou d'appareil ciblent explicitement un compte nommé :
+
+```bash
+openclaw matrix verify status --account assistant
+openclaw matrix verify backup restore --account assistant
+openclaw matrix devices list --account assistant
+```
+
+Lorsque le chiffrement est désactivé ou indisponible pour un compte nommé, les avertissements Matrix et les erreurs de vérification pointent vers la clé de configuration de ce compte, par exemple `channels.matrix.accounts.assistant.encryption`.
+
+### Que signifie « vérifié »
+
+OpenClaw traite cet appareil Matrix comme vérifié uniquement s'il est vérifié par votre propre identité de signature croisée.
+En pratique, `openclaw matrix verify status --verbose` expose trois signaux de confiance :
+
+- `Locally trusted` : cet appareil est approuvé par le client actuel uniquement
+- `Cross-signing verified` : le SDK signale l'appareil comme vérifié via la signature croisée
+- `Signed by owner` : l'appareil est signé par votre propre clé d'auto-signature
+
+`Verified by owner` devient `yes` uniquement lorsque la vérification par signature croisée ou la signature par le propriétaire est présente.
+La confiance locale seule ne suffit pas pour qu'OpenClaw considère l'appareil comme entièrement vérifié.
+
+### Ce que fait l'amorçage (bootstrap)
+
+`openclaw matrix verify bootstrap` est la commande de réparation et de configuration pour les comptes Matrix chiffrés.
+Elle effectue toutes les opérations suivantes dans l'ordre :
+
+- amorce le stockage des secrets, en réutilisant une clé de récupération existante si possible
+- amorce la signature croisée et téléverse les clés publiques de signature croisée manquantes
+- tente de marquer et de signer croisée l'appareil actuel
+- crée une nouvelle sauvegarde de clés de salon côté serveur si elle n'existe pas déjà
+
+Si le serveur domestique nécessite une authentification interactive pour téléverser les clés de signature croisée, OpenClaw essaie d'abord le téléversement sans authentification, puis avec `m.login.dummy`, puis avec `m.login.password` lorsque `channels.matrix.password` est configuré.
+
+Utilisez `--force-reset-cross-signing` uniquement lorsque vous souhaitez intentionnellement supprimer l'identité de signature croisée actuelle et en créer une nouvelle.
+
+Si vous souhaitez intentionnellement supprimer la sauvegarde actuelle des clés de salon et commencer une nouvelle ligne de base de sauvegarde pour les futurs messages, utilisez `openclaw matrix verify backup reset --yes`.
+Faites ceci uniquement si vous acceptez que l'historique chiffré ancien non récupérable restera indisponible.
+
+### Nouvelle ligne de base de sauvegarde
+
+Si vous souhaitez que les futurs messages chiffrés continuent de fonctionner et acceptez de perdre l'historique ancien non récupérable, exécutez ces commandes dans l'ordre :
+
+```bash
+openclaw matrix verify backup reset --yes
+openclaw matrix verify backup status --verbose
+openclaw matrix verify status
+```
+
+Ajoutez `--account <id>` à chaque commande lorsque vous souhaitez cibler explicitement un compte Matrix nommé.
+
+### Comportement au démarrage
+
+Lorsque `encryption: true`, Matrix définit `startupVerification` à `"if-unverified"` par défaut.
+Au démarrage, si cet appareil n'est toujours pas vérifié, Matrix demandera l'auto-vérification dans un autre client Matrix,
+ignorera les demandes en double tant qu'une est déjà en attente, et appliquera un temps d'attente local avant de réessayer après les redémarrages.
+Par défaut, les tentatives de demande échouées réessayent plus tôt que la création réussie d'une demande.
+Définissez `startupVerification: "off"` pour désactiver les demandes automatiques au démarrage, ou ajustez `startupVerificationCooldownHours`
+si vous souhaitez une fenêtre de réessai plus courte ou plus longue.
+
+Le démarrage effectue également automatiquement une passe d'amorçage crypto conservatrice.
+Cette passe essaie d'abord de réutiliser le stockage de secrets actuel et l'identité de signature croisée, et évite de réinitialiser la signature croisée sauf si vous exécutez un flux de réparation d'amorçage explicite.
+
+Si le démarrage détecte un état d'amorçage cassé et que `channels.matrix.password` est configuré, OpenClaw peut tenter une voie de réparation plus stricte.
+Si l'appareil actuel est déjà signé par le propriétaire, OpenClaw conserve cette identité au lieu de la réinitialiser automatiquement.
+
+Mise à niveau à partir du plugin Matrix public précédent :
+
+- OpenClaw réutilise automatiquement le même compte Matrix, le même jeton d'accès et la même identité d'appareil lorsque cela est possible.
+- Avant que toute modification de migration Matrix actionnable ne s'exécute, OpenClaw crée ou réutilise un instantané de récupération sous `~/Backups/openclaw-migrations/`.
+- Si vous utilisez plusieurs comptes Matrix, définissez `channels.matrix.defaultAccount` avant la mise à niveau à partir de l'ancienne structure de stockage plat afin qu'OpenClaw sache quel compte doit recevoir cet état hérité partagé.
+- Si le plugin précédent a stocké une clé de déchiffrement de sauvegarde de clés de salle Matrix localement, le démarrage ou `openclaw doctor --fix` l'importera automatiquement dans le nouveau flux de clé de récupération.
+- Si le jeton d'accès Matrix a changé après la préparation de la migration, le démarrage analyse désormais les racines de stockage de hachage de jeton sœurs pour l'état de restauration hérité en attente avant d'abandonner la restauration automatique de la sauvegarde.
+- Si le jeton d'accès Matrix change ultérieurement pour le même compte, le serveur domestique et l'utilisateur, OpenClaw préfère désormais réutiliser la racine de stockage de hachage de jeton existante la plus complète au lieu de repartir d'un répertoire d'état Matrix vide.
+- Au prochain démarrage de la passerelle, les clés de salle sauvegardées sont restaurées automatiquement dans le nouveau magasin de chiffrement.
+- Si l'ancien plugin avait des clés de salle locales uniquement qui n'avaient jamais été sauvegardées, OpenClaw vous avertira clairement. Ces clés ne peuvent pas être exportées automatiquement depuis le précédent magasin de chiffrement rust, donc certains anciens historiques chiffrés peuvent rester indisponibles jusqu'à ce qu'ils soient récupérés manuellement.
+- Voir [Matrix migration](/fr/install/migrating-matrix) pour le processus complet de mise à niveau, les limites, les commandes de récupération et les messages de migration courants.
+
+L'état d'exécution chiffré est organisé sous des racines par compte et par hachage de jeton d'utilisateur dans
+`~/.openclaw/matrix/accounts/<account>/<homeserver>__<user>/<token-hash>/`.
+Ce répertoire contient le magasin de synchronisation (`bot-storage.json`), le magasin de chiffrement (`crypto/`),
+le fichier de clé de récupération (`recovery-key.json`), l'instantané IndexedDB (`crypto-idb-snapshot.json`),
+les liaisons de threads (`thread-bindings.json`) et l'état de vérification au démarrage (`startup-verification.json`)
+lorsque ces fonctionnalités sont utilisées.
+Lorsque le jeton change mais que l'identité du compte reste la même, OpenClaw réutilise la meilleure racine
+existante pour ce tuple compte/serveur domestique/utilisateur afin que l'état de synchronisation précédent, l'état de chiffrement, les liaisons de threads
+et l'état de vérification au démarrage restent visibles.
+
+### Modèle de magasin de chiffrement Node
+
+Le chiffrement de bout en bout (E2EE) Matrix dans ce plugin utilise le chemin officiel de chiffrement Rust `matrix-js-sdk` dans Node.
+Ce chemin attend une persistance sauvegardée par IndexedDB lorsque vous voulez que l'état de chiffrement survive aux redémarrages.
+
+OpenClaw fournit actuellement cela dans Node par :
+
+- en utilisant `fake-indexeddb` comme le shim d'API IndexedDB attendu par le SDK
+- en restaurant le contenu IndexedDB du chiffrement Rust à partir de `crypto-idb-snapshot.json` avant `initRustCrypto`
+- en persistant le contenu IndexedDB mis à jour vers `crypto-idb-snapshot.json` après l'initialisation et pendant l'exécution
+
+Il s'agit de plomberie de compatibilité/stockage, et non d'une implémentation de chiffrement personnalisée.
+Le fichier d'instantané est un état d'exécution sensible et est stocké avec des autorisations de fichier restrictives.
+Dans le modèle de sécurité de OpenClaw, l'hôte de la passerelle et le répertoire d'état local OpenClaw se trouvent déjà dans la limite de confiance de l'opérateur, il s'agit donc principalement d'une préoccupation de durabilité opérationnelle plutôt que d'une limite de confiance distante séparée.
+
+Amélioration prévue :
+
+- ajouter la prise en charge de SecretRef pour le matériel de clé Matrix persistant afin que les clés de récupération et les secrets de chiffrement du magasin associés puissent être issus des fournisseurs de secrets OpenClaw au lieu de fichiers locaux uniquement
+
+## Notifications de vérification automatique
+
+Matrix publie désormais des notifications de cycle de vie de vérification directement dans la salle de vérification DM stricte sous forme de messages `m.notice`.
+Cela comprend :
+
+- notifications de demande de vérification
+- notifications de vérification prête (avec des instructions explicites « Vérifier par emoji »)
+- notifications de début et de fin de vérification
+- détails SAS (emoji et décimal) lorsque disponibles
+
+Les demandes de vérification entrantes d'un autre client Matrix sont suivies et automatiquement acceptées par OpenClaw.
+Pour les flux d'auto-vérification, OpenClaw lance également automatiquement le flux SAS lorsque la vérification par emoji devient disponible et confirme son propre côté.
+Pour les demandes de vérification d'un autre utilisateur/appareil Matrix, OpenClaw accepte automatiquement la demande puis attend que le flux SAS se poursuive normalement.
+Vous devez toujours comparer l'emoji ou le décimal SAS dans votre client Matrix et confirmer « Ils correspondent » ici pour terminer la vérification.
+
+OpenClaw n'accepte pas aveuglément les flux en double auto-initiés. Le démarrage ignore la création d'une nouvelle demande lorsqu'une demande d'auto-vérification est déjà en attente.
+
+Les notifications de protocole/système de vérification ne sont pas transmises au pipeline de discussion de l'agent, elles ne produisent donc pas `NO_REPLY`.
+
+### Hygiène des appareils
+
+Les anciens appareils Matrix gérés par OpenClaw peuvent s'accumuler sur le compte et rendre plus difficile la compréhension de la confiance dans les salons chiffrés.
+Listez-les avec :
+
+```bash
+openclaw matrix devices list
+```
+
+Supprimez les appareils périmés gérés par OpenClaw avec :
+
+```bash
+openclaw matrix devices prune-stale
+```
+
+### Réparation de salon direct
+
+Si l'état des messages directs (DM) se désynchronise, OpenClaw peut se retrouver avec des mappages `m.direct` périmés qui pointent vers d'anciens salons en solo au lieu du DM actif. Inspectez le mappage actuel pour un pair avec :
+
+```bash
+openclaw matrix direct inspect --user-id @alice:example.org
+```
+
+Réparez-le avec :
+
+```bash
+openclaw matrix direct repair --user-id @alice:example.org
+```
+
+La réparation conserve la logique spécifique à Matrix à l'intérieur du plugin :
+
+- il préfère un DM strict 1:1 qui est déjà mappé dans `m.direct`
+- sinon, il revient à n'importe quel DM strict 1:1 actuellement rejoint avec cet utilisateur
+- si aucun DM sain n'existe, il crée un nouveau salon direct et réécrit `m.direct` pour pointer vers celui-ci
+
+Le flux de réparation ne supprime pas automatiquement les anciens salons. Il ne sélectionne que la DM saine et met à jour le mappage afin que les nouveaux envois Matrix, les notifications de vérification et les autres flux de messages directs ciblent à nouveau le bon salon.
+
+## Fil de discussion
+
+Matrix prend en charge les fils de discussion natifs Matrix pour les réponses automatiques ainsi que pour les envois via l'outil de message.
+
+- `threadReplies: "off"` garde les réponses au niveau supérieur.
+- `threadReplies: "inbound"` répond dans un fil de discussion uniquement lorsque le message entrant figurait déjà dans ce fil.
+- `threadReplies: "always"` conserve les réponses du salon dans un fil ancré au message déclencheur.
+- Les messages entrants dans un fil incluent le message racine du fil comme contexte supplémentaire pour l'agent.
+- Les envois via l'outil de message héritent désormais automatiquement du fil Matrix actuel lorsque la cible est le même salon ou le même utilisateur en DM, sauf si un `threadId` explicite est fourni.
+- Les liaisons de fils à l'exécution sont prises en charge pour Matrix. `/focus`, `/unfocus`, `/agents`, `/session idle`, `/session max-age` et `/acp spawn` liés à un fil fonctionnent désormais dans les salons et les DM Matrix.
+- Un `/focus` de salon/DM Matrix de niveau supérieur crée un nouveau fil Matrix et le lie à la session cible lorsque `threadBindings.spawnSubagentSessions=true`.
+- L'exécution de `/focus` ou `/acp spawn --thread here` dans un fil Matrix existant lie à la place le fil actuel.
+
+### Configuration de liaison de fil
+
+Matrix hérite des valeurs globales par défaut de `session.threadBindings` et prend également en charge les substitutions par canal :
+
+- `threadBindings.enabled`
+- `threadBindings.idleHours`
+- `threadBindings.maxAgeHours`
+- `threadBindings.spawnSubagentSessions`
+- `threadBindings.spawnAcpSessions`
+
+Les indicateurs de génération liés aux fils Matrix sont opt-in :
+
+- Définissez `threadBindings.spawnSubagentSessions: true` pour permettre à `/focus` de niveau supérieur de créer et lier de nouveaux fils Matrix.
+- Définissez `threadBindings.spawnAcpSessions: true` pour permettre à `/acp spawn --thread auto|here` de lier les sessions ACP aux fils Matrix.
+
+## Réactions
+
+Matrix prend en charge les actions de réaction sortantes, les notifications de réaction entrantes et les réactions d'accusé de réception entrantes.
+
+- Les outils de réaction sortants sont contrôlés par `channels["matrix"].actions.reactions`.
+- `react` ajoute une réaction à un événement Matrix spécifique.
+- `reactions` liste le résumé actuel des réactions pour un événement Matrix spécifique.
+- `emoji=""` supprime les propres réactions du compte bot sur cet événement.
+- `remove: true` supprime uniquement la réaction emoji spécifiée du compte bot.
+
+Les réactions d'accusé de réception utilisent l'ordre de résolution standard OpenClaw :
+
+- `channels["matrix"].accounts.<accountId>.ackReaction`
+- `channels["matrix"].ackReaction`
+- `messages.ackReaction`
+- secours pour emoji d'identité d'agent
+
+La portée de la réaction d'accusé de réception se résout dans cet ordre :
+
+- `channels["matrix"].accounts.<accountId>.ackReactionScope`
+- `channels["matrix"].ackReactionScope`
+- `messages.ackReactionScope`
+
+Le mode de notification de réaction se résout dans cet ordre :
+
+- `channels["matrix"].accounts.<accountId>.reactionNotifications`
+- `channels["matrix"].reactionNotifications`
+- par défaut : `own`
+
+Comportement actuel :
+
+- `reactionNotifications: "own"` transfère les événements `m.reaction` ajoutés lorsqu'ils ciblent des messages Matrix créés par le bot.
+- `reactionNotifications: "off"` désactive les événements système de réaction.
+- Les suppressions de réactions ne sont toujours pas synthétisées en événements système car Matrix les présente comme des rédactions, et non comme des suppressions `m.reaction` autonomes.
+
+## Exemple de politique pour les DMs et les salons
+
+```json5
+{
+  channels: {
+    matrix: {
+      dm: {
+        policy: "allowlist",
+        allowFrom: ["@admin:example.org"],
+      },
+      groupPolicy: "allowlist",
+      groupAllowFrom: ["@admin:example.org"],
+      groups: {
+        "!roomid:example.org": {
+          requireMention: true,
+        },
+      },
+    },
+  },
+}
+```
+
+Voir [Groupes](/fr/channels/groups) pour le comportement de restriction des mentions et de la liste d'autorisation.
+
+Exemple d'appairage pour les DMs Matrix :
+
+```bash
+openclaw pairing list matrix
+openclaw pairing approve matrix <CODE>
+```
+
+Si un utilisateur Matrix non approuvé continue à vous envoyer des messages avant l'approbation, OpenClaw réutilise le même code d'appairage en attente et peut envoyer une réponse de rappel après un court délai de recharge au lieu de créer un nouveau code.
+
+Voir [Appairage](/fr/channels/pairing) pour le flux d'appairage DM partagé et la disposition du stockage.
+
+## Exemple multi-compte
 
 ```json5
 {
   channels: {
     matrix: {
       enabled: true,
+      defaultAccount: "assistant",
       dm: { policy: "pairing" },
       accounts: {
         assistant: {
-          name: "Main assistant",
           homeserver: "https://matrix.example.org",
-          accessToken: "syt_assistant_***",
+          accessToken: "syt_assistant_xxx",
           encryption: true,
         },
         alerts: {
-          name: "Alerts bot",
           homeserver: "https://matrix.example.org",
-          accessToken: "syt_alerts_***",
-          dm: { policy: "allowlist", allowFrom: ["@admin:example.org"] },
+          accessToken: "syt_alerts_xxx",
+          dm: {
+            policy: "allowlist",
+            allowFrom: ["@ops:example.org"],
+          },
         },
       },
     },
@@ -169,138 +584,97 @@ politique de DM, groupes, chiffrement, etc.).
 }
 ```
 
-Notes :
+Les valeurs `channels.matrix` de niveau supérieur servent de valeurs par défaut pour les comptes nommés, sauf si un compte les remplace.
+Définissez `defaultAccount` lorsque vous souhaitez qu'OpenClaw privilégie un compte Matrix nommé pour le routage implicite, la détection et les opérations CLI.
+Si vous configurez plusieurs comptes nommés, définissez `defaultAccount` ou transmettez `--account <id>` pour les commandes CLI qui dépendent d'une sélection de compte implicite.
+Transmettez `--account <id>` à `openclaw matrix verify ...` et `openclaw matrix devices ...` lorsque vous souhaitez remplacer cette sélection implicite pour une commande.
 
-- Le démarrage du compte est sérialisé pour éviter les conditions de course avec les importations de modules simultanées.
-- Les variables d'environnement (`MATRIX_HOMESERVER`, `MATRIX_ACCESS_TOKEN`, etc.) ne s'appliquent qu'au compte **par défaut**.
-- Les paramètres de base du canal (stratégie de DM, stratégie de groupe, filtrage des mentions, etc.) s'appliquent à tous les comptes, sauf s'ils sont remplacés pour chaque compte.
-- Utilisez `bindings[].match.accountId` pour router chaque compte vers un agent différent.
-- L'état de chiffrement est stocké par compte + jeton d'accès (magasins de clés distincts par compte).
+## Serveurs domestiques privés/LAN
 
-## Modèle de routage
+Par défaut, OpenClaw bloque les serveurs domestiques Matrix privés/internes pour la protection SSRF, sauf si vous
+optez explicitement pour chaque compte.
 
-- Les réponses vont toujours vers Matrix.
-- Les DMs partagent la session principale de l'agent ; les salles sont mappées à des sessions de groupe.
-
-## Contrôle d'accès (DMs)
-
-- Par défaut : `channels.matrix.dm.policy = "pairing"`. Les expéditeurs inconnus reçoivent un code d'appariement.
-- Approuver via :
-  - `openclaw pairing list matrix`
-  - `openclaw pairing approve matrix <CODE>`
-- DMs publics : `channels.matrix.dm.policy="open"` plus `channels.matrix.dm.allowFrom=["*"]`.
-- `channels.matrix.dm.allowFrom` accepte les identifiants utilisateur complets Matrix (exemple : `@user:server`). L'assistant résout les noms d'affichage en identifiants utilisateur lorsque la recherche dans l'annuaire trouve une seule correspondance exacte.
-- N'utilisez pas de noms d'affichage ou de parties locales simples (exemple : `"Alice"` ou `"alice"`). Ils sont ambigus et sont ignorés pour la correspondance de la liste d'autorisation. Utilisez des identifiants `@user:server` complets.
-
-## Salles (groupes)
-
-- Par défaut : `channels.matrix.groupPolicy = "allowlist"` (limité par mention). Utilisez `channels.defaults.groupPolicy` pour remplacer la valeur par défaut lorsqu'elle n'est pas définie.
-- Remarque d'exécution : si `channels.matrix` est totalement absent, l'exécution revient à `groupPolicy="allowlist"` pour les vérifications de salon (même si `channels.defaults.groupPolicy` est défini).
-- Liste blanche des salons avec `channels.matrix.groups` (ID ou alias de salon ; les noms sont résolus en ID lorsque la recherche de répertoire trouve une seule correspondance exacte) :
+Si votre serveur domestique fonctionne sur localhost, une IP LAN/Tailscale ou un nom d'hôte interne, activez
+`allowPrivateNetwork` pour ce compte Matrix :
 
 ```json5
 {
   channels: {
     matrix: {
-      groupPolicy: "allowlist",
-      groups: {
-        "!roomId:example.org": { allow: true },
-        "#alias:example.org": { allow: true },
-      },
-      groupAllowFrom: ["@owner:example.org"],
+      homeserver: "http://matrix-synapse:8008",
+      allowPrivateNetwork: true,
+      accessToken: "syt_internal_xxx",
     },
   },
 }
 ```
 
-- `requireMention: false` active la réponse automatique dans ce salon.
-- `groups."*"` peut définir les valeurs par défaut pour le filtrage par mention entre les salons.
-- `groupAllowFrom` restreint les expéditeurs pouvant déclencher le bot dans les salons (ID d'utilisateur Matrix complets).
-- Les listes blanches `users` par salon peuvent restreindre davantage les expéditeurs dans un salon spécifique (utilisez les ID d'utilisateur Matrix complets).
-- L'assistant de configuration demande les listes blanches de salons (identifiants, alias ou noms de salon) et ne résout les noms que sur une correspondance exacte et unique.
-- Au démarrage, OpenClaw résout les noms de salon/utilisateur dans les listes blanches en identifiants et consigne le mappage ; les entrées non résolues sont ignorées pour la correspondance de liste blanche.
-- Les invitations sont acceptées automatiquement par défaut ; contrôlez avec `channels.matrix.autoJoin` et `channels.matrix.autoJoinAllowlist`.
-- Pour n'**autoriser aucun salon**, définissez `channels.matrix.groupPolicy: "disabled"` (ou gardez une liste blanche vide).
-- Clé héritée : `channels.matrix.rooms` (même forme que `groups`).
-
-## Fils de discussion
-
-- Les fils de discussion en réponse sont pris en charge.
-- `channels.matrix.threadReplies` contrôle si les réponses restent dans les fils :
-  - `off`, `inbound` (par défaut), `always`
-- `channels.matrix.replyToMode` contrôle les métadonnées de réponse lors d'une réponse hors fil :
-  - `off` (par défaut), `first`, `all`
-
-## Capacités
-
-| Fonctionnalité     | Statut                                                                                                     |
-| ------------------ | ---------------------------------------------------------------------------------------------------------- |
-| Messages directs   | ✅ Pris en charge                                                                                          |
-| Salons             | ✅ Pris en charge                                                                                          |
-| Fils de discussion | ✅ Pris en charge                                                                                          |
-| Médias             | ✅ Pris en charge                                                                                          |
-| E2EE               | ✅ Pris en charge (module crypto requis)                                                                   |
-| Réactions          | ✅ Pris en charge (envoi/lecture via outils)                                                               |
-| Sondages           | ✅ Envoi pris en charge ; les débuts de sondages entrants sont convertis en texte (réponses/fins ignorées) |
-| Emplacement        | ✅ Pris en charge (URI géo ; altitude ignorée)                                                             |
-| Commandes natives  | ✅ Pris en charge                                                                                          |
-
-## Dépannage
-
-Exécutez d'abord cette échelle :
+Exemple de configuration CLI :
 
 ```bash
-openclaw status
-openclaw gateway status
-openclaw logs --follow
-openclaw doctor
-openclaw channels status --probe
+openclaw matrix account add \
+  --account ops \
+  --homeserver http://matrix-synapse:8008 \
+  --allow-private-network \
+  --access-token syt_ops_xxx
 ```
 
-Confirmez ensuite l'état du jumelage DM si nécessaire :
+Cette option d'adhésion ne permet que les cibles privées/internes de confiance. Les serveurs domestiques publics en clair tels que
+`http://matrix.example.org:8008` restent bloqués. Privilégiez `https://` chaque fois que possible.
 
-```bash
-openclaw pairing list matrix
-```
+## Résolution de cible
 
-Pannes courantes :
+Matrix accepte ces formes de cibles partout où OpenClaw vous demande une cible de salle ou d'utilisateur :
 
-- Connecté mais messages de salon ignorés : salon bloqué par `groupPolicy` ou liste blanche de salons.
-- DMs ignorés : expéditeur en attente d'approbation lorsque `channels.matrix.dm.policy="pairing"`.
-- Échec des salles chiffrées : prise en charge du chiffrement ou inadéquation des paramètres de chiffrement.
+- Utilisateurs : `@user:server`, `user:@user:server` ou `matrix:user:@user:server`
+- Salles : `!room:server`, `room:!room:server` ou `matrix:room:!room:server`
+- Alias : `#alias:server`, `channel:#alias:server` ou `matrix:channel:#alias:server`
 
-Pour le flux de triage : [/channels/troubleshooting](/fr/channels/troubleshooting).
+La recherche en direct dans l'annuaire utilise le compte Matrix connecté :
 
-## Référence de configuration (Matrix)
+- Les recherches d'utilisateurs interrogent l'annuaire des utilisateurs Matrix sur ce serveur domestique.
+- Les recherches de salle acceptent directement les ID de salle et les alias explicites, puis reviennent à rechercher les noms des salles rejoints pour ce compte.
+- La recherche de nom de salle rejointe est de type « best-effort ». Si un nom de salle ne peut pas être résolu en ID ou en alias, il est ignoré par la résolution de liste d'autorisation (allowlist) lors de l'exécution.
 
-Configuration complète : [Configuration](/fr/gateway/configuration)
+## Référence de configuration
 
-Options du fournisseur :
-
-- `channels.matrix.enabled` : activer/désactiver le démarrage du channel.
-- `channels.matrix.homeserver` : URL du serveur domestique.
-- `channels.matrix.userId` : ID d'utilisateur Matrix (optionnel avec le jeton d'accès).
-- `channels.matrix.accessToken` : jeton d'accès.
-- `channels.matrix.password` : mot de passe pour la connexion (jeton stocké).
-- `channels.matrix.deviceName` : nom d'affichage de l'appareil.
-- `channels.matrix.encryption` : activer l'E2EE (par défaut : false).
-- `channels.matrix.initialSyncLimit` : limite de synchronisation initiale.
-- `channels.matrix.threadReplies` : `off | inbound | always` (par défaut : entrant).
-- `channels.matrix.textChunkLimit` : taille du bloc de texte sortant (caractères).
-- `channels.matrix.chunkMode` : `length` (par défaut) ou `newline` pour diviser sur les lignes vides (limites de paragraphe) avant le découpage par longueur.
-- `channels.matrix.dm.policy` : `pairing | allowlist | open | disabled` (par défaut : couplage).
-- `channels.matrix.dm.allowFrom` : liste d'autorisation de DMs (identifiants utilisateur Matrix complets). `open` nécessite `"*"`. L'assistant résout les noms en identifiants lorsque cela est possible.
-- `channels.matrix.groupPolicy` : `allowlist | open | disabled` (par défaut : allowlist).
-- `channels.matrix.groupAllowFrom` : expéditeurs autorisés pour les messages de groupe (identifiants utilisateur Matrix complets).
-- `channels.matrix.allowlistOnly` : forcer les règles de liste d'autorisation pour les DMs + salons.
-- `channels.matrix.groups` : liste d'autorisation de groupe + carte des paramètres par salon.
-- `channels.matrix.rooms` : ancienne liste d'autorisation/configuration de groupe.
-- `channels.matrix.replyToMode` : mode de réponse pour les fils/tags.
-- `channels.matrix.mediaMaxMb` : limite de média entrant/sortant (Mo).
-- `channels.matrix.autoJoin` : gestion des invitations (`always | allowlist | off`, par défaut : toujours).
-- `channels.matrix.autoJoinAllowlist` : identifiants/alias de salon autorisés pour l'auto-join.
-- `channels.matrix.accounts` : configuration multi-compte indexée par l'identifiant de compte (chaque compte hérite des paramètres de premier niveau).
-- `channels.matrix.actions` : vérification des outils par action (réactions/messages/épingles/memberInfo/channelInfo).
+- `enabled` : activer ou désactiver le canal.
+- `name` : étiquette facultative pour le compte.
+- `defaultAccount` : ID de compte préféré lorsque plusieurs comptes Matrix sont configurés.
+- `homeserver` : URL du serveur d'accueil, par exemple `https://matrix.example.org`.
+- `allowPrivateNetwork` : autoriser ce compte Matrix à se connecter à des serveurs d'accueil privés/internes. Activez ceci lorsque le serveur d'accueil est résolu vers `localhost`, une IP LAN/Tailscale, ou un hôte interne tel que `matrix-synapse`.
+- `userId` : identifiant utilisateur Matrix complet, par exemple `@bot:example.org`.
+- `accessToken` : jeton d'accès pour l'authentification par jeton.
+- `password` : mot de passe pour la connexion par mot de passe.
+- `deviceId` : identifiant d'appareil Matrix explicite.
+- `deviceName` : nom d'affichage de l'appareil pour la connexion par mot de passe.
+- `avatarUrl` : URL de l'auto-avatar stockée pour la synchronisation du profil et les mises à jour `set-profile`.
+- `initialSyncLimit` : limite d'événements de synchronisation au démarrage.
+- `encryption` : activer E2EE.
+- `allowlistOnly` : forcer le comportement de liste d'autorisation uniquement pour les DMs et les salons.
+- `groupPolicy` : `open`, `allowlist`, ou `disabled`.
+- `groupAllowFrom` : liste d'autorisation des identifiants utilisateurs pour le trafic de salon.
+- Les entrées `groupAllowFrom` doivent être des identifiants utilisateur Matrix complets. Les noms non résolus sont ignorés lors de l'exécution.
+- `replyToMode` : `off`, `first`, ou `all`.
+- `threadReplies` : `off`, `inbound`, ou `always`.
+- `threadBindings` : substitutions par canal pour le routage et le cycle de vie des sessions liées aux fils de discussion.
+- `startupVerification` : mode de demande de vérification automatique de soi au démarrage (`if-unverified`, `off`).
+- `startupVerificationCooldownHours` : temps de refroidissement avant de réessayer les demandes de vérification automatique au démarrage.
+- `textChunkLimit` : taille du bloc des messages sortants.
+- `chunkMode` : `length` ou `newline`.
+- `responsePrefix` : préfixe de message optionnel pour les réponses sortantes.
+- `ackReaction` : substitution de réaction d'accusé de réception optionnelle pour ce channel/compte.
+- `ackReactionScope` : substitution de la portée de réaction d'accusé de réception optionnelle (`group-mentions`, `group-all`, `direct`, `all`, `none`, `off`).
+- `reactionNotifications` : mode de notification de réaction entrante (`own`, `off`).
+- `mediaMaxMb` : limite de taille des médias sortants en Mo.
+- `autoJoin` : politique de jointure automatique aux invitations (`always`, `allowlist`, `off`). Par défaut : `off`.
+- `autoJoinAllowlist` : salons/alias autorisés lorsque `autoJoin` est `allowlist`. Les entrées d'alias sont résolues en ID de salon lors du traitement des invitations ; OpenClaw ne fait pas confiance à l'état de l'alias revendiqué par le salon invité.
+- `dm` : bloc de stratégie DM (`enabled`, `policy`, `allowFrom`).
+- Les entrées `dm.allowFrom` doivent être des IDs utilisateur Matrix complets, sauf si vous les avez déjà résolus via une recherche en direct dans l'annuaire.
+- `accounts` : substitutions nommées par compte. Les valeurs `channels.matrix` de premier niveau servent de valeurs par défaut pour ces entrées.
+- `groups` : carte de stratégie par salon. Privilégiez les ID de salon ou les alias ; les noms de salon non résolus sont ignorés lors de l'exécution. L'identité de session/groupe utilise l'ID de salon stable après résolution, tandis que les étiquettes lisibles par l'homme proviennent toujours des noms de salon.
+- `rooms` : alias hérité pour `groups`.
+- `actions` : verrouillage de l'outil par action (`messages`, `reactions`, `pins`, `profile`, `memberInfo`, `channelInfo`, `verification`).
 
 import fr from "/components/footer/fr.mdx";
 

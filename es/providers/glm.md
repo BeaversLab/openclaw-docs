@@ -1,15 +1,15 @@
 ---
 summary: "Resumen de la familia de modelos GLM + cómo usarla en OpenClaw"
 read_when:
-  - Quieres modelos GLM en OpenClaw
-  - Necesitas la convención de nomenclatura y configuración del modelo
+  - You want GLM models in OpenClaw
+  - You need the model naming convention and setup
 title: "Modelos GLM"
 ---
 
 # Modelos GLM
 
 GLM es una **familia de modelos** (no una empresa) disponible a través de la plataforma Z.AI. En OpenClaw, los modelos
-GLM se acceden a través del proveedor `zai` y los IDs de modelo como `zai/glm-5`.
+GLM se acceden mediante el proveedor `zai` e IDs de modelo como `zai/glm-5`.
 
 ## Configuración de CLI
 
@@ -38,9 +38,9 @@ openclaw onboard --auth-choice zai-cn
 
 ## Notas
 
-- Las versiones y disponibilidad de GLM pueden cambiar; consulta los documentos de Z.AI para lo más reciente.
+- Las versiones y disponibilidad de GLM pueden cambiar; consulta la documentación de Z.AI para obtener la más reciente.
 - Los IDs de modelo de ejemplo incluyen `glm-5`, `glm-4.7` y `glm-4.6`.
-- Para obtener detalles del proveedor, consulta [/providers/zai](/es/providers/zai).
+- Para más detalles del proveedor, consulta [/providers/zai](/es/providers/zai).
 
 import es from "/components/footer/es.mdx";
 

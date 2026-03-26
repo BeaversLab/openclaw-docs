@@ -1,18 +1,18 @@
 ---
-summary: "`openclaw logs` 的 CLI 參考（透過 RPC 追蹤 Gateway 日誌）"
+summary: "透過 RPC 追蹤 Gateway 日誌的 `openclaw logs` CLI 參考資料"
 read_when:
-  - 您需要遠端追蹤 Gateway 日誌（不使用 SSH）
-  - 您想要用於工具的 JSON 日誌行
+  - You need to tail Gateway logs remotely (without SSH)
+  - You want JSON log lines for tooling
 title: "logs"
 ---
 
 # `openclaw logs`
 
-透過 RPC 追蹤 Gateway 檔案日誌（適用於遠端模式）。
+透過 RPC 追蹤 Gateway 檔案日誌 (適用於遠端模式)。
 
-相關：
+相關連結：
 
-- 日誌總覽：[Logging](/zh-Hant/logging)
+- 日誌記錄概覽：[Logging](/zh-Hant/logging)
 
 ## 範例
 

@@ -1,35 +1,34 @@
 ---
 summary: "Complemento de llamada de voz: llamadas salientes + entrantes a través de Twilio/Telnyx/Plivo (instalación del complemento + configuración + CLI)"
 read_when:
-  - Deseas realizar una llamada de voz saliente desde OpenClaw
-  - Estás configurando o desarrollando el complemento de llamada de voz
+  - You want to place an outbound voice call from OpenClaw
+  - You are configuring or developing the voice-call plugin
 title: "Complemento de llamada de voz"
 ---
 
 # Llamada de voz (complemento)
 
-Llamadas de voz para OpenClaw a través de un complemento. Soporta notificaciones salientes y
-conversaciones de varios turnos con políticas entrantes.
+Llamadas de voz para OpenClaw a través de un complemento. Soporta notificaciones salientes y conversaciones de varios turnos con políticas entrantes.
 
 Proveedores actuales:
 
-- `twilio` (Programmable Voice + Media Streams)
-- `telnyx` (Call Control v2)
-- `plivo` (Voice API + XML transfer + GetInput speech)
-- `mock` (dev/sin red)
+- `twilio` (Voz programable + Transmisiones de medios)
+- `telnyx` (Control de llamadas v2)
+- `plivo` (API de voz + transferencia XML + voz GetInput)
+- `mock` (desarrollo/sin red)
 
 Modelo mental rápido:
 
 - Instalar complemento
 - Reiniciar Gateway
-- Configurar bajo `plugins.entries.voice-call.config`
+- Configurar en `plugins.entries.voice-call.config`
 - Usar `openclaw voicecall ...` o la herramienta `voice_call`
 
 ## Dónde se ejecuta (local vs remoto)
 
-El complemento de llamada de voz se ejecuta **dentro del proceso Gateway**.
+El complemento de llamada de voz se ejecuta **dentro del proceso del Gateway**.
 
-Si usas un Gateway remoto, instala/configura el complemento en la **máquina que ejecuta el Gateway**, luego reinicia el Gateway para cargarlo.
+Si utiliza un Gateway remoto, instale/configure el complemento en la **máquina que ejecuta el Gateway** y luego reinicie el Gateway para cargarlo.
 
 ## Instalación
 
@@ -39,7 +38,7 @@ Si usas un Gateway remoto, instala/configura el complemento en la **máquina que
 openclaw plugins install @openclaw/voice-call
 ```
 
-Reiniciar el Gateway después.
+Reinicie el Gateway después.
 
 ### Opción B: instalar desde una carpeta local (desarrollo, sin copia)
 
@@ -48,11 +47,11 @@ openclaw plugins install ./extensions/voice-call
 cd ./extensions/voice-call && pnpm install
 ```
 
-Reiniciar el Gateway después.
+Reinicie el Gateway después.
 
 ## Configuración
 
-Establecer configuración bajo `plugins.entries.voice-call.config`:
+Establezca la configuración en `plugins.entries.voice-call.config`:
 
 ```json5
 {
@@ -126,16 +125,16 @@ Notas:
 - `mock` es un proveedor de desarrollo local (sin llamadas a la red).
 - Telnyx requiere `telnyx.publicKey` (o `TELNYX_PUBLIC_KEY`) a menos que `skipSignatureVerification` sea verdadero.
 - `skipSignatureVerification` es solo para pruebas locales.
-- Si usas el nivel gratuito de ngrok, establece `publicUrl` en la URL exacta de ngrok; la verificación de firma siempre se aplica.
-- `tunnel.allowNgrokFreeTierLoopbackBypass: true` permite webhooks de Twilio con firmas no válidas **solo** cuando `tunnel.provider="ngrok"` y `serve.bind` es loopback (agente local de ngrok). Usar solo para desarrollo local.
-- Las URL del nivel gratuito de Ngrok pueden cambiar o añadir comportamientos intersticiales; si `publicUrl` cambia, las firmas de Twilio fallarán. Para producción, prefiera un dominio estable o un túnel Tailscale.
+- Si usa el nivel gratuito de ngrok, configure `publicUrl` en la URL exacta de ngrok; siempre se exige la verificación de firma.
+- `tunnel.allowNgrokFreeTierLoopbackBypass: true` permite webhooks de Twilio con firmas no válidas **solo** cuando `tunnel.provider="ngrok"` y `serve.bind` es loopback (agente local ngrok). Use solo para desarrollo local.
+- Las URL del nivel gratuito de Ngrok pueden cambiar o agregar un comportamiento intersticial; si `publicUrl` cambia, las firmas de Twilio fallarán. Para producción, prefiera un dominio estable o un embudo Tailscale.
 - Valores predeterminados de seguridad de transmisión:
   - `streaming.preStartTimeoutMs` cierra los sockets que nunca envían un marco `start` válido.
-  - `streaming.maxPendingConnections` limita el total de sockets no autenticados antes del inicio.
-  - `streaming.maxPendingConnectionsPerIp` limita los sockets no autenticados antes del inicio por IP de origen.
+  - `streaming.maxPendingConnections` limita el total de sockets de preinicio no autenticados.
+  - `streaming.maxPendingConnectionsPerIp` limita los sockets de preinicio no autenticados por IP de origen.
   - `streaming.maxConnections` limita el total de sockets de flujo de medios abiertos (pendientes + activos).
 
-## Segador de llamadas obsoletas
+## Segadora de llamadas obsoletas
 
 Use `staleCallReaperSeconds` para finalizar llamadas que nunca reciben un webhook terminal
 (por ejemplo, llamadas en modo de notificación que nunca se completan). El valor predeterminado es `0`
@@ -144,7 +143,7 @@ Use `staleCallReaperSeconds` para finalizar llamadas que nunca reciben un webhoo
 Rangos recomendados:
 
 - **Producción:** `120`–`300` segundos para flujos de estilo de notificación.
-- Mantenga este valor **mayor que `maxDurationSeconds`** para que las llamadas normales puedan
+- Mantenga este valor **más alto que `maxDurationSeconds`** para que las llamadas normales puedan
   finalizar. Un buen punto de partida es `maxDurationSeconds + 30–60` segundos.
 
 Ejemplo:
@@ -164,20 +163,21 @@ Ejemplo:
 }
 ```
 
-## Seguridad de Webhooks
+## Seguridad del Webhook
 
-Cuando un proxy o túnel se delante de la Gateway, el complemento reconstruye la
+Cuando un proxy o túnel se encuentra delante de la puerta de enlace (Gateway), el complemento reconstruye la
 URL pública para la verificación de firmas. Estas opciones controlan qué encabezados reenviados
-son confiables.
+son de confianza.
 
 `webhookSecurity.allowedHosts` pone en la lista blanca los hosts de los encabezados de reenvío.
 
 `webhookSecurity.trustForwardingHeaders` confía en los encabezados reenviados sin una lista blanca.
 
-`webhookSecurity.trustedProxyIPs` solo confía en los encabezados reenviados cuando la IP remota
-de la solicitud coincide con la lista.
+`webhookSecurity.trustedProxyIPs` solo confía en los encabezados reenviados cuando la IP
+remota de la solicitud coincide con la lista.
 
-La protección de repetición de webhooks está habilitada para Twilio y Plivo. Las solicitudes de webhook válidas repetidas se reconocen pero se omiten para efectos secundarios.
+La protección de repetición de webhook está habilitada para Twilio y Plivo. Las solicitudes de webhook válidas repetidas
+se reconocen pero se omiten para efectos secundarios.
 
 Los turnos de conversación de Twilio incluyen un token por turno en las devoluciones de llamada `<Gather>`, por lo que
 las devoluciones de llamada de voz obsoletas/repetidas no pueden satisfacer un turno de transcripción pendiente más reciente.
@@ -203,9 +203,7 @@ Ejemplo con un host público estable:
 
 ## TTS para llamadas
 
-Voice Call utiliza la configuración central `messages.tts` para
-la transmisión de voz en las llamadas. Puede anularla en la configuración del complemento con el
-**mismo formato** — se fusiona profundamente con `messages.tts`.
+Voice Call utiliza la configuración central `messages.tts` para transmitir voz en las llamadas. Puedes anularla en la configuración del complemento con el **mismo formato**; se fusiona profundamente con `messages.tts`.
 
 ```json5
 {
@@ -221,8 +219,8 @@ la transmisión de voz en las llamadas. Puede anularla en la configuración del 
 
 Notas:
 
-- **Se ignora el habla de Microsoft para las llamadas de voz** (el audio de telefonía necesita PCM; el transporte actual de Microsoft no expone la salida PCM de telefonía).
-- Se usa el TTS principal cuando la transmisión de medios de Twilio está habilitada; de lo contrario, las llamadas recurren a las voces nativas del proveedor.
+- **Microsoft Speech se ignora para las llamadas de voz** (el audio de telefonía necesita PCM; el transporte actual de Microsoft no expone la salida PCM de telefonía).
+- Se utiliza el TTS principal cuando la transmisión de medios de Twilio está habilitada; de lo contrario, las llamadas recurren a las voces nativas del proveedor.
 
 ### Más ejemplos
 
@@ -239,7 +237,7 @@ Usar solo el TTS principal (sin anulación):
 }
 ```
 
-Anular a ElevenLabs solo para llamadas (mantener el predeterminado principal en otros lugares):
+Sobrescribir a ElevenLabs solo para llamadas (mantener el predeterminado principal en otros lugares):
 
 ```json5
 {
@@ -262,7 +260,7 @@ Anular a ElevenLabs solo para llamadas (mantener el predeterminado principal en 
 }
 ```
 
-Anular solo el modelo de OpenAI para llamadas (ejemplo de fusión profunda):
+Sobrescribir solo el modelo de OpenAI para llamadas (ejemplo de fusión profunda):
 
 ```json5
 {
@@ -285,7 +283,7 @@ Anular solo el modelo de OpenAI para llamadas (ejemplo de fusión profunda):
 
 ## Llamadas entrantes
 
-La política entrante predeterminada es `disabled`. Para habilitar las llamadas entrantes, establezca:
+La política entrante tiene como valor predeterminado `disabled`. Para habilitar las llamadas entrantes, establezca:
 
 ```json5
 {
@@ -295,9 +293,9 @@ La política entrante predeterminada es `disabled`. Para habilitar las llamadas 
 }
 ```
 
-`inboundPolicy: "allowlist"` es un filtro de identificador de llamadas de baja seguridad. El complemento normaliza el valor `From` proporcionado por el proveedor y lo compara con `allowFrom`. La verificación del webhook autentica la entrega y la integridad de la carga útil del proveedor, pero no prueba la propiedad del número de llamada PSTN/VoIP. Trate `allowFrom` como un filtrado de identificador de llamadas, no como una identidad de llamante fuerte.
+`inboundPolicy: "allowlist"` es un filtro de identificación de llamante de baja seguridad. El complemento normaliza el valor `From` proporcionado por el proveedor y lo compara con `allowFrom`. La verificación del webhook autentica la entrega del proveedor y la integridad de la carga útil, pero no prueba la propiedad del número de llamada PSTN/VoIP. Trate `allowFrom` como un filtrado de identificación de llamante, no como una identidad de llamante fuerte.
 
-Las respuestas automáticas usan el sistema de agente. Ajuste con:
+Las respuestas automáticas utilizan el sistema de agentes. Ajuste con:
 
 - `responseModel`
 - `responseSystemPrompt`
@@ -307,23 +305,27 @@ Las respuestas automáticas usan el sistema de agente. Ajuste con:
 
 ```bash
 openclaw voicecall call --to "+15555550123" --message "Hello from OpenClaw"
+openclaw voicecall start --to "+15555550123"   # alias for call
 openclaw voicecall continue --call-id <id> --message "Any questions?"
 openclaw voicecall speak --call-id <id> --message "One moment"
 openclaw voicecall end --call-id <id>
 openclaw voicecall status --call-id <id>
 openclaw voicecall tail
+openclaw voicecall latency                     # summarize turn latency from logs
 openclaw voicecall expose --mode funnel
 ```
 
-## Herramienta de agente
+`latency` lee `calls.jsonl` desde la ruta de almacenamiento predeterminada de voice-call. Usa `--file <path>` para señalar a un registro diferente y `--last <n>` para limitar el análisis a los últimos N registros (predeterminado 200). La salida incluye p50/p90/p99 para la latencia de turno y los tiempos de espera de escucha.
+
+## Herramienta del agente
 
 Nombre de la herramienta: `voice_call`
 
 Acciones:
 
-- `initiate_call` (mensaje ¿para?, ¿modo?)
-- `continue_call` (callId, mensaje)
-- `speak_to_user` (callId, mensaje)
+- `initiate_call` (message, to?, mode?)
+- `continue_call` (callId, message)
+- `speak_to_user` (callId, message)
 - `end_call` (callId)
 - `get_status` (callId)
 

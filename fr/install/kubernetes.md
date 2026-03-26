@@ -1,18 +1,18 @@
 ---
-summary: "Déployez la passerelle OpenClaw sur un cluster Kubernetes avec Kustomize"
+summary: "Déployer la passerelle OpenClaw sur un cluster Kubernetes avec Kustomize"
 read_when:
-  - Vous souhaitez exécuter OpenClaw sur un cluster Kubernetes
-  - Vous souhaitez tester OpenClaw dans un environnement Kubernetes
+  - You want to run OpenClaw on a Kubernetes cluster
+  - You want to test OpenClaw in a Kubernetes environment
 title: "Kubernetes"
 ---
 
 # OpenClaw sur Kubernetes
 
-Un point de départ minimal pour exécuter OpenClaw sur Kubernetes — et non un déploiement prêt pour la production. Il couvre les ressources principales et est destiné à être adapté à votre environnement.
+Un point de départ minimal pour exécuter OpenClaw sur Kubernetes — il ne s'agit pas d'un déploiement prêt pour la production. Il couvre les ressources principales et est destiné à être adapté à votre environnement.
 
 ## Pourquoi pas Helm ?
 
-OpenClaw est un conteneur unique avec quelques fichiers de configuration. La personnalisation intéressante réside dans le contenu de l'agent (fichiers markdown, compétences, substitutions de configuration), et non dans le modèle d'infrastructure. Kustomize gère les superpositions sans la surcharge d'un chart Helm. Si votre déploiement devient plus complexe, un chart Helm peut être ajouté par-dessus ces manifestes.
+OpenClaw est un conteneur unique avec quelques fichiers de configuration. La personnalisation intéressante réside dans le contenu de l'agent (fichiers markdown, compétences, substitutions de configuration), et non dans le modèle d'infrastructure. Kustomize gère les superpositions sans la surcharge d'un graphique Helm. Si votre déploiement devient plus complexe, un graphique Helm peut être superposé à ces manifests.
 
 ## Ce dont vous avez besoin
 
@@ -48,7 +48,7 @@ Si vous n'avez pas de cluster, créez-en un localement avec [Kind](https://kind.
 ./scripts/k8s/create-kind.sh --delete  # tear down
 ```
 
-Déployez ensuite comme d'habitude avec `./scripts/k8s/deploy.sh`.
+Ensuite, déployez comme d'habitude avec `./scripts/k8s/deploy.sh`.
 
 ## Étape par étape
 
@@ -72,7 +72,7 @@ export <PROVIDER>_API_KEY="..."
 ./scripts/k8s/deploy.sh
 ```
 
-Utilisez `--show-token` avec l'une ou l'autre commande si vous souhaitez que le jeton soit imprimé sur stdout pour les tests locaux.
+Utilisez `--show-token` avec l'une ou l'autre commande si vous souhaitez que le jeton soit affiché sur stdout pour un test local.
 
 ### 2) Accéder à la passerelle
 
@@ -102,13 +102,13 @@ Modifiez le `AGENTS.md` dans `scripts/k8s/manifests/configmap.yaml` et redéploy
 ./scripts/k8s/deploy.sh
 ```
 
-### Config de la Gateway
+### Configuration de la passerelle
 
-Modifiez `openclaw.json` dans `scripts/k8s/manifests/configmap.yaml`. Consultez [Configuration de la Gateway](/fr/gateway/configuration) pour la référence complète.
+Modifiez `openclaw.json` dans `scripts/k8s/manifests/configmap.yaml`. Consultez [configuration de Gateway](/fr/gateway/configuration) pour la référence complète.
 
-### Ajouter des fournisseurs
+### Ajouter des providers
 
-Réexécutez avec des clés supplémentaires exportées :
+Relancez avec des clés supplémentaires exportées :
 
 ```bash
 export ANTHROPIC_API_KEY="..."
@@ -117,9 +117,9 @@ export OPENAI_API_KEY="..."
 ./scripts/k8s/deploy.sh
 ```
 
-Les clés de fournisseur existantes restent dans le secret tant que vous ne les écrasez pas.
+Les clés de provider existantes restent dans le Secret sauf si vous les écrasez.
 
-Ou appliquez directement un correctif au secret :
+Ou appliquez directement un correctif au Secret :
 
 ```bash
 kubectl patch secret openclaw-secrets -n openclaw \
@@ -138,10 +138,10 @@ OPENCLAW_NAMESPACE=my-namespace ./scripts/k8s/deploy.sh
 Modifiez le champ `image` dans `scripts/k8s/manifests/deployment.yaml` :
 
 ```yaml
-image: ghcr.io/openclaw/openclaw:2026.3.1
+image: ghcr.io/openclaw/openclaw:latest # or pin to a specific version from https://github.com/openclaw/openclaw/releases
 ```
 
-### Exposer au-delà du transfert de port
+### Exposition au-delà du transfert de port
 
 Les manifestes par défaut lient la passerelle à la boucle locale (loopback) à l'intérieur du pod. Cela fonctionne avec `kubectl port-forward`, mais cela ne fonctionne pas avec un `Service` Kubernetes ou un chemin Ingress qui doit atteindre l'IP du pod.
 
@@ -149,7 +149,7 @@ Si vous souhaitez exposer la passerelle via un Ingress ou un équilibreur de cha
 
 - Modifiez la liaison de la passerelle dans `scripts/k8s/manifests/configmap.yaml` de `loopback` à une liaison non boucle locale qui correspond à votre modèle de déploiement
 - Gardez l'authentification de la passerelle activée et utilisez un point d'entrée correctement terminé par TLS
-- Configurez l'interface de contrôle pour l'accès à distance en utilisant le modèle de sécurité web pris en charge (par exemple HTTPS/Tailscale Serve et des origines autorisées explicites si nécessaire)
+- Configurez l'interface de contrôle pour l'accès à distance en utilisant le modèle de sécurité Web pris en charge (par exemple HTTPS/Tailscale Serve et des origines autorisées explicites si nécessaire)
 
 ## Redéployer
 
@@ -157,9 +157,9 @@ Si vous souhaitez exposer la passerelle via un Ingress ou un équilibreur de cha
 ./scripts/k8s/deploy.sh
 ```
 
-Cela applique tous les manifestes et redémarre le pod pour prendre en compte les modifications de configuration ou de secrets.
+Cela applique tous les manifestes et redémarre le pod pour prendre en compte les modifications de configuration ou de secret.
 
-## Démontage
+## Démantèlement
 
 ```bash
 ./scripts/k8s/deploy.sh --delete
@@ -167,14 +167,14 @@ Cela applique tous les manifestes et redémarre le pod pour prendre en compte le
 
 Cela supprime l'espace de noms et toutes les ressources qu'il contient, y compris le PVC.
 
-## Notes d'architecture
+## Notes sur l'architecture
 
-- La passerelle est liée à la boucle locale à l'intérieur du pod par défaut, donc la configuration incluse est prévue pour `kubectl port-forward`
-- Aucune ressource à portée de cluster — tout réside dans un seul espace de noms
+- La passerelle se lie à la boucle locale à l'intérieur du pod par défaut, donc la configuration incluse est pour `kubectl port-forward`
+- Aucune ressource à portée de cluster — tout vit dans un seul espace de noms
 - Sécurité : `readOnlyRootFilesystem`, capacités `drop: ALL`, utilisateur non root (UID 1000)
-- La configuration par défaut maintient l'interface de contrôle sur le chemin d'accès local plus sûr : liaison boucle locale plus `kubectl port-forward` vers `http://127.0.0.1:18789`
-- Si vous dépassez l'accès localhost, utilisez le modèle distant pris en charge : HTTPS/Tailscale plus les liaisons de passerelle appropriées et les paramètres d'origine de l'interface de contrôle
-- Les secrets sont générés dans un répertoire temporaire et appliqués directement au cluster — aucun matériel secret n'est écrit dans l'extraction du dépôt
+- La configuration par défaut garde l'interface de contrôle sur le chemin d'accès local plus sûr : liaison boucle locale plus `kubectl port-forward` vers `http://127.0.0.1:18789`
+- Si vous allez au-delà de l'accès localhost, utilisez le modèle distant pris en charge : HTTPS/Tailscale ainsi que les liaisons de passerelle appropriées et les paramètres d'origine de l'interface de contrôle
+- Les secrets sont générés dans un répertoire temporaire et appliqués directement au cluster — aucune donnée secrète n'est écrite dans l'extraction du dépôt
 
 ## Structure des fichiers
 

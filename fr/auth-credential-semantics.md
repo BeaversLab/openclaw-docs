@@ -1,21 +1,21 @@
 ---
-title: "Auth Credential Semantics"
-summary: "Sémantiques canoniques d'éligibilité et de résolution des informations d'identification pour les profils d'auth"
+title: "Sémantique des informations d'identification d'authentification"
+summary: "Sémantique canonique d'éligibilité et de résolution des informations d'identification pour les profils d'authentification"
 read_when:
-  - Travailler sur la résolution de profils d'auth ou le routage des informations d'identification
-  - Débogage des échecs d'auth du modèle ou de l'ordre des profils
+  - Working on auth profile resolution or credential routing
+  - Debugging model auth failures or profile order
 ---
 
-# Sémantiques des informations d'identification d'auth
+# Sémantique des informations d'identification d'authentification
 
-Ce document définit les sémantiques canoniques d'éligibilité et de résolution des informations d'identification utilisées dans :
+Ce document définit la sémantique canonique d'éligibilité et de résolution des informations d'identification utilisée dans :
 
 - `resolveAuthProfileOrder`
 - `resolveApiKeyForProfile`
 - `models status --probe`
 - `doctor-auth`
 
-L'objectif est de garder le comportement au moment de la sélection et à l'exécution aligné.
+L'objectif est de garder le comportement au moment de la sélection et à l'exécution alignés.
 
 ## Codes de raison stables
 
@@ -31,22 +31,22 @@ Les informations d'identification de jeton (`type: "token"`) prennent en charge 
 
 ### Règles d'éligibilité
 
-1. Un profil de jeton n'est pas éligible lorsque `token` et `tokenRef` sont absents.
+1. Un profil de jeton n'est pas éligible lorsque `token` et `tokenRef` sont tous deux absents.
 2. `expires` est facultatif.
 3. Si `expires` est présent, il doit être un nombre fini supérieur à `0`.
-4. Si `expires` n'est pas valide (`NaN`, `0`, négatif, non fini ou de type incorrect), le profil n'est pas éligible avec `invalid_expires`.
+4. Si `expires` est invalide (`NaN`, `0`, négatif, non fini ou de type incorrect), le profil n'est pas éligible avec `invalid_expires`.
 5. Si `expires` est dans le passé, le profil n'est pas éligible avec `expired`.
 6. `tokenRef` ne contourne pas la validation de `expires`.
 
 ### Règles de résolution
 
-1. Les sémantiques du résolveur correspondent aux sémantiques d'éligibilité pour `expires`.
+1. La sémantique du résolveur correspond à la sémantique d'éligibilité pour `expires`.
 2. Pour les profils éligibles, le matériel du jeton peut être résolu à partir de la valeur en ligne ou `tokenRef`.
 3. Les références non résolues produisent `unresolved_ref` dans la sortie `models status --probe`.
 
-## Messagerie compatible avec l'ancien système
+## Messagerie compatible avec les versions héritées
 
-Pour la compatibilité des scripts, les erreurs de sonde gardent cette première ligne inchangée :
+Pour la compatibilité des scripts, les erreurs de sondage gardent cette première ligne inchangée :
 
 `Auth profile credentials are missing or expired.`
 

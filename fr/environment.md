@@ -1,27 +1,27 @@
 ---
-summary: "Où OpenClaw charge les environment variables et l'ordre de priorité"
+summary: "Où OpenClaw charge les variables d'environnement et l'ordre de priorité"
 read_when:
-  - Vous devez savoir quelles env vars sont chargées et dans quel ordre
-  - Vous déboguez des clés API manquantes dans le Gateway
-  - Vous documentez l'authentification du provider ou les environnements de déploiement
-title: "Environment Variables"
+  - You need to know which env vars are loaded, and in what order
+  - You are debugging missing API keys in the Gateway
+  - You are documenting provider auth or deployment environments
+title: "Variables d'environnement"
 ---
 
-# Environment variables
+# Variables d'environnement
 
-OpenClaw récupère les environment variables à partir de plusieurs sources. La règle est **ne jamais remplacer les valeurs existantes**.
+OpenClaw récupère les variables d'environnement à partir de plusieurs sources. La règle est **ne jamais remplacer les valeurs existantes**.
 
 ## Priorité (la plus élevée → la plus basse)
 
-1. **Environnement de processus** (ce que le processus Gateway possède déjà à partir du shell/daemon parent).
+1. **Environnement de processus** (ce que le processus Gateway possède déjà du shell/parent démon).
 2. **`.env` dans le répertoire de travail actuel** (dotenv par défaut ; ne remplace pas).
 3. **`.env` global** à `~/.openclaw/.env` (aka `$OPENCLAW_STATE_DIR/.env` ; ne remplace pas).
-4. **Bloc `env` de configuration** dans `~/.openclaw/openclaw.json` (appliqué uniquement si manquant).
+4. **Bloc de configuration `env`** dans `~/.openclaw/openclaw.json` (appliqué uniquement si manquant).
 5. **Import facultatif du shell de connexion** (`env.shellEnv.enabled` ou `OPENCLAW_LOAD_SHELL_ENV=1`), appliqué uniquement pour les clés attendues manquantes.
 
 Si le fichier de configuration est entièrement manquant, l'étape 4 est ignorée ; l'import du shell s'exécute toujours s'il est activé.
 
-## Bloc `env` de configuration
+## Bloc de configuration `env`
 
 Deux façons équivalentes de définir des env vars en ligne (les deux ne remplacent pas) :
 
@@ -56,9 +56,9 @@ Deux façons équivalentes de définir des env vars en ligne (les deux ne rempla
 - `OPENCLAW_LOAD_SHELL_ENV=1`
 - `OPENCLAW_SHELL_ENV_TIMEOUT_MS=15000`
 
-## Substitution de variables d'environnement dans la configuration
+## Substitution de variable d'environnement dans la configuration
 
-Vous pouvez référencer les env vars directement dans les valeurs de chaîne de configuration en utilisant la syntaxe `${VAR_NAME}` :
+Vous pouvez référencer des env vars directement dans les valeurs de chaîne de configuration en utilisant la syntaxe `${VAR_NAME}` :
 
 ```json5
 {
@@ -72,7 +72,7 @@ Vous pouvez référencer les env vars directement dans les valeurs de chaîne de
 }
 ```
 
-Voir [Configuration : Substitution de variables d'environnement](/fr/gateway/configuration#env-var-substitution-in-config) pour plus de détails.
+Voir [Configuration : Substitution de variable d'environnement](/fr/gateway/configuration#env-var-substitution-in-config) pour plus de détails.
 
 ## Connexes
 

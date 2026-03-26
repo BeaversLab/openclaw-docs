@@ -1,18 +1,18 @@
 ---
-summary: "Referencia de CLI para `openclaw agent` (enviar una turno de agente a través de la Gateway)"
+summary: "Referencia de la CLI para `openclaw agent` (enviar una vuelta de agente a través de la puerta de enlace)"
 read_when:
-  - Desea ejecutar un turno de agente desde scripts (opcionalmente entregar respuesta)
-title: "agent"
+  - You want to run one agent turn from scripts (optionally deliver reply)
+title: "agente"
 ---
 
 # `openclaw agent`
 
-Ejecute un turno de agente a través de la Gateway (use `--local` para integrado).
-Use `--agent <id>` para apuntar a un agente configurado directamente.
+Ejecuta una vuelta de agente a través de la puerta de enlace (usa `--local` para embebido).
+Usa `--agent <id>` para dirigirte a un agente configurado directamente.
 
 Relacionado:
 
-- Herramienta de envío de agente: [Agent send](/es/tools/agent-send)
+- Herramienta de envío de agente: [Envío de agente](/es/tools/agent-send)
 
 ## Ejemplos
 
@@ -25,7 +25,7 @@ openclaw agent --agent ops --message "Generate report" --deliver --reply-channel
 
 ## Notas
 
-- Cuando este comando activa la regeneración de `models.json`, las credenciales del proveedor gestionadas por SecretRef se persisten como marcadores no secretos (por ejemplo, nombres de variables de entorno, `secretref-env:ENV_VAR_NAME` o `secretref-managed`), no como texto plano de secreto resuelto.
+- Cuando este comando activa la regeneración de `models.json`, las credenciales del proveedor gestionadas por SecretRef se guardan como marcadores no secretos (por ejemplo, nombres de variables de entorno, `secretref-env:ENV_VAR_NAME` o `secretref-managed`), no como texto plano de secretos resueltos.
 - Las escrituras de marcadores tienen autoridad de origen: OpenClaw guarda los marcadores de la instantánea de la configuración de origen activa, no de los valores secretos de tiempo de ejecución resueltos.
 
 import es from "/components/footer/es.mdx";

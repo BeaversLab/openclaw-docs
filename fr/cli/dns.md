@@ -1,21 +1,21 @@
 ---
-summary: "Référence CLI pour `openclaw dns` (assistants de découverte à grande échelle)"
+summary: "Référence CLI pour `openclaw dns` (helpers de découverte grande distance)"
 read_when:
-  - Vous souhaitez une découverte à grande échelle (DNS-SD) via Tailscale + CoreDNS
-  - Vous configurez un DNS fractionné pour un domaine de découverte personnalisé (exemple: openclaw.internal)
+  - You want wide-area discovery (DNS-SD) via Tailscale + CoreDNS
+  - You’re setting up split DNS for a custom discovery domain (example: openclaw.internal)
 title: "dns"
 ---
 
 # `openclaw dns`
 
-Assistants DNS pour la découverte à grande échelle (Tailscale + CoreDNS). Actuellement concentré sur macOS + Homebrew CoreDNS.
+Helpers DNS pour la découverte grande distance (Tailscale + CoreDNS). Actuellement axé sur macOS + Homebrew CoreDNS.
 
 Connexes :
 
-- Découverte de Gateway : [Discovery](/fr/gateway/discovery)
-- Configuration de la découverte à grande échelle : [Configuration](/fr/gateway/configuration)
+- Découverte Gateway : [Discovery](/fr/gateway/discovery)
+- Configuration de la découverte grande distance : [Configuration](/fr/gateway/configuration)
 
-## Configuration
+## Installation
 
 ```bash
 openclaw dns setup

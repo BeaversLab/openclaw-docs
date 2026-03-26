@@ -1,38 +1,38 @@
 ---
 summary: "Usage tracking surfaces and credential requirements"
 read_when:
-  - You are wiring 提供商 usage/quota surfaces
+  - You are wiring provider usage/quota surfaces
   - You need to explain usage tracking behavior or auth requirements
 title: "Usage Tracking"
 ---
 
-# Usage tracking
+# 使用情况跟踪
 
-## What it is
+## 它是什么
 
-- Pulls 提供商 usage/quota directly from their usage endpoints.
-- No estimated costs; only the 提供商-reported windows.
+- 直接从提供商的使用情况端点拉取提供商的使用情况/配额。
+- 无估算费用；仅限提供商报告的窗口。
 
-## Where it shows up
+## 显示位置
 
-- `/status` in chats: emoji‑rich status card with 会话 tokens + estimated cost (API key only). Provider usage shows for the **current 模型 提供商** when available.
-- `/usage off|tokens|full` in chats: per-response usage footer (OAuth shows tokens only).
-- `/usage cost` in chats: local cost summary aggregated from OpenClaw 会话 logs.
-- CLI: `openclaw status --usage` prints a full per-提供商 breakdown.
-- CLI: `openclaw channels list` prints the same usage snapshot alongside 提供商 config (use `--no-usage` to skip).
-- macOS menu bar: “Usage” section under Context (only if available).
+- `/status` 在聊天中：包含会话令牌和预估成本（仅限 API 密钥）的丰富表情符号状态卡片。如果可用，将显示 **当前模型提供商** 的提供商使用情况。
+- `/usage off|tokens|full` 在聊天中：每次响应的使用情况页脚（OAuth 仅显示令牌）。
+- `/usage cost` 在聊天中：从 OpenClaw 会话日志汇总的本地成本摘要。
+- CLI：`openclaw status --usage` 打印完整的按提供商分类的细分信息。
+- CLI：`openclaw channels list` 在提供商配置旁边打印相同的使用情况快照（使用 `--no-usage` 跳过）。
+- macOS 菜单栏：上下文下的“使用情况”部分（仅在可用时）。
 
-## Providers + credentials
+## 提供商 + 凭据
 
-- **Anthropic (Claude)**: OAuth tokens in auth profiles.
-- **GitHub Copilot**: OAuth tokens in auth profiles.
-- **Gemini CLI**: OAuth tokens in auth profiles.
-- **Antigravity**: OAuth tokens in auth profiles.
-- **OpenAI Codex**: OAuth tokens in auth profiles (accountId used when present).
-- **MiniMax**: API key (coding plan key; `MINIMAX_CODE_PLAN_KEY` or `MINIMAX_API_KEY`); uses the 5‑hour coding plan window.
-- **z.ai**: API key via env/config/auth store.
+- **Anthropic (Claude)**：配置文件中的 OAuth 令牌。
+- **GitHub Copilot**：配置文件中的 OAuth 令牌。
+- **Gemini CLI**：配置文件中的 OAuth 令牌。
+- **Antigravity**：配置文件中的 OAuth 令牌。
+- **OpenAI Codex**：配置文件中的 OAuth 令牌（存在时使用 accountId）。
+- **MiniMax**：API 密钥（编码计划密钥；`MINIMAX_CODE_PLAN_KEY` 或 `MINIMAX_API_KEY`）；使用 5 小时编码计划窗口。
+- **z.ai**：通过 env/config/auth store 提供的 API 密钥。
 
-Usage is hidden if no matching OAuth/API credentials exist.
+如果不存在匹配的 OAuth/API 凭据，使用情况将被隐藏。
 
 import zh from "/components/footer/zh.mdx";
 

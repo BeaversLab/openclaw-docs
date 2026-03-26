@@ -1,62 +1,58 @@
 ---
-summary: "Gateway(网关) runtime on macOS (external launchd service)"
+summary: "Gateway 网关 runtime on macOS (external launchd service)"
 read_when:
   - Packaging OpenClaw.app
   - Debugging the macOS gateway launchd service
   - Installing the gateway CLI for macOS
-title: "Gateway(网关) on macOS"
+title: "Gateway 网关 on macOS"
 ---
 
-# Gateway(网关) on macOS (external launchd)
+# macOS 上的 Gateway 网关（外部 launchd）
 
-OpenClaw.app no longer bundles Node/Bun or the Gateway(网关) runtime. The macOS app
-expects an **external** `openclaw` CLI install, does not spawn the Gateway(网关) as a
-child process, and manages a per‑user launchd service to keep the Gateway(网关)
-running (or attaches to an existing local Gateway(网关) if one is already running).
+OpenClaw.app 不再捆绑 Node/Bun 或 Gateway 网关 运行时。macOS 应用需要**外部**安装 `openclaw` CLI，不会将 Gateway 网关 作为子进程生成，而是管理一个每用户 launchd 服务以保持 Gateway 网关 运行（或者如果已有本地 Gateway 网关 正在运行，则附加到该服务）。
 
-## Install the CLI (required for local mode)
+## 安装 CLI（本地模式需要）
 
-Node 24 is the default runtime on the Mac. Node 22 LTS, currently `22.16+`, still works for compatibility. Then install `openclaw` globally:
+Mac 上的默认运行时是 Node 24。Node 22 LTS（目前为 `22.16+`）仍然兼容。然后全局安装 `openclaw`：
 
 ```bash
 npm install -g openclaw@<version>
 ```
 
-The macOS app’s **Install CLI** button runs the same flow via npm/pnpm (bun not recommended for Gateway(网关) runtime).
+macOS 应用的 **Install CLI** 按钮通过 npm/pnpm 运行相同的流程（不推荐在 Gateway 网关 运行时使用 bun）。
 
-## Launchd (Gateway(网关) as LaunchAgent)
+## Launchd（Gateway 网关 作为 LaunchAgent）
 
-Label:
+标签：
 
-- `ai.openclaw.gateway` (or `ai.openclaw.<profile>`; legacy `com.openclaw.*` may remain)
+- `ai.openclaw.gateway` （或 `ai.openclaw.<profile>`；旧版 `com.openclaw.*` 可能仍然存在）
 
-Plist location (per‑user):
+Plist 位置（per‑user）：
 
 - `~/Library/LaunchAgents/ai.openclaw.gateway.plist`
-  (or `~/Library/LaunchAgents/ai.openclaw.<profile>.plist`)
+  (或 `~/Library/LaunchAgents/ai.openclaw.<profile>.plist`)
 
-Manager:
+管理器：
 
-- The macOS app owns LaunchAgent install/update in Local mode.
-- The CLI can also install it: `openclaw gateway install`.
+- macOS 应用程序负责在本地模式下安装/更新 LaunchAgent。
+- CLI 也可以安装它：`openclaw gateway install`。
 
-Behavior:
+行为：
 
-- “OpenClaw Active” enables/disables the LaunchAgent.
-- App quit does **not** stop the gateway (launchd keeps it alive).
-- If a Gateway(网关) is already running on the configured port, the app attaches to
-  it instead of starting a new one.
+- “OpenClaw Active”启用/禁用 LaunchAgent。
+- 退出应用程序**不会**停止 Gateway（launchd 使其保持运行）。
+- 如果已有一个 Gateway(网关) 在配置的端口上运行，该应用将附加到它，而不是启动一个新的。
 
-Logging:
+日志记录：
 
-- launchd stdout/err: `/tmp/openclaw/openclaw-gateway.log`
+- launchd stdout/err：`/tmp/openclaw/openclaw-gateway.log`
 
-## Version compatibility
+## 版本兼容性
 
-The macOS app checks the gateway version against its own version. If they’re
-incompatible, update the global CLI to match the app version.
+macOS 应用程序会检查 Gateway 版本与其自身版本是否匹配。如果不
+兼容，请更新全局 CLI 以匹配应用程序版本。
 
-## Smoke check
+## 冒烟检查"
 
 ```bash
 openclaw --version
@@ -66,7 +62,7 @@ OPENCLAW_SKIP_CANVAS_HOST=1 \
 openclaw gateway --port 18999 --bind loopback
 ```
 
-Then:
+然后：
 
 ```bash
 openclaw gateway call health --url ws://127.0.0.1:18999 --timeout 3000

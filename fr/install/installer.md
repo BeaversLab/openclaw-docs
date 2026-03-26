@@ -1,15 +1,15 @@
 ---
 summary: "Fonctionnement des scripts d'installation (install.sh, install-cli.sh, install.ps1), indicateurs et automatisation"
 read_when:
-  - Vous souhaitez comprendre `openclaw.ai/install.sh`
-  - Vous souhaitez automatiser les installations (CI / sans interface)
-  - Vous souhaitez installer à partir d'un checkout GitHub
-title: "Détails de l'installateur"
+  - You want to understand `openclaw.ai/install.sh`
+  - You want to automate installs (CI / headless)
+  - You want to install from a GitHub checkout
+title: "Fonctionnement interne de l'installateur"
 ---
 
-# Détails de l'installateur
+# Fonctionnement interne de l'installateur
 
-OpenClaw fournit trois scripts d'installation, disponibles depuis `openclaw.ai`.
+OpenClaw fournit trois scripts d'installation, servis depuis `openclaw.ai`.
 
 | Script                             | Plateforme           | Ce qu'il fait                                                                                              |
 | ---------------------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------- |
@@ -54,7 +54,7 @@ OpenClaw fournit trois scripts d'installation, disponibles depuis `openclaw.ai`.
 
 <Note>
   Si l'installation réussit mais que `openclaw` n'est pas trouvé dans un nouveau terminal, consultez
-  le dépannage Node.js](/fr/install/node#troubleshooting).
+  la section [Node.js troubleshooting](/fr/install/node#troubleshooting).
 </Note>
 
 ---
@@ -66,37 +66,37 @@ OpenClaw fournit trois scripts d'installation, disponibles depuis `openclaw.ai`.
 ### Flux (install.sh)
 
 <Steps>
-  <Step title="Détection de l'OS">
-    Prend en charge macOS et Linux (y compris WSL). Si macOS est détecté, installe Homebrew si
+  <Step title="Détecter le système d'exploitation">
+    Prend en charge macOS et Linux (y compris WSL). Si macOS est détecté, installe Homebrew s'il est
     manquant.
   </Step>
-  <Step title="S'assurer que Node.js 24 est utilisé par défaut">
+  <Step title="Assurer Node.js 24 par défaut">
     Vérifie la version de Node et installe Node 24 si nécessaire (Homebrew sur macOS, scripts de
     configuration NodeSource sur Linux apt/dnf/yum). OpenClaw prend toujours en charge Node 22 LTS,
     actuellement `22.16+`, pour la compatibilité.
   </Step>
-  <Step title="S'assurer que Git est installé">Installe Git si manquant.</Step>
+  <Step title="Assurer Git">Installe Git s'il est manquant.</Step>
   <Step title="Installer OpenClaw">
-    - Méthode `npm` (par défaut) : installation globale npm - Méthode `git` : clone/mise à jour du
+    - `npm` (méthode par défaut) : installation npm globale - `git` (méthode) : clone/mise à jour du
     dépôt, installation des dépendances avec pnpm, build, puis installation du wrapper à
     `~/.local/bin/openclaw`
   </Step>
   <Step title="Tâches post-installation">
-    - Exécute `openclaw doctor --non-interactive` lors des mises à niveau et des installations git
-    (au mieux) - Tente l'onboarding lorsque cela est approprié (TTY disponible, onboarding non
-    désactivé, et les vérifications bootstrap/config réussissent) - Valeurs par défaut
-    `SHARP_IGNORE_GLOBAL_LIBVIPS=1`
+    - Exécute `openclaw doctor --non-interactive` lors des mises à niveau et installations git (au
+    mieux) - Tente l'intégration (onboarding) si approprié (TTY disponible, intégration non
+    désactivée et vérifications bootstrap/config réussies) - Définit `SHARP_IGNORE_GLOBAL_LIBVIPS=1`
+    par défaut
   </Step>
 </Steps>
 
-### Détection de l'extraction du code source
+### Détection de l'extraction de source
 
-S'il est exécuté dans un extrait de OpenClaw (`package.json` + `pnpm-workspace.yaml`), le script offre :
+S'il est exécuté dans un checkout OpenClaw (`package.json` + `pnpm-workspace.yaml`), le script offre :
 
-- utiliser l'extrait (`git`), ou
+- utiliser le checkout (`git`), ou
 - utiliser l'installation globale (`npm`)
 
-Si aucun TTY n'est disponible et qu'aucune méthode d'installation n'est définie, il utilise par défaut `npm` et avertit.
+Si aucun TTY n'est disponible et qu'aucune méthode d'installation n'est définie, la valeur par défaut est `npm` et un avertissement est émis.
 
 Le script se termine avec le code `2` pour une sélection de méthode non valide ou des valeurs `--install-method` non valides.
 
@@ -125,22 +125,22 @@ Le script se termine avec le code `2` pour une sélection de méthode non valide
 </Tabs>
 
 <AccordionGroup>
-  <Accordion title="Référence des drapeaux">
+  <Accordion title="Référence des indicateurs">
 
-| Drapeau                               | Description                                                                |
+| Indicateur                            | Description                                                                |
 | ------------------------------------- | -------------------------------------------------------------------------- |
 | `--install-method npm\|git`           | Choisir la méthode d'installation (par défaut : `npm`). Alias : `--method` |
 | `--npm`                               | Raccourci pour la méthode npm                                              |
 | `--git`                               | Raccourci pour la méthode git. Alias : `--github`                          |
-| `--version <version\|dist-tag\|spec>` | version npm, dist-tag ou spécification de package (par défaut : `latest`)  |
+| `--version <version\|dist-tag\|spec>` | Version npm, dist-tag ou spécification de package (par défaut : `latest`)  |
 | `--beta`                              | Utiliser le dist-tag beta si disponible, sinon revenir à `latest`          |
 | `--git-dir <path>`                    | Répertoire de checkout (par défaut : `~/openclaw`). Alias : `--dir`        |
 | `--no-git-update`                     | Ignorer `git pull` pour un checkout existant                               |
 | `--no-prompt`                         | Désactiver les invites                                                     |
-| `--no-onboard`                        | Ignorer l'intégration                                                      |
-| `--onboard`                           | Activer l'intégration                                                      |
-| `--dry-run`                           | Imprimer les actions sans appliquer les modifications                      |
-| `--verbose`                           | Activer la sortie de débogage (`set -x`, journaux de niveau notice npm)    |
+| `--no-onboard`                        | Ignorer l'onboarding                                                       |
+| `--onboard`                           | Activer l'onboarding                                                       |
+| `--dry-run`                           | Afficher les actions sans appliquer les modifications                      |
+| `--verbose`                           | Activer la sortie de débogage (`set -x`, logs de niveau notice npm)        |
 | `--help`                              | Afficher l'utilisation (`-h`)                                              |
 
   </Accordion>
@@ -153,12 +153,12 @@ Le script se termine avec le code `2` pour une sélection de méthode non valide
 | `OPENCLAW_VERSION=latest\|next\|main\|<semver>\|<spec>` | version npm, dist-tag ou spécification de paquet              |
 | `OPENCLAW_BETA=0\|1`                                    | Utiliser la version bêta si disponible                        |
 | `OPENCLAW_GIT_DIR=<path>`                               | Répertoire de checkout                                        |
-| `OPENCLAW_GIT_UPDATE=0\|1`                              | Activer/désactiver les mises à jour git                       |
+| `OPENCLAW_GIT_UPDATE=0\|1`                              | Activer/Désactiver les mises à jour git                       |
 | `OPENCLAW_NO_PROMPT=1`                                  | Désactiver les invites                                        |
 | `OPENCLAW_NO_ONBOARD=1`                                 | Ignorer l'onboarding                                          |
 | `OPENCLAW_DRY_RUN=1`                                    | Mode simulation (dry run)                                     |
-| `OPENCLAW_VERBOSE=1`                                    | Mode débogage                                                 |
-| `OPENCLAW_NPM_LOGLEVEL=error\|warn\|notice`             | niveau de log npm                                             |
+| `OPENCLAW_VERBOSE=1`                                    | Mode de débogage                                              |
+| `OPENCLAW_NPM_LOGLEVEL=error\|warn\|notice`             | niveau de journalisation npm                                  |
 | `SHARP_IGNORE_GLOBAL_LIBVIPS=0\|1`                      | Contrôler le comportement de sharp/libvips (par défaut : `1`) |
 
   </Accordion>
@@ -170,14 +170,14 @@ Le script se termine avec le code `2` pour une sélection de méthode non valide
 
 <Info>
   Conçu pour les environnements où vous souhaitez tout sous un préfixe local (par défaut
-  `~/.openclaw`) et sans dépendance système Node.
+  `~/.openclaw`) et aucune dépendance système à Node.
 </Info>
 
 ### Flux (install-cli.sh)
 
 <Steps>
-  <Step title="Installer l'exécution Node locale">
-    Télécharge une archive Node supportée épinglée (par défaut actuel `22.22.0`) vers `<prefix>/tools/node-v<version>` et vérifie le SHA-256.
+  <Step title="Installer l'exécution locale de Node">
+    Télécharge une archive tarball Node LTS prise en charge et épinglée (la version est intégrée dans le script et mise à jour indépendamment) vers `<prefix>/tools/node-v<version>` et vérifie le SHA-256.
   </Step>
   <Step title="S'assurer de la présence de Git">
     Si Git est manquant, tente une installation via apt/dnf/yum sur Linux ou Homebrew sur macOS.
@@ -187,7 +187,7 @@ Le script se termine avec le code `2` pour une sélection de méthode non valide
   </Step>
 </Steps>
 
-### Exemples (install-cli.sh)
+### Examples (install-cli.sh)
 
 <Tabs>
   <Tab title="Default">
@@ -210,16 +210,16 @@ Le script se termine avec le code `2` pour une sélection de méthode non valide
 <AccordionGroup>
   <Accordion title="Référence des indicateurs">
 
-| Indicateur             | Description                                                                                   |
-| ---------------------- | --------------------------------------------------------------------------------------------- |
-| `--prefix <path>`      | Préfixe d'installation (par défaut : `~/.openclaw`)                                           |
-| `--version <ver>`      | Version ou dist-tag OpenClaw (par défaut : `latest`)                                          |
-| `--node-version <ver>` | Version de Node (par défaut : `22.22.0`)                                                      |
-| `--json`               | Émettre des événements NDJSON                                                                 |
-| `--onboard`            | Exécuter `openclaw onboard` après l'installation                                              |
-| `--no-onboard`         | Ignorer l'onboarding (par défaut)                                                             |
-| `--set-npm-prefix`     | Sur Linux, force le préfixe npm à `~/.npm-global` si le préfixe actuel n'est pas inscriptible |
-| `--help`               | Afficher l'utilisation (`-h`)                                                                 |
+| Indicateur             | Description                                                                                                 |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `--prefix <path>`      | Préfixe d'installation (par défaut : `~/.openclaw`)                                                         |
+| `--version <ver>`      | Version ou balise de distribution OpenClaw (par défaut : `latest`)                                          |
+| `--node-version <ver>` | Version de Node (par défaut : `22.22.0`)                                                                    |
+| `--json`               | Émettre des événements NDJSON                                                                               |
+| `--onboard`            | Exécuter `openclaw onboard` après l'installation                                                            |
+| `--no-onboard`         | Ignorer l'intégration (par défaut)                                                                          |
+| `--set-npm-prefix`     | Sur Linux, forcer le préfixe npm vers `~/.npm-global` si le préfixe actuel n'est pas accessible en écriture |
+| `--help`               | Afficher l'utilisation (`-h`)                                                                               |
 
   </Accordion>
 
@@ -231,8 +231,8 @@ Le script se termine avec le code `2` pour une sélection de méthode non valide
 | `OPENCLAW_VERSION=<ver>`                    | Version ou dist-tag OpenClaw                                                                                            |
 | `OPENCLAW_NODE_VERSION=<ver>`               | Version de Node                                                                                                         |
 | `OPENCLAW_NO_ONBOARD=1`                     | Ignorer l'onboarding                                                                                                    |
-| `OPENCLAW_NPM_LOGLEVEL=error\|warn\|notice` | Niveau de journalisation npm                                                                                            |
-| `OPENCLAW_GIT_DIR=<path>`                   | Chemin de recherche de nettoyage hérité (utilisé lors de la suppression de l'ancien checkout du sous-module `Peekaboo`) |
+| `OPENCLAW_NPM_LOGLEVEL=error\|warn\|notice` | Niveau de log npm                                                                                                       |
+| `OPENCLAW_GIT_DIR=<path>`                   | Chemin de recherche de nettoyage hérité (utilisé lors de la suppression d'un ancien checkout de sous-module `Peekaboo`) |
 | `SHARP_IGNORE_GLOBAL_LIBVIPS=0\|1`          | Contrôler le comportement de sharp/libvips (par défaut : `1`)                                                           |
 
   </Accordion>
@@ -246,18 +246,18 @@ Le script se termine avec le code `2` pour une sélection de méthode non valide
 
 <Steps>
   <Step title="S'assurer de l'environnement PowerShell + Windows">Nécessite PowerShell 5+.</Step>
-  <Step title="S'assurer de Node.js 24 par défaut">
-    S'il est manquant, tente l'installation via winget, puis Chocolatey, puis Scoop. Node 22 LTS,
+  <Step title="Assurer Node.js 24 par défaut">
+    Si manquant, tente l'installation via winget, puis Chocolatey, puis Scoop. Node 22 LTS,
     actuellement `22.16+`, reste pris en charge pour la compatibilité.
   </Step>
   <Step title="Installer OpenClaw">
-    - Méthode `npm` (par défaut) : installation npm globale en utilisant `-Tag` - Méthode `git` :
-    clone/mise à jour du dépôt, installation/build avec pnpm, et installation du wrapper à
-    `%USERPROFILE%\.local\bin\openclaw.cmd`
+    - Méthode `npm` (par défaut) : installation globale npm utilisant le `-Tag` sélectionné -
+    Méthode `git` : clône/mise à jour du dépôt, installation/build avec pnpm, et installation du
+    wrapper à `%USERPROFILE%\.local\bin\openclaw.cmd`
   </Step>
   <Step title="Tâches post-installation">
-    Ajoute le répertoire bin nécessaire au PATH utilisateur lorsque c'est possible, puis exécute
-    `openclaw doctor --non-interactive` lors des mises à jour et des installations git (au mieux).
+    Ajoute le répertoire bin nécessaire au PATH utilisateur si possible, puis exécute `openclaw
+    doctor --non-interactive` lors des mises à niveau et des installations git (au mieux).
   </Step>
 </Steps>
 
@@ -290,14 +290,14 @@ Le script se termine avec le code `2` pour une sélection de méthode non valide
 <AccordionGroup>
   <Accordion title="Référence des indicateurs">
 
-| Indicateur                  | Description                                                               |
-| --------------------------- | ------------------------------------------------------------------------- |
-| `-InstallMethod npm\|git`   | Méthode d'installation (par défaut : `npm`)                               |
-| `-Tag <tag\|version\|spec>` | dist-tag npm, version ou spécification de package (par défaut : `latest`) |
-| `-GitDir <path>`            | Répertoire de checkout (par défaut : `%USERPROFILE%\openclaw`)            |
-| `-NoOnboard`                | Ignorer l'onboarding                                                      |
-| `-NoGitUpdate`              | Ignorer `git pull`                                                        |
-| `-DryRun`                   | Afficher uniquement les actions                                           |
+| Indicateur                  | Description                                                                |
+| --------------------------- | -------------------------------------------------------------------------- |
+| `-InstallMethod npm\|git`   | Méthode d'installation (par défaut : `npm`)                                |
+| `-Tag <tag\|version\|spec>` | Dist-tag npm, version, ou spécification de package (par défaut : `latest`) |
+| `-GitDir <path>`            | Répertoire de checkout (par défaut : `%USERPROFILE%\openclaw`)             |
+| `-NoOnboard`                | Ignorer l'onboarding                                                       |
+| `-NoGitUpdate`              | Ignorer `git pull`                                                         |
+| `-DryRun`                   | Afficher uniquement les actions                                            |
 
   </Accordion>
 
@@ -309,21 +309,21 @@ Le script se termine avec le code `2` pour une sélection de méthode non valide
 | `OPENCLAW_GIT_DIR=<path>`          | Répertoire de checkout |
 | `OPENCLAW_NO_ONBOARD=1`            | Ignorer l'onboarding   |
 | `OPENCLAW_GIT_UPDATE=0`            | Désactiver git pull    |
-| `OPENCLAW_DRY_RUN=1`               | Mode Dry run           |
+| `OPENCLAW_DRY_RUN=1`               | Mode simulation        |
 
   </Accordion>
 </AccordionGroup>
 
 <Note>
   Si `-InstallMethod git` est utilisé et que Git est manquant, le script s'arrête et affiche le lien
-  Git for Windows.
+  Git pour Windows.
 </Note>
 
 ---
 
 ## CI et automatisation
 
-Utilisez des indicateurs/variables d'environnement non interactifs pour des exécutions prévisibles.
+Utilisez des indicateurs/env vars non interactifs pour des exécutions prévisibles.
 
 <Tabs>
   <Tab title="install.sh (non-interactive npm)">
@@ -350,17 +350,17 @@ Utilisez des indicateurs/variables d'environnement non interactifs pour des exé
 
 <AccordionGroup>
   <Accordion title="Pourquoi Git est-il requis ?">
-    Git est requis pour la méthode d'installation `git`. Pour les installations `npm`, Git est tout de même vérifié/installé pour éviter les échecs `spawn git ENOENT` lorsque les dépendances utilisent des URL git.
+    Git est requis pour la méthode d'installation `git`. Pour les installations `npm`, Git est tout de même vérifié/installé pour éviter les échecs de `spawn git ENOENT` lorsque les dépendances utilisent des URL git.
   </Accordion>
 
-<Accordion title="Pourquoi npm renvoie-t-il EACCES sur Linux ?">
-  Certaines configurations Linux définissent le préfixe global npm sur des chemins détenus par root.
+<Accordion title="Pourquoi npm rencontre-t-il EACCES sur Linux ?">
+  Certains paramétrages Linux pointent le préfixe global npm vers des chemins détenus par root.
   `install.sh` peut changer le préfixe vers `~/.npm-global` et ajouter des exports PATH aux fichiers
   rc du shell (lorsque ces fichiers existent).
 </Accordion>
 
   <Accordion title="problèmes sharp/libvips">
-    Les scripts définissent `SHARP_IGNORE_GLOBAL_LIBVIPS=1` par défaut pour éviter que sharp ne soit construit avec le libvips du système. Pour outrepasser :
+    Les scripts définissent `SHARP_IGNORE_GLOBAL_LIBVIPS=1` par défaut pour éviter que sharp ne se compile contre la libvips du système. Pour outrepasser :
 
     ```bash
     SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
@@ -368,17 +368,17 @@ Utilisez des indicateurs/variables d'environnement non interactifs pour des exé
 
   </Accordion>
 
-<Accordion title="Windows : « erreur npm spawn git / ENOENT »">
-  Installez Git pour Windows, rouvrez PowerShell, relancez le programme d'installation.
+<Accordion title="Windows : « npm error spawn git / ENOENT »">
+  Installez Git pour Windows, rouvrez PowerShell, relancez l'installateur.
 </Accordion>
 
-<Accordion title="Windows : « openclaw n'est pas reconnu »">
+<Accordion title="Windows : « openclaw is not recognized »">
   Exécutez `npm config get prefix` et ajoutez ce répertoire à votre PATH utilisateur (pas de suffixe
   `\bin` nécessaire sur Windows), puis rouvrez PowerShell.
 </Accordion>
 
   <Accordion title="Windows : comment obtenir une sortie détaillée de l'installateur">
-    `install.ps1` n'expose pas actuellement de commutateur `-Verbose`.
+    `install.ps1` n'expose actuellement pas de commutateur `-Verbose`.
     Utilisez le traçage PowerShell pour les diagnostics au niveau du script :
 
     ```powershell

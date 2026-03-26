@@ -1,36 +1,38 @@
 ---
 summary: "Liens organisés vers la documentation OpenClaw la plus utilisée."
 read_when:
-  - Vous souhaitez accéder rapidement aux pages clés de la documentation
+  - You want quick access to key docs pages
 title: "Docs directory"
 ---
 
+# Annuaire de la documentation
+
 <Note>
-  Cette page est un index organisé. Si vous êtes nouveau, commencez par [Getting
-  Started](/fr/start/getting-started). Pour une carte complète de la documentation, voir [Docs
-  hubs](/fr/start/hubs).
+  Cette page est un index sélectionné. Si vous êtes novice, commencez par [Premiers
+  pas](/fr/start/getting-started). Pour une carte complète de la documentation, consultez [Hubs de
+  documentation](/fr/start/hubs).
 </Note>
 
 ## Commencer ici
 
-- [Docs hubs (toutes les pages liées)](/fr/start/hubs)
+- [Hubs de documentation (toutes les pages liées)](/fr/start/hubs)
 - [Aide](/fr/help)
 - [Configuration](/fr/gateway/configuration)
 - [Exemples de configuration](/fr/gateway/configuration-examples)
 - [Commandes slash](/fr/tools/slash-commands)
 - [Routage multi-agent](/fr/concepts/multi-agent)
 - [Mise à jour et retour en arrière](/fr/install/updating)
-- [Appariement (DM et nœuds)](/fr/channels/pairing)
-- [Mode Nix](/fr/install/nix)
+- [Jumelage (DM et nœuds)](/fr/channels/pairing)
+- [mode Nix](/fr/install/nix)
 - [Configuration de l'assistant OpenClaw](/fr/start/openclaw)
 - [Skills](/fr/tools/skills)
 - [Configuration des Skills](/fr/tools/skills-config)
 - [Modèles d'espace de travail](/fr/reference/templates/AGENTS)
 - [Adaptateurs RPC](/fr/reference/rpc)
-- [Guide de fonctionnement du Gateway](/fr/gateway)
+- [Manuel d'exécution Gateway](/fr/gateway)
 - [Nœuds (iOS et Android)](/fr/nodes)
 - [Interfaces Web (UI de contrôle)](/fr/web)
-- [Discovery et transports](/fr/gateway/discovery)
+- [Découverte et transports](/fr/gateway/discovery)
 - [Accès à distance](/fr/gateway/remote)
 
 ## Fournisseurs et UX
@@ -41,11 +43,11 @@ title: "Docs directory"
 - [Discord](/fr/channels/discord)
 - [Mattermost (plugin)](/fr/channels/mattermost)
 - [BlueBubbles (iMessage)](/fr/channels/bluebubbles)
-- [iMessage (ancien)](/fr/channels/imessage)
+- [iMessage (hérité)](/fr/channels/imessage)
 - [Groupes](/fr/channels/groups)
 - [Messages de groupe WhatsApp](/fr/channels/group-messages)
-- [Images médias](/fr/nodes/images)
-- [Audio médias](/fr/nodes/audio)
+- [Images multimédia](/fr/nodes/images)
+- [Audio multimédia](/fr/nodes/audio)
 
 ## Companion apps
 

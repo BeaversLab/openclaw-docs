@@ -1,9 +1,9 @@
 ---
-summary: "CLI 参考，用于 `openclaw setup`（初始化配置 + 工作区）"
+summary: "CLI 参考 for `openclaw setup` (初始化配置 + 工作区)"
 read_when:
-  - 您正在进行首次运行设置，而不进行完整的 CLI 新手引导
-  - 您想要设置默认工作区路径
-title: "setup"
+  - You’re doing first-run setup without full CLI onboarding
+  - You want to set the default workspace path
+title: "安装"
 ---
 
 # `openclaw setup`

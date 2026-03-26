@@ -1,8 +1,8 @@
 ---
-summary: "Canal DM Nostr via des messages chiffrés NIP-04"
+summary: "Canal DM Nostr via messages chiffrés NIP-04"
 read_when:
-  - Vous souhaitez qu'OpenClaw reçoive des DMs via Nostr
-  - Vous configurez la messagerie décentralisée
+  - You want OpenClaw to receive DMs via Nostr
+  - You're setting up decentralized messaging
 title: "Nostr"
 ---
 
@@ -16,15 +16,15 @@ Nostr est un protocole décentralisé pour les réseaux sociaux. Ce canal permet
 
 ### Onboarding (recommandé)
 
-- L'intégration (`openclaw onboard`) et `openclaw channels add` listent les plugins de canal optionnels.
+- Onboarding (`openclaw onboard`) et `openclaw channels add` listent les plugins de canal optionnels.
 - Sélectionner Nostr vous invite à installer le plugin à la demande.
 
 Paramètres d'installation par défaut :
 
-- **Canal Dev + git checkout disponible :** utilise le chemin local du plugin.
+- **Canal Dev + git checkout disponible :** utilise le chemin du plugin local.
 - **Stable/Bêta :** télécharge depuis npm.
 
-Vous pouvez toujours modifier le choix dans l'invite.
+Vous pouvez toujours remplacer le choix dans l'invite.
 
 ### Installation manuelle
 
@@ -60,13 +60,13 @@ nak key generate
 
 2. Ajouter à la configuration :
 
-```json
+```json5
 {
-  "channels": {
-    "nostr": {
-      "privateKey": "${NOSTR_PRIVATE_KEY}"
-    }
-  }
+  channels: {
+    nostr: {
+      privateKey: "${NOSTR_PRIVATE_KEY}",
+    },
+  },
 }
 ```
 
@@ -76,19 +76,19 @@ nak key generate
 export NOSTR_PRIVATE_KEY="nsec1..."
 ```
 
-4. Redémarrez la passerelle.
+4. Redémarrez le Gateway.
 
 ## Référence de configuration
 
-| Clé          | Type     | Par défaut                                  | Description                            |
-| ------------ | -------- | ------------------------------------------- | -------------------------------------- |
-| `privateKey` | string   | requis                                      | Clé privée au format `nsec` ou hex     |
-| `relays`     | string[] | `['wss://relay.damus.io', 'wss://nos.lol']` | URLs de relais (WebSocket)             |
-| `dmPolicy`   | string   | `pairing`                                   | Stratégie d'accès DM                   |
-| `allowFrom`  | string[] | `[]`                                        | Clés publiques d'expéditeur autorisées |
-| `enabled`    | boolean  | `true`                                      | Activer/désactiver le canal            |
-| `name`       | string   | -                                           | Nom d'affichage                        |
-| `profile`    | object   | -                                           | Métadonnées de profil NIP-01           |
+| Clé          | Type     | Par défaut                                  | Description                                |
+| ------------ | -------- | ------------------------------------------- | ------------------------------------------ |
+| `privateKey` | string   | requis                                      | Clé privée au format `nsec` ou hexadécimal |
+| `relays`     | string[] | `['wss://relay.damus.io', 'wss://nos.lol']` | URLs de relais (WebSocket)                 |
+| `dmPolicy`   | string   | `pairing`                                   | Politique d'accès DM                       |
+| `allowFrom`  | string[] | `[]`                                        | Clés publiques d'expéditeurs autorisées    |
+| `enabled`    | boolean  | `true`                                      | Activer/désactiver le canal                |
+| `name`       | string   | -                                           | Nom d'affichage                            |
+| `profile`    | object   | -                                           | Métadonnées de profil NIP-01               |
 
 ## Métadonnées du profil
 
@@ -96,51 +96,51 @@ Les données du profil sont publiées en tant qu'événement NIP-01 `kind:0`. Vo
 
 Exemple :
 
-```json
+```json5
 {
-  "channels": {
-    "nostr": {
-      "privateKey": "${NOSTR_PRIVATE_KEY}",
-      "profile": {
-        "name": "openclaw",
-        "displayName": "OpenClaw",
-        "about": "Personal assistant DM bot",
-        "picture": "https://example.com/avatar.png",
-        "banner": "https://example.com/banner.png",
-        "website": "https://example.com",
-        "nip05": "openclaw@example.com",
-        "lud16": "openclaw@example.com"
-      }
-    }
-  }
+  channels: {
+    nostr: {
+      privateKey: "${NOSTR_PRIVATE_KEY}",
+      profile: {
+        name: "openclaw",
+        displayName: "OpenClaw",
+        about: "Personal assistant DM bot",
+        picture: "https://example.com/avatar.png",
+        banner: "https://example.com/banner.png",
+        website: "https://example.com",
+        nip05: "openclaw@example.com",
+        lud16: "openclaw@example.com",
+      },
+    },
+  },
 }
 ```
 
 Notes :
 
-- Les URL de profil doivent utiliser `https://`.
-- L'importation depuis les relais fusionne les champs et préserve les substitutions locales.
+- Les URLs de profil doivent utiliser `https://`.
+- L'importation depuis les relais fusionne les champs et conserve les substitutions locales.
 
 ## Contrôle d'accès
 
-### Stratégies DM
+### Politiques DM
 
 - **pairing** (par défaut) : les expéditeurs inconnus reçoivent un code d'appariement.
-- **allowlist** : seules les clés publiques dans `allowFrom` peuvent envoyer des DM.
-- **open** : DM entrants publics (nécessite `allowFrom: ["*"]`).
-- **disabled** : ignorer les DM entrants.
+- **allowlist** : seules les clés publiques dans `allowFrom` peuvent envoyer des DMs.
+- **open** : DMs entrants publics (nécessite `allowFrom: ["*"]`).
+- **disabled** : ignorer les DMs entrants.
 
-### Exemple de liste d'autorisation
+### Exemple de liste blanche
 
-```json
+```json5
 {
-  "channels": {
-    "nostr": {
-      "privateKey": "${NOSTR_PRIVATE_KEY}",
-      "dmPolicy": "allowlist",
-      "allowFrom": ["npub1abc...", "npub1xyz..."]
-    }
-  }
+  channels: {
+    nostr: {
+      privateKey: "${NOSTR_PRIVATE_KEY}",
+      dmPolicy: "allowlist",
+      allowFrom: ["npub1abc...", "npub1xyz..."],
+    },
+  },
 }
 ```
 
@@ -148,21 +148,21 @@ Notes :
 
 Formats acceptés :
 
-- **Clé privée :** `nsec...` ou hexadécimal de 64 caractères
+- **Clé privée :** `nsec...` ou hexadécimal sur 64 caractères
 - **Clés publiques (`allowFrom`) :** `npub...` ou hexadécimal
 
 ## Relais
 
 Par défaut : `relay.damus.io` et `nos.lol`.
 
-```json
+```json5
 {
-  "channels": {
-    "nostr": {
-      "privateKey": "${NOSTR_PRIVATE_KEY}",
-      "relays": ["wss://relay.damus.io", "wss://relay.primal.net", "wss://nostr.wine"]
-    }
-  }
+  channels: {
+    nostr: {
+      privateKey: "${NOSTR_PRIVATE_KEY}",
+      relays: ["wss://relay.damus.io", "wss://relay.primal.net", "wss://nostr.wine"],
+    },
+  },
 }
 ```
 
@@ -178,33 +178,33 @@ Conseils :
 | NIP    | Statut         | Description                                        |
 | ------ | -------------- | -------------------------------------------------- |
 | NIP-01 | Pris en charge | Format d'événement de base + métadonnées de profil |
-| NIP-04 | Pris en charge | DM chiffrés (`kind:4`)                             |
-| NIP-17 | Prévu          | DM emballés-cadeau (Gift-wrapped)                  |
+| NIP-04 | Pris en charge | DMs chiffrés (`kind:4`)                            |
+| NIP-17 | Prévu          | DMs enveloppés (gift-wrapped)                      |
 | NIP-44 | Prévu          | Chiffrement versionné                              |
 
 ## Tests
 
-### Relais local
+### Relai local
 
 ```bash
 # Start strfry
 docker run -p 7777:7777 ghcr.io/hoytech/strfry
 ```
 
-```json
+```json5
 {
-  "channels": {
-    "nostr": {
-      "privateKey": "${NOSTR_PRIVATE_KEY}",
-      "relays": ["ws://localhost:7777"]
-    }
-  }
+  channels: {
+    nostr: {
+      privateKey: "${NOSTR_PRIVATE_KEY}",
+      relays: ["ws://localhost:7777"],
+    },
+  },
 }
 ```
 
 ### Test manuel
 
-1. Notez la clé publique du bot (npub) à partir des journaux (logs).
+1. Notez la clé publique du bot (npub) dans les journaux (logs).
 2. Ouvrez un client Nostr (Damus, Amethyst, etc.).
 3. Envoyez un DM à la clé publique du bot.
 4. Vérifiez la réponse.
@@ -214,19 +214,19 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 ### Non-réception de messages
 
 - Vérifiez que la clé privée est valide.
-- Assurez-vous que les URL des relais sont accessibles et utilisez `wss://` (ou `ws://` pour le local).
+- Assurez-vous que les URL des relais sont accessibles et utilisent `wss://` (ou `ws://` en local).
 - Confirmez que `enabled` n'est pas `false`.
-- Vérifiez les journaux du Gateway pour les erreurs de connexion au relais.
+- Consultez les journaux du Gateway pour les erreurs de connexion aux relais.
 
-### Pas d'envoi de réponses
+### Absence d'envoi de réponses
 
-- Vérifiez que le relais accepte les écritures.
+- Vérifiez que le relai accepte les écritures.
 - Vérifiez la connectivité sortante.
 - Surveillez les limites de taux des relais.
 
 ### Réponses en double
 
-- Attendu lors de l'utilisation de plusieurs relais.
+- Comportement attendu lors de l'utilisation de plusieurs relais.
 - Les messages sont dédupliqués par ID d'événement ; seule la première livraison déclenche une réponse.
 
 ## Sécurité
@@ -237,7 +237,7 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ## Limitations (MVP)
 
-- Messages directs uniquement (pas de chat de groupe).
+- Messages directs uniquement (pas de discussions de groupe).
 - Pas de pièces jointes multimédias.
 - NIP-04 uniquement (NIP-17 gift-wrap prévu).
 

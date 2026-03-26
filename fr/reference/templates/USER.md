@@ -1,7 +1,7 @@
 ---
-summary: "Enregistrement du profil utilisateur"
+summary: "User profile record"
 read_when:
-  - Amorçage manuel d'un espace de travail
+  - Bootstrapping a workspace manually
 ---
 
 # USER.md - À propos de votre humain
@@ -16,11 +16,11 @@ _Apprenez à connaître la personne que vous aidez. Mettez à jour ces informati
 
 ## Contexte
 
-_(Que leur tient à cœur ? Sur quels projets travaillent-ils ? Qu'est-ce qui les agace ? Qu'est-ce qui les fait rire ? Construisez cela au fil du temps._)
+_(À quoi tiennent-ils ? Sur quels projets travaillent-ils ? Qu'est-ce qui les agace ? Qu'est-ce qui les fait rire ? Construisez ceci au fil du temps._)
 
 ---
 
-Plus vous en savez, mieux vous pouvez aider. Mais n'oubliez pas — vous apprenez à connaître une personne, vous ne constituez pas un dossier. Respectez la différence.
+Plus vous en savez, mieux vous pourrez aider. Mais n'oubliez pas — vous apprenez à connaître une personne, vous ne constituez pas un dossier. Respectez la différence.
 
 import fr from "/components/footer/fr.mdx";
 

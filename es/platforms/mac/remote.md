@@ -1,25 +1,25 @@
 ---
-summary: "flujo de la app de macOS para controlar una puerta de enlace OpenClaw remota a través de SSH"
+summary: "Flujo de la aplicación macOS para controlar una puerta de enlace OpenClaw remota a través de SSH"
 read_when:
-  - Configuración o depuración del control remoto de Mac
+  - Setting up or debugging remote mac control
 title: "Control remoto"
 ---
 
 # OpenClaw remoto (macOS ⇄ host remoto)
 
-Este flujo permite que la aplicación de macOS actúe como un control remoto completo para una puerta de enlace OpenClaw que se ejecuta en otro host (escritorio/servidor). Es la función **Remoto por SSH** (ejecución remota) de la aplicación. Todas las funciones: comprobaciones de estado, reenvío de activación por voz y Web Chat, reutilizan la misma configuración SSH remota de _Configuración → General_.
+Este flujo permite que la aplicación macOS actúe como un control remoto completo para una puerta de enlace OpenClaw que se ejecuta en otro host (escritorio/servidor). Es la función de **control remoto por SSH** (ejecución remota) de la aplicación. Todas las funciones: comprobaciones de estado, reenvío de activación por voz y Chat Web: reutilizan la misma configuración SSH remota de _Configuración → General_.
 
 ## Modos
 
 - **Local (este Mac)**: Todo se ejecuta en el portátil. No hay SSH involucrado.
-- **Remoto por SSH (predeterminado)**: Los comandos de OpenClaw se ejecutan en el host remoto. La aplicación Mac abre una conexión SSH con `-o BatchMode` más su identidad/clave elegida y un reenvío de puerto local.
+- **Remoto por SSH (predeterminado)**: Los comandos de OpenClaw se ejecutan en el host remoto. La aplicación mac abre una conexión SSH con `-o BatchMode` más su identidad/clave elegida y un reenvío de puerto local.
 - **Remoto directo (ws/wss)**: Sin túnel SSH. La aplicación mac se conecta directamente a la URL de la puerta de enlace (por ejemplo, a través de Tailscale Serve o un proxy inverso HTTPS público).
 
 ## Transportes remotos
 
 El modo remoto admite dos transportes:
 
-- **Túnel SSH** (predeterminado): Utiliza `ssh -N -L ...` para reenviar el puerto de la puerta de enlace a localhost. La puerta de enlace verá la IP del nodo como `127.0.0.1` porque el túnel es de bucle local (loopback).
+- **Túnel SSH** (predeterminado): Usa `ssh -N -L ...` para reenviar el puerto de la puerta de enlace a localhost. La puerta de enlace verá la IP del nodo como `127.0.0.1` porque el túnel es de retorno (loopback).
 - **Directo (ws/wss)**: Se conecta directamente a la URL de la puerta de enlace. La puerta de enlace ve la IP real del cliente.
 
 ## Requisitos previos en el host remoto
@@ -35,11 +35,11 @@ El modo remoto admite dos transportes:
    - **Transporte**: **Túnel SSH** o **Directo (ws/wss)**.
    - **Destino SSH**: `user@host` (opcional `:port`).
      - Si la puerta de enlace está en la misma LAN y anuncia Bonjour, selecciónela de la lista descubierta para rellenar automáticamente este campo.
-   - **URL de la puerta de enlace** (solo directo): `wss://gateway.example.ts.net` (o `ws://...` para local/LAN).
+   - **URL de la puerta de enlace** (Solo directo): `wss://gateway.example.ts.net` (o `ws://...` para local/LAN).
    - **Archivo de identidad** (avanzado): ruta a su clave.
    - **Raíz del proyecto** (avanzado): ruta de checkout remoto utilizada para los comandos.
-   - **Ruta de la CLI** (avanzado): ruta opcional a un punto de entrada/binario `openclaw` ejecutable (se rellena automáticamente cuando se anuncia).
-3. Pulse **Probar remoto**. El éxito indica que el `openclaw status --json` remoto se ejecuta correctamente. Los fallos suelen significar problemas de PATH/CLI; la salida 127 significa que no se encuentra la CLI de forma remota.
+   - **Ruta de CLI** (avanzado): ruta opcional a un punto de entrada/binario ejecutable `openclaw` (se rellena automáticamente cuando se anuncia).
+3. Pulse **Probar remoto**. El éxito indica que el `openclaw status --json` remoto se ejecuta correctamente. Los fallos suelen significar problemas de PATH/CLI; exit 127 significa que la CLI no se encontró de forma remota.
 4. Los controles de estado y el Web Chat ahora se ejecutarán automáticamente a través de este túnel SSH.
 
 ## Web Chat
@@ -56,7 +56,7 @@ El modo remoto admite dos transportes:
 ## Notas de seguridad
 
 - Prefiera los enlaces de loopback en el host remoto y conéctese a través de SSH o Tailscale.
-- El túnel SSH utiliza una verificación estricta de clave de host; confíe primero en la clave del host para que exista en `~/.ssh/known_hosts`.
+- El túnel SSH utiliza verificación estricta de clave de host; confíe primero en la clave del host para que exista en `~/.ssh/known_hosts`.
 - Si vincula la Pasarela a una interfaz que no sea de loopback, requiera autenticación por token/contraseña.
 - Consulte [Seguridad](/es/gateway/security) y [Tailscale](/es/gateway/tailscale).
 
@@ -67,8 +67,8 @@ El modo remoto admite dos transportes:
 
 ## Solución de problemas
 
-- **exit 127 / no encontrado**: `openclaw` no está en PATH para shells no interactivos. Agréguelo a `/etc/paths`, su rc de shell, o cree un enlace simbólico en `/usr/local/bin`/`/opt/homebrew/bin`.
-- **Health probe failed**: verifique la accesibilidad SSH, PATH, y que Baileys haya iniciado sesión (`openclaw status --json`).
+- **exit 127 / not found**: `openclaw` no está en PATH para shells que no son de inicio de sesión. Agréguelo a `/etc/paths`, su shell rc, o cree un enlace simbólico en `/usr/local/bin`/`/opt/homebrew/bin`.
+- **Health probe failed**: verifique la accesibilidad SSH, PATH y que Baileys haya iniciado sesión (`openclaw status --json`).
 - **Web Chat atascado**: confirme que la pasarela se está ejecutando en el host remoto y que el puerto reenviado coincide con el puerto WS de la pasarela; la interfaz de usuario requiere una conexión WS saludable.
 - **Node IP shows 127.0.0.1**: esperado con el túnel SSH. Cambie **Transport** a **Direct (ws/wss)** si desea que la puerta de enlace vea la IP del cliente real.
 - **Voice Wake**: las frases de activación se reenvían automáticamente en modo remoto; no se necesita un reenviador separado.

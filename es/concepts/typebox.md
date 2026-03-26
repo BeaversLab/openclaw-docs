@@ -1,7 +1,7 @@
 ---
-summary: "Esquemas TypeBox como única fuente de verdad para el protocolo de la puerta de enlace"
+summary: "Esquemas TypeBox como la única fuente de verdad para el protocolo de la puerta de enlace"
 read_when:
-  - Actualizar esquemas de protocolo o generación de código
+  - Updating protocol schemas or codegen
 title: "TypeBox"
 ---
 
@@ -9,12 +9,9 @@ title: "TypeBox"
 
 Última actualización: 2026-01-10
 
-TypeBox es una biblioteca de esquemas con prioridad para TypeScript. La usamos para definir el **protocolo
-de WebSocket de la puerta de enlace** (protocolo de enlace, solicitud/respuesta, eventos del servidor). Esos esquemas
-impulsan la **validación en tiempo de ejecución**, la **exportación de JSON Schema** y la **generación de código Swift** para
-la aplicación macOS. Una única fuente de verdad; todo lo demás se genera.
+TypeBox es una biblioteca de esquemas con prioridad para TypeScript. La usamos para definir el **protocolo WebSocket de la puerta de enlace** (protocolo de enlace, solicitud/respuesta, eventos del servidor). Esos esquemas impulsan la **validación en tiempo de ejecución**, la **exportación de JSON Schema** y el **código generado para Swift** (Swift codegen) para la aplicación de macOS. Una única fuente de verdad; todo lo demás se genera.
 
-Si desea el contexto de nivel superior del protocolo, comience con
+Si deseas el contexto del protocolo de alto nivel, comienza con
 [Arquitectura de la puerta de enlace](/es/concepts/architecture).
 
 ## Modelo mental (30 segundos)
@@ -25,8 +22,8 @@ Cada mensaje de WS de la puerta de enlace es uno de tres tramas:
 - **Respuesta**: `{ type: "res", id, ok, payload | error }`
 - **Evento**: `{ type: "event", event, payload, seq?, stateVersion? }`
 
-El primer fotograma **debe** ser una solicitud `connect`. Después de eso, los clientes pueden llamar
-a métodos (p. ej. `health`, `send`, `chat.send`) y suscribirse a eventos (p. ej.
+La primera trama **debe** ser una solicitud `connect`. Después de eso, los clientes pueden llamar
+a métodos (p. ej., `health`, `send`, `chat.send`) y suscribirse a eventos (p. ej.
 `presence`, `tick`, `agent`).
 
 Flujo de conexión (mínimo):
@@ -44,22 +41,22 @@ Métodos + eventos comunes:
 
 | Categoría  | Ejemplos                                                  | Notas                                              |
 | ---------- | --------------------------------------------------------- | -------------------------------------------------- |
-| Principal  | `connect`, `health`, `status`                             | `connect` debe ser el primero                      |
+| Principal  | `connect`, `health`, `status`                             | `connect` debe ser primero                         |
 | Mensajería | `send`, `poll`, `agent`, `agent.wait`                     | los efectos secundarios necesitan `idempotencyKey` |
 | Chat       | `chat.history`, `chat.send`, `chat.abort`, `chat.inject`  | WebChat utiliza estos                              |
 | Sesiones   | `sessions.list`, `sessions.patch`, `sessions.delete`      | administración de sesiones                         |
 | Nodos      | `node.list`, `node.invoke`, `node.pair.*`                 | WS de la puerta de enlace + acciones de nodo       |
 | Eventos    | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | envío del servidor                                 |
 
-La lista autorizada se encuentra en `src/gateway/server.ts` (`METHODS`, `EVENTS`).
+La lista autorizada vive en `src/gateway/server.ts` (`METHODS`, `EVENTS`).
 
 ## Dónde viven los esquemas
 
 - Fuente: `src/gateway/protocol/schema.ts`
-- Validadores en tiempo de ejecución (AJV): `src/gateway/protocol/index.ts`
-- Protocolo de enlace del servidor + envío de métodos: `src/gateway/server.ts`
-- Cliente de Node: `src/gateway/client.ts`
-- Esquema JSON generado: `dist/protocol.schema.json`
+- Validadores de tiempo de ejecución (AJV): `src/gateway/protocol/index.ts`
+- Protocolo de enlace del servidor + despacho de métodos: `src/gateway/server.ts`
+- Cliente Node: `src/gateway/client.ts`
+- JSON Schema generado: `dist/protocol.schema.json`
 - Modelos Swift generados: `apps/macos/Sources/OpenClawProtocol/GatewayModels.swift`
 
 ## Canalización actual
@@ -75,9 +72,9 @@ La lista autorizada se encuentra en `src/gateway/server.ts` (`METHODS`, `EVENTS`
 
 - **Lado del servidor**: cada trama entrante se valida con AJV. El protocolo de enlace solo
   acepta una solicitud `connect` cuyos parámetros coincidan con `ConnectParams`.
-- **Lado del cliente**: el cliente JS valida los marcos de eventos y respuestas antes
-  de usarlos.
-- **Superficie del método**: Gateway anuncia los `methods` y
+- **Lado del cliente**: el cliente JS valida las tramas de eventos y respuestas antes
+  de usarlas.
+- **Superficie de métodos**: la puerta de enlace anuncia los `methods` y
   `events` admitidos en `hello-ok`.
 
 ## Tramas de ejemplo
@@ -185,13 +182,13 @@ ws.on("message", (data) => {
 });
 ```
 
-## Ejemplo práctico: agregar un método de extremo a extremo
+## Ejemplo práctico: añadir un método de extremo a extremo
 
-Ejemplo: agregar una nueva solicitud `system.echo` que devuelva `{ ok: true, text }`.
+Ejemplo: añadir una nueva solicitud `system.echo` que devuelva `{ ok: true, text }`.
 
 1. **Esquema (fuente de verdad)**
 
-Agregar a `src/gateway/protocol/schema.ts`:
+Añadir a `src/gateway/protocol/schema.ts`:
 
 ```ts
 export const SystemEchoParamsSchema = Type.Object(
@@ -205,7 +202,7 @@ export const SystemEchoResultSchema = Type.Object(
 );
 ```
 
-Agregar ambos a `ProtocolSchemas` y exportar tipos:
+Añadir ambos a `ProtocolSchemas` y exportar los tipos:
 
 ```ts
   SystemEchoParams: SystemEchoParamsSchema,
@@ -227,7 +224,7 @@ export const validateSystemEchoParams = ajv.compile<SystemEchoParams>(SystemEcho
 
 3. **Comportamiento del servidor**
 
-Agregar un controlador en `src/gateway/server-methods/system.ts`:
+Añadir un controlador en `src/gateway/server-methods/system.ts`:
 
 ```ts
 export const systemHandlers: GatewayRequestHandlers = {
@@ -238,7 +235,7 @@ export const systemHandlers: GatewayRequestHandlers = {
 };
 ```
 
-Regístrelo en `src/gateway/server-methods.ts` (ya fusiona `systemHandlers`),
+Regístrelo en `src/gateway/server-methods.ts` (ya combina `systemHandlers`),
 luego agregue `"system.echo"` a `METHODS` en `src/gateway/server.ts`.
 
 4. **Regenerar**
@@ -249,15 +246,15 @@ pnpm protocol:check
 
 5. **Pruebas + documentación**
 
-Agregar una prueba de servidor en `src/gateway/server.*.test.ts` y anotar el método en los documentos.
+Agregue una prueba de servidor en `src/gateway/server.*.test.ts` y note el método en la documentación.
 
 ## Comportamiento de la generación de código Swift
 
 El generador Swift emite:
 
-- enum `GatewayFrame` con `req`, `res`, `event` y `unknown` casos
+- Un enum `GatewayFrame` con casos `req`, `res`, `event` y `unknown`
 - Structs/enums de carga útil fuertemente tipados
-- valores `ErrorCode` y `GATEWAY_PROTOCOL_VERSION`
+- Valores `ErrorCode` y `GATEWAY_PROTOCOL_VERSION`
 
 Los tipos de trama desconocidos se preservan como cargas útiles sin procesar para la compatibilidad futura.
 
@@ -270,17 +267,17 @@ Los tipos de trama desconocidos se preservan como cargas útiles sin procesar pa
 ## Patrones y convenciones de esquemas
 
 - La mayoría de los objetos usan `additionalProperties: false` para cargas útiles estrictas.
-- `NonEmptyString` es el valor predeterminado para ID y nombres de métodos/eventos.
-- El `GatewayFrame` de nivel superior usa un **discriminador** en `type`.
+- `NonEmptyString` es el valor predeterminado para los ID y nombres de métodos/eventos.
+- El `GatewayFrame` de nivel superior utiliza un **discriminador** en `type`.
 - Los métodos con efectos secundarios generalmente requieren un `idempotencyKey` en los parámetros
   (ejemplo: `send`, `poll`, `agent`, `chat.send`).
-- `agent` acepta `internalEvents` opcionales para el contexto de orquestación generado en tiempo de ejecución
-  (por ejemplo, entrega de finalización de tareas de subagente/cron); trátelo como una superficie de API interna.
+- `agent` acepta una `internalEvents` opcional para el contexto de orquestación generado en tiempo de ejecución
+  (por ejemplo, entrega de finalización de tareas de subagente/cron); trate esto como una superficie de API interna.
 
 ## JSON de esquema en vivo
 
-El esquema JSON generado está en el repositorio en `dist/protocol.schema.json`. El
-archivo crudo publicado suele estar disponible en:
+El JSON Schema generado está en el repositorio en `dist/protocol.schema.json`. El
+archivo sin procesar publicado generalmente está disponible en:
 
 - [https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json](https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json)
 
