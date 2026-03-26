@@ -1,54 +1,70 @@
 ---
-summary: "Aperçu des options et des flux d'onboarding OpenClaw"
+summary: "Aperçu des options et flux d'onboarding OpenClaw"
 read_when:
   - Choosing an onboarding path
   - Setting up a new environment
-title: "Onboarding Overview"
-sidebarTitle: "Onboarding Overview"
+title: "Aperçu de l'onboarding"
+sidebarTitle: "Aperçu de l'onboarding"
 ---
 
 # Aperçu de l'onboarding
 
-OpenClaw supports multiple onboarding paths depending on where the Gateway runs
-and how you prefer to configure providers.
+OpenClaw a deux parcours d'onboarding. Les deux configurent l'auth, le Gateway et
+les canaux optionnels — ils diffèrent simplement par la façon dont vous interagissez avec la configuration.
 
-## Choisissez votre parcours d'onboarding
+## Quel parcours dois-je utiliser ?
 
-- **CLI onboarding** pour macOS, Linux et Windows (via WSL2).
-- **Application macOS** pour une première exécution guidée sur Mac Apple silicon ou Intel.
+|                    | CLI onboarding                                                | macOS app onboarding                  |
+| ------------------ | ------------------------------------------------------------- | ------------------------------------- |
+| **Plateformes**    | macOS, Linux, Windows (natif ou WSL2)                         | macOS uniquement                      |
+| **Interface**      | Assistant terminal                                            | Interface guidée dans l'application   |
+| **Idéal pour**     | Serveurs, sans interface graphique (headless), contrôle total | Mac de bureau, configuration visuelle |
+| **Automatisation** | `--non-interactive` pour les scripts                          | Manuel uniquement                     |
+| **Commande**       | `openclaw onboard`                                            | Lancer l'application                  |
+
+La plupart des utilisateurs devraient commencer par **l'onboarding CLI** — cela fonctionne partout et vous
+offre le plus de contrôle.
+
+## Ce que l'onboarding configure
+
+Quel que soit le parcours que vous choisissez, l'onboarding configure :
+
+1. **Fournisseur de modèle et auth** — clé API, OAuth, ou jeton de configuration pour votre fournisseur choisi
+2. **Espace de travail** — répertoire pour les fichiers de l'agent, les modèles d'amorçage, et la mémoire
+3. **Gateway** — port, adresse de liaison, mode d'auth
+4. **Canaux** (optionnel) — WhatsApp, Telegram, Discord, et plus
+5. **Démon** (optionnel) — service en arrière-plan pour que le Gateway démarre automatiquement
 
 ## CLI onboarding
 
-Exécutez l'onboarding dans un terminal :
+Exécutez dans n'importe quel terminal :
 
 ```bash
 openclaw onboard
 ```
 
-Use CLI onboarding when you want full control of the Gateway, workspace,
-channels, and skills. Docs:
+Ajoutez `--install-daemon` pour également installer le service en arrière-plan en une seule étape.
 
-- [Onboarding (CLI)](/fr/start/wizard)
-- [`openclaw onboard` command](/fr/cli/onboard)
+Référence complète : [Onboarding (CLI)](/fr/start/wizard)
+Docs de la commande CLI : [`openclaw onboard`](/fr/cli/onboard)
 
-## Onboarding de l'application macOS
+## macOS app onboarding
 
-Utilisez l'application OpenClaw lorsque vous souhaitez une configuration entièrement guidée sur macOS. Documentation :
+Ouvrez l'application OpenClaw. L'assistant de premier démarrage vous guide à travers les mêmes étapes
+avec une interface visuelle.
 
-- [Onboarding (macOS App)](/fr/start/onboarding)
+Référence complète : [Onboarding (macOS App)](/fr/start/onboarding)
 
-## Provider personnalisé
+## Fournisseurs personnalisés ou non répertoriés
 
-If you need an endpoint that is not listed, including hosted providers that
-expose standard OpenAI or Anthropic APIs, choose **Custom Provider** in the
-CLI onboarding. You will be asked to:
+Si votre fournisseur n'est pas répertorié dans l'onboarding, choisissez **Fournisseur personnalisé** et
+entrez :
 
-- Choisir OpenAI-compatible, Anthropic-compatible ou **Inconnu** (détection automatique).
-- Entrer une URL de base et une clé API (si requis par le provider).
-- Fournir un ID de modèle et un alias facultatif.
-- Choisir un ID de point de terminaison afin que plusieurs points de terminaison personnalisés puissent coexister.
+- Mode de compatibilité API (compatible OpenAI, compatible Anthropic, ou détection automatique)
+- URL de base et clé API
+- ID du modèle et alias optionnel
 
-Pour les étapes détaillées, suivez la documentation d'onboarding CLI ci-dessus.
+Plusieurs points de terminaison personnalisés peuvent coexister — chacun obtient son propre ID de point de terminaison.
 
 import fr from "/components/footer/fr.mdx";
 

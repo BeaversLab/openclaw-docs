@@ -1,14 +1,14 @@
 ---
-summary: "`openclaw dashboard` 的 CLI 參考（開啟控制 UI）"
+summary: "`openclaw dashboard` (開啟控制 UI) 的 CLI 參考資料"
 read_when:
-  - 您想要使用目前的 token 開啟控制 UI
-  - 您想要在不啟動瀏覽器的情況下列印 URL
+  - You want to open the Control UI with your current token
+  - You want to print the URL without launching a browser
 title: "dashboard"
 ---
 
 # `openclaw dashboard`
 
-使用您目前的授權開啟控制 UI。
+使用您目前的認證開啟控制 UI。
 
 ```bash
 openclaw dashboard
@@ -17,9 +17,9 @@ openclaw dashboard --no-open
 
 備註：
 
-- `dashboard` 會盡可能解析已設定的 `gateway.auth.token` SecretRefs。
-- 對於由 SecretRef 管理的 token（無論已解析或未解析），`dashboard` 會列印/複製/開啟未包含 token 的 URL，以避免在終端機輸出、剪貼簿歷程或瀏覽器啟動引數中洩露外部機密。
-- 如果 `gateway.auth.token` 是由 SecretRef 管理但在此指令路徑中未解析，該指令會列印未包含 token 的 URL 並明確指出修復指引，而不會嵌入無效的 token 預留位置。
+- `dashboard` 會盡可能解析設定的 `gateway.auth.token` SecretRefs。
+- 對於由 SecretRef 管理的權杖 (已解析或未解析)，`dashboard` 會列印/複製/開啟非權杖化的 URL，以避免在終端機輸出、剪貼簿歷程或瀏覽器啟動引數中暴露外部機密。
+- 如果 `gateway.auth.token` 是由 SecretRef 管理，但在此指令路徑中未解析，該指令會列印非權杖化的 URL 和明確的修復指引，而不會嵌入無效的權杖預留位置。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

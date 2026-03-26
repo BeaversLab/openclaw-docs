@@ -1,5 +1,5 @@
 ---
-summary: "Expose an OpenAI-compatible /v1/chat/completions HTTP endpoint from the Gateway"
+summary: "Expose un point de terminaison HTTP /v1/chat/completions compatible OpenAI depuis le Gateway"
 read_when:
   - Integrating tools that expect OpenAI Chat Completions
 title: "OpenAI Chat Completions"
@@ -12,9 +12,9 @@ Le OpenClaw d'Gateway peut servir un petit point de terminaison de Chat Completi
 Ce point de terminaison est **désactivé par défaut**. Activez-le d'abord dans la configuration.
 
 - `POST /v1/chat/completions`
-- Same port as the Gateway (WS + HTTP multiplex): `http://<gateway-host>:<port>/v1/chat/completions`
+- Même port que le Gateway (multiplexage WS + HTTP) : `http://<gateway-host>:<port>/v1/chat/completions`
 
-Under the hood, requests are executed as a normal Gateway agent run (same codepath as `openclaw agent`), so routing/permissions/config match your Gateway.
+En interne, les requêtes sont exécutées en tant qu'exécution d'agent Gateway normale (même chemin de code que `openclaw agent`), donc le routage/les autorisations/la configuration correspondent à votre Gateway.
 
 ## Authentification
 
@@ -24,9 +24,9 @@ Utilise la configuration d'authentification du Gateway. Envoyez un jeton de port
 
 Notes :
 
-- When `gateway.auth.mode="token"`, use `gateway.auth.token` (or `OPENCLAW_GATEWAY_TOKEN`).
-- When `gateway.auth.mode="password"`, use `gateway.auth.password` (or `OPENCLAW_GATEWAY_PASSWORD`).
-- If `gateway.auth.rateLimit` is configured and too many auth failures occur, the endpoint returns `429` with `Retry-After`.
+- Quand `gateway.auth.mode="token"`, utilisez `gateway.auth.token` (ou `OPENCLAW_GATEWAY_TOKEN`).
+- Quand `gateway.auth.mode="password"`, utilisez `gateway.auth.password` (ou `OPENCLAW_GATEWAY_PASSWORD`).
+- Si `gateway.auth.rateLimit` est configuré et que trop d'échecs d'authentification se produisent, le point de terminaison renvoie `429` avec `Retry-After`.
 
 ## Limite de sécurité (important)
 
@@ -39,26 +39,26 @@ Traitez ce point de terminaison comme une surface d'**accès complet opérateur*
 - Si la stratégie de l'agent cible autorise les outils sensibles, ce point de terminaison peut les utiliser.
 - Gardez ce point de terminaison uniquement en boucle locale/tailnet/ingrès privé ; ne l'exposez pas directement à l'Internet public.
 
-See [Security](/fr/gateway/security) and [Remote access](/fr/gateway/remote).
+Voir [Sécurité](/fr/gateway/security) et [Accès à distance](/fr/gateway/remote).
 
 ## Choisir un agent
 
-No custom headers required: encode the agent id in the OpenAI `model` field:
+Aucun en-tête personnalisé requis : encodez l'identifiant de l'agent dans le champ OpenAI `model` :
 
-- `model: "openclaw:<agentId>"` (example: `"openclaw:main"`, `"openclaw:beta"`)
+- `model: "openclaw:<agentId>"` (exemple : `"openclaw:main"`, `"openclaw:beta"`)
 - `model: "agent:<agentId>"` (alias)
 
 Ou ciblez un agent OpenClaw spécifique via l'en-tête :
 
-- `x-openclaw-agent-id: <agentId>` (default: `main`)
+- `x-openclaw-agent-id: <agentId>` (par défaut : `main`)
 
 Avancé :
 
-- `x-openclaw-session-key: <sessionKey>` to fully control session routing.
+- `x-openclaw-session-key: <sessionKey>` pour contrôler entièrement le routage de session.
 
 ## Activation du point de terminaison
 
-Set `gateway.http.endpoints.chatCompletions.enabled` to `true`:
+Définissez `gateway.http.endpoints.chatCompletions.enabled` sur `true` :
 
 ```json5
 {
@@ -74,7 +74,7 @@ Set `gateway.http.endpoints.chatCompletions.enabled` to `true`:
 
 ## Désactivation du point de terminaison
 
-Set `gateway.http.endpoints.chatCompletions.enabled` to `false`:
+Définissez `gateway.http.endpoints.chatCompletions.enabled` sur `false` :
 
 ```json5
 {
@@ -92,15 +92,15 @@ Set `gateway.http.endpoints.chatCompletions.enabled` to `false`:
 
 Par défaut, le point de terminaison est **sans état par requête** (une nouvelle clé de session est générée à chaque appel).
 
-If the request includes an OpenAI `user` string, the Gateway derives a stable session key from it, so repeated calls can share an agent session.
+Si la requête inclut une chaîne OpenAI `user`, le Gateway en dérive une clé de session stable, permettant ainsi aux appels répétés de partager une session d'agent.
 
 ## Streaming (SSE)
 
-Set `stream: true` to receive Server-Sent Events (SSE):
+Définissez `stream: true` pour recevoir les événements envoyés par le serveur (SSE) :
 
 - `Content-Type: text/event-stream`
-- Each event line is `data: <json>`
-- Stream ends with `data: [DONE]`
+- Chaque ligne d'événement est `data: <json>`
+- Le flux se termine par `data: [DONE]`
 
 ## Exemples
 

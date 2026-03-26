@@ -1,24 +1,24 @@
 ---
-summary: "針對特定除錯記錄的診斷旗標"
+summary: "用於目標偵錯日誌的診斷標誌"
 read_when:
-  - 您需要針對性的除錯記錄，而不提高全域記錄層級
-  - 您需要擷取子系統特定的記錄以供技術支援
-title: "診斷旗標"
+  - You need targeted debug logs without raising global logging levels
+  - You need to capture subsystem-specific logs for support
+title: "診斷標誌"
 ---
 
-# 診斷旗標
+# 診斷標誌
 
-診斷旗標讓您能夠啟用針對性的除錯記錄，而無需到處開啟詳細記錄。旗標屬於選用性功能，除非子系統進行檢查，否則不會產生任何效果。
+診斷標誌讓您能夠啟用目標偵錯日誌，而不需要在所有地方開啟詳細記錄。標誌屬於選用性質，除非子系統檢查它們，否則不會產生任何效果。
 
 ## 運作方式
 
-- 旗標是字串（不區分大小寫）。
-- 您可以透過設定檔或環境變數覆寫來啟用旗標。
+- 標誌是字串（不區分大小寫）。
+- 您可以在設定中或透過環境變數覆寫來啟用標誌。
 - 支援萬用字元：
   - `telegram.*` 符合 `telegram.http`
-  - `*` 啟用所有旗標
+  - `*` 啟用所有標誌
 
-## 透過設定檔啟用
+## 透過設定啟用
 
 ```json
 {
@@ -28,7 +28,7 @@ title: "診斷旗標"
 }
 ```
 
-多個旗標：
+多個標誌：
 
 ```json
 {
@@ -38,57 +38,57 @@ title: "診斷旗標"
 }
 ```
 
-變更旗標後請重新啟動閘道。
+變更標誌後請重新啟動閘道。
 
-## 環境變數覆寫（一次性）
+## 環境變數覆寫 (一次性)
 
 ```bash
 OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 ```
 
-停用所有旗標：
+停用所有標誌：
 
 ```bash
 OPENCLAW_DIAGNOSTICS=0
 ```
 
-## 記錄位置
+## 日誌位置
 
-旗標會將記錄輸出到標準診斷記錄檔中。預設情況下：
+標誌會將日誌輸出到標準診斷日誌檔中。預設為：
 
 ```
 /tmp/openclaw/openclaw-YYYY-MM-DD.log
 ```
 
-如果您設定了 `logging.file`，則會改用該路徑。記錄為 JSONL 格式（每行一個 JSON 物件）。根據 `logging.redactSensitive` 套用遮碼規則依然有效。
+如果您設定了 `logging.file`，請改用該路徑。日誌為 JSONL 格式（每行一個 JSON 物件）。根據 `logging.redactSensitive` 的遮蔽規則仍然適用。
 
-## 擷取記錄
+## 擷取日誌
 
-選取最新的記錄檔：
+選擇最新的日誌檔案：
 
 ```bash
 ls -t /tmp/openclaw/openclaw-*.log | head -n 1
 ```
 
-篩選 Telegram HTTP 診斷記錄：
+篩選 Telegram HTTP 診斷訊息：
 
 ```bash
 rg "telegram http error" /tmp/openclaw/openclaw-*.log
 ```
 
-或在重現問題時持續追蹤：
+或在重現問題時持續監看：
 
 ```bash
 tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
 ```
 
-對於遠端閘道，您也可以使用 `openclaw logs --follow`（請參閱 [/cli/logs](/zh-Hant/cli/logs)）。
+對於遠端閘道，您也可以使用 `openclaw logs --follow`（參閱 [/cli/logs](/zh-Hant/cli/logs)）。
 
 ## 備註
 
-- 如果 `logging.level` 的設定高於 `warn`，這些記錄可能會被隱藏。預設的 `info` 即可。
-- 將旗標保持啟用狀態是安全的；它們只會影響特定子系統的記錄量。
-- 使用 [/logging](/zh-Hant/logging) 來變更記錄目的地、層級和遮碼設定。
+- 如果 `logging.level` 設定高於 `warn`，這些日誌可能會被隱藏。預設的 `info` 即可。
+- 保持旗標啟用是安全的；它們只會影響特定子系統的日誌量。
+- 使用 [/logging](/zh-Hant/logging) 來變更日誌目的地、層級和遮蔽設定。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

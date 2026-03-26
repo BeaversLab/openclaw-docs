@@ -1,30 +1,30 @@
 ---
-summary: "Configuration de l'inférence Hugging Face (auth + sélection de modèle)"
+summary: "Configuration de Hugging Face Inference (auth + sélection du modèle)"
 read_when:
-  - Vous souhaitez utiliser l'inférence Hugging Face avec OpenClaw
-  - Vous avez besoin de la variable d'environnement du jeton HF ou du choix d'auth CLI
-title: "Hugging Face (Inference)"
+  - You want to use Hugging Face Inference with OpenClaw
+  - You need the HF token env var or CLI auth choice
+title: "Hugging Face (Inférence)"
 ---
 
-# Hugging Face (Inference)
+# Hugging Face (Inférence)
 
-[Les fournisseurs d'inférence Hugging Face](https://huggingface.co/docs/inference-providers) offrent des complérations de chat compatibles avec OpenAI via une seule API de routeur. Vous accédez à de nombreux modèles (DeepSeek, Llama, et plus) avec un seul jeton. OpenClaw utilise le **point de terminaison compatible avec OpenAI** (complérations de chat uniquement) ; pour le texte vers image, les embeddings, ou la parole, utilisez directement les [clients d'inférence HF](https://huggingface.co/docs/api-inference/quicktour).
+[Les fournisseurs d'inférence Hugging Face](https://huggingface.co/docs/inference-providers) proposent des complérations de chat compatibles avec OpenAI via une API de routeur unique. Vous avez accès à de nombreux modèles (DeepSeek, Llama, etc.) avec un seul jeton. OpenClaw utilise le **point de terminaison compatible API** (complétions de chat uniquement) ; pour la synthèse texte-image, les embeddings ou la parole, utilisez directement les [clients d'inférence HF](https://huggingface.co/docs/api-inference/quicktour).
 
 - Fournisseur : `huggingface`
-- Auth : `HUGGINGFACE_HUB_TOKEN` ou `HF_TOKEN` (jeton à granularité fine avec **Make calls to Inference Providers**)
-- API : compatible avec OpenAI (`https://router.huggingface.co/v1`)
+- Auth : `HUGGINGFACE_HUB_TOKEN` ou `HF_TOKEN` (jeton à granularité fine avec **Effectuer des appels aux fournisseurs d'inférence**)
+- API : compatible OpenAI (`https://router.huggingface.co/v1`)
 - Facturation : Jeton HF unique ; la [tarification](https://huggingface.co/docs/inference-providers/pricing) suit les tarifs des fournisseurs avec un palier gratuit.
 
-## Quick start
+## Démarrage rapide
 
-1. Créez un jeton à granularité fine sur [Hugging Face → Settings → Tokens](https://huggingface.co/settings/tokens/new?ownUserPermissions=inference.serverless.write&tokenType=fineGrained) avec l'autorisation **Make calls to Inference Providers**.
-2. Exécutez l'intégration et choisissez **Hugging Face** dans le menu déroulant des fournisseurs, puis entrez votre clé API lorsqu'on vous le demande :
+1. Créez un jeton à granularité fine dans [Hugging Face → Paramètres → Jetons](https://huggingface.co/settings/tokens/new?ownUserPermissions=inference.serverless.write&tokenType=fineGrained) avec l'autorisation **Effectuer des appels aux fournisseurs d'inférence**.
+2. Lancez l'intégration (onboarding) et choisissez **Hugging Face** dans la liste déroulante des fournisseurs, puis entrez votre clé API lorsqu'on vous le demande :
 
 ```bash
 openclaw onboard --auth-choice huggingface-api-key
 ```
 
-3. Dans le menu déroulant **Modèle Hugging Face par défaut**, choisissez le modèle que vous souhaitez (la liste est chargée depuis l'API d'inférence lorsque vous disposez d'un jeton valide ; sinon, une liste intégrée est affichée). Votre choix est enregistré en tant que modèle par défaut.
+3. Dans la liste déroulante **Modèle Hugging Face par défaut**, sélectionnez le modèle de votre choix (la liste est chargée à partir de l'API d'inférence API lorsque vous disposez d'un jeton valide ; sinon, une liste intégrée est affichée). Votre choix est enregistré en tant que modèle par défaut.
 4. Vous pouvez également définir ou modifier le modèle par défaut ultérieurement dans la configuration :
 
 ```json5
@@ -37,7 +37,7 @@ openclaw onboard --auth-choice huggingface-api-key
 }
 ```
 
-## Non-interactive example
+## Exemple non interactif
 
 ```bash
 openclaw onboard --non-interactive \
@@ -48,13 +48,13 @@ openclaw onboard --non-interactive \
 
 Cela définira `huggingface/deepseek-ai/DeepSeek-R1` comme modèle par défaut.
 
-## Environment note
+## Note sur l'environnement
 
-Si le Gateway s'exécute en tant que démon (launchd/systemd), assurez-vous que `HUGGINGFACE_HUB_TOKEN` ou `HF_TOKEN`
+Si la Gateway s'exécute en tant que démon (launchd/systemd), assurez-vous que `HUGGINGFACE_HUB_TOKEN` ou `HF_TOKEN`
 est disponible pour ce processus (par exemple, dans `~/.openclaw/.env` ou via
 `env.shellEnv`).
 
-## Model discovery and onboarding dropdown
+## Liste déroulante de découverte de modèles et d'intégration
 
 OpenClaw découvre les modèles en appelant le **point de terminaison d'inférence directement** :
 
@@ -62,14 +62,14 @@ OpenClaw découvre les modèles en appelant le **point de terminaison d'inféren
 GET https://router.huggingface.co/v1/models
 ```
 
-(Optionnel : envoyez `Authorization: Bearer $HUGGINGFACE_HUB_TOKEN` ou `$HF_TOKEN` pour la liste complète ; certains points de terminaison renvoient un sous-ensemble sans auth.) La réponse est au style OpenAI `{ "object": "list", "data": [ { "id": "Qwen/Qwen3-8B", "owned_by": "Qwen", ... }, ... ] }`.
+(Optionnel : envoyez `Authorization: Bearer $HUGGINGFACE_HUB_TOKEN` ou `$HF_TOKEN` pour la liste complète ; certains points de terminaison renvoient un sous-ensemble sans authentification.) La réponse est au style OpenAI `{ "object": "list", "data": [ { "id": "Qwen/Qwen3-8B", "owned_by": "Qwen", ... }, ... ] }`.
 
-Lorsque vous configurez une clé API Hugging Face (via l'intégration, `HUGGINGFACE_HUB_TOKEN` ou `HF_TOKEN`), OpenClaw utilise cette requête GET pour découvrir les modèles de complétion de chat disponibles. Pendant la **configuration interactive**, après avoir entré votre jeton, vous voyez une liste déroulante **Modèle Hugging Face par défaut** remplie à partir de cette liste (ou du catalogue intégré si la requête échoue). Au moment de l'exécution (par exemple, au démarrage du Gateway), lorsqu'une clé est présente, OpenClaw appelle à nouveau **GET** `https://router.huggingface.co/v1/models` pour actualiser le catalogue. La liste est fusionnée avec un catalogue intégré (pour les métadonnées telles que la fenêtre de contexte et le coût). Si la requête échoue ou si aucune clé n'est définie, seul le catalogue intégré est utilisé.
+Lorsque vous configurez une clé d'API Hugging Face (via onboarding, `HUGGINGFACE_HUB_TOKEN` ou `HF_TOKEN`), OpenClaw utilise cette requête GET pour découvrir les modèles de complétion de chat disponibles. Pendant la **configuration interactive**, après avoir saisi votre jeton, vous voyez une liste déroulante du **modèle Hugging Face par défaut** remplie à partir de cette liste (ou du catalogue intégré si la requête échoue). Au moment de l'exécution (par exemple, démarrage du Gateway), lorsqu'une clé est présente, OpenClaw appelle à nouveau **GET** `https://router.huggingface.co/v1/models` pour actualiser le catalogue. La liste est fusionnée avec un catalogue intégré (pour les métadonnées telles que la fenêtre contextuelle et le coût). Si la requête échoue ou si aucune clé n'est définie, seul le catalogue intégré est utilisé.
 
-## Noms de modèles et options modifiables
+## Noms des modèles et options modifiables
 
-- **Nom provenant de l'API :** Le nom d'affichage du modèle est **récupéré depuis GET /v1/models** lorsque l'API renvoie `name`, `title` ou `display_name` ; sinon, il est dérivé de l'identifiant du modèle (par exemple, `deepseek-ai/DeepSeek-R1` → « DeepSeek R1 »).
-- **Remplacer le nom d'affichage :** Vous pouvez définir une étiquette personnalisée par modèle dans la configuration afin qu'elle apparaisse comme vous le souhaitez dans la CLI et l'interface utilisateur :
+- **Nom provenant de API :** Le nom d'affichage du modèle est **récupéré depuis GET /v1/models** lorsque API renvoie `name`, `title` ou `display_name` ; sinon il est dérivé de l'identifiant du modèle (par exemple `deepseek-ai/DeepSeek-R1` → « DeepSeek R1 »).
+- **Remplacer le nom d'affichage :** Vous pouvez définir une étiquette personnalisée par modèle dans la configuration pour qu'elle apparaisse comme vous le souhaitez dans CLI et l'interface utilisateur :
 
 ```json5
 {
@@ -84,22 +84,22 @@ Lorsque vous configurez une clé API Hugging Face (via l'intégration, `HUGGINGF
 }
 ```
 
-- **Sélection du fournisseur / de la stratégie :** Ajoutez un suffixe à l'**identifiant du modèle** pour choisir la manière dont le routeur sélectionne le backend :
-  - **`:fastest`** — débit le plus élevé (choisi par le routeur ; le choix du fournisseur est **verrouillé** — aucun sélecteur de backend interactif).
+- **Sélection du fournisseur / de la stratégie :** Ajoutez un suffixe à **l'identifiant du modèle** pour choisir la manière dont le routeur sélectionne le backend :
+  - **`:fastest`** — débit le plus élevé (choisi par le routeur ; le choix du fournisseur est **verrouillé** — pas de sélecteur backend interactif).
   - **`:cheapest`** — coût le plus faible par jeton de sortie (choisi par le routeur ; le choix du fournisseur est **verrouillé**).
-  - **`:provider`** — forcer un backend spécifique (par exemple, `:sambanova`, `:together`).
+  - **`:provider`** — forcer un backend spécifique (par exemple `:sambanova`, `:together`).
 
-  Lorsque vous sélectionnez **:cheapest** ou **:fastest** (par exemple, dans la liste déroulante des modèles lors de l'intégration), le fournisseur est verrouillé : le routeur décide en fonction du coût ou de la vitesse et aucune étape optionnelle « préférer un backend spécifique » n'est affichée. Vous pouvez les ajouter en tant qu'entrées distinctes dans `models.providers.huggingface.models` ou définir `model.primary` avec le suffixe. Vous pouvez également définir votre ordre par défaut dans [Paramètres du fournisseur d'inférence](https://hf.co/settings/inference-providers) (aucun suffixe = utiliser cet ordre).
+  Lorsque vous sélectionnez **:cheapest** ou **:fastest** (par exemple dans la liste déroulante des models d'onboarding), le fournisseur est verrouillé : le routeur décide en fonction du coût ou de la vitesse et aucune étape optionnelle « préférer un backend spécifique » n'est affichée. Vous pouvez ajouter ces éléments comme entrées distinctes dans `models.providers.huggingface.models` ou définir `model.primary` avec le suffixe. Vous pouvez également définir votre ordre par défaut dans les [Paramètres du fournisseur d'inférence](https://hf.co/settings/inference-providers) (pas de suffixe = utiliser cet ordre).
 
-- **Fusion de la configuration :** Les entrées existantes dans `models.providers.huggingface.models` (par exemple dans `models.json`) sont conservées lors de la fusion de la configuration. Ainsi, tous les `name` personnalisés, `alias` ou options de modèle que vous y avez définis sont préservés.
+- **Fusion de la configuration :** Les entrées existantes dans `models.providers.huggingface.models` (par exemple dans `models.json`) sont conservées lors de la fusion de la configuration. Ainsi, toutes les options personnalisées `name`, `alias`, ou de model que vous y avez définies sont préservées.
 
-## ID de modèle et exemples de configuration
+## Identifiants de model et exemples de configuration
 
-Les références de modèle utilisent le format `huggingface/<org>/<model>` (ID de style Hub). La liste ci-dessous provient de **GET** `https://router.huggingface.co/v1/models` ; votre catalogue peut en inclure davantage.
+Les références de model utilisent le format `huggingface/<org>/<model>` (identifiants de style Hub). La liste ci-dessous provient de **GET** `https://router.huggingface.co/v1/models` ; votre catalogue peut en inclure davantage.
 
-**Exemples d'ID (provenant du endpoint d'inférence) :**
+**Exemples d'identifiants (à partir du point de terminaison d'inférence) :**
 
-| Modèle                 | Réf (préfixe avec `huggingface/`)   |
+| Model                  | Réf (préfixe avec `huggingface/`)   |
 | ---------------------- | ----------------------------------- |
 | DeepSeek R1            | `deepseek-ai/DeepSeek-R1`           |
 | DeepSeek V3.2          | `deepseek-ai/DeepSeek-V3.2`         |
@@ -112,11 +112,11 @@ Les références de modèle utilisent le format `huggingface/<org>/<model>` (ID 
 | GLM 4.7                | `zai-org/GLM-4.7`                   |
 | Kimi K2.5              | `moonshotai/Kimi-K2.5`              |
 
-Vous pouvez ajouter `:fastest`, `:cheapest` ou `:provider` (par exemple `:together`, `:sambanova`) à l'ID du modèle. Définissez votre ordre par défaut dans [Paramètres du fournisseur d'inférence](https://hf.co/settings/inference-providers) ; voir [Fournisseurs d'inférence](https://huggingface.co/docs/inference-providers) et **GET** `https://router.huggingface.co/v1/models` pour la liste complète.
+Vous pouvez ajouter `:fastest`, `:cheapest` ou `:provider` (par exemple `:together`, `:sambanova`) à l'identifiant du model. Définissez votre ordre par défaut dans les [Paramètres du fournisseur d'inférence](https://hf.co/settings/inference-providers) ; consultez [Fournisseurs d'inférence](https://huggingface.co/docs/inference-providers) et **GET** `https://router.huggingface.co/v1/models` pour la liste complète.
 
 ### Exemples de configuration complets
 
-**DeepSeek R1 principal avec repli Qwen :**
+**DeepSeek R1 principal avec repli vers Qwen :**
 
 ```json5
 {
@@ -135,7 +135,7 @@ Vous pouvez ajouter `:fastest`, `:cheapest` ou `:provider` (par exemple `:togeth
 }
 ```
 
-**Qwen par défaut, avec variantes :cheapest et :fastest :**
+**Qwen comme défaut, avec les variantes :cheapest et :fastest :**
 
 ```json5
 {
@@ -152,7 +152,7 @@ Vous pouvez ajouter `:fastest`, `:cheapest` ou `:provider` (par exemple `:togeth
 }
 ```
 
-**DeepSeek + Llama + GPT-OSS avec alias :**
+**DeepSeek + Llama + GPT-OSS avec des alias :**
 
 ```json5
 {
@@ -190,7 +190,7 @@ Vous pouvez ajouter `:fastest`, `:cheapest` ou `:provider` (par exemple `:togeth
 }
 ```
 
-**Plusieurs modèles Qwen et DeepSeek avec suffixes de stratégie :**
+**Plusieurs modèles Qwen et DeepSeek avec des suffixes de stratégie :**
 
 ```json5
 {

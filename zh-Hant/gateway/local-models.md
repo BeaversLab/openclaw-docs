@@ -1,21 +1,21 @@
 ---
-summary: "在本機 LLM（LM Studio、vLLM、LiteLLM、自訂 OpenAI 端點）上執行 OpenClaw"
+summary: "在本機 LLM 上執行 OpenClaw (LM Studio, vLLM, LiteLLM, 自訂 OpenAI 端點)"
 read_when:
-  - 您想從自己的 GPU 主機提供模型服務
-  - 您正在連接 LM Studio 或 OpenAI 相容的代理伺服器
-  - 您需要最安全的本機模型指引
+  - You want to serve models from your own GPU box
+  - You are wiring LM Studio or an OpenAI-compatible proxy
+  - You need the safest local model guidance
 title: "本機模型"
 ---
 
 # 本機模型
 
-本機部署是可行的，但 OpenClaw 需要大型上下文以及對提示注入的強大防護。顯卡容量較小會截斷上下文並洩漏安全性資訊。目標要定高：**≥2 台滿配 Mac Studios 或同等的 GPU 設備（約 $30k+）**。單一 **24 GB** GPU 僅適合延遲較高的輕量級提示。使用**您所能執行的最大 / 完整尺寸模型變體**；過度量化或「小型」的檢查點會增加提示注入的風險（請參閱 [安全性](/zh-Hant/gateway/security)）。
+在本機執行是可行的，但 OpenClaw 需要大量的上下文以及針對提示詞注入的強大防禦機制。較小的顯卡會截斷上下文並導致安全性洩漏。目標要高：**≥2 台滿配的 Mac Studio 或同等的 GPU 設備 (~$30k+)**。單一的 **24 GB** GPU 僅適用於處理較輕量的提示詞，且延遲較高。請使用**您所能執行的最大 / 完整尺寸模型變體**；過度量化或「小型」的檢查點會增加提示詞注入的風險 (請參閱 [安全性](/zh-Hant/gateway/security))。
 
-如果您想要設定最低阻力的本機環境，請從 [Ollama](/zh-Hant/providers/ollama) 和 `openclaw onboard` 開始。本頁是針對高階本機堆疊和自訂 OpenAI 相容本機伺服器的觀點指引。
+如果您想要最低阻力的本地設置，請從 [Ollama](/zh-Hant/providers/ollama) 和 `openclaw onboard` 開始。本頁面是針對高端本地堆疊和自訂 OpenAI 相容本地伺服器的權威指南。
 
-## 推薦：LM Studio + MiniMax M2.5（Responses API，完整尺寸）
+## 推薦：LM Studio + MiniMax M2.5 (Responses API, 完整版)
 
-目前最佳的本機堆疊。在 LM Studio 中載入 MiniMax M2.5，啟用本機伺服器（預設 `http://127.0.0.1:1234`），並使用 Responses API 將推理與最終文字分開。
+目前最佳的本地堆疊。在 LM Studio 中載入 MiniMax M2.5，啟用本地伺服器（預設 `http://127.0.0.1:1234`），並使用 Responses API 將推理與最終文字分開。
 
 ```json5
 {
@@ -52,28 +52,28 @@ title: "本機模型"
 }
 ```
 
-**設定檢查清單**
+**設置檢查清單**
 
-- 安裝 LM Studio：[https://lmstudio.ai](https://lmstudio.ai)
-- 在 LM Studio 中，下載**可用的最大 MiniMax M2.5 版本**（避免「小型」/ 過度量化變體），啟動伺服器，確認 `http://127.0.0.1:1234/v1/models` 列出了該模型。
-- 保持模型載入狀態；冷載入會增加啟動延遲。
+- 安裝 LM Studio: [https://lmstudio.ai](https://lmstudio.ai)
+- 在 LM Studio 中，下載 **最大的可用 MiniMax M2.5 版本**（避免「小型」/重度量化變體），啟動伺服器，確認 `http://127.0.0.1:1234/v1/models` 已列出它。
+- 保持模型已載入；冷載入會增加啟動延遲。
 - 如果您的 LM Studio 版本不同，請調整 `contextWindow`/`maxTokens`。
-- 對於 WhatsApp，請堅持使用 Responses API，以便只傳送最終文字。
+- 對於 WhatsApp，請堅持使用 Responses API，以便僅發送最終文字。
 
-即使在執行本機時，也要保持託管模型的設定；使用 `models.mode: "merge"` 以便備援方案保持可用。
+即使在執行本地模型時，也要保持託管模型的配置；使用 `models.mode: "merge"` 以便讓備援方案保持可用。
 
-### 混合設定：託管為主，本機為備援
+### 混合配置：託管為主，本地備援
 
 ```json5
 {
   agents: {
     defaults: {
       model: {
-        primary: "anthropic/claude-sonnet-4-5",
+        primary: "anthropic/claude-sonnet-4-6",
         fallbacks: ["lmstudio/minimax-m2.5-gs32", "anthropic/claude-opus-4-6"],
       },
       models: {
-        "anthropic/claude-sonnet-4-5": { alias: "Sonnet" },
+        "anthropic/claude-sonnet-4-6": { alias: "Sonnet" },
         "lmstudio/minimax-m2.5-gs32": { alias: "MiniMax Local" },
         "anthropic/claude-opus-4-6": { alias: "Opus" },
       },
@@ -103,18 +103,18 @@ title: "本機模型"
 }
 ```
 
-### 本機優先並搭配託管安全網
+### 本地優先並搭配託管安全網
 
-交換主要與備援順序；保持相同的供應者區塊和 `models.mode: "merge"`，以便在本機設備停機時能備援至 Sonnet 或 Opus。
+交換主要和備援的順序；保持相同的提供者區塊和 `models.mode: "merge"`，以便當本地機器關閉時，您可以備援到 Sonnet 或 Opus。
 
 ### 區域託管 / 資料路由
 
-- OpenRouter 上也提供託管的 MiniMax/Kimi/GLM 變體，並具備區域固定端點（例如美國託管）。在那裡選擇區域變體，可讓流量保留在您選擇的司法管轄區內，同時仍使用 `models.mode: "merge"` 作為 Anthropic/OpenAI 的備援。
-- 僅限本地仍是隱私性最強的路徑；當您需要供應商功能但希望控制資料流向時，託管區域路由則是折衷方案。
+- 託管的 MiniMax/Kimi/GLM 變體也存在於 OpenRouter 上，並具備區域綁定的端點（例如，美國託管）。請在那裡選擇區域變體，以將流量保留在您選擇的司法管轄區內，同時仍使用 `models.mode: "merge"` 進行 Anthropic/OpenAI 備援。
+- 僅使用本地仍是隱私最強的路徑；當您需要供應商功能但想控制資料流向時，託管的區域路由是折衷方案。
 
 ## 其他相容 OpenAI 的本地代理
 
-如果 vLLM、LiteLLM、OAI-proxy 或自訂閘道公開了 OpenAI 風格的 `/v1` 端點，即可使用。將上述的 provider 區塊替換為您的端點和模型 ID：
+vLLM、LiteLLM、OAI-proxy 或自訂閘道若公開 OpenAI 風格的 `/v1` 端點即可運作。將上方的供應商區塊替換為您的端點和模型 ID：
 
 ```json5
 {
@@ -142,14 +142,14 @@ title: "本機模型"
 }
 ```
 
-保留 `models.mode: "merge"`，以便託管模型保持可用作為備援。
+保留 `models.mode: "merge"`，以便託管模型可作為備案使用。
 
 ## 疑難排解
 
-- 閘道能否連線到代理？`curl http://127.0.0.1:1234/v1/models`。
-- LM Studio 模型是否已卸載？重新載入；冷啟動是常見的「卡住」原因。
-- 出現 Context 錯誤？降低 `contextWindow` 或提高您的伺服器限制。
-- 安全性：本地模型會跳過供應商端的過濾器；請保持代理的範圍狹窄並啟用壓縮，以限制提示注入的爆炸半徑。
+- 閘道能連上代理？`curl http://127.0.0.1:1234/v1/models`。
+- LM Studio 模型已卸載？請重新載入；冷啟動是常見的「卡住」原因。
+- 發生 Context 錯誤？請降低 `contextWindow` 或提高伺服器限制。
+- 安全性：本地模型會跳過供應商端的篩選器；請保持代理人範圍狹窄並開啟壓縮功能，以限制提示詞注入的影響範圍。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

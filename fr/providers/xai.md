@@ -1,5 +1,5 @@
 ---
-summary: "Use xAI Grok models in OpenClaw"
+summary: "Utiliser les modèles Grok xAI dans OpenClaw"
 read_when:
   - You want to use Grok models in OpenClaw
   - You are configuring xAI auth or model ids
@@ -8,18 +8,18 @@ title: "xAI"
 
 # xAI
 
-OpenClaw ships a bundled `xai` provider plugin for Grok models.
+OpenClaw est fourni avec un plugin de fournisseur `xai` pour les modèles Grok.
 
-## Setup
+## Configuration
 
-1. Create an API key in the xAI console.
-2. Set `XAI_API_KEY`, or run:
+1. Créez une clé API dans la console xAI.
+2. Définissez `XAI_API_KEY`, ou exécutez :
 
 ```bash
 openclaw onboard --auth-choice xai-api-key
 ```
 
-3. Pick a model such as:
+3. Choisissez un modèle tel que :
 
 ```json5
 {
@@ -27,9 +27,9 @@ openclaw onboard --auth-choice xai-api-key
 }
 ```
 
-## Current bundled model catalog
+## Catalogue actuel des modèles inclus
 
-OpenClaw now includes these xAI model families out of the box:
+OpenClaw inclut désormais ces familles de modèles xAI prêtes à l'emploi :
 
 - `grok-4`, `grok-4-0709`
 - `grok-4-fast-reasoning`, `grok-4-fast-non-reasoning`
@@ -38,27 +38,26 @@ OpenClaw now includes these xAI model families out of the box:
 - `grok-4.20-experimental-beta-0304-non-reasoning`
 - `grok-code-fast-1`
 
-The plugin also forward-resolves newer `grok-4*` and `grok-code-fast*` ids when
-they follow the same API shape.
+Le plugin résout également par anticipation les identifiants `grok-4*` et `grok-code-fast*` plus récents lorsqu'ils suivent la même forme d'API.
 
-## Web search
+## Recherche Web
 
-The bundled `grok` web-search provider uses `XAI_API_KEY` too:
+Le fournisseur de recherche Web `grok` inclus utilise également `XAI_API_KEY` :
 
 ```bash
 openclaw config set tools.web.search.provider grok
 ```
 
-## Known limits
+## Limites connues
 
-- Auth is API-key only today. There is no xAI OAuth/device-code flow in OpenClaw yet.
-- `grok-4.20-multi-agent-experimental-beta-0304` is not supported on the normal xAI provider path because it requires a different upstream API surface than the standard OpenClaw xAI transport.
-- Native xAI server-side tools such as `x_search` and `code_execution` are not yet first-class model-provider features in the bundled plugin.
+- L'authentification se fait actuellement uniquement par clé API. Il n'y a pas encore de flux OAuth / code d'appareil xAI dans OpenClaw.
+- `grok-4.20-multi-agent-experimental-beta-0304` n'est pas pris en charge sur le chemin normal du fournisseur xAI car il nécessite une surface d'API en amont différente du transport xAI standard d'OpenClaw.
+- Les outils natifs côté serveur xAI tels que `x_search` et `code_execution` ne sont pas encore des fonctionnalités de première classe du fournisseur de modèles dans le plugin inclus.
 
 ## Notes
 
-- OpenClaw applies xAI-specific tool-schema and tool-call compatibility fixes automatically on the shared runner path.
-- For the broader provider overview, see [Model providers](/fr/providers/index).
+- OpenClaw applique automatiquement les correctifs de compatibilité des schémas d'outils et des appels d'outils spécifiques à xAI sur le chemin d'exécution partagé.
+- Pour une vue d'ensemble plus large des fournisseurs, consultez [Modèles de fournisseurs](/fr/providers/index).
 
 import fr from "/components/footer/fr.mdx";
 

@@ -1,15 +1,15 @@
 ---
 summary: "Ejemplos de configuración precisos al esquema para configuraciones comunes de OpenClaw"
 read_when:
-  - Aprender a configurar OpenClaw
-  - Buscando ejemplos de configuración
-  - Configurando OpenClaw por primera vez
+  - Learning how to configure OpenClaw
+  - Looking for configuration examples
+  - Setting up OpenClaw for the first time
 title: "Ejemplos de configuración"
 ---
 
 # Ejemplos de configuración
 
-Los siguientes ejemplos están alineados con el esquema de configuración actual. Para la referencia exhaustiva y notas por campo, consulte [Configuración](/es/gateway/configuration).
+Los ejemplos a continuación se alinean con el esquema de configuración actual. Para obtener la referencia exhaustiva y notas por campo, consulte [Configuración](/es/gateway/configuration).
 
 ## Inicio rápido
 
@@ -22,7 +22,7 @@ Los siguientes ejemplos están alineados con el esquema de configuración actual
 }
 ```
 
-Guárdelo en `~/.openclaw/openclaw.json` y podrá enviar mensajes privados al bot desde ese número.
+Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot desde ese número.
 
 ### Inicio recomendado
 
@@ -35,7 +35,7 @@ Guárdelo en `~/.openclaw/openclaw.json` y podrá enviar mensajes privados al bo
   },
   agent: {
     workspace: "~/.openclaw/workspace",
-    model: { primary: "anthropic/claude-sonnet-4-5" },
+    model: { primary: "anthropic/claude-sonnet-4-6" },
   },
   channels: {
     whatsapp: {
@@ -48,7 +48,7 @@ Guárdelo en `~/.openclaw/openclaw.json` y podrá enviar mensajes privados al bo
 
 ## Ejemplo expandido (opciones principales)
 
-> JSON5 le permite usar comentarios y comas finales. El JSON regular también funciona.
+> JSON5 le permite usar comentarios y comas finales. El JSON normal también funciona.
 
 ```json5
 {
@@ -238,15 +238,15 @@ Guárdelo en `~/.openclaw/openclaw.json` y podrá enviar mensajes privados al bo
       workspace: "~/.openclaw/workspace",
       userTimezone: "America/Chicago",
       model: {
-        primary: "anthropic/claude-sonnet-4-5",
+        primary: "anthropic/claude-sonnet-4-6",
         fallbacks: ["anthropic/claude-opus-4-6", "openai/gpt-5.2"],
       },
       imageModel: {
-        primary: "openrouter/anthropic/claude-sonnet-4-5",
+        primary: "openrouter/anthropic/claude-sonnet-4-6",
       },
       models: {
         "anthropic/claude-opus-4-6": { alias: "opus" },
-        "anthropic/claude-sonnet-4-5": { alias: "sonnet" },
+        "anthropic/claude-sonnet-4-6": { alias: "sonnet" },
         "openai/gpt-5.2": { alias: "gpt" },
       },
       thinkingDefault: "low",
@@ -271,7 +271,7 @@ Guárdelo en `~/.openclaw/openclaw.json` y podrá enviar mensajes privados al bo
       maxConcurrent: 3,
       heartbeat: {
         every: "30m",
-        model: "anthropic/claude-sonnet-4-5",
+        model: "anthropic/claude-sonnet-4-6",
         target: "last",
         directPolicy: "allow", // allow (default) | block
         to: "+15555550123",
@@ -468,9 +468,9 @@ Guárdelo en `~/.openclaw/openclaw.json` y podrá enviar mensajes privados al bo
 }
 ```
 
-### Modo de mensaje privado seguro (bandeja de entrada compartida / mensajes privados multiusuario)
+### Modo de MD seguro (bandeja de entrada compartida / MD multiusuario)
 
-Si más de una persona puede enviar mensajes privados a su bot (múltiples entradas en `allowFrom`, aprobaciones de emparejamiento para varias personas, o `dmPolicy: "open"`), active el **modo de mensaje privado seguro** para que, de forma predeterminada, los mensajes privados de diferentes remitentes no compartan un contexto:
+Si más de una persona puede enviar MD a su bot (múltiples entradas en `allowFrom`, aprobaciones de emparejamiento para múltiples personas, o `dmPolicy: "open"`), habilite el **modo de MD seguro** para que los MD de diferentes remitentes no compartan un contexto de forma predeterminada:
 
 ```json5
 {
@@ -494,10 +494,10 @@ Si más de una persona puede enviar mensajes privados a su bot (múltiples entra
 }
 ```
 
-Para Discord/Slack/Google Chat/MS Teams/Mattermost/IRC, la autorización del remitente es primero por ID de forma predeterminada.
-Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutable con el `dangerouslyAllowNameMatching: true` de cada canal si acepta explícitamente ese riesgo.
+Para Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC, la autorización del remitente es prioritaria por ID de forma predeterminada.
+Solo habilite la coincidencia directa de nombre/correo/nick mutable con el `dangerouslyAllowNameMatching: true` de cada canal si acepta explícitamente ese riesgo.
 
-### OAuth con conmutación por error de clave de API
+### OAuth con conmutación por error de clave API
 
 ```json5
 {
@@ -520,19 +520,19 @@ Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutabl
   agent: {
     workspace: "~/.openclaw/workspace",
     model: {
-      primary: "anthropic/claude-sonnet-4-5",
+      primary: "anthropic/claude-sonnet-4-6",
       fallbacks: ["anthropic/claude-opus-4-6"],
     },
   },
 }
 ```
 
-### Token de configuración de Anthropic + clave de API, conmutación por error a MiniMax
+### Token de configuración de Anthropic + clave API, conmutación por error a MiniMax
 
 <Warning>
-  El uso del token de configuración de Anthropic fuera de Claude Code ha sido restringido para
-  algunos usuarios en el pasado. Considere esto como un riesgo de elección del usuario y verifique
-  los términos actuales de Anthropic antes de depender de la autenticación de suscripción.
+  El uso del token de configuración de Anthropic fuera de Claude Code se ha restringido para algunos
+  usuarios en el pasado. Trate esto como un riesgo de elección del usuario y verifique los términos
+  actuales de Anthropic antes de depender de la autenticación por suscripción.
 </Warning>
 
 ```json5
@@ -566,7 +566,7 @@ Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutabl
     workspace: "~/.openclaw/workspace",
     model: {
       primary: "anthropic/claude-opus-4-6",
-      fallbacks: ["minimax/MiniMax-M2.5"],
+      fallbacks: ["minimax/MiniMax-M2.7"],
     },
   },
 }
@@ -632,7 +632,7 @@ Solo habilite la coincidencia directa de nombre/correo electrónico/apodo mutabl
 ## Consejos
 
 - Si establece `dmPolicy: "open"`, la lista `allowFrom` coincidente debe incluir `"*"`.
-- Los ID de proveedores difieren (números de teléfono, ID de usuario, ID de canal). Use la documentación del proveedor para confirmar el formato.
+- Los ID del proveedor difieren (números de teléfono, ID de usuario, ID de canal). Use la documentación del proveedor para confirmar el formato.
 - Secciones opcionales para agregar más tarde: `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
 - Consulte [Proveedores](/es/providers) y [Solución de problemas](/es/gateway/troubleshooting) para obtener notas de configuración más detalladas.
 

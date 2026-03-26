@@ -1,15 +1,15 @@
 ---
 title: "Node.js"
-summary: "Installer et configurer Node.js pour OpenClaw — exigences de version, options d'installation et dépannage du PATH"
+summary: "Installer et configurer Node.js pour OpenClaw — exigences de version, options d'installation et résolution des problèmes PATH"
 read_when:
-  - "Vous devez installer Node.js avant d'installer OpenClaw"
-  - "Vous avez installé OpenClaw mais `openclaw` est introuvable (command not found)"
-  - "npm install -g échoue en raison de problèmes d'autorisations ou de PATH"
+  - "You need to install Node.js before installing OpenClaw"
+  - "You installed OpenClaw but `openclaw` is command not found"
+  - "npm install -g fails with permissions or PATH issues"
 ---
 
 # Node.js
 
-OpenClaw nécessite **Node 22.16 ou une version plus récente**. **Node 24 est le runtime par défaut et recommandé** pour les installations, l'intégration continue et les workflows de publication. Node 22 reste pris en charge via la branche LTS active. Le [script d'installation](/fr/install#install-methods) détectera et installera Node automatiquement — cette page est destinée au cas où vous souhaiteriez configurer Node vous-même et vous assurer que tout est correctement configuré (versions, PATH, installations globales).
+OpenClaw nécessite **Node 22.16 ou une version plus récente**. **Node 24 est l'environnement d'exécution par défaut et recommandé** pour les installations, l'intégration continue et les workflows de publication. Node 22 reste pris en charge via la ligne LTS active. Le [script d'installation](/fr/install#alternative-install-methods) détectera et installera Node automatiquement — cette page est destinée au cas où vous souhaiteriez configurer Node vous-même et vous assurer que tout est correctement connecté (versions, PATH, installations globales).
 
 ## Vérifiez votre version
 
@@ -17,7 +17,7 @@ OpenClaw nécessite **Node 22.16 ou une version plus récente**. **Node 24 est l
 node -v
 ```
 
-Si cela affiche `v24.x.x` ou supérieur, vous êtes sur la version par défaut recommandée. Si cela affiche `v22.16.x` ou supérieur, vous êtes sur la version Node 22 LTS prise en charge, mais nous recommandons tout de même de passer à Node 24 lorsque cela est possible. Si Node n'est pas installé ou si la version est trop ancienne, choisissez une méthode d'installation ci-dessous.
+Si cela affiche `v24.x.x` ou supérieur, vous utilisez la version par défaut recommandée. Si cela affiche `v22.16.x` ou supérieur, vous êtes sur la voie de la prise en charge de Node 22 LTS, mais nous recommandons tout de même de passer à Node 24 lorsque cela est possible. Si Node n'est pas installé ou si la version est trop ancienne, choisissez une méthode d'installation ci-dessous.
 
 ## Installer Node
 
@@ -33,14 +33,14 @@ Si cela affiche `v24.x.x` ou supérieur, vous êtes sur la version par défaut r
 
   </Tab>
   <Tab title="Linux">
-    **Ubuntu / Debian** :
+    **Ubuntu / Debian :**
 
     ```bash
     curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
     sudo apt-get install -y nodejs
     ```
 
-    **Fedora / RHEL** :
+    **Fedora / RHEL :**
 
     ```bash
     sudo dnf install nodejs
@@ -82,11 +82,11 @@ fnm use 24
 ```
 
   <Warning>
-  Assurez-vous que votre gestionnaire de versions est initialisé dans votre fichier de démarrage de shell (`~/.zshrc` ou `~/.bashrc`). Si ce n'est pas le cas, `openclaw` pourrait ne pas être trouvé dans les nouvelles sessions de terminal car le PATH n'inclura pas le répertoire bin de Node.
+  Assurez-vous que votre gestionnaire de versions est initialisé dans votre fichier de démarrage de shell (`~/.zshrc` ou `~/.bashrc`). Sinon, `openclaw` risque de ne pas être trouvé dans les nouvelles sessions de terminal car le PATH n'inclura pas le répertoire bin de Node.
   </Warning>
 </Accordion>
 
-## Résolution de problèmes
+## Dépannage
 
 ### `openclaw: command not found`
 
@@ -115,10 +115,10 @@ Cela signifie presque toujours que le répertoire bin global de npm n'est pas da
         export PATH="$(npm prefix -g)/bin:$PATH"
         ```
 
-        Ensuite, ouvrez un nouveau terminal (ou exécutez `rehash` dans zsh / `hash -r` dans bash).
+        Ouvrez ensuite un nouveau terminal (ou exécutez `rehash` dans zsh / `hash -r` dans bash).
       </Tab>
       <Tab title="Windows">
-        Ajoutez la sortie de `npm prefix -g` à votre PATH système via Paramètres → Système → Variables d'environnement.
+        Ajoutez la sortie de `npm prefix -g` à votre variable d'environnement PATH système via Paramètres → Système → Variables d'environnement.
       </Tab>
     </Tabs>
 
@@ -127,7 +127,7 @@ Cela signifie presque toujours que le répertoire bin global de npm n'est pas da
 
 ### Erreurs de permission sur `npm install -g` (Linux)
 
-Si vous voyez des erreurs `EACCES`, remplacez le préfixe global de npm par un répertoire accessible en écriture par l'utilisateur :
+Si vous voyez des erreurs `EACCES`, modifiez le préfixe global de npm pour pointer vers un répertoire accessible en écriture par l'utilisateur :
 
 ```bash
 mkdir -p "$HOME/.npm-global"
@@ -135,7 +135,7 @@ npm config set prefix "$HOME/.npm-global"
 export PATH="$HOME/.npm-global/bin:$PATH"
 ```
 
-Ajoutez la ligne `export PATH=...` à votre `~/.bashrc` ou `~/.zshrc` pour le rendre permanent.
+Ajoutez la ligne `export PATH=...` à votre `~/.bashrc` ou `~/.zshrc` pour rendre la modification permanente.
 
 import fr from "/components/footer/fr.mdx";
 

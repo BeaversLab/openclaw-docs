@@ -1,49 +1,49 @@
 ---
-summary: "Location command for nodes (location.get), permission modes, and Android foreground behavior"
+summary: "Commande de localisation pour les nœuds (location.get), modes d'autorisation et comportement en premier plan Android"
 read_when:
   - Adding location node support or permissions UI
   - Designing Android location permissions or foreground behavior
-title: "Location Command"
+title: "Commande de localisation"
 ---
 
-# Location command (nodes)
+# Commande de localisation (nœuds)
 
 ## TL;DR
 
-- `location.get` is a node command (via `node.invoke`).
-- Off by default.
-- Android app settings use a selector: Off / While Using.
-- Separate toggle: Precise Location.
+- `location.get` est une commande de nœud (via `node.invoke`).
+- Désactivé par défaut.
+- Les paramètres de l'application Android utilisent un sélecteur : Désactivé / Pendant l'utilisation.
+- Interrupteur séparé : Localisation précise.
 
-## Why a selector (not just a switch)
+## Pourquoi un sélecteur (pas seulement un interrupteur)
 
-OS permissions are multi-level. We can expose a selector in-app, but the OS still decides the actual grant.
+Les autorisations de l'OS sont à plusieurs niveaux. Nous pouvons exposer un sélecteur dans l'application, mais l'OS décide toujours de l'autorisation réelle.
 
-- iOS/macOS may expose **While Using** or **Always** in system prompts/Settings.
-- Android app currently supports foreground location only.
-- Precise location is a separate grant (iOS 14+ “Precise”, Android “fine” vs “coarse”).
+- iOS/macOS peut exposer **Pendant l'utilisation** ou **Toujours** dans les invites système / Paramètres.
+- L'application Android prend actuellement uniquement en charge la localisation en premier plan.
+- La localisation précise est une autorisation distincte (iOS 14+ « Précise », Android « fine » vs « grossière »).
 
-Le sélecteur de l'interface utilisateur détermine notre mode demandé ; l'octroi réel se trouve dans les paramètres du système d'exploitation.
+Le sélecteur dans l'interface utilisateur pilote le mode demandé ; l'autorisation réelle réside dans les paramètres de l'OS.
 
-## Modèle de paramètres
+## Modèle des paramètres
 
-Par appareil de nœud :
+Par appareil nœud :
 
-- `location.enabledMode` : `off | whileUsing`
-- `location.preciseEnabled` : booléen
+- `location.enabledMode` : `off | whileUsing`
+- `location.preciseEnabled` : booléen
 
 Comportement de l'interface utilisateur :
 
-- Sélectionner `whileUsing` demande la permission de premier plan.
-- Si le système d'exploitation refuse le niveau demandé, revenir au niveau accordé le plus élevé et afficher le statut.
+- La sélection de `whileUsing` demande l'autorisation de premier plan.
+- Si l'OS refuse le niveau demandé, revenez au niveau le plus élevé accordé et affichez le statut.
 
-## Mapping des permissions (node.permissions)
+## Mappage des autorisations (node.permissions)
 
-Optionnel. Le nœud macOS signale `location` via la carte des permissions ; iOS/Android peut l'omettre.
+Optionnel. Le nœud macOS signale `location` via la carte des autorisations ; iOS/Android peuvent l'omettre.
 
 ## Commande : `location.get`
 
-Appelé via `node.invoke`.
+Appelée via `node.invoke`.
 
 Paramètres (suggérés) :
 
@@ -74,28 +74,28 @@ Charge utile de réponse :
 Erreurs (codes stables) :
 
 - `LOCATION_DISABLED` : le sélecteur est désactivé.
-- `LOCATION_PERMISSION_REQUIRED` : permission manquante pour le mode demandé.
+- `LOCATION_PERMISSION_REQUIRED` : autorisation manquante pour le mode demandé.
 - `LOCATION_BACKGROUND_UNAVAILABLE` : l'application est en arrière-plan mais seule l'autorisation « Pendant l'utilisation » est accordée.
-- `LOCATION_TIMEOUT` : aucun fixe obtenu à temps.
+- `LOCATION_TIMEOUT` : aucune localisation trouvée à temps.
 - `LOCATION_UNAVAILABLE` : échec du système / aucun fournisseur.
 
 ## Comportement en arrière-plan
 
 - L'application Android refuse `location.get` lorsqu'elle est en arrière-plan.
 - Gardez OpenClaw ouvert lors de la demande de localisation sur Android.
-- D'autres plates-formes de nœuds peuvent différer.
+- Les autres plateformes de nœuds peuvent différer.
 
-## Intégration du modèle/de l'outil
+## Intégration modèle/outillage
 
-- Surface de l'outil : l'outil `nodes` ajoute l'action `location_get` (nœud requis).
+- Surface de l'outil : le `nodes` tool ajoute l'action `location_get` (nœud requis).
 - CLI : `openclaw nodes location get --node <id>`.
-- Recommandations pour l'agent : n'appeler que lorsque l'utilisateur a activé la localisation et comprend la portée.
+- Directives pour l'agent : appeler uniquement lorsque l'utilisateur a activé la localisation et comprend la portée.
 
-## Texte UX (suggéré)
+## Copie UX (suggérée)
 
 - Désactivé : « Le partage de la localisation est désactivé. »
 - Pendant l'utilisation : « Uniquement lorsque OpenClaw est ouvert. »
-- Précise : « Utiliser une localisation GPS précise. Désactiver pour partager une localisation approximative. »
+- Précise : « Utiliser la localisation GPS précise. Désactiver pour partager la localisation approximative. »
 
 import fr from "/components/footer/fr.mdx";
 

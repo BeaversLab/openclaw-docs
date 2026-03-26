@@ -1,15 +1,15 @@
 ---
-summary: "Referencia de CLI para `openclaw message` (enviar + acciones de canal)"
+summary: "Referencia de la CLI para `openclaw message` (envío + acciones de canal)"
 read_when:
-  - Agregar o modificar acciones de CLI de mensajes
-  - Cambiar el comportamiento del canal de salida
+  - Adding or modifying message CLI actions
+  - Changing outbound channel behavior
 title: "message"
 ---
 
 # `openclaw message`
 
 Comando único de salida para enviar mensajes y acciones de canal
-(Discord/Google Chat/Slack/Mattermost (plugin)/Telegram/WhatsApp/Signal/iMessage/MS Teams).
+(Discord/Google Chat/Slack/Mattermost (plugin)/Telegram/WhatsApp/Signal/iMessage/Microsoft Teams).
 
 ## Uso
 
@@ -19,33 +19,33 @@ openclaw message <subcommand> [flags]
 
 Selección de canal:
 
-- `--channel` requerido si hay más de un canal configurado.
-- Si hay exactamente un canal configurado, se convierte en el predeterminado.
+- `--channel` obligatorio si hay más de un canal configurado.
+- Si exactamente un canal está configurado, se convierte en el predeterminado.
 - Valores: `whatsapp|telegram|discord|googlechat|slack|mattermost|signal|imessage|msteams` (Mattermost requiere plugin)
 
 Formatos de destino (`--target`):
 
 - WhatsApp: E.164 o JID de grupo
 - Telegram: id de chat o `@username`
-- Discord: `channel:<id>` o `user:<id>` (o mención `<@id>`; los ids numéricos sin procesar se tratan como canales)
+- Discord: `channel:<id>` o `user:<id>` (o mención de `<@id>`; los ids numéricos sin procesar se tratan como canales)
 - Google Chat: `spaces/<spaceId>` o `users/<userId>`
 - Slack: `channel:<id>` o `user:<id>` (se acepta el id de canal sin procesar)
 - Mattermost (plugin): `channel:<id>`, `user:<id>`, o `@username` (los ids simples se tratan como canales)
 - Signal: `+E.164`, `group:<id>`, `signal:+E.164`, `signal:group:<id>`, o `username:<name>`/`u:<name>`
 - iMessage: identificador, `chat_id:<id>`, `chat_guid:<guid>`, o `chat_identifier:<id>`
-- MS Teams: id de conversación (`19:...@thread.tacv2`) o `conversation:<id>` o `user:<aad-object-id>`
+- Microsoft Teams: id de conversación (`19:...@thread.tacv2`) o `conversation:<id>` o `user:<aad-object-id>`
 
-Búsqueda por nombre:
+Búsqueda de nombres:
 
-- Para los proveedores compatibles (Discord/Slack/etc.), los nombres de canal como `Help` o `#help` se resuelven mediante el caché del directorio.
-- Ante un error en el caché, OpenClaw intentará realizar una búsqueda en vivo en el directorio cuando el proveedor lo admita.
+- Para proveedores compatibles (Discord/Slack/etc), los nombres de canales como `Help` o `#help` se resuelven a través del caché del directorio.
+- Si no se encuentra en el caché, OpenClaw intentará realizar una búsqueda en vivo en el directorio cuando el proveedor lo admita.
 
-## Marcas comunes
+## Flags comunes
 
 - `--channel <name>`
 - `--account <id>`
-- `--target <dest>` (canal de destino o usuario para enviar/encuestar/leer/etc.)
-- `--targets <name>` (repetir; solo transmisión)
+- `--target <dest>` (canal o usuario de destino para enviar/encuestar/leer/etc)
+- `--targets <name>` (repetir; solo difusión)
 - `--json`
 - `--dry-run`
 - `--verbose`
@@ -53,20 +53,20 @@ Búsqueda por nombre:
 ## Comportamiento de SecretRef
 
 - `openclaw message` resuelve los SecretRefs de canal compatibles antes de ejecutar la acción seleccionada.
-- La resolución se limita al objetivo de la acción activa cuando es posible:
-  - con ámbito de canal cuando se establece `--channel` (o se infiere de objetivos con prefijo como `discord:...`)
-  - con ámbito de cuenta cuando se establece `--account` (globales del canal + superficies de la cuenta seleccionada)
+- La resolución está limitada al objetivo de la acción activa cuando es posible:
+  - con ámbito de canal cuando `--channel` está establecido (o se infiere de objetivos con prefijo como `discord:...`)
+  - con ámbito de cuenta cuando `--account` está establecido (globales del canal + superficies de la cuenta seleccionada)
   - cuando se omite `--account`, OpenClaw no fuerza un ámbito de SecretRef de cuenta `default`
-- Los SecretRef no resueltos en canales no relacionados no bloquean una acción de mensaje dirigida.
+- Los SecretRefs no resueltos en canales no relacionados no bloquean una acción de mensaje dirigida.
 - Si el SecretRef del canal/cuenta seleccionado no está resuelto, el comando falla cerrado para esa acción.
 
 ## Acciones
 
-### Núcleo
+### Principal
 
 - `send`
-  - Canales: WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (complemento)/Signal/iMessage/MS Teams
-  - Obligatorio: `--target`, más `--message` o `--media`
+  - Canales: WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage/Microsoft Teams
+  - Obligatorio: `--target`, además de `--message` o `--media`
   - Opcional: `--media`, `--reply-to`, `--thread-id`, `--gif-playback`
   - Solo Telegram: `--buttons` (requiere `channels.telegram.capabilities.inlineButtons` para permitirlo)
   - Solo Telegram: `--force-document` (envía imágenes y GIF como documentos para evitar la compresión de Telegram)
@@ -75,19 +75,19 @@ Búsqueda por nombre:
   - Solo WhatsApp: `--gif-playback`
 
 - `poll`
-  - Canales: WhatsApp/Telegram/Discord/Matrix/MS Teams
+  - Canales: WhatsApp/Telegram/Discord/Matrix/Microsoft Teams
   - Obligatorio: `--target`, `--poll-question`, `--poll-option` (repetir)
   - Opcional: `--poll-multi`
-  - Solo Discord: `--poll-duration-hours`, `--silent`, `--message`
-  - Solo Telegram: `--poll-duration-seconds` (5-600), `--silent`, `--poll-anonymous` / `--poll-public`, `--thread-id`
+  - Solo para Discord: `--poll-duration-hours`, `--silent`, `--message`
+  - Solo para Telegram: `--poll-duration-seconds` (5-600), `--silent`, `--poll-anonymous` / `--poll-public`, `--thread-id`
 
 - `react`
   - Canales: Discord/Google Chat/Slack/Telegram/WhatsApp/Signal
   - Obligatorio: `--message-id`, `--target`
   - Opcional: `--emoji`, `--remove`, `--participant`, `--from-me`, `--target-author`, `--target-author-uuid`
-  - Nota: `--remove` requiere `--emoji` (omite `--emoji` para borrar tus propias reacciones donde esté soportado; ver /tools/reactions)
-  - Solo WhatsApp: `--participant`, `--from-me`
-  - Reacciones de grupos de Signal: `--target-author` o `--target-author-uuid` obligatorios
+  - Nota: `--remove` requiere `--emoji` (omite `--emoji` para borrar tus propias reacciones donde sea compatible; consulta /tools/reactions)
+  - Solo para WhatsApp: `--participant`, `--from-me`
+  - Reacciones de grupo de Signal: se requiere `--target-author` o `--target-author-uuid`
 
 - `reactions`
   - Canales: Discord/Google Chat/Slack
@@ -98,7 +98,7 @@ Búsqueda por nombre:
   - Canales: Discord/Slack
   - Obligatorio: `--target`
   - Opcional: `--limit`, `--before`, `--after`
-  - Solo Discord: `--around`
+  - Solo para Discord: `--around`
 
 - `edit`
   - Canales: Discord/Slack
@@ -146,7 +146,7 @@ Búsqueda por nombre:
 
 - `emoji list`
   - Discord: `--guild-id`
-  - Slack: sin banderas adicionales
+  - Slack: sin flags adicionales
 
 - `emoji upload`
   - Canales: Discord
@@ -181,16 +181,16 @@ Búsqueda por nombre:
 
 ### Moderación (Discord)
 
-- `timeout`: `--guild-id`, `--user-id` (opcional `--duration-min` o `--until`; omita ambos para quitar el tiempo de espera)
+- `timeout`: `--guild-id`, `--user-id` (opcional `--duration-min` o `--until`; omite ambos para quitar el tiempo de espera)
 - `kick`: `--guild-id`, `--user-id` (+ `--reason`)
 - `ban`: `--guild-id`, `--user-id` (+ `--delete-days`, `--reason`)
-  - `timeout` también soporta `--reason`
+  - `timeout` también admite `--reason`
 
 ### Transmisión
 
 - `broadcast`
-  - Canales: cualquier canal configurado; use `--channel all` para apuntar a todos los proveedores
-  - Requerido: `--targets` (repetir)
+  - Canales: cualquier canal configurado; usa `--channel all` para apuntar a todos los proveedores
+  - Obligatorio: `--targets` (repetir)
   - Opcional: `--message`, `--media`, `--dry-run`
 
 ## Ejemplos
@@ -210,7 +210,7 @@ openclaw message send --channel discord \
   --components '{"text":"Choose a path","blocks":[{"type":"actions","buttons":[{"label":"Approve","style":"success"},{"label":"Decline","style":"danger"}]}]}'
 ```
 
-Vea [Componentes de Discord](/es/channels/discord#interactive-components) para el esquema completo.
+Consulta los [componentes de Discord](/es/channels/discord#interactive-components) para ver el esquema completo.
 
 Crear una encuesta de Discord:
 
@@ -270,7 +270,7 @@ openclaw message send --channel telegram --target @mychat --message "Choose:" \
   --buttons '[ [{"text":"Yes","callback_data":"cmd:yes"}], [{"text":"No","callback_data":"cmd:no"}] ]'
 ```
 
-Enviar una imagen de Telegram como documento para evitar la compresión:
+Enviar una imagen de Telegram como un documento para evitar la compresión:
 
 ```bash
 openclaw message send --channel telegram --target @mychat \

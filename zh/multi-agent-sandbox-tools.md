@@ -1,45 +1,44 @@
 ---
-summary: "Per-agent sandbox + 工具 restrictions, precedence, and examples"
-title: Multi-Agent 沙箱 & Tools
-read_when: "You want per-agent 沙箱隔离 or per-agent 工具 allow/deny policies in a multi-agent gateway."
+summary: "每个代理的沙箱 + 工具限制、优先级和示例"
+title: 多代理沙箱与工具
+read_when: "您希望在多代理网关中配置每个代理的沙箱或每个代理的工具允许/拒绝策略。"
 status: active
 ---
 
-# Multi-Agent 沙箱 & Tools Configuration
+# 多代理沙箱与工具配置
 
-## Overview
+## 概述
 
-Each agent in a multi-agent setup can now have its own:
+现在，多代理设置中的每个代理都可以拥有自己的：
 
-- **沙箱 configuration** (`agents.list[].sandbox` overrides `agents.defaults.sandbox`)
-- **Tool restrictions** (`tools.allow` / `tools.deny`, plus `agents.list[].tools`)
+- **沙箱配置** (`agents.list[].sandbox` 覆盖 `agents.defaults.sandbox`)
+- **工具限制** (`tools.allow` / `tools.deny`，加上 `agents.list[].tools`)
 
-This allows you to run multiple agents with different security profiles:
+这允许您运行具有不同安全配置文件的多个代理：
 
-- Personal assistant with full access
-- Family/work agents with restricted tools
-- Public-facing agents in sandboxes
+- 具有完全访问权限的个人助理
+- 具有受限工具的家庭/工作代理
+- 沙箱中的面向公众的代理
 
-`setupCommand` belongs under `sandbox.docker` (global or per-agent) and runs once
-when the container is created.
+`setupCommand` 属于 `sandbox.docker` (全局或每个代理) 之下，并在创建容器时运行一次。
 
-Auth is per-agent: each agent reads from its own `agentDir` auth store at:
+认证是针对每个代理的：每个代理从其自己的 `agentDir` 认证存储读取，位置位于：
 
 ```
 ~/.openclaw/agents/<agentId>/agent/auth-profiles.json
 ```
 
-Credentials are **not** shared between agents. Never reuse `agentDir` across agents.
-If you want to share creds, copy `auth-profiles.json` into the other agent's `agentDir`.
+凭据**不**在代理之间共享。切勿在代理之间重复使用 `agentDir`。
+如果您想共享凭据，请将 `auth-profiles.json` 复制到其他代理的 `agentDir` 中。
 
-For how 沙箱隔离 behaves at runtime, see [沙箱隔离](/zh/gateway/sandboxing).
-For debugging “why is this blocked?”, see [沙箱 vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated) and `openclaw sandbox explain`.
+有关沙箱隔离在运行时的行为方式，请参阅 [沙箱隔离](/zh/gateway/sandboxing)。
+有关调试“为什么会被阻止？”，请参阅 [沙箱 vs 工具策略 vs 提升权限](/zh/gateway/sandbox-vs-tool-policy-vs-elevated) 和 `openclaw sandbox explain`。
 
 ---
 
-## Configuration Examples
+## 配置示例
 
-### Example 1: Personal + Restricted Family Agent
+### 示例 1：个人 + 受限的家庭代理
 
 ```json
 {
@@ -83,14 +82,14 @@ For debugging “why is this blocked?”, see [沙箱 vs Tool Policy vs Elevated
 }
 ```
 
-**Result:**
+**结果：**
 
-- `main` agent: Runs on host, full 工具 access
-- `family` agent: Runs in Docker (one container per agent), only `read` 工具
+- `main` 代理：在主机上运行，拥有完全的工具访问权限
+- `family` 代理：在 Docker 中运行（每个代理一个容器），仅限 `read` 工具
 
 ---
 
-### Example 2: Work Agent with Shared 沙箱
+### 示例 2：具有共享沙箱的工作代理
 
 ```json
 {
@@ -121,7 +120,7 @@ For debugging “why is this blocked?”, see [沙箱 vs Tool Policy vs Elevated
 
 ---
 
-### Example 2b: Global coding profile + messaging-only agent
+### 示例 2b：全局编码配置文件 + 仅消息传递代理
 
 ```json
 {
@@ -137,14 +136,14 @@ For debugging “why is this blocked?”, see [沙箱 vs Tool Policy vs Elevated
 }
 ```
 
-**Result:**
+**结果：**
 
-- default agents get coding tools
-- `support` agent is messaging-only (+ Slack 工具)
+- 默认代理获取编码工具
+- `support` 代理仅用于消息传递（+ Slack 工具）
 
 ---
 
-### Example 3: Different 沙箱 Modes per Agent
+### 示例 3：每个代理不同的沙箱模式
 
 ```json
 {
@@ -182,13 +181,13 @@ For debugging “why is this blocked?”, see [沙箱 vs Tool Policy vs Elevated
 
 ---
 
-## Configuration Precedence
+## 配置优先级
 
-When both global (`agents.defaults.*`) and agent-specific (`agents.list[].*`) configs exist:
+当同时存在全局 (`agents.defaults.*`) 和特定于代理的 (`agents.list[].*`) 配置时：
 
-### 沙箱 Config
+### 沙箱配置
 
-Agent-specific settings override global:
+特定于代理的设置会覆盖全局设置：
 
 ```
 agents.list[].sandbox.mode > agents.defaults.sandbox.mode
@@ -200,7 +199,7 @@ agents.list[].sandbox.browser.* > agents.defaults.sandbox.browser.*
 agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 ```
 
-**Notes:**
+**注意：**
 
 - `agents.list[].sandbox.{docker,browser,prune}.*` 会覆盖该代理的 `agents.defaults.sandbox.{docker,browser,prune}.*`（当沙箱范围解析为 `"shared"` 时忽略）。
 
@@ -208,44 +207,44 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 过滤顺序为：
 
-1. **工具配置**（`tools.profile` 或 `agents.list[].tools.profile`）
-2. **提供商工具配置**（`tools.byProvider[provider].profile` 或 `agents.list[].tools.byProvider[provider].profile`）
-3. **全局工具策略**（`tools.allow` / `tools.deny`）
-4. **提供商工具策略**（`tools.byProvider[provider].allow/deny`）
-5. **代理特定工具策略**（`agents.list[].tools.allow/deny`）
-6. **代理提供商策略**（`agents.list[].tools.byProvider[provider].allow/deny`）
-7. **沙箱工具策略**（`tools.sandbox.tools` 或 `agents.list[].tools.sandbox.tools`）
-8. **子代理工具策略**（`tools.subagents.tools`，如适用）
+1. **工具配置文件** (`tools.profile` 或 `agents.list[].tools.profile`)
+2. **提供商工具配置文件** (`tools.byProvider[provider].profile` 或 `agents.list[].tools.byProvider[provider].profile`)
+3. **全局工具策略** (`tools.allow` / `tools.deny`)
+4. **提供商工具策略** (`tools.byProvider[provider].allow/deny`)
+5. **特定于代理的工具策略** (`agents.list[].tools.allow/deny`)
+6. **代理提供商策略** (`agents.list[].tools.byProvider[provider].allow/deny`)
+7. **沙箱工具策略** (`tools.sandbox.tools` 或 `agents.list[].tools.sandbox.tools`)
+8. **子代理工具策略** (`tools.subagents.tools`，如果适用)
 
-每个层级都可以进一步限制工具，但不能恢复早期层级中被拒绝的工具。
+每一层级都可以进一步限制工具，但不能恢复先前层级中被拒绝的工具。
 如果设置了 `agents.list[].tools.sandbox.tools`，它将替换该代理的 `tools.sandbox.tools`。
 如果设置了 `agents.list[].tools.profile`，它将覆盖该代理的 `tools.profile`。
 提供商工具键接受 `provider`（例如 `google-antigravity`）或 `provider/model`（例如 `openai/gpt-5.2`）。
 
 ### 工具组（简写）
 
-工具策略（全局、代理、沙箱）支持扩展为多个具体工具的 `group:*` 条目：
+工具策略（全局、代理、沙箱）支持 `group:*` 条目，这些条目可扩展为多个具体的工具：
 
 - `group:runtime`：`exec`、`bash`、`process`
 - `group:fs`：`read`、`write`、`edit`、`apply_patch`
 - `group:sessions`：`sessions_list`、`sessions_history`、`sessions_send`、`sessions_spawn`、`session_status`
 - `group:memory`：`memory_search`、`memory_get`
 - `group:ui`：`browser`、`canvas`
-- `group:automation`: `cron`, `gateway`
-- `group:messaging`: `message`
-- `group:nodes`: `nodes`
-- `group:openclaw`: 所有内置 OpenClaw 工具（不包括提供商插件）
+- `group:automation`：`cron`、`gateway`
+- `group:messaging`：`message`
+- `group:nodes`：`nodes`
+- `group:openclaw`：所有内置的 OpenClaw 工具（不包括提供商插件）
 
 ### 提升模式
 
-`tools.elevated` 是全局基线（基于发送方的允许列表）。`agents.list[].tools.elevated` 可以针对特定代理进一步限制提升权限（两者必须均允许）。
+`tools.elevated` 是全局基线（基于发件人的允许列表）。`agents.list[].tools.elevated` 可以针对特定代理进一步限制提升模式（两者都必须允许）。
 
 缓解模式：
 
-- 拒绝非受信代理的 `exec` (`agents.list[].tools.deny: ["exec"]`)
-- 避免将路由到受限代理的发送方加入允许列表
-- 如果您只希望沙箱隔离执行，请全局禁用提升模式 (`tools.elevated.enabled: false`)
-- 针对敏感配置文件，逐个代理禁用提升模式 (`agents.list[].tools.elevated.enabled: false`)
+- 拒绝不受信任代理的 `exec`（`agents.list[].tools.deny: ["exec"]`）
+- 避免将路由到受限代理的发件人加入允许列表
+- 如果您只希望进行沙箱隔离执行，请全局禁用 elevated (`tools.elevated.enabled: false`)
+- 针对敏感配置文件，请为每个代理禁用 elevated (`agents.list[].tools.elevated.enabled: false`)
 
 ---
 
@@ -291,7 +290,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 }
 ```
 
-旧的 `agent.*` 配置由 `openclaw doctor` 迁移；今后请使用 `agents.defaults` + `agents.list`。
+旧的 `agent.*` 配置将由 `openclaw doctor` 迁移；今后建议使用 `agents.defaults` + `agents.list`。
 
 ---
 
@@ -319,7 +318,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 }
 ```
 
-### 仅通信代理
+### 仅通讯代理
 
 ```json
 {
@@ -332,12 +331,12 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 ---
 
-## 常见陷阱："non-main"
+## 常见误区："non-main"
 
 `agents.defaults.sandbox.mode: "non-main"` 基于 `session.mainKey`（默认为 `"main"`），
-而不是代理 ID。组/渠道会话总是获得自己的密钥，因此
-它们被视为非主体，将被沙箱隔离。如果您希望代理永不
-沙箱隔离，请设置 `agents.list[].sandbox.mode: "off"`。
+而非代理 id。群组/渠道会话总是拥有自己的密钥，因此
+它们被视为非主代理并将处于沙箱隔离中。如果您希望代理永不
+进行沙箱隔离，请设置 `agents.list[].sandbox.mode: "off"`。
 
 ---
 
@@ -370,21 +369,21 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 ## 故障排除
 
-### 尽管设置了 `mode: "all"`，代理仍未沙箱隔离
+### 尽管有 `mode: "all"`，代理仍未沙箱隔离
 
-- 检查是否有覆盖它的全局 `agents.defaults.sandbox.mode`
+- 检查是否存在覆盖它的全局 `agents.defaults.sandbox.mode`
 - 代理特定配置优先级更高，因此请设置 `agents.list[].sandbox.mode: "all"`
 
-### 尽管有拒绝列表，工具仍然可用
+### 尽管存在拒绝列表，工具仍然可用
 
 - 检查工具过滤顺序：全局 → 代理 → 沙箱 → 子代理
-- 每一层只能进一步限制，不能恢复权限
+- 每一层级只能进一步限制，不能恢复权限
 - 通过日志验证：`[tools] filtering tools for agent:${agentId}`
 
 ### 容器未按代理隔离
 
 - 在代理特定的沙箱配置中设置 `scope: "agent"`
-- 默认值为 `"session"`，即为每个会话创建一个容器
+- 默认值是 `"session"`，它会为每个会话创建一个容器
 
 ---
 

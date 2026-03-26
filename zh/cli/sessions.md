@@ -1,7 +1,7 @@
 ---
-summary: "CLI 参考文档 `openclaw sessions`（列出存储的会话 + 用法）"
+summary: "CLI reference for `openclaw sessions` (list stored sessions + usage)"
 read_when:
-  - 您想要列出存储的会话并查看最近的活动
+  - You want to list stored sessions and see recent activity
 title: "sessions"
 ---
 
@@ -20,15 +20,11 @@ openclaw sessions --json
 范围选择：
 
 - 默认：配置的默认代理存储
-- `--agent <id>`：一个已配置的代理存储
-- `--all-agents`：聚合所有已配置的代理存储
-- `--store <path>`：显式存储路径（不能与 `--agent` 或 `--all-agents` 结合使用）
+- `--agent <id>`：一个配置的代理存储
+- `--all-agents`：聚合所有配置的代理存储
+- `--store <path>`：显式存储路径（不能与 `--agent` 或 `--all-agents` 组合使用）
 
-`openclaw sessions --all-agents` 读取已配置的代理存储。Gateway(网关) 和 ACP
-会话发现范围更广：它们还包括在默认
-`agents/` 根目录或模板化 `session.store` 根目录下找到的仅限磁盘的存储。这些
-发现的存储必须解析为代理根目录内的常规
-`sessions.json` 文件；符号链接和根目录外的路径将被跳过。
+`openclaw sessions --all-agents` 读取已配置的代理存储。Gateway 网关 和 ACP 会话发现范围更广：它们还包括在默认 `agents/` 根目录或模板化 `session.store` 根目录下发现的仅磁盘存储。这些发现的存储必须解析为代理根目录内的常规 `sessions.json` 文件；符号链接和根目录外的路径会被跳过。
 
 JSON 示例：
 
@@ -46,7 +42,7 @@ JSON 示例：
   "activeMinutes": null,
   "sessions": [
     { "agentId": "main", "key": "agent:main:main", "model": "gpt-5" },
-    { "agentId": "work", "key": "agent:work:main", "model": "claude-opus-4-5" }
+    { "agentId": "work", "key": "agent:work:main", "model": "claude-opus-4-6" }
   ]
 }
 ```
@@ -66,16 +62,16 @@ openclaw sessions cleanup --json
 
 `openclaw sessions cleanup` 使用配置中的 `session.maintenance` 设置：
 
-- 范围说明：`openclaw sessions cleanup` 仅维护会话存储/转录记录。它不会修剪 cron 运行日志 (`cron/runs/<jobId>.jsonl`)，这些日志由 [Cron 配置](/zh/automation/cron-jobs#configuration) 中的 `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 管理，并在 [Cron 维护](/zh/automation/cron-jobs#maintenance) 中进行了解释。
+- 范围说明：`openclaw sessions cleanup` 仅维护会话存储/记录。它不会清理 cron 运行日志 (`cron/runs/<jobId>.jsonl`)，这些日志由 [Cron configuration](/zh/automation/cron-jobs#configuration) 中的 `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 管理，并在 [Cron maintenance](/zh/automation/cron-jobs#maintenance) 中进行解释。
 
-- `--dry-run`：预览将修剪/封存的条目数量，而不进行实际写入。
-  - 在文本模式下，dry-run 会打印每个会话的操作表 (`Action`、`Key`、`Age`、`Model`、`Flags`)，以便您查看将保留哪些内容与将删除哪些内容。
-- `--enforce`：即使 `session.maintenance.mode` 为 `warn`，也应用维护。
-- `--active-key <key>`：保护特定的活动密钥免受磁盘预算驱逐。
-- `--agent <id>`：对一个已配置的代理存储运行清理。
-- `--all-agents`：对所有已配置的代理存储运行清理。
+- `--dry-run`：预览将修剪/封顶的条目数量而不进行写入。
+  - 在文本模式下，dry-run 会打印一个按会话列出的操作表 (`Action`, `Key`, `Age`, `Model`, `Flags`)，以便您查看哪些内容会被保留，哪些会被移除。
+- `--enforce`：即使 `session.maintenance.mode` 为 `warn` 时也应用维护。
+- `--active-key <key>`：保护特定的活动密钥不被磁盘预算驱逐。
+- `--agent <id>`: 为一个已配置的代理存储运行清理。
+- `--all-agents`: 为所有已配置的代理存储运行清理。
 - `--store <path>`: 针对特定的 `sessions.json` 文件运行。
-- `--json`: 打印 JSON 摘要。配合 `--all-agents` 使用时，输出包含每个存储的摘要。
+- `--json`: 打印 JSON 摘要。使用 `--all-agents` 时，输出包括每个存储的摘要。
 
 `openclaw sessions cleanup --all-agents --dry-run --json`:
 
@@ -107,7 +103,7 @@ openclaw sessions cleanup --json
 
 相关：
 
-- Session 配置：[配置参考](/zh/gateway/configuration-reference#session)
+- 会话配置：[Configuration reference](/zh/gateway/configuration-reference#session)
 
 import zh from "/components/footer/zh.mdx";
 

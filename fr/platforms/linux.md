@@ -1,42 +1,42 @@
 ---
-summary: "Linux support + companion app status"
+summary: "Prise en charge Linux + statut de l'application compagnon"
 read_when:
   - Looking for Linux companion app status
   - Planning platform coverage or contributions
-title: "Linux App"
+title: "Application Linux"
 ---
 
-# Linux App
+# Application Linux
 
-The Gateway is fully supported on Linux. **Node is the recommended runtime**.
-Bun is not recommended for the Gateway (WhatsApp/Telegram bugs).
+Le Gateway est entièrement pris en charge sur Linux. **Node est l'environnement d'exécution recommandé**.
+Bun n'est pas recommandé pour le Gateway (bugs WhatsApp/Telegram).
 
-Native Linux companion apps are planned. Contributions are welcome if you want to help build one.
+Des applications compagnons natives Linux sont prévues. Les contributions sont les bienvenues si vous souhaitez aider à en construire une.
 
-## Beginner quick path (VPS)
+## Parcours rapide pour débutants (VPS)
 
-1. Install Node 24 (recommended; Node 22 LTS, currently `22.16+`, still works for compatibility)
+1. Installez Node 24 (recommandé ; Node 22 LTS, actuellement `22.16+`, fonctionne toujours pour la compatibilité)
 2. `npm i -g openclaw@latest`
 3. `openclaw onboard --install-daemon`
-4. From your laptop: `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
-5. Open `http://127.0.0.1:18789/` and paste your token
+4. Depuis votre ordinateur portable : `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
+5. Ouvrez `http://127.0.0.1:18789/` et collez votre jeton
 
-Step-by-step VPS guide: [exe.dev](/fr/install/exe-dev)
+Guide complet du serveur Linux : [Linux Server](/fr/vps). Exemple étape par étape de VPS : [exe.dev](/fr/install/exe-dev)
 
-## Install
+## Installer
 
 - [Getting Started](/fr/start/getting-started)
 - [Install & updates](/fr/install/updating)
-- Optional flows: [Bun (experimental)](/fr/install/bun), [Nix](/fr/install/nix), [Docker](/fr/install/docker)
+- Flux facultatifs : [Bun (expérimental)](/fr/install/bun), [Nix](/fr/install/nix), [Docker](/fr/install/docker)
 
 ## Gateway
 
 - [Gateway runbook](/fr/gateway)
 - [Configuration](/fr/gateway/configuration)
 
-## Gateway service install (CLI)
+## Installation du service Gateway (CLI)
 
-Use one of these:
+Utilisez l'une de ces options :
 
 ```
 openclaw onboard --install-daemon
@@ -48,29 +48,29 @@ Ou :
 openclaw gateway install
 ```
 
-Or:
+Ou :
 
 ```
 openclaw configure
 ```
 
-Select **Gateway service** when prompted.
+Sélectionnez **Gateway service** lorsqu'on vous le demande.
 
-Repair/migrate:
+Réparer/migrer :
 
 ```
 openclaw doctor
 ```
 
-## System control (systemd user unit)
+## Contrôle système (unité utilisateur systemd)
 
-OpenClaw installs a systemd **user** service by default. Use a **system**
-service for shared or always-on servers. The full unit example and guidance
-live in the [Gateway runbook](/fr/gateway).
+OpenClaw installe un service systemd **utilisateur** par défaut. Utilisez un service
+**système** pour les serveurs partagés ou toujours actifs. L'exemple complet d'unité
+et les conseils se trouvent dans le [Gateway runbook](/fr/gateway).
 
-Minimal setup:
+Configuration minimale :
 
-Create `~/.config/systemd/user/openclaw-gateway[-<profile>].service`:
+Créez `~/.config/systemd/user/openclaw-gateway[-<profile>].service` :
 
 ```
 [Unit]
@@ -87,7 +87,7 @@ RestartSec=5
 WantedBy=default.target
 ```
 
-Enable it:
+Activez-le :
 
 ```
 systemctl --user enable --now openclaw-gateway[-<profile>].service

@@ -1,62 +1,59 @@
 ---
-summary: "Workflow Bun (expérimental) : installations et pièges vs pnpm"
+summary: "Workflow Bun (expérimental) : installations et pièges par rapport à pnpm"
 read_when:
-  - Vous souhaitez la boucle de dev locale la plus rapide (bun + watch)
-  - Vous rencontrez des problèmes d'installation/patch/scripts de cycle de vie Bun
+  - You want the fastest local dev loop (bun + watch)
+  - You hit Bun install/patch/lifecycle script issues
 title: "Bun (Expérimental)"
 ---
 
-# Bun (expérimental)
+# Bun (Expérimental)
 
-Objectif : exécuter ce dépôt avec **Bun** (optionnel, non recommandé pour WhatsApp/Telegram)
-sans diverger des workflows pnpm.
+<Warning>
+  Bun est **déconseillé pour le runtime de passerelle** (problèmes connus avec WhatsApp et
+  Telegram). Utilisez Node pour la production.
+</Warning>
 
-⚠️ **Non recommandé pour le runtime Gateway** (bugs WhatsApp/Telegram). Utilisez Node pour la production.
-
-## Statut
-
-- Bun est un runtime local optionnel pour exécuter TypeScript directement (`bun run …`, `bun --watch …`).
-- `pnpm` est la valeur par défaut pour les builds et reste entièrement pris en charge (et utilisé par certains outils de documentation).
-- Bun ne peut pas utiliser `pnpm-lock.yaml` et l'ignorera.
+Bun est un runtime local facultatif pour exécuter TypeScript directement (`bun run ...`, `bun --watch ...`). Le gestionnaire de paquets par défaut reste `pnpm`, qui est entièrement pris en charge et utilisé par les outils de documentation. Bun ne peut pas utiliser `pnpm-lock.yaml` et l'ignorera.
 
 ## Installer
 
-Par défaut :
+<Steps>
+  <Step title="Installer les dépendances">
+    ```sh
+    bun install
+    ```
 
-```sh
-bun install
-```
+    `bun.lock` / `bun.lockb` sont ignorés par git, il n'y a donc pas de modifications inutiles dans le dépôt. Pour sauter entièrement les écritures de fichiers de verrouillage :
 
-Remarque : `bun.lock`/`bun.lockb` sont gitignorés, il n'y a donc pas de modifications inutiles dans le dépôt dans les deux cas. Si vous ne souhaitez _aucune écriture de fichier de verrouillage_ :
+    ```sh
+    bun install --no-save
+    ```
 
-```sh
-bun install --no-save
-```
+  </Step>
+  <Step title="Construire et tester">
+    ```sh
+    bun run build
+    bun run vitest run
+    ```
+  </Step>
+</Steps>
 
-## Build / Test (Bun)
+## Scripts de cycle de vie
 
-```sh
-bun run build
-bun run vitest run
-```
+Bun bloque les scripts de cycle de vie des dépendances sauf s'ils sont explicitement approuvés. Pour ce dépôt, les scripts couramment bloqués ne sont pas requis :
 
-## Scripts de cycle de vie Bun (bloqués par défaut)
+- `@whiskeysockets/baileys` `preinstall` -- vérifie que la version majeure de Node est >= 20 (OpenClaw utilise par défaut Node 24 et prend toujours en charge Node 22 LTS, actuellement `22.16+`)
+- `protobufjs` `postinstall` -- émet des avertissements concernant les schémas de version incompatibles (pas d'artefacts de build)
 
-Bun peut bloquer les scripts de cycle de vie des dépendances sauf s'ils sont explicitement approuvés (`bun pm untrusted` / `bun pm trust`).
-Pour ce dépôt, les scripts couramment bloqués ne sont pas requis :
-
-- `@whiskeysockets/baileys` `preinstall` : vérifie que Node major >= 20 (OpenClaw est défini par défaut sur Node 24 et prend toujours en charge Node 22 LTS, actuellement `22.16+`).
-- `protobufjs` `postinstall` : émet des avertissements concernant les schémas de version incompatibles (pas d'artefacts de build).
-
-Si vous rencontrez un vrai problème d'exécution nécessitant ces scripts, approuvez-les explicitement :
+Si vous rencontrez un problème d'exécution nécessitant ces scripts, accordez-leur explicitement votre confiance :
 
 ```sh
 bun pm trust @whiskeysockets/baileys protobufjs
 ```
 
-## Avertissements
+## Mises en garde
 
-- Certains scripts utilisent encore pnpm en dur (par ex. `docs:build`, `ui:*`, `protocol:check`). Exécutez-les via pnpm pour le moment.
+Certains scripts codent encore en dur pnpm (par exemple `docs:build`, `ui:*`, `protocol:check`). Exécutez-les via pnpm pour l'instant.
 
 import fr from "/components/footer/fr.mdx";
 

@@ -1,21 +1,21 @@
 ---
-summary: "`secrets apply` 計劃的約定：目標驗證、路徑匹配以及 `auth-profiles.json` 目標範圍"
+summary: "用於 `secrets apply` 計畫的合約：目標驗證、路徑比對以及 `auth-profiles.json` 目標範圍"
 read_when:
-  - 正在產生或審查 `openclaw secrets apply` 計劃
-  - 除錯 `Invalid plan target path` 錯誤
-  - 瞭解目標類型和路徑驗證行為
+  - Generating or reviewing `openclaw secrets apply` plans
+  - Debugging `Invalid plan target path` errors
+  - Understanding target type and path validation behavior
 title: "Secrets Apply Plan Contract"
 ---
 
-# Secrets apply plan contract
+# Secrets 套用計畫合約
 
-本頁定義了 `openclaw secrets apply` 強制執行的嚴格約定。
+本頁面定義了由 `openclaw secrets apply` 強制執行的嚴格合約。
 
-如果目標不符合這些規則，在變更組態之前，apply 將會失敗。
+如果目標不符合這些規則，則會在變更配置之前導致應用失敗。
 
-## Plan file shape
+## 計畫檔案結構
 
-`openclaw secrets apply --from <plan.json>` 預期一個 `targets` 陣列作為計劃目標：
+`openclaw secrets apply --from <plan.json>` 預期一個包含計畫目標的 `targets` 陣列：
 
 ```json5
 {
@@ -40,56 +40,56 @@ title: "Secrets Apply Plan Contract"
 }
 ```
 
-## Supported target scope
+## 支援的目標範圍
 
-以下位置中支援的憑證路徑會接受計劃目標：
+計畫目標被接受用於以下支援的憑證路徑：
 
 - [SecretRef Credential Surface](/zh-Hant/reference/secretref-credential-surface)
 
-## Target type behavior
+## 目標類型行為
 
 一般規則：
 
-- `target.type` 必須被識別，且必須符合正規化的 `target.path` 形狀。
+- `target.type` 必須被識別，且必須符合標準化的 `target.path` 形狀。
 
-現有計劃仍接受相容性別名：
+相容性別名仍被現有計畫接受：
 
 - `models.providers.apiKey`
 - `skills.entries.apiKey`
 - `channels.googlechat.serviceAccount`
 
-## Path validation rules
+## 路徑驗證規則
 
-每個目標都會根據以下所有項目進行驗證：
+每個目標都會使用以下所有規則進行驗證：
 
-- `type` 必須是可識別的目標類型。
-- `path` 必須是非空白的點分隔路徑。
-- `pathSegments` 可以省略。如果提供，其正規化後的路徑必須與 `path` 完全相同。
+- `type` 必須是已識別的目標類型。
+- `path` 必須是非空的點路徑。
+- `pathSegments` 可以省略。如果提供，則必須正規化為與 `path` 完全相同的路徑。
 - 禁止的區段會被拒絕：`__proto__`、`prototype`、`constructor`。
-- 正規化路徑必須符合該目標類型的註冊路徑形狀。
-- 如果設定了 `providerId` 或 `accountId`，其必須符合路徑中編碼的 ID。
+- 正規化路徑必須符合目標類型的註冊路徑形狀。
+- 如果設定了 `providerId` 或 `accountId`，它必須與路徑中編碼的相符。
 - `auth-profiles.json` 目標需要 `agentId`。
 - 建立新的 `auth-profiles.json` 對應時，請包含 `authProfileProvider`。
 
-## Failure behavior
+## 失敗行為
 
-如果目標驗證失敗，apply 將會產生類似以下的錯誤並結束：
+如果目標驗證失敗，apply 會以類似以下的錯誤結束：
 
 ```text
 Invalid plan target path for models.providers.apiKey: models.providers.openai.baseUrl
 ```
 
-無效的計劃不會執行任何寫入操作。
+無效的計畫不會提交任何寫入。
 
-## Exec provider consent behavior
+## Exec 提供者同意行為
 
 - `--dry-run` 預設會跳過 exec SecretRef 檢查。
-- 包含 exec SecretRefs/提供者的計劃在寫入模式下會被拒絕，除非設定了 `--allow-exec`。
-- 在驗證/套用包含 exec 的計劃時，請在試執行和寫入命令中傳遞 `--allow-exec`。
+- 除非設定了 `--allow-exec`，否則包含 exec SecretRefs/提供者的計畫會在寫入模式下被拒絕。
+- 驗證/套用包含 exec 的計畫時，請在 dry-run 和寫入指令中傳遞 `--allow-exec`。
 
-## 執行時和稽核範圍註記
+## Runtime 和稽核範圍注意事項
 
-- 僅參照的 `auth-profiles.json` 項目（`keyRef`/`tokenRef`）包含在執行時解析和稽核覆蓋範圍內。
+- 僅引用 `auth-profiles.json` 項目 (`keyRef`/`tokenRef`) 包含在執行時期解析和稽核涵蓋範圍內。
 - `secrets apply` 會寫入支援的 `openclaw.json` 目標、支援的 `auth-profiles.json` 目標以及選用的清理目標。
 
 ## 操作員檢查
@@ -106,7 +106,7 @@ openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-
 openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
 ```
 
-如果套用失敗並顯示無效目標路徑訊息，請使用 `openclaw secrets configure` 重新產生計劃，或將目標路徑修正為上述支援的形狀。
+如果 apply 失敗並顯示無效的目標路徑訊息，請使用 `openclaw secrets configure` 重新產生計畫，或將目標路徑修正為上述支援的格式。
 
 ## 相關文件
 

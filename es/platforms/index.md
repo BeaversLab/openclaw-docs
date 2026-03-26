@@ -1,8 +1,8 @@
 ---
-summary: "Resumen de soporte de plataformas (Gateway + aplicaciones complementarias)"
+summary: "Resumen de compatibilidad de plataformas (Gateway + aplicaciones complementarias)"
 read_when:
-  - Buscando soporte de SO o rutas de instalación
-  - Decidiendo dónde ejecutar el Gateway
+  - Looking for OS support or install paths
+  - Deciding where to run the Gateway
 title: "Plataformas"
 ---
 
@@ -11,11 +11,11 @@ title: "Plataformas"
 El núcleo de OpenClaw está escrito en TypeScript. **Node es el tiempo de ejecución recomendado**.
 No se recomienda Bun para el Gateway (errores de WhatsApp/Telegram).
 
-Existen aplicaciones complementarias para macOS (aplicación de barra de menús) y nodos móviles (iOS/Android). Las aplicaciones complementarias para Windows y
-Linux están planeadas, pero el Gateway es totalmente compatible hoy en día.
-Las aplicaciones complementarias nativas para Windows también están planeadas; se recomienda el Gateway a través de WSL2.
+Existen aplicaciones complementarias para macOS (aplicación de la barra de menús) y nodos móviles (iOS/Android). Se planean
+aplicaciones complementarias para Windows y Linux, pero hoy el Gateway es totalmente compatible.
+También se planean aplicaciones complementarias nativas para Windows; se recomienda el Gateway a través de WSL2.
 
-## Elige tu SO
+## Elige tu sistema operativo
 
 - macOS: [macOS](/es/platforms/macos)
 - iOS: [iOS](/es/platforms/ios)
@@ -23,13 +23,14 @@ Las aplicaciones complementarias nativas para Windows también están planeadas;
 - Windows: [Windows](/es/platforms/windows)
 - Linux: [Linux](/es/platforms/linux)
 
-## VPS y hosting
+## VPS y alojamiento
 
-- Centro VPS: [Alojamiento VPS](/es/vps)
+- Centro de VPS: [Alojamiento VPS](/es/vps)
 - Fly.io: [Fly.io](/es/install/fly)
 - Hetzner (Docker): [Hetzner](/es/install/hetzner)
 - GCP (Compute Engine): [GCP](/es/install/gcp)
-- exe.dev (VM + proxy HTTPS): [exe.dev](/es/install/exe-dev)
+- Azure (máquina virtual Linux): [Azure](/es/install/azure)
+- exe.dev (máquina virtual + proxy HTTPS): [exe.dev](/es/install/exe-dev)
 
 ## Enlaces comunes
 
@@ -47,7 +48,7 @@ Use uno de estos (todos compatibles):
 - Flujo de configuración: `openclaw configure` → seleccione **Gateway service**
 - Reparar/migrar: `openclaw doctor` (ofrece instalar o reparar el servicio)
 
-El destino del servicio depende del SO:
+El destino del servicio depende del sistema operativo:
 
 - macOS: LaunchAgent (`ai.openclaw.gateway` o `ai.openclaw.<profile>`; heredado `com.openclaw.*`)
 - Linux/WSL2: servicio de usuario systemd (`openclaw-gateway[-<profile>].service`)

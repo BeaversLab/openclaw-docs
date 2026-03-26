@@ -1,21 +1,21 @@
 ---
-summary: "Panel de Canvas controlado por agente incrustado a través de WKWebView + esquema de URL personalizado"
+summary: "Panel Canvas controlado por agente incrustado a través de WKWebView + esquema de URL personalizado"
 read_when:
-  - Implementar el panel de Canvas de macOS
-  - Agregar controles de agente para el espacio de trabajo visual
-  - Depuración de las cargas del lienzo WKWebView
+  - Implementing the macOS Canvas panel
+  - Adding agent controls for visual workspace
+  - Debugging WKWebView canvas loads
 title: "Canvas"
 ---
 
 # Canvas (aplicación macOS)
 
-La aplicación macOS incrusta un **panel Canvas** controlado por agente usando `WKWebView`. Es
+La aplicación macOS incrusta un **panel Canvas** controlado por agente utilizando `WKWebView`. Es
 un espacio de trabajo visual ligero para HTML/CSS/JS, A2UI y pequeñas superficies
-de IU interactivas.
+de UI interactivas.
 
-## Dónde reside Canvas
+## Dónde se encuentra Canvas
 
-El estado de Canvas se almacena en Soporte de la aplicación:
+El estado de Canvas se almacena en Soporte de aplicaciones (Application Support):
 
 - `~/Library/Application Support/OpenClaw/canvas/<session>/...`
 
@@ -29,16 +29,16 @@ Ejemplos:
 - `openclaw-canvas://main/assets/app.css` → `<canvasRoot>/main/assets/app.css`
 - `openclaw-canvas://main/widgets/todo/` → `<canvasRoot>/main/widgets/todo/index.html`
 
-Si no existe ningún `index.html` en la raíz, la aplicación muestra una **página de andamio integrada**.
+Si no existe ningún `index.html` en la raíz, la aplicación muestra una **página de andamiaje incorporada**.
 
 ## Comportamiento del panel
 
-- Panel redimensionable sin bordes anclado cerca de la barra de menús (o del cursor del mouse).
-- Recuerda el tamaño/posición por sesión.
-- Se recarga automáticamente cuando cambian los archivos locales del lienzo.
-- Solo un panel de Canvas es visible a la vez (la sesión se cambia según sea necesario).
+- Panel sin bordes y redimensionable, anclado cerca de la barra de menús (o del cursor del ratón).
+- Recuerda el tamaño y la posición por sesión.
+- Se recarga automáticamente cuando cambian los archivos locales de canvas.
+- Solo un panel Canvas es visible a la vez (la sesión se cambia según sea necesario).
 
-Canvas se puede deshabilitar desde Configuración → **Permitir Canvas**. Cuando está deshabilitado, los comandos
+Canvas se puede desactivar desde Configuración → **Permitir Canvas**. Cuando está desactivado, los comandos
 del nodo canvas devuelven `CANVAS_DISABLED`.
 
 ## Superficie de la API del agente
@@ -61,16 +61,16 @@ openclaw nodes canvas snapshot --node <id>
 
 Notas:
 
-- `canvas.navigate` acepta **rutas de lienzo locales**, URLs de `http(s)` y URLs de `file://`.
-- Si pasa `"/"`, el Canvas muestra el andamio local o el `index.html`.
+- `canvas.navigate` acepta **rutas de canvas locales**, URL `http(s)` y URL `file://`.
+- Si pasas `"/"`, Canvas muestra el andamiaje local o `index.html`.
 
 ## A2UI en Canvas
 
-A2UI está alojado por el host de lienzo de Gateway y se representa dentro del panel Canvas.
-Cuando Gateway anuncia un host de Canvas, la aplicación macOS navega automáticamente
-a la página del host A2UI en la primera apertura.
+A2UI está alojado por el host de canvas de la puerta de enlace (Gateway) y se representa dentro del panel Canvas.
+Cuando la puerta de enlace anuncia un host de Canvas, la aplicación macOS navega automáticamente a la
+página del host A2UI en la primera apertura.
 
-URL del host A2UI predeterminada:
+URL del host A2UI predeterminado:
 
 ```
 http://<gateway-host>:18789/__openclaw__/a2ui/
@@ -78,7 +78,7 @@ http://<gateway-host>:18789/__openclaw__/a2ui/
 
 ### Comandos de A2UI (v0.8)
 
-Actualmente, Canvas acepta mensajes de servidor→cliente de **A2UI v0.8**:
+Actualmente, Canvas acepta mensajes de servidor a cliente de **A2UI v0.8**:
 
 - `beginRendering`
 - `surfaceUpdate`
@@ -104,7 +104,7 @@ Prueba rápida:
 openclaw nodes canvas a2ui push --node <id> --text "Hello from A2UI"
 ```
 
-## Activar ejecuciones de agentes desde Canvas
+## Activación de ejecuciones de agentes desde Canvas
 
 Canvas puede activar nuevas ejecuciones de agentes a través de enlaces profundos:
 
@@ -120,9 +120,9 @@ La aplicación solicita confirmación a menos que se proporcione una clave váli
 
 ## Notas de seguridad
 
-- El esquema de Canvas bloquea el cruce de directorios; los archivos deben vivir en la raíz de la sesión.
-- El contenido local de Canvas utiliza un esquema personalizado (no se requiere servidor de bucle invertido).
-- Las URL externas `http(s)` solo se permiten cuando se navega explícitamente.
+- El esquema de Canvas bloquea el cruce de directorios; los archivos deben residir en la raíz de la sesión.
+- El contenido local de Canvas utiliza un esquema personalizado (no se requiere servidor de retorno de bucle).
+- Las URL externas de `http(s)` solo se permiten cuando se navega explícitamente.
 
 import es from "/components/footer/es.mdx";
 

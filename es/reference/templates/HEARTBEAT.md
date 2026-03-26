@@ -1,15 +1,17 @@
 ---
-title: "Plantilla HEARTBEAT.md"
-summary: "Plantilla de espacio de trabajo para HEARTBEAT.md"
+title: "Plantilla de HEARTBEAT.md"
+summary: "Plantilla del área de trabajo para HEARTBEAT.md"
 read_when:
-  - Inicializar manualmente un espacio de trabajo
+  - Bootstrapping a workspace manually
 ---
 
-# HEARTBEAT.md
+# Plantilla de HEARTBEAT.md
 
-# Mantenga este archivo vacío (o solo con comentarios) para omitir las llamadas a la API de latido.
+```markdown
+# Keep this file empty (or with only comments) to skip heartbeat API calls.
 
-# Añada tareas a continuación cuando desee que el agente verifique algo periódicamente.
+# Add tasks below when you want the agent to check something periodically.
+```
 
 import es from "/components/footer/es.mdx";
 

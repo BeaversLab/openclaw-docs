@@ -1,17 +1,15 @@
 ---
-summary: "Proposal: long-term command authorization 模型 for ACP-bound conversations"
+summary: "提案：ACP 绑定对话的长期命令授权模型"
 read_when:
   - Designing native command auth behavior in Telegram/Discord ACP-bound channels/topics
-title: "ACP Bound Command Authorization (Proposal)"
+title: "ACP 绑定命令授权（提案）"
 ---
 
 # ACP 绑定命令授权（提案）
 
 状态：已提议，**尚未实施**。
 
-This document describes a long-term authorization 模型 for native commands in
-ACP-bound conversations. It is an experiments proposal and does not replace
-current production behavior.
+本文档描述了 ACP 绑定对话中原生命令的长期授权模型。这是一个实验性提案，不会取代当前的生产环境行为。
 
 有关已实施的行为，请阅读以下源代码和测试：
 
@@ -21,14 +19,11 @@ current production behavior.
 
 ## 问题
 
-Today we have command-specific checks (for example `/new` and `/reset`) that
-need to work inside ACP-bound channels/topics even when allowlists are empty.
-This solves immediate UX pain, but command-name-based exceptions do not scale.
+今天，我们拥有特定命令的检查（例如 `/new` 和 `/reset`），即使在白名单为空时，也需要在 ACP 绑定的频道/主题中工作。这解决了眼前的用户体验痛点，但基于命令名称的例外情况无法扩展。
 
 ## 长期形态
 
-Move command authorization from ad-hoc handler logic to command metadata plus a
-shared policy evaluator.
+将命令授权从临时的处理程序逻辑转移到命令元数据和共享的策略评估器。
 
 ### 1) 将授权策略元数据添加到命令定义
 
@@ -41,8 +36,8 @@ type CommandAuthPolicy =
   | { mode: "owner_only" };
 ```
 
-`/new` and `/reset` would use `bound_acp_or_owner_or_allowlist`.
-Most other commands would remain `owner_or_allowlist`.
+`/new` 和 `/reset` 将使用 `bound_acp_or_owner_or_allowlist`。
+大多数其他命令将保持 `owner_or_allowlist`。
 
 ### 2) 在频道之间共享一个评估器
 
@@ -52,14 +47,11 @@ Most other commands would remain `owner_or_allowlist`.
 - 发送者授权状态
 - 已解析的对话绑定状态
 
-Both Telegram and Discord native handlers should call the same helper to avoid
-behavior drift.
+Telegram 和 Discord 原生处理程序都应调用同一个辅助函数，以避免行为漂移。
 
 ### 3) 使用绑定匹配作为绕过边界
 
-When policy allows bound ACP bypass, authorize only if a configured binding
-match was resolved for the current conversation (not just because current
-会话 key looks ACP-like).
+当策略允许绑定 ACP 绕过时，仅当为当前对话解析了配置的绑定匹配时才授权（不仅仅是因为当前会话密钥看起来像 ACP）。
 
 这使边界保持明确，并最大限度地减少意外扩大。
 
@@ -74,7 +66,7 @@ match was resolved for the current conversation (not just because current
 
 1. 将命令授权策略字段添加到命令注册类型和命令数据中。
 2. 实现共享评估器并迁移 Telegram 和 Discord 原生处理器。
-3. Move `/new` and `/reset` to metadata-driven policy.
+3. 将 `/new` 和 `/reset` 迁移到元数据驱动的策略。
 4. 针对每种策略模式和渠道界面添加测试。
 
 ## 非目标
@@ -85,8 +77,7 @@ match was resolved for the current conversation (not just because current
 
 ## 注意
 
-This proposal is intentionally additive and does not delete or replace existing
-experiments documents.
+本提案意在增量添加，不会删除或替换现有的实验文档。
 
 import zh from "/components/footer/zh.mdx";
 

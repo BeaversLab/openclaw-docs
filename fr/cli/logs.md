@@ -1,18 +1,18 @@
 ---
-summary: "Référence de la CLI pour `openclaw logs` (suivre les journaux du Gateway via RPC)"
+summary: "Référence CLI pour `openclaw logs` (tail gateway logs via RPC)"
 read_when:
-  - Vous devez suivre les journaux du Gateway à distance (sans SSH)
-  - Vous voulez des lignes de journal JSON pour les outils
+  - You need to tail Gateway logs remotely (without SSH)
+  - You want JSON log lines for tooling
 title: "logs"
 ---
 
 # `openclaw logs`
 
-Suivre les journaux de fichiers du Gateway via RPC (fonctionne en mode distant).
+Tail Gateway file logs over RPC (works in remote mode).
 
-Connexes :
+Related:
 
-- Aperçu de la journalisation : [Journalisation](/fr/logging)
+- Logging overview: [Logging](/fr/logging)
 
 ## Exemples
 
@@ -25,7 +25,7 @@ openclaw logs --local-time
 openclaw logs --follow --local-time
 ```
 
-Utilisez `--local-time` pour afficher les horodatages dans votre fuseau horaire local.
+Use `--local-time` to render timestamps in your local timezone.
 
 import fr from "/components/footer/fr.mdx";
 

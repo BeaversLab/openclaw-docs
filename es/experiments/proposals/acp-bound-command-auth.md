@@ -1,7 +1,7 @@
 ---
 summary: "Propuesta: modelo de autorización de comandos a largo plazo para conversaciones vinculadas a ACP"
 read_when:
-  - Diseñar el comportamiento de autenticación nativa de comandos en canales/temas vinculados a ACP en Telegram/Discord
+  - Designing native command auth behavior in Telegram/Discord ACP-bound channels/topics
 title: "Autorización de comandos vinculados a ACP (Propuesta)"
 ---
 
@@ -9,7 +9,7 @@ title: "Autorización de comandos vinculados a ACP (Propuesta)"
 
 Estado: Propuesto, **aún no implementado**.
 
-Este documento describe un modelo de autorización a largo plazo para los comandos nativos en
+Este documento describe un modelo de autorización a largo plazo para comandos nativos en
 conversaciones vinculadas a ACP. Es una propuesta de experimentos y no reemplaza
 el comportamiento actual de producción.
 
@@ -21,13 +21,13 @@ Para el comportamiento implementado, lea el código fuente y las pruebas en:
 
 ## Problema
 
-Hoy tenemos verificaciones específicas de comandos (por ejemplo `/new` y `/reset`) que
+Hoy tenemos comprobaciones específicas de comandos (por ejemplo `/new` y `/reset`) que
 necesitan funcionar dentro de canales/temas vinculados a ACP incluso cuando las listas de permitidos están vacías.
-Esto soluciona el problema inmediato de UX, pero las excepciones basadas en nombres de comandos no escalan.
+Esto soluciona el dolor inmediato de la experiencia de usuario, pero las excepciones basadas en el nombre del comando no escalan.
 
 ## Forma a largo plazo
 
-Mover la autorización de comandos desde la lógica del controlador ad-hoc hacia los metadatos del comando más un
+Mueva la autorización de comandos desde la lógica de controladores ad-hoc hasta los metadatos de comandos más un
 evaluador de políticas compartido.
 
 ### 1) Agregar metadatos de política de autenticación a las definiciones de comandos
@@ -42,7 +42,7 @@ type CommandAuthPolicy =
 ```
 
 `/new` y `/reset` usarían `bound_acp_or_owner_or_allowlist`.
-La mayoría de los otros comandos seguirían siendo `owner_or_allowlist`.
+La mayoría de los demás comandos permanecerían `owner_or_allowlist`.
 
 ### 2) Compartir un evaluador a través de canales
 
@@ -52,13 +52,14 @@ Introduzca un asistente que evalúe la autenticación del comando usando:
 - estado de autorización del remitente
 - estado de vinculación de conversación resuelto
 
-Tanto los controladores nativos de Telegram como de Discord deben llamar al mismo asistente para evitar
+Tanto los controladores nativos de Telegram como de Discord deberían llamar al mismo asistente para evitar
 la deriva del comportamiento.
 
 ### 3) Usar binding-match como el límite de omisión
 
-Cuando la política permite la omisión del ACP vinculado, autorizar solo si se resolvió una coincidencia de vinculación
-configurada para la conversación actual (no solo porque la clave de sesión actual se parezca a una ACP).
+Cuando la política permite la omisión de ACP vinculada, autorice solo si se resolvió una vinculación
+configurada para la conversación actual (no solo porque la clave de sesión actual
+parece de ACP).
 
 Esto mantiene el límite explícito y minimiza la ampliación accidental.
 
@@ -84,8 +85,8 @@ Esto mantiene el límite explícito y minimiza la ampliación accidental.
 
 ## Nota
 
-Esta propuesta es intencionalmente aditiva y no elimina ni reemplaza los documentos de
-experimentos existentes.
+Esta propuesta es intencionalmente aditiva y no elimina ni reemplaza los
+documentos de experimentos existentes.
 
 import es from "/components/footer/es.mdx";
 

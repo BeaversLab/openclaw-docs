@@ -1,5 +1,5 @@
 ---
-summary: "How the mac app embeds the gateway WebChat and how to debug it"
+summary: "Comment l'application mac intègre le WebChat et comment la déboguer"
 read_when:
   - Debugging mac WebChat view or loopback port
 title: "WebChat (macOS)"
@@ -7,13 +7,10 @@ title: "WebChat (macOS)"
 
 # WebChat (application macOS)
 
-The macOS menu bar app embeds the WebChat UI as a native SwiftUI view. It
-connects to the Gateway and defaults to the **main session** for the selected
-agent (with a session switcher for other sessions).
+L'application de la barre de menus macOS intègre l'interface utilisateur WebChat en tant que vue native SwiftUI. Elle se connecte au Gateway et utilise par défaut la **session principale** pour l'agent sélectionné (avec un sélecteur de session pour les autres sessions).
 
 - **Mode local** : se connecte directement au WebSocket du Gateway local.
-- **Remote mode**: forwards the Gateway control port over SSH and uses that
-  tunnel as the data plane.
+- **Mode distant** : transfère le port de contrôle du Gateway via SSH et utilise ce tunnel comme plan de données.
 
 ## Lancement et débogage
 
@@ -24,14 +21,14 @@ agent (with a session switcher for other sessions).
   dist/OpenClaw.app/Contents/MacOS/OpenClaw --webchat
   ```
 
-- Logs: `./scripts/clawlog.sh` (subsystem `ai.openclaw`, category `WebChatSwiftUI`).
+- Journaux : `./scripts/clawlog.sh` (sous-système `ai.openclaw`, catégorie `WebChatSwiftUI`).
 
-## How it is wired
+## Comment il est connecté
 
-- Data plane: Gateway WS methods `chat.history`, `chat.send`, `chat.abort`,
-  `chat.inject` and events `chat`, `agent`, `presence`, `tick`, `health`.
-- Session: defaults to the primary session (`main`, or `global` when scope is
-  global). The UI can switch between sessions.
+- Plan de données : méthodes WS du Gateway `chat.history`, `chat.send`, `chat.abort`,
+  `chat.inject` et événements `chat`, `agent`, `presence`, `tick`, `health`.
+- Session : utilise par défaut la session principale (`main`, ou `global` lorsque la portée est
+  globale). L'interface utilisateur peut basculer entre les sessions.
 - L'intégration utilise une session dédiée pour séparer la configuration du premier lancement.
 
 ## Surface de sécurité

@@ -1,21 +1,20 @@
 ---
 title: "Kilo Gateway"
-summary: "Use la API unificada de Kilo Gateway para acceder a muchos modelos en OpenClaw"
+summary: "Usa la API unificada de Kilo Gateway para acceder a muchos modelos en OpenClaw"
 read_when:
-  - Desea una sola clave API para muchos LLMs
-  - Desea ejecutar modelos a través de Kilo Gateway en OpenClaw
+  - You want a single API key for many LLMs
+  - You want to run models via Kilo Gateway in OpenClaw
 ---
 
 # Kilo Gateway
 
-Kilo Gateway proporciona una **API unificada** que enruta las solicitudes a muchos modelos detrás de un único
-endpoint y clave API. Es compatible con OpenAI, por lo que la mayoría de los SDK de OpenAI funcionan simplemente cambiando la URL base.
+Kilo Gateway proporciona una **API unificada** que dirige las solicitudes a muchos modelos detrás de un solo punto de conexión y clave de API. Es compatible con OpenAI, por lo que la mayoría de los SDK de OpenAI funcionan cambiando la URL base.
 
-## Obtener una clave API
+## Obtener una clave de API
 
-1. Vaya a [app.kilo.ai](https://app.kilo.ai)
-2. Inicie sesión o cree una cuenta
-3. Navegue a API Keys y genere una nueva clave
+1. Ve a [app.kilo.ai](https://app.kilo.ai)
+2. Inicia sesión o crea una cuenta
+3. Navega a API Keys y genera una nueva clave
 
 ## Configuración de CLI
 
@@ -23,7 +22,7 @@ endpoint y clave API. Es compatible con OpenAI, por lo que la mayoría de los SD
 openclaw onboard --kilocode-api-key <key>
 ```
 
-O configure la variable de entorno:
+O establece la variable de entorno:
 
 ```bash
 export KILOCODE_API_KEY="<your-kilocode-api-key>" # pragma: allowlist secret
@@ -44,16 +43,15 @@ export KILOCODE_API_KEY="<your-kilocode-api-key>" # pragma: allowlist secret
 
 ## Modelo predeterminado
 
-El modelo predeterminado es `kilocode/kilo/auto`, un modelo de enrutamiento inteligente que selecciona automáticamente
-el mejor modelo subyacente según la tarea:
+El modelo predeterminado es `kilocode/kilo/auto`, un modelo de enrutamiento inteligente que selecciona automáticamente el mejor modelo subyacente basándose en la tarea:
 
-- Las tareas de planificación, depuración y orquestación se enrutan a Claude Opus
-- Las tareas de escritura y exploración de código se enrutan a Claude Sonnet
+- Las tareas de planificación, depuración y orquestación se dirigen a Claude Opus
+- Las tareas de escritura y exploración de código se dirigen a Claude Sonnet
 
 ## Modelos disponibles
 
-OpenClaw descubre dinámicamente los modelos disponibles desde Kilo Gateway al inicio. Use
-`/models kilocode` para ver la lista completa de modelos disponibles con su cuenta.
+OpenClaw descubre dinámicamente los modelos disponibles desde Kilo Gateway al iniciarse. Usa
+`/models kilocode` para ver la lista completa de modelos disponibles con tu cuenta.
 
 Cualquier modelo disponible en la puerta de enlace se puede usar con el prefijo `kilocode/`:
 
@@ -67,11 +65,11 @@ kilocode/google/gemini-3-pro-preview
 
 ## Notas
 
-- Las referencias de modelo son `kilocode/<model-id>` (p. ej., `kilocode/anthropic/claude-sonnet-4`).
+- Las referencias de modelo son `kilocode/<model-id>` (por ejemplo, `kilocode/anthropic/claude-sonnet-4`).
 - Modelo predeterminado: `kilocode/kilo/auto`
 - URL base: `https://api.kilo.ai/api/gateway/`
-- Para obtener más opciones de modelos/proveedores, consulte [/concepts/model-providers](/es/concepts/model-providers).
-- Kilo Gateway utiliza un token Bearer con su clave API en segundo plano.
+- Para más opciones de modelos/proveedores, consulta [/concepts/model-providers](/es/concepts/model-providers).
+- Kilo Gateway utiliza un token de Bearer con tu clave de API entre bastidores.
 
 import es from "/components/footer/es.mdx";
 

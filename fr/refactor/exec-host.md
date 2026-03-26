@@ -1,28 +1,28 @@
 ---
-summary: "Plan de refactorisation : routage de l'hôte d'exécution, approbations de nœuds et runner sans interface graphique"
+summary: "Plan de refonte : routage de l'hôte d'exécution, approbations de nœud et runner sans interface"
 read_when:
-  - Conception du routage de l'hôte d'exécution ou des approbations d'exécution
-  - Implémentation du runner de nœud + IPC UI
-  - Ajout de modes de sécurité de l'hôte d'exécution et de commandes slash
-title: "Refactorisation de l'hôte d'exécution"
+  - Designing exec host routing or exec approvals
+  - Implementing node runner + UI IPC
+  - Adding exec host security modes and slash commands
+title: "Refonte de l'hôte d'exécution"
 ---
 
-# Plan de refactorisation de l'hôte d'exécution
+# Plan de refonte de l'hôte d'exécution
 
 ## Objectifs
 
-- Ajouter `exec.host` + `exec.security` pour router l'exécution entre **sandbox**, **gateway** et **node**.
-- Garder les paramètres par défaut **sûrs** : aucune exécution inter-hôtes sauf si explicitement activée.
-- Diviser l'exécution en un **service runner sans interface graphique** avec une interface utilisateur optionnelle (application macOS) via IPC local.
-- Fournir une stratégie **par agent**, une liste d'autorisation, un mode de demande et une liaison de nœud.
+- Ajouter `exec.host` + `exec.security` pour router l'exécution sur le **bac à sable (sandbox)**, la **passerelle (gateway)** et le **nœud**.
+- Garder les valeurs par défaut **sûres** : pas d'exécution entre hôtes sauf si explicitement activée.
+- Séparer l'exécution en un **service runner sans interface** avec une UI optionnelle (application macOS) via IPC local.
+- Fournir une politique **par agent**, une liste d'autorisation, un mode de demande et une liaison de nœud.
 - Prendre en charge les **modes de demande** qui fonctionnent _avec_ ou _sans_ listes d'autorisation.
-- Multiplateforme : socket Unix + authentification par jeton (parité macOS/Linux/Windows).
+- Multiplateforme : socket Unix + auth par jeton (parité macOS/Linux/Windows).
 
-## Non-objectifs
+## Hors objectifs
 
-- Aucune migration de liste d'autorisation héritée ou de support de schéma hérité.
-- Aucun PTY/streaming pour l'exécution de nœud (sortie agrégée uniquement).
-- Aucune nouvelle couche réseau au-delà du Bridge et Gateway existants.
+- Pas de migration de liste d'autorisation héritée ni de prise en charge de schéma hérité.
+- Pas de PTY/streaming pour l'exécution de nœud (sortie agrégée uniquement).
+- Pas de nouvelle couche réseau au-delà du Bridge et de la Gateway existants.
 
 ## Décisions (verrouillées)
 
@@ -30,11 +30,11 @@ title: "Refactorisation de l'hôte d'exécution"
 - **Élévation :** conserver `/elevated` comme alias pour l'accès complet à la passerelle.
 - **Demande par défaut :** `on-miss`.
 - **Stockage des approbations :** `~/.openclaw/exec-approvals.json` (JSON, aucune migration héritée).
-- **Runner :** service système sans interface graphique ; l'application UI héberge un socket Unix pour les approbations.
+- **Runner :** service système sans interface ; l'application UI héberge un socket Unix pour les approbations.
 - **Identité du nœud :** utiliser `nodeId` existant.
-- **Authentification de socket :** socket Unix + jeton (multiplateforme) ; séparation ultérieure si nécessaire.
-- **État de l'hôte du nœud :** `~/.openclaw/node.json` (identifiant du nœud + jeton d'appariement).
-- **Hôte d'exécution macOS :** exécuter `system.run` dans l'application macOS ; le service d'hôte de nœud transfère les demandes via IPC local.
+- **Auth socket :** socket Unix + jeton (multiplateforme) ; séparation ultérieure si nécessaire.
+- **État de l'hôte du nœud :** `~/.openclaw/node.json` (id de nœud + jeton d'appairage).
+- **Hôte d'exécution macOS :** exécuter `system.run` à l'intérieur de l'application macOS ; le service d'hôte de nœud transmet les requêtes via IPC local.
 - **Pas d'assistant XPC :** s'en tenir au socket Unix + jeton + vérifications des pairs.
 
 ## Concepts clés
@@ -49,22 +49,22 @@ title: "Refactorisation de l'hôte d'exécution"
 
 - `deny` : toujours bloquer.
 - `allowlist` : autoriser uniquement les correspondances.
-- `full` : tout autoriser (équivalent à elevated).
+- `full` : tout autoriser (équivalent à élevé).
 
-### Mode Ask
+### Mode de demande
 
 - `off` : ne jamais demander.
-- `on-miss` : demander uniquement si la liste d'autorisation ne correspond pas.
+- `on-miss` : demander uniquement lorsque la liste d'autorisation ne correspond pas.
 - `always` : demander à chaque fois.
 
-Ask est **indépendant** de la liste d'autorisation ; la liste d'autorisation peut être utilisée avec `always` ou `on-miss`.
+La demande est **indépendante** de la liste d'autorisation ; la liste d'autorisation peut être utilisée avec `always` ou `on-miss`.
 
-### Résolution de la stratégie (par exec)
+### Résolution de stratégie (par exécution)
 
-1. Résoudre `exec.host` (paramètre d'outil → remplacement d'agent → valeur par défaut globale).
+1. Résoudre `exec.host` (paramètre de l'outil → substitution de l'agent → valeur par défaut globale).
 2. Résoudre `exec.security` et `exec.ask` (même priorité).
-3. Si l'hôte est `sandbox`, procéder à l'exécution locale dans un bac à sable.
-4. Si l'hôte est `gateway` ou `node`, appliquer la stratégie de sécurité + ask sur cet hôte.
+3. Si l'hôte est `sandbox`, procéder à l'exécution dans le bac à sable local.
+4. Si l'hôte est `gateway` ou `node`, appliquer la stratégie de sécurité + de demande sur cet hôte.
 
 ## Sécurité par défaut
 
@@ -75,12 +75,12 @@ Ask est **indépendant** de la liste d'autorisation ; la liste d'autorisation pe
 
 ## Surface de configuration
 
-### Paramètres d'outil
+### Paramètres de l'outil
 
-- `exec.host` (optionnel) : `sandbox | gateway | node`.
-- `exec.security` (optionnel) : `deny | allowlist | full`.
-- `exec.ask` (optionnel) : `off | on-miss | always`.
-- `exec.node` (optionnel) : id/nom du nœud à utiliser lorsque `host=node`.
+- `exec.host` (facultatif) : `sandbox | gateway | node`.
+- `exec.security` (facultatif) : `deny | allowlist | full`.
+- `exec.ask` (facultatif) : `off | on-miss | always`.
+- `exec.node` (facultatif) : id/nom du nœud à utiliser lorsque `host=node`.
 
 ### Clés de configuration (global)
 
@@ -101,15 +101,15 @@ Ask est **indépendant** de la liste d'autorisation ; la liste d'autorisation pe
 - `/elevated on` = définir `tools.exec.host=gateway`, `tools.exec.security=full` pour la session de l'agent.
 - `/elevated off` = restaurer les paramètres d'exécution précédents pour la session de l'agent.
 
-## Stockage des approbations (JSON)
+## Magasin d'approbations (JSON)
 
 Chemin : `~/.openclaw/exec-approvals.json`
 
 Objectif :
 
 - Stratégie locale + listes d'autorisation pour l'**hôte d'exécution** (passerelle ou node runner).
-- Retour à la demande (Ask) si aucune interface utilisateur n'est disponible.
-- Identifiants IPC pour les clients d'interface utilisateur.
+- Repli (fallback) Ask (Demander) lorsque aucune interface utilisateur n'est disponible.
+- Identifiants IPC pour les clients de l'interface utilisateur.
 
 Schéma proposé (v1) :
 
@@ -144,39 +144,39 @@ Schéma proposé (v1) :
 
 Notes :
 
-- Aucun format d'autorisation hérité.
-- `askFallback` s'applique uniquement lorsque `ask` est requis et qu'aucune interface utilisateur n'est accessible.
+- Aucun format de liste d'autorisation hérité.
+- `askFallback` s'applique uniquement lorsque `ask` est requis et qu'aucune interface utilisateur n'est joignable.
 - Autorisations de fichier : `0600`.
 
-## Service Runner (sans interface)
+## Service d'exécution (headless)
 
 ### Rôle
 
 - Appliquer `exec.security` + `exec.ask` localement.
 - Exécuter les commandes système et renvoyer la sortie.
-- Émettre des événements Bridge pour le cycle de vie de l'exécution (optionnel mais recommandé).
+- Émettre des événements Bridge pour le cycle de vie de l'exécution (facultatif mais recommandé).
 
 ### Cycle de vie du service
 
 - Launchd/démon sur macOS ; service système sur Linux/Windows.
-- Le JSON des approbations est local à l'hôte d'exécution.
-- L'interface utilisateur héberge un socket Unix local ; les runners se connectent à la demande.
+- Le JSON d'approbations est local à l'hôte d'exécution.
+- L'interface utilisateur héberge un socket Unix local ; les exécuteurs se connectent à la demande.
 
 ## Intégration de l'interface utilisateur (application macOS)
 
 ### IPC
 
-- Socket Unix sur `~/.openclaw/exec-approvals.sock` (0600).
+- Socket Unix à `~/.openclaw/exec-approvals.sock` (0600).
 - Jeton stocké dans `exec-approvals.json` (0600).
 - Vérifications des pairs : même UID uniquement.
-- Défi/réponse : nonce + HMAC(token, request-hash) pour empêcher la relecture.
-- TTL court (ex. 10s) + charge utile maximale + limite de débit.
+- Défi/réponse : nonce + HMAC(jeton, hash de requête) pour empêcher la relecture.
+- TTL court (ex. : 10 s) + charge utile maximale + limite de débit.
 
-### Flux Ask (hôte d'exécution de l'application macOS)
+### Flux Ask (Demander) (hôte d'exécution de l'application macOS)
 
 1. Le service de nœud reçoit `system.run` de la passerelle.
-2. Le service de nœud se connecte au socket local et envoie la demande de prompt/d'exécution.
-3. L'application valide le pair + le jeton + HMAC + TTL, puis affiche une boîte de dialogue si nécessaire.
+2. Le service de nœud se connecte au socket local et envoie la requête d'invite/de commande.
+3. L'application valide le pair + le jeton + HMAC + TTL, puis affiche la boîte de dialogue si nécessaire.
 4. L'application exécute la commande dans le contexte de l'interface utilisateur et renvoie la sortie.
 5. Le service de nœud renvoie la sortie à la passerelle.
 
@@ -195,123 +195,123 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 
 ## Identité du nœud + liaison
 
-- Utiliser l'`nodeId` existant de l'appariement Bridge.
+- Utiliser l'`nodeId` existant issu du jumelage Bridge.
 - Modèle de liaison :
-  - `tools.exec.node` restreint l'agent à un nœud spécifique.
+  - `tools.exec.node` limite l'agent à un nœud spécifique.
   - Si non défini, l'agent peut choisir n'importe quel nœud (la stratégie applique toujours les valeurs par défaut).
-- Résolution de la sélection du nœud :
-  - Correspondance exacte `nodeId`
+- Résolution de la sélection de nœud :
+  - `nodeId` correspondance exacte
   - `displayName` (normalisé)
   - `remoteIp`
-  - Préfixe `nodeId` (>= 6 caractères)
+  - préfixe `nodeId` (>= 6 caractères)
 
-## Gestion des événements
+## Gestion d'événements
 
 ### Qui voit les événements
 
-- Les événements système sont **par session** et sont affichés à l'agent lors du prochain prompt.
-- Stockés dans la file d'attente en mémoire de la passerelle (`enqueueSystemEvent`).
+- Les événements système sont **par session** et sont affichés à l'agent lors de la prochaine invite.
+- Stockés dans la file d'attente en mémoire du Gateway (`enqueueSystemEvent`).
 
 ### Texte de l'événement
 
 - `Exec started (node=<id>, id=<runId>)`
-- `Exec finished (node=<id>, id=<runId>, code=<code>)` + optional output tail
+- `Exec finished (node=<id>, id=<runId>, code=<code>)` + fin de sortie facultative
 - `Exec denied (node=<id>, id=<runId>, <reason>)`
 
 ### Transport
 
-Option A (recommended) :
+Option A (recommandée) :
 
-- Runner sends Bridge `event` frames `exec.started` / `exec.finished`.
-- Gateway `handleBridgeEvent` maps these into `enqueueSystemEvent`.
+- Le Runner envoie des trames Bridge `event` `exec.started` / `exec.finished`.
+- Le Gateway `handleBridgeEvent` les mappe vers `enqueueSystemEvent`.
 
 Option B :
 
-- Gateway `exec` tool handles lifecycle directly (synchronous only).
+- Le tool Gateway `exec` gère le cycle de vie directement (synchrone uniquement).
 
-## Exec flows
+## Flux d'exécution
 
-### Sandbox host
+### Hôte Sandbox
 
-- Existing `exec` behavior (Docker or host when unsandboxed).
-- PTY supported in non-sandbox mode only.
+- Comportement existant de `exec` (Docker ou hôte lorsqu'il n'est pas dans un bac à sable).
+- PTY pris en charge en mode non-bac à sable uniquement.
 
-### Gateway host
+### Hôte Gateway
 
-- Gateway process executes on its own machine.
-- Enforces local `exec-approvals.json` (security/ask/allowlist).
+- Le processus Gateway s'exécute sur sa propre machine.
+- Applique le `exec-approvals.json` local (sécurité/demande/liste blanche).
 
-### Node host
+### Hôte Node
 
-- Gateway calls `node.invoke` with `system.run`.
-- Runner enforces local approvals.
-- Runner returns aggregated stdout/stderr.
-- Optional Bridge events for start/finish/deny.
+- Le Gateway appelle `node.invoke` avec `system.run`.
+- Le Runner applique les approbations locales.
+- Le Runner renvoie le stdout/stderr agrégé.
+- Événements Bridge facultatifs pour début/fin/refus.
 
-## Output caps
+## Limites de sortie
 
-- Cap combined stdout+stderr at **200k** ; keep **tail 20k** for events.
-- Truncate with a clear suffix (e.g., `"… (truncated)"`).
+- Limiter le stdout+stderr combiné à **200k** ; conserver les **derniers 20k** pour les événements.
+- Tronquer avec un suffixe clair (par exemple, `"… (truncated)"`).
 
-## Slash commands
+## Commandes slash
 
 - `/exec host=<sandbox|gateway|node> security=<deny|allowlist|full> ask=<off|on-miss|always> node=<id>`
-- Per-agent, per-session overrides ; non-persistent unless saved via config.
-- `/elevated on|off|ask|full` remains a shortcut for `host=gateway security=full` (with `full` skipping approvals).
+- Remplacements par agent, par session ; non persistants sauf s'ils sont sauvegardés via la configuration.
+- `/elevated on|off|ask|full` reste un raccourci pour `host=gateway security=full` (avec `full` ignorant les approbations).
 
-## Cross-platform story
+## Histoire multiplateforme
 
-- The runner service is the portable execution target.
-- UI is optional ; if missing, `askFallback` applies.
-- Windows/Linux support the same approvals JSON + socket protocol.
+- Le service Runner est la cible d'exécution portable.
+- L'interface utilisateur est facultative ; si elle est manquante, `askFallback` s'applique.
+- Windows/Linux prennent en charge le même protocole JSON d'approbations + socket.
 
-## Implementation phases
+## Phases de mise en œuvre
 
-### Phase 1 : config + exec routing
+### Phase 1 : configuration + routage exec
 
-- Add config schema for `exec.host`, `exec.security`, `exec.ask`, `exec.node`.
-- Update tool plumbing to respect `exec.host`.
-- Add `/exec` slash command and keep `/elevated` alias.
+- Ajouter le schéma de configuration pour `exec.host`, `exec.security`, `exec.ask`, `exec.node`.
+- Mettre à jour la plomberie de l'outil pour respecter `exec.host`.
+- Ajouter la commande slash `/exec` et conserver l'alias `/elevated`.
 
-### Phase 2 : approvals store + gateway enforcement
+### Phase 2 : magasin d'approbations + application de la passerelle
 
-- Implement `exec-approvals.json` reader/writer.
-- Enforce allowlist + ask modes for `gateway` host.
-- Add output caps.
+- Implémenter le lecteur/rédacteur `exec-approvals.json`.
+- Appliquer les modes liste verte (allowlist) + demander pour l'hôte `gateway`.
+- Ajouter des limites de sortie.
 
-### Phase 3 : node runner enforcement
+### Phase 3 : application du node runner
 
-- Mettre à jour le node runner pour appliquer la liste d'autorisation + demander.
-- Ajouter un pont de demande via socket Unix à l'interface de l'application macOS.
-- Connecter `askFallback`.
+- Mettre à jour le node runner pour appliquer la liste verte + demander.
+- Ajouter le pont de prompt de socket Unix à l'interface utilisateur de l'application macOS.
+- Câbler `askFallback`.
 
 ### Phase 4 : événements
 
-- Ajouter les événements du pont nœud → passerelle pour le cycle de vie de l'exécution.
+- Ajouter des événements Bridge node → passerelle pour le cycle de vie de l'exécution.
 - Mapper vers `enqueueSystemEvent` pour les invites de l'agent.
 
-### Phase 5 : finitions de l'interface utilisateur
+### Phase 5 : finition de l'interface utilisateur
 
-- Application Mac : éditeur de liste d'autorisation, sélecteur par agent, interface de politique de demande.
+- Application Mac : éditeur de liste verte, sélecteur par agent, interface utilisateur de stratégie de demande.
 - Contrôles de liaison de nœud (en option).
 
 ## Plan de test
 
-- Tests unitaires : correspondance de la liste d'autorisation (glob + insensible à la casse).
-- Tests unitaires : précédence de résolution de politique (paramètre d'outil → remplacement par agent → global).
+- Tests unitaires : correspondance de liste verte (glob + insensible à la casse).
+- Tests unitaires : précédence de résolution de stratégie (paramètre d'outil → remplacement par l'agent → global).
 - Tests d'intégration : flux de refus/autorisation/demande du node runner.
-- Tests d'événements de pont : routage des événements de nœud → événement système.
+- Tests d'événements Bridge : routage des événements de nœud → événement système.
 
 ## Risques ouverts
 
-- Indisponibilité de l'interface utilisateur : s'assurer que `askFallback` est respecté.
-- Commandes de longue durée : s'appuyer sur le délai d'expiration et les limites de sortie.
+- Indisponibilité de l'interface utilisateur : veiller à ce que `askFallback` soit respecté.
+- Commandes de longue durée : s'appuyer sur le délai d'expiration + les limites de sortie.
 - Ambiguïté multi-nœud : erreur sauf en cas de liaison de nœud ou de paramètre de nœud explicite.
 
-## Documents connexes
+## Documentation connexe
 
-- [Outil d'exécution](/fr/tools/exec)
-- [Approbations d'exécution](/fr/tools/exec-approvals)
+- [Outil Exec](/fr/tools/exec)
+- [Approbations Exec](/fr/tools/exec-approvals)
 - [Nœuds](/fr/nodes)
 - [Mode élevé](/fr/tools/elevated)
 

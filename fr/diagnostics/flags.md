@@ -1,14 +1,14 @@
 ---
 summary: "Indicateurs de diagnostic pour les journaux de débogage ciblés"
 read_when:
-  - Vous avez besoin de journaux de débogage ciblés sans augmenter les niveaux de journalisation globaux
-  - Vous devez capturer des journaux spécifiques à un sous-système pour le support
+  - You need targeted debug logs without raising global logging levels
+  - You need to capture subsystem-specific logs for support
 title: "Indicateurs de diagnostic"
 ---
 
 # Indicateurs de diagnostic
 
-Les indicateurs de diagnostic vous permettent d'activer des journaux de débogage ciblés sans activer la journalisation détaillée partout. Les indicateurs sont optionnels et n'ont aucun effet sauf si un sous-système les vérifie.
+Les indicateurs de diagnostic vous permettent d'activer des journaux de débogage ciblés sans activer la journalisation détaillée partout. Les indicateurs sont opt-in et n'ont aucun effet à moins qu'un sous-système ne les vérifie.
 
 ## Fonctionnement
 
@@ -40,7 +40,7 @@ Plusieurs indicateurs :
 
 Redémarrez la passerelle après avoir modifié les indicateurs.
 
-## Substitution de variable d'environnement ( ponctuelle )
+## Substitution de variable d'environnement (ponctuelle)
 
 ```bash
 OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
@@ -60,11 +60,11 @@ Les indicateurs émettent des journaux dans le fichier de journal de diagnostic 
 /tmp/openclaw/openclaw-YYYY-MM-DD.log
 ```
 
-Si vous définissez `logging.file`, utilisez ce chemin à la place. Les journaux sont au format JSONL (un objet JSON par ligne). La suppression des données sensibles s'applique toujours en fonction de `logging.redactSensitive`.
+Si vous définissez `logging.file`, utilisez plutôt ce chemin. Les journaux sont au format JSONL (un objet JSON par ligne). La suppression des informations sensibles s'applique toujours en fonction de `logging.redactSensitive`.
 
 ## Extraire les journaux
 
-Sélectionner le dernier fichier journal :
+Sélectionnez le dernier fichier journal :
 
 ```bash
 ls -t /tmp/openclaw/openclaw-*.log | head -n 1
@@ -88,7 +88,7 @@ Pour les passerelles distantes, vous pouvez également utiliser `openclaw logs -
 
 - Si `logging.level` est défini plus haut que `warn`, ces journaux peuvent être supprimés. La valeur par défaut `info` convient.
 - Il est possible de laisser les indicateurs activés ; ils n'affectent que le volume des journaux pour le sous-système spécifique.
-- Utilisez [/logging](/fr/logging) pour modifier les destinations des journaux, les niveaux et la suppression des données sensibles.
+- Utilisez [/logging](/fr/logging) pour modifier les destinations des journaux, les niveaux et la suppression des informations sensibles.
 
 import fr from "/components/footer/fr.mdx";
 

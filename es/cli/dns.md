@@ -1,14 +1,14 @@
 ---
-summary: "Referencia de la CLI para `openclaw dns` (ayudantes de descubrimiento de área amplia)"
+summary: "Referencia de la CLI para `openclaw dns` (asistentes de descubrimiento de área amplia)"
 read_when:
-  - Deseas el descubrimiento de área amplia (DNS-SD) mediante Tailscale + CoreDNS
-  - Estás configurando DNS dividido para un dominio de descubrimiento personalizado (ejemplo: openclaw.internal)
+  - You want wide-area discovery (DNS-SD) via Tailscale + CoreDNS
+  - You’re setting up split DNS for a custom discovery domain (example: openclaw.internal)
 title: "dns"
 ---
 
 # `openclaw dns`
 
-Ayudantes de DNS para el descubrimiento de área amplia (Tailscale + CoreDNS). Actualmente centrado en macOS + CoreDNS de Homebrew.
+Asistentes de DNS para el descubrimiento de área amplia (Tailscale + CoreDNS). Actualmente centrados en macOS + CoreDNS de Homebrew.
 
 Relacionado:
 

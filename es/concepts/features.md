@@ -1,17 +1,19 @@
 ---
-summary: "Capacidades de OpenClaw en canales, enrutamiento, medios y UX."
+summary: "Capacidades de OpenClaw a través de canales, enrutamiento, medios y UX."
 read_when:
-  - Deseas ver la lista completa de lo que OpenClaw admite
-title: "Funciones"
+  - You want a full list of what OpenClaw supports
+title: "Características"
 ---
+
+# Características
 
 ## Destacados
 
 <Columns>
   <Card title="Canales" icon="message-square">
-    WhatsApp, Telegram, Discord e iMessage con una única pasarela.
+    WhatsApp, Telegram, Discord y iMessage con una única puerta de enlace.
   </Card>
-  <Card title="Complementos" icon="plug">
+  <Card title="Plugins" icon="plug">
     Añade Mattermost y más con extensiones.
   </Card>
   <Card title="Enrutamiento" icon="route">
@@ -30,27 +32,45 @@ title: "Funciones"
 
 ## Lista completa
 
-- Integración con WhatsApp a través de WhatsApp Web (Baileys)
-- Soporte de bot de Telegram (grammY)
-- Soporte de bot de Discord (channels.discord.js)
-- Soporte de bot de Mattermost (complemento)
-- Integración con iMessage a través de la CLI local imsg (macOS)
-- Puente de agente para Pi en modo RPC con streaming de herramientas
-- Transmisión y fragmentación para respuestas largas
-- Enrutamiento multiagente para sesiones aisladas por espacio de trabajo o remitente
-- Autenticación de suscripción para Anthropic y OpenAI a través de OAuth
-- Sesiones: los chats directos se colapsan en `main` compartidos; los grupos están aislados
-- Soporte de chat grupal con activación basada en menciones
-- Soporte de medios para imágenes, audio y documentos
-- Gancho opcional de transcripción de notas de voz
-- WebChat y aplicación de la barra de menús de macOS
-- Nodo iOS con emparejamiento, Canvas, cámara, grabación de pantalla, ubicación y funciones de voz
-- Nodo Android con emparejamiento, pestaña Conectar, sesiones de chat, pestaña de voz, Canvas/cámara, además de dispositivo, notificaciones, contactos/calendario, movimiento, fotos y comandos SMS
+**Canales:**
 
-<Note>
-  Se han eliminado las rutas heredadas de Claude, Codex, Gemini y Opencode. Pi es la única ruta del
-  agente de codificación.
-</Note>
+- WhatsApp, Telegram, Discord, iMessage (integrado)
+- Mattermost, Matrix, Microsoft Teams, Nostr y más (plugins)
+- Soporte de chat grupal con activación basada en menciones
+- Seguridad de MD con listas de permitidos y emparejamiento
+
+**Agente:**
+
+- Tiempo de ejecución del agente integrado con transmisión de herramientas
+- Enrutamiento multiagente con sesiones aisladas por espacio de trabajo o remitente
+- Sesiones: los chats directos se colapsan en un `main` compartido; los grupos están aislados
+- Transmisión y fragmentación para respuestas largas
+
+**Autenticación y proveedores:**
+
+- Más de 35 proveedores de modelos (Anthropic, OpenAI, Google y más)
+- Autenticación de suscripción vía OAuth (ej. OpenAI Codex)
+- Soporte para proveedores personalizados y autohospedados (vLLM, SGLang, Ollama y cualquier punto de conexión compatible con OpenAI o Anthropic)
+
+**Medios:**
+
+- Imágenes, audio, vídeo y documentos de entrada y salida
+- Transcripción de notas de voz
+- Conversión de texto a voz con múltiples proveedores
+
+**Aplicaciones e interfaces:**
+
+- WebChat e interfaz de Control del navegador
+- Aplicación complementaria de la barra de menús de macOS
+- Nodo iOS con emparejamiento, Canvas, cámara, grabación de pantalla, ubicación y voz
+- Nodo Android con emparejamiento, chat, voz, Canvas, cámara y comandos de dispositivo
+
+**Herramientas y automatización:**
+
+- Automatización del navegador, exec, sandboxing
+- Búsqueda web (Brave, Perplexity, Gemini, Grok, Kimi, Firecrawl)
+- Trabajos de Cron y programación de latidos
+- Habilidades, plugins y tuberías de flujo de trabajo (Lobster)
 
 import es from "/components/footer/es.mdx";
 

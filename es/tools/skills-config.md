@@ -1,14 +1,14 @@
 ---
-summary: "Esquema y ejemplos de configuración de habilidades"
+summary: "Esquema de configuración de habilidades y ejemplos"
 read_when:
-  - Agregar o modificar la configuración de habilidades
-  - Ajustar la lista de permitidos agrupados o el comportamiento de instalación
+  - Adding or modifying skills config
+  - Adjusting bundled allowlist or install behavior
 title: "Configuración de habilidades"
 ---
 
 # Configuración de habilidades
 
-Toda la configuración relacionada con habilidades reside bajo `skills` en `~/.openclaw/openclaw.json`.
+Toda la configuración relacionada con las habilidades reside bajo `skills` en `~/.openclaw/openclaw.json`.
 
 ```json5
 {
@@ -38,9 +38,9 @@ Toda la configuración relacionada con habilidades reside bajo `skills` en `~/.o
 }
 ```
 
-Para la generación/edición de imágenes integrada, prefiera `agents.defaults.imageGenerationModel`
-junto con la herramienta principal `image_generate`. `skills.entries.*` es solo para flujos de trabajo de habilidades personalizados
-o de terceros.
+Para la generación/edición de imágenes integrada, se prefiere `agents.defaults.imageGenerationModel`
+más la herramienta central `image_generate`. `skills.entries.*` es solo para flujos de trabajo
+de habilidades personalizadas o de terceros.
 
 Ejemplos:
 
@@ -49,20 +49,20 @@ Ejemplos:
 
 ## Campos
 
-- `allowBundled`: lista de permitidos opcional solo para habilidades **agrupadas**. Cuando se establece, solo
-  las habilidades agrupadas de la lista son elegibles (las habilidades administradas/del espacio de trabajo no se ven afectadas).
-- `load.extraDirs`: directorios de habilidades adicionales para escanear (precedencia más baja).
+- `allowBundled`: lista de permitidos opcional solo para habilidades **incluidas**. Cuando se establece, solo
+  las habilidades incluidas en la lista son elegibles (las habilidades gestionadas/en el espacio de trabajo no se ven afectadas).
+- `load.extraDirs`: directorios de habilidades adicionales para escanear (menor prioridad).
 - `load.watch`: vigila las carpetas de habilidades y actualiza la instantánea de habilidades (predeterminado: true).
-- `load.watchDebounceMs`: tiempo de rebote para los eventos del observador de habilidades en milisegundos (predeterminado: 250).
-- `install.preferBrew`: preferir instaladores de brew cuando estén disponibles (predeterminado: true).
+- `load.watchDebounceMs`: retardo para los eventos del observador de habilidades en milisegundos (predeterminado: 250).
+- `install.preferBrew`: preferir los instaladores de brew cuando estén disponibles (predeterminado: true).
 - `install.nodeManager`: preferencia del instalador de node (`npm` | `pnpm` | `yarn` | `bun`, predeterminado: npm).
   Esto solo afecta las **instalaciones de habilidades**; el tiempo de ejecución de Gateway aún debe ser Node
-  (Bun no recomendado para WhatsApp/Telegram).
+  (no se recomienda Bun para WhatsApp/Telegram).
 - `entries.<skillKey>`: anulaciones por habilidad.
 
 Campos por habilidad:
 
-- `enabled`: establezca `false` para deshabilitar una habilidad incluso si está agrupada/instalada.
+- `enabled`: establezca `false` para deshabilitar una habilidad incluso si está incluida/instalada.
 - `env`: variables de entorno inyectadas para la ejecución del agente (solo si aún no están establecidas).
 - `apiKey`: conveniencia opcional para habilidades que declaran una variable de entorno principal.
   Admite cadena de texto sin formato u objeto SecretRef (`{ source, provider, id }`).
@@ -73,16 +73,17 @@ Campos por habilidad:
   `metadata.openclaw.skillKey`, use esa clave en su lugar.
 - Los cambios en las habilidades se detectan en el siguiente turno del agente cuando el observador está habilitado.
 
-### Habilidades en sandbox + variables de entorno
+### Habilidades en entorno restringido + variables de entorno
 
-Cuando una sesión está **en sandbox**, los procesos de las habilidades se ejecutan dentro de Docker. El sandbox **no** hereda el `process.env` del host.
+Cuando una sesión está **en entorno restringido**, los procesos de las habilidades se ejecutan dentro de Docker. El entorno restringido
+**no** hereda el `process.env` del host.
 
-Utilice uno de los siguientes:
+Use una de:
 
-- `agents.defaults.sandbox.docker.env` (o por agente `agents.list[].sandbox.docker.env`)
-- incorpore las variables de entorno en su imagen de sandbox personalizada
+- `agents.defaults.sandbox.docker.env` (o `agents.list[].sandbox.docker.env` por agente)
+- incorpore el entorno en su imagen de sandbox personalizada
 
-Las `env` y `skills.entries.<skill>.env/apiKey` globales solo se aplican a las ejecuciones en el **host**.
+Las variables globales `env` y `skills.entries.<skill>.env/apiKey` se aplican solo a ejecuciones en el **host**.
 
 import es from "/components/footer/es.mdx";
 

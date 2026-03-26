@@ -1,7 +1,7 @@
 ---
-summary: "菜单栏状态逻辑以及向用户展示的内容"
+summary: "菜单栏状态逻辑及向用户展示的内容"
 read_when:
-  - 调整 mac 菜单 UI 或状态逻辑
+  - Tweaking mac menu UI or status logic
 title: "菜单栏"
 ---
 
@@ -11,23 +11,23 @@ title: "菜单栏"
 
 - 我们在菜单栏图标和菜单的第一状态行中显示当前的代理工作状态。
 - 当工作处于活动状态时，健康状态会被隐藏；当所有会话处于空闲状态时，它会重新显示。
-- 菜单中的“节点”块仅列出 **设备**（通过 `node.list` 配对的节点），不列出客户端/在线状态条目。
+- 菜单中的“节点”区块仅列出**设备**（通过 `node.list` 配对的节点），不包括客户端/在线条目。
 - 当提供商使用情况快照可用时，“使用情况”部分会显示在 Context 下方。
 
 ## 状态模型
 
-- 会话：事件到达时带有 `runId`（每次运行）加上载荷中的 `sessionKey`。“主要”会话是键 `main`；如果不存在，我们回退到最近更新的会话。
+- 会话：事件随 `runId`（每次运行）以及负载中的 `sessionKey` 一起到达。“主”会话是键 `main`；如果不存在，我们回退到最近更新的会话。
 - 优先级：main 始终优先。如果 main 处于活动状态，则立即显示其状态。如果 main 处于空闲状态，则显示最近处于活动状态的非 main 会话。我们不会在活动期间反复切换；仅在当前会话变为空闲或 main 变为活动状态时才切换。
 - 活动类型：
-  - `job`：高级命令执行 (`state: started|streaming|done|error`)。
-  - `tool`：带有 `toolName` 和 `meta/args` 的 `phase: start|result`。
+  - `job`: 高级命令执行（`state: started|streaming|done|error`）。
+  - `tool`: 带有 `toolName` 和 `meta/args` 的 `phase: start|result`。
 
 ## IconState 枚举（Swift）
 
 - `idle`
 - `workingMain(ActivityKind)`
 - `workingOther(ActivityKind)`
-- `overridden(ActivityKind)` (调试覆盖)
+- `overridden(ActivityKind)`（调试覆盖）
 
 ### ActivityKind → 字形
 
@@ -40,23 +40,23 @@ title: "菜单栏"
 
 ### 视觉映射
 
-- `idle`：正常的小动物。
-- `workingMain`：带图标的徽章，完全着色，腿部“正在工作”动画。
-- `workingOther`：带图标的徽章，柔和着色，无急促动作。
-- `overridden`：无论活动如何，都使用选定的图标/着色。
+- `idle`: 普通生物。
+- `workingMain`: 带字形的徽章，全色调，“腿部工作”动画。
+- `workingOther`: 带字形的徽章，柔和色调，无疾驰。
+- `overridden`: 无论活动如何，均使用选定的字形/色调。
 
 ## 状态行文本（菜单）
 
-- 当工作处于活动状态时：`<Session role> · <activity label>`
-  - 示例：`Main · exec: pnpm test`，`Other · read: apps/macos/Sources/OpenClaw/AppState.swift`。
+- 工作激活时：`<Session role> · <activity label>`
+  - 示例：`Main · exec: pnpm test`、`Other · read: apps/macos/Sources/OpenClaw/AppState.swift`。
 - 空闲时：回退到运行状况摘要。
 
 ## 事件摄取
 
-- 来源：控制渠道 `agent` 事件 (`ControlChannel.handleAgentEvent`)。
+- 来源：控制渠道 `agent` 事件（`ControlChannel.handleAgentEvent`）。
 - 解析字段：
-  - `stream: "job"` 带有用于开始/停止的 `data.state`。
-  - `stream: "tool"` 带有 `data.phase`、`name`，可选的 `meta`/`args`。
+  - 用于开始/停止的 `data.state` 和 `stream: "job"`。
+  - 带有 `data.phase`、`name`、可选 `meta`/`args` 的 `stream: "tool"`。
 - 标签：
   - `exec`：`args.command` 的第一行。
   - `read`/`write`：缩短的路径。

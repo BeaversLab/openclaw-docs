@@ -1,13 +1,13 @@
 ---
-summary: "链接到所有 OpenClaw 文档的文档中心"
+summary: "Hubs that link to every OpenClaw doc"
 read_when:
-  - 您想要完整的文档地图
-title: "Docs hubs"
+  - You want a complete map of the documentation
+title: "Docs Hubs"
 ---
 
 # 文档中心
 
-<Note>如果您是 OpenClaw 的新手，请从 [入门指南](/zh/start/getting-started) 开始。</Note>
+<Note>如果您是 OpenClaw 的新手，请从[入门指南](/zh/start/getting-started)开始。</Note>
 
 使用这些中心来探索每一个页面，包括左侧导航中未显示的深度剖析和参考文档。
 
@@ -15,11 +15,10 @@ title: "Docs hubs"
 
 - [索引](/zh/)
 - [入门指南](/zh/start/getting-started)
-- [快速开始](/zh/start/quickstart)
 - [新手引导](/zh/start/onboarding)
 - [新手引导 (CLI)](/zh/start/wizard)
 - [设置](/zh/start/setup)
-- [仪表板 (本地 Gateway)](http://127.0.0.1:18789/)
+- [仪表盘 (本地网关)](http://127.0.0.1:18789/)
 - [帮助](/zh/help)
 - [文档目录](/zh/start/docs-directory)
 - [配置](/zh/gateway/configuration)
@@ -48,7 +47,7 @@ title: "Docs hubs"
 - [多 Agent 路由](/zh/concepts/multi-agent)
 - [压缩](/zh/concepts/compaction)
 - [会话](/zh/concepts/session)
-- [会话修剪](/zh/concepts/session-pruning)
+- [会话清理](/zh/concepts/session-pruning)
 - [会话工具](/zh/concepts/session-tool)
 - [队列](/zh/concepts/queue)
 - [斜杠命令](/zh/tools/slash-commands)
@@ -64,29 +63,29 @@ title: "Docs hubs"
 - [模型故障转移](/zh/concepts/model-failover)
 - [OAuth](/zh/concepts/oauth)
 
-## Providers + ingress
+## 提供商 + 入口
 
-- [聊天通道中心](/zh/channels)
+- [聊天渠道中心](/zh/channels)
 - [模型提供商中心](/zh/providers/models)
 - [WhatsApp](/zh/channels/whatsapp)
 - [Telegram](/zh/channels/telegram)
 - [Slack](/zh/channels/slack)
 - [Discord](/zh/channels/discord)
-- [Mattermost](/zh/channels/mattermost) (插件)
+- [Mattermost](/zh/channels/mattermost) (plugin)
 - [Signal](/zh/channels/signal)
 - [BlueBubbles (iMessage)](/zh/channels/bluebubbles)
-- [iMessage (旧版)](/zh/channels/imessage)
+- [iMessage (legacy)](/zh/channels/imessage)
 - [位置解析](/zh/channels/location)
 - [WebChat](/zh/web/webchat)
 - [Webhooks](/zh/automation/webhook)
 - [Gmail Pub/Sub](/zh/automation/gmail-pubsub)
 
-## Gateway 网关 + operations
+## Gateway(网关) + operations
 
-- [Gateway(网关) 手册](/zh/gateway)
+- [Gateway(网关) runbook](/zh/gateway)
 - [网络模型](/zh/gateway/network-model)
-- [Gateway(网关) 配对](/zh/gateway/pairing)
-- [Gateway(网关) 锁](/zh/gateway/gateway-lock)
+- [Gateway(网关) pairing](/zh/gateway/pairing)
+- [Gateway(网关) lock](/zh/gateway/gateway-lock)
 - [后台进程](/zh/gateway/background-process)
 - [健康检查](/zh/gateway/health)
 - [心跳](/zh/gateway/heartbeat)
@@ -94,11 +93,11 @@ title: "Docs hubs"
 - [日志记录](/zh/gateway/logging)
 - [沙箱隔离](/zh/gateway/sandboxing)
 - [仪表板](/zh/web/dashboard)
-- [控制界面](/zh/web/control-ui)
+- [控制 UI](/zh/web/control-ui)
 - [远程访问](/zh/gateway/remote)
-- [远程网关自述文件](/zh/gateway/remote-gateway-readme)
+- [Remote gateway README](/zh/gateway/remote-gateway-readme)
 - [Tailscale](/zh/gateway/tailscale)
-- [安全性](/zh/gateway/security)
+- [安全](/zh/gateway/security)
 - [故障排除](/zh/gateway/troubleshooting)
 
 ## Tools + automation
@@ -106,21 +105,21 @@ title: "Docs hubs"
 - [工具界面](/zh/tools)
 - [OpenProse](/zh/prose)
 - [CLI 参考](/zh/cli)
-- [执行工具](/zh/tools/exec)
+- [Exec 工具](/zh/tools/exec)
 - [PDF 工具](/zh/tools/pdf)
 - [提升模式](/zh/tools/elevated)
-- [Cron jobs](/zh/automation/cron-jobs)
-- [Cron vs Heartbeat](/zh/automation/cron-vs-heartbeat)
-- [Thinking + verbose](/zh/tools/thinking)
-- [Models](/zh/concepts/models)
-- [Sub-agents](/zh/tools/subagents)
+- [Cron 任务](/zh/automation/cron-jobs)
+- [Cron 与心跳](/zh/automation/cron-vs-heartbeat)
+- [思考 + 详细输出](/zh/tools/thinking)
+- [模型](/zh/concepts/models)
+- [子代理](/zh/tools/subagents)
 - [Agent send CLI](/zh/tools/agent-send)
 - [Terminal UI](/zh/web/tui)
 - [Browser control](/zh/tools/browser)
 - [Browser (Linux 故障排除)](/zh/tools/browser-linux-troubleshooting)
 - [Polls](/zh/automation/poll)
 
-## Nodes, media, voice
+## 节点、媒体、语音
 
 - [Nodes overview](/zh/nodes)
 - [Camera](/zh/nodes/camera)
@@ -160,11 +159,23 @@ title: "Docs hubs"
 - [macOS skills](/zh/platforms/mac/skills)
 - [macOS Peekaboo](/zh/platforms/mac/peekaboo)
 
-## Workspace + 模板
+## 扩展 + 插件
+
+- [Plugins overview](/zh/tools/plugin)
+- [Building extensions](/zh/plugins/building-extensions)
+- [Plugin manifest](/zh/plugins/manifest)
+- [Agent tools](/zh/plugins/agent-tools)
+- [插件包](/zh/plugins/bundles)
+- [社区插件](/zh/plugins/community)
+- [功能指南](/zh/tools/capability-cookbook)
+- [语音通话插件](/zh/plugins/voice-call)
+- [Zalo 用户插件](/zh/plugins/zalouser)
+
+## 工作区 + 模板
 
 - [Skills](/zh/tools/skills)
 - [ClawHub](/zh/tools/clawhub)
-- [Skills config](/zh/tools/skills-config)
+- [Skills 配置](/zh/tools/skills-config)
 - [默认 AGENTS](/zh/reference/AGENTS.default)
 - [模板：AGENTS](/zh/reference/templates/AGENTS)
 - [模板：BOOTSTRAP](/zh/reference/templates/BOOTSTRAP)
@@ -176,12 +187,12 @@ title: "Docs hubs"
 
 ## 项目
 
-- [贡献](/zh/reference/credits)
+- [贡献者](/zh/reference/credits)
 
-## 测试 + 版本
+## 测试 + 发布
 
 - [测试](/zh/reference/test)
-- [版本策略](/zh/reference/RELEASING)
+- [发布策略](/zh/reference/RELEASING)
 - [设备型号](/zh/reference/device-models)
 
 import zh from "/components/footer/zh.mdx";

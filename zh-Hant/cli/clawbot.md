@@ -1,14 +1,14 @@
 ---
-summary: "`openclaw clawbot` 的 CLI 參考（舊版別名命名空間）"
+summary: "CLI 參考手冊：`openclaw clawbot`（舊版別名命名空間）"
 read_when:
-  - 您維護使用 `openclaw clawbot ...` 的舊版腳本
-  - 您需要遷移至當前指令的指導
+  - You maintain older scripts using `openclaw clawbot ...`
+  - You need migration guidance to current commands
 title: "clawbot"
 ---
 
 # `openclaw clawbot`
 
-保留用於向後相容性的舊版別名命名空間。
+保留舊版別名命名空間以維持向後相容性。
 
 目前支援的別名：
 
@@ -16,7 +16,7 @@ title: "clawbot"
 
 ## 遷移
 
-優先直接使用現代頂層指令：
+建議直接使用現代化的頂層指令：
 
 - `openclaw clawbot qr` -> `openclaw qr`
 

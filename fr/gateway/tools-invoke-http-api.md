@@ -1,14 +1,14 @@
 ---
-summary: "Invoquer un seul outil directement via le point de terminaison HTTP du Gateway"
+summary: "Invoquer un seul tool directement via le point de terminaison HTTP du Gateway"
 read_when:
-  - Appel d'outils sans exécuter un tour complet d'agent
-  - Création d'automatisations nécessitant l'application de la stratégie d'outil
-title: "API d'appel d'outils"
+  - Calling tools without running a full agent turn
+  - Building automations that need tool policy enforcement
+title: "Outil d'appel API"
 ---
 
-# Appel d'outils (HTTP)
+# Outil d'appel (HTTP)
 
-Le OpenClaw d'Gateway expose un point de terminaison HTTP simple pour invoquer directement un seul outil. Il est toujours activé, mais protégé par l'authentification du Gateway et la stratégie d'outil.
+Le OpenClaw d'Gateway expose un point de terminaison HTTP simple pour invoquer un seul tool directement. Il est toujours activé, mais protégé par l'auth du Gateway et la stratégie de tool.
 
 - `POST /tools/invoke`
 - Même port que le Gateway (multiplexage WS + HTTP) : `http://<gateway-host>:<port>/tools/invoke`
@@ -17,15 +17,15 @@ La taille maximale par défaut de la charge utile est de 2 Mo.
 
 ## Authentification
 
-Utilise la configuration d'authentification du Gateway. Envoyez un jeton de porteur :
+Utilise la configuration d'auth du Gateway. Envoyer un jeton porteur :
 
 - `Authorization: Bearer <token>`
 
-Notes :
+Remarques :
 
-- Quand `gateway.auth.mode="token"`, utilisez `gateway.auth.token` (ou `OPENCLAW_GATEWAY_TOKEN`).
-- Quand `gateway.auth.mode="password"`, utilisez `gateway.auth.password` (ou `OPENCLAW_GATEWAY_PASSWORD`).
-- Si `gateway.auth.rateLimit` est configuré et qu'il y a trop d'échecs d'authentification, le point de terminaison renvoie `429` avec `Retry-After`.
+- Lorsque `gateway.auth.mode="token"`, utilisez `gateway.auth.token` (ou `OPENCLAW_GATEWAY_TOKEN`).
+- Lorsque `gateway.auth.mode="password"`, utilisez `gateway.auth.password` (ou `OPENCLAW_GATEWAY_PASSWORD`).
+- Si `gateway.auth.rateLimit` est configuré et que trop d'échecs d'auth se produisent, le point de terminaison renvoie `429` avec `Retry-After`.
 
 ## Corps de la requête
 
@@ -41,25 +41,25 @@ Notes :
 
 Champs :
 
-- `tool` (chaîne, requis) : nom de l'outil à invoquer.
-- `action` (chaîne, facultatif) : mappé dans les arguments si le schéma de l'outil prend en charge `action` et que la charge utile des arguments l'a omis.
-- `args` (objet, facultatif) : arguments spécifiques à l'outil.
+- `tool` (chaîne, requis) : nom du tool à invoquer.
+- `action` (chaîne, facultatif) : mappé dans les arguments si le schéma du tool prend en charge `action` et que la charge utile des arguments l'a omis.
+- `args` (objet, facultatif) : arguments spécifiques au tool.
 - `sessionKey` (chaîne, facultatif) : clé de session cible. Si omis ou `"main"`, le Gateway utilise la clé de session principale configurée (respecte `session.mainKey` et l'agent par défaut, ou `global` dans la portée globale).
 - `dryRun` (booléen, facultatif) : réservé pour une utilisation future ; actuellement ignoré.
 
 ## Stratégie + comportement de routage
 
-La disponibilité des outils est filtrée par la même chaîne de stratégies que celle utilisée par les agents du Gateway :
+La disponibilité des tools est filtrée via la même chaîne de stratégies utilisée par les agents du Gateway :
 
 - `tools.profile` / `tools.byProvider.profile`
 - `tools.allow` / `tools.byProvider.allow`
 - `agents.<id>.tools.allow` / `agents.<id>.tools.byProvider.allow`
-- stratégies de groupe (si la clé de session correspond à un groupe ou un canal)
+- stratégies de groupe (si la clé de session correspond à un groupe ou à un channel)
 - stratégie de sous-agent (lors de l'invocation avec une clé de session de sous-agent)
 
 Si un tool n'est pas autorisé par la stratégie, le point de terminaison renvoie **404**.
 
-Le HTTP du Gateway applique également une liste de refus stricte par défaut (même si la stratégie de session autorise le tool) :
+Le Gateway HTTP applique également une liste de refus stricte par défaut (même si la stratégie de session autorise le tool) :
 
 - `sessions_spawn`
 - `sessions_send`
@@ -89,12 +89,12 @@ Pour aider les stratégies de groupe à résoudre le contexte, vous pouvez éven
 ## Réponses
 
 - `200` → `{ ok: true, result }`
-- `400` → `{ ok: false, error: { type, message } }` (demande non valide ou erreur d'entrée du tool)
+- `400` → `{ ok: false, error: { type, message } }` (demande invalide ou erreur de saisie du tool)
 - `401` → non autorisé
-- `429` → auth limité par débit (`Retry-After` défini)
-- `404` → tool non disponible (non trouvé ou non autorisé)
+- `429` → auth limitée par débit (`Retry-After` défini)
+- `404` → tool non disponible (introuvable ou non autorisé)
 - `405` → méthode non autorisée
-- `500` → `{ ok: false, error: { type, message } }` (erreur inattendue d'exécution du tool ; message nettoyé)
+- `500` → `{ ok: false, error: { type, message } }` (erreur d'exécution inattendue du tool ; message nettoyé)
 
 ## Exemple
 

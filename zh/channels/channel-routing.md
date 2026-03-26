@@ -1,22 +1,21 @@
 ---
-summary: "每个渠道（WhatsApp、Telegram、Discord、Slack）的路由规则和共享上下文"
+summary: "每个渠道（WhatsApp、Telegram、Discord、Slack）的路由规则及共享上下文"
 read_when:
-  - 更改渠道路由或收件箱行为
-title: "Channel Routing"
+  - Changing channel routing or inbox behavior
+title: "渠道路由"
 ---
 
 # 渠道与路由
 
-OpenClaw 将回复**路由回消息来源的渠道**。
-模型不会选择渠道；路由是确定性的，由主机配置控制。
+OpenClaw 将回复**路由回消息来源的渠道**。模型不会选择渠道；路由是确定性的，并由主机配置控制。
 
 ## 关键术语
 
-- **Channel**：`whatsapp`、`telegram`、`discord`、`slack`、`signal`、`imessage`、`webchat`。
+- **渠道**：`whatsapp`、`telegram`、`discord`、`slack`、`signal`、`imessage`、`webchat`。
 - **AccountId (账户ID)**：按渠道划分的账户实例（如果支持）。
-- 可选渠道默认账号：`channels.<channel>.defaultAccount` 选择
-  当出站路径未指定 `accountId` 时使用的账号。
-  - 在多账号设置中，当配置了两个或更多账号时，请设置显式默认值（`defaultAccount` 或 `accounts.default`）。否则，回退路由可能会选择第一个规范化账号 ID。
+- 可选的渠道默认账户：`channels.<channel>.defaultAccount` 决定
+  当出站路径未指定 `accountId` 时使用哪个账户。
+  - 在多账户设置中，当配置了两个或更多账户时，请设置一个显式的默认值（`defaultAccount` 或 `accounts.default`）。否则，备用路由可能会选择第一个标准化的账户 ID。
 - **AgentId (代理ID)**：一个隔离的工作区 + 会话存储（“大脑”）。
 - **SessionKey (会话密钥)**：用于存储上下文和控制并发存储桶的密钥。
 
@@ -24,17 +23,17 @@ OpenClaw 将回复**路由回消息来源的渠道**。
 
 直接消息折叠为代理的**主**会话：
 
-- `agent:<agentId>:<mainKey>`（默认：`agent:main:main`）
+- `agent:<agentId>:<mainKey>`（默认值：`agent:main:main`）
 
 群组和频道在每个渠道中保持隔离：
 
-- 组：`agent:<agentId>:<channel>:group:<id>`
+- 群组：`agent:<agentId>:<channel>:group:<id>`
 - 频道/房间：`agent:<agentId>:<channel>:channel:<id>`
 
 线程：
 
-- Slack/Discord 主题会将 `:thread:<threadId>` 附加到基础密钥。
-- Telegram 论坛主题将 `:topic:<topicId>` 嵌入到组密钥中。
+- Slack/Discord 线程会将 `:thread:<threadId>` 附加到基础密钥上。
+- Telegram 论坛主题将 `:topic:<topicId>` 嵌入到群组密钥中。
 
 示例：
 
@@ -45,7 +44,7 @@ OpenClaw 将回复**路由回消息来源的渠道**。
 
 当 `session.dmScope` 为 `main` 时，私信可能共享一个主会话。
 为了防止会话的 `lastRoute` 被非所有者私信覆盖，
-当满足以下所有条件时，OpenClaw 会从 `allowFrom` 推断固定的所有者：
+当满足以下所有条件时，OpenClaw 会从 `allowFrom` 推断出一个固定的所有者：
 
 - `allowFrom` 恰好有一个非通配符条目。
 - 该条目可以针对该渠道规范化为具体的发送者 ID。
@@ -58,16 +57,16 @@ OpenClaw 将回复**路由回消息来源的渠道**。
 
 路由会为每条入站消息挑选**一个 Agent**：
 
-1. **精确对等匹配**（具有 `peer.kind` + `peer.id` 的 `bindings`）。
+1. **精确对等匹配**（`bindings` 包含 `peer.kind` + `peer.id`）。
 2. **父级对等匹配**（线程继承）。
-3. **Guild + 角色匹配**（Discord），通过 `guildId` + `roles`。
-4. **Guild 匹配**（Discord），通过 `guildId`。
-5. **团队匹配** (Slack) 通过 `teamId`。
-6. **帐户匹配** (渠道上的 `accountId`)。
-7. **渠道匹配** (该渠道上的任何帐户，`accountId: "*"`)。
-8. **默认代理** (`agents.list[].default`，否则为第一个列表条目，回退到 `main`)。
+3. **服务器 + 角色匹配**（Discord），通过 `guildId` + `roles` 实现。
+4. **Guild match** (Discord) 通过 `guildId`。
+5. **Team match** (Slack) 通过 `teamId`。
+6. **Account match** （频道上的 `accountId`）。
+7. **Channel match** （该频道上的任何帐户，`accountId: "*"`）。
+8. **Default agent** （`agents.list[].default`，否则为第一个列表条目，回退到 `main`）。
 
-当绑定包含多个匹配字段 (`peer`、`guildId`、`teamId`、`roles`) 时，**所有提供的字段都必须匹配** 才能应用该绑定。
+当绑定包含多个匹配字段（`peer`、`guildId`、`teamId`、`roles`）时，**所有提供的字段必须匹配** 该绑定才能应用。
 
 匹配的 Agent 决定了使用哪个工作区和会话存储。
 
@@ -92,7 +91,7 @@ OpenClaw 将回复**路由回消息来源的渠道**。
 ## 配置概览
 
 - `agents.list`：命名的代理定义（工作区、模型等）。
-- `bindings`：将入站渠道/帐户/对等端映射到代理。
+- `bindings`：将入站频道/帐户/对等点映射到代理。
 
 示例：
 
@@ -117,17 +116,17 @@ OpenClaw 将回复**路由回消息来源的渠道**。
 
 您可以通过 `session.store` 和 `{agentId}` 模板覆盖存储路径。
 
-Gateway(网关) 和 ACP 会话发现还会扫描默认 `agents/` 根目录和模板化 `session.store` 根目录下的基于磁盘的代理存储。发现的存储必须保留在该解析的代理根目录内，并使用常规 `sessions.json` 文件。符号链接和根目录外路径将被忽略。
+Gateway 网关 和 ACP 会话发现还会扫描默认 `agents/` 根目录和模板化 `session.store` 根目录下的基于磁盘的代理存储。发现的存储必须保留在该解析的代理根目录内，并使用常规的 `sessions.json` 文件。符号链接和根目录外的路径将被忽略。
 
 ## WebChat 行为
 
-WebChat 附加到**选定的代理**，默认为该代理的主会话。因此，WebChat 允许您在一个位置查看该代理的跨渠道上下文。
+WebChat 附加到**选定的代理**，默认使用该代理的主会话。因此，WebChat 允许您在一个位置查看该代理的跨渠道上下文。
 
 ## 回复上下文
 
 入站回复包括：
 
-- `ReplyToId`、`ReplyToBody` 和 `ReplyToSender`（如果有）。
+- `ReplyToId`、`ReplyToBody` 和 `ReplyToSender`（如果可用）。
 - 引用的上下文作为 `[Replying to ...]` 块附加到 `Body`。
 
 这在所有渠道中是一致的。

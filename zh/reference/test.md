@@ -1,23 +1,24 @@
 ---
 summary: "如何在本地运行测试 (vitest) 以及何时使用 force/coverage 模式"
 read_when:
-  - 运行或修复测试
-title: "Tests"
+  - Running or fixing tests
+title: "测试"
 ---
 
 # 测试
 
-- 完整的测试工具包（套件、实时、Docker）：[Testing](/zh/help/testing)
+- 完整的测试套件（套件、实时测试、Docker）：[Testing](/zh/help/testing)
 
-- `pnpm test:force`: 终止任何占用默认控制端口的残留 Gateway(网关) 进程，然后使用隔离的 Gateway(网关) 端口运行完整的 Vitest 套件，以免服务器测试与正在运行的实例发生冲突。当先前的 Gateway(网关) 运行导致端口 18789 被占用时，请使用此选项。
-- `pnpm test:coverage`: 运行带有 V8 覆盖率的单元套件（通过 `vitest.unit.config.ts`）。全局阈值为 70% 的行/分支/函数/语句。覆盖率排除了重度集成的入口点（CLI 线路、Gateway(网关)/telegram 网桥、webchat 静态服务器），以保持目标专注于可进行单元测试的逻辑。
+- `pnpm test:force`：终止任何占用默认控制端口的残留网关进程，然后使用隔离的网关端口运行完整的 Vitest 测试套件，以防止服务器测试与正在运行的实例发生冲突。当之前的网关运行导致 18789 端口被占用时，请使用此方法。
+- `pnpm test:coverage`：运行带有 V8 覆盖率（通过 `vitest.unit.config.ts`）的单元测试套件。全局阈值为 70% 的行/分支/函数/语句。覆盖率排除了重集成的入口点（CLI 线路、网关/telegram 桥接、webchat 静态服务器），以使目标专注于可进行单元测试的逻辑。
 - 在 Node 22、23 和 24 上，`pnpm test` 默认使用 Vitest `vmForks` 以实现更快的启动。Node 25+ 在重新验证之前回退到 `forks`。您可以使用 `OPENCLAW_TEST_VM_FORKS=0|1` 强制执行特定行为。
-- `pnpm test`: 默认运行快速的核心单元通道，以便提供快速的本地反馈。
-- `pnpm test:channels`: 运行重度依赖渠道的套件。
-- `pnpm test:extensions`: 运行扩展/插件套件。
+- `pnpm test`：运行完整的包装器。它仅在 git 中保留一个小的行为覆盖清单，然后使用检入的时间快照将测量到的最重的单元文件剥离到专用通道中。
+- `pnpm test:channels`：运行重度依赖渠道的测试套件。
+- `pnpm test:extensions`：运行扩展/插件测试套件。
+- `pnpm test:perf:update-timings`：刷新由 `scripts/test-parallel.mjs` 使用的检入慢文件时间快照。
 - Gateway(网关) 集成：通过 `OPENCLAW_TEST_INCLUDE_GATEWAY=1 pnpm test` 或 `pnpm test:gateway` 选择加入。
-- `pnpm test:e2e`: 运行 Gateway(网关) 端到端冒烟测试（多实例 WS/HTTP/node 配对）。默认为 `vmForks` + `vitest.e2e.config.ts` 中的自适应工作线程；使用 `OPENCLAW_E2E_WORKERS=<n>` 进行调整，并设置 `OPENCLAW_E2E_VERBOSE=1` 以获取详细日志。
-- `pnpm test:live`: 运行提供商实时测试（minimax/zai）。需要 API 密钥和 `LIVE=1`（或特定于提供商的 `*_LIVE_TEST=1`）以取消跳过。
+- `pnpm test:e2e`：运行 Gateway(网关) 端到端冒烟测试（多实例 WS/HTTP/node 配对）。默认为 `vmForks` + `vitest.e2e.config.ts` 中的自适应工作线程；使用 `OPENCLAW_E2E_WORKERS=<n>` 进行调整，并设置 `OPENCLAW_E2E_VERBOSE=1` 以获取详细日志。
+- `pnpm test:live`：运行提供商实时测试（minimax/zai）。需要 API 密钥和 `LIVE=1`（或特定于提供商的 `*_LIVE_TEST=1`）来取消跳过。
 
 ## 本地 PR 门控
 
@@ -28,7 +29,7 @@ title: "Tests"
 - `pnpm test`
 - `pnpm check:docs`
 
-如果 `pnpm test` 在负载较高的主机上不稳定，请在将其视为回归之前重新运行一次，然后使用 `pnpm vitest run <path/to/test>` 隔离它。对于内存受限的主机，请使用：
+如果 `pnpm test` 在负载较重的主机上出现不稳定，请在将其视为回归之前重新运行一次，然后使用 `pnpm vitest run <path/to/test>` 进行隔离。对于内存受限的主机，请使用：
 
 - `OPENCLAW_TEST_PROFILE=low OPENCLAW_TEST_SERIAL_GATEWAY=1 pnpm test`
 
@@ -40,7 +41,7 @@ title: "Tests"
 
 - `source ~/.profile && pnpm tsx scripts/bench-model.ts --runs 10`
 - 可选环境变量：`MINIMAX_API_KEY`、`MINIMAX_BASE_URL`、`MINIMAX_MODEL`、`ANTHROPIC_API_KEY`
-- 默认提示词：“请用一个词回复：ok。不要标点符号或多余文本。”
+- 默认提示：“用一个词回复：ok。不要标点符号或额外文本。”
 
 上次运行（2025-12-31，20 次运行）：
 
@@ -57,7 +58,7 @@ title: "Tests"
 - `pnpm tsx scripts/bench-cli-startup.ts --runs 12`
 - `pnpm tsx scripts/bench-cli-startup.ts --entry dist/entry.js --timeout-ms 45000`
 
-此基准测试针对以下命令：
+这会对以下命令进行基准测试：
 
 - `--version`
 - `--help`
@@ -65,23 +66,23 @@ title: "Tests"
 - `status --json`
 - `status`
 
-输出包括每个命令的平均值、p50、p95、最小/最大值以及退出码/信号分布。
+输出包括每个命令的平均值、p50、p95、最小值/最大值以及退出代码/信号分布。
 
-## 入职 E2E 测试 (Docker)
+## 新手引导 E2E (Docker)
 
-Docker 是可选的；这仅用于容器化的入门冒烟测试。
+Docker 是可选的；仅容器化新手引导冒烟测试需要。
 
-在干净的 Linux 容器中进行完整的冷启动流程：
+在干净的 Linux 容器中完整的冷启动流程：
 
 ```bash
 scripts/e2e/onboard-docker.sh
 ```
 
-此脚本通过伪终端驱动交互式向导，验证 config/workspace/会话 文件，然后启动网关并运行 `openclaw health`。
+此脚本通过伪终端驱动交互式向导，验证配置/工作区/会话文件，然后启动网关并运行 `openclaw health`。
 
-## 二维码导入冒烟测试 (Docker)
+## QR 导入冒烟测试 (Docker)
 
-确保 `qrcode-terminal` 在受支持的 Docker Node 运行时下加载（默认为 Node 24，兼容 Node 22）：
+确保 `qrcode-terminal` 在支持的 Docker Node 运行时（默认 Node 24，兼容 Node 22）下加载：
 
 ```bash
 pnpm test:docker:qr

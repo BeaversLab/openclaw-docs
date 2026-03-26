@@ -1,26 +1,26 @@
 ---
 title: "LiteLLM"
-summary: "透過 LiteLLM Proxy 執行 OpenClaw 以進行統一的模型存取與成本追蹤"
+summary: "透過 LiteLLM Proxy 執行 OpenClaw 以獲得統一的模型存取和成本追蹤"
 read_when:
-  - 您想要透過 LiteLLM proxy 路由 OpenClaw
-  - 您需要透過 LiteLLM 進行成本追蹤、記錄或模型路由
+  - You want to route OpenClaw through a LiteLLM proxy
+  - You need cost tracking, logging, or model routing through LiteLLM
 ---
 
 # LiteLLM
 
-[LiteLLM](https://litellm.ai) 是一個開放原始碼的 LLM 閘道，為 100 多個模型提供者提供統一的 API。透過 LiteLLM 路由 OpenClaw 以獲得集中式的成本追蹤、記錄，以及在無需變更 OpenClaw 設定的情況下切換後端的彈性。
+[LiteLLM](https://litellm.ai) 是一個開源 LLM 閘道，為 100 多個模型供應商提供統一的 API。透過 LiteLLM 路由 OpenClaw，以獲得集中化的成本追蹤、記錄，以及無需變更 OpenClaw 設定即可切換後端的靈活性。
 
-## 為什麼要將 LiteLLM 與 OpenClar 搭配使用？
+## 為什麼將 LiteLLM 與 OpenClD 搭配使用？
 
 - **成本追蹤** — 確切掌握 OpenClaw 在所有模型上的花費
 - **模型路由** — 在 Claude、GPT-4、Gemini、Bedrock 之間切換，無需變更設定
-- **虛擬金鑰** — 為 OpenClaw 建立具有花費限制的金鑰
-- **記錄** — 完整的請求/回應記錄以便進行偵錯
-- **故障轉移** — 當您的主要提供者停機時自動切換
+- **虛擬金鑰** — 為 OpenClaw 建立具有花費限額的金鑰
+- **記錄** — 完整的請求/回應記錄，用於除錯
+- **容錯移轉** — 當您的主要供應商停機時自動故障轉移
 
 ## 快速開始
 
-### 透過導入流程
+### 透過入門引導
 
 ```bash
 openclaw onboard --auth-choice litellm-api-key
@@ -43,7 +43,7 @@ export LITELLM_API_KEY="your-litellm-key"
 openclaw
 ```
 
-就這樣。OpenClaw 現在會透過 LiteLLM 進行路由。
+這樣就完成了。OpenClaw 現在會透過 LiteLLM 進行路由。
 
 ## 設定
 
@@ -94,7 +94,7 @@ export LITELLM_API_KEY="sk-litellm-key"
 
 ## 虛擬金鑰
 
-為 OpenClar 建立具有花費限制的專用金鑰：
+為 OpenClaw 建立一個具有花費上限的專用金鑰：
 
 ```bash
 curl -X POST "http://localhost:4000/key/generate" \
@@ -107,7 +107,7 @@ curl -X POST "http://localhost:4000/key/generate" \
   }'
 ```
 
-將產生的金鑰用作 `LITELLM_API_KEY`。
+使用產生的金鑰作為 `LITELLM_API_KEY`。
 
 ## 模型路由
 
@@ -126,11 +126,11 @@ model_list:
       api_key: os.environ/OPENAI_API_KEY
 ```
 
-OpenClar 持續請求 `claude-opus-4-6` — LiteLLM 負責處理路由。
+OpenClaw 持續請求 `claude-opus-4-6` — LiteLLM 負責處理路由。
 
-## 查看使用量
+## 檢視使用情況
 
-查看 LiteLLM 的儀表板或 API：
+檢查 LiteLLM 的儀表板或 API：
 
 ```bash
 # Key info
@@ -142,16 +142,16 @@ curl "http://localhost:4000/spend/logs" \
   -H "Authorization: Bearer $LITELLM_MASTER_KEY"
 ```
 
-## 備註
+## 注意事項
 
-- LiteLLM 預設在 `http://localhost:4000` 上執行
-- OpenClar 透過與 OpenAI 相容的 `/v1/chat/completions` 端點進行連線
-- 所有 OpenClar 功能皆可透過 LiteLLM 運作 — 無任何限制
+- LiteLLM 預設運作在 `http://localhost:4000` 上
+- OpenClaw 透過相容 OpenAI 的 `/v1/chat/completions` 端點進行連接
+- 所有 OpenClaw 功能皆可透過 LiteLLM 運作 — 無任何限制
 
-## 參閱
+## 另請參閱
 
-- [LiteLLM 文件](https://docs.litellm.ai)
-- [模型提供者](/zh-Hant/concepts/model-providers)
+- [LiteLLM Docs](https://docs.litellm.ai)
+- [Model Providers](/zh-Hant/concepts/model-providers)
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

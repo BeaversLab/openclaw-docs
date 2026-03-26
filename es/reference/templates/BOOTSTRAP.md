@@ -1,8 +1,8 @@
 ---
-title: "Plantilla BOOTSTRAP.md"
-summary: "Ritual de primera ejecución para nuevos agentes"
+title: "BOOTSTRAP.md Plantilla"
+summary: "Ritual de inicio para nuevos agentes"
 read_when:
-  - Inicializando manualmente un espacio de trabajo
+  - Bootstrapping a workspace manually
 ---
 
 # BOOTSTRAP.md - Hola, Mundo
@@ -32,10 +32,10 @@ Ofrece sugerencias si están atascados. Diviértete con ello.
 
 Actualiza estos archivos con lo que aprendiste:
 
-- `IDENTITY.md` — tu nombre, criatura, vibra, emoji
+- `IDENTITY.md` — tu nombre, criatura, estilo, emoji
 - `USER.md` — su nombre, cómo dirigirse a ellos, zona horaria, notas
 
-Luego abran `SOUL.md` juntos y hablen sobre:
+Luego abre `SOUL.md` juntos y habla sobre:
 
 - Qué es importante para ellos
 - Cómo quieren que te comportes

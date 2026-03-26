@@ -1,47 +1,47 @@
 ---
-summary: "Arquitectura de vinculación de sesión agnóstica al canal y alcance de entrega de la iteración 1"
+summary: "Arquitectura de enlace de sesión agnóstica al canal y alcance de entrega de la iteración 1"
 read_when:
-  - Refactorización del enrutamiento y las vinculaciones de sesión agnóstica al canal
-  - Investigando entregas de sesión duplicadas, obsoletas o faltantes a través de canales
+  - Refactoring channel-agnostic session routing and bindings
+  - Investigating duplicate, stale, or missing session delivery across channels
 owner: "onutc"
-status: "in-progress"
+status: "en curso"
 last_updated: "2026-02-21"
-title: "Session Binding Channel Agnostic Plan"
+title: "Plan de enlace de sesión agnóstico al canal"
 ---
 
-# Plan de vinculación de sesión agnóstica al canal
+# Plan de enlace de sesión agnóstico al canal
 
 ## Resumen
 
-Este documento define el modelo de vinculación de sesión agnóstica al canal a largo plazo y el alcance concreto para la próxima iteración de implementación.
+Este documento define el modelo de enlace de sesión agnóstico al canal a largo plazo y el alcance concreto para la próxima iteración de implementación.
 
 Objetivo:
 
-- hacer que el enrutamiento de sesión vinculado a subagentes sea una capacidad principal
+- hacer que el enrutamiento de sesiones vinculadas a subagentes sea una capacidad principal
 - mantener el comportamiento específico del canal en los adaptadores
 - evitar regresiones en el comportamiento normal de Discord
 
-## Por qué esto existe
+## Por qué existe esto
 
 El comportamiento actual mezcla:
 
-- política de contenido de completado
+- política de contenido de finalización
 - política de enrutamiento de destino
 - detalles específicos de Discord
 
-Esto causó casos extremos como:
+Esto causó casos extremos tales como:
 
-- entrega duplicada en el hilo principal y en ejecuciones concurrentes
-- uso de tokens obsoletos en gestores de vinculación reutilizados
-- falta de contabilidad de actividad para envíos de webhooks
+- entrega duplicada en el hilo principal y en subprocesos durante ejecuciones simultáneas
+- uso de tokens obsoletos en gestores de enlace reutilizados
+- falta de contabilidad de actividad para envíos vía webhook
 
 ## Alcance de la iteración 1
 
-Esta iteración es intencionalmente limitada.
+Esta iteración está intencionalmente limitada.
 
-### 1. Agregar interfaces principales agnósticas al canal
+### 1. Añadir interfaces principales agnósticas al canal
 
-Agregar tipos principales e interfaces de servicio para vinculaciones y enrutamiento.
+Añadir tipos principales e interfaces de servicio para enlaces y enrutamiento.
 
 Tipos principales propuestos:
 
@@ -91,9 +91,9 @@ export interface SessionBindingService {
 }
 ```
 
-### 2. Agregar un enrutador de entrega principal para completados de subagentes
+### 2. Añadir un enrutador de entrega principal para finalizaciones de subagentes
 
-Agregar una única ruta de resolución de destino para eventos de completado.
+Añadir una única ruta de resolución de destino para eventos de finalización.
 
 Contrato del enrutador:
 
@@ -123,22 +123,22 @@ Discord sigue siendo la primera implementación del adaptador.
 
 Responsabilidades del adaptador:
 
-- crear/reutilizar conversaciones de hilos
-- enviar mensajes vinculados mediante webhook o envío de canal
+- crear/reutilizar conversaciones en hilos
+- enviar mensajes vinculados a través de webhook o envío al canal
 - validar el estado del hilo (archivado/eliminado)
 - mapear metadatos del adaptador (identidad del webhook, ids de hilos)
 
-### 4. Corregir problemas de corrección conocidos actualmente
+### 4. Corregir los problemas de corrección conocidos actualmente
 
 Requerido en esta iteración:
 
-- actualizar el uso del token al reutilizar el gestor de vinculación de hilo existente
+- actualizar el uso del token al reutilizar el gestor de enlace de hilo existente
 - registrar la actividad saliente para envíos de Discord basados en webhooks
-- detener la retirada implícita al canal principal cuando se selecciona un destino de hilo vinculado para el completado en modo de sesión
+- detener la reserva implícita al canal principal cuando se selecciona un destino de hilo vinculado para la finalización en modo de sesión
 
-### 5. Preservar los valores predeterminados de seguridad de ejecución actuales
+### 5. Preservar los valores predeterminados de seguridad en tiempo de ejecución actuales
 
-Sin cambio de comportamiento para los usuarios con generación vinculada a hilos deshabilitada.
+No hay cambios de comportamiento para los usuarios con el spawn vinculado a hilos deshabilitado.
 
 Los valores predeterminados se mantienen:
 
@@ -146,18 +146,18 @@ Los valores predeterminados se mantienen:
 
 Resultado:
 
-- los usuarios normales de Discord se mantienen con el comportamiento actual
-- la nueva ruta principal solo afecta el enrutamiento de finalización de sesión enlazada donde esté habilitado
+- los usuarios normales de Discord se mantienen en el comportamiento actual
+- la nueva ruta principal afecta solo el enrutamiento de finalizaciones de sesión vinculadas donde está habilitado
 
 ## No en la iteración 1
 
-Pospuesto explícitamente:
+Explícitamente diferido:
 
-- objetivos de enlace ACP (`targetKind: "acp"`)
-- nuevos adaptadores de canal además de Discord
+- objetivos de vinculación de ACP (`targetKind: "acp"`)
+- nuevos adaptadores de canal más allá de Discord
 - reemplazo global de todas las rutas de entrega (`spawn_ack`, futuro `subagent_message`)
 - cambios a nivel de protocolo
-- rediseño de migración/versiones de almacenamiento para toda la persistencia de enlaces
+- rediseño de migración/versiones de almacenamiento para toda la persistencia de vinculación
 
 Notas sobre ACP:
 
@@ -168,44 +168,44 @@ Notas sobre ACP:
 
 Estos invariantes son obligatorios para la iteración 1.
 
-- la selección del destino y la generación de contenido son pasos separados
-- si la finalización en modo de sesión se resuelve en un destino enlazado activo, la entrega debe dirigirse a ese destino
-- sin redirección oculta del destino enlazado al canal principal
+- la selección de destino y la generación de contenido son pasos separados
+- si la finalización del modo de sesión se resuelve a un destino vinculado activo, la entrega debe dirigirse a ese destino
+- sin redirección oculta del destino vinculado al canal principal
 - el comportamiento de reserva debe ser explícito y observable
 
-## Compatibilidad y lanzamiento
+## Compatibilidad e implementación
 
 Objetivo de compatibilidad:
 
-- sin regresión para usuarios con el lanzamiento de hilos enlazados desactivado
-- sin cambios en los canales que no son de Discord en esta iteración
+- sin regresión para los usuarios con el spawn vinculado a hilos desactivado
+- sin cambios en los canales que no sean Discord en esta iteración
 
-Lanzamiento:
+Implementación:
 
-1. Implementar interfaces y enrutador detrás de las puertas de características actuales.
-2. Enrutar las entregas enlazadas en modo de finalización de Discord a través del enrutador.
-3. Mantener la ruta heredada para flujos no enlazados.
+1. Incluir las interfaces y el enrutador detrás de las puertas de características actuales.
+2. Enrutar las entregas vinculadas del modo de finalización de Discord a través del enrutador.
+3. Mantener la ruta heredada para flujos no vinculados.
 4. Verificar con pruebas específicas y registros de tiempo de ejecución canary.
 
 ## Pruebas requeridas en la iteración 1
 
 Cobertura unitaria y de integración requerida:
 
-- la rotación de tokens del administrador usa el token más reciente después de la reutilización del administrador
+- la rotación de tokens del administrador usa el token más reciente después de reutilizar el administrador
 - el webhook envía actualizaciones de marcas de tiempo de actividad del canal
-- dos sesiones enlazadas activas en el mismo canal solicitante no se duplican en el canal principal
-- la finalización para la ejecución en modo de sesión enlazada se resuelve solo al destino del hilo
-- el indicador de lanzamiento desactivado mantiene el comportamiento heredado sin cambios
+- dos sesiones vinculadas activas en el mismo canal solicitante no se duplican en el canal principal
+- la finalización para la ejecución del modo de sesión vinculada se resuelve solo al destino del hilo
+- el indicador de spawn deshabilitado mantiene el comportamiento heredado sin cambios
 
 ## Archivos de implementación propuestos
 
-Núcleo:
+Core:
 
 - `src/infra/outbound/session-binding-service.ts` (nuevo)
 - `src/infra/outbound/bound-delivery-router.ts` (nuevo)
 - `src/agents/subagent-announce.ts` (integración de resolución de destino de finalización)
 
-Adaptador de Discord y tiempo de ejecución:
+Adaptador y tiempo de ejecución de Discord:
 
 - `src/discord/monitor/thread-bindings.manager.ts`
 - `src/discord/monitor/reply-delivery.ts`
@@ -219,11 +219,11 @@ Pruebas:
 
 ## Criterios de terminación para la iteración 1
 
-- las interfaces principales existen y están conectadas para el enrutamiento de finalización
-- las correcciones de corrección anteriores se combinan con las pruebas
-- sin entrega de finalización duplicada en el hilo principal y en el modo de ejecución vinculado a la sesión
-- sin cambio de comportamiento para los despliegues de generación vinculada deshabilitados
-- ACP se mantiene explícitamente pospuesto
+- las interfaces principales existen y están conectadas para el enrutamiento de finalizaciones
+- las correcciones de corrección anteriores se han fusionado con pruebas
+- no hay entrega de finalización duplicada en el hilo principal en ejecuciones enlazadas en modo de sesión
+- ningún cambio de comportamiento para los despliegues de generación enlazada deshabilitados
+- ACP sigue explícitamente aplazado
 
 import es from "/components/footer/es.mdx";
 

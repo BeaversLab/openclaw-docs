@@ -1,20 +1,19 @@
 ---
-summary: "Model providers (LLMs) supported by OpenClaw"
+summary: "Fournisseurs de modèles (LLM) pris en charge par OpenClaw"
 read_when:
   - You want to choose a model provider
   - You want quick setup examples for LLM auth + model selection
-title: "Model Provider Quickstart"
+title: "Démarrage rapide du fournisseur de modèles"
 ---
 
-# Model Providers
+# Fournisseurs de modèles
 
-OpenClaw can use many LLM providers. Pick one, authenticate, then set the default
-model as `provider/model`.
+OpenClaw peut utiliser de nombreux fournisseurs LLM. Choisissez-en un, authentifiez-vous, puis définissez le modèle par défaut sur `provider/model`.
 
-## Quick start (two steps)
+## Démarrage rapide (deux étapes)
 
-1. Authenticate with the provider (usually via `openclaw onboard`).
-2. Set the default model:
+1. Authentifiez-vous auprès du fournisseur (généralement via `openclaw onboard`).
+2. Définir le modèle par défaut :
 
 ```json5
 {
@@ -22,7 +21,7 @@ model as `provider/model`.
 }
 ```
 
-## Supported providers (starter set)
+## Fournisseurs pris en charge (ensemble de démarrage)
 
 - [OpenAI (API + Codex)](/fr/providers/openai)
 - [Anthropic (API + Claude Code CLI)](/fr/providers/anthropic)
@@ -34,15 +33,15 @@ model as `provider/model`.
 - [Synthetic](/fr/providers/synthetic)
 - [OpenCode (Zen + Go)](/fr/providers/opencode)
 - [Z.AI](/fr/providers/zai)
-- [GLM models](/fr/providers/glm)
+- [Modèles GLM](/fr/providers/glm)
 - [MiniMax](/fr/providers/minimax)
 - [Venice (Venice AI)](/fr/providers/venice)
 - [Amazon Bedrock](/fr/providers/bedrock)
 - [Qianfan](/fr/providers/qianfan)
 - [xAI](/fr/providers/xai)
 
-For the full provider catalog (xAI, Groq, Mistral, etc.) and advanced configuration,
-see [Model providers](/fr/concepts/model-providers).
+Pour le catalogue complet des providers (xAI, Groq, Mistral, etc.) et la configuration avancée,
+voir [Model providers](/fr/concepts/model-providers).
 
 import fr from "/components/footer/fr.mdx";
 

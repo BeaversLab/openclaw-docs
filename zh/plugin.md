@@ -1,18 +1,18 @@
 ---
-summary: "OpenClaw 插件/扩展：发现、配置与安全性"
+summary: "OpenClaw 插件/扩展：发现、配置与安全"
 read_when:
-  - 添加或修改插件/扩展
-  - 记录插件安装或加载规则
+  - Adding or modifying plugins/extensions
+  - Documenting plugin install or load rules
 title: "插件"
 ---
 
 # 插件（扩展）
 
-## 快速开始（插件新手？）
+## 快速入门（插件新手？）
 
-插件只是一个**小型代码模块**，它通过额外功能（命令、工具和 Gateway RPC）来扩展 OpenClaw。
+插件只是一个**小型代码模块**，它通过额外功能（命令、工具和 Gateway 网关 RPC）来扩展 OpenClaw。
 
-大多数情况下，当你想要 OpenClaw 核心尚未内置的功能（或者你想将可选功能排除在主安装之外）时，就会使用插件。
+大多数情况下，当你想要一个尚未内置在核心 OpenClaw 中的功能（或者你想将可选功能保留在主安装之外）时，你会使用插件。
 
 快速路径：
 
@@ -22,50 +22,51 @@ title: "插件"
 openclaw plugins list
 ```
 
-2. 安装官方插件（例如：语音通话）：
+2. 安装官方插件（示例：语音通话）：
 
 ```bash
 openclaw plugins install @openclaw/voice-call
 ```
 
-3. 重启 Gateway(网关)，然后在 `plugins.entries.<id>.config` 下进行配置。
+3. 重启 Gateway 网关，然后在 `plugins.entries.<id>.config` 下进行配置。
 
 有关具体的插件示例，请参阅 [语音通话](/zh/plugins/voice-call)。
 
 ## 可用插件（官方）
 
-- Microsoft Teams 自 2026.1.15 起仅作为插件提供；如果你使用 Teams，请安装 `@openclaw/msteams`。
-- Memory (Core) — 捆绑的内存搜索插件（通过 `plugins.slots.memory` 默认启用）
-- Memory (LanceDB) — 捆绑的长期记忆插件（自动回忆/捕获；设置 `plugins.slots.memory = "memory-lancedb"`）
+- 截至 2026.1.15，Microsoft Teams 仅支持插件模式；如果您使用 Teams，请安装 `@openclaw/msteams`。
+- Memory (Core) — 捆绑的内存搜索插件（默认通过 `plugins.slots.memory` 启用）
+- Memory (LanceDB) — 捆绑的长期记忆插件（自动回想/捕获；设置 `plugins.slots.memory = "memory-lancedb"`）
 - [语音通话](/zh/plugins/voice-call) — `@openclaw/voice-call`
 - [Zalo 个人版](/zh/plugins/zalouser) — `@openclaw/zalouser`
 - [Matrix](/zh/channels/matrix) — `@openclaw/matrix`
 - [Nostr](/zh/channels/nostr) — `@openclaw/nostr`
 - [Zalo](/zh/channels/zalo) — `@openclaw/zalo`
 - [Microsoft Teams](/zh/channels/msteams) — `@openclaw/msteams`
-- Google Antigravity OAuth（提供商认证） — 捆绑为 `google-antigravity-auth`（默认禁用）
-- Gemini CLI OAuth（提供商认证） — 捆绑为 `google-gemini-cli-auth`（默认禁用）
-- Qwen OAuth（提供商认证） — 捆绑为 `qwen-portal-auth`（默认禁用）
-- Copilot Proxy（提供商认证） — 本地 VS Code Copilot Proxy 网桥；与内置的 `github-copilot` 设备登录不同（捆绑，默认禁用）
+- Google Antigravity OAuth（提供商身份验证） — 捆绑为 `google-antigravity-auth`（默认禁用）
+- Gemini CLI OAuth（提供商身份验证） — 捆绑为 `google-gemini-cli-auth`（默认禁用）
+- Qwen OAuth（提供商身份验证） — 捆绑为 `qwen-portal-auth`（默认禁用）
+- Copilot Proxy（提供商身份验证） — 本地 VS Code Copilot Proxy 网桥；区别于内置的 `github-copilot` 设备登录（已捆绑，默认禁用）
 
-OpenClaw 插件是通过 jiti 在运行时加载的 **TypeScript 模块**。**配置验证不会执行插件代码**；它使用插件清单和 JSON Schema 来代替。请参阅 [插件清单](/zh/plugins/manifest)。
+OpenClaw 插件是通过 jiti 在运行时加载的 **TypeScript 模块**。**配置验证不会执行插件代码**，而是使用插件清单和 JSON Schema。请参阅 [插件清单](/zh/plugins/manifest)。
 
 插件可以注册：
 
-- Gateway(网关) RPC 方法
-- Gateway(网关) HTTP 处理程序
+- Gateway 网关 RPC 方法
+- Gateway 网关 HTTP 处理程序
 - Agent 工具
 - CLI 命令
 - 后台服务
 - 可选配置验证
-- **Skills**（通过在插件清单中列出 `skills` 目录）
-- **自动回复命令**（执行而不调用 AI agent）
+- **技能**（通过在插件清单中列出 `skills` 目录）
+- **自动回复命令**（执行时无需调用 AI 代理）
 
-插件与 Gateway(网关) **在进程中 (in‑process)** 运行，因此请将它们视为受信任的代码。工具编写指南：[插件 agent 工具](/zh/plugins/agent-tools)。
+插件与 Gateway 网关 **同进程** 运行，因此请将其视为受信任的代码。
+工具编写指南：[插件代理工具](/zh/plugins/agent-tools)。
 
 ## 运行时辅助工具
 
-插件可以通过 `api.runtime` 访问选定的核心辅助工具。对于电话 TTS：
+插件可以通过 `api.runtime` 访问选定的核心助手。对于电话 TTS：
 
 ```ts
 const result = await api.runtime.tts.textToSpeechTelephony({
@@ -74,13 +75,13 @@ const result = await api.runtime.tts.textToSpeechTelephony({
 });
 ```
 
-说明：
+注意：
 
 - 使用核心 `messages.tts` 配置（OpenAI 或 ElevenLabs）。
 - 返回 PCM 音频缓冲区 + 采样率。插件必须为提供商重新采样/编码。
-- Edge TTS 不支持电话。
+- Edge TTS 不支持电话功能。
 
-## 设备发现与优先级
+## 发现与优先级
 
 OpenClaw 按顺序扫描：
 
@@ -102,13 +103,13 @@ OpenClaw 按顺序扫描：
 
 - `<openclaw>/extensions/*`
 
-捆绑插件必须通过 `plugins.entries.<id>.enabled` 或 `openclaw plugins enable <id>` 显式启用。已安装的插件默认启用，但也可以通过相同方式禁用。
+必须通过 `plugins.entries.<id>.enabled` 或 `openclaw plugins enable <id>` 显式启用捆绑插件。已安装的插件默认处于启用状态，但也可以通过同样的方式禁用。
 
-每个插件必须在其根目录中包含一个 `openclaw.plugin.json` 文件。如果路径指向文件，则插件根目录是该文件的目录，并且必须包含清单。
+每个插件必须在其根目录中包含一个 `openclaw.plugin.json` 文件。如果路径指向某个文件，则插件根目录为该文件所在的目录，且该目录必须包含清单文件。
 
-如果多个插件解析为相同的 ID，则上述顺序中的第一个匹配项获胜，并忽略优先级较低的副本。
+如果多个插件解析为相同的 ID，则上述顺序中的第一个匹配项胜出，优先级较低的副本将被忽略。
 
-### 软件包
+### 程序包集合
 
 插件目录可以包含带有 `openclaw.extensions` 的 `package.json`：
 
@@ -121,15 +122,13 @@ OpenClaw 按顺序扫描：
 }
 ```
 
-每个条目成为一个插件。如果软件包列出了多个扩展，插件 ID 将变为 `name/<fileBase>`。
+每个条目都会成为一个插件。如果包列出了多个扩展，插件 ID 将变为 `name/<fileBase>`。
 
-如果您的插件导入了 npm 依赖项，请在该目录中安装它们，以便
-`node_modules` 可用（`npm install` / `pnpm install`）。
+如果您的插件导入了 npm 依赖项，请将其安装在该目录中，以便 `node_modules` 可用（`npm install` / `pnpm install`）。
 
-### 渠道目录元数据
+### 通道目录元数据
 
-渠道插件可以通过 `openclaw.channel` 宣传 OpenClaw 元数据，并通过
-`openclaw.install` 提供安装提示。这使核心目录不包含数据。
+通道插件可以通过 `openclaw.channel` 发布入门元数据，并通过 `openclaw.install` 发布安装提示。这使核心目录保持无数据状态。
 
 示例：
 
@@ -157,26 +156,22 @@ OpenClaw 按顺序扫描：
 }
 ```
 
-OpenClaw 还可以合并**外部渠道目录**（例如，MPM
-注册表导出）。将 JSON 文件放置在以下位置之一：
+OpenClaw 也可以合并**外部通道目录**（例如，MPM 注册表导出）。将 JSON 文件放置在以下任一位置：
 
 - `~/.openclaw/mpm/plugins.json`
 - `~/.openclaw/mpm/catalog.json`
 - `~/.openclaw/plugins/catalog.json`
 
-或者将 `OPENCLAW_PLUGIN_CATALOG_PATHS`（或 `OPENCLAW_MPM_CATALOG_PATHS`）指向
-一个或多个 JSON 文件（以逗号/分号/`PATH` 分隔）。每个文件应
-包含 `{ "entries": [ { "name": "@scope/pkg", "openclaw": { "channel": {...}, "install": {...} } } ] }`。
+或者将 `OPENCLAW_PLUGIN_CATALOG_PATHS`（或 `OPENCLAW_MPM_CATALOG_PATHS`）指向一个或多个 JSON 文件（以逗号/分号/`PATH` 分隔）。每个文件应包含 `{ "entries": [ { "name": "@scope/pkg", "openclaw": { "channel": {...}, "install": {...} } } ] }`。
 
 ## 插件 ID
 
 默认插件 ID：
 
-- 包打包： `package.json` `name`
+- 包：`package.json` `name`
 - 独立文件：文件基本名称（`~/.../voice-call.ts` → `voice-call`）
 
-如果插件导出 `id`，OpenClaw 会使用它，但在它与
-配置的 ID 不匹配时发出警告。
+如果插件导出了 `id`，OpenClaw 会使用它，但在其与配置的 ID 不匹配时会发出警告。
 
 ## 配置
 
@@ -196,7 +191,7 @@ OpenClaw 还可以合并**外部渠道目录**（例如，MPM
 
 字段：
 
-- `enabled`：主开关（默认值：true）
+- `enabled`：主开关（默认：true）
 - `allow`：允许列表（可选）
 - `deny`：拒绝列表（可选；拒绝优先）
 - `load.paths`：额外的插件文件/目录
@@ -206,17 +201,17 @@ OpenClaw 还可以合并**外部渠道目录**（例如，MPM
 
 验证规则（严格）：
 
-- `entries`、`allow`、`deny` 或 `slots` 中未知的插件 ID 是**错误**。
-- 未知的 `channels.<id>` 键是**错误**，除非插件清单声明了
+- `entries`、`allow`、`deny` 或 `slots` 中的未知插件 ID 是**错误**。
+- 未知的 `channels.<id>` 键是 **错误**，除非插件清单声明了
   渠道 ID。
-- 使用嵌入在
-  `openclaw.plugin.json`（`configSchema`）中的 JSON Schema 验证插件配置。
-- 如果插件被禁用，其配置将被保留，并发出**警告**。
+- 插件配置使用嵌入在
+  `openclaw.plugin.json` (`configSchema`) 中的 JSON Schema 进行验证。
+- 如果插件被禁用，其配置会被保留并发出 **警告**。
 
-## 插件插槽（互斥类别）
+## 插件槽（互斥类别）
 
-某些插件类别是**排他的**（一次只能激活一个）。使用
-`plugins.slots` 来选择哪个插件拥有该插槽：
+某些插件类别是 **互斥的**（一次只能有一个活动）。使用
+`plugins.slots` 来选择哪个插件拥有该槽：
 
 ```json5
 {
@@ -228,21 +223,21 @@ OpenClaw 还可以合并**外部渠道目录**（例如，MPM
 }
 ```
 
-如果多个插件声明了 `kind: "memory"`，则仅加载选中的那个。其他
+如果多个插件声明 `kind: "memory"`，则仅加载选中的那个。其他
 插件将被禁用并输出诊断信息。
 
-## 控制 UI（架构 + 标签）
+## 控制 UI（schema + 标签）
 
-控制 UI 使用 `config.schema`（JSON 架构 + `uiHints`）来渲染更好的表单。
+控制 UI 使用 `config.schema` (JSON Schema + `uiHints`) 来渲染更好的表单。
 
 OpenClaw 在运行时根据发现的插件增强 `uiHints`：
 
 - 为 `plugins.entries.<id>` / `.enabled` / `.config` 添加每个插件的标签
-- 在以下位置合并可选的插件提供的配置字段提示：
+- 合并插件提供的可选配置字段提示，位于：
   `plugins.entries.<id>.config.<field>`
 
-如果您希望插件配置字段显示良好的标签/占位符（并将机密标记为敏感），
-请在插件清单中随 JSON 架构一起提供 `uiHints`。
+如果您希望您的插件配置字段显示良好的标签/占位符（并将机密标记为敏感），
+请在插件清单中与您的 JSON Schema 一起提供 `uiHints`。
 
 示例：
 
@@ -284,19 +279,19 @@ openclaw plugins doctor
 
 `plugins update` 仅适用于在 `plugins.installs` 下跟踪的 npm 安装。
 
-插件也可以注册自己的顶级命令（例如：`openclaw voicecall`）。
+插件还可以注册自己的顶级命令（例如：`openclaw voicecall`）。
 
-## 插件 API（概述）
+## 插件 API（概览）
 
-插件导出以下任一内容：
+插件导出以下之一：
 
 - 一个函数：`(api) => { ... }`
 - 一个对象：`{ id, name, configSchema, register(api) { ... } }`
 
-## 插件挂钩
+## 插件钩子
 
-插件可以附带挂钩并在运行时注册它们。这允许插件捆绑
-事件驱动的自动化，而无需单独安装挂钩包。
+插件可以附带钩子并在运行时注册它们。这使得插件可以捆绑
+事件驱动的自动化，而无需单独安装钩子包。
 
 ### 示例
 
@@ -308,20 +303,18 @@ export default function register(api) {
 }
 ```
 
-注：
+注意事项：
 
-- 挂钩目录遵循正常的挂钩结构（`HOOK.md` + `handler.ts`）。
-- 挂钩资格规则仍然适用（操作系统/二进制文件/环境/配置要求）。
-- 插件管理的挂钩会显示在 `openclaw hooks list` 中，并带有 `plugin:<id>`。
-- 您无法通过 `openclaw hooks` 启用/禁用插件管理的挂钩；请改为启用/禁用插件。
+- 钩子目录遵循正常的钩子结构（`HOOK.md` + `handler.ts`）。
+- 钩子资格规则仍然适用（操作系统/二进制文件/环境/配置要求）。
+- 插件管理的钩子会显示在 `openclaw hooks list` 中，并带有 `plugin:<id>`。
+- 您不能通过 `openclaw hooks` 启用/禁用插件管理的钩子；请改为启用/禁用插件。
 
 ## 提供商插件（模型身份验证）
 
-插件可以注册**模型提供商身份验证**流程，以便用户可以在 OAuth 内运行 API 或
-OpenClaw 密钥设置（无需外部脚本）。
+插件可以注册**模型提供商身份验证**流程，以便用户可以在 OAuth 内运行 API 或 OpenClaw 密钥设置（无需外部脚本）。
 
-通过 `api.registerProvider(...)` 注册提供商。每个提供商公开一个
-或多个身份验证方法（OAuth、API 密钥、设备代码等）。这些方法支持：
+通过 `api.registerProvider(...)` 注册提供商。每个提供商公开一种或多种身份验证方法（OAuth、API 密钥、设备代码等）。这些方法支持：
 
 - `openclaw models auth login --provider <id> [--method <id>]`
 
@@ -359,16 +352,16 @@ api.registerProvider({
 });
 ```
 
-注：
+注意事项：
 
-- `run` 接收一个带有 `prompter`、`runtime`、
-  `openUrl` 和 `oauth.createVpsAwareHandlers` 助手的 `ProviderAuthContext`。
-- 当您需要添加默认模型或提供商配置时，返回 `configPatch`。
-- 返回 `defaultModel`，以便 `--set-default` 可以更新代理默认值。
+- `run` 接收一个 `ProviderAuthContext`，其中包含 `prompter`、`runtime`、
+  `openUrl` 和 `oauth.createVpsAwareHandlers` 辅助工具。
+- 当您需要添加默认模型或提供商配置时，请返回 `configPatch`。
+- 返回 `defaultModel` 以便 `--set-default` 更新代理默认值。
 
 ### 注册消息渠道
 
-插件可以注册表现得像内置渠道（WhatsApp、Telegram 等）的**渠道插件**。渠道配置位于 `channels.<id>` 下，并由您的渠道插件代码进行验证。
+插件可以注册**渠道插件**，其行为类似于内置渠道（WhatsApp、Telegram 等）。渠道配置位于 `channels.<id>` 下，并由您的渠道插件代码进行验证。
 
 ```ts
 const myChannel = {
@@ -402,42 +395,41 @@ export default function (api) {
 
 注意：
 
-- 将配置放在 `channels.<id>` 下（而不是 `plugins.entries`）。
+- 将配置置于 `channels.<id>` 下（而非 `plugins.entries`）。
 - `meta.label` 用于 CLI/UI 列表中的标签。
-- `meta.aliases` 添加用于规范化处理和 CLI 输入的备用 ID。
-- `meta.preferOver` 列出了在两者都配置完毕时需要跳过自动启用的渠道 ID。
-- `meta.detailLabel` 和 `meta.systemImage` 让 UI 能够显示更丰富的渠道标签/图标。
+- `meta.aliases` 添加用于规范化和 CLI 输入的备用 ID。
+- `meta.preferOver` 列出在两者均已配置时跳过自动启用的渠道 ID。
+- `meta.detailLabel` 和 `meta.systemImage` 允许 UI 显示更丰富的渠道标签/图标。
 
 ### 编写新的消息渠道（分步指南）
 
-当您想要一个**新的聊天界面**（一个“消息渠道”）而不是模型提供商时，请使用此选项。
-模型提供商文档位于 `/providers/*` 下。
+当您想要一个**新的聊天界面**（“消息渠道”）而非模型提供商时使用此选项。模型提供商文档位于 `/providers/*` 下。
 
 1. 选择 ID + 配置结构
 
-- 所有渠道配置都位于 `channels.<id>` 下。
+- 所有渠道配置均位于 `channels.<id>` 下。
 - 对于多账户设置，首选 `channels.<id>.accounts.<accountId>`。
 
 2. 定义渠道元数据
 
 - `meta.label`、`meta.selectionLabel`、`meta.docsPath`、`meta.blurb` 控制 CLI/UI 列表。
-- `meta.docsPath` 应指向一个类似于 `/channels/<id>` 的文档页面。
+- `meta.docsPath` 应指向类似于 `/channels/<id>` 的文档页面。
 - `meta.preferOver` 允许插件替换另一个渠道（自动启用优先选择它）。
-- `meta.detailLabel` 和 `meta.systemImage` 被 UI 用于显示详情文本/图标。
+- `meta.detailLabel` 和 `meta.systemImage` 由 UI 用于详细文本/图标。
 
 3. 实现所需的适配器
 
 - `config.listAccountIds` + `config.resolveAccount`
-- `capabilities`（聊天类型、媒体、线程等）
-- `outbound.deliveryMode` + `outbound.sendText` (用于基本发送)
+- `capabilities`（聊天类型、媒体、会话串等）
+- `outbound.deliveryMode` + `outbound.sendText`（用于基本发送）
 
 4. 根据需要添加可选适配器
 
-- `setup` (向导)、`security` (私信策略)、`status` (健康/诊断)
-- `gateway` (启动/停止/登录)、`mentions`、`threading`、`streaming`
-- `actions` (消息操作)、`commands` (原生命令行为)
+- `setup` (向导), `security` (私信策略), `status` (健康/诊断)
+- `gateway` (启动/停止/登录), `mentions`, `threading`, `streaming`
+- `actions` (消息操作), `commands` (原生命令行为)
 
-5. 在你的插件中注册渠道
+5. 在插件中注册渠道
 
 - `api.registerChannel({ plugin })`
 
@@ -455,7 +447,7 @@ export default function (api) {
 }
 ```
 
-最小渠道插件（仅出站）：
+最小渠道插件（仅限出站）：
 
 ```ts
 const plugin = {
@@ -495,9 +487,9 @@ export default function (api) {
 
 ### Agent 工具
 
-请参阅专用指南：[Plugin agent tools](/zh/plugins/agent-tools)。
+请参阅专用指南：[插件 Agent 工具](/zh/plugins/agent-tools)。
 
-### 注册网关 RPC 方法
+### 注册 Gateway RPC 方法
 
 ```ts
 export default function (api) {
@@ -524,7 +516,7 @@ export default function (api) {
 
 ### 注册自动回复命令
 
-插件可以注册自定义斜杠命令，这些命令在执行时**无需调用 AI 代理**。这对于切换命令、状态检查或不需要 LLM 处理的快速操作非常有用。
+插件可以注册自定义斜杠命令，这些命令执行时**无需调用 AI 代理**。这对于切换命令、状态检查或不需要 LLM 处理的快速操作非常有用。
 
 ```ts
 export default function (api) {
@@ -545,14 +537,14 @@ export default function (api) {
 - `isAuthorizedSender`：发送者是否为授权用户
 - `args`：命令后传递的参数（如果 `acceptsArgs: true`）
 - `commandBody`：完整的命令文本
-- `config`：当前的 OpenClaw 配置
+- `config`: 当前的 OpenClaw 配置
 
 命令选项：
 
-- `name`：命令名称（不带前导 `/`）
+- `name`：命令名称（不带前缀 `/`）
 - `description`：在命令列表中显示的帮助文本
-- `acceptsArgs`：命令是否接受参数（默认：false）。如果为 false 且提供了参数，则命令不会匹配，消息将传递给其他处理程序
-- `requireAuth`：是否要求授权的发送者（默认：true）
+- `acceptsArgs`：命令是否接受参数（默认：false）。如果为 false 且提供了参数，该命令将不匹配，消息将传递给其他处理程序
+- `requireAuth`：是否要求发送者已授权（默认：true）
 - `handler`：返回 `{ text: string }` 的函数（可以是异步的）
 
 包含授权和参数的示例：
@@ -571,7 +563,7 @@ api.registerCommand({
 });
 ```
 
-注意事项：
+注意：
 
 - 插件命令在内置命令和 AI 代理**之前**处理
 - 命令是全局注册的，并在所有频道中工作
@@ -594,29 +586,29 @@ export default function (api) {
 
 ## 命名约定
 
-- Gateway(网关) 方法：`pluginId.action`（示例：`voicecall.status`）
-- 工具：`snake_case`（示例：`voice_call`）
-- CLI 命令：kebab 或 camel，但避免与核心命令冲突
+- Gateway(网关) 方法: `pluginId.action` (示例: `voicecall.status`)
+- 工具：`snake_case`（例如：`voice_call`）
+- CLI 命令: kebab 或 camel，但避免与核心命令冲突
 
 ## Skills
 
-插件可以在代码仓库中包含一个技能 (`skills/<name>/SKILL.md`)。
-使用 `plugins.entries.<id>.enabled`（或其他配置开关）启用它，并确保
-它位于您的工作区/托管技能位置中。
+插件可以在仓库中附带一个技能（`skills/<name>/SKILL.md`）。
+通过 `plugins.entries.<id>.enabled`（或其他配置门控）启用它，并确保
+它存在于您的工作区/托管技能位置中。
 
 ## 分发 (npm)
 
 推荐的打包方式：
 
-- 主包：`openclaw`（此代码仓库）
-- 插件：在 `@openclaw/*` 下的独立 npm 包（示例：`@openclaw/voice-call`）
+- 主包：`openclaw`（此仓库）
+- 插件: `@openclaw/*` 下的独立 npm 包 (示例: `@openclaw/voice-call`)
 
 发布约定：
 
-- 插件 `package.json` 必须包含 `openclaw.extensions`，其中包含一个或多个入口文件。
+- 插件 `package.json` 必须包含 `openclaw.extensions`，其中含有一个或多个入口文件。
 - 入口文件可以是 `.js` 或 `.ts`（jiti 在运行时加载 TS）。
-- `openclaw plugins install <npm-spec>` 使用 `npm pack`，解压到 `~/.openclaw/extensions/<id>/` 中，并在配置中启用它。
-- 配置键稳定性：作用域包对于 `plugins.entries.*` 被规范化为 **无作用域** 的 id。
+- `openclaw plugins install <npm-spec>` 使用 `npm pack`，将其提取到 `~/.openclaw/extensions/<id>/` 中，并在配置中启用它。
+- 配置键稳定性：作用域包会被规范化为 `plugins.entries.*` 的 **无作用域** id。
 
 ## 示例插件：语音通话
 
@@ -625,27 +617,27 @@ export default function (api) {
 - 源码：`extensions/voice-call`
 - 技能：`skills/voice-call`
 - CLI: `openclaw voicecall start|status`
-- 工具: `voice_call`
+- 工具：`voice_call`
 - RPC: `voicecall.start`, `voicecall.status`
-- 配置 (twilio): `provider: "twilio"` + `twilio.accountSid/authToken/from` (可选 `statusCallbackUrl`, `twimlUrl`)
-- 配置 (开发环境): `provider: "log"` (无网络)
+- 配置 (twilio)：`provider: "twilio"` + `twilio.accountSid/authToken/from` (可选 `statusCallbackUrl`, `twimlUrl`)
+- 配置 (dev)：`provider: "log"` (无网络)
 
-参阅 [Voice Call](/zh/plugins/voice-call) 和 `extensions/voice-call/README.md` 了解设置和用法。
+请参阅 [语音通话](/zh/plugins/voice-call) 和 `extensions/voice-call/README.md` 了解设置和用法。
 
-## 安全注意事项
+## 安全说明
 
-插件在 Gateway 进程内运行。请将其视为受信任的代码：
+插件与 Gateway(网关) 网关在同一进程中运行。请将它们视为受信任的代码：
 
 - 仅安装您信任的插件。
 - 首选 `plugins.allow` 允许列表。
-- 更改后重启 Gateway。
+- 更改后重启 Gateway 网关。
 
 ## 测试插件
 
-插件可以（且应该）附带测试：
+插件可以（并且应该）附带测试：
 
-- 仓库内的插件可以将 Vitest 测试保留在 `src/**` 下（例如：`src/plugins/voice-call.plugin.test.ts`）。
-- 单独发布的插件应运行自己的 CI（检查/构建/测试），并验证 `openclaw.extensions` 指向构建的入口点（`dist/index.js`）。
+- 仓库内的插件可以将 Vitest 测试保存在 `src/**` 下（示例：`src/plugins/voice-call.plugin.test.ts`）。
+- 单独发布的插件应运行自己的 CI (lint/build/test) 并验证 `openclaw.extensions` 指向构建的入口点 (`dist/index.js`)。
 
 import zh from "/components/footer/zh.mdx";
 

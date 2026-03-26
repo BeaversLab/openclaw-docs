@@ -1,14 +1,14 @@
 ---
-summary: "Invocar una única herramienta directamente a través del endpoint HTTP del Gateway"
+summary: "Invocar una sola herramienta directamente a través del endpoint HTTP del Gateway"
 read_when:
-  - Llamada a herramientas sin ejecutar un turno completo de agente
-  - Creación de automatizaciones que requieren cumplimiento de la política de herramientas
+  - Calling tools without running a full agent turn
+  - Building automations that need tool policy enforcement
 title: "API de invocación de herramientas"
 ---
 
 # Invocación de herramientas (HTTP)
 
-El Gateway de OpenClaw expone un simple endpoint HTTP para invocar directamente una única herramienta. Siempre está habilitado, pero limitado por la autenticación del Gateway y la política de herramientas.
+El Gateway de OpenClaw expone un endpoint HTTP simple para invocar una sola herramienta directamente. Siempre está habilitado, pero está limitado por la autenticación del Gateway y la política de herramientas.
 
 - `POST /tools/invoke`
 - Mismo puerto que el Gateway (multiplexación WS + HTTP): `http://<gateway-host>:<port>/tools/invoke`
@@ -17,7 +17,7 @@ El tamaño máximo predeterminado del payload es de 2 MB.
 
 ## Autenticación
 
-Utiliza la configuración de autenticación del Gateway. Envíe un token de portador (bearer token):
+Utiliza la configuración de autenticación del Gateway. Envíe un token de portador:
 
 - `Authorization: Bearer <token>`
 
@@ -44,12 +44,12 @@ Campos:
 - `tool` (cadena, obligatorio): nombre de la herramienta a invocar.
 - `action` (cadena, opcional): se asigna a los argumentos si el esquema de la herramienta admite `action` y el payload de argumentos lo omitió.
 - `args` (objeto, opcional): argumentos específicos de la herramienta.
-- `sessionKey` (cadena, opcional): clave de sesión de destino. Si se omite o es `"main"`, el Gateway utiliza la clave de sesión principal configurada (respeta `session.mainKey` y el agente predeterminado, o `global` en el ámbito global).
+- `sessionKey` (cadena, opcional): clave de sesión de destino. Si se omite o es `"main"`, el Gateway utiliza la clave de sesión principal configurada (respeta `session.mainKey` y el agente predeterminado, o `global` en el alcance global).
 - `dryRun` (booleano, opcional): reservado para uso futuro; actualmente ignorado.
 
-## Comportamiento de política + enrutamiento
+## Política + comportamiento de enrutamiento
 
-La disponibilidad de las herramientas se filtra a través de la misma cadena de políticas utilizada por los agentes del Gateway:
+La disponibilidad de la herramienta se filtra a través de la misma cadena de políticas utilizada por los agentes del Gateway:
 
 - `tools.profile` / `tools.byProvider.profile`
 - `tools.allow` / `tools.byProvider.allow`
@@ -57,9 +57,9 @@ La disponibilidad de las herramientas se filtra a través de la misma cadena de 
 - políticas de grupo (si la clave de sesión se asigna a un grupo o canal)
 - política de subagente (al invocar con una clave de sesión de subagente)
 
-Si una herramienta no está permitida por la política, el punto de conexión devuelve **404**.
+Si una herramienta no está permitida por la política, el punto final devuelve **404**.
 
-Gateway HTTP también aplica una lista de denegación estricta de manera predeterminada (incluso si la política de sesión permite la herramienta):
+Gateway HTTP también aplica una lista de denegación estricta de forma predeterminada (incluso si la política de sesión permite la herramienta):
 
 - `sessions_spawn`
 - `sessions_send`
@@ -91,10 +91,10 @@ Para ayudar a las políticas de grupo a resolver el contexto, opcionalmente pued
 - `200` → `{ ok: true, result }`
 - `400` → `{ ok: false, error: { type, message } }` (solicitud no válida o error de entrada de herramienta)
 - `401` → no autorizado
-- `429` → límite de velocidad de autenticación (`Retry-After` establecido)
+- `429` → autenticación limitada por velocidad (`Retry-After` establecido)
 - `404` → herramienta no disponible (no encontrada o no permitida)
 - `405` → método no permitido
-- `500` → `{ ok: false, error: { type, message } }` (error de ejecución de herramienta inesperado; mensaje saneado)
+- `500` → `{ ok: false, error: { type, message } }` (error inesperado de ejecución de herramienta; mensaje saneado)
 
 ## Ejemplo
 

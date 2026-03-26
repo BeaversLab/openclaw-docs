@@ -1,42 +1,40 @@
 ---
-summary: "在几分钟内安装 OpenClaw 并运行您的第一次聊天。"
+summary: "在几分钟内安装 OpenClaw 并运行您的首次聊天。"
 read_when:
-  - 首次从零开始设置
-  - 您希望最快获得可用的聊天体验
+  - First time setup from zero
+  - You want the fastest path to a working chat
 title: "入门指南"
 ---
 
 # 入门指南
 
-目标：以最少的设置从零开始实现第一次可用的聊天。
+安装 OpenClaw，运行新手引导，并与您的 AI 助手聊天 — 全程
+大约需要 5 分钟。完成后，您将拥有一个运行的 Gateway(网关)，已配置的身份验证，
+以及一个可用的聊天会话。
 
-<Info>
-  最快的聊天方式：打开控制 UI（无需设置渠道）。运行 `openclaw dashboard` 并在浏览器中聊天，或者在
-  <Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">
-    Gateway(网关)主机
-  </Tooltip>
-  上打开 `http://127.0.0.1:18789/`。 文档：[仪表板](/zh/web/dashboard) 和 [控制
-  UI](/zh/web/control-ui)。
-</Info>
+## 所需条件
 
-## 先决条件
+- **Node.js** — 推荐使用 Node 24（也支持 Node 22.16+）
+- 来自模型提供商（API、Anthropic、Google 等）的 **OpenAI 密钥** — 新手引导将会提示您
 
-- 推荐使用 Node 24（目前为 `22.16+` 的 Node 22 LTS 出于兼容性考虑仍受支持）
+<Tip>
+  使用 `node --version` 检查您的 Node 版本。**Windows 用户：** 原生 Windows 和 WSL2 均 受支持。WSL2
+  更稳定，推荐用于完整体验。请参阅 [Windows](/zh/platforms/windows)。需要安装 Node？请参阅 [Node
+  设置](/zh/install/node)。
+</Tip>
 
-<Tip>如果不确定，请使用 `node --version` 检查您的 Node 版本。</Tip>
-
-## 快速设置 (CLI)
+## 快速设置
 
 <Steps>
-  <Step title="安装 OpenClaw（推荐）">
+  <Step title="安装 OpenClaw">
     <Tabs>
-      <Tab title="macOS/Linux">
+      <Tab title="macOS / Linux">
         ```bash
         curl -fsSL https://openclaw.ai/install.sh | bash
         ```
         <img
   src="/assets/install-script.svg"
-  alt="安装脚本流程"
+  alt="安装脚本过程"
   className="rounded-lg"
 />
       </Tab>
@@ -48,7 +46,7 @@ title: "入门指南"
     </Tabs>
 
     <Note>
-    其他安装方法和要求：[安装](/zh/install)。
+    其他安装方法（Docker、Nix、npm）：[安装](/zh/install)。
     </Note>
 
   </Step>
@@ -57,80 +55,65 @@ title: "入门指南"
     openclaw onboard --install-daemon
     ```
 
-    新手引导会配置身份验证、Gateway(网关)设置以及可选渠道。
-    详见 [新手引导 (CLI)](/zh/start/wizard)。
+    向导将引导您选择模型提供商，设置 API 密钥，
+    并配置 Gateway(网关)。这大约需要 2 分钟。
+
+    请参阅 [新手引导 (CLI)](/zh/start/wizard) 获取完整参考。
 
   </Step>
-  <Step title="检查 Gateway(网关)">
-    如果您安装了该服务，它应该已经在运行：
-
+  <Step title="验证 Gateway(网关) 是否正在运行">
     ```bash
     openclaw gateway status
     ```
 
+    您应该看到 Gateway(网关) 正在监听端口 18789。
+
   </Step>
-  <Step title="打开控制 UI">
+  <Step title="打开仪表板">
     ```bash
     openclaw dashboard
     ```
+
+    这将在浏览器中打开控制 UI。如果能加载，说明一切正常。
+
+  </Step>
+  <Step title="Send your first message">
+    在控制 UI 聊天中输入一条消息，你应该会收到 AI 的回复。
+
+    想改用手机聊天吗？设置最快的渠道是
+    [Telegram](/zh/channels/telegram)（只需一个 bot 令牌）。查看 [Channels](/zh/channels)
+    了解所有选项。
+
   </Step>
 </Steps>
 
-<Check>如果控制 UI 加载成功，您的 Gateway(网关)已准备就绪。</Check>
-
-## 可选检查和额外内容
-
-<AccordionGroup>
-  <Accordion title="在前台运行 Gateway">
-    适用于快速测试或故障排除。
-
-    ```bash
-    openclaw gateway --port 18789
-    ```
-
-  </Accordion>
-  <Accordion title="发送测试消息">
-    需要一个已配置的渠道。
-
-    ```bash
-    openclaw message send --target +15555550123 --message "Hello from OpenClaw"
-    ```
-
-  </Accordion>
-</AccordionGroup>
-
-## 有用的环境变量
-
-如果您以服务帐户运行 OpenClaw 或希望自定义配置/状态位置：
-
-- `OPENCLAW_HOME` 设置用于内部路径解析的主目录。
-- `OPENCLAW_STATE_DIR` 覆盖状态目录。
-- `OPENCLAW_CONFIG_PATH` 覆盖配置文件路径。
-
-完整的环境变量参考：[Environment vars](/zh/help/environment)。
-
-## 深入了解
+## What to do next
 
 <Columns>
-  <Card title="新手引导 (CLI)" href="/zh/start/wizard">
-    完整的 CLI 新手引导参考和高级选项。
+  <Card title="Connect a 渠道" href="/zh/channels" icon="message-square">
+    WhatsApp、Telegram、Discord、iMessage 等。
   </Card>
-  <Card title="macOS 应用新手引导" href="/zh/start/onboarding">
-    macOS 应用的首次运行流程。
+  <Card title="Pairing and safety" href="/zh/channels/pairing" icon="shield">
+    控制谁可以向你的代理发送消息。
+  </Card>
+  <Card title="Configure the Gateway(网关)" href="/zh/gateway/configuration" icon="settings">
+    模型、工具、沙盒和高级设置。
+  </Card>
+  <Card title="Browse tools" href="/zh/tools" icon="wrench">
+    浏览器、执行、网络搜索、技能和插件。
   </Card>
 </Columns>
 
-## 您将拥有
+<Accordion title="Advanced: 环境变量">
+  如果你以服务账户身份运行 OpenClaw 或想要自定义路径：
 
-- 一个运行中的 Gateway
-- 已配置身份验证
-- 控制 UI 访问权限或已连接的渠道
+- `OPENCLAW_HOME` — 用于内部路径解析的主目录
+- `OPENCLAW_STATE_DIR` — 覆盖状态目录
+- `OPENCLAW_CONFIG_PATH` — 覆盖配置文件路径
 
-## 后续步骤
+完整参考：[Environment variables](/zh/help/environment)。
 
-- 私信安全和审批：[Pairing](/zh/channels/pairing)
-- 连接更多渠道：[Channels](/zh/channels)
-- 高级工作流程和从源代码构建：[Setup](/zh/start/setup)
+</Accordion>
 
 import zh from "/components/footer/zh.mdx";
 

@@ -1,19 +1,17 @@
 ---
-summary: "Configurer Moonshot K2 vs Kimi Coding (fournisseurs et clés séparés)"
+summary: "Configurer Moonshot K2 vs Kimi Coding (fournisseurs séparés + clés)"
 read_when:
-  - Vous voulez une configuration Moonshot K2 (Plateforme Ouverte Moonshot) vs Kimi Coding
-  - Vous devez comprendre les points de terminaison, les clés et les références de modèle distincts
-  - Vous voulez copier/coller la configuration pour l'un ou l'autre fournisseur
+  - You want Moonshot K2 (Moonshot Open Platform) vs Kimi Coding setup
+  - You need to understand separate endpoints, keys, and model refs
+  - You want copy/paste config for either provider
 title: "Moonshot AI"
 ---
 
 # Moonshot AI (Kimi)
 
-Moonshot fournit l'API Kimi avec des points de terminaison compatibles API. Configurez le
-fournisseur et définissez le modèle par défaut sur `moonshot/kimi-k2.5`, ou utilisez
-Kimi Coding avec `kimi-coding/k2p5`.
+Moonshot fournit l'API Kimi avec des points de terminaison compatibles avec OpenAI. Configurez le fournisseur et définissez le modèle par défaut sur `moonshot/kimi-k2.5`, ou utilisez Kimi Coding avec `kimi-coding/k2p5`.
 
-ID actuels des modèles Kimi K2 :
+IDs actuels des modèles Kimi K2 :
 
 [//]: # "moonshot-kimi-k2-ids:start"
 
@@ -138,9 +136,8 @@ Remarque : Moonshot et Kimi Coding sont des fournisseurs distincts. Les clés ne
 
 - Les références de modèle Moonshot utilisent `moonshot/<modelId>`. Les références de modèle Kimi Coding utilisent `kimi-coding/<modelId>`.
 - Remplacez les tarifs et les métadonnées de contexte dans `models.providers` si nécessaire.
-- Si Moonshot publie des limites de contexte différentes pour un modèle, ajustez
-  `contextWindow` en conséquence.
-- Utilisez `https://api.moonshot.ai/v1` pour le point de terminaison international, et `https://api.moonshot.cn/v1` pour le point de terminaison Chine.
+- Si Moonshot publie des limites de contexte différentes pour un modèle, ajustez `contextWindow` en conséquence.
+- Utilisez `https://api.moonshot.ai/v1` pour le point de terminaison international et `https://api.moonshot.cn/v1` pour le point de terminaison Chine.
 
 ## Mode de réflexion natif (Moonshot)
 
@@ -167,10 +164,10 @@ Configurez-le par modèle via `agents.defaults.models.<provider/model>.params` :
 }
 ```
 
-OpenClaw mappe également les niveaux `/think` d'exécution pour Moonshot :
+OpenClaw mappe également les niveaux d'exécution `/think` pour Moonshot :
 
 - `/think off` -> `thinking.type=disabled`
-- tout niveau de réflexion non désactivé -> `thinking.type=enabled`
+- tout niveau de réflexion autre que désactivé -> `thinking.type=enabled`
 
 Lorsque la réflexion Moonshot est activée, `tool_choice` doit être `auto` ou `none`. OpenClaw normalise les valeurs `tool_choice` incompatibles à `auto` pour la compatibilité.
 

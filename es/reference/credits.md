@@ -1,9 +1,11 @@
 ---
 summary: "Origen del proyecto, colaboradores y licencia."
 read_when:
-  - Quieres conocer la historia del proyecto o los créditos de los colaboradores
+  - You want the project backstory or contributor credits
 title: "Créditos"
 ---
+
+# Créditos y reconocimientos
 
 ## El nombre
 
@@ -12,7 +14,7 @@ OpenClaw = CLAW + TARDIS, porque cada langosta espacial necesita una máquina de
 ## Créditos
 
 - **Peter Steinberger** ([@steipete](https://x.com/steipete)) - Creador, susurrador de langostas
-- **Mario Zechner** ([@badlogicc](https://x.com/badlogicgames)) - Creador de Pi, probador de penetración de seguridad
+- **Mario Zechner** ([@badlogicc](https://x.com/badlogicgames)) - Creador de Pi, probador de seguridad de penetración
 - **Clawd** - La langosta espacial que exigió un mejor nombre
 
 ## Colaboradores principales
@@ -25,7 +27,7 @@ OpenClaw = CLAW + TARDIS, porque cada langosta espacial necesita una máquina de
 
 MIT - Libre como una langosta en el océano.
 
-> "Todos solo estamos jugando con nuestros propios promps." (Una IA, probablemente alta en tokens)
+> "Todos estamos jugando con nuestros propios prompts." (Una IA, probablemente alta en tokens)
 
 import es from "/components/footer/es.mdx";
 

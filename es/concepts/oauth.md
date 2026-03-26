@@ -1,25 +1,25 @@
 ---
-summary: "OAuth en OpenClaw: intercambio de tokens, almacenamiento y patrones de múltiples cuentas"
+summary: "OAuth en OpenClaw: intercambio de tokens, almacenamiento y patrones de multicuenta"
 read_when:
-  - Quieres comprender el flujo de OAuth de OpenClaw de extremo a extremo
-  - Te encuentras con problemas de invalidación de tokens / cierre de sesión
-  - Quieres flujos de autenticación setup-token u OAuth
-  - Quieres múltiples cuentas o enrutamiento de perfiles
+  - You want to understand OpenClaw OAuth end-to-end
+  - You hit token invalidation / logout issues
+  - You want setup-token or OAuth auth flows
+  - You want multiple accounts or profile routing
 title: "OAuth"
 ---
 
 # OAuth
 
-OpenClaw admite "autenticación de suscripción" mediante OAuth para proveedores que la ofrecen (notablemente **OpenAI Codex (ChatGPT OAuth)**). Para las suscripciones de Anthropic, utiliza el flujo **setup-token**. El uso de la suscripción de Anthropic fuera de Claude Code ha sido restringido para algunos usuarios en el pasado, así que trátalo como un riesgo de elección del usuario y verifica por ti mismo la política actual de Anthropic. El OAuth de OpenAI Codex es explícitamente compatible para su uso en herramientas externas como OpenClaw. Esta página explica:
+OpenClaw admite "autenticación de suscripción" a través de OAuth para proveedores que la ofrecen (notablemente **OpenAI Codex (ChatGPT OAuth)**). Para suscripciones de Anthropic, utilice el flujo de **setup-token**. El uso de la suscripción de Anthropic fuera de Claude Code ha sido restringido para algunos usuarios en el pasado, así que trátelo como un riesgo de elección del usuario y verifique la política actual de Anthropic usted mismo. El OAuth de OpenAI Codex es compatible explícitamente para su uso en herramientas externas como OpenClaw. Esta página explica:
 
-Para Anthropic en producción, la autenticación con clave de API es la ruta recomendada más segura que la autenticación con setup-token de suscripción.
+Para Anthropic en producción, la autenticación con clave de API es la ruta recomendada más segura en comparación con la autenticación por token de configuración de suscripción.
 
-- cómo funciona el **intercambio de tokens** de OAuth (PKCE)
+- cómo funciona el **intercambio de tokens** OAuth (PKCE)
 - dónde se **almacenan** los tokens (y por qué)
 - cómo manejar **múltiples cuentas** (perfiles + anulaciones por sesión)
 
-OpenClaw también admite **complementos de proveedores** que incluyen sus propios flujos de OAuth o clave de API.
-Ejecútalos mediante:
+OpenClaw también admite **complementos de proveedor** que incluyen sus propios flujos de OAuth o clave de API.
+Ejecútelos a través de:
 
 ```bash
 openclaw models auth login --provider <id>
@@ -27,11 +27,11 @@ openclaw models auth login --provider <id>
 
 ## El sumidero de tokens (por qué existe)
 
-Los proveedores de OAuth suelen generar un **nuevo token de actualización** durante los flujos de inicio de sesión/actualización. Algunos proveedores (o clientes de OAuth) pueden invalidar los tokens de actualización anteriores cuando se emite uno nuevo para el mismo usuario/aplicación.
+Los proveedores de OAuth comúnmente emiten un **nuevo token de actualización** durante los flujos de inicio de sesión/actualización. Algunos proveedores (o clientes OAuth) pueden invalidar los tokens de actualización más antiguos cuando se emite uno nuevo para el mismo usuario/aplicación.
 
 Síntoma práctico:
 
-- inicias sesión a través de OpenClaw _y_ a través de Claude Code / Codex CLI → uno de ellos se cierra sesión aleatoriamente más tarde
+- inicia sesión a través de OpenClaw _y_ a través de Claude Code / Codex CLI → uno de ellos se "cierra sesión" aleatoriamente más tarde
 
 Para reducir eso, OpenClaw trata `auth-profiles.json` como un **sumidero de tokens**:
 
@@ -50,20 +50,20 @@ Archivo heredado de solo importación (todavía compatible, pero no el almacén 
 
 - `~/.openclaw/credentials/oauth.json` (importado a `auth-profiles.json` en el primer uso)
 
-Todo lo anterior también respeta `$OPENCLAW_STATE_DIR` (anulación del directorio de estado). Referencia completa: [/gateway/configuration](/es/gateway/configuration#auth-storage-oauth--api-keys)
+Todo lo anterior también respeta `$OPENCLAW_STATE_DIR` (anulación del directorio de estado). Referencia completa: [/gateway/configuration](/es/gateway/configuration-reference#auth-storage)
 
-Para obtener información sobre las referencias de secretos estáticos y el comportamiento de activación de instantáneas en tiempo de ejecución, consulte [Secrets Management](/es/gateway/secrets).
+Para obtener referencias de secretos estáticos y el comportamiento de activación de instantáneas de tiempo de ejecución, consulte [Gestión de secretos](/es/gateway/secrets).
 
 ## Token de configuración de Anthropic (autenticación de suscripción)
 
 <Warning>
   La compatibilidad con el token de configuración de Anthropic es una compatibilidad técnica, no una
-  garantía política. Anthropic ha bloqueado algunos usos de suscripciones fuera de Claude Code en el
-  pasado. Decida por sí mismo si utilizar la autenticación de suscripción y verifique los términos
-  actuales de Anthropic.
+  garantía política. Anthropic ha bloqueado algunos usos de suscripción fuera de Claude Code en el
+  pasado. Decida por sí mismo si desea utilizar la autenticación por suscripción y verifique los
+  términos actuales de Anthropic.
 </Warning>
 
-Ejecute `claude setup-token` en cualquier máquina y luego péguelo en OpenClaw:
+Ejecute `claude setup-token` en cualquier máquina, luego péguelo en OpenClaw:
 
 ```bash
 openclaw models auth setup-token --provider anthropic
@@ -95,22 +95,22 @@ Forma del flujo:
 
 La ruta del asistente es `openclaw onboard` → elección de autenticación `setup-token` (Anthropic).
 
-### OpenAI Codex (ChatGPT OAuth)
+### OpenAI Codex (OAuth de ChatGPT)
 
-OpenAI Codex OAuth es explícitamente compatible para su uso fuera de la CLI de Codex, incluidos los flujos de trabajo de OpenClaw.
+OAuth de OpenAI Codex es explícitamente compatible para su uso fuera de la CLI de Codex, incluidos los flujos de trabajo de OpenClaw.
 
 Forma del flujo (PKCE):
 
 1. generar verificador/desafío PKCE + `state` aleatorio
 2. abrir `https://auth.openai.com/oauth/authorize?...`
 3. intentar capturar la devolución de llamada en `http://127.0.0.1:1455/auth/callback`
-4. si la devolución de llamada no puede enlazarse (o está remoto/sin cabeza), pegue la URL/código de redirección
+4. si la devolución de llamada no se puede vincular (o si está remoto/sin interfaz), pegue la URL/código de redirección
 5. intercambiar en `https://auth.openai.com/oauth/token`
 6. extraer `accountId` del token de acceso y almacenar `{ access, refresh, expires, accountId }`
 
 La ruta del asistente es `openclaw onboard` → elección de autenticación `openai-codex`.
 
-## Actualización + caducidad
+## Actualización + vencimiento
 
 Los perfiles almacenan una marca de tiempo `expires`.
 
@@ -119,7 +119,7 @@ En tiempo de ejecución:
 - si `expires` está en el futuro → usar el token de acceso almacenado
 - si ha caducado → actualizar (bajo un bloqueo de archivo) y sobrescribir las credenciales almacenadas
 
-El flujo de actualización es automático; generalmente no necesita administrar los tokens manualmente.
+El flujo de actualización es automático; por lo general, no necesita administrar los tokens manualmente.
 
 ## Múltiples cuentas (perfiles) + enrutamiento
 
@@ -127,20 +127,20 @@ Dos patrones:
 
 ### 1) Preferido: agentes separados
 
-Si deseas que “personal” y “trabajo” nunca interactúen, usa agentes aislados (sesiones separadas + credenciales + espacio de trabajo):
+Si desea que lo "personal" y lo "laboral" nunca interactúen, use agentes aislados (sesiones + credenciales + espacio de trabajo separados):
 
 ```bash
 openclaw agents add work
 openclaw agents add personal
 ```
 
-Luego configura la autenticación por agente (asistente) y enruta los chats al agente correcto.
+Luego configure la autenticación por agente (asistente) y enrute los chats al agente correcto.
 
-### 2) Avanzado: múltiples perfiles en un agente
+### 2) Avanzado: múltiples perfiles en un solo agente
 
 `auth-profiles.json` admite múltiples ID de perfil para el mismo proveedor.
 
-Elige qué perfil se utiliza:
+Elija qué perfil se utiliza:
 
 - globalmente mediante el orden de configuración (`auth.order`)
 - por sesión mediante `/model ...@<profileId>`

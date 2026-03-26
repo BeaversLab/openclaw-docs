@@ -2,13 +2,13 @@
 title: "Together AI"
 summary: "Configuración de Together AI (autenticación + selección de modelo)"
 read_when:
-  - Quieres usar Together AI con OpenClaw
-  - Necesitas la variable de entorno de la clave API o la elección de autenticación por CLI
+  - You want to use Together AI with OpenClaw
+  - You need the API key env var or CLI auth choice
 ---
 
 # Together AI
 
-[Together AI](https://together.ai) proporciona acceso a modelos de código abierto líderes como Llama, DeepSeek, Kimi y más a través de una API unificada.
+[Together AI](https://together.ai) proporciona acceso a modelos de código abierto líderes, incluyendo Llama, DeepSeek, Kimi y más, a través de una API unificada.
 
 - Proveedor: `together`
 - Autenticación: `TOGETHER_API_KEY`
@@ -16,13 +16,13 @@ read_when:
 
 ## Inicio rápido
 
-1. Establezca la clave API (se recomienda: guárdela para el Gateway):
+1. Establezca la clave API (recomendado: guárdela para el Gateway):
 
 ```bash
 openclaw onboard --auth-choice together-api-key
 ```
 
-2. Establecer un modelo predeterminado:
+2. Establezca un modelo predeterminado:
 
 ```json5
 {

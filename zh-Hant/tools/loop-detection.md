@@ -1,25 +1,24 @@
 ---
 title: "Tool-loop detection"
-description: "Configure optional guardrails for preventing repetitive or stalled tool-call loops"
 summary: "How to enable and tune guardrails that detect repetitive tool-call loops"
 read_when:
-  - 用戶報告代理程式重複呼叫工具時陷入停滯
-  - 您需要調整重複呼叫防護
-  - 您正在編輯代理程式工具/執行時原則
+  - A user reports agents getting stuck repeating tool calls
+  - You need to tune repetitive-call protection
+  - You are editing agent tool/runtime policies
 ---
 
 # Tool-loop detection
 
-OpenClaw 可防止代理程式陷入重複的工具呼叫模式。
-此防護**預設為停用**。
+OpenClaw can keep agents from getting stuck in repeated tool-call patterns.
+The guard is **disabled by default**.
 
-僅在需要時啟用，因為嚴格的設定可能會阻擋合理的重複呼叫。
+Enable it only where needed, because it can block legitimate repeated calls with strict settings.
 
 ## Why this exists
 
-- 偵測無法取得進度的重複序列。
-- 偵測高頻率的無結果迴圈（相同工具、相同輸入、重複錯誤）。
-- 偵測已知輪詢工具的特定重複呼叫模式。
+- Detect repetitive sequences that do not make progress.
+- Detect high-frequency no-result loops (same tool, same inputs, repeated errors).
+- Detect specific repeated-call patterns for known polling tools.
 
 ## Configuration block
 
@@ -88,17 +87,17 @@ Per-agent override (optional):
 
 ## Logs and expected behavior
 
-當檢測到迴圈時，OpenClaw 會回報一個迴圈事件，並根據嚴重程度封鎖或抑制下一個工具週期。
-這可以保護使用者免於過度消耗 Token 並避免系統鎖死，同時維持正常的工具存取權。
+When a loop is detected, OpenClaw reports a loop event and blocks or dampens the next tool-cycle depending on severity.
+This protects users from runaway token spend and lockups while preserving normal tool access.
 
-- 優先使用警告與暫時性抑制。
-- 僅當累積重複證據時才升級處理。
+- Prefer warning and temporary suppression first.
+- Escalate only when repeated evidence accumulates.
 
-## 備註
+## Notes
 
-- `tools.loopDetection` 與代理程式層級的覆寫值合併。
-- 各別代理程式的設定會完全覆寫或延伸全域值。
-- 若不存在任何設定，防護機制將保持關閉。
+- `tools.loopDetection` 會與代理層級的覆寫合併。
+- 每個代理的配置會完全覆寫或擴展全域值。
+- 如果不存在配置，防護機制將保持關閉。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

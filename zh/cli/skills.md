@@ -1,19 +1,19 @@
 ---
-summary: "CLI 参考 `openclaw skills`（list/info/check）以及技能适用性"
+summary: "`openclaw skills` (list/info/check) 和技能资格的 CLI 参考"
 read_when:
-  - 您希望查看哪些技能可用并已准备好运行
-  - 您希望调试技能缺失的二进制文件/环境/配置
-title: "skills"
+  - You want to see which skills are available and ready to run
+  - You want to debug missing binaries/env/config for skills
+title: "技能"
 ---
 
 # `openclaw skills`
 
-检查技能（bundled + workspace + managed overrides），查看哪些符合条件以及缺少哪些要求。
+检查技能（内置 + 工作区 + 托管覆盖）并查看哪些具备资格以及哪些缺少要求。
 
 相关：
 
 - Skills 系统：[Skills](/zh/tools/skills)
-- Skills 配置：[Skills config](/zh/tools/skills-config)
+- Skills 配置：[Skills 配置](/zh/tools/skills-config)
 - ClawHub 安装：[ClawHub](/zh/tools/clawhub)
 
 ## 命令

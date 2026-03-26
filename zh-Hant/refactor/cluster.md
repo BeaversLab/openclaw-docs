@@ -1,20 +1,20 @@
 ---
-summary: "Refactor clusters with highest LOC reduction potential"
+summary: "重構具有最高 LOC 減少潛力的叢集"
 read_when:
   - You want to reduce total LOC without changing behavior
   - You are choosing the next dedupe or extraction pass
-title: "Refactor Cluster Backlog"
+title: "重構叢集待辦事項"
 ---
 
-# Refactor Cluster Backlog
+# 重構叢集待辦事項
 
-Ranked by likely LOC reduction, safety, and breadth.
+根據可能的 LOC 減少量、安全性和範圍進行排名。
 
-## 1. Channel plugin config and security scaffolding
+## 1. 頻道外掛程式配置與安全性腳手架
 
-Highest-value cluster.
+最高價值的叢集。
 
-Repeated shapes across many channel plugins:
+在許多頻道外掛程式中重複出現的形狀：
 
 - `config.listAccountIds`
 - `config.resolveAccount`
@@ -24,7 +24,7 @@ Repeated shapes across many channel plugins:
 - `config.describeAccount`
 - `security.resolveDmPolicy`
 
-Strong examples:
+強範例：
 
 - `extensions/telegram/src/channel.ts`
 - `extensions/googlechat/src/channel.ts`
@@ -35,31 +35,31 @@ Strong examples:
 - `extensions/signal/src/channel.ts`
 - `extensions/mattermost/src/channel.ts`
 
-Likely extraction shape:
+預期的提取形狀：
 
 - `buildChannelConfigAdapter(...)`
 - `buildMultiAccountConfigAdapter(...)`
 - `buildDmSecurityAdapter(...)`
 
-Expected savings:
+預期節省：
 
 - ~250-450 LOC
 
-Risk:
+風險：
 
-- Medium. Each channel has slightly different `isConfigured`, warnings, and normalization.
+- 中等。每個頻道都有略微不同的 `isConfigured`、警告和正規化。
 
 ## 2. Extension runtime singleton boilerplate
 
-Very safe.
+非常安全。
 
-Nearly every extension has the same runtime holder:
+幾乎每個擴充都有相同的運行時持有者：
 
 - `let runtime: PluginRuntime | null = null`
 - `setXRuntime`
 - `getXRuntime`
 
-Strong examples:
+強力範例：
 
 - `extensions/telegram/src/runtime.ts`
 - `extensions/matrix/src/runtime.ts`
@@ -69,38 +69,38 @@ Strong examples:
 - `extensions/imessage/src/runtime.ts`
 - `extensions/twitch/src/runtime.ts`
 
-Special-case variants:
+特殊情況變體：
 
 - `extensions/bluebubbles/src/runtime.ts`
 - `extensions/line/src/runtime.ts`
 - `extensions/synology-chat/src/runtime.ts`
 
-Likely extraction shape:
+可能的重構形狀：
 
 - `createPluginRuntimeStore<T>(errorMessage)`
 
-Expected savings:
+預期減少量：
 
 - ~180-260 LOC
 
-Risk:
+風險：
 
-- Low
+- 低
 
 ## 3. Setup prompt and config-patch steps
 
-Large surface area.
+涉及範圍廣大。
 
-Many setup files repeat:
+許多設置檔案重複：
 
-- resolve account id
-- prompt allowlist entries
-- merge allowFrom
-- set DM policy
-- prompt secrets
-- patch top-level vs account-scoped config
+- 解析帳戶 ID
+- 提示許可清單條目
+- 合併 allowFrom
+- 設定 DM 政策
+- 提示密碼
+- 修補頂層與帳戶範圍的配置
 
-Strong examples:
+強力範例：
 
 - `extensions/bluebubbles/src/setup-surface.ts`
 - `extensions/googlechat/src/setup-surface.ts`
@@ -111,11 +111,11 @@ Strong examples:
 - `extensions/matrix/src/setup-surface.ts`
 - `extensions/irc/src/setup-surface.ts`
 
-現有的輔助縫合點：
+現有的輔助接縫：
 
 - `src/channels/plugins/setup-wizard-helpers.ts`
 
-可能的提取形狀：
+可能的重構形狀：
 
 - `promptAllowFromList(...)`
 - `buildDmPolicyAdapter(...)`
@@ -124,15 +124,15 @@ Strong examples:
 
 預期節省：
 
-- 約 300-600 行程式碼
+- ~300-600 LOC
 
 風險：
 
-- 中等。容易過度泛化；請保持輔助函式的狹窄與可組合性。
+- 中等。容易過度泛化；請保持輔助函式的窄範圍與可組合性。
 
 ## 4. 多帳號 config-schema 片段
 
-跨擴充功能重複的 schema 片段。
+擴充功能之間重複的 schema 片段。
 
 常見模式：
 
@@ -143,7 +143,7 @@ Strong examples:
 - 重複的 DM/群組欄位
 - 重複的 markdown/工具政策欄位
 
-強力範例：
+典型範例：
 
 - `extensions/bluebubbles/src/config-schema.ts`
 - `extensions/zalo/src/config-schema.ts`
@@ -159,27 +159,27 @@ Strong examples:
 
 預期節省：
 
-- 約 120-220 行程式碼
+- ~120-220 LOC
 
 風險：
 
-- 低至中等。部分 schema 很簡單，部分則較特殊。
+- 低到中等。部分架構簡單，部分較為特殊。
 
-## 5. Webhook 與監控器生命週期啟動
+## 5. Webhook 和監控器生命週期啟動
 
-良好的中等價值叢集。
+良好的中等價值群集。
 
 重複的 `startAccount` / 監控器設定模式：
 
-- 解析帳號
+- 解析帳戶
 - 計算 webhook 路徑
 - 記錄啟動
 - 啟動監控器
 - 等待中止
 - 清理
-- 狀態 sink 更新
+- 狀態接收器更新
 
-強力範例：
+強範例：
 
 - `extensions/googlechat/src/channel.ts`
 - `extensions/bluebubbles/src/channel.ts`
@@ -187,33 +187,33 @@ Strong examples:
 - `extensions/telegram/src/channel.ts`
 - `extensions/nextcloud-talk/src/channel.ts`
 
-現有的輔助縫合點：
+現有的輔助接縫：
 
 - `src/plugin-sdk/channel-lifecycle.ts`
 
 可能的提取形狀：
 
-- 帳號監控器生命週期的輔助函式
-- 基於 webhook 的帳號啟動輔助函式
+- 帳戶監控器生命週期的輔助函式
+- Webback 支援的帳戶啟動輔助函式
 
 預期節省：
 
-- 約 150-300 行程式碼
+- ~150-300 LOC
 
 風險：
 
-- 中至高。傳輸細節很容易快速分歧。
+- 中到高。傳輸細節差異很大。
 
 ## 6. 小型完全克隆清理
 
-低風險清理分類。
+低風險清理桶。
 
 範例：
 
-- 重複的 gateway argv 偵測：
+- 重複的網關 argv 檢測：
   - `src/infra/gateway-lock.ts`
   - `src/cli/daemon-cli/lifecycle.ts`
-- 重複的 port 診斷渲染：
+- 重複的 port diagnostics 渲染：
   - `src/cli/daemon-cli/restart-health.ts`
 - 重複的 session-key 建構：
   - `src/web/auto-reply/monitor/broadcast.ts`
@@ -228,7 +228,7 @@ Strong examples:
 
 ## 測試叢集
 
-### LINE webhook 事件 fixtures
+### LINE webhook event fixtures
 
 強力範例：
 
@@ -253,7 +253,7 @@ Strong examples:
 
 可能的提取：
 
-- 論壇 context builder
+- forum context builder
 - denied-message assertion helper
 - table-driven auth cases
 
@@ -261,7 +261,7 @@ Strong examples:
 
 - ~80-140 LOC
 
-### Zalo lifecycle 設定
+### Zalo lifecycle setup
 
 強力範例：
 
@@ -275,13 +275,13 @@ Strong examples:
 
 - ~50-90 LOC
 
-### Brave llm-context unsupported-option 測試
+### Brave llm-context 不支援選項測試
 
-強力範例：
+強烈範例：
 
 - `src/agents/tools/web-tools.enabled-defaults.test.ts`
 
-可能的提取：
+可能提取：
 
 - `it.each(...)` 矩陣
 
@@ -291,12 +291,12 @@ Strong examples:
 
 ## 建議順序
 
-1. Runtime singleton boilerplate
-2. Small exact-clone cleanup
-3. Config and security builder extraction
-4. Test-helper extraction
-5. Onboarding step extraction
-6. Monitor lifecycle helper extraction
+1. Runtime singleton 樣板
+2. 小型完全複製清理
+3. 設定與安全性建構器提取
+4. 測試輔助提取
+5. 入門步驟提取
+6. 監控生命週期輔助提取
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

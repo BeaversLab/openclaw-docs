@@ -1,14 +1,14 @@
 ---
-summary: "`openclaw webhooks` 的 CLI 參考（webhook 輔助程式 + Gmail Pub/Sub）"
+summary: "CLI 參考資料：`openclaw webhooks` (webhook 輔助程式 + Gmail Pub/Sub)"
 read_when:
-  - 您想將 Gmail Pub/Sub 事件連接到 OpenClaw
-  - 您需要 webhook 輔助指令
+  - You want to wire Gmail Pub/Sub events into OpenClaw
+  - You want webhook helper commands
 title: "webhooks"
 ---
 
 # `openclaw webhooks`
 
-Webhook 輔助程式與整合（Gmail Pub/Sub、webhook 輔助程式）。
+Webhook 輔助程式與整合功能 (Gmail Pub/Sub、webhook 輔助程式)。
 
 相關連結：
 

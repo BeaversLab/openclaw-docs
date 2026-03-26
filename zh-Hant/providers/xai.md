@@ -1,14 +1,14 @@
 ---
 summary: "在 OpenClaw 中使用 xAI Grok 模型"
 read_when:
-  - 您想在 OpenClaw 中使用 Grok 模型
-  - 您正在設定 xAI 驗證或模型 ID
+  - You want to use Grok models in OpenClaw
+  - You are configuring xAI auth or model ids
 title: "xAI"
 ---
 
 # xAI
 
-OpenClaw 內建了針對 Grok 模型的 `xai` 供應商插件。
+OpenClaw 附帶了一個針對 Grok 模型的內建 `xai` 提供者外掛程式。
 
 ## 設定
 
@@ -29,21 +29,20 @@ openclaw onboard --auth-choice xai-api-key
 
 ## 目前內建的模型目錄
 
-OpenClaw 現已內建這些 xAI 模型系列：
+OpenClaw 現已內建以下 xAI 模型系列：
 
-- `grok-4`，`grok-4-0709`
-- `grok-4-fast-reasoning`，`grok-4-fast-non-reasoning`
-- `grok-4-1-fast-reasoning`，`grok-4-1-fast-non-reasoning`
+- `grok-4`, `grok-4-0709`
+- `grok-4-fast-reasoning`, `grok-4-fast-non-reasoning`
+- `grok-4-1-fast-reasoning`, `grok-4-1-fast-non-reasoning`
 - `grok-4.20-experimental-beta-0304-reasoning`
 - `grok-4.20-experimental-beta-0304-non-reasoning`
 - `grok-code-fast-1`
 
-當較新的 `grok-4*` 和 `grok-code-fast*` ID 採用相同的
-API 形式時，該插件也會自動解析它們。
+當 `grok-4*` 和 `grok-code-fast*` id 遵循相同的 API 形狀時，該外掛程式也會向前解析這些較新的 ID：
 
-## 網路搜尋
+## 網頁搜尋
 
-內建的 `grok` 網路搜尋供應商也使用 `XAI_API_KEY`：
+內建的 `grok` 網頁搜尋提供者也使用 `XAI_API_KEY`：
 
 ```bash
 openclaw config set tools.web.search.provider grok
@@ -51,14 +50,14 @@ openclaw config set tools.web.search.provider grok
 
 ## 已知限制
 
-- 目前僅支援 API 金鑰驗證。OpenClaw 尚未提供 xAI OAuth / 裝置代碼流程。
-- `grok-4.20-multi-agent-experimental-beta-0304` 不支援一般的 xAI 供應商路徑，因為它需要與標準 OpenClaw xAI 傳輸不同的上游 API 介面。
-- 原生的 xAI 伺服器端工具（如 `x_search` 和 `code_execution`）尚未在內建插件中成為一等公民的模型供應商功能。
+- 目前僅支援 API 金鑰驗證。OpenClaw 中尚無 xAI OAuth / 裝置代碼流程。
+- `grok-4.20-multi-agent-experimental-beta-0304` 在標準 xAI 提供者路徑上不受支援，因為它需要與標準 OpenClaw xAI 傳輸不同的上游 API 介面。
+- 原生的 xAI 伺服器端工具（如 `x_search` 和 `code_execution`）在該內建外掛程式中尚非一等模型提供者功能。
 
 ## 備註
 
-- OpenClaw 會在共用執行器路徑上自動套用 xAI 專屬的工具架構和工具呼叫相容性修復。
-- 如需更廣泛的供應商概覽，請參閱 [模型供應商](/zh-Hant/providers/index)。
+- OpenClaw 會在共用的執行器路徑上自動套用 xAI 專用的工具架構和工具呼叫相容性修復。
+- 如需更廣泛的供應商概覽，請參閱 [Model providers](/zh-Hant/providers/index)。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

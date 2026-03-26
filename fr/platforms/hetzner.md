@@ -1,42 +1,42 @@
 ---
-summary: "Exécuter OpenClaw Gateway 24/7 sur un VPS Hetzner pas cher (Docker) avec un état durable et des binaires intégrés"
+summary: "Exécuter la passerelle OpenClaw 24/7 sur un VPS Gateway pas cher (Hetzner) avec un état durable et des binaires intégrés"
 read_when:
-  - Vous voulez exécuter OpenClaw 24/7 sur un VPS cloud (pas votre ordinateur portable)
-  - Vous voulez un Gateway de niveau production, toujours actif sur votre propre VPS
-  - Vous souhaitez un contrôle total sur la persistance, les binaires et le comportement de redémarrage
-  - Vous exécutez OpenClaw dans Docker sur Hetzner ou un provider similaire
+  - You want OpenClaw running 24/7 on a cloud VPS (not your laptop)
+  - You want a production-grade, always-on Gateway on your own VPS
+  - You want full control over persistence, binaries, and restart behavior
+  - You are running OpenClaw in Docker on Hetzner or a similar provider
 title: "Hetzner"
 ---
 
-# OpenClaw sur Hetzner (Docker, Guide VPS de production)
+# OpenClaw sur Hetzner (Docker, Guide de VPS de production)
 
 ## Objectif
 
-Exécuter un OpenClaw Gateway persistant sur un VPS Hetzner en utilisant Docker, avec un état durable, des binaires intégrés et un comportement de redémarrage sûr.
+Exécuter une passerelle OpenClaw Gateway persistante sur un VPS Hetzner en utilisant Docker, avec un état durable, des binaires intégrés et un comportement de redémarrage sécurisé.
 
-Si vous voulez « OpenClaw 24/7 pour ~5$ », c'est la configuration la plus simple et fiable.
-Les tarifs Hetzner changent ; choisissez le plus petit VPS Debian/Ubuntu et augmentez l'échelle si vous rencontrez des erreurs OOM.
+Si vous voulez « OpenClaw 24/7 pour ~5 $ », c'est la configuration la plus simple et fiable.
+Les tarifs de Hetzner changent ; choisissez le plus petit VPS Debian/Ubuntu et augmentez l'échelle si vous rencontrez des OOM.
 
 ## Que faisons-nous (termes simples) ?
 
 - Louer un petit serveur Linux (VPS Hetzner)
-- Installer Docker (environnement d'exécution d'application isolé)
-- Démarrer le OpenClaw Gateway dans Docker
+- Installer Docker (runtime d'application isolé)
+- Démarrer la passerelle OpenClaw Gateway dans Docker
 - Persister `~/.openclaw` + `~/.openclaw/workspace` sur l'hôte (survit aux redémarrages/reconstructions)
 - Accéder à l'interface de contrôle depuis votre ordinateur portable via un tunnel SSH
 
-Le Gateway est accessible via :
+La passerelle Gateway est accessible via :
 
 - Transfert de port SSH depuis votre ordinateur portable
 - Exposition directe du port si vous gérez vous-même le pare-feu et les jetons
 
 Ce guide suppose Ubuntu ou Debian sur Hetzner.  
-Si vous êtes sur un autre VPS Linux, adaptez les paquets en conséquence.
+Si vous êtes sur un autre VPS Linux, mappez les paquets en conséquence.
 Pour le flux générique Docker, voir [Docker](/fr/install/docker).
 
 ---
 
-## Accès rapide (opérateurs expérimentés)
+## Chemin rapide (opérateurs expérimentés)
 
 1. Provisionner le VPS Hetzner
 2. Installer Docker
@@ -45,7 +45,7 @@ Pour le flux générique Docker, voir [Docker](/fr/install/docker).
 5. Configurer `.env` et `docker-compose.yml`
 6. Intégrer les binaires requis dans l'image
 7. `docker compose up -d`
-8. Vérifier la persistance et l'accès au Gateway
+8. Vérifier la persistance et l'accès à la passerelle Gateway
 
 ---
 
@@ -57,16 +57,16 @@ Pour le flux générique Docker, voir [Docker](/fr/install/docker).
 - ~20 minutes
 - Docker et Docker Compose
 - Identifiants d'authentification du modèle
-- Identifiants du provider (optionnel)
+- Identifiants du fournisseur en option
   - QR WhatsApp
-  - Jeton bot Telegram
-  - OAuth Gmail
+  - Jeton de bot Telegram
+  - Gmail OAuth
 
 ---
 
 ## 1) Provisionner le VPS
 
-Créer un VPS Ubuntu ou Debian chez Hetzner.
+Créez un VPS Ubuntu ou Debian chez Hetzner.
 
 Connectez-vous en tant que root :
 
@@ -96,7 +96,7 @@ docker compose version
 
 ---
 
-## 3) Cloner le dépôt OpenClaw
+## 3) Clonez le dépôt OpenClaw
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -107,10 +107,10 @@ Ce guide suppose que vous allez construire une image personnalisée pour garanti
 
 ---
 
-## 4) Créer des répertoires persistants sur l'hôte
+## 4) Créez des répertoires persistants sur l'hôte
 
 Les conteneurs Docker sont éphémères.
-Tout état de longue durée doit résider sur l'hôte.
+Tout l'état de longue durée doit résider sur l'hôte.
 
 ```bash
 mkdir -p /root/.openclaw
@@ -123,9 +123,9 @@ chown -R 1000:1000 /root/.openclaw/workspace
 
 ---
 
-## 5) Configurer les variables d'environnement
+## 5) Configurez les variables d'environnement
 
-Créez `.env` à la racine du référentiel.
+Créez `.env` à la racine du dépôt.
 
 ```bash
 OPENCLAW_IMAGE=openclaw:latest
@@ -146,7 +146,7 @@ Générez des secrets forts :
 openssl rand -hex 32
 ```
 
-**Ne commettez pas ce fichier.**
+**Ne commitez pas ce fichier.**
 
 ---
 
@@ -197,10 +197,10 @@ services:
 
 ---
 
-## 7) Intégrer les binaires requis dans l'image (critique)
+## 7) Intégrez les binaires requis dans l'image (critique)
 
-L'installation de binaires dans un conteneur en cours d'exécution est un piège.
-Tout ce qui est installé au moment de l'exécution sera perdu au redémarrage.
+Installer des binaires dans un conteneur en cours d'exécution est un piège.
+Tout ce qui est installé lors de l'exécution sera perdu au redémarrage.
 
 Tous les binaires externes requis par les compétences doivent être installés au moment de la construction de l'image.
 
@@ -285,7 +285,7 @@ Sortie attendue :
 
 ---
 
-## 9) Vérifier le Gateway
+## 9) Vérifiez le Gateway
 
 ```bash
 docker compose logs -f openclaw-gateway
@@ -314,20 +314,20 @@ Collez votre jeton de passerelle.
 ## Ce qui persiste où (source de vérité)
 
 OpenClaw s'exécute dans Docker, mais Docker n'est pas la source de vérité.
-Tout état de longue durée doit survivre aux redémarrages, reconstructions et redémarrages du système.
+Tout l'état de longue durée doit survivre aux redémarrages, reconstructions et reboots.
 
-| Composant                            | Emplacement                       | Mécanisme de persistance   | Notes                                          |
-| ------------------------------------ | --------------------------------- | -------------------------- | ---------------------------------------------- |
-| Configuration Gateway                | `/home/node/.openclaw/`           | Montage de volume hôte     | Inclut `openclaw.json`, jetons                 |
-| Profils d'authentification de modèle | `/home/node/.openclaw/`           | Montage de volume hôte     | Jetons OAuth, clés API                         |
-| Configurations de compétences        | `/home/node/.openclaw/skills/`    | Montage de volume hôte     | État au niveau des compétences                 |
-| Espace de travail de l'agent         | `/home/node/.openclaw/workspace/` | Montage de volume hôte     | Code et artefacts d'agent                      |
-| Session WhatsApp                     | `/home/node/.openclaw/`           | Montage de volume hôte     | Préserve la connexion QR                       |
-| Trousseau de clés Gmail              | `/home/node/.openclaw/`           | Volume hôte + mot de passe | Nécessite `GOG_KEYRING_PASSWORD`               |
-| Binaires externes                    | `/usr/local/bin/`                 | Image Docker               | Doit être intégré au moment de la construction |
-| Runtime Node                         | Système de fichiers du conteneur  | Image Docker               | Reconstruit à chaque construction d'image      |
-| Paquets OS                           | Système de fichiers du conteneur  | Image Docker               | Ne pas installer au moment de l'exécution      |
-| Conteneur Docker                     | Éphémère                          | Redémarrable               | Peut être détruit sans risque                  |
+| Composant                            | Emplacement                       | Mécanisme de persistance        | Notes                                   |
+| ------------------------------------ | --------------------------------- | ------------------------------- | --------------------------------------- |
+| Config Gateway                       | `/home/node/.openclaw/`           | Montage de volume hôte          | Inclut `openclaw.json`, jetons          |
+| Profils d'authentification de modèle | `/home/node/.openclaw/`           | Montage de volume hôte          | Jeton OAuth, clés API                   |
+| Configurations de compétences        | `/home/node/.openclaw/skills/`    | Montage de volume hôte          | État au niveau des compétences          |
+| Espace de travail de l'agent         | `/home/node/.openclaw/workspace/` | Montage de volume hôte          | Code et artefacts de l'agent            |
+| Session WhatsApp                     | `/home/node/.openclaw/`           | Montage du volume de l'hôte     | Préserve la connexion QR                |
+| Trousseau de clés Gmail              | `/home/node/.openclaw/`           | Volume de l'hôte + mot de passe | Nécessite `GOG_KEYRING_PASSWORD`        |
+| Binaires externes                    | `/usr/local/bin/`                 | Image Docker                    | Doit être inclus lors de la compilation |
+| Runtime Node                         | Système de fichiers du conteneur  | Image Docker                    | Reconstruit à chaque build d'image      |
+| Paquets OS                           | Système de fichiers du conteneur  | Image Docker                    | Ne pas installer à l'exécution          |
+| Conteneur Docker                     | Éphémère                          | Redémarrable                    | Destruction sans risque                 |
 
 import fr from "/components/footer/fr.mdx";
 

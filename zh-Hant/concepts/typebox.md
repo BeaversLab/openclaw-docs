@@ -1,35 +1,29 @@
 ---
-summary: "TypeBox schemas as the single source of truth for the gateway protocol"
+summary: "TypeBox 結構作為 Gateway 協定的唯一真實來源"
 read_when:
   - Updating protocol schemas or codegen
 title: "TypeBox"
 ---
 
-# TypeBox as protocol source of truth
+# TypeBox 作為協定的真實來源
 
 Last updated: 2026-01-10
 
-TypeBox is a TypeScript-first schema library. We use it to define the **Gateway
-WebSocket protocol** (handshake, request/response, server events). Those schemas
-drive **runtime validation**, **JSON Schema export**, and **Swift codegen** for
-the macOS app. One source of truth; everything else is generated.
+TypeBox 是一個以 TypeScript 為優先的結構描述庫。我們使用它來定義 **Gateway WebSocket 協定**（handshake、request/response、server events）。這些結構描述驅動了 **執行時期驗證**、**JSON Schema 匯出**，以及 macOS 應用程式的 **Swift 程式碼生成**。一個真實來源；其他一切都是生成的。
 
-If you want the higher-level protocol context, start with
-[Gateway architecture](/zh-Hant/concepts/architecture).
+如果您想要更高階的協定背景，請從 [Gateway architecture](/zh-Hant/concepts/architecture) 開始。
 
-## Mental model (30 seconds)
+## 心智模型（30 秒）
 
-Every Gateway WS message is one of three frames:
+每個 Gateway WS 訊息都是以下三種幀之一：
 
-- **Request**: `{ type: "req", id, method, params }`
-- **Response**: `{ type: "res", id, ok, payload | error }`
-- **Event**: `{ type: "event", event, payload, seq?, stateVersion? }`
+- **Request**：`{ type: "req", id, method, params }`
+- **Response**：`{ type: "res", id, ok, payload | error }`
+- **Event**：`{ type: "event", event, payload, seq?, stateVersion? }`
 
-The first frame **must** be a `connect` request. After that, clients can call
-methods (e.g. `health`, `send`, `chat.send`) and subscribe to events (e.g.
-`presence`, `tick`, `agent`).
+第一個幀 **必須** 是 `connect` 請求。在此之後，客戶端可以呼叫方法（例如 `health`、`send`、`chat.send`）並訂閱事件（例如 `presence`、`tick`、`agent`）。
 
-Connection flow (minimal):
+連線流程（最小化）：
 
 ```
 Client                    Gateway
@@ -40,46 +34,49 @@ Client                    Gateway
   |<---- res:health ----------|
 ```
 
-Common methods + events:
+常見方法 + 事件：
 
-| Category  | Examples                                                  | Notes                              |
-| --------- | --------------------------------------------------------- | ---------------------------------- |
-| Core      | `connect`, `health`, `status`                             | `connect` must be first            |
-| Messaging | `send`, `poll`, `agent`, `agent.wait`                     | side-effects need `idempotencyKey` |
-| Chat      | `chat.history`, `chat.send`, `chat.abort`, `chat.inject`  | WebChat uses these                 |
-| Sessions  | `sessions.list`, `sessions.patch`, `sessions.delete`      | session admin                      |
-| Nodes     | `node.list`, `node.invoke`, `node.pair.*`                 | Gateway WS + node actions          |
-| Events    | `tick`, `presence`, `agent`, `chat`, `health`, `shutdown` | 伺服器推送                         |
+| 類別     | 範例                                                      | 備註                        |
+| -------- | --------------------------------------------------------- | --------------------------- |
+| 核心     | `connect`、`health`、`status`                             | `connect` 必須是第一個      |
+| 訊息     | `send`、`poll`、`agent`、`agent.wait`                     | 副作用需要 `idempotencyKey` |
+| 聊天     | `chat.history`、`chat.send`、`chat.abort`、`chat.inject`  | WebChat 使用這些            |
+| 工作階段 | `sessions.list`、`sessions.patch`、`sessions.delete`      | 工作階段管理                |
+| 節點     | `node.list`、`node.invoke`、`node.pair.*`                 | Gateway WS + 節點動作       |
+| 事件     | `tick`、`presence`、`agent`、`chat`、`health`、`shutdown` | 伺服器推送                  |
 
-Authoritative list lives in `src/gateway/server.ts` (`METHODS`, `EVENTS`).
+權威清單位於 `src/gateway/server.ts`（`METHODS`、`EVENTS`）。
 
-## Schemas 所在位置
+## Schema 的存放位置
 
-- Source: `src/gateway/protocol/schema.ts`
+- 來源：`src/gateway/protocol/schema.ts`
 - Runtime validators (AJV): `src/gateway/protocol/index.ts`
-- 伺服器握手 + 方法分派：`src/gateway/server.ts`
-- Node 客戶端：`src/gateway/client.ts`
-- 產生的 JSON Schema：`dist/protocol.schema.json`
-- 產生的 Swift 模型：`apps/macos/Sources/OpenClawProtocol/GatewayModels.swift`
+- Server handshake + method dispatch: `src/gateway/server.ts`
+- Node client: `src/gateway/client.ts`
+- Generated JSON Schema: `dist/protocol.schema.json`
+- Generated Swift models: `apps/macos/Sources/OpenClawProtocol/GatewayModels.swift`
 
-## 目前管線
+## Current pipeline
 
 - `pnpm protocol:gen`
-  - 將 JSON Schema (draft‑07) 寫入 `dist/protocol.schema.json`
+  - writes JSON Schema (draft‑07) to `dist/protocol.schema.json`
 - `pnpm protocol:gen:swift`
-  - 生成 Swift gateway 模型
+  - generates Swift gateway models
 - `pnpm protocol:check`
-  - 執行這兩個生成器並驗證輸出已提交
+  - runs both generators and verifies the output is committed
 
-## Schemas 如何在執行時期被使用
+## How the schemas are used at runtime
 
-- **伺服器端**：每個傳入的幀都會經過 AJV 驗證。握手僅接受參數符合 `ConnectParams` 的 `connect` 請求。
-- **客戶端**：JS 客戶端會在使用事件和回應幀之前對其進行驗證。
-- **方法表面**：Gateway 在 `hello-ok` 中通告支援的 `methods` 和 `events`。
+- **Server side**: every inbound frame is validated with AJV. The handshake only
+  accepts a `connect` request whose params match `ConnectParams`.
+- **Client side**: the JS client validates event and response frames before
+  using them.
+- **方法介面**：Gateway 會在 `hello-ok` 中公告支援的 `methods` 和
+  `events`。
 
 ## 範例幀
 
-連線 (第一則訊息)：
+連線（第一則訊息）：
 
 ```json
 {
@@ -140,9 +137,9 @@ Hello-ok 回應：
 { "type": "event", "event": "tick", "payload": { "ts": 1730000000 }, "seq": 12 }
 ```
 
-## 最簡客戶端 (Node.js)
+## 最小化客戶端 (Node.js)
 
-最小可用流程：連線 + 健康檢查。
+最小可用的流程：連線 + 健康檢查。
 
 ```ts
 import { WebSocket } from "ws";
@@ -184,9 +181,9 @@ ws.on("message", (data) => {
 
 ## 實作範例：端對端新增方法
 
-範例：新增一個傳回 `{ ok: true, text }` 的新 `system.echo` 請求。
+範例：新增一個會回傳 `{ ok: true, text }` 的 `system.echo` 請求。
 
-1. **Schema (唯一真實來源)**
+1. **Schema（單一真實來源）**
 
 新增至 `src/gateway/protocol/schema.ts`：
 
@@ -224,7 +221,7 @@ export const validateSystemEchoParams = ajv.compile<SystemEchoParams>(SystemEcho
 
 3. **伺服器行為**
 
-在 `src/gateway/server-methods/system.ts` 中新增處理程式：
+在 `src/gateway/server-methods/system.ts` 中新增處理常式：
 
 ```ts
 export const systemHandlers: GatewayRequestHandlers = {
@@ -235,8 +232,8 @@ export const systemHandlers: GatewayRequestHandlers = {
 };
 ```
 
-在 `src/gateway/server-methods.ts` 中註冊 (已合併 `systemHandlers`)，
-然後將 `"system.echo"` 新增至 `METHODS` 中的 `src/gateway/server.ts`。
+在 `src/gateway/server-methods.ts` 中註冊它（已合併 `systemHandlers`），
+然後將 `"system.echo"` 新增到 `src/gateway/server.ts` 中的 `METHODS`。
 
 4. **重新生成**
 
@@ -246,46 +243,46 @@ pnpm protocol:check
 
 5. **測試 + 文件**
 
-在 `src/gateway/server.*.test.ts` 中新增伺服器測試並在文件中註記該方法。
+在 `src/gateway/server.*.test.ts` 中新增伺服器測試，並在文件中記錄該方法。
 
-## Swift codegen 行為
+## Swift 程式碼生成行為
 
 Swift 生成器會輸出：
 
-- 具有 `req`、`res`、`event` 和 `unknown` 案例 (cases) 的 `GatewayFrame` 列舉
-- 強型別 payload structs/enums
+- 帶有 `req`、`res`、`event` 和 `unknown` 案例的 `GatewayFrame` 枚舉
+- 強型別 payload 結構體/枚舉
 - `ErrorCode` 值和 `GATEWAY_PROTOCOL_VERSION`
 
-未知的 frame types 會保留為原始 payload 以維持向前相容性。
+未知的框架類型會以原始 payload 形式保留，以實現前向相容性。
 
 ## 版本控制 + 相容性
 
 - `PROTOCOL_VERSION` 位於 `src/gateway/protocol/schema.ts` 中。
-- 客戶端發送 `minProtocol` + `maxProtocol`；伺服器會拒絕不相符的請求。
-- Swift 模型會保留未知的 frame types，以避免破壞舊版客戶端。
+- 客戶端發送 `minProtocol` + `maxProtocol`；伺服器會拒絕不匹配的請求。
+- Swift 模型會保留未知的幀類型，以避免破壞舊版客戶端。
 
 ## Schema 模式與慣例
 
-- 大多數物件使用 `additionalProperties: false` 來處理嚴格的 payloads。
+- 大多數物件使用 `additionalProperties: false` 來定義嚴格的承載。
 - `NonEmptyString` 是 ID 和方法/事件名稱的預設值。
-- 頂層 `GatewayFrame` 在 `type` 上使用鑑別器 (**discriminator**)。
-- 具有副作用的方法通常在參數中需要 `idempotencyKey`
+- 頂層 `GatewayFrame` 在 `type` 上使用 **判別器 (discriminator)**。
+- 具有副作用的函式通常需要在參數中包含 `idempotencyKey`
   （例如：`send`、`poll`、`agent`、`chat.send`）。
-- `agent` 接受可選的 `internalEvents` 用於運行時生成的編排上下文
-  （例如子代理/ cron 任務完成移交）；請將其視為內部 API 表面。
+- `agent` 接受可選的 `internalEvents` 以用於執行時生成的編排上下文
+  （例如子代理/cron 任務完成交接）；將此視為內部 API 介面。
 
 ## 即時 Schema JSON
 
-生成的 JSON Schema 位於儲存庫的 `dist/protocol.schema.json`。已發布的
-原始檔案通常可在以下位置取得：
+生成的 JSON Schema 位於 repo 中的 `dist/protocol.schema.json`。已
+發佈的原始檔案通常可於以下位置取得：
 
 - [https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json](https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json)
 
-## 當您變更 schema 時
+## 當您變更 Schema 時
 
-1. 更新 TypeBox schema。
+1. 更新 TypeBox Schema。
 2. 執行 `pnpm protocol:check`。
-3. 提交重新生成的 schema 與 Swift 模型。
+3. 提交重新生成的 Schema 與 Swift 模型。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

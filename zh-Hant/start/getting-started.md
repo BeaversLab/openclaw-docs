@@ -1,42 +1,40 @@
 ---
-summary: "在幾分鐘內安裝 OpenClaw 並執行您的第一次聊天。"
+summary: "在數分鐘內安裝 OpenClaw 並執行您的第一次聊天。"
 read_when:
-  - 首次從零開始設定
-  - 您想要通往可運作聊天的最快路徑
-title: "入門指南"
+  - First time setup from zero
+  - You want the fastest path to a working chat
+title: "開始使用"
 ---
 
-# 入門指南
+# 開始使用
 
-目標：從零開始，以最少的設定完成第一次可運作的聊天。
+安裝 OpenClaw，執行入門引導，並與您的 AI 助手聊天 — 全部
+大約 5 分鐘即可完成。結束時，您將擁有一個執行中的 Gateway、已配置的驗證
+以及一個可運作的聊天工作階段。
 
-<Info>
-  最快聊天方式：開啟控制介面（無需設定頻道）。執行 `openclaw dashboard` 並在瀏覽器中聊天，或在
-  <Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">
-    閘道主機
-  </Tooltip>
-  上開啟 `http://127.0.0.1:18789/`。 文件：[儀表板](/zh-Hant/web/dashboard) 和
-  [控制介面](/zh-Hant/web/control-ui)。
-</Info>
+## 您需要什麼
 
-## 先決條件
+- **Node.js** — 建議使用 Node 24（也支援 Node 22.16+）
+- **API 金鑰**，來自模型供應商（Anthropic、OpenAI、Google 等） — 入門引導會提示您輸入
 
-- 建議使用 Node 24（Node 22 LTS，目前為 `22.16+`，為了相容性仍支援）
+<Tip>
+  使用 `node --version` 檢查您的 Node 版本。 **Windows 使用者：** 原生 Windows 和 WSL2 均獲
+  支援。WSL2 更穩定，建議用於完整體驗。請參閱 [Windows](/zh-Hant/platforms/windows)。需要安裝 Node
+  嗎？請參閱 [Node 設定](/zh-Hant/install/node)。
+</Tip>
 
-<Tip>如果不確定，請使用 `node --version` 檢查您的 Node 版本。</Tip>
-
-## 快速設定（CLI）
+## 快速設定
 
 <Steps>
-  <Step title="安裝 OpenClaw (建議)">
+  <Step title="安裝 OpenClaw">
     <Tabs>
-      <Tab title="macOS/Linux">
+      <Tab title="macOS / Linux">
         ```bash
         curl -fsSL https://openclaw.ai/install.sh | bash
         ```
         <img
   src="/assets/install-script.svg"
-  alt="安裝腳本程序"
+  alt="安裝腳本流程"
   className="rounded-lg"
 />
       </Tab>
@@ -48,91 +46,75 @@ title: "入門指南"
     </Tabs>
 
     <Note>
-    其他安裝方法和需求：[安裝](/zh-Hant/install)。
+    其他安裝方法（Docker、Nix、npm）：[安裝](/zh-Hant/install)。
     </Note>
 
   </Step>
-
   <Step title="執行入門引導">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    入門引導會配置身份驗證、網關設定和可選頻道。
-    詳情請參閱 [Onboarding (CLI)](/zh-Hant/start/wizard)。
+    精靈會引導您完成選擇模型供應商、設定 API 金鑰
+
+以及設定 Gateway 的過程。大約需要 2 分鐘。
+
+    如需完整參考，請參閱 [入門引導 (CLI)](/zh-Hant/start/wizard)。
 
   </Step>
-
-  <Step title="Check the Gateway">
-    如果您已安裝該服務，它應該已經在運行：
-
+  <Step title="驗證 Gateway 正在執行">
     ```bash
     openclaw gateway status
     ```
 
+    您應該會看到 Gateway 正在監聽連接埠 18789。
+
   </Step>
-  <Step title="Open the Control UI">
+  <Step title="開啟儀表板">
     ```bash
     openclaw dashboard
     ```
+
+    這會在您的瀏覽器中開啟控制 UI。如果它能載入，表示一切正常運作。
+
+  </Step>
+  <Step title="傳送您的第一則訊息">
+    在控制 UI 聊天中輸入一則訊息，您應該會收到 AI 的回覆。
+
+    想改用手機聊天嗎？設定最快的管道是
+    [Telegram](/zh-Hant/channels/telegram)（只需要一個 bot token）。請參閱 [管道](/zh-Hant/channels)
+    以了解所有選項。
+
   </Step>
 </Steps>
 
-<Check>如果控制 UI 加載成功，表示您的閘道已準備就緒。</Check>
-
-## 可選檢查與額外功能
-
-<AccordionGroup>
-  <Accordion title="Run the Gateway in the foreground">
-    適用於快速測試或故障排除。
-
-    ```bash
-    openclaw gateway --port 18789
-    ```
-
-  </Accordion>
-  <Accordion title="Send a test message">
-    需要已配置的頻道。
-
-    ```bash
-    openclaw message send --target +15555550123 --message "Hello from OpenClaw"
-    ```
-
-  </Accordion>
-</AccordionGroup>
-
-## 實用的環境變數
-
-如果您以服務帳戶運行 OpenClaw，或想要自訂設定/狀態位置：
-
-- `OPENCLAW_HOME` 設定用於內部路徑解析的主目錄。
-- `OPENCLAW_STATE_DIR` 覆寫狀態目錄。
-- `OPENCLAW_CONFIG_PATH` 覆寫設定檔路徑。
-
-完整的環境變數參考：[環境變數](/zh-Hant/help/environment)。
-
-## 深入了解
+## 接下來做什麼
 
 <Columns>
-  <Card title="CLI 入門指南" href="/zh-Hant/start/wizard">
-    完整的 CLI 入門參考和高級選項。
+  <Card title="連接管道" href="/zh-Hant/channels" icon="message-square">
+    WhatsApp、Telegram、Discord、iMessage 等等。
   </Card>
-  <Card title="macOS 應用程式入門" href="/zh-Hant/start/onboarding">
-    macOS 應用程式的首次執行流程。
+  <Card title="配對與安全性" href="/zh-Hant/channels/pairing" icon="shield">
+    控制誰可以傳送訊息給您的代理程式。
+  </Card>
+  <Card title="設定 Gateway" href="/zh-Hant/gateway/configuration" icon="settings">
+    模型、工具、沙盒和進階設定。
+  </Card>
+  <Card title="瀏覽工具" href="/zh-Hant/tools" icon="wrench">
+    瀏覽器、exec、網路搜尋、技能和外掛程式。
   </Card>
 </Columns>
 
-## 您將擁有
+<Accordion title="進階：環境變數">
+  如果您以服務帳戶身分執行 OpenClaw 或想要自訂路徑：
 
-- 一個運行中的 Gateway
-- 已配置的認證
-- 控制 UI 存取權或已連接的頻道
+- `OPENCLAW_HOME` — 用於內部路徑解析的主目錄
+- `OPENCLAW_STATE_DIR` — 覆寫狀態目錄
+- `OPENCLAW_CONFIG_PATH` — 覆寫設定檔路徑
 
-## 後續步驟
+完整參考：[環境變數](/zh-Hant/help/environment)。
 
-- DM 安全性與核准：[配對](/zh-Hant/channels/pairing)
-- 連接更多頻道：[Channels](/zh-Hant/channels)
-- 進階工作流程與從原始碼安裝：[Setup](/zh-Hant/start/setup)
+</Accordion>
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

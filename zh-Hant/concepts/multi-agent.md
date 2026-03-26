@@ -1,68 +1,68 @@
 ---
-summary: "Multi-agent routing: isolated agents, channel accounts, and bindings"
-title: Multi-Agent Routing
-read_when: "You want multiple isolated agents (workspaces + auth) in one gateway process."
+summary: "多代理路由：隔離的代理、頻道帳戶與綁定"
+title: 多代理路由
+read_when: "您希望在一個閘道程序中擁有多個隔離的代理（工作區 + 身份驗證）。"
 status: active
 ---
 
-# Multi-Agent Routing
+# 多代理路由
 
-目標：在一個運行中的 Gateway 中擁有多個*隔離*的代理（獨立的工作區 + `agentDir` + 會話），以及多個通道帳戶（例如兩個 WhatsApp）。訊息透過綁定路由至代理。
+目標：在單一執行中的閘道內，擁有多個*隔離的*代理（獨立工作區 + `agentDir` + 會話），以及多個頻道帳戶（例如兩個 WhatsApp）。入站流量透過綁定路由至特定代理。
 
 ## 什麼是「一個代理」？
 
-一個 **代理** 是一個具有完整作用域的「大腦」，擁有自己獨立的：
+一個 **代理** 是一個具備完整作用域的「大腦」，擁有：
 
-- **工作區** (Workspace)（檔案、AGENTS.md/SOUL.md/USER.md、本機筆記、角色規則）。
-- **狀態目錄** (`agentDir`)，用於儲存設定檔、模型註冊表以及每個代理的配置。
-- **會話存儲** (Session store)（聊天記錄 + 路由狀態）位於 `~/.openclaw/agents/<agentId>/sessions` 之下。
+- **工作區**（檔案、AGENTS.md/SOUL.md/USER.md、本地筆記、角色規則）。
+- **狀態目錄**（`agentDir`），用於存放身分驗證設定檔、模型登錄表與各代理的配置。
+- **會話存儲**（聊天紀錄 + 路由狀態），位於 `~/.openclaw/agents/<agentId>/sessions` 之下。
 
-設定檔是 **每個代理獨立** 的。每個代理從其自身的位置讀取：
+Auth profiles 是**每個 Agent 各自獨立**的。每個 Agent 從其自身的：
 
 ```text
 ~/.openclaw/agents/<agentId>/agent/auth-profiles.json
 ```
 
-主要代理的憑證**不會**自動共享。切勿跨代理重複使用 `agentDir`
-（這會導致認證/會話衝突）。如果您想共享憑證，
-請將 `auth-profiles.json` 複製到另一個代理的 `agentDir` 中。
+主要 Agent 憑證**不會**自動共用。切勿跨 Agent 重複使用 `agentDir`
+（這會導致 auth/session 衝突）。如果您想共用憑證，
+請將 `auth-profiles.json` 複製到另一個 Agent 的 `agentDir` 中。
 
-技能透過每個工作區的 `skills/` 資料夾實現每個代理獨立，並可從 `~/.openclaw/skills` 獲取共享技能。
+Skills 透過每個 workspace 的 `skills/` 資料夾對應到各個 Agent，並可從 `~/.openclaw/skills` 取用共用的 skills。
 請參閱 [Skills: per-agent vs shared](/zh-Hant/tools/skills#per-agent-vs-shared-skills)。
 
-Gateway 可以並行託管 **一個代理**（預設）或 **多個代理**。
+Gateway 可以託管**一個 Agent**（預設）或**並排託管多個 Agents**。
 
-**工作區備註：** 每個代理的工作區是 **預設 cwd**（目前工作目錄），而非嚴格的
-沙盒。相對路徑在工作區內解析，但除非啟用了沙盒機制，否則絕對路徑可以
-存取主機上的其他位置。請參閱
+**Workspace 註記：**每個 Agent 的 workspace 是**預設的 cwd**，而不是嚴格的
+sandbox。相對路徑會在 workspace 內解析，但除非啟用 sandboxing，否則絕對路徑可以
+存取其他主機位置。請參閱
 [Sandboxing](/zh-Hant/gateway/sandboxing)。
 
-## 路徑 (快速地圖)
+## 路徑（快速地圖）
 
-- 設定： `~/.openclaw/openclaw.json` (或 `OPENCLAW_CONFIG_PATH`)
-- 狀態目錄： `~/.openclaw` (或 `OPENCLAW_STATE_DIR`)
-- 工作區： `~/.openclaw/workspace` (或 `~/.openclaw/workspace-<agentId>`)
-- 代理目錄： `~/.openclaw/agents/<agentId>/agent` (或 `agents.list[].agentDir`)
-- 會話： `~/.openclaw/agents/<agentId>/sessions`
+- 配置：`~/.openclaw/openclaw.json`（或 `OPENCLAW_CONFIG_PATH`）
+- 狀態目錄：`~/.openclaw`（或 `OPENCLAW_STATE_DIR`）
+- 工作區：`~/.openclaw/workspace`（或 `~/.openclaw/workspace-<agentId>`）
+- 代理目錄：`~/.openclaw/agents/<agentId>/agent`（或 `agents.list[].agentDir`）
+- 會話：`~/.openclaw/agents/<agentId>/sessions`
 
-### 單代理模式 (預設)
+### 單代理模式（預設）
 
-如果您不做任何設定，OpenClaw 將運行單一代理：
+如果您不做任何操作，OpenClaw 將運行單個代理：
 
 - `agentId` 預設為 **`main`**。
-- Session 的鍵值為 `agent:main:<mainKey>`。
-- Workspace 預設為 `~/.openclaw/workspace`（當設定了 `OPENCLAW_PROFILE` 時則為 `~/.openclaw/workspace-<profile>`）。
-- State 預設為 `~/.openclaw/agents/main/agent`。
+- 會話鍵值為 `agent:main:<mainKey>`。
+- 工作區預設為 `~/.openclaw/workspace`（或在設定 `OPENCLAW_PROFILE` 時為 `~/.openclaw/workspace-<profile>`）。
+- 狀態預設為 `~/.openclaw/agents/main/agent`。
 
-## Agent helper
+## 代理助手
 
-使用 agent wizard 來新增一個新的 isolated agent：
+使用代理精靈新增一個新的隔離代理：
 
 ```bash
 openclaw agents add work
 ```
 
-然後新增 `bindings`（或讓 wizard 自動處理）以路由 inbound messages。
+然後新增 `bindings`（或讓精靈為您新增）以路由傳入訊息。
 
 驗證方式：
 
@@ -70,41 +70,41 @@ openclaw agents add work
 openclaw agents list --bindings
 ```
 
-## Quick start
+## 快速開始
 
 <Steps>
-  <Step title="建立每個 agent workspace">
+  <Step title="建立每個代理程式工作區">
 
-使用 wizard 或手動建立 workspaces：
+使用精靈或手動建立工作區：
 
 ```bash
 openclaw agents add coding
 openclaw agents add social
 ```
 
-每個 agent 都會獲得自己的 workspace，包含 `SOUL.md`、`AGENTS.md` 和選用的 `USER.md`，以及位於 `~/.openclaw/agents/<agentId>` 下的專屬 `agentDir` 與 session store。
+每個代理程式都會獲得自己的工作區，其中包含 `SOUL.md`、`AGENTS.md` 和選用的 `USER.md`，外加專屬的 `agentDir` 和 `~/.openclaw/agents/<agentId>` 下的會話儲存庫。
 
   </Step>
 
-  <Step title="建立 channel accounts">
+  <Step title="建立通道帳號">
 
-在您偏好的 channels 上為每個 agent 建立一個帳號：
+在您偏好的通道上為每個代理建立一個帳號：
 
-- Discord：每個 agent 一個 bot，啟用 Message Content Intent，並複製每個 token。
-- Telegram：透過 BotFather 為每個 agent 建立一個 bot，並複製每個 token。
+- Discord：每個代理一個機器人，啟用 Message Content Intent，複製每個 token。
+- Telegram：透過 BotFather 為每個代理建立一個機器人，複製每個 token。
 - WhatsApp：將每個電話號碼連結至對應的帳號。
 
 ```bash
 openclaw channels login --channel whatsapp --account work
 ```
 
-請參閱 channel 指南：[Discord](/zh-Hant/channels/discord)、[Telegram](/zh-Hant/channels/telegram)、[WhatsApp](/zh-Hant/channels/whatsapp)。
+參閱通道指南：[Discord](/zh-Hant/channels/discord)、[Telegram](/zh-Hant/channels/telegram)、[WhatsApp](/zh-Hant/channels/whatsapp)。
 
   </Step>
 
-  <Step title="新增 agents、accounts 與 bindings">
+  <Step title="新增代理、帳號與綁定">
 
-在 `agents.list` 下新增 agents，在 `channels.<channel>.accounts` 下新增 channel accounts，並使用 `bindings` 將它們連接起來（範例見下文）。
+在 `agents.list` 下新增代理，在 `channels.<channel>.accounts` 下新增通道帳號，並使用 `bindings` 將它們連接起來（範例見下文）。
 
   </Step>
 
@@ -119,21 +119,21 @@ openclaw channels status --probe
   </Step>
 </Steps>
 
-## Multiple agents = multiple people, multiple personalities
+## 多個代理程式 = 多個人，多種個性
 
-在 **multiple agents** 模式下，每個 `agentId` 都會成為一個 **完全獨立的 persona**：
+在**多個代理程式**的情況下，每個 `agentId` 都會成為一個**完全獨立的個性**：
 
-- **不同的電話號碼/帳號**（每個 channel `accountId` 一組）。
-- **不同的性格**（每個 agent 的 workspace 檔案，例如 `AGENTS.md` 和 `SOUL.md`）。
-- **獨立的驗證 + 工作階段**（除非明確啟用，否則不會發生交談）。
+- **不同的電話號碼/帳戶**（每個頻道 `accountId`）。
+- **不同的個性**（每個代理程式的工作區檔案，例如 `AGENTS.md` 和 `SOUL.md`）。
+- **分開的驗證 + 會話**（除非明確啟用，否則不會有串線）。
 
-這讓**多人**可以共用一個 Gateway 伺服器，同時保持他們的 AI「大腦」和資料隔離。
+這讓**多個人**可以共用一個 Gateway 伺服器，同時保持他們的 AI 「大腦」和資料互相隔離。
 
-## 一個 WhatsApp 號碼，多個人（私訊分派）
+## 一個 WhatsApp 號碼，多個人（私訊分發）
 
-您可以在維持**一個 WhatsApp 帳號**的同時，將**不同的 WhatsApp 私訊**路由傳送到不同的代理程式。使用 `peer.kind: "direct"` 根據發送者 E.164（例如 `+15551234567`）進行配對。回覆仍來自同一個 WhatsApp 號碼（沒有每個代理程式的發送者身分）。
+您可以在使用 **一個 WhatsApp 帳號** 的同時，將 **不同的 WhatsApp 私訊** 路由到不同的代理程式。使用 `peer.kind: "direct"` 比對發送者 E.164（例如 `+15551234567`）。回覆仍來自同一個 WhatsApp 號碼（沒有按代理程式區分的發送者身分）。
 
-重要細節：私訊會折疊到代理程式的**主要工作階段金鑰**，因此若要實現真正的隔離，必須是**每人一個代理程式**。
+重要細節：直接聊天會合併到代理程式的 **主要會話金鑰**，因此要實現真正的隔離需要 **每個人一個代理程式**。
 
 範例：
 
@@ -166,38 +166,38 @@ openclaw channels status --probe
 
 備註：
 
-- 私訊存取控制是**每個 WhatsApp 帳號全域**的（配對/允許清單），而非每個代理程式。
-- 對於共用群組，請將群組綁定到一個代理程式，或使用 [廣播群組](/zh-Hant/channels/broadcast-groups)。
+- 私訊存取控制是 **每個 WhatsApp 帳號全域的**（配對/允許清單），而不是按代理程式區分。
+- 對於共用群組，將群組綁定到一個代理程式或使用 [廣播群組](/zh-Hant/channels/broadcast-groups)。
 
 ## 路由規則（訊息如何選擇代理程式）
 
-綁定是**確定性**的，且**最明確者優先**：
+綁定是 **確定性** 的且 **最特指定規則優先**：
 
-1. `peer` 配對（精確的私訊/群組/頻道 ID）
-2. `parentPeer` 配對（執行緒繼承）
-3. `guildId + roles`（Discord 角色路由）
-4. `guildId` （Discord）
-5. `teamId` （Slack）
-6. 頻道的 `accountId` 配對
-7. 頻道層級配對 (`accountId: "*"`)
-8. 回退到預設代理程式 (`agents.list[].default`，否則為列表中的第一個項目，預設值：`main`)
+1. `peer` 比對（精確的私訊/群組/頻道 ID）
+2. `parentPeer` 比對（執行緒繼承）
+3. `guildId + roles` (Discord 角色路由)
+4. `guildId` (Discord)
+5. `teamId` (Slack)
+6. `accountId` 符合頻道
+7. 頻道層級符合 (`accountId: "*"`)
+8. 回退至預設代理程式 (`agents.list[].default`，否則為清單第一個項目，預設值：`main`)
 
-如果多個綁定在同一層級中配對成功，則設定順序中的第一個優先。
-如果一個綁定設定了多個配對欄位（例如 `peer` + `guildId`），則所有指定的欄位都是必需的（`AND` 語義）。
+如果同一層級有多個綁定符合，則以設定順序的第一個為準。
+如果綁定設定了多個符合欄位 (例如 `peer` + `guildId`)，則需要所有指定的欄位 (`AND` 語意)。
 
 重要的帳號範圍細節：
 
-- 省略 `accountId` 的綁定僅配對預設帳號。
-- 使用 `accountId: "*"` 針對所有帳號進行頻道範圍的回退。
-- 如果您後續為同一個代理程式新增具有明確帳號 ID 的相同綁定，OpenClaw 會將現有的僅頻道綁定升級為帳號範圍，而不是重複建立它。
+- 省略 `accountId` 的綁定僅符合預設帳號。
+- 使用 `accountId: "*"` 作為跨所有帳號的頻道全域回退。
+- 如果您之後針對同一個代理程式使用明確的帳戶 ID 新增相同的綁定，OpenClaw 會將現有的僅限通道綁定升級為帳戶範圍，而不是重複建立。
 
-## 多個帳號 / 電話號碼
+## 多個帳戶 / 電話號碼
 
-支援**多個帳戶**（例如 WhatsApp）的頻道使用 `accountId` 來識別每個登入。每個 `accountId` 都可以路由到不同的代理，因此一台伺服器可以託管多個電話號碼而不會混合會話。
+支援 **多個帳戶** 的通道（例如 WhatsApp）使用 `accountId` 來識別每個登入。每個 `accountId` 都可以路由到不同的代理程式，因此一台伺服器可以託管多個電話號碼，而不會混淆會話。
 
-如果您希望當省略 `accountId` 時有一個頻道範圍的預設帳戶，請設定 `channels.<channel>.defaultAccount`（可選）。當未設定時，OpenClaw 會回退到 `default`（如果存在），否則回退到第一個設定的帳戶 ID（排序後）。
+如果您想要在省略 `accountId` 時設定通道預設的預設帳戶，請設定 `channels.<channel>.defaultAccount`（可選）。如果未設定，OpenClaw 會回退到 `default`（如果存在），否則回退到第一個設定的帳戶 ID（已排序）。
 
-支援此模式的常見頻道包括：
+支援此模式的常見通道包括：
 
 - `whatsapp`，`telegram`，`discord`，`slack`，`signal`，`imessage`
 - `irc`，`line`，`googlechat`，`mattermost`，`matrix`，`nextcloud-talk`
@@ -205,16 +205,16 @@ openclaw channels status --probe
 
 ## 概念
 
-- `agentId`：一個「大腦」（工作區、個別代理驗證、個別代理會話儲存）。
-- `accountId`：一個頻道帳戶實例（例如 WhatsApp 帳戶 `"personal"` vs `"biz"`）。
-- `binding`：透過 `(channel, accountId, peer)` 和選用的公會/團隊 ID 將傳入訊息路由到 `agentId`。
-- 直接聊天會折疊為 `agent:<agentId>:<mainKey>`（每個代理的「主要」；`session.mainKey`）。
+- `agentId`：一個「大腦」（工作區、每個代理的認證、每個代理的會話儲存）。
+- `accountId`：一個頻道帳號實例（例如 WhatsApp 帳號 `"personal"` 對比 `"biz"`）。
+- `binding`：根據 `(channel, accountId, peer)` 以及可選的公會/團隊 ID，將傳入訊息路由至 `agentId`。
+- 直接聊天會合併為 `agent:<agentId>:<mainKey>`（每個代理的「主要」；`session.mainKey`）。
 
 ## 平台範例
 
 ### 每個代理的 Discord 機器人
 
-每個 Discord 機器人帳戶都對應到唯一的 `accountId`。將每個帳戶綁定到一個代理，並為每個機�器人維護允許清單。
+每個 Discord 機器人帳戶都對應到唯一的 `accountId`。將每個帳戶綁定到一個代理，並為每個機器人設定允許名單。
 
 ```json5
 {
@@ -260,8 +260,8 @@ openclaw channels status --probe
 
 備註：
 
-- 邀請每個機器人加入公會並啟用訊息內容意圖。
-- Token 存活於 `channels.discord.accounts.<id>.token` 中（預設帳戶可以使用 `DISCORD_BOT_TOKEN`）。
+- 邀請每個機器人加入伺服器，並啟用訊息內容意圖。
+- Token 存放於 `channels.discord.accounts.<id>.token`（預設帳戶可使用 `DISCORD_BOT_TOKEN`）。
 
 ### 每個代理的 Telegram 機器人
 
@@ -297,19 +297,19 @@ openclaw channels status --probe
 
 備註：
 
-- 使用 BotFather 為每個代理建立一個機器人，並複製每個 token。
-- Tokens 存活於 `channels.telegram.accounts.<id>.botToken` 中（預設帳戶可以使用 `TELEGRAM_BOT_TOKEN`）。
+- 透過 BotFather 為每個代理建立一個機器人，並複製每個 Token。
+- Token 存放於 `channels.telegram.accounts.<id>.botToken`（預設帳戶可使用 `TELEGRAM_BOT_TOKEN`）。
 
 ### 每個代理的 WhatsApp 號碼
 
-在啟動閘道之前連結每個帳戶：
+在啟動 Gateway 之前連結每個帳號：
 
 ```bash
 openclaw channels login --channel whatsapp --account personal
 openclaw channels login --channel whatsapp --account biz
 ```
 
-`~/.openclaw/openclaw.json` (JSON5):
+`~/.openclaw/openclaw.json` (JSON5)：
 
 ```js
 {
@@ -374,7 +374,7 @@ openclaw channels login --channel whatsapp --account biz
 
 ## 範例：WhatsApp 日常聊天 + Telegram 深度工作
 
-依頻道分割：將 WhatsApp 路由到一個快速的日常代理，並將 Telegram 路由到 Opus 代理。
+按頻道分流：將 WhatsApp 路由到快速日常 Agent，將 Telegram 路由到 Opus Agent。
 
 ```json5
 {
@@ -384,7 +384,7 @@ openclaw channels login --channel whatsapp --account biz
         id: "chat",
         name: "Everyday",
         workspace: "~/.openclaw/workspace-chat",
-        model: "anthropic/claude-sonnet-4-5",
+        model: "anthropic/claude-sonnet-4-6",
       },
       {
         id: "opus",
@@ -403,12 +403,12 @@ openclaw channels login --channel whatsapp --account biz
 
 備註：
 
-- 如果您有一個頻道的多個帳戶，請將 `accountId` 加入綁定中（例如 `{ channel: "whatsapp", accountId: "personal" }`）。
-- 若要在將其餘部分保留在聊天模式時，將單一 DM/群組路由到 Opus，請為該對等點新增 `match.peer` 綁定；對等點比對永遠勝過頻道範圍的規則。
+- 如果您在某個頻道擁有多個帳號，請在綁定中加入 `accountId` (例如 `{ channel: "whatsapp", accountId: "personal" }`)。
+- 若要將單一 DM/群組路由到 Opus，其餘保持為 chat，請為該 peer 新增 `match.peer` 綁定；peer 匹配總是優先於頻道範圍的規則。
 
-## 範例：相同頻道，一個對等點到 Opus
+## 範例：相同頻道，一個 peer 至 Opus
 
-將 WhatsApp 保持在快速代理上，但將一個 DM 路由到 Opus：
+將 WhatsApp 保持在快速 Agent，但將一個 DM 路由到 Opus：
 
 ```json5
 {
@@ -418,7 +418,7 @@ openclaw channels login --channel whatsapp --account biz
         id: "chat",
         name: "Everyday",
         workspace: "~/.openclaw/workspace-chat",
-        model: "anthropic/claude-sonnet-4-5",
+        model: "anthropic/claude-sonnet-4-6",
       },
       {
         id: "opus",
@@ -438,11 +438,11 @@ openclaw channels login --channel whatsapp --account biz
 }
 ```
 
-對等點綁定永遠優先，因此請將它們保持在頻道範圍規則之上。
+Peer 綁定總是優先，因此請將它們放在頻道範圍規則之上。
 
-## 綁定到 WhatsApp 群組的家庭代理
+## 綁定到 WhatsApp 群組的家庭 Agent
 
-將專用的家庭代理綁定到單一 WhatsApp 群組，並設定提及閘門
+將專用的家庭 Agent 綁定到單一 WhatsApp 群組，並啟用提及閘控
 和更嚴格的工具政策：
 
 ```json5
@@ -490,14 +490,14 @@ openclaw channels login --channel whatsapp --account biz
 
 備註：
 
-- 工具允許/拒絕清單是 **tools**，而不是 skills。如果技能需要執行
-  二進位檔案，請確保允許 `exec` 並且該二進位檔案存在於沙箱中。
-- 若要進行更嚴格的閘門控制，請設定 `agents.list[].groupChat.mentionPatterns` 並對該頻道
-  保持群組允許清單的啟用狀態。
+- 工具允許/拒絕清單是 **工具**，而非技能。如果技能需要執行
+  二進制檔案，請確保允許 `exec` 且該二進制檔案存在於沙箱中。
+- 若要進行更嚴格的閘道控制，請設定 `agents.list[].groupChat.mentionPatterns` 並
+  對頻道啟用群組允許清單。
 
-## 各代理沙箱和工具設定
+## 個別代理程式的沙箱與工具設定
 
-從 v2026.1.6 開始，每個代理都可以有自己的沙箱和工具限制：
+每個代理程式都可以擁有自己的沙箱與工具限制：
 
 ```js
 {
@@ -533,19 +533,19 @@ openclaw channels login --channel whatsapp --account biz
 ```
 
 注意：`setupCommand` 位於 `sandbox.docker` 之下，並在建立容器時執行一次。
-當解析的範圍是 `"shared"` 時，會忽略各代理的 `sandbox.docker.*` 覆寫。
+當解析的作用域為 `"shared"` 時，將忽略個別代理程式的 `sandbox.docker.*` 覆寫設定。
 
 **優點：**
 
-- **安全隔離**：限制不受信任代理的工具
-- **資源控制**：將特定代理沙箱化，同時將其他代理保持在主機上
-- **靈活政策**：每個代理有不同的權限
+- **安全隔離**：限制不受信任代理程式的工具
+- **資源控制**：將特定代理程式放入沙箱，同時將其他代理程式保留在主機上
+- **彈性原則**：每個代理程式擁有不同的權限
 
-注意：`tools.elevated` 是 **global** 且基於發送者的；它無法針對每個代理進行設定。
-如果您需要各代理的邊界，請使用 `agents.list[].tools` 來拒絕 `exec`。
-針對群組目標設定，請使用 `agents.list[].groupChat.mentionPatterns`，以便 @mentions 能乾淨地對應到預期的代理。
+注意：`tools.elevated` 是**全局**且基於發送者的；它無法針對每個代理進行配置。
+如果您需要針對每個代理的邊界，請使用 `agents.list[].tools` 來拒絕 `exec`。
+若要針對群組目標，請使用 `agents.list[].groupChat.mentionPatterns`，以便 @mentions 能乾淨地對應到預期的代理。
 
-請參閱 [Multi-Agent Sandbox & Tools](/zh-Hant/tools/multi-agent-sandbox-tools) 以取得詳細範例。
+詳情請參閱 [Multi-Agent Sandbox & Tools](/zh-Hant/tools/multi-agent-sandbox-tools)。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

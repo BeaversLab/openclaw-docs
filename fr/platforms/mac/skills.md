@@ -1,5 +1,5 @@
 ---
-summary: "macOS Skills settings UI and gateway-backed status"
+summary: "Interface utilisateur des paramètres macOS Skills et état basé sur la passerelle"
 read_when:
   - Updating the macOS Skills settings UI
   - Changing skills gating or install behavior
@@ -8,29 +8,29 @@ title: "Skills (macOS)"
 
 # Skills (macOS)
 
-The macOS app surfaces OpenClaw skills via the gateway; it does not parse skills locally.
+L'application macOS expose les skills OpenClaw via la passerelle ; elle ne les analyse pas localement.
 
-## Data source
+## Source de données
 
-- `skills.status` (gateway) returns all skills plus eligibility and missing requirements
-  (including allowlist blocks for bundled skills).
-- Requirements are derived from `metadata.openclaw.requires` in each `SKILL.md`.
+- `skills.status` (passerelle) renvoie toutes les skills ainsi que l'éligibilité et les prérequis manquants
+  (y compris les blocs de liste autorisée pour les skills groupées).
+- Les prérequis sont dérivés de `metadata.openclaw.requires` dans chaque `SKILL.md`.
 
-## Install actions
+## Actions d'installation
 
-- `metadata.openclaw.install` defines install options (brew/node/go/uv).
-- The app calls `skills.install` to run installers on the gateway host.
-- The gateway surfaces only one preferred installer when multiple are provided
-  (brew when available, otherwise node manager from `skills.install`, default npm).
+- `metadata.openclaw.install` définit les options d'installation (brew/node/go/uv).
+- L'application appelle `skills.install` pour exécuter les programmes d'installation sur l'hôte de la passerelle.
+- La passerelle n'expose qu'un seul programme d'installation préféré lorsque plusieurs sont fournis
+  (brew si disponible, sinon le gestionnaire de nœud depuis `skills.install`, npm par défaut).
 
-## Env/API keys
+## Clés Env/API
 
-- The app stores keys in `~/.openclaw/openclaw.json` under `skills.entries.<skillKey>`.
-- `skills.update` patches `enabled`, `apiKey`, and `env`.
+- L'application stocke les clés dans `~/.openclaw/openclaw.json` sous `skills.entries.<skillKey>`.
+- `skills.update` applique des correctifs à `enabled`, `apiKey` et `env`.
 
-## Remote mode
+## Mode distant
 
-- Install + config updates happen on the gateway host (not the local Mac).
+- L'installation et les mises à jour de configuration se produisent sur l'hôte de la passerelle (et non sur le Mac local).
 
 import fr from "/components/footer/fr.mdx";
 

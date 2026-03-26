@@ -1,17 +1,17 @@
 ---
-summary: "常見 OpenClaw 設定的精確結構配置範例"
+summary: "常見 OpenClaw 設定的符合架構的配置範例"
 read_when:
-  - 正在學習如何設定 OpenClaw
-  - 尋找設定範例
-  - 首次設定 OpenClaw
+  - Learning how to configure OpenClaw
+  - Looking for configuration examples
+  - Setting up OpenClaw for the first time
 title: "配置範例"
 ---
 
 # 配置範例
 
-以下範例已與目前的配置架構同步。如需完整的參考資料及各欄位說明，請參閱[配置](/zh-Hant/gateway/configuration)。
+以下範例與目前的配置架構一致。如需完整的參考資料和各欄位說明，請參閱[配置](/zh-Hant/gateway/configuration)。
 
-## 快速入門
+## 快速開始
 
 ### 絕對最小值
 
@@ -22,9 +22,9 @@ title: "配置範例"
 }
 ```
 
-儲存至 `~/.openclaw/openclaw.json`，您即可透過該號碼傳送私人訊息給機器人。
+儲存到 `~/.openclaw/openclaw.json`，您就可以從該號碼向機器人發送私訊。
 
-### 建議的入門設定
+### 推薦的入門配置
 
 ```json5
 {
@@ -35,7 +35,7 @@ title: "配置範例"
   },
   agent: {
     workspace: "~/.openclaw/workspace",
-    model: { primary: "anthropic/claude-sonnet-4-5" },
+    model: { primary: "anthropic/claude-sonnet-4-6" },
   },
   channels: {
     whatsapp: {
@@ -46,9 +46,9 @@ title: "配置範例"
 }
 ```
 
-## 擴充範例（主要選項）
+## 擴展示例（主要選項）
 
-> JSON5 允許您使用註解與尾隨逗號。標準 JSON 亦可運作。
+> JSON5 允許您使用註解和尾隨逗號。常規 JSON 也可以使用。
 
 ```json5
 {
@@ -238,15 +238,15 @@ title: "配置範例"
       workspace: "~/.openclaw/workspace",
       userTimezone: "America/Chicago",
       model: {
-        primary: "anthropic/claude-sonnet-4-5",
+        primary: "anthropic/claude-sonnet-4-6",
         fallbacks: ["anthropic/claude-opus-4-6", "openai/gpt-5.2"],
       },
       imageModel: {
-        primary: "openrouter/anthropic/claude-sonnet-4-5",
+        primary: "openrouter/anthropic/claude-sonnet-4-6",
       },
       models: {
         "anthropic/claude-opus-4-6": { alias: "opus" },
-        "anthropic/claude-sonnet-4-5": { alias: "sonnet" },
+        "anthropic/claude-sonnet-4-6": { alias: "sonnet" },
         "openai/gpt-5.2": { alias: "gpt" },
       },
       thinkingDefault: "low",
@@ -271,7 +271,7 @@ title: "配置範例"
       maxConcurrent: 3,
       heartbeat: {
         every: "30m",
-        model: "anthropic/claude-sonnet-4-5",
+        model: "anthropic/claude-sonnet-4-6",
         target: "last",
         directPolicy: "allow", // allow (default) | block
         to: "+15555550123",
@@ -447,7 +447,7 @@ title: "配置範例"
 
 ## 常見模式
 
-### 多平台設定
+### 多平台設置
 
 ```json5
 {
@@ -468,9 +468,9 @@ title: "配置範例"
 }
 ```
 
-### 安全私人訊息模式（共用收件匣 / 多使用者私人訊息）
+### 安全私訊模式（共用收件匣 / 多使用者私訊）
 
-如果超過一人能傳送私人訊息給您的機器人（`allowFrom` 中有多個項目、多人的配對批准，或 `dmPolicy: "open"`），請啟用**安全私人訊息模式**，讓不同傳送者的私人訊息預設不會共用同一個脈絡：
+如果有多個人可以對您的機器人發送私訊（`allowFrom` 中有多個條目、多人的配對核准，或是 `dmPolicy: "open"`），請啟用 **secure DM mode**，使來自不同發送者的私訊預設不共用同一個語境：
 
 ```json5
 {
@@ -494,10 +494,10 @@ title: "配置範例"
 }
 ```
 
-對於 Discord/Slack/Google Chat/MS Teams/Mattermost/IRC，傳送者授權預設優先採用 ID。
-只有在您明確接受風險的情況下，才啟用各頻道的 `dangerouslyAllowNameMatching: true` 進行直接可變的名稱/電子郵件/暱稱比對。
+對於 Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC，傳送者授權預設優先使用 ID。
+只有在您明確接受相關風險的情況下，才透過每個頻道的 `dangerouslyAllowNameMatching: true` 啟用直接的可變名稱/電子郵件/暱稱比對。
 
-### 搭配 API 金鑰備援的 OAuth
+### OAuth 搭配 API 金鑰故障移轉
 
 ```json5
 {
@@ -520,7 +520,7 @@ title: "配置範例"
   agent: {
     workspace: "~/.openclaw/workspace",
     model: {
-      primary: "anthropic/claude-sonnet-4-5",
+      primary: "anthropic/claude-sonnet-4-6",
       fallbacks: ["anthropic/claude-opus-4-6"],
     },
   },
@@ -530,9 +530,8 @@ title: "配置範例"
 ### Anthropic setup-token + API 金鑰，MiniMax 備援
 
 <Warning>
-  Anthropic setup-token 在 Claude Code
-  之外的使用過去曾對部分使用者受限。請將此視為使用者自選風險，並在依賴訂閱授權前確認目前的 Anthropic
-  條款。
+  過去曾有部分使用者受限，無法在 Claude Code 之外使用 Anthropic setup-token。
+  請將此視為使用者自選風險，在依賴訂閱驗證之前，請先確認目前的 Anthropic 條款。
 </Warning>
 
 ```json5
@@ -566,13 +565,13 @@ title: "配置範例"
     workspace: "~/.openclaw/workspace",
     model: {
       primary: "anthropic/claude-opus-4-6",
-      fallbacks: ["minimax/MiniMax-M2.5"],
+      fallbacks: ["minimax/MiniMax-M2.7"],
     },
   },
 }
 ```
 
-### 工作機器人（受限存取）
+### 工作機器人 (受限存取)
 
 ```json5
 {
@@ -597,7 +596,7 @@ title: "配置範例"
 }
 ```
 
-### 僅限本機模型
+### 僅限本地模型
 
 ```json5
 {
@@ -631,10 +630,10 @@ title: "配置範例"
 
 ## 提示
 
-- 如果您設定 `dmPolicy: "open"`，對應的 `allowFrom` 清單必須包含 `"*"`。
-- 提供者 ID 各不相同（電話號碼、使用者 ID、頻道 ID）。請參閱提供者文件以確認格式。
-- 稍後可新增的選用章節：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 請參閱[提供者](/zh-Hant/providers)和[疑難排解](/zh-Hant/gateway/troubleshooting)以獲取更深入的設定說明。
+- 如果您設定了 `dmPolicy: "open"`，相對應的 `allowFrom` 清單必須包含 `"*"`。
+- 供應商 ID 各不相同（電話號碼、使用者 ID、頻道 ID）。請使用供應商文件確認格式。
+- 稍後新增的可選章節：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
+- 如需更深入的設定說明，請參閱[供應商](/zh-Hant/providers)和[疑難排解](/zh-Hant/gateway/troubleshooting)。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

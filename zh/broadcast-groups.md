@@ -1,16 +1,16 @@
 ---
-summary: "向多个代理 WhatsApp 消息"
+summary: "向多个代理广播 WhatsApp 消息"
 read_when:
-  - 配置 %%PH:GLOSSARY:51:c4a4a4d%% 组
-  - 调试 WhatsApp 中的 WhatsApp 回复
-status: experimental
-title: "Broadcast Groups"
+  - Configuring broadcast groups
+  - Debugging multi-agent replies in WhatsApp
+status: 实验性
+title: "广播组"
 ---
 
 # 广播组
 
-**Status:** 实验性  
-**Version:** 添加于 2026.1.9
+**状态：** 实验性  
+**版本：** 2026.1.9 新增
 
 ## 概述
 
@@ -70,10 +70,10 @@ Agents:
 
 ### 基本设置
 
-添加顶层 `broadcast` 部分（位于 `bindings` 旁边）。键是 WhatsApp 对等 ID：
+添加顶级 `broadcast` 部分（位于 `bindings` 旁边）。键为 WhatsApp 对等 ID：
 
-- group chats：群组 JID（例如 `120363403215116621@g.us`）
-- OpenClaw：E.164 电话号码（例如 `+15551234567`）
+- 群组聊天：群组 JID（例如 `120363403215116621@g.us`）
+- 私信：E.164 电话号码（例如 `+15551234567`）
 
 ```json
 {
@@ -155,7 +155,7 @@ Agents:
 ### 消息流
 
 1. **传入消息** 到达 WhatsApp 群组
-2. **%%PH:GLOSSARY:51:c4a4a4d%% 检查**：系统检查对等 ID 是否位于 `broadcast` 中
+2. **广播检查**：系统检查对等 ID 是否在 `broadcast` 中
 3. **如果在广播列表中**：
    - 所有列出的代理都会处理该消息
    - 每个代理都有自己的会话密钥和隔离的上下文
@@ -169,7 +169,7 @@ Agents:
 
 广播组中的每个代理维护完全独立的：
 
-- **会话密钥**（`agent:alfred:whatsapp:group:120363...` 与 `agent:baerbel:whatsapp:group:120363...`）
+- **会话密钥** (`agent:alfred:whatsapp:group:120363...` vs `agent:baerbel:whatsapp:group:120363...`)
 - **对话历史记录**（代理看不到其他代理的消息）
 - **工作区**（如果已配置，则为独立的沙盒）
 - **工具访问权限**（不同的允许/拒绝列表）
@@ -219,8 +219,8 @@ Tools: read only
 }
 ```
 
-✅ **Good:** 每个代理专注一项工作  
-❌ **Bad:** 一个通用的 "dev-helper" 代理
+✅ **好**：每个代理有一项工作  
+❌ **坏**：一个通用的“开发助手”代理
 
 ### 2. 使用描述性名称
 
@@ -300,7 +300,7 @@ Result: Agent A and C respond, Agent B logs error
 ```
 
 - `GROUP_A`：仅 alfred 响应（正常路由）
-- `GROUP_B`：agent1 和 agent2 均响应（%%PH:GLOSSARY:51:c4a4a4d%%）
+- `GROUP_B`：agent1 和 agent2 均响应（广播）
 
 **优先级：** `broadcast` 优先于 `bindings`。
 
@@ -311,7 +311,7 @@ Result: Agent A and C respond, Agent B logs error
 **检查：**
 
 1. 代理 ID 存在于 `agents.list` 中
-2. 对等 ID 格式正确（例如 `120363403215116621@g.us`）
+2. 对等 ID 格式正确（例如，`120363403215116621@g.us`）
 3. 代理不在拒绝列表中
 
 **调试：**
@@ -322,7 +322,7 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 
 ### 只有一个代理响应
 
-**原因：** 对等 ID 可能位于 `bindings` 中，但不在 `broadcast` 中。
+**原因：** 对等 ID 可能在 `bindings` 中，但不在 `broadcast` 中。
 
 **修复：** 添加到广播配置或从绑定中移除。
 
@@ -372,13 +372,13 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 }
 ```
 
-**User sends:** 代码片段  
-**Responses:**
+**用户发送：** 代码片段  
+**响应：**
 
 - code-formatter：“修复了缩进并添加了类型提示”
 - security-scanner：“⚠️ 第 12 行存在 SQL 注入漏洞”
 - test-coverage：“覆盖率为 45%，缺少错误情况的测试”
-- docs-checker："函数 `process_data` 缺少文档字符串"
+- docs-checker：“函数 `process_data` 缺少文档字符串”
 
 ### 示例 2：多语言支持
 
@@ -413,8 +413,8 @@ interface OpenClawConfig {
 
 ### 字段
 
-- `strategy`（可选）：如何处理代理
-  - `"parallel"`（默认）：所有代理同时处理
+- `strategy` （可选）：如何处理代理
+  - `"parallel"` （默认）：所有代理同时处理
   - `"sequential"`：代理按数组顺序处理
 - `[peerId]`：WhatsApp 群组 JID、E.164 号码或其他对等 ID
   - 值：应处理消息的代理 ID 数组
@@ -437,7 +437,7 @@ interface OpenClawConfig {
 
 ## 另请参阅
 
-- [WhatsApp 配置](/zh/multi-agent-sandbox-tools)
+- [多代理配置](/zh/multi-agent-sandbox-tools)
 - [路由配置](/zh/concepts/channel-routing)
 - [会话管理](/zh/concepts/sessions)
 

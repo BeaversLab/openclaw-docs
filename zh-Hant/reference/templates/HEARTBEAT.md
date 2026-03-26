@@ -1,15 +1,17 @@
 ---
-title: "HEARTBEAT.md 模板"
-summary: "HEARTBEAT.md 的工作區模板"
+title: "HEARTBEAT.md 範本"
+summary: "HEARTBEAT.md 的工作區範本"
 read_when:
-  - 手動引導工作區
+  - Bootstrapping a workspace manually
 ---
 
-# HEARTBEAT.md
+# HEARTBEAT.md 範本
 
-# 將此檔案保持空白（或僅包含註解）以跳過心跳 API 呼叫。
+```markdown
+# Keep this file empty (or with only comments) to skip heartbeat API calls.
 
-# 當您希望代理程式定期檢查某些事項時，請在下方新增工作。
+# Add tasks below when you want the agent to check something periodically.
+```
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

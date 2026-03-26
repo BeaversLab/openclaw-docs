@@ -1,86 +1,86 @@
 ---
-summary: "Logging surfaces, file logs, WS log styles, and console formatting"
+summary: "日誌介面、檔案日誌、WS 日誌樣式以及主控台格式設定"
 read_when:
   - Changing logging output or formats
   - Debugging CLI or gateway output
-title: "Logging"
+title: "日誌"
 ---
 
-# Logging
+# 日誌
 
-For a user-facing overview (CLI + Control UI + config), see [/logging](/zh-Hant/logging).
+若要查看使用者導向的總覽（CLI + Control UI + config），請參閱 [/logging](/zh-Hant/logging)。
 
-OpenClaw has two log “surfaces”:
+OpenClaw 有兩個日誌「介面」：
 
-- **Console output** (what you see in the terminal / Debug UI).
-- **File logs** (JSON lines) written by the gateway logger.
+- **主控台輸出**（您在終端機 / Debug UI 中看到的內容）。
+- **檔案日誌**（JSON 行），由 gateway logger 撰寫。
 
-## File-based logger
+## 基於檔案的記錄器
 
-- Default rolling log file is under `/tmp/openclaw/` (one file per day): `openclaw-YYYY-MM-DD.log`
-  - Date uses the gateway host's local timezone.
-- The log file path and level can be configured via `~/.openclaw/openclaw.json`:
+- 預設的輪替日誌檔位於 `/tmp/openclaw/` 下（每天一個檔案）：`openclaw-YYYY-MM-DD.log`
+  - 日期使用 gateway 主機的本地時區。
+- 日誌檔案路徑和層級可以透過 `~/.openclaw/openclaw.json` 進行設定：
   - `logging.file`
   - `logging.level`
 
-The file format is one JSON object per line.
+檔案格式為每行一個 JSON 物件。
 
-The Control UI Logs tab tails this file via the gateway (`logs.tail`).
-CLI can do the same:
+Control UI 的「Logs」分頁透過閘道 (`logs.tail`) 追蹤此檔案。
+CLI 也可以執行相同操作：
 
 ```bash
 openclaw logs --follow
 ```
 
-**Verbose vs. log levels**
+**Verbose 與日誌層級**
 
-- **File logs** are controlled exclusively by `logging.level`.
-- `--verbose` only affects **console verbosity** (and WS log style); it does **not**
-  raise the file log level.
-- To capture verbose-only details in file logs, set `logging.level` to `debug` or
-  `trace`.
+- **檔案日誌** 完全由 `logging.level` 控制。
+- `--verbose` 僅影響 **主控台詳細度** (以及 WS 日誌樣式)；它 **不會**
+  提升檔案日誌層級。
+- 若要在檔案日誌中擷取僅詳細模式的資訊，請將 `logging.level` 設定為 `debug` 或
+  `trace`。
 
-## Console capture
+## 主控台擷取
 
-The CLI captures `console.log/info/warn/error/debug/trace` and writes them to file logs,
-while still printing to stdout/stderr.
+CLI 會擷取 `console.log/info/warn/error/debug/trace` 並將其寫入檔案日誌，
+同時仍然列印到 stdout/stderr。
 
-You can tune console verbosity independently via:
+您可以透過以下方式獨立調整主控台詳細度：
 
-- `logging.consoleLevel` (default `info`)
+- `logging.consoleLevel` (預設為 `info`)
 - `logging.consoleStyle` (`pretty` | `compact` | `json`)
 
-## Tool summary redaction
+## 工具摘要編輯
 
-Verbose tool summaries (e.g. `🛠️ Exec: ...`) can mask sensitive tokens before they hit the
-console stream. This is **tools-only** and does not alter file logs.
+詳細的工具摘要（例如 `🛠️ Exec: ...`）可以在敏感權杖進入
+主控台串流之前將其遮蔽。這是**僅限工具**的功能，不會變更檔案記錄。
 
-- `logging.redactSensitive`: `off` | `tools` (default: `tools`)
-- `logging.redactPatterns`: array of regex strings (overrides defaults)
-  - 使用原始正則表達式字串（自動 `gi`），若需要自訂旗標則使用 `/pattern/flags`。
-  - 匹配項會透過保留前 6 個與後 4 個字元（長度 >= 18）進行遮蔽，否則 `***`。
-  - 預設值涵蓋常見的鍵值分配、CLI 旗標、JSON 欄位、bearer 標頭、PEM 區塊以及熱門的 token 前綴。
+- `logging.redactSensitive`: `off` | `tools` (預設值: `tools`)
+- `logging.redactPatterns`: 正規表示式字串陣列 (覆寫預設值)
+  - 使用原始正規表示式字串 (自動 `gi`)，或者如果需要自訂旗標則使用 `/pattern/flags`。
+  - 符合項目會透過保留前 6 個字元 + 後 4 個字元來遮蔽 (長度 >= 18)，否則為 `***`。
+  - 預設值涵蓋了常見的金鑰指派、CLI 標誌、JSON 欄位、Bearer 標頭、PEM 區塊以及熱門的 Token 前綴。
 
-## Gateway WebSocket 記錄
+## Gateway WebSocket 日誌
 
-Gateway 會以兩種模式列印 WebSocket 協定記錄：
+Gateway 會以兩種模式列印 WebSocket 協定日誌：
 
 - **一般模式（無 `--verbose`）**：僅列印「有趣」的 RPC 結果：
   - 錯誤（`ok=false`）
-  - 緩慢呼叫（預設門檻：`>= 50ms`）
+  - 慢速呼叫（預設閾值：`>= 50ms`）
   - 解析錯誤
 - **詳細模式（`--verbose`）**：列印所有 WS 請求/回應流量。
 
-### WS 記錄樣式
+### WS 日誌樣式
 
-`openclaw gateway` 支援各 Gateway 的樣式切換：
+`openclaw gateway` 支援針對每個 Gateway 的樣式切換：
 
-- `--ws-log auto`（預設）：一般模式已最佳化；詳細模式使用精簡輸出
-- `--ws-log compact`：精簡輸出（配對的請求/回應）當處於詳細模式時
-- `--ws-log full`：完整的逐幀輸出當處於詳細模式時
-- `--compact`：`--ws-log compact` 的別名
+- `--ws-log auto`（預設值）：一般模式已最佳化；詳細模式使用精簡輸出
+- `--ws-log compact`：詳細模式時使用精簡輸出（成對的請求/回應）
+- `--ws-log full`：詳細模式時使用完整的逐幀輸出
+- `--compact`: alias for `--ws-log compact`
 
-範例：
+Examples:
 
 ```bash
 # optimized (only errors/slow)
@@ -93,24 +93,24 @@ openclaw gateway --verbose --ws-log compact
 openclaw gateway --verbose --ws-log full
 ```
 
-## 主控台格式化（子系統記錄）
+## Console formatting (subsystem logging)
 
-主控台格式化工具具備 **TTY 感知能力**，並列印一致的帶前綴行。
-子系統記錄器會讓輸出保持分組且易於掃描。
+The console formatter is **TTY-aware** and prints consistent, prefixed lines.
+Subsystem loggers keep output grouped and scannable.
 
-行為：
+Behavior:
 
-- **子系統前綴** 位於每一行（例如 `[gateway]`、`[canvas]`、`[tailscale]`）
-- **子系統顏色**（每個子系統固定）加上層級顏色
-- **當輸出為 TTY 或環境看似豐富終端機時顯示顏色**（`TERM`/`COLORTERM`/`TERM_PROGRAM`），並遵守 `NO_COLOR`
-- **縮短的子系統前綴**：捨棄前導的 `gateway/` + `channels/`，保留最後 2 個區段（例如 `whatsapp/outbound`）
+- **Subsystem prefixes** on every line (e.g. `[gateway]`, `[canvas]`, `[tailscale]`)
+- **Subsystem colors** (stable per subsystem) plus level coloring
+- **Color when output is a TTY or the environment looks like a rich terminal** (`TERM`/`COLORTERM`/`TERM_PROGRAM`), respects `NO_COLOR`
+- **Shortened subsystem prefixes**: drops leading `gateway/` + `channels/`, keeps last 2 segments (e.g. `whatsapp/outbound`)
 - **依子系統區分的子記錄器**（自動前綴 + 結構化欄位 `{ subsystem }`）
-- **`logRaw()`** 用於 QR/UX 輸出（無前綴、無格式化）
+- **`logRaw()`** 用於 QR/UX 輸出（無前綴，無格式化）
 - **主控台樣式**（例如 `pretty | compact | json`）
-- **主控台記錄層級** 與檔案記錄層級分開（當 `logging.level` 設為 `debug`/`trace` 時，檔案會保留完整詳細資訊）
-- **WhatsApp 訊息內容** 記錄於 `debug` 層級（使用 `--verbose` 以查看）
+- **主控台日誌層級** 與檔案日誌層級分開（當 `logging.level` 設定為 `debug`/`trace` 時，檔案會保留完整細節）
+- **WhatsApp 訊息內文** 記錄於 `debug`（使用 `--verbose` 以查看）
 
-這既可保持現有檔案記錄的穩定性，又能讓互動式輸出易於掃讀。
+這既保持了現有檔案日誌的穩定，又使互動式輸出便於瀏覽。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

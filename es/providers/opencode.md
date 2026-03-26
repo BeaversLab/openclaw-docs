@@ -1,5 +1,5 @@
 ---
-summary: "Use OpenCode Zen and Go catalogs with OpenClaw"
+summary: "Usar los catálogos Zen y Go de OpenCode con OpenClaw"
 read_when:
   - You want OpenCode-hosted model access
   - You want to pick between the Zen and Go catalogs
@@ -8,32 +8,30 @@ title: "OpenCode"
 
 # OpenCode
 
-OpenCode exposes two hosted catalogs in OpenClaw:
+OpenCode expone dos catálogos alojados en OpenClaw:
 
 - `opencode/...` para el catálogo **Zen**
 - `opencode-go/...` para el catálogo **Go**
 
-Both catalogs use the same OpenCode API key. OpenClaw keeps the runtime provider ids
-split so upstream per-model routing stays correct, but onboarding and docs treat them
-as one OpenCode setup.
+Ambos catálogos utilizan la misma clave de API de OpenCode. OpenClaw mantiene los IDs de los proveedores de tiempo de ejecución separados para que el enrutamiento ascendente por modelo siga siendo correcto, pero la incorporación y la documentación los tratan como una única configuración de OpenCode.
 
-## CLI setup
+## Configuración de CLI
 
-### Zen catalog
+### Catálogo Zen
 
 ```bash
 openclaw onboard --auth-choice opencode-zen
 openclaw onboard --opencode-zen-api-key "$OPENCODE_API_KEY"
 ```
 
-### Go catalog
+### Catálogo Go
 
 ```bash
 openclaw onboard --auth-choice opencode-go
 openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 ```
 
-## Config snippet
+## Fragmento de configuración
 
 ```json5
 {
@@ -42,26 +40,26 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 }
 ```
 
-## Catalogs
+## Catálogos
 
 ### Zen
 
-- Runtime provider: `opencode`
-- Example models: `opencode/claude-opus-4-6`, `opencode/gpt-5.2`, `opencode/gemini-3-pro`
-- Best when you want the curated OpenCode multi-model proxy
+- Proveedor de tiempo de ejecución: `opencode`
+- Modelos de ejemplo: `opencode/claude-opus-4-6`, `opencode/gpt-5.2`, `opencode/gemini-3-pro`
+- Ideal cuando deseas el proxy multi-modelo curado de OpenCode
 
 ### Go
 
-- Runtime provider: `opencode-go`
-- Example models: `opencode-go/kimi-k2.5`, `opencode-go/glm-5`, `opencode-go/minimax-m2.5`
-- Best when you want the OpenCode-hosted Kimi/GLM/MiniMax lineup
+- Proveedor de tiempo de ejecución: `opencode-go`
+- Modelos de ejemplo: `opencode-go/kimi-k2.5`, `opencode-go/glm-5`, `opencode-go/minimax-m2.5`
+- Ideal cuando deseas la alineación Kimi/GLM/MiniMax alojada en OpenCode
 
-## Notes
+## Notas
 
-- `OPENCODE_ZEN_API_KEY` is also supported.
-- Entering one OpenCode key during setup stores credentials for both runtime providers.
-- You sign in to OpenCode, add billing details, and copy your API key.
-- Billing and catalog availability are managed from the OpenCode dashboard.
+- `OPENCODE_ZEN_API_KEY` también es compatible.
+- Ingresar una clave de OpenCode durante la configuración guarda las credenciales para ambos proveedores de tiempo de ejecución.
+- Inicia sesión en OpenCode, añade los detalles de facturación y copia tu clave de API.
+- La facturación y la disponibilidad de los catálogos se gestionan desde el panel de OpenCode.
 
 import es from "/components/footer/es.mdx";
 

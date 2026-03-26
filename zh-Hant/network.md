@@ -1,57 +1,55 @@
 ---
-summary: "Network hub: gateway surfaces, pairing, discovery, and security"
+summary: "網路中樞：閘道介面、配對、探索與安全性"
 read_when:
   - You need the network architecture + security overview
   - You are debugging local vs tailnet access or pairing
   - You want the canonical list of networking docs
-title: "Network"
+title: "網路"
 ---
 
-# Network hub
+# 網路中樞
 
-This hub links the core docs for how OpenClaw connects, pairs, and secures
-devices across localhost, LAN, and tailnet.
+此中樞連結了關於 OpenClaw 如何在本地主機、區域網路和 tailnet 中連線、配對及保護裝置的核心文件。
 
-## Core model
+## 核心模型
 
-- [Gateway architecture](/zh-Hant/concepts/architecture)
-- [Gateway protocol](/zh-Hant/gateway/protocol)
-- [Gateway runbook](/zh-Hant/gateway)
-- [Web surfaces + bind modes](/zh-Hant/web)
+- [閘架構](/zh-Hant/concepts/architecture)
+- [閘道協定](/zh-Hant/gateway/protocol)
+- [閘道操作手冊](/zh-Hant/gateway)
+- [Web 介面 + 綁定模式](/zh-Hant/web)
 
-## Pairing + identity
+## 配對 + 身份
 
-- [Pairing overview (DM + nodes)](/zh-Hant/channels/pairing)
-- [Gateway-owned node pairing](/zh-Hant/gateway/pairing)
-- [Devices CLI (pairing + token rotation)](/zh-Hant/cli/devices)
-- [Pairing CLI (DM approvals)](/zh-Hant/cli/pairing)
+- [配對總覽 (DM + 節點)](/zh-Hant/channels/pairing)
+- [閘道擁有的節點配對](/zh-Hant/gateway/pairing)
+- [裝置 CLI (配對 + 權杖輪換)](/zh-Hant/cli/devices)
+- [配對 CLI (DM 核准)](/zh-Hant/cli/pairing)
 
-Local trust:
+本機信任：
 
-- Local connections (loopback or the gateway host’s own tailnet address) can be
-  auto‑approved for pairing to keep same‑host UX smooth.
-- Non‑local tailnet/LAN clients still require explicit pairing approval.
+- 本機連線（回環或閘道主機自己的 tailnet 位址）可以自動批准配對，以保持同主機的使用者體驗順暢。
+- 非本機的 tailnet/LAN 用戶端仍需要明確的配對批准。
 
-## Discovery + transports
+## 探索 + 傳輸
 
-- [Discovery & transports](/zh-Hant/gateway/discovery)
+- [探索與傳輸](/zh-Hant/gateway/discovery)
 - [Bonjour / mDNS](/zh-Hant/gateway/bonjour)
-- [Remote access (SSH)](/zh-Hant/gateway/remote)
+- [遠端存取 (SSH)](/zh-Hant/gateway/remote)
 - [Tailscale](/zh-Hant/gateway/tailscale)
 
-## Nodes + transports
+## 節點 + 傳輸
 
-- [Nodes overview](/zh-Hant/nodes)
-- [Bridge protocol (legacy nodes)](/zh-Hant/gateway/bridge-protocol)
-- [Node runbook: iOS](/zh-Hant/platforms/ios)
-- [Node runbook: Android](/zh-Hant/platforms/android)
+- [節點概覽](/zh-Hant/nodes)
+- [橋接協定（舊版節點）](/zh-Hant/gateway/bridge-protocol)
+- [節點手冊：iOS](/zh-Hant/platforms/ios)
+- [節點手冊：Android](/zh-Hant/platforms/android)
 
-## Security
+## 安全性
 
-- [Security overview](/zh-Hant/gateway/security)
-- [Gateway config reference](/zh-Hant/gateway/configuration)
-- [Troubleshooting](/zh-Hant/gateway/troubleshooting)
-- [Doctor](/zh-Hant/gateway/doctor)
+- [安全性概覽](/zh-Hant/gateway/security)
+- [閘道設定參考](/zh-Hant/gateway/configuration)
+- [疑難排解](/zh-Hant/gateway/troubleshooting)
+- [診斷](/zh-Hant/gateway/doctor)
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

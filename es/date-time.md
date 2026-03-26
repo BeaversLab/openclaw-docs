@@ -1,14 +1,14 @@
 ---
 summary: "Manejo de fecha y hora en sobres, avisos, herramientas y conectores"
 read_when:
-  - Estás cambiando la forma en que se muestran las marcas de tiempo al modelo o a los usuarios
-  - Estás depurando el formato de hora en los mensajes o en la salida del aviso del sistema
+  - You are changing how timestamps are shown to the model or users
+  - You are debugging time formatting in messages or system prompt output
 title: "Fecha y Hora"
 ---
 
 # Fecha y Hora
 
-De forma predeterminada, OpenClaw usa la **hora local del host para las marcas de tiempo de transporte** y **la zona horaria del usuario solo en el aviso del sistema**.
+De forma predeterminada, OpenClaw utiliza la **hora local del host para las marcas de tiempo de transporte** y **la zona horaria del usuario solo en el aviso del sistema**.
 Las marcas de tiempo del proveedor se conservan para que las herramientas mantengan su semántica nativa (la hora actual está disponible a través de `session_status`).
 
 ## Sobres de mensajes (local de forma predeterminada)
@@ -21,7 +21,7 @@ Los mensajes entrantes se envuelven con una marca de tiempo (precisión de minut
 
 Esta marca de tiempo del sobre es **local del host de forma predeterminada**, independientemente de la zona horaria del proveedor.
 
-Puedes anular este comportamiento:
+Puede anular este comportamiento:
 
 ```json5
 {
@@ -37,8 +37,8 @@ Puedes anular este comportamiento:
 
 - `envelopeTimezone: "utc"` usa UTC.
 - `envelopeTimezone: "local"` usa la zona horaria del host.
-- `envelopeTimezone: "user"` usa `agents.defaults.userTimezone` (recae en la zona horaria del host).
-- Usa una zona horaria IANA explícita (por ejemplo, `"America/Chicago"`) para una zona fija.
+- `envelopeTimezone: "user"` usa `agents.defaults.userTimezone` (recurre a la zona horaria del host).
+- Use una zona horaria IANA explícita (por ejemplo, `"America/Chicago"`) para una zona fija.
 - `envelopeTimestamp: "off"` elimina las marcas de tiempo absolutas de los encabezados del sobre.
 - `envelopeElapsed: "off"` elimina los sufijos de tiempo transcurrido (el estilo `+2m`).
 
@@ -66,25 +66,25 @@ Puedes anular este comportamiento:
 
 Si se conoce la zona horaria del usuario, el aviso del sistema incluye una sección dedicada
 **Fecha y Hora Actual** con **solo la zona horaria** (sin formato de reloj/hora)
-para mantener estable el almacenamiento en caché del aviso:
+para mantener estable el almacenamiento en caché de avisos:
 
 ```
 Time zone: America/Chicago
 ```
 
-Cuando el agente necesita la hora actual, use la herramienta `session_status`; la tarjeta
-de estado incluye una línea de marca de tiempo.
+Cuando el agente necesita la hora actual, use la herramienta `session_status`; la tarjeta de estado
+incluye una línea de marca de tiempo.
 
 ## Líneas de eventos del sistema (local de forma predeterminada)
 
-Los eventos del sistema en cola que se insertan en el contexto del agente tienen un prefijo con una marca de tiempo usando la
+Los eventos del sistema en cola que se insertan en el contexto del agente tienen el prefijo de una marca de tiempo utilizando la
 misma selección de zona horaria que los sobres de mensajes (predeterminado: local del host).
 
 ```
 System: [2026-01-12 12:19:17 PST] Model switched.
 ```
 
-### Configurar zona horaria de usuario + formato
+### Configurar zona horaria + formato del usuario
 
 ```json5
 {
@@ -98,7 +98,7 @@ System: [2026-01-12 12:19:17 PST] Model switched.
 ```
 
 - `userTimezone` establece la **zona horaria local del usuario** para el contexto del aviso.
-- `timeFormat` controla la **visualización de 12h/24h** en el aviso. `auto` sigue las preferencias del SO.
+- `timeFormat` controla la **visualización de 12h/24h** en el aviso. `auto` sigue las preferencias del sistema operativo.
 
 ## Detección de formato de hora (automática)
 
@@ -106,26 +106,26 @@ Cuando `timeFormat: "auto"`, OpenClaw inspecciona la preferencia del sistema ope
 y recurre al formato de configuración regional. El valor detectado se **almacena en caché por proceso**
 para evitar llamadas repetidas al sistema.
 
-## Cargas útiles de herramientas + conectores (hora del proveedor sin procesar + campos normalizados)
+## Cargas útiles de herramientas + conectores (hora sin procesar del proveedor + campos normalizados)
 
 Las herramientas de canal devuelven **marcas de tiempo nativas del proveedor** y añaden campos normalizados para mayor coherencia:
 
 - `timestampMs`: milisegundos de época (UTC)
 - `timestampUtc`: cadena UTC ISO 8601
 
-Los campos del proveedor sin procesar se conservan para que no se pierda nada.
+Los campos originales del proveedor se conservan para que no se pierda nada.
 
 - Slack: cadenas tipo época de la API
 - Discord: marcas de tiempo ISO UTC
 - Telegram/WhatsApp: marcas de tiempo numéricas/ISO específicas del proveedor
 
-Si necesita la hora local, conviértala posteriormente utilizando la zona horaria conocida.
+Si necesita la hora local, conviértala más adelante utilizando la zona horaria conocida.
 
 ## Documentos relacionados
 
 - [System Prompt](/es/concepts/system-prompt)
-- [Zonas horarias](/es/concepts/timezone)
-- [Mensajes](/es/concepts/messages)
+- [Timezones](/es/concepts/timezone)
+- [Messages](/es/concepts/messages)
 
 import es from "/components/footer/es.mdx";
 

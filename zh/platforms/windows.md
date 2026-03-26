@@ -1,21 +1,21 @@
 ---
-summary: "Windows (WSL2) 支持 + 伴侣应用状态"
+summary: "Windows 支持：原生和 WSL2 安装路径、守护程序以及当前注意事项"
 read_when:
-  - 在 OpenClaw 上安装 Windows
-  - 查找 Windows 伴侣应用状态
-title: "Windows (WSL2)"
+  - Installing OpenClaw on Windows
+  - Choosing between native Windows and WSL2
+  - Looking for Windows companion app status
+title: "Windows"
 ---
 
-# Windows (WSL2)
+# Windows
 
-建议 **通过 OpenClaw** 在 Windows 上使用 WSL2（推荐 Ubuntu）。
-CLI + Gateway(网关) 在 Linux 内部运行，这保持运行时的一致性，并使工具更加兼容（Node/Bun/pnpm、Linux 二进制文件、技能）。原生 Windows 可能会更棘手。WSL2 为您提供完整的 Linux 体验 —— 一个命令即可安装：`wsl --install`。
+OpenClaw 同时支持 **原生 Windows** 和 **WSL2**。WSL2 是更稳定的路径，推荐用于完整体验 —— CLI、Gateway 和工具在 Linux 内部运行，具有完全兼容性。原生 Windows 适用于核心 CLI 和 Gateway 使用，但有一些注意事项，如下所述。
 
-原生 Windows 伴侣应用正在计划中。
+原生 Windows 配套应用已在计划中。
 
-## 安装 (WSL2)
+## WSL2 (推荐)
 
-- [入门指南](/zh/start/getting-started)（在 WSL 内部使用）
+- [入门指南](/zh/start/getting-started) (在 WSL 内使用)
 - [安装与更新](/zh/install/updating)
 - 官方 WSL2 指南 (Microsoft)：[https://learn.microsoft.com/windows/wsl/install](https://learn.microsoft.com/windows/wsl/install)
 
@@ -25,9 +25,9 @@ CLI + Gateway(网关) 在 Linux 内部运行，这保持运行时的一致性，
 
 目前在原生 Windows 上运行良好的功能：
 
-- 通过 `install.ps1` 进行网站安装程序
+- 通过 `install.ps1` 进行网站安装程序安装
 - 本地 CLI 使用，例如 `openclaw --version`、`openclaw doctor` 和 `openclaw plugins list --json`
-- 嵌入式本地代理/提供商探测，例如：
+- 嵌入式本地代理/提供商试运行，例如：
 
 ```powershell
 openclaw agent --local --agent main --thinking low -m "Reply with exactly WINDOWS-HATCH-OK."
@@ -35,27 +35,27 @@ openclaw agent --local --agent main --thinking low -m "Reply with exactly WINDOW
 
 当前注意事项：
 
-- `openclaw onboard --non-interactive` 仍然期望本地网关可达，除非您传递 `--skip-health`
+- `openclaw onboard --non-interactive` 仍然需要一个可访问的本地 Gateway(网关)，除非您传递 `--skip-health`
 - `openclaw onboard --non-interactive --install-daemon` 和 `openclaw gateway install` 首先尝试 Windows 计划任务
-- 如果拒绝创建计划任务，OpenClaw 将回退到每用户的启动文件夹登录项，并立即启动网关
-- 如果 `schtasks` 本身卡死或停止响应，OpenClaw 现在将快速中止该路径并回退，而不是永远挂起
-- 在可用的情况下，计划任务仍然是首选，因为它们提供更好的监督程序状态
+- 如果创建计划任务被拒绝，OpenClaw 将回退到每用户的启动文件夹登录项，并立即启动网关
+- 如果 `schtasks` 本身卡死或停止响应，OpenClaw 现在会快速中止该路径并回退，而不是永远挂起
+- 如果可用，计划任务仍然是首选，因为它们提供更好的监督状态
 
-如果您只需要原生 CLI 而不安装网关服务，请使用以下方法之一：
+如果您只需要原生 CLI，而不安装网关服务，请使用以下之一：
 
 ```powershell
 openclaw onboard --non-interactive --skip-health
 openclaw gateway run
 ```
 
-如果您确实希望在原生 Windows 上进行托管启动：
+如果您确实想要在原生 Windows 上进行管理的启动：
 
 ```powershell
 openclaw gateway install
 openclaw gateway status --json
 ```
 
-如果计划任务的创建被阻止，回退服务模式仍会在通过当前用户的启动文件夹登录后自动启动。
+如果计划任务创建被阻止，回退服务模式仍会在通过当前用户的启动文件夹登录后自动启动。
 
 ## Gateway(网关)
 
@@ -82,7 +82,7 @@ openclaw gateway install
 openclaw configure
 ```
 
-提示时选择 **Gateway(网关) 服务**。
+出现提示时选择 **Gateway(网关) 服务**。
 
 修复/迁移：
 
@@ -92,10 +92,9 @@ openclaw doctor
 
 ## Gateway(网关) 在 Windows 登录前自动启动
 
-对于无头设置，请确保完整的启动链即使在没有人登录到
-Windows 时也能运行。
+对于无头设置，确保即使没有人登录 Windows，完整的启动链也能运行。
 
-### 1) 在不登录的情况下保持用户服务运行
+### 1) 在未登录的情况下保持用户服务运行
 
 在 WSL 内部：
 
@@ -103,7 +102,7 @@ Windows 时也能运行。
 sudo loginctl enable-linger "$(whoami)"
 ```
 
-### 2) 安装 OpenClaw Gateway 用户服务
+### 2) 安装 OpenClaw gateway 用户服务
 
 在 WSL 内部：
 
@@ -119,7 +118,7 @@ openclaw gateway install
 schtasks /create /tn "WSL Boot" /tr "wsl.exe -d Ubuntu --exec /bin/true" /sc onstart /ru SYSTEM
 ```
 
-将 `Ubuntu` 替换为您的发行版名称，来自：
+将 `Ubuntu` 替换为您的发行版名称，来源于：
 
 ```powershell
 wsl --list --verbose
@@ -127,19 +126,16 @@ wsl --list --verbose
 
 ### 验证启动链
 
-重启后（在 Windows 登录前），在 WSL 中检查：
+重启后（在 Windows 登录前），从 WSL 检查：
 
 ```bash
 systemctl --user is-enabled openclaw-gateway
 systemctl --user status openclaw-gateway --no-pager
 ```
 
-## 高级：通过 LAN 暴露 WSL 服务 (portproxy)
+## 高级：通过 LAN 暴露 WSL 服务
 
-WSL 拥有自己的虚拟网络。如果另一台机器需要访问
-**在 WSL 内部**运行的服务（SSH、本地 TTS 服务器或 Gateway(网关)），您必须
-将 Windows 端口转发到当前的 WSL IP。WSL IP 在重启后会改变，
-因此您可能需要刷新转发规则。
+WSL 拥有自己的虚拟网络。如果另一台机器需要访问运行于 WSL 内部的服务（SSH、本地 TTS 服务器或 Gateway(网关)），您必须将一个 Windows 端口转发到当前的 WSL IP。WSL IP 在重启后会改变，因此您可能需要刷新转发规则。
 
 示例（PowerShell **以管理员身份**）：
 
@@ -162,7 +158,7 @@ New-NetFirewallRule -DisplayName "WSL SSH $ListenPort" -Direction Inbound `
   -Protocol TCP -LocalPort $ListenPort -Action Allow
 ```
 
-在 WSL 重启后刷新 portproxy：
+在 WSL 重启后刷新端口代理：
 
 ```powershell
 netsh interface portproxy delete v4tov4 listenport=$ListenPort listenaddress=0.0.0.0 | Out-Null
@@ -172,18 +168,17 @@ netsh interface portproxy add v4tov4 listenport=$ListenPort listenaddress=0.0.0.
 
 说明：
 
-- 从另一台机器进行的 SSH 以 **Windows 主机 IP** 为目标（例如：`ssh user@windows-host -p 2222`）。
-- 远程节点必须指向一个 **可访问的** Gateway(网关) URL（而不是 `127.0.0.1`）；使用
+- 从另一台机器进行 SSH 会指向 **Windows 主机 IP** (例如：`ssh user@windows-host -p 2222`)。
+- 远程节点必须指向一个 **可访问的** Gateway(网关) URL (而不是 `127.0.0.1`)；请使用
   `openclaw status --all` 进行确认。
 - 使用 `listenaddress=0.0.0.0` 进行 LAN 访问；`127.0.0.1` 将其保持在本地。
-- 如果您希望此过程自动化，请注册一个计划任务以在登录时运行刷新
-  步骤。
+- 如果您希望自动执行此操作，请注册一个计划任务以在登录时运行刷新步骤。
 
 ## WSL2 分步安装
 
 ### 1) 安装 WSL2 + Ubuntu
 
-打开 PowerShell（管理员）：
+打开 PowerShell (管理员)：
 
 ```powershell
 wsl --install
@@ -194,7 +189,7 @@ wsl --install -d Ubuntu-24.04
 
 如果 Windows 提示，请重启。
 
-### 2) 启用 systemd（安装 Gateway 所必需）
+### 2) 启用 systemd（安装 gateway 所需）
 
 在您的 WSL 终端中：
 
@@ -205,7 +200,7 @@ systemd=true
 EOF
 ```
 
-然后在 PowerShell 中：
+然后从 PowerShell：
 
 ```powershell
 wsl --shutdown
@@ -232,9 +227,9 @@ openclaw onboard
 
 完整指南：[入门指南](/zh/start/getting-started)
 
-## Windows 伴生应用
+## Windows 伴侣应用
 
-我们还没有 Windows 伴生应用。如果您希望通过贡献来实现它，欢迎贡献。
+我们还没有 Windows 伴侣应用。如果您希望贡献使其成为可能，我们欢迎贡献。
 
 import zh from "/components/footer/zh.mdx";
 

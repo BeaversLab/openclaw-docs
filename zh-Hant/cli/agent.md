@@ -1,18 +1,18 @@
 ---
-summary: "`openclaw agent` 的 CLI 參考（透過 Gateway 傳送一個 agent 輪次）"
+summary: "CLI 參考資料，用於 `openclaw agent`（透過 Gateway 傳送一個 agent 輪次）"
 read_when:
-  - 您想從腳本執行一個 agent 輪次（選擇性地傳遞回覆）
+  - You want to run one agent turn from scripts (optionally deliver reply)
 title: "agent"
 ---
 
 # `openclaw agent`
 
 透過 Gateway 執行 agent 輪次（針對嵌入式使用 `--local`）。
-使用 `--agent <id>` 直接針對已設定的 agent。
+使用 `--agent <id>` 直接將目標設為已設定的 agent。
 
-相關：
+相關連結：
 
-- Agent send 工具：[Agent send](/zh-Hant/tools/agent-send)
+- Agent 傳送工具：[Agent send](/zh-Hant/tools/agent-send)
 
 ## 範例
 
@@ -25,8 +25,8 @@ openclaw agent --agent ops --message "Generate report" --deliver --reply-channel
 
 ## 備註
 
-- 當此指令觸發 `models.json` 重新生成時，SecretRef 管理的提供者憑證會以非秘密標記（例如環境變數名稱、`secretref-env:ENV_VAR_NAME` 或 `secretref-managed`）的形式保存，而非解析後的秘密明文。
-- 標記寫入是以來源為授權依據：OpenClaw 會保存來自作用中來源配置快照的標記，而非來自已解析執行時期秘密值的標記。
+- 當此指令觸發 `models.json` 重新生成時，由 SecretRef 管理的提供者憑證會以非秘密標記（例如環境變數名稱、`secretref-env:ENV_VAR_NAME` 或 `secretref-managed`）持久化，而不是已解析的秘密明文。
+- Marker 寫入是以來源為準的：OpenClaw 會保留來自目前來源設定快照的 markers，而不是來自解析後的執行時期密鑰值。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

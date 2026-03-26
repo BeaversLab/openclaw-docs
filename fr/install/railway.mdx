@@ -1,10 +1,14 @@
 ---
-title: Déployer sur Railway
+summary: "Déployez OpenClaw sur Railway avec un modèle en un clic"
+read_when:
+  - Deploying OpenClaw to Railway
+  - You want a one-click cloud deploy with browser-based setup
+title: "Railway"
 ---
 
 Déployez OpenClaw sur Railway avec un modèle en un clic et terminez la configuration dans votre navigateur.
 C'est le chemin le plus simple « sans terminal sur le serveur » : Railway exécute le Gateway pour vous,
-et vous configurez tout via l'assistant Web `/setup`.
+et vous configurez tout via l'`/setup` assistant Web.
 
 ## Liste de contrôle rapide (nouveaux utilisateurs)
 
@@ -29,14 +33,14 @@ Railway effectuera soit :
 
 Ensuite, ouvrez :
 
-- `https://<your-railway-domain>/setup` — configuration web (protégée par mot de passe)
+- `https://<your-railway-domain>/setup` — configuration Web (protégée par mot de passe)
 - `https://<your-railway-domain>/openclaw` — Interface de contrôle
 
 ## Ce que vous obtenez
 
 - OpenClaw Gateway hébergé + Interface de contrôle
-- Configuration web sur `/setup` (aucune commande de terminal)
-- Stockage persistant via Volume Railway (`/data`) pour que la configuration/les identifiants/l'espace de travail survivent aux redéploiements
+- Configuration Web sur `/setup` (pas de commandes terminal)
+- Stockage persistant via le Volume Railway (`/data`) afin que la configuration/les informations d'identification/l'espace de travail survivent aux redéploiements
 - Exportation de sauvegarde sur `/setup/export` pour migrer hors de Railway plus tard
 
 ## Paramètres Railway requis
@@ -66,37 +70,33 @@ Définissez ces variables sur le service :
 ## Flux de configuration
 
 1. Visitez `https://<your-railway-domain>/setup` et entrez votre `SETUP_PASSWORD`.
-2. Choisissez un fournisseur de modèle/authentification et collez votre clé.
+2. Choisissez un modèle/fournisseur d'authentification et collez votre clé.
 3. (Facultatif) Ajoutez les jetons Telegram/Discord/Slack.
-4. Cliquez sur **Exécuter la configuration**.
+4. Cliquez sur **Run setup**.
 
-Si les DMs Telegram sont définis sur l'appairage, la configuration web peut approuver le code d'appairage.
+Si les DMs Telegram sont réglés sur l'appairage, la configuration Web peut approuver le code d'appairage.
 
-## Obtenir les jetons de chat
+## Connect a channel
 
-### Jeton de bot Telegram
+Collez votre jeton Telegram ou Discord dans l'assistant `/setup`. Pour les instructions de configuration, consultez la documentation du channel :
 
-1. Envoyez un message à `@BotFather` sur Telegram
-2. Exécutez `/newbot`
-3. Copiez le jeton (ressemble à `123456789:AA...`)
-4. Collez-le dans `/setup`
+- [Telegram](/fr/channels/telegram) (le plus rapide —仅需 un jeton de bot)
+- [Discord](/fr/channels/discord)
+- [All channels](/fr/channels)
 
-### Jeton de bot Discord
+## Backups & migration
 
-1. Allez sur [https://discord.com/developers/applications](https://discord.com/developers/applications)
-2. **New Application** → choisissez un nom
-3. **Bot** → **Add Bot**
-4. **Activez MESSAGE CONTENT INTENT** sous Bot → Privileged Gateway Intents (requis, sinon le bot plantera au démarrage)
-5. Copiez le **Bot Token** et collez-le dans `/setup`
-6. Invitez le bot sur votre serveur (Générateur d'URL OAuth2 ; portées : `bot`, `applications.commands`)
-
-## Sauvegardes et migration
-
-Télécharger une sauvegarde à l'adresse :
+Téléchargez une sauvegarde à l'adresse :
 
 - `https://<your-railway-domain>/setup/export`
 
-Cela exporte l'état de OpenClaw + l'espace de travail afin que vous puissiez migrer vers un autre hôte sans perdre la configuration ni la mémoire.
+Cela exporte votre état OpenClaw + votre espace de travail afin que vous puissiez migrer vers un autre hôte sans perdre la configuration ni la mémoire.
+
+## Next steps
+
+- Configurez les channels de messagerie : [Channels](/fr/channels)
+- Configurez le Gateway : [Gateway configuration](/fr/gateway/configuration)
+- Gardez OpenClaw à jour : [Updating](/fr/install/updating)
 
 import fr from "/components/footer/fr.mdx";
 

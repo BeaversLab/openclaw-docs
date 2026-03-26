@@ -1,16 +1,16 @@
 ---
 summary: "Diffuser un message WhatsApp vers plusieurs agents"
 read_when:
-  - Configuration des groupes de diffusion
-  - Débogage des réponses multi-agents dans WhatsApp
+  - Configuring broadcast groups
+  - Debugging multi-agent replies in WhatsApp
 status: experimental
-title: "Broadcast Groups"
+title: "Groupes de diffusion"
 ---
 
 # Groupes de diffusion
 
 **Statut :** Expérimental  
-**Version :** Ajouté dans la 2026.1.9
+**Version :** Ajouté dans 2026.1.9
 
 ## Aperçu
 
@@ -70,10 +70,10 @@ Agents:
 
 ### Configuration de base
 
-Ajoutez une section `broadcast` de premier niveau (à côté de `bindings`). Les clés sont les ID de pairs WhatsApp :
+Ajoutez une section `broadcast` de niveau supérieur (à côté de `bindings`). Les clés sont les identifiants de pairs WhatsApp :
 
-- group chats : JID de groupe (ex. `120363403215116621@g.us`)
-- DMs : Numéro de téléphone E.164 (ex. `+15551234567`)
+- discussions de groupe : JID de groupe (ex. `120363403215116621@g.us`)
+- DMs : numéro de téléphone E.164 (ex. `+15551234567`)
 
 ```json
 {
@@ -155,7 +155,7 @@ Les agents traitent dans l'ordre (un attend la fin du précédent) :
 ### Flux de messages
 
 1. **Message entrant** arrive dans un groupe WhatsApp
-2. **Vérification de diffusion** : Le système vérifie si l'ID du pair est dans `broadcast`
+2. **Vérification de diffusion** : Le système vérifie si l'ID de pair est dans `broadcast`
 3. **Si dans la liste de diffusion** :
    - Tous les agents répertoriés traitent le message
    - Chaque agent possède sa propre clé de session et son propre contexte isolé
@@ -219,8 +219,8 @@ Concevez chaque agent avec une responsabilité unique et claire :
 }
 ```
 
-✅ **Bon :** Chaque agent a une seule tâche  
-❌ **Mauvais :** Un seul agent générique "dev-helper"
+✅ **Bon :** Chaque agent a un travail  
+❌ **Mauvais :** Un agent générique "dev-helper"
 
 ### 2. Utiliser des noms descriptifs
 
@@ -257,7 +257,7 @@ Donnez aux agents uniquement les tool dont ils ont besoin :
 
 Avec de nombreux agents, envisagez :
 
-- Utilisation de `"strategy": "parallel"` (par défaut) pour la vitesse
+- Utiliser `"strategy": "parallel"` (par défaut) pour la vitesse
 - Limiter les groupes de diffusion à 5 à 10 agents
 - Utiliser des modèles plus rapides pour les agents plus simples
 
@@ -300,7 +300,7 @@ Les groupes de diffusion fonctionnent parallèlement au routage existant :
 ```
 
 - `GROUP_A` : Seul alfred répond (routage normal)
-- `GROUP_B` : agent1 ET agent2 répondent (diffusion)
+- `GROUP_B` : agent1 AND agent2 répondent (diffusion)
 
 **Priorité :** `broadcast` est prioritaire sur `bindings`.
 
@@ -310,8 +310,8 @@ Les groupes de diffusion fonctionnent parallèlement au routage existant :
 
 **Vérification :**
 
-1. Les ID d'agents existent dans `agents.list`
-2. Le format de l'ID de pair est correct (ex., `120363403215116621@g.us`)
+1. Les IDs des agents existent dans `agents.list`
+2. Le format de l'ID du pair est correct (par ex., `120363403215116621@g.us`)
 3. Les agents ne sont pas dans les listes de refus
 
 **Débogage :**
@@ -322,7 +322,7 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 
 ### Un seul agent répond
 
-**Cause :** L'ID de pair peut être dans `bindings` mais pas dans `broadcast`.
+**Cause :** L'ID du pair est peut-être dans `bindings` mais pas dans `broadcast`.
 
 **Correction :** Ajouter à la configuration de diffusion ou retirer des liaisons.
 
@@ -372,7 +372,7 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 }
 ```
 
-**Utilisateur envoie :** Extrait de code  
+**L'utilisateur envoie :** Extrait de code  
 **Réponses :**
 
 - code-formatter : "Indentation corrigée et indications de type ajoutées"
@@ -413,7 +413,7 @@ interface OpenClawConfig {
 
 ### Champs
 
-- `strategy` (optionnel) : Comment traiter les agents
+- `strategy` (facultatif) : Comment traiter les agents
   - `"parallel"` (par défaut) : Tous les agents traitent simultanément
   - `"sequential"` : Les agents traitent dans l'ordre du tableau
 - `[peerId]` : JID de groupe WhatsApp, numéro E.164 ou autre ID de pair
@@ -437,9 +437,9 @@ Fonctionnalités prévues :
 
 ## Voir aussi
 
-- [Configuration Multi-Agent](/fr/multi-agent-sandbox-tools)
-- [Configuration du Routage](/fr/concepts/channel-routing)
-- [Gestion des Sessions](/fr/concepts/sessions)
+- [Configuration multi-agent](/fr/multi-agent-sandbox-tools)
+- [Configuration du routage](/fr/concepts/channel-routing)
+- [Gestion de session](/fr/concepts/sessions)
 
 import fr from "/components/footer/fr.mdx";
 

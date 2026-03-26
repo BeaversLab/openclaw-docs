@@ -1,31 +1,31 @@
 ---
 summary: "Scripts del repositorio: propósito, alcance y notas de seguridad"
 read_when:
-  - Ejecutar scripts desde el repositorio
-  - Añadir o cambiar scripts bajo ./scripts
+  - Running scripts from the repo
+  - Adding or changing scripts under ./scripts
 title: "Scripts"
 ---
 
 # Scripts
 
 El directorio `scripts/` contiene scripts auxiliares para flujos de trabajo locales y tareas de operaciones.
-Úsalos cuando una tarea esté claramente ligada a un script; de lo contrario, prefiere la CLI.
+Úselos cuando una tarea esté claramente vinculada a un script; de lo contrario, prefiera la CLI.
 
 ## Convenciones
 
-- Los scripts son **opcionales** a menos que se mencionen en la documentación o en listas de verificación de lanzamientos.
-- Prefiere las superficies de la CLI cuando existan (ejemplo: la supervisión de autenticación usa `openclaw models status --check`).
-- Asume que los scripts son específicos del host; léelos antes de ejecutarlos en una nueva máquina.
+- Los scripts son **opcionales**, a menos que se mencionen en la documentación o en las listas de verificación de lanzamiento.
+- Prefiera las interfaces de la CLI cuando existan (ejemplo: la supervisión de autenticación usa `openclaw models status --check`).
+- Suponga que los scripts son específicos del host; léalos antes de ejecutarlos en una máquina nueva.
 
 ## Scripts de supervisión de autenticación
 
 Los scripts de supervisión de autenticación están documentados aquí:
 [/automation/auth-monitoring](/es/automation/auth-monitoring)
 
-## Al añadir scripts
+## Al agregar scripts
 
-- Mantén los scripts enfocados y documentados.
-- Añade una breve entrada en el documento relevante (o crea uno si falta).
+- Mantenga los scripts enfocados y documentados.
+- Agregue una entrada breve en el documento relevante (o cree uno si falta).
 
 import es from "/components/footer/es.mdx";
 

@@ -1,68 +1,68 @@
 ---
-summary: "Conception pour une extension Firecrawl optionnelle qui ajoute de la valeur de recherche/extraction sans câbler Firecrawl dans les valeurs par défaut du cœur"
+summary: "Conception pour une extension Firecrawl optionnelle qui ajoute de la valeur de recherche/extraction sans câbler Firecrawl en dur dans les valeurs par défaut du cœur"
 read_when:
-  - Conception du travail d'intégration Firecrawl
-  - Évaluation des interfaces de plugin web_search/web_fetch
-  - Décider si Firecrawl appartient au cœur ou en tant qu'extension
-title: "Conception de l'extension Firecrawl"
+  - Designing Firecrawl integration work
+  - Evaluating web_search/web_fetch plugin seams
+  - Deciding whether Firecrawl belongs in core or as an extension
+title: "Firecrawl Extension Design"
 ---
 
-# Conception de l'extension Firecrawl
+# Firecrawl Extension Design
 
-## Objectif
+## Goal
 
-Livrer Firecrawl en tant qu'**extension optionnelle** qui ajoute :
+Ship Firecrawl as an **opt-in extension** that adds:
 
-- des outils Firecrawl explicites pour les agents,
-- une intégration `web_search` optionnelle basée sur Firecrawl,
-- le support de l'auto-hébergement,
-- des paramètres de sécurité plus robustes que le chemin de repli actuel du cœur,
+- explicit Firecrawl tools for agents,
+- optional Firecrawl-backed `web_search` integration,
+- self-hosted support,
+- stronger security defaults than the current core fallback path,
 
-sans imposer Firecrawl dans la configuration par défaut ou le parcours d'onboarding.
+without pushing Firecrawl into the default setup/onboarding path.
 
-## Pourquoi cette forme
+## Why this shape
 
-Les problèmes/PR récents sur Firecrawl se regroupent en trois catégories :
+Recent Firecrawl issues/PRs cluster into three buckets:
 
-1. **Dérive de version/de schéma**
-   - Plusieurs versions ont rejeté `tools.web.fetch.firecrawl` alors que la documentation et le code d'exécution le prenaient en charge.
-2. **Renforcement de la sécurité**
-   - Le `fetchFirecrawlContent()` actuel envoie toujours des requêtes au point de terminaison Firecrawl avec des `fetch()` brutes, alors que le chemin principal de web-fetch utilise la garde SSRF.
-3. **Pression produit**
-   - Les utilisateurs veulent des flux de recherche/extraction natifs Firecrawl, surtout pour les configurations auto-hébergées/privées.
-   - Les mainteneurs ont explicitement rejeté le câblage profond de Firecrawl dans les valeurs par défaut du cœur, le flux de configuration et le comportement du navigateur.
+1. **Release/schema drift**
+   - Several releases rejected `tools.web.fetch.firecrawl` even though docs and runtime code supported it.
+2. **Security hardening**
+   - Current `fetchFirecrawlContent()` still posts to the Firecrawl endpoint with raw `fetch()`, while the main web-fetch path uses the SSRF guard.
+3. **Product pressure**
+   - Users want Firecrawl-native search/scrape flows, especially for self-hosted/private setups.
+   - Maintainers explicitly rejected wiring Firecrawl deeply into core defaults, setup flow, and browser behavior.
 
-Cette combinaison plaide pour une extension, et non pour plus de logique spécifique à Firecrawl dans le chemin par défaut du cœur.
+That combination argues for an extension, not more Firecrawl-specific logic in the default core path.
 
-## Principes de conception
+## Design principles
 
-- **Optionnel, limité au fournisseur** : pas d'activation automatique, pas de détournement de la configuration, pas d'élargissement du profil d'outil par défaut.
-- **L'extension possède la configuration spécifique à Firecrawl** : préférer la configuration du plugin plutôt que d'étendre `tools.web.*` encore une fois.
-- **Utile dès le premier jour** : fonctionne même si les interfaces `web_search` / `web_fetch` du cœur restent inchangées.
-- **Sécurité avant tout** : les récupérations de points de terminaison utilisent la même posture réseau gardée que les autres outils web.
-- **Adapté à l'auto-hébergement** : configuration + repli env, URL de base explicite, aucune hypothèse hébergée uniquement.
+- **Opt-in, vendor-scoped**: no auto-enable, no setup hijack, no default tool-profile widening.
+- **Extension owns Firecrawl-specific config**: prefer plugin config over growing `tools.web.*` again.
+- **Useful on day one**: works even if core `web_search` / `web_fetch` seams stay unchanged.
+- **Security-first**: endpoint fetches use the same guarded networking posture as other web tools.
+- **Self-hosted-friendly**: config + env fallback, explicit base URL, no hosted-only assumptions.
 
-## Extension proposée
+## Proposed extension
 
-ID de plugin : `firecrawl`
+Plugin id: `firecrawl`
 
-### Capacités MVP
+### MVP capabilities
 
-Enregistrer les outils explicites :
+Register explicit tools:
 
 - `firecrawl_search`
 - `firecrawl_scrape`
 
-Optionnel plus tard :
+Optional later:
 
 - `firecrawl_crawl`
 - `firecrawl_map`
 
-N'ajoutez **pas** l'automatisation du navigateur Firecrawl dans la première version. C'était la partie de la PR #32543 qui a trop intégré Firecrawl dans le comportement du cœur et a soulevé le plus de préoccupations de maintenance.
+Ne **pas** ajouter l'automatisation du navigateur Firecrawl dans la première version. C'était la partie de la PR #32543 qui a attiré Firecrawl trop profondément dans le comportement du cœur et a soulevé le plus de préoccupations de maintenance.
 
-## Structure de la configuration
+## Forme de la configuration
 
-Utiliser une configuration portée par le plugin :
+Utiliser une configuration de portée de plugin :
 
 ```json5
 {
@@ -111,9 +111,9 @@ Priorité de l'URL de base :
 
 ### Pont de compatibilité
 
-Pour la première version, l'extension peut également **lire** la configuration existante du cœur à `tools.web.fetch.firecrawl.*` comme source de secours pour que les utilisateurs existants n'aient pas besoin de migrer immédiatement.
+Pour la première version, l'extension peut également **lire** la configuration du cœur existante à `tools.web.fetch.firecrawl.*` en tant que source de secours pour que les utilisateurs existants n'aient pas besoin de migrer immédiatement.
 
-Le chemin d'écriture reste local au plugin. Ne continuez pas à étendre les surfaces de configuration de cœur Firecrawl.
+Le chemin d'écriture reste local au plugin. Ne continuez pas à étendre les surfaces de configuration du cœur Firecrawl.
 
 ## Conception de l'outil
 
@@ -136,15 +136,15 @@ Comportement :
   - `url`
   - `snippet`
   - `source`
-  - optionnel `content`
-- Enveloppe le contenu du résultat en tant que contenu externe non approuvé
-- La clé de cache inclut la requête + les paramètres de fournisseur pertinents
+  - `content` optionnel
+- Enveloppe le contenu du résultat en tant que contenu externe non fiable
+- La clé de cache inclut la requête + les paramètres pertinents du provider
 
 Pourquoi un outil explicite d'abord :
 
 - Fonctionne aujourd'hui sans changer `tools.web.search.provider`
 - Évite les contraintes actuelles de schéma/chargeur
-- Donne aux utilisateurs la valeur de Firecrawl immédiatement
+- Donne aux utilisateurs la valeur Firecrawl immédiatement
 
 ### `firecrawl_scrape`
 
@@ -161,7 +161,7 @@ Entrées :
 Comportement :
 
 - Appelle Firecrawl `v2/scrape`
-- Renvoie le markdown/le texte plus les métadonnées :
+- Renvoie le markdown/texte plus les métadonnées :
   - `title`
   - `finalUrl`
   - `status`
@@ -171,93 +171,93 @@ Comportement :
 
 Pourquoi un outil de scraping explicite :
 
-- Contourne le bug de commande `Readability -> Firecrawl -> basic HTML cleanup` non résolu dans le `web_fetch` central
-- Donne aux utilisateurs un chemin déterministe « toujours utiliser Firecrawl » pour les sites lourds en JS protégés par des bots
+- Contourne le bogue de classement `Readability -> Firecrawl -> basic HTML cleanup` non résolu dans le `web_fetch` principal
+- Offre aux utilisateurs un chemin déterministe « toujours utiliser Firecrawl » pour les sites lourds en JS ou protégés par des bots
 
 ## Ce que l'extension ne doit pas faire
 
-- Pas d'ajout automatique de `browser`, `web_search`, ou `web_fetch` à `tools.alsoAllow`
-- Pas d'étape d'onboarding par défaut dans `openclaw setup`
+- Pas d'ajout automatique de `browser`, `web_search` ou `web_fetch` à `tools.alsoAllow`
+- Aucune étape d'onboarding par défaut dans `openclaw setup`
 - Aucun cycle de vie de session de navigateur spécifique à Firecrawl dans le cœur
-- Aucun changement à la sémantique de repli `web_fetch` intégrée dans le MVP de l'extension
+- Aucun changement de la sémantique de repli `web_fetch` intégrée dans le MVP de l'extension
 
 ## Plan de phase
 
-### Phase 1 : extension uniquement, aucune modification du schéma central
+### Phase 1 : extension uniquement, aucune modification du schéma principal
 
-Mettre en œuvre :
+Implémenter :
 
 - `extensions/firecrawl/`
 - schéma de configuration du plugin
 - `firecrawl_search`
 - `firecrawl_scrape`
-- tests pour la résolution de configuration, la sélection du point de terminaison, la mise en cache, la gestion des erreurs et l'utilisation du garde SSRF
+- tests pour la résolution de la configuration, la sélection du point de terminaison, la mise en cache, la gestion des erreurs et l'utilisation du garde SSRF
 
-Cette phase suffit pour apporter une véritable valeur à l'utilisateur.
+Cette phase suffit pour fournir une valeur réelle à l'utilisateur.
 
-### Phase 2 : intégration facultative du fournisseur `web_search`
+### Phase 2 : intégration facultative du provider `web_search`
 
-Prendre en charge `tools.web.search.provider = "firecrawl"` uniquement après avoir corrigé deux contraintes centrales :
+Prendre en charge `tools.web.search.provider = "firecrawl"` uniquement après avoir corrigé deux contraintes principales :
 
-1. `src/plugins/web-search-providers.ts` doit charger les plugins de fournisseurs de recherche web configurés/installés au lieu d'une liste groupée en dur.
-2. `src/config/types.tools.ts` et `src/config/zod-schema.agent-runtime.ts` doivent cesser de coder en dur l'énumération des fournisseurs d'une manière qui bloque les identifiants enregistrés par les plugins.
+1. `src/plugins/web-search-providers.ts` doit charger les plugins de provider de recherche web configurés/installés au lieu d'une liste groupée codée en dur.
+2. `src/config/types.tools.ts` et `src/config/zod-schema.agent-runtime.ts` doivent cesser de coder en dur l'énumération des providers d'une manière qui bloque les ids enregistrés par les plugins.
 
 Forme recommandée :
 
-- garder les fournisseurs intégrés documentés,
-- autoriser tout identifiant de fournisseur de plugin enregistré lors de l'exécution,
-- valider la configuration spécifique au fournisseur via le plugin du fournisseur ou un sac générique de fournisseur.
+- garder les providers intégrés documentés,
+- autoriser n'importe quel id de provider de plugin enregistré lors de l'exécution,
+- valider la configuration spécifique au provider via le plugin du provider ou un sac de provider générique.
 
-### Phase 3 : jointure de fournisseur `web_fetch` facultative
+### Phase 3 : point de suture (seam) de provider `web_fetch` facultatif
 
-Faites cela uniquement si les mainteneurs veulent que les backends de récupération spécifiques aux fournisseurs participent à `web_fetch`.
+Ne le faire que si les mainteneurs souhaitent que les backends de récupération spécifiques aux fournisseurs participent à `web_fetch`.
 
-Ajout central nécessaire :
+Ajout principal nécessaire :
 
-- `registerWebFetchProvider` ou jointure équivalente de backend de récupération
+- `registerWebFetchProvider` ou point de suture (seam) de backend de récupération équivalent
 
-Sans cette jointure, l'extension doit conserver `firecrawl_scrape` comme un outil explicite plutôt que d'essayer de corriger le `web_fetch` intégré.
+Sans ce point de suture (seam), l'extension doit garder `firecrawl_scrape` comme un outil explicite plutôt que d'essayer de patcher le `web_fetch` intégré.
 
 ## Exigences de sécurité
 
-L'extension doit traiter Firecrawl comme un **point de terminaison configuré par l'opérateur de confiance**, mais renforcer nonetheless le transport :
+L'extension doit traiter Firecrawl comme un **point de terminaison configuré par l'opérateur de confiance**, mais durcir tout de même le transport :
 
-- Utilisez une récupération (fetch) protégée par SSRF pour l'appel au point de terminaison Firecrawl, et non un `fetch()` brut
-- Préservez la compatibilité auto-hébergée/réseau privé en utilisant la même stratégie de point de terminaison trusted-web-tools qu'ailleurs
+- Utilisez une récupération (fetch) protégée par SSRF pour l'appel au point de terminaison Firecrawl, et non `fetch()` brut
+- Préservez la compatibilité auto-hébergée/réseau privé en utilisant la même stratégie de point de terminaison trusted-web-tools utilisée ailleurs
 - Ne jamais journaliser la clé API
-- Garder la résolution du point de terminaison/URL de base explicite et prévisible
-- Traitez le contenu renvoyé par Firecrawl comme un contenu externe non approuvé
+- Gardez la résolution du point de terminaison/URL de base explicite et prévisible
+- Traitez le contenu renvoyé par Firecrawl comme un contenu externe non fiable
 
 Cela reflète l'intention derrière les PR de durcissement SSRF sans supposer que Firecrawl est une surface multi-locataire hostile.
 
 ## Pourquoi pas une compétence (skill)
 
-Le dépôt a déjà fermé une PR de compétence Firecrawl au profit de la distribution via ClawHub. Cela convient aux workflows d'invite installés par l'utilisateur en option, mais cela ne résout pas :
+Le dépôt a déjà clos une PR de compétence Firecrawl en faveur de la distribution ClawHub. Cela convient pour les workflows de prompts installés par l'utilisateur en option, mais cela ne résout pas :
 
-- la disponibilité déterministe des outils,
+- la disponibilité déterministe de l'outil,
 - la gestion de la configuration/des identifiants de niveau fournisseur,
 - la prise en charge des points de terminaison auto-hébergés,
-- la mise en cache,
+- le cache,
 - des sorties typées stables,
-- l'examen de sécurité du comportement réseau.
+- l'examen de sécurité sur le comportement réseau.
 
-Ceci doit être une extension, et non une compétence basée uniquement sur une invite.
+Cela appartient à une extension, et non à une compétence basée uniquement sur un prompt.
 
 ## Critères de succès
 
-- Les utilisateurs peuvent installer/activer une seule extension et obtenir une recherche/extraction Firecrawl fiable sans toucher aux valeurs par défaut du noyau.
-- Firecrawl auto-hébergé fonctionne avec un repli de configuration/env.
-- Les récupérations (fetches) des points de terminaison de l'extension utilisent un réseau protégé.
-- Aucun nouveau comportement d'intégration/défaut spécifique à Firecrawl dans le noyau.
-- Le noyau peut plus tard adopter des interfaces (seams) `web_search` / `web_fetch` natives aux plugins sans redessiner l'extension.
+- Les utilisateurs peuvent installer/activer une extension et obtenir une recherche/un scraping Firecrawl fiable sans toucher aux valeurs par défaut du cœur.
+- Le Firecrawl auto-hébergé fonctionne avec un repli config/env.
+- Les récupérations (fetchs) des points de terminaison de l'extension utilisent une mise en réseau gardée.
+- Aucun nouveau comportement d'intégration/défaut central spécifique à Firecrawl.
+- Le cœur peut ensuite adopter les interfaces (seams) `web_search` / `web_fetch` natives aux plugins sans redessiner l'extension.
 
 ## Ordre d'implémentation recommandé
 
 1. Construire `firecrawl_scrape`
 2. Construire `firecrawl_search`
 3. Ajouter de la documentation et des exemples
-4. Si souhaité, généraliser le chargement du fournisseur `web_search` afin que l'extension puisse prendre en charge `web_search`
-5. Ensuite seulement, envisager une véritable interface (seam) de fournisseur `web_fetch`
+4. Si souhaité, généralisez le chargement du fournisseur `web_search` afin que l'extension puisse prendre en charge `web_search`
+5. Ensuite seulement, envisagez une vraie interface de fournisseur `web_fetch`
 
 import fr from "/components/footer/fr.mdx";
 

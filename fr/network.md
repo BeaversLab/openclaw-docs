@@ -1,36 +1,34 @@
 ---
-summary: "Centre de réseau : surfaces Gateway, appairage, découverte et sécurité"
+summary: "Network hub: gateway surfaces, pairing, discovery, and security"
 read_when:
-  - Vous avez besoin d'une vue d'ensemble de l'architecture et de la sécurité du réseau
-  - Vous déboguez l'accès local vs tailnet ou l'appairage
-  - Vous souhaitez la liste canonique de la documentation réseau
+  - You need the network architecture + security overview
+  - You are debugging local vs tailnet access or pairing
+  - You want the canonical list of networking docs
 title: "Réseau"
 ---
 
-# Centre de réseau
+# Hub réseau
 
-Ce centre relie la documentation principale sur la façon dont OpenClaw connecte, couple et sécurise
-les appareils sur localhost, le réseau local et le tailnet.
+Ce hub relie la documentation de base expliquant comment OpenClaw connecte, associe et sécurise les appareils sur localhost, le LAN et le tailnet.
 
 ## Modèle principal
 
 - [Architecture Gateway](/fr/concepts/architecture)
 - [Protocole Gateway](/fr/gateway/protocol)
-- [Guide d'exploitation Gateway](/fr/gateway)
-- [Surfaces Web + modes de liaison](/fr/web)
+- [Runbook Gateway](/fr/gateway)
+- [Surfaces Web + modes de bind](/fr/web)
 
-## Appairage + identité
+## Association + identité
 
-- [Vue d'ensemble de l'appairage (DM + nœuds)](/fr/channels/pairing)
-- [Appairage de nœud détenus par Gateway](/fr/gateway/pairing)
-- [CLI des appareils (appairage + rotation des jetons)](/fr/cli/devices)
-- [Appairage CLI (approbations DM)](/fr/cli/pairing)
+- [Aperçu de l'association (DM + nœuds)](/fr/channels/pairing)
+- [Association de nœuds appartenant à la Gateway](/fr/gateway/pairing)
+- [CLI des appareils (association + rotation des jetons)](/fr/cli/devices)
+- [CLI d'association (approbations DM)](/fr/cli/pairing)
 
 Confiance locale :
 
-- Les connexions locales (boucle locale ou adresse tailnet propre de l’hôte de passerelle) peuvent être
-  approuvées automatiquement pour l’appairage afin de maintenir la fluidité de l’expérience utilisateur sur le même hôte.
-- Les clients tailnet/LAN non locaux nécessitent toujours une approbation d’appairage explicite.
+- Les connexions locales (boucle locale ou propre adresse tailnet de l'hôte de la passerelle) peuvent être approuvées automatiquement pour l'association afin de garder l'UX same-host fluide.
+- Les clients tailnet/LAN non locaux nécessitent toujours une approbation d'association explicite.
 
 ## Discovery + transports
 
@@ -39,17 +37,17 @@ Confiance locale :
 - [Accès à distance (SSH)](/fr/gateway/remote)
 - [Tailscale](/fr/gateway/tailscale)
 
-## Nodes + transports
+## Nœuds + transports
 
-- [Vue d’ensemble des nœuds](/fr/nodes)
+- [Aperçu des nœuds](/fr/nodes)
 - [Protocole de pont (nœuds hérités)](/fr/gateway/bridge-protocol)
-- [Manuel du nœud : iOS](/fr/platforms/ios)
-- [Manuel du nœud : Android](/fr/platforms/android)
+- [Runbook de nœud : iOS](/fr/platforms/ios)
+- [Runbook de nœud : Android](/fr/platforms/android)
 
 ## Sécurité
 
-- [Vue d’ensemble de la sécurité](/fr/gateway/security)
-- [Référence de la configuration Gateway](/fr/gateway/configuration)
+- [Aperçu de la sécurité](/fr/gateway/security)
+- [Référence de configuration Gateway](/fr/gateway/configuration)
 - [Dépannage](/fr/gateway/troubleshooting)
 - [Doctor](/fr/gateway/doctor)
 

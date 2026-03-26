@@ -1,16 +1,20 @@
 ---
-title: 在 Railway 上部署
+summary: "使用一键模板在 Railway 上部署 OpenClaw"
+read_when:
+  - Deploying OpenClaw to Railway
+  - You want a one-click cloud deploy with browser-based setup
+title: "Railway"
 ---
 
-使用一键模板在 Railway 上部署 OpenClaw 并在浏览器中完成设置。
-这是最简单的“无需服务器终端”路径：Railway 为您运行 Gateway(网关)，
-您可以通过 `/setup` 网页向导配置所有内容。
+使用一键模板在 Railway 上部署 OpenClaw，并在浏览器中完成设置。
+这是最简单的“服务器上无需终端”路径：Railway 为您运行 Gateway(网关)，
+您可以通过 `/setup` Web 向导配置所有内容。
 
 ## 快速清单（新用户）
 
 1. 点击 **Deploy on Railway**（下方）。
 2. 添加一个挂载于 `/data` 的 **Volume（卷）**。
-3. 设置所需的 **Variables（变量）**（至少包括 `SETUP_PASSWORD`）。
+3. 设置所需的 **Variables（变量）**（至少 `SETUP_PASSWORD`）。
 4. 在端口 `8080` 上启用 **HTTP Proxy**。
 5. 打开 `https://<your-railway-domain>/setup` 并完成向导。
 
@@ -22,24 +26,24 @@ title: 在 Railway 上部署
 
 部署后，在 **Railway → 您的服务 → Settings → Domains** 中找到您的公共 URL。
 
-Railway 将：
+Railway 将会：
 
 - 为您提供一个生成的域名（通常是 `https://<something>.up.railway.app`），或者
-- 如果您添加了自定义域名，则使用您的自定义域名。
+- 如果您绑定了自定义域名，则使用该域名。
 
 然后打开：
 
-- `https://<your-railway-domain>/setup` — 网页设置（受密码保护）
-- `https://<your-railway-domain>/openclaw` — 控制 UI
+- `https://<your-railway-domain>/setup` — Web 设置（密码保护）
+- `https://<your-railway-domain>/openclaw` — 控制界面
 
 ## 您将获得
 
-- 托管的 OpenClaw Gateway(网关) + 控制 UI
-- 位于 `/setup` 的网页设置（无需终端命令）
-- 通过 Railway 卷（`/data`）实现的持久存储，确保配置/凭据/工作区在重新部署后仍然存在
-- 位于 `/setup/export` 的备份导出功能，以便日后从 Railway 迁移
+- 托管的 OpenClaw Gateway(网关) + 控制界面
+- 位于 `/setup` 的 Web 设置（无需终端命令）
+- 通过 Railway 卷（`/data`）提供的持久存储，使配置/凭据/工作空间在重新部署后得以保留
+- 位于 `/setup/export` 的备份导出，以便日后从 Railway 迁移
 
-## Railway 必需设置
+## 必需的 Railway 设置
 
 ### 公共网络
 
@@ -55,7 +59,7 @@ Railway 将：
 
 ### 变量
 
-在服务上设置以下变量：
+在服务上设置这些变量：
 
 - `SETUP_PASSWORD`（必需）
 - `PORT=8080`（必需 — 必须与公共网络中的端口匹配）
@@ -67,28 +71,18 @@ Railway 将：
 
 1. 访问 `https://<your-railway-domain>/setup` 并输入您的 `SETUP_PASSWORD`。
 2. 选择一个模型/身份验证提供商并粘贴您的密钥。
-3. （可选）添加 Telegram/Discord/Slack 令牌。
-4. 点击 **Run setup**。
+3. (可选) 添加 Telegram/Discord/Slack 令牌。
+4. 点击 **运行设置 (Run setup)**。
 
-如果 Telegram 私信设置为配对模式，网页设置可以批准配对码。
+如果 Telegram 私信设置为配对模式，Web 设置可以批准配对码。
 
-## 获取聊天令牌
+## 连接渠道
 
-### Telegram 机器人令牌
+将您的 Telegram 或 Discord 令牌粘贴到 `/setup` 向导中。有关设置说明，请参阅渠道文档：
 
-1. 在 Telegram 中发送消息 `@BotFather`
-2. 运行 `/newbot`
-3. 复制令牌（看起来像 `123456789:AA...`）
-4. 将其粘贴到 `/setup` 中
-
-### Discord 机器人令牌
-
-1. 前往 [https://discord.com/developers/applications](https://discord.com/developers/applications)
-2. **New Application** → 选择一个名称
-3. **Bot** → **Add Bot**
-4. 在 Bot → Privileged Gateway(网关) Intents 下启用 **MESSAGE CONTENT INTENT**（必须，否则机器人将在启动时崩溃）
-5. 复制 **Bot Token** 并粘贴到 `/setup` 中
-6. 邀请机器人到您的服务器（OAuth2 URL Generator；scopes：`bot`， `applications.commands`）
+- [Telegram](/zh/channels/telegram) (最快 — 只需机器人令牌)
+- [Discord](/zh/channels/discord)
+- [所有渠道](/zh/channels)
 
 ## 备份与迁移
 
@@ -96,7 +90,13 @@ Railway 将：
 
 - `https://<your-railway-domain>/setup/export`
 
-这将导出您的 OpenClaw 状态和工作区，以便您可以迁移到另一个主机而不会丢失配置或记忆。
+这将导出您的 OpenClaw 状态 + 工作区，以便您可以迁移到另一台主机而不丢失配置或记忆。
+
+## 后续步骤
+
+- 设置消息渠道：[渠道](/zh/channels)
+- 配置 Gateway(网关)：[Gateway(网关) 配置](/zh/gateway/configuration)
+- 保持 OpenClaw 为最新：[更新](/zh/install/updating)
 
 import zh from "/components/footer/zh.mdx";
 

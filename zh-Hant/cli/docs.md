@@ -1,7 +1,7 @@
 ---
-summary: "CLI 參考指南 `openclaw docs`（搜尋即時文件索引）"
+summary: "CLI 參考手冊，適用於 `openclaw docs`（搜尋即時文件索引）"
 read_when:
-  - 您想從終端機搜尋即時 OpenClaw 文件
+  - You want to search the live OpenClaw docs from the terminal
 title: "docs"
 ---
 

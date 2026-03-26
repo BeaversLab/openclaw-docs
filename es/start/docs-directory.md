@@ -1,19 +1,21 @@
 ---
 summary: "Enlaces curados a los documentos de OpenClaw más utilizados."
 read_when:
-  - Deseas acceso rápido a páginas clave de la documentación
+  - You want quick access to key docs pages
 title: "Directorio de documentos"
 ---
 
+# Directorio de documentación
+
 <Note>
-  Esta página es un índice curado. Si eres nuevo, comienza con [Getting
-  Started](/es/start/getting-started). Para ver un mapa completo de la documentación, consulta [Docs
+  Esta página es un índice curado. Si es nuevo, comience con [Getting
+  Started](/es/start/getting-started). Para ver un mapa completo de la documentación, consulte [Docs
   hubs](/es/start/hubs).
 </Note>
 
-## Comience aquí
+## Comenzar aquí
 
-- [Docs hubs (all pages linked)](/es/start/hubs)
+- [Centros de documentación (todas las páginas vinculadas)](/es/start/hubs)
 - [Ayuda](/es/help)
 - [Configuración](/es/gateway/configuration)
 - [Ejemplos de configuración](/es/gateway/configuration-examples)
@@ -27,16 +29,16 @@ title: "Directorio de documentos"
 - [Configuración de habilidades](/es/tools/skills-config)
 - [Plantillas de espacio de trabajo](/es/reference/templates/AGENTS)
 - [Adaptadores RPC](/es/reference/rpc)
-- [Manual de la pasarela](/es/gateway)
+- [Manual de operación de Gateway](/es/gateway)
 - [Nodos (iOS y Android)](/es/nodes)
-- [Superficies web (Control UI)](/es/web)
+- [Superficies web (IU de control)](/es/web)
 - [Descubrimiento y transportes](/es/gateway/discovery)
 - [Acceso remoto](/es/gateway/remote)
 
 ## Proveedores y experiencia de usuario
 
 - [WebChat](/es/web/webchat)
-- [Control UI (navegador)](/es/web/control-ui)
+- [IU de control (navegador)](/es/web/control-ui)
 - [Telegram](/es/channels/telegram)
 - [Discord](/es/channels/discord)
 - [Mattermost (complemento)](/es/channels/mattermost)
@@ -53,14 +55,14 @@ title: "Directorio de documentos"
 - [Aplicación iOS](/es/platforms/ios)
 - [Aplicación Android](/es/platforms/android)
 - [Windows (WSL2)](/es/platforms/windows)
-- [Aplicación de Linux](/es/platforms/linux)
+- [Aplicación Linux](/es/platforms/linux)
 
 ## Operaciones y seguridad
 
 - [Sesiones](/es/concepts/session)
 - [Trabajos programados (Cron jobs)](/es/automation/cron-jobs)
 - [Webhooks](/es/automation/webhook)
-- [Gmail hooks (Pub/Sub)](/es/automation/gmail-pubsub)
+- [Ganchos de Gmail (Pub/Sub)](/es/automation/gmail-pubsub)
 - [Seguridad](/es/gateway/security)
 - [Solución de problemas](/es/gateway/troubleshooting)
 

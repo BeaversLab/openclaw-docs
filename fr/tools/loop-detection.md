@@ -1,29 +1,28 @@
 ---
-title: "Tool-loop detection"
-description: "Configure optional guardrails for preventing repetitive or stalled tool-call loops"
-summary: "How to enable and tune guardrails that detect repetitive tool-call loops"
+title: "Détection de boucle d'outils"
+summary: "Comment activer et régler les garde-fous qui détectent les boucles d'appels d'outils répétitifs"
 read_when:
   - A user reports agents getting stuck repeating tool calls
   - You need to tune repetitive-call protection
   - You are editing agent tool/runtime policies
 ---
 
-# Tool-loop detection
+# Détection des boucles d'outils
 
-OpenClaw can keep agents from getting stuck in repeated tool-call patterns.
-The guard is **disabled by default**.
+OpenClaw peut empêcher les agents de rester bloqués dans des modèles d'appels d'outils répétitifs.
+Ce garde-fou est **désactivé par défaut**.
 
-Enable it only where needed, because it can block legitimate repeated calls with strict settings.
+Activez-le uniquement là où c'est nécessaire, car il peut bloquer des appels répétitifs légitimes avec des paramètres stricts.
 
-## Why this exists
+## Pourquoi cela existe
 
-- Detect repetitive sequences that do not make progress.
-- Detect high-frequency no-result loops (same tool, same inputs, repeated errors).
-- Detect specific repeated-call patterns for known polling tools.
+- Détecter les séquences répétitives qui ne progressent pas.
+- Détecter les boucles sans résultat à haute fréquence (même outil, mêmes entrées, erreurs répétées).
+- Détecter des modèles d'appels répétitifs spécifiques pour les outils de sondage connus.
 
-## Configuration block
+## Bloc de configuration
 
-Global defaults:
+Valeurs par défaut globales :
 
 ```json5
 {
@@ -44,7 +43,7 @@ Global defaults:
 }
 ```
 
-Per-agent override (optional):
+Remplacement par agent (facultatif) :
 
 ```json5
 {
@@ -65,39 +64,39 @@ Per-agent override (optional):
 }
 ```
 
-### Field behavior
+### Comportement des champs
 
-- `enabled`: Master switch. `false` means no loop detection is performed.
-- `historySize`: number of recent tool calls kept for analysis.
-- `warningThreshold`: threshold before classifying a pattern as warning-only.
-- `criticalThreshold`: threshold for blocking repetitive loop patterns.
-- `globalCircuitBreakerThreshold`: global no-progress breaker threshold.
-- `detectors.genericRepeat`: detects repeated same-tool + same-params patterns.
-- `detectors.knownPollNoProgress`: detects known polling-like patterns with no state change.
-- `detectors.pingPong`: detects alternating ping-pong patterns.
+- `enabled` : Interrupteur principal. `false` signifie qu'aucune détection de boucle n'est effectuée.
+- `historySize` : nombre d'appels d'outils récents conservés pour l'analyse.
+- `warningThreshold` : seuil avant de classer un modèle comme avertissement uniquement.
+- `criticalThreshold` : seuil pour bloquer les modèles de boucles répétitives.
+- `globalCircuitBreakerThreshold` : seuil global du coupe-circuit sans progression.
+- `detectors.genericRepeat` : détecte les modèles répétés de même outil + mêmes paramètres.
+- `detectors.knownPollNoProgress` : détecte les modèles de type sondage connus sans changement d'état.
+- `detectors.pingPong` : détecte les modèles alternatifs de type ping-pong.
 
-## Recommended setup
+## Configuration recommandée
 
-- Start with `enabled: true`, defaults unchanged.
-- Keep thresholds ordered as `warningThreshold < criticalThreshold < globalCircuitBreakerThreshold`.
-- If false positives occur:
-  - raise `warningThreshold` and/or `criticalThreshold`
-  - (optionally) raise `globalCircuitBreakerThreshold`
-  - disable only the detector causing issues
-  - reduce `historySize` for less strict historical context
+- Commencez avec `enabled: true`, valeurs par défaut inchangées.
+- Gardez les seuils ordonnés comme `warningThreshold < criticalThreshold < globalCircuitBreakerThreshold`.
+- En cas de faux positifs :
+  - augmentez `warningThreshold` et/ou `criticalThreshold`
+  - (facultativement) augmentez `globalCircuitBreakerThreshold`
+  - désactivez uniquement le détecteur causant des problèmes
+  - réduisez `historySize` pour un contexte historique moins strict
 
-## Logs and expected behavior
+## Journaux et comportement attendu
 
 Lorsqu'une boucle est détectée, OpenClaw signale un événement de boucle et bloque ou atténue le prochain cycle d'outils en fonction de la gravité.
-Cela protège les utilisateurs contre une dépense excessive de jetons et des blocages tout en préservant l'accès normal aux outils.
+Cela protège les utilisateurs contre les dépenses excessives de jetons et les blocages tout en préservant l'accès normal aux outils.
 
 - Privilégiez d'abord l'avertissement et la suppression temporaire.
-- N'intensifiez que lorsque des preuves répétées s'accumulent.
+- N'escaladez que lorsque des preuves répétées s'accumulent.
 
-## Remarques
+## Notes
 
 - `tools.loopDetection` est fusionné avec les remplacements au niveau de l'agent.
-- La configuration par agent remplace ou étend entièrement les valeurs globales.
+- La configuration par agent remplace complètement ou étend les valeurs globales.
 - Si aucune configuration n'existe, les garde-fous restent désactivés.
 
 import fr from "/components/footer/fr.mdx";

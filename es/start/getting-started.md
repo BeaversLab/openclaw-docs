@@ -1,42 +1,41 @@
 ---
 summary: "Instala OpenClaw y ejecuta tu primer chat en minutos."
 read_when:
-  - Primera configuración desde cero
-  - Quieres la ruta más rápida hacia un chat funcional
-title: "Introducción"
+  - First time setup from zero
+  - You want the fastest path to a working chat
+title: "Para empezar"
 ---
 
-# Introducción
+# Para comenzar
 
-Objetivo: pasar de cero a un primer chat funcional con una configuración mínima.
+Instala OpenClaw, ejecuta la integración y chatea con tu asistente de IA — todo en
+unos 5 minutos. Al final tendrás un Gateway en funcionamiento, autenticación
+configurada y una sesión de chat operativa.
 
-<Info>
-  El chat más rápido: abre la Interfaz de Control (no se necesita configuración de canales). Ejecuta
-  `openclaw dashboard` y chatea en el navegador, o abre `http://127.0.0.1:18789/` en el
-  <Tooltip headline="Gateway host" tip="The machine running the OpenClaw gateway service.">
-    host de la puerta de enlace
-  </Tooltip>
-  . Docs: [Panel de control](/es/web/dashboard) y [Interfaz de Control](/es/web/control-ui).
-</Info>
+## Lo que necesitas
 
-## Requisitos previos
+- **Node.js** — Se recomienda Node 24 (también se admite Node 22.16+)
+- **Una clave de API** de un proveedor de modelos (Anthropic, OpenAI, Google, etc.) — la integración te lo solicitará
 
-- Se recomienda Node 24 (Node 22 LTS, actualmente `22.16+`, sigue siendo compatible por compatibilidad)
+<Tip>
+  Comprueba tu versión de Node con `node --version`. **Usuarios de Windows:** tanto Windows nativo
+  como WSL2 son compatibles. WSL2 es más estable y se recomienda para la experiencia completa.
+  Consulta [Windows](/es/platforms/windows). ¿Necesitas instalar Node? Consulta [Configuración de
+  Node](/es/install/node).
+</Tip>
 
-<Tip>Comprueba tu versión de Node con `node --version` si no estás seguro.</Tip>
-
-## Configuración rápida (CLI)
+## Configuración rápida
 
 <Steps>
-  <Step title="Instalar OpenClaw (recomendado)">
+  <Step title="Instalar OpenClaw">
     <Tabs>
-      <Tab title="macOS/Linux">
+      <Tab title="macOS / Linux">
         ```bash
         curl -fsSL https://openclaw.ai/install.sh | bash
         ```
         <img
   src="/assets/install-script.svg"
-  alt="Proceso del script de instalación"
+  alt="Proceso del Script de Instalación"
   className="rounded-lg"
 />
       </Tab>
@@ -48,89 +47,74 @@ Objetivo: pasar de cero a un primer chat funcional con una configuración mínim
     </Tabs>
 
     <Note>
-    Otros métodos de instalación y requisitos: [Instalación](/es/install).
+    Otros métodos de instalación (Docker, Nix, npm): [Instalar](/es/install).
     </Note>
 
   </Step>
-  <Step title="Ejecutar la incorporación">
+  <Step title="Ejecutar la integración">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    La incorporación configura la autenticación, la configuración de la puerta de enlace y los canales opcionales.
-    Consulta [Incorporación (CLI)](/es/start/wizard) para obtener más detalles.
+    El asistente te guía a través de la elección de un proveedor de modelos, el establecimiento de una clave de API
+    y la configuración del Gateway. Tarda unos 2 minutos.
+
+    Consulta [Integración (CLI)](/es/start/wizard) para obtener la referencia completa.
 
   </Step>
-  <Step title="Comprobar la puerta de enlace">
-    Si instalaste el servicio, ya debería estar ejecutándose:
-
+  <Step title="Verificar que el Gateway se está ejecutando">
     ```bash
     openclaw gateway status
     ```
 
+    Deberías ver el Gateway escuchando en el puerto 18789.
+
   </Step>
-  <Step title="Abrir la interfaz de control">
+  <Step title="Abrir el panel">
     ```bash
     openclaw dashboard
     ```
+
+    Esto abre la interfaz de usuario de control en tu navegador. Si se carga, todo está funcionando.
+
+  </Step>
+  <Step title="Envía tu primer mensaje">
+    Escribe un mensaje en el chat de la Interfaz de Control (Control UI) y deberías recibir una respuesta de la IA.
+
+    ¿Prefieres chatear desde tu teléfono? El canal más rápido de configurar es
+    [Telegram](/es/channels/telegram) (solo un token de bot). Consulta [Canales](/es/channels)
+    para ver todas las opciones.
+
   </Step>
 </Steps>
 
-<Check>Si la interfaz de control se carga, tu puerta de enlace está lista para usarse.</Check>
-
-## Comprobaciones opcionales y extras
-
-<AccordionGroup>
-  <Accordion title="Ejecutar la puerta de enlace en primer plano">
-    Útil para pruebas rápidas o solución de problemas.
-
-    ```bash
-    openclaw gateway --port 18789
-    ```
-
-  </Accordion>
-  <Accordion title="Enviar un mensaje de prueba">
-    Requiere un canal configurado.
-
-    ```bash
-    openclaw message send --target +15555550123 --message "Hello from OpenClaw"
-    ```
-
-  </Accordion>
-</AccordionGroup>
-
-## Variables de entorno útiles
-
-Si ejecuta OpenClaw como una cuenta de servicio o desea ubicaciones personalizadas de configuración/estado:
-
-- `OPENCLAW_HOME` establece el directorio de inicio utilizado para la resolución de rutas internas.
-- `OPENCLAW_STATE_DIR` anula el directorio de estado.
-- `OPENCLAW_CONFIG_PATH` anula la ruta del archivo de configuración.
-
-Referencia completa de variables de entorno: [Variables de entorno](/es/help/environment).
-
-## Profundizar
+## Qué hacer a continuación
 
 <Columns>
-  <Card title="Incorporación (CLI)" href="/es/start/wizard">
-    Referencia completa de incorporación por CLI y opciones avanzadas.
+  <Card title="Conecta un canal" href="/es/channels" icon="message-square">
+    WhatsApp, Telegram, Discord, iMessage y más.
   </Card>
-  <Card title="Incorporación de la app macOS" href="/es/start/onboarding">
-    Flujo de primera ejecución para la aplicación macOS.
+  <Card title="Emparejamiento y seguridad" href="/es/channels/pairing" icon="shield">
+    Controla quién puede enviar mensajes a tu agente.
+  </Card>
+  <Card title="Configura el Gateway" href="/es/gateway/configuration" icon="settings">
+    Modelos, herramientas, sandbox y configuraciones avanzadas.
+  </Card>
+  <Card title="Explorar herramientas" href="/es/tools" icon="wrench">
+    Navegador, exec, búsqueda web, habilidades y complementos.
   </Card>
 </Columns>
 
-## Lo que tendrá
+<Accordion title="Avanzado: variables de entorno">
+  Si ejecutas OpenClaw como una cuenta de servicio o deseas rutas personalizadas:
 
-- Una puerta de enlace en ejecución
-- Autenticación configurada
-- Acceso a la interfaz de control o un canal conectado
+- `OPENCLAW_HOME` — directorio principal para la resolución de rutas internas
+- `OPENCLAW_STATE_DIR` — sobrescribir el directorio de estado
+- `OPENCLAW_CONFIG_PATH` — sobrescribir la ruta del archivo de configuración
 
-## Próximos pasos
+Referencia completa: [Variables de entorno](/es/help/environment).
 
-- Seguridad y aprobaciones de MD: [Emparejamiento](/es/channels/pairing)
-- Conectar más canales: [Canales](/es/channels)
-- Flujos de trabajo avanzados y desde el código fuente: [Configuración](/es/start/setup)
+</Accordion>
 
 import es from "/components/footer/es.mdx";
 

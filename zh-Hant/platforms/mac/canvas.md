@@ -1,23 +1,23 @@
 ---
-summary: "由 Agent 控制的 Canvas 面板透過 WKWebView + 自訂 URL scheme 嵌入"
+summary: "透過 WKWebView + 自訂 URL 網址配置內嵌的代理程式控制 Canvas 面板"
 read_when:
-  - 實作 macOS Canvas 面板
-  - 為視覺化工作區新增 Agent 控制項
-  - 偵錯 WKWebView canvas 載入
+  - Implementing the macOS Canvas panel
+  - Adding agent controls for visual workspace
+  - Debugging WKWebView canvas loads
 title: "Canvas"
 ---
 
-# Canvas (macOS 應用程式)
+# Canvas (macOS app)
 
-macOS 應用程式使用 `WKWebView` 嵌入了由 Agent 控制的 **Canvas 面板**。它是 HTML/CSS/JS、A2UI 和小型互動式 UI 介面的輕量級視覺化工作區。
+macOS app 透過 `WKWebView` 內建一個由代理程式控制的 **Canvas 面板**。它是 HTML/CSS/JS、A2UI 與小型互動 UI 介面的輕量級視覺工作區。
 
-## Canvas 的位置
+## Canvas 的儲存位置
 
-Canvas 狀態儲存在 Application Support 下：
+Canvas 狀態儲存於 Application Support 下：
 
 - `~/Library/Application Support/OpenClaw/canvas/<session>/...`
 
-Canvas 面板透過 **自訂 URL scheme** 提供這些檔案：
+Canvas 面板透過 **自訂 URL 網址配置** 提供這些檔案：
 
 - `openclaw-canvas://<session>/<path>`
 
@@ -27,25 +27,26 @@ Canvas 面板透過 **自訂 URL scheme** 提供這些檔案：
 - `openclaw-canvas://main/assets/app.css` → `<canvasRoot>/main/assets/app.css`
 - `openclaw-canvas://main/widgets/todo/` → `<canvasRoot>/main/widgets/todo/index.html`
 
-如果根目錄中不存在 `index.html`，應用程式會顯示 **內建的 scaffold 頁面**。
+如果根目錄下不存在 `index.html`，應用程式會顯示一個 **內建的鷹架頁面 (built‑in scaffold page)**。
 
 ## 面板行為
 
-- 無邊框、可調整大小的面板，錨定在選單列（或滑鼠游標）附近。
-- 記住每個階段的大小/位置。
-- 當本地 canvas 檔案變更時自動重新載入。
-- 一次只能顯示一個 Canvas 面板（會視需要切換階段）。
+- 無邊框、可調整大小的面板，錨定在功能表列（或滑鼠游標）附近。
+- 記住每個工作階段的大小/位置。
+- 當本機 canvas 檔案變更時自動重新載入。
+- 一次只能顯示一個 Canvas 面板（視需要切換工作階段）。
 
-可以從設定 → **允許 Canvas** 停用 Canvas。停用時，canvas 節點指令會回傳 `CANVAS_DISABLED`。
+可以從設定 → **允許 Canvas (Allow Canvas)** 停用 Canvas。停用時，canvas
+節點指令會回傳 `CANVAS_DISABLED`。
 
-## Agent API 介面
+## Agent API 表面
 
-Canvas 透過 **Gateway WebSocket** 公開，因此 Agent 可以：
+Canvas 是透過 **Gateway WebSocket** 公開的，因此 agent 可以：
 
 - 顯示/隱藏面板
-- 巡覽至路徑或 URL
+- 導航至路徑或 URL
 - 執行 JavaScript
-- 擷取快照圖片
+- 擷取快照影像
 
 CLI 範例：
 
@@ -58,12 +59,14 @@ openclaw nodes canvas snapshot --node <id>
 
 備註：
 
-- `canvas.navigate` 接受 **本地 canvas 路徑**、`http(s)` URL 和 `file://` URL。
-- 如果您傳遞 `"/"`，Canvas 會顯示本地 scaffold 或 `index.html`。
+- `canvas.navigate` 接受 **本機 canvas 路徑**、`http(s)` URL 和 `file://` URL。
+- 如果您傳遞 `"/"`，Canvas 會顯示本機腳手架或 `index.html`。
 
 ## Canvas 中的 A2UI
 
-A2UI 由 Gateway canvas host 託管，並在 Canvas 面板內呈現。當 Gateway 廣告 Canvas host 時，macOS 應用程式會在首次開啟時自動巡覽至 A2UI host 頁面。
+A2UI 由 Gateway canvas host 託管，並在 Canvas 面板內呈現。
+當 Gateway 公告 Canvas host 時，macOS 應用程式會在首次開啟時自動
+導覽至 A2UI host 頁面。
 
 預設 A2UI host URL：
 
@@ -73,7 +76,7 @@ http://<gateway-host>:18789/__openclaw__/a2ui/
 
 ### A2UI 指令 (v0.8)
 
-Canvas 目前接受 **A2UI v0.8** 伺服器→用戶端訊息：
+Canvas 目前接受 **A2UI v0.8** 伺服器對客戶端訊息：
 
 - `beginRendering`
 - `surfaceUpdate`
@@ -99,25 +102,25 @@ openclaw nodes canvas a2ui push --jsonl /tmp/a2ui-v0.8.jsonl --node <id>
 openclaw nodes canvas a2ui push --node <id> --text "Hello from A2UI"
 ```
 
-## 從 Canvas 觸發代理程式執行
+## 從 Canvas 觸發 Agent 執行
 
-Canvas 可以透過深層連結觸發新的代理程式執行：
+Canvas 可以透過深層連結 (deep links) 觸發新的 Agent 執行：
 
 - `openclaw://agent?...`
 
-範例（在 JS 中）：
+範例 (在 JS 中)：
 
 ```js
 window.location.href = "openclaw://agent?message=Review%20this%20design";
 ```
 
-除非提供有效的金鑰，否則應用程式會提示進行確認。
+除非提供了有效的金鑰，否則應用程式會提示確認。
 
-## 安全性說明
+## 安全性備註
 
-- Canvas 配置會阻擋目錄遍歷；檔案必須位於 session 根目錄下。
-- 本機 Canvas 內容使用自訂配置（不需要回環伺服器）。
-- 只有在明確導覽時，才允許外部 `http(s)` URL。
+- Canvas 配置會阻止目錄遍歷；檔案必須位於 session 根目錄下。
+- 本機 Canvas 內容使用自訂配置（不需要 loopback 伺服器）。
+- 只有在明確導航時才允許外部 `http(s)` URL。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

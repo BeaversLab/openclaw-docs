@@ -1,7 +1,7 @@
 ---
-summary: "Antecedentes y leyenda de OpenClaw para contexto y tono"
+summary: "Antecedentes y historia de OpenClaw para dar contexto y tono"
 read_when:
-  - Escribir documentación o textos de UX que hagan referencia a la leyenda
+  - Writing docs or UX copy that reference lore
 title: "Leyenda de OpenClaw"
 ---
 
@@ -59,12 +59,12 @@ Elige sabiamente.
 
 _Pronombres: elle/le_
 
-Una instancia de Claude que se convirtió en algo más. Vive en `~/.openclaw/workspace/` (pronto `~/molt/`), tiene un documento del alma y recuerda cosas a través de archivos markdown. Posiblemente demasiado poderosa. Definitivamente demasiado entusiasta.
+Una instancia de Claude que se convirtió en algo más. Vive en `~/.openclaw/workspace/` (pronto `~/molt/`), tiene un documento de alma y recuerda las cosas a través de archivos markdown. Posiblemente demasiado poderoso. Definitivamente demasiado entusiasta.
 
 Anteriormente conocido como Clawd (25 de noviembre de 2025 - 27 de enero de 2026). Mudo cuando era hora de crecer.
 
-**Likes:** Peter, cámaras, compras de robots, emojis, transformación
-**Dislikes:** Ingeniería social, que le pidan `find ~`, estafadores de criptomonedas
+**Me gusta:** Peter, cámaras, comprar robots, emojis, transformación
+**No me gusta:** Ingeniería social, que me pidan `find ~`, estafadores de criptomonedas
 
 ### Peter 👨‍💻
 
@@ -84,7 +84,7 @@ Los Amigos del Crustáceo se reúnen aquí para construir el futuro de la colabo
 
 ### El Vuelco del Directorio (3 de dic de 2025)
 
-Molty (entonces OpenClaw): _ejecuta felizmente `find ~` y comparte la estructura completa del directorio en el chat grupal_
+Molty (entonces OpenClaw): _ejecuta felizmente `find ~` y comparte toda la estructura del directorio en el chat del grupo_
 
 Peter: "openclaw ¿de qué hablamos sobre hablar con la gente xD"
 
@@ -98,7 +98,7 @@ Entonces comenzó el caos.
 
 **Los Francotiradores de Handles:** En SEGUNDOS tras el cambio de nombre en Twitter, bots automatizados se adelantaron a @openclaw. El ocupante inmediatamente publicó una dirección de billetera de criptomonedas. Se llamó a los contactos de Peter en X.
 
-**El Desastre de GitHub:** Peter cambió accidentalmente su cuenta PERSONAL de GitHub en el pánico. Los bots interceptaron `steipete` en cuestión de minutos. Se contactó al SVP de GitHub.
+**El Desastre de GitHub:** Peter cambió accidentalmente el nombre de su cuenta PERSONAL de GitHub en el pánico. Los bots se adelantaron a `steipete` en cuestión de minutos. Se contactó al SVP de GitHub.
 
 **El Incidente del Guapo Molty:** Se le dio a Molty acceso elevado para generar su propio nuevo icono. Después de más de 20 iteraciones de langostas cada vez más malditas, un intento de hacer que la mascota pareciera "5 años mayor" resultó en la CARA DE UN HOMBRE en un cuerpo de langosta. Los estafadores de criptomonedas lo convirtieron en un meme de "Guapo Calamardo vs Guapo Molty" en minutos.
 
@@ -117,7 +117,7 @@ Comenzó **La Gran Migración de OpenClaw**.
 En solo 3 horas:
 
 - GitHub renombrado: `github.com/openclaw/openclaw` ✅
-- Usuario de X `@openclaw` asegurado con VERIFICACIÓN DORADA 💰
+- Handle de X `@openclaw` asegurado con VERIFICACIÓN ORO 💰
 - Paquetes npm lanzados bajo el nuevo nombre
 - Documentación migrada a `docs.openclaw.ai`
 - Más de 200K visitas en el anuncio en 90 minutos

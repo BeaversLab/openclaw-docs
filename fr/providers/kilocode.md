@@ -1,15 +1,15 @@
 ---
 title: "Kilo Gateway"
-summary: "Utilisez l'API unifiée de Kilo Gateway pour accéder à de nombreux modèles dans API"
+summary: "Utilisez l'API unifiée de Kilo Gateway pour accéder à de nombreux modèles dans OpenClaw"
 read_when:
-  - Vous souhaitez une seule clé API pour de nombreux LLMs
-  - Vous souhaitez exécuter des modèles via Kilo Gateway dans OpenClaw
+  - You want a single API key for many LLMs
+  - You want to run models via Kilo Gateway in OpenClaw
 ---
 
 # Kilo Gateway
 
-Kilo Gateway fournit une **API unifiée** qui achemine les demandes vers de nombreux modèles derrière un seul
-endpoint et une seule clé API. Il est compatible avec API, donc la plupart des SDK OpenAI fonctionnent en changeant l'URL de base.
+Kilo Gateway fournit une **API unifiée** qui achemine les requêtes vers de nombreux modèles derrière un
+seul point de terminaison et une seule clé API. Elle est compatible avec OpenAI, la plupart des SDK OpenAI fonctionnent donc simplement en changeant l'URL de base.
 
 ## Obtenir une clé API
 
@@ -48,11 +48,11 @@ Le modèle par défaut est `kilocode/kilo/auto`, un modèle de routage intellige
 le meilleur modèle sous-jacent en fonction de la tâche :
 
 - Les tâches de planification, de débogage et d'orchestration sont acheminées vers Claude Opus
-- Les tâches d'écriture de code et d'exploration sont acheminées vers Claude Sonnet
+- Les tâches d'écriture et d'exploration de code sont acheminées vers Claude Sonnet
 
 ## Modèles disponibles
 
-OpenClaw découvre dynamiquement les modèles disponibles à partir du Kilo Gateway au démarrage. Utilisez
+OpenClaw découvre dynamiquement les modèles disponibles via Kilo Gateway au démarrage. Utilisez
 `/models kilocode` pour voir la liste complète des modèles disponibles avec votre compte.
 
 Tout modèle disponible sur la passerelle peut être utilisé avec le préfixe `kilocode/` :

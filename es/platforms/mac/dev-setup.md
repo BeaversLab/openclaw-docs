@@ -1,7 +1,7 @@
 ---
 summary: "Guía de configuración para desarrolladores que trabajan en la aplicación de OpenClaw para macOS"
 read_when:
-  - Configuración del entorno de desarrollo de macOS
+  - Setting up the macOS development environment
 title: "Configuración de desarrollo de macOS"
 ---
 
@@ -14,7 +14,7 @@ Esta guía cubre los pasos necesarios para compilar y ejecutar la aplicación de
 Antes de compilar la aplicación, asegúrese de tener instalado lo siguiente:
 
 1. **Xcode 26.2+**: Necesario para el desarrollo en Swift.
-2. **Node.js 24 y pnpm**: Recomendado para el gateway, la CLI y los scripts de empaquetado. Node 22 LTS, actualmente `22.16+`, sigue siendo compatible.
+2. **Node.js 24 y pnpm**: Recomendado para la puerta de enlace (gateway), la interfaz de línea de comandos (CLI) y los scripts de empaquetado. Node 22 LTS, actualmente `22.16+`, sigue siendo compatible.
 
 ## 1. Instalar dependencias
 
@@ -34,14 +34,14 @@ Para compilar la aplicación de macOS y empaquetarla en `dist/OpenClaw.app`, eje
 
 Si no tiene un certificado de ID de desarrollador de Apple, el script utilizará automáticamente **firma ad-hoc** (`-`).
 
-Para ver los modos de ejecución de desarrollo, las marcas de firma y la solución de problemas del ID de equipo, consulte el README de la aplicación de macOS:
+Para los modos de ejecución de desarrollo, las banderas de firma y la resolución de problemas con el ID de equipo, consulte el README de la aplicación de macOS:
 [https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md](https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md)
 
-> **Nota**: Las aplicaciones firmadas ad-hoc pueden activar avisos de seguridad. Si la aplicación se bloquea inmediatamente con "Abort trap 6", consulte la sección [Solución de problemas](#troubleshooting).
+> **Nota**: Las aplicaciones firmadas ad-hoc pueden activar avisos de seguridad. Si la aplicación falla inmediatamente con "Abort trap 6", consulte la sección [Solución de problemas](#troubleshooting).
 
 ## 3. Instalar la CLI
 
-La aplicación de macOS espera una instalación global de la CLI `openclaw` para administrar las tareas en segundo plano.
+La aplicación de macOS espera una instalación global de la CLI `openclaw` para gestionar las tareas en segundo plano.
 
 **Para instalarla (recomendado):**
 
@@ -87,7 +87,7 @@ Si la aplicación falla cuando intenta permitir el acceso al **Reconocimiento de
    tccutil reset All ai.openclaw.mac.debug
    ```
 
-2. Si eso falla, cambie el `BUNDLE_ID` temporalmente en [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) para forzar un "nuevo comienzo" desde macOS.
+2. Si eso falla, cambie el `BUNDLE_ID` temporalmente en [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) para forzar una "hoja en blanco" desde macOS.
 
 ### Gateway "Starting..." indefinidamente
 

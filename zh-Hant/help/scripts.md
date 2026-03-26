@@ -1,31 +1,31 @@
 ---
-summary: "Repository scripts: purpose, scope, and safety notes"
+summary: "存放庫腳本：用途、範圍與安全性說明"
 read_when:
   - Running scripts from the repo
   - Adding or changing scripts under ./scripts
-title: "Scripts"
+title: "腳本"
 ---
 
-# Scripts
+# 腳本
 
-The `scripts/` directory contains helper scripts for local workflows and ops tasks.
-Use these when a task is clearly tied to a script; otherwise prefer the CLI.
+`scripts/` 目錄包含用於本機工作流程和維護工作的輔助腳本。
+當一項任務明確與腳本相關時，請使用這些腳本；否則請優先使用 CLI。
 
-## Conventions
+## 慣例
 
-- Scripts are **optional** unless referenced in docs or release checklists.
-- Prefer CLI surfaces when they exist (example: auth monitoring uses `openclaw models status --check`).
-- Assume scripts are host‑specific; read them before running on a new machine.
+- 除非在文件或版本檢查清單中被提及，否則腳本均為**選用**。
+- 當 CLI 介面存在時，請優先使用它（例如：auth monitoring 使用 `openclaw models status --check`）。
+- 請假設腳本是特定於主機的；在新機器上執行前請先閱讀腳本內容。
 
-## Auth monitoring scripts
+## Auth 監控腳本
 
-Auth monitoring scripts are documented here:
+Auth 監控腳本的文件位於此處：
 [/automation/auth-monitoring](/zh-Hant/automation/auth-monitoring)
 
-## When adding scripts
+## 新增腳本時
 
-- Keep scripts focused and documented.
-- Add a short entry in the relevant doc (or create one if missing).
+- 保持腳本專注且備有文件。
+- 在相關文件中新增簡短的條目（如果沒有則建立一個）。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

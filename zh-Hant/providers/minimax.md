@@ -1,42 +1,30 @@
 ---
-summary: "在 OpenClaw 中使用 MiniMax M2.5"
+summary: "在 OpenClaw 中使用 MiniMax 模型"
 read_when:
-  - 您想在 OpenClaw 中使用 MiniMax 模型
-  - 您需要 MiniMax 設定指南
+  - You want MiniMax models in OpenClaw
+  - You need MiniMax setup guidance
 title: "MiniMax"
 ---
 
 # MiniMax
 
-MiniMax 是一家建構 **M2/M2.5** 模型系列的 AI 公司。目前的專注於程式設計的版本是 **MiniMax M2.5**（2025 年 12 月 23 日發布），專為現實世界的複雜任務而設計。
+OpenClaw 的 MiniMax 提供者預設為 **MiniMax M2.7**，並為了相容性在目錄中保留了 **MiniMax M2.5**。
 
-來源：[MiniMax M2.5 發布說明](https://www.minimax.io/news/minimax-m25)
+## 模型陣容
 
-## 模型概覽 (M2.5)
+- `MiniMax-M2.7`：預設的託管文字模型。
+- `MiniMax-M2.7-highspeed`：更快的 M2.7 文字層級。
+- `MiniMax-M2.5`：舊版文字模型，仍可在 MiniMax 目錄中使用。
+- `MiniMax-M2.5-highspeed`：更快的 M2.5 文字層級。
+- `MiniMax-VL-01`：用於文字 + 圖片輸入的視覺模型。
 
-MiniMax 強調了 M2.5 中的以下改進：
-
-- 更強的 **多語言程式設計** 能力 (Rust, Java, Go, C++, Kotlin, Objective-C, TS/JS)。
-- 更佳的 **網頁/應用程式開發** 和美觀的輸出品質 (包括原生行動應用)。
-- 改進的 **複合指令** 處理能力，適用於辦公室式的工作流程，基於交錯思考 (interleaved thinking) 和整合式約束執行。
-- **更簡潔的回應**，具備更低的 token 使用量和更快的迭代迴圈。
-- 更強的 **工具/代理框架** 相容性和上下文管理 (Claude Code,
-  Droid/Factory AI, Cline, Kilo Code, Roo Code, BlackBox)。
-- 更佳的 **對話和技術寫作** 輸出品質。
-
-## MiniMax M2.5 與 MiniMax M2.5 Highspeed
-
-- **速度：** `MiniMax-M2.5-highspeed` 是 MiniMax 文件中的官方高速層級。
-- **成本：** MiniMax 價目表列出了相同的輸入成本，而高速版的輸出成本較高。
-- **目前的模型 ID：** 使用 `MiniMax-M2.5` 或 `MiniMax-M2.5-highspeed`。
-
-## 選擇設定方式
+## 選擇設置
 
 ### MiniMax OAuth (Coding Plan) - 推薦
 
-**最適用於：** 透過 OAuth 快速設定 MiniMax Coding Plan，無需 API 金鑰。
+**最適用於：** 透過 OAuth 使用 MiniMax Coding Plan 快速設置，無需 API 金鑰。
 
-啟用內建的 OAuth 外掛並進行驗證：
+啟用內建的 OAuth 外掛程式並進行驗證：
 
 ```bash
 openclaw plugins enable minimax  # skip if already loaded.
@@ -44,27 +32,27 @@ openclaw gateway restart  # restart if gateway is already running
 openclaw onboard --auth-choice minimax-portal
 ```
 
-系統將提示您選擇一個端點：
+系統會提示您選擇一個端點：
 
-- **Global** - 國際使用者 (`api.minimax.io`)
-- **CN** - 中國使用者 (`api.minimaxi.com`)
+- **Global** - 國際用戶 (`api.minimax.io`)
+- **CN** - 中國用戶 (`api.minimaxi.com`)
 
-詳情請參閱 [MiniMax 外掛 README](https://github.com/openclaw/openclaw/tree/main/extensions/minimax)。
+詳情請參閱 [MiniMax 外掛程式 README](https://github.com/openclaw/openclaw/tree/main/extensions/minimax)。
 
-### MiniMax M2.5 (API 金鑰)
+### MiniMax M2.7 (API 金鑰)
 
-**最適用於：** 使用相容 Anthropic API 的託管 MiniMax。
+**最適用於：** 具有相容 Anthropic API 的託管 MiniMax。
 
 透過 CLI 設定：
 
 - 執行 `openclaw configure`
-- 選擇 **Model/auth**
-- 選擇 **MiniMax M2.5**
+- 選取 **Model/auth**
+- 選擇 **MiniMax** 驗證選項
 
 ```json5
 {
   env: { MINIMAX_API_KEY: "sk-..." },
-  agents: { defaults: { model: { primary: "minimax/MiniMax-M2.5" } } },
+  agents: { defaults: { model: { primary: "minimax/MiniMax-M2.7" } } },
   models: {
     mode: "merge",
     providers: {
@@ -73,6 +61,24 @@ openclaw onboard --auth-choice minimax-portal
         apiKey: "${MINIMAX_API_KEY}",
         api: "anthropic-messages",
         models: [
+          {
+            id: "MiniMax-M2.7",
+            name: "MiniMax M2.7",
+            reasoning: true,
+            input: ["text"],
+            cost: { input: 0.3, output: 1.2, cacheRead: 0.03, cacheWrite: 0.12 },
+            contextWindow: 200000,
+            maxTokens: 8192,
+          },
+          {
+            id: "MiniMax-M2.7-highspeed",
+            name: "MiniMax M2.7 Highspeed",
+            reasoning: true,
+            input: ["text"],
+            cost: { input: 0.3, output: 1.2, cacheRead: 0.03, cacheWrite: 0.12 },
+            contextWindow: 200000,
+            maxTokens: 8192,
+          },
           {
             id: "MiniMax-M2.5",
             name: "MiniMax M2.5",
@@ -98,10 +104,10 @@ openclaw onboard --auth-choice minimax-portal
 }
 ```
 
-### MiniMax M2.5 作為後備 (範例)
+### MiniMax M2.7 作為後備 (範例)
 
-**最適用於：** 將您最強大的最新一代模型作為主要模型，並將 MiniMax M2.5 作為故障轉移。
-下方的範例使用 Opus 作為具體的主要模型；您可以替換為您偏好的最新一代主要模型。
+**最適用於：** 將您最強大的最新世代模型設為主要模型，並容錯移轉至 MiniMax M2.7。
+下方的範例使用 Opus 作為具體的主要模型；請替換為您偏好的最新世代主要模型。
 
 ```json5
 {
@@ -110,21 +116,21 @@ openclaw onboard --auth-choice minimax-portal
     defaults: {
       models: {
         "anthropic/claude-opus-4-6": { alias: "primary" },
-        "minimax/MiniMax-M2.5": { alias: "minimax" },
+        "minimax/MiniMax-M2.7": { alias: "minimax" },
       },
       model: {
         primary: "anthropic/claude-opus-4-6",
-        fallbacks: ["minimax/MiniMax-M2.5"],
+        fallbacks: ["minimax/MiniMax-M2.7"],
       },
     },
   },
 }
 ```
 
-### 選用：透過 LM Studio 本地設定 (手動)
+### 選用：透過 LM Studio 本地端 (手動)
 
-**最適用於：** 使用 LM Studio 進行本地推論。
-我們在使用 LM Studio 的本地伺服器時，在強大的硬體（例如桌上型電腦/伺服器）上使用 MiniMax M2.5 獲得了不錯的結果。
+**最適用於：** 使用 LM Studio 進行本地端推論。
+我們在使用 LM Studio 的本地端伺服器於強大硬體 (例如桌上型電腦/伺服器) 上執行 MiniMax M2.5 時，看到了不錯的成果。
 
 透過 `openclaw.json` 手動設定：
 
@@ -162,49 +168,54 @@ openclaw onboard --auth-choice minimax-portal
 
 ## 透過 `openclaw configure` 進行設定
 
-使用互動式設定精靈來設定 MiniMax，無需編輯 JSON：
+使用互動式設定精靈來設定 MiniMax，而無需編輯 JSON：
 
 1. 執行 `openclaw configure`。
-2. 選取 **Model/auth**。
-3. 選擇 **MiniMax M2.5**。
+2. 選擇 **Model/auth**。
+3. 選擇一個 **MiniMax** 驗證選項。
 4. 當系統提示時，選擇您的預設模型。
 
 ## 設定選項
 
-- `models.providers.minimax.baseUrl`: 優先使用 `https://api.minimax.io/anthropic` (相容 Anthropic)；`https://api.minimax.io/v1` 是 OpenAI 相容 Payload 的選用項目。
-- `models.providers.minimax.api`: 優先使用 `anthropic-messages`；`openai-completions` 是 OpenAI 相容 Payload 的選用項目。
-- `models.providers.minimax.apiKey`: MiniMax API 金鑰 (`MINIMAX_API_KEY`)。
-- `models.providers.minimax.models`: 定義 `id`、`name`、`reasoning`、`contextWindow`、`maxTokens`、`cost`。
-- `agents.defaults.models`: 為您想要加入允許清單的模型設定別名。
-- `models.mode`: 如果您想將 MiniMax 與內建模型一起新增，請保留 `merge`。
+- `models.providers.minimax.baseUrl`：建議優先使用 `https://api.minimax.io/anthropic`（Anthropic 相容）；`https://api.minimax.io/v1` 對於 OpenAI 相容的 payload 是可選的。
+- `models.providers.minimax.api`：建議優先使用 `anthropic-messages`；`openai-completions` 對於 OpenAI 相容的 payload 是可選的。
+- `models.providers.minimax.apiKey`：MiniMax API 金鑰 (`MINIMAX_API_KEY`)。
+- `models.providers.minimax.models`：定義 `id`、`name`、`reasoning`、`contextWindow`、`maxTokens`、`cost`。
+- `agents.defaults.models`：為您想要在允許清單中的模型設定別名。
+- `models.mode`：如果您想將 MiniMax 與內建模型一起新增，請保留 `merge`。
 
-## 備註
+## 註解
 
-- 模型參照為 `minimax/<model>`。
-- 推薦的模型 ID：`MiniMax-M2.5` 和 `MiniMax-M2.5-highspeed`。
-- Coding Plan 使用 API：`https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains` (需要 coding plan 金鑰)。
+- 模型參考為 `minimax/<model>`。
+- 預設文字模型：`MiniMax-M2.7`。
+- 備用文字模型：`MiniMax-M2.7-highspeed`、`MiniMax-M2.5`、`MiniMax-M2.5-highspeed`。
+- Coding Plan 使用 API：`https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains`（需要 coding plan 金鑰）。
 - 如果您需要準確的成本追蹤，請更新 `models.json` 中的定價數值。
-- MiniMax Coding Plan 的推薦連結 (10% 折扣)：[https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)
+- MiniMax Coding Plan 的推薦連結（10% 折扣）：[https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)
 - 請參閱 [/concepts/model-providers](/zh-Hant/concepts/model-providers) 以了解提供者規則。
-- 使用 `openclaw models list` 和 `openclaw models set minimax/MiniMax-M2.5` 進行切換。
+- 使用 `openclaw models list` 和 `openclaw models set minimax/MiniMax-M2.7` 進行切換。
 
 ## 疑難排解
 
-### "Unknown model: minimax/MiniMax-M2.5"
+### "Unknown model: minimax/MiniMax-M2.7"
 
-這通常表示 **未設定 MiniMax 提供者** (找不到提供者項目且找不到 MiniMax 認證設定檔/環境金鑰)。針對此偵測問題的修正包含在 **2026.1.12** 版本中 (撰寫時尚未發布)。修正方法：
+這通常表示 **MiniMax 提供者未設定**（找不到提供者項目
+也找不到 MiniMax 驗證設定檔/環境金鑰）。此偵測問題的修復方案位於
+**2026.1.12** 版本（撰寫時尚未發布）。可透過以下方式修正：
 
-- 升級到 **2026.1.12**（或從源代碼運行 `main`），然後重啟閘道。
-- 運行 `openclaw configure` 並選擇 **MiniMax M2.5**，或
-- 手動添加 `models.providers.minimax` 區塊，或
-- 設定 `MINIMAX_API_KEY`（或 MiniMax 認證設定檔），以便注入提供者。
+- 升級至 **2026.1.12**（或從原始碼執行 `main`），然後重新啟動閘道。
+- 執行 `openclaw configure` 並選擇 **MiniMax** 驗證選項，或
+- 手動新增 `models.providers.minimax` 區塊，或
+- 設定 `MINIMAX_API_KEY`（或 MiniMax 驗證設定檔）以便注入提供者。
 
-請確保模型 ID **區分大小寫**：
+請確保模型 ID 區分大小寫：
 
+- `minimax/MiniMax-M2.7`
+- `minimax/MiniMax-M2.7-highspeed`
 - `minimax/MiniMax-M2.5`
 - `minimax/MiniMax-M2.5-highspeed`
 
-然後使用以下指令重新檢查：
+然後重新檢查：
 
 ```bash
 openclaw models list

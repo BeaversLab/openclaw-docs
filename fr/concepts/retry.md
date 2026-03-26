@@ -1,44 +1,44 @@
 ---
-summary: "Politique de nouvelle tentative pour les appels sortants du fournisseur"
+summary: "Stratégie de nouvelle tentative pour les appels sortants au provider"
 read_when:
-  - Mise à jour du comportement de nouvelle tentative du fournisseur ou des valeurs par défaut
-  - Débogage des erreurs d'envoi du fournisseur ou des limites de taux
-title: "Politique de nouvelle tentative"
+  - Updating provider retry behavior or defaults
+  - Debugging provider send errors or rate limits
+title: "Stratégie de nouvelle tentative"
 ---
 
-# Politique de nouvelle tentative
+# Stratégie de nouvelle tentative
 
 ## Objectifs
 
 - Nouvelle tentative par requête HTTP, et non par flux multi-étapes.
-- Conserver l'ordre en réessayant uniquement l'étape actuelle.
+- Préserver l'ordre en réessayant uniquement l'étape actuelle.
 - Éviter de dupliquer les opérations non idempotentes.
 
 ## Valeurs par défaut
 
 - Tentatives : 3
-- Plafond de délai maximal : 30 000 ms
-- Gigue : 0,1 (10 %)
-- Valeurs par défaut du fournisseur :
-  - Telegram délai min : 400 ms
-  - Discord délai min : 500 ms
+- Plafond de délai maximum : 30000 ms
+- Gigue : 0,1 (10 pour cent)
+- Valeurs par défaut du provider :
+  - Délai minimum Telegram : 400 ms
+  - Délai minimum Discord : 500 ms
 
 ## Comportement
 
 ### Discord
 
-- Réessaie uniquement en cas d'erreurs de limitation de débit (HTTP 429).
-- Utilise Discord `retry_after` lorsqu'il est disponible, sinon un temps d'attente exponentiel.
+- Nouvelle tentative uniquement en cas d'erreurs de limitation de débit (HTTP 429).
+- Utilise le Discord `retry_after` de Discord lorsqu'il est disponible, sinon un délai exponentiel.
 
 ### Telegram
 
-- Réessaie en cas d'erreurs transitoires (429, expiration du délai, connexion/réinitialisation/fermeture, temporairement indisponible).
-- Utilise `retry_after` lorsqu'il est disponible, sinon un temps d'attente exponentiel.
+- Nouvelle tentative en cas d'erreurs transitoires (429, expiration de délai, connexion/réinitialisation/fermeture, indisponible temporairement).
+- Utilise `retry_after` si disponible, sinon un backoff exponentiel.
 - Les erreurs d'analyse Markdown ne sont pas réessayées ; elles reviennent au texte brut.
 
 ## Configuration
 
-Définir la politique de nouvelle tentative par fournisseur dans `~/.openclaw/openclaw.json` :
+Définissez la stratégie de réessai par provider dans `~/.openclaw/openclaw.json` :
 
 ```json5
 {
@@ -65,7 +65,7 @@ Définir la politique de nouvelle tentative par fournisseur dans `~/.openclaw/op
 
 ## Notes
 
-- Les nouvelles tentatives s'appliquent par requête (envoi de message, téléchargement de média, réaction, sondage, autocollant).
+- Les tentatives s'appliquent par requête (envoi de message, téléchargement de média, réaction, sondage, sticker).
 - Les flux composites ne réessayent pas les étapes terminées.
 
 import fr from "/components/footer/fr.mdx";

@@ -1,14 +1,14 @@
 ---
-summary: "Referencia de CLI para `openclaw uninstall` (eliminar servicio de puerta de enlace + datos locales)"
+summary: "Referencia de la CLI para `openclaw uninstall` (eliminar servicio de puerta de enlace + datos locales)"
 read_when:
-  - Deseas eliminar el servicio de puerta de enlace y/o el estado local
-  - Deseas hacer una prueba en seco primero
-title: "uninstall"
+  - You want to remove the gateway service and/or local state
+  - You want a dry-run first
+title: "desinstalar"
 ---
 
 # `openclaw uninstall`
 
-Desinstala el servicio de puerta de enlace + datos locales (la CLI permanece).
+Desinstale el servicio de puerta de enlace + los datos locales (la CLI permanece).
 
 ```bash
 openclaw backup create
@@ -17,7 +17,7 @@ openclaw uninstall --all --yes
 openclaw uninstall --dry-run
 ```
 
-Ejecuta `openclaw backup create` primero si deseas una instantánea restaurable antes de eliminar el estado o los espacios de trabajo.
+Ejecute `openclaw backup create` primero si desea una instantánea restaurable antes de eliminar el estado o los espacios de trabajo.
 
 import es from "/components/footer/es.mdx";
 

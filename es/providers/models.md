@@ -1,20 +1,19 @@
 ---
 summary: "Proveedores de modelos (LLM) compatibles con OpenClaw"
 read_when:
-  - Quieres elegir un proveedor de modelos
-  - Quieres ejemplos de configuración rápida para la autenticación de LLM + selección de modelo
+  - You want to choose a model provider
+  - You want quick setup examples for LLM auth + model selection
 title: "Inicio rápido del proveedor de modelos"
 ---
 
 # Proveedores de modelos
 
-OpenClaw puede utilizar muchos proveedores de LLM. Elige uno, autentícate y luego establece el modelo
-predeterminado como `provider/model`.
+OpenClaw puede utilizar muchos proveedores de LLM. Elija uno, autentíquese y luego establezca el modelo predeterminado como `provider/model`.
 
 ## Inicio rápido (dos pasos)
 
-1. Autentícate con el proveedor (generalmente mediante `openclaw onboard`).
-2. Establecer el modelo predeterminado:
+1. Autentíquese con el proveedor (generalmente a través de `openclaw onboard`).
+2. Establezca el modelo predeterminado:
 
 ```json5
 {

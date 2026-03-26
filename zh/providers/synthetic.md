@@ -1,19 +1,20 @@
 ---
-summary: "在 OpenClaw 中使用 Synthetic 的兼容 Anthropic 的 API"
+summary: "在 OpenClaw 中使用 Synthetic 的 Anthropic 兼容 API"
 read_when:
-  - 您想使用 Synthetic 作为模型提供商
-  - 您需要设置 Synthetic API 密钥或基础 URL
+  - You want to use Synthetic as a model provider
+  - You need a Synthetic API key or base URL setup
 title: "Synthetic"
 ---
 
 # Synthetic
 
-Synthetic 公开了兼容 Anthropic 的端点。OpenClaw 将其注册为 `synthetic` 提供商，并使用 Anthropic Messages API。
+Synthetic 公开了兼容 Anthropic 的端点。OpenClaw 将其注册为
+`synthetic` 提供商，并使用 Anthropic Messages API。
 
 ## 快速设置
 
-1. 设置 `SYNTHETIC_API_KEY`（或运行下面的向导）。
-2. 运行新手引导：
+1. 设置 `SYNTHETIC_API_KEY`（或运行下方的向导）。
+2. 运行入门指南：
 
 ```bash
 openclaw onboard --auth-choice synthetic-api-key
@@ -60,39 +61,42 @@ synthetic/hf:MiniMaxAI/MiniMax-M2.5
 }
 ```
 
-注意：OpenClaw 的 Anthropic 客户端会在基础 URL 附加 `/v1`，因此请使用 `https://api.synthetic.new/anthropic`（而非 `/anthropic/v1`）。如果 Synthetic 更改了其基础 URL，请覆盖 `models.providers.synthetic.baseUrl`。
+注意：OpenClaw 的 Anthropic 客户端会将 `/v1` 追加到基础 URL，因此请使用
+`https://api.synthetic.new/anthropic`（而非 `/anthropic/v1`）。如果 Synthetic 更改
+了其基础 URL，请覆盖 `models.providers.synthetic.baseUrl`。
 
 ## 模型目录
 
 以下所有模型均使用成本 `0`（输入/输出/缓存）。
 
-| 模型 ID                                                | 上下文窗口 | 最大令牌数 | 推理  | 输入         |
-| ------------------------------------------------------ | ---------- | ---------- | ----- | ------------ |
-| `hf:MiniMaxAI/MiniMax-M2.5`                            | 192000     | 65536      | false | text         |
-| `hf:moonshotai/Kimi-K2-Thinking`                       | 256000     | 8192       | true  | text         |
-| `hf:zai-org/GLM-4.7`                                   | 198000     | 128000     | false | text         |
-| `hf:deepseek-ai/DeepSeek-R1-0528`                      | 128000     | 8192       | false | text         |
-| `hf:deepseek-ai/DeepSeek-V3-0324`                      | 128000     | 8192       | false | text         |
-| `hf:deepseek-ai/DeepSeek-V3.1`                         | 128000     | 8192       | false | text         |
-| `hf:deepseek-ai/DeepSeek-V3.1-Terminus`                | 128000     | 8192       | false | text         |
-| `hf:deepseek-ai/DeepSeek-V3.2`                         | 159000     | 8192       | false | text         |
-| `hf:meta-llama/Llama-3.3-70B-Instruct`                 | 128000     | 8192       | false | text         |
-| `hf:meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | 524000     | 8192       | false | text         |
-| `hf:moonshotai/Kimi-K2-Instruct-0905`                  | 256000     | 8192       | false | text         |
-| `hf:openai/gpt-oss-120b`                               | 128000     | 8192       | false | text         |
-| `hf:Qwen/Qwen3-235B-A22B-Instruct-2507`                | 256000     | 8192       | false | text         |
-| `hf:Qwen/Qwen3-Coder-480B-A35B-Instruct`               | 256000     | 8192       | false | text         |
-| `hf:Qwen/Qwen3-VL-235B-A22B-Instruct`                  | 250000     | 8192       | false | text + image |
-| `hf:zai-org/GLM-4.5`                                   | 128000     | 128000     | false | text         |
-| `hf:zai-org/GLM-4.6`                                   | 198000     | 128000     | false | text         |
-| `hf:deepseek-ai/DeepSeek-V3`                           | 128000     | 8192       | false | text         |
-| `hf:Qwen/Qwen3-235B-A22B-Thinking-2507`                | 256000     | 8192       | true  | text         |
+| 模型 ID                                                | 上下文窗口 | 最大令牌数 | 推理  | 输入        |
+| ------------------------------------------------------ | ---------- | ---------- | ----- | ----------- |
+| `hf:MiniMaxAI/MiniMax-M2.5`                            | 192000     | 65536      | false | text        |
+| `hf:moonshotai/Kimi-K2-Thinking`                       | 256000     | 8192       | true  | text        |
+| `hf:zai-org/GLM-4.7`                                   | 198000     | 128000     | false | text        |
+| `hf:deepseek-ai/DeepSeek-R1-0528`                      | 128000     | 8192       | false | text        |
+| `hf:deepseek-ai/DeepSeek-V3-0324`                      | 128000     | 8192       | false | text        |
+| `hf:deepseek-ai/DeepSeek-V3.1`                         | 128000     | 8192       | false | text        |
+| `hf:deepseek-ai/DeepSeek-V3.1-Terminus`                | 128000     | 8192       | false | text        |
+| `hf:deepseek-ai/DeepSeek-V3.2`                         | 159000     | 8192       | false | text        |
+| `hf:meta-llama/Llama-3.3-70B-Instruct`                 | 128000     | 8192       | false | text        |
+| `hf:meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | 524000     | 8192       | false | text        |
+| `hf:moonshotai/Kimi-K2-Instruct-0905`                  | 256000     | 8192       | false | text        |
+| `hf:openai/gpt-oss-120b`                               | 128000     | 8192       | false | text        |
+| `hf:Qwen/Qwen3-235B-A22B-Instruct-2507`                | 256000     | 8192       | false | text        |
+| `hf:Qwen/Qwen3-Coder-480B-A35B-Instruct`               | 256000     | 8192       | false | text        |
+| `hf:Qwen/Qwen3-VL-235B-A22B-Instruct`                  | 250000     | 8192       | false | 文本 + 图像 |
+| `hf:zai-org/GLM-4.5`                                   | 128000     | 128000     | false | text        |
+| `hf:zai-org/GLM-4.6`                                   | 198000     | 128000     | false | text        |
+| `hf:deepseek-ai/DeepSeek-V3`                           | 128000     | 8192       | false | text        |
+| `hf:Qwen/Qwen3-235B-A22B-Thinking-2507`                | 256000     | 8192       | true  | text        |
 
-## 备注
+## 注意
 
 - 模型引用使用 `synthetic/<modelId>`。
-- 如果您启用了模型允许列表（`agents.defaults.models`），请添加您计划使用的每个模型。
-- 请参阅[模型提供商](/zh/concepts/model-providers)以了解提供商规则。
+- 如果您启用了模型允许列表（`agents.defaults.models`），请添加您计划
+  使用的每个模型。
+- 有关提供商规则，请参阅[模型提供商](/zh/concepts/model-providers)。
 
 import zh from "/components/footer/zh.mdx";
 

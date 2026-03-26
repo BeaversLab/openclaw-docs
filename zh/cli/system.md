@@ -1,15 +1,15 @@
 ---
-summary: "用于 `openclaw system` 的 CLI 参考（系统事件、心跳、在线状态）"
+summary: "CLI 参考 `openclaw system` (系统事件、心跳、在线)"
 read_when:
-  - 您希望在无需创建 cron 作业的情况下将系统事件加入队列
-  - 您需要启用或禁用心跳
-  - 您希望检查系统在线状态条目
-title: "system"
+  - You want to enqueue a system event without creating a cron job
+  - You need to enable or disable heartbeats
+  - You want to inspect system presence entries
+title: "系统"
 ---
 
 # `openclaw system`
 
-Gateway 的系统级辅助工具：将系统事件加入队列、控制心跳
+Gateway 网关 的系统级辅助工具：将系统事件加入队列、控制心跳
 以及查看在线状态。
 
 ## 常用命令
@@ -23,14 +23,12 @@ openclaw system presence
 
 ## `system event`
 
-在 **主** 会话中将系统事件加入队列。下一次心跳将会
-将其作为 `System:` 行注入提示中。使用 `--mode now` 立即触发心跳；
-`next-heartbeat` 则等待下一次计划滴答。
+在 **主** 会话中排队一个系统事件。下一次心跳将在提示中将其注入为 `System:` 行。使用 `--mode now` 立即触发心跳；`next-heartbeat` 则等待下一次计划的计时。
 
 标志：
 
 - `--text <text>`：必需的系统事件文本。
-- `--mode <mode>`：`now` 或 `next-heartbeat`（默认）。
+- `--mode <mode>`： `now` 或 `next-heartbeat`（默认）。
 - `--json`：机器可读的输出。
 
 ## `system heartbeat last|enable|disable`
@@ -38,7 +36,7 @@ openclaw system presence
 心跳控制：
 
 - `last`：显示最后一次心跳事件。
-- `enable`：重新开启心跳（如果之前已被禁用，请使用此项）。
+- `enable`：重新开启心跳（如果之前被禁用，请使用此项）。
 - `disable`：暂停心跳。
 
 标志：
@@ -47,17 +45,17 @@ openclaw system presence
 
 ## `system presence`
 
-列出 Gateway 当前已知的系统在线状态条目（节点、
+列出 Gateway 网关 已知的当前系统在线状态条目（节点、
 实例和类似的状态行）。
 
 标志：
 
 - `--json`：机器可读的输出。
 
-## 注意
+## 注意事项
 
-- 需要通过您的当前配置（本地或远程）连接到一个正在运行的 Gateway。
-- 系统事件是临时的，不会在重启后持久保存。
+- 需要一个可通过当前配置（本地或远程）访问的运行中的 Gateway 网关。
+- 系统事件是临时的，不会在重启后保留。
 
 import zh from "/components/footer/zh.mdx";
 

@@ -1,15 +1,15 @@
 ---
-summary: "Aplica parches de múltiples archivos con la herramienta apply_patch"
+summary: "Aplicar parches de múltiples archivos con la herramienta apply_patch"
 read_when:
-  - Necesitas ediciones de archivos estructuradas en varios archivos
-  - Quieres documentar o depurar ediciones basadas en parches
+  - You need structured file edits across multiple files
+  - You want to document or debug patch-based edits
 title: "Herramienta apply_patch"
 ---
 
 # herramienta apply_patch
 
-Aplica cambios en los archivos usando un formato de parche estructurado. Esto es ideal para ediciones de múltiples archivos
-o de múltiples fragmentos donde una sola llamada `edit` sería frágil.
+Aplica cambios en archivos utilizando un formato de parche estructurado. Esto es ideal para ediciones
+de múltiples archivos o de múltiples fragmentos donde una sola llamada `edit` sería frágil.
 
 La herramienta acepta una sola cadena `input` que envuelve una o más operaciones de archivo:
 
@@ -36,10 +36,10 @@ La herramienta acepta una sola cadena `input` que envuelve una o más operacione
 - `tools.exec.applyPatch.workspaceOnly` por defecto es `true` (contenido en el espacio de trabajo). Establézcalo en `false` solo si intencionalmente desea que `apply_patch` escriba/elimine fuera del directorio del espacio de trabajo.
 - Use `*** Move to:` dentro de un fragmento `*** Update File:` para cambiar el nombre de los archivos.
 - `*** End of File` marca una inserción solo de EOF cuando sea necesario.
-- Experimental y deshabilitado de forma predeterminada. Habilítelo con `tools.exec.applyPatch.enabled`.
-- Solo para OpenAI (incluyendo OpenAI Codex). Opcionalmente restringir por modelo mediante
+- Experimental y deshabilitado por defecto. Habilite con `tools.exec.applyPatch.enabled`.
+- Solo para OpenAI (incluido OpenAI Codex). Opcionalmente limite por modelo a través de
   `tools.exec.applyPatch.allowModels`.
-- La configuración solo está en `tools.exec`.
+- La configuración está solo en `tools.exec`.
 
 ## Ejemplo
 

@@ -1,46 +1,46 @@
 ---
-summary: "計畫：為所有訊息連接器提供一個乾淨的插件 SDK 與運行時"
+summary: "計畫：為所有訊息連接器提供一個乾淨的 Plugin SDK + runtime"
 read_when:
-  - 定義或重構插件架構
-  - 將頻道連接器遷移至插件 SDK/運行時
+  - Defining or refactoring the plugin architecture
+  - Migrating channel connectors to the plugin SDK/runtime
 title: "Plugin SDK 重構"
 ---
 
 # Plugin SDK + Runtime 重構計畫
 
-目標：每個訊息連接器都是使用單一穩定 API 的插件（捆綁或外部）。
-插件不得直接從 `src/**` 匯入。所有依賴項都須透過 SDK 或運行時。
+目標：每個訊息連接器都是使用一個穩定 API 的插件（內建或外掛）。
+沒有任何插件直接從 `src/**` 匯入。所有依賴關係都通過 SDK 或 runtime。
 
-## 為何現在
+## 為什麼是現在
 
-- 目前的連接器混雜了多種模式：直接匯入核心、僅 dist 的橋接器以及自訂輔助程式。
-- 這使得升級變得脆弱，並阻礙了乾淨的外部插件介面。
+- 目前的連接器混合了多種模式：直接匯入核心、僅 dist 的橋接器以及自訂輔助程式。
+- 這使得升級過程變得脆弱，並阻礙了乾淨的外部插件介面。
 
 ## 目標架構（兩層）
 
-### 1) Plugin SDK（編譯時期、穩定、可發布）
+### 1) Plugin SDK（編譯時期、穩定、可發佈）
 
-範圍：型別、輔助程式和設定公用程式。無運行時狀態，無副作用。
+範圍：型別、輔助程式和配置公用程式。無 runtime 狀態，無副作用。
 
 內容（範例）：
 
-- 型別：`ChannelPlugin`、配接器、`ChannelMeta`、`ChannelCapabilities`、`ChannelDirectoryEntry`。
-- 設定輔助程式：`buildChannelConfigSchema`、`setAccountEnabledInConfigSection`、`deleteAccountFromConfigSection`、
+- 類型：`ChannelPlugin`、適配器、`ChannelMeta`、`ChannelCapabilities`、`ChannelDirectoryEntry`。
+- 配置輔助函數：`buildChannelConfigSchema`、`setAccountEnabledInConfigSection`、`deleteAccountFromConfigSection`、
   `applyAccountNameToChannelSection`。
-- 配對輔助程式：`PAIRING_APPROVED_MESSAGE`、`formatPairingApproveHint`。
-- 設定進入點：主機擁有的 `setup` + `setupWizard`；避免廣泛的公開上線輔助程式。
-- 工具參數輔助程式：`createActionGate`、`readStringParam`、`readNumberParam`、`readReactionParams`、`jsonResult`。
-- 文件連結輔助程式：`formatDocsLink`。
+- 配對輔助函數：`PAIRING_APPROVED_MESSAGE`、`formatPairingApproveHint`。
+- 設定入口點：主機擁有的 `setup` + `setupWizard`；避免廣泛的公開入門輔助函數。
+- 工具參數輔助函數：`createActionGate`、`readStringParam`、`readNumberParam`、`readReactionParams`、`jsonResult`。
+- 文件連結輔助函數：`formatDocsLink`。
 
-交付方式：
+交付：
 
-- 發布為 `openclaw/plugin-sdk`（或從核心匯出，位於 `openclaw/plugin-sdk` 下）。
-- 具有明確穩定性保證的 Semver。
+- 作為 `openclaw/plugin-sdk` 發布（或從核心中在 `openclaw/plugin-sdk` 下匯出）。
+- 具有明確穩定性保證的語意化版本。
 
-### 2) Plugin Runtime（執行介面、注入）
+### 2) Plugin Runtime（執行層，注入式）
 
-範圍：所有涉及核心運行時行為的內容。
-透過 `OpenClawPluginApi.runtime` 存取，因此插件永不匯入 `src/**`。
+範圍：所有涉及核心執行階段行為的內容。
+透過 `OpenClawPluginApi.runtime` 存取，因此外掛程式永遠不會匯入 `src/**`。
 
 提議的介面（最小但完整）：
 
@@ -148,92 +148,93 @@ export type PluginRuntime = {
 
 - Runtime 是存取核心行為的唯一途徑。
 - SDK 刻意保持小型且穩定。
-- 每個 runtime 方法都對應到一個現有的核心實作（無重複）。
+- 每個 runtime 方法都對應到現有的核心實作（無重複）。
 
-## 遷移計畫（分階段、安全）
+## 遷移計畫（分階段，安全）
 
-### 第 0 階段：建構基礎
+### 階段 0：搭建基礎架構
 
 - 引進 `openclaw/plugin-sdk`。
-- 將 `api.runtime` 加入 `OpenClawPluginApi`，並使用上述介面。
-- 在過渡期間保留現有的匯入（棄用警告）。
+- 使用上述介面將 `api.runtime` 新增到 `OpenClawPluginApi`。
+- 在過渡期間維持現有的匯入（棄用警告）。
 
-### Phase 1: bridge cleanup (low risk)
+### 階段 1：橋接清理（低風險）
 
 - 將每個擴充功能的 `core-bridge.ts` 替換為 `api.runtime`。
 - 優先遷移 BlueBubbles、Zalo、Zalo Personal（已接近完成）。
-- 移除重複的 bridge 程式碼。
+- 移除重複的橋接程式碼。
 
-### Phase 2: light direct-import plugins
+### 階段 2：輕量級直接匯入的外掛
 
-- 將 Matrix 遷移至 SDK + runtime。
-- 驗證 onboarding、directory、group mention 邏輯。
+- 將 Matrix 遷移至 SDK + 執行時期。
+- 驗證入職、目錄、群組提及邏輯。
 
-### Phase 3: heavy direct-import plugins
+### 階段 3：重量級直接匯入的外掛
 
-- 遷移 MS Teams（最大的 runtime helpers 集合）。
-- 確保 reply/typing 語義符合目前的行為。
+- 遷移 MS Teams（最大的執行時期輔助程式集）。
+- 確保回覆/輸入語意符合目前的行為。
 
-### Phase 4: iMessage pluginization
+### 階段 4：iMessage 外掛化
 
 - 將 iMessage 移至 `extensions/imessage`。
 - 將直接的 core 呼叫替換為 `api.runtime`。
-- 保持 config keys、CLI 行為和文件完整不變。
+- 保持設定金鑰、CLI 行為和文件不變。
 
-### Phase 5: enforcement
+### 階段 5：強制執行
 
-- 新增 lint rule / CI 檢查：禁止從 `src/**` 匯入 `extensions/**`。
-- 新增 plugin SDK/version 相容性檢查（runtime + SDK semver）。
+- 加入 lint 規則 / CI 檢查：禁止從 `src/**` 匯入 `extensions/**`。
+- 加入外掛 SDK/版本相容性檢查（執行時期 + SDK semver）。
 
-## Compatibility and versioning
+## 相容性與版本控制
 
-- SDK：semver、已發佈、文件化的變更。
-- Runtime：隨每個 core 發行版本進行版本控制。新增 `api.runtime.version`。
-- Plugins 宣告所需的 runtime 範圍（例如 `openclawRuntime: ">=2026.2.0"`）。
+- SDK：semver，已發布，文件化的變更。
+- Runtime：隨核心版本發布。新增 `api.runtime.version`。
+- 外掛宣告所需的 Runtime 版本範圍（例如 `openclawRuntime: ">=2026.2.0"`）。
 
-## Testing strategy
+## 測試策略
 
-- Adapter 層級的單元測試（使用真實的 core 實作來執行 runtime 函式）。
-- 每個 plugin 的 Golden 測試：確保沒有行為差異（routing、pairing、allowlist、mention gating）。
-- 在 CI 中使用單一的端到端 plugin 範例（安裝 + 執行 + 冒煙測試）。
+- Adapter 層級的單元測試（使用真實的核心實作來執行 Runtime 函式）。
+- 每個外掛的 Golden 測試：確保沒有行為偏差（路由、配對、允許清單、提及閘道）。
+- 在 CI 中使用的單一端對端外掛範例（安裝 + 執行 + 冒煙測試）。
 
-## Open questions
+## 待解問題
 
-- SDK types 的託管位置：獨立套件或 core 匯出？
-- Runtime 類型發布：在 SDK（僅類型）中還是在 core 中？
-- 如何為 bundled 與 external plugins 公開文件連結？
-- 我們是否允許在過渡期間對 in-repo plugins 進行有限制的直接 core 匯入？
+- 在何處託管 SDK 型別：獨立套件或是核心匯出？
+- Runtime 型別發佈：在 SDK 中（僅型別）還是在核心中？
+- 如何為內建與外部外掛公開文件連結？
+- 我們是否在轉換期間允許倉庫內的外掛有限度地直接匯入核心？
 
-## Success criteria
+## 成功標準
 
-- 所有 channel connectors 都是使用 SDK + runtime 的 plugins。
-- 禁止從 `src/**` 匯入 `extensions/**`。
-- 新的 connector 模板僅依賴 SDK + runtime。
-- External plugins 可以在無需存取核心原始碼的情況下進行開發和更新。
+- 所有頻道連接器都是使用 SDK + Runtime 的外掛。
+- 沒有從 `src/**` 的 `extensions/**` 匯入。
+- 新的連接器範本僅依賴於 SDK 與 runtime。
+- 外部外掛程式可以在無需存取核心原始碼的情況下進行開發與更新。
 
-相關文件：[Plugins](/zh-Hant/tools/plugin)、[Channels](/zh-Hant/channels/index)、[Configuration](/zh-Hant/gateway/configuration)。
+相關文件：[外掛程式](/zh-Hant/tools/plugin)、[頻道](/zh-Hant/channels/index)、[設定](/zh-Hant/gateway/configuration)。
 
-## 實作了 channel-owned seams
+## 已實作頻道擁有的縫合機制 (channel-owned seams)
 
-最近的重構工作擴展了 channel plugin contract，讓 core 可以停止擁有特定於 channel 的 UX 和路由行為：
+近期的重構工作擴展了頻道外掛程式合約，因此核心可以停止擁有
+特定頻道的 UX 與路由行為：
 
-- `messaging.buildCrossContextComponents`：channel-owned 的跨語境 UI 標記
-  (例如 Discord components v2 containers)
-- `messaging.enableInteractiveReplies`：channel-owned 的回覆標準化切換開關
-  (例如 Slack interactive replies)
-- `messaging.resolveOutboundSessionRoute`：channel-owned 的出站 session 路由
-- `status.formatCapabilitiesProbe` / `status.buildCapabilitiesDiagnostics`：channel-owned 的
-  `/channels capabilities` probe 顯示與額外的稽核/範圍
-- `threading.resolveAutoThreadId`：channel-owned 的同一對話自動串接功能
-- `threading.resolveReplyTransport`：channel-owned 的回覆與串接傳遞對應
-- `actions.requiresTrustedRequesterSender`：channel-owned 的特權動作信任閘道
-- `execApprovals.*`：channel-owned 的執行核准介面狀態、轉發抑制、
-  待處理 payload UX，以及傳遞前掛鉤
-- `lifecycle.onAccountConfigChanged` / `lifecycle.onAccountRemoved`：channel-owned 在
-  設定變更/移除時的清理作業
-- `allowlist.supportsScope`：channel-owned 的允許清單範圍公告
+- `messaging.buildCrossContextComponents`：頻道擁有的跨情境 UI 標記
+  (例如 Discord 元件 v2 容器)
+- `messaging.enableInteractiveReplies`：頻道擁有的回覆正規化切換開關
+  (例如 Slack 互動式回覆)
+- `messaging.resolveOutboundSessionRoute`：頻道擁有的出站會話路由
+- `status.formatCapabilitiesProbe` / `status.buildCapabilitiesDiagnostics`: channel-owned
+  `/channels capabilities` 探測顯示與額外的稽核/範圍
+- `threading.resolveAutoThreadId`: channel-owned 同一對話自動串接
+- `threading.resolveReplyTransport`: channel-owned 回覆 vs. 串接傳遞對應
+- `actions.requiresTrustedRequesterSender`: channel-owned 特權動作信任閘道
+- `execApprovals.*`: channel-owned 執行核准介面狀態、轉發抑制、
+  待處理 Payload UX 以及傳遞前掛鉤
+- `lifecycle.onAccountConfigChanged` / `lifecycle.onAccountRemoved`: channel-owned 當
+  設定變更/移除時的清理
+- `allowlist.supportsScope`: channel-owned 允許清單範圍公告
 
-應優先使用這些掛鉤，而不是在共享的 core flows 中新增 `channel === "discord"` / `telegram`
+在共享核心流程中，應優先使用這些掛鉤，而非新增新的 `channel === "discord"` / `telegram`
 分支。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";

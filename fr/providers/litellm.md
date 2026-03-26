@@ -1,26 +1,26 @@
 ---
 title: "LiteLLM"
-summary: "Exécuter OpenClaw via le proxy LiteLLM pour un accès unifié aux modèles et le suivi des coûts"
+summary: "Exécuter OpenClaw via le proxy LiteLLM pour un accès unifié au modèle et le suivi des coûts"
 read_when:
-  - Vous souhaitez router OpenClaw via un proxy LiteLLM
-  - Vous avez besoin d'un suivi des coûts, de journaux ou de routage de modèles via LiteLLM
+  - You want to route OpenClaw through a LiteLLM proxy
+  - You need cost tracking, logging, or model routing through LiteLLM
 ---
 
 # LiteLLM
 
-[LiteLLM](https://litellm.ai) est une passerelle LLM open source qui fournit une API unifiée pour plus de 100 fournisseurs de modèles. Routez OpenClaw via LiteLLM pour centraliser le suivi des coûts, la journalisation, et bénéficier de la flexibilité de changer de backend sans modifier votre configuration OpenClaw.
+[LiteLLM](https://litellm.ai) est une passerelle LLM open source qui fournit une API unifiée à plus de 100 fournisseurs de modèles. Acheminez OpenClaw via LiteLLM pour bénéficier d'un centralisé suivi des coûts, de la journalisation, et de la flexibilité de changer de backend sans modifier votre configuration OpenClaw.
 
 ## Pourquoi utiliser LiteLLM avec OpenClaw ?
 
-- **Suivi des coûts** — Voyez exactement ce qu'OpenClaw dépense pour tous les modèles
-- **Routage de modèles** — Basculez entre Claude, GPT-4, Gemini, Bedrock sans modifier la configuration
+- **Suivi des coûts** — Voyez exactement ce que OpenClaw dépense pour tous les modèles
+- **Acheminement de modèle** — Basculez entre Claude, GPT-4, Gemini, Bedrock sans modifier la configuration
 - **Clés virtuelles** — Créez des clés avec des limites de dépenses pour OpenClaw
 - **Journalisation** — Journaux complets des requêtes/réponses pour le débogage
-- **Secours (Fallbacks)** — Basculement automatique si votre fournisseur principal est en panne
+- **Basculades** — Bascule automatique si votre fournisseur principal est en panne
 
-## Quick start
+## Démarrage rapide
 
-### Via onboarding
+### Via l'intégration
 
 ```bash
 openclaw onboard --auth-choice litellm-api-key
@@ -43,7 +43,7 @@ export LITELLM_API_KEY="your-litellm-key"
 openclaw
 ```
 
-C'est tout. OpenClaw route maintenant via LiteLLM.
+C'est tout. OpenClaw est désormais acheminé via LiteLLM.
 
 ## Configuration
 
@@ -94,7 +94,7 @@ export LITELLM_API_KEY="sk-litellm-key"
 
 ## Clés virtuelles
 
-Créez une clé dédiée pour OpenClaw avec des limites de dépenses :
+Créer une clé dédiée pour OpenClaw avec des limites de dépenses :
 
 ```bash
 curl -X POST "http://localhost:4000/key/generate" \
@@ -109,9 +109,9 @@ curl -X POST "http://localhost:4000/key/generate" \
 
 Utilisez la clé générée comme `LITELLM_API_KEY`.
 
-## Routage de modèles
+## Acheminement de modèle
 
-LiteLLM peut router les demandes de modèles vers différents backends. Configurez cela dans votre fichier `config.yaml` LiteLLM :
+LiteLLM peut acheminer les demandes de modèle vers différents backends. Configurez-les dans votre `config.yaml` LiteLLM :
 
 ```yaml
 model_list:
@@ -126,11 +126,11 @@ model_list:
       api_key: os.environ/OPENAI_API_KEY
 ```
 
-OpenClaw continue de demander `claude-opus-4-6` — LiteLLM gère le routage.
+OpenClaw continue de demander `claude-opus-4-6` — LiteLLM gère l'acheminement.
 
 ## Affichage de l'utilisation
 
-Vérifiez le tableau de bord LiteLLM ou l'API :
+Vérifiez le tableau de bord ou l'API de LiteLLM :
 
 ```bash
 # Key info
@@ -144,9 +144,9 @@ curl "http://localhost:4000/spend/logs" \
 
 ## Notes
 
-- LiteLLM fonctionne sur `http://localhost:4000` par défaut
+- LiteLLM s'exécute sur `http://localhost:4000` par défaut
 - OpenClaw se connecte via le point de terminaison `/v1/chat/completions` compatible OpenAI
-- Toutes les fonctionnalités d'OpenClaw fonctionnent via LiteLLM — aucune limitation
+- Toutes les fonctionnalités de OpenClaw fonctionnent via LiteLLM — aucune limitation
 
 ## Voir aussi
 

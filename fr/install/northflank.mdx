@@ -1,56 +1,57 @@
 ---
-title: Déployer sur Northflank
+summary: "Déployez OpenClaw sur Northflank avec un modèle en un clic"
+read_when:
+  - Deploying OpenClaw to Northflank
+  - You want a one-click cloud deploy with browser-based setup
+title: "Northflank"
 ---
 
-Déployez OpenClaw sur Northflank à l'aide d'un modèle en un clic et terminez la configuration dans votre navigateur.
-C'est le chemin le plus simple « sans terminal sur le serveur » : Northflank exécute le Gateway pour vous,
-et vous configurez tout via l'assistant web `/setup`.
+Déployez OpenClaw sur Northflank avec un modèle en un clic et terminez la configuration dans votre navigateur.
+C'est le moyen le plus simple « sans terminal sur le serveur » : Northflank exécute le Gateway pour vous,
+et vous configurez tout via l'assistant `/setup` web.
 
 ## Comment démarrer
 
-1. Cliquez sur [Deploy OpenClaw](https://northflank.com/stacks/deploy-openclaw) pour ouvrir le modèle.
+1. Cliquez sur [Déployer OpenClaw](https://northflank.com/stacks/deploy-openclaw) pour ouvrir le modèle.
 2. Créez un [compte sur Northflank](https://app.northflank.com/signup) si vous n'en avez pas déjà un.
-3. Cliquez sur **Deploy OpenClaw now**.
+3. Cliquez sur **Déployer OpenClaw maintenant**.
 4. Définissez la variable d'environnement requise : `SETUP_PASSWORD`.
-5. Cliquez sur **Deploy stack** pour construire et exécuter le modèle OpenClaw.
-6. Attendez que le déploiement soit terminé, puis cliquez sur **View resources**.
+5. Cliquez sur **Déployer la stack** pour construire et exécuter le modèle OpenClaw.
+6. Attendez que le déploiement soit terminé, puis cliquez sur **Voir les ressources**.
 7. Ouvrez le service OpenClaw.
-8. Ouvrez l'URL publique OpenClaw et terminez la configuration sur `/setup`.
-9. Ouvrez l'interface de contrôle sur `/openclaw`.
+8. Ouvrez l'URL publique OpenClaw et terminez la configuration à `/setup`.
+9. Ouvrez l'interface de contrôle à `/openclaw`.
 
 ## Ce que vous obtenez
 
-- OpenClaw Gateway hébergé + Interface de contrôle
-- Configuration Web sur `/setup` (aucune commande de terminal)
+- Gateway OpenClaw hébergé + Interface de contrôle
+- Configuration Web à `/setup` (pas de commandes terminal)
 - Stockage persistant via Northflank Volume (`/data`) pour que la configuration/les identifiants/l'espace de travail survivent aux redéploiements
 
 ## Flux de configuration
 
 1. Visitez `https://<your-northflank-domain>/setup` et entrez votre `SETUP_PASSWORD`.
-2. Choisissez un fournisseur de modèle/d'authentification et collez votre clé.
+2. Choisissez un model/fournisseur d'auth et collez votre clé.
 3. (Facultatif) Ajoutez les jetons Telegram/Discord/Slack.
-4. Cliquez sur **Run setup**.
-5. Ouvrez l'interface de contrôle sur `https://<your-northflank-domain>/openclaw`
+4. Cliquez sur **Exécuter la configuration**.
+5. Ouvrez l'interface de contrôle à `https://<your-northflank-domain>/openclaw`
 
-Si les DMs Telegram sont configurés pour l'appairage, la configuration Web peut approuver le code d'appairage.
+Si les DMs Telegram sont définis sur l'appairage, la configuration Web peut approuver le code d'appairage.
 
-## Obtenir les jetons de chat
+## Connecter un channel
 
-### Jeton de bot Telegram
+Collez votre jeton Telegram ou Discord dans l'assistant `/setup`. Pour les instructions
+de configuration, consultez la documentation du channel :
 
-1. Envoyez un message à `@BotFather` sur Telegram
-2. Exécutez `/newbot`
-3. Copiez le jeton (ressemble à `123456789:AA...`)
-4. Collez-le dans `/setup`
+- [Telegram](/fr/channels/telegram) (le plus rapide — juste un jeton de bot)
+- [Discord](/fr/channels/discord)
+- [Tous les channels](/fr/channels)
 
-### Jeton de bot Discord
+## Étapes suivantes
 
-1. Allez sur [https://discord.com/developers/applications](https://discord.com/developers/applications)
-2. **New Application** → choisissez un nom
-3. **Bot** → **Add Bot**
-4. **Enable MESSAGE CONTENT INTENT** sous Bot → Privilèges des Intents de Gateway (requis sinon le bot plantera au démarrage)
-5. Copiez le **Bot Token** et collez-le dans `/setup`
-6. Invitez le bot sur votre serveur (OAuth2 URL Generator ; portées : `bot`, `applications.commands`)
+- Configurez les channels de messagerie : [Channels](/fr/channels)
+- Configurez le Gateway : [Configuration du Gateway](/fr/gateway/configuration)
+- Gardez OpenClaw à jour : [Mises à jour](/fr/install/updating)
 
 import fr from "/components/footer/fr.mdx";
 

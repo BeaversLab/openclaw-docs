@@ -1,34 +1,34 @@
 ---
-summary: "Registro de OpenClaw: archivo de registro de diagnósticos rotativo + marcas de privacidad de registro unificado"
+summary: "Registro de OpenClaw: registro de archivo de diagnóstico rotativo + indicadores de privacidad de registro unificado"
 read_when:
-  - Capturar registros de macOS o investigar el registro de datos privados
-  - Depurar problemas de ciclo de vida de activación por voz/sesión
+  - Capturing macOS logs or investigating private data logging
+  - Debugging voice wake/session lifecycle issues
 title: "Registro de macOS"
 ---
 
 # Registro (macOS)
 
-## Archivo de registro de diagnósticos rotativos (Panel de depuración)
+## Registro de archivo de diagnóstico rotativo (panel Depuración)
 
-OpenClaw enruta los registros de la aplicación de macOS a través de swift-log (registro unificado de forma predeterminada) y puede escribir un archivo de registro local y rotativo en el disco cuando necesites una captura duradera.
+OpenClaw enruta los registros de la aplicación de macOS a través de swift-log (registro unificado de forma predeterminada) y puede escribir un registro de archivo local y rotativo en el disco cuando necesite una captura duradera.
 
-- Nivel de detalle: **Panel de depuración → Registros → Registro de aplicación → Nivel de detalle**
-- Activar: **Panel de depuración → Registros → Registro de aplicación → “Escribir registro de diagnósticos rotativos (JSONL)”**
+- Verbosidad: **Panel Depuración → Registros → Registro de aplicaciones → Verbosidad**
+- Habilitar: **Panel Depuración → Registros → Registro de aplicaciones → “Escribir registro de diagnóstico rotativo (JSONL)”**
 - Ubicación: `~/Library/Logs/OpenClaw/diagnostics.jsonl` (rota automáticamente; los archivos antiguos tienen el sufijo `.1`, `.2`, …)
-- Borrar: **Panel de depuración → Registros → Registro de aplicación → “Borrar”**
+- Borrar: **Panel Depuración → Registros → Registro de aplicaciones → “Borrar”**
 
 Notas:
 
-- Esto está **desactivado de forma predeterminada**. Actívelo solo mientras depura activamente.
+- Esto está **desactivado de forma predeterminada**. Habilítelo solo mientras depura activamente.
 - Trate el archivo como confidencial; no lo comparta sin revisión.
 
 ## Datos privados de registro unificado en macOS
 
-El registro unificado redacta la mayoría de las cargas útiles a menos que un subsistema acepte `privacy -off`. Según la publicación de Peter sobre [travesuras de privacidad de registro en macOS](https://steipete.me/posts/2025/logging-privacy-shenanigans) (2025), esto se controla mediante un plist en `/Library/Preferences/Logging/Subsystems/` con clave por el nombre del subsistema. Solo las nuevas entradas de registro adoptan la marca, así que actívela antes de reproducir un problema.
+El registro unificado redacta la mayoría de las cargas útiles a menos que un subsistema opte por `privacy -off`. Según el artículo de Peter sobre las [travesuras de privacidad del registro](https://steipete.me/posts/2025/logging-privacy-shenanigans) de macOS (2025), esto se controla mediante un plist en `/Library/Preferences/Logging/Subsystems/` con clave por el nombre del subsistema. Solo las nuevas entradas de registro adoptan el indicador, así que habilítelo antes de reproducir un problema.
 
-## Activar para OpenClaw (`ai.openclaw`)
+## Habilitar para OpenClaw (`ai.openclaw`)
 
-- Escriba primero el plist en un archivo temporal y luego instálelo atómicamente como root:
+- Escriba primero el plist en un archivo temporal y luego instálelo de forma atómica como root:
 
 ```bash
 cat <<'EOF' >/tmp/ai.openclaw.plist
@@ -48,13 +48,13 @@ sudo install -m 644 -o root -g wheel /tmp/ai.openclaw.plist /Library/Preferences
 ```
 
 - No es necesario reiniciar; logd nota el archivo rápidamente, pero solo las nuevas líneas de registro incluirán cargas útiles privadas.
-- Vea la salida más rica con el asistente existente, p. ej., `./scripts/clawlog.sh --category WebChat --last 5m`.
+- Vea la salida más enriquecida con el asistente existente, p. ej. `./scripts/clawlog.sh --category WebChat --last 5m`.
 
-## Desactivar después de la depuración
+## Deshabilitar después de la depuración
 
-- Elimine la invalidación: `sudo rm /Library/Preferences/Logging/Subsystems/ai.openclaw.plist`.
-- Opcionalmente, ejecute `sudo log config --reload` para forzar a logd a eliminar la invalidación inmediatamente.
-- Recuerde que esta superficie puede incluir números de teléfono y cuerpos de mensajes; mantenga el plist en su lugar solo mientras necesita activamente el detalle adicional.
+- Elimine la anulación: `sudo rm /Library/Preferences/Logging/Subsystems/ai.openclaw.plist`.
+- Opcionalmente, ejecute `sudo log config --reload` para forzar a logd a eliminar la anulación de inmediato.
+- Recuerde que esta superficie puede incluir números de teléfono y cuerpos de mensajes; mantenga el plist en su lugar solo mientras necesite activamente el detalle adicional.
 
 import es from "/components/footer/es.mdx";
 

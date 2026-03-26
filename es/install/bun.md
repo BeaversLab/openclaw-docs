@@ -1,54 +1,51 @@
 ---
 summary: "Flujo de trabajo de Bun (experimental): instalaciones y problemas frente a pnpm"
 read_when:
-  - Quieres el bucle de desarrollo local más rápido (bun + watch)
-  - Te encuentras con problemas de instalación/ parches/ scripts de ciclo de vida de Bun
+  - You want the fastest local dev loop (bun + watch)
+  - You hit Bun install/patch/lifecycle script issues
 title: "Bun (Experimental)"
 ---
 
-# Bun (experimental)
+# Bun (Experimental)
 
-Objetivo: ejecutar este repositorio con **Bun** (opcional, no recomendado para WhatsApp/Telegram)
-sin divergir de los flujos de trabajo de pnpm.
+<Warning>
+  Bun is **not recommended for gateway runtime** (known issues with WhatsApp and Telegram). Use Node
+  for production.
+</Warning>
 
-⚠️ **No recomendado para el tiempo de ejecución de Gateway** (errores de WhatsApp/Telegram). Usa Node para producción.
-
-## Estado
-
-- Bun es un tiempo de ejecución local opcional para ejecutar TypeScript directamente (`bun run …`, `bun --watch …`).
-- `pnpm` es el valor predeterminado para las compilaciones y sigue siendo totalmente compatible (y utilizado por algunas herramientas de documentación).
-- Bun no puede usar `pnpm-lock.yaml` y lo ignorará.
+Bun es un runtime local opcional para ejecutar TypeScript directamente (`bun run ...`, `bun --watch ...`). El gestor de paquetes predeterminado sigue siendo `pnpm`, que es totalmente compatible y utilizado por las herramientas de documentación. Bun no puede usar `pnpm-lock.yaml` y lo ignorará.
 
 ## Instalación
 
-Predeterminado:
+<Steps>
+  <Step title="Install dependencies">
+    ```sh
+    bun install
+    ```
 
-```sh
-bun install
-```
+    `bun.lock` / `bun.lockb` están ignorados por git, por lo que no hay cambios excesivos en el repositorio. Para omitir por completo la escritura de archivos de bloqueo:
 
-Nota: `bun.lock`/`bun.lockb` están ignorados por git, por lo que no hay cambios en el repositorio de ninguna manera. Si quieres _que no haya escrituras en el archivo de bloqueo_:
+    ```sh
+    bun install --no-save
+    ```
 
-```sh
-bun install --no-save
-```
+  </Step>
+  <Step title="Build and test">
+    ```sh
+    bun run build
+    bun run vitest run
+    ```
+  </Step>
+</Steps>
 
-## Compilar / Probar (Bun)
+## Scripts de ciclo de vida
 
-```sh
-bun run build
-bun run vitest run
-```
+Bun bloquea los scripts de ciclo de vida de las dependencias a menos que se confíe explícitamente en ellos. Para este repositorio, los scripts comúnmente bloqueados no son necesarios:
 
-## Scripts de ciclo de vida de Bun (bloqueados de forma predeterminada)
+- `@whiskeysockets/baileys` `preinstall` -- verifica Node major >= 20 (OpenClaw usa por defecto Node 24 y todavía soporta Node 22 LTS, actualmente `22.16+`)
+- `protobufjs` `postinstall` -- emite advertencias sobre esquemas de versiones incompatibles (sin artefactos de compilación)
 
-Bun puede bloquear los scripts de ciclo de vida de las dependencias a menos que se confíe explícitamente en ellos (`bun pm untrusted` / `bun pm trust`).
-Para este repositorio, los scripts comúnmente bloqueados no son necesarios:
-
-- `@whiskeysockets/baileys` `preinstall`: comprueba Node major >= 20 (OpenClaw usa Node 24 de forma predeterminada y todavía admite Node 22 LTS, actualmente `22.16+`).
-- `protobufjs` `postinstall`: emite advertencias sobre esquemas de versiones incompatibles (sin artefactos de compilación).
-
-Si encuentras un problema real de tiempo de ejecución que requiera estos scripts, confía en ellos explícitamente:
+Si encuentras un problema en tiempo de ejecución que requiere estos scripts, confía en ellos explícitamente:
 
 ```sh
 bun pm trust @whiskeysockets/baileys protobufjs
@@ -56,7 +53,7 @@ bun pm trust @whiskeysockets/baileys protobufjs
 
 ## Advertencias
 
-- Algunos scripts todavía codifican pnpm de forma rígida (ej. `docs:build`, `ui:*`, `protocol:check`). Ejecuta esos mediante pnpm por ahora.
+Algunos scripts todavía tienen pnpm codificado (por ejemplo `docs:build`, `ui:*`, `protocol:check`). Ejecuta esos a través de pnpm por ahora.
 
 import es from "/components/footer/es.mdx";
 

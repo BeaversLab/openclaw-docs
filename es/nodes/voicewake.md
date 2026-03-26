@@ -1,19 +1,19 @@
 ---
-summary: "Palabras de activación de voz globales (propiedad del Gateway) y cómo se sincronizan entre los nodos"
+summary: "Palabras de activación por voz globales (propiedad de Gateway) y cómo se sincronizan entre nodos"
 read_when:
-  - Cambiar el comportamiento o los valores predeterminados de las palabras de activación de voz
-  - Añadir nuevas plataformas de nodos que necesiten sincronización de palabras de activación
-title: "Voice Wake"
+  - Changing voice wake words behavior or defaults
+  - Adding new node platforms that need wake word sync
+title: "Activación por Voz"
 ---
 
-# Voice Wake (Palabras de activación globales)
+# Activación por Voz (Palabras de activación globales)
 
-OpenClaw trata **las palabras de activación como una única lista global** propiedad del **Gateway**.
+OpenClaw trata las **palabras de activación como una única lista global** propiedad del **Gateway**.
 
 - **No hay palabras de activación personalizadas por nodo**.
-- **Cualquier interfaz de usuario de nodo/aplicación puede editar** la lista; los cambios son guardados por el Gateway y transmitidos a todos.
-- macOS e iOS mantienen interruptores locales de **Voice Wake activado/desactivado** (la experiencia de usuario local y los permisos difieren).
-- Actualmente, Android mantiene Voice Wake desactivado y utiliza un flujo de micrófono manual en la pestaña Voz.
+- **Cualquier interfaz de nodo/aplicación puede editar** la lista; los cambios son guardados por el Gateway y transmitidos a todos.
+- macOS e iOS mantienen interruptores locales de **Activación por Voz activada/desactivada** (la UX local y los permisos difieren).
+- Actualmente, Android mantiene la Activación por Voz apagada y usa un flujo de micrófono manual en la pestaña Voz.
 
 ## Almacenamiento (host Gateway)
 
@@ -36,34 +36,34 @@ Forma:
 
 Notas:
 
-- Los disparadores se normalizan (se eliminan los espacios en blanco, se eliminan los vacíos). Las listas vacías vuelven a los valores predeterminados.
+- Los activadores se normalizan (se recortan los espacios, se eliminan los vacíos). Las listas vacías vuelven a los valores predeterminados.
 - Se aplican límites por seguridad (límites de recuento/longitud).
 
 ### Eventos
 
-- `voicewake.changed` carga útil `{ triggers: string[] }`
+- carga útil `voicewake.changed` `{ triggers: string[] }`
 
 Quién lo recibe:
 
 - Todos los clientes WebSocket (aplicación macOS, WebChat, etc.)
-- Todos los nodos conectados (iOS/Android), y también al conectar el nodo como un envío inicial del "estado actual".
+- Todos los nodos conectados (iOS/Android), y también al conectar el nodo como un envío inicial de "estado actual".
 
 ## Comportamiento del cliente
 
-### Aplicación macOS
+### aplicación macOS
 
-- Usa la lista global para filtrar los disparadores `VoiceWakeRuntime`.
-- Editar "Palabras de activación" en la configuración de Voice Wake llama a `voicewake.set` y luego se basa en la transmisión para mantener sincronizados a los demás clientes.
+- Usa la lista global para filtrar los activadores `VoiceWakeRuntime`.
+- Editar "Palabras de activación" en la configuración de Activación por Voz llama a `voicewake.set` y luego confía en la transmisión para mantener sincronizados los demás clientes.
 
-### Nodo iOS
+### nodo iOS
 
-- Usa la lista global para la detección de disparadores `VoiceWakeManager`.
-- Editar Palabras de activación en Configuración llama a `voicewake.set` (a través del WebSocket del Gateway) y también mantiene la detección local de palabras de activación receptiva.
+- Usa la lista global para la detección de activadores `VoiceWakeManager`.
+- Editar Palabras de activación en Configuración llama a `voicewake.set` (a través del Gateway WS) y también mantiene la detección de palabras de activación local responsiva.
 
-### Nodo Android
+### nodo Android
 
-- Voice Wake está actualmente desactivado en el tiempo de ejecución/Configuración de Android.
-- La voz de Android utiliza la captura manual del micrófono en la pestaña Voz en lugar de los disparadores de palabras de activación.
+- La Activación por Voz está actualmente deshabilitada en el tiempo de ejecución/Configuración de Android.
+- La voz de Android usa la captura manual del micrófono en la pestaña Voz en lugar de los activadores de palabras de activación.
 
 import es from "/components/footer/es.mdx";
 

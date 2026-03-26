@@ -2,8 +2,8 @@
 title: "Semántica de credenciales de autenticación"
 summary: "Semántica canónica de elegibilidad y resolución de credenciales para perfiles de autenticación"
 read_when:
-  - Trabajar en la resolución de perfiles de autenticación o el enrutamiento de credenciales
-  - Depuración de fallos de autenticación de modelos o el orden de perfiles
+  - Working on auth profile resolution or credential routing
+  - Debugging model auth failures or profile order
 ---
 
 # Semántica de credenciales de autenticación
@@ -15,7 +15,7 @@ Este documento define la semántica canónica de elegibilidad y resolución de c
 - `models status --probe`
 - `doctor-auth`
 
-El objetivo es mantener alineados los comportamientos de selección y tiempo de ejecución.
+El objetivo es mantener el comportamiento de selección y tiempo de ejecución alineados.
 
 ## Códigos de razón estables
 
@@ -44,9 +44,9 @@ Las credenciales de token (`type: "token"`) admiten `token` en línea y/o `token
 2. Para los perfiles elegibles, el material del token puede resolverse desde el valor en línea o `tokenRef`.
 3. Las referencias no resolubles producen `unresolved_ref` en la salida de `models status --probe`.
 
-## Mensajes compatibles con sistemas heredados
+## Mensajes compatibles con heredados
 
-Para la compatibilidad de secuencias de comandos, los errores de sonda mantienen esta primera línea sin cambios:
+Para la compatibilidad con scripts, los errores de sonda mantienen esta primera línea sin cambios:
 
 `Auth profile credentials are missing or expired.`
 

@@ -1,5 +1,5 @@
 ---
-summary: "Run OpenClaw with SGLang (OpenAI-compatible self-hosted server)"
+summary: "使用 SGLang 运行 OpenClaw（OpenAI 兼容的自托管服务器）"
 read_when:
   - You want to run OpenClaw against a local SGLang server
   - You want OpenAI-compatible /v1 endpoints with your own models
@@ -8,29 +8,28 @@ title: "SGLang"
 
 # SGLang
 
-SGLang can serve open-source models via an **OpenAI-compatible** HTTP API.
-OpenClaw can connect to SGLang using the `openai-completions` API.
+SGLang 可以通过 **OpenAI 兼容的** HTTP API 提供开源模型服务。
+OpenClaw 可以使用 `openai-completions` API 连接到 SGLang。
 
-OpenClaw can also **auto-discover** available models from SGLang when you opt
-in with `SGLANG_API_KEY` (any value works if your server does not enforce auth)
-and you do not define an explicit `models.providers.sglang` entry.
+当您选择使用 `SGLANG_API_KEY` 时（如果您的服务器不强制身份验证，则任何值均可），
+并且未定义显式的 `models.providers.sglang` 条目，OpenClaw 还可以从 SGLang **自动发现** 可用模型。
 
 ## 快速开始
 
-1. Start SGLang with an OpenAI-compatible server.
+1. 使用 OpenAI 兼容服务器启动 SGLang。
 
-Your base URL should expose `/v1` endpoints (for example `/v1/models`,
-`/v1/chat/completions`). SGLang commonly runs on:
+您的基础 URL 应该公开 `/v1` 端点（例如 `/v1/models`、
+`/v1/chat/completions`）。SGLang 通常运行在：
 
 - `http://127.0.0.1:30000/v1`
 
-2. Opt in (any value works if no auth is configured):
+2. 选择启用（如果未配置认证，则任何值均可）：
 
 ```bash
 export SGLANG_API_KEY="sglang-local"
 ```
 
-3. Run 新手引导 and choose `SGLang`, or set a 模型 directly:
+3. 运行入门引导并选择 `SGLang`，或直接设置模型：
 
 ```bash
 openclaw onboard
@@ -46,25 +45,25 @@ openclaw onboard
 }
 ```
 
-## Model discovery (implicit 提供商)
+## 模型发现（隐式提供商）
 
-When `SGLANG_API_KEY` is set (or an auth profile exists) and you **do not**
-define `models.providers.sglang`, OpenClaw will query:
+当设置了 `SGLANG_API_KEY`（或存在身份验证配置文件）并且您**未**
+定义 `models.providers.sglang` 时，OpenClaw 将查询：
 
 - `GET http://127.0.0.1:30000/v1/models`
 
-and convert the returned IDs into 模型 entries.
+并将返回的 ID 转换为模型条目。
 
-If you set `models.providers.sglang` explicitly, auto-discovery is skipped and
-you must define models manually.
+如果您显式设置了 `models.providers.sglang`，则会跳过自动发现，
+并且您必须手动定义模型。
 
-## Explicit configuration (manual models)
+## 显式配置（手动模型）
 
-Use explicit config when:
+在以下情况下使用显式配置：
 
-- SGLang runs on a different host/port.
-- You want to pin `contextWindow`/`maxTokens` values.
-- Your server requires a real API key (or you want to control headers).
+- SGLang 运行在不同的主机/端口上。
+- 您想要固定 `contextWindow`/`maxTokens` 的值。
+- 您的服务器需要真实的 API 密钥（或者您想要控制请求头）。
 
 ```json5
 {
@@ -91,17 +90,15 @@ Use explicit config when:
 }
 ```
 
-## Troubleshooting
+## 故障排除
 
-- Check the server is reachable:
+- 检查服务器是否可访问：
 
 ```bash
 curl http://127.0.0.1:30000/v1/models
 ```
 
-- If requests fail with auth errors, set a real `SGLANG_API_KEY` that matches
-  your server configuration, or configure the 提供商 explicitly under
-  `models.providers.sglang`.
+- 如果请求因身份验证错误而失败，请设置一个与您的服务器配置相匹配的真实 `SGLANG_API_KEY`，或者在 `models.providers.sglang` 下显式配置提供商。
 
 import zh from "/components/footer/zh.mdx";
 

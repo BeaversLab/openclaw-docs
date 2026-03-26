@@ -7,13 +7,9 @@ title: "Agent Loop"
 
 # Agent Loop (OpenClaw)
 
-Une bouche agentic est le « véritable » parcours complet d'un agent : intake → assemblage du contexte → inférence du modèle →
-exécution de l'outil → réponses en continu → persistance. C'est le chemin faisant autorité qui transforme un message
-en actions et une réponse finale, tout en maintenant l'état de la session cohérent.
+Une boucle agentique est l'exécution complète « réelle » d'un agent : ingestion → assemblage du contexte → inférence du modèle → exécution d'outils → réponses en streaming → persistance. C'est le chemin autoritatif qui transforme un message en actions et une réponse finale, tout en maintenant l'état de la session cohérent.
 
-Dans OpenClaw, une boucle est une exécution unique et sérialisée par session qui émet des événements de cycle de vie et de flux
-alors que le modèle réfléchit, appelle des outils et diffuse la sortie. Ce document explique comment cette bouche authentique est
-connectée de bout en bout.
+Dans OpenClaw, une boucle est une exécution unique et sérialisée par session qui émet des événements de cycle de vie et de flux alors que le modèle réfléchit, appelle des outils et diffuse la sortie. Ce document explique comment cette boucle authentique est câblée de bout en bout.
 
 ## Points d'entrée
 
@@ -22,7 +18,7 @@ connectée de bout en bout.
 
 ## Fonctionnement (haut niveau)
 
-1. Le RPC `agent` valide les paramètres, résout la session (sessionKey/sessionId), persiste les métadonnées de la session, renvoie `{ runId, acceptedAt }` immédiatement.
+1. Le RPC `agent` valide les paramètres, résout la session (sessionKey/sessionId), persiste les métadonnées de session et renvoie `{ runId, acceptedAt }` immédiatement.
 2. `agentCommand` exécute l'agent :
    - résout le modèle + les valeurs par défaut de réflexion/verbosité
    - charge l'instantané des compétences
@@ -34,12 +30,12 @@ connectée de bout en bout.
    - s'abonne aux événements pi et diffuse les deltas de l'assistant/outils
    - applique le délai d'attente -> annule l'exécution s'il est dépassé
    - renvoie les charges utiles + les métadonnées d'utilisation
-4. `subscribeEmbeddedPiSession` fait le pont entre les événements pi-agent-core et le flux `agent` OpenClaw :
-   - événements d'outil => `stream: "tool"`
-   - deltas d'assistant => `stream: "assistant"`
+4. `subscribeEmbeddedPiSession` fait le pont entre les événements pi-agent-core et le flux OpenClaw `agent` :
+   - événements d'outils => `stream: "tool"`
+   - deltas de l'assistant => `stream: "assistant"`
    - événements de cycle de vie => `stream: "lifecycle"` (`phase: "start" | "end" | "error"`)
 5. `agent.wait` utilise `waitForAgentJob` :
-   - attend la **fin du cycle de vie/erreur** pour `runId`
+   - attend la **fin/erreur de cycle de vie** pour `runId`
    - renvoie `{ status: ok|error|timeout, startedAt, endedAt, error? }`
 
 ## File d'attente + concurrence
@@ -54,7 +50,7 @@ connectée de bout en bout.
 - L'espace de travail est résolu et créé ; les exécutions en bac à sable peuvent rediriger vers une racine d'espace de travail en bac à sable.
 - Les Skills sont chargés (ou réutilisés à partir d'un instantané) et injectés dans l'environnement et le prompt.
 - Les fichiers d'amorçage/contexte sont résolus et injectés dans le rapport du prompt système.
-- Un verrou en écriture de session est acquis ; `SessionManager` est ouvert et préparé avant la diffusion.
+- Un verrou d'écriture de session est acquis ; `SessionManager` est ouvert et préparé avant le streaming.
 
 ## Assemblage du prompt + prompt système
 
@@ -71,39 +67,39 @@ OpenClaw possède deux systèmes d'accroche :
 
 ### Accroches internes (accroches Gateway)
 
-- **`agent:bootstrap`** : s'exécute lors de la création des fichiers d'amorçage avant la finalisation du système de prompt.
-  Utilisez ceci pour ajouter/supprimer des fichiers de contexte d'amorçage.
-- **Command hooks** : `/new`, `/reset`, `/stop`, et autres événements de commande (voir la documentation sur les hooks).
+- **`agent:bootstrap`** : s'exécute lors de la création des fichiers d'amorçage avant la finalisation du prompt système.
+  Utilisez-le pour ajouter/supprimer des fichiers de contexte d'amorçage.
+- **Accroches de commande** : `/new`, `/reset`, `/stop` et autres événements de commande (voir la documentation sur les Hooks).
 
-Consultez [Hooks](/fr/automation/hooks) pour la configuration et les exemples.
+Voir [Hooks](/fr/automation/hooks) pour la configuration et les exemples.
 
 ### Accroches de plugin (cycle de vie de l'agent + Gateway)
 
 Celles-ci s'exécutent à l'intérieur de la boucle de l'agent ou du pipeline du Gateway :
 
-- **`before_model_resolve`** : s'exécute avant la session (sans `messages`) pour remplacer de manière déterministe le provider/model avant la résolution du model.
-- **`before_prompt_build`** : s'exécute après le chargement de la session (avec `messages`) pour injecter `prependContext`, `systemPrompt`, `prependSystemContext` ou `appendSystemContext` avant la soumission du prompt. Utilisez `prependContext` pour le texte dynamique par tour et les champs de contexte système pour une guidance stable qui doit figurer dans l'espace du système prompt.
-- **`before_agent_start`** : hook de compatibilité héritée qui peut s'exécuter dans l'une ou l'autre phase ; préférez les hooks explicites ci-dessus.
-- **`agent_end`** : inspecter la liste finale des messages et exécuter les métadonnées après l'achèvement.
+- **`before_model_resolve`** : s'exécute pré-session (sans `messages`) pour redéfinir de manière déterminante le provider/modèle avant la résolution du modèle.
+- **`before_prompt_build`** : s'exécute après le chargement de la session (avec `messages`) pour injecter `prependContext`, `systemPrompt`, `prependSystemContext` ou `appendSystemContext` avant la soumission du prompt. Utilisez `prependContext` pour le texte dynamique par tour et les champs system-context pour des conseils stables qui doivent figurer dans l'espace du prompt système.
+- **`before_agent_start`** : hook de compatibilité héritée qui peut s'exécuter dans l'une ou l'autre phase ; privilégiez les hooks explicites ci-dessus.
+- **`agent_end`** : inspecter la liste finale des messages et les métadonnées d'exécution après l'achèvement.
 - **`before_compaction` / `after_compaction`** : observer ou annoter les cycles de compactage.
 - **`before_tool_call` / `after_tool_call`** : intercepter les paramètres/résultats des outils.
 - **`tool_result_persist`** : transformer de manière synchrone les résultats des outils avant qu'ils ne soient écrits dans la transcription de la session.
-- **`message_received` / `message_sending` / `message_sent`** : hooks de messages entrants + sortants.
+- **`message_received` / `message_sending` / `message_sent`** : hooks de messages entrants et sortants.
 - **`session_start` / `session_end`** : limites du cycle de vie de la session.
 - **`gateway_start` / `gateway_stop`** : événements du cycle de vie de la passerelle.
 
-Consultez [Plugins](/fr/tools/plugin#plugin-hooks) pour l'API des hooks et les détails d'enregistrement.
+Voir [Plugin hooks](/fr/plugins/architecture#provider-runtime-hooks) pour l'API API et les détails d'enregistrement.
 
 ## Streaming + réponses partielles
 
 - Les deltas de l'assistant sont diffusés en continu depuis pi-agent-core et émis sous forme d'événements `assistant`.
-- Le streaming par bloc peut émettre des réponses partielles soit sur `text_end` soit sur `message_end`.
+- Le streaming de blocs peut émettre des réponses partielles soit sur `text_end` soit sur `message_end`.
 - Le streaming de raisonnement peut être émis sous forme d'un flux séparé ou sous forme de réponses de bloc.
-- Consultez [Streaming](/fr/concepts/streaming) pour le comportement de découpage et de réponse par bloc.
+- Voir [Streaming](/fr/concepts/streaming) pour le comportement de découpage et de réponse de bloc.
 
 ## Exécution d'outils + outils de messagerie
 
-- Les événements de début/mise à jour/fin de tool sont émis sur le flux `tool`.
+- Les événements de début/mise à jour/fin d'outil sont émis sur le flux `tool`.
 - Les résultats des outils sont nettoyés en termes de taille et de charges d'images avant la journalisation/l'émission.
 - Les envois d'outils de messagerie sont suivis pour supprimer les confirmations en double de l'assistant.
 
@@ -115,20 +111,20 @@ Consultez [Plugins](/fr/tools/plugin#plugin-hooks) pour l'API des hooks et les d
   - texte d'erreur de l'assistant lorsque le modèle rencontre une erreur
 - `NO_REPLY` est traité comme un jeton silencieux et filtré des charges utiles sortantes.
 - Les doublons d'outils de messagerie sont supprimés de la liste finale des charges utiles.
-- S'il ne reste aucune charge utile rendable et qu'un tool a généré une erreur, une réponse d'erreur de tool de secours est émise
-  (sauf si un tool de messagerie a déjà envoyé une réponse visible par l'utilisateur).
+- S'il ne reste aucune charge utile pouvant être rendue et qu'un outil a échoué, une réponse d'erreur d'outil de secours est émise
+  (sauf si un outil de messagerie a déjà envoyé une réponse visible par l'utilisateur).
 
 ## Compactage + nouvelles tentatives
 
-- La compactage automatique émet des événements de flux `compaction` et peut déclencher une nouvelle tentative.
+- L'auto-compactage émet des événements de flux `compaction` et peut déclencher une nouvelle tentative.
 - Lors d'une nouvelle tentative, les tampons en mémoire et les résumés d'outils sont réinitialisés pour éviter les doublons.
 - Voir [Compactage](/fr/concepts/compaction) pour le pipeline de compactage.
 
 ## Flux d'événements (actuellement)
 
-- `lifecycle` : émis par `subscribeEmbeddedPiSession` (et comme solution de repli par `agentCommand`)
+- `lifecycle` : émis par `subscribeEmbeddedPiSession` (et comme solution de secours par `agentCommand`)
 - `assistant` : deltas diffusés en continu depuis pi-agent-core
-- `tool` : événements de tool diffusés en continu depuis pi-agent-core
+- `tool` : événements d'outil diffusés en continu depuis pi-agent-core
 
 ## Gestion du canal de discussion
 
@@ -137,8 +133,8 @@ Consultez [Plugins](/fr/tools/plugin#plugin-hooks) pour l'API des hooks et les d
 
 ## Délais d'expiration
 
-- `agent.wait` par défaut : 30 s (seulement l'attente). Le paramètre `timeoutMs` permet de le remplacer.
-- Runtime de l'agent : `agents.defaults.timeoutSeconds` par défaut 600 s ; appliqué dans la minuterie d'abandon `runEmbeddedPiAgent`.
+- `agent.wait` par défaut : 30 s (juste l'attente). Le paramètre `timeoutMs` prévaut.
+- Durée d'exécution de l'agent : `agents.defaults.timeoutSeconds` par défaut 600 s ; appliquée dans la minuterie d'abandon `runEmbeddedPiAgent`.
 
 ## Où les choses peuvent se terminer tôt
 

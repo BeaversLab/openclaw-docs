@@ -1,7 +1,7 @@
 ---
-summary: "Logique de l'état de la barre de menus et ce qui est présenté aux utilisateurs"
+summary: "Logique de l'état de la barre de menus et ce qui est affiché aux utilisateurs"
 read_when:
-  - Modification de l'interface utilisateur du menu Mac ou de la logique d'état
+  - Tweaking mac menu UI or status logic
 title: "Barre de menus"
 ---
 
@@ -11,12 +11,12 @@ title: "Barre de menus"
 
 - Nous affichons l'état de travail actuel de l'agent dans l'icône de la barre de menus et dans la première ligne d'état du menu.
 - L'état de santé est masqué pendant le travail actif ; il réapparaît lorsque toutes les sessions sont inactives.
-- Le bloc « Nodes » du menu répertorie uniquement les **appareils** (nœuds appariés via `node.list`), et non les entrées client/présence.
+- Le bloc « Nodes » dans le menu répertorie uniquement les **appareils** (nœuds appariés via `node.list`), et non les entrées client/présence.
 - Une section « Utilisation » apparaît sous Contexte lorsque des instantanés d'utilisation du provider sont disponibles.
 
 ## Modèle d'état
 
-- Sessions : les événements arrivent avec `runId` (par exécution) plus `sessionKey` dans la charge utile. La session « principale » est la clé `main` ; si absente, nous revenons à la session la plus récemment mise à jour.
+- Sessions : les événements arrivent avec `runId` (par exécution) ainsi que `sessionKey` dans la charge utile. La session « principale » est la clé `main` ; si elle est absente, nous revenons à la session la plus récemment mise à jour.
 - Priorité : la session principale gagne toujours. Si la session principale est active, son état est affiché immédiatement. Si la session principale est inactive, la session non principale la plus récemment active est affichée. Nous n'alternons pas en pleine activité ; nous ne changeons que lorsque la session actuelle devient inactive ou que la session principale devient active.
 - Types d'activité :
   - `job` : exécution de commandes de haut niveau (`state: started|streaming|done|error`).
@@ -41,36 +41,36 @@ title: "Barre de menus"
 ### Correspondance visuelle
 
 - `idle` : créature normale.
-- `workingMain` : badge avec glyphe, teinte complète, animation de patte « en cours de travail ».
-- `workingOther` : badge avec glyphe, teinte atténuée, sans agitation.
-- `overridden` : utilise la glyphe/teinte choisie indépendamment de l'activité.
+- `workingMain` : badge avec glyphe, teinte complète, animation de patte « working ».
+- `workingOther` : badge avec glyphe, teinte atténuée, pas de course.
+- `overridden` : utilise le glyphe/la teinte choisi, indépendamment de l'activité.
 
 ## Texte de la ligne d'état (menu)
 
-- Pendant que le travail est actif : `<Session role> · <activity label>`
-  - Exemples : `Main · exec: pnpm test`, `Other · read: apps/macos/Sources/OpenClaw/AppState.swift`.
+- Pendant le travail actif : `<Session role> · <activity label>`
+  - Exemples : `Main · exec: pnpm test`, `Other · read: apps/macos/Sources/OpenClaw/AppState.swift`.
 - Au repos : retourne au résumé de santé.
 
 ## Ingestion des événements
 
-- Source : événements `agent` du canal de contrôle (`ControlChannel.handleAgentEvent`).
+- Source : événements du canal de contrôle `agent` (`ControlChannel.handleAgentEvent`).
 - Champs analysés :
   - `stream: "job"` avec `data.state` pour le démarrage/l'arrêt.
-  - `stream: "tool"` avec `data.phase`, `name`, en option `meta`/`args`.
+  - `stream: "tool"` avec `data.phase`, `name`, `meta`/`args` en option.
 - Libellés :
-  - `exec` : première ligne de `args.command`.
-  - `read`/`write` : chemin raccourci.
-  - `edit` : chemin plus type de modification déduit à partir de `meta`/comptes de différences.
+  - `exec` : première ligne de `args.command`.
+  - `read`/`write` : chemin raccourci.
+  - `edit` : chemin plus type de modification déduit à partir de `meta`/diff counts.
   - repli (fallback) : nom de l'outil.
 
 ## Remplacement de débogage
 
 - Paramètres ▸ Débogage ▸ Sélecteur « Icon override » :
   - `System (auto)` (par défaut)
-  - `Working: main` (par kind d'outil)
-  - `Working: other` (par kind d'outil)
+  - `Working: main` (par type d'outil)
+  - `Working: other` (par type d'outil)
   - `Idle`
-- Stocké via `@AppStorage("iconOverride")` ; mappé à `IconState.overridden`.
+- Stocké via `@AppStorage("iconOverride")` ; mappé à `IconState.overridden`.
 
 ## Liste de vérification des tests
 

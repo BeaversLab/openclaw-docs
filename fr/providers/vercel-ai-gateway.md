@@ -1,24 +1,23 @@
 ---
 title: "Vercel AI Gateway"
-summary: "Vercel AI Gateway configuration (auth + sélection du modèle)"
+summary: "Vercel AI Gateway configuration (auth + sélection de modèle)"
 read_when:
-  - Vous souhaitez utiliser Vercel AI Gateway avec OpenClaw
-  - Vous avez besoin de la variable d'environnement de la clé API ou du choix d'authentification CLI
+  - You want to use Vercel AI Gateway with OpenClaw
+  - You need the API key env var or CLI auth choice
 ---
 
 # Vercel AI Gateway
 
-Le [Vercel AI Gateway](https://vercel.com/ai-gateway) fournit une API unifiée pour accéder à des centaines de modèles via un point de terminaison unique.
+Le [Vercel AI Gateway](https://vercel.com/ai-gateway) fournit une API unifiée pour accéder à des centaines de modèles via un seul point de terminaison.
 
 - Fournisseur : `vercel-ai-gateway`
 - Auth : `AI_GATEWAY_API_KEY`
-- API : compatible avec les messages Anthropic
-- OpenClaw détecte automatiquement le catalogue du Gateway `/v1/models`, donc `/models vercel-ai-gateway`
-  inclut les références de modèles actuelles telles que `vercel-ai-gateway/openai/gpt-5.4`.
+- API : Compatible avec les messages Anthropic
+- OpenClaw détecte automatiquement le catalogue `/v1/models` de la passerelle, donc `/models vercel-ai-gateway` inclut les références de modèle actuelles telles que `vercel-ai-gateway/openai/gpt-5.4`.
 
-## Quick start
+## Démarrage rapide
 
-1. Définissez la clé API (recommandé : stockez-la pour le Gateway) :
+1. Définissez la clé API (recommandé : stockez-la pour la passerelle) :
 
 ```bash
 openclaw onboard --auth-choice ai-gateway-api-key
@@ -45,16 +44,13 @@ openclaw onboard --non-interactive \
   --ai-gateway-api-key "$AI_GATEWAY_API_KEY"
 ```
 
-## Note sur l'environnement
+## Remarque sur l'environnement
 
-Si le Gateway s'exécute en tant que démon (launchd/systemd), assurez-vous que `AI_GATEWAY_API_KEY`
-est disponible pour ce processus (par exemple, dans `~/.openclaw/.env` ou via
-`env.shellEnv`).
+Si la passerelle s'exécute en tant que démon (launchd/systemd), assurez-vous que `AI_GATEWAY_API_KEY` est disponible pour ce processus (par exemple, dans `~/.openclaw/.env` ou via `env.shellEnv`).
 
 ## Raccourci de l'ID de modèle
 
-OpenClaw accepte les références de modèles abrégées Vercel Claude et les normalise à
-l'exécution :
+OpenClaw accepte les références de modèle raccourcies Vercel Claude et les normalise lors de l'exécution :
 
 - `vercel-ai-gateway/claude-opus-4.6` -> `vercel-ai-gateway/anthropic/claude-opus-4.6`
 - `vercel-ai-gateway/opus-4.6` -> `vercel-ai-gateway/anthropic/claude-opus-4-6`

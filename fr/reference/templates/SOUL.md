@@ -2,7 +2,7 @@
 title: "Modèle SOUL.md"
 summary: "Modèle d'espace de travail pour SOUL.md"
 read_when:
-  - Initialisation manuelle d'un espace de travail
+  - Bootstrapping a workspace manually
 ---
 
 # SOUL.md - Qui vous êtes

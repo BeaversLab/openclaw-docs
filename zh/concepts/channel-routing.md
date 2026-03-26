@@ -1,18 +1,19 @@
 ---
-summary: "每个渠道（WhatsApp、Telegram、Discord、Slack）的路由规则和共享上下文"
+summary: "每个渠道的路由规则（WhatsApp、Telegram、Discord、Slack）及共享上下文"
 read_when:
-  - 更改渠道路由或收件箱行为
-title: "Channel Routing"
+  - Changing channel routing or inbox behavior
+title: "渠道路由"
 ---
 
 # Channels & routing
 
-OpenClaw 将回复**路由回消息来源渠道**。
-模型不选择渠道；路由是确定性的，由主机配置控制。
+OpenClaw routes replies **back to the 渠道 where a message came from**. The
+模型 does not choose a 渠道; routing is deterministic and controlled by the
+host configuration.
 
 ## Key terms
 
-- **渠道 (Channel)**：`whatsapp`、`telegram`、`discord`、`slack`、`signal`、`imessage`、`webchat`。
+- **渠道**：`whatsapp`、`telegram`、`discord`、`slack`、`signal`、`imessage`、`webchat`。
 - **AccountId**: per‑渠道 account instance (when supported).
 - **AgentId**: an isolated workspace + 会话 store (“brain”).
 - **SessionKey**: the bucket key used to store context and control concurrency.
@@ -30,8 +31,8 @@ Groups and channels remain isolated per 渠道:
 
 Threads:
 
-- Slack/Discord 主题会在基础键后附加 `:thread:<threadId>`。
-- Telegram 论坛主题将 `:topic:<topicId>` 嵌入到群组键中。
+- Slack/Discord 话题会在基础键后附加 `:thread:<threadId>`。
+- Telegram 论坛主题会将 `:topic:<topicId>` 嵌入到群组键中。
 
 Examples:
 
@@ -42,12 +43,12 @@ Examples:
 
 Routing picks **one agent** for each inbound message:
 
-1. **完全对等匹配**（具有 `peer.kind` + `peer.id` 的 `bindings`）。
+1. **精确对等匹配**（`bindings` 包含 `peer.kind` + `peer.id`）。
 2. **公会匹配**（Discord）通过 `guildId`。
 3. **团队匹配**（Slack）通过 `teamId`。
 4. **账户匹配**（渠道上的 `accountId`）。
 5. **Channel match** (any account on that 渠道).
-6. **默认代理**（`agents.list[].default`，否则为列表第一个条目，回退至 `main`）。
+6. **默认代理**（`agents.list[].default`，否则为列表第一项，回退到 `main`）。
 
 The matched agent determines which workspace and 会话 store are used.
 
@@ -67,12 +68,12 @@ Config:
 }
 ```
 
-参见：[广播组](/zh/broadcast-groups)。
+请参阅：[广播组](/zh/broadcast-groups)。
 
 ## Config overview
 
 - `agents.list`：命名的代理定义（工作区、模型等）。
-- `bindings`：将入站渠道/账户/对等点映射到代理。
+- `bindings`：将入站渠道/账户/对等端映射到代理。
 
 示例：
 
@@ -90,7 +91,7 @@ Config:
 
 ## 会话存储
 
-会话存储位于状态目录下（默认 `~/.openclaw`）：
+会话存储位于状态目录下（默认为 `~/.openclaw`）：
 
 - `~/.openclaw/agents/<agentId>/sessions/sessions.json`
 - JSONL 记录与存储并存
@@ -99,15 +100,14 @@ Config:
 
 ## WebChat 行为
 
-WebChat 附加到**选定的代理**，默认使用该代理的主会话。
-因此，WebChat 允许您在一个位置查看该代理的跨渠道上下文。
+WebChat 附加到**选定的代理**，并默认为该代理的主会话。因此，WebChat 允许您在一个位置查看该代理的跨通道上下文。
 
 ## 回复上下文
 
 入站回复包括：
 
 - `ReplyToId`、`ReplyToBody` 和 `ReplyToSender`（如果可用）。
-- 引用的上下文作为 `[Replying to ...]` 块附加到 `Body`。
+- 引用上下文作为 `[Replying to ...]` 块附加到 `Body`。
 
 这在所有通道中是一致的。
 

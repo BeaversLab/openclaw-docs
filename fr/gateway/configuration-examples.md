@@ -1,19 +1,19 @@
 ---
 summary: "Exemples de configuration conformes au schéma pour les configurations courantes d'OpenClaw"
 read_when:
-  - Apprendre à configurer OpenClaw
-  - Recherche d'exemples de configuration
-  - Configuration d'OpenClaw pour la première fois
-title: "Configuration Examples"
+  - Learning how to configure OpenClaw
+  - Looking for configuration examples
+  - Setting up OpenClaw for the first time
+title: "Exemples de configuration"
 ---
 
-# Configuration Examples
+# Exemples de configuration
 
 Les exemples ci-dessous sont alignés sur le schéma de configuration actuel. Pour la référence exhaustive et les notes par champ, voir [Configuration](/fr/gateway/configuration).
 
 ## Quick start
 
-### Absolute minimum
+### Minimum absolu
 
 ```json5
 {
@@ -22,9 +22,9 @@ Les exemples ci-dessous sont alignés sur le schéma de configuration actuel. Po
 }
 ```
 
-Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
+Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot depuis ce numéro.
 
-### Recommended starter
+### Starter recommandé
 
 ```json5
 {
@@ -35,7 +35,7 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
   },
   agent: {
     workspace: "~/.openclaw/workspace",
-    model: { primary: "anthropic/claude-sonnet-4-5" },
+    model: { primary: "anthropic/claude-sonnet-4-6" },
   },
   channels: {
     whatsapp: {
@@ -46,9 +46,9 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
 }
 ```
 
-## Expanded example (major options)
+## Exemple développé (options principales)
 
-> JSON5 lets you use comments and trailing commas. Regular JSON works too.
+> JSON5 vous permet d'utiliser des commentaires et des virgules finales. Le JSON standard fonctionne également.
 
 ```json5
 {
@@ -238,15 +238,15 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
       workspace: "~/.openclaw/workspace",
       userTimezone: "America/Chicago",
       model: {
-        primary: "anthropic/claude-sonnet-4-5",
+        primary: "anthropic/claude-sonnet-4-6",
         fallbacks: ["anthropic/claude-opus-4-6", "openai/gpt-5.2"],
       },
       imageModel: {
-        primary: "openrouter/anthropic/claude-sonnet-4-5",
+        primary: "openrouter/anthropic/claude-sonnet-4-6",
       },
       models: {
         "anthropic/claude-opus-4-6": { alias: "opus" },
-        "anthropic/claude-sonnet-4-5": { alias: "sonnet" },
+        "anthropic/claude-sonnet-4-6": { alias: "sonnet" },
         "openai/gpt-5.2": { alias: "gpt" },
       },
       thinkingDefault: "low",
@@ -271,7 +271,7 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
       maxConcurrent: 3,
       heartbeat: {
         every: "30m",
-        model: "anthropic/claude-sonnet-4-5",
+        model: "anthropic/claude-sonnet-4-6",
         target: "last",
         directPolicy: "allow", // allow (default) | block
         to: "+15555550123",
@@ -445,9 +445,9 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
 }
 ```
 
-## Common patterns
+## Modèles courants
 
-### Multi-platform setup
+### Configuration multiplateforme
 
 ```json5
 {
@@ -468,9 +468,9 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
 }
 ```
 
-### Secure DM mode (shared inbox / multi-user DMs)
+### Mode DM sécurisé (boîte de réception partagée / DMs multi-utilisateurs)
 
-If more than one person can DM your bot (multiple entries in `allowFrom`, pairing approvals for multiple people, or `dmPolicy: "open"`), enable **secure DM mode** so DMs from different senders don’t share one context by default:
+Si plus d'une personne peut envoyer un DM à votre bot (plusieurs entrées dans `allowFrom`, approbations d'appariement pour plusieurs personnes, ou `dmPolicy: "open"`), activez le **mode DM sécurisé** afin que les DMs d'expéditeurs différents ne partagent pas un même contexte par défaut :
 
 ```json5
 {
@@ -494,10 +494,10 @@ If more than one person can DM your bot (multiple entries in `allowFrom`, pairin
 }
 ```
 
-For Discord/Slack/Google Chat/MS Teams/Mattermost/IRC, sender authorization is ID-first by default.
-Only enable direct mutable name/email/nick matching with each channel's `dangerouslyAllowNameMatching: true` if you explicitly accept that risk.
+Pour Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC, l'autorisation de l'expéditeur est basée sur l'ID par défaut.
+N'activez la correspondance directe mutable de nom/e-mail/pseudonyme avec le `dangerouslyAllowNameMatching: true` de chaque canal que si vous acceptez explicitement ce risque.
 
-### OAuth with API key failover
+### OAuth avec basculement de clé API
 
 ```json5
 {
@@ -520,19 +520,20 @@ Only enable direct mutable name/email/nick matching with each channel's `dangero
   agent: {
     workspace: "~/.openclaw/workspace",
     model: {
-      primary: "anthropic/claude-sonnet-4-5",
+      primary: "anthropic/claude-sonnet-4-6",
       fallbacks: ["anthropic/claude-opus-4-6"],
     },
   },
 }
 ```
 
-### Anthropic setup-token + API key, MiniMax fallback
+### Jeton de configuration Anthropic + clé API, repli MiniMax
 
 <Warning>
-  Anthropic setup-token usage outside Claude Code has been restricted for some users in the past.
-  Treat this as user-choice risk and verify current Anthropic terms before depending on subscription
-  auth.
+  L'utilisation du jeton de configuration Anthropic hors de Claude Code a été restreinte pour
+  certains utilisateurs par le passé. Considérez ceci comme un risque lié au choix de l'utilisateur
+  et vérifiez les conditions actuelles de Anthropic avant de dépendre de l'authentification par
+  abonnement.
 </Warning>
 
 ```json5
@@ -566,13 +567,13 @@ Only enable direct mutable name/email/nick matching with each channel's `dangero
     workspace: "~/.openclaw/workspace",
     model: {
       primary: "anthropic/claude-opus-4-6",
-      fallbacks: ["minimax/MiniMax-M2.5"],
+      fallbacks: ["minimax/MiniMax-M2.7"],
     },
   },
 }
 ```
 
-### Work bot (restricted access)
+### Bot de travail (accès restreint)
 
 ```json5
 {
@@ -597,7 +598,7 @@ Only enable direct mutable name/email/nick matching with each channel's `dangero
 }
 ```
 
-### Local models only
+### Modèles locaux uniquement
 
 ```json5
 {
@@ -629,12 +630,12 @@ Only enable direct mutable name/email/nick matching with each channel's `dangero
 }
 ```
 
-## Tips
+## Conseils
 
-- If you set `dmPolicy: "open"`, the matching `allowFrom` list must include `"*"`.
-- Provider IDs differ (phone numbers, user IDs, channel IDs). Use the provider docs to confirm the format.
-- Optional sections to add later: `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
-- Voir [Fournisseurs](/fr/providers) et [Dépannage](/fr/gateway/troubleshooting) pour des notes de configuration plus détaillées.
+- Si vous définissez `dmPolicy: "open"`, la liste `allowFrom` correspondante doit inclure `"*"`.
+- Les IDs de fournisseur diffèrent (numéros de téléphone, IDs utilisateur, IDs de canal). Consultez la documentation du fournisseur pour confirmer le format.
+- Sections facultatives à ajouter plus tard : `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
+- Voir [Fournisseurs](/fr/providers) et [Dépannage](/fr/gateway/troubleshooting) pour des notes de configuration plus approfondies.
 
 import fr from "/components/footer/fr.mdx";
 

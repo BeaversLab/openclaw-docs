@@ -1,19 +1,19 @@
 ---
-summary: "Référence CLI pour `openclaw skills` (list/info/check) et l'éligibilité des compétences"
+summary: "Référence de la CLI pour `openclaw skills` (list/info/check) et l'éligibilité des compétences"
 read_when:
-  - Vous voulez voir quelles compétences sont disponibles et prêtes à être exécutées
-  - Vous voulez déboguer les binaires/env/config manquants pour les compétences
-title: "skills"
+  - You want to see which skills are available and ready to run
+  - You want to debug missing binaries/env/config for skills
+title: "compétences"
 ---
 
 # `openclaw skills`
 
-Inspecter les compétences (intégrées + espace de travail + remplacements gérés) et voir ce qui est éligible par rapport aux exigences manquantes.
+Inspectez les compétences (groupées + espace de travail + remplacements gérés) et voyez ce qui est éligible par rapport aux prérequis manquants.
 
 Connexes :
 
-- Système de compétences : [Skills](/fr/tools/skills)
-- Configuration des compétences : [Skills config](/fr/tools/skills-config)
+- Système de compétences : [Compétences](/fr/tools/skills)
+- Configuration des compétences : [Configuration des compétences](/fr/tools/skills-config)
 - Installations ClawHub : [ClawHub](/fr/tools/clawhub)
 
 ## Commandes

@@ -1,42 +1,42 @@
 ---
-title: Verificación Formal (Modelos de Seguridad)
+title: Verificación formal (modelos de seguridad)
 summary: Modelos de seguridad verificados por máquina para las rutas de mayor riesgo de OpenClaw.
 permalink: /security/formal-verification/
 ---
 
-# Verificación Formal (Modelos de Seguridad)
+# Verificación formal (modelos de seguridad)
 
 Esta página rastrea los **modelos de seguridad formales** de OpenClaw (TLA+/TLC hoy; más según sea necesario).
 
 > Nota: algunos enlaces antiguos pueden referirse al nombre anterior del proyecto.
 
-**Objetivo (estrella polar):** proporcionar un argumento verificado por máquina de que OpenClaw cumple con su
-política de seguridad prevista (autorización, aislamiento de sesión, filtrado de herramientas y
-seguridad contra configuraciones erróneas), bajo suposiciones explícitas.
+**Objetivo (estrella polar):** proporcionar un argumento verificado por máquina de que OpenClaw hace cumplir su
+política de seguridad prevista (autorización, aislamiento de sesión, restricción de herramientas y
+seguridad contra configuraciones incorrectas), bajo suposiciones explícitas.
 
-**Lo que esto es (hoy):** un **conjunto de regresiones de seguridad** ejecutable y dirigido por un atacante:
+**Lo que es esto (hoy):** un **conjunto de regresión de seguridad** ejecutable e impulsado por atacantes:
 
-- Cada afirmación tiene una verificación de modelo ejecutable sobre un espacio de estados finito.
-- Muchas afirmaciones tienen un **modelo negativo** emparejado que produce un rastro contraejemplo para una clase de error realista.
+- Cada afirmación tiene una verificación de modelo ejecutable sobre un espacio de estado finito.
+- Muchas afirmaciones tienen un **modelo negativo** emparejado que produce un rastro de contraejemplo para una clase de errores realista.
 
 **Lo que esto no es (todavía):** una prueba de que "OpenClaw es seguro en todos los aspectos" o de que la implementación completa de TypeScript es correcta.
 
-## Dónde residen los modelos
+## Dónde viven los modelos
 
 Los modelos se mantienen en un repositorio separado: [vignesh07/openclaw-formal-models](https://github.com/vignesh07/openclaw-formal-models).
 
 ## Advertencias importantes
 
-- Estos son **modelos**, no la implementación completa de TypeScript. Es posible que haya una deriva entre el modelo y el código.
-- Los resultados están limitados por el espacio de estados explorado por TLC; "verde" no implica seguridad más allá de las suposiciones y límites modelados.
-- Algunas afirmaciones se basan en suposiciones ambientales explícitas (por ejemplo, despliegue correcto, entradas de configuración correctas).
+- Estos son **modelos**, no la implementación completa de TypeScript. Es posible una divergencia entre el modelo y el código.
+- Los resultados están limitados por el espacio de estado explorado por TLC; "verde" no implica seguridad más allá de las suposiciones y límites modelados.
+- Algunas afirmaciones se basan en suposiciones ambientales explícitas (p. ej., implementación correcta, entradas de configuración correctas).
 
-## Reproduciendo resultados
+## Reproducir resultados
 
-Hoy, los resultados se reproducen clonando localmente el repositorio de modelos y ejecutando TLC (ver abajo). Una iteración futura podría ofrecer:
+Hoy, los resultados se reproducen clonando el repositorio de modelos localmente y ejecutando TLC (ver abajo). Una iteración futura podría ofrecer:
 
-- Modelos ejecutados por CI con artefactos públicos (rastros contraejemplo, registros de ejecución)
-- un flujo de trabajo alojado de "ejecutar este modelo" para verificaciones pequeñas y acotadas
+- Modelos ejecutados por CI con artefactos públicos (rastros de contraejemplo, registros de ejecución)
+- un flujo de trabajo alojado "ejecutar este modelo" para verificaciones pequeñas y delimitadas
 
 Para empezar:
 
@@ -50,21 +50,21 @@ cd openclaw-formal-models
 make <target>
 ```
 
-### Exposición de la puerta de enlace y configuración errónea de puerta de enlace abierta
+### Exposición de la puerta de enlace y mala configuración de la puerta de enlace abierta
 
-**Afirmación:** vincularse más allá de loopback sin autenticación puede permitir que el compromiso remoto sea posible / aumenta la exposición; el token/contraseña bloquea a los atacantes no autenticados (según las suposiciones del modelo).
+**Afirmación:** vincularse más allá del loopback sin autenticación puede hacer posible el compromiso remoto / aumenta la exposición; el token/contraseña bloquea a los atacantes no autenticados (según las suposiciones del modelo).
 
 - Ejecuciones verdes:
   - `make gateway-exposure-v2`
   - `make gateway-exposure-v2-protected`
-- Rojas (esperado):
+- Rojo (esperado):
   - `make gateway-exposure-v2-negative`
 
-Ver también: `docs/gateway-exposure-matrix.md` en el repositorio de modelos.
+Véase también: `docs/gateway-exposure-matrix.md` en el repositorio de modelos.
 
-### Canalización de Nodes.run (capacidad de mayor riesgo)
+### Canalización Nodes.run (capacidad de mayor riesgo)
 
-**Reclamación:** `nodes.run` requiere (a) lista de permitidos de comandos de nodo más comandos declarados y (b) aprobación en vivo cuando se configura; las aprobaciones se tokenizan para evitar la repetición (en el modelo).
+**Afirmación:** `nodes.run` requiere (a) lista blanca de comandos de nodo más comandos declarados y (b) aprobación en vivo cuando esté configurado; las aprobaciones se tokenizan para evitar la repetición (en el modelo).
 
 - Ejecuciones verdes:
   - `make nodes-pipeline`
@@ -73,9 +73,9 @@ Ver también: `docs/gateway-exposure-matrix.md` en el repositorio de modelos.
   - `make nodes-pipeline-negative`
   - `make approvals-token-negative`
 
-### Almacenamiento de emparejamiento (bloqueo DM)
+### Almacenamiento de emparejamiento (filtrado DM)
 
-**Reclamación:** las solicitudes de emparejamiento respetan el TTL y los límites de solicitudes pendientes.
+**Afirmación:** las solicitudes de emparejamiento respetan el TTL y los límites de solicitudes pendientes.
 
 - Ejecuciones verdes:
   - `make pairing`
@@ -84,9 +84,9 @@ Ver también: `docs/gateway-exposure-matrix.md` en el repositorio de modelos.
   - `make pairing-negative`
   - `make pairing-cap-negative`
 
-### Bloqueo de entrada (menciones + omisión de comandos de control)
+### Filtrado de entrada (menciones + bypass de comando de control)
 
-**Reclamación:** en contextos de grupo que requieren mención, un "comando de control" no autorizado no puede omitir el bloqueo de mención.
+**Afirmación:** en contextos de grupo que requieren mención, un "comando de control" no autorizado no puede omitir el filtrado de menciones.
 
 - Verde:
   - `make ingress-gating`
@@ -95,25 +95,25 @@ Ver también: `docs/gateway-exposure-matrix.md` en el repositorio de modelos.
 
 ### Aislamiento de enrutamiento/clave de sesión
 
-**Reclamación:** los MD de distintos pares no colapsan en la misma sesión a menos que se vinculen/configuren explícitamente.
+**Afirmación:** los MD de distintos pares no se fusionan en la misma sesión a menos que estén explícitamente vinculados/configurados.
 
 - Verde:
   - `make routing-isolation`
 - Rojo (esperado):
   - `make routing-isolation-negative`
 
-## v1++: modelos acotados adicionales (concurrencia, reintentos, corrección de traza)
+## v1++: modelos limitados adicionales (concurrencia, reintentos, corrección de rastros)
 
-Estos son modelos posteriores que ajustan la fidelidad en torno a los modos de falla del mundo real (actualizaciones no atómicas, reintentos y difusión de mensajes).
+Estos son modelos posteriores que ajustan la fidelidad en torno a modos de falla del mundo real (actualizaciones no atómicas, reintentos y difusión de mensajes).
 
-### Concurrencia del almacenamiento de emparejamiento / idempotencia
+### Concurrencia / idempotencia del almacenamiento de emparejamiento
 
-**Reclamación:** un almacenamiento de emparejamiento debe hacer cumplir `MaxPending` y la idempotencia incluso bajo intercalaciones (es decir, "verificar-then-escribir" debe ser atómico/bloqueado; la actualización no debería crear duplicados).
+**Afirmación:** un almacenamiento de emparejamiento debe hacer cumplir `MaxPending` y la idempotencia incluso bajo intercalaciones (es decir, "verificar-antes-escribir" debe ser atómico/bloqueado; la actualización no debería crear duplicados).
 
 Lo que significa:
 
-- Bajo solicitudes concurrentes, no puedes exceder `MaxPending` para un canal.
-- Las solicitudes/actualizaciones repetidas para el mismo `(channel, sender)` no deberían crear filas pendientes duplicadas en vivo.
+- Bajo solicitudes concurrentes, no se puede exceder `MaxPending` para un canal.
+- Las solicitudes/actualizaciones repetidas para el mismo `(channel, sender)` no deben crear filas pendientes en vivo duplicadas.
 
 - Ejecuciones verdes:
   - `make pairing-race` (verificación de límite atómico/bloqueado)
@@ -121,20 +121,20 @@ Lo que significa:
   - `make pairing-refresh`
   - `make pairing-refresh-race`
 - Rojo (esperado):
-  - `make pairing-race-negative` (condición de carrera de límite no atómico begin/commit)
+  - `make pairing-race-negative` (carrera de límite de inicio/confirmación no atómico)
   - `make pairing-idempotency-negative`
   - `make pairing-refresh-negative`
   - `make pairing-refresh-race-negative`
 
-### Correlación de traza de entrada / idempotencia
+### Correlación de rastros de entrada / idempotencia
 
-**Afirmación:** la ingesta debe preservar la correlación de trazas a través de la distribución y ser idempotente bajo los reintentos del proveedor.
+**Afirmación:** la ingesta debe preservar la correlación de trazas en el reparto (fan-out) ser idempotente ante los reintentos del proveedor.
 
 Lo que significa:
 
-- Cuando un evento externo se convierte en múltiples mensajes internos, cada parte mantiene la misma identidad de traza/evento.
+- Cuando un evento externo se convierte en múltiples mensajes internos, cada parte conserva la misma identidad de traza/evento.
 - Los reintentos no resultan en un procesamiento doble.
-- Si faltan los IDs de eventos del proveedor, la deduplicación recurre a una clave segura (p. ej., ID de traza) para evitar descartar eventos distintos.
+- Si faltan los IDs de evento del proveedor, la deduplicación vuelve a una clave segura (p. ej., ID de traza) para evitar perder eventos distintos.
 
 - Verde:
   - `make ingress-trace`
@@ -149,11 +149,11 @@ Lo que significa:
 
 ### Precedencia de dmScope de enrutamiento + identityLinks
 
-**Afirmación:** el enrutamiento debe mantener las sesiones DM aisladas de forma predeterminada y solo colapsar las sesiones cuando se configure explícitamente (precedencia de canal + enlaces de identidad).
+**Afirmación:** el enrutamiento debe mantener las sesiones de DM aisladas por defecto y solo colapsarlas cuando esté configurado explícitamente (precedencia de canal + enlaces de identidad).
 
 Lo que significa:
 
-- Las anulaciones de dmScope específicas del canal deben tener prioridad sobre los valores predeterminados globales.
+- Las invalidaciones de dmScope específicas del canal deben tener prioridad sobre los valores globales predeterminados.
 - identityLinks solo debe colapsar dentro de grupos vinculados explícitos, no entre pares no relacionados.
 
 - Verde:

@@ -1,68 +1,70 @@
 ---
-summary: "將新的共享功能新增至 OpenClaw 的食譜"
+summary: "用於為 OpenClaw 新增共享功能的食譜"
 read_when:
-  - 新增新的核心功能與外掛註冊介面
-  - 決定程式碼應屬於核心、供應商外掛，還是功能外掛
-  - 為通道或工具接線新的執行時期輔助程式
+  - Adding a new core capability and plugin registration surface
+  - Deciding whether code belongs in core, a vendor plugin, or a feature plugin
+  - Wiring a new runtime helper for channels or tools
 title: "功能食譜"
 ---
 
 # 功能食譜
 
-當 OpenClaw 需要新的領域（例如影像生成、視訊生成或某些未來由供應商支援的功能區域）時，請使用本指南。
+當 OpenClaw 需要一個新的領域（例如圖像生成、視頻生成或某些未來由供應商支援的功能區域）時，請使用此內容。
 
 規則：
 
-- plugin = 所有權邊界
-- capability = 共享核心合約
+- 插件 = 所有權邊界
+- 功能 = 共享核心合約
 
-這表示你不應該直接將供應商接線到通道或工具。請從定義功能開始。
+這意味著你不應該開始就將供應商直接連接到通道或工具。首先要從定義功能開始。
 
-## 何時建立功能
+## 何時創建功能
 
-當以下條件皆成立時，請建立新功能：
+當以下所有條件都成立時，創建一個新功能：
 
-1. 多個供應商皆可能合理地實作該功能
-2. 通道、工具或功能外掛應使用該功能，而不需關心供應商
-3. 核心需要擁有後備、原則、設定或傳遞行為
+1. 多個供應商可能實現它
+2. 通道、工具或功能插件應該使用它而不必關心
+   供應商
+3. 核心需要擁有後備、策略、配置或傳遞行為
 
-如果工作僅屬於供應商且尚未存在共享合約，請停止並先定義合約。
+如果工作僅涉及供應商且尚不存在共享合約，請停止並先定義
+該合約。
 
-## 標準程序
+## 標準流程
 
 1. 定義類型化的核心合約。
-2. 為該合約新增外掛註冊。
-3. 新增共享的執行時期輔助程式。
-4. 接線一個真實的供應商外掛作為證明。
-5. 將功能/通道的消費者移至執行時期輔助程式。
-6. 新增合約測試。
-7. 記錄操作員導向的設定與所有權模型。
+2. 為該合約添加插件註冊。
+3. 添加共享運行時輔助程式。
+4. 連接一個真實的供應商插件作為證明。
+5. 將功能/通道使用者移至運行時輔助程式。
+6. 添加合約測試。
+7. 記錄面向運營商的配置和所有權模型。
 
-## 位置安排
+## 什麼放在哪裡
 
 核心：
 
 - 請求/回應類型
 - 提供者註冊表 + 解析
 - 後備行為
-- 設定結構描述與標籤/說明
-- 執行時期輔助程式介面
+- 配置架構和標籤/幫助
+- 運行時輔助介面
 
-供應商外掛：
+供應商插件：
 
-- 供應商 API 呼叫
-- 供應商驗證處理
+- 供應商 API 調用
+- 供應商身份驗證處理
 - 供應商特定的請求正規化
 - 功能實作的註冊
 
-功能/通道外掛：
+功能/通道插件：
 
-- 呼叫 `api.runtime.*` 或相符的 `plugin-sdk/*-runtime` 輔助程式
-- 絕不直接呼叫供應商實作
+- 調用 `api.runtime.*` 或匹配的 `plugin-sdk/*-runtime` 輔助程式
+- 絕不直接調用供應商實作
 
-## 檔案檢查清單
+## 文件檢查清單
 
-對於新功能，預計會涉及以下區域：
+對於一個新功能，預計需要接觸這些區域：
 
 - `src/<capability>/types.ts`
 - `src/<capability>/...registry/runtime.ts`
@@ -74,37 +76,37 @@ title: "功能食譜"
 - `src/plugins/runtime/index.ts`
 - `src/plugin-sdk/<capability>.ts`
 - `src/plugin-sdk/<capability>-runtime.ts`
-- 一或多個 `extensions/<vendor>/...`
-- config/docs/tests
+- 一個或多個 `extensions/<vendor>/...`
+- 配置/文檔/測試
 
-## 範例：影像生成
+## 示例：圖像生成
 
-影像生成遵循標準結構：
+圖像生成遵循標準形式：
 
-1. core 定義 `ImageGenerationProvider`
-2. core 公開 `registerImageGenerationProvider(...)`
-3. core 公開 `runtime.imageGeneration.generate(...)`
-4. `openai` 和 `google` 外掛程式註冊廠商支援的實作
-5. 未來的廠商可以註冊相同的合約，而無需變更 channels/tools
+1. core 定義了 `ImageGenerationProvider`
+2. core 公開了 `registerImageGenerationProvider(...)`
+3. core 公開了 `runtime.imageGeneration.generate(...)`
+4. `openai` 和 `google` 外掛註冊了供應商支援的實作
+5. 未來的供應商可以在不修改 channels/tools 的情況下註冊相同的合約
 
-組態金鑰與視覺分析路由是分開的：
+設定金鑰與視覺分析路由是分開的：
 
-- `agents.defaults.imageModel` = 分析影像
-- `agents.defaults.imageGenerationModel` = 生成影像
+- `agents.defaults.imageModel` = 分析圖片
+- `agents.defaults.imageGenerationModel` = 產生圖片
 
-請將這兩者分開，以便回退和原則保持明確。
+將這兩者分開，以便備援和策略保持明確。
 
 ## 審查檢查清單
 
-在發布新功能之前，請確認：
+在發布新功能之前，請驗證：
 
-- 沒有任何 channel/tool 直接匯入廠商程式碼
-- runtime helper 是共用路徑
-- 至少有一個合約測試斷言捆綁所有權
-- 組態文件命名了新的 model/config 金鑰
-- 外掛程式文件說明了所有權邊界
+- 沒有 channel/tool 直接匯入供應商程式碼
+- runtime helper 是共用的路徑
+- 至少有一個合約測試斷言了捆綁所有權
+- 設定文件中指名了新的 model/config 金鑰
+- 外掛文件說明了所有權邊界
 
-如果 PR 略過功能層並將廠商行為硬編碼到 channel/tool 中，請將其退回並先定義合約。
+如果 PR 略過了功能層並將供應商行為硬編碼到 channel/tool 中，請將其退回並先定義合約。
 
 import footerZhHant from "/components/footer/zh-Hant.mdx";
 

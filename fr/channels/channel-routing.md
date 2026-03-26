@@ -1,23 +1,23 @@
 ---
 summary: "Règles de routage par canal (WhatsApp, Telegram, Discord, Slack) et contexte partagé"
 read_when:
-  - Modification du routage par canal ou du comportement de la boîte de réception
-title: "Routage de canal"
+  - Changing channel routing or inbox behavior
+title: "Channel Routing"
 ---
 
 # Channels & routing
 
-OpenClaw achemine les réponses **vers le canal d'où provient le message**. Le
-model ne choisit pas de canal ; le routage est déterministe et contrôlé par la
-configuration de l'hôte.
+OpenClaw routes replies **back to the channel where a message came from**. The
+model does not choose a channel; routing is deterministic and controlled by the
+host configuration.
 
 ## Key terms
 
-- **Channel** : `whatsapp`, `telegram`, `discord`, `slack`, `signal`, `imessage`, `webchat`.
+- **Channel**: `whatsapp`, `telegram`, `discord`, `slack`, `signal`, `imessage`, `webchat`.
 - **AccountId**: per‑channel account instance (when supported).
-- Compte par canal par défaut : `channels.<channel>.defaultAccount` choisit
-  quel compte est utilisé lorsqu'un chemin sortant ne spécifie pas `accountId`.
-  - Dans les configurations multi-comptes, définissez un défaut explicite (`defaultAccount` ou `accounts.default`) lorsque deux comptes ou plus sont configurés. Sans cela, le routage de secours peut choisir le premier ID de compte normalisé.
+- Optional channel default account: `channels.<channel>.defaultAccount` chooses
+  which account is used when an outbound path does not specify `accountId`.
+  - In multi-account setups, set an explicit default (`defaultAccount` or `accounts.default`) when two or more accounts are configured. Without it, fallback routing may pick the first normalized account ID.
 - **AgentId**: an isolated workspace + session store (“brain”).
 - **SessionKey**: the bucket key used to store context and control concurrency.
 
@@ -25,17 +25,17 @@ configuration de l'hôte.
 
 Direct messages collapse to the agent’s **main** session:
 
-- `agent:<agentId>:<mainKey>` (par défaut : `agent:main:main`)
+- `agent:<agentId>:<mainKey>` (default: `agent:main:main`)
 
 Groups and channels remain isolated per channel:
 
-- Groupes : `agent:<agentId>:<channel>:group:<id>`
-- Canaux/salles : `agent:<agentId>:<channel>:channel:<id>`
+- Groups: `agent:<agentId>:<channel>:group:<id>`
+- Channels/rooms: `agent:<agentId>:<channel>:channel:<id>`
 
 Threads:
 
-- Les fils de discussion Slack/Discord ajoutent `:thread:<threadId>` à la clé de base.
-- Les sujets de forum Telegram intègrent `:topic:<topicId>` dans la clé de groupe.
+- Slack/Discord threads append `:thread:<threadId>` to the base key.
+- Telegram forum topics embed `:topic:<topicId>` in the group key.
 
 Examples:
 
@@ -44,16 +44,13 @@ Examples:
 
 ## Main DM route pinning
 
-Lorsque `session.dmScope` est `main`, les messages directs peuvent partager une session principale.
-Pour empêcher que le `lastRoute` de la session ne soit écrasé par des messages directs de non-propriétaires,
-OpenClaw déduit un propriétaire épinglé à partir de `allowFrom` lorsque toutes ces conditions sont remplies :
+Lorsque `session.dmScope` est `main`, les messages privés peuvent partager une session principale. Pour empêcher que le `lastRoute` de la session ne soit écrasé par des messages privés de non-propriétaires, OpenClaw déduit un propriétaire épinglé à partir de `allowFrom` lorsque toutes les conditions suivantes sont remplies :
 
-- `allowFrom` a exactement une entrée non générique.
+- `allowFrom` a exactement une entrée non générique (non-wildcard).
 - L'entrée peut être normalisée en un ID d'expéditeur concret pour ce channel.
 - L'expéditeur du message privé entrant ne correspond pas à ce propriétaire épinglé.
 
-Dans ce cas de non-concordance, OpenClaw enregistre toujours les métadonnées de session entrantes, mais il
-saute la mise à jour du `lastRoute` de la session principale.
+Dans ce cas de non-correspondance, OpenClaw enregistre toujours les métadonnées de session entrantes, mais il ignore la mise à jour du `lastRoute` de la session principale.
 
 ## Règles de routage (choix d'un agent)
 
@@ -62,11 +59,11 @@ Le routage choisit **un agent** pour chaque message entrant :
 1. **Correspondance exacte de pair** (`bindings` avec `peer.kind` + `peer.id`).
 2. **Correspondance de pair parent** (héritage de fil de discussion).
 3. **Correspondance Guilde + rôles** (Discord) via `guildId` + `roles`.
-4. **Correspondance de guilde** (Discord) via `guildId`.
-5. **Team match** (Slack) via `teamId`.
-6. **Account match** (`accountId` sur le channel).
-7. **Channel match** (n'importe quel compte sur ce channel, `accountId: "*"`).
-8. **Default agent** (`agents.list[].default`, sinon première entrée de liste, repli sur `main`).
+4. **Correspondance de Guilde** (Discord) via `guildId`.
+5. **Correspondance d'équipe** (Slack) via `teamId`.
+6. **Correspondance de compte** (`accountId` sur le channel).
+7. **Correspondance de channel** (n'importe quel compte sur ce channel, `accountId: "*"`).
+8. **Agent par défaut** (`agents.list[].default`, sinon première entrée de la liste, repli sur `main`).
 
 Lorsqu'une liaison inclut plusieurs champs de correspondance (`peer`, `guildId`, `teamId`, `roles`), **tous les champs fournis doivent correspondre** pour que cette liaison s'applique.
 
@@ -88,12 +85,12 @@ Configuration :
 }
 ```
 
-Voir : [Broadcast Groups](/fr/channels/broadcast-groups).
+Voir : [Groupes de diffusion](/fr/channels/broadcast-groups).
 
 ## Aperçu de la configuration
 
-- `agents.list` : définitions d'agents nommés (espace de travail, model, etc.).
-- `bindings` : mapper les channels/comptes/pairs entrants aux agents.
+- `agents.list` : définitions d'agents nommés (espace de travail, modèle, etc.).
+- `bindings` : mappe les canaux/comptes/pairs entrants aux agents.
 
 Exemple :
 
@@ -116,24 +113,19 @@ Les magasins de session résident dans le répertoire d'état (par défaut `~/.o
 - `~/.openclaw/agents/<agentId>/sessions/sessions.json`
 - Les transcriptions JSONL résident à côté du magasin
 
-Vous pouvez remplacer le chemin du magasin via `session.store` et `{agentId}` de templating.
+Vous pouvez remplacer le chemin du magasin via le modèle `session.store` et `{agentId}`.
 
-La découverte de session Gateway et ACP analyse également les magasins d'agents sur disque sous
-la racine `agents/` par défaut et sous les racines `session.store` templatisées. Les magasins
-découverts doivent rester à l'intérieur de cette racine d'agent résolue et utiliser un fichier
-`sessions.json` régulier. Les liens symboliques et les chemins hors racine sont ignorés.
+La découverte de sessions Gateway et ACP analyse également les magasins d'agents sur disque sous la racine `agents/` par défaut et sous les racines `session.store` modelisées. Les magasins découverts doivent rester à l'intérieur de cette racine d'agent résolue et utiliser un fichier `sessions.json` régulier. Les liens symboliques et les chemins hors racine sont ignorés.
 
 ## Comportement WebChat
 
-WebChat se rattache à l'**agent sélectionné** et par défaut à la session principale
-de l'agent. Pour cette raison, WebChat vous permet de voir le contexte inter‑channel pour cet
-agent en un seul endroit.
+WebChat s'attache à l'**agent sélectionné** et utilise par défaut la session principale de l'agent. Pour cette raison, WebChat vous permet de voir le contexte inter-canaux de cet agent en un seul endroit.
 
 ## Contexte de réponse
 
 Les réponses entrantes incluent :
 
-- `ReplyToId`, `ReplyToBody`, et `ReplyToSender` lorsque disponible.
+- `ReplyToId`, `ReplyToBody` et `ReplyToSender` lorsqu'ils sont disponibles.
 - Le contexte cité est ajouté à `Body` sous forme de bloc `[Replying to ...]`.
 
 Ceci est cohérent sur tous les canaux.

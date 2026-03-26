@@ -1,31 +1,30 @@
 ---
-summary: "Hubs que enlazan con cada documento de OpenClaw"
+summary: "Centros que enlazan a toda la documentación de OpenClaw"
 read_when:
-  - Deseas un mapa completo de la documentación
-title: "Hubs de documentación"
+  - You want a complete map of the documentation
+title: "Centros de documentación"
 ---
 
 # Centros de documentación
 
-<Note>Si eres nuevo en OpenClaw, comienza con [Getting Started](/es/start/getting-started).</Note>
+<Note>Si es nuevo en OpenClaw, comience con [Introducción](/es/start/getting-started).</Note>
 
 Utilice estos centros para descubrir todas las páginas, incluidos los análisis profundos y los documentos de referencia que no aparecen en la navegación izquierda.
 
 ## Comenzar aquí
 
 - [Índice](/es/)
-- [Primeros pasos](/es/start/getting-started)
-- [Inicio rápido](/es/start/quickstart)
-- [Incorporación](/es/start/onboarding)
-- [Incorporación (CLI)](/es/start/wizard)
+- [Introducción](/es/start/getting-started)
+- [Onboarding](/es/start/onboarding)
+- [Onboarding (CLI)](/es/start/wizard)
 - [Configuración](/es/start/setup)
-- [Dashboard (Gateway local)](http://127.0.0.1:18789/)
+- [Panel (Gateway local)](http://127.0.0.1:18789/)
 - [Ayuda](/es/help)
 - [Directorio de documentos](/es/start/docs-directory)
 - [Configuración](/es/gateway/configuration)
 - [Ejemplos de configuración](/es/gateway/configuration-examples)
 - [Asistente de OpenClaw](/es/start/openclaw)
-- [Escaparate](/es/start/showcase)
+- [Showcase](/es/start/showcase)
 - [Historia](/es/start/lore)
 
 ## Instalación + actualizaciones
@@ -39,12 +38,12 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 
 - [Arquitectura](/es/concepts/architecture)
 - [Características](/es/concepts/features)
-- [Concentrador de red](/es/network)
-- [Tiempo de ejecución del agente](/es/concepts/agent)
+- [Hub de red](/es/network)
+- [Runtime del agente](/es/concepts/agent)
 - [Espacio de trabajo del agente](/es/concepts/agent-workspace)
 - [Memoria](/es/concepts/memory)
 - [Bucle del agente](/es/concepts/agent-loop)
-- [Transmisión + fragmentación](/es/concepts/streaming)
+- [Streaming + fragmentación](/es/concepts/streaming)
 - [Enrutamiento multiagente](/es/concepts/multi-agent)
 - [Compactación](/es/concepts/compaction)
 - [Sesiones](/es/concepts/session)
@@ -54,20 +53,20 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 - [Comandos de barra](/es/tools/slash-commands)
 - [Adaptadores RPC](/es/reference/rpc)
 - [Esquemas TypeBox](/es/concepts/typebox)
-- [Manejo de zona horaria](/es/concepts/timezone)
+- [Manejo de zonas horarias](/es/concepts/timezone)
 - [Presencia](/es/concepts/presence)
 - [Descubrimiento + transportes](/es/gateway/discovery)
 - [Bonjour](/es/gateway/bonjour)
 - [Enrutamiento de canales](/es/channels/channel-routing)
 - [Grupos](/es/channels/groups)
-- [Mensajes de grupo](/es/channels/group-messages)
+- [Mensajes grupales](/es/channels/group-messages)
 - [Conmutación por error del modelo](/es/concepts/model-failover)
 - [OAuth](/es/concepts/oauth)
 
-## Proveedores + ingreso
+## Proveedores + ingress
 
-- [Hub de canales de chat](/es/channels)
-- [Hub de proveedores de modelos](/es/providers/models)
+- [Centro de canales de chat](/es/channels)
+- [Centro de proveedores de modelos](/es/providers/models)
 - [WhatsApp](/es/channels/whatsapp)
 - [Telegram](/es/channels/telegram)
 - [Slack](/es/channels/slack)
@@ -75,7 +74,7 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 - [Mattermost](/es/channels/mattermost) (plugin)
 - [Signal](/es/channels/signal)
 - [BlueBubbles (iMessage)](/es/channels/bluebubbles)
-- [iMessage (heredado)](/es/channels/imessage)
+- [iMessage (legado)](/es/channels/imessage)
 - [Análisis de ubicación](/es/channels/location)
 - [WebChat](/es/web/webchat)
 - [Webhooks](/es/automation/webhook)
@@ -83,20 +82,20 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 
 ## Pasarela + operaciones
 
-- [Manual de la puerta de enlace](/es/gateway)
+- [Manual de procedimientos de la pasarela](/es/gateway)
 - [Modelo de red](/es/gateway/network-model)
-- [Emparejamiento de la puerta de enlace](/es/gateway/pairing)
-- [Bloqueo de la puerta de enlace](/es/gateway/gateway-lock)
+- [Emparejamiento de la pasarela](/es/gateway/pairing)
+- [Bloqueo de la pasarela](/es/gateway/gateway-lock)
 - [Proceso en segundo plano](/es/gateway/background-process)
 - [Salud](/es/gateway/health)
-- [Latido](/es/gateway/heartbeat)
+- [Latido del corazón](/es/gateway/heartbeat)
 - [Doctor](/es/gateway/doctor)
-- [Registro](/es/gateway/logging)
+- [Registro de logs](/es/gateway/logging)
 - [Sandboxing](/es/gateway/sandboxing)
-- [Panel](/es/web/dashboard)
+- [Panel de control](/es/web/dashboard)
 - [Interfaz de control](/es/web/control-ui)
 - [Acceso remoto](/es/gateway/remote)
-- [LÉEME de la puerta de enlace remota](/es/gateway/remote-gateway-readme)
+- [LÉEME de la pasarela remota](/es/gateway/remote-gateway-readme)
 - [Tailscale](/es/gateway/tailscale)
 - [Seguridad](/es/gateway/security)
 - [Solución de problemas](/es/gateway/troubleshooting)
@@ -105,19 +104,19 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 
 - [Superficie de herramientas](/es/tools)
 - [OpenProse](/es/prose)
-- [Referencia de la CLI](/es/cli)
+- [Referencia de CLI](/es/cli)
 - [Herramienta Exec](/es/tools/exec)
 - [Herramienta PDF](/es/tools/pdf)
 - [Modo elevado](/es/tools/elevated)
-- [Trabajos cron](/es/automation/cron-jobs)
-- [Cron frente a Heartbeat](/es/automation/cron-vs-heartbeat)
+- [Trabajos Cron](/es/automation/cron-jobs)
+- [Cron vs Latido del corazón](/es/automation/cron-vs-heartbeat)
 - [Pensamiento + detallado](/es/tools/thinking)
 - [Modelos](/es/concepts/models)
 - [Subagentes](/es/tools/subagents)
 - [CLI de envío de agente](/es/tools/agent-send)
 - [Interfaz de terminal](/es/web/tui)
 - [Control del navegador](/es/tools/browser)
-- [Navegador (solución de problemas de Linux)](/es/tools/browser-linux-troubleshooting)
+- [Navegador (solución de problemas en Linux)](/es/tools/browser-linux-troubleshooting)
 - [Encuestas](/es/automation/poll)
 
 ## Nodos, medios, voz
@@ -128,7 +127,7 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 - [Audio](/es/nodes/audio)
 - [Comando de ubicación](/es/nodes/location-command)
 - [Activación por voz](/es/nodes/voicewake)
-- [Modo de conversación](/es/nodes/talk)
+- [Modo de habla](/es/nodes/talk)
 
 ## Plataformas
 
@@ -142,23 +141,35 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 
 ## Aplicación complementaria de macOS (avanzado)
 
-- [Configuración de desarrollo en macOS](/es/platforms/mac/dev-setup)
-- [Barra de menús de macOS](/es/platforms/mac/menu-bar)
-- [Activación por voz en macOS](/es/platforms/mac/voicewake)
-- [Superposición de voz en macOS](/es/platforms/mac/voice-overlay)
-- [WebChat en macOS](/es/platforms/mac/webchat)
-- [Canvas en macOS](/es/platforms/mac/canvas)
-- [Proceso secundario en macOS](/es/platforms/mac/child-process)
-- [Salud en macOS](/es/platforms/mac/health)
+- [Configuración de desarrollo de macOS](/es/platforms/mac/dev-setup)
+- [Barra de menú de macOS](/es/platforms/mac/menu-bar)
+- [Activación por voz de macOS](/es/platforms/mac/voicewake)
+- [Superposición de voz de macOS](/es/platforms/mac/voice-overlay)
+- [WebChat de macOS](/es/platforms/mac/webchat)
+- [Canvas de macOS](/es/platforms/mac/canvas)
+- [Proceso secundario de macOS](/es/platforms/mac/child-process)
+- [Salud de macOS](/es/platforms/mac/health)
 - [Icono de macOS](/es/platforms/mac/icon)
-- [Registro en macOS](/es/platforms/mac/logging)
-- [Permisos en macOS](/es/platforms/mac/permissions)
-- [Control remoto en macOS](/es/platforms/mac/remote)
-- [Firma en macOS](/es/platforms/mac/signing)
-- [Gateway en macOS (launchd)](/es/platforms/mac/bundled-gateway)
-- [XPC en macOS](/es/platforms/mac/xpc)
-- [Habilidades en macOS](/es/platforms/mac/skills)
-- [Peekaboo en macOS](/es/platforms/mac/peekaboo)
+- [Registro de macOS](/es/platforms/mac/logging)
+- [Permisos de macOS](/es/platforms/mac/permissions)
+- [Control remoto de macOS](/es/platforms/mac/remote)
+- [Firma de macOS](/es/platforms/mac/signing)
+- [Puerta de enlace de macOS (launchd)](/es/platforms/mac/bundled-gateway)
+- [macOS XPC](/es/platforms/mac/xpc)
+- [Habilidades de macOS](/es/platforms/mac/skills)
+- [macOS Peekaboo](/es/platforms/mac/peekaboo)
+
+## Extensiones + complementos
+
+- [Descripción general de complementos](/es/tools/plugin)
+- [Crear extensiones](/es/plugins/building-extensions)
+- [Manifiesto de complementos](/es/plugins/manifest)
+- [Herramientas de agente](/es/plugins/agent-tools)
+- [Paquetes de complementos](/es/plugins/bundles)
+- [Complementos comunitarios](/es/plugins/community)
+- [Cookbook de capacidades](/es/tools/capability-cookbook)
+- [Complemento de llamada de voz](/es/plugins/voice-call)
+- [Complemento de usuario de Zalo](/es/plugins/zalouser)
 
 ## Espacio de trabajo + plantillas
 
@@ -178,10 +189,10 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 
 - [Créditos](/es/reference/credits)
 
-## Pruebas + versiones
+## Pruebas + lanzamiento
 
 - [Pruebas](/es/reference/test)
-- [Política de versiones](/es/reference/RELEASING)
+- [Política de lanzamientos](/es/reference/RELEASING)
 - [Modelos de dispositivos](/es/reference/device-models)
 
 import es from "/components/footer/es.mdx";

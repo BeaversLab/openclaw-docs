@@ -1,52 +1,52 @@
 ---
 summary: "Comprensión de imagen/audio/video entrante (opcional) con proveedor + alternativas de CLI"
 read_when:
-  - Diseñar o refactorizar la comprensión de medios
-  - Ajustar el preprocesamiento de audio/video/imagen entrante
-title: "Media Understanding"
+  - Designing or refactoring media understanding
+  - Tuning inbound audio/video/image preprocessing
+title: "Comprensión de medios"
 ---
 
 # Media Understanding - Inbound (2026-01-17)
 
-OpenClaw puede **resumir los medios entrantes** (imagen/audio/video) antes de que se ejecute la canalización de respuesta. Detecta automáticamente cuando hay herramientas locales o claves de proveedor disponibles, y se puede desactivar o personalizar. Si la comprensión está desactivada, los modelos aún reciben los archivos/URL originales como de costumbre.
+OpenClaw puede **resumir los medios entrantes** (imagen/audio/video) antes de que se ejecute la canalización de respuesta. Detecta automáticamente cuándo hay herramientas locales o claves de proveedor disponibles, y se puede desactivar o personalizar. Si la comprensión está desactivada, los modelos siguen recibiendo los archivos/URL originales como de costumbre.
 
-El comportamiento de medios específico del proveedor es registrado por los complementos del proveedor, mientras que el núcleo de OpenClaw es propietario de la configuración compartida `tools.media`, el orden de las alternativas y la integración con la canalización de respuesta.
+El comportamiento multimedia específico del proveedor se registra mediante complementos del proveedor, mientras que el núcleo de OpenClaw posee la configuración `tools.media` compartida, el orden de reserva y la integración con la canalización de respuesta.
 
 ## Objetivos
 
-- Opcional: predigerir los medios entrantes en texto breve para un enrutamiento más rápido y un mejor análisis de comandos.
+- Opcional: pre-procesar los medios entrantes en texto breve para un enrutamiento más rápido y un mejor análisis de comandos.
 - Conservar la entrega de medios original al modelo (siempre).
-- Soportar **APIs de proveedor** y **alternativas de CLI**.
-- Permitir múltiples modelos con alternativas ordenadas (error/tamaño/tiempo de espera).
+- Soportar **APIs de proveedores** y **reservas de CLI**.
+- Permitir múltiples modelos con reserva ordenada (error/tamaño/tiempo de espera).
 
 ## Comportamiento de alto nivel
 
 1. Recopilar archivos adjuntos entrantes (`MediaPaths`, `MediaUrls`, `MediaTypes`).
-2. Para cada capacidad habilitada (imagen/audio/video), seleccionar los archivos adjuntos según la política (predeterminado: **primero**).
-3. Elegir la primera entrada de modelo elegible (tamaño + capacidad + autenticación).
-4. Si un modelo falla o el medio es demasiado grande, **alternar a la siguiente entrada**.
+2. Para cada capacidad habilitada (imagen/audio/video), seleccione los archivos adjuntos según la política (predeterminado: **primero**).
+3. Elija la primera entrada de modelo elegible (tamaño + capacidad + autenticación).
+4. Si un modelo falla o el medio es demasiado grande, **recurra a la siguiente entrada**.
 5. En caso de éxito:
    - `Body` se convierte en bloque `[Image]`, `[Audio]` o `[Video]`.
    - El audio establece `{{Transcript}}`; el análisis de comandos usa el texto del subtítulo cuando está presente,
      de lo contrario la transcripción.
    - Los subtítulos se conservan como `User text:` dentro del bloque.
 
-Si la comprensión falla o está desactivada, **el flujo de respuesta continúa** con el cuerpo original + archivos adjuntos.
+Si falla o se deshabilita la comprensión, **el flujo de respuesta continúa** con el cuerpo y los archivos adjuntos originales.
 
-## Resumen de configuración
+## Descripción general de la configuración
 
-`tools.media` admite **modelos compartidos** además de anulaciones por capacidad:
+`tools.media` admite **modelos compartidos** más anulaciones por capacidad:
 
-- `tools.media.models`: lista de modelos compartidos (usar `capabilities` para bloquear).
+- `tools.media.models`: lista de modelos compartidos (use `capabilities` para bloquear).
 - `tools.media.image` / `tools.media.audio` / `tools.media.video`:
   - valores predeterminados (`prompt`, `maxChars`, `maxBytes`, `timeoutSeconds`, `language`)
-  - sobrescrituras del proveedor (`baseUrl`, `headers`, `providerOptions`)
+  - anulaciones del proveedor (`baseUrl`, `headers`, `providerOptions`)
   - opciones de audio de Deepgram a través de `tools.media.audio.providerOptions.deepgram`
-  - controles de eco de transcripción de audio (`echoTranscript`, valor predeterminado `false`; `echoFormat`)
-  - lista **por capacidad `models`** opcional (preferida antes que los modelos compartidos)
-  - política de `attachments` (`mode`, `maxAttachments`, `prefer`)
-  - `scope` (filtrado opcional por clave de canal/chatType/sesión)
-- `tools.media.concurrency`: máximo de ejecuciones de capacidad simultáneas (valor predeterminado **2**).
+  - controles de eco de transcripción de audio (`echoTranscript`, predeterminado `false`; `echoFormat`)
+  - opcional **lista `models` por capacidad** (preferida antes que los modelos compartidos)
+  - política `attachments` (`mode`, `maxAttachments`, `prefer`)
+  - `scope` (filtrado opcional por canal/chatType/clave de sesión)
+- `tools.media.concurrency`: máximo de ejecuciones simultáneas de capacidades (por defecto **2**).
 
 ```json5
 {
@@ -118,8 +118,8 @@ Las plantillas de CLI también pueden usar:
 
 Valores predeterminados recomendados:
 
-- `maxChars`: **500** para imagen/vídeo (corto, amigable para comandos)
-- `maxChars`: **sin establecer** para audio (transcripción completa a menos que establezca un límite)
+- `maxChars`: **500** para imagen/vídeo (breve, apto para comandos)
+- `maxChars`: **sin establecer** para audio (transcripción completa a menos que se establezca un límite)
 - `maxBytes`:
   - imagen: **10MB**
   - audio: **20MB**
@@ -127,20 +127,20 @@ Valores predeterminados recomendados:
 
 Reglas:
 
-- Si el medio excede `maxBytes`, ese modelo se omite y se **prueba el siguiente modelo**.
+- Si el medio excede `maxBytes`, ese modelo se omite y se **intenta con el siguiente modelo**.
 - Los archivos de audio menores de **1024 bytes** se tratan como vacíos/corruptos y se omiten antes de la transcripción del proveedor/CLI.
-- Si el modelo devuelve más de `maxChars`, la salida se recorta.
-- `prompt` se establece de forma predeterminada en un sencillo "Describe el {media}." más la guía `maxChars` (solo para imagen/vídeo).
+- Si el modelo devuelve más de `maxChars`, el resultado se recorta.
+- `prompt` usa por defecto un simple "Describe the {media}." más la guía `maxChars` (solo imagen/vídeo).
 - Si `<capability>.enabled: true` pero no hay modelos configurados, OpenClaw intenta el
   **modelo de respuesta activo** cuando su proveedor admite la capacidad.
 
-### Detección automática de comprensión de medios (valor predeterminado)
+### Detección automática de comprensión de medios (predeterminado)
 
-Si `tools.media.<capability>.enabled` **no** está establecido en `false` y no has
+Si `tools.media.<capability>.enabled` **no** está establecido en `false` y no ha
 configurado modelos, OpenClaw detecta automáticamente en este orden y **se detiene en la primera
 opción que funcione**:
 
-1. **CLI locales** (solo audio; si están instalados)
+1. **CLIs locales** (solo audio; si están instalados)
    - `sherpa-onnx-offline` (requiere `SHERPA_ONNX_MODEL_DIR` con codificador/decodificador/unidor/tokens)
    - `whisper-cli` (`whisper-cpp`; usa `WHISPER_CPP_MODEL` o el modelo tiny incluido)
    - `whisper` (CLI de Python; descarga modelos automáticamente)
@@ -150,7 +150,7 @@ opción que funcione**:
    - Imagen: OpenAI → Anthropic → Google → MiniMax
    - Vídeo: Google
 
-Para desactivar la detección automática, establezca:
+Para desactivar la detección automática, configure:
 
 ```json5
 {
@@ -164,26 +164,26 @@ Para desactivar la detección automática, establezca:
 }
 ```
 
-Nota: La detección de binarios se hace con el mejor esfuerzo posible en macOS/Linux/Windows; asegúrese de que la CLI esté en `PATH` (expandimos `~`), o establezca un modelo de CLI explícito con una ruta de comando completa.
+Nota: La detección binaria se realiza con el mejor esfuerzo posible en macOS/Linux/Windows; asegúrese de que la CLI esté en `PATH` (nosotros expandimos `~`), o configure un modelo CLI explícito con una ruta de comando completa.
 
 ### Soporte de entorno de proxy (modelos de proveedor)
 
-Cuando la comprensión de medios **de audio** y **vídeo** basada en proveedores está habilitada, OpenClaw
-respeta las variables de entorno de proxy de salida estándar para las llamadas HTTP del proveedor:
+Cuando la comprensión de medios de **audio** y **vídeo** basada en proveedores está activada, OpenClaw
+respeta las variables de entorno de proxy de salida estándar para las llamadas HTTP de proveedores:
 
 - `HTTPS_PROXY`
 - `HTTP_PROXY`
 - `https_proxy`
 - `http_proxy`
 
-Si no se establecen variables de entorno de proxy, la comprensión de medios usa una salida directa.
-Si el valor del proxy está malformado, OpenClaw registra una advertencia y recurre a una
+Si no se establecen variables de entorno de proxy, la comprensión de medios utiliza una salida directa.
+Si el valor del proxy está mal formado, OpenClaw registra una advertencia y recurre a una
 obtención directa.
 
 ## Capacidades (opcional)
 
 Si establece `capabilities`, la entrada solo se ejecuta para esos tipos de medios. Para listas
-compartidas, OpenClaw puede inferir valores predeterminados:
+compartidas, OpenClaw puede inferir los valores predeterminados:
 
 - `openai`, `anthropic`, `minimax`: **imagen**
 - `moonshot`: **imagen + vídeo**
@@ -193,38 +193,38 @@ compartidas, OpenClaw puede inferir valores predeterminados:
 - `groq`: **audio**
 - `deepgram`: **audio**
 
-Para las entradas de la CLI, **establezca `capabilities` explícitamente** para evitar coincidencias sorprendentes.
+Para las entradas de CLI, **establezca `capabilities` explícitamente** para evitar coincidencias sorprendentes.
 Si omite `capabilities`, la entrada es elegible para la lista en la que aparece.
 
 ## Matriz de soporte de proveedores (integraciones de OpenClaw)
 
-| Capacidad | Integración del proveedor                          | Notas                                                                                                   |
+| Capacidad | Integración de proveedor                           | Notas                                                                                                   |
 | --------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Imagen    | OpenAI, Anthropic, Google, MiniMax, Moonshot, Z.AI | Los complementos de proveedores registran el soporte de imágenes en la comprensión principal de medios. |
+| Imagen    | OpenAI, Anthropic, Google, MiniMax, Moonshot, Z.AI | Los complementos de proveedores registran el soporte de imagen contra la comprensión de medios central. |
 | Audio     | OpenAI, Groq, Deepgram, Google, Mistral            | Transcripción del proveedor (Whisper/Deepgram/Gemini/Voxtral).                                          |
-| Vídeo     | Google, Moonshot                                   | Comprensión de vídeo del proveedor a través de complementos de proveedores.                             |
+| Vídeo     | Google, Moonshot                                   | Comprensión de vídeo del proveedor a través de complementos de proveedor.                               |
 
-## Orientación de selección de modelo
+## Guía de selección de modelo
 
-- Prefiera el modelo más fuerte de la última generación disponible para cada capacidad de medios cuando la calidad y la seguridad sean importantes.
-- Para los agentes con herramientas habilitadas que manejan entradas que no son de confianza, evite los modelos de medios más antiguos/débiles.
-- Mantenga al menos una alternativa por capacidad para garantizar disponibilidad (modelo de calidad + modelo más rápido/barato).
-- Las alternativas de la CLI (`whisper-cli`, `whisper`, `gemini`) son útiles cuando las API de los proveedores no están disponibles.
-- Nota `parakeet-mlx`: con `--output-dir`, OpenClaw lee `<output-dir>/<media-basename>.txt` cuando el formato de salida es `txt` (o no especificado); los formatos que no son `txt` vuelven a stdout.
+- Prefiera el modelo más potente de la última generación disponible para cada capacidad multimedia cuando importen la calidad y la seguridad.
+- Para agentes con herramientas habilitadas que manejen entradas que no son de confianza, evite modelos multimedia más antiguos/débiles.
+- Mantenga al menos un respaldo por capacidad para garantizar disponibilidad (modelo de calidad + modelo más rápido/económico).
+- Los respaldos de CLI (`whisper-cli`, `whisper`, `gemini`) son útiles cuando las API del proveedor no están disponibles.
+- Nota `parakeet-mlx`: con `--output-dir`, OpenClaw lee `<output-dir>/<media-basename>.txt` cuando el formato de salida es `txt` (o no está especificado); los formatos que no son `txt` vuelven a stdout.
 
 ## Política de archivos adjuntos
 
 El `attachments` por capacidad controla qué archivos adjuntos se procesan:
 
 - `mode`: `first` (predeterminado) o `all`
-- `maxAttachments`: limita el número procesado (predeterminado **1**)
+- `maxAttachments`: limita la cantidad procesada (predeterminado **1**)
 - `prefer`: `first`, `last`, `path`, `url`
 
 Cuando `mode: "all"`, las salidas se etiquetan como `[Image 1/2]`, `[Audio 2/2]`, etc.
 
 ## Ejemplos de configuración
 
-### 1) Lista de modelos compartida + anulaciones
+### 1) Lista de modelos compartidos + anulaciones
 
 ```json5
 {
@@ -261,7 +261,7 @@ Cuando `mode: "all"`, las salidas se etiquetan como `[Image 1/2]`, `[Audio 2/2]`
 }
 ```
 
-### 2) Solo Audio + Vídeo (imagen desactivada)
+### 2) Solo audio + vídeo (imagen desactivada)
 
 ```json5
 {
@@ -301,7 +301,7 @@ Cuando `mode: "all"`, las salidas se etiquetan como `[Image 1/2]`, `[Audio 2/2]`
 }
 ```
 
-### 3) Comprensión opcional de imágenes
+### 3) Comprensión de imágenes opcional
 
 ```json5
 {
@@ -372,24 +372,24 @@ Cuando `mode: "all"`, las salidas se etiquetan como `[Image 1/2]`, `[Audio 2/2]`
 
 ## Salida de estado
 
-Cuando se ejecuta la comprensión de medios, `/status` incluye una línea de resumen breve:
+Cuando se ejecuta la comprensión multimedia, `/status` incluye una línea de resumen breve:
 
 ```
 📎 Media: image ok (openai/gpt-5.2) · audio skipped (maxBytes)
 ```
 
-Esto muestra los resultados por capacidad y el proveedor/modelo elegido cuando sea aplicable.
+Esto muestra los resultados por capacidad y el proveedor/modelo elegido, cuando corresponda.
 
 ## Notas
 
-- La comprensión es de **mejor esfuerzo posible**. Los errores no bloquean las respuestas.
-- Los adjuntos todavía se pasan a los modelos incluso cuando la comprensión está deshabilitada.
+- La comprensión es con **mejor esfuerzo**. Los errores no bloquean las respuestas.
+- Los archivos adjuntos aún se pasan a los modelos incluso cuando la comprensión está deshabilitada.
 - Use `scope` para limitar dónde se ejecuta la comprensión (ej. solo MDs).
 
 ## Documentos relacionados
 
 - [Configuración](/es/gateway/configuration)
-- [Soporte de imagen y medios](/es/nodes/images)
+- [Soporte de imágenes y multimedia](/es/nodes/images)
 
 import es from "/components/footer/es.mdx";
 

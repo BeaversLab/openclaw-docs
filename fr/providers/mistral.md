@@ -1,5 +1,5 @@
 ---
-summary: "Use Mistral models and Voxtral transcription with OpenClaw"
+summary: "Utiliser les modèles Mistral et la transcription Voxtral avec OpenClaw"
 read_when:
   - You want to use Mistral models in OpenClaw
   - You need Mistral API key onboarding and model refs
@@ -8,11 +8,11 @@ title: "Mistral"
 
 # Mistral
 
-OpenClaw supports Mistral for both text/image model routing (`mistral/...`) and
-audio transcription via Voxtral in media understanding.
-Mistral can also be used for memory embeddings (`memorySearch.provider = "mistral"`).
+OpenClaw prend en charge Mistral à la fois pour le routage de modèles texte/image (`mistral/...`) et
+pour la transcription audio via Voxtral dans la compréhension des médias.
+Mistral peut également être utilisé pour les embeddings de mémoire (`memorySearch.provider = "mistral"`).
 
-## CLI setup
+## Configuration CLI
 
 ```bash
 openclaw onboard --auth-choice mistral-api-key
@@ -20,7 +20,7 @@ openclaw onboard --auth-choice mistral-api-key
 openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
 ```
 
-## Config snippet (LLM provider)
+## Extrait de configuration (provider LLM)
 
 ```json5
 {
@@ -29,7 +29,7 @@ openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
 }
 ```
 
-## Config snippet (audio transcription with Voxtral)
+## Extrait de configuration (transcription audio avec Voxtral)
 
 ```json5
 {
@@ -46,12 +46,12 @@ openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
 
 ## Notes
 
-- Mistral auth uses `MISTRAL_API_KEY`.
-- Provider base URL defaults to `https://api.mistral.ai/v1`.
-- Onboarding default model is `mistral/mistral-large-latest`.
-- Media-understanding default audio model for Mistral is `voxtral-mini-latest`.
-- Media transcription path uses `/v1/audio/transcriptions`.
-- Memory embeddings path uses `/v1/embeddings` (default model: `mistral-embed`).
+- L'authentification Mistral utilise `MISTRAL_API_KEY`.
+- L'URL de base du provider par défaut est `https://api.mistral.ai/v1`.
+- Le modèle par défaut lors de l'intégration est `mistral/mistral-large-latest`.
+- Le modèle audio par défaut pour la compréhension des médias avec Mistral est `voxtral-mini-latest`.
+- Le chemin de transcription des médias utilise `/v1/audio/transcriptions`.
+- Le chemin des embeddings de mémoire utilise `/v1/embeddings` (modèle par défaut : `mistral-embed`).
 
 import fr from "/components/footer/fr.mdx";
 

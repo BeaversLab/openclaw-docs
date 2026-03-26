@@ -1,8 +1,8 @@
 ---
-summary: "通过共享 OpenCode 设置使用 OpenCode Go 目录"
+summary: "通过共享的 OpenCode 设置使用 OpenCode Go 目录"
 read_when:
-  - 您需要 OpenCode Go 目录
-  - 您需要 Go 托管模型的运行时模型引用
+  - You want the OpenCode Go catalog
+  - You need the runtime model refs for Go-hosted models
 title: "OpenCode Go"
 ---
 
@@ -10,7 +10,7 @@ title: "OpenCode Go"
 
 OpenCode Go 是 [OpenCode](/zh/providers/opencode) 中的 Go 目录。
 它使用与 Zen 目录相同的 `OPENCODE_API_KEY`，但保留运行时
-提供商 ID `opencode-go`，以确保上游按模型路由保持正确。
+提供商 ID `opencode-go`，以便上游的按模型路由保持正确。
 
 ## 支持的模型
 
@@ -39,10 +39,10 @@ openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
 
 当模型引用使用 `opencode-go/...` 时，OpenClaw 会自动处理按模型路由。
 
-## 备注
+## 注意
 
-- 使用 [OpenCode](/zh/providers/opencode) 进行共享的新手引导和目录概览。
-- 运行时引用保持显式：Zen 使用 `opencode/...`，Go 使用 `opencode-go/...`。
+- 有关共享的新手引导和目录概述，请使用 [OpenCode](/zh/providers/opencode)。
+- 运行时引用保持显式：Zen 用 `opencode/...`，Go 用 `opencode-go/...`。
 
 import zh from "/components/footer/zh.mdx";
 

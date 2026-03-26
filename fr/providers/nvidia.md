@@ -1,5 +1,5 @@
 ---
-summary: "Use NVIDIA's OpenAI-compatible API in OpenClaw"
+summary: "Utilisez l'API compatible OpenAI de NVIDIA dans OpenClaw"
 read_when:
   - You want to use NVIDIA models in OpenClaw
   - You need NVIDIA_API_KEY setup
@@ -8,11 +8,11 @@ title: "NVIDIA"
 
 # NVIDIA
 
-NVIDIA provides an OpenAI-compatible API at `https://integrate.api.nvidia.com/v1` for Nemotron and NeMo models. Authenticate with an API key from [NVIDIA NGC](https://catalog.ngc.nvidia.com/).
+NVIDIA fournit une API compatible OpenAI à l'adresse `https://integrate.api.nvidia.com/v1` pour les modèles Nemotron et NeMo. Authentifiez-vous avec une clé API issue de [NVIDIA NGC](https://catalog.ngc.nvidia.com/).
 
-## CLI setup
+## Configuration CLI
 
-Export the key once, then run onboarding and set an NVIDIA model:
+Exportez la clé une fois, puis exécutez l'onboarding et définissez un modèle NVIDIA :
 
 ```bash
 export NVIDIA_API_KEY="nvapi-..."
@@ -20,9 +20,9 @@ openclaw onboard --auth-choice skip
 openclaw models set nvidia/nvidia/llama-3.1-nemotron-70b-instruct
 ```
 
-If you still pass `--token`, remember it lands in shell history and `ps` output; prefer the env var when possible.
+Si vous passez encore `--token`, gardez à l'esprit qu'elle atterrit dans l'historique du shell et la sortie `ps` ; préférez la variable d'environnement lorsque c'est possible.
 
-## Config snippet
+## Extrait de configuration
 
 ```json5
 {
@@ -43,16 +43,16 @@ If you still pass `--token`, remember it lands in shell history and `ps` output;
 }
 ```
 
-## Model IDs
+## ID de modèle
 
-- `nvidia/llama-3.1-nemotron-70b-instruct` (default)
+- `nvidia/llama-3.1-nemotron-70b-instruct` (par défaut)
 - `meta/llama-3.3-70b-instruct`
 - `nvidia/mistral-nemo-minitron-8b-8k-instruct`
 
 ## Notes
 
-- OpenAI-compatible `/v1` endpoint; use an API key from NVIDIA NGC.
-- Provider auto-enables when `NVIDIA_API_KEY` is set; uses static defaults (131,072-token context window, 4,096 max tokens).
+- Point de terminaison `/v1` compatible OpenAI ; utilisez une clé API de NVIDIA NGC.
+- Le fournisseur s'active automatiquement lorsque `NVIDIA_API_KEY` est défini ; utilise des valeurs statiques par défaut (fenêtre de contexte de 131 072 jetons, 4 096 jetons maximum).
 
 import fr from "/components/footer/fr.mdx";
 
