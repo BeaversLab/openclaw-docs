@@ -22,7 +22,7 @@ title: "Configuration"
 
 ## Prérequis (à partir du code source)
 
-- Node 24 recommandé (Node 22 LTS, actuellement `22.16+`, toujours pris en charge)
+- Node 24 recommandé (Node 22 LTS, actuellement `22.14+`, toujours pris en charge)
 - `pnpm`
 - Docker (optionnel ; uniquement pour la configuration/e2e conteneurisés — voir [Docker](/fr/install/docker))
 

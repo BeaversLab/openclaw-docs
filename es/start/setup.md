@@ -21,7 +21,7 @@ title: "Configuración"
 
 ## Requisitos previos (desde el código fuente)
 
-- Se recomienda Node 24 (Node 22 LTS, actualmente `22.16+`, todavía compatible)
+- Se recomienda Node 24 (Node 22 LTS, actualmente `22.14+`, aún compatible)
 - `pnpm`
 - Docker (opcional; solo para configuración/e2e en contenedores — consulta [Docker](/es/install/docker))
 

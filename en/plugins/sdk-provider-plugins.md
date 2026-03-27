@@ -15,9 +15,8 @@ This guide walks through building a provider plugin that adds a model provider
 API key auth, and dynamic model resolution.
 
 <Info>
-  If you have not built any OpenClaw plugin before, read
-  [Getting Started](/en/plugins/building-plugins) first for the basic package
-  structure and manifest setup.
+  If you have not built any OpenClaw plugin before, read [Getting
+  Started](/en/plugins/building-plugins) first for the basic package structure and manifest setup.
 </Info>
 
 ## Walkthrough

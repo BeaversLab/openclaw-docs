@@ -1,66 +1,117 @@
 ---
-summary: "Modo de ejecución elevado y directivas /elevated"
+summary: "Modo de ejecución elevado: ejecuta comandos en el host de puerta de enlace desde un agente en sandbox"
 read_when:
   - Adjusting elevated mode defaults, allowlists, or slash command behavior
-title: "Modo elevado"
+  - Understanding how sandboxed agents can access the host
+title: "Modo Elevado"
 ---
 
-# Modo elevado (directivas /elevated)
+# Modo Elevado
 
-## Lo que hace
+Cuando un agente se ejecuta dentro de un sandbox, sus comandos `exec` están confinados al
+entorno del sandbox. El **Modo elevado** permite al agente salir y ejecutar comandos
+en el host de la puerta de enlace en su lugar, con puertas de aprobación configurables.
 
-- `/elevated on` se ejecuta en el host de la puerta de enlace y mantiene las aprobaciones de exec (igual que `/elevated ask`).
-- `/elevated full` se ejecuta en el host de la puerta de enlace **y** aprueba automáticamente exec (omite las aprobaciones de exec).
-- `/elevated ask` se ejecuta en el host de la puerta de enlace pero mantiene las aprobaciones de exec (igual que `/elevated on`).
-- `on`/`ask` **no** fuerzan `exec.security=full`; la política de seguridad/pregunta configurada todavía se aplica.
-- Solo cambia el comportamiento cuando el agente está **en sandbox** (de lo contrario, exec ya se ejecuta en el host).
-- Formas de directiva: `/elevated on|off|ask|full`, `/elev on|off|ask|full`.
-- Solo se aceptan `on|off|ask|full`; cualquier otra cosa devuelve una pista y no cambia el estado.
+<Info>
+  El modo elevado solo cambia el comportamiento cuando el agente está **en sandbox**. Para los
+  agentes sin sandbox, exec ya se ejecuta en el host.
+</Info>
 
-## Lo que controla (y lo que no controla)
+## Directivas
 
-- **Controladores de disponibilidad**: `tools.elevated` es la línea base global. `agents.list[].tools.elevated` puede restringir aún más el modo elevado por agente (ambos deben permitirlo).
-- **Estado por sesión**: `/elevated on|off|ask|full` establece el nivel elevado para la clave de sesión actual.
-- **Directiva en línea**: `/elevated on|ask|full` dentro de un mensaje se aplica solo a ese mensaje.
-- **Grupos**: En los chats grupales, las directivas elevadas solo se respetan cuando se menciona al agente. Los mensajes que son solo comandos y omiten los requisitos de mención se tratan como mencionados.
-- **Ejecución en host**: elevado fuerza `exec` en el host de la puerta de enlace; `full` también establece `security=full`.
-- **Aprobaciones**: `full` omite las aprobaciones de exec; `on`/`ask` las respetan cuando las reglas de allowlist/pregunta lo requieren.
-- **Agentes sin sandbox**: no-op para la ubicación; solo afecta el control, el registro y el estado.
-- **La política de herramientas todavía se aplica**: si `exec` es denegado por la política de herramientas, no se puede usar el modo elevado.
-- **Separado de `/exec`**: `/exec` ajusta los valores predeterminados por sesión para remitentes autorizados y no requiere elevated.
+Controle el modo elevado por sesión con comandos de barra:
+
+| Directiva        | Lo que hace                                                                  |
+| ---------------- | ---------------------------------------------------------------------------- |
+| `/elevated on`   | Ejecutar en el host de la puerta de enlace, mantener aprobaciones de exec    |
+| `/elevated ask`  | Igual que `on` (alias)                                                       |
+| `/elevated full` | Ejecutar en el host de la puerta de enlace **y** omitir aprobaciones de exec |
+| `/elevated off`  | Volver a la ejecución confinada al sandbox                                   |
+
+También disponible como `/elev on|off|ask|full`.
+
+Envíe `/elevated` sin argumentos para ver el nivel actual.
+
+## Cómo funciona
+
+<Steps>
+  <Step title="Verificar disponibilidad">
+    Elevated debe estar habilitado en la configuración y el remitente debe estar en la lista de permitidos:
+
+    ```json5
+    {
+      tools: {
+        elevated: {
+          enabled: true,
+          allowFrom: {
+            discord: ["user-id-123"],
+            whatsapp: ["+15555550123"],
+          },
+        },
+      },
+    }
+    ```
+
+  </Step>
+
+  <Step title="Establecer el nivel">
+    Envíe un mensaje de solo directiva para establecer el valor predeterminado de la sesión:
+
+    ```
+    /elevated full
+    ```
+
+    O úselo en línea (se aplica solo a ese mensaje):
+
+    ```
+    /elevated on run the deployment script
+    ```
+
+  </Step>
+
+  <Step title="Los comandos se ejecutan en el host">
+    Con elevated activo, las llamadas a `exec` se dirigen al host de la puerta de enlace en lugar del
+    sandbox. En el modo `full`, se omiten las aprobaciones de exec. En el modo `on`/`ask`,
+    las reglas de aprobación configuradas aún se aplican.
+  </Step>
+</Steps>
 
 ## Orden de resolución
 
-1. Directiva en línea en el mensaje (se aplica solo a ese mensaje).
-2. Anulación de sesión (establecida enviando un mensaje que contiene solo la directiva).
-3. Valor predeterminado global (`agents.defaults.elevatedDefault` en la configuración).
+1. **Directiva en línea** en el mensaje (se aplica solo a ese mensaje)
+2. **Anulación de sesión** (establecida al enviar un mensaje de solo directiva)
+3. **Valor predeterminado global** (`agents.defaults.elevatedDefault` en configuración)
 
-## Establecer un valor predeterminado de sesión
+## Disponibilidad y listas de permitidos
 
-- Envíe un mensaje que sea **solo** la directiva (se permiten espacios en blanco), p. ej. `/elevated full`.
-- Se envía una respuesta de confirmación (`Elevated mode set to full...` / `Elevated mode disabled.`).
-- Si el acceso elevado está desactivado o el remitente no está en la lista de permitidos (allowlist) aprobada, la directiva responde con un error accionable y no cambia el estado de la sesión.
-- Envíe `/elevated` (o `/elevated:`) sin argumentos para ver el nivel elevado actual.
+- **Global gate**: `tools.elevated.enabled` (must be `true`)
+- **Sender allowlist**: `tools.elevated.allowFrom` con listas por canal
+- **Per-agent gate**: `agents.list[].tools.elevated.enabled` (solo puede restringir más)
+- **Per-agent allowlist**: `agents.list[].tools.elevated.allowFrom` (el remitente debe coincidir con la global + por agente)
+- **Discord fallback**: si se omite `tools.elevated.allowFrom.discord`, se usa `channels.discord.allowFrom` como alternativa
+- **All gates must pass**; de lo contrario, elevated se trata como no disponible
 
-## Disponibilidad + listas de permitidos
+Allowlist entry formats:
 
-- Feature gate (control de características): `tools.elevated.enabled` (el valor predeterminado puede estar desactivado mediante configuración incluso si el código lo soporta).
-- Lista de permitidos de remitentes: `tools.elevated.allowFrom` con listas de permitidos por proveedor (p. ej. `discord`, `whatsapp`).
-- Las entradas de la lista de permitidos sin prefijo coinciden solo con los valores de identidad con ámbito de remitente (`SenderId`, `SenderE164`, `From`); los campos de enrutamiento del destinatario nunca se usan para la autorización elevada.
-- Los metadatos de remitente mutables requieren prefijos explícitos:
-  - `name:<value>` coincide con `SenderName`
-  - `username:<value>` coincide con `SenderUsername`
-  - `tag:<value>` coincide con `SenderTag`
-  - `id:<value>`, `from:<value>`, `e164:<value>` están disponibles para la orientación explícita de identidad
-- Control por agente: `agents.list[].tools.elevated.enabled` (opcional; solo puede restringir aún más).
-- Lista de permitidos por agente: `agents.list[].tools.elevated.allowFrom` (opcional; cuando se establece, el remitente debe coincidir con **ambas** listas de permitidos: global + por agente).
-- Respaldo de Discord: si se omite `tools.elevated.allowFrom.discord`, se usa la lista `channels.discord.allowFrom` como respaldo (legado: `channels.discord.dm.allowFrom`). Establezca `tools.elevated.allowFrom.discord` (incluso `[]`) para anular. Las listas de permitidos por agente **no** usan el respaldo.
-- Todos los controles deben pasar; de lo contrario, el modo elevado se trata como no disponible.
+| Prefix                  | Matches                           |
+| ----------------------- | --------------------------------- |
+| (ninguno)               | Sender ID, E.164 o campo From     |
+| `name:`                 | Nombre para mostrar del remitente |
+| `username:`             | Nombre de usuario del remitente   |
+| `tag:`                  | Etiqueta del remitente            |
+| `id:`, `from:`, `e164:` | Targeting de identidad explícita  |
 
-## Registro y estado
+## What elevated does not control
 
-- Las llamadas exec elevadas se registran en el nivel de información (info).
-- El estado de la sesión incluye el modo elevado (p. ej., `elevated=ask`, `elevated=full`).
+- **Tool policy**: si `exec` es denegado por la política de herramientas, elevated no puede anularlo
+- **Separate from `/exec`**: la directiva `/exec` ajusta los valores predeterminados de exec por sesión para remitentes autorizados y no requiere el modo elevated
+
+## Related
+
+- [Exec tool](/es/tools/exec) — ejecución de comandos de shell
+- [Exec approvals](/es/tools/exec-approvals) — sistema de aprobación y lista de permitidos
+- [Sandboxing](/es/gateway/sandboxing) — configuración de sandbox
+- [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated)
 
 import es from "/components/footer/es.mdx";
 

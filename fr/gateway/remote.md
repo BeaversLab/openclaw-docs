@@ -28,7 +28,7 @@ Exécutez le Gateway sur un hôte persistant et accédez-y via **Tailscale** ou 
 
 - **Meilleure UX :** conservez `gateway.bind: "loopback"` et utilisez **Tailscale Serve** pour l'interface de contrôle.
 - **Repli :** conservez loopback + tunnel SSH à partir de n'importe quelle machine nécessitant un accès.
-- **Exemples :** [exe.dev](/fr/install/exe-dev) (VM facile) ou [Hetzner](/fr/install/hetzner) (VPS de production).
+- **Exemples :** [exe.dev](/fr/install/exe-dev) (machine virtuelle facile) ou [Hetzner](/fr/install/hetzner) (VPS de production).
 
 C'est idéal lorsque votre ordinateur portable se met souvent en veille mais que vous souhaitez que l'agent soit toujours actif.
 
@@ -48,7 +48,7 @@ Gardez le Gateway en local mais exposez-le en toute sécurité :
 - Tunnel SSH vers l'ordinateur portable depuis d'autres machines, ou
 - Tailscale Serve l'interface de contrôle et garde le Gateway en boucle locale uniquement (loopback-only).
 
-Guide : [Tailscale](/fr/gateway/tailscale) et [Vue d'ensemble Web](/fr/web).
+Guide : [Tailscale](/fr/gateway/tailscale) et [Aperçu Web](/fr/web).
 
 ## Flux de commandes (ce qui s'exécute où)
 
@@ -63,7 +63,7 @@ Exemple de flux (Telegram → nœud) :
 
 Remarques :
 
-- **Les nœuds n'exécutent pas le service de gateway.** Une seule gateway doit s'exécuter par hôte, sauf si vous exécutez intentionnellement des profils isolés (voir [Multiple gateways](/fr/gateway/multiple-gateways)).
+- **Les nœuds n'exécutent pas le service de passerelle.** Une seule passerelle doit s'exécuter par hôte, sauf si vous exécutez intentionnellement des profils isolés (voir [Passerelles multiples](/fr/gateway/multiple-gateways)).
 - L'application macOS en « mode nœud » est simplement un client nœud via le WebSocket de la Gateway.
 
 ## Tunnel SSH (CLI + outils)
@@ -117,7 +117,7 @@ La résolution des informations d'identification du Gateway suit un contrat part
   - mot de passe : `OPENCLAW_GATEWAY_PASSWORD` -> `gateway.remote.password` -> `gateway.auth.password`
 - Exception du mode local Node-host : `gateway.remote.token` / `gateway.remote.password` sont ignorés.
 - Les vérifications de jeton de sonde/d'état distantes sont strictes par défaut : elles utilisent `gateway.remote.token` uniquement (pas de repli de jeton local) lors du ciblage du mode distant.
-- Les variables d'env `CLAWDBOT_GATEWAY_*` héritées sont uniquement utilisées par les chemins d'appel de compatibilité ; la résolution sonde/état/auth utilise `OPENCLAW_GATEWAY_*` uniquement.
+- Les remplacements d'environnement de la Gateway n'utilisent que `OPENCLAW_GATEWAY_*`.
 
 ## Interface utilisateur de chat sur SSH
 
@@ -130,23 +130,24 @@ WebChat n'utilise plus de port HTTP distinct. L'interface utilisateur de chat Sw
 
 L'application de la barre de menus macOS peut gérer le même configuration de bout en bout (vérifications de l'état distant, WebChat et transfert Voice Wake).
 
-Runbook : [accès distant macOS](/fr/platforms/mac/remote).
+Runbook : [Accès distant macOS](/fr/platforms/mac/remote).
 
 ## Règles de sécurité (accès distant/VPN)
 
 Version courte : **gardez le Gateway en loopback uniquement** sauf si vous êtes sûr de devoir faire un bind.
 
 - **Loopback + SSH/Tailscale Serve** est le réglage par défaut le plus sûr (aucune exposition publique).
-- Le texte brut `ws://` est en loopback uniquement par défaut. Pour les réseaux privés de confiance,
-  définissez `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` sur le processus client en guise de bris de glace.
-- Les **binds non-loopback** (`lan`/`tailnet`/`custom`, ou `auto` lorsque le loopback n'est pas disponible) doivent utiliser des jetons d'authentification/mots de passe.
-- `gateway.remote.token` / `.password` sont des sources d'identifiants clients. Ils ne configurent **pas** l'authentification serveur par eux-mêmes.
+- Le `ws://` en texte clair est en boucle locale (loopback) uniquement par défaut. Pour les réseaux privés de confiance,
+  définissez `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` sur le processus client en tant que rupture de vitre (break-glass).
+- **Les liaisons non-boucle** (`lan`/`tailnet`/`custom`, ou `auto` lorsque la boucle locale n'est pas disponible) doivent utiliser des jetons/mots de passe d'authentification.
+- `gateway.remote.token` / `.password` sont des sources d'informations d'identification client. Ils ne configurent **pas** l'authentification serveur par eux-mêmes.
 - Les chemins d'appel locaux peuvent utiliser `gateway.remote.*` comme solution de repli uniquement lorsque `gateway.auth.*` n'est pas défini.
 - Si `gateway.auth.token` / `gateway.auth.password` est explicitement configuré via SecretRef et non résolu, la résolution échoue en mode fermé (aucun masquage de repli distant).
 - `gateway.remote.tlsFingerprint` épingle le certificat TLS distant lors de l'utilisation de `wss://`.
-- **Tailscale Serve** peut authentifier le trafic Control UI/WebSocket via des en-têtes d'identité
-  lorsque `gateway.auth.allowTailscale: true` ; les points de terminaison HTTP API nécessitent toujours une authentification par jeton/mot de passe. Ce flux sans jeton suppose que l'hôte de la passerelle est
-  fiable. Définissez-le sur `false` si vous voulez des jetons/mots de passe partout.
+- **Tailscale Serve** peut authentifier le trafic UI de contrôle/WebSocket via les en-têtes d'identité
+  lorsque `gateway.auth.allowTailscale: true` ; les points de terminaison de l'API HTTP nécessitent
+  toujours une authentification par jeton/mot de passe. Ce flux sans jeton suppose que l'hôte de la passerelle est
+  de confiance. Définissez-le sur `false` si vous voulez des jetons/mots de passe partout.
 - Traitez le contrôle navigateur comme un accès opérateur : uniquement tailnet + appariement délibéré des nœuds.
 
 Approfondissement : [Sécurité](/fr/gateway/security).

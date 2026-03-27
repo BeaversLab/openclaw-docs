@@ -49,7 +49,7 @@ openclaw logs --follow
 
 1. 将 `openclaw.extensions` 添加到 `package.json`。
 2. 将条目指向构建的运行时文件（通常是 `./dist/index.js`）。
-3. 重新发布插件并再次运行 `openclaw plugins install <npm-spec>`。
+3. 重新发布插件并再次运行 `openclaw plugins install <package>`。
 
 示例：
 

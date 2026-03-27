@@ -4,13 +4,13 @@ read_when:
   - Enabling text-to-speech for replies
   - Configuring TTS providers or limits
   - Using /tts commands
-title: "Synthèse vocale"
+title: "Synthèse vocale (chemin hérité)"
 ---
 
 # Synthèse vocale (TTS)
 
-OpenClaw peut convertir les réponses sortantes en audio à l'aide d'ElevenLabs, Microsoft ou OpenAI.
-Cela fonctionne partout où OpenClaw peut envoyer de l'audio ; Telegram reçoit une bulle de note vocale ronde.
+OpenClaw peut convertir les réponses sortantes en audio en utilisant ElevenLabs, Microsoft ou OpenAI.
+Cela fonctionne partout où OpenClaw peut envoyer de l'audio.
 
 ## Services pris en charge
 
@@ -49,11 +49,11 @@ c'est pourquoi ce fournisseur doit également être authentifié si vous activez
 ## Liens vers les services
 
 - [Guide de synthèse vocale OpenAI](https://platform.openai.com/docs/guides/text-to-speech)
-- [Référence de l'OpenAI audio API](https://platform.openai.com/docs/api-reference/audio)
+- [Référence de l'API Audio OpenAI](https://platform.openai.com/docs/api-reference/audio)
 - [Synthèse vocale ElevenLabs](https://elevenlabs.io/docs/api-reference/text-to-speech)
 - [Authentification ElevenLabs](https://elevenlabs.io/docs/api-reference/authentication)
 - [node-edge-tts](https://github.com/SchneeHertz/node-edge-tts)
-- [Formats de sortie de synthèse vocale Microsoft](https://learn.microsoft.com/azure/ai-services/speech-service/rest-text-to-speech#audio-outputs)
+- [Formats de sortie vocale Microsoft](https://learn.microsoft.com/azure/ai-services/speech-service/rest-text-to-speech#audio-outputs)
 
 ## Est-ce activé par défaut ?
 
@@ -66,7 +66,7 @@ lorsque aucune clé OpenAI ou ElevenLabs API n'est disponible.
 ## Configuration
 
 La configuration TTS se trouve sous `messages.tts` dans `openclaw.json`.
-Le schéma complet se trouve dans [configuration de Gateway](/fr/gateway/configuration).
+Le schéma complet se trouve dans [configuration du Gateway](/fr/gateway/configuration).
 
 ### Configuration minimale (activation + provider)
 
@@ -170,7 +170,7 @@ Le schéma complet se trouve dans [configuration de Gateway](/fr/gateway/configu
 }
 ```
 
-### Répondre avec l'audio uniquement après une note vocale entrante
+### Ne répondre avec de l'audio qu'après un message vocal entrant
 
 ```json5
 {
@@ -203,7 +203,7 @@ Exécutez ensuite :
 ### Notes sur les champs
 
 - `auto` : mode TTS auto (`off`, `always`, `inbound`, `tagged`).
-  - `inbound` n'envoie de l'audio qu'après une note vocale entrante.
+  - `inbound` n'envoie de l'audio qu'après un message vocal entrant.
   - `tagged` n'envoie de l'audio que lorsque la réponse inclut des balises `[[tts]]`.
 - `enabled` : commutateur hérité (le docteur le migre vers `auto`).
 - `mode` : `"final"` (par défaut) ou `"all"` (inclut les réponses tool/block).
@@ -319,18 +319,18 @@ Ceux-ci remplacent `messages.tts.*` pour cet hôte.
 
 ## Formats de sortie (fixes)
 
-- **Telegram** : Note vocale Opus (`opus_48000_64` de ElevenLabs, `opus` de OpenAI).
-  - 48kHz / 64kbps est un bon compromis pour les notes vocales et est nécessaire pour la bulle ronde.
+- **Feishu / Matrix / Telegram / WhatsApp** : Message vocal Opus (`opus_48000_64` de ElevenLabs, `opus` de OpenAI).
+  - 48kHz / 64kbps est un bon compromis pour les messages vocaux.
 - **Autres canaux** : MP3 (`mp3_44100_128` depuis ElevenLabs, `mp3` depuis OpenAI).
   - 44.1kHz / 128kbps est l'équilibre par défaut pour la clarté de la parole.
 - **Microsoft** : utilise `microsoft.outputFormat` (par défaut `audio-24khz-48kbitrate-mono-mp3`).
   - Le transport inclus accepte un `outputFormat`, mais tous les formats ne sont pas disponibles depuis le service.
   - Les valeurs de format de sortie suivent les formats de sortie Microsoft Speech (y compris Ogg/WebM Opus).
   - Telegram `sendVoice` accepte OGG/MP3/M4A ; utilisez OpenAI/ElevenLabs si vous avez besoin
-    de notes vocales Opus garanties. citeturn1search1
+    de messages vocaux Opus garantis.
   - Si le format de sortie Microsoft configuré échoue, OpenClaw réessaie avec MP3.
 
-Les formats OpenAI/ElevenLabs sont fixes ; Telegram attend Opus pour l'expérience utilisateur des notes vocales.
+Les formats de sortie OpenAI/ElevenLabs sont fixes par canal (voir ci-dessus).
 
 ## Comportement du TTS automatique
 
@@ -363,7 +363,7 @@ Reply -> TTS enabled?
 ## Utilisation des commandes slash
 
 Il y a une seule commande : `/tts`.
-Voir [Slash commands](/fr/tools/slash-commands) pour les détails d'activation.
+Voir [Commandes slash](/fr/tools/slash-commands) pour les détails d'activation.
 
 Note Discord : `/tts` est une commande intégrée de Discord, donc OpenClaw enregistre
 `/voice` comme la commande native ici. Le texte `/tts ...` fonctionne toujours.
@@ -390,7 +390,9 @@ Notes :
 
 ## Outil d'agent
 
-L'outil `tts` convertit du texte en parole et renvoie un chemin `MEDIA:`. Lorsque le résultat est compatible avec Telegram, l'outil inclut `[[audio_as_voice]]` pour que Telegram envoie une bulle vocale.
+L'outil `tts` convertit le texte en parole et renvoie une pièce jointe audio pour
+la livraison de réponse. Lorsque le canal est Feishu, Matrix, Telegram ou WhatsApp,
+l'audio est livré sous forme de message vocal plutôt que de pièce jointe.
 
 ## Gateway RPC
 

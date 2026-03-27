@@ -393,10 +393,10 @@ Paramètres de sécurité par défaut :
 Les installations Docker et la passerelle conteneurisée se trouvent ici :
 [Docker](/fr/install/docker)
 
-Pour les déploiements de passerelle Docker, `scripts/docker/setup.sh` peut amorcer la configuration du sandbox.
+Pour les déploiements de passerelle Docker, `scripts/docker/setup.sh` peut initialiser la configuration du bac à sable (sandbox).
 Définissez `OPENCLAW_SANDBOX=1` (ou `true`/`yes`/`on`) pour activer ce chemin. Vous pouvez
-remplacer l'emplacement du socket avec `OPENCLAW_DOCKER_SOCKET`. Configuration complète et référence des variables d'environnement :
-[Docker](/fr/install/docker#enable-agent-sandbox-for-docker-gateway-opt-in).
+remplacer l'emplacement du socket avec `OPENCLAW_DOCKER_SOCKET`. Référence complète de la configuration et de l'environnement :
+[Docker](/fr/install/docker#enable-agent-sandbox-for-docker-gateway).
 
 ## setupCommand (configuration unique du conteneur)
 
@@ -457,7 +457,7 @@ Consultez [Multi-Agent Sandbox & Tools](/fr/tools/multi-agent-sandbox-tools) pou
 ## Documentation connexe
 
 - [OpenShell](/fr/gateway/openshell) -- configuration du backend sandbox géré, modes d'espace de travail et référence de configuration
-- [Configuration du Sandbox](/fr/gateway/configuration-reference#agents-defaults-sandbox)
+- [Configuration du bac à sable](/fr/gateway/configuration-reference#agentsdefaultssandbox)
 - [Sandbox vs Tool Policy vs Elevated](/fr/gateway/sandbox-vs-tool-policy-vs-elevated) -- débogage de « pourquoi cela est-il bloqué ? »
 - [Multi-Agent Sandbox & Tools](/fr/tools/multi-agent-sandbox-tools) -- remplacements et priorité par agent
 - [Sécurité](/fr/gateway/security)

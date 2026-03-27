@@ -1,63 +1,147 @@
 ---
-summary: "Plugins communautaires : barre de qualité, exigences d'hébergement et processus de soumission de PR"
+summary: "Plug-ins OpenClaw maintenus par la communauté : parcourir, installer et soumettre les vôtres"
 read_when:
-  - You want to publish a third-party OpenClaw plugin
-  - You want to propose a plugin for docs listing
-title: "Plugins communautaires"
+  - You want to find third-party OpenClaw plugins
+  - You want to publish or list your own plugin
+title: "Plug-ins communautaires"
 ---
 
-# Plugins communautaires
+# Plug-ins communautaires
 
-Cette page répertorie des **plugins communautaires** de haute qualité pour OpenClaw.
+Les plug-ins communautaires sont des packages tiers qui étendent OpenClaw avec de nouveaux
+canaux, outils, fournisseurs ou autres capacités. Ils sont construits et maintenus
+par la communauté, publiés sur [ClawHub](/fr/tools/clawhub) ou npm, et
+installables avec une seule commande.
 
-Nous acceptons les PR qui ajoutent des plugins communautaires ici lorsqu'ils répondent à nos critères de qualité.
+```bash
+openclaw plugins install <package-name>
+```
 
-## Requis pour le listing
+OpenClaw vérifie d'abord ClawHub et revient automatiquement à npm.
 
-- Le paquet du plugin est publié sur npmjs (installable via `openclaw plugins install <npm-spec>`).
-- Le code source est hébergé sur GitHub (dépôt public).
-- Le dépôt inclut une documentation d'installation/utilisation et un suivi des problèmes.
-- Le plugin présente un signal de maintenance clair (mainteneur actif, mises à jour récentes ou gestion réactive des problèmes).
+## Plug-ins répertoriés
 
-## Comment soumettre
+### Codex App Server Bridge
 
-Ouvrez une PR qui ajoute votre plugin à cette page avec :
+Pont OpenClaw indépendant pour les conversations du Codex App Server. Lier une discussion à
+un fil Codex, lui parler en texte brut, et la contrôler avec des commandes
+natives de chat pour la reprise, la planification, la révision, la sélection de modèle, la compaction, et plus encore.
 
-- Nom du plugin
-- Nom du paquet npm
-- URL du dépôt GitHub
-- Description en une ligne
-- Commande d'installation
+- **npm :** `openclaw-codex-app-server`
+- **repo :** [github.com/pwrdrvr/openclaw-codex-app-server](https://github.com/pwrdrvr/openclaw-codex-app-server)
 
-## Barre de revue
+```bash
+openclaw plugins install openclaw-codex-app-server
+```
 
-Nous préférons les plugins qui sont utiles, documentés et sûrs à utiliser.
-Les enveloppes de faible effort, la propriété peu claire ou les paquets non maintenus peuvent être refusés.
+### DingTalk
 
-## Format de candidature
+Intégration de robot d'entreprise utilisant le mode Stream. Prend en charge les messages texte, images et
+fichiers via n'importe quel client DingTalk.
 
-Utilisez ce format lors de l'ajout d'entrées :
+- **npm :** `@largezhou/ddingtalk`
+- **repo :** [github.com/largezhou/openclaw-dingtalk](https://github.com/largezhou/openclaw-dingtalk)
 
-- **Nom du plugin** — courte description
-  npm : `@scope/package`
-  repo : `https://github.com/org/repo`
-  install : `openclaw plugins install @scope/package`
+```bash
+openclaw plugins install @largezhou/ddingtalk
+```
 
-## Plugins listés
+### Lossless Claw (LCM)
 
-- **openclaw-dingtalk** — Le plugin de canal DingTalk pour OpenClaw permet l'intégration de robots d'entreprise utilisant le mode Stream. Il prend en charge les messages texte, image et fichier via n'importe quel client DingTalk.
-  npm : `@largezhou/ddingtalk`
-  repo : `https://github.com/largezhou/openclaw-dingtalk`
-  install : `openclaw plugins install @largezhou/ddingtalk`
-- **QQbot** — Connectez OpenClaw à QQ via l'API QQ Bot. Prend en charge les conversations privées, les mentions de groupe, les messages de canal et les médias riches, notamment la voix, les images, les vidéos et les fichiers.
-  API : `@sliverp/qqbot`
-  repo : `https://github.com/sliverp/qqbot`
-  install : `openclaw plugins install @sliverp/qqbot`
+Plug-in de gestion de contexte sans perte pour OpenClaw. Résumé de conversation
+basé sur des DAG avec compactage incrémental — préserve la fidélité totale du contexte
+tout en réduisant l'utilisation des jetons.
 
-- **WeChat** — Connectez OpenClaw aux comptes personnels WeChat via WeChatPadPro (protocole iPad). Prend en charge l'échange de texte, d'images et de fichiers avec des conversations déclenchées par des mots-clés.
-  npm : `@icesword760/openclaw-wechat`
-  repo : `https://github.com/icesword0760/openclaw-wechat`
-  install : `openclaw plugins install @icesword760/openclaw-wechat`
+- **npm :** `@martian-engineering/lossless-claw`
+- **repo :** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
+
+```bash
+openclaw plugins install @martian-engineering/lossless-claw
+```
+
+### Opik
+
+Plug-in officiel qui exporte les traces d'agent vers Opik. Surveillez le comportement de l'agent,
+le coût, les jetons, les erreurs, et plus encore.
+
+- **npm :** `@opik/opik-openclaw`
+- **repo :** [github.com/comet-ml/opik-openclaw](https://github.com/comet-ml/opik-openclaw)
+
+```bash
+openclaw plugins install @opik/opik-openclaw
+```
+
+### QQbot
+
+Connectez OpenClaw à QQ via le QQ Bot API. Prend en charge les chats privés, les mentions
+de groupe, les messages de canal, et les médias riches incluant la voix, les images, les vidéos,
+et les fichiers.
+
+- **npm :** `@sliverp/qqbot`
+- **repo :** [github.com/sliverp/qqbot](https://github.com/sliverp/qqbot)
+
+```bash
+openclaw plugins install @sliverp/qqbot
+```
+
+### wecom
+
+OpenClaw Enterprise WeCom Channel Plugin.
+Un plugin de bot alimenté par des connexions WebSocket persistantes du bot IA WeCom,
+prenant en charge les messages directs et les discussions de groupe, les réponses en streaming et la messagerie proactive.
+
+- **npm :** `@wecom/wecom-openclaw-plugin`
+- **dépôt :** [github.com/WecomTeam/wecom-openclaw-plugin](https://github.com/WecomTeam/wecom-openclaw-plugin)
+
+```bash
+openclaw plugins install @wecom/wecom-openclaw-plugin
+```
+
+## Soumettre votre plugin
+
+Nous accueillons favorablement les plugins communautaires qui sont utiles, documentés et sûrs à utiliser.
+
+<Steps>
+  <Step title="Publier sur ClawHub ou npm">
+    Votre plugin doit être installable via `openclaw plugins install \<package-name\>`.
+    Publiez sur [ClawHub](/fr/tools/clawhub) (préféré) ou npm.
+    Voir [Building Plugins](/fr/plugins/building-plugins) pour le guide complet.
+
+  </Step>
+
+  <Step title="Héberger sur GitHub">
+    Le code source doit être dans un dépôt public avec une documentation de configuration et un suivi de problèmes.
+
+  </Step>
+
+  <Step title="Ouvrir une PR">
+    Ajoutez votre plugin à cette page avec :
+
+    - Nom du plugin
+    - Nom du package npm
+    - URL du dépôt GitHub
+    - Description en une ligne
+    - Commande d'installation
+
+  </Step>
+</Steps>
+
+## Niveau de qualité
+
+| Exigence                                        | Pourquoi                                                              |
+| ----------------------------------------------- | --------------------------------------------------------------------- |
+| Publié sur ClawHub ou npm                       | Les utilisateurs ont besoin que `openclaw plugins install` fonctionne |
+| Dépôt GitHub public                             | Examen du code, suivi des problèmes, transparence                     |
+| Documentation de configuration et d'utilisation | Les utilisateurs doivent savoir comment le configurer                 |
+| Maintenance active                              | Mises à jour récentes ou gestion réactive des problèmes               |
+
+Les enveloppes de faible effort, la propriété incertaine ou les packages non maintenus peuvent être refusés.
+
+## Connexes
+
+- [Install and Configure Plugins](/fr/tools/plugin) — comment installer n'importe quel plugin
+- [Building Plugins](/fr/plugins/building-plugins) — créer le vôtre
+- [Plugin Manifest](/fr/plugins/manifest) — schéma du manifeste
 
 import fr from "/components/footer/fr.mdx";
 

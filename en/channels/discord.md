@@ -173,8 +173,11 @@ openclaw pairing approve discord <CODE>
 </Steps>
 
 <Note>
-Token resolution is account-aware. Config token values win over env fallback. `DISCORD_BOT_TOKEN` is only used for the default account.
-For advanced outbound calls (message tool/channel actions), an explicit per-call `token` is used for that call. This applies to send and read/probe-style actions (for example read/search/fetch/thread/pins/permissions). Account policy/retry settings still come from the selected account in the active runtime snapshot.
+  Token resolution is account-aware. Config token values win over env fallback. `DISCORD_BOT_TOKEN`
+  is only used for the default account. For advanced outbound calls (message tool/channel actions),
+  an explicit per-call `token` is used for that call. This applies to send and read/probe-style
+  actions (for example read/search/fetch/thread/pins/permissions). Account policy/retry settings
+  still come from the selected account in the active runtime snapshot.
 </Note>
 
 ## Recommended: Set up a guild workspace

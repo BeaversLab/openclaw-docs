@@ -527,7 +527,7 @@ openclaw plugins install ./extensions/acpx
 
 ### acpx 命令和版本配置
 
-默认情况下，acpx 插件（发布为 `@openclaw/acpx`）使用插件本地固定的二进制文件：
+默认情况下，捆绑的 acpx 后端插件 (`acpx`) 使用插件本地的固定二进制文件：
 
 1. 命令默认为 `extensions/acpx/node_modules/.bin/acpx`。
 2. 预期版本默认为扩展的固定版本。

@@ -77,11 +77,11 @@ Les dossiers de session hérités d'autres outils ne sont pas lus.
 
 ## Pilotage lors du streaming
 
-Lorsque le mode de file d'attente est `steer`, les messages entrants sont injectés dans l'exécution
-en cours. La file d'attente est vérifiée **après chaque appel d'outil** ; si un message en file d'attente est présent,
-les appels d'outils restants du message assistant actuel sont ignorés (résultats d'erreur d'outil
-avec « Ignoré en raison d'un message utilisateur en file d'attente. »), puis le message utilisateur en file d'attente
-est injecté avant la prochaine réponse de l'assistant.
+Lorsque le mode de file d'attente est `steer`, les messages entrants sont injectés dans l'exécution actuelle.
+La direction en file d'attente est délivrée **une fois que le tour de l'assistant actuel a fini
+d'exécuter ses appels de tool**, avant le prochain appel LLM. La direction ne saute plus
+les appels de tool restants du message de l'assistant actuel ; elle injecte plutôt le message mis en file d'attente
+à la prochaine limite du model.
 
 Lorsque le mode de file d'attente est `followup` ou `collect`, les messages entrants sont retenus jusqu'à ce que
 le tour actuel se termine, puis un nouveau tour d'agent commence avec les charges utiles en file d'attente. Voir

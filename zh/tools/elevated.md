@@ -1,66 +1,116 @@
 ---
-summary: "提升执行模式和 /elevated 指令"
+summary: "提升执行模式：从沙箱隔离的代理在网关主机上运行命令"
 read_when:
   - Adjusting elevated mode defaults, allowlists, or slash command behavior
+  - Understanding how sandboxed agents can access the host
 title: "提升模式"
 ---
 
-# 提升模式 (/elevated 指令)
+# 提升模式
 
-## 作用
+当代理在沙箱内运行时，其 `exec` 命令被限制在
+沙箱环境中。**提升模式** 允许代理突破限制并在
+网关主机上运行命令，并配有可配置的审批关卡。
 
-- `/elevated on` 在网关主机上运行并保留执行批准（与 `/elevated ask` 相同）。
-- `/elevated full` 在网关主机上运行**并**自动批准执行（跳过执行批准）。
-- `/elevated ask` 在网关主机上运行，但保留执行批准（与 `/elevated on` 相同）。
-- `on`/`ask` **不**强制 `exec.security=full`；配置的安全/询问策略仍然适用。
-- 仅当代理处于**沙盒**状态时才改变行为（否则执行已在主机上运行）。
-- 指令形式：`/elevated on|off|ask|full`，`/elev on|off|ask|full`。
-- 仅接受 `on|off|ask|full`；其他任何内容均返回提示且不更改状态。
+<Info>
+  提升模式仅在代理处于**沙箱隔离**状态时才会改变行为。对于未沙箱隔离的代理，exec 已经在主机上运行。
+</Info>
 
-## 它控制什么（以及不控制什么）
+## 指令
 
-- **可用性门槛**：`tools.elevated` 是全局基准。`agents.list[].tools.elevated` 可以针对每个代理进一步限制提升（两者都必须允许）。
-- **每会话状态**：`/elevated on|off|ask|full` 为当前会话密钥设置提升级别。
-- **内联指令**：消息内的 `/elevated on|ask|full` 仅适用于该消息。
-- **群组**：在群组聊天中，仅当提及代理时才会遵守提升指令。绕过提及要求的纯命令消息被视为已提及。
-- **主机执行**：提升模式强制将 `exec` 置于网关主机上；`full` 还会设置 `security=full`。
-- **批准**：`full` 跳过执行批准；当允许列表/询问规则要求时，`on`/`ask` 遵守批准。
-- **非沙盒代理**：对位置无操作；仅影响准入、日志记录和状态。
-- **工具策略仍然适用**：如果工具策略拒绝 `exec`，则无法使用提升模式。
-- **与 `/exec` 分开**：`/exec` 为授权发件人调整每会话默认值，且不需要提升。
+使用斜杠命令按会话控制提升模式：
+
+| 指令             | 作用                                   |
+| ---------------- | -------------------------------------- |
+| `/elevated on`   | 在网关主机上运行，保留 exec 审批       |
+| `/elevated ask`  | 与 `on` 相同（别名）                   |
+| `/elevated full` | 在网关主机上运行 **并** 跳过 exec 审批 |
+| `/elevated off`  | 返回沙箱限制的执行                     |
+
+也可用作 `/elev on|off|ask|full`。
+
+发送不带参数的 `/elevated` 以查看当前级别。
+
+## 工作原理
+
+<Steps>
+  <Step title="检查可用性">
+    必须在配置中启用 Elevated，并且发送者必须在允许列表中：
+
+    ```json5
+    {
+      tools: {
+        elevated: {
+          enabled: true,
+          allowFrom: {
+            discord: ["user-id-123"],
+            whatsapp: ["+15555550123"],
+          },
+        },
+      },
+    }
+    ```
+
+  </Step>
+
+  <Step title="设置级别">
+    发送仅包含指令的消息以设置会话默认值：
+
+    ```
+    /elevated full
+    ```
+
+    或内联使用（仅适用于该消息）：
+
+    ```
+    /elevated on run the deployment script
+    ```
+
+  </Step>
+
+  <Step title="命令在主机上运行">
+    激活提升后，`exec` 调用将路由到网关主机而不是
+    沙箱。在 `full` 模式下，将跳过 exec 审批。在 `on`/`ask` 模式下，
+    配置的审批规则仍然适用。
+  </Step>
+</Steps>
 
 ## 解析顺序
 
-1. 消息上的内联指令（仅适用于该消息）。
-2. 会话覆盖（通过发送仅包含指令的消息设置）。
-3. 全局默认值（配置中的 `agents.defaults.elevatedDefault`）。
+1. **消息上的内联指令**（仅适用于该消息）
+2. **会话覆盖**（通过发送仅包含指令的消息设置）
+3. **全局默认值**（配置中的 `agents.defaults.elevatedDefault`）
 
-## 设置会话默认值
+## 可用性和允许列表
 
-- 发送一条**仅**包含指令的消息（允许包含空白字符），例如 `/elevated full`。
-- 发送确认回复（`Elevated mode set to full...` / `Elevated mode disabled.`）。
-- 如果 elevated 访问被禁用或发送者不在批准的允许列表中，该指令将返回可执行操作的错误并且不会更改会话状态。
-- 发送不带参数的 `/elevated`（或 `/elevated:`）以查看当前的提升级别。
+- **Global gate**: `tools.elevated.enabled` (must be `true`)
+- **Sender allowlist**: `tools.elevated.allowFrom` with per-渠道 lists
+- **Per-agent gate**: `agents.list[].tools.elevated.enabled` (can only further restrict)
+- **Per-agent allowlist**: `agents.list[].tools.elevated.allowFrom` (sender must match both global + per-agent)
+- **Discord fallback**: if `tools.elevated.allowFrom.discord` is omitted, `channels.discord.allowFrom` is used as fallback
+- **All gates must pass**; otherwise elevated is treated as unavailable
 
-## 可用性 + 允许列表
+Allowlist entry formats:
 
-- 功能开关：`tools.elevated.enabled`（即使代码支持，默认值也可以通过配置关闭）。
-- 发送者白名单：`tools.elevated.allowFrom`，带有针对每个提供商的白名单（例如 `discord`，`whatsapp`）。
-- 不带前缀的白名单条目仅匹配发送者作用域的身份值（`SenderId`，`SenderE164`，`From`）；接收者路由字段从不用于提升授权。
-- 可变的发送者元数据需要明确的前缀：
-  - `name:<value>` 匹配 `SenderName`
-  - `username:<value>` 匹配 `SenderUsername`
-  - `tag:<value>` 匹配 `SenderTag`
-  - `id:<value>`、`from:<value>`、`e164:<value>` 可用于显式身份定位
-- 每个代理的门槛：`agents.list[].tools.elevated.enabled`（可选；只能进一步限制）。
-- 每个代理的允许列表：`agents.list[].tools.elevated.allowFrom`（可选；设置时，发送者必须匹配全局和每个代理的允许列表**两者**）。
-- Discord 后备：如果省略了 `tools.elevated.allowFrom.discord`，则将 `channels.discord.allowFrom` 列表用作后备（旧版：`channels.discord.dm.allowFrom`）。设置 `tools.elevated.allowFrom.discord`（即使是 `[]`）以覆盖此项。每个代理的允许列表**不**使用后备。
-- 所有门槛都必须通过；否则提升模式将被视为不可用。
+| Prefix                  | Matches                         |
+| ----------------------- | ------------------------------- |
+| (none)                  | Sender ID, E.164, or From field |
+| `name:`                 | Sender display name             |
+| `username:`             | Sender username                 |
+| `tag:`                  | Sender tag                      |
+| `id:`, `from:`, `e164:` | Explicit identity targeting     |
 
-## 日志记录 + 状态
+## What elevated does not control
 
-- 提升的 exec 调用将记录在 info 级别。
-- 会话状态包括提升模式（例如 `elevated=ask`、`elevated=full`）。
+- **Tool policy**: if `exec` is denied by 工具 policy, elevated cannot override it
+- **Separate from `/exec`**: the `/exec` directive adjusts per-会话 exec defaults for authorized senders and does not require elevated mode
+
+## Related
+
+- [Exec 工具](/zh/tools/exec) — shell command execution
+- [Exec approvals](/zh/tools/exec-approvals) — approval and allowlist system
+- [沙箱隔离](/zh/gateway/sandboxing) — sandbox configuration
+- [沙箱 vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)
 
 import zh from "/components/footer/zh.mdx";
 

@@ -51,27 +51,27 @@ SecretRef 仅在有效活跃的表面上进行验证。
   - In local mode without those remote surfaces:
     - `gateway.remote.token` is active when token auth can win and no env/auth token is configured.
     - `gateway.remote.password` is active only when password auth can win and no env/auth password is configured.
-- `gateway.auth.token` SecretRef is inactive for startup auth resolution when `OPENCLAW_GATEWAY_TOKEN` (or `CLAWDBOT_GATEWAY_TOKEN`) is set, because env token input wins for that runtime.
+- 当设置了 `OPENCLAW_GATEWAY_TOKEN` 时，`gateway.auth.token` SecretRef 对启动身份解析处于非活动状态，因为在该运行时中环境令牌输入优先。
 
 ## Gateway auth surface diagnostics
 
-When a SecretRef is configured on `gateway.auth.token`, `gateway.auth.password`,
-`gateway.remote.token`, or `gateway.remote.password`, gateway startup/reload logs the
-surface state explicitly:
+当在 `gateway.auth.token`、`gateway.auth.password`、
+`gateway.remote.token` 或 `gateway.remote.password` 上配置 SecretRef 时，网关启动/重新加载会显式记录
+表面状态：
 
-- `active`: the SecretRef is part of the effective auth surface and must resolve.
-- `inactive`: the SecretRef is ignored for this runtime because another auth surface wins, or
-  because remote auth is disabled/not active.
+- `active`：SecretRef 是有效身份表面的一部分，必须进行解析。
+- `inactive`：在此运行时中忽略 SecretRef，因为另一个身份表面优先，或者
+  因为远程身份已禁用/未处于活动状态。
 
-这些条目使用 `SECRETS_GATEWAY_AUTH_SURFACE` 记录，并包含 active-surface 策略使用的原因，因此您可以了解为什么凭据被视为活动或非活动。
+这些条目使用 `SECRETS_GATEWAY_AUTH_SURFACE` 记录，并包含活动表面策略使用的原因，因此您可以查看凭证为何被视为活动或非活动。
 
 ## 新手引导参考预检
 
 当新手引导以交互模式运行并且您选择 SecretRef 存储时，OpenClaw 会在保存之前运行预检验证：
 
 - Env refs：验证环境变量名称并确认在设置期间可见非空值。
-- Provider refs（`file` 或 `exec`）：验证提供商选择，解析 `id`，并检查解析的值类型。
-- Quickstart 重用路径：当 `gateway.auth.token` 已经是 SecretRef 时，新手引导会在探测/仪表板引导之前（针对 `env`、`file` 和 `exec` 引用）使用相同的快速失败门来解析它。
+- 提供商引用（`file` 或 `exec`）：验证提供商选择，解析 `id`，并检查解析的值类型。
+- 快速启动重用路径：当 `gateway.auth.token` 已经是 SecretRef 时，新手引导会在探针/仪表板引导之前（针对 `env`、`file` 和 `exec` 引用）使用相同的快速失败门对其进行解析。
 
 如果验证失败，新手引导会显示错误并允许您重试。
 
@@ -104,7 +104,7 @@ surface state explicitly:
 
 - `provider` 必须匹配 `^[a-z][a-z0-9_-]{0,63}$`
 - `id` 必须是绝对 JSON 指针（`/...`）
-- 分段中的 RFC6901 转义：`~` => `~0`，`/` => `~1`
+- 段中的 RFC6901 转义：`~` => `~0`，`/` => `~1`
 
 ### `source: "exec"`
 
@@ -116,7 +116,7 @@ surface state explicitly:
 
 - `provider` 必须匹配 `^[a-z][a-z0-9_-]{0,63}$`
 - `id` 必须匹配 `^[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}$`
-- `id` 不得包含 `.` 或 `..` 作为以斜杠分隔的路径分段（例如，`a/../b` 会被拒绝）
+- `id` 不得包含 `.` 或 `..` 作为以斜杠分隔的路径段（例如 `a/../b` 会被拒绝）
 
 ## 提供商配置
 
@@ -156,16 +156,16 @@ surface state explicitly:
 
 ### Env 提供商
 
-- 通过 `allowlist` 进行可选的允许列表控制。
+- 通过 `allowlist` 进行可选的允许列表配置。
 - 缺失或为空的环境变量值将导致解析失败。
 
 ### 文件提供商
 
 - 从 `path` 读取本地文件。
-- `mode: "json"` 期望 JSON 对象负载，并将 `id` 解析为指针。
-- `mode: "singleValue"` 期望引用 ID `"value"` 并返回文件内容。
+- `mode: "json"` 期望 JSON 对象负载并将 `id` 解析为指针。
+- `mode: "singleValue"` 期望 ref id `"value"` 并返回文件内容。
 - 路径必须通过所有权/权限检查。
-- Windows 失败关闭（fail-closed）说明：如果某个路径的 ACL 验证不可用，解析将失败。仅对于受信任的路径，在该提供商上设置 `allowInsecurePath: true` 以绕过路径安全检查。
+- Windows 失败关闭（fail-closed）说明：如果某个路径的 ACL 验证不可用，解析将失败。仅限受信任路径，在该提供商上设置 `allowInsecurePath: true` 以绕过路径安全检查。
 
 ### Exec 提供商
 
@@ -174,7 +174,7 @@ surface state explicitly:
 - 设置 `allowSymlinkCommand: true` 以允许符号链接命令路径（例如 Homebrew shims）。OpenClaw 会验证解析后的目标路径。
 - 将 `allowSymlinkCommand` 与 `trustedDirs` 配对使用，用于包管理器路径（例如 `["/opt/homebrew"]`）。
 - 支持超时、无输出超时、输出字节限制、环境变量白名单和受信任目录。
-- Windows 失败关闭（fail-closed）说明：如果命令路径的 ACL 验证不可用，解析将失败。仅对于受信任的路径，在该提供商上设置 `allowInsecurePath: true` 以绕过路径安全检查。
+- Windows 失败关闭（fail-closed）说明：如果命令路径的 ACL 验证不可用，解析将失败。仅限受信任路径，在该提供商上设置 `allowInsecurePath: true` 以绕过路径安全检查。
 
 请求负载（stdin）：
 
@@ -289,7 +289,7 @@ surface state explicitly:
 
 ## 沙箱 SSH 认证材料
 
-核心 `ssh` 沙箱后端也支持用于 SSH 认证材料的 SecretRefs：
+核心 `ssh` 沙盒后端还支持用于 SSH 认证材料的 SecretRefs：
 
 ```json5
 {
@@ -314,13 +314,13 @@ surface state explicitly:
 
 - OpenClaw 在沙箱激活期间解析这些引用，而不是在每次 SSH 调用期间延迟解析。
 - 解析后的值将写入具有限制性权限的临时文件，并在生成的 SSH 配置中使用。
-- 如果有效的沙箱后端不是 `ssh`，这些引用将保持非活动状态，并且不会阻塞启动。
+- 如果有效的沙盒后端不是 `ssh`，这些引用将保持非活动状态且不会阻塞启动。
 
 ## 支持的凭证面
 
 规范的支持和不支持的凭证列于：
 
-- [SecretRef 凭证表面](/zh/reference/secretref-credential-surface)
+- [SecretRef 凭证 Surface](/zh/reference/secretref-credential-surface)
 
 运行时创建或轮换的凭据和 OAuth 刷新材料被有意排除在只读 SecretRef 解析之外。
 
@@ -333,11 +333,11 @@ surface state explicitly:
 警告和审计信号：
 
 - `SECRETS_REF_OVERRIDES_PLAINTEXT`（运行时警告）
-- `REF_SHADOWED`（当 `auth-profiles.json` 凭据优先于 `openclaw.json` ref 时的审计发现）
+- `REF_SHADOWED`（当 `auth-profiles.json` 凭证优先于 `openclaw.json` 引用时的审计发现）
 
 Google Chat 兼容性行为：
 
-- `serviceAccountRef` 优先于明文 `serviceAccount`。
+- `serviceAccountRef` 优先于纯文本 `serviceAccount`。
 - 当设置了同级 ref 时，明文值将被忽略。
 
 ## 激活触发器
@@ -354,7 +354,7 @@ Secret 激活在以下情况下运行：
 - 成功会原子地交换快照。
 - 启动失败会中止网关启动。
 - 运行时重新加载失败将保留最后一个已知良好的快照。
-- 为出站 helper/工具 调用提供显式的逐次调用渠道令牌不会触发 SecretRef 激活；激活点仍然是启动、重新加载和显式 `secrets.reload`。
+- 为出站 helper/工具 调用提供明确的每次调用渠道 token 不会触发 SecretRef 激活；激活点仍为启动、重新加载和显式 `secrets.reload`。
 
 ## 降级和恢复信号
 
@@ -379,7 +379,7 @@ Secret 激活在以下情况下运行：
 有两种广泛的行为：
 
 - 严格命令路径（例如 `openclaw memory` 远程内存路径和 `openclaw qr --remote`）从活动快照读取，并在所需的 SecretRef 不可用时快速失败。
-- 只读命令路径（例如 `openclaw status`、`openclaw status --all`、`openclaw channels status`、`openclaw channels resolve`、`openclaw security audit` 以及只读的 doctor/配置修复流程）也首选活动快照，但当该命令路径中目标 SecretRef 不可用时，会降级而不是中止。
+- 只读命令路径（例如 `openclaw status`、`openclaw status --all`、`openclaw channels status`、`openclaw channels resolve`、`openclaw security audit` 以及只读 doctor/config 修复流程）也优先使用活动快照，但在该命令路径中目标 SecretRef 不可用时会降级而不是中止。
 
 只读行为：
 
@@ -390,8 +390,8 @@ Secret 激活在以下情况下运行：
 
 其他说明：
 
-- 后端密钥轮换后的快照刷新由 `openclaw secrets reload` 处理。
-- 这些命令路径使用的 Gateway RPC 方法：`secrets.resolve`。
+- 后端 secret 轮换后的快照刷新由 `openclaw secrets reload` 处理。
+- 这些命令路径使用的 Gateway(网关) RPC 方法：`secrets.resolve`。
 
 ## 审计和配置工作流
 
@@ -407,27 +407,27 @@ openclaw secrets audit --check
 
 发现项包括：
 
-- 静态的明文值（`openclaw.json`、`auth-profiles.json`、`.env` 和生成的 `agents/*/agent/models.json`）
-- 生成的 `models.json` 条目中的明文敏感提供商标头残留
+- 静态纯文本值（`openclaw.json`、`auth-profiles.json`、`.env` 和生成的 `agents/*/agent/models.json`）
+- 生成的 `models.json` 条目中的静态敏感提供商 header 残留
 - 未解析的引用
-- 优先级覆盖（`auth-profiles.json` 优先于 `openclaw.json` 引用）
-- 旧版残留（`auth.json`、OAuth 提醒）
+- 优先级遮蔽（`auth-profiles.json` 优先于 `openclaw.json` refs）
+- 遗留残留（`auth.json`、OAuth 提醒）
 
 Exec 注释：
 
 - 默认情况下，审计会跳过 exec SecretRef 可解析性检查，以避免命令副作用。
-- 使用 `openclaw secrets audit --allow-exec` 在审计期间执行 exec 提供商。
+- 使用 `openclaw secrets audit --allow-exec` 在审计期间执行 exec providers。
 
 Header 残留注释：
 
-- 敏感提供商 header 检测基于名称启发式（常见的 auth/credential header 名称和片段，例如 `authorization`、`x-api-key`、`token`、`secret`、`password` 和 `credential`）。
+- 敏感提供商 header 检测基于名称启发式方法（常见的 auth/credential header 名称和片段，例如 `authorization`、`x-api-key`、`token`、`secret`、`password` 和 `credential`）。
 
 ### `secrets configure`
 
 交互式助手，用于：
 
 - 首先配置 `secrets.providers`（`env`/`file`/`exec`，添加/编辑/删除）
-- 允许您为单个代理作用域在 `openclaw.json` 中选择支持的秘密承载字段，外加 `auth-profiles.json`
+- 允许您在 `openclaw.json` 以及 `auth-profiles.json` 中为一个代理范围选择支持的秘密承载字段
 - 可以直接在目标选择器中创建新的 `auth-profiles.json` 映射
 - 捕获 SecretRef 详细信息（`source`、`provider`、`id`）
 - 运行预检解析
@@ -435,8 +435,8 @@ Header 残留注释：
 
 Exec 注释：
 
-- 除非设置了 `--allow-exec`，否则预检会跳过 exec SecretRef 检查。
-- 如果您直接从 `configure --apply` 应用，并且计划包含 exec refs/providers，请保持为应用步骤设置 `--allow-exec`。
+- 除非设置了 `--allow-exec`，否则预检将跳过 exec SecretRef 检查。
+- 如果您直接从 `configure --apply` 应用，并且计划包含 exec 引用/提供程序，请在应用步骤中也保持 `--allow-exec` 的设置。
 
 有用的模式：
 
@@ -446,7 +446,7 @@ Exec 注释：
 
 `configure` 应用默认值：
 
-- 为目标提供商清除 `auth-profiles.json` 中匹配的静态凭据
+- 从 `auth-profiles.json` 中清除目标提供程序的匹配静态凭据
 - 从 `auth.json` 中清除旧的静态 `api_key` 条目
 - 从 `<config-dir>/.env` 中清除匹配的已知秘密行
 
@@ -463,8 +463,8 @@ openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-
 
 Exec 注释：
 
-- 除非设置了 `--allow-exec`，否则试运行会跳过 exec 检查。
-- 写入模式会拒绝包含 exec SecretRefs/providers 的计划，除非设置了 `--allow-exec`。
+- 除非设置了 `--allow-exec`，否则 dry-run 会跳过 exec 检查。
+- 写入模式会拒绝包含 exec SecretRefs/提供程序的计划，除非设置了 `--allow-exec`。
 
 有关严格的目标/路径契约详细信息和确切的拒绝规则，请参阅：
 
@@ -485,7 +485,7 @@ OpenClaw 故意不写入包含历史明文机密值的回滚备份。
 对于静态凭证，运行时不再依赖明文旧版身份验证存储。
 
 - 运行时凭证源是已解析的内存快照。
-- 发现时会清除旧版静态 `api_key` 条目。
+- 发现旧的静态 `api_key` 条目时会将其清除。
 - OAuth 相关的兼容性行为保持独立。
 
 ## Web UI 说明
@@ -495,8 +495,8 @@ OpenClaw 故意不写入包含历史明文机密值的回滚备份。
 ## 相关文档
 
 - CLI 命令：[secrets](/zh/cli/secrets)
-- 计划契约详细信息：[Secrets Apply Plan Contract](/zh/gateway/secrets-plan-contract)
-- 凭证表面：[SecretRef Credential Surface](/zh/reference/secretref-credential-surface)
+- 计划合同详细信息：[Secrets Apply Plan Contract](/zh/gateway/secrets-plan-contract)
+- 凭据范围：[SecretRef Credential Surface](/zh/reference/secretref-credential-surface)
 - 身份验证设置：[Authentication](/zh/gateway/authentication)
 - 安全态势：[Security](/zh/gateway/security)
 - 环境优先级：[Environment Variables](/zh/help/environment)

@@ -25,7 +25,7 @@ Le channel WhatsApp fonctionne via **Baileys Web**. Ce document capture les règ
 
 - Entrée : chemin d'accès au fichier local **ou** URL HTTP(S).
 - Flux : charger dans un tampon (Buffer), détecter le type de média et construire la charge utile correcte :
-  - **Images :** redimensionner et recompresser en JPEG (côté max 2048px) en ciblant `agents.defaults.mediaMaxMb` (par défaut 5 Mo), plafonné à 6 Mo.
+  - **Images :** redimensionner et recompresser en JPEG (côté max 2048 px) en visant `channels.whatsapp.mediaMaxMb` (par défaut : 50 Mo).
   - **Audio/Voix/Vidéo :** transfert direct jusqu'à 16 Mo ; l'audio est envoyé sous forme de note vocale (`ptt: true`).
   - **Documents :** tout le reste, jusqu'à 100 Mo, avec le nom de fichier conservé si disponible.
 - Lecture style GIF WhatsApp : envoyer un MP4 avec `gifPlayback: true` (CLI : `--gif-playback`) afin que les clients mobiles bouclent en ligne.
@@ -54,7 +54,7 @@ Le channel WhatsApp fonctionne via **Baileys Web**. Ce document capture les règ
 
 **Limites d'envoi sortant (envoi web WhatsApp)**
 
-- Images : limite d'environ 6 Mo après recompression.
+- Images : jusqu'à `channels.whatsapp.mediaMaxMb` (par défaut : 50 Mo) après recompression.
 - Audio/voix/vidéo : limite de 16 Mo ; documents : limite de 100 Mo.
 - Médias trop volumineux ou illisibles → erreur claire dans les journaux et la réponse est ignorée.
 

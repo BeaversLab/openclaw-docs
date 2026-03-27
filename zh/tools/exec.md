@@ -51,9 +51,10 @@ title: "Exec Tool"
 - `tools.exec.security`（默认值：sandbox 为 `deny`，未设置时 gateway + node 为 `allowlist`）
 - `tools.exec.ask`（默认值：`on-miss`）
 - `tools.exec.node`（默认值：未设置）
-- `tools.exec.pathPrepend`：要添加到 exec 运行的 `PATH` 前面的目录列表（仅限 gateway + sandbox）。
-- `tools.exec.safeBins`：无需明确的允许列表条目即可运行的仅 stdin 安全二进制文件。有关行为详细信息，请参阅 [Safe bins](/zh/tools/exec-approvals#safe-bins-stdin-only)。
-- `tools.exec.safeBinTrustedDirs`：用于 `safeBins` 路径检查的其他受信任显式目录。`PATH` 条目永远不会被自动信任。内置默认值为 `/bin` 和 `/usr/bin`。
+- `tools.exec.strictInlineEval`（默认值：false）：当为 true 时，内联解释器 eval 形式（如 `python -c`、`node -e`、`ruby -e`、`perl -e`、`php -r`、`lua -e` 和 `osascript -e`）始终需要显式批准，并且永远不会被 `allow-always` 持久化。
+- `tools.exec.pathPrepend`：要在 exec 运行（仅限网关 + 沙盒）的 `PATH` 前添加的目录列表。
+- `tools.exec.safeBins`：仅限 stdin 的安全二进制文件，无需显式允许列表条目即可运行。有关行为详细信息，请参阅 [安全二进制文件](/zh/tools/exec-approvals#safe-bins-stdin-only)。
+- `tools.exec.safeBinTrustedDirs`：针对 `safeBins` 路径检查受信任的其他显式目录。`PATH` 条目永远不会自动受信任。内置默认值为 `/bin` 和 `/usr/bin`。
 - `tools.exec.safeBinProfiles`：每个安全二进制文件的可选自定义 argv 策略（`minPositional`、`maxPositional`、`allowedValueFlags`、`deniedFlags`）。
 
 示例：
@@ -70,27 +71,26 @@ title: "Exec Tool"
 
 ### PATH 处理
 
-- `host=gateway`：将您的登录 shell `PATH` 合并到 exec 环境中。主机执行会拒绝
-  `env.PATH` 覆盖。守护进程本身仍然以最小的 `PATH` 运行：
-  - macOS: `/opt/homebrew/bin`, `/usr/local/bin`, `/usr/bin`, `/bin`
-  - Linux: `/usr/local/bin`, `/usr/bin`, `/bin`
-- `host=sandbox`: 在容器内运行 `sh -lc` (login shell)，因此 `/etc/profile` 可能会重置 `PATH`。
-  OpenClaw 在通过内部环境变量(no shell interpolation)获取 profile 后将 `env.PATH` 添加到前面；
+- `host=gateway`：将您的登录 shell `PATH` 合并到 exec 环境中。对于主机执行，会拒绝 `env.PATH` 覆盖。守护进程本身仍以最小的 `PATH` 运行：
+  - macOS：`/opt/homebrew/bin`、`/usr/local/bin`、`/usr/bin`、`/bin`
+  - Linux：`/usr/local/bin`、`/usr/bin`、`/bin`
+- `host=sandbox`：在容器内运行 `sh -lc`（登录 shell），因此 `/etc/profile` 可能会重置 `PATH`。
+  OpenClaw 在通过内部环境变量获取配置文件后前置 `env.PATH`（无 shell 插值）；
   `tools.exec.pathPrepend` 也适用于此处。
-- `host=node`: 只有您传递的非被阻止的 env 覆盖项才会发送到节点。`env.PATH` 覆盖项在主机执行时被拒绝，并被节点主机忽略。如果您在节点上需要额外的 PATH 条目，请配置节点主机服务环境 (systemd/launchd) 或将工具安装在标准位置。
+- `host=node`：只有您传递的未被阻止的环境变量覆盖项才会发送到节点。`env.PATH` 覆盖项在主机执行时被拒绝，并被节点主机忽略。如果您在节点上需要额外的 PATH 条目，请配置节点主机服务环境（systemd/launchd）或将工具安装在标准位置。
 
-每代理节点绑定（使用配置中的代理列表索引）：
+按代理绑定节点（使用配置中的代理列表索引）：
 
 ```bash
 openclaw config get agents.list
 openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 ```
 
-控制 UI：Nodes（节点）选项卡包含一个小的“Exec node binding”（Exec 节点绑定）面板，用于相同的设置。
+控制 UI：节点选项卡包含一个用于相同设置的小型“Exec 节点绑定”面板。
 
-## Session overrides (`/exec`)
+## 会话覆盖 (`/exec`)
 
-使用 `/exec` 为 `host`、`security`、`ask` 和 `node` 设置**每会话 (per-会话)** 的默认值。
+使用 `/exec` 为 `host`、`security`、`ask` 和 `node` 设置**每次会话**的默认值。
 发送不带参数的 `/exec` 以显示当前值。
 
 示例：
@@ -101,38 +101,39 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 
 ## 授权模型
 
-`/exec` 仅对**授权发送者**（渠道 allowlists/配对加上 `commands.useAccessGroups`）有效。
-它仅更新**会话状态**，不写入配置。要彻底禁用 exec，请通过工具策略（`tools.deny: ["exec"]` 或每代理）拒绝它。除非您显式设置了
-`security=full` 和 `ask=off`，否则主机批准仍然适用。
+`/exec` 仅对**经过授权的发送者**（渠道允许列表/配对加上 `commands.useAccessGroups`）有效。
+它仅更新**会话状态**而不写入配置。要彻底禁用 exec，请通过工具策略（`tools.deny: ["exec"]` 或按代理）拒绝它。除非您明确设置了 `security=full` 和 `ask=off`，否则主机批准仍然适用。
 
-## Exec approvals (companion app / node host)
+## Exec 批准（配套应用 / 节点主机）
 
-沙箱隔离 代理在 `exec` 于网关或节点主机上运行之前，可能需要每请求批准。
-有关策略、allowlist 和 UI 流程，请参阅 [Exec approvals](/zh/tools/exec-approvals)。
+沙箱隔离的代理可能需要在 `exec` 于 Gateway(网关) 或节点主机上运行之前获得针对每个请求的批准。
+有关策略、允许列表和 UI 流程，请参阅 [Exec 批准](/zh/tools/exec-approvals)。
 
-需要审批时，exec 工具 会立即返回 `status: "approval-pending"` 和一个审批 ID。一旦获批（或被拒绝/超时），Gateway(网关) 会发出系统事件（`Exec finished` / `Exec denied`）。如果命令在 `tools.exec.approvalRunningNoticeMs` 后仍在运行，则会发出一条 `Exec running` 通知。
+当需要批准时，exec 工具会立即返回 `status: "approval-pending"` 和一个批准 ID。一旦获得批准（或被拒绝/超时），Gateway(网关) 会发出系统事件（`Exec finished` / `Exec denied`）。如果在 `tools.exec.approvalRunningNoticeMs` 后命令仍在运行，则会发出一个 `Exec running` 通知。
 
-## Allowlist + safe bins
+## 允许列表 + 安全二进制文件
 
-手动强制执行允许列表仅匹配 **已解析的二进制路径**（不匹配基本名称）。当
-`security=allowlist` 时，shell 命令只有在每个管道段都
-在允许列表中或是安全二进制文件时才会被自动允许。在允许列表模式下，除非每个顶层段都满足允许列表要求（包括安全二进制文件），否则将拒绝链接（`;`、`&&`、`||`）和重定向。
-重定向仍然不受支持。
+手动允许列表执行仅匹配**解析后的二进制路径**（不匹配基本名称）。当
+`security=allowlist` 时，仅当每个管道段
+都在允许列表中或者是安全二进制文件时，Shell 命令才会被自动允许。在允许列表模式下，链接（`;`、`&&`、`||`）和重定向会被拒绝，除非每个顶级段都满足允许列表（包括安全二进制文件）。
+重操作仍然不受支持。
 
-`autoAllowSkills` 是 exec 批准中一个单独的便捷路径。它不同于
-手动路径允许列表条目。为了严格的显式信任，请保持 `autoAllowSkills` 禁用状态。
+`autoAllowSkills` 是 exec 批准中一个独立的便捷路径。它与
+手动路径允许列表条目不同。为了严格的显式信任，请保持 `autoAllowSkills` 禁用。
 
-使用这两个控件分别处理不同的任务：
+使用这两个控件来处理不同的工作：
 
-- `tools.exec.safeBins`：小型的、仅 stdin 的流过滤器。
-- `tools.exec.safeBinTrustedDirs`：用于安全二进制可执行路径的显式额外受信任目录。
-- `tools.exec.safeBinProfiles`：用于自定义安全二进制文件的显式 argv 策略。
-- allowlist：对可执行路径的显式信任。
+- `tools.exec.safeBins`：小型、仅标准输入（stdin）的流过滤器。
+- `tools.exec.safeBinTrustedDirs`：用于安全二进制可执行文件路径的显式额外受信任目录。
+- `tools.exec.safeBinProfiles`：针对自定义安全二进制文件的显式 argv 策略。
+- allowlist：针对可执行文件路径的显式信任。
 
 不要将 `safeBins` 视为通用允许列表，并且不要添加解释器/运行时二进制文件（例如 `python3`、`node`、`ruby`、`bash`）。如果您需要这些，请使用显式允许列表条目并保持批准提示启用。
-当解释器/运行时 `safeBins` 条目缺少显式配置文件时，`openclaw security audit` 会发出警告，并且 `openclaw doctor --fix` 可以构建缺失的自定义 `safeBinProfiles` 条目。
+当解释器/运行时 `safeBins` 条目缺少显式配置文件时，`openclaw security audit` 会发出警告，而 `openclaw doctor --fix` 可以搭建缺失的自定义 `safeBinProfiles` 条目。
+当您明确将具有广泛行为的二进制文件（例如 `jq`）重新添加到 `safeBins` 中时，`openclaw security audit` 和 `openclaw doctor` 也会发出警告。
+如果您明确允许列出了解释器，请启用 `tools.exec.strictInlineEval`，以便内联代码评估表单仍然需要新的批准。
 
-有关完整的策略详细信息和示例，请参阅 [Exec 批准](/zh/tools/exec-approvals#safe-bins-stdin-only) 和 [安全二进制文件与允许列表](/zh/tools/exec-approvals#safe-bins-versus-allowlist)。
+有关完整的策略详细信息和示例，请参阅 [Exec approvals](/zh/tools/exec-approvals#safe-bins-stdin-only) 和 [Safe bins versus allowlist](/zh/tools/exec-approvals#safe-bins-versus-allowlist)。
 
 ## 示例
 
@@ -163,7 +164,7 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 { "tool": "process", "action": "submit", "sessionId": "<id>" }
 ```
 
-粘贴（默认使用括号模式）：
+粘贴（默认带括号）：
 
 ```json
 { "tool": "process", "action": "paste", "sessionId": "<id>", "text": "line1\nline2\n" }
@@ -184,12 +185,12 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 }
 ```
 
-注意：
+注意事项：
 
 - 仅适用于 OpenAI/OpenAI Codex 模型。
 - 工具策略仍然适用；`allow: ["exec"]` 隐式允许 `apply_patch`。
 - 配置位于 `tools.exec.applyPatch` 下。
-- `tools.exec.applyPatch.workspaceOnly` 默认为 `true`（包含在工作区内）。仅在您有意让 `apply_patch` 在工作区目录之外进行写入/删除时，才将其设置为 `false`。
+- `tools.exec.applyPatch.workspaceOnly` 默认为 `true`（包含在工作区内）。仅当您有意让 `apply_patch` 在工作区目录之外写入/删除时，才将其设置为 `false`。
 
 import zh from "/components/footer/zh.mdx";
 

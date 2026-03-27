@@ -14,7 +14,7 @@ Esta guía cubre los pasos necesarios para compilar y ejecutar la aplicación de
 Antes de compilar la aplicación, asegúrese de tener instalado lo siguiente:
 
 1. **Xcode 26.2+**: Necesario para el desarrollo en Swift.
-2. **Node.js 24 y pnpm**: Recomendado para la puerta de enlace (gateway), la interfaz de línea de comandos (CLI) y los scripts de empaquetado. Node 22 LTS, actualmente `22.16+`, sigue siendo compatible.
+2. **Node.js 24 y pnpm**: Recomendados para la puerta de enlace, la CLI y los scripts de empaquetado. Node 22 LTS, actualmente `22.14+`, sigue siendo compatible por compatibilidad.
 
 ## 1. Instalar dependencias
 

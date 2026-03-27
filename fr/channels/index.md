@@ -26,23 +26,24 @@ Le texte est pris en charge partout ; les médias et les réactions varient selo
 - [Nextcloud Talk](/fr/channels/nextcloud-talk) — Chat auto-hébergé via Nextcloud Talk (plugin, installé séparément).
 - [Nostr](/fr/channels/nostr) — DMs décentralisés via NIP-04 (plugin, installé séparément).
 - [Signal](/fr/channels/signal) — signal-cli ; axé sur la confidentialité.
-- [Synology Chat](/fr/channels/synology-chat) — Synology NAS Chat via webhooks sortants+entrants (plugin, installed separately).
-- [Slack](/fr/channels/slack) — SDK Bolt; applications de l'espace de travail.
+- [Slack](/fr/channels/slack) — Bolt SDK ; applications d'espace de travail.
+- [Synology Chat](/fr/channels/synology-chat) — Synology NAS Chat via webhooks sortants et entrants (plug-in, installé séparément).
 - [Telegram](/fr/channels/telegram) — Bot API via grammY; prend en charge les groupes.
 - [Tlon](/fr/channels/tlon) — Messagerie basée sur Urbit (plugin, installed separately).
 - [Twitch](/fr/channels/twitch) — Chat Twitch via connexion IRC (plugin, installed separately).
-- [WebChat](/fr/web/webchat) — Interface utilisateur Gateway du WebChat via WebSocket.
-- [WhatsApp](/fr/channels/whatsapp) — Le plus populaire ; utilise Baileys et nécessite un appairage QR.
-- [Zalo](/fr/channels/zalo) — Bot Zalo API; messagerie populaire au Vietnam (plugin, installed separately).
-- [Zalo Personal](/fr/channels/zalouser) — Compte personnel Zalo via connexion QR (plugin, installed separately).
+- [Voice Call](/fr/plugins/voice-call) — Téléphonie via Plivo ou Twilio (plug-in, installé séparément).
+- [WebChat](/fr/web/webchat) — Interface utilisateur Gateway WebChat sur WebSocket.
+- [WhatsApp](/fr/channels/whatsapp) — Le plus populaire ; utilise Baileys et nécessite un appariement QR.
+- [Zalo](/fr/channels/zalo) — Zalo Bot API ; messagerie populaire du Vietnam (plug-in, installé séparément).
+- [Zalo Personal](/fr/channels/zalouser) — Compte personnel Zalo via connexion QR (plug-in, installé séparément).
 
 ## Notes
 
-- Les channels peuvent fonctionner simultanément ; configurez-en plusieurs et OpenClaw routera par chat.
-- La configuration la plus rapide est généralement **Telegram** (simple jeton de bot). WhatsApp nécessite un appairage QR et
+- Les canaux peuvent fonctionner simultanément ; configurez-en plusieurs et OpenClaw acheminera par chat.
+- La configuration la plus rapide est généralement **Telegram** (jeton de bot simple). WhatsApp nécessite un appariement QR et
   stocke plus d'état sur le disque.
-- Le comportement des groupes varie selon le channel ; voir [Groupes](/fr/channels/groups).
-- L'appairage DM et les listes d'autorisation sont appliqués pour la sécurité ; voir [Sécurité](/fr/gateway/security).
+- Le comportement des groupes varie selon le canal ; voir [Groups](/fr/channels/groups).
+- L'appariement DM et les listes d'autorisation sont appliqués pour la sécurité ; voir [Security](/fr/gateway/security).
 - Dépannage : [Channel troubleshooting](/fr/channels/troubleshooting).
 - Les fournisseurs de modèles sont documentés séparément ; voir [Model Providers](/fr/providers/models).
 

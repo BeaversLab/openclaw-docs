@@ -362,7 +362,7 @@ Después de configurar el sandbox y las herramientas multiagente:
 - [Sandbox vs Política de herramientas vs Elevado (Elevated)](/es/gateway/sandbox-vs-tool-policy-vs-elevated) -- depuración de "¿por qué está bloqueado esto?"
 - [Modo Elevado (Elevated Mode)](/es/tools/elevated)
 - [Enrutamiento Multiagente (Multi-Agent Routing)](/es/concepts/multi-agent)
-- [Configuración del Sandbox (Sandbox Configuration)](/es/gateway/configuration-reference#agents-defaults-sandbox)
+- [Configuración del sandbox](/es/gateway/configuration-reference#agentsdefaultssandbox)
 - [Gestión de Sesiones (Session Management)](/es/concepts/session)
 
 import es from "/components/footer/es.mdx";

@@ -1,61 +1,120 @@
 ---
-title: "Crear Habilidades"
+title: "Crear habilidades"
 summary: "Construye y prueba habilidades personalizadas del espacio de trabajo con SKILL.md"
 read_when:
   - You are creating a new custom skill in your workspace
   - You need a quick starter workflow for SKILL.md-based skills
 ---
 
-# Crear Habilidades Personalizadas 🛠
+# Crear habilidades
 
-OpenClaw está diseñado para ser fácilmente extensible. Las "Habilidades" ("Skills") son la forma principal de añadir nuevas capacidades a tu asistente.
+Las habilidades enseñan al agente cómo y cuándo utilizar las herramientas. Cada habilidad es un directorio
+que contiene un archivo `SKILL.md` con frontmatter YAML e instrucciones en markdown.
 
-## ¿Qué es una Habilidad?
+Para obtener información sobre cómo se cargan y priorizan las habilidades, consulte [Habilidades](/es/tools/skills).
 
-Una habilidad es un directorio que contiene un archivo `SKILL.md` (que proporciona instrucciones y definiciones de herramientas al LLM) y opcionalmente algunos scripts o recursos.
+## Crear tu primera habilidad
 
-## Paso a Paso: Tu Primera Habilidad
+<Steps>
+  <Step title="Crear el directorio de la habilidad">
+    Las habilidades residen en tu espacio de trabajo. Crea una nueva carpeta:
 
-### 1. Crear el Directorio
+    ```bash
+    mkdir -p ~/.openclaw/workspace/skills/hello-world
+    ```
 
-Las habilidades residen en tu espacio de trabajo, usualmente en `~/.openclaw/workspace/skills/`. Crea una nueva carpeta para tu habilidad:
+  </Step>
 
-```bash
-mkdir -p ~/.openclaw/workspace/skills/hello-world
-```
+  <Step title="Escribir SKILL.md">
+    Crea `SKILL.md` dentro de ese directorio. El frontmatter define los metadatos
+    y el cuerpo markdown contiene las instrucciones para el agente.
 
-### 2. Definir el `SKILL.md`
+    ```markdown
+    ---
+    name: hello_world
+    description: A simple skill that says hello.
+    ---
 
-Crea un archivo `SKILL.md` en ese directorio. Este archivo usa frontmatter YAML para metadatos y Markdown para instrucciones.
+    # Hello World Skill
 
-```markdown
----
-name: hello_world
-description: A simple skill that says hello.
----
+    When the user asks for a greeting, use the `echo` tool to say
+    "Hello from your custom skill!".
+    ```
 
-# Hello World Skill
+  </Step>
 
-When the user asks for a greeting, use the `echo` tool to say "Hello from your custom skill!".
-```
+  <Step title="Añadir herramientas (opcional)">
+    Puedes definir esquemas de herramientas personalizados en el frontmatter o instruir al agente
+    para que use herramientas del sistema existentes (como `exec` o `browser`). Las habilidades también pueden
+    distribuirse dentro de complementos junto con las herramientas que documentan.
 
-### 3. Añadir Herramientas (Opcional)
+  </Step>
 
-Puedes definir herramientas personalizadas en el frontmatter o instruir al agente para que use herramientas del sistema existentes (como `bash` o `browser`).
+  <Step title="Cargar la habilidad">
+    Inicia una nueva sesión para que OpenClaw reconozca la habilidad:
 
-### 4. Actualizar OpenClaw
+    ```bash
+    # From chat
+    /new
 
-Pide a tu agente que "actualice habilidades" ("refresh skills") o reinicia el gateway. OpenClaw descubrirá el nuevo directorio e indexará el `SKILL.md`.
+    # Or restart the gateway
+    openclaw gateway restart
+    ```
 
-## Mejores Prácticas
+    Verifica que la habilidad se haya cargado:
 
-- **Sé Conciso**: Instruye al modelo sobre _qué_ hacer, no sobre cómo ser una IA.
-- **Seguridad Primero**: Si tu habilidad usa `bash`, asegúrate de que los prompts no permitan la inyección de comandos arbitrarios desde entradas de usuario no confiables.
-- **Prueba Localmente**: Usa `openclaw agent --message "use my new skill"` para probar.
+    ```bash
+    openclaw skills list
+    ```
 
-## Habilidades Compartidas
+  </Step>
 
-También puedes explorar y contribuir con habilidades a [ClawHub](https://clawhub.com).
+  <Step title="Probarla">
+    Envía un mensaje que debería activar la habilidad:
+
+    ```bash
+    openclaw agent --message "give me a greeting"
+    ```
+
+    O simplemente chatea con el agente y pide un saludo.
+
+  </Step>
+</Steps>
+
+## Referencia de metadatos de habilidad
+
+El frontmatter YAML admite estos campos:
+
+| Campo                               | Obligatorio | Descripción                                       |
+| ----------------------------------- | ----------- | ------------------------------------------------- |
+| `name`                              | Sí          | Identificador único (snake_case)                  |
+| `description`                       | Sí          | Descripción de una línea que se muestra al agente |
+| `metadata.openclaw.os`              | No          | Filtro de SO (`["darwin"]`, `["linux"]`, etc.)    |
+| `metadata.openclaw.requires.bins`   | No          | Binarios requeridos en PATH                       |
+| `metadata.openclaw.requires.config` | No          | Claves de configuración requeridas                |
+
+## Mejores prácticas
+
+- **Sea conciso** — instruya al modelo sobre _qué_ hacer, no sobre cómo ser una IA
+- **Seguridad ante todo** — si su habilidad usa `exec`, asegúrese de que los mensajes no permitan la inyección de comandos arbitrarios desde entradas que no son confiables
+- **Pruebe localmente** — use `openclaw agent --message "..."` para probar antes de compartir
+- **Use ClawHub** — navegue y contribuya con habilidades en [ClawHub](https://clawhub.com)
+
+## Ubicación de las habilidades
+
+| Ubicación                       | Precedencia | Alcance                             |
+| ------------------------------- | ----------- | ----------------------------------- |
+| `\<workspace\>/skills/`         | La más alta | Por agente                          |
+| `~/.openclaw/skills/`           | Media       | Compartida (todos los agentes)      |
+| Incluida (enviada con OpenClaw) | La más baja | Global                              |
+| `skills.load.extraDirs`         | La más baja | Carpetas compartidas personalizadas |
+
+## Relacionado
+
+- [Referencia de habilidades](/es/tools/skills) — reglas de carga, precedencia y filtrado
+- [Configuración de habilidades](/es/tools/skills-config) — esquema de configuración `skills.*`
+- [ClawHub](/es/tools/clawhub) — registro público de habilidades
+- [Creación de complementos](/es/plugins/building-plugins) — los complementos pueden incluir habilidades
 
 import es from "/components/footer/es.mdx";
 

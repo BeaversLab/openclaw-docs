@@ -1,61 +1,119 @@
 ---
-title: "创建技能"
-summary: "使用 SKILL.md 构建和测试自定义工作区技能"
+title: "Creating Skills"
+summary: "使用 SKILL.md 构建和测试自定义工作区 Skills"
 read_when:
   - You are creating a new custom skill in your workspace
   - You need a quick starter workflow for SKILL.md-based skills
 ---
 
-# 创建自定义技能 🛠
+# 创建 Skills
 
-OpenClaw 旨在易于扩展。“技能”是为助手添加新功能的主要方式。
+Skills 教会 Agent 如何以及何时使用工具。每个 Skill 都是一个目录，其中包含一个带有 YAML frontmatter 和 markdown 指令的 `SKILL.md` 文件。
 
-## 什么是技能？
+有关如何加载和确定 Skills 的优先级，请参阅 [Skills](/zh/tools/skills)。
 
-技能是一个包含 `SKILL.md` 文件（为 LLM 提供指令和工具定义）以及可选的一些脚本或资源的目录。
+## 创建您的第一个 Skill
 
-## 分步操作：你的第一个技能
+<Steps>
+  <Step title="创建 Skill 目录">
+    Skills 位于您的工作区中。创建一个新文件夹：
 
-### 1. 创建目录
+    ```bash
+    mkdir -p ~/.openclaw/workspace/skills/hello-world
+    ```
 
-技能位于您的工作区中，通常是 `~/.openclaw/workspace/skills/`。为您的技能创建一个新文件夹：
+  </Step>
 
-```bash
-mkdir -p ~/.openclaw/workspace/skills/hello-world
-```
+  <Step title="编写 SKILL.md">
+    在该目录内创建 `SKILL.md`。Frontmatter 定义元数据，
+    而 markdown 主体包含给 Agent 的指令。
 
-### 2. 定义 `SKILL.md`
+    ```markdown
+    ---
+    name: hello_world
+    description: A simple skill that says hello.
+    ---
 
-在该目录中创建一个 `SKILL.md` 文件。该文件使用 YAML frontmatter 作为元数据，使用 Markdown 作为指令。
+    # Hello World Skill
 
-```markdown
----
-name: hello_world
-description: A simple skill that says hello.
----
+    When the user asks for a greeting, use the `echo` tool to say
+    "Hello from your custom skill!".
+    ```
 
-# Hello World Skill
+  </Step>
 
-When the user asks for a greeting, use the `echo` tool to say "Hello from your custom skill!".
-```
+  <Step title="添加工具（可选）">
+    您可以在 frontmatter 中定义自定义工具架构，或者指示 Agent
+    使用现有的系统工具（如 `exec` 或 `browser`）。Skills 也可以
+    随其记录的工具一起打包在插件中。
 
-### 3. 添加工具（可选）
+  </Step>
 
-您可以在 frontmatter 中定义自定义工具，或者指示代理使用现有的系统工具（如 `bash` 或 `browser`）。
+  <Step title="加载 Skill">
+    启动一个新的会话，以便 OpenClaw 获取该 Skill：
 
-### 4. 刷新 OpenClaw
+    ```bash
+    # From chat
+    /new
 
-要求您的代理“刷新技能”或重启网关。OpenClaw 将发现新目录并对 `SKILL.md` 进行索引。
+    # Or restart the gateway
+    openclaw gateway restart
+    ```
+
+    验证 Skill 是否已加载：
+
+    ```bash
+    openclaw skills list
+    ```
+
+  </Step>
+
+  <Step title="测试它">
+    发送一条应触发该 Skill 的消息：
+
+    ```bash
+    openclaw agent --message "give me a greeting"
+    ```
+
+    或者直接与 Agent 聊天并请求问候。
+
+  </Step>
+</Steps>
+
+## Skill 元数据参考
+
+YAML frontmatter 支持以下字段：
+
+| 字段                                | 是否必填 | 描述                                          |
+| ----------------------------------- | -------- | --------------------------------------------- |
+| `name`                              | 是       | 唯一标识符 (snake_case)                       |
+| `description`                       | 是       | 向 Agent 显示的单行描述                       |
+| `metadata.openclaw.os`              | 否       | 操作系统过滤器 (`["darwin"]`, `["linux"]` 等) |
+| `metadata.openclaw.requires.bins`   | 否       | PATH 上需要的二进制文件                       |
+| `metadata.openclaw.requires.config` | 否       | 必需的配置键                                  |
 
 ## 最佳实践
 
-- **保持简洁**：指示模型做*什么*，而不是如何做一个 AI。
-- **安全第一**：如果您的技能使用 `bash`，请确保提示词不允许来自不受信任用户输入的任意命令注入。
-- **本地测试**：使用 `openclaw agent --message "use my new skill"` 进行测试。
+- **保持简洁** — 指示模型做*什么*，而不是如何成为 AI
+- **安全第一** — 如果你的 Skill 使用 `exec`，请确保提示词不允许来自不受信任输入的任意命令注入
+- **本地测试** — 在共享之前使用 `openclaw agent --message "..."` 进行测试
+- **使用 ClawHub** — 在 [ClawHub](https://clawhub.com) 上浏览和贡献 Skills
 
-## 共享技能
+## Skills 的存放位置
 
-您也可以浏览并为 [ClawHub](https://clawhub.com) 贡献技能。
+| 位置                     | 优先级 | 范围                |
+| ------------------------ | ------ | ------------------- |
+| `\<workspace\>/skills/`  | 最高   | 每个 Agent          |
+| `~/.openclaw/skills/`    | 中等   | 共享（所有 Agents） |
+| 捆绑（随 OpenClaw 附带） | 最低   | 全局                |
+| `skills.load.extraDirs`  | 最低   | 自定义共享文件夹    |
+
+## 相关
+
+- [Skills 参考](/zh/tools/skills) — 加载、优先级和规则
+- [Skills 配置](/zh/tools/skills-config) — `skills.*` 配置架构
+- [ClawHub](/zh/tools/clawhub) — 公共 Skill 注册表
+- [构建插件](/zh/plugins/building-plugins) — 插件可以附带 Skills
 
 import zh from "/components/footer/zh.mdx";
 

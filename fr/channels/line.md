@@ -47,6 +47,7 @@ Si vous avez besoin d'un chemin personnalisé, définissez `channels.line.webhoo
 Note de sécurité :
 
 - La vérification de la signature LINE dépend du corps (HMAC sur le corps brut), donc OpenClaw applique des limites strictes de corps et de délai d'attente pré-authentification avant la vérification.
+- OpenClaw traite les événements webhook à partir des octets bruts de la demande vérifiée. Les valeurs `req.body` transformées par le middleware en amont sont ignorées pour la sécurité de l'intégrité de la signature.
 
 ## Configurer
 
@@ -70,7 +71,7 @@ Variables d'environnement (compte par défaut uniquement) :
 - `LINE_CHANNEL_ACCESS_TOKEN`
 - `LINE_CHANNEL_SECRET`
 
-Fichiers de jeton/secret :
+Fichiers de jeton/secrète :
 
 ```json5
 {
@@ -105,7 +106,7 @@ Comptes multiples :
 
 ## Contrôle d'accès
 
-Les messages directs sont par défaut en mode appariement. Les expéditeurs inconnus reçoivent un code d'appariement et leurs messages sont ignorés jusqu'à approbation.
+Les messages directs sont par défaut en mode appairage. Les expéditeurs inconnus reçoivent un code d'appairage et leurs messages sont ignorés jusqu'à approbation.
 
 ```bash
 openclaw pairing list line
@@ -115,13 +116,13 @@ openclaw pairing approve line <CODE>
 Listes d'autorisation et stratégies :
 
 - `channels.line.dmPolicy` : `pairing | allowlist | open | disabled`
-- `channels.line.allowFrom` : IDs utilisateur LINE autorisés pour les DMs
+- `channels.line.allowFrom` : identifiants utilisateur LINE autorisés pour les MDs
 - `channels.line.groupPolicy` : `allowlist | open | disabled`
-- `channels.line.groupAllowFrom` : IDs d'utilisateurs LINE sur liste blanche pour les groupes
+- `channels.line.groupAllowFrom` : identifiants utilisateur LINE autorisés pour les groupes
 - Remplacements par groupe : `channels.line.groups.<groupId>.allowFrom`
-- Remarque d'exécution : si `channels.line` est totalement manquant, l'exécution revient à `groupPolicy="allowlist"` pour les vérifications de groupe (même si `channels.defaults.groupPolicy` est défini).
+- Note d'exécution : si `channels.line` est complètement manquant, l'exécution revient à `groupPolicy="allowlist"` pour les vérifications de groupe (même si `channels.defaults.groupPolicy` est défini).
 
-Les ID LINE sont sensibles à la casse. Les ID valides ressemblent à :
+Les identifiants LINE sont sensibles à la casse. Les identifiants valides ressemblent à :
 
 - Utilisateur : `U` + 32 caractères hexadécimaux
 - Groupe : `C` + 32 caractères hexadécimaux
@@ -129,10 +130,10 @@ Les ID LINE sont sensibles à la casse. Les ID valides ressemblent à :
 
 ## Comportement des messages
 
-- Le texte est découpé par tranches de 5000 caractères.
+- Le texte est découpé en blocs de 5000 caractères.
 - Le formatage Markdown est supprimé ; les blocs de code et les tableaux sont convertis en cartes Flex lorsque cela est possible.
-- Les réponses en continu sont mises en tampon ; LINE reçoit les blocs complets avec une animation de chargement pendant que l'agent travaille.
-- Les téléchargements de médias sont plafonnés par `channels.line.mediaMaxMb` (par défaut 10).
+- Les réponses en streaming sont mises en mémoire tampon ; LINE reçoit des blocs complets avec une animation de chargement pendant que l'agent travaille.
+- Les téléchargements de médias sont limités par `channels.line.mediaMaxMb` (par défaut 10).
 
 ## Données de canal (messages enrichis)
 
@@ -169,7 +170,7 @@ Utilisez `channelData.line` pour envoyer des réponses rapides, des lieux, des c
 }
 ```
 
-Le plugin LINE comprend également une commande `/card` pour les préréglages de messages Flex :
+Le plugin LINE inclut également une commande `/card` pour les préréglages de messages Flex :
 
 ```
 /card info "Welcome" "Thanks for joining!"
@@ -178,8 +179,10 @@ Le plugin LINE comprend également une commande `/card` pour les préréglages d
 ## Dépannage
 
 - **Échec de la vérification du webhook :** assurez-vous que l'URL du webhook est en HTTPS et que le `channelSecret` correspond à la console LINE.
-- **Aucun événement entrant :** confirmez que le chemin du webhook correspond à `channels.line.webhookPath` et que la passerelle est accessible depuis LINE.
-- **Erreurs de téléchargement de médias :** augmentez `channels.line.mediaMaxMb` si les médias dépassent la limite par défaut.
+- **Pas d'événements entrants :** vérifiez que le chemin du webhook correspond à `channels.line.webhookPath`
+  et que la passerelle est accessible depuis LINE.
+- **Erreurs de téléchargement de médias :** déclenchez `channels.line.mediaMaxMb` si le média dépasse la
+  limite par défaut.
 
 import fr from "/components/footer/fr.mdx";
 

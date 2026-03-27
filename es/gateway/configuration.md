@@ -234,7 +234,7 @@ Cuando falla la validación:
   </Accordion>
 
   <Accordion title="Habilitar sandbox">
-    Ejecute sesiones de agente en contenedores Docker aislados:
+    Ejecuta sesiones de agente en contenedores Docker aislados:
 
     ```json5
     {
@@ -249,9 +249,9 @@ Cuando falla la validación:
     }
     ```
 
-    Construya la imagen primero: `scripts/sandbox-setup.sh`
+    Construye la imagen primero: `scripts/sandbox-setup.sh`
 
-    Consulte [Sandboxing](/es/gateway/sandboxing) para obtener la guía completa y [referencia completa](/es/gateway/configuration-reference#agents-defaults-sandbox) para ver todas las opciones.
+    Consulta [Sandboxing](/es/gateway/sandboxing) para la guía completa y [full reference](/es/gateway/configuration-reference#agentsdefaultssandbox) para todas las opciones.
 
   </Accordion>
 

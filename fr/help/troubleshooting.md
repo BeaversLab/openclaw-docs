@@ -49,7 +49,7 @@ Correction dans le paquet du plugin :
 
 1. Ajoutez `openclaw.extensions` à `package.json`.
 2. Faites pointer les entrées vers les fichiers d'exécution construits (généralement `./dist/index.js`).
-3. Republichez le plugin et exécutez `openclaw plugins install <npm-spec>` à nouveau.
+3. Republica el plugin y ejecuta `openclaw plugins install <package>` de nuevo.
 
 Exemple :
 

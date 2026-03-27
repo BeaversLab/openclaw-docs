@@ -144,10 +144,10 @@ Ce que vous définissez :
     Définit `agents.defaults.model` sur `openai-codex/gpt-5.4` lorsque le modèle n'est pas défini ou `openai/*`.
 
   </Accordion>
-  <Accordion title="Clé OpenAI API">
-    Utilise `OPENAI_API_KEY` si elle est présente ou demande une clé, puis stocke les informations d'identification dans les profils d'authentification.
+  <Accordion title="Clé API OpenAI">
+    Utilise `OPENAI_API_KEY` si elle est présente ou demande une clé, puis stocke l'identifiant dans les profils d'authentification.
 
-    Définit `agents.defaults.model` sur `openai/gpt-5.1-codex` lorsque le modèle n'est pas défini, `openai/*`, ou `openai-codex/*`.
+    Définit `agents.defaults.model` sur `openai/gpt-5.4` lorsque le modèle n'est pas défini, `openai/*` ou `openai-codex/*`.
 
   </Accordion>
   <Accordion title="Clé API xAI (Grok)">

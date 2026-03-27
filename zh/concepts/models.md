@@ -24,7 +24,7 @@ OpenClaw 按以下顺序选择模型：
 
 - `agents.defaults.models` 是 OpenClaw 可以使用的模型的允许列表/目录（以及别名）。
 - `agents.defaults.imageModel` **仅当** 主模型无法接受图像时才会使用。
-- `agents.defaults.imageGenerationModel` 用于共享图像生成功能。如果省略，`image_generate` 仍可以从兼容的身份验证支持的图像生成插件中推断出提供商默认值。
+- `agents.defaults.imageGenerationModel` 由共享的图像生成功能使用。如果省略，`image_generate` 仍然可以从兼容的支持身份验证的图像生成插件中推断出提供商默认值。如果您设置了特定的提供商/模型，请同时配置该提供商的 auth/API 密钥。
 - 每个代理的默认值可以通过 `agents.list[].model` 加上绑定来覆盖 `agents.defaults.model`（请参阅 [/concepts/multi-agent](/zh/concepts/multi-agent)）。
 
 ## 快速模型策略

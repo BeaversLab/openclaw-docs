@@ -50,10 +50,11 @@ https://gateway-host/line/webhook
 安全提示：
 
 - LINE 签名验证依赖于正文（对原始正文进行 HMAC），因此 OpenClaw 在验证之前会应用严格的预认证正文限制和超时设置。
+- OpenClaw 处理来自经过验证的原始请求字节的 Webhook 事件。出于签名完整性安全考虑，上游中间件转换后的 `req.body` 值将被忽略。
 
 ## 配置
 
-最小配置：
+最低配置：
 
 ```json5
 {
@@ -68,7 +69,7 @@ https://gateway-host/line/webhook
 }
 ```
 
-环境变量（仅限默认账户）：
+环境变量（仅限默认账号）：
 
 - `LINE_CHANNEL_ACCESS_TOKEN`
 - `LINE_CHANNEL_SECRET`
@@ -86,9 +87,9 @@ https://gateway-host/line/webhook
 }
 ```
 
-`tokenFile` 和 `secretFile` 必须指向常规文件。拒绝使用符号链接。
+`tokenFile` 和 `secretFile` 必须指向常规文件。符号链接将被拒绝。
 
-多账户：
+多个账号：
 
 ```json5
 {
@@ -108,40 +109,39 @@ https://gateway-host/line/webhook
 
 ## 访问控制
 
-私信默认采用配对模式。未知发送者将收到配对码，在批准之前其消息将被忽略。
+私信默认为配对模式。未知发送者将收到配对码，在其获得批准之前，其消息将被忽略。
 
 ```bash
 openclaw pairing list line
 openclaw pairing approve line <CODE>
 ```
 
-白名单和策略：
+允许列表和策略：
 
 - `channels.line.dmPolicy`: `pairing | allowlist | open | disabled`
-- `channels.line.allowFrom`: 私信中允许的 LINE 用户 ID
+- `channels.line.allowFrom`: 私信允许列表中的 LINE 用户 ID
 - `channels.line.groupPolicy`: `allowlist | open | disabled`
-- `channels.line.groupAllowFrom`: 群组中允许的 LINE 用户 ID
-- 每个群组的覆盖设置：`channels.line.groups.<groupId>.allowFrom`
-- 运行时说明：如果完全缺少 `channels.line`，运行时将回退到 `groupPolicy="allowlist"` 进行群组检查（即使设置了 `channels.defaults.groupPolicy`）。
+- `channels.line.groupAllowFrom`: 群组允许列表中的 LINE 用户 ID
+- 按群组覆盖设置： `channels.line.groups.<groupId>.allowFrom`
+- 运行时注意：如果 `channels.line` 完全缺失，运行时将回退到 `groupPolicy="allowlist"` 进行群组检查（即使设置了 `channels.defaults.groupPolicy`）。
 
-LINE ID 区分大小写。有效的 ID 如下所示：
+LINE ID 区分大小写。有效的 ID 格式如下：
 
-- 用户：`U` + 32 个十六进制字符
-- 群组：`C` + 32 个十六进制字符
-- 房间：`R` + 32 个十六进制字符
+- 用户： `U` + 32 个十六进制字符
+- 群组： `C` + 32 个十六进制字符
+- 房间： `R` + 32 个十六进制字符
 
 ## 消息行为
 
-- 文本会在 5000 个字符处分块。
-- Markdown 格式会被去除；代码块和表格会尽可能转换为 Flex
+- 文本会在 5000 个字符处进行分块。
+- Markdown 格式将被去除；代码块和表格在可能的情况下会被转换为 Flex
   卡片。
-- 流式响应会被缓冲；在代理运行时，LINE 会收到带有加载
-  动画的完整分块。
+- 流式响应会被缓冲；在代理工作期间，LINE 会收到带有加载动画的完整消息块。
 - 媒体下载受 `channels.line.mediaMaxMb` 限制（默认为 10）。
 
 ## 频道数据（富消息）
 
-使用 `channelData.line` 发送快速回复、位置、Flex 卡片或模板
+使用 `channelData.line` 发送快速回复、位置信息、Flex 卡片或模板
 消息。
 
 ```json5
@@ -175,7 +175,7 @@ LINE ID 区分大小写。有效的 ID 如下所示：
 }
 ```
 
-LINE 插件还附带了用于 Flex 消息预设的 `/card` 命令：
+LINE 插件还提供了一个用于 Flex 消息预设的 `/card` 命令：
 
 ```
 /card info "Welcome" "Thanks for joining!"
@@ -183,12 +183,12 @@ LINE 插件还附带了用于 Flex 消息预设的 `/card` 命令：
 
 ## 故障排除
 
-- **Webhook 验证失败：** 确保 webhook URL 是 HTTPS 且
-  `channelSecret` 与 LINE 控制台匹配。
-- **无入站事件：** 确认 webhook 路径与 `channels.line.webhookPath`
-  匹配，并且网关可从 LINE 访问。
+- **Webhook 验证失败：** 请确保 Webhook URL 是 HTTPS，并且
+  `channelSecret` 与 LINE 控制台中的匹配。
+- **没有接收到入站事件：** 请确认 webhook 路径与 `channels.line.webhookPath`
+  匹配，并且 LINE 可以访问到网关。
 - **媒体下载错误：** 如果媒体超出
-  默认限制，请提高 `channels.line.mediaMaxMb`。
+  默认限制，会抛出 `channels.line.mediaMaxMb`。
 
 import zh from "/components/footer/zh.mdx";
 

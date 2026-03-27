@@ -1,66 +1,117 @@
 ---
-summary: "Mode exec élevé et directives /elevated"
+summary: "Mode exec avec élévation : exécuter des commandes sur l'hôte de la passerelle à partir d'un agent sandboxé"
 read_when:
   - Adjusting elevated mode defaults, allowlists, or slash command behavior
-title: "Mode élevé"
+  - Understanding how sandboxed agents can access the host
+title: "Mode avec élévation"
 ---
 
-# Mode élevé (directives /elevated)
+# Mode avec élévation
 
-## Ce qu'il fait
+Lorsqu'un agent s'exécute dans un sandbox, ses commandes `exec` sont confinées à l'environnement
+sandbox. Le **mode avec élévation** permet à l'agent de s'en échapper et d'exécuter des commandes
+sur l'hôte de la passerelle à la place, avec des barrières d'approbation configurables.
 
-- `/elevated on` s'exécute sur l'hôte de la passerelle et conserve les approbations d'exécution (identique à `/elevated ask`).
-- `/elevated full` s'exécute sur l'hôte de la passerelle **et** approuve automatiquement l'exécution (ignore les approbations d'exécution).
-- `/elevated ask` s'exécute sur l'hôte de la passerelle mais conserve les approbations d'exécution (identique à `/elevated on`).
-- `on`/`ask` ne forcent **pas** `exec.security=full` ; la stratégie de sécurité/demande configurée s'applique toujours.
-- Modifie le comportement uniquement lorsque l'agent est **sandboxed** (sinon, l'exécution a déjà lieu sur l'hôte).
-- Formes de directive : `/elevated on|off|ask|full`, `/elev on|off|ask|full`.
-- Seuls `on|off|ask|full` sont acceptés ; tout autre renvoie une indication et ne modifie pas l'état.
+<Info>
+  Le mode avec élévation ne modifie le comportement que lorsque l'agent est **sandboxé**. Pour les
+  agents non sandboxés, exec s'exécute déjà sur l'hôte.
+</Info>
 
-## Ce qu'il contrôle (et ce qu'il ne contrôle pas)
+## Directives
 
-- **Portes de disponibilité** : `tools.elevated` est la base globale. `agents.list[].tools.elevated` peut restreindre davantage le mode élevé par agent (les deux doivent autoriser).
-- **État par session** : `/elevated on|off|ask|full` définit le niveau élevé pour la clé de session actuelle.
-- **Directive en ligne** : `/elevated on|ask|full` à l'intérieur d'un message s'applique uniquement à ce message.
-- **Groupes** : Dans les discussions de groupe, les directives élevées sont honorées uniquement lorsque l'agent est mentionné. Les messages de type commande uniquement qui contournent les exigences de mention sont traités comme s'ils étaient mentionnés.
-- **Exécution sur l'hôte** : le mode élevé force `exec` sur l'hôte de la passerelle ; `full` définit également `security=full`.
-- **Approbations** : `full` ignore les approbations d'exécution ; `on`/`ask` les respectent lorsque les règles de liste d'autorisation/demande l'exigent.
-- **Agents non isolés** : sans effet pour l'emplacement ; affecte uniquement la validation (gating), la journalisation et le statut.
-- **La stratégie d'outils s'applique toujours** : si `exec` est refusé par la stratégie d'outils, le mode élevé ne peut pas être utilisé.
-- **Distinct de `/exec`** : `/exec` ajuste les valeurs par défaut par session pour les expéditeurs autorisés et ne nécessite pas le mode élevé.
+Contrôlez le mode avec élévation par session avec les commandes slash :
+
+| Directive        | Ce qu'elle fait                                                           |
+| ---------------- | ------------------------------------------------------------------------- |
+| `/elevated on`   | Exécuter sur l'hôte de la passerelle, conserver les approbations exec     |
+| `/elevated ask`  | Identique à `on` (alias)                                                  |
+| `/elevated full` | Exécuter sur l'hôte de la passerelle **et** ignorer les approbations exec |
+| `/elevated off`  | Retourner à l'exécution confinée au sandbox                               |
+
+Également disponible sous la forme `/elev on|off|ask|full`.
+
+Envoyez `/elevated` sans argument pour voir le niveau actuel.
+
+## Fonctionnement
+
+<Steps>
+  <Step title="Vérifier la disponibilité">
+    La fonctionnalité Elevated doit être activée dans la configuration et l'expéditeur doit figurer sur la liste d'autorisation (allowlist) :
+
+    ```json5
+    {
+      tools: {
+        elevated: {
+          enabled: true,
+          allowFrom: {
+            discord: ["user-id-123"],
+            whatsapp: ["+15555550123"],
+          },
+        },
+      },
+    }
+    ```
+
+  </Step>
+
+  <Step title="Définir le niveau">
+    Envoyez un message contenant uniquement une directive pour définir la valeur par défaut de la session :
+
+    ```
+    /elevated full
+    ```
+
+    Ou utilisez-la en ligne (s'applique uniquement à ce message) :
+
+    ```
+    /elevated on run the deployment script
+    ```
+
+  </Step>
+
+  <Step title="Les commandes s'exécutent sur l'hôte">
+    Lorsque le mode avec élévation est actif, les appels `exec` sont routés vers l'hôte de la passerelle au lieu du
+    sandbox. En mode `full`, les approbations exec sont ignorées. En mode `on`/`ask`,
+    les règles d'approbation configurées s'appliquent toujours.
+  </Step>
+</Steps>
 
 ## Ordre de résolution
 
-1. Directive en ligne sur le message (s'applique uniquement à ce message).
-2. Remplacement de session (défini en envoyant un message contenant uniquement la directive).
-3. Valeur par défaut globale (`agents.defaults.elevatedDefault` dans la configuration).
+1. **Directive en ligne** sur le message (s'applique uniquement à ce message)
+2. **Remplacement de session** (défini en envoyant un message contenant uniquement une directive)
+3. **Valeur par défaut globale** (`agents.defaults.elevatedDefault` dans la configuration)
 
-## Définir une valeur par défaut de session
+## Disponibilité et listes d'autorisation
 
-- Envoyez un message qui contient **uniquement** la directive (les espaces blancs sont autorisés), par exemple `/elevated full`.
-- Une réponse de confirmation est envoyée (`Elevated mode set to full...` / `Elevated mode disabled.`).
-- Si l'accès élevé est désactivé ou si l'expéditeur ne figure pas sur la liste d'autorisation approuvée, la directive répond par une erreur actionnable et ne modifie pas l'état de la session.
-- Envoyez `/elevated` (ou `/elevated:`) sans argument pour voir le niveau élevé actuel.
+- **Portail global** : `tools.elevated.enabled` (doit être `true`)
+- **Liste d'autorisation de l'expéditeur** : `tools.elevated.allowFrom` avec des listes par canal
+- **Portail par agent** : `agents.list[].tools.elevated.enabled` (ne peut que restreindre davantage)
+- **Liste d'autorisation par agent** : `agents.list[].tools.elevated.allowFrom` (l'expéditeur doit correspondre à la fois au global + par agent)
+- **Repli Discord** : si `tools.elevated.allowFrom.discord` est omis, `channels.discord.allowFrom` est utilisé comme solution de repli
+- **Tous les portails doivent être réussis** ; sinon, le mode élevé est traité comme indisponible
 
-## Disponibilité + listes d'autorisation
+Formats des entrées de la liste d'autorisation :
 
-- Porte de fonctionnalité (feature gate) : `tools.elevated.enabled` (la valeur par défaut peut être désactivée via la configuration même si le code la prend en charge).
-- Liste d'autorisation des expéditeurs : `tools.elevated.allowFrom` avec des listes d'autorisation par fournisseur (par exemple `discord`, `whatsapp`).
-- Les entrées de la liste d'autorisation sans préfixe correspondent uniquement aux valeurs d'identité délimitées à l'expéditeur (`SenderId`, `SenderE164`, `From`) ; les champs de routage du destinataire ne sont jamais utilisés pour l'autorisation élevée.
-- Les métadonnées d'expéditeur modifiables nécessitent des préfixes explicites :
-  - `name:<value>` correspond à `SenderName`
-  - `username:<value>` correspond à `SenderUsername`
-  - `tag:<value>` correspond à `SenderTag`
-  - `id:<value>`, `from:<value>`, `e164:<value>` sont disponibles pour le ciblage explicite d'identité
-- Porte par agent : `agents.list[].tools.elevated.enabled` (facultatif ; ne peut que restreindre davantage).
-- Liste d'autorisation par agent : `agents.list[].tools.elevated.allowFrom` (facultatif ; lorsqu'elle est définie, l'expéditeur doit correspondre à **la fois** aux listes d'autorisation globales et par agent).
-- Secours Discord : si `tools.elevated.allowFrom.discord` est omis, la liste `channels.discord.allowFrom` est utilisée comme solution de secours (legacy : `channels.discord.dm.allowFrom`). Définissez `tools.elevated.allowFrom.discord` (même `[]`) pour remplacer. Les listes d'autorisation par agent n'utilisent **pas** la solution de secours.
-- Toutes les portes doivent être passées ; sinon, le mode élevé est traité comme indisponible.
+| Préfixe                 | Correspondances                    |
+| ----------------------- | ---------------------------------- |
+| (aucun)                 | ID d'expéditeur, E.164 ou champ De |
+| `name:`                 | Nom d'affichage de l'expéditeur    |
+| `username:`             | Nom d'utilisateur de l'expéditeur  |
+| `tag:`                  | Balise de l'expéditeur             |
+| `id:`, `from:`, `e164:` | Ciblage d'identité explicite       |
 
-## Journalisation + statut
+## Ce que le mode élevé ne contrôle pas
 
-- Les appels exec élevés sont journalisés au niveau info.
-- Le statut de la session inclut le mode élevé (p. ex. `elevated=ask`, `elevated=full`).
+- **Stratégie d'outil** : si `exec` est refusé par la stratégie d'outil, le mode élevé ne peut pas le remplacer
+- **Distinct de `/exec`** : la directive `/exec` ajuste les valeurs par défaut d'exécution par session pour les expéditeurs autorisés et ne nécessite pas le mode élevé
+
+## Connexes
+
+- [Outil Exec](/fr/tools/exec) — exécution de commandes shell
+- [Approbations Exec](/fr/tools/exec-approvals) — système d'approbation et de liste d'autorisation
+- [Bac à sable (Sandboxing)](/fr/gateway/sandboxing) — configuration du bac à sable
+- [Bac à sable vs Stratégie d'outil vs Mode élevé](/fr/gateway/sandbox-vs-tool-policy-vs-elevated)
 
 import fr from "/components/footer/fr.mdx";
 

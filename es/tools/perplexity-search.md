@@ -89,9 +89,9 @@ Controles de compatibilidad opcionales:
 `~/.openclaw/openclaw.json` bajo `plugins.entries.perplexity.config.webSearch.apiKey`.
 Ese campo también acepta objetos SecretRef.
 
-**A través del entorno:** establezca `PERPLEXITY_API_KEY` o `OPENROUTER_API_KEY`
-en el entorno del proceso Gateway. Para una instalación de puerta de enlace, póngalo en
-`~/.openclaw/.env` (o su entorno de servicio). Consulte [Variables de entorno](/es/help/faq#how-does-openclaw-load-environment-variables).
+**Vía entorno:** establezca `PERPLEXITY_API_KEY` o `OPENROUTER_API_KEY`
+en el entorno del proceso de Gateway. Para una instalación de puerta de enlace, póngalo en
+`~/.openclaw/.env` (o su entorno de servicio). Consulte [Env vars](/es/help/faq#env-vars-and-env-loading).
 
 Si `provider: "perplexity"` está configurado y el SecretRef de la clave Perplexity no está resuelto sin respaldo de entorno, el inicio/recarga falla rápidamente.
 
@@ -170,8 +170,12 @@ await web_search({
 - OpenRouter o los interruptores explícitos `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` hacen que Perplexity vuelva a las finalizaciones de chat de Sonar por compatibilidad
 - Los resultados se almacenan en caché durante 15 minutos de forma predeterminada (configurable mediante `cacheTtlMinutes`)
 
-Consulte [Web tools](/es/tools/web) para obtener la configuración completa de web_search.
-Consulte la [Documentación de la API de Perplexity Search](https://docs.perplexity.ai/docs/search/quickstart) para obtener más detalles.
+## Relacionado
+
+- [Web Search overview](/es/tools/web) -- todos los proveedores y detección automática
+- [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) -- documentación oficial de Perplexity
+- [Brave Search](/es/tools/brave-search) -- resultados estructurados con filtros de país/idioma
+- [Exa Search](/es/tools/exa-search) -- búsqueda neuronal con extracción de contenido
 
 import es from "/components/footer/es.mdx";
 

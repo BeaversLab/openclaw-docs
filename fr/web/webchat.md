@@ -33,30 +33,31 @@ Statut : l'interface de conversation SwiftUI macOS/iOS communique directement av
 
 ## Panneau des outils des agents de l'interface de contrôle
 
-- Le panneau des outils `/agents` de l'interface de contrôle récupère un catalogue d'exécution via `tools.catalog` et étiquette chaque
-  outil comme `core` ou `plugin:<id>` (ainsi que `optional` pour les outils de plugin optionnels).
-- Si `tools.catalog` n'est pas disponible, le panneau revient à une liste statique intégrée.
-- Le panneau modifie le profil et la configuration de substitution, mais l'accès effectif à l'exécution suit toujours la priorité de la stratégie (`allow`/`deny`, substitutions par agent et fournisseur/channel).
+- Le panneau Outils de l'`/agents` de l'interface de contrôle présente deux vues distinctes :
+  - **Disponible maintenant** utilise `tools.effective(sessionKey=...)` et affiche ce que la session actuelle peut réellement utiliser lors de l'exécution, y compris les outils principaux, les plugins et ceux appartenant au canal.
+  - **Configuration des outils** utilise `tools.catalog` et se concentre sur les profils, les remplacements et la sémantique du catalogue.
+- La disponibilité lors de l'exécution est limitée à la session. Le changement de session sur le même agent peut modifier la liste **Disponible maintenant**.
+- L'éditeur de configuration n'implique pas la disponibilité lors de l'exécution ; l'accès effectif suit toujours la priorité de la stratégie (`allow`/`deny`, remplacements par agent et par fournisseur/canal).
 
 ## Utilisation à distance
 
-- Le mode distant tunnellise la WebSocket de la passerelle via SSH/Tailscale.
-- Vous n'avez pas besoin d'exécuter un serveur WebChat séparé.
+- Le mode distant tunnellise le WebSocket de la passerelle via SSH/Tailscale.
+- Vous n'avez pas besoin d'exécuter un serveur WebChat distinct.
 
 ## Référence de configuration (WebChat)
 
 Configuration complète : [Configuration](/fr/gateway/configuration)
 
-Options de channel :
+Options de canal :
 
-- Aucun bloc `webchat.*` dédié. WebChat utilise le point de terminaison de la passerelle + les paramètres d'authentification ci-dessous.
+- Aucun bloc `webchat.*` dédié. WebChat utilise le point de terminaison de la passerelle et les paramètres d'authentification ci-dessous.
 
-Options globales associées :
+Options globales connexes :
 
 - `gateway.port`, `gateway.bind` : hôte/port WebSocket.
 - `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password` : authentification WebSocket (jeton/mot de passe).
-- `gateway.auth.mode: "trusted-proxy"` : authentification par proxy inverse pour les clients navigateur (voir [Trusted Proxy Auth](/fr/gateway/trusted-proxy-auth)).
-- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password` : cible de passerelle distante.
+- `gateway.auth.mode: "trusted-proxy"` : authentification par proxy inverse pour les clients navigateur (voir [Authentification de proxy approuvé](/fr/gateway/trusted-proxy-auth)).
+- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password` : cible de la passerelle distante.
 - `session.*` : stockage de session et valeurs par défaut de la clé principale.
 
 import fr from "/components/footer/fr.mdx";

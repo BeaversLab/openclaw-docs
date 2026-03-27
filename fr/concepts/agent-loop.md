@@ -56,7 +56,7 @@ Dans OpenClaw, une boucle est une exécution unique et sérialisée par session 
 
 - Le prompt système est construit à partir du prompt de base d'OpenClaw, du prompt des Skills, du contexte d'amorçage et des redéfinitions par exécution.
 - Les limites spécifiques au modèle et les jetons de réserve de compactage sont appliqués.
-- Voir [System prompt](/fr/concepts/system-prompt) pour ce que le modèle voit.
+- Voir [System prompt](/fr/concepts/system-prompt) pour ce que le model voit.
 
 ## Points d'accroche (où vous pouvez intercepter)
 
@@ -88,52 +88,59 @@ Celles-ci s'exécutent à l'intérieur de la boucle de l'agent ou du pipeline du
 - **`session_start` / `session_end`** : limites du cycle de vie de la session.
 - **`gateway_start` / `gateway_stop`** : événements du cycle de vie de la passerelle.
 
-Voir [Plugin hooks](/fr/plugins/architecture#provider-runtime-hooks) pour l'API API et les détails d'enregistrement.
+Règles de décision des hooks pour les gardes de sorties/tools :
+
+- `before_tool_call` : `{ block: true }` est terminal et arrête les gestionnaires de priorité inférieure.
+- `before_tool_call` : `{ block: false }` est une opération vide et ne efface pas un blocage précédent.
+- `message_sending` : `{ cancel: true }` est terminal et arrête les gestionnaires de priorité inférieure.
+- `message_sending` : `{ cancel: false }` est une opération vide et ne efface pas une annulation précédente.
+
+Voir [Plugin hooks](/fr/plugins/architecture#provider-runtime-hooks) pour les détails de l'API de hook et d'enregistrement.
 
 ## Streaming + réponses partielles
 
-- Les deltas de l'assistant sont diffusés en continu depuis pi-agent-core et émis sous forme d'événements `assistant`.
-- Le streaming de blocs peut émettre des réponses partielles soit sur `text_end` soit sur `message_end`.
-- Le streaming de raisonnement peut être émis sous forme d'un flux séparé ou sous forme de réponses de bloc.
+- Les deltas de l'assistant sont diffusés en continu depuis pi-agent-core et émis en tant qu'événements `assistant`.
+- Le Block streaming peut émettre des réponses partielles soit sur `text_end` soit sur `message_end`.
+- Le streaming de raisonnement peut être émis comme un flux séparé ou comme des réponses de bloc.
 - Voir [Streaming](/fr/concepts/streaming) pour le comportement de découpage et de réponse de bloc.
 
-## Exécution d'outils + outils de messagerie
+## Exécution de tool + outils de messagerie
 
-- Les événements de début/mise à jour/fin d'outil sont émis sur le flux `tool`.
-- Les résultats des outils sont nettoyés en termes de taille et de charges d'images avant la journalisation/l'émission.
+- Les événements de début/mise à jour/fin de tool sont émis sur le flux `tool`.
+- Les résultats des tools sont assainis pour la taille et les charges utiles d'image avant la journalisation/l'émission.
 - Les envois d'outils de messagerie sont suivis pour supprimer les confirmations en double de l'assistant.
 
-## Mise en forme et suppression des réponses
+## Mise en forme de la réponse + suppression
 
 - Les charges utiles finales sont assemblées à partir de :
-  - texte de l'assistant (et raisonnement optionnel)
-  - résumés d'outils en ligne (lorsque verbeux et autorisé)
-  - texte d'erreur de l'assistant lorsque le modèle rencontre une erreur
+  - texte de l'assistant (et raisonnement facultatif)
+  - résumés de tools en ligne (lorsque verbeux + autorisé)
+  - texte d'erreur de l'assistant lorsque le model génère des erreurs
 - `NO_REPLY` est traité comme un jeton silencieux et filtré des charges utiles sortantes.
 - Les doublons d'outils de messagerie sont supprimés de la liste finale des charges utiles.
-- S'il ne reste aucune charge utile pouvant être rendue et qu'un outil a échoué, une réponse d'erreur d'outil de secours est émise
+- S'il ne reste aucune charge utile rendable et qu'un tool a échoué, une réponse d'erreur de tool de secours est émise
   (sauf si un outil de messagerie a déjà envoyé une réponse visible par l'utilisateur).
 
 ## Compactage + nouvelles tentatives
 
 - L'auto-compactage émet des événements de flux `compaction` et peut déclencher une nouvelle tentative.
-- Lors d'une nouvelle tentative, les tampons en mémoire et les résumés d'outils sont réinitialisés pour éviter les doublons.
-- Voir [Compactage](/fr/concepts/compaction) pour le pipeline de compactage.
+- En cas de nouvelle tentative, les tampons en mémoire et les résumés des outils sont réinitialisés pour éviter les doublons.
+- Voir [Compaction](/fr/concepts/compaction) pour le pipeline de compactage.
 
 ## Flux d'événements (actuellement)
 
-- `lifecycle` : émis par `subscribeEmbeddedPiSession` (et comme solution de secours par `agentCommand`)
+- `lifecycle` : émis par `subscribeEmbeddedPiSession` (et en secours par `agentCommand`)
 - `assistant` : deltas diffusés en continu depuis pi-agent-core
 - `tool` : événements d'outil diffusés en continu depuis pi-agent-core
 
-## Gestion du canal de discussion
+## Gestion du canal de chat
 
 - Les deltas de l'assistant sont mis en tampon dans les messages de chat `delta`.
-- Un chat `final` est émis lors de la **fin/erreur du cycle de vie**.
+- Un chat `final` est émis lors de la **fin ou de l'erreur du cycle de vie**.
 
 ## Délais d'expiration
 
-- `agent.wait` par défaut : 30 s (juste l'attente). Le paramètre `timeoutMs` prévaut.
+- `agent.wait` par défaut : 30 s (juste l'attente). Le paramètre `timeoutMs` prend le dessus.
 - Durée d'exécution de l'agent : `agents.defaults.timeoutSeconds` par défaut 600 s ; appliquée dans la minuterie d'abandon `runEmbeddedPiAgent`.
 
 ## Où les choses peuvent se terminer tôt

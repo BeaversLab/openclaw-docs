@@ -62,7 +62,7 @@ Ils s'exécutent immédiatement, sont supprimés avant que le modèle ne voie le
 - `commands.bashForegroundMs` (par défaut `2000`) contrôle la durée d'attente de bash avant de passer en mode arrière-plan (`0` passe immédiatement en arrière-plan).
 - `commands.config` (par défaut `false`) active `/config` (lit/écrit `openclaw.json`).
 - `commands.mcp` (par défaut `false`) active `/mcp` (lit/écrit la configuration MCP gérée par OpenClaw sous `mcp.servers`).
-- `commands.plugins` (par défaut `false`) active `/plugins` (découverte/état des plugins plus interrupteurs d'activation/désactivation).
+- `commands.plugins` (défaut `false`) active `/plugins` (découverte/statut des plugins plus contrôles d'installation + activation/désactivation).
 - `commands.debug` (par défaut `false`) active `/debug` (remplacements uniquement à l'exécution).
 - `commands.allowFrom` (facultatif) définit une liste d'autorisation par fournisseur pour l'autorisation des commandes. Lorsqu'elle est configurée, elle est la seule source d'autorisation pour les commandes et les directives (les listes d'autorisation/appariements de canal et `commands.useAccessGroups` sont ignorés). Utilisez `"*"` pour un défaut global ; les clés spécifiques au fournisseur la remplacent.
 - `commands.useAccessGroups` (par défaut `true`) applique les listes d'autorisation/stratégies pour les commandes lorsque `commands.allowFrom` n'est pas défini.
@@ -73,92 +73,108 @@ Texte + natif (lorsqu'activé) :
 
 - `/help`
 - `/commands`
+- `/tools [compact|verbose]` (afficher ce que l'agent actuel peut utiliser maintenant ; `verbose` ajoute des descriptions)
 - `/skill <name> [input]` (exécuter une compétence par son nom)
-- `/status` (afficher l'état actuel ; inclut l'utilisation/le quota du provider pour le provider de model actuel si disponible)
-- `/allowlist` (lister/ajouter/supprimer les entrées de la liste d'autorisation)
+- `/status` (afficher l'état actuel ; inclut l'utilisation/le quota du provider pour le model actuel si disponible)
+- `/allowlist` (liste/ajoute/supprime les entrées de la liste blanche)
 - `/approve <id> allow-once|allow-always|deny` (résoudre les invites d'approbation d'exécution)
-- `/context [list|detail|json]` (expliquer le « contexte » ; `detail` affiche la taille du prompt par fichier + par tool + par compétence + système)
-- `/btw <question>` (poser une question éphémère sur la session actuelle sans modifier le contexte futur de la session ; voir [/tools/btw](/fr/tools/btw))
-- `/export-session [path]` (alias : `/export`) (exporter la session actuelle au format HTML avec le prompt système complet)
-- `/whoami` (afficher votre identifiant d'expéditeur ; alias : `/id`)
-- `/session idle <duration|off>` (gérer le désauto-focalisation par inactivité pour les liaisons de fils focalisés)
-- `/session max-age <duration|off>` (gérer le désauto-focalisation par âge maximal strict pour les liaisons de fils focalisés)
-- `/subagents list|kill|log|info|send|steer|spawn` (inspecter, contrôler ou générer des exécutions de sous-agents pour la session actuelle)
-- `/acp spawn|cancel|steer|close|status|set-mode|set|cwd|permissions|timeout|model|reset-options|doctor|install|sessions` (inspecter et contrôler les sessions d'exécution ACP)
+- `/context [list|detail|json]` (expliquer « contexte » ; `detail` montre la taille par fichier + par tool + par compétence + du prompt système)
+- `/btw <question>` (poser une question latérale éphémère sur la session actuelle sans changer le contexte de la session future ; voir [/tools/btw](/fr/tools/btw))
+- `/export-session [path]` (alias : `/export`) (exporter la session actuelle au HTML avec le prompt système complet)
+- `/whoami` (afficher votre id d'expéditeur ; alias : `/id`)
+- `/session idle <duration|off>` (gérer l'auto-défocalisation par inactivité pour les liaisons de fils focalisés)
+- `/session max-age <duration|off>` (gérer l'auto-défocalisation stricte par ancienneté maximale pour les liaisons de fils focalisés)
+- `/subagents list|kill|log|info|send|steer|spawn` (inspecter, contrôler ou lancer des exécutions de sous-agents pour la session actuelle)
+- `/acp spawn|cancel|steer|close|status|set-mode|set|cwd|permissions|timeout|model|reset-options|doctor|install|sessions` (inspecter et contrôler les sessions runtime ACP)
 - `/agents` (lister les agents liés au fil pour cette session)
 - `/focus <target>` (Discord : lier ce fil, ou un nouveau fil, à une cible de session/sous-agent)
-- `/unfocus` (Discord : supprimer la liaison du fil actuel)
+- `/unfocus` (Discord : supprimer la liaison de fil actuelle)
 - `/kill <id|#|all>` (interrompre immédiatement un ou tous les sous-agents en cours d'exécution pour cette session ; sans message de confirmation)
-- `/steer <id|#> <message>` (diriger immédiatement un sous-agent en cours d'exécution : en cours d'exécution si possible, sinon interrompre le travail actuel et redémarrer sur le message de direction)
+- `/steer <id|#> <message>` (guider immédiatement un sous-agent en cours : en cours d'exécution si possible, sinon interrompre le travail actuel et redémarrer sur le message de guidage)
 - `/tell <id|#> <message>` (alias pour `/steer`)
-- `/config show|get|set|unset` (enregistrer la configuration sur le disque, propriétaire uniquement ; nécessite `commands.config: true`)
-- `/mcp show|get|set|unset` (gérer la configuration du serveur MCP OpenClaw , propriétaire uniquement ; nécessite `commands.mcp: true`)
-- `/plugins list|show|get|enable|disable` (inspecter les plugins découverts et activer/désactiver, réservé au propriétaire pour l'écriture ; nécessite `commands.plugins: true`)
-- `/debug show|set|unset|reset` (remplacements à l'exécution, réservé au propriétaire ; nécessite `commands.debug: true`)
+- `/config show|get|set|unset` (persister la config sur le disque, propriétaire uniquement ; nécessite `commands.config: true`)
+- `/mcp show|get|set|unset` (gérer la config du serveur MCP OpenClaw, propriétaire uniquement ; nécessite `commands.mcp: true`)
+- `/plugins list|show|get|install|enable|disable` (inspecter les plugins découverts, en installer de nouveaux et activer/désactiver ; propriétaire uniquement pour les écritures ; nécessite `commands.plugins: true`)
+  - `/plugin` est un alias pour `/plugins`.
+  - `/plugin install <spec>` accepte les mêmes spécifications de plugin que `openclaw plugins install` : chemin local/archive, package npm, ou `clawhub:<pkg>`.
+  - L'activation/désactivation des écritures répond toujours avec une indication de redémarrage. Sur une passerelle (gateway) surveillée en premier plan, OpenClaw peut effectuer ce redémarrage automatiquement juste après l'écriture.
+- `/debug show|set|unset|reset` (remplacements à l'exécution, propriétaire uniquement ; nécessite `commands.debug: true`)
 - `/usage off|tokens|full|cost` (pied de page d'utilisation par réponse ou résumé des coûts locaux)
 - `/tts off|always|inbound|tagged|status|provider|limit|summary|audio` (contrôler le TTS ; voir [/tts](/fr/tools/tts))
   - Discord : la commande native est `/voice` (Discord réserve `/tts`) ; le texte `/tts` fonctionne toujours.
 - `/stop`
 - `/restart`
-- `/dock-telegram` (alias : `/dock_telegram`) (basculer les réponses vers Telegram)
-- `/dock-discord` (alias : `/dock_discord`) (change les réponses vers Discord)
-- `/dock-slack` (alias : `/dock_slack`) (change les réponses vers Slack)
+- `/dock-telegram` (alias : `/dock_telegram`) (transférer les réponses vers Telegram)
+- `/dock-discord` (alias : `/dock_discord`) (transférer les réponses vers Discord)
+- `/dock-slack` (alias : `/dock_slack`) (transférer les réponses vers Slack)
 - `/activation mention|always` (groupes uniquement)
 - `/send on|off|inherit` (propriétaire uniquement)
-- `/reset` ou `/new [model]` (indicateur de model facultatif ; le reste est transmis)
+- `/reset` ou `/new [model]` (indicateur de model optionnel ; le reste est transmis tel quel)
 - `/think <off|minimal|low|medium|high|xhigh>` (choix dynamiques par model/provider ; alias : `/thinking`, `/t`)
-- `/fast status|on|off` (l'omission de l'arg affiche l'état actuel effectif du mode rapide)
+- `/fast status|on|off` (l'omission de l'arg montre l'état actuel effectif du mode rapide)
 - `/verbose on|full|off` (alias : `/v`)
-- `/reasoning on|off|stream` (alias : `/reason` ; lorsqu'activé, envoie un message séparé préfixé par `Reasoning:` ; `stream` = brouillon Telegram uniquement)
-- `/elevated on|off|ask|full` (alias : `/elev` ; `full` ignore les approbations d'exécution)
+- `/reasoning on|off|stream` (alias : `/reason` ; si activé, envoie un message distinct préfixé par `Reasoning:` ; `stream` = brouillon Telegram uniquement)
+- `/elevated on|off|ask|full` (alias : `/elev` ; `full` saute les approbations d'exécution)
 - `/exec host=<sandbox|gateway|node> security=<deny|allowlist|full> ask=<off|on-miss|always> node=<id>` (envoyez `/exec` pour afficher l'actuel)
 - `/model <name>` (alias : `/models` ; ou `/<alias>` depuis `agents.defaults.models.*.alias`)
 - `/queue <mode>` (plus des options comme `debounce:2s cap:25 drop:summarize` ; envoyez `/queue` pour voir les paramètres actuels)
-- `/bash <command>` (hôte uniquement ; alias pour `! <command>` ; nécessite les listes d'autorisation `commands.bash: true` + `tools.elevated`)
+- `/bash <command>` (hébergement uniquement ; alias pour `! <command>` ; nécessite les listes d'autorisation `commands.bash: true` + `tools.elevated`)
 
 Texte uniquement :
 
 - `/compact [instructions]` (voir [/concepts/compaction](/fr/concepts/compaction))
-- `! <command>` (hôte uniquement ; un à la fois ; utilisez `!poll` + `!stop` pour les tâches de longue durée)
-- `!poll` (vérifier la sortie / le statut ; accepte `sessionId` en option ; `/bash poll` fonctionne également)
-- `!stop` (arrêter la tâche bash en cours ; accepte `sessionId` en option ; `/bash stop` fonctionne également)
+- `! <command>` (hébergement uniquement ; un à la fois ; utilisez `!poll` + `!stop` pour les tâches de longue durée)
+- `!poll` (vérifier la sortie / le statut ; accepte `sessionId` en option ; `/bash poll` fonctionne aussi)
+- `!stop` (arrêter la tâche bash en cours ; accepte `sessionId` en option ; `/bash stop` fonctionne aussi)
 
 Notes :
 
-- Les commandes acceptent un `:` optionnel entre la commande et les arguments (par ex. `/think: high`, `/send: on`, `/help:`).
-- `/new <model>` accepte un alias de modèle, `provider/model`, ou un nom de fournisseur (correspondance approximative) ; si aucune correspondance n'est trouvée, le texte est traité comme le corps du message.
+- Les commandes acceptent un `:` optionnel entre la commande et les arguments (ex. : `/think: high`, `/send: on`, `/help:`).
+- `/new <model>` accepte un alias de modèle, `provider/model`, ou un nom de fournisseur (correspondance approximative) ; si aucune correspondance, le texte est traité comme le corps du message.
 - Pour une ventilation complète de l'utilisation du fournisseur, utilisez `openclaw status --usage`.
 - `/allowlist add|remove` nécessite `commands.config=true` et respecte le `configWrites` du canal.
-- Dans les canaux multi-comptes, `/allowlist --account <id>` et `/config set channels.<provider>.accounts.<id>...` ciblant la configuration respectent également le `configWrites` du compte cible.
-- `/usage` contrôle le pied de page d'utilisation par réponse ; `/usage cost` imprime un résumé des coûts locaux à partir des journaux de session OpenClaw.
+- Dans les salons multi-comptes, les `/allowlist --account <id>` et `/config set channels.<provider>.accounts.<id>...` ciblées sur la configuration honorent également le `configWrites` du compte cible.
+- `/usage` contrôle le pied de page d'utilisation par réponse ; `/usage cost` imprime un résumé local des coûts à partir des journaux de session OpenClaw.
 - `/restart` est activé par défaut ; définissez `commands.restart: false` pour le désactiver.
-- Commande native exclusive à Discord : `/vc join|leave|status` contrôle les canaux vocaux (nécessite `channels.discord.voice` et les commandes natives ; non disponible sous forme de texte).
-- Les commandes de liaison de discussion Discord (`/focus`, `/unfocus`, `/agents`, `/session idle`, `/session max-age`) nécessitent l'activation des liaisons de discussion effectives (`session.threadBindings.enabled` et/ou `channels.discord.threadBindings.enabled`).
+- Commande native exclusive à Discord : `/vc join|leave|status` contrôle les salons vocaux (nécessite `channels.discord.voice` et les commandes natives ; non disponible sous forme de texte).
+- Les commandes de liaison de fils Discord (`/focus`, `/unfocus`, `/agents`, `/session idle`, `/session max-age`) nécessitent que les liaisons de fils effectives soient activées (`session.threadBindings.enabled` et/ou `channels.discord.threadBindings.enabled`).
 - Référence des commandes ACP et comportement à l'exécution : [ACP Agents](/fr/tools/acp-agents).
-- `/verbose` est destiné au débogage et à une visibilité accrue ; gardez-le **désactivé** lors d'une utilisation normale.
-- `/fast on|off` enregistre une substitution de session. Utilisez l'option `inherit` de l'interface Sessions pour l'effacer et revenir aux paramètres par défaut de la configuration.
-- Les résumés des échecs d'outils sont toujours affichés si pertinent, mais le texte d'échec détaillé n'est inclus que lorsque `/verbose` est `on` ou `full`.
-- `/reasoning` (et `/verbose`) présentent des risques dans les contextes de groupe : ils peuvent révéler un raisonnement interne ou des sorties d'outils que vous ne souhaitiez pas exposer. Il est préférable de les laisser désactivés, en particulier dans les conversations de groupe.
-- **Chemin rapide :** les messages contenant uniquement des commandes provenant d'expéditeurs autorisés sont traités immédiatement (contournent la file d'attente + le modèle).
-- **Filtrage des mentions de groupe :** les messages de commande uniquement provenant des expéditeurs sur la liste autorisée contournent les exigences de mention.
-- **Raccourcis en ligne (expéditeurs sur liste autorisée uniquement) :** certaines commandes fonctionnent également lorsqu'elles sont intégrées dans un message normal et sont supprimées avant que le modèle ne voie le texte restant.
-  - Exemple : `hey /status` déclenche une réponse d'état, et le texte restant continue via le flux normal.
+- `/verbose` est destiné au débogage et à une visibilité supplémentaire ; gardez-la désactivée (**off**) en utilisation normale.
+- `/fast on|off` rend persistante une substitution de session. Utilisez l'option `inherit` de l'interface Sessions pour l'effacer et revenir aux valeurs par défaut de la configuration.
+- Les résumés d'échecs d'outils sont toujours affichés lorsqu'ils sont pertinents, mais le texte d'échec détaillé n'est inclus que lorsque `/verbose` est `on` ou `full`.
+- `/reasoning` (et `/verbose`) sont risqués dans les contextes de groupe : ils peuvent révéler un raisonnement interne ou une sortie d'outil que vous ne souhaitiez pas exposer. Il est préférable de les laisser désactivés, en particulier dans les discussions de groupe.
+- **Chemin rapide (Fast path) :** les messages contenant uniquement des commandes provenant d'expéditeurs autorisés sont traités immédiatement (contournent la file d'attente + le modèle).
+- **Filtrage des mentions de groupe :** les messages contenant uniquement des commandes provenant d'expéditeurs autorisés contournent les exigences de mention.
+- **Raccourcis en ligne (expéditeurs autorisés uniquement) :** certaines commandes fonctionnent également lorsqu'elles sont intégrées dans un message normal et sont supprimées avant que le modèle ne voie le texte restant.
+  - Exemple : `hey /status` déclenche une réponse de statut, et le texte restant continue selon le flux normal.
 - Actuellement : `/help`, `/commands`, `/status`, `/whoami` (`/id`).
-- Les messages de commande uniquement non autorisés sont silencieusement ignorés, et les jetons en ligne `/...` sont traités comme du texte brut.
-- **Commandes de Skills :** les compétences `user-invocable` sont exposées en tant que commandes slash. Les noms sont nettoyés en `a-z0-9_` (max 32 caractères) ; les collisions reçoivent des suffixes numériques (par ex. `_2`).
-  - `/skill <name> [input]` exécute une compétence par son nom (utile lorsque les limites de commandes natives empêchent les commandes par compétence).
-  - Par défaut, les commandes de compétences sont transmises au modèle en tant que requête normale.
-  - Les compétences peuvent éventuellement déclarer `command-dispatch: tool` pour router la commande directement vers un outil (déterministe, pas de modèle).
+- Les messages non autorisés contenant uniquement des commandes sont ignorés silencieusement, et les jetons `/...` en ligne sont traités comme du texte brut.
+- **Commandes de Skills :** Les skills `user-invocable` sont exposées en tant que commandes slash. Les noms sont nettoyés en `a-z0-9_` (max 32 caractères) ; les collisions reçoivent des suffixes numériques (par ex. `_2`).
+  - `/skill <name> [input]` exécute une skill par son nom (utile lorsque les limites de commandes natives empêchent les commandes par skill).
+  - Par défaut, les commandes de skills sont transmises au model en tant que requête normale.
+  - Les skills peuvent éventuellement déclarer `command-dispatch: tool` pour acheminer la commande directement vers un tool (déterministe, sans model).
   - Exemple : `/prose` (plugin OpenProse) — voir [OpenProse](/fr/prose).
-- **Arguments de commande native :** Discord utilise l'autocomplétion pour les options dynamiques (et les menus à boutons lorsque vous omettez les arguments requis). Telegram et Slack affichent un menu à boutons lorsqu'une commande prend en charge les choix et que vous omettez l'argument.
+- **Arguments de commandes natives :** Discord utilise l'autocomplétion pour les options dynamiques (et les menus de boutons lorsque vous omettez les arguments requis). Telegram et Slack affichent un menu de boutons lorsqu'une commande prend en charge des choix et que vous omettez l'argument.
+
+## `/tools`
+
+`/tools` répond à une question d'exécution, et non à une question de configuration : **ce que cet agent peut utiliser maintenant dans cette conversation**.
+
+- Le `/tools` par défaut est compact et optimisé pour un examen rapide.
+- `/tools verbose` ajoute de courtes descriptions.
+- Les surfaces de commandes natives qui prennent en charge les arguments exposent le même sélecteur de mode que `compact|verbose`.
+- Les résultats sont limités à la session, donc le changement d'agent, de channel, de fil, de l'autorisation de l'expéditeur ou de model peut modifier la sortie.
+- `/tools` inclut les tools réellement accessibles lors de l'exécution, notamment les tools principaux, les tools de plugin connectés et les tools appartenant au channel.
+
+Pour la modification de profil et de remplacement, utilisez le panneau Tools de l'interface de contrôle ou les surfaces de configuration/catalogue au lieu de traiter `/tools` comme un catalogue statique.
 
 ## Surfaces d'utilisation (ce qui s'affiche où)
 
-- **Utilisation/quota du provider** (exemple : « 80 % restants pour Claude ») s'affiche dans `/status` pour le provider de model actuel lorsque le suivi de l'utilisation est activé.
-- **Jetets/coût par réponse** est contrôlé par `/usage off|tokens|full` (ajouté aux réponses normales).
-- `/model status` concerne les **models/auth/endpoints**, pas l'utilisation.
+- **Utilisation/quota du fournisseur** (exemple : « 80 % restants pour Claude ») s'affiche dans `/status` pour le fournisseur de model actuel lorsque le suivi de l'utilisation est activé.
+- **Jetets/coût par réponse** sont contrôlés par `/usage off|tokens|full` (ajoutés aux réponses normales).
+- `/model status` concerne les **models/auth/points de terminaison**, pas l'utilisation.
 
-## Sélection de model (`/model`)
+## Sélection du model (`/model`)
 
 `/model` est implémenté en tant que directive.
 
@@ -175,10 +191,10 @@ Exemples :
 
 Notes :
 
-- `/model` et `/model list` affichent un sélecteur compact et numéroté (famille de models + providers disponibles).
-- Sur Discord, `/model` et `/models` ouvrent un sélecteur interactif avec des listes déroulantes pour le provider et le model, ainsi qu'une étape de soumission.
+- `/model` et `/model list` affichent un sélecteur compact numéroté (famille de models + providers disponibles).
+- Sur Discord, `/model` et `/models` ouvrent un sélecteur interactif avec des menus déroulants pour le provider et le model, ainsi qu'une étape de soumission.
 - `/model <#>` sélectionne depuis ce sélecteur (et préfère le provider actuel si possible).
-- `/model status` affiche la vue détaillée, y compris le endpoint du provider configuré (`baseUrl`) et le mode API (`api`) lorsque disponibles.
+- `/model status` affiche la vue détaillée, y compris le point de terminaison du provider configuré (`baseUrl`) et le mode API (`api`) si disponible.
 
 ## Débogage des overrides
 
@@ -201,7 +217,7 @@ Notes :
 
 ## Mises à jour de la configuration
 
-`/config` écrit dans votre configuration sur disque (`openclaw.json`). Réservé au propriétaire. Désactivé par défaut ; activez avec `commands.config: true`.
+`/config` écrit dans votre configuration sur disque (`openclaw.json`). Réservé au propriétaire. Désactivé par défaut ; activez-le avec `commands.config: true`.
 
 Exemples :
 
@@ -213,14 +229,14 @@ Exemples :
 /config unset messages.responsePrefix
 ```
 
-Notes :
+Remarques :
 
-- La configuration est validée avant l'écriture ; les modifications non valides sont rejetées.
-- Les mises à jour de `/config` persistent après les redémarrages.
+- La configuration est validée avant l'écriture ; les modifications invalides sont rejetées.
+- Les mises à jour `/config` persistent après les redémarrages.
 
 ## Mises à jour MCP
 
-`/mcp` écrit les définitions de serveur MCP gérées par OpenClaw sous `mcp.servers`. Réservé au propriétaire. Désactivé par défaut ; activez avec `commands.mcp: true`.
+`/mcp` écrit les définitions de serveurs MCP gérées par OpenClaw sous `mcp.servers`. Réservé au propriétaire. Désactivé par défaut ; activez-le avec `commands.mcp: true`.
 
 Exemples :
 
@@ -233,12 +249,12 @@ Exemples :
 
 Notes :
 
-- `/mcp` stocke la configuration dans la config OpenClaw, et non dans les paramètres de projet détenus par Pi.
+- `/mcp` stocke la configuration dans la configuration OpenClaw, et non dans les paramètres de projet appartenant à Pi.
 - Les adaptateurs d'exécution décident quels transports sont réellement exécutables.
 
-## Mises à jour de plugins
+## Mises à jour des plugins
 
-`/plugins` permet aux opérateurs d'inspecter les plugins découverts et d'activer ou désactiver leur activation dans la configuration. Les flux en lecture seule peuvent utiliser `/plugin` comme alias. Désactivé par défaut ; activez-le avec `commands.plugins: true`.
+`/plugins` permet aux opérateurs d'inspecter les plugins découverts et d'activer ou désactiver leur activation dans la configuration. Les flux en lecture seule peuvent utiliser `/plugin` comme alias. Désactivé par défaut ; activer avec `commands.plugins: true`.
 
 Exemples :
 
@@ -252,32 +268,32 @@ Exemples :
 
 Remarques :
 
-- `/plugins list` et `/plugins show` utilisent une découverte réelle de plugins basée sur l'espace de travail actuel ainsi que sur la configuration sur disque.
-- `/plugins enable|disable` met uniquement à jour la configuration des plugins ; il n'installe ni ne désinstalle les plugins.
+- `/plugins list` et `/plugins show` utilisent la véritable découverte de plugins sur l'espace de travail actuel ainsi que la configuration sur disque.
+- `/plugins enable|disable` met à jour uniquement la configuration du plugin ; il n'installe ni ne désinstalle les plugins.
 - Après des modifications d'activation/désactivation, redémarrez la passerelle pour les appliquer.
 
-## Notes de surface
+## Notes sur les surfaces
 
-- Les **commandes texte** s'exécutent dans la session de chat normale (les DMs partagent `main`, les groupes ont leur propre session).
+- Les **commandes textuelles** s'exécutent dans la session de chat normale (les DMs partagent `main`, les groupes ont leur propre session).
 - Les **commandes natives** utilisent des sessions isolées :
   - Discord : `agent:<agentId>:discord:slash:<userId>`
   - Slack : `agent:<agentId>:slack:slash:<userId>` (préfixe configurable via `channels.slack.slashCommand.sessionPrefix`)
-  - Telegram : `telegram:slash:<userId>` (cible la session de discussion via `CommandTargetSessionKey`)
-- **`/stop`** cible la session de discussion active afin qu'elle puisse interrompre l'exécution en cours.
-- **Slack :** `channels.slack.slashCommand` est toujours pris en charge pour une seule commande de style `/openclaw`. Si vous activez `commands.native`, vous devez créer une commande slash Slack pour chaque commande intégrée (mêmes noms que `/help`). Les menus d'arguments de commande pour Slack sont livrés sous forme de boutons éphémères du Block Kit.
-  - Slack exception native : enregistrez `/agentstatus` (pas `/status`) car Slack réserve `/status`. Le texte `/status` fonctionne toujours dans les messages Slack.
+  - Telegram : `telegram:slash:<userId>` (cible la session de chat via `CommandTargetSessionKey`)
+- **`/stop`** cible la session de chat active afin qu'elle puisse interrompre l'exécution en cours.
+- **Slack :** `channels.slack.slashCommand` est toujours pris en charge pour une commande unique de style `/openclaw`. Si vous activez `commands.native`, vous devez créer une commande slash Slack pour chaque commande intégrée (mêmes noms que `/help`). Les menus d'arguments de commande pour Slack sont transmis sous forme de boutons éphémères Block Kit.
+  - Exception native Slack : enregistrez `/agentstatus` (pas `/status`) car Slack réserve `/status`. Le texte `/status` fonctionne toujours dans les messages Slack.
 
-## Questions BTW annexes
+## Questions BTW à côté
 
-`/btw` est une **question annexe** rapide sur la session actuelle.
+`/btw` est une **question à côté** rapide sur la session actuelle.
 
 Contrairement au chat normal :
 
 - il utilise la session actuelle comme contexte d'arrière-plan,
-- il s'exécute comme un appel unique séparé **sans tool**,
+- il s'exécute comme un appel unique **sans tool** séparé,
 - il ne modifie pas le contexte futur de la session,
 - il n'est pas écrit dans l'historique des transcriptions,
-- il est délivré comme un résultat annexe en direct plutôt que comme un message d'assistant normal.
+- il est transmis comme un résultat latéral en direct au lieu d'un message d'assistant normal.
 
 Cela rend `/btw` utile lorsque vous souhaitez une clarification temporaire pendant que la tâche principale continue.
 
@@ -287,7 +303,7 @@ Exemple :
 /btw what are we doing right now?
 ```
 
-Voir [Questions BTW annexes](/fr/tools/btw) pour le comportement complet et les détails de l'expérience utilisateur client.
+Consultez [Questions secondaires BTW](/fr/tools/btw) pour le comportement complet et les détails de l'expérience utilisateur.
 
 import fr from "/components/footer/fr.mdx";
 

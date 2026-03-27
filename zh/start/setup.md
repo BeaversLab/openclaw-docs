@@ -21,7 +21,7 @@ title: "设置"
 
 ## Prereqs (from source)
 
-- 推荐 Node 24（Node 22 LTS，目前为 `22.16+`，仍受支持）
+- 推荐使用 Node 24（Node 22 LTS，目前为 `22.14+`，仍受支持）
 - `pnpm`
 - Docker（可选；仅用于容器化设置/e2e — 请参阅 [Docker](/zh/install/docker)）
 

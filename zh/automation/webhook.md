@@ -84,21 +84,21 @@ Gateway 网关 可以暴露一个小型的 HTTP webhook 端点用于外部触发
 - `sessionKey` 可选（字符串）：用于标识代理会话的密钥。默认情况下，除非 `hooks.allowRequestSessionKey=true`，否则拒绝此字段。
 - `wakeMode` 可选（`now` | `next-heartbeat`）：是否触发立即心跳（默认 `now`）或等待下一次定期检查。
 - `deliver` 可选（布尔值）：如果为 `true`，代理的响应将发送到消息渠道。默认为 `true`。仅包含心跳确认的响应将被自动跳过。
-- `channel` 可选（字符串）：用于传递的消息渠道。以下之一：`last`、`whatsapp`、`telegram`、`discord`、`slack`、`mattermost`（插件）、`signal`、`imessage`、`msteams`。默认为 `last`。
-- `to` 可选（字符串）：该渠道的接收方标识符（例如，WhatsApp/Signal 的电话号码，Telegram 的聊天 ID，Discord/Slack/Mattermost（插件）的频道 ID，Microsoft Teams 的对话 ID）。默认为主会话中的最后一个接收方。
-- `model` 可选（字符串）：模型覆盖（例如 `anthropic/claude-3-5-sonnet` 或别名）。如果受限，必须在允许的模型列表中。
+- `channel` 可选（字符串）：用于传递的消息渠道。核心渠道包括：`last`、`whatsapp`、`telegram`、`discord`、`slack`、`signal`、`imessage`、`irc`、`googlechat`、`line`。扩展渠道（插件）：`msteams`、`mattermost` 等。默认为 `last`。
+- `to` 可选（字符串）：渠道的接收方标识符（例如 WhatsApp/Signal 的电话号码，Telegram 的聊天 ID，Discord/Slack/Mattermost（插件）的频道 ID，Microsoft Teams 的对话 ID）。默认为主会话中的最后一个接收方。
+- `model` 可选（字符串）：模型覆盖（例如 `anthropic/claude-sonnet-4-6` 或别名）。如果受限，必须在允许的模型列表中。
 - `thinking` 可选（字符串）：思考级别覆盖（例如 `low`、`medium`、`high`）。
-- `timeoutSeconds` 可选（数字）：代理运行的最大持续时间（以秒为单位）。
+- `timeoutSeconds` 可选（数字）：代理运行的最大持续时间（秒）。
 
 效果：
 
 - 运行一个**隔离的**代理轮次（拥有自己的会话密钥）
 - 始终将摘要发布到**主**会话中
-- 如果为 `wakeMode=now`，则触发立即心跳
+- 如果为 `wakeMode=now`，则会触发立即的心跳检测
 
 ## 会话密钥策略（重大变更）
 
-`/hooks/agent` 负载 `sessionKey` 覆盖默认是禁用的。
+`/hooks/agent` 载荷 `sessionKey` 覆盖默认禁用。
 
 - 建议：设置固定的 `hooks.defaultSessionKey` 并保持请求覆盖关闭。
 - 可选：仅在需要时允许请求覆盖，并限制前缀。
@@ -130,37 +130,37 @@ Gateway 网关 可以暴露一个小型的 HTTP webhook 端点用于外部触发
 }
 ```
 
-### `POST /hooks/<name>`（映射）
+### `POST /hooks/<name>`（已映射）
 
-自定义挂钩名称通过 `hooks.mappings` 解析（请参阅配置）。映射可以将任意负载转换为 `wake` 或 `agent` 操作，并带有可选的模板或代码转换。
+自定义钩子名称通过 `hooks.mappings` 解析（请参阅配置）。映射可以将任意载荷转换为 `wake` 或 `agent` 操作，并带有可选模板或代码转换。
 
 映射选项（摘要）：
 
 - `hooks.presets: ["gmail"]` 启用内置的 Gmail 映射。
 - `hooks.mappings` 允许您在配置中定义 `match`、`action` 和模板。
-- `hooks.transformsDir` + `transform.module` 加载 JS/TS 模块以用于自定义逻辑。
-  - `hooks.transformsDir`（如果设置）必须位于 OpenClaw 配置目录下的 transforms 根目录内（通常为 `~/.openclaw/hooks/transforms`）。
+- `hooks.transformsDir` + `transform.module` 加载用于自定义逻辑的 JS/TS 模块。
+  - `hooks.transformsDir`（如果设置）必须位于您的 OpenClaw 配置目录下的 transforms 根目录内（通常是 `~/.openclaw/hooks/transforms`）。
   - `transform.module` 必须在有效的 transforms 目录内解析（拒绝遍历/转义路径）。
-- 使用 `match.source` 以保留通用摄取端点（基于负载的路由）。
-- TS 变换需要 TS 加载器（例如 `bun` 或 `tsx`）或在运行时预编译的 `.js`。
+- 使用 `match.source` 以保留通用接收端点（基于负载的路由）。
+- TS 转换需要 TS 加载器（例如 `bun` 或 `tsx`）或在运行时预编译的 `.js`。
 - 在映射上设置 `deliver: true` + `channel`/`to` 以将回复路由到聊天界面
-  （`channel` 默认为 `last` 并回退到 WhatsApp）。
+  (`channel` 默认为 `last`，回退到 WhatsApp)。
 - `agentId` 将 hook 路由到特定代理；未知 ID 回退到默认代理。
 - `hooks.allowedAgentIds` 限制显式 `agentId` 路由。省略它（或包含 `*`）以允许任何代理。设置 `[]` 以拒绝显式 `agentId` 路由。
-- 当未提供显式密钥时，`hooks.defaultSessionKey` 为 hook 代理运行设置默认会话。
+- 当未提供显式密钥时，`hooks.defaultSessionKey` 设置 hook 代理运行的默认会话。
 - `hooks.allowRequestSessionKey` 控制 `/hooks/agent` 负载是否可以设置 `sessionKey`（默认：`false`）。
-- `hooks.allowedSessionKeyPrefixes` 可选地限制来自请求负载和映射的显式 `sessionKey` 值。
-- `allowUnsafeExternalContent: true` 禁用该 hook 的外部内容安全包装器
-  （危险；仅适用于受信任的内部来源）。
-- `openclaw webhooks gmail setup` 为 `openclaw webhooks gmail run` 编写 `hooks.gmail` 配置。
+- `hooks.allowedSessionKeyPrefixes` 可选择限制来自请求负载和映射的显式 `sessionKey` 值。
+- `allowUnsafeExternalContent: true` 为该 hook 禁用外部内容安全包装器
+  （危险；仅限受信任的内部源）。
+- `openclaw webhooks gmail setup` 为 `openclaw webhooks gmail run` 写入 `hooks.gmail` 配置。
   有关完整的 Gmail watch 流程，请参阅 [Gmail Pub/Sub](/zh/automation/gmail-pubsub)。
 
 ## 响应
 
 - `200` 用于 `/hooks/wake`
-- `200` 用于 `/hooks/agent` (已接受异步运行)
+- `200` 用于 `/hooks/agent`（接受异步运行）
 - 身份验证失败时返回 `401`
-- 同一客户端反复出现身份验证失败后返回 `429` (请检查 `Retry-After`)
+- 同一客户端重复身份验证失败后返回 `429`（检查 `Retry-After`）
 - 负载无效时返回 `400`
 - 负载过大时返回 `413`
 
@@ -182,7 +182,7 @@ curl -X POST http://127.0.0.1:18789/hooks/agent \
 
 ### 使用不同的模型
 
-将 `model` 添加到代理负载（或映射）中以覆盖该次运行的模型：
+将 `model` 添加到代理负载（或映射）中以覆盖该运行的模型：
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/agent \
@@ -191,7 +191,7 @@ curl -X POST http://127.0.0.1:18789/hooks/agent \
   -d '{"message":"Summarize inbox","name":"Email","model":"openai/gpt-5.2-mini"}'
 ```
 
-如果您强制执行 `agents.defaults.models`，请确保其中包含覆盖模型。
+如果您强制执行 `agents.defaults.models`，请确保覆盖模型包含在其中。
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/gmail \
@@ -204,15 +204,15 @@ curl -X POST http://127.0.0.1:18789/hooks/gmail \
 
 - 将 Hook 端点置于环回接口、Tailnet 或可信反向代理之后。
 - 使用专用的 Hook 令牌；不要复用网关身份验证令牌。
-- 首选具有严格 `tools.profile` 和沙箱隔离的专用 Hook 代理，以便 Hook 入站具有更小的爆炸半径。
+- 首选具有严格 `tools.profile` 和沙箱隔离的专用挂钩代理，以便挂钩入口的影响范围更小。
 - 每个客户端地址会限制重复身份验证失败的速率，以减缓暴力破解尝试。
-- 如果您使用多代理路由，请设置 `hooks.allowedAgentIds` 来限制显式的 `agentId` 选择。
-- 保持 `hooks.allowRequestSessionKey=false` 状态，除非您需要调用方选择的会话。
-- 如果启用请求 `sessionKey`，请限制 `hooks.allowedSessionKeyPrefixes` (例如，`["hook:"]`)。
+- 如果您使用多代理路由，请设置 `hooks.allowedAgentIds` 以限制显式 `agentId` 选择。
+- 除非您需要调用方选择的会话，否则请保留 `hooks.allowRequestSessionKey=false`。
+- 如果启用请求 `sessionKey`，请限制 `hooks.allowedSessionKeyPrefixes`（例如 `["hook:"]`）。
 - 避免在 Webhook 日志中包含敏感的原始负载。
-- Hook 负载默认被视为不受信任，并使用安全边界进行包装。
-  如果必须针对特定 Hook 禁用此功能，请在该 Hook 的映射中设置 `allowUnsafeExternalContent: true`
-  (危险)。
+- 默认情况下，挂钩负载被视为不受信任，并用安全边界包裹。
+  如果必须为特定挂钩禁用此功能，请在该挂钩的映射中设置 `allowUnsafeExternalContent: true`
+  （危险）。
 
 import zh from "/components/footer/zh.mdx";
 

@@ -39,7 +39,7 @@ El portátil **no** ejecuta el agente. Se conecta de forma remota:
 - Use el modo **Remoto a través de SSH** de la aplicación macOS (Configuración → General → "OpenClaw runs").
 - La aplicación abre y gestiona el túnel, por lo que WebChat + verificaciones de salud "simplemente funcionan".
 
-Manual de operaciones: [acceso remoto macOS](/es/platforms/mac/remote).
+Manual de procedimientos: [acceso remoto de macOS](/es/platforms/mac/remote).
 
 ### 3) El portátil ejecuta la puerta de enlace, acceso remoto desde otras máquinas
 
@@ -48,7 +48,7 @@ Mantenga la puerta de enlace local pero exponga de forma segura:
 - Túnel SSH al portátil desde otras máquinas, o
 - Sirva la interfaz de usuario de control con Tailscale Serve y mantenga la puerta de enlace solo loopback.
 
-Guía: [Tailscale](/es/gateway/tailscale) y [descripción general web](/es/web).
+Guía: [Tailscale](/es/gateway/tailscale) y [visión general web](/es/web).
 
 ## Flujo de comandos (qué se ejecuta dónde)
 
@@ -63,7 +63,7 @@ Ejemplo de flujo (Telegram → nodo):
 
 Notas:
 
-- **Los nodos no ejecutan el servicio de puerta de enlace.** Solo se debe ejecutar una puerta de enlace por host a menos que ejecute intencionadamente perfiles aislados (consulte [Multiple gateways](/es/gateway/multiple-gateways)).
+- **Los nodos no ejecutan el servicio de puerta de enlace.** Solo se debe ejecutar una puerta de enlace por host, a menos que intencionalmente ejecute perfiles aislados (ver [Múltiples puertas de enlace](/es/gateway/multiple-gateways)).
 - El "modo nodo" de la aplicación macOS es solo un cliente de nodo a través del WebSocket del Gateway.
 
 ## Túnel SSH (CLI + herramientas)
@@ -117,34 +117,33 @@ La resolución de credenciales del Gateway sigue un contrato compartido en las r
   - contraseña: `OPENCLAW_GATEWAY_PASSWORD` -> `gateway.remote.password` -> `gateway.auth.password`
 - Excepción del modo local del host del nodo: se ignoran `gateway.remote.token` / `gateway.remote.password`.
 - Las verificaciones de token de sondeo/estado remotas son estrictas de forma predeterminada: usan solo `gateway.remote.token` (sin respaldo de token local) cuando el objetivo es el modo remoto.
-- Las variables de entorno `CLAWDBOT_GATEWAY_*` heredadas solo se usan en rutas de llamada de compatibilidad; la resolución de sondeo/estado/auth usa solo `OPENCLAW_GATEWAY_*`.
+- Las anulaciones de variables de entorno de la puerta de enlace usan solo `OPENCLAW_GATEWAY_*`.
 
 ## Interfaz de usuario de chat a través de SSH
 
 WebChat ya no utiliza un puerto HTTP separado. La interfaz de usuario de chat SwiftUI se conecta directamente al WebSocket de Gateway.
 
-- Reenvíe `18789` a través de SSH (ver arriba) y luego conecte los clientes a `ws://127.0.0.1:18789`.
+- Reenvíe `18789` a través de SSH (ver arriba), luego conecte los clientes a `ws://127.0.0.1:18789`.
 - En macOS, prefiera el modo "Remoto a través de SSH" de la aplicación, que gestiona el túnel automáticamente.
 
 ## aplicación macOS "Acceso remoto por SSH"
 
 La aplicación de la barra de menús de macOS puede gestionar la misma configuración de extremo a extremo (verificaciones de estado remotas, WebChat y reenvío de activación por voz).
 
-Manual de procedimientos: [acceso remoto macOS](/es/platforms/mac/remote).
+Manual de procedimientos: [acceso remoto de macOS](/es/platforms/mac/remote).
 
 ## Reglas de seguridad (remoto/VPN)
 
 Versión corta: **mantenga el Gateway solo en loopback** a menos que esté seguro de que necesita un enlace.
 
 - **Loopback + SSH/Tailscale Serve** es la opción predeterminada más segura (sin exposición pública).
-- El `ws://` en texto plano es solo de loopback de forma predeterminada. Para redes privadas de confianza,
-  configure `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` en el proceso del cliente como medida de emergencia.
-- **Enlaces que no son de loopback** (`lan`/`tailnet`/`custom`, o `auto` cuando loopback no está disponible) deben usar tokens de autenticación/contraseñas.
-- `gateway.remote.token` / `.password` son fuentes de credenciales del cliente. **No** configuran la autenticación del servidor por sí mismos.
-- Las rutas de llamadas locales pueden usar `gateway.remote.*` como alternativa solo cuando `gateway.auth.*` no está configurado.
-- Si `gateway.auth.token` / `gateway.auth.password` está configurado explícitamente mediante SecretRef y no se resuelve, la resolución falla de forma cerrada (sin enmascaramiento de alternativa remota).
-- `gateway.remote.tlsFingerprint` fija el certificado TLS remoto al usar `wss://`.
-- **Tailscale Serve** puede autenticar el tráfico de la interfaz de usuario de control/WebSocket a través de encabezados de identidad cuando `gateway.auth.allowTailscale: true`; los puntos finales de la API HTTP aún requieren autenticación por token/contraseña. Este flujo sin token asume que el host de la puerta de enlace es confiable. Establézcalo en `false` si desea tokens/contraseñas en todas partes.
+- El `ws://` en texto sin formato es solo de bucle local (loopback) de forma predeterminada. Para redes privadas confiables, establezca `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` en el proceso del cliente como medida de emergencia.
+- **Los enlaces no loopback** (`lan`/`tailnet`/`custom`, o `auto` cuando no hay bucle local disponible) deben usar tokens de autenticación/contraseñas.
+- `gateway.remote.token` / `.password` son fuentes de credenciales del cliente. Por sí mismos **no** configuran la autenticación del servidor.
+- Las rutas de llamadas locales pueden usar `gateway.remote.*` como alternativa solo cuando `gateway.auth.*` no está establecido.
+- Si `gateway.auth.token` / `gateway.auth.password` se configura explícitamente mediante SecretRef y no se resuelve, la resolución falla de forma cerrada (sin enmascaramiento de alternativa remota).
+- `gateway.remote.tlsFingerprint` fija el certificado TLS remoto cuando se usa `wss://`.
+- **Tailscale Serve** puede autenticar el tráfico de Control UI/WebSocket mediante encabezados de identidad cuando `gateway.auth.allowTailscale: true`; los endpoints de la API HTTP aún requieren autenticación por token/contraseña. Este flujo sin token asume que el host de la puerta de enlace es confiable. Establézcalo en `false` si desea tokens/contraseñas en todas partes.
 - Trate el control del navegador como acceso de operador: solo tailnet + emparejamiento deliberado de nodos.
 
 Profundización: [Seguridad](/es/gateway/security).

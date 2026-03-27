@@ -1,61 +1,119 @@
 ---
-title: "Création de Skills"
-summary: "Créez et testez des skills d'espace de travail personnalisés avec SKILL.md"
+title: "Création de compétences"
+summary: "Créez et testez des compétences d'espace de travail personnalisées avec SKILL.md"
 read_when:
   - You are creating a new custom skill in your workspace
   - You need a quick starter workflow for SKILL.md-based skills
 ---
 
-# Créer des Skills personnalisés 🛠
+# Création de compétences
 
-OpenClaw est conçu pour être facilement extensible. Les « Skills » constituent le moyen principal d'ajouter de nouvelles capacités à votre assistant.
+Les compétences enseignent à l'agent comment et quand utiliser les outils. Chaque compétence est un répertoire contenant un fichier `SKILL.md` avec des en-têtes YAML et des instructions markdown.
 
-## Qu'est-ce qu'un Skill ?
+Pour savoir comment les compétences sont chargées et priorisées, consultez [Compétences](/fr/tools/skills).
 
-Un skill est un répertoire contenant un fichier `SKILL.md` (qui fournit des instructions et des définitions d'outils au LLM) et éventuellement des scripts ou des ressources.
+## Créez votre première compétence
 
-## Étape par étape : Votre premier Skill
+<Steps>
+  <Step title="Créer le répertoire de la compétence">
+    Les compétences résident dans votre espace de travail. Créez un nouveau dossier :
 
-### 1. Créer le répertoire
+    ```bash
+    mkdir -p ~/.openclaw/workspace/skills/hello-world
+    ```
 
-Les Skills résident dans votre espace de travail, généralement `~/.openclaw/workspace/skills/`. Créez un nouveau dossier pour votre skill :
+  </Step>
 
-```bash
-mkdir -p ~/.openclaw/workspace/skills/hello-world
-```
+  <Step title="Écrire SKILL.md">
+    Créez `SKILL.md` à l'intérieur de ce répertoire. L'en-tête définit les métadonnées,
+    et le corps markdown contient les instructions pour l'agent.
 
-### 2. Définir le `SKILL.md`
+    ```markdown
+    ---
+    name: hello_world
+    description: A simple skill that says hello.
+    ---
 
-Créez un fichier `SKILL.md` dans ce répertoire. Ce fichier utilise l'en-tête YAML pour les métadonnées et le Markdown pour les instructions.
+    # Hello World Skill
 
-```markdown
----
-name: hello_world
-description: A simple skill that says hello.
----
+    When the user asks for a greeting, use the `echo` tool to say
+    "Hello from your custom skill!".
+    ```
 
-# Hello World Skill
+  </Step>
 
-When the user asks for a greeting, use the `echo` tool to say "Hello from your custom skill!".
-```
+  <Step title="Ajouter des outils (optionnel)">
+    Vous pouvez définir des schémas d'outils personnalisés dans l'en-tête ou instruire l'agent
+    d'utiliser les outils système existants (comme `exec` ou `browser`). Les compétences peuvent également
+    être livrées dans des plugins aux côtés des outils qu'elles documentent.
 
-### 3. Ajouter des outils (Facultatif)
+  </Step>
 
-Vous pouvez définir des outils personnalisés dans l'en-tête ou demander à l'agent d'utiliser les outils système existants (comme `bash` ou `browser`).
+  <Step title="Charger la compétence">
+    Démarrez une nouvelle session pour que OpenClaw prenne en charge la compétence :
 
-### 4. Actualiser OpenClaw
+    ```bash
+    # From chat
+    /new
 
-Demandez à votre agent d'« actualiser les skills » ou redémarrez la passerelle. OpenClaw découvrira le nouveau répertoire et indexera le `SKILL.md`.
+    # Or restart the gateway
+    openclaw gateway restart
+    ```
 
-## Bonnes pratiques
+    Vérifiez que la compétence a été chargée :
 
-- **Soyez concis** : Indiquez au modèle _quoi_ faire, pas comment être une IA.
-- **Sécurité d'abord** : Si votre skill utilise `bash`, assurez-vous que les invites n'autorisent pas l'injection arbitraire de commandes provenant d'une entrée utilisateur non fiable.
-- **Tester localement** : Utilisez `openclaw agent --message "use my new skill"` pour tester.
+    ```bash
+    openclaw skills list
+    ```
 
-## Skills partagés
+  </Step>
 
-Vous pouvez également parcourir et contribuer aux skills sur [ClawHub](https://clawhub.com).
+  <Step title="Tester">
+    Envoyez un message qui devrait déclencher la compétence :
+
+    ```bash
+    openclaw agent --message "give me a greeting"
+    ```
+
+    Ou discutez simplement avec l'agent et demandez une salutation.
+
+  </Step>
+</Steps>
+
+## Référence des métadonnées des compétences
+
+L'en-tête YAML prend en charge ces champs :
+
+| Champ                               | Obligatoire | Description                                 |
+| ----------------------------------- | ----------- | ------------------------------------------- |
+| `name`                              | Oui         | Identifiant unique (snake_case)             |
+| `description`                       | Oui         | Description en une ligne montrée à l'agent  |
+| `metadata.openclaw.os`              | Non         | Filtre OS (`["darwin"]`, `["linux"]`, etc.) |
+| `metadata.openclaw.requires.bins`   | Non         | Binaires requis sur le PATH                 |
+| `metadata.openclaw.requires.config` | Non         | Clés de configuration requises              |
+
+## Meilleures pratiques
+
+- **Soyez concis** — indiquez au modèle _quoi_ faire, pas comment être une IA
+- **Sécurité avant tout** — si votre skill utilise `exec`, assurez-vous que les invites ne permettent pas l'injection de commandes arbitraires à partir d'une entrée non fiable
+- **Testez localement** — utilisez `openclaw agent --message "..."` pour tester avant de partager
+- **Utilisez ClawHub** — parcourez et contribuez aux skills sur [ClawHub](https://clawhub.com)
+
+## Emplacement des skills
+
+| Emplacement                   | Priorité       | Portée                          |
+| ----------------------------- | -------------- | ------------------------------- |
+| `\<workspace\>/skills/`       | La plus élevée | Par agent                       |
+| `~/.openclaw/skills/`         | Moyenne        | Partagé (tous les agents)       |
+| Intégré (livré avec OpenClaw) | La plus basse  | Global                          |
+| `skills.load.extraDirs`       | La plus basse  | Dossiers partagés personnalisés |
+
+## Connexes
+
+- [Référence des Skills](/fr/tools/skills) — chargement, priorité et règles de filtrage
+- [Configuration des Skills](/fr/tools/skills-config) — schéma de configuration `skills.*`
+- [ClawHub](/fr/tools/clawhub) — registre public de skills
+- [Création de plugins](/fr/plugins/building-plugins) — les plugins peuvent fournir des skills
 
 import fr from "/components/footer/fr.mdx";
 

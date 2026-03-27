@@ -19,7 +19,7 @@ Tavily 是专为 AI 应用程序设计的搜索 API，返回针对 LLM 消费优
 
 ## 获取 API 密钥
 
-1. 在 [tavily.com](https://tavily.com/) 创建 Tavily 账户。
+1. 在 [tavily.com](https://tavily.com/) 创建一个 Tavily 账户。
 2. 在控制台中生成 API 密钥。
 3. 将其存储在配置中或在网关环境中设置 `TAVILY_API_KEY`。
 
@@ -117,7 +117,11 @@ Tavily 是专为 AI 应用程序设计的搜索 API，返回针对 LLM 消费优
 | 带有深度、主题、AI 答案的搜索 | `tavily_search`  |
 | 从特定 URL 提取内容           | `tavily_extract` |
 
-有关完整的 Web 工具设置和提供商比较，请参阅 [Web 工具](/zh/tools/web)。
+## 相关
+
+- [Web Search 概述](/zh/tools/web) -- 所有提供商及自动检测
+- [Firecrawl](/zh/tools/firecrawl) -- 带有内容提取的搜索 + 抓取
+- [Exa Search](/zh/tools/exa-search) -- 带有内容提取的神经搜索
 
 import zh from "/components/footer/zh.mdx";
 

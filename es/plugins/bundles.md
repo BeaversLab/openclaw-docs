@@ -1,294 +1,183 @@
 ---
-summary: "Guía del formato de paquete unificado para paquetes de Codex, Claude y Cursor en OpenClaw"
+summary: "Instalar y usar bundles de Codex, Claude y Cursor como complementos de OpenClaw"
 read_when:
-  - You want to install or debug a Codex, Claude, or Cursor-compatible bundle
+  - You want to install a Codex, Claude, or Cursor-compatible bundle
   - You need to understand how OpenClaw maps bundle content into native features
-  - You are documenting bundle compatibility or current support limits
-title: "Paquetes de plugins"
+  - You are debugging bundle detection or missing capabilities
+title: "Bundles de complementos"
 ---
 
-# Paquetes de plugins
+# Bundles de complementos
 
-OpenClaw es compatible con una clase compartida de paquetes de plugins externos: **plugins de paquete**.
+OpenClaw puede instalar complementos de tres ecosistemas externos: **Codex**, **Claude**
+y **Cursor**. Estos se denominan **bundles** — paquetes de contenido y metadatos que
+OpenClaw asigna a características nativas como habilidades, enlaces y herramientas MCP.
 
-Hoy en día, esto significa tres ecosistemas estrechamente relacionados:
+<Info>
+  Los bundles **no** son lo mismo que los complementos nativos de OpenClaw. Los complementos nativos
+  se ejecutan en proceso y pueden registrar cualquier capacidad. Los bundles son paquetes de
+  contenido con mapeo de características selectivo y un límite de confianza más estrecho.
+</Info>
 
-- Paquetes de Codex
-- Paquetes de Claude
-- Paquetes de Cursor
+## Por qué existen los bundles
 
-OpenClaw muestra todos ellos como `Format: bundle` en `openclaw plugins list`.
-La salida detallada y `openclaw plugins inspect <id>` también muestran el subtipo
-(`codex`, `claude` o `cursor`).
+Muchos complementos útiles se publican en formato Codex, Claude o Cursor. En lugar
+de requerir que los autores los reescriban como complementos nativos de OpenClaw, OpenClaw
+detecta estos formatos y asigna su contenido compatible al conjunto de características
+nativo. Esto significa que puede instalar un paquete de comandos de Claude o un bundle de habilidades de Codex
+y usarlo inmediatamente.
 
-Relacionado:
+## Instalar un bundle
 
-- Resumen del sistema de complementos: [Complementos](/es/tools/plugin)
-- Flujos de instalación/lista de CLI: [complementos](/es/cli/plugins)
-- Esquema de manifiesto nativo: [Manifiesto de complemento](/es/plugins/manifest)
+<Steps>
+  <Step title="Install from a directory, archive, or marketplace">
+    ```bash
+    # Local directory
+    openclaw plugins install ./my-bundle
 
-## Qué es un paquete
+    # Archive
+    openclaw plugins install ./my-bundle.tgz
 
-Un paquete es un **paquete de contenido/metadatos**, no un plugin nativo dentro del proceso de OpenClaw.
+    # Claude marketplace
+    openclaw plugins marketplace list <marketplace-name>
+    openclaw plugins install <plugin-name>@<marketplace-name>
+    ```
 
-Hoy en día, OpenClaw **no** ejecuta código de tiempo de ejecución del paquete dentro del proceso. En su lugar,
-detecta archivos de paquetes conocidos, lee los metadatos y asigna el contenido del paquete compatible
-a superficies nativas de OpenClaw, como habilidades, paquetes de hooks, configuración de MCP
-y configuraciones integradas de Pi.
+  </Step>
 
-Ese es el límite de confianza principal:
+  <Step title="Verificar detección">
+    ```bash
+    openclaw plugins list
+    openclaw plugins inspect <id>
+    ```
 
-- plugin nativo de OpenClaw: el módulo de tiempo de ejecución se ejecuta dentro del proceso
-- paquete: paquete de metadatos/contenido, con mapeo de características selectivo
+    Los bundles aparecen como `Format: bundle` con un subtipo de `codex`, `claude` o `cursor`.
 
-## Modelo de paquete compartido
+  </Step>
 
-Los paquetes de Codex, Claude y Cursor son lo suficientemente similares como para que OpenClaw los trate
-como un modelo normalizado.
+  <Step title="Reiniciar y usar">
+    ```bash
+    openclaw gateway restart
+    ```
 
-Idea compartida:
+    Las características asignadas (habilidades, enlaces, herramientas MCP) están disponibles en la siguiente sesión.
 
-- un pequeño archivo de manifiesto o una estructura de directorios predeterminada
-- una o más raíces de contenido como `skills/` o `commands/`
-- metadatos opcionales de herramientas/tiempo de ejecución como MCP, hooks, agentes o LSP
-- instalar como un directorio o archivo y luego habilitar en la lista normal de plugins
+  </Step>
+</Steps>
 
-Comportamiento común de OpenClaw:
+## Lo que OpenClaw asigna desde los bundles
 
-- detectar el subtipo de paquete
-- normalizarlo en un registro interno de paquete
-- asignar las partes compatibles a características nativas de OpenClaw
-- reportar las partes no compatibles como capacidades detectadas pero no conectadas
+Hoy en día, no todas las características de los bundles se ejecutan en OpenClaw. Esto es lo que funciona y lo que
+detecta pero aún no está conectado.
 
-En la práctica, la mayoría de los usuarios no necesitan pensar primero en el formato específico del proveedor.
-La pregunta más útil es: ¿qué superficies de paquete asigna OpenClaw
-hoy?
+### Compatible ahora
 
-## Orden de detección
-
-OpenClaw prefiere los diseños nativos de complementos/paquetes de OpenClaw antes que el manejo de paquetes.
-
-Efecto práctico:
-
-- `openclaw.plugin.json` tiene prioridad sobre la detección de paquetes
-- las instalaciones de paquetes con `package.json` válido + `openclaw.extensions` usan
-  la ruta de instalación nativa
-- si un directorio contiene metadatos tanto nativos como de paquete, OpenClaw lo trata
-  como nativo primero
-
-Eso evita instalar parcialmente un paquete de formato dual como un paquete y luego
-cargarlo más tarde como un complemento nativo.
-
-## Lo que funciona hoy
-
-OpenClaw normaliza los metadatos del paquete en un registro interno de paquete, y luego asigna
-las superficies compatibles al comportamiento nativo existente.
-
-### Compatible actualmente
-
-#### Contenido de habilidades
-
-- las raíces de habilidades del paquete se cargan como raíces de habilidades normales de OpenClaw
-- las raíces `commands` de Claude se tratan como raíces de habilidades adicionales
-- las raíces `.cursor/commands` de Cursor se tratan como raíces de habilidades adicionales
-
-Esto significa que los archivos de comandos markdown de Claude funcionan a través del cargador de habilidades
-normal de OpenClaw. El markdown de comandos de Cursor funciona a través de la misma ruta.
-
-#### Paquetes de hooks
-
-- las raíces de hooks del paquete funcionan **solo** cuando usan el diseño normal de paquetes de hooks
-  de OpenClaw. Hoy este es principalmente el caso compatible con Codex:
-  - `HOOK.md`
-  - `handler.ts` o `handler.js`
-
-#### MCP para Pi
-
-- los paquetes habilitados pueden contribuir con la configuración del servidor MCP
-- OpenClaw fusiona la configuración MCP del paquete en la configuración efectiva de Pi incrustada como
-  `mcpServers`
-- OpenClaw también expone las herramientas MCP del paquete admitidas durante los turnos del agente Pi incrustado
-  iniciando los servidores MCP stdio admitidos como subprocesos
-- la configuración Pi local del proyecto todavía se aplica después de los valores predeterminados del paquete, por lo que la configuración
-  del espacio de trabajo puede anular las entradas MCP del paquete cuando sea necesario
-
-#### Configuración Pi incrustada
-
-- Claude `settings.json` se importa como configuración Pi incrustada predeterminada cuando el
-  paquete está habilitado
-- OpenClaw sanea las claves de anulación de shell antes de aplicarlas
-
-Claves saneadas:
-
-- `shellPath`
-- `shellCommandPrefix`
+| Característica           | Cómo se asigna                                                                                                                       | Aplica a           |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------ |
+| Contenido de habilidades | Las raíces de habilidades del bundle se cargan como habilidades normales de OpenClaw                                                 | Todos los formatos |
+| Comandos                 | `commands/` y `.cursor/commands/` tratados como raíces de habilidades                                                                | Claude, Cursor     |
+| Paquetes de enlaces      | Diseños `HOOK.md` + `handler.ts` estilo OpenClaw                                                                                     | Codex              |
+| Herramientas MCP         | Configuración MCP del bundle fusionada con la configuración incrustada de Pi; servidores stdio compatibles lanzados como subprocesos | Todos los formatos |
+| Configuración            | `settings.json` de Claude importado como valores predeterminados de Pi incrustados                                                   | Claude             |
 
 ### Detectado pero no ejecutado
 
-Estas superficies se detectan, se muestran en las capacidades del paquete y pueden aparecer en
-la salida de diagnóstico/información, pero OpenClaw aún no las ejecuta:
+Estos se reconocen y muestran en el diagnóstico, pero OpenClaw no los ejecuta:
 
-- Claude `agents`
-- Automatización Claude `hooks.json`
-- Claude `lspServers`
-- Claude `outputStyles`
-- Cursor `.cursor/agents`
-- Cursor `.cursor/hooks.json`
-- Cursor `.cursor/rules`
-- Metadatos en línea/aplicación de Codex más allá del informe de capacidades
+- Claude `agents`, `hooks.json` automatización, `lspServers`, `outputStyles`
+- Cursor `.cursor/agents`, `.cursor/hooks.json`, `.cursor/rules`
+- Metadatos en línea/de aplicación de Codex más allá del informe de capacidades
 
-## Informe de capacidades
+## Formatos de paquetes
 
-`openclaw plugins inspect <id>` muestra las capacidades del paquete desde el registro de
-paquete normalizado.
+<AccordionGroup>
+  <Accordion title="Paquetes de Codex">
+    Marcadores: `.codex-plugin/plugin.json`
 
-Las capacidades compatibles se cargan silenciosamente. Las capacidades no compatibles generan una advertencia como:
+    Contenido opcional: `skills/`, `hooks/`, `.mcp.json`, `.app.json`
 
-```text
-bundle capability detected but not wired into OpenClaw yet: agents
-```
+    Los paquetes de Codex se adaptan mejor a OpenClaw cuando usan raíces de habilidades y directorios de paquetes de enlace estilo OpenClaw (`HOOK.md` + `handler.ts`).
 
-Excepciones actuales:
+  </Accordion>
 
-- Claude `commands` se considera admitido porque se asigna a habilidades
-- Claude `settings` se considera admitido porque se asigna a la configuración de Pi incrustada
-- Cursor `commands` se considera admitido porque se asigna a habilidades
-- el MCP del paquete se considera admitido porque se asigna a la configuración de Pi incrustada
-  y expone herramientas stdio admitidas a Pi incrustado
-- Codex `hooks` se considera admitido solo para diseños de paquetes de enlace de OpenClaw
+  <Accordion title="Paquetes de Claude">
+    Dos modos de detección:
 
-## Diferencias de formato
+    - **Basado en manifiesto:** `.claude-plugin/plugin.json`
+    - **Sin manifiesto:** diseño predeterminado de Claude (`skills/`, `commands/`, `agents/`, `hooks/`, `.mcp.json`, `settings.json`)
 
-Los formatos son similares, pero no idénticos byte por byte. Estas son las diferencias prácticas que importan en OpenClaw.
+    Comportamiento específico de Claude:
 
-### Codex
+    - `commands/` se trata como contenido de habilidad
+    - `settings.json` se importa a la configuración de Pi integrada (las claves de anulación de shell se sanitizan)
+    - `.mcp.json` expone las herramientas stdio compatibles a Pi integrado
+    - `hooks/hooks.json` se detecta pero no se ejecuta
+    - Las rutas de componentes personalizados en el manifiesto son aditivas (extienden los valores predeterminados, no los reemplazan)
 
-Marcadores típicos:
+  </Accordion>
 
-- `.codex-plugin/plugin.json`
-- opcional `skills/`
-- opcional `hooks/`
-- opcional `.mcp.json`
-- opcional `.app.json`
+  <Accordion title="Paquetes de Cursor">
+    Marcadores: `.cursor-plugin/plugin.json`
 
-Los paquetes de Codex se adaptan mejor a OpenClaw cuando utilizan raíces de habilidades (skill roots) y directorios de paquetes de enganches (hook-pack) estilo OpenClaw.
+    Contenido opcional: `skills/`, `.cursor/commands/`, `.cursor/agents/`, `.cursor/rules/`, `.cursor/hooks.json`, `.mcp.json`
 
-### Claude
+    - `.cursor/commands/` se trata como contenido de habilidad
+    - `.cursor/rules/`, `.cursor/agents/` y `.cursor/hooks.json` son solo de detección
 
-OpenClaw admite ambos:
+  </Accordion>
+</AccordionGroup>
 
-- paquetes Claude basados en manifiesto: `.claude-plugin/plugin.json`
-- paquetes de Claude sin manifiesto que utilizan el diseño predeterminado de Claude
+## Precedencia de detección
 
-Marcadores del diseño predeterminado de Claude que OpenClaw reconoce:
+OpenClaw verifica primero el formato de complemento nativo:
 
-- `skills/`
-- `commands/`
-- `agents/`
-- `hooks/hooks.json`
-- `.mcp.json`
-- `.lsp.json`
-- `settings.json`
+1. `openclaw.plugin.json` o `package.json` válido con `openclaw.extensions` — se trata como **complemento nativo**
+2. Marcadores de paquete (`.codex-plugin/`, `.claude-plugin/` o diseño predeterminado de Claude/Cursor) — se trata como **paquete**
 
-Notas específicas de Claude:
+Si un directorio contiene ambos, OpenClaw utiliza la ruta nativa. Esto evita
+que los paquetes de formato dual se instalen parcialmente como paquetes.
 
-- `commands/` se trata como contenido de habilidad
-- `settings.json` se importa a la configuración incrustada de Pi
-- `.mcp.json` y el manifiesto `mcpServers` pueden exponer herramientas stdio compatibles a
-  Pi incrustado
-- `hooks/hooks.json` se detecta, pero no se ejecuta como automatización de Claude
+## Seguridad
 
-### Cursor
+Los paquetes tienen un límite de confianza más estrecho que los complementos nativos:
 
-Marcadores típicos:
+- OpenClaw **no** carga módulos de tiempo de ejecución de paquetes arbitrarios dentro del proceso
+- Las rutas de habilidades y paquetes de ganchos deben permanecer dentro de la raíz del complemento (verificación de límites)
+- Los archivos de configuración se leen con las mismas verificaciones de límites
+- Los servidores MCP stdio admitidos pueden iniciarse como subprocesos
 
-- `.cursor-plugin/plugin.json`
-- opcional `skills/`
-- opcional `.cursor/commands/`
-- opcional `.cursor/agents/`
-- opcional `.cursor/rules/`
-- opcional `.cursor/hooks.json`
-- opcional `.mcp.json`
-
-Notas específicas de Cursor:
-
-- `.cursor/commands/` se trata como contenido de habilidad
-- `.cursor/rules/`, `.cursor/agents/` y `.cursor/hooks.json` son
-  solo detección hoy
-
-## Rutas personalizadas de Claude
-
-Los manifiestos de paquetes de Claude pueden declarar rutas de componentes personalizadas. OpenClaw trata
-esas rutas como **aditivas**, no reemplazando los valores predeterminados.
-
-Claves de ruta personalizadas reconocidas actualmente:
-
-- `skills`
-- `commands`
-- `agents`
-- `hooks`
-- `mcpServers`
-- `lspServers`
-- `outputStyles`
-
-Ejemplos:
-
-- `commands/` predeterminado más el manifiesto `commands: "extra-commands"` =>
-  OpenClaw escanea ambos
-- `skills/` predeterminado más el manifiesto `skills: ["team-skills"]` =>
-  OpenClaw escanea ambos
-
-## Modelo de seguridad
-
-El soporte de paquetes es intencionalmente más limitado que el soporte de complementos nativos.
-
-Comportamiento actual:
-
-- el descubrimiento de paquetes lee archivos dentro de la raíz del complemento con comprobaciones de límites
-- las rutas de habilidades y paquetes de enlaces deben permanecer dentro de la raíz del complemento
-- los archivos de configuración del paquete se leen con las mismas comprobaciones de límites
-- los servidores MCP de paquetes stdio compatibles pueden lanzarse como subprocesos para las llamadas a herramientas Pi integradas
-- OpenClaw no carga módulos de tiempo de ejecución de paquetes arbitrarios en proceso
-
-Esto hace que la compatibilidad con paquetes sea más segura por defecto que los módulos de complementos nativos, pero aún debe tratar los paquetes de terceros como contenido de confianza para las funciones que sí exponen.
-
-## Ejemplos de instalación
-
-```bash
-openclaw plugins install ./my-codex-bundle
-openclaw plugins install ./my-claude-bundle
-openclaw plugins install ./my-cursor-bundle
-openclaw plugins install ./my-bundle.tgz
-openclaw plugins marketplace list <marketplace-name>
-openclaw plugins install <plugin-name>@<marketplace-name>
-openclaw plugins inspect my-bundle
-```
-
-Si el directorio es un complemento/paquete nativo de OpenClaw, la ruta de instalación nativa aún tiene prioridad.
-
-Para los nombres del mercado de Claude, OpenClaw lee el registro local known-marketplace de Claude en `~/.claude/plugins/known_marketplaces.json`. Las entradas del mercado pueden resolver a directorios/archivos compatibles con paquetes o a fuentes de complementos nativos; después de la resolución, las reglas de instalación normales aún se aplican.
+Esto hace que los paquetes sean más seguros por defecto, pero aún debes tratar los
+paquetes de terceros como contenido de confianza para las características que exponen.
 
 ## Solución de problemas
 
-### Se detecta el paquete pero las capacidades no se ejecutan
+<AccordionGroup>
+  <Accordion title="El paquete se detecta pero las capacidades no se ejecutan">
+    Ejecuta `openclaw plugins inspect <id>`. Si una capacidad está listada pero marcada como
+no conectada, ese es un límite del producto — no una instalación rota.
+  </Accordion>
 
-Verifique `openclaw plugins inspect <id>`.
+<Accordion title="Los archivos de comandos de Claude no aparecen">
+  Asegúrate de que el paquete esté habilitado y que los archivos markdown estén dentro de una raíz
+  `commands/` o `skills/` detectada.
+</Accordion>
 
-Si la capacidad está listada pero OpenClaw dice que aún no está conectada, ese es un límite real del producto, no una instalación rota.
+<Accordion title="La configuración de Claude no se aplica">
+  Solo se admiten las configuraciones integradas de Pi de `settings.json`. OpenClaw no trata la
+  configuración del paquete como parches de configuración sin procesar.
+</Accordion>
 
-### Los archivos de comandos de Claude no aparecen
+  <Accordion title="Los hooks de Claude no se ejecutan">
+    `hooks/hooks.json` es solo de detección. Si necesitas hooks ejecutables, usa el
+    diseño de paquetes de hooks de OpenClaw o envía un plugin nativo.
+  </Accordion>
+</AccordionGroup>
 
-Asegúrese de que el paquete esté habilitado y que los archivos markdown estén dentro de una raíz `commands` detectada o una raíz `skills` detectada.
+## Relacionado
 
-### La configuración de Claude no se aplica
-
-La compatibilidad actual se limita a la configuración Pi integrada de `settings.json`. OpenClaw no trata la configuración del paquete como parches de configuración sin procesar de OpenClaw.
-
-### Los enlaces (hooks) de Claude no se ejecutan
-
-`hooks/hooks.json` solo se detecta hoy.
-
-Si necesita enlaces de paquetes ejecutables hoy, use el diseño normal de paquetes de enlaces de OpenClaw a través de una raíz de enlaces de Codex compatible o envíe un complemento nativo de OpenClaw.
+- [Instalar y configurar plugins](/es/tools/plugin)
+- [Construcción de plugins](/es/plugins/building-plugins) — crear un plugin nativo
+- [Manifiesto del plugin](/es/plugins/manifest) — esquema de manifiesto nativo
 
 import es from "/components/footer/es.mdx";
 

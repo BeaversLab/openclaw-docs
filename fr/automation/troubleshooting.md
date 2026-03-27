@@ -107,12 +107,12 @@ Règles rapides :
 - `Config path not found: agents.defaults.userTimezone` signifie que la clé n'est pas définie ; le heartbeat revient au fuseau horaire de l'hôte (ou `activeHours.timezone` si défini).
 - Cron sans `--tz` utilise le fuseau horaire de l'hôte de la passerelle.
 - Le heartbeat `activeHours` utilise la résolution de fuseau horaire configurée (`user`, `local` ou tz IANA explicite).
-- Les horodatages ISO sans fuseau horaire sont traités comme UTC pour les planifications cron `at`.
+- Les planifications Cron `at` traitent les horodatages ISO sans fuseau horaire comme UTC, sauf si vous avez utilisé le CLI `--at "<offset-less-iso>" --tz <iana>`.
 
 Signatures courantes :
 
 - Les tâches s'exécutent à la mauvaise heure horloge après un changement de fuseau horaire de l'hôte.
-- Le heartbeat est toujours ignoré pendant la journée car `activeHours.timezone` est incorrect.
+- Heartbeat est toujours ignoré pendant la journée car `activeHours.timezone` est incorrect.
 
 Connexes :
 

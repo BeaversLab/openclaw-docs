@@ -2,7 +2,7 @@
 summary: "Référence CLI pour `openclaw hooks` (hooks d'agent)"
 read_when:
   - You want to manage agent hooks
-  - You want to install or update hooks
+  - You want to inspect hook availability or enable workspace hooks
 title: "hooks"
 ---
 
@@ -21,7 +21,7 @@ Connexe :
 openclaw hooks list
 ```
 
-Répertorier tous les hooks découverts dans les répertoires de l'espace de travail, gérés et groupés.
+Lister tous les hooks découverts dans les répertoires de l'espace de travail, gérés, extra et groupés.
 
 **Options :**
 
@@ -38,7 +38,7 @@ Ready:
   🚀 boot-md ✓ - Run BOOT.md on gateway startup
   📎 bootstrap-extra-files ✓ - Inject extra workspace bootstrap files during agent bootstrap
   📝 command-logger ✓ - Log all command events to a centralized audit file
-  💾 session-memory ✓ - Save session context to memory when /new command is issued
+  💾 session-memory ✓ - Save session context to memory when /new or /reset command is issued
 ```
 
 **Exemple (verbose) :**
@@ -84,14 +84,14 @@ openclaw hooks info session-memory
 ```
 💾 session-memory ✓ Ready
 
-Save session context to memory when /new command is issued
+Save session context to memory when /new or /reset command is issued
 
 Details:
   Source: openclaw-bundled
   Path: /path/to/openclaw/hooks/bundled/session-memory/HOOK.md
   Handler: /path/to/openclaw/hooks/bundled/session-memory/handler.ts
   Homepage: https://docs.openclaw.ai/automation/hooks#session-memory
-  Events: command:new
+  Events: command:new, command:reset
 
 Requirements:
   Config: ✓ workspace.dir
@@ -127,8 +127,7 @@ openclaw hooks enable <name>
 
 Activer un hook spécifique en l'ajoutant à votre configuration (`~/.openclaw/config.json`).
 
-**Remarque :** Les hooks gérés par des plugins affichent `plugin:<id>` dans `openclaw hooks list` et
-ne peuvent pas être activés/désactivés ici. Activez/désactivez plutôt le plugin.
+**Remarque :** Les hooks de l'espace de travail sont désactivés par défaut jusqu'à ce qu'ils soient activés ici ou dans la configuration. Les hooks gérés par des plugins affichent `plugin:<id>` dans `openclaw hooks list` et ne peuvent pas être activés/désactivés ici. Activez/désactivez plutôt le plugin.
 
 **Arguments :**
 
@@ -152,9 +151,11 @@ openclaw hooks enable session-memory
 - Met à jour `hooks.internal.entries.<name>.enabled = true` dans votre configuration
 - Enregistre la configuration sur le disque
 
+Si le hook provient de `<workspace>/hooks/`, cette étape d'acceptation est requise avant que le Gateway ne puisse le charger.
+
 **Après activation :**
 
-- Redémarrez la passerelle pour que les hooks se rechargent (redémarrage de l'application de la barre de menus sur macOS, ou redémarrez votre processus de passerelle en dev).
+- Redémarrez la passerelle pour que les hooks se rechargent (redémarrage de l'application de la barre de menus sur macOS, ou redémarrez votre processus de passerelle en développement).
 
 ## Désactiver un Hook
 
@@ -166,7 +167,7 @@ Désactivez un hook spécifique en mettant à jour votre configuration.
 
 **Arguments :**
 
-- `<name>` : Nom du hook (ex. : `command-logger`)
+- `<name>` : Nom du hook (ex. `command-logger`)
 
 **Exemple :**
 
@@ -184,22 +185,21 @@ openclaw hooks disable command-logger
 
 - Redémarrez la passerelle pour que les hooks se rechargent
 
-## Installer des Hooks
+## Installer des packs de hooks
 
 ```bash
-openclaw hooks install <path-or-spec>
-openclaw hooks install <npm-spec> --pin
+openclaw plugins install <package>        # ClawHub first, then npm
+openclaw plugins install <package> --pin  # pin version
+openclaw plugins install <path>           # local path
 ```
 
-Installez un pack de hooks à partir d'un dossier/archif local ou npm.
+Installez des packs de hooks via l'installateur unifié de plugins.
 
-Les specs npm sont **uniquement de registre** (nom du package + **version exacte** facultative ou
-**dist-tag**). Les specs Git/URL/fichier et les plages semver sont rejetées. Les installations
-dépendances s'exécutent avec `--ignore-scripts` pour la sécurité.
+`openclaw hooks install` fonctionne toujours comme un alias de compatibilité, mais il affiche un avertissement d'obsolescence et redirige vers `openclaw plugins install`.
 
-Les specs nues et `@latest` restent sur la voie stable. Si npm résout l'un de
-ceux-ci vers une préversion, OpenClaw s'arrête et vous demande d'accepter explicitement avec une
-balise de préversion telle que `@beta`/`@rc` ou une version de préversion exacte.
+Les specs npm sont **uniquement de registre** (nom du package + **version exacte** facultative ou **dist-tag**). Les specs Git/URL/fichier et les plages semver sont rejetées. Les installations de dépendances s'exécutent avec `--ignore-scripts` pour plus de sécurité.
+
+Les specs nues et `@latest` restent sur la voie stable. Si npm résout l'un de ceux-ci vers une préversion, OpenClaw s'arrête et vous demande d'accepter explicitement avec une balise de préversion telle que `@beta`/`@rc` ou une version de préversion exacte.
 
 **Ce qu'il fait :**
 
@@ -209,8 +209,8 @@ balise de préversion telle que `@beta`/`@rc` ou une version de préversion exac
 
 **Options :**
 
-- `-l, --link` : Lier un répertoire local au lieu de copier (l'ajoute à `hooks.internal.load.extraDirs`)
-- `--pin` : Enregistrer les installations npm comme `name@version` résolus exacts dans `hooks.internal.installs`
+- `-l, --link` : Lier un répertoire local au lieu de le copier (l'ajoute à `hooks.internal.load.extraDirs`)
+- `--pin` : Enregistrer les installations npm comme `name@version` résolues exactes dans `hooks.internal.installs`
 
 **Archives prises en charge :** `.zip`, `.tgz`, `.tar.gz`, `.tar`
 
@@ -218,39 +218,43 @@ balise de préversion telle que `@beta`/`@rc` ou une version de préversion exac
 
 ```bash
 # Local directory
-openclaw hooks install ./my-hook-pack
+openclaw plugins install ./my-hook-pack
 
 # Local archive
-openclaw hooks install ./my-hook-pack.zip
+openclaw plugins install ./my-hook-pack.zip
 
 # NPM package
-openclaw hooks install @openclaw/my-hook-pack
+openclaw plugins install @openclaw/my-hook-pack
 
 # Link a local directory without copying
-openclaw hooks install -l ./my-hook-pack
+openclaw plugins install -l ./my-hook-pack
 ```
 
-## Mettre à jour les Hooks
+Les packs de hooks liés sont traités comme des hooks gérés à partir d'un répertoire configuré par l'opérateur, et non comme des hooks d'espace de travail.
+
+## Mettre à jour les packs de hooks
 
 ```bash
-openclaw hooks update <id>
-openclaw hooks update --all
+openclaw plugins update <id>
+openclaw plugins update --all
 ```
 
-Mettre à jour les packs de hooks installés (installations npm uniquement).
+Mettre à jour les packs de hooks basés sur npm suivis via le metteur à jour unifié des plugins.
+
+`openclaw hooks update` fonctionne toujours comme un alias de compatibilité, mais il imprime un avertissement d'obsolescence et redirige vers `openclaw plugins update`.
 
 **Options :**
 
 - `--all` : Mettre à jour tous les packs de hooks suivis
 - `--dry-run` : Afficher ce qui changerait sans écrire
 
-Lorsqu'un hachage d'intégrité stocké existe et que le hachage de l'artefact récupéré change, OpenClaw affiche un avertissement et demande une confirmation avant de continuer. Utilisez `--yes` global pour contourner les invites dans les exécutions CI/non interactives.
+Lorsqu'un hachage d'intégrité stocké existe et que le hachage de l'artefact récupéré change, OpenClaw imprime un avertissement et demande une confirmation avant de continuer. Utilisez le `--yes` global pour contourner les invites lors des exécutions CI/non interactives.
 
-## Hooks groupés
+## Hooks inclus
 
 ### session-memory
 
-Enregistre le contexte de la session dans la mémoire lorsque vous émettez `/new`.
+Enregistre le contexte de la session en mémoire lorsque vous émettez `/new` ou `/reset`.
 
 **Activer :**
 
@@ -264,7 +268,7 @@ openclaw hooks enable session-memory
 
 ### bootstrap-extra-files
 
-Injecte des fichiers d'amorçage supplémentaires (par exemple `AGENTS.md` / `TOOLS.md` local à monorepo) pendant `agent:bootstrap`.
+Injecte des fichiers d'amorçage supplémentaires (par exemple monorepo-local `AGENTS.md` / `TOOLS.md`) pendant `agent:bootstrap`.
 
 **Activer :**
 

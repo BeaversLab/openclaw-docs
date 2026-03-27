@@ -14,9 +14,9 @@ The `web_search` tool searches the web using your configured provider and
 returns results. Results are cached by query for 15 minutes (configurable).
 
 <Info>
-  `web_search` is a lightweight HTTP tool, not browser automation. For
-  JS-heavy sites or logins, use the [Web Browser](/en/tools/browser). For
-  fetching a specific URL, use [Web Fetch](/en/tools/web-fetch).
+  `web_search` is a lightweight HTTP tool, not browser automation. For JS-heavy sites or logins, use
+  the [Web Browser](/en/tools/browser). For fetching a specific URL, use [Web
+  Fetch](/en/tools/web-fetch).
 </Info>
 
 ## Quick start
@@ -47,7 +47,8 @@ returns results. Results are cached by query for 15 minutes (configurable).
 
 <CardGroup cols={2}>
   <Card title="Brave Search" icon="shield" href="/en/tools/brave-search">
-    Structured results with snippets. Supports `llm-context` mode, country/language filters. Free tier available.
+    Structured results with snippets. Supports `llm-context` mode, country/language filters. Free
+    tier available.
   </Card>
   <Card title="DuckDuckGo" icon="bird" href="/en/tools/duckduckgo-search">
     Key-free fallback. No API key needed. Unofficial HTML-based integration.
@@ -56,7 +57,8 @@ returns results. Results are cached by query for 15 minutes (configurable).
     Neural + keyword search with content extraction (highlights, text, summaries).
   </Card>
   <Card title="Firecrawl" icon="flame" href="/en/tools/firecrawl">
-    Structured results. Best paired with `firecrawl_search` and `firecrawl_scrape` for deep extraction.
+    Structured results. Best paired with `firecrawl_search` and `firecrawl_scrape` for deep
+    extraction.
   </Card>
   <Card title="Gemini" icon="sparkles" href="/en/tools/gemini-search">
     AI-synthesized answers with citations via Google Search grounding.
@@ -77,8 +79,8 @@ returns results. Results are cached by query for 15 minutes (configurable).
 
 ### Provider comparison
 
-| Provider                               | Result style               | Filters                                          | API key                                     |
-| -------------------------------------- | -------------------------- | ------------------------------------------------ | ------------------------------------------- |
+| Provider                                  | Result style               | Filters                                          | API key                                     |
+| ----------------------------------------- | -------------------------- | ------------------------------------------------ | ------------------------------------------- |
 | [Brave](/en/tools/brave-search)           | Structured snippets        | Country, language, time, `llm-context` mode      | `BRAVE_API_KEY`                             |
 | [DuckDuckGo](/en/tools/duckduckgo-search) | Structured snippets        | --                                               | None (key-free)                             |
 | [Exa](/en/tools/exa-search)               | Structured + extracted     | Neural/keyword mode, date, content extraction    | `EXA_API_KEY`                               |
@@ -109,9 +111,8 @@ If no keys are found, it falls back to Brave (you will get a missing-key error
 prompting you to configure one).
 
 <Note>
-  All provider key fields support SecretRef objects. In auto-detect mode,
-  OpenClaw resolves only the selected provider key -- non-selected SecretRefs
-  stay inactive.
+  All provider key fields support SecretRef objects. In auto-detect mode, OpenClaw resolves only the
+  selected provider key -- non-selected SecretRefs stay inactive.
 </Note>
 
 ## Config
@@ -189,10 +190,9 @@ examples.
 | `max_tokens_per_page` | Per-page token limit, default 2048 (Perplexity only)  |
 
 <Warning>
-  Not all parameters work with all providers. Brave `llm-context` mode
-  rejects `ui_lang`, `freshness`, `date_after`, and `date_before`.
-  Firecrawl and Tavily only support `query` and `count` through `web_search`
-  -- use their dedicated tools for advanced options.
+  Not all parameters work with all providers. Brave `llm-context` mode rejects `ui_lang`,
+  `freshness`, `date_after`, and `date_before`. Firecrawl and Tavily only support `query` and
+  `count` through `web_search` -- use their dedicated tools for advanced options.
 </Warning>
 
 ## Examples

@@ -23,39 +23,38 @@ El diseño del espacio de trabajo predeterminado utiliza dos capas de memoria:
   - Leer hoy + ayer al inicio de la sesión.
 - `MEMORY.md` (opcional)
   - Memoria a largo plazo curada.
-  - Si ambos `MEMORY.md` y `memory.md` existen en la raíz del espacio de trabajo, OpenClaw solo carga `MEMORY.md`.
-  - `memory.md` en minúsculas solo se usa como alternativa cuando `MEMORY.md` está ausente.
-  - **Cargar solo en la sesión principal privada** (nunca en contextos de grupo).
+  - Si existen tanto `MEMORY.md` como `memory.md` en la raíz del espacio de trabajo, OpenClaw carga ambos (deduplicados por realpath, por lo que los enlaces simbólicos que apuntan al mismo archivo no se inyectan dos veces).
+  - **Cargar solo en la sesión principal y privada** (nunca en contextos grupales).
 
-Estos archivos viven bajo el espacio de trabajo (`agents.defaults.workspace`, por defecto
-`~/.openclaw/workspace`). Consulte [Espacio de trabajo del agente](/es/concepts/agent-workspace) para ver el diseño completo.
+Estos archivos residen en el espacio de trabajo (`agents.defaults.workspace`, predeterminado
+`~/.openclaw/workspace`). Consulte [Agente de espacio de trabajo](/es/concepts/agent-workspace) para ver el diseño completo.
 
 ## Herramientas de memoria
 
 OpenClaw expone dos herramientas orientadas al agente para estos archivos Markdown:
 
 - `memory_search` -- recuperación semántica sobre fragmentos indexados.
-- `memory_get` -- lectura específica de un archivo Markdown/rango de líneas específico.
+- `memory_get` -- lectura específica de un archivo o rango de líneas Markdown específico.
 
-`memory_get` ahora **se degrada con gracia cuando un archivo no existe** (por ejemplo,
+`memory_get` ahora **se degrada con elegancia cuando un archivo no existe** (por ejemplo,
 el registro diario de hoy antes de la primera escritura). Tanto el administrador integrado como el backend QMD
-retornan `{ text: "", path }` en lugar de lanzar `ENOENT`, por lo que los agentes pueden
+devuelven `{ text: "", path }` en lugar de lanzar `ENOENT`, por lo que los agentes pueden
 manejar "aún no se ha registrado nada" y continuar su flujo de trabajo sin envolver la
 llamada a la herramienta en lógica try/catch.
 
 ## Cuándo escribir memoria
 
-- Las decisiones, preferencias y hechos duraderos van a `MEMORY.md`.
+- Las decisiones, preferencias y datos duraderos van a `MEMORY.md`.
 - Las notas del día a día y el contexto en ejecución van a `memory/YYYY-MM-DD.md`.
-- Si alguien dice "recuerda esto", escríbelo (no lo mantengas en la RAM).
-- Esta área sigue evolucionando. Ayuda recordarle al modelo que almacene recuerdos; él sabrá qué hacer.
-- Si quieres que algo quede grabado, **pídele al bot que lo escriba** en la memoria.
+- Si alguien dice "recuerda esto", escríbelo (no lo guardes en la RAM).
+- Esta área sigue evolucionando. Ayuda recordar al modelo que almacene recuerdos; él sabrá qué hacer.
+- Si quieres que algo se quede, **pide al bot que lo escriba** en la memoria.
 
-## Vaciamiento automático de memoria (ping de precompactación)
+## Flujo de memoria automático (pre-compaction ping)
 
-Cuando una sesión está **cerca de la auto compactación**, OpenClaw activa un **turno
-agente silencioso** que le recuerda al modelo que escriba memoria duradera **antes** de que
-el contexto se compacte. Las indicaciones predeterminadas dicen explícitamente que el modelo _puede responder_,
+Cuando una sesión está **cerca de la compactación automática**, OpenClaw activa un **turno
+silencioso y de agente** que recuerda al modelo escribir memoria duradera **antes** de que
+se compacte el contexto. Los avisos predeterminados dicen explícitamente que el modelo _puede responder_,
 pero por lo general `NO_REPLY` es la respuesta correcta para que el usuario nunca vea este turno.
 
 Esto se controla mediante `agents.defaults.compaction.memoryFlush`:
@@ -80,31 +79,31 @@ Esto se controla mediante `agents.defaults.compaction.memoryFlush`:
 
 Detalles:
 
-- **Umbral suave**: el vaciado se activa cuando la estimación de tokens de la sesión supera
+- **Umbral suave**: el flujo se activa cuando la estimación de tokens de la sesión supera
   `contextWindow - reserveTokensFloor - softThresholdTokens`.
-- **Silencioso** de forma predeterminada: las indicaciones incluyen `NO_REPLY` para que no se entregue nada.
+- **Silencioso** de forma predeterminada: los avisos incluyen `NO_REPLY` para que no se entregue nada.
 - **Dos avisos**: un aviso de usuario más un aviso del sistema añaden el recordatorio.
-- **Una limpieza por ciclo de compactación** (rastreado en `sessions.json`).
-- **El espacio de trabajo debe ser editable**: si la sesión se ejecuta en un entorno protegido (sandboxed) con
-  `workspaceAccess: "ro"` o `"none"`, la limpieza se omite.
+- **Un flush por ciclo de compactación** (rastreado en `sessions.json`).
+- **El espacio de trabajo debe ser escribible**: si la sesión se ejecuta en sandbox con
+  `workspaceAccess: "ro"` o `"none"`, el flush se omite.
 
 Para el ciclo de vida completo de la compactación, consulte
 [Gestión de sesiones + compactación](/es/reference/session-management-compaction).
 
 ## Búsqueda de memoria vectorial
 
-OpenClaw puede crear un pequeño índice vectorial sobre `MEMORY.md` y `memory/*.md` para que
+OpenClaw puede construir un índice vectorial pequeño sobre `MEMORY.md` y `memory/*.md` para que
 las consultas semánticas puedan encontrar notas relacionadas incluso cuando la redacción difiera. La búsqueda híbrida
 (BM25 + vector) está disponible para combinar la coincidencia semántica con búsquedas exactas de
 palabras clave.
 
-La búsqueda en la memoria admite múltiples proveedores de incrustaciones (embeddings) (OpenAI, Gemini, Voyage,
+La búsqueda de memoria admite múltiples proveedores de incrustación (OpenAI, Gemini, Voyage,
 Mistral, Ollama y modelos GGUF locales), un backend opcional de sidecar QMD para
-recuperación avanzada, y funciones de posprocesamiento como la reordenación de diversidad MMR
+recuperación avanzada, y funciones de postprocesamiento como la reordenación de diversidad MMR
 y el decaimiento temporal.
 
-Para la referencia completa de configuración, incluida la configuración del proveedor de incrustaciones, el backend
-QMD, el ajuste de la búsqueda híbrida, la memoria multimodal y todos los parámetros de configuración, consulte
+Para la referencia completa de configuración, incluida la configuración del proveedor de incrustación, el backend
+QMD, el ajuste de la búsqueda híbrida, la memoria multimodal y todos los controles de configuración, consulte
 [Referencia de configuración de memoria](/es/reference/memory-config).
 
 import es from "/components/footer/es.mdx";

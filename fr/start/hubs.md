@@ -164,9 +164,9 @@ Utilisez ces hubs pour découvrir chaque page, y compris les analyses approfondi
 ## Extensions + plugins
 
 - [Plugins overview](/fr/tools/plugin)
-- [Building extensions](/fr/plugins/building-extensions)
+- [Création de plugins](/fr/plugins/building-plugins)
 - [Plugin manifest](/fr/plugins/manifest)
-- [Agent tools](/fr/plugins/agent-tools)
+- [Outils d'agent](/fr/plugins/building-plugins#registering-agent-tools)
 - [Plugins groupés](/fr/plugins/bundles)
 - [Plugins communautaires](/fr/plugins/community)
 - [Livre de recettes des fonctionnalités](/fr/tools/capability-cookbook)

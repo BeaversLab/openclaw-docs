@@ -74,7 +74,7 @@ Si ve registros como:
 
 Ejemplo (permitir a cualquier persona en `#tuirc-dev` hablar con el bot):
 
-```json55
+```json5
 {
   channels: {
     irc: {
@@ -95,7 +95,7 @@ Eso significa que puedes ver registros como `drop channel … (missing-mention)`
 
 Para hacer que el bot responda en un canal IRC **sin necesidad de una mención**, desactiva el filtrado por menciones para ese canal:
 
-```json55
+```json5
 {
   channels: {
     irc: {
@@ -113,7 +113,7 @@ Para hacer que el bot responda en un canal IRC **sin necesidad de una mención**
 
 O para permitir **todos** los canales IRC (sin lista de permitidos por canal) y seguir respondiendo sin menciones:
 
-```json55
+```json5
 {
   channels: {
     irc: {
@@ -133,7 +133,7 @@ Para reducir el riesgo, restringe las herramientas para ese canal.
 
 ### Mismas herramientas para todos en el canal
 
-```json55
+```json5
 {
   channels: {
     irc: {
@@ -154,7 +154,7 @@ Para reducir el riesgo, restringe las herramientas para ese canal.
 
 Usa `toolsBySender` para aplicar una política más estricta a `"*"` y una más relajada a tu apodo:
 
-```json55
+```json5
 {
   channels: {
     irc: {

@@ -49,7 +49,7 @@ OpenClaw es una **puerta de enlace autoalojada** que conecta tus aplicaciones de
 - **Nativo para agentes**: diseñado para agentes de programación con uso de herramientas, sesiones, memoria y enrutamiento multi-agente
 - **Código abierto**: con licencia MIT, impulsado por la comunidad
 
-**¿Qué necesitas?** Node 24 (recomendado) o Node 22 LTS (`22.16+`) para compatibilidad, una clave de API de tu proveedor elegido y 5 minutos. Para la mejor calidad y seguridad, utiliza el modelo más potente de última generación disponible.
+**¿Qué necesitas?** Node 24 (recomendado), o Node 22 LTS (`22.14+`) para compatibilidad, una clave de API de tu proveedor elegido y 5 minutos. Para obtener la mejor calidad y seguridad, utiliza el modelo más potente de última generación disponible.
 
 ## Cómo funciona
 

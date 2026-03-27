@@ -16,7 +16,7 @@ actif (ou se connecte à un Gateway local existant si un est déjà en cours d'e
 
 ## Installer le CLI (requis pour le mode local)
 
-Node 24 est le runtime par défaut sur le Mac. Node 22 LTS, actuellement `22.16+`, fonctionne toujours pour la compatibilité. Installez ensuite `openclaw` globalement :
+Node 24 est l'exécution par défaut sur le Mac. Node 22 LTS, actuellement `22.14+`, fonctionne toujours pour la compatibilité. Installez ensuite `openclaw` globalement :
 
 ```bash
 npm install -g openclaw@<version>

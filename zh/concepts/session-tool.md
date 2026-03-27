@@ -162,49 +162,58 @@ WebSocket：
 
 ## sessions_spawn
 
-在隔离的会话中生成子代理运行，并将结果公告回请求者的聊天渠道。
+生成一个隔离的委托会话。
+
+- 默认运行时：OpenClaw 子代理 (`runtime: "subagent"`)。
+- ACP 挽具会话使用 `runtime: "acp"` 并遵循 ACP 特定的定位/策略规则。
+- 除非另有说明，本节重点介绍子代理行为。有关 ACP 特定的行为，请参阅 [ACP Agents](/zh/tools/acp-agents)。
 
 参数：
 
-- `task`（必需）
-- `label?`（可选；用于日志/UI）
-- `agentId?`（可选；如果允许，在另一个代理 ID 下生成）
-- `model?`（可选；覆盖子代理模型；无效值将报错）
-- `thinking?`（可选；覆盖子代理运行的思考级别）
-- `runTimeoutSeconds?`（设置时默认为 `agents.defaults.subagents.runTimeoutSeconds`，否则为 `0`；设置时，在 N 秒后中止子代理运行）
-- `thread?`（默认为 false；当渠道/插件支持时，为此生成的请求请求线程绑定路由）
-- `mode?`（`run|session`；默认为 `run`，但当 `thread=true` 时默认为 `session`；`mode="session"` 需要 `thread=true`）
-- `cleanup?`（`delete|keep`，默认 `keep`）
-- `sandbox?`（`inherit|require`，默认 `inherit`；`require` 拒绝生成，除非目标子运行时是沙箱隔离的）
-- `attachments?`（可选的行内文件数组；仅限子代理运行时，ACP 拒绝）。每个条目：`{ name, content, encoding?: "utf8" | "base64", mimeType? }`。文件被具体化到子工作空间的 `.openclaw/attachments/<uuid>/`。返回带有每个文件 sha256 的回执。
+- `task` (必需)
+- `runtime?` (`subagent|acp`; 默认为 `subagent`)
+- `label?` (可选; 用于日志/UI)
+- `agentId?` (可选)
+  - `runtime: "subagent"`: 如果 `subagents.allowAgents` 允许，则以另一个 OpenClaw 代理 ID 为目标
+  - `runtime: "acp"`: 如果 `acp.allowedAgents` 允许，则以一个 ACP 挽具 ID 为目标
+- `model?` (可选; 覆盖子代理模型; 无效值将报错)
+- `thinking?` (可选; 覆盖子代理运行的思考层级)
+- `runTimeoutSeconds?` (设置时默认为 `agents.defaults.subagents.runTimeoutSeconds`，否则为 `0`; 设置时，在 N 秒后中止子代理运行)
+- `thread?` (默认为 false; 当渠道/插件支持时，请求为此生成使用线程绑定路由)
+- `mode?` (`run|session`; 默认为 `run`，但当 `thread=true` 时默认为 `session`; `mode="session"` 需要 `thread=true`)
+- `cleanup?` (`delete|keep`, 默认 `keep`)
+- `sandbox?` (`inherit|require`, 默认 `inherit`; 除非目标子运行时是沙箱隔离的，否则 `require` 拒绝生成)
+- `attachments?`（可选的内联文件数组；仅限子代理运行时，ACP 拒绝）。每个条目：`{ name, content, encoding?: "utf8" | "base64", mimeType? }`。文件被具体化到子工作空间的 `.openclaw/attachments/<uuid>/`。返回包含每个文件 sha256 的收据。
 - `attachAs?`（可选；`{ mountPath? }` 提示保留用于未来的挂载实现）
 
 允许列表：
 
-- `agents.list[].subagents.allowAgents`：允许通过 `agentId` 的代理 id 列表（`["*"]` 表示允许任何）。默认：仅请求者代理。
-- 沙箱继承保护：如果请求者会话是沙箱隔离的，`sessions_spawn` 将拒绝以非沙箱方式运行的目标。
+- `runtime: "subagent"`：`agents.list[].subagents.allowAgents` 控制允许哪些 OpenClaw 代理 ID 通过 `agentId`（`["*"]` 表示允许任意）。默认：仅请求者代理。
+- `runtime: "acp"`：`acp.allowedAgents` 控制允许哪些 ACP 驱动 ID。这是与 `subagents.allowAgents` 分开的策略。
+- 沙箱继承守卫：如果请求者会话是沙箱隔离的，`sessions_spawn` 将拒绝会以非沙箱方式运行的目标。
 
 设备发现：
 
-- 使用 `agents_list` 来发现哪些代理 id 允许用于 `sessions_spawn`。
+- 使用 `agents_list` 来发现 `runtime: "subagent"` 的允许目标。
+- 对于 `runtime: "acp"`，使用已配置的 ACP 驱动 ID 和 `acp.allowedAgents`；`agents_list` 不会列出 ACP 驱动目标。
 
 行为：
 
 - 使用 `deliver: false` 启动一个新的 `agent:<agentId>:subagent:<uuid>` 会话。
-- 子代理默认使用完整工具集**减去会话工具**（可通过 `tools.subagents.tools` 配置）。
-- 不允许子代理调用 `sessions_spawn`（不允许子代理 → 子代理生成）。
+- 子代理默认使用完整的工具集 **减去** 会话工具（可通过 `tools.subagents.tools` 配置）。
+- 子代理不允许调用 `sessions_spawn`（禁止子代理 → 子代理衍生）。
 - 始终非阻塞：立即返回 `{ status: "accepted", runId, childSessionKey }`。
 - 使用 `thread=true` 时，渠道插件可以将传递/路由绑定到线程目标（Discord 支持由 `session.threadBindings.*` 和 `channels.discord.threadBindings.*` 控制）。
-- 完成后，OpenClaw 运行一个子代理 **announce step** 并将结果发布到请求者聊天频道。
-  - 如果助手最终回复为空，则子代理历史记录中的最新 `toolResult` 将作为 `Result` 包含在内。
-- 在 announce step 期间准确回复 `ANNOUNCE_SKIP` 以保持静默。
+- 完成后，OpenClaw 运行子代理 **公告步骤**，并将结果发布到请求者聊天渠道。
+  - 如果助手最终回复为空，子代理历史记录中的最新 `toolResult` 将作为 `Result` 包含在内。
+- 在 announce 步骤中准确回复 `ANNOUNCE_SKIP` 以保持静默。
 - Announce 回复被规范化为 `Status`/`Result`/`Notes`；`Status` 来自运行时结果（而非模型文本）。
 - 子代理会话在 `agents.defaults.subagents.archiveAfterMinutes` 后自动归档（默认：60）。
 - Announce 回复包含统计行（运行时、令牌、sessionKey/sessionId、转录路径和可选成本）。
 
 ## 沙箱会话可见性
 
-会话工具可以设置作用域以减少跨会话访问。
+会话工具可以限定范围以减少跨会话访问。
 
 默认行为：
 
@@ -236,10 +245,10 @@ WebSocket：
 说明：
 
 - `self`：仅当前会话密钥。
-- `tree`：当前会话 + 由当前会话生成的会话。
+- `tree`：当前会话 + 当前会话生成的会话。
 - `agent`：属于当前代理 ID 的任何会话。
-- `all`：任何会话（跨代理访问仍需要 `tools.agentToAgent`）。
-- 当会话被沙箱隔离且 `sessionToolsVisibility="spawned"` 时，即使您设置了 `tools.sessions.visibility="all"`，OpenClaw 也会将可见性限制为 `tree`。
+- `all`：任何会话（跨代理访问仍需 `tools.agentToAgent`）。
+- 当会话被沙箱隔离且 `sessionToolsVisibility="spawned"` 时，OpenClaw 会将可见性限制为 `tree`，即使您设置了 `tools.sessions.visibility="all"`。
 
 import zh from "/components/footer/zh.mdx";
 

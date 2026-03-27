@@ -12,7 +12,8 @@ title: "Ansible"
 Deploy OpenClaw to production servers with **[openclaw-ansible](https://github.com/openclaw/openclaw-ansible)** -- an automated installer with security-first architecture.
 
 <Info>
-The [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) repo is the source of truth for Ansible deployment. This page is a quick overview.
+  The [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) repo is the source of truth
+  for Ansible deployment. This page is a quick overview.
 </Info>
 
 ## Prerequisites
@@ -53,35 +54,24 @@ The Ansible playbook installs and configures:
 6. **Systemd service** -- auto-start with security hardening
 
 <Note>
-The gateway runs directly on the host (not in Docker), but agent sandboxes use Docker for isolation. See [Sandboxing](/en/gateway/sandboxing) for details.
+  The gateway runs directly on the host (not in Docker), but agent sandboxes use Docker for
+  isolation. See [Sandboxing](/en/gateway/sandboxing) for details.
 </Note>
 
 ## Post-Install Setup
 
 <Steps>
-  <Step title="Switch to the openclaw user">
-    ```bash
-    sudo -i -u openclaw
-    ```
-  </Step>
+  <Step title="Switch to the openclaw user">```bash sudo -i -u openclaw ```</Step>
   <Step title="Run the onboarding wizard">
     The post-install script guides you through configuring OpenClaw settings.
   </Step>
   <Step title="Connect messaging providers">
-    Log in to WhatsApp, Telegram, Discord, or Signal:
-    ```bash
-    openclaw channels login
-    ```
+    Log in to WhatsApp, Telegram, Discord, or Signal: ```bash openclaw channels login ```
   </Step>
   <Step title="Verify the installation">
-    ```bash
-    sudo systemctl status openclaw
-    sudo journalctl -u openclaw -f
-    ```
+    ```bash sudo systemctl status openclaw sudo journalctl -u openclaw -f ```
   </Step>
-  <Step title="Connect to Tailscale">
-    Join your VPN mesh for secure remote access.
-  </Step>
+  <Step title="Connect to Tailscale">Join your VPN mesh for secure remote access.</Step>
 </Steps>
 
 ### Quick Commands

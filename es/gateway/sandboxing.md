@@ -397,10 +397,10 @@ Valores predeterminados de seguridad:
 Las instalaciones de Docker y el gateway en contenedor se encuentran aquí:
 [Docker](/es/install/docker)
 
-Para los despliegues del gateway de Docker, `scripts/docker/setup.sh` puede arrancar la configuración del sandbox.
-Establece `OPENCLAW_SANDBOX=1` (o `true`/`yes`/`on`) para habilitar esa ruta. Puedes
-sobrescribir la ubicación del socket con `OPENCLAW_DOCKER_SOCKET`. Configuración completa y referencia de
-variables de entorno: [Docker](/es/install/docker#enable-agent-sandbox-for-docker-gateway-opt-in).
+Para los despliegues de puerta de enlace de Docker, `scripts/docker/setup.sh` puede iniciar la configuración del sandbox.
+Establezca `OPENCLAW_SANDBOX=1` (o `true`/`yes`/`on`) para habilitar esa ruta. Puede
+anular la ubicación del socket con `OPENCLAW_DOCKER_SOCKET`. Consulta la configuración completa y las referencias de entorno
+en: [Docker](/es/install/docker#enable-agent-sandbox-for-docker-gateway).
 
 ## setupCommand (configuración única del contenedor)
 
@@ -461,7 +461,7 @@ Vea [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para cono
 ## Documentación relacionada
 
 - [OpenShell](/es/gateway/openshell) -- configuración del backend de sandbox administrado, modos de espacio de trabajo y referencia de configuración
-- [Configuración de Sandbox](/es/gateway/configuration-reference#agents-defaults-sandbox)
+- [Configuración del sandbox](/es/gateway/configuration-reference#agentsdefaultssandbox)
 - [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) -- depurando "¿por qué está esto bloqueado?"
 - [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) -- invalidaciones por agente y precedencia
 - [Seguridad](/es/gateway/security)

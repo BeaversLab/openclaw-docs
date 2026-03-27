@@ -99,7 +99,7 @@ Notes :
 - En mode local, l'hôte du nœud ignore intentionnellement `gateway.remote.token` / `gateway.remote.password`.
 - En mode distant, `gateway.remote.token` / `gateway.remote.password` sont éligibles selon les règles de priorité distantes.
 - Si des SecretRefs `gateway.auth.*` locaux actifs sont configurés mais non résolus, l'authentification de l'hôte de nœud échoue de manière sécurisée (fails closed).
-- Les anciennes variables d'environnement `CLAWDBOT_GATEWAY_*` sont intentionnellement ignorées lors de la résolution de l'authentification de l'hôte de nœud.
+- La résolution de l'authentification de l'hôte de nœud honor uniquement les env vars `OPENCLAW_GATEWAY_*`.
 
 ### Démarrer un hôte de nœud (service)
 

@@ -17,16 +17,36 @@ tuning that applies everywhere.
 ## Pick a provider
 
 <CardGroup cols={2}>
-  <Card title="Railway" href="/en/install/railway">One-click, browser setup</Card>
-  <Card title="Northflank" href="/en/install/northflank">One-click, browser setup</Card>
-  <Card title="DigitalOcean" href="/en/install/digitalocean">Simple paid VPS</Card>
-  <Card title="Oracle Cloud" href="/en/install/oracle">Always Free ARM tier</Card>
-  <Card title="Fly.io" href="/en/install/fly">Fly Machines</Card>
-  <Card title="Hetzner" href="/en/install/hetzner">Docker on Hetzner VPS</Card>
-  <Card title="GCP" href="/en/install/gcp">Compute Engine</Card>
-  <Card title="Azure" href="/en/install/azure">Linux VM</Card>
-  <Card title="exe.dev" href="/en/install/exe-dev">VM with HTTPS proxy</Card>
-  <Card title="Raspberry Pi" href="/en/install/raspberry-pi">ARM self-hosted</Card>
+  <Card title="Railway" href="/en/install/railway">
+    One-click, browser setup
+  </Card>
+  <Card title="Northflank" href="/en/install/northflank">
+    One-click, browser setup
+  </Card>
+  <Card title="DigitalOcean" href="/en/install/digitalocean">
+    Simple paid VPS
+  </Card>
+  <Card title="Oracle Cloud" href="/en/install/oracle">
+    Always Free ARM tier
+  </Card>
+  <Card title="Fly.io" href="/en/install/fly">
+    Fly Machines
+  </Card>
+  <Card title="Hetzner" href="/en/install/hetzner">
+    Docker on Hetzner VPS
+  </Card>
+  <Card title="GCP" href="/en/install/gcp">
+    Compute Engine
+  </Card>
+  <Card title="Azure" href="/en/install/azure">
+    Linux VM
+  </Card>
+  <Card title="exe.dev" href="/en/install/exe-dev">
+    VM with HTTPS proxy
+  </Card>
+  <Card title="Raspberry Pi" href="/en/install/raspberry-pi">
+    ARM self-hosted
+  </Card>
 </CardGroup>
 
 **AWS (EC2 / Lightsail / free tier)** also works well.

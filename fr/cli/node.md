@@ -31,6 +31,8 @@ Les hôtes de nœud annoncent automatiquement un proxy de navigateur si `browser
 désactivé sur le nœud. Cela permet à l'agent d'utiliser l'automatisation du navigateur sur ce nœud
 sans configuration supplémentaire.
 
+Par défaut, le proxy expose la surface de profil de navigateur normale du nœud. Si vous définissez `nodeHost.browserProxy.allowProfiles`, le proxy devient restrictif : le ciblage de profil non autorisé est rejeté, et les routes de création/suppression de profil persistant sont bloquées via le proxy.
+
 Désactivez-le sur le nœud si nécessaire :
 
 ```json5
@@ -43,7 +45,7 @@ Désactivez-le sur le nœud si nécessaire :
 }
 ```
 
-## Exécuter (premier plan)
+## Exécution (premier plan)
 
 ```bash
 openclaw node run --host <gateway-host> --port 18789
@@ -55,23 +57,23 @@ Options :
 - `--port <port>` : Port WebSocket Gateway (par défaut : `18789`)
 - `--tls` : Utiliser TLS pour la connexion à la passerelle
 - `--tls-fingerprint <sha256>` : Empreinte du certificat TLS attendue (sha256)
-- `--node-id <id>` : Remplacer l'ID du nœud (efface le jeton d'appariement)
+- `--node-id <id>` : Remplacer l'identifiant du nœud (efface le jeton d'appairage)
 - `--display-name <name>` : Remplacer le nom d'affichage du nœud
 
 ## Authentification Gateway pour l'hôte de nœud
 
-`openclaw node run` et `openclaw node install` résolvent l'authentification de la passerelle à partir de la configuration/env (pas de drapeaux `--token`/`--password` sur les commandes de nœud) :
+`openclaw node run` et `openclaw node install` résolvent l'authentification de la passerelle à partir de la configuration/de l'environnement (pas de drapeaux `--token`/`--password` sur les commandes de nœud) :
 
 - `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD` sont vérifiés en premier.
 - Ensuite, repli sur la configuration locale : `gateway.auth.token` / `gateway.auth.password`.
 - En mode local, l'hôte de nœud n'hérite pas intentionnellement de `gateway.remote.token` / `gateway.remote.password`.
-- Si `gateway.auth.token` / `gateway.auth.password` est explicitement configuré via SecretRef et non résolu, la résolution de l'authentification du nœud échoue fermement (pas de masquage de repli distant).
+- Si `gateway.auth.token` / `gateway.auth.password` est explicitement configuré via SecretRef et non résolu, la résolution de l'authentification du nœud échoue fermée (pas de masquage de repli distant).
 - Dans `gateway.mode=remote`, les champs de client distant (`gateway.remote.token` / `gateway.remote.password`) sont également éligibles selon les règles de priorité distantes.
-- Les `CLAWDBOT_GATEWAY_*` env vars hérités sont ignorés pour la résolution de l'authentification de l'hôte de nœud.
+- La résolution de l'authentification de l'hôte de nœud ne prend en compte que les `OPENCLAW_GATEWAY_*` env vars.
 
 ## Service (arrière-plan)
 
-Installez un hôte de nœud sans interface utilisateur (headless) en tant que service utilisateur.
+Installer un hôte de nœud sans interface graphique en tant que service utilisateur.
 
 ```bash
 openclaw node install --host <gateway-host> --port 18789
@@ -83,10 +85,10 @@ Options :
 - `--port <port>` : Port WebSocket Gateway (par défaut : `18789`)
 - `--tls` : Utiliser TLS pour la connexion à la passerelle
 - `--tls-fingerprint <sha256>` : Empreinte du certificat TLS attendue (sha256)
-- `--node-id <id>` : Remplacer l'ID du nœud (efface le jeton d'appairage)
+- `--node-id <id>` : Remplacer l'ID du nœud (efface le jeton d'appariement)
 - `--display-name <name>` : Remplacer le nom d'affichage du nœud
 - `--runtime <runtime>` : Runtime du service (`node` ou `bun`)
-- `--force` : Réinstaller/écraser s'il est déjà installé
+- `--force` : Réinstaller/écraser si déjà installé
 
 Gérer le service :
 
@@ -103,7 +105,7 @@ Les commandes de service acceptent `--json` pour une sortie lisible par machine.
 
 ## Appairage
 
-La première connexion crée une demande d'appairage d'appareil en attente (`role: node`) sur le Gateway.
+La première connexion crée une demande d'appareil en attente (`role: node`) sur le Gateway.
 Approuvez-la via :
 
 ```bash
@@ -111,16 +113,16 @@ openclaw devices list
 openclaw devices approve <requestId>
 ```
 
-Si le nœud réessaie l'appariement avec des détails d'authentification modifiés (rôle/portées/clé publique),
-la demande en attente précédente est remplacée et un nouveau `requestId` est créé.
+Si le nœud réessaie l'appairage avec des détails d'authentification modifiés (rôle/portées/clé publique),
+l'ancienne demande en attente est remplacée et un nouveau `requestId` est créé.
 Exécutez `openclaw devices list` à nouveau avant l'approbation.
 
-L'hôte du nœud stocke son identifiant de nœud, son jeton, son nom d'affichage et les informations de connexion à la passerelle dans
+L'hôte de nœud stocke son identifiant de nœud, son jeton, son nom d'affichage et les informations de connexion à la passerelle dans
 `~/.openclaw/node.json`.
 
 ## Approbations d'exécution
 
-`system.run` est soumis à des approbations d'exécution locales :
+`system.run` est limité par des approbations d'exécution locales :
 
 - `~/.openclaw/exec-approvals.json`
 - [Approbations d'exécution](/fr/tools/exec-approvals)

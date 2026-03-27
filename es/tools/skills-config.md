@@ -42,6 +42,8 @@ Para la generación/edición de imágenes integrada, se prefiere `agents.default
 más la herramienta central `image_generate`. `skills.entries.*` es solo para flujos de trabajo
 de habilidades personalizadas o de terceros.
 
+Si selecciona un proveedor/modelo de imagen específico, también configure la clave de autenticación/API de ese proveedor. Ejemplos típicos: `GEMINI_API_KEY` o `GOOGLE_API_KEY` para `google/*`, `OPENAI_API_KEY` para `openai/*` y `FAL_KEY` para `fal/*`.
+
 Ejemplos:
 
 - Configuración nativa estilo Nano Banana: `agents.defaults.imageGenerationModel.primary: "google/gemini-3-pro-image-preview"`
@@ -49,12 +51,11 @@ Ejemplos:
 
 ## Campos
 
-- `allowBundled`: lista de permitidos opcional solo para habilidades **incluidas**. Cuando se establece, solo
-  las habilidades incluidas en la lista son elegibles (las habilidades gestionadas/en el espacio de trabajo no se ven afectadas).
+- `allowBundled`: lista de permitidos opcional solo para habilidades **incluidas** (bundled). Cuando se establece, solo las habilidades incluidas en la lista son elegibles (las habilidades administradas/del espacio de trabajo no se ven afectadas).
 - `load.extraDirs`: directorios de habilidades adicionales para escanear (menor prioridad).
-- `load.watch`: vigila las carpetas de habilidades y actualiza la instantánea de habilidades (predeterminado: true).
-- `load.watchDebounceMs`: retardo para los eventos del observador de habilidades en milisegundos (predeterminado: 250).
-- `install.preferBrew`: preferir los instaladores de brew cuando estén disponibles (predeterminado: true).
+- `load.watch`: vigilar las carpetas de habilidades y actualizar la instantánea de habilidades (predeterminado: true).
+- `load.watchDebounceMs`: tiempo de espera para los eventos del observador de habilidades en milisegundos (predeterminado: 250).
+- `install.preferBrew`: preferir los instaladores brew cuando estén disponibles (predeterminado: true).
 - `install.nodeManager`: preferencia del instalador de node (`npm` | `pnpm` | `yarn` | `bun`, predeterminado: npm).
   Esto solo afecta las **instalaciones de habilidades**; el tiempo de ejecución de Gateway aún debe ser Node
   (no se recomienda Bun para WhatsApp/Telegram).
@@ -69,21 +70,19 @@ Campos por habilidad:
 
 ## Notas
 
-- Las claves bajo `entries` se asignan al nombre de la habilidad de forma predeterminada. Si una habilidad define
-  `metadata.openclaw.skillKey`, use esa clave en su lugar.
+- Las claves bajo `entries` se asignan al nombre de la habilidad de manera predeterminada. Si una habilidad define `metadata.openclaw.skillKey`, use esa clave en su lugar.
 - Los cambios en las habilidades se detectan en el siguiente turno del agente cuando el observador está habilitado.
 
-### Habilidades en entorno restringido + variables de entorno
+### Habilidades en entorno limitado + variables de entorno
 
-Cuando una sesión está **en entorno restringido**, los procesos de las habilidades se ejecutan dentro de Docker. El entorno restringido
-**no** hereda el `process.env` del host.
+Cuando una sesión está **sandboxed**, los procesos de las habilidades se ejecutan dentro de Docker. El sandbox **no** hereda el `process.env` del host.
 
-Use una de:
+Usa uno de:
 
 - `agents.defaults.sandbox.docker.env` (o `agents.list[].sandbox.docker.env` por agente)
-- incorpore el entorno en su imagen de sandbox personalizada
+- incorporar el env en tu imagen sandbox personalizada
 
-Las variables globales `env` y `skills.entries.<skill>.env/apiKey` se aplican solo a ejecuciones en el **host**.
+El `env` global y el `skills.entries.<skill>.env/apiKey` solo se aplican a las ejecuciones en el **host**.
 
 import es from "/components/footer/es.mdx";
 

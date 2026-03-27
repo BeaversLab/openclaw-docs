@@ -181,56 +181,53 @@ El Gateway trata estos como **reclamaciones** y hace cumplir las listas de permi
   - `source`: `core` o `plugin`
   - `pluginId`: propietario del complemento cuando `source="plugin"`
   - `optional`: si una herramienta de complemento es opcional
+- Los operadores pueden llamar a `tools.effective` (`operator.read`) para obtener el inventario de herramientas efectivo en tiempo de ejecución para una sesión.
+  - Se requiere `sessionKey`.
+  - El gateway deriva el contexto de tiempo de ejecución confiable de la sesión del lado del servidor en lugar de aceptar el contexto de autenticación o entrega proporcionado por el llamador.
+  - La respuesta está limitada a la sesión y refleja lo que la conversación activa puede usar ahora mismo, incluyendo herramientas principales, de complementos y de canal.
 
 ## Aprobaciones de ejecución
 
 - Cuando una solicitud de ejecución necesita aprobación, el gateway transmite `exec.approval.requested`.
-- Los clientes operador resuelven llamando a `exec.approval.resolve` (requiere el alcance `operator.approvals`).
-- Para `host=node`, `exec.approval.request` debe incluir `systemRunPlan` (metadatos canónicos de `argv`/`cwd`/`rawCommand`/sesión). Las solicitudes que no incluyen `systemRunPlan` son rechazadas.
+- Los clientes del operador resuelven llamando a `exec.approval.resolve` (requiere el alcance `operator.approvals`).
+- Para `host=node`, `exec.approval.request` debe incluir `systemRunPlan` (metadatos canónicos de `argv`/`cwd`/`rawCommand`/session). Las solicitudes que carecen de `systemRunPlan` son rechazadas.
 
 ## Versionado
 
-- `PROTOCOL_VERSION` vive en `src/gateway/protocol/schema.ts`.
+- `PROTOCOL_VERSION` reside en `src/gateway/protocol/schema.ts`.
 - Los clientes envían `minProtocol` + `maxProtocol`; el servidor rechaza las discordancias.
-- Los esquemas y modelos se generan a partir de definiciones TypeBox:
+- Los esquemas y modelos se generan a partir de definiciones de TypeBox:
   - `pnpm protocol:gen`
   - `pnpm protocol:gen:swift`
   - `pnpm protocol:check`
 
 ## Autenticación
 
-- Si `OPENCLAW_GATEWAY_TOKEN` (o `--token`) está establecido, `connect.params.auth.token`
-  debe coincidir o el socket se cierra.
-- Después del emparejamiento, el Gateway emite un **token de dispositivo** con alcance al rol
-  - alcances de la conexión. Se devuelve en `hello-ok.auth.deviceToken` y debe ser
-    persistido por el cliente para futuras conexiones.
-- Los tokens de dispositivo se pueden rotar/revocar mediante `device.token.rotate` y
-  `device.token.revoke` (requiere el alcance `operator.pairing`).
+- Si `OPENCLAW_GATEWAY_TOKEN` (o `--token`) está configurado, `connect.params.auth.token` debe coincidir o el socket se cerrará.
+- Después del emparejamiento, el Gateway emite un **token de dispositivo** con alcance al rol + alcances de la conexión. Se devuelve en `hello-ok.auth.deviceToken` y el cliente debería conservarlo para futuras conexiones.
+- Los tokens de dispositivo pueden ser rotados/revocados a través de `device.token.rotate` y `device.token.revoke` (requiere el alcance `operator.pairing`).
 - Los fallos de autenticación incluyen `error.details.code` más sugerencias de recuperación:
   - `error.details.canRetryWithDeviceToken` (booleano)
   - `error.details.recommendedNextStep` (`retry_with_device_token`, `update_auth_configuration`, `update_auth_credentials`, `wait_then_retry`, `review_auth_configuration`)
 - Comportamiento del cliente para `AUTH_TOKEN_MISMATCH`:
   - Los clientes de confianza pueden intentar un reintento limitado con un token por dispositivo en caché.
-  - Si ese reintento falla, los clientes deben detener los bucles de reconexión automática y mostrar la guía de acción del operador.
+  - Si ese reintento falla, los clientes deben detener los bucles de reconexión automática y mostrar orientación de acción para el operador.
 
 ## Identidad del dispositivo + emparejamiento
 
-- Los nodos deben incluir una identidad de dispositivo estable (`device.id`) derivada de una
-  huella digital del par de claves.
-- Las pasarelas emiten tokens por dispositivo + rol.
-- Se requieren aprobaciones de emparejamiento para los nuevos ID de dispositivo a menos que la autoaprobación
-  local esté habilitada.
-- Las conexiones **locales** incluyen el bucle local (loopback) y la dirección de tailnet del propio host de la pasarela
-  (por lo que los enlaces de tailnet del mismo host aún pueden autoaprobarse).
-- Todos los clientes de WS deben incluir la identidad `device` durante `connect` (operador + nodo).
+- Los nodos deben incluir una identidad de dispositivo estable (`device.id`) derivada de una huella digital de un par de claves.
+- Los gateways emiten tokens por dispositivo + rol.
+- Se requieren aprobaciones de emparejamiento para los nuevos ID de dispositivo a menos que se habilite la autoaprobación local.
+- Las conexiones **locales** incluyen el bucle invertido (loopback) y la propia dirección de tailnet del host del gateway (por lo que los enlaces de tailnet del mismo host aún pueden autoaprobarse).
+- Todos los clientes WS deben incluir la identidad `device` durante `connect` (operador + nodo).
   La interfaz de control puede omitirla solo en estos modos:
   - `gateway.controlUi.allowInsecureAuth=true` para compatibilidad HTTP insegura solo para localhost.
-  - `gateway.controlUi.dangerouslyDisableDeviceAuth=true` (romper cristal, degradación de seguridad grave).
+  - `gateway.controlUi.dangerouslyDisableDeviceAuth=true` (romper el cristal, degradación de seguridad severa).
 - Todas las conexiones deben firmar el nonce `connect.challenge` proporcionado por el servidor.
 
 ### Diagnósticos de migración de autenticación de dispositivo
 
-Para los clientes heredados que aún utilizan el comportamiento de firma previo al desafío, `connect` ahora devuelve
+Para los clientes heredados que aún usan el comportamiento de firma previa al desafío, `connect` ahora devuelve
 códigos de detalle `DEVICE_AUTH_*` bajo `error.details.code` con un `error.details.reason` estable.
 
 Fallos comunes de migración:
@@ -240,17 +237,17 @@ Fallos comunes de migración:
 | `device nonce required`     | `DEVICE_AUTH_NONCE_REQUIRED`     | `device-nonce-missing`   | El cliente omitió `device.nonce` (o lo envió en blanco).           |
 | `device nonce mismatch`     | `DEVICE_AUTH_NONCE_MISMATCH`     | `device-nonce-mismatch`  | El cliente firmó con un nonce obsoleto/incorrecto.                 |
 | `device signature invalid`  | `DEVICE_AUTH_SIGNATURE_INVALID`  | `device-signature`       | El payload de la firma no coincide con el payload v2.              |
-| `device signature expired`  | `DEVICE_AUTH_SIGNATURE_EXPIRED`  | `device-signature-stale` | La marca de tiempo firmada está fuera del desvío permitido.        |
+| `device signature expired`  | `DEVICE_AUTH_SIGNATURE_EXPIRED`  | `device-signature-stale` | La marca de tiempo firmada está fuera del desfase permitido.       |
 | `device identity mismatch`  | `DEVICE_AUTH_DEVICE_ID_MISMATCH` | `device-id-mismatch`     | `device.id` no coincide con la huella digital de la clave pública. |
 | `device public key invalid` | `DEVICE_AUTH_PUBLIC_KEY_INVALID` | `device-public-key`      | Error en el formato/canonicalización de la clave pública.          |
 
 Objetivo de migración:
 
-- Espere siempre `connect.challenge`.
+- Espere siempre por `connect.challenge`.
 - Firme el payload v2 que incluye el nonce del servidor.
 - Envíe el mismo nonce en `connect.params.device.nonce`.
 - El payload de firma preferido es `v3`, que vincula `platform` y `deviceFamily`
-  además de los campos dispositivo/cliente/rol/ámbitos/token/nonce.
+  además de los campos de dispositivo/cliente/rol/ámbitos/token/nonce.
 - Las firmas `v2` heredadas siguen siendo aceptadas por compatibilidad, pero la fijación de metadatos del dispositivo emparejado aún controla la política de comandos al reconectar.
 
 ## TLS + fijación (pinning)
@@ -259,9 +256,9 @@ Objetivo de migración:
 - Los clientes pueden fijar opcionalmente la huella digital del certificado de la puerta de enlace (ver configuración `gateway.tls`
   más `gateway.remote.tlsFingerprint` o CLI `--tls-fingerprint`).
 
-## Ámbito (Scope)
+## Ámbito
 
-Este protocolo expone la **API completa de la puerta de enlace** (estado, canales, modelos, chat,
+Este protocolo expone la **API de puerta de enlace completa** (estado, canales, modelos, chat,
 agente, sesiones, nodos, aprobaciones, etc.). La superficie exacta se define mediante los
 esquemas TypeBox en `src/gateway/protocol/schema.ts`.
 

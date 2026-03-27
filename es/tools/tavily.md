@@ -122,7 +122,11 @@ Consejos:
 | Búsqueda con profundidad, tema, respuestas de IA | `tavily_search`  |
 | Extraer contenido de URL específicas             | `tavily_extract` |
 
-Consulta [Herramientas web](/es/tools/web) para la configuración completa de herramientas web y la comparación de proveedores.
+## Relacionado
+
+- [Descripción general de la búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
+- [Firecrawl](/es/tools/firecrawl) -- búsqueda + extracción con extracción de contenido
+- [Exa Search](/es/tools/exa-search) -- búsqueda neuronal con extracción de contenido
 
 import es from "/components/footer/es.mdx";
 

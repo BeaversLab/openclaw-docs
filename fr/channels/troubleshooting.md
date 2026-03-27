@@ -115,7 +115,7 @@ Dépannage complet : [/channels/signal#troubleshooting](/fr/channels/signal#trou
 | Les DMs ne sont pas traités                | `openclaw pairing list matrix`                                     | Approuver l'expéditeur ou ajuster la politique de DM.                         |
 | Les salons chiffrés échouent               | Vérifier le module de chiffrement et les paramètres de chiffrement | Activer la prise en charge du chiffrement et rejoindre/synchroniser le salon. |
 
-Dépannage complet : [/channels/matrix#troubleshooting](/fr/channels/matrix#troubleshooting)
+Configuration et installation complètes : [Matrix](/fr/channels/matrix)
 
 import fr from "/components/footer/fr.mdx";
 

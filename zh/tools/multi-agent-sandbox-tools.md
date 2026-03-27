@@ -360,7 +360,7 @@ The filtering order is:
 - [沙箱 vs 工具策略 vs 提升权限](/zh/gateway/sandbox-vs-tool-policy-vs-elevated) -- 调试“为什么这个被阻止了？”
 - [提升权限模式](/zh/tools/elevated)
 - [多代理路由](/zh/concepts/multi-agent)
-- [沙箱配置](/zh/gateway/configuration-reference#agents-defaults-sandbox)
+- [沙箱配置](/zh/gateway/configuration-reference#agentsdefaultssandbox)
 - [会话管理](/zh/concepts/session)
 
 import zh from "/components/footer/zh.mdx";

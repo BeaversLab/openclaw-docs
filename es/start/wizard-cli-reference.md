@@ -144,10 +144,10 @@ Lo que configura:
     Establece `agents.defaults.model` en `openai-codex/gpt-5.4` cuando el modelo no está configurado o es `openai/*`.
 
   </Accordion>
-  <Accordion title="OpenAI API key">
-    Usa `OPENAI_API_KEY` si está presente o solicita una clave, luego almacena la credencial en los perfiles de autenticación.
+  <Accordion title="Clave de API de OpenAI">
+    Usa `OPENAI_API_KEY` si está presente o solicita una clave, y luego almacena la credencial en los perfiles de autenticación.
 
-    Establece `agents.defaults.model` en `openai/gpt-5.1-codex` cuando el modelo no está configurado, es `openai/*` o `openai-codex/*`.
+    Establece `agents.defaults.model` en `openai/gpt-5.4` cuando el modelo no está configurado, es `openai/*` o `openai-codex/*`.
 
   </Accordion>
   <Accordion title="xAI (Grok) API key">

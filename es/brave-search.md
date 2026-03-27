@@ -3,7 +3,7 @@ summary: "Configuración de la API de Brave Search para web_search"
 read_when:
   - You want to use Brave Search for web_search
   - You need a BRAVE_API_KEY or plan details
-title: "Brave Search"
+title: "Brave Search (ruta heredada)"
 ---
 
 # API de Brave Search

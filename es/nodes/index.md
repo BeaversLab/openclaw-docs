@@ -94,7 +94,7 @@ Notas:
 - En modo local, el host del nodo ignora intencionalmente `gateway.remote.token` / `gateway.remote.password`.
 - En modo remoto, `gateway.remote.token` / `gateway.remote.password` son elegibles según las reglas de precedencia remota.
 - Si se configuran SecretRefs `gateway.auth.*` locales activos pero no resueltos, la autenticación del host del nodo falla de forma cerrada.
-- Las variables de entorno `CLAWDBOT_GATEWAY_*` heredadas se ignoran intencionalmente en la resolución de autenticación del host del nodo.
+- La resolución de autenticación del host del nodo solo respeta las variables de entorno `OPENCLAW_GATEWAY_*`.
 
 ### Iniciar un host de nodo (servicio)
 

@@ -12,7 +12,7 @@ OpenClaw prend en charge l'API de recherche Brave en tant que fournisseur `web_s
 
 ## Obtenir une clé API
 
-1. Créez un compte API de recherche Brave à l'adresse [https://brave.com/search/api/](https://brave.com/search/api/)
+1. Créez un compte Brave Search API à [https://brave.com/search/api/](https://brave.com/search/api/)
 2. Dans le tableau de bord, choisissez le forfait **Search** et générez une clé API.
 3. Stockez la clé dans la configuration ou définissez `BRAVE_API_KEY` dans l'environnement Gateway.
 
@@ -86,11 +86,15 @@ await web_search({
 ## Notes
 
 - OpenClaw utilise le forfait Brave **Search**. Si vous disposez d'un abonnement hérité (par exemple, le forfait Free d'origine avec 2 000 requêtes/mois), il reste valide mais n'inclut pas les nouvelles fonctionnalités telles que le contexte LLM ou des limites de débit plus élevées.
-- Chaque forfait Brave comprend **\$5/mois de crédit gratuit** (renouvelable). Le forfait Search coûte \$5 pour 1 000 requêtes, donc le crédit couvre 1 000 requêtes/mois. Définissez votre limite d'utilisation dans le tableau de bord Brave pour éviter des frais inattendus. Consultez le [portail de l'API Brave](https://brave.com/search/api/) pour les forfaits actuels.
-- Le plan de recherche inclut le point de terminaison LLM Context et les droits d'inférence IA. Le stockage des résultats pour entraîner ou régler des modèles nécessite un plan avec des droits de stockage explicites. Voir les Brave [Conditions d'utilisation](https://api-dashboard.search.brave.com/terms-of-service).
+- Chaque plan Brave comprend **\$5/mois de crédit gratuit** (renouvelable). Le plan Search coûte \$5 pour 1 000 requêtes, donc le crédit couvre 1 000 requêtes par mois. Définissez votre limite d'utilisation dans le tableau de bord Brave pour éviter des frais inattendus. Consultez le [portail API Brave](https://brave.com/search/api/) pour les plans actuels.
+- Le plan Search inclut le point de terminaison LLM Context et les droits d'inférence IA. Le stockage des résultats pour entraîner ou régler des modèles nécessite un plan avec des droits de stockage explicites. Consultez les [Conditions d'utilisation](https://api-dashboard.search.brave.com/terms-of-service) de Brave.
 - Les résultats sont mis en cache pendant 15 minutes par défaut (configurable via `cacheTtlMinutes`).
 
-Voir [Outils Web](/fr/tools/web) pour la configuration complète de web_search.
+## Connexes
+
+- [Aperçu de la recherche Web](/fr/tools/web) -- tous les fournisseurs et détection automatique
+- [Recherche Perplexity](/fr/tools/perplexity-search) -- résultats structurés avec filtrage de domaine
+- [Recherche Exa](/fr/tools/exa-search) -- recherche neurale avec extraction de contenu
 
 import fr from "/components/footer/fr.mdx";
 

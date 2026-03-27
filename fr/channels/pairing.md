@@ -36,7 +36,7 @@ openclaw pairing list telegram
 openclaw pairing approve telegram <CODE>
 ```
 
-Canaux pris en charge : `telegram`, `whatsapp`, `signal`, `imessage`, `discord`, `slack`, `feishu`.
+Canaux pris en charge : `bluebubbles`, `discord`, `feishu`, `googlechat`, `imessage`, `irc`, `line`, `matrix`, `mattermost`, `msteams`, `nextcloud-talk`, `nostr`, `signal`, `slack`, `synology-chat`, `telegram`, `twitch`, `whatsapp`, `zalo`, `zalouser`.
 
 ### Où se trouve l'état
 
@@ -56,23 +56,22 @@ Traitez-les comme sensibles (ils contrôlent l'accès à votre assistant).
 
 ## 2) Couplage d'appareils nœuds (nœuds iOS/Android/macOS/headless)
 
-Les nœuds se connectent à la Gateway en tant que **périphériques** avec `role: node`. La Gateway
-crée une demande d'appariement de périphérique qui doit être approuvée.
+Les nœuds se connectent à la Gateway en tant qu'**appareils** avec `role: node`. La Gateway crée une demande d'appariement d'appareil qui doit être approuvée.
 
 ### Appairer via Telegram (recommandé pour iOS)
 
-Si vous utilisez le plugin `device-pair`, vous pouvez effectuer le premier appariement de périphérique entièrement depuis Telegram :
+Si vous utilisez le plugin `device-pair`, vous pouvez effectuer le premier appariement d'appareil entièrement depuis Telegram :
 
 1. Sur Telegram, envoyez un message à votre bot : `/pair`
 2. Le bot répond avec deux messages : un message d'instruction et un message de **code de configuration** séparé (facile à copier/coller dans Telegram).
 3. Sur votre téléphone, ouvrez l'application OpenClaw iOS → Paramètres → Gateway.
 4. Collez le code de configuration et connectez-vous.
-5. De retour sur Telegram : `/pair pending` (vérifiez les ID de demande, le rôle et les portées), puis approuvez.
+5. De retour sur Telegram : `/pair pending` (examinez les ID de demande, le rôle et les portées), puis approuvez.
 
 Le code de configuration est une charge utile JSON encodée en base64 qui contient :
 
 - `url` : l'URL WebSocket de la Gateway (`ws://...` ou `wss://...`)
-- `bootstrapToken` : un jeton d'amorçage à courte durée de vie et à périphérique unique utilisé pour la poignée de main initiale de l'appariement
+- `bootstrapToken` : un jeton d'amorçage à courte durée de vie pour un seul appareil, utilisé pour la poignée de main d'appariement initiale
 
 Traitez le code de configuration comme un mot de passe tant qu'il est valide.
 
@@ -84,19 +83,19 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-Si le même appareil réessaie avec des détails d'authentification différents (par exemple un rôle/portée/clé publique différent), la demande en attente précédente est remplacée et un nouveau `requestId` est créé.
+Si le même appareil réessaie avec des détails d'authentification différents (par exemple un rôle, des portées ou une clé publique différents), la demande en attente précédente est remplacée et un nouveau `requestId` est créé.
 
 ### Stockage de l'état de jumelage des nœuds
 
 Stocké sous `~/.openclaw/devices/` :
 
 - `pending.json` (à courte durée de vie ; les demandes en attente expirent)
-- `paired.json` (appareils jumelés + jetons)
+- `paired.json` (appareils appariés + jetons)
 
 ### Notes
 
 - L'API `node.pair.*` héritée (CLI : `openclaw nodes pending/approve`) est un
-  magasin de jumelage distinct détenu par la passerelle. Les nœuds WS nécessitent toujours un jumelage d'appareil.
+  magasin de jumelage distinct appartenant à la passerelle. Les nœuds WS nécessitent toujours un jumelage d'appareil.
 
 ## Documentation connexe
 

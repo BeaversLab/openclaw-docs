@@ -116,7 +116,7 @@ otherwise -> reply
 
 相关内容：
 
-- 配置键和默认值：[Gateway(网关) 配置](/zh/gateway/configuration-reference#agents-defaults-sandbox)
+- 配置键和默认值：[Gateway(网关) 配置](/zh/gateway/configuration-reference#agentsdefaultssandbox)
 - 调试工具被阻止的原因：[沙箱 vs 工具策略 vs 提升权限](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)
 - 绑定挂载详情：[沙箱隔离](/zh/gateway/sandboxing#custom-bind-mounts)
 

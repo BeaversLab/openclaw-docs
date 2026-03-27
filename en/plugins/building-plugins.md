@@ -128,15 +128,15 @@ and provider plugins have dedicated guides linked above.
 
 A single plugin can register any number of capabilities via the `api` object:
 
-| Capability           | Registration method                           | Detailed guide                                                                  |
-| -------------------- | --------------------------------------------- | ------------------------------------------------------------------------------- |
+| Capability           | Registration method                           | Detailed guide                                                                     |
+| -------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------- |
 | Text inference (LLM) | `api.registerProvider(...)`                   | [Provider Plugins](/en/plugins/sdk-provider-plugins)                               |
 | Channel / messaging  | `api.registerChannel(...)`                    | [Channel Plugins](/en/plugins/sdk-channel-plugins)                                 |
 | Speech (TTS/STT)     | `api.registerSpeechProvider(...)`             | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
 | Media understanding  | `api.registerMediaUnderstandingProvider(...)` | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
 | Image generation     | `api.registerImageGenerationProvider(...)`    | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
 | Web search           | `api.registerWebSearchProvider(...)`          | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| Agent tools          | `api.registerTool(...)`                       | Below                                                                           |
+| Agent tools          | `api.registerTool(...)`                       | Below                                                                              |
 | Custom commands      | `api.registerCommand(...)`                    | [Entry Points](/en/plugins/sdk-entrypoints)                                        |
 | Event hooks          | `api.registerHook(...)`                       | [Entry Points](/en/plugins/sdk-entrypoints)                                        |
 | HTTP routes          | `api.registerHttpRoute(...)`                  | [Internals](/en/plugins/architecture#gateway-http-routes)                          |

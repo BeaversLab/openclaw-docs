@@ -14,10 +14,10 @@ The plugin SDK is the typed contract between plugins and core. This page is the
 reference for **what to import** and **what you can register**.
 
 <Tip>
-  **Looking for a how-to guide?**
-  - First plugin? Start with [Getting Started](/en/plugins/building-plugins)
-  - Channel plugin? See [Channel Plugins](/en/plugins/sdk-channel-plugins)
-  - Provider plugin? See [Provider Plugins](/en/plugins/sdk-provider-plugins)
+  **Looking for a how-to guide?** - First plugin? Start with [Getting
+  Started](/en/plugins/building-plugins) - Channel plugin? See [Channel
+  Plugins](/en/plugins/sdk-channel-plugins) - Provider plugin? See [Provider
+  Plugins](/en/plugins/sdk-provider-plugins)
 </Tip>
 
 ## Import convention
@@ -63,36 +63,28 @@ subpaths is in `scripts/lib/plugin-sdk-entrypoints.json`.
     | `plugin-sdk/channel-feedback` | Feedback/reaction wiring |
   </Accordion>
 
-  <Accordion title="Provider subpaths">
-    | Subpath | Key exports |
-    | --- | --- |
-    | `plugin-sdk/provider-auth` | `createProviderApiKeyAuthMethod`, `ensureApiKeyFromOptionEnvOrPrompt`, `upsertAuthProfile` |
-    | `plugin-sdk/provider-models` | `normalizeModelCompat` |
-    | `plugin-sdk/provider-catalog` | Catalog type re-exports |
-    | `plugin-sdk/provider-usage` | `fetchClaudeUsage` and similar |
-    | `plugin-sdk/provider-stream` | Stream wrapper types |
-    | `plugin-sdk/provider-onboard` | Onboarding config patch helpers |
-  </Accordion>
+<Accordion title="Provider subpaths">
+  | Subpath | Key exports | | --- | --- | | `plugin-sdk/provider-auth` |
+  `createProviderApiKeyAuthMethod`, `ensureApiKeyFromOptionEnvOrPrompt`, `upsertAuthProfile` | |
+  `plugin-sdk/provider-models` | `normalizeModelCompat` | | `plugin-sdk/provider-catalog` | Catalog
+  type re-exports | | `plugin-sdk/provider-usage` | `fetchClaudeUsage` and similar | |
+  `plugin-sdk/provider-stream` | Stream wrapper types | | `plugin-sdk/provider-onboard` | Onboarding
+  config patch helpers |
+</Accordion>
 
-  <Accordion title="Auth and security subpaths">
-    | Subpath | Key exports |
-    | --- | --- |
-    | `plugin-sdk/command-auth` | `resolveControlCommandGate` |
-    | `plugin-sdk/allow-from` | `formatAllowFromLowercase` |
-    | `plugin-sdk/secret-input` | Secret input parsing helpers |
-    | `plugin-sdk/webhook-ingress` | Webhook request/target helpers |
-  </Accordion>
+<Accordion title="Auth and security subpaths">
+  | Subpath | Key exports | | --- | --- | | `plugin-sdk/command-auth` | `resolveControlCommandGate`
+  | | `plugin-sdk/allow-from` | `formatAllowFromLowercase` | | `plugin-sdk/secret-input` | Secret
+  input parsing helpers | | `plugin-sdk/webhook-ingress` | Webhook request/target helpers |
+</Accordion>
 
-  <Accordion title="Runtime and storage subpaths">
-    | Subpath | Key exports |
-    | --- | --- |
-    | `plugin-sdk/runtime-store` | `createPluginRuntimeStore` |
-    | `plugin-sdk/config-runtime` | Config load/write helpers |
-    | `plugin-sdk/infra-runtime` | System event/heartbeat helpers |
-    | `plugin-sdk/agent-runtime` | Agent dir/identity/workspace helpers |
-    | `plugin-sdk/directory-runtime` | Config-backed directory query/dedup |
-    | `plugin-sdk/keyed-async-queue` | `KeyedAsyncQueue` |
-  </Accordion>
+<Accordion title="Runtime and storage subpaths">
+  | Subpath | Key exports | | --- | --- | | `plugin-sdk/runtime-store` | `createPluginRuntimeStore`
+  | | `plugin-sdk/config-runtime` | Config load/write helpers | | `plugin-sdk/infra-runtime` |
+  System event/heartbeat helpers | | `plugin-sdk/agent-runtime` | Agent dir/identity/workspace
+  helpers | | `plugin-sdk/directory-runtime` | Config-backed directory query/dedup | |
+  `plugin-sdk/keyed-async-queue` | `KeyedAsyncQueue` |
+</Accordion>
 
   <Accordion title="Capability and testing subpaths">
     | Subpath | Key exports |
@@ -171,7 +163,7 @@ methods:
 | `api.rootDir`            | `string?`                 | Plugin root directory (optional)                          |
 | `api.config`             | `OpenClawConfig`          | Current config snapshot                                   |
 | `api.pluginConfig`       | `Record<string, unknown>` | Plugin-specific config from `plugins.entries.<id>.config` |
-| `api.runtime`            | `PluginRuntime`           | [Runtime helpers](/en/plugins/sdk-runtime)                   |
+| `api.runtime`            | `PluginRuntime`           | [Runtime helpers](/en/plugins/sdk-runtime)                |
 | `api.logger`             | `PluginLogger`            | Scoped logger (`debug`, `info`, `warn`, `error`)          |
 | `api.registrationMode`   | `PluginRegistrationMode`  | `"full"`, `"setup-only"`, or `"setup-runtime"`            |
 | `api.resolvePath(input)` | `(string) => string`      | Resolve path relative to plugin root                      |

@@ -28,10 +28,12 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 - [Amazon Bedrock](/zh/providers/bedrock)
 - [Anthropic (API + Claude Code CLI)](/zh/providers/anthropic)
 - [Cloudflare AI Gateway(网关)](/zh/providers/cloudflare-ai-gateway)
+- [DeepSeek](/zh/providers/deepseek)
+- [GitHub Copilot](/zh/providers/github-copilot)
 - [GLM 模型](/zh/providers/glm)
 - [Google (Gemini)](/zh/providers/google)
-- [Groq (LPU inference)](/zh/providers/groq)
-- [Hugging Face (Inference)](/zh/providers/huggingface)
+- [Groq (LPU 推理)](/zh/providers/groq)
+- [Hugging Face (推理)](/zh/providers/huggingface)
 - [Kilocode](/zh/providers/kilocode)
 - [LiteLLM (统一网关)](/zh/providers/litellm)
 - [MiniMax](/zh/providers/minimax)
@@ -41,15 +43,17 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 - [NVIDIA](/zh/providers/nvidia)
 - [Ollama (云端 + 本地模型)](/zh/providers/ollama)
 - [OpenAI (API + Codex)](/zh/providers/openai)
-- [OpenCode (Zen + Go)](/zh/providers/opencode)
+- [OpenCode](/zh/providers/opencode)
+- [OpenCode Go](/zh/providers/opencode-go)
 - [OpenRouter](/zh/providers/openrouter)
 - [Perplexity (网络搜索)](/zh/providers/perplexity-provider)
 - [Qianfan](/zh/providers/qianfan)
 - [Qwen (OAuth)](/zh/providers/qwen)
 - [SGLang (本地模型)](/zh/providers/sglang)
+- [Synthetic](/zh/providers/synthetic)
 - [Together AI](/zh/providers/together)
-- [Vercel AI Gateway(网关)](/zh/providers/vercel-ai-gateway)
 - [Venice (Venice AI, 注重隐私)](/zh/providers/venice)
+- [Vercel AI Gateway(网关)](/zh/providers/vercel-ai-gateway)
 - [vLLM (本地模型)](/zh/providers/vllm)
 - [Volcengine (Doubao)](/zh/providers/volcengine)
 - [xAI](/zh/providers/xai)
@@ -62,10 +66,10 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 
 ## 社区工具
 
-- [Claude Max API Proxy](/zh/providers/claude-max-api-proxy) - Claude 订阅凭证的社区代理（使用前请验证 Anthropic 的政策/条款）
+- [Claude Max API Proxy](/zh/providers/claude-max-api-proxy) - Claude 订阅凭证的社区代理（使用前请验证 Anthropic 政策/条款）
 
-有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
-请参阅 [模型提供商](/zh/concepts/model-providers)。
+如需完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
+请参阅 [Model providers](/zh/concepts/model-providers)。
 
 import zh from "/components/footer/zh.mdx";
 

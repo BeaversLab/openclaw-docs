@@ -201,7 +201,9 @@ Utilisez l'assistant de configuration interactif pour définir MiniMax sans modi
 
 ### "Unknown model: minimax/MiniMax-M2.7"
 
-Cela signifie généralement que le **provider MiniMax n'est pas configuré** (aucune entrée de provider et aucun profil/clé d'environnement d'authentification MiniMax trouvé). Une correction pour cette détection est prévue dans la version **2026.1.12** (non publiée au moment de la rédaction). Corrigez en :
+Cela signifie généralement que le **fournisseur MiniMax n’est pas configuré** (aucune entrée de fournisseur
+et aucun profil de clé d’auth/env MiniMax trouvé). Une correction pour cette détection est prévue dans
+**2026.1.12**. Corriger par :
 
 - Mise à niveau vers **2026.1.12** (ou exécution depuis la source `main`), puis redémarrage de la passerelle.
 - Exécution de `openclaw configure` et sélection d'une option d'authentification **MiniMax**, ou

@@ -162,9 +162,9 @@ Utilice estos centros para descubrir todas las páginas, incluidos los análisis
 ## Extensiones + complementos
 
 - [Descripción general de complementos](/es/tools/plugin)
-- [Crear extensiones](/es/plugins/building-extensions)
+- [Construcción de complementos](/es/plugins/building-plugins)
 - [Manifiesto de complementos](/es/plugins/manifest)
-- [Herramientas de agente](/es/plugins/agent-tools)
+- [Herramientas de agente](/es/plugins/building-plugins#registering-agent-tools)
 - [Paquetes de complementos](/es/plugins/bundles)
 - [Complementos comunitarios](/es/plugins/community)
 - [Cookbook de capacidades](/es/tools/capability-cookbook)

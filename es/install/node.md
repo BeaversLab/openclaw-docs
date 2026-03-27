@@ -9,7 +9,7 @@ read_when:
 
 # Node.js
 
-OpenClaw requiere **Node 22.16 o más reciente**. **Node 24 es el tiempo de ejecución predeterminado y recomendado** para instalaciones, CI y flujos de trabajo de lanzamiento. Node 22 sigue siendo compatible a través de la línea LTS activa. El [script de instalación](/es/install#alternative-install-methods) detectará e instalará Node automáticamente; esta página es para cuando deseas configurar Node tú mismo y asegurarte de que todo esté conectado correctamente (versiones, PATH, instalaciones globales).
+OpenClaw requiere **Node 22.14 o más reciente**. **Node 24 es el entorno de ejecución predeterminado y recomendado** para instalaciones, CI y flujos de trabajo de lanzamiento. Node 22 sigue siendo compatible a través de la línea LTS activa. El [script de instalación](/es/install#alternative-install-methods) detectará e instalará Node automáticamente; esta página es para cuando desees configurar Node tú mismo y asegurarte de que todo esté conectado correctamente (versiones, PATH, instalaciones globales).
 
 ## Verifica tu versión
 
@@ -17,7 +17,7 @@ OpenClaw requiere **Node 22.16 o más reciente**. **Node 24 es el tiempo de ejec
 node -v
 ```
 
-Si esto imprime `v24.x.x` o superior, estás en el valor predeterminado recomendado. Si imprime `v22.16.x` o superior, estás en la ruta compatible Node 22 LTS, pero aún recomendamos actualizar a Node 24 cuando sea conveniente. Si Node no está instalado o la versión es demasiado antigua, elige un método de instalación a continuación.
+Si esto imprime `v24.x.x` o superior, estás en la versión predeterminada recomendada. Si imprime `v22.14.x` o superior, estás en la ruta compatible de Node 22 LTS, pero aún recomendamos actualizar a Node 24 cuando sea conveniente. Si Node no está instalado o la versión es demasiado antigua, elige un método de instalación a continuación.
 
 ## Instalar Node
 

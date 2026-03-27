@@ -107,12 +107,12 @@ openclaw logs --follow
 - `Config path not found: agents.defaults.userTimezone` 表示未设置该键；心跳回退到主机时区（如果设置了 `activeHours.timezone` 则使用该值）。
 - 没有 `--tz` 的 Cron 使用网关主机时区。
 - 心跳 `activeHours` 使用配置的时区解析（`user`、`local` 或显式 IANA tz）。
-- 对于 cron `at` 计划，没有时区的 ISO 时间戳将被视为 UTC。
+- Cron `at` 计划将不带时区的 ISO 时间戳视为 UTC，除非您使用了 CLI `--at "<offset-less-iso>" --tz <iana>`。
 
 常见特征：
 
 - 在主机时区更改后，作业在错误的挂钟时间运行。
-- 在您的白天时段心跳总是被跳过，因为 `activeHours.timezone` 是错误的。
+- 在您白天期间总是跳过 Heartbeat，因为 `activeHours.timezone` 错误。
 
 相关内容：
 

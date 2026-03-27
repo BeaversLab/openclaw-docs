@@ -79,13 +79,14 @@ openclaw plugins install ./extensions/synology-chat
 - 在 `allowlist` 模式下，空的 `allowedUserIds` 列表将被视为配置错误，webhook 路由将不会启动（使用 `dmPolicy: "open"` 允许所有）。
 - `dmPolicy: "open"` 允许任何发送者。
 - `dmPolicy: "disabled"` 阻止私信。
+- 默认情况下，回复收件人绑定保持稳定的数值 `user_id`。`channels.synology-chat.dangerouslyAllowNameMatching: true` 是一种应急兼容模式，重新启用了可变的用户名/昵称查找以进行回复投递。
 - 配对批准适用于：
   - `openclaw pairing list synology-chat`
   - `openclaw pairing approve synology-chat <CODE>`
 
 ## 出站投递
 
-使用数字 Synology Chat 用户 ID 作为目标。
+使用数值型 Synology Chat 用户 ID 作为目标。
 
 示例：
 
@@ -94,12 +95,18 @@ openclaw message send --channel synology-chat --target 123456 --text "Hello from
 openclaw message send --channel synology-chat --target synology-chat:123456 --text "Hello again"
 ```
 
-媒体发送支持基于 URL 的文件传送。
+媒体发送支持基于 URL 的文件投递。
 
 ## 多账户
 
 在 `channels.synology-chat.accounts` 下支持多个 Synology Chat 账户。
-每个账户可以覆盖令牌、传入 URL、webhook 路径、私信策略和限制。
+每个账户可以覆盖令牌、入站 URL、Webhook 路径、私信策略和限制。
+私信会话按账户和用户隔离，因此不同 Synology 账户上相同的数值 `user_id`
+不会共享记录状态。
+为每个启用的账户指定一个不同的 `webhookPath`。OpenClaw 现在会拒绝重复的完全相同的路径，
+并拒绝启动在多账户设置中仅继承共享 Webhook 路径的命名账户。
+如果您有意需要命名账户的传统继承，请在该账户上或 `channels.synology-chat` 处设置
+`dangerouslyAllowInheritedWebhookPath: true`，但重复的完全相同的路径仍会被故障安全地拒绝。首选明确的每账户路径。
 
 ```json5
 {
@@ -126,10 +133,12 @@ openclaw message send --channel synology-chat --target synology-chat:123456 --te
 
 ## 安全说明
 
-- 请保密 `token`，如果泄露请轮换它。
+- 请将 `token` 保密，并在泄露后轮换它。
 - 除非您明确信任自签名的本地 NAS 证书，否则请保持 `allowInsecureSsl: false` 开启。
-- 传入 webhook 请求已通过令牌验证，并对每个发送者进行速率限制。
+- 入站 Webhook 请求会进行令牌验证，并按发件人进行速率限制。
 - 生产环境建议使用 `dmPolicy: "allowlist"`。
+- 除非您明确需要基于用户名的传统回复投递，否则请保持 `dangerouslyAllowNameMatching` 关闭。
+- 除非您明确接受多账户设置中的共享路径路由风险，否则请保持 `dangerouslyAllowInheritedWebhookPath` 关闭。
 
 import zh from "/components/footer/zh.mdx";
 

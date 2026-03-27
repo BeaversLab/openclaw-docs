@@ -1,10 +1,11 @@
 ---
-summary: "User profile record"
+title: "Modèle UTILISATEUR"
+summary: "Enregistrement de profil utilisateur"
 read_when:
   - Bootstrapping a workspace manually
 ---
 
-# USER.md - À propos de votre humain
+# UTILISATEUR.md - À propos de votre humain
 
 _Apprenez à connaître la personne que vous aidez. Mettez à jour ces informations au fur et à mesure._
 
@@ -16,7 +17,7 @@ _Apprenez à connaître la personne que vous aidez. Mettez à jour ces informati
 
 ## Contexte
 
-_(À quoi tiennent-ils ? Sur quels projets travaillent-ils ? Qu'est-ce qui les agace ? Qu'est-ce qui les fait rire ? Construisez ceci au fil du temps._)
+_(Qu'est-ce qui leur tient à cœur ? Sur quels projets travaillent-ils ? Qu'est-ce qui les agace ? Qu'est-ce qui les fait rire ? Construisez ceci au fil du temps.)_
 
 ---
 

@@ -49,7 +49,7 @@ OpenClaw est une **passerelle auto-hébergée** qui connecte vos applications de
 - **Natif pour les agents** : conçu pour les agents de codation avec l'utilisation d'outils, les sessions, la mémoire et le routage multi-agents
 - **Open source** : sous licence MIT, piloté par la communauté
 
-**De quoi avez-vous besoin ?** Node 24 (recommandé), ou Node 22 LTS (`22.16+`) pour la compatibilité, une clé API de votre fournisseur choisi, et 5 minutes. Pour une meilleure qualité et sécurité, utilisez le modèle le plus puissant de dernière génération disponible.
+**De quoi avez-vous besoin ?** Node 24 (recommandé), ou Node 22 LTS (`22.14+`) pour la compatibilité, une clé API de votre fournisseur choisi, et 5 minutes. Pour une qualité et une sécurité optimales, utilisez le modèle de dernière génération le plus puissant disponible.
 
 ## Fonctionnement
 

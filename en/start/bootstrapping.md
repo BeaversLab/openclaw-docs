@@ -31,8 +31,8 @@ a remote Gateway, the workspace and bootstrapping files live on that remote
 machine.
 
 <Note>
-When the Gateway runs on another machine, edit workspace files on the gateway
-host (for example, `user@gateway-host:~/.openclaw/workspace`).
+  When the Gateway runs on another machine, edit workspace files on the gateway host (for example,
+  `user@gateway-host:~/.openclaw/workspace`).
 </Note>
 
 ## Related docs

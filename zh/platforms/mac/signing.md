@@ -14,7 +14,7 @@ title: "macOS 签名"
 - 调用 [`scripts/codesign-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/codesign-mac-app.sh) 对主二进制文件和 App 包进行签名，以便 macOS 将每次重新构建视为相同的已签名包，并保留 TCC 权限（通知、辅助功能、屏幕录制、麦克风、语音）。为了获得稳定的权限，请使用真实的签名身份；临时签名 (ad-hoc) 是可选的且不稳定（请参阅 [macOS permissions](/zh/platforms/mac/permissions)）。
 - 默认使用 `CODESIGN_TIMESTAMP=auto`；它为 Developer ID 签名启用受信任的时间戳。设置 `CODESIGN_TIMESTAMP=off` 以跳过时间戳（离线调试构建）。
 - 将构建元数据注入 Info.plist：`OpenClawBuildTimestamp` (UTC) 和 `OpenClawGitCommit` (短哈希)，以便“关于”面板可以显示构建、git 和调试/发布渠道。
-- **打包默认使用 Node 24**：该脚本运行 TS 构建和控制 UI 构建。目前为 `22.16+` 的 Node 22 LTS 仍受支持以确保兼容性。
+- **打包默认使用 Node 24**：该脚本运行 TS 构建和控制 UI 构建。为了兼容性，目前为 `22.14+` 的 Node 22 LTS 仍然受支持。
 - 从环境中读取 `SIGN_IDENTITY`。将 `export SIGN_IDENTITY="Apple Development: Your Name (TEAMID)"`（或您的 Developer ID Application 证书）添加到您的 shell rc 中，以便始终使用您的证书进行签名。Ad-hoc 签名需要通过 `ALLOW_ADHOC_SIGNING=1` 或 `SIGN_IDENTITY="-"` 显式选择加入（不建议用于权限测试）。
 - 在签名后运行团队 ID 审计，如果应用包内的任何 Mach-O 文件由不同的团队 ID 签名，则会失败。设置 `SKIP_TEAM_ID_CHECK=1` 以绕过。
 

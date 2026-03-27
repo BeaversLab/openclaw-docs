@@ -193,13 +193,13 @@ Notas:
 - Cuando la autenticación por token requiere un token y `gateway.auth.token` está administrado por SecretRef, `gateway install` valida que el SecretRef se pueda resolver, pero no persiste el token resuelto en los metadatos del entorno del servicio.
 - Si la autenticación por token requiere un token y el SecretRef del token configurado no está resuelto, la instalación falla de forma segura en lugar de persistir el texto plano de reserva.
 - Para la autenticación con contraseña en `gateway run`, se prefiere `OPENCLAW_GATEWAY_PASSWORD`, `--password-file` o un `gateway.auth.password` respaldado por SecretRef antes que `--password` en línea.
-- En el modo de autenticación inferida, `OPENCLAW_GATEWAY_PASSWORD`/`CLAWDBOT_GATEWAY_PASSWORD` solo de shell no relaja los requisitos del token de instalación; use la configuración duradera (`gateway.auth.password` o configuración `env`) al instalar un servicio administrado.
-- Si están configurados tanto `gateway.auth.token` como `gateway.auth.password` y `gateway.auth.mode` no está definido, la instalación se bloquea hasta que se establezca explícitamente el modo.
+- En modo de autenticación inferida, `OPENCLAW_GATEWAY_PASSWORD` solo de shell no relaja los requisitos del token de instalación; use la configuración duradera (`gateway.auth.password` o configuración `env`) al instalar un servicio administrado.
+- Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está definido, la instalación se bloquea hasta que el modo se establezca explícitamente.
 - Los comandos de ciclo de vida aceptan `--json` para secuencias de comandos (scripting).
 
 ## Descubrir gateways (Bonjour)
 
-`gateway discover` escucha balizas de Gateway (`_openclaw-gw._tcp`).
+`gateway discover` escanea balizas de Gateway (`_openclaw-gw._tcp`).
 
 - Multicast DNS-SD: `local.`
 - Unicast DNS-SD (Bonjour de área amplia): elija un dominio (ejemplo: `openclaw.internal.`) y configure DNS dividido + un servidor DNS; consulte [/gateway/bonjour](/es/gateway/bonjour)
@@ -208,13 +208,13 @@ Solo los gateways con el descubrimiento Bonjour habilitado (por defecto) anuncia
 
 Los registros de descubrimiento de área amplia incluyen (TXT):
 
-- `role` (pista de rol de gateway)
-- `transport` (pista de transporte, p. ej. `gateway`)
+- `role` (sugerencia de rol de puerta de enlace)
+- `transport` (sugerencia de transporte, p. ej. `gateway`)
 - `gatewayPort` (puerto WebSocket, generalmente `18789`)
 - `sshPort` (puerto SSH; por defecto es `22` si no está presente)
 - `tailnetDns` (nombre de host MagicDNS, cuando está disponible)
 - `gatewayTls` / `gatewayTlsSha256` (TLS habilitado + huella digital del certificado)
-- `cliPath` (pista opcional para instalaciones remotas)
+- `cliPath` (sugerencia opcional para instalaciones remotas)
 
 ### `gateway discover`
 
@@ -224,7 +224,7 @@ openclaw gateway discover
 
 Opciones:
 
-- `--timeout <ms>`: tiempo de espera por comando (exploración/resolución); por defecto `2000`.
+- `--timeout <ms>`: tiempo de espera por comando (examinar/resolver); por defecto `2000`.
 - `--json`: salida legible por máquina (también deshabilita el estilo/indicador de carga).
 
 Ejemplos:

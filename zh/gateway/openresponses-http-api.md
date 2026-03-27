@@ -23,20 +23,31 @@ OpenClaw 的 Gateway(网关)可以提供一个 OpenResponses 兼容的 `POST /v1
 
 - 使用 `Authorization: Bearer <token>` 配合正常的 Gateway(网关) 身份验证配置
 - 将该端点视为对 gateway 实例的完整操作员访问权限
-- 使用 `model: "openclaw:<agentId>"`、`model: "agent:<agentId>"` 或 `x-openclaw-agent-id` 选择代理
-- 使用 `x-openclaw-session-key` 进行明确的会话路由
+- 使用 `model: "openclaw"`、`model: "openclaw/default"`、`model: "openclaw/<agentId>"` 或 `x-openclaw-agent-id` 选择代理
+- 当您想覆盖所选代理的后端模型时，请使用 `x-openclaw-model`
+- 使用 `x-openclaw-session-key` 进行显式会话路由
+- 当您需要非默认的合成入站渠道上下文时，请使用 `x-openclaw-message-channel`
 
 使用 `gateway.http.endpoints.responses.enabled` 启用或禁用此端点。
 
+相同的兼容性界面还包括：
+
+- `GET /v1/models`
+- `GET /v1/models/{id}`
+- `POST /v1/embeddings`
+- `POST /v1/chat/completions`
+
+有关代理目标模型、`openclaw/default`、嵌入传递和后端模型覆盖如何组合在一起的规范说明，请参阅 [OpenAI Chat Completions](/zh/gateway/openai-http-api#agent-first-model-contract) 和 [模型列表和代理路由](/zh/gateway/openai-http-api#model-list-and-agent-routing)。
+
 ## 会话行为
 
-默认情况下，该端点是**每次请求无状态的**（每次调用都会生成一个新的会话密钥）。
+默认情况下，该端点是**每个请求无状态的**（每次调用都会生成一个新的会话密钥）。
 
-如果请求包含 OpenResponses `user` 字符串，Gateway(网关) 将从中派生一个稳定的会话密钥，因此重复调用可以共享一个代理会话。
+如果请求包含 OpenResponses `user` 字符串，Gateway(网关) 会从中派生出一个稳定的会话密钥，以便重复调用可以共享代理会话。
 
-## 请求形状（支持）
+## 请求形状（已支持）
 
-该请求遵循基于项目输入的 OpenResponses API。当前支持：
+请求遵循具有基于项目输入的 OpenResponses API。当前支持：
 
 - `input`：字符串或项目对象数组。
 - `instructions`：合并到系统提示词中。
@@ -52,20 +63,23 @@ OpenClaw 的 Gateway(网关)可以提供一个 OpenResponses 兼容的 `POST /v1
 - `reasoning`
 - `metadata`
 - `store`
-- `previous_response_id`
 - `truncation`
 
-## Items (输入)
+支持：
+
+- `previous_response_id`：当请求保持在同一个 agent/user/requested-会话 范围内时，OpenClaw 会重用之前的响应会话。
+
+## Items（输入）
 
 ### `message`
 
 角色：`system`、`developer`、`user`、`assistant`。
 
-- `system` 和 `developer` 会被追加到系统提示词中。
-- 最近的 `user` 或 `function_call_output` 项目将成为“当前消息”。
-- 较早的用户/助手消息将作为历史记录包含在内以提供上下文。
+- `system` 和 `developer` 会被附加到系统提示词中。
+- 最近的 `user` 或 `function_call_output` 项将成为“当前消息”。
+- 之前的用户/助手消息会作为上下文历史包含在内。
 
-### `function_call_output` (基于回合的工具)
+### `function_call_output`（基于回合的工具）
 
 将工具结果发送回模型：
 
@@ -79,14 +93,14 @@ OpenClaw 的 Gateway(网关)可以提供一个 OpenResponses 兼容的 `POST /v1
 
 ### `reasoning` 和 `item_reference`
 
-出于模式兼容性考虑接受，但在构建提示词时会被忽略。
+出于架构兼容性而被接受，但在构建提示词时被忽略。
 
-## 工具 (客户端函数工具)
+## 工具（客户端函数工具）
 
 使用 `tools: [{ type: "function", function: { name, description?, parameters? } }]` 提供工具。
 
-如果代理决定调用工具，响应将返回一个 `function_call` 输出项目。
-然后，您发送一个包含 `function_call_output` 的后续请求以继续该回合。
+如果 Agent 决定调用工具，响应将返回一个 `function_call` 输出项。
+随后，您需要发送一个带有 `function_call_output` 的后续请求以继续该回合。
 
 ## 图像 (`input_image`)
 
@@ -99,8 +113,8 @@ OpenClaw 的 Gateway(网关)可以提供一个 OpenResponses 兼容的 `POST /v1
 }
 ```
 
-允许的 MIME 类型 (当前)：`image/jpeg`、`image/png`、`image/gif`、`image/webp`、`image/heic`、`image/heif`。
-最大大小 (当前)：10MB。
+允许的 MIME 类型（当前）：`image/jpeg`、`image/png`、`image/gif`、`image/webp`、`image/heic`、`image/heif`。
+最大尺寸（当前）：10MB。
 
 ## 文件 (`input_file`)
 
@@ -118,32 +132,33 @@ OpenClaw 的 Gateway(网关)可以提供一个 OpenResponses 兼容的 `POST /v1
 }
 ```
 
-允许的 MIME 类型 (当前)：`text/plain`、`text/markdown`、`text/html`、`text/csv`、
+允许的 MIME 类型（当前）：`text/plain`、`text/markdown`、`text/html`、`text/csv`、
 `application/json`、`application/pdf`。
 
-最大大小 (当前)：5MB。
+最大尺寸（当前）：5MB。
 
 当前行为：
 
-- 文件内容被解码并添加到 **系统提示词** 中，而不是用户消息中，
-  因此它保持临时性（不会持久保存在会话历史中）。
-- PDF 会解析其中的文本。如果发现的文本很少，前几页将被栅格化为图像并传递给模型。
+- 文件内容将被解码并添加到**系统提示词**中，而不是用户消息中，
+  因此它保持临时状态（不会持久保存在会话历史中）。
+- PDF 将解析文本。如果发现的文本很少，前几页将被光栅化
+  为图像并传递给模型。
 
-PDF 解析使用 Node 友好的 `pdfjs-dist` 旧版构建（无 worker）。现代 PDF.js 构建需要浏览器 worker/DOM 全局对象，因此未在 Gateway(网关) 中使用。
+PDF 解析使用兼容 Node 的 `pdfjs-dist` 旧版构建（无 worker）。现代版 PDF.js 构建需要浏览器 worker/DOM 全局变量，因此未在 Gateway(网关) 中使用。
 
 URL 获取默认值：
 
-- `files.allowUrl`： `true`
-- `images.allowUrl`： `true`
-- `maxUrlParts`： `8`（每个请求基于 URL 的 `input_file` + `input_image` 部分总计）
-- 请求受到保护（DNS 解析、私有 IP 阻止、重定向上限、超时）。
-- 支持按输入类型（`files.urlAllowlist`、 `images.urlAllowlist`）设置可选的主机名允许列表。
-  - 精确主机： `"cdn.example.com"`
-  - 通配符子域： `"*.assets.example.com"`（不匹配顶级域）
-  - 空或省略的允许列表意味着没有主机名允许列表限制。
+- `files.allowUrl`：`true`
+- `images.allowUrl`：`true`
+- `maxUrlParts`：`8`（每个请求中基于 URL 的 `input_file` + `input_image` 部分总计）
+- 请求受保护（DNS 解析、私有 IP 阻断、重定向上限、超时）。
+- 支持按输入类型（`files.urlAllowlist`、`images.urlAllowlist`）设置可选的主机名允许列表。
+  - 精确主机：`"cdn.example.com"`
+  - 通配符子域：`"*.assets.example.com"`（不匹配顶点域）
+  - 允许列表为空或省略表示没有主机名允许列表限制。
 - 要完全禁用基于 URL 的获取，请设置 `files.allowUrl: false` 和/或 `images.allowUrl: false`。
 
-## 文件 + 图像限制 (配置)
+## 文件 + 图像限制（配置）
 
 可以在 `gateway.http.endpoints.responses` 下调整默认值：
 
@@ -201,25 +216,25 @@ URL 获取默认值：
 
 省略时的默认值：
 
-- `maxBodyBytes`: 20MB
-- `maxUrlParts`: 8
-- `files.maxBytes`: 5MB
-- `files.maxChars`: 200k
-- `files.maxRedirects`: 3
-- `files.timeoutMs`: 10s
-- `files.pdf.maxPages`: 4
-- `files.pdf.maxPixels`: 4,000,000
-- `files.pdf.minTextChars`: 200
-- `images.maxBytes`: 10MB
-- `images.maxRedirects`: 3
-- `images.timeoutMs`: 10s
-- HEIC/HEIF `input_image` 源被接受，并在提供商交付之前规范化为 JPEG。
+- `maxBodyBytes`：20MB
+- `maxUrlParts`：8
+- `files.maxBytes`：5MB
+- `files.maxChars`：200k
+- `files.maxRedirects`：3
+- `files.timeoutMs`：10s
+- `files.pdf.maxPages`：4
+- `files.pdf.maxPixels`：4,000,000
+- `files.pdf.minTextChars`：200
+- `images.maxBytes`：10MB
+- `images.maxRedirects`：3
+- `images.timeoutMs`：10s
+- 接受 HEIC/HEIF `input_image` 源，并在交付给提供商之前将其规范化为 JPEG。
 
-安全说明：
+安全提示：
 
-- URL 允许列表在获取之前和重定向跳转时强制执行。
-- 允许列出主机名不会绕过私有/内部 IP 阻止。
-- 对于暴露于互联网的网关，除了应用程序级别的保护之外，还应应用网络出口控制。
+- 在获取之前和重定向跳转时会强制执行 URL 允许列表。
+- 将主机名加入允许列表并不能绕过私有/内部 IP 阻断。
+- 对于暴露于互联网的 Gateway(网关)，除了应用级防护外，还应应用网络出口控制。
   请参阅 [安全](/zh/gateway/security)。
 
 ## 流式传输 (SSE)
@@ -227,7 +242,7 @@ URL 获取默认值：
 设置 `stream: true` 以接收服务器发送事件 (SSE)：
 
 - `Content-Type: text/event-stream`
-- 每个事件行是 `event: <type>` 和 `data: <json>`
+- 每个事件行都是 `event: <type>` 和 `data: <json>`
 - 流以 `data: [DONE]` 结束
 
 当前发出的事件类型：
@@ -241,15 +256,15 @@ URL 获取默认值：
 - `response.content_part.done`
 - `response.output_item.done`
 - `response.completed`
-- `response.failed` (出错时)
+- `response.failed` (错误时)
 
 ## 使用情况
 
-当底层提供商报告令牌计数时，将填充 `usage`。
+当底层提供商报告 token 计数时，会填充 `usage`。
 
 ## 错误
 
-错误使用类似以下的 JSON 对象：
+错误使用如下 JSON 对象：
 
 ```json
 { "error": { "message": "...", "type": "invalid_request_error" } }
@@ -257,8 +272,8 @@ URL 获取默认值：
 
 常见情况：
 
-- `401` 缺失/无效的身份验证
-- `400` 无效的请求正文
+- `401` 缺失/无效的认证
+- `400` 无效的请求体
 - `405` 错误的方法
 
 ## 示例

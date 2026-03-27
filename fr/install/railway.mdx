@@ -1,22 +1,21 @@
 ---
-summary: "Déployez OpenClaw sur Railway avec un modèle en un clic"
+summary: "Déployer OpenClaw sur Railway avec un modèle en un clic"
 read_when:
   - Deploying OpenClaw to Railway
-  - You want a one-click cloud deploy with browser-based setup
+  - You want a one-click cloud deploy with browser-based Control UI
 title: "Railway"
 ---
 
-Déployez OpenClaw sur Railway avec un modèle en un clic et terminez la configuration dans votre navigateur.
-C'est le chemin le plus simple « sans terminal sur le serveur » : Railway exécute le Gateway pour vous,
-et vous configurez tout via l'`/setup` assistant Web.
+Déployez OpenClaw sur Railway avec un modèle en un clic et accédez-y via l'interface web de contrôle.
+C'est le chemin le plus simple « sans terminal sur le serveur » : Railway exécute le Gateway pour vous.
 
 ## Liste de contrôle rapide (nouveaux utilisateurs)
 
 1. Cliquez sur **Déployer sur Railway** (ci-dessous).
 2. Ajoutez un **Volume** monté sur `/data`.
-3. Définissez les **Variables** requises (au moins `SETUP_PASSWORD`).
+3. Définissez les **Variables** requises (au moins `OPENCLAW_GATEWAY_PORT` et `OPENCLAW_GATEWAY_TOKEN`).
 4. Activez le **Proxy HTTP** sur le port `8080`.
-5. Ouvrez `https://<your-railway-domain>/setup` et terminez l'assistant.
+5. Ouvrez `https://<your-railway-domain>/openclaw` et connectez-vous en utilisant votre `OPENCLAW_GATEWAY_TOKEN`.
 
 ## Déploiement en un clic
 
@@ -33,27 +32,24 @@ Railway effectuera soit :
 
 Ensuite, ouvrez :
 
-- `https://<your-railway-domain>/setup` — configuration Web (protégée par mot de passe)
 - `https://<your-railway-domain>/openclaw` — Interface de contrôle
 
 ## Ce que vous obtenez
 
-- OpenClaw Gateway hébergé + Interface de contrôle
-- Configuration Web sur `/setup` (pas de commandes terminal)
-- Stockage persistant via le Volume Railway (`/data`) afin que la configuration/les informations d'identification/l'espace de travail survivent aux redéploiements
-- Exportation de sauvegarde sur `/setup/export` pour migrer hors de Railway plus tard
+- Gateway OpenClaw hébergé + Interface de contrôle
+- Stockage persistant via un Volume Railway (`/data`) afin que la configuration/les identifiants/l'espace de travail survivent aux redéploiements
 
 ## Paramètres Railway requis
 
-### Réseau public
+### Mise en réseau publique
 
-Activez le **Proxy HTTP** pour le service.
+Activez le **proxy HTTP** pour le service.
 
 - Port : `8080`
 
 ### Volume (requis)
 
-Attachez un volume monté sur :
+Attachez un volume monté à :
 
 - `/data`
 
@@ -61,42 +57,34 @@ Attachez un volume monté sur :
 
 Définissez ces variables sur le service :
 
-- `SETUP_PASSWORD` (requis)
-- `PORT=8080` (requis — doit correspondre au port dans Réseau public)
+- `OPENCLAW_GATEWAY_PORT=8080` (requis — doit correspondre au port dans la mise en réseau publique)
+- `OPENCLAW_GATEWAY_TOKEN` (requis ; à traiter comme un secret administrateur)
 - `OPENCLAW_STATE_DIR=/data/.openclaw` (recommandé)
 - `OPENCLAW_WORKSPACE_DIR=/data/workspace` (recommandé)
-- `OPENCLAW_GATEWAY_TOKEN` (recommandé ; à traiter comme un secret administrateur)
 
-## Flux de configuration
+## Connecter un channel
 
-1. Visitez `https://<your-railway-domain>/setup` et entrez votre `SETUP_PASSWORD`.
-2. Choisissez un modèle/fournisseur d'authentification et collez votre clé.
-3. (Facultatif) Ajoutez les jetons Telegram/Discord/Slack.
-4. Cliquez sur **Run setup**.
+Utilisez l'interface de contrôle sur `/openclaw` ou exécutez `openclaw onboard` via le shell de Railway pour les instructions de configuration du channel :
 
-Si les DMs Telegram sont réglés sur l'appairage, la configuration Web peut approuver le code d'appairage.
-
-## Connect a channel
-
-Collez votre jeton Telegram ou Discord dans l'assistant `/setup`. Pour les instructions de configuration, consultez la documentation du channel :
-
-- [Telegram](/fr/channels/telegram) (le plus rapide —仅需 un jeton de bot)
+- [Telegram](/fr/channels/telegram) (le plus rapide — juste un jeton de bot)
 - [Discord](/fr/channels/discord)
-- [All channels](/fr/channels)
+- [Tous les canaux](/fr/channels)
 
-## Backups & migration
+## Sauvegardes et migration
 
-Téléchargez une sauvegarde à l'adresse :
+Exportez votre configuration et votre espace de travail :
 
-- `https://<your-railway-domain>/setup/export`
+```bash
+openclaw backup create
+```
 
-Cela exporte votre état OpenClaw + votre espace de travail afin que vous puissiez migrer vers un autre hôte sans perdre la configuration ni la mémoire.
+Cela crée une archive de sauvegarde portable que vous pouvez restaurer sur n'importe quel hôte OpenClaw. Voir [Sauvegarde](/fr/cli/backup) pour plus de détails.
 
-## Next steps
+## Étapes suivantes
 
-- Configurez les channels de messagerie : [Channels](/fr/channels)
-- Configurez le Gateway : [Gateway configuration](/fr/gateway/configuration)
-- Gardez OpenClaw à jour : [Updating](/fr/install/updating)
+- Configurez les canaux de messagerie : [Canaux](/fr/channels)
+- Configurez le Gateway : [Configuration du Gateway](/fr/gateway/configuration)
+- Gardez OpenClaw à jour : [Mise à jour](/fr/install/updating)
 
 import fr from "/components/footer/fr.mdx";
 

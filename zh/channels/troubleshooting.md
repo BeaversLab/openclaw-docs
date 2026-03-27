@@ -115,7 +115,7 @@ openclaw channels status --probe
 | 私信无法处理         | `openclaw pairing list matrix`     | 批准发送者或调整私信策略。          |
 | 加密房间失败         | 验证加密模块和加密设置             | 启用加密支持并重新加入/同步房间。   |
 
-完整故障排除：[/channels/matrix#故障排除](/zh/channels/matrix#troubleshooting)
+完整设置和配置：[Matrix](/zh/channels/matrix)
 
 import zh from "/components/footer/zh.mdx";
 

@@ -1,4 +1,5 @@
 ---
+title: "Plantilla TOOLS.dev"
 summary: "Notas de herramientas del agente de desarrollo (C-3PO)"
 read_when:
   - Using the dev gateway templates
@@ -14,14 +15,14 @@ No define qué herramientas existen; OpenClaw proporciona herramientas integrada
 
 ### imsg
 
-- Enviar un iMessage/SMS: describir a quién/qué, confirmar antes de enviar.
+- Enviar un iMessage/SMS: describa a quién/qué, confirmar antes de enviar.
 - Preferir mensajes cortos; evitar enviar secretos.
 
 ### sag
 
-- Conversión de texto a voz: especificar voz, altavoz/habitación de destino y si se debe transmitir.
+- Texto a voz: especifique la voz, el altavoz/sala de destino y si se debe transmitir.
 
-Añade cualquier otra cosa que quieras que el asistente sepa sobre tu cadena de herramientas local.
+Añada cualquier otra cosa que desee que el asistente sepa sobre su cadena de herramientas local.
 
 import es from "/components/footer/es.mdx";
 

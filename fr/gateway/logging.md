@@ -3,7 +3,7 @@ summary: "Surfaces de journalisation, journaux de fichiers, styles de journaux W
 read_when:
   - Changing logging output or formats
   - Debugging CLI or gateway output
-title: "Journalisation"
+title: "Journalisation du Gateway"
 ---
 
 # Journalisation

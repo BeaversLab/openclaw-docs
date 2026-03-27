@@ -107,12 +107,12 @@ Reglas rápidas:
 - `Config path not found: agents.defaults.userTimezone` significa que la clave no está establecida; el latido vuelve a la zona horaria del host (o a `activeHours.timezone` si está establecida).
 - Cron sin `--tz` utiliza la zona horaria del host de la puerta de enlace.
 - El latido `activeHours` utiliza la resolución de zona horaria configurada (`user`, `local` o zona horaria IANA explícita).
-- Las marcas de tiempo ISO sin zona horaria se tratan como UTC para las programaciones cron `at`.
+- Las programaciones de Cron `at` tratan las marcas de tiempo ISO sin zona horaria como UTC a menos que haya utilizado la CLI `--at "<offset-less-iso>" --tz <iana>`.
 
 Firmas comunes:
 
 - Los trabajos se ejecutan a la hora incorrecta del reloj después de los cambios de zona horaria del host.
-- El latido siempre se omite durante el día porque `activeHours.timezone` es incorrecto.
+- Heartbeat siempre se omite durante su horario diurno porque `activeHours.timezone` es incorrecto.
 
 Relacionado:
 

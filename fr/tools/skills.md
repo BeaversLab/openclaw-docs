@@ -8,7 +8,7 @@ title: "Skills"
 
 # Skills (OpenClaw)
 
-OpenClaw utilise des dossiers de compétences **compatibles avec [AgentSkills](https://agentskills.io)** pour enseigner à l'agent comment utiliser des outils. Chaque compétence est un répertoire contenant un `SKILL.md` avec des en-têtes YAML et des instructions. OpenClaw charge les **compétences groupées** ainsi que des remplacements locaux facultatifs, et les filtre au chargement en fonction de l'environnement, de la configuration et de la présence des binaires.
+OpenClaw utilise des dossiers de compétences **compatibles avec [AgentSkills](https://agentskills.io)** pour apprendre à l'agent comment utiliser les outils. Chaque compétence est un répertoire contenant un fichier `SKILL.md` avec des en-têtes YAML et des instructions. OpenClaw charge les **compétences groupées** ainsi que des remplacements locaux facultatifs, et les filtre au chargement en fonction de l'environnement, de la configuration et de la présence des binaires.
 
 ## Emplacements et priorité
 
@@ -42,38 +42,41 @@ s'applique : l'espace de travail l'emporte, puis gérées/locales, puis groupée
 
 Les plugins peuvent fournir leurs propres compétences en listant les répertoires `skills` dans
 `openclaw.plugin.json` (chemins relatifs à la racine du plugin). Les compétences des plugins sont
-chargées lorsque le plugin est activé et participent aux règles normales de précédence des compétences.
-Vous pouvez les filtrer via `metadata.openclaw.requires.config` sur l'entrée de configuration
+chargées lorsque le plugin est activé et participent aux règles normales de priorité des compétences.
+Vous pouvez les conditionner via `metadata.openclaw.requires.config` sur l'entrée de configuration
 du plugin. Consultez [Plugins](/fr/tools/plugin) pour la découverte/configuration et [Outils](/fr/tools) pour la
 surface outil que ces compétences enseignent.
 
 ## ClawHub (install + sync)
 
-ClawHub est le registre public de compétences pour OpenClaw. Parcourir sur
-[https://clawhub.com](https://clawhub.com). Utilisez-le pour découvrir, installer, mettre à jour et sauvegarder des compétences.
+ClawHub est le registre public de compétences pour OpenClaw. Parcourez-le sur
+[https://clawhub.com](https://clawhub.com). Utilisez les commandes natives `openclaw skills`
+pour découvrir/installer/mettre à jour les compétences, ou la CLI `clawhub` distincte lorsque
+vous avez besoin des flux de travail de publication/synchronisation.
 Guide complet : [ClawHub](/fr/tools/clawhub).
 
 Flux courants :
 
 - Installer une compétence dans votre espace de travail :
-  - `clawhub install <skill-slug>`
+  - `openclaw skills install <skill-slug>`
 - Mettre à jour toutes les compétences installées :
-  - `clawhub update --all`
+  - `openclaw skills update --all`
 - Synchroniser (scanner + publier les mises à jour) :
   - `clawhub sync --all`
 
-Par défaut, `clawhub` installe dans `./skills` sous votre répertoire de travail
-actuel (ou revient à l'espace de travail OpenClaw configuré). OpenClaw le détecte
-en tant que `<workspace>/skills` lors de la prochaine session.
+L'installation native `openclaw skills install` se fait dans le répertoire `skills/`
+de l'espace de travail actif. La CLI `clawhub` distincte installe également dans `./skills` sous votre
+crépertoire de travail actuel (ou revient à l'espace de travail OpenClaw configuré).
+OpenClaw le récupère en tant que `<workspace>/skills` lors de la session suivante.
 
 ## Notes de sécurité
 
 - Traitez les compétences tierces comme du **code non fiable**. Lisez-les avant de les activer.
-- Préférez les exécutions en bac à sable (sandboxed) pour les entrées non fiables et les outils risqués. Voir [Sandboxing](/fr/gateway/sandboxing).
+- Privilégiez les exécutions en mode bac à sable (sandboxed) pour les entrées non fiables et les outils risqués. Consultez [Mise en bac à sable](/fr/gateway/sandboxing).
 - La découverte de compétences dans l'espace de travail et les répertoires supplémentaires n'accepte que les racines de compétences et les fichiers `SKILL.md` dont le chemin réel résolu reste à l'intérieur de la racine configurée.
 - `skills.entries.*.env` et `skills.entries.*.apiKey` injectent des secrets dans le processus **hôte**
   pour ce tour d'agent (pas le bac à sable). Gardez les secrets hors des invites et des journaux.
-- Pour un modèle de menace plus large et des listes de contrôle, voir [Security](/fr/gateway/security).
+- Pour un modèle de menace plus large et des listes de contrôle, voir [Sécurité](/fr/gateway/security).
 
 ## Format (AgentSkills + compatible Pi)
 
@@ -91,21 +94,21 @@ Notes :
 - Nous suivons la spécification AgentSkills pour la disposition/l'intention.
 - L'analyseur utilisé par l'agent intégré prend en charge uniquement les clés de frontmatter **sur une seule ligne**.
 - `metadata` doit être un **objet JSON sur une seule ligne**.
-- Utilisez `{baseDir}` dans les instructions pour faire référence au chemin du dossier de la compétence.
+- Utilisez `{baseDir}` dans les instructions pour faire référence au chemin du dossier de compétence.
 - Clés de frontmatter facultatives :
-  - `homepage` — URL affichée sous le nom de « Site Web » dans l'interface utilisateur des Skills de macOS (également prise en charge via `metadata.openclaw.homepage`).
+  - `homepage` — URL affichée sous le nom de « Site Web » dans l'interface utilisateur des Skills macOS (également prise en charge via `metadata.openclaw.homepage`).
   - `user-invocable` — `true|false` (par défaut : `true`). Lorsque `true`, la compétence est exposée en tant que commande slash utilisateur.
-  - `disable-model-invocation` — `true|false` (par défaut : `false`). Lorsque `true`, la compétence est exclue du prompt du modèle (toujours disponible via l'invocation de l'utilisateur).
-  - `command-dispatch` — `tool` (facultatif). Lorsqu'il est défini sur `tool`, la commande slash contourne le modèle et envoie directement la commande à un outil.
+  - `disable-model-invocation` — `true|false` (par défaut : `false`). Lorsque `true`, la compétence est exclue du prompt du modèle (toujours disponible via l'invocation par l'utilisateur).
+  - `command-dispatch` — `tool` (facultatif). Lorsqu'il est défini sur `tool`, la commande slash contourne le modèle et envoie directement la requête à un outil.
   - `command-tool` — nom de l'outil à invoquer lorsque `command-dispatch: tool` est défini.
-  - `command-arg-mode` — `raw` (par défaut). Pour l'envoi à l'outil, transmet la chaîne d'arguments brute à l'outil (pas d'analyse principale).
+  - `command-arg-mode` — `raw` (par défaut). Pour l'envoi à l'outil, transmet la chaîne d'arguments brute à l'outil (pas d'analyse par le cœur).
 
     L'outil est invoqué avec les paramètres :
     `{ command: "<raw args>", commandName: "<slash command>", skillName: "<skill name>" }`.
 
 ## Gating (filtres de chargement)
 
-OpenClaw **filtre les compétences au moment du chargement** à l'aide de `metadata` (JSON sur une seule ligne) :
+OpenClaw **filtre les compétences au moment du chargement** en utilisant `metadata` (JSON sur une seule ligne) :
 
 ```markdown
 ---
@@ -124,16 +127,16 @@ metadata:
 
 Champs sous `metadata.openclaw` :
 
-- `always: true` — toujours inclure la compétence (ignorer les autres portes).
-- `emoji` — emoji facultatif utilisé par l'interface utilisateur des Skills de macOS.
-- `homepage` — URL facultative affichée sous le nom de « Site Web » dans l'interface utilisateur des Skills de macOS.
-- `os` — liste facultative de plateformes (`darwin`, `linux`, `win32`). Si défini, la compétence n'est éligible que sur ces systèmes d'exploitation.
+- `always: true` — inclure toujours la compétence (ignorer les autres barrières).
+- `emoji` — emoji facultatif utilisé par l'interface utilisateur des Skills macOS.
+- `homepage` — URL facultative affichée sous le nom de « Site Web » dans l'interface utilisateur des Skills macOS.
+- `os` — liste facultative de plateformes (`darwin`, `linux`, `win32`). Si elle est définie, la compétence n'est éligible que sur ces systèmes d'exploitation.
 - `requires.bins` — liste ; chacun doit exister sur `PATH`.
 - `requires.anyBins` — liste ; au moins un doit exister sur `PATH`.
 - `requires.env` — liste ; la env var doit exister **ou** être fournie dans la configuration.
 - `requires.config` — liste de chemins `openclaw.json` qui doivent être véridiques.
-- `primaryEnv` — nom de la env var associé à `skills.entries.<name>.apiKey`.
-- `install` — tableau facultatif de spécifications d'installation utilisées par l'interface utilisateur Skills macOS (brew/node/go/uv/download).
+- `primaryEnv` — nom de la env var associée à `skills.entries.<name>.apiKey`.
+- `install` — tableau facultatif de spécifications d'installateur utilisées par l'interface utilisateur des macOS Skills (brew/node/go/uv/download).
 
 Note sur le sandboxing :
 
@@ -141,9 +144,9 @@ Note sur le sandboxing :
 - Si un agent est sandboxed, le binaire doit également exister **à l'intérieur du conteneur**.
   Installez-le via `agents.defaults.sandbox.docker.setupCommand` (ou une image personnalisée).
   `setupCommand` s'exécute une fois après la création du conteneur.
-  Les installations de packages nécessitent également un accès réseau sortant, un système de fichiers racine inscriptible et un utilisateur root dans le sandbox.
-  Exemple : la compétence `summarize` (`skills/summarize/SKILL.md`) a besoin du CLI `summarize`
-  dans le conteneur sandbox pour s'exécuter.
+  Les installations de packages nécessitent également une sortie réseau, un système de fichiers racine inscriptible et un utilisateur root dans le bac à sable.
+  Exemple : la compétence `summarize` (`skills/summarize/SKILL.md`) a besoin du `summarize` CLI
+  dans le conteneur sandbox pour s'y exécuter.
 
 Exemple d'installateur :
 
@@ -177,13 +180,13 @@ Notes :
 - Si plusieurs installateurs sont répertoriés, la gateway choisit une **seule** option préférée (brew si disponible, sinon node).
 - Si tous les installateurs sont `download`, OpenClaw répertorie chaque entrée afin que vous puissiez voir les artefacts disponibles.
 - Les spécifications de l'installateur peuvent inclure `os: ["darwin"|"linux"|"win32"]` pour filtrer les options par plate-forme.
-- Les installations Node honorent `skills.install.nodeManager` dans `openclaw.json` (par défaut : npm ; options : npm/pnpm/yarn/bun).
-  Cela n'affecte que les **installations de compétences** ; l'exécution Gateway doit toujours être Node
+- Les installations Node respectent `skills.install.nodeManager` dans `openclaw.json` (par défaut : npm ; options : npm/pnpm/yarn/bun).
+  Cela n'affecte que les **installations de compétences** ; le runtime Gateway doit toujours être Node
   (Bun n'est pas recommandé pour WhatsApp/Telegram).
 - Installations Go : si `go` est manquant et que `brew` est disponible, la passerelle installe d'abord Go via Homebrew et définit `GOBIN` sur le `bin` de Homebrew lorsque cela est possible.
 - Installations par téléchargement : `url` (requis), `archive` (`tar.gz` | `tar.bz2` | `zip`), `extract` (par défaut : auto lorsqu'une archive est détectée), `stripComponents`, `targetDir` (par défaut : `~/.openclaw/tools/<skillKey>`).
 
-Si aucun `metadata.openclaw` n'est présent, la compétence est toujours éligible (sauf si
+Si aucun `metadata.openclaw` n'est présent, la compétence est toujours éligible (sauf
 désactivée dans la configuration ou bloquée par `skills.allowBundled` pour les compétences groupées).
 
 ## Remplacements de configuration (`~/.openclaw/openclaw.json`)
@@ -214,50 +217,56 @@ Les compétences groupées/gérées peuvent être activées/désactivées et fou
 
 Remarque : si le nom de la compétence contient des traits d'union, mettez la clé entre guillemets (JSON5 autorise les clés entre guillemets).
 
-Si vous souhaitez une génération/édition d'image standard dans OpenClaw lui-même, utilisez l'outil principal
+Si vous souhaitez une génération/édition d'images standard au sein de OpenClaw lui-même, utilisez l'outil principal
 `image_generate` avec `agents.defaults.imageGenerationModel` au lieu d'une
-compétence groupée. Les exemples de compétences ici sont pour des flux de travail personnalisés ou tiers.
+compétence groupée. Les exemples de compétences ici concernent les flux de travail personnalisés ou tiers.
+
+Pour l'analyse d'images native, utilisez l'outil `image` avec `agents.defaults.imageModel`.
+Pour la génération/édition d'images native, utilisez `image_generate` avec
+`agents.defaults.imageGenerationModel`. Si vous choisissez `openai/*`, `google/*`,
+`fal/*`, ou un autre modèle d'image spécifique au fournisseur, ajoutez également la clé d'auth/API
+de ce fournisseur.
 
 Les clés de configuration correspondent au **nom de la compétence** par défaut. Si une compétence définit
 `metadata.openclaw.skillKey`, utilisez cette clé sous `skills.entries`.
 
 Règles :
 
-- `enabled: false` désactive la compétence même si elle est fournie/installée.
+- `enabled: false` désactive la compétence même si elle est groupée/installée.
 - `env` : injecté **seulement si** la variable n'est pas déjà définie dans le processus.
 - `apiKey` : commodité pour les compétences qui déclarent `metadata.openclaw.primaryEnv`.
   Prend en charge une chaîne en texte brut ou un objet SecretRef (`{ source, provider, id }`).
-- `config` : conteneur optionnel pour les champs personnalisés par compétence ; les clés personnalisées doivent se trouver ici.
-- `allowBundled` : liste d'autorisation optionnelle pour les compétences **fournies** uniquement. Si défini, seules
-  les compétences fournies dans la liste sont éligibles (les compétences gérées/espace de travail ne sont pas concernées).
+- `config` : conteneur facultatif pour les champs personnalisés par compétence ; les clés personnalisées doivent résider ici.
+- `allowBundled` : liste d'autorisation facultative pour les compétences **groupées** uniquement. Si défini, seules
+  les compétences groupées de la liste sont éligibles (les compétences gérées/espace de travail ne sont pas concernées).
 
 ## Injection d'environnement (par exécution d'agent)
 
-Lorsqu'une exécution d'agent démarre, OpenClaw :
+Lorsqu'une exécution d'agent commence, OpenClaw :
 
-1. Lit les métadonnées de la compétence.
-2. Applique tout `skills.entries.<key>.env` ou `skills.entries.<key>.apiKey` à
+1. Lit les métadonnées des compétences.
+2. Applique tous les `skills.entries.<key>.env` ou `skills.entries.<key>.apiKey` à
    `process.env`.
-3. Construit le prompt système avec les **éligibles** skills.
+3. Construit le prompt système avec les compétences **éligibles**.
 4. Restaure l'environnement d'origine après la fin de l'exécution.
 
 Ceci est **délimité à l'exécution de l'agent**, et non à un environnement shell global.
 
 ## Instantané de session (performance)
 
-OpenClaw crée un instantané des skills éligibles **lorsqu'une session démarre** et réutilise cette liste pour les tours suivants dans la même session. Les modifications apportées aux skills ou à la configuration prennent effet lors de la prochaine nouvelle session.
+OpenClaw capture les compétences éligibles **lorsqu'une session démarre** et réutilise cette liste pour les tours suivants de la même session. Les modifications des compétences ou de la configuration prennent effet lors de la prochaine nouvelle session.
 
-Les skills peuvent également être actualisés en cours de session lorsque l'observateur de skills est activé ou lorsqu'un nouveau nœud distant éligible apparaît (voir ci-dessous). Considérez cela comme un **rechargement à chaud** : la liste actualisée est prise en compte lors du prochain tour de l'agent.
+Les compétences peuvent également s'actualiser en cours de session lorsque l'observateur de compétences est activé ou lorsqu'un nouveau nœud distant éligible apparaît (voir ci-dessous). Considérez cela comme un **rechargement à chaud (hot reload)** : la liste actualisée est récupérée lors du prochain tour de l'agent.
 
-## Nœuds distants macOS (passerelle Linux)
+## Nœuds macOS distants (passerelle Linux)
 
-Si le Gateway s'exécute sur Linux mais qu'un nœud macOS est connecté **avec `system.run` autorisé** (sécurité des approbations Exec non définie sur `deny`), OpenClaw peut considérer les skills exclusifs à macOS comme éligibles lorsque les binaires requis sont présents sur ce nœud. L'agent doit exécuter ces skills via l'outil `nodes` (généralement `nodes.run`).
+Si le Gateway s'exécute sur Linux mais qu'un **nœud macOS** est connecté **avec `system.run` autorisé** (Sécurité des approbations d'exécution non réglée sur `deny`), OpenClaw peut considérer les compétences exclusives macOS comme éligibles lorsque les binaires requis sont présents sur ce nœud. L'agent doit exécuter ces compétences via l'outil `nodes` (généralement `nodes.run`).
 
-Cela repose sur la capacité du nœud à signaler sa prise en charge des commandes et sur une sonde de binaire via `system.run`. Si le nœud macOS se déconnecte par la suite, les skills restent visibles ; les appels peuvent échouer jusqu'à ce que le nœud se reconnecte.
+Cela repose sur le fait que le nœud signale sa prise en charge des commandes et sur une sonde de binaire via `system.run`. Si le nœud macOS se déconnecte par la suite, les compétences restent visibles ; les appels peuvent échouer jusqu'à ce que le nœud se reconnecte.
 
-## Skills watcher (auto-refresh)
+## Observateur de compétences (actualisation automatique)
 
-Par défaut, OpenClaw surveille les dossiers de skills et met à jour l'instantané des skills lorsque les fichiers `SKILL.md` changent. Configurez ceci sous `skills.load` :
+Par défaut, OpenClaw surveille les dossiers de compétences et met à jour l'instantané des compétences lorsque les fichiers `SKILL.md` sont modifiés. Configurez ceci sous `skills.load` :
 
 ```json5
 {
@@ -270,11 +279,11 @@ Par défaut, OpenClaw surveille les dossiers de skills et met à jour l'instanta
 }
 ```
 
-## Token impact (skills list)
+## Impact sur les jetons (liste des compétences)
 
-Lorsque les compétences sont éligibles, OpenClaw injecte une liste XML compacte des compétences disponibles dans le prompt système (via `formatSkillsForPrompt` dans `pi-coding-agent`). Le coût est déterministe :
+Lorsque les compétences sont éligibles, OpenClaw injecte une liste XML compacte des compétences disponibles dans le invite système (via `formatSkillsForPrompt` dans `pi-coding-agent`). Le coût est déterministe :
 
-- **Surcharge de base (uniquement lorsqu'il y a ≥1 compétence) :** 195 caractères.
+- **Surcharge de base (seulement lorsqu'il y a ≥1 compétence) :** 195 caractères.
 - **Par compétence :** 97 caractères + la longueur des valeurs `<name>`, `<description>` et `<location>` échappées en XML.
 
 Formule (caractères) :
@@ -285,16 +294,16 @@ total = 195 + Σ (97 + len(name_escaped) + len(description_escaped) + len(locati
 
 Notes :
 
-- L'échappement XML développe `& < > " '` en entités (`&amp;`, `&lt;`, etc.), augmentant la longueur.
-- Le nombre de tokens varie selon le tokeniseur du modèle. Une estimation approximative de style OpenAI est d'environ 4 caractères/token, donc **97 caractères ≈ 24 tokens** par compétence plus vos longueurs de champ réelles.
+- L'échappement XML étend `& < > " '` en entités (`&amp;`, `&lt;`, etc.), augmentant la longueur.
+- Le nombre de jetons varie selon le tokeniseur du model. Une estimation de style OpenAI est d'environ ~4 caractères/jeton, donc **97 caractères ≈ 24 jetons** par compétence plus vos longueurs de champ réelles.
 
 ## Cycle de vie des compétences gérées
 
-OpenClaw fournit un ensemble de base de compétences en tant que **compétences groupées** dans le cadre de l'installation (package npm ou OpenClaw.app). `~/.openclaw/skills` existe pour les substitutions locales (par exemple, épingler/patcher une compétence sans modifier la copie groupée). Les compétences de l'espace de travail sont détenues par l'utilisateur et remplacent les deux en cas de conflit de noms.
+OpenClaw fournit un ensemble de base de compétences en tant que **compétences groupées** dans le cadre de l'installation (paquet npm ou OpenClaw.app). `~/.openclaw/skills` existe pour les remplacements locaux (par exemple, épingler/corriger une compétence sans modifier la copie groupée). Les compétences de l'espace de travail sont détenues par l'utilisateur et remplacent les deux en cas de conflit de noms.
 
 ## Référence de configuration
 
-Voir [Configuration des compétences](/fr/tools/skills-config) pour le schéma de configuration complet.
+Voir [Skills config](/fr/tools/skills-config) pour le schéma de configuration complet.
 
 ## Vous cherchez plus de compétences ?
 

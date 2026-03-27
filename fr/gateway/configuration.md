@@ -234,7 +234,7 @@ En cas d'échec de la validation :
   </Accordion>
 
   <Accordion title="Activer le sandboxing">
-    Exécutez les sessions de l'agent dans des conteneurs Docker isolés :
+    Exécutez les sessions d'agent dans des conteneurs Docker isolés :
 
     ```json5
     {
@@ -251,7 +251,7 @@ En cas d'échec de la validation :
 
     Construisez d'abord l'image : `scripts/sandbox-setup.sh`
 
-    Consultez [Sandboxing](/fr/gateway/sandboxing) pour le guide complet et [full reference](/fr/gateway/configuration-reference#agents-defaults-sandbox) pour toutes les options.
+    Consultez le [Sandboxing](/fr/gateway/sandboxing) pour le guide complet et la [référence complète](/fr/gateway/configuration-reference#agentsdefaultssandbox) pour toutes les options.
 
   </Accordion>
 

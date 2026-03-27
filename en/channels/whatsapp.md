@@ -91,7 +91,8 @@ openclaw pairing approve whatsapp <CODE>
 </Steps>
 
 <Note>
-OpenClaw recommends running WhatsApp on a separate number when possible. (The channel metadata and setup flow are optimized for that setup, but personal-number setups are also supported.)
+  OpenClaw recommends running WhatsApp on a separate number when possible. (The channel metadata and
+  setup flow are optimized for that setup, but personal-number setups are also supported.)
 </Note>
 
 ## Deployment patterns
@@ -313,13 +314,12 @@ When the linked self number is also present in `allowFrom`, WhatsApp self-chat s
     - `newline` mode prefers paragraph boundaries (blank lines), then falls back to length-safe chunking
   </Accordion>
 
-  <Accordion title="Outbound media behavior">
-    - supports image, video, audio (PTT voice-note), and document payloads
-    - `audio/ogg` is rewritten to `audio/ogg; codecs=opus` for voice-note compatibility
-    - animated GIF playback is supported via `gifPlayback: true` on video sends
-    - captions are applied to the first media item when sending multi-media reply payloads
-    - media source can be HTTP(S), `file://`, or local paths
-  </Accordion>
+<Accordion title="Outbound media behavior">
+  - supports image, video, audio (PTT voice-note), and document payloads - `audio/ogg` is rewritten
+  to `audio/ogg; codecs=opus` for voice-note compatibility - animated GIF playback is supported via
+  `gifPlayback: true` on video sends - captions are applied to the first media item when sending
+  multi-media reply payloads - media source can be HTTP(S), `file://`, or local paths
+</Accordion>
 
   <Accordion title="Media size limits and fallback behavior">
     - inbound media save cap: `channels.whatsapp.mediaMaxMb` (default `50`)

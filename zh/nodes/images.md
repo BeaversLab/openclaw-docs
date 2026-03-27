@@ -25,7 +25,7 @@ WhatsApp 渠道通过 **Baileys Web** 运行。本文档记录了目前针对发
 
 - 输入：本地文件路径 **或** HTTP(S) URL。
 - 流程：加载到 Buffer 中，检测媒体类型，并构建正确的负载：
-  - **图片：** 调整大小并重新压缩为 JPEG（最大边 2048px），目标是 `agents.defaults.mediaMaxMb`（默认 5 MB），上限为 6 MB。
+  - **图片：** 调整大小并重新压缩为 JPEG（最长边 2048px），目标是 `channels.whatsapp.mediaMaxMb`（默认：50 MB）。
   - **音频/语音/视频：** 最大通过 16 MB；音频作为语音笔记发送（`ptt: true`）。
   - **文档：** 其他任何内容，最大 100 MB，并在可用时保留文件名。
 - WhatsApp GIF 风格播放：发送带有 `gifPlayback: true`（CLI：`--gif-playback`）的 MP4，以便移动客户端内联循环。
@@ -54,15 +54,15 @@ WhatsApp 渠道通过 **Baileys Web** 运行。本文档记录了目前针对发
 
 **Outbound send caps (WhatsApp web send)**
 
-- 图像：重新压缩后约为 6 MB 的上限。
+- 图片：重新压缩后最多 `channels.whatsapp.mediaMaxMb`（默认：50 MB）。
 - 音频/语音/视频：16 MB 上限；文档：100 MB 上限。
 - 过大或无法读取的媒体 → 日志中有明确的错误，并跳过回复。
 
 **媒体理解上限（转录/描述）**
 
-- 图像默认值：10 MB（`tools.media.image.maxBytes`）。
-- 音频默认值：20 MB（`tools.media.audio.maxBytes`）。
-- 视频默认值：50 MB（`tools.media.video.maxBytes`）。
+- 图片默认值：10 MB (`tools.media.image.maxBytes`)。
+- 音频默认值：20 MB (`tools.media.audio.maxBytes`)。
+- 视频默认值：50 MB (`tools.media.video.maxBytes`)。
 - 过大的媒体会跳过理解，但回复仍会使用原始正文发送。
 
 ## 测试注意事项

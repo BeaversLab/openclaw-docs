@@ -90,8 +90,8 @@ Contrôles de compatibilité optionnels :
 Ce champ accepte également les objets SecretRef.
 
 **Via l'environnement :** définissez `PERPLEXITY_API_KEY` ou `OPENROUTER_API_KEY`
-dans l'environnement du processus de la Gateway. Pour une installation de passerelle, placez-la dans
-`~/.openclaw/.env` (ou l'environnement de votre service). Voir [Env vars](/fr/help/faq#how-does-openclaw-load-environment-variables).
+dans l'environnement de processus du Gateway. Pour une installation de passerelle, placez-le dans
+`~/.openclaw/.env` (ou votre environnement de service). Voir [Variables d'environnement](/fr/help/faq#env-vars-and-env-loading).
 
 Si `provider: "perplexity"` est configuré et que le SecretRef de la clé Perplexity n'est pas résolu sans solution de repli d'environnement, le démarrage/rechargement échoue rapidement.
 
@@ -170,8 +170,12 @@ await web_search({
 - OpenRouter ou les commutateurs explicites `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` ramènent Perplexity aux complétés de chat Sonar pour compatibilité
 - Les résultats sont mis en cache pendant 15 minutes par défaut (configurable via `cacheTtlMinutes`)
 
-Voir [Web tools](/fr/tools/web) pour la configuration complète de web_search.
-Voir [Perplexity Search API docs](https://docs.perplexity.ai/docs/search/quickstart) pour plus de détails.
+## Connexes
+
+- [Aperçu de la recherche Web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
+- [Documentation de l'Perplexity de recherche API](https://docs.perplexity.ai/docs/search/quickstart) -- documentation officielle de Perplexity
+- [Recherche Brave](/fr/tools/brave-search) -- résultats structurés avec des filtres de pays/langue
+- [Recherche Exa](/fr/tools/exa-search) -- recherche neurale avec extraction de contenu
 
 import fr from "/components/footer/fr.mdx";
 

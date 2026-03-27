@@ -33,9 +33,15 @@ title: "WebChat"
 
 ## 控制 UI 代理工具面板
 
-- 控制 UI `/agents` 工具面板通过 `tools.catalog` 获取运行时目录，并将每个工具标记为 `core` 或 `plugin:<id>`（对于可选插件工具则标记为 `optional`）。
-- 如果 `tools.catalog` 不可用，该面板将回退到内置的静态列表。
-- 该面板编辑配置文件和覆盖配置，但有效的运行时访问仍遵循策略优先级（`allow`/`deny`、每个代理以及提供商/渠道覆盖）。
+- 控制 UI `/agents` 工具面板有两个独立的视图：
+  - **当前可用** 使用 `tools.effective(sessionKey=...)` 并显示当前
+    会话在运行时实际可用的内容，包括核心、插件和渠道拥有的工具。
+  - **工具配置** 使用 `tools.catalog` 并专注于配置文件、覆盖和
+    目录语义。
+- 运行时可用性是会话范围的。在同一代理上切换会话可能会更改
+  **当前可用** 列表。
+- 配置编辑器并不暗示运行时可用性；有效访问仍然遵循策略
+  优先级 (`allow`/`deny`，以及每个代理和提供商/渠道的覆盖)。
 
 ## 远程使用
 
@@ -48,15 +54,15 @@ title: "WebChat"
 
 渠道选项：
 
-- 没有专用的 `webchat.*` 块。WebChat 使用网关端点和下面的身份验证设置。
+- 没有专用的 `webchat.*` 块。WebChat 使用下面的网关端点 + 身份验证设置。
 
-相关的全局选项：
+相关全局选项：
 
-- `gateway.port`, `gateway.bind`：WebSocket 主机/端口。
-- `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password`：WebSocket 身份验证（令牌/密码）。
-- `gateway.auth.mode: "trusted-proxy"`：针对浏览器客户端的反向代理身份验证（参见 [Trusted Proxy Auth](/zh/gateway/trusted-proxy-auth)）。
-- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password`：远程网关目标。
-- `session.*`：会话存储和主密钥默认值。
+- `gateway.port`, `gateway.bind`: WebSocket 主机/端口。
+- `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password`: WebSocket 身份验证 (令牌/密码)。
+- `gateway.auth.mode: "trusted-proxy"`: 用于浏览器客户端的反向代理身份验证 (请参阅 [Trusted Proxy Auth](/zh/gateway/trusted-proxy-auth))。
+- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password`: 远程网关目标。
+- `session.*`: 会话存储和主密钥默认值。
 
 import zh from "/components/footer/zh.mdx";
 

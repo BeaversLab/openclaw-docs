@@ -192,6 +192,8 @@ MEDIA:https://example.com/screenshot.png
 
 OpenClaw les extrait et les envoie en tant que médias accompagnant le texte.
 
+Pour les chemins locaux, la liste d'autorisation par défaut est intentionnellement restreinte : la racine temporaire OpenClaw, le cache média, les chemins de l'espace de travail de l'agent et les fichiers générés par le bac à sable. Si vous avez besoin de racines de pièces jointes locales plus larges, configurez une liste d'autorisation explicite de canal/plugin au lieu de vous fier à des chemins d'hôte arbitraires.
+
 ## Liste de contrôle des opérations
 
 ```bash
@@ -206,11 +208,11 @@ Les journaux se trouvent sous `/tmp/openclaw/` (par défaut : `openclaw-YYYY-MM-
 ## Étapes suivantes
 
 - WebChat : [WebChat](/fr/web/webchat)
-- Opérations Gateway : [manuel de procédures Gateway](/fr/gateway)
+- Opérations du Gateway : [Manuel d'exécution Gateway](/fr/gateway)
 - Cron + réveils : [Tâches Cron](/fr/automation/cron-jobs)
-- Compagnon de barre de menus macOS : [application OpenClaw macOS](/fr/platforms/macos)
-- Application nœud iOS : [application iOS](/fr/platforms/ios)
-- Application nœud Android : [application Android](/fr/platforms/android)
+- Compagnon de barre de menu macOS : [Application OpenClaw macOS](/fr/platforms/macos)
+- Application de nœud iOS : [Application iOS](/fr/platforms/ios)
+- Application de nœud Android : [Application Android](/fr/platforms/android)
 - Statut Windows : [Windows (WSL2)](/fr/platforms/windows)
 - Statut Linux : [Application Linux](/fr/platforms/linux)
 - Sécurité : [Sécurité](/fr/gateway/security)

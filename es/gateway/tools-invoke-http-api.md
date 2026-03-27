@@ -8,7 +8,7 @@ title: "API de invocación de herramientas"
 
 # Invocación de herramientas (HTTP)
 
-El Gateway de OpenClaw expone un endpoint HTTP simple para invocar una sola herramienta directamente. Siempre está habilitado, pero está limitado por la autenticación del Gateway y la política de herramientas.
+El Gateway de OpenClaw expone un punto final HTTP simple para invocar una sola herramienta directamente. Siempre está habilitado y utiliza la autenticación del Gateway además de la política de herramientas, pero los llamadores que pasan la autenticación de portador del Gateway se tratan como operadores de confianza para ese gateway.
 
 - `POST /tools/invoke`
 - Mismo puerto que el Gateway (multiplexación WS + HTTP): `http://<gateway-host>:<port>/tools/invoke`
@@ -26,6 +26,7 @@ Notas:
 - Cuando `gateway.auth.mode="token"`, use `gateway.auth.token` (o `OPENCLAW_GATEWAY_TOKEN`).
 - Cuando `gateway.auth.mode="password"`, use `gateway.auth.password` (o `OPENCLAW_GATEWAY_PASSWORD`).
 - Si `gateway.auth.rateLimit` está configurado y ocurren demasiados fallos de autenticación, el endpoint devuelve `429` con `Retry-After`.
+- Trate esta credencial como un secreto de operador de acceso completo para ese gateway. No es un token de API con ámbito para un rol `/tools/invoke` más limitado.
 
 ## Cuerpo de la solicitud
 
@@ -42,14 +43,14 @@ Notas:
 Campos:
 
 - `tool` (cadena, obligatorio): nombre de la herramienta a invocar.
-- `action` (cadena, opcional): se asigna a los argumentos si el esquema de la herramienta admite `action` y el payload de argumentos lo omitió.
+- `action` (cadena, opcional): se asigna a args si el esquema de la herramienta soporta `action` y la carga útil de args lo omitió.
 - `args` (objeto, opcional): argumentos específicos de la herramienta.
-- `sessionKey` (cadena, opcional): clave de sesión de destino. Si se omite o es `"main"`, el Gateway utiliza la clave de sesión principal configurada (respeta `session.mainKey` y el agente predeterminado, o `global` en el alcance global).
+- `sessionKey` (cadena, opcional): clave de sesión de destino. Si se omite o es `"main"`, el Gateway utiliza la clave de sesión principal configurada (respeta `session.mainKey` y el agente predeterminado, o `global` en el ámbito global).
 - `dryRun` (booleano, opcional): reservado para uso futuro; actualmente ignorado.
 
-## Política + comportamiento de enrutamiento
+## Comportamiento de política y enrutamiento
 
-La disponibilidad de la herramienta se filtra a través de la misma cadena de políticas utilizada por los agentes del Gateway:
+La disponibilidad de herramientas se filtra a través de la misma cadena de políticas utilizada por los agentes del Gateway:
 
 - `tools.profile` / `tools.byProvider.profile`
 - `tools.allow` / `tools.byProvider.allow`
@@ -59,8 +60,15 @@ La disponibilidad de la herramienta se filtra a través de la misma cadena de po
 
 Si una herramienta no está permitida por la política, el punto final devuelve **404**.
 
+Notas importantes sobre los límites:
+
+- `POST /tools/invoke` está en el mismo cubo de operador de confianza que otras API HTTP del Gateway como `/v1/chat/completions`, `/v1/responses` y `/api/channels/*`.
+- Las aprobaciones de ejecución son barreras de seguridad para el operador, no un límite de autorización separado para este punto final HTTP. Si una herramienta es accesible aquí a través de la autenticación del Gateway + la política de herramientas, `/tools/invoke` no añade un aviso de aprobación adicional por llamada.
+- No comparta las credenciales de portador del Gateway con llamadores que no sean de confianza. Si necesita separación a través de límites de confianza, ejecute gateways separados (e idealmente usuarios/hosts de sistema operativo separados).
+
 Gateway HTTP también aplica una lista de denegación estricta de forma predeterminada (incluso si la política de sesión permite la herramienta):
 
+- `cron`
 - `sessions_spawn`
 - `sessions_send`
 - `gateway`
@@ -81,7 +89,7 @@ Puedes personalizar esta lista de denegación a través de `gateway.tools`:
 }
 ```
 
-Para ayudar a las políticas de grupo a resolver el contexto, opcionalmente puedes establecer:
+Para ayudar a las políticas de grupo a resolver el contexto, opcionalmente puedes configurar:
 
 - `x-openclaw-message-channel: <channel>` (ejemplo: `slack`, `telegram`)
 - `x-openclaw-account-id: <accountId>` (cuando existen múltiples cuentas)
@@ -89,12 +97,12 @@ Para ayudar a las políticas de grupo a resolver el contexto, opcionalmente pued
 ## Respuestas
 
 - `200` → `{ ok: true, result }`
-- `400` → `{ ok: false, error: { type, message } }` (solicitud no válida o error de entrada de herramienta)
+- `400` → `{ ok: false, error: { type, message } }` (solicitud no válida o error en la entrada de la herramienta)
 - `401` → no autorizado
-- `429` → autenticación limitada por velocidad (`Retry-After` establecido)
-- `404` → herramienta no disponible (no encontrada o no permitida)
+- `429` → autenticación limitada por tasa (`Retry-After` establecido)
+- `404` → herramienta no disponible (no encontrada o no en la lista de permitidos)
 - `405` → método no permitido
-- `500` → `{ ok: false, error: { type, message } }` (error inesperado de ejecución de herramienta; mensaje saneado)
+- `500` → `{ ok: false, error: { type, message } }` (error inesperado en la ejecución de la herramienta; mensaje saneado)
 
 ## Ejemplo
 

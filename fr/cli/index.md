@@ -55,8 +55,8 @@ Cette page décrit le comportement actuel de la CLI. Si les commandes changent, 
 - [`security`](/fr/cli/security)
 - [`secrets`](/fr/cli/secrets)
 - [`skills`](/fr/cli/skills)
-- [`daemon`](/fr/cli/daemon) (alias hérité pour les commandes de service de passerelle)
-- [`clawbot`](/fr/cli/clawbot) (espace de noms d'alias hérité)
+- [`daemon`](/fr/cli/daemon) (alias de héritage pour les commandes de service de passerelle)
+- [`clawbot`](/fr/cli/clawbot) (espace de noms d'alias de héritage)
 - [`voicecall`](/fr/cli/voicecall) (plugin ; si installé)
 
 ## Indicateurs globaux
@@ -113,7 +113,9 @@ openclaw [--dev] [--profile <name>] <command>
     audit
   secrets
     reload
-    migrate
+    audit
+    configure
+    apply
   reset
   uninstall
   update
@@ -132,16 +134,21 @@ openclaw [--dev] [--profile <name>] <command>
     check
   plugins
     list
-    info
+    inspect
     install
+    uninstall
+    update
     enable
     disable
     doctor
+    marketplace list
   memory
     status
     index
     search
   message
+    send
+    broadcast
   agent
   agents
     list
@@ -485,17 +492,20 @@ Lister et inspecter les compétences disponibles ainsi que les informations de p
 
 Sous-commandes :
 
-- `skills list` : lister les compétences (par défaut en l'absence de sous-commande).
+- `skills search [query...]` : rechercher des compétences ClawHub.
+- `skills install <slug>` : installer une compétence depuis ClawHub dans l'espace de travail actif.
+- `skills update <slug|--all>` : mettre à jour les compétences ClawHub suivies.
+- `skills list` : lister les compétences (par défaut lorsqu'il n'y a pas de sous-commande).
 - `skills info <name>` : afficher les détails d'une compétence.
 - `skills check` : résumé des prérequis prêts par rapport à ceux manquants.
 
 Options :
 
 - `--eligible` : afficher uniquement les compétences prêtes.
-- `--json` : sortie JSON (pas de mise en forme).
+- `--json` : sortie JSON (sans style).
 - `-v`, `--verbose` : inclure les détails des prérequis manquants.
 
-Conseil : utilisez `npx clawhub` pour rechercher, installer et synchroniser les compétences.
+Conseil : utilisez `openclaw skills search`, `openclaw skills install` et `openclaw skills update` pour les compétences prises en charge par ClawHub.
 
 ### `pairing`
 
@@ -509,7 +519,7 @@ Sous-commandes :
 
 ### `devices`
 
-Gérer les entrées d'appariement d'appareils passerelle et les jetons d'appareil par rôle.
+Gérer les entrées d'appariement des passerelles et les jetons de périphérique par rôle.
 
 Sous-commandes :
 
@@ -523,16 +533,16 @@ Sous-commandes :
 
 ### `webhooks gmail`
 
-Configuration du hook Gmail Pub/Sub + exécuteur. Voir [/automation/gmail-pubsub](/fr/automation/gmail-pubsub).
+Configuration + exécuteur du hook Gmail Pub/Sub. Voir [/automation/gmail-pubsub](/fr/automation/gmail-pubsub).
 
 Sous-commandes :
 
 - `webhooks gmail setup` (nécessite `--account <email>` ; prend en charge `--project`, `--topic`, `--subscription`, `--label`, `--hook-url`, `--hook-token`, `--push-token`, `--bind`, `--port`, `--path`, `--include-body`, `--max-bytes`, `--renew-minutes`, `--tailscale`, `--tailscale-path`, `--tailscale-target`, `--push-endpoint`, `--json`)
-- `webhooks gmail run` (remplacements à l'exécution pour les mêmes indicateurs)
+- `webhooks gmail run` (remplacements au moment de l'exécution pour les mêmes indicateurs)
 
 ### `dns setup`
 
-Helper DNS de découverte étendue (CoreDNS + Tailscale). Voir [/gateway/discovery](/fr/gateway/discovery).
+Assistant DNS de découverte de zone étendue (CoreDNS + Tailscale). Voir [/gateway/discovery](/fr/gateway/discovery).
 
 Options :
 
@@ -598,7 +608,7 @@ Options :
 
 #### `agents add [name]`
 
-Ajouter un nouvel agent isolé. Exécute l'assistant guidé sauf si des indicateurs (ou `--non-interactive`) sont transmis ; `--workspace` est requis en mode non interactif.
+Ajoute un nouvel agent isolé. Exécute l'assistant guidé, sauf si des indicateurs (ou `--non-interactive`) sont transmis ; `--workspace` est requis en mode non interactif.
 
 Options :
 
@@ -609,11 +619,11 @@ Options :
 - `--non-interactive`
 - `--json`
 
-Les spécifications de liaison utilisent `channel[:accountId]`. Lorsque `accountId` est omis, OpenClaw peut résoudre la portée du compte via les hooks par défaut des plugins de canal ; sinon, il s'agit d'une liaison de canal sans portée de compte explicite.
+Les spécifications de liaison utilisent `channel[:accountId]`. Lorsque `accountId` est omis, OpenClaw peut résoudre la portée du compte via les valeurs par défaut du canal/hooks de plugin ; sinon, il s'agit d'une liaison de canal sans portée de compte explicite.
 
 #### `agents bindings`
 
-Lister les liaisons de routage.
+Répertorier les liaisons de routage.
 
 Options :
 
@@ -634,7 +644,7 @@ Options :
 
 Supprimer les liaisons de routage pour un agent.
 
-Options :
+Options :
 
 - `--agent <id>`
 - `--bind <channel[:accountId]>` (répétable)
@@ -643,18 +653,18 @@ Options :
 
 #### `agents delete <id>`
 
-Supprimer un agent et nettoyer son espace de travail et son état.
+Supprimer un agent et nettoyer son espace de travail + son état.
 
-Options :
+Options :
 
 - `--force`
 - `--json`
 
 ### `acp`
 
-Exécuter le pont ACP qui connecte les IDE au Gateway.
+Exécutez le pont ACP qui connecte les IDE au Gateway.
 
-Voir [`acp`](/fr/cli/acp) pour toutes les options et exemples.
+Consultez [`acp`](/fr/cli/acp) pour les options complètes et les exemples.
 
 ### `status`
 
@@ -663,31 +673,31 @@ Afficher l'état de santé de la session liée et les destinataires récents.
 Options :
 
 - `--json`
-- `--all`%% (diagnostic complet ; lecture seule, collable)
+- `--all` (diagnostic complet ; lecture seule, collable)
 - `--deep` (sonder les canaux)
-- `--usage` (afficher l'utilisation/le quota du fournisseur de model)
+- `--usage` (afficher l'utilisation/quota du provider de model)
 - `--timeout <ms>`
 - `--verbose`
 - `--debug` (alias pour `--verbose`)
 
 Notes :
 
-- L'aperçu inclut l'état du Gateway + du service d'hôte de nœud lorsque disponible.
+- L'aperçu inclut le statut du Gateway + du service hôte de nœud, si disponible.
 
 ### Suivi de l'utilisation
 
-OpenClaw peut afficher l'utilisation/le quota du fournisseur lorsque les identifiants OAuth/API sont disponibles.
+OpenClaw peut afficher l'utilisation/le quota du provider lorsque les identifiants OpenClaw/OAuth sont disponibles.
 
 Interfaces :
 
-- `/status` (ajoute une ligne courte d'utilisation du fournisseur lorsque disponible)
-- `openclaw status --usage` (affiche la répartition complète du fournisseur)
-- Barre de menu macOS (section Utilisation sous Contexte)
+- `/status` (ajoute une courte ligne d'utilisation du provider lorsque disponible)
+- `openclaw status --usage` (affiche la répartition complète du provider)
+- barre de menu macOS (section Utilisation sous Contexte)
 
 Notes :
 
-- Les données proviennent directement des points de terminaison d'utilisation du fournisseur (pas d'estimations).
-- Fournisseurs : Anthropic, GitHub Copilot, OpenAI Codex OAuth, ainsi que Gemini CLI via le plugin `google` inclus et Antigravity lorsque configuré.
+- Les données proviennent directement des points de terminaison d'utilisation du provider (pas d'estimations).
+- Fournisseurs : Anthropic, GitHub Copilot, OpenAI Codex OAuth, ainsi que Gemini CLI via le plugin `google` inclus et Antigravity lorsqu'il est configuré.
 - Si aucune information d'identification correspondante n'existe, l'utilisation est masquée.
 - Détails : voir [Suivi de l'utilisation](/fr/concepts/usage-tracking).
 
@@ -716,7 +726,7 @@ Options :
 
 ### `reset`
 
-Réinitialiser la configuration/l'état local (garde la CLI installée).
+Réinitialiser la configuration/l'état local (conserve le CLI installé).
 
 Options :
 
@@ -731,7 +741,7 @@ Notes :
 
 ### `uninstall`
 
-Désinstaller le service de passerelle + les données locales (la CLI reste).
+Désinstaller le service de passerelle + les données locales (le CLI reste).
 
 Options :
 
@@ -746,15 +756,15 @@ Options :
 
 Notes :
 
-- `--non-interactive` nécessite `--yes` et des champs d'application explicites (ou `--all`).
+- `--non-interactive` nécessite `--yes` et des étendues explicites (ou `--all`).
 
 ## Gateway
 
 ### `gateway`
 
-Exécutez le WebSocket Gateway.
+Exécuter le Gateway WebSocket.
 
-Options :
+Options :
 
 - `--port <port>`
 - `--bind <loopback|tailnet|lan|auto|custom>`
@@ -766,7 +776,7 @@ Options :
 - `--tailscale-reset-on-exit`
 - `--allow-unconfigured`
 - `--dev`
-- `--reset` (réinitialiser la configuration dev + identifiants + sessions + espace de travail)
+- `--reset` (réinitialiser la config dev + identifiants + sessions + espace de travail)
 - `--force` (tuer l'écouteur existant sur le port)
 - `--verbose`
 - `--claude-cli-logs`
@@ -779,7 +789,7 @@ Options :
 
 Gérer le service Gateway (launchd/systemd/schtasks).
 
-Sous-commandes :
+Sous-commandes :
 
 - `gateway status` (sonde le Gateway RPC par défaut)
 - `gateway install` (installation du service)
@@ -788,25 +798,25 @@ Sous-commandes :
 - `gateway stop`
 - `gateway restart`
 
-Notes :
+Notes :
 
-- `gateway status` sonde le Gateway RPC par défaut en utilisant le port/config résolu du service (remplacer par `--url/--token/--password`).
+- `gateway status` sonde le Gateway RPC par défaut en utilisant le port/la configuration résolus du service (remplacer par `--url/--token/--password`).
 - `gateway status` prend en charge `--no-probe`, `--deep`, `--require-rpc` et `--json` pour les scripts.
-- `gateway status` détecte également les services de passerelle hérités ou supplémentaires lorsqu'il peut les détecter (`--deep` ajoute des analyses au niveau du système). Les services OpenClaw nommés par profil sont traités comme des services de première classe et ne sont pas signalés comme "extra".
-- `gateway status` affiche le chemin de configuration utilisé par la CLI par rapport à la configuration probablement utilisée par le service (env du service), ainsi que l'URL cible de la sonde résolue.
-- Si les SecretRefs d'authentification de la passerelle ne sont pas résolues dans le chemin de commande actuel, `gateway status --json` signale `rpc.authWarning` uniquement lorsque la sonde de connectivité/d'authentification échoue (les avertissements sont supprimés lorsque la sonde réussit).
-- Sur les installations systemd Linux, les vérifications de dérive du jeton d'état incluent les sources d'unité `Environment=` et `EnvironmentFile=`.
-- `gateway install|uninstall|start|stop|restart` prend en charge `--json` pour les scripts (la sortie par défaut reste conviviale pour les humains).
+- `gateway status` expose également les services de passerelle hérités ou supplémentaires lorsqu'il peut les détecter (`--deep` ajoute des analyses au niveau du système). Les services OpenClaw nommés par profil sont traités comme des services de premier plan et ne sont pas signalés comme « supplémentaires ».
+- `gateway status` affiche le chemin de configuration utilisé par la CLI par rapport à la configuration probablement utilisée par le service (env service), ainsi que l'URL cible de la sonde résolue.
+- Si les SecretRefs d'authentification de la passerelle ne sont pas résolus dans le chemin de commande actuel, `gateway status --json` signale `rpc.authWarning` uniquement lorsque la connectivité/l'authentification de la sonde échoue (les avertissements sont supprimés lorsque la sonde réussit).
+- Sur les installations systemd Linux, les vérifications de dérive de jeton d'état incluent les sources d'unité `Environment=` et `EnvironmentFile=`.
+- `gateway install|uninstall|start|stop|restart` prennent en charge `--json` pour les scripts (la sortie par défaut reste conviviale pour les humains).
 - `gateway install` utilise par défaut le runtime Node ; bun est **déconseillé** (bugs WhatsApp/Telegram).
-- Options `gateway install` : `--port`, `--runtime`, `--token`, `--force`, `--json`.
+- `gateway install` options : `--port`, `--runtime`, `--token`, `--force`, `--json`.
 
 ### `logs`
 
-Suivez les journaux de fichiers du Gateway via RPC.
+Suivre les journaux de fichiers du Gateway via RPC.
 
-Notes :
+Remarques :
 
-- Les sessions TTY affichent une vue structurée en couleur ; non-TTY revient au texte brut.
+- Les sessions TTY affichent une vue structurée en couleur ; les sessions non-TTY reviennent au texte brut.
 - `--json` émet du JSON délimité par des lignes (un événement de journal par ligne).
 
 Exemples :
@@ -821,8 +831,8 @@ openclaw logs --no-color
 
 ### `gateway <subcommand>`
 
-Assistants Gateway du CLI (utilisez `--url`, `--token`, `--password`, `--timeout`, `--expect-final` pour les sous-commandes RPC).
-Lorsque vous transmettez `--url`, la CLI n'applique pas automatiquement la configuration ou les informations d'identification de l'environnement.
+Assistants de CLI de Gateway (utilisez `--url`, `--token`, `--password`, `--timeout`, `--expect-final` pour les sous-commandes CLI).
+Lorsque vous transmettez `--url`, la RPC n'applique pas automatiquement la configuration ou les informations d'identification de l'environnement.
 Incluez `--token` ou `--password` explicitement. L'absence d'informations d'identification explicites est une erreur.
 
 Sous-commandes :
@@ -839,7 +849,7 @@ RPC courants :
 
 - `config.apply` (valider + écrire la configuration + redémarrer + réveiller)
 - `config.patch` (fusionner une mise à jour partielle + redémarrer + réveiller)
-- `update.run` (exécuter la mise à jour + redémarrer + réveiller)
+- `update.run` (exécuter la mise à jour + redémarrage + réveil)
 
 Astuce : lors de l'appel direct de `config.set`/`config.apply`/`config.patch`, passez `baseHash` depuis
 `config.get` si une configuration existe déjà.
@@ -848,7 +858,7 @@ Astuce : lors de l'appel direct de `config.set`/`config.apply`/`config.patch`, p
 
 Voir [/concepts/models](/fr/concepts/models) pour le comportement de repli et la stratégie de balayage.
 
-Jeton de configuration Anthropic (pris en charge) :
+Anthropic setup-token (pris en charge) :
 
 ```bash
 claude setup-token
@@ -856,9 +866,9 @@ openclaw models auth setup-token --provider anthropic
 openclaw models status
 ```
 
-Remarque concernant la politique : il s'agit d'une compatibilité technique. Anthropic a bloqué par le passé
-une certaine utilisation d'abonnement en dehors de Claude Code ; vérifiez les conditions actuelles de Anthropic
-avant de vous fier au jeton de configuration en production.
+Note de politique : il s'agit d'une compatibilité technique. Anthropic a bloqué par le passé
+certaines utilisations d'abonnement en dehors de Claude Code ; vérifiez les conditions actuelles de Anthropic
+avant de vous fier au setup-token en production.
 
 ### `models` (racine)
 
@@ -885,15 +895,15 @@ Options :
 
 - `--json`
 - `--plain`
-- `--check` (exit 1=expiré/manquant, 2=en expiration)
-- `--probe` (sonde en direct des profils d'authentification configurés)
+- `--check` (sortie 1=expiré/manquant, 2=en expiration)
+- `--probe` (sonde en direct des profils d'auth configurés)
 - `--probe-provider <name>`
-- `--probe-profile <id>` (à répéter ou séparé par des virgules)
+- `--probe-profile <id>` (répétition ou séparé par des virgules)
 - `--probe-timeout <ms>`
 - `--probe-concurrency <n>`
 - `--probe-max-tokens <n>`
 
-Inclut toujours la vue d'ensemble de l'authentification et le statut d'expiration OAuth pour les profils dans le stock d'authentification.
+Inclut toujours la vue d'ensemble de l'authentification et le statut d'expiration OAuth pour les profils dans le magasin d'authentification.
 `--probe` exécute des requêtes en direct (peut consommer des jetons et déclencher des limites de taux).
 
 ### `models set <model>`
@@ -952,24 +962,24 @@ Options :
 Options :
 
 - `add` : assistant d'authentification interactive
-- `setup-token` : `--provider <name>` (par défaut `anthropic`), `--yes`
-- `paste-token` : `--provider <name>`, `--profile-id <id>`, `--expires-in <duration>`
+- `setup-token` : `--provider <name>` (défaut `anthropic`), `--yes`
+- `paste-token` : `--provider <name>`, `--profile-id <id>`, `--expires-in <duration>`
 
 ### `models auth order get|set|clear`
 
-Options :
+Options :
 
-- `get` : `--provider <name>`, `--agent <id>`, `--json`
-- `set` : `--provider <name>`, `--agent <id>`, `<profileIds...>`
-- `clear` : `--provider <name>`, `--agent <id>`
+- `get` : `--provider <name>`, `--agent <id>`, `--json`
+- `set` : `--provider <name>`, `--agent <id>`, `<profileIds...>`
+- `clear` : `--provider <name>`, `--agent <id>`
 
 ## Système
 
 ### `system event`
 
-Mettre en file d'attente un événement système et déclencher éventuellement un heartbeat (Gateway RPC).
+Met en file d'attente un événement système et déclenche éventuellement un battement de cœur (Gateway RPC).
 
-Obligatoire :
+Obligatoire :
 
 - `--text <text>`
 
@@ -990,7 +1000,7 @@ Options :
 
 ### `system presence`
 
-Lister les entrées de présence du système (Gateway RPC).
+Répertorier les entrées de présence du système (Gateway RPC).
 
 Options :
 
@@ -1004,7 +1014,7 @@ Gérer les tâches planifiées (Gateway RPC). Voir [/automation/cron-jobs](/fr/a
 Sous-commandes :
 
 - `cron status [--json]`
-- `cron list [--all] [--json]` (sortie tableau par défaut ; utiliser `--json` pour les données brutes)
+- `cron list [--all] [--json]` (tableau par défaut ; utilisez `--json` pour le format brut)
 - `cron add` (alias : `create` ; nécessite `--name` et exactement l'un des éléments `--at` | `--every` | `--cron`, et exactement une charge utile parmi `--system-event` | `--message`)
 - `cron edit <id>` (champs de correctif)
 - `cron rm <id>` (alias : `remove`, `delete`)
@@ -1031,12 +1041,12 @@ Sous-commandes :
 
 Notes d'authentification :
 
-- `node` résout l'authentification de la passerelle à partir de env/config (pas de drapeaux `--token`/`--password`) : `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`, puis `gateway.auth.*`. En mode local, l'hôte du nœud ignore intentionnellement `gateway.remote.*` ; dans `gateway.mode=remote`, `gateway.remote.*` participe selon les règles de priorité distantes.
-- Les anciennes variables d'environnement `CLAWDBOT_GATEWAY_*` sont intentionnellement ignorées pour la résolution de l'authentification de l'hôte du nœud.
+- `node` résout l'authentification de la passerelle depuis env/config (pas de drapeaux `--token`/`--password`) : `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`, puis `gateway.auth.*`. En mode local, l'hôte de nœud ignore intentionnellement `gateway.remote.*` ; dans `gateway.mode=remote`, `gateway.remote.*` participe selon les règles de priorité distantes.
+- La résolution d'authentification de l'hôte de nœud honore uniquement les variables d'environnement `OPENCLAW_GATEWAY_*`.
 
 ## Nœuds
 
-`nodes` communique avec la Gateway et cible les nœuds couplés. Voir [/nodes](/fr/nodes).
+`nodes` communique avec le Gateway et cible les nœuds appariés. Voir [/nodes](/fr/nodes).
 
 Options courantes :
 
@@ -1055,13 +1065,13 @@ Sous-commandes :
 - `nodes run --node <id|name|ip> [--cwd <path>] [--env KEY=VAL] [--command-timeout <ms>] [--needs-screen-recording] [--invoke-timeout <ms>] <command...>` (nœud mac ou hôte de nœud sans interface)
 - `nodes notify --node <id|name|ip> [--title <text>] [--body <text>] [--sound <name>] [--priority <passive|active|timeSensitive>] [--delivery <system|overlay|auto>] [--invoke-timeout <ms>]` (mac uniquement)
 
-Caméra :
+Caméra :
 
 - `nodes camera list --node <id|name|ip>`
 - `nodes camera snap --node <id|name|ip> [--facing front|back|both] [--device-id <id>] [--max-width <px>] [--quality <0-1>] [--delay-ms <ms>] [--invoke-timeout <ms>]`
 - `nodes camera clip --node <id|name|ip> [--facing front|back] [--device-id <id>] [--duration <ms|10s|1m>] [--no-audio] [--invoke-timeout <ms>]`
 
-Canvas + écran :
+Canvas + écran :
 
 - `nodes canvas snapshot --node <id|name|ip> [--format png|jpg|jpeg] [--max-width <px>] [--quality <0-1>] [--invoke-timeout <ms>]`
 - `nodes canvas present --node <id|name|ip> [--target <urlOrPath>] [--x <px>] [--y <px>] [--width <px>] [--height <px>] [--invoke-timeout <ms>]`
@@ -1072,13 +1082,13 @@ Canvas + écran :
 - `nodes canvas a2ui reset --node <id|name|ip> [--invoke-timeout <ms>]`
 - `nodes screen record --node <id|name|ip> [--screen <index>] [--duration <ms|10s>] [--fps <n>] [--no-audio] [--out <path>] [--invoke-timeout <ms>]`
 
-Emplacement :
+Emplacement :
 
 - `nodes location get --node <id|name|ip> [--max-age <ms>] [--accuracy <coarse|balanced|precise>] [--location-timeout <ms>] [--invoke-timeout <ms>]`
 
 ## Navigateur
 
-CLI de contrôle du navigateur (Chrome/CLI/Edge/Chromium dédié). Voir [`openclaw browser`](/fr/cli/browser) et l'outil [Navigateur](/fr/tools/browser).
+CLI de contrôle du navigateur (Chrome/Brave/Edge/Chromium dédié). Voir [`openclaw browser`](/fr/cli/browser) et l'[outil de navigation](/fr/tools/browser).
 
 Options courantes :
 
@@ -1122,11 +1132,11 @@ Actions :
 - `browser console [--level <error|warn|info>] [--target-id <id>]`
 - `browser pdf [--target-id <id>]`
 
-## Recherche dans la documentation
+## Recherche de docs
 
 ### `docs [query...]`
 
-Rechercher dans l'index de la documentation en direct.
+Rechercher dans l'index des docs en direct.
 
 ## TUI
 

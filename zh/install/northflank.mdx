@@ -2,56 +2,42 @@
 summary: "使用一键模板在 Northflank 上部署 OpenClaw"
 read_when:
   - Deploying OpenClaw to Northflank
-  - You want a one-click cloud deploy with browser-based setup
+  - You want a one-click cloud deploy with browser-based Control UI
 title: "Northflank"
 ---
 
-使用一键模板在 Northflank 上部署 OpenClaw 并在浏览器中完成设置。
-这是最简单的“无需在服务器上使用终端”的路径：Northflank 为您运行 Gateway(网关)，
-您可以通过 `/setup` 网页向导配置所有内容。
+使用一键模板在 Northflank 上部署 OpenClaw 并通过 Web 控制界面访问它。
+这是最简单的“无需在服务器上使用终端”的路径：Northflank 为您运行 Gateway(网关)。
 
 ## 如何开始
 
-1. 点击 [Deploy OpenClaw](https://northflank.com/stacks/deploy-openclaw) 打开模板。
-2. 如果您还没有账户，请在 [Northflank 上创建账户](https://app.northflank.com/signup)。
+1. 点击 [部署 OpenClaw](https://northflank.com/stacks/deploy-openclaw) 打开模板。
+2. 如果您还没有 [Northflank 账户](https://app.northflank.com/signup)，请创建一个。
 3. 点击 **Deploy OpenClaw now**。
-4. 设置所需的环境变量：`SETUP_PASSWORD`。
+4. 设置所需的环境变量：`OPENCLAW_GATEWAY_TOKEN`（使用一个强随机值）。
 5. 点击 **Deploy stack** 以构建并运行 OpenClaw 模板。
 6. 等待部署完成，然后点击 **View resources**。
 7. 打开 OpenClaw 服务。
-8. 打开公共 OpenClaw URL 并在 `/setup` 完成设置。
-9. 在 `/openclaw` 打开 Control UI。
+8. 在 `/openclaw` 打开公共 OpenClaw URL，并使用您的 `OPENCLAW_GATEWAY_TOKEN` 进行连接。
 
 ## 您将获得
 
-- 托管的 OpenClaw Gateway(网关) + Control UI
-- 位于 `/setup` 的网页设置（无需终端命令）
-- 通过 Northflank 卷 (`/data`) 实现持久存储，因此配置/凭据/工作区可在重新部署后保留
-
-## 设置流程
-
-1. 访问 `https://<your-northflank-domain>/setup` 并输入您的 `SETUP_PASSWORD`。
-2. 选择模型/身份验证提供商并粘贴您的密钥。
-3. （可选）添加 Telegram/Discord/Slack 令牌。
-4. 点击 **Run setup**。
-5. 在 `https://<your-northflank-domain>/openclaw` 打开 Control UI
-
-如果 Telegram 私信设置为配对，网页设置可以批准配对代码。
+- 托管的 OpenClaw Gateway(网关) + 控制界面
+- 通过 Northflank 卷 (`/data`) 提供持久存储，以便配置/凭据/工作区在重新部署后得以保留
 
 ## 连接渠道
 
-将您的 Telegram 或 Discord 令牌粘贴到 `/setup` 向导中。有关设置
-说明，请参阅渠道文档：
+使用 `/openclaw` 的控制界面，或通过 SSH 运行 `openclaw onboard` 以获取渠道设置说明：
 
-- [Telegram](/zh/channels/telegram)（最快 - 只需要一个机器人令牌）
+- [Telegram](/zh/channels/telegram)（最快——只需一个 bot 令牌）
 - [Discord](/zh/channels/discord)
 - [所有渠道](/zh/channels)
 
 ## 后续步骤
 
 - 设置消息渠道：[渠道](/zh/channels)
-- 配置 Gateway(网关)：[Gateway configuration](/zh/gateway/configuration)
-- 保持 OpenClaw 为最新状态：[更新](/zh/install/updating)
+- 配置 Gateway(网关)：[Gateway(网关) 配置](/zh/gateway/configuration)
+- 保持 OpenClaw 更新：[更新](/zh/install/updating)
 
 import zh from "/components/footer/zh.mdx";
 

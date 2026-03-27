@@ -15,9 +15,8 @@ messaging platform. By the end you will have a working channel with DM security,
 pairing, reply threading, and outbound messaging.
 
 <Info>
-  If you have not built any OpenClaw plugin before, read
-  [Getting Started](/en/plugins/building-plugins) first for the basic package
-  structure and manifest setup.
+  If you have not built any OpenClaw plugin before, read [Getting
+  Started](/en/plugins/building-plugins) first for the basic package structure and manifest setup.
 </Info>
 
 ## How channel plugins work
@@ -348,13 +347,25 @@ extensions/acme-chat/
 ## Advanced topics
 
 <CardGroup cols={2}>
-  <Card title="Threading options" icon="git-branch" href="/en/plugins/sdk-entrypoints#registration-mode">
+  <Card
+    title="Threading options"
+    icon="git-branch"
+    href="/en/plugins/sdk-entrypoints#registration-mode"
+  >
     Fixed, account-scoped, or custom reply modes
   </Card>
-  <Card title="Message tool integration" icon="puzzle" href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool">
+  <Card
+    title="Message tool integration"
+    icon="puzzle"
+    href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool"
+  >
     describeMessageTool and action discovery
   </Card>
-  <Card title="Target resolution" icon="crosshair" href="/en/plugins/architecture#channel-target-resolution">
+  <Card
+    title="Target resolution"
+    icon="crosshair"
+    href="/en/plugins/architecture#channel-target-resolution"
+  >
     inferTargetChatType, looksLikeId, resolveTarget
   </Card>
   <Card title="Runtime helpers" icon="settings" href="/en/plugins/sdk-runtime">

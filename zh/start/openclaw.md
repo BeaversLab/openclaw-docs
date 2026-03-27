@@ -192,6 +192,8 @@ MEDIA:https://example.com/screenshot.png
 
 OpenClaw 提取这些内容，并将它们作为媒体与文本一起发送。
 
+对于本地路径，默认的允许列表故意设置得很窄：OpenClaw 临时根目录、媒体缓存、代理工作区路径以及沙盒生成的文件。如果您需要更广泛的本地文件附件根目录，请配置明确的渠道/插件允许列表，而不是依赖任意的主机路径。
+
 ## 操作检查清单
 
 ```bash
@@ -201,13 +203,13 @@ openclaw status --deep   # adds gateway health probes (Telegram + Discord)
 openclaw health --json   # gateway health snapshot (WS)
 ```
 
-日志位于 `/tmp/openclaw/` 下（默认值：`openclaw-YYYY-MM-DD.log`）。
+日志位于 `/tmp/openclaw/` 下（默认：`openclaw-YYYY-MM-DD.log`）。
 
 ## 后续步骤
 
 - WebChat：[WebChat](/zh/web/webchat)
-- Gateway ops: [Gateway runbook](/zh/gateway)
-- Cron + 唤醒：[Cron jobs](/zh/automation/cron-jobs)
+- Gateway(网关) 操作：[Gateway(网关) 运维手册](/zh/gateway)
+- Cron + 唤醒：[Cron 作业](/zh/automation/cron-jobs)
 - macOS 菜单栏伴侣：[OpenClaw macOS 应用](/zh/platforms/macos)
 - iOS 节点应用：[iOS 应用](/zh/platforms/ios)
 - Android 节点应用：[Android 应用](/zh/platforms/android)

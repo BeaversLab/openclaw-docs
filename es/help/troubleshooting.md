@@ -49,7 +49,7 @@ Solución en el paquete del complemento:
 
 1. Añade `openclaw.extensions` a `package.json`.
 2. Apunta las entradas a los archivos de tiempo de ejecución construidos (generalmente `./dist/index.js`).
-3. Republica el plugin y ejecuta `openclaw plugins install <npm-spec>` de nuevo.
+3. Vuelve a publicar el plugin y ejecuta `openclaw plugins install <package>` de nuevo.
 
 Ejemplo:
 

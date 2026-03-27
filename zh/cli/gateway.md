@@ -193,8 +193,8 @@ openclaw gateway uninstall
 - 当令牌认证需要令牌且 `gateway.auth.token` 由 SecretRef 管理时，`gateway install` 会验证 SecretRef 是否可解析，但不会将解析出的令牌持久化到服务环境元数据中。
 - 如果令牌认证需要令牌且配置的令牌 SecretRef 未解析，安装将以失败告终（封闭），而不是持久化回退明文。
 - 对于 `gateway run` 上的密码认证，优先使用 `OPENCLAW_GATEWAY_PASSWORD`、`--password-file` 或 SecretRef 支持的 `gateway.auth.password`，而不是内联 `--password`。
-- 在推断的认证模式下，仅限 Shell 的 `OPENCLAW_GATEWAY_PASSWORD`/`CLAWDBOT_GATEWAY_PASSWORD` 不会放宽安装令牌要求；安装托管服务时，请使用持久化配置（`gateway.auth.password` 或配置 `env`）。
-- 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password` 且未设置 `gateway.auth.mode`，则在显式设置模式之前将阻止安装。
+- 在推断身份验证模式下，仅限 Shell 的 `OPENCLAW_GATEWAY_PASSWORD` 不会放宽安装令牌的要求；在安装托管服务时，请使用持久配置（`gateway.auth.password` 或配置 `env`）。
+- 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password` 且未设置 `gateway.auth.mode`，则安装将被阻止，直到明确设置模式。
 - 生命周期命令接受 `--json` 以用于脚本编写。
 
 ## 发现网关（Bonjour）
@@ -202,7 +202,7 @@ openclaw gateway uninstall
 `gateway discover` 扫描 Gateway(网关) 信标（`_openclaw-gw._tcp`）。
 
 - 多播 DNS-SD：`local.`
-- 单播 DNS-SD（广域 Bonjour）：选择一个域（例如：`openclaw.internal.`）并设置分离 DNS + DNS 服务器；参见 [/gateway/bonjour](/zh/gateway/bonjour)
+- 单播 DNS-SD（广域 Bonjour）：选择一个域（例如：`openclaw.internal.`）并设置分离 DNS + DNS 服务器；请参阅 [/gateway/bonjour](/zh/gateway/bonjour)
 
 只有启用了 Bonjour 发现功能（默认）的网关才会发布信标。
 
@@ -214,7 +214,7 @@ openclaw gateway uninstall
 - `sshPort`（SSH 端口；如果不存在，默认为 `22`）
 - `tailnetDns`（MagicDNS 主机名，如果可用）
 - `gatewayTls` / `gatewayTlsSha256`（已启用 TLS + 证书指纹）
-- `cliPath`（用于远程安装的可选提示）
+- `cliPath`（远程安装的可选提示）
 
 ### `gateway discover`
 
@@ -225,7 +225,7 @@ openclaw gateway discover
 选项：
 
 - `--timeout <ms>`：每个命令的超时时间（浏览/解析）；默认为 `2000`。
-- `--json`：机器可读输出（同时禁用样式/加载指示符）。
+- `--json`：机器可读的输出（同时禁用样式/加载动画）。
 
 示例：
 

@@ -116,7 +116,7 @@ Ejemplo (MD en el host, grupos en sandbox y solo herramientas de mensajería):
 
 Relacionado:
 
-- Claves de configuración y valores predeterminados: [Configuración de puerta de enlace](/es/gateway/configuration-reference#agents-defaults-sandbox)
+- Claves de configuración y valores predeterminados: [Configuración de puerta de enlace](/es/gateway/configuration-reference#agentsdefaultssandbox)
 - Depurar por qué una herramienta está bloqueada: [Sandbox vs. Política de herramientas vs. Elevado](/es/gateway/sandbox-vs-tool-policy-vs-elevated)
 - Detalles de montajes de enlace: [Sandboxing](/es/gateway/sandboxing#custom-bind-mounts)
 

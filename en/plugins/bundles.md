@@ -14,9 +14,9 @@ and **Cursor**. These are called **bundles** — content and metadata packs that
 OpenClaw maps into native features like skills, hooks, and MCP tools.
 
 <Info>
-  Bundles are **not** the same as native OpenClaw plugins. Native plugins run
-  in-process and can register any capability. Bundles are content packs with
-  selective feature mapping and a narrower trust boundary.
+  Bundles are **not** the same as native OpenClaw plugins. Native plugins run in-process and can
+  register any capability. Bundles are content packs with selective feature mapping and a narrower
+  trust boundary.
 </Info>
 
 ## Why bundles exist
@@ -158,15 +158,15 @@ bundles as trusted content for the features they do expose.
     not wired, that is a product limit — not a broken install.
   </Accordion>
 
-  <Accordion title="Claude command files do not appear">
-    Make sure the bundle is enabled and the markdown files are inside a detected
-    `commands/` or `skills/` root.
-  </Accordion>
+<Accordion title="Claude command files do not appear">
+  Make sure the bundle is enabled and the markdown files are inside a detected `commands/` or
+  `skills/` root.
+</Accordion>
 
-  <Accordion title="Claude settings do not apply">
-    Only embedded Pi settings from `settings.json` are supported. OpenClaw does
-    not treat bundle settings as raw config patches.
-  </Accordion>
+<Accordion title="Claude settings do not apply">
+  Only embedded Pi settings from `settings.json` are supported. OpenClaw does not treat bundle
+  settings as raw config patches.
+</Accordion>
 
   <Accordion title="Claude hooks do not execute">
     `hooks/hooks.json` is detect-only. If you need runnable hooks, use the

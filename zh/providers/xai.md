@@ -34,15 +34,14 @@ OpenClaw 现在开箱即用地包含这些 xAI 模型系列：
 - `grok-4`, `grok-4-0709`
 - `grok-4-fast-reasoning`, `grok-4-fast-non-reasoning`
 - `grok-4-1-fast-reasoning`, `grok-4-1-fast-non-reasoning`
-- `grok-4.20-experimental-beta-0304-reasoning`
-- `grok-4.20-experimental-beta-0304-non-reasoning`
+- `grok-4.20-reasoning`, `grok-4.20-non-reasoning`
 - `grok-code-fast-1`
 
-当这些较新的 `grok-4*` 和 `grok-code-fast*` ID 遵循相同的 API 形状时，该插件也会向前解析它们。
+当新的 `grok-4*` 和 `grok-code-fast*` ID 遵循相同的 API 形状时，该插件也会自动解析它们。
 
-## 网络搜索
+## 网页搜索
 
-捆绑的 `grok` 网络搜索提供商也使用 `XAI_API_KEY`：
+内置的 `grok` 网页搜索提供商也使用 `XAI_API_KEY`：
 
 ```bash
 openclaw config set tools.web.search.provider grok
@@ -50,14 +49,14 @@ openclaw config set tools.web.search.provider grok
 
 ## 已知限制
 
-- 目前仅支持 API 密钥身份验证。OpenClaw 中尚不支持 xAI OAuth/设备代码流程。
-- 常规 xAI 提供商路径不支持 `grok-4.20-multi-agent-experimental-beta-0304`，因为它需要与标准 OpenClaw xAI 传输不同的上游 API 表面。
-- 诸如 `x_search` 和 `code_execution` 之类的原生 xAI 服务器端工具在捆绑插件中尚未成为一等模型提供商功能。
+- 目前仅支持 API 密钥认证。OAuth 中尚不支持 xAI OpenClaw/设备码流程。
+- 标准的 xAI 提供商路径不支持 `grok-4.20-multi-agent-experimental-beta-0304`，因为它需要的上游 API 接口与标准的 OpenClaw xAI 传输不同。
+- 原生 xAI 服务器端工具（如 `x_search` 和 `code_execution`）在内置插件中尚未成为一流的模型提供商功能。
 
 ## 备注
 
 - OpenClaw 会在共享运行器路径上自动应用特定于 xAI 的工具架构和工具调用兼容性修复。
-- 有关更广泛的提供商概述，请参阅 [模型提供商](/zh/providers/index)。
+- 有关更广泛的提供商概览，请参阅 [模型提供商](/zh/providers/index)。
 
 import zh from "/components/footer/zh.mdx";
 

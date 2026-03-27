@@ -25,7 +25,7 @@ El canal de WhatsApp se ejecuta a través de **Baileys Web**. Este documento cap
 
 - Entrada: ruta de archivo local **o** URL HTTP(S).
 - Flujo: cargar en un búfer, detectar el tipo de medio y construir la carga útil correcta:
-  - **Imágenes:** redimensionar y recomprimir a JPEG (lado máximo 2048px) apuntando a `agents.defaults.mediaMaxMb` (predeterminado 5 MB), limitado a 6 MB.
+  - **Imágenes:** cambiar tamaño y volver a comprimir a JPEG (lado máximo 2048px) apuntando a `channels.whatsapp.mediaMaxMb` (predeterminado: 50 MB).
   - **Audio/Voz/Vídeo:** paso directo hasta 16 MB; el audio se envía como nota de voz (`ptt: true`).
   - **Documentos:** cualquier otra cosa, hasta 100 MB, con el nombre de archivo preservado cuando esté disponible.
 - Reproducción estilo GIF de WhatsApp: enviar un MP4 con `gifPlayback: true` (CLI: `--gif-playback`) para que los clientes móviles se repitan en línea.
@@ -54,15 +54,15 @@ El canal de WhatsApp se ejecuta a través de **Baileys Web**. Este documento cap
 
 **Límites de envío saliente (envío web de WhatsApp)**
 
-- Imágenes: límite de ~6 MB después de la recompresión.
+- Imágenes: hasta `channels.whatsapp.mediaMaxMb` (predeterminado: 50 MB) después de la recompresión.
 - Audio/voz/video: límite de 16 MB; documentos: límite de 100 MB.
 - Medio excesivamente grande o ilegible → error claro en los registros y la respuesta se omite.
 
 **Límites de comprensión de medios (transcripción/descripción)**
 
-- Imagen predeterminada: 10 MB (`tools.media.image.maxBytes`).
-- Audio predeterminado: 20 MB (`tools.media.audio.maxBytes`).
-- Video predeterminado: 50 MB (`tools.media.video.maxBytes`).
+- Predeterminado de imagen: 10 MB (`tools.media.image.maxBytes`).
+- Predeterminado de audio: 20 MB (`tools.media.audio.maxBytes`).
+- Predeterminado de video: 50 MB (`tools.media.video.maxBytes`).
 - El medio excesivamente grande omite la comprensión, pero las respuestas aún se envían con el cuerpo original.
 
 ## Notas para las pruebas

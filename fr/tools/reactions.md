@@ -1,26 +1,66 @@
 ---
-summary: "Sémantique des réactions partagée entre les canaux"
+summary: "Sémantique de l'outil de réaction sur tous les canaux pris en charge"
 read_when:
   - Working on reactions in any channel
+  - Understanding how emoji reactions differ across platforms
 title: "Réactions"
 ---
 
-# Outil de réaction
+# Réactions
 
-Sémantique des réactions partagée entre les canaux :
+L'agent peut ajouter et supprimer des réactions par emoji sur les messages à l'aide de l'outil `message`
+avec l'action `react`. Le comportement des réactions varie selon le canal.
+
+## Fonctionnement
+
+```json
+{
+  "action": "react",
+  "messageId": "msg-123",
+  "emoji": "thumbsup"
+}
+```
 
 - `emoji` est requis lors de l'ajout d'une réaction.
-- `emoji=""` supprime la ou les réactions du bot lorsque pris en charge.
-- `remove: true` supprime l'émoji spécifié lorsque pris en charge (nécessite `emoji`).
+- Définissez `emoji` sur une chaîne vide (`""`) pour supprimer la ou les réactions du bot.
+- Définissez `remove: true` pour supprimer un emoji spécifique (nécessite un `emoji` non vide).
 
-Notes sur les canaux :
+## Comportement du canal
 
-- **Discord/Slack** : un `emoji` vide supprime toutes les réactions du bot sur le message ; `remove: true` supprime uniquement cet émoji.
-- **Google Chat** : un `emoji` vide supprime les réactions de l'application sur le message ; `remove: true` supprime uniquement cet émoji.
-- **Telegram** : un `emoji` vide supprime les réactions du bot ; `remove: true` supprime également les réactions mais nécessite toujours un `emoji` non vide pour la validation de l'outil.
-- **WhatsApp** : un `emoji` vide supprime la réaction du bot ; `remove: true` correspond à un émoji vide (nécessite toujours `emoji`).
-- **Zalo Personnel (`zalouser`)** : nécessite un `emoji` non vide ; `remove: true` supprime cette réaction émoji spécifique.
-- **Signal** : les notifications de réaction entrantes émettent des événements système lorsque `channels.signal.reactionNotifications` est activé.
+<AccordionGroup>
+  <Accordion title="Discord et Slack">
+    - Un `emoji` vide supprime toutes les réactions du bot sur le message.
+    - `remove: true` supprime uniquement l'emoji spécifié.
+  </Accordion>
+
+<Accordion title="Google Chat">
+  - Un `emoji` vide supprime les réactions de l'application sur le message. - `remove: true`
+  supprime uniquement l'emoji spécifié.
+</Accordion>
+
+<Accordion title="Telegram">
+  - Un `emoji` vide supprime les réactions du bot. - `remove: true` supprime également les réactions
+  mais nécessite toujours un `emoji` non vide pour la validation de l'outil.
+</Accordion>
+
+<Accordion title="WhatsApp">
+  - Un `emoji` vide supprime la réaction du bot. - `remove: true` correspond en interne à un emoji
+  vide (nécessite toujours `emoji` lors de l'appel de l'outil).
+</Accordion>
+
+<Accordion title="Zalo Personnel (zalouser)">
+  - Nécessite un `emoji` non vide. - `remove: true` supprime cette réaction emoji spécifique.
+</Accordion>
+
+  <Accordion title="Signal">
+    - Les notifications de réactions entrantes sont contrôlées par `channels.signal.reactionNotifications` : `"off"` les désactive, `"own"` (par défaut) émet des événements lorsque les utilisateurs réagissent aux messages du bot, et `"all"` émet des événements pour toutes les réactions.
+  </Accordion>
+</AccordionGroup>
+
+## Connexes
+
+- [Agent Send](/fr/tools/agent-send) — l'outil `message` qui inclut `react`
+- [Channels](/fr/channels) — configuration spécifique au channel
 
 import fr from "/components/footer/fr.mdx";
 

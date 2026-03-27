@@ -326,7 +326,7 @@ OpenProse 与 Lobster 搭配得很好：使用 `/prose` 协调多代理准备工
 ## 了解更多
 
 - [插件](/zh/tools/plugin)
-- [插件工具创作](/zh/plugins/agent-tools)
+- [插件工具编写](/zh/plugins/building-plugins#registering-agent-tools)
 
 ## 案例研究：社区工作流
 

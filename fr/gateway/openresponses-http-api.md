@@ -24,24 +24,36 @@ Le comportement opérationnel correspond aux [OpenAI Chat Completions](/fr/gatew
 
 - utilisez `Authorization: Bearer <token>` avec la configuration d'authentification normale du Gateway
 - traitez le point de terminaison comme un accès opérateur complet pour l'instance de la passerelle
-- sélectionnez les agents avec `model: "openclaw:<agentId>"`, `model: "agent:<agentId>"` ou `x-openclaw-agent-id`
-- utilisez `x-openclaw-session-key` pour le routage explicite de session
+- sélectionnez les agents avec `model: "openclaw"`, `model: "openclaw/default"`, `model: "openclaw/<agentId>"` ou `x-openclaw-agent-id`
+- utilisez `x-openclaw-model` lorsque vous souhaitez remplacer le modèle backend de l'agent sélectionné
+- utilisez `x-openclaw-session-key` pour un routage de session explicite
+- utilisez `x-openclaw-message-channel` lorsque vous souhaitez un contexte de canal d'entrée synthétique non par défaut
 
 Activez ou désactivez ce point de terminaison avec `gateway.http.endpoints.responses.enabled`.
+
+La même surface de compatibilité inclut également :
+
+- `GET /v1/models`
+- `GET /v1/models/{id}`
+- `POST /v1/embeddings`
+- `POST /v1/chat/completions`
+
+Pour l'explication canonique de la manière dont les modèles ciblés par l'agent, `openclaw/default`, le transfert d'embeddings et les remplacements de modèle backend s'articulent, consultez [OpenAI Chat Completions](/fr/gateway/openai-http-api#agent-first-model-contract) et [Model list and agent routing](/fr/gateway/openai-http-api#model-list-and-agent-routing).
 
 ## Comportement de la session
 
 Par défaut, le point de terminaison est **sans état par requête** (une nouvelle clé de session est générée à chaque appel).
 
-Si la requête inclut une chaîne `user` OpenResponses, le Gateway en dérive une clé de session stable, permettant ainsi aux appels répétés de partager une session d'agent.
+Si la requête inclut une chaîne OpenResponses `user`, le Gateway en dérive une clé de session stable,
+afin que les appels répétés puissent partager une session d'agent.
 
 ## Format de la requête (pris en charge)
 
-La requête suit l'API OpenResponses avec des entrées basées sur les éléments. Prise en charge actuelle :
+La requête suit l'OpenResponses API avec une entrée basée sur les éléments. Support actuel :
 
-- `input` : chaîne ou tableau d'objets d'élément.
-- `instructions` : fusionné dans le système de prompt.
-- `tools` : définitions des outils client (outils de fonction).
+- `input` : chaîne ou tableau d'objets d'éléments.
+- `instructions` : fusionné dans l'invite système.
+- `tools` : définitions d'outils client (fonction outils).
 - `tool_choice` : filtre ou exige des outils client.
 - `stream` : active le streaming SSE.
 - `max_output_tokens` : limite de sortie au mieux (dépend du fournisseur).
@@ -53,8 +65,11 @@ Accepté mais **actuellement ignoré** :
 - `reasoning`
 - `metadata`
 - `store`
-- `previous_response_id`
 - `truncation`
+
+Pris en charge :
+
+- `previous_response_id` : OpenClaw réutilise la session de réponse précédente lorsque la requête reste dans le même périmètre d'agent/utilisateur/session-demandée.
 
 ## Éléments (entrée)
 
@@ -66,9 +81,9 @@ Rôles : `system`, `developer`, `user`, `assistant`.
 - L'élément `user` ou `function_call_output` le plus récent devient le « message actuel ».
 - Les messages utilisateur/assistant précédents sont inclus en tant qu'historique pour le contexte.
 
-### `function_call_output` (tools basés sur les tours)
+### `function_call_output` (tools basés sur des tours)
 
-Renvoyer les résultats des tools au modèle :
+Renvoyez les résultats des tools au modèle :
 
 ```json
 {
@@ -84,7 +99,7 @@ Acceptés pour la compatibilité du schéma mais ignorés lors de la constructio
 
 ## Tools (tools de fonction côté client)
 
-Fournir les tools avec `tools: [{ type: "function", function: { name, description?, parameters? } }]`.
+Fournissez les tools avec `tools: [{ type: "function", function: { name, description?, parameters? } }]`.
 
 Si l'agent décide d'appeler un tool, la réponse renvoie un élément de sortie `function_call`.
 Vous envoyez ensuite une requête de suivi avec `function_call_output` pour continuer le tour.
@@ -100,8 +115,8 @@ Prend en charge les sources base64 ou URL :
 }
 ```
 
-Types MIME autorisés (actuel) : `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `image/heic`, `image/heif`.
-Taille max. (actuelle) : 10 Mo.
+Types MIME autorisés (actuels) : `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `image/heic`, `image/heif`.
+Taille maximale (actuelle) : 10 Mo.
 
 ## Fichiers (`input_file`)
 
@@ -119,34 +134,33 @@ Prend en charge les sources base64 ou URL :
 }
 ```
 
-Types MIME autorisés (actuel) : `text/plain`, `text/markdown`, `text/html`, `text/csv`,
+Types MIME autorisés (actuels) : `text/plain`, `text/markdown`, `text/html`, `text/csv`,
 `application/json`, `application/pdf`.
 
-Taille max. (actuelle) : 5 Mo.
+Taille maximale (actuelle) : 5 Mo.
 
 Comportement actuel :
 
 - Le contenu du fichier est décodé et ajouté au **prompt système**, et non au message utilisateur,
   il reste donc éphémère (non persistant dans l'historique de session).
-- Les PDF sont analysés pour en extraire le texte. Si peu de texte est trouvé, les premières pages sont matricialisées
-  en images et transmises au model.
+- Les PDF sont analysés pour en extraire le texte. Si peu de texte est trouvé, les premières pages sont matricisées
+  en images et transmises au modèle.
 
-L'analyse PDF utilise la version héritée compatible avec Node `pdfjs-dist` (sans worker). La version moderne
-PDF.js s'attend à des workers de navigateur/des globaux DOM, elle n'est donc pas utilisée dans le Gateway.
+L'analyse PDF utilise la version héritée `pdfjs-dist` compatible avec Node (sans worker). La version moderne de PDF.js s'attend à des workers de navigateur ou à des globaux DOM, elle n'est donc pas utilisée dans le Gateway.
 
 Valeurs par défaut de récupération d'URL :
 
 - `files.allowUrl` : `true`
 - `images.allowUrl` : `true`
-- `maxUrlParts` : `8` (total des parties `input_file` et `input_image` basées sur l'URL par requête)
-- Les requêtes sont sécurisées (résolution DNS, blocage des IP privées, limites de redirection, délais d'attente).
-- Des listes d'autorisation de noms d'hôte facultatives sont prises en charge par type d'entrée (`files.urlAllowlist`, `images.urlAllowlist`).
+- `maxUrlParts` : `8` (total `input_file` basé sur l'URL + parties `input_image` par requête)
+- Les requêtes sont protégées (résolution DNS, blocage des IP privées, limites de redirection, délais d'expiration).
+- Des listes d'autorisation de noms d'hôte (hostname allowlists) optionnelles sont prises en charge par type d'entrée (`files.urlAllowlist`, `images.urlAllowlist`).
   - Hôte exact : `"cdn.example.com"`
-  - Sous-domaines génériques : `"*.assets.example.com"` (ne correspond pas à l'apex)
-  - Les listes d'autorisation (allowlists) vides ou omises signifient qu'il n'y a aucune restriction de liste d'autorisation de nom d'hôte.
+  - Sous-domaines génériques : `"*.assets.example.com"` (ne correspond pas au domaine racine)
+  - Les listes d'autorisation vides ou omises signifient qu'il n'y a aucune restriction de liste d'autorisation de nom d'hôte.
 - Pour désactiver entièrement les récupérations basées sur l'URL, définissez `files.allowUrl: false` et/ou `images.allowUrl: false`.
 
-## Limites de fichiers et d'images (config)
+## Limites de fichiers + images (config)
 
 Les valeurs par défaut peuvent être ajustées sous `gateway.http.endpoints.responses` :
 
@@ -207,27 +221,27 @@ Valeurs par défaut en cas d'omission :
 - `maxBodyBytes` : 20 Mo
 - `maxUrlParts` : 8
 - `files.maxBytes` : 5 Mo
-- `files.maxChars` : 200 k
+- `files.maxChars` : 200k
 - `files.maxRedirects` : 3
-- `files.timeoutMs` : 10 s
+- `files.timeoutMs` : 10s
 - `files.pdf.maxPages` : 4
 - `files.pdf.maxPixels` : 4 000 000
 - `files.pdf.minTextChars` : 200
 - `images.maxBytes` : 10 Mo
 - `images.maxRedirects` : 3
-- `images.timeoutMs` : 10 s
-- Les sources `input_image` HEIC/HEIF sont acceptées et normalisées en JPEG avant la livraison au fournisseur.
+- `images.timeoutMs` : 10s
+- Les sources `input_image` HEIC/HEIF sont acceptées et normalisées en JPEG avant la livraison au provider.
 
 Remarque de sécurité :
 
-- Les listes d'autorisation d'URL sont appliquées avant la récupération et lors des étapes de redirection.
-- L'autorisation d'un nom d'hôte contourne pas le blocage des IP privées/internes.
-- Pour les passerelles exposées sur Internet, appliquez des contrôles de sortie réseau en plus des gardes au niveau de l'application.
+- Les listes d'autorisation d'URL sont appliquées avant la récupération et lors des sauts de redirection.
+- L'ajout d'un nom d'hôte à la liste d'autorisation ne contourne pas le blocage des IP privées/internes.
+- Pour les passerelles exposées à Internet, appliquez des contrôles de sortie réseau (egress controls) en plus des gardes au niveau de l'application.
   Voir [Sécurité](/fr/gateway/security).
 
 ## Streaming (SSE)
 
-Définissez `stream: true` pour recevoir des Server-Sent Events (SSE) :
+Définissez `stream: true` pour recevoir des événements envoyés par le serveur (SSE) :
 
 - `Content-Type: text/event-stream`
 - Chaque ligne d'événement est `event: <type>` et `data: <json>`
@@ -248,11 +262,11 @@ Types d'événements actuellement émis :
 
 ## Utilisation
 
-`usage` est renseigné lorsque le fournisseur sous-jacent signale les comptes de jetons.
+`usage` est renseigné lorsque le fournisseur sous-jacent signale les nombres de jetons.
 
 ## Erreurs
 
-Les erreurs utilisent un objet JSON comme :
+Les erreurs utilisent un objet JSON tel que :
 
 ```json
 { "error": { "message": "...", "type": "invalid_request_error" } }
@@ -260,8 +274,8 @@ Les erreurs utilisent un objet JSON comme :
 
 Cas courants :
 
-- `401` auth manquant/invalide
-- `400` corps de requête invalide
+- `401` auth manquante/invalide
+- `400` corps de la requête invalide
 - `405` mauvaise méthode
 
 ## Exemples

@@ -75,9 +75,9 @@ Comportement :
 - Renvoie le tableau de messages dans le format de transcription brut.
 - Lorsqu'un `sessionId` est fourni, OpenClaw le résout en clé de session correspondante (erreur sur les identifiants manquants).
 
-## API d'historique de session Gateway et de transcription en direct
+## Gateway historique de session et API de transcription en direct
 
-L'interface utilisateur de contrôle et les clients Gateway peuvent utiliser les surfaces d'historique et de transcription en direct de niveau inférieur directement.
+L'interface utilisateur de contrôle et les clients Gateway peuvent utiliser directement les surfaces d'historique et de transcription en direct de niveau inférieur.
 
 HTTP :
 
@@ -162,56 +162,65 @@ Points d'application :
 
 ## sessions_spawn
 
-Lancer une exécution de sous-agent dans une session isolée et annoncer le résultat au channel de discussion demandeur.
+Générer une session déléguée isolée.
+
+- Runtime par défaut : sous-agent OpenClaw (`runtime: "subagent"`).
+- Les sessions de harnais ACP utilisent `runtime: "acp"` et suivent des règles spécifiques de ciblage et de stratégie ACP.
+- Cette section se concentre sur le comportement du sous-agent, sauf indication contraire. Pour le comportement spécifique à l'ACP, voir [Agents ACP](/fr/tools/acp-agents).
 
 Paramètres :
 
 - `task` (requis)
-- `label?` (optionnel ; utilisé pour les journaux/interface utilisateur)
-- `agentId?` (optionnel ; lance sous un autre id d'agent si autorisé)
-- `model?` (optionnel ; remplace le modèle du sous-agent ; les valeurs invalides provoquent une erreur)
-- `thinking?` (optionnel ; remplace le niveau de réflexion pour l'exécution du sous-agent)
-- `runTimeoutSeconds?` (par défaut `agents.defaults.subagents.runTimeoutSeconds` si défini, sinon `0` ; si défini, abandonne l'exécution du sous-agent après N secondes)
-- `thread?` (par défaut false ; demande un routage lié au fil de discussion pour ce spawn lorsque pris en charge par le channel/plugin)
-- `mode?` (`run|session` ; par défaut `run`, mais par défaut `session` quand `thread=true` ; `mode="session"` requiert `thread=true`)
+- `runtime?` (`subagent|acp` ; par défaut `subagent`)
+- `label?` (facultatif ; utilisé pour les journaux/interface utilisateur)
+- `agentId?` (facultatif)
+  - `runtime: "subagent"` : cibler un autre ID d'agent OpenClaw si autorisé par `subagents.allowAgents`
+  - `runtime: "acp"` : cibler un ID de harnais ACP si autorisé par `acp.allowedAgents`
+- `model?` (facultatif ; remplace le modèle du sous-agent ; les valeurs invalides génèrent une erreur)
+- `thinking?` (facultatif ; remplace le niveau de réflexion pour l'exécution du sous-agent)
+- `runTimeoutSeconds?` (par défaut `agents.defaults.subagents.runTimeoutSeconds` si défini, sinon `0` ; si défini, interrompt l'exécution du sous-agent après N secondes)
+- `thread?` (faux par défaut ; demande un routage lié au fil pour cette génération lorsque pris en charge par le canal/le plugin)
+- `mode?` (`run|session` ; par défaut `run`, mais par défaut `session` quand `thread=true` ; `mode="session"` nécessite `thread=true`)
 - `cleanup?` (`delete|keep`, par défaut `keep`)
-- `sandbox?` (`inherit|require`, par défaut `inherit` ; `require` rejette le spawn sauf si le runtime enfant cible est sandboxé)
-- `attachments?` (tableau optionnel de fichiers en ligne ; runtime du subagent uniquement, rejeté par l'ACP). Chaque entrée : `{ name, content, encoding?: "utf8" | "base64", mimeType? }`. Les fichiers sont matérialisés dans l'espace de travail enfant à `.openclaw/attachments/<uuid>/`. Renvoie un reçu avec sha256 par fichier.
-- `attachAs?` (optionnel ; indice `{ mountPath? }` réservé pour de futures implémentations de montage)
+- `sandbox?` (`inherit|require`, par défaut `inherit` ; `require` rejette la génération sauf si le runtime enfant cible est isolé)
+- `attachments?` (tableau facultatif de fichiers en ligne ; environnement d'exécution du sous-agent uniquement, rejeté par l'ACP). Chaque entrée : `{ name, content, encoding?: "utf8" | "base64", mimeType? }`. Les fichiers sont matérialisés dans l'espace de travail enfant à `.openclaw/attachments/<uuid>/`. Renvoie un reçu avec sha256 par fichier.
+- `attachAs?` (facultatif ; indice `{ mountPath? }` réservé pour les futures implémentations de montage)
 
-Liste blanche :
+Liste verte :
 
-- `agents.list[].subagents.allowAgents` : liste des ids d'agents autorisés via `agentId` (`["*"]` pour autoriser tout). Par défaut : seul l'agent demandeur.
-- Garantie d'héritage du bac à sable : si la session demandeur est sandboxée, `sessions_spawn` rejette les cibles qui s'exécuteraient sans bac à sable.
+- `runtime: "subagent"` : `agents.list[].subagents.allowAgents` contrôle quels ids d'agent OpenClaw sont autorisés via `agentId` (`["*"]` pour autoriser n'importe lequel). Par défaut : uniquement l'agent demandeur.
+- `runtime: "acp"` : `acp.allowedAgents` contrôle quels ids de harnais ACP sont autorisés. Il s'agit d'une politique distincte de `subagents.allowAgents`.
+- Garde d'héritage du bac à sable : si la session demandeur est sandboxed, `sessions_spawn` rejette les cibles qui s'exécuteraient sans bac à sable.
 
 Discovery :
 
-- Utilisez `agents_list` pour découvrir quels ids d'agents sont autorisés pour `sessions_spawn`.
+- Utilisez `agents_list` pour découvrir les cibles autorisées pour `runtime: "subagent"`.
+- Pour `runtime: "acp"`, utilisez les ids de harnais ACP configurés et `acp.allowedAgents` ; `agents_list` ne liste pas les cibles de harnais ACP.
 
 Comportement :
 
 - Démarre une nouvelle session `agent:<agentId>:subagent:<uuid>` avec `deliver: false`.
 - Les sous-agents utilisent par défaut l'ensemble complet d'outils **moins les outils de session** (configurable via `tools.subagents.tools`).
-- Les sous-agents ne sont pas autorisés à appeler `sessions_spawn` (pas de spawn sous-agent → sous-agent).
+- Les sous-agents ne sont pas autorisés à appeler `sessions_spawn` (aucun lancement de sous-agent → sous-agent).
 - Toujours non bloquant : renvoie `{ status: "accepted", runId, childSessionKey }` immédiatement.
-- Avec `thread=true`, les plugins de channel peuvent lier la livraison/routage à une cible de fil de discussion (le support Discord est contrôlé par `session.threadBindings.*` et `channels.discord.threadBindings.*`).
-- After completion, OpenClaw runs a sub-agent **announce step** and posts the result to the requester chat channel.
-  - If the assistant final reply is empty, the latest `toolResult` from sub-agent history is included as `Result`.
-- Reply exactly `ANNOUNCE_SKIP` during the announce step to stay silent.
-- Announce replies are normalized to `Status`/`Result`/`Notes`; `Status` comes from runtime outcome (not model text).
-- Sub-agent sessions are auto-archived after `agents.defaults.subagents.archiveAfterMinutes` (default: 60).
-- Announce replies include a stats line (runtime, tokens, sessionKey/sessionId, transcript path, and optional cost).
+- Avec `thread=true`, les plugins de channel peuvent lier la livraison/routage à une cible de fil (le support Discord est contrôlé par `session.threadBindings.*` et `channels.discord.threadBindings.*`).
+- Après achèvement, OpenClaw exécute une **étape d'annonce** du sous-agent et publie le résultat dans le channel de discussion demandeur.
+  - Si la réponse finale de l'assistant est vide, le dernier `toolResult` de l'historique du sous-agent est inclus comme `Result`.
+- Répondez exactement `ANNOUNCE_SKIP` pendant l'étape d'annonce pour rester silencieux.
+- Les réponses d'annonce sont normalisées en `Status`/`Result`/`Notes` ; `Status` provient du résultat de l'exécution (pas du texte du modèle).
+- Les sessions de sous-agents sont automatiquement archivées après `agents.defaults.subagents.archiveAfterMinutes` (par défaut : 60).
+- Les réponses d'annonce incluent une ligne de statistiques (durée d'exécution, jetons, sessionKey/sessionId, chemin de la transcription et coût optionnel).
 
-## Sandbox Session Visibility
+## Visibilité de la session de Sandbox
 
-Session tools can be scoped to reduce cross-session access.
+Les outils de session peuvent être délimités pour réduire l'accès inter-session.
 
-Default behavior:
+Comportement par défaut :
 
-- `tools.sessions.visibility` defaults to `tree` (current session + spawned subagent sessions).
-- For sandboxed sessions, `agents.defaults.sandbox.sessionToolsVisibility` can hard-clamp visibility.
+- `tools.sessions.visibility` par défaut correspond à `tree` (session actuelle + sessions de sous-agents générés).
+- Pour les sessions sandboxées, `agents.defaults.sandbox.sessionToolsVisibility` peut imposer strictement la visibilité.
 
-Config:
+Configuration :
 
 ```json5
 {
@@ -233,13 +242,13 @@ Config:
 }
 ```
 
-Notes:
+Notes :
 
-- `self`: only the current session key.
-- `tree`: current session + sessions spawned by the current session.
-- `agent`: any session belonging to the current agent id.
-- `all`: any session (cross-agent access still requires `tools.agentToAgent`).
-- When a session is sandboxed and `sessionToolsVisibility="spawned"`, OpenClaw clamps visibility to `tree` even if you set `tools.sessions.visibility="all"`.
+- `self` : uniquement la clé de session actuelle.
+- `tree` : session actuelle + sessions générées par la session actuelle.
+- `agent` : n'importe quelle session appartenant à l'identifiant de l'agent actuel.
+- `all` : n'importe quelle session (l'accès inter-agent nécessite toujours `tools.agentToAgent`).
+- Lorsqu'une session est sandboxée et `sessionToolsVisibility="spawned"`, OpenClaw restreint la visibilité à `tree` même si vous définissez `tools.sessions.visibility="all"`.
 
 import fr from "/components/footer/fr.mdx";
 

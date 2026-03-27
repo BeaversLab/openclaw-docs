@@ -34,11 +34,10 @@ OpenClaw ahora incluye estas familias de modelos de xAI de fábrica:
 - `grok-4`, `grok-4-0709`
 - `grok-4-fast-reasoning`, `grok-4-fast-non-reasoning`
 - `grok-4-1-fast-reasoning`, `grok-4-1-fast-non-reasoning`
-- `grok-4.20-experimental-beta-0304-reasoning`
-- `grok-4.20-experimental-beta-0304-non-reasoning`
+- `grok-4.20-reasoning`, `grok-4.20-non-reasoning`
 - `grok-code-fast-1`
 
-El complemento también resuelve hacia adelante los ids `grok-4*` y `grok-code-fast*` más recientes cuando
+El complemento también resuelve directamente los ids más nuevos de `grok-4*` y `grok-code-fast*` cuando
 siguen la misma forma de API.
 
 ## Búsqueda web
@@ -51,13 +50,13 @@ openclaw config set tools.web.search.provider grok
 
 ## Límites conocidos
 
-- Hoy la autenticación es solo mediante clave de API. Aún no hay un flujo OAuth / código de dispositivo de xAI en OpenClaw.
-- `grok-4.20-multi-agent-experimental-beta-0304` no es compatible con la ruta normal del proveedor xAI porque requiere una superficie de API upstream diferente que el transporte estándar de OpenClaw xAI.
-- Las herramientas nativas del lado del servidor de xAI, como `x_search` y `code_execution`, aún no son funciones de primera clase del proveedor de modelos en el complemento incluido.
+- Hoy la autenticación es solo mediante clave de API. Todavía no hay flujo OAuth/código de dispositivo de xAI en OpenClaw.
+- `grok-4.20-multi-agent-experimental-beta-0304` no es compatible con la ruta del proveedor normal de xAI porque requiere una superficie de API upstream diferente al transporte estándar de OpenClaw xAI.
+- Las herramientas del lado del servidor nativas de xAI, como `x_search` y `code_execution` , aún no son funciones de proveedor de modelo de primera clase en el complemento incluido.
 
 ## Notas
 
-- OpenClaw aplica correcciones de compatibilidad de esquemas de herramientas y llamadas a herramientas específicas de xAI automáticamente en la ruta de ejecución compartida.
+- OpenClaw aplica correcciones de compatibilidad específicas de xAI para esquemas de herramientas y llamadas a herramientas automáticamente en la ruta de ejecución compartida.
 - Para obtener una visión general más amplia de los proveedores, consulte [Proveedores de modelos](/es/providers/index).
 
 import es from "/components/footer/es.mdx";

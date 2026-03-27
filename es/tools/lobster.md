@@ -330,7 +330,7 @@ OpenProse combina bien con Lobster: use `/prose` para orquestar la preparación 
 ## Más información
 
 - [Plugins](/es/tools/plugin)
-- [Creación de herramientas de complemento](/es/plugins/agent-tools)
+- [Autoría de herramientas de complemento](/es/plugins/building-plugins#registering-agent-tools)
 
 ## Caso de estudio: flujos de trabajo de la comunidad
 

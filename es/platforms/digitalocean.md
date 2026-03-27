@@ -3,7 +3,7 @@ summary: "OpenClaw en DigitalOcean (opción de VPS pago simple)"
 read_when:
   - Setting up OpenClaw on DigitalOcean
   - Looking for cheap VPS hosting for OpenClaw
-title: "DigitalOcean"
+title: "DigitalOcean (Plataforma)"
 ---
 
 # OpenClaw en DigitalOcean

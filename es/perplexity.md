@@ -3,7 +3,7 @@ summary: "API de Perplexity Search y compatibilidad con Sonar/OpenRouter para we
 read_when:
   - You want to use Perplexity Search for web search
   - You need PERPLEXITY_API_KEY or OPENROUTER_API_KEY setup
-title: "Búsqueda Perplexity"
+title: "Búsqueda de Perplexity (ruta heredada)"
 ---
 
 # API de Perplexity Search
@@ -89,9 +89,9 @@ Controles de compatibilidad opcionales:
 `~/.openclaw/openclaw.json` bajo `plugins.entries.perplexity.config.webSearch.apiKey`.
 Ese campo también acepta objetos SecretRef.
 
-**A través del entorno:** establezca `PERPLEXITY_API_KEY` o `OPENROUTER_API_KEY`
-en el entorno del proceso del Gateway. Para una instalación de gateway, colóquelo en
-`~/.openclaw/.env` (o en el entorno de su servicio). Consulte [Env vars](/es/help/faq#how-does-openclaw-load-environment-variables).
+**Vía entorno:** establezca `PERPLEXITY_API_KEY` o `OPENROUTER_API_KEY`
+en el entorno de proceso de Gateway. Para una instalación de puerta de enlace, póngalo en
+`~/.openclaw/.env` (o en su entorno de servicio). Consulte [Env vars](/es/help/faq#env-vars-and-env-loading).
 
 Si `provider: "perplexity"` está configurado y el SecretRef de la clave de Perplexidad no está resuelto sin un respaldo de entorno, el inicio/recarga falla rápidamente.
 

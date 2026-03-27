@@ -79,13 +79,14 @@ Los valores de configuración sobrescriben las variables de entorno.
 - En el modo `allowlist`, una lista vacía de `allowedUserIds` se trata como una configuración incorrecta y la ruta del webhook no se iniciará (use `dmPolicy: "open"` para permitir todo).
 - `dmPolicy: "open"` permite cualquier remitente.
 - `dmPolicy: "disabled"` bloquea los MD.
+- El enlace del destinatario de respuesta se mantiene en un `user_id` numérico estable de forma predeterminada. `channels.synology-chat.dangerouslyAllowNameMatching: true` es un modo de compatibilidad de emergencia que reactiva la búsqueda de nombre de usuario/apodo mutable para la entrega de respuestas.
 - Las aprobaciones de emparejamiento funcionan con:
   - `openclaw pairing list synology-chat`
   - `openclaw pairing approve synology-chat <CODE>`
 
 ## Entrega saliente
 
-Use los IDs numéricos de usuario de Synology Chat como destinos.
+Utilice los IDs de usuario numéricos de Synology Chat como destinos.
 
 Ejemplos:
 
@@ -94,12 +95,19 @@ openclaw message send --channel synology-chat --target 123456 --text "Hello from
 openclaw message send --channel synology-chat --target synology-chat:123456 --text "Hello again"
 ```
 
-Los envíos de medios son compatibles con la entrega de archivos basada en URL.
+Los envíos de medios son compatibles mediante la entrega de archivos basada en URL.
 
 ## Multicuenta
 
-Se admiten múltiples cuentas de Synology Chat en `channels.synology-chat.accounts`.
-Cada cuenta puede sobrescribir el token, la URL entrante, la ruta del webhook, la política de MD y los límites.
+Se admiten varias cuentas de Synology Chat bajo `channels.synology-chat.accounts`.
+Cada cuenta puede anular el token, la URL entrante, la ruta del webhook, la política de DM y los límites.
+Las sesiones de mensajes directos están aisladas por cuenta y usuario, por lo que el mismo `user_id` numérico
+en dos cuentas de Synology diferentes no comparte el estado de la transcripción.
+Asigne a cada cuenta habilitada un `webhookPath` distinto. OpenClaw ahora rechaza las rutas exactas duplicadas
+y se niega a iniciar cuentas con nombre que solo heredan una ruta de webhook compartida en configuraciones multicuenta.
+Si necesita intencionalmente la herencia heredada para una cuenta con nombre, establezca
+`dangerouslyAllowInheritedWebhookPath: true` en esa cuenta o en `channels.synology-chat`,
+pero las rutas exactas duplicadas aún se rechazan con fallo cerrado. Prefiera rutas explícitas por cuenta.
 
 ```json5
 {
@@ -128,8 +136,10 @@ Cada cuenta puede sobrescribir el token, la URL entrante, la ruta del webhook, l
 
 - Mantenga `token` en secreto y rótelo si se filtra.
 - Mantenga `allowInsecureSsl: false` a menos que confíe explícitamente en un certificado NAS local autofirmado.
-- Las solicitudes entrantes del webhook se verifican por token y tienen límites de velocidad por remitente.
-- Se prefiere `dmPolicy: "allowlist"` para producción.
+- Las solicitudes entrantes de webhook se verifican por token y tienen límites de tasa por remitente.
+- Prefiera `dmPolicy: "allowlist"` para producción.
+- Mantenga `dangerouslyAllowNameMatching` desactivado a menos que necesite explícitamente la entrega de respuestas heredada basada en nombre de usuario.
+- Mantenga `dangerouslyAllowInheritedWebhookPath` desactivado a menos que acepte explícitamente el riesgo de enrutamiento de ruta compartida en una configuración multicuenta.
 
 import es from "/components/footer/es.mdx";
 

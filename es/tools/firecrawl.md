@@ -137,7 +137,11 @@ Orden de extracción de `web_fetch`:
 2. Firecrawl (si está configurado)
 3. Limpieza básica de HTML (último recurso)
 
-Consulte [Herramientas web](/es/tools/web) para obtener la configuración completa de la herramienta web.
+## Relacionado
+
+- [Resumen de búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
+- [Web Fetch](/es/tools/web-fetch) -- herramienta web_fetch con respaldo Firecrawl
+- [Tavily](/es/tools/tavily) -- herramientas de búsqueda y extracción
 
 import es from "/components/footer/es.mdx";
 

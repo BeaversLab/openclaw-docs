@@ -89,7 +89,7 @@ openclaw node run --host 127.0.0.1 --port 18790 --display-name "Build Node"
 - 在本地模式下，节点主机会故意忽略 `gateway.remote.token` / `gateway.remote.password`。
 - 在远程模式下，根据远程优先级规则，`gateway.remote.token` / `gateway.remote.password` 是有效的。
 - 如果配置了活动的本地 `gateway.auth.*` SecretRefs 但未解析，则节点主机认证将失败关闭。
-- 节点主机认证解析会故意忽略旧的 `CLAWDBOT_GATEWAY_*` 环境变量。
+- Node-host 身份验证解析仅遵守 `OPENCLAW_GATEWAY_*` 环境变量。
 
 ### 启动节点主机（服务）
 

@@ -28,12 +28,14 @@ Vous recherchez de la documentation sur les canaux de chat (WhatsApp/Telegram/Di
 - [Amazon Bedrock](/fr/providers/bedrock)
 - [Anthropic (API + Claude Code CLI)](/fr/providers/anthropic)
 - [Cloudflare AI Gateway](/fr/providers/cloudflare-ai-gateway)
-- [Modèles GLM](/fr/providers/glm)
+- [DeepSeek](/fr/providers/deepseek)
+- [GitHub Copilot](/fr/providers/github-copilot)
+- [modèles GLM](/fr/providers/glm)
 - [Google (Gemini)](/fr/providers/google)
 - [Groq (inférence LPU)](/fr/providers/groq)
 - [Hugging Face (Inférence)](/fr/providers/huggingface)
 - [Kilocode](/fr/providers/kilocode)
-- [LiteLLM (passerelle unifiée)](/fr/providers/litellm)
+- [LiteLLM (passelle unifiée)](/fr/providers/litellm)
 - [MiniMax](/fr/providers/minimax)
 - [Mistral](/fr/providers/mistral)
 - [Model Studio (Alibaba Cloud)](/fr/providers/modelstudio)
@@ -41,15 +43,17 @@ Vous recherchez de la documentation sur les canaux de chat (WhatsApp/Telegram/Di
 - [NVIDIA](/fr/providers/nvidia)
 - [Ollama (modèles cloud + locaux)](/fr/providers/ollama)
 - [OpenAI (API + Codex)](/fr/providers/openai)
-- [OpenCode (Zen + Go)](/fr/providers/opencode)
+- [OpenCode](/fr/providers/opencode)
+- [OpenCode Go](/fr/providers/opencode-go)
 - [OpenRouter](/fr/providers/openrouter)
 - [Perplexity (recherche web)](/fr/providers/perplexity-provider)
 - [Qianfan](/fr/providers/qianfan)
 - [Qwen (OAuth)](/fr/providers/qwen)
 - [SGLang (modèles locaux)](/fr/providers/sglang)
+- [Synthetic](/fr/providers/synthetic)
 - [Together AI](/fr/providers/together)
-- [Vercel AI Gateway](/fr/providers/vercel-ai-gateway)
-- [Venice (Venice AI, axé sur la confidentialité)](/fr/providers/venice)
+- [Venice (Venice IA, respectueux de la vie privée)](/fr/providers/venice)
+- [Vercel IA Gateway](/fr/providers/vercel-ai-gateway)
 - [vLLM (modèles locaux)](/fr/providers/vllm)
 - [Volcengine (Doubao)](/fr/providers/volcengine)
 - [xAI](/fr/providers/xai)
@@ -62,10 +66,10 @@ Vous recherchez de la documentation sur les canaux de chat (WhatsApp/Telegram/Di
 
 ## Outils communautaires
 
-- [Claude Max API Proxy](/fr/providers/claude-max-api-proxy) - Proxy communautaire pour les identifiants d'abonnement Claude (vérifiez la politique/les conditions d'utilisation d'Anthropic avant utilisation)
+- [Claude Max API Proxy](/fr/providers/claude-max-api-proxy) - Proxy communautaire pour les identifiants d'abonnement Claude (vérifiez la politique/conditions d'utilisation de Anthropic avant utilisation)
 
 Pour le catalogue complet des fournisseurs (xAI, Groq, Mistral, etc.) et la configuration avancée,
-voyez [Model providers](/fr/concepts/model-providers).
+voir [Model providers](/fr/concepts/model-providers).
 
 import fr from "/components/footer/fr.mdx";
 

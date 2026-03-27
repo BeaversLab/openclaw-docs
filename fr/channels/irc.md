@@ -74,7 +74,7 @@ Si vous voyez des journaux comme :
 
 Exemple (autoriser n'importe qui dans `#tuirc-dev` à parler au bot) :
 
-```json55
+```json5
 {
   channels: {
     irc: {
@@ -95,7 +95,7 @@ Cela signifie que vous pouvez voir des journaux comme `drop channel … (missing
 
 Pour faire répondre le bot dans un channel IRC **sans avoir besoin d'une mention**, désactivez le filtrage par mention pour ce channel :
 
-```json55
+```json5
 {
   channels: {
     irc: {
@@ -113,7 +113,7 @@ Pour faire répondre le bot dans un channel IRC **sans avoir besoin d'une mentio
 
 Ou pour autoriser **tous** les channels IRC (pas de liste d'autorisation par channel) et répondre tout de même sans mentions :
 
-```json55
+```json5
 {
   channels: {
     irc: {
@@ -133,7 +133,7 @@ Pour réduire les risques, restreignez les outils pour ce channel.
 
 ### Mêmes outils pour tout le monde dans le channel
 
-```json55
+```json5
 {
   channels: {
     irc: {
@@ -154,7 +154,7 @@ Pour réduire les risques, restreignez les outils pour ce channel.
 
 Utilisez `toolsBySender` pour appliquer une politique plus stricte à `"*"` et une plus souple à votre pseudo :
 
-```json55
+```json5
 {
   channels: {
     irc: {

@@ -12,12 +12,11 @@ sidebarTitle: "Internals"
 # Plugin Internals
 
 <Info>
-  This is the **deep architecture reference**. For practical guides, see:
-  - [Install and use plugins](/en/tools/plugin) — user guide
-  - [Getting Started](/en/plugins/building-plugins) — first plugin tutorial
-  - [Channel Plugins](/en/plugins/sdk-channel-plugins) — build a messaging channel
-  - [Provider Plugins](/en/plugins/sdk-provider-plugins) — build a model provider
-  - [SDK Overview](/en/plugins/sdk-overview) — import map and registration API
+  This is the **deep architecture reference**. For practical guides, see: - [Install and use
+  plugins](/en/tools/plugin) — user guide - [Getting Started](/en/plugins/building-plugins) — first
+  plugin tutorial - [Channel Plugins](/en/plugins/sdk-channel-plugins) — build a messaging channel -
+  [Provider Plugins](/en/plugins/sdk-provider-plugins) — build a model provider - [SDK
+  Overview](/en/plugins/sdk-overview) — import map and registration API
 </Info>
 
 This page covers the internal architecture of the OpenClaw plugin system.

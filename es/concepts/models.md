@@ -27,10 +27,7 @@ Relacionado:
 
 - `agents.defaults.models` es la lista de permitidos/catálogo de modelos que OpenClaw puede usar (más alias).
 - `agents.defaults.imageModel` se usa **solo cuando** el modelo principal no puede aceptar imágenes.
-- `agents.defaults.imageGenerationModel` es utilizado por la capacidad compartida de generación
-  de imágenes. Si se omite, `image_generate` aún puede inferir un proveedor
-  predeterminado a partir de complementos de generación de imágenes compatibles
-  con respaldo de autenticación.
+- `agents.defaults.imageGenerationModel` lo utiliza la funcionalidad de generación de imágenes compartida. Si se omite, `image_generate` aún puede inferir un proveedor predeterminado a partir de complementos de generación de imágenes compatibles con autenticación. Si configura un proveedor/modelo específico, también configure la clave de API/autenticación de ese proveedor.
 - Los valores predeterminados por agente pueden anular `agents.defaults.model` a través de
   `agents.list[].model` más enlaces (consulte [/concepts/multi-agent](/es/concepts/multi-agent)).
 

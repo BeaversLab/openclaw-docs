@@ -383,8 +383,8 @@ Docker 安装和容器化网关位于此处：
 
 对于 Docker 网关部署，`scripts/docker/setup.sh` 可以引导沙箱配置。
 设置 `OPENCLAW_SANDBOX=1`（或 `true`/`yes`/`on`）以启用该路径。您可以使用
-`OPENCLAW_DOCKER_SOCKET` 覆盖套接字位置。完整的设置和环境
-参考：[Docker](/zh/install/docker#enable-agent-sandbox-for-docker-gateway-opt-in)。
+`OPENCLAW_DOCKER_SOCKET` 覆盖套接字位置。完整的设置和环境变量
+参考：[Docker](/zh/install/docker#enable-agent-sandbox-for-docker-gateway)。
 
 ## setupCommand（一次性容器设置）
 
@@ -444,7 +444,7 @@ Docker 安装和容器化网关位于此处：
 ## 相关文档
 
 - [OpenShell](/zh/gateway/openshell) -- 托管沙箱后端设置、工作区模式和配置参考
-- [沙箱 Configuration](/zh/gateway/configuration-reference#agents-defaults-sandbox)
+- [沙箱配置](/zh/gateway/configuration-reference#agentsdefaultssandbox)
 - [沙箱 vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated) -- 调试“为什么被阻止？”
 - [Multi-Agent 沙箱 & Tools](/zh/tools/multi-agent-sandbox-tools) -- 每个代理的覆盖和优先级
 - [Security](/zh/gateway/security)

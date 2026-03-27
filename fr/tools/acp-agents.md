@@ -526,7 +526,7 @@ Vérifiez ensuite l'état du backend :
 
 ### Configuration de la commande et de la version d'acpx
 
-Par défaut, le plugin acpx (publié sous le nom `@openclaw/acpx`) utilise le binaire épinglé local au plugin :
+Par défaut, le plugin backend groupé acpx (`acpx`) utilise le binaire épinglé local au plugin :
 
 1. La commande par défaut est `extensions/acpx/node_modules/.bin/acpx`.
 2. La version attendue correspond par défaut à l'épingle de l'extension.

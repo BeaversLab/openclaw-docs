@@ -136,7 +136,11 @@ OpenClaw 始终对 Firecrawl 请求使用 `proxy: "auto"` 加上 `storeInCache: 
 2. Firecrawl（如果已配置）
 3. 基本 HTML 清理（最后的后备方案）
 
-有关完整的 Web 工具设置，请参阅 [Web 工具](/zh/tools/web)。
+## 相关
+
+- [Web Search overview](/zh/tools/web) -- 所有提供商和自动检测
+- [Web Fetch](/zh/tools/web-fetch) -- 具有 Firecrawl 后备支持的 web_fetch 工具
+- [Tavily](/zh/tools/tavily) -- 搜索和提取工具
 
 import zh from "/components/footer/zh.mdx";
 

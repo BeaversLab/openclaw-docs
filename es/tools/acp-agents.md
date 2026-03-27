@@ -528,7 +528,7 @@ Luego verifique el estado del backend:
 
 ### comando y versión de acpx configuración
 
-De forma predeterminada, el complemento acpx (publicado como `@openclaw/acpx`) usa el binario anclado local del complemento:
+De manera predeterminada, el complemento de backend acpx incluido (`acpx`) utiliza el binario anclado local del complemento:
 
 1. El comando predeterminado es `extensions/acpx/node_modules/.bin/acpx`.
 2. La versión esperada predeterminada es la ancla de la extensión.

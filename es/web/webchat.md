@@ -33,31 +33,35 @@ Estado: la interfaz de usuario de chat SwiftUI de macOS/iOS se comunica directam
 
 ## Panel de herramientas de agentes de la interfaz de usuario de Control
 
-- El panel de herramientas `/agents` de la interfaz de usuario de Control obtiene un catálogo de tiempo de ejecución a través de `tools.catalog` y etiqueta cada
-  herramienta como `core` o `plugin:<id>` (además de `optional` para herramientas de complemento opcionales).
-- Si `tools.catalog` no está disponible, el panel recurre a una lista estática integrada.
-- El panel edita el perfil y la configuración de anulación, pero el acceso efectivo en tiempo de ejecución aún sigue la precedencia de la política
+- El panel de herramientas `/agents` del Control UI tiene dos vistas separadas:
+  - **Disponible ahora** usa `tools.effective(sessionKey=...)` y muestra lo que la sesión
+    actual puede usar realmente en tiempo de ejecución, incluyendo herramientas principales, de complemento y propias del canal.
+  - **Configuración de herramientas** usa `tools.catalog` y se centra en los perfiles, anulaciones y
+    semántica del catálogo.
+- La disponibilidad en tiempo de ejecución está limitada a la sesión. Cambiar de sesiones en el mismo agente puede modificar la lista
+  **Disponible ahora**.
+- El editor de configuración no implica disponibilidad en tiempo de ejecución; el acceso efectivo aún sigue la precedencia de políticas
   (`allow`/`deny`, anulaciones por agente y proveedor/canal).
 
 ## Uso remoto
 
-- El modo remoto tuneliza el WebSocket de Gateway a través de SSH/Tailscale.
+- El modo remoto realiza un túnel del WebSocket de la puerta de enlace a través de SSH/Tailscale.
 - No necesita ejecutar un servidor WebChat separado.
 
 ## Referencia de configuración (WebChat)
 
 Configuración completa: [Configuration](/es/gateway/configuration)
 
-Opciones del canal:
+Opciones de canal:
 
-- No hay un bloque `webchat.*` dedicado. WebChat usa el endpoint de la puerta de enlace y la configuración de autenticación a continuación.
+- No hay un bloque `webchat.*` dedicado. WebChat usa el punto de conexión de la puerta de enlace + la configuración de autenticación a continuación.
 
 Opciones globales relacionadas:
 
-- `gateway.port`, `gateway.bind`: host/puerto de WebSocket.
-- `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password`: autenticación de WebSocket (token/contraseña).
+- `gateway.port`, `gateway.bind`: host/puerto del WebSocket.
+- `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password`: autenticación del WebSocket (token/contraseña).
 - `gateway.auth.mode: "trusted-proxy"`: autenticación de proxy inverso para clientes del navegador (consulte [Trusted Proxy Auth](/es/gateway/trusted-proxy-auth)).
-- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password`: destino remoto de la puerta de enlace.
+- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password`: destino de la puerta de enlace remota.
 - `session.*`: almacenamiento de sesión y valores predeterminados de clave principal.
 
 import es from "/components/footer/es.mdx";

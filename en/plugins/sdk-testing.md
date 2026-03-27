@@ -14,9 +14,9 @@ Reference for test utilities, patterns, and lint enforcement for OpenClaw
 plugins.
 
 <Tip>
-  **Looking for test examples?** The how-to guides include worked test examples:
-  [Channel plugin tests](/en/plugins/sdk-channel-plugins#step-6-test) and
-  [Provider plugin tests](/en/plugins/sdk-provider-plugins#step-6-test).
+  **Looking for test examples?** The how-to guides include worked test examples: [Channel plugin
+  tests](/en/plugins/sdk-channel-plugins#step-6-test) and [Provider plugin
+  tests](/en/plugins/sdk-provider-plugins#step-6-test).
 </Tip>
 
 ## Test utilities

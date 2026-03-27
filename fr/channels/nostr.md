@@ -130,7 +130,13 @@ Notes :
 - **open** : DMs entrants publics (nécessite `allowFrom: ["*"]`).
 - **disabled** : ignorer les DMs entrants.
 
-### Exemple de liste blanche
+Notes sur l'application :
+
+- La stratégie de l'expéditeur est vérifiée avant la vérification de la signature et le déchiffrement NIP-04.
+- Les réponses d'appariement sont envoyées sans traiter le corps du DM d'origine.
+- Les DM entrants sont soumis à une limitation de débit et les charges utiles trop volumineuses sont supprimées avant le déchiffrement.
+
+### Exemple de liste d'autorisation
 
 ```json5
 {
@@ -144,11 +150,11 @@ Notes :
 }
 ```
 
-## Formats de clé
+## Formats de clés
 
 Formats acceptés :
 
-- **Clé privée :** `nsec...` ou hexadécimal sur 64 caractères
+- **Clé privée :** `nsec...` ou hexadécimal de 64 caractères
 - **Clés publiques (`allowFrom`) :** `npub...` ou hexadécimal
 
 ## Relais
@@ -178,13 +184,13 @@ Conseils :
 | NIP    | Statut         | Description                                        |
 | ------ | -------------- | -------------------------------------------------- |
 | NIP-01 | Pris en charge | Format d'événement de base + métadonnées de profil |
-| NIP-04 | Pris en charge | DMs chiffrés (`kind:4`)                            |
-| NIP-17 | Prévu          | DMs enveloppés (gift-wrapped)                      |
+| NIP-04 | Pris en charge | DM chiffrés (`kind:4`)                             |
+| NIP-17 | Prévu          | DM emballés (gift-wrapped)                         |
 | NIP-44 | Prévu          | Chiffrement versionné                              |
 
 ## Tests
 
-### Relai local
+### Relais local
 
 ```bash
 # Start strfry
@@ -204,7 +210,7 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ### Test manuel
 
-1. Notez la clé publique du bot (npub) dans les journaux (logs).
+1. Notez la clé publique du bot (npub) dans les journaux.
 2. Ouvrez un client Nostr (Damus, Amethyst, etc.).
 3. Envoyez un DM à la clé publique du bot.
 4. Vérifiez la réponse.
@@ -216,24 +222,25 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 - Vérifiez que la clé privée est valide.
 - Assurez-vous que les URL des relais sont accessibles et utilisent `wss://` (ou `ws://` en local).
 - Confirmez que `enabled` n'est pas `false`.
-- Consultez les journaux du Gateway pour les erreurs de connexion aux relais.
+- Vérifiez les journaux du Gateway pour les erreurs de connexion aux relais.
 
 ### Absence d'envoi de réponses
 
-- Vérifiez que le relai accepte les écritures.
+- Vérifiez que le relais accepte les écritures.
 - Vérifiez la connectivité sortante.
-- Surveillez les limites de taux des relais.
+- Surveillez les limites de débit des relais.
 
 ### Réponses en double
 
-- Comportement attendu lors de l'utilisation de plusieurs relais.
-- Les messages sont dédupliqués par ID d'événement ; seule la première livraison déclenche une réponse.
+- Attendu lors de l'utilisation de plusieurs relais.
+- Les messages sont dédoublonnés par ID d'événement ; seule la première livraison déclenche une réponse.
 
 ## Sécurité
 
 - Ne commettez jamais de clés privées.
 - Utilisez des variables d'environnement pour les clés.
 - Envisagez `allowlist` pour les bots de production.
+- La stratégie d'appariement et de liste d'autorisation est appliquée avant le déchiffrement, les expéditeurs inconnus ne peuvent donc pas forcer une charge cryptographique complète.
 
 ## Limitations (MVP)
 

@@ -52,18 +52,18 @@ OpenClaw has three layers that work together:
 
 These tools ship with OpenClaw and are available without installing any plugins:
 
-| Tool                         | What it does                                             | Page                              |
-| ---------------------------- | -------------------------------------------------------- | --------------------------------- |
+| Tool                         | What it does                                             | Page                                 |
+| ---------------------------- | -------------------------------------------------------- | ------------------------------------ |
 | `exec` / `process`           | Run shell commands, manage background processes          | [Exec](/en/tools/exec)               |
 | `browser`                    | Control a Chromium browser (navigate, click, screenshot) | [Browser](/en/tools/browser)         |
 | `web_search` / `web_fetch`   | Search the web, fetch page content                       | [Web](/en/tools/web)                 |
-| `read` / `write` / `edit`    | File I/O in the workspace                                |                                   |
+| `read` / `write` / `edit`    | File I/O in the workspace                                |                                      |
 | `apply_patch`                | Multi-hunk file patches                                  | [Apply Patch](/en/tools/apply-patch) |
 | `message`                    | Send messages across all channels                        | [Agent Send](/en/tools/agent-send)   |
-| `canvas`                     | Drive node Canvas (present, eval, snapshot)              |                                   |
-| `nodes`                      | Discover and target paired devices                       |                                   |
-| `cron` / `gateway`           | Manage scheduled jobs, restart gateway                   |                                   |
-| `image` / `image_generate`   | Analyze or generate images                               |                                   |
+| `canvas`                     | Drive node Canvas (present, eval, snapshot)              |                                      |
+| `nodes`                      | Discover and target paired devices                       |                                      |
+| `cron` / `gateway`           | Manage scheduled jobs, restart gateway                   |                                      |
+| `image` / `image_generate`   | Analyze or generate images                               |                                      |
 | `sessions_*` / `agents_list` | Session management, sub-agents                           | [Sub-agents](/en/tools/subagents)    |
 
 For image work, use `image` for analysis and `image_generate` for generation or editing. If you target `openai/*`, `google/*`, `fal/*`, or another non-default image provider, configure that provider's auth/API key first.

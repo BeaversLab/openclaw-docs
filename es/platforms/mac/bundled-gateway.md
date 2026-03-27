@@ -13,7 +13,7 @@ OpenClaw.app ya no incluye Node/Bun ni el tiempo de ejecución de Gateway. La ap
 
 ## Instalar la CLI (necesario para el modo local)
 
-Node 24 es el tiempo de ejecución predeterminado en Mac. Node 22 LTS, actualmente `22.16+`, todavía funciona por compatibilidad. Luego instale `openclaw` globalmente:
+Node 24 es el tiempo de ejecución predeterminado en Mac. Node 22 LTS, actualmente `22.14+`, todavía funciona por compatibilidad. Luego, instale `openclaw` globalmente:
 
 ```bash
 npm install -g openclaw@<version>

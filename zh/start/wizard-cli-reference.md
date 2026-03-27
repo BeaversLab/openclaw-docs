@@ -144,9 +144,9 @@ What you set:
 
   </Accordion>
   <Accordion title="OpenAI API 密钥">
-    如果存在则使用 `OPENAI_API_KEY`，或提示输入密钥，然后将凭据存储在 auth profiles 中。
+    如果存在 `OPENAI_API_KEY` 则使用，否则提示输入密钥，然后将凭据存储在身份验证配置文件中。
 
-    当模型未设置、为 `openai/*` 或 `openai-codex/*` 时，将 `agents.defaults.model` 设置为 `openai/gpt-5.1-codex`。
+    当模型未设置、`openai/*` 或 `openai-codex/*` 时，将 `agents.defaults.model` 设置为 `openai/gpt-5.4`。
 
   </Accordion>
   <Accordion title="xAI (Grok) API 密钥">

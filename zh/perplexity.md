@@ -3,7 +3,7 @@ summary: "Perplexity Search API 和 Sonar/OpenRouter 的 web_search 兼容性"
 read_when:
   - You want to use Perplexity Search for web search
   - You need PERPLEXITY_API_KEY or OPENROUTER_API_KEY setup
-title: "Perplexity 搜索"
+title: "Perplexity 搜索（旧版路径）"
 ---
 
 # Perplexity Search API
@@ -91,7 +91,7 @@ OpenClaw 支持 Perplexity Search API 作为 `web_search` 提供商。
 
 **通过环境变量：** 在 Gateway(网关) 进程环境中设置 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。
 对于 gateway 安装，将其放入
-`~/.openclaw/.env` （或您的服务环境）中。请参阅 [Env vars](/zh/help/faq#how-does-openclaw-load-environment-variables)。
+`~/.openclaw/.env`（或您的服务环境）。参见 [Env vars](/zh/help/faq#env-vars-and-env-loading)。
 
 如果配置了 `provider: "perplexity"` 且 Perplexity 密钥 SecretRef 未解析且没有环境变量回退，启动/重载将快速失败。
 

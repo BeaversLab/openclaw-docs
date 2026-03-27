@@ -21,30 +21,33 @@ la sortie en interne. `--deliver` reste un alias déprécié pour `--announce`.
 
 Remarque : les tâches ponctuelles (`--at`) sont supprimées après réussite par défaut. Utilisez `--keep-after-run` pour les conserver.
 
-Remarque : les tâches récurrentes utilisent désormais une nouvelle tentative avec attente exponentielle après des erreurs consécutives (30 s → 1 min → 5 min → 15 min → 60 min), puis reviennent à la planification normale après la prochaine exécution réussie.
+Note : pour les tâches CLI ponctuelles, les dates/heures `--at` sans décalage sont traitées comme UTC, sauf si vous passez également
+`--tz <iana>`, qui interprète cette heure locale d'horloge murale dans le fuseau horaire donné.
 
-Remarque : `openclaw cron run` renvoie désormais dès que l'exécution manuelle est mise en file d'attente. Les réponses réussies incluent `{ ok: true, enqueued: true, runId }` ; utilisez `openclaw cron runs --id <job-id>` pour suivre le résultat final.
+Remarque : les tâches récurrentes utilisent désormais une attente exponentielle avec nouvelles tentatives après des erreurs consécutives (30 s → 1 min → 5 min → 15 min → 60 min), puis reviennent à la planification normale après la prochaine exécution réussie.
 
-Remarque : la rétention/le nettoyage est contrôlé dans la configuration :
+Remarque : `openclaw cron run` retourne désormais dès que l'exécution manuelle est mise en file d'attente. Les réponses réussies incluent `{ ok: true, enqueued: true, runId }` ; utilisez `openclaw cron runs --id <job-id>` pour suivre le résultat final.
+
+Remarque : la rétention/le nettoyage sont contrôlés dans la configuration :
 
 - `cron.sessionRetention` (par défaut `24h`) nettoie les sessions d'exécution isolées terminées.
 - `cron.runLog.maxBytes` + `cron.runLog.keepLines` nettoient `~/.openclaw/cron/runs/<jobId>.jsonl`.
 
-Note de mise à jour : si vous avez d'anciennes tâches cron antérieures au format de livraison/stockage actuel, exécutez
+Remarque de mise à niveau : si vous avez d'anciennes tâches cron antérieures au format actuel de livraison/stockage, exécutez
 `openclaw doctor --fix`. Doctor normalise désormais les champs cron hérités (`jobId`, `schedule.cron`,
-champs de livraison de premier niveau, alias de livraison de payload `provider`) et migre les simples
-tâches de secours de webhook `notify: true` vers une livraison de webhook explicite lorsque `cron.webhook` est
+champs de livraison de premier niveau, alias de livraison de payload `provider`) et migre les tâches de secours webhook simples
+`notify: true` vers une livraison webhook explicite lorsque `cron.webhook` est
 configuré.
 
 ## Modifications courantes
 
-Mettre à jour les paramètres de livraison sans changer le message :
+Mettre à jour les paramètres de livraison sans modifier le message :
 
 ```bash
 openclaw cron edit <job-id> --announce --channel telegram --to "123456789"
 ```
 
-Désactiver la diffusion pour une tâche isolée :
+Désactiver la livraison pour une tâche isolée :
 
 ```bash
 openclaw cron edit <job-id> --no-deliver
@@ -56,7 +59,7 @@ Activer le contexte d'amorçage léger pour une tâche isolée :
 openclaw cron edit <job-id> --light-context
 ```
 
-Annoncer à un canal spécifique :
+Annoncer dans un channel spécifique :
 
 ```bash
 openclaw cron edit <job-id> --announce --channel slack --to "channel:C1234567890"
@@ -74,7 +77,7 @@ openclaw cron add \
   --no-deliver
 ```
 
-`--light-context` s'applique uniquement aux tâches isolées de type agent-turn. Pour les exécutions cron, le mode léger maintient le contexte d'amorçage vide au lieu d'injecter l'ensemble complet d'amorçage de l'espace de travail.
+`--light-context` s'applique uniquement aux tâches de tour d'agent isolées. Pour les exécutions cron, le mode léger maintient le contexte d'amorçage vide au lieu d'injecter l'ensemble complet d'amorçage de l'espace de travail.
 
 import fr from "/components/footer/fr.mdx";
 

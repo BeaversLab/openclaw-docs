@@ -326,7 +326,7 @@ OpenProse se marie bien avec Lobster : utilisez `/prose` pour orchestrer la pré
 ## En savoir plus
 
 - [Plugins](/fr/tools/plugin)
-- [Création de tools de plugin](/fr/plugins/agent-tools)
+- [Création d'outil de plugin](/fr/plugins/building-plugins#registering-agent-tools)
 
 ## Étude de cas : workflows communautaires
 

@@ -201,9 +201,7 @@ Usa el asistente de configuración interactivo para establecer MiniMax sin edita
 
 ### "Unknown model: minimax/MiniMax-M2.7"
 
-Esto generalmente significa que el **proveedor de MiniMax no está configurado** (no se encontró ninguna entrada de proveedor
-ni ninguna clave de perfil/entorno de autenticación de MiniMax). Una solución para esta detección está en
-**2026.1.12** (sin lanzar en el momento de escribir esto). Solucionar mediante:
+Esto generalmente significa que **el proveedor de MiniMax no está configurado** (no se encontró ninguna entrada de proveedor ni ningún perfil de autenticación/clave de entorno de MiniMax). Una corrección para esta detección está en **2026.1.12**. Corregir mediante:
 
 - Actualizando a **2026.1.12** (o ejecutando desde la fuente `main`) y luego reiniciando la puerta de enlace.
 - Ejecutando `openclaw configure` y seleccionando una opción de autenticación **MiniMax**, o

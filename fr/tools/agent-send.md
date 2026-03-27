@@ -1,56 +1,103 @@
 ---
-summary: "Exécutions directes du `openclaw agent` CLI (avec livraison facultative)"
+summary: "Exécuter des tours d'agent depuis le CLI et livrer facultativement les réponses aux channels"
 read_when:
-  - Adding or modifying the agent CLI entrypoint
+  - You want to trigger agent runs from scripts or the command line
+  - You need to deliver agent replies to a chat channel programmatically
 title: "Agent Send"
 ---
 
-# `openclaw agent` (exécutions directes d'agent)
+# Agent Send
 
-`openclaw agent` exécute un seul tour d'agent sans avoir besoin d'un message de chat entrant.
-Par défaut, il passe **par le Gateway** ; ajoutez `--local` pour forcer le runtime
-intégré sur la machine actuelle.
+`openclaw agent` exécute un seul tour d'agent depuis la ligne de commande sans avoir besoin
+d'un message de chat entrant. Utilisez-le pour les flux de travail scriptés, les tests et
+la livraison programmée.
+
+## Quick start
+
+<Steps>
+  <Step title="Exécuter un tour d'agent simple">
+    ```bash
+    openclaw agent --message "What is the weather today?"
+    ```
+
+    Cela envoie le message via le Gateway et imprime la réponse.
+
+  </Step>
+
+  <Step title="Cibler un agent ou une session spécifique">
+    ```bash
+    # Target a specific agent
+    openclaw agent --agent ops --message "Summarize logs"
+
+    # Target a phone number (derives session key)
+    openclaw agent --to +15555550123 --message "Status update"
+
+    # Reuse an existing session
+    openclaw agent --session-id abc123 --message "Continue the task"
+    ```
+
+  </Step>
+
+  <Step title="Livrer la réponse à un channel">
+    ```bash
+    # Deliver to WhatsApp (default channel)
+    openclaw agent --to +15555550123 --message "Report ready" --deliver
+
+    # Deliver to Slack
+    openclaw agent --agent ops --message "Generate report" \
+      --deliver --reply-channel slack --reply-to "#reports"
+    ```
+
+  </Step>
+</Steps>
+
+## Drapeaux
+
+| Drapeau                       | Description                                                             |
+| ----------------------------- | ----------------------------------------------------------------------- |
+| `--message \<text\>`          | Message à envoyer (requis)                                              |
+| `--to \<dest\>`               | Dériver la clé de session à partir d'une cible (téléphone, id de chat)  |
+| `--agent \<id\>`              | Cibler un agent configuré (utilise sa session `main`)                   |
+| `--session-id \<id\>`         | Réutiliser une session existante par id                                 |
+| `--local`                     | Forcer l'exécution locale intégrée (ignorer le Gateway)                 |
+| `--deliver`                   | Envoyer la réponse à un channel de chat                                 |
+| `--channel \<name\>`          | Channel de livraison (whatsapp, telegram, discord, slack, etc.)         |
+| `--reply-to \<target\>`       | Remplacement de la cible de livraison                                   |
+| `--reply-channel \<name\>`    | Remplacement du channel de livraison                                    |
+| `--reply-account \<id\>`      | Remplacement de l'id de compte de livraison                             |
+| `--thinking \<level\>`        | Définir le niveau de réflexion (off, minimal, low, medium, high, xhigh) |
+| `--verbose \<on\|full\|off\>` | Définir le niveau de verbosité                                          |
+| `--timeout \<seconds\>`       | Remplacer le délai d'attente de l'agent                                 |
+| `--json`                      | Sortie JSON structurée                                                  |
 
 ## Comportement
 
-- Obligatoire : `--message <text>`
-- Sélection de session :
-  - `--to <dest>` dérive la clé de session (les cibles de groupe/canal préservent l'isolement ; les chats directs s'effondrent en `main`), **ou**
-  - `--session-id <id>` réutilise une session existante par id, **ou**
-  - `--agent <id>` cible un agent configuré directement (utilise la clé de session `main` de cet agent)
-- Exécute le même runtime d'agent intégré que les réponses entrantes normales.
-- Les indicateurs de réflexion/verbosité persistent dans le magasin de sessions.
-- Sortie :
-  - par défaut : imprime le texte de la réponse (plus les lignes `MEDIA:<url>`)
-  - `--json` : imprime la charge utile structurée + les métadonnées
-- Livraison facultative vers un canal avec `--deliver` + `--channel` (les formats cibles correspondent à `openclaw message --target`).
-- Utilisez `--reply-channel`/`--reply-to`/`--reply-account` pour remplacer la livraison sans changer la session.
-
-Si le Gateway est inaccessible, le CLI **revient** à l'exécution locale intégrée.
+- Par défaut, le CLI passe **via le Gateway**. Ajoutez `--local` pour forcer l'
+  runtime intégré sur la machine actuelle.
+- Si le Gateway est inaccessible, le CLI **revient** à l'exécution intégrée locale.
+- Sélection de session : `--to` dérive la clé de session (les cibles de groupe/channel
+  préservent l'isolement ; les discussions directes sont réduites à `main`).
+- Les indicateurs de réflexion et de mode détaillé (verbose) sont conservés dans le magasin de session.
+- Sortie : texte brut par défaut, ou `--json` pour une charge utile structurée + métadonnées.
 
 ## Exemples
 
 ```bash
-openclaw agent --to +15555550123 --message "status update"
-openclaw agent --agent ops --message "Summarize logs"
-openclaw agent --session-id 1234 --message "Summarize inbox" --thinking medium
+# Simple turn with JSON output
 openclaw agent --to +15555550123 --message "Trace logs" --verbose on --json
-openclaw agent --to +15555550123 --message "Summon reply" --deliver
-openclaw agent --agent ops --message "Generate report" --deliver --reply-channel slack --reply-to "#reports"
+
+# Turn with thinking level
+openclaw agent --session-id 1234 --message "Summarize inbox" --thinking medium
+
+# Deliver to a different channel than the session
+openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram --reply-to "@admin"
 ```
 
-## Indicateurs
+## Connexes
 
-- `--local` : exécuter localement (nécessite les clés API du fournisseur de modèle dans votre shell)
-- `--deliver` : envoyer la réponse au canal choisi
-- `--channel` : canal de livraison (`whatsapp|telegram|discord|googlechat|slack|signal|imessage`, par défaut : `whatsapp`)
-- `--reply-to` : remplacement de la cible de livraison
-- `--reply-channel` : remplacement du canal de livraison
-- `--reply-account` : forcer le remplacement de l'id du compte de livraison
-- `--thinking <off|minimal|low|medium|high|xhigh>` : niveau de persistance de la réflexion (modèles GPT-5.2 + Codex uniquement)
-- `--verbose <on|full|off>` : niveau de persistance du mode verbeux
-- `--timeout <seconds>` : remplacer le délai d'attente de l'agent
-- `--json` : afficher du JSON structuré
+- [Référence de l'agent CLI](/fr/cli/agent)
+- [Sous-agents](/fr/tools/subagents) — génération de sous-agents en arrière-plan
+- [Sessions](/fr/concepts/session) — fonctionnement des clés de session
 
 import fr from "/components/footer/fr.mdx";
 

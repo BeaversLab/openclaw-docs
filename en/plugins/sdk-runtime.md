@@ -14,9 +14,9 @@ Reference for the `api.runtime` object injected into every plugin during
 registration. Use these helpers instead of importing host internals directly.
 
 <Tip>
-  **Looking for a walkthrough?** See [Channel Plugins](/en/plugins/sdk-channel-plugins)
-  or [Provider Plugins](/en/plugins/sdk-provider-plugins) for step-by-step guides
-  that show these helpers in context.
+  **Looking for a walkthrough?** See [Channel Plugins](/en/plugins/sdk-channel-plugins) or [Provider
+  Plugins](/en/plugins/sdk-provider-plugins) for step-by-step guides that show these helpers in
+  context.
 </Tip>
 
 ```typescript
@@ -177,8 +177,8 @@ const result = await api.runtime.mediaUnderstanding.runFile({
 Returns `{ text: undefined }` when no output is produced (e.g. skipped input).
 
 <Info>
-  `api.runtime.stt.transcribeAudioFile(...)` remains as a compatibility alias
-  for `api.runtime.mediaUnderstanding.transcribeAudioFile(...)`.
+  `api.runtime.stt.transcribeAudioFile(...)` remains as a compatibility alias for
+  `api.runtime.mediaUnderstanding.transcribeAudioFile(...)`.
 </Info>
 
 ### `api.runtime.imageGeneration`

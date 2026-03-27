@@ -162,9 +162,9 @@ title: "Docs Hubs"
 ## 扩展 + 插件
 
 - [Plugins overview](/zh/tools/plugin)
-- [Building extensions](/zh/plugins/building-extensions)
+- [构建插件](/zh/plugins/building-plugins)
 - [Plugin manifest](/zh/plugins/manifest)
-- [Agent tools](/zh/plugins/agent-tools)
+- [Agent 工具](/zh/plugins/building-plugins#registering-agent-tools)
 - [插件包](/zh/plugins/bundles)
 - [社区插件](/zh/plugins/community)
 - [功能指南](/zh/tools/capability-cookbook)

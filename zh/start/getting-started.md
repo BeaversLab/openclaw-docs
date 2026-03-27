@@ -14,7 +14,7 @@ title: "入门指南"
 
 ## 所需条件
 
-- **Node.js** — 推荐使用 Node 24（也支持 Node 22.16+）
+- **Node.js** — 推荐 Node 24（也支持 Node 22.14+）
 - 来自模型提供商（API、Anthropic、Google 等）的 **OpenAI 密钥** — 新手引导将会提示您
 
 <Tip>

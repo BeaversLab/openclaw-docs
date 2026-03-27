@@ -303,6 +303,20 @@ title: "配置示例"
         },
       },
     },
+    list: [
+      {
+        id: "main",
+        default: true,
+        thinkingDefault: "high", // per-agent thinking override
+        reasoningDefault: "on", // per-agent reasoning visibility
+        fastModeDefault: false, // per-agent fast mode
+      },
+      {
+        id: "quick",
+        fastModeDefault: true, // this agent always runs fast
+        thinkingDefault: "off",
+      },
+    ],
   },
 
   tools: {

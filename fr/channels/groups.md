@@ -116,7 +116,7 @@ Vous préférez « les groupes ne peuvent voir que le dossier X » plutôt que �
 
 Connexes :
 
-- Clés de configuration et valeurs par défaut : [configuration du Gateway](/fr/gateway/configuration-reference#agents-defaults-sandbox)
+- Clés de configuration et valeurs par défaut : [configuration du Gateway](/fr/gateway/configuration-reference#agentsdefaultssandbox)
 - Débogage du blocage d'un outil : [Sandbox vs Tool Policy vs Elevated](/fr/gateway/sandbox-vs-tool-policy-vs-elevated)
 - Détails sur les montages de liaison : [Sandboxing](/fr/gateway/sandboxing#custom-bind-mounts)
 

@@ -137,7 +137,11 @@ Ordre d'extraction `web_fetch` :
 2. Firecrawl (si configuré)
 3. Nettoyage HTML basique (dernier recours)
 
-Voir [Outils Web](/fr/tools/web) pour la configuration complète des outils web.
+## Connexes
+
+- [Vue d'ensemble de la recherche web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
+- [Web Fetch](/fr/tools/web-fetch) -- tool web_fetch avec repli vers Firecrawl
+- [Tavily](/fr/tools/tavily) -- tools de recherche et d'extraction
 
 import fr from "/components/footer/fr.mdx";
 

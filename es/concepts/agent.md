@@ -78,10 +78,10 @@ No se leen las carpetas de sesión heredadas de otras herramientas.
 ## Dirección durante la transmisión
 
 Cuando el modo de cola es `steer`, los mensajes entrantes se inyectan en la ejecución actual.
-La cola se verifica **después de cada llamada a herramienta**; si hay un mensaje en cola presente,
-se saltan las llamadas a herramientas restantes del mensaje del asistente actual (resultados de herramienta de error
-con "Omitido debido a un mensaje de usuario en cola."), y luego se inyecta el mensaje de usuario
-en cola antes de la siguiente respuesta del asistente.
+La dirección en cola se entrega **después de que el turno del asistente actual termina
+de ejecutar sus llamadas a herramientas**, antes de la siguiente llamada al LLM. La dirección ya no omite
+las llamadas a herramientas restantes del mensaje del asistente actual; en su lugar, inyecta el mensaje
+en cola en el siguiente límite del modelo.
 
 Cuando el modo de cola es `followup` o `collect`, los mensajes entrantes se retienen hasta que
 termina el turno actual, luego comienza un nuevo turno de agente con las cargas útiles en cola. Consulte

@@ -69,9 +69,9 @@ OpenClaw 附带了三个安装程序脚本，由 `openclaw.ai` 提供。
   <Step title="检测操作系统">
     支持 macOS 和 Linux（包括 WSL）。如果检测到 macOS，若缺少 Homebrew 则会进行安装。
   </Step>
-  <Step title="确保默认使用 Node.js 24">
-    检查 Node 版本，并在需要时安装 Node 24（在 macOS 上使用 Homebrew，在 Linux 上使用 NodeSource
-    设置脚本 针对 apt/dnf/yum）。OpenClaw 仍支持 Node 22 LTS，目前为 `22.16+`，以确保 兼容性。
+  <Step title="Ensure Node.js 24 by default">
+    检查 Node 版本并在需要时安装 Node 24（macOS 上使用 Homebrew，Linux apt/dnf/yum 上使用 NodeSource
+    设置脚本）。为了兼容性，macOS 仍支持 Node 22 LTS，目前为 `22.14+`。
   </Step>
   <Step title="确保 Git">如果缺少 Git，则安装 Git。</Step>
   <Step title="安装 OpenClaw">
@@ -239,9 +239,9 @@ OpenClaw 附带了三个安装程序脚本，由 `openclaw.ai` 提供。
 
 <Steps>
   <Step title="确保 PowerShell + Windows 环境">需要 PowerShell 5+。</Step>
-  <Step title="默认确保 Node.js 24">
-    如果缺失，尝试通过 winget 安装，然后是 Chocolatey，接着是 Scoop。为了兼容性，目前仍支持 Node 22
-    LTS， 即 `22.16+`。
+  <Step title="Ensure Node.js 24 by default">
+    如果缺失，会尝试通过 winget，然后是 Chocolatey，接着是 Scoop 进行安装。为了兼容性，Node 22
+    LTS，目前为 `22.14+`，仍然受支持。
   </Step>
   <Step title="安装 OpenClaw">
     - `npm` 方法（默认）：使用所选 `-Tag` 进行全局 npm 安装 - `git` 方法：克隆/更新 仓库，使用 pnpm

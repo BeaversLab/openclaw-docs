@@ -182,6 +182,10 @@ La protection contre la relecture de webhooks est activée pour Twilio et Plivo.
 Les tours de conversation Twilio incluent un jeton par tour dans les rappels `<Gather>`, de sorte que
 les rappels vocaux périmés/rejoués ne peuvent pas satisfaire un tour de transcription en attente plus récent.
 
+Les requêtes webhook non authentifiées sont rejetées avant la lecture du corps lorsque les en-têtes de signature requis par le fournisseur sont manquants.
+
+Le webhook d'appel vocal utilise le profil de corps pré-authentifié partagé (64 Ko / 5 secondes) ainsi qu'une limite simultanée par adresse IP avant la vérification de la signature.
+
 Exemple avec un hôte public stable :
 
 ```json5
@@ -203,9 +207,7 @@ Exemple avec un hôte public stable :
 
 ## TTS pour les appels
 
-Voice Call utilise la configuration de base `messages.tts` pour
-la diffusion vocale lors des appels. Vous pouvez la remplacer dans la configuration du plugin avec la
-**même structure** — elle fusionne en profondeur avec `messages.tts`.
+Voice Call utilise la configuration centrale `messages.tts` pour la diffusion vocale en continu lors des appels. Vous pouvez la remplacer dans la configuration du plugin avec la **même structure** — elle fusionne en profondeur avec `messages.tts`.
 
 ```json5
 {
@@ -222,11 +224,12 @@ la diffusion vocale lors des appels. Vous pouvez la remplacer dans la configurat
 Notes :
 
 - **La synthèse vocale Microsoft est ignorée pour les appels vocaux** (l'audio téléphonique nécessite du PCM ; le transport Microsoft actuel n'expose pas de sortie PCM téléphonique).
-- Le TTS principal est utilisé lorsque le streaming média Twilio est activé ; sinon, les appels reviennent aux voix natives du fournisseur.
+- Le TTS central est utilisé lorsque le flux de médias Twilio est activé ; sinon, les appels reviennent aux voix natives du fournisseur.
+- Si un flux de médias Twilio est déjà actif, Voice Call ne revient pas au TwiML `<Say>`. Si le TTS téléphonique n'est pas disponible dans cet état, la demande de lecture échoue au lieu de mélanger deux chemins de lecture.
 
 ### Plus d'exemples
 
-Utiliser uniquement le TTS principal (pas de remplacement) :
+Utiliser uniquement le TTS central (pas de remplacement) :
 
 ```json5
 {
@@ -239,7 +242,7 @@ Utiliser uniquement le TTS principal (pas de remplacement) :
 }
 ```
 
-Remplacer par ElevenLabs uniquement pour les appels (garder la valeur par défaut principale ailleurs) :
+Remplacer par ElevenLabs uniquement pour les appels (garder la valeur par défaut centrale ailleurs) :
 
 ```json5
 {
@@ -262,7 +265,7 @@ Remplacer par ElevenLabs uniquement pour les appels (garder la valeur par défau
 }
 ```
 
-Remplacer uniquement le modèle OpenAI pour les appels (exemple de fusion profonde) :
+Remplacer uniquement le modèle OpenAI pour les appels (exemple de fusion en profondeur) :
 
 ```json5
 {
@@ -295,17 +298,42 @@ La stratégie entrante par défaut est `disabled`. Pour activer les appels entra
 }
 ```
 
-`inboundPolicy: "allowlist"` est un filtre d'identification de l'appelant à faible assurance. Le plugin
-normalise la valeur `From` fournie par le fournisseur et la compare à `allowFrom`.
-La vérification du webhook authentifie la livraison et l'intégrité de la charge utile par le fournisseur, mais
-elle ne prouve pas la propriété du numéro d'appelant PSTN/VoIP. Traitez `allowFrom` comme un
-filtrage de l'identification de l'appelant, et non comme une identité forte de l'appelant.
+`inboundPolicy: "allowlist"` est un filtre d'identification de l'appelant à faible assurance. Le plugin normalise la valeur `From` fournie par le fournisseur et la compare à `allowFrom`. La vérification du webhook authentifie la livraison et l'intégrité de la charge utile par le fournisseur, mais elle ne prouve pas la propriété du numéro d'appelant PSTN/VoIP. Traitez `allowFrom` comme un filtrage de l'identification de l'appelant, et non comme une identité forte de l'appelant.
 
 Les réponses automatiques utilisent le système d'agent. Ajustez avec :
 
 - `responseModel`
 - `responseSystemPrompt`
 - `responseTimeoutMs`
+
+### Contrat de sortie vocale
+
+Pour les réponses automatiques, Voice Call ajoute un contrat strict de sortie vocale à l'invite système :
+
+- `{"spoken":"..."}`
+
+Voice Call extrait ensuite le texte de la parole de manière défensive :
+
+- Ignore les charges utiles marquées comme contenu de raisonnement/erreur.
+- Analyse le JSON direct, le JSON délimité ou les clés `"spoken"` en ligne.
+- Revient au texte brut et supprime les paragraphes d'introduction probables liés à la planification/métadonnées.
+
+Cela permet de concentrer la lecture vocale sur le texte destiné à l'appelant et d'éviter la fuite de texte de planification dans l'audio.
+
+### Comportement de démarrage de la conversation
+
+Pour les appels `conversation` sortants, la gestion du premier message est liée à l'état de la lecture en direct :
+
+- Le vidage de la file d'attente d'interruption et la réponse automatique sont supprimés uniquement pendant la lecture active du message d'accueil initial.
+- Si la lecture initiale échoue, l'appel revient à `listening` et le message initial reste en file d'attente pour une nouvelle tentative.
+- La lecture initiale pour le flux Twilio commence lors de la connexion du flux sans délai supplémentaire.
+
+### Délai de grâce de déconnexion du flux Twilio
+
+Lorsqu'un flux média Twilio se déconnecte, Voice Call attend `2000ms` avant de terminer automatiquement l'appel :
+
+- Si le flux se reconnecte pendant cette fenêtre, la fin automatique est annulée.
+- Si aucun flux n'est réenregistré après la période de grâce, l'appel est terminé pour éviter les appels actifs bloqués.
 
 ## CLI
 
@@ -321,10 +349,10 @@ openclaw voicecall latency                     # summarize turn latency from log
 openclaw voicecall expose --mode funnel
 ```
 
-`latency` lit `calls.jsonl` à partir du chemin de stockage par défaut des appels vocaux. Utilisez
+`latency` lit `calls.jsonl` à partir du chemin de stockage vocal par défaut. Utilisez
 `--file <path>` pour pointer vers un journal différent et `--last <n>` pour limiter l'analyse
-aux N derniers enregistrements (par défaut 200). La sortie inclut p50/p90/p99 pour la latence de tour
-et les temps d'attente d'écoute.
+aux N derniers enregistrements (par défaut 200). La sortie comprend p50/p90/p99 pour la latence
+de tour et les temps d'attente d'écoute.
 
 ## Outil de l'agent
 

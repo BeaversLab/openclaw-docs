@@ -193,7 +193,7 @@ Notes :
 - Lorsque l'authentification par jeton nécessite un jeton et que `gateway.auth.token` est géré par SecretRef, `gateway install` vérifie que le SecretRef peut être résolu, mais ne persiste pas le jeton résolu dans les métadonnées de l'environnement de service.
 - Si l'authentification par jeton nécessite un jeton et que le SecretRef de jeton configuré n'est pas résolu, l'installation échoue de manière fermée au lieu de persister le texte en clair de secours.
 - Pour l'authentification par mot de passe sur `gateway run`, privilégiez `OPENCLAW_GATEWAY_PASSWORD`, `--password-file`, ou un `gateway.auth.password` soutenu par SecretRef plutôt qu'un `--password` en ligne.
-- En mode d'authentification inférée, le `OPENCLAW_GATEWAY_PASSWORD`/`CLAWDBOT_GATEWAY_PASSWORD` limité au shell ne relâche pas les exigences de jeton d'installation ; utilisez une configuration durable (`gateway.auth.password` ou config `env`) lors de l'installation d'un service géré.
+- En mode d'authentification déduit, `OPENCLAW_GATEWAY_PASSWORD` exclusif au shell ne desserre pas les exigences du jeton d'installation ; utilisez une configuration persistante (`gateway.auth.password` ou config `env`) lors de l'installation d'un service géré.
 - Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés et que `gateway.auth.mode` n'est pas défini, l'installation est bloquée jusqu'à ce que le mode soit défini explicitement.
 - Les commandes de cycle de vie acceptent `--json` pour les scripts.
 
@@ -202,19 +202,19 @@ Notes :
 `gateway discover` recherche les balises Gateway (`_openclaw-gw._tcp`).
 
 - Multicast DNS-SD : `local.`
-- Unicast DNS-SD (Bonjour étendu) : choisissez un domaine (exemple : `openclaw.internal.`) et configurez un DNS divisé + un serveur DNS ; voir [/gateway/bonjour](/fr/gateway/bonjour)
+- Unicast DNS-SD (Wide-Area Bonjour) : choisissez un domaine (exemple : `openclaw.internal.`) et configurez un DNS fractionné + un serveur DNS ; voir [/gateway/bonjour](/fr/gateway/bonjour)
 
 Seules les passerelles avec la découverte Bonjour activée (par défaut) annoncent la balise.
 
 Les enregistrements de découverte étendue incluent (TXT) :
 
-- `role` (indication de rôle de passerelle)
-- `transport` (indication de transport, par exemple `gateway`)
+- `role` (indicateur de rôle de passerelle)
+- `transport` (indicateur de transport, p. ex. `gateway`)
 - `gatewayPort` (port WebSocket, généralement `18789`)
 - `sshPort` (port SSH ; par défaut `22` si absent)
 - `tailnetDns` (nom d'hôte MagicDNS, si disponible)
-- `gatewayTls` / `gatewayTlsSha256` (TLS activé + empreinte de certificat)
-- `cliPath` (indication facultative pour les installations distantes)
+- `gatewayTls` / `gatewayTlsSha256` (TLS activé + empreinte du certificat)
+- `cliPath` (indicateur facultatif pour les installations à distance)
 
 ### `gateway discover`
 
@@ -224,8 +224,8 @@ openclaw gateway discover
 
 Options :
 
-- `--timeout <ms>` : délai d'expiration par commande (parcours/résolution) ; par défaut `2000`.
-- `--json` : sortie lisible par machine (désactive également le style/l'indicateur d'activité).
+- `--timeout <ms>` : délai d'attente par commande (parcours/résolution) ; par défaut `2000`.
+- `--json` : sortie lisible par machine (désactive également le style/le spinner).
 
 Exemples :
 

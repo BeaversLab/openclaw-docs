@@ -15,13 +15,13 @@ Se utiliza en dos lugares:
 1. **Emparejamiento MD** (quién tiene permiso para hablar con el bot)
 2. **Emparejamiento de nodos** (qué dispositivos/nodos tienen permiso para unirse a la red de pasarela)
 
-Contexto de seguridad: [Security](/es/gateway/security)
+Contexto de seguridad: [Seguridad](/es/gateway/security)
 
 ## 1) Emparejamiento MD (acceso de chat entrante)
 
 Cuando un canal está configurado con la política de MD `pairing`, los remitentes desconocidos reciben un código corto y su mensaje **no se procesa** hasta que usted lo apruebe.
 
-Las políticas de MD predeterminadas están documentadas en: [Security](/es/gateway/security)
+Las políticas de MD predeterminadas están documentadas en: [Seguridad](/es/gateway/security)
 
 Códigos de emparejamiento:
 
@@ -36,7 +36,7 @@ openclaw pairing list telegram
 openclaw pairing approve telegram <CODE>
 ```
 
-Canales compatibles: `telegram`, `whatsapp`, `signal`, `imessage`, `discord`, `slack`, `feishu`.
+Canales compatibles: `bluebubbles`, `discord`, `feishu`, `googlechat`, `imessage`, `irc`, `line`, `matrix`, `mattermost`, `msteams`, `nextcloud-talk`, `nostr`, `signal`, `slack`, `synology-chat`, `telegram`, `twitch`, `whatsapp`, `zalo`, `zalouser`.
 
 ### Dónde reside el estado
 
@@ -56,23 +56,23 @@ Trátelos como confidenciales (controlan el acceso a su asistente).
 
 ## 2) Emparejamiento de dispositivos de nodo (nodos iOS/Android/macOS/headless)
 
-Los nodos se conectan a la Pasarela como **dispositivos** con `role: node`. La Pasarela
+Los nodos se conectan a la Gateway como **dispositivos** con `role: node`. La Gateway
 crea una solicitud de emparejamiento de dispositivo que debe ser aprobada.
 
 ### Emparejar vía Telegram (recomendado para iOS)
 
-Si utiliza el complemento `device-pair`, puede realizar el emparejamiento de dispositivos por primera vez completamente desde Telegram:
+Si usas el plugin `device-pair`, puedes realizar el emparejamiento inicial del dispositivo completamente desde Telegram:
 
 1. En Telegram, envía un mensaje a tu bot: `/pair`
 2. El bot responde con dos mensajes: un mensaje de instrucciones y un mensaje separado de **código de configuración** (fácil de copiar/pegar en Telegram).
 3. En tu teléfono, abre la aplicación OpenClaw para iOS → Configuración → Gateway.
 4. Pega el código de configuración y conéctate.
-5. De vuelta en Telegram: `/pair pending` (revisar los IDs de solicitud, rol y alcances), luego aprobar.
+5. De vuelta en Telegram: `/pair pending` (revisa los IDs de solicitud, el rol y los ámbitos), luego aprueba.
 
 El código de configuración es una carga útil JSON codificada en base64 que contiene:
 
-- `url`: la URL del WebSocket de Gateway (`ws://...` o `wss://...`)
-- `bootstrapToken`: un token de arranque de un solo dispositivo de corta duración que se utiliza para el protocolo de enlace de emparejamiento inicial
+- `url`: la URL del WebSocket de la Gateway (`ws://...` o `wss://...`)
+- `bootstrapToken`: un token de arranque de un solo dispositivo de corta duración utilizado para el protocolo de enlace de emparejamiento inicial
 
 Trata el código de configuración como una contraseña mientras sea válido.
 
@@ -84,8 +84,8 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-Si el mismo dispositivo vuelve a intentarlo con diferentes detalles de autenticación (por ejemplo, diferente
-rol/alcances/clave pública), la solicitud pendiente anterior es reemplazada y se crea una nueva
+Si el mismo dispositivo reintenta con diferentes detalles de autenticación (por ejemplo, diferentes
+rol/ámbitos/clave pública), la solicitud pendiente anterior es reemplazada y se crea una nueva
 `requestId`.
 
 ### Almacenamiento del estado de emparejamiento del nodo
@@ -98,11 +98,11 @@ Almacenado bajo `~/.openclaw/devices/`:
 ### Notas
 
 - La API heredada `node.pair.*` (CLI: `openclaw nodes pending/approve`) es un
-  almacén de emparejamiento propiedad de la puerta de enlace separado. Los nodos WS aún requieren emparejamiento de dispositivos.
+  almacén de emparejamiento propiedad de la puerta de enlace separado. Los nodos WS aún requieren emparejamiento de dispositivo.
 
 ## Documentos relacionados
 
-- Modelo de seguridad + inyección de mensajes: [Security](/es/gateway/security)
+- Modelo de seguridad + inyección de avisos: [Security](/es/gateway/security)
 - Actualización segura (ejecutar doctor): [Updating](/es/install/updating)
 - Configuraciones de canales:
   - Telegram: [Telegram](/es/channels/telegram)

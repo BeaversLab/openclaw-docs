@@ -2,46 +2,32 @@
 summary: "Despliega OpenClaw en Northflank con una plantilla de un clic"
 read_when:
   - Deploying OpenClaw to Northflank
-  - You want a one-click cloud deploy with browser-based setup
+  - You want a one-click cloud deploy with browser-based Control UI
 title: "Northflank"
 ---
 
-Despliega OpenClaw en Northflank con una plantilla de un clic y termina la configuración en tu navegador.
-Esta es la ruta más fácil “sin terminal en el servidor”: Northflank ejecuta el Gateway por ti,
-y configuras todo a través del asistente web `/setup`.
+Despliega OpenClaw en Northflank con una plantilla de un solo clic y accede a él a través de la interfaz de control web.
+Esta es la ruta más fácil "sin terminal en el servidor": Northflank ejecuta el Gateway por ti.
 
 ## Cómo empezar
 
-1. Haz clic en [Desplegar OpenClaw](https://northflank.com/stacks/deploy-openclaw) para abrir la plantilla.
+1. Haz clic en [Deploy OpenClaw](https://northflank.com/stacks/deploy-openclaw) para abrir la plantilla.
 2. Crea una [cuenta en Northflank](https://app.northflank.com/signup) si aún no tienes una.
 3. Haz clic en **Desplegar OpenClaw ahora**.
-4. Establezca la variable de entorno requerida: `SETUP_PASSWORD`.
+4. Establezca la variable de entorno requerida: `OPENCLAW_GATEWAY_TOKEN` (use un valor aleatorio fuerte).
 5. Haz clic en **Desplegar stack** para compilar y ejecutar la plantilla de OpenClaw.
 6. Espera a que se complete el despliegue y luego haz clic en **Ver recursos**.
 7. Abre el servicio OpenClaw.
-8. Abre la URL pública de OpenClaw y completa la configuración en `/setup`.
-9. Abre la interfaz de usuario de Control en `/openclaw`.
+8. Abra la URL pública de OpenClaw en `/openclaw` y conéctese usando su `OPENCLAW_GATEWAY_TOKEN`.
 
 ## Lo que obtienes
 
-- OpenClaw Gateway alojado + Interfaz de usuario de Control
-- Configuración web en `/setup` (sin comandos de terminal)
-- Almacenamiento persistente a través de Volumen de Northflank (`/data`) para que la configuración/credenciales/espacio de trabajo sobrevivan a los redespliegues
-
-## Flujo de configuración
-
-1. Visita `https://<your-northflank-domain>/setup` e introduce tu `SETUP_PASSWORD`.
-2. Elige un modelo/proveedor de autenticación y pega tu clave.
-3. (Opcional) Añade tokens de Telegram/Discord/Slack.
-4. Haz clic en **Ejecutar configuración**.
-5. Abre la Interfaz de usuario de Control en `https://<your-northflank-domain>/openclaw`
-
-Si los MD de Telegram están configurados en emparejamiento, la configuración web puede aprobar el código de emparejamiento.
+- Gateway OpenClaw alojado + Interfaz de control
+- Almacenamiento persistente a través de Northflank Volume (`/data`) para que la configuración/credenciales/espacio de trabajo sobrevivan a los nuevos despliegues
 
 ## Conectar un canal
 
-Pega tu token de Telegram o Discord en el asistente `/setup`. Para ver las instrucciones
-de configuración, consulta la documentación del canal:
+Use la interfaz de control en `/openclaw` o ejecute `openclaw onboard` a través de SSH para obtener instrucciones de configuración del canal:
 
 - [Telegram](/es/channels/telegram) (el más rápido: solo un token de bot)
 - [Discord](/es/channels/discord)
@@ -49,9 +35,9 @@ de configuración, consulta la documentación del canal:
 
 ## Próximos pasos
 
-- Configura canales de mensajería: [Canales](/es/channels)
-- Configura el Gateway: [Configuración del Gateway](/es/gateway/configuration)
-- Mantén OpenClaw actualizado: [Actualización](/es/install/updating)
+- Configurar canales de mensajería: [Canales](/es/channels)
+- Configurar el Gateway: [Configuración del Gateway](/es/gateway/configuration)
+- Mantener OpenClaw actualizado: [Actualización](/es/install/updating)
 
 import es from "/components/footer/es.mdx";
 

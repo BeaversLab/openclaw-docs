@@ -115,7 +115,7 @@ Solución de problemas completa: [/channels/signal#troubleshooting](/es/channels
 | Los MD no se procesan                               | `openclaw pairing list matrix`                              | Aprobar remitente o ajustar la política de MD.                 |
 | Fallo en salas cifradas                             | Verificar módulo de criptografía y configuración de cifrado | Habilitar soporte de cifrado y volver a unir/sincronizar sala. |
 
-Solución de problemas completa: [/channels/matrix#troubleshooting](/es/channels/matrix#troubleshooting)
+Configuración completa: [Matrix](/es/channels/matrix)
 
 import es from "/components/footer/es.mdx";
 

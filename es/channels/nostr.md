@@ -130,7 +130,13 @@ Notas:
 - **open**: DM entrantes públicos (requiere `allowFrom: ["*"]`).
 - **disabled**: ignorar DM entrantes.
 
-### Ejemplo de lista blanca
+Notas sobre el cumplimiento:
+
+- La política del remitente se verifica antes de la verificación de la firma y el descifrado de NIP-04.
+- Las respuestas de emparejamiento se envían sin procesar el cuerpo del DM original.
+- Los DM entrantes tienen límite de velocidad y las cargas excesivamente grandes se descartan antes de descifrar.
+
+### Ejemplo de lista de permitidos
 
 ```json5
 {
@@ -151,7 +157,7 @@ Formatos aceptados:
 - **Clave privada:** `nsec...` o hexadecimal de 64 caracteres
 - **Claves públicas (`allowFrom`):** `npub...` o hexadecimal
 
-## Relays
+## Relés
 
 Predeterminados: `relay.damus.io` y `nos.lol`.
 
@@ -168,19 +174,19 @@ Predeterminados: `relay.damus.io` y `nos.lol`.
 
 Consejos:
 
-- Use 2-3 relays para redundancia.
-- Evita demasiados relés (latencia, duplicación).
-- Los relés de pago pueden mejorar la fiabilidad.
-- Los relés locales son adecuados para pruebas (`ws://localhost:7777`).
+- Use 2-3 relés para redundancia.
+- Evite usar demasiados relés (latencia, duplicación).
+- Los relés de pago pueden mejorar la confiabilidad.
+- Los relés locales están bien para pruebas (`ws://localhost:7777`).
 
 ## Soporte de protocolo
 
-| NIP    | Estado      | Descripción                                     |
-| ------ | ----------- | ----------------------------------------------- |
-| NIP-01 | Compatible  | Formato básico de eventos + metadatos de perfil |
-| NIP-04 | Compatible  | MD cifrados (`kind:4`)                          |
-| NIP-17 | Planificado | MD envueltos (gift-wrapped)                     |
-| NIP-44 | Planificado | Cifrado con versión                             |
+| NIP    | Estado      | Descripción                                    |
+| ------ | ----------- | ---------------------------------------------- |
+| NIP-01 | Soportado   | Formato de evento básico + metadatos de perfil |
+| NIP-04 | Soportado   | DM cifrados (`kind:4`)                         |
+| NIP-17 | Planificado | DM envueltos (gift-wrapped)                    |
+| NIP-44 | Planificado | Cifrado con versiones                          |
 
 ## Pruebas
 
@@ -204,25 +210,25 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ### Prueba manual
 
-1. Anota la clave pública del bot (npub) de los registros.
-2. Abre un cliente de Nostr (Damus, Amethyst, etc.).
-3. Envía un MD a la clave pública del bot.
-4. Verifica la respuesta.
+1. Anote la clave pública del bot (npub) de los registros.
+2. Abra un cliente de Nostr (Damus, Amethyst, etc.).
+3. Envíe un DM a la clave pública del bot.
+4. Verifique la respuesta.
 
 ## Solución de problemas
 
 ### No se reciben mensajes
 
-- Verifica que la clave privada sea válida.
-- Asegúrate de que las URL de los relés sean accesibles y usen `wss://` (o `ws://` para local).
-- Confirma que `enabled` no sea `false`.
-- Revisa los registros de Gateway para ver errores de conexión de relé.
+- Verifique que la clave privada sea válida.
+- Asegúrese de que las URL de los relés sean accesibles y usen `wss://` (o `ws://` para local).
+- Confirme que `enabled` no sea `false`.
+- Revise los registros de Gateway para ver errores de conexión de relé.
 
 ### No se envían respuestas
 
-- Comprueba que el relé acepte escrituras.
-- Verifica la conectividad saliente.
-- Vigila los límites de tasa del relé.
+- Compruebe que el relé acepte escrituras.
+- Verifique la conectividad saliente.
+- Vigile los límites de velocidad del relé.
 
 ### Respuestas duplicadas
 
@@ -231,15 +237,16 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
 ## Seguridad
 
-- Nunca confirmes claves privadas.
-- Usa variables de entorno para las claves.
-- Considera `allowlist` para bots en producción.
+- Nunca confirme claves privadas.
+- Use variables de entorno para las claves.
+- Considere `allowlist` para bots de producción.
+- La política de emparejamiento y lista de permitidos se aplica antes de descifrar, por lo que los remitentes desconocidos no pueden forzar todo el trabajo criptográfico.
 
 ## Limitaciones (MVP)
 
 - Solo mensajes directos (sin chats grupales).
 - Sin archivos adjuntos multimedia.
-- Solo NIP-04 (gift-wrap NIP-17 planificado).
+- Solo NIP-04 (NIP-17 gift-wrap planificado).
 
 import es from "/components/footer/es.mdx";
 

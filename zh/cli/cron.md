@@ -21,41 +21,40 @@ title: "cron"
 
 注意：一次性 (`--at`) 作业默认在成功后删除。使用 `--keep-after-run` 保留它们。
 
-注意：循环作业现在在连续错误后使用指数退避重试 (30秒 → 1分钟 → 5分钟 → 15分钟 → 60分钟)，然后在下次成功运行后恢复正常调度。
+注意：对于一次性 CLI 作业，不带偏移量的 `--at` 日期时间将被视为 UTC，除非您还传递了 `--tz <iana>`，这会将该本地挂钟时间解释为在给定的时区中。
 
-注意：`openclaw cron run` 现在在手动运行排队执行后立即返回。成功的响应包含 `{ ok: true, enqueued: true, runId }`；使用 `openclaw cron runs --id <job-id>` 跟踪最终结果。
+注意：周期性作业现在在连续错误后使用指数退避重试（30s → 1m → 5m → 15m → 60m），然后在下次成功运行后恢复正常调度。
 
-注意：保留/修剪在配置中控制：
+注意：`openclaw cron run` 现在会在手动运行被排队执行后立即返回。成功的响应包含 `{ ok: true, enqueued: true, runId }`；请使用 `openclaw cron runs --id <job-id>` 来跟踪最终结果。
 
-- `cron.sessionRetention`（默认 `24h`）会清理已完成的隔离运行会话。
-- `cron.runLog.maxBytes` + `cron.runLog.keepLines` 会清理 `~/.openclaw/cron/runs/<jobId>.jsonl`。
+注意：保留/修剪由配置控制：
 
-升级说明：如果您拥有当前投递/存储格式之前的旧 cron 作业，请运行
-`openclaw doctor --fix`。Doctor 现在会规范化旧的 cron 字段（`jobId`、`schedule.cron`、
-顶级投递字段、payload `provider` 投递别名），并在配置 `cron.webhook` 时
-将简单的 `notify: true` webhook 后备作业迁移到显式 webhook 投递。
+- `cron.sessionRetention`（默认为 `24h`）修剪已完成的隔离运行会话。
+- `cron.runLog.maxBytes` + `cron.runLog.keepLines` 修剪 `~/.openclaw/cron/runs/<jobId>.jsonl`。
+
+升级提示：如果您有当前传递/存储格式之前的旧 cron 作业，请运行 `openclaw doctor --fix`。Doctor 现在会规范化旧的 cron 字段（`jobId`、`schedule.cron`、顶层传递字段、有效负载 `provider` 传递别名），并在配置了 `cron.webhook` 时将简单的 `notify: true` webhook 回退作业迁移到显式 webhook 传递。
 
 ## 常见编辑
 
-在不更改消息的情况下更新投递设置：
+在不更改消息的情况下更新传递设置：
 
 ```bash
 openclaw cron edit <job-id> --announce --channel telegram --to "123456789"
 ```
 
-为隔离的作业禁用投递：
+禁用隔离作业的传递：
 
 ```bash
 openclaw cron edit <job-id> --no-deliver
 ```
 
-为隔离的作业启用轻量级引导上下文：
+为隔离作业启用轻量级引导上下文：
 
 ```bash
 openclaw cron edit <job-id> --light-context
 ```
 
-宣布到特定频道：
+向特定渠道宣布：
 
 ```bash
 openclaw cron edit <job-id> --announce --channel slack --to "channel:C1234567890"
@@ -73,7 +72,7 @@ openclaw cron add \
   --no-deliver
 ```
 
-`--light-context` 仅适用于隔离的 agent-turn 作业。对于 cron 运行，轻量级模式将引导上下文保持为空，而不是注入完整的工作区引导集。
+`--light-context` 仅适用于隔离的代理轮次作业。对于 cron 运行，轻量级模式保持引导上下文为空，而不是注入完整的工作区引导集。
 
 import zh from "/components/footer/zh.mdx";
 

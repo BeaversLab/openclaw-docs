@@ -24,38 +24,52 @@ El comportamiento operativo coincide con [OpenAI Chat Completions](/es/gateway/o
 
 - usa `Authorization: Bearer <token>` con la configuración de autenticación normal del Gateway
 - trata el endpoint como acceso de operador completo para la instancia del gateway
-- selecciona agentes con `model: "openclaw:<agentId>"`, `model: "agent:<agentId>"` o `x-openclaw-agent-id`
-- usa `x-openclaw-session-key` para el enrutamiento explícito de sesiones
+- seleccione agentes con `model: "openclaw"`, `model: "openclaw/default"`, `model: "openclaw/<agentId>"` o `x-openclaw-agent-id`
+- use `x-openclaw-model` cuando desee anular el modelo backend del agente seleccionado
+- use `x-openclaw-session-key` para el enrutamiento explícito de sesiones
+- use `x-openclaw-message-channel` cuando desee un contexto de canal de entrada sintético no predeterminado
 
-Activa o desactiva este endpoint con `gateway.http.endpoints.responses.enabled`.
+Habilite o deshabilite este punto de conexión con `gateway.http.endpoints.responses.enabled`.
+
+La misma superficie de compatibilidad también incluye:
+
+- `GET /v1/models`
+- `GET /v1/models/{id}`
+- `POST /v1/embeddings`
+- `POST /v1/chat/completions`
+
+Para la explicación canónica de cómo los modelos de destino de agente, `openclaw/default`, el paso a través de embeddings y las anulaciones del modelo backend se ajustan, consulte [OpenAI Chat Completions](/es/gateway/openai-http-api#agent-first-model-contract) y [Model list and agent routing](/es/gateway/openai-http-api#model-list-and-agent-routing).
 
 ## Comportamiento de la sesión
 
-Por defecto, el endpoint es **sin estado por solicitud** (se genera una nueva clave de sesión en cada llamada).
+De forma predeterminada, el punto de conexión es **sin estado por solicitud** (se genera una nueva clave de sesión en cada llamada).
 
-Si la solicitud incluye una cadena `user` de OpenResponses, el Gateway deriva una clave de sesión estable
+Si la solicitud incluye una cadena `user` de OpenResponses, Gateway deriva una clave de sesión estable
 a partir de ella, por lo que las llamadas repetidas pueden compartir una sesión de agente.
 
-## Formato de la solicitud (admitido)
+## Forma de solicitud (compatible)
 
 La solicitud sigue la API de OpenResponses con entrada basada en elementos. Soporte actual:
 
 - `input`: cadena o matriz de objetos de elemento.
-- `instructions`: fusionado en el prompt del sistema.
-- `tools`: definiciones de herramientas de cliente (herramientas de función).
-- `tool_choice`: filtrar o requerir herramientas de cliente.
-- `stream`: habilita el streaming SSE.
+- `instructions`: fusionado en el mensaje del sistema.
+- `tools`: definiciones de herramientas del cliente (herramientas de función).
+- `tool_choice`: filtrar o requerir herramientas del cliente.
+- `stream`: habilita la transmisión SSE.
 - `max_output_tokens`: límite de salida de mejor esfuerzo (dependiente del proveedor).
 - `user`: enrutamiento de sesión estable.
 
-Aceptado pero **actualmente ignorado**:
+Aceptado pero **ignorado actualmente**:
 
 - `max_tool_calls`
 - `reasoning`
 - `metadata`
 - `store`
-- `previous_response_id`
 - `truncation`
+
+Compatible:
+
+- `previous_response_id`: OpenClaw reutiliza la sesión de respuesta anterior cuando la solicitud se mantiene dentro del mismo ámbito de agente/usuario/sesión solicitada.
 
 ## Elementos (entrada)
 
@@ -64,7 +78,7 @@ Aceptado pero **actualmente ignorado**:
 Roles: `system`, `developer`, `user`, `assistant`.
 
 - `system` y `developer` se añaden al prompt del sistema.
-- El elemento `user` o `function_call_output` más reciente se convierte en el "mensaje actual".
+- El elemento `user` o `function_call_output` más reciente se convierte en el “mensaje actual”.
 - Los mensajes anteriores de usuario/asistente se incluyen como historial para dar contexto.
 
 ### `function_call_output` (herramientas por turnos)
@@ -81,7 +95,7 @@ Envíe los resultados de las herramientas de vuelta al modelo:
 
 ### `reasoning` y `item_reference`
 
-Se aceptan por compatibilidad con el esquema, pero se ignoran al construir el prompt.
+Aceptados por compatibilidad con el esquema pero ignorados al construir el prompt.
 
 ## Herramientas (herramientas de función del lado del cliente)
 
@@ -92,7 +106,7 @@ A continuación, envía una solicitud de seguimiento con `function_call_output` 
 
 ## Imágenes (`input_image`)
 
-Admite fuentes base64 o URL:
+Soporta fuentes base64 o URL:
 
 ```json
 {
@@ -101,12 +115,12 @@ Admite fuentes base64 o URL:
 }
 ```
 
-Tipos MIME permitidos (actuales): `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `image/heic`, `image/heif`.
+Tipos MIME permitidos (actual): `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `image/heic`, `image/heif`.
 Tamaño máximo (actual): 10MB.
 
 ## Archivos (`input_file`)
 
-Admite fuentes base64 o URL:
+Soporta fuentes base64 o URL:
 
 ```json
 {
@@ -120,7 +134,7 @@ Admite fuentes base64 o URL:
 }
 ```
 
-Tipos MIME permitidos (actuales): `text/plain`, `text/markdown`, `text/html`, `text/csv`,
+Tipos MIME permitidos (actual): `text/plain`, `text/markdown`, `text/html`, `text/csv`,
 `application/json`, `application/pdf`.
 
 Tamaño máximo (actual): 5MB.
@@ -129,20 +143,20 @@ Comportamiento actual:
 
 - El contenido del archivo se decodifica y se añade al **prompt del sistema**, no al mensaje de usuario,
   por lo que permanece efímero (no se guarda en el historial de la sesión).
-- Los archivos PDF se analizan para obtener texto. Si se encuentra poco texto, las primeras páginas se rasterizan
+- Los PDF se analizan para extraer texto. Si se encuentra poco texto, las primeras páginas se rasterizan
   en imágenes y se pasan al modelo.
 
-El análisis de PDF utiliza la compilación heredada compatible con Node `pdfjs-dist` (sin worker). La compilación moderna de PDF.js espera workers de navegador/globales DOM, por lo que no se usa en el Gateway.
+El análisis de PDF utiliza la compilación heredada `pdfjs-dist` compatible con Node (sin trabajador). La compilación moderna de PDF.js espera trabajadores del navegador/globales DOM, por lo que no se utiliza en el Gateway.
 
-Valores predeterminados de obtención de URL:
+Valores predeterminados de recuperación de URL:
 
 - `files.allowUrl`: `true`
 - `images.allowUrl`: `true`
-- `maxUrlParts`: `8` (total de partes `input_file` + `input_image` basadas en URL por solicitud)
+- `maxUrlParts`: `8` (total `input_file` basado en URL + `input_image` partes por solicitud)
 - Las solicitudes están protegidas (resolución DNS, bloqueo de IP privada, límites de redirección, tiempos de espera).
-- Se admiten listas de permitidos (allowlists) de nombres de host opcionales por tipo de entrada (`files.urlAllowlist`, `images.urlAllowlist`).
+- Las listas de permitidos (allowlists) de nombre de host opcionales son compatibles por tipo de entrada (`files.urlAllowlist`, `images.urlAllowlist`).
   - Host exacto: `"cdn.example.com"`
-  - Subdominios comodín: `"*.assets.example.com"` (no coincide con el dominio raíz)
+  - Subdominios comodín: `"*.assets.example.com"` (no coincide con el ápice)
   - Las listas de permitidos vacías u omitidas significan que no hay restricción de lista de permitidos de nombre de host.
 - Para deshabilitar completamente las recuperaciones basadas en URL, establezca `files.allowUrl: false` y/o `images.allowUrl: false`.
 
@@ -220,14 +234,14 @@ Valores predeterminados cuando se omiten:
 
 Nota de seguridad:
 
-- Las listas de permitidos de URL se hacen cumplir antes de la recuperación y en los saltos de redirección.
+- Las listas de permitidos de URL se aplican antes de la recuperación y en los saltos de redirección.
 - Permitir un nombre de host no evita el bloqueo de IP privada/interna.
-- Para pasarelas expuestas a internet, aplique controles de salida de red además de las protecciones a nivel de aplicación.
-  Consulte [Seguridad](/es/gateway/security).
+- Para gateways expuestos a Internet, aplique controles de salida de red además de las protecciones a nivel de aplicación.
+  Vea [Security](/es/gateway/security).
 
 ## Transmisión (SSE)
 
-Establezca `stream: true` para recibir Eventos enviados por el servidor (SSE):
+Establezca `stream: true` para recibir eventos enviados por el servidor (SSE):
 
 - `Content-Type: text/event-stream`
 - Cada línea de evento es `event: <type>` y `data: <json>`
@@ -248,11 +262,11 @@ Tipos de eventos emitidos actualmente:
 
 ## Uso
 
-`usage` se completa cuando el proveedor subyacente informa los recuentos de tokens.
+`usage` se rellena cuando el proveedor subyacente informa de los recuentos de tokens.
 
 ## Errores
 
-Los errores usan un objeto JSON como:
+Los errores utilizan un objeto JSON como:
 
 ```json
 { "error": { "message": "...", "type": "invalid_request_error" } }

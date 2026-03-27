@@ -3,7 +3,7 @@ summary: "Superficies de registro, registros de archivo, estilos de registro WS 
 read_when:
   - Changing logging output or formats
   - Debugging CLI or gateway output
-title: "Registro"
+title: "Registro de puerta de enlace"
 ---
 
 # Registro

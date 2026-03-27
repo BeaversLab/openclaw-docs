@@ -37,19 +37,16 @@ await web_fetch({ url: "https://example.com/article" });
 
 <Steps>
   <Step title="Fetch">
-    Sends an HTTP GET with a Chrome-like User-Agent and `Accept-Language`
-    header. Blocks private/internal hostnames and re-checks redirects.
+    Sends an HTTP GET with a Chrome-like User-Agent and `Accept-Language` header. Blocks
+    private/internal hostnames and re-checks redirects.
   </Step>
-  <Step title="Extract">
-    Runs Readability (main-content extraction) on the HTML response.
-  </Step>
+  <Step title="Extract">Runs Readability (main-content extraction) on the HTML response.</Step>
   <Step title="Fallback (optional)">
-    If Readability fails and Firecrawl is configured, retries through the
-    Firecrawl API with bot-circumvention mode.
+    If Readability fails and Firecrawl is configured, retries through the Firecrawl API with
+    bot-circumvention mode.
   </Step>
   <Step title="Cache">
-    Results are cached for 15 minutes (configurable) to reduce repeated
-    fetches of the same URL.
+    Results are cached for 15 minutes (configurable) to reduce repeated fetches of the same URL.
   </Step>
 </Steps>
 
@@ -102,8 +99,8 @@ If Readability extraction fails, `web_fetch` can fall back to
 `tools.web.fetch.firecrawl.apiKey` supports SecretRef objects.
 
 <Note>
-  If Firecrawl is enabled and its SecretRef is unresolved with no
-  `FIRECRAWL_API_KEY` env fallback, gateway startup fails fast.
+  If Firecrawl is enabled and its SecretRef is unresolved with no `FIRECRAWL_API_KEY` env fallback,
+  gateway startup fails fast.
 </Note>
 
 ## Limits and safety

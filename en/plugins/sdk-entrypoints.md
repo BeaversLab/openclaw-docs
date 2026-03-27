@@ -14,8 +14,8 @@ Every plugin exports a default entry object. The SDK provides three helpers for
 creating them.
 
 <Tip>
-  **Looking for a walkthrough?** See [Channel Plugins](/en/plugins/sdk-channel-plugins)
-  or [Provider Plugins](/en/plugins/sdk-provider-plugins) for step-by-step guides.
+  **Looking for a walkthrough?** See [Channel Plugins](/en/plugins/sdk-channel-plugins) or [Provider
+  Plugins](/en/plugins/sdk-provider-plugins) for step-by-step guides.
 </Tip>
 
 ## `definePluginEntry`

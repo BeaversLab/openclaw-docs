@@ -192,6 +192,8 @@ MEDIA:https://example.com/screenshot.png
 
 OpenClaw los extrae y los envía como medios junto con el texto.
 
+Para las rutas locales, la lista de permitidos predeterminada es intencionadamente estrecha: la raíz temporal de OpenClaw, la caché de medios, las rutas del espacio de trabajo del agente y los archivos generados por el sandbox. Si necesita raíces de archivos adjuntos locales más amplias, configure una lista de permitidos explícita de canal/complemento en lugar de confiar en rutas de host arbitrarias.
+
 ## Lista de verificación de operaciones
 
 ```bash
@@ -201,18 +203,18 @@ openclaw status --deep   # adds gateway health probes (Telegram + Discord)
 openclaw health --json   # gateway health snapshot (WS)
 ```
 
-Los registros residen en `/tmp/openclaw/` (predeterminado: `openclaw-YYYY-MM-DD.log`).
+Los registros se encuentran en `/tmp/openclaw/` (predeterminado: `openclaw-YYYY-MM-DD.log`).
 
 ## Próximos pasos
 
 - WebChat: [WebChat](/es/web/webchat)
-- Operaciones de puerta de enlace: [Manual de operaciones de la puerta de enlace](/es/gateway)
-- Cron + despertares: [Trabajos Cron](/es/automation/cron-jobs)
+- Operaciones de la puerta de enlace: [Manual de operaciones de la puerta de enlace](/es/gateway)
+- Cron + despertares: [Trabajos de Cron](/es/automation/cron-jobs)
 - Compañero de la barra de menús de macOS: [Aplicación OpenClaw para macOS](/es/platforms/macos)
-- Aplicación de nodo iOS: [Aplicación iOS](/es/platforms/ios)
-- Aplicación de nodo Android: [Aplicación Android](/es/platforms/android)
+- Aplicación de nodo para iOS: [Aplicación para iOS](/es/platforms/ios)
+- Aplicación de nodo para Android: [Aplicación para Android](/es/platforms/android)
 - Estado de Windows: [Windows (WSL2)](/es/platforms/windows)
-- Estado de Linux: [Aplicación Linux](/es/platforms/linux)
+- Estado de Linux: [Aplicación para Linux](/es/platforms/linux)
 - Seguridad: [Seguridad](/es/gateway/security)
 
 import es from "/components/footer/es.mdx";

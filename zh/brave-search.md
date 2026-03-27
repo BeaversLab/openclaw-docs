@@ -3,7 +3,7 @@ summary: "web_search 的 Brave Search API 设置"
 read_when:
   - You want to use Brave Search for web_search
   - You need a BRAVE_API_KEY or plan details
-title: "Brave Search"
+title: "Brave 搜索（旧路径）"
 ---
 
 # Brave Search API

@@ -14,9 +14,9 @@ Reference for plugin packaging (`package.json` metadata), manifests
 (`openclaw.plugin.json`), setup entries, and config schemas.
 
 <Tip>
-  **Looking for a walkthrough?** The how-to guides cover packaging in context:
-  [Channel Plugins](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) and
-  [Provider Plugins](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest).
+  **Looking for a walkthrough?** The how-to guides cover packaging in context: [Channel
+  Plugins](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) and [Provider
+  Plugins](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest).
 </Tip>
 
 ## Package metadata
@@ -89,10 +89,9 @@ phase, even for already-configured channels. The full entry loads after the
 gateway starts listening.
 
 <Warning>
-  Only enable deferred loading when your `setupEntry` registers everything the
-  gateway needs before it starts listening (channel registration, HTTP routes,
-  gateway methods). If the full entry owns required startup capabilities, keep
-  the default behavior.
+  Only enable deferred loading when your `setupEntry` registers everything the gateway needs before
+  it starts listening (channel registration, HTTP routes, gateway methods). If the full entry owns
+  required startup capabilities, keep the default behavior.
 </Warning>
 
 ## Plugin manifest
@@ -330,9 +329,9 @@ openclaw plugins install <package-name>
 ```
 
 <Info>
-  For npm-sourced installs, `openclaw plugins install` runs
-  `npm install --ignore-scripts` (no lifecycle scripts). Keep plugin dependency
-  trees pure JS/TS and avoid packages that require `postinstall` builds.
+  For npm-sourced installs, `openclaw plugins install` runs `npm install --ignore-scripts` (no
+  lifecycle scripts). Keep plugin dependency trees pure JS/TS and avoid packages that require
+  `postinstall` builds.
 </Info>
 
 ## Related

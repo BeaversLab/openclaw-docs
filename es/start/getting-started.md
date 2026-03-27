@@ -14,7 +14,7 @@ configurada y una sesión de chat operativa.
 
 ## Lo que necesitas
 
-- **Node.js** — Se recomienda Node 24 (también se admite Node 22.16+)
+- **Node.js** — Se recomienda Node 24 (también se admite Node 22.14+)
 - **Una clave de API** de un proveedor de modelos (Anthropic, OpenAI, Google, etc.) — la integración te lo solicitará
 
 <Tip>

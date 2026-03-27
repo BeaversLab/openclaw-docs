@@ -86,11 +86,15 @@ await web_search({
 ## Notas
 
 - OpenClaw utiliza el plan **Search** de Brave. Si tiene una suscripción heredada (por ejemplo, el plan Free original con 2000 consultas/mes), sigue siendo válida pero no incluye características más recientes como LLM Context o límites de tasa más altos.
-- Cada plan de Brave incluye **\$5/mes en crédito gratuito** (renovable). El plan Search cuesta \$5 por cada 1000 solicitudes, por lo que el crédito cubre 1000 consultas/mes. Configure su límite de uso en el panel de Brave para evitar cargos inesperados. Consulte el [portal de la API de Brave](https://brave.com/search/api/) para conocer los planes actuales.
-- El plan de Búsqueda incluye el endpoint LLM Context y derechos de inferencia de IA. Almacenar resultados para entrenar o ajustar modelos requiere un plan con derechos de almacenamiento explícitos. Consulte los [Términos de servicio](https://api-dashboard.search.brave.com/terms-of-service) de Brave.
+- Cada plan de Brave incluye **\$5/mes en crédito gratuito** (renovable). El plan de Search cuesta \$5 por cada 1,000 solicitudes, por lo que el crédito cubre 1,000 consultas/mes. Establezca su límite de uso en el panel de Brave para evitar cargos inesperados. Consulte el [portal de la API de Brave](https://brave.com/search/api/) para ver los planes actuales.
+- El plan de Search incluye el endpoint de contexto de LLM y derechos de inferencia de IA. Almacenar resultados para entrenar o ajustar modelos requiere un plan con derechos de almacenamiento explícitos. Consulte los [Términos de servicio](https://api-dashboard.search.brave.com/terms-of-service) de Brave.
 - Los resultados se almacenan en caché durante 15 minutos de forma predeterminada (configurable mediante `cacheTtlMinutes`).
 
-Consulte [Herramientas web](/es/tools/web) para la configuración completa de web_search.
+## Relacionado
+
+- [Resumen de Web Search](/es/tools/web) -- todos los proveedores y detección automática
+- [Perplexity Search](/es/tools/perplexity-search) -- resultados estructurados con filtrado de dominio
+- [Exa Search](/es/tools/exa-search) -- búsqueda neuronal con extracción de contenido
 
 import es from "/components/footer/es.mdx";
 
