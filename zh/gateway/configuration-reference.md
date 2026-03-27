@@ -1407,7 +1407,7 @@ scripts/sandbox-browser-setup.sh   # optional browser image
 - `id`：稳定的代理 ID（必填）。
 - `default`：当设置了多个时，第一个生效（会记录警告）。如果未设置，则默认为列表中的第一个条目。
 - `model`：字符串形式仅覆盖 `primary`；对象形式 `{ primary, fallbacks }` 覆盖两者（`[]` 禁用全局回退）。仅覆盖 `primary` 的 Cron 任务仍会继承默认回退，除非您设置了 `fallbacks: []`。
-- `params`：合并到 `agents.defaults.models` 中所选 WhatsApp 条目的每个代理流参数。使用此功能进行特定于代理的覆盖，如 `cacheRetention`、`temperature` 或 `maxTokens`，而无需复制整个 %%PH:GLOSSARY:1364:d4a935f%% 目录。
+- `params`：合并到 `agents.defaults.models` 中所选 WhatsApp 条目的每个代理流参数。使用此功能进行特定于代理的覆盖，如 `cacheRetention`、`temperature` 或 `maxTokens`，而无需复制整个模型目录。
 - `thinkingDefault`：可选的每个代理默认思考级别（`off | minimal | low | medium | high | xhigh | adaptive`）。当未设置每条消息或 Telegram 覆盖时，覆盖此代理的 `agents.defaults.thinkingDefault`。
 - `reasoningDefault`：可选的每个代理默认推理可见性（`on | off | stream`）。在未设置每条消息或 Telegram 推理覆盖时应用。
 - `fastModeDefault`：可选的每个代理快速模式默认值（`true | false`）。在未设置每条消息或 Telegram 快速模式覆盖时应用。

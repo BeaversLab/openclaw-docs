@@ -565,7 +565,7 @@ title: "常见问题"
   <Accordion title="Do you support Claude subscription auth (Claude Pro or Max)?">
     是的 - 通过 **setup-token**。OpenClaw 不再复用 Claude Code CLI OAuth 令牌；请使用 setup-token 或 Anthropic API 密钥。您可以在任何位置生成令牌并将其粘贴到网关主机上。请参阅 [Anthropic](/zh/providers/anthropic) 和 [OAuth](/zh/concepts/oauth)。
 
-    重要提示：这只是技术兼容性，而非政策保证。%%PH:GLOSSARY:1383:c7c52eb3%
+    重要提示：这只是技术兼容性，而非政策保证。Anthropic
     过去曾阻止在 Claude Code 之外使用某些订阅。您需要决定是否使用它，并验证 Anthropic 的当前条款。对于生产或多用户工作负载，Anthropic Anthropic 密钥身份验证是更安全、推荐的选择。
 
   </Accordion>

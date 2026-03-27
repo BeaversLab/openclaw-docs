@@ -403,7 +403,7 @@ Docker 安装和容器化网关位于此处：
 - `readOnlyRoot: true` 防止写入；设置 `readOnlyRoot: false` 或构建自定义镜像。
 - 对于软件包安装，`user` 必须是 root 用户（省略 `user` 或设置 `user: "0:0"`）。
 - 沙箱执行**不**继承主机 `process.env`。请使用
-  `agents.defaults.sandbox.docker.env`（或自定义镜像）来获取技能 %%PH:GLOSSARY:267:11e336a2\*\* 密钥。
+  `agents.defaults.sandbox.docker.env`（或自定义镜像）来获取技能API密钥。
 
 ## 工具策略 + 逃生舱口
 

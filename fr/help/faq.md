@@ -1358,7 +1358,7 @@ Réponses rapides et dépannage approfondi pour les configurations réelles (dev
 
   </Accordion>
 
-  <Accordion title='J'ai défini gateway.bind: "lan" (ou "tailnet") et rien n'écoute / l'interface indique non autorisé'>
+  <Accordion title="J'ai défini gateway.bind: lan (ou tailnet) et rien n'écoute / l'interface indique non autorisé">
     Les liaisons non-boucle (non-loopback) **nécessitent une authentification**. Configurez `gateway.auth.mode` + `gateway.auth.token` (ou utilisez `OPENCLAW_GATEWAY_TOKEN`).
 
     ```json5
@@ -1777,7 +1777,7 @@ Réponses rapides et dépannage approfondi pour les configurations réelles (dev
 
   </Accordion>
 
-  <Accordion title='J'ai défini COPILOT_GITHUB_TOKEN, mais l'état des modèles affiche "Shell env: off." Pourquoi ?'>
+  <Accordion title="J'ai défini COPILOT_GITHUB_TOKEN, mais l'état des modèles affiche Shell env: off. Pourquoi ?">
     `openclaw models status` indique si l'**importation de l'environnement shell** est activée. "Shell env: off"
     ne signifie **pas** que vos env vars sont manquantes - cela signifie simplement que OpenClaw ne chargera pas
     votre shell de connexion automatiquement.
@@ -2173,7 +2173,7 @@ Réponses rapides et dépannage approfondi pour les configurations réelles (dev
 
   </Accordion>
 
-  <Accordion title='Pourquoi je vois « Le modèle ... n'est pas autorisé » et ensuite aucune réponse ?'>
+  <Accordion title="Pourquoi je vois « Le modèle ... n'est pas autorisé » et ensuite aucune réponse ?">
     Si `agents.defaults.models` est défini, il devient la **liste d'autorisation** pour `/model` et toutes
     les substitutions de session. Choisir un modèle qui n'est pas dans cette liste renvoie :
 
@@ -2528,7 +2528,7 @@ Connexe : [/concepts/oauth](/fr/concepts/oauth) (flux OAuth, stockage des jetons
 
   </Accordion>
 
-  <Accordion title='L'interface de contrôle indique "non autorisé" (ou continue de se reconnecter). Que faire ?'>
+  <Accordion title="L'interface de contrôle indique non autorisé (ou continue de se reconnecter). Que faire ?">
     Votre passerelle s'exécute avec l'authentification activée (`gateway.auth.*`), mais l'interface n'envoie pas le jeton/mot de passe correspondant.
 
     Faits (issus du code) :
@@ -3007,7 +3007,7 @@ Connexe : [/concepts/oauth](/fr/concepts/oauth) (flux OAuth, stockage des jetons
 
   </Accordion>
 
-  <Accordion title='Pourquoi a-t-on l'impression que le bot "ignore" les messages en rafale ?'>
+  <Accordion title="Pourquoi a-t-on l'impression que le bot ignore les messages en rafale ?">
     Le mode de file d'attente contrôle la manière dont les nouveaux messages interagissent avec une exécution en cours. Utilisez `/queue` pour changer de mode :
 
     - `steer` - les nouveaux messages redirigent la tâche actuelle
