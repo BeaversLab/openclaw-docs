@@ -1,0 +1,160 @@
+---
+title: Déployer sur Render
+---
+
+Déployez OpenClaw sur Render en utilisant l'Infrastructure as Code. Le Blueprint `render.yaml` inclus définit l'intégralité de votre pile de manière déclarative, service, disque, variables d'environnement, afin que vous puissiez déployer en un seul clic et versionner votre infrastructure aux côtés de votre code.
+
+## Prérequis
+
+- Un [compte Render](https://render.com) (gratuit disponible)
+- Une clé API de votre [fournisseur de modèle](/fr/providers) préféré
+
+## Déployer avec un Blueprint Render
+
+<a href="https://render.com/deploy?repo=https://github.com/openclaw/openclaw" target="_blank" rel="noreferrer">
+  Déployer sur Render
+</a>
+
+En cliquant sur ce lien, vous allez :
+
+1. Créer un nouveau service Render à partir du Blueprint `render.yaml` à la racine de ce dépôt.
+2. Vous inviter à définir `SETUP_PASSWORD`
+3. Construire l'image Docker et déployer
+
+Une fois déployé, l'URL de votre service suit le modèle `https://<service-name>.onrender.com`.
+
+## Comprendre le Blueprint
+
+Les Blueprints Render sont des fichiers YAML qui définissent votre infrastructure. Le `render.yaml` dans ce référentiel configure tout ce qui est nécessaire pour exécuter OpenClaw :
+
+```yaml
+services:
+  - type: web
+    name: openclaw
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: SETUP_PASSWORD
+        sync: false # prompts during deploy
+      - key: OPENCLAW_STATE_DIR
+        value: /data/.openclaw
+      - key: OPENCLAW_WORKSPACE_DIR
+        value: /data/workspace
+      - key: OPENCLAW_GATEWAY_TOKEN
+        generateValue: true # auto-generates a secure token
+    disk:
+      name: openclaw-data
+      mountPath: /data
+      sizeGB: 1
+```
+
+Fonctionnalités clés du Blueprint utilisées :
+
+| Fonctionnalité        | Objectif                                                         |
+| --------------------- | ---------------------------------------------------------------- |
+| `runtime: docker`     | Construit à partir du Dockerfile du dépôt                        |
+| `healthCheckPath`     | Render surveille `/health` et redémarre les instances non saines |
+| `sync: false`         | Demande une valeur lors du déploiement (secrets)                 |
+| `generateValue: true` | Génère automatiquement une valeur sécurisée cryptographiquement  |
+| `disk`                | Stockage persistant qui survit aux redéploiements                |
+
+## Choisir un plan
+
+| Plan      | Mise en veille            | Disque         | Idéal pour                       |
+| --------- | ------------------------- | -------------- | -------------------------------- |
+| Gratuit   | Après 15 min d'inactivité | Non disponible | Tests, démos                     |
+| Starter   | Jamais                    | 1Go+           | Usage personnel, petites équipes |
+| Standard+ | Jamais                    | 1 Go+          | Production, canaux multiples     |
+
+Le Blueprint utilise par défaut `starter`. Pour utiliser le niveau gratuit, modifiez `plan: free` dans le
+`render.yaml` de votre fork (mais notez l'absence de disque persistant signifie que la configuration est réinitialisée à chaque déploiement).
+
+## Après le déploiement
+
+### Terminer l'assistant de configuration
+
+1. Accédez à `https://<your-service>.onrender.com/setup`
+2. Entrez votre `SETUP_PASSWORD`
+3. Sélectionnez un fournisseur de modèle et collez votre clé API
+4. Configurez éventuellement les canaux de messagerie (Telegram, Discord, Slack)
+5. Cliquez sur **Exécuter la configuration**
+
+### Accéder à l'interface de contrôle
+
+Le tableau de bord Web est disponible sur `https://<your-service>.onrender.com/openclaw`.
+
+## Fonctionnalités du tableau de bord Render
+
+### Journaux
+
+Affichez les journaux en temps réel dans **Tableau de bord → votre service → Journaux**. Filtrez par :
+
+- Journaux de build (création de l'image Docker)
+- Journaux de déploiement (démarrage du service)
+- Journaux d'exécution (sortie de l'application)
+
+### Accès Shell
+
+Pour le débogage, ouvrez une session via **Dashboard → your service → Shell**. Le disque persistant est monté sur `/data`.
+
+### Variables d'environnement
+
+Modifiez les variables dans **Dashboard → your service → Environment**. Les modifications déclenchent un redéploiement automatique.
+
+### Déploiement automatique
+
+Si vous utilisez le dépôt original OpenClaw, Render ne déploiera pas automatiquement votre OpenClaw. Pour le mettre à jour, lancez une synchronisation manuelle de Blueprint depuis le tableau de bord.
+
+## Domaine personnalisé
+
+1. Allez dans **Dashboard → your service → Settings → Custom Domains**
+2. Ajoutez votre domaine
+3. Configurez le DNS comme indiqué (CNAME vers `*.onrender.com`)
+4. Render provisionne automatiquement un certificat TLS
+
+## Mise à l'échelle
+
+Render prend en charge la mise à l'échelle horizontale et verticale :
+
+- **Verticale** : Changez le plan pour obtenir plus de CPU/RAM
+- **Horizontale** : Augmentez le nombre d'instances (plan Standard et supérieur)
+
+Pour OpenClaw, la mise à l'échelle verticale est généralement suffisante. La mise à l'échelle horizontale nécessite des sessions persistantes ou une gestion d'état externe.
+
+## Sauvegardes et migration
+
+Exportez votre configuration et votre espace de travail à tout moment :
+
+```
+https://<your-service>.onrender.com/setup/export
+```
+
+Cela télécharge une sauvegarde portable que vous pouvez restaurer sur n'importe quel hôte OpenClaw.
+
+## Dépannage
+
+### Le service ne démarre pas
+
+Vérifiez les journaux de déploiement dans le tableau de bord Render. Problèmes courants :
+
+- `SETUP_PASSWORD` manquant — le Blueprint le demande, mais vérifiez qu'il est défini
+- Inadéquation de port — assurez-vous que `PORT=8080` correspond au port exposé dans le Dockerfile
+
+### Démarrages à froids lents (offre gratuite)
+
+Les services de l'offre gratuite s'arrêtent après 15 minutes d'inactivité. La première requête après l'arrêt prend quelques secondes le temps que le conteneur démarre. Passez à l'offre Starter pour un service actif en permanence.
+
+### Perte de données après redéploiement
+
+Cela arrive sur le niveau gratuit (pas de disque persistant). Passez à un plan payant, ou
+exportez régulièrement votre configuration via `/setup/export`.
+
+### Échecs des vérifications de santé
+
+Render s'attend à une réponse 200 de `/health` dans les 30 secondes. Si les builds réussissent mais que les déploiements échouent, le service peut prendre trop de temps à démarrer. Vérifiez :
+
+- Les journaux de build pour les erreurs
+- Si le conteneur fonctionne localement avec `docker build && docker run`

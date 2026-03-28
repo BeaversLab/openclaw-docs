@@ -1,0 +1,33 @@
+---
+interface Props {
+  caption?: string;
+}
+
+const { caption } = Astro.props;
+---
+
+<figure class="oc-frame">
+  <div class="oc-frame__body">
+    <slot />
+  </div>
+  {caption && <figcaption class="oc-frame__caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .oc-frame {
+    margin: 1rem 0;
+  }
+
+  .oc-frame__body {
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    background: var(--sl-color-black);
+  }
+
+  .oc-frame__caption {
+    margin-top: 0.5rem;
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-3);
+  }
+</style>

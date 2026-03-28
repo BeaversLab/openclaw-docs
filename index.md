@@ -1,5 +1,0 @@
----
-title: OpenClaw Docs
----
-
-Redirecting...

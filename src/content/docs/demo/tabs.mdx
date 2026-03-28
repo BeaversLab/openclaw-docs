@@ -1,0 +1,68 @@
+---
+title: "Demo: Tabs"
+sidebarTitle: "Tabs"
+description: "Tabs and Tab rendering demos."
+---
+
+import { Tab, Tabs } from "../../../components/mdx-auto";
+
+# Tab demos
+
+These examples mirror the config examples used in channel setup pages.
+
+<Tabs>
+  <Tab title="Environment variables">
+    Export the token before starting the gateway.
+
+    ```bash
+    export DISCORD_BOT_TOKEN=example-token
+    openclaw gateway
+    ```
+
+    - This list should remain a list
+    - The code block should remain a code block
+
+  </Tab>
+  <Tab title="Config file">
+    Put the same value in your config file.
+
+    ```json5
+    {
+      channels: {
+        discord: {
+          token: { env: "DISCORD_BOT_TOKEN" }
+        }
+      }
+    }
+    ```
+
+    [Configuration reference](/en/gateway/configuration-reference#discord)
+
+  </Tab>
+  <Tab title="Validation">
+    Confirm interaction behavior:
+
+    1. Clicking tabs should swap panels
+    2. Hidden panels should stay hidden
+    3. Markdown should keep structure after tab switches
+
+  </Tab>
+</Tabs>
+
+## Nested Markdown stress case
+
+<Tabs>
+  <Tab title="Nested lists">
+    - Top level item
+    - Second item
+
+      1. Nested ordered item
+      2. Nested ordered item with `inline code`
+
+  </Tab>
+  <Tab title="Blockquote">
+    > Tabs should preserve block-level Markdown.
+    >
+    > This should not collapse into plain inline text.
+  </Tab>
+</Tabs>

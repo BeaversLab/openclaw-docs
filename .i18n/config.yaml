@@ -7,7 +7,6 @@ collect:
     - ja-JP/**
     - zh-CN/**
     - .generated/**
-    - .i18n/*.tm.jsonl
 
 provider:
   baseUrl: https://open.bigmodel.cn/api/coding/paas/v4

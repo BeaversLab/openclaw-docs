@@ -1,0 +1,19 @@
+---
+interface Props {
+  tip: string;
+}
+
+const { tip } = Astro.props;
+---
+
+<span class="oc-tooltip" title={tip}>
+  <slot />
+</span>
+
+<style>
+  .oc-tooltip {
+    cursor: help;
+    text-decoration: underline dotted;
+    text-underline-offset: 0.18em;
+  }
+</style>

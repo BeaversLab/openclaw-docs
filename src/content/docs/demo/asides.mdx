@@ -1,0 +1,45 @@
+---
+title: "Demo: Asides"
+sidebarTitle: "Asides"
+description: "Note, Tip, Warning, Check, and Info demos."
+---
+
+import { Check, Info, Note, Tip, Warning } from "../../../components/mdx-auto";
+
+# Aside demos
+
+These demos focus on block-level Markdown inside Starlight aside wrappers.
+
+<Note title="Account-aware token resolution">
+  Config values should win over env fallback.
+
+- `DISCORD_BOT_TOKEN` only applies to the default account
+- Per-account config should override it
+  </Note>
+
+<Tip title="Useful validation flow">
+  Run these checks after editing docs:
+
+```bash
+npm run build
+```
+
+Then open the generated demo pages and verify the structure visually.
+
+</Tip>
+
+<Warning title="Common failure mode">
+  If Markdown inside an aside is flattened into plain text, the issue is usually in one of these places:
+
+1. Slot content is being serialized too early
+2. A client-side rewrite path is using `innerHTML` without full Markdown semantics
+   </Warning>
+
+<Check title="Expected passing case">
+  This aside uses the real Astro component path.
+
+> Blockquotes should still render correctly here.
+
+</Check>
+
+<Info title="Inline content">Inline code like `gateway.bind` and links like [Configuration](/en/gateway/configuration) should remain intact.</Info>

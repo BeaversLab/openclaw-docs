@@ -1,35 +1,29 @@
 {
-  "name": "crawfish-docs",
-  "version": "1.0.0",
-  "description": "OpenClaw Documentation - Markdown format with Prettier",
-  "private": true,
+  "name": "crawfish-doc",
+  "type": "module",
+  "version": "0.0.1",
   "scripts": {
-    "format": "prettier --write \"**/*.{md,json,yaml,yml,json5}\"",
-    "format:check": "prettier --check \"**/*.{md,json,yaml,yml,json5}\"",
-    "format:en": "prettier --write \"en/**/*.md\"",
-    "format:fr": "prettier --write \"fr/**/*.md\"",
-    "format:zh": "prettier --write \"zh/**/*.md\"",
-    "format:es": "prettier --write \"es/**/*.md\"",
-    "format:components": "prettier --write \"components/**/*.mdx\"",
-    "format:staged": "prettier --write",
-    "footers": "node scripts/ensure-doc-footers.mjs",
-    "footers:check": "node scripts/ensure-doc-footers.mjs --check",
-    "lang:add": "node scripts/manage-lang.mjs add",
-    "lang:enable": "node scripts/manage-lang.mjs enable",
-    "lang:remove": "node scripts/manage-lang.mjs remove",
-    "lang:sync": "node scripts/manage-lang.mjs sync",
-    "hooks:install": "git config core.hooksPath .githooks",
-    "format:zh-Hant": "prettier --write \"zh-Hant/**/*.md\""
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
   },
-  "keywords": [
-    "documentation",
-    "markdown",
-    "prettier"
-  ],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.26.1",
+  "dependencies": {
+    "@astrojs/starlight": "^0.38.2",
+    "astro": "^6.0.1",
+    "mermaid": "^11.13.0",
+    "sharp": "^0.34.2"
+  },
   "devDependencies": {
-    "prettier": "^3.8.1"
+    "hast-util-from-html": "^2.0.3",
+    "prettier": "^3.8.1",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "remark-smartypants": "^3.0.2",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0"
   }
 }

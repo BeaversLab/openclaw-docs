@@ -1,0 +1,65 @@
+---
+const uid = `oc-tabs-${Math.random().toString(36).slice(2, 10)}`;
+---
+
+<div class="oc-tabs" data-oc-tabs={uid}>
+  <div class="oc-tabs__list" role="tablist"></div>
+  <div class="oc-tabs__panels">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .oc-tabs__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .oc-tabs__list button {
+    border: 1px solid var(--sl-color-gray-5);
+    background: transparent;
+    color: var(--sl-color-text);
+    border-radius: 999px;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+  }
+
+  .oc-tabs__list button[aria-selected='true'] {
+    background: var(--sl-color-text-accent);
+    color: var(--sl-color-black);
+  }
+
+  .oc-tabs :global(.oc-tab[hidden]) {
+    display: none;
+  }
+</style>
+
+<script>
+  for (const root of document.querySelectorAll('[data-oc-tabs]')) {
+    const list = root.querySelector('.oc-tabs__list');
+    const panels = [...root.querySelectorAll('.oc-tab')];
+    if (!list || panels.length === 0 || list.childElementCount > 0) continue;
+
+    panels.forEach((panel, index) => {
+      const title = panel.getAttribute('data-title') || `Tab ${index + 1}`;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = title;
+      button.setAttribute('role', 'tab');
+      button.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+      if (index !== 0) panel.setAttribute('hidden', '');
+      button.addEventListener('click', () => {
+        panels.forEach((p, i) => {
+          if (i === index) p.removeAttribute('hidden');
+          else p.setAttribute('hidden', '');
+        });
+        [...list.querySelectorAll('button')].forEach((b, i) => {
+          b.setAttribute('aria-selected', i === index ? 'true' : 'false');
+        });
+      });
+      list.appendChild(button);
+    });
+  }
+</script>

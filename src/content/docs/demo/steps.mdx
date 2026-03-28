@@ -1,0 +1,44 @@
+---
+title: "Demo: Steps"
+sidebarTitle: "Steps"
+description: "Steps and Step slot rendering demos."
+---
+
+import { Note, Step, Steps } from "../../../components/mdx-auto";
+
+# Step demos
+
+These samples mirror the installation and channel setup guides.
+
+<Steps>
+  <Step title="Create the application">
+    Go to the provider console and create a new application.
+
+    - Give it a stable name
+    - Keep the client secret out of chat
+    - Record the generated identifier
+
+  </Step>
+  <Step title="Configure OpenClaw">
+    Add the required settings and keep the token outside the transcript.
+
+    <Note>
+      Markdown nested inside a component within a step should still render correctly.
+
+      - This nested list should stay nested
+      - Inline code like `DISCORD_BOT_TOKEN` should keep code styling
+    </Note>
+
+  </Step>
+  <Step title="Verify behavior">
+    Run a quick smoke test:
+
+    ```bash
+    openclaw gateway status
+    openclaw doctor
+    ```
+
+    Then send a test message and confirm the response arrives.
+
+  </Step>
+</Steps>

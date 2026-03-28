@@ -1,0 +1,34 @@
+---
+title: "MDX Component Demos"
+sidebarTitle: "MDX Component Demos"
+description: "Regression demos for MDX components and legacy tag enhancement."
+---
+
+# MDX Component Demos
+
+This section is a standalone regression harness for MDX component rendering.
+
+Use these pages to verify two paths:
+
+- Astro components imported from `src/components/mdx-auto`
+- Legacy lowercase tags transformed at runtime in `Head.astro`
+
+## Demo pages
+
+- [Cards](/demo/cards)
+- [Steps](/demo/steps)
+- [Tabs](/demo/tabs)
+- [Accordions](/demo/accordions)
+- [Asides](/demo/asides)
+- [Layout and framing](/demo/layout)
+- [Mixed nesting](/demo/mixed-nesting)
+- [Legacy tag enhancement](/demo/legacy-tags)
+
+## What to check
+
+- Markdown inside component bodies stays structured
+- Lists remain lists
+- Fenced code blocks render as code blocks
+- Links and inline code survive slot rendering
+- Tabs and accordions keep their interaction behavior
+- Legacy lowercase tags do not flatten nested Markdown unexpectedly

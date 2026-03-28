@@ -1,0 +1,105 @@
+---
+import EditLink from 'virtual:starlight/components/EditLink';
+import LastUpdated from 'virtual:starlight/components/LastUpdated';
+import Pagination from 'virtual:starlight/components/Pagination';
+import config from 'virtual:starlight/user-config';
+import { Icon } from '@astrojs/starlight/components';
+
+import FooterEn from '../footer/en.mdx';
+import FooterEs from '../footer/es.mdx';
+import FooterFr from '../footer/fr.mdx';
+import FooterZh from '../footer/zh.mdx';
+import FooterZhHant from '../footer/zh-Hant.mdx';
+
+const locale = Astro.locals.starlightRoute?.locale || 'en';
+
+const footerNotes = {
+	en: FooterEn,
+	es: FooterEs,
+	fr: FooterFr,
+	zh: FooterZh,
+	'zh-Hant': FooterZhHant,
+};
+
+const FooterNote = footerNotes[locale] || FooterEn;
+---
+
+<footer class="sl-flex">
+	<div class="meta-row">
+		<div class="footer-note">
+			<FooterNote />
+		</div>
+		<div class="meta sl-flex">
+			<EditLink />
+			<LastUpdated />
+		</div>
+	</div>
+	<Pagination />
+
+	{
+		config.credits && (
+			<a class="kudos sl-flex" href="https://starlight.astro.build">
+				<Icon name={'starlight'} /> {Astro.locals.t('builtWithStarlight.label')}
+			</a>
+		)
+	}
+</footer>
+
+<style>
+	@layer starlight.core {
+		footer {
+			flex-direction: column;
+			gap: 1.5rem;
+		}
+
+		.meta-row {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			align-items: flex-start;
+			gap: 1rem 3rem;
+			margin-top: 3rem;
+			font-size: var(--sl-text-sm);
+			color: var(--sl-color-gray-3);
+		}
+
+		.footer-note {
+			flex: 1 1 28rem;
+			text-align: left;
+		}
+
+		.meta {
+			gap: 0.75rem 3rem;
+			justify-content: flex-end;
+			flex-wrap: wrap;
+			flex: 0 0 auto;
+		}
+
+		.footer-note :global(p) {
+			margin: 0;
+		}
+
+		.footer-note :global(a) {
+			text-decoration: none;
+		}
+
+		.kudos {
+			align-items: center;
+			gap: 0.5em;
+			margin: 1.5rem auto;
+			font-size: var(--sl-text-xs);
+			text-decoration: none;
+			color: var(--sl-color-gray-3);
+		}
+
+		.kudos:hover {
+			color: var(--sl-color-white);
+		}
+	}
+
+	@layer starlight.components {
+		.kudos :global(svg) {
+			color: var(--sl-color-orange);
+		}
+	}
+</style>

@@ -1,0 +1,19 @@
+---
+interface Props {
+  title?: string;
+}
+
+const { title } = Astro.props;
+---
+
+<li class="oc-step">
+  {title && <p class="oc-step__title">{title}</p>}
+  <slot />
+</li>
+
+<style>
+  .oc-step__title {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+</style>

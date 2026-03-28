@@ -58,7 +58,7 @@ overrides:
       # Markdown 保持换行
       proseWrap: "preserve"
       # Markdown 宽度可以更宽
-      printWidth: 100
+      printWidth: 400
       # Markdown 中的代码块也添加尾随逗号
       trailingComma: "all"
 

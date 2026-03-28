@@ -47,14 +47,14 @@
   "navbar": {
     "links": [
       {
+        "label": "GitHub",
+        "href": "https://beaverslab.xyz/BeaversLab/openclaw-docs",
+        "icon": "github"
+      },
+      {
         "label": "BeaversLab",
         "href": "https://beaverslab.xyz",
         "icon": "home"
-      },
-      {
-        "label": "GitHub",
-        "href": "https://github.com/BeaversLab/crawfish",
-        "icon": "github"
       }
     ]
   },

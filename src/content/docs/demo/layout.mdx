@@ -1,0 +1,60 @@
+---
+title: "Demo: Layout and Framing"
+sidebarTitle: "Layout and Framing"
+description: "Columns, CodeGroup, and Frame demos."
+---
+
+import { Card, CodeGroup, Columns, Frame } from "../../../components/mdx-auto";
+
+# Layout and framing demos
+
+These samples verify higher-level layout wrappers that host Markdown-heavy content.
+
+## Columns
+
+<Columns>
+  <Card title="Get started" href="/en/start/getting-started">
+    Install OpenClaw and bring up the Gateway in minutes.
+
+    - Keep this bullet list intact
+    - Keep this link clickable
+
+  </Card>
+  <Card title="Open the Control UI" href="/en/web/control-ui">
+    Launch the browser dashboard for chat, config, and sessions.
+
+    `openclaw ui`
+
+  </Card>
+</Columns>
+
+## CodeGroup
+
+<CodeGroup>
+
+```bash title="CLI"
+openclaw gateway status
+openclaw doctor
+```
+
+```json5 title="Config"
+{
+  gateway: {
+    bind: "loopback",
+  },
+}
+```
+
+</CodeGroup>
+
+## Frame
+
+<Frame caption="Frame content should preserve nested Markdown structure.">
+  ### Framed heading
+
+- bullet one
+- bullet two
+
+[OpenClaw Docs](/en/)
+
+</Frame>

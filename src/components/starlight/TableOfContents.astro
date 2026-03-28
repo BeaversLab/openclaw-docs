@@ -1,0 +1,70 @@
+---
+import TableOfContentsList from './TableOfContentsList.astro';
+
+const PAGE_TITLE_ID = '_top';
+type TocItem = {
+	slug: string;
+	text: string;
+	children: TocItem[];
+};
+
+const { toc } = Astro.locals.starlightRoute;
+const locale = Astro.locals.starlightRoute?.locale || 'en';
+
+const topLabels = {
+	en: 'Back to top',
+	zh: '返回顶部',
+	'zh-Hant': '返回頂部',
+	es: 'Volver arriba',
+	fr: 'Retour en haut',
+};
+
+const topLabel = topLabels[locale] || topLabels.en;
+const tocItems = (toc?.items || []).filter((item: TocItem) => item.slug !== PAGE_TITLE_ID);
+---
+
+{
+	toc && (
+		<starlight-toc data-min-h={toc.minHeadingLevel} data-max-h={toc.maxHeadingLevel}>
+			<nav aria-labelledby="starlight__on-this-page">
+				<h2 id="starlight__on-this-page">{Astro.locals.t('tableOfContents.onThisPage')}</h2>
+				<ul class="sl-toc-list">
+					<li>
+						<a href={`#${PAGE_TITLE_ID}`} data-sl-toc-top-link>
+							<span>{topLabel}</span>
+						</a>
+					</li>
+				</ul>
+				<TableOfContentsList toc={tocItems} />
+			</nav>
+		</starlight-toc>
+	)
+}
+
+<style>
+	@layer starlight.core {
+		.sl-toc-list {
+			padding: 0;
+			list-style: none;
+		}
+
+		.sl-toc-list a {
+			--pad-inline: 0.5rem;
+			display: block;
+			border-radius: 0.25rem;
+			padding-block: 0.25rem;
+			padding-inline: var(--pad-inline);
+			line-height: 1.25;
+		}
+
+		.sl-toc-list ul a {
+			padding-inline-start: calc(1rem + var(--pad-inline));
+		}
+
+		.sl-toc-list a[aria-current='true'] {
+			color: var(--sl-color-text-accent);
+		}
+	}
+</style>
+
+<script src="../../scripts/starlight-toc.ts"></script>

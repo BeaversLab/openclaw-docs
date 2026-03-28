@@ -1,0 +1,110 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import MobileMenuFooter from '@astrojs/starlight/components/MobileMenuFooter.astro';
+import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
+import SidebarRestorePoint from '@astrojs/starlight/components/SidebarRestorePoint.astro';
+import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
+import { getHeaderTabs } from '../../lib/starlight-nav.js';
+
+const { sidebar } = Astro.locals.starlightRoute;
+const locale = Astro.locals.starlightRoute?.locale || 'en';
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const tabs = getHeaderTabs(locale);
+const activeTabIndex = tabs.findIndex((tab) =>
+	tab.pages.some((page) => {
+		const normalized = page.replace(/\/+$/, '') || '/';
+		return normalized === `/${locale}`
+			? pathname === normalized
+			: pathname === normalized || pathname.startsWith(`${normalized}/`);
+	})
+);
+const activeGroup = sidebar[activeTabIndex >= 0 ? activeTabIndex : 0];
+
+const currentSidebar = activeGroup?.type === 'group' ? activeGroup.entries : sidebar;
+
+const versionScript = fs.readFileSync(path.join(process.cwd(), 'version.js'), 'utf8');
+const tag = versionScript.match(/var TAG = "([^"]*)";/)?.[1] || '';
+const updatedAt = versionScript.match(/var UPDATED_AT = "([^"]*)";/)?.[1] || '';
+const commit = versionScript.match(/var COMMIT = "([^"]*)";/)?.[1] || '';
+const shortCommit = commit ? commit.slice(0, 7) : '';
+const isZh = locale.toLowerCase().startsWith('zh');
+const versionLabel = isZh ? '版本' : 'Version';
+const updatedLabel = isZh ? '更新' : 'Updated';
+const tagUrl = tag ? `https://github.com/openclaw/openclaw/releases/tag/${tag}` : '';
+---
+
+<div class="sidebar-doc-meta" data-doc-version-meta>
+	<div class="sidebar-doc-meta__row">
+		<span class="sidebar-doc-meta__label">{versionLabel}</span>
+		{
+			tagUrl ? (
+				<a class="sidebar-doc-meta__value sidebar-doc-meta__link" href={tagUrl}>
+					{tag}
+					{shortCommit && ` (${shortCommit})`}
+				</a>
+			) : (
+				<span class="sidebar-doc-meta__value">
+					dev
+					{shortCommit && ` (${shortCommit})`}
+				</span>
+			)
+		}
+	</div>
+	{updatedAt && (
+		<div class="sidebar-doc-meta__row">
+			<span class="sidebar-doc-meta__label">{updatedLabel}</span>
+			<time class="sidebar-doc-meta__value" datetime={updatedAt}>{updatedAt}</time>
+		</div>
+	)}
+</div>
+
+<SidebarPersister>
+	<SidebarRestorePoint />
+	<SidebarSublist sublist={currentSidebar} />
+</SidebarPersister>
+
+<div class="md:sl-hidden">
+	<MobileMenuFooter />
+</div>
+
+<style>
+	@layer starlight.core {
+		.sidebar-doc-meta {
+			margin: 0;
+			padding: 0.7rem 0.75rem;
+			border: 1px solid var(--sl-color-gray-5);
+			background: var(--sl-color-bg-nav);
+			display: grid;
+			gap: 0.45rem;
+		}
+
+		.sidebar-doc-meta__row {
+			display: grid;
+			gap: 0.15rem;
+		}
+
+		.sidebar-doc-meta__label {
+			font-size: 0.68rem;
+			font-weight: 700;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--sl-color-text-accent);
+		}
+
+		.sidebar-doc-meta__value {
+			font-size: var(--sl-text-xs);
+			color: var(--sl-color-gray-2);
+			font-variant-numeric: tabular-nums;
+			word-break: break-word;
+		}
+
+		.sidebar-doc-meta__link {
+			text-decoration: none;
+		}
+
+		.sidebar-doc-meta__link:hover {
+			color: var(--sl-color-text-accent);
+		}
+	}
+</style>

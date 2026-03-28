@@ -1,0 +1,100 @@
+---
+summary: "使用一鍵範本在 Railway 上部署 OpenClaw"
+read_when:
+  - Deploying OpenClaw to Railway
+  - You want a one-click cloud deploy with browser-based setup
+title: "Railway"
+---
+
+使用一鍵範本在 Railway 上部署 OpenClaw，並在瀏覽器中完成設定。
+這是最簡單的「伺服器無終端機」路徑：Railway 會為您執行 Gateway，
+而您可以透過 `/setup` 網頁精靈設定所有內容。
+
+## 快速檢查清單（新用戶）
+
+1. 點擊 **Deploy on Railway**（下方）。
+2. 新增一個掛載於 `/data` 的 **Volume**。
+3. 設定所需的 **Variables**（至少 `SETUP_PASSWORD`）。
+4. 在連接埠 `8080` 上啟用 **HTTP Proxy**。
+5. 開啟 `https://<your-railway-domain>/setup` 並完成精靈設定。
+
+## 一鍵部署
+
+<a href="https://railway.com/deploy/clawdbot-railway-template" target="_blank" rel="noreferrer">
+  在 Railway 上部署
+</a>
+
+部署完成後，請在 **Railway → 您的服務 → Settings → Domains** 中尋找您的公開網址。
+
+Railway 將會：
+
+- 提供一個產生的網域（通常是 `https://<something>.up.railway.app`），或
+- 如果您附加了自訂網域，則使用您的自訂網域。
+
+然後開啟：
+
+- `https://<your-railway-domain>/setup` — 網頁設定（受密碼保護）
+- `https://<your-railway-domain>/openclaw` — 控制介面
+
+## 您將獲得
+
+- 託管的 OpenClaw Gateway + 控制介面
+- 位於 `/setup` 的網頁設定（無需終端機指令）
+- 透過 Railway Volume (`/data`) 進行持久儲存，讓設定/憑證/工作區在重新部署後得以保留
+- 位於 `/setup/export` 的備份匯出功能，以便日後從 Railway 遷移
+
+## 必要的 Railway 設定
+
+### 公開網路
+
+為服務啟用 **HTTP Proxy**。
+
+- 連接埠：`8080`
+
+### Volume (必填)
+
+掛載一個位於以下路徑的 Volume：
+
+- `/data`
+
+### 變數
+
+在服務上設定這些變數：
+
+- `SETUP_PASSWORD` （必要）
+- `PORT=8080` （必要 — 必須與 Public Networking 中的連接埠相符）
+- `OPENCLAW_STATE_DIR=/data/.openclaw` （建議）
+- `OPENCLAW_WORKSPACE_DIR=/data/workspace` （建議）
+- `OPENCLAW_GATEWAY_TOKEN` （建議；請將其視為管理員密鑰）
+
+## 設定流程
+
+1. 造訪 `https://<your-railway-domain>/setup` 並輸入您的 `SETUP_PASSWORD`。
+2. 選擇模型/驗證提供者並貼上您的金鑰。
+3. （選用）新增 Telegram/Discord/Slack 權杖。
+4. 點擊 **Run setup**。
+
+如果 Telegram 訊息設定為配對模式，網頁設定可以批准配對碼。
+
+## 連接頻道
+
+將您的 Telegram 或 Discord 權杖貼入 `/setup` 精靈中。有關
+設定說明，請參閱頻道文件：
+
+- [Telegram](/zh-Hant/channels/telegram) （最快 — 只需要 Bot 權杖）
+- [Discord](/zh-Hant/channels/discord)
+- [所有頻道](/zh-Hant/channels)
+
+## 備份與遷移
+
+在以下位置下載備份：
+
+- `https://<your-railway-domain>/setup/export`
+
+這會匯出您的 OpenClaw 狀態與工作區，以便您遷移到其他主機而不會遺失設定或記憶。
+
+## 下一步
+
+- 設定訊息頻道：[頻道](/zh-Hant/channels)
+- 設定 Gateway：[Gateway 設定](/zh-Hant/gateway/configuration)
+- 保持 OpenClaw 為最新狀態：[更新](/zh-Hant/install/updating)

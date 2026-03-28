@@ -1,0 +1,720 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import DefaultHead from '@astrojs/starlight/components/Head.astro';
+
+const FOOTER_DIR = path.join(process.cwd(), 'components', 'footer');
+
+function footerMarkdownToHtml(fileName) {
+	const filePath = path.join(FOOTER_DIR, fileName);
+	if (!fs.existsSync(filePath)) return '';
+	const source = fs.readFileSync(filePath, 'utf8').replace(/^---\n[\s\S]*?\n---\n?/, '').trim();
+	if (!source) return '';
+	return `<p>${source.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')}</p>`;
+}
+
+const footerHtmlByTag = {
+	en: footerMarkdownToHtml('en.mdx'),
+	es: footerMarkdownToHtml('es.mdx'),
+	fr: footerMarkdownToHtml('fr.mdx'),
+	zh: footerMarkdownToHtml('zh.mdx'),
+	footerzhhant: footerMarkdownToHtml('zh-Hant.mdx'),
+};
+---
+
+<style is:inline>
+	html[data-theme='dark'] {
+		--sl-color-accent-low: #3a1b14;
+		--sl-color-accent: #ff5a36;
+		--sl-color-accent-high: #ff8a6b;
+		--sl-color-text-accent: #ff8a6b;
+		--sl-color-orange: #ff5a36;
+		--sl-color-bg-nav: #131010;
+		--sl-color-bg-sidebar: #171212;
+		--sl-color-bg-inline-code: #241615;
+		--sl-color-hairline: rgba(255, 138, 107, 0.18);
+		--sl-color-hairline-light: rgba(255, 138, 107, 0.12);
+		--sl-color-hairline-shade: rgba(255, 90, 54, 0.26);
+	}
+
+	html[data-theme='light'] {
+		--sl-color-accent-low: #ffe2da;
+		--sl-color-accent: #ff5a36;
+		--sl-color-accent-high: #c84427;
+		--sl-color-text-accent: #d34e2f;
+		--sl-color-orange: #ff5a36;
+	}
+
+	:root {
+		--sl-content-width: 64rem;
+	}
+
+	@media (min-width: 50rem) {
+		.header-center site-search button[data-open-modal] {
+			max-width: 11rem;
+		}
+	}
+</style>
+
+<DefaultHead />
+
+<script is:inline data-footer-html-by-tag={JSON.stringify(footerHtmlByTag)}>
+(() => {
+	const footerHtmlByTag = JSON.parse(document.currentScript?.dataset.footerHtmlByTag || '{}');
+
+	const ready = (fn) => {
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', fn, { once: true });
+		} else {
+			fn();
+		}
+	};
+
+	const create = (tag, props = {}, text) => {
+		const el = document.createElement(tag);
+		for (const [key, value] of Object.entries(props)) {
+			if (value == null) continue;
+			if (key === 'className') el.className = value;
+			else if (key === 'dataset') {
+				for (const [dataKey, dataValue] of Object.entries(value)) {
+					el.dataset[dataKey] = dataValue;
+				}
+			} else {
+				el.setAttribute(key, value);
+			}
+		}
+		if (text) el.textContent = text;
+		return el;
+	};
+
+	const escapeHtml = (value) =>
+		value
+			.replaceAll('&', '&amp;')
+			.replaceAll('<', '&lt;')
+			.replaceAll('>', '&gt;');
+
+	const renderInlineMarkdown = (value) =>
+		escapeHtml(value)
+			.replace(/`([^`]+)`/g, '<code>$1</code>')
+			.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+
+	const REGISTERED_COMPONENTS = new Set([
+		'card',
+		'accordion',
+		'steps',
+		'step',
+		'tabs',
+		'tab',
+		'note',
+		'tip',
+		'info',
+		'warning',
+		'check',
+	]);
+
+	const normalizeMarkdownSource = (value) => {
+		const normalized = value.replace(/\r\n?/g, '\n');
+		const lines = normalized.split('\n');
+		while (lines.length && lines[0].trim() === '') lines.shift();
+		while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
+		const indents = lines
+			.filter((line) => line.trim() !== '')
+			.map((line) => line.match(/^\s*/)?.[0].length ?? 0);
+		const commonIndent = indents.length ? Math.min(...indents) : 0;
+		return lines.map((line) => line.slice(commonIndent)).join('\n');
+	};
+
+	const appendParagraph = (fragment, text) => {
+		const paragraphText = text.trim();
+		if (!paragraphText) return;
+		const paragraph = create('p');
+		paragraph.innerHTML = renderInlineMarkdown(paragraphText).replace(/\n/g, '<br />');
+		fragment.append(paragraph);
+	};
+
+	const TERMINAL_LANGUAGES = new Set(['bash', 'sh', 'shell', 'zsh', 'exec']);
+
+	const createCodeBlock = (lang, code) => {
+		const normalized = code.replace(/^\n+|\n+$/g, '');
+		const shell = create('div', { className: 'expressive-code' });
+		const figure = create('figure', {
+			className: `frame not-content${TERMINAL_LANGUAGES.has(lang) ? ' is-terminal' : ''}`,
+		});
+		const caption = create('figcaption', { className: 'header' });
+		if (TERMINAL_LANGUAGES.has(lang)) {
+			caption.append(
+				create('span', { className: 'title' }),
+				create('span', { className: 'sr-only' }, 'Terminal window')
+			);
+		}
+		const pre = create('pre', {
+			className: `cf-codeblock${lang ? ` language-${lang}` : ''}`,
+			'data-language': lang || null,
+		});
+		const codeEl = create('code');
+		codeEl.textContent = normalized;
+		pre.append(codeEl);
+		const copy = create('div', { className: 'copy' });
+		const button = create('button', {
+			title: 'Copy to clipboard',
+			'data-copied': 'Copied!',
+			'data-code': normalized,
+		});
+		button.append(create('div'));
+		button.addEventListener('click', async () => {
+			try {
+				await navigator.clipboard.writeText(normalized);
+				const live = copy.querySelector('[aria-live]');
+				if (!live || live.querySelector('.feedback')) return;
+				const feedback = create('div', { className: 'feedback' }, 'Copied!');
+				live.append(feedback);
+				feedback.offsetWidth;
+				requestAnimationFrame(() => feedback.classList.add('show'));
+				const hide = () => feedback.classList.remove('show');
+				const cleanup = () => {
+					if (!feedback || parseFloat(getComputedStyle(feedback).opacity) > 0) return;
+					feedback.remove();
+				};
+				window.setTimeout(hide, 1500);
+				window.setTimeout(cleanup, 2500);
+				button.addEventListener('blur', hide, { once: true });
+				feedback.addEventListener('transitioncancel', cleanup, { once: true });
+				feedback.addEventListener('transitionend', cleanup, { once: true });
+			} catch (error) {
+				console.error('Failed to copy code block.', error);
+			}
+		});
+		copy.append(create('div', { 'aria-live': 'polite' }), button);
+		figure.append(caption, pre, copy);
+		shell.append(figure);
+		return shell;
+	};
+
+	const appendCodeBlock = (fragment, lang, code) => {
+		fragment.append(createCodeBlock(lang, code));
+	};
+
+	const appendList = (fragment, items, ordered) => {
+		if (!items.length) return;
+		const list = create(ordered ? 'ol' : 'ul');
+		for (const item of items) {
+			const li = create('li');
+			li.innerHTML = renderInlineMarkdown(item.trim().replace(/\n+/g, ' '));
+			list.append(li);
+		}
+		fragment.append(list);
+	};
+
+	const renderMarkdownFragment = (value) => {
+		const fragment = document.createDocumentFragment();
+		const source = normalizeMarkdownSource(value);
+		if (!source.trim()) return fragment;
+
+		const lines = source.split('\n');
+		let index = 0;
+
+		while (index < lines.length) {
+			if (!lines[index].trim()) {
+				index += 1;
+				continue;
+			}
+
+			const fence = lines[index].match(/^```([a-zA-Z0-9_-]+)?\s*$/);
+			if (fence) {
+				const lang = fence[1] || '';
+				index += 1;
+				const codeLines = [];
+				while (index < lines.length && !/^```/.test(lines[index].trim())) {
+					codeLines.push(lines[index]);
+					index += 1;
+				}
+				if (index < lines.length) index += 1;
+				appendCodeBlock(fragment, lang, codeLines.join('\n'));
+				continue;
+			}
+
+			const unordered = lines[index].match(/^\s*[-*+]\s+(.+)$/);
+			const ordered = lines[index].match(/^\s*\d+\.\s+(.+)$/);
+			if (unordered || ordered) {
+				const items = [];
+				const orderedList = Boolean(ordered);
+				while (index < lines.length) {
+					const line = lines[index];
+					const match = orderedList
+						? line.match(/^\s*\d+\.\s+(.+)$/)
+						: line.match(/^\s*[-*+]\s+(.+)$/);
+					if (match) {
+						items.push(match[1]);
+						index += 1;
+						continue;
+					}
+					if (!line.trim()) {
+						index += 1;
+						break;
+					}
+					if (items.length) {
+						items[items.length - 1] += ` ${line.trim()}`;
+						index += 1;
+						continue;
+					}
+					break;
+				}
+				appendList(fragment, items, orderedList);
+				continue;
+			}
+
+			const paragraphLines = [];
+			while (index < lines.length) {
+				const line = lines[index];
+				if (!line.trim()) break;
+				if (/^```([a-zA-Z0-9_-]+)?\s*$/.test(line.trim())) break;
+				if (/^\s*[-*+]\s+/.test(line) || /^\s*\d+\.\s+/.test(line)) break;
+				paragraphLines.push(line);
+				index += 1;
+			}
+			appendParagraph(fragment, paragraphLines.join('\n'));
+		}
+
+		return fragment;
+	};
+
+	const cloneOpaqueElement = (el) => el.cloneNode(true);
+
+	const hoistExpressiveCodeAssets = (container) => {
+		if (!container) return;
+		for (const asset of container.querySelectorAll('link[rel="stylesheet"], script[type="module"][src]')) {
+			if (asset.tagName.toLowerCase() === 'link') {
+				const href = asset.getAttribute('href');
+				if (!href) continue;
+				if (!document.head.querySelector(`link[rel="stylesheet"][href="${href}"]`)) {
+					document.head.append(asset.cloneNode(true));
+				}
+				continue;
+			}
+
+			const src = asset.getAttribute('src');
+			if (!src) continue;
+			if (!document.head.querySelector(`script[type="module"][src="${src}"]`)) {
+				document.head.append(asset.cloneNode(true));
+			}
+		}
+	};
+
+	const renderRecursiveContent = (root) => {
+		const fragment = document.createDocumentFragment();
+		let markdownBuffer = '';
+
+		const flushMarkdown = () => {
+			if (!markdownBuffer.trim()) {
+				markdownBuffer = '';
+				return;
+			}
+			fragment.append(renderMarkdownFragment(markdownBuffer));
+			markdownBuffer = '';
+		};
+
+		for (const node of root.childNodes) {
+			if (node.nodeType === Node.TEXT_NODE) {
+				markdownBuffer += node.textContent || '';
+				continue;
+			}
+
+			if (node.nodeType !== Node.ELEMENT_NODE) continue;
+
+			const tag = node.tagName.toLowerCase();
+			if (REGISTERED_COMPONENTS.has(tag)) {
+				flushMarkdown();
+				fragment.append(transformRegisteredComponent(node));
+				continue;
+			}
+
+			flushMarkdown();
+			fragment.append(cloneOpaqueElement(node));
+		}
+
+		flushMarkdown();
+		return fragment;
+	};
+
+	const transformRegisteredComponent = (node) => {
+		const tag = node.tagName.toLowerCase();
+
+		if (tag === 'card') {
+			const href = node.getAttribute('href');
+			const title = node.getAttribute('title') || '';
+			const icon = node.getAttribute('icon') || '';
+			const wrapper = create(href ? 'a' : 'article', {
+				className: 'cf-card',
+				href: href || null,
+			});
+			if (icon) wrapper.dataset.icon = icon;
+			const titleEl = create('div', { className: 'cf-card__title' }, title);
+			const body = create('div', { className: 'cf-card__body' });
+			body.append(renderRecursiveContent(node));
+			wrapper.append(titleEl, body);
+			return wrapper;
+		}
+
+		if (tag === 'accordion') {
+			const title = node.getAttribute('title') || 'Details';
+			const details = create('details', { className: 'cf-accordion' });
+			const summary = create('summary', { className: 'cf-accordion__summary' }, title);
+			const body = create('div', { className: 'cf-accordion__body' });
+			body.append(renderRecursiveContent(node));
+			details.append(summary, body);
+			return details;
+		}
+
+		if (tag === 'step') {
+			const li = create('li', { className: 'cf-step' });
+			const title = node.getAttribute('title');
+			if (title) li.append(create('p', { className: 'cf-step__title' }, title));
+			const content = create('div', { className: 'cf-step__content' });
+			content.append(renderRecursiveContent(node));
+			li.append(content);
+			return li;
+		}
+
+		if (tag === 'steps') {
+			const ol = create('ol', { className: 'cf-steps' });
+			for (const child of node.children) {
+				if (child.tagName.toLowerCase() !== 'step') continue;
+				ol.append(transformRegisteredComponent(child));
+			}
+			return ol;
+		}
+
+		if (tag === 'tabs') {
+			const tabItems = [...node.children].filter((child) => child.tagName.toLowerCase() === 'tab');
+			if (tabItems.length === 0) return document.createDocumentFragment();
+
+			const shell = create('div', { className: 'cf-tabs', 'data-cf-tabs': '' });
+			const tabListWrap = create('div', { className: 'cf-tabs__list-wrap not-content' });
+			const tabList = create('div', { className: 'cf-tabs__list', role: 'tablist' });
+			const panels = [];
+
+			tabItems.forEach((tab, index) => {
+				const label = tab.getAttribute('title') || tab.getAttribute('label') || `Tab ${index + 1}`;
+				const button = create('button', {
+					className: 'cf-tabs__tab',
+					role: 'tab',
+					type: 'button',
+					'aria-selected': index === 0 ? 'true' : 'false',
+					tabindex: index === 0 ? '0' : '-1',
+				}, label);
+				const panel = create('div', {
+					className: 'cf-tabs__panel',
+					role: 'tabpanel',
+				});
+				if (index !== 0) panel.hidden = true;
+				panel.append(renderRecursiveContent(tab));
+				panels.push(panel);
+				tabList.append(button);
+			});
+
+			tabListWrap.append(tabList);
+			shell.append(tabListWrap, ...panels);
+			return shell;
+		}
+
+		if (['note', 'tip', 'info', 'warning', 'check'].includes(tag)) {
+			const defaultTitle = tag.charAt(0).toUpperCase() + tag.slice(1);
+			const title = node.getAttribute('title') || defaultTitle;
+			const wrapper = create('aside', {
+				className: `cf-aside cf-aside--${tag}`,
+				'aria-label': title,
+			});
+			const titleEl = create('p', { className: 'cf-aside__title' }, title);
+			const body = create('div', { className: 'cf-aside__content' });
+			body.append(renderRecursiveContent(node));
+			wrapper.append(titleEl, body);
+			return wrapper;
+		}
+
+		return cloneOpaqueElement(node);
+	};
+
+	const enhanceFooterPlaceholders = (root = document) => {
+		for (const [tagName, html] of Object.entries(footerHtmlByTag)) {
+			if (!html) continue;
+			for (const node of root.querySelectorAll(`${tagName}:not([data-crawfish-enhanced])`)) {
+				node.setAttribute('data-crawfish-enhanced', '');
+				const wrapper = create('div', { className: 'cf-footer-note' });
+				wrapper.innerHTML = html;
+				const parent = node.parentElement;
+				if (parent && parent.tagName.toLowerCase() === 'p' && parent.childElementCount === 1) {
+					parent.replaceWith(wrapper);
+				} else {
+					node.replaceWith(wrapper);
+				}
+			}
+		}
+	};
+
+	const enhanceCards = (root = document) => {
+		for (const card of root.querySelectorAll('card:not([data-crawfish-enhanced])')) {
+			card.setAttribute('data-crawfish-enhanced', '');
+			card.replaceWith(transformRegisteredComponent(card));
+		}
+	};
+
+	const enhanceAccordions = (root = document) => {
+		for (const accordion of root.querySelectorAll('accordion:not([data-crawfish-enhanced])')) {
+			accordion.setAttribute('data-crawfish-enhanced', '');
+			accordion.replaceWith(transformRegisteredComponent(accordion));
+		}
+	};
+
+	const enhanceSteps = (root = document) => {
+		for (const steps of root.querySelectorAll('steps:not([data-crawfish-enhanced])')) {
+			steps.setAttribute('data-crawfish-enhanced', '');
+			steps.replaceWith(transformRegisteredComponent(steps));
+		}
+	};
+
+	const enhanceTabs = (root = document) => {
+		for (const tabs of root.querySelectorAll('tabs:not([data-crawfish-enhanced])')) {
+			tabs.setAttribute('data-crawfish-enhanced', '');
+			tabs.replaceWith(transformRegisteredComponent(tabs));
+		}
+	};
+
+	const initializeTabs = (root = document) => {
+		for (const shell of root.querySelectorAll('.cf-tabs:not([data-cf-tabs-ready])')) {
+			shell.setAttribute('data-cf-tabs-ready', '');
+			const buttons = [...shell.querySelectorAll('.cf-tabs__tab[role="tab"]')];
+			const panels = [...shell.querySelectorAll('.cf-tabs__panel[role="tabpanel"]')];
+			if (!buttons.length || buttons.length !== panels.length) continue;
+
+			const activateTab = (targetIndex) => {
+				buttons.forEach((button, index) => {
+					const active = index === targetIndex;
+					button.setAttribute('aria-selected', active ? 'true' : 'false');
+					button.setAttribute('tabindex', active ? '0' : '-1');
+					panels[index].hidden = !active;
+				});
+			};
+
+			let activeIndex = buttons.findIndex((button) => button.getAttribute('aria-selected') === 'true');
+			if (activeIndex < 0) activeIndex = 0;
+			activateTab(activeIndex);
+
+			buttons.forEach((button, index) => {
+				button.addEventListener('click', () => {
+					activateTab(index);
+				});
+				button.addEventListener('keydown', (event) => {
+					const nextIndex =
+						event.key === 'ArrowRight' ? (index + 1) % buttons.length :
+						event.key === 'ArrowLeft' ? (index - 1 + buttons.length) % buttons.length :
+						event.key === 'Home' ? 0 :
+						event.key === 'End' ? buttons.length - 1 :
+						null;
+					if (nextIndex == null) return;
+					event.preventDefault();
+					buttons[nextIndex].focus();
+					activateTab(nextIndex);
+				});
+			});
+		}
+	};
+
+	const enhanceAsides = (root = document) => {
+		const variants = {
+			note: 'Note',
+			tip: 'Tip',
+			info: 'Info',
+			warning: 'Warning',
+			check: 'Check',
+		};
+
+		for (const tag of Object.keys(variants)) {
+			for (const aside of root.querySelectorAll(`${tag}:not([data-crawfish-enhanced])`)) {
+				aside.setAttribute('data-crawfish-enhanced', '');
+				const wrapper = transformRegisteredComponent(aside);
+
+				const parent = aside.parentElement;
+				if (
+					parent &&
+					parent.tagName.toLowerCase() === 'p' &&
+					parent.childElementCount === 1 &&
+					parent.textContent?.trim() === aside.textContent?.trim()
+				) {
+					parent.replaceWith(wrapper);
+				} else {
+					aside.replaceWith(wrapper);
+				}
+			}
+		}
+	};
+
+	const normalizePlaintextFenceBlocks = (root = document) => {
+		for (const pre of root.querySelectorAll('.expressive-code pre[data-language="plaintext"]')) {
+			const lines = [...pre.querySelectorAll('.ec-line .code')].map((line) => (line.textContent || '').replace(/\u00a0/g, ''));
+			const first = lines.findIndex((line) => line.trim().length > 0);
+			if (first === -1) continue;
+			const start = lines[first].trim().match(/^```([a-zA-Z0-9_-]+)?$/);
+			if (!start) continue;
+			const end = lines.findIndex((line, index) => index > first && line.trim() === '```');
+			if (end === -1) continue;
+
+			const lang = start[1] || '';
+			const code = lines.slice(first + 1, end).join('\n').replace(/^\n+|\n+$/g, '');
+			const trailing = lines.slice(end + 1).join('\n').trim();
+			const container = pre.closest('.expressive-code');
+			if (!container) continue;
+			hoistExpressiveCodeAssets(container);
+
+			const fragment = document.createDocumentFragment();
+			fragment.append(createCodeBlock(lang, code));
+
+			if (trailing) {
+				const paragraph = create('p');
+				paragraph.innerHTML = renderInlineMarkdown(trailing);
+				fragment.append(paragraph);
+			}
+
+			container.replaceWith(fragment);
+		}
+	};
+
+	const enhanceFrames = (root = document) => {
+		for (const frame of root.querySelectorAll('frame:not([data-crawfish-enhanced]), codegroup:not([data-crawfish-enhanced]), columns:not([data-crawfish-enhanced]), cardgroup:not([data-crawfish-enhanced]), accordiongroup:not([data-crawfish-enhanced])')) {
+			frame.setAttribute('data-crawfish-enhanced', '');
+			const tag = frame.tagName.toLowerCase();
+			frame.classList.add(`cf-${tag}`);
+		}
+	};
+
+	ready(() => {
+		enhanceFrames();
+		enhanceCards();
+		enhanceAccordions();
+		enhanceSteps();
+		enhanceTabs();
+		initializeTabs();
+		enhanceAsides();
+		enhanceFooterPlaceholders();
+		normalizePlaintextFenceBlocks();
+	});
+})();
+</script>
+
+<script>
+	import mermaid from 'mermaid';
+
+	const getMermaidTheme = () =>
+		document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default';
+
+	const hoistExpressiveCodeAssets = (container) => {
+		if (!container) return;
+		for (const asset of container.querySelectorAll('link[rel="stylesheet"], script[type="module"][src]')) {
+			if (asset.tagName.toLowerCase() === 'link') {
+				const href = asset.getAttribute('href');
+				if (!href) continue;
+				if (!document.head.querySelector(`link[rel="stylesheet"][href="${href}"]`)) {
+					document.head.append(asset.cloneNode(true));
+				}
+				continue;
+			}
+
+			const src = asset.getAttribute('src');
+			if (!src) continue;
+			if (!document.head.querySelector(`script[type="module"][src="${src}"]`)) {
+				document.head.append(asset.cloneNode(true));
+			}
+		}
+	};
+
+	let mermaidRenderPromise = null;
+	let mermaidRenderQueued = false;
+
+	const buildMermaidWrappers = () => {
+		for (const pre of document.querySelectorAll(
+			'.sl-markdown-content .expressive-code pre[data-language="mermaid"]'
+		)) {
+			const lines = [...pre.querySelectorAll('.ec-line .code')].map((line) => line.textContent || '');
+			const source = (lines.length ? lines.join('\n') : pre.textContent || '').trim();
+			if (!source) continue;
+			const container = pre.closest('.expressive-code');
+			if (!container) continue;
+			hoistExpressiveCodeAssets(container);
+			const wrapper = document.createElement('div');
+			wrapper.className = 'cf-mermaid not-content';
+			wrapper.dataset.source = source;
+			container.replaceWith(wrapper);
+		}
+	};
+
+	const populateMermaidGraphs = () => {
+		for (const wrapper of document.querySelectorAll('.cf-mermaid')) {
+			const source = wrapper.dataset.source?.trim();
+			if (!source) continue;
+			wrapper.innerHTML = '';
+			const graph = document.createElement('div');
+			graph.className = 'cf-mermaid__graph mermaid';
+			graph.textContent = source;
+			wrapper.append(graph);
+		}
+	};
+
+	const renderMermaidNow = async () => {
+		buildMermaidWrappers();
+		populateMermaidGraphs();
+		const nodes = [...document.querySelectorAll('.cf-mermaid__graph')].filter((node) => node.isConnected);
+		if (!nodes.length) return;
+		mermaid.initialize({
+			startOnLoad: false,
+			securityLevel: 'loose',
+			theme: getMermaidTheme(),
+		});
+		await mermaid.run({ nodes });
+	};
+
+	const renderMermaid = async () => {
+		if (mermaidRenderPromise) {
+			mermaidRenderQueued = true;
+			return mermaidRenderPromise;
+		}
+
+		mermaidRenderPromise = (async () => {
+			try {
+				do {
+					mermaidRenderQueued = false;
+					await renderMermaidNow();
+				} while (mermaidRenderQueued);
+			} catch (error) {
+				console.error('Failed to render mermaid diagrams.', error);
+			} finally {
+				mermaidRenderPromise = null;
+			}
+		})();
+
+		return mermaidRenderPromise;
+	};
+
+	const start = () => {
+		renderMermaid();
+		const observer = new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				if (
+					mutation.type === 'attributes' &&
+					mutation.attributeName === 'data-theme'
+				) {
+					renderMermaid();
+					break;
+				}
+			}
+		});
+		observer.observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['data-theme'],
+		});
+	};
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', start, { once: true });
+	} else {
+		start();
+	}
+</script>

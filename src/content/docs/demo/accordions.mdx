@@ -1,0 +1,51 @@
+---
+title: "Demo: Accordions"
+sidebarTitle: "Accordions"
+description: "Accordion and AccordionGroup rendering demos."
+---
+
+import { Accordion, AccordionGroup } from "../../../components/mdx-auto";
+
+# Accordion demos
+
+These examples mirror the FAQ and troubleshooting style used throughout the docs.
+
+<AccordionGroup>
+  <Accordion title="Formatting and HTML fallback">
+    Accordions should preserve Markdown formatting inside their body.
+
+    - Lists should stay lists
+    - Links like [Telegram docs](/en/channels/telegram) should remain clickable
+    - Inline code like `parse_mode=HTML` should stay inline code
+
+  </Accordion>
+  <Accordion title="Code block in accordion">
+    ```bash
+    openclaw gateway status
+    openclaw logs --tail 100
+    ```
+  </Accordion>
+  <Accordion title="Block content">
+    > This blockquote should still look like a blockquote.
+
+    1. Ordered item one
+    2. Ordered item two
+
+  </Accordion>
+</AccordionGroup>
+
+## Standalone accordion
+
+<Accordion title="Single accordion without a group">
+  Some pages use a single accordion by itself.
+
+This paragraph, the list below, and the code fence should all survive:
+
+- preserve paragraph spacing
+- preserve list styling
+
+```json
+{ "mode": "single" }
+```
+
+</Accordion>

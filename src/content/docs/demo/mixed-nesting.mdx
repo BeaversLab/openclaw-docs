@@ -1,0 +1,53 @@
+---
+title: "Demo: Mixed Nesting"
+sidebarTitle: "Mixed Nesting"
+description: "Nested component composition stress cases."
+---
+
+import { Accordion, Note, Step, Steps, Tab, Tabs, Warning } from "../../../components/mdx-auto";
+
+# Mixed nesting demos
+
+This page intentionally combines components in the same ways that tend to break when slot content is rewritten or flattened.
+
+## Tabs containing steps
+
+<Tabs>
+  <Tab title="Onboarding flow">
+    <Steps>
+      <Step title="Start onboarding">
+        Run:
+
+        ```bash
+        openclaw onboard
+        ```
+      </Step>
+      <Step title="Complete pairing">
+        Confirm:
+
+        - the list remains structured
+        - the code block above remains a code block
+      </Step>
+    </Steps>
+
+  </Tab>
+  <Tab title="Expected result">
+    The tab panel should preserve the nested list, nested steps, and fenced code block.
+  </Tab>
+</Tabs>
+
+## Accordion containing asides
+
+<Accordion title="Nested aside inside accordion">
+  <Note>
+    This note sits inside an accordion body.
+
+    - It should still render as an aside
+    - Markdown inside the aside should still work
+
+  </Note>
+
+  <Warning>
+    If this content loses structure, the nesting path is not preserving MDX children correctly.
+  </Warning>
+</Accordion>

@@ -9,3 +9,5 @@ en/.i18n/*.tm.jsonl
 .i18n/.env
 .i18n/artifacts/
 .i18n/flow-i18n.db*
+dist/
+.astro/

@@ -224,7 +224,7 @@ Examples:
   process.exit(0);
 }
 
-const rootDir = process.cwd();
+const rootDir = path.join(process.cwd(), 'src/content/docs');
 let totalFiles = 0;
 let totalChanged = 0;
 let totalLinks = 0;

@@ -47,37 +47,52 @@ jobs:
           sed -i "s/var UPDATED_AT = \".*\";/var UPDATED_AT = \"${{ env.SYNC_DATE }}\";/" version.js
           sed -i "s/var COMMIT = \".*\";/var COMMIT = \"${{ env.OPENCLAW_COMMIT }}\";/" version.js
 
-      - name: Copy docs to en/
+      - name: Sync docs and assets
         if: env.SHOULD_SYNC == 'true'
         run: |
-          mkdir -p en
-          # Copy content of openclaw-repo/docs to en/, excluding zh-CN and ja-JP
-          # We do not use --delete to avoid removing project-specific files like CNAME, style.css, etc.
-          rsync -av --exclude 'zh-CN' --exclude 'ja-JP' openclaw-repo/docs/ en/
+          mkdir -p src/content/docs/en public/assets public/images public
 
-      - name: Fix MDX compatibility in en/
-        if: env.SHOULD_SYNC == 'true'
-        run: |
-          node scripts/fix-mdx-compat.js en/
+          # Sync shared assets
+          rsync -av openclaw-repo/docs/assets/ public/assets/
+          rsync -av openclaw-repo/docs/images/ public/images/
 
-      - name: Fix internal links in en/
-        if: env.SHOULD_SYNC == 'true'
-        run: |
-          # Use the existing script to add /en/ prefix to internal links
-          # It automatically detects 'en' locale for files under 'en/' folder
-          node scripts/fix-locale-links.js en/
+          # Sync top-level image files into public/
+          find openclaw-repo/docs -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.png' \) -exec rsync -av {} public/ \;
 
-      - name: Ensure doc footers in en/
+          # Sync remaining docs into the English docs tree.
+          # Do not use --delete to avoid removing local project-specific content.
+          rsync -av \
+            --exclude 'assets' \
+            --exclude 'images' \
+            --exclude 'ja-JP' \
+            --exclude 'zh-CN' \
+            --exclude '.generated' \
+            --exclude '.i18n/*.tm.jsonl' \
+            --exclude '*.jpg' \
+            --exclude '*.png' \
+            openclaw-repo/docs/ src/content/docs/en/
+
+      - name: Fix MDX compatibility in src/content/docs/en/
         if: env.SHOULD_SYNC == 'true'
         run: |
-          node scripts/ensure-doc-footers.mjs en/
+          node scripts/fix-mdx-compat.js src/content/docs/en/
+
+      - name: Fix internal links in src/content/docs/en/
+        if: env.SHOULD_SYNC == 'true'
+        run: |
+          node scripts/fix-locale-links.js src/content/docs/en/
+
+      - name: Ensure doc footers in src/content/docs/en/
+        if: env.SHOULD_SYNC == 'true'
+        run: |
+          node scripts/ensure-doc-footers.mjs src/content/docs/en/
 
       - name: Commit and push changes
         if: env.SHOULD_SYNC == 'true'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add en/ version.js
+          git add src/content/docs/en/ public/assets/ public/images/ public/*.jpg public/*.png version.js
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else

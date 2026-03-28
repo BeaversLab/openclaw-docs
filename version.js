@@ -11,37 +11,55 @@
     var style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent =
-      "#" + META_ID + " {" +
+      "#" +
+      META_ID +
+      " {" +
       " display: inline-flex; align-items: center; gap: 8px;" +
       " font-size: 12px; color: rgb(107 114 128);" +
       " padding: 4px 8px; border-radius: 10px;" +
       " background: rgba(15, 23, 42, 0.04);" +
       " }" +
-      "#" + META_ID + " .meta-label {" +
+      "#" +
+      META_ID +
+      " .meta-label {" +
       " font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;" +
       " color: rgba(107, 114, 128, 0.9);" +
       " }" +
-      "#" + META_ID + " .meta-value {" +
+      "#" +
+      META_ID +
+      " .meta-value {" +
       " font-variant-numeric: tabular-nums;" +
       " }" +
-      "#" + META_ID + " .meta-sep {" +
+      "#" +
+      META_ID +
+      " .meta-sep {" +
       " color: rgba(107, 114, 128, 0.6);" +
       " }" +
-      "#" + META_ID + " .meta-link {" +
+      "#" +
+      META_ID +
+      " .meta-link {" +
       " color: rgb(59 130 246); text-decoration: none;" +
       " border-bottom: 1px dotted rgba(59, 130, 246, 0.6);" +
       " }" +
-      "#" + META_ID + " .meta-link:hover {" +
+      "#" +
+      META_ID +
+      " .meta-link:hover {" +
       " color: rgb(37 99 235); border-bottom-color: rgba(37, 99, 235, 0.6);" +
       " }" +
       "@media (prefers-color-scheme: dark) {" +
-      " #" + META_ID + " {" +
+      " #" +
+      META_ID +
+      " {" +
       " color: rgb(156 163 175); background: rgba(148, 163, 184, 0.08);" +
       " }" +
-      " #" + META_ID + " .meta-link {" +
+      " #" +
+      META_ID +
+      " .meta-link {" +
       " color: rgb(125 211 252); border-bottom-color: rgba(125, 211, 252, 0.55);" +
       " }" +
-      " #" + META_ID + " .meta-link:hover {" +
+      " #" +
+      META_ID +
+      " .meta-link:hover {" +
       " color: rgb(56 189 248); border-bottom-color: rgba(56, 189, 248, 0.65);" +
       " }" +
       " }";
@@ -52,7 +70,9 @@
     var isZh = (location.pathname || "").toLowerCase().startsWith("/zh");
     var versionText = isZh ? "版本" : "Version";
     var updatedText = isZh ? "更新" : "Updated";
-    var tagUrl = TAG ? "https://github.com/openclaw/openclaw/releases/tag/" + TAG : "";
+    var tagUrl = TAG
+      ? "https://github.com/openclaw/openclaw/releases/tag/" + TAG
+      : "";
 
     var wrapper = document.createElement("div");
     wrapper.id = META_ID;
@@ -97,6 +117,7 @@
 
   function insertMeta() {
     if (document.getElementById(META_ID)) return;
+    if (document.querySelector("[data-doc-version-meta]")) return;
 
     var trigger = document.getElementById("localization-select-trigger");
     if (!trigger) return;

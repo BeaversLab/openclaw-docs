@@ -1,0 +1,78 @@
+---
+title: "Demo: Legacy Tag Enhancement"
+sidebarTitle: "Legacy Tag Enhancement"
+description: "Lowercase runtime-enhanced tags and nested Markdown stress cases."
+---
+
+# Legacy tag enhancement demos
+
+These examples deliberately use lowercase tags so they go through the client-side enhancement path in `Head.astro`.
+
+This page is expected to be the most useful one when debugging Markdown loss inside component-like tags.
+
+## Legacy note
+
+<note title="Legacy note">
+This note uses the lowercase tag path.
+
+- The list should stay a list
+- Inline code like `gateway.status` should stay inline code
+  </note>
+
+## Legacy accordion
+
+<accordion title="Legacy accordion with Markdown">
+This body contains normal prose, a list, and a fenced block.
+
+- item one
+- item two
+
+```bash
+openclaw gateway status
+```
+
+</accordion>
+
+## Legacy tabs
+
+<tabs>
+<tab title="First tab">
+
+This tab contains a list.
+
+- alpha
+- beta
+
+</tab>
+<tab title="Second tab">
+
+This tab contains a blockquote and code.
+
+> Runtime enhancement should preserve block-level structure here.
+
+`inline-code`
+
+</tab>
+</tabs>
+
+## Legacy steps
+
+<steps>
+<step title="First step">
+
+This step contains a list.
+
+- one
+- two
+
+</step>
+<step title="Second step">
+
+This step contains a fenced block.
+
+```json
+{ "path": "legacy" }
+```
+
+</step>
+</steps>
