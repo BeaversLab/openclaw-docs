@@ -58,6 +58,16 @@ const footerHtmlByTag = {
 
 <DefaultHead />
 
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8X5BNEEMV"></script>
+<script is:inline>
+	window.dataLayer = window.dataLayer || [];
+	function gtag() {
+		dataLayer.push(arguments);
+	}
+	gtag('js', new Date());
+	gtag('config', 'G-B8X5BNEEMV');
+</script>
+
 <script is:inline data-footer-html-by-tag={JSON.stringify(footerHtmlByTag)}>
 (() => {
 	const footerHtmlByTag = JSON.parse(document.currentScript?.dataset.footerHtmlByTag || '{}');

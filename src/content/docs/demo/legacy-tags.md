@@ -13,11 +13,12 @@ This page is expected to be the most useful one when debugging Markdown loss ins
 ## Legacy note
 
 <note title="Legacy note">
-This note uses the lowercase tag path.
+  This note uses the lowercase tag path.
 
 - The list should stay a list
 - Inline code like `gateway.status` should stay inline code
-  </note>
+
+</note>
 
 ## Legacy accordion
 
