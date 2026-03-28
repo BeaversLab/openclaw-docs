@@ -24,9 +24,6 @@ importers:
       hast-util-from-html:
         specifier: ^2.0.3
         version: 2.0.3
-      mdast-util-to-markdown:
-        specifier: ^2.1.2
-        version: 2.1.2
       prettier:
         specifier: ^3.8.1
         version: 3.8.1
