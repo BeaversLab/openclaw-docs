@@ -1,5 +1,5 @@
 ---
-summary: "CLI 參考手冊：`openclaw browser`（設定檔、分頁、動作、Chrome MCP 與 CDP）"
+summary: "CLI 參考資料 `openclaw browser` (設定檔、分頁、動作、Chrome MCP 和 CDP)"
 read_when:
   - You use `openclaw browser` and want examples for common tasks
   - You want to control a browser running on another machine via a node host
@@ -9,23 +9,23 @@ title: "browser"
 
 # `openclaw browser`
 
-管理 OpenClaw 的瀏覽器控制伺服器並執行瀏覽器動作（分頁、快照、截圖、導航、點擊、輸入）。
+管理 OpenClaw 的瀏覽器控制伺服器並執行瀏覽器動作（分頁、快照、擷圖、導航、點擊、輸入）。
 
 相關連結：
 
-- 瀏覽器工具 + API：[Browser tool](/zh-Hant/tools/browser)
+- 瀏覽器工具 + API：[Browser tool](/en/tools/browser)
 
-## 通用旗標
+## 常用旗標
 
-- `--url <gatewayWsUrl>`：Gateway WebSocket URL（預設為設定值）。
-- `--token <token>`：Gateway 權杖（若有需要）。
-- `--timeout <ms>`：請求逾時（毫秒）。
-- `--browser-profile <name>`：選擇瀏覽器設定檔（預設為設定值）。
-- `--json`：機器可讀格式輸出（在支援的情況下）。
+- `--url <gatewayWsUrl>`: Gateway WebSocket URL（預設為設定值）。
+- `--token <token>`: Gateway 權杖（若需要）。
+- `--timeout <ms>`: 要求逾時 (ms)。
+- `--browser-profile <name>`: 選擇瀏覽器設定檔（預設為設定值）。
+- `--json`: 機器可讀取的輸出（在支援的情況下）。
 
 ## 快速入門（本機）
 
-```exec
+```bash
 openclaw browser profiles
 openclaw browser --browser-profile openclaw start
 openclaw browser --browser-profile openclaw open https://example.com
@@ -34,13 +34,13 @@ openclaw browser --browser-profile openclaw snapshot
 
 ## 設定檔
 
-設定檔是命名的瀏覽器路由設定。實際上：
+設定檔是已命名的瀏覽器路由設定。實際上為：
 
-- `openclaw`：啟動或附加至專屬的 OpenClaw 管理的 Chrome 執行個體（獨立的使用者資料目錄）。
+- `openclaw`：啟動或連線至專屬的 OpenClaw 管理之 Chrome 執行個體（獨立的使用者資料目錄）。
 - `user`：透過 Chrome DevTools MCP 控制您現有的已登入 Chrome 工作階段。
-- 自訂 CDP 設定檔：指向本地或遠端 CDP 端點。
+- 自訂 CDP 設定檔：指向本機或遠端 CDP 端點。
 
-```exec
+```bash
 openclaw browser profiles
 openclaw browser create-profile --name work --color "#FF5A36"
 openclaw browser create-profile --name chrome-live --driver existing-session
@@ -49,36 +49,36 @@ openclaw browser delete-profile --name work
 
 使用特定設定檔：
 
-```exec
+```bash
 openclaw browser --browser-profile work tabs
 ```
 
 ## 分頁
 
-```exec
+```bash
 openclaw browser tabs
 openclaw browser open https://docs.openclaw.ai
 openclaw browser focus <targetId>
 openclaw browser close <targetId>
 ```
 
-## 快照 / 截圖 / 動作
+## 快照 / 擷圖 / 動作
 
 快照：
 
-```exec
+```bash
 openclaw browser snapshot
 ```
 
-截圖：
+擷圖：
 
-```exec
+```bash
 openclaw browser screenshot
 ```
 
-導覽/點擊/輸入（基於參照的 UI 自動化）：
+導航/點擊/輸入（基於參照的 UI 自動化）：
 
-```exec
+```bash
 openclaw browser navigate https://example.com
 openclaw browser click <ref>
 openclaw browser type <ref> "hello"
@@ -88,19 +88,19 @@ openclaw browser type <ref> "hello"
 
 使用內建的 `user` 設定檔，或建立您自己的 `existing-session` 設定檔：
 
-```exec
+```bash
 openclaw browser --browser-profile user tabs
 openclaw browser create-profile --name chrome-live --driver existing-session
 openclaw browser create-profile --name brave-live --driver existing-session --user-data-dir "~/Library/Application Support/BraveSoftware/Brave-Browser"
 openclaw browser --browser-profile chrome-live tabs
 ```
 
-此路徑僅適用於主機。對於 Docker、無頭伺服器、Browserless 或其他遠端設定，請改用 CDP 設定檔。
+此路徑僅適用於主機。若為 Docker、無介面伺服器、Browserless 或其他遠端設定，請改用 CDP 設定檔。
 
-## 遠端瀏覽器控制（節點主機代理程式）
+## 遠端瀏覽器控制 (節點主機代理)
 
-如果 Gateway 與瀏覽器在不同的機器上運行，請在裝有 Chrome/Brave/Edge/Chromium 的機器上執行 **node host**。Gateway 會將瀏覽器操作代理到該節點（不需要單獨的瀏覽器控制伺服器）。
+如果 Gateway 執行所在的機器與瀏覽器不同，請在安裝了 Chrome/Brave/Edge/Chromium 的機器上執行 **節點主機**。Gateway 會將瀏覽器動作代理至該節點（不需要個別的瀏覽器控制伺服器）。
 
-使用 `gateway.nodes.browser.mode` 控制自動路由，並在連接多個節點時使用 `gateway.nodes.browser.node` 指定特定節點。
+使用 `gateway.nodes.browser.mode` 來控制自動路由，如果連線了多個節點，請使用 `gateway.nodes.browser.node` 指定特定節點。
 
-安全性與遠端設定：[Browser tool](/zh-Hant/tools/browser)、[Remote access](/zh-Hant/gateway/remote)、[Tailscale](/zh-Hant/gateway/tailscale)、[Security](/zh-Hant/gateway/security)
+安全性 + 遠端設定：[Browser tool](/en/tools/browser)、[Remote access](/en/gateway/remote)、[Tailscale](/en/gateway/tailscale)、[Security](/en/gateway/security)

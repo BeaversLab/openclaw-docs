@@ -1,5 +1,5 @@
 ---
-summary: "CLI 參考手冊，適用於 `openclaw docs`（搜尋即時文件索引）"
+summary: "CLI 參考手冊，用於 `openclaw docs` (搜尋即時文件索引)"
 read_when:
   - You want to search the live OpenClaw docs from the terminal
 title: "docs"
@@ -9,7 +9,7 @@ title: "docs"
 
 搜尋即時文件索引。
 
-```exec
+```bash
 openclaw docs browser existing-session
 openclaw docs sandbox allowHostControl
 ```

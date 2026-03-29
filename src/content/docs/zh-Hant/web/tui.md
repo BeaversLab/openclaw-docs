@@ -1,24 +1,24 @@
 ---
-summary: "終端使用者介面 (TUI)：從任何機器連線到 Gateway"
+summary: "終端機介面 (TUI)：從任何機器連線到 Gateway"
 read_when:
   - You want a beginner-friendly walkthrough of the TUI
   - You need the complete list of TUI features, commands, and shortcuts
 title: "TUI"
 ---
 
-# TUI (Terminal UI)
+# TUI (終端機介面)
 
-## 快速入門
+## 快速開始
 
 1. 啟動 Gateway。
 
-```exec
+```bash
 openclaw gateway
 ```
 
 2. 開啟 TUI。
 
-```exec
+```bash
 openclaw tui
 ```
 
@@ -26,7 +26,7 @@ openclaw tui
 
 遠端 Gateway：
 
-```exec
+```bash
 openclaw tui --url ws://<host>:<port> --token <gateway-token>
 ```
 
@@ -34,38 +34,38 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 ## 您所看到的介面
 
-- 標頭：連線 URL、目前的 agent、目前的 session。
-- 聊天紀錄：使用者訊息、助理回覆、系統通知、工具卡片。
-- 狀態列：連線/執行狀態 (connecting, running, streaming, idle, error)。
-- 頁尾：連線狀態 + agent + session + 模型 + think/fast/verbose/reasoning + token 計數 + deliver。
-- 輸入區：具備自動完成功能的文字編輯器。
+- 標題列：連線 URL、目前代理程式、目前工作階段。
+- 聊天記錄：使用者訊息、助理回覆、系統通知、工具卡片。
+- 狀態列：連線/執行狀態 (連線中、執行中、串流中、閒置、錯誤)。
+- 底部列：連線狀態 + 代理程式 + 工作階段 + 模型 + 思考/快速/詳細/推理 + Token 計數 + 傳送。
+- 輸入區：帶有自動完成的文字編輯器。
 
-## 心智模型：agents + sessions
+## 心智模型：代理程式 + 工作階段
 
-- Agents 是唯一的識別碼 (例如 `main`、`research`)。Gateway 會公開此列表。
-- Sessions 屬於目前的 agent。
-- Session 金鑰儲存為 `agent:<agentId>:<sessionKey>`。
+- 代理程式是唯一的代碼 (例如 `main`、`research`)。Gateway 會公開這個列表。
+- 工作階段屬於目前的代理程式。
+- 工作階段金鑰以 `agent:<agentId>:<sessionKey>` 的形式儲存。
   - 如果您輸入 `/session main`，TUI 會將其展開為 `agent:<currentAgent>:main`。
-  - 如果您輸入 `/session agent:other:main`，您會明確切換到該 agent session。
-- Session 範圍：
-  - `per-sender` (預設)：每個 agent 有許多 sessions。
-  - `global`：TUI 總是使用 `global` session (選擇器可能為空)。
-- 目前的 agent + session 始終顯示在頁尾中。
+  - 如果您輸入 `/session agent:other:main`，您將會明確切換到該代理程式工作階段。
+- 工作階段範圍：
+  - `per-sender` (預設)：每個代理程式都有多個工作階段。
+  - `global`：TUI 總是使用 `global` 工作階段 (選擇器可能為空)。
+- 目前的代理程式和工作階段始終顯示在底部列中。
 
 ## 傳送 + 遞送
 
-- 訊息會傳送到 Gateway；預設情況下不會遞送給提供者。
-- 開啟遞送功能：
+- 訊息會傳送到 Gateway；預設情況下不會遞送給供應商。
+- 開啟遞送：
   - `/deliver on`
-  - 或是設定面板
-  - 或是以 `openclaw tui --deliver` 啟動
+  - 或設定面板
+  - 或使用 `openclaw tui --deliver` 啟動
 
 ## 選擇器 + 覆蓋層
 
-- 模型選擇器：列出可用模型並設定 session 覆蓋。
-- Agent 選擇器：選擇不同的 agent。
-- Session 選擇器：僅顯示目前 agent 的 sessions。
-- 設定：切換遞送、工具輸出展開，以及思考可見性。
+- 模型選擇器：列出可用的模型並設定工作階段覆蓋。
+- 代理程式選擇器：選擇不同的代理程式。
+- 工作階段選擇器：僅顯示目前代理程式的工作階段。
+- 設定：切換遞送、工具輸出展開和思考可見性。
 
 ## 鍵盤快捷鍵
 
@@ -74,10 +74,10 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 - Ctrl+C：清除輸入 (按兩次以退出)
 - Ctrl+D：退出
 - Ctrl+L：模型選擇器
-- Ctrl+G：agent 選擇器
-- Ctrl+P：session 選擇器
+- Ctrl+G：代理程式選擇器
+- Ctrl+P：工作階段選擇器
 - Ctrl+O：切換工具輸出展開
-- Ctrl+T：切換思考可見性 (會重新載入歷史記錄)
+- Ctrl+T：切換思考可見性 (重新載入歷史記錄)
 
 ## 斜線指令
 
@@ -102,69 +102,69 @@ Session controls：
 
 Session lifecycle：
 
-- `/new` 或 `/reset`（重置 session）
-- `/abort`（中止正在運行的 run）
+- `/new` 或 `/reset`（重設 session）
+- `/abort`（中止正在執行的操作）
 - `/settings`
 - `/exit`
 
-其他 Gateway 斜線指令（例如 `/context`）會被轉發至 Gateway 並顯示為系統輸出。請參閱[斜線指令](/zh-Hant/tools/slash-commands)。
+其他 Gateway 斜線指令（例如 `/context`）會轉發到 Gateway 並顯示為系統輸出。請參閱 [Slash commands](/en/tools/slash-commands)。
 
-## Local shell commands
+## 本機 Shell 指令
 
-- 在行首加上 `!` 以在 TUI 主機上執行本地 shell 指令。
-- TUI 會在每個 session 提示一次以允許本地執行；拒絕將在該 session 期間停用 `!`。
-- 指令會在 TUI 工作目錄中的全新非互動式 shell 中執行（沒有持續性的 `cd`/env）。
-- 本地 shell 指令會在其環境中接收 `OPENCLAW_SHELL=tui-local`。
-- 單獨的 `!` 會作為一般訊息傳送；前導空格不會觸發本地執行。
+- 在一行開頭加上 `!`，即可在 TUI 主機上執行本機 Shell 指令。
+- TUI 會在每個 session 提示一次以允許本機執行；拒絕將會在該 session 中停用 `!`。
+- 指令會在 TUI 工作目錄中，於一個全新的非互動式 Shell 中執行（無持續的 `cd`/env）。
+- 本機 Shell 指令會在其環境變數中接收 `OPENCLAW_SHELL=tui-local`。
+- 單獨的 `!` 會作為一般訊息發送；前置空格不會觸發本機執行。
 
-## Tool output
+## Tool 輸出
 
-- 工具呼叫會以包含參數與結果的卡片顯示。
-- Ctrl+O 會切換摺疊/展開檢視。
-- 當工具執行時，部分更新會串流至同一張卡片。
+- Tool 呼叫會以包含參數與結果的卡片形式顯示。
+- Ctrl+O 可切換摺疊/展開檢視。
+- 當 Tool 執行時，部分更新會串流至同一張卡片中。
 
-## Terminal colors
+## 終端機色彩
 
-- TUI 會將助理內文保持為終端機的預設前景色，讓深色與淺色終端機都能維持可讀性。
+- TUI 會將助手內文保持在終端機的預設前景色，讓深色與淺色終端機都能保持可讀性。
 - 如果您的終端機使用淺色背景且自動偵測錯誤，請在啟動 `openclaw tui` 之前設定 `OPENCLAW_THEME=light`。
-- 若要改為強制使用原始深色調色盤，請設定 `OPENCLAW_THEME=dark`。
+- 若要改用原始的深色色盤，請設定 `OPENCLAW_THEME=dark`。
 
-## History + streaming
+## 歷史記錄 + 串流
 
-- 連線時，TUI 會載入最新的歷史記錄（預設為 200 則訊息）。
-- 串流回應會在原地更新，直到完成。
-- TUI 也會監聽 Agent 工具事件，以顯示更豐富的工具資訊卡。
+- 連線時，TUI 會載入最新的歷史記錄（預設 200 則訊息）。
+- 串流回應會就地更新，直到完成為止。
+- TUI 也會監聽 Agent 工具事件，以顯示更豐富的工具卡片。
 
 ## 連線詳細資訊
 
-- TUI 會向 Gateway 註冊為 `mode: "tui"`。
-- 重新連線會顯示一則系統訊息；事件間隙會顯示在日誌中。
+- TUI 向 Gateway 註冊為 `mode: "tui"`。
+- 重新連線會顯示一則系統訊息；事件間隙會顯示於日誌中。
 
 ## 選項
 
-- `--url <url>`：Gateway WebSocket URL（預設為設定或 `ws://127.0.0.1:<port>`）
-- `--token <token>`：Gateway 權杖（若需要）
-- `--password <password>`：Gateway 密碼（若需要）
+- `--url <url>`：Gateway WebSocket URL（預設為組態或 `ws://127.0.0.1:<port>`）
+- `--token <token>`：Gateway 權杖（如有需要）
+- `--password <password>`：Gateway 密碼（如有需要）
 - `--session <key>`：Session 金鑰（預設：`main`，若範圍為全域則為 `global`）
-- `--deliver`：將助理回覆傳送給提供者（預設關閉）
+- `--deliver`：將 Assistant 回覆傳送至提供者（預設關閉）
 - `--thinking <level>`：覆寫傳送的思考層級
-- `--timeout-ms <ms>`：Agent 逾時時間，以毫秒為單位（預設為 `agents.defaults.timeoutSeconds`）
+- `--timeout-ms <ms>`：Agent 逾時時間（毫秒，預設為 `agents.defaults.timeoutSeconds`）
 
-注意：當您設定 `--url` 時，TUI 不會回退至設定或環境變數中的憑證。
-請明確傳遞 `--token` 或 `--password`。缺少明確的憑證視為錯誤。
+注意：當您設定 `--url` 時，TUI 將不會回退至組態或環境認證。
+請明確傳遞 `--token` 或 `--password`。缺少明確認證將視為錯誤。
 
 ## 疑難排解
 
 傳送訊息後沒有輸出：
 
-- 在 TUI 中執行 `/status` 以確認 Gateway 已連線且處於閒置/忙碌狀態。
+- 在 TUI 中執行 `/status` 以確認 Gateway 已連線並處於閒置/忙碌狀態。
 - 檢查 Gateway 日誌：`openclaw logs --follow`。
-- 確認 Agent 可以執行：`openclaw status` 和 `openclaw models status`。
-- 如果您預期在聊天頻道中收到訊息，請啟用傳遞功能（`/deliver on` 或 `--deliver`）。
-- `--history-limit <n>`：要載入的歷史記錄項目數量（預設為 200）
+- 確認 Agent 能夠執行：`openclaw status` 和 `openclaw models status`。
+- 如果您預期在聊天頻道中有訊息，請啟用傳送（`/deliver on` 或 `--deliver`）。
+- `--history-limit <n>`：要載入的歷史記錄筆數（預設 200）
 
 ## 連線疑難排解
 
-- `disconnected`：請確保 Gateway 正在執行，且您的 `--url/--token/--password` 正確。
+- `disconnected`：請確保 Gateway 正在運行，並且您的 `--url/--token/--password` 是正確的。
 - 選擇器中沒有 Agent：請檢查 `openclaw agents list` 和您的路由設定。
-- 空的 Session 選擇器：您可能處於全域範圍，或者還沒有任何 Session。
+- 空的 Session 選擇器：您可能處於全域範圍，或尚未建立任何 Session。

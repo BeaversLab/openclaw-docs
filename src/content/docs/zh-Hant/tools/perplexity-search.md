@@ -1,5 +1,5 @@
 ---
-summary: "用於 web_search 的 Perplexity Search API 及 Sonar/OpenRouter 相容性"
+summary: "Perplexity Search API 和 Sonar/OpenRouter 的 web_search 相容性"
 read_when:
   - You want to use Perplexity Search for web search
   - You need PERPLEXITY_API_KEY or OPENROUTER_API_KEY setup
@@ -12,19 +12,19 @@ OpenClaw 支援將 Perplexity Search API 作為 `web_search` 提供者。
 它會傳回包含 `title`、`url` 和 `snippet` 欄位的結構化結果。
 
 為了相容性，OpenClaw 也支援舊版的 Perplexity Sonar/OpenRouter 設定。
-如果您使用 `OPENROUTER_API_KEY`、在 `plugins.entries.perplexity.config.webSearch.apiKey` 中使用 `sk-or-...` 金鑰，或是設定 `plugins.entries.perplexity.config.webSearch.baseUrl` / `model`，提供者會切換至 chat-completions 路徑，並傳回帶有引用的 AI 綜合答案，而非結構化的 Search API 結果。
+如果您使用 `OPENROUTER_API_KEY`、`sk-or-...` 金鑰於 `plugins.entries.perplexity.config.webSearch.apiKey` 中，或是設定 `plugins.entries.perplexity.config.webSearch.baseUrl` / `model`，提供者將會切換至 chat-completions 路徑，並傳回帶有引用的 AI 合成答案，而非結構化的 Search API 結果。
 
 ## 取得 Perplexity API 金鑰
 
 1. 在 [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api) 建立 Perplexity 帳戶
-2. 在儀表板中生成 API 金鑰
+2. 在儀表板中建立 API 金鑰
 3. 將金鑰儲存在設定中，或在 Gateway 環境中設定 `PERPLEXITY_API_KEY`。
 
 ## OpenRouter 相容性
 
-如果您之前已經為 Perplexity Sonar 使用 OpenRouter，請保留 `provider: "perplexity"` 並在 Gateway 環境中設定 `OPENROUTER_API_KEY`，或在 `plugins.entries.perplexity.config.webSearch.apiKey` 中儲存 `sk-or-...` 金鑰。
+如果您之前已經使用 OpenRouter 來進行 Perplexity Sonar，請保留 `provider: "perplexity"` 並在 Gateway 環境中設定 `OPENROUTER_API_KEY`，或者在 `plugins.entries.perplexity.config.webSearch.apiKey` 中儲存 `sk-or-...` 金鑰。
 
-選用的相容性控制：
+選用的相容性控制選項：
 
 - `plugins.entries.perplexity.config.webSearch.baseUrl`
 - `plugins.entries.perplexity.config.webSearch.model`
@@ -83,37 +83,37 @@ OpenClaw 支援將 Perplexity Search API 作為 `web_search` 提供者。
 }
 ```
 
-## 設定金鑰的位置
+## 在哪裡設定金鑰
 
 **透過設定：** 執行 `openclaw configure --section web`。它會將金鑰儲存在
-`~/.openclaw/openclaw.json` 下的 `plugins.entries.perplexity.config.webSearch.apiKey` 中。
+`plugins.entries.perplexity.config.webSearch.apiKey` 下的 `~/.openclaw/openclaw.json` 中。
 該欄位也接受 SecretRef 物件。
 
-**透過環境：** 在 Gateway 程序環境中設定 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。
-對於 gateway 安裝，將其放在
-`~/.openclaw/.env` (或您的服務環境) 中。請參閱 [Env vars](/zh-Hant/help/faq#how-does-openclaw-load-environment-variables)。
+**透過環境變數：** 在 Gateway 程序環境中設定 `PERPLEXITY_API_KEY` 或 `OPENROUTER_API_KEY`。
+若是安裝 Gateway，請將其置於
+`~/.openclaw/.env` (或您的服務環境) 中。參閱 [環境變數](/en/help/faq#env-vars-and-env-loading)。
 
-如果已設定 `provider: "perplexity"` 且 Perplexity 金鑰 SecretRef 未解析且沒有環境變數後備，啟動/重新載入會快速失敗。
+如果已設定 `provider: "perplexity"` 且 Perplexity 金鑰 SecretRef 未解析且沒有環境變數備案，啟動/重新載入會快速失敗。
 
 ## 工具參數
 
 這些參數適用於原生的 Perplexity Search API 路徑。
 
-| 參數                  | 說明                                                    |
-| --------------------- | ------------------------------------------------------- |
-| `query`               | 搜尋查詢（必填）                                        |
-| `count`               | 傳回結果的數量（1-10，預設值：5）                       |
-| `country`             | 兩字母 ISO 國家代碼（例如 "US"、"DE"）                  |
-| `language`            | ISO 639-1 語言代碼（例如 "en"、"de"、"fr"）             |
-| `freshness`           | 時間過濾器：`day`（24 小時）、`week`、`month` 或 `year` |
-| `date_after`          | 僅限此日期之後發布的結果（YYYY-MM-DD）                  |
-| `date_before`         | 僅限此日期之前發布的結果（YYYY-MM-DD）                  |
-| `domain_filter`       | 網域允許清單/封鎖清單陣列（最多 20 個）                 |
-| `max_tokens`          | 總內容預算（預設值：25000，最大值：1000000）            |
-| `max_tokens_per_page` | 每頁 token 限制（預設值：2048）                         |
+| 參數                  | 描述                                                   |
+| --------------------- | ------------------------------------------------------ |
+| `query`               | 搜尋查詢（必填）                                       |
+| `count`               | 要傳回的結果數量（1-10，預設值：5）                    |
+| `country`             | 兩字母 ISO 國家代碼（例如 "US"、"DE"）                 |
+| `language`            | ISO 639-1 語言代碼（例如 "en"、"de"、"fr"）            |
+| `freshness`           | 時間篩選器：`day`（24小時）、`week`、`month` 或 `year` |
+| `date_after`          | 僅此日期之後發布的結果（YYYY-MM-DD）                   |
+| `date_before`         | 僅此日期之前發布的結果（YYYY-MM-DD）                   |
+| `domain_filter`       | 網域允許清單/拒絕清單陣列（最多 20 個）                |
+| `max_tokens`          | 總內容預算（預設值：25000，最大值：1000000）           |
+| `max_tokens_per_page` | 每頁 Token 限制（預設值：2048）                        |
 
 對於舊版 Sonar/OpenRouter 相容性路徑，僅支援 `query` 和 `freshness`。
-僅限搜尋 API 的過濾器（如 `country`、`language`、`date_after`、`date_before`、`domain_filter`、`max_tokens` 和 `max_tokens_per_page`）會傳回明確的錯誤。
+僅限 Search API 的篩選器（例如 `country`、`language`、`date_after`、`date_before`、`domain_filter`、`max_tokens` 和 `max_tokens_per_page`）會傳回明確的錯誤。
 
 **範例：**
 
@@ -158,17 +158,21 @@ await web_search({
 });
 ```
 
-### 網域過濾規則
+### 網域篩選規則
 
-- 每個過濾器最多 20 個網域
-- 無法在同一個請求中混合使用允許清單和封鎖清單
-- 使用 `-` 前綴來表示封鎖清單項目（例如 `["-reddit.com"]`）
+- 每個篩選器最多 20 個網域
+- 無法在同一個請求中混合使用允許清單和拒絕清單
+- 對拒絕清單項目使用 `-` 前綴（例如 `["-reddit.com"]`）
 
-## 備註
+## 注意事項
 
-- Perplexity Search API 會傳回結構化的網路搜尋結果（`title`、`url`、`snippet`）
-- 使用 OpenRouter 或明確的 `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` 會將 Perplexity 切換回 Sonar 聊天完成以保持相容性
+- Perplexity Search API 會傳回結構化的網頁搜尋結果（`title`、`url`、`snippet`）
+- OpenRouter 或明確指定 `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` 會將 Perplexity 切換回 Sonar 聊天完成模式以保持相容性
 - 結果預設快取 15 分鐘（可透過 `cacheTtlMinutes` 設定）
 
-請參閱 [Web 工具](/zh-Hant/tools/web) 以取得完整的 web_search 配置。
-請參閱 [Perplexity Search API 文件](https://docs.perplexity.ai/docs/search/quickstart) 以取得更多詳細資訊。
+## 相關連結
+
+- [Web Search 概觀](/en/tools/web) -- 所有供應商與自動偵測
+- [Perplexity Search API 文件](https://docs.perplexity.ai/docs/search/quickstart) -- 官方 Perplexity 文件
+- [Brave Search](/en/tools/brave-search) -- 具有國家/語言過濾器的結構化結果
+- [Exa Search](/en/tools/exa-search) -- 具有內容提取功能的神經搜尋

@@ -1,19 +1,19 @@
 ---
-summary: "常見 OpenClaw 設定的符合架構的配置範例"
+summary: "符合 Schema 的常見 OpenClaw 設定範例"
 read_when:
   - Learning how to configure OpenClaw
   - Looking for configuration examples
   - Setting up OpenClaw for the first time
-title: "配置範例"
+title: "設定範例"
 ---
 
-# 配置範例
+# 設定範例
 
-以下範例與目前的配置架構一致。如需完整的參考資料和各欄位說明，請參閱[配置](/zh-Hant/gateway/configuration)。
+以下範例與目前的設定 Schema 一致。若要查看詳盡的參考資料及各欄位說明，請參閱[設定](/en/gateway/configuration)。
 
 ## 快速開始
 
-### 絕對最小值
+### 絕對最低限度
 
 ```json5
 {
@@ -22,9 +22,9 @@ title: "配置範例"
 }
 ```
 
-儲存到 `~/.openclaw/openclaw.json`，您就可以從該號碼向機器人發送私訊。
+儲存至 `~/.openclaw/openclaw.json`，您即可從該號碼傳送私訊給機器人。
 
-### 推薦的入門配置
+### 推薦入門
 
 ```json5
 {
@@ -46,9 +46,9 @@ title: "配置範例"
 }
 ```
 
-## 擴展示例（主要選項）
+## 擴充範例（主要選項）
 
-> JSON5 允許您使用註解和尾隨逗號。常規 JSON 也可以使用。
+> JSON5 允許您使用註解和尾隨逗號。一般 JSON 也適用。
 
 ```json5
 {
@@ -303,6 +303,20 @@ title: "配置範例"
         },
       },
     },
+    list: [
+      {
+        id: "main",
+        default: true,
+        thinkingDefault: "high", // per-agent thinking override
+        reasoningDefault: "on", // per-agent reasoning visibility
+        fastModeDefault: false, // per-agent fast mode
+      },
+      {
+        id: "quick",
+        fastModeDefault: true, // this agent always runs fast
+        thinkingDefault: "off",
+      },
+    ],
   },
 
   tools: {
@@ -447,7 +461,7 @@ title: "配置範例"
 
 ## 常見模式
 
-### 多平台設置
+### 多平台設定
 
 ```json5
 {
@@ -470,7 +484,7 @@ title: "配置範例"
 
 ### 安全私訊模式（共用收件匣 / 多使用者私訊）
 
-如果有多個人可以對您的機器人發送私訊（`allowFrom` 中有多個條目、多人的配對核准，或是 `dmPolicy: "open"`），請啟用 **secure DM mode**，使來自不同發送者的私訊預設不共用同一個語境：
+如果可以傳送私訊給您機器人的不只有一人（`allowFrom` 中有多個項目、多人的配對核准，或 `dmPolicy: "open"`），請啟用**安全私訊模式**，如此一來，來自不同寄件者的私訊預設就不會共用同一個語境：
 
 ```json5
 {
@@ -494,10 +508,10 @@ title: "配置範例"
 }
 ```
 
-對於 Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC，傳送者授權預設優先使用 ID。
-只有在您明確接受相關風險的情況下，才透過每個頻道的 `dangerouslyAllowNameMatching: true` 啟用直接的可變名稱/電子郵件/暱稱比對。
+對於 Discord/Slack/Google Chat/Microsoft Teams/Mattermost/IRC，寄件者授權預設以 ID 為優先。
+只有在您明確接受風險時，才透過各頻道的 `dangerouslyAllowNameMatching: true` 啟用直接的可變名稱/電子郵件/暱稱匹配。
 
-### OAuth 搭配 API 金鑰故障移轉
+### OAuth 搭配 API 金鑰故障轉移
 
 ```json5
 {
@@ -527,9 +541,9 @@ title: "配置範例"
 }
 ```
 
-### Anthropic setup-token + API 金鑰，MiniMax 備援
+### Anthropic setup-token + API 金鑰，MiniMax 故障轉移
 
-<Warning>過去曾有部分使用者受限，無法在 Claude Code 之外使用 Anthropic setup-token。 請將此視為使用者自選風險，在依賴訂閱驗證之前，請先確認目前的 Anthropic 條款。</Warning>
+<Warning>過去曾有部分使用者在 Claude Code 之外使用 Anthropic setup-token 時受到限制。請將此視為使用者自選風險，並在依賴訂閱授權前確認目前的 Anthropic 條款。</Warning>
 
 ```json5
 {
@@ -568,7 +582,7 @@ title: "配置範例"
 }
 ```
 
-### 工作機器人 (受限存取)
+### 工作機器人（受限存取）
 
 ```json5
 {
@@ -593,7 +607,7 @@ title: "配置範例"
 }
 ```
 
-### 僅限本地模型
+### 僅限本機模型
 
 ```json5
 {
@@ -627,7 +641,7 @@ title: "配置範例"
 
 ## 提示
 
-- 如果您設定了 `dmPolicy: "open"`，相對應的 `allowFrom` 清單必須包含 `"*"`。
-- 供應商 ID 各不相同（電話號碼、使用者 ID、頻道 ID）。請使用供應商文件確認格式。
-- 稍後新增的可選章節：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 如需更深入的設定說明，請參閱[供應商](/zh-Hant/providers)和[疑難排解](/zh-Hant/gateway/troubleshooting)。
+- 如果您設定了 `dmPolicy: "open"`，對應的 `allowFrom` 清單必須包含 `"*"`。
+- 提供者 ID 會有所不同（電話號碼、使用者 ID、頻道 ID）。請使用提供者文件確認格式。
+- 稍後可新增的選用章節：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
+- 請參閱 [Providers](/en/providers) 和 [Troubleshooting](/en/gateway/troubleshooting) 以獲得更深入的設定說明。

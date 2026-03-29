@@ -1,5 +1,5 @@
 ---
-summary: "在 OpenClaw 中使用 Z.AI (GLM 模型)"
+summary: "使用 Z.AI (GLM 模型) 與 OpenClaw"
 read_when:
   - You want Z.AI / GLM models in OpenClaw
   - You need a simple ZAI_API_KEY setup
@@ -8,13 +8,11 @@ title: "Z.AI"
 
 # Z.AI
 
-Z.AI 是 **GLM** 模型的 API 平台。它提供 GLM 的 REST API，並使用 API 金鑰
-進行身份驗證。在 Z.AI 控制台中建立您的 API 金鑰。OpenClaw 使用 `zai` 提供者
-搭配 Z.AI API 金鑰。
+Z.AI 是 **GLM** 模型的 API 平台。它提供 GLM 的 REST API，並使用 API 金鑰進行驗證。在 Z.AI 控制台中建立您的 API 金鑰。OpenClaw 使用 `zai` 提供者搭配 Z.AI API 金鑰。
 
 ## CLI 設定
 
-```exec
+```bash
 # Coding Plan Global, recommended for Coding Plan users
 openclaw onboard --auth-choice zai-coding-global
 
@@ -39,8 +37,8 @@ openclaw onboard --auth-choice zai-cn
 
 ## 備註
 
-- GLM 模型可作為 `zai/<model>` 使用 (範例：`zai/glm-5`)。
-- 針對 Z.AI 工具呼叫串流，預設已啟用 `tool_stream`。設定
-  `agents.defaults.models["zai/<model>"].params.tool_stream` 為 `false` 即可停用它。
-- 請參閱 [/providers/glm](/zh-Hant/providers/glm) 以了解模型系列概覽。
-- Z.AI 使用您的 API 金鑰進行 Bearer 身份驗證。
+- GLM 模型可作為 `zai/<model>` 使用 (例如：`zai/glm-5`)。
+- `tool_stream` 針對 Z.AI 工具呼叫串流預設為啟用。將
+  `agents.defaults.models["zai/<model>"].params.tool_stream` 設定為 `false` 即可停用它。
+- 請參閱 [/providers/glm](/en/providers/glm) 以瞭解模型系列概觀。
+- Z.AI 使用您的 API 金鑰進行 Bearer 驗證。

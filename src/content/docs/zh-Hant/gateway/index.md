@@ -1,26 +1,26 @@
 ---
-summary: "Gateway 服務的 Runbook、生命週期與作業"
+summary: "Gateway 服務的 Runbook、生命週期和操作"
 read_when:
   - Running or debugging the gateway process
 title: "Gateway Runbook"
 ---
 
-# Gateway Runbook
+# Gateway runbook
 
-使用此頁面進行 Gateway 服務的第 1 天啟動和第 2 天作業。
+使用此頁面進行 Gateway 服務的第一天啟動和第二天操作。
 
 <CardGroup cols={2}>
-  <Card title="Deep troubleshooting" icon="siren" href="/zh-Hant/gateway/troubleshooting">
-    透過確切的指令階梯和日誌特徵進行以症狀為優先的診斷。
+  <Card title="深度疑難排解" icon="siren" href="/en/gateway/troubleshooting">
+    透過精確的命令階梯和日誌特徵進行以症狀為先的診斷。
   </Card>
-  <Card title="Configuration" icon="sliders" href="/zh-Hant/gateway/configuration">
+  <Card title="設定" icon="sliders" href="/en/gateway/configuration">
     以任務為導向的設定指南 + 完整設定參考。
   </Card>
-  <Card title="機密管理" icon="key-round" href="/zh-Hant/gateway/secrets">
-    SecretRef 合約、執行時快照行為，以及遷移/重新載入操作。
+  <Card title="秘密管理" icon="key-round" href="/en/gateway/secrets">
+    SecretRef 合約、執行時期快照行為，以及遷移/重新載入操作。
   </Card>
-  <Card title="機密計劃合約" icon="shield-check" href="/zh-Hant/gateway/secrets-plan-contract">
-    精確的 `secrets apply` 目標/路徑規則與僅參考 auth-profile 行為。
+  <Card title="Secrets plan contract" icon="shield-check" href="/en/gateway/secrets-plan-contract">
+    精確的 `secrets apply` target/path 規則以及僅限 ref 的 auth-profile 行為。
   </Card>
 </CardGroup>
 
@@ -29,7 +29,7 @@ title: "Gateway Runbook"
 <Steps>
   <Step title="Start the Gateway">
 
-```exec
+```bash
 openclaw gateway --port 18789
 # debug/trace mirrored to stdio
 openclaw gateway --port 18789 --verbose
@@ -39,58 +39,82 @@ openclaw gateway --force
 
   </Step>
 
-  <Step title="驗證服務健全狀況">
+  <Step title="驗證服務健康狀態">
 
-```exec
+```bash
 openclaw gateway status
 openclaw status
 openclaw logs --follow
 ```
 
-健全基線：`Runtime: running` 和 `RPC probe: ok`。
+健康基準：`Runtime: running` 和 `RPC probe: ok`。
 
   </Step>
 
   <Step title="驗證通道就緒狀態">
 
-```exec
+```bash
 openclaw channels status --probe
 ```
 
   </Step>
 </Steps>
 
-<Note>Gateway config reload watches the active config file path (resolved from profile/state defaults, or `OPENCLAW_CONFIG_PATH` when set). Default mode is `gateway.reload.mode="hybrid"`.</Note>
+<Note>Gateway 設定重新載入會監看作用中的設定檔路徑（由 profile/state 預設值解析，若設定則為 `OPENCLAW_CONFIG_PATH`）。預設模式為 `gateway.reload.mode="hybrid"`。</Note>
 
 ## Runtime model
 
-- One always-on process for routing, control plane, and channel connections.
-- Single multiplexed port for:
-  - WebSocket control/RPC
-  - HTTP APIs (OpenAI-compatible, Responses, tools invoke)
-  - Control UI and hooks
-- Default bind mode: `loopback`.
-- Auth is required by default (`gateway.auth.token` / `gateway.auth.password`, or `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`).
+- 一個用於路由、控制平面和通道連線的常駐程序。
+- 單一多工連接埠用於：
+  - WebSocket 控制/RPC
+  - HTTP API、OpenAI 相容 (`/v1/models`, `/v1/embeddings`, `/v1/chat/completions`, `/v1/responses`, `/tools/invoke`)
+  - 控制 UI 和 hooks
+- 預設綁定模式：`loopback`。
+- 預設需要驗證（`gateway.auth.token` / `gateway.auth.password`，或 `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`）。
 
-### Port and bind precedence
+## OpenAI 相容端點
 
-| Setting      | Resolution order                                              |
-| ------------ | ------------------------------------------------------------- |
-| Gateway port | `--port` → `OPENCLAW_GATEWAY_PORT` → `gateway.port` → `18789` |
-| Bind mode    | CLI/覆寫 → `gateway.bind` → `loopback`                        |
+OpenClaw 目前最高杠杆的相容性介面為：
 
-### 熱重新載入模式
+- `GET /v1/models`
+- `GET /v1/models/{id}`
+- `POST /v1/embeddings`
+- `POST /v1/chat/completions`
+- `POST /v1/responses`
 
-| `gateway.reload.mode` | 行為                         |
-| --------------------- | ---------------------------- |
-| `off`                 | 不重新載入設定               |
-| `hot`                 | 僅套用熱安全變更             |
-| `restart`             | 需要重新載入變更時重新啟動   |
-| `hybrid` (預設)       | 安全時熱套用，必要時重新啟動 |
+為何這組端點很重要：
+
+- 大多數 Open WebUI、LobeChat 和 LibreChat 整合會先探測 `/v1/models`。
+- 許多 RAG 和記憶管線預期使用 `/v1/embeddings`。
+- Agent 原生客戶端越來越傾向於使用 `/v1/responses`。
+
+規劃備註：
+
+- `/v1/models` 為 Agent 優先：它會傳回 `openclaw`、`openclaw/default` 和 `openclaw/<agentId>`。
+- `openclaw/default` 是穩定的別名，總是對應到已設定的預設 Agent。
+- 當您想要後端供應商/模型覆寫時，請使用 `x-openclaw-model`；否則所選 Agent 的正常模型和嵌入設定將維持主控權。
+
+所有這些都運作在主要 Gateway 連接埠上，並使用與其餘 Gateway HTTP API 相同的可信操作員驗證邊界。
+
+### 連接埠與綁定優先順序
+
+| 設定           | 解析順序                                                      |
+| -------------- | ------------------------------------------------------------- |
+| Gateway 連接埠 | `--port` → `OPENCLAW_GATEWAY_PORT` → `gateway.port` → `18789` |
+| 綁定模式       | CLI/override → `gateway.bind` → `loopback`                    |
+
+### 熱重載模式
+
+| `gateway.reload.mode` | 行為                     |
+| --------------------- | ------------------------ |
+| `off`                 | 不重新載入設定           |
+| `hot`                 | 僅套用熱安全變更         |
+| `restart`             | 當需要重新載入變更時重啟 |
+| `hybrid` (預設)       | 安全時熱套用，必要時重啟 |
 
 ## 操作員指令集
 
-```exec
+```bash
 openclaw gateway status
 openclaw gateway status --deep
 openclaw gateway status --json
@@ -105,57 +129,57 @@ openclaw doctor
 ## 遠端存取
 
 首選：Tailscale/VPN。
-備用：SSH 通道。
+備選：SSH tunnel。
 
-```exec
+```bash
 ssh -N -L 18789:127.0.0.1:18789 user@host
 ```
 
-然後在本機將客戶端連線至 `ws://127.0.0.1:18789`。
+然後將客戶端連線至本地的 `ws://127.0.0.1:18789`。
 
-<Warning>若已設定 Gateway 驗證，客戶端即使在 SSH 通道上也必須傳送驗證 (`token`/`password`)。</Warning>
+<Warning>如果已配置 Gateway 驗證，即使透過 SSH 通道，用戶端仍必須發送驗證資訊 (`token`/`password`)。</Warning>
 
-參閱：[Remote Gateway](/zh-Hant/gateway/remote)、[Authentication](/zh-Hant/gateway/authentication)、[Tailscale](/zh-Hant/gateway/tailscale)。
+參閱：[Remote Gateway](/en/gateway/remote)、[Authentication](/en/gateway/authentication)、[Tailscale](/en/gateway/tailscale)。
 
-## 監督與服務生命週期
+## 監控與服務生命週期
 
-請使用監督執行以獲得類似生產環境的可靠性。
+在生產環境等對可靠性要求高的場景中，請使用監控模式運行。
 
 <Tabs>
   <Tab title="macOS (launchd)">
 
-```exec
+```bash
 openclaw gateway install
 openclaw gateway status
 openclaw gateway restart
 openclaw gateway stop
 ```
 
-LaunchAgent 標籤為 `ai.openclaw.gateway` (預設) 或 `ai.openclaw.<profile>` (命名設定檔)。`openclaw doctor` 會稽核並修復服務設定 drift。
+LaunchAgent 標籤為 `ai.openclaw.gateway` (預設) 或 `ai.openclaw.<profile>` (命名設定檔)。 `openclaw doctor` 會稽核並修復服務設定漂移。
 
   </Tab>
 
   <Tab title="Linux (systemd user)">
 
-```exec
+```bash
 openclaw gateway install
 systemctl --user enable --now openclaw-gateway[-<profile>].service
 openclaw gateway status
 ```
 
-若要在登出後保持執行，請啟用 lingering：
+若要在登出後保持持續運行，請啟用 lingering：
 
-```exec
+```bash
 sudo loginctl enable-linger <user>
 ```
 
   </Tab>
 
-  <Tab title="Linux (系統服務)">
+  <Tab title="Linux (system service)">
 
-對於多使用者/始終運行的主機，請使用系統單元（system unit）。
+對於多用戶/始終在線的主機，請使用系統單元。
 
-```exec
+```bash
 sudo systemctl daemon-reload
 sudo systemctl enable --now openclaw-gateway[-<profile>].service
 ```
@@ -163,10 +187,10 @@ sudo systemctl enable --now openclaw-gateway[-<profile>].service
   </Tab>
 </Tabs>
 
-## 在同一台主機上執行多個閘道
+## 在單一主機上執行多個 Gateway
 
-大多數設定應該只執行**一個**閘道。
-僅在需要嚴格隔離/冗餘時（例如救援設定檔）才使用多個閘道。
+大多數設定應執行 **一** 個 Gateway。
+僅在需要嚴格隔離/冗餘時（例如救援設定檔）才使用多個。
 
 每個執行個體的檢查清單：
 
@@ -177,47 +201,47 @@ sudo systemctl enable --now openclaw-gateway[-<profile>].service
 
 範例：
 
-```exec
+```bash
 OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a openclaw gateway --port 19001
 OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
 ```
 
-請參閱：[多個閘道](/zh-Hant/gateway/multiple-gateways)。
+參閱：[Multiple gateways](/en/gateway/multiple-gateways)。
 
 ### 開發設定檔快速路徑
 
-```exec
+```bash
 openclaw --dev setup
 openclaw --dev gateway --allow-unconfigured
 openclaw --dev status
 ```
 
-預設值包括隔離的狀態/設定以及基礎閘道連接埠 `19001`。
+預設值包括隔離的狀態/設定和基本 Gateway 埠 `19001`。
 
-## 通訊協定快速參考（操作員檢視）
+## 協定快速參考 (操作員視圖)
 
-- 第一個客戶端框架必須是 `connect`。
-- Gateway 返回 `hello-ok` 快照（`presence`、`health`、`stateVersion`、`uptimeMs`、limits/policy）。
-- 請求：`req(method, params)` → `res(ok/payload|error)`。
+- 第一個用戶端框架必須是 `connect`。
+- Gateway 會傳回 `hello-ok` 快照 (`presence`、`health`、`stateVersion`、`uptimeMs`、限制/原則)。
+- 請求： `req(method, params)` → `res(ok/payload|error)`。
 - 常見事件：`connect.challenge`、`agent`、`chat`、`presence`、`tick`、`health`、`heartbeat`、`shutdown`。
 
 Agent 執行分為兩個階段：
 
-1. 立即接受的確認（`status:"accepted"`）
-2. 最終完成回應（`status:"ok"|"error"`），中間穿插串流的 `agent` 事件。
+1. 立即接受的確認 (`status:"accepted"`)
+2. 最終完成回應 (`status:"ok"|"error"`)，中間會串流 `agent` 事件。
 
-請參閱完整的協議文件：[Gateway Protocol](/zh-Hant/gateway/protocol)。
+請參閱完整的協定文件：[Gateway Protocol](/en/gateway/protocol)。
 
 ## 操作檢查
 
-### 存活性
+### 存活度
 
-- 開啟 WS 並傳送 `connect`。
-- 預期帶有快照的 `hello-ok` 回應。
+- 開啟 WS 並發送 `connect`。
+- 預期會收到包含快照的 `hello-ok` 回應。
 
-### 就緒性
+### 就緒度
 
-```exec
+```bash
 openclaw gateway status
 openclaw channels status --probe
 openclaw health
@@ -225,32 +249,32 @@ openclaw health
 
 ### 間隙恢復
 
-事件不會重播。發生序列間隙時，請在繼續之前重新整理狀態 (`health`, `system-presence`)。
+事件不會重播。發生序列間隙時，請在繼續之前重新整理狀態 (`health`、`system-presence`)。
 
 ## 常見失敗特徵
 
-| 特徵                                                           | 可能問題                          |
-| -------------------------------------------------------------- | --------------------------------- |
-| `refusing to bind gateway ... without auth`                    | 非回送綁定但未提供 token/password |
-| `another gateway instance is already listening` / `EADDRINUSE` | 連接埠衝突                        |
-| `Gateway start blocked: set gateway.mode=local`                | 配置設定為遠端模式                |
-| 連線時發生 `unauthorized`                                      | 客戶端與閘道之間的身份驗證不匹配  |
+| 特徵                                                           | 可能問題                        |
+| -------------------------------------------------------------- | ------------------------------- |
+| `refusing to bind gateway ... without auth`                    | 非回環綁定但未提供令牌/密碼     |
+| `another gateway instance is already listening` / `EADDRINUSE` | 連接埠衝突                      |
+| `Gateway start blocked: set gateway.mode=local`                | 設定設為遠端模式                |
+| 連線時發生 `unauthorized`                                      | 用戶端與 Gateway 之間的驗證不符 |
 
-如需完整的診斷步驟，請使用 [閘道疑難排解](/zh-Hant/gateway/troubleshooting)。
+如需完整的診斷階梯，請使用 [Gateway Troubleshooting](/en/gateway/troubleshooting)。
 
 ## 安全保證
 
-- 當 Gateway 無法使用時，Gateway 協定客戶端會快速失敗（沒有隱含的直接通道回退）。
-- 無效或非連線的第一幀會被拒絕並關閉。
-- 優雅關閉會在關閉 socket 之前發出 `shutdown` 事件。
+- 當 Gateway 無法使用時，Gateway 協定用戶端會快速失敗 (沒有隱含的直接通道回退)。
+- 無效或非連線的第一個影格會被拒絕並關閉。
+- 優雅關機會在 Socket 關閉之前發出 `shutdown` 事件。
 
 ---
 
-相關連結：
+相關：
 
-- [疑難排解](/zh-Hant/gateway/troubleshooting)
-- [背景程序](/zh-Hant/gateway/background-process)
-- [設定](/zh-Hant/gateway/configuration)
-- [健康狀態](/zh-Hant/gateway/health)
-- [診斷](/zh-Hant/gateway/doctor)
-- [驗證](/zh-Hant/gateway/authentication)
+- [疑難排解](/en/gateway/troubleshooting)
+- [背景程序](/en/gateway/background-process)
+- [設定](/en/gateway/configuration)
+- [健全狀況](/en/gateway/health)
+- [Doctor](/en/gateway/doctor)
+- [驗證](/en/gateway/authentication)

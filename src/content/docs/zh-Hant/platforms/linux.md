@@ -1,60 +1,60 @@
 ---
-summary: "Linux 支援 + 伴隨應用程式狀態"
+summary: "Linux 支援與伴隨應用程式狀態"
 read_when:
   - Looking for Linux companion app status
   - Planning platform coverage or contributions
-title: "Linux App"
+title: "Linux 應用程式"
 ---
 
-# Linux App
+# Linux 應用程式
 
-Gateway 在 Linux 上受到完全支援。**Node 是建議的執行環境**。
+Gateway 在 Linux 上受到完整支援。**Node 是建議的執行環境**。
 不建議在 Gateway 上使用 Bun（WhatsApp/Telegram 錯誤）。
 
-原生 Linux 伴隨應用程式已在計劃中。如果您願意協助建構，歡迎貢獻。
+原生 Linux 伴隨應用程式正在計畫中。如果您願意協助建構，歡迎貢獻。
 
-## 初學者快速路徑 (VPS)
+## 新手快速途徑 (VPS)
 
-1. 安裝 Node 24（建議；目前為 `22.16+` 的 Node 22 LTS 仍為了相容性而運作正常）
+1. 安裝 Node 24（建議；Node 22 LTS，目前為 `22.14+`，為了相容性仍可使用）
 2. `npm i -g openclaw@latest`
 3. `openclaw onboard --install-daemon`
-4. 從您的筆記型電腦： `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
-5. 開啟 `http://127.0.0.1:18789/` 並貼上您的 token
+4. 從您的筆記型電腦：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
+5. 開啟 `http://127.0.0.1:18789/` 並貼上您的權杖
 
-完整的 Linux 伺服器指南：[Linux Server](/zh-Hant/vps)。逐步 VPS 範例：[exe.dev](/zh-Hant/install/exe-dev)
+完整的 Linux 伺服器指南：[Linux Server](/en/vps)。逐步 VPS 範例：[exe.dev](/en/install/exe-dev)
 
 ## 安裝
 
-- [開始使用](/zh-Hant/start/getting-started)
-- [安裝與更新](/zh-Hant/install/updating)
-- 可選流程：[Bun (實驗性)](/zh-Hant/install/bun)、[Nix](/zh-Hant/install/nix)、[Docker](/zh-Hant/install/docker)
+- [快速入門](/en/start/getting-started)
+- [安裝與更新](/en/install/updating)
+- 選用流程：[Bun (實驗性)](/en/install/bun)、[Nix](/en/install/nix)、[Docker](/en/install/docker)
 
 ## Gateway
 
-- [Gateway 操作手冊](/zh-Hant/gateway)
-- [設定](/zh-Hant/gateway/configuration)
+- [Gateway 操作手冊](/en/gateway)
+- [設定](/en/gateway/configuration)
 
 ## Gateway 服務安裝 (CLI)
 
-使用其中之一：
+使用其中一個：
 
 ```
 openclaw onboard --install-daemon
 ```
 
-或：
+或是：
 
 ```
 openclaw gateway install
 ```
 
-或：
+或是：
 
 ```
 openclaw configure
 ```
 
-系統提示時，選擇 **Gateway service**。
+當提示時選擇 **Gateway service**。
 
 修復/遷移：
 
@@ -62,11 +62,13 @@ openclaw configure
 openclaw doctor
 ```
 
-## 系統控制 (systemd 使用者單元)
+## 系統控制 (systemd user unit)
 
-OpenClaw 預設安裝 systemd **user** 服務。請在共用或 24/7 運行的伺服器上使用 **system** 服務。完整的單元範例與指南位於 [Gateway 操作手冊](/zh-Hant/gateway)。
+OpenClaw 預設安裝 systemd **user** 服務。針對共用或恆線伺服器
+請使用 **system** 服務。完整的單元範例與指引位於
+[Gateway 操作手冊](/en/gateway)。
 
-最小設定：
+最小化設定：
 
 建立 `~/.config/systemd/user/openclaw-gateway[-<profile>].service`：
 

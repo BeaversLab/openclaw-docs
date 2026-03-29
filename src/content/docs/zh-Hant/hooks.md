@@ -1,5 +1,5 @@
 ---
-summary: "Hooks: event-driven automation for commands and lifecycle events"
+summary: "Hooks: 針對指令和生命週期事件的事件驅動自動化"
 read_when:
   - You want event-driven automation for /new, /reset, /stop, and agent lifecycle events
   - You want to build, install, or debug hooks
@@ -8,85 +8,85 @@ title: "Hooks"
 
 # Hooks
 
-Hooks provide an extensible event-driven system for automating actions in response to agent commands and events. Hooks are automatically discovered from directories and can be managed via CLI commands, similar to how skills work in OpenClaw.
+Hooks 提供了一個可擴充的事件驅動系統，用於自動化回應代理指令和事件的動作。Hooks 會從目錄中自動被發現，並且可以透過 CLI 指令進行管理，這與 OpenClaw 中的 Skills 運作方式類似。
 
-## Getting Oriented
+## 導覽
 
-Hooks are small scripts that run when something happens. There are two kinds:
+Hooks 是在某些事情發生時執行的小型腳本。有兩種類型：
 
-- **Hooks** (this page): run inside the Gateway when agent events fire, like `/new`, `/reset`, `/stop`, or lifecycle events.
-- **Webhooks**：外部 HTTP webhook，可讓其他系統在 OpenClaw 中觸發工作。請參閱 [Webhook Hooks](/zh-Hant/automation/webhook) 或使用 `openclaw webhooks` 取得 Gmail 輔助命令。
+- **Hooks** (本頁)：當代理事件觸發時，例如 `/new`、`/reset`、`/stop` 或生命週期事件時，在 Gateway 內部執行。
+- **Webhooks**：讓其他系統觸發 OpenClaw 工作的外部 HTTP webhooks。請參閱 [Webhook Hooks](/en/automation/webhook) 或使用 `openclaw webhooks` 來取得 Gmail 輔助指令。
 
-Hook 也可以打包在插件內；請參閱 [Plugins](/zh-Hant/plugin#plugin-hooks)。
+Hooks 也可以打包在插件內；請參閱 [Plugins](/en/plugin#plugin-hooks)。
 
 常見用途：
 
-- 當您重設工作階段時儲存記憶體快照
-- 保留命令的稽核記錄以進行疑難排解或合規性檢查
-- 當工作階段開始或結束時觸發後續的自動化
-- 當事件觸發時，將檔案寫入代理程式工作區或呼叫外部 API
+- 當您重設對話時，儲存記憶體快照
+- 保留指令的稽核記錄以進行疑難排解或合規性檢查
+- 當對話開始或結束時觸發後續的自動化
+- 當事件觸發時，將檔案寫入代理工作區或呼叫外部 API
 
-如果您能編寫小型 TypeScript 函式，就能編寫 hook。Hook 會自動被探索，而您可以透過 CLI 啟用或停用它們。
+如果您可以撰寫小型 TypeScript 函式，您就可以撰寫 hook。Hooks 會自動被發現，您可以透過 CLI 啟用或停用它們。
 
-## 概觀
+## 概覽
 
-Hook 系統允許您：
+Hooks 系統允許您：
 
-- 當發出 `/new` 時，將工作階段內容儲存到記憶體
-- 記錄所有命令以供稽核
-- 在代理程式生命週期事件上觸發自訂自動化
-- 無需修改核心程式碼即可擴展 OpenClaw 的行為
+- 當發出 `/new` 時，將對話上下文儲存到記憶體
+- 記錄所有指令以供稽核
+- 在代理生命週期事件上觸發自訂自動化
+- 擴充 OpenClaw 的行為而不需要修改核心程式碼
 
-## 快速入門
+## 開始使用
 
-### 內建 Hooks
+### 內建的 Hooks
 
-OpenClaw 附帶四個會自動被發現的內建 hooks：
+OpenClaw 隨附了四個會自動被發現的內建 hooks：
 
-- **💾 session-memory**：當您發出 `/new` 時，將會話上下文儲存到您的 agent 工作區（預設 `~/.openclaw/workspace/memory/`）
+- **💾 session-memory**：當您發出 `/new` 時，將對話上下文儲存到您的代理工作區 (預設為 `~/.openclaw/workspace/memory/`)
 - **📝 command-logger**：將所有指令事件記錄到 `~/.openclaw/logs/commands.log`
-- **🚀 boot-md**：在閘道啟動時執行 `BOOT.md`（需要啟用內部 hooks）
-- **😈 soul-evil**：在清除視窗內或隨機將注入的 `SOUL.md` 內容替換為 `SOUL_EVIL.md`
+- **🚀 boot-md**：當 gateway 啟動時執行 `BOOT.md` (需要啟用內部 hooks)
+- **😈 soul-evil**：在清除視窗期間或隨機將注入的 `SOUL.md` 內容與 `SOUL_EVIL.md` 交換
 
 列出可用的 hooks：
 
-```exec
+```bash
 openclaw hooks list
 ```
 
 啟用 hook：
 
-```exec
+```bash
 openclaw hooks enable session-memory
 ```
 
 檢查 hook 狀態：
 
-```exec
+```bash
 openclaw hooks check
 ```
 
-獲取詳細資訊：
+取得詳細資訊：
 
-```exec
+```bash
 openclaw hooks info session-memory
 ```
 
-### 入門導覽
+### 入門
 
-在上線期間 (`openclaw onboard`)，系統會提示您啟用建議的 hooks。精靈會自動探索符合資格的 hooks 並將其列出供選擇。
+在入門（`openclaw onboard`）期間，系統會提示您啟用推薦的 hooks。精靈會自動發現合適的 hooks 並將其列出供您選擇。
 
-## Hook 探索
+## Hook 發現
 
-Hooks 會從三個目錄自動探索（按優先順序）：
+Hooks 會自動從三個目錄發現（按優先順序）：
 
-1. **工作區 hooks**：`<workspace>/hooks/` (每個代理，優先順序最高)
-2. **受管 hooks**：`~/.openclaw/hooks/` (使用者安裝，跨工作區共享)
-3. **內建 hooks**：`<openclaw>/dist/hooks/bundled/` (隨 OpenClaw 附帶)
+1. **工作區 hooks**：`<workspace>/hooks/` （每個代理，最高優先順序）
+2. **受管理的 hooks**：`~/.openclaw/hooks/` （使用者安裝，在工作區之間共用）
+3. **隨附的 hooks**：`<openclaw>/dist/hooks/bundled/` （隨 OpenClaw 附帶）
 
-受管 hook 目錄可以是**單一 hook** 或 **hook 套件** (package 目錄)。
+受管理的 hook 目錄可以是**單一 hook** 或 **hook 套件**（套件目錄）。
 
-每個 hook 都是一個包含以下內容的目錄：
+每個 hook 都是包含以下內容的目錄：
 
 ```
 my-hook/
@@ -94,16 +94,16 @@ my-hook/
 └── handler.ts       # Handler implementation
 ```
 
-## Hook 套件
+## Hook 套件 (npm/archives)
 
-Hook 套件是標準的 npm 套件，透過 `openclaw.hooks` 中的
-`package.json` 匯出一或多個 hooks。請使用以下指令安裝：
+Hook 套件是標準的 npm 套件，透過 `openclaw.hooks` 在
+`package.json` 中匯出一或多個 hooks。使用以下指令安裝：
 
-```exec
+```bash
 openclaw hooks install <path-or-spec>
 ```
 
-範例 `package.json`：
+`package.json` 範例：
 
 ```json
 {
@@ -115,8 +115,8 @@ openclaw hooks install <path-or-spec>
 }
 ```
 
-每個條目都指向一個包含 `HOOK.md` 和 `handler.ts`（或 `index.ts`）的 hook 目錄。
-Hook 套件可以包含相依性；它們將被安裝在 `~/.openclaw/hooks/<id>` 下。
+每個條目指向包含 `HOOK.md` 和 `handler.ts` （或 `index.ts`）的 hook 目錄。
+Hook 套件可以隨附相依性；它們將安裝在 `~/.openclaw/hooks/<id>` 下。
 
 ## Hook 結構
 
@@ -155,22 +155,22 @@ No configuration needed.
 
 `metadata.openclaw` 物件支援：
 
-- **`emoji`**：CLI 的顯示表情符號（例如 `"💾"`）
+- **`emoji`**：用於 CLI 的顯示表情符號（例如 `"💾"`）
 - **`events`**：要監聽的事件陣列（例如 `["command:new", "command:reset"]`）
 - **`export`**：要使用的具名匯出（預設為 `"default"`）
 - **`homepage`**：文件 URL
-- **`requires`**: 可選需求
-  - **`bins`**: PATH 中的必要二進位檔案（例如 `["git", "node"]`）
-  - **`anyBins`**: 這些二進位檔案中至少必須存在一個
-  - **`env`**: 必要的環境變數
-  - **`config`**: 必要的配置路徑（例如 `["workspace.dir"]`）
-  - **`os`**: 必要的平台（例如 `["darwin", "linux"]`）
-- **`always`**: 繞過資格檢查（布林值）
-- **`install`**: 安裝方法（對於內掛 hook：`[{"id":"bundled","kind":"bundled"}]`）
+- **`requires`**：可選需求
+  - **`bins`**：PATH 上所需的二元檔（例如 `["git", "node"]`）
+  - **`anyBins`**：這些二進位檔案中至少必須存在一個
+  - **`env`**：必要的環境變數
+  - **`config`**：必要的設定路徑（例如 `["workspace.dir"]`）
+  - **`os`**：必要的平台（例如 `["darwin", "linux"]`）
+- **`always`**：略過資格檢查（布林值）
+- **`install`**：安裝方法（對於捆綁的 Hooks：`[{"id":"bundled","kind":"bundled"}]`）
 
 ### 處理器實作
 
-`handler.ts` 檔案匯出一個 `HookHandler` 函數：
+`handler.ts` 檔案匯出一個 `HookHandler` 函式：
 
 ```typescript
 import type { HookHandler } from "../../src/hooks/hooks.js";
@@ -196,7 +196,7 @@ export default myHandler;
 
 #### 事件上下文
 
-每個事件包含：
+每個事件包括：
 
 ```typescript
 {
@@ -224,47 +224,47 @@ export default myHandler;
 
 當發出代理指令時觸發：
 
-- **`command`**：所有指令事件（通用監聽器）
+- **`command`**：所有指令事件（一般監聽器）
 - **`command:new`**：當發出 `/new` 指令時
 - **`command:reset`**：當發出 `/reset` 指令時
 - **`command:stop`**：當發出 `/stop` 指令時
 
 ### 代理事件
 
-- **`agent:bootstrap`**：在工作區引導檔案注入之前（Hook 可能會變更 `context.bootstrapFiles`）
+- **`agent:bootstrap`**：在注入工作區啟動檔案之前（hooks 可以變動 `context.bootstrapFiles`）
 
 ### 閘道事件
 
 當閘道啟動時觸發：
 
-- **`gateway:startup`**：在通道啟動並載入 Hook 之後
+- **`gateway:startup`**：在通道啟動並載入 hooks 之後
 
-### 工具結果 Hook（外掛程式 API）
+### 工具結果 Hooks（Plugin API）
 
-這些 Hook 不是事件串流監聽器；它們允許外掛程式在 OpenClaw 持久化工具結果之前同步調整這些結果。
+這些 hooks 不是事件串流監聽器；它們允許外掛在 OpenClaw 持久化工具結果之前同步調整結果。
 
-- **`tool_result_persist`**：在工具結果寫入會話紀錄之前進行轉換。必須是同步的；回傳更新後的工具結果承載資料，或回傳 `undefined` 以保持原樣。請參閱 [Agent Loop](/zh-Hant/concepts/agent-loop)。
+- **`tool_result_persist`**：在將工具結果寫入會話記錄之前進行轉換。必須同步；回傳更新後的工具結果負載，或 `undefined` 以保持原樣。請參閱 [Agent Loop](/en/concepts/agent-loop)。
 
 ### 未來事件
 
-規劃中的事件類型：
+計畫中的事件類型：
 
-- **`session:start`**：當新工作階段開始時
-- **`session:end`**：當工作階段結束時
-- **`agent:error`**：當代理程式遭遇錯誤時
+- **`session:start`**：當新會話開始時
+- **`session:end`**：當會話結束時
+- **`agent:error`**：當代理遇到錯誤時
 - **`message:sent`**：當傳送訊息時
-- **`message:received`**：當接收訊息時
+- **`message:received`**：當收到訊息時
 
 ## 建立自訂 Hooks
 
 ### 1. 選擇位置
 
-- **工作區 hooks** (`<workspace>/hooks/`)：針對個別代理程式，優先順序最高
-- **受控 hooks** (`~/.openclaw/hooks/`)：跨工作區共享
+- **工作區 hooks** (`<workspace>/hooks/`)：個別代理，優先順序最高
+- **受管理的 hooks** (`~/.openclaw/hooks/`)：在工作區之間共享
 
 ### 2. 建立目錄結構
 
-```exec
+```bash
 mkdir -p ~/.openclaw/hooks/my-hook
 cd ~/.openclaw/hooks/my-hook
 ```
@@ -302,7 +302,7 @@ export default handler;
 
 ### 5. 啟用並測試
 
-```exec
+```bash
 # Verify hook is discovered
 openclaw hooks list
 
@@ -317,7 +317,7 @@ openclaw hooks enable my-hook
 
 ## 設定
 
-### 新設定格式（建議）
+### 新設定格式 (推薦)
 
 ```json
 {
@@ -372,7 +372,7 @@ Hooks 可以擁有自訂設定：
 }
 ```
 
-### 舊版設定格式（仍支援）
+### 舊版設定格式 (仍支援)
 
 舊的設定格式為了向後相容性仍然有效：
 
@@ -393,13 +393,13 @@ Hooks 可以擁有自訂設定：
 }
 ```
 
-**遷移**：請針對新的 hooks 使用新的探索式系統。舊版的處理程式會在基於目錄的 hooks 之後載入。
+**移轉**：對於新的 hooks，請使用新的發現式系統。舊版處理程式會在基於目錄的 hooks 之後載入。
 
 ## CLI 指令
 
 ### 列出 Hooks
 
-```exec
+```bash
 # List all hooks
 openclaw hooks list
 
@@ -415,7 +415,7 @@ openclaw hooks list --json
 
 ### Hook 資訊
 
-```exec
+```bash
 # Show detailed info about a hook
 openclaw hooks info session-memory
 
@@ -423,9 +423,9 @@ openclaw hooks info session-memory
 openclaw hooks info session-memory --json
 ```
 
-### 檢查符合資格
+### 檢查資格
 
-```exec
+```bash
 # Show eligibility summary
 openclaw hooks check
 
@@ -435,7 +435,7 @@ openclaw hooks check --json
 
 ### 啟用/停用
 
-```exec
+```bash
 # Enable a hook
 openclaw hooks enable session-memory
 
@@ -443,26 +443,26 @@ openclaw hooks enable session-memory
 openclaw hooks disable command-logger
 ```
 
-## 內建 Hooks
+## 內建的 Hooks
 
 ### session-memory
 
-當您發出 `/new` 時，將 session 語境儲存至記憶體。
+當您發出 `/new` 時，將會話上下文儲存到記憶體中。
 
 **事件**：`command:new`
 
 **需求**：必須設定 `workspace.dir`
 
-**輸出**：`<workspace>/memory/YYYY-MM-DD-slug.md`（預設為 `~/.openclaw/workspace`）
+**輸出**：`<workspace>/memory/YYYY-MM-DD-slug.md` (預設為 `~/.openclaw/workspace`)
 
 **功能**：
 
-1. 使用重置前的會話條目來定位正確的對話紀錄
-2. 提取最後 15 行對話
-3. 使用 LLM 生成描述性的檔案名稱 slug
-4. 將會話元數據儲存到帶有日期的記憶檔案中
+1. 使用重置前的會話項目來定位正確的紀錄
+2. 擷取最後 15 行對話
+3. 使用 LLM 產生描述性的檔案名稱 slug
+4. 將會話元資料儲存到帶有日期的記憶檔案中
 
-**範例輸出**：
+**輸出範例**：
 
 ```markdown
 # Session: 2026-01-16 14:30:00 UTC
@@ -476,11 +476,11 @@ openclaw hooks disable command-logger
 
 - `2026-01-16-vendor-pitch.md`
 - `2026-01-16-api-design.md`
-- `2026-01-16-1430.md` （如果 slug 生成失敗，則使用後備時間戳記）
+- `2026-01-16-1430.md` (如果 slug 產生失敗，則使用備用時間戳記)
 
 **啟用**：
 
-```exec
+```bash
 openclaw hooks enable session-memory
 ```
 
@@ -488,28 +488,28 @@ openclaw hooks enable session-memory
 
 將所有指令事件記錄到集中的稽核檔案中。
 
-**事件**： `command`
+**事件**：`command`
 
 **需求**：無
 
-**輸出**： `~/.openclaw/logs/commands.log`
+**輸出**：`~/.openclaw/logs/commands.log`
 
-**功能說明**：
+**功能**：
 
-1. 擷取事件詳細資訊（指令動作、時間戳記、會話金鑰、發送者 ID、來源）
-2. 以 JSONL 格式附加到日誌檔案
+1. 擷取事件細節 (指令動作、時間戳記、會話金鑰、傳送者 ID、來源)
+2. 以 JSONL 格式附加到記錄檔
 3. 在背景中靜默執行
 
-**範例日誌條目**：
+**記錄範例**：
 
 ```jsonl
 {"timestamp":"2026-01-16T14:30:00.000Z","action":"new","sessionKey":"agent:main:main","senderId":"+1234567890","source":"telegram"}
 {"timestamp":"2026-01-16T15:45:22.000Z","action":"stop","sessionKey":"agent:main:main","senderId":"user@example.com","source":"whatsapp"}
 ```
 
-**查看日誌**：
+**檢視記錄**：
 
-```exec
+```bash
 # View recent commands
 tail -n 20 ~/.openclaw/logs/commands.log
 
@@ -522,27 +522,27 @@ grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 
 **啟用**：
 
-```exec
+```bash
 openclaw hooks enable command-logger
 ```
 
 ### soul-evil
 
-在清除窗口期間或隨機機會下，將注入的 `SOUL.md` 內容與 `SOUL_EVIL.md` 交換。
+在清除視窗內或隨機將注入的 `SOUL.md` 內容與 `SOUL_EVIL.md` 交換。
 
 **事件**：`agent:bootstrap`
 
-**文件**：[SOUL Evil Hook](/zh-Hant/hooks/soul-evil)
+**文件**: [SOUL Evil Hook](/en/hooks/soul-evil)
 
-**輸出**：不寫入檔案；交換僅在記憶體中進行。
+**輸出**: 未寫入任何檔案；交換僅在記憶體中進行。
 
-**啟用**：
+**啟用**:
 
-```exec
+```bash
 openclaw hooks enable soul-evil
 ```
 
-**配置**：
+**設定**:
 
 ```json
 {
@@ -564,30 +564,30 @@ openclaw hooks enable soul-evil
 
 ### boot-md
 
-在閘道啟動時（頻道啟動後）執行 `BOOT.md`。
-必須啟用內部 hooks 才能執行此操作。
+當閘道啟動時（在頻道啟動後）執行 `BOOT.md`。
+必須啟用內部 hooks 此功能才會執行。
 
-**事件**：`gateway:startup`
+**事件**: `gateway:startup`
 
-**需求**：必須設定 `workspace.dir`
+**需求**: 必須設定 `workspace.dir`
 
-**功能**：
+**功能說明**:
 
 1. 從您的工作區讀取 `BOOT.md`
 2. 透過代理執行器執行指令
-3. 透過訊息工具發送任何請求的傳出訊息
+3. 透過訊息工具發送任何請求的輸出訊息
 
-**啟用**：
+**啟用**:
 
-```exec
+```bash
 openclaw hooks enable boot-md
 ```
 
 ## 最佳實踐
 
-### 保持處理程序快速
+### 保持處理器輕量化
 
-Hooks 在指令處理期間運行。請保持輕量化：
+Hooks 在指令處理期間執行。請保持它們輕量化：
 
 ```typescript
 // ✓ Good - async work, returns immediately
@@ -604,7 +604,7 @@ const handler: HookHandler = async (event) => {
 
 ### 優雅地處理錯誤
 
-始終將有風險的操作包裝起來：
+總是將有風險的操作包裹起來：
 
 ```typescript
 const handler: HookHandler = async (event) => {
@@ -617,7 +617,7 @@ const handler: HookHandler = async (event) => {
 };
 ```
 
-### 儘早過濾事件
+### 盡早過濾事件
 
 如果事件不相關，則提前返回：
 
@@ -650,7 +650,7 @@ metadata: { "openclaw": { "events": ["command"] } } # General - more overhead
 
 ### 啟用 Hook 記錄
 
-閘道會在啟動時記錄 Hook 的載入情況：
+閘道會在啟動時記錄 hook 載入情況：
 
 ```
 Registered hook: session-memory -> command:new
@@ -660,15 +660,15 @@ Registered hook: boot-md -> gateway:startup
 
 ### 檢查探索
 
-列出所有探索到的 Hook：
+列出所有發現的 hooks：
 
-```exec
+```bash
 openclaw hooks list --verbose
 ```
 
 ### 檢查註冊
 
-在您的處理器中，記錄被呼叫的時機：
+在您的處理器中，記錄何時被呼叫：
 
 ```typescript
 const handler: HookHandler = async (event) => {
@@ -679,9 +679,9 @@ const handler: HookHandler = async (event) => {
 
 ### 驗證資格
 
-檢查 Hook 不符合資格的原因：
+檢查 hook 為何不符合資格：
 
-```exec
+```bash
 openclaw hooks info my-hook
 ```
 
@@ -691,9 +691,9 @@ openclaw hooks info my-hook
 
 ### 閘道記錄
 
-監控閘道記錄以查看 Hook 執行情況：
+監控閘道記錄以查看 hook 執行情況：
 
-```exec
+```bash
 # macOS
 ./scripts/clawlog.sh -f
 
@@ -701,9 +701,9 @@ openclaw hooks info my-hook
 tail -f ~/.openclaw/gateway.log
 ```
 
-### 直接測試 Hook
+### 直接測試 Hooks
 
-單獨測試您的處理器：
+獨立測試您的處理器：
 
 ```typescript
 import { test } from "vitest";
@@ -723,13 +723,13 @@ test("my handler works", async () => {
 
 ## 架構
 
-### 核心元件
+### 核心組件
 
-- **`src/hooks/types.ts`**：類型定義
-- **`src/hooks/workspace.ts`**：目錄掃描與載入
-- **`src/hooks/frontmatter.ts`**：HOOK.md 元數據解析
-- **`src/hooks/config.ts`**：資格檢查
-- **`src/hooks/hooks-status.ts`**: 狀態報告
+- **`src/hooks/types.ts`**: 類型定義
+- **`src/hooks/workspace.ts`**: 目錄掃描與載入
+- **`src/hooks/frontmatter.ts`**: HOOK.md 元數據解析
+- **`src/hooks/config.ts`**: 資格檢查
+- **`src/hooks/hooks-status.ts`**: 狀態回報
 - **`src/hooks/loader.ts`**: 動態模組載入器
 - **`src/cli/hooks-cli.ts`**: CLI 指令
 - **`src/gateway/server-startup.ts`**: 在閘道啟動時載入 hooks
@@ -773,20 +773,20 @@ Session reset
 
 1. 檢查目錄結構：
 
-   ```exec
+   ```bash
    ls -la ~/.openclaw/hooks/my-hook/
    # Should show: HOOK.md, handler.ts
    ```
 
 2. 驗證 HOOK.md 格式：
 
-   ```exec
+   ```bash
    cat ~/.openclaw/hooks/my-hook/HOOK.md
    # Should have YAML frontmatter with name and metadata
    ```
 
 3. 列出所有發現的 hooks：
-   ```exec
+   ```bash
    openclaw hooks list
    ```
 
@@ -794,30 +794,30 @@ Session reset
 
 檢查需求：
 
-```exec
+```bash
 openclaw hooks info my-hook
 ```
 
-尋找缺失項目：
+尋找缺失的項目：
 
-- 二進位檔案（檢查 PATH）
+- 執行檔（檢查 PATH）
 - 環境變數
 - 設定值
 - 作業系統相容性
 
 ### Hook 未執行
 
-1. 驗證 hook 是否已啟用：
+1. 驗證 Hook 是否已啟用：
 
-   ```exec
+   ```bash
    openclaw hooks list
    # Should show ✓ next to enabled hooks
    ```
 
-2. 重新啟動您的閘道程序以重新載入 hooks。
+2. 重新啟動您的 gateway 程序以重新載入 hooks。
 
-3. 檢查閘道日誌中的錯誤：
-   ```exec
+3. 檢查 gateway 日誌中的錯誤：
+   ```bash
    ./scripts/clawlog.sh | grep hook
    ```
 
@@ -825,7 +825,7 @@ openclaw hooks info my-hook
 
 檢查 TypeScript/匯入錯誤：
 
-```exec
+```bash
 # Test import directly
 node -e "import('./path/to/handler.ts').then(console.log)"
 ```
@@ -856,7 +856,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 
 1. 建立 hook 目錄：
 
-   ```exec
+   ```bash
    mkdir -p ~/.openclaw/hooks/my-hook
    mv ./hooks/handlers/my-handler.ts ~/.openclaw/hooks/my-hook/handler.ts
    ```
@@ -875,7 +875,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
    Does something useful.
    ```
 
-3. 更新配置：
+3. 更新設定：
 
    ```json
    {
@@ -890,23 +890,23 @@ node -e "import('./path/to/handler.ts').then(console.log)"
    }
    ```
 
-4. 驗證並重新啟動您的 gateway 進程：
-   ```exec
+4. 驗證並重新啟動您的 gateway 程序：
+   ```bash
    openclaw hooks list
    # Should show: 🎯 my-hook ✓
    ```
 
-**遷移的好處**：
+**遷移的優點**：
 
 - 自動探索
 - CLI 管理
 - 資格檢查
-- 更好的文件
+- 更完善的文件
 - 一致的結構
 
-## 另請參閱
+## 參見
 
-- [CLI 參考：hooks](/zh-Hant/cli/hooks)
-- [內建 Hooks 說明文件](https://github.com/openclaw/openclaw/tree/main/src/hooks/bundled)
-- [Webhook Hooks](/zh-Hant/automation/webhook)
-- [配置](/zh-Hant/gateway/configuration#hooks)
+- [CLI 參考：hooks](/en/cli/hooks)
+- [隨附 Hooks 說明文件](https://github.com/openclaw/openclaw/tree/main/src/hooks/bundled)
+- [Webhook Hooks](/en/automation/webhook)
+- [設定](/en/gateway/configuration#hooks)

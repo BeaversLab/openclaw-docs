@@ -1,95 +1,95 @@
 ---
-summary: "重構計畫：執行主機路由、節點核准以及無頭執行器"
+summary: "重構計畫：exec host 路由、節點審核與無頭執行器"
 read_when:
   - Designing exec host routing or exec approvals
   - Implementing node runner + UI IPC
   - Adding exec host security modes and slash commands
-title: "執行主機重構"
+title: "Exec Host 重構"
 ---
 
-# 執行主機重構計畫
+# Exec host 重構計畫
 
 ## 目標
 
 - 新增 `exec.host` + `exec.security` 以在 **sandbox**、**gateway** 和 **node** 之間路由執行。
 - 保持預設值 **安全**：除非明確啟用，否則不允許跨主機執行。
-- 將執行分離為 **無頭執行器服務**，並透過本機 IPC 提供選用的 UI (macOS 應用程式)。
-- 提供 **每個代理程式** 的原則、允許清單、詢問模式和節點綁定。
-- 支援可搭配或不搭配允許清單使用的 **詢問模式**。
-- 跨平台：Unix socket + 權杖驗證 (macOS/Linux/Windows 功能對等)。
+- 將執行拆分為具選用 UI（macOS app）透過本機 IPC 連線的 **無頭執行器服務**。
+- 提供 **個別代理程式** 的原則、允許清單、詢問模式和節點綁定。
+- 支援可搭配允許清單使用或不使用的 **詢問模式**。
+- 跨平台：Unix socket + token 認證（macOS/Linux/Windows 同等支援）。
 
 ## 非目標
 
-- 不進行舊版允許清單遷移或舊版架構支援。
-- 節點執行不提供 PTY/串流 (僅提供彙總輸出)。
-- 除現有的 Bridge + Gateway 外，不新增網路層。
+- 不提供舊版允許清單遷移或舊版 Schema 支援。
+- 不提供節點執行的 PTY/串流（僅支援聚合輸出）。
+- 除了現有的 Bridge + Gateway 之外，不新增額外的網路層。
 
-## 決策（已鎖定）
+## 已鎖定的決定
 
-- **組態鍵：** `exec.host` + `exec.security`（允許每個 agent 覆蓋）。
-- **提權：** 將 `/elevated` 保留為 gateway 完全存取的別名。
-- **Ask 預設值：** `on-miss`。
-- **核准儲存：** `~/.openclaw/exec-approvals.json`（JSON，無舊版遷移）。
-- **執行器：** 無頭系統服務；UI 應用程式主持用於核准的 Unix socket。
-- **Node 身分識別：** 使用現有的 `nodeId`。
-- **Socket 驗證：** Unix socket + token（跨平台）；如有需要稍後再拆分。
-- **Node 主機狀態：** `~/.openclaw/node.json`（node id + 配對 token）。
-- **macOS exec host：** 在 macOS 應用程式內執行 `system.run`；node host 服務透過本機 IPC 轉發請求。
-- **不使用 XPC helper：** 堅持使用 Unix socket + token + peer 檢查。
+- **設定金鑰：** `exec.host` + `exec.security`（允許各別代理程式覆寫）。
+- **提權：** 將 `/elevated` 保留為 gateway 完整存取權的別名。
+- **詢問預設值：** `on-miss`。
+- **審核儲存：** `~/.openclaw/exec-approvals.json`（JSON，無舊版遷移）。
+- **執行器：** 無頭系統服務；UI app 託管 Unix socket 用於審核。
+- **節點身分識別：** 使用現有的 `nodeId`。
+- **Socket 認證：** Unix socket + token（跨平台）；如有需要之後再拆分。
+- **節點主機狀態：** `~/.openclaw/node.json`（節點 ID + 配對 token）。
+- **macOS exec host：** 在 macOS app 內執行 `system.run`；節點主機服務透過本機 IPC 轉發請求。
+- **不使用 XPC helper：** 堅持使用 Unix socket + token + 對等檢查。
 
 ## 關鍵概念
 
 ### 主機
 
-- `sandbox`：Docker exec（目前的行為）。
-- `gateway`：在 gateway host 上執行 exec。
-- `node`：透過 Bridge (`system.run`) 在 node runner 上執行 exec。
+- `sandbox`：Docker exec（目前行為）。
+- `gateway`：在 gateway host 上執行。
+- `node`：透過 Bridge 在節點執行器上執行（`system.run`）。
 
 ### 安全模式
 
-- `deny`：永遠封鎖。
-- `allowlist`：僅允許符合條件的項目。
-- `full`：允許所有項目（等同於 elevated）。
+- `deny`：一律封鎖。
+- `allowlist`：僅允許符合的項目。
+- `full`：允許所有項目（等同於已提權）。
 
 ### 詢問模式
 
 - `off`：永不詢問。
-- `on-miss`：僅在 allowlist 不符合時詢問。
+- `on-miss`：僅在允許清單不符時詢問。
 - `always`：每次都詢問。
 
-詢問與 allowlist 是**獨立**的；allowlist 可與 `always` 或 `on-miss` 搭配使用。
+詢問（Ask）與允許清單（allowlist）彼此**獨立**；允許清單可與 `always` 或 `on-miss` 搭配使用。
 
-### 策略解析（每次 exec）
+### 原則解析（每次執行）
 
-1. 解析 `exec.host` (tool param → agent override → global default)。
-2. 解析 `exec.security` 和 `exec.ask` (優先順序相同)。
-3. 如果 host 是 `sandbox`，則繼續執行本機沙盒執行。
-4. 如果 host 是 `gateway` 或 `node`，則對該 host 應用安全 + 詢問策略。
+1. 解析 `exec.host`（工具參數 → 代理覆寫 → 全域預設）。
+2. 解析 `exec.security` 和 `exec.ask`（優先順序相同）。
+3. 如果主機是 `sandbox`，則繼續進行本地沙箱執行。
+4. 如果主機是 `gateway` 或 `node`，則對該主機套用安全性 + 詢問原則。
 
 ## 預設安全性
 
 - 預設 `exec.host = sandbox`。
-- `gateway` 和 `node` 的預設 `exec.security = deny`。
-- 預設 `exec.ask = on-miss` (僅在安全性允許時相關)。
-- 如果未設定節點綁定，**Agent 可以以任何節點為目標**，但僅限於策略允許的情況。
+- 針對 `gateway` 和 `node`，預設 `exec.security = deny`。
+- 預設 `exec.ask = on-miss`（僅在安全性允許時相關）。
+- 若未設定節點綁定，**代理可以以任何節點為目標**，但前提是原則允許。
 
 ## 設定介面
 
 ### 工具參數
 
-- `exec.host` (可選): `sandbox | gateway | node`。
-- `exec.security` (optional): `deny | allowlist | full`。
-- `exec.ask` (optional): `off | on-miss | always`。
-- `exec.node` (optional): 當 `host=node` 時使用的節點 ID/名稱。
+- `exec.host`（選用）：`sandbox | gateway | node`。
+- `exec.security`（選用）：`deny | allowlist | full`。
+- `exec.ask`（選用）：`off | on-miss | always`。
+- `exec.node`（選用）：當 `host=node` 時要使用的節點 ID/名稱。
 
-### Config keys (global)
+### 設定鍵（全域）
 
 - `tools.exec.host`
 - `tools.exec.security`
 - `tools.exec.ask`
-- `tools.exec.node` (預設節點綁定)
+- `tools.exec.node`（預設節點綁定）
 
-### Config keys (per agent)
+### 設定鍵（每個代理）
 
 - `agents.list[].tools.exec.host`
 - `agents.list[].tools.exec.security`
@@ -98,20 +98,20 @@ title: "執行主機重構"
 
 ### 別名
 
-- `/elevated on` = 為代理程式工作階段設定 `tools.exec.host=gateway`、`tools.exec.security=full`。
-- `/elevated off` = 為代理程式工作階段還原先前的 exec 設定。
+- `/elevated on` = 為代理工作階段設定 `tools.exec.host=gateway`、`tools.exec.security=full`。
+- `/elevated off` = 為代理工作階段還原先前的執行設定。
 
 ## 核准存放區 (JSON)
 
-Path: `~/.openclaw/exec-approvals.json`
+路徑：`~/.openclaw/exec-approvals.json`
 
-Purpose:
+用途：
 
-- Local policy + allowlists for the **execution host** (gateway or node runner).
-- Ask fallback when no UI is available.
-- IPC credentials for UI clients.
+- **執行主機**（閘道或節點執行器）的本地原則與允許清單。
+- 無 UI 時的詢問後援機制。
+- UI 用戶端的 IPC 憑證。
 
-Proposed schema (v1):
+建議的架構 (v1)：
 
 ```json
 {
@@ -142,49 +142,49 @@ Proposed schema (v1):
 }
 ```
 
-Notes:
+備註：
 
-- No legacy allowlist formats.
-- `askFallback` applies only when `ask` is required and no UI is reachable.
-- File permissions: `0600`.
+- 無舊版允許清單格式。
+- `askFallback` 僅在需要 `ask` 且無法連接 UI 時套用。
+- 檔案權限：`0600`。
 
-## Runner service (headless)
+## 執行器服務 (無頭模式)
 
-### Role
+### 角色
 
-- Enforce `exec.security` + `exec.ask` locally.
-- Execute system commands and return output.
-- Emit Bridge events for exec lifecycle (optional but recommended).
+- 在本機強制執行 `exec.security` + `exec.ask`。
+- 執行系統指令並回傳輸出。
+- 發送執行生命週期的 Bridge 事件 (可選但建議)。
 
-### Service lifecycle
+### 服務生命週期
 
-- Launchd/daemon on macOS; system service on Linux/Windows.
-- Approvals JSON is local to the execution host.
-- UI hosts a local Unix socket; runners connect on demand.
+- macOS 上為 Launchd/daemon；Linux/Windows 上為系統服務。
+- Approvals JSON 檔案位於執行主機本機。
+- UI 託管本機 Unix socket；執行器按需連線。
 
-## UI integration (macOS app)
+## UI 整合 (macOS 應用程式)
 
 ### IPC
 
-- Unix socket 於 `~/.openclaw/exec-approvals.sock` (0600)。
+- 位於 `~/.openclaw/exec-approvals.sock` 的 Unix socket (0600)。
 - Token 儲存於 `exec-approvals.json` (0600)。
-- Peer 檢查：僅限相同 UID。
+- 對等檢查：僅限相同 UID。
 - 挑戰/回應：nonce + HMAC(token, request-hash) 以防止重放。
-- 短暫 TTL (例如 10s) + 最大 payload + 速率限制。
+- 短暫 TTL (例如 10 秒) + 最大負載 + 速率限制。
 
-### Ask flow (macOS app exec host)
+### 詢問流程 (macOS 應用程式執行主機)
 
-1. Node service 從 gateway 接收 `system.run`。
-2. Node service 連接到本機 socket 並發送 prompt/exec request。
-3. App 驗證 peer + token + HMAC + TTL，然後在需要時顯示對話框。
-4. App 在 UI 語境中執行命令並傳回輸出。
-5. Node service 將輸出傳回給 gateway。
+1. Node 服務從閘道接收 `system.run`。
+2. Node 服務連線到本機 socket 並發送提示/執行請求。
+3. 應用程式驗證對等端 + token + HMAC + TTL，然後在需要時顯示對話框。
+4. 應用程式在 UI 語境中執行指令並回傳輸出。
+5. Node 服務將輸出回傳給閘道。
 
-如果 UI 缺失：
+如果 UI 遺失：
 
-- 應用 `askFallback` (`deny|allowlist|full`)。
+- 套用 `askFallback` (`deny|allowlist|full`)。
 
-### Diagram (SCI)
+### 圖表 (SCI)
 
 ```
 Agent -> Gateway -> Bridge -> Node Service (TS)
@@ -193,24 +193,24 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
                      Mac App (UI + TCC + system.run)
 ```
 
-## Node identity + binding
+## 節點身分識別 + 綁定
 
 - 使用來自 Bridge 配對的現有 `nodeId`。
-- Binding model：
-  - `tools.exec.node` 將 agent 限制在特定 node。
-  - 如果未設定，Agent 可以選擇任何節點（原則仍會強制執行預設值）。
-- 節點選擇解析：
-  - `nodeId` 完全符合
-  - `displayName`（已標準化）
+- 綁定模型：
+  - `tools.exec.node` 將代理程式限制在特定節點。
+  - 若未設定，代理程式可選擇任何節點 (政策仍強制執行預設值)。
+- 節點選取解析：
+  - `nodeId` 完全相符
+  - `displayName` (已正規化)
   - `remoteIp`
-  - `nodeId` 字首（>= 6 個字元）
+  - `nodeId` 前綴 (>= 6 個字元)
 
-## 事件處理
+## 事件
 
-### 誰可以看到事件
+### 誰看得到事件
 
-- 系統事件是**依會話 (per session)** 的，並會在下一個提示中顯示給 Agent。
-- 儲存在閘道記憶體佇列 (`enqueueSystemEvent`) 中。
+- 系統事件是 **依據 session** 並在下一次提示時顯示給代理程式。
+- 儲存於閘道的記憶體佇列中 (`enqueueSystemEvent`)。
 
 ### 事件文字
 
@@ -220,97 +220,97 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 
 ### 傳輸
 
-選項 A（建議）：
+選項 A (建議)：
 
 - Runner 發送 Bridge `event` 幀 `exec.started` / `exec.finished`。
-- 閘道 `handleBridgeEvent` 將這些對應到 `enqueueSystemEvent`。
+- Gateway `handleBridgeEvent` 將這些對應至 `enqueueSystemEvent`。
 
 選項 B：
 
-- Gateway `exec` 工具直接處理生命週期（僅同步）。
+- Gateway `exec` 工具直接處理生命週期（僅限同步）。
 
-## 執行流程
+## Exec 流程
 
-### Sandbox 主機
+### Sandbox host
 
-- 現有的 `exec` 行為（Docker 或非沙箱模式下的 host）。
-- 僅在非沙箱模式下支援 PTY。
+- 現有的 `exec` 行為（未使用 sandbox 時為 Docker 或 host）。
+- 僅在非沙箱模式支援 PTY。
 
-### Gateway 主機
+### Gateway host
 
-- Gateway 程序在自己的機器上執行。
-- 強制執行本地 `exec-approvals.json`（security/ask/allowlist）。
+- Gateway 程序在其自身的機器上執行。
+- 強制執行本地 `exec-approvals.json`（安全性/詢問/允許清單）。
 
-### Node 主機
+### Node host
 
-- Gateway 使用 `system.run` 呼叫 `node.invoke`。
-- Runner 強制執行本地審核。
-- Runner 返回聚合的 stdout/stderr。
-- 可選的 Bridge 事件用於 start/finish/deny。
+- Gateway 以 `system.run` 呼叫 `node.invoke`。
+- Runner 強制執行本機核准。
+- Runner 傳回聚合的 stdout/stderr。
+- 針對開始/完成/拒絕的選用 Bridge 事件。
 
-## 輸出限制
+## 輸出上限
 
-- 將合併的 stdout+stderr 限制在 **200k**；為事件保留 **tail 20k**。
+- 將合併的 stdout+stderr 上限設為 **200k**；保留 **tail 20k** 用於事件。
 - 使用明確的後綴截斷（例如 `"… (truncated)"`）。
 
 ## 斜線指令
 
 - `/exec host=<sandbox|gateway|node> security=<deny|allowlist|full> ask=<off|on-miss|always> node=<id>`
-- 每個 Agent、每個 Session 的覆蓋；除非透過配置儲存，否則不持久化。
-- `/elevated on|off|ask|full` 仍然是 `host=gateway security=full` 的捷徑（其中 `full` 跳過核准）。
+- 針對每個 Agent、每個工作階段的覆寫；除非透過設定儲存，否則為非永久性。
+- `/elevated on|off|ask|full` 保持為 `host=gateway security=full` 的捷徑（其中 `full` 跳過核准）。
 
-## 跨平台故事
+## 跨平台情況
 
-- Runner 服務是可移植的執行目標。
-- UI 是可選的；如果缺失，則套用 `askFallback`。
-- Windows/Linux 支援相同的核准 JSON + socket 協定。
+- Runner 服務是可攜帶的執行目標。
+- UI 為選用；如果遺失，則適用 `askFallback`。
+- Windows/Linux 支援相同的核准 JSON + socket 通訊協定。
 
 ## 實作階段
 
-### 第 1 階段：設定 + exec 路由
+### 階段 1：設定 + exec 路由
 
 - 新增 `exec.host`、`exec.security`、`exec.ask`、`exec.node` 的設定架構。
 - 更新工具管道以遵守 `exec.host`。
 - 新增 `/exec` 斜線指令並保留 `/elevated` 別名。
 
-### 第 2 階段：核准存放區 + 閘道強制執行
+### 階段 2：核准存放區 + gateway 強制執行
 
 - 實作 `exec-approvals.json` 讀取器/寫入器。
-- 針對 `gateway` 主機強制執行允許清單 + 詢問模式。
+- 針對 `gateway` host 強制執行允許清單 + 詢問模式。
 - 新增輸出上限。
 
-### 第 3 階段：Node runner 強制執行
+### 階段 3：node runner 強制執行
 
 - 更新 node runner 以強制執行允許清單 + 詢問。
-- 將 Unix socket 提示橋接新增至 macOS 應用程式 UI。
+- 將 Unix socket prompt bridge 連線至 macOS 應用程式 UI。
 - 連線 `askFallback`。
 
-### 第 4 階段：事件
+### 階段 4：事件
 
-- 新增 node → gateway Bridge 事件以用於 exec 生命週期。
-- 對應至 `enqueueSystemEvent` 以供 Agent 提示使用。
+- 針對執行生命週期，新增 node → gateway Bridge 事件。
+- 對應至 `enqueueSystemEvent` 以供 agent 提示使用。
 
-### 第 5 階段：UI 打磨
+### 階段 5：UI 打磨
 
-- Mac 應用程式：允許清單編輯器、Per-agent 切換器、詢問原則 UI。
-- Node 綁定控制（可選）。
+- Mac 應用程式：允許清單編輯器、每個 agent 的切換器、詢問政策 UI。
+- 節點綁定控制（選用）。
 
 ## 測試計畫
 
-- 單元測試：允許清單比對（glob + 不區分大小寫）。
-- 單元測試：原則解析優先順序（tool 參數 → agent 覆寫 → 全域）。
-- 整合測試：node runner 拒絕/允許/詢問流程。
-- Bridge 事件測試：node 事件 → 系統事件路由。
+- 單元測試：允許清單匹配（glob + 不區分大小寫）。
+- 單元測試：政策解析優先順序（工具參數 → agent 覆蓋 → 全域）。
+- 整合測試：節點執行器的拒絕/允許/詢問流程。
+- Bridge 事件測試：節點事件 → 系統事件路由。
 
 ## 開放風險
 
 - UI 無法使用：確保遵守 `askFallback`。
-- 長時間執行的命令：依賴逾時和輸出上限。
-- 多節點歧義：除非有節點綁定或明確的節點參數，否則報錯。
+- 長時間執行的指令：依賴逾時 + 輸出上限。
+- 多節點歧異：除非有節點綁定或明確的節點參數，否則報錯。
 
 ## 相關文件
 
-- [Exec tool](/zh-Hant/tools/exec)
-- [Exec approvals](/zh-Hant/tools/exec-approvals)
-- [Nodes](/zh-Hant/nodes)
-- [Elevated mode](/zh-Hant/tools/elevated)
+- [Exec tool](/en/tools/exec)
+- [Exec approvals](/en/tools/exec-approvals)
+- [Nodes](/en/nodes)
+- [Elevated mode](/en/tools/elevated)

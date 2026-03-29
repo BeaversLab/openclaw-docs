@@ -46,102 +46,110 @@ wired end-to-end.
 
 - Runs are serialized per session key (session lane) and optionally through a global lane.
 - This prevents tool/session races and keeps session history consistent.
-- 訊息通道可以選擇提供給此車道系統的佇列模式。請參閱 [Command Queue](/zh-Hant/concepts/queue)。
+- 訊息傳遞通道可以選擇佇列模式，為此通道系統提供輸入。
+  請參閱 [Command Queue](/en/concepts/queue)。
 
-## Session + workspace preparation
+## 工作階段 + 工作區準備
 
-- 工作區會被解析並建立；沙箱執行可能會重新導向至沙箱工作區根目錄。
-- 技能會被載入（或從快照重複使用），並注入至 env 和 prompt 中。
-- Bootstrap/context 檔案會被解析並注入至系統提示詞報告中。
-- 會取得寫入鎖；`SessionManager` 會在串流之前開啟並準備就緒。
+- 解析並建立工作區；沙箱執行可能會重新導向至沙箱工作區根目錄。
+- 載入技能（或從快照重複使用）並將其注入環境與提示。
+- 解析 Bootstrap/Context 檔案並將其注入系統提示報告。
+- 取得工作階段寫入鎖定；在串流之前開啟並準備 `SessionManager`。
 
-## Prompt assembly + system prompt
+## 提示組裝 + 系統提示
 
-- 系統提示詞是根據 OpenClaw 的基本提示詞、技能提示詞、bootstrap 語境以及每次執行的覆寫所建構。
-- 會強制執行特定模型的限制與壓縮保留 token。
-- 關於模型看到的內容，請參閱 [System prompt](/zh-Hant/concepts/system-prompt)。
+- 系統提示是依據 OpenClaw 的基本提示、技能提示、Bootstrap 內容以及各次執行的覆寫所建構。
+- 會強制執行特定模型的限制與壓縮保留 Token。
+- 請參閱 [System prompt](/en/concepts/system-prompt) 以了解模型會看到什麼內容。
 
-## Hook points (where you can intercept)
+## Hook 點（您可以進行攔截的地方）
 
-OpenClaw 具有兩個掛鉤系統：
+OpenClaw 有兩個 Hook 系統：
 
-- **內部掛鉤** (Gateway hooks)：用於指令和生命週期事件的事件驅動腳本。
-- **外掛掛鉤**：Agent/工具生命週期和 Gateway 管道內部的擴充點。
+- **Internal hooks**（Gateway hooks）：用於指令與生命週期事件的事件驅動腳本。
+- **Plugin hooks**：Agent/工具生命週期與 Gateway 管線內部的擴充點。
 
-### 內部掛鉤 (Gateway hooks)
+### Internal hooks (Gateway hooks)
 
-- **`agent:bootstrap`**：在系統提示完成之前建置引導檔案時執行。
-  使用此項來新增/移除引導上下文檔案。
-- **指令掛鉤**：`/new`、`/reset`、`/stop` 和其他指令事件（請參閱 Hooks 文件）。
+- **`agent:bootstrap`**：在系統提示最終確定之前，於建構 Bootstrap 檔案時執行。
+  使用此功能來新增/移除 Bootstrap Context 檔案。
+- **Command hooks**：`/new`、`/reset`、`/stop` 以及其他指令事件（請參閱 Hooks 文件）。
 
-請參閱 [Hooks](/zh-Hant/automation/hooks) 以了解設定和範例。
+請參閱 [Hooks](/en/automation/hooks) 以了解設定與範例。
 
-### 外掛掛鉤 (agent + gateway lifecycle)
+### Plugin hooks (agent + gateway lifecycle)
 
-這些在 Agent 迴圈或 Gateway 管道內執行：
+這些在 Agent 迴圈或 Gateway 管線內執行：
 
-- **`before_model_resolve`**：在階段前執行（無 `messages`），以在模型解析之前確定性地覆寫提供者/模型。
-- **`before_prompt_build`**：在會話載入後（伴隨 `messages`）執行，以便在提交提示之前注入 `prependContext`、`systemPrompt`、`prependSystemContext` 或 `appendSystemContext`。使用 `prependContext` 處理每輪動態文字，並針對應位於系統提示空間中的穩定指引使用 system-context 欄位。
-- **`before_agent_start`**：舊版相容性掛鉤，可能在任一階段執行；建議優先使用上述的明確掛鉤。
-- **`agent_end`**：在完成後檢查最終訊息列表和執行元資料。
+- **`before_model_resolve`**：在 Pre-session（無 `messages`）執行，以便在模型解析前確定性地覆寫提供者/模型。
+- **`before_prompt_build`**：在工作階段載入後（含 `messages`）執行，以便在提交提示前注入 `prependContext`、`systemPrompt`、`prependSystemContext` 或 `appendSystemContext`。請使用 `prependContext` 來設定每輪動態文字，並使用 system-context 欄位來設定應位於系統提示空間中的穩定指引。
+- **`before_agent_start`**：舊版相容性掛鉤，可能在任一階段執行；優先使用上述的明確掛鉤。
+- **`agent_end`**：在完成後檢查最終訊息清單和執行元資料。
 - **`before_compaction` / `after_compaction`**：觀察或標註壓縮循環。
 - **`before_tool_call` / `after_tool_call`**：攔截工具參數/結果。
-- **`tool_result_persist`**：在工具結果寫入會話記錄之前同步轉換工具結果。
-- **`message_received` / `message_sending` / `message_sent`**：入站與出站訊息掛鉤。
-- **`session_start` / `session_end`**：會話生命週期邊界。
+- **`tool_result_persist`**：在寫入會話紀錄之前同步轉換工具結果。
+- **`message_received` / `message_sending` / `message_sent`**：連入 + 連出訊息掛鉤。
+- **`session_start` / `session_end`**：會請生命週期邊界。
 - **`gateway_start` / `gateway_stop`**：閘道生命週期事件。
 
-請參閱 [Plugin hooks](/zh-Hant/plugins/architecture#provider-runtime-hooks) 以了解掛鉤 API 和註冊詳細資訊。
+連出/工具防衛的掛鉤決策規則：
+
+- `before_tool_call`：`{ block: true }` 是終止的，並停止較低優先級的處理程序。
+- `before_tool_call`：`{ block: false }` 是空操作，不會清除先前的阻擋。
+- `message_sending`：`{ cancel: true }` 是終止的，並停止較低優先級的處理程序。
+- `message_sending`：`{ cancel: false }` 是空操作，不會清除先前的取消。
+
+請參閱 [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) 以了解掛鉤 API 和註冊細節。
 
 ## 串流 + 部分回覆
 
-- Assistant 增量從 pi-agent-core 串流輸出，並作為 `assistant` 事件發出。
+- 助理增量會從 pi-agent-core 串流傳輸，並發出為 `assistant` 事件。
 - 區塊串流可以在 `text_end` 或 `message_end` 上發出部分回覆。
-- 推理串流可以作為單獨的串流或作為區塊回覆發出。
-- 請參閱 [Streaming](/zh-Hant/concepts/streaming) 以了解分塊和區塊回覆行為。
+- 推理串流可以作為單獨的串流或區塊回覆發出。
+- 請參閱 [Streaming](/en/concepts/streaming) 以了解分塊和區塊回覆行為。
 
-## 工具執行 + 訊息傳遞工具
+## 工具執行 + 傳訊工具
 
-- 工具啟動/更新/結束事件會在 `tool` 串流上發出。
-- 工具結果會在記錄/發出前，針對大小和圖片載荷進行清理。
-- 會追蹤訊息傳遞工具的發送，以抑制重複的助理確認。
+- 工具啟動/更新/結束事件是在 `tool` 串流上發出的。
+- 工具結果會在記錄/發出之前針對大小和圖像承載進行清理。
+- 會追蹤傳訊工具發送以抑制重複的助理確認。
 
-## 回覆塑形 + 抑制
+## 回覆塑造 + 抑制
 
-- 最終載荷由以下組成：
-  - 助理文字（和選用的推理）
-  - 內嵌工具摘要（當啟用詳細模式且允許時）
-  - 當模型錯誤時的助理錯誤文字
-- `NO_REPLY` 被視為靜默權杖，並會從傳出載荷中濾除。
-- 重複的訊息傳遞工具會從最終載荷清單中移除。
-- 如果沒有剩下可渲染的載荷且工具發生錯誤，則會發出後備工具錯誤回覆
-  （除非訊息傳遞工具已經發送了使用者可見的回覆）。
+- 最終的 payload 組合自：
+  - 助理文字（以及可選的推理）
+  - 內嵌工具摘要（當處於詳細模式且允許時）
+  - 當模型發生錯誤時的助理錯誤文字
+- `NO_REPLY` 被視為靜默權杖，並會從傳出的 payload 中過濾掉。
+- 訊息工具的重複項會從最終 payload 列表中移除。
+- 如果沒有剩餘可呈現的 payload 且工具發生錯誤，將發出備用的工具錯誤回覆
+  （除非訊息工具已經發送了使用者可見的回覆）。
 
 ## 壓縮 + 重試
 
 - 自動壓縮會發出 `compaction` 串流事件，並可觸發重試。
-- 重試時，記憶體緩衝區和工具摘要會重置，以避免重複輸出。
-- 請參閱[壓縮](/zh-Hant/concepts/compaction)以了解壓縮管線。
+- 重試時，記憶體緩衝區和工具摘要會重置以避免重複輸出。
+- 請參閱 [壓縮](/en/concepts/compaction) 以了解壓縮管線。
 
-## 事件串流 (目前)
+## 事件串流（目前）
 
-- `lifecycle`：由 `subscribeEmbeddedPiSession` 發出（並作為 `agentCommand` 的後備機制）
+- `lifecycle`：由 `subscribeEmbeddedPiSession` 發出（並作為 `agentCommand` 的備用方案）
 - `assistant`：來自 pi-agent-core 的串流增量
 - `tool`：來自 pi-agent-core 的串流工具事件
 
 ## 聊天頻道處理
 
-- 助理增量會緩衝至聊天 `delta` 訊息中。
-- 會在 **生命週期結束/錯誤** 時發出聊天 `final`。
+- 助理增量會被緩衝到聊天 `delta` 訊息中。
+- 聊天 `final` 會在 **生命週期結束/錯誤** 時發出。
 
 ## 逾時
 
-- `agent.wait` 預設值：30秒（僅指等待時間）。可透過 `timeoutMs` 參數覆寫。
-- Agent runtime: `agents.defaults.timeoutSeconds` default 600s; enforced in `runEmbeddedPiAgent` abort timer.
+- `agent.wait` 預設值：30 秒（僅為等待時間）。`timeoutMs` 參數可覆寫。
+- Agent 執行時間：`agents.defaults.timeoutSeconds` 預設為 600 秒；在 `runEmbeddedPiAgent` 中止計時器中強制執行。
 
-## Where things can end early
+## 可能提前結束的地方
 
-- Agent timeout (abort)
-- AbortSignal (cancel)
-- Gateway disconnect or RPC timeout
-- `agent.wait` timeout (wait-only, does not stop agent)
+- Agent 逾時（中止）
+- AbortSignal（取消）
+- Gateway 中斷連線或 RPC 逾時
+- `agent.wait` 逾時（僅等待，不會停止 Agent）

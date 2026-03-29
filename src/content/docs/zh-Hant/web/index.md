@@ -1,5 +1,5 @@
 ---
-summary: "Gateway web surfaces: Control UI, bind modes, and security"
+summary: "Gateway web 介面：控制 UI、綁定模式與安全性"
 read_when:
   - You want to access the Gateway over Tailscale
   - You want the browser Control UI and config editing
@@ -8,23 +8,23 @@ title: "Web"
 
 # Web (Gateway)
 
-The Gateway serves a small **browser Control UI** (Vite + Lit) from the same port as the Gateway WebSocket:
+Gateway 會透過與 Gateway WebSocket 相同的連接埠，提供一個小型的 **瀏覽器控制 UI** (Vite + Lit)：
 
 - default: `http://<host>:18789/`
 - optional prefix: set `gateway.controlUi.basePath` (e.g. `/openclaw`)
 
-Capabilities live in [Control UI](/zh-Hant/web/control-ui).
-This page focuses on bind modes, security, and web-facing surfaces.
+功能位於 [Control UI](/en/web/control-ui) 中。
+本頁面著重於綁定模式、安全性以及網頁介面。
 
 ## Webhooks
 
-When `hooks.enabled=true`, the Gateway also exposes a small webhook endpoint on the same HTTP server.
-See [Gateway configuration](/zh-Hant/gateway/configuration) → `hooks` for auth + payloads.
+當 `hooks.enabled=true` 時，Gateway 也會在同一個 HTTP 伺服器上公開一個小型的 webhook 端點。
+請參閱 [Gateway configuration](/en/gateway/configuration) → `hooks` 以了解認證與 Payload。
 
 ## Config (default-on)
 
-The Control UI is **enabled by default** when assets are present (`dist/control-ui`).
-You can control it via config:
+當資源存在時 (`dist/control-ui`)，控制 UI **預設為啟用**。
+您可以透過設定檔來控制它：
 
 ```json5
 {
@@ -38,7 +38,7 @@ You can control it via config:
 
 ### Integrated Serve (recommended)
 
-Keep the Gateway on loopback and let Tailscale Serve proxy it:
+將 Gateway 保持在 loopback，並讓 Tailscale Serve 將其代理：
 
 ```json5
 {
@@ -49,15 +49,15 @@ Keep the Gateway on loopback and let Tailscale Serve proxy it:
 }
 ```
 
-Then start the gateway:
+然後啟動 gateway：
 
-```exec
+```bash
 openclaw gateway
 ```
 
-Open:
+開啟：
 
-- `https://<magicdns>/` (or your configured `gateway.controlUi.basePath`)
+- `https://<magicdns>/` (或您設定的 `gateway.controlUi.basePath`)
 
 ### Tailnet bind + token
 
@@ -71,15 +71,15 @@ Open:
 }
 ```
 
-Then start the gateway (token required for non-loopback binds):
+然後啟動 gateway (非 loopback 綁定需要 token)：
 
-```exec
+```bash
 openclaw gateway
 ```
 
-Open:
+開啟：
 
-- `http://<tailscale-ip>:18789/` (or your configured `gateway.controlUi.basePath`)
+- `http://<tailscale-ip>:18789/` (或您設定的 `gateway.controlUi.basePath`)
 
 ### Public internet (Funnel)
 
@@ -95,25 +95,25 @@ Open:
 
 ## Security notes
 
-- Gateway auth is required by default (token/password or Tailscale identity headers).
-- Non-loopback binds still **require** a shared token/password (`gateway.auth` or env).
-- The wizard generates a gateway token by default (even on loopback).
-- The UI sends `connect.params.auth.token` or `connect.params.auth.password`.
-- For non-loopback Control UI deployments, set `gateway.controlUi.allowedOrigins`
-  explicitly (full origins). Without it, gateway startup is refused by default.
-- `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` enables
-  Host-header origin fallback mode, but is a dangerous security downgrade.
-- 使用 Serve 時，當 `gateway.auth.allowTailscale` 為 `true` 時，Tailscale 身份標頭可以滿足控制 UI/WebSocket 身份驗證（不需要令牌/密碼）。
-  HTTP API 端點仍然需要令牌/密碼。設定
+- 預設情況下需要 Gateway 認證 (token/密碼或 Tailscale 身分標頭)。
+- 非 loopback 綁定仍然 **需要** 共用的 token/密碼 (`gateway.auth` 或環境變數)。
+- 精靈預設會產生 gateway token (即使在 loopback 上)。
+- UI 會發送 `connect.params.auth.token` 或 `connect.params.auth.password`。
+- 對於非 loopback 的控制 UI 部署，請明確設定 `gateway.controlUi.allowedOrigins`
+  (完整的來源)。如果沒有設定，預設會拒絕 gateway 啟動。
+- `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` 啟用
+  Host-header origin 後援模式，但這會造成危險的安全性降級。
+- 使用 Serve 時，當 `gateway.auth.allowTailscale` 為 `true`（無需 token/密碼），Tailscale 身分標頭即可滿足 Control UI/WebSocket 認證。
+  HTTP API 端點仍需 token/密碼。設定
   `gateway.auth.allowTailscale: false` 以要求明確的憑證。請參閱
-  [Tailscale](/zh-Hant/gateway/tailscale) 和 [安全性](/zh-Hant/gateway/security)。此
-  無令牌流程假設閘道主機是受信任的。
+  [Tailscale](/en/gateway/tailscale) 和 [Security](/en/gateway/security)。此
+  無 token 流程假設閘道主機是受信任的。
 - `gateway.tailscale.mode: "funnel"` 需要 `gateway.auth.mode: "password"`（共享密碼）。
 
-## 建置 UI
+## 建構 UI
 
-閘道從 `dist/control-ui` 提供靜態檔案。使用以下指令建置：
+閘道從 `dist/control-ui` 提供靜態檔案。使用以下指令建構：
 
-```exec
+```bash
 pnpm ui:build # auto-installs UI deps on first run
 ```

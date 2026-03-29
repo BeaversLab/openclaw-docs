@@ -8,19 +8,19 @@ read_when:
 
 # Groq
 
-[Groq](https://groq.com) 使用自訂 LPU 硬體，在開源模型（Llama、Gemma、Mistral 等）上提供超快的推論速度。OpenClaw 透過其相容 OpenAI 的 API 連接到 Groq。
+[Groq](https://groq.com) 使用自訂的 LPU 硬體，在開源模型（Llama、Gemma、Mistral 等）上提供超快推理。OpenClaw 透過其相容 OpenAI 的 API 連接到 Groq。
 
-- 提供者：`groq`
-- 驗證：`GROQ_API_KEY`
+- 提供者： `groq`
+- 驗證： `GROQ_API_KEY`
 - API：相容 OpenAI
 
-## 快速開始
+## 快速入門
 
 1. 從 [console.groq.com/keys](https://console.groq.com/keys) 取得 API 金鑰。
 
 2. 設定 API 金鑰：
 
-```exec
+```bash
 export GROQ_API_KEY="gsk_..."
 ```
 
@@ -51,7 +51,7 @@ export GROQ_API_KEY="gsk_..."
 
 ## 音訊轉錄
 
-Groq 也提供快速的 Whisper 音訊轉錄。當配置為媒體理解提供者時，OpenClaw 使用 Groq 的 `whisper-large-v3-turbo` 模型來轉錄語音訊息。
+Groq 也提供快速的 Whisper 音訊轉錄。當設定為媒體理解提供者時，OpenClaw 會使用 Groq 的 `whisper-large-v3-turbo` 模型來轉錄語音訊息。
 
 ```json5
 {
@@ -65,24 +65,24 @@ Groq 也提供快速的 Whisper 音訊轉錄。當配置為媒體理解提供者
 }
 ```
 
-## 環境說明
+## 環境注意事項
 
-如果 Gateway 作為守護程序（launchd/systemd）運行，請確保該程序可以存取 `GROQ_API_KEY`（例如，透過 `~/.openclaw/.env` 或 `env.shellEnv`）。
+如果 Gateway 作為守護程序（launchd/systemd）運行，請確保 `GROQ_API_KEY` 對該程序可用（例如，在 `~/.openclaw/.env` 中或透過 `env.shellEnv`）。
 
 ## 可用模型
 
-Groq 的模型目錄變更頻繁。請執行 `openclaw models list | grep groq` 以查看目前可用的模型，或查看 [console.groq.com/docs/models](https://console.groq.com/docs/models)。
+Groq 的模型目錄經常變更。執行 `openclaw models list | grep groq` 以查看目前可用的模型，或查看 [console.groq.com/docs/models](https://console.groq.com/docs/models)。
 
 熱門選擇包括：
 
-- **Llama 3.3 70B Versatile** - 通用，大上下文
-- **Llama 3.1 8B Instant** - 快速，輕量
-- **Gemma 2 9B** - 緊湊，高效
+- **Llama 3.3 70B Versatile** - 通用用途，大語境
+- **Llama 3.1 8B Instant** - 快速、輕量
+- **Gemma 2 9B** - 緊湊、高效
 - **Mixtral 8x7B** - MoE 架構，強大的推理能力
 
 ## 連結
 
 - [Groq Console](https://console.groq.com)
-- [API Documentation](https://console.groq.com/docs)
-- [Model List](https://console.groq.com/docs/models)
-- [Pricing](https://groq.com/pricing)
+- [API 文件](https://console.groq.com/docs)
+- [模型列表](https://console.groq.com/docs/models)
+- [定價](https://groq.com/pricing)

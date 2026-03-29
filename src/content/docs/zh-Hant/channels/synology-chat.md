@@ -6,41 +6,40 @@ read_when:
 title: "Synology Chat"
 ---
 
-# Synology Chat (外掛程式)
+# Synology Chat (外掛)
 
-狀態：透過外掛程式支援，作為使用 Synology Chat webhook 的直接訊息管道。
-此外掛程式接收來自 Synology Chat 傳出 webhook 的傳入訊息，並透過
-Synology Chat 傳入 webhook 傳送回覆。
+狀態：透過外掛支援作為使用 Synology Chat webhooks 的直接訊息 (DM) 頻道。
+此外掛接收來自 Synology Chat outgoing webhooks 的訊息，並透過 Synology Chat incoming webhook 發送回覆。
 
-## 需要外掛程式
+## 需要安裝外掛
 
-Synology Chat 是基於外掛程式的，並非預設核心管道安裝的一部分。
+Synology Chat 是基於外掛的，並非預設核心頻道安裝的一部分。
 
-從本機 checkout 安裝：
+從本地副本安裝：
 
-```exec
+```bash
 openclaw plugins install ./extensions/synology-chat
 ```
 
-詳細資訊：[外掛程式](/zh-Hant/tools/plugin)
+詳細資訊：[外掛](/en/tools/plugin)
 
 ## 快速設定
 
-1. 安裝並啟用 Synology Chat 外掛程式。
-   - `openclaw onboard` 現在會在與 `openclaw channels add` 相同的管道設定清單中顯示 Synology Chat。
+1. 安裝並啟用 Synology Chat 外掛。
+   - `openclaw onboard` 現在會在與 `openclaw channels add` 相同的頻道設定清單中顯示 Synology Chat。
    - 非互動式設定：`openclaw channels add --channel synology-chat --token <token> --url <incoming-webhook-url>`
-2. 在 Synology Chat 整合功能中：
-   - 建立傳入 webhook 並複製其 URL。
-   - 使用您的秘密金鑰建立傳出 webhook。
-3. 將傳出 webhook URL 指向您的 OpenClaw 閘道：
+2. 在 Synology Chat 整合中：
+   - 建立一個 incoming webhook 並複製其 URL。
+   - 使用您的 secret token 建立一個 outgoing webhook。
+3. 將 outgoing webhook URL 指向您的 OpenClaw gateway：
    - 預設為 `https://gateway-host/webhook/synology`。
-   - 或您的自訂 `channels.synology-chat.webhookPath`。
+   - 或是您的自訂 `channels.synology-chat.webhookPath`。
 4. 在 OpenClaw 中完成設定。
    - 引導式：`openclaw onboard`
-   - 直接式：`openclaw channels add --channel synology-chat --token <token> --url <incoming-webhook-url>`
-5. 重新啟動閘道並發送私訊給 Synology Chat 機器人。
+   - 直接：`openclaw channels add --channel synology-chat --token <token> --url <incoming-webhook-url>`
+5. 重新啟動 gateway 並傳送一則 DM 給 Synology Chat bot。
 
-最簡設定：
+最小設定：
 
 ```json5
 {
@@ -72,34 +71,41 @@ openclaw plugins install ./extensions/synology-chat
 
 設定值會覆蓋環境變數。
 
-## 私訊政策與存取控制
+## DM 政策與存取控制
 
-- 建議預設使用 `dmPolicy: "allowlist"`。
-- `allowedUserIds` 接受 Synology 使用者 ID 列表（或逗號分隔的字串）。
-- 在 `allowlist` 模式下，空的 `allowedUserIds` 列表會被視為錯誤配置，且 webhook 路由將不會啟動（使用 `dmPolicy: "open"` 以允許所有）。
+- 建議的預設值為 `dmPolicy: "allowlist"`。
+- `allowedUserIds` 接受 Synology 使用者 ID 的清單 (或以逗號分隔的字串)。
+- 在 `allowlist` 模式下，空的 `allowedUserIds` 清單會被視為設定錯誤，webhook 路由將不會啟動 (請使用 `dmPolicy: "open"` 來允許所有)。
 - `dmPolicy: "open"` 允許任何發送者。
 - `dmPolicy: "disabled"` 封鎖 DM。
-- 配對核准適用於：
+- 回覆收件者綁定預設保持在穩定的數值 `user_id` 上。`channels.synology-chat.dangerouslyAllowNameMatching: true` 是一種應急兼容模式，用於重新啟用可變的使用者名稱/暱稱查詢以進行回覆傳遞。
+- 配對審核適用於：
   - `openclaw pairing list synology-chat`
   - `openclaw pairing approve synology-chat <CODE>`
 
-## 外發傳遞
+## 出站傳遞
 
-使用數值型 Synology Chat 使用者 ID 作為目標。
+使用數值的 Synology Chat 使用者 ID 作為目標。
 
 範例：
 
-```exec
+```bash
 openclaw message send --channel synology-chat --target 123456 --text "Hello from OpenClaw"
 openclaw message send --channel synology-chat --target synology-chat:123456 --text "Hello again"
 ```
 
-透過基於 URL 的檔案傳遞來支援媒體傳送。
+透過基於 URL 的檔案傳遞支援媒體發送。
 
 ## 多重帳號
 
 在 `channels.synology-chat.accounts` 下支援多個 Synology Chat 帳號。
 每個帳號都可以覆寫 token、傳入 URL、webhook 路徑、DM 政策和限制。
+直接訊息階段會按帳號和使用者隔離，因此兩個不同 Synology 帳號上相同的數值 `user_id`
+不會共享對話紀錄狀態。
+請為每個啟用的帳號指定一個不同的 `webhookPath`。OpenClaw 現在會拒絕重複的完全相同路徑，
+並拒絕啟動在多重帳號設置中僅繼承共用 webhook 路徑的已命名帳號。
+如果您確實需要為已命名帳號保留舊版繼承功能，請在該帳號或 `channels.synology-chat` 上
+設定 `dangerouslyAllowInheritedWebhookPath: true`，但重複的完全相同路徑仍會被拒絕（故障安全）。建議優先使用明確的個別帳號路徑。
 
 ```json5
 {
@@ -124,9 +130,11 @@ openclaw message send --channel synology-chat --target synology-chat:123456 --te
 }
 ```
 
-## 安全備註
+## 安全性備註
 
-- 請將 `token` 保密，如果洩露請進行輪換。
-- 除非您明確信任本地 NAS 的自簽憑證，否則請啟用 `allowInsecureSsl: false`。
-- 入站 Webhook 請求已經過驗證權杖，並按發送者進行了速率限制。
-- 生產環境建議使用 `dmPolicy: "allowlist"`。
+- 請妥善保管 `token`，若發生洩漏請立即輪換。
+- 除非您明確信任自簽名的本機 NAS 憑證，否則請保持 `allowInsecureSsl: false`。
+- 傳入 webhook 請求會經過 token 驗證，並按發送者進行速率限制。
+- 正式環境建議使用 `dmPolicy: "allowlist"`。
+- 除非您明確需要基於舊版使用者名稱的回覆傳遞，否則請保持 `dangerouslyAllowNameMatching` 為關閉。
+- 除非您明確接受在多重帳號設置中共用路徑路由的風險，否則請保持 `dangerouslyAllowInheritedWebhookPath` 為關閉。

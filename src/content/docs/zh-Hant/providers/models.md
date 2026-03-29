@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw 支援的模型供應商 (LLM)"
+summary: "OpenClaw 支援的模型供應商 (LLMs)"
 read_when:
   - You want to choose a model provider
   - You want quick setup examples for LLM auth + model selection
@@ -8,11 +8,12 @@ title: "模型供應商快速入門"
 
 # 模型供應商
 
-OpenClaw 可以使用許多 LLM 供應商。選擇一個，進行身份驗證，然後將預設模型設定為 `provider/model`。
+OpenClaw 可以使用許多 LLM 供應商。選擇一個，進行驗證，然後將預設
+模型設定為 `provider/model`。
 
 ## 快速入門（兩個步驟）
 
-1. 與供應商進行身份驗證（通常透過 `openclaw onboard`）。
+1. 向供應商進行驗證（通常透過 `openclaw onboard`）。
 2. 設定預設模型：
 
 ```json5
@@ -21,24 +22,24 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個，進行身份驗證，
 }
 ```
 
-## 支援的供應商（入門套件）
+## 支援的供應商（入門組）
 
-- [OpenAI (API + Codex)](/zh-Hant/providers/openai)
-- [Anthropic (API + Claude Code CLI)](/zh-Hant/providers/anthropic)
-- [OpenRouter](/zh-Hant/providers/openrouter)
-- [Vercel AI Gateway](/zh-Hant/providers/vercel-ai-gateway)
-- [Cloudflare AI Gateway](/zh-Hant/providers/cloudflare-ai-gateway)
-- [Moonshot AI (Kimi + Kimi Coding)](/zh-Hant/providers/moonshot)
-- [Mistral](/zh-Hant/providers/mistral)
-- [Synthetic](/zh-Hant/providers/synthetic)
-- [OpenCode (Zen + Go)](/zh-Hant/providers/opencode)
-- [Z.AI](/zh-Hant/providers/zai)
-- [GLM 模型](/zh-Hant/providers/glm)
-- [MiniMax](/zh-Hant/providers/minimax)
-- [Venice (Venice AI)](/zh-Hant/providers/venice)
-- [Amazon Bedrock](/zh-Hant/providers/bedrock)
-- [Qianfan](/zh-Hant/providers/qianfan)
-- [xAI](/zh-Hant/providers/xai)
+- [OpenAI (API + Codex)](/en/providers/openai)
+- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
+- [OpenRouter](/en/providers/openrouter)
+- [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
+- [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
+- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
+- [Mistral](/en/providers/mistral)
+- [Synthetic](/en/providers/synthetic)
+- [OpenCode (Zen + Go)](/en/providers/opencode)
+- [Z.AI](/en/providers/zai)
+- [GLM 模型](/en/providers/glm)
+- [MiniMax](/en/providers/minimax)
+- [Venice (Venice AI)](/en/providers/venice)
+- [Amazon Bedrock](/en/providers/bedrock)
+- [Qianfan](/en/providers/qianfan)
+- [xAI](/en/providers/xai)
 
-如需完整的提供商目錄（xAI、Groq、Mistral 等）及進階設定，
-請參閱 [Model providers](/zh-Hant/concepts/model-providers)。
+若要查看完整的供應商目錄（xAI、Groq、Mistral 等）和進階配置，
+請參閱 [模型供應商](/en/concepts/model-providers)。

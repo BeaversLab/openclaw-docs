@@ -1,23 +1,51 @@
 ---
-summary: "跨管道共享的反應語義"
+summary: "所有支援頻道的 Reaction 工具語意"
 read_when:
   - Working on reactions in any channel
-title: "反應"
+  - Understanding how emoji reactions differ across platforms
+title: "Reactions"
 ---
 
-# 反應工具
+# Reactions
 
-跨管道共享的反應語義：
+Agent 可以使用 `message` 工具的 `react` 動作，在訊息上新增及移除 emoji 反應。反應行為會因頻道而異。
+
+## 運作方式
+
+```json
+{
+  "action": "react",
+  "messageId": "msg-123",
+  "emoji": "thumbsup"
+}
+```
 
 - 新增反應時需要 `emoji`。
-- 當支援時，`emoji=""` 會移除機器人的反應。
-- 當支援時，`remove: true` 會移除指定的表情符號（需要 `emoji`）。
+- 將 `emoji` 設為空字串 (`""`) 以移除 bot 的反應。
+- 設定 `remove: true` 以移除特定的 emoji (需要非空的 `emoji`)。
 
-管道備註：
+## 頻道行為
 
-- **Discord/Slack**：空的 `emoji` 會移除訊息上機器人的所有反應；`remove: true` 僅移除該表情符號。
-- **Google Chat**：空的 `emoji` 會移除訊息上應用程式的反應；`remove: true` 僅移除該表情符號。
-- **Telegram**：空的 `emoji` 會移除機器人的反應；`remove: true` 也會移除反應，但為了工具驗證，仍需要非空的 `emoji`。
-- **WhatsApp**：空的 `emoji` 會移除機器人反應；`remove: true` 對應至空表情符號（仍需要 `emoji`）。
-- **Zalo Personal (`zalouser`)**：需要非空的 `emoji`；`remove: true` 會移除該特定表情符號反應。
-- **Signal**：當啟用 `channels.signal.reactionNotifications` 時，傳入的反應通知會發出系統事件。
+<AccordionGroup>
+  <Accordion title="Discord 和 Slack">
+    - 空的 `emoji` 會移除該訊息上 bot 的所有反應。
+    - `remove: true` 僅移除指定的 emoji。
+  </Accordion>
+
+<Accordion title="Google Chat">- 空的 `emoji` 會移除該訊息上應用程式的反應。 - `remove: true` 僅移除指定的 emoji。</Accordion>
+
+<Accordion title="Telegram">- 空的 `emoji` 會移除 bot 的反應。 - `remove: true` 也會移除反應，但為了工具驗證，仍需要非空的 `emoji`。</Accordion>
+
+<Accordion title="WhatsApp">- 空的 `emoji` 會移除 bot 反應。 - `remove: true` 在內部會對應到空 emoji (在工具呼叫中仍需要 `emoji`)。</Accordion>
+
+<Accordion title="Zalo 個人版 (zalouser)">- 需要非空的 `emoji`。 - `remove: true` 會移除該特定的 emoji 反應。</Accordion>
+
+  <Accordion title="Signal">
+    - 傳入的反應通知由 `channels.signal.reactionNotifications` 控制：`"off"` 會停用它們，`"own"`（預設）會在使用者對機器人訊息做出反應時發出事件，而 `"all"` 則會為所有反應發出事件。
+  </Accordion>
+</AccordionGroup>
+
+## 相關
+
+- [Agent Send](/en/tools/agent-send) — 包含 `react` 的 `message` 工具
+- [Channels](/en/channels) — 特定頻道的設定

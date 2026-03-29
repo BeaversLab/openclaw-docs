@@ -10,9 +10,9 @@ read_when:
 
 本指南總結了在 OpenClaw 中處理 pi 整合的合理工作流程。
 
-## 類型檢查與 Linting
+## 型別檢查與 Lint
 
-- 類型檢查與建置：`pnpm build`
+- 型別檢查與建置：`pnpm build`
 - Lint：`pnpm lint`
 - 格式檢查：`pnpm format`
 - 推送前的完整檢查：`pnpm lint && pnpm build && pnpm test`
@@ -21,7 +21,7 @@ read_when:
 
 直接使用 Vitest 執行 Pi 專屬的測試組：
 
-```exec
+```bash
 pnpm test -- \
   "src/agents/pi-*.test.ts" \
   "src/agents/pi-embedded-*.test.ts" \
@@ -31,13 +31,13 @@ pnpm test -- \
   "src/agents/pi-extensions/**/*.test.ts"
 ```
 
-若要包含即時供應者練習：
+若要包含即時提供者的練習：
 
-```exec
+```bash
 OPENCLAW_LIVE_TEST=1 pnpm test -- src/agents/pi-embedded-runner-extraparams.live.test.ts
 ```
 
-這涵蓋了主要的 Pi 單元測試組：
+這涵蓋了主要的 Pi 單元測試套件：
 
 - `src/agents/pi-*.test.ts`
 - `src/agents/pi-embedded-*.test.ts`
@@ -50,31 +50,31 @@ OPENCLAW_LIVE_TEST=1 pnpm test -- src/agents/pi-embedded-runner-extraparams.live
 
 建議流程：
 
-- 在開發模式下執行 gateway：
+- 以開發模式執行閘道：
   - `pnpm gateway:dev`
-- 直接觸發 agent：
+- 直接觸發代理程式：
   - `pnpm openclaw agent --message "Hello" --thinking low`
 - 使用 TUI 進行互動式除錯：
   - `pnpm tui`
 
-針對工具呼叫行為，提示進行 `read` 或 `exec` 動作，以便您查看工具串流和載入處理。
+針對工具呼叫行為，提示要求 `read` 或 `exec` 動作，以便您查看工具串流與負載處理。
 
-## 全新重置
+## 完全重置
 
 狀態儲存在 OpenClaw 狀態目錄下。預設為 `~/.openclaw`。如果設定了 `OPENCLAW_STATE_DIR`，則改用該目錄。
 
 若要重置所有內容：
 
-- `openclaw.json` 用於配置
-- `credentials/` 用於驗證設定檔和權杖
-- `agents/<agentId>/sessions/` 用於 agent 會話歷史
-- `agents/<agentId>/sessions.json` 用於會話索引
-- `sessions/` 如果存在舊版路徑
-- `workspace/` 如果你想要一個空白的工作區
+- `openclaw.json` 用於設定
+- `credentials/` 用於設定檔與權杖
+- `agents/<agentId>/sessions/` 用於代理程式工作階段記錄
+- `agents/<agentId>/sessions.json` 用於工作階段索引
+- `sessions/` 如果舊版路徑存在
+- `workspace/` 如果您想要一個空白的工作區
 
-如果您只想重置會話，請刪除該代理程式的 `agents/<agentId>/sessions/` 和 `agents/<agentId>/sessions.json`。如果您不想重新進行身份驗證，請保留 `credentials/`。
+如果您只想重置工作階段，請刪除該代理程式的 `agents/<agentId>/sessions/` 和 `agents/<agentId>/sessions.json`。如果您不想重新進行身份驗證，請保留 `credentials/`。
 
 ## 參考資料
 
-- [測試](/zh-Hant/help/testing)
-- [開始使用](/zh-Hant/start/getting-started)
+- [測試](/en/help/testing)
+- [快速入門](/en/start/getting-started)

@@ -1,24 +1,24 @@
 ---
-summary: "SecretRef 憑證介面的標準支援與不支援"
+summary: "Canonical supported vs unsupported SecretRef credential surface"
 read_when:
   - Verifying SecretRef credential coverage
   - Auditing whether a credential is eligible for `secrets configure` or `secrets apply`
   - Verifying why a credential is outside the supported surface
-title: "SecretRef 憑證介面"
+title: "SecretRef Credential Surface"
 ---
 
-# SecretRef 憑證介面
+# SecretRef credential surface
 
-本頁定義了標準的 SecretRef 憑證介面。
+This page defines the canonical SecretRef credential surface.
 
-範圍意圖：
+Scope intent:
 
-- 範圍內：嚴格指由使用者提供，且 OpenClaw 不產生或輪替的憑證。
-- 範圍外：執行時期產生或輪替的憑證、OAuth 重新整理材料，以及類似階段性工作階段的構件。
+- In scope: strictly user-supplied credentials that OpenClaw does not mint or rotate.
+- Out of scope: runtime-minted or rotating credentials, OAuth refresh material, and session-like artifacts.
 
-## 支援的憑證
+## Supported credentials
 
-### `openclaw.json` 目標 (`secrets configure` + `secrets apply` + `secrets audit`)
+### `openclaw.json` targets (`secrets configure` + `secrets apply` + `secrets audit`)
 
 [//]: # "secretref-supported-list-start"
 
@@ -94,8 +94,8 @@ title: "SecretRef 憑證介面"
 - `channels.zalo.webhookSecret`
 - `channels.zalo.accounts.*.botToken`
 - `channels.zalo.accounts.*.webhookSecret`
-- 透過同層級 `serviceAccountRef` 存取 `channels.googlechat.serviceAccount`（相容性例外）
-- 透過同層級 `serviceAccountRef` 存取 `channels.googlechat.accounts.*.serviceAccount`（相容性例外）
+- 透過同層級 `serviceAccountRef` 的 `channels.googlechat.serviceAccount` (相容性例外)
+- 透過同層級 `serviceAccountRef` 的 `channels.googlechat.accounts.*.serviceAccount` (相容性例外)
 
 ### `auth-profiles.json` 目標 (`secrets configure` + `secrets apply` + `secrets audit`)
 
@@ -104,18 +104,18 @@ title: "SecretRef 憑證介面"
 
 [//]: # "secretref-supported-list-end"
 
-註：
+備註：
 
-- Auth-profile 計畫目標需要 `agentId`。
-- 計畫項目以 `profiles.*.key` / `profiles.*.token` 為目標，並寫入同級引用 (`keyRef` / `tokenRef`)。
-- Auth-profile 引用包含在執行時期解析和稽核覆蓋範圍內。
-- 對於由 SecretRef 管理的模型提供者，生成的 `agents/*/agent/models.json` 項目會針對 `apiKey`/header 表面保存非秘密標記（而非解析後的秘密值）。
-- Marker persistence is source-authoritative: OpenClaw writes markers from the active source config snapshot (pre-resolution), not from resolved runtime secret values.
-- For web search:
-  - In explicit provider mode (`tools.web.search.provider` set), only the selected provider key is active.
-  - In auto mode (`tools.web.search.provider` unset), only the first provider key that resolves by precedence is active.
-  - In auto mode, non-selected provider refs are treated as inactive until selected.
-  - Legacy `tools.web.search.*` provider paths still resolve during the compatibility window, but the canonical SecretRef surface is `plugins.entries.<plugin>.config.webSearch.*`.
+- Auth-profile plan 目標需要 `agentId`。
+- Plan 項目以 `profiles.*.key` / `profiles.*.token` 為目標並寫入同層級參照 (`keyRef` / `tokenRef`)。
+- Auth-profile 參照包含在執行階段解析和稽核範圍內。
+- 對於 SecretRef 管理的模型提供者，產生的 `agents/*/agent/models.json` 項目會針對 `apiKey`/header 介面保留非秘密標記 (非解析的秘密值)。
+- 標記持久性以來源為準：OpenClaw 根據作用中的來源設定快照（解析前）寫入標記，而非根據已解析的執行時期秘密值。
+- 針對網路搜尋：
+  - 在明確提供者模式（已設定 `tools.web.search.provider`）下，只有所選的提供者金鑰是作用中的。
+  - 在自動模式（未設定 `tools.web.search.provider`）下，只有依優先順序解析的第一個提供者金鑰是作用中的。
+  - 在自動模式下，非選定的提供者參照在被選定之前會被視為非作用中。
+  - 舊版 `tools.web.search.*` 提供者路徑在相容視窗期間仍會解析，但標準的 SecretRef 表面為 `plugins.entries.<plugin>.config.webSearch.*`。
 
 ## 不支援的憑證
 
@@ -135,6 +135,6 @@ title: "SecretRef 憑證介面"
 
 [//]: # "secretref-unsupported-list-end"
 
-理由：
+基本原理：
 
-- 這些憑證屬於已鑄造、輪替、承載會話或 OAuth 持久性類別，不適合唯讀的外部 SecretRef 解析。
+- 這些憑證屬於已鑄造、輪替、承載工作階段或 OAuth 持久性類別，不適用於唯讀的外部 SecretRef 解析。

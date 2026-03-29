@@ -1,67 +1,67 @@
 ---
-summary: "Mac 應用程式中的語音喚醒和即按即說模式以及路由詳細資訊"
+summary: "mac app 中的語音喚醒和按住講話模式以及路由詳情"
 read_when:
   - Working on voice wake or PTT pathways
 title: "語音喚醒 (macOS)"
 ---
 
-# 語音喚醒與即按即說
+# 語音喚醒與按住講話
 
 ## 模式
 
-- **喚醒詞模式** (預設)：永遠開啟的語音辨識器會等待觸發符記 (`swabbleTriggerWords`)。匹配後，它會開始擷取，顯示包含部分文字的覆蓋層，並在靜音後自動發送。
-- **即按即說 (按住右邊 Option 鍵)**：按住右邊 Option 鍵即可立即擷取——不需要觸發條件。按住時會顯示覆蓋層；放開後會經短暫延遲後完成並轉寄，以便您調整文字。
+- **喚醒詞模式** (預設)：常駐的語音辨識器等待觸發權杖 (`swabbleTriggerWords`)。匹配時開始錄製，顯示包含部分文字的覆蓋層，並在靜音後自動發送。
+- **按住講話 (長按右 Option 鍵)**：按住右 Option 鍵立即錄製 — 不需要觸發詞。按住時顯示覆蓋層；放開後會短暫延遲以微調文字，然後完成並轉發。
 
 ## 執行時期行為 (喚醒詞)
 
-- 語音辨識器位於 `VoiceWakeRuntime`。
-- 觸發僅在喚醒詞與下一個詞之間存在**有意義的暫停**時才會發生（約 0.55 秒的間隔）。覆蓋層/提示音可以在命令開始之前於暫停時啟動。
-- 靜音時間窗：當語音正在輸入時為 2.0 秒，若僅聽到觸發詞則為 5.0 秒。
-- 硬停止：120 秒以防止會話失控。
-- 會話之間的去抖動：350 毫秒。
-- 覆蓋層透過 `VoiceWakeOverlayController` 驅動，並具有已提交/易變性著色。
-- 發送後，識別器會乾淨地重新啟動以監聽下一個觸發詞。
+- 語音辨識器存在於 `VoiceWakeRuntime` 中。
+- 觸發僅在喚醒詞和下一個詞之間有**有意義的暫停**時觸發 (~0.55s 間隔)。覆蓋層/提示音可以在暫停時開始，甚至命令開始之前。
+- 靜音視窗：語音進行時為 2.0s，若僅聽到觸發詞則為 5.0s。
+- 強制停止：120s 以防止失控的會話。
+- 會話之間的防彈跳：350ms。
+- 覆蓋層透過 `VoiceWakeOverlayController` 驅動，並帶有已提交/揮發性著色。
+- 發送後，辨識器會乾淨地重新啟動以聆聽下一個觸發詞。
 
 ## 生命週期不變性
 
-- 如果啟用了語音喚醒並已授予權限，喚醒詞識別器應處於監聽狀態（在明確的按壓對講擷取期間除外）。
-- 覆蓋層的可見性（包括透過 X 按鈕手動關閉）絕不能阻止識別器恢復。
+- 如果啟用了語音喚醒並授予了權限，喚醒詞辨識器應該正在聆聽 (除了在明確的按住講話錄製期間)。
+- 覆蓋層的可見性 (包括透過 X 按鈕手動關閉) 絕不能阻止辨識器恢復。
 
-## 黏性覆蓋層失效模式（上一版）
+## 黏性覆蓋層失敗模式 (先前)
 
-先前，如果疊加層卡住可見並且您手動關閉了它，語音喚醒可能會顯示為「失效」，因為運行時的重啟嘗試可能會被疊加層可見性阻擋，並且沒有安排後續重啟。
+先前，如果覆蓋層卡住顯示而您手動關閉它，語音喚醒可能會顯示「死機」，因為執行時的重新啟動嘗試可能被覆蓋層可見性阻止，且未安排後續重新啟動。
 
-強化措施：
+強化：
 
-- Wake 運行時重啟不再受疊加層可見性的阻擋。
-- 疊加層解除完成會透過 `VoiceSessionCoordinator` 觸發 `VoiceWakeRuntime.refresh(...)`，因此手動 X-解除總是會恢復聆聽。
+- 喚醒執行時重新啟動不再被覆蓋層可見性阻止。
+- 覆蓋層關閉完成會透過 `VoiceSessionCoordinator` 觸發 `VoiceWakeRuntime.refresh(...)`，因此手動 X 關閉總是會恢復聆聽。
 
-## 按住通話細節
+## 按住講話細節
 
-- 熱鍵偵測使用全域 `.flagsChanged` 監視器來監控 **右選項** 鍵 (`keyCode 61` + `.option`)。我們僅觀察事件（不攔截）。
-- 擷取管線位於 `VoicePushToTalk` 中：立即啟動語音，將部分結果串流到疊加層，並在釋放時呼叫 `VoiceWakeForwarder`。
-- 當按下通話開始時，我們會暫停喚醒詞執行時以避免音訊輸入競爭；釋放後會自動重新啟動。
-- 權限：需要麥克風 + 語音權限；查看事件需要輔助功能 / 輸入監控的批准。
-- 外接鍵盤：某些鍵盤可能無法如預期般偵測右側 Option 鍵——如果使用者回報遺漏，請提供備用捷徑。
+- 快速鍵偵測使用全域 `.flagsChanged` 監視器來監控 **右 Option** (`keyCode 61` + `.option`)。我們僅觀察事件 (不吞噬)。
+- Capture pipeline lives in `VoicePushToTalk`: starts Speech immediately, streams partials to the overlay, and calls `VoiceWakeForwarder` on release.
+- When push-to-talk starts we pause the wake-word runtime to avoid dueling audio taps; it restarts automatically after release.
+- Permissions: requires Microphone + Speech; seeing events needs Accessibility/Input Monitoring approval.
+- External keyboards: some may not expose right Option as expected—offer a fallback shortcut if users report misses.
 
-## 使用者面向設定
+## User-facing settings
 
-- **Voice Wake** 切換開關：啟用喚醒詞執行時。
-- **按住 Cmd+Fn 通話**：啟用按下通話監控器。在 macOS < 26 上停用。
-- 語言與麥克風選擇器、即時電平表、觸發詞表格、測試程式（僅限本機；不會轉發）。
-- 如果裝置中斷連線，麥克風選擇器會保留最後的選擇，顯示已中斷連線的提示，並暫時退回至系統預設值，直到其回來為止。
-- **音效**：在觸發偵測與發送時播放提示音；預設為 macOS 的「Glass」系統音效。您可以為每個事件選擇任何 `NSSound` 可載入的檔案（例如 MP3/WAV/AIFF），或是選擇**無音效**。
+- **Voice Wake** toggle: enables wake-word runtime.
+- **Hold Cmd+Fn to talk**: enables the push-to-talk monitor. Disabled on macOS < 26.
+- Language & mic pickers, live level meter, trigger-word table, tester (local-only; does not forward).
+- Mic picker preserves the last selection if a device disconnects, shows a disconnected hint, and temporarily falls back to the system default until it returns.
+- **Sounds**: chimes on trigger detect and on send; defaults to the macOS “Glass” system sound. You can pick any `NSSound`-loadable file (e.g. MP3/WAV/AIFF) for each event or choose **No Sound**.
 
-## 轉送行為
+## Forwarding behavior
 
-- 當啟用 Voice Wake 時，文字紀錄會轉送到作用中的閘道/代理程式（與 mac 應用程式其餘部分使用的相同本地或遠端模式）。
-- 回覆會傳送至**最後使用的主要提供者**（WhatsApp/Telegram/Discord/WebChat）。如果傳送失敗，錯誤會被記錄下來，且執行結果仍可透過 WebChat/工作階段記錄檔查看。
+- When Voice Wake is enabled, transcripts are forwarded to the active gateway/agent (the same local vs remote mode used by the rest of the mac app).
+- Replies are delivered to the **last-used main provider** (WhatsApp/Telegram/Discord/WebChat). If delivery fails, the error is logged and the run is still visible via WebChat/session logs.
 
-## 轉送載荷
+## Forwarding payload
 
-- `VoiceWakeForwarder.prefixedTranscript(_:)` 會在發送前預先加入機器提示。此功能在喚醒詞與即按即說路徑之間共用。
+- `VoiceWakeForwarder.prefixedTranscript(_:)` prepends the machine hint before sending. Shared between wake-word and push-to-talk paths.
 
-## 快速驗證
+## Quick verification
 
-- 開啟即按即說，按住 Cmd+Fn，說話，放開：覆蓋層應顯示部分文字然後發送。
-- 按住時，選單列圖示應保持放大狀態（使用 `triggerVoiceEars(ttl:nil)`）；放開後則恢復。
+- Toggle push-to-talk on, hold Cmd+Fn, speak, release: overlay should show partials then send.
+- While holding, menu-bar ears should stay enlarged (uses `triggerVoiceEars(ttl:nil)`); they drop after release.

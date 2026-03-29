@@ -20,7 +20,7 @@ Use these when a task is clearly tied to a script; otherwise prefer the CLI.
 ## Auth monitoring scripts
 
 Auth monitoring scripts are documented here:
-[/automation/auth-monitoring](/zh-Hant/automation/auth-monitoring)
+[/automation/auth-monitoring](/en/automation/auth-monitoring)
 
 ## When adding scripts
 

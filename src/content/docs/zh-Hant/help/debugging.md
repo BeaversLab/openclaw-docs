@@ -1,5 +1,5 @@
 ---
-summary: "除錯工具：監視模式、原始模型串流與追蹤推理洩漏"
+summary: "除錯工具：監看模式、原始模型串流，以及追蹤推理洩漏"
 read_when:
   - You need to inspect raw model output for reasoning leakage
   - You want to run the Gateway in watch mode while iterating
@@ -9,13 +9,13 @@ title: "除錯"
 
 # 除錯
 
-本頁涵蓋串流輸出的除錯輔助功能，特別是當提供者將推理內容混入正常文字時。
+本頁面涵蓋串流輸出的除錯輔助工具，特別是當供應商將推理內容混合到正常文字中時。
 
-## 執行階段除錯覆寫
+## 執行時期除錯覆寫
 
-在聊天中使用 `/debug` 來設定**僅限執行階段**的設定覆寫（記憶體，非磁碟）。
-`/debug` 預設為停用；使用 `commands.debug: true` 啟用。
-當您需要切換冷門設定而不編輯 `openclaw.json` 時，這非常方便。
+在聊天中使用 `/debug` 來設定**僅限執行時期**的配置覆寫（記憶體中，而非磁碟）。
+`/debug` 預設為停用；請使用 `commands.debug: true` 啟用。
+當您需要切換不常用的設定而不編輯 `openclaw.json` 時，這非常方便。
 
 範例：
 
@@ -26,110 +26,108 @@ title: "除錯"
 /debug reset
 ```
 
-`/debug reset` 會清除所有覆寫並回到磁碟上的設定。
+`/debug reset` 會清除所有覆寫並回到磁碟上的配置。
 
-## Gateway 監視模式
+## Gateway 監看模式
 
-為了快速迭代，請在檔案監視器下執行 gateway：
+為了快速迭代，請在檔案監看器下執行 gateway：
 
-```exec
+```bash
 pnpm gateway:watch
 ```
 
 這對應至：
 
-```exec
+```bash
 node scripts/watch-node.mjs gateway --force
 ```
 
-監視器會針對 `src/` 下的建置相關檔案、擴充功能原始碼檔案、
-擴充功能 `package.json` 與 `openclaw.plugin.json` 元資料、`tsconfig.json`、
-`package.json` 和 `tsdown.config.ts` 進行重啟。擴充功能元資料變更會重啟
-Gateway，而不需強制 `tsdown` 重新建置；來源與設定變更仍然會
-先重新建置 `dist`。
+監看器會在 `src/` 下的建置相關檔案、擴充功能原始檔、
+擴充功能 `package.json` 與 `openclaw.plugin.json` 中繼資料、`tsconfig.json`、
+`package.json` 和 `tsdown.config.ts` 變更時重新啟動。
+擴充功能中繼資料變更會重新啟動 gateway，而不會強制進行 `tsdown` 重新建置；
+原始碼和配置變更仍會先重新建置 `dist`。
 
-在 `gateway:watch` 之後新增任何 Gateway CLI 旗標，它們將會在每次重啟時
-被傳遞下去。
+在 `gateway:watch` 之後新增任何 gateway CLI 標誌，它們將會在每次重新啟動時被傳遞。
 
-## Dev profile + dev gateway (--dev)
+## Dev 設定檔 + dev gateway (--dev)
 
-使用 dev profile 來隔離狀態並啟動安全、可捨棄的設定以進行
-除錯。共有 **兩個** `--dev` 旗標：
+使用 dev 設定檔來隔離狀態，並啟動安全的、可拋棄的設定進行除錯。
+共有 **兩個** `--dev` 標誌：
 
-- **Global `--dev` (profile):** isolates state under `~/.openclaw-dev` and
-  defaults the gateway port to `19001` (derived ports shift with it).
-- **`gateway --dev`: tells the Gateway to auto-create a default config +
-  workspace** when missing (and skip BOOTSTRAP.md).
+- **全域 `--dev`（設定檔）：** 將狀態隔離在 `~/.openclaw-dev` 下，並
+  將 gateway 連接埠預設為 `19001`（衍生連接埠會隨之變動）。
+- **`gateway --dev`：** 告訴 Gateway 在缺少時自動建立預設配置 +
+  workspace\*\*（並跳過 BOOTSTRAP.md）。
 
-Recommended flow (dev profile + dev bootstrap):
+建議流程（dev 設定檔 + dev 引導程序）：
 
-```exec
+```bash
 pnpm gateway:dev
 OPENCLAW_PROFILE=dev openclaw tui
 ```
 
-If you don’t have a global install yet, run the CLI via `pnpm openclaw ...`.
+如果您尚未全域安裝，請透過 `pnpm openclaw ...` 執行 CLI。
 
-What this does:
+這會做什麼：
 
-1. **Profile isolation** (global `--dev`)
+1. **設定檔隔離**（全域 `--dev`）
    - `OPENCLAW_PROFILE=dev`
    - `OPENCLAW_STATE_DIR=~/.openclaw-dev`
    - `OPENCLAW_CONFIG_PATH=~/.openclaw-dev/openclaw.json`
-   - `OPENCLAW_GATEWAY_PORT=19001` (browser/canvas shift accordingly)
+   - `OPENCLAW_GATEWAY_PORT=19001` (瀏覽器/畫布隨之移動)
 
 2. **Dev bootstrap** (`gateway --dev`)
-   - Writes a minimal config if missing (`gateway.mode=local`, bind loopback).
-   - 將 `agent.workspace` 設定為 dev 工作區。
-   - 設定 `agent.skipBootstrap=true`（無 BOOTSTRAP.md）。
-   - 如果缺少工作區檔案則進行種子設定：
-     `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`。
-   - 預設身分：**C3‑PO**（protocol droid）。
-   - 在 dev 模式下跳過通道提供者（`OPENCLAW_SKIP_CHANNELS=1`）。
+   - 如果缺少設定，則寫入最小設定 (`gateway.mode=local`，綁定 loopback)。
+   - 將 `agent.workspace` 設定為開發工作區。
+   - 設定 `agent.skipBootstrap=true` (無 BOOTSTRAP.md)。
+   - 如果缺少工作區檔案，則植入種子：
+     `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`。
+   - 預設身分：**C3‑PO** (protocol droid)。
+   - 在開發模式下略過頻道提供者 (`OPENCLAW_SKIP_CHANNELS=1`)。
 
-重設流程（重新開始）：
+重置流程 (重新開始)：
 
-```exec
+```bash
 pnpm gateway:dev:reset
 ```
 
-注意：`--dev` 是一個 **global** 設定檔旗標，會被某些 runner 吞掉。
-如果您需要完整拼寫，請使用環境變數格式：
+注意：`--dev` 是一個 **全域** 設定檔旗標，且會被某些執行器吞噬。
+如果您需要明確指定，請使用環境變數形式：
 
-```exec
+```bash
 OPENCLAW_PROFILE=dev openclaw gateway --dev --reset
 ```
 
-`--reset` 會清除設定、憑證、工作階段和 dev 工作區（使用
-`trash`，而非 `rm`），然後重建預設的 dev 設定。
+`--reset` 會清除設定、憑證、工作階段和開發工作區 (使用
+`trash`，而非 `rm`)，然後重新建立預設開發環境。
 
-提示：如果非開發版本的 Gateway 已經在執行（launchd/systemd），請先停止它：
+提示：如果非開發的 Gateway 已經在執行中 (launchd/systemd)，請先將其停止：
 
-```exec
+```bash
 openclaw gateway stop
 ```
 
-## 原始串流記錄
+## 原始串流記錄 (OpenClaw)
 
-OpenClaw 可以在任何過濾/格式化之前記錄**原始助理串流**。
-這是檢查推理內容是否以純文字增量
-（或獨立的思考區塊）到達的最佳方式。
+OpenClaw 可以在任何篩選/格式化之前記錄 **原始助手串流**。
+這是查看推理是否以純文字增量形式到達 (或是作為獨立的思考區塊) 的最佳方式。
 
-透過 CLI 啟用：
+透過 CLI 啟用它：
 
-```exec
+```bash
 pnpm gateway:watch --raw-stream
 ```
 
-可選的路徑覆蓋：
+可選路徑覆寫：
 
-```exec
+```bash
 pnpm gateway:watch --raw-stream --raw-stream-path ~/.openclaw/logs/raw-stream.jsonl
 ```
 
-對應的環境變數：
+對等環境變數：
 
-```exec
+```bash
 OPENCLAW_RAW_STREAM=1
 OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-stream.jsonl
 ```
@@ -140,16 +138,16 @@ OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-stream.jsonl
 
 ## 原始區塊記錄 (pi-mono)
 
-為了擷取在解析為區塊之前的**原始 OpenAI 相容區塊**，
-pi-mono 提供了一個獨立的記錄器：
+為了在將 **原始 OpenAI 相容區塊** 解析為區塊之前擷取它們，
+pi-mono 公開了一個獨立的記錄器：
 
-```exec
+```bash
 PI_RAW_STREAM=1
 ```
 
 可選路徑：
 
-```exec
+```bash
 PI_RAW_STREAM_PATH=~/.pi-mono/logs/raw-openai-completions.jsonl
 ```
 
@@ -162,6 +160,6 @@ PI_RAW_STREAM_PATH=~/.pi-mono/logs/raw-openai-completions.jsonl
 
 ## 安全注意事項
 
-- 原始串流記錄可能包含完整的提示詞、工具輸出和用戶數據。
-- 請將記錄檔保留在本地，並在除錯後將其刪除。
-- 如果您分享記錄檔，請先清除機密資訊和個人識別資訊 (PII)。
+- 原始串流記錄可能包含完整的提示詞、工具輸出和使用者資料。
+- 請將記錄保留在本機，並在偵錯後將其刪除。
+- 如果您分享記錄，請先清除機密和個人資訊。

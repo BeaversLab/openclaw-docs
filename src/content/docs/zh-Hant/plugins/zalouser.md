@@ -6,46 +6,46 @@ read_when:
 title: "Zalo Personal 外掛程式"
 ---
 
-# Zalo Personal（外掛程式）
+# Zalo Personal (外掛程式)
 
-透過外掛程式為 OpenClaw 提供 Zalo Personal 支援，使用原生 `zca-js` 自動化一般 Zalo 使用者帳戶。
+透過外掛程式為 OpenClaw 提供 Zalo Personal 支援，使用原生 `zca-js` 來自動化一般的 Zalo 使用者帳戶。
 
-> **警告：** 非官方自動化可能導致帳戶停權或封鎖。使用風險自負。
+> **警告：** 非官方的自動化可能導致帳戶停權/封鎖。使用風險請自行承擔。
 
 ## 命名
 
-頻道 ID 為 `zalouser`，以明確表示這是用於自動化 **個人 Zalo 使用者帳戶**（非官方）。我們將 `zalo` 保留給未來可能推出的官方 Zalo API 整合。
+頻道 ID 為 `zalouser`，以明確表示此功能自動化的是 **Zalo 個人帳戶**（非官方）。我們保留 `zalo` 給未來潛在的官方 Zalo API 整合。
 
 ## 執行位置
 
-此外掛程式在 **閘道程序內部** 執行。
+此外掛程式執行於 **Gateway 程序內部**。
 
-如果您使用遠端閘道，請在 **執行閘道的機器上** 安裝/設定，然後重新啟動閘道。
+如果您使用遠端 Gateway，請在 **執行 Gateway 的機器上** 安裝/設定它，然後重新啟動 Gateway。
 
-不需要外部的 `zca`/`openzca` CLI 二進制文件。
+不需要外部的 `zca`/`openzca` CLI 執行檔。
 
 ## 安裝
 
 ### 選項 A：從 npm 安裝
 
-```exec
+```bash
 openclaw plugins install @openclaw/zalouser
 ```
 
-之後重啟 Gateway。
+之後請重新啟動 Gateway。
 
-### 選項 B：從本地文件夾安裝（開發用）
+### 選項 B：從本機資料夾安裝（開發用）
 
-```exec
+```bash
 openclaw plugins install ./extensions/zalouser
 cd ./extensions/zalouser && pnpm install
 ```
 
-之後重啟 Gateway。
+之後請重新啟動 Gateway。
 
-## 配置
+## 設定
 
-頻道配置位於 `channels.zalouser` 下（而非 `plugins.entries.*`）：
+頻道設定位於 `channels.zalouser` 之下（而非 `plugins.entries.*`）：
 
 ```json5
 {
@@ -60,7 +60,7 @@ cd ./extensions/zalouser && pnpm install
 
 ## CLI
 
-```exec
+```bash
 openclaw channels login --channel zalouser
 openclaw channels logout --channel zalouser
 openclaw channels status --probe
@@ -74,4 +74,4 @@ openclaw directory peers list --channel zalouser --query "name"
 
 動作：`send`、`image`、`link`、`friends`、`groups`、`me`、`status`
 
-頻道訊息動作也支援用於訊息反應的 `react`。
+頻道訊息動作也支援 `react` 用於訊息回應。

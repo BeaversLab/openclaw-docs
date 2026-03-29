@@ -1,5 +1,5 @@
 ---
-summary: "將 WhatsApp 訊息廣播給多個代理"
+summary: "廣播 WhatsApp 訊息給多個代理"
 read_when:
   - Configuring broadcast groups
   - Debugging multi-agent replies in WhatsApp
@@ -9,22 +9,22 @@ title: "廣播群組"
 
 # 廣播群組
 
-**狀態：** 實驗性功能  
+**狀態：** 實驗性  
 **版本：** 新增於 2026.1.9
 
 ## 概覽
 
-廣播群組允許多個代理同時處理並回應同一則訊息。這讓您能夠建立專業的代理團隊，在單一 WhatsApp 群組或 DM 中協作 — 全部使用同一個電話號碼。
+廣播群組讓多個代理能夠同時處理並回應同一則訊息。這讓您可以建立專業的代理團隊，在單一 WhatsApp 群組或私訊中協作——全部使用同一個電話號碼。
 
 目前範圍：**僅限 WhatsApp**（網頁頻道）。
 
-廣播群組會在頻道允許清單和群組啟動規則之後進行評估。在 WhatsApp 群組中，這意味著當 OpenClaw 通常會回覆時才會進行廣播（例如：在被提及時，取決於您的群組設定）。
+廣播群組是在頻道允許清單和群組啟用規則之後進行評估。在 WhatsApp 群組中，這意味著廣播會在 OpenClaw 通常會回覆時發生（例如：在被提及時，視您的群組設定而定）。
 
 ## 使用案例
 
 ### 1. 專業代理團隊
 
-部署多個代理，各自負責原子化、專注的職責：
+部署多個具有獨立、專注職責的代理：
 
 ```
 Group: "Development Team"
@@ -35,7 +35,7 @@ Agents:
   - TestGenerator (suggests test cases)
 ```
 
-每個智能體處理相同的訊息並提供其專業的觀點。
+每個代理處理相同的訊息，並提供其專業的觀點。
 
 ### 2. 多語言支援
 
@@ -70,10 +70,10 @@ Agents:
 
 ### 基本設定
 
-新增一個頂層 `broadcast` 區塊（緊鄰 `bindings`）。鍵為 WhatsApp 對等 ID：
+新增一個頂層 `broadcast` 部分（在 `bindings` 旁邊）。鍵值為 WhatsApp 對端 ID：
 
 - 群組聊天：群組 JID（例如 `120363403215116621@g.us`）
-- 私人訊息：E.164 電話號碼（例如 `+15551234567`）
+- 私訊：E.164 電話號碼（例如 `+15551234567`）
 
 ```json
 {
@@ -83,15 +83,15 @@ Agents:
 }
 ```
 
-**結果：** 當 OpenClaw 打算在此聊天中回覆時，它將會執行這全部三個智能體。
+**結果：** 當 OpenClaw 在此聊天中回覆時，它將執行所有三個代理。
 
 ### 處理策略
 
-控制智能體如何處理訊息：
+控制代理如何處理訊息：
 
-#### 平行（預設）
+#### 並行（預設）
 
-所有智能體同時處理：
+所有代理同時處理：
 
 ```json
 {
@@ -104,7 +104,7 @@ Agents:
 
 #### 循序
 
-智能體依序處理（一個等待上一個完成）：
+代理依順序處理（一個等待前一個完成）：
 
 ```json
 {
@@ -155,39 +155,39 @@ Agents:
 ### 訊息流程
 
 1. **傳入訊息** 抵達 WhatsApp 群組
-2. **廣播檢查**：系統檢查對等 ID 是否在 `broadcast` 中
-3. **如果在廣播清單中**：
-   - 所有列出的代理程式都會處理該訊息
-   - 每個代理程式都有自己的會話金鑰和隔離的上下文
-   - 代理程式並行處理（預設）或順序處理
-4. **如果不在廣播清單中**：
-   - 應用正常路由（第一個匹配的綁定）
+2. **廣播檢查**：系統檢查對端 ID 是否位於 `broadcast` 中
+3. **若在廣播清單中**：
+   - 所有列出的代理處理該訊息
+   - 每個代理都有自己的會話金鑰和隔離的上下文
+   - 代理並行處理（預設）或循序處理
+4. **若不在廣播清單中**：
+   - 套用一般路由（第一個符合的綁定）
 
-注意：廣播群組不會繞過通道允許清單或群組啟動規則（提及/指令等）。它們僅在訊息符合處理資格時改變*執行哪些代理程式*。
+注意：廣播群組不會繞過頻道允許清單或群組啟用規則（提及/指令等）。它們僅在訊息符合處理資格時改變 _執行哪些代理_。
 
 ### 會話隔離
 
-廣播群組中的每個代理程式都保持完全分離的：
+廣播群組中的每個代理都維護完全獨立的：
 
-- **會話金鑰**（`agent:alfred:whatsapp:group:120363...` vs `agent:baerbel:whatsapp:group:120363...`）
-- **對話歷史**（代理程式看不到其他代理程式的訊息）
-- **工作區**（如果已配置，則為獨立的沙盒）
-- **工具存取權**（不同的允許/拒絕清單）
-- **記憶/上下文**（獨立的 IDENTITY.md、SOUL.md 等）
-- **群組上下文緩衝區**（用於上下文的最近群組訊息）是按對等節點共享的，因此在觸發時所有廣播代理程式都能看到相同的上下文
+- **Session keys** (`agent:alfred:whatsapp:group:120363...` vs `agent:baerbel:whatsapp:group:120363...`)
+- **Conversation history** (agent doesn't see other agents' messages)
+- **Workspace** (separate sandboxes if configured)
+- **Tool access** (different allow/deny lists)
+- **Memory/context** (separate IDENTITY.md, SOUL.md, etc.)
+- **Group context buffer** (recent group messages used for context) is shared per peer, so all broadcast agents see the same context when triggered
 
-這允許每個代理程式擁有：
+這允許每個代理擁有：
 
 - 不同的個性
-- 不同的工具存取權限（例如：唯讀 vs. 讀寫）
-- 不同的模型（例如：opus vs. sonnet）
+- Different tool access (e.g., read-only vs. read-write)
+- Different models (e.g., opus vs. sonnet)
 - 安裝不同的技能
 
-### 範例：隔離的工作階段
+### Example: Isolated Sessions
 
-在群組 `120363403215116621@g.us` 中，包含代理程式 `["alfred", "baerbel"]`：
+In group `120363403215116621@g.us` with agents `["alfred", "baerbel"]`:
 
-**Alfred 的上下文：**
+**Alfred's context:**
 
 ```
 Session: agent:alfred:whatsapp:group:120363403215116621@g.us
@@ -196,7 +196,7 @@ Workspace: /Users/pascal/openclaw-alfred/
 Tools: read, write, exec
 ```
 
-**Bärbel 的上下文：**
+**Bärbel's context:**
 
 ```
 Session: agent:baerbel:whatsapp:group:120363403215116621@g.us
@@ -205,11 +205,11 @@ Workspace: /Users/pascal/openclaw-baerbel/
 Tools: read only
 ```
 
-## 最佳實踐
+## Best Practices
 
-### 1. 保持代理程式專注
+### 1. Keep Agents Focused
 
-設計每個代理程式時，應賦予其單一、明確的職責：
+Design each agent with a single, clear responsibility:
 
 ```json
 {
@@ -219,12 +219,12 @@ Tools: read only
 }
 ```
 
-✅ **好：** 每個代理程式有一項工作  
-❌ **壞：** 一個通用的「開發助手」代理程式
+✅ **Good:** Each agent has one job  
+❌ **Bad:** One generic "dev-helper" agent
 
-### 2. 使用描述性名稱
+### 2. Use Descriptive Names
 
-讓每個代理程式的職責一目了然：
+Make it clear what each agent does:
 
 ```json
 {
@@ -236,9 +236,9 @@ Tools: read only
 }
 ```
 
-### 3. 設定不同的工具存取權限
+### 3. Configure Different Tool Access
 
-僅給予代理程式其所需的工具：
+Give agents only the tools they need:
 
 ```json
 {
@@ -253,37 +253,37 @@ Tools: read only
 }
 ```
 
-### 4. 監控效能
+### 4. Monitor Performance
 
-若有多個代理程式，請考慮：
+With many agents, consider:
 
-- 使用 `"strategy": "parallel"`（預設值）以提升速度
-- 將廣播群組限制在 5-10 個代理程式
-- 為較簡單的代理程式使用更快的模型
+- Using `"strategy": "parallel"` (default) for speed
+- Limiting broadcast groups to 5-10 agents
+- Using faster models for simpler agents
 
-### 5. 優雅地處理失敗
+### 5. Handle Failures Gracefully
 
-代理程式獨立失敗。一個代理程式的錯誤不會阻擋其他的：
+Agents fail independently. One agent's error doesn't block others:
 
 ```
 Message → [Agent A ✓, Agent B ✗ error, Agent C ✓]
 Result: Agent A and C respond, Agent B logs error
 ```
 
-## 相容性
+## Compatibility
 
-### 提供者
+### Providers
 
-廣播群組目前適用於：
+Broadcast groups currently work with:
 
-- ✅ WhatsApp（已實作）
-- 🚧 Telegram（計畫中）
-- 🚧 Discord（計畫中）
-- 🚧 Slack（計畫中）
+- ✅ WhatsApp (implemented)
+- 🚧 Telegram (planned)
+- 🚧 Discord (planned)
+- 🚧 Slack (planned)
 
-### 路由
+### Routing
 
-廣播群組可與現有路由並行運作：
+Broadcast groups work alongside existing routing:
 
 ```json
 {
@@ -299,44 +299,44 @@ Result: Agent A and C respond, Agent B logs error
 }
 ```
 
-- `GROUP_A`：僅 alfred 回應（正常路由）
-- `GROUP_B`：agent1 與 agent2 回應（廣播）
+- `GROUP_A`: Only alfred responds (normal routing)
+- `GROUP_B`: agent1 AND agent2 respond (broadcast)
 
-**優先順序：**`broadcast` 優先於 `bindings`。
+**Precedence:** `broadcast` takes priority over `bindings`.
 
-## 疑難排解
+## Troubleshooting
 
-### 代理程式無回應
+### Agents Not Responding
 
-**檢查：**
+**Check:**
 
-1. 代理程式 ID 存在於 `agents.list`
-2. Peer ID 格式正確（例如 `120363403215116621@g.us`）
-3. 代理程式不在拒絕清單中
+1. Agent IDs exist in `agents.list`
+2. Peer ID format is correct (e.g., `120363403215116621@g.us`)
+3. Agents are not in deny lists
 
-**除錯：**
+**Debug:**
 
-```exec
+```bash
 tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 ```
 
-### 僅有一個代理程式回應
+### Only One Agent Responding
 
 **原因：** Peer ID 可能位於 `bindings` 中，但不在 `broadcast` 中。
 
-**修復：** 加入至廣播設定或從綁定中移除。
+**修復：** 將其新增到廣播設定或從綁定中移除。
 
 ### 效能問題
 
-**如果在使用多個代理程式時速度緩慢：**
+**如果代理程式多時速度變慢：**
 
 - 減少每個群組的代理程式數量
-- 使用較輕量的模型（使用 sonnet 而非 opus）
+- 使用較輕量的模型（sonnet 而非 opus）
 - 檢查沙箱啟動時間
 
 ## 範例
 
-### 範例 1：Code Review 團隊
+### 範例 1：程式碼審查團隊
 
 ```json
 {
@@ -370,10 +370,10 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 **使用者傳送：** 程式碼片段  
 **回應：**
 
-- code-formatter：「已修正縮排並新增型別提示」
-- security-scanner：「⚠️ 第 12 行存在 SQL 注入漏洞」
-- test-coverage：「覆蓋率為 45%，缺少錯誤處理的測試」
-- docs-checker：「函式 `process_data` 缺少 docstring」
+- code-formatter: "已修正縮排並新增型別提示"
+- security-scanner: "⚠️ 第 12 行有 SQL 注入漏洞"
+- test-coverage: "覆蓋率為 45%，缺少錯誤情況的測試"
+- docs-checker: "函式 `process_data` 缺少文件字串"
 
 ### 範例 2：多語言支援
 
@@ -410,28 +410,28 @@ interface OpenClawConfig {
 
 - `strategy` (選用)：如何處理代理程式
   - `"parallel"` (預設)：所有代理程式同時處理
-  - `"sequential"`: Agents 按陣列順序處理
-- `[peerId]`: WhatsApp 群組 JID、E.164 號碼或其他對等 ID
-  - 值：應處理訊息的 Agent ID 陣列
+  - `"sequential"`：代理程式依陣列順序處理
+- `[peerId]`：WhatsApp 群組 JID、E.164 號碼或其他 Peer ID
+  - 值：應處理訊息的代理程式 ID 陣列
 
 ## 限制
 
-1. **最大 Agent 數量：** 沒有硬性限制，但 10 個以上的 Agent 可能會變慢
-2. **共享上下文：** Agent 看不到彼此的回應（依設計）
-3. **訊息排序：** 平行回應可能以任何順序到達
-4. **速率限制：** 所有 Agent 都計入 WhatsApp 速率限制
+1. **最大代理程式數：** 沒有硬性限制，但 10 個以上的代理程式可能會很慢
+2. **共享上下文：** 代理程式看不到彼此的回應（依照設計）
+3. **訊息排序：** 平行回應可能以任何順序抵達
+4. **速率限制：** 所有代理程式都計入 WhatsApp 速率限制
 
 ## 未來增強功能
 
-計畫中的功能：
+計畫功能：
 
-- [ ] 共享上下文模式 (Agent 看得到彼此的回應)
-- [ ] Agent 協調 (Agent 可以互相發送訊號)
-- [ ] 動態 Agent 選擇 (根據訊息內容選擇 Agent)
-- [ ] Agent 優先順序 (部分 Agent 會優先回應)
+- [ ] 共享上下文模式（代理程式能看到彼此的回應）
+- [ ] 代理程式協調（代理程式可以互相發送訊號）
+- [ ] 動態代理程式選擇（根據訊息內容選擇代理程式）
+- [ ] 代理程式優先順序（部分代理程式會先回應）
 
-## 另請參閱
+## 參見
 
-- [多 Agent 配置](/zh-Hant/tools/multi-agent-sandbox-tools)
-- [路由配置](/zh-Hant/channels/channel-routing)
-- [會話管理](/zh-Hant/concepts/session)
+- [多代理程式設定](/en/tools/multi-agent-sandbox-tools)
+- [路由設定](/en/channels/channel-routing)
+- [會話管理](/en/concepts/session)

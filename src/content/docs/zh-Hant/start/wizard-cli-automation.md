@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw CLI 的腳本化入門和代理程式設定"
+summary: "OpenClaw CLI 的指令碼入門與代理程式設定"
 read_when:
   - You are automating onboarding in scripts or CI
   - You need non-interactive examples for specific providers
@@ -9,13 +9,13 @@ sidebarTitle: "CLI 自動化"
 
 # CLI 自動化
 
-使用 `--non-interactive` 自動化 `openclaw onboard`。
+使用 `--non-interactive` 來自動化 `openclaw onboard`。
 
-<Note>`--json` 並不意味著非互動模式。請針對腳本使用 `--non-interactive` (以及 `--workspace`)。</Note>
+<Note>`--json` 並不表示非互動模式。請在指令碼中使用 `--non-interactive`（以及 `--workspace`）。</Note>
 
 ## 基準非互動範例
 
-```exec
+```bash
 openclaw onboard --non-interactive \
   --mode local \
   --auth-choice apiKey \
@@ -28,17 +28,17 @@ openclaw onboard --non-interactive \
   --skip-skills
 ```
 
-新增 `--json` 以取得機器可讀的摘要。
+新增 `--json` 以取得機器可讀取的摘要。
 
-使用 `--secret-input-mode ref` 將環境變數支援的參照儲存在認證設定檔中，而非純文字值。
-入門流程中提供環境變數參照與已設定的供應商參照 (`file` 或 `exec`) 之間的互動式選擇。
+使用 `--secret-input-mode ref` 將環境變數參照儲存在 auth profiles 中，而非純文字值。
+在入門流程中，可以在環境變數參照與已設定的提供者參照（`file` 或 `exec`）之間進行互動式選擇。
 
-在非互動 `ref` 模式下，必須在程序環境中設定供應商環境變數。
-現在，如果傳入的內嵌金鑰旗標沒有匹配的環境變數，將會快速失敗。
+在非互動式 `ref` 模式下，提供者環境變數必須在程序環境中設定。
+現在，如果傳入內聯金鑰旗標但沒有對應的環境變數，將會快速失敗。
 
 範例：
 
-```exec
+```bash
 openclaw onboard --non-interactive \
   --mode local \
   --auth-choice openai-api-key \
@@ -46,11 +46,11 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-## 供應商特定範例
+## 特定提供者的範例
 
 <AccordionGroup>
   <Accordion title="Gemini example">
-    ```exec
+    ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice gemini-api-key \
@@ -60,7 +60,7 @@ openclaw onboard --non-interactive \
     ```
   </Accordion>
   <Accordion title="Z.AI example">
-    ```exec
+    ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice zai-api-key \
@@ -70,7 +70,7 @@ openclaw onboard --non-interactive \
     ```
   </Accordion>
   <Accordion title="Vercel AI Gateway example">
-    ```exec
+    ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice ai-gateway-api-key \
@@ -80,7 +80,7 @@ openclaw onboard --non-interactive \
     ```
   </Accordion>
   <Accordion title="Cloudflare AI Gateway example">
-    ```exec
+    ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice cloudflare-ai-gateway-api-key \
@@ -92,7 +92,7 @@ openclaw onboard --non-interactive \
     ```
   </Accordion>
   <Accordion title="Moonshot example">
-    ```exec
+    ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice moonshot-api-key \
@@ -102,7 +102,7 @@ openclaw onboard --non-interactive \
     ```
   </Accordion>
   <Accordion title="Mistral example">
-    ```exec
+    ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice mistral-api-key \
@@ -112,7 +112,7 @@ openclaw onboard --non-interactive \
     ```
   </Accordion>
   <Accordion title="Synthetic example">
-    ```exec
+    ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice synthetic-api-key \
@@ -122,7 +122,7 @@ openclaw onboard --non-interactive \
     ```
   </Accordion>
   <Accordion title="OpenCode 範例">
-    ```exec
+    ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice opencode-zen \
@@ -133,7 +133,7 @@ openclaw onboard --non-interactive \
     切換至 `--auth-choice opencode-go --opencode-go-api-key "$OPENCODE_API_KEY"` 以使用 Go 目錄。
   </Accordion>
   <Accordion title="Ollama 範例">
-    ```exec
+    ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice ollama \
@@ -143,8 +143,8 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
   </Accordion>
-  <Accordion title="自訂供應商範例">
-    ```exec
+  <Accordion title="自訂提供者範例">
+    ```bash
     openclaw onboard --non-interactive \
       --mode local \
       --auth-choice custom-api-key \
@@ -157,11 +157,11 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    `--custom-api-key` 是選用的。如果省略，入門程序會檢查 `CUSTOM_API_KEY`。
+    `--custom-api-key` 是選用的。如果省略，入門流程會檢查 `CUSTOM_API_KEY`。
 
     參照模式變體：
 
-    ```exec
+    ```bash
     export CUSTOM_API_KEY="your-key"
     openclaw onboard --non-interactive \
       --mode local \
@@ -175,17 +175,17 @@ openclaw onboard --non-interactive \
       --gateway-bind loopback
     ```
 
-    在此模式下，入門程序會將 `apiKey` 儲存為 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
+    在此模式下，入門流程會將 `apiKey` 儲存為 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
 
   </Accordion>
 </AccordionGroup>
 
 ## 新增另一個代理程式
 
-使用 `openclaw agents add <name>` 建立具有獨立工作區、工作階段和認證設定檔的獨立代理程式。
-若不使用 `--workspace` 執行，將會啟動精靈。
+使用 `openclaw agents add <name>` 建立具有獨立工作區、
+階段作業和 auth profiles 的個別代理程式。若不帶 `--workspace` 執行，則會啟動精靈。
 
-```exec
+```bash
 openclaw agents add work \
   --workspace ~/.openclaw/workspace-work \
   --model openai/gpt-5.2 \
@@ -203,11 +203,11 @@ openclaw agents add work \
 備註：
 
 - 預設工作區遵循 `~/.openclaw/workspace-<agentId>`。
-- 加入 `bindings` 以路由傳入訊息（精靈可以執行此操作）。
-- 非互動式標誌：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
+- 新增 `bindings` 以路由傳入訊息（精靈可以執行此操作）。
+- 非互動式旗標：`--model`、`--agent-dir`、`--bind`、`--non-interactive`。
 
 ## 相關文件
 
-- 入站中心：[入站 (CLI)](/zh-Hant/start/wizard)
-- 完整參考：[CLI 設定參考](/zh-Hant/start/wizard-cli-reference)
-- 指令參考：[`openclaw onboard`](/zh-Hant/cli/onboard)
+- 上架中心：[上架 (CLI)](/en/start/wizard)
+- 完整參考：[CLI 設定參考](/en/start/wizard-cli-reference)
+- 指令參考：[`openclaw onboard`](/en/cli/onboard)

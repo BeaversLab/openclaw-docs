@@ -1,5 +1,5 @@
 ---
-summary: "Skills config schema and examples"
+summary: "Skills 配置架構與範例"
 read_when:
   - Adding or modifying skills config
   - Adjusting bundled allowlist or install behavior
@@ -8,7 +8,7 @@ title: "Skills Config"
 
 # Skills Config
 
-All skills-related configuration lives under `skills` in `~/.openclaw/openclaw.json`.
+所有與 Skills 相關的配置都位於 `skills` 的 `~/.openclaw/openclaw.json` 下。
 
 ```json5
 {
@@ -38,48 +38,53 @@ All skills-related configuration lives under `skills` in `~/.openclaw/openclaw.j
 }
 ```
 
-For built-in image generation/editing, prefer `agents.defaults.imageGenerationModel`
-plus the core `image_generate` tool. `skills.entries.*` is only for custom or
-third-party skill workflows.
+對於內建的影像生成/編輯，建議使用 `agents.defaults.imageGenerationModel`
+加上核心的 `image_generate` 工具。`skills.entries.*` 僅適用於自訂或
+第三方 Skills 工作流程。
 
-Examples:
+如果您選擇了特定的影像提供者/模型，請同時配置該提供者的
+驗證/API 金鑰。常見範例：`GEMINI_API_KEY` 或 `GOOGLE_API_KEY` 用於
+`google/*`，`OPENAI_API_KEY` 用於 `openai/*`，以及 `FAL_KEY` 用於 `fal/*`。
 
-- Native Nano Banana-style setup: `agents.defaults.imageGenerationModel.primary: "google/gemini-3-pro-image-preview"`
-- Native fal setup: `agents.defaults.imageGenerationModel.primary: "fal/fal-ai/flux/dev"`
+範例：
 
-## Fields
+- 原生 Nano Banana 風格設定：`agents.defaults.imageGenerationModel.primary: "google/gemini-3-pro-image-preview"`
+- 原生 fal 設定：`agents.defaults.imageGenerationModel.primary: "fal/fal-ai/flux/dev"`
 
-- `allowBundled`: optional allowlist for **bundled** skills only. When set, only
-  bundled skills in the list are eligible (managed/workspace skills unaffected).
-- `load.extraDirs`: additional skill directories to scan (lowest precedence).
-- `load.watch`: watch skill folders and refresh the skills snapshot (default: true).
-- `load.watchDebounceMs`: debounce for skill watcher events in milliseconds (default: 250).
-- `install.preferBrew`: prefer brew installers when available (default: true).
-- `install.nodeManager`: node installer preference (`npm` | `pnpm` | `yarn` | `bun`, default: npm).
-  This only affects **skill installs**; the Gateway runtime should still be Node
-  (Bun not recommended for WhatsApp/Telegram).
-- `entries.<skillKey>`: per-skill overrides.
+## 欄位
 
-Per-skill fields:
+- `allowBundled`：僅針對 **內建** Skills 的可選允許清單。設定後，僅清單中的
+  內建 Skills 符合資格（受管理/工作區 Skills 不受影響）。
+- `load.extraDirs`：要掃描的其他 Skills 目錄（優先順序最低）。
+- `load.watch`：監看 Skills 資料夾並重新整理 Skills 快照（預設為 true）。
+- `load.watchDebounceMs`：Skills 監看事件的防震動時間（毫秒，預設為 250）。
+- `install.preferBrew`：當可用時優先使用 brew 安裝程式（預設為 true）。
+- `install.nodeManager`：node 安裝程式偏好設定（`npm` | `pnpm` | `yarn` | `bun`，預設為 npm）。
+  這僅影響 **Skills 安裝**；Gateway 執行時應仍為 Node
+  （不建議在 WhatsApp/Telegram 上使用 Bun）。
+- `entries.<skillKey>`：個別 Skills 的覆寫設定。
 
-- `enabled`: set `false` to disable a skill even if it’s bundled/installed.
-- `env`: environment variables injected for the agent run (only if not already set).
-- `apiKey`: optional convenience for skills that declare a primary env var.
-  Supports plaintext string or SecretRef object (`{ source, provider, id }`).
+個別 Skills 欄位：
 
-## Notes
+- `enabled`：設定 `false` 以停用 Skill，即使該 Skill 已內建/安裝。
+- `env`：為代理執行注入的環境變數（僅在尚未設定時）。
+- `apiKey`：針對宣告主要環境變數的技能的選用便利設定。
+  支援純文字字串或 SecretRef 物件 (`{ source, provider, id }`)。
 
-- Keys under `entries` map to the skill name by default. If a skill defines
-  `metadata.openclaw.skillKey`, use that key instead.
-- 當啟用監視器時，對技能的變更將在下一個代理輪次中生效。
+## 注意事項
 
-### 沙盒化技能 + 環境變數
+- `entries` 下的鍵預設對應至技能名稱。如果技能定義了
+  `metadata.openclaw.skillKey`，請改用該鍵。
+- 當啟用監看器時，對技能的變更會在下一個代理回合中被套用。
 
-當工作階段處於**沙盒化**狀態時，技能程序會在 Docker 內執行。沙盒**不會**繼承主機的 `process.env`。
+### 沙箱技能 + 環境變數
 
-使用下列其中之一：
+當工作階段處於 **沙箱** 模式時，技能程序會在 Docker 內執行。沙箱
+**不會** 繼承主機的 `process.env`。
+
+使用以下其中之一：
 
 - `agents.defaults.sandbox.docker.env` (或每個代理的 `agents.list[].sandbox.docker.env`)
-- 將環境變數內建至您的自訂沙盒映像中
+- 將環境變數內建至您的自訂沙箱映像中
 
-全域 `env` 和 `skills.entries.<skill>.env/apiKey` 僅適用於**主機**執行。
+全域 `env` 和 `skills.entries.<skill>.env/apiKey` 僅適用於 **主機** 執行。

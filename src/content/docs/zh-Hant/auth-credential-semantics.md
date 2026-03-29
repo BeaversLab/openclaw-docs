@@ -1,23 +1,23 @@
 ---
-title: "Auth Credential Semantics"
-summary: "Canonical credential eligibility and resolution semantics for auth profiles"
+title: "認證憑證語意"
+summary: "用於認證設定檔的規範憑證資格與解析語意"
 read_when:
   - Working on auth profile resolution or credential routing
   - Debugging model auth failures or profile order
 ---
 
-# Auth Credential Semantics
+# 認證憑證語意
 
-This document defines the canonical credential eligibility and resolution semantics used across:
+本文件定義了以下範圍中使用的規範憑證資格與解析語意：
 
 - `resolveAuthProfileOrder`
 - `resolveApiKeyForProfile`
 - `models status --probe`
 - `doctor-auth`
 
-The goal is to keep selection-time and runtime behavior aligned.
+目標是保持選擇時間與執行階段的行為一致。
 
-## Stable Reason Codes
+## 穩定原因代碼
 
 - `ok`
 - `missing_credential`
@@ -25,29 +25,29 @@ The goal is to keep selection-time and runtime behavior aligned.
 - `expired`
 - `unresolved_ref`
 
-## Token Credentials
+## 權杖憑證
 
-權杖憑證 (`type: "token"`) 支援行內 `token` 和/或 `tokenRef`。
+權杖憑證 (`type: "token"`) 支援內聯 `token` 和/或 `tokenRef`。
 
 ### 資格規則
 
 1. 當同時缺少 `token` 和 `tokenRef` 時，權杖設定檔不符合資格。
-2. `expires` 是選用的。
-3. 如果存在 `expires`，它必須是大於 `0` 的有限數值。
-4. 如果 `expires` 無效（`NaN`、`0`、負數、非有限數或類型錯誤），則該設定檔因 `invalid_expires` 而不符合資格。
-5. 如果 `expires` 在過去，則該設定檔因 `expired` 而不符合資格。
+2. `expires` 為選用。
+3. 如果存在 `expires`，它必須是大於 `0` 的有限數字。
+4. 如果 `expires` 無效（`NaN`、`0`、負數、非有限數字或類型錯誤），則該設定檔因 `invalid_expires` 而不符合資格。
+5. 如果 `expires` 已過期，則該設定檔因 `expired` 而不符合資格。
 6. `tokenRef` 並不繞過 `expires` 驗證。
 
 ### 解析規則
 
-1. 解析器語義與 `expires` 的資格語義相符。
-2. 對於符合資格的設定檔，token 內容可以從內嵌值或 `tokenRef` 解析。
-3. 無法解析的引用會在 `models status --probe` 輸出中產生 `unresolved_ref`。
+1. 解析器語意符合 `expires` 的資格語意。
+2. 對於符合資格的設定檔，權杖內容可以從內聯值或 `tokenRef` 解析。
+3. 無法解析的參照會在 `models status --probe` 輸出中產生 `unresolved_ref`。
 
 ## 舊版相容訊息
 
-為了與腳本相容，探測錯誤會將第一行保持不變：
+為了與腳本相容，探錯錯誤會保留第一行不變：
 
 `Auth profile credentials are missing or expired.`
 
-人類可讀的詳細資訊和穩定的原因代碼可能會在後續行中新增。
+後續行可以加入人類可讀的詳細資訊和穩定的原因代碼。

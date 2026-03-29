@@ -1,27 +1,28 @@
 ---
-summary: 「Per-agent sandbox + tool restrictions, precedence, and examples」
-title: Multi-Agent Sandbox & Tools
-read_when: 「You want per-agent sandboxing or per-agent tool allow/deny policies in a multi-agent gateway.」
+summary: 「各代理程式沙箱 + 工具限制、優先順序與範例」
+title: 多代理程式沙箱與工具
+read_when: 「您希望在多代理程式閘道中設定各代理程式的沙箱，或是各代理程式的工具允許/拒絕策略。」
 status: active
 ---
 
-# Multi-Agent Sandbox & Tools Configuration
+# 多代理程式沙箱與工具設定
 
-在多代理設定中，每個代理都可以覆寫全域沙箱和工具原則。本頁面涵蓋了每個代理的設定、優先順序規則和範例。
+在多代理程式設定中，每個代理程式都可以覆寫全域沙箱和工具政策。本頁涵蓋各代理程式的設定、優先順序規則與範例。
 
-- **Sandbox backends and modes**：請參閱 [Sandboxing](/zh-Hant/gateway/sandboxing)。
-- **Debugging blocked tools**：請參閱 [Sandbox vs Tool Policy vs Elevated](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated) 和 `openclaw sandbox explain`。
-- **Elevated exec**：請參閱 [Elevated Mode](/zh-Hant/tools/elevated)。
+- **沙箱後端與模式**：請參閱 [沙箱隔離](/en/gateway/sandboxing)。
+- **除錯被阻擋的工具**：請參閱 [沙箱 vs 工具政策 vs 提升權限](/en/gateway/sandbox-vs-tool-policy-vs-elevated) 與 `openclaw sandbox explain`。
+- **提升權限執行**：請參閱 [提升權限模式](/en/tools/elevated)。
 
-驗證是針對每個代理獨立的：每個代理會從其位於 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 的自己的 `agentDir` 驗證儲存區讀取。
-憑證在代理之間**不**共享。切勿在代理之間重複使用 `agentDir`。
-如果您想共享憑證，請將 `auth-profiles.json` 複製到另一個代理的 `agentDir` 中。
+身分驗證是以代理程式為單位：每個代理程式會從其位於
+`~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 的 `agentDir` 驗證儲存庫中讀取。
+憑證**不會**在代理程式之間共享。切勿跨代理程式重複使用 `agentDir`。
+如果您想共享憑證，請將 `auth-profiles.json` 複製到另一個代理程式的 `agentDir` 中。
 
 ---
 
-## Configuration Examples
+## 設定範例
 
-### Example 1: Personal + Restricted Family Agent
+### 範例 1：個人 + 受限的家庭代理程式
 
 ```json
 {
@@ -67,12 +68,12 @@ status: active
 
 **結果：**
 
-- `main` 代理：在主機上執行，擁有完整工具存取權
-- `family` 代理：在 Docker 中執行（每個代理一個容器），僅限 `read` 工具
+- `main` 代理程式：在主機上執行，完整工具存取權
+- `family` 代理程式：在 Docker 中執行（每個代理程式一個容器），僅限 `read` 工具
 
 ---
 
-### Example 2: Work Agent with Shared Sandbox
+### 範例 2：具有共用沙箱的工作代理程式
 
 ```json
 {
@@ -103,7 +104,7 @@ status: active
 
 ---
 
-### Example 2b: Global coding profile + messaging-only agent
+### 範例 2b：全域編碼設定檔 + 僅限訊息傳遞的代理程式
 
 ```json
 {
@@ -121,12 +122,12 @@ status: active
 
 **結果：**
 
-- 預設代理獲得編碼工具
-- `support` 代理僅限傳訊（+ Slack 工具）
+- 預設代理程式取得編碼工具
+- `support` 代理程式僅限訊息傳遞（+ Slack 工具）
 
 ---
 
-### Example 3: Different Sandbox Modes per Agent
+### 範例 3：每個代理程式不同的沙箱模式
 
 ```json
 {
@@ -164,13 +165,13 @@ status: active
 
 ---
 
-## Configuration Precedence
+## 設定優先順序
 
-當同時存在全域 (`agents.defaults.*`) 和代理特定 (`agents.list[].*`) 設定時：
+當同時存在全域 (`agents.defaults.*`) 和代理程式特定 (`agents.list[].*`) 設定時：
 
-### Sandbox Config
+### 沙箱設定
 
-代理特定設定會覆寫全域設定：
+代理程式特定設定會覆寫全域設定：
 
 ```
 agents.list[].sandbox.mode > agents.defaults.sandbox.mode
@@ -182,31 +183,31 @@ agents.list[].sandbox.browser.* > agents.defaults.sandbox.browser.*
 agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 ```
 
-**注意：**
+**備註：**
 
-- `agents.list[].sandbox.{docker,browser,prune}.*` 會覆寫該代理的 `agents.defaults.sandbox.{docker,browser,prune}.*`（當沙箱範圍解析為 `"shared"` 時會被忽略）。
+- `agents.list[].sandbox.{docker,browser,prune}.*` 會覆寫該代理程式的 `agents.defaults.sandbox.{docker,browser,prune}.*`（當沙箱範圍解析為 `"shared"` 時會被忽略）。
 
-### Tool Restrictions
+### 工具限制
 
-篩選順序為：
+篩選順序如下：
 
 1. **工具設定檔** (`tools.profile` 或 `agents.list[].tools.profile`)
 2. **提供者工具設定檔** (`tools.byProvider[provider].profile` 或 `agents.list[].tools.byProvider[provider].profile`)
-3. **全域工具政策** (`tools.allow` / `tools.deny`)
-4. **提供者工具政策** (`tools.byProvider[provider].allow/deny`)
-5. **代理程式特定工具政策** (`agents.list[].tools.allow/deny`)
-6. **代理程式提供者政策** (`agents.list[].tools.byProvider[provider].allow/deny`)
-7. **沙箱工具政策** (`tools.sandbox.tools` 或 `agents.list[].tools.sandbox.tools`)
-8. **子代理程式工具政策** (`tools.subagents.tools`，如適用)
+3. **全域工具原則** (`tools.allow` / `tools.deny`)
+4. **提供者工具原則** (`tools.byProvider[provider].allow/deny`)
+5. **代理程式特定工具原則** (`agents.list[].tools.allow/deny`)
+6. **代理程式提供者原則** (`agents.list[].tools.byProvider[provider].allow/deny`)
+7. **沙箱工具原則** (`tools.sandbox.tools` 或 `agents.list[].tools.sandbox.tools`)
+8. **子代理程式工具原則** (`tools.subagents.tools`，如適用)
 
-每個層級都可以進一步限制工具，但不能恢復前一層級已拒絕的工具。
-如果設定了 `agents.list[].tools.sandbox.tools`，它會取代該代理程式的 `tools.sandbox.tools`。
-如果設定了 `agents.list[].tools.profile`，它會覆寫該代理程式的 `tools.profile`。
+每個層級都可以進一步限制工具，但無法恢復先前層級中已拒絕的工具。
+如果設定了 `agents.list[].tools.sandbox.tools`，它將取代該代理程式的 `tools.sandbox.tools`。
+如果設定了 `agents.list[].tools.profile`，它將覆寫該代理程式的 `tools.profile`。
 提供者工具金鑰接受 `provider` (例如 `google-antigravity`) 或 `provider/model` (例如 `openai/gpt-5.2`)。
 
-工具政策支援 `group:*` 簡寫，這些簡寫會展開為多個工具。完整清單請參閱 [工具群組](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)。
+工具原則支援 `group:*` 簡寫，可擴展為多個工具。完整列表請參閱 [工具群組](/en/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands)。
 
-各代理程式的提權覆寫 (`agents.list[].tools.elevated`) 可以進一步限制特定代理程式的提權執行。詳情請參閱 [提權模式](/zh-Hant/tools/elevated)。
+各代理程式的提升權限覆寫 (`agents.list[].tools.elevated`) 可以針對特定代理程式進一步限制提升權限執行。詳細資訊請參閱 [提升模式](/en/tools/elevated)。
 
 ---
 
@@ -252,7 +253,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 }
 ```
 
-舊版 `agent.*` 設定會由 `openclaw doctor` 遷移；建議今後使用 `agents.defaults` + `agents.list`。
+舊版 `agent.*` 設定會由 `openclaw doctor` 遷移；今後建議優先使用 `agents.defaults` + `agents.list`。
 
 ---
 
@@ -280,7 +281,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 }
 ```
 
-### 純通訊代理程式
+### 僅通訊代理程式
 
 ```json
 {
@@ -294,38 +295,38 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 ---
 
-## 常見陷阱："non-main"
+## 常見陷阱：「non-main」
 
 `agents.defaults.sandbox.mode: "non-main"` 是基於 `session.mainKey` (預設為 `"main"`)，
-而非代理程式 ID。群組/頻道會話總是會獲得自己的金鑰，因此它們
-會被視為 non-main 並將會被沙箱化。如果您希望代理程式永不
-使用沙箱，請設定 `agents.list[].sandbox.mode: "off"`。
+而非代理程式 ID。群組/頻道工作階段總是會獲得自己的金鑰，因此
+它們會被視為 non-main 並將受到沙箱限制。如果您希望代理程式永遠
+不要使用沙箱，請設定 `agents.list[].sandbox.mode: "off"`。
 
 ---
 
 ## 測試
 
-設定多代理程式沙箱與工具後：
+設定多代理程式沙箱和工具後：
 
 1. **檢查代理程式解析：**
 
-   ```exec
+   ```bash
    openclaw agents list --bindings
    ```
 
 2. **驗證沙箱容器：**
 
-   ```exec
+   ```bash
    docker ps --filter "name=openclaw-sbx-"
    ```
 
 3. **測試工具限制：**
-   - 傳送一則需要受限制工具的訊息
+   - 傳送需要受限工具的訊息
    - 驗證代理程式無法使用被拒絕的工具
 
 4. **監控日誌：**
 
-   ```exec
+   ```bash
    tail -f "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/logs/gateway.log" | grep -E "routing|sandbox|tools"
    ```
 
@@ -333,29 +334,29 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 ## 疑難排解
 
-### 儘管設定了 `mode: "all"`，代理程式仍未被沙箱化
+### 代理程式未受沙箱保護，儘管有 `mode: "all"`
 
 - 檢查是否有全域 `agents.defaults.sandbox.mode` 覆蓋了它
-- 代理程式專屬設定優先，請設定 `agents.list[].sandbox.mode: "all"`
+- 代理程式特定設定具有優先權，因此請設定 `agents.list[].sandbox.mode: "all"`
 
-### 儘管有拒絕清單，工具仍可使用
+### 儘管有拒絕列表，工具仍然可用
 
 - 檢查工具過濾順序：全域 → 代理程式 → 沙箱 → 子代理程式
-- 每個層級只能進一步限制，不能重新授予
-- 透過日誌驗證：`[tools] filtering tools for agent:${agentId}`
+- 每個層級只能進一步限制，無法恢復權限
+- 使用日誌驗證：`[tools] filtering tools for agent:${agentId}`
 
-### 容器未按代理程式隔離
+### 容器未依代理程式隔離
 
-- 在代理程式專屬沙箱設定中設定 `scope: "agent"`
-- 預設值為 `"session"`，這會為每個工作階段建立一個容器
+- 在代理程式特定的沙箱設定中設定 `scope: "agent"`
+- 預設值為 `"session"`，這會為每個階段建立一個容器
 
 ---
 
 ## 另請參閱
 
-- [沙箱機制](/zh-Hant/gateway/sandboxing) -- 完整的沙箱參考（模式、範圍、後端、映像檔）
-- [沙箱 vs 工具原則 vs 提升權限](/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated) -- 除錯「為什麼這被阻擋了？」
-- [提升權限模式](/zh-Hant/tools/elevated)
-- [多代理程式路由](/zh-Hant/concepts/multi-agent)
-- [沙箱設定](/zh-Hant/gateway/configuration-reference#agents-defaults-sandbox)
-- [工作階段管理](/zh-Hant/concepts/session)
+- [Sandboxing](/en/gateway/sandboxing) -- 完整的沙箱參考（模式、範圍、後端、映像檔）
+- [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- 除錯「為什麼這被阻擋？」
+- [Elevated Mode](/en/tools/elevated)
+- [Multi-Agent Routing](/en/concepts/multi-agent)
+- [Sandbox Configuration](/en/gateway/configuration-reference#agentsdefaultssandbox)
+- [Session Management](/en/concepts/session)

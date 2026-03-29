@@ -1,5 +1,5 @@
 ---
-summary: "透過 Gateway + CLI 傳送投票"
+summary: "透過 Gateway + CLI 發送投票"
 read_when:
   - Adding or modifying poll support
   - Debugging poll sends from the CLI or gateway
@@ -11,13 +11,13 @@ title: "投票"
 ## 支援的頻道
 
 - Telegram
-- WhatsApp (網路頻道)
+- WhatsApp (網頁頻道)
 - Discord
 - Microsoft Teams (Adaptive Cards)
 
 ## CLI
 
-```exec
+```bash
 # Telegram
 openclaw message poll --channel telegram --target 123456789 \
   --poll-question "Ship it?" --poll-option "Yes" --poll-option "No"
@@ -57,29 +57,29 @@ openclaw message poll --channel msteams --target conversation:19:abc@thread.tacv
 參數：
 
 - `to` (字串，必填)
-- `question`（字串，必要）
-- `options`（字串陣列，必要）
-- `maxSelections`（數字，選用）
-- `durationHours`（數字，選用）
-- `durationSeconds`（數字，選用，僅限 Telegram）
-- `isAnonymous`（布林值，選用，僅限 Telegram）
-- `channel`（字串，選用，預設值：`whatsapp`）
-- `idempotencyKey`（字串，必要）
+- `question` (字串，必填)
+- `options` (字串陣列，必填)
+- `maxSelections` (數字，選填)
+- `durationHours` (數字，選填)
+- `durationSeconds` (數字，選填，僅限 Telegram)
+- `isAnonymous` (布林值，選填，僅限 Telegram)
+- `channel` (字串，選填，預設： `whatsapp`)
+- `idempotencyKey` (字串，必填)
 
 ## 頻道差異
 
 - Telegram：2-10 個選項。透過 `threadId` 或 `:topic:` 目標支援論壇主題。使用 `durationSeconds` 而非 `durationHours`，限制為 5-600 秒。支援匿名和公開投票。
 - WhatsApp：2-12 個選項，`maxSelections` 必須在選項數量範圍內，忽略 `durationHours`。
-- Discord：2-10 個選項，`durationHours` 限制為 1-768 小時（預設 24）。`maxSelections > 1` 啟用多選；Discord 不支援嚴格的選擇計數。
-- Microsoft Teams：Adaptive Card 投票（由 OpenClaw 管理）。沒有原生的投票 API；`durationHours` 會被忽略。
+- Discord：2-10 個選項，`durationHours` 限制在 1-768 小時 (預設 24)。`maxSelections > 1` 啟用多選；Discord 不支援嚴格的選取計數。
+- Microsoft Teams：Adaptive Card 投票 (由 OpenClaw 管理)。無原生投票 API；`durationHours` 會被忽略。
 
 ## Agent 工具 (訊息)
 
-使用 `message` 工具並搭配 `poll` 動作 (`to`, `pollQuestion`, `pollOption`, 可選 `pollMulti`, `pollDurationHours`, `channel`)。
+使用 `message` 工具配合 `poll` 動作（`to`、`pollQuestion`、`pollOption`、可選的 `pollMulti`、`pollDurationHours`、`channel`）。
 
-對於 Telegram，此工具也接受 `pollDurationSeconds`、`pollAnonymous` 和 `pollPublic`。
+對於 Telegram，該工具也接受 `pollDurationSeconds`、`pollAnonymous` 和 `pollPublic`。
 
 使用 `action: "poll"` 來建立投票。透過 `action: "send"` 傳遞的投票欄位會被拒絕。
 
-注意：Discord 沒有「精準選擇 N 項」模式；`pollMulti` 對應到多選。
-Teams 投票會呈現為 Adaptive Cards，並且需要閘道保持上線，以便在 `~/.openclaw/msteams-polls.json` 中記錄投票。
+注意：Discord 沒有「精確選擇 N 個」模式；`pollMulti` 對應到多選。
+Teams 投票呈現為 Adaptive Cards，並且需要閘道保持線上以便在 `~/.openclaw/msteams-polls.json` 中記錄投票。

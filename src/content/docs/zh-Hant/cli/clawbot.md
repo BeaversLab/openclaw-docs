@@ -1,5 +1,5 @@
 ---
-summary: "CLI 參考手冊：`openclaw clawbot`（舊版別名命名空間）"
+summary: "CLI 參考 for `openclaw clawbot` (legacy alias namespace)"
 read_when:
   - You maintain older scripts using `openclaw clawbot ...`
   - You need migration guidance to current commands
@@ -8,11 +8,11 @@ title: "clawbot"
 
 # `openclaw clawbot`
 
-保留舊版別名命名空間以維持向後相容性。
+為了向後相容性而保留的舊版別名命名空間。
 
 目前支援的別名：
 
-- `openclaw clawbot qr`（行為與 [`openclaw qr`](/zh-Hant/cli/qr) 相同）
+- `openclaw clawbot qr` (行為與 [`openclaw qr`](/en/cli/qr) 相同)
 
 ## 遷移
 

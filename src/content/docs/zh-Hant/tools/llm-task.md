@@ -1,20 +1,21 @@
 ---
-summary: "工作流程的純 JSON LLM 任務（選用插件工具）"
+summary: "適用於工作流程的僅限 JSON 的 LLM 任務（可選外掛程式工具）"
 read_when:
   - You want a JSON-only LLM step inside workflows
   - You need schema-validated LLM output for automation
-title: "LLM 任務"
+title: "LLM Task"
 ---
 
-# LLM 任務
+# LLM Task
 
-`llm-task` 是一個 **選用插件工具**，用於執行純 JSON LLM 任務並傳回結構化輸出（可選擇根據 JSON Schema 進行驗證）。
+`llm-task` 是一個 **可選的外掛程式工具**，它執行僅限 JSON 的 LLM 任務並
+傳回結構化輸出（可選地根據 JSON Schema 進行驗證）。
 
-這非常適合像 Lobster 這樣的工作流程引擎：您可以新增單一 LLM 步驟，而無需為每個工作流程撰寫自訂的 OpenClaw 程式碼。
+這對於像 Lobster 這樣的工作流程引擎來說非常理想：您可以加入單一 LLM 步驟，而無需為每個工作流程編寫自訂的 OpenClaw 程式碼。
 
-## 啟用插件
+## 啟用外掛程式
 
-1. 啟用插件：
+1. 啟用外掛程式：
 
 ```json
 {
@@ -26,7 +27,7 @@ title: "LLM 任務"
 }
 ```
 
-2. 將工具加入允許清單（已註冊為 `optional: true`）：
+2. 將工具加入允許清單（它註冊於 `optional: true`）：
 
 ```json
 {
@@ -41,7 +42,7 @@ title: "LLM 任務"
 }
 ```
 
-## 設定（選用）
+## 設定（可選）
 
 ```json
 {
@@ -67,22 +68,23 @@ title: "LLM 任務"
 
 ## 工具參數
 
-- `prompt` (字串，必填)
-- `input` (任意，選用)
-- `schema` (物件，選用的 JSON Schema)
-- `provider` (字串，選用)
-- `model` (字串，選用)
-- `thinking` (字串，選用)
-- `authProfileId` (字串，選用)
-- `temperature` (數字，選用)
-- `maxTokens` (數字，選用)
-- `timeoutMs` (數字，選用)
+- `prompt`（字串，必填）
+- `input`（任何，可選）
+- `schema`（物件，可選的 JSON Schema）
+- `provider`（字串，可選）
+- `model`（字串，可選）
+- `thinking`（字串，可選）
+- `authProfileId`（字串，可選）
+- `temperature`（數字，可選）
+- `maxTokens`（數字，可選）
+- `timeoutMs`（數字，可選）
 
 `thinking` 接受標準的 OpenClaw 推理預設值，例如 `low` 或 `medium`。
 
 ## 輸出
 
-傳回 `details.json`，其中包含已解析的 JSON（若提供則根據 `schema` 進行驗證）。
+傳回 `details.json`，其中包含已解析的 JSON（當提供時會根據
+`schema` 進行驗證）。
 
 ## 範例：Lobster 工作流程步驟
 
@@ -108,7 +110,8 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 
 ## 安全注意事項
 
-- 此工具為 **僅限 JSON**，並會指示模型僅輸出 JSON（無程式碼區塊，無註解）。
-- 在此執行過程中，不會向模型公開任何工具。
-- 除非您使用 `schema` 進行驗證，否則請將輸出視為未受信任。
-- 將審核步驟置於任何會產生副作用（send、post、exec）的步驟之前。
+- 此工具是 **僅限 JSON** 的，並指示模型僅輸出 JSON（沒有
+  程式碼柵欄，沒有評論）。
+- 在此次執行中，沒有任何工具暴露給模型。
+- 除非您使用 `schema` 進行驗證，否則請將輸出視為不受信任。
+- 將審核程序置於任何會產生副作用的步驟（send、post、exec）之前。
