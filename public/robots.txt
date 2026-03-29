@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /demo
+
+Sitemap: https://openclaw-docs.beaverslab.xyz/sitemap-index.xml

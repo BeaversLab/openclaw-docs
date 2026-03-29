@@ -20,6 +20,130 @@ const footerHtmlByTag = {
 	zh: footerMarkdownToHtml('zh.mdx'),
 	footerzhhant: footerMarkdownToHtml('zh-Hant.mdx'),
 };
+
+const route = Astro.locals.starlightRoute;
+const locale = route?.locale || 'en';
+const pathname = Astro.url.pathname;
+const site = Astro.site ?? new URL('https://openclaw-docs.beaverslab.xyz');
+const canonicalUrl = new URL(pathname, site).toString();
+const normalizedPathname = pathname.replace(/\/+$/, '') || '/';
+const isHomePage = normalizedPathname === `/${locale}` || normalizedPathname === '/';
+const pageTitle = route?.entry?.data?.title || 'OpenClaw Docs';
+const pageDescription =
+	route?.entry?.data?.description ||
+	'OpenClaw documentation for installing, configuring, and running the self-hosted AI gateway across WhatsApp, Telegram, Discord, iMessage, and more.';
+const ogImagePath =
+	isHomePage ? '/whatsapp-openclaw.jpg' : '/assets/openclaw-logo-text.png';
+const ogImageUrl = new URL(ogImagePath, site).toString();
+const isNoIndex = route?.entry?.id === '404' || pathname.startsWith('/demo');
+const robotsContent = isNoIndex
+	? 'noindex, nofollow, noarchive'
+	: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+const ogLocaleMap = {
+	en: 'en_US',
+	zh: 'zh_CN',
+	'zh-Hant': 'zh_TW',
+	fr: 'fr_FR',
+	es: 'es_ES',
+};
+const ogLocale = ogLocaleMap[locale] || 'en_US';
+const localeHomeLabels = {
+	en: 'Home',
+	zh: '首页',
+	'zh-Hant': '首頁',
+	fr: 'Accueil',
+	es: 'Inicio',
+};
+const searchActionLabels = {
+	en: 'Search documentation',
+	zh: '搜索文档',
+	'zh-Hant': '搜尋文件',
+	fr: 'Rechercher dans la documentation',
+	es: 'Buscar en la documentación',
+};
+const pathSegments = normalizedPathname.split('/').filter(Boolean);
+const localeSegmentCount = pathSegments[0] === locale ? 1 : 0;
+const localizedHomePath = `/${locale}`;
+const localizedHomeUrl = new URL(localizedHomePath, site).toString();
+const defaultLocalePath = pathSegments.length
+	? `/${['en', ...pathSegments.slice(localeSegmentCount)].filter(Boolean).join('/')}`
+	: '/en';
+const xDefaultUrl = new URL(defaultLocalePath, site).toString();
+
+const findSidebarLabel = (entries, href) => {
+	for (const entry of entries || []) {
+		if (entry.type === 'link' && entry.href === href) return entry.label;
+		if (entry.type === 'group') {
+			const nested = findSidebarLabel(entry.entries, href);
+			if (nested) return nested;
+		}
+	}
+	return undefined;
+};
+
+const breadcrumbItems = [
+	{
+		'@type': 'ListItem',
+		position: 1,
+		name: localeHomeLabels[locale] || 'Home',
+		item: localizedHomeUrl,
+	},
+];
+
+const docSegments = pathSegments.slice(localeSegmentCount);
+for (let index = 0; index < docSegments.length; index += 1) {
+	const href = `/${[locale, ...docSegments.slice(0, index + 1)].join('/')}`;
+	const isCurrent = index === docSegments.length - 1;
+	const label = isCurrent ? pageTitle : findSidebarLabel(route?.sidebar, href) || docSegments[index];
+	breadcrumbItems.push({
+		'@type': 'ListItem',
+		position: breadcrumbItems.length + 1,
+		name: label,
+		item: new URL(href, site).toString(),
+	});
+}
+
+const breadcrumbSchema =
+	breadcrumbItems.length > 1
+		? {
+				'@context': 'https://schema.org',
+				'@type': 'BreadcrumbList',
+				itemListElement: breadcrumbItems,
+			}
+		: null;
+
+const pageSchema = {
+	'@context': 'https://schema.org',
+	'@type': isHomePage ? 'WebSite' : 'TechArticle',
+	name: pageTitle,
+	headline: pageTitle,
+	description: pageDescription,
+	url: canonicalUrl,
+	inLanguage: route?.entryMeta?.lang || route?.lang || 'en',
+	isPartOf: {
+		'@type': 'WebSite',
+		name: 'OpenClaw Docs',
+		url: site.toString(),
+	},
+	publisher: {
+		'@type': 'Organization',
+		name: 'BeaversLab',
+		url: 'https://beaverslab.xyz',
+		logo: {
+			'@type': 'ImageObject',
+			url: new URL('/assets/pixel-lobster.svg', site).toString(),
+		},
+	},
+	image: ogImageUrl,
+};
+if (isHomePage) {
+	pageSchema.potentialAction = {
+		'@type': 'SearchAction',
+		target: `${localizedHomeUrl.replace(/\/$/, '')}/?q={search_term_string}`,
+		'query-input': 'required name=search_term_string',
+		name: searchActionLabels[locale] || 'Search documentation',
+	};
+}
 ---
 
 <style is:inline>
@@ -57,6 +181,22 @@ const footerHtmlByTag = {
 </style>
 
 <DefaultHead />
+
+<meta name="robots" content={robotsContent} />
+<meta name="googlebot" content={robotsContent} />
+{isHomePage && <meta property="og:type" content="website" />}
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:alt" content="OpenClaw Docs" />
+<meta property="og:locale" content={ogLocale} />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={pageDescription} />
+<meta name="twitter:image" content={ogImageUrl} />
+<meta name="twitter:image:alt" content="OpenClaw Docs" />
+<link rel="alternate" hreflang="x-default" href={xDefaultUrl} />
+<script type="application/ld+json" set:html={JSON.stringify(pageSchema)}></script>
+{breadcrumbSchema && (
+	<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)}></script>
+)}
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-B8X5BNEEMV"></script>
 <script is:inline>
