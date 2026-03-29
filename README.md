@@ -39,4 +39,4 @@ pnpm run lang:sync
 
 ## 📜 License
 
-This documentation is licensed under the [MIT License](./LICENSE_MIT.md).
+This documentation is licensed under the [MIT License](./LICENSE).

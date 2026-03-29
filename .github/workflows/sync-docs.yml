@@ -82,11 +82,6 @@ jobs:
         run: |
           node scripts/fix-locale-links.js src/content/docs/en/
 
-      - name: Ensure doc footers in src/content/docs/en/
-        if: env.SHOULD_SYNC == 'true'
-        run: |
-          node scripts/ensure-doc-footers.mjs src/content/docs/en/
-
       - name: Commit and push changes
         if: env.SHOULD_SYNC == 'true'
         run: |

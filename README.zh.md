@@ -40,4 +40,4 @@ pnpm run lang:sync
 
 ## 📜 许可证
 
-本文档采用 [MIT 许可证](./LICENSE_MIT.md)。
+本文档采用 [MIT 许可证](./LICENSE)。
