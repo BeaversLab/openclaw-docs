@@ -168,7 +168,12 @@ const result = await runEmbeddedPiAgent({
 Inside `runEmbeddedAttempt()` (called by `runEmbeddedPiAgent()`), the pi SDK is used:
 
 ```typescript
-import { createAgentSession, DefaultResourceLoader, SessionManager, SettingsManager } from "@mariozechner/pi-coding-agent";
+import {
+  createAgentSession,
+  DefaultResourceLoader,
+  SessionManager,
+  SettingsManager,
+} from "@mariozechner/pi-coding-agent";
 
 const resourceLoader = new DefaultResourceLoader({
   cwd: resolvedWorkspace,
@@ -352,7 +357,12 @@ const rotated = await advanceAuthProfile();
 ```typescript
 import { resolveModel } from "./pi-embedded-runner/model.js";
 
-const { model, error, authStorage, modelRegistry } = resolveModel(provider, modelId, agentDir, config);
+const { model, error, authStorage, modelRegistry } = resolveModel(
+  provider,
+  modelId,
+  agentDir,
+  config,
+);
 
 // Uses pi's ModelRegistry and AuthStorage
 authStorage.setRuntimeApiKey(model.provider, apiKeyInfo.apiKey);

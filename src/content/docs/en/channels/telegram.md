@@ -68,7 +68,9 @@ openclaw pairing approve telegram <CODE>
   </Step>
 </Steps>
 
-<Note>Token resolution order is account-aware. In practice, config values win over env fallback, and `TELEGRAM_BOT_TOKEN` only applies to the default account.</Note>
+<Note>
+Token resolution order is account-aware. In practice, config values win over env fallback, and `TELEGRAM_BOT_TOKEN` only applies to the default account.
+</Note>
 
 ## Telegram side settings
 

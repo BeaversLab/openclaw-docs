@@ -60,7 +60,10 @@ openclaw channels status --probe
   </Step>
 </Steps>
 
-<Note>Gateway config reload watches the active config file path (resolved from profile/state defaults, or `OPENCLAW_CONFIG_PATH` when set). Default mode is `gateway.reload.mode="hybrid"`.</Note>
+<Note>
+Gateway config reload watches the active config file path (resolved from profile/state defaults, or `OPENCLAW_CONFIG_PATH` when set).
+Default mode is `gateway.reload.mode="hybrid"`.
+</Note>
 
 ## Runtime model
 
@@ -137,7 +140,9 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 
 Then connect clients to `ws://127.0.0.1:18789` locally.
 
-<Warning>If gateway auth is configured, clients still must send auth (`token`/`password`) even over SSH tunnels.</Warning>
+<Warning>
+If gateway auth is configured, clients still must send auth (`token`/`password`) even over SSH tunnels.
+</Warning>
 
 See: [Remote Gateway](/en/gateway/remote), [Authentication](/en/gateway/authentication), [Tailscale](/en/gateway/tailscale).
 

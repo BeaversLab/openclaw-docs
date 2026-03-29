@@ -14,7 +14,11 @@ This guide walks through building a channel plugin that connects OpenClaw to a
 messaging platform. By the end you will have a working channel with DM security,
 pairing, reply threading, and outbound messaging.
 
-<Info>If you have not built any OpenClaw plugin before, read [Getting Started](/en/plugins/building-plugins) first for the basic package structure and manifest setup.</Info>
+<Info>
+  If you have not built any OpenClaw plugin before, read
+  [Getting Started](/en/plugins/building-plugins) first for the basic package
+  structure and manifest setup.
+</Info>
 
 ## How channel plugins work
 

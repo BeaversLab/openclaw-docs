@@ -95,20 +95,30 @@ It does not install or modify anything on the remote host.
   </Step>
 </Steps>
 
-<Note>If no GUI is detected, the wizard prints SSH port-forward instructions for the Control UI instead of opening a browser. If Control UI assets are missing, the wizard attempts to build them; fallback is `pnpm ui:build` (auto-installs UI deps).</Note>
+<Note>
+If no GUI is detected, the wizard prints SSH port-forward instructions for the Control UI instead of opening a browser.
+If Control UI assets are missing, the wizard attempts to build them; fallback is `pnpm ui:build` (auto-installs UI deps).
+</Note>
 
 ## Remote mode details
 
 Remote mode configures this machine to connect to a gateway elsewhere.
 
-<Info>Remote mode does not install or modify anything on the remote host.</Info>
+<Info>
+Remote mode does not install or modify anything on the remote host.
+</Info>
 
 What you set:
 
 - Remote gateway URL (`ws://...`)
 - Token if remote gateway auth is required (recommended)
 
-<Note>- If gateway is loopback-only, use SSH tunneling or a tailnet. - Discovery hints: - macOS: Bonjour (`dns-sd`) - Linux: Avahi (`avahi-browse`)</Note>
+<Note>
+- If gateway is loopback-only, use SSH tunneling or a tailnet.
+- Discovery hints:
+  - macOS: Bonjour (`dns-sd`)
+  - Linux: Avahi (`avahi-browse`)
+</Note>
 
 ## Auth and model options
 
@@ -116,7 +126,10 @@ What you set:
   <Accordion title="Anthropic API key">
     Uses `ANTHROPIC_API_KEY` if present or prompts for a key, then saves it for daemon use.
   </Accordion>
-  <Accordion title="Anthropic OAuth (Claude Code CLI)">
+  <Accordion title="Anthropic Claude CLI">
+    Reuses a local Claude CLI login on the gateway host and switches model
+    selection to `claude-cli/...`.
+
     - macOS: checks Keychain item "Claude Code-credentials"
     - Linux and Windows: reuses `~/.claude/.credentials.json` if present
 
@@ -230,7 +243,11 @@ Credential storage mode:
 - Non-interactive token SecretRef path: `--gateway-token-ref-env <ENV_VAR>`.
 - Existing plaintext setups continue to work unchanged.
 
-<Note>Headless and server tip: complete OAuth on a machine with a browser, then copy `~/.openclaw/credentials/oauth.json` (or `$OPENCLAW_STATE_DIR/credentials/oauth.json`) to the gateway host.</Note>
+<Note>
+Headless and server tip: complete OAuth on a machine with a browser, then copy
+`~/.openclaw/credentials/oauth.json` (or `$OPENCLAW_STATE_DIR/credentials/oauth.json`)
+to the gateway host.
+</Note>
 
 ## Outputs and internals
 
@@ -255,7 +272,10 @@ Typical fields in `~/.openclaw/openclaw.json`:
 WhatsApp credentials go under `~/.openclaw/credentials/whatsapp/<accountId>/`.
 Sessions are stored under `~/.openclaw/agents/<agentId>/sessions/`.
 
-<Note>Some channels are delivered as plugins. When selected during setup, the wizard prompts to install the plugin (npm or local path) before channel configuration.</Note>
+<Note>
+Some channels are delivered as plugins. When selected during setup, the wizard
+prompts to install the plugin (npm or local path) before channel configuration.
+</Note>
 
 Gateway wizard RPC:
 

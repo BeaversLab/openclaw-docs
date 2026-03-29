@@ -31,7 +31,7 @@ For a high-level overview, see [Onboarding (CLI)](/en/start/wizard).
   </Step>
   <Step title="Model/Auth">
     - **Anthropic API key**: uses `ANTHROPIC_API_KEY` if present or prompts for a key, then saves it for daemon use.
-    - **Anthropic OAuth (Claude Code CLI)**: on macOS onboarding checks Keychain item "Claude Code-credentials" (choose "Always Allow" so launchd starts don't block); on Linux/Windows it reuses `~/.claude/.credentials.json` if present.
+    - **Anthropic Claude CLI**: on macOS onboarding checks Keychain item "Claude Code-credentials" (choose "Always Allow" so launchd starts don't block); on Linux/Windows it reuses `~/.claude/.credentials.json` if present and switches model selection to `claude-cli/...`.
     - **Anthropic token (paste setup-token)**: run `claude setup-token` on any machine, then paste the token (you can name it; blank = default).
     - **OpenAI Code (Codex) subscription (Codex CLI)**: if `~/.codex/auth.json` exists, onboarding can reuse it.
     - **OpenAI Code (Codex) subscription (OAuth)**: browser flow; paste the `code#state`.
@@ -127,7 +127,10 @@ For a high-level overview, see [Onboarding (CLI)](/en/start/wizard).
   </Step>
 </Steps>
 
-<Note>If no GUI is detected, onboarding prints SSH port-forward instructions for the Control UI instead of opening a browser. If the Control UI assets are missing, onboarding attempts to build them; fallback is `pnpm ui:build` (auto-installs UI deps).</Note>
+<Note>
+If no GUI is detected, onboarding prints SSH port-forward instructions for the Control UI instead of opening a browser.
+If the Control UI assets are missing, onboarding attempts to build them; fallback is `pnpm ui:build` (auto-installs UI deps).
+</Note>
 
 ## Non-interactive mode
 
@@ -160,7 +163,9 @@ openclaw onboard --non-interactive \
 
 `--gateway-token` and `--gateway-token-ref-env` are mutually exclusive.
 
-<Note>`--json` does **not** imply non-interactive mode. Use `--non-interactive` (and `--workspace`) for scripts.</Note>
+<Note>
+`--json` does **not** imply non-interactive mode. Use `--non-interactive` (and `--workspace`) for scripts.
+</Note>
 
 Provider-specific command examples live in [CLI Automation](/en/start/wizard-cli-automation#provider-specific-examples).
 Use this reference page for flag semantics and step ordering.

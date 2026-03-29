@@ -11,7 +11,9 @@ sidebarTitle: "CLI automation"
 
 Use `--non-interactive` to automate `openclaw onboard`.
 
-<Note>`--json` does not imply non-interactive mode. Use `--non-interactive` (and `--workspace`) for scripts.</Note>
+<Note>
+`--json` does not imply non-interactive mode. Use `--non-interactive` (and `--workspace`) for scripts.
+</Note>
 
 ## Baseline non-interactive example
 

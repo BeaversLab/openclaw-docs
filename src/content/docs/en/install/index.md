@@ -14,15 +14,31 @@ title: "Install"
 The fastest way to install. It detects your OS, installs Node if needed, installs OpenClaw, and launches onboarding.
 
 <Tabs>
-  <Tab title="macOS / Linux / WSL2">```bash curl -fsSL https://openclaw.ai/install.sh | bash ```</Tab>
-  <Tab title="Windows (PowerShell)">```powershell iwr -useb https://openclaw.ai/install.ps1 | iex ```</Tab>
+  <Tab title="macOS / Linux / WSL2">
+    ```bash
+    curl -fsSL https://openclaw.ai/install.sh | bash
+    ```
+  </Tab>
+  <Tab title="Windows (PowerShell)">
+    ```powershell
+    iwr -useb https://openclaw.ai/install.ps1 | iex
+    ```
+  </Tab>
 </Tabs>
 
 To install without running onboarding:
 
 <Tabs>
-  <Tab title="macOS / Linux / WSL2">```bash curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-onboard ```</Tab>
-  <Tab title="Windows (PowerShell)">```powershell & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard ```</Tab>
+  <Tab title="macOS / Linux / WSL2">
+    ```bash
+    curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-onboard
+    ```
+  </Tab>
+  <Tab title="Windows (PowerShell)">
+    ```powershell
+    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard
+    ```
+  </Tab>
 </Tabs>
 
 For all flags and CI/automation options, see [Installer internals](/en/install/installer).
@@ -122,36 +138,16 @@ openclaw gateway status # verify the Gateway is running
 Deploy OpenClaw on a cloud server or VPS:
 
 <CardGroup cols={3}>
-  <Card title="VPS" href="/en/vps">
-    Any Linux VPS
-  </Card>
-  <Card title="Docker VM" href="/en/install/docker-vm-runtime">
-    Shared Docker steps
-  </Card>
-  <Card title="Kubernetes" href="/en/install/kubernetes">
-    K8s
-  </Card>
-  <Card title="Fly.io" href="/en/install/fly">
-    Fly.io
-  </Card>
-  <Card title="Hetzner" href="/en/install/hetzner">
-    Hetzner
-  </Card>
-  <Card title="GCP" href="/en/install/gcp">
-    Google Cloud
-  </Card>
-  <Card title="Azure" href="/en/install/azure">
-    Azure
-  </Card>
-  <Card title="Railway" href="/en/install/railway">
-    Railway
-  </Card>
-  <Card title="Render" href="/en/install/render">
-    Render
-  </Card>
-  <Card title="Northflank" href="/en/install/northflank">
-    Northflank
-  </Card>
+  <Card title="VPS" href="/en/vps">Any Linux VPS</Card>
+  <Card title="Docker VM" href="/en/install/docker-vm-runtime">Shared Docker steps</Card>
+  <Card title="Kubernetes" href="/en/install/kubernetes">K8s</Card>
+  <Card title="Fly.io" href="/en/install/fly">Fly.io</Card>
+  <Card title="Hetzner" href="/en/install/hetzner">Hetzner</Card>
+  <Card title="GCP" href="/en/install/gcp">Google Cloud</Card>
+  <Card title="Azure" href="/en/install/azure">Azure</Card>
+  <Card title="Railway" href="/en/install/railway">Railway</Card>
+  <Card title="Render" href="/en/install/render">Render</Card>
+  <Card title="Northflank" href="/en/install/northflank">Northflank</Card>
 </CardGroup>
 
 ## Update, migrate, or uninstall

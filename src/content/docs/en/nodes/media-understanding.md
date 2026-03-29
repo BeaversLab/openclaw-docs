@@ -96,7 +96,13 @@ Each `models[]` entry can be **provider** or **CLI**:
 {
   type: "cli",
   command: "gemini",
-  args: ["-m", "gemini-3-flash", "--allowed-tools", "read_file", "Read the media at {{MediaPath}} and describe it in <= {{MaxChars}} characters."],
+  args: [
+    "-m",
+    "gemini-3-flash",
+    "--allowed-tools",
+    "read_file",
+    "Read the media at {{MediaPath}} and describe it in <= {{MaxChars}} characters.",
+  ],
   maxChars: 500,
   maxBytes: 52428800,
   timeoutSeconds: 120,
@@ -236,7 +242,13 @@ When `mode: "all"`, outputs are labeled `[Image 1/2]`, `[Audio 2/2]`, etc.
         {
           type: "cli",
           command: "gemini",
-          args: ["-m", "gemini-3-flash", "--allowed-tools", "read_file", "Read the media at {{MediaPath}} and describe it in <= {{MaxChars}} characters."],
+          args: [
+            "-m",
+            "gemini-3-flash",
+            "--allowed-tools",
+            "read_file",
+            "Read the media at {{MediaPath}} and describe it in <= {{MaxChars}} characters.",
+          ],
           capabilities: ["image", "video"],
         },
       ],
@@ -276,7 +288,13 @@ When `mode: "all"`, outputs are labeled `[Image 1/2]`, `[Audio 2/2]`, etc.
           {
             type: "cli",
             command: "gemini",
-            args: ["-m", "gemini-3-flash", "--allowed-tools", "read_file", "Read the media at {{MediaPath}} and describe it in <= {{MaxChars}} characters."],
+            args: [
+              "-m",
+              "gemini-3-flash",
+              "--allowed-tools",
+              "read_file",
+              "Read the media at {{MediaPath}} and describe it in <= {{MaxChars}} characters.",
+            ],
           },
         ],
       },
@@ -301,7 +319,13 @@ When `mode: "all"`, outputs are labeled `[Image 1/2]`, `[Audio 2/2]`, etc.
           {
             type: "cli",
             command: "gemini",
-            args: ["-m", "gemini-3-flash", "--allowed-tools", "read_file", "Read the media at {{MediaPath}} and describe it in <= {{MaxChars}} characters."],
+            args: [
+              "-m",
+              "gemini-3-flash",
+              "--allowed-tools",
+              "read_file",
+              "Read the media at {{MediaPath}} and describe it in <= {{MaxChars}} characters.",
+            ],
           },
         ],
       },

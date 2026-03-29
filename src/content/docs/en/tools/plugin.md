@@ -74,8 +74,8 @@ and the [Plugin SDK Overview](/en/plugins/sdk-overview).
 
 ### Installable (npm)
 
-| Plugin          | Package                | Docs                                    |
-| --------------- | ---------------------- | --------------------------------------- |
+| Plugin          | Package                | Docs                                 |
+| --------------- | ---------------------- | ------------------------------------ |
 | Matrix          | `@openclaw/matrix`     | [Matrix](/en/channels/matrix)           |
 | Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/en/channels/msteams) |
 | Nostr           | `@openclaw/nostr`      | [Nostr](/en/channels/nostr)             |
@@ -90,15 +90,21 @@ and the [Plugin SDK Overview](/en/plugins/sdk-overview).
     `anthropic`, `byteplus`, `cloudflare-ai-gateway`, `github-copilot`, `google`,
     `huggingface`, `kilocode`, `kimi-coding`, `minimax`, `mistral`, `modelstudio`,
     `moonshot`, `nvidia`, `openai`, `opencode`, `opencode-go`, `openrouter`,
-    `qianfan`, `qwen-portal-auth`, `synthetic`, `together`, `venice`,
+    `qianfan`, `synthetic`, `together`, `venice`,
     `vercel-ai-gateway`, `volcengine`, `xiaomi`, `zai`
   </Accordion>
 
-<Accordion title="Memory plugins">- `memory-core` — bundled memory search (default via `plugins.slots.memory`) - `memory-lancedb` — install-on-demand long-term memory with auto-recall/capture (set `plugins.slots.memory = "memory-lancedb"`)</Accordion>
+  <Accordion title="Memory plugins">
+    - `memory-core` — bundled memory search (default via `plugins.slots.memory`)
+    - `memory-lancedb` — install-on-demand long-term memory with auto-recall/capture (set `plugins.slots.memory = "memory-lancedb"`)
+  </Accordion>
 
-<Accordion title="Speech providers (enabled by default)">`elevenlabs`, `microsoft`</Accordion>
+  <Accordion title="Speech providers (enabled by default)">
+    `elevenlabs`, `microsoft`
+  </Accordion>
 
   <Accordion title="Other">
+    - `browser` — bundled browser plugin for the browser tool, `openclaw browser` CLI, `browser.request` gateway method, browser runtime, and default browser control service (enabled by default; disable before replacing it)
     - `copilot-proxy` — VS Code Copilot Proxy bridge (disabled by default)
   </Accordion>
 </AccordionGroup>
@@ -134,7 +140,11 @@ Config changes **require a gateway restart**. If the Gateway is running with con
 watch + in-process restart enabled (the default `openclaw gateway` path), that
 restart is usually performed automatically a moment after the config write lands.
 
-<Accordion title="Plugin states: disabled vs missing vs invalid">- **Disabled**: plugin exists but enablement rules turned it off. Config is preserved. - **Missing**: config references a plugin id that discovery did not find. - **Invalid**: plugin exists but its config does not match the declared schema.</Accordion>
+<Accordion title="Plugin states: disabled vs missing vs invalid">
+  - **Disabled**: plugin exists but enablement rules turned it off. Config is preserved.
+  - **Missing**: config references a plugin id that discovery did not find.
+  - **Invalid**: plugin exists but its config does not match the declared schema.
+</Accordion>
 
 ## Discovery and precedence
 
@@ -149,7 +159,9 @@ OpenClaw scans for plugins in this order (first match wins):
     `\<workspace\>/.openclaw/extensions/*.ts` and `\<workspace\>/.openclaw/extensions/*/index.ts`.
   </Step>
 
-<Step title="Global extensions">`~/.openclaw/extensions/*.ts` and `~/.openclaw/extensions/*/index.ts`.</Step>
+  <Step title="Global extensions">
+    `~/.openclaw/extensions/*.ts` and `~/.openclaw/extensions/*/index.ts`.
+  </Step>
 
   <Step title="Bundled plugins">
     Shipped with OpenClaw. Many are enabled by default (model providers, speech).

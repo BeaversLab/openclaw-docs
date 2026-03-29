@@ -312,13 +312,13 @@ After configuring multi-agent sandbox and tools:
 
 1. **Check agent resolution:**
 
-   ```bash
+   ```exec
    openclaw agents list --bindings
    ```
 
 2. **Verify sandbox containers:**
 
-   ```bash
+   ```exec
    docker ps --filter "name=openclaw-sbx-"
    ```
 
@@ -328,7 +328,7 @@ After configuring multi-agent sandbox and tools:
 
 4. **Monitor logs:**
 
-   ```bash
+   ```exec
    tail -f "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/logs/gateway.log" | grep -E "routing|sandbox|tools"
    ```
 

@@ -543,7 +543,11 @@ Only enable direct mutable name/email/nick matching with each channel's `dangero
 
 ### Anthropic setup-token + API key, MiniMax fallback
 
-<Warning>Anthropic setup-token usage outside Claude Code has been restricted for some users in the past. Treat this as user-choice risk and verify current Anthropic terms before depending on subscription auth.</Warning>
+<Warning>
+Anthropic setup-token usage outside Claude Code has been restricted for some
+users in the past. Treat this as user-choice risk and verify current Anthropic
+terms before depending on subscription auth.
+</Warning>
 
 ```json5
 {

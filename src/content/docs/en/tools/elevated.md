@@ -12,7 +12,10 @@ When an agent runs inside a sandbox, its `exec` commands are confined to the
 sandbox environment. **Elevated mode** lets the agent break out and run commands
 on the gateway host instead, with configurable approval gates.
 
-<Info>Elevated mode only changes behavior when the agent is **sandboxed**. For unsandboxed agents, exec already runs on the host.</Info>
+<Info>
+  Elevated mode only changes behavior when the agent is **sandboxed**. For
+  unsandboxed agents, exec already runs on the host.
+</Info>
 
 ## Directives
 

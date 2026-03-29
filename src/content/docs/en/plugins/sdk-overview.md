@@ -13,7 +13,12 @@ read_when:
 The plugin SDK is the typed contract between plugins and core. This page is the
 reference for **what to import** and **what you can register**.
 
-<Tip>**Looking for a how-to guide?** - First plugin? Start with [Getting Started](/en/plugins/building-plugins) - Channel plugin? See [Channel Plugins](/en/plugins/sdk-channel-plugins) - Provider plugin? See [Provider Plugins](/en/plugins/sdk-provider-plugins)</Tip>
+<Tip>
+  **Looking for a how-to guide?**
+  - First plugin? Start with [Getting Started](/en/plugins/building-plugins)
+  - Channel plugin? See [Channel Plugins](/en/plugins/sdk-channel-plugins)
+  - Provider plugin? See [Provider Plugins](/en/plugins/sdk-provider-plugins)
+</Tip>
 
 ## Import convention
 
@@ -58,17 +63,48 @@ subpaths is in `scripts/lib/plugin-sdk-entrypoints.json`.
     | `plugin-sdk/channel-feedback` | Feedback/reaction wiring |
   </Accordion>
 
-<Accordion title="Provider subpaths">
-  | Subpath | Key exports | | --- | --- | | `plugin-sdk/provider-auth` | `createProviderApiKeyAuthMethod`, `ensureApiKeyFromOptionEnvOrPrompt`, `upsertAuthProfile` | | `plugin-sdk/provider-models` | `normalizeModelCompat` | | `plugin-sdk/provider-catalog` | Catalog type re-exports | | `plugin-sdk/provider-usage` | `fetchClaudeUsage` and similar | | `plugin-sdk/provider-stream` | Stream wrapper
-  types | | `plugin-sdk/provider-onboard` | Onboarding config patch helpers |
-</Accordion>
+  <Accordion title="Provider subpaths">
+    | Subpath | Key exports |
+    | --- | --- |
+    | `plugin-sdk/cli-backend` | CLI backend defaults + watchdog constants |
+    | `plugin-sdk/provider-auth` | `createProviderApiKeyAuthMethod`, `ensureApiKeyFromOptionEnvOrPrompt`, `upsertAuthProfile` |
+    | `plugin-sdk/provider-models` | Legacy compat provider model aliases; prefer provider-specific subpaths or `plugin-sdk/provider-model-shared` |
+    | `plugin-sdk/provider-model-shared` | `normalizeModelCompat` |
+    | `plugin-sdk/provider-catalog-shared` | `findCatalogTemplate`, `buildSingleProviderApiKeyCatalog` |
+    | `plugin-sdk/provider-catalog` | Legacy compat provider builder aliases; prefer provider-specific subpaths or `plugin-sdk/provider-catalog-shared` |
+    | `plugin-sdk/provider-usage` | `fetchClaudeUsage` and similar |
+    | `plugin-sdk/provider-stream` | Stream wrapper types |
+    | `plugin-sdk/provider-onboard` | Onboarding config patch helpers |
+    | `plugin-sdk/global-singleton` | Process-local singleton/map/cache helpers |
+  </Accordion>
 
-<Accordion title="Auth and security subpaths">| Subpath | Key exports | | --- | --- | | `plugin-sdk/command-auth` | `resolveControlCommandGate` | | `plugin-sdk/allow-from` | `formatAllowFromLowercase` | | `plugin-sdk/secret-input` | Secret input parsing helpers | | `plugin-sdk/webhook-ingress` | Webhook request/target helpers |</Accordion>
+  <Accordion title="Auth and security subpaths">
+    | Subpath | Key exports |
+    | --- | --- |
+    | `plugin-sdk/command-auth` | `resolveControlCommandGate` |
+    | `plugin-sdk/allow-from` | `formatAllowFromLowercase` |
+    | `plugin-sdk/secret-input` | Secret input parsing helpers |
+    | `plugin-sdk/webhook-ingress` | Webhook request/target helpers |
+    | `plugin-sdk/webhook-request-guards` | Request body size/timeout helpers |
+  </Accordion>
 
-<Accordion title="Runtime and storage subpaths">
-  | Subpath | Key exports | | --- | --- | | `plugin-sdk/runtime-store` | `createPluginRuntimeStore` | | `plugin-sdk/config-runtime` | Config load/write helpers | | `plugin-sdk/infra-runtime` | System event/heartbeat helpers | | `plugin-sdk/agent-runtime` | Agent dir/identity/workspace helpers | | `plugin-sdk/directory-runtime` | Config-backed directory query/dedup | |
-  `plugin-sdk/keyed-async-queue` | `KeyedAsyncQueue` |
-</Accordion>
+  <Accordion title="Runtime and storage subpaths">
+    | Subpath | Key exports |
+    | --- | --- |
+    | `plugin-sdk/runtime-store` | `createPluginRuntimeStore` |
+    | `plugin-sdk/config-runtime` | Config load/write helpers |
+    | `plugin-sdk/approval-runtime` | Exec and plugin approval helpers |
+    | `plugin-sdk/infra-runtime` | System event/heartbeat helpers |
+    | `plugin-sdk/collection-runtime` | Small bounded cache helpers |
+    | `plugin-sdk/diagnostic-runtime` | Diagnostic flag and event helpers |
+    | `plugin-sdk/error-runtime` | Error graph and formatting helpers |
+    | `plugin-sdk/fetch-runtime` | Wrapped fetch, proxy, and pinned lookup helpers |
+    | `plugin-sdk/host-runtime` | Hostname and SCP host normalization helpers |
+    | `plugin-sdk/retry-runtime` | Retry config and retry runner helpers |
+    | `plugin-sdk/agent-runtime` | Agent dir/identity/workspace helpers |
+    | `plugin-sdk/directory-runtime` | Config-backed directory query/dedup |
+    | `plugin-sdk/keyed-async-queue` | `KeyedAsyncQueue` |
+  </Accordion>
 
   <Accordion title="Capability and testing subpaths">
     | Subpath | Key exports |
@@ -90,6 +126,7 @@ methods:
 | Method                                        | What it registers              |
 | --------------------------------------------- | ------------------------------ |
 | `api.registerProvider(...)`                   | Text inference (LLM)           |
+| `api.registerCliBackend(...)`                 | Local CLI inference backend    |
 | `api.registerChannel(...)`                    | Messaging channel              |
 | `api.registerSpeechProvider(...)`             | Text-to-speech / STT synthesis |
 | `api.registerMediaUnderstandingProvider(...)` | Image/audio/video analysis     |
@@ -114,12 +151,41 @@ methods:
 | `api.registerService(service)`                 | Background service    |
 | `api.registerInteractiveHandler(registration)` | Interactive handler   |
 
+### CLI backend registration
+
+`api.registerCliBackend(...)` lets a plugin own the default config for a local
+AI CLI backend such as `claude-cli` or `codex-cli`.
+
+- The backend `id` becomes the provider prefix in model refs like `claude-cli/opus`.
+- The backend `config` uses the same shape as `agents.defaults.cliBackends.<id>`.
+- User config still wins. OpenClaw merges `agents.defaults.cliBackends.<id>` over the
+  plugin default before running the CLI.
+- Use `normalizeConfig` when a backend needs compatibility rewrites after merge
+  (for example normalizing old flag shapes).
+
 ### Exclusive slots
 
 | Method                                     | What it registers                     |
 | ------------------------------------------ | ------------------------------------- |
 | `api.registerContextEngine(id, factory)`   | Context engine (one active at a time) |
 | `api.registerMemoryPromptSection(builder)` | Memory prompt section builder         |
+| `api.registerMemoryFlushPlan(resolver)`    | Memory flush plan resolver            |
+| `api.registerMemoryRuntime(runtime)`       | Memory runtime adapter                |
+
+### Memory embedding adapters
+
+| Method                                         | What it registers                              |
+| ---------------------------------------------- | ---------------------------------------------- |
+| `api.registerMemoryEmbeddingProvider(adapter)` | Memory embedding adapter for the active plugin |
+
+- `registerMemoryPromptSection`, `registerMemoryFlushPlan`, and
+  `registerMemoryRuntime` are exclusive to memory plugins.
+- `registerMemoryEmbeddingProvider` lets the active memory plugin register one
+  or more embedding adapter ids (for example `openai`, `gemini`, or a custom
+  plugin-defined id).
+- User config such as `agents.defaults.memorySearch.provider` and
+  `agents.defaults.memorySearch.fallback` resolves against those registered
+  adapter ids.
 
 ### Events and lifecycle
 
@@ -147,7 +213,7 @@ methods:
 | `api.rootDir`            | `string?`                 | Plugin root directory (optional)                          |
 | `api.config`             | `OpenClawConfig`          | Current config snapshot                                   |
 | `api.pluginConfig`       | `Record<string, unknown>` | Plugin-specific config from `plugins.entries.<id>.config` |
-| `api.runtime`            | `PluginRuntime`           | [Runtime helpers](/en/plugins/sdk-runtime)                |
+| `api.runtime`            | `PluginRuntime`           | [Runtime helpers](/en/plugins/sdk-runtime)                   |
 | `api.logger`             | `PluginLogger`            | Scoped logger (`debug`, `info`, `warn`, `error`)          |
 | `api.registrationMode`   | `PluginRegistrationMode`  | `"full"`, `"setup-only"`, or `"setup-runtime"`            |
 | `api.resolvePath(input)` | `(string) => string`      | Resolve path relative to plugin root                      |

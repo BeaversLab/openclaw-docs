@@ -51,7 +51,7 @@ Common commands:
 
 ## Example: a simple `.prose` file
 
-```text
+```prose
 # Research + synthesis with two agents running in parallel.
 
 input topic: "What should we research?"

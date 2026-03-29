@@ -1,11 +1,12 @@
 ---
-summary: "web_search tool -- search the web with Brave, Firecrawl, Gemini, Grok, Kimi, Perplexity, or Tavily"
-read_when:
-  - You want to enable or configure web_search
-  - You need to choose a search provider
-  - You want to understand auto-detection and provider fallback
 title: "Web Search"
 sidebarTitle: "Web Search"
+summary: "web_search, x_search, and web_fetch -- search the web, search X posts, or fetch page content"
+read_when:
+  - You want to enable or configure web_search
+  - You want to enable or configure x_search
+  - You need to choose a search provider
+  - You want to understand auto-detection and provider fallback
 ---
 
 # Web Search
@@ -13,7 +14,15 @@ sidebarTitle: "Web Search"
 The `web_search` tool searches the web using your configured provider and
 returns results. Results are cached by query for 15 minutes (configurable).
 
-<Info>`web_search` is a lightweight HTTP tool, not browser automation. For JS-heavy sites or logins, use the [Web Browser](/en/tools/browser). For fetching a specific URL, use [Web Fetch](/en/tools/web-fetch).</Info>
+OpenClaw also includes `x_search` for X (formerly Twitter) posts and
+`web_fetch` for lightweight URL fetching. In this phase, `web_fetch` stays
+local while `web_search` and `x_search` can use xAI Responses under the hood.
+
+<Info>
+  `web_search` is a lightweight HTTP tool, not browser automation. For
+  JS-heavy sites or logins, use the [Web Browser](/en/tools/browser). For
+  fetching a specific URL, use [Web Fetch](/en/tools/web-fetch).
+</Info>
 
 ## Quick start
 
@@ -34,6 +43,12 @@ returns results. Results are cached by query for 15 minutes (configurable).
 
     ```javascript
     await web_search({ query: "OpenClaw plugin SDK" });
+    ```
+
+    For X posts, use:
+
+    ```javascript
+    await x_search({ query: "dinner recipes" });
     ```
 
   </Step>
@@ -73,8 +88,8 @@ returns results. Results are cached by query for 15 minutes (configurable).
 
 ### Provider comparison
 
-| Provider                                  | Result style               | Filters                                          | API key                                     |
-| ----------------------------------------- | -------------------------- | ------------------------------------------------ | ------------------------------------------- |
+| Provider                               | Result style               | Filters                                          | API key                                     |
+| -------------------------------------- | -------------------------- | ------------------------------------------------ | ------------------------------------------- |
 | [Brave](/en/tools/brave-search)           | Structured snippets        | Country, language, time, `llm-context` mode      | `BRAVE_API_KEY`                             |
 | [DuckDuckGo](/en/tools/duckduckgo-search) | Structured snippets        | --                                               | None (key-free)                             |
 | [Exa](/en/tools/exa-search)               | Structured + extracted     | Neural/keyword mode, date, content extraction    | `EXA_API_KEY`                               |
@@ -104,7 +119,11 @@ the first one found:
 If no keys are found, it falls back to Brave (you will get a missing-key error
 prompting you to configure one).
 
-<Note>All provider key fields support SecretRef objects. In auto-detect mode, OpenClaw resolves only the selected provider key -- non-selected SecretRefs stay inactive.</Note>
+<Note>
+  All provider key fields support SecretRef objects. In auto-detect mode,
+  OpenClaw resolves only the selected provider key -- non-selected SecretRefs
+  stay inactive.
+</Note>
 
 ## Config
 
@@ -127,6 +146,9 @@ prompting you to configure one).
 Provider-specific config (API keys, base URLs, modes) lives under
 `plugins.entries.<plugin>.config.webSearch.*`. See the provider pages for
 examples.
+
+For `x_search`, configure `tools.web.x_search.*` directly. It uses the same
+`XAI_API_KEY` fallback as Grok web search.
 
 ### Storing API keys
 
@@ -180,7 +202,77 @@ examples.
 | `max_tokens`          | Total content budget, default 25000 (Perplexity only) |
 | `max_tokens_per_page` | Per-page token limit, default 2048 (Perplexity only)  |
 
-<Warning>Not all parameters work with all providers. Brave `llm-context` mode rejects `ui_lang`, `freshness`, `date_after`, and `date_before`. Firecrawl and Tavily only support `query` and `count` through `web_search` -- use their dedicated tools for advanced options.</Warning>
+<Warning>
+  Not all parameters work with all providers. Brave `llm-context` mode
+  rejects `ui_lang`, `freshness`, `date_after`, and `date_before`.
+  Firecrawl and Tavily only support `query` and `count` through `web_search`
+  -- use their dedicated tools for advanced options.
+</Warning>
+
+## x_search
+
+`x_search` queries X (formerly Twitter) posts using xAI and returns
+AI-synthesized answers with citations. It accepts natural-language queries and
+optional structured filters. OpenClaw only enables the built-in xAI `x_search`
+tool on the request that serves this tool call.
+
+<Note>
+  xAI documents `x_search` as supporting keyword search, semantic search, user
+  search, and thread fetch. For per-post engagement stats such as reposts,
+  replies, bookmarks, or views, prefer a targeted lookup for the exact post URL
+  or status ID. Broad keyword searches may find the right post but return less
+  complete per-post metadata. A good pattern is: locate the post first, then
+  run a second `x_search` query focused on that exact post.
+</Note>
+
+### x_search config
+
+```json5
+{
+  tools: {
+    web: {
+      x_search: {
+        enabled: true,
+        apiKey: "xai-...", // optional if XAI_API_KEY is set
+        model: "grok-4-1-fast-non-reasoning",
+        inlineCitations: false,
+        maxTurns: 2,
+        timeoutSeconds: 30,
+        cacheTtlMinutes: 15,
+      },
+    },
+  },
+}
+```
+
+### x_search parameters
+
+| Parameter                    | Description                                            |
+| ---------------------------- | ------------------------------------------------------ |
+| `query`                      | Search query (required)                                |
+| `allowed_x_handles`          | Restrict results to specific X handles                 |
+| `excluded_x_handles`         | Exclude specific X handles                             |
+| `from_date`                  | Only include posts on or after this date (YYYY-MM-DD)  |
+| `to_date`                    | Only include posts on or before this date (YYYY-MM-DD) |
+| `enable_image_understanding` | Let xAI inspect images attached to matching posts      |
+| `enable_video_understanding` | Let xAI inspect videos attached to matching posts      |
+
+### x_search example
+
+```javascript
+await x_search({
+  query: "dinner recipes",
+  allowed_x_handles: ["nytfood"],
+  from_date: "2026-03-01",
+});
+```
+
+```javascript
+// Per-post stats: use the exact status URL or status ID when possible
+await x_search({
+  query: "https://x.com/huntharo/status/1905678901234567890",
+});
+```
 
 ## Examples
 
@@ -210,13 +302,13 @@ await web_search({
 
 ## Tool profiles
 
-If you use tool profiles or allowlists, add `web_search` or `group:web`:
+If you use tool profiles or allowlists, add `web_search`, `x_search`, or `group:web`:
 
 ```json5
 {
   tools: {
-    allow: ["web_search"],
-    // or: allow: ["group:web"]  (includes both web_search and web_fetch)
+    allow: ["web_search", "x_search"],
+    // or: allow: ["group:web"]  (includes web_search, x_search, and web_fetch)
   },
 }
 ```
@@ -225,3 +317,4 @@ If you use tool profiles or allowlists, add `web_search` or `group:web`:
 
 - [Web Fetch](/en/tools/web-fetch) -- fetch a URL and extract readable content
 - [Web Browser](/en/tools/browser) -- full browser automation for JS-heavy sites
+- [Grok Search](/en/tools/grok-search) -- Grok as the `web_search` provider

@@ -71,7 +71,13 @@ Run a persistent OpenClaw Gateway on a DigitalOcean Droplet.
     ```
   </Step>
 
-<Step title="Verify the gateway">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
+  <Step title="Verify the gateway">
+    ```bash
+    openclaw status
+    systemctl --user status openclaw-gateway.service
+    journalctl --user -u openclaw-gateway.service -f
+    ```
+  </Step>
 
   <Step title="Access the Control UI">
     The gateway binds to loopback by default. Pick one of these options.

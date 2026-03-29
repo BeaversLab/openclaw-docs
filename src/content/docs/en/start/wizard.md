@@ -18,7 +18,10 @@ and workspace defaults in one guided flow.
 openclaw onboard
 ```
 
-<Info>Fastest first chat: open the Control UI (no channel setup needed). Run `openclaw dashboard` and chat in the browser. Docs: [Dashboard](/en/web/dashboard).</Info>
+<Info>
+Fastest first chat: open the Control UI (no channel setup needed). Run
+`openclaw dashboard` and chat in the browser. Docs: [Dashboard](/en/web/dashboard).
+</Info>
 
 To reconfigure later:
 
@@ -27,9 +30,16 @@ openclaw configure
 openclaw agents add <name>
 ```
 
-<Note>`--json` does not imply non-interactive mode. For scripts, use `--non-interactive`.</Note>
+<Note>
+`--json` does not imply non-interactive mode. For scripts, use `--non-interactive`.
+</Note>
 
-<Tip>CLI onboarding includes a web search step where you can pick a provider (Perplexity, Brave, Gemini, Grok, or Kimi) and paste your API key so the agent can use `web_search`. You can also configure this later with `openclaw configure --section web`. Docs: [Web tools](/en/tools/web).</Tip>
+<Tip>
+CLI onboarding includes a web search step where you can pick a provider
+(Perplexity, Brave, Gemini, Grok, or Kimi) and paste your API key so the agent
+can use `web_search`. You can also configure this later with
+`openclaw configure --section web`. Docs: [Web tools](/en/tools/web).
+</Tip>
 
 ## QuickStart vs Advanced
 
@@ -37,10 +47,18 @@ Onboarding starts with **QuickStart** (defaults) vs **Advanced** (full control).
 
 <Tabs>
   <Tab title="QuickStart (defaults)">
-    - Local gateway (loopback) - Workspace default (or existing workspace) - Gateway port **18789** - Gateway auth **Token** (auto‑generated, even on loopback) - Tool policy default for new local setups: `tools.profile: "coding"` (existing explicit profile is preserved) - DM isolation default: local onboarding writes `session.dmScope: "per-channel-peer"` when unset. Details: [CLI Setup
-    Reference](/en/start/wizard-cli-reference#outputs-and-internals) - Tailscale exposure **Off** - Telegram + WhatsApp DMs default to **allowlist** (you'll be prompted for your phone number)
+    - Local gateway (loopback)
+    - Workspace default (or existing workspace)
+    - Gateway port **18789**
+    - Gateway auth **Token** (auto‑generated, even on loopback)
+    - Tool policy default for new local setups: `tools.profile: "coding"` (existing explicit profile is preserved)
+    - DM isolation default: local onboarding writes `session.dmScope: "per-channel-peer"` when unset. Details: [CLI Setup Reference](/en/start/wizard-cli-reference#outputs-and-internals)
+    - Tailscale exposure **Off**
+    - Telegram + WhatsApp DMs default to **allowlist** (you'll be prompted for your phone number)
   </Tab>
-  <Tab title="Advanced (full control)">- Exposes every step (mode, workspace, gateway, channels, daemon, skills).</Tab>
+  <Tab title="Advanced (full control)">
+    - Exposes every step (mode, workspace, gateway, channels, daemon, skills).
+  </Tab>
 </Tabs>
 
 ## What onboarding configures
@@ -65,7 +83,11 @@ Onboarding starts with **QuickStart** (defaults) vs **Advanced** (full control).
 6. **Health check** — Starts the Gateway and verifies it's running.
 7. **Skills** — Installs recommended skills and optional dependencies.
 
-<Note>Re-running onboarding does **not** wipe anything unless you explicitly choose **Reset** (or pass `--reset`). CLI `--reset` defaults to config, credentials, and sessions; use `--reset-scope full` to include workspace. If the config is invalid or contains legacy keys, onboarding asks you to run `openclaw doctor` first.</Note>
+<Note>
+Re-running onboarding does **not** wipe anything unless you explicitly choose **Reset** (or pass `--reset`).
+CLI `--reset` defaults to config, credentials, and sessions; use `--reset-scope full` to include workspace.
+If the config is invalid or contains legacy keys, onboarding asks you to run `openclaw doctor` first.
+</Note>
 
 **Remote mode** only configures the local client to connect to a Gateway elsewhere.
 It does **not** install or change anything on the remote host.

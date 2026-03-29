@@ -13,7 +13,11 @@ read_when:
 Reference for test utilities, patterns, and lint enforcement for OpenClaw
 plugins.
 
-<Tip>**Looking for test examples?** The how-to guides include worked test examples: [Channel plugin tests](/en/plugins/sdk-channel-plugins#step-6-test) and [Provider plugin tests](/en/plugins/sdk-provider-plugins#step-6-test).</Tip>
+<Tip>
+  **Looking for test examples?** The how-to guides include worked test examples:
+  [Channel plugin tests](/en/plugins/sdk-channel-plugins#step-6-test) and
+  [Provider plugin tests](/en/plugins/sdk-provider-plugins#step-6-test).
+</Tip>
 
 ## Test utilities
 
@@ -22,7 +26,11 @@ plugins.
 The testing subpath exports a narrow set of helpers for plugin authors:
 
 ```typescript
-import { installCommonResolveTargetErrorCases, shouldAckReaction, removeAckReactionAfterReply } from "openclaw/plugin-sdk/testing";
+import {
+  installCommonResolveTargetErrorCases,
+  shouldAckReaction,
+  removeAckReactionAfterReply,
+} from "openclaw/plugin-sdk/testing";
 ```
 
 ### Available exports
@@ -38,7 +46,14 @@ import { installCommonResolveTargetErrorCases, shouldAckReaction, removeAckReact
 The testing subpath also re-exports types useful in test files:
 
 ```typescript
-import type { ChannelAccountSnapshot, ChannelGatewayContext, OpenClawConfig, PluginRuntime, RuntimeEnv, MockFn } from "openclaw/plugin-sdk/testing";
+import type {
+  ChannelAccountSnapshot,
+  ChannelGatewayContext,
+  OpenClawConfig,
+  PluginRuntime,
+  RuntimeEnv,
+  MockFn,
+} from "openclaw/plugin-sdk/testing";
 ```
 
 ## Testing target resolution

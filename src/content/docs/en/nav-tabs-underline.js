@@ -42,10 +42,7 @@
     const left = tabRect.left - navRect.left;
 
     navTabs.style.setProperty("--nav-tab-underline-x", `${left}px`);
-    navTabs.style.setProperty(
-      "--nav-tab-underline-width",
-      `${tabRect.width}px`,
-    );
+    navTabs.style.setProperty("--nav-tab-underline-width", `${tabRect.width}px`);
     navTabs.classList.add(READY_CLASS);
 
     lastX = left;

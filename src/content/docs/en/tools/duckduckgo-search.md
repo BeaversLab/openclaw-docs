@@ -12,14 +12,23 @@ title: "DuckDuckGo Search"
 OpenClaw supports DuckDuckGo as a **key-free** `web_search` provider. No API
 key or account is required.
 
-<Warning>DuckDuckGo is an **experimental, unofficial** integration that pulls results from DuckDuckGo's non-JavaScript search pages — not an official API. Expect occasional breakage from bot-challenge pages or HTML changes.</Warning>
+<Warning>
+  DuckDuckGo is an **experimental, unofficial** integration that pulls results
+  from DuckDuckGo's non-JavaScript search pages — not an official API. Expect
+  occasional breakage from bot-challenge pages or HTML changes.
+</Warning>
 
 ## Setup
 
 No API key needed — just set DuckDuckGo as your provider:
 
 <Steps>
-  <Step title="Configure">```bash openclaw configure --section web # Select "duckduckgo" as the provider ```</Step>
+  <Step title="Configure">
+    ```bash
+    openclaw configure --section web
+    # Select "duckduckgo" as the provider
+    ```
+  </Step>
 </Steps>
 
 ## Config
@@ -80,7 +89,10 @@ parameters override config values per-query.
   auto-detection, so any API-backed provider with a key takes priority
 - **SafeSearch defaults to moderate** when not configured
 
-<Tip>For production use, consider [Brave Search](/en/tools/brave-search) (free tier available) or another API-backed provider.</Tip>
+<Tip>
+  For production use, consider [Brave Search](/en/tools/brave-search) (free tier
+  available) or another API-backed provider.
+</Tip>
 
 ## Related
 

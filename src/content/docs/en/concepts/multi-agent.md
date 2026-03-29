@@ -466,7 +466,15 @@ and a tighter tool policy:
           scope: "agent",
         },
         tools: {
-          allow: ["exec", "read", "sessions_list", "sessions_history", "sessions_send", "sessions_spawn", "session_status"],
+          allow: [
+            "exec",
+            "read",
+            "sessions_list",
+            "sessions_history",
+            "sessions_send",
+            "sessions_spawn",
+            "session_status",
+          ],
           deny: ["write", "edit", "apply_patch", "browser", "canvas", "nodes", "cron"],
         },
       },

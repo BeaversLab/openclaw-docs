@@ -160,7 +160,10 @@ You can append `:fastest`, `:cheapest`, or `:provider` (e.g. `:together`, `:samb
     defaults: {
       model: {
         primary: "huggingface/deepseek-ai/DeepSeek-V3.2",
-        fallbacks: ["huggingface/meta-llama/Llama-3.3-70B-Instruct", "huggingface/openai/gpt-oss-120b"],
+        fallbacks: [
+          "huggingface/meta-llama/Llama-3.3-70B-Instruct",
+          "huggingface/openai/gpt-oss-120b",
+        ],
       },
       models: {
         "huggingface/deepseek-ai/DeepSeek-V3.2": { alias: "DeepSeek V3.2" },

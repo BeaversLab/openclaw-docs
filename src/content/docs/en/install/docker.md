@@ -110,9 +110,18 @@ docker compose run --rm --no-deps --entrypoint node openclaw-gateway \
 docker compose up -d openclaw-gateway
 ```
 
-<Note>Run `docker compose` from the repo root. If you enabled `OPENCLAW_EXTRA_MOUNTS` or `OPENCLAW_HOME_VOLUME`, the setup script writes `docker-compose.extra.yml`; include it with `-f docker-compose.yml -f docker-compose.extra.yml`.</Note>
+<Note>
+Run `docker compose` from the repo root. If you enabled `OPENCLAW_EXTRA_MOUNTS`
+or `OPENCLAW_HOME_VOLUME`, the setup script writes `docker-compose.extra.yml`;
+include it with `-f docker-compose.yml -f docker-compose.extra.yml`.
+</Note>
 
-<Note>Because `openclaw-cli` shares `openclaw-gateway`'s network namespace, it is a post-start tool. Before `docker compose up -d openclaw-gateway`, run onboarding and setup-time config writes through `openclaw-gateway` with `--no-deps --entrypoint node`.</Note>
+<Note>
+Because `openclaw-cli` shares `openclaw-gateway`'s network namespace, it is a
+post-start tool. Before `docker compose up -d openclaw-gateway`, run onboarding
+and setup-time config writes through `openclaw-gateway` with
+`--no-deps --entrypoint node`.
+</Note>
 
 ### Environment variables
 
@@ -156,7 +165,10 @@ docker compose exec openclaw-gateway node dist/index.js health --token "$OPENCLA
 - `loopback`: only processes inside the container network namespace can reach
   the gateway directly.
 
-<Note>Use bind mode values in `gateway.bind` (`lan` / `loopback` / `custom` / `tailnet` / `auto`), not host aliases like `0.0.0.0` or `127.0.0.1`.</Note>
+<Note>
+Use bind mode values in `gateway.bind` (`lan` / `loopback` / `custom` /
+`tailnet` / `auto`), not host aliases like `0.0.0.0` or `127.0.0.1`.
+</Note>
 
 ### Storage and persistence
 
@@ -214,7 +226,12 @@ See the [`ClawDock` Helper README](https://github.com/openclaw/openclaw/blob/mai
 
   </Accordion>
 
-<Accordion title="Shared-network security note">`openclaw-cli` uses `network_mode: "service:openclaw-gateway"` so CLI commands can reach the gateway over `127.0.0.1`. Treat this as a shared trust boundary. The compose config drops `NET_RAW`/`NET_ADMIN` and enables `no-new-privileges` on `openclaw-cli`.</Accordion>
+  <Accordion title="Shared-network security note">
+    `openclaw-cli` uses `network_mode: "service:openclaw-gateway"` so CLI
+    commands can reach the gateway over `127.0.0.1`. Treat this as a shared
+    trust boundary. The compose config drops `NET_RAW`/`NET_ADMIN` and enables
+    `no-new-privileges` on `openclaw-cli`.
+  </Accordion>
 
   <Accordion title="Permissions and EACCES">
     The image runs as `node` (uid 1000). If you see permission errors on
@@ -267,7 +284,11 @@ See the [`ClawDock` Helper README](https://github.com/openclaw/openclaw/blob/mai
 
   </Accordion>
 
-<Accordion title="OpenAI Codex OAuth (headless Docker)">If you pick OpenAI Codex OAuth in the wizard, it opens a browser URL. In Docker or headless setups, copy the full redirect URL you land on and paste it back into the wizard to finish auth.</Accordion>
+  <Accordion title="OpenAI Codex OAuth (headless Docker)">
+    If you pick OpenAI Codex OAuth in the wizard, it opens a browser URL. In
+    Docker or headless setups, copy the full redirect URL you land on and paste
+    it back into the wizard to finish auth.
+  </Accordion>
 
   <Accordion title="Base image metadata">
     The main Docker image uses `node:24-bookworm` and publishes OCI base-image
@@ -332,11 +353,20 @@ scripts/sandbox-setup.sh
     Containers are auto-created per session on demand.
   </Accordion>
 
-<Accordion title="Permission errors in sandbox">Set `docker.user` to a UID:GID that matches your mounted workspace ownership, or chown the workspace folder.</Accordion>
+  <Accordion title="Permission errors in sandbox">
+    Set `docker.user` to a UID:GID that matches your mounted workspace ownership,
+    or chown the workspace folder.
+  </Accordion>
 
-<Accordion title="Custom tools not found in sandbox">OpenClaw runs commands with `sh -lc` (login shell), which sources `/etc/profile` and may reset PATH. Set `docker.env.PATH` to prepend your custom tool paths, or add a script under `/etc/profile.d/` in your Dockerfile.</Accordion>
+  <Accordion title="Custom tools not found in sandbox">
+    OpenClaw runs commands with `sh -lc` (login shell), which sources
+    `/etc/profile` and may reset PATH. Set `docker.env.PATH` to prepend your
+    custom tool paths, or add a script under `/etc/profile.d/` in your Dockerfile.
+  </Accordion>
 
-<Accordion title="OOM-killed during image build (exit 137)">The VM needs at least 2 GB RAM. Use a larger machine class and retry.</Accordion>
+  <Accordion title="OOM-killed during image build (exit 137)">
+    The VM needs at least 2 GB RAM. Use a larger machine class and retry.
+  </Accordion>
 
   <Accordion title="Unauthorized or pairing required in Control UI">
     Fetch a fresh dashboard link and approve the browser device:

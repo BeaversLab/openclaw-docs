@@ -212,7 +212,7 @@ secret elsewhere (password manager, environment variables, or `~/.openclaw/`).
 
 Suggested `.gitignore` starter:
 
-```text
+```gitignore
 .DS_Store
 .env
 **/*.key

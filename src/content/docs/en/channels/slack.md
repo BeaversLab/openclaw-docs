@@ -129,7 +129,9 @@ openclaw gateway
 - `userToken` (`xoxp-...`) is config-only (no env fallback) and defaults to read-only behavior (`userTokenReadOnly: true`).
 - Optional: add `chat:write.customize` if you want outgoing messages to use the active agent identity (custom `username` and icon). `icon_emoji` uses `:emoji_name:` syntax.
 
-<Tip>For actions/directory reads, user token can be preferred when configured. For writes, bot token remains preferred; user-token writes are only allowed when `userTokenReadOnly: false` and bot token is unavailable.</Tip>
+<Tip>
+For actions/directory reads, user token can be preferred when configured. For writes, bot token remains preferred; user-token writes are only allowed when `userTokenReadOnly: false` and bot token is unavailable.
+</Tip>
 
 ## Access control and routing
 
@@ -310,9 +312,12 @@ Note: `replyToMode="off"` disables **all** reply threading in Slack, including e
 
   </Accordion>
 
-<Accordion title="Outbound text and files">
-  - text chunks use `channels.slack.textChunkLimit` (default 4000) - `channels.slack.chunkMode="newline"` enables paragraph-first splitting - file sends use Slack upload APIs and can include thread replies (`thread_ts`) - outbound media cap follows `channels.slack.mediaMaxMb` when configured; otherwise channel sends use MIME-kind defaults from media pipeline
-</Accordion>
+  <Accordion title="Outbound text and files">
+    - text chunks use `channels.slack.textChunkLimit` (default 4000)
+    - `channels.slack.chunkMode="newline"` enables paragraph-first splitting
+    - file sends use Slack upload APIs and can include thread replies (`thread_ts`)
+    - outbound media cap follows `channels.slack.mediaMaxMb` when configured; otherwise channel sends use MIME-kind defaults from media pipeline
+  </Accordion>
 
   <Accordion title="Delivery targets">
     Preferred explicit targets:
@@ -338,6 +343,8 @@ Available action groups in current Slack tooling:
 | pins       | enabled |
 | memberInfo | enabled |
 | emojiList  | enabled |
+
+Current Slack message actions include `send`, `upload-file`, `download-file`, `read`, `edit`, `delete`, `pin`, `unpin`, `list-pins`, `member-info`, and `emoji-list`.
 
 ## Events and operational behavior
 
@@ -411,13 +418,48 @@ Notes:
   },
   "oauth_config": {
     "scopes": {
-      "bot": ["chat:write", "channels:history", "channels:read", "groups:history", "im:history", "im:read", "im:write", "mpim:history", "mpim:read", "mpim:write", "users:read", "app_mentions:read", "assistant:write", "reactions:read", "reactions:write", "pins:read", "pins:write", "emoji:read", "commands", "files:read", "files:write"]
+      "bot": [
+        "chat:write",
+        "channels:history",
+        "channels:read",
+        "groups:history",
+        "im:history",
+        "im:read",
+        "im:write",
+        "mpim:history",
+        "mpim:read",
+        "mpim:write",
+        "users:read",
+        "app_mentions:read",
+        "assistant:write",
+        "reactions:read",
+        "reactions:write",
+        "pins:read",
+        "pins:write",
+        "emoji:read",
+        "commands",
+        "files:read",
+        "files:write"
+      ]
     }
   },
   "settings": {
     "socket_mode_enabled": true,
     "event_subscriptions": {
-      "bot_events": ["app_mention", "message.channels", "message.groups", "message.im", "message.mpim", "reaction_added", "reaction_removed", "member_joined_channel", "member_left_channel", "channel_rename", "pin_added", "pin_removed"]
+      "bot_events": [
+        "app_mention",
+        "message.channels",
+        "message.groups",
+        "message.im",
+        "message.mpim",
+        "reaction_added",
+        "reaction_removed",
+        "member_joined_channel",
+        "member_left_channel",
+        "channel_rename",
+        "pin_added",
+        "pin_removed"
+      ]
     }
   }
 }
@@ -473,7 +515,9 @@ openclaw pairing list slack
 
   </Accordion>
 
-<Accordion title="Socket mode not connecting">Validate bot + app tokens and Socket Mode enablement in Slack app settings.</Accordion>
+  <Accordion title="Socket mode not connecting">
+    Validate bot + app tokens and Socket Mode enablement in Slack app settings.
+  </Accordion>
 
   <Accordion title="HTTP mode not receiving events">
     Validate:

@@ -14,7 +14,11 @@ This guide walks through building a provider plugin that adds a model provider
 (LLM) to OpenClaw. By the end you will have a provider with a model catalog,
 API key auth, and dynamic model resolution.
 
-<Info>If you have not built any OpenClaw plugin before, read [Getting Started](/en/plugins/building-plugins) first for the basic package structure and manifest setup.</Info>
+<Info>
+  If you have not built any OpenClaw plugin before, read
+  [Getting Started](/en/plugins/building-plugins) first for the basic package
+  structure and manifest setup.
+</Info>
 
 ## Walkthrough
 
