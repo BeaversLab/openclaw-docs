@@ -13,8 +13,8 @@ title: "memory"
 
 相关：
 
-- 内存概念：[Memory](/zh/concepts/memory)
-- 插件：[Plugins](/zh/tools/plugin)
+- 内存概念：[Memory](/en/concepts/memory)
+- 插件：[Plugins](/en/tools/plugin)
 
 ## 示例
 

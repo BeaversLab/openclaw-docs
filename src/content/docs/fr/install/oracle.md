@@ -151,6 +151,6 @@ Ensuite, ouvrez `http://localhost:18789`.
 
 ## Étapes suivantes
 
-- [Canaux](/fr/channels) -- connectez Telegram, WhatsApp, Discord, et plus encore
-- [Configuration de la Gateway](/fr/gateway/configuration) -- toutes les options de configuration
-- [Mise à jour](/fr/install/updating) -- garder OpenClaw à jour
+- [Canaux](/en/channels) -- connectez Telegram, WhatsApp, Discord, et plus encore
+- [Configuration de la Gateway](/en/gateway/configuration) -- toutes les options de configuration
+- [Mise à jour](/en/install/updating) -- garder OpenClaw à jour

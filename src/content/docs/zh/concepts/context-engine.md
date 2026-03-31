@@ -239,5 +239,5 @@ export default function register(api) {
 - 引擎错误会被记录并在诊断中显示。如果插件引擎未能注册，或者所选的引擎 ID 无法解析，OpenClaw 不会自动回退；运行将失败，直到您修复插件或将 `plugins.slots.contextEngine` 切换回 `"legacy"`。
 - 对于开发，请使用 `openclaw plugins install -l ./my-engine` 来链接本地插件目录，而无需复制。
 
-另请参阅：[Compaction](/zh/concepts/compaction)、[Context](/zh/concepts/context)、
-[Plugins](/zh/tools/plugin)、[Plugin manifest](/zh/plugins/manifest)。
+另请参阅：[Compaction](/en/concepts/compaction)、[Context](/en/concepts/context)、
+[Plugins](/en/tools/plugin)、[Plugin manifest](/en/plugins/manifest)。

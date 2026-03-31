@@ -8,16 +8,16 @@ title: "Hooks"
 
 # Hooks
 
-Hooks 提供了一个可扩展的事件驱动系统，用于自动响应代理命令和事件而执行操作。Hooks 会从目录中自动发现，并可以使用 `openclaw hooks` 进行检查，而 hook-pack 的安装和更新现在通过 `openclaw plugins` 进行。
+Hooks provide an extensible event-driven system for automating actions in response to agent commands and events. Hooks are automatically discovered from directories and can be inspected with `openclaw hooks`, while hook-pack installation and updates now go through `openclaw plugins`.
 
 ## 入门指南
 
 Hooks 是在发生某些事情时运行的小脚本。有两种类型：
 
-- **Hooks**（本页）：在代理事件触发时运行于 Gateway(网关) 内部，例如 `/new`、`/reset`、`/stop` 或生命周期事件。
-- **Webhooks**：允许其他系统在 OpenClaw 中触发工作的外部 HTTP webhooks。请参阅 [Webhook Hooks](/zh/automation/webhook) 或使用 `openclaw webhooks` 获取 Gmail 辅助命令。
+- **Hooks** (this page): run inside the Gateway(网关) when agent events fire, like `/new`, `/reset`, `/stop`, or lifecycle events.
+- **Webhooks**: external HTTP webhooks that let other systems trigger work in OpenClaw. See [Webhook Hooks](/en/automation/webhook) or use `openclaw webhooks` for Gmail helper commands.
 
-Hooks 也可以打包在插件内部；请参阅 [Plugin hooks](/zh/plugins/architecture#provider-runtime-hooks)。`openclaw hooks list` 会显示独立的 hooks 和插件管理的 hooks。
+Hooks can also be bundled inside plugins; see [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks). `openclaw hooks list` shows both standalone hooks and plugin-managed hooks.
 
 常见用途：
 
@@ -32,7 +32,7 @@ Hooks 也可以打包在插件内部；请参阅 [Plugin hooks](/zh/plugins/arch
 
 Hooks 系统允许您：
 
-- 当发出 `/new` 时，将会话上下文保存到内存
+- Save 会话 context to memory when `/new` is issued
 - 记录所有命令以供审计
 - 在代理生命周期事件上触发自定义自动化
 - 扩展 OpenClaw 的行为而无需修改核心代码
@@ -43,10 +43,10 @@ Hooks 系统允许您：
 
 OpenClaw 附带了四个自动发现的内置 hooks：
 
-- **💾 会话-memory**：当您发出 `/new` 或 `/reset` 时，将会话上下文保存到您的代理工作区（默认为 `~/.openclaw/workspace/memory/`）
-- **📎 bootstrap-extra-files**：在 `agent:bootstrap` 期间，根据配置的 glob/路径模式注入额外的工作区引导文件
-- **📝 command-logger**：将所有命令事件记录到 `~/.openclaw/logs/commands.log`
-- **🚀 boot-md**：在网关启动时运行 `BOOT.md`（需要启用内部 hooks）
+- **💾 会话-memory**: Saves 会话 context to your agent workspace (default `~/.openclaw/workspace/memory/`) when you issue `/new` or `/reset`
+- **📎 bootstrap-extra-files**: Injects additional workspace bootstrap files from configured glob/path patterns during `agent:bootstrap`
+- **📝 command-logger**: Logs all command events to `~/.openclaw/logs/commands.log`
+- **🚀 boot-md**: Runs `BOOT.md` when the gateway starts (requires internal hooks enabled)
 
 列出可用的挂钩：
 
@@ -74,20 +74,20 @@ openclaw hooks info session-memory
 
 ### 入职
 
-在新手引导期间 (`openclaw onboard`)，系统将提示您启用推荐的 hooks。向导会自动发现符合条件的 hooks 并呈现它们供您选择。
+During 新手引导 (`openclaw onboard`), you'll be prompted to enable recommended hooks. The wizard automatically discovers eligible hooks and presents them for selection.
 
 ### 信任边界
 
-Hooks 在 Gateway(网关) 进程内运行。将打包 hooks、托管 hooks 和 `hooks.internal.load.extraDirs` 视为受信任的本地代码。位于 `<workspace>/hooks/` 下的 Workspace hooks 是仓库本地的代码，因此 OpenClaw 需要在加载之前执行显式的启用步骤。
+Hooks run inside the Gateway(网关) process. Treat bundled hooks, managed hooks, and `hooks.internal.load.extraDirs` as trusted local code. Workspace hooks under `<workspace>/hooks/` are repo-local code, so OpenClaw requires an explicit enable step before loading them.
 
 ## Hook 设备发现
 
 Hooks 会按覆盖优先级从高到低的顺序，自动从以下目录中发现：
 
-1. **Bundled hooks**：随 OpenClaw 一起提供；对于 npm 安装，位于 `<openclaw>/dist/hooks/bundled/`（对于编译的二进制文件，位于同级 `hooks/bundled/`）
-2. **Plugin hooks**：打包在已安装插件中的 hooks（请参阅 [Plugin hooks](/zh/plugins/architecture#provider-runtime-hooks)）
-3. **Managed hooks**：`~/.openclaw/hooks/`（用户安装，在工作区之间共享；可以覆盖打包和插件 hooks）。通过 `hooks.internal.load.extraDirs` 配置的 **Extra hook directories** 也被视为托管 hooks，并具有相同的覆盖优先级。
-4. **Workspace hooks**：`<workspace>/hooks/`（针对每个 Agent，默认处于禁用状态，直到显式启用；无法覆盖来自其他源的 hooks）
+1. **Bundled hooks**: 随 OpenClaw 一起提供；对于 npm 安装位于 `<openclaw>/dist/hooks/bundled/`（对于编译的二进制文件则位于同级目录 `hooks/bundled/`）
+2. **Plugin hooks**: 捆绑在已安装插件中的 hooks（参见 [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks)）
+3. **Managed hooks**: `~/.openclaw/hooks/`（用户安装的，跨工作区共享；可以覆盖 bundled 和 plugin hooks）。通过 `hooks.internal.load.extraDirs` 配置的 **Extra hook directories** 也被视为 managed hooks，并共享相同的覆盖优先级。
+4. **Workspace hooks**: `<workspace>/hooks/`（针对每个 agent，默认禁用，直到显式启用；无法覆盖来自其他源的 hooks）
 
 Workspace hooks 可以为仓库添加新的 hook 名称，但它们无法覆盖具有相同名称的打包、托管或插件提供的 hooks。
 
@@ -103,8 +103,7 @@ my-hook/
 
 ## Hook Packs (npm/archives)
 
-Hook packs 是标准的 npm 包，通过 `openclaw.hooks` 中的
-`package.json` 导出一个或多个 hooks。使用以下命令安装它们：
+Hook packs 是标准的 npm 包，通过 `openclaw.hooks` 在 `package.json` 中导出一个或多个 hooks。使用以下命令安装它们：
 
 ```bash
 openclaw plugins install <path-or-spec>
@@ -113,7 +112,7 @@ openclaw plugins install <path-or-spec>
 Npm 规范仅限于注册表（包名称 + 可选的确切版本或 dist-tag）。
 Git/URL/file 规范和 semver 范围将被拒绝。
 
-裸规范和 `@latest` 将保持在稳定轨道上。如果 npm 将其中任何一个解析为预发布版本，OpenClaw 将停止并要求您通过预发布标签（如 `@beta`/`@rc`）或确切的预发布版本来显式选择加入。
+Bare specs 和 `@latest` 保持稳定版本。如果 npm 将其中任何一个解析为预发布版本，OpenClaw 将停止并要求您使用预发布标签（例如 `@beta`/`@rc`）或确切的预发布版本进行显式选择。
 
 示例 `package.json`：
 
@@ -128,12 +127,10 @@ Git/URL/file 规范和 semver 范围将被拒绝。
 ```
 
 每个条目指向一个包含 `HOOK.md` 和 `handler.ts`（或 `index.ts`）的 hook 目录。
-Hook 包可以附带依赖项；它们将被安装在 `~/.openclaw/hooks/<id>` 下。
-解析符号链接后，每个 `openclaw.hooks` 条目必须保留在包目录内；超出包目录的条目将被拒绝。
+Hook packs 可以附带依赖项；它们将被安装在 `~/.openclaw/hooks/<id>` 下。
+每个 `openclaw.hooks` 条目在解析符号链接后必须保留在包目录内；转义的条目将被拒绝。
 
-安全提示：`openclaw plugins install` 使用 `npm install --ignore-scripts` 安装 hook 包的依赖项
-（不包含生命周期脚本）。请保持 hook 包的依赖树为“纯 JS/TS”，并避免依赖于
-`postinstall` 构建的包。
+安全提示：`openclaw plugins install` 使用 `npm install --ignore-scripts` 安装 hook-pack 依赖项（无生命周期脚本）。保持 hook pack 依赖树为“纯 JS/TS”，并避免依赖 `postinstall` 构建的包。
 
 ## Hook 结构
 
@@ -172,18 +169,18 @@ No configuration needed.
 
 `metadata.openclaw` 对象支持：
 
-- **`emoji`**：用于 CLI 显示的表情符号（例如 `"💾"`）
-- **`events`**：要监听的事件数组（例如 `["command:new", "command:reset"]`）
+- **`emoji`**: 用于 CLI 显示的表情符号（例如 `"💾"`）
+- **`events`**：要监听的事件数组（例如，`["command:new", "command:reset"]`）
 - **`export`**：要使用的命名导出（默认为 `"default"`）
 - **`homepage`**：文档 URL
-- **`os`**：所需平台（例如 `["darwin", "linux"]`）
+- **`os`**：所需平台（例如，`["darwin", "linux"]`）
 - **`requires`**：可选要求
-  - **`bins`**：PATH 中所需的二进制文件（例如 `["git", "node"]`）
-  - **`anyBins`**：这些二进制文件中至少必须存在一个
+  - **`bins`**：PATH 上所需的二进制文件（例如，`["git", "node"]`）
+  - **`anyBins`**：必须至少存在这些二进制文件之一
   - **`env`**：所需的环境变量
-  - **`config`**：所需的配置路径（例如 `["workspace.dir"]`）
+  - **`config`**：所需的配置路径（例如，`["workspace.dir"]`）
 - **`always`**：绕过资格检查（布尔值）
-- **`install`**：安装方法（对于内置 hooks：`[{"id":"bundled","kind":"bundled"}]`）
+- **`install`**：安装方法（对于捆绑的 hooks：`[{"id":"bundled","kind":"bundled"}]`）
 
 ### 处理程序实现
 
@@ -248,34 +245,34 @@ export default myHandler;
 
 当发出代理命令时触发：
 
-- **`command`**: 所有命令事件（通用侦听器）
-- **`command:new`**: 发出 `/new` 命令时
-- **`command:reset`**: 发出 `/reset` 命令时
-- **`command:stop`**: 发出 `/stop` 命令时
+- **`command`**：所有命令事件（通用监听器）
+- **`command:new`**：发出 `/new` 命令时
+- **`command:reset`**：发出 `/reset` 命令时
+- **`command:stop`**：发出 `/stop` 命令时
 
 ### 会话事件
 
-- **`session:compact:before`**: 紧接在压缩总结历史之前
-- **`session:compact:after`**: 压缩完成并附带摘要元数据之后
+- **`session:compact:before`**：紧接在压缩总结历史之前
+- **`session:compact:after`**：压缩完成并带有摘要元数据之后
 
-内部钩子负载将这些作为带有 `action: "compact:before"` / `action: "compact:after"` 的 `type: "session"` 发出；侦听器使用上述组合键进行订阅。
+内部 hook 负载将这些作为 `type: "session"` 与 `action: "compact:before"` / `action: "compact:after"` 一起发出；监听者使用上述组合键进行订阅。
 特定的处理程序注册使用字面键格式 `${type}:${action}`。对于这些事件，请注册 `session:compact:before` 和 `session:compact:after`。
 
 ### 代理事件
 
-- **`agent:bootstrap`**: 注入工作区引导文件之前（钩子可能会更改 `context.bootstrapFiles`）
+- **`agent:bootstrap`**：在注入工作区引导文件之前（hooks 可以修改 `context.bootstrapFiles`）
 
 ### Gateway(网关) 事件
 
 网关启动时触发：
 
-- **`gateway:startup`**: 通道启动并加载钩子之后
+- **`gateway:startup`**：在通道启动且 hooks 加载之后
 
 ### 会话补丁事件
 
 修改会话属性时触发：
 
-- **`session:patch`**: 会话更新时
+- **`session:patch`**：当会话更新时
 
 #### 会话事件上下文
 
@@ -314,7 +311,7 @@ export default myHandler;
 }
 ```
 
-**安全说明：** 只有特权客户端（包括控制 UI）才能触发 `session:patch` 事件。标准 WebChat 客户端被阻止修补会话（请参阅 PR #20800），因此该钩子不会从这些连接中触发。
+**安全提示：** 只有特权客户端（包括控制 UI）才能触发 `session:patch` 事件。由于标准的 WebChat 客户端被禁止修补会话（参见 PR #20800），因此该 Hook 不会在这些连接上触发。
 
 有关完整的类型定义，请参阅 `src/gateway/protocol/schema/sessions.ts` 中的 `SessionsPatchParamsSchema`。
 
@@ -337,11 +334,11 @@ export default handler;
 
 接收或发送消息时触发：
 
-- **`message`**: 所有消息事件（通用侦听器）
-- **`message:received`**: 当从任何渠道接收到入站消息时触发。在媒体理解之前的处理早期触发。内容可能包含像 `<media:audio>` 这样的原始占位符，用于尚未处理的媒体附件。
-- **`message:transcribed`**: 当消息已完全处理时触发，包括音频转录和链接理解。此时，`transcript` 包含音频消息的完整转录文本。当您需要访问转录后的音频内容时，请使用此钩子。
-- **`message:preprocessed`**: 在所有媒体和链接理解完成后，为每条消息触发，允许钩子在代理看到之前访问完全丰富化的正文（转录、图像描述、链接摘要）。
-- **`message:sent`**: 当出站消息成功发送时
+- **`message`**：所有消息事件（通用监听器）
+- **`message:received`**：当从任何渠道接收到入站消息时触发。在媒体理解之前的处理早期触发。内容可能包含原始占位符，例如 `<media:audio>`，用于尚未处理的媒体附件。
+- **`message:transcribed`**：当一条消息已完全处理（包括音频转录和链接理解）时。此时，`transcript` 包含音频消息的完整转录文本。当您需要访问转录后的音频内容时，请使用此 Hook。
+- **`message:preprocessed`**：在所有媒体和链接理解完成后，为每条消息触发，让 Hook 能够在 agent 看到消息之前访问完全丰富的正文（转录、图像描述、链接摘要）。
+- **`message:sent`**：当出站消息成功发送时
 
 #### 消息事件上下文
 
@@ -449,29 +446,67 @@ export default handler;
 
 这些钩子不是事件流监听器；它们允许插件在 OpenClaw 持久化工具结果之前同步调整这些结果。
 
-- **`tool_result_persist`**: 在将工具结果写入会话记录之前对其进行转换。必须是同步的；返回更新后的工具结果负载或 `undefined` 以保持原样。请参阅 [代理循环](/zh/concepts/agent-loop)。
+- **`tool_result_persist`**：在将工具结果写入会话记录之前对其进行转换。必须是同步的；返回更新后的工具结果负载，或返回 `undefined` 以保持原样。请参阅 [Agent Loop](/en/concepts/agent-loop)。
 
 ### 插件钩子事件
 
-通过插件钩子运行器公开的压缩生命周期钩子：
+#### before_tool_call
 
-- **`before_compaction`**: 在压缩之前运行，带有计数/令牌元数据
-- **`after_compaction`**: 在压缩之后运行，带有压缩摘要元数据
+在每个工具调用之前运行。插件可以修改参数、阻止调用或请求用户批准。
+
+返回字段：
+
+- **`params`**：覆盖工具参数（与原始参数合并）
+- **`block`**：设置为 `true` 以阻止工具调用
+- **`blockReason`**：阻止时向代理显示的原因
+- **`requireApproval`**：暂停执行并等待通过渠道获得用户批准
+
+`requireApproval` 字段会触发原生平台批准（Telegram 按钮、Discord 组件、`/approve` 命令），而不是依赖代理配合：
+
+```typescript
+{
+  requireApproval: {
+    title: "Sensitive operation",
+    description: "This tool call modifies production data",
+    severity: "warning",       // "info" | "warning" | "critical"
+    timeoutMs: 120000,         // default: 120s
+    timeoutBehavior: "deny",   // "allow" | "deny" (default)
+    onResolution: async (decision) => {
+      // Called after the user resolves: "allow-once", "allow-always", "deny", "timeout", or "cancelled"
+    },
+  }
+}
+```
+
+在批准解决、超时或取消后，`onResolution` 回调会使用最终决策字符串被调用。它在插件内部进程内运行（不发送到网关）。使用它来持久化决策、更新缓存或执行清理。
+
+`pluginId` 字段由挂钩运行程序从插件注册自动标记。当多个插件返回 `requireApproval` 时，第一个（优先级最高）获胜。
+
+`block` 优先于 `requireApproval`：如果合并的挂钩结果同时具有 `block: true` 和 `requireApproval` 字段，则工具调用将立即被阻止，而不会触发批准流程。这确保了高优先级插件的阻止操作不能被低优先级插件的批准请求覆盖。
+
+如果网关不可用或不支持插件审批，工具调用将回退到使用 `description` 作为阻止原因的软阻止。
+
+#### 压缩生命周期
+
+通过插件钩子运行器暴露的压缩生命周期钩子：
+
+- **`before_compaction`**：在压缩之前运行，带有计数/token 元数据
+- **`after_compaction`**：在压缩之后运行，带有压缩摘要元数据
 
 ### 未来事件
 
-计划中的事件类型：
+计划的事件类型：
 
-- **`session:start`**: 当新会话开始时
-- **`session:end`**: 当会话结束时
-- **`agent:error`**: 当代理遇到错误时
+- **`session:start`**：当新会话开始时
+- **`session:end`**：当会话结束时
+- **`agent:error`**：当代理遇到错误时
 
 ## 创建自定义钩子
 
 ### 1. 选择位置
 
-- **工作区钩子** (`<workspace>/hooks/`): 针对每个代理；可以添加新的钩子名称，但不能覆盖具有相同名称的捆绑、托管或插件钩子
-- **托管 Hook** (`~/.openclaw/hooks/`)：在工作区之间共享；可以覆盖捆绑和插件 Hook
+- **工作区钩子** (`<workspace>/hooks/`)：针对每个代理；可以添加新的钩子名称，但不能覆盖同名捆绑的、托管或插件钩子
+- **托管钩子** (`~/.openclaw/hooks/`)：在工作区之间共享；可以覆盖捆绑和插件钩子
 
 ### 2. 创建目录结构
 
@@ -509,7 +544,7 @@ const handler = async (event) => {
 export default handler;
 ```
 
-### 5. 启用和测试
+### 5. 启用并测试
 
 ```bash
 # Verify hook is discovered
@@ -542,9 +577,9 @@ openclaw hooks enable my-hook
 }
 ```
 
-### 每个 Hook 的配置
+### 每个钩子的配置
 
-Hook 可以具有自定义配置：
+钩子可以具有自定义配置：
 
 ```json
 {
@@ -564,9 +599,9 @@ Hook 可以具有自定义配置：
 }
 ```
 
-### 附加目录
+### 额外目录
 
-从其他目录加载 Hook（视为托管 Hook，具有相同的覆盖优先级）：
+从其他目录加载钩子（视为托管钩子，具有相同的覆盖优先级）：
 
 ```json
 {
@@ -583,7 +618,7 @@ Hook 可以具有自定义配置：
 
 ### 旧配置格式（仍然支持）
 
-旧配置格式仍然可用于向后兼容：
+旧的配置格式仍然有效，以保持向后兼容性：
 
 ```json
 {
@@ -602,13 +637,13 @@ Hook 可以具有自定义配置：
 }
 ```
 
-注意：`module` 必须是相对于工作区的路径。绝对路径和工作区之外的遍历路径将被拒绝。
+注意：`module` 必须是相对于工作区的路径。绝对路径和工作区之外的路径遍历将被拒绝。
 
-**迁移**：对于新的 Hook，请使用新的基于发现的系统。旧的处理程序在基于目录的 Hook 之后加载。
+**迁移**：对新钩子使用新的基于发现的系统。旧的处理程序在基于目录的钩子之后加载。
 
 ## CLI 命令
 
-### 列出 Hook
+### 列出钩子
 
 ```bash
 # List all hooks
@@ -624,7 +659,7 @@ openclaw hooks list --verbose
 openclaw hooks list --json
 ```
 
-### Hook 信息
+### 钩子信息
 
 ```bash
 # Show detailed info about a hook
@@ -654,11 +689,11 @@ openclaw hooks enable session-memory
 openclaw hooks disable command-logger
 ```
 
-## 捆绑 Hook 参考
+## 捆绑的 Hook 参考
 
-### 会话-memory
+### 会话记忆
 
-当您发出 `/new` 或 `/reset` 时，将会话上下文保存到内存。
+当您发出 `/new` 或 `/reset` 时，将会话上下文保存到记忆中。
 
 **事件**：`command:new`、`command:reset`
 
@@ -668,12 +703,12 @@ openclaw hooks disable command-logger
 
 **作用**：
 
-1. 使用重置前的会话条目来定位正确的记录
+1. 使用重置前的会话条目来定位正确的脚本
 2. 从对话中提取最后 15 条用户/助手消息（可配置）
-3. 使用 LLM 生成描述性文件名别名
-4. 将会话元数据保存到带日期的内存文件中
+3. 使用 LLM 生成描述性的文件名标识符
+4. 将会话元数据保存到带有日期的记忆文件中
 
-**示例输出**：
+**输出示例**：
 
 ```markdown
 # Session: 2026-01-16 14:30:00 UTC
@@ -692,7 +727,7 @@ assistant: Sure! Let's start with the endpoints...
 
 - `2026-01-16-vendor-pitch.md`
 - `2026-01-16-api-design.md`
-- `2026-01-16-1430.md`（如果别名生成失败，则回退到时间戳）
+- `2026-01-16-1430.md`（如果标识符生成失败，则使用回退时间戳）
 
 **启用**：
 
@@ -702,13 +737,13 @@ openclaw hooks enable session-memory
 
 ### bootstrap-extra-files
 
-在 `agent:bootstrap` 期间注入额外的引导文件（例如 monorepo 本地 `AGENTS.md` / `TOOLS.md`）。
+在 `agent:bootstrap` 期间注入额外的引导文件（例如 monorepo 本地的 `AGENTS.md` / `TOOLS.md`）。
 
 **事件**：`agent:bootstrap`
 
 **要求**：必须配置 `workspace.dir`
 
-**输出**：不写入文件；引导上下文仅在内存中修改。
+**输出**：未写入任何文件；引导上下文仅在内存中修改。
 
 **配置**：
 
@@ -730,16 +765,16 @@ openclaw hooks enable session-memory
 
 **配置选项**：
 
-- `paths` (string[])：从工作区解析的 glob/路径模式。
-- `patterns` (string[])：`paths` 的别名。
-- `files` (string[])：`paths` 的别名。
+- `paths` (string[]): 从工作区解析的 glob/路径模式。
+- `patterns` (string[]): `paths` 的别名。
+- `files` (string[]): `paths` 的别名。
 
 **注意**：
 
 - 路径是相对于工作区解析的。
-- 文件必须保留在工作区内（经过 realpath 检查）。
-- 仅加载已识别的引导基本名称（`AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md`、`MEMORY.md`、`memory.md`）。
-- 对于子代理/定时会话，适用更严格的允许列表（`AGENTS.md`、`TOOLS.md`、`SOUL.md`、`IDENTITY.md`、`USER.md`）。
+- 文件必须保留在工作区内（已通过 realpath 检查）。
+- 仅加载已识别的引导基本名称 (`AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md`, `MEMORY.md`, `memory.md`)。
+- 对于子代理/ cron 会话，适用更严格的允许列表 (`AGENTS.md`, `TOOLS.md`, `SOUL.md`, `IDENTITY.md`, `USER.md`)。
 
 **启用**：
 
@@ -749,17 +784,17 @@ openclaw hooks enable bootstrap-extra-files
 
 ### command-logger
 
-将所有命令事件记录到集中的审计文件中。
+将所有命令事件记录到集中式审计文件中。
 
-**事件**：`command`
+**事件**： `command`
 
 **要求**：无
 
-**输出**：`~/.openclaw/logs/commands.log`
+**输出**： `~/.openclaw/logs/commands.log`
 
 **作用**：
 
-1. 捕获事件详细信息（命令操作、时间戳、会话密钥、发送者 ID、来源）
+1. 捕获事件详细信息（命令动作、时间戳、会话密钥、发送者 ID、来源）
 2. 以 JSONL 格式追加到日志文件
 3. 在后台静默运行
 
@@ -791,17 +826,17 @@ openclaw hooks enable command-logger
 
 ### boot-md
 
-当网关启动时（通道启动后）运行 `BOOT.md`。
-必须启用内部 hooks 才能运行此程序。
+在网关启动时（通道启动后）运行 `BOOT.md`。
+必须启用内部 Hook 才能运行此程序。
 
 **事件**：`gateway:startup`
 
 **要求**：必须配置 `workspace.dir`
 
-**作用**：
+**功能**：
 
 1. 从您的工作区读取 `BOOT.md`
-2. 通过代理运行程序运行指令
+2. 通过代理运行器运行指令
 3. 通过消息工具发送任何请求的出站消息
 
 **启用**：
@@ -814,7 +849,7 @@ openclaw hooks enable boot-md
 
 ### 保持处理程序快速
 
-Hooks 在命令处理期间运行。保持它们轻量级：
+Hook 在命令处理期间运行。保持轻量级：
 
 ```typescript
 // ✓ Good - async work, returns immediately
@@ -846,7 +881,7 @@ const handler: HookHandler = async (event) => {
 
 ### 尽早过滤事件
 
-如果事件不相关，则尽早返回：
+如果事件不相关，请尽早返回：
 
 ```typescript
 const handler: HookHandler = async (event) => {
@@ -877,7 +912,7 @@ metadata: { "openclaw": { "events": ["command"] } } # General - more overhead
 
 ### 启用 Hook 日志记录
 
-Gateway(网关)会在启动时记录 Hook 加载情况：
+网关在启动时会记录 Hook 的加载情况：
 
 ```
 Registered hook: session-memory -> command:new
@@ -896,7 +931,7 @@ openclaw hooks list --verbose
 
 ### 检查注册
 
-在您的处理程序中，记录调用时间：
+在你的处理程序中，记录调用时间：
 
 ```typescript
 const handler: HookHandler = async (event) => {
@@ -919,7 +954,7 @@ openclaw hooks info my-hook
 
 ### Gateway(网关) 日志
 
-监控 Gateway(网关)日志以查看 Hook 执行情况：
+监控网关日志以查看 Hook 执行情况：
 
 ```bash
 # macOS
@@ -929,9 +964,9 @@ openclaw hooks info my-hook
 tail -f ~/.openclaw/gateway.log
 ```
 
-### 直接测试 Hook
+### 直接测试 Hooks
 
-单独测试您的处理程序：
+单独测试你的处理程序：
 
 ```typescript
 import { test } from "vitest";
@@ -964,10 +999,10 @@ test("my handler works", async () => {
 - **`src/hooks/hooks-status.ts`**：状态报告
 - **`src/hooks/loader.ts`**：动态模块加载器
 - **`src/cli/hooks-cli.ts`**：CLI 命令
-- **`src/gateway/server-startup.ts`**：在 Gateway(网关)启动时加载 Hook
+- **`src/gateway/server-startup.ts`**：在网关启动时加载挂钩
 - **`src/auto-reply/reply/commands-core.ts`**：触发命令事件
 
-### 设备发现流程
+### 发现流程
 
 ```
 Gateway startup
@@ -1003,7 +1038,7 @@ Session reset
 
 ## 故障排除
 
-### 未发现 Hook
+### 挂钩未发现
 
 1. 检查目录结构：
 
@@ -1019,13 +1054,13 @@ Session reset
    # Should have YAML frontmatter with name and metadata
    ```
 
-3. 列出所有已发现的 Hook：
+3. 列出所有发现的挂钩：
 
    ```bash
    openclaw hooks list
    ```
 
-### Hook 不符合资格
+### 挂钩不符合资格
 
 检查要求：
 
@@ -1040,18 +1075,18 @@ openclaw hooks info my-hook
 - 配置值
 - 操作系统兼容性
 
-### Hook 未执行
+### 挂钩未执行
 
-1. 验证 Hook 是否已启用：
+1. 验证挂钩是否已启用：
 
    ```bash
    openclaw hooks list
    # Should show ✓ next to enabled hooks
    ```
 
-2. 重启您的 Gateway(网关)进程以重新加载 Hook。
+2. 重启您的网关进程以便重新加载挂钩。
 
-3. 检查 Gateway(网关)日志中的错误：
+3. 检查网关日志中的错误：
 
    ```bash
    ./scripts/clawlog.sh | grep hook
@@ -1068,7 +1103,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 
 ## 迁移指南
 
-### 从旧版配置迁移到设备发现
+### 从旧版配置到发现
 
 **之前**：
 
@@ -1090,7 +1125,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 
 **之后**：
 
-1. 创建 Hook 目录：
+1. 创建挂钩目录：
 
    ```bash
    mkdir -p ~/.openclaw/hooks/my-hook
@@ -1126,7 +1161,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
    }
    ```
 
-4. 验证并重启您的 Gateway(网关)进程：
+4. 验证并重启您的网关进程：
 
    ```bash
    openclaw hooks list
@@ -1135,7 +1170,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 
 **迁移的好处**：
 
-- 自动设备发现
+- 自动发现
 - CLI 管理
 - 资格检查
 - 更好的文档
@@ -1143,7 +1178,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 
 ## 另请参阅
 
-- [CLI 参考：hooks](/zh/cli/hooks)
-- [捆绑的 Hook 说明](https://github.com/openclaw/openclaw/tree/main/src/hooks/bundled)
-- [Webhook Hook](/zh/automation/webhook)
-- [配置](/zh/gateway/configuration-reference#hooks)
+- [CLI 参考：hooks](/en/cli/hooks)
+- [Bundled Hooks README](https://github.com/openclaw/openclaw/tree/main/src/hooks/bundled)
+- [Webhook Hooks](/en/automation/webhook)
+- [配置](/en/gateway/configuration-reference#hooks)

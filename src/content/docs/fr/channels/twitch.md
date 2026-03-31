@@ -25,7 +25,7 @@ Extraction locale (lors de l'exécution depuis un dépôt git) :
 openclaw plugins install ./extensions/twitch
 ```
 
-Détails : [Plugins](/fr/tools/plugin)
+Détails : [Plugins](/en/tools/plugin)
 
 ## Configuration rapide (débutant)
 
@@ -146,7 +146,7 @@ Le bot actualise automatiquement les jetons avant leur expiration et enregistre 
 
 ## Prise en charge multi-comptes
 
-Utilisez `channels.twitch.accounts` avec des jetons par compte. Voir [`gateway/configuration`](/fr/gateway/configuration) pour le modèle partagé.
+Utilisez `channels.twitch.accounts` avec des jetons par compte. Voir [`gateway/configuration`](/en/gateway/configuration) pour le modèle partagé.
 
 Exemple (un compte bot dans deux channels) :
 

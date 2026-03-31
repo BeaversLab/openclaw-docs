@@ -43,7 +43,7 @@ Dans OpenClaw, une boucle est une exécution unique et sérialisée par session 
 - Les exécutions sont sérialisées par clé de session (voie de session) et éventuellement via une voie globale.
 - Cela évite les conflits d'outils/session et maintient l'historique de la session cohérent.
 - Les canaux de messagerie peuvent choisir des modes de file d'attente (collect/steer/followup) qui alimentent ce système de voies.
-  Voir [Command Queue](/fr/concepts/queue).
+  Voir [Command Queue](/en/concepts/queue).
 
 ## Préparation de la session + de l'espace de travail
 
@@ -56,7 +56,7 @@ Dans OpenClaw, une boucle est une exécution unique et sérialisée par session 
 
 - Le prompt système est construit à partir du prompt de base d'OpenClaw, du prompt des Skills, du contexte d'amorçage et des redéfinitions par exécution.
 - Les limites spécifiques au modèle et les jetons de réserve de compactage sont appliqués.
-- Voir [System prompt](/fr/concepts/system-prompt) pour ce que le model voit.
+- Voir [System prompt](/en/concepts/system-prompt) pour ce que le model voit.
 
 ## Points d'accroche (où vous pouvez intercepter)
 
@@ -71,7 +71,7 @@ OpenClaw possède deux systèmes d'accroche :
   Utilisez-le pour ajouter/supprimer des fichiers de contexte d'amorçage.
 - **Accroches de commande** : `/new`, `/reset`, `/stop` et autres événements de commande (voir la documentation sur les Hooks).
 
-Voir [Hooks](/fr/automation/hooks) pour la configuration et les exemples.
+Voir [Hooks](/en/automation/hooks) pour la configuration et les exemples.
 
 ### Accroches de plugin (cycle de vie de l'agent + Gateway)
 
@@ -95,14 +95,14 @@ Règles de décision des hooks pour les gardes de sorties/tools :
 - `message_sending` : `{ cancel: true }` est terminal et arrête les gestionnaires de priorité inférieure.
 - `message_sending` : `{ cancel: false }` est une opération vide et ne efface pas une annulation précédente.
 
-Voir [Plugin hooks](/fr/plugins/architecture#provider-runtime-hooks) pour les détails de l'API de hook et d'enregistrement.
+Voir [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) pour les détails de l'API de hook et d'enregistrement.
 
 ## Streaming + réponses partielles
 
 - Les deltas de l'assistant sont diffusés en continu depuis pi-agent-core et émis en tant qu'événements `assistant`.
 - Le Block streaming peut émettre des réponses partielles soit sur `text_end` soit sur `message_end`.
 - Le streaming de raisonnement peut être émis comme un flux séparé ou comme des réponses de bloc.
-- Voir [Streaming](/fr/concepts/streaming) pour le comportement de découpage et de réponse de bloc.
+- Voir [Streaming](/en/concepts/streaming) pour le comportement de découpage et de réponse de bloc.
 
 ## Exécution de tool + outils de messagerie
 
@@ -125,7 +125,7 @@ Voir [Plugin hooks](/fr/plugins/architecture#provider-runtime-hooks) pour les d�
 
 - L'auto-compactage émet des événements de flux `compaction` et peut déclencher une nouvelle tentative.
 - En cas de nouvelle tentative, les tampons en mémoire et les résumés des outils sont réinitialisés pour éviter les doublons.
-- Voir [Compaction](/fr/concepts/compaction) pour le pipeline de compactage.
+- Voir [Compaction](/en/concepts/compaction) pour le pipeline de compactage.
 
 ## Flux d'événements (actuellement)
 
@@ -141,7 +141,7 @@ Voir [Plugin hooks](/fr/plugins/architecture#provider-runtime-hooks) pour les d�
 ## Délais d'expiration
 
 - `agent.wait` par défaut : 30 s (juste l'attente). Le paramètre `timeoutMs` prend le dessus.
-- Durée d'exécution de l'agent : `agents.defaults.timeoutSeconds` par défaut 600 s ; appliquée dans la minuterie d'abandon `runEmbeddedPiAgent`.
+- Durée d'exécution de l'agent : `agents.defaults.timeoutSeconds` par défaut 172800 s (48 heures) ; appliquée dans le minuteur d'abandon `runEmbeddedPiAgent`.
 
 ## Où les choses peuvent se terminer tôt
 

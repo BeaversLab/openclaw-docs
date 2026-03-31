@@ -12,7 +12,7 @@ read_when:
 
 注入到每个插件中的 `api.runtime` 对象的参考。请使用这些辅助程序，而不是直接导入主机内部组件。
 
-<Tip>**正在寻找演练？** 请参阅 [通道插件](/zh/plugins/sdk-channel-plugins) 或 [提供商 插件](/zh/plugins/sdk-提供商-plugins) 获取在上下文中展示这些辅助程序的分步指南。</Tip>
+<Tip>**正在寻找分步指南？** 请参阅 [Channel Plugins](/en/plugins/sdk-channel-plugins) 或 [Provider Plugins](/en/plugins/sdk-provider-plugins)，查看在具体上下文中 演示这些辅助函数的分步指南。</Tip>
 
 ```typescript
 register(api) {
@@ -332,6 +332,6 @@ export function tryGetRuntime() {
 
 ## 相关
 
-- [SDK 概述](/zh/plugins/sdk-overview) -- 子路径参考
-- [SDK 入口点](/zh/plugins/sdk-entrypoints) -- `definePluginEntry` 选项
-- [插件内部机制](/zh/plugins/architecture) -- 能力模型和注册表
+- [SDK Overview](/en/plugins/sdk-overview) -- 子路径参考
+- [SDK Entry Points](/en/plugins/sdk-entrypoints) -- `definePluginEntry` 选项
+- [Plugin Internals](/en/plugins/architecture) -- 能力模型和注册表

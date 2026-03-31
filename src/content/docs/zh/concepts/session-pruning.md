@@ -73,7 +73,7 @@ read_when:
 ## 与其他限制的交互
 
 - 内置工具已经会截断自己的输出；会话修剪是一个额外的层，用于防止长时间运行的对话在模型上下文中积累过多的工具输出。
-- 压缩是独立的：压缩进行总结和持久化，而修剪是每个请求的临时行为。请参阅 [/concepts/compaction](/zh/concepts/compaction)。
+- 压缩是独立的：压缩进行总结和持久化，而修剪是每个请求的临时行为。请参阅 [/concepts/compaction](/en/concepts/compaction)。
 
 ## 默认值（启用时）
 
@@ -118,4 +118,4 @@ read_when:
 }
 ```
 
-请参阅配置参考：[Gateway 网关 配置](/zh/gateway/configuration)
+请参阅配置参考：[Gateway 网关 配置](/en/gateway/configuration)

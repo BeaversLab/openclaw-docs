@@ -12,7 +12,7 @@ Statut : prêt pour les DMs + espaces via les webhooks de l'API Google Chat API 
 ## Configuration rapide (débutant)
 
 1. Créez un projet Google Cloud et activez l'**API Google Chat API**.
-   - Accédez à : [Identifiants de l'API Google Chat API](https://console.cloud.google.com/apis/api/chat.googleapis.com/credentials)
+   - Accédez à : [Google Chat API Credentials](https://console.cloud.google.com/apis/api/chat.googleapis.com/credentials)
    - Activez l'**API API** si elle n'est pas déjà activée.
 2. Créez un **compte de service** :
    - Cliquez sur **Créer des identifiants** > **Compte de service**.
@@ -25,7 +25,7 @@ Statut : prêt pour les DMs + espaces via les webhooks de l'API Google Chat API 
    - Cliquez sur **Ajouter une clé** > **Créer une nouvelle clé**.
    - Sélectionnez **JSON** et appuyez sur **Créer**.
 4. Stockez le fichier JSON téléchargé sur votre hôte de passerelle (par exemple, `~/.openclaw/googlechat-service-account.json`).
-5. Créez une application Google Chat dans la [Configuration de Chat de la console Google Cloud](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat) :
+5. Créez une application Google Chat dans la [Google Cloud Console Chat Configuration](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat) :
    - Remplissez les **Informations sur l'application** :
      - **Nom de l'application** : (par exemple `OpenClaw`)
      - **URL de l'avatar** : (par exemple `https://openclaw.ai/logo.png`)
@@ -121,7 +121,7 @@ Utilisez l'URL publique (sans `:8443`) dans la configuration de l'application Go
 
 Si vous utilisez un proxy inverse comme Caddy, ne proxyfier que le chemin spécifique :
 
-```text
+```caddy
 your-domain.com {
     reverse_proxy /googlechat* localhost:18789
 }
@@ -201,10 +201,11 @@ Notes :
 - Le chemin du webhook par défaut est `/googlechat` si `webhookPath` n'est pas défini.
 - `dangerouslyAllowNameMatching` réactive la correspondance de principal par e-mail modifiable pour les listes d'autorisation (mode de compatibilité break-glass).
 - Les réactions sont disponibles via l'outil `reactions` et `channels action` lorsque `actions.reactions` est activé.
-- `typingIndicator` prend en charge `none`, `message` (par défaut) et `reaction` (la réaction nécessite l'OAuth utilisateur).
-- Les pièces jointes sont téléchargées via l'API Chat et stockées dans le pipeline média (taille limitée par `mediaMaxMb`).
+- Les actions de message exposent `send` pour le texte et `upload-file` pour l'envoi explicite de pièces jointes. `upload-file` accepte `media` / `filePath` / `path` ainsi que `message`, `filename` en option, et le ciblage de fils de discussion.
+- `typingIndicator` prend en charge `none`, `message` (par défaut) et `reaction` (la réaction nécessite le OAuth de l'utilisateur).
+- Les pièces jointes sont téléchargées via l'API de Chat et stockées dans le pipeline de médias (taille limitée par `mediaMaxMb`).
 
-Détails de référence des secrets : [Gestion des secrets](/fr/gateway/secrets).
+Détails de référence sur les secrets : [Gestion des secrets](/en/gateway/secrets).
 
 ## Dépannage
 
@@ -218,13 +219,13 @@ status code: 405, reason phrase: HTTP error response: HTTP/1.1 405 Method Not Al
 
 Cela signifie que le gestionnaire de webhook n'est pas enregistré. Causes courantes :
 
-1. **Canal non configuré** : La section `channels.googlechat` est manquante dans votre configuration. Vérifiez avec :
+1. **Channel non configuré** : La section `channels.googlechat` est manquante dans votre configuration. Vérifiez avec :
 
    ```bash
    openclaw config get channels.googlechat
    ```
 
-   S'il renvoie "Config path not found", ajoutez la configuration (voir [Points forts de la configuration](#config-highlights)).
+   Si cela renvoie "Config path not found", ajoutez la configuration (voir [Points forts de la configuration](#config-highlights)).
 
 2. **Plugin non activé** : Vérifiez l'état du plugin :
 
@@ -232,9 +233,9 @@ Cela signifie que le gestionnaire de webhook n'est pas enregistré. Causes coura
    openclaw plugins list | grep googlechat
    ```
 
-   S'il affiche "désactivé", ajoutez `plugins.entries.googlechat.enabled: true` à votre configuration.
+   S'il affiche "disabled", ajoutez `plugins.entries.googlechat.enabled: true` à votre configuration.
 
-3. **Gateway non redémarré** : Après avoir ajouté la configuration, redémarrez la passerelle :
+3. **Gateway non redémarrée** : Après avoir ajouté la configuration, redémarrez la passerelle :
 
    ```bash
    openclaw gateway restart
@@ -249,13 +250,13 @@ openclaw channels status
 
 ### Autres problèmes
 
-- Vérifiez `openclaw channels status --probe` pour les erreurs d'authentification ou la configuration de l'audience manquante.
-- Si aucun message n'arrive, confirmez l'URL du webhook de l'application Chat + les abonnements aux événements.
-- Si le blocage par mention empêche les réponses, définissez `botUser` sur le nom de la ressource utilisateur de l'application et vérifiez `requireMention`.
+- Consultez `openclaw channels status --probe` pour détecter les erreurs d'authentification ou une configuration d'audience manquante.
+- Si aucun message n'arrive, vérifiez l'URL du webhook de l'application Chat + les abonnements aux événements.
+- Si le blocage par mention empêche les réponses, définissez `botUser` sur le nom de ressource utilisateur de l'application et vérifiez `requireMention`.
 - Utilisez `openclaw logs --follow` lors de l'envoi d'un message de test pour voir si les requêtes atteignent la passerelle.
 
-Documentation associée :
+Documentation connexe :
 
-- [Configuration de la Gateway](/fr/gateway/configuration)
-- [Sécurité](/fr/gateway/security)
-- [Réactions](/fr/tools/reactions)
+- [Configuration Gateway](/en/gateway/configuration)
+- [Sécurité](/en/gateway/security)
+- [Réactions](/en/tools/reactions)

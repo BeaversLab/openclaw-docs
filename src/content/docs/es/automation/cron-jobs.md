@@ -9,14 +9,14 @@ title: "Trabajos Cron"
 
 # Trabajos Cron (programador del Gateway)
 
-> **¿Cron vs Heartbeat?** Consulte [Cron vs Heartbeat](/es/automation/cron-vs-heartbeat) para obtener orientación sobre cuándo usar cada uno.
+> **¿Cron vs Heartbeat?** Consulte [Cron vs Heartbeat](/en/automation/cron-vs-heartbeat) para obtener orientación sobre cuándo usar cada uno.
 
 Cron es el programador integrado del Gateway. Persiste los trabajos, despierta al agente en el momento adecuado y, opcionalmente, puede entregar el resultado de vuelta a un chat.
 
 Si desea _"ejecutar esto cada mañana"_ o _"avisar al agente en 20 minutos"_,
 cron es el mecanismo.
 
-Solución de problemas: [/automation/troubleshooting](/es/automation/troubleshooting)
+Solución de problemas: [/automation/troubleshooting](/en/automation/troubleshooting)
 
 ## TL;DR
 
@@ -66,7 +66,7 @@ openclaw cron add \
 
 ## Equivalentes de llamadas a herramientas (herramienta cron del Gateway)
 
-Para las formas canónicas de JSON y ejemplos, consulte [JSON schema for tool calls](/es/automation/cron-jobs#json-schema-for-tool-calls).
+Para las formas canónicas de JSON y ejemplos, consulte [JSON schema for tool calls](/en/automation/cron-jobs#json-schema-for-tool-calls).
 
 ## Dónde se almacenan los trabajos cron
 
@@ -152,7 +152,7 @@ Deben usar `payload.kind = "systemEvent"`.
 - `wakeMode: "next-heartbeat"`: el evento espera el siguiente latido programado.
 
 Esta es la mejor opción cuando desea el prompt de heartbeat normal + el contexto de la sesión principal.
-Vea [Heartbeat](/es/gateway/heartbeat).
+Vea [Heartbeat](/en/gateway/heartbeat).
 
 #### Trabajos aislados (sesiones cron dedicadas)
 
@@ -433,7 +433,7 @@ Cuando un trabajo falla, OpenClaw clasifica los errores como **transitorios** (r
 - Ante cualquier error: aplicar retroceso exponencial (30s → 1m → 5m → 15m → 60m) antes de la siguiente ejecución programada.
 - El trabajo permanece habilitado; el retroceso se restablece después de la siguiente ejecución exitosa.
 
-Configure `cron.retry` para anular estos valores predeterminados (consulte [Configuración](/es/automation/cron-jobs#configuration)).
+Configure `cron.retry` para anular estos valores predeterminados (consulte [Configuración](/en/automation/cron-jobs#configuration)).
 
 ## Configuración
 
@@ -692,7 +692,7 @@ openclaw system event --mode now --text "Next heartbeat: check battery."
 
 - `cron.list`, `cron.status`, `cron.add`, `cron.update`, `cron.remove`
 - `cron.run` (forzar o pendiente), `cron.runs`
-  Para eventos del sistema inmediatos sin un trabajo, use [`openclaw system event`](/es/cli/system).
+  Para eventos del sistema inmediatos sin un trabajo, use [`openclaw system event`](/en/cli/system).
 
 ## Solución de problemas
 
@@ -707,7 +707,7 @@ openclaw system event --mode now --text "Next heartbeat: check battery."
 - OpenClaw aplica un retroceso exponencial de reintentos para trabajos recurrentes después de errores consecutivos:
   30s, 1m, 5m, 15m, y luego 60m entre reintentos.
 - El retroceso se restablece automáticamente después de la próxima ejecución exitosa.
-- Los trabajos de una sola vez (`at`)) reintentan errores transitorios (límite de velocidad, sobrecarga, red, server_error) hasta 3 veces con retroceso; los errores permanentes se deshabilitan inmediatamente. Consulte [Política de reintento](/es/automation/cron-jobs#retry-policy).
+- Los trabajos de una sola vez (`at`)) reintentan errores transitorios (límite de velocidad, sobrecarga, red, server_error) hasta 3 veces con retroceso; los errores permanentes se deshabilitan inmediatamente. Consulte [Política de reintento](/en/automation/cron-jobs#retry-policy).
 
 ### Telegram entrega en el lugar equivocado
 

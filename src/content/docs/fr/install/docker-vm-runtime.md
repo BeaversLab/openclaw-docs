@@ -71,7 +71,7 @@ ENV NODE_ENV=production
 CMD ["node","dist/index.js"]
 ```
 
-<Note>Les URLs de téléchargement ci-dessus sont pour x86_64 (amd64). Pour les VM basées sur ARM (par ex. Hetzner ARM, GCP Tau T2A), remplacez les URLs de téléchargement par les variantes ARM64 appropriées depuis la page de publication de chaque outil.</Note>
+<Note>Les URLs de téléchargement ci-dessus sont pour x86_64 (amd64). Pour les VM basées sur ARM (par ex. Hetzner ARM, GCP Tau T2A), remplacez les URLs de téléchargement par les variantes ARM64 appropriées à partir de la page de publication de chaque outil.</Note>
 
 ## Construire et lancer
 

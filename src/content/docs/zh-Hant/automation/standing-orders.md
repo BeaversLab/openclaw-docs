@@ -42,7 +42,7 @@ title: "常駐指令"
 
 代理程式會透過工作區引導檔案在每個階段載入這些指令（有關自動注入檔案的完整列表，請參閱 [Agent Workspace](/en/concepts/agent-workspace)），並結合 [cron jobs](/en/automation/cron-jobs) 進行基於時間的強制執行。
 
-<Tip>將常駐指令放在 `AGENTS.md` 中，以確保每次會話都會載入它們。工作區引導程序會自動注入 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md` 和 `MEMORY.md` ——但不會注入子目錄中的任意檔案。</Tip>
+<Tip>將常備指令置於 `AGENTS.md` 以確保每個工作階段都會載入它們。工作區啟動程序會自動注入 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md` 和 `MEMORY.md` —— 但不會包含子目錄中的任意檔案。</Tip>
 
 ## 常駐指令剖析
 

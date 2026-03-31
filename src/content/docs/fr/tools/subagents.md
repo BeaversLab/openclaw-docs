@@ -53,7 +53,7 @@ Ces commandes fonctionnent sur les channels qui prennent en charge les liaisons 
 - `--model` et `--thinking` remplacent les valeurs par défaut pour cette exécution spécifique.
 - Utilisez `info`/`log` pour inspecter les détails et la sortie après la fin de l'exécution.
 - `/subagents spawn` est le mode ponctuel (`mode: "run"`). Pour les sessions persistantes liées aux fils, utilisez `sessions_spawn` avec `thread: true` et `mode: "session"`.
-- Pour les sessions de harnais ACP (Codex, Claude Code, Gemini CLI), utilisez `sessions_spawn` avec `runtime: "acp"` et consultez [ACP Agents](/fr/tools/acp-agents).
+- Pour les sessions de harnais ACP (Codex, Claude Code, Gemini CLI), utilisez `sessions_spawn` avec `runtime: "acp"` et consultez [ACP Agents](/en/tools/acp-agents).
 
 Objectifs principaux :
 
@@ -121,7 +121,7 @@ Commutateurs de configuration :
 - Par défaut global : `session.threadBindings.enabled`, `session.threadBindings.idleHours`, `session.threadBindings.maxAgeHours`
 - La priorité du canal et les clés de liaison automatique de génération sont spécifiques à l'adaptateur. Voir **Canaux supportant les fils** ci-dessus.
 
-Voir [Référence de configuration](/fr/gateway/configuration-reference) et [Commandes slash](/fr/tools/slash-commands) pour les détails actuels de l'adaptateur.
+Voir [Référence de configuration](/en/gateway/configuration-reference) et [Commandes slash](/en/tools/slash-commands) pour les détails actuels de l'adaptateur.
 
 Liste d'autorisation :
 

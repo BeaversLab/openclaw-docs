@@ -58,7 +58,7 @@ Notes :
 - `tools.exec.node` (par défaut non défini)
 - `tools.exec.strictInlineEval` (par défaut : false) : si true, les formes d'évaluation de l'interpréteur en ligne telles que `python -c`, `node -e`, `ruby -e`, `perl -e`, `php -r`, `lua -e` et `osascript -e` nécessitent toujours une approbation explicite et ne sont jamais persistées par `allow-always`.
 - `tools.exec.pathPrepend` : liste des répertoires à ajouter en tête de `PATH` pour les exécutions exec (passerelle + bac à sable uniquement).
-- `tools.exec.safeBins` : binaires sécurisés stdin-only qui peuvent s'exécuter sans entrées explicites de liste d'autorisation. Pour plus de détails sur le comportement, consultez [Safe bins](/fr/tools/exec-approvals#safe-bins-stdin-only).
+- `tools.exec.safeBins` : binaires sûres stdin-only qui peuvent s'exécuter sans entrées de liste d'autorisation explicites. Pour les détails sur le comportement, voir [Safe bins](/en/tools/exec-approvals#safe-bins-stdin-only).
 - `tools.exec.safeBinTrustedDirs` : répertoires explicites supplémentaires approuvés pour les vérifications de chemin `safeBins`. Les entrées `PATH` ne sont jamais automatiquement approuvées. Les valeurs par défaut intégrées sont `/bin` et `/usr/bin`.
 - `tools.exec.safeBinProfiles` : stratégie argv personnalisée facultative par binaire sécurisé (`minPositional`, `maxPositional`, `allowedValueFlags`, `deniedFlags`).
 
@@ -116,8 +116,8 @@ outil (`tools.deny: ["exec"]` ou par agent). Les approbations de l'hôte s'appli
 
 ## Approbations Exec (application compagnon / hôte de nœud)
 
-Les agents sandboxés peuvent nécessiter une approbation par requête avant que `exec` ne s'exécute sur la passerelle ou l'hôte de nœud.
-Voir [Approbations Exec](/fr/tools/exec-approvals) pour la stratégie, la liste d'autorisation et le flux de l'interface utilisateur.
+Les agents Sandboxed peuvent nécessiter une approbation par requête avant que `exec` ne s'exécute sur la passerelle ou l'hôte de nœud.
+Voir [Exec approvals](/en/tools/exec-approvals) pour la stratégie, la liste d'autorisation et le flux de l'interface utilisateur.
 
 Lorsque des approbations sont requises, l'outil d'exécution retourne immédiatement
 `status: "approval-pending"` et un ID d'approbation. Une fois approuvé (ou refusé / expiré),
@@ -139,7 +139,7 @@ Utilisez les deux contrôles pour des tâches différentes :
 
 Ne traitez pas `safeBins` comme une liste d'autorisation générique, et n'ajoutez pas de binaires d'interpréteur/runtime (par exemple `python3`, `node`, `ruby`, `bash`). Si vous en avez besoin, utilisez des entrées explicites de la liste d'autorisation et gardez les invites d'approbation activées. `openclaw security audit` avertit lorsque les entrées `safeBins` d'interpréteur/runtime n'ont pas de profils explicites, et `openclaw doctor --fix` peut échafauder les entrées `safeBinProfiles` personnalisées manquantes. `openclaw security audit` et `openclaw doctor` avertissent également lorsque vous ajoutez explicitement des bacs à comportement large tels que `jq` dans `safeBins`. Si vous autorisez explicitement des interpréteurs, activez `tools.exec.strictInlineEval` afin que les formes d'évaluation de code en ligne nécessitent toujours une nouvelle approbation.
 
-Pour plus de détails et d'exemples sur la stratégie, voir [Approbations d'exécution](/fr/tools/exec-approvals#safe-bins-stdin-only) et [Bacs sécurisés par rapport à la liste d'autorisation](/fr/tools/exec-approvals#safe-bins-versus-allowlist).
+Pour plus de détails sur la politique et des exemples, consultez [Exec approvals](/en/tools/exec-approvals#safe-bins-stdin-only) et [Safe bins versus allowlist](/en/tools/exec-approvals#safe-bins-versus-allowlist).
 
 ## Exemples
 
@@ -176,16 +176,17 @@ Coller (entre crochets par défaut) :
 { "tool": "process", "action": "paste", "sessionId": "<id>", "text": "line1\nline2\n" }
 ```
 
-## apply_patch (expérimental)
+## apply_patch
 
-`apply_patch` est un sous-outil de `exec` pour les modifications multi-fichiers structurées.
-Activez-le explicitement :
+`apply_patch` est un sous-outil de `exec` pour les modifications structurées multi-fichiers.
+Il est activé par défaut pour les modèles OpenAI et OpenAI Codex. N'utilisez la configuration que
+lorsque vous souhaitez le désactiver ou le restreindre à des modèles spécifiques :
 
 ```json5
 {
   tools: {
     exec: {
-      applyPatch: { enabled: true, workspaceOnly: true, allowModels: ["gpt-5.2"] },
+      applyPatch: { workspaceOnly: true, allowModels: ["gpt-5.2"] },
     },
   },
 }
@@ -194,6 +195,7 @@ Activez-le explicitement :
 Remarques :
 
 - Disponible uniquement pour les modèles OpenAI/OpenAI Codex.
-- La politique d'outil s'applique toujours ; `allow: ["exec"]` autorise implicitement `apply_patch`.
+- La stratégie d'outil s'applique toujours ; `allow: ["write"]` autorise implicitement `apply_patch`.
 - La configuration se trouve sous `tools.exec.applyPatch`.
-- `tools.exec.applyPatch.workspaceOnly` est défini par défaut sur `true` (contenu dans l'espace de travail). Définissez-le sur `false` uniquement si vous souhaitez intentionnellement que `apply_patch` écrivez/supprimez en dehors du répertoire de l'espace de travail.
+- `tools.exec.applyPatch.enabled` est par défaut `true` ; définissez-le sur `false` pour désactiver l'outil pour les modèles OpenAI.
+- `tools.exec.applyPatch.workspaceOnly` est par défaut `true` (contenu dans l'espace de travail). Définissez-le sur `false` uniquement si vous souhaitez explicitement que `apply_patch` écrive ou supprime en dehors du répertoire de l'espace de travail.

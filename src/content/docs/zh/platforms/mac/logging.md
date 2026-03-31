@@ -30,7 +30,7 @@ OpenClaw 通过 swift-log（默认为统一日志记录）路由 macOS 应用日
 
 - 先将 plist 写入临时文件，然后以 root 身份原子性地安装它：
 
-```exec
+```bash
 cat <<'EOF' >/tmp/ai.openclaw.plist
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

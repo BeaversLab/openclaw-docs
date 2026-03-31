@@ -31,7 +31,7 @@ Redémarrez la Gateway après avoir activé le plugin.
 
 Checkout Dev/local : `openclaw plugins install ./extensions/open-prose`
 
-Documentation connexe : [Plugins](/fr/tools/plugin), [Manifeste de plugin](/fr/plugins/manifest), [Compétences](/fr/tools/skills).
+Documentation connexe : [Plugins](/en/tools/plugin), [Manifeste de plugin](/en/plugins/manifest), [Compétences](/en/tools/skills).
 
 ## Commande slash
 
@@ -51,7 +51,7 @@ Commandes courantes :
 
 ## Exemple : un fichier `.prose` simple
 
-```text
+```prose
 # Research + synthesis with two agents running in parallel.
 
 input topic: "What should we research?"
@@ -125,10 +125,10 @@ Les programmes OpenProse correspondent aux primitives OpenClaw :
 | Lecture/écriture de fichiers | `read` / `write` |
 | Récupération Web             | `web_fetch`      |
 
-Si votre liste blanche d'outils bloque ces outils, les programmes OpenProse échoueront. Voir [Skills config](/fr/tools/skills-config).
+Si votre liste blanche d'outils bloque ces outils, les programmes OpenProse échoueront. Voir [Skills config](/en/tools/skills-config).
 
 ## Sécurité + approbations
 
 Traitez les fichiers `.prose` comme du code. Révisez-les avant exécution. Utilisez les listes blanches d'outils OpenClaw et les portails d'approbation pour contrôler les effets secondaires.
 
-Pour des flux de travail déterministes et soumis à approbation, comparer avec [Lobster](/fr/tools/lobster).
+Pour des flux de travail déterministes et soumis à approbation, comparer avec [Lobster](/en/tools/lobster).

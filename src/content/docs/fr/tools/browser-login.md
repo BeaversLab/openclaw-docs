@@ -14,7 +14,7 @@ Lorsqu'un site nécessite une connexion, **connectez-vous manuellement** dans le
 
 Ne **donnez pas** vos identifiants au modèle. Les connexions automatisées déclenchent souvent des défenses anti‑robots et peuvent verrouiller le compte.
 
-Retour à la documentation principale du navigateur : [Navigateur](/fr/tools/browser).
+Retour à la documentation principale du navigateur : [Navigateur](/en/tools/browser).
 
 ## Quel profil Chrome est utilisé ?
 

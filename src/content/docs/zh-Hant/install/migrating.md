@@ -41,7 +41,7 @@ title: "遷移指南"
 
   </Step>
 
-<Step title="在新機器上安裝 OpenClaw">[安裝](/en/install) 新機器上的 CLI（以及 Node，如果需要）。即使入門流程建立了新的 `~/.openclaw/` 也沒關係——您接下來會覆寫它。</Step>
+<Step title="在新機器上安裝 OpenClaw">在新機器上[安裝](/en/install) CLI（如果需要也包括 Node）。 如果入門程序建立了一個新的 `~/.openclaw/` 也不打緊——您接下來會將其覆蓋。</Step>
 
   <Step title="複製狀態目錄和工作區">
     透過 `scp`、`rsync -a` 或外部硬碟傳輸封存檔，然後解壓縮：
@@ -76,11 +76,11 @@ title: "遷移指南"
     使用您遷移的**相同** profile 或 state-dir 啟動閘道，然後重新執行 `openclaw doctor`。
   </Accordion>
 
-<Accordion title="Copying only openclaw.">僅複製設定檔是不夠的。憑證儲存在 `credentials/` 下，而代理程式狀態儲存在 `agents/` 下。請務必遷移**整個**狀態目錄。</Accordion>
+<Accordion title="僅複製 openclaw.">僅有設定檔是不夠的。憑證位於 `credentials/` 下，而代理程式 狀態位於 `agents/` 下。請務必遷移**整個**狀態目錄。</Accordion>
 
-<Accordion title="Permissions and ownership">如果您以 root 身份複製或切換了使用者，閘道可能無法讀取憑證。請確保狀態目錄和工作區是由執行閘道的使用者所擁有。</Accordion>
+<Accordion title="權限與所有權">如果您以 root 身份複製或切換了使用者，閘道可能無法讀取憑證。 請確保狀態目錄和工作區是由執行閘道的使用者所擁有。</Accordion>
 
-<Accordion title="Remote mode">如果您的 UI 指向**遠端**閘道，則遠端主機擁有工作階段和工作區。請遷移閘道主機本身，而不是您的本機筆記型電腦。請參閱 [FAQ](/en/help/faq#where-does-openclaw-store-its-data)。</Accordion>
+<Accordion title="遠端模式">如果您的 UI 指向**遠端**閘道，遠端主機擁有工作階段和工作區。 請遷移閘道主機本身，而不是您的本機筆電。請參閱 [FAQ](/en/help/faq#where-things-live-on-disk)。</Accordion>
 
   <Accordion title="Secrets in backups">
     狀態目錄包含 API 金鑰、OAuth 權杖和頻道憑證。

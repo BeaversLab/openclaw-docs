@@ -12,8 +12,8 @@ Administra las cuentas de los canales de chat y su estado de tiempo de ejecució
 
 Documentos relacionados:
 
-- Guías de canales: [Canales](/es/channels/index)
-- Configuración de la Gateway: [Configuración](/es/gateway/configuration)
+- Guías de canales: [Canales](/en/channels/index)
+- Configuración de la Gateway: [Configuración](/en/gateway/configuration)
 
 ## Comandos comunes
 
@@ -44,7 +44,7 @@ Al ejecutar `openclaw channels add` sin marcas, el asistente interactivo puede s
 
 Si confirmas el enlace ahora, el asistente pregunta qué agente debe ser dueño de cada cuenta de canal configurada y escribe enlaces de enrutamiento con ámbito de cuenta.
 
-También puedes gestionar las mismas reglas de enrutamiento más tarde con `openclaw agents bindings`, `openclaw agents bind` y `openclaw agents unbind` (consulta [agents](/es/cli/agents)).
+También puedes gestionar las mismas reglas de enrutamiento más tarde con `openclaw agents bindings`, `openclaw agents bind` y `openclaw agents unbind` (consulta [agents](/en/cli/agents)).
 
 Cuando añades una cuenta no predeterminada a un canal que aún está usando configuraciones de nivel superior de cuenta única (sin entradas `channels.<channel>.accounts` todavía), OpenClaw mueve los valores de nivel superior de cuenta única con ámbito de cuenta a `channels.<channel>.accounts.default` y luego escribe la nueva cuenta. Esto preserva el comportamiento de la cuenta original al pasar a la estructura multicuenta.
 

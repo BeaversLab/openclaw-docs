@@ -27,7 +27,7 @@ openclaw plugins install @openclaw/tlon
 openclaw plugins install ./extensions/tlon
 ```
 
-详细信息：[插件](/zh/tools/plugin)
+详细信息：[插件](/en/tools/plugin)
 
 ## 设置
 
@@ -244,7 +244,7 @@ openclaw doctor
 
 ## 配置参考
 
-完整配置：[Configuration](/zh/gateway/configuration)
+完整配置：[Configuration](/en/gateway/configuration)
 
 提供者选项：
 

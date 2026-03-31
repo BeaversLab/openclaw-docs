@@ -11,7 +11,7 @@ title: "Ansible"
 
 Implemente OpenClaw en servidores de producción con **[openclaw-ansible](https://github.com/openclaw/openclaw-ansible)** -- un instalador automatizado con arquitectura de seguridad primero.
 
-<Info>El repositorio [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) es la fuente de verdad para el despliegue de Ansible. Esta página es una visión general rápida.</Info>
+<Info>El repositorio [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) es la fuente de verdad para el despliegue de Ansible. Esta página es un resumen rápido.</Info>
 
 ## Requisitos previos
 
@@ -50,14 +50,14 @@ El playbook de Ansible instala y configura:
 5. **OpenClaw** -- basado en el host, no en contenedores
 6. **Servicio Systemd** -- inicio automático con endurecimiento de seguridad
 
-<Note>La puerta de enlace se ejecuta directamente en el host (no en Docker), pero los entornos de prueba de los agentes usan Docker para el aislamiento. Consulte [Sandboxing](/es/gateway/sandboxing) para obtener más detalles.</Note>
+<Note>La puerta de enlace se ejecuta directamente en el host (no en Docker), pero los entornos limitados del agente utilizan Docker para el aislamiento. Consulte [Sandboxing](/en/gateway/sandboxing) para obtener más detalles.</Note>
 
 ## Configuración posterior a la instalación
 
 <Steps>
   <Step title="Switch to the openclaw user">```bash sudo -i -u openclaw ```</Step>
   <Step title="Ejecute el asistente de incorporación">El script posterior a la instalación le guiará a través de la configuración de los ajustes de OpenClaw.</Step>
-  <Step title="Conecte proveedores de mensajería">Inicie sesión en WhatsApp, Telegram, Discord o Signal: ```bash openclaw channels login ```</Step>
+  <Step title="Conectar proveedores de mensajería">Inicie sesión en WhatsApp, Telegram, Discord o Signal: ```bash openclaw channels login ```</Step>
   <Step title="Verificar la instalación">```bash sudo systemctl status openclaw sudo journalctl -u openclaw -f ```</Step>
   <Step title="Conectar a Tailscale">Únase a su malla VPN para acceso remoto seguro.</Step>
 </Steps>

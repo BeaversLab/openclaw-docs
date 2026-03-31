@@ -48,7 +48,7 @@ openclaw devices approve <requestId>
 
 如果浏览器重试配对，且身份验证详细信息（角色/范围/公钥）发生变化，则之前的待处理请求将被取代，并创建一个新的 `requestId`。在批准之前，请重新运行 `openclaw devices list`。
 
-一旦获得批准，设备将被记住，除非您使用 `openclaw devices revoke --device <id> --role <role>` 撤销它，否则不需要重新批准。有关令牌轮换和撤销，请参阅[设备 CLI](/zh/cli/devices)。
+一旦获得批准，设备将被记住，除非您使用 `openclaw devices revoke --device <id> --role <role>` 撤销它，否则不需要重新批准。有关令牌轮换和撤销，请参阅[设备 CLI](/en/cli/devices)。
 
 **注意：**
 
@@ -187,7 +187,7 @@ OpenClaw **阻止**没有设备身份的 Control UI 连接。
 `dangerouslyDisableDeviceAuth` 禁用 Control UI 设备身份检查，这是一个
 严重的安全降级。紧急使用后请迅速还原。
 
-有关 HTTPS 设置指南，请参阅 [Tailscale](/zh/gateway/tailscale)。
+有关 HTTPS 设置指南，请参阅 [Tailscale](/en/gateway/tailscale)。
 
 ## 构建 UI
 
@@ -252,4 +252,4 @@ http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789#token=<gateway-toke
 }
 ```
 
-远程访问设置详细信息：[Remote access](/zh/gateway/remote)。
+远程访问设置详细信息：[Remote access](/en/gateway/remote)。

@@ -39,7 +39,7 @@ Sandboxing is controlled by `agents.defaults.sandbox.mode`:
 - `"non-main"`: only non-main sessions are sandboxed (common “surprise” for groups/channels).
 - `"all"`: everything is sandboxed.
 
-See [Sandboxing](/fr/gateway/sandboxing) for the full matrix (scope, workspace mounts, images).
+See [Sandboxing](/en/gateway/sandboxing) for the full matrix (scope, workspace mounts, images).
 
 ### Bind mounts (security quick check)
 
@@ -110,7 +110,7 @@ Portes :
 - Activation : `tools.elevated.enabled` (et optionnellement `agents.list[].tools.elevated.enabled`)
 - Listes d'autorisation des expéditeurs : `tools.elevated.allowFrom.<provider>` (et optionnellement `agents.list[].tools.elevated.allowFrom.<provider>`)
 
-Voir [Elevated Mode](/fr/tools/elevated).
+Voir [Elevated Mode](/en/tools/elevated).
 
 ## Corrections courantes du "sandbox jail"
 
@@ -129,6 +129,6 @@ En mode `"non-main"`, les clés de groupe/channel ne sont _pas_ main. Utilisez l
 
 ## Voir aussi
 
-- [Sandboxing](/fr/gateway/sandboxing) -- référence complète du sandbox (modes, portées, backends, images)
-- [Multi-Agent Sandbox & Tools](/fr/tools/multi-agent-sandbox-tools) -- substitutions par agent et priorité
-- [Elevated Mode](/fr/tools/elevated)
+- [Sandboxing](/en/gateway/sandboxing) -- référence complète du sandbox (modes, portées, backends, images)
+- [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) -- substitutions par agent et priorité
+- [Elevated Mode](/en/tools/elevated)

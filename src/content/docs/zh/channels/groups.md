@@ -36,7 +36,7 @@ requireMention? yes -> mentioned? no -> store for context only
 otherwise -> reply
 ```
 
-![Group message flow](/images/groups-flow.svg)
+![群组消息流程](/images/groups-flow.svg)
 
 如果您想要...
 
@@ -65,7 +65,7 @@ otherwise -> reply
 - **私信**：完整工具（宿主机）
 - **群组**：沙箱 + 受限工具（Docker）
 
-> 如果您需要真正独立的工作空间/角色（“个人”和“公共”绝不能混合），请使用第二个代理 + 绑定。参见[多代理路由](/zh/concepts/multi-agent)。
+> 如果您需要完全独立的工作区/角色（“个人”和“公开”绝不能混合），请使用第二个 agent + bindings。参见 [Multi-Agent Routing](/en/concepts/multi-agent)。
 
 示例（私信在宿主机上，群组沙箱隔离 + 仅消息工具）：
 
@@ -116,9 +116,9 @@ otherwise -> reply
 
 相关内容：
 
-- 配置键和默认值：[Gateway(网关) 配置](/zh/gateway/configuration-reference#agentsdefaultssandbox)
-- 调试工具被阻止的原因：[沙箱 vs 工具策略 vs 提升权限](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)
-- 绑定挂载详情：[沙箱隔离](/zh/gateway/sandboxing#custom-bind-mounts)
+- 配置键和默认值：[Gateway(网关) configuration](/en/gateway/configuration-reference#agentsdefaultssandbox)
+- 调试工具被阻止的原因：[沙箱 vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Bind mounts 详情：[沙箱隔离](/en/gateway/sandboxing#custom-bind-mounts)
 
 ## 显示标签
 
@@ -366,14 +366,18 @@ otherwise -> reply
 - `WasMentioned`（提及门控结果）
 - Telegram 论坛主题还包括 `MessageThreadId` 和 `IsForum`。
 
-代理系统提示在新的群组会话的第一轮包含群组介绍。它提醒模型像人类一样回应，避免使用 Markdown 表格，并避免输入字面意义的 `\n` 序列。
+特定渠道说明：
 
-## iMessage 详情
+- BlueBubbles 可以在填充 `GroupMembers` 之前，选择性地从本地联系人数据库中丰富未命名的 macOS 群组参与者。默认情况下此功能关闭，且仅在通过正常群组筛选后运行。
 
-- 路由或添加到允许列表时，优先使用 `chat_id:<id>`。
+Agent 系统提示会在新群组会话的第一轮包含一个群组介绍。它会提醒模型像人类一样回应，避免使用 Markdown 表格，并避免输入字面的 `\n` 序列。
+
+## iMessage 细节
+
+- 在路由或添加到允许列表时，首选 `chat_id:<id>`。
 - 列出聊天：`imsg chats --limit 20`。
 - 群组回复总是返回到同一个 `chat_id`。
 
-## WhatsApp 详情
+## WhatsApp 细节
 
-请参阅 [Group messages](/zh/channels/group-messages) 了解 WhatsApp 专属行为（历史记录注入、提及处理详情）。
+请参阅 [Group messages](/en/channels/group-messages) 了解 WhatsApp 特有的行为（历史记录注入、提及处理细节）。

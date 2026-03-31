@@ -12,8 +12,8 @@ Asistentes de DNS para el descubrimiento de área amplia (Tailscale + CoreDNS). 
 
 Relacionado:
 
-- Descubrimiento de puerta de enlace: [Discovery](/es/gateway/discovery)
-- Configuración de descubrimiento de área amplia: [Configuration](/es/gateway/configuration)
+- Descubrimiento de puerta de enlace: [Discovery](/en/gateway/discovery)
+- Configuración de descubrimiento de área amplia: [Configuration](/en/gateway/configuration)
 
 ## Configuración
 

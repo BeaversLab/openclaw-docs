@@ -32,7 +32,7 @@ macOS 会将该应用视为新应用，并可能会丢弃或隐藏提示。
 
 重置示例（根据需要替换 Bundle ID）：
 
-```exec
+```bash
 sudo tccutil reset Accessibility ai.openclaw.mac
 sudo tccutil reset ScreenCapture ai.openclaw.mac
 sudo tccutil reset AppleEvents

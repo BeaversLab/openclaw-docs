@@ -11,7 +11,7 @@ title: "Ansible"
 
 使用 **[openclaw-ansible](https://github.com/openclaw/openclaw-ansible)** 將 OpenClaw 部署到生產伺服器——這是一個具有優先安全架構的自動化安裝程式。
 
-<Info>[openclaw-ansible](https://github.com/openclaw/openclaw-ansible) 程式庫是 Ansible 部署的事實來源。本頁面提供快速概覽。</Info>
+<Info>[openclaw-ansible](https://github.com/openclaw/openclaw-ansible) repo 是 Ansible 部署的權威來源。本頁提供快速概覽。</Info>
 
 ## 先決條件
 
@@ -50,14 +50,14 @@ Ansible playbook 會安裝並設定：
 5. **OpenClaw** -- 基於主機，非容器化
 6. **Systemd 服務** -- 自動啟動並強化安全性
 
-<Note>閘道直接在主機上執行 (非在 Docker 中)，但代理沙箱使用 Docker 進行隔離。詳情請參閱 [沙箱隔離](/en/gateway/sandboxing)。</Note>
+<Note>閘道直接在主機上運行（而非在 Docker 中），但代理沙箱使用 Docker 進行隔離。詳情請參閱 [Sandboxing](/en/gateway/sandboxing)。</Note>
 
 ## 安裝後設定
 
 <Steps>
   <Step title="Switch to the openclaw user">```bash sudo -i -u openclaw ```</Step>
-  <Step title="執行入門精靈">安裝後指令碼會引導您完成 OpenClaw 設定。</Step>
-  <Step title="連接訊息服務提供商">登入 WhatsApp、Telegram、Discord 或 Signal：```bash openclaw channels login ```</Step>
+  <Step title="執行上架嚮導">安裝後腳本會引導您設定 OpenClaw 設定。</Step>
+  <Step title="連接訊息服務提供商">登入 WhatsApp、Telegram、Discord 或 Signal： ```bash openclaw channels login ```</Step>
   <Step title="驗證安裝">```bash sudo systemctl status openclaw sudo journalctl -u openclaw -f ```</Step>
   <Step title="連線至 Tailscale">加入您的 VPN 網狀網路以進行安全的遠端存取。</Step>
 </Steps>

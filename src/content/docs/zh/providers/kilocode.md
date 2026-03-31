@@ -67,5 +67,5 @@ kilocode/google/gemini-3-pro-preview
 - 模型引用是 `kilocode/<model-id>` （例如 `kilocode/anthropic/claude-sonnet-4`）。
 - 默认模型： `kilocode/kilo/auto`
 - 基础 URL： `https://api.kilo.ai/api/gateway/`
-- 有关更多模型/提供商选项，请参阅 [/concepts/模型-providers](/zh/concepts/model-providers)。
+- 有关更多模型/提供商选项，请参阅 [/concepts/模型-providers](/en/concepts/model-providers)。
 - Kilo Gateway(网关) 在底层使用带有 API 密钥的 Bearer 令牌。

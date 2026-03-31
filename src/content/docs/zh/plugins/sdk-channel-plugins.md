@@ -12,11 +12,12 @@ read_when:
 
 本指南介绍了如何构建一个连接 OpenClaw 与消息平台的渠道插件。在结束时，你将拥有一个可用的渠道，具备私信安全性、配对、回复线程和出站消息功能。
 
-<Info>如果你之前没有构建过任何 OpenClaw 插件，请先阅读 [入门指南](/zh/plugins/building-plugins)，了解基本的包结构和清单设置。</Info>
+<Info>如果您以前从未构建过任何 OpenClaw 插件，请先阅读 [入门指南](/en/plugins/building-plugins) 以了解基本的包 结构和清单设置。</Info>
 
 ## 渠道插件的工作原理
 
-渠道插件不需要自己的发送/编辑/反应工具。OpenClaw 在核心中保留了一个共享的 `message` 工具。你的插件拥有：
+渠道插件不需要自己的发送/编辑/反应工具。OpenClaw 在核心中维护一个
+共享的 `message` 工具。您的插件拥有：
 
 - **配置** — 账户解析和设置向导
 - **安全性** — 私信策略和允许列表
@@ -30,8 +31,8 @@ read_when:
 
 <Steps>
   <Step title="包和清单">
-    创建标准的插件文件。`package.json` 中的 `channel` 字段
-    使其成为一个渠道插件：
+    创建标准插件文件。`package.json` 中的 `channel` 字段
+    使其成为渠道插件：
 
     <CodeGroup>
     ```json package.json
@@ -81,7 +82,8 @@ read_when:
   </Step>
 
   <Step title="构建渠道插件对象">
-    `ChannelPlugin` 接口有许多可选的适配器表面。从最基础的开始 — `id` 和 `setup` — 然后根据需要添加适配器。
+    `ChannelPlugin` 接口有许多可选的适配器表面。从
+    最小需求开始 —— `id` 和 `setup` —— 并根据需要添加适配器。
 
     创建 `src/channel.ts`：
 
@@ -177,16 +179,18 @@ read_when:
     ```
 
     <Accordion title="createChatChannelPlugin 为您做了什么">
-      您无需手动实现低级适配器接口，只需传递声明式选项，构建器会将它们组合起来：
+      您无需手动实现低级适配器接口，而是传递
+      声明式选项，构建器会将它们组合起来：
 
       | 选项 | 它连接的内容 |
       | --- | --- |
-      | `security.dm` | 来自配置字段的范围界定私信安全解析器 |
-      | `pairing.text` | 基于代码交换的文本私信配对流程 |
-      | `threading` | 回复模式解析器（固定、账户范围或自定义）|
+      | `security.dm` | 来自配置字段的范围限定私信安全解析器 |
+      | `pairing.text` | 基于文本的代码交换私信配对流程 |
+      | `threading` | 回复模式解析器（固定、账户范围或自定义） |
       | `outbound.attachedResults` | 返回结果元数据（消息 ID）的发送函数 |
 
-      如果需要完全控制，您也可以传递原始适配器对象来代替声明式选项。
+      如果您需要完全控制，也可以传递原始适配器对象
+      代替声明式选项。
     </Accordion>
 
   </Step>
@@ -216,13 +220,14 @@ read_when:
     });
     ```
 
-    `defineChannelPluginEntry` 会自动处理设置/完整注册的拆分。请参阅
-    [Entry Points](/zh/plugins/sdk-entrypoints#definechannelpluginentry) 了解所有
+    `defineChannelPluginEntry` 会自动
+    处理设置/完整注册的拆分。请参阅
+    [入口点](/en/plugins/sdk-entrypoints#definechannelpluginentry) 了解所有
     选项。
 
   </Step>
 
-  <Step title="添加设置入口">
+  <Step title="添加一个设置入口">
     创建 `setup-entry.ts` 以便在新手引导期间进行轻量级加载：
 
     ```typescript setup-entry.ts
@@ -232,13 +237,12 @@ read_when:
     export default defineSetupPluginEntry(acmeChatPlugin);
     ```
 
-    当渠道被禁用或未配置时，OpenClaw 会加载此文件而不是完整入口。这避免了在设置流程中引入繁重的运行时代码。详情请参阅 [Setup and Config](/zh/plugins/sdk-setup#setup-entry)。
+    当渠道被禁用或未配置时，OpenClaw 会加载此入口而不是完整入口。这可以避免在设置流程中引入繁重的运行时代码。有关详细信息，请参阅 [Setup and Config](/en/plugins/sdk-setup#setup-entry)。
 
   </Step>
 
-  <Step title="处理入站消息">
-    您的插件需要接收来自平台的消息并将其转发给
-    OpenClaw。典型的模式是使用 webhook 来验证请求并通过您的渠道的入站处理器进行分发：
+  <Step title="处理传入消息">
+    您的插件需要从平台接收消息并将其转发给 OpenClaw。典型的模式是使用一个 Webhook 来验证请求，并通过您渠道的传入处理程序进行分发：
 
     ```typescript
     registerFull(api) {
@@ -262,14 +266,13 @@ read_when:
     ```
 
     <Note>
-      入站消息处理因渠道而异。每个渠道插件都拥有自己的入站管道。请查看内置渠道插件
-      （例如 `extensions/msteams`、`extensions/googlechat`）以了解实际模式。
+      传入消息的处理是特定于渠道的。每个渠道插件都拥有自己的传入管道。请查看捆绑的渠道插件（例如 `extensions/msteams`、`extensions/googlechat`）以获取实际模式。
     </Note>
 
   </Step>
 
   <Step title="测试">
-    在 `src/channel.test.ts` 中编写同置测试（colocated tests）：
+    在 `src/channel.test.ts` 中编写并置测试：
 
     ```typescript src/channel.test.ts
     import { describe, it, expect } from "vitest";
@@ -307,7 +310,7 @@ read_when:
     pnpm test -- extensions/acme-chat/
     ```
 
-    有关共享测试辅助工具，请参阅 [Testing](/zh/plugins/sdk-testing)。
+    有关共享测试帮助程序，请参阅 [Testing](/en/plugins/sdk-testing)。
 
   </Step>
 </Steps>
@@ -332,23 +335,23 @@ extensions/acme-chat/
 ## 高级主题
 
 <CardGroup cols={2}>
-  <Card title="线程选项" icon="git-branch" href="/zh/plugins/sdk-entrypoints#registration-mode">
+  <Card title="线程选项" icon="git-branch" href="/en/plugins/sdk-entrypoints#registration-mode">
     固定、账户范围或自定义回复模式
   </Card>
-  <Card title="消息工具集成" icon="puzzle" href="/zh/plugins/architecture#channel-plugins-and-the-shared-message-tool">
-    describeMessageTool 和 action discovery
+  <Card title="消息工具集成" icon="puzzle" href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool">
+    describeMessageTool 和操作发现
   </Card>
-  <Card title="目标解析" icon="crosshair" href="/zh/plugins/architecture#channel-target-resolution">
-    inferTargetChatType, looksLikeId, resolveTarget
+  <Card title="目标解析" icon="crosshair" href="/en/plugins/architecture#channel-target-resolution">
+    inferTargetChatType、looksLikeId、resolveTarget
   </Card>
-  <Card title="运行时辅助工具" icon="settings" href="/zh/plugins/sdk-runtime">
-    通过 api.runtime 进行 TTS、STT、媒体处理和子代理调用
+  <Card title="运行时助手" icon="settings" href="/en/plugins/sdk-runtime">
+    通过 api.runtime 实现 TTS、STT、媒体、子代理
   </Card>
 </CardGroup>
 
 ## 后续步骤
 
-- [Provider Plugins](/zh/plugins/sdk-provider-plugins) — 如果您的插件还提供模型
-- [SDK Overview](/zh/plugins/sdk-overview) — 完整的子路径导入参考
-- [SDK Testing](/zh/plugins/sdk-testing) — 测试工具和契约测试
-- [Plugin Manifest](/zh/plugins/manifest) — 完整的清单架构
+- [Provider Plugins](/en/plugins/sdk-provider-plugins) — 如果您的插件也提供模型
+- [SDK Overview](/en/plugins/sdk-overview) — 完整的子路径导入参考
+- [SDK Testing](/en/plugins/sdk-testing) — 测试工具和合约测试
+- [Plugin Manifest](/en/plugins/manifest) — 完整的清单模式

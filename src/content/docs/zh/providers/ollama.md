@@ -10,7 +10,7 @@ title: "Ollama"
 
 Ollama 是一个本地 LLM 运行时，可让您轻松在机器上运行开源模型。OpenClaw 与 Ollama 的原生 API (`/api/chat`) 集成，支持流式传输和 Ollama 调用，并且当您选择加入 `OLLAMA_API_KEY`（或身份验证配置文件）且未定义显式 `models.providers.ollama` 条目时，可以自动发现本地 Ollama 模型。
 
-<Warning>**远程 Ollama 用户**：请勿在 OpenAI 中使用 `/v1` OpenClaw 兼容 URL (`http://host:11434/v1`)。这会破坏 Ollama 调用，并且模型可能会将原始 API JSON 作为纯文本输出。请改用 原生 API API URL：`baseUrl: "http://host:11434"`（无 `/v1`）。</Warning>
+<Warning>**Remote Ollama users**: Do not use the `/v1` OpenAI-compatible URL (`http://host:11434/v1`) with OpenClaw. This breaks 工具 calling and models may output raw 工具 JSON as plain text. Use the native Ollama API URL instead: `baseUrl: "http://host:11434"` (no `/v1`).</Warning>
 
 ## 快速入门
 
@@ -204,7 +204,7 @@ export OLLAMA_API_KEY="ollama-local"
 }
 ```
 
-<Warning>不要在 URL 中添加 `/v1`。 `/v1` 路径使用 OpenAI 兼容模式，在该模式下工具调用并 不可靠。请使用不带路径后缀的基础 Ollama URL。</Warning>
+<Warning>Do not add `/v1` to the URL. The `/v1` path uses OpenAI-compatible mode, where 工具 calling is not reliable. Use the base Ollama URL without a path suffix.</Warning>
 
 ### 模型选择
 
@@ -251,7 +251,7 @@ OpenClaw 的 Ollama 集成默认使用 **原生 Ollama API** (`/api/chat`)，它
 
 #### 旧版 OpenAI 兼容模式
 
-<Warning>**在 OpenAI 兼容模式下工具调用并不可靠。** 仅当您需要代理的 OpenAI 格式且不依赖原生工具调用行为时才使用此模式。</Warning>
+<Warning>**工具 calling is not reliable in OpenAI-compatible mode.** Use this mode only if you need OpenAI format for a proxy and do not depend on native 工具 calling behavior.</Warning>
 
 如果您需要改用 OpenAI 兼容的端点（例如，在仅支持 OpenAI 格式的代理后面），请显式设置 `api: "openai-completions"`：
 
@@ -341,6 +341,6 @@ ollama serve
 
 ## 另请参阅
 
-- [模型提供商](/zh/concepts/model-providers) - 所有提供商的概览
-- [模型选择](/zh/concepts/models) - 如何选择模型
-- [配置](/zh/gateway/configuration) - 完整配置参考
+- [模型提供商](/en/concepts/model-providers) - 所有提供商的概览
+- [模型选择](/en/concepts/models) - 如何选择模型
+- [配置](/en/gateway/configuration) - 完整配置参考

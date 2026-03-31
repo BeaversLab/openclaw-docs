@@ -183,7 +183,7 @@ Notas:
 - Las claves heredadas sin prefijo todavía se aceptan y coinciden solo como `id:`.
 - Gana la primera política de remitente que coincida; `"*"` es el respaldo de comodín.
 
-Para obtener más información sobre el acceso de grupos frente al filtrado por menciones (y cómo interactúan), consulte: [/channels/groups](/es/channels/groups).
+Para obtener más información sobre el acceso de grupos frente al filtrado por menciones (y cómo interactúan), consulte: [/channels/groups](/en/channels/groups).
 
 ## NickServ
 

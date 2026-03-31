@@ -49,7 +49,7 @@ Canvas 通过 **Gateway 网关 WebSocket** 公开，因此 Agent 可以：
 
 CLI 示例：
 
-```exec
+```bash
 openclaw nodes canvas present --node <id>
 openclaw nodes canvas navigate --node <id> --url "/"
 openclaw nodes canvas eval --node <id> --js "document.title"
@@ -86,7 +86,7 @@ Canvas 目前接受 **A2UI v0.8** 服务器→客户端消息：
 
 CLI 示例：
 
-```exec
+```bash
 cat > /tmp/a2ui-v0.8.jsonl <<'EOFA2'
 {"surfaceUpdate":{"surfaceId":"main","components":[{"id":"root","component":{"Column":{"children":{"explicitList":["title","content"]}}}},{"id":"title","component":{"Text":{"text":{"literalString":"Canvas (A2UI v0.8)"},"usageHint":"h1"}}},{"id":"content","component":{"Text":{"text":{"literalString":"If you can read this, A2UI push works."},"usageHint":"body"}}}]}}
 {"beginRendering":{"surfaceId":"main","root":"root"}}
@@ -97,7 +97,7 @@ openclaw nodes canvas a2ui push --jsonl /tmp/a2ui-v0.8.jsonl --node <id>
 
 快速测试：
 
-```exec
+```bash
 openclaw nodes canvas a2ui push --node <id> --text "Hello from A2UI"
 ```
 

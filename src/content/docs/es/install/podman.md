@@ -1,5 +1,5 @@
 ---
-summary: "Ejecutar OpenClaw en un contenedor rootless de Podman"
+summary: "Ejecuta OpenClaw en un contenedor de Podman sin root"
 read_when:
   - You want a containerized gateway with Podman instead of Docker
 title: "Podman"
@@ -7,127 +7,256 @@ title: "Podman"
 
 # Podman
 
-Ejecute OpenClaw Gateway en un contenedor de Podman **sin privilegios de root**. Usa la misma imagen que Docker (construida desde el [Dockerfile](https://github.com/openclaw/openclaw/blob/main/Dockerfile) del repositorio).
+Ejecuta el OpenClaw Gateway en un contenedor de Podman sin root, gestionado por tu usuario actual sin privilegios de root.
+
+El modelo previsto es:
+
+- Podman ejecuta el contenedor del gateway.
+- Tu `openclaw` CLI en el host es el plano de control.
+- El estado persistente reside en el host en `~/.openclaw` de forma predeterminada.
+- La gestión diaria utiliza `openclaw --container <name> ...` en lugar de `sudo -u openclaw`, `podman exec`, o un usuario de servicio separado.
 
 ## Requisitos previos
 
-- **Podman** (modo sin privilegios de root)
-- Acceso a **sudo** para la configuración única (crear el usuario dedicado y construir la imagen)
+- **Podman** en modo sin root
+- **OpenClaw CLI** instalado en el host
+- **Opcional:** `systemd --user` si quieres un inicio automático gestionado por Quadlet
+- **Opcional:** `sudo` solo si quieres `loginctl enable-linger "$(whoami)"` para persistencia al arranque en un host sin interfaz gráfica
 
 ## Inicio rápido
 
 <Steps>
   <Step title="Configuración única">
-    Desde la raíz del repositorio, ejecute el script de configuración. Crea un usuario dedicado `openclaw`, construye la imagen del contenedor e instala el script de lanzamiento:
-
-    ```bash
-    ./scripts/podman/setup.sh
-    ```
-
-    Esto también crea una configuración mínima en `~openclaw/.openclaw/openclaw.json` (establece `gateway.mode` en `"local"`) para que el Gateway pueda iniciarse sin ejecutar el asistente.
-
-    De forma predeterminada, el contenedor **no** se instala como un servicio systemd: lo iniciará manualmente en el siguiente paso. Para una configuración de estilo de producción con inicio automático y reinicios, pase `--quadlet` en su lugar:
-
-    ```bash
-    ./scripts/podman/setup.sh --quadlet
-    ```
-
-    (O configure `OPENCLAW_PODMAN_QUADLET=1`. Use `--container` para instalar solo el contenedor y el script de lanzamiento).
-
-    **Variables de entorno de compilación opcionales** (establecer antes de ejecutar `scripts/podman/setup.sh`):
-
-    - `OPENCLAW_DOCKER_APT_PACKAGES` -- instala paquetes apt adicionales durante la compilación de la imagen.
-    - `OPENCLAW_EXTENSIONS` -- preinstala las dependencias de las extensiones (nombres separados por espacios, p. ej., `diagnostics-otel matrix`).
-
+    Desde la raíz del repositorio, ejecuta `./scripts/podman/setup.sh`.
   </Step>
 
-  <Step title="Iniciar el Gateway">
-    Para un inicio manual rápido:
+<Step title="Inicia el contenedor del Gateway">Inicia el contenedor con `./scripts/run-openclaw-podman.sh launch`.</Step>
 
-    ```bash
-    ./scripts/run-openclaw-podman.sh launch
-    ```
+<Step title="Ejecuta el onboarding dentro del contenedor">Ejecuta `./scripts/run-openclaw-podman.sh launch setup`, luego abre `http://127.0.0.1:18789/`.</Step>
 
-  </Step>
-
-  <Step title="Ejecutar el asistente de incorporación">
-    Para agregar canales o proveedores de forma interactiva:
-
-    ```bash
-    ./scripts/run-openclaw-podman.sh launch setup
-    ```
-
-    Luego abra `http://127.0.0.1:18789/` y use el token de `~openclaw/.openclaw/.env` (o el valor impreso por la configuración).
-
+  <Step title="Administrar el contenedor en ejecución desde la CLI del host">
+    Configure `OPENCLAW_CONTAINER=openclaw`, luego use comandos normales de `openclaw` desde el host.
   </Step>
 </Steps>
 
+Detalles de la configuración:
+
+- `./scripts/podman/setup.sh` compila `openclaw:local` en su almacén de Podman sin root de manera predeterminada, o usa `OPENCLAW_IMAGE` / `OPENCLAW_PODMAN_IMAGE` si configura uno.
+- Crea `~/.openclaw/openclaw.json` con `gateway.mode: "local"` si falta.
+- Crea `~/.openclaw/.env` con `OPENCLAW_GATEWAY_TOKEN` si falta.
+- Para inicios manuales, el asistente solo lee una pequeña lista blanca de claves relacionadas con Podman desde `~/.openclaw/.env` y pasa variables de entorno de ejecución explícitas al contenedor; no entrega el archivo de entorno completo a Podman.
+
+Configuración administrada por Quadlet:
+
+```bash
+./scripts/podman/setup.sh --quadlet
+```
+
+Quadlet es una opción solo para Linux porque depende de los servicios de usuario de systemd.
+
+También puede configurar `OPENCLAW_PODMAN_QUADLET=1`.
+
+Variables de entorno de compilación/configuración opcionales:
+
+- `OPENCLAW_IMAGE` o `OPENCLAW_PODMAN_IMAGE` -- use una imagen existente/descargada en lugar de compilar `openclaw:local`
+- `OPENCLAW_DOCKER_APT_PACKAGES` -- instale paquetes apt adicionales durante la compilación de la imagen
+- `OPENCLAW_EXTENSIONS` -- preinstale las dependencias de las extensiones en el momento de la compilación
+
+Inicio del contenedor:
+
+```bash
+./scripts/run-openclaw-podman.sh launch
+```
+
+El script inicia el contenedor como su uid/gid actual con `--userns=keep-id` y monta el estado de OpenClaw en el contenedor.
+
+Incorporación:
+
+```bash
+./scripts/run-openclaw-podman.sh launch setup
+```
+
+Luego abra `http://127.0.0.1:18789/` y use el token de `~/.openclaw/.env`.
+
+Predeterminado de la CLI del host:
+
+```bash
+export OPENCLAW_CONTAINER=openclaw
+```
+
+Entonces, comandos como estos se ejecutarán automáticamente dentro de ese contenedor:
+
+```bash
+openclaw dashboard --no-open
+openclaw gateway status --deep
+openclaw doctor
+openclaw channels login
+```
+
+En macOS, Podman machine puede hacer que el navegador parezca no local para la puerta de enlace.
+Si la interfaz de usuario de control informa errores de autenticación de dispositivo después del inicio, prefiera el flujo de túnel SSH en [macOS Podman SSH tunnel](#macos-podman-ssh-tunnel). Para
+el acceso HTTPS remoto, use la guía de Tailscale en
+[Podman + Tailscale](#podman--tailscale).
+
+## Túnel SSH de Podman en macOS
+
+En macOS, Podman machine puede hacer que el navegador parezca no local para la puerta de enlace incluso cuando el puerto publicado está solo en `127.0.0.1`.
+
+Para el acceso del navegador local, use un túnel SSH hacia la VM de Podman y abra el puerto localhost tunelado en su lugar.
+
+Puerto de túnel local recomendado:
+
+- `28889` en el host Mac
+- reenviado a `127.0.0.1:18789` dentro de la VM de Podman
+
+Inicie el túnel en una terminal separada:
+
+```bash
+ssh -N \
+  -i ~/.local/share/containers/podman/machine/machine \
+  -p <podman-vm-ssh-port> \
+  -L 28889:127.0.0.1:18789 \
+  core@127.0.0.1
+```
+
+En ese comando, `<podman-vm-ssh-port>` es el puerto SSH de la VM de Podman en el host Mac. Verifique su valor actual con:
+
+```bash
+podman system connection list
+```
+
+Permita el origen del navegador tunelado una vez. Esto es necesario la primera vez que usa el túnel porque el iniciador puede autocompletar el puerto publicado por Podman, pero no puede inferir su puerto de túnel de navegador elegido:
+
+```bash
+OPENCLAW_CONTAINER=openclaw openclaw config set gateway.controlUi.allowedOrigins \
+  '["http://127.0.0.1:18789","http://localhost:18789","http://127.0.0.1:28889","http://localhost:28889"]' \
+  --strict-json
+podman restart openclaw
+```
+
+Ese es un paso único para el túnel predeterminado `28889`.
+
+Luego abra:
+
+```text
+http://127.0.0.1:28889/
+```
+
+Notas:
+
+- `18789` generalmente ya está ocupado en el host Mac por el puerto de puerta de enlace publicado por Podman, por lo que el túnel usa `28889` como el puerto del navegador local.
+- Si la interfaz de usuario solicita aprobación de emparejamiento, prefiera comandos con destino explícito al contenedor o comandos de URL explícita para que la CLI del host no recurra a archivos de emparejamiento local:
+
+```bash
+openclaw --container openclaw devices list
+openclaw --container openclaw devices approve --latest
+```
+
+- Forma equivalente de URL explícita:
+
+```bash
+openclaw devices list \
+  --url ws://127.0.0.1:28889 \
+  --token "$(sed -n 's/^OPENCLAW_GATEWAY_TOKEN=//p' ~/.openclaw/.env | head -n1)"
+```
+
+## Podman + Tailscale
+
+Para acceso HTTPS o acceso remoto desde el navegador, sigue la documentación principal de Tailscale.
+
+Nota específica de Podman:
+
+- Mantén el host de publicación de Podman en `127.0.0.1`.
+- Prefiere `tailscale serve` gestionado por el host en lugar de `openclaw gateway --tailscale serve`.
+- Para el acceso local desde el navegador en macOS sin HTTPS, prefiere la sección del túnel SSH anterior.
+
+Ver:
+
+- [Tailscale](/en/gateway/tailscale)
+- [Interfaz de control](/en/web/control-ui)
+
 ## Systemd (Quadlet, opcional)
 
-Si ejecutó `./scripts/podman/setup.sh --quadlet` (o `OPENCLAW_PODMAN_QUADLET=1`), se instala una unidad de [Podman Quadlet](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html) para que el gateway se ejecute como un servicio de usuario de systemd para el usuario openclaw. El servicio está habilitado y se inicia al final de la configuración.
+Si ejecutaste `./scripts/podman/setup.sh --quadlet`, la instalación coloca un archivo Quadlet en:
 
-- **Inicio:** `sudo systemctl --machine openclaw@ --user start openclaw.service`
-- **Detener:** `sudo systemctl --machine openclaw@ --user stop openclaw.service`
-- **Estado:** `sudo systemctl --machine openclaw@ --user status openclaw.service`
-- **Registros:** `sudo journalctl --machine openclaw@ --user -u openclaw.service -f`
+```bash
+~/.config/containers/systemd/openclaw.container
+```
 
-El archivo quadlet se encuentra en `~openclaw/.config/containers/systemd/openclaw.container`. Para cambiar los puertos o las variables de entorno, edite ese archivo (o el `.env` que fuente), luego `sudo systemctl --machine openclaw@ --user daemon-reload` y reinicie el servicio. En el arranque, el servicio se inicia automáticamente si el lingering está habilitado para openclaw (la configuración hace esto cuando loginctl está disponible).
+Comandos útiles:
 
-Para agregar quadlet **después** de una configuración inicial que no lo usó, vuelva a ejecutar: `./scripts/podman/setup.sh --quadlet`.
+- **Iniciar:** `systemctl --user start openclaw.service`
+- **Detener:** `systemctl --user stop openclaw.service`
+- **Estado:** `systemctl --user status openclaw.service`
+- **Registros:** `journalctl --user -u openclaw.service -f`
 
-## El usuario openclaw (sin inicio de sesión)
+Después de editar el archivo Quadlet:
 
-`scripts/podman/setup.sh` crea un usuario de sistema dedicado `openclaw`:
+```bash
+systemctl --user daemon-reload
+systemctl --user restart openclaw.service
+```
 
-- **Shell:** `nologin` — sin inicio de sesión interactivo; reduce la superficie de ataque.
-- **Inicio:** p. ej. `/home/openclaw` — contiene `~/.openclaw` (configuración, espacio de trabajo) y el script de lanzamiento `run-openclaw-podman.sh`.
-- **Podman sin root:** El usuario debe tener un rango **subuid** y **subgid**. Muchas distribuciones los asignan automáticamente cuando se crea el usuario. Si la configuración imprime una advertencia, agregue líneas a `/etc/subuid` y `/etc/subgid`:
+Para la persistencia al arranque en hosts SSH/headless, habilita el modo persistente (lingering) para tu usuario actual:
 
-  ```text
-  openclaw:100000:65536
-  ```
+```bash
+sudo loginctl enable-linger "$(whoami)"
+```
 
-  Luego inicie la puerta de enlace como ese usuario (p. ej. desde cron o systemd):
+## Config, env y almacenamiento
 
-  ```bash
-  sudo -u openclaw /home/openclaw/run-openclaw-podman.sh
-  sudo -u openclaw /home/openclaw/run-openclaw-podman.sh setup
-  ```
+- **Directorio de configuración:** `~/.openclaw`
+- **Directorio de espacio de trabajo:** `~/.openclaw/workspace`
+- **Archivo de token:** `~/.openclaw/.env`
+- **Asistente de lanzamiento:** `./scripts/run-openclaw-podman.sh`
 
-- **Configuración:** Solo `openclaw` y root pueden acceder a `/home/openclaw/.openclaw`. Para editar la configuración: use la interfaz de usuario de Control una vez que la puerta de enlace se esté ejecutando, o `sudo -u openclaw $EDITOR /home/openclaw/.openclaw/openclaw.json`.
+El script de lanzamiento y Quadlet montan el estado del host en el contenedor:
 
-## Entorno y configuración
+- `OPENCLAW_CONFIG_DIR` -> `/home/node/.openclaw`
+- `OPENCLAW_WORKSPACE_DIR` -> `/home/node/.openclaw/workspace`
 
-- **Token:** Almacenado en `~openclaw/.openclaw/.env` como `OPENCLAW_GATEWAY_TOKEN`. `scripts/podman/setup.sh` y `run-openclaw-podman.sh` lo generan si falta (usa `openssl`, `python3`, o `od`).
-- **Opcional:** En ese `.env` puede establecer claves de proveedor (p. ej. `GROQ_API_KEY`, `OLLAMA_API_KEY`) y otras variables de entorno de OpenClaw.
-- **Puertos del host:** De forma predeterminada, el script asigna `18789` (puerta de enlace) y `18790` (puente). Anule la asignación de puertos del **host** con `OPENCLAW_PODMAN_GATEWAY_HOST_PORT` y `OPENCLAW_PODMAN_BRIDGE_HOST_PORT` al lanzar.
-- **Enlace de puerta de enlace:** De forma predeterminada, `run-openclaw-podman.sh` inicia la puerta de enlace con `--bind loopback` para un acceso local seguro. Para exponer en la red de área local (LAN), establezca `OPENCLAW_GATEWAY_BIND=lan` y configure `gateway.controlUi.allowedOrigins` (o habilite explícitamente el respaldo de encabezado de host) en `openclaw.json`.
-- **Rutas:** La configuración y el espacio de trabajo del host tienen como valor predeterminado `~openclaw/.openclaw` y `~openclaw/.openclaw/workspace`. Sobrescriba las rutas del host utilizadas por el script de inicio con `OPENCLAW_CONFIG_DIR` y `OPENCLAW_WORKSPACE_DIR`.
+De forma predeterminada, estos son directorios del host, no un estado anónimo del contenedor, por lo que la configuración y el espacio de trabajo sobreviven al reemplazo del contenedor.
+La configuración de Podman también inicializa `gateway.controlUi.allowedOrigins` para `127.0.0.1` y `localhost` en el puerto de la pasarela publicado, para que el panel local funcione con el enlace de no bucle invertido del contenedor.
 
-## Modelo de almacenamiento
+Variables de entorno útiles para el iniciador manual:
 
-- **Datos persistentes del host:** `OPENCLAW_CONFIG_DIR` y `OPENCLAW_WORKSPACE_DIR` se montan con bind (montaje de vinculación) en el contenedor y retienen el estado en el host.
-- **Sandbox efímero tmpfs:** si habilita `agents.defaults.sandbox`, los contenedores del sandbox de herramientas montan `tmpfs` en `/tmp`, `/var/tmp` y `/run`. Esas rutas están respaldadas en memoria y desaparecen con el contenedor del sandbox; la configuración del contenedor Podman de nivel superior no añade sus propios montajes tmpfs.
-- **Puntos calientes de crecimiento del disco:** las rutas principales a vigilar son `media/`, `agents/<agentId>/sessions/sessions.json`, archivos JSONL de transcripción, `cron/runs/*.jsonl` y registros de archivos rotativos bajo `/tmp/openclaw/` (o su `logging.file` configurado).
+- `OPENCLAW_PODMAN_CONTAINER` -- nombre del contenedor (`openclaw` de forma predeterminada)
+- `OPENCLAW_PODMAN_IMAGE` / `OPENCLAW_IMAGE` -- imagen a ejecutar
+- `OPENCLAW_PODMAN_GATEWAY_HOST_PORT` -- puerto del host asignado al contenedor `18789`
+- `OPENCLAW_PODMAN_BRIDGE_HOST_PORT` -- puerto del host asignado al contenedor `18790`
+- `OPENCLAW_PODMAN_PUBLISH_HOST` -- interfaz del host para los puertos publicados; el valor predeterminado es `127.0.0.1`
+- `OPENCLAW_GATEWAY_BIND` -- modo de enlace de la pasarela dentro del contenedor; el valor predeterminado es `lan`
+- `OPENCLAW_PODMAN_USERNS` -- `keep-id` (predeterminado), `auto`, o `host`
 
-`scripts/podman/setup.sh` ahora prepara el tar de la imagen en un directorio temporal privado e imprime el directorio base elegido durante la configuración. Para ejecuciones sin root, acepta `TMPDIR` solo cuando esa base sea segura de usar; de lo contrario, recurre a `/var/tmp` y luego a `/tmp`. El tar guardado permanece solo para el propietario y se transmite al `podman load` del usuario objetivo, por lo que los directorios temporales privados de quien llama no bloquean la configuración.
+El iniciador manual lee `~/.openclaw/.env` antes de finalizar los valores predeterminados del contenedor/imagen, por lo que puede persistirlos allí.
+
+Si utiliza un `OPENCLAW_CONFIG_DIR` o `OPENCLAW_WORKSPACE_DIR` no predeterminado, establezca las mismas variables tanto para los comandos `./scripts/podman/setup.sh` como para los posteriores comandos `./scripts/run-openclaw-podman.sh launch`. El iniciador local del repositorio no persiste las anulaciones de ruta personalizada entre shells.
+
+Nota sobre Quadlet:
+
+- El servicio Quadlet generado mantiene intencionalmente una forma predeterminada fija y reforzada: `127.0.0.1` puertos publicados, `--bind lan` dentro del contenedor y espacio de nombres de usuario `keep-id`.
+- Todavía lee `~/.openclaw/.env` para variables de entorno de ejecución de la puerta de enlace como `OPENCLAW_GATEWAY_TOKEN`, pero no consume la lista de permitidos de anulación específicos de Podman del iniciador manual.
+- Si necesitas puertos de publicación personalizados, host de publicación u otras opciones de ejecución del contenedor, usa el iniciador manual o edita `~/.config/containers/systemd/openclaw.container` directamente, luego recarga y reinicia el servicio.
 
 ## Comandos útiles
 
-- **Registros:** Con quadlet: `sudo journalctl --machine openclaw@ --user -u openclaw.service -f`. Con script: `sudo -u openclaw podman logs -f openclaw`
-- **Detener:** Con quadlet: `sudo systemctl --machine openclaw@ --user stop openclaw.service`. Con script: `sudo -u openclaw podman stop openclaw`
-- **Iniciar de nuevo:** Con quadlet: `sudo systemctl --machine openclaw@ --user start openclaw.service`. Con script: vuelve a ejecutar el script de inicio o `podman start openclaw`
-- **Eliminar contenedor:** `sudo -u openclaw podman rm -f openclaw` — la configuración y el espacio de trabajo en el host se mantienen
+- **Registros del contenedor:** `podman logs -f openclaw`
+- **Detener contenedor:** `podman stop openclaw`
+- **Eliminar contenedor:** `podman rm -f openclaw`
+- **Abrir URL del panel desde la CLI del host:** `openclaw dashboard --no-open`
+- **Estado/salud a través de la CLI del host:** `openclaw gateway status --deep`
 
 ## Solución de problemas
 
-- **Permiso denegado (EACCES) en config o auth-profiles:** El contenedor usa por defecto `--userns=keep-id` y se ejecuta con el mismo uid/gid que el usuario del host que ejecuta el script. Asegúrese de que su host `OPENCLAW_CONFIG_DIR` y `OPENCLAW_WORKSPACE_DIR` sean propiedad de ese usuario.
-- **Inicio del Gateway bloqueado (falta `gateway.mode=local`):** Asegúrese de que `~openclaw/.openclaw/openclaw.json` exista y establezca `gateway.mode="local"`. `scripts/podman/setup.sh` crea este archivo si falta.
-- **Podman sin root falla para el usuario openclaw:** Compruebe que `/etc/subuid` y `/etc/subgid` contienen una línea para `openclaw` (ej. `openclaw:100000:65536`). Añádala si falta y reinicie.
-- **Nombre de contenedor en uso:** El script de inicio usa `podman run --replace`, por lo que el contenedor existente se reemplaza al iniciar de nuevo. Para limpiar manualmente: `podman rm -f openclaw`.
-- **Script no encontrado al ejecutarse como openclaw:** Asegúrese de que se haya ejecutado `scripts/podman/setup.sh` para que `run-openclaw-podman.sh` se copie al home de openclaw (ej. `/home/openclaw/run-openclaw-podman.sh`).
-- **Servicio Quadlet no encontrado o falla al iniciar:** Ejecute `sudo systemctl --machine openclaw@ --user daemon-reload` después de editar el archivo `.container`. Quadlet requiere cgroups v2: `podman info --format '{{.Host.CgroupsVersion}}'` debería mostrar `2`.
+- **Permiso denegado (EACCES) en la configuración o el espacio de trabajo:** El contenedor se ejecuta con `--userns=keep-id` y `--user <your uid>:<your gid>` de forma predeterminada. Asegúrate de que las rutas de configuración/espacio de trabajo del host sean propiedad de tu usuario actual.
+- **Inicio de Gateway bloqueado (falta `gateway.mode=local`):** Asegúrate de que `~/.openclaw/openclaw.json` exista y establezca `gateway.mode="local"`. `scripts/podman/setup.sh` crea esto si falta.
+- **Los comandos CLI del contenedor golpean el objetivo incorrecto:** Usa `openclaw --container <name> ...` explícitamente, o exporta `OPENCLAW_CONTAINER=<name>` en tu shell.
+- **`openclaw update` falla con `--container`:** Esperado. Reconstruye/pull de la imagen, luego reinicia el contenedor o el servicio Quadlet.
+- **El servicio Quadlet no se inicia:** Ejecute `systemctl --user daemon-reload`, luego `systemctl --user start openclaw.service`. En sistemas sin cabeza también puede necesitar `sudo loginctl enable-linger "$(whoami)"`.
+- **SELinux bloquea los montajes de enlace (bind mounts):** Deje el comportamiento de montaje predeterminado como está; el iniciador agrega automáticamente `:Z` en Linux cuando SELinux está aplicando (enforcing) o en modo permisivo (permissive).
 
-## Opcional: ejecutar como su propio usuario
+## Relacionado
 
-Para ejecutar la pasarela como tu usuario normal (sin usuario dedicado openclaw): crea la imagen, crea `~/.openclaw/.env` con `OPENCLAW_GATEWAY_TOKEN`, y ejecuta el contenedor con `--userns=keep-id` y montajes a tu `~/.openclaw`. El script de lanzamiento está diseñado para el flujo de usuario openclaw; para una configuración de usuario único puedes ejecutar el comando `podman run` del script manualmente, apuntando la configuración y el espacio de trabajo a tu hogar. Recomendado para la mayoría de usuarios: usa `scripts/podman/setup.sh` y ejecuta como el usuario openclaw para que la configuración y el proceso estén aislados.
+- [Docker](/en/install/docker)
+- [Proceso en segundo plano de la puerta de enlace](/en/gateway/background-process)
+- [Solución de problemas de la puerta de enlace](/en/gateway/troubleshooting)

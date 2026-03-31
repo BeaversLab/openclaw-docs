@@ -22,7 +22,7 @@ OpenClaw ensambla su propio prompt del sistema en cada ejecución. Incluye:
 - Etiquetas de respuesta + comportamiento de latido
 - Metadatos de tiempo de ejecución (host/SO/modelo/pensamiento)
 
-Vea el desglose completo en [Prompt del Sistema](/es/concepts/system-prompt).
+Vea el desglose completo en [Prompt del Sistema](/en/concepts/system-prompt).
 
 ## Qué cuenta en la ventana de contexto
 
@@ -35,7 +35,7 @@ Todo lo que recibe el modelo cuenta hacia el límite de contexto:
 - Resúmenes de compactación y artefactos de poda
 - Envoltorios del proveedor o encabezados de seguridad (no visibles, pero aún contados)
 
-Para un desglose práctico (por archivo inyectado, herramientas, habilidades y tamaño del prompt del sistema), use `/context list` o `/context detail`. Vea [Contexto](/es/concepts/context).
+Para un desglose práctico (por archivo inyectado, herramientas, habilidades y tamaño del prompt del sistema), use `/context list` o `/context detail`. Vea [Contexto](/en/concepts/context).
 
 ## Cómo ver el uso actual de tokens
 
@@ -74,8 +74,8 @@ ha expirado y luego restablece la ventana de caché para que las solicitudes pos
 contexto recién almacenado en caché en lugar de volver a almacenar en caché el historial completo. Esto mantiene los costos de
 escritura de caché más bajos cuando una sesión permanece inactiva más allá del TTL.
 
-Configúrelo en [Configuración de Gateway](/es/gateway/configuration) y vea los
-detalles del comportamiento en [Poda de sesión](/es/concepts/session-pruning).
+Configúrelo en [Configuración de Gateway](/en/gateway/configuration) y vea los
+detalles del comportamiento en [Poda de sesión](/en/concepts/session-pruning).
 
 El latido (heartbeat) puede mantener la caché **caliente** a través de brechas de inactividad. Si el TTL de caché de su modelo
 es `1h`, establecer el intervalo de latido justo por debajo de eso (por ejemplo, `55m`) puede evitar
@@ -108,4 +108,4 @@ agents:
 - Mantenga las descripciones de habilidades cortas (la lista de habilidades se inyecta en el prompt).
 - Prefiera modelos más pequeños para trabajos verbosos y exploratorios.
 
-Consulte [Habilidades](/es/tools/skills) para la fórmula exacta de sobrecarga de la lista de habilidades.
+Consulte [Habilidades](/en/tools/skills) para la fórmula exacta de sobrecarga de la lista de habilidades.

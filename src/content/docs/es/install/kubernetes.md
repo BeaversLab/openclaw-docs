@@ -104,7 +104,7 @@ Edite el `AGENTS.md` en `scripts/k8s/manifests/configmap.yaml` y vuelva a implem
 
 ### Configuración de la puerta de enlace
 
-Edite `openclaw.json` en `scripts/k8s/manifests/configmap.yaml`. Consulte [Configuración de la puerta de enlace](/es/gateway/configuration) para obtener la referencia completa.
+Edite `openclaw.json` en `scripts/k8s/manifests/configmap.yaml`. Consulte [Configuración de la puerta de enlace](/en/gateway/configuration) para obtener la referencia completa.
 
 ### Añadir proveedores
 

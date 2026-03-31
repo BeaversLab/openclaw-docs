@@ -8,7 +8,7 @@ title: "設定"
 
 # 設定
 
-<Note>如果您是第一次設定，請從 [快速入門](/en/start/getting-started) 開始。若需了解入門詳情，請參閱 [入門 (CLI)](/en/start/wizard)。</Note>
+<Note>如果您是第一次設定，請從[開始使用](/en/start/getting-started)開始。 如需新手入門詳細資訊，請參閱[新手入門 (CLI)](/en/start/wizard)。</Note>
 
 ## TL;DR
 

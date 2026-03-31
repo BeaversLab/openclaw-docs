@@ -662,7 +662,7 @@ Consulte [Obtener IDs de grupo/usuario](#get-groupuser-ids) para obtener consejo
 
 ## Referencia de configuración
 
-Configuración completa: [Configuración de Gateway](/es/gateway/configuration)
+Configuración completa: [Configuración de Gateway](/en/gateway/configuration)
 
 Opciones clave:
 

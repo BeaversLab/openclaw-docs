@@ -11,7 +11,7 @@ read_when:
 Le plugin Perplexity fournit des capacités de recherche web via l'Perplexity
 Search API ou Perplexity Sonar via OpenRouter.
 
-<Note>Cette page couvre la configuration du **provider** Perplexity. Pour l'**outil** Perplexity (comment l'agent l'utilise), voir [Perplexity tool](/fr/tools/perplexity-search).</Note>
+<Note>Cette page traite de la configuration du **provider** Perplexity. Pour l'**outil** Perplexity (comment l'agent l'utilise), voir [Perplexity tool](/en/tools/perplexity-search).</Note>
 
 - Type : web search provider (pas un model provider)
 - Auth : `PERPLEXITY_API_KEY` (direct) ou `OPENROUTER_API_KEY` (via OpenRouter)

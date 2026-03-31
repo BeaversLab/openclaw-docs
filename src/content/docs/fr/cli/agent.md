@@ -12,7 +12,7 @@ Utilisez `--agent <id>` pour cibler directement un agent configuré.
 
 Connexe :
 
-- Outil Agent send : [Agent send](/fr/tools/agent-send)
+- Outil Agent send : [Agent send](/en/tools/agent-send)
 
 ## Exemples
 

@@ -12,8 +12,8 @@ title: "安装"
 
 相关：
 
-- 入门指南：[入门指南](/zh/start/getting-started)
-- CLI 新手引导：[新手引导 (CLI)](/zh/start/wizard)
+- 入门指南：[入门指南](/en/start/getting-started)
+- CLI 新手引导：[新手引导 (CLI)](/en/start/wizard)
 
 ## 示例
 

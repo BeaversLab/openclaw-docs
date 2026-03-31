@@ -9,7 +9,7 @@ title: "Exemples de configuration"
 
 # Exemples de configuration
 
-Les exemples ci-dessous sont alignés sur le schéma de configuration actuel. Pour la référence exhaustive et les notes par champ, voir [Configuration](/fr/gateway/configuration).
+Les exemples ci-dessous sont alignés sur le schéma de configuration actuel. Pour la référence exhaustive et les notes par champ, voir [Configuration](/en/gateway/configuration).
 
 ## Quick start
 
@@ -543,7 +543,7 @@ N'activez la correspondance directe mutable de nom/e-mail/pseudonyme avec le `da
 
 ### Jeton de configuration Anthropic + clé API, repli MiniMax
 
-<Warning>L'utilisation du jeton de configuration Anthropic hors de Claude Code a été restreinte pour certains utilisateurs par le passé. Considérez ceci comme un risque lié au choix de l'utilisateur et vérifiez les conditions actuelles de Anthropic avant de dépendre de l'authentification par abonnement.</Warning>
+<Warning>L'utilisation du Anthropic setup-token en dehors de Claude Code a été restreinte par le passé pour certains utilisateurs. Considérez cela comme un risque lié au choix de l'utilisateur et vérifiez les conditions actuelles d'Anthropic avant de dépendre de l'authentification par abonnement.</Warning>
 
 ```json5
 {
@@ -644,4 +644,4 @@ N'activez la correspondance directe mutable de nom/e-mail/pseudonyme avec le `da
 - Si vous définissez `dmPolicy: "open"`, la liste `allowFrom` correspondante doit inclure `"*"`.
 - Les IDs de fournisseur diffèrent (numéros de téléphone, IDs utilisateur, IDs de canal). Consultez la documentation du fournisseur pour confirmer le format.
 - Sections facultatives à ajouter plus tard : `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
-- Voir [Fournisseurs](/fr/providers) et [Dépannage](/fr/gateway/troubleshooting) pour des notes de configuration plus approfondies.
+- Voir [Fournisseurs](/en/providers) et [Dépannage](/en/gateway/troubleshooting) pour des notes de configuration plus approfondies.

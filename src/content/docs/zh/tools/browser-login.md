@@ -14,7 +14,7 @@ title: "浏览器登录"
 
 请**勿**向模型提供您的凭据。自动登录通常会触发反机器人防御措施，并可能导致账户被锁定。
 
-返回主浏览器文档：[浏览器](/zh/tools/browser)。
+返回主浏览器文档：[浏览器](/en/tools/browser)。
 
 ## 使用的是哪个 Chrome 配置文件？
 
@@ -31,7 +31,7 @@ OpenClaw 控制一个**专用的 Chrome 配置文件**（名为 `openclaw`，橙
 1. **让代理打开浏览器**，然后您自己登录。
 2. **通过 CLI 打开**：
 
-```exec
+```bash
 openclaw browser start
 openclaw browser open https://x.com
 ```
@@ -66,7 +66,7 @@ openclaw browser open https://x.com
 
 然后定位主机浏览器：
 
-```exec
+```bash
 openclaw browser open https://x.com --browser-profile openclaw --target host
 ```
 

@@ -9,14 +9,14 @@ title: "Tâches Cron"
 
 # Tâches Cron (planificateur Gateway)
 
-> **Cron vs Heartbeat ?** Consultez [Cron vs Heartbeat](/fr/automation/cron-vs-heartbeat) pour savoir quand utiliser chacun d'eux.
+> **Cron vs Heartbeat ?** Consultez [Cron vs Heartbeat](/en/automation/cron-vs-heartbeat) pour savoir quand utiliser chacun d'eux.
 
 Cron est le planificateur intégré du Gateway. Il rend les tâches persistantes, réveille l'agent au bon moment et peut éventuellement renvoyer la sortie vers un chat.
 
 Si vous souhaitez _« exécuter ceci chaque matin »_ ou _« solliciter l'agent dans 20 minutes »_,
 cron est le mécanisme approprié.
 
-Dépannage : [/automation/troubleshooting](/fr/automation/troubleshooting)
+Dépannage : [/automation/troubleshooting](/en/automation/troubleshooting)
 
 ## TL;DR
 
@@ -66,7 +66,7 @@ openclaw cron add \
 
 ## Équivalents des appels d'outil (Gateway cron tool)
 
-Pour les structures JSON canoniques et les exemples, voir [Schéma JSON pour les appels d'outil](/fr/automation/cron-jobs#json-schema-for-tool-calls).
+Pour les structures JSON canoniques et les exemples, voir [Schéma JSON pour les appels d'outil](/en/automation/cron-jobs#json-schema-for-tool-calls).
 
 ## Où sont stockées les tâches cron
 
@@ -145,7 +145,7 @@ Elles doivent utiliser `payload.kind = "systemEvent"`.
 - `wakeMode: "next-heartbeat"` : l'événement attend le prochain heartbeat planifié.
 
 C'est le choix idéal lorsque vous souhaitez le prompt heartbeat normal + le contexte de la session principale.
-Voir [Heartbeat](/fr/gateway/heartbeat).
+Voir [Heartbeat](/en/gateway/heartbeat).
 
 #### Tâches isolées (sessions cron dédiées)
 
@@ -424,7 +424,7 @@ Lorsqu'une tâche échoue, OpenClaw classe les erreurs comme **transitoires** (r
 - En cas d'erreur : appliquer un backoff exponentiel (30s → 1m → 5m → 15m → 60m) avant la prochaine exécution planifiée.
 - La tâche reste activée ; le backoff est réinitialisé après la prochaine exécution réussie.
 
-Configurez `cron.retry` pour remplacer ces valeurs par défaut (voir [Configuration](/fr/automation/cron-jobs#configuration)).
+Configurez `cron.retry` pour remplacer ces valeurs par défaut (voir [Configuration](/en/automation/cron-jobs#configuration)).
 
 ## Configuration
 
@@ -683,7 +683,7 @@ openclaw system event --mode now --text "Next heartbeat: check battery."
 
 - `cron.list`, `cron.status`, `cron.add`, `cron.update`, `cron.remove`
 - `cron.run` (force ou due), `cron.runs`
-  Pour les événements système immédiats sans tâche, utilisez [`openclaw system event`](/fr/cli/system).
+  Pour les événements système immédiats sans tâche, utilisez [`openclaw system event`](/en/cli/system).
 
 ## Dépannage
 
@@ -698,7 +698,7 @@ openclaw system event --mode now --text "Next heartbeat: check battery."
 - OpenClaw applique un réessai avec temporisation exponentielle pour les tâches récurrentes après des erreurs consécutives :
   30s, 1m, 5m, 15m, puis 60m entre les tentatives.
 - La temporisation est réinitialisée automatiquement après la prochaine exécution réussie.
-- Les tâches ponctuelles (`at`) réessayent les erreurs transitoires (limite de débit, surcharge, réseau, server_error) jusqu'à 3 fois avec attente progressive ; les erreurs permanentes désactivent immédiatement. Voir [Politique de réessai](/fr/automation/cron-jobs#retry-policy).
+- Les tâches ponctuelles (`at`) réessayent les erreurs transitoires (limite de débit, surcharge, réseau, server_error) jusqu'à 3 fois avec attente progressive ; les erreurs permanentes désactivent immédiatement. Voir [Politique de réessai](/en/automation/cron-jobs#retry-policy).
 
 ### Telegram envoie au mauvais endroit
 

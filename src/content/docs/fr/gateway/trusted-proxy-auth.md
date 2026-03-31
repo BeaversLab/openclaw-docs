@@ -324,7 +324,7 @@ Si vous passez de l'authentification par jeton au proxy de confiance :
 
 ## Connexes
 
-- [Sécurité](/fr/gateway/security) — guide de sécurité complet
-- [Configuration](/fr/gateway/configuration) — référence de configuration
-- [Accès à distance](/fr/gateway/remote) — autres modèles d'accès à distance
-- [Tailscale](/fr/gateway/tailscale) — alternative plus simple pour l'accès exclusif au tailnet
+- [Sécurité](/en/gateway/security) — guide de sécurité complet
+- [Configuration](/en/gateway/configuration) — référence de configuration
+- [Accès à distance](/en/gateway/remote) — autres modèles d'accès à distance
+- [Tailscale](/en/gateway/tailscale) — alternative plus simple pour l'accès exclusif au tailnet

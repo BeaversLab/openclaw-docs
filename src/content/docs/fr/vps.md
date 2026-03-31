@@ -17,34 +17,34 @@ qui s'applique partout.
 ## Pick a provider
 
 <CardGroup cols={2}>
-  <Card title="Railway" href="/fr/install/railway">
-    Configuration en un clic via navigateur
+  <Card title="Railway" href="/en/install/railway">
+    Configuration en un clic depuis le navigateur
   </Card>
-  <Card title="Northflank" href="/fr/install/northflank">
-    Configuration en un clic via navigateur
+  <Card title="Northflank" href="/en/install/northflank">
+    Configuration en un clic via le navigateur
   </Card>
-  <Card title="DigitalOcean" href="/fr/install/digitalocean">
-    VPS payant simple
+  <Card title="DigitalOcean" href="/en/install/digitalocean">
+    Simple VPS payant
   </Card>
-  <Card title="Oracle Cloud" href="/fr/install/oracle">
-    Offre ARM Always Free
+  <Card title="Oracle Cloud" href="/en/install/oracle">
+    Niveau ARM Always Free
   </Card>
-  <Card title="Fly.io" href="/fr/install/fly">
+  <Card title="Fly.io" href="/en/install/fly">
     Fly Machines
   </Card>
-  <Card title="Hetzner" href="/fr/install/hetzner">
-    Docker sur VPS Hetzner
+  <Card title="Hetzner" href="/en/install/hetzner">
+    Docker sur un VPS Hetzner
   </Card>
-  <Card title="GCP" href="/fr/install/gcp">
+  <Card title="GCP" href="/en/install/gcp">
     Compute Engine
   </Card>
-  <Card title="Azure" href="/fr/install/azure">
-    VM Linux
+  <Card title="Azure" href="/en/install/azure">
+    Linux VM
   </Card>
-  <Card title="exe.dev" href="/fr/install/exe-dev">
+  <Card title="exe.dev" href="/en/install/exe-dev">
     VM avec proxy HTTPS
   </Card>
-  <Card title="Raspberry Pi" href="/fr/install/raspberry-pi">
+  <Card title="Raspberry Pi" href="/en/install/raspberry-pi">
     ARM auto-hébergé
   </Card>
 </CardGroup>
@@ -62,7 +62,7 @@ Un tutoriel vidéo communautaire est disponible sur
 - Par défaut sécurisé : gardez le Gateway en boucle locale (loopback) et accédez-y via un tunnel SSH ou Tailscale Serve.
   Si vous vous liez à `lan` ou `tailnet`, exigez `gateway.auth.token` ou `gateway.auth.password`.
 
-Pages connexes : [Gateway accès à distance](/fr/gateway/remote), [Hub Plateformes](/fr/platforms).
+Pages connexes : [Gateway accès à distance](/en/gateway/remote), [Hub Plateformes](/en/platforms).
 
 ## Agent d'entreprise partagé sur un VPS
 
@@ -72,7 +72,7 @@ Faire fonctionner un seul agent pour une équipe est une configuration valide lo
 - Ne connectez pas cet environnement d'exécution à des comptes personnels Apple/Google ou à des profils personnels de navigateur/gestionnaire de mots de passe.
 - Si les utilisateurs sont adversaires les uns envers les autres, séparez par passerelle/hôte/utilisateur OS.
 
-Détails du modèle de sécurité : [Sécurité](/fr/gateway/security).
+Détails du modèle de sécurité : [Sécurité](/en/gateway/security).
 
 ## Utilisation des nœuds avec un VPS
 
@@ -80,7 +80,7 @@ Vous pouvez conserver le Gateway dans le cloud et jumeler des **nœuds** sur vos
 (Mac/iOS/Android/sans tête). Les nœuds fournissent des capacités d'écran/caméra/canvas locales et `system.run`
 tandis que le Gateway reste dans le cloud.
 
-Documentation : [Nœuds](/fr/nodes), [CLI des nœuds](/fr/cli/nodes).
+Documentation : [Nœuds](/en/nodes), [CLI des nœuds](/en/cli/nodes).
 
 ## Réglage du démarrage pour les petits VM et hôtes ARM
 
@@ -98,7 +98,7 @@ source ~/.bashrc
 - `NODE_COMPILE_CACHE` améliore les temps de démarrage des commandes répétées.
 - `OPENCLAW_NO_RESPAWN=1` évite la surcharge de démarrage supplémentaire d'un chemin de redémarrage automatique.
 - La première exécution de commande réchauffe le cache ; les exécutions suivantes sont plus rapides.
-- Pour les spécificités du Raspberry Pi, voir [Raspberry Pi](/fr/install/raspberry-pi).
+- Pour les spécificités du Raspberry Pi, voir [Raspberry Pi](/en/install/raspberry-pi).
 
 ### Liste de contrôle du réglage systemd (facultatif)
 

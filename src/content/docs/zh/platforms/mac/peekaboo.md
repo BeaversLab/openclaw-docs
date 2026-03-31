@@ -39,7 +39,7 @@ Peekaboo 客户端通常按以下顺序尝试主机：
 使用 `peekaboo bridge status --verbose` 查看哪个主机处于活动状态以及
 正在使用哪个套接字路径。你可以通过以下方式覆盖：
 
-```exec
+```bash
 export PEEKABOO_BRIDGE_SOCKET=/path/to/bridge.sock
 ```
 

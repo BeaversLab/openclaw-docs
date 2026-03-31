@@ -90,7 +90,7 @@ Vous pouvez référencer directement des env vars dans les valeurs de chaîne de
 }
 ```
 
-Voir [Configuration : Substitution d'env var](/fr/gateway/configuration-reference#env-var-substitution) pour plus de détails.
+Voir [Configuration : Substitution d'env var](/en/gateway/configuration-reference#env-var-substitution) pour plus de détails.
 
 ## Références de secrets vs chaînes `${ENV}`
 
@@ -99,7 +99,7 @@ OpenClaw prend en charge deux modèles basés sur l'env :
 - Substitution de chaîne `${VAR}` dans les valeurs de configuration.
 - Objets SecretRef (`{ source: "env", provider: "default", id: "VAR" }`) pour les champs qui prennent en charge les références de secrets.
 
-Les deux sont résolus à partir de l'env du processus au moment de l'activation. Les détails de SecretRef sont documentés dans [Gestion des secrets](/fr/gateway/secrets).
+Les deux sont résolus à partir de l'env du processus au moment de l'activation. Les détails de SecretRef sont documentés dans [Gestion des secrets](/en/gateway/secrets).
 
 ## Variables d'env liées au chemin
 
@@ -157,6 +157,6 @@ Ne comptez pas uniquement sur l'écriture dans `~/.openclaw/.env` pour cette var
 
 ## Connexes
 
-- [Configuration Gateway](/fr/gateway/configuration)
-- [FAQ : env vars et chargement .env](/fr/help/faq#env-vars-and-env-loading)
-- [Aperçu des modèles](/fr/concepts/models)
+- [Configuration Gateway](/en/gateway/configuration)
+- [FAQ : env vars et chargement .env](/en/help/faq#env-vars-and-env-loading)
+- [Aperçu des modèles](/en/concepts/models)

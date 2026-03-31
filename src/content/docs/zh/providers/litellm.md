@@ -151,4 +151,4 @@ curl "http://localhost:4000/spend/logs" \
 ## 另请参阅
 
 - [LiteLLM 文档](https://docs.litellm.ai)
-- [模型提供商](/zh/concepts/model-providers)
+- [模型提供商](/en/concepts/model-providers)

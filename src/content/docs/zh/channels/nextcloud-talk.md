@@ -28,7 +28,7 @@ openclaw plugins install ./extensions/nextcloud-talk
 如果在设置期间选择了 Nextcloud Talk 并且检测到了 git checkout，
 OpenClaw 将自动提供本地安装路径。
 
-详情：[插件](/zh/tools/plugin)
+详情：[插件](/en/tools/plugin)
 
 ## 快速设置（初学者）
 
@@ -108,7 +108,7 @@ OpenClaw 将自动提供本地安装路径。
 
 ## 配置参考（Nextcloud Talk）
 
-完整配置：[配置](/zh/gateway/configuration)
+完整配置：[配置](/en/gateway/configuration)
 
 提供商选项：
 

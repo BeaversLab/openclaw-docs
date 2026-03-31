@@ -432,6 +432,6 @@ Funciones planificadas:
 
 ## Ver también
 
-- [Configuración multiagente](/es/tools/multi-agent-sandbox-tools)
-- [Configuración de enrutamiento](/es/channels/channel-routing)
-- [Gestión de sesiones](/es/concepts/session)
+- [Configuración multiagente](/en/tools/multi-agent-sandbox-tools)
+- [Configuración de enrutamiento](/en/channels/channel-routing)
+- [Gestión de sesiones](/en/concepts/session)

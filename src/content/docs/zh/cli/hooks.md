@@ -12,8 +12,8 @@ title: "hooks"
 
 相关：
 
-- 钩子：[Hooks](/zh/automation/hooks)
-- 插件钩子：[Plugin hooks](/zh/plugins/architecture#provider-runtime-hooks)
+- 钩子：[Hooks](/en/automation/hooks)
+- 插件钩子：[Plugin hooks](/en/plugins/architecture#provider-runtime-hooks)
 
 ## 列出所有 Hooks
 
@@ -264,7 +264,7 @@ openclaw hooks enable session-memory
 
 **输出：** `~/.openclaw/workspace/memory/YYYY-MM-DD-slug.md`
 
-**参见：** [会话内存 (会话-memory) 文档](/zh/automation/hooks#session-memory)
+**参见：** [会话内存 (会话-memory) 文档](/en/automation/hooks#session-memory)
 
 ### bootstrap-extra-files
 
@@ -276,7 +276,7 @@ openclaw hooks enable session-memory
 openclaw hooks enable bootstrap-extra-files
 ```
 
-**参见：** [bootstrap-extra-files 文档](/zh/automation/hooks#bootstrap-extra-files)
+**参见：** [bootstrap-extra-files 文档](/en/automation/hooks#bootstrap-extra-files)
 
 ### command-logger
 
@@ -303,7 +303,7 @@ cat ~/.openclaw/logs/commands.log | jq .
 grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 ```
 
-**参见：** [command-logger 文档](/zh/automation/hooks#command-logger)
+**参见：** [command-logger 文档](/en/automation/hooks#command-logger)
 
 ### boot-md
 
@@ -317,4 +317,4 @@ grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 openclaw hooks enable boot-md
 ```
 
-**参见：** [boot-md 文档](/zh/automation/hooks#boot-md)
+**参见：** [boot-md 文档](/en/automation/hooks#boot-md)

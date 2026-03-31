@@ -16,13 +16,13 @@ sidebarTitle: "安装和配置"
 
 <Steps>
   <Step title="See what is loaded">
-    ```exec
+    ```bash
     openclaw plugins list
     ```
   </Step>
 
   <Step title="安装插件">
-    ```exec
+    ```bash
     # From npm
     openclaw plugins install @openclaw/voice-call
 
@@ -34,7 +34,7 @@ sidebarTitle: "安装和配置"
   </Step>
 
   <Step title="重启 Gateway(网关)">
-    ```exec
+    ```bash
     openclaw gateway restart
     ```
 
@@ -62,10 +62,10 @@ OpenClaw 识别两种插件格式：
 | **原生** | `openclaw.plugin.json` + 运行时模块；在进程中执行  | 官方插件，社区 npm 包                                  |
 | **包**   | Codex/Claude/Cursor 兼容布局；映射到 OpenClaw 功能 | `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/` |
 
-两者都显示在 `openclaw plugins list` 下。有关包的详细信息，请参阅[插件包](/zh/plugins/bundles)。
+两者都显示在 `openclaw plugins list` 下。有关插件包的详细信息，请参阅[插件包](/en/plugins/bundles)。
 
-如果您正在编写原生插件，请从[构建插件](/zh/plugins/building-plugins)
-和[插件 SDK 概述](/zh/plugins/sdk-overview)开始。
+如果您正在编写原生插件，请从[构建插件](/en/plugins/building-plugins)
+和[插件 SDK 概述](/en/plugins/sdk-overview)开始。
 
 ## 官方插件
 
@@ -73,12 +73,12 @@ OpenClaw 识别两种插件格式：
 
 | 插件            | 包                     | 文档                                    |
 | --------------- | ---------------------- | --------------------------------------- |
-| Matrix          | `@openclaw/matrix`     | [Matrix](/zh/channels/matrix)           |
-| Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/zh/channels/msteams) |
-| Nostr           | `@openclaw/nostr`      | [Nostr](/zh/channels/nostr)             |
-| 语音通话        | `@openclaw/voice-call` | [语音通话](/zh/plugins/voice-call)      |
-| Zalo            | `@openclaw/zalo`       | [Zalo](/zh/channels/zalo)               |
-| Zalo Personal   | `@openclaw/zalouser`   | [Zalo Personal](/zh/plugins/zalouser)   |
+| Matrix          | `@openclaw/matrix`     | [Matrix](/en/channels/matrix)           |
+| Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/en/channels/msteams) |
+| Nostr           | `@openclaw/nostr`      | [Nostr](/en/channels/nostr)             |
+| 语音通话        | `@openclaw/voice-call` | [语音通话](/en/plugins/voice-call)      |
+| Zalo            | `@openclaw/zalo`       | [Zalo](/en/channels/zalo)               |
+| Zalo Personal   | `@openclaw/zalouser`   | [Zalo Personal](/en/plugins/zalouser)   |
 
 ### 核心（随 OpenClaw 附带）
 
@@ -87,7 +87,7 @@ OpenClaw 识别两种插件格式：
     `anthropic`, `byteplus`, `cloudflare-ai-gateway`, `github-copilot`, `google`,
     `huggingface`, `kilocode`, `kimi-coding`, `minimax`, `mistral`, `modelstudio`,
     `moonshot`, `nvidia`, `openai`, `opencode`, `opencode-go`, `openrouter`,
-    `qianfan`, `qwen-portal-auth`, `synthetic`, `together`, `venice`,
+    `qianfan`, `synthetic`, `together`, `venice`,
     `vercel-ai-gateway`, `volcengine`, `xiaomi`, `zai`
   </Accordion>
 
@@ -96,11 +96,12 @@ OpenClaw 识别两种插件格式：
 <Accordion title="Speech providers (enabled by default)">`elevenlabs`, `microsoft`</Accordion>
 
   <Accordion title="Other">
+    - `browser` — 用于浏览器工具的捆绑浏览器插件，`openclaw browser` CLI，`browser.request` 网关方法、浏览器运行时和默认浏览器控制服务（默认启用；在替换前禁用它）
     - `copilot-proxy` — VS Code Copilot 代理桥（默认禁用）
   </Accordion>
 </AccordionGroup>
 
-寻找第三方插件？请参阅[社区插件](/zh/plugins/community)。
+正在寻找第三方插件？请参阅[社区插件](/en/plugins/community)。
 
 ## 配置
 
@@ -118,18 +119,18 @@ OpenClaw 识别两种插件格式：
 }
 ```
 
-| 字段             | 描述                                           |
-| ---------------- | ---------------------------------------------- |
-| `enabled`        | 主开关（默认：`true`）                         |
-| `allow`          | 插件允许列表（可选）                           |
-| `deny`           | 插件拒绝列表（可选；拒绝优先）                 |
-| `load.paths`     | 额外的插件文件/目录                            |
-| `slots`          | 独占槽选择器（例如 `memory`, `contextEngine`） |
-| `entries.\<id\>` | 单个插件开关 + 配置                            |
+| 字段             | 描述                                             |
+| ---------------- | ------------------------------------------------ |
+| `enabled`        | 主开关（默认：`true`）                           |
+| `allow`          | 插件允许列表（可选）                             |
+| `deny`           | 插件拒绝列表（可选；拒绝优先）                   |
+| `load.paths`     | 额外的插件文件/目录                              |
+| `slots`          | 独占槽位选择器（例如 `memory`、`contextEngine`） |
+| `entries.\<id\>` | 单个插件开关 + 配置                              |
 
-配置更改**需要重启 Gateway(网关)**。如果 Gateway(网关) 在启用配置监视 + 进程内重启（默认 `openclaw gateway` 路径）的情况下运行，则该重启通常在配置写入完成后自动执行。
+配置更改**需要重启 Gateway(网关)**。如果 Gateway(网关) 正在运行并启用了配置监视 + 进程内重启（默认 `openclaw gateway` 路径），则该重启通常会在配置写入后的一小会儿自动执行。
 
-<Accordion title="Plugin states: disabled vs missing vs invalid">- **Disabled（已禁用）**：插件存在，但启用规则将其关闭。配置被保留。 - **Missing（缺失）**：配置引用了设备发现未找到的插件 ID。 - **Invalid（无效）**：插件 存在，但其配置与声明的架构不匹配。</Accordion>
+<Accordion title="插件状态：已禁用 vs 缺失 vs 无效">- **Disabled（已禁用）**：插件存在但启用规则将其关闭。配置被保留。 - **Missing（缺失）**：配置引用了一个发现机制未找到的插件 ID。 - **Invalid（无效）**：插件存在但其配置与声明的架构不匹配。</Accordion>
 
 ## 设备发现和优先级
 
@@ -155,7 +156,7 @@ OpenClaw 按以下顺序扫描插件（第一个匹配项获胜）：
 ### 启用规则
 
 - `plugins.enabled: false` 禁用所有插件
-- `plugins.deny` 总是覆盖允许设置
+- `plugins.deny` 总是优先于 allow
 - `plugins.entries.\<id\>.enabled: false` 禁用该插件
 - 工作区来源的插件**默认禁用**（必须显式启用）
 - 捆绑插件遵循内置的默认开启集，除非被覆盖
@@ -176,14 +177,14 @@ OpenClaw 按以下顺序扫描插件（第一个匹配项获胜）：
 }
 ```
 
-| 插槽            | 控制内容       | 默认值          |
-| --------------- | -------------- | --------------- |
-| `memory`        | 活动内存插件   | `memory-core`   |
-| `contextEngine` | 活动上下文引擎 | `legacy` (内置) |
+| 插槽            | 控制内容       | 默认值            |
+| --------------- | -------------- | ----------------- |
+| `memory`        | 活动内存插件   | `memory-core`     |
+| `contextEngine` | 活动上下文引擎 | `legacy` （内置） |
 
 ## CLI 参考
 
-```exec
+```bash
 openclaw plugins list                    # compact inventory
 openclaw plugins inspect <id>            # deep detail
 openclaw plugins inspect <id> --json     # machine-readable
@@ -201,7 +202,7 @@ openclaw plugins enable <id>
 openclaw plugins disable <id>
 ```
 
-有关详细信息，请参阅 [`openclaw plugins` CLI 参考](/zh/cli/plugins)。
+有关完整详细信息，请参阅 [`openclaw plugins` CLI 参考](/en/cli/plugins)。
 
 ## 插件 API 概览
 
@@ -244,18 +245,18 @@ export default definePluginEntry({
 
 Hook guard behavior for typed lifecycle hooks:
 
-- `before_tool_call`: `{ block: true }` is terminal; lower-priority handlers are skipped.
-- `before_tool_call`: `{ block: false }` is a no-op and does not clear an earlier block.
-- `message_sending`: `{ cancel: true }` is terminal; lower-priority handlers are skipped.
-- `message_sending`: `{ cancel: false }` is a no-op and does not clear an earlier cancel.
+- `before_tool_call`: `{ block: true }` 是终端的；较低优先级的处理程序将被跳过。
+- `before_tool_call`: `{ block: false }` 是空操作，不会清除之前的块。
+- `message_sending`: `{ cancel: true }` 是终端的；较低优先级的处理程序将被跳过。
+- `message_sending` `{ cancel: false }` 是空操作，不会清除之前的取消。
 
-For full typed hook behavior, see [SDK Overview](/zh/plugins/sdk-overview#hook-decision-semantics).
+有关完整的类型化 Hook 行为，请参阅 [SDK Overview](/en/plugins/sdk-overview#hook-decision-semantics)。
 
 ## Related
 
-- [Building Plugins](/zh/plugins/building-plugins) — create your own plugin
-- [Plugin Bundles](/zh/plugins/bundles) — Codex/Claude/Cursor bundle compatibility
-- [Plugin Manifest](/zh/plugins/manifest) — manifest schema
-- [Registering Tools](/zh/plugins/building-plugins#registering-agent-tools) — add agent tools in a plugin
-- [Plugin Internals](/zh/plugins/architecture) — capability 模型 and load pipeline
-- [Community Plugins](/zh/plugins/community) — third-party listings
+- [构建插件](/en/plugins/building-plugins) — 创建您自己的插件
+- [插件包](/en/plugins/bundles) — Codex/Claude/Cursor 包兼容性
+- [插件清单](/en/plugins/manifest) — 清单架构
+- [注册工具](/en/plugins/building-plugins#registering-agent-tools) — 在插件中添加代理工具
+- [插件内部机制](/en/plugins/architecture) — 能力模型和加载流水线
+- [社区插件](/en/plugins/community) — 第三方列表

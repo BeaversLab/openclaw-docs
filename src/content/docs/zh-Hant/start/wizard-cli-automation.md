@@ -11,7 +11,7 @@ sidebarTitle: "CLI 自動化"
 
 使用 `--non-interactive` 來自動化 `openclaw onboard`。
 
-<Note>`--json` 並不表示非互動模式。請在指令碼中使用 `--non-interactive`（以及 `--workspace`）。</Note>
+<Note>`--json` 並不意味著非互動模式。在腳本中使用 `--non-interactive`（以及 `--workspace`）。</Note>
 
 ## 基準非互動範例
 

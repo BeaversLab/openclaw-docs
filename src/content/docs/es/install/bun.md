@@ -8,7 +8,7 @@ title: "Bun (Experimental)"
 
 # Bun (Experimental)
 
-<Warning>Bun is **not recommended for gateway runtime** (known issues with WhatsApp and Telegram). Use Node for production.</Warning>
+<Warning>Bun **no se recomienda para el tiempo de ejecución de gateway** (problemas conocidos con WhatsApp y Telegram). Use Node para producción.</Warning>
 
 Bun es un runtime local opcional para ejecutar TypeScript directamente (`bun run ...`, `bun --watch ...`). El gestor de paquetes predeterminado sigue siendo `pnpm`, que es totalmente compatible y utilizado por las herramientas de documentación. Bun no puede usar `pnpm-lock.yaml` y lo ignorará.
 

@@ -381,6 +381,6 @@ Motor de renderizado de Diff:
 
 ## Documentos relacionados
 
-- [Resumen de herramientas](/es/tools)
-- [Plugins](/es/tools/plugin)
-- [Navegador](/es/tools/browser)
+- [Resumen de herramientas](/en/tools)
+- [Plugins](/en/tools/plugin)
+- [Navegador](/en/tools/browser)

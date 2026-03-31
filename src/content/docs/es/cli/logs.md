@@ -12,7 +12,7 @@ Ver los registros de archivo de Gateway a través de RPC (funciona en modo remot
 
 Relacionado:
 
-- Resumen de registro: [Registro](/es/logging)
+- Resumen de registro: [Registro](/en/logging)
 
 ## Ejemplos
 

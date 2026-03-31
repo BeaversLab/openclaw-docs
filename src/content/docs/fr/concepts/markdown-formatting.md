@@ -84,7 +84,7 @@ channels:
 - Les préfixes de liste et les préfixes de bloc de citation font partie du texte IR, le découpage ne les divise donc pas en plein milieu d'un préfixe.
 - Les styles en ligne (gras/italique/barré/code en ligne/spoiler) ne sont jamais divisés entre les fragments ; le répéteur rouvre les styles dans chaque fragment.
 
-Si vous avez besoin de plus d'informations sur le comportement du découpage entre les canaux, consultez [Streaming + chunking](/fr/concepts/streaming).
+Si vous avez besoin de plus d'informations sur le comportement du découpage entre les canaux, consultez [Streaming + chunking](/en/concepts/streaming).
 
 ## Politique de liens
 

@@ -137,6 +137,6 @@ En ese caso, pregunte normalmente en la sesión principal en lugar de usar BTW.
 
 ## Relacionado
 
-- [Comandos de barra](/es/tools/slash-commands)
-- [Niveles de pensamiento](/es/tools/thinking)
-- [Sesión](/es/concepts/session)
+- [Comandos de barra](/en/tools/slash-commands)
+- [Niveles de pensamiento](/en/tools/thinking)
+- [Sesión](/en/concepts/session)

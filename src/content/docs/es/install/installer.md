@@ -52,7 +52,7 @@ OpenClaw incluye tres scripts de instalación, servidos desde `openclaw.ai`.
   </Tab>
 </Tabs>
 
-<Note>Si la instalación se realiza correctamente pero `openclaw` no se encuentra en una nueva terminal, consulte [solución de problemas de Node.js ](/es/install/node#troubleshooting).</Note>
+<Note>Si la instalación tiene éxito pero no se encuentra `openclaw` en una nueva terminal, consulte [Solución de problemas de Node.js](/en/install/node#troubleshooting).</Note>
 
 ---
 
@@ -64,10 +64,10 @@ OpenClaw incluye tres scripts de instalación, servidos desde `openclaw.ai`.
 
 <Steps>
   <Step title="Detectar SO">Soporta macOS y Linux (incluyendo WSL). Si se detecta macOS, instala Homebrew si no está presente.</Step>
-  <Step title="Ensure Node.js 24 by default">Comprueba la versión de Node e instala Node 24 si es necesario (Homebrew en macOS, scripts de configuración de NodeSource en Linux apt/dnf/yum). OpenClaw aún es compatible con Node 22 LTS, actualmente `22.14+`, por compatibilidad.</Step>
-  <Step title="Asegurar Git">Instala Git si no está presente.</Step>
-  <Step title="Instalar OpenClaw">- `npm` método (por defecto): instalación global npm - `git` método: clonar/actualizar repositorio, instalar dependencias con pnpm, compilar, y luego instalar el contenedor en `~/.local/bin/openclaw`</Step>
-  <Step title="Tareas posteriores a la instalación">- Ejecuta `openclaw doctor --non-interactive` en actualizaciones e instalaciones git (mejor esfuerzo) - Intenta la incorporación (onboarding) cuando es apropiado (TTY disponible, incorporación no deshabilitada, y las verificaciones de arranque/configuración pasan) - Establece por defecto `SHARP_IGNORE_GLOBAL_LIBVIPS=1`</Step>
+  <Step title="Asegurar Node.js 24 por defecto">Verifica la versión de Node e instala Node 24 si es necesario (Homebrew en macOS, scripts de configuración de NodeSource en Linux apt/dnf/yum). OpenClaw todavía admite Node 22 LTS, actualmente `22.14+`, por compatibilidad.</Step>
+  <Step title="Asegurar Git">Instala Git si falta.</Step>
+  <Step title="Instalar OpenClaw">- Método `npm` (predeterminado): instalación global de npm - Método `git`: clonar/actualizar repositorio, instalar dependencias con pnpm, compilar y luego instalar el contenedor en `~/.local/bin/openclaw`</Step>
+  <Step title="Tareas posteriores a la instalación">- Ejecuta `openclaw doctor --non-interactive` en actualizaciones e instalaciones de git (mejor esfuerzo) - Intenta la incorporación cuando corresponda (TTY disponible, incorporación no deshabilitada y las verificaciones de bootstrap/config pasan) - Establece por defecto `SHARP_IGNORE_GLOBAL_LIBVIPS=1`</Step>
 </Steps>
 
 ### Detección de repositorio de origen
@@ -135,7 +135,7 @@ El script sale con el código `2` para una selección de método no válida o va
 
 ## install-cli.sh
 
-<Info>Diseñado para entornos donde desea todo bajo un prefijo local (predeterminado `~/.openclaw`) y sin dependencia del Node del sistema.</Info>
+<Info>Diseñado para entornos donde desea todo bajo un prefijo local (predeterminado `~/.openclaw`) y sin dependencia del sistema Node.</Info>
 
 ### Flujo (install-cli.sh)
 
@@ -199,9 +199,9 @@ El script sale con el código `2` para una selección de método no válida o va
 
 <Steps>
   <Step title="Asegurar el entorno de PowerShell + Windows">Requiere PowerShell 5+.</Step>
-  <Step title="Ensure Node.js 24 by default">Si falta, intenta la instalación mediante winget, luego Chocolatey y luego Scoop. Node 22 LTS, actualmente `22.14+`, sigue siendo compatible por compatibilidad.</Step>
-  <Step title="Instalar OpenClaw">- `npm` método (predeterminado): instalación global de npm usando `-Tag` seleccionado - `git` método: clonar/actualizar repositorio, instalar/compilar con pnpm e instalar contenedor en `%USERPROFILE%\.local\bin\openclaw.cmd`</Step>
-  <Step title="Tareas posteriores a la instalación">Añade el directorio bin necesario al PATH del usuario cuando sea posible, luego ejecuta `openclaw doctor --non-interactive` en actualizaciones e instalaciones de git (mejor esfuerzo).</Step>
+  <Step title="Asegurar Node.js 24 por defecto">Si falta, intenta la instalación a través de winget, luego Chocolatey y luego Scoop. Node 22 LTS, actualmente `22.14+`, sigue siendo compatible por compatibilidad.</Step>
+  <Step title="Instalar OpenClaw">- método `npm` (predeterminado): instalación global de npm usando el `-Tag` seleccionado - método `git`: clonar/actualizar el repositorio, instalar/compilar con pnpm, e instalar el wrapper en `%USERPROFILE%\.local\bin\openclaw.cmd`</Step>
+  <Step title="Tareas posteriores a la instalación">Agrega el directorio bin necesario al PATH del usuario cuando sea posible, luego ejecuta `openclaw doctor --non-interactive` en actualizaciones e instalaciones de git (mejor esfuerzo).</Step>
 </Steps>
 
 ### Ejemplos (install.ps1)
@@ -216,16 +216,16 @@ El script sale con el código `2` para una selección de método no válida o va
 </Tabs>
 
 <AccordionGroup>
-  <Accordion title="Referencia de marcas">
+  <Accordion title="Referencia de opciones">
 
-| Marca                       | Descripción                                                                                  |
-| --------------------------- | -------------------------------------------------------------------------------------------- |
-| `-InstallMethod npm\|git`   | Método de instalación (predeterminado: `npm`)                                                |
-| `-Tag <tag\|version\|spec>` | etiqueta de distribución npm, versión o especificación de paquete (predeterminado: `latest`) |
-| `-GitDir <path>`            | Directorio de checkout (predeterminado: `%USERPROFILE%\openclaw`)                            |
-| `-NoOnboard`                | Omitir integración                                                                           |
-| `-NoGitUpdate`              | Omitir `git pull`                                                                            |
-| `-DryRun`                   | Imprimir solo acciones                                                                       |
+| Opción                      | Descripción                                                                                      |
+| --------------------------- | ------------------------------------------------------------------------------------------------ |
+| `-InstallMethod npm\|git`   | Método de instalación (predeterminado: `npm`)                                                    |
+| `-Tag <tag\|version\|spec>` | etiqueta de distribución de npm, versión o especificación del paquete (predeterminado: `latest`) |
+| `-GitDir <path>`            | Directorio de checkout (predeterminado: `%USERPROFILE%\openclaw`)                                |
+| `-NoOnboard`                | Saltar onboarding                                                                                |
+| `-NoGitUpdate`              | Saltar `git pull`                                                                                |
+| `-DryRun`                   | Imprimir solo las acciones                                                                       |
 
   </Accordion>
 
@@ -242,7 +242,7 @@ El script sale con el código `2` para una selección de método no válida o va
   </Accordion>
 </AccordionGroup>
 
-<Note>Si se usa `-InstallMethod git` y falta Git, el script sale e imprime el enlace de Git para Windows.</Note>
+<Note>Si se utiliza `-InstallMethod git` y Git no está instalado, el script se cierra e imprime el enlace de Git para Windows.</Note>
 
 ---
 
@@ -263,13 +263,13 @@ Use flags/variables de entorno no interactivas para ejecuciones predecibles.
 
 <AccordionGroup>
   <Accordion title="¿Por qué se requiere Git?">
-    Git es necesario para el método de instalación `git`. Para las instalaciones `npm`, Git aún se comprueba/instala para evitar fallos de `spawn git ENOENT` cuando las dependencias usan URLs de git.
+    Git es necesario para el método de instalación `git`. Para las instalaciones `npm`, Git todavía se comprueba/instala para evitar fallos `spawn git ENOENT` cuando las dependencias usan URLs de git.
   </Accordion>
 
-<Accordion title="¿Por qué npm encuentra EACCES en Linux?">Algunas configuraciones de Linux apuntan el prefijo global de npm a rutas propiedad de root. `install.sh` puede cambiar el prefijo a `~/.npm-global` y añadir exportaciones de PATH a los archivos rc de shell (cuando esos archivos existen).</Accordion>
+<Accordion title="¿Por qué npm encuentra EACCES en Linux?">Algunas configuraciones de Linux apuntan el prefijo global de npm a rutas propiedad de root. `install.sh` puede cambiar el prefijo a `~/.npm-global` y añadir exportaciones de PATH a los archivos rc del shell (cuando esos archivos existen).</Accordion>
 
-  <Accordion title="problemas con sharp/libvips">
-    Los scripts establecen `SHARP_IGNORE_GLOBAL_LIBVIPS=1` por defecto para evitar que sharp se compile contra la libvips del sistema. Para anularlo:
+  <Accordion title="Problemas con sharp/libvips">
+    Los scripts tienen por defecto `SHARP_IGNORE_GLOBAL_LIBVIPS=1` para evitar que sharp se compile contra el libvips del sistema. Para anular esto:
 
     ```bash
     SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
@@ -277,13 +277,13 @@ Use flags/variables de entorno no interactivas para ejecuciones predecibles.
 
   </Accordion>
 
-<Accordion title='Windows: "npm error spawn git / ENOENT"'>Instale Git para Windows, vuelva a abrir PowerShell, ejecute el instalador nuevamente.</Accordion>
+<Accordion title='Windows: "npm error spawn git / ENOENT"'>Instale Git para Windows, vuelva a abrir PowerShell y vuelva a ejecutar el instalador.</Accordion>
 
-<Accordion title='Windows: "openclaw no se reconoce"'>Ejecute `npm config get prefix` y añada ese directorio a su PATH de usuario (no se necesita el sufijo `\bin` en Windows), luego vuelva a abrir PowerShell.</Accordion>
+<Accordion title='Windows: "openclaw is not recognized"'>Ejecute `npm config get prefix` y añada ese directorio a su PATH de usuario (no es necesario el sufijo `\bin` en Windows), luego vuelva a abrir PowerShell.</Accordion>
 
-  <Accordion title="Windows: cómo obtener salida detallada del instalador">
+  <Accordion title="Windows: cómo obtener una salida detallada del instalador">
     `install.ps1` actualmente no expone un interruptor `-Verbose`.
-    Use el seguimiento de PowerShell para diagnósticos a nivel de script:
+    Utilice el seguimiento de PowerShell para diagnósticos a nivel de script:
 
     ```powershell
     Set-PSDebug -Trace 1
@@ -294,6 +294,6 @@ Use flags/variables de entorno no interactivas para ejecuciones predecibles.
   </Accordion>
 
   <Accordion title="openclaw no encontrado después de la instalación">
-    Generalmente es un problema de PATH. Consulte [Solución de problemas de Node.js](/es/install/node#troubleshooting).
+    Generalmente es un problema de PATH. Consulte [Solución de problemas de Node.js](/en/install/node#troubleshooting).
   </Accordion>
 </AccordionGroup>

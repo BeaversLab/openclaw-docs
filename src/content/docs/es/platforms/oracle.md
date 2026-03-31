@@ -296,8 +296,8 @@ tar -czvf openclaw-backup.tar.gz ~/.openclaw ~/.openclaw/workspace
 
 ## Ver También
 
-- [Acceso remoto del Gateway](/es/gateway/remote) — otros patrones de acceso remoto
-- [Integración con Tailscale](/es/gateway/tailscale) — documentación completa de Tailscale
-- [Configuración del Gateway](/es/gateway/configuration) — todas las opciones de configuración
-- [Guía de DigitalOcean](/es/platforms/digitalocean) — si deseas pago + registro más fácil
-- [Guía de Hetzner](/es/install/hetzner) — alternativa basada en Docker
+- [Acceso remoto del Gateway](/en/gateway/remote) — otros patrones de acceso remoto
+- [Integración con Tailscale](/en/gateway/tailscale) — documentación completa de Tailscale
+- [Configuración del Gateway](/en/gateway/configuration) — todas las opciones de configuración
+- [Guía de DigitalOcean](/en/platforms/digitalocean) — si deseas pago + registro más fácil
+- [Guía de Hetzner](/en/install/hetzner) — alternativa basada en Docker

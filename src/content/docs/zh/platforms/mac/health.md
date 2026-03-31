@@ -31,4 +31,4 @@ title: "Health Checks (macOS)"
 
 ## 遇到问题时
 
-- 您仍然可以在 [Gateway health](/zh/gateway/health) (`openclaw status`, `openclaw status --deep`, `openclaw health --json`) 中使用 CLI 流程，并查看 `/tmp/openclaw/openclaw-*.log` 的尾部，以查找 `web-heartbeat` / `web-reconnect`。
+- 您仍然可以在 [Gateway health](/en/gateway/health) (`openclaw status`, `openclaw status --deep`, `openclaw health --json`) 中使用 CLI 流程，并查看 `/tmp/openclaw/openclaw-*.log` 的尾部，以查找 `web-heartbeat` / `web-reconnect`。

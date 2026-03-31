@@ -7,7 +7,7 @@ title: "測試"
 
 # 測試
 
-- 完整測試套件 (suites, live, Docker)：[測試](/en/help/testing)
+- 完整測試套件（套件、即時、Docker）：[測試](/en/help/testing)
 
 - `pnpm test:force`：終止任何佔用預設控制埠的殘留 gateway 程序，然後使用隔離的 gateway 埠執行完整的 Vitest 套件，以免伺服器測試與執行中的實例衝突。當先前的 gateway 執行留下佔用 18789 埠時使用此選項。
 - `pnpm test:coverage`：使用 V8 覆蓋率 (透過 `vitest.unit.config.ts`) 執行單元套件。全域閾值為 70% 的行/分支/函式/陳述式。覆蓋率排除重度整合的進入點 (CLI 接線、gateway/telegram 橋接器、webchat 靜態伺服器)，以將目標集中在可進行單元測試的邏輯上。
@@ -27,35 +27,36 @@ title: "測試"
 - `pnpm test:e2e`：執行 gateway 端到端基本測試 (多實例 WS/HTTP/node 配對)。預設為 `forks` + `vitest.e2e.config.ts` 中的自適應工作執行緒；使用 `OPENCLAW_E2E_WORKERS=<n>` 進行調整，並設定 `OPENCLAW_E2E_VERBOSE=1` 以取得詳細記錄。
 - `pnpm test:live`：執行提供者即時測試 (minimax/zai)。需要 API 金鑰和 `LIVE=1` (或提供者特定的 `*_LIVE_TEST=1`) 以取消跳過。
 - `pnpm test:docker:openwebui`：啟動 Docker 化的 OpenClaw + Open WebUI，透過 Open WebUI 登入，檢查 `/api/models`，然後透過 `/api/chat/completions` 執行真實的代理聊天。需要可用的即時模型金鑰 (例如 `~/.profile` 中的 OpenAI)，並會拉取外部 Open WebUI 映像檔，且不像一般的單元/e2e 測試套件那樣預期在 CI 中保持穩定。
+- `pnpm test:docker:mcp-channels`：啟動一個有種子的 Gateway 容器和一個產生 `openclaw mcp serve` 的第二個客戶端容器，然後驗證透過真實 stdio 橋接器進行的路由對話探索、逐字稿讀取、附件元資料、即時事件佇列行為、輸出傳送路由以及 Claude 風格的頻道 + 權限通知。Claude 通知斷言會直接讀取原始 stdio MCP 框架，因此此冒煙測試能反映橋接器實際發出的內容。
 
-## Local PR gate
+## 本機 PR 閘道
 
-對於本地 PR land/gate 檢查，請執行：
+若要進行本機 PR 合併/閘道檢查，請執行：
 
 - `pnpm check`
 - `pnpm build`
 - `pnpm test`
 - `pnpm check:docs`
 
-如果 `pnpm test` 在負載較高的主機上發生不穩定，在將其視為回歸之前請重新執行一次，然後使用 `pnpm vitest run <path/to/test>` 進行隔離。對於記憶體受限的主機，請使用：
+如果 `pnpm test` 在負載較高的主機上出現不穩定，請在將其視為回歸問題之前重新執行一次，然後使用 `pnpm vitest run <path/to/test>` 將其隔離。對於記憶體受限的主機，請使用：
 
 - `OPENCLAW_TEST_PROFILE=low OPENCLAW_TEST_SERIAL_GATEWAY=1 pnpm test`
-- `OPENCLAW_VITEST_FS_MODULE_CACHE=0 pnpm test:changed`
+- `OPENCLAW_VITEST_FS_MODULE_CACHE_PATH=/tmp/openclaw-vitest-cache pnpm test:changed`
 
-## Model latency bench (local keys)
+## 模型延遲基準測試（本地金鑰）
 
 腳本：[`scripts/bench-model.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-model.ts)
 
 用法：
 
 - `source ~/.profile && pnpm tsx scripts/bench-model.ts --runs 10`
-- 可選環境變數：`MINIMAX_API_KEY`, `MINIMAX_BASE_URL`, `MINIMAX_MODEL`, `ANTHROPIC_API_KEY`
-- 預設提示詞：「請用單字回覆：ok。不要標點符號或多餘文字。」
+- 可選環境變數：`MINIMAX_API_KEY`、`MINIMAX_BASE_URL`、`MINIMAX_MODEL`、`ANTHROPIC_API_KEY`
+- 預設提示詞：「請用一個單詞回覆：ok。不要標點符號或多餘的文字。」
 
-最近一次執行 (2025-12-31，20 次執行)：
+最近一次執行（2025-12-31，20 次執行）：
 
-- minimax 中位數 1279ms (最小 1114, 最大 2431)
-- opus 中位數 2454ms (最小 1224, 最大 3170)
+- minimax 中位數 1279ms（最小 1114，最大 2431）
+- opus 中位數 2454ms（最小 1224，最大 3170）
 
 ## CLI 啟動基準測試
 
@@ -67,7 +68,7 @@ title: "測試"
 - `pnpm tsx scripts/bench-cli-startup.ts --runs 12`
 - `pnpm tsx scripts/bench-cli-startup.ts --entry dist/entry.js --timeout-ms 45000`
 
-此基準測試對以下指令進行測試：
+此基準測試針對以下指令：
 
 - `--version`
 - `--help`
@@ -75,23 +76,23 @@ title: "測試"
 - `status --json`
 - `status`
 
-輸出包含每個指令的平均值、p50、p95、最小/最大值，以及退出代碼/訊號分佈。
+輸出包含每個指令的平均值、p50、p95、最小/最大值，以及結束代碼/信號分佈。
 
 ## 入門 E2E 測試 (Docker)
 
-Docker 是可選的；這僅需要用於容器化的入門冒煙測試。
+Docker 是選用的；這僅需要用於容器化的入門基礎測試。
 
-在乾淨的 Linux 容器中進行完整的冷啟動流程：
+在乾淨的 Linux 容器中執行完整的冷啟動流程：
 
 ```bash
 scripts/e2e/onboard-docker.sh
 ```
 
-此腳本透過虛擬終端機驅動互動式精靈，驗證設定/工作區/會議檔案，然後啟動閘道並執行 `openclaw health`。
+此腳本透過偽終端機驅動互動式精靈，驗證設定/工作區/工作階段檔案，然後啟動閘道並執行 `openclaw health`。
 
-## QR 匯入冒煙測試 (Docker)
+## QR 匯入基礎測試 (Docker)
 
-確保 `qrcode-terminal` 在支援的 Docker Node 執行環境下載入 (Node 24 預設，Node 22 相容)：
+確保 `qrcode-terminal` 可在支援的 Docker Node 執行環境下載入（預設 Node 24，相容 Node 22）：
 
 ```bash
 pnpm test:docker:qr

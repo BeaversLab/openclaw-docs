@@ -57,7 +57,7 @@ title: "Raspberry Pi (Platform)"
 
 ## 2) 通过 SSH 连接
 
-```exec
+```bash
 ssh user@gateway-host
 # or use the IP address
 ssh user@192.168.x.x
@@ -65,7 +65,7 @@ ssh user@192.168.x.x
 
 ## 3) 系统设置
 
-```exec
+```bash
 # Update system
 sudo apt update && sudo apt upgrade -y
 
@@ -78,7 +78,7 @@ sudo timedatectl set-timezone America/Chicago  # Change to your timezone
 
 ## 4) 安装 Node.js 24 (ARM64)
 
-```exec
+```bash
 # Install Node.js via NodeSource
 curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
 sudo apt install -y nodejs
@@ -92,7 +92,7 @@ npm --version
 
 Swap 可防止内存耗尽崩溃：
 
-```exec
+```bash
 # Create 2GB swap file
 sudo fallocate -l 2G /swapfile
 sudo chmod 600 /swapfile
@@ -111,13 +111,13 @@ sudo sysctl -p
 
 ### 选项 A：标准安装（推荐）
 
-```exec
+```bash
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
 ### 选项 B：可破解安装（适合折腾）
 
-```exec
+```bash
 git clone https://github.com/openclaw/openclaw.git
 cd openclaw
 npm install
@@ -129,7 +129,7 @@ npm link
 
 ## 7) 运行新手引导
 
-```exec
+```bash
 openclaw onboard --install-daemon
 ```
 
@@ -142,7 +142,7 @@ openclaw onboard --install-daemon
 
 ## 8) 验证安装
 
-```exec
+```bash
 # Check status
 openclaw status
 
@@ -159,7 +159,7 @@ journalctl -u openclaw -f
 
 在您的计算机上，让 Pi 打印一个新的仪表板 URL：
 
-```exec
+```bash
 ssh user@gateway-host 'openclaw dashboard --no-open'
 ```
 
@@ -169,7 +169,7 @@ ssh user@gateway-host 'openclaw dashboard --no-open'
 
 在计算机上的另一个终端中，创建 SSH 隧道：
 
-```exec
+```bash
 ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
 ```
 
@@ -178,7 +178,7 @@ ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
 如果 UI 要求身份验证，请将 `gateway.auth.token`
 （或 `OPENCLAW_GATEWAY_TOKEN`）中的令牌粘贴到控制 UI 设置中。
 
-如需始终在线的远程访问，请参阅 [Tailscale](/zh/gateway/tailscale)。
+如需始终在线的远程访问，请参阅 [Tailscale](/en/gateway/tailscale)。
 
 ---
 
@@ -188,7 +188,7 @@ ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
 
 SD 卡速度慢且容易磨损。使用 USB SSD 可以显著提高性能：
 
-```exec
+```bash
 # Check if booting from USB
 lsblk
 ```
@@ -199,7 +199,7 @@ lsblk
 
 在低功耗 Pi 主机上，启用 Node 的模块编译缓存，以便加快重复运行 CLI 的速度：
 
-```exec
+```bash
 grep -q 'NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF' # pragma: allowlist secret
 export NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
 mkdir -p /var/tmp/openclaw-compile-cache
@@ -219,7 +219,7 @@ source ~/.bashrc
 
 如果此 Pi 主要运行 OpenClaw，请添加一个 service drop-in 以减少重启抖动并保持启动环境稳定：
 
-```exec
+```bash
 sudo systemctl edit openclaw
 ```
 
@@ -234,7 +234,7 @@ TimeoutStartSec=90
 
 然后应用：
 
-```exec
+```bash
 sudo systemctl daemon-reload
 sudo systemctl restart openclaw
 ```
@@ -246,7 +246,7 @@ sudo systemctl restart openclaw
 
 ### 减少内存使用
 
-```exec
+```bash
 # Disable GPU memory allocation (headless)
 echo 'gpu_mem=16' | sudo tee -a /boot/config.txt
 
@@ -256,7 +256,7 @@ sudo systemctl disable bluetooth
 
 ### 监控资源
 
-```exec
+```bash
 # Check memory
 free -h
 
@@ -289,7 +289,7 @@ htop
 
 **始终使用 64 位操作系统。** Node.js 和许多现代工具都需要它。使用以下命令检查：
 
-```exec
+```bash
 uname -m
 # Should show: aarch64 (64-bit) not armv7l (32-bit)
 ```
@@ -321,7 +321,7 @@ uname -m
 
 新手引导会设置此项，但为了验证：
 
-```exec
+```bash
 # Check service is enabled
 sudo systemctl is-enabled openclaw
 
@@ -338,7 +338,7 @@ sudo systemctl start openclaw
 
 ### 内存不足 (OOM)
 
-```exec
+```bash
 # Check memory
 free -h
 
@@ -354,7 +354,7 @@ free -h
 
 ### 服务无法启动
 
-```exec
+```bash
 # Check logs
 journalctl -u openclaw --no-pager -n 100
 
@@ -376,7 +376,7 @@ sudo systemctl restart openclaw
 
 对于使用 WiFi 的无头 Pi：
 
-```exec
+```bash
 # Disable WiFi power management
 sudo iwconfig wlan0 power off
 
@@ -403,8 +403,8 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ## 另请参阅
 
-- [Linux 指南](/zh/platforms/linux) — 常规 Linux 设置
-- [DigitalOcean 指南](/zh/platforms/digitalocean) — 云端替代方案
-- [Hetzner 指南](/zh/install/hetzner) — Docker 设置
-- [Tailscale](/zh/gateway/tailscale) — 远程访问
-- [节点](/zh/nodes) — 将您的笔记本电脑/手机与 Pi 网关联动
+- [Linux 指南](/en/platforms/linux) — 常规 Linux 设置
+- [DigitalOcean 指南](/en/platforms/digitalocean) — 云端替代方案
+- [Hetzner 指南](/en/install/hetzner) — Docker 设置
+- [Tailscale](/en/gateway/tailscale) — 远程访问
+- [节点](/en/nodes) — 将您的笔记本电脑/手机与 Pi 网关联动

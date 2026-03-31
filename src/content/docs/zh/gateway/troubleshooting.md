@@ -8,8 +8,8 @@ title: "故障排除"
 
 # Gateway 网关 故障排查
 
-本页面是详细的运行手册。
-如果您想先进行快速分诊流程，请从 [/help/故障排除](/zh/help/troubleshooting) 开始。
+此页面是详细的操作手册。
+如果您想先进行快速的分诊流程，请从 [/help/故障排除](/en/help/troubleshooting) 开始。
 
 ## 命令阶梯
 
@@ -54,9 +54,9 @@ openclaw config get agents.defaults.models
 
 相关：
 
-- [/providers/anthropic](/zh/providers/anthropic)
-- [/reference/token-use](/zh/reference/token-use)
-- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/zh/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
+- [/providers/anthropic](/en/providers/anthropic)
+- [/reference/token-use](/en/reference/token-use)
+- [/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic](/en/help/faq#why-am-i-seeing-http-429-ratelimiterror-from-anthropic)
 
 ## 无回复
 
@@ -84,9 +84,9 @@ openclaw logs --follow
 
 相关：
 
-- [/channels/故障排除](/zh/channels/troubleshooting)
-- [/channels/pairing](/zh/channels/pairing)
-- [/channels/groups](/zh/channels/groups)
+- [/channels/故障排除](/en/channels/troubleshooting)
+- [/channels/pairing](/en/channels/pairing)
+- [/channels/groups](/en/channels/groups)
 
 ## 仪表板控制 UI 连接性
 
@@ -121,12 +121,12 @@ openclaw gateway status --json
 
 使用失败的 `connect` 响应中的 `error.details.code` 来选择下一步操作：
 
-| 详细代码                     | 含义                               | 建议操作                                                                                                                                                  |
-| ---------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH_TOKEN_MISSING`         | 客户端未发送所需的共享令牌。       | 在客户端中粘贴/设置令牌并重试。对于仪表板路径：`openclaw config get gateway.auth.token`，然后粘贴到控制 UI 设置中。                                       |
-| `AUTH_TOKEN_MISMATCH`        | 共享令牌与网关身份验证令牌不匹配。 | 如果 `canRetryWithDeviceToken=true`，请允许一次受信任的重试。如果仍然失败，请运行[令牌漂移恢复检查清单](/zh/cli/devices#token-drift-recovery-checklist)。 |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | 缓存的每设备令牌已过期或已撤销。   | 使用 [devices CLI](/zh/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                 |
-| `PAIRING_REQUIRED`           | 设备身份已知但未获批准用于此角色。 | 批准待处理的请求：`openclaw devices list` 然后 `openclaw devices approve <requestId>`。                                                                   |
+| 详细代码                     | 含义                               | 建议操作                                                                                                                                                 |
+| ---------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_TOKEN_MISSING`         | 客户端未发送所需的共享令牌。       | 在客户端中粘贴/设置令牌并重试。对于仪表板路径：`openclaw config get gateway.auth.token`，然后粘贴到控制 UI 设置中。                                      |
+| `AUTH_TOKEN_MISMATCH`        | 共享令牌与网关身份验证令牌不匹配。 | 如果 `canRetryWithDeviceToken=true`，则允许一次可信的重试。如果仍然失败，请运行 [令牌漂移恢复检查清单](/en/cli/devices#token-drift-recovery-checklist)。 |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | 缓存的每设备令牌已过期或已撤销。   | 使用 [devices CLI](/en/cli/devices) 轮换/重新批准设备令牌，然后重新连接。                                                                                |
+| `PAIRING_REQUIRED`           | 设备身份已知但未获批准用于此角色。 | 批准待处理的请求：`openclaw devices list` 然后 `openclaw devices approve <requestId>`。                                                                  |
 
 设备身份验证 v2 迁移检查：
 
@@ -144,10 +144,10 @@ openclaw gateway status
 
 相关内容：
 
-- [/web/control-ui](/zh/web/control-ui)
-- [/gateway/authentication](/zh/gateway/authentication)
-- [/gateway/remote](/zh/gateway/remote)
-- [/cli/devices](/zh/cli/devices)
+- [/web/control-ui](/en/web/control-ui)
+- [/gateway/authentication](/en/gateway/authentication)
+- [/gateway/remote](/en/gateway/remote)
+- [/cli/devices](/en/cli/devices)
 
 ## Gateway(网关) service not running
 
@@ -169,15 +169,15 @@ openclaw gateway status --deep
 
 常见特征：
 
-- `Gateway start blocked: set gateway.mode=local` → 未启用本地网关模式。修复方法：在配置中设置 `gateway.mode="local"`（或运行 `openclaw configure`）。如果您使用专用的 `openclaw` 用户通过 Podman 运行 OpenClaw，配置位于 `~openclaw/.openclaw/openclaw.json`。
-- `refusing to bind gateway ... without auth` → 在没有令牌/密码的情况下绑定到非环回地址。
+- `Gateway start blocked: set gateway.mode=local` → 未启用本地网关模式。解决方法：在配置中设置 `gateway.mode="local"`（或运行 `openclaw configure`）。如果您通过 Podman 运行 OpenClaw，默认配置路径为 `~/.openclaw/openclaw.json`。
+- `refusing to bind gateway ... without auth` → 在没有令牌/密码的情况下进行了非环回绑定。
 - `another gateway instance is already listening` / `EADDRINUSE` → 端口冲突。
 
 相关内容：
 
-- [/gateway/background-process](/zh/gateway/background-process)
-- [/gateway/configuration](/zh/gateway/configuration)
-- [/gateway/doctor](/zh/gateway/doctor)
+- [/gateway/background-process](/en/gateway/background-process)
+- [/gateway/configuration](/en/gateway/configuration)
+- [/gateway/doctor](/en/gateway/doctor)
 
 ## 渠道已连接但消息无法流转
 
@@ -193,22 +193,22 @@ openclaw config get channels
 
 查找：
 
-- 私信政策（`pairing`，`allowlist`，`open`，`disabled`）。
+- 私信策略（`pairing`、`allowlist`、`open`、`disabled`）。
 - 群组允许列表和提及要求。
 - 缺少渠道 API 权限/范围。
 
 常见特征：
 
-- `mention required` → 消息因群组提及策略被忽略。
-- `pairing` / 待批准追踪 → 发送者未获批准。
-- `missing_scope`, `not_in_channel`, `Forbidden`, `401/403` → 渠道认证/权限问题。
+- `mention required` → 消息因组提及策略而被忽略。
+- `pairing` / 待批准的跟踪信息 → 发送者未获批准。
+- `missing_scope`、`not_in_channel`、`Forbidden`、`401/403` → 渠道身份验证/权限问题。
 
 相关：
 
-- [/channels/故障排除](/zh/channels/troubleshooting)
-- [/channels/whatsapp](/zh/channels/whatsapp)
-- [/channels/telegram](/zh/channels/telegram)
-- [/channels/discord](/zh/channels/discord)
+- [/channels/故障排除](/en/channels/troubleshooting)
+- [/channels/whatsapp](/en/channels/whatsapp)
+- [/channels/telegram](/en/channels/telegram)
+- [/channels/discord](/en/channels/discord)
 
 ## Cron 和心跳传递
 
@@ -230,17 +230,17 @@ openclaw logs --follow
 
 常见特征：
 
-- `cron: scheduler disabled; jobs will not run automatically` → 定时任务已禁用。
-- `cron: timer tick failed` → 调度器计时失败；请检查文件/日志/运行时错误。
-- `heartbeat skipped` 搭配 `reason=quiet-hours` → 超出活跃时间段窗口。
-- `heartbeat: unknown accountId` → 心跳发送目标的账户 ID 无效。
-- `heartbeat skipped` 搭配 `reason=dm-blocked` → 心跳目标解析为私信风格的目标，但 `agents.defaults.heartbeat.directPolicy`（或每代理覆盖）设置为 `block`。
+- `cron: scheduler disabled; jobs will not run automatically` → cron 已禁用。
+- `cron: timer tick failed` → 调度器时钟失败；请检查文件/日志/运行时错误。
+- `heartbeat skipped` 且 `reason=quiet-hours` → 超出活跃时间窗口。
+- `heartbeat: unknown accountId` → 心跳传递目标的账户 ID 无效。
+- `heartbeat skipped` 且 `reason=dm-blocked` → 心跳目标解析为私信 (私信) 样式的目标，但 `agents.defaults.heartbeat.directPolicy`（或每个代理的覆盖设置）被设置为 `block`。
 
 相关：
 
-- [/automation/故障排除](/zh/automation/troubleshooting)
-- [/automation/cron-jobs](/zh/automation/cron-jobs)
-- [/gateway/heartbeat](/zh/gateway/heartbeat)
+- [/automation/故障排除](/en/automation/troubleshooting)
+- [/automation/cron-jobs](/en/automation/cron-jobs)
+- [/gateway/heartbeat](/en/gateway/heartbeat)
 
 ## 节点配对工具失败
 
@@ -262,16 +262,16 @@ openclaw status
 
 常见特征：
 
-- `NODE_BACKGROUND_UNAVAILABLE` → 节点应用必须处于前台。
+- `NODE_BACKGROUND_UNAVAILABLE` → 节点应用程序必须位于前台。
 - `*_PERMISSION_REQUIRED` / `LOCATION_PERMISSION_REQUIRED` → 缺少操作系统权限。
-- `SYSTEM_RUN_DENIED: approval required` → 批准执行待处理。
+- `SYSTEM_RUN_DENIED: approval required` → 批准执行挂起。
 - `SYSTEM_RUN_DENIED: allowlist miss` → 命令被允许列表阻止。
 
 相关：
 
-- [/nodes/故障排除](/zh/nodes/troubleshooting)
-- [/nodes/index](/zh/nodes/index)
-- [/tools/exec-approvals](/zh/tools/exec-approvals)
+- [/nodes/故障排除](/en/nodes/troubleshooting)
+- [/nodes/index](/en/nodes/index)
+- [/tools/exec-approvals](/en/tools/exec-approvals)
 
 ## 浏览器工具失败
 
@@ -300,8 +300,8 @@ openclaw doctor
 
 相关：
 
-- [/tools/browser-linux-故障排除](/zh/tools/browser-linux-troubleshooting)
-- [/tools/browser](/zh/tools/browser)
+- [/tools/browser-linux-故障排除](/en/tools/browser-linux-troubleshooting)
+- [/tools/browser](/en/tools/browser)
 
 ## 如果您升级后突然出现故障
 
@@ -318,13 +318,13 @@ openclaw config get gateway.auth.mode
 
 检查事项：
 
-- 如果 `gateway.mode=remote`，CLI 调用可能针对的是远程，而您的本地服务是正常的。
+- 如果 `gateway.mode=remote`，CLI 调用可能指向远程，而您的本地服务运行正常。
 - 显式 `--url` 调用不会回退到存储的凭据。
 
 常见特征：
 
 - `gateway connect failed:` → 错误的 URL 目标。
-- `unauthorized` → 端点可访问但身份验证错误。
+- `unauthorized` → 端点可达但身份验证错误。
 
 ### 2) 绑定和身份验证防护栏更严格了
 
@@ -337,13 +337,13 @@ openclaw logs --follow
 
 检查事项：
 
-- 非环回绑定 (`lan`, `tailnet`, `custom`) 需要配置身份验证。
+- 非环回绑定（`lan`、`tailnet`、`custom`）需要配置身份验证。
 - 像 `gateway.token` 这样的旧键不会替换 `gateway.auth.token`。
 
 常见特征：
 
 - `refusing to bind gateway ... without auth` → 绑定+身份验证不匹配。
-- `RPC probe: failed` 而运行时正在运行 → 网关处于活动状态，但无法使用当前的身份验证/URL 进行访问。
+- `RPC probe: failed` 而运行时正在运行 → 网关存活但使用当前身份验证/URL 无法访问。
 
 ### 3) 配对和设备标识状态已更改
 
@@ -362,7 +362,7 @@ openclaw doctor
 常见特征：
 
 - `device identity required` → 设备身份验证未满足。
-- `pairing required` → 发送者/设备必须被批准。
+- `pairing required` → 发送方/设备必须被批准。
 
 如果在检查后服务配置和运行时仍然不一致，请从相同的配置文件/状态目录重新安装服务元数据：
 
@@ -373,6 +373,6 @@ openclaw gateway restart
 
 相关：
 
-- [/gateway/pairing](/zh/gateway/pairing)
-- [/gateway/authentication](/zh/gateway/authentication)
-- [/gateway/background-process](/zh/gateway/background-process)
+- [/gateway/pairing](/en/gateway/pairing)
+- [/gateway/authentication](/en/gateway/authentication)
+- [/gateway/background-process](/en/gateway/background-process)

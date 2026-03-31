@@ -183,7 +183,7 @@ Notes :
 - Les clés héritées sans préfixe sont toujours acceptées et mises en correspondance uniquement en tant que `id:`.
 - La première politique d'expéditeur correspondante l'emporte ; `"*"` est le repli générique.
 
-Pour plus d'informations sur l'accès aux groupes par rapport au filtrage par mention (et sur leur interaction), voir : [/channels/groups](/fr/channels/groups).
+Pour plus d'informations sur l'accès aux groupes par rapport au filtrage par mention (et sur leur interaction), voir : [/channels/groups](/en/channels/groups).
 
 ## NickServ
 

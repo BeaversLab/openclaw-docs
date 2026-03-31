@@ -9,7 +9,7 @@ read_when:
 
 # Node.js
 
-OpenClaw 需要 **Node 22.14 或更新版本**。**Node 24 是安装、CI 和发布工作流的默认及推荐运行时**。Node 22 仍然通过活跃 LTS 线路获得支持。[安装程序脚本](/zh/install#alternative-install-methods) 将自动检测并安装 Node — 本页面适用于您想要自行设置 Node 并确保一切配置正确（版本、PATH、全局安装）的情况。
+OpenClaw 需要 **Node 22.14 或更新版本**。**Node 24 是安装、CI 和发布工作流的默认及推荐运行时**。Node 22 仍然通过活跃 LTS 线路获得支持。[安装程序脚本](/en/install#alternative-install-methods) 将自动检测并安装 Node — 本页面适用于您想要自行设置 Node 并确保一切配置正确（版本、PATH、全局安装）的情况。
 
 ## 检查您的版本
 

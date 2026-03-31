@@ -41,7 +41,7 @@ title: "Arquitectura del Gateway"
 
 Detalles del protocolo:
 
-- [Protocolo del Gateway](/es/gateway/protocol)
+- [Protocolo del Gateway](/en/gateway/protocol)
 
 ### WebChat
 
@@ -98,8 +98,8 @@ sequenceDiagram
 - La autenticación del Gateway (`gateway.auth.*`) todavía se aplica a **todas** las conexiones, locales o
   remotas.
 
-Detalles: [Gateway protocol](/es/gateway/protocol), [Pairing](/es/channels/pairing),
-[Security](/es/gateway/security).
+Detalles: [Gateway protocol](/en/gateway/protocol), [Pairing](/en/channels/pairing),
+[Security](/en/gateway/security).
 
 ## Escritura de protocolos y generación de código
 

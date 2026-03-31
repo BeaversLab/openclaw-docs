@@ -18,7 +18,7 @@ et les valeurs par défaut de l'espace de travail dans un processus guidé uniqu
 openclaw onboard
 ```
 
-<Info>Premier chat le plus rapide : ouvrez l'interface de contrôle (aucune configuration de canal nécessaire). Exécutez `openclaw dashboard` et discutez dans le navigateur. Documentation : [Tableau de bord](/fr/web/dashboard).</Info>
+<Info>Première discussion la plus rapide : ouvrez l'interface de contrôle (aucune configuration de channel nécessaire). Exécutez `openclaw dashboard` et discutez dans le navigateur. Documentation : [Dashboard](/en/web/dashboard).</Info>
 
 Pour reconfigurer plus tard :
 
@@ -29,16 +29,16 @@ openclaw agents add <name>
 
 <Note>`--json` n'implique pas le mode non interactif. Pour les scripts, utilisez `--non-interactive`.</Note>
 
-<Tip>L'onboarding CLI comprend une étape de recherche Web où vous pouvez choisir un fournisseur (Perplexity, Brave, Gemini, Grok ou Kimi) et coller votre clé API afin que l'agent puisse utiliser `web_search`. Vous pouvez également configurer cela ultérieurement avec `openclaw configure --section web`. Documentation : [Web tools](/fr/tools/web).</Tip>
+<Tip>L'onboarding CLI comprend une étape de recherche Web où vous pouvez choisir un provider (Perplexity, Brave, Gemini, Grok ou Kimi) et coller votre clé API pour que l'agent puisse utiliser `web_search`. Vous pouvez également configurer cela ultérieurement avec `openclaw configure --section web`. Documentation : [Web tools](/en/tools/web).</Tip>
 
 ## Démarrage rapide vs Avancé
 
 L'onboarding commence par **QuickStart** (valeurs par défaut) ou **Advanced** (contrôle total).
 
 <Tabs>
-  <Tab title="QuickStart (defaults)">
-    - Passerelle (Gateway) locale (boucle locale) - Espace de travail par défaut (ou espace de travail existant) - Port de la passerelle **18789** - Authentification de la passerelle par **Jeton** (généré automatiquement, même en boucle locale) - Stratégie d'outil par défaut pour les nouvelles configurations locales : `tools.profile: "coding"` (le profil explicite existant est préservé) -
-    Isolation par DM par défaut : l'onboarding local écrit `session.dmScope: "per-channel-peer"` s'il n'est pas défini. Détails : [Référence de l'installation CLI](/fr/start/wizard-cli-reference#outputs-and-internals) - Exposition Tailscale **Désactivée** - Les DM Telegram + WhatsApp sont paramétrés par défaut sur **liste d'autorisation** (vous serez invité à entrer votre numéro de téléphone)
+  <Tab title="QuickStart (défauts)">
+    - Gateway local (boucle locale) - Espace de travail par défaut (ou espace de travail existant) - Port du Gateway **18789** - Auth du CLI **Token** (auto‑généré, même en boucle locale) - Stratégie d'outil par défaut pour les nouvelles configurations locales : `tools.profile: "coding"` (le profil explicite existant est conservé) - Isolation des DM par défaut : l'onboarding local écrit
+    `session.dmScope: "per-channel-peer"` si non défini. Détails : [Référence de la configuration Tailscale](/en/start/wizard-cli-reference#outputs-and-internals) - Exposition Telegram **Désactivée** - Les DM WhatsApp + WhatsApp sont par défaut sur **allowlist** (votre numéro de téléphone vous sera demandé)
   </Tab>
   <Tab title="Avancé (contrôle total)">- Expose chaque étape (mode, espace de travail, passerelle, canaux, démon, compétences).</Tab>
 </Tabs>
@@ -66,8 +66,8 @@ L'onboarding commence par **QuickStart** (valeurs par défaut) ou **Advanced** (
 7. **Skills** — Installe les compétences recommandées et les dépendances facultatives.
 
 <Note>
-  Le fait de relancer l'onboarding ne **supprime** rien, sauf si vous choisissez explicitement **Réinitialiser** (ou si vous transmettez `--reset`). La commande `--reset` de la CLI concerne par défaut la configuration, les identifiants et les sessions ; utilisez `--reset-scope full` pour inclure l'espace de travail. Si la configuration n'est pas valide ou contient des clés héritées, l'onboarding
-  vous invite à exécuter d'abord `openclaw doctor`.
+  Le fait de relancer l'onboarding **ne** supprime rien, sauf si vous choisissez explicitement **Reset** (ou si vous passez `--reset`). La CLI `--reset` concerne par défaut la configuration, les identifiants et les sessions ; utilisez `--reset-scope full` pour inclure l'espace de travail. Si la configuration n'est pas valide ou contient des clés héritées, l'onboarding vous demande d'exécuter
+  d'abord `openclaw doctor`.
 </Note>
 
 Le **Remote mode** ne configure que le client local pour se connecter à un Gateway situé ailleurs.
@@ -92,15 +92,15 @@ Notes :
 
 ## Référence complète
 
-Pour des descriptions détaillées étape par étape et les sorties de configuration, voir
-[Référence de la configuration CLI](/fr/start/wizard-cli-reference).
-Pour des exemples non interactifs, voir [Automatisation CLI](/fr/start/wizard-cli-automation).
-Pour la référence technique approfondie, incluant les détails RPC, voir
-[Référence Onboarding](/fr/reference/wizard).
+Pour des descriptions détaillées étape par étape et les sorties de configuration, consultez
+[Référence de la configuration CLI](/en/start/wizard-cli-reference).
+Pour des exemples non interactifs, consultez [Automatisation CLI](/en/start/wizard-cli-automation).
+Pour la référence technique approfondie, incluant les détails RPC, consultez
+[Référence de l'intégration](/en/reference/wizard).
 
 ## Documentation connexe
 
-- Référence des commandes CLI : [`openclaw onboard`](/fr/cli/onboard)
-- Aperçu de l'onboarding : [Onboarding Overview](/fr/start/onboarding-overview)
-- Onboarding de l'application macOS : [Onboarding](/fr/start/onboarding)
-- Rituel de premier exécution de l'agent : [Agent Bootstrapping](/fr/start/bootstrapping)
+- Référence de la commande CLI : [`openclaw onboard`](/en/cli/onboard)
+- Aperçu de l'onboarding : [Onboarding Overview](/en/start/onboarding-overview)
+- onboarding de l'application macOS : [Onboarding](/en/start/onboarding)
+- Agent first-run ritual: [Agent Bootstrapping](/en/start/bootstrapping)

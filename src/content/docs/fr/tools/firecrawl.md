@@ -139,6 +139,6 @@ Ordre d'extraction `web_fetch` :
 
 ## Connexes
 
-- [Vue d'ensemble de la recherche web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
-- [Web Fetch](/fr/tools/web-fetch) -- tool web_fetch avec repli vers Firecrawl
-- [Tavily](/fr/tools/tavily) -- tools de recherche et d'extraction
+- [Vue d'ensemble de la recherche web](/en/tools/web) -- tous les fournisseurs et la détection automatique
+- [Web Fetch](/en/tools/web-fetch) -- tool web_fetch avec repli vers Firecrawl
+- [Tavily](/en/tools/tavily) -- tools de recherche et d'extraction

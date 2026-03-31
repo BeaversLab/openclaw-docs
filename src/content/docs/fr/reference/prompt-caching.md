@@ -69,7 +69,7 @@ agents:
       ttl: "1h"
 ```
 
-Voir [Session Pruning](/fr/concepts/session-pruning) pour le comportement complet.
+Voir [Session Pruning](/en/concepts/session-pruning) pour le comportement complet.
 
 ### Maintien de chaleur du heartbeat
 
@@ -179,7 +179,7 @@ Valeurs par défaut :
 
 Documentation connexe :
 
-- [Anthropic](/fr/providers/anthropic)
-- [Utilisation et coûts des jetons](/fr/reference/token-use)
-- [Nettoyage de session](/fr/concepts/session-pruning)
-- [Référence de configuration de la Gateway](/fr/gateway/configuration-reference)
+- [Anthropic](/en/providers/anthropic)
+- [Utilisation et coûts des jetons](/en/reference/token-use)
+- [Nettoyage de session](/en/concepts/session-pruning)
+- [Référence de configuration de la Gateway](/en/gateway/configuration-reference)

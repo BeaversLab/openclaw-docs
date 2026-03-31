@@ -23,7 +23,7 @@ Rappel du modèle de sécurité :
 - Maintenez une séparation stricte : VPS/environnement d'exécution dédié + comptes dédiés ; aucun profil personnel Apple/Google/navigateur/gestionnaire de mots de passe sur cet hôte.
 - Si les utilisateurs sont antagonistes les uns envers les autres, séparez par passerelle/hôte/utilisateur du système d'exploitation.
 
-Voir [Sécurité](/fr/gateway/security) et [Hébergement VPS](/fr/vps).
+Voir [Sécurité](/en/gateway/security) et [Hébergement VPS](/en/vps).
 
 ## Que faisons-nous (en termes simples) ?
 
@@ -40,7 +40,7 @@ La passerelle Gateway est accessible via :
 
 Ce guide suppose Ubuntu ou Debian sur Hetzner.  
 Si vous êtes sur un autre VPS Linux, mappez les paquets en conséquence.
-Pour le flux générique Docker, voir [Docker](/fr/install/docker).
+Pour le flux générique Docker, voir [Docker](/en/install/docker).
 
 ---
 
@@ -200,10 +200,10 @@ Pour le flux générique Docker, voir [Docker](/fr/install/docker).
   <Step title="Étapes d'exécution de VM Docker partagées">
     Utilisez le guide d'exécution partagé pour le flux d'hôte Docker courant :
 
-    - [Intégrer les binaires requis dans l'image](/fr/install/docker-vm-runtime#bake-required-binaries-into-the-image)
-    - [Construire et lancer](/fr/install/docker-vm-runtime#build-and-launch)
-    - [Ce qui persiste où](/fr/install/docker-vm-runtime#what-persists-where)
-    - [Mises à jour](/fr/install/docker-vm-runtime#updates)
+    - [Intégrer les binaires requis dans l'image](/en/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+    - [Construire et lancer](/en/install/docker-vm-runtime#build-and-launch)
+    - [Ce qui persiste où](/en/install/docker-vm-runtime#what-persists-where)
+    - [Mises à jour](/en/install/docker-vm-runtime#updates)
 
   </Step>
 
@@ -223,7 +223,7 @@ Pour le flux générique Docker, voir [Docker](/fr/install/docker).
   </Step>
 </Steps>
 
-La carte de persistance partagée se trouve dans [Docker VM Runtime](/fr/install/docker-vm-runtime#what-persists-where).
+La carte de persistance partagée se trouve dans [Docker VM Runtime](/en/install/docker-vm-runtime#what-persists-where).
 
 ## Infrastructure as Code (Terraform)
 
@@ -246,6 +246,6 @@ Cette approche complète la configuration Docker ci-dessus avec des déploiement
 
 ## Étapes suivantes
 
-- Configurez les canaux de messagerie : [Canaux](/fr/channels)
-- Configurez la passerelle : [Configuration de la passerelle](/fr/gateway/configuration)
-- Gardez OpenClaw à jour : [Mise à jour](/fr/install/updating)
+- Configurez les canaux de messagerie : [Canaux](/en/channels)
+- Configurez la passerelle : [Configuration de la passerelle](/en/gateway/configuration)
+- Gardez OpenClaw à jour : [Mise à jour](/en/install/updating)

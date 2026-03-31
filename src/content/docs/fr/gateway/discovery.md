@@ -22,12 +22,12 @@ L'objectif de conception est de conserver toute la découverte/publicité résea
 - **Gateway WS (plan de contrôle)** : le point de terminaison WebSocket sur `127.0.0.1:18789` par défaut ; peut être lié au réseau local/tailnet via `gateway.bind`.
 - **Transport WS direct** : un point de terminaison Gateway WS orienté réseau local/tailnet (pas de SSH).
 - **Transport SSH (secours)** : contrôle à distance en transférant `127.0.0.1:18789` via SSH.
-- **Pont TCP hérité (déprécié/supprimé)** : ancien transport de nœud (voir [Protocole de pont](/fr/gateway/bridge-protocol)) ; n'est plus annoncé pour la découverte.
+- **Pont TCP hérité (déprécié/supprimé)** : ancien transport de nœud (voir [Protocole de pont](/en/gateway/bridge-protocol)) ; n'est plus annoncé pour la découverte.
 
 Protocol details:
 
-- [Protocole de Gateway](/fr/gateway/protocol)
-- [Protocole de pont (hérité)](/fr/gateway/bridge-protocol)
+- [Protocole de Gateway](/en/gateway/protocol)
+- [Protocole de pont (hérité)](/en/gateway/bridge-protocol)
 
 ## Pourquoi nous conservons à la fois le mode "direct" et SSH
 
@@ -51,7 +51,7 @@ Direction de la cible :
 - La **passerelle** annonce son point de terminaison WS via Bonjour.
 - Les clients naviguent et affichent une liste « choisir une passerelle », puis stockent le point de terminaison choisi.
 
-Dépannage et détails de la balise : [Bonjour](/fr/gateway/bonjour).
+Dépannage et détails de la balise : [Bonjour](/en/gateway/bonjour).
 
 #### Détails de la balise de service
 
@@ -95,7 +95,7 @@ Si la passerelle peut détecter qu'elle fonctionne sous Tailscale, elle publie `
 
 Lorsqu'il n'y a pas de route directe (ou que le mode direct est désactivé), les clients peuvent toujours se connecter via SSH en transférant le port de passerelle de bouclage.
 
-Voir [Accès distant](/fr/gateway/remote).
+Voir [Accès distant](/en/gateway/remote).
 
 ## Sélection du transport (politique client)
 
@@ -110,7 +110,7 @@ Comportement recommandé du client :
 
 La passerelle est la source de vérité pour l'admission des nœuds/clients.
 
-- Les demandes de couplage sont créées/approuvées/rejetées dans la passerelle (voir [Couplage de Gateway](/fr/gateway/pairing)).
+- Les demandes de couplage sont créées/approuvées/rejetées dans la passerelle (voir [Couplage de Gateway](/en/gateway/pairing)).
 - La passerelle applique :
   - auth (jeton / paire de clés)
   - portées/ACL (la passerelle n'est pas un proxy brut vers chaque méthode)

@@ -13,7 +13,7 @@ read_when:
 Référence de l'objet `api.runtime` injecté dans chaque plugin lors de
 l'enregistrement. Utilisez ces assistants au lieu d'importer directement les éléments internes de l'hôte.
 
-<Tip>**Vous cherchez un guide pas à pas ?** Consultez [Plugins de canal](/fr/plugins/sdk-channel-plugins) ou [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins) pour des guides détaillés présentant ces assistants dans leur contexte.</Tip>
+<Tip>**Vous cherchez un guide pas à pas ?** Consultez [Channel Plugins](/en/plugins/sdk-channel-plugins) ou [Provider Plugins](/en/plugins/sdk-provider-plugins) pour des guides détaillés qui présentent ces assistants dans leur contexte.</Tip>
 
 ```typescript
 register(api) {
@@ -335,6 +335,6 @@ Au-delà de `api.runtime`, l'objet API fournit également :
 
 ## Connexes
 
-- [Présentation du SDK](/fr/plugins/sdk-overview) -- référence de sous-chemin
-- [Points d'entrée du SDK](/fr/plugins/sdk-entrypoints) -- options `definePluginEntry`
-- [Fonctionnement interne des plugins](/fr/plugins/architecture) -- modèle de capacités et registre
+- [Vue d'ensemble du SDK](/en/plugins/sdk-overview) -- référence de sous-chemin
+- [Points d'entrée du SDK](/en/plugins/sdk-entrypoints) -- options `definePluginEntry`
+- [Plugin Internals](/en/plugins/architecture) -- capability model and registry

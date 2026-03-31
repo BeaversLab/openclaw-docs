@@ -11,13 +11,13 @@ title: "功能"
 
 <Columns>
   <Card title="Channels" icon="message-square">
-    通过单一WhatsApp使用 Telegram、Discord、iMessage 和 Gateway(网关)。
+    WhatsApp、Telegram、Discord 和 iMessage 统一通过一个 Gateway(网关)。
   </Card>
   <Card title="Plugins" icon="plug">
-    通过扩展添加 Mattermost 和更多功能。
+    通过扩展添加 Mattermost 等。
   </Card>
   <Card title="Routing" icon="route">
-    带有隔离会话的多智能体路由。
+    支持会话隔离的多代理路由。
   </Card>
   <Card title="Media" icon="image">
     图片、音频和文档的输入与输出。
@@ -26,7 +26,7 @@ title: "功能"
     Web 控制界面和 macOS 伴侣应用。
   </Card>
   <Card title="Mobile nodes" icon="smartphone">
-    支持iOS和Android节点，具备配对、语音/聊天和丰富的设备命令。
+    支持配对、语音/聊天和丰富的设备指令的 iOS 和 Android 节点。
   </Card>
 </Columns>
 
@@ -43,7 +43,7 @@ title: "功能"
 
 - 嵌入式智能体运行时，支持工具流式传输
 - 多智能体路由，每个工作区或发送者拥有隔离会话
-- 会话：直接聊天会合并到共享的 `main` 中；群组会话相互隔离
+- 会话：直接聊天合并到共享的 `main` 中；群组则相互隔离
 - 针对长响应的流式传输和分块
 
 **身份验证和提供商：**

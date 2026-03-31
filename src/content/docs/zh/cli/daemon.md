@@ -50,4 +50,4 @@ openclaw daemon uninstall
 
 ## 首选
 
-请使用 [`openclaw gateway`](/zh/cli/gateway) 查看当前文档和示例。
+请使用 [`openclaw gateway`](/en/cli/gateway) 查看当前文档和示例。

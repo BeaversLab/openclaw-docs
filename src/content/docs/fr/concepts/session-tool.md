@@ -166,7 +166,7 @@ Générer une session déléguée isolée.
 
 - Runtime par défaut : sous-agent OpenClaw (`runtime: "subagent"`).
 - Les sessions de harnais ACP utilisent `runtime: "acp"` et suivent des règles spécifiques de ciblage et de stratégie ACP.
-- Cette section se concentre sur le comportement du sous-agent, sauf indication contraire. Pour le comportement spécifique à l'ACP, voir [Agents ACP](/fr/tools/acp-agents).
+- Cette section se concentre sur le comportement du sous-agent, sauf indication contraire. Pour le comportement spécifique à l'ACP, voir [Agents ACP](/en/tools/acp-agents).
 
 Paramètres :
 

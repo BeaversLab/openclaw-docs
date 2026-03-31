@@ -13,7 +13,7 @@ Le protocole de pont est un transport de nœud **hérité** (TCP JSONL). Les nou
 doivent utiliser à la place le protocole WebSocket Gateway unifié.
 
 Si vous créez un opérateur ou un client nœud, utilisez le
-[protocole Gateway](/fr/gateway/protocol).
+[protocole Gateway](/en/gateway/protocol).
 
 **Remarque :** Les versions actuelles d'OpenClaw n'incluent plus l'écouteur de pont TCP ; ce document est conservé à titre historique.
 Les clés de configuration `bridge.*` héritées ne font plus partie du schéma de configuration.

@@ -340,5 +340,5 @@ ejecución del doctor.
 Doctor sugiere un sistema de memoria del espacio de trabajo cuando falta e imprime un consejo de copia de seguridad
 si el espacio de trabajo aún no está bajo git.
 
-Consulte [/concepts/agent-workspace](/es/concepts/agent-workspace) para obtener una guía completa sobre
+Consulte [/concepts/agent-workspace](/en/concepts/agent-workspace) para obtener una guía completa sobre
 la estructura del espacio de trabajo y la copia de seguridad en git (se recomienda GitHub o GitLab privados).

@@ -123,6 +123,6 @@ Si vous avez besoin de l'heure locale, convertissez-la en aval en utilisant le f
 
 ## Documentation connexe
 
-- [Prompt système](/fr/concepts/system-prompt)
-- [Fuseaux horaires](/fr/concepts/timezone)
-- [Messages](/fr/concepts/messages)
+- [Prompt système](/en/concepts/system-prompt)
+- [Fuseaux horaires](/en/concepts/timezone)
+- [Messages](/en/concepts/messages)

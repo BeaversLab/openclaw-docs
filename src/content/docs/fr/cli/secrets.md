@@ -38,9 +38,9 @@ Note sur le code de sortie pour CI/gates :
 
 Connexes :
 
-- Guide des secrets : [Gestion des secrets](/fr/gateway/secrets)
-- Surface des informations d'identification : [Surface des informations d'identification SecretRef](/fr/reference/secretref-credential-surface)
-- Guide de sécurité : [Sécurité](/fr/gateway/security)
+- Guide des secrets : [Gestion des secrets](/en/gateway/secrets)
+- Surface des informations d'identification : [Surface des informations d'identification SecretRef](/en/reference/secretref-credential-surface)
+- Guide de sécurité : [Sécurité](/en/gateway/security)
 
 ## Recharger l'instantané d'exécution
 
@@ -127,7 +127,7 @@ Notes :
 - Vous ne pouvez pas combiner `--providers-only` avec `--skip-provider-setup`.
 - `configure` cible les champs contenant des secrets dans `openclaw.json` ainsi que `auth-profiles.json` pour la portée de l'agent sélectionné.
 - `configure` prend en charge la création directe de nouveaux mappages `auth-profiles.json` dans le flux du sélecteur.
-- Surface prise en charge canonique : [SecretRef Credential Surface](/fr/reference/secretref-credential-surface).
+- Surface prise en charge canonique : [SecretRef Credential Surface](/en/reference/secretref-credential-surface).
 - Il effectue une résolution préliminaire avant l'application.
 - Si la pré-vérification/l'application inclut des refs exec, gardez `--allow-exec` défini pour ces deux étapes.
 - Les plans générés utilisent par défaut les options de nettoyage (`scrubEnv`, `scrubAuthProfilesForProviderTargets`, `scrubLegacyAuthJson` tous activés).
@@ -162,7 +162,7 @@ Comportement d'exécution :
 
 Détails du contrat de plan (chemins cibles autorisés, règles de validation et sémantique d'échec) :
 
-- [Secrets Apply Plan Contract](/fr/gateway/secrets-plan-contract)
+- [Secrets Apply Plan Contract](/en/gateway/secrets-plan-contract)
 
 Ce que `apply` peut mettre à jour :
 

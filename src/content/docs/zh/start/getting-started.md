@@ -17,7 +17,7 @@ title: "入门指南"
 - **Node.js** — 推荐 Node 24（也支持 Node 22.14+）
 - 来自模型提供商（API、Anthropic、Google 等）的 **OpenAI 密钥** — 新手引导将会提示您
 
-<Tip>使用 `node --version` 检查您的 Node 版本。**Windows 用户：** 原生 Windows 和 WSL2 均 受支持。WSL2 更稳定，推荐用于完整体验。请参阅 [Windows](/zh/platforms/windows)。需要安装 Node？请参阅 [Node 设置](/zh/install/node)。</Tip>
+<Tip>使用 `node --version` 检查你的 Node 版本。 **Windows 用户：** 原生 Windows 和 WSL2 均受支持。WSL2 更加稳定，推荐用于完整体验。参见 [Windows](/en/platforms/windows)。 需要安装 Node？参见 [Node setup](/en/install/node)。</Tip>
 
 ## 快速设置
 
@@ -30,7 +30,7 @@ title: "入门指南"
         ```
         <img
   src="/assets/install-script.svg"
-  alt="安装脚本过程"
+  alt="Install Script Process"
   className="rounded-lg"
 />
       </Tab>
@@ -42,7 +42,7 @@ title: "入门指南"
     </Tabs>
 
     <Note>
-    其他安装方法（Docker、Nix、npm）：[安装](/zh/install)。
+    其他安装方式 (Docker，Nix，npm)：[Install](/en/install)。
     </Note>
 
   </Step>
@@ -51,10 +51,9 @@ title: "入门指南"
     openclaw onboard --install-daemon
     ```
 
-    向导将引导您选择模型提供商，设置 API 密钥，
-    并配置 Gateway(网关)。这大约需要 2 分钟。
+    向导将指引你选择模型提供商，设置 API 密钥，以及配置 Gateway(网关)。大约需要 2 分钟。
 
-    请参阅 [新手引导 (CLI)](/zh/start/wizard) 获取完整参考。
+    完整参考请参见 [新手引导 (CLI)](/en/start/wizard)。
 
   </Step>
   <Step title="验证 Gateway(网关) 是否正在运行">
@@ -73,11 +72,11 @@ title: "入门指南"
     这将在浏览器中打开控制 UI。如果能加载，说明一切正常。
 
   </Step>
-  <Step title="Send your first message">
-    在控制 UI 聊天中输入一条消息，你应该会收到 AI 的回复。
+  <Step title="发送第一条消息">
+    在 Control UI 聊天中输入一条消息，你应该会收到 AI 的回复。
 
-    想改用手机聊天吗？设置最快的渠道是
-    [Telegram](/zh/channels/telegram)（只需一个 bot 令牌）。查看 [Channels](/zh/channels)
+    想在手机上聊天？设置最快的渠道是
+    [Telegram](/en/channels/telegram) (只需一个 bot token)。参见 [Channels](/en/channels)
     了解所有选项。
 
   </Step>
@@ -86,27 +85,27 @@ title: "入门指南"
 ## What to do next
 
 <Columns>
-  <Card title="Connect a 渠道" href="/zh/channels" icon="message-square">
-    WhatsApp、Telegram、Discord、iMessage 等。
+  <Card title="连接渠道" href="/en/channels" icon="message-square">
+    WhatsApp，Telegram，Discord，iMessage 等等。
   </Card>
-  <Card title="Pairing and safety" href="/zh/channels/pairing" icon="shield">
+  <Card title="配对与安全" href="/en/channels/pairing" icon="shield">
     控制谁可以向你的代理发送消息。
   </Card>
-  <Card title="Configure the Gateway(网关)" href="/zh/gateway/configuration" icon="settings">
-    模型、工具、沙盒和高级设置。
+  <Card title="配置 Gateway" href="/en/gateway/configuration" icon="settings">
+    模型、工具、沙箱和高级设置。
   </Card>
-  <Card title="Browse tools" href="/zh/tools" icon="wrench">
+  <Card title="浏览工具" href="/en/tools" icon="wrench">
     浏览器、执行、网络搜索、技能和插件。
   </Card>
 </Columns>
 
-<Accordion title="Advanced: 环境变量">
-  如果你以服务账户身份运行 OpenClaw 或想要自定义路径：
+<Accordion title="高级：环境变量">
+  如果您将 OpenClaw 作为服务帐户运行或想要自定义路径：
 
 - `OPENCLAW_HOME` — 用于内部路径解析的主目录
 - `OPENCLAW_STATE_DIR` — 覆盖状态目录
 - `OPENCLAW_CONFIG_PATH` — 覆盖配置文件路径
 
-完整参考：[Environment variables](/zh/help/environment)。
+完整参考：[环境变量](/en/help/environment)。
 
 </Accordion>

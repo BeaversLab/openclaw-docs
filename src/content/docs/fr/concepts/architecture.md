@@ -46,7 +46,7 @@ title: "Gateway Architecture"
 
 Détails du protocole :
 
-- [Protocole Gateway](/fr/gateway/protocol)
+- [Protocole Gateway](/en/gateway/protocol)
 
 ### WebChat
 
@@ -95,7 +95,7 @@ sequenceDiagram
 - Les connexions **non locales** nécessitent toujours une approbation explicite.
 - L'auth Gateway (`gateway.auth.*`) s'applique toujours à **toutes** les connexions, locales ou distantes.
 
-Détails : [Protocole Gateway](/fr/gateway/protocol), [Appairage](/fr/channels/pairing), [Sécurité](/fr/gateway/security).
+Détails : [Protocole Gateway](/en/gateway/protocol), [Appairage](/en/channels/pairing), [Sécurité](/en/gateway/security).
 
 ## Typage du protocole et génération de code
 

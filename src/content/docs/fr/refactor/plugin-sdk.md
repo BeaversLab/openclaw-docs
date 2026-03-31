@@ -178,7 +178,7 @@ Notes :
 - Les nouveaux modèles de connecteurs ne dépendent que du SDK + runtime.
 - Les plugins externes peuvent être développés et mis à jour sans accès au code source du noyau.
 
-Documentation connexe : [Plugins](/fr/tools/plugin), [Canaux](/fr/channels/index), [Configuration](/fr/gateway/configuration).
+Documentation connexe : [Plugins](/en/tools/plugin), [Canaux](/en/channels/index), [Configuration](/en/gateway/configuration).
 
 ## Coutures détenues par le canal implémentées
 

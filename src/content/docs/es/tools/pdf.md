@@ -99,7 +99,7 @@ Detalles de la reserva:
 }
 ```
 
-Consulte [Referencia de configuración](/es/gateway/configuration-reference) para obtener detalles completos de los campos.
+Consulte [Referencia de configuración](/en/gateway/configuration-reference) para obtener detalles completos de los campos.
 
 ## Detalles de la salida
 

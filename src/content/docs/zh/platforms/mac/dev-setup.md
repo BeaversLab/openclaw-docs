@@ -20,7 +20,7 @@ title: "macOS 开发设置"
 
 安装项目范围内的依赖项：
 
-```exec
+```bash
 pnpm install
 ```
 
@@ -28,7 +28,7 @@ pnpm install
 
 要构建 macOS 应用并将其打包为 `dist/OpenClaw.app`，请运行：
 
-```exec
+```bash
 ./scripts/package-mac-app.sh
 ```
 
@@ -51,7 +51,7 @@ macOS 应用期望安装全局 `openclaw` CLI 来管理后台任务。
 
 或者，手动安装：
 
-```exec
+```bash
 npm install -g openclaw@<version>
 ```
 
@@ -68,7 +68,7 @@ macOS 应用构建需要最新的 macOS SDK 和 Swift 6.2 工具链。
 
 **检查：**
 
-```exec
+```bash
 xcodebuild -version
 xcrun swift --version
 ```
@@ -83,7 +83,7 @@ xcrun swift --version
 
 1. 重置 TCC 权限：
 
-   ```exec
+   ```bash
    tccutil reset All ai.openclaw.mac.debug
    ```
 
@@ -93,7 +93,7 @@ xcrun swift --version
 
 如果网关状态一直停留在“启动中...”，请检查是否有僵尸进程占用了端口：
 
-```exec
+```bash
 openclaw gateway status
 openclaw gateway stop
 

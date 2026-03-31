@@ -12,8 +12,8 @@ Gérer les hooks d'agent (automatisations basées sur les événements pour les 
 
 Connexe :
 
-- Hooks : [Hooks](/fr/automation/hooks)
-- Hooks de plugin : [Plugin hooks](/fr/plugins/architecture#provider-runtime-hooks)
+- Hooks : [Hooks](/en/automation/hooks)
+- Hooks de plugin : [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks)
 
 ## Lister tous les hooks
 
@@ -264,7 +264,7 @@ openclaw hooks enable session-memory
 
 **Sortie :** `~/.openclaw/workspace/memory/YYYY-MM-DD-slug.md`
 
-**Voir :** [documentation session-memory](/fr/automation/hooks#session-memory)
+**Voir :** [documentation session-memory](/en/automation/hooks#session-memory)
 
 ### bootstrap-extra-files
 
@@ -276,7 +276,7 @@ Injecte des fichiers d'amorçage supplémentaires (par exemple monorepo-local `A
 openclaw hooks enable bootstrap-extra-files
 ```
 
-**Voir :** [documentation bootstrap-extra-files](/fr/automation/hooks#bootstrap-extra-files)
+**Voir :** [documentation bootstrap-extra-files](/en/automation/hooks#bootstrap-extra-files)
 
 ### command-logger
 
@@ -303,7 +303,7 @@ cat ~/.openclaw/logs/commands.log | jq .
 grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 ```
 
-**Voir :** [documentation command-logger](/fr/automation/hooks#command-logger)
+**Voir :** [documentation command-logger](/en/automation/hooks#command-logger)
 
 ### boot-md
 
@@ -317,4 +317,4 @@ Exécute `BOOT.md` lorsque la passerelle démarre (après le démarrage des cana
 openclaw hooks enable boot-md
 ```
 
-**Voir :** [documentation boot-md](/fr/automation/hooks#boot-md)
+**Voir :** [documentation boot-md](/en/automation/hooks#boot-md)

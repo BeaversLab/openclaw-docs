@@ -11,7 +11,7 @@ read_when:
 Las habilidades enseñan al agente cómo y cuándo utilizar las herramientas. Cada habilidad es un directorio
 que contiene un archivo `SKILL.md` con frontmatter YAML e instrucciones en markdown.
 
-Para obtener información sobre cómo se cargan y priorizan las habilidades, consulte [Habilidades](/es/tools/skills).
+Para obtener información sobre cómo se cargan y priorizan las habilidades, consulte [Habilidades](/en/tools/skills).
 
 ## Crear tu primera habilidad
 
@@ -111,7 +111,7 @@ El frontmatter YAML admite estos campos:
 
 ## Relacionado
 
-- [Referencia de habilidades](/es/tools/skills) — reglas de carga, precedencia y filtrado
-- [Configuración de habilidades](/es/tools/skills-config) — esquema de configuración `skills.*`
-- [ClawHub](/es/tools/clawhub) — registro público de habilidades
-- [Creación de complementos](/es/plugins/building-plugins) — los complementos pueden incluir habilidades
+- [Referencia de habilidades](/en/tools/skills) — reglas de carga, precedencia y filtrado
+- [Configuración de habilidades](/en/tools/skills-config) — esquema de configuración `skills.*`
+- [ClawHub](/en/tools/clawhub) — registro público de habilidades
+- [Creación de complementos](/en/plugins/building-plugins) — los complementos pueden incluir habilidades

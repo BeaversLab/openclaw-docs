@@ -9,7 +9,7 @@ read_when:
 
 # Node.js
 
-OpenClaw requiere **Node 22.14 o más reciente**. **Node 24 es el entorno de ejecución predeterminado y recomendado** para instalaciones, CI y flujos de trabajo de lanzamiento. Node 22 sigue siendo compatible a través de la línea LTS activa. El [script de instalación](/es/install#alternative-install-methods) detectará e instalará Node automáticamente; esta página es para cuando desees configurar Node tú mismo y asegurarte de que todo esté conectado correctamente (versiones, PATH, instalaciones globales).
+OpenClaw requiere **Node 22.14 o más reciente**. **Node 24 es el entorno de ejecución predeterminado y recomendado** para instalaciones, CI y flujos de trabajo de lanzamiento. Node 22 sigue siendo compatible a través de la línea LTS activa. El [script de instalación](/en/install#alternative-install-methods) detectará e instalará Node automáticamente; esta página es para cuando desees configurar Node tú mismo y asegurarte de que todo esté conectado correctamente (versiones, PATH, instalaciones globales).
 
 ## Verifica tu versión
 

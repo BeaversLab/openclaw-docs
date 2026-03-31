@@ -13,7 +13,7 @@ Administre el servidor de control del navegador de OpenClaw y ejecute acciones d
 
 Relacionado:
 
-- Herramienta de navegador + API: [Herramienta de navegador](/es/tools/browser)
+- Herramienta de navegador + API: [Herramienta de navegador](/en/tools/browser)
 
 ## Opciones comunes
 
@@ -103,4 +103,4 @@ Si la puerta de enlace se ejecuta en una máquina diferente a la del navegador, 
 
 Usa `gateway.nodes.browser.mode` para controlar el enrutamiento automático y `gateway.nodes.browser.node` para anclar un nodo específico si hay varios conectados.
 
-Seguridad + configuración remota: [Herramienta de navegador](/es/tools/browser), [Acceso remoto](/es/gateway/remote), [Tailscale](/es/gateway/tailscale), [Seguridad](/es/gateway/security)
+Seguridad + configuración remota: [Herramienta de navegador](/en/tools/browser), [Acceso remoto](/en/gateway/remote), [Tailscale](/en/gateway/tailscale), [Seguridad](/en/gateway/security)

@@ -29,7 +29,7 @@ read_when:
 
 ### 为本威胁模型做贡献
 
-这是一份由 OpenClaw 社区维护的活文档。请参阅 [CONTRIBUTING-THREAT-MODEL.md](/zh/security/CONTRIBUTING-THREAT-MODEL) 了解贡献指南：
+这是一份由 OpenClaw 社区维护的活文档。请参阅 [CONTRIBUTING-THREAT-MODEL.md](/en/security/CONTRIBUTING-THREAT-MODEL) 了解贡献指南：
 
 - 报告新威胁
 - 更新现有威胁

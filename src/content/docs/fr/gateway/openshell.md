@@ -11,7 +11,7 @@ read_when:
 
 OpenShell est un backend de bac à sable géré pour OpenClaw. Au lieu d'exécuter des conteneurs Docker en local, OpenClaw délègue le cycle de vie du bac à sable au `openshell` CLI, qui provisionne des environnements distants avec une exécution de commandes basée sur SSH.
 
-Le plugin OpenShell réutilise le même transport SSH de base et le même pont de système de fichiers distant que le [backend SSH générique](/fr/gateway/sandboxing#ssh-backend). Il ajoute un cycle de vie spécifique à OpenShell (`sandbox create/get/delete`, `sandbox ssh-config`) et un mode d'espace de travail `mirror` facultatif.
+Le plugin OpenShell réutilise le même transport SSH de base et le même pont de système de fichiers distant que le [backend SSH générique](/en/gateway/sandboxing#ssh-backend). Il ajoute un cycle de vie spécifique à OpenShell (`sandbox create/get/delete`, `sandbox ssh-config`) et un mode d'espace de travail `mirror` facultatif.
 
 ## Prérequis
 
@@ -135,7 +135,7 @@ Toute la configuration OpenShell se trouve sous `plugins.entries.openshell.confi
 
 Les paramètres au niveau du sandbox (`mode`, `scope`, `workspaceAccess`) sont configurés sous
 `agents.defaults.sandbox` comme pour tout backend. Voir
-[Sandboxing](/fr/gateway/sandboxing) pour la matrice complète.
+[Sandboxing](/en/gateway/sandboxing) pour la matrice complète.
 
 ## Exemples
 
@@ -289,7 +289,7 @@ openclaw sandbox recreate --all
 
 ## Voir aussi
 
-- [Sandboxing](/fr/gateway/sandboxing) -- modes, portées et comparaison des backends
-- [Sandbox vs Tool Policy vs Elevated](/fr/gateway/sandbox-vs-tool-policy-vs-elevated) -- débogage des outils bloqués
-- [Multi-Agent Sandbox and Tools](/fr/tools/multi-agent-sandbox-tools) -- substitutions par agent
-- [Sandbox CLI](/fr/cli/sandbox) -- commandes `openclaw sandbox`
+- [Sandboxing](/en/gateway/sandboxing) -- modes, portées et comparaison des backends
+- [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- débogage des outils bloqués
+- [Multi-Agent Sandbox and Tools](/en/tools/multi-agent-sandbox-tools) -- substitutions par agent
+- [Sandbox CLI](/en/cli/sandbox) -- commandes `openclaw sandbox`

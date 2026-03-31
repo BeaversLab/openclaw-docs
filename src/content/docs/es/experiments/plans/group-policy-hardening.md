@@ -36,5 +36,5 @@ falsos negativos al decidir si responder en MDs o grupos.
 
 ## Documentos relacionados
 
-- [Chats de grupo](/es/concepts/groups)
-- [Proveedor de Telegram](/es/channels/telegram)
+- [Chats de grupo](/en/concepts/groups)
+- [Proveedor de Telegram](/en/channels/telegram)

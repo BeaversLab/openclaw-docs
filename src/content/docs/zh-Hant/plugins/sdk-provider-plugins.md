@@ -14,7 +14,7 @@ read_when:
 (LLM) 新增至 OpenClaw。最後，您將擁有一個包含模型目錄、
 API 金鑰驗證以及動態模型解析的提供者。
 
-<Info>如果您之前尚未建置過任何 OpenClaw 外掛程式，請先閱讀[入門指南](/en/plugins/building-plugins)，了解基本的套件結構和資訊清單設定。</Info>
+<Info>如果您之前尚未建立過任何 OpenClaw 外掛程式，請先閱讀 [Getting Started](/en/plugins/building-plugins) 以了解基本的套件 結構與 manifest 設定。</Info>
 
 ## 逐步演练
 

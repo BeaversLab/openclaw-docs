@@ -8,6 +8,17 @@ collect:
     - zh-CN/**
     - .generated/**
     - .i18n/*.tm.jsonl
+    - install/index.md
+
+formatSafety:
+  jsx:
+    translatableAttrs:
+      - title
+      - alt
+      - aria-label
+      - data-title
+      - summary
+      - icon
 
 provider:
   baseUrl: https://open.bigmodel.cn/api/coding/paas/v4

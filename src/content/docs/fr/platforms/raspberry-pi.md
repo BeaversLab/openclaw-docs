@@ -178,7 +178,7 @@ Ensuite, ouvrez l'URL du tableau de bord affichée dans votre navigateur local.
 Si l'interface utilisateur demande une authentification, collez le jeton de `gateway.auth.token`
 (ou `OPENCLAW_GATEWAY_TOKEN`) dans les paramètres de l'interface de contrôle.
 
-Pour un accès à distance permanent, voir [Tailscale](/fr/gateway/tailscale).
+Pour un accès à distance permanent, voir [Tailscale](/en/gateway/tailscale).
 
 ---
 
@@ -405,8 +405,8 @@ echo 'wireless-power off' | sudo tee -a /etc/network/interfaces
 
 ## Voir aussi
 
-- [Guide Linux](/fr/platforms/linux) — configuration générale Linux
-- [Guide DigitalOcean](/fr/platforms/digitalocean) — alternative cloud
-- [Guide Hetzner](/fr/install/hetzner) — configuration Docker
-- [Tailscale](/fr/gateway/tailscale) — accès à distance
-- [Nœuds](/fr/nodes) — associez votre ordinateur portable/téléphone à la passerelle Pi
+- [Guide Linux](/en/platforms/linux) — configuration générale Linux
+- [Guide DigitalOcean](/en/platforms/digitalocean) — alternative cloud
+- [Guide Hetzner](/en/install/hetzner) — configuration Docker
+- [Tailscale](/en/gateway/tailscale) — accès à distance
+- [Nœuds](/en/nodes) — associez votre ordinateur portable/téléphone à la passerelle Pi

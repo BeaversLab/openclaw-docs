@@ -15,13 +15,13 @@ title: "Aplicación de Android"
 
 - Rol: aplicación de nodo complementario (Android no aloja el Gateway).
 - Gateway requerido: sí (ejecútelo en macOS, Linux o Windows a través de WSL2).
-- Instalación: [Primeros pasos](/es/start/getting-started) + [Emparejamiento](/es/channels/pairing).
-- Gateway: [Manual de operaciones](/es/gateway) + [Configuración](/es/gateway/configuration).
-  - Protocolos: [Protocolo de Gateway](/es/gateway/protocol) (nodos + plano de control).
+- Instalación: [Primeros pasos](/en/start/getting-started) + [Emparejamiento](/en/channels/pairing).
+- Gateway: [Manual de operaciones](/en/gateway) + [Configuración](/en/gateway/configuration).
+  - Protocolos: [Protocolo de Gateway](/en/gateway/protocol) (nodos + plano de control).
 
 ## Control del sistema
 
-El control del sistema (launchd/systemd) se encuentra en el host Gateway. Consulte [Gateway](/es/gateway).
+El control del sistema (launchd/systemd) se encuentra en el host Gateway. Consulte [Gateway](/en/gateway).
 
 ## Manual de conexión
 
@@ -61,7 +61,7 @@ Desde la máquina del gateway:
 dns-sd -B _openclaw-gw._tcp local.
 ```
 
-Más notas de depuración: [Bonjour](/es/gateway/bonjour).
+Más notas de depuración: [Bonjour](/en/gateway/bonjour).
 
 #### Descubrimiento de Tailnet (Viena ⇄ Londres) mediante DNS-SD unicast
 
@@ -70,7 +70,7 @@ El descubrimiento de NSD/mDNS de Android no cruzará redes. Si su nodo de Androi
 1. Configure una zona DNS-SD (ejemplo `openclaw.internal.`) en el host de la puerta de enlace y publique registros `_openclaw-gw._tcp`.
 2. Configure el DNS dividido de Tailscale para su dominio elegido apuntando a ese servidor DNS.
 
-Detalles y configuración de ejemplo de CoreDNS: [Bonjour](/es/gateway/bonjour).
+Detalles y configuración de ejemplo de CoreDNS: [Bonjour](/en/gateway/bonjour).
 
 ### 3) Conectar desde Android
 
@@ -96,7 +96,7 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-Detalles del emparejamiento: [Emparejamiento](/es/channels/pairing).
+Detalles del emparejamiento: [Emparejamiento](/en/channels/pairing).
 
 ### 5) Verificar que el nodo está conectado
 
@@ -151,7 +151,7 @@ Comandos de cámara (solo en primer plano; restringidos por permisos):
 - `camera.snap` (jpg)
 - `camera.clip` (mp4)
 
-Consulte [Nodo de cámara](/es/nodes/camera) para conocer los parámetros y las herramientas de CLI.
+Consulte [Nodo de cámara](/en/nodes/camera) para conocer los parámetros y las herramientas de CLI.
 
 ### 8) Voz + superficie de comandos de Android ampliada
 

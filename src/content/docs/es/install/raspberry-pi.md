@@ -37,7 +37,7 @@ Ejecute un Gateway de OpenClaw persistente y siempre activo en una Raspberry Pi.
 
   </Step>
 
-<Step title="Conectar vía SSH">```bash ssh user@gateway-host ```</Step>
+<Step title="Conectarse a través de SSH">```bash ssh user@gateway-host ```</Step>
 
   <Step title="Actualizar el sistema">
     ```bash
@@ -93,7 +93,7 @@ Ejecute un Gateway de OpenClaw persistente y siempre activo en una Raspberry Pi.
     ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
     ```
 
-    Abra la URL impresa en su navegador local. Para un acceso remoto permanente, consulte [Integración con Tailscale](/es/gateway/tailscale).
+    Abra la URL impresa en su navegador local. Para un acceso remoto permanente, consulte [Integración con Tailscale](/en/gateway/tailscale).
 
   </Step>
 </Steps>
@@ -134,6 +134,6 @@ sudo systemctl disable bluetooth
 
 ## Siguientes pasos
 
-- [Canales](/es/channels) -- conecte Telegram, WhatsApp, Discord y más
-- [Configuración del Gateway](/es/gateway/configuration) -- todas las opciones de configuración
-- [Actualización](/es/install/updating) -- mantener OpenClaw actualizado
+- [Canales](/en/channels) -- conecte Telegram, WhatsApp, Discord y más
+- [Configuración del Gateway](/en/gateway/configuration) -- todas las opciones de configuración
+- [Actualización](/en/install/updating) -- mantener OpenClaw actualizado

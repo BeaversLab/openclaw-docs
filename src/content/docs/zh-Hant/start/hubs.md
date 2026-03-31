@@ -7,7 +7,7 @@ title: "文件中心"
 
 # 文件中心
 
-<Note>如果您是 OpenClaw 新手，請從[入門指南](/en/start/getting-started)開始。</Note>
+<Note>如果您剛接觸 OpenClaw，請從[入門指南](/en/start/getting-started)開始。</Note>
 
 使用這些中心探索每一個頁面，包括未出現在左側導航中的深入探討和參考文件。
 

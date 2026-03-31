@@ -76,7 +76,7 @@ Les sessions de sous-agents n'injectent que `AGENTS.md` et `TOOLS.md` (les autre
 
 Les crochets internes peuvent intercepter cette étape via `agent:bootstrap` pour modifier ou remplacer les fichiers de bootstrap injectés (par exemple, échanger `SOUL.md` pour une personnalité alternative).
 
-Pour inspecter la contribution de chaque fichier injecté (brut par rapport à injecté, troncation, plus la surcharge du schéma d'outil), utilisez `/context list` ou `/context detail`. Voir [Context](/fr/concepts/context).
+Pour inspecter la contribution de chaque fichier injecté (brut par rapport à injecté, troncation, plus la surcharge du schéma d'outil), utilisez `/context list` ou `/context detail`. Voir [Context](/en/concepts/context).
 
 ## Gestion du temps
 
@@ -89,7 +89,7 @@ Configurer avec :
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat` (`auto` | `12` | `24`)
 
-Voir [Date & Time](/fr/date-time) pour les détails complets du comportement.
+Voir [Date & Time](/en/date-time) pour les détails complets du comportement.
 
 ## Skills
 

@@ -64,7 +64,7 @@ Vous verrez :
 - `/status` affichant `🧹 Compactions: <count>`
 
 Avant la compactage, OpenClaw peut exécuter un tour de **silent memory flush** pour stocker
-des notes durables sur le disque. Voir [Memory](/fr/concepts/memory) pour les détails et la configuration.
+des notes durables sur le disque. Voir [Memory](/en/concepts/memory) pour les détails et la configuration.
 
 ## Compaction manuelle
 
@@ -83,7 +83,7 @@ La fenêtre de contexte est spécifique au modèle. OpenClaw utilise la définit
 - **Compaction** : résume et **persiste** en JSONL.
 - **Élagage de session** : supprime uniquement les anciens **résultats d'outils**, **en mémoire**, par requête.
 
-Voir [/concepts/session-pruning](/fr/concepts/session-pruning) pour les détails sur l'élagage (pruning).
+Voir [/concepts/session-pruning](/en/concepts/session-pruning) pour les détails sur l'élagage (pruning).
 
 ## Compaction côté serveur OpenAI
 
@@ -93,12 +93,12 @@ OpenClaw prend également en charge les indications de compaction côté serveur
 - Compaction côté serveur : OpenAI compacte le contexte côté provider lorsque
   `store` + `context_management` sont activés.
 
-Voir [OpenAI provider](/fr/providers/openai) pour les paramètres de modèle et les substitutions.
+Voir [OpenAI provider](/en/providers/openai) pour les paramètres de modèle et les substitutions.
 
 ## Moteurs de contexte personnalisés
 
 Le comportement de compactage est géré par le
-[context engine](/fr/concepts/context-engine) actif. Le moteur hérité utilise la synthèse
+[context engine](/en/concepts/context-engine) actif. Le moteur hérité utilise la synthèse
 intégrée décrite ci-dessus. Les moteurs de plugins (sélectionnés via
 `plugins.slots.contextEngine`) peuvent implémenter n'importe quelle stratégie de compactage — synthèses DAG,
 récupération vectorielle, condensation incrémentale, etc.

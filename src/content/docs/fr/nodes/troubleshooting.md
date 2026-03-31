@@ -107,8 +107,8 @@ Si toujours bloqué :
 
 Connexes :
 
-- [/nodes/index](/fr/nodes/index)
-- [/nodes/camera](/fr/nodes/camera)
-- [/nodes/location-command](/fr/nodes/location-command)
-- [/tools/exec-approvals](/fr/tools/exec-approvals)
-- [/gateway/pairing](/fr/gateway/pairing)
+- [/nodes/index](/en/nodes/index)
+- [/nodes/camera](/en/nodes/camera)
+- [/nodes/location-command](/en/nodes/location-command)
+- [/tools/exec-approvals](/en/tools/exec-approvals)
+- [/gateway/pairing](/en/gateway/pairing)

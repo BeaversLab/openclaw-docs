@@ -10,7 +10,7 @@ sidebarTitle: "添加功能"
 
 # 添加功能
 
-<Info>这是一份面向 OpenClaw 核心开发者的**贡献者指南**。如果您正在构建外部 插件，请参阅[构建插件](/zh/plugins/building-plugins)。</Info>
+<Info>这是面向 OpenClaw 核心开发者的**贡献者指南**。如果您正在 构建外部插件，请参阅[构建插件](/en/plugins/building-plugins) 。</Info>
 
 当 OpenClaw 需要一个新领域（例如图像生成、视频
 生成或某些未来的供应商支持的功能区域）时，请使用本指南。

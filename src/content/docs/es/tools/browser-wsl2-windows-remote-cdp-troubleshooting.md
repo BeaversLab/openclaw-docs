@@ -73,7 +73,7 @@ Use:
 
 `http://127.0.0.1:18789/`
 
-No use una IP LAN por defecto para la Interfaz de Control. HTTP simple en una dirección LAN o tailnet puede desencadenar un comportamiento de origen inseguro/autenticación de dispositivo que no está relacionado con el CDP en sí. Vea [Interfaz de Control](/es/web/control-ui).
+No use una IP LAN por defecto para la Interfaz de Control. HTTP simple en una dirección LAN o tailnet puede desencadenar un comportamiento de origen inseguro/autenticación de dispositivo que no está relacionado con el CDP en sí. Vea [Interfaz de Control](/en/web/control-ui).
 
 ## Valide en capas
 
@@ -158,7 +158,7 @@ Luego verifique:
 
 Página útil:
 
-- [Interfaz de Control](/es/web/control-ui)
+- [Interfaz de Control](/en/web/control-ui)
 
 ### Capa 5: Verifique el control del navegador de extremo a extremo
 

@@ -10,6 +10,10 @@ title: "Búsqueda Grok"
 
 OpenClaw admite Grok como proveedor `web_search`, utilizando respuestas fundamentadas en la web de xAI para producir respuestas sintetizadas por IA respaldadas por resultados de búsqueda en vivo con citas.
 
+La misma `XAI_API_KEY` también puede alimentar la herramienta integrada `x_search` para la búsqueda de publicaciones de X (anteriormente Twitter). Si almacena la clave bajo `plugins.entries.xai.config.webSearch.apiKey`, OpenClaw ahora la reutiliza como alternativa para el proveedor de modelo xAI incluido también.
+
+Para métricas de X a nivel de publicación, como republicaciones, respuestas, marcadores o vistas, prefiera `x_search` con la URL exacta de la publicación o el ID de estado en lugar de una consulta de búsqueda amplia.
+
 ## Obtener una clave de API
 
 <Steps>
@@ -17,7 +21,7 @@ OpenClaw admite Grok como proveedor `web_search`, utilizando respuestas fundamen
     Obtenga una clave de API de [xAI](https://console.x.ai/).
   </Step>
   <Step title="Almacenar la clave">
-    Establezca `XAI_API_KEY` en el entorno de Gateway, o configure mediante:
+    Establezca `XAI_API_KEY` en el entorno de Gateway, o configure a través de:
 
     ```bash
     openclaw configure --section web
@@ -51,19 +55,21 @@ OpenClaw admite Grok como proveedor `web_search`, utilizando respuestas fundamen
 }
 ```
 
-**Alternativa de entorno:** establezca `XAI_API_KEY` en el entorno de Gateway.
+**Alternativa de entorno:** configure `XAI_API_KEY` en el entorno de Gateway.
 Para una instalación de puerta de enlace, colóquela en `~/.openclaw/.env`.
 
 ## Cómo funciona
 
-Grok utiliza respuestas fundamentadas en la web de xAI para sintetizar respuestas con citas en línea, similar al enfoque de fundamentación en la búsqueda de Google de Gemini.
+Grok utiliza respuestas fundamentadas en la web de xAI para sintetizar respuestas con
+citas en línea, de manera similar al enfoque de fundamentación en Google Search de Gemini.
 
-## Parámetros admitidos
+## Parámetros compatibles
 
 La búsqueda de Grok admite los parámetros estándar `query` y `count`.
-Los filtros específicos del proveedor no son compatibles actualmente.
+Actualmente no se admiten filtros específicos del proveedor.
 
 ## Relacionado
 
-- [Descripción general de la búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
-- [Búsqueda Gemini](/es/tools/gemini-search) -- respuestas sintetizadas por IA mediante la fundamentación de Google
+- [Información general de Web Search](/en/tools/web) -- todos los proveedores y detección automática
+- [x_search en Web Search](/en/tools/web#x_search) -- búsqueda de X de primera clase a través de xAI
+- [Gemini Search](/en/tools/gemini-search) -- respuestas sintetizadas por IA a través de Google grounding

@@ -9,8 +9,8 @@ title: "Models CLI"
 
 # 模型 CLI
 
-请参阅 [/concepts/模型-failover](/zh/concepts/model-failover) 了解身份配置文件轮换、冷却期以及它们如何与回退机制交互。
-快速提供商概览 + 示例：[/concepts/模型-providers](/zh/concepts/model-providers)。
+请参阅 [/concepts/模型-failover](/en/concepts/model-failover) 了解身份配置文件轮换、冷却期以及它们如何与回退机制交互。
+快速提供商概览 + 示例：[/concepts/模型-providers](/en/concepts/model-providers)。
 
 ## 模型选择的工作原理
 
@@ -25,7 +25,7 @@ OpenClaw 按以下顺序选择模型：
 - `agents.defaults.models` 是 OpenClaw 可以使用的模型的允许列表/目录（以及别名）。
 - `agents.defaults.imageModel` **仅当** 主模型无法接受图像时才会使用。
 - `agents.defaults.imageGenerationModel` 由共享的图像生成功能使用。如果省略，`image_generate` 仍然可以从兼容的支持身份验证的图像生成插件中推断出提供商默认值。如果您设置了特定的提供商/模型，请同时配置该提供商的 auth/API 密钥。
-- 每个代理的默认值可以通过 `agents.list[].model` 加上绑定来覆盖 `agents.defaults.model`（请参阅 [/concepts/multi-agent](/zh/concepts/multi-agent)）。
+- 每个代理的默认值可以通过 `agents.list[].model` 加上绑定来覆盖 `agents.defaults.model`（请参阅 [/concepts/multi-agent](/en/concepts/multi-agent)）。
 
 ## 快速模型策略
 
@@ -54,7 +54,7 @@ openclaw onboard
 
 模型引用会规范化为小写。像 `z.ai/*` 这样的提供商别名会规范化为 `zai/*`。
 
-提供商配置示例（包括 OpenCode）位于 [/providers/opencode](/zh/providers/opencode)。
+提供商配置示例（包括 OpenCode）位于 [/providers/opencode](/en/providers/opencode)。
 
 ## "Model is not allowed"（以及回复停止的原因）
 
@@ -106,7 +106,7 @@ Model "provider/model" is not allowed. Use /model to list available models.
 - 如果模型 ID 本身包含 `/` (OpenRouter 风格)，您必须包含提供商前缀（例如：`/model openrouter/moonshotai/kimi-k2`）。
 - 如果您省略提供商，OpenClaw 会将输入视为别名或**默认提供商**的模型（仅在模型 ID 中没有 `/` 时有效）。
 
-完整的命令行为/配置：[斜杠命令](/zh/tools/slash-commands)。
+完整的命令行为/配置：[斜杠命令](/en/tools/slash-commands)。
 
 ## CLI 命令
 

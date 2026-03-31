@@ -660,7 +660,7 @@ Voir [Obtenir les IDs de groupe/utilisateur](#get-groupuser-ids) pour des consei
 
 ## Référence de configuration
 
-Configuration complète : [Configuration Gateway](/fr/gateway/configuration)
+Configuration complète : [Configuration Gateway](/en/gateway/configuration)
 
 Options principales :
 

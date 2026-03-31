@@ -92,6 +92,6 @@ await web_search({
 
 ## Relacionado
 
-- [Resumen de Web Search](/es/tools/web) -- todos los proveedores y detección automática
-- [Perplexity Search](/es/tools/perplexity-search) -- resultados estructurados con filtrado de dominio
-- [Exa Search](/es/tools/exa-search) -- búsqueda neuronal con extracción de contenido
+- [Resumen de Web Search](/en/tools/web) -- todos los proveedores y detección automática
+- [Perplexity Search](/en/tools/perplexity-search) -- resultados estructurados con filtrado de dominio
+- [Exa Search](/en/tools/exa-search) -- búsqueda neuronal con extracción de contenido

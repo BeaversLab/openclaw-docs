@@ -13,7 +13,7 @@ Gérer le serveur de contrôle de navigateur de OpenClaw et exécuter des action
 
 Connexes :
 
-- Outil de navigateur + API : [Outil de navigateur](/fr/tools/browser)
+- Outil de navigateur + API : [Outil de navigateur](/en/tools/browser)
 
 ## Drapeaux courants
 
@@ -103,4 +103,4 @@ Si le Gateway s'exécute sur une machine différente de celle du navigateur, ex�
 
 Utilisez `gateway.nodes.browser.mode` pour contrôler le routage automatique et `gateway.nodes.browser.node` pour épingler un nœud spécifique si plusieurs sont connectés.
 
-Sécurité + configuration à distance : [Outil de navigateur](/fr/tools/browser), [Accès distant](/fr/gateway/remote), [Tailscale](/fr/gateway/tailscale), [Sécurité](/fr/gateway/security)
+Sécurité + configuration à distance : [Outil de navigateur](/en/tools/browser), [Accès distant](/en/gateway/remote), [Tailscale](/en/gateway/tailscale), [Sécurité](/en/gateway/security)

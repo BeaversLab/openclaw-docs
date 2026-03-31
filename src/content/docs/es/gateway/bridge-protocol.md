@@ -13,7 +13,7 @@ El protocolo de puente es un transporte de nodo **heredado** (TCP JSONL). Los nu
 deben usar en su lugar el protocolo WebSocket de Gateway unificado.
 
 Si está creando un operador o un cliente de nodo, use el
-[protocolo de Gateway](/es/gateway/protocol).
+[protocolo de Gateway](/en/gateway/protocol).
 
 **Nota:** Las compilaciones actuales de OpenClaw ya no incluyen el oyente del puente TCP; este documento se conserva como referencia histórica.
 Las claves de configuración heredadas de `bridge.*` ya no forman parte del esquema de configuración.

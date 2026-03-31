@@ -32,7 +32,7 @@ title: "macOS 发布"
 - 对于 `BUILD_CONFIG=release`，`scripts/package-mac-app.sh` 现在默认自动设置为通用二进制（`arm64 x86_64`）。您仍然可以使用 `BUILD_ARCHS=arm64` 或 `BUILD_ARCHS=x86_64` 进行覆盖。对于本地/开发构建（`BUILD_CONFIG=debug`），它默认为当前架构（`$(uname -m)`）。
 - 对发布产物（zip + DMG + 公证）使用 `scripts/package-mac-dist.sh`。对本地/开发打包使用 `scripts/package-mac-app.sh`。
 
-```exec
+```bash
 # From repo root; set release IDs so Sparkle feed is enabled.
 # This command builds release artifacts without notarization.
 # APP_BUILD must be numeric + monotonic for Sparkle compare.
@@ -71,7 +71,7 @@ ditto -c -k --keepParent apps/macos/.build/release/OpenClaw.app.dSYM dist/OpenCl
 
 使用发布说明生成器，以便 Sparkle 渲染格式化的 HTML 说明：
 
-```exec
+```bash
 SPARKLE_PRIVATE_KEY_FILE=/path/to/ed25519-private-key scripts/make_appcast.sh dist/OpenClaw-2026.3.13.zip https://raw.githubusercontent.com/openclaw/openclaw/main/appcast.xml
 ```
 

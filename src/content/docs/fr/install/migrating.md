@@ -41,7 +41,7 @@ Les profils personnalisés utilisent `~/.openclaw-<profile>/` ou un chemin défi
 
   </Step>
 
-<Step title="Installer OpenClaw sur la nouvelle machine">[Installez](/fr/install) la CLI (et Node si nécessaire) sur la nouvelle machine. Il n'y a aucun problème si l'onboarding crée un nouveau `~/.openclaw/` -- vous l'écraserez ensuite.</Step>
+<Step title="Installer OpenClaw sur la nouvelle machine">[Installez](/en/install) la CLI (et Node si nécessaire) sur la nouvelle machine. C'est normal si l'onboarding crée un nouveau `~/.openclaw/` -- vous l'écraserez ensuite.</Step>
 
   <Step title="Copier le répertoire d'état et l'espace de travail">
     Transférez l'archive via `scp`, `rsync -a` ou un disque externe, puis extrayez :
@@ -56,7 +56,7 @@ Les profils personnalisés utilisent `~/.openclaw-<profile>/` ou un chemin défi
   </Step>
 
   <Step title="Exécuter le docteur et vérifier">
-    Sur la nouvelle machine, exécutez [Doctor](/fr/gateway/doctor) pour appliquer les migrations de configuration et réparer les services :
+    Sur la nouvelle machine, exécutez [Doctor](/en/gateway/doctor) pour appliquer les migrations de configuration et réparer les services :
 
     ```bash
     openclaw doctor
@@ -76,11 +76,11 @@ Les profils personnalisés utilisent `~/.openclaw-<profile>/` ou un chemin défi
     Lancez la passerelle avec le **même** profil ou répertoire d'état que celui que vous avez migré, puis réexécutez `openclaw doctor`.
   </Accordion>
 
-<Accordion title="Copier uniquement openclaw.">Le fichier de configuration seul ne suffit pas. Les identifiants se trouvent sous `credentials/`, et l'état de l'agent se trouve sous `agents/`. Migrez toujours le **répertoire d'état entier**.</Accordion>
+<Accordion title="Copier uniquement openclaw.">Le fichier de configuration seul ne suffit pas. Les identifiants se trouvent sous `credentials/`, et l'état de l'agent se trouve sous `agents/`. Migrez toujours le répertoire d'état **entier**.</Accordion>
 
-<Accordion title="Autorisations et propriété">Si vous avez copié en tant que root ou si vous avez changé d'utilisateur, la passerelle risque de ne pas pouvoir lire les identifiants. Assurez-vous que le répertoire d'état et l'espace de travail appartiennent à l'utilisateur exécutant la passerelle.</Accordion>
+<Accordion title="Autorisations et propriété">Si vous avez copié en tant que root ou changé d'utilisateur, la passerelle risque de ne pas pouvoir lire les identifiants. Assurez-vous que le répertoire d'état et l'espace de travail appartiennent à l'utilisateur exécutant la passerelle.</Accordion>
 
-<Accordion title="Mode distant">Si votre interface pointe vers une passerelle **distante**, l'hôte distant possède les sessions et l'espace de travail. Migrez l'hôte de la passerelle lui-même, et non votre ordinateur portable local. Voir [FAQ](/fr/help/faq#where-does-openclaw-store-its-data).</Accordion>
+<Accordion title="Mode distant">Si votre interface pointe vers une passerelle **distante**, l'hôte distant possède les sessions et l'espace de travail. Migrez l'hôte de la passerelle lui-même, et non votre ordinateur portable local. Voir [FAQ](/en/help/faq#where-things-live-on-disk).</Accordion>
 
   <Accordion title="Secrets dans les sauvegardes">
     Le répertoire d'état contient des clés API, des jetons OAuth et des identifiants de canal.

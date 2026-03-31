@@ -135,5 +135,5 @@ openclaw devices approve <requestId>
 
 Relacionado:
 
-- [Solución de problemas de autenticación del Panel](/es/web/dashboard#if-you-see-unauthorized-1008)
-- [Solución de problemas de la puerta de enlace](/es/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [Solución de problemas de autenticación del Panel](/en/web/dashboard#if-you-see-unauthorized-1008)
+- [Solución de problemas de la puerta de enlace](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)

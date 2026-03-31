@@ -1,5 +1,5 @@
 ---
-summary: "CLI 參考資料 for `openclaw models` (status/list/set/scan, aliases, fallbacks, auth)"
+summary: "`openclaw models` 的 CLI 參考資料（status/list/set/scan、別名、備援、驗證）"
 read_when:
   - You want to change default models or view provider auth status
   - You want to scan available models/providers and debug auth profiles
@@ -12,8 +12,8 @@ Model discovery, scanning, and configuration (default model, fallbacks, auth pro
 
 相關：
 
-- Providers + models: [Models](/en/providers/models)
-- Provider auth setup: [Getting started](/en/start/getting-started)
+- 供應商 + 模型：[Models](/en/providers/models)
+- 供應商驗證設定：[Getting started](/en/start/getting-started)
 
 ## 常用指令
 
@@ -24,21 +24,21 @@ openclaw models set <model-or-alias>
 openclaw models scan
 ```
 
-`openclaw models status` shows the resolved default/fallbacks plus an auth overview.
-When provider usage snapshots are available, the OAuth/token status section includes
-provider usage headers.
-Add `--probe` to run live auth probes against each configured provider profile.
-Probes are real requests (may consume tokens and trigger rate limits).
-Use `--agent <id>` to inspect a configured agent’s model/auth state. When omitted,
-the command uses `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR` if set, otherwise the
-configured default agent.
+`openclaw models status` 顯示已解析的預設值/備案以及認證概覽。
+當提供者使用情況快照可用時，OAuth/token 狀態區段會包含
+提供者使用情況標頭。
+加入 `--probe` 以對每個已設定的提供者設定檔執行即時認證探查。
+探查是真實請求（可能會消耗 token 並觸發速率限制）。
+使用 `--agent <id>` 來檢視已設定代理程式的 model/auth 狀態。當省略時，
+指令會使用已設定的 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`（若有設定），否則使用
+已設定的預設代理程式。
 
 備註：
 
-- `models set <model-or-alias>` accepts `provider/model` or an alias.
-- Model refs are parsed by splitting on the **first** `/`. If the model ID includes `/` (OpenRouter-style), include the provider prefix (example: `openrouter/moonshotai/kimi-k2`).
-- If you omit the provider, OpenClaw treats the input as an alias or a model for the **default provider** (only works when there is no `/` in the model ID).
-- `models status` may show `marker(<value>)` in auth output for non-secret placeholders (for example `OPENAI_API_KEY`, `secretref-managed`, `minimax-oauth`, `qwen-oauth`, `ollama-local`) instead of masking them as secrets.
+- `models set <model-or-alias>` 接受 `provider/model` 或別名。
+- 模型參照通過分割**第一個** `/` 來進行解析。如果模型 ID 包含 `/`（OpenRouter 風格），請包含提供者前綴（例如：`openrouter/moonshotai/kimi-k2`）。
+- 如果您省略提供者，OpenClaw 會將輸入視為**預設提供者**的別名或模型（僅在模型 ID 中沒有 `/` 時有效）。
+- `models status` 可能會在驗證輸出中對非秘密佔位符（例如 `OPENAI_API_KEY`、`secretref-managed`、`minimax-oauth`、`oauth:chutes`、`ollama-local`）顯示 `marker(<value>)`，而不是將其作為秘密掩碼。
 
 ### `models status`
 
@@ -46,14 +46,14 @@ configured default agent.
 
 - `--json`
 - `--plain`
-- `--check` (exit 1=expired/missing, 2=expiring)
-- `--probe` (live probe of configured auth profiles)
-- `--probe-provider <name>` （偵測單一提供者）
-- `--probe-profile <id>` （重複或以逗號分隔的設定檔 ID）
+- `--check` (結束代碼 1=已過期/遺失，2=即將過期)
+- `--probe` (對已設定的 auth profiles 進行即時探測)
+- `--probe-provider <name>` (探測單一提供者)
+- `--probe-profile <id>` (重複或以逗號分隔的 profile ID)
 - `--probe-timeout <ms>`
 - `--probe-concurrency <n>`
 - `--probe-max-tokens <n>`
-- `--agent <id>` （已配置的代理程式 ID；會覆蓋 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`）
+- `--agent <id>` (已設定的 agent ID；會覆蓋 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`)
 
 ## 別名 + 備援
 
@@ -71,11 +71,20 @@ openclaw models auth setup-token
 openclaw models auth paste-token
 ```
 
-`models auth login` 會執行提供者外掛程式的驗證流程（OAuth/API 金鑰）。使用
-`openclaw plugins list` 來查看已安裝的提供者。
+`models auth login` 會執行提供者外掛程式的驗證流程 (OAuth/API 金鑰)。請使用
+`openclaw plugins list` 來查看已安裝哪些提供者。
+
+範例：
+
+```bash
+openclaw models auth login --provider anthropic --method cli --set-default
+openclaw models auth login --provider openai-codex --set-default
+```
 
 備註：
 
-- `setup-token` 會提示輸入 setup-token 值（在任何機器上使用 `claude setup-token` 產生）。
-- `paste-token` 接受在其他地方產生或來自自動化的 token 字串。
-- Anthropic 政策說明：setup-token 支援屬於技術相容性。Anthropic 過去曾阻止部分在 Claude Code 之外的訂閱使用，因此廣泛使用前請確認目前的條款。
+- `login --provider anthropic --method cli --set-default` 會重複使用本機的 Claude
+  CLI 登入並將主要 Anthropic default-model 路徑重寫為 `claude-cli/...`。
+- `setup-token` 會提示輸入 setup-token 值（可在任何機器上使用 `claude setup-token` 產生）。
+- `paste-token` 接受在其他地方產生的或來自自動化的 token 字串。
+- Anthropic 政策提示：setup-token 支援僅為技術相容性。Anthropic 過去曾封鎖 Claude Code 以外的部分訂閱使用，因此在廣泛使用前請確認目前的條款。

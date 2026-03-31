@@ -20,7 +20,7 @@ Bajo el capó, las solicitudes se ejecutan como una ejecución normal de agente 
 
 ## Autenticación, seguridad y enrutamiento
 
-El comportamiento operativo coincide con [OpenAI Chat Completions](/es/gateway/openai-http-api):
+El comportamiento operativo coincide con [OpenAI Chat Completions](/en/gateway/openai-http-api):
 
 - usa `Authorization: Bearer <token>` con la configuración de autenticación normal del Gateway
 - trata el endpoint como acceso de operador completo para la instancia del gateway
@@ -38,7 +38,7 @@ La misma superficie de compatibilidad también incluye:
 - `POST /v1/embeddings`
 - `POST /v1/chat/completions`
 
-Para la explicación canónica de cómo los modelos de destino de agente, `openclaw/default`, el paso a través de embeddings y las anulaciones del modelo backend se ajustan, consulte [OpenAI Chat Completions](/es/gateway/openai-http-api#agent-first-model-contract) y [Model list and agent routing](/es/gateway/openai-http-api#model-list-and-agent-routing).
+Para la explicación canónica de cómo los modelos de destino de agente, `openclaw/default`, el paso a través de embeddings y las anulaciones del modelo backend se ajustan, consulte [OpenAI Chat Completions](/en/gateway/openai-http-api#agent-first-model-contract) y [Model list and agent routing](/en/gateway/openai-http-api#model-list-and-agent-routing).
 
 ## Comportamiento de la sesión
 
@@ -223,7 +223,7 @@ Nota de seguridad:
 - Las listas de permitidos de URL se aplican antes de la recuperación y en los saltos de redirección.
 - Permitir un nombre de host no evita el bloqueo de IP privada/interna.
 - Para gateways expuestos a Internet, aplique controles de salida de red además de las protecciones a nivel de aplicación.
-  Vea [Security](/es/gateway/security).
+  Vea [Security](/en/gateway/security).
 
 ## Transmisión (SSE)
 

@@ -172,5 +172,5 @@ Bonjour/DNS‑SD 通常会将服务实例名称中的字节转义为十进制 `\
 
 ## 相关文档
 
-- 设备发现策略和传输选择：[设备发现](/zh/gateway/discovery)
-- 节点配对 + 批准：[Gateway(网关) 配对](/zh/gateway/pairing)
+- 设备发现策略和传输选择：[设备发现](/en/gateway/discovery)
+- 节点配对 + 批准：[Gateway(网关) 配对](/en/gateway/pairing)

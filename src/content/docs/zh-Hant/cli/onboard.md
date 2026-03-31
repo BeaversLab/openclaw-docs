@@ -151,4 +151,4 @@ openclaw configure
 openclaw agents add <name>
 ```
 
-<Note>`--json` 並不代表非互動模式。請使用 `--non-interactive` 進行腳本操作。</Note>
+<Note>`--json` 並不意味著非互動模式。若要用於腳本，請使用 `--non-interactive`。</Note>

@@ -41,7 +41,7 @@ Los perfiles personalizados usan `~/.openclaw-<profile>/` o una ruta establecida
 
   </Step>
 
-<Step title="Instalar OpenClaw en la nueva máquina">[Instale](/es/install) la CLI (y Node si es necesario) en la nueva máquina. No hay problema si la incorporación crea un `~/.openclaw/` nuevo; lo sobrescribirá a continuación.</Step>
+<Step title="Instalar OpenClaw en la nueva máquina">[Instale](/en/install) la CLI (y Node si es necesario) en la nueva máquina. Está bien si el registro crea un nuevo `~/.openclaw/` -- lo sobrescribirá a continuación.</Step>
 
   <Step title="Copiar el directorio de estado y el espacio de trabajo">
     Transfiera el archivo mediante `scp`, `rsync -a` o una unidad externa, y luego extráigalo:
@@ -56,7 +56,7 @@ Los perfiles personalizados usan `~/.openclaw-<profile>/` o una ruta establecida
   </Step>
 
   <Step title="Ejecuta doctor y verifica">
-    En la nueva máquina, ejecuta [Doctor](/es/gateway/doctor) para aplicar las migraciones de configuración y reparar los servicios:
+    En la nueva máquina, ejecuta [Doctor](/en/gateway/doctor) para aplicar las migraciones de configuración y reparar los servicios:
 
     ```bash
     openclaw doctor
@@ -76,11 +76,11 @@ Los perfiles personalizados usan `~/.openclaw-<profile>/` o una ruta establecida
     Inicia la puerta de enlace con el **mismo** perfil o directorio de estado que migraste, luego vuelve a ejecutar `openclaw doctor`.
   </Accordion>
 
-<Accordion title="Copiar solo openclaw.">El archivo de configuración por sí solo no es suficiente. Las credenciales se encuentran en `credentials/` y el estado del agente vive en `agents/`. Migra siempre el directorio de estado **completo**.</Accordion>
+<Accordion title="Copiar solo openclaw.">El archivo de configuración por sí solo no es suficiente. Las credenciales residen en `credentials/` y el estado del agente reside en `agents/`. Migre siempre el directorio de estado **completo**.</Accordion>
 
-<Accordion title="Permisos y propiedad">Si copiaste como root o cambiaste de usuario, la puerta de enlace podría fallar al leer las credenciales. Asegúrate de que el directorio de estado y el espacio de trabajo sean propiedad del usuario que ejecuta la puerta de enlace.</Accordion>
+<Accordion title="Permisos y propiedad">Si copió como root o cambió de usuario, es posible que la puerta de enlace no pueda leer las credenciales. Asegúrese de que el directorio de estado y el espacio de trabajo sean propiedad del usuario que ejecuta la puerta de enlace.</Accordion>
 
-<Accordion title="Modo remoto">Si tu interfaz apunta a una puerta de enlace **remota**, el host remoto posee las sesiones y el espacio de trabajo. Migra el host de la puerta de enlace en sí, no tu portátil local. Consulta [Preguntas frecuentes](/es/help/faq#where-does-openclaw-store-its-data).</Accordion>
+<Accordion title="Modo remoto">Si su interfaz apunta a una puerta de enlace **remota**, el host remoto es propietario de las sesiones y el espacio de trabajo. Migre el host de la puerta de enlace en sí, no su computadora portátil local. Consulte [Preguntas frecuentes](/en/help/faq#where-things-live-on-disk).</Accordion>
 
   <Accordion title="Secretos en copias de seguridad">
     El directorio de estado contiene claves API, tokens de OAuth y credenciales de canales.

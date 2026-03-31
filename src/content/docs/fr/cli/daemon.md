@@ -50,4 +50,4 @@ Remarques :
 
 ## Préférence
 
-Utilisez [`openclaw gateway`](/fr/cli/gateway) pour la documentation actuelle et les exemples.
+Utilisez [`openclaw gateway`](/en/cli/gateway) pour la documentation actuelle et les exemples.

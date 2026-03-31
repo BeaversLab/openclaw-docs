@@ -129,5 +129,5 @@ openclaw devices approve <requestId>
 
 Connexes :
 
-- [Dépannage de l'auth Dashboard](/fr/web/dashboard#if-you-see-unauthorized-1008)
-- [Dépannage du Gateway](/fr/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [Dépannage de l'auth Dashboard](/en/web/dashboard#if-you-see-unauthorized-1008)
+- [Dépannage du Gateway](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)

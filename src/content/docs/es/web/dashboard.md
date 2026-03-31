@@ -16,12 +16,12 @@ Apertura rápida (Gateway local):
 
 Referencias clave:
 
-- [Interfaz de usuario de control](/es/web/control-ui) para el uso y las capacidades de la interfaz de usuario.
-- [Tailscale](/es/gateway/tailscale) para la automatización de Serve/Funnel.
-- [Superficies web](/es/web) para modos de enlace y notas de seguridad.
+- [Interfaz de usuario de control](/en/web/control-ui) para el uso y las capacidades de la interfaz de usuario.
+- [Tailscale](/en/gateway/tailscale) para la automatización de Serve/Funnel.
+- [Superficies web](/en/web) para modos de enlace y notas de seguridad.
 
 La autenticación se aplica en el protocolo de enlace WebSocket a través de `connect.params.auth`
-(token o contraseña). Consulte `gateway.auth` en [configuración de Gateway](/es/gateway/configuration).
+(token o contraseña). Consulte `gateway.auth` en [configuración de Gateway](/en/gateway/configuration).
 
 Nota de seguridad: la interfaz de usuario de control es una **superficie de administración** (chat, configuración, aprobaciones de ejecución).
 No la exponga públicamente. La interfaz de usuario mantiene los tokens de URL del panel de control en sessionStorage
@@ -40,13 +40,13 @@ Prefiera localhost, Tailscale Serve o un túnel SSH.
 - **Fuente del token**: `gateway.auth.token` (o `OPENCLAW_GATEWAY_TOKEN`); `openclaw dashboard` puede pasarlo a través del fragmento de URL para un arranque único y la interfaz de usuario de control lo mantiene en sessionStorage para la sesión actual de la pestaña del navegador y la URL de gateway seleccionada en lugar de localStorage.
 - Si `gateway.auth.token` está administrado por SecretRef, `openclaw dashboard` imprime/copia/abre una URL sin token por diseño. Esto evita exponer tokens administrados externamente en registros de shell, historial del portapapeles o argumentos de lanzamiento del navegador.
 - Si `gateway.auth.token` está configurado como un SecretRef y no está resuelto en su shell actual, `openclaw dashboard` aún imprime una URL sin tokenizar más orientación de configuración de autenticación accionable.
-- **No es localhost**: use Tailscale Serve (sin token para la interfaz de control/WebSocket si `gateway.auth.allowTailscale: true`, asume un host de puerta de enlace confiable; las API de HTTP aún necesitan token/contraseña), enlace de tailnet con un token o un túnel SSH. Consulte [Superficies web](/es/web).
+- **No es localhost**: use Tailscale Serve (sin token para la interfaz de control/WebSocket si `gateway.auth.allowTailscale: true`, asume un host de puerta de enlace confiable; las API de HTTP aún necesitan token/contraseña), enlace de tailnet con un token o un túnel SSH. Consulte [Superficies web](/en/web).
 
 ## Si ve "no autorizado" / 1008
 
 - Asegúrese de que la puerta de enlace sea accesible (local: `openclaw status`; remoto: túnel SSH `ssh -N -L 18789:127.0.0.1:18789 user@host` y luego abrir `http://127.0.0.1:18789/`).
 - Para `AUTH_TOKEN_MISMATCH`, los clientes pueden realizar un reintento de confianza con un token de dispositivo en caché cuando la puerta de enlace devuelve sugerencias de reintento. Si la autenticación aún falla después de ese reintento, resuelva la deriva del token manualmente.
-- Para conocer los pasos de reparación de la deriva del token, siga la [Lista de verificación de recuperación de deriva del token](/es/cli/devices#token-drift-recovery-checklist).
+- Para conocer los pasos de reparación de la deriva del token, siga la [Lista de verificación de recuperación de deriva del token](/en/cli/devices#token-drift-recovery-checklist).
 - Recupere o proporcione el token desde el host de la puerta de enlace:
   - Configuración de texto plano: `openclaw config get gateway.auth.token`
   - Configuración administrada por SecretRef: resuelva el proveedor de secretos externo o exporte `OPENCLAW_GATEWAY_TOKEN` en este shell, luego vuelva a ejecutar `openclaw dashboard`

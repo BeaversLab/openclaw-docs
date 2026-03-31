@@ -496,6 +496,6 @@ ngrok 隧道在容器内运行，并提供公共 webhook URL，而无需暴露 F
 
 ## 后续步骤
 
-- 设置消息频道：[频道](/zh/channels)
-- 配置 Gateway(网关)：[Gateway(网关) 配置](/zh/gateway/configuration)
-- 保持 OpenClaw 更新：[更新](/zh/install/updating)
+- 设置消息频道：[频道](/en/channels)
+- 配置 Gateway(网关)：[Gateway(网关) 配置](/en/gateway/configuration)
+- 保持 OpenClaw 更新：[更新](/en/install/updating)

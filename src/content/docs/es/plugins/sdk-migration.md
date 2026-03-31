@@ -22,7 +22,7 @@ El antiguo sistema de complementos proporcionaba dos superficies muy abiertas qu
 
 Ambas superficies ahora están **obsoletas**. Todavía funcionan en tiempo de ejecución, pero los nuevos complementos no deben usarlas, y los complementos existentes deben migrar antes de que la próxima versión principal las elimine.
 
-<Warning>La capa de compatibilidad con versiones anteriores se eliminará en una versión principal futura. Los complementos que todavía importen de estas superficies se romperán cuando eso ocurra.</Warning>
+<Warning>La capa de compatibilidad con versiones anteriores se eliminará en una versión mayor futura. Los complementos que todavía se importen de estas superficies se romperán cuando eso ocurra.</Warning>
 
 ## Por qué cambió esto
 
@@ -101,15 +101,18 @@ El SDK de complementos moderno soluciona esto: cada ruta de importación (`openc
 ## Referencia de la ruta de importación
 
 <Accordion title="Tabla completa de rutas de importación">
-  | Ruta de importación | Propósito | Exportaciones clave | | --- | --- | --- | | `plugin-sdk/plugin-entry` | Asistente de entrada de complemento canónico | `definePluginEntry` | | `plugin-sdk/core` | Definiciones de entrada de canal, constructores de canal, tipos base | `defineChannelPluginEntry`, `createChatChannelPlugin` | | `plugin-sdk/channel-setup` | Adaptadores del asistente de
-  configuración | `createOptionalChannelSetupSurface` | | `plugin-sdk/channel-pairing` | Primitivas de emparejamiento de MD | `createChannelPairingController` | | `plugin-sdk/channel-reply-pipeline` | Cableado de prefijo de respuesta + escritura | `createChannelReplyPipeline` | | `plugin-sdk/channel-config-helpers` | Fábricas de adaptadores de configuración | `createHybridChannelConfigAdapter` | |
-  `plugin-sdk/channel-config-schema` | Constructores de esquema de configuración | Tipos de esquema de configuración de canal | | `plugin-sdk/channel-policy` | Resolución de políticas de grupo/MD | `resolveChannelGroupRequireMention` | | `plugin-sdk/channel-lifecycle` | Seguimiento del estado de la cuenta | `createAccountStatusSink` | | `plugin-sdk/channel-runtime` | Asistentes de cableado en
-  tiempo de ejecución | Utilidades de tiempo de ejecución del canal | | `plugin-sdk/channel-send-result` | Tipos de resultado de envío | Tipos de resultado de respuesta | | `plugin-sdk/runtime-store` | Almacenamiento persistente del complemento | `createPluginRuntimeStore` | | `plugin-sdk/allow-from` | Formato de lista de permitidos | `formatAllowFromLowercase` | |
-  `plugin-sdk/allowlist-resolution` | Mapeo de entrada de lista de permitidos | `mapAllowlistResolutionInputs` | | `plugin-sdk/command-auth` | Bloqueo de comandos | `resolveControlCommandGate` | | `plugin-sdk/secret-input` | Análisis de entrada secreta | Asistentes de entrada secreta | | `plugin-sdk/webhook-ingress` | Asistentes de solicitudes de webhook | Utilidades de destino de webhook | |
-  `plugin-sdk/reply-payload` | Tipos de respuesta de mensaje | Tipos de carga útil de respuesta | | `plugin-sdk/provider-onboard` | Parches de incorporación de proveedores | Asistentes de configuración de incorporación | | `plugin-sdk/keyed-async-queue` | Cola asíncrona ordenada | `KeyedAsyncQueue` | | `plugin-sdk/testing` | Utilidades de prueba | Asistentes y simulacros de prueba |
+  | Ruta de importación | Propósito | Exportaciones clave | | --- | --- | --- | | `plugin-sdk/plugin-entry` | Auxiliar de entrada de complemento canónico | `definePluginEntry` | | `plugin-sdk/core` | Definiciones de entrada de canal, constructores de canal, tipos base | `defineChannelPluginEntry`, `createChatChannelPlugin` | | `plugin-sdk/channel-setup` | Adaptadores del asistente de configuración
+  | `createOptionalChannelSetupSurface` | | `plugin-sdk/channel-pairing` | Primitivas de emparejamiento DM | `createChannelPairingController` | | `plugin-sdk/channel-reply-pipeline` | Cableado de prefijo de respuesta + escritura | `createChannelReplyPipeline` | | `plugin-sdk/channel-config-helpers` | Fábricas de adaptadores de configuración | `createHybridChannelConfigAdapter` | |
+  `plugin-sdk/channel-config-schema` | Constructores de esquema de configuración | Tipos de esquema de configuración de canal | | `plugin-sdk/channel-policy` | Resolución de política de grupo/DM | `resolveChannelGroupRequireMention` | | `plugin-sdk/channel-lifecycle` | Seguimiento del estado de la cuenta | `createAccountStatusSink` | | `plugin-sdk/channel-runtime` | Auxiliares de cableado en
+  tiempo de ejecución | Utilidades de tiempo de ejecución del canal | | `plugin-sdk/channel-send-result` | Tipos de resultado de envío | Tipos de resultado de respuesta | | `plugin-sdk/runtime-store` | Almacenamiento persistente del complemento | `createPluginRuntimeStore` | | `plugin-sdk/approval-runtime` | Auxiliares de solicitud de aprobación | Carga útil y auxiliares de respuesta de aprobación
+  de ejec/complemento | | `plugin-sdk/collection-runtime` | Auxiliares de caché delimitada | `pruneMapToMaxSize` | | `plugin-sdk/diagnostic-runtime` | Auxiliares de bloqueo de diagnóstico | `isDiagnosticFlagEnabled`, `isDiagnosticsEnabled` | | `plugin-sdk/error-runtime` | Auxiliares de formato de error | `formatUncaughtError`, auxiliares de gráfico de errores | | `plugin-sdk/fetch-runtime` |
+  Auxiliares de búsqueda/proxy encapsulados | `resolveFetch`, auxiliares de proxy | | `plugin-sdk/host-runtime` | Auxiliares de normalización de host | `normalizeHostname`, `normalizeScpRemoteHost` | | `plugin-sdk/retry-runtime` | Auxiliares de reintento | `RetryConfig`, `retryAsync`, ejecutores de política | | `plugin-sdk/allow-from` | Formato de lista de permitidos | `formatAllowFromLowercase` |
+  | `plugin-sdk/allowlist-resolution` | Mapeo de entrada de lista de permitidos | `mapAllowlistResolutionInputs` | | `plugin-sdk/command-auth` | Bloqueo de comandos | `resolveControlCommandGate` | | `plugin-sdk/secret-input` | Análisis de entrada secreta | Auxiliares de entrada secreta | | `plugin-sdk/webhook-ingress` | Auxiliares de solicitud de webhook | Utilidades de destino de webhook | |
+  `plugin-sdk/webhook-request-guards` | Auxiliares de guardia de cuerpo de webhook | Auxiliares de lectura/limite de cuerpo de solicitud | | `plugin-sdk/reply-payload` | Tipos de respuesta de mensaje | Tipos de carga útil de respuesta | | `plugin-sdk/provider-onboard` | Parches de incorporación de proveedores | Auxiliares de configuración de incorporación | | `plugin-sdk/keyed-async-queue` | Cola
+  asíncrona ordenada | `KeyedAsyncQueue` | | `plugin-sdk/testing` | Utilidades de prueba | Auxiliares y simulacros de prueba |
 </Accordion>
 
-Utiliza la importación más específica que coincida con la tarea. Si no encuentras una exportación, consulta el código fuente en `src/plugin-sdk/` o pregunta en Discord.
+Utilice la importación más específica que coincida con la tarea. Si no puede encontrar una exportación, verifique el código fuente en `src/plugin-sdk/` o pregunte en Discord.
 
 ## Cronograma de eliminación
 
@@ -133,9 +136,9 @@ Esta es una solución de escape temporal, no una solución permanente.
 
 ## Relacionado
 
-- [Primeros pasos](/es/plugins/building-plugins) — crea tu primer complemento
-- [Resumen del SDK](/es/plugins/sdk-overview) — referencia completa de importación de subrutas
-- [Complementos de canal](/es/plugins/sdk-channel-plugins) — creación de complementos de canal
-- [Complementos de proveedor](/es/plugins/sdk-provider-plugins) — creación de complementos de proveedor
-- [Aspectos internos del complemento](/es/plugins/architecture) — inmersión profunda en la arquitectura
-- [Manifiesto del complemento](/es/plugins/manifest) — referencia del esquema del manifiesto
+- [Introducción](/en/plugins/building-plugins) — construya su primer complemento
+- [Resumen del SDK](/en/plugins/sdk-overview) — referencia completa de importación de subrutas
+- [Complementos de canal](/en/plugins/sdk-channel-plugins) — construcción de complementos de canal
+- [Complementos de proveedor](/en/plugins/sdk-provider-plugins) — construcción de complementos de proveedor
+- [Aspectos internos del complemento](/en/plugins/architecture) — inmersión profunda en la arquitectura
+- [Manifiesto del complemento](/en/plugins/manifest) — referencia del esquema del manifiesto

@@ -35,7 +35,7 @@ title: "macOS 应用"
 该应用程序管理一个标记为 `ai.openclaw.gateway` 的每用户 LaunchAgent
 （在使用 `--profile`/`OPENCLAW_PROFILE` 时为 `ai.openclaw.<profile>`；传统的 `com.openclaw.*` 仍会卸载）。
 
-```exec
+```bash
 launchctl kickstart -k gui/$UID/ai.openclaw.gateway
 launchctl bootout gui/$UID/ai.openclaw.gateway
 ```
@@ -115,7 +115,7 @@ Gateway -> Node Service (WS)
 
 触发 Gateway `agent` 请求。
 
-```exec
+```bash
 open 'openclaw://agent?message=Hello%20from%20deep%20link'
 ```
 
@@ -148,7 +148,7 @@ open 'openclaw://agent?message=Hello%20from%20deep%20link'
 
 最好使用本地非同步状态路径，例如：
 
-```exec
+```bash
 OPENCLAW_STATE_DIR=~/.openclaw
 ```
 
@@ -169,7 +169,7 @@ OPENCLAW_STATE_DIR=~/.openclaw
 
 使用调试 CLI 来执行与 macOS 应用相同的 Gateway WebSocket 握手和发现逻辑，而无需启动应用。
 
-```exec
+```bash
 cd apps/macos
 swift run openclaw-mac connect --json
 swift run openclaw-mac discover --timeout 3000 --json
@@ -208,13 +208,13 @@ Node CLI 基于 `dns-sd` 的设备发现不同。
   ExitOnForwardFailure + keepalive 选项。
 - **IP 报告：** SSH 隧道使用环回地址，因此 Gateway 网关看到的节点
   IP 为 `127.0.0.1`。如果您希望显示真实的客户端
-  IP，请使用 **直接** 传输方式（请参阅 [macOS 远程访问](/zh/platforms/mac/remote)）。
+  IP，请使用 **直接** 传输方式（请参阅 [macOS 远程访问](/en/platforms/mac/remote)）。
 
-有关设置步骤，请参阅 [macOS 远程访问](/zh/platforms/mac/remote)。有关协议详细信息，请参阅 [Gateway(网关) 协议](/zh/gateway/protocol)。
+有关设置步骤，请参阅 [macOS 远程访问](/en/platforms/mac/remote)。有关协议详细信息，请参阅 [Gateway(网关) 协议](/en/gateway/protocol)。
 
 ## 相关文档
 
-- [Gateway(网关) 运行手册](/zh/gateway)
-- [Gateway (macOS)](/zh/platforms/mac/bundled-gateway)
-- [macOS 权限](/zh/platforms/mac/permissions)
-- [Canvas](/zh/platforms/mac/canvas)
+- [Gateway(网关) 运行手册](/en/gateway)
+- [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
+- [macOS 权限](/en/platforms/mac/permissions)
+- [Canvas](/en/platforms/mac/canvas)

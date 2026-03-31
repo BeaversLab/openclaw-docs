@@ -16,7 +16,7 @@ title: "Agent Send"
 
 <Steps>
   <Step title="运行一个简单的代理轮次">
-    ```exec
+    ```bash
     openclaw agent --message "What is the weather today?"
     ```
 
@@ -25,7 +25,7 @@ title: "Agent Send"
   </Step>
 
   <Step title="以特定代理或会话为目标">
-    ```exec
+    ```bash
     # Target a specific agent
     openclaw agent --agent ops --message "Summarize logs"
 
@@ -39,7 +39,7 @@ title: "Agent Send"
   </Step>
 
   <Step title="将回复发送到渠道">
-    ```exec
+    ```bash
     # Deliver to WhatsApp (default channel)
     openclaw agent --to +15555550123 --message "Report ready" --deliver
 
@@ -82,7 +82,7 @@ title: "Agent Send"
 
 ## 示例
 
-```exec
+```bash
 # Simple turn with JSON output
 openclaw agent --to +15555550123 --message "Trace logs" --verbose on --json
 
@@ -95,6 +95,6 @@ openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram 
 
 ## 相关
 
-- [Agent CLI reference](/zh/cli/agent)
-- [Sub-agents](/zh/tools/subagents) — 后台子代理生成
-- [Sessions](/zh/concepts/session) — 会话密钥的工作原理
+- [Agent CLI reference](/en/cli/agent)
+- [Sub-agents](/en/tools/subagents) — 后台子代理生成
+- [Sessions](/en/concepts/session) — 会话密钥的工作原理

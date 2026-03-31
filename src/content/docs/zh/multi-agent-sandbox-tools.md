@@ -31,8 +31,8 @@ status: active
 凭据**不**在代理之间共享。切勿在代理之间重复使用 `agentDir`。
 如果您想共享凭据，请将 `auth-profiles.json` 复制到其他代理的 `agentDir` 中。
 
-有关沙箱隔离在运行时的行为方式，请参阅 [沙箱隔离](/zh/gateway/sandboxing)。
-有关调试“为什么会被阻止？”，请参阅 [沙箱 vs 工具策略 vs 提升权限](/zh/gateway/sandbox-vs-tool-policy-vs-elevated) 和 `openclaw sandbox explain`。
+有关沙箱隔离在运行时的行为方式，请参阅 [沙箱隔离](/en/gateway/sandboxing)。
+有关调试“为什么会被阻止？”，请参阅 [沙箱 vs 工具策略 vs 提升权限](/en/gateway/sandbox-vs-tool-policy-vs-elevated) 和 `openclaw sandbox explain`。
 
 ---
 
@@ -346,13 +346,13 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 1. **检查代理解析：**
 
-   ```exec
+   ```bash
    openclaw agents list --bindings
    ```
 
 2. **验证沙箱容器：**
 
-   ```exec
+   ```bash
    docker ps --filter "name=openclaw-sbx-"
    ```
 
@@ -361,7 +361,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
    - 验证代理无法使用被拒绝的工具
 
 4. **监控日志：**
-   ```exec
+   ```bash
    tail -f "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/logs/gateway.log" | grep -E "routing|sandbox|tools"
    ```
 
@@ -389,6 +389,6 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 ## 另请参阅
 
-- [多代理路由](/zh/concepts/multi-agent)
-- [沙箱配置](/zh/gateway/configuration#agentsdefaults-sandbox)
-- [会话管理](/zh/concepts/session)
+- [多代理路由](/en/concepts/multi-agent)
+- [沙箱配置](/en/gateway/configuration#agentsdefaults-sandbox)
+- [会话管理](/en/concepts/session)

@@ -13,7 +13,7 @@ read_when:
 Referencia del objeto `api.runtime` inyectado en cada complemento durante
 el registro. Utilice estos auxiliares en lugar de importar directamente los internos del host.
 
-<Tip>**¿Buscas un tutorial?** Consulta [Complementos de canal](/es/plugins/sdk-channel-plugins) o [Complementos de proveedor](/es/plugins/sdk-provider-plugins) para ver guías paso a paso que muestren estos auxiliares en contexto.</Tip>
+<Tip>**¿Buscas un tutorial?** Consulta [Complementos de canal](/en/plugins/sdk-channel-plugins) o [Complementos de proveedor](/en/plugins/sdk-provider-plugins) para obtener guías paso a paso que muestren estos ayudantes en contexto.</Tip>
 
 ```typescript
 register(api) {
@@ -335,6 +335,6 @@ Más allá de `api.runtime`, el objeto API también proporciona:
 
 ## Relacionado
 
-- [Resumen del SDK](/es/plugins/sdk-overview) -- referencia de subruta
-- [Puntos de entrada del SDK](/es/plugins/sdk-entrypoints) -- opciones `definePluginEntry`
-- [Aspectos internos del complemento](/es/plugins/architecture) -- modelo de capacidades y registro
+- [Resumen del SDK](/en/plugins/sdk-overview) -- referencia de subruta
+- [Puntos de entrada del SDK](/en/plugins/sdk-entrypoints) -- opciones de `definePluginEntry`
+- [Internos del complemento](/en/plugins/architecture) -- modelo de capacidades y registro

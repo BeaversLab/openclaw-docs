@@ -23,7 +23,7 @@ OpenClaw ensambla su propio prompt del sistema en cada ejecución. Incluye:
 - Etiquetas de respuesta + comportamiento de latido
 - Metadatos de tiempo de ejecución (host/SO/modelo/pensamiento)
 
-Vea el desglose completo en [System Prompt](/es/concepts/system-prompt).
+Vea el desglose completo en [System Prompt](/en/concepts/system-prompt).
 
 ## Qué cuenta en la ventana de contexto
 
@@ -42,7 +42,7 @@ Use `agents.defaults.imageMaxDimensionPx` (predeterminado: `1200`) para ajustar 
 - Los valores más bajos generalmente reducen el uso de tokens de visión y el tamaño de la carga útil.
 - Los valores más altos preservan más detalles visuales para capturas de pantalla con mucho OCR/interfaz de usuario.
 
-Para un desglose práctico (por archivo inyectado, herramientas, habilidades y tamaño del prompt del sistema), use `/context list` o `/context detail`. Consulte [Context](/es/concepts/context).
+Para un desglose práctico (por archivo inyectado, herramientas, habilidades y tamaño del prompt del sistema), use `/context list` o `/context detail`. Consulte [Context](/en/concepts/context).
 
 ## Cómo ver el uso actual de tokens
 
@@ -81,8 +81,8 @@ ha expirado y luego restablece la ventana de caché para que las solicitudes pos
 contexto recién almacenado en caché en lugar de volver a almacenar todo el historial. Esto mantiene los costos de
 escritura de caché más bajos cuando una sesión permanece inactiva más allá del TTL.
 
-Configúrelo en [Configuración del Gateway](/es/gateway/configuration) y consulte los
-detalles del comportamiento en [Poda de sesiones](/es/concepts/session-pruning).
+Configúrelo en [Configuración del Gateway](/en/gateway/configuration) y consulte los
+detalles del comportamiento en [Poda de sesiones](/en/concepts/session-pruning).
 
 El latido puede mantener la caché **activa** a través de períodos de inactividad. Si el TTL de la caché de su modelo
 es `1h`, establecer el intervalo de latido justo por debajo de ese valor (por ejemplo, `55m`) puede evitar
@@ -91,7 +91,7 @@ volver a almacenar el prompt completo, reduciendo los costos de escritura de la 
 En configuraciones multiagente, puedes mantener una configuración de modelo compartida y ajustar el comportamiento del caché
 por agente con `agents.list[].params.cacheRetention`.
 
-Para una guía completa paso a paso, consulta [Prompt Caching](/es/reference/prompt-caching).
+Para una guía completa paso a paso, consulta [Prompt Caching](/en/reference/prompt-caching).
 
 Para los precios de la API de Anthropic, las lecturas de caché son significativamente más baratas que los tokens
 de entrada, mientras que las escrituras de caché se facturan con un multiplicador más alto. Consulta los precios
@@ -172,4 +172,4 @@ rechaza esa combinación con HTTP 401.
 - Mantén las descripciones de las habilidades cortas (la lista de habilidades se inyecta en el prompt).
 - Prefiere modelos más pequeños para trabajos detallados y exploratorios.
 
-Consulta [Skills](/es/tools/skills) para la fórmula exacta de sobrecarga de la lista de habilidades.
+Consulta [Skills](/en/tools/skills) para la fórmula exacta de sobrecarga de la lista de habilidades.

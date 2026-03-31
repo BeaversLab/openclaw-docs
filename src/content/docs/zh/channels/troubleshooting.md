@@ -38,7 +38,7 @@ openclaw channels status --probe
 | 群组消息被忽略            | 检查 `requireMention` + 配置中的提及模式  | 提及机器人或放宽该群的提及策略。    |
 | 随机断开连接/重新登录循环 | `openclaw channels status --probe` + 日志 | 重新登录并验证凭证目录是否正常。    |
 
-完整故障排除：[/channels/whatsapp#故障排除](/zh/channels/whatsapp#troubleshooting)
+完整故障排除：[/channels/whatsapp#故障排除](/en/channels/whatsapp#troubleshooting)
 
 ## Telegram
 
@@ -52,7 +52,7 @@ openclaw channels status --probe
 | `setMyCommands` 在启动时被拒绝 | 检查日志中的 `BOT_COMMANDS_TOO_MUCH`     | 减少插件/技能/自定义 Telegram 指令或禁用原生菜单。                  |
 | 升级后允许列表阻止了您         | `openclaw security audit` 和配置允许列表 | 运行 `openclaw doctor --fix` 或将 `@username` 替换为数字发送者 ID。 |
 
-完整故障排除：[/channels/telegram#故障排除](/zh/channels/telegram#troubleshooting)
+完整故障排除：[/channels/telegram#故障排除](/en/channels/telegram#troubleshooting)
 
 ## Discord
 
@@ -64,7 +64,7 @@ openclaw channels status --probe
 | 群组消息被忽略         | 检查日志中是否有提及拦截导致的丢弃 | 提及机器人或设置公会/渠道 `requireMention: false`。 |
 | 私信回复缺失           | `openclaw pairing list discord`    | 批准私信配对或调整私信策略。                        |
 
-完整故障排除：[/channels/discord#故障排除](/zh/channels/discord#troubleshooting)
+完整故障排除：[/channels/discord#故障排除](/en/channels/discord#troubleshooting)
 
 ## Slack
 
@@ -76,7 +76,7 @@ openclaw channels status --probe
 | 私信被阻止                | `openclaw pairing list slack`      | 批准配对或放宽私信策略。                       |
 | 渠道消息被忽略            | 检查 `groupPolicy` 和渠道允许列表  | 允许该渠道或将策略切换到 `open`。              |
 
-完整故障排除：[/channels/slack#故障排除](/zh/channels/slack#troubleshooting)
+完整故障排除：[/channels/slack#故障排除](/en/channels/slack#troubleshooting)
 
 ## iMessage 和 BlueBubbles
 
@@ -90,8 +90,8 @@ openclaw channels status --probe
 
 完整故障排除：
 
-- [/channels/imessage#故障排除](/zh/channels/imessage#troubleshooting)
-- [/channels/bluebubbles#故障排除](/zh/channels/bluebubbles#troubleshooting)
+- [/channels/imessage#故障排除](/en/channels/imessage#troubleshooting)
+- [/channels/bluebubbles#故障排除](/en/channels/bluebubbles#troubleshooting)
 
 ## Signal
 
@@ -103,7 +103,7 @@ openclaw channels status --probe
 | 私信被阻止                 | `openclaw pairing list signal`     | 批准发送者或调整私信策略。                      |
 | 群组回复未触发             | 检查群组允许列表和提及模式         | 添加发送者/群组或放宽限制。                     |
 
-完整故障排除：[/channels/signal#故障排除](/zh/channels/signal#troubleshooting)
+完整故障排除：[/channels/signal#故障排除](/en/channels/signal#troubleshooting)
 
 ## Matrix
 
@@ -115,4 +115,4 @@ openclaw channels status --probe
 | 私信无法处理         | `openclaw pairing list matrix`     | 批准发送者或调整私信策略。          |
 | 加密房间失败         | 验证加密模块和加密设置             | 启用加密支持并重新加入/同步房间。   |
 
-完整设置和配置：[Matrix](/zh/channels/matrix)
+完整设置和配置：[Matrix](/en/channels/matrix)

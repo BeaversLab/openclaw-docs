@@ -1,5 +1,5 @@
 ---
-summary: "Référence de la CLI pour `openclaw models` (status/list/set/scan, alias, replis, auth)"
+summary: "Référence CLI pour `openclaw models` (status/list/set/scan, aliases, fallbacks, auth)"
 read_when:
   - You want to change default models or view provider auth status
   - You want to scan available models/providers and debug auth profiles
@@ -12,8 +12,8 @@ Découverte, analyse et configuration de modèles (modèle par défaut, replis, 
 
 Connexes :
 
-- Providers + modèles : [Modèles](/fr/providers/models)
-- Configuration de l'auth du provider : [Getting started](/fr/start/getting-started)
+- Fournisseurs + modèles : [Modèles](/en/providers/models)
+- Configuration de l'authentification du fournisseur : [Getting started](/en/start/getting-started)
 
 ## Commandes courantes
 
@@ -24,20 +24,20 @@ openclaw models set <model-or-alias>
 openclaw models scan
 ```
 
-`openclaw models status` affiche les valeurs par défaut/replis résolues ainsi qu'un aperçu de l'auth.
-Lorsque des instantanés d'utilisation des providers sont disponibles, la section de statut OAuth/token inclut
-les en-têtes d'utilisation des providers.
-Ajoutez `--probe` pour exécuter des sondages d'auth en direct sur chaque profil de provider configuré.
-Les sondages sont de vraies requêtes (peuvent consommer des tokens et déclencher des limitations de taux).
+`openclaw models status` affiche les valeurs par défaut résolues/les secours ainsi qu'un aperçu de l'authentification.
+Lorsque des instantanés d'utilisation de provider sont disponibles, la section de statut OAuth/token comprend
+les en-têtes d'utilisation du provider.
+Ajoutez `--probe` pour exécuter des sondages d'authentification en direct sur chaque profil provider configuré.
+Les sondages sont de vraies requêtes (peuvent consommer des tokens et déclencher des limites de taux).
 Utilisez `--agent <id>` pour inspecter l'état model/auth d'un agent configuré. Si omis,
 la commande utilise `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR` si défini, sinon l'agent par défaut configuré.
 
 Remarques :
 
 - `models set <model-or-alias>` accepte `provider/model` ou un alias.
-- Les références de modèle sont analysées en divisant sur la **première** occurrence `/`. Si l'ID du modèle inclut `/` (style OpenRouter), incluez le préfixe du provider (exemple : `openrouter/moonshotai/kimi-k2`).
-- Si vous omettez le provider, OpenClaw traite l'entrée comme un alias ou un modèle pour le **provider par défaut** (fonctionne uniquement lorsqu'il n'y a pas de `/` dans l'ID du modèle).
-- `models status` peut afficher `marker(<value>)` dans la sortie d'auth pour les espaces réservés non secrets (par exemple `OPENAI_API_KEY`, `secretref-managed`, `minimax-oauth`, `qwen-oauth`, `ollama-local`) au lieu de les masquer comme des secrets.
+- Les références de modèle sont analysées en divisant sur la **première** `/`. Si l'ID du modèle inclut `/` (style OpenRouter), incluez le préfixe du fournisseur (exemple : `openrouter/moonshotai/kimi-k2`).
+- Si vous omettez le fournisseur, OpenClaw traite l'entrée comme un alias ou un modèle pour le **fournisseur par défaut** (ne fonctionne que s'il n'y a pas de `/` dans l'ID du modèle).
+- `models status` peut afficher `marker(<value>)` dans la sortie d'authentification pour les espaces réservés non secrets (par exemple `OPENAI_API_KEY`, `secretref-managed`, `minimax-oauth`, `oauth:chutes`, `ollama-local`) au lieu de les masquer comme des secrets.
 
 ### `models status`
 
@@ -70,11 +70,20 @@ openclaw models auth setup-token
 openclaw models auth paste-token
 ```
 
-`models auth login` exécute le flux d'authentification d'un plugin de provider (OAuth/clé API). Utilisez
-`openclaw plugins list` pour voir quels providers sont installés.
+`models auth login` runs a provider plugin’s auth flow (OAuth/API key). Use
+`openclaw plugins list` to see which providers are installed.
 
-Notes :
+Examples:
 
-- `setup-token` demande une valeur de setup-token (générez-la avec `claude setup-token` sur n'importe quelle machine).
-- `paste-token` accepte une chaîne de token générée ailleurs ou via l'automatisation.
-- Remarque sur la politique Anthropic : la prise en charge du setup-token est une compatibilité technique. Anthropic a bloqué certaines utilisations d'abonnement en dehors de Claude Code dans le passé, vérifiez donc les conditions actuelles avant une utilisation généralisée.
+```bash
+openclaw models auth login --provider anthropic --method cli --set-default
+openclaw models auth login --provider openai-codex --set-default
+```
+
+Notes:
+
+- `login --provider anthropic --method cli --set-default` reuses a local Claude
+  CLI login and rewrites the main Anthropic default-model path to `claude-cli/...`.
+- `setup-token` invite à entrer une valeur de setup-token (générez-la avec `claude setup-token` sur n'importe quelle machine).
+- `paste-token` accepte une chaîne de token générée ailleurs ou par automation.
+- Remarque sur la politique Anthropic : la prise en charge des setup-tokens est une compatibilité technique. Anthropic a bloqué par le passé certaines utilisations d'abonnement en dehors de Claude Code, vérifiez donc les conditions actuelles avant une utilisation large.

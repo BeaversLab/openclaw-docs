@@ -543,7 +543,7 @@ title: "設定範例"
 
 ### Anthropic setup-token + API 金鑰，MiniMax 故障轉移
 
-<Warning>過去曾有部分使用者在 Claude Code 之外使用 Anthropic setup-token 時受到限制。請將此視為使用者自選風險，並在依賴訂閱授權前確認目前的 Anthropic 條款。</Warning>
+<Warning>過去，部分使用者在 Claude Code 之外使用 Anthropic setup-token 的使用受到限制。請將此視為使用者自行承擔的風險，並在依賴訂閱驗證之前確認目前的 Anthropic 條款。</Warning>
 
 ```json5
 {

@@ -26,7 +26,7 @@ Empiece de forma conservadora:
 
 ## Requisitos previos
 
-- OpenClaw instalado e integrado — consulte [Introducción](/es/start/getting-started) si aún no ha hecho esto
+- OpenClaw instalado e integrado — consulte [Introducción](/en/start/getting-started) si aún no ha hecho esto
 - Un segundo número de teléfono (SIM/eSIM/prepago) para el asistente
 
 ## La configuración de dos teléfonos (recomendada)
@@ -79,8 +79,8 @@ Consejo: trata esta carpeta como la "memoria" de OpenClaw y conviértela en un r
 openclaw setup
 ```
 
-Guía completa del diseño del espacio de trabajo + copia de seguridad: [Agente workspace](/es/concepts/agent-workspace)
-Flujo de trabajo de memoria: [Memoria](/es/concepts/memory)
+Guía completa del diseño del espacio de trabajo + copia de seguridad: [Agente workspace](/en/concepts/agent-workspace)
+Flujo de trabajo de memoria: [Memoria](/en/concepts/memory)
 
 Opcional: elige un espacio de trabajo diferente con `agents.defaults.workspace` (admite `~`).
 
@@ -207,12 +207,12 @@ Los registros se encuentran en `/tmp/openclaw/` (predeterminado: `openclaw-YYYY-
 
 ## Próximos pasos
 
-- WebChat: [WebChat](/es/web/webchat)
-- Operaciones de la puerta de enlace: [Manual de operaciones de la puerta de enlace](/es/gateway)
-- Cron + despertares: [Trabajos de Cron](/es/automation/cron-jobs)
-- Compañero de la barra de menús de macOS: [Aplicación OpenClaw para macOS](/es/platforms/macos)
-- Aplicación de nodo para iOS: [Aplicación para iOS](/es/platforms/ios)
-- Aplicación de nodo para Android: [Aplicación para Android](/es/platforms/android)
-- Estado de Windows: [Windows (WSL2)](/es/platforms/windows)
-- Estado de Linux: [Aplicación para Linux](/es/platforms/linux)
-- Seguridad: [Seguridad](/es/gateway/security)
+- WebChat: [WebChat](/en/web/webchat)
+- Operaciones de la puerta de enlace: [Manual de operaciones de la puerta de enlace](/en/gateway)
+- Cron + despertares: [Trabajos de Cron](/en/automation/cron-jobs)
+- Compañero de la barra de menús de macOS: [Aplicación OpenClaw para macOS](/en/platforms/macos)
+- Aplicación de nodo para iOS: [Aplicación para iOS](/en/platforms/ios)
+- Aplicación de nodo para Android: [Aplicación para Android](/en/platforms/android)
+- Estado de Windows: [Windows (WSL2)](/en/platforms/windows)
+- Estado de Linux: [Aplicación para Linux](/en/platforms/linux)
+- Seguridad: [Seguridad](/en/gateway/security)

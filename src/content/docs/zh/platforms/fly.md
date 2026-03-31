@@ -23,7 +23,7 @@ description: 在 Fly.io 上部署 OpenClaw
 
 ## 1) 创建 Fly 应用
 
-```exec
+```bash
 # Clone the repo
 git clone https://github.com/openclaw/openclaw.git
 cd openclaw
@@ -88,7 +88,7 @@ primary_region = "iad"
 
 ## 3) 设置密钥
 
-```exec
+```bash
 # Required: Gateway token (for non-loopback binding)
 fly secrets set OPENCLAW_GATEWAY_TOKEN=$(openssl rand -hex 32)
 
@@ -111,7 +111,7 @@ fly secrets set DISCORD_BOT_TOKEN=MTQ...
 
 ## 4) 部署
 
-```exec
+```bash
 fly deploy
 ```
 
@@ -119,7 +119,7 @@ fly deploy
 
 部署后，请验证：
 
-```exec
+```bash
 fly status
 fly logs
 ```
@@ -135,13 +135,13 @@ fly logs
 
 SSH 进入机器以创建适当的配置：
 
-```exec
+```bash
 fly ssh console
 ```
 
 创建配置目录和文件：
 
-```exec
+```bash
 mkdir -p /data
 cat > /data/openclaw.json << 'EOF'
 {
@@ -206,7 +206,7 @@ EOF
 
 重启以应用：
 
-```exec
+```bash
 exit
 fly machine restart <machine-id>
 ```
@@ -217,7 +217,7 @@ fly machine restart <machine-id>
 
 在浏览器中打开：
 
-```exec
+```bash
 fly open
 ```
 
@@ -227,14 +227,14 @@ fly open
 
 ### 日志
 
-```exec
+```bash
 fly logs              # Live logs
 fly logs --no-tail    # Recent logs
 ```
 
 ### SSH 控制台
 
-```exec
+```bash
 fly ssh console
 ```
 
@@ -265,7 +265,7 @@ Fly 无法在配置的端口上访问 Gateway 网关。
 
 或者更新现有机器：
 
-```exec
+```bash
 fly machine update <machine-id> --vm-memory 2048 -y
 ```
 
@@ -279,7 +279,7 @@ Gateway(网关) 拒绝启动，并提示“already running”错误。
 
 **修复方法：** 删除锁文件：
 
-```exec
+```bash
 fly ssh console --command "rm -f /data/gateway.*.lock"
 fly machine restart <machine-id>
 ```
@@ -292,7 +292,7 @@ fly machine restart <machine-id>
 
 验证配置是否存在：
 
-```exec
+```bash
 fly ssh console --command "cat /data/openclaw.json"
 ```
 
@@ -300,7 +300,7 @@ fly ssh console --command "cat /data/openclaw.json"
 
 `fly ssh console -C` 命令不支持 shell 重定向。要写入配置文件：
 
-```exec
+```bash
 # Use echo + tee (pipe from local to remote)
 echo '{"your":"config"}' | fly ssh console -C "tee /data/openclaw.json"
 
@@ -311,7 +311,7 @@ fly sftp shell
 
 **注意：** 如果文件已存在，`fly sftp` 可能会失败。请先删除：
 
-```exec
+```bash
 fly ssh console --command "rm /data/openclaw.json"
 ```
 
@@ -323,7 +323,7 @@ fly ssh console --command "rm /data/openclaw.json"
 
 ## 更新
 
-```exec
+```bash
 # Pull latest changes
 git pull
 
@@ -339,7 +339,7 @@ fly logs
 
 如果需要更改启动命令而无需完全重新部署：
 
-```exec
+```bash
 # Get machine ID
 fly machines list
 
@@ -369,14 +369,14 @@ fly machine update <machine-id> --vm-memory 2048 --command "node dist/index.js g
 
 使用 `fly.private.toml` 代替标准配置：
 
-```exec
+```bash
 # Deploy with private config
 fly deploy -c fly.private.toml
 ```
 
 或者转换现有部署：
 
-```exec
+```bash
 # List current IPs
 fly ips list -a my-openclaw
 
@@ -405,7 +405,7 @@ v6       fdaa:x:x:x:x::x      private          global
 
 **选项 1：本地代理（最简单）**
 
-```exec
+```bash
 # Forward local port 3000 to the app
 fly proxy 3000:3000 -a my-openclaw
 
@@ -414,7 +414,7 @@ fly proxy 3000:3000 -a my-openclaw
 
 **选项 2：WireGuard VPN**
 
-```exec
+```bash
 # Create WireGuard config (one-time)
 fly wireguard create
 
@@ -424,7 +424,7 @@ fly wireguard create
 
 **选项 3：仅 SSH**
 
-```exec
+```bash
 fly ssh console -a my-openclaw
 ```
 

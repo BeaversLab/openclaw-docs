@@ -345,7 +345,7 @@ Ya tenemos algunas pruebas seguras para CI que se comportan como "evaluaciones d
 - Llamada a herramientas simulada a través de la puerta de enlace real + bucle de agente (`src/gateway/gateway.tool-calling.mock-openai.test.ts`).
 - Flujos de extremo a extremo del asistente que validan el cableado de la sesión y los efectos de configuración (`src/gateway/gateway.wizard.e2e.test.ts`).
 
-Lo que aún falta para las habilidades (consulte [Habilidades](/es/tools/skills)):
+Lo que aún falta para las habilidades (consulte [Habilidades](/en/tools/skills)):
 
 - **Toma de decisiones:** cuando las habilidades se enumeran en el mensaje, ¿el agente elige la habilidad correcta (o evita las irrelevantes)?
 - **Cumplimiento:** ¿el agente lee `SKILL.md` antes de usarlo y sigue los pasos/argumentos requeridos?

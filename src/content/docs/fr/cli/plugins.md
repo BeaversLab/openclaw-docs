@@ -12,10 +12,10 @@ Gérer les plugins/extensions du Gateway, les packs de hooks et les bundles comp
 
 Connexe :
 
-- Système de plugins : [Plugins](/fr/tools/plugin)
-- Compatibilité des bundles : [Plugin bundles](/fr/plugins/bundles)
-- Manifeste de plugin + schéma : [Plugin manifest](/fr/plugins/manifest)
-- Renforcement de la sécurité : [Security](/fr/gateway/security)
+- Système de plugins : [Plugins](/en/tools/plugin)
+- Compatibilité des bundles : [Plugin bundles](/en/plugins/bundles)
+- Manifeste de plugin + schéma : [Plugin manifest](/en/plugins/manifest)
+- Renforcement de la sécurité : [Security](/en/gateway/security)
 
 ## Commandes
 
@@ -198,7 +198,7 @@ Chaque plugin est classé selon ce qu'il enregistre réellement à l'exécution 
 - **hook-only** — uniquement des hooks, aucune capacité ou surface
 - **non-capability** — outils/commandes/services mais aucune capacité
 
-Voir [Plugin shapes](/fr/plugins/architecture#plugin-shapes) pour plus d'informations sur le modèle de capacité.
+Voir [Plugin shapes](/en/plugins/architecture#plugin-shapes) pour plus d'informations sur le modèle de capacité.
 
 Le drapeau `--json` génère un rapport lisible par machine adapté au scriptage et à l'audit.
 

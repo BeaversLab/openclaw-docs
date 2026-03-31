@@ -13,28 +13,28 @@ read_when:
 Los complementos amplían OpenClaw con nuevas capacidades: canales, proveedores de modelos, voz,
 generación de imágenes, búsqueda web, herramientas de agente, o cualquier combinación.
 
-No es necesario que añadas tu complemento al repositorio de OpenClaw. Publícalo en
-[ClawHub](/es/tools/clawhub) o npm y los usuarios lo instalan con
+No es necesario que agregues tu complemento al repositorio de OpenClaw. Publica en
+[ClawHub](/en/tools/clawhub) o npm y los usuarios instalan con
 `openclaw plugins install <package-name>`. OpenClaw intenta con ClawHub primero y
-recurre a npm automáticamente.
+automáticamente recurre a npm.
 
 ## Requisitos previos
 
 - Node >= 22 y un gestor de paquetes (npm o pnpm)
 - Familiaridad con TypeScript (ESM)
-- Para complementos en el repositorio: repositorio clonado y `pnpm install` realizado
+- Para complementos en el repositorio: repositorio clonado y `pnpm install` hecho
 
 ## ¿Qué tipo de complemento?
 
 <CardGroup cols={3}>
-  <Card title="Complemento de canal" icon="messages-square" href="/es/plugins/sdk-channel-plugins">
+  <Card title="Complemento de canal" icon="messages-square" href="/en/plugins/sdk-channel-plugins">
     Conecta OpenClaw a una plataforma de mensajería (Discord, IRC, etc.)
   </Card>
-  <Card title="Complemento de proveedor" icon="cpu" href="/es/plugins/sdk-provider-plugins">
-    Añade un proveedor de modelos (LLM, proxy o punto de conexión personalizado)
+  <Card title="Complemento de proveedor" icon="cpu" href="/en/plugins/sdk-provider-plugins">
+    Agrega un proveedor de modelos (LLM, proxy o endpoint personalizado)
   </Card>
   <Card title="Complemento de herramienta / hook" icon="wrench">
-    Registra herramientas de agente, hooks de eventos o servicios — continúa abajo
+    Registra herramientas de agente, ganchos de eventos o servicios — continúa abajo
   </Card>
 </CardGroup>
 
@@ -71,11 +71,11 @@ complementos de canal y proveedor tienen guías dedicadas vinculadas anteriormen
     </CodeGroup>
 
     Cada complemento necesita un manifiesto, incluso sin configuración. Consulta
-    [Manifest](/es/plugins/manifest) para ver el esquema completo.
+    [Manifiesto](/en/plugins/manifest) para ver el esquema completo.
 
   </Step>
 
-  <Step title="Escriba el punto de entrada">
+  <Step title="Escribir el punto de entrada">
 
     ```typescript
     // index.ts
@@ -99,21 +99,21 @@ complementos de canal y proveedor tienen guías dedicadas vinculadas anteriormen
     });
     ```
 
-    `definePluginEntry` es para complementos que no son de canal. Para los canales, use
-    `defineChannelPluginEntry` — consulte [Complementos de canal](/es/plugins/sdk-channel-plugins).
-    Para obtener opciones completas de puntos de entrada, consulte [Puntos de entrada](/es/plugins/sdk-entrypoints).
+    `definePluginEntry` es para complementos que no son de canales. Para los canales, use
+    `defineChannelPluginEntry` — consulte [Complementos de canal](/en/plugins/sdk-channel-plugins).
+    Para obtener todas las opciones del punto de entrada, consulte [Puntos de entrada](/en/plugins/sdk-entrypoints).
 
   </Step>
 
-  <Step title="Prueba y publicación">
+  <Step title="Probar y publicar">
 
-    **Complementos externos:** publíquelos en [ClawHub](/es/tools/clawhub) o npm, luego instálelos:
+    **Complementos externos:** publíquelos en [ClawHub](/en/tools/clawhub) o npm, luego instale:
 
     ```bash
     openclaw plugins install @myorg/openclaw-my-plugin
     ```
 
-    OpenClaw verifica primero ClawHub y luego recurre a npm.
+    OpenClaw verifica ClawHub primero y luego recurre a npm.
 
     **Complementos en el repositorio:** colóquelos bajo `extensions/` — se detectan automáticamente.
 
@@ -126,36 +126,38 @@ complementos de canal y proveedor tienen guías dedicadas vinculadas anteriormen
 
 ## Capacidades de los complementos
 
-Un único complemento puede registrar cualquier cantidad de capacidades a través del objeto `api`:
+Un solo complemento puede registrar cualquier cantidad de capacidades a través del objeto `api`:
 
-| Capacidad                 | Método de registro                            | Guía detallada                                                                              |
-| ------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Inferencia de texto (LLM) | `api.registerProvider(...)`                   | [Complementos de proveedor](/es/plugins/sdk-provider-plugins)                               |
-| Canal / mensajería        | `api.registerChannel(...)`                    | [Complementos de canal](/es/plugins/sdk-channel-plugins)                                    |
-| Voz (TTS/STT)             | `api.registerSpeechProvider(...)`             | [Complementos de proveedor](/es/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| Comprensión de medios     | `api.registerMediaUnderstandingProvider(...)` | [Complementos de proveedor](/es/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| Generación de imágenes    | `api.registerImageGenerationProvider(...)`    | [Complementos de proveedor](/es/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| Búsqueda web              | `api.registerWebSearchProvider(...)`          | [Complementos de proveedor](/es/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| Herramientas de agente    | `api.registerTool(...)`                       | A continuación                                                                              |
-| Comandos personalizados   | `api.registerCommand(...)`                    | [Puntos de entrada](/es/plugins/sdk-entrypoints)                                            |
-| Ganchos de eventos        | `api.registerHook(...)`                       | [Puntos de entrada](/es/plugins/sdk-entrypoints)                                            |
-| Rutas HTTP                | `api.registerHttpRoute(...)`                  | [Aspectos internos](/es/plugins/architecture#gateway-http-routes)                           |
-| Subcomandos de CLI        | `api.registerCli(...)`                        | [Puntos de entrada](/es/plugins/sdk-entrypoints)                                            |
+| Capacidad                    | Método de registro                            | Guía detallada                                                                              |
+| ---------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Inferencia de texto (LLM)    | `api.registerProvider(...)`                   | [Complementos de proveedor](/en/plugins/sdk-provider-plugins)                               |
+| Backend de inferencia de CLI | `api.registerCliBackend(...)`                 | [Backends de CLI](/en/gateway/cli-backends)                                                 |
+| Canal / mensajería           | `api.registerChannel(...)`                    | [Complementos de canal](/en/plugins/sdk-channel-plugins)                                    |
+| Voz (TTS/STT)                | `api.registerSpeechProvider(...)`             | [Complementos de proveedor](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| Comprensión multimedia       | `api.registerMediaUnderstandingProvider(...)` | [Complementos de proveedor](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| Generación de imágenes       | `api.registerImageGenerationProvider(...)`    | [Plugins de proveedores](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)    |
+| Búsqueda web                 | `api.registerWebSearchProvider(...)`          | [Plugins de proveedores](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities)    |
+| Herramientas de agente       | `api.registerTool(...)`                       | A continuación                                                                              |
+| Comandos personalizados      | `api.registerCommand(...)`                    | [Puntos de entrada](/en/plugins/sdk-entrypoints)                                            |
+| Ganchos de eventos           | `api.registerHook(...)`                       | [Puntos de entrada](/en/plugins/sdk-entrypoints)                                            |
+| Rutas HTTP                   | `api.registerHttpRoute(...)`                  | [Funciones internas](/en/plugins/architecture#gateway-http-routes)                          |
+| Subcomandos de CLI           | `api.registerCli(...)`                        | [Puntos de entrada](/en/plugins/sdk-entrypoints)                                            |
 
-Para obtener la API de registro completa, consulte [Descripción general del SDK](/es/plugins/sdk-overview#registration-api).
+Para conocer la API de registro completa, consulte [Descripción general del SDK](/en/plugins/sdk-overview#registration-api).
 
-Semántica de protección de ganchos a tener en cuenta:
+Semántica de protección de gancho a tener en cuenta:
 
 - `before_tool_call`: `{ block: true }` es terminal y detiene los controladores de menor prioridad.
 - `before_tool_call`: `{ block: false }` se trata como sin decisión.
 - `message_sending`: `{ cancel: true }` es terminal y detiene los controladores de menor prioridad.
-- `message_sending` `{ cancel: false }` se trata como sin decisión.
+- `message_sending`: `{ cancel: false }` se trata como sin decisión.
 
-Consulte [semánticas de decisión de hook del SDK Overview](/es/plugins/sdk-overview#hook-decision-semantics) para obtener detalles.
+Consulte [Semántica de decisión de gancho de descripción general del SDK](/en/plugins/sdk-overview#hook-decision-semantics) para obtener detalles.
 
 ## Registro de herramientas de agente
 
-Las herramientas son funciones tipificadas que el LLM puede llamar. Pueden ser obligatorias (siempre disponibles) u opcionales (opción del usuario):
+Las herramientas son funciones tipificadas que el LLM puede llamar. Pueden ser obligatorias (siempre
+disponibles) u opcionales (elección del usuario):
 
 ```typescript
 register(api) {
@@ -194,11 +196,11 @@ Los usuarios habilitan las herramientas opcionales en la configuración:
 
 - Los nombres de las herramientas no deben entrar en conflicto con las herramientas principales (los conflictos se omiten)
 - Use `optional: true` para herramientas con efectos secundarios o requisitos binarios adicionales
-- Los usuarios pueden habilitar todas las herramientas de un complemento agregando el ID del complemento a `tools.allow`
+- Los usuarios pueden habilitar todas las herramientas de un complemento agregando el id del complemento a `tools.allow`
 
 ## Convenciones de importación
 
-Siempre importe desde rutas `openclaw/plugin-sdk/<subpath>` enfocadas:
+Importe siempre desde rutas `openclaw/plugin-sdk/<subpath>` enfocadas:
 
 ```typescript
 import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
@@ -208,39 +210,49 @@ import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
 import { ... } from "openclaw/plugin-sdk";
 ```
 
-Para obtener la referencia completa de subrutas, consulte [SDK Overview](/es/plugins/sdk-overview).
+Para la referencia completa de la subruta, consulte [Información general del SDK](/en/plugins/sdk-overview).
 
-Dentro de su complemento, use archivos barril locales (`api.ts`, `runtime-api.ts`) para importaciones internas; nunca importe su propio complemento a través de su ruta del SDK.
+Dentro de su complemento, use archivos barrel locales (`api.ts`, `runtime-api.ts`) para
+importaciones internas; nunca importe su propio complemento a través de su ruta SDK.
 
 ## Lista de verificación previa al envío
 
-<Check>**package.** tiene metadatos `openclaw` correctos</Check>
+<Check>**package.** tiene los metadatos correctos `openclaw`</Check>
 <Check>El manifiesto **openclaw.plugin.** está presente y es válido</Check>
 <Check>El punto de entrada usa `defineChannelPluginEntry` o `definePluginEntry`</Check>
 <Check>Todas las importaciones usan rutas `plugin-sdk/<subpath>` enfocadas</Check>
-<Check>Las importaciones internas usan módulos locales, no autoimportaciones del SDK</Check>
+<Check>Las importaciones internas usan módulos locales, no auto-importaciones del SDK</Check>
 <Check>Las pruebas pasan (`pnpm test -- extensions/my-plugin/`)</Check>
 <Check>`pnpm check` pasa (complementos en el repositorio)</Check>
 
-## Siguientes pasos
+## Pruebas de lanzamiento beta
+
+1. Esté atento a las etiquetas de lanzamiento de GitHub en [openclaw/openclaw](https://github.com/openclaw/openclaw/releases) y suscríbase a través de `Watch` > `Releases`. Las etiquetas beta tienen el aspecto `v2026.3.N-beta.1`. También puede activar las notificaciones para la cuenta oficial de OpenClaw X [@openclaw](https://x.com/openclaw) para recibir anuncios de lanzamiento.
+2. Pruebe su complemento con la etiqueta beta tan pronto como aparezca. El período de tiempo antes de la versión estable suele ser de solo unas pocas horas.
+3. Publique en el hilo de su complemento en el canal de Discord `plugin-forum` después de probar con `all good` o con lo que falló. Si aún no tiene un hilo, cree uno.
+4. Si algo falla, abra o actualice un problema titulado `Beta blocker: <plugin-name> - <summary>` y aplique la etiqueta `beta-blocker`. Ponga el enlace del problema en su hilo.
+5. Abra una PR a `main` titulada `fix(<plugin-id>): beta blocker - <summary>` y vincule el problema tanto en la PR como en su hilo de Discord. Los colaboradores no pueden etiquetar las PR, por lo que el título es la señal del lado de la PR para los mantenedores y la automatización. Los bloqueos con una PR se fusionan; los bloqueos sin una podrían lanzarse de todos modos. Los mantenedores observan estos hilos durante las pruebas beta.
+6. El silencio significa que está bien (verde). Si pierde el plazo, su solución probablemente se incluirá en el próximo ciclo.
+
+## Próximos pasos
 
 <CardGroup cols={2}>
-  <Card title="Complementos de canal" icon="messages-square" href="/es/plugins/sdk-channel-plugins">
+  <Card title="Complementos de canal" icon="messages-square" href="/en/plugins/sdk-channel-plugins">
     Cree un complemento de canal de mensajería
   </Card>
-  <Card title="Complementos de proveedor" icon="cpu" href="/es/plugins/sdk-provider-plugins">
-    Construye un complemento de proveedor de modelos
+  <Card title="Complementos de proveedor" icon="cpu" href="/en/plugins/sdk-provider-plugins">
+    Cree un complemento de proveedor de modelos
   </Card>
-  <Card title="Resumen del SDK" icon="book-open" href="/es/plugins/sdk-overview">
+  <Card title="Resumen del SDK" icon="book-open" href="/en/plugins/sdk-overview">
     Mapa de importación y referencia de la API de registro
   </Card>
-  <Card title="Ayudantes de runtime" icon="settings" href="/es/plugins/sdk-runtime">
-    TTS, búsqueda, subagente vía api.runtime
+  <Card title="Asistentes de tiempo de ejecución" icon="settings" href="/en/plugins/sdk-runtime">
+    TTS, búsqueda, subagente mediante api.runtime
   </Card>
-  <Card title="Pruebas" icon="test-tubes" href="/es/plugins/sdk-testing">
+  <Card title="Pruebas" icon="test-tubes" href="/en/plugins/sdk-testing">
     Utilidades y patrones de prueba
   </Card>
-  <Card title="Manifiesto del complemento" icon="file-json" href="/es/plugins/manifest">
-    Referencia completa del esquema de manifiesto
+  <Card title="Manifiesto del complemento" icon="file-" href="/en/plugins/manifest">
+    Referencia completa del esquema del manifiesto
   </Card>
 </CardGroup>

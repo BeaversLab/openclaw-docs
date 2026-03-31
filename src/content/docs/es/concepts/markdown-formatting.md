@@ -101,7 +101,7 @@ channels:
   fragmentos; el renderizador vuelve a abrir los estilos dentro de cada fragmento.
 
 Si necesita más información sobre el comportamiento de la fragmentación entre canales, consulte
-[Streaming + chunking](/es/concepts/streaming).
+[Streaming + chunking](/en/concepts/streaming).
 
 ## Política de enlaces
 

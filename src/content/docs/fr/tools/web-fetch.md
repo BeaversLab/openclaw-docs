@@ -14,7 +14,7 @@ L'outil `web_fetch` effectue une requête HTTP GET simple et extrait le contenu 
 (HTML en markdown ou texte). Il n'exécute **pas** JavaScript.
 
 Pour les sites utilisant beaucoup de JS ou les pages protégées par connexion, utilisez
-[Web Browser](/fr/tools/browser) à la place.
+[Web Browser](/en/tools/browser) à la place.
 
 ## Démarrage rapide
 
@@ -36,9 +36,9 @@ await web_fetch({ url: "https://example.com/article" });
 ## Fonctionnement
 
 <Steps>
-  <Step title="Récupérer">Envoie un HTTP GET avec un User-Agent de type Chrome et l'en-tête `Accept-Language`. Bloque les noms d'hôte privés/internes et vérifie les redirections.</Step>
-  <Step title="Extraire">Exécute Readability (extraction du contenu principal) sur la réponse HTML.</Step>
-  <Step title="Secours (optionnel)">Si Readabilité échoue et que Firecrawl est configuré, réessaie via l'Firecrawl API avec le mode de contournement de bot.</Step>
+  <Step title="Récupération">Envoie un HTTP GET avec un User-Agent semblable à Chrome et l'en-tête `Accept-Language`. Bloque les noms d'hôte privés/internes et vérifie les redirections.</Step>
+  <Step title="Extraction">Exécute Readability (extraction du contenu principal) sur la réponse HTML.</Step>
+  <Step title="Fallback (optional)">Si Readability échoue et que Firecrawl est configuré, de nouvelles tentatives sont effectuées via l'Firecrawl API en mode de contournement des bots.</Step>
   <Step title="Cache">Les résultats sont mis en cache pendant 15 minutes (configurable) pour réduire les récupérations répétées de la même URL.</Step>
 </Steps>
 
@@ -67,7 +67,7 @@ await web_fetch({ url: "https://example.com/article" });
 ## Firecrawl de secours
 
 Si l'extraction par Readabilité échoue, `web_fetch` peut revenir à
-[Firecrawl](/fr/tools/firecrawl) pour le contournement de bot et une meilleure extraction :
+[Firecrawl](/en/tools/firecrawl) pour le contournement de bot et une meilleure extraction :
 
 ```json5
 {
@@ -90,7 +90,7 @@ Si l'extraction par Readabilité échoue, `web_fetch` peut revenir à
 
 `tools.web.fetch.firecrawl.apiKey` prend en charge les objets SecretRef.
 
-<Note>Si Firecrawl est activé et que son SecretRef n'est pas résolu sans aucune valeur de repli (fallback) d'env `FIRECRAWL_API_KEY`, le démarrage de la passerelle échoue rapidement.</Note>
+<Note>Si Firecrawl est activé et que son SecretRef n'est pas résolu sans `FIRECRAWL_API_KEY` de repli d'env, le démarrage de la passerelle échoue rapidement.</Note>
 
 ## Limites et sécurité
 
@@ -99,7 +99,7 @@ Si l'extraction par Readabilité échoue, `web_fetch` peut revenir à
   trop volumineuses sont tronquées avec un avertissement
 - Les noms d'hôte privés/internes sont bloqués
 - Les redirections sont vérifiées et limitées par `maxRedirects`
-- `web_fetch` est au mieux -- certains sites ont besoin du [Web Browser](/fr/tools/browser)
+- `web_fetch` est au mieux -- certains sites ont besoin du [Web Browser](/en/tools/browser)
 
 ## Profils d'outil
 
@@ -116,6 +116,6 @@ Si vous utilisez des profils d'outil ou des listes autorisées (allowlists), ajo
 
 ## Connexes
 
-- [Web Search](/fr/tools/web) -- rechercher sur le web avec plusieurs fournisseurs
-- [Web Browser](/fr/tools/browser) -- automatisation complète du navigateur pour les sites utilisant beaucoup de JS
-- [Firecrawl](/fr/tools/firecrawl) -- outils de recherche et de scraping Firecrawl
+- [Web Search](/en/tools/web) -- rechercher sur le web avec plusieurs fournisseurs
+- [Web Browser](/en/tools/browser) -- automatisation complète du navigateur pour les sites utilisant beaucoup de JS
+- [Firecrawl](/en/tools/firecrawl) -- outils de recherche et de scraping Firecrawl

@@ -11,7 +11,7 @@ Cette application est généralement construite à partir de [`scripts/package-m
 
 - définit un identifiant de bundle de débogage stable : `ai.openclaw.mac.debug`
 - écrit le Info.plist avec cet identifiant de bundle (remplacer via `BUNDLE_ID=...`)
-- appelle [`scripts/codesign-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/codesign-mac-app.sh) pour signer le binaire principal et le bundle de l'application afin que macOS traite chaque reconstruction comme le même bundle signé et conserve les autorisations TCC (notifications, accessibilité, enregistrement d'écran, microphone, reconnaissance vocale). Pour des autorisations stables, utilisez une véritable identité de signature ; la signature ad-hoc est optionnelle et fragile (voir [macOS permissions](/fr/platforms/mac/permissions)).
+- appelle [`scripts/codesign-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/codesign-mac-app.sh) pour signer le binaire principal et le bundle de l'application afin que macOS traite chaque reconstruction comme le même bundle signé et conserve les autorisations TCC (notifications, accessibilité, enregistrement d'écran, microphone, reconnaissance vocale). Pour des autorisations stables, utilisez une véritable identité de signature ; la signature ad-hoc est optionnelle et fragile (voir [macOS permissions](/en/platforms/mac/permissions)).
 - utilise `CODESIGN_TIMESTAMP=auto` par défaut ; il active les horodatages de confiance pour les signatures d'ID de développeur. Définissez `CODESIGN_TIMESTAMP=off` pour ignorer l'horodatage (versions de débogage hors ligne).
 - injecte les métadonnées de construction dans le Info.plist : `OpenClawBuildTimestamp` (UTC) et `OpenClawGitCommit` (hash court) afin que le panneau À propos puisse afficher la version, git, et le channel de débogage/release.
 - **Le packaging utilise par défaut Node 24** : le script exécute les builds TS et le build de l'interface de contrôle. Node 22 LTS, actuellement `22.14+`, reste pris en charge pour la compatibilité.
@@ -31,7 +31,7 @@ DISABLE_LIBRARY_VALIDATION=1 scripts/package-mac-app.sh   # dev-only Sparkle Tea
 
 ### Note sur la signature ad-hoc
 
-Lors de la signature avec `SIGN_IDENTITY="-"` (ad-hoc), le script désactive automatiquement le **Hardened Runtime** (`--options runtime`). Cela est nécessaire pour éviter les plantages lorsque l'application tente de charger des frameworks intégrés (comme Sparkle) qui ne partagent pas le même identifiant d'équipe. Les signatures ad-hoc cassent également la persistance des permissions TCC ; consultez [permissions macOS](/fr/platforms/mac/permissions) pour les étapes de récupération.
+Lors de la signature avec `SIGN_IDENTITY="-"` (ad-hoc), le script désactive automatiquement le **Hardened Runtime** (`--options runtime`). Cela est nécessaire pour éviter les plantages lorsque l'application tente de charger des frameworks intégrés (comme Sparkle) qui ne partagent pas le même identifiant d'équipe. Les signatures ad-hoc cassent également la persistance des permissions TCC ; consultez [permissions macOS](/en/platforms/mac/permissions) pour les étapes de récupération.
 
 ## Métadonnées de build pour À propos
 

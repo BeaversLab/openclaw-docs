@@ -32,11 +32,11 @@ Agent 可以使用 `message` 工具的 `react` 動作，在訊息上新增及移
     - `remove: true` 僅移除指定的 emoji。
   </Accordion>
 
-<Accordion title="Google Chat">- 空的 `emoji` 會移除該訊息上應用程式的反應。 - `remove: true` 僅移除指定的 emoji。</Accordion>
+<Accordion title="Google Chat">- 空的 `emoji` 會移除應用程式在訊息上的反應。 - `remove: true` 僅移除指定的表情符號。</Accordion>
 
-<Accordion title="Telegram">- 空的 `emoji` 會移除 bot 的反應。 - `remove: true` 也會移除反應，但為了工具驗證，仍需要非空的 `emoji`。</Accordion>
+<Accordion title="Telegram">- 空的 `emoji` 會移除機器人的反應。 - `remove: true` 也會移除反應，但為了工具驗證，仍需要非空的 `emoji`。</Accordion>
 
-<Accordion title="WhatsApp">- 空的 `emoji` 會移除 bot 反應。 - `remove: true` 在內部會對應到空 emoji (在工具呼叫中仍需要 `emoji`)。</Accordion>
+<Accordion title="WhatsApp">- 空的 `emoji` 會移除機器人反應。 - `remove: true` 在內部映射為空的表情符號（在工具呼叫中仍需要 `emoji`）。</Accordion>
 
 <Accordion title="Zalo 個人版 (zalouser)">- 需要非空的 `emoji`。 - `remove: true` 會移除該特定的 emoji 反應。</Accordion>
 

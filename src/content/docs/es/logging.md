@@ -69,7 +69,7 @@ openclaw doctor
 ### Interfaz de usuario de control (web)
 
 La pestaña **Registros** de la interfaz de usuario de control realiza un seguimiento del mismo archivo usando `logs.tail`.
-Consulta [/web/control-ui](/es/web/control-ui) para saber cómo abrirla.
+Consulta [/web/control-ui](/en/web/control-ui) para saber cómo abrirla.
 
 ### Registros solo de canal
 
@@ -219,7 +219,7 @@ Notas:
 
 - Los registros de marcadores van al archivo de registro estándar (igual que `logging.file`).
 - El resultado todavía se redacta según `logging.redactSensitive`.
-- Guía completa: [/diagnostics/flags](/es/diagnostics/flags).
+- Guía completa: [/diagnostics/flags](/en/diagnostics/flags).
 
 ### Exportar a OpenTelemetry
 

@@ -44,7 +44,7 @@ title: "Secrets Apply Plan Contract"
 
 以下位置中支持的凭据路径接受计划目标：
 
-- [SecretRef 凭证界面](/zh/reference/secretref-credential-surface)
+- [SecretRef 凭证界面](/en/reference/secretref-credential-surface)
 
 ## 目标类型行为
 
@@ -110,7 +110,7 @@ openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
 
 ## 相关文档
 
-- [Secrets 管理](/zh/gateway/secrets)
-- [CLI `secrets`](/zh/cli/secrets)
-- [SecretRef 凭证界面](/zh/reference/secretref-credential-surface)
-- [配置参考](/zh/gateway/configuration-reference)
+- [Secrets 管理](/en/gateway/secrets)
+- [CLI `secrets`](/en/cli/secrets)
+- [SecretRef 凭证界面](/en/reference/secretref-credential-surface)
+- [配置参考](/en/gateway/configuration-reference)

@@ -65,10 +65,10 @@ OpenClaw reconnaît deux formats de plugins :
 | **Native** | `openclaw.plugin.json` + module d'exécution ; s'exécute dans le processus        | Plugins officiels, packages npm communautaires         |
 | **Bundle** | Disposition compatible Codex/Claude/Cursor ; mappée aux fonctionnalités OpenClaw | `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/` |
 
-Les deux apparaissent sous `openclaw plugins list`. Consultez [Plugin Bundles](/fr/plugins/bundles) pour plus de détails sur les bundles.
+Les deux apparaissent sous `openclaw plugins list`. Voir [Plugin Bundles](/en/plugins/bundles) pour les détails sur les bundles.
 
-Si vous écrivez un plugin natif, commencez par [Building Plugins](/fr/plugins/building-plugins)
-et [Plugin SDK Overview](/fr/plugins/sdk-overview).
+Si vous écrivez un plugin natif, commencez par [Building Plugins](/en/plugins/building-plugins)
+et la [Plugin SDK Overview](/en/plugins/sdk-overview).
 
 ## Plugins officiels
 
@@ -76,12 +76,12 @@ et [Plugin SDK Overview](/fr/plugins/sdk-overview).
 
 | Plugin          | Package                | Docs                                    |
 | --------------- | ---------------------- | --------------------------------------- |
-| Matrix          | `@openclaw/matrix`     | [Matrix](/fr/channels/matrix)           |
-| Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/fr/channels/msteams) |
-| Nostr           | `@openclaw/nostr`      | [Nostr](/fr/channels/nostr)             |
-| Appel vocal     | `@openclaw/voice-call` | [Appel vocal](/fr/plugins/voice-call)   |
-| Zalo            | `@openclaw/zalo`       | [Zalo](/fr/channels/zalo)               |
-| Zalo Personal   | `@openclaw/zalouser`   | [Zalo Personal](/fr/plugins/zalouser)   |
+| Matrix          | `@openclaw/matrix`     | [Matrix](/en/channels/matrix)           |
+| Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/en/channels/msteams) |
+| Nostr           | `@openclaw/nostr`      | [Nostr](/en/channels/nostr)             |
+| Appel vocal     | `@openclaw/voice-call` | [Voice Call](/en/plugins/voice-call)    |
+| Zalo            | `@openclaw/zalo`       | [Zalo](/en/channels/zalo)               |
+| Zalo Personal   | `@openclaw/zalouser`   | [Zalo Personal](/en/plugins/zalouser)   |
 
 ### Core (livré avec OpenClaw)
 
@@ -90,20 +90,21 @@ et [Plugin SDK Overview](/fr/plugins/sdk-overview).
     `anthropic`, `byteplus`, `cloudflare-ai-gateway`, `github-copilot`, `google`,
     `huggingface`, `kilocode`, `kimi-coding`, `minimax`, `mistral`, `modelstudio`,
     `moonshot`, `nvidia`, `openai`, `opencode`, `opencode-go`, `openrouter`,
-    `qianfan`, `qwen-portal-auth`, `synthetic`, `together`, `venice`,
+    `qianfan`, `synthetic`, `together`, `venice`,
     `vercel-ai-gateway`, `volcengine`, `xiaomi`, `zai`
   </Accordion>
 
-<Accordion title="Plugins de mémoire">- `memory-core` — recherche de mémoire groupée (par défaut via `plugins.slots.memory`) - `memory-lancedb` — mémoire à long terme installée à la demande avec rappel/capture automatique (définir `plugins.slots.memory = "memory-lancedb"`)</Accordion>
+<Accordion title="Plugins de mémoire">- `memory-core` — recherche de mémoire intégrée (par défaut via `plugins.slots.memory`) - `memory-lancedb` — mémoire à long terme installée à la demande avec rappel/capture automatiques (définir `plugins.slots.memory = "memory-lancedb"`)</Accordion>
 
 <Accordion title="Fournisseurs de reconnaissance vocale (activés par défaut)">`elevenlabs`, `microsoft`</Accordion>
 
-  <Accordion title="Autre">
-    - `copilot-proxy` — pont proxy VS Code Copilot (désactivé par défaut)
+  <Accordion title="Other">
+    - `browser` — plugin navigateur groupé pour l'outil navigateur, `openclaw browser` CLI, méthode de passerelle `browser.request`, runtime du navigateur et service de contrôle du navigateur par défaut (activé par défaut ; désactiver avant de le remplacer)
+    - `copilot-proxy` — pont VS Code Copilot Proxy (désactivé par défaut)
   </Accordion>
 </AccordionGroup>
 
-Vous cherchez des plugins tiers ? Voir [Plugins communautaires](/fr/plugins/community).
+Vous recherchez des plugins tiers ? Voir [Plugins communautaires](/en/plugins/community).
 
 ## Configuration
 
@@ -123,16 +124,16 @@ Vous cherchez des plugins tiers ? Voir [Plugins communautaires](/fr/plugins/comm
 
 | Champ            | Description                                                  |
 | ---------------- | ------------------------------------------------------------ |
-| `enabled`        | Commutateur principal (par défaut : `true`)                  |
+| `enabled`        | Interrupteur principal (par défaut : `true`)                 |
 | `allow`          | Liste d'autorisation des plugins (facultatif)                |
 | `deny`           | Liste de refus des plugins (facultatif ; la refus l'emporte) |
 | `load.paths`     | Fichiers/répertoires de plugins supplémentaires              |
 | `slots`          | Sélecteurs de slot exclusifs (ex. `memory`, `contextEngine`) |
 | `entries.\<id\>` | Commutateurs + configuration par plugin                      |
 
-Les modifications de la configuration **nécessitent un redémarrage de la passerelle**. Si la passerelle fonctionne avec la surveillance de la configuration + le redémarrage en processus activés (le chemin par défaut `openclaw gateway`), ce redémarrage est généralement effectué automatiquement un instant après l'écriture de la configuration.
+Les modifications de la configuration **nécessitent un redémarrage de la passerelle**. Si le Gateway fonctionne avec la surveillance de la configuration et le redémarrage en processus activés (le chemin par défaut `openclaw gateway`), ce redémarrage est généralement effectué automatiquement un instant après l'écriture de la configuration.
 
-<Accordion title="États des plugins : désactivé vs manquant vs invalide">- **Désactivé** : le plugin existe mais les règles d'activation l'ont éteint. La configuration est conservée. - **Manquant** : la configuration fait référence à un identifiant de plugin que la découverte n'a pas trouvé. - **Invalide** : le plugin existe mais sa configuration ne correspond pas au schéma déclaré.</Accordion>
+<Accordion title="Plugin states: disabled vs missing vs invalid">- **Disabled** : le plugin existe mais les règles d'activation l'ont désactivé. La configuration est conservée. - **Missing** : la configuration fait référence à un ID de plugin que la découverte n'a pas trouvé. - **Invalid** : le plugin existe mais sa configuration ne correspond pas au schéma déclaré.</Accordion>
 
 ## Discovery et précédence
 
@@ -140,7 +141,7 @@ OpenClaw recherche les plugins dans cet ordre (la première correspondance l'emp
 
 <Steps>
   <Step title="Chemins de configuration">
-    `plugins.load.paths` — chemins de fichiers ou de répertoires explicites.
+    `plugins.load.paths` — chemins explicites de fichiers ou de répertoires.
   </Step>
 
   <Step title="Extensions de l'espace de travail">
@@ -158,7 +159,7 @@ OpenClaw recherche les plugins dans cet ordre (la première correspondance l'emp
 ### Règles d'activation
 
 - `plugins.enabled: false` désactive tous les plugins
-- `plugins.deny` l'emporte toujours sur la liste d'autorisation
+- `plugins.deny` l'emporte toujours sur allow
 - `plugins.entries.\<id\>.enabled: false` désactive ce plugin
 - Les plugins d'origine espace de travail sont **désactivés par défaut** (doivent être explicitement activés)
 - Les plugins groupés suivent l'ensemble intégré activé par défaut, sauf s'ils sont remplacés
@@ -204,7 +205,7 @@ openclaw plugins enable <id>
 openclaw plugins disable <id>
 ```
 
-Voir la [Référence CLI `openclaw plugins`](/fr/cli/plugins) pour plus de détails.
+Voir la [référence de la CLI `openclaw plugins`](/en/cli/plugins) pour tous les détails.
 
 ## Aperçu de API des plugins
 
@@ -250,15 +251,15 @@ Comportement de garde de hook pour les hooks de cycle de vie typés :
 - `before_tool_call` : `{ block: true }` est terminal ; les gestionnaires de priorité inférieure sont ignorés.
 - `before_tool_call` : `{ block: false }` est une opération vide et ne efface pas un bloc précédent.
 - `message_sending` : `{ cancel: true }` est terminal ; les gestionnaires de priorité inférieure sont ignorés.
-- `message_sending` : `{ cancel: false }` est une opération vide et ne efface pas une annulation précédente.
+- `message_sending` : `{ cancel: false }` est une opération sans effet et n'annule pas une annulation antérieure.
 
-Pour le comportement complet des hooks typés, voir [Aperçu du SDK](/fr/plugins/sdk-overview#hook-decision-semantics).
+Pour le comportement complet des hooks typés, consultez [Présentation du SDK](/en/plugins/sdk-overview#hook-decision-semantics).
 
 ## Connexes
 
-- [Créer des plugins](/fr/plugins/building-plugins) — créer votre propre plugin
-- [Bundles de plugins](/fr/plugins/bundles) — compatibilité des bundles Codex/Claude/Cursor
-- [Manifeste de plugin](/fr/plugins/manifest) — schéma du manifeste
-- [Enregistrement des outils](/fr/plugins/building-plugins#registering-agent-tools) — ajouter des outils d'agent dans un plugin
-- [Fonctionnement interne des plugins](/fr/plugins/architecture) — modèle de capacité et pipeline de chargement
-- [Plugins communautaires](/fr/plugins/community) — listes tierces
+- [Création de plugins](/en/plugins/building-plugins) — créez votre propre plugin
+- [Plugin Bundles](/en/plugins/bundles) — Compatibilité des bundles Codex/Claude/Cursor
+- [Plugin Manifest](/en/plugins/manifest) — schéma de manifeste
+- [Enregistrement des outils](/en/plugins/building-plugins#registering-agent-tools) — ajouter des outils d'agent dans un plugin
+- [Plugin Internals](/en/plugins/architecture) — modèle de capacités et pipeline de chargement
+- [Plugins communautaires](/en/plugins/community) — listes tierces

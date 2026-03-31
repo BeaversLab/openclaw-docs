@@ -23,7 +23,7 @@ title: "转录清理"
 
 如果您需要脚本存储详细信息，请参阅：
 
-- [/reference/会话-management-compaction](/zh/reference/session-management-compaction)
+- [/reference/会话-management-compaction](/en/reference/session-management-compaction)
 
 ---
 

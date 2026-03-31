@@ -11,7 +11,7 @@ title: "插件包"
 
 OpenClaw 可以从三个外部生态系统安装插件：**Codex**、**Claude** 和 **Cursor**。这些被称为 **插件包（bundles）**——即 OpenClaw 映射到技能、钩子和 MCP 工具等原生功能的内容和元数据包。
 
-<Info>插件包与原生 OpenClaw 插件**不同**。原生插件在进程中运行，并且可以注册任何功能。插件包是具有选择性功能映射和更窄信任边界的内容包。</Info>
+<Info>**插件包**与原生 OpenClaw 插件**并不**相同。原生插件在进程内运行，可以注册任何功能。插件包是内容包，具有选择性功能映射和更窄的信任边界。</Info>
 
 ## 为什么存在插件包
 
@@ -146,9 +146,9 @@ bundle 视为其暴露功能的受信任内容。
     未连接，则这是产品限制 — 而不是安装损坏。
   </Accordion>
 
-<Accordion title="Claude 命令文件未显示">确保 bundle 已启用，且 markdown 文件位于检测到的 `commands/` 或 `skills/` 根目录内。</Accordion>
+<Accordion title="Claude 命令文件未显示">确保已启用该插件包，并且 markdown 文件位于检测到的 `commands/` 或 `skills/` 根目录中。</Accordion>
 
-<Accordion title="Claude 设置不适用">仅支持来自 `settings.json` 的嵌入式 Pi 设置。OpenClaw 不会将 bundle 设置视为原始配置补丁。</Accordion>
+<Accordion title="Claude 设置未生效">仅支持来自 `settings.json` 的嵌入式 Pi 设置。OpenClaw 不会将插件包设置视为原始配置补丁。</Accordion>
 
   <Accordion title="Claude 钩子不执行">
     `hooks/hooks.json` 仅用于检测。如果您需要可运行的钩子，请使用 OpenClaw hook-pack 布局或打包原生插件。
@@ -157,6 +157,6 @@ bundle 视为其暴露功能的受信任内容。
 
 ## 相关
 
-- [安装和配置插件](/zh/tools/plugin)
-- [构建插件](/zh/plugins/building-plugins) — 创建原生插件
-- [插件清单](/zh/plugins/manifest) — 原生清单架构
+- [安装和配置插件](/en/tools/plugin)
+- [构建插件](/en/plugins/building-plugins) — 创建原生插件
+- [插件清单](/en/plugins/manifest) — 原生清单架构

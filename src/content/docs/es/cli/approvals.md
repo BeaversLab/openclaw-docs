@@ -13,8 +13,8 @@ De forma predeterminada, los comandos se dirigen al archivo de aprobaciones loca
 
 Relacionado:
 
-- Aprobaciones de ejecución: [Aprobaciones de ejecución](/es/tools/exec-approvals)
-- Nodos: [Nodos](/es/nodes)
+- Aprobaciones de ejecución: [Aprobaciones de ejecución](/en/tools/exec-approvals)
+- Nodos: [Nodos](/en/nodes)
 
 ## Comandos comunes
 

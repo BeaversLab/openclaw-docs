@@ -21,18 +21,18 @@ Des applications compagnons natives Linux sont prévues. Les contributions sont 
 4. Depuis votre ordinateur portable : `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. Ouvrez `http://127.0.0.1:18789/` et collez votre jeton
 
-Guide complet du serveur Linux : [Linux Server](/fr/vps). Exemple étape par étape de VPS : [exe.dev](/fr/install/exe-dev)
+Guide complet du serveur Linux : [Linux Server](/en/vps). Exemple étape par étape de VPS : [exe.dev](/en/install/exe-dev)
 
 ## Installer
 
-- [Getting Started](/fr/start/getting-started)
-- [Install & updates](/fr/install/updating)
-- Flux facultatifs : [Bun (expérimental)](/fr/install/bun), [Nix](/fr/install/nix), [Docker](/fr/install/docker)
+- [Getting Started](/en/start/getting-started)
+- [Install & updates](/en/install/updating)
+- Flux facultatifs : [Bun (expérimental)](/en/install/bun), [Nix](/en/install/nix), [Docker](/en/install/docker)
 
 ## Gateway
 
-- [Gateway runbook](/fr/gateway)
-- [Configuration](/fr/gateway/configuration)
+- [Gateway runbook](/en/gateway)
+- [Configuration](/en/gateway/configuration)
 
 ## Installation du service Gateway (CLI)
 
@@ -66,7 +66,7 @@ openclaw doctor
 
 OpenClaw installe un service systemd **utilisateur** par défaut. Utilisez un service
 **système** pour les serveurs partagés ou toujours actifs. L'exemple complet d'unité
-et les conseils se trouvent dans le [Gateway runbook](/fr/gateway).
+et les conseils se trouvent dans le [Gateway runbook](/en/gateway).
 
 Configuration minimale :
 

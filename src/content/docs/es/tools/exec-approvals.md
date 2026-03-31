@@ -1,5 +1,5 @@
 ---
-summary: "Aprobaciones de ejecución, listas de permitidos y avisos de escape del entorno limitado"
+summary: "Aprobaciones de ejecución, listas de permitidos y avisos de escape de sandbox"
 read_when:
   - Configuring exec approvals or allowlists
   - Implementing exec approval UX in the macOS app
@@ -9,11 +9,11 @@ title: "Aprobaciones de ejecución"
 
 # Aprobaciones de ejecución
 
-Las aprobaciones de ejecución son la **barra de protección de la aplicación complementaria / host del nodo** para permitir que un agente en entorno limitado ejecute
+Las aprobaciones de ejecución son la **guarda de la aplicación complementaria / host del nodo** para permitir que un agente en sandbox ejecute
 comandos en un host real (`gateway` o `node`). Piénselo como un interbloqueo de seguridad:
-los comandos solo se permiten cuando la política + lista de permitidos + (opcional) aprobación del usuario están todos de acuerdo.
-Las aprobaciones de ejecución son **adicionales** a la política de herramientas y al filtrado elevado (a menos que elevated se establezca en `full`, lo que omite las aprobaciones).
-La política efectiva es la **más estricta** de `tools.exec.*` y los valores predeterminados de aprobaciones; si se omite un campo de aprobaciones, se utiliza el valor de `tools.exec`.
+los comandos solo se permiten cuando la política + lista de permitidos + aprobación de usuario (opcional) están todos de acuerdo.
+Las aprobaciones de ejecución son **adicionales** a la política de herramientas y al filtrado elevado (a menos que elevated se establezca en `full`, lo cual omite las aprobaciones).
+La política efectiva es la **más estricta** de `tools.exec.*` y los valores predeterminados de aprobaciones; si se omite un campo de aprobaciones, se utiliza el valor `tools.exec`.
 
 Si la interfaz de usuario de la aplicación complementaria **no está disponible**, cualquier solicitud que requiera un aviso se
 resuelve mediante la **alternativa de consulta (ask fallback)** (predeterminado: denegar).
@@ -41,7 +41,7 @@ Nota sobre el modelo de confianza:
 
 División de macOS:
 
-- **servicio de host de nodo** reenvía `system.run` a la **aplicación de macOS** a través de IPC local.
+- **servicio de host de nodo** reenvía `system.run` a la **aplicación macOS** a través de IPC local.
 - La **aplicación macOS** impone aprobaciones y ejecuta el comando en el contexto de la interfaz de usuario.
 
 ## Configuración y almacenamiento
@@ -109,7 +109,7 @@ Si se requiere una pregunta pero no se puede alcanzar ninguna interfaz de usuari
 
 ### Endurecimiento de la evaluación del intérprete en línea (`tools.exec.strictInlineEval`)
 
-Cuando `tools.exec.strictInlineEval=true`, OpenClaw trata los formularios de evaluación de código en línea como solo aprobación incluso si el binario del intérprete en sí está en la lista de permitidos.
+Cuando `tools.exec.strictInlineEval=true`, OpenClaw trata los formularios de evaluación de código en línea como de solo aprobación, incluso si el binario del intérprete en sí está en la lista de permitidos.
 
 Ejemplos:
 
@@ -124,13 +124,13 @@ Ejemplos:
 Esto es una defensa en profundidad para los cargadores de intérpretes que no se asignan claramente a un solo operando de archivo estable. En modo estricto:
 
 - estos comandos aún necesitan aprobación explícita;
-- `allow-always` no persiste nuevas entradas de lista de permitidos para ellos automáticamente.
+- `allow-always` no guarda automáticamente las nuevas entradas de la lista de permitidos para ellos.
 
 ## Lista de permitidos (por agente)
 
-Las listas de permitidos son **por agente**. Si existen múltiples agentes, cambia qué agente estás
-editando en la aplicación macOS. Los patrones son **coincidencias glob que no distinguen mayúsculas de minúsculas**.
-Los patrones deben resolverse a **rutas binarias** (las entradas de solo nombre base se ignoran).
+Las listas de permitidos son **por agente**. Si existen varios agentes, cambia qué agente estás
+editando en la aplicación de macOS. Los patrones son **coincidencias glob que no distinguen mayúsculas de minúsculas**.
+Los patrones deben resolverse a **rutas binarias** (se ignoran las entradas que solo contienen el nombre base).
 Las entradas heredadas de `agents.default` se migran a `agents.main` al cargar.
 
 Ejemplos:
@@ -148,34 +148,32 @@ Cada entrada de la lista de permitidos rastrea:
 
 ## Permitir automáticamente CLIs de habilidades
 
-Cuando **Permitir automáticamente CLIs de habilidades** está habilitado, los ejecutables referenciados por habilidades conocidas
-se tratan como permitidos en los nodos (nodo macOS o host de nodo sin interfaz). Esto utiliza
-`skills.bins` a través del Gateway RPC para obtener la lista de bins de habilidad. Deshabilite esto si desea listas de permitidos manuales estrictas.
+Cuando **Auto-allow skill CLIs** (Permitir automáticamente los CLIs de habilidades) está habilitado, los ejecutables a los que hacen referencia las habilidades conocidas se tratan como incluidos en la lista de permitidos en los nodos (nodo macOS o host de nodo sin cabeza). Esto utiliza `skills.bins` a través del Gateway RPC para obtener la lista de binarios de habilidades. Deshabilite esto si desea listas de permitidos manuales estrictas.
 
 Notas importantes de confianza:
 
 - Esta es una **lista de permitidos de comodidad implícita**, separada de las entradas de lista de permitidos de ruta manual.
 - Está destinada a entornos de operador de confianza donde Gateway y el nodo están en el mismo límite de confianza.
-- Si requiere una confianza explícita estricta, mantenga `autoAllowSkills: false` y use solo entradas de lista de permitidos de ruta manual.
+- Si requiere una confianza explícita estricta, mantenga `autoAllowSkills: false` deshabilitado y use solo entradas manuales de lista de permitidos de rutas.
 
 ## Bins seguros (solo stdin)
 
-`tools.exec.safeBins` define una pequeña lista de binarios **solo stdin** (por ejemplo `cut`)
-que pueden ejecutarse en modo de lista de permitidos **sin** entradas explícitas en la lista de permitidos. Los bins seguros rechazan
-argumentos de archivo posicionales y tokens tipo ruta, por lo que solo pueden operar en la secuencia entrante.
-Trate esto como una ruta rápida estrecha para filtros de secuencia, no una lista de confianza general.
-**No** agregue binarios de intérprete o de tiempo de ejecución (por ejemplo `python3`, `node`, `ruby`, `bash`, `sh`, `zsh`) a `safeBins`.
-Si un comando puede evaluar código, ejecutar subcomandos o leer archivos por diseño, prefiera entradas explícitas en la lista de permitidos y mantenga los mensajes de aprobación habilitados.
-Los bins seguros personalizados deben definir un perfil explícito en `tools.exec.safeBinProfiles.<bin>`.
+`tools.exec.safeBins` define una pequeña lista de binarios **solo de stdin** (por ejemplo `cut`)
+que pueden ejecutarse en modo de lista de permitidos **sin** entradas explícitas en la lista de permitidos. Los binarios seguros rechazan
+argumentos de archivo posicionales y tokens tipo ruta, por lo que solo pueden operar en el flujo entrante.
+Trate esto como una ruta rápida estrecha para filtros de flujo, no una lista de confianza general.
+**No** añada binarios de intérprete o tiempo de ejecución (por ejemplo `python3`, `node`, `ruby`, `bash`, `sh`, `zsh`) a `safeBins`.
+Si un comando puede evaluar código, ejecutar subcomandos o leer archivos por diseño, prefiera entradas explícitas en la lista de permitidos y mantenga activas las solicitudes de aprobación.
+Los binarios seguros personalizados deben definir un perfil explícito en `tools.exec.safeBinProfiles.<bin>`.
 La validación es determinista solo a partir de la forma de argv (sin verificaciones de existencia en el sistema de archivos del host), lo que
 previene el comportamiento de oráculo de existencia de archivos a partir de diferencias de permitir/denegar.
-Las opciones orientadas a archivos se deniegan para los bins seguros predeterminados (por ejemplo `sort -o`, `sort --output`,
+Las opciones orientadas a archivos se deniegan para los binarios seguros predeterminados (por ejemplo `sort -o`, `sort --output`,
 `sort --files0-from`, `sort --compress-program`, `sort --random-source`,
 `sort --temporary-directory`/`-T`, `wc --files0-from`, `jq -f/--from-file`,
 `grep -f/--file`).
-Los bins seguros también hacen cumplir una política explícita de indicadores por binario para opciones que rompen el comportamiento solo stdin
-(por ejemplo `sort -o/--output/--compress-program` y las indicadores recursivos de grep).
-Las opciones largas se validan con cierre de fallos en modo binario seguro: las indicadores desconocidas y las
+Los binarios seguros también hacen cumplir una política explícita de indicadores por binario para las opciones que rompen el comportamiento de solo stdin
+(por ejemplo `sort -o/--output/--compress-program` y los indicadores recursivos de grep).
+Las opciones largas se validan con fallo cerrado en modo de binario seguro: los indicadores desconocidos y las
 abreviaturas ambiguas se rechazan.
 Indicadores denegados por perfil de binario seguro:
 
@@ -188,31 +186,30 @@ Indicadores denegados por perfil de binario seguro:
 
 [//]: # "SAFE_BIN_DENIED_FLAGS:END"
 
-Los bins seguros también fuerzan que los tokens argv se traten como **texto literal** en el momento de la ejecución (sin expansión de comodines
+Los binarios seguros también fuerzan que los tokens argv se traten como **texto literal** en el momento de la ejecución (sin globalización
 y sin expansión de `$VARS`) para segmentos solo de stdin, por lo que patrones como `*` o `$HOME/...` no se pueden
-usar para introducir lecturas de archivos de forma encubierta.
-Los bins seguros también deben resolverse desde directorios de binarios confiables (predeterminados del sistema más opcionales
-`tools.exec.safeBinTrustedDirs`). Las entradas `PATH` nunca se confían automáticamente.
-Los directorios predeterminados de bins seguros confiables son intencionalmente mínimos: `/bin`, `/usr/bin`.
-Si su ejecutable bin seguro se encuentra en rutas de gestor de paquetes/usuario (por ejemplo
-`/opt/homebrew/bin`, `/usr/local/bin`, `/opt/local/bin`, `/snap/bin`), añádalos explícitamente
+utilizar para introducir lecturas de archivos de contrabando.
+Los binarios seguros también deben resolverse desde directorios binarios confiables (valores predeterminados del sistema más `tools.exec.safeBinTrustedDirs` opcionales). Las entradas `PATH` nunca son de confianza automática.
+Los directorios seguros de binarios confiables predeterminados son intencionalmente mínimos: `/bin`, `/usr/bin`.
+Si su ejecutable safe-bin se encuentra en rutas de gestor de paquetes/usuario (por ejemplo
+`/opt/homebrew/bin`, `/usr/local/bin`, `/opt/local/bin`, `/snap/bin`), agrégalos explícitamente
 a `tools.exec.safeBinTrustedDirs`.
-El encadenamiento de shell y las redirecciones no se permiten automáticamente en modo allowlist.
+El encadenamiento de shell y las redirecciones no se permiten automáticamente en el modo de lista de permitidos.
 
 Shell chaining (`&&`, `||`, `;`) está permitido cuando cada segmento de nivel superior satisfaga la lista de permitidos
-(incluyendo bins seguros o permiso automático de habilidades). Las redirecciones siguen sin ser compatibles en el modo de lista de permitidos.
-La sustitución de comandos (`$()` / backticks) se rechaza durante el análisis de la lista de permitidos, incluso dentro de
+(incluyendo safe bins o skill auto-allow). Las redirecciones siguen sin ser compatibles en el modo de lista de permitidos.
+La sustitución de comandos (`$()` / backticks) se rechaza durante el análisis de la lista de permitidos, incluyendo dentro de
 dobles comillas; use comillas simples si necesita texto literal `$()`.
 En las aprobaciones de la aplicación complementaria de macOS, el texto de shell sin procesar que contenga sintaxis de control o expansión de shell
-(`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) se trata como un fallo en la lista de permitidos a menos que
-el binario del shell en sí esté en la lista de permitidos.
-Para los envoltorios de shell (`bash|sh|zsh ... -c/-lc`), las anulaciones de env con alcance de solicitud se reducen a una
+(`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) se trata como un fallo de la lista de permitidos a menos que
+el binario de shell en sí esté en la lista de permitidos.
+Para los contenedores de shell (`bash|sh|zsh ... -c/-lc`), las anulaciones de env con alcance de solicitud se reducen a una
 pequeña lista de permitidos explícita (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
-Para las decisiones de permitir siempre en el modo de lista de permitidos, los envoltorios de despacho conocidos
-(`env`, `nice`, `nohup`, `stdbuf`, `timeout`) persisten las rutas ejecutables internas en lugar de las rutas del envoltorio.
+Para las decisiones de permitir siempre en modo de lista de permitidos, los contenedores de despacho conocidos
+(`env`, `nice`, `nohup`, `stdbuf`, `timeout`) persisten las rutas ejecutables internas en lugar de las rutas del contenedor.
 Los multiplexores de shell (`busybox`, `toybox`) también se desenvuelven para los applets de shell (`sh`, `ash`,
-etc.) de modo que los ejecutables internos persisten en lugar de los binarios multiplexores. Si un envoltorio o
-multiplexor no se puede desenvolver de manera segura, ninguna entrada de lista de permitidos se persiste automáticamente.
+etc.) de modo que se persisten los ejecutables internos en lugar de los binarios multiplexores. Si un contenedor o
+multiplexor no se puede desenvolver de manera segura, no se persiste ninguna entrada de la lista de permitidos automáticamente.
 Si incluye en la lista de permitidos intérpretes como `python3` o `node`, prefiera `tools.exec.strictInlineEval=true` para que la evaluación en línea aún requiera una aprobación explícita.
 
 Bins seguros predeterminados:
@@ -223,8 +220,10 @@ Bins seguros predeterminados:
 
 [//]: # "SAFE_BIN_DEFAULTS:END"
 
-`grep` y `sort` no están en la lista predeterminada. Si decides participar, mantén entradas de lista de permitidos explícitas para sus flujos de trabajo que no sean stdin.
-Para `grep` en modo de bin seguro, proporciona el patrón con `-e`/`--regexp`; el patrón posicional se rechaza para que no se puedan introducir operandos de archivo como posicionales ambiguos.
+`grep` y `sort` no están en la lista predeterminada. Si optas por incluirlos, mantén entradas explícitas en la lista de permitidos para
+sus flujos de trabajo que no son stdin.
+Para `grep` en modo safe-bin, proporciona el patrón con `-e`/`--regexp`; el formulario de patrón posicional es
+rechazado para que los operandos de archivo no puedan ser introducidos de contrabando como posicionales ambiguos.
 
 ### Bins seguros versus lista de permitidos
 
@@ -233,17 +232,17 @@ Para `grep` en modo de bin seguro, proporciona el patrón con `-e`/`--regexp`; e
 | Objetivo             | Permitir automáticamente filtros stdin estrechos                      | Confiar explícitamente en ejecutables específicos                            |
 | Tipo de coincidencia | Nombre del ejecutable + política de argv de bin seguro                | Patrón global de ruta ejecutable resuelta                                    |
 | Ámbito del argumento | Restringido por el perfil de bin seguro y las reglas de token literal | Solo coincidencia de ruta; los argumentos son de tu responsabilidad          |
-| Ejemplos típicos     | `head`, `tail`, `tr`, `wc`                                            | `jq`, `python3`, `node`, `ffmpeg`, CLIs personalizadas                       |
+| Ejemplos típicos     | `head`, `tail`, `tr`, `wc`                                            | `jq`, `python3`, `node`, `ffmpeg`, CLIs personalizados                       |
 | Mejor uso            | Transformaciones de texto de bajo riesgo en tuberías                  | Cualquier herramienta con un comportamiento más amplio o efectos secundarios |
 
 Ubicación de la configuración:
 
 - `safeBins` proviene de la configuración (`tools.exec.safeBins` o por agente `agents.list[].tools.exec.safeBins`).
 - `safeBinTrustedDirs` proviene de la configuración (`tools.exec.safeBinTrustedDirs` o por agente `agents.list[].tools.exec.safeBinTrustedDirs`).
-- `safeBinProfiles` proviene de la configuración (`tools.exec.safeBinProfiles` o por agente `agents.list[].tools.exec.safeBinProfiles`). Las claves de perfil por agente anulan las claves globales.
-- las entradas de la lista de permitidos residen en `~/.openclaw/exec-approvals.json` local del host bajo `agents.<id>.allowlist` (o a través de Control UI / `openclaw approvals allowlist ...`).
-- `openclaw security audit` advierte con `tools.exec.safe_bins_interpreter_unprofiled` cuando aparecen intérpretes/binarios de runtime en `safeBins` sin perfiles explícitos.
-- `openclaw doctor --fix` puede crear entradas `safeBinProfiles.<bin>` personalizadas faltantes como `{}` (revísalo y ajústalo después). Los intérpretes/binarios de runtime no se crean automáticamente.
+- `safeBinProfiles` proviene de la configuración (`tools.exec.safeBinProfiles` o por agente `agents.list[].tools.exec.safeBinProfiles`). Las claves del perfil por agente anulan las claves globales.
+- las entradas de la lista de permitidos residen en `~/.openclaw/exec-approvals.json` local del host bajo `agents.<id>.allowlist` (o a través de UI de Control / `openclaw approvals allowlist ...`).
+- `openclaw security audit` advierte con `tools.exec.safe_bins_interpreter_unprofiled` cuando los bins de intérprete/runtime aparecen en `safeBins` sin perfiles explícitos.
+- `openclaw doctor --fix` puede crear entradas `safeBinProfiles.<bin>` personalizadas faltantes como `{}` (revise y ajuste después). Los bins de intérprete/runtime no se crean automáticamente.
 
 Ejemplo de perfil personalizado:
 
@@ -265,21 +264,25 @@ Ejemplo de perfil personalizado:
 }
 ```
 
-Si optas explícitamente por `jq` en `safeBins`, OpenClaw aún rechaza el comando integrado `env` en el modo de safe-bin, de modo que `jq -n env` no pueda volcar el entorno de proceso del host sin una ruta de lista de permitidos explícita o un mensaje de aprobación.
+Si optas explícitamente por `jq` en `safeBins`, OpenClaw aún rechaza el comando integrado `env` en modo safe-bin, por lo que `jq -n env` no puede volcar el entorno de procesos del host sin una ruta de lista de permitidos explícita o un mensaje de aprobación.
 
 ## Edición de la interfaz de usuario de control
 
 Usa la tarjeta **Control UI → Nodes → Exec approvals** para editar los valores predeterminados, las anulaciones por agente y las listas de permitidos. Elige un ámbito (Defaults o un agente), ajusta la política, añade/elimina patrones de lista de permitidos y luego haz clic en **Save**. La interfaz muestra metadatos de **last used** por patrón para que puedas mantener la lista ordenada.
 
-El selector de destino elige **Gateway** (aprobaciones locales) o un **Node**. Los nodos deben anunciar `system.execApprovals.get/set` (aplicación macOS o host de nodo sin interfaz gráfica). Si un nodo aún no anuncia aprobaciones de ejecución, edita su `~/.openclaw/exec-approvals.json` local directamente.
+El selector de destino elige **Gateway** (aprobaciones locales) o un **Node**. Los nodos deben anunciar `system.execApprovals.get/set` (aplicación macOS o host de nodo headless). Si un nodo aún no anuncia aprobaciones de ejecución, edite su `~/.openclaw/exec-approvals.json` local directamente.
 
-CLI: `openclaw approvals` admite la edición de gateway o de nodo (consulta [Approvals CLI](/es/cli/approvals)).
+CLI: `openclaw approvals` admite la edición de puerta de enlace o nodo (consulte [Approvals CLI](/en/cli/approvals)).
 
 ## Flujo de aprobación
 
-Cuando se requiere un mensaje, la puerta de enlace transmite `exec.approval.requested` a los clientes del operador. La interfaz de usuario de control y la aplicación macOS lo resuelven a través de `exec.approval.resolve` y, a continuación, la puerta de enlace reenvía la solicitud aprobada al host del nodo.
+Cuando se requiere un aviso, la puerta de enlace transmite `exec.approval.requested` a los clientes del operador.
+La interfaz de usuario de Control y la aplicación de macOS lo resuelven mediante `exec.approval.resolve` y, a continuación, la puerta de enlace reenvía la
+solicitud aprobada al host del nodo.
 
-Para `host=node`, las solicitudes de aprobación incluyen una carga útil `systemRunPlan` canónica. La puerta de enlace utiliza ese plan como contexto de comando/cwd/sesión autoritativo al reenviar solicitudes `system.run` aprobadas.
+Para `host=node`, las solicitudes de aprobación incluyen una carga útil canónica `systemRunPlan`. La puerta de enlace utiliza
+ese plan como contexto de comando/cwd/sesión autorizado al reenviar las solicitudes `system.run`
+aprobadas.
 
 ## Comandos de intérprete/runtime
 
@@ -287,7 +290,7 @@ Las ejecuciones de intérprete/runtime respaldadas por aprobaciones son intencio
 
 - El contexto exacto de argv/cwd/env siempre está vinculado.
 - Las formas de script de shell directo y de archivo de runtime directo se vinculan, con el mejor esfuerzo posible, a una instantánea de un archivo local concreto.
-- Las formas comunes de envoltorio del gestor de paquetes que aún se resuelven en un solo archivo local directo (por ejemplo
+- Las formas habituales de envoltorio de gestores de paquetes que aún se resuelven en un solo archivo local directo (por ejemplo
   `pnpm exec`, `pnpm node`, `npm exec`, `npx`) se desenvuelven antes del enlace.
 - Si OpenClaw no puede identificar exactamente un archivo local concreto para un comando de intérprete/tiempo de ejecución
   (por ejemplo, scripts de paquetes, formularios de evaluación, cadenas de carga específicas del tiempo de ejecución o formularios de
@@ -297,8 +300,8 @@ Las ejecuciones de intérprete/runtime respaldadas por aprobaciones son intencio
   /flujo de trabajo completo donde el operador acepte las semánticas más amplias del tiempo de ejecución.
 
 Cuando se requieren aprobaciones, la herramienta exec regresa inmediatamente con un id de aprobación. Use ese id para
-correlacionar eventos posteriores del sistema (`Exec finished` / `Exec denied`). Si no llega ninguna decisión antes del
-tiempo de espera, la solicitud se trata como un tiempo de espera de aprobación y se presenta como un motivo de denegación.
+correlacionar eventos posteriores del sistema (`Exec finished` / `Exec denied`). Si no llega ninguna decisión antes de que
+finalice el tiempo de espera, la solicitud se trata como un tiempo de espera de aprobación y se muestra como un motivo de denegación.
 
 El diálogo de confirmación incluye:
 
@@ -316,7 +319,7 @@ Acciones:
 
 ## Reenvío de aprobaciones a canales de chat
 
-Puede reenviar las solicitudes de aprobación de ejecución a cualquier canal de chat (incluyendo canales de complementos) y aprobarlas
+Puede reenviar las solicitudes de aprobación de exec a cualquier canal de chat (incluidos los canales de complementos) y aprobarlas
 con `/approve`. Esto utiliza la canalización de entrega saliente normal.
 
 Configuración:
@@ -346,31 +349,56 @@ Responder en el chat:
 /approve <id> deny
 ```
 
+El comando `/approve` maneja tanto las aprobaciones de exec como las de complementos. Si el ID no coincide con una aprobación de exec pendiente, automáticamente verifica las aprobaciones de complementos.
+
+### Reenvío de aprobación de complementos
+
+El reenvío de aprobaciones de complementos utiliza la misma canalización de entrega que las aprobaciones de ejecución, pero tiene su propia configuración independiente bajo `approvals.plugin`. Habilitar o deshabilitar uno no afecta al otro.
+
+```json5
+{
+  approvals: {
+    plugin: {
+      enabled: true,
+      mode: "targets",
+      agentFilter: ["main"],
+      targets: [
+        { channel: "slack", to: "U12345678" },
+        { channel: "telegram", to: "123456789" },
+      ],
+    },
+  },
+}
+```
+
+La forma de la configuración es idéntica a `approvals.exec`: `enabled`, `mode`, `agentFilter`,
+`sessionFilter` y `targets` funcionan de la misma manera.
+
+Los canales que admiten botones interactivos de aprobación de ejecución (como Telegram) también renderizan botones para
+aprobaciones de complementos. Los canales sin soporte de adaptador recurren a texto plano con instrucciones `/approve`.
+
 ### Clientes de aprobación de chat integrados
 
-Discord y Telegram también pueden actuar como clientes de aprobación de ejecución explícitos con configuración específica del canal.
+Discord y Telegram también pueden actuar como clientes explícitos de aprobación de ejecución con configuración específica del canal.
 
 - Discord: `channels.discord.execApprovals.*`
 - Telegram: `channels.telegram.execApprovals.*`
 
-Estos clientes son opcionales. Si un canal no tiene las aprobaciones de ejecución habilitadas, OpenClaw no trata
-ese canal como una superficie de aprobación solo porque la conversación ocurrió allí.
+Estos clientes son opcionales. Si un canal no tiene las aprobaciones de ejecución habilitadas, OpenClaw no trata ese canal como una superficie de aprobación solo porque la conversación ocurrió allí.
 
 Comportamiento compartido:
 
 - solo los aprobadores configurados pueden aprobar o denegar
 - el solicitante no necesita ser un aprobador
-- cuando la entrega del canal está habilitada, las solicitudes de aprobación incluyen el texto del comando
-- si ninguna interfaz de usuario de operador o cliente de aprobación configurado puede aceptar la solicitud, la solicitud vuelve a `askFallback`
+- cuando la entrega al canal está habilitada, las solicitudes de aprobación incluyen el texto del comando
+- si ninguna interfaz de usuario del operador o cliente de aprobación configurado puede aceptar la solicitud, el mensaje vuelve a `askFallback`
 
-Telegram utiliza por defecto los MD del aprobador (`target: "dm"`). Puedes cambiar a `channel` o `both` cuando
-quieras que las solicitudes de aprobación aparezcan también en el chat/tema de Telegram de origen. Para los temas de foro de
-Telegram, OpenClaw conserva el tema para la solicitud de aprobación y el seguimiento posterior a la aprobación.
+Telegram por defecto usa MDs del aprobador (`target: "dm"`). Puedes cambiar a `channel` o `both` cuando quieras que las solicitudes de aprobación aparezcan también en el chat/tema de Telegram de origen. Para los temas del foro de Telegram, OpenClaw conserva el tema para la solicitud de aprobación y el seguimiento posterior a la aprobación.
 
 Ver:
 
-- [Discord](/es/channels/discord#exec-approvals-in-discord)
-- [Telegram](/es/channels/telegram#exec-approvals-in-telegram)
+- [Discord](/en/channels/discord)
+- [Telegram](/en/channels/telegram)
 
 ### Flujo de IPC de macOS
 
@@ -384,7 +412,7 @@ Gateway -> Node Service (WS)
 Notas de seguridad:
 
 - Modo de socket Unix `0600`, token almacenado en `exec-approvals.json`.
-- Verificación de pares del mismo UID.
+- Verificación de pares con el mismo UID.
 - Desafío/respuesta (nonce + token HMAC + hash de solicitud) + TTL corto.
 
 ## Eventos del sistema
@@ -395,21 +423,21 @@ El ciclo de vida de exec se muestra como mensajes del sistema:
 - `Exec finished`
 - `Exec denied`
 
-Estos se publican en la sesión del agente después de que el nodo reporta el evento.
-Las aprobaciones de exec alojadas en la puerta de enlace emiten los mismos eventos de ciclo de vida cuando finaliza el comando (y opcionalmente cuando se ejecuta por más tiempo que el umbral).
-Los execs con puerta de aprobación reutilizan el id de aprobación como el `runId` en estos mensajes para una fácil correlación.
+Estos se publican en la sesión del agente después de que el nodo reporte el evento.
+Las aprobaciones de exec del host de puerta de enlace emiten los mismos eventos del ciclo de vida cuando finaliza el comando (y opcionalmente cuando se ejecuta durante más tiempo que el umbral).
+Los ejecutables con bloqueo de aprobación reutilizan el id de aprobación como el `runId` en estos mensajes para una fácil correlación.
 
 ## Implicaciones
 
-- **full** es potente; prefiera listas de permitidos (allowlists) cuando sea posible.
-- **ask** lo mantiene informado mientras permite aprobaciones rápidas.
-- Las listas de permitidos (allowlists) por agente evitan que las aprobaciones de un agente se filtren en otras.
-- Las aprobaciones solo se aplican a las solicitudes de exec del host de **remitentes autorizados**. Los remitentes no autorizados no pueden emitir `/exec`.
-- `/exec security=full` es una conveniencia a nivel de sesión para operadores autorizados y omite aprobaciones por diseño.
-  Para bloquear por completo el exec del host, configure la seguridad de aprobaciones en `deny` o deniegue la herramienta `exec` mediante la política de herramientas.
+- **full** es potente; prefiera las listas de permitidos cuando sea posible.
+- **ask** te mantiene informado mientras permite aprobaciones rápidas.
+- Las listas de permitidos por agente evitan que las aprobaciones de un agente filtren hacia otros.
+- Las aprobaciones solo se aplican a las solicitudes de ejecución en el host de **remitentes autorizados**. Los remitentes no autorizados no pueden emitir `/exec`.
+- `/exec security=full` es una comodidad a nivel de sesión para operadores autorizados y omite las aprobaciones por diseño.
+  Para bloquear estrictamente la ejecución en el host, establezca la seguridad de aprobaciones en `deny` o deniegue la herramienta `exec` mediante la política de herramientas.
 
 Relacionado:
 
-- [Herramienta Exec](/es/tools/exec)
-- [Modo elevado](/es/tools/elevated)
-- [Habilidades (Skills)](/es/tools/skills)
+- [Herramienta Exec](/en/tools/exec)
+- [Modo elevado](/en/tools/elevated)
+- [Habilidades](/en/tools/skills)

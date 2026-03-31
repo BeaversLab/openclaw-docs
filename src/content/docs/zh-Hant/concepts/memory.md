@@ -26,8 +26,8 @@ OpenClaw 的記憶是 **代理工作區中的純 Markdown**。這些檔案是
   - 如果 `MEMORY.md` 和 `memory.md` 同時存在於工作區根目錄，OpenClaw 將會載入這兩個檔案（透過 realpath 去重，因此指向同一個檔案的符號連結不會被重複注入）。
   - **僅在主要的私人工作階段中載入**（絕不在群組情境中）。
 
-這些檔案位於工作區之下（`agents.defaults.workspace`，預設為
-`~/.openclaw/workspace`）。請參閱 [Agent workspace](/en/concepts/agent-workspace) 以了解完整佈局。
+這些檔案位於工作區（`agents.defaults.workspace`，預設
+`~/.openclaw/workspace`）。請參閱 [Agent workspace](/en/concepts/agent-workspace) 以了解完整配置。
 
 ## 記憶工具
 
@@ -52,7 +52,8 @@ OpenClaw 為這些 Markdown 檔案提供了兩個供代理使用的工具：
 
 ## 自動記憶刷新（壓縮前 ping）
 
-當會話**接近自動壓縮**時，OpenClaw 會觸發一個**靜默的代理回合**，提醒模型在上下文被壓縮**之前**寫入持久化記憶。預設提示明確指出模型*可能會回應*，但通常 `NO_REPLY` 是正確的回應，因此使用者從不會看到此回合。
+當工作階段**接近自動壓縮**時，OpenClaw 會觸發一次**靜默的 Agent 輪次**，提醒模型在上下文壓縮**之前**寫入持久化記憶。預設提示明確指出模型*可以回覆*，但通常 `NO_REPLY` 是正確的回應，因此使用者永遠看不到這個輪次。
+主動記憶外掛擁有該刷新的提示/路徑策略；預設的 `memory-core` 外掛會寫入 `memory/YYYY-MM-DD.md` 下的標準每日檔案。
 
 這由 `agents.defaults.compaction.memoryFlush` 控制：
 
@@ -76,22 +77,30 @@ OpenClaw 為這些 Markdown 檔案提供了兩個供代理使用的工具：
 
 詳情：
 
-- **軟閾值**：當會話 token 估計值超過
+- **軟閾值**：當工作階段 token 估計值超過
   `contextWindow - reserveTokensFloor - softThresholdTokens` 時觸發刷新。
 - **預設為靜默**：提示包含 `NO_REPLY`，因此不會傳送任何內容。
 - **兩個提示**：一個使用者提示加上一個系統提示附加了提醒。
-- **每個壓縮週期一次刷新**（在 `sessions.json` 中追蹤）。
-- **工作區必須可寫**：如果會話在
-  `workspaceAccess: "ro"` 或 `"none"` 下以沙盒模式執行，則會跳過刷新。
+- **每個壓縮循環一次清除**（在 `sessions.json` 中追蹤）。
+- **工作區必須可寫入**：如果會話在沙箱中運行且
+  使用了 `workspaceAccess: "ro"` 或 `"none"`，則會跳過清除。
 
 有關完整的壓縮生命週期，請參閱
 [Session management + compaction](/en/reference/session-management-compaction)。
 
 ## 向量記憶搜尋
 
-OpenClaw 可以在 `MEMORY.md` 和 `memory/*.md` 上建立小型向量索引，以便語義查詢即使措辭不同也能找到相關筆記。混合搜尋（BM25 + 向量）可用於結合語義匹配與精確關鍵字查找。
+OpenClaw 可以在 `MEMORY.md` 和 `memory/*.md` 上建立小型向量索引，以便
+語義查詢即使在措辭不同時也能找到相關筆記。混合搜尋
+（BM25 + 向量）可用於將語義匹配與精確關鍵字
+查找結合起來。
 
-記憶搜尋支援多種嵌入提供商（OpenAI、Gemini、Voyage、Mistral、Ollama 和本地 GGUF 模型）、用於高級檢索的可選 QMD 附屬後端，以及 MMR 多樣性重新排序和時間衰減等後處理功能。
+記憶搜尋適配器 ID 來自於現用的記憶外掛程式。預設的
+`memory-core` 外掛程式內建了對 OpenAI、Gemini、Voyage、Mistral、
+Ollama 和本地 GGUF 模型的支援，以及一個可選的 QMD sidecar 後端，
+用於進階檢索與後處理功能，例如 MMR 多樣性重新排序
+和時間衰減。
 
-有關完整的配置參考——包括嵌入提供商設置、QMD 後端、混合搜尋調整、多模態記憶和所有配置選項——請參閱
-[Memory configuration reference](/en/reference/memory-config)。
+如需完整的設定參考——包括嵌入提供者設定、QMD
+後端、混合搜尋調整、多模態記憶以及所有設定選項——請參閱
+[記憶設定參考](/en/reference/memory-config)。

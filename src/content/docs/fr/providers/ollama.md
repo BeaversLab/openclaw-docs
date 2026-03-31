@@ -10,7 +10,7 @@ title: "Ollama"
 
 Ollama est un runtime LLM local qui facilite l'exécution de modèles open-source sur votre machine. OpenClaw s'intègre à l'Ollama native de API (`/api/chat`), prend en charge le streaming et l'appel d'outils, et peut découvrir automatiquement les modèles Ollama locaux lorsque vous activez l'option avec `OLLAMA_API_KEY` (ou un profil d'authentification) et que vous ne définissez pas d'entrée `models.providers.ollama` explicite.
 
-<Warning>**Utilisateurs distants de Ollama** : N'utilisez pas l'URL compatible `/v1` OpenAI (`http://host:11434/v1`) avec OpenClaw. Cela désactive l'appel d'outil et les modèles peuvent sortir du JSON d'outil brut en texte brut. Utilisez plutôt l'URL de l'API native Ollama API : `baseUrl: "http://host:11434"` (pas `/v1`).</Warning>
+<Warning>**Remote Ollama utilisateurs** : N'utilisez pas l'URL compatible `/v1` OpenAI (`http://host:11434/v1`) avec OpenClaw. Cela casse l'appel d'outils et les modèles peuvent afficher le JSON brut de l'outil en texte clair. Utilisez plutôt l'URL de l'API native Ollama OpenAI : `baseUrl: "http://host:11434"` (sans `/v1`).</Warning>
 
 ## Quick start
 
@@ -204,7 +204,7 @@ Si Ollama s'exécute sur un hôte ou un port différent (la configuration explic
 }
 ```
 
-<Warning>N'ajoutez pas `/v1` à l'URL. Le chemin `/v1` utilise le mode compatible OpenAI, où l'appel d'outils n'est pas fiable. Utilisez l'URL de base Ollama sans suffixe de chemin.</Warning>
+<Warning>Do not add `/v1` to the URL. The `/v1` path uses OpenAI-compatible mode, where tool calling is not reliable. Use the base Ollama URL without a path suffix.</Warning>
 
 ### Sélection du modèle
 
@@ -251,7 +251,7 @@ L'intégration OpenClaw de Ollama utilise l'**Ollama API native** (`/api/chat`) 
 
 #### Mode compatible hérité OpenAI
 
-<Warning>**L'appel d'outils n'est pas fiable en mode compatible OpenAI.** N'utilisez ce mode que si vous avez besoin du format OpenAI pour un proxy et ne dépendez pas du comportement natif d'appel d'outils.</Warning>
+<Warning>**L'appel de tool n'est pas fiable en mode compatible OpenAI.** N'utilisez ce mode que si vous avez besoin du format OpenAI pour un proxy et ne dépendez pas du comportement natif de l'appel de tool.</Warning>
 
 Si vous devez utiliser le point de terminaison compatible OpenAI à la place (par exemple, derrière un proxy qui ne prend en charge que le format OpenAI), définissez `api: "openai-completions"` explicitement :
 
@@ -341,6 +341,6 @@ ollama serve
 
 ## Voir aussi
 
-- [Fournisseurs de modèles](/fr/concepts/model-providers) - Aperçu de tous les fournisseurs
-- [Sélection de modèle](/fr/concepts/models) - Comment choisir les modèles
-- [Configuration](/fr/gateway/configuration) - Référence complète de la configuration
+- [Fournisseurs de modèles](/en/concepts/model-providers) - Aperçu de tous les fournisseurs
+- [Sélection de modèle](/en/concepts/models) - Comment choisir les modèles
+- [Configuration](/en/gateway/configuration) - Référence complète de la configuration

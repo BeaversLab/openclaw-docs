@@ -11,7 +11,7 @@ title: "Ansible"
 
 Déployez OpenClaw sur des serveurs de production avec **[openclaw-ansible](https://github.com/openclaw/openclaw-ansible)** -- un installateur automatisé avec une architecture axée sur la sécurité.
 
-<Info>Le dépôt [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) fait autorité pour le déploiement Ansible. Cette page est une vue d'ensemble rapide.</Info>
+<Info>Le dépôt [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) est la source de vérité pour le déploiement Ansible. Cette page est un aperçu rapide.</Info>
 
 ## Prérequis
 
@@ -50,7 +50,7 @@ Le playbook Ansible installe et configure :
 5. **OpenClaw** -- basé sur l'hôte, non conteneurisé
 6. **Service Systemd** -- démarrage automatique avec durcissement de la sécurité
 
-<Note>La passerelle s'exécute directement sur l'hôte (pas dans Docker), mais les bac à sable d'agents utilisent Docker pour l'isolation. Voir [Sandboxing](/fr/gateway/sandboxing) pour les détails.</Note>
+<Note>La passerelle s'exécute directement sur l'hôte (pas dans Docker), mais les sandboxs d'agent utilisent Docker pour l'isolation. Voir [Sandboxing](/en/gateway/sandboxing) pour les détails.</Note>
 
 ## Configuration post-installation
 
@@ -58,8 +58,8 @@ Le playbook Ansible installe et configure :
   <Step title="Switch to the openclaw user">```bash sudo -i -u openclaw ```</Step>
   <Step title="Exécuter l'assistant de configuration">Le script post-installation vous guide dans la configuration des paramètres OpenClaw.</Step>
   <Step title="Connecter les fournisseurs de messagerie">Connectez-vous à WhatsApp, Telegram, Discord ou Signal : ```bash openclaw channels login ```</Step>
-  <Step title="Vérifiez l'installation">```bash sudo systemctl status openclaw sudo journalctl -u openclaw -f ```</Step>
-  <Step title="Connectez-vous à Tailscale">Rejoignez votre maillage VPN pour un accès distant sécurisé.</Step>
+  <Step title="Vérifier l'installation">```bash sudo systemctl status openclaw sudo journalctl -u openclaw -f ```</Step>
+  <Step title="Connecter à Tailscale">Rejoignez votre maillage VPN pour un accès distant sécurisé.</Step>
 </Steps>
 
 ### Commandes rapides

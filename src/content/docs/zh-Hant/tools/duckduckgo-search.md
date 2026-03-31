@@ -12,7 +12,7 @@ title: "DuckDuckGo 搜尋"
 OpenClaw 支援 DuckDuckGo 作為 **免金鑰** 的 `web_search` 提供者。不需要 API
 金鑰或帳戶。
 
-<Warning>DuckDuckGo 是一個 **實驗性、非官方** 的整合功能，它從 DuckDuckGo 的非 JavaScript 搜尋頁面擷取結果——而非官方 API。請預期會因為機器人驗證頁面或 HTML 變更而偶爾中斷。</Warning>
+<Warning>DuckDuckGo 是一個**實驗性、非官方**的整合，它從 DuckDuckGo 的非 JavaScript 搜尋頁面擷取結果——而非官方 API。請預期可能會因為機器人驗證頁面或 HTML 變更而偶爾無法運作。</Warning>
 
 ## 設定
 
@@ -79,7 +79,7 @@ OpenClaw 支援 DuckDuckGo 作為 **免金鑰** 的 `web_search` 提供者。不
   因此任何帶有金鑰的 API 支援提供者都會優先
 - 未設定時，**SafeSearch 預設為中等**
 
-<Tip>對於生產環境使用，請考慮 [Brave Search](/en/tools/brave-search)（提供免費層）或其他 API 支援的提供者。</Tip>
+<Tip>若用於生產環境，請考慮使用 [Brave Search](/en/tools/brave-search) (提供免費層級) 或其他支援 API 的提供者。</Tip>
 
 ## 相關
 

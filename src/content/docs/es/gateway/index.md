@@ -10,17 +10,17 @@ title: "Manual de procedimientos de Gateway"
 Utilice esta página para el inicio inicial (día-1) y las operaciones posteriores (día-2) del servicio Gateway.
 
 <CardGroup cols={2}>
-  <Card title="Solución de problemas profunda" icon="siren" href="/es/gateway/troubleshooting">
-    Diagnósticos basados en síntomas con escalas de comandos exactas y firmas de registros.
+  <Card title="Solución profunda de problemas" icon="siren" href="/en/gateway/troubleshooting">
+    Diagnóstico basado en síntomas con escalas de comandos exactas y firmas de registro.
   </Card>
-  <Card title="Configuración" icon="sliders" href="/es/gateway/configuration">
+  <Card title="Configuración" icon="sliders" href="/en/gateway/configuration">
     Guía de configuración orientada a tareas + referencia de configuración completa.
   </Card>
-  <Card title="Gestión de secretos" icon="key-round" href="/es/gateway/secrets">
-    Contrato SecretRef, comportamiento de instantánea en tiempo de ejecución y operaciones de migración/recarga.
+  <Card title="Gestión de secretos" icon="key-round" href="/en/gateway/secrets">
+    Contrato SecretRef, comportamiento de la instantánea de ejecución y operaciones de migración/recarga.
   </Card>
-  <Card title="Contrato del plan de secretos" icon="shield-check" href="/es/gateway/secrets-plan-contract">
-    Reglas exactas de `secrets apply` ruta/destino y comportamiento del perfil de autenticación de solo referencia.
+  <Card title="Contrato del plan de secretos" icon="shield-check" href="/en/gateway/secrets-plan-contract">
+    Reglas exactas de `secrets apply` destino/ruta y comportamiento del perfil de autenticación de solo referencia.
   </Card>
 </CardGroup>
 
@@ -60,7 +60,7 @@ openclaw channels status --probe
   </Step>
 </Steps>
 
-<Note>La recarga de la configuración de Gateway supervisa la ruta del archivo de configuración activo (resuelta desde los valores predeterminados de perfil/estado, o `OPENCLAW_CONFIG_PATH` cuando se establece). El modo predeterminado es `gateway.reload.mode="hybrid"`.</Note>
+<Note>La recarga de la configuración de Gateway supervisa la ruta del archivo de configuración activo (resuelta a partir de los valores predeterminados del perfil/estado, o `OPENCLAW_CONFIG_PATH` cuando se establece). El modo predeterminado es `gateway.reload.mode="hybrid"`.</Note>
 
 ## Modelo de tiempo de ejecución
 
@@ -70,7 +70,7 @@ openclaw channels status --probe
   - APIs HTTP, compatibles con OpenAI (`/v1/models`, `/v1/embeddings`, `/v1/chat/completions`, `/v1/responses`, `/tools/invoke`)
   - Interfaz de usuario de control y enlaces (hooks)
 - Modo de enlace predeterminado: `loopback`.
-- Se requiere autenticación de manera predeterminada (`gateway.auth.token` / `gateway.auth.password`, o `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`).
+- Se requiere autenticación de forma predeterminada (`gateway.auth.token` / `gateway.auth.password`, o `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`).
 
 ## Endpoints compatibles con OpenAI
 
@@ -85,14 +85,14 @@ La superficie de compatibilidad de mayor impacto de OpenClaw es ahora:
 Por qué es importante este conjunto:
 
 - La mayoría de las integraciones de Open WebUI, LobeChat y LibreChat sondean primero `/v1/models`.
-- Muchas canalizaciones de RAG y memoria esperan `/v1/embeddings`.
-- Los clientes nativos de agentes prefieren cada vez más `/v1/responses`.
+- Muchos procesos de RAG y memoria esperan `/v1/embeddings`.
+- Los clientes nativos de agentes cada vez prefieren más `/v1/responses`.
 
 Nota de planificación:
 
-- `/v1/models` es prioridad para agentes: devuelve `openclaw`, `openclaw/default` y `openclaw/<agentId>`.
+- `/v1/models` es agente-primero: devuelve `openclaw`, `openclaw/default` y `openclaw/<agentId>`.
 - `openclaw/default` es el alias estable que siempre se asigna al agente predeterminado configurado.
-- Use `x-openclaw-model` cuando desee una invalidación del proveedor/modelo de backend; de lo contrario, la configuración normal de modelo y embedding del agente seleccionado permanece bajo control.
+- Use `x-openclaw-model` cuando desee una invalidación de proveedor/modelo de backend; de lo contrario, la configuración normal del modelo y de incrustaciones (embedding) del agente seleccionado permanece en control.
 
 Todos estos se ejecutan en el puerto principal de Gateway y usan el mismo límite de autenticación de operador de confianza que el resto de la API HTTP de Gateway.
 
@@ -101,7 +101,7 @@ Todos estos se ejecutan en el puerto principal de Gateway y usan el mismo límit
 | Configuración     | Orden de resolución                                           |
 | ----------------- | ------------------------------------------------------------- |
 | Puerto de Gateway | `--port` → `OPENCLAW_GATEWAY_PORT` → `gateway.port` → `18789` |
-| Modo de enlace    | CLI/override → `gateway.bind` → `loopback`                    |
+| Modo de enlace    | CLI/invalidación → `gateway.bind` → `loopback`                |
 
 ### Modos de recarga en caliente
 
@@ -135,11 +135,11 @@ Alternativa: túnel SSH.
 ssh -N -L 18789:127.0.0.1:18789 user@host
 ```
 
-Luego conecte los clientes a `ws://127.0.0.1:18789` localmente.
+Luego conecte los clientes localmente a `ws://127.0.0.1:18789`.
 
 <Warning>Si la autenticación de la pasarela está configurada, los clientes aún deben enviar autenticación (`token`/`password`) incluso a través de túneles SSH.</Warning>
 
-Consulte: [Pasarela remota](/es/gateway/remote), [Autenticación](/es/gateway/authentication), [Tailscale](/es/gateway/tailscale).
+Consulte: [Remote Gateway](/en/gateway/remote), [Authentication](/en/gateway/authentication), [Tailscale](/en/gateway/tailscale).
 
 ## Supervisión y ciclo de vida del servicio
 
@@ -155,7 +155,7 @@ openclaw gateway restart
 openclaw gateway stop
 ```
 
-Las etiquetas de LaunchAgent son `ai.openclaw.gateway` (predeterminado) o `ai.openclaw.<profile>` (perfil con nombre). `openclaw doctor` audita y repara la deriva de configuración del servicio.
+Las etiquetas de LaunchAgent son `ai.openclaw.gateway` (predeterminado) o `ai.openclaw.<profile>` (perfil con nombre). `openclaw doctor` audita y repara la deriva de la configuración del servicio.
 
   </Tab>
 
@@ -167,7 +167,7 @@ systemctl --user enable --now openclaw-gateway[-<profile>].service
 openclaw gateway status
 ```
 
-Para la persistencia después de cerrar sesión, habilite el modo persistente (lingering):
+Para la persistencia después de cerrar sesión, habilite el lingering:
 
 ```bash
 sudo loginctl enable-linger <user>
@@ -206,7 +206,7 @@ OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a opencla
 OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
 ```
 
-Consulte: [Múltiples pasarelas](/es/gateway/multiple-gateways).
+Consulte: [Multiple gateways](/en/gateway/multiple-gateways).
 
 ### Ruta rápida de perfil de desarrollo
 
@@ -216,28 +216,28 @@ openclaw --dev gateway --allow-unconfigured
 openclaw --dev status
 ```
 
-Los valores predeterminados incluyen estado/configuración aislados y el puerto base de la pasarela `19001`.
+Los valores predeterminados incluyen estado/configuración aislados y puerto de puerta de enlace base `19001`.
 
 ## Referencia rápida del protocolo (vista de operador)
 
-- El primer tramo del cliente debe ser `connect`.
-- La pasarela devuelve una instantánea `hello-ok` (`presence`, `health`, `stateVersion`, `uptimeMs`, límites/política).
+- El primer frame del cliente debe ser `connect`.
+- La puerta de enlace devuelve una instantánea `hello-ok` (`presence`, `health`, `stateVersion`, `uptimeMs`, límites/política).
 - Solicitudes: `req(method, params)` → `res(ok/payload|error)`.
 - Eventos comunes: `connect.challenge`, `agent`, `chat`, `presence`, `tick`, `health`, `heartbeat`, `shutdown`.
 
 Las ejecuciones del agente tienen dos etapas:
 
 1. Ack de aceptación inmediata (`status:"accepted"`)
-2. Respuesta de finalización completa (`status:"ok"|"error"`), con eventos `agent` transmitidos en medio.
+2. Respuesta de finalización final (`status:"ok"|"error"`), con eventos `agent` transmitidos en medio.
 
-Consulte la documentación completa del protocolo: [Gateway Protocol](/es/gateway/protocol).
+Ver documentos completos del protocolo: [Gateway Protocol](/en/gateway/protocol).
 
 ## Comprobaciones operativas
 
 ### Vitalidad
 
 - Abra WS y envíe `connect`.
-- Espere una respuesta `hello-ok` con una instantánea.
+- Espere respuesta `hello-ok` con instantánea.
 
 ### Disponibilidad
 
@@ -249,7 +249,7 @@ openclaw health
 
 ### Recuperación de brechas
 
-Los eventos no se reproducen. Ante brechas en la secuencia, actualice el estado (`health`, `system-presence`) antes de continuar.
+Los eventos no se reproducen. Ante lagunas en la secuencia, actualice el estado (`health`, `system-presence`) antes de continuar.
 
 ## Firmas comunes de fallos
 
@@ -260,21 +260,21 @@ Los eventos no se reproducen. Ante brechas en la secuencia, actualice el estado 
 | `Gateway start blocked: set gateway.mode=local`                | Configuración establecida en modo remoto                             |
 | `unauthorized` durante la conexión                             | Discrepancia de autenticación entre el cliente y la puerta de enlace |
 
-Para obtener escaleras de diagnóstico completas, use [Gateway Troubleshooting](/es/gateway/troubleshooting).
+Para obtener las escaleras de diagnóstico completas, use [Solución de problemas de Gateway](/en/gateway/troubleshooting).
 
 ## Garantías de seguridad
 
 - Los clientes del protocolo de la puerta de enlace fallan rápido cuando la puerta de enlace no está disponible (sin respaldo implícito de canal directo).
 - Los primeros marcos no válidos o no de conexión se rechazan y cierran.
-- El cierre ordenado emite el evento `shutdown` antes de cerrar el socket.
+- El cierre elegante emite el evento `shutdown` antes de cerrar el socket.
 
 ---
 
 Relacionado:
 
-- [Solución de problemas](/es/gateway/troubleshooting)
-- [Proceso en segundo plano](/es/gateway/background-process)
-- [Configuración](/es/gateway/configuration)
-- [Estado de salud](/es/gateway/health)
-- [Doctor](/es/gateway/doctor)
-- [Autenticación](/es/gateway/authentication)
+- [Solución de problemas](/en/gateway/troubleshooting)
+- [Proceso en segundo plano](/en/gateway/background-process)
+- [Configuración](/en/gateway/configuration)
+- [Salud](/en/gateway/health)
+- [Doctor](/en/gateway/doctor)
+- [Autenticación](/en/gateway/authentication)

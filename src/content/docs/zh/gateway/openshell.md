@@ -13,7 +13,7 @@ OpenShell 是 OpenClaw 的托管沙盒后端。OpenClaw 不在本地运行 Docke
 容器，而是将沙盒生命周期委托给 `openshell` CLI，
 该 CLI 会配置支持基于 SSH 的命令执行的远程环境。
 
-OpenShell 插件复用与通用 [SSH 后端](/zh/gateway/sandboxing#ssh-backend) 相同的核心 SSH 传输和远程文件系统
+OpenShell 插件复用与通用 [SSH 后端](/en/gateway/sandboxing#ssh-backend) 相同的核心 SSH 传输和远程文件系统
 桥接器。它增加了
 OpenShell 特定的生命周期 (`sandbox create/get/delete`、`sandbox ssh-config`)
 以及一个可选的 `mirror` 工作区模式。
@@ -141,7 +141,7 @@ openclaw sandbox explain
 
 沙箱级设置（`mode`、`scope`、`workspaceAccess`）与任何后端一样配置在
 `agents.defaults.sandbox` 下。有关完整矩阵，请参阅
-[沙箱隔离](/zh/gateway/sandboxing)。
+[沙箱隔离](/en/gateway/sandboxing)。
 
 ## 示例
 
@@ -294,7 +294,7 @@ openclaw sandbox recreate --all
 
 ## 另请参阅
 
-- [沙箱隔离](/zh/gateway/sandboxing) -- 模式、范围和后端比较
-- [沙箱 vs 工具策略 vs 提权](/zh/gateway/sandbox-vs-tool-policy-vs-elevated) -- 调试被阻止的工具
-- [多代理沙箱和工具](/zh/tools/multi-agent-sandbox-tools) -- 每个代理的覆盖设置
-- [沙箱 CLI](/zh/cli/sandbox) -- `openclaw sandbox` 命令
+- [沙箱隔离](/en/gateway/sandboxing) -- 模式、范围和后端比较
+- [沙箱 vs 工具策略 vs 提权](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- 调试被阻止的工具
+- [多代理沙箱和工具](/en/tools/multi-agent-sandbox-tools) -- 每个代理的覆盖设置
+- [沙箱 CLI](/en/cli/sandbox) -- `openclaw sandbox` 命令

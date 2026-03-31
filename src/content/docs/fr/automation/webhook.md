@@ -153,7 +153,7 @@ Options de mappage (résumé) :
 - `allowUnsafeExternalContent: true` désactive le wrapper de sécurité de contenu externe pour ce hook
   (dangereux ; uniquement pour les sources internes de confiance).
 - `openclaw webhooks gmail setup` écrit la configuration `hooks.gmail` pour `openclaw webhooks gmail run`.
-  Voir [Gmail Pub/Sub](/fr/automation/gmail-pubsub) pour le flux complet de surveillance Gmail.
+  Voir [Gmail Pub/Sub](/en/automation/gmail-pubsub) pour le flux complet de surveillance Gmail.
 
 ## Réponses
 

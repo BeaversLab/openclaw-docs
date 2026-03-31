@@ -12,7 +12,7 @@ title: "Recherche DuckDuckGo"
 OpenClaw prend en charge DuckDuckGo en tant que fournisseur `web_search` **sans clé**. Aucune clé OpenClaw
 ni compte n'est requis.
 
-<Warning>DuckDuckGo est une intégration **expérimentale et non officielle** qui récupère les résultats des pages de recherche non-JavaScript de DuckDuckGo — et non d'une API officielle. Attendez-vous à des pannes occasionnelles dues aux pages de défi pour les bots ou aux modifications du HTML.</Warning>
+<Warning>DuckDuckGo est une intégration **expérimentale et non officielle** qui extrait les résultats des pages de recherche non-JavaScript de DuckDuckGo — et non de l'API officielle. Attendez-vous-vous à des pannes occasionnelles dues aux pages de défi pour bots ou aux modifications HTML.</Warning>
 
 ## Configuration
 
@@ -80,7 +80,7 @@ paramètres de l'outil remplacent les valeurs de configuration par requête.
   la détection automatique, tout fournisseur API avec une clé est donc prioritaire
 - **SafeSearch est modéré par défaut** lorsqu'il n'est pas configuré
 
-<Tip>Pour une utilisation en production, envisagez [Recherche Brave](/en/tools/brave-search) (gratuit disponible) ou un autre fournisseur pris en charge par une API.</Tip>
+<Tip>Pour une utilisation en production, envisagez [Brave Search](/en/tools/brave-search) (version gratuite disponible) ou un autre provider supporté par une API.</Tip>
 
 ## Connexes
 

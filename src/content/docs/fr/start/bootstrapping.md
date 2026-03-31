@@ -25,9 +25,9 @@ Lors de la première exécution de l'agent, OpenClaw initialise l'espace de trav
 
 L'initialisation s'exécute toujours sur l'**hôte de passerelle**. Si l'application macOS se connecte à une Gateway distante, l'espace de travail et les fichiers d'initialisation résident sur cette machine distante.
 
-<Note>Lorsque la Gateway s'exécute sur une autre machine, modifiez les fichiers de l'espace de travail sur l'hôte de la passerelle (par exemple, `user@gateway-host:~/.openclaw/workspace`).</Note>
+<Note>Lorsque le Gateway s'exécute sur une autre machine, modifiez les fichiers de l'espace de travail sur l'hôte de la passerelle (par exemple, `user@gateway-host:~/.openclaw/workspace`).</Note>
 
 ## Documentation connexe
 
-- Onboarding de l'application macOS : [Onboarding](/fr/start/onboarding)
-- Disposition de l'espace de travail : [Espace de travail de l'agent](/fr/concepts/agent-workspace)
+- Onboarding de l'application macOS : [Onboarding](/en/start/onboarding)
+- Disposition de l'espace de travail : [Espace de travail de l'agent](/en/concepts/agent-workspace)

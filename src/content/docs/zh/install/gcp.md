@@ -32,7 +32,7 @@ title: "GCP"
 
 本指南在 GCP Compute Engine 上使用 Debian。
 Ubuntu 也可以；请相应地映射软件包。
-有关通用的 Docker 流程，请参阅 [Docker](/zh/install/docker)。
+有关通用的 Docker 流程，请参阅 [Docker](/en/install/docker)。
 
 ---
 
@@ -279,10 +279,10 @@ Ubuntu 也可以；请相应地映射软件包。
   <Step title="共享 Docker 虚拟机运行时步骤">
     使用共享运行时指南了解常见的 Docker 主机流程：
 
-    - [将所需的二进制文件烘焙到镜像中](/zh/install/docker-vm-runtime#bake-required-binaries-into-the-image)
-    - [构建并启动](/zh/install/docker-vm-runtime#build-and-launch)
-    - [什么内容持久化在哪里](/zh/install/docker-vm-runtime#what-persists-where)
-    - [更新](/zh/install/docker-vm-runtime#updates)
+    - [将所需的二进制文件烘焙到镜像中](/en/install/docker-vm-runtime#bake-required-binaries-into-the-image)
+    - [构建并启动](/en/install/docker-vm-runtime#build-and-launch)
+    - [什么内容持久化在哪里](/en/install/docker-vm-runtime#what-persists-where)
+    - [更新](/en/install/docker-vm-runtime#updates)
 
   </Step>
 
@@ -326,7 +326,7 @@ Ubuntu 也可以；请相应地映射软件包。
     ```
 
     再次需要共享持久化和更新参考？
-    请参阅 [Docker VM Runtime](/zh/install/docker-vm-runtime#what-persists-where) 和 [Docker VM Runtime 更新](/zh/install/docker-vm-runtime#updates)。
+    请参阅 [Docker VM Runtime](/en/install/docker-vm-runtime#what-persists-where) 和 [Docker VM Runtime 更新](/en/install/docker-vm-runtime#updates)。
 
   </Step>
 </Steps>
@@ -397,6 +397,6 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 ## 后续步骤
 
-- 设置消息通道：[通道](/zh/channels)
-- 将本地设备配对为节点：[节点](/zh/nodes)
-- 配置 Gateway(网关)：[Gateway(网关) 配置](/zh/gateway/configuration)
+- 设置消息通道：[通道](/en/channels)
+- 将本地设备配对为节点：[节点](/en/nodes)
+- 配置 Gateway(网关)：[Gateway(网关) 配置](/en/gateway/configuration)

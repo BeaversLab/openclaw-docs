@@ -38,7 +38,7 @@ Línea base saludable:
 | Mensajes de grupo ignorados                         | Verifique `requireMention` + patrones de mención en la configuración | Mencione al bot o relaje la política de menciones para ese grupo.                     |
 | Bucles aleatorios de desconexión/reinicio de sesión | `openclaw channels status --probe` + registros                       | Vuelva a iniciar sesión y verifique que el directorio de credenciales esté saludable. |
 
-Solución de problemas completa: [/channels/whatsapp#troubleshooting](/es/channels/whatsapp#troubleshooting)
+Solución de problemas completa: [/channels/whatsapp#troubleshooting](/en/channels/whatsapp#troubleshooting)
 
 ## Telegram
 
@@ -52,7 +52,7 @@ Solución de problemas completa: [/channels/whatsapp#troubleshooting](/es/channe
 | `setMyCommands` rechazado al inicio             | Inspeccione los registros para `BOT_COMMANDS_TOO_MUCH`                         | Reduzca los comandos personalizados de complemento/habilidad/de Telegram o desactive los menús nativos. |
 | Actualizado y la lista de permitidos le bloquea | `openclaw security audit` y listas de permitidos de configuración              | Ejecute `openclaw doctor --fix` o reemplace `@username` con ID de remitente numéricos.                  |
 
-Solución de problemas completa: [/channels/telegram#troubleshooting](/es/channels/telegram#troubleshooting)
+Solución de problemas completa: [/channels/telegram#troubleshooting](/en/channels/telegram#troubleshooting)
 
 ## Discord
 
@@ -64,7 +64,7 @@ Solución de problemas completa: [/channels/telegram#troubleshooting](/es/channe
 | Mensajes de grupo ignorados                 | Verifique los registros para descartes por filtrado de menciones | Menciona el bot o establece el servidor/canal `requireMention: false`.   |
 | Faltan respuestas de MD                     | `openclaw pairing list discord`                                  | Aprueba el emparejamiento por MD o ajusta la política de MD.             |
 
-Solución de problemas completa: [/channels/discord#troubleshooting](/es/channels/discord#troubleshooting)
+Solución de problemas completa: [/channels/discord#troubleshooting](/en/channels/discord#troubleshooting)
 
 ## Slack
 
@@ -76,7 +76,7 @@ Solución de problemas completa: [/channels/discord#troubleshooting](/es/channel
 | MD bloqueados                             | `openclaw pairing list slack`                             | Aprueba el emparejamiento o relaja la política de MD.                        |
 | Mensaje del canal ignorado                | Verifica `groupPolicy` y la lista de permitidos del canal | Permite el canal o cambia la política a `open`.                              |
 
-Solución de problemas completa: [/channels/slack#troubleshooting](/es/channels/slack#troubleshooting)
+Solución de problemas completa: [/channels/slack#troubleshooting](/en/channels/slack#troubleshooting)
 
 ## iMessage y BlueBubbles
 
@@ -90,8 +90,8 @@ Solución de problemas completa: [/channels/slack#troubleshooting](/es/channels/
 
 Solución de problemas completa:
 
-- [/channels/imessage#troubleshooting](/es/channels/imessage#troubleshooting)
-- [/channels/bluebubbles#troubleshooting](/es/channels/bluebubbles#troubleshooting)
+- [/channels/imessage#troubleshooting](/en/channels/imessage#troubleshooting)
+- [/channels/bluebubbles#troubleshooting](/en/channels/bluebubbles#troubleshooting)
 
 ## Signal
 
@@ -103,7 +103,7 @@ Solución de problemas completa:
 | MD bloqueado                                  | `openclaw pairing list signal`                                      | Aprueba el remitente o ajusta la política de MD.                        |
 | Las respuestas de grupo no se activan         | Verifica la lista de permitidos del grupo y los patrones de mención | Agrega el remitente/grupo o relaja el filtrado.                         |
 
-Solución de problemas completa: [/channels/signal#troubleshooting](/es/channels/signal#troubleshooting)
+Solución de problemas completa: [/channels/signal#troubleshooting](/en/channels/signal#troubleshooting)
 
 ## Matrix
 
@@ -115,4 +115,4 @@ Solución de problemas completa: [/channels/signal#troubleshooting](/es/channels
 | Los MD no se procesan                               | `openclaw pairing list matrix`                              | Aprobar remitente o ajustar la política de MD.                 |
 | Fallo en salas cifradas                             | Verificar módulo de criptografía y configuración de cifrado | Habilitar soporte de cifrado y volver a unir/sincronizar sala. |
 
-Configuración completa: [Matrix](/es/channels/matrix)
+Configuración completa: [Matrix](/en/channels/matrix)

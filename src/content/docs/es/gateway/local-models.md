@@ -9,9 +9,9 @@ title: "Modelos locales"
 
 # Modelos locales
 
-Ejecutarlo localmente es posible, pero OpenClaw espera un contexto grande + defensas sólidas contra la inyección de avisos. Las tarjetas pequeñas truncan el contexto y filtran la seguridad. Apunta alto: **≥2 Mac Studios al máximo o un equipo de GPU equivalente (~$30k+)**. Una sola GPU de **24 GB** solo funciona para avisos más ligeros con mayor latencia. Utiliza la **variante del modelo más grande / de tamaño completo que puedas ejecutar**; los puntos de control cuantificados agresivamente o “pequeños” aumentan el riesgo de inyección de avisos (consulta [Seguridad](/es/gateway/security)).
+Ejecutarlo localmente es posible, pero OpenClaw espera un contexto grande + defensas sólidas contra la inyección de avisos. Las tarjetas pequeñas truncan el contexto y filtran la seguridad. Apunta alto: **≥2 Mac Studios al máximo o un equipo de GPU equivalente (~$30k+)**. Una sola GPU de **24 GB** solo funciona para avisos más ligeros con mayor latencia. Utiliza la **variante del modelo más grande / de tamaño completo que puedas ejecutar**; los puntos de control cuantificados agresivamente o “pequeños” aumentan el riesgo de inyección de avisos (consulta [Seguridad](/en/gateway/security)).
 
-Si deseas la configuración local con menos fricción, comienza con [Ollama](/es/providers/ollama) y `openclaw onboard`. Esta página es la guía con opiniones para pilas locales de gama alta y servidores locales compatibles con OpenAI personalizados.
+Si deseas la configuración local con menos fricción, comienza con [Ollama](/en/providers/ollama) y `openclaw onboard`. Esta página es la guía con opiniones para pilas locales de gama alta y servidores locales compatibles con OpenAI personalizados.
 
 ## Recomendado: LM Studio + MiniMax M2.5 (API de respuestas, tamaño completo)
 

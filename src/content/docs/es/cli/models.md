@@ -1,5 +1,5 @@
 ---
-summary: "Referencia de CLI para `openclaw models` (estado/lista/configuración/escaneo, alias, respaldos, autenticación)"
+summary: "Referencia de la CLI para `openclaw models` (estado/lista/configuración/escaneo, alias, respaldos, autenticación)"
 read_when:
   - You want to change default models or view provider auth status
   - You want to scan available models/providers and debug auth profiles
@@ -12,8 +12,8 @@ Descubrimiento, escaneo y configuración de modelos (modelo predeterminado, resp
 
 Relacionado:
 
-- Proveedores + modelos: [Modelos](/es/providers/models)
-- Configuración de autenticación del proveedor: [Cómo empezar](/es/start/getting-started)
+- Proveedores + modelos: [Modelos](/en/providers/models)
+- Configuración de autenticación del proveedor: [Introducción](/en/start/getting-started)
 
 ## Comandos comunes
 
@@ -24,11 +24,11 @@ openclaw models set <model-or-alias>
 openclaw models scan
 ```
 
-`openclaw models status` muestra los predeterminados/resueltos de respaldo más un resumen de autenticación.
-Cuando hay instantáneas de uso del proveedor disponibles, la sección de estado de OAuth/token incluye
+`openclaw models status` muestra los valores predeterminados/resueltos de respaldo más una descripción general de autenticación.
+Cuando hay disponibles instantáneas de uso del proveedor, la sección de estado de OAuth/token incluye
 encabezados de uso del proveedor.
-Agregue `--probe` para ejecutar sondas de autenticación en vivo contra cada perfil de proveedor configurado.
-Las sondas son solicitudes reales (pueden consumir tokens y activar límites de velocidad).
+Agregue `--probe` para ejecutar sondeos de autenticación en vivo contra cada perfil de proveedor configurado.
+Los sondeos son solicitudes reales (pueden consumir tokens y activar límites de velocidad).
 Use `--agent <id>` para inspeccionar el estado de modelo/autenticación de un agente configurado. Cuando se omite,
 el comando usa `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR` si está configurado, de lo contrario el
 agente predeterminado configurado.
@@ -38,7 +38,7 @@ Notas:
 - `models set <model-or-alias>` acepta `provider/model` o un alias.
 - Las referencias de modelo se analizan dividiéndolas en el **primer** `/`. Si el ID del modelo incluye `/` (estilo OpenRouter), incluya el prefijo del proveedor (ejemplo: `openrouter/moonshotai/kimi-k2`).
 - Si omite el proveedor, OpenClaw trata la entrada como un alias o un modelo para el **proveedor predeterminado** (solo funciona cuando no hay `/` en el ID del modelo).
-- `models status` puede mostrar `marker(<value>)` en la salida de autenticación para marcadores de posición que no son secretos (por ejemplo `OPENAI_API_KEY`, `secretref-managed`, `minimax-oauth`, `qwen-oauth`, `ollama-local`) en lugar de enmascararlos como secretos.
+- `models status` puede mostrar `marker(<value>)` en la salida de autenticación para marcadores de posición no secretos (por ejemplo `OPENAI_API_KEY`, `secretref-managed`, `minimax-oauth`, `oauth:chutes`, `ollama-local`) en lugar de enmascararlos como secretos.
 
 ### `models status`
 
@@ -46,8 +46,8 @@ Opciones:
 
 - `--json`
 - `--plain`
-- `--check` (salida 1=expirado/faltante, 2=por expirar)
-- `--probe` (sonda en vivo de los perfiles de autenticación configurados)
+- `--check` (salida 1=expirado/ausente, 2=por expirar)
+- `--probe` (sondeo en vivo de los perfiles de autenticación configurados)
 - `--probe-provider <name>` (sondear un proveedor)
 - `--probe-profile <id>` (repetir o ids de perfil separados por comas)
 - `--probe-timeout <ms>`
@@ -74,8 +74,17 @@ openclaw models auth paste-token
 `models auth login` ejecuta el flujo de autenticación de un complemento de proveedor (OAuth/clave de API). Use
 `openclaw plugins list` para ver qué proveedores están instalados.
 
+Ejemplos:
+
+```bash
+openclaw models auth login --provider anthropic --method cli --set-default
+openclaw models auth login --provider openai-codex --set-default
+```
+
 Notas:
 
+- `login --provider anthropic --method cli --set-default` reutiliza un inicio de sesión local de
+  Claude CLI y reescribe la ruta principal del modelo predeterminado de Anthropic a `claude-cli/...`.
 - `setup-token` solicita un valor de token de configuración (genérelo con `claude setup-token` en cualquier máquina).
 - `paste-token` acepta una cadena de token generada en otro lugar o desde la automatización.
-- Nota sobre la política de Anthropic: la compatibilidad con setup-token es una compatibilidad técnica. Anthropic ha bloqueado algunos usos de suscripción fuera de Claude Code en el pasado, así que verifique los términos actuales antes de usarlo ampliamente.
+- Nota sobre la política de Anthropic: la compatibilidad con setup-token es técnica. En el pasado, Anthropic ha bloqueado el uso de algunas suscripciones fuera de Claude Code, por lo que debes verificar los términos actuales antes de usarlo ampliamente.

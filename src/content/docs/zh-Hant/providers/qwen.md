@@ -1,52 +1,33 @@
 ---
-summary: "在 OpenClaw 中使用 Qwen OAuth（免費層級）"
+summary: "透過阿里雲 Model Studio 使用 Qwen 模型"
 read_when:
   - You want to use Qwen with OpenClaw
-  - You want free-tier OAuth access to Qwen Coder
+  - You previously used Qwen OAuth
 title: "Qwen"
 ---
 
 # Qwen
 
-Qwen 為 Qwen Coder 和 Qwen Vision 模型提供免費層級的 OAuth 流程
-（每天 2,000 次請求，受 Qwen 速率限制約束）。
+<Warning>
 
-## 啟用外掛程式
+**Qwen OAuth 已移除。** 使用 `portal.qwen.ai` 端點的免費層 OAuth 整合
+(`qwen-portal`) 已不再提供。
+請參閱 [Issue #49557](https://github.com/openclaw/openclaw/issues/49557) 瞭解
+背景資訊。
 
-```bash
-openclaw plugins enable qwen-portal-auth
-```
+</Warning>
 
-啟用後請重新啟動 Gateway。
+## 建議：Model Studio (阿里雲 Coding 方案)
 
-## 驗證
-
-```bash
-openclaw models auth login --provider qwen-portal --set-default
-```
-
-這將執行 Qwen 裝置碼 OAuth 流程，並將提供者條目寫入您的
-`models.json`（加上一個 `qwen` 別名以便快速切換）。
-
-## 模型 ID
-
-- `qwen-portal/coder-model`
-- `qwen-portal/vision-model`
-
-使用以下指令切換模型：
+使用 [Model Studio](/en/providers/modelstudio) 以取得官方支援的 Qwen 模型
+(Qwen 3.5 Plus、GLM-4.7、Kimi K2.5、MiniMax M2.5 等) 的存取權限。
 
 ```bash
-openclaw models set qwen-portal/coder-model
+# Global endpoint
+openclaw onboard --auth-choice modelstudio-api-key
+
+# China endpoint
+openclaw onboard --auth-choice modelstudio-api-key-cn
 ```
 
-## 重複使用 Qwen Code CLI 登入
-
-如果您已經使用 Qwen Code CLI 登入，OpenClaw 將在載入驗證存儲時從 `~/.qwen/oauth_creds.json` 同步憑證。
-您仍然需要一個 `models.providers.qwen-portal` 條目（使用上面的登入指令來建立一個）。
-
-## 備註
-
-- 權杖會自動重新整理；如果重新整理失敗或存取權被撤銷，請重新執行登入指令。
-- 預設基礎 URL：`https://portal.qwen.ai/v1`（如果 Qwen 提供不同的端點，
-  請使用 `models.providers.qwen-portal.baseUrl` 覆蓋）。
-- 請參閱 [Model providers](/en/concepts/model-providers) 以了解提供者範圍的規則。
+請參閱 [Model Studio](/en/providers/modelstudio) 以取得完整的設定詳細資料。

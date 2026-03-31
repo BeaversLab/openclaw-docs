@@ -28,7 +28,7 @@ La portée inclut :
 
 Si vous avez besoin de détails sur le stockage des transcripts, consultez :
 
-- [/reference/session-management-compaction](/fr/reference/session-management-compaction)
+- [/reference/session-management-compaction](/en/reference/session-management-compaction)
 
 ---
 

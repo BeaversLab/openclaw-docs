@@ -38,9 +38,9 @@ Nota del código de salida para CI/compuertas:
 
 Relacionado:
 
-- Guía de Secrets: [Secrets Management](/es/gateway/secrets)
-- Superficie de credenciales: [SecretRef Credential Surface](/es/reference/secretref-credential-surface)
-- Guía de seguridad: [Security](/es/gateway/security)
+- Guía de Secrets: [Secrets Management](/en/gateway/secrets)
+- Superficie de credenciales: [SecretRef Credential Surface](/en/reference/secretref-credential-surface)
+- Guía de seguridad: [Security](/en/gateway/security)
 
 ## Recargar instantánea de tiempo de ejecución
 
@@ -127,7 +127,7 @@ Notas:
 - No puedes combinar `--providers-only` con `--skip-provider-setup`.
 - `configure` apunta a campos con secretos en `openclaw.json` más `auth-profiles.json` para el alcance de agente seleccionado.
 - `configure` admite la creación de nuevos mapeos de `auth-profiles.json` directamente en el flujo del selector.
-- Superficie canónica soportada: [SecretRef Credential Surface](/es/reference/secretref-credential-surface).
+- Superficie canónica soportada: [SecretRef Credential Surface](/en/reference/secretref-credential-surface).
 - Realiza la resolución previa al vuelo antes de aplicar.
 - Si la verificación previa o la aplicación incluye referencias exec, mantenga `--allow-exec` configurado para ambos pasos.
 - Los planes generados por defecto a las opciones de limpieza (`scrubEnv`, `scrubAuthProfilesForProviderTargets`, `scrubLegacyAuthJson` todos habilitados).
@@ -162,7 +162,7 @@ Comportamiento de ejecución:
 
 Detalles del contrato del plan (rutas de destino permitidas, reglas de validación y semántica de fallas):
 
-- [Contrato del plan de aplicación de Secrets](/es/gateway/secrets-plan-contract)
+- [Contrato del plan de aplicación de Secrets](/en/gateway/secrets-plan-contract)
 
 Qué puede actualizar `apply`:
 

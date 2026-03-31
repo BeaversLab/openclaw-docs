@@ -82,7 +82,7 @@ title: "Niveaux de réflexion"
 
 ## Connexe
 
-- La documentation du mode élevé se trouve dans [Elevated mode](/fr/tools/elevated).
+- La documentation du mode élevé se trouve dans [Elevated mode](/en/tools/elevated).
 
 ## Heartbeats
 

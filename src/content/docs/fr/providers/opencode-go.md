@@ -8,7 +8,7 @@ title: "OpenCode Go"
 
 # OpenCode Go
 
-OpenCode Go est le catalogue Go au sein de [OpenCode](/fr/providers/opencode).
+OpenCode Go est le catalogue Go au sein de [OpenCode](/en/providers/opencode).
 Il utilise le même `OPENCODE_API_KEY` que le catalogue Zen, mais conserve l'identifiant
 provider d'exécution `opencode-go` afin que le routage en amont par model reste correct.
 
@@ -41,5 +41,5 @@ OpenClaw gère le routage par model automatiquement lorsque la référence du mo
 
 ## Notes
 
-- Utilisez [OpenCode](/fr/providers/opencode) pour l'onboarding partagé et la vue d'ensemble du catalogue.
+- Utilisez [OpenCode](/en/providers/opencode) pour l'onboarding partagé et la vue d'ensemble du catalogue.
 - Les références d'exécution restent explicites : `opencode/...` pour Zen, `opencode-go/...` pour Go.

@@ -36,7 +36,7 @@ requireMention? yes -> mentioned? no -> store for context only
 otherwise -> reply
 ```
 
-![Flux des messages de groupe](/images/groups-flow.svg)
+![Group message flow](/images/groups-flow.svg)
 
 Si vous voulez...
 
@@ -65,7 +65,7 @@ Cela vous donne un seul « cerveau » d'agent (espace de travail partagé + mém
 - **DMs** : outils complets (hôte)
 - **Groupes** : sandbox + outils restreints (Docker)
 
-> Si vous avez besoin d'espaces de travail/personnalités véritablement distincts (les aspects « personnel » et « public » ne doivent jamais se mélanger), utilisez un second agent + liaisons. Voir [Multi-Agent Routing](/fr/concepts/multi-agent).
+> Si vous avez besoin d'espaces de travail/personnalités véritablement séparés (les « personnels » et « publics » ne doivent jamais être mélangés), utilisez un deuxième agent + liaisons. Voir [Multi-Agent Routing](/en/concepts/multi-agent).
 
 Exemple (DMs sur l'hôte, groupes sandboxés + outils de messagerie uniquement) :
 
@@ -116,9 +116,9 @@ Vous préférez « les groupes ne peuvent voir que le dossier X » plutôt que �
 
 Connexes :
 
-- Clés de configuration et valeurs par défaut : [configuration du Gateway](/fr/gateway/configuration-reference#agentsdefaultssandbox)
-- Débogage du blocage d'un outil : [Sandbox vs Tool Policy vs Elevated](/fr/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Détails sur les montages de liaison : [Sandboxing](/fr/gateway/sandboxing#custom-bind-mounts)
+- Clés de configuration et valeurs par défaut : [Gateway configuration](/en/gateway/configuration-reference#agentsdefaultssandbox)
+- Débogage du blocage d'un tool : [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Détails sur les montages de liaison : [Sandboxing](/en/gateway/sandboxing#custom-bind-mounts)
 
 ## Libellés d'affichage
 
@@ -366,14 +366,18 @@ Les charges utiles entrantes de groupe définissent :
 - `WasMentioned` (résultat du filtrage des mentions)
 - Les sujets de forum Telegram incluent également `MessageThreadId` et `IsForum`.
 
-L'invite système de l'agent inclut une introduction de groupe au premier tour d'une nouvelle session de groupe. Cela rappelle au modèle de répondre comme un humain, d'éviter les tableaux Markdown et d'éviter de taper des séquences `\n` littérales.
+Notes spécifiques au canal :
+
+- BlueBubbles peut optionnellement enrichir les participants de groupe macOS sans nom à partir de la base de données locale Contacts avant de remplir `GroupMembers`. C'est désactivé par défaut et ne s'exécute qu'après le passage normal du filtrage de groupe.
+
+Le système de prompt de l'agent inclut une introduction de groupe lors du premier tour d'une nouvelle session de groupe. Il rappelle au modèle de répondre comme un humain, d'éviter les tableaux Markdown et d'éviter de taper des séquences littérales `\n`.
 
 ## Spécificités iMessage
 
-- Privilégiez `chat_id:<id>` lors du routage ou de la liste d'autorisation.
+- Privilégiez `chat_id:<id>` lors du routage ou de la liste blanche.
 - Lister les chats : `imsg chats --limit 20`.
 - Les réponses de groupe reviennent toujours au même `chat_id`.
 
 ## Spécificités WhatsApp
 
-Voir [Messages de groupe](/fr/channels/group-messages) pour les comportements spécifiques à WhatsApp (injection d'historique, détails de gestion des mentions).
+Voir [Group messages](/en/channels/group-messages) pour le comportement exclusif à WhatsApp (injection de l'historique, détails de la gestion des mentions).

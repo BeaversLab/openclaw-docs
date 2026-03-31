@@ -27,7 +27,7 @@ Extraction locale (lors de l'exécution depuis un dépôt git) :
 openclaw plugins install ./extensions/tlon
 ```
 
-Détails : [Plugins](/fr/tools/plugin)
+Détails : [Plugins](/en/tools/plugin)
 
 ## Configuration
 
@@ -243,7 +243,7 @@ Pannes courantes :
 
 ## Référence de configuration
 
-Configuration complète : [Configuration](/fr/gateway/configuration)
+Configuration complète : [Configuration](/en/gateway/configuration)
 
 Options du fournisseur :
 

@@ -28,7 +28,7 @@ title: "API 使用和成本"
 
 - `openclaw status --usage` 和 `openclaw channels list` 显示提供商**使用量窗口**（配额快照，而非单条消息的费用）。
 
-有关详细信息和示例，请参阅 [Token 使用与费用](/zh/reference/token-use)。
+有关详细信息和示例，请参阅 [Token 使用与费用](/en/reference/token-use)。
 
 ## 如何发现密钥
 
@@ -46,7 +46,7 @@ OpenClaw 可以从以下位置获取凭据：
 
 每次回复或工具调用都使用**当前模型提供商**（OpenAI、Anthropic 等）。这是使用量和成本的主要来源。
 
-有关价格配置，请参阅 [模型](/zh/providers/models)；有关显示，请参阅 [Token 使用与费用](/zh/reference/token-use)。
+有关价格配置，请参阅 [模型](/en/providers/models)；有关显示，请参阅 [Token 使用与费用](/en/reference/token-use)。
 
 ### 2) 媒体理解（音频/图像/视频）
 
@@ -56,7 +56,7 @@ OpenClaw 可以从以下位置获取凭据：
 - 图像：OpenAI / Anthropic / Google。
 - 视频：Google。
 
-请参阅 [媒体理解](/zh/nodes/media-understanding)。
+请参阅 [媒体理解](/en/nodes/media-understanding)。
 
 ### 3) 记忆嵌入 + 语义搜索
 
@@ -71,7 +71,7 @@ OpenClaw 可以从以下位置获取凭据：
 
 您可以使用 `memorySearch.provider = "local"` 将其保持在本地（不使用 API）。
 
-请参阅 [记忆](/zh/concepts/memory)。
+请参阅 [记忆](/en/concepts/memory)。
 
 ### 4) Web search 工具
 
@@ -87,7 +87,7 @@ OpenClaw 可以从以下位置获取凭据：
 
 **Brave 搜索免费额度**：每个 Brave 计划均包含每月 $5 的续期免费额度。搜索计划价格为每 1,000 次请求 $5，因此该额度覆盖每月 1,000 次免费请求。在 Brave 仪表板中设置您的使用限制，以避免意外收费。
 
-请参阅 [Web 工具](/zh/tools/web)。
+请参阅 [Web 工具](/en/tools/web)。
 
 ### 5) Web 抓取工具 (Firecrawl)
 
@@ -97,7 +97,7 @@ OpenClaw 可以从以下位置获取凭据：
 
 如果未配置 Firecrawl，该工具将回退到直接抓取 + 可读性处理（无付费 API）。
 
-请参阅 [Web 工具](/zh/tools/web)。
+请参阅 [Web 工具](/en/tools/web)。
 
 ### 6) 提供商使用快照（状态/健康状况）
 
@@ -106,19 +106,19 @@ OpenClaw 可以从以下位置获取凭据：
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-请参阅 [模型 CLI](/zh/cli/models)。
+请参阅 [模型 CLI](/en/cli/models)。
 
 ### 7) 压缩保护摘要
 
 压缩保护机制可以使用 **当前模型** 摘要会话历史，运行时会调用提供商 API。
 
-请参阅 [会话管理 + 压缩](/zh/reference/session-management-compaction)。
+请参阅 [会话管理 + 压缩](/en/reference/session-management-compaction)。
 
 ### 8) 模型扫描 / 探测
 
 `openclaw models scan` 可以探测 OpenRouter 模型，并在启用探测时使用 `OPENROUTER_API_KEY`。
 
-请参阅 [模型 CLI](/zh/cli/models)。
+请参阅 [模型 CLI](/en/cli/models)。
 
 ### 9) 对话（语音）
 
@@ -126,10 +126,10 @@ OpenClaw 可以从以下位置获取凭据：
 
 - `ELEVENLABS_API_KEY` 或 `talk.apiKey`
 
-请参阅 [对话模式](/zh/nodes/talk)。
+请参阅 [对话模式](/en/nodes/talk)。
 
 ### 10) Skills（第三方 API）
 
 Skills 可以在 `skills.entries.<name>.apiKey` 中存储 `apiKey`。如果技能使用该密钥调用外部 API，则可能会根据该技能的提供商产生费用。
 
-请参阅 [Skills](/zh/tools/skills)。
+请参阅 [Skills](/en/tools/skills)。

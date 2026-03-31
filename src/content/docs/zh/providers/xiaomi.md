@@ -80,4 +80,4 @@ openclaw onboard --auth-choice xiaomi-api-key --xiaomi-api-key "$XIAOMI_API_KEY"
 - 默认模型参考：`xiaomi/mimo-v2-flash`。
 - 其他内置模型：`xiaomi/mimo-v2-pro`、`xiaomi/mimo-v2-omni`。
 - 当设置了 `XIAOMI_API_KEY`（或存在身份验证配置文件）时，提供商会自动注入。
-- 有关提供商规则，请参阅 [/concepts/模型-providers](/zh/concepts/model-providers)。
+- 有关提供商规则，请参阅 [/concepts/模型-providers](/en/concepts/model-providers)。

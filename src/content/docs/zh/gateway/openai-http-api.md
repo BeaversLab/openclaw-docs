@@ -46,7 +46,7 @@ OpenClaw 的 Gateway 网关 可以提供一个小型的兼容 OpenAI 的 Chat Co
 - 如果目标 agent 策略允许敏感工具，此端点可以使用它们。
 - 仅将此端点保留在 loopback/tailnet/私有入口上；不要将其直接暴露给公共互联网。
 
-请参阅 [安全](/zh/gateway/security) 和 [远程访问](/zh/gateway/remote)。
+请参阅 [安全](/en/gateway/security) 和 [远程访问](/en/gateway/remote)。
 
 ## Agent 优先的模型合约
 

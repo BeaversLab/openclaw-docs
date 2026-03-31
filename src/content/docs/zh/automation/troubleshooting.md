@@ -116,7 +116,7 @@ openclaw logs --follow
 
 相关内容：
 
-- [/automation/cron-jobs](/zh/automation/cron-jobs)
-- [/gateway/heartbeat](/zh/gateway/heartbeat)
-- [/automation/cron-vs-heartbeat](/zh/automation/cron-vs-heartbeat)
-- [/concepts/timezone](/zh/concepts/timezone)
+- [/automation/cron-jobs](/en/automation/cron-jobs)
+- [/gateway/heartbeat](/en/gateway/heartbeat)
+- [/automation/cron-vs-heartbeat](/en/automation/cron-vs-heartbeat)
+- [/concepts/timezone](/en/concepts/timezone)

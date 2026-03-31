@@ -21,7 +21,7 @@ OpenClaw 支持具有内置 [Google Search 接入](https://ai.google.dev/gemini-
   <Step title="Store the key">
     在 Gateway(网关) 环境中设置 `GEMINI_API_KEY`，或通过以下方式配置：
 
-    ```exec
+    ```bash
     openclaw configure --section web
     ```
 
@@ -78,6 +78,6 @@ Gemini 搜索支持标准 `query` 和 `count` 参数。
 
 ## 相关
 
-- [网络搜索概述](/zh/tools/web) -- 所有提供商和自动检测
-- [Brave 搜索](/zh/tools/brave-search) -- 带有片段的结构化结果
-- [Perplexity Search](/zh/tools/perplexity-search) -- 结构化结果 + 内容提取
+- [网络搜索概述](/en/tools/web) -- 所有提供商和自动检测
+- [Brave 搜索](/en/tools/brave-search) -- 带有片段的结构化结果
+- [Perplexity Search](/en/tools/perplexity-search) -- 结构化结果 + 内容提取

@@ -12,10 +12,10 @@ title: "plugins"
 
 相关内容：
 
-- 插件系统：[插件](/zh/tools/plugin)
-- 捆绑包兼容性：[插件捆绑包](/zh/plugins/bundles)
-- 插件清单 + 架构：[插件清单](/zh/plugins/manifest)
-- 安全加固：[安全性](/zh/gateway/security)
+- 插件系统：[插件](/en/tools/plugin)
+- 捆绑包兼容性：[插件捆绑包](/en/plugins/bundles)
+- 插件清单 + 架构：[插件清单](/en/plugins/manifest)
+- 安全加固：[安全性](/en/gateway/security)
 
 ## 命令
 
@@ -192,7 +192,7 @@ HTTP 路由、策略标志、诊断信息和安装元数据。
 - **hook-only** — 仅包含 hooks，没有功能或表面
 - **non-capability** — 包含工具/命令/服务但没有功能
 
-有关功能模型的详细信息，请参阅 [Plugin shapes](/zh/plugins/architecture#plugin-shapes)。
+有关功能模型的详细信息，请参阅 [Plugin shapes](/en/plugins/architecture#plugin-shapes)。
 
 `--json` 标志输出适合脚本编写和
 审计的机器可读报告。

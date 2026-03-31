@@ -1,5 +1,5 @@
 ---
-summary: "Referencia de CLI para `openclaw config` (get/set/unset/file/validate)"
+summary: "Referencia de la CLI para `openclaw config` (get/set/unset/file/schema/validate)"
 read_when:
   - You want to read or edit config non-interactively
 title: "config"
@@ -7,14 +7,15 @@ title: "config"
 
 # `openclaw config`
 
-Auxiliares de configuración para ediciones no interactivas en `openclaw.json`: get/set/unset/validate
-valores por ruta e imprimir el archivo de configuración activo. Ejecutar sin un subcomando para
+Auxiliares de configuración para ediciones no interactivas en `openclaw.json`: get/set/unset/file/schema/validate
+valores por ruta e imprime el archivo de configuración activo. Ejecuta sin un subcomando para
 abrir el asistente de configuración (igual que `openclaw configure`).
 
 ## Ejemplos
 
 ```bash
 openclaw config file
+openclaw config schema
 openclaw config get browser.executablePath
 openclaw config set browser.executablePath "/usr/bin/google-chrome"
 openclaw config set agents.defaults.heartbeat.every "2h"
@@ -27,7 +28,21 @@ openclaw config validate
 openclaw config validate --json
 ```
 
-## Rutas
+### `config schema`
+
+Imprime el esquema JSON generado para `openclaw.json` en stdout como texto plano.
+
+```bash
+openclaw config schema
+```
+
+Rediríjelo a un archivo cuando desee inspeccionarlo o validarlo con otras herramientas:
+
+```bash
+openclaw config schema > openclaw.schema.json
+```
+
+### Rutas
 
 Las rutas usan notación de punto o de corchetes:
 
@@ -45,7 +60,7 @@ openclaw config set agents.list[1].tools.exec.node "node-id-or-name"
 
 ## Valores
 
-Los valores se analizan como JSON5 cuando sea posible; de lo contrario, se tratan como cadenas.
+Los valores se analizan como JSON5 cuando es posible; de lo contrario, se tratan como cadenas.
 Use `--strict-json` para requerir el análisis JSON5. `--json` sigue siendo compatible como alias heredado.
 
 ```bash
@@ -101,7 +116,7 @@ openclaw config set --batch-file ./config-set.batch.json --dry-run
 El análisis por lotes siempre utiliza la carga útil por lotes (`--batch-json`/`--batch-file`) como fuente de verdad.
 `--strict-json` / `--json` no cambian el comportamiento del análisis por lotes.
 
-El modo de ruta/valor JSON sigue siendo compatible tanto para SecretRefs como para proveedores:
+El modo de ruta/valor JSON sigue siendo compatible tanto con SecretRefs como con proveedores:
 
 ```bash
 openclaw config set channels.discord.token \
@@ -113,28 +128,28 @@ openclaw config set secrets.providers.vaultfile \
   --strict-json
 ```
 
-## Opciones del constructor de proveedor
+## Marcas del constructor de proveedores
 
-Los objetivos del constructor de proveedor deben usar `secrets.providers.<alias>` como la ruta.
+Los objetivos del constructor de proveedores deben usar `secrets.providers.<alias>` como ruta.
 
-Opciones comunes:
+Marcas comunes:
 
 - `--provider-source <env|file|exec>`
 - `--provider-timeout-ms <ms>` (`file`, `exec`)
 
-Proveedor Env (`--provider-source env`):
+Proveedor de entorno (`--provider-source env`):
 
 - `--provider-allowlist <ENV_VAR>` (repetible)
 
 Proveedor de archivos (`--provider-source file`):
 
-- `--provider-path <path>` (obligatorio)
+- `--provider-path <path>` (requerido)
 - `--provider-mode <singleValue|json>`
 - `--provider-max-bytes <bytes>`
 
-Proveedor Exec (`--provider-source exec`):
+Proveedor de ejecución (`--provider-source exec`):
 
-- `--provider-command <path>` (obligatorio)
+- `--provider-command <path>` (requerido)
 - `--provider-arg <arg>` (repetible)
 - `--provider-no-output-timeout-ms <ms>`
 - `--provider-max-output-bytes <bytes>`
@@ -145,7 +160,7 @@ Proveedor Exec (`--provider-source exec`):
 - `--provider-allow-insecure-path`
 - `--provider-allow-symlink-command`
 
-Ejemplo de proveedor de ejecución reforzado:
+Ejemplo de proveedor de ejecución blindado:
 
 ```bash
 openclaw config set secrets.providers.vault \
@@ -161,7 +176,7 @@ openclaw config set secrets.providers.vault \
 
 ## Ejecución en seco
 
-Use `--dry-run` para validar los cambios sin escribir `openclaw.json`.
+Use `--dry-run` para validar cambios sin escribir `openclaw.json`.
 
 ```bash
 openclaw config set channels.discord.token \
@@ -187,23 +202,23 @@ openclaw config set channels.discord.token \
 
 Comportamiento de ejecución en seco:
 
-- Modo de constructor (Builder mode): ejecuta comprobaciones de resolubilidad de SecretRef para las referencias/proveedores modificados.
-- Modo JSON (`--strict-json`, `--json` o modo por lotes): ejecuta la validación del esquema más las comprobaciones de resolubilidad de SecretRef.
-- Las comprobaciones de SecretRef de ejecución (Exec) se omiten de forma predeterminada durante la ejecución en seco para evitar efectos secundarios en los comandos.
-- Use `--allow-exec` con `--dry-run` para optar por las comprobaciones de SecretRef de ejecución (esto puede ejecutar comandos de proveedor).
-- `--allow-exec` es solo para ejecución en seco y genera errores si se usa sin `--dry-run`.
+- Modo de constructor: ejecuta comprobaciones de resolución de SecretRef para referencias/proveedores modificados.
+- Modo JSON (`--strict-json`, `--json`, o modo por lotes): ejecuta validación de esquema además de comprobaciones de resolución de SecretRef.
+- Las comprobaciones de Exec SecretRef se omiten de forma predeterminada durante la ejecución en seco para evitar efectos secundarios de los comandos.
+- Use `--allow-exec` con `--dry-run` para optar por las comprobaciones de exec SecretRef (esto puede ejecutar comandos del proveedor).
+- `--allow-exec` es solo de simulación (dry-run) y genera un error si se usa sin `--dry-run`.
 
 `--dry-run --json` imprime un informe legible por máquina:
 
-- `ok`: si la ejecución en seco fue exitosa
+- `ok`: si la simulación (dry-run) fue exitosa
 - `operations`: número de asignaciones evaluadas
-- `checks`: si se ejecutaron las comprobaciones de esquema/resolubilidad
-- `checks.resolvabilityComplete`: si las comprobaciones de resolubilidad se completaron (falso cuando se omiten las referencias de ejecución)
-- `refsChecked`: número de referencias resueltas realmente durante la ejecución en seco
+- `checks`: si se ejecutaron las comprobaciones de esquema/resolvibilidad
+- `checks.resolvabilityComplete`: si las comprobaciones de resolvibilidad se completaron (falso cuando se omiten las referencias de ejecución)
+- `refsChecked`: número de referencias realmente resueltas durante la simulación
 - `skippedExecRefs`: número de referencias de ejecución omitidas porque `--allow-exec` no estaba establecido
-- `errors`: fallos de esquema/resolubilidad estructurados cuando `ok=false`
+- `errors`: fallos estructurados de esquema/resolvibilidad cuando `ok=false`
 
-### Forma de salida JSON
+### JSON Output Shape
 
 ```json5
 {
@@ -228,7 +243,7 @@ Comportamiento de ejecución en seco:
 }
 ```
 
-Ejemplo de éxito:
+Success example:
 
 ```json
 {
@@ -246,7 +261,7 @@ Ejemplo de éxito:
 }
 ```
 
-Ejemplo de fallo:
+Failure example:
 
 ```json
 {
@@ -271,22 +286,22 @@ Ejemplo de fallo:
 }
 ```
 
-Si la ejecución en seco falla:
+If dry-run fails:
 
-- `config schema validation failed`: la forma de su configuración posterior al cambio no es válida; corrija la ruta/valor o la forma del objeto del proveedor/referencia.
-- `SecretRef assignment(s) could not be resolved`: el proveedor/referencia al que se hace referencia actualmente no se puede resolver (falta la variable de entorno, puntero de archivo no válido, fallo del proveedor de ejecución o falta de coincidencia entre el proveedor y la fuente).
-- `Dry run note: skipped <n> exec SecretRef resolvability check(s)`: la ejecución en seco omitió las referencias de ejecución; vuelva a ejecutar con `--allow-exec` si necesita validación de resolubilidad de ejecución.
+- `config schema validation failed`: la forma de su configuración posterior al cambio no es válida; corrija la ruta/valor o la forma del objeto proveedor/referencia.
+- `SecretRef assignment(s) could not be resolved`: el proveedor/referencia al que se hace referencia actualmente no se puede resolver (falta variable de entorno, puntero de archivo no válido, fallo del proveedor de ejecución o falta de coincidencia entre proveedor y fuente).
+- `Dry run note: skipped <n> exec SecretRef resolvability check(s)`: la ejecución en seco omitió las referencias de ejecución; vuelva a ejecutar con `--allow-exec` si necesita la validación de la capacidad de resolución de la ejecución.
 - Para el modo por lotes, corrija las entradas con errores y vuelva a ejecutar `--dry-run` antes de escribir.
 
 ## Subcomandos
 
-- `config file`: Imprime la ruta del archivo de configuración activo (resuelta desde `OPENCLAW_CONFIG_PATH` o la ubicación predeterminada).
+- `config file`: Imprime la ruta del archivo de configuración activo (resuelta a partir de `OPENCLAW_CONFIG_PATH` o la ubicación predeterminada).
 
-Reinicia la puerta de enlace después de las ediciones.
+Reinicie la puerta de enlace después de las ediciones.
 
 ## Validar
 
-Valida la configuración actual contra el esquema activo sin iniciar la
+Valide la configuración actual frente al esquema activo sin iniciar la
 puerta de enlace.
 
 ```bash

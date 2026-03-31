@@ -10,7 +10,7 @@ sidebarTitle: "Ajout de capacités"
 
 # Ajout de capacités
 
-<Info>Ceci est un **guide du contributeur** pour les développeurs du cœur de OpenClaw. Si vous créez un plugin externe, consultez plutôt [Building Plugins](/fr/plugins/building-plugins).</Info>
+<Info>This is a **contributor guide** for OpenClaw core developers. If you are building an external plugin, see [Building Plugins](/en/plugins/building-plugins) instead.</Info>
 
 Utilisez ceci lorsque OpenClaw a besoin d'un nouveau domaine tel que la génération d'images,
 la génération de vidéos, ou une future zone fonctionnalité supportée par un fournisseur.

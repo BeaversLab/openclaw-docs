@@ -18,7 +18,7 @@ y valores predeterminados del espacio de trabajo en un flujo guiado.
 openclaw onboard
 ```
 
-<Info>Primer chat más rápido: abre la interfaz de usuario de Control (no se necesita configuración de canales). Ejecuta `openclaw dashboard` y chatea en el navegador. Documentación: [Panel de control](/es/web/dashboard).</Info>
+<Info>La forma más rápida de comenzar a chatear: abra la Interfaz de Control (no es necesaria la configuración de canales). Ejecute `openclaw dashboard` y chatee en el navegador. Documentación: [Dashboard](/en/web/dashboard).</Info>
 
 Para reconfigurar más adelante:
 
@@ -27,18 +27,18 @@ openclaw configure
 openclaw agents add <name>
 ```
 
-<Note>`--json` no implica el modo no interactivo. Para secuencias de comandos, usa `--non-interactive`.</Note>
+<Note>`--json` no implica el modo no interactivo. Para scripts, use `--non-interactive`.</Note>
 
-<Tip>La incorporación mediante CLI incluye un paso de búsqueda web donde puede elegir un proveedor (Perplexity, Brave, Gemini, Grok o Kimi) y pegar su clave API para que el agente pueda usar `web_search`. También puede configurar esto más tarde con `openclaw configure --section web`. Documentación: [Herramientas web](/es/tools/web).</Tip>
+<Tip>La incorporación de la CLI incluye un paso de búsqueda web donde puede elegir un proveedor (Perplexity, Brave, Gemini, Grok o Kimi) y pegar su clave API para que el agente pueda usar `web_search`. También puede configurar esto más tarde con `openclaw configure --section web`. Documentación: [Web tools](/en/tools/web).</Tip>
 
 ## Inicio rápido frente a Avanzado
 
 La incorporación comienza con **QuickStart** (valores predeterminados) frente a **Advanced** (control total).
 
 <Tabs>
-  <Tab title="QuickStart (valores predeterminados)">
-    - Puerta de enlace local (bucle) - Espacio de trabajo predeterminado (o espacio de trabajo existente) - Puerto de puerta de enlace **18789** - Autenticación de puerta de enlace **Token** (generado automáticamente, incluso en bucle) - Política de herramientas predeterminada para nuevas configuraciones locales: `tools.profile: "coding"` (se conserva el perfil explícito existente) - Aislamiento
-    de DM predeterminado: la incorporación local escribe `session.dmScope: "per-channel-peer"` cuando no está configurado. Detalles: [Referencia de configuración de CLI](/es/start/wizard-cli-reference#outputs-and-internals) - Exposición de Tailscale **Desactivada** - Los DM de Telegram + WhatsApp se establecen de forma predeterminada en **lista de permitidos** (se le pedirá su número de teléfono)
+  <Tab title="Inicio rápido (valores predeterminados)">
+    - Puerta de enlace local (bucle local) - Espacio de trabajo predeterminado (o espacio de trabajo existente) - Puerto de puerta de enlace **18789** - Autenticación de puerta de enlace **Token** (generado automáticamente, incluso en bucle local) - Política de herramientas predeterminada para nuevas configuraciones locales: `tools.profile: "coding"` (se conserva el perfil explícito existente) -
+    Aislamiento de DM predeterminado: la incorporación local escribe `session.dmScope: "per-channel-peer"` cuando no está configurado. Detalles: [Referencia de configuración de CLI](/en/start/wizard-cli-reference#outputs-and-internals) - Exposición de Tailscale **Desactivada** - Los DM de Telegram + WhatsApp son predeterminados a **lista de permitidos** (se le pedirá su número de teléfono)
   </Tab>
   <Tab title="Avanzado (control total)">- Expone cada paso (modo, espacio de trabajo, puerta de enlace, canales, demonio, habilidades).</Tab>
 </Tabs>
@@ -65,10 +65,7 @@ La incorporación comienza con **QuickStart** (valores predeterminados) frente a
 6. **Verificación de estado** — Inicia el Gateway y verifica que se esté ejecutando.
 7. **Habilidades** — Instala las habilidades recomendadas y dependencias opcionales.
 
-<Note>
-  Volver a ejecutar la incorporación **no** borra nada a menos que elija explícitamente **Restablecer** (o pase `--reset`). La CLI `--reset` se usa de forma predeterminada para configuración, credenciales y sesiones; use `--reset-scope full` para incluir el espacio de trabajo. Si la configuración no es válida o contiene claves heredadas, la incorporación le pedirá que ejecute `openclaw doctor`
-  primero.
-</Note>
+<Note>Volver a ejecutar la incorporación **no** borra nada a menos que elija explícitamente **Restablecer** (o pase `--reset`). La CLI `--reset` predetermina a configuración, credenciales y sesiones; use `--reset-scope full` para incluir el espacio de trabajo. Si la configuración no es válida o contiene claves heredadas, la incorporación le pide que ejecute `openclaw doctor` primero.</Note>
 
 El **modo remoto** solo configura el cliente local para conectarse a un Gateway en otro lugar.
 **No** instala ni cambia nada en el host remoto.
@@ -93,14 +90,14 @@ Notas:
 ## Referencia completa
 
 Para ver desgloses detallados paso a paso y salidas de configuración, consulte
-[Referencia de configuración de CLI](/es/start/wizard-cli-reference).
-Para ver ejemplos no interactivos, consulte [Automatización de CLI](/es/start/wizard-cli-automation).
-Para obtener la referencia técnica más profunda, incluidos los detalles de RPC, consulte
-[Referencia de incorporación](/es/reference/wizard).
+[Referencia de configuración de CLI](/en/start/wizard-cli-reference).
+Para ver ejemplos no interactivos, consulte [Automatización de CLI](/en/start/wizard-cli-automation).
+Para la referencia técnica más profunda, incluidos los detalles de RPC, consulte
+[Referencia de incorporación](/en/reference/wizard).
 
 ## Documentos relacionados
 
-- Referencia de comandos de CLI: [`openclaw onboard`](/es/cli/onboard)
-- Resumen de incorporación: [Resumen de incorporación](/es/start/onboarding-overview)
-- Incorporación de la aplicación macOS: [Incorporación](/es/start/onboarding)
-- Ritual de primera ejecución del agente: [Inicialización del agente](/es/start/bootstrapping)
+- Referencia de comandos de CLI: [`openclaw onboard`](/en/cli/onboard)
+- Resumen de incorporación: [Resumen de incorporación](/en/start/onboarding-overview)
+- Incorporación de la aplicación de macOS: [Incorporación](/en/start/onboarding)
+- Ritual de primera ejecución del agente: [Inicialización del agente](/en/start/bootstrapping)

@@ -16,8 +16,8 @@ Consejo: `openclaw config` sin un subcomando abre el mismo asistente. Use
 
 Relacionado:
 
-- Referencia de configuración de Gateway: [Configuration](/es/gateway/configuration)
-- CLI de configuración: [Config](/es/cli/config)
+- Referencia de configuración de Gateway: [Configuration](/en/gateway/configuration)
+- CLI de configuración: [Config](/en/cli/config)
 
 Notas:
 

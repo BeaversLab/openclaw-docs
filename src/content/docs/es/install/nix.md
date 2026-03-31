@@ -11,7 +11,7 @@ title: "Nix"
 
 Instala OpenClaw declarativamente con **[nix-openclaw](https://github.com/openclaw/nix-openclaw)** -- un módulo de Home Manager que incluye todo lo necesario.
 
-<Info>El repositorio [nix-openclaw](https://github.com/openclaw/nix-openclaw) es la fuente de verdad para la instalación con Nix. Esta página es una visión general rápida.</Info>
+<Info>El repositorio [nix-openclaw](https://github.com/openclaw/nix-openclaw) es la fuente de verdad para la instalación de Nix. Esta página es un resumen rápido.</Info>
 
 ## Lo que obtienes
 
@@ -23,10 +23,10 @@ Instala OpenClaw declarativamente con **[nix-openclaw](https://github.com/opencl
 ## Inicio rápido
 
 <Steps>
-  <Step title="Instalar Determinate Nix">Si Nix no está instalado aún, sigue las instrucciones del instalador [Determinate Nix](https://github.com/DeterminateSystems/nix-installer).</Step>
-  <Step title="Crear un flake local">Usa la plantilla centrada en el agente del repositorio nix-openclaw: ```bash mkdir -p ~/code/openclaw-local # Copy templates/agent-first/flake.nix from the nix-openclaw repo ```</Step>
-  <Step title="Configurar secretos">Configura tu token de bot de mensajería y la clave API del proveedor de modelos. Los archivos planos en `~/.secrets/` funcionan bien.</Step>
-  <Step title="Rellenar marcadores de la plantilla y cambiar">```bash home-manager switch ```</Step>
+  <Step title="Instalar Determinate Nix">Si Nix aún no está instalado, sigue las instrucciones del instalador [Determinate Nix](https://github.com/DeterminateSystems/nix-installer).</Step>
+  <Step title="Crear un flake local">Usa la plantilla agent-first del repositorio nix-openclaw: ```bash mkdir -p ~/code/openclaw-local # Copy templates/agent-first/flake.nix from the nix-openclaw repo ```</Step>
+  <Step title="Configurar secretos">Configura el token de tu bot de mensajería y la clave API del proveedor de modelos. Los archivos simples en `~/.secrets/` funcionan bien.</Step>
+  <Step title="Rellenar los marcadores de posición de la plantilla y cambiar">```bash home-manager switch ```</Step>
   <Step title="Verificar">Confirma que el servicio launchd se está ejecutando y que tu bot responde a los mensajes.</Step>
 </Steps>
 
@@ -67,5 +67,5 @@ OpenClaw lee la configuración JSON5 de `OPENCLAW_CONFIG_PATH` y almacena datos 
 ## Relacionado
 
 - [nix-openclaw](https://github.com/openclaw/nix-openclaw) -- guía de configuración completa
-- [Asistente](/es/start/wizard) -- configuración de CLI sin Nix
-- [Docker](/es/install/docker) -- configuración en contenedor
+- [Asistente](/en/start/wizard) -- configuración de CLI sin Nix
+- [Docker](/en/install/docker) -- configuración en contenedor

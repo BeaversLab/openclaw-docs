@@ -29,8 +29,7 @@ Scope intent:
 - `agents.list[].memorySearch.remote.apiKey`
 - `talk.apiKey`
 - `talk.providers.*.apiKey`
-- `messages.tts.elevenlabs.apiKey`
-- `messages.tts.openai.apiKey`
+- `messages.tts.providers.*.apiKey`
 - `tools.web.fetch.firecrawl.apiKey`
 - `plugins.entries.brave.config.webSearch.apiKey`
 - `plugins.entries.google.config.webSearch.apiKey`
@@ -44,6 +43,7 @@ Scope intent:
 - `tools.web.search.grok.apiKey`
 - `tools.web.search.kimi.apiKey`
 - `tools.web.search.perplexity.apiKey`
+- `tools.web.x_search.apiKey`
 - `gateway.auth.password`
 - `gateway.auth.token`
 - `gateway.remote.token`
@@ -63,12 +63,10 @@ Scope intent:
 - `channels.slack.accounts.*.signingSecret`
 - `channels.discord.token`
 - `channels.discord.pluralkit.token`
-- `channels.discord.voice.tts.elevenlabs.apiKey`
-- `channels.discord.voice.tts.openai.apiKey`
+- `channels.discord.voice.tts.providers.*.apiKey`
 - `channels.discord.accounts.*.token`
 - `channels.discord.accounts.*.pluralkit.token`
-- `channels.discord.accounts.*.voice.tts.elevenlabs.apiKey`
-- `channels.discord.accounts.*.voice.tts.openai.apiKey`
+- `channels.discord.accounts.*.voice.tts.providers.*.apiKey`
 - `channels.irc.password`
 - `channels.irc.nickserv.password`
 - `channels.irc.accounts.*.password`
@@ -84,7 +82,9 @@ Scope intent:
 - `channels.msteams.appPassword`
 - `channels.mattermost.botToken`
 - `channels.mattermost.accounts.*.botToken`
+- `channels.matrix.accessToken`
 - `channels.matrix.password`
+- `channels.matrix.accounts.*.accessToken`
 - `channels.matrix.accounts.*.password`
 - `channels.nextcloud-talk.botSecret`
 - `channels.nextcloud-talk.apiPassword`
@@ -124,8 +124,6 @@ Scope intent:
 [//]: # "secretref-unsupported-list-start"
 
 - `commands.ownerDisplaySecret`
-- `channels.matrix.accessToken`
-- `channels.matrix.accounts.*.accessToken`
 - `hooks.token`
 - `hooks.gmail.pushToken`
 - `hooks.mappings[].sessionKey`
@@ -135,6 +133,6 @@ Scope intent:
 
 [//]: # "secretref-unsupported-list-end"
 
-基本原理：
+理由：
 
-- 這些憑證屬於已鑄造、輪替、承載工作階段或 OAuth 持久性類別，不適用於唯讀的外部 SecretRef 解析。
+- 這些憑證屬於已鑄造、輪替、承載會話或 OAuth 持久性類別，不適合唯讀的外部 SecretRef 解析。

@@ -10,7 +10,7 @@ read_when:
 
 Perplexity 插件通过 Perplexity Search API 或经由 OpenRouter 的 Perplexity Sonar 提供网络搜索功能。
 
-<Note>本页面介绍 Perplexity **提供商** 的设置。关于 Perplexity **工具**（代理如何使用它），请参阅 [Perplexity 工具](/zh/tools/perplexity-search)。</Note>
+<Note>本页面介绍 Perplexity **提供商** 的设置。有关 Perplexity **工具**（智能体如何使用它）的信息，请参阅 [Perplexity 工具](/en/tools/perplexity-search)。</Note>
 
 - 类型：网络搜索提供商（而非模型提供商）
 - 认证：`PERPLEXITY_API_KEY`（直接）或 `OPENROUTER_API_KEY`（通过 OpenRouter）

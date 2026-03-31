@@ -1,5 +1,5 @@
 ---
-summary: "CLI 参考 for `openclaw config` (get/set/unset/file/validate)"
+summary: "CLI 参考，用于 `openclaw config` (get/set/unset/file/schema/validate)"
 read_when:
   - You want to read or edit config non-interactively
 title: "config"
@@ -7,14 +7,15 @@ title: "config"
 
 # `openclaw config`
 
-用于在 `openclaw.json` 中进行非交互式编辑的配置辅助工具：通过路径获取/设置/取消设置/验证
-值并打印当前有效的配置文件。不带子命令运行以
+用于在 `openclaw.json` 中进行非交互式编辑的配置辅助工具：get/set/unset/file/schema/validate
+按路径设置值并打印活动配置文件。不带子命令运行以
 打开配置向导（与 `openclaw configure` 相同）。
 
 ## 示例
 
 ```bash
 openclaw config file
+openclaw config schema
 openclaw config get browser.executablePath
 openclaw config set browser.executablePath "/usr/bin/google-chrome"
 openclaw config set agents.defaults.heartbeat.every "2h"
@@ -27,7 +28,21 @@ openclaw config validate
 openclaw config validate --json
 ```
 
-## 路径
+### `config schema`
+
+将 `openclaw.json` 生成的 JSON schema 作为纯文本打印到 stdout。
+
+```bash
+openclaw config schema
+```
+
+当您想使用其他工具检查或验证它时，将其通过管道传输到文件中：
+
+```bash
+openclaw config schema > openclaw.schema.json
+```
+
+### 路径
 
 路径使用点或括号表示法：
 
@@ -45,8 +60,8 @@ openclaw config set agents.list[1].tools.exec.node "node-id-or-name"
 
 ## 值
 
-值在可能的情况下被解析为 JSON5；否则它们将被视为字符串。
-使用 `--strict-json` 强制进行 JSON5 解析。`--json` 作为传统别名仍受支持。
+值尽可能被解析为 JSON5；否则它们将被视为字符串。
+使用 `--strict-json` 要求进行 JSON5 解析。`--json` 仍作为旧版别名受支持。
 
 ```bash
 openclaw config set agents.defaults.heartbeat.every "0m"
@@ -68,7 +83,7 @@ openclaw config set channels.discord.token \
   --ref-id DISCORD_BOT_TOKEN
 ```
 
-3. Provider 构建器模式（仅限 `secrets.providers.<alias>` 路径）：
+3. 提供商构建器模式（仅 `secrets.providers.<alias>` 路径）：
 
 ```bash
 openclaw config set secrets.providers.vault \
@@ -98,10 +113,10 @@ openclaw config set --batch-json '[
 openclaw config set --batch-file ./config-set.batch.json --dry-run
 ```
 
-批处理解析始终使用批处理负载（`--batch-json`/`--batch-file`）作为事实来源。
-`--strict-json` / `--json` 不会改变批处理解析行为。
+批处理解析始终使用批处理负载（`--batch-json`/`--batch-file`）作为单一事实来源。
+`--strict-json` / `--json` 不会更改批处理解析行为。
 
-JSON 路径/值模式仍支持 SecretRef 和提供商：
+JSON 路径/值模式仍受 SecretRefs 和提供商支持：
 
 ```bash
 openclaw config set channels.discord.token \
@@ -113,9 +128,9 @@ openclaw config set secrets.providers.vaultfile \
   --strict-json
 ```
 
-## Provider 构建器标志
+## 提供商构建器标志
 
-Provider 构建器目标必须使用 `secrets.providers.<alias>` 作为路径。
+提供商构建器目标必须使用 `secrets.providers.<alias>` 作为路径。
 
 通用标志：
 
@@ -128,24 +143,24 @@ Env 提供商 (`--provider-source env`)：
 
 File 提供商 (`--provider-source file`)：
 
-- `--provider-path <path>` (必需)
+- `--provider-path <path>` (必填)
 - `--provider-mode <singleValue|json>`
 - `--provider-max-bytes <bytes>`
 
 Exec 提供商 (`--provider-source exec`)：
 
-- `--provider-command <path>` (必需)
-- `--provider-arg <arg>` (可重复)
+- `--provider-command <path>`（必需）
+- `--provider-arg <arg>`（可重复）
 - `--provider-no-output-timeout-ms <ms>`
 - `--provider-max-output-bytes <bytes>`
 - `--provider-json-only`
-- `--provider-env <KEY=VALUE>` (可重复)
-- `--provider-pass-env <ENV_VAR>` (可重复)
+- `--provider-env <KEY=VALUE>`（可重复）
+- `--provider-pass-env <ENV_VAR>`（可重复）
 - `--provider-trusted-dir <path>`（可重复）
 - `--provider-allow-insecure-path`
 - `--provider-allow-symlink-command`
 
-加固版 exec 提供商示例：
+加固型 exec 提供商示例：
 
 ```bash
 openclaw config set secrets.providers.vault \
@@ -161,7 +176,7 @@ openclaw config set secrets.providers.vault \
 
 ## 试运行
 
-使用 `--dry-run` 在不写入 `openclaw.json` 的情况下验证更改。
+使用 `--dry-run` 来验证更改而不写入 `openclaw.json`。
 
 ```bash
 openclaw config set channels.discord.token \
@@ -187,20 +202,20 @@ openclaw config set channels.discord.token \
 
 试运行行为：
 
-- 构建器模式：对已更改的 refs/providers 运行 SecretRef 可解析性检查。
+- Builder 模式：对已更改的引用/提供商运行 SecretRef 可解析性检查。
 - JSON 模式（`--strict-json`、`--json` 或批处理模式）：运行架构验证以及 SecretRef 可解析性检查。
-- 为了避免命令副作用，试运行期间默认跳过 Exec SecretRef 检查。
-- 将 `--allow-exec` 与 `--dry-run` 结合使用以启用 Exec SecretRef 检查（这可能会执行提供商命令）。
-- `--allow-exec` 仅用于试运行，如果未与 `--dry-run` 一起使用则会报错。
+- 为了避免命令产生副作用，默认情况下会在试运行期间跳过 Exec SecretRef 检查。
+- 使用 `--allow-exec` 配合 `--dry-run` 以选择加入 Exec SecretRef 检查（这可能会执行提供商命令）。
+- `--allow-exec` 仅适用于试运行，如果未与 `--dry-run` 一起使用则会报错。
 
 `--dry-run --json` 打印机器可读的报告：
 
 - `ok`：试运行是否通过
-- `operations`：评估的赋值数量
+- `operations`：已评估的赋值数量
 - `checks`：是否运行了架构/可解析性检查
-- `checks.resolvabilityComplete`：可解析性检查是否运行完成（跳过 exec refs 时为 false）
-- `refsChecked`：试运行期间实际解析的 refs 数量
-- `skippedExecRefs`：因未设置 `--allow-exec` 而跳过的 exec refs 数量
+- `checks.resolvabilityComplete`：可解析性检查是否运行至完成（跳过 exec 引用时为 false）
+- `refsChecked`：试运行期间实际解析的引用数量
+- `skippedExecRefs`：因未设置 `--allow-exec` 而跳过的 exec 引用数量
 - `errors`：当 `ok=false` 时的结构化架构/可解析性失败信息
 
 ### JSON 输出结构
@@ -273,14 +288,14 @@ openclaw config set channels.discord.token \
 
 如果试运行失败：
 
-- `config schema validation failed`：更改后的配置结构无效；请修复路径/值或提供商/ref 对象结构。
-- `SecretRef assignment(s) could not be resolved`：引用的提供商/ref 当前无法解析（缺少环境变量、文件指针无效、exec 提供商失败或提供商/来源不匹配）。
-- `Dry run note: skipped <n> exec SecretRef resolvability check(s)`：试运行跳过了 exec refs；如果需要 exec 可解析性验证，请使用 `--allow-exec` 重新运行。
-- 对于批处理模式，请在写入之前修复失败的条目并重新运行 `--dry-run`。
+- `config schema validation failed`：您的更改后配置结构无效；请修复路径/值或提供商/引用对象结构。
+- `SecretRef assignment(s) could not be resolved`：引用的提供商/引用当前无法解析（缺少环境变量、文件指针无效、exec 提供商失败或提供商/源不匹配）。
+- `Dry run note: skipped <n> exec SecretRef resolvability check(s)`: dry-run 跳过了 exec 引用；如果需要 exec 可解析性验证，请使用 `--allow-exec` 重新运行。
+- 对于批量模式，请在写入前修复失败的条目并重新运行 `--dry-run`。
 
 ## 子命令
 
-- `config file`：打印活动配置文件路径（从 `OPENCLAW_CONFIG_PATH` 或默认位置解析）。
+- `config file`: 打印活动配置文件路径（从 `OPENCLAW_CONFIG_PATH` 或默认位置解析）。
 
 编辑后重启网关。
 

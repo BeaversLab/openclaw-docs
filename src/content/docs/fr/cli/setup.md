@@ -12,8 +12,8 @@ Initialise `~/.openclaw/openclaw.json` et l'espace de travail de l'agent.
 
 Connexe :
 
-- Getting started : [Getting started](/fr/start/getting-started)
-- CLI onboarding : [Onboarding (CLI)](/fr/start/wizard)
+- Getting started : [Getting started](/en/start/getting-started)
+- CLI onboarding : [Onboarding (CLI)](/en/start/wizard)
 
 ## Exemples
 

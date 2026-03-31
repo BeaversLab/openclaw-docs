@@ -11,7 +11,7 @@ title: "Ansible"
 
 使用 **[openclaw-ansible](https://github.com/openclaw/openclaw-ansible)** 将 OpenClaw 部署到生产服务器 —— 这是一款具有安全优先架构的自动化安装程序。
 
-<Info>[openclaw-ansible](https://github.com/openclaw/openclaw-ansible) 仓库是 Ansible 部署的事实来源。本页面仅作快速概览。</Info>
+<Info>[openclaw-ansible](https://github.com/openclaw/openclaw-ansible) 仓库是 Ansible 部署的事实来源。本页面是一个快速概览。</Info>
 
 ## 先决条件
 
@@ -50,7 +50,7 @@ Ansible playbook 将安装并配置以下内容：
 5. **OpenClaw** —— 基于主机，非容器化
 6. **Systemd 服务** —— 自动启动并带有安全加固
 
-<Note>网关直接在主机上运行（不在 Docker 中），但代理沙箱使用 Docker 进行 隔离。详情请参阅 [沙箱隔离](/zh/gateway/sandboxing)。</Note>
+<Note>网关直接在主机上运行（不在 Docker 中），但代理沙箱使用 Docker 进行隔离。详情请参阅 [沙箱隔离](/en/gateway/sandboxing)。</Note>
 
 ## 安装后设置
 
@@ -59,7 +59,7 @@ Ansible playbook 将安装并配置以下内容：
   <Step title="运行新手向导">安装后脚本将指导您完成 OpenClaw 设置的配置。</Step>
   <Step title="连接消息提供商">登录 WhatsApp、Telegram、Discord 或 Signal： ```bash openclaw channels login ```</Step>
   <Step title="验证安装">```bash sudo systemctl status openclaw sudo journalctl -u openclaw -f ```</Step>
-  <Step title="连接到 Tailscale">加入您的 VPN 网状网络以进行安全的远程访问。</Step>
+  <Step title="连接到 Tailscale">加入您的 VPN 网格以进行安全的远程访问。</Step>
 </Steps>
 
 ### 快速命令

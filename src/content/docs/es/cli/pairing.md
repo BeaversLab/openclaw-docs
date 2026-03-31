@@ -11,7 +11,7 @@ Aprobar o inspeccionar solicitudes de emparejamiento de MD (para canales que adm
 
 Relacionado:
 
-- Flujo de emparejamiento: [Emparejamiento](/es/channels/pairing)
+- Flujo de emparejamiento: [Emparejamiento](/en/channels/pairing)
 
 ## Comandos
 

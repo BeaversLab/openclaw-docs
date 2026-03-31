@@ -73,7 +73,7 @@ Si `agents.defaults.contextTokens` est défini, il est traité comme une limite 
 ## Interaction avec d'autres limites
 
 - Les outils intégrés tronquent déjà leur propre sortie ; l'élagage de session est une couche supplémentaire qui empêche les conversations de longue durée d'accumuler trop de résultats d'outils dans le contexte du modèle.
-- La compaction est distincte : la compaction résume et rend persistant, tandis que l'élagage est transitoire par requête. Voir [/concepts/compaction](/fr/concepts/compaction).
+- La compaction est distincte : la compaction résume et rend persistant, tandis que l'élagage est transitoire par requête. Voir [/concepts/compaction](/en/concepts/compaction).
 
 ## Valeurs par défaut (lorsqu'activé)
 
@@ -118,4 +118,4 @@ Limiter l'élagage à des outils spécifiques :
 }
 ```
 
-Voir la référence de configuration : [Configuration du Gateway](/fr/gateway/configuration)
+Voir la référence de configuration : [Configuration du Gateway](/en/gateway/configuration)

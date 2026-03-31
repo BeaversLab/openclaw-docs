@@ -183,7 +183,7 @@ IRC 频道有两个独立的“入口”：
 - 旧的无前缀键仍被接受，并仅作为 `id:` 进行匹配。
 - 第一个匹配的发送者策略优先；`"*"` 是通配符后备选项。
 
-有关组访问与提及门控（以及它们如何交互）的更多信息，请参阅：[/channels/groups](/zh/channels/groups)。
+有关组访问与提及门控（以及它们如何交互）的更多信息，请参阅：[/channels/groups](/en/channels/groups)。
 
 ## NickServ
 

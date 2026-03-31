@@ -95,6 +95,6 @@ openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram 
 
 ## Connexes
 
-- [Référence de l'agent CLI](/fr/cli/agent)
-- [Sous-agents](/fr/tools/subagents) — génération de sous-agents en arrière-plan
-- [Sessions](/fr/concepts/session) — fonctionnement des clés de session
+- [Référence de l'agent CLI](/en/cli/agent)
+- [Sous-agents](/en/tools/subagents) — génération de sous-agents en arrière-plan
+- [Sessions](/en/concepts/session) — fonctionnement des clés de session

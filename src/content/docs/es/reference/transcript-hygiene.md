@@ -28,7 +28,7 @@ El alcance incluye:
 
 Si necesita detalles sobre el almacenamiento de transcripciones, consulte:
 
-- [/reference/session-management-compaction](/es/reference/session-management-compaction)
+- [/reference/session-management-compaction](/en/reference/session-management-compaction)
 
 ---
 

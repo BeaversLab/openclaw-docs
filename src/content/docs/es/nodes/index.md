@@ -9,9 +9,9 @@ title: "Nodos"
 
 # Nodos
 
-Un **nodo** es un dispositivo complementario (macOS/iOS/Android/headless) que se conecta al **WebSocket** de la Gateway (mismo puerto que los operadores) con `role: "node"` y expone una superficie de comandos (por ejemplo, `canvas.*`, `camera.*`, `device.*`, `notifications.*`, `system.*`) a través de `node.invoke`. Detalles del protocolo: [Gateway protocol](/es/gateway/protocol).
+Un **nodo** es un dispositivo complementario (macOS/iOS/Android/headless) que se conecta al **WebSocket** de la Gateway (mismo puerto que los operadores) con `role: "node"` y expone una superficie de comandos (por ejemplo, `canvas.*`, `camera.*`, `device.*`, `notifications.*`, `system.*`) a través de `node.invoke`. Detalles del protocolo: [Gateway protocol](/en/gateway/protocol).
 
-Transporte heredado: [Bridge protocol](/es/gateway/bridge-protocol) (TCP JSONL; en desuso/eliminado para los nodos actuales).
+Transporte heredado: [Bridge protocol](/en/gateway/bridge-protocol) (TCP JSONL; en desuso/eliminado para los nodos actuales).
 
 macOS también puede ejecutarse en **modo de nodo**: la aplicación de la barra de menús se conecta al servidor WS de la Gateway y expone sus comandos locales de canvas/cámara como un nodo (por lo que `openclaw nodes …` funciona contra este Mac).
 
@@ -19,7 +19,7 @@ Notas:
 
 - Los nodos son **periféricos**, no gateways. No ejecutan el servicio de gateway.
 - Los mensajes de Telegram/WhatsApp/etc. llegan a la **gateway**, no a los nodos.
-- Manual de solución de problemas: [/nodes/troubleshooting](/es/nodes/troubleshooting)
+- Manual de solución de problemas: [/nodes/troubleshooting](/en/nodes/troubleshooting)
 
 ## Emparejamiento + estado
 
@@ -153,9 +153,9 @@ lista blanca/aprobaciones del nodo).
 
 Relacionado:
 
-- [CLI de host de nodos](/es/cli/node)
-- [Herramienta Exec](/es/tools/exec)
-- [Aprobaciones Exec](/es/tools/exec-approvals)
+- [CLI de host de nodos](/en/cli/node)
+- [Herramienta Exec](/en/tools/exec)
+- [Aprobaciones Exec](/en/tools/exec-approvals)
 
 ## Invocar comandos
 
@@ -373,7 +373,7 @@ Notas:
 - Aún se requiere el emparejamiento (el Gateway mostrará un mensaje de emparejamiento de dispositivo).
 - El host del nodo almacena su id de nodo, token, nombre para mostrar e información de conexión de la puerta de enlace en `~/.openclaw/node.json`.
 - Las aprobaciones de ejecución se aplican localmente a través de `~/.openclaw/exec-approvals.json`
-  (consulte [Aprobaciones de ejecución](/es/tools/exec-approvals)).
+  (consulte [Aprobaciones de ejecución](/en/tools/exec-approvals)).
 - En macOS, el host de nodo sin cabeza ejecuta `system.run` localmente de forma predeterminada. Establezca
   `OPENCLAW_NODE_EXEC_HOST=app` para enrutar `system.run` a través del host de ejecución de la aplicación complementaria; agregue
   `OPENCLAW_NODE_EXEC_FALLBACK=0` para requerir el host de la aplicación y cerrar con fallo si no está disponible.

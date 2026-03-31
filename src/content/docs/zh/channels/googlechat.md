@@ -12,7 +12,7 @@ title: "Google Chat"
 ## 快速设置（入门）
 
 1. 创建一个 Google Cloud 项目并启用 **Google Chat API**。
-   - 前往：[Google Chat API Credentials](https://console.cloud.google.com/apis/api/chat.googleapis.com/credentials)
+   - 前往：[Google Chat API 凭据](https://console.cloud.google.com/apis/api/chat.googleapis.com/credentials)
    - 如果尚未启用 API，请启用它。
 2. 创建一个 **Service Account**：
    - 点击 **Create Credentials** > **Service Account**。
@@ -25,7 +25,7 @@ title: "Google Chat"
    - 点击 **Add Key** > **Create new key**。
    - 选择 **JSON** 并点击 **Create**。
 4. 将下载的 JSON 文件存储在您的网关主机上（例如，`~/.openclaw/googlechat-service-account.json`）。
-5. 在 [Google Cloud Console Chat Configuration](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat) 中创建一个 Google Chat 应用：
+5. 在 [Google Cloud Console Chat Configuration](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat) 中创建 Google Chat 应用：
    - 填写 **Application info**：
      - **App name**:（例如 `OpenClaw`）
      - **Avatar URL**:（例如 `https://openclaw.ai/logo.png`）
@@ -201,38 +201,39 @@ your-domain.com {
 - 如果未设置 `webhookPath`，默认的 Webhook 路径为 `/googlechat`。
 - `dangerouslyAllowNameMatching` 为允许列表重新启用了可变邮箱主体匹配（紧急情况兼容模式）。
 - 当启用 `actions.reactions` 时，可以通过 `reactions` 工具和 `channels action` 使用回应（反应）功能。
-- `typingIndicator` 支持 `none`、`message`（默认）和 `reaction`（回应需要用户 OAuth）。
-- 附件通过 Chat API 下载并存储在媒体管道中（大小由 `mediaMaxMb` 限制）。
+- 消息操作公开 `send` 用于文本，公开 `upload-file` 用于显式附件发送。`upload-file` 接受 `media` / `filePath` / `path` 加上可选的 `message`、`filename` 和会话定位（thread targeting）。
+- `typingIndicator` 支持 `none`、`message`（默认）和 `reaction`（反应需要用户 OAuth）。
+- 附件通过 Chat API 下载并存储在媒体管道中（大小受 `mediaMaxMb` 限制）。
 
-Secrets 引用详情：[Secrets Management](/zh/gateway/secrets)。
+密钥参考详情：[密钥管理](/en/gateway/secrets)。
 
 ## 故障排除
 
-### 405 Method Not Allowed
+### 405 方法不允许
 
-如果 Google Cloud 日志资源管理器显示如下错误：
+如果 Google Cloud 日志浏览器显示如下错误：
 
 ```
 status code: 405, reason phrase: HTTP error response: HTTP/1.1 405 Method Not Allowed
 ```
 
-这意味着 Webhook 处理程序未注册。常见原因：
+这意味着未注册 webhook 处理程序。常见原因：
 
-1. **未配置渠道**：您的配置中缺少 `channels.googlechat` 部分。通过以下命令验证：
+1. **未配置渠道**：您的配置中缺少 `channels.googlechat` 部分。请使用以下命令验证：
 
    ```bash
    openclaw config get channels.googlechat
    ```
 
-   如果返回“Config path not found”，请添加配置（参见 [配置要点](#config-highlights)）。
+   如果返回“找不到配置路径”，请添加配置（请参阅 [配置要点](#config-highlights)）。
 
-2. **未启用插件**：检查插件状态：
+2. **插件未启用**：检查插件状态：
 
    ```bash
    openclaw plugins list | grep googlechat
    ```
 
-   如果显示“disabled”，请将 `plugins.entries.googlechat.enabled: true` 添加到您的配置中。
+   如果显示“已禁用”，请将 `plugins.entries.googlechat.enabled: true` 添加到您的配置中。
 
 3. **Gateway(网关) 未重启**：添加配置后，请重启网关：
 
@@ -249,13 +250,13 @@ openclaw channels status
 
 ### 其他问题
 
-- 检查 `openclaw channels status --probe` 中是否存在身份验证错误或缺少受众群体配置。
-- 如果没有收到消息，请确认 Chat 应用的 Webhook URL 和事件订阅。
-- 如果提及（mention）拦截阻止了回复，请将 `botUser` 设置为应用的用户资源名称，并验证 `requireMention`。
-- 发送测试消息时请使用 `openclaw logs --follow`，以查看请求是否到达网关。
+- 检查 `openclaw channels status --probe` 以查找身份验证错误或缺少的受众群体配置。
+- 如果没有收到消息，请确认 Chat 应用的 webhook URL 和事件订阅。
+- 如果提及阻断阻止了回复，请将 `botUser` 设置为应用的用户资源名称，并验证 `requireMention`。
+- 在发送测试消息时使用 `openclaw logs --follow`，以查看请求是否到达网关。
 
 相关文档：
 
-- [Gateway(网关) 配置](/zh/gateway/configuration)
-- [安全](/zh/gateway/security)
-- [回应](/zh/tools/reactions)
+- [Gateway(网关) 配置](/en/gateway/configuration)
+- [安全](/en/gateway/security)
+- [回应](/en/tools/reactions)

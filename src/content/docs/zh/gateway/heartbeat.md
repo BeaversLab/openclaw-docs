@@ -8,12 +8,12 @@ title: "心跳"
 
 # 心跳（Gateway 网关）
 
-> **Heartbeat vs Cron？** 请参阅 [Cron vs Heartbeat](/zh/automation/cron-vs-heartbeat) 以获取有关何时使用各自的指导。
+> **Heartbeat vs Cron？** 请参阅 [Cron vs Heartbeat](/en/automation/cron-vs-heartbeat) 以获取有关何时使用各自的指导。
 
 心跳在主会话中运行**周期性的代理轮次**，以便模型可以
 呈现需要注意的事项，而不会通过垃圾消息打扰您。
 
-故障排除：[/automation/故障排除](/zh/automation/troubleshooting)
+故障排除：[/automation/故障排除](/en/automation/troubleshooting)
 
 ## 快速入门（初学者）
 
@@ -62,7 +62,7 @@ title: "心跳"
   后续工作（收件箱、日历、提醒、排队的工作）并突出显示任何紧急事项。
 - **人工检查**：“Checkup sometimes on your human during day time”会提示偶尔发送
   一条轻松的“anything you need?”消息，但通过使用您配置的本地时区来避免夜间垃圾信息
-  （请参阅 [/concepts/timezone](/zh/concepts/timezone)）。
+  （请参阅 [/concepts/timezone](/en/concepts/timezone)）。
 
 如果您希望心跳执行非常具体的操作（例如“检查 Gmail PubSub
 统计数据”或“验证网关健康状况”），请将 `agents.defaults.heartbeat.prompt`（或
@@ -216,8 +216,8 @@ title: "心跳"
 - `isolatedSession`：为 true 时，每次心跳都在一个新的会话中运行，没有先前的对话历史记录。使用与 cron `sessionTarget: "isolated"` 相同的隔离模式。大幅降低每次心跳的 token 成本。结合 `lightContext: true` 使用以实现最大程度的节省。传递路由仍使用主会话上下文。
 - `session`：心跳运行的可选会话密钥。
   - `main`（默认）：代理主会话。
-  - 显式会话密钥（从 `openclaw sessions --json` 复制或从 [sessions CLI](/zh/cli/sessions) 复制）。
-  - 会话密钥格式：请参阅 [Sessions](/zh/concepts/session) 和 [Groups](/zh/channels/groups)。
+  - 显式会话密钥（从 `openclaw sessions --json` 复制或从 [sessions CLI](/en/cli/sessions) 复制）。
+  - 会话密钥格式：请参阅 [Sessions](/en/concepts/session) 和 [Groups](/en/channels/groups)。
 - `target`：
   - `last`：传递到上次使用的外部渠道。
   - 显式渠道：`whatsapp` / `telegram` / `discord` / `googlechat` / `slack` / `msteams` / `signal` / `imessage`。

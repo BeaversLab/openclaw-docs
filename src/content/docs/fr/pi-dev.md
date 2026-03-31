@@ -76,5 +76,5 @@ Si vous ne souhaitez réinitialiser que les sessions, supprimez `agents/<agentId
 
 ## Références
 
-- [Tests](/fr/help/testing)
-- [Getting Started](/fr/start/getting-started)
+- [Tests](/en/help/testing)
+- [Getting Started](/en/start/getting-started)

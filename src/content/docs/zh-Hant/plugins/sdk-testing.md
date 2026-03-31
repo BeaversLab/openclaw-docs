@@ -13,7 +13,7 @@ read_when:
 Reference for test utilities, patterns, and lint enforcement for OpenClaw
 plugins.
 
-<Tip>**Looking for test examples?** The how-to guides include worked test examples: [Channel plugin tests](/en/plugins/sdk-channel-plugins#step-6-test) and [Provider plugin tests](/en/plugins/sdk-provider-plugins#step-6-test).</Tip>
+<Tip>**尋找測試範例？** 操作指南包含完整的測試範例： [通道外掛程式測試](/en/plugins/sdk-channel-plugins#step-6-test) 和 [提供者外掛程式測試](/en/plugins/sdk-provider-plugins#step-6-test)。</Tip>
 
 ## Test utilities
 

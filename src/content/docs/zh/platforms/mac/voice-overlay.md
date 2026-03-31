@@ -44,7 +44,7 @@ title: "语音覆盖"
 
 - 在重现粘性覆盖层时流式传输日志：
 
-  ```exec
+  ```bash
   sudo log stream --predicate 'subsystem == "ai.openclaw" AND category CONTAINS "voicewake"' --level info --style compact
   ```
 

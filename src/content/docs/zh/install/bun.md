@@ -8,7 +8,7 @@ title: "Bun（实验性）"
 
 # Bun（实验性）
 
-<Warning>Bun **不推荐用于网关运行时**（已知存在与 WhatsApp 和 Telegram 的问题）。生产环境请使用 Node。</Warning>
+<Warning>Bun **不建议用于网关运行时**（与 WhatsApp 和 Telegram 存在已知问题）。生产环境请使用 Node。</Warning>
 
 Bun 是一个可选的本地运行时，用于直接运行 TypeScript（`bun run ...`，`bun --watch ...`）。默认的包管理器仍然是 `pnpm`，它得到完全支持并被文档工具使用。Bun 无法使用 `pnpm-lock.yaml` 并且会忽略它。
 

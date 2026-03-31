@@ -65,7 +65,7 @@ otherwise -> reply
 - **私人訊息**：完整工具 (主機)
 - **群組**：沙盒 + 受限工具 (Docker)
 
-> 如果您需要真正獨立的工作區/角色（「個人」和「公開」絕不能混合），請使用第二個代理 + 綁定。請參閱 [多代理路由](/en/concepts/multi-agent)。
+> 如果您需要完全分開的工作區/角色（「個人」和「公開」絕不能混合），請使用第二個 Agent + 綁定。請參閱 [多 Agent 路由](/en/concepts/multi-agent)。
 
 範例（私人訊息在主機上，群組在沙盒中 + 僅限訊息傳遞工具）：
 
@@ -116,9 +116,9 @@ otherwise -> reply
 
 相關：
 
-- 設定鍵和預設值：[閘道設定](/en/gateway/configuration-reference#agentsdefaultssandbox)
-- 調試工具被封鎖的原因：[沙盒 vs 工具政策 vs 提升權限](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Bind mounts 詳情：[沙盒化](/en/gateway/sandboxing#custom-bind-mounts)
+- 配置鍵和預設值：[閘道配置](/en/gateway/configuration-reference#agentsdefaultssandbox)
+- 除錯工具被阻擋的原因：[沙箱 vs 工具政策 vs 提升權限](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Bind mount 細節：[沙箱機制](/en/gateway/sandboxing#custom-bind-mounts)
 
 ## 顯示標籤
 
@@ -366,14 +366,18 @@ otherwise -> reply
 - `WasMentioned`（提及閘道結果）
 - Telegram 論壇主題還包含 `MessageThreadId` 和 `IsForum`。
 
-Agent 系統提示在新的群組會話的第一輪會包含群組簡介。它會提醒模型像人類一樣回應，避免使用 Markdown 表格，並避免輸入字面的 `\n` 序列。
+頻道特定說明：
 
-## iMessage 特定事項
+- BlueBubbles 可以選擇在填入 `GroupMembers` 之前，從本機聯絡人資料庫中豐富未命名的 macOS 群組參與者。此功能預設為關閉，並且僅在正常的群組閘道通過後執行。
 
-- 在路由或建立允許清單時，建議優先使用 `chat_id:<id>`。
+代理系統提示詞在新群組會話的第一輪包含群組介紹。它提醒模型要像人類一樣回應，避免使用 Markdown 表格，並避免輸入字面的 `\n` 序列。
+
+## iMessage 詳情
+
+- 在路由或加入允許清單時，偏好使用 `chat_id:<id>`。
 - 列出聊天：`imsg chats --limit 20`。
-- 群組回覆總是會傳回同一個 `chat_id`。
+- 群組回覆總是發回同一個 `chat_id`。
 
-## WhatsApp 特定事項
+## WhatsApp 詳情
 
-請參閱 [群組訊息](/en/channels/group-messages) 以了解 WhatsApp 專屬的行為（歷史記錄注入、提及處理細節）。
+請參閱 [群組訊息](/en/channels/group-messages) 以了解 WhatsApp 專屬行為（歷史記錄注入、提及處理細節）。

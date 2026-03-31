@@ -11,9 +11,9 @@ Cada agente en una configuración multiagente puede anular la política global d
 sandbox y herramientas. Esta página cubre la configuración por agente, las reglas
 de precedencia y ejemplos.
 
-- **Backends y modos de sandbox**: consulta [Sandboxing](/es/gateway/sandboxing).
-- **Depuración de herramientas bloqueadas**: consulta [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) y `openclaw sandbox explain`.
-- **Exec elevado**: consulta [Elevated Mode](/es/tools/elevated).
+- **Backends y modos de sandbox**: consulta [Sandboxing](/en/gateway/sandboxing).
+- **Depuración de herramientas bloqueadas**: consulta [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) y `openclaw sandbox explain`.
+- **Exec elevado**: consulta [Elevated Mode](/en/tools/elevated).
 
 La autenticación es por agente: cada agente lee desde su propio almacén de
 autenticación `agentDir` en `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`.
@@ -209,9 +209,9 @@ Si se establece `agents.list[].tools.sandbox.tools`, reemplaza a `tools.sandbox.
 Si se establece `agents.list[].tools.profile`, anula a `tools.profile` para ese agente.
 Las claves de herramientas del proveedor aceptan `provider` (p. ej., `google-antigravity`) o `provider/model` (p. ej., `openai/gpt-5.2`).
 
-Las políticas de herramientas admiten atajos `group:*` que se expanden a múltiples herramientas. Consulte [Grupos de herramientas](/es/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands) para ver la lista completa.
+Las políticas de herramientas admiten atajos `group:*` que se expanden a múltiples herramientas. Consulte [Grupos de herramientas](/en/gateway/sandbox-vs-tool-policy-vs-elevated#tool-groups-shorthands) para ver la lista completa.
 
-Las anulaciones elevadas por agente (`agents.list[].tools.elevated`) pueden restringir aún más la exec elevada para agentes específicos. Consulte [Modo elevado](/es/tools/elevated) para obtener más detalles.
+Las anulaciones elevadas por agente (`agents.list[].tools.elevated`) pueden restringir aún más la exec elevada para agentes específicos. Consulte [Modo elevado](/en/tools/elevated) para obtener más detalles.
 
 ---
 
@@ -314,13 +314,13 @@ Después de configurar el sandbox y las herramientas multiagente:
 
 1. **Verificar la resolución del agente:**
 
-   ```bash
+   ```exec
    openclaw agents list --bindings
    ```
 
 2. **Verificar los contenedores del sandbox:**
 
-   ```bash
+   ```exec
    docker ps --filter "name=openclaw-sbx-"
    ```
 
@@ -330,7 +330,7 @@ Después de configurar el sandbox y las herramientas multiagente:
 
 4. **Monitorear registros:**
 
-   ```bash
+   ```exec
    tail -f "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/logs/gateway.log" | grep -E "routing|sandbox|tools"
    ```
 
@@ -358,9 +358,9 @@ Después de configurar el sandbox y las herramientas multiagente:
 
 ## Véase también
 
-- [Aislamiento (Sandboxing)](/es/gateway/sandboxing) -- referencia completa del sandbox (modos, ámbitos, backends, imágenes)
-- [Sandbox vs Política de herramientas vs Elevado (Elevated)](/es/gateway/sandbox-vs-tool-policy-vs-elevated) -- depuración de "¿por qué está bloqueado esto?"
-- [Modo Elevado (Elevated Mode)](/es/tools/elevated)
-- [Enrutamiento Multiagente (Multi-Agent Routing)](/es/concepts/multi-agent)
-- [Configuración del sandbox](/es/gateway/configuration-reference#agentsdefaultssandbox)
-- [Gestión de Sesiones (Session Management)](/es/concepts/session)
+- [Aislamiento (Sandboxing)](/en/gateway/sandboxing) -- referencia completa del sandbox (modos, ámbitos, backends, imágenes)
+- [Sandbox vs Política de herramientas vs Elevado (Elevated)](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- depuración de "¿por qué está bloqueado esto?"
+- [Modo Elevado (Elevated Mode)](/en/tools/elevated)
+- [Enrutamiento Multiagente (Multi-Agent Routing)](/en/concepts/multi-agent)
+- [Configuración del sandbox](/en/gateway/configuration-reference#agentsdefaultssandbox)
+- [Gestión de Sesiones (Session Management)](/en/concepts/session)

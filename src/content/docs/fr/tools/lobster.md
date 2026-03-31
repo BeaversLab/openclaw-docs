@@ -117,7 +117,7 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 }'
 ```
 
-Voir [Tâche LLM](/fr/tools/llm-task) pour les détails et les options de configuration.
+Voir [Tâche LLM](/en/tools/llm-task) pour les détails et les options de configuration.
 
 ## Fichiers de flux de travail (.lobster)
 
@@ -307,7 +307,7 @@ Utilisez `approve --preview-from-stdin --limit N` pour joindre un aperçu JSON a
 
 ## OpenProse
 
-OpenProse se marie bien avec Lobster : utilisez `/prose` pour orchestrer la préparation multi-agent, puis exécutez un pipeline Lobster pour des approbations déterministes. Si un programme Prose a besoin de Lobster, autorisez l'outil `lobster` pour les sous-agents via `tools.subagents.tools`. Voir [OpenProse](/fr/prose).
+OpenProse se marie bien avec Lobster : utilisez `/prose` pour orchestrer la préparation multi-agent, puis exécutez un pipeline Lobster pour des approbations déterministes. Si un programme Prose a besoin de Lobster, autorisez l'outil `lobster` pour les sous-agents via `tools.subagents.tools`. Voir [OpenProse](/en/prose).
 
 ## Sécurité
 
@@ -325,8 +325,8 @@ OpenProse se marie bien avec Lobster : utilisez `/prose` pour orchestrer la pré
 
 ## En savoir plus
 
-- [Plugins](/fr/tools/plugin)
-- [Création d'outil de plugin](/fr/plugins/building-plugins#registering-agent-tools)
+- [Plugins](/en/tools/plugin)
+- [Création d'outil de plugin](/en/plugins/building-plugins#registering-agent-tools)
 
 ## Étude de cas : workflows communautaires
 

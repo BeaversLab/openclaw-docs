@@ -12,11 +12,12 @@ read_when:
 
 本指南將逐步引導您建構一個將 OpenClaw 連結至訊息平台的頻道外掛程式。完成後，您將擁有一個具備私訊安全性、配對、回覆串接以及傳出訊息功能的運作中頻道。
 
-<Info>如果您之前尚未建構過任何 OpenClaw 外掛程式，請先閱讀[入門指南](/en/plugins/building-plugins)以了解基本的套件結構和清單設定。</Info>
+<Info>如果您之前尚未建置任何 OpenClaw 外掛程式，請先閱讀 [Getting Started](/en/plugins/building-plugins) 以了解基本套件 結構和 manifest 設定。</Info>
 
 ## 頻道外掛程式的運作方式
 
-頻道外掛程式不需要自己的傳送/編輯/反應工具。OpenClaw 在核心中保留一個共享的 `message` 工具。您的外掛程式擁有：
+頻道外掛程式不需要自己的傳送/編輯/反應工具。OpenClaw 在核心中保留了一個
+共享的 `message` 工具。您的外掛程式擁有：
 
 - **Config** — 帳戶解析與設定精靈
 - **Security** — 私訊原則與允許清單
@@ -29,8 +30,9 @@ read_when:
 ## 逐步演練
 
 <Steps>
-  <Step title="套件與清單">
-    建立標準外掛程式檔案。`package.json` 中的 `channel` 欄位是讓此成為頻道外掛程式的關鍵：
+  <Step title="Package and manifest">
+    建立標準的外掛程式檔案。`package.json` 中的 `channel` 欄位
+    是使其成為頻道外掛程式的關鍵：
 
     <CodeGroup>
     ```json package.json
@@ -80,8 +82,8 @@ read_when:
   </Step>
 
   <Step title="建置通道插件物件">
-    `ChannelPlugin` 介面有許多可選的介面卡表面。從最低
-    限度的需求開始 — `id` 和 `setup` — 並根據需求加入介面卡。
+    `ChannelPlugin` 介面有許多選用的介面卡表面。從
+    最小需求開始 —— `id` 和 `setup` —— 並根據需求加入介面卡。
 
     建立 `src/channel.ts`：
 
@@ -177,16 +179,17 @@ read_when:
     ```
 
     <Accordion title="createChatChannelPlugin 為您做些什麼">
-      您無需手動實作底層介面卡介面，而是傳遞宣告式選項，然後建構器會將它們組合起來：
+      不必手動實作底層介面卡介面，您只需傳入
+      宣告式選項，建構器便會將其組合起來：
 
-      | 選項 | 它連接什麼 |
+      | 選項 | 連接內容 |
       | --- | --- |
-      | `security.dm` | 來自配置欄位的範圍 DM 安全性解析器 |
-      | `pairing.text` | 基於文字的 DM 配對流程，包含代碼交換 |
-      | `threading` | 回覆模式解析器 (固定、帳戶範圍或自訂) |
-      | `outbound.attachedResults` | 傳回結果中繼資料 (訊息 ID) 的傳送函式 |
+      | `security.dm` | 從設定欄位產生範圍化的 DM 安全性解析器 |
+      | `pairing.text` | 基於文字並包含代碼交換的 DM 配對流程 |
+      | `threading` | 回覆模式解析器（固定、帳戶範圍或自訂） |
+      | `outbound.attachedResults` | 傳回結果中繼資料（訊息 ID）的傳送函式 |
 
-      如果您需要完全控制，也可以傳遞原始介面卡物件來取代宣告式選項。
+      如果您需要完全控制，也可以傳入原始介面卡物件來取代宣告式選項。
     </Accordion>
 
   </Step>
@@ -222,8 +225,8 @@ read_when:
 
   </Step>
 
-  <Step title="加入設定進入點">
-    建立 `setup-entry.ts` 以在入職期間進行輕量級載入：
+  <Step title="新增設定進入點">
+    建立 `setup-entry.ts` 以在引導過程中進行輕量載入：
 
     ```typescript setup-entry.ts
     import { defineSetupPluginEntry } from "openclaw/plugin-sdk/core";
@@ -232,14 +235,13 @@ read_when:
     export default defineSetupPluginEntry(acmeChatPlugin);
     ```
 
-    當通道停用或未設定時，OpenClaw 會載入此項目而非完整進入點。這可以避免在設定流程中載入繁重的執行時期程式碼。詳情請參閱 [設定與組態](/en/plugins/sdk-setup#setup-entry)。
+    當頻道已停用或未設定時，OpenClaw 會載入此項目而非完整的進入點。這可以避免在設定流程中載入沉重的執行時程式碼。詳情請參閱 [設定與組態](/en/plugins/sdk-setup#setup-entry)。
 
   </Step>
 
   <Step title="處理傳入訊息">
-    您的外掛程式需要從平台接收訊息並將其轉發至
-    OpenClaw。典型的模式是驗證請求並透過
-    您管道的傳入處理程式分派該請求的 webhook：
+    您的外掛程式需要從平台接收訊息並將其轉發給
+    OpenClaw。典型的模式是一個 webhook，它會驗證請求並透過您頻道的傳入處理程式進行分派：
 
     ```typescript
     registerFull(api) {
@@ -263,15 +265,15 @@ read_when:
     ```
 
     <Note>
-      傳入訊息處理因管道而異。每個管道外掛程式擁有
-      自己的傳入管線。請查看隨附的管道外掛程式
-      (例如 `extensions/msteams`、`extensions/googlechat`) 以了解實際模式。
+      傳入訊息處理是特定於頻道的。每個頻道外掛程式都擁有
+      自己的傳入管線。請查看打包的頻道外掛程式
+      （例如 `extensions/msteams`、`extensions/googlechat`）以了解實際模式。
     </Note>
 
   </Step>
 
   <Step title="測試">
-    在 `src/channel.test.ts` 中撰寫同置測試：
+    在 `src/channel.test.ts` 中編寫同置測試：
 
     ```typescript src/channel.test.ts
     import { describe, it, expect } from "vitest";
@@ -309,7 +311,7 @@ read_when:
     pnpm test -- extensions/acme-chat/
     ```
 
-    有關共用的測試輔助程式，請參閱 [測試](/en/plugins/sdk-testing)。
+    有關共享測試輔助工具，請參閱 [測試](/en/plugins/sdk-testing)。
 
   </Step>
 </Steps>
@@ -334,7 +336,7 @@ extensions/acme-chat/
 ## 進階主題
 
 <CardGroup cols={2}>
-  <Card title="串接選項" icon="git-branch" href="/en/plugins/sdk-entrypoints#registration-mode">
+  <Card title="執行緒選項" icon="git-branch" href="/en/plugins/sdk-entrypoints#registration-mode">
     固定、帳戶範圍或自訂回覆模式
   </Card>
   <Card title="訊息工具整合" icon="puzzle" href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool">
@@ -343,14 +345,14 @@ extensions/acme-chat/
   <Card title="目標解析" icon="crosshair" href="/en/plugins/architecture#channel-target-resolution">
     inferTargetChatType、looksLikeId、resolveTarget
   </Card>
-  <Card title="執行時期輔助程式" icon="settings" href="/en/plugins/sdk-runtime">
-    透過 api.runtime 進行 TTS、STT、媒體、子代理程式
+  <Card title="Runtime helpers" icon="settings" href="/en/plugins/sdk-runtime">
+    TTS、STT、媒體、透過 api.runtime 執行的子代理程式
   </Card>
 </CardGroup>
 
 ## 後續步驟
 
-- [提供者外掛程式](/en/plugins/sdk-provider-plugins) — 如果您的外掛程式也提供模型
+- [提供商外掛程式](/en/plugins/sdk-provider-plugins) — 如果您的外掛程式也提供模型
 - [SDK 概覽](/en/plugins/sdk-overview) — 完整的子路徑匯入參考
-- [SDK 測試](/en/plugins/sdk-testing) — 測試公用程式和合約測試
+- [SDK 測試](/en/plugins/sdk-testing) — 測試工具程式與合約測試
 - [外掛程式清單](/en/plugins/manifest) — 完整的清單架構

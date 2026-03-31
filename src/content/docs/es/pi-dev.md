@@ -76,5 +76,5 @@ Si solo desea restablecer las sesiones, elimine `agents/<agentId>/sessions/` y `
 
 ## Referencias
 
-- [Pruebas](/es/help/testing)
-- [Para empezar](/es/start/getting-started)
+- [Pruebas](/en/help/testing)
+- [Para empezar](/en/start/getting-started)

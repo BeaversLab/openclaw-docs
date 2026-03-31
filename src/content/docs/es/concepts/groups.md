@@ -64,7 +64,7 @@ Esto te da un "cerebro" de agente (espacio de trabajo compartido + memoria), per
 - **MD**: herramientas completas (host)
 - **Grupos**: sandbox + herramientas restringidas (Docker)
 
-> Si necesitas espacios de trabajo/personas verdaderamente separados ("personal" y "público" nunca deben mezclarse), usa un segundo agente + enlaces. Consulta [Enrutamiento Multi-Agente](/es/concepts/multi-agent).
+> Si necesitas espacios de trabajo/personas verdaderamente separados ("personal" y "público" nunca deben mezclarse), usa un segundo agente + enlaces. Consulta [Enrutamiento Multi-Agente](/en/concepts/multi-agent).
 
 Ejemplo (MD en el host, grupos en sandbox con solo herramientas de mensajería):
 
@@ -115,9 +115,9 @@ Ejemplo (MD en el host, grupos en sandbox con solo herramientas de mensajería):
 
 Relacionado:
 
-- Claves de configuración y valores predeterminados: [Configuración de Gateway](/es/gateway/configuration#agentsdefaultssandbox)
-- Depurar por qué una herramienta está bloqueada: [Sandbox vs Política de Herramientas vs Elevado](/es/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Detalles de montajes de enlace: [Sandboxing](/es/gateway/sandboxing#custom-bind-mounts)
+- Claves de configuración y valores predeterminados: [Configuración de Gateway](/en/gateway/configuration#agentsdefaultssandbox)
+- Depurar por qué una herramienta está bloqueada: [Sandbox vs Política de Herramientas vs Elevado](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Detalles de montajes de enlace: [Sandboxing](/en/gateway/sandboxing#custom-bind-mounts)
 
 ## Etiquetas de visualización
 
@@ -370,4 +370,4 @@ El mensaje del sistema del agente incluye una introducción al grupo en el prime
 
 ## Especificaciones de WhatsApp
 
-Consulte [Mensajes grupales](/es/concepts/group-messages) para conocer el comportamiento exclusivo de WhatsApp (inyección de historial, detalles del manejo de menciones).
+Consulte [Mensajes grupales](/en/concepts/group-messages) para conocer el comportamiento exclusivo de WhatsApp (inyección de historial, detalles del manejo de menciones).

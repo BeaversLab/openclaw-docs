@@ -31,7 +31,7 @@ Esta es la diferencia entre decirle a su asistente "envía el informe semanal" t
 
 ## Cómo Funcionan
 
-Las órdenes permanentes se definen en los archivos de su [agente workspace](/es/concepts/agent-workspace). El enfoque recomendado es incluirlas directamente en `AGENTS.md` (que se inyecta automáticamente en cada sesión) para que el agente siempre las tenga en contexto. Para configuraciones más grandes, también puede colocarlas en un archivo dedicado como `standing-orders.md` y referenciarlo desde `AGENTS.md`.
+Las órdenes permanentes se definen en los archivos de su [agente workspace](/en/concepts/agent-workspace). El enfoque recomendado es incluirlas directamente en `AGENTS.md` (que se inyecta automáticamente en cada sesión) para que el agente siempre las tenga en contexto. Para configuraciones más grandes, también puede colocarlas en un archivo dedicado como `standing-orders.md` y referenciarlo desde `AGENTS.md`.
 
 Cada programa especifica:
 
@@ -40,9 +40,9 @@ Cada programa especifica:
 3. **Puertas de aprobación** — qué requiere la firma humana antes de actuar
 4. **Reglas de escalada** — cuándo detenerse y pedir ayuda
 
-El agente carga estas instrucciones en cada sesión a través de los archivos de arranque del espacio de trabajo (consulte [Agent Workspace](/es/concepts/agent-workspace) para obtener la lista completa de archivos autoinyectados) y se ejecuta basándose en ellas, combinado con [cron jobs](/es/automation/cron-jobs) para el cumplimiento basado en tiempo.
+El agente carga estas instrucciones en cada sesión a través de los archivos de arranque del espacio de trabajo (consulte [Agent Workspace](/en/concepts/agent-workspace) para obtener la lista completa de archivos autoinyectados) y se ejecuta basándose en ellas, combinado con [cron jobs](/en/automation/cron-jobs) para el cumplimiento basado en tiempo.
 
-<Tip>Put standing orders in `AGENTS.md` to guarantee they're loaded every session. The workspace bootstrap automatically injects `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md`, and `MEMORY.md` — but not arbitrary files in subdirectories.</Tip>
+<Tip>Coloque las órdenes permanentes en `AGENTS.md` para garantizar que se carguen en cada sesión. El arranque del espacio de trabajo inyecta automáticamente `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md` y `MEMORY.md` — pero no archivos arbitrarios en subdirectorios.</Tip>
 
 ## Anatomía de una Orden Permanente
 
@@ -71,7 +71,7 @@ El agente carga estas instrucciones en cada sesión a través de los archivos de
 
 ## Órdenes Permanentes + Trabajos Cron
 
-Las órdenes permanentes definen **qué** está autorizado a hacer el agente. Los [trabajos cron](/es/automation/cron-jobs) definen **cuándo** sucede. Trabajan juntos:
+Las órdenes permanentes definen **qué** está autorizado a hacer el agente. Los [trabajos cron](/en/automation/cron-jobs) definen **cuándo** sucede. Trabajan juntos:
 
 ```
 Standing Order: "You own the daily inbox triage"
@@ -245,5 +245,5 @@ Cada programa debe tener:
 
 ## Relacionado
 
-- [Trabajos Cron](/es/automation/cron-jobs) — Programar el cumplimiento de las órdenes permanentes
-- [Espacio de Trabajo del Agente](/es/concepts/agent-workspace) — Donde residen las órdenes permanentes, incluida la lista completa de archivos de arranque inyectados automáticamente (AGENTS.md, SOUL.md, etc.)
+- [Trabajos Cron](/en/automation/cron-jobs) — Programar el cumplimiento de las órdenes permanentes
+- [Espacio de Trabajo del Agente](/en/concepts/agent-workspace) — Donde residen las órdenes permanentes, incluida la lista completa de archivos de arranque inyectados automáticamente (AGENTS.md, SOUL.md, etc.)

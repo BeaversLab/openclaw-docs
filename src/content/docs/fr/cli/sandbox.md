@@ -190,6 +190,6 @@ Les paramètres du bac à sable se trouvent dans `~/.openclaw/openclaw.json` sou
 
 ## Voir aussi
 
-- [Documentation Sandbox](/fr/gateway/sandboxing)
-- [Configuration de l'agent](/fr/concepts/agent-workspace)
-- [Commande Doctor](/fr/gateway/doctor) - Vérifier la configuration du bac à sable
+- [Documentation Sandbox](/en/gateway/sandboxing)
+- [Configuration de l'agent](/en/concepts/agent-workspace)
+- [Commande Doctor](/en/gateway/doctor) - Vérifier la configuration du bac à sable

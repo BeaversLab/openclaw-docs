@@ -84,7 +84,7 @@ se filtran para mantener el contexto del subagente pequeño).
 Los ganchos internos pueden interceptar este paso a través de `agent:bootstrap` para modificar o reemplazar
 los archivos de inicialización inyectados (por ejemplo, intercambiar `SOUL.md` por una personalidad alternativa).
 
-Para inspeccionar cuánto contribuye cada archivo inyectado (sin procesar vs inyectado, truncación, más sobrecarga del esquema de herramientas), use `/context list` o `/context detail`. Consulte [Contexto](/es/concepts/context).
+Para inspeccionar cuánto contribuye cada archivo inyectado (sin procesar vs inyectado, truncación, más sobrecarga del esquema de herramientas), use `/context list` o `/context detail`. Consulte [Contexto](/en/concepts/context).
 
 ## Manejo del tiempo
 
@@ -100,7 +100,7 @@ Configurar con:
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat` (`auto` | `12` | `24`)
 
-Consulte [Fecha y hora](/es/date-time) para obtener detalles completos del comportamiento.
+Consulte [Fecha y hora](/en/date-time) para obtener detalles completos del comportamiento.
 
 ## Habilidades
 

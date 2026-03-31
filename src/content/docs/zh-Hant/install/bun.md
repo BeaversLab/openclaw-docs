@@ -8,7 +8,7 @@ title: "Bun（實驗性）"
 
 # Bun（實驗性）
 
-<Warning>不建議將 Bun 用於 **gateway runtime**（與 WhatsApp 和 Telegram 存在已知問題）。生產環境請使用 Node。</Warning>
+<Warning>Bun **不建議用於 gateway runtime**（已知 WhatsApp 和 Telegram 存在問題）。正式環境請使用 Node。</Warning>
 
 Bun 是一個可選的本地運行時，用於直接運行 TypeScript（`bun run ...`，`bun --watch ...`）。預設的套件管理器仍然是 `pnpm`，它被完全支援並用於文件工具。Bun 無法使用 `pnpm-lock.yaml` 並會忽略它。
 

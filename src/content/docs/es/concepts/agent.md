@@ -15,11 +15,11 @@ OpenClaw utiliza un directorio de espacio de trabajo de agente único (`agents.d
 
 Recomendado: utilice `openclaw setup` para crear `~/.openclaw/openclaw.json` si falta e inicialice los archivos del espacio de trabajo.
 
-Guía completa del diseño del espacio de trabajo + copia de seguridad: [Espacio de trabajo del agente](/es/concepts/agent-workspace)
+Guía completa del diseño del espacio de trabajo + copia de seguridad: [Espacio de trabajo del agente](/en/concepts/agent-workspace)
 
 Si `agents.defaults.sandbox` está habilitado, las sesiones que no sean principales pueden anular esto con
 espacios de trabajo por sesión bajo `agents.defaults.sandbox.workspaceRoot` (consulte
-[Configuración de la pasarela](/es/gateway/configuration)).
+[Configuración de la pasarela](/en/gateway/configuration)).
 
 ## Archivos de inicio (inyectados)
 
@@ -58,7 +58,7 @@ OpenClaw carga habilidades desde tres ubicaciones (el espacio de trabajo prevale
 - Administradas locales: `~/.openclaw/skills`
 - Espacio de trabajo: `<workspace>/skills`
 
-Las habilidades pueden estar restringidas por configuración/entorno (ver `skills` en [Configuración de la pasarela](/es/gateway/configuration)).
+Las habilidades pueden estar restringidas por configuración/entorno (ver `skills` en [Configuración de la pasarela](/en/gateway/configuration)).
 
 ## Límites del tiempo de ejecución
 
@@ -85,7 +85,7 @@ en cola en el siguiente límite del modelo.
 
 Cuando el modo de cola es `followup` o `collect`, los mensajes entrantes se retienen hasta que
 termina el turno actual, luego comienza un nuevo turno de agente con las cargas útiles en cola. Consulte
-[Cola](/es/concepts/queue) para conocer el comportamiento del modo + rebote/ límite.
+[Cola](/en/concepts/queue) para conocer el comportamiento del modo + rebote/ límite.
 
 La transmisión en bloque envía bloques completos del asistente tan pronto como terminan; está
 desactivada por defecto (`agents.defaults.blockStreamingDefault: "off"`).
@@ -97,7 +97,7 @@ el spam de una sola línea (fusión basada en inactividad antes del envío). Los
 `*.blockStreaming: true` explícito para habilitar las respuestas en bloque.
 Los resúmenes detallados de herramientas se emiten al inicio de la herramienta (sin rebote); La interfaz de control
 transmite la salida de la herramienta a través de eventos del agente cuando está disponible.
-Más detalles: [Streaming + chunking](/es/concepts/streaming).
+Más detalles: [Streaming + chunking](/en/concepts/streaming).
 
 ## Referencias de modelo
 
@@ -116,4 +116,4 @@ Como mínimo, configure:
 
 ---
 
-_Siguiente: [Group Chats](/es/channels/group-messages)_ 🦞
+_Siguiente: [Group Chats](/en/channels/group-messages)_ 🦞

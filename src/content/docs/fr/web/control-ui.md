@@ -55,7 +55,7 @@ créé. Réexécutez `openclaw devices list` avant l'approbation.
 
 Une fois approuvé, l'appareil est mémorisé et ne nécessitera pas de réapprobation à moins que
 vous ne le révoquiez avec `openclaw devices revoke --device <id> --role <role>`. Voir
-[Devices CLI](/fr/cli/devices) pour la rotation des jetons et la révocation.
+[Devices CLI](/en/cli/devices) pour la rotation des jetons et la révocation.
 
 **Notes :**
 
@@ -200,7 +200,7 @@ OpenClaw **bloque** les connexions Control UI sans identité d'appareil.
 `dangerouslyDisableDeviceAuth` désactive les vérifications d'identité d'appareil Control UI et constitue une
 régression de sécurité sévère. Rétablissez rapidement après une utilisation d'urgence.
 
-Voir [Tailscale](/fr/gateway/tailscale) pour les instructions de configuration HTTPS.
+Voir [Tailscale](/en/gateway/tailscale) pour les instructions de configuration HTTPS.
 
 ## Construction de l'interface utilisateur
 
@@ -271,4 +271,4 @@ Exemple :
 }
 ```
 
-Détails de la configuration de l'accès distant : [Accès distant](/fr/gateway/remote).
+Détails de la configuration de l'accès distant : [Accès distant](/en/gateway/remote).

@@ -43,7 +43,7 @@ En OpenClaw, un bucle es una única ejecución serializada por sesión que emite
 - Las ejecuciones se serializan por clave de sesión (carril de sesión) y opcionalmente a través de un carril global.
 - Esto evita carreras de herramientas/sesión y mantiene el historial de sesiones consistente.
 - Los canales de mensajería pueden elegir modos de cola (collect/steer/followup) que alimentan este sistema de carriles.
-  Consulte [Command Queue](/es/concepts/queue).
+  Consulte [Command Queue](/en/concepts/queue).
 
 ## Sesión + preparación del espacio de trabajo
 
@@ -56,7 +56,7 @@ En OpenClaw, un bucle es una única ejecución serializada por sesión que emite
 
 - El prompt del sistema se construye a partir del prompt base de OpenClaw, el prompt de habilidades, el contexto de arranque y las anulaciones por ejecución.
 - Se aplican los límites específicos del modelo y los tokens de reserva de compactación.
-- Consulte [System prompt](/es/concepts/system-prompt) para ver lo que ve el modelo.
+- Consulte [System prompt](/en/concepts/system-prompt) para ver lo que ve el modelo.
 
 ## Puntos de enlace (donde puede interceptar)
 
@@ -71,7 +71,7 @@ OpenClaw tiene dos sistemas de enlaces:
   Úselo para agregar/eliminar archivos de contexto de arranque.
 - **Command hooks**: `/new`, `/reset`, `/stop` y otros eventos de comando (consulte la documentación de Hooks).
 
-Consulte [Hooks](/es/automation/hooks) para ver la configuración y ejemplos.
+Consulte [Hooks](/en/automation/hooks) para ver la configuración y ejemplos.
 
 ### Enlaces de complemento (ciclo de vida del agente + puerta de enlace)
 
@@ -95,14 +95,14 @@ Reglas de decisión de los enlaces para guardas de salida/herramientas:
 - `message_sending`: `{ cancel: true }` es terminal y detiene los controladores de menor prioridad.
 - `message_sending`: `{ cancel: false }` es una no-op y no borra una cancelación previa.
 
-Consulte [Plugin hooks](/es/plugins/architecture#provider-runtime-hooks) para ver los detalles de la API de enlaces y registro.
+Consulte [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks) para ver los detalles de la API de enlaces y registro.
 
 ## Streaming + respuestas parciales
 
 - Los deltas del asistente se transmiten desde pi-agent-core y se emiten como eventos `assistant`.
 - La transmisión por bloques puede emitir respuestas parciales ya sea en `text_end` o en `message_end`.
 - La transmisión del razonamiento puede emitirse como una transmisión separada o como respuestas de bloque.
-- Consulte [Streaming](/es/concepts/streaming) para conocer el comportamiento de fragmentación y respuestas de bloque.
+- Consulte [Streaming](/en/concepts/streaming) para conocer el comportamiento de fragmentación y respuestas de bloque.
 
 ## Ejecución de herramientas + herramientas de mensajería
 
@@ -125,7 +125,7 @@ Consulte [Plugin hooks](/es/plugins/architecture#provider-runtime-hooks) para ve
 
 - La auto-compactación emite eventos de flujo `compaction` y puede activar un reintento.
 - Al reintentar, los búferes en memoria y los resúmenes de herramientas se restablecen para evitar resultados duplicados.
-- Consulte [Compaction](/es/concepts/compaction) para conocer la canalización de compactación.
+- Consulte [Compaction](/en/concepts/compaction) para conocer la canalización de compactación.
 
 ## Flujos de eventos (hoy)
 
@@ -141,7 +141,7 @@ Consulte [Plugin hooks](/es/plugins/architecture#provider-runtime-hooks) para ve
 ## Tiempos de espera
 
 - `agent.wait` predeterminado: 30 s (solo la espera). El parámetro `timeoutMs` lo anula.
-- Tiempo de ejecución del agente: `agents.defaults.timeoutSeconds` predeterminado 600 s; se aplica en el temporizador de interrupción `runEmbeddedPiAgent`.
+- Tiempo de ejecución del agente: `agents.defaults.timeoutSeconds` valor predeterminado 172800s (48 horas); aplicado en el temporizador de interrupción `runEmbeddedPiAgent`.
 
 ## Dónde pueden terminar las cosas antes de tiempo
 

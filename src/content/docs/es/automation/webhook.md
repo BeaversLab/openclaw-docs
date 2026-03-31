@@ -155,7 +155,7 @@ Opciones de mapeo (resumen):
 - `allowUnsafeExternalContent: true` deshabilita el contenedor de seguridad de contenido externo para ese enlace
   (peligroso; solo para fuentes internas confiables).
 - `openclaw webhooks gmail setup` escribe la configuración `hooks.gmail` para `openclaw webhooks gmail run`.
-  Consulte [Gmail Pub/Sub](/es/automation/gmail-pubsub) para ver el flujo completo de Gmail watch.
+  Consulte [Gmail Pub/Sub](/en/automation/gmail-pubsub) para ver el flujo completo de Gmail watch.
 
 ## Respuestas
 

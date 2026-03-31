@@ -29,7 +29,7 @@ title: "iOS App"
 
 1. 启动 Gateway：
 
-```exec
+```bash
 openclaw gateway --port 18789
 ```
 
@@ -37,7 +37,7 @@ openclaw gateway --port 18789
 
 3. 在网关主机上批准配对请求：
 
-```exec
+```bash
 openclaw devices list
 openclaw devices approve <requestId>
 ```
@@ -48,7 +48,7 @@ openclaw devices approve <requestId>
 
 4. 验证连接：
 
-```exec
+```bash
 openclaw nodes status
 openclaw gateway call node.list --params "{}"
 ```
@@ -147,7 +147,7 @@ Gateway **不需要**为此路径做什么：
 
 本地/手动构建仍使用直接的 APNs。如果您在没有中继的情况下测试这些构建，网关仍然需要直接的 APNs 凭据：
 
-```exec
+```bash
 export OPENCLAW_APNS_TEAM_ID="TEAMID"
 export OPENCLAW_APNS_KEY_ID="KEYID"
 export OPENCLAW_APNS_PRIVATE_KEY_P8="$(cat /path/to/AuthKey_KEYID.p8)"
@@ -162,7 +162,7 @@ Gateway(网关) 在 `local.` 上广播 `_openclaw-gw._tcp`。iOS 应用会自动
 ### Tailnet（跨网络）
 
 如果 mDNS 被阻止，请使用单播 DNS-SD 区域（选择一个域；例如：`openclaw.internal.`）和 Tailscale 分割 DNS。
-有关 CoreDNS 示例，请参见 [Bonjour](/zh/gateway/bonjour)。
+有关 CoreDNS 示例，请参见 [Bonjour](/en/gateway/bonjour)。
 
 ### 手动主机/端口
 
@@ -172,7 +172,7 @@ Gateway(网关) 在 `local.` 上广播 `_openclaw-gw._tcp`。iOS 应用会自动
 
 iOS 节点渲染 WKWebView 画布。使用 `node.invoke` 来驱动它：
 
-```exec
+```bash
 openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18789/__openclaw__/canvas/"}'
 ```
 
@@ -185,11 +185,11 @@ openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"ur
 
 ### Canvas 评估 / 快照
 
-```exec
+```bash
 openclaw nodes invoke --node "iOS Node" --command canvas.eval --params '{"javaScript":"(() => { const {ctx} = window.__openclaw; ctx.clearRect(0,0,innerWidth,innerHeight); ctx.lineWidth=6; ctx.strokeStyle=\"#ff2d55\"; ctx.beginPath(); ctx.moveTo(40,40); ctx.lineTo(innerWidth-40, innerHeight-40); ctx.stroke(); return \"ok\"; })()"}'
 ```
 
-```exec
+```bash
 openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"maxWidth":900,"format":"jpeg"}'
 ```
 
@@ -201,12 +201,12 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 ## 常见错误
 
 - `NODE_BACKGROUND_UNAVAILABLE`：将 iOS 应用置于前台（画布/相机/屏幕命令需要此操作）。
-- `A2UI_HOST_NOT_CONFIGURED`：Gateway(网关) 未广播画布主机 URL；请在 [Gateway(网关) 配置](/zh/gateway/configuration) 中检查 `canvasHost`。
+- `A2UI_HOST_NOT_CONFIGURED`：Gateway(网关) 未广播画布主机 URL；请在 [Gateway(网关) 配置](/en/gateway/configuration) 中检查 `canvasHost`。
 - 配对提示从未出现：运行 `openclaw devices list` 并手动批准。
 - 重新安装后重新连接失败：钥匙串配对令牌已被清除；请重新配对节点。
 
 ## 相关文档
 
-- [配对](/zh/channels/pairing)
-- [设备发现](/zh/gateway/discovery)
-- [Bonjour](/zh/gateway/bonjour)
+- [配对](/en/channels/pairing)
+- [设备发现](/en/gateway/discovery)
+- [Bonjour](/en/gateway/bonjour)

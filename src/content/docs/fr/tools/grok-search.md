@@ -10,6 +10,15 @@ title: "Recherche Grok"
 
 OpenClaw prend en charge Grok en tant que `web_search` provider, en utilisant des réponses ancrées sur le web xAI pour produire des réponses synthétisées par l'IA basées sur des résultats de recherche en direct avec citations.
 
+La même `XAI_API_KEY` peut également alimenter l'outil intégré `x_search` pour la recherche de publications sur X
+(ex-Twitter). Si vous stockez la clé sous
+`plugins.entries.xai.config.webSearch.apiKey`, OpenClaw la réutilise désormais en tant que
+solution de secours pour le provider de modèle xAI inclus.
+
+Pour les métriques de niveau publication sur X telles que les repartages, les réponses, les marque-pages ou les vues, préférez
+`x_search` avec l'URL exacte de la publication ou l'ID de statut au lieu d'une requête de
+recherche large.
+
 ## Obtenir une clé API
 
 <Steps>
@@ -17,7 +26,7 @@ OpenClaw prend en charge Grok en tant que `web_search` provider, en utilisant de
     Obtenez une clé API auprès de [xAI](https://console.x.ai/).
   </Step>
   <Step title="Stocker la clé">
-    Définissez `XAI_API_KEY` dans l'environnement Gateway, ou configurez via :
+    Définissez `XAI_API_KEY` dans l'environnement du Gateway ou configurez via :
 
     ```bash
     openclaw configure --section web
@@ -26,7 +35,7 @@ OpenClaw prend en charge Grok en tant que `web_search` provider, en utilisant de
   </Step>
 </Steps>
 
-## Configuration
+## Config
 
 ```json5
 {
@@ -51,19 +60,20 @@ OpenClaw prend en charge Grok en tant que `web_search` provider, en utilisant de
 }
 ```
 
-**Alternative d'environnement :** définissez `XAI_API_KEY` dans l'environnement Gateway.
-Pour une installation de passerelle, placez-la dans `~/.openclaw/.env`.
+**Alternative de l'environnement** : définissez `XAI_API_KEY` dans l'environnement Gateway.
+Pour une installation de gateway, placez-le dans `~/.openclaw/.env`.
 
-## Fonctionnement
+## Comment cela fonctionne
 
-Grok utilise des réponses ancrées sur le web xAI pour synthétiser des réponses avec des citations en ligne, similaires à l'approche d'ancrage de Google Search de Gemini.
+Grok utilise les réponses d'xAI basées sur le Web pour synthétiser des réponses avec des citations en ligne, similaires à l'approche d'ancrage dans la recherche Google de Gemini.
 
 ## Paramètres pris en charge
 
 La recherche Grok prend en charge les paramètres standard `query` et `count`.
-Les filtres spécifiques au provider ne sont actuellement pas pris en charge.
+Les filtres spécifiques au fournisseur ne sont actuellement pas pris en charge.
 
 ## Connexes
 
-- [Aperçu de la recherche web](/fr/tools/web) -- tous les providers et détection automatique
-- [Recherche Gemini](/fr/tools/gemini-search) -- réponses synthétisées par l'IA via l'ancrage Google
+- [Vue d'ensemble de la recherche Web](/en/tools/web) -- tous les fournisseurs et la détection automatique
+- [x_search dans la recherche Web](/en/tools/web#x_search) -- recherche X de premier plan via xAI
+- [Gemini Search](/en/tools/gemini-search) -- Réponses synthétisées par l'IA via le grounding de Google

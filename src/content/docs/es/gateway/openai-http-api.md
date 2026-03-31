@@ -46,7 +46,7 @@ Trate este endpoint como una superficie de **acceso completo de operador** para 
 - Si la política del agente de destino permite herramientas confidenciales, este endpoint puede usarlas.
 - Mantenga este endpoint solo en loopback/tailnet/ingreso privado; no lo exponga directamente a Internet pública.
 
-Consulte [Seguridad](/es/gateway/security) y [Acceso remoto](/es/gateway/remote).
+Consulte [Seguridad](/en/gateway/security) y [Acceso remoto](/en/gateway/remote).
 
 ## Contrato de modelo primero el agente
 

@@ -40,7 +40,7 @@ title: "DigitalOcean (平台)"
 
 ## 1) 建立 Droplet
 
-<Warning>使用乾淨的基礎映像檔 (Ubuntu 24.04 LTS)。除非您已審閱第三方 Marketplace 一鍵映像檔的啟動腳本與防火牆預設值，否則請避免使用。</Warning>
+<Warning>使用乾淨的基礎映像檔 (Ubuntu 24.04 LTS)。除非您已審閱其啟動腳本和防火牆預設值，否則請避免使用第三方 Marketplace 一鍵映像檔。</Warning>
 
 1. 登入 [DigitalOcean](https://cloud.digitalocean.com/)
 2. 點擊 **Create → Droplets**

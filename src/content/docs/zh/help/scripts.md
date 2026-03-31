@@ -20,7 +20,7 @@ title: "脚本"
 ## 身份验证监控脚本
 
 身份监控脚本记录在此处：
-[/automation/auth-monitoring](/zh/automation/auth-monitoring)
+[/automation/auth-monitoring](/en/automation/auth-monitoring)
 
 ## 添加脚本时
 

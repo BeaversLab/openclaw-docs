@@ -39,13 +39,13 @@ Set up OpenClaw (https://docs.openclaw.ai/install) on this VM. Use the non-inter
 
 从您的设备：
 
-```exec
+```bash
 ssh exe.dev new
 ```
 
 然后连接：
 
-```exec
+```bash
 ssh <vm-name>.exe.xyz
 ```
 
@@ -53,7 +53,7 @@ ssh <vm-name>.exe.xyz
 
 ## 2) 安装先决条件（在虚拟机上）
 
-```exec
+```bash
 sudo apt-get update
 sudo apt-get install -y git curl jq ca-certificates openssl
 ```
@@ -62,7 +62,7 @@ sudo apt-get install -y git curl jq ca-certificates openssl
 
 运行 OpenClaw 安装脚本：
 
-```exec
+```bash
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
@@ -110,11 +110,11 @@ server {
 
 ## 更新
 
-```exec
+```bash
 npm i -g openclaw@latest
 openclaw doctor
 openclaw gateway restart
 openclaw health
 ```
 
-指南：[更新](/zh/install/updating)
+指南：[更新](/en/install/updating)

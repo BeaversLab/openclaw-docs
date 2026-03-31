@@ -12,7 +12,7 @@ title: "TypeBox"
 TypeBox es una biblioteca de esquemas con prioridad para TypeScript. La usamos para definir el **protocolo WebSocket de la puerta de enlace** (protocolo de enlace, solicitud/respuesta, eventos del servidor). Esos esquemas impulsan la **validación en tiempo de ejecución**, la **exportación de JSON Schema** y el **código generado para Swift** (Swift codegen) para la aplicación de macOS. Una única fuente de verdad; todo lo demás se genera.
 
 Si deseas el contexto del protocolo de alto nivel, comienza con
-[Arquitectura de la puerta de enlace](/es/concepts/architecture).
+[Arquitectura de la puerta de enlace](/en/concepts/architecture).
 
 ## Modelo mental (30 segundos)
 

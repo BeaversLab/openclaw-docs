@@ -7,4 +7,4 @@ title: "会话"
 
 # 会话
 
-正则的会话管理文档位于 [会话管理](/zh/concepts/session)。
+正则的会话管理文档位于 [会话管理](/en/concepts/session)。

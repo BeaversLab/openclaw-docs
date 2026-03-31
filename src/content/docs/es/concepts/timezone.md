@@ -88,4 +88,4 @@ El aviso del sistema incluye:
 
 Puede controlar el formato del aviso con `agents.defaults.timeFormat` (`auto` | `12` | `24`).
 
-Consulte [Fecha y hora](/es/date-time) para conocer el comportamiento completo y los ejemplos.
+Consulte [Fecha y hora](/en/date-time) para conocer el comportamiento completo y los ejemplos.

@@ -11,7 +11,7 @@ title: "配对"
 
 相关：
 
-- 配对流程：[配对](/zh/channels/pairing)
+- 配对流程：[配对](/en/channels/pairing)
 
 ## 命令
 

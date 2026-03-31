@@ -51,36 +51,43 @@ title: "Skills 配置"
 
 ## 字段
 
-- `allowBundled`：仅针对 **内置** 技能的可选允许列表。设置后，列表中仅有内置技能符合条件（托管/工作区技能不受影响）。
+- 内置技能根目录始终包括 `~/.openclaw/skills`、`~/.agents/skills`、
+  `<workspace>/.agents/skills` 和 `<workspace>/skills`。
+- `allowBundled`：仅适用于**内置**技能的可选允许列表。设置后，
+  只有列表中的内置技能符合条件（受管技能、代理技能和工作区技能不受影响）。
 - `load.extraDirs`：要扫描的其他技能目录（优先级最低）。
-- `load.watch`：监视技能文件夹并刷新技能快照（默认为 true）。
-- `load.watchDebounceMs`：技能监视器事件的防抖时间，以毫秒为单位（默认为 250）。
-- `install.preferBrew`：如果可用，优先使用 brew 安装程序（默认为 true）。
-- `install.nodeManager`：node 安装程序首选项（`npm` | `pnpm` | `yarn` | `bun`，默认为 npm）。
-  这仅影响 **技能安装**；Gateway(网关) 运行时仍应为 Node
-  （不建议将 Bun 用于 Gateway(网关)/Bun）。
-- `entries.<skillKey>`：针对每个技能的覆盖设置。
+- `load.watch`：监视技能文件夹并刷新技能快照（默认：true）。
+- `load.watchDebounceMs`：技能监视器事件的去抖动时间（毫秒）（默认：250）。
+- `install.preferBrew`：在可用时首选 brew 安装程序（默认：true）。
+- `install.nodeManager`：Node 安装程序首选（`npm` | `pnpm` | `yarn` | `bun`，默认：npm）。
+  这仅影响**技能安装**；Gateway(网关) 运行时仍应为 Node
+  （不建议将 Bun 用于 WhatsApp/Telegram）。
+- `entries.<skillKey>`：按技能覆盖。
 
-针对每个技能的字段：
+按技能字段：
 
-- `enabled`：设置 `false` 可禁用技能，即使该技能是内置的或已安装。
-- `env`：为代理运行注入的环境变量（仅当尚未设置时）。
-- `apiKey`：针对声明了主要环境变量的技能的可选便利设置。
+- `enabled`：将 `false` 设置为禁用技能，即使其已内置/已安装。
+- `env`：为代理运行注入的环境变量（仅在尚未设置时）。
+- `apiKey`：为声明主要环境变量的技能提供的可选便利。
   支持纯文本字符串或 SecretRef 对象（`{ source, provider, id }`）。
 
 ## 注意事项
 
-- `entries` 下的键默认映射到技能名称。如果技能定义了
-  `metadata.openclaw.skillKey`，则改用该键。
-- 启用监视器后，技能的更改将在下一轮代理对话时被检测到。
+- 默认情况下，`entries` 下的键映射到技能名称。如果技能定义了
+  `metadata.openclaw.skillKey`，请改用该键。
+- 加载优先级为 `<workspace>/skills` → `<workspace>/.agents/skills` →
+  `~/.agents/skills` → `~/.openclaw/skills` → 内置技能 →
+  `skills.load.extraDirs`。
+- 启用监视器后，技能的更改将在下一个代理轮次中被拾取。
 
 ### 沙箱隔离技能 + 环境变量
 
-当会话处于**沙箱隔离**状态时，技能进程在 Docker 内运行。沙箱**不**继承主机的 `process.env`。
+当会话处于**沙箱隔离**状态时，技能进程在 Docker 内运行。沙箱
+**不**继承主机 `process.env`。
 
 使用以下方法之一：
 
-- `agents.defaults.sandbox.docker.env`（或每个代理的 `agents.list[].sandbox.docker.env`）
-- 将环境变量 bake 到您的自定义沙箱镜像中
+- `agents.defaults.sandbox.docker.env`（或每个代理 `agents.list[].sandbox.docker.env`）
+- 将环境变量 baked 到你的自定义沙箱镜像中
 
-全局 `env` 和 `skills.entries.<skill>.env/apiKey` 仅适用于 **host** 运行模式。
+全局 `env` 和 `skills.entries.<skill>.env/apiKey` 仅适用于 **host** 运行。

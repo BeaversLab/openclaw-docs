@@ -12,7 +12,7 @@ Herramientas de seguridad (auditoría + correcciones opcionales).
 
 Relacionado:
 
-- Guía de seguridad: [Security](/es/gateway/security)
+- Guía de seguridad: [Security](/en/gateway/security)
 
 ## Auditoría
 
@@ -40,7 +40,7 @@ También advierte cuando los registros de instalación de complementos/ganchos b
 Advierte cuando las listas permitidas de canales dependen de nombres/correos/etiquetas mutables en lugar de IDs estables (alcances de Discord, Slack, Google Chat, Microsoft Teams, Mattermost, IRC cuando corresponda).
 Advierte cuando `gateway.auth.mode="none"` deja las API HTTP de la puerta de enlace accesibles sin un secreto compartido (`/tools/invoke` más cualquier punto final `/v1/*` habilitado).
 Las configuraciones con el prefijo `dangerous`/`dangerously` son anulaciones explícitas del operador de ruptura de cristal; habilitar una de ellas no es, por sí misma, un informe de vulnerabilidad de seguridad.
-Para el inventario completo de parámetros peligrosos, consulte la sección "Resumen de indicadores inseguros o peligrosos" en [Seguridad](/es/gateway/security).
+Para el inventario completo de parámetros peligrosos, consulte la sección "Resumen de indicadores inseguros o peligrosos" en [Seguridad](/en/gateway/security).
 
 Comportamiento de SecretRef:
 

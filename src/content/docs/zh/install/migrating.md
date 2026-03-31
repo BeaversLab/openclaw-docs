@@ -41,7 +41,7 @@ title: "迁移指南"
 
   </Step>
 
-<Step title="在新机器上安装 OpenClaw">在新机器上 [安装](/zh/install) CLI（如果需要，还包括 Node）。如果新手引导 创建了新的 `~/.openclaw/` 也没关系——您接下来将覆盖它。</Step>
+<Step title="在新机器上安装 OpenClaw">在新机器上[安装](/en/install) CLI（如果需要，也包括 Node）。 如果新手引导创建了一个新的 `~/.openclaw/`，这没有问题——您接下来会覆盖它。</Step>
 
   <Step title="复制状态目录和工作空间">
     通过 `scp`、`rsync -a` 或外部驱动器传输存档，然后解压：
@@ -56,7 +56,7 @@ title: "迁移指南"
   </Step>
 
   <Step title="运行 Doctor 并验证">
-    在新机器上，运行 [Doctor](/zh/gateway/doctor) 以应用配置迁移并修复服务：
+    在新机器上，运行 [Doctor](/en/gateway/doctor) 以应用配置迁移并修复服务：
 
     ```bash
     openclaw doctor
@@ -75,11 +75,11 @@ title: "迁移指南"
     渠道将显示为已登出状态，且会话将为空。请使用您迁移时使用的 **相同** 配置文件或状态目录启动网关，然后重新运行 `openclaw doctor`。
   </Accordion>
 
-<Accordion title="仅复制 openclaw.">仅复制配置文件是不够的。凭据位于 `credentials/` 下，而代理状态位于 `agents/` 下。请始终迁移 **整个** 状态目录。</Accordion>
+<Accordion title="仅复制 openclaw.">仅复制配置文件是不够的。凭证位于 `credentials/` 下，而代理 状态位于 `agents/` 下。请始终迁移**整个**状态目录。</Accordion>
 
-<Accordion title="权限和所有权">如果您以 root 用户身份复制文件或切换了用户，网关可能无法读取凭据。请确保 状态目录和工作区归运行网关的用户所有。</Accordion>
+<Accordion title="权限和所有权">如果您以 root 用户身份复制或切换了用户，网关可能无法读取凭证。 请确保状态目录和工作区归运行网关的用户所有。</Accordion>
 
-<Accordion title="远程模式">如果您的 UI 指向 **远程** 网关，则远程主机拥有会话和工作区。请迁移 网关主机本身，而不是您的本地笔记本电脑。请参阅 [常见问题](/zh/help/faq#where-does-openclaw-store-its-data)。</Accordion>
+<Accordion title="远程模式">如果您的 UI 指向**远程**网关，则远程主机拥有会话和工作区。 请迁移网关主机本身，而不是您的本地笔记本电脑。请参阅[常见问题](/en/help/faq#where-things-live-on-disk)。</Accordion>
 
   <Accordion title="备份中的机密信息">
     状态目录包含 API 密钥、OAuth 令牌和渠道凭据。

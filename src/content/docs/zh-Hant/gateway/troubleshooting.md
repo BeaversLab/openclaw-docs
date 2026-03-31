@@ -8,8 +8,8 @@ title: "疑難排解"
 
 # 閘道疑難排解
 
-本頁面是深度操作手冊。
-如果您想先進行快速分流流程，請從 [/help/troubleshooting](/en/help/troubleshooting) 開始。
+本頁面是深入的操作手冊。
+如果您希望先進行快速分流流程，請從 [/help/troubleshooting](/en/help/troubleshooting) 開始。
 
 ## 指令階梯
 
@@ -121,12 +121,12 @@ openclaw gateway status --json
 
 使用失敗的 `connect` 回應中的 `error.details.code` 來選擇下一步動作：
 
-| 詳細代碼                     | 含義                                     | 建議動作                                                                                                                                                     |
-| ---------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `AUTH_TOKEN_MISSING`         | 用戶端未傳送所需的共用 Token。           | 在用戶端中貼上/設定 Token 並重試。對於儀表板路徑：`openclaw config get gateway.auth.token` 然後貼上到控制 UI 設定中。                                        |
-| `AUTH_TOKEN_MISMATCH`        | 共用 Token 與閘道驗證 Token 不符。       | 如果是 `canRetryWithDeviceToken=true`，允許一次受信任的重試。如果仍然失敗，請執行 [Token 偏移恢復檢查清單](/en/cli/devices#token-drift-recovery-checklist)。 |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | 快取的每裝置 Token 已過期或已撤銷。      | 使用 [devices CLI](/en/cli/devices) 輪替/重新核准裝置 Token，然後重新連線。                                                                                  |
-| `PAIRING_REQUIRED`           | 裝置身分識別已知，但未獲核准擔任此角色。 | 核准待處理請求：`openclaw devices list` 然後 `openclaw devices approve <requestId>`。                                                                        |
+| 詳細代碼                     | 含義                                     | 建議動作                                                                                                                                                   |
+| ---------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_TOKEN_MISSING`         | 用戶端未傳送所需的共用 Token。           | 在用戶端中貼上/設定 Token 並重試。對於儀表板路徑：`openclaw config get gateway.auth.token` 然後貼上到控制 UI 設定中。                                      |
+| `AUTH_TOKEN_MISMATCH`        | 共用 Token 與閘道驗證 Token 不符。       | 如果是 `canRetryWithDeviceToken=true`，允許一次信任的重試。如果仍然失敗，請執行 [token 漂移恢復檢查清單](/en/cli/devices#token-drift-recovery-checklist)。 |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | 快取的每裝置 Token 已過期或已撤銷。      | 使用 [devices CLI](/en/cli/devices) 輪換/重新核准裝置令牌，然後重新連線。                                                                                  |
+| `PAIRING_REQUIRED`           | 裝置身分識別已知，但未獲核准擔任此角色。 | 核准待處理請求：`openclaw devices list` 然後 `openclaw devices approve <requestId>`。                                                                      |
 
 裝置驗證 v2 遷移檢查：
 
@@ -169,8 +169,8 @@ openclaw gateway status --deep
 
 常見特徵：
 
-- `Gateway start blocked: set gateway.mode=local` → 本機閘道模式未啟用。解決方法：在配置中設定 `gateway.mode="local"` (或執行 `openclaw configure`)。如果您是透過 Podman 使用專用的 `openclaw` 使用者執行 OpenClaw，配置位於 `~openclaw/.openclaw/openclaw.json`。
-- `refusing to bind gateway ... without auth` → 非迴路綁定但未提供 token/密碼。
+- `Gateway start blocked: set gateway.mode=local` → 未啟用本機閘道模式。修正：在設定中設定 `gateway.mode="local"`（或執行 `openclaw configure`）。如果您透過 Podman 執行 OpenClaw，預設設定路徑為 `~/.openclaw/openclaw.json`。
+- `refusing to bind gateway ... without auth` → 在沒有 token/密碼的情況下非回環綁定。
 - `another gateway instance is already listening` / `EADDRINUSE` → 連接埠衝突。
 
 相關：
@@ -193,15 +193,15 @@ openclaw config get channels
 
 尋找：
 
-- DM 策略 (`pairing`、`allowlist`、`open`、`disabled`)。
+- DM 原則 (`pairing`, `allowlist`, `open`, `disabled`)。
 - 群組允許清單和提及要求。
 - 缺少通道 API 權限/範圍。
 
 常見特徵：
 
-- `mention required` → 訊息被群組提及策略忽略。
+- `mention required` → 訊息被群組提及原則忽略。
 - `pairing` / 待審核追蹤 → 發送者未獲核准。
-- `missing_scope`, `not_in_channel`, `Forbidden`, `401/403` → 頻道驗證/權限問題。
+- `missing_scope`, `not_in_channel`, `Forbidden`, `401/403` → 頻道認證/權限問題。
 
 相關：
 
@@ -226,15 +226,15 @@ openclaw logs --follow
 
 - Cron 已啟用且存在下一次喚醒時間。
 - 工作執行歷史狀態 (`ok`, `skipped`, `error`)。
-- 心跳跳過原因 (`quiet-hours`, `requests-in-flight`, `alerts-disabled`)。
+- 跳過心跳的原因 (`quiet-hours`, `requests-in-flight`, `alerts-disabled`)。
 
 常見特徵：
 
 - `cron: scheduler disabled; jobs will not run automatically` → cron 已停用。
-- `cron: timer tick failed` → 排程器滴答失敗；請檢查檔案/日誌/執行時錯誤。
-- `heartbeat skipped` 搭配 `reason=quiet-hours` → 超出活動時間視窗。
+- `cron: timer tick failed` → 排程器計時失敗；請檢查檔案/日誌/執行時錯誤。
+- `heartbeat skipped` 搭配 `reason=quiet-hours` → 超出啟用時段視窗。
 - `heartbeat: unknown accountId` → 心跳傳遞目標的帳戶 ID 無效。
-- `heartbeat skipped` 搭配 `reason=dm-blocked` → 心跳目標解析為 DM 風格的目的地，但 `agents.defaults.heartbeat.directPolicy` (或個別代理覆寫) 設定為 `block`。
+- `heartbeat skipped` 搭配 `reason=dm-blocked` → 心跳目標解析為 DM 風格的目的地，但 `agents.defaults.heartbeat.directPolicy` (或個別代理程式覆寫) 設定為 `block`。
 
 相關：
 
@@ -262,9 +262,9 @@ openclaw status
 
 常見特徵：
 
-- `NODE_BACKGROUND_UNAVAILABLE` → 節點應用程式必須位於前景。
-- `*_PERMISSION_REQUIRED` / `LOCATION_PERMISSION_REQUIRED` → 缺少作業系統權限。
-- `SYSTEM_RUN_DENIED: approval required` → 執行審核待定。
+- `NODE_BACKGROUND_UNAVAILABLE` → node 應用程式必須在前台執行。
+- `*_PERMISSION_REQUIRED` / `LOCATION_PERMISSION_REQUIRED` → 缺少 OS 權限。
+- `SYSTEM_RUN_DENIED: approval required` → 執行審核待決。
 - `SYSTEM_RUN_DENIED: allowlist miss` → 指令被允許清單封鎖。
 
 相關：
@@ -295,7 +295,7 @@ openclaw doctor
 
 - `Failed to start Chrome CDP on port` → 瀏覽器程序啟動失敗。
 - `browser.executablePath not found` → 設定的路徑無效。
-- `No Chrome tabs found for profile="user"` → Chrome MCP 附加設定檔沒有開啟的本機 Chrome 分頁。
+- `No Chrome tabs found for profile="user"` → Chrome MCP 附加設定檔沒有開啟本機 Chrome 分頁。
 - `Browser attachOnly is enabled ... not reachable` → 僅附加設定檔沒有可連線的目標。
 
 相關連結：
@@ -318,13 +318,13 @@ openclaw config get gateway.auth.mode
 
 檢查事項：
 
-- 如果 `gateway.mode=remote`，CLI 呼叫可能以遠端為目標，而您的本機服務正常。
+- 如果是 `gateway.mode=remote`，CLI 呼叫可能針對的是遠端，而您的本地服務是正常的。
 - 明確的 `--url` 呼叫不會回退到儲存的認證。
 
 常見特徵：
 
 - `gateway connect failed:` → 錯誤的 URL 目標。
-- `unauthorized` → 端點可連線但驗證錯誤。
+- `unauthorized` → 端點可連線但認證錯誤。
 
 ### 2) 綁定與驗證防護機制更嚴格
 
@@ -337,13 +337,13 @@ openclaw logs --follow
 
 檢查事項：
 
-- 非回環綁定 (`lan`、`tailnet`、`custom`) 需要設定驗證。
-- 舊的金鑰（如 `gateway.token`）不會取代 `gateway.auth.token`。
+- 非回環綁定 (`lan`、`tailnet`、`custom`) 需要設定認證。
+- 像 `gateway.token` 這樣的舊金鑰不會取代 `gateway.auth.token`。
 
 常見特徵：
 
-- `refusing to bind gateway ... without auth` → 綁定與驗證不匹配。
-- `RPC probe: failed` 而 runtime 正在執行 → 閘道運作中但無法以目前的驗證/URL 存取。
+- `refusing to bind gateway ... without auth` → 綁定+認證不匹配。
+- 在執行時運行時發生 `RPC probe: failed` → Gateway 運作中但無法使用目前的認證/url 存取。
 
 ### 3) 配對與裝置身分狀態已變更
 
@@ -361,8 +361,8 @@ openclaw doctor
 
 常見特徵：
 
-- `device identity required` → 裝置驗證未滿足。
-- `pairing required` → 發送者/裝置必須已獲核准。
+- `device identity required` → 未滿足設備身份驗證。
+- `pairing required` → 發送者/設備必須經過核准。
 
 如果檢查後服務設定和執行階段仍然不一致，請從相同的設定檔/狀態目錄重新安裝服務中繼資料：
 

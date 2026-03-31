@@ -10,7 +10,7 @@ title: "提供商目录"
 
 OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份验证，然后将默认模型设置为 `provider/model`。
 
-正在寻找聊天渠道文档（WhatsApp/Telegram/Discord/Slack/Mattermost (插件)/etc.）？请参阅 [渠道](/zh/channels)。
+正在寻找聊天渠道文档（WhatsApp/Telegram/Discord/Slack/Mattermost (插件)/etc.）？请参阅 [渠道](/en/channels)。
 
 ## 快速开始
 
@@ -25,48 +25,47 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 
 ## 提供商文档
 
-- [Amazon Bedrock](/zh/providers/bedrock)
-- [Anthropic (API + Claude Code CLI)](/zh/providers/anthropic)
-- [Cloudflare AI Gateway(网关)](/zh/providers/cloudflare-ai-gateway)
-- [DeepSeek](/zh/providers/deepseek)
-- [GitHub Copilot](/zh/providers/github-copilot)
-- [GLM 模型](/zh/providers/glm)
-- [Google (Gemini)](/zh/providers/google)
-- [Groq (LPU 推理)](/zh/providers/groq)
-- [Hugging Face (推理)](/zh/providers/huggingface)
-- [Kilocode](/zh/providers/kilocode)
-- [LiteLLM (统一网关)](/zh/providers/litellm)
-- [MiniMax](/zh/providers/minimax)
-- [Mistral](/zh/providers/mistral)
-- [Model Studio (阿里云)](/zh/providers/modelstudio)
-- [Moonshot AI (Kimi + Kimi Coding)](/zh/providers/moonshot)
-- [NVIDIA](/zh/providers/nvidia)
-- [Ollama (云端 + 本地模型)](/zh/providers/ollama)
-- [OpenAI (API + Codex)](/zh/providers/openai)
-- [OpenCode](/zh/providers/opencode)
-- [OpenCode Go](/zh/providers/opencode-go)
-- [OpenRouter](/zh/providers/openrouter)
-- [Perplexity (网络搜索)](/zh/providers/perplexity-provider)
-- [Qianfan](/zh/providers/qianfan)
-- [Qwen (OAuth)](/zh/providers/qwen)
-- [SGLang (本地模型)](/zh/providers/sglang)
-- [Synthetic](/zh/providers/synthetic)
-- [Together AI](/zh/providers/together)
-- [Venice (Venice AI, 注重隐私)](/zh/providers/venice)
-- [Vercel AI Gateway(网关)](/zh/providers/vercel-ai-gateway)
-- [vLLM (本地模型)](/zh/providers/vllm)
-- [Volcengine (Doubao)](/zh/providers/volcengine)
-- [xAI](/zh/providers/xai)
-- [Xiaomi](/zh/providers/xiaomi)
-- [Z.AI](/zh/providers/zai)
+- [Amazon Bedrock](/en/providers/bedrock)
+- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
+- [Cloudflare AI Gateway(网关)](/en/providers/cloudflare-ai-gateway)
+- [DeepSeek](/en/providers/deepseek)
+- [GitHub Copilot](/en/providers/github-copilot)
+- [GLM 模型](/en/providers/glm)
+- [Google (Gemini)](/en/providers/google)
+- [Groq (LPU 推理)](/en/providers/groq)
+- [Hugging Face (推理)](/en/providers/huggingface)
+- [Kilocode](/en/providers/kilocode)
+- [LiteLLM (统一网关)](/en/providers/litellm)
+- [MiniMax](/en/providers/minimax)
+- [Mistral](/en/providers/mistral)
+- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
+- [NVIDIA](/en/providers/nvidia)
+- [Ollama (云端 + 本地模型)](/en/providers/ollama)
+- [OpenAI (API + Codex)](/en/providers/openai)
+- [OpenCode](/en/providers/opencode)
+- [OpenCode Go](/en/providers/opencode-go)
+- [OpenRouter](/en/providers/openrouter)
+- [Perplexity (网络搜索)](/en/providers/perplexity-provider)
+- [Qianfan](/en/providers/qianfan)
+- [Qwen / Model Studio (阿里云)](/en/providers/qwen_modelstudio)
+- [SGLang (本地模型)](/en/providers/sglang)
+- [Synthetic](/en/providers/synthetic)
+- [Together AI](/en/providers/together)
+- [Venice (Venice AI，注重隐私)](/en/providers/venice)
+- [Vercel AI Gateway(网关)](/en/providers/vercel-ai-gateway)
+- [vLLM (本地模型)](/en/providers/vllm)
+- [Volcengine (Doubao)](/en/providers/volcengine)
+- [xAI](/en/providers/xai)
+- [Xiaomi](/en/providers/xiaomi)
+- [Z.AI](/en/providers/zai)
 
 ## 转录提供商
 
-- [Deepgram (音频转录)](/zh/providers/deepgram)
+- [Deepgram (音频转录)](/en/providers/deepgram)
 
 ## 社区工具
 
-- [Claude Max API Proxy](/zh/providers/claude-max-api-proxy) - Claude 订阅凭证的社区代理（使用前请验证 Anthropic 政策/条款）
+- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Claude 订阅凭据的社区代理（使用前请验证 Anthropic 的政策/条款）
 
-如需完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
-请参阅 [Model providers](/zh/concepts/model-providers)。
+有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
+请参阅 [模型提供商](/en/concepts/model-providers)。

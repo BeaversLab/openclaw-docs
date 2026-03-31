@@ -73,7 +73,7 @@ Utilisez :
 
 `http://127.0.0.1:18789/`
 
-N'utilisez pas par défaut une IP de réseau local (LAN) pour l'interface de contrôle. Le HTTP non sécurisé sur une adresse de réseau local ou de tailnet peut déclencher un comportement d'origine non sécurisée/d'authentification d'appareil qui n'est pas lié au CDP lui-même. Voir [Control UI](/fr/web/control-ui).
+N'utilisez pas par défaut une IP de réseau local (LAN) pour l'interface de contrôle. Le HTTP non sécurisé sur une adresse de réseau local ou de tailnet peut déclencher un comportement d'origine non sécurisée/d'authentification d'appareil qui n'est pas lié au CDP lui-même. Voir [Control UI](/en/web/control-ui).
 
 ## Valider par couches
 
@@ -158,7 +158,7 @@ Vérifiez ensuite :
 
 Page utile :
 
-- [Interface de contrôle](/fr/web/control-ui)
+- [Interface de contrôle](/en/web/control-ui)
 
 ### Couche 5 : Vérifier le contrôle du navigateur de bout en bout
 

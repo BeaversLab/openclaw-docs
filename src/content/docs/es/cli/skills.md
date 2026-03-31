@@ -13,9 +13,9 @@ Inspeccione las habilidades locales e instale/actualice habilidades desde ClawHu
 
 Relacionado:
 
-- Sistema de habilidades: [Habilidades](/es/tools/skills)
-- Configuración de habilidades: [Configuración de habilidades](/es/tools/skills-config)
-- Instalaciones de ClawHub: [ClawHub](/es/tools/clawhub)
+- Sistema de habilidades: [Habilidades](/en/tools/skills)
+- Configuración de habilidades: [Configuración de habilidades](/en/tools/skills-config)
+- Instalaciones de ClawHub: [ClawHub](/en/tools/clawhub)
 
 ## Comandos
 

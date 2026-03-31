@@ -73,7 +73,7 @@ Si se establece `agents.defaults.contextTokens`, se trata como un límite (míni
 ## Interacción con otros límites
 
 - Las herramientas integradas ya truncan su propia salida; la eliminación de sesiones es una capa adicional que evita que las conversaciones largas acumulen demasiada salida de herramientas en el contexto del modelo.
-- La compactación es independiente: la compactación resume y persiste, la eliminación es transitoria por solicitud. Consulte [/concepts/compaction](/es/concepts/compaction).
+- La compactación es independiente: la compactación resume y persiste, la eliminación es transitoria por solicitud. Consulte [/concepts/compaction](/en/concepts/compaction).
 
 ## Valores predeterminados (cuando está habilitado)
 
@@ -118,4 +118,4 @@ Restringir la poda a herramientas específicas:
 }
 ```
 
-Consultar referencia de configuración: [Configuración de Gateway](/es/gateway/configuration)
+Consultar referencia de configuración: [Configuración de Gateway](/en/gateway/configuration)

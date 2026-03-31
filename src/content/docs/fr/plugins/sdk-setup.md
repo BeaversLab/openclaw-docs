@@ -13,7 +13,7 @@ read_when:
 Référence pour le packaging des plugins (métadonnées `package.json`), les manifests
 (`openclaw.plugin.json`), les points d'entrée de configuration et les schémas de configuration.
 
-<Tip>**Vous cherchez un guide pas à pas ?** Les guides pratiques couvrent le packaging en contexte : [Plugins de canal](/fr/plugins/sdk-channel-plugins#step-1-package-and-manifest) et [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins#step-1-package-and-manifest).</Tip>
+<Tip>**Vous cherchez un guide pas à pas ?** Les guides pratiques couvrent le packaging en contexte : [Plugins de Channel](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) et [Plugins de Fournisseur](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest).</Tip>
 
 ## Métadonnées du package
 
@@ -84,7 +84,7 @@ Lorsqu'il est activé, OpenClaw ne charge que `setupEntry` pendant la phase de d
 préalable à l'écoute, même pour les canaux déjà configurés. Le point d'entrée complet se charge après
 que la passerelle a commencé à écouter.
 
-<Warning>N'activez le chargement différé que lorsque votre `setupEntry` enregistre tout ce dont le gateway a besoin avant qu'il ne commence à écouter (enregistrement de canal, routes HTTP, méthodes de gateway). Si l'entrée complète possède des capacités de démarrage requises, conservez le comportement par défaut.</Warning>
+<Warning>N'activez le chargement différé que si votre `setupEntry` enregistre tout ce dont la passerelle a besoin avant de commencer à écouter (enregistrement de channel, routes HTTP, méthodes de passerelle). Si l'entrée complète possède des capacités de démarrage requises, gardez le comportement par défaut.</Warning>
 
 ## Manifeste du plugin
 
@@ -136,7 +136,7 @@ Même les plugins sans configuration doivent inclure un schéma. Un schéma vide
 }
 ```
 
-Voir [Plugin Manifest](/fr/plugins/manifest) pour la référence complète du schéma.
+Voir [Plugin Manifest](/en/plugins/manifest) pour la référence complète du schéma.
 
 ## Entrée de configuration
 
@@ -296,7 +296,7 @@ const setupSurface = createOptionalChannelSetupSurface({
 
 ## Publication et installation
 
-**Plugins externes :** publiez sur [ClawHub](/fr/tools/clawhub) ou npm, puis installez :
+**Plugins externes :** publiez sur [ClawHub](/en/tools/clawhub) ou npm, puis installez :
 
 ```bash
 openclaw plugins install @myorg/openclaw-my-plugin
@@ -320,10 +320,10 @@ openclaw plugins search <query>
 openclaw plugins install <package-name>
 ```
 
-<Info>Pour les installations issues de npm, `openclaw plugins install` exécute `npm install --ignore-scripts` (pas de scripts de cycle de vie). Gardez les arbres de dépendances des plugins purs JS/TS et évitez les packages qui nécessitent des constructions `postinstall`.</Info>
+<Info>Pour les installations depuis npm, `openclaw plugins install` exécute `npm install --ignore-scripts` (pas de scripts de cycle de vie). Gardez les arbres de dépendances des plugins en JS/TS pur et évitez les packages qui nécessitent des builds `postinstall`.</Info>
 
 ## Connexes
 
-- [Points d'entrée SDK](/fr/plugins/sdk-entrypoints) -- `definePluginEntry` et `defineChannelPluginEntry`
-- [Manifeste de plugin](/fr/plugins/manifest) -- référence complète du schéma de manifeste
-- [Création de plugins](/fr/plugins/building-plugins) -- guide de démarrage étape par étape
+- [Points d'entrée du SDK](/en/plugins/sdk-entrypoints) -- `definePluginEntry` et `defineChannelPluginEntry`
+- [Plugin Manifest](/en/plugins/manifest) -- référence complète du schéma de manifeste
+- [Création de Plugins](/en/plugins/building-plugins) -- guide de démarrage pas à pas

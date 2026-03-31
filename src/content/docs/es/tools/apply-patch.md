@@ -36,8 +36,9 @@ La herramienta acepta una sola cadena `input` que envuelve una o más operacione
 - `tools.exec.applyPatch.workspaceOnly` por defecto es `true` (contenido en el espacio de trabajo). Establézcalo en `false` solo si intencionalmente desea que `apply_patch` escriba/elimine fuera del directorio del espacio de trabajo.
 - Use `*** Move to:` dentro de un fragmento `*** Update File:` para cambiar el nombre de los archivos.
 - `*** End of File` marca una inserción solo de EOF cuando sea necesario.
-- Experimental y deshabilitado por defecto. Habilite con `tools.exec.applyPatch.enabled`.
-- Solo para OpenAI (incluido OpenAI Codex). Opcionalmente limite por modelo a través de
+- Disponible por defecto para los modelos de OpenAI y OpenAI Codex. Configure
+  `tools.exec.applyPatch.enabled: false` para desactivarlo.
+- Opcionalmente restrinja por modelo mediante
   `tools.exec.applyPatch.allowModels`.
 - La configuración está solo en `tools.exec`.
 

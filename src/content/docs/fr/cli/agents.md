@@ -11,8 +11,8 @@ Gérez des agents isolés (espaces de travail + auth + routage).
 
 Connexes :
 
-- Routage multi-agent : [Routage multi-agent](/fr/concepts/multi-agent)
-- Espace de travail de l'agent : [Espace de travail de l'agent](/fr/concepts/agent-workspace)
+- Routage multi-agent : [Routage multi-agent](/en/concepts/multi-agent)
+- Espace de travail de l'agent : [Espace de travail de l'agent](/en/concepts/agent-workspace)
 
 ## Exemples
 

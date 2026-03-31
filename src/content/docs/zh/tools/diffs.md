@@ -381,6 +381,6 @@ URL 构建行为：
 
 ## 相关文档
 
-- [工具概述](/zh/tools)
-- [插件](/zh/tools/plugin)
-- [浏览器](/zh/tools/browser)
+- [工具概述](/en/tools)
+- [插件](/en/tools/plugin)
+- [浏览器](/en/tools/browser)

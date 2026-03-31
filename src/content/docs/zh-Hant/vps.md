@@ -16,16 +16,16 @@ sidebarTitle: "Linux 伺服器"
 
 <CardGroup cols={2}>
   <Card title="Railway" href="/en/install/railway">
-    一鍵、瀏覽器設定
+    單鍵、瀏覽器設定
   </Card>
   <Card title="Northflank" href="/en/install/northflank">
-    一鍵、瀏覽器設定
+    單鍵、瀏覽器設定
   </Card>
   <Card title="DigitalOcean" href="/en/install/digitalocean">
-    簡單的付費 VPS
+    簡單付費 VPS
   </Card>
   <Card title="Oracle Cloud" href="/en/install/oracle">
-    永久免費 ARM 層級
+    永遠免費 ARM 層級
   </Card>
   <Card title="Fly.io" href="/en/install/fly">
     Fly Machines
@@ -40,10 +40,10 @@ sidebarTitle: "Linux 伺服器"
     Linux VM
   </Card>
   <Card title="exe.dev" href="/en/install/exe-dev">
-    含 HTTPS 代理的 VM
+    VM with HTTPS proxy
   </Card>
   <Card title="Raspberry Pi" href="/en/install/raspberry-pi">
-    ARM 自託管
+    ARM self-hosted
   </Card>
 </CardGroup>
 

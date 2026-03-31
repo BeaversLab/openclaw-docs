@@ -26,8 +26,8 @@ El diseño del espacio de trabajo predeterminado utiliza dos capas de memoria:
   - Si existen tanto `MEMORY.md` como `memory.md` en la raíz del espacio de trabajo, OpenClaw carga ambos (deduplicados por realpath, por lo que los enlaces simbólicos que apuntan al mismo archivo no se inyectan dos veces).
   - **Cargar solo en la sesión principal y privada** (nunca en contextos grupales).
 
-Estos archivos residen en el espacio de trabajo (`agents.defaults.workspace`, predeterminado
-`~/.openclaw/workspace`). Consulte [Agente de espacio de trabajo](/es/concepts/agent-workspace) para ver el diseño completo.
+Estos archivos se encuentran en el espacio de trabajo (`agents.defaults.workspace`, por defecto
+`~/.openclaw/workspace`). Consulte [Agent workspace](/en/concepts/agent-workspace) para ver el diseño completo.
 
 ## Herramientas de memoria
 
@@ -53,11 +53,14 @@ llamada a la herramienta en lógica try/catch.
 ## Flujo de memoria automático (pre-compaction ping)
 
 Cuando una sesión está **cerca de la compactación automática**, OpenClaw activa un **turno
-silencioso y de agente** que recuerda al modelo escribir memoria duradera **antes** de que
-se compacte el contexto. Los avisos predeterminados dicen explícitamente que el modelo _puede responder_,
-pero por lo general `NO_REPLY` es la respuesta correcta para que el usuario nunca vea este turno.
+silencioso y agentic** que recuerda al modelo que escriba una memoria duradera **antes** de que
+se compacte el contexto. Las indicaciones predeterminadas dicen explícitamente que el modelo _puede responder_,
+pero usualmente `NO_REPLY` es la respuesta correcta para que el usuario nunca vea este turno.
+El complemento de memoria activa posee la política de indicación/ruta para ese vaciado; el
+complemento `memory-core` predeterminado escribe en el archivo diario canónico bajo
+`memory/YYYY-MM-DD.md`.
 
-Esto se controla mediante `agents.defaults.compaction.memoryFlush`:
+Esto está controlado por `agents.defaults.compaction.memoryFlush`:
 
 ```json5
 {
@@ -79,29 +82,29 @@ Esto se controla mediante `agents.defaults.compaction.memoryFlush`:
 
 Detalles:
 
-- **Umbral suave**: el flujo se activa cuando la estimación de tokens de la sesión supera
+- **Umbral suave**: el vaciado se activa cuando la estimación de tokens de la sesión supera
   `contextWindow - reserveTokensFloor - softThresholdTokens`.
-- **Silencioso** de forma predeterminada: los avisos incluyen `NO_REPLY` para que no se entregue nada.
+- **Silencioso** de forma predeterminada: las indicaciones incluyen `NO_REPLY` para que no se entregue nada.
 - **Dos avisos**: un aviso de usuario más un aviso del sistema añaden el recordatorio.
-- **Un flush por ciclo de compactación** (rastreado en `sessions.json`).
-- **El espacio de trabajo debe ser escribible**: si la sesión se ejecuta en sandbox con
-  `workspaceAccess: "ro"` o `"none"`, el flush se omite.
+- **Un vaciado por ciclo de compactación** (rastreado en `sessions.json`).
+- **El espacio de trabajo debe ser escribible**: si la sesión se ejecuta en un espacio aislado con
+  `workspaceAccess: "ro"` o `"none"`, se omite el vaciado.
 
-Para el ciclo de vida completo de la compactación, consulte
-[Gestión de sesiones + compactación](/es/reference/session-management-compaction).
+Para ver el ciclo de vida completo de compactación, consulte
+[Gestión de sesiones + compactación](/en/reference/session-management-compaction).
 
 ## Búsqueda de memoria vectorial
 
-OpenClaw puede construir un índice vectorial pequeño sobre `MEMORY.md` y `memory/*.md` para que
+OpenClaw puede construir un pequeño índice vectorial sobre `MEMORY.md` y `memory/*.md` para que
 las consultas semánticas puedan encontrar notas relacionadas incluso cuando la redacción difiera. La búsqueda híbrida
-(BM25 + vector) está disponible para combinar la coincidencia semántica con búsquedas exactas de
-palabras clave.
+(BM25 + vector) está disponible para combinar la coincidencia semántica con búsquedas exactas de palabras clave.
 
-La búsqueda de memoria admite múltiples proveedores de incrustación (OpenAI, Gemini, Voyage,
-Mistral, Ollama y modelos GGUF locales), un backend opcional de sidecar QMD para
-recuperación avanzada, y funciones de postprocesamiento como la reordenación de diversidad MMR
+Los identificadores de adaptadores de búsqueda de memoria provienen del complemento de memoria activo. El complemento
+`memory-core` predeterminado incluye funciones integradas para OpenAI, Gemini, Voyage, Mistral,
+Ollama y modelos GGUF locales, además de un backend opcional QMD sidecar para
+características avanzadas de recuperación y posprocesamiento como la reorganización de diversidad MMR
 y el decaimiento temporal.
 
-Para la referencia completa de configuración, incluida la configuración del proveedor de incrustación, el backend
-QMD, el ajuste de la búsqueda híbrida, la memoria multimodal y todos los controles de configuración, consulte
-[Referencia de configuración de memoria](/es/reference/memory-config).
+Para obtener la referencia de configuración completa, incluida la configuración del proveedor de incrustaciones, el backend QMD,
+el ajuste de búsqueda híbrida, la memoria multimodal y todos los controles de configuración, consulte
+[Referencia de configuración de memoria](/en/reference/memory-config).

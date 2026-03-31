@@ -68,6 +68,6 @@ Los filtros específicos del proveedor no son compatibles actualmente.
 
 ## Relacionado
 
-- [Descripción general de la búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
-- [Búsqueda Gemini](/es/tools/gemini-search) -- respuestas sintetizadas por IA mediante grounding de Google
-- [Búsqueda Grok](/es/tools/grok-search) -- respuestas sintetizadas por IA mediante grounding de xAI
+- [Descripción general de la búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
+- [Búsqueda Gemini](/en/tools/gemini-search) -- respuestas sintetizadas por IA mediante grounding de Google
+- [Búsqueda Grok](/en/tools/grok-search) -- respuestas sintetizadas por IA mediante grounding de xAI

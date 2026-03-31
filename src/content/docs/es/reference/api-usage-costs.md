@@ -29,7 +29,7 @@ las características de OpenClaw que pueden generar uso del proveedor o llamadas
 - `openclaw status --usage` y `openclaw channels list` muestran las **ventanas de uso** del proveedor
   (instantáneas de cuota, no costes por mensaje).
 
-Consulte [Uso y costes de tokens](/es/reference/token-use) para obtener detalles y ejemplos.
+Consulte [Uso y costes de tokens](/en/reference/token-use) para obtener detalles y ejemplos.
 
 ## Cómo se descubren las claves
 
@@ -48,7 +48,7 @@ OpenClaw puede obtener las credenciales de:
 Cada respuesta o llamada a herramienta utiliza el **proveedor de modelo actual** (OpenAI, Anthropic, etc.). Esta es la
 fuente principal de uso y coste.
 
-Consulte [Modelos](/es/providers/models) para la configuración de precios y [Uso y costes de tokens](/es/reference/token-use) para su visualización.
+Consulte [Modelos](/en/providers/models) para la configuración de precios y [Uso y costes de tokens](/en/reference/token-use) para su visualización.
 
 ### 2) Comprensión de medios (audio/imagen/vídeo)
 
@@ -58,7 +58,7 @@ Los medios entrantes pueden resumirse/transcribirse antes de que se ejecute la r
 - Imagen: OpenAI / Anthropic / Google.
 - Video: Google.
 
-Consulte [Comprensión de medios](/es/nodes/media-understanding).
+Consulte [Comprensión de medios](/en/nodes/media-understanding).
 
 ### 3) Incrustaciones de memoria + búsqueda semántica
 
@@ -73,7 +73,7 @@ La búsqueda de memoria semántica utiliza **API de incrustación** cuando se co
 
 Puede mantenerlo localmente con `memorySearch.provider = "local"` (sin uso de API).
 
-Consulte [Memoria](/es/concepts/memory).
+Consulte [Memoria](/en/concepts/memory).
 
 ### 4) Herramienta de búsqueda web
 
@@ -92,7 +92,7 @@ gratuito renovable. El plan de Search cuesta 5 $ por cada 1000 solicitudes, por 
 1000 solicitudes/mes sin coste. Establezca su límite de uso en el panel de control de Brave
 para evitar cargos inesperados.
 
-Consulte [Herramientas web](/es/tools/web).
+Consulte [Herramientas web](/en/tools/web).
 
 ### 5) Herramienta de obtención web (Firecrawl)
 
@@ -102,7 +102,7 @@ Consulte [Herramientas web](/es/tools/web).
 
 Si Firecrawl no está configurado, la herramienta recurre a la obtención directa + legibilidad (sin API de pago).
 
-Consulte [Herramientas web](/es/tools/web).
+Consulte [Herramientas web](/en/tools/web).
 
 ### 6) Instantáneas de uso del proveedor (estado/salud)
 
@@ -112,21 +112,21 @@ Estas son típicamente llamadas de bajo volumen pero que aún así llegan a las 
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-Consulte [CLI de modelos](/es/cli/models).
+Consulte [CLI de modelos](/en/cli/models).
 
 ### 7) Resumen de salvaguarda de compactación
 
 La salvaguarda de compactación puede resumir el historial de la sesión usando el **modelo actual**, lo que
 invoca las API del proveedor cuando se ejecuta.
 
-Consulte [Gestión de sesiones + compactación](/es/reference/session-management-compaction).
+Consulte [Gestión de sesiones + compactación](/en/reference/session-management-compaction).
 
 ### 8) Escaneo / sondeo de modelo
 
 `openclaw models scan` puede sondear modelos de OpenRouter y usa `OPENROUTER_API_KEY` cuando
 el sondeo está habilitado.
 
-Vea [Modelos CLI](/es/cli/models).
+Vea [Modelos CLI](/en/cli/models).
 
 ### 9) Hablar (voz)
 
@@ -134,11 +134,11 @@ El modo de hablar puede invocar **ElevenLabs** cuando está configurado:
 
 - `ELEVENLABS_API_KEY` o `talk.apiKey`
 
-Vea [Modo de hablar](/es/nodes/talk).
+Vea [Modo de hablar](/en/nodes/talk).
 
 ### 10) Habilidades (APIs de terceros)
 
 Las habilidades pueden almacenar `apiKey` en `skills.entries.<name>.apiKey`. Si una habilidad usa esa clave para APIs
 externas, puede incurrir en costos según el proveedor de la habilidad.
 
-Vea [Habilidades](/es/tools/skills).
+Vea [Habilidades](/en/tools/skills).

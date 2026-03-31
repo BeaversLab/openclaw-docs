@@ -178,7 +178,7 @@ Notas:
 - Las nuevas plantillas de conectores dependen solo de SDK + runtime.
 - Los complementos externos pueden desarrollarse y actualizarse sin acceso al código fuente del núcleo.
 
-Documentos relacionados: [Plugins](/es/tools/plugin), [Canales](/es/channels/index), [Configuración](/es/gateway/configuration).
+Documentos relacionados: [Plugins](/en/tools/plugin), [Canales](/en/channels/index), [Configuración](/en/gateway/configuration).
 
 ## Costuras propiedad del canal implementadas
 

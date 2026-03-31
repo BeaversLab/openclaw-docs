@@ -65,10 +65,10 @@ OpenClaw reconoce dos formatos de complementos:
 | **Nativo**           | `openclaw.plugin.json` + módulo de tiempo de ejecución; se ejecuta en proceso | Complementos oficiales, paquetes npm de la comunidad   |
 | **Paquete (Bundle)** | Diseño compatible con Codex/Claude/Cursor; asignado a funciones de OpenClaw   | `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/` |
 
-Ambos aparecen bajo `openclaw plugins list`. Consulta [Plugin Bundles](/es/plugins/bundles) para detalles sobre paquetes.
+Ambos aparecen bajo `openclaw plugins list`. Consulte [Paquetes de complementos](/en/plugins/bundles) para obtener detalles sobre los paquetes.
 
-Si estás escribiendo un complemento nativo, comienza con [Building Plugins](/es/plugins/building-plugins)
-y la [Plugin SDK Overview](/es/plugins/sdk-overview).
+Si está escribiendo un complemento nativo, comience con [Creación de complementos](/en/plugins/building-plugins)
+y la [Descripción general del SDK de complementos](/en/plugins/sdk-overview).
 
 ## Complementos oficiales
 
@@ -76,12 +76,12 @@ y la [Plugin SDK Overview](/es/plugins/sdk-overview).
 
 | Complemento     | Paquete                | Documentación                            |
 | --------------- | ---------------------- | ---------------------------------------- |
-| Matriz          | `@openclaw/matrix`     | [Matrix](/es/channels/matrix)            |
-| Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/es/channels/msteams)  |
-| Nostr           | `@openclaw/nostr`      | [Nostr](/es/channels/nostr)              |
-| Llamada de voz  | `@openclaw/voice-call` | [Llamada de voz](/es/plugins/voice-call) |
-| Zalo            | `@openclaw/zalo`       | [Zalo](/es/channels/zalo)                |
-| Zalo Personal   | `@openclaw/zalouser`   | [Zalo Personal](/es/plugins/zalouser)    |
+| Matriz          | `@openclaw/matrix`     | [Matrix](/en/channels/matrix)            |
+| Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/en/channels/msteams)  |
+| Nostr           | `@openclaw/nostr`      | [Nostr](/en/channels/nostr)              |
+| Llamada de voz  | `@openclaw/voice-call` | [Llamada de voz](/en/plugins/voice-call) |
+| Zalo            | `@openclaw/zalo`       | [Zalo](/en/channels/zalo)                |
+| Zalo Personal   | `@openclaw/zalouser`   | [Zalo Personal](/en/plugins/zalouser)    |
 
 ### Core (incluido con OpenClaw)
 
@@ -90,20 +90,21 @@ y la [Plugin SDK Overview](/es/plugins/sdk-overview).
     `anthropic`, `byteplus`, `cloudflare-ai-gateway`, `github-copilot`, `google`,
     `huggingface`, `kilocode`, `kimi-coding`, `minimax`, `mistral`, `modelstudio`,
     `moonshot`, `nvidia`, `openai`, `opencode`, `opencode-go`, `openrouter`,
-    `qianfan`, `qwen-portal-auth`, `synthetic`, `together`, `venice`,
+    `qianfan`, `synthetic`, `together`, `venice`,
     `vercel-ai-gateway`, `volcengine`, `xiaomi`, `zai`
   </Accordion>
 
-<Accordion title="Plugins de memoria">- `memory-core` — búsqueda de memoria incluida (predeterminada vía `plugins.slots.memory`) - `memory-lancedb` — memoria a largo plazo bajo demanda con recuperación/captura automática (establecer `plugins.slots.memory = "memory-lancedb"`)</Accordion>
+<Accordion title="Complementos de memoria">- `memory-core` — búsqueda de memoria empaquetada (predeterminada mediante `plugins.slots.memory`) - `memory-lancedb` — memoria a largo plazo bajo demanda con recuperación/captura automáticas (establezca `plugins.slots.memory = "memory-lancedb"`)</Accordion>
 
-<Accordion title="Proveedores de voz (habilitados por defecto)">`elevenlabs`, `microsoft`</Accordion>
+<Accordion title="Proveedores de voz (habilitado por defecto)">`elevenlabs`, `microsoft`</Accordion>
 
   <Accordion title="Otros">
-    - `copilot-proxy` — puente VS Code Copilot Proxy (desactivado por defecto)
+    - `browser` — complemento del navegador incluido para la herramienta del navegador, `openclaw browser` CLI, método de puerta de enlace `browser.request`, tiempo de ejecución del navegador y servicio de control del navegador predeterminado (habilitado por defecto; deshabilítelo antes de reemplazarlo)
+    - `copilot-proxy` — puente de proxy de VS Code Copilot (deshabilitado por defecto)
   </Accordion>
 </AccordionGroup>
 
-¿Buscas plugins de terceros? Consulta [Plugins de la comunidad](/es/plugins/community).
+¿Busca complementos de terceros? Consulte [Complementos de la comunidad](/en/plugins/community).
 
 ## Configuración
 
@@ -130,11 +131,10 @@ y la [Plugin SDK Overview](/es/plugins/sdk-overview).
 | `slots`          | Selectores de ranura exclusivos (ej. `memory`, `contextEngine`) |
 | `entries.\<id\>` | Interruptores + configuración por plugin                        |
 
-Los cambios en la configuración **requieren un reinicio del gateway**. Si el Gateway se está ejecutando con vigilancia de configuración + reinicio en proceso habilitado (la ruta predeterminada `openclaw gateway`), ese
-reinicio generalmente se realiza automáticamente un momento después de que se escribe la configuración.
+Los cambios de configuración **requieren un reinicio de la puerta de enlace**. Si la puerta de enlace se está ejecutando con la supervisión de configuración + el reinicio en proceso habilitados (la ruta predeterminada `openclaw gateway`), ese reinicio generalmente se realiza automáticamente un momento después de que se escribe la configuración.
 
-<Accordion title="Estados de los plugins: desactivado vs. faltante vs. no válido">
-  - **Desactivado**: el plugin existe pero las reglas de habilitación lo desactivaron. La configuración se conserva. - **Faltante**: la configuración hace referencia a un id de plugin que el descubrimiento no encontró. - **No válido**: el plugin existe pero su configuración no coincide con el esquema declarado.
+<Accordion title="Estados de los complementos: deshabilitado frente a faltante frente a inválido">
+  - **Deshabilitado**: el complemento existe pero las reglas de habilitación lo desactivaron. La configuración se conserva. - **Faltante**: la configuración hace referencia a un id de complemento que el descubrimiento no encontró. - **Inválido**: el complemento existe pero su configuración no coincide con el esquema declarado.
 </Accordion>
 
 ## Descubrimiento y precedencia
@@ -142,15 +142,15 @@ reinicio generalmente se realiza automáticamente un momento después de que se 
 OpenClaw busca plugins en este orden (gana la primera coincidencia):
 
 <Steps>
-  <Step title="Config paths">
+  <Step title="Rutas de configuración">
     `plugins.load.paths` — rutas explícitas de archivo o directorio.
   </Step>
 
-  <Step title="Workspace extensions">
+  <Step title="Extensiones del espacio de trabajo">
     `\<workspace\>/.openclaw/extensions/*.ts` y `\<workspace\>/.openclaw/extensions/*/index.ts`.
   </Step>
 
-<Step title="Global extensions">`~/.openclaw/extensions/*.ts` y `~/.openclaw/extensions/*/index.ts`.</Step>
+<Step title="Extensiones globales">`~/.openclaw/extensions/*.ts` y `~/.openclaw/extensions/*/index.ts`.</Step>
 
   <Step title="Bundled plugins">
     Incluidos con OpenClaw. Muchos están habilitados por defecto (proveedores de modelos, voz).
@@ -161,7 +161,7 @@ OpenClaw busca plugins en este orden (gana la primera coincidencia):
 ### Reglas de habilitación
 
 - `plugins.enabled: false` deshabilita todos los complementos
-- `plugins.deny` siempre prevalece sobre permitir
+- `plugins.deny` siempre tiene prioridad sobre permitir
 - `plugins.entries.\<id\>.enabled: false` deshabilita ese complemento
 - Los complementos originados en el espacio de trabajo están **deshabilitados por defecto** (deben ser habilitados explícitamente)
 - Los complementos incluidos siguen el conjunto predeterminado de activación incorporado a menos que se anule
@@ -182,10 +182,10 @@ Algunas categorías son exclusivas (solo una activa a la vez):
 }
 ```
 
-| Ranura          | Lo que controla               | Predeterminado         |
-| --------------- | ----------------------------- | ---------------------- |
-| `memory`        | Complemento de memoria activa | `memory-core`          |
-| `contextEngine` | Motor de contexto activo      | `legacy` (incorporado) |
+| Ranura          | Lo que controla               | Predeterminado       |
+| --------------- | ----------------------------- | -------------------- |
+| `memory`        | Complemento de memoria activa | `memory-core`        |
+| `contextEngine` | Motor de contexto activo      | `legacy` (integrado) |
 
 ## Referencia de CLI
 
@@ -207,7 +207,7 @@ openclaw plugins enable <id>
 openclaw plugins disable <id>
 ```
 
-Consulte la [referencia de CLI de `openclaw plugins`](/es/cli/plugins) para obtener detalles completos.
+Consulte la [referencia de la CLI `openclaw plugins`](/en/cli/plugins) para obtener todos los detalles.
 
 ## Resumen de la API de complementos
 
@@ -250,18 +250,18 @@ Métodos de registro comunes:
 
 Comportamiento de protección de gancho para ganchos de ciclo de vida tipados:
 
-- `before_tool_call`: `{ block: true }` es terminal; se omiten los manejadores de menor prioridad.
-- `before_tool_call`: `{ block: false }` es una no-op y no borra un bloqueo anterior.
-- `message_sending`: `{ cancel: true }` es terminal; se omiten los manejadores de menor prioridad.
-- `message_sending`: `{ cancel: false }` es una no-op y no borra una cancelación anterior.
+- `before_tool_call`: `{ block: true }` es terminal; los controladores de menor prioridad se omiten.
+- `before_tool_call`: `{ block: false }` es una operación nula y no borra un bloque anterior.
+- `message_sending`: `{ cancel: true }` es terminal; los controladores de menor prioridad se omiten.
+- `message_sending`: `{ cancel: false }` es una operación nula y no borra una cancelación anterior.
 
-Para ver el comportamiento completo de los ganchos tipados, consulte [Resumen del SDK](/es/plugins/sdk-overview#hook-decision-semantics).
+Para conocer el comportamiento completo de los hooks tipados, consulte [Descripción general del SDK](/en/plugins/sdk-overview#hook-decision-semantics).
 
 ## Relacionado
 
-- [Construcción de complementos](/es/plugins/building-plugins) — cree su propio complemento
-- [Paquetes de complementos](/es/plugins/bundles) — compatibilidad con paquetes Codex/Claude/Cursor
-- [Manifiesto del complemento](/es/plugins/manifest) — esquema de manifiesto
-- [Registro de herramientas](/es/plugins/building-plugins#registering-agent-tools) — agregar herramientas de agente en un complemento
-- [Aspectos internos del complemento](/es/plugins/architecture) — modelo de capacidad y canalización de carga
-- [Complementos comunitarios](/es/plugins/community) — listados de terceros
+- [Construcción de plugins](/en/plugins/building-plugins) — crear su propio plugin
+- [Paquetes de plugins](/en/plugins/bundles) — compatibilidad con paquetes de Codex/Claude/Cursor
+- [Manifiesto del plugin](/en/plugins/manifest) — esquema del manifiesto
+- [Registro de herramientas](/en/plugins/building-plugins#registering-agent-tools) — agregar herramientas de agente en un plugin
+- [Aspectos internos del plugin](/en/plugins/architecture) — modelo de capacidades y canalización de carga
+- [Complementos de la comunidad](/en/plugins/community) — listados de terceros

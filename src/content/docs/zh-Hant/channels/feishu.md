@@ -79,7 +79,7 @@ Lark（全球）租戶應使用 [https://open.larksuite.com/app](https://open.la
 2. 填寫應用程式名稱和描述
 3. 選擇應用程式圖示
 
-![建立企業應用程式](/images/feishu-step2-create-app.png)
+![Create enterprise app](/images/feishu-step2-create-app.png)
 
 ### 3. 複製憑證
 
@@ -90,7 +90,7 @@ Lark（全球）租戶應使用 [https://open.larksuite.com/app](https://open.la
 
 ❗ **重要：** 請勿公開 App Secret。
 
-![取得憑證](/images/feishu-step3-credentials.png)
+![Get credentials](/images/feishu-step3-credentials.png)
 
 ### 4. 設定權限
 
@@ -124,7 +124,7 @@ Lark（全球）租戶應使用 [https://open.larksuite.com/app](https://open.la
 }
 ```
 
-![設定權限](/images/feishu-step4-permissions.png)
+![Configure permissions](/images/feishu-step4-permissions.png)
 
 ### 5. 啟用機器人功能
 
@@ -133,7 +133,7 @@ Lark（全球）租戶應使用 [https://open.larksuite.com/app](https://open.la
 1. 啟用機器人功能
 2. 設定機器人名稱
 
-![啟用機器人能力](/images/feishu-step5-bot-capability.png)
+![Enable bot capability](/images/feishu-step5-bot-capability.png)
 
 ### 6. 配置事件訂閱
 
@@ -149,7 +149,7 @@ Lark（全球）租戶應使用 [https://open.larksuite.com/app](https://open.la
 
 ⚠️ 如果閘道未運行，長連接設置可能會保存失敗。
 
-![配置事件訂閱](/images/feishu-step6-event-subscription.png)
+![Configure event subscription](/images/feishu-step6-event-subscription.png)
 
 ### 7. 發布應用
 
@@ -204,7 +204,7 @@ openclaw channels add
 
 下方的截圖顯示了在哪裡可以找到 **驗證令牌**。**加密密鑰** 列在同一個 **加密策略** 部分中。
 
-![驗證令牌位置](/images/feishu-verification-token.png)
+![Verification Token location](/images/feishu-verification-token.png)
 
 ### 通過環境變量配置
 

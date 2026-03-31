@@ -163,7 +163,7 @@ El Gateway anuncia `_openclaw-gw._tcp` en `local.`. La app de iOS los lista auto
 ### Tailnet (entre redes)
 
 Si mDNS está bloqueado, usa una zona DNS-SD unicast (elige un dominio; ejemplo: `openclaw.internal.`) y DNS dividido de Tailscale.
-Ver [Bonjour](/es/gateway/bonjour) para el ejemplo de CoreDNS.
+Ver [Bonjour](/en/gateway/bonjour) para el ejemplo de CoreDNS.
 
 ### Host/puerto manual
 
@@ -202,12 +202,12 @@ openclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"ma
 ## Errores comunes
 
 - `NODE_BACKGROUND_UNAVAILABLE`: trae la app de iOS al primer plano (los comandos canvas/camera/pantalla lo requieren).
-- `A2UI_HOST_NOT_CONFIGURED`: el Gateway no anunció una URL de host de canvas; verifica `canvasHost` en [configuración del Gateway](/es/gateway/configuration).
+- `A2UI_HOST_NOT_CONFIGURED`: el Gateway no anunció una URL de host de canvas; verifica `canvasHost` en [configuración del Gateway](/en/gateway/configuration).
 - El aviso de emparejamiento nunca aparece: ejecuta `openclaw devices list` y aprueba manualmente.
 - La reconexión falla después de reinstalar: el token de emparejamiento del Keychain se borró; vuelve a emparejar el nodo.
 
 ## Documentos relacionados
 
-- [Emparejamiento](/es/channels/pairing)
-- [Descubrimiento](/es/gateway/discovery)
-- [Bonjour](/es/gateway/bonjour)
+- [Emparejamiento](/en/channels/pairing)
+- [Descubrimiento](/en/gateway/discovery)
+- [Bonjour](/en/gateway/bonjour)

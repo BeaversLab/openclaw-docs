@@ -28,7 +28,7 @@ openclaw plugins install ./extensions/nextcloud-talk
 Si eliges Nextcloud Talk durante la configuración y se detecta una comprobación de git,
 OpenClaw ofrecerá la ruta de instalación local automáticamente.
 
-Detalles: [Plugins](/es/tools/plugin)
+Detalles: [Plugins](/en/tools/plugin)
 
 ## Configuración rápida (principiante)
 
@@ -108,7 +108,7 @@ Configuración mínima:
 
 ## Referencia de configuración (Nextcloud Talk)
 
-Configuración completa: [Configuration](/es/gateway/configuration)
+Configuración completa: [Configuration](/en/gateway/configuration)
 
 Opciones del proveedor:
 

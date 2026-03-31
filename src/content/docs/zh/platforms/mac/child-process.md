@@ -21,7 +21,7 @@ macOS 应用程序默认情况下 **通过 launchd 管理 Gateway 网关**，而
 
 常用命令：
 
-```exec
+```bash
 launchctl kickstart -k gui/$UID/ai.openclaw.gateway
 launchctl bootout gui/$UID/ai.openclaw.gateway
 ```
@@ -36,7 +36,7 @@ launchctl bootout gui/$UID/ai.openclaw.gateway
 
 如果存在标记，`scripts/restart-mac.sh` 的签名运行会清除此覆盖。要手动重置：
 
-```exec
+```bash
 rm ~/.openclaw/disable-launchagent
 ```
 

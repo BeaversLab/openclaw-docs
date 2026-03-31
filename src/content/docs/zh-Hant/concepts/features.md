@@ -10,23 +10,23 @@ title: "功能"
 ## 亮點
 
 <Columns>
-  <Card title="Channels" icon="message-square">
-    透過單一閘道使用 WhatsApp、Telegram、Discord 和 iMessage。
+  <Card title="頻道" icon="message-square">
+    使用單一閘道連接 WhatsApp、Telegram、Discord 和 iMessage。
   </Card>
-  <Card title="Plugins" icon="plug">
-    透過擴充功能新增 Mattermost 和更多支援。
+  <Card title="外掛程式" icon="plug">
+    透過擴充功能新增 Mattermost 等。
   </Card>
-  <Card title="Routing" icon="route">
+  <Card title="路由" icon="route">
     具有隔離會話的多代理程式路由。
   </Card>
-  <Card title="Media" icon="image">
-    圖片、音訊和文件的輸入與輸出。
+  <Card title="媒體" icon="image">
+    影像、音訊和文件的輸入與輸出。
   </Card>
-  <Card title="Apps and UI" icon="monitor">
-    Web Control UI 和 macOS 伴隨應用程式。
+  <Card title="應用程式與介面" icon="monitor">
+    Web 控制介面與 macOS 伴隨應用程式。
   </Card>
-  <Card title="Mobile nodes" icon="smartphone">
-    iOS 和 Android 節點，具備配對、語音/聊天和豐富的裝置指令。
+  <Card title="行動裝置節點" icon="smartphone">
+    具備配對、語音/聊天及豐富裝置指令的 iOS 與 Android 節點。
   </Card>
 </Columns>
 
@@ -43,7 +43,7 @@ title: "功能"
 
 - 內嵌代理程式執行時，支援工具串流
 - 多代理程式路由，針對每個工作區或發送者提供隔離會話
-- 會話：直接聊天會合併為共用的 `main`；群組則保持隔離
+- Sessions：直接聊天會合併至共用的 `main`；群組則彼此獨立
 - 長回應的串流和分塊
 
 **驗證與提供者：**

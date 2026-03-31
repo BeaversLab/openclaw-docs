@@ -26,7 +26,7 @@ openclaw update --tag main
 openclaw update --dry-run   # preview without applying
 ```
 
-Consulta [Canales de desarrollo](/es/install/development-channels) para conocer la semántica de los canales.
+Consulta [Canales de desarrollo](/en/install/development-channels) para conocer la semántica de los canales.
 
 ## Alternativa: volver a ejecutar el instalador
 
@@ -82,7 +82,7 @@ El gateway también registra un consejo de actualización al iniciar (desactíva
 openclaw doctor
 ```
 
-Migra la configuración, audita las políticas de DM y comprueba el estado del gateway. Detalles: [Doctor](/es/gateway/doctor)
+Migra la configuración, audita las políticas de DM y comprueba el estado del gateway. Detalles: [Doctor](/en/gateway/doctor)
 
 ### Reiniciar el gateway
 
@@ -124,5 +124,5 @@ Para volver a la última versión: `git checkout main && git pull`.
 ## Si estás atascado
 
 - Ejecuta `openclaw doctor` de nuevo y lee la salida cuidadosamente.
-- Consulta: [Solución de problemas](/es/gateway/troubleshooting)
+- Consulta: [Solución de problemas](/en/gateway/troubleshooting)
 - Pregunta en Discord: [https://discord.gg/clawd](https://discord.gg/clawd)

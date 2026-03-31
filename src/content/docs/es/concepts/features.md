@@ -11,10 +11,10 @@ title: "Características"
 
 <Columns>
   <Card title="Canales" icon="message-square">
-    WhatsApp, Telegram, Discord y iMessage con una única puerta de enlace.
+    WhatsApp, Telegram, Discord e iMessage con una única pasarela.
   </Card>
-  <Card title="Plugins" icon="plug">
-    Añade Mattermost y más con extensiones.
+  <Card title="Complementos" icon="plug">
+    Añada Mattermost y mucho más con extensiones.
   </Card>
   <Card title="Enrutamiento" icon="route">
     Enrutamiento multiagente con sesiones aisladas.
@@ -26,7 +26,7 @@ title: "Características"
     Interfaz de control web y aplicación complementaria para macOS.
   </Card>
   <Card title="Nodos móviles" icon="smartphone">
-    Nodos iOS y Android con emparejamiento, voz/chat y comandos de dispositivo enriquecidos.
+    Nodos iOS y Android con emparejamiento, voz/chat y comandos enriquecidos de dispositivo.
   </Card>
 </Columns>
 
@@ -43,7 +43,7 @@ title: "Características"
 
 - Tiempo de ejecución del agente integrado con transmisión de herramientas
 - Enrutamiento multiagente con sesiones aisladas por espacio de trabajo o remitente
-- Sesiones: los chats directos se colapsan en un `main` compartido; los grupos están aislados
+- Sesiones: los chats directos se contraen en una `main` compartida; los grupos están aislados
 - Transmisión y fragmentación para respuestas largas
 
 **Autenticación y proveedores:**

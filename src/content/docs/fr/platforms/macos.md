@@ -209,13 +209,13 @@ components can talk to a remote Gateway as if it were on localhost.
 - **Comportement:** pas de port local aléatoire; l'application réutilise un tunnel sain existant ou le redémarre si nécessaire.
 - **Forme SSH:** `ssh -N -L <local>:127.0.0.1:<remote>` avec les options BatchMode +
   ExitOnForwardFailure + keepalive.
-- **Rapport d'IP:** le tunnel SSH utilise le bouclage, donc la passerelle verra l'IP du nœud comme `127.0.0.1`. Utilisez le transport **Direct (ws/wss)** si vous souhaitez que l'IP réelle du client apparaisse (voir [macOS accès à distance](/fr/platforms/mac/remote)).
+- **Rapport d'IP:** le tunnel SSH utilise le bouclage, donc la passerelle verra l'IP du nœud comme `127.0.0.1`. Utilisez le transport **Direct (ws/wss)** si vous souhaitez que l'IP réelle du client apparaisse (voir [macOS accès à distance](/en/platforms/mac/remote)).
 
-Pour les étapes de configuration, voir [macOS accès à distance](/fr/platforms/mac/remote). Pour les détails du protocole, voir [Protocole Gateway](/fr/gateway/protocol).
+Pour les étapes de configuration, voir [macOS accès à distance](/en/platforms/mac/remote). Pour les détails du protocole, voir [Protocole Gateway](/en/gateway/protocol).
 
 ## Documentation connexe
 
-- [Manuel de procédures Gateway](/fr/gateway)
-- [Gateway (macOS)](/fr/platforms/mac/bundled-gateway)
-- [Autorisations macOS](/fr/platforms/mac/permissions)
-- [Canvas](/fr/platforms/mac/canvas)
+- [Manuel de procédures Gateway](/en/gateway)
+- [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
+- [Autorisations macOS](/en/platforms/mac/permissions)
+- [Canvas](/en/platforms/mac/canvas)

@@ -15,13 +15,13 @@ Il est utilisé dans deux cas :
 1. **Couplage DM** (qui est autorisé à parler au bot)
 2. **Couplage de nœuds** (quels appareils/nœuds sont autorisés à rejoindre le réseau passerelle)
 
-Contexte de sécurité : [Sécurité](/fr/gateway/security)
+Contexte de sécurité : [Sécurité](/en/gateway/security)
 
 ## 1) Couplage DM (accès aux messages entrants)
 
 Lorsqu'un canal est configuré avec la stratégie de DM `pairing`, les expéditeurs inconnus reçoivent un code court et leur message n'est **pas traité** tant que vous ne l'avez pas approuvé.
 
-Les stratégies DM par défaut sont documentées dans : [Sécurité](/fr/gateway/security)
+Les politiques DM par défaut sont documentées dans : [Sécurité](/en/gateway/security)
 
 Codes de couplage :
 
@@ -36,7 +36,7 @@ openclaw pairing list telegram
 openclaw pairing approve telegram <CODE>
 ```
 
-Canaux pris en charge : `bluebubbles`, `discord`, `feishu`, `googlechat`, `imessage`, `irc`, `line`, `matrix`, `mattermost`, `msteams`, `nextcloud-talk`, `nostr`, `signal`, `slack`, `synology-chat`, `telegram`, `twitch`, `whatsapp`, `zalo`, `zalouser`.
+Canaux pris en charge : `bluebubbles`, `discord`, `feishu`, `googlechat`, `imessage`, `irc`, `line`, `matrix`, `mattermost`, `msteams`, `nextcloud-talk`, `nostr`, `openclaw-weixin`, `signal`, `slack`, `synology-chat`, `telegram`, `twitch`, `whatsapp`, `zalo`, `zalouser`.
 
 ### Où se trouve l'état
 
@@ -56,22 +56,22 @@ Traitez-les comme sensibles (ils contrôlent l'accès à votre assistant).
 
 ## 2) Couplage d'appareils nœuds (nœuds iOS/Android/macOS/headless)
 
-Les nœuds se connectent à la Gateway en tant qu'**appareils** avec `role: node`. La Gateway crée une demande d'appariement d'appareil qui doit être approuvée.
+Les nœuds se connectent au Gateway en tant que **périphériques** avec `role: node`. Le Gateway crée une demande de jumelage de périphérique qui doit être approuvée.
 
 ### Appairer via Telegram (recommandé pour iOS)
 
-Si vous utilisez le plugin `device-pair`, vous pouvez effectuer le premier appariement d'appareil entièrement depuis Telegram :
+Si vous utilisez le plugin `device-pair`, vous pouvez effectuer le jumelage initial du périphérique entièrement depuis Telegram :
 
 1. Sur Telegram, envoyez un message à votre bot : `/pair`
 2. Le bot répond avec deux messages : un message d'instruction et un message de **code de configuration** séparé (facile à copier/coller dans Telegram).
 3. Sur votre téléphone, ouvrez l'application OpenClaw iOS → Paramètres → Gateway.
 4. Collez le code de configuration et connectez-vous.
-5. De retour sur Telegram : `/pair pending` (examinez les ID de demande, le rôle et les portées), puis approuvez.
+5. De retour sur Telegram : `/pair pending` (vérifiez les ID de demande, le rôle et les portées), puis approuvez.
 
 Le code de configuration est une charge utile JSON encodée en base64 qui contient :
 
-- `url` : l'URL WebSocket de la Gateway (`ws://...` ou `wss://...`)
-- `bootstrapToken` : un jeton d'amorçage à courte durée de vie pour un seul appareil, utilisé pour la poignée de main d'appariement initiale
+- `url` : l'URL WebSocket du Gateway (`ws://...` ou `wss://...`)
+- `bootstrapToken` : un jeton d'amorçage à courte durée de vie pour un seul périphérique, utilisé pour la poignée de main de jumelage initiale
 
 Traitez le code de configuration comme un mot de passe tant qu'il est valide.
 
@@ -83,29 +83,29 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-Si le même appareil réessaie avec des détails d'authentification différents (par exemple un rôle, des portées ou une clé publique différents), la demande en attente précédente est remplacée et un nouveau `requestId` est créé.
+Si le même appareil réessaie avec des détails d'authentification différents (par exemple un rôle/une portée/une clé publique différent), la demande en attente précédente est remplacée et un nouveau `requestId` est créé.
 
 ### Stockage de l'état de jumelage des nœuds
 
 Stocké sous `~/.openclaw/devices/` :
 
-- `pending.json` (à courte durée de vie ; les demandes en attente expirent)
+- `pending.json` (de courte durée ; les demandes en attente expirent)
 - `paired.json` (appareils appariés + jetons)
 
 ### Notes
 
-- L'API `node.pair.*` héritée (CLI : `openclaw nodes pending/approve`) est un
-  magasin de jumelage distinct appartenant à la passerelle. Les nœuds WS nécessitent toujours un jumelage d'appareil.
+- L'ancien `node.pair.*` API (CLI : `openclaw nodes pending/approve`) est un
+  magasin de jumelage distinct détenu par la passerelle. Les nœuds WS nécessitent toujours le jumelage d'appareil.
 
 ## Documentation connexe
 
-- Modèle de sécurité + injection de prompt : [Sécurité](/fr/gateway/security)
-- Mise à jour sécurisée (exécuter doctor) : [Mise à jour](/fr/install/updating)
+- Modèle de sécurité + injection rapide : [Sécurité](/en/gateway/security)
+- Mise à jour en toute sécurité (exécuter le docteur) : [Mise à jour](/en/install/updating)
 - Configurations des canaux :
-  - Telegram : [Telegram](/fr/channels/telegram)
-  - WhatsApp : [WhatsApp](/fr/channels/whatsapp)
-  - Signal : [Signal](/fr/channels/signal)
-  - BlueBubbles (iMessage) : [BlueBubbles](/fr/channels/bluebubbles)
-  - iMessage (hérité) : [iMessage](/fr/channels/imessage)
-  - Discord : [Discord](/fr/channels/discord)
-  - Slack : [Slack](/fr/channels/slack)
+  - Telegram : [Telegram](/en/channels/telegram)
+  - WhatsApp : [WhatsApp](/en/channels/whatsapp)
+  - Signal : [Signal](/en/channels/signal)
+  - BlueBubbles (iMessage) : [BlueBubbles](/en/channels/bluebubbles)
+  - iMessage (ancien) : [iMessage](/en/channels/imessage)
+  - Discord : [Discord](/en/channels/discord)
+  - Slack : [Slack](/en/channels/slack)

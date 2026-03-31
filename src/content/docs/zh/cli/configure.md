@@ -15,8 +15,8 @@ title: "configure"
 
 相关：
 
-- Gateway(网关) 网关配置参考：[配置](/zh/gateway/configuration)
-- 配置 CLI：[Config](/zh/cli/config)
+- Gateway(网关) 网关配置参考：[配置](/en/gateway/configuration)
+- 配置 CLI：[Config](/en/cli/config)
 
 备注：
 

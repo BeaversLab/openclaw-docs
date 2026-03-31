@@ -1,5 +1,5 @@
 ---
-summary: "Autenticación del modelo: OAuth, claves de API y token de configuración"
+summary: "Autenticación de modelos: OAuth, claves de API y token de configuración"
 read_when:
   - Debugging model auth or OAuth expiry
   - Documenting authentication or credential storage
@@ -10,10 +10,10 @@ title: "Autenticación"
 
 OpenClaw admite OAuth y claves de API para proveedores de modelos. Para hosts de puerta de enlace siempre activos, las claves de API suelen ser la opción más predecible. Los flujos de Suscripción/OAuth también son compatibles cuando coinciden con el modelo de cuenta de su proveedor.
 
-Consulte [/concepts/oauth](/es/concepts/oauth) para ver el flujo de OAuth completo y el diseño de almacenamiento.
-Para la autenticación basada en SecretRef (proveedores `env`/`file`/`exec`), consulte [Gestión de secretos](/es/gateway/secrets).
-Para las reglas de elegibilidad de credenciales/códigos de razón utilizadas por `models status --probe`, consulte
-[Semántica de credenciales de autenticación](/es/auth-credential-semantics).
+Consulte [/concepts/oauth](/en/concepts/oauth) para ver el flujo de OAuth completo y el diseño de almacenamiento.
+Para la autenticación basada en SecretRef (proveedores `env`/`file`/`exec`), consulte [Gestión de secretos](/en/gateway/secrets).
+Para ver las reglas de elegibilidad de credenciales/códigos de razón utilizadas por `models status --probe`, consulte
+[Semántica de credenciales de autenticación](/en/auth-credential-semantics).
 
 ## Configuración recomendada (clave de API, cualquier proveedor)
 
@@ -22,14 +22,14 @@ Específicamente para Anthropic, la autenticación con clave de API es el camino
 sobre la autenticación con token de configuración de suscripción.
 
 1. Cree una clave de API en la consola de su proveedor.
-2. Póngala en el **host de la puerta de enlace** (la máquina que ejecuta `openclaw gateway`).
+2. Colóquela en el **host de la puerta de enlace** (la máquina que ejecuta `openclaw gateway`).
 
 ```bash
 export <PROVIDER>_API_KEY="..."
 openclaw models status
 ```
 
-3. Si la puerta de enlace se ejecuta bajo systemd/launchd, prefiera poner la clave en
+3. Si la Puerta de enlace se ejecuta bajo systemd/launchd, es preferible colocar la clave en
    `~/.openclaw/.env` para que el demonio pueda leerla:
 
 ```bash
@@ -45,10 +45,10 @@ openclaw models status
 openclaw doctor
 ```
 
-Si prefieres no gestionar las variables de entorno tú mismo, el proceso de incorporación puede almacenar
-claves API para uso del demonio: `openclaw onboard`.
+Si prefiere no gestionar las variables de entorno usted mismo, el proceso de incorporación puede almacenar
+claves de API para uso del demonio: `openclaw onboard`.
 
-Consulte [Ayuda](/es/help) para obtener detalles sobre la herencia de entorno (`env.shellEnv`,
+Consulte [Ayuda](/en/help) para obtener detalles sobre la herencia de variables de entorno (`env.shellEnv`,
 `~/.openclaw/.env`, systemd/launchd).
 
 ## Anthropic: token de configuración (autenticación de suscripción)
@@ -80,7 +80,7 @@ This credential is only authorized for use with Claude Code and cannot be used f
 
 ...use una clave de API de Anthropic en su lugar.
 
-<Warning>La compatibilidad con el token de configuración de Anthropic es solo técnica. Anthropic ha bloqueado algún uso de suscripción fuera de Claude Code en el pasado. Úselo solo si decide que el riesgo de política es aceptable y verifique los términos actuales de Anthropic usted mismo.</Warning>
+<Warning>El soporte del token de configuración de Anthropic es solo compatibilidad técnica. Anthropic ha bloqueado algún uso de suscripción fuera de Claude Code en el pasado. Úselo solo si decide que el riesgo de la política es aceptable y verifique los términos actuales de Anthropic usted mismo.</Warning>
 
 Entrada manual de token (cualquier proveedor; escribe `auth-profiles.json` + actualiza la configuración):
 
@@ -94,16 +94,36 @@ Las referencias de perfil de autenticación también son compatibles con credenc
 - Las credenciales `api_key` pueden usar `keyRef: { source, provider, id }`
 - Las credenciales `token` pueden usar `tokenRef: { source, provider, id }`
 
-Verificación compatible con automatización (sale con `1` cuando caduca/falta, `2` cuando está por caducar):
+Verificación compatible con automatización (sale `1` cuando caduca/falta, `2` cuando está por caducar):
 
 ```bash
 openclaw models status --check
 ```
 
 Los scripts de operaciones opcionales (systemd/Termux) están documentados aquí:
-[/automation/auth-monitoring](/es/automation/auth-monitoring)
+[/automation/auth-monitoring](/en/automation/auth-monitoring)
 
 > `claude setup-token` requiere una TTY interactiva.
+
+## Anthropic: migración de Claude CLI
+
+Si Claude CLI ya está instalado y ha iniciado sesión en el host de la puerta de enlace, puede
+cambiar una configuración existente de Anthropic al backend de CLI en lugar de pegar un
+token de configuración:
+
+```bash
+openclaw models auth login --provider anthropic --method cli --set-default
+```
+
+Esto mantiene sus perfiles de autenticación de Anthropic existentes para la reversión, pero cambia la
+selección del modelo predeterminado a `claude-cli/...` y añade entradas de lista blanca de Claude CLI
+coincidentes bajo `agents.defaults.models`.
+
+Acceso directo de incorporación:
+
+```bash
+openclaw onboard --auth-choice anthropic-cli
+```
 
 ## Verificar el estado de autenticación del modelo
 
@@ -112,7 +132,7 @@ openclaw models status
 openclaw doctor
 ```
 
-## Comportamiento de rotación de claves de API (puerta de enlace)
+## Comportamiento de la rotación de claves de API (puerta de enlace)
 
 Algunos proveedores admiten reintentar una solicitud con claves alternativas cuando una llamada a la API
 alcanza un límite de velocidad del proveedor.
@@ -122,7 +142,7 @@ alcanza un límite de velocidad del proveedor.
   - `<PROVIDER>_API_KEYS`
   - `<PROVIDER>_API_KEY`
   - `<PROVIDER>_API_KEY_*`
-- Los proveedores de Google también incluyen `GOOGLE_API_KEY` como un respaldo adicional.
+- Los proveedores de Google también incluyen `GOOGLE_API_KEY` como alternativa adicional.
 - La misma lista de claves se deduplica antes de su uso.
 - OpenClaw reintenta con la siguiente clave solo para errores de límite de velocidad (por ejemplo
   `429`, `rate_limit`, `quota`, `resource exhausted`).
@@ -133,7 +153,7 @@ alcanza un límite de velocidad del proveedor.
 
 ### Por sesión (comando de chat)
 
-Use `/model <alias-or-id>@<profileId>` para fijar una credencial de proveedor específica para la sesión actual (ids de perfil de ejemplo: `anthropic:default`, `anthropic:work`).
+Use `/model <alias-or-id>@<profileId>` para fijar una credencial específica del proveedor para la sesión actual (ejemplos de IDs de perfil: `anthropic:default`, `anthropic:work`).
 
 Use `/model` (o `/model list`) para un selector compacto; use `/model status` para la vista completa (candidatos + siguiente perfil de autenticación, más detalles del endpoint del proveedor cuando esté configurado).
 
@@ -147,14 +167,14 @@ openclaw models auth order set --provider anthropic anthropic:default
 openclaw models auth order clear --provider anthropic
 ```
 
-Use `--agent <id>` para apuntar a un agente específico; omítalo para usar el agente predeterminado configurado.
+Use `--agent <id>` para dirigirse a un agente específico; omítalo para usar el agente predeterminado configurado.
 
 ## Solución de problemas
 
 ### "No se encontraron credenciales"
 
 Si falta el perfil de token de Anthropic, ejecute `claude setup-token` en el
-**host de puerta de enlace** y luego verifique nuevamente:
+**host de la puerta de enlace**, luego verifique de nuevo:
 
 ```bash
 openclaw models status

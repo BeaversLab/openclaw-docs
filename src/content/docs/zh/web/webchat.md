@@ -50,7 +50,7 @@ title: "WebChat"
 
 ## 配置参考 (WebChat)
 
-完整配置：[Configuration](/zh/gateway/configuration)
+完整配置：[Configuration](/en/gateway/configuration)
 
 渠道选项：
 
@@ -60,6 +60,6 @@ title: "WebChat"
 
 - `gateway.port`, `gateway.bind`: WebSocket 主机/端口。
 - `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password`: WebSocket 身份验证 (令牌/密码)。
-- `gateway.auth.mode: "trusted-proxy"`: 用于浏览器客户端的反向代理身份验证 (请参阅 [Trusted Proxy Auth](/zh/gateway/trusted-proxy-auth))。
+- `gateway.auth.mode: "trusted-proxy"`: 用于浏览器客户端的反向代理身份验证 (请参阅 [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth))。
 - `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password`: 远程网关目标。
 - `session.*`: 会话存储和主密钥默认值。

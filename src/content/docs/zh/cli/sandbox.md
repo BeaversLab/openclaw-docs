@@ -190,6 +190,6 @@ openclaw sandbox recreate --agent alfred
 
 ## 另请参阅
 
-- [沙箱文档](/zh/gateway/sandboxing)
-- [代理配置](/zh/concepts/agent-workspace)
-- [Doctor 命令](/zh/gateway/doctor) - 检查沙箱设置
+- [沙箱文档](/en/gateway/sandboxing)
+- [代理配置](/en/concepts/agent-workspace)
+- [Doctor 命令](/en/gateway/doctor) - 检查沙箱设置

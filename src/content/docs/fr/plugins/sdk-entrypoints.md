@@ -13,7 +13,7 @@ read_when:
 Chaque plugin exporte un objet d'entrée par défaut. Le SDK fournit trois assistants pour
 les créer.
 
-<Tip>**Vous cherchez un guide pas à pas ?** Consultez [Plugins de channel](/fr/plugins/sdk-channel-plugins) ou [Plugins de provider](/fr/plugins/sdk-provider-plugins) pour des guides détaillés.</Tip>
+<Tip>**Vous cherchez un guide pas à pas ?** Voir [Channel Plugins](/en/plugins/sdk-channel-plugins) ou [Provider Plugins](/en/plugins/sdk-provider-plugins) pour des guides détaillés.</Tip>
 
 ## `definePluginEntry`
 
@@ -104,9 +104,7 @@ import { defineSetupPluginEntry } from "openclaw/plugin-sdk/core";
 export default defineSetupPluginEntry(myChannelPlugin);
 ```
 
-OpenClaw charge ceci à la place de l'entrée complète lorsqu'un canal est désactivé,
-non configuré, ou lorsque le chargement différé est activé. Voir
-[Setup and Config](/fr/plugins/sdk-setup#setup-entry) pour savoir quand cela est important.
+OpenClaw charge cela à la place de l'entrée complète lorsqu'un canal est désactivé, non configuré, ou lorsque le chargement différé est activé. Voir [Setup and Config](/en/plugins/sdk-setup#setup-entry) pour savoir quand cela est important.
 
 ## Mode d'enregistrement
 
@@ -147,8 +145,8 @@ Utilisez `openclaw plugins inspect <id>` pour voir la forme d'un plugin.
 
 ## Connexes
 
-- [SDK Overview](/fr/plugins/sdk-overview) — API d'enregistrement et référence des sous-chemins
-- [Runtime Helpers](/fr/plugins/sdk-runtime) — `api.runtime` et `createPluginRuntimeStore`
-- [Setup and Config](/fr/plugins/sdk-setup) — manifeste, entrée de configuration, chargement différé
-- [Plugins de canal](/fr/plugins/sdk-channel-plugins) — construction de l'objet `ChannelPlugin`
-- [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins) — enregistrement et hooks du fournisseur
+- [Vue d'ensemble du SDK](/en/plugins/sdk-overview) — référence de l'API d'enregistrement et des sous-chemins
+- [Assistants d'exécution](/en/plugins/sdk-runtime) — `api.runtime` et `createPluginRuntimeStore`
+- [Installation et configuration](/en/plugins/sdk-setup) — manifeste, point d'entrée de configuration, chargement différé
+- [Plugins de canal](/en/plugins/sdk-channel-plugins) — construction de l'objet `ChannelPlugin`
+- [Provider Plugins](/en/plugins/sdk-provider-plugins) — inscription et hooks du provider

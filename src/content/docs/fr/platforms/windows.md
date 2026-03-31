@@ -15,8 +15,8 @@ Les applications compagnons natives Windows sont prévues.
 
 ## WSL2 (recommandé)
 
-- [Getting Started](/fr/start/getting-started) (à utiliser à l'intérieur de WSL)
-- [Installation et mises à jour](/fr/install/updating)
+- [Getting Started](/en/start/getting-started) (à utiliser à l'intérieur de WSL)
+- [Installation et mises à jour](/en/install/updating)
 - Guide officiel WSL2 (Microsoft) : [https://learn.microsoft.com/windows/wsl/install](https://learn.microsoft.com/windows/wsl/install)
 
 ## Statut Windows natif
@@ -59,8 +59,8 @@ Si la création de tâche planifiée est bloquée, le mode service de secours se
 
 ## Gateway
 
-- [Guide opérationnel Gateway](/fr/gateway)
-- [Configuration](/fr/gateway/configuration)
+- [Guide opérationnel Gateway](/en/gateway)
+- [Configuration](/en/gateway/configuration)
 
 ## Installation du service Gateway (CLI)
 
@@ -229,7 +229,7 @@ pnpm build
 openclaw onboard
 ```
 
-Guide complet : [Getting Started](/fr/start/getting-started)
+Guide complet : [Getting Started](/en/start/getting-started)
 
 ## Application compagnon Windows
 

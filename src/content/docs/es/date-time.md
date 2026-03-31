@@ -123,6 +123,6 @@ Si necesita la hora local, conviértala más adelante utilizando la zona horaria
 
 ## Documentos relacionados
 
-- [System Prompt](/es/concepts/system-prompt)
-- [Timezones](/es/concepts/timezone)
-- [Messages](/es/concepts/messages)
+- [System Prompt](/en/concepts/system-prompt)
+- [Timezones](/en/concepts/timezone)
+- [Messages](/en/concepts/messages)

@@ -13,8 +13,8 @@ Par défaut, les commandes ciblent le fichier d'approbations local sur le disque
 
 Connexes :
 
-- Approbations exec : [Approbations exec](/fr/tools/exec-approvals)
-- Nœuds : [Nœuds](/fr/nodes)
+- Approbations exec : [Approbations exec](/en/tools/exec-approvals)
+- Nœuds : [Nœuds](/en/nodes)
 
 ## Commandes courantes
 

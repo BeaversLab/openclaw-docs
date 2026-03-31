@@ -15,7 +15,7 @@ pilotent la **validation à l'exécution**, l'**exportation JSON Schema** et la 
 l'application macOS. Une source de vérité ; tout le reste est généré.
 
 Si vous souhaitez obtenir le contexte de protocole de plus haut niveau, commencez par
-[Architecture de la passerelle](/fr/concepts/architecture).
+[Architecture de la passerelle](/en/concepts/architecture).
 
 ## Modèle mental (30 secondes)
 

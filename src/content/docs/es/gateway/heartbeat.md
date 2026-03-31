@@ -8,12 +8,12 @@ title: "Heartbeat"
 
 # Heartbeat (Gateway)
 
-> **¿Heartbeat o Cron?** Consulte [Cron vs Heartbeat](/es/automation/cron-vs-heartbeat) para obtener orientación sobre cuándo usar cada uno.
+> **¿Heartbeat o Cron?** Consulte [Cron vs Heartbeat](/en/automation/cron-vs-heartbeat) para obtener orientación sobre cuándo usar cada uno.
 
 Heartbeat ejecuta **turnos de agente periódicos** en la sesión principal para que el modelo pueda
 resaltar cualquier cosa que requiera atención sin enviarle spam.
 
-Solución de problemas: [/automation/troubleshooting](/es/automation/troubleshooting)
+Solución de problemas: [/automation/troubleshooting](/en/automation/troubleshooting)
 
 ## Inicio rápido (principiante)
 
@@ -63,7 +63,7 @@ El mensaje predeterminado es intencionalmente amplio:
   los seguimientos (bandeja de entrada, calendario, recordatorios, trabajo en cola) y destaque cualquier cosa urgente.
 - **Verificación humana**: “Checkup sometimes on your human during day time” sugiere un
   mensaje ocasional y ligero de “anything you need?”, pero evita el spam nocturno
-  al usar tu zona horaria local configurada (consulta [/concepts/timezone](/es/concepts/timezone)).
+  al usar tu zona horaria local configurada (consulta [/concepts/timezone](/en/concepts/timezone)).
 
 Si deseas que un latido haga algo muy específico (p. ej., “check Gmail PubSub
 stats” o “verify gateway health”), establece `agents.defaults.heartbeat.prompt` (o
@@ -218,8 +218,8 @@ Use `accountId` para apuntar a una cuenta específica en canales multicuenta com
 - `isolatedSession`: cuando es verdadero, cada latido se ejecuta en una sesión nueva sin historial de conversación previo. Usa el mismo patrón de aislamiento que el cron `sessionTarget: "isolated"`. Reduce drásticamente el costo de tokens por latido. Combine con `lightContext: true` para obtener el máximo ahorro. El enrutamiento de entrega aún usa el contexto de la sesión principal.
 - `session`: clave de sesión opcional para ejecuciones de latido.
   - `main` (predeterminado): sesión principal del agente.
-  - Clave de sesión explícita (copiada de `openclaw sessions --json` o de la [CLI de sesiones](/es/cli/sessions)).
-  - Formatos de clave de sesión: consulte [Sesiones](/es/concepts/session) y [Grupos](/es/channels/groups).
+  - Clave de sesión explícita (copiada de `openclaw sessions --json` o de la [CLI de sesiones](/en/cli/sessions)).
+  - Formatos de clave de sesión: consulte [Sesiones](/en/concepts/session) y [Grupos](/en/channels/groups).
 - `target`:
   - `last`: entregar al último canal externo utilizado.
   - canal explícito: `whatsapp` / `telegram` / `discord` / `googlechat` / `slack` / `msteams` / `signal` / `imessage`.

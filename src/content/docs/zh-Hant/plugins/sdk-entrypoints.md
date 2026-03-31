@@ -12,7 +12,7 @@ read_when:
 
 每個外掛程式都會匯出一個預設的進入物件。SDK 提供了三個輔助函式來建立它們。
 
-<Tip>**尋找逐步指南？** 請參閱 [頻道外掛程式](/en/plugins/sdk-channel-plugins) 或 [提供者外掛程式](/en/plugins/sdk-provider-plugins)。</Tip>
+<Tip>**尋找逐步教學？** 請參閱 [頻道外掛程式](/en/plugins/sdk-channel-plugins) 或 [提供者外掛程式](/en/plugins/sdk-provider-plugins) 以取得逐步指南。</Tip>
 
 ## `definePluginEntry`
 

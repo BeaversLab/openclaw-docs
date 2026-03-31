@@ -261,7 +261,7 @@ title: "Azure"
     rm -f /tmp/install.sh
     ```
 
-    如果尚未安装，安装程序将安装 Node LTS 和依赖项，安装 OpenClaw，并启动新手引导向导。有关详细信息，请参阅[安装](/zh/install)。
+    如果尚未安装，安装程序将安装 Node LTS 和依赖项，安装 OpenClaw，并启动新手引导向导。有关详细信息，请参阅[安装](/en/install)。
 
   </Step>
 
@@ -272,7 +272,7 @@ title: "Azure"
     openclaw gateway status
     ```
 
-    大多数企业 Azure 团队已经拥有 GitHub Copilot 许可证。如果您属于这种情况，我们建议在 GitHub 新手引导向导中选择 OpenClaw Copilot 提供商。请参阅 [GitHub Copilot 提供商](/zh/providers/github-copilot)。
+    大多数企业 Azure 团队已经拥有 GitHub Copilot 许可证。如果您属于这种情况，我们建议在 GitHub 新手引导向导中选择 OpenClaw Copilot 提供商。请参阅 [GitHub Copilot 提供商](/en/providers/github-copilot)。
 
   </Step>
 </Steps>
@@ -305,7 +305,7 @@ az group delete -n "${RG}" --yes --no-wait
 
 ## 后续步骤
 
-- 设置消息传递渠道：[渠道](/zh/channels)
-- 将本地设备配对为节点：[节点](/zh/nodes)
-- 配置 Gateway(网关)：[Gateway(网关) 配置](/zh/gateway/configuration)
+- 设置消息传递渠道：[渠道](/en/channels)
+- 将本地设备配对为节点：[节点](/en/nodes)
+- 配置 Gateway(网关)：[Gateway(网关) 配置](/en/gateway/configuration)
 - 有关使用 OpenClaw Copilot 模型提供商部署 GitHub Azure 的更多详细信息：[在 Azure 上使用 OpenClaw Copilot 部署 GitHub](https://github.com/johnsonshi/openclaw-azure-github-copilot)

@@ -31,7 +31,7 @@ chromium-browser is already the newest version (2:1snap1-0ubuntu2).
 
 安装官方的 Google Chrome `.deb` 软件包，它不受 snap 的沙箱限制：
 
-```exec
+```bash
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
 sudo apt --fix-broken install -y  # if there are dependency errors
@@ -69,7 +69,7 @@ sudo apt --fix-broken install -y  # if there are dependency errors
 
 2. 手动启动 Chromium：
 
-```exec
+```bash
 chromium-browser --headless --no-sandbox --disable-gpu \
   --remote-debugging-port=18800 \
   --user-data-dir=$HOME/.openclaw/browser/openclaw/user-data \
@@ -99,13 +99,13 @@ WantedBy=default.target
 
 检查状态：
 
-```exec
+```bash
 curl -s http://127.0.0.1:18791/ | jq '{running, pid, chosenBrowser}'
 ```
 
 测试浏览：
 
-```exec
+```bash
 curl -s -X POST http://127.0.0.1:18791/start
 curl -s http://127.0.0.1:18791/tabs
 ```

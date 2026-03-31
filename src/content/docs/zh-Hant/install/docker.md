@@ -110,9 +110,9 @@ docker compose run --rm --no-deps --entrypoint node openclaw-gateway \
 docker compose up -d openclaw-gateway
 ```
 
-<Note>請從 repo 根目錄執行 `docker compose`。如果您啟用了 `OPENCLAW_EXTRA_MOUNTS` 或 `OPENCLAW_HOME_VOLUME`，設定腳本會寫入 `docker-compose.extra.yml`；請將其包含在 `-f docker-compose.yml -f docker-compose.extra.yml` 中。</Note>
+<Note>請從儲存庫根目錄執行 `docker compose`。如果您啟用了 `OPENCLAW_EXTRA_MOUNTS` 或 `OPENCLAW_HOME_VOLUME`，設定腳本會寫入 `docker-compose.extra.yml`； 請使用 `-f docker-compose.yml -f docker-compose.extra.yml` 將其包含在內。</Note>
 
-<Note>由於 `openclaw-cli` 共用 `openclaw-gateway` 的網路命名空間，因此它是一個啟動後的工具。在 `docker compose up -d openclaw-gateway` 之前，請透過 `openclaw-gateway` 執行上架和設定時期的設定寫入，並使用 `--no-deps --entrypoint node`。</Note>
+<Note>由於 `openclaw-cli` 共用 `openclaw-gateway` 的網路命名空間，它是一個 啟動後工具。在 `docker compose up -d openclaw-gateway` 之前，請透過 `openclaw-gateway` 使用 `--no-deps --entrypoint node` 來執行上架和設定時的配置寫入。</Note>
 
 ### 環境變數
 
@@ -156,7 +156,7 @@ docker compose exec openclaw-gateway node dist/index.js health --token "$OPENCLA
 - `loopback`：只有容器網路命名空間內的處理程序可以直接
   存取 gateway。
 
-<Note>請在 `gateway.bind` 中使用綁定模式值 (`lan` / `loopback` / `custom` / `tailnet` / `auto`)，而不要使用像 `0.0.0.0` 或 `127.0.0.1` 這樣的主機別名。</Note>
+<Note>在 `gateway.bind` (`lan` / `loopback` / `custom` / `tailnet` / `auto`) 中使用綁定模式值，而不是像 `0.0.0.0` 或 `127.0.0.1` 這樣的主機別名。</Note>
 
 ### 儲存與持久性
 
@@ -214,7 +214,7 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 
   </Accordion>
 
-<Accordion title="共用網路安全注意事項">`openclaw-cli` 使用 `network_mode: "service:openclaw-gateway"`，以便 CLI 指令可以透過 `127.0.0.1` 到達閘道。將此視為共用的信任邊界。Compose 設定會捨棄 `NET_RAW`/`NET_ADMIN` 並在 `openclaw-cli` 上啟用 `no-new-privileges`。</Accordion>
+<Accordion title="Shared-network security note">`openclaw-cli` 使用 `network_mode: "service:openclaw-gateway"`，以便 CLI 指令可以透過 `127.0.0.1` 存取閘道。將此視為共享信任邊界。 Compose 設定會捨棄 `NET_RAW`/`NET_ADMIN` 並在 `openclaw-cli` 上啟用 `no-new-privileges`。</Accordion>
 
   <Accordion title="權限與 EACCES">
     映像檔以 `node` (uid 1000) 身分執行。如果您在
@@ -266,7 +266,7 @@ echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 
   </Accordion>
 
-<Accordion title="OpenAI Codex OAuth (無介面 Docker)">如果您在精靈中選擇 OpenAI Codex OAuth，它會開啟瀏覽器 URL。在 Docker 或無介面設定中，請複製您抵達時的完整重新導向 URL，並將其貼回精靈中以完成驗證。</Accordion>
+<Accordion title="OpenAI Codex OAuth (無頭 Docker)">如果您在精靈中選擇 OpenAI Codex OAuth，它會開啟一個瀏覽器 URL。在 Docker 或無頭設定中，複製您抵達的完整重新導向 URL 並將其 貼回精靈中以完成驗證。</Accordion>
 
   <Accordion title="基礎映像檔中繼資料">
     主要的 Docker 映像檔使用 `node:24-bookworm` 並發布 OCI 基礎映像檔
@@ -329,11 +329,11 @@ scripts/sandbox-setup.sh
     容器會在每次會話中按需求自動建立。
   </Accordion>
 
-<Accordion title="沙箱中的權限錯誤">將 `docker.user` 設定為符合您掛載工作區所有權的 UID:GID，或對工作區資料夾執行 chown。</Accordion>
+<Accordion title="沙箱中的權限錯誤">將 `docker.user` 設定為符合您掛載工作區所有權的 UID:GID， 或使用 chown 更改工作區資料夾的所有權。</Accordion>
 
-<Accordion title="在沙箱中找不到自訂工具">OpenClaw 使用 `sh -lc` (login shell) 執行指令，這會載入 `/etc/profile` 並可能重設 PATH。請設定 `docker.env.PATH` 以在前面加入您的自訂工具路徑，或在 Dockerfile 中的 `/etc/profile.d/` 下新增一個指令碼。</Accordion>
+<Accordion title="在沙盒中找不到自訂工具">OpenClaw 使用 `sh -lc`（登入 shell）執行指令，該過程會 執行 `/etc/profile` 並可能重設 PATH。請設定 `docker.env.PATH` 以將您的 自訂工具路徑加到前面，或在您的 Dockerfile 中的 `/etc/profile.d/` 下新增一個腳本。</Accordion>
 
-<Accordion title="建構映像檔期間發生 OOM (記憶體不足) 終止 (exit 137)">VM 至少需要 2 GB RAM。請使用更大的機器類別並重試。</Accordion>
+<Accordion title="建置映像檔期間 OOM-killed（exit 137）">VM 至少需要 2 GB RAM。請使用更大的機器類別並重試。</Accordion>
 
   <Accordion title="控制 UI 中顯示未授權或需要配對">
     取得一個新的儀表板連結並核准瀏覽器裝置：

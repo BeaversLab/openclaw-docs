@@ -26,7 +26,7 @@ openclaw update --tag main
 openclaw update --dry-run   # preview without applying
 ```
 
-有关渠道的语义，请参阅 [开发渠道](/zh/install/development-channels)。
+有关渠道的语义，请参阅 [开发渠道](/en/install/development-channels)。
 
 ## 备选方案：重新运行安装程序
 
@@ -82,7 +82,7 @@ pnpm add -g openclaw@latest
 openclaw doctor
 ```
 
-迁移配置，审核私信策略，并检查网关健康状况。详情：[Doctor](/zh/gateway/doctor)
+迁移配置，审核私信策略，并检查网关健康状况。详情：[Doctor](/en/gateway/doctor)
 
 ### 重启网关
 
@@ -124,5 +124,5 @@ openclaw gateway restart
 ## 如果您遇到了问题
 
 - 再次运行 `openclaw doctor` 并仔细阅读输出。
-- 检查：[故障排除](/zh/gateway/troubleshooting)
+- 检查：[故障排除](/en/gateway/troubleshooting)
 - 在 Discord 中询问：[https://discord.gg/clawd](https://discord.gg/clawd)

@@ -138,6 +138,6 @@ OpenClaw 始终对 Firecrawl 请求使用 `proxy: "auto"` 加上 `storeInCache: 
 
 ## 相关
 
-- [Web Search overview](/zh/tools/web) -- 所有提供商和自动检测
-- [Web Fetch](/zh/tools/web-fetch) -- 具有 Firecrawl 后备支持的 web_fetch 工具
-- [Tavily](/zh/tools/tavily) -- 搜索和提取工具
+- [Web Search overview](/en/tools/web) -- 所有提供商和自动检测
+- [Web Fetch](/en/tools/web-fetch) -- 具有 Firecrawl 后备支持的 web_fetch 工具
+- [Tavily](/en/tools/tavily) -- 搜索和提取工具

@@ -11,7 +11,7 @@ title: "外掛程式套件"
 
 OpenClaw 可以從三個外部生態系統安裝外掛程式：**Codex**、**Claude** 和 **Cursor**。這些被稱為**套件**（bundles）—— OpenClaw 會將其內容和元資料套件映射到技能、掛鉤和 MCP 工具等原生功能。
 
-<Info>套件與 OpenClaw 原生外掛程式**並不相同**。原生外掛程式在程式內運行，並可註冊任何功能。套件是具有選擇性功能映射和更狹窄信任邊界的內容套件。</Info>
+<Info>套件與原生的 OpenClaw 外掛並**不**相同。原生外掛在 進程內運行，並可以註冊任何功能。套件則是內容套件，具有 選擇性的功能映射和更狹窄的信任邊界。</Info>
 
 ## 為何存在套件
 
@@ -144,9 +144,9 @@ OpenClaw 會首先檢查原生外掛程式格式：
     未連接 (not wired)，那是產品限制 — 而非安裝失敗。
   </Accordion>
 
-<Accordion title="Claude 指令檔未顯示">請確保已啟用套件，且 markdown 檔案位於偵測到的 `commands/` 或 `skills/` 根目錄內。</Accordion>
+<Accordion title="Claude command files do not appear">請確保已啟用該套件，且 Markdown 檔案位於偵測到的 `commands/` 或 `skills/` 根目錄內。</Accordion>
 
-<Accordion title="Claude settings do not apply">僅支援來自 `settings.json` 的內嵌 Pi 設定。OpenClaw 不會將打包套件的設定視為原始設定檔補丁。</Accordion>
+<Accordion title="Claude settings do not apply">僅支援來自 `settings.json` 的內嵌 Pi 設定。OpenClaw 不會 將套件設定視為原始設定檔補丁。</Accordion>
 
   <Accordion title="Claude hooks do not execute">
     `hooks/hooks.json` 僅供偵測。如果您需要可執行的 hooks，請使用

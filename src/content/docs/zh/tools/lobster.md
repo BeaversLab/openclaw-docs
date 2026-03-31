@@ -41,7 +41,7 @@ OpenClaw 在**工具模式**下启动本地 `lobster` CLI，并从 stdout 解析
 
 构建能输出 JSON 的微型命令，然后将它们链接到单个 Lobster 调用中。（下面的示例命令名称 — 请替换为您自己的。）
 
-```exec
+```bash
 inbox list --json
 inbox categorize --json
 inbox apply --json
@@ -69,7 +69,7 @@ AI 触发工作流；Lobster 执行步骤。审批门控使副作用变得明确
 
 示例：将输入项映射到工具调用：
 
-```exec
+```bash
 gog.gmail.search --query 'newer_than:1d' \
   | openclaw.invoke --tool message --action send --each --item-key message --args-json '{"provider":"telegram","to":"..."}'
 ```
@@ -117,7 +117,7 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 }'
 ```
 
-有关详细信息和配置选项，请参阅 [LLM Task](/zh/tools/llm-task)。
+有关详细信息和配置选项，请参阅 [LLM Task](/en/tools/llm-task)。
 
 ## 工作流文件 (.lobster)
 
@@ -307,7 +307,7 @@ Lobster 返回具有以下三种状态之一的 JSON 封装：
 
 ## OpenProse
 
-OpenProse 与 Lobster 搭配得很好：使用 `/prose` 协调多代理准备工作，然后运行 Lobster 管道进行确定性审批。如果 Prose 程序需要 Lobster，请通过 `tools.subagents.tools` 为子代理允许 `lobster` 工具。参见 [OpenProse](/zh/prose)。
+OpenProse 与 Lobster 搭配得很好：使用 `/prose` 协调多代理准备工作，然后运行 Lobster 管道进行确定性审批。如果 Prose 程序需要 Lobster，请通过 `tools.subagents.tools` 为子代理允许 `lobster` 工具。参见 [OpenProse](/en/prose)。
 
 ## 安全性
 
@@ -325,8 +325,8 @@ OpenProse 与 Lobster 搭配得很好：使用 `/prose` 协调多代理准备工
 
 ## 了解更多
 
-- [插件](/zh/tools/plugin)
-- [插件工具编写](/zh/plugins/building-plugins#registering-agent-tools)
+- [插件](/en/tools/plugin)
+- [插件工具编写](/en/plugins/building-plugins#registering-agent-tools)
 
 ## 案例研究：社区工作流
 

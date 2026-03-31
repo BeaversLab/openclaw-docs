@@ -33,11 +33,11 @@ avec l'action `react`. Le comportement des réactions varie selon le canal.
     - `remove: true` supprime uniquement l'emoji spécifié.
   </Accordion>
 
-<Accordion title="Google Chat">- Un `emoji` vide supprime les réactions de l'application sur le message. - `remove: true` supprime uniquement l'emoji spécifié.</Accordion>
+<Accordion title="Google Chat">- Empty `emoji` supprime les réactions de l'application sur le message. - `remove: true` supprime uniquement l'emoji spécifié.</Accordion>
 
-<Accordion title="Telegram">- Un `emoji` vide supprime les réactions du bot. - `remove: true` supprime également les réactions mais nécessite toujours un `emoji` non vide pour la validation de l'outil.</Accordion>
+<Accordion title="Telegram">- Un `emoji` vide supprime les réactions du bot. - `remove: true` supprime également les réactions mais nécessite tout de même un `emoji` non vide pour la validation de l'outil.</Accordion>
 
-<Accordion title="WhatsApp">- Un `emoji` vide supprime la réaction du bot. - `remove: true` correspond en interne à un emoji vide (nécessite toujours `emoji` lors de l'appel de l'outil).</Accordion>
+<Accordion title="WhatsApp">- Empty `emoji` removes the bot reaction. - `remove: true` maps to empty emoji internally (still requires `emoji` in the tool call).</Accordion>
 
 <Accordion title="Zalo Personnel (zalouser)">- Nécessite un `emoji` non vide. - `remove: true` supprime cette réaction emoji spécifique.</Accordion>
 
@@ -48,5 +48,5 @@ avec l'action `react`. Le comportement des réactions varie selon le canal.
 
 ## Connexes
 
-- [Agent Send](/fr/tools/agent-send) — l'outil `message` qui inclut `react`
-- [Channels](/fr/channels) — configuration spécifique au channel
+- [Agent Send](/en/tools/agent-send) — l'outil `message` qui inclut `react`
+- [Channels](/en/channels) — configuration spécifique au channel

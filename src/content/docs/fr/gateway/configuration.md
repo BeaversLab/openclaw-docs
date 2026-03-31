@@ -17,9 +17,9 @@ Si le fichier est manquant, OpenClaw utilise des paramètres par défaut sûrs. 
 - Définir les modèles, les outils, le sandboxing ou l'automatisation (cron, hooks)
 - Ajuster les sessions, les médias, le réseau ou l'interface utilisateur
 
-Consultez la [référence complète](/fr/gateway/configuration-reference) pour chaque champ disponible.
+Consultez la [référence complète](/en/gateway/configuration-reference) pour chaque champ disponible.
 
-<Tip>**Nouveau dans la configuration ?** Commencez avec `openclaw onboard` pour une configuration interactive, ou consultez le guide [Exemples de configuration](/fr/gateway/configuration-examples) pour des configurations complètes à copier-coller.</Tip>
+<Tip>**Nouveau dans la configuration ?** Commencez avec `openclaw onboard` pour une configuration interactive, ou consultez le guide [Exemples de configuration](/en/gateway/configuration-examples) pour des configurations complètes à copier-coller.</Tip>
 
 ## Configuration minimale
 
@@ -57,15 +57,15 @@ En cas d'échec de la validation :
   <Accordion title="Configurer un canal (WhatsApp, Telegram, Discord, etc.)">
     Chaque canal possède sa propre section de configuration sous `channels.<provider>`. Consultez la page dédiée au canal pour les étapes de configuration :
 
-    - [WhatsApp](/fr/channels/whatsapp) — `channels.whatsapp`
-    - [Telegram](/fr/channels/telegram) — `channels.telegram`
-    - [Discord](/fr/channels/discord) — `channels.discord`
-    - [Slack](/fr/channels/slack) — `channels.slack`
-    - [Signal](/fr/channels/signal) — `channels.signal`
-    - [iMessage](/fr/channels/imessage) — `channels.imessage`
-    - [Google Chat](/fr/channels/googlechat) — `channels.googlechat`
-    - [Mattermost](/fr/channels/mattermost) — `channels.mattermost`
-    - [Microsoft Teams](/fr/channels/msteams) — `channels.msteams`
+    - [WhatsApp](/en/channels/whatsapp) — `channels.whatsapp`
+    - [Telegram](/en/channels/telegram) — `channels.telegram`
+    - [Discord](/en/channels/discord) — `channels.discord`
+    - [Slack](/en/channels/slack) — `channels.slack`
+    - [Signal](/en/channels/signal) — `channels.signal`
+    - [iMessage](/en/channels/imessage) — `channels.imessage`
+    - [Google Chat](/en/channels/googlechat) — `channels.googlechat`
+    - [Mattermost](/en/channels/mattermost) — `channels.mattermost`
+    - [Microsoft Teams](/en/channels/msteams) — `channels.msteams`
 
     Tous les canaux partagent le même modèle de politique DM :
 
@@ -107,8 +107,8 @@ En cas d'échec de la validation :
     - `agents.defaults.models` définit le catalogue de modèles et agit comme la liste d'autorisation pour `/model`.
     - Les références de modèles utilisent le format `provider/model` (ex. `anthropic/claude-opus-4-6`).
     - `agents.defaults.imageMaxDimensionPx` contrôle la réduction d'échelle des images de transcription/CLI (par défaut `1200`) ; des valeurs plus faibles réduisent généralement l'utilisation des jetons de vision lors des exécutions avec de nombreuses captures d'écran.
-    - Voir [Modèles CLI](/fr/concepts/models) pour changer de modèles dans le chat et [Échec de modèle](/fr/concepts/model-failover) pour la rotation d'authentification et le comportement de repli.
-    - Pour les fournisseurs personnalisés/auto-hébergés, voir [Fournisseurs personnalisés](/fr/gateway/configuration-reference#custom-providers-and-base-urls) dans la référence.
+    - Voir [Modèles CLI](/en/concepts/models) pour changer de modèles dans le chat et [Échec de modèle](/en/concepts/model-failover) pour la rotation d'authentification et le comportement de repli.
+    - Pour les fournisseurs personnalisés/auto-hébergés, voir [Fournisseurs personnalisés](/en/gateway/configuration-reference#custom-providers-and-base-urls) dans la référence.
 
   </Accordion>
 
@@ -122,7 +122,7 @@ En cas d'échec de la validation :
 
     Pour les groupes, utilisez `groupPolicy` + `groupAllowFrom` ou des listes d'autorisation spécifiques au channel.
 
-    Voir la [référence complète](/fr/gateway/configuration-reference#dm-and-group-access) pour les détails par channel.
+    Voir la [référence complète](/en/gateway/configuration-reference#dm-and-group-access) pour les détails par channel.
 
   </Accordion>
 
@@ -151,7 +151,7 @@ En cas d'échec de la validation :
 
     - **Mentions de métadonnées** : mentions @ natives ( WhatsApp tap-to-mention,  Telegram @bot, etc.)
     - **Modèles de texte** : modèles d'expression rationnelle sécurisés dans `mentionPatterns`
-    - Voir la [référence complète](/fr/gateway/configuration-reference#group-chat-mention-gating) pour les remplacements par channel et le mode self-chat.
+    - Voir la [référence complète](/en/gateway/configuration-reference#group-chat-mention-gating) pour les remplacements par channel et le mode self-chat.
 
   </Accordion>
 
@@ -181,7 +181,7 @@ En cas d'échec de la validation :
     - Définissez `gateway.channelHealthCheckMinutes: 0` pour désactiver globalement les redémarrages du moniteur de santé.
     - `channelStaleEventThresholdMinutes` doit être supérieur ou égal à l'intervalle de vérification.
     - Utilisez `channels.<provider>.healthMonitor.enabled` ou `channels.<provider>.accounts.<id>.healthMonitor.enabled` pour désactiver les redémarrages automatiques pour un channel ou un compte sans désactiver le moniteur global.
-    - Voir [Health Checks](/fr/gateway/health) pour le débogage opérationnel et la [référence complète](/fr/gateway/configuration-reference#gateway) pour tous les champs.
+    - Voir [Health Checks](/en/gateway/health) pour le débogage opérationnel et la [référence complète](/en/gateway/configuration-reference#gateway) pour tous les champs.
 
   </Accordion>
 
@@ -208,8 +208,8 @@ En cas d'échec de la validation :
 
     - `dmScope` : `main` (partagé) | `per-peer` | `per-channel-peer` | `per-account-channel-peer`
     - `threadBindings` : paramètres globaux pour le routage des sessions liées aux fils de discussion (Discord prend en charge `/focus`, `/unfocus`, `/agents`, `/session idle` et `/session max-age`).
-    - Voir [Gestion des sessions](/fr/concepts/session) pour la portée, les liens d'identité et la politique d'envoi.
-    - Voir [référence complète](/fr/gateway/configuration-reference#session) pour tous les champs.
+    - Voir [Gestion des sessions](/en/concepts/session) pour la portée, les liens d'identité et la politique d'envoi.
+    - Voir [référence complète](/en/gateway/configuration-reference#session) pour tous les champs.
 
   </Accordion>
 
@@ -231,7 +231,7 @@ En cas d'échec de la validation :
 
     Construisez d'abord l'image : `scripts/sandbox-setup.sh`
 
-    Consultez le [Sandboxing](/fr/gateway/sandboxing) pour le guide complet et la [référence complète](/fr/gateway/configuration-reference#agentsdefaultssandbox) pour toutes les options.
+    Consultez le [Sandboxing](/en/gateway/sandboxing) pour le guide complet et la [référence complète](/en/gateway/configuration-reference#agentsdefaultssandbox) pour toutes les options.
 
   </Accordion>
 
@@ -288,7 +288,7 @@ En cas d'échec de la validation :
     - `OPENCLAW_APNS_RELAY_BASE_URL` et `OPENCLAW_APNS_RELAY_TIMEOUT_MS` fonctionnent toujours en tant que substitutions d'environnement temporaires.
     - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` reste une échappatoire de développement en boucle locale uniquement ; ne pas rendre persistantes les URL de relais HTTP dans la configuration.
 
-    Voir [Application iOS](/fr/platforms/ios#relay-backed-push-for-official-builds) pour le flux de bout en bout et [Flux d'authentification et de confiance](/fr/platforms/ios#authentication-and-trust-flow) pour le modèle de sécurité du relais.
+    Voir [Application iOS](/en/platforms/ios#relay-backed-push-for-official-builds) pour le flux de bout en bout et [Flux d'authentification et de confiance](/en/platforms/ios#authentication-and-trust-flow) pour le modèle de sécurité du relais.
 
   </Accordion>
 
@@ -309,7 +309,7 @@ En cas d'échec de la validation :
     - `every`: chaîne de durée (`30m`, `2h`). Définir `0m` pour désactiver.
     - `target`: `last` | `whatsapp` | `telegram` | `discord` | `none`
     - `directPolicy`: `allow` (par défaut) ou `block` pour les cibles de heartbeat de style DM
-    - Voir [Heartbeat](/fr/gateway/heartbeat) pour le guide complet.
+    - Voir [Heartbeat](/en/gateway/heartbeat) pour le guide complet.
 
   </Accordion>
 
@@ -330,7 +330,7 @@ En cas d'échec de la validation :
 
     - `sessionRetention`: nettoyer les sessions d'exécution isolées terminées à partir de `sessions.json` (par défaut `24h`; définir `false` pour désactiver).
     - `runLog`: nettoyer `cron/runs/<jobId>.jsonl` par taille et lignes conservées.
-    - Voir [Cron jobs](/fr/automation/cron-jobs) pour la vue d'ensemble des fonctionnalités et les exemples CLI.
+    - Voir [Cron jobs](/en/automation/cron-jobs) pour la vue d'ensemble des fonctionnalités et les exemples CLI.
 
   </Accordion>
 
@@ -363,7 +363,7 @@ En cas d'échec de la validation :
     - Gardez les indicateurs de contournement de contenu non sécurisé désactivés (`hooks.gmail.allowUnsafeExternalContent`, `hooks.mappings[].allowUnsafeExternalContent`) sauf si vous effectuez un débogage à portée strictement limitée.
     - Pour les agents pilotés par hooks, préférez les niveaux de modèle modernes et robustes ainsi qu'une politique d'outil stricte (par exemple, messagerie uniquement plus sandboxing si possible).
 
-    Voir [référence complète](/fr/gateway/configuration-reference#hooks) pour toutes les options de mappage et l'intégration Gmail.
+    Voir [référence complète](/en/gateway/configuration-reference#hooks) pour toutes les options de mappage et l'intégration Gmail.
 
   </Accordion>
 
@@ -385,7 +385,7 @@ En cas d'échec de la validation :
     }
     ```
 
-    Voir [Multi-Agent](/fr/concepts/multi-agent) et [référence complète](/fr/gateway/configuration-reference#multi-agent-routing) pour les règles de liaison et les profils d'accès par agent.
+    Voir [Multi-Agent](/en/concepts/multi-agent) et [référence complète](/en/gateway/configuration-reference#multi-agent-routing) pour les règles de liaison et les profils d'accès par agent.
 
   </Accordion>
 
@@ -595,17 +595,17 @@ Règles :
 }
 ```
 
-Les détails de SecretRef (y compris `secrets.providers` pour `env`/`file`/`exec`) se trouvent dans [Secrets Management](/fr/gateway/secrets).
-Les chemins d'identification pris en charge sont répertoriés dans [SecretRef Credential Surface](/fr/reference/secretref-credential-surface).
+Les détails de SecretRef (y compris `secrets.providers` pour `env`/`file`/`exec`) se trouvent dans [Secrets Management](/en/gateway/secrets).
+Les chemins d'identification pris en charge sont répertoriés dans [SecretRef Credential Surface](/en/reference/secretref-credential-surface).
 
 </Accordion>
 
-Consultez [Environment](/fr/help/environment) pour connaître l'ordre de priorité complet et les sources.
+Consultez [Environment](/en/help/environment) pour connaître l'ordre de priorité complet et les sources.
 
 ## Référence complète
 
-Pour la référence complète champ par champ, consultez la **[Référence de configuration](/fr/gateway/configuration-reference)**.
+Pour la référence complète champ par champ, consultez la **[Référence de configuration](/en/gateway/configuration-reference)**.
 
 ---
 
-_En relation : [Exemples de configuration](/fr/gateway/configuration-examples) · [Référence de configuration](/fr/gateway/configuration-reference) · [Doctor](/fr/gateway/doctor)_
+_En relation : [Exemples de configuration](/en/gateway/configuration-examples) · [Référence de configuration](/en/gateway/configuration-reference) · [Doctor](/en/gateway/doctor)_

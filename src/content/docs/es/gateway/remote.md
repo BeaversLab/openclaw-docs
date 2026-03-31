@@ -28,7 +28,7 @@ Ejecute la puerta de enlace en un host persistente y acceda a ella a través de 
 
 - **Mejor UX:** mantenga `gateway.bind: "loopback"` y use **Tailscale Serve** para la interfaz de usuario de control.
 - **Respaldo:** mantenga loopback + túnel SSH desde cualquier máquina que necesite acceso.
-- **Ejemplos:** [exe.dev](/es/install/exe-dev) (VM fácil) o [Hetzner](/es/install/hetzner) (VPS de producción).
+- **Ejemplos:** [exe.dev](/en/install/exe-dev) (VM fácil) o [Hetzner](/en/install/hetzner) (VPS de producción).
 
 Esto es ideal cuando su portátil se suspende a menudo, pero desea que el agente esté siempre activo.
 
@@ -39,7 +39,7 @@ El portátil **no** ejecuta el agente. Se conecta de forma remota:
 - Use el modo **Remoto a través de SSH** de la aplicación macOS (Configuración → General → "OpenClaw runs").
 - La aplicación abre y gestiona el túnel, por lo que WebChat + verificaciones de salud "simplemente funcionan".
 
-Manual de procedimientos: [acceso remoto de macOS](/es/platforms/mac/remote).
+Manual de procedimientos: [acceso remoto de macOS](/en/platforms/mac/remote).
 
 ### 3) El portátil ejecuta la puerta de enlace, acceso remoto desde otras máquinas
 
@@ -48,7 +48,7 @@ Mantenga la puerta de enlace local pero exponga de forma segura:
 - Túnel SSH al portátil desde otras máquinas, o
 - Sirva la interfaz de usuario de control con Tailscale Serve y mantenga la puerta de enlace solo loopback.
 
-Guía: [Tailscale](/es/gateway/tailscale) y [visión general web](/es/web).
+Guía: [Tailscale](/en/gateway/tailscale) y [visión general web](/en/web).
 
 ## Flujo de comandos (qué se ejecuta dónde)
 
@@ -63,7 +63,7 @@ Ejemplo de flujo (Telegram → nodo):
 
 Notas:
 
-- **Los nodos no ejecutan el servicio de puerta de enlace.** Solo se debe ejecutar una puerta de enlace por host, a menos que intencionalmente ejecute perfiles aislados (ver [Múltiples puertas de enlace](/es/gateway/multiple-gateways)).
+- **Los nodos no ejecutan el servicio de puerta de enlace.** Solo se debe ejecutar una puerta de enlace por host, a menos que intencionalmente ejecute perfiles aislados (ver [Múltiples puertas de enlace](/en/gateway/multiple-gateways)).
 - El "modo nodo" de la aplicación macOS es solo un cliente de nodo a través del WebSocket del Gateway.
 
 ## Túnel SSH (CLI + herramientas)
@@ -130,7 +130,7 @@ WebChat ya no utiliza un puerto HTTP separado. La interfaz de usuario de chat Sw
 
 La aplicación de la barra de menús de macOS puede gestionar la misma configuración de extremo a extremo (verificaciones de estado remotas, WebChat y reenvío de activación por voz).
 
-Manual de procedimientos: [acceso remoto de macOS](/es/platforms/mac/remote).
+Manual de procedimientos: [acceso remoto de macOS](/en/platforms/mac/remote).
 
 ## Reglas de seguridad (remoto/VPN)
 
@@ -146,4 +146,4 @@ Versión corta: **mantenga el Gateway solo en loopback** a menos que esté segur
 - **Tailscale Serve** puede autenticar el tráfico de Control UI/WebSocket mediante encabezados de identidad cuando `gateway.auth.allowTailscale: true`; los endpoints de la API HTTP aún requieren autenticación por token/contraseña. Este flujo sin token asume que el host de la puerta de enlace es confiable. Establézcalo en `false` si desea tokens/contraseñas en todas partes.
 - Trate el control del navegador como acceso de operador: solo tailnet + emparejamiento deliberado de nodos.
 
-Profundización: [Seguridad](/es/gateway/security).
+Profundización: [Seguridad](/en/gateway/security).

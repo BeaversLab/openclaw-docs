@@ -13,7 +13,7 @@ title: "browser"
 
 相关内容：
 
-- 浏览器工具 + API：[Browser 工具](/zh/tools/browser)
+- 浏览器工具 + API：[Browser 工具](/en/tools/browser)
 
 ## 通用标志
 
@@ -103,4 +103,4 @@ openclaw browser --browser-profile chrome-live tabs
 
 使用 `gateway.nodes.browser.mode` 控制自动路由，如果连接了多个节点，则使用 `gateway.nodes.browser.node` 固定特定节点。
 
-安全与远程设置：[Browser 工具](/zh/tools/browser)、[Remote access](/zh/gateway/remote)、[Tailscale](/zh/gateway/tailscale)、[Security](/zh/gateway/security)
+安全与远程设置：[Browser 工具](/en/tools/browser)、[Remote access](/en/gateway/remote)、[Tailscale](/en/gateway/tailscale)、[Security](/en/gateway/security)

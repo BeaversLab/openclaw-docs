@@ -11,14 +11,14 @@ title: "DuckDuckGo 搜索"
 
 OpenClaw 支持 DuckDuckGo 作为 **免密钥** 的 `web_search` 提供商。无需 API 密钥或账户。
 
-<Warning>DuckDuckGo 是一个 **实验性的、非官方的** 集成，它从 DuckDuckGo 的 非 JavaScript 搜索页面获取结果 — 而非官方 API。由于机器人验证页面 或 HTML 变更，可能会偶尔出现中断。</Warning>
+<Warning>DuckDuckGo 是一个 **实验性的、非官方的** 集成，它从 DuckDuckGo 的非 JavaScript 搜索页面中提取结果 —— 而非官方 API。请预期因机器人挑战页面或 HTML 变更而导致的偶尔中断。</Warning>
 
 ## 设置
 
 不需要 API 密钥 — 只需将 DuckDuckGo 设置为您的提供商：
 
 <Steps>
-  <Step title="Configure">```exec openclaw configure --section web # Select "duckduckgo" as the provider ```</Step>
+  <Step title="Configure">```bash openclaw configure --section web # Select "duckduckgo" as the provider ```</Step>
 </Steps>
 
 ## 配置
@@ -78,7 +78,7 @@ OpenClaw 支持 DuckDuckGo 作为 **免密钥** 的 `web_search` 提供商。无
   自动检测中排在最后（顺序 100），因此任何带有密钥的 API 支持提供商都具有优先权
 - **SafeSearch 默认为适中**（moderate），如果未进行配置
 
-<Tip>对于生产用途，请考虑 [Brave 搜索](/en/tools/brave-search)（提供免费层级）或 另一个 API 支持的提供商。</Tip>
+<Tip>对于生产环境，请考虑使用 [Brave Search](/en/tools/brave-search)（提供免费层级）或另一个由 API 支持的提供商。</Tip>
 
 ## 相关
 

@@ -660,7 +660,7 @@ Feishu ACP 是由文本命令驱动的。没有原生的斜杠命令菜单，因
 
 ## 配置参考
 
-完整配置：[Gateway(网关) 配置](/zh/gateway/configuration)
+完整配置：[Gateway(网关) 配置](/en/gateway/configuration)
 
 关键选项：
 

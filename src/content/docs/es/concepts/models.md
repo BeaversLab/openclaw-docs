@@ -9,10 +9,10 @@ title: "CLI de modelos"
 
 # CLI de modelos
 
-Consulte [/concepts/model-failover](/es/concepts/model-failover) para la rotación del
+Consulte [/concepts/model-failover](/en/concepts/model-failover) para la rotación del
 perfil de autenticación, los tiempos de espera y cómo interactúa con los
 respaldos.
-Resumen rápido del proveedor + ejemplos: [/concepts/model-providers](/es/concepts/model-providers).
+Resumen rápido del proveedor + ejemplos: [/concepts/model-providers](/en/concepts/model-providers).
 
 ## Cómo funciona la selección de modelos
 
@@ -29,7 +29,7 @@ Relacionado:
 - `agents.defaults.imageModel` se usa **solo cuando** el modelo principal no puede aceptar imágenes.
 - `agents.defaults.imageGenerationModel` lo utiliza la funcionalidad de generación de imágenes compartida. Si se omite, `image_generate` aún puede inferir un proveedor predeterminado a partir de complementos de generación de imágenes compatibles con autenticación. Si configura un proveedor/modelo específico, también configure la clave de API/autenticación de ese proveedor.
 - Los valores predeterminados por agente pueden anular `agents.defaults.model` a través de
-  `agents.list[].model` más enlaces (consulte [/concepts/multi-agent](/es/concepts/multi-agent)).
+  `agents.list[].model` más enlaces (consulte [/concepts/multi-agent](/en/concepts/multi-agent)).
 
 ## Política rápida de modelos
 
@@ -62,7 +62,7 @@ Las referencias de modelos se normalizan a minúsculas. Los alias de proveedores
 `z.ai/*` se normalizan a `zai/*`.
 
 Los ejemplos de configuración de proveedores (incluido OpenCode) se encuentran en
-[/providers/opencode](/es/providers/opencode).
+[/providers/opencode](/en/providers/opencode).
 
 ## "Modelo no permitido" (y por qué se detienen las respuestas)
 
@@ -117,7 +117,7 @@ Notas:
 - Si el ID del modelo en sí contiene `/` (estilo OpenRouter), debes incluir el prefijo del proveedor (ejemplo: `/model openrouter/moonshotai/kimi-k2`).
 - Si omites el proveedor, OpenClaw trata la entrada como un alias o un modelo para el **proveedor predeterminado** (solo funciona cuando no hay `/` en el ID del modelo).
 
-Comportamiento/configuración completa del comando: [Slash commands](/es/tools/slash-commands).
+Comportamiento/configuración completa del comando: [Slash commands](/en/tools/slash-commands).
 
 ## Comandos de CLI
 
@@ -196,7 +196,7 @@ Los resultados del escaneo se clasifican por:
 Entrada
 
 - OpenRouter `/models` lista (filtro `:free`)
-- Requiere clave de API de OpenRouter de perfiles de autenticación o `OPENROUTER_API_KEY` (consulte [/environment](/es/help/environment))
+- Requiere clave de API de OpenRouter de perfiles de autenticación o `OPENROUTER_API_KEY` (consulte [/environment](/en/help/environment))
 - Filtros opcionales: `--max-age-days`, `--min-params`, `--provider`, `--max-candidates`
 - Controles de sonda: `--timeout`, `--concurrency`
 

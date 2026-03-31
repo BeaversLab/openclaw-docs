@@ -13,7 +13,7 @@ read_when:
 Plugin packaging (`package.json` metadata)、manifests
 (`openclaw.plugin.json`)、setup entries 與 config schemas 的參考資料。
 
-<Tip>**尋找逐步指南？** 操作指南涵蓋了相關情境下的 packaging：[Channel Plugins](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) 和 [Provider Plugins](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest)。</Tip>
+<Tip>**尋找逐步教學？** 操作指南涵蓋了封裝相關內容： [頻道外掛](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) 和 [提供者外掛](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest)。</Tip>
 
 ## Package metadata
 
@@ -82,7 +82,7 @@ Channel plugins 可以選擇透過以下方式啟用 deferred loading：
 
 啟用後，OpenClaw 在 pre-listen 啟動階段只會載入 `setupEntry`，即使是已配置的 channels 也一樣。完整的 entry 會在 gateway 開始 listening 後才載入。
 
-<Warning>僅當您的 `setupEntry` 在閘道開始監聽之前註冊了閘道所需的一切（通道註冊、HTTP 路由、閘道方法）時，才啟用延遲載入。如果完整入口擁有必要的啟動功能，請保持預設行為。</Warning>
+<Warning>僅當您的 `setupEntry` 在閘道開始監聽之前註冊了所有閘道需要的項目時（頻道註冊、HTTP 路由、 閘道方法），才啟用延遲載入。如果完整入口擁有必要的啟動功能，請 保留預設行為。</Warning>
 
 ## Plugin manifest
 

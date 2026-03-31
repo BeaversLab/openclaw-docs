@@ -38,35 +38,34 @@ OpenClaw 可以使用許多 LLM 供應商。選擇一個供應商，進行驗證
 - [LiteLLM (unified gateway)](/en/providers/litellm)
 - [MiniMax](/en/providers/minimax)
 - [Mistral](/en/providers/mistral)
-- [Model Studio (Alibaba Cloud)](/en/providers/modelstudio)
 - [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
 - [NVIDIA](/en/providers/nvidia)
-- [Ollama (cloud + local models)](/en/providers/ollama)
+- [Ollama (雲端 + 本地模型)](/en/providers/ollama)
 - [OpenAI (API + Codex)](/en/providers/openai)
 - [OpenCode](/en/providers/opencode)
 - [OpenCode Go](/en/providers/opencode-go)
 - [OpenRouter](/en/providers/openrouter)
-- [Perplexity (web search)](/en/providers/perplexity-provider)
+- [Perplexity (網路搜尋)](/en/providers/perplexity-provider)
 - [Qianfan](/en/providers/qianfan)
-- [Qwen (OAuth)](/en/providers/qwen)
-- [SGLang (local models)](/en/providers/sglang)
+- [Qwen / Model Studio (阿里雲)](/en/providers/qwen_modelstudio)
+- [SGLang (本地模型)](/en/providers/sglang)
 - [Synthetic](/en/providers/synthetic)
 - [Together AI](/en/providers/together)
-- [Venice (Venice AI, privacy-focused)](/en/providers/venice)
+- [Venice (Venice AI, 注重隱私)](/en/providers/venice)
 - [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
 - [vLLM (本機模型)](/en/providers/vllm)
-- [火山引擎 (豆包)](/en/providers/volcengine)
+- [Volcengine (豆包)](/en/providers/volcengine)
 - [xAI](/en/providers/xai)
 - [小米](/en/providers/xiaomi)
 - [Z.AI](/en/providers/zai)
 
-## 轉錄服務提供商
+## 轉錄服務商
 
 - [Deepgram (音訊轉錄)](/en/providers/deepgram)
 
 ## 社群工具
 
-- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - 用於 Claude 訂閱憑證的社群代理（使用前請確認 Anthropic 的政策/條款）
+- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - 適用於 Claude 訂閱憑證的社群代理（使用前請確認 Anthropic 政策/條款）
 
-如需完整的服務商目錄（xAI、Groq、Mistral 等）及進階設定，
+如需完整的服務商目錄（xAI、Groq、Mistral 等）及進階配置，
 請參閱 [Model providers](/en/concepts/model-providers)。

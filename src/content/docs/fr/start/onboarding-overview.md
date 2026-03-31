@@ -45,15 +45,15 @@ openclaw onboard
 
 Ajoutez `--install-daemon` pour également installer le service en arrière-plan en une seule étape.
 
-Référence complète : [Onboarding (CLI)](/fr/start/wizard)
-Docs de la commande CLI : [`openclaw onboard`](/fr/cli/onboard)
+Référence complète : [Onboarding (CLI)](/en/start/wizard)
+Docs de la commande CLI : [`openclaw onboard`](/en/cli/onboard)
 
 ## macOS app onboarding
 
 Ouvrez l'application OpenClaw. L'assistant de premier démarrage vous guide à travers les mêmes étapes
 avec une interface visuelle.
 
-Référence complète : [Onboarding (macOS App)](/fr/start/onboarding)
+Référence complète : [Onboarding (macOS App)](/en/start/onboarding)
 
 ## Fournisseurs personnalisés ou non répertoriés
 

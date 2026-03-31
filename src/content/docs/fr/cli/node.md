@@ -125,5 +125,5 @@ L'hôte de nœud stocke son identifiant de nœud, son jeton, son nom d'affichage
 `system.run` est limité par des approbations d'exécution locales :
 
 - `~/.openclaw/exec-approvals.json`
-- [Approbations d'exécution](/fr/tools/exec-approvals)
+- [Approbations d'exécution](/en/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>` (modifier depuis le Gateway)

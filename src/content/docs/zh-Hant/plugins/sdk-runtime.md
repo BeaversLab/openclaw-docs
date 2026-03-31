@@ -13,7 +13,7 @@ read_when:
 Reference for the `api.runtime` object injected into every plugin during
 registration. Use these helpers instead of importing host internals directly.
 
-<Tip>**Looking for a walkthrough?** See [Channel Plugins](/en/plugins/sdk-channel-plugins) or [Provider Plugins](/en/plugins/sdk-provider-plugins) for step-by-step guides that show these helpers in context.</Tip>
+<Tip>**正在尋找逐步指南？** 請參閱 [Channel Plugins](/en/plugins/sdk-channel-plugins) 或 [Provider Plugins](/en/plugins/sdk-provider-plugins)，查看展示這些輔助函式 使用情境的逐步指南。</Tip>
 
 ```typescript
 register(api) {
@@ -172,7 +172,7 @@ const result = await api.runtime.mediaUnderstanding.runFile({
 
 Returns `{ text: undefined }` when no output is produced (e.g. skipped input).
 
-<Info>`api.runtime.stt.transcribeAudioFile(...)` remains as a compatibility alias for `api.runtime.mediaUnderstanding.transcribeAudioFile(...)`.</Info>
+<Info>`api.runtime.stt.transcribeAudioFile(...)` 仍作為 `api.runtime.mediaUnderstanding.transcribeAudioFile(...)` 的相容別名 保留。</Info>
 
 ### `api.runtime.imageGeneration`
 

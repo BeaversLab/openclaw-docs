@@ -14,7 +14,7 @@ Cuando un sitio requiera inicio de sesión, **inicie sesión manualmente** en el
 
 **No** proporcione sus credenciales al modelo. Los inicios de sesión automatizados a menudo activan defensas anti-bot y pueden bloquear la cuenta.
 
-Volver a la documentación principal del navegador: [Browser](/es/tools/browser).
+Volver a la documentación principal del navegador: [Browser](/en/tools/browser).
 
 ## ¿Qué perfil de Chrome se utiliza?
 

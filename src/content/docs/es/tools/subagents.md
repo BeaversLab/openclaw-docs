@@ -53,7 +53,7 @@ Estos comandos funcionan en canales que admiten vinculaciones de hilos persisten
 - `--model` y `--thinking` anulan los valores predeterminados para esa ejecución específica.
 - Use `info`/`log` para inspeccionar detalles y resultados después de la finalización.
 - `/subagents spawn` es el modo de un solo disparo (`mode: "run"`). Para sesiones persistentes ligadas a hilos, use `sessions_spawn` con `thread: true` y `mode: "session"`.
-- Para sesiones de arnés ACP (Codex, Claude Code, Gemini CLI), use `sessions_spawn` con `runtime: "acp"` y consulte [ACP Agents](/es/tools/acp-agents).
+- Para sesiones de arnés ACP (Codex, Claude Code, Gemini CLI), use `sessions_spawn` con `runtime: "acp"` y consulte [ACP Agents](/en/tools/acp-agents).
 
 Objetivos principales:
 
@@ -121,7 +121,7 @@ Interruptores de configuración:
 - Predeterminado global: `session.threadBindings.enabled`, `session.threadBindings.idleHours`, `session.threadBindings.maxAgeHours`
 - La anulación del canal y las claves de vinculación automática al generar son específicas del adaptador. Consulte **Canales compatibles con hilos** más arriba.
 
-Consulte [Referencia de configuración](/es/gateway/configuration-reference) y [Comandos de barra](/es/tools/slash-commands) para obtener detalles del adaptador actual.
+Consulte [Referencia de configuración](/en/gateway/configuration-reference) y [Comandos de barra](/en/tools/slash-commands) para obtener detalles del adaptador actual.
 
 Lista de permitidos:
 

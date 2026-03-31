@@ -58,7 +58,7 @@ Notas:
 - `tools.exec.node` (predeterminado: sin establecer)
 - `tools.exec.strictInlineEval` (predeterminado: false): cuando es true, los formularios de evaluación del intérprete en línea, como `python -c`, `node -e`, `ruby -e`, `perl -e`, `php -r`, `lua -e` y `osascript -e` siempre requieren aprobación explícita y nunca son persistidos por `allow-always`.
 - `tools.exec.pathPrepend`: lista de directorios que se anteponen a `PATH` para las ejecuciones exec (solo puerta de enlace + zona de pruebas).
-- `tools.exec.safeBins`: binarios seguros solo de stdin que pueden ejecutarse sin entradas explícitas en la lista de permitidos. Para más detalles sobre el comportamiento, consulte [Safe bins](/es/tools/exec-approvals#safe-bins-stdin-only).
+- `tools.exec.safeBins`: binarios seguros solo de stdin que pueden ejecutarse sin entradas explícitas en la lista de permitidos. Para obtener detalles sobre el comportamiento, consulte [Safe bins](/en/tools/exec-approvals#safe-bins-stdin-only).
 - `tools.exec.safeBinTrustedDirs`: directorios explícitos adicionales de confianza para las comprobaciones de ruta `safeBins`. Las entradas `PATH` nunca son de confianza automática. Los valores predeterminados integrados son `/bin` y `/usr/bin`.
 - `tools.exec.safeBinProfiles`: política personalizada opcional de argv por cada binario seguro (`minPositional`, `maxPositional`, `allowedValueFlags`, `deniedFlags`).
 
@@ -116,8 +116,8 @@ Actualiza **solo el estado de la sesión** y no escribe la configuración. Para 
 
 ## Aprobaciones de ejecución (aplicación complementaria / host del nodo)
 
-Los agentes en sandbox pueden requerir aprobación por solicitud antes de que `exec` se ejecute en la puerta de enlace o el host del nodo.
-Consulta [Aprobaciones de ejecución](/es/tools/exec-approvals) para conocer la política, la lista de permitidos y el flujo de la interfaz de usuario.
+Los agentes en sandbox pueden requerir aprobación por solicitud antes de que `exec` se ejecute en la puerta de enlace o en el host del nodo.
+Consulte [Exec approvals](/en/tools/exec-approvals) para conocer la política, la lista de permitidos y el flujo de la interfaz de usuario.
 
 Cuando se requieren aprobaciones, la herramienta de ejecución regresa inmediatamente con
 `status: "approval-pending"` y un id de aprobación. Una vez aprobada (o denegada / expirada),
@@ -147,7 +147,7 @@ No trate `safeBins` como una lista de permitidos genérica y no agregue binarios
 `openclaw security audit` y `openclaw doctor` también advierten cuando agrega explícitamente binarios de comportamiento amplio como `jq` de nuevo a `safeBins`.
 Si permite explícitamente intérpretes, habilite `tools.exec.strictInlineEval` para que los formularios de evaluación de código en línea aún requieran una aprobación nueva.
 
-Para obtener detalles completos de la política y ejemplos, consulte [Aprobaciones de ejecución](/es/tools/exec-approvals#safe-bins-stdin-only) y [Binarios seguros versus lista de permitidos](/es/tools/exec-approvals#safe-bins-versus-allowlist).
+Para obtener detalles completos sobre la política y ejemplos, consulte [Exec approvals](/en/tools/exec-approvals#safe-bins-stdin-only) y [Safe bins versus allowlist](/en/tools/exec-approvals#safe-bins-versus-allowlist).
 
 ## Ejemplos
 
@@ -184,16 +184,17 @@ Pegar (entre corchetes de forma predeterminada):
 { "tool": "process", "action": "paste", "sessionId": "<id>", "text": "line1\nline2\n" }
 ```
 
-## apply_patch (experimental)
+## apply_patch
 
 `apply_patch` es una subherramienta de `exec` para ediciones estructuradas de múltiples archivos.
-Actívela explícitamente:
+Está habilitada por defecto para los modelos de OpenAI y OpenAI Codex. Usa la configuración solo
+cuando quieras deshabilitarla o restringirla a modelos específicos:
 
 ```json5
 {
   tools: {
     exec: {
-      applyPatch: { enabled: true, workspaceOnly: true, allowModels: ["gpt-5.2"] },
+      applyPatch: { workspaceOnly: true, allowModels: ["gpt-5.2"] },
     },
   },
 }
@@ -202,6 +203,7 @@ Actívela explícitamente:
 Notas:
 
 - Solo disponible para modelos de OpenAI/OpenAI Codex.
-- La política de herramientas aún se aplica; `allow: ["exec"]` permite implícitamente `apply_patch`.
+- La política de herramientas aún se aplica; `allow: ["write"]` permite implícitamente `apply_patch`.
 - La configuración se encuentra en `tools.exec.applyPatch`.
-- `tools.exec.applyPatch.workspaceOnly` tiene como valor predeterminado `true` (contenido en el espacio de trabajo). Establézcalo en `false` solo si intencionalmente quiere que `apply_patch` escriba/elimine fuera del directorio del espacio de trabajo.
+- `tools.exec.applyPatch.enabled` por defecto es `true`; establécelo en `false` para deshabilitar la herramienta para los modelos de OpenAI.
+- `tools.exec.applyPatch.workspaceOnly` por defecto es `true` (contenido en el espacio de trabajo). Establécelo en `false` solo si intencionalmente quieres que `apply_patch` escriba/elimine fuera del directorio del espacio de trabajo.

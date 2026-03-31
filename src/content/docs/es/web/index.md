@@ -13,13 +13,13 @@ El Gateway sirve una pequeña **Interfaz de usuario de control del navegador** (
 - predeterminado: `http://<host>:18789/`
 - prefijo opcional: configure `gateway.controlUi.basePath` (por ejemplo, `/openclaw`)
 
-Las capacidades residen en [Control UI](/es/web/control-ui).
+Las capacidades residen en [Control UI](/en/web/control-ui).
 Esta página se centra en los modos de enlace, seguridad y superficies web.
 
 ## Webhooks
 
 Cuando `hooks.enabled=true`, el Gateway también expone un pequeño endpoint de webhook en el mismo servidor HTTP.
-Consulte [Gateway configuration](/es/gateway/configuration) → `hooks` para obtener información sobre la autenticación y las cargas útiles.
+Consulte [Gateway configuration](/en/gateway/configuration) → `hooks` para obtener información sobre la autenticación y las cargas útiles.
 
 ## Configuración (activada de forma predeterminada)
 
@@ -107,7 +107,7 @@ Abrir:
   cuando `gateway.auth.allowTailscale` es `true` (no se requiere token/contraseña).
   Los endpoints de la API HTTP aún requieren token/contraseña. Establezca
   `gateway.auth.allowTailscale: false` para requerir credenciales explícitas. Consulte
-  [Tailscale](/es/gateway/tailscale) y [Seguridad](/es/gateway/security). Este
+  [Tailscale](/en/gateway/tailscale) y [Seguridad](/en/gateway/security). Este
   flujo sin token asume que el host de la puerta de enlace es confiable.
 - `gateway.tailscale.mode: "funnel"` requiere `gateway.auth.mode: "password"` (contraseña compartida).
 

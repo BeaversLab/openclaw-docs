@@ -18,7 +18,7 @@ and workspace defaults in one guided flow.
 openclaw onboard
 ```
 
-<Info>Fastest first chat: open the Control UI (no channel setup needed). Run `openclaw dashboard` and chat in the browser. Docs: [Dashboard](/en/web/dashboard).</Info>
+<Info>最快首次聊天：打開 Control UI（無需設置通道）。執行 `openclaw dashboard` 並在瀏覽器中聊天。文件：[Dashboard](/en/web/dashboard)。</Info>
 
 To reconfigure later:
 
@@ -27,20 +27,20 @@ openclaw configure
 openclaw agents add <name>
 ```
 
-<Note>`--json` does not imply non-interactive mode. For scripts, use `--non-interactive`.</Note>
+<Note>`--json` 並不意味著非互動模式。對於腳本，請使用 `--non-interactive`。</Note>
 
-<Tip>CLI onboarding includes a web search step where you can pick a provider (Perplexity, Brave, Gemini, Grok, or Kimi) and paste your API key so the agent can use `web_search`. You can also configure this later with `openclaw configure --section web`. Docs: [Web tools](/en/tools/web).</Tip>
+<Tip>CLI 入門導覽包含一個網路搜尋步驟，您可以在其中選擇提供商 （Perplexity、Brave、Gemini、Grok 或 Kimi）並貼上您的 API 金鑰，以便 Agent 能夠使用 `web_search`。您也可以稍後使用 `openclaw configure --section web` 進行配置。文件：[Web tools](/en/tools/web)。</Tip>
 
 ## QuickStart vs Advanced
 
 Onboarding starts with **QuickStart** (defaults) vs **Advanced** (full control).
 
 <Tabs>
-  <Tab title="QuickStart (defaults)">
-    - Local gateway (loopback) - Workspace default (or existing workspace) - Gateway port **18789** - Gateway auth **Token** (auto‑generated, even on loopback) - Tool policy default for new local setups: `tools.profile: "coding"` (existing explicit profile is preserved) - DM isolation default: local onboarding writes `session.dmScope: "per-channel-peer"` when unset. Details: [CLI Setup
-    Reference](/en/start/wizard-cli-reference#outputs-and-internals) - Tailscale exposure **Off** - Telegram + WhatsApp DMs default to **allowlist** (you'll be prompted for your phone number)
+  <Tab title="快速入門 (預設值)">
+    - 本機閘道 (loopback) - 工作區預設值 (或現有工作區) - 閘道連接埠 **18789** - 閘道驗證 **Token** (自動生成，即使是 loopback) - 新本地設定的工具政策預設值：`tools.profile: "coding"` (現有的明確設定檔會被保留) - DM 隔離預設值：本機入門設定若未設定則寫入 `session.dmScope: "per-channel-peer"`。詳情：[CLI 設定參考](/en/start/wizard-cli-reference#outputs-and-internals) - Tailscale 暴露 **關閉** -
+    Telegram + WhatsApp DM 預設為 **allowlist** (系統會提示您輸入電話號碼)
   </Tab>
-  <Tab title="Advanced (full control)">- Exposes every step (mode, workspace, gateway, channels, daemon, skills).</Tab>
+  <Tab title="Advanced (full control)">- 顯示每個步驟 (模式、workspace、gateway、channels、daemon、skills)。</Tab>
 </Tabs>
 
 ## What onboarding configures
@@ -65,7 +65,7 @@ Onboarding starts with **QuickStart** (defaults) vs **Advanced** (full control).
 6. **Health check** — 啟動 Gateway 並驗證其正在執行。
 7. **Skills** — 安裝建議的技能和可選的相依性。
 
-<Note>重新執行入門流程**不會**清除任何內容，除非您明確選擇**Reset**（或傳遞 `--reset`）。CLI `--reset` 預設會處理 config、credentials 和 sessions；請使用 `--reset-scope full` 以包含 workspace。如果設定檔無效或包含舊版金鑰，入門流程會要求您先執行 `openclaw doctor`。</Note>
+<Note>重新執行入門指引**不會**清除任何內容，除非您明確選擇 **Reset**（或傳遞 `--reset`）。 CLI `--reset` 預設涵蓋組態、憑證和會話；請使用 `--reset-scope full` 以包含工作區。 如果組態無效或包含舊版金鑰，入門指引會要求您先執行 `openclaw doctor`。</Note>
 
 **Remote mode** 僅會設定本地端用戶端以連線到其他位置的 Gateway。
 它**不會**安裝或變更遠端主機上的任何內容。
@@ -88,15 +88,15 @@ Notes:
 
 ## Full reference
 
-如需詳細的逐步分解和設定輸出，請參閱
-[CLI Setup Reference](/en/start/wizard-cli-reference)。
-如需非互動式範例，請參閱 [CLI Automation](/en/start/wizard-cli-automation)。
-如需更深入的技術參考，包括 RPC 詳細資訊，請參閱
-[Onboarding Reference](/en/reference/wizard)。
+如需詳細的逐步分解與組態輸出，請參閱
+[CLI 安裝參考](/en/start/wizard-cli-reference)。
+如需非互動式範例，請參閱 [CLI 自動化](/en/start/wizard-cli-automation)。
+如需包含 RPC 詳細資料的更深層技術參考，請參閱
+[Onboarding 參考](/en/reference/wizard)。
 
 ## Related docs
 
 - CLI 指令參考：[`openclaw onboard`](/en/cli/onboard)
-- 入門概覽：[Onboarding Overview](/en/start/onboarding-overview)
+- 入門總覽：[Onboarding Overview](/en/start/onboarding-overview)
 - macOS 應用程式入門：[Onboarding](/en/start/onboarding)
 - Agent 首次執行程序：[Agent Bootstrapping](/en/start/bootstrapping)

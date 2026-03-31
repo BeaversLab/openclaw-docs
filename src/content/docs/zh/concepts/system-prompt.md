@@ -84,7 +84,7 @@ OpenClaw 可以在项目上下文中注入警告块；通过
 内部钩子可以通过 `agent:bootstrap` 拦截此步骤，以更改或替换
 注入的引导文件（例如，将 `SOUL.md` 交换为备用角色设定）。
 
-要检查每个注入文件的贡献（原始与注入、截断，加上工具架构开销），请使用 `/context list` 或 `/context detail`。参见[上下文](/zh/concepts/context)。
+要检查每个注入文件的贡献（原始与注入、截断，加上工具架构开销），请使用 `/context list` 或 `/context detail`。参见[上下文](/en/concepts/context)。
 
 ## 时间处理
 
@@ -99,7 +99,7 @@ OpenClaw 可以在项目上下文中注入警告块；通过
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat` (`auto` | `12` | `24`)
 
-有关完整行为细节，请参见[日期和时间](/zh/date-time)。
+有关完整行为细节，请参见[日期和时间](/en/date-time)。
 
 ## Skills
 

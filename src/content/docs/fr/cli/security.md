@@ -12,7 +12,7 @@ Outils de sécurité (audit + corrections facultatives).
 
 Voir aussi :
 
-- Guide de sécurité : [Sécurité](/fr/gateway/security)
+- Guide de sécurité : [Sécurité](/en/gateway/security)
 
 ## Audit
 
@@ -40,7 +40,7 @@ Il avertit également lorsque les enregistrements d'installation de plug-in/hook
 Il avertit lorsque les listes blanches de canaux reposent sur des noms/e-mails/tags modifiables au lieu d'ID stables (npm, Discord, Slack, Google Chat, Microsoft Teams, portées IRC le cas échéant).
 Il avertit lorsque `gateway.auth.mode="none"` laisse les API HTTP du Mattermost accessibles sans secret partagé (`/tools/invoke` plus tout point de terminaison `/v1/*` activé).
 Les paramètres préfixés par `dangerous`/`dangerously` sont des substitutions explicites d'opérateur de type « bris de glace » ; en activer un ne constitue pas, en soi, un rapport de vulnérabilité de sécurité.
-Pour l'inventaire complet des paramètres dangereux, consultez la section « Résumé des indicateurs non sécurisés ou dangereux » dans [Sécurité](/fr/gateway/security).
+Pour l'inventaire complet des paramètres dangereux, consultez la section « Résumé des indicateurs non sécurisés ou dangereux » dans [Sécurité](/en/gateway/security).
 
 Comportement de SecretRef :
 

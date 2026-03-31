@@ -153,7 +153,7 @@ Gateway 网关 可以暴露一个小型的 HTTP webhook 端点用于外部触发
 - `allowUnsafeExternalContent: true` 为该 hook 禁用外部内容安全包装器
   （危险；仅限受信任的内部源）。
 - `openclaw webhooks gmail setup` 为 `openclaw webhooks gmail run` 写入 `hooks.gmail` 配置。
-  有关完整的 Gmail watch 流程，请参阅 [Gmail Pub/Sub](/zh/automation/gmail-pubsub)。
+  有关完整的 Gmail watch 流程，请参阅 [Gmail Pub/Sub](/en/automation/gmail-pubsub)。
 
 ## 响应
 

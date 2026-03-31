@@ -26,7 +26,7 @@ sidebarTitle: "引導"
 
 引導程序始終在 **閘道主機** 上執行。如果 macOS 應用程式連線到遠端閘道，工作區和引導檔案將位於該遠端機器上。
 
-<Note>當閘道在另一台機器上執行時，請在閘道主機上編輯工作區檔案（例如，`user@gateway-host:~/.openclaw/workspace`）。</Note>
+<Note>當 Gateway 在另一台機器上運行時，請在 gateway 主機上編輯工作區檔案（例如，`user@gateway-host:~/.openclaw/workspace`）。</Note>
 
 ## 相關文件
 

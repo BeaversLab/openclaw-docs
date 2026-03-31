@@ -13,17 +13,17 @@ Ce hub relie la documentation de base expliquant comment OpenClaw connecte, asso
 
 ## Modèle principal
 
-- [Architecture Gateway](/fr/concepts/architecture)
-- [Protocole Gateway](/fr/gateway/protocol)
-- [Runbook Gateway](/fr/gateway)
-- [Surfaces Web + modes de bind](/fr/web)
+- [Architecture Gateway](/en/concepts/architecture)
+- [Protocole Gateway](/en/gateway/protocol)
+- [Runbook Gateway](/en/gateway)
+- [Surfaces Web + modes de bind](/en/web)
 
 ## Association + identité
 
-- [Aperçu de l'association (DM + nœuds)](/fr/channels/pairing)
-- [Association de nœuds appartenant à la Gateway](/fr/gateway/pairing)
-- [CLI des appareils (association + rotation des jetons)](/fr/cli/devices)
-- [CLI d'association (approbations DM)](/fr/cli/pairing)
+- [Aperçu de l'association (DM + nœuds)](/en/channels/pairing)
+- [Association de nœuds appartenant à la Gateway](/en/gateway/pairing)
+- [CLI des appareils (association + rotation des jetons)](/en/cli/devices)
+- [CLI d'association (approbations DM)](/en/cli/pairing)
 
 Confiance locale :
 
@@ -32,21 +32,21 @@ Confiance locale :
 
 ## Discovery + transports
 
-- [Discovery & transports](/fr/gateway/discovery)
-- [Bonjour / mDNS](/fr/gateway/bonjour)
-- [Accès à distance (SSH)](/fr/gateway/remote)
-- [Tailscale](/fr/gateway/tailscale)
+- [Discovery & transports](/en/gateway/discovery)
+- [Bonjour / mDNS](/en/gateway/bonjour)
+- [Accès à distance (SSH)](/en/gateway/remote)
+- [Tailscale](/en/gateway/tailscale)
 
 ## Nœuds + transports
 
-- [Aperçu des nœuds](/fr/nodes)
-- [Protocole de pont (nœuds hérités)](/fr/gateway/bridge-protocol)
-- [Runbook de nœud : iOS](/fr/platforms/ios)
-- [Runbook de nœud : Android](/fr/platforms/android)
+- [Aperçu des nœuds](/en/nodes)
+- [Protocole de pont (nœuds hérités)](/en/gateway/bridge-protocol)
+- [Runbook de nœud : iOS](/en/platforms/ios)
+- [Runbook de nœud : Android](/en/platforms/android)
 
 ## Sécurité
 
-- [Aperçu de la sécurité](/fr/gateway/security)
-- [Référence de configuration Gateway](/fr/gateway/configuration)
-- [Dépannage](/fr/gateway/troubleshooting)
-- [Doctor](/fr/gateway/doctor)
+- [Aperçu de la sécurité](/en/gateway/security)
+- [Référence de configuration Gateway](/en/gateway/configuration)
+- [Dépannage](/en/gateway/troubleshooting)
+- [Doctor](/en/gateway/doctor)

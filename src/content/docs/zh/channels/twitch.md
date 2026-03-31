@@ -25,7 +25,7 @@ openclaw plugins install @openclaw/twitch
 openclaw plugins install ./extensions/twitch
 ```
 
-详情：[插件](/zh/tools/plugin)
+详情：[插件](/en/tools/plugin)
 
 ## 快速设置（初学者）
 
@@ -146,7 +146,7 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 
 ## 多账号支持
 
-将 `channels.twitch.accounts` 与每个账号的令牌一起使用。有关共享模式，请参阅 [`gateway/configuration`](/zh/gateway/configuration)。
+将 `channels.twitch.accounts` 与每个账号的令牌一起使用。有关共享模式，请参阅 [`gateway/configuration`](/en/gateway/configuration)。
 
 示例（一个机器人账号在两个渠道中）：
 

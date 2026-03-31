@@ -29,8 +29,7 @@ title: "SecretRef 凭据定义"
 - `agents.list[].memorySearch.remote.apiKey`
 - `talk.apiKey`
 - `talk.providers.*.apiKey`
-- `messages.tts.elevenlabs.apiKey`
-- `messages.tts.openai.apiKey`
+- `messages.tts.providers.*.apiKey`
 - `tools.web.fetch.firecrawl.apiKey`
 - `plugins.entries.brave.config.webSearch.apiKey`
 - `plugins.entries.google.config.webSearch.apiKey`
@@ -44,6 +43,7 @@ title: "SecretRef 凭据定义"
 - `tools.web.search.grok.apiKey`
 - `tools.web.search.kimi.apiKey`
 - `tools.web.search.perplexity.apiKey`
+- `tools.web.x_search.apiKey`
 - `gateway.auth.password`
 - `gateway.auth.token`
 - `gateway.remote.token`
@@ -63,12 +63,10 @@ title: "SecretRef 凭据定义"
 - `channels.slack.accounts.*.signingSecret`
 - `channels.discord.token`
 - `channels.discord.pluralkit.token`
-- `channels.discord.voice.tts.elevenlabs.apiKey`
-- `channels.discord.voice.tts.openai.apiKey`
+- `channels.discord.voice.tts.providers.*.apiKey`
 - `channels.discord.accounts.*.token`
 - `channels.discord.accounts.*.pluralkit.token`
-- `channels.discord.accounts.*.voice.tts.elevenlabs.apiKey`
-- `channels.discord.accounts.*.voice.tts.openai.apiKey`
+- `channels.discord.accounts.*.voice.tts.providers.*.apiKey`
 - `channels.irc.password`
 - `channels.irc.nickserv.password`
 - `channels.irc.accounts.*.password`
@@ -84,7 +82,9 @@ title: "SecretRef 凭据定义"
 - `channels.msteams.appPassword`
 - `channels.mattermost.botToken`
 - `channels.mattermost.accounts.*.botToken`
+- `channels.matrix.accessToken`
 - `channels.matrix.password`
+- `channels.matrix.accounts.*.accessToken`
 - `channels.matrix.accounts.*.password`
 - `channels.nextcloud-talk.botSecret`
 - `channels.nextcloud-talk.apiPassword`
@@ -124,8 +124,6 @@ title: "SecretRef 凭据定义"
 [//]: # "secretref-unsupported-list-start"
 
 - `commands.ownerDisplaySecret`
-- `channels.matrix.accessToken`
-- `channels.matrix.accounts.*.accessToken`
 - `hooks.token`
 - `hooks.gmail.pushToken`
 - `hooks.mappings[].sessionKey`
@@ -137,4 +135,4 @@ title: "SecretRef 凭据定义"
 
 基本原理：
 
-- 这些凭据属于动态生成、轮换、承载会话或 OAuth 持久化的类别，不符合只读外部 SecretRef 解析的要求。
+- 这些凭据是动态生成、轮换、会话持有或 OAuth 持久类，不适合只读外部 SecretRef 解析。

@@ -11,11 +11,11 @@ Incorporación interactiva para la configuración de Gateway local o remota.
 
 ## Guías relacionadas
 
-- Centro de incorporación de la CLI: [Incorporación (CLI)](/es/start/wizard)
-- Descripción general de la integración: [Descripción general de la integración](/es/start/onboarding-overview)
-- Referencia de incorporación de la CLI: [Referencia de configuración de la CLI](/es/start/wizard-cli-reference)
-- Automatización de CLI: [Automatización de CLI](/es/start/wizard-cli-automation)
-- Integración en macOS: [Integración (Aplicación macOS)](/es/start/onboarding)
+- Centro de incorporación de la CLI: [Incorporación (CLI)](/en/start/wizard)
+- Descripción general de la integración: [Descripción general de la integración](/en/start/onboarding-overview)
+- Referencia de incorporación de la CLI: [Referencia de configuración de la CLI](/en/start/wizard-cli-reference)
+- Automatización de CLI: [Automatización de CLI](/en/start/wizard-cli-automation)
+- Integración en macOS: [Integración (Aplicación macOS)](/en/start/onboarding)
 
 ## Ejemplos
 
@@ -140,7 +140,7 @@ Notas sobre el flujo:
 
 - `quickstart`: indicaciones mínimas, genera automáticamente un token de puerta de enlace.
 - `manual`: indicaciones completas para puerto/vínculo/autenticación (alias de `advanced`).
-- Comportamiento del alcance de MD en la incorporación local: [Referencia de configuración de la CLI](/es/start/wizard-cli-reference#outputs-and-internals).
+- Comportamiento del alcance de MD en la incorporación local: [Referencia de configuración de la CLI](/en/start/wizard-cli-reference#outputs-and-internals).
 - El primer chat más rápido: `openclaw dashboard` (UI de control, sin configuración de canal).
 - Proveedor personalizado: conecte cualquier punto final compatible con OpenAI o Anthropic,
   incluidos los proveedores alojados que no figuran en la lista. Use Unknown para detectar automáticamente.

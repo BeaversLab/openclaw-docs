@@ -14,7 +14,7 @@ title: "Gmail PubSub"
 
 - `gcloud` 已安装并登录（[安装指南](https://docs.cloud.google.com/sdk/docs/install-sdk)）。
 - `gog` (gogcli) 已安装并获得 Gmail 帐户的授权（[gogcli.sh](https://gogcli.sh/)）。
-- OpenClaw 钩子已启用（参见 [Webhooks](/zh/automation/webhook)）。
+- OpenClaw 钩子已启用（参见 [Webhooks](/en/automation/webhook)）。
 - `tailscale` 已登录 ([tailscale.com](https://tailscale.com/))。受支持的设置使用 Tailscale Funnel 作为公共 HTTPS 端点。
   其他隧道服务可能也可以使用，但属于 DIY/不受支持的范围，并且需要手动连接。
   目前，我们支持 Tailscale。
@@ -87,7 +87,7 @@ title: "Gmail PubSub"
 - 默认情况下，Gmail hook 内容会使用外部内容安全边界进行包装。
   要禁用（危险），请设置 `hooks.gmail.allowUnsafeExternalContent: true`。
 
-要进一步自定义负载处理，请在 `~/.openclaw/hooks/transforms` 下添加 `hooks.mappings` 或 JS/TS 转换模块（参见 [Webhooks](/zh/automation/webhook)）。
+要进一步自定义负载处理，请在 `~/.openclaw/hooks/transforms` 下添加 `hooks.mappings` 或 JS/TS 转换模块（参见 [Webhooks](/en/automation/webhook)）。
 
 ## 向导（推荐）
 

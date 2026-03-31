@@ -92,6 +92,6 @@ await web_search({
 
 ## 相关
 
-- [Web Search overview](/zh/tools/web) -- 所有提供商和自动检测
-- [Perplexity Search](/zh/tools/perplexity-search) -- 带有域名过滤的结构化结果
-- [Exa Search](/zh/tools/exa-search) -- 带有内容提取的神经搜索
+- [Web Search overview](/en/tools/web) -- 所有提供商和自动检测
+- [Perplexity Search](/en/tools/perplexity-search) -- 带有域名过滤的结构化结果
+- [Exa Search](/en/tools/exa-search) -- 带有内容提取的神经搜索

@@ -13,7 +13,7 @@ read_when:
 Cada complemento exporta un objeto de entrada predeterminado. El SDK proporciona tres asistentes para
 crearlos.
 
-<Tip>**¿Buscas un tutorial?** Consulta [Complementos de canal](/es/plugins/sdk-channel-plugins) o [Complementos de proveedor](/es/plugins/sdk-provider-plugins) para obtener guías paso a paso.</Tip>
+<Tip>**¿Buscas un tutorial?** Consulta [Channel Plugins](/en/plugins/sdk-channel-plugins) o [Provider Plugins](/en/plugins/sdk-provider-plugins) para guías paso a paso.</Tip>
 
 ## `definePluginEntry`
 
@@ -105,8 +105,8 @@ export default defineSetupPluginEntry(myChannelPlugin);
 ```
 
 OpenClaw carga esto en lugar de la entrada completa cuando un canal está deshabilitado,
-sin configurar, o cuando la carga diferida está habilitada. Consulte
-[Configuración y ajustes](/es/plugins/sdk-setup#setup-entry) para saber cuándo importa esto.
+sin configurar o cuando la carga diferida está habilitada. Consulta
+[Setup and Config](/en/plugins/sdk-setup#setup-entry) para saber cuándo es importante.
 
 ## Modo de registro
 
@@ -147,8 +147,8 @@ Use `openclaw plugins inspect <id>` para ver la forma de un complemento.
 
 ## Relacionado
 
-- [Resumen del SDK](/es/plugins/sdk-overview) — referencia de la API de registro y subrutas
-- [Ayudantes de tiempo de ejecución](/es/plugins/sdk-runtime) — `api.runtime` y `createPluginRuntimeStore`
-- [Configuración y ajustes](/es/plugins/sdk-setup) — manifiesto, entrada de configuración, carga diferida
-- [Channel Plugins](/es/plugins/sdk-channel-plugins) — construir el objeto `ChannelPlugin`
-- [Provider Plugins](/es/plugins/sdk-provider-plugins) — registro de proveedores y hooks
+- [SDK Overview](/en/plugins/sdk-overview) — referencia de la API de registro y subrutas
+- [Runtime Helpers](/en/plugins/sdk-runtime) — `api.runtime` y `createPluginRuntimeStore`
+- [Setup and Config](/en/plugins/sdk-setup) — manifiesto, entrada de configuración, carga diferida
+- [Channel Plugins](/en/plugins/sdk-channel-plugins) — construcción del objeto `ChannelPlugin`
+- [Provider Plugins](/en/plugins/sdk-provider-plugins) — registro de proveedores y hooks

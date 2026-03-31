@@ -12,7 +12,7 @@ title: "提升模式"
 沙箱环境中。**提升模式** 允许代理突破限制并在
 网关主机上运行命令，并配有可配置的审批关卡。
 
-<Info>提升模式仅在代理处于**沙箱隔离**状态时才会改变行为。对于未沙箱隔离的代理，exec 已经在主机上运行。</Info>
+<Info>提升模式仅在代理处于**沙箱隔离**状态时才会改变行为。对于 非沙箱隔离的代理，exec 已在主机上运行。</Info>
 
 ## 指令
 
@@ -105,7 +105,7 @@ Allowlist entry formats:
 
 ## Related
 
-- [Exec 工具](/zh/tools/exec) — shell command execution
-- [Exec approvals](/zh/tools/exec-approvals) — approval and allowlist system
-- [沙箱隔离](/zh/gateway/sandboxing) — sandbox configuration
-- [沙箱 vs Tool Policy vs Elevated](/zh/gateway/sandbox-vs-tool-policy-vs-elevated)
+- [Exec 工具](/en/tools/exec) — shell command execution
+- [Exec approvals](/en/tools/exec-approvals) — approval and allowlist system
+- [沙箱隔离](/en/gateway/sandboxing) — sandbox configuration
+- [沙箱 vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)

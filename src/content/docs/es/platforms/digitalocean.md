@@ -12,7 +12,7 @@ title: "DigitalOcean (Plataforma)"
 
 Ejecutar un Gateway OpenClaw persistente en DigitalOcean por **$6/mes** (o $4/mes con precio reservado).
 
-Si desea una opción de $0/mes y no le importa ARM + una configuración específica del proveedor, consulte la [guía de Oracle Cloud](/es/platforms/oracle).
+Si desea una opción de $0/mes y no le importa ARM + una configuración específica del proveedor, consulte la [guía de Oracle Cloud](/en/platforms/oracle).
 
 ## Comparación de costos (2026)
 
@@ -27,8 +27,8 @@ Si desea una opción de $0/mes y no le importa ARM + una configuración específ
 **Elegir un proveedor:**
 
 - DigitalOcean: la experiencia de usuario más simple + configuración predecible (esta guía)
-- Hetzner: buen precio/rendimiento (consulte la [guía de Hetzner](/es/install/hetzner))
-- Oracle Cloud: puede ser $0/mes, pero es más complicado y solo para ARM (consulte la [guía de Oracle](/es/platforms/oracle))
+- Hetzner: buen precio/rendimiento (consulte la [guía de Hetzner](/en/install/hetzner))
+- Oracle Cloud: puede ser $0/mes, pero es más complicado y solo para ARM (consulte la [guía de Oracle](/en/platforms/oracle))
 
 ---
 
@@ -40,7 +40,7 @@ Si desea una opción de $0/mes y no le importa ARM + una configuración específ
 
 ## 1) Crear un Droplet
 
-<Warning>Utilice una imagen base limpia (Ubuntu 24.04 LTS). Evite las imágenes de un clic del Marketplace de terceros a menos que haya revisado sus scripts de inicio y configuraciones predeterminadas del firewall.</Warning>
+<Warning>Utilice una imagen base limpia (Ubuntu 24.04 LTS). Evite las imágenes de un clic de Marketplace de terceros a menos que haya revisado sus scripts de inicio y configuraciones predeterminadas del firewall.</Warning>
 
 1. Inicie sesión en [DigitalOcean](https://cloud.digitalocean.com/)
 2. Haga clic en **Create → Droplets**
@@ -158,7 +158,7 @@ openclaw channels login whatsapp
 # Scan QR code
 ```
 
-Consulte [Canales](/es/channels) para otros proveedores.
+Consulte [Canales](/en/channels) para otros proveedores.
 
 ---
 
@@ -223,7 +223,7 @@ Oracle Cloud ofrece instancias ARM **Always Free** que son significativamente m�
 - El registro puede ser complicado (intente de nuevo si falla)
 - Arquitectura ARM — la mayoría de las cosas funcionan, pero algunos binarios necesitan compilaciones para ARM
 
-Para la guía completa de configuración, consulte [Oracle Cloud](/es/platforms/oracle). Para consejos de registro y solución de problemas del proceso de inscripción, consulte esta [guía de la comunidad](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
+Para la guía completa de configuración, consulte [Oracle Cloud](/en/platforms/oracle). Para consejos de registro y solución de problemas del proceso de inscripción, consulte esta [guía de la comunidad](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
 
 ---
 
@@ -258,7 +258,7 @@ free -h
 
 ## Véase También
 
-- [Guía de Hetzner](/es/install/hetzner) — más barato, más potente
-- [Instalación con Docker](/es/install/docker) — configuración en contenedores
-- [Tailscale](/es/gateway/tailscale) — acceso remoto seguro
-- [Configuración](/es/gateway/configuration) — referencia completa de configuración
+- [Guía de Hetzner](/en/install/hetzner) — más barato, más potente
+- [Instalación con Docker](/en/install/docker) — configuración en contenedores
+- [Tailscale](/en/gateway/tailscale) — acceso remoto seguro
+- [Configuración](/en/gateway/configuration) — referencia completa de configuración

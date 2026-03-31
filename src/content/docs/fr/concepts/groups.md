@@ -64,7 +64,7 @@ Cela vous donne un seul « cerveau » d'agent (espace de travail partagé + mém
 - **DMs** : outils complets (hôte)
 - **Groupes** : sandbox + outils restreints (Docker)
 
-> Si vous avez besoin d'espaces de travail ou de personnalités véritablement séparés (le « personnel » et le « public » ne doivent jamais être mélangés), utilisez un second agent + liaisons. Voir [Multi-Agent Routing](/fr/concepts/multi-agent).
+> Si vous avez besoin d'espaces de travail ou de personnalités véritablement séparés (le « personnel » et le « public » ne doivent jamais être mélangés), utilisez un second agent + liaisons. Voir [Multi-Agent Routing](/en/concepts/multi-agent).
 
 Exemple (DMs sur l'hôte, groupes isolés + outils de messagerie uniquement) :
 
@@ -115,9 +115,9 @@ Vous préférez « les groupes peuvent uniquement voir le dossier X » plutôt q
 
 Connexes :
 
-- Clés de configuration et valeurs par défaut : [configuration Gateway](/fr/gateway/configuration#agentsdefaultssandbox)
-- Débogage du blocage d'un outil : [Sandbox vs Tool Policy vs Elevated](/fr/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Détails des montages de liaison (bind mounts) : [Sandboxing](/fr/gateway/sandboxing#custom-bind-mounts)
+- Clés de configuration et valeurs par défaut : [configuration Gateway](/en/gateway/configuration#agentsdefaultssandbox)
+- Débogage du blocage d'un outil : [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Détails des montages de liaison (bind mounts) : [Sandboxing](/en/gateway/sandboxing#custom-bind-mounts)
 
 ## Libellés d'affichage
 
@@ -370,4 +370,4 @@ Le prompt système de l'agent inclut une introduction de groupe au premier tour 
 
 ## Spécificités WhatsApp
 
-Voir [Group messages](/fr/concepts/group-messages) pour les comportements exclusifs à WhatsApp (injection de l'historique, détails de la gestion des mentions).
+Voir [Group messages](/en/concepts/group-messages) pour les comportements exclusifs à WhatsApp (injection de l'historique, détails de la gestion des mentions).

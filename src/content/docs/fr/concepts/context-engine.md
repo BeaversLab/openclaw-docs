@@ -249,4 +249,4 @@ Le slot est exclusif lors de l'exécution — un seul moteur de contexte enregis
 - Les erreurs du moteur sont journalisées et affichées dans les diagnostics. Si un moteur de plugin échoue à s'enregistrer ou si l'identifiant du moteur sélectionné ne peut pas être résolu, OpenClaw ne revient pas automatiquement à une version précédente ; les exécutions échouent jusqu'à ce que vous corrigiez le plugin ou que vous remettiez `plugins.slots.contextEngine` à `"legacy"`.
 - Pour le développement, utilisez `openclaw plugins install -l ./my-engine` pour lier un répertoire de plugin local sans copier.
 
-Voir aussi : [Compactage](/fr/concepts/compaction), [Contexte](/fr/concepts/context), [Plugins](/fr/tools/plugin), [Manifeste de plugin](/fr/plugins/manifest).
+Voir aussi : [Compactage](/en/concepts/compaction), [Contexte](/en/concepts/context), [Plugins](/en/tools/plugin), [Manifeste de plugin](/en/plugins/manifest).

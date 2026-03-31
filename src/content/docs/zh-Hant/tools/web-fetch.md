@@ -36,10 +36,10 @@ await web_fetch({ url: "https://example.com/article" });
 ## 運作原理
 
 <Steps>
-  <Step title="擷取">使用類似 Chrome 的 User-Agent 和 `Accept-Language` 標頭發送 HTTP GET 請求。阻擋私人/內部主機名稱並重新檢查重新導向。</Step>
-  <Step title="提取">對 HTML 回應執行 Readability（主要內容提取）。</Step>
-  <Step title="後備 (可選)">如果 Readability 失敗且已設定 Firecrawl，則透過 Firecrawl API 以繞過機器人模式重試。</Step>
-  <Step title="快取">結果會快取 15 分鐘（可設定），以減少對相同 URL 的重複擷取。</Step>
+  <Step title="擷取">傳送帶有類似 Chrome User-Agent 和 `Accept-Language` 標頭的 HTTP GET。封鎖私人/內部主機名稱並重新檢查重新導向。</Step>
+  <Step title="提取">在 HTML 回應上執行 Readability（主要內容提取）。</Step>
+  <Step title="後備（可選）">如果 Readability 失敗且已設定 Firecrawl，則透過 Firecrawl API 以繞過機器人模式重試。</Step>
+  <Step title="快取">結果會被快取 15 分鐘（可設定），以減少對 相同 URL 的重複擷取。</Step>
 </Steps>
 
 ## 設定
@@ -90,7 +90,7 @@ await web_fetch({ url: "https://example.com/article" });
 
 `tools.web.fetch.firecrawl.apiKey` 支援 SecretRef 物件。
 
-<Note>如果啟用了 Firecrawl 且其 SecretRef 未解析並且沒有 `FIRECRAWL_API_KEY` env 後備，gateway 啟動會快速失敗。</Note>
+<Note>如果已啟用 Firecrawl 且其 SecretRef 未解析且沒有 `FIRECRAWL_API_KEY` 環境變數後備，閘道啟動會快速失敗。</Note>
 
 ## 限制與安全性
 

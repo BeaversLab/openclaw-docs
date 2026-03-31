@@ -69,7 +69,7 @@ openclaw doctor
 ### 控制 UI (Web)
 
 控制 UI 的 **日志 (Logs)** 选项卡使用 `logs.tail` 追踪同一个文件。
-有关如何打开它的信息，请参阅 [/web/control-ui](/zh/web/control-ui)。
+有关如何打开它的信息，请参阅 [/web/control-ui](/en/web/control-ui)。
 
 ### 仅通道日志
 
@@ -216,7 +216,7 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 
 - 标志日志进入标准日志文件（与 `logging.file` 相同）。
 - 输出仍根据 `logging.redactSensitive` 进行编辑。
-- 完整指南：[/diagnostics/flags](/zh/diagnostics/flags)。
+- 完整指南：[/diagnostics/flags](/en/diagnostics/flags)。
 
 ### 导出到 OpenTelemetry
 

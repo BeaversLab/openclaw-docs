@@ -8,7 +8,7 @@ title: "Configuración"
 
 # Configuración
 
-<Note>Si está configurando por primera vez, comience con [Getting Started](/es/start/getting-started). Para más detalles sobre la incorporación, consulte [Onboarding (CLI)](/es/start/wizard).</Note>
+<Note>Si está configurando por primera vez, comience con [Getting Started](/en/start/getting-started). Para obtener detalles sobre la incorporación, consulte [Onboarding (CLI)](/en/start/wizard).</Note>
 
 ## TL;DR
 
@@ -20,7 +20,7 @@ title: "Configuración"
 
 - Se recomienda Node 24 (Node 22 LTS, actualmente `22.14+`, aún compatible)
 - `pnpm`
-- Docker (opcional; solo para configuración/e2e en contenedores — consulta [Docker](/es/install/docker))
+- Docker (opcional; solo para configuración/e2e en contenedores — consulta [Docker](/en/install/docker))
 
 ## Estrategia de personalización (para que las actualizaciones no dañen)
 
@@ -132,7 +132,7 @@ Usa esto al depurar la autenticación o al decidir qué respaldar:
 - **Perfiles de autenticación de modelos**: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
 - **Carga útil de secretos respaldada en archivo (opcional)**: `~/.openclaw/secrets.json`
 - **Importación heredada de OAuth**: `~/.openclaw/credentials/oauth.json`
-  Más detalles: [Seguridad](/es/gateway/security#credential-storage-map).
+  Más detalles: [Seguridad](/en/gateway/security#credential-storage-map).
 
 ## Actualización (sin arruinar tu configuración)
 
@@ -150,12 +150,12 @@ sudo loginctl enable-linger $USER
 ```
 
 Para servidores siempre activos o multiusuario, considera un servicio del **sistema** en lugar de un
-servicio de usuario (no se necesita modo persistente). Consulta el [Manual de procedimientos de Gateway](/es/gateway) para las notas de systemd.
+servicio de usuario (no se necesita modo persistente). Consulta el [Manual de procedimientos de Gateway](/en/gateway) para las notas de systemd.
 
 ## Documentación relacionada
 
-- [Manual de procedimientos de Gateway](/es/gateway) (indicadores, supervisión, puertos)
-- [Configuración de Gateway](/es/gateway/configuration) (esquema de configuración + ejemplos)
-- [Discord](/es/channels/discord) y [Telegram](/es/channels/telegram) (etiquetas de respuesta + configuraciones replyToMode)
-- [Configuración del asistente OpenClaw](/es/start/openclaw)
-- [aplicación de macOS](/es/platforms/macos) (ciclo de vida del gateway)
+- [Manual de procedimientos de Gateway](/en/gateway) (indicadores, supervisión, puertos)
+- [Configuración de Gateway](/en/gateway/configuration) (esquema de configuración + ejemplos)
+- [Discord](/en/channels/discord) y [Telegram](/en/channels/telegram) (etiquetas de respuesta + configuraciones replyToMode)
+- [Configuración del asistente OpenClaw](/en/start/openclaw)
+- [aplicación de macOS](/en/platforms/macos) (ciclo de vida del gateway)

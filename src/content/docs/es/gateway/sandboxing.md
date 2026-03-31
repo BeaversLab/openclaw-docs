@@ -34,7 +34,7 @@ No está en sandbox:
 - El proceso del Gateway en sí.
 - Cualquier herramienta explícitamente permitida para ejecutarse en el host (p. ej. `tools.elevated`).
   - **La ejecución elevada se ejecuta en el host y omite el aislamiento.**
-  - Si el aislamiento está desactivado, `tools.elevated` no cambia la ejecución (ya está en el host). Consulte [Modo elevado](/es/tools/elevated).
+  - Si el aislamiento está desactivado, `tools.elevated` no cambia la ejecución (ya está en el host). Consulte [Modo elevado](/en/tools/elevated).
 
 ## Modos
 
@@ -137,7 +137,7 @@ Consecuencias importantes:
 Use `backend: "openshell"` cuando desee que OpenClaw ponga herramientas en sandbox en un
 entorno remoto administrado por OpenShell. Para obtener la guía de configuración completa, la
 referencia de configuración y la comparación de modos de espacio de trabajo, consulte la
-[página dedicada a OpenShell](/es/gateway/openshell).
+[página dedicada a OpenShell](/en/gateway/openshell).
 
 OpenShell reutiliza el mismo transporte SSH central y el puente del sistema de archivos remoto que el
 backend SSH genérico, y agrega un ciclo de vida específico de OpenShell
@@ -320,7 +320,7 @@ Notas de seguridad:
 - OpenClaw bloquea fuentes de enlace peligrosas (por ejemplo: `docker.sock`, `/etc`, `/proc`, `/sys`, `/dev`, y montajes principales que los expondrían).
 - Los montajes sensibles (secretos, claves SSH, credenciales de servicio) deben ser `:ro` a menos que sean absolutamente necesarios.
 - Combínalo con `workspaceAccess: "ro"` si solo necesitas acceso de lectura al espacio de trabajo; los modos de enlace se mantienen independientes.
-- Consulta [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) para ver cómo los enlaces interactúan con la política de herramientas y la ejecución elevada.
+- Consulta [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) para ver cómo los enlaces interactúan con la política de herramientas y la ejecución elevada.
 
 ## Imágenes + configuración
 
@@ -395,12 +395,12 @@ Valores predeterminados de seguridad:
 - Anulación de emergencia: `agents.defaults.sandbox.docker.dangerouslyAllowContainerNamespaceJoin: true`.
 
 Las instalaciones de Docker y el gateway en contenedor se encuentran aquí:
-[Docker](/es/install/docker)
+[Docker](/en/install/docker)
 
-Para los despliegues de puerta de enlace de Docker, `scripts/docker/setup.sh` puede iniciar la configuración del sandbox.
+Para despliegues de gateway en Docker, `scripts/docker/setup.sh` puede iniciar la configuración del sandbox.
 Establezca `OPENCLAW_SANDBOX=1` (o `true`/`yes`/`on`) para habilitar esa ruta. Puede
-anular la ubicación del socket con `OPENCLAW_DOCKER_SOCKET`. Consulta la configuración completa y las referencias de entorno
-en: [Docker](/es/install/docker#enable-agent-sandbox-for-docker-gateway).
+anular la ubicación del socket con `OPENCLAW_DOCKER_SOCKET`. Referencia completa de configuración y
+entorno: [Docker](/en/install/docker#agent-sandbox).
 
 ## setupCommand (configuración única del contenedor)
 
@@ -428,19 +428,19 @@ globalmente o por agente, el sandbox no la restaura.
 
 `tools.elevated` es una vía de escape explícita que ejecuta `exec` en el host.
 Las directivas `/exec` solo se aplican a remitentes autorizados y persisten por sesión; para deshabilitar permanentemente
-`exec`, use la denegación de la política de herramientas (vea [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated)).
+`exec`, use la denegación de la política de herramientas (vea [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)).
 
 Depuración:
 
 - Use `openclaw sandbox explain` para inspeccionar el modo de sandbox efectivo, la política de herramientas y las claves de configuración de reparación.
-- Vea [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) para el modelo mental de "¿por qué está esto bloqueado?".
+- Vea [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) para el modelo mental de "¿por qué está esto bloqueado?".
   Manténgalo bloqueado.
 
 ## Invalidaciones de multiagente
 
 Cada agente puede anular el sandbox + herramientas:
 `agents.list[].sandbox` y `agents.list[].tools` (además de `agents.list[].tools.sandbox.tools` para la política de herramientas del sandbox).
-Vea [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para conocer la precedencia.
+Vea [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) para conocer la precedencia.
 
 ## Ejemplo de activación mínima
 
@@ -460,8 +460,8 @@ Vea [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para cono
 
 ## Documentación relacionada
 
-- [OpenShell](/es/gateway/openshell) -- configuración del backend de sandbox administrado, modos de espacio de trabajo y referencia de configuración
-- [Configuración del sandbox](/es/gateway/configuration-reference#agentsdefaultssandbox)
-- [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) -- depurando "¿por qué está esto bloqueado?"
-- [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) -- invalidaciones por agente y precedencia
-- [Seguridad](/es/gateway/security)
+- [OpenShell](/en/gateway/openshell) -- configuración del backend de sandbox administrado, modos de espacio de trabajo y referencia de configuración
+- [Configuración del sandbox](/en/gateway/configuration-reference#agentsdefaultssandbox)
+- [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) -- depurando "¿por qué está esto bloqueado?"
+- [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) -- invalidaciones por agente y precedencia
+- [Seguridad](/en/gateway/security)

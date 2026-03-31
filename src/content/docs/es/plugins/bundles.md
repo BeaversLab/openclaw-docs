@@ -13,7 +13,7 @@ OpenClaw puede instalar complementos de tres ecosistemas externos: **Codex**, **
 y **Cursor**. Estos se denominan **bundles** — paquetes de contenido y metadatos que
 OpenClaw asigna a características nativas como habilidades, enlaces y herramientas MCP.
 
-<Info>Los bundles **no** son lo mismo que los complementos nativos de OpenClaw. Los complementos nativos se ejecutan en proceso y pueden registrar cualquier capacidad. Los bundles son paquetes de contenido con mapeo de características selectivo y un límite de confianza más estrecho.</Info>
+<Info>Los bundles **no** son lo mismo que los plugins nativos de OpenClaw. Los plugins nativos se ejecutan en proceso y pueden registrar cualquier capacidad. Los bundles son paquetes de contenido con asignación selectiva de características y un límite de confianza más estrecho.</Info>
 
 ## Por qué existen los bundles
 
@@ -153,9 +153,9 @@ paquetes de terceros como contenido de confianza para las características que e
 no conectada, ese es un límite del producto — no una instalación rota.
   </Accordion>
 
-<Accordion title="Los archivos de comandos de Claude no aparecen">Asegúrate de que el paquete esté habilitado y que los archivos markdown estén dentro de una raíz `commands/` o `skills/` detectada.</Accordion>
+<Accordion title="Los archivos de comandos de Claude no aparecen">Asegúrese de que el bundle esté habilitado y que los archivos markdown estén dentro de una raíz `commands/` o `skills/` detectada.</Accordion>
 
-<Accordion title="La configuración de Claude no se aplica">Solo se admiten las configuraciones integradas de Pi de `settings.json`. OpenClaw no trata la configuración del paquete como parches de configuración sin procesar.</Accordion>
+<Accordion title="La configuración de Claude no se aplica">Solo se admiten las configuraciones Pi incrustadas de `settings.json`. OpenClaw no trata la configuración de los bundles como parches de configuración sin procesar.</Accordion>
 
   <Accordion title="Los hooks de Claude no se ejecutan">
     `hooks/hooks.json` es solo de detección. Si necesitas hooks ejecutables, usa el
@@ -165,6 +165,6 @@ no conectada, ese es un límite del producto — no una instalación rota.
 
 ## Relacionado
 
-- [Instalar y configurar plugins](/es/tools/plugin)
-- [Construcción de plugins](/es/plugins/building-plugins) — crear un plugin nativo
-- [Manifiesto del plugin](/es/plugins/manifest) — esquema de manifiesto nativo
+- [Instalar y configurar plugins](/en/tools/plugin)
+- [Construcción de plugins](/en/plugins/building-plugins) — crear un plugin nativo
+- [Manifiesto del plugin](/en/plugins/manifest) — esquema de manifiesto nativo

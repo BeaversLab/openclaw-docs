@@ -35,5 +35,5 @@ Telegram 许可名单现在不区分大小写地接受 `telegram:` 和 `tg:` 前
 
 ## 相关文档
 
-- [群聊](/zh/concepts/groups)
-- [Telegram 提供商](/zh/channels/telegram)
+- [群聊](/en/concepts/groups)
+- [Telegram 提供商](/en/channels/telegram)

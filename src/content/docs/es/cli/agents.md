@@ -11,8 +11,8 @@ Administrar agentes aislados (espacios de trabajo + autenticación + enrutamient
 
 Relacionado:
 
-- Enrutamiento multiagente: [Multi-Agent Routing](/es/concepts/multi-agent)
-- Espacio de trabajo del agente: [Agent workspace](/es/concepts/agent-workspace)
+- Enrutamiento multiagente: [Multi-Agent Routing](/en/concepts/multi-agent)
+- Espacio de trabajo del agente: [Agent workspace](/en/concepts/agent-workspace)
 
 ## Ejemplos
 

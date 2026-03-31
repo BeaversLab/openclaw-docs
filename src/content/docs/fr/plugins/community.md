@@ -10,7 +10,7 @@ title: "Plug-ins communautaires"
 
 Les plug-ins communautaires sont des packages tiers qui étendent OpenClaw avec de nouveaux
 canaux, outils, fournisseurs ou autres capacités. Ils sont construits et maintenus
-par la communauté, publiés sur [ClawHub](/fr/tools/clawhub) ou npm, et
+par la communauté, publiés sur [ClawHub](/en/tools/clawhub) ou npm, et
 installables avec une seule commande.
 
 ```bash
@@ -104,8 +104,8 @@ Nous accueillons favorablement les plugins communautaires qui sont utiles, docum
 <Steps>
   <Step title="Publier sur ClawHub ou npm">
     Votre plugin doit être installable via `openclaw plugins install \<package-name\>`.
-    Publiez sur [ClawHub](/fr/tools/clawhub) (préféré) ou npm.
-    Voir [Building Plugins](/fr/plugins/building-plugins) pour le guide complet.
+    Publiez sur [ClawHub](/en/tools/clawhub) (préféré) ou npm.
+    Voir [Building Plugins](/en/plugins/building-plugins) pour le guide complet.
 
   </Step>
 
@@ -139,6 +139,6 @@ Les enveloppes de faible effort, la propriété incertaine ou les packages non m
 
 ## Connexes
 
-- [Install and Configure Plugins](/fr/tools/plugin) — comment installer n'importe quel plugin
-- [Building Plugins](/fr/plugins/building-plugins) — créer le vôtre
-- [Plugin Manifest](/fr/plugins/manifest) — schéma du manifeste
+- [Install and Configure Plugins](/en/tools/plugin) — comment installer n'importe quel plugin
+- [Building Plugins](/en/plugins/building-plugins) — créer le vôtre
+- [Plugin Manifest](/en/plugins/manifest) — schéma du manifeste

@@ -12,7 +12,7 @@ read_when:
 
 本指南介绍了如何构建一个提供商插件，用于向 LLM 添加模型提供商 (OpenClaw)。完成本指南后，你将拥有一个包含模型目录、API 密钥身份验证和动态模型解析的提供商。
 
-<Info>如果你之前从未构建过 OpenClaw 插件，请先阅读 [入门指南](/zh/plugins/building-plugins) 以了解基本包结构和清单设置。</Info>
+<Info>如果您之前尚未构建任何 OpenClaw 插件，请首先阅读 [入门指南](/en/plugins/building-plugins) 以了解基本的包 结构和清单设置。</Info>
 
 ## 演练
 
@@ -207,11 +207,11 @@ read_when:
   </Step>
 
   <Step title="添加运行时钩子（根据需要）">
-    大多数提供商只需要 `catalog` + `resolveDynamicModel`。根据提供商的需要逐步添加钩子。
+    大多数提供商只需要 `catalog` + `resolveDynamicModel`。根据您的提供商需要逐步添加钩子。
 
     <Tabs>
       <Tab title="令牌交换">
-        对于需要在每次推理调用之前进行令牌交换的提供商：
+        对于在每次推理调用前需要令牌交换的提供商：
 
         ```typescript
         prepareRuntimeAuth: async (ctx) => {
@@ -243,7 +243,7 @@ read_when:
         ```
       </Tab>
       <Tab title="使用和计费">
-        对于暴露使用/计费数据的提供商：
+        对于公开使用/计费数据的提供商：
 
         ```typescript
         resolveUsageAuth: async (ctx) => {
@@ -258,23 +258,23 @@ read_when:
     </Tabs>
 
     <Accordion title="所有可用的提供商钩子">
-      OpenClaw 按此顺序调用钩子。大多数提供商仅使用 2-3 个：
+      OpenClaw 按此顺序调用钩子。大多数提供商只使用 2-3 个：
 
       | # | Hook | 何时使用 |
       | --- | --- | --- |
       | 1 | `catalog` | 模型目录或基础 URL 默认值 |
-      | 2 | `resolveDynamicModel` | 接受任意上游模型 ID |
-      | 3 | `prepareDynamicModel` | 解析之前的异步元数据获取 |
-      | 4 | `normalizeResolvedModel` | 运行程序之前的传输重写 |
-      | 5 | `capabilities` | 副本/工具元数据（数据，不可调用） |
+      | 2 | `resolveDynamicModel` | 接受任意的上游模型 ID |
+      | 3 | `prepareDynamicModel` | 解析前的异步元数据获取 |
+      | 4 | `normalizeResolvedModel` | 运行器前的传输重写 |
+      | 5 | `capabilities` | 转录/工具元数据（数据，不可调用） |
       | 6 | `prepareExtraParams` | 默认请求参数 |
       | 7 | `wrapStreamFn` | 自定义标头/正文包装器 |
       | 8 | `formatApiKey` | 自定义运行时令牌形状 |
       | 9 | `refreshOAuth` | 自定义 OAuth 刷新 |
-      | 10 | `buildAuthDoctorHint` | 认证修复指南 |
-      | 11 | `isCacheTtlEligible` | 提示缓存 TTL 门控 |
+      | 10 | `buildAuthDoctorHint` | 认证修复指导 |
+      | 11 | `isCacheTtlEligible` | 提示缓存 TTL 控制 |
       | 12 | `buildMissingAuthMessage` | 自定义缺失认证提示 |
-      | 13 | `suppressBuiltInModel` | 隐藏陈旧的上游行 |
+      | 13 | `suppressBuiltInModel` | 隐藏过时的上游行 |
       | 14 | `augmentModelCatalog` | 合成向前兼容行 |
       | 15 | `isBinaryThinking` | 二元思维开/关 |
       | 16 | `supportsXHighThinking` | `xhigh` 推理支持 |
@@ -285,14 +285,14 @@ read_when:
       | 21 | `fetchUsageSnapshot` | 自定义使用端点 |
       | 22 | `onModelSelected` | 选择后回调（例如遥测） |
 
-      有关详细描述和真实示例，请参阅
-      [内部原理：提供商运行时钩子](/zh/plugins/architecture#provider-runtime-hooks)。
+      有关详细描述和实际示例，请参阅
+      [Internals: Provider Runtime Hooks](/en/plugins/architecture#provider-runtime-hooks)。
     </Accordion>
 
   </Step>
 
   <Step title="添加额外功能（可选）">
-    提供商插件可以注册语音、媒体理解、图像生成和 Web 搜索，以及文本推理：
+    提供商插件可以注册语音、媒体理解、图像生成和网络搜索，与文本推理并存：
 
     ```typescript
     register(api) {
@@ -325,8 +325,8 @@ read_when:
     }
     ```
 
-    OpenClaw 将其归类为 **混合功能** 插件。这是公司插件的推荐模式（每个供应商一个插件）。请参阅
-    [内部机制：功能所有权](/zh/plugins/architecture#capability-ownership-model)。
+    OpenClaw 将此归类为 **混合功能** 插件。这是公司插件的推荐模式（每个供应商一个插件）。请参阅
+    [内部原理：功能所有权](/en/plugins/architecture#capability-ownership-model)。
 
   </Step>
 
@@ -389,7 +389,7 @@ extensions/acme-ai/
 
 ## 后续步骤
 
-- [渠道插件](/zh/plugins/sdk-channel-plugins) — 如果您的插件还提供渠道
-- [SDK 运行时](/zh/plugins/sdk-runtime) — `api.runtime` 辅助工具 (TTS, search, subagent)
-- [SDK 概览](/zh/plugins/sdk-overview) — 完整的子路径导入参考
-- [插件内部机制](/zh/plugins/architecture#provider-runtime-hooks) — 钩子详情和捆绑示例
+- [渠道插件](/en/plugins/sdk-channel-plugins) — 如果您的插件也提供渠道
+- [SDK 运行时](/en/plugins/sdk-runtime) — `api.runtime` 辅助工具（TTS、搜索、子代理）
+- [SDK 概述](/en/plugins/sdk-overview) — 完整的子路径导入参考
+- [插件内部原理](/en/plugins/architecture#provider-runtime-hooks) — 钩子详情和捆绑示例

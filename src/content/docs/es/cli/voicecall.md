@@ -12,7 +12,7 @@ title: "voicecall"
 
 Documentación principal:
 
-- Complemento de llamada de voz: [Voice Call](/es/plugins/voice-call)
+- Complemento de llamada de voz: [Voice Call](/en/plugins/voice-call)
 
 ## Comandos comunes
 

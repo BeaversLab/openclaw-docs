@@ -11,7 +11,7 @@ read_when:
 Perplexity 外掛程式透過 Perplexity
 Search API 或透過 OpenRouter 的 Perplexity Sonar 提供網路搜尋功能。
 
-<Note>本頁面涵蓋 Perplexity **提供者** 的設定。關於 Perplexity **工具** (Agent 如何使用它)，請參閱 [Perplexity 工具](/en/tools/perplexity-search)。</Note>
+<Note>此頁面涵蓋 Perplexity **provider** 的設定。若要了解 Perplexity **tool**（代理如何使用它），請參閱 [Perplexity tool](/en/tools/perplexity-search)。</Note>
 
 - 類型：網路搜尋提供者 (非模型提供者)
 - 驗證：`PERPLEXITY_API_KEY` (直接) 或 `OPENROUTER_API_KEY` (透過 OpenRouter)

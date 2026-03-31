@@ -310,13 +310,13 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 1. **檢查代理程式解析：**
 
-   ```bash
+   ```exec
    openclaw agents list --bindings
    ```
 
 2. **驗證沙箱容器：**
 
-   ```bash
+   ```exec
    docker ps --filter "name=openclaw-sbx-"
    ```
 
@@ -326,7 +326,7 @@ agents.list[].sandbox.prune.* > agents.defaults.sandbox.prune.*
 
 4. **監控日誌：**
 
-   ```bash
+   ```exec
    tail -f "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/logs/gateway.log" | grep -E "routing|sandbox|tools"
    ```
 

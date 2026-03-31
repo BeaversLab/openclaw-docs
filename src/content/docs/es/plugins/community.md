@@ -10,7 +10,7 @@ title: "Complementos de la comunidad"
 
 Los complementos comunitarios son paquetes de terceros que amplían OpenClaw con nuevos
 canales, herramientas, proveedores u otras capacidades. Son construidos y mantenidos
-por la comunidad, publicados en [ClawHub](/es/tools/clawhub) o npm, e
+por la comunidad, publicados en [ClawHub](/en/tools/clawhub) o npm, e
 instalables con un solo comando.
 
 ```bash
@@ -104,8 +104,8 @@ Damos la bienvenida a los plugins de la comunidad que sean útiles, documentados
 <Steps>
   <Step title="Publicar en ClawHub o npm">
     Tu plugin debe poder instalarse mediante `openclaw plugins install \<package-name\>`.
-    Publícalo en [ClawHub](/es/tools/clawhub) (preferible) o npm.
-    Consulte [Creación de Plugins](/es/plugins/building-plugins) para obtener la guía completa.
+    Publícalo en [ClawHub](/en/tools/clawhub) (preferible) o npm.
+    Consulte [Creación de Plugins](/en/plugins/building-plugins) para obtener la guía completa.
 
   </Step>
 
@@ -140,6 +140,6 @@ Los envoltorios de bajo esfuerzo, la propiedad poco clara o los paquetes no mant
 
 ## Relacionado
 
-- [Instalar y configurar plugins](/es/tools/plugin) — cómo instalar cualquier plugin
-- [Creación de Plugins](/es/plugins/building-plugins) — crea el tuyo propio
-- [Manifiesto de Plugin](/es/plugins/manifest) — esquema de manifiesto
+- [Instalar y configurar plugins](/en/tools/plugin) — cómo instalar cualquier plugin
+- [Creación de Plugins](/en/plugins/building-plugins) — crea el tuyo propio
+- [Manifiesto de Plugin](/en/plugins/manifest) — esquema de manifiesto

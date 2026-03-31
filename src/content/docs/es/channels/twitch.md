@@ -25,7 +25,7 @@ Repositorio local (al ejecutar desde un repositorio git):
 openclaw plugins install ./extensions/twitch
 ```
 
-Detalles: [Plugins](/es/tools/plugin)
+Detalles: [Plugins](/en/tools/plugin)
 
 ## Configuración rápida (principiante)
 
@@ -146,7 +146,7 @@ El bot actualiza automáticamente los tokens antes de que caduquen y registra lo
 
 ## Soporte multicuenta
 
-Use `channels.twitch.accounts` con tokens por cuenta. Consulte [`gateway/configuration`](/es/gateway/configuration) para ver el patrón compartido.
+Use `channels.twitch.accounts` con tokens por cuenta. Consulte [`gateway/configuration`](/en/gateway/configuration) para ver el patrón compartido.
 
 Ejemplo (una cuenta de bot en dos canales):
 

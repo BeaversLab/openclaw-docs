@@ -9,9 +9,9 @@ title: "Nodes"
 
 # Nodes
 
-Un **nœud** est un appareil compagnon (macOS/iOS/Android/headless) qui se connecte au **WebSocket** du **Gateway** (même port que les opérateurs) avec `role: "node"` et expose une surface de commande (ex. `canvas.*`, `camera.*`, `device.*`, `notifications.*`, `system.*`) via `node.invoke`. Détails du protocole : [Gateway protocol](/fr/gateway/protocol).
+Un **nœud** est un appareil compagnon (macOS/iOS/Android/headless) qui se connecte au **WebSocket** du **Gateway** (même port que les opérateurs) avec `role: "node"` et expose une surface de commande (ex. `canvas.*`, `camera.*`, `device.*`, `notifications.*`, `system.*`) via `node.invoke`. Détails du protocole : [Gateway protocol](/en/gateway/protocol).
 
-Transport hérité : [Bridge protocol](/fr/gateway/bridge-protocol) (TCP JSONL ; déprécié/supprimé pour les nœuds actuels).
+Transport hérité : [Bridge protocol](/en/gateway/bridge-protocol) (TCP JSONL ; déprécié/supprimé pour les nœuds actuels).
 
 Le macOS peut également fonctionner en **mode node** : l'application de la barre de menus se connecte au serveur WS du Gateway et expose ses commandes canvas/camera locales en tant que node (donc `openclaw nodes …` fonctionne sur ce Mac).
 
@@ -19,7 +19,7 @@ Notes :
 
 - Les nodes sont des **périphériques**, pas des passerelles. Elles n'exécutent pas le service de passerelle.
 - Les messages Telegram/WhatsApp/etc. atterrissent sur la **passerelle**, pas sur les nodes.
-- Runbook de dépannage : [/nodes/troubleshooting](/fr/nodes/troubleshooting)
+- Runbook de dépannage : [/nodes/troubleshooting](/en/nodes/troubleshooting)
 
 ## Appairage + statut
 
@@ -158,9 +158,9 @@ liste autorisée/approbations du nœud).
 
 Connexe :
 
-- [Node host CLI](/fr/cli/node)
-- [Exec tool](/fr/tools/exec)
-- [Exec approvals](/fr/tools/exec-approvals)
+- [Node host CLI](/en/cli/node)
+- [Exec tool](/en/tools/exec)
+- [Exec approvals](/en/tools/exec-approvals)
 
 ## Invocation de commandes
 
@@ -377,7 +377,7 @@ Notes :
 
 - Le jumelage est toujours requis (le Gateway affichera une invite de jumelage d'appareil).
 - L'hôte du nœud stocke son id de nœud, son jeton, son nom d'affichage et les informations de connexion à la passerelle dans `~/.openclaw/node.json`.
-- Les approbations d'exécution sont appliquées localement via `~/.openclaw/exec-approvals.json` (voir [Exec approvals](/fr/tools/exec-approvals)).
+- Les approbations d'exécution sont appliquées localement via `~/.openclaw/exec-approvals.json` (voir [Exec approvals](/en/tools/exec-approvals)).
 - Sur macOS, l'hôte de nœud sans interface exécute `system.run` localement par défaut. Définissez `OPENCLAW_NODE_EXEC_HOST=app` pour acheminer `system.run` via l'hôte d'exécution de l'application compagnon ; ajoutez `OPENCLAW_NODE_EXEC_FALLBACK=0` pour exiger l'hôte de l'application et échouer en mode fermé s'il n'est pas disponible.
 - Ajoutez `--tls` / `--tls-fingerprint` lorsque le WS du Gateway utilise TLS.
 

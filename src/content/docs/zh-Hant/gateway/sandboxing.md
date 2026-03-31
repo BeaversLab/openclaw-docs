@@ -388,9 +388,10 @@ scripts/sandbox-browser-setup.sh
 Docker 安裝和容器化閘道位於此處：
 [Docker](/en/install/docker)
 
-對於 Docker 閘道部署，`scripts/docker/setup.sh` 可以引導沙盒設定。
-設定 `OPENCLAW_SANDBOX=1`（或 `true`/`yes`/`on`）以啟用該路徑。
-您可以使用 `OPENCLAW_DOCKER_SOCKET` 覆寫 socket 位置。完整設定和環境變數參考：[Docker](/en/install/docker#enable-agent-sandbox-for-docker-gateway)。
+對於 Docker Gateway 部署，`scripts/docker/setup.sh` 可以引導沙箱配置。
+設定 `OPENCLAW_SANDBOX=1`（或 `true`/`yes`/`on`）以啟用該路徑。您可以使用
+`OPENCLAW_DOCKER_SOCKET` 覆寫 socket 位置。完整的設定與環境變數
+參考：[Docker](/en/install/docker#agent-sandbox)。
 
 ## setupCommand（一次性容器設定）
 

@@ -13,8 +13,8 @@ Proporcionado por el complemento de memoria activo (predeterminado: `memory-core
 
 Relacionado:
 
-- Concepto de memoria: [Memoria](/es/concepts/memory)
-- Complementos: [Complementos](/es/tools/plugin)
+- Concepto de memoria: [Memoria](/en/concepts/memory)
+- Complementos: [Complementos](/en/tools/plugin)
 
 ## Ejemplos
 

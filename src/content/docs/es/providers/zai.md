@@ -42,5 +42,5 @@ openclaw onboard --auth-choice zai-cn
 - Los modelos GLM están disponibles como `zai/<model>` (ejemplo: `zai/glm-5`).
 - `tool_stream` está habilitado por defecto para la transmisión de llamadas a herramientas de Z.AI. Establece
   `agents.defaults.models["zai/<model>"].params.tool_stream` en `false` para desactivarlo.
-- Consulta [/providers/glm](/es/providers/glm) para obtener una descripción general de la familia de modelos.
+- Consulta [/providers/glm](/en/providers/glm) para obtener una descripción general de la familia de modelos.
 - Z.AI utiliza autenticación Bearer con tu clave de API.

@@ -12,8 +12,8 @@ Ayudantes de webhooks e integraciones (Gmail Pub/Sub, ayudantes de webhooks).
 
 Relacionado:
 
-- Webhooks: [Webhook](/es/automation/webhook)
-- Gmail Pub/Sub: [Gmail Pub/Sub](/es/automation/gmail-pubsub)
+- Webhooks: [Webhook](/en/automation/webhook)
+- Gmail Pub/Sub: [Gmail Pub/Sub](/en/automation/gmail-pubsub)
 
 ## Gmail
 
@@ -22,4 +22,4 @@ openclaw webhooks gmail setup --account you@example.com
 openclaw webhooks gmail run
 ```
 
-Consulte la [documentación de Gmail Pub/Sub](/es/automation/gmail-pubsub) para obtener más detalles.
+Consulte la [documentación de Gmail Pub/Sub](/en/automation/gmail-pubsub) para obtener más detalles.

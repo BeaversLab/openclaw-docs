@@ -121,7 +121,7 @@ Google Chat webhooks 需要一個公開的 HTTPS 端點。為了安全起見，*
 
 如果您使用像 Caddy 這樣的反向代理，請只代理特定路徑：
 
-```text
+```caddy
 your-domain.com {
     reverse_proxy /googlechat* localhost:18789
 }
@@ -201,40 +201,41 @@ your-domain.com {
 - 如果未設定 `webhookPath`，預設 webhook 路徑為 `/googlechat`。
 - `dangerouslyAllowNameMatching` 重新啟用允許清單的可變電子郵件主體比對（緊急相容性模式）。
 - 當啟用 `actions.reactions` 時，可以透過 `reactions` 工具和 `channels action` 使用回應。
-- `typingIndicator` 支援 `none`、`message`（預設）和 `reaction`（回應需要使用者 OAuth）。
-- 附件是透過 Chat API 下載並儲存在媒體管線中（大小由 `mediaMaxMb` 限制）。
+- 訊息動作公開 `send` 用於文字和 `upload-file` 用於明確附件發送。`upload-file` 接受 `media` / `filePath` / `path` 以及選用的 `message`、`filename` 和執行緒目標。
+- `typingIndicator` 支援 `none`、`message`（預設）和 `reaction`（反應需要使用者 OAuth）。
+- 附件透過 Chat API 下載並儲存在媒體管線中（大小受 `mediaMaxMb` 限制）。
 
-秘密參考詳細資訊：[秘密管理](/en/gateway/secrets)。
+祕鑰參考詳情：[Secrets Management](/en/gateway/secrets)。
 
-## 故障排除
+## 疑難排解
 
-### 405 不允許的方法
+### 405 Method Not Allowed
 
-如果 Google Cloud Logs Explorer 顯示如下錯誤：
+如果 Google Cloud Logs Explorer 顯示類似的錯誤：
 
 ```
 status code: 405, reason phrase: HTTP error response: HTTP/1.1 405 Method Not Allowed
 ```
 
-這表示尚未註冊 webhook 處理程式。常見原因：
+這表示未註冊 webhook 處理程式。常見原因：
 
-1. **未設定頻道**：您的設定中缺少 `channels.googlechat` 部分。使用以下指令驗證：
+1. **未設定頻道**：您的設定中缺少 `channels.googlechat` 區塊。請使用以下指令驗證：
 
    ```bash
    openclaw config get channels.googlechat
    ```
 
-   如果回傳「Config path not found」，請新增設定（請參閱 [設定重點](#config-highlights)）。
+   如果它返回「Config path not found」，請新增設定（請參閱 [Config highlights](#config-highlights)）。
 
-2. **外掛程式未啟用**：檢查外掛程式狀態：
+2. **外掛程式未啟用**：請檢查外掛程式狀態：
 
    ```bash
    openclaw plugins list | grep googlechat
    ```
 
-   如果顯示「disabled」，請將 `plugins.entries.googlechat.enabled: true` 加入您的設定。
+   如果顯示「disabled」，請將 `plugins.entries.googlechat.enabled: true` 新增至您的設定中。
 
-3. **閘道未重新啟動**：新增設定後，請重新啟動閘道：
+3. **未重新啟動閘道**：新增設定後，請重新啟動閘道：
 
    ```bash
    openclaw gateway restart
@@ -249,13 +250,13 @@ openclaw channels status
 
 ### 其他問題
 
-- 檢查 `openclaw channels status --probe` 是否有驗證錯誤或缺少 audience 設定。
-- 如果沒有收到任何訊息，請確認 Chat 應用程式的 webhook URL + 事件訂閱。
-- 如果提及閘門阻擋了回覆，請將 `botUser` 設定為應用程式的使用者資源名稱，並驗證 `requireMention`。
+- 檢查 `openclaw channels status --probe` 是否有驗證錯誤或缺少對象設定。
+- 如果沒有收到訊息，請確認 Chat 應用程式的 webhook URL + 事件訂閱。
+- 如果提及 gating 阻止了回覆，請將 `botUser` 設定為應用程式的使用者資源名稱，並驗證 `requireMention`。
 - 傳送測試訊息時使用 `openclaw logs --follow`，以查看請求是否到達閘道。
 
 相關文件：
 
 - [閘道設定](/en/gateway/configuration)
 - [安全性](/en/gateway/security)
-- [回應](/en/tools/reactions)
+- [反應](/en/tools/reactions)

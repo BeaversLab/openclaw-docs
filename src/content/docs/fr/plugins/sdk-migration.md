@@ -22,7 +22,7 @@ L'ancien système de plugins offrait deux surfaces très ouvertes qui permettaie
 
 Ces deux surfaces sont désormais **dépréciées**. Elles fonctionnent toujours à l'exécution, mais les nouveaux plugins ne doivent pas les utiliser, et les plugins existants devraient migrer avant que la prochaine version majeure ne les supprime.
 
-<Warning>La couche de rétrocompatibilité sera supprimée dans une future version majeure. Les plugins qui importent encore depuis ces surfaces cesseront de fonctionner à ce moment-là.</Warning>
+<Warning>La couche de compatibilité descendante sera supprimée dans une future version majeure. Les plugins qui importent toujours de ces interfaces cesseront de fonctionner à ce moment-là.</Warning>
 
 ## Pourquoi ce changement
 
@@ -100,15 +100,18 @@ Le SDK de plugin moderne résout ce problème : chaque chemin d'importation (`op
 ## Référence des chemins d'import
 
 <Accordion title="Tableau complet des chemins d'importation">
-  | Chemin d'importation | Objectif | Exportations clés | | --- | --- | --- | | `plugin-sdk/plugin-entry` | Assistant d'entrée de plugin canonique | `definePluginEntry` | | `plugin-sdk/core` | Définitions d'entrée de channel, constructeurs de channel, types de base | `defineChannelPluginEntry`, `createChatChannelPlugin` | | `plugin-sdk/channel-setup` | Adaptateurs de l'assistant de configuration |
-  `createOptionalChannelSetupSurface` | | `plugin-sdk/channel-pairing` | Primitifs d'appairage DM | `createChannelPairingController` | | `plugin-sdk/channel-reply-pipeline` | Câblage du préfixe de réponse + de la saisie | `createChannelReplyPipeline` | | `plugin-sdk/channel-config-helpers` | Fabriques d'adaptateurs de configuration | `createHybridChannelConfigAdapter` | |
-  `plugin-sdk/channel-config-schema` | Constructeurs de schéma de configuration | Types de schéma de configuration de channel | | `plugin-sdk/channel-policy` | Résolution de stratégie de groupe/DM | `resolveChannelGroupRequireMention` | | `plugin-sdk/channel-lifecycle` | Suivi de l'état du compte | `createAccountStatusSink` | | `plugin-sdk/channel-runtime` | Assistants de câblage d'exécution |
-  Utilitaires d'exécution de channel | | `plugin-sdk/channel-send-result` | Types de résultat d'envoi | Types de résultat de réponse | | `plugin-sdk/runtime-store` | Stockage persistant de plugin | `createPluginRuntimeStore` | | `plugin-sdk/allow-from` | Formatage de la liste d'autorisation | `formatAllowFromLowercase` | | `plugin-sdk/allowlist-resolution` | Mappage des entrées de la liste
-  d'autorisation | `mapAllowlistResolutionInputs` | | `plugin-sdk/command-auth` | Gating de commande | `resolveControlCommandGate` | | `plugin-sdk/secret-input` | Analyse des entrées secrètes | Assistants de saisie secrète | | `plugin-sdk/webhook-ingress` | Assistants de requête Webhook | Utilitaires de cible Webhook | | `plugin-sdk/reply-payload` | Types de réponse de message | Types de payload
-  de réponse | | `plugin-sdk/provider-onboard` | Correctifs d'intégration de fournisseur | Assistants de configuration d'intégration | | `plugin-sdk/keyed-async-queue` | File d'attente asynchrone ordonnée | `KeyedAsyncQueue` | | `plugin-sdk/testing` | Utilitaires de test | Assistants de test et mocks |
+  | Chemin d'importation | Objectif | Exportations clés | | --- | --- | --- | | `plugin-sdk/plugin-entry` | Assistant d'entrée de plugin canonique | `definePluginEntry` | | `plugin-sdk/core` | Définitions d'entrée de channel, constructeurs de channel, types de base | `defineChannelPluginEntry`, `createChatChannelPlugin` | | `plugin-sdk/channel-setup` | Adaptateurs d'assistant de configuration |
+  `createOptionalChannelSetupSurface` | | `plugin-sdk/channel-pairing` | Primitives d'appairage DM | `createChannelPairingController` | | `plugin-sdk/channel-reply-pipeline` | Câblage du préfixe de réponse + saisie | `createChannelReplyPipeline` | | `plugin-sdk/channel-config-helpers` | Fabriques d'adaptateurs de configuration | `createHybridChannelConfigAdapter` | |
+  `plugin-sdk/channel-config-schema` | Constructeurs de schémas de configuration | Types de schémas de configuration de channel | | `plugin-sdk/channel-policy` | Résolution de stratégie de groupe/DM | `resolveChannelGroupRequireMention` | | `plugin-sdk/channel-lifecycle` | Suivi de l'état du compte | `createAccountStatusSink` | | `plugin-sdk/channel-runtime` | Assistants de câblage d'exécution |
+  Utilitaires d'exécution de channel | | `plugin-sdk/channel-send-result` | Types de résultats d'envoi | Types de résultats de réponse | | `plugin-sdk/runtime-store` | Stockage persistant de plugin | `createPluginRuntimeStore` | | `plugin-sdk/approval-runtime` | Assistants d'invite d'approbation | Charge utile et assistants de réponse d'approbation exec/plugin | | `plugin-sdk/collection-runtime` |
+  Assistants de cache borné | `pruneMapToMaxSize` | | `plugin-sdk/diagnostic-runtime` | Assistants de verrouillage de diagnostic | `isDiagnosticFlagEnabled`, `isDiagnosticsEnabled` | | `plugin-sdk/error-runtime` | Assistants de formatage d'erreur | `formatUncaughtError`, assistants de graphe d'erreurs | | `plugin-sdk/fetch-runtime` | Assistants de récupération/proxy encapsulés | `resolveFetch`,
+  assistants de proxy | | `plugin-sdk/host-runtime` | Assistants de normalisation d'hôte | `normalizeHostname`, `normalizeScpRemoteHost` | | `plugin-sdk/retry-runtime` | Assistants de nouvelle tentative | `RetryConfig`, `retryAsync`, exécuteurs de stratégie | | `plugin-sdk/allow-from` | Formatage de liste d'autorisation | `formatAllowFromLowercase` | | `plugin-sdk/allowlist-resolution` | Mappage
+  d'entrée de liste d'autorisation | `mapAllowlistResolutionInputs` | | `plugin-sdk/command-auth` | Verrouillage de commande | `resolveControlCommandGate` | | `plugin-sdk/secret-input` | Analyse d'entrée secrète | Assistants d'entrée secrète | | `plugin-sdk/webhook-ingress` | Assistants de requête Webhook | Utilitaires de cible Webhook | | `plugin-sdk/webhook-request-guards` | Assistants de
+  protection de corps Webhook | Assistants de lecture/limite de corps de requête | | `plugin-sdk/reply-payload` | Types de réponse de message | Types de charge utile de réponse | | `plugin-sdk/provider-onboard` | Correctifs d'intégration de fournisseur | Assistants de configuration d'intégration | | `plugin-sdk/keyed-async-queue` | File d'attente asynchrone ordonnée | `KeyedAsyncQueue` | |
+  `plugin-sdk/testing` | Utilitaires de test | Assistants et simulacres de test |
 </Accordion>
 
-Utilisez l'importation la plus précise correspondant à la tâche. Si vous ne trouvez pas d'exportation, vérifiez la source dans `src/plugin-sdk/` ou demandez sur Discord.
+Utilisez l'import le plus étroit qui correspond à la tâche. Si vous ne trouvez pas d'exportation, vérifiez la source à `src/plugin-sdk/` ou demandez sur Discord.
 
 ## Calendrier de suppression
 
@@ -132,9 +135,9 @@ Il s'agit d'une échappatoire temporaire, pas d'une solution permanente.
 
 ## Connexes
 
-- [Getting Started](/fr/plugins/building-plugins) — construire votre premier plugin
-- [Aperçu du SDK](/fr/plugins/sdk-overview) — référence complète des importations de sous-chemins
-- [Plugins de canal](/fr/plugins/sdk-channel-plugins) — créer des plugins de canal
-- [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins) — créer des plugins de fournisseur
-- [Internes du plugin](/fr/plugins/architecture) — plongée approfondie dans l'architecture
-- [Manifeste du plugin](/fr/plugins/manifest) — référence du schéma du manifeste
+- [Getting Started](/en/plugins/building-plugins) — build your first plugin
+- [Vue d'ensemble du SDK](/en/plugins/sdk-overview) — référence complète des importations de sous-chemin
+- [Plugins de canal](/en/plugins/sdk-channel-plugins) — créer des plugins de canal
+- [Plugins de fournisseur](/en/plugins/sdk-provider-plugins) — créer des plugins de fournisseur
+- [Plugin Internals](/en/plugins/architecture) — plongée dans l'architecture
+- [Plugin Manifest](/en/plugins/manifest) — référence du schéma de manifeste

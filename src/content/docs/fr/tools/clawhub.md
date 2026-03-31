@@ -102,7 +102,7 @@ La commande native `openclaw skills install` installe dans le répertoire de l'e
 
 L'CLI `clawhub` distinct installe également des compétences dans `./skills` sous votre répertoire de travail actuel. Si un espace de travail OpenClaw est configuré, `clawhub` revient par défaut à cet espace de travail, sauf si vous substituez `--workdir` (ou `CLAWHUB_WORKDIR`). OpenClaw charge les compétences de l'espace de travail à partir de `<workspace>/skills` et les récupérera lors de la **prochaine** session. Si vous utilisez déjà `~/.openclaw/skills` ou des compétences groupées, les compétences de l'espace de travail prévalent.
 
-Pour plus de détails sur le chargement, le partage et la limitation des compétences, voir [Skills](/fr/tools/skills).
+Pour plus de détails sur le chargement, le partage et la limitation des compétences, voir [Skills](/en/tools/skills).
 
 ## Aperçu du système de compétences
 

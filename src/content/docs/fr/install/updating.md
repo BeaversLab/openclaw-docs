@@ -26,7 +26,7 @@ openclaw update --tag main
 openclaw update --dry-run   # preview without applying
 ```
 
-Voir [Canaux de développement](/fr/install/development-channels) pour la sémantique des canaux.
+Voir [Canaux de développement](/en/install/development-channels) pour la sémantique des canaux.
 
 ## Alternative : réexécuter l'installateur
 
@@ -82,7 +82,7 @@ La passerelle enregistre également un indice de mise à jour au démarrage (dé
 openclaw doctor
 ```
 
-Migre la configuration, audite les politiques DM, et vérifie la santé de la passerelle. Détails : [Docteur](/fr/gateway/doctor)
+Migre la configuration, audite les politiques DM, et vérifie la santé de la passerelle. Détails : [Docteur](/en/gateway/doctor)
 
 ### Redémarrer la passerelle
 
@@ -124,5 +124,5 @@ Pour revenir à la dernière version : `git checkout main && git pull`.
 ## Si vous êtes bloqué
 
 - Exécutez `openclaw doctor` à nouveau et lisez attentivement la sortie.
-- Vérifiez : [Dépannage](/fr/gateway/troubleshooting)
+- Vérifiez : [Dépannage](/en/gateway/troubleshooting)
 - Demandez sur Discord : [https://discord.gg/clawd](https://discord.gg/clawd)

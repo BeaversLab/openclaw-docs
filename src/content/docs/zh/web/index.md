@@ -13,13 +13,13 @@ Gateway 网关 在与 Gateway 网关 WebSocket 相同的端口上提供一个小
 - 默认：`http://<host>:18789/`
 - 可选前缀：设置 `gateway.controlUi.basePath`（例如 `/openclaw`）
 
-功能位于[控制 UI](/zh/web/control-ui)中。
+功能位于[控制 UI](/en/web/control-ui)中。
 本页面重点关注绑定模式、安全性和 Web 面向的表面。
 
 ## Webhooks
 
 当 `hooks.enabled=true` 时，Gateway(网关) 还会在同一 HTTP 服务器上暴露一个小的 Webhook 端点。
-请参阅 [Gateway(网关) 配置](/zh/gateway/configuration) → `hooks` 了解身份验证 + 载荷。
+请参阅 [Gateway(网关) 配置](/en/gateway/configuration) → `hooks` 了解身份验证 + 载荷。
 
 ## Config (default-on)
 
@@ -106,7 +106,7 @@ openclaw gateway
   Tailscale 身份标头可以满足控制 UI/WebSocket 身份验证。
   HTTP API 端点仍然需要令牌/密码。设置
   `gateway.auth.allowTailscale: false` 以要求显式凭据。请参阅
-  [Tailscale](/zh/gateway/tailscale) 和[安全性](/zh/gateway/security)。这种
+  [Tailscale](/en/gateway/tailscale) 和[安全性](/en/gateway/security)。这种
   无令牌流程假定网关主机是受信任的。
 - `gateway.tailscale.mode: "funnel"` 需要 `gateway.auth.mode: "password"`（共享密码）。
 

@@ -29,7 +29,7 @@ les features OpenClaw qui peuvent générer une utilisation de provider ou des a
 - `openclaw status --usage` et `openclaw channels list` affichent les **fenêtres d'utilisation** du provider
   (instantanés de quota, pas les coûts par message).
 
-Voir [Utilisation des jetons et coûts](/fr/reference/token-use) pour plus de détails et d'exemples.
+Voir [Utilisation des jetons et coûts](/en/reference/token-use) pour plus de détails et d'exemples.
 
 ## Comment les clés sont découvertes
 
@@ -48,7 +48,7 @@ OpenClaw peut récupérer les identifiants à partir de :
 Chaque réponse ou appel d'outil utilise le **provider de model actuel** (OpenAI, Anthropic, etc.). C'est la
 source principale d'utilisation et de coûts.
 
-Voir [Modèles](/fr/providers/models) pour la configuration des tarifs et [Utilisation des jetons et coûts](/fr/reference/token-use) pour l'affichage.
+Voir [Modèles](/en/providers/models) pour la configuration des tarifs et [Utilisation des jetons et coûts](/en/reference/token-use) pour l'affichage.
 
 ### 2) Compréhension des médias (audio/image/vidéo)
 
@@ -58,7 +58,7 @@ Les médias entrants peuvent être résumés/transcrits avant l'exécution de la
 - Image : OpenAI / Anthropic / Google.
 - Vidéo : Google.
 
-Voir [Compréhension multimédia](/fr/nodes/media-understanding).
+Voir [Compréhension multimédia](/en/nodes/media-understanding).
 
 ### 3) Embeddings de mémoire + recherche sémantique
 
@@ -73,7 +73,7 @@ La recherche de mémoire sémantique utilise les **API d'embedding** lorsqu'elle
 
 Vous pouvez le garder local avec `memorySearch.provider = "local"` (aucune utilisation d'API).
 
-Voir [Mémoire](/fr/concepts/memory).
+Voir [Mémoire](/en/concepts/memory).
 
 ### 4) Outil de recherche Web
 
@@ -89,7 +89,7 @@ Les chemins de fournisseur `tools.web.search.*` hérités se chargent toujours v
 
 **Crédit gratuit Brave Search :** Chaque plan Brave inclut 5 $/mois de crédit gratuit renouvelable. Le plan Search coûte 5 $ pour 1 000 requêtes, donc le crédit couvre 1 000 requêtes/mois sans frais. Définissez votre limite d'utilisation dans le tableau de bord Brave pour éviter des frais inattendus.
 
-Voir [Outils Web](/fr/tools/web).
+Voir [Outils Web](/en/tools/web).
 
 ### 5) Outil de récupération Web (Firecrawl)
 
@@ -99,7 +99,7 @@ Voir [Outils Web](/fr/tools/web).
 
 Si Firecrawl n'est pas configuré, l'outil revient à une récupération directe + lisibilité (pas d'API payant).
 
-Voir [Outils Web](/fr/tools/web).
+Voir [Outils Web](/en/tools/web).
 
 ### 6) Instantanés d'utilisation du fournisseur (statut/santé)
 
@@ -109,21 +109,21 @@ Ce sont généralement des appels à faible volume mais qui atteignent toujours 
 - `openclaw status --usage`
 - `openclaw models status --json`
 
-Voir [Modèles CLI](/fr/cli/models).
+Voir [Modèles CLI](/en/cli/models).
 
 ### 7) Résumé de la sauvegarde de compactage
 
 La sauvegarde de compactage peut résumer l'historique de la session en utilisant le **modèle actuel**, ce qui
 appelle les API des fournisseurs lors de son exécution.
 
-Voir [Gestion de session + compactage](/fr/reference/session-management-compaction).
+Voir [Gestion de session + compactage](/en/reference/session-management-compaction).
 
 ### 8) Analyse / sonde de modèle
 
 `openclaw models scan` peut sonder les modèles OpenRouter et utilise `OPENROUTER_API_KEY` lorsque
 le sondage est activé.
 
-Voir [Modèles CLI](/fr/cli/models).
+Voir [Modèles CLI](/en/cli/models).
 
 ### 9) Talk (parole)
 
@@ -131,11 +131,11 @@ Le mode Talk peut appeler **ElevenLabs** lorsqu'il est configuré :
 
 - `ELEVENLABS_API_KEY` ou `talk.apiKey`
 
-Voir [Talk mode](/fr/nodes/talk).
+Voir [Talk mode](/en/nodes/talk).
 
 ### 10) Skills (API tiers)
 
 Les Skills peuvent stocker `apiKey` dans `skills.entries.<name>.apiKey`. Si une skill utilise cette clé pour des API
 externes, elle peut entraîner des coûts selon le provider de la skill.
 
-Voir [Skills](/fr/tools/skills).
+Voir [Skills](/en/tools/skills).

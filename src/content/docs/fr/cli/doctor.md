@@ -12,8 +12,8 @@ Vérifications de santé + correctifs rapides pour la passerelle et les canaux.
 
 Connexes :
 
-- Dépannage : [Dépannage](/fr/gateway/troubleshooting)
-- Audit de sécurité : [Sécurité](/fr/gateway/security)
+- Dépannage : [Dépannage](/en/gateway/troubleshooting)
+- Audit de sécurité : [Sécurité](/en/gateway/security)
 
 ## Exemples
 

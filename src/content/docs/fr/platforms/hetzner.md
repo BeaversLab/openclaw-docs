@@ -32,7 +32,7 @@ La passerelle Gateway est accessible via :
 
 Ce guide suppose Ubuntu ou Debian sur Hetzner.  
 Si vous êtes sur un autre VPS Linux, mappez les paquets en conséquence.
-Pour le flux générique Docker, voir [Docker](/fr/install/docker).
+Pour le flux générique Docker, voir [Docker](/en/install/docker).
 
 ---
 

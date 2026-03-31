@@ -52,7 +52,7 @@ Notes :
 - L'intégration locale du CLI écrit `session.dmScope: "per-channel-peer"` par défaut lorsqu'elle n'est pas définie (les valeurs explicites existantes sont conservées).
 - Pour les boîtes de réception multi-comptes sur le même canal, préférez `per-account-channel-peer`.
 - Si la même personne vous contacte sur plusieurs canaux, utilisez `session.identityLinks` pour regrouper ses sessions de DM en une identité canonique.
-- Vous pouvez vérifier vos paramètres DM avec `openclaw security audit` (voir [sécurité](/fr/cli/security)).
+- Vous pouvez vérifier vos paramètres DM avec `openclaw security audit` (voir [sécurité](/en/cli/security)).
 
 ## Gateway est la source de vérité
 
@@ -177,14 +177,14 @@ openclaw sessions cleanup --enforce
 ## Session pruning
 
 OpenClaw supprime les **anciens résultats d'outils** du contexte en mémoire juste avant les appels LLM par défaut.
-Cela ne **réécrit pas** l'historique JSONL. Voir [/concepts/session-pruning](/fr/concepts/session-pruning).
+Cela ne **réécrit pas** l'historique JSONL. Voir [/concepts/session-pruning](/en/concepts/session-pruning).
 
 ## Pre-compaction memory flush
 
 Lorsqu'une session approche de la compactage automatique, OpenClaw peut exécuter un **vidage silencieux de la mémoire**
 tour qui rappelle au modèle d'écrire des notes durables sur le disque. Cela ne s'exécute que lorsque
-l'espace de travail est accessible en écriture. Voir [Memory](/fr/concepts/memory) et
-[Compaction](/fr/concepts/compaction).
+l'espace de travail est accessible en écriture. Voir [Memory](/en/concepts/memory) et
+[Compaction](/en/concepts/compaction).
 
 ## Mapping transports → session keys
 
@@ -284,7 +284,7 @@ Remplacement à l'exécution (propriétaire uniquement) :
 - Envoyez `/status` comme message autonome dans le chat pour voir si l'agent est joignable, combien du contexte de session est utilisé, les bascules actuelles thinking/fast/verbose, et quand vos identifiants web WhatsApp ont été actualisés pour la dernière fois (aide à détecter les besoins de reconnexion).
 - Envoyez `/context list` ou `/context detail` pour voir ce qu'il y a dans le système d'invite et les fichiers d'espace de travail injectés (ainsi que les plus gros contributeurs de contexte).
 - Envoyez `/stop` (ou des phrases d'abandon autonomes comme `stop`, `stop action`, `stop run`, `stop openclaw`) pour abandonner l'exécution actuelle, effacer les suites en file d'attente pour cette session, et arrêter toutes les exécutions de sous-agents lancées à partir de celle-ci (la réponse inclut le nombre arrêté).
-- Envoyez `/compact` (instructions optionnelles) comme message autonome pour résumer l'ancien contexte et libérer de l'espace dans la fenêtre. Voir [/concepts/compaction](/fr/concepts/compaction).
+- Envoyez `/compact` (instructions optionnelles) comme message autonome pour résumer l'ancien contexte et libérer de l'espace dans la fenêtre. Voir [/concepts/compaction](/en/concepts/compaction).
 - Les transcriptions JSONL peuvent être ouvertes directement pour examiner les tours complets.
 
 ## Conseils

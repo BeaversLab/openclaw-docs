@@ -13,17 +13,17 @@ Este concentrador vincula los documentos principales sobre cómo OpenClaw conect
 
 ## Modelo principal
 
-- [Arquitectura de puerta de enlace](/es/concepts/architecture)
-- [Protocolo de puerta de enlace](/es/gateway/protocol)
-- [Manual de procedimientos de puerta de enlace](/es/gateway)
-- [Superficies web + modos de enlace](/es/web)
+- [Arquitectura de puerta de enlace](/en/concepts/architecture)
+- [Protocolo de puerta de enlace](/en/gateway/protocol)
+- [Manual de procedimientos de puerta de enlace](/en/gateway)
+- [Superficies web + modos de enlace](/en/web)
 
 ## Emparejamiento + identidad
 
-- [Descripción general del emparejamiento (DM + nodos)](/es/channels/pairing)
-- [Emparejamiento de nodos propiedad de la puerta de enlace](/es/gateway/pairing)
-- [CLI de dispositivos (emparejamiento + rotación de tokens)](/es/cli/devices)
-- [CLI de emparejamiento (aprobaciones de DM)](/es/cli/pairing)
+- [Descripción general del emparejamiento (DM + nodos)](/en/channels/pairing)
+- [Emparejamiento de nodos propiedad de la puerta de enlace](/en/gateway/pairing)
+- [CLI de dispositivos (emparejamiento + rotación de tokens)](/en/cli/devices)
+- [CLI de emparejamiento (aprobaciones de DM)](/en/cli/pairing)
 
 Confianza local:
 
@@ -33,21 +33,21 @@ Confianza local:
 
 ## Descubrimiento + transportes
 
-- [Descubrimiento y transportes](/es/gateway/discovery)
-- [Bonjour / mDNS](/es/gateway/bonjour)
-- [Acceso remoto (SSH)](/es/gateway/remote)
-- [Tailscale](/es/gateway/tailscale)
+- [Descubrimiento y transportes](/en/gateway/discovery)
+- [Bonjour / mDNS](/en/gateway/bonjour)
+- [Acceso remoto (SSH)](/en/gateway/remote)
+- [Tailscale](/en/gateway/tailscale)
 
 ## Nodos + transportes
 
-- [Descripción general de nodos](/es/nodes)
-- [Protocolo de puente (nodos heredados)](/es/gateway/bridge-protocol)
-- [Manual de procedimientos de nodo: iOS](/es/platforms/ios)
-- [Manual de procedimientos de nodo: Android](/es/platforms/android)
+- [Descripción general de nodos](/en/nodes)
+- [Protocolo de puente (nodos heredados)](/en/gateway/bridge-protocol)
+- [Manual de procedimientos de nodo: iOS](/en/platforms/ios)
+- [Manual de procedimientos de nodo: Android](/en/platforms/android)
 
 ## Seguridad
 
-- [Descripción general de seguridad](/es/gateway/security)
-- [Referencia de configuración de puerta de enlace](/es/gateway/configuration)
-- [Solución de problemas](/es/gateway/troubleshooting)
-- [Doctor](/es/gateway/doctor)
+- [Descripción general de seguridad](/en/gateway/security)
+- [Referencia de configuración de puerta de enlace](/en/gateway/configuration)
+- [Solución de problemas](/en/gateway/troubleshooting)
+- [Doctor](/en/gateway/doctor)

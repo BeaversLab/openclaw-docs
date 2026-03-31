@@ -99,7 +99,7 @@ Détails du repli :
 }
 ```
 
-Voir [Référence de configuration](/fr/gateway/configuration-reference) pour plus de détails sur les champs.
+Voir [Référence de configuration](/en/gateway/configuration-reference) pour plus de détails sur les champs.
 
 ## Détails de la sortie
 

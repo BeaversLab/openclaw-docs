@@ -1,5 +1,5 @@
 ---
-summary: "在無 root 權限的 Podman 容器中執行 OpenClaw"
+summary: "在無特權 Podman 容器中執行 OpenClaw"
 read_when:
   - You want a containerized gateway with Podman instead of Docker
 title: "Podman"
@@ -7,127 +7,254 @@ title: "Podman"
 
 # Podman
 
-在 **rootless** Podman 容器中執行 OpenClaw Gateway。使用與 Docker 相同的映像檔（從儲存庫的 [Dockerfile](https://github.com/openclaw/openclaw/blob/main/Dockerfile) 建構）。
+在無特權 Podman 容器中執行 OpenClaw Gateway，由您目前的非 root 使用者管理。
+
+預期的模式是：
+
+- Podman 執行閘道容器。
+- 您主機上的 `openclaw` CLI 是控制平面。
+- 持久狀態預設儲存在主機上的 `~/.openclaw` 下。
+- 日常管理使用 `openclaw --container <name> ...` 而非 `sudo -u openclaw`、`podman exec` 或獨立的服務使用者。
 
 ## 先決條件
 
-- **Podman** (無 root 權限模式)
-- **sudo** 存取權限，用於一次性設定（建立專屬使用者及建構映像檔）
+- **Podman** 處於無特權模式
+- 主機上已安裝 **OpenClaw CLI**
+- **可選：**如果您想要 Quadlet 管理的自動啟動，則需要 `systemd --user`
+- **可選：** `sudo` 僅當您希望在無主機（headless host）上開機持續執行時需要 `loginctl enable-linger "$(whoami)"`
 
 ## 快速開始
 
 <Steps>
   <Step title="一次性設定">
-    從儲存庫根目錄執行設定腳本。它會建立一個專屬的 `openclaw` 使用者、建構容器映像檔，並安裝啟動腳本：
-
-    ```bash
-    ./scripts/podman/setup.sh
-    ```
-
-    這也會在 `~openclaw/.openclaw/openclaw.json` 建立一個最小設定（將 `gateway.mode` 設為 `"local"`），以便 Gateway 能夠在不執行精靈的情況下啟動。
-
-    預設情況下，容器**不會**安裝為 systemd 服務——您需要在下一步手動啟動它。若要使用自動啟動和重新啟動的生產環境風格設定，請改為傳入 `--quadlet`：
-
-    ```bash
-    ./scripts/podman/setup.sh --quadlet
-    ```
-
-    （或是設定 `OPENCLAW_PODMAN_QUADLET=1`。使用 `--container` 僅安裝容器和啟動腳本。）
-
-    **選用建構時期環境變數**（在執行 `scripts/podman/setup.sh` 前設定）：
-
-    - `OPENCLAW_DOCKER_APT_PACKAGES` -- 在映像檔建構期間安裝額外的 apt 套件。
-    - `OPENCLAW_EXTENSIONS` -- 預先安裝擴充功能相依項（以空格分隔的名稱，例如 `diagnostics-otel matrix`）。
-
+    從 repo 根目錄執行 `./scripts/podman/setup.sh`。
   </Step>
 
-  <Step title="啟動 Gateway">
-    若要快速手動啟動：
+<Step title="啟動 Gateway 容器">使用 `./scripts/run-openclaw-podman.sh launch` 啟動容器。</Step>
 
-    ```bash
-    ./scripts/run-openclaw-podman.sh launch
-    ```
+<Step title="在容器內執行 onboarding">執行 `./scripts/run-openclaw-podman.sh launch setup`，然後開啟 `http://127.0.0.1:18789/`。</Step>
 
-  </Step>
-
-  <Step title="執行上架精靈">
-    若要以互動方式新增頻道或供應商：
-
-    ```bash
-    ./scripts/run-openclaw-podman.sh launch setup
-    ```
-
-    然後開啟 `http://127.0.0.1:18789/` 並使用來自 `~openclaw/.openclaw/.env` 的 token（或設定過程中列印的值）。
-
+  <Step title="從主機 CLI 管理執行中的容器">
+    設定 `OPENCLAW_CONTAINER=openclaw`，然後從主機使用標準的 `openclaw` 指令。
   </Step>
 </Steps>
 
-## Systemd (Quadlet, 選用)
+設定詳情：
 
-如果您執行了 `./scripts/podman/setup.sh --quadlet`（或 `OPENCLAW_PODMAN_QUADLET=1`），則會安裝 [Podman Quadlet](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html) 單元，以便閘道作為 openclaw 使用者的 systemd 使用者服務執行。該服務會在設定結束時被啟用並啟動。
+- `./scripts/podman/setup.sh` 預設會在您的 rootless Podman 儲存庫中建置 `openclaw:local`，如果您設定了 `OPENCLAW_IMAGE` / `OPENCLAW_PODMAN_IMAGE`，則會使用該路徑。
+- 如果缺少 `gateway.mode: "local"`，它會以該設定建立 `~/.openclaw/openclaw.json`。
+- 如果缺少 `OPENCLAW_GATEWAY_TOKEN`，它會以該設定建立 `~/.openclaw/.env`。
+- 對於手動啟動，輔助腳本僅從 `~/.openclaw/.env` 讀取一小部分與 Podman 相關的鍵，並將明確的執行時環境變量傳遞給容器；它不會將完整的環境檔案交給 Podman。
 
-- **啟動：** `sudo systemctl --machine openclaw@ --user start openclaw.service`
-- **停止：** `sudo systemctl --machine openclaw@ --user stop openclaw.service`
-- **狀態：** `sudo systemctl --machine openclaw@ --user status openclaw.service`
-- **日誌：** `sudo journalctl --machine openclaw@ --user -u openclaw.service -f`
+由 Quadlet 管理的設定：
 
-quadlet 檔案位於 `~openclaw/.config/containers/systemd/openclaw.container`。若要更改連接埠或環境變數，請編輯該檔案（或其引入的 `.env`），然後 `sudo systemctl --machine openclaw@ --user daemon-reload` 並重新啟動服務。開機時，如果為 openclaw 啟用了 linger，該服務會自動啟動（當 loginctl 可用時，設定程序會執行此操作）。
+```bash
+./scripts/podman/setup.sh --quadlet
+```
 
-若要在未使用 quadlet 的初始設定**之後**新增 quadlet，請重新執行：`./scripts/podman/setup.sh --quadlet`。
+Quadlet 僅適用於 Linux，因為它依賴 systemd 使用者服務。
 
-## openclaw 使用者（非登入）
+您也可以設定 `OPENCLAW_PODMAN_QUADLET=1`。
 
-`scripts/podman/setup.sh` 會建立一個專屬的系統使用者 `openclaw`：
+可選的建置/設定環境變量：
 
-- **Shell：** `nologin` — 無互動式登入；減少攻擊面。
-- **Home：** 例如 `/home/openclaw` — 包含 `~/.openclaw`（設定、工作區）和啟動腳本 `run-openclaw-podman.sh`。
-- **Rootless Podman：** 該使用者必須擁有 **subuid** 和 **subgid** 範圍。許多發行版在建立使用者時會自動分配這些範圍。如果設定列印出警告，請將行新增至 `/etc/subuid` 和 `/etc/subgid`：
+- `OPENCLAW_IMAGE` 或 `OPENCLAW_PODMAN_IMAGE` —— 使用現有的/已拉取的映像檔，而不是建置 `openclaw:local`
+- `OPENCLAW_DOCKER_APT_PACKAGES` —— 在映像檔建置期間安裝額外的 apt 套件
+- `OPENCLAW_EXTENSIONS` —— 在建置時預先安裝擴充功能相依項
 
-  ```text
-  openclaw:100000:65536
-  ```
+容器啟動：
 
-  然後以該使用者身分啟動閘道（例如從 cron 或 systemd）：
+```bash
+./scripts/run-openclaw-podman.sh launch
+```
 
-  ```bash
-  sudo -u openclaw /home/openclaw/run-openclaw-podman.sh
-  sudo -u openclaw /home/openclaw/run-openclaw-podman.sh setup
-  ```
+該腳本會以您目前的 uid/gid 透過 `--userns=keep-id` 啟動容器，並將您的 OpenClaw 狀態綁定掛載到容器中。
 
-- **設定：** 只有 `openclaw` 和 root 可以存取 `/home/openclaw/.openclaw`。若要編輯設定：在閘道運行後使用控制 UI，或 `sudo -u openclaw $EDITOR /home/openclaw/.openclaw/openclaw.json`。
+入門：
 
-## 環境和設定
+```bash
+./scripts/run-openclaw-podman.sh launch setup
+```
 
-- **Token：** 儲存在 `~openclaw/.openclaw/.env` 中作為 `OPENCLAW_GATEWAY_TOKEN`。`scripts/podman/setup.sh` 和 `run-openclaw-podman.sh` 會在遺失時生成它（使用 `openssl`、`python3` 或 `od`）。
-- **可選：** 在該 `.env` 中，您可以設定供應商金鑰（例如 `GROQ_API_KEY`、`OLLAMA_API_KEY`）和其他 OpenClaw 環境變數。
-- **主機連接埠：** 預設情況下，該腳本會映射 `18789`（gateway）和 `18790`（bridge）。啟動時，請使用 `OPENCLAW_PODMAN_GATEWAY_HOST_PORT` 和 `OPENCLAW_PODMAN_BRIDGE_HOST_PORT` 覆寫 **主機** 連接埠映射。
-- **Gateway 繫結：** 預設情況下，`run-openclaw-podman.sh` 會以 `--bind loopback` 啟動 gateway 以便安全地在本機存取。若要暴露在區域網路上，請設定 `OPENCLAW_GATEWAY_BIND=lan` 並在 `openclaw.json` 中設定 `gateway.controlUi.allowedOrigins`（或明確啟用 host-header 後援機制）。
-- **路徑：** 主機設定和工作區預設為 `~openclaw/.openclaw` 和 `~openclaw/.openclaw/workspace`。請使用 `OPENCLAW_CONFIG_DIR` 和 `OPENCLAW_WORKSPACE_DIR` 覆寫啟動腳本使用的主機路徑。
+然後開啟 `http://127.0.0.1:18789/` 並使用來自 `~/.openclaw/.env` 的令牌。
 
-## 儲存模型
+主機 CLI 預設值：
 
-- **持久化主機資料：** `OPENCLAW_CONFIG_DIR` 和 `OPENCLAW_WORKSPACE_DIR` 會被繫結掛載到容器中，並在主機上保留狀態。
-- **暫時性沙箱 tmpfs：** 如果您啟用 `agents.defaults.sandbox`，工具沙箱容器會在 `/tmp`、`/var/tmp` 和 `/run` 掛載 `tmpfs`。這些路徑是基於記憶體的，並會隨沙箱容器消失；頂層 Podman 容器設定不會新增自己的 tmpfs 掛載。
-- **磁碟增長熱點：** 主要需注意的路徑為 `media/`、`agents/<agentId>/sessions/sessions.json`、transcript JSONL 檔案、`cron/runs/*.jsonl`，以及 `/tmp/openclaw/`（或您設定的 `logging.file`）下的滾動檔案日誌。
+```bash
+export OPENCLAW_CONTAINER=openclaw
+```
 
-`scripts/podman/setup.sh` 現在會將映像檔 tar 暫存於私有的臨時目錄中，並在設定期間印出所選的基礎目錄。對於非 root 執行，僅當該基礎目錄可安全使用時，它才接受 `TMPDIR`；否則它會回退到 `/var/tmp`，然後是 `/tmp`。儲存的 tar 檔案僅供擁有者使用，並會被串流傳輸到目標使用者的 `podman load`，因此私有的呼叫者臨時目錄不會阻擋設定。
+然後，諸如此類的指令將自動在該容器內執行：
+
+```bash
+openclaw dashboard --no-open
+openclaw gateway status --deep
+openclaw doctor
+openclaw channels login
+```
+
+在 macOS 上，Podman machine 可能會導致瀏覽器對閘道而言顯示為非本機。
+如果在啟動後控制 UI 回報裝置認證錯誤，請優先使用 [macOS Podman SSH tunnel](#macos-podman-ssh-tunnel) 中的 SSH 隧道流程。若要進行遠端 HTTPS 存取，請使用 [Podman + Tailscale](#podman--tailscale) 中的 Tailscale 指引。
+
+## macOS Podman SSH tunnel
+
+在 macOS 上，即使發布的連接埠僅在 `127.0.0.1` 上，Podman machine 也可能會導致瀏覽器對閘道而言顯示為非本機。
+
+對於本機瀏覽器存取，請使用 SSH 隧道進入 Podman VM，並改為開啟隧道的 localhost 連接埠。
+
+推薦的本機隧道連接埠：
+
+- Mac 主機上的 `28889`
+- 轉發到 Podman VM 內部的 `127.0.0.1:18789`
+
+在單獨的終端機中啟動隧道：
+
+```bash
+ssh -N \
+  -i ~/.local/share/containers/podman/machine/machine \
+  -p <podman-vm-ssh-port> \
+  -L 28889:127.0.0.1:18789 \
+  core@127.0.0.1
+```
+
+在該指令中，`<podman-vm-ssh-port>` 是 Mac 主機上 Podman VM 的 SSH 連接埠。使用以下指令檢查您目前的值：
+
+```bash
+podman system connection list
+```
+
+允許經過隧道的瀏覽器來源一次。這是您首次使用隧道時所必需的，因為啟動器可以自動植入 Podman 發布的連接埠，但無法推斷您選擇的瀏覽器隧道連接埠：
+
+```bash
+OPENCLAW_CONTAINER=openclaw openclaw config set gateway.controlUi.allowedOrigins \
+  '["http://127.0.0.1:18789","http://localhost:18789","http://127.0.0.1:28889","http://localhost:28889"]' \
+  --strict-json
+podman restart openclaw
+```
+
+這是針對預設 `28889` 隧道的一次性步驟。
+
+然後開啟：
+
+```text
+http://127.0.0.1:28889/
+```
+
+備註：
+
+- `18789` 在 Mac 主機上通常已被 Podman 發布的閘道連接埠佔用，因此隧道使用 `28889` 作為本機瀏覽器連接埠。
+- 如果 UI 要求配對核准，請優先使用明確指定容器目標或明確 URL 的指令，以免主機 CLI 回退到本機配對檔案：
+
+```bash
+openclaw --container openclaw devices list
+openclaw --container openclaw devices approve --latest
+```
+
+- 對等的明確 URL 形式：
+
+```bash
+openclaw devices list \
+  --url ws://127.0.0.1:28889 \
+  --token "$(sed -n 's/^OPENCLAW_GATEWAY_TOKEN=//p' ~/.openclaw/.env | head -n1)"
+```
+
+## Podman + Tailscale
+
+若要進行 HTTPS 或遠端瀏覽器存取，請遵循主要的 Tailscale 文件。
+
+Podman 特別說明：
+
+- 請將 Podman 發佈主機保持為 `127.0.0.1`。
+- 比起 `openclaw gateway --tailscale serve`，更傾向於主機管理的 `tailscale serve`。
+- 對於沒有 HTTPS 的本地 macOS 瀏覽器存取，建議使用上述的 SSH 通道章節。
+
+請參閱：
+
+- [Tailscale](/en/gateway/tailscale)
+- [Control UI](/en/web/control-ui)
+
+## Systemd (Quadlet，選用)
+
+如果您執行了 `./scripts/podman/setup.sh --quadlet`，安裝程式會將 Quadlet 檔案安裝至：
+
+```bash
+~/.config/containers/systemd/openclaw.container
+```
+
+實用指令：
+
+- **啟動：** `systemctl --user start openclaw.service`
+- **停止：** `systemctl --user stop openclaw.service`
+- **狀態：** `systemctl --user status openclaw.service`
+- **日誌：** `journalctl --user -u openclaw.service -f`
+
+編輯 Quadlet 檔案後：
+
+```bash
+systemctl --user daemon-reload
+systemctl --user restart openclaw.service
+```
+
+若要在 SSH/headless 主機上開機自動啟動，請為您目前的使用者啟用 linger 功能：
+
+```bash
+sudo loginctl enable-linger "$(whoami)"
+```
+
+## 設定、環境變數與儲存空間
+
+- **配置目錄：** `~/.openclaw`
+- **工作區目錄：** `~/.openclaw/workspace`
+- **Token 檔案：** `~/.openclaw/.env`
+- **啟動輔助程式：** `./scripts/run-openclaw-podman.sh`
+
+啟動腳本和 Quadlet 將主機狀態掛載到容器中：
+
+- `OPENCLAW_CONFIG_DIR` -> `/home/node/.openclaw`
+- `OPENCLAW_WORKSPACE_DIR` -> `/home/node/.openclaw/workspace`
+
+預設情況下，這些是主機目錄，而非匿名容器狀態，因此設定和工作區在容器替換後會保留。
+Podman 設定還會在已發佈的 Gateway 連接埠上為 `127.0.0.1` 和 `localhost` 播種 `gateway.controlUi.allowedOrigins`，以便本地儀表板能夠與容器的非環回繫結配合運作。
+
+手動啟動器的實用環境變數：
+
+- `OPENCLAW_PODMAN_CONTAINER` -- 容器名稱（預設為 `openclaw`）
+- `OPENCLAW_PODMAN_IMAGE` / `OPENCLAW_IMAGE` -- 要執行的映像檔
+- `OPENCLAW_PODMAN_GATEWAY_HOST_PORT` -- 對應至容器 `18789` 的主機連接埠
+- `OPENCLAW_PODMAN_BRIDGE_HOST_PORT` -- 對應至容器 `18790` 的主機連接埠
+- `OPENCLAW_PODMAN_PUBLISH_HOST` -- 已發布連接埠的主機介面；預設為 `127.0.0.1`
+- `OPENCLAW_GATEWAY_BIND` -- 容器內的閘道綁定模式；預設為 `lan`
+- `OPENCLAW_PODMAN_USERNS` -- `keep-id`（預設）、`auto` 或 `host`
+
+手動啟動器在確定容器/映像檔預設值之前會讀取 `~/.openclaw/.env`，因此您可以將設定保存在那裡。
+
+如果您使用非預設的 `OPENCLAW_CONFIG_DIR` 或 `OPENCLAW_WORKSPACE_DIR`，請為 `./scripts/podman/setup.sh` 和後續的 `./scripts/run-openclaw-podman.sh launch` 指令設定相同的變數。存放庫本地的啟動器不會在不同 Shell 之間保存自訂路徑覆寫。
+
+Quadlet 說明：
+
+- 產生的 Quadlet 服務刻意保持固定的、經過強化的預設形態：`127.0.0.1` 發佈的連接埠、`--bind lan` 在容器內部，以及 `keep-id` 使用者命名空間。
+- 它仍然會讀取 `~/.openclaw/.env` 以取得閘道執行時環境變數（例如 `OPENCLAW_GATEWAY_TOKEN`），但它不會使用手動啟動器針對 Podman 的特定覆寫允許清單。
+- 如果您需要自訂發佈埠、發佈主機或其他容器執行標誌，請使用手動啟動器或直接編輯 `~/.config/containers/systemd/openclaw.container`，然後重新載入並重新啟動服務。
 
 ## 實用指令
 
-- **日誌：** 使用 quadlet：`sudo journalctl --machine openclaw@ --user -u openclaw.service -f`。使用腳本：`sudo -u openclaw podman logs -f openclaw`
-- **停止：** 使用 quadlet：`sudo systemctl --machine openclaw@ --user stop openclaw.service`。使用腳本：`sudo -u openclaw podman stop openclaw`
-- **再次啟動：** 使用 quadlet：`sudo systemctl --machine openclaw@ --user start openclaw.service`。使用腳本：重新執行啟動腳本或 `podman start openclaw`
-- **移除容器：** `sudo -u openclaw podman rm -f openclaw` — 主機上的設定和工作區會被保留
+- **容器日誌：** `podman logs -f openclaw`
+- **停止容器：** `podman stop openclaw`
+- **移除容器：** `podman rm -f openclaw`
+- **從主機 CLI 開啟儀表板 URL：** `openclaw dashboard --no-open`
+- **透過主機 CLI 檢查健康狀態/狀態：** `openclaw gateway status --deep`
 
 ## 疑難排解
 
-- **設定或 auth-profiles 權限被拒 (EACCES)：** 容器預設為 `--userns=keep-id` 並以執行腳本的主機使用者相同的 uid/gid 執行。請確保您的主機 `OPENCLAW_CONFIG_DIR` 和 `OPENCLAW_WORKSPACE_DIR` 為該使用者所擁有。
-- **Gateway 啟動受阻 (缺少 `gateway.mode=local`)：** 確保 `~openclaw/.openclaw/openclaw.json` 存在並設定 `gateway.mode="local"`。`scripts/podman/setup.sh` 如果缺少此檔案會建立它。
-- **Rootless Podman 對使用者 openclaw 失敗：** 檢查 `/etc/subuid` 和 `/etc/subgid` 是否包含 `openclaw` 的行（例如 `openclaw:100000:65536`）。如果缺少則新增並重新啟動。
-- **容器名稱正在使用中：** 啟動腳本使用 `podman run --replace`，因此當您再次啟動時，現有的容器會被取代。若要手動清理：`podman rm -f openclaw`。
-- **以 openclaw 身分執行時找不到腳本：** 確保已執行 `scripts/podman/setup.sh`，以便將 `run-openclaw-podman.sh` 複製到 openclaw 的家目錄（例如 `/home/openclaw/run-openclaw-podman.sh`）。
-- **Quadlet 服務找不到或無法啟動：** 編輯 `.container` 檔案後，請執行 `sudo systemctl --machine openclaw@ --user daemon-reload`。Quadlet 需要 cgroups v2：`podman info --format '{{.Host.CgroupsVersion}}'` 應該顯示 `2`。
+- **設定或工作區權限被拒 (EACCES)：** 容器預設以 `--userns=keep-id` 和 `--user <your uid>:<your gid>` 執行。請確保主機設定/工作區路徑由您目前的使用者擁有。
+- **Gateway start blocked (missing `gateway.mode=local`):** 確保 `~/.openclaw/openclaw.json` 存在並設定了 `gateway.mode="local"`。如果缺少，`scripts/podman/setup.sh` 會建立它。
+- **Container CLI commands hit the wrong target:** 明確使用 `openclaw --container <name> ...`，或在您的 shell 中 export `OPENCLAW_CONTAINER=<name>`。
+- **`openclaw update` fails with `--container`:** 這是預期的。重建/拉取映像檔，然後重新啟動容器或 Quadlet 服務。
+- **Quadlet service does not start:** 執行 `systemctl --user daemon-reload`，然後執行 `systemctl --user start openclaw.service`。在無介面系統上，您可能還需要 `sudo loginctl enable-linger "$(whoami)"`。
+- **SELinux 阻擋掛載綁定：** 請保留預設的掛載行為；當 SELinux 處於 Enforcing 或 Permissive 模式時，啟動器會在 Linux 上自動新增 `:Z`。
 
-## 選用：以您自己的使用者身分執行
+## 相關
 
-若要以您的一般使用者身分（無專用的 openclaw 使用者）執行閘道：建置映像檔，使用 `OPENCLAW_GATEWAY_TOKEN` 建立 `~/.openclaw/.env`，並使用 `--userns=keep-id` 和掛載點到您的 `~/.openclaw` 來執行容器。啟動腳本是為 openclaw 使用者流程設計的；對於單一使用者設定，您可以改為手動從腳本中執行 `podman run` 指令，將設定和工作區指向您的家目錄。建議大多數使用者：使用 `scripts/podman/setup.sh` 並以 openclaw 使用者身分執行，以便將設定和程序隔離。
+- [Docker](/en/install/docker)
+- [Gateway 背景程序](/en/gateway/background-process)
+- [Gateway 疑難排解](/en/gateway/troubleshooting)

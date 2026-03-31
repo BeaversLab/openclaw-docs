@@ -130,8 +130,8 @@ Nota: La detección de binarios es de mejor esfuerzo en macOS/Linux/Windows; ase
 
 - La autenticación del proveedor sigue el orden de autenticación estándar del modelo (perfiles de autenticación, variables de entorno, `models.providers.*.apiKey`).
 - Deepgram detecta `DEEPGRAM_API_KEY` cuando se usa `provider: "deepgram"`.
-- Detalles de configuración de Deepgram: [Deepgram (transcripción de audio)](/es/providers/deepgram).
-- Detalles de configuración de Mistral: [Mistral](/es/providers/mistral).
+- Detalles de configuración de Deepgram: [Deepgram (transcripción de audio)](/en/providers/deepgram).
+- Detalles de configuración de Mistral: [Mistral](/en/providers/mistral).
 - Los proveedores de audio pueden anular `baseUrl`, `headers` y `providerOptions` a través de `tools.media.audio`.
 - El límite de tamaño predeterminado es de 20 MB (`tools.media.audio.maxBytes`). El audio de tamaño excesivo se omite para ese modelo y se prueba la siguiente entrada.
 - Los archivos de audio pequeños/vacíos de menos de 1024 bytes se omiten antes de la transcripción del proveedor/CLI.

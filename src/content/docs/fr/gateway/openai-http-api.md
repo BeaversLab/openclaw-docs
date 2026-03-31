@@ -46,7 +46,7 @@ Traitez ce point de terminaison comme une surface d'**accès complet pour l'opé
 - Si la stratégie de l'agent cible autorise des outils sensibles, ce point de terminaison peut les utiliser.
 - Gardez ce point de terminaison uniquement sur boucle locale/tailnet/ingress privé ; ne l'exposez pas directement à l'internet public.
 
-Voir [Sécurité](/fr/gateway/security) et [Accès à distance](/fr/gateway/remote).
+Voir [Sécurité](/en/gateway/security) et [Accès à distance](/en/gateway/remote).
 
 ## Contrat de modèle prioritaire à l'agent
 

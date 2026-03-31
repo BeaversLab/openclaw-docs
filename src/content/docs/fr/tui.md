@@ -106,7 +106,7 @@ Cycle de vie de la session :
 - `/settings`
 - `/exit`
 
-Les autres commandes slash du Gateway (par exemple, `/context`) sont transmises au Gateway et affichées sous forme de sortie système. Voir [Slash commands](/fr/tools/slash-commands).
+Les autres commandes slash du Gateway (par exemple, `/context`) sont transmises au Gateway et affichées sous forme de sortie système. Voir [Slash commands](/en/tools/slash-commands).
 
 ## Commandes du shell local
 

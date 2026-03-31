@@ -9,7 +9,7 @@ title: "Ejemplos de configuración"
 
 # Ejemplos de configuración
 
-Los ejemplos a continuación se alinean con el esquema de configuración actual. Para obtener la referencia exhaustiva y notas por campo, consulte [Configuración](/es/gateway/configuration).
+Los ejemplos a continuación se alinean con el esquema de configuración actual. Para obtener la referencia exhaustiva y notas por campo, consulte [Configuración](/en/gateway/configuration).
 
 ## Inicio rápido
 
@@ -543,7 +543,7 @@ Solo habilite la coincidencia directa de nombre/correo/nick mutable con el `dang
 
 ### Token de configuración de Anthropic + clave API, conmutación por error a MiniMax
 
-<Warning>El uso del token de configuración de Anthropic fuera de Claude Code se ha restringido para algunos usuarios en el pasado. Trate esto como un riesgo de elección del usuario y verifique los términos actuales de Anthropic antes de depender de la autenticación por suscripción.</Warning>
+<Warning>El uso del token de configuración de Anthropic fuera de Claude Code ha sido restringido para algunos usuarios en el pasado. Considere esto como un riesgo de elección del usuario y verifique los términos actuales de Anthropic antes de depender de la autenticación por suscripción.</Warning>
 
 ```json5
 {
@@ -644,4 +644,4 @@ Solo habilite la coincidencia directa de nombre/correo/nick mutable con el `dang
 - Si establece `dmPolicy: "open"`, la lista `allowFrom` coincidente debe incluir `"*"`.
 - Los ID del proveedor difieren (números de teléfono, ID de usuario, ID de canal). Use la documentación del proveedor para confirmar el formato.
 - Secciones opcionales para agregar más tarde: `web`, `browser`, `ui`, `discovery`, `canvasHost`, `talk`, `signal`, `imessage`.
-- Consulte [Proveedores](/es/providers) y [Solución de problemas](/es/gateway/troubleshooting) para obtener notas de configuración más detalladas.
+- Consulte [Proveedores](/en/providers) y [Solución de problemas](/en/gateway/troubleshooting) para obtener notas de configuración más detalladas.

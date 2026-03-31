@@ -63,7 +63,7 @@ Verá:
 - `🧹 Auto-compaction complete` en modo detallado
 - `/status` mostrando `🧹 Compactions: <count>`
 
-Antes de la compactación, OpenClaw puede ejecutar un turno de **flush de memoria silencioso** para almacenar notas duraderas en el disco. Consulte [Memory](/es/concepts/memory) para obtener detalles y configuración.
+Antes de la compactación, OpenClaw puede ejecutar un turno de **flush de memoria silencioso** para almacenar notas duraderas en el disco. Consulte [Memory](/en/concepts/memory) para obtener detalles y configuración.
 
 ## Compactación manual
 
@@ -82,7 +82,7 @@ La ventana de contexto es específica del modelo. OpenClaw utiliza la definició
 - **Compactación**: resume y **persiste** en JSONL.
 - **Poda de sesión**: recorta antiguos **resultados de herramientas** solo, **en memoria**, por solicitud.
 
-Consulte [/concepts/session-pruning](/es/concepts/session-pruning) para obtener detalles sobre la poda.
+Consulte [/concepts/session-pruning](/en/concepts/session-pruning) para obtener detalles sobre la poda.
 
 ## Compactación del lado del servidor de OpenAI
 
@@ -92,12 +92,12 @@ OpenClaw también admite sugerencias de compactación del lado del servidor de O
 - Compactación del lado del servidor: OpenAI compacta el contexto en el lado del proveedor cuando
   `store` + `context_management` están habilitados.
 
-Consulte [OpenAI provider](/es/providers/openai) para conocer los parámetros y anulaciones del modelo.
+Consulte [OpenAI provider](/en/providers/openai) para conocer los parámetros y anulaciones del modelo.
 
 ## Motores de contexto personalizados
 
 El comportamiento de compactación es propiedad del motor de contexto
-[context engine](/es/concepts/context-engine) activo. El motor heredado utiliza el resumen integrado descrito anteriormente. Los motores de complementos (seleccionados a través de
+[context engine](/en/concepts/context-engine) activo. El motor heredado utiliza el resumen integrado descrito anteriormente. Los motores de complementos (seleccionados a través de
 `plugins.slots.contextEngine`) pueden implementar cualquier estrategia de compactación: resúmenes DAG, recuperación vectorial, condensación incremental, etc.
 
 Cuando un motor de complemento establece `ownsCompaction: true`, OpenClaw delega todas las decisiones de compactación al motor y no ejecuta la auto-compactación integrada.

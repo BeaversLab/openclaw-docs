@@ -14,12 +14,12 @@ Ce guide explique la création d'un plugin de canal qui connecte OpenClaw à une
 plateforme de messagerie. À la fin, vous disposerez d'un canal fonctionnel avec la sécurité DM,
 l'appairage, le threading des réponses et la messagerie sortante.
 
-<Info>Si vous n'avez jamais créé de plugin OpenClaw auparavant, lisez d'abord [Getting Started](/fr/plugins/building-plugins) pour connaître la structure de base du package et la configuration du manifeste.</Info>
+<Info>Si vous n'avez jamais créé de plugin OpenClaw auparavant, lisez d'abord [Getting Started](/en/plugins/building-plugins) pour connaître la structure de base du package et la configuration du manifeste.</Info>
 
 ## Fonctionnement des plugins de canal
 
-Les plugins de canal n'ont pas besoin de leurs propres outils d'envoi/modification/réaction. OpenClaw conserve un
-outil partagé `message` dans le cœur. Votre plugin possède :
+Les plugins de canal n'ont pas besoin de leurs propres outils d'envoi/de modification/de réaction. OpenClaw conserve un
+outil `message` partagé dans le cœur. Votre plugin possède :
 
 - **Config** — résolution de compte et assistant de configuration
 - **Sécurité** — stratégie DM et listes autorisées
@@ -35,7 +35,7 @@ la répartition.
 <Steps>
   <Step title="Package et manifeste">
     Créez les fichiers de plugin standard. Le champ `channel` dans `package.json` est
-ce qui fait de ce plugin un plugin de canal :
+    ce qui en fait un plugin de channel :
 
     <CodeGroup>
     ```json package.json
@@ -84,7 +84,7 @@ ce qui fait de ce plugin un plugin de canal :
 
   </Step>
 
-  <Step title="Construire l'objet du plugin de channel">
+  <Step title="Construire l'objet du plugin channel">
     L'interface `ChannelPlugin` possède de nombreuses surfaces d'adaptateur optionnelles. Commencez par
     le minimum — `id` et `setup` — et ajoutez des adaptateurs selon vos besoins.
 
@@ -181,16 +181,16 @@ ce qui fait de ce plugin un plugin de canal :
     });
     ```
 
-    <Accordion title="Ce que fait createChatChannelPlugin pour vous">
+    <Accordion title="Ce que createChatChannelPlugin fait pour vous">
       Au lieu d'implémenter manuellement les interfaces d'adaptateur de bas niveau, vous passez
-      des options déclaratives et le générateur les compose :
+      des options déclaratives et le constructeur les compose :
 
       | Option | Ce qu'il connecte |
       | --- | --- |
       | `security.dm` | Résolveur de sécurité DM délimité depuis les champs de configuration |
       | `pairing.text` | Flux d'appariement DM basé sur du texte avec échange de code |
       | `threading` | Résolveur de mode de réponse (fixe, délimité au compte, ou personnalisé) |
-      | `outbound.attachedResults` | Fonctions d'envoi qui renvoient des métadonnées de résultat (ID de message) |
+      | `outbound.attachedResults` | Fonctions d'envoi qui renvoient les métadonnées de résultat (ID de message) |
 
       Vous pouvez également passer des objets d'adaptateur bruts au lieu des options déclaratives
       si vous avez besoin d'un contrôle total.
@@ -223,14 +223,13 @@ ce qui fait de ce plugin un plugin de canal :
     });
     ```
 
-    `defineChannelPluginEntry` gère la division configuration/enregistrement complet
-    automatiquement. Voir
-    [Entry Points](/fr/plugins/sdk-entrypoints#definechannelpluginentry) pour toutes
+    `defineChannelPluginEntry` gère automatiquement la séparation entre la configuration et l'enregistrement complet. Voir
+    [Points d'entrée](/en/plugins/sdk-entrypoints#definechannelpluginentry) pour toutes
     les options.
 
   </Step>
 
-  <Step title="Ajouter une entrée de configuration">
+  <Step title="Add a setup entry">
     Créez `setup-entry.ts` pour un chargement léger lors de l'onboarding :
 
     ```typescript setup-entry.ts
@@ -241,15 +240,15 @@ ce qui fait de ce plugin un plugin de canal :
     ```
 
     OpenClaw charge cela à la place de l'entrée complète lorsque le channel est désactivé
-    ou non configuré. Cela évite d'inclure du code d'exécution lourd lors des flux de configuration.
-    Voir [Setup and Config](/fr/plugins/sdk-setup#setup-entry) pour plus de détails.
+    ou non configuré. Cela évite d'intégrer du code d'exécution lourd lors des flux de configuration.
+    Voir [Setup and Config](/en/plugins/sdk-setup#setup-entry) pour plus de détails.
 
   </Step>
 
   <Step title="Gérer les messages entrants">
-    Votre plugin doit recevoir les messages de la plateforme et les transmettre à
-    OpenClaw. Le modèle typique est un webhook qui vérifie la requête et
-    la répartit via le gestionnaire entrant de votre canal :
+    Votre plugin doit recevoir des messages de la plateforme et les transmettre à
+    OpenClaw. Le modèle type consiste en un webhook qui vérifie la requête et
+    la répartit via le gestionnaire entrant de votre channel :
 
     ```typescript
     registerFull(api) {
@@ -273,15 +272,16 @@ ce qui fait de ce plugin un plugin de canal :
     ```
 
     <Note>
-      La gestion des messages entrants est spécifique au canal. Chaque plugin de canal possède
-      son propre pipeline entrant. Consultez les plugins de canal fournis
-      (ex. `extensions/msteams`, `extensions/googlechat`) pour des modèles concrets.
+      La gestion des messages entrants est spécifique au channel. Chaque plugin de
+      channel possède son propre pipeline entrant. Consultez les plugins de
+      channel fournis (p. ex. `extensions/msteams`, `extensions/googlechat`) pour
+      des modèles réels.
     </Note>
 
   </Step>
 
-  <Step title="Tester">
-    Écrivez des tests co-localisés dans `src/channel.test.ts` :
+  <Step title="Test">
+    Écrivez des tests colocalisés dans `src/channel.test.ts` :
 
     ```typescript src/channel.test.ts
     import { describe, it, expect } from "vitest";
@@ -319,7 +319,7 @@ ce qui fait de ce plugin un plugin de canal :
     pnpm test -- extensions/acme-chat/
     ```
 
-    Pour les assistants de test partagés, consultez [Testing](/fr/plugins/sdk-testing).
+    Pour les assistants de test partagés, consultez [Testing](/en/plugins/sdk-testing).
 
   </Step>
 </Steps>
@@ -344,23 +344,23 @@ extensions/acme-chat/
 ## Rubriques avancées
 
 <CardGroup cols={2}>
-  <Card title="Options de discussion" icon="git-branch" href="/fr/plugins/sdk-entrypoints#registration-mode">
-    Modes de réponse fixes, délimités au compte ou personnalisés
+  <Card title="Options de threading" icon="git-branch" href="/en/plugins/sdk-entrypoints#registration-mode">
+    Modes de réponse fixes, au niveau du compte ou personnalisés
   </Card>
-  <Card title="Intégration de l'outil de message" icon="puzzle" href="/fr/plugins/architecture#channel-plugins-and-the-shared-message-tool">
-    describeMessageTool et découverte d'actions
+  <Card title="Intégration d'outil de message" icon="puzzle" href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool">
+    describeMessageTool et découverte d'action
   </Card>
-  <Card title="Résolution de cible" icon="crosshair" href="/fr/plugins/architecture#channel-target-resolution">
+  <Card title="Résolution de cible" icon="crosshair" href="/en/plugins/architecture#channel-target-resolution">
     inferTargetChatType, looksLikeId, resolveTarget
   </Card>
-  <Card title="Assistants d'exécution" icon="settings" href="/fr/plugins/sdk-runtime">
-    TTS, STT, média, subagent via api.runtime
+  <Card title="Runtime helpers" icon="settings" href="/en/plugins/sdk-runtime">
+    TTS, STT, media, subagent via api.runtime
   </Card>
 </CardGroup>
 
 ## Étapes suivantes
 
-- [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins) — si votre plugin fournit également des modèles
-- [Aperçu du SDK](/fr/plugins/sdk-overview) — référence complète des importations de sous-chemins
-- [Tests du SDK](/fr/plugins/sdk-testing) — utilitaires de test et tests contractuels
-- [Manifeste de plugin](/fr/plugins/manifest) — schéma complet du manifeste
+- [Plugins de fournisseur](/en/plugins/sdk-provider-plugins) — si votre plugin fournit également des modèles
+- [Vue d'ensemble du SDK](/en/plugins/sdk-overview) — référence complète des importations par sous-chemin
+- [Tests du SDK](/en/plugins/sdk-testing) — utilitaires de test et tests contractuels
+- [Manifeste du plugin](/en/plugins/manifest) — schéma complet du manifeste

@@ -12,9 +12,9 @@ title: "VMs macOS"
 
 ## Par défaut recommandé (la plupart des utilisateurs)
 
-- **Petit VPS Linux** pour une Gateway toujours active et à faible coût. Voir [Hébergement VPS](/fr/vps).
+- **Petit VPS Linux** pour une Gateway toujours active et à faible coût. Voir [Hébergement VPS](/en/vps).
 - **Matériel dédié** (Mac mini ou boîtier Linux) si vous souhaitez un contrôle total et une **IP résidentielle** pour l'automatisation du navigateur. De nombreux sites bloquent les IP des centres de données, la navigation locale fonctionne donc souvent mieux.
-- **Hybride :** gardez la Gateway sur un VPS bon marché, et connectez votre Mac en tant que **nœud** lorsque vous avez besoin d'une automatisation du navigateur/interface. Voir [Nœuds](/fr/nodes) et [Gateway à distance](/fr/gateway/remote).
+- **Hybride :** gardez la Gateway sur un VPS bon marché, et connectez votre Mac en tant que **nœud** lorsque vous avez besoin d'une automatisation du navigateur/interface. Voir [Nœuds](/en/nodes) et [Gateway à distance](/en/gateway/remote).
 
 Utilisez une VM macOS lorsque vous avez spécifiquement besoin de capacités exclusives à macOS (iMessage/BlueBubbles) ou si vous souhaitez un isolement strict de votre Mac quotidien.
 
@@ -223,7 +223,7 @@ Ajoutez à votre configuration OpenClaw :
 
 Redémarrez la passerelle. Votre agent peut maintenant envoyer et recevoir des iMessages.
 
-Détails complets de la configuration : [Canal BlueBubbles](/fr/channels/bluebubbles)
+Détails complets de la configuration : [Canal BlueBubbles](/en/channels/bluebubbles)
 
 ---
 
@@ -254,7 +254,7 @@ Gardez la machine virtuelle en marche en :
 - Désactivant la mise en veille dans Réglages Système → Économie d'énergie
 - Utilisant `caffeinate` si nécessaire
 
-Pour une disponibilité 24h/24, envisagez un Mac mini dédié ou un petit VPS. Voir [Hébergement VPS](/fr/vps).
+Pour une disponibilité 24h/24, envisagez un Mac mini dédié ou un petit VPS. Voir [Hébergement VPS](/en/vps).
 
 ---
 
@@ -271,11 +271,11 @@ Pour une disponibilité 24h/24, envisagez un Mac mini dédié ou un petit VPS. V
 
 ## Documentation connexe
 
-- [Hébergement VPS](/fr/vps)
-- [Nœuds](/fr/nodes)
-- [Gateway distant](/fr/gateway/remote)
-- [Channel BlueBubbles](/fr/channels/bluebubbles)
+- [Hébergement VPS](/en/vps)
+- [Nœuds](/en/nodes)
+- [Gateway distant](/en/gateway/remote)
+- [Channel BlueBubbles](/en/channels/bluebubbles)
 - [Démarrage rapide Lume](https://cua.ai/docs/lume/guide/getting-started/quickstart)
 - [Référence de la CLI Lume](https://cua.ai/docs/lume/reference/cli-reference)
 - [Configuration de VM sans assistance](https://cua.ai/docs/lume/guide/fundamentals/unattended-setup) (avancé)
-- [Sandboxing Docker](/fr/install/docker) (méthode d'isolation alternative)
+- [Sandboxing Docker](/en/install/docker) (méthode d'isolation alternative)

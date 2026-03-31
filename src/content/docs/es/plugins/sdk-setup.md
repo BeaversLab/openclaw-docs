@@ -13,7 +13,7 @@ read_when:
 Referencia para el empaquetado de complementos (metadatos de `package.json`), manifiestos
 (`openclaw.plugin.json`), entradas de configuración y esquemas de configuración.
 
-<Tip>**¿Buscas un tutorial?** Las guías prácticas cubren el empaquetado en contexto: [Complementos de canal](/es/plugins/sdk-channel-plugins#step-1-package-and-manifest) y [Complementos de proveedor](/es/plugins/sdk-provider-plugins#step-1-package-and-manifest).</Tip>
+<Tip>**¿Buscas un tutorial?** Las guías prácticas cubren el empaquetado en contexto: [Complementos de canal](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) y [Complementos de proveedor](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest).</Tip>
 
 ## Metadatos del paquete
 
@@ -84,7 +84,7 @@ Cuando está habilitado, OpenClaw carga solo `setupEntry` durante la fase de ini
 incluso para canales ya configurados. La entrada completa se carga después de que
 la puerta de enlace comienza a escuchar.
 
-<Warning>Solo habilite la carga diferida cuando su `setupEntry` registre todo lo que la puerta de enlace necesita antes de que comience a escuchar (registro de canal, rutas HTTP, métodos de puerta de enlace). Si la entrada completa posee capacidades de inicio requeridas, mantenga el comportamiento predeterminado.</Warning>
+<Warning>Activa la carga diferida solo cuando tu `setupEntry` registre todo lo que la puerta de enlace necesita antes de comenzar a escuchar (registro de canales, rutas HTTP, métodos de puerta de enlace). Si la entrada completa posee capacidades de inicio requeridas, mantén el comportamiento predeterminado.</Warning>
 
 ## Manifiesto del complemento
 
@@ -136,7 +136,7 @@ Incluso los complementos sin configuración deben incluir un esquema. Un esquema
 }
 ```
 
-Consulte [Plugin Manifest](/es/plugins/manifest) para la referencia completa del esquema.
+Consulta [Manifiesto de complemento](/en/plugins/manifest) para obtener la referencia completa del esquema.
 
 ## Entrada de configuración
 
@@ -296,7 +296,7 @@ const setupSurface = createOptionalChannelSetupSurface({
 
 ## Publicación e instalación
 
-**Complementos externos:** publíquelos en [ClawHub](/es/tools/clawhub) o npm, luego instálelos:
+**Complementos externos:** publica en [ClawHub](/en/tools/clawhub) o npm, luego instala:
 
 ```bash
 openclaw plugins install @myorg/openclaw-my-plugin
@@ -320,10 +320,10 @@ openclaw plugins search <query>
 openclaw plugins install <package-name>
 ```
 
-<Info>Para las instalaciones obtenidas de npm, `openclaw plugins install` ejecuta `npm install --ignore-scripts` (sin scripts de ciclo de vida). Mantenga los árboles de dependencias de complementos puros JS/TS y evite paquetes que requieran compilaciones `postinstall`.</Info>
+<Info>Para instalaciones desde npm, `openclaw plugins install` ejecuta `npm install --ignore-scripts` (sin scripts de ciclo de vida). Mantén los árboles de dependencias de los complementos puramente JS/TS y evita paquetes que requieran compilaciones `postinstall`.</Info>
 
 ## Relacionado
 
-- [Puntos de entrada del SDK](/es/plugins/sdk-entrypoints) -- `definePluginEntry` y `defineChannelPluginEntry`
-- [Manifiesto del complemento](/es/plugins/manifest) -- referencia completa del esquema del manifiesto
-- [Construcción de complementos](/es/plugins/building-plugins) -- guía de introducción paso a paso
+- [Puntos de entrada del SDK](/en/plugins/sdk-entrypoints) -- `definePluginEntry` y `defineChannelPluginEntry`
+- [Manifiesto de complemento](/en/plugins/manifest) -- referencia completa del esquema del manifiesto
+- [Construcción de Plugins](/en/plugins/building-plugins) -- guía de introducción paso a paso

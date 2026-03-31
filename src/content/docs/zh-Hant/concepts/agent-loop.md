@@ -145,7 +145,7 @@ OpenClaw 有兩個 Hook 系統：
 ## 逾時
 
 - `agent.wait` 預設值：30 秒（僅為等待時間）。`timeoutMs` 參數可覆寫。
-- Agent 執行時間：`agents.defaults.timeoutSeconds` 預設為 600 秒；在 `runEmbeddedPiAgent` 中止計時器中強制執行。
+- 代理運行時：`agents.defaults.timeoutSeconds` 預設 172800s（48 小時）；於 `runEmbeddedPiAgent` 中止計時器中強制執行。
 
 ## 可能提前結束的地方
 

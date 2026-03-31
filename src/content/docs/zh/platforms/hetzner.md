@@ -32,7 +32,7 @@ Hetzner 的价格可能会变动；选择最小的 Debian/Ubuntu VPS，如果遇
 
 本指南假设 Hetzner 上运行的是 Ubuntu 或 Debian。
 如果您使用的是其他 Linux VPS，请相应地调整软件包。
-有关通用的 Docker 流程，请参阅 [Docker](/zh/install/docker)。
+有关通用的 Docker 流程，请参阅 [Docker](/en/install/docker)。
 
 ---
 
@@ -70,7 +70,7 @@ Hetzner 的价格可能会变动；选择最小的 Debian/Ubuntu VPS，如果遇
 
 以 root 用户身份连接：
 
-```exec
+```bash
 ssh root@YOUR_VPS_IP
 ```
 
@@ -81,7 +81,7 @@ ssh root@YOUR_VPS_IP
 
 ## 2) 安装 Docker（在 VPS 上）
 
-```exec
+```bash
 apt-get update
 apt-get install -y git curl ca-certificates
 curl -fsSL https://get.docker.com | sh
@@ -89,7 +89,7 @@ curl -fsSL https://get.docker.com | sh
 
 验证：
 
-```exec
+```bash
 docker --version
 docker compose version
 ```
@@ -98,7 +98,7 @@ docker compose version
 
 ## 3) 克隆 OpenClaw 仓库
 
-```exec
+```bash
 git clone https://github.com/openclaw/openclaw.git
 cd openclaw
 ```
@@ -112,7 +112,7 @@ cd openclaw
 Docker 容器是临时的。
 所有长期存在的状态都必须驻留在主机上。
 
-```exec
+```bash
 mkdir -p /root/.openclaw
 mkdir -p /root/.openclaw/workspace
 
@@ -127,7 +127,7 @@ chown -R 1000:1000 /root/.openclaw/workspace
 
 在仓库根目录中创建 `.env`。
 
-```exec
+```bash
 OPENCLAW_IMAGE=openclaw:latest
 OPENCLAW_GATEWAY_TOKEN=change-me-now
 OPENCLAW_GATEWAY_BIND=lan
@@ -142,7 +142,7 @@ XDG_CONFIG_HOME=/home/node/.openclaw
 
 生成强密码：
 
-```exec
+```bash
 openssl rand -hex 32
 ```
 
@@ -253,14 +253,14 @@ CMD ["node","dist/index.js"]
 
 ## 8) 构建并启动
 
-```exec
+```bash
 docker compose build
 docker compose up -d openclaw-gateway
 ```
 
 验证二进制文件：
 
-```exec
+```bash
 docker compose exec openclaw-gateway which gog
 docker compose exec openclaw-gateway which goplaces
 docker compose exec openclaw-gateway which wacli
@@ -278,7 +278,7 @@ docker compose exec openclaw-gateway which wacli
 
 ## 9) 验证 Gateway(网关)
 
-```exec
+```bash
 docker compose logs -f openclaw-gateway
 ```
 
@@ -290,7 +290,7 @@ docker compose logs -f openclaw-gateway
 
 从您的笔记本电脑：
 
-```exec
+```bash
 ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
 ```
 

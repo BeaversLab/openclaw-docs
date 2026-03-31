@@ -71,7 +71,7 @@ Exécutez une passerelle OpenClaw persistante sur un Droplet Gateway.
     ```
   </Step>
 
-<Step title="Vérifier la passerelle">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
+<Step title="Vérifiez la passerelle">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
 
   <Step title="Accéder à l'interface de contrôle">
     La passerelle se lie à l'interface locale (loopback) par défaut. Choisissez l'une de ces options.

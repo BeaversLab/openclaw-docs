@@ -46,7 +46,7 @@ title: "Gateway 网关 架构"
 
 协议详细信息：
 
-- [Gateway(网关) 协议](/zh/gateway/protocol)
+- [Gateway(网关) 协议](/en/gateway/protocol)
 
 ### WebChat
 
@@ -102,8 +102,8 @@ sequenceDiagram
 - Gateway(网关) 认证（`gateway.auth.*`）仍然适用于**所有**连接，无论是
   本地还是远程。
 
-详情：[Gateway(网关) 协议](/zh/gateway/protocol)、[配对](/zh/channels/pairing)、
-[安全性](/zh/gateway/security)。
+详情：[Gateway(网关) 协议](/en/gateway/protocol)、[配对](/en/channels/pairing)、
+[安全性](/en/gateway/security)。
 
 ## 协议类型和代码生成
 

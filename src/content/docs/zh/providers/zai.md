@@ -42,5 +42,5 @@ openclaw onboard --auth-choice zai-cn
 - GLM 模型可以作为 `zai/<model>` 使用（例如：`zai/glm-5`）。
 - 默认情况下，Z.AI 工具调用流式传输已启用 `tool_stream`。将
   `agents.defaults.models["zai/<model>"].params.tool_stream` 设置为 `false` 即可将其禁用。
-- 有关模型系列概览，请参阅 [/providers/glm](/zh/providers/glm)。
+- 有关模型系列概览，请参阅 [/providers/glm](/en/providers/glm)。
 - Z.AI 使用您的 API 密钥进行 Bearer 身份验证。

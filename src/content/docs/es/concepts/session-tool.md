@@ -166,7 +166,7 @@ Generar una sesión delegada aislada.
 
 - Runtime predeterminado: subagente OpenClaw (`runtime: "subagent"`).
 - Las sesiones de arnés ACP usan `runtime: "acp"` y siguen reglas específicas de ACP para la orientación/políticas.
-- Esta sección se centra en el comportamiento del subagente, a menos que se indique lo contrario. Para obtener información sobre el comportamiento específico de ACP, consulte [ACP Agents](/es/tools/acp-agents).
+- Esta sección se centra en el comportamiento del subagente, a menos que se indique lo contrario. Para obtener información sobre el comportamiento específico de ACP, consulte [ACP Agents](/en/tools/acp-agents).
 
 Parámetros:
 

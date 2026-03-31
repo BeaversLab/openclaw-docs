@@ -22,12 +22,12 @@ OpenClaw 有两个表面看起来相似但实际上截然不同的问题：
 - **Gateway 网关 WS（控制平面）**：默认情况下 `127.0.0.1:18789` 上的 WebSocket 端点；可以通过 `gateway.bind` 绑定到局域网/tailnet。
 - **直接 WS 传输**：面向局域网/tailnet 的 Gateway 网关 WS 端点（无 SSH）。
 - **SSH 传输（备用）**：通过 SSH 转发 `127.0.0.1:18789` 进行远程控制。
-- **Legacy TCP bridge（已弃用/已移除）**：旧版节点传输（请参阅 [Bridge protocol](/zh/gateway/bridge-protocol)）；不再广播用于设备发现。
+- **Legacy TCP bridge（已弃用/已移除）**：旧版节点传输（请参阅 [Bridge protocol](/en/gateway/bridge-protocol)）；不再广播用于设备发现。
 
 协议详情：
 
-- [Gateway(网关) 协议](/zh/gateway/protocol)
-- [Bridge protocol (legacy)](/zh/gateway/bridge-protocol)
+- [Gateway(网关) 协议](/en/gateway/protocol)
+- [Bridge protocol (legacy)](/en/gateway/bridge-protocol)
 
 ## 为什么我们同时保留“direct”和 SSH
 
@@ -51,7 +51,7 @@ Bonjour 是尽力而为的，无法跨网络工作。它仅用于“同一局域
 - **Gateway 网关**通过 Bonjour 广播其 WS 端点。
 - 客户端进行浏览并显示“选择一个 Gateway 网关”列表，然后存储所选的端点。
 
-故障排除和信标详细信息：[Bonjour](/zh/gateway/bonjour)。
+故障排除和信标详细信息：[Bonjour](/en/gateway/bonjour)。
 
 #### 服务信标详细信息
 
@@ -95,7 +95,7 @@ Bonjour 是尽力而为的，无法跨网络工作。它仅用于“同一局域
 
 当没有直接路由（或直接连接被禁用）时，客户端始终可以通过转发环回 Gateway 网关端口来通过 SSH 连接。
 
-参见 [远程访问](/zh/gateway/remote)。
+参见 [远程访问](/en/gateway/remote)。
 
 ## 传输选择（客户端策略）
 
@@ -110,7 +110,7 @@ Bonjour 是尽力而为的，无法跨网络工作。它仅用于“同一局域
 
 Gateway 网关是节点/客户端准入的单一事实来源。
 
-- 配对请求是在 Gateway(网关) 中创建/批准/拒绝的（请参阅 [Gateway(网关) 配对](/zh/gateway/pairing)）。
+- 配对请求是在 Gateway(网关) 中创建/批准/拒绝的（请参阅 [Gateway(网关) 配对](/en/gateway/pairing)）。
 - Gateway 网关强制执行：
   - 身份验证（令牌 / 密钥对）
   - 作用域/ACL（Gateway 网关不是每个方法的原始代理）

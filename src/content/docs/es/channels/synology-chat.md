@@ -22,7 +22,7 @@ Instalar desde una copia local:
 openclaw plugins install ./extensions/synology-chat
 ```
 
-Detalles: [Plugins](/es/tools/plugin)
+Detalles: [Plugins](/en/tools/plugin)
 
 ## Configuración rápida
 

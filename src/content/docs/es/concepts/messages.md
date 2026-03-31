@@ -28,7 +28,7 @@ Los controles clave se encuentran en la configuración:
 - `agents.defaults.*` para la transmisión en bloques y valores predeterminados de fragmentación.
 - Anulaciones de canal (`channels.whatsapp.*`, `channels.telegram.*`, etc.) para límites e interruptores de transmisión.
 
-Consulte [Configuración](/es/gateway/configuration) para ver el esquema completo.
+Consulte [Configuración](/en/gateway/configuration) para ver el esquema completo.
 
 ## Deduplicación entrante
 
@@ -77,7 +77,7 @@ completamente con cada cliente. Recomendación: use un dispositivo principal par
 largas para evitar un contexto divergente. La interfaz de usuario de Control y la TUI siempre muestran
 la transcripción de sesión respaldada por la puerta de enlace, por lo que son la fuente de verdad.
 
-Detalles: [Gestión de sesiones](/es/concepts/session).
+Detalles: [Gestión de sesiones](/en/concepts/session).
 
 ## Cuerpos entrantes e historial de contexto
 
@@ -107,7 +107,7 @@ Si una ejecución ya está activa, los mensajes entrantes se pueden poner en col
 - Configurar mediante `messages.queue` (y `messages.queue.byChannel`).
 - Modos: `interrupt`, `steer`, `followup`, `collect`, además de variantes de acumulación.
 
-Detalles: [Poner en cola](/es/concepts/queue).
+Detalles: [Poner en cola](/en/concepts/queue).
 
 ## Transmisión por bloques, fragmentación y procesamiento por lotes
 
@@ -123,7 +123,7 @@ Configuraciones clave:
 - `agents.defaults.humanDelay` (pausa similar a la humana entre respuestas de bloques)
 - Sobrescrituras de canal: `*.blockStreaming` y `*.blockStreamingCoalesce` (los canales que no sean Telegram requieren `*.blockStreaming: true` explícito)
 
-Detalles: [Streaming + chunking](/es/concepts/streaming).
+Detalles: [Streaming + chunking](/en/concepts/streaming).
 
 ## Visibilidad del razonamiento y tokens
 
@@ -133,7 +133,7 @@ OpenClaw puede exponer u ocultar el razonamiento del modelo:
 - El contenido del razonamiento sigue contando para el uso de tokens cuando es producido por el modelo.
 - Telegram soporta el flujo de razonamiento en la burbuja de borrador.
 
-Detalles: [Thinking + reasoning directives](/es/tools/thinking) y [Token use](/es/reference/token-use).
+Detalles: [Thinking + reasoning directives](/en/tools/thinking) y [Token use](/en/reference/token-use).
 
 ## Prefijos, hilos y respuestas
 
@@ -142,4 +142,4 @@ El formato de los mensajes salientes está centralizado en `messages`:
 - `messages.responsePrefix`, `channels.<channel>.responsePrefix` y `channels.<channel>.accounts.<id>.responsePrefix` (cascada de prefijos salientes), más `channels.whatsapp.messagePrefix` (prefijo entrante de WhatsApp)
 - Hilos de respuesta mediante `replyToMode` y valores predeterminados por canal
 
-Detalles: [Configuración](/es/gateway/configuration-reference#messages) y documentación del canal.
+Detalles: [Configuración](/en/gateway/configuration-reference#messages) y documentación del canal.

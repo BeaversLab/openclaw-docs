@@ -13,7 +13,7 @@ L'extension Chrome OpenClaw permet à l'agent de contrôler vos **onglets Chrome
 
 L'attachement/détachement s'effectue via un **bouton unique de la barre d'outils Chrome**.
 
-Si vous préférez le flux officiel de connexion MCP DevTools de Chrome au lieu du relais de l'extension OpenClaw, utilisez plutôt un profil de navigateur `existing-session`. Voir [Navigateur](/fr/tools/browser#chrome-existing-session-via-mcp). Pour la documentation de configuration propre à Chrome, consultez [Chrome pour les développeurs : Utiliser Chrome DevTools MCP avec votre session de navigateur](https://developer.chrome.com/blog/chrome-devtools-mcp-debug-your-browser-session) et le [README Chrome DevTools MCP](https://github.com/ChromeDevTools/chrome-devtools-mcp).
+Si vous préférez le flux officiel de connexion MCP DevTools de Chrome au lieu du relais de l'extension OpenClaw, utilisez plutôt un profil de navigateur `existing-session`. Voir [Navigateur](/en/tools/browser#chrome-existing-session-via-mcp). Pour la documentation de configuration propre à Chrome, consultez [Chrome pour les développeurs : Utiliser Chrome DevTools MCP avec votre session de navigateur](https://developer.chrome.com/blog/chrome-devtools-mcp-debug-your-browser-session) et le [README Chrome DevTools MCP](https://github.com/ChromeDevTools/chrome-devtools-mcp).
 
 ## Ce que c'est (concept)
 
@@ -193,6 +193,6 @@ Recommandations :
 
 Connexes :
 
-- Aperçu de l'outil de navigation : [Navigateur](/fr/tools/browser)
-- Audit de sécurité : [Sécurité](/fr/gateway/security)
-- Configuration Tailscale : [Tailscale](/fr/gateway/tailscale)
+- Aperçu de l'outil de navigation : [Navigateur](/en/tools/browser)
+- Audit de sécurité : [Sécurité](/en/gateway/security)
+- Configuration Tailscale : [Tailscale](/en/gateway/tailscale)

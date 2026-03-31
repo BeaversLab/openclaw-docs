@@ -11,7 +11,7 @@ title: "Proxy API de Claude Max"
 
 **claude-max-api-proxy** est un outil communautaire qui expose votre abonnement Claude Max/Pro en tant que point de terminaison OpenAI compatible API. Cela vous permet d'utiliser votre abonnement avec n'importe quel outil prenant en charge le format OpenAI API.
 
-<Warning>Cette approche concerne uniquement la compatibilité technique. Anthropic a bloqué par le passé certaines utilisations d'abonnement en dehors de Claude Code. Vous devez décider par vous-même de l'utiliser et vérifier les conditions actuelles de Anthropic avant de vous y fier.</Warning>
+<Warning>Cette option concerne uniquement la compatibilité technique. Anthropic a bloqué par le passé certaines utilisations d'abonnement en dehors de Claude Code. Vous devez décider par vous-même de l'utiliser et vérifier les conditions actuelles de Anthropic avant d'en dépendre.</Warning>
 
 ## Pourquoi l'utiliser ?
 
@@ -146,5 +146,5 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.claude-max-api.plist
 
 ## Voir aussi
 
-- [Fournisseur Anthropic](/fr/providers/anthropic) - Intégration native OpenClaw avec le jeton de configuration Claude ou les clés API
-- [Fournisseur OpenAI](/fr/providers/openai) - Pour les abonnements OpenAI/Codex
+- [Fournisseur Anthropic](/en/providers/anthropic) - Intégration native OpenClaw avec le jeton de configuration Claude ou les clés API
+- [Fournisseur OpenAI](/en/providers/openai) - Pour les abonnements OpenAI/Codex

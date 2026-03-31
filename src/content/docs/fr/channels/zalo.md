@@ -15,7 +15,7 @@ Zalo est fourni sous forme de plugin et n'est pas inclus dans l'installation de 
 
 - Installer via CLI : `openclaw plugins install @openclaw/zalo`
 - Ou sélectionnez **Zalo** lors de la configuration et confirmez la invite d'installation
-- Détails : [Plugins](/fr/tools/plugin)
+- Détails : [Plugins](/en/tools/plugin)
 
 ## Configuration rapide (débutant)
 
@@ -117,7 +117,7 @@ Support multi-compte : utilisez `channels.zalo.accounts` avec des jetons par com
 - Approuver via :
   - `openclaw pairing list zalo`
   - `openclaw pairing approve zalo <CODE>`
-- L'appariement est l'échange de jetons par défaut. Détails : [Appariement](/fr/channels/pairing)
+- L'appariement est l'échange de jetons par défaut. Détails : [Appariement](/en/channels/pairing)
 - `channels.zalo.allowFrom` accepte les ID utilisateur numériques (aucune recherche par nom d'utilisateur disponible).
 
 ## Contrôle d'accès (Groupes)
@@ -208,7 +208,7 @@ Ce tableau résume le comportement actuel des **Zalo Bot Creator / Marketplace b
 
 ## Référence de configuration (Zalo)
 
-Configuration complète : [Configuration](/fr/gateway/configuration)
+Configuration complète : [Configuration](/en/gateway/configuration)
 
 Les clés plates de premier niveau (`channels.zalo.botToken`, `channels.zalo.dmPolicy`, et similaires) sont un raccourci hérité pour compte unique. Privilégiez `channels.zalo.accounts.<id>.*` pour les nouvelles configurations. Les deux formes sont encore documentées ici car elles existent dans le schéma.
 

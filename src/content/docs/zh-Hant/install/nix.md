@@ -11,7 +11,7 @@ title: "Nix"
 
 使用 **[nix-openclaw](https://github.com/openclaw/nix-openclaw)** 宣告式安裝 OpenClaw —— 一個功能齊全的 Home Manager 模組。
 
-<Info>[nix-openclaw](https://github.com/openclaw/nix-openclaw) repo 是 Nix 安裝的權威來源。本頁面僅提供快速概覽。</Info>
+<Info>[nix-openclaw](https://github.com/openclaw/nix-openclaw) 儲存庫是 Nix 安裝的權威來源。本頁面僅提供快速概覽。</Info>
 
 ## 您將獲得
 
@@ -23,11 +23,11 @@ title: "Nix"
 ## 快速開始
 
 <Steps>
-  <Step title="安裝 Determinate Nix">如果尚未安裝 Nix，請依照 [Determinate Nix installer](https://github.com/DeterminateSystems/nix-installer) 的說明操作。</Step>
-  <Step title="建立本地 flake">使用 nix-openclaw repo 中的 agent-first 模板： ```bash mkdir -p ~/code/openclaw-local # Copy templates/agent-first/flake.nix from the nix-openclaw repo ```</Step>
-  <Step title="配置 secrets">設定您的訊息機器人 token 和模型提供者 API 金鑰。位於 `~/.secrets/` 的純文字檔案即可正常運作。</Step>
-  <Step title="填寫模板預留位置並切換">```bash home-manager switch ```</Step>
-  <Step title="驗證">確認 launchd 服務正在運行，且您的機器人會回應訊息。</Step>
+  <Step title="安裝 Determinate Nix">如果尚未安裝 Nix，請依照 [Determinate Nix installer](https://github.com/DeterminateSystems/nix-installer) 的指示操作。</Step>
+  <Step title="建立本地 flake">使用來自 nix-openclaw 儲存庫的 agent-first 樣板： ```bash mkdir -p ~/code/openclaw-local # Copy templates/agent-first/flake.nix from the nix-openclaw repo ```</Step>
+  <Step title="設定 secrets">設定您的訊息機器人權杖和模型提供者 API 金鑰。位於 `~/.secrets/` 的純文字檔案即可。</Step>
+  <Step title="填寫樣板預留位置並切換">```bash home-manager switch ```</Step>
+  <Step title="Verify">確認 launchd 服務正在運行，且您的機器人會回應訊息。</Step>
 </Steps>
 
 請參閱 [nix-openclaw README](https://github.com/openclaw/nix-openclaw) 以了解完整的模組選項和範例。

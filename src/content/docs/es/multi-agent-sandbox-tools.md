@@ -32,8 +32,8 @@ La autenticación es por agente: cada agente lee de su propio almacén de autent
 Las credenciales **no** se comparten entre agentes. Nunca reutilices `agentDir` entre agentes.
 Si deseas compartir credenciales, copia `auth-profiles.json` en el `agentDir` del otro agente.
 
-Para saber cómo se comporta el sandbox en tiempo de ejecución, consulta [Sandboxing](/es/gateway/sandboxing).
-Para depurar "¿por qué está bloqueado esto?", consulta [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) y `openclaw sandbox explain`.
+Para saber cómo se comporta el sandbox en tiempo de ejecución, consulta [Sandboxing](/en/gateway/sandboxing).
+Para depurar "¿por qué está bloqueado esto?", consulta [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) y `openclaw sandbox explain`.
 
 ---
 
@@ -361,7 +361,7 @@ Después de configurar el entorno restringido y las herramientas multiagente:
    - Enviar un mensaje que requiera herramientas restringidas
    - Verificar que el agente no puede usar las herramientas denegadas
 
-4. **Monitorear registros:**
+4. **Supervisar registros:**
    ```bash
    tail -f "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/logs/gateway.log" | grep -E "routing|sandbox|tools"
    ```
@@ -390,6 +390,6 @@ Después de configurar el entorno restringido y las herramientas multiagente:
 
 ## Véase también
 
-- [Enrutamiento multiagente](/es/concepts/multi-agent)
-- [Configuración de sandbox](/es/gateway/configuration#agentsdefaults-sandbox)
-- [Gestión de sesiones](/es/concepts/session)
+- [Enrutamiento multiagente](/en/concepts/multi-agent)
+- [Configuración de sandbox](/en/gateway/configuration#agentsdefaults-sandbox)
+- [Gestión de sesiones](/en/concepts/session)

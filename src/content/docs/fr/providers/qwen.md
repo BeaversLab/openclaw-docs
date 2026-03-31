@@ -1,53 +1,32 @@
 ---
-summary: "Utiliser Qwen OAuth (offre gratuite) dans OpenClaw"
+summary: "Utiliser les modèles Qwen via Alibaba Cloud Model Studio"
 read_when:
   - You want to use Qwen with OpenClaw
-  - You want free-tier OAuth access to Qwen Coder
+  - You previously used Qwen OAuth
 title: "Qwen"
 ---
 
 # Qwen
 
-Qwen fournit un flux OAuth de niveau gratuit pour les modèles Qwen Coder et Qwen Vision
-(2 000 requêtes/jour, sous réserve des limites de taux de Qwen).
+<Warning>
 
-## Activer le plugin
+**Qwen OAuth a été supprimé.** L'intégration OAuth de niveau gratuit
+(`qwen-portal`) qui utilisait les points de terminaison `portal.qwen.ai` n'est plus disponible.
+Voir [Issue #49557](https://github.com/openclaw/openclaw/issues/49557) pour
+plus de contexte.
 
-```bash
-openclaw plugins enable qwen-portal-auth
-```
+</Warning>
 
-Redémarrez la Gateway après l'activation.
+## Recommandé : Model Studio (Plan de codage Alibaba Cloud)
 
-## Authentifier
-
-```bash
-openclaw models auth login --provider qwen-portal --set-default
-```
-
-Cela exécute le flux Qwen avec code d'appareil de OAuth et écrit une entrée de fournisseur dans votre
-`models.json` (plus un alias `qwen` pour un changement rapide).
-
-## ID de modèle
-
-- `qwen-portal/coder-model`
-- `qwen-portal/vision-model`
-
-Changer de modèle avec :
+Utilisez [Model Studio](/en/providers/modelstudio) pour un accès officiellement pris en charge aux modèles Qwen (Qwen 3.5 Plus, GLM-4.7, Kimi K2.5, MiniMax M2.5, et plus).
 
 ```bash
-openclaw models set qwen-portal/coder-model
+# Global endpoint
+openclaw onboard --auth-choice modelstudio-api-key
+
+# China endpoint
+openclaw onboard --auth-choice modelstudio-api-key-cn
 ```
 
-## Réutiliser la connexion Qwen de CLI Code
-
-Si vous vous êtes déjà connecté avec la Qwen CLI Code, OpenClaw synchronisera les informations d'identification
-de `~/.qwen/oauth_creds.json` lors du chargement du magasin d'auth. Vous avez toujours besoin d'une
-entrée `models.providers.qwen-portal` (utilisez la commande de connexion ci-dessus pour en créer une).
-
-## Remarques
-
-- Les jetons s'actualisent automatiquement ; réexécutez la commande de connexion si l'actualisation échoue ou si l'accès est révoqué.
-- URL de base par défaut : `https://portal.qwen.ai/v1` (remplacez par
-  `models.providers.qwen-portal.baseUrl` si Qwen fournit un point de terminaison différent).
-- Voir [Modèles de fournisseurs](/fr/concepts/model-providers) pour les règles générales des fournisseurs.
+Voir [Model Studio](/en/providers/modelstudio) pour tous les détails de configuration.

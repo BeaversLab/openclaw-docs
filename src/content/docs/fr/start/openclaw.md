@@ -26,7 +26,7 @@ Commencez prudemment :
 
 ## Prérequis
 
-- OpenClaw installé et intégré — voir [Getting Started](/fr/start/getting-started) si vous ne l'avez pas encore fait
+- OpenClaw installé et intégré — voir [Getting Started](/en/start/getting-started) si vous ne l'avez pas encore fait
 - Un deuxième numéro de téléphone (SIM/eSIM/prépayé) pour l'assistant
 
 ## La configuration à deux téléphones (recommandée)
@@ -79,8 +79,8 @@ Conseil : traitez ce dossier comme la « mémoire » de OpenClaw et faites-en un
 openclaw setup
 ```
 
-Guide complet de la disposition de l'espace de travail + sauvegarde : [Espace de travail de l'agent](/fr/concepts/agent-workspace)
-Flux de travail de la mémoire : [Mémoire](/fr/concepts/memory)
+Guide complet de la disposition de l'espace de travail + sauvegarde : [Espace de travail de l'agent](/en/concepts/agent-workspace)
+Flux de travail de la mémoire : [Mémoire](/en/concepts/memory)
 
 Optionnel : choisir un espace de travail différent avec `agents.defaults.workspace` (prend en charge `~`).
 
@@ -207,12 +207,12 @@ Les journaux se trouvent sous `/tmp/openclaw/` (par défaut : `openclaw-YYYY-MM-
 
 ## Étapes suivantes
 
-- WebChat : [WebChat](/fr/web/webchat)
-- Opérations du Gateway : [Manuel d'exécution Gateway](/fr/gateway)
-- Cron + réveils : [Tâches Cron](/fr/automation/cron-jobs)
-- Compagnon de barre de menu macOS : [Application OpenClaw macOS](/fr/platforms/macos)
-- Application de nœud iOS : [Application iOS](/fr/platforms/ios)
-- Application de nœud Android : [Application Android](/fr/platforms/android)
-- Statut Windows : [Windows (WSL2)](/fr/platforms/windows)
-- Statut Linux : [Application Linux](/fr/platforms/linux)
-- Sécurité : [Sécurité](/fr/gateway/security)
+- WebChat : [WebChat](/en/web/webchat)
+- Opérations du Gateway : [Manuel d'exécution Gateway](/en/gateway)
+- Cron + réveils : [Tâches Cron](/en/automation/cron-jobs)
+- Compagnon de barre de menu macOS : [Application OpenClaw macOS](/en/platforms/macos)
+- Application de nœud iOS : [Application iOS](/en/platforms/ios)
+- Application de nœud Android : [Application Android](/en/platforms/android)
+- Statut Windows : [Windows (WSL2)](/en/platforms/windows)
+- Statut Linux : [Application Linux](/en/platforms/linux)
+- Sécurité : [Sécurité](/en/gateway/security)

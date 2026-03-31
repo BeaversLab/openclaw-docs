@@ -17,7 +17,7 @@ las sesiones.
 **Importante:** el espacio de trabajo es el **cwd predeterminado**, no un sandbox estricto. Las herramientas
 resuelven las rutas relativas respecto al espacio de trabajo, pero las rutas absolutas aún pueden alcanzar
 otros lugares en el host a menos que se habilite el sandbox. Si necesita aislamiento, use
-[`agents.defaults.sandbox`](/es/gateway/sandboxing) (y/o configuración de sandbox por agente).
+[`agents.defaults.sandbox`](/en/gateway/sandboxing) (y/o configuración de sandbox por agente).
 Cuando el sandbox está habilitado y `workspaceAccess` no es `"rw"`, las herramientas operan
 dentro de un espacio de trabajo sandbox bajo `~/.openclaw/sandboxes`, no su espacio de trabajo del host.
 
@@ -107,7 +107,7 @@ Estos son los archivos estándar que OpenClaw espera dentro del espacio de traba
   - Memoria a largo plazo curada.
   - Solo cargar en la sesión principal privada (no en contextos compartidos/grupales).
 
-Consulta [Memoria](/es/concepts/memory) para conocer el flujo de trabajo y el vaciado automático de memoria.
+Consulta [Memoria](/en/concepts/memory) para conocer el flujo de trabajo y el vaciado automático de memoria.
 
 - `skills/` (opcional)
   - Habilidades específicas del espacio de trabajo.
@@ -212,7 +212,7 @@ el secreto real en otro lugar (gestor de contraseñas, variables de entorno o `~
 
 Inicio `.gitignore` sugerido:
 
-```text
+```gitignore
 .DS_Store
 .env
 **/*.key
@@ -231,5 +231,5 @@ Inicio `.gitignore` sugerido:
 ## Notas avanzadas
 
 - El enrutamiento multiagente puede usar diferentes espacios de trabajo por agente.
-  Vea [Enrutamiento de canales](/es/channels/channel-routing) para la configuración de enrutamiento.
+  Vea [Enrutamiento de canales](/en/channels/channel-routing) para la configuración de enrutamiento.
 - Si `agents.defaults.sandbox` está habilitado, las sesiones que no son las principales pueden usar espacios de trabajo de sandbox por sesión bajo `agents.defaults.sandbox.workspaceRoot`.

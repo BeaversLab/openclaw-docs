@@ -12,7 +12,7 @@ read_when:
 
 Referencia de utilidades de prueba, patrones y aplicación de reglas de lint para complementos de OpenClaw.
 
-<Tip>**¿Buscas ejemplos de pruebas?** Las guías prácticas incluyen ejemplos de pruebas funcionales: [Pruebas de complementos de canal](/es/plugins/sdk-channel-plugins#step-6-test) y [Pruebas de complementos de proveedor](/es/plugins/sdk-provider-plugins#step-6-test).</Tip>
+<Tip>**¿Buscas ejemplos de pruebas?** Las guías prácticas incluyen ejemplos de pruebas detallados: [Pruebas de complementos de canal](/en/plugins/sdk-channel-plugins#step-6-test) y [Pruebas de complementos de proveedor](/en/plugins/sdk-provider-plugins#step-6-test).</Tip>
 
 ## Utilidades de prueba
 
@@ -240,7 +240,7 @@ OPENCLAW_TEST_PROFILE=low OPENCLAW_TEST_SERIAL_GATEWAY=1 pnpm test
 
 ## Relacionado
 
-- [Descripción general del SDK](/es/plugins/sdk-overview) -- convenciones de importación
-- [Complementos de canal del SDK](/es/plugins/sdk-channel-plugins) -- interfaz del complemento de canal
-- [Complementos de proveedor del SDK](/es/plugins/sdk-provider-plugins) -- ganchos del complemento de proveedor
-- [Construcción de complementos](/es/plugins/building-plugins) -- guía de introducción
+- [Descripción general del SDK](/en/plugins/sdk-overview) -- convenciones de importación
+- [Complementos de canal del SDK](/en/plugins/sdk-channel-plugins) -- interfaz del complemento de canal
+- [Complementos de proveedor del SDK](/en/plugins/sdk-provider-plugins) -- enlaces del complemento de proveedor
+- [Compilación de complementos](/en/plugins/building-plugins) -- guía de introducción

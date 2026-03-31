@@ -70,7 +70,7 @@ L'agent lit cela à chaque heartbeat et gère tous les éléments en un seul tou
 }
 ```
 
-Voir [Heartbeat](/fr/gateway/heartbeat) pour la configuration complète.
+Voir [Heartbeat](/en/gateway/heartbeat) pour la configuration complète.
 
 ## Cron : Planification précise
 
@@ -128,7 +128,7 @@ openclaw cron add \
   --delete-after-run
 ```
 
-Voir [Tâches Cron](/fr/automation/cron-jobs) pour la référence complète de la CLI.
+Voir [Tâches Cron](/en/automation/cron-jobs) pour la référence complète de la CLI.
 
 ## Organigramme de décision
 
@@ -213,7 +213,7 @@ Pour les workflows ponctuels, appelez Lobster directement.
 - L'outil est un **plugin optionnel** ; activez-le de manière additive via `tools.alsoAllow: ["lobster"]` (recommandé).
 - Lobster s'attend à ce que le `lobster` Lobster soit disponible sur `PATH`.
 
-Voir [Lobster](/fr/tools/lobster) pour l'utilisation complète et les exemples.
+Voir [Lobster](/en/tools/lobster) pour l'utilisation complète et les exemples.
 
 ## Session principale vs Session isolée
 
@@ -281,6 +281,6 @@ openclaw cron add \
 
 ## Connexes
 
-- [Heartbeat](/fr/gateway/heartbeat) - configuration complète du heartbeat
-- [Tâches cron](/fr/automation/cron-jobs) - référence complète de la CLI et de l'API cron
-- [Système](/fr/cli/system) - événements système + contrôles heartbeat
+- [Heartbeat](/en/gateway/heartbeat) - configuration complète du heartbeat
+- [Tâches cron](/en/automation/cron-jobs) - référence complète de la CLI et de l'API cron
+- [Système](/en/cli/system) - événements système + contrôles heartbeat

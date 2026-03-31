@@ -27,7 +27,7 @@ openclaw plugins install @openclaw/matrix
 openclaw plugins install ./extensions/matrix
 ```
 
-有关插件行为和安装规则，请参阅 [Plugins](/zh/tools/plugin)。
+有关插件行为和安装规则，请参阅 [Plugins](/en/tools/plugin)。
 
 ## 设置
 
@@ -233,7 +233,7 @@ openclaw matrix verify status --include-recovery-key --json
 openclaw matrix verify bootstrap
 ```
 
-多账户支持：使用 `channels.matrix.accounts` 配合每个账户的凭据和可选的 `name`。有关共享模式，请参阅[配置参考](/zh/gateway/configuration-reference#multi-account-all-channels)。
+多账号支持：使用 `channels.matrix.accounts` 配置各账号的凭据和可选的 `name`。有关共享模式，请参阅 [Configuration reference](/en/gateway/configuration-reference#multi-account-all-channels)。
 
 详细引导诊断：
 
@@ -370,7 +370,7 @@ openclaw matrix verify status
 - 如果对于同一帐户、主服务器和用户，Matrix 访问令牌稍后发生变化，OpenClaw 现在倾向于重复使用最完整的现有令牌哈希存储根目录，而不是从空的 Matrix 状态目录开始。
 - 在下一次网关启动时，备份的房间密钥将自动恢复到新的加密存储中。
 - 如果旧插件有从未备份的仅本地房间密钥，OpenClaw 将明确发出警告。由于这些密钥无法从先前的 rust crypto 存储自动导出，因此一些旧的加密历史记录可能需要手动恢复后才能查看。
-- 有关完整的升级流程、限制、恢复命令和常见迁移信息，请参阅 [Matrix 迁移](/zh/install/migrating-matrix)。
+- 有关完整的升级流程、限制、恢复命令和常见迁移消息，请参阅 [Matrix migration](/en/install/migrating-matrix)。
 
 加密的运行时状态按账号、按用户令牌哈希根目录组织在
 `~/.openclaw/matrix/accounts/<account>/<homeserver>__<user>/<token-hash>/` 中。
@@ -541,7 +541,7 @@ Ack 表情回应范围按以下顺序解析：
 }
 ```
 
-有关提及控制和允许列表行为，请参阅 [Groups](/zh/channels/groups)。
+有关提及限制和允许列表行为，请参阅 [Groups](/en/channels/groups)。
 
 Matrix 私信的配对示例：
 
@@ -552,7 +552,7 @@ openclaw pairing approve matrix <CODE>
 
 如果未批准的 Matrix 用户在批准前持续向您发送消息，OpenClaw 将重用相同的待处理配对代码，并可能在短暂的冷却后再次发送提醒回复，而不是生成新代码。
 
-有关共享私信配对流程和存储布局，请参阅 [Pairing](/zh/channels/pairing)。
+有关共享私信配对流程和存储布局，请参阅 [Pairing](/en/channels/pairing)。
 
 ## 多账户示例
 
@@ -643,34 +643,34 @@ openclaw matrix account add \
 - `homeserver`：主服务器 URL，例如 `https://matrix.example.org`。
 - `allowPrivateNetwork`：允许此 Matrix 账户连接到私有/内部主服务器。当主服务器解析为 `localhost`、LAN/Tailscale IP 或内部主机（如 `matrix-synapse`）时，请启用此选项。
 - `userId`：完整的 Matrix 用户 ID，例如 `@bot:example.org`。
-- `accessToken`：基于令牌的身份验证的访问令牌。
-- `password`：基于密码登录的密码。
-- `deviceId`：显式 Matrix 设备 ID。
+- `accessToken`：基于令牌的身份验证的访问令牌。env/file/exec 提供程序支持 `channels.matrix.accessToken` 和 `channels.matrix.accounts.<id>.accessToken` 的纯文本值和 SecretRef 值。请参阅 [Secrets Management](/en/gateway/secrets)。
+- `password`：基于密码的登录密码。支持纯文本值和 SecretRef 值。
+- `deviceId`：显式的 Matrix 设备 ID。
 - `deviceName`：密码登录的设备显示名称。
-- `avatarUrl`：存储的个人头像 URL，用于个人资料同步和 `set-profile` 更新。
+- `avatarUrl`：用于个人资料同步和 `set-profile` 更新的存储的自我头像 URL。
 - `initialSyncLimit`：启动同步事件限制。
 - `encryption`：启用 E2EE。
-- `allowlistOnly`：对私信和房间强制执行仅限允许列表的行为。
+- `allowlistOnly`：对私信和房间强制执行仅允许列表行为。
 - `groupPolicy`：`open`、`allowlist` 或 `disabled`。
 - `groupAllowFrom`：用于房间流量的用户 ID 允许列表。
 - `groupAllowFrom` 条目应为完整的 Matrix 用户 ID。未解析的名称在运行时将被忽略。
 - `replyToMode`：`off`、`first` 或 `all`。
 - `threadReplies`：`off`、`inbound` 或 `always`。
-- `threadBindings`：用于线程绑定会话路由和生命周期的渠道覆盖设置。
-- `startupVerification`：启动时的自动自我验证请求模式（`if-unverified`、`off`）。
-- `startupVerificationCooldownHours`：重试自动启动验证请求之前的冷却时间。
-- `textChunkLimit`：出站消息块大小。
+- `threadBindings`: 针对绑定线程的会话路由和生命周期的每渠道覆盖设置。
+- `startupVerification`: 启动时的自动自我验证请求模式（`if-unverified`，`off`）。
+- `startupVerificationCooldownHours`: 重试自动启动验证请求之前的冷却时间。
+- `textChunkLimit`: 出站消息分块大小。
 - `chunkMode`: `length` 或 `newline`。
 - `responsePrefix`: 出站回复的可选消息前缀。
-- `ackReaction`: 此渠道/账号的可选确认反应覆盖。
-- `ackReactionScope`: 可选的确认反应范围覆盖 (`group-mentions`, `group-all`, `direct`, `all`, `none`, `off`)。
-- `reactionNotifications`: 入站反应通知模式 (`own`, `off`)。
-- `mediaMaxMb`: 出站媒体大小上限（MB）。
-- `autoJoin`: 邀请自动加入策略 (`always`, `allowlist`, `off`)。默认值：`off`。
-- `autoJoinAllowlist`: 当 `autoJoin` 为 `allowlist` 时允许的房间/别名。别名条目会在邀请处理期间解析为房间 ID；OpenClaw 不信任被邀请房间声明的别名状态。
-- `dm`: 私信策略块 (`enabled`, `policy`, `allowFrom`)。
-- `dm.allowFrom` 条目应为完整的 Matrix 用户 ID，除非您已通过实时目录查找对其进行了解析。
-- `accounts`: 命名的按账号覆盖。顶级 `channels.matrix` 值作为这些条目的默认值。
-- `groups`: 按房间策略映射。优先使用房间 ID 或别名；未解析的房间名在运行时会被忽略。会话/组标识在解析后使用稳定的房间 ID，而人类可读的标签仍来自房间名。
-- `rooms`: `groups` 的旧版别名。
-- `actions`：针对每个动作的工具门控（`messages`、`reactions`、`pins`、`profile`、`memberInfo`、`channelInfo`、`verification`）。
+- `ackReaction`: 此渠道/账号的可选确认反应覆盖设置。
+- `ackReactionScope`：可选的确认反应范围覆盖（`group-mentions`、`group-all`、`direct`、`all`、`none`、`off`）。
+- `reactionNotifications`：传入反应通知模式（`own`、`off`）。
+- `mediaMaxMb`：出站媒体大小上限（MB）。
+- `autoJoin`：邀请自动加入策略（`always`、`allowlist`、`off`）。默认值：`off`。
+- `autoJoinAllowlist`：当 `autoJoin` 为 `allowlist` 时，允许使用房间/别名。在处理邀请期间，别名条目会被解析为房间 ID；OpenClaw 不信任被邀请房间声明的别名状态。
+- `dm`：私信策略块（`enabled`，`policy`，`allowFrom`）。
+- 除非您已经通过实时目录查找解析了 `dm.allowFrom` 条目，否则它们应该是完整的 Matrix 用户 ID。
+- `accounts`：按账户命名的覆盖项。顶层的 `channels.matrix` 值作为这些条目的默认值。
+- `groups`：按房间划分的策略映射。优先使用房间 ID 或别名；运行时将忽略无法解析的房间名称。会话/组身份在解析后使用稳定的房间 ID，而人类可读的标签仍来自房间名称。
+- `rooms`：`groups` 的旧别名。
+- `actions`：针对每项工具操作的权限控制 (`messages`, `reactions`, `pins`, `profile`, `memberInfo`, `channelInfo`, `verification`)。

@@ -52,7 +52,7 @@ openclaw devices approve <requestId>
 Si el navegador reintenta el emparejamiento con detalles de autenticación modificados (rol/ámbitos/clave pública), la solicitud pendiente anterior es reemplazada y se crea un nuevo `requestId`. Vuelva a ejecutar `openclaw devices list` antes de la aprobación.
 
 Una vez aprobado, el dispositivo se recuerda y no requerirá una nueva aprobación a menos que lo revoque con `openclaw devices revoke --device <id> --role <role>`. Consulte
-[Devices CLI](/es/cli/devices) para la rotación y revocación de tokens.
+[Devices CLI](/en/cli/devices) para la rotación y revocación de tokens.
 
 **Notas:**
 
@@ -195,7 +195,7 @@ OpenClaw **bloquea** las conexiones de la interfaz de control sin identidad del 
 
 `dangerouslyDisableDeviceAuth` deshabilita las comprobaciones de identidad del dispositivo de la Interfaz de Control y es una degradación grave de la seguridad. Revértelo rápidamente después del uso de emergencia.
 
-Consulte [Tailscale](/es/gateway/tailscale) para obtener instrucciones sobre la configuración de HTTPS.
+Consulte [Tailscale](/en/gateway/tailscale) para obtener instrucciones sobre la configuración de HTTPS.
 
 ## Compilación de la interfaz de usuario
 
@@ -267,4 +267,4 @@ Ejemplo:
 }
 ```
 
-Detalles de la configuración de acceso remoto: [Acceso remoto](/es/gateway/remote).
+Detalles de la configuración de acceso remoto: [Acceso remoto](/en/gateway/remote).

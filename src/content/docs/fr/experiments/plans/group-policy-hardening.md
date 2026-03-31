@@ -34,5 +34,5 @@ Le copier-coller à partir des journaux ou des ID de discussion inclut souvent d
 
 ## Documentation connexe
 
-- [Discussions de groupe](/fr/concepts/groups)
-- [Fournisseur Telegram](/fr/channels/telegram)
+- [Discussions de groupe](/en/concepts/groups)
+- [Fournisseur Telegram](/en/channels/telegram)

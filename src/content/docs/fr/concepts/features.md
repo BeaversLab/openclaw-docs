@@ -14,7 +14,7 @@ title: "Fonctionnalités"
     WhatsApp, Telegram, Discord et iMessage avec un seul Gateway.
   </Card>
   <Card title="Plugins" icon="plug">
-    Ajoutez Mattermost et plus encore avec des extensions.
+    Ajoutez Mattermost et bien plus encore avec des extensions.
   </Card>
   <Card title="Routing" icon="route">
     Routage multi-agent avec sessions isolées.
@@ -26,7 +26,7 @@ title: "Fonctionnalités"
     Interface de contrôle Web et application compagnon macOS.
   </Card>
   <Card title="Mobile nodes" icon="smartphone">
-    Nœuds iOS et Android avec couplage, voix/chat et commandes riches d'appareil.
+    Nœuds iOS et Android avec appairage, voix/chat et commandes riches d'appareil.
   </Card>
 </Columns>
 
@@ -43,7 +43,7 @@ title: "Fonctionnalités"
 
 - Runtime d'agent intégré avec streaming d'outils
 - Routage multi-agent avec sessions isolées par espace de travail ou expéditeur
-- Sessions : les chats directs sont fusionnés dans un `main` partagé ; les groupes sont isolés
+- Sessions : les discussions directes sont fusionnées dans `main` partagé ; les groupes sont isolés
 - Streaming et découpage pour les longues réponses
 
 **Authentification et fournisseurs :**

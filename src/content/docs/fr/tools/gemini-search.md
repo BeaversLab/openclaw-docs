@@ -79,6 +79,6 @@ qui prend en charge le grounding peut être utilisé via
 
 ## Connexes
 
-- [Aperçu de la recherche web](/fr/tools/web) -- tous les fournisseurs et la détection automatique
-- [Recherche Brave](/fr/tools/brave-search) -- résultats structurés avec extraits
-- [Perplexity Search](/fr/tools/perplexity-search) -- résultats structurés + extraction de contenu
+- [Aperçu de la recherche web](/en/tools/web) -- tous les fournisseurs et la détection automatique
+- [Recherche Brave](/en/tools/brave-search) -- résultats structurés avec extraits
+- [Perplexity Search](/en/tools/perplexity-search) -- résultats structurés + extraction de contenu

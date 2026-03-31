@@ -14,7 +14,7 @@ Ce guide explique la création d'un plugin de fournisseur qui ajoute un fourniss
 (LLM) à OpenClaw. À la fin, vous disposerez d'un fournisseur avec un catalogue de modèles,
 une authentification par clé API et une résolution dynamique de modèle.
 
-<Info>Si vous n'avez jamais créé de plugin OpenClaw auparavant, lisez le guide [Getting Started](/fr/plugins/building-plugins) d'abord pour comprendre la structure de base du package et la configuration du manifeste.</Info>
+<Info>Si vous n'avez jamais construit de plugin OpenClaw auparavant, lisez d'abord [Getting Started](/en/plugins/building-plugins) pour connaître la structure de base du package et la configuration du manifeste.</Info>
 
 ## Procédure pas à pas
 
@@ -218,9 +218,9 @@ une authentification par clé API et une résolution dynamique de modèle.
 
   </Step>
 
-  <Step title="Ajouter les hooks d'exécution (si nécessaire)">
-    La plupart des providers ont uniquement besoin de `catalog` + `resolveDynamicModel`. Ajoutez les hooks
-    de manière incrémentale au fur et à mesure que votre provider en a besoin.
+  <Step title="Ajouter des hooks d'exécution (si nécessaire)">
+    La plupart des providers n'ont besoin que de `catalog` + `resolveDynamicModel`. Ajoutez les hooks
+    de manière incrémentielle au fur et à mesure que votre provider en a besoin.
 
     <Tabs>
       <Tab title="Échange de jetons">
@@ -256,7 +256,7 @@ une authentification par clé API et une résolution dynamique de modèle.
         ```
       </Tab>
       <Tab title="Utilisation et facturation">
-        Pour les providers qui exposent des données d'utilisation/de facturation :
+        Pour les providers qui exposent des données d'utilisation/facturation :
 
         ```typescript
         resolveUsageAuth: async (ctx) => {
@@ -271,41 +271,41 @@ une authentification par clé API et une résolution dynamique de modèle.
     </Tabs>
 
     <Accordion title="Tous les hooks de provider disponibles">
-      OpenClaw appelle les hooks dans cet ordre. La plupart des providers n'en utilisent que 2-3 :
+      OpenClaw appelle les hooks dans cet ordre. La plupart des providers n'en utilisent que 2 ou 3 :
 
       | # | Hook | Quand l'utiliser |
       | --- | --- | --- |
       | 1 | `catalog` | Catalogue de modèles ou URL de base par défaut |
       | 2 | `resolveDynamicModel` | Accepter les ID de modèle en amont arbitraires |
-      | 3 | `prepareDynamicModel` | Récupération asynchrone des métadonnées avant résolution |
-      | 4 | `normalizeResolvedModel` | Réécritures du transport avant le runner |
-      | 5 | `capabilities` | Métadonnées de retranscription/outillage (données, non appelable) |
+      | 3 | `prepareDynamicModel` | Récupération asynchrone des métadonnées avant la résolution |
+      | 4 | `normalizeResolvedModel` | Réécritures du transport avant l'exécuteur |
+      | 5 | `capabilities` | Métadonnées de transcription/outillage (données, non appelable) |
       | 6 | `prepareExtraParams` | Paramètres de requête par défaut |
       | 7 | `wrapStreamFn` | En-têtes personnalisés/wrappers de corps |
       | 8 | `formatApiKey` | Forme de jeton d'exécution personnalisée |
       | 9 | `refreshOAuth` | Actualisation OAuth personnalisée |
-      | 10 | `buildAuthDoctorHint` | Conseils de réparation d'authentification |
-      | 11 | `isCacheTtlEligible` | Gating TTL du cache de prompt |
-      | 12 | `buildMissingAuthMessage` | Indication d'auth manquante personnalisée |
+      | 10 | `buildAuthDoctorHint` | Guide de réparation d'authentification |
+      | 11 | `isCacheTtlEligible` | Porte de TTL du cache de prompt |
+      | 12 | `buildMissingAuthMessage` | Indicateur personnalisé d'auth manquante |
       | 13 | `suppressBuiltInModel` | Masquer les lignes en amont obsolètes |
-      | 14 | `augmentModelCatalog` | Lignes synthétiques de compatibilité ascendante |
-      | 15 | `isBinaryThinking` | Activation/désactivation de la pensée binaire |
+      | 14 | `augmentModelCatalog` | Lignes synthétiques de compatibilité future |
+      | 15 | `isBinaryThinking` | Pensée binaire activée/désactivée |
       | 16 | `supportsXHighThinking` | Support du raisonnement `xhigh` |
       | 17 | `resolveDefaultThinkingLevel` | Politique `/think` par défaut |
-      | 18 | `isModernModelRef` | Correspondance de modèle Live/smoke |
-      | 19 | `prepareRuntimeAuth` | Échange de jetons avant l'inférence |
+      | 18 | `isModernModelRef` | Correspondance de modèle en direct/test |
+      | 19 | `prepareRuntimeAuth` | Échange de jetons avant inférence |
       | 20 | `resolveUsageAuth` | Analyse personnalisée des informations d'identification d'utilisation |
       | 21 | `fetchUsageSnapshot` | Point de terminaison d'utilisation personnalisé |
-      | 22 | `onModelSelected` | Rappel post-sélection (ex. télémétrie) |
+      | 22 | `onModelSelected` | Rappel post-sélection (ex: télémétrie) |
 
-      Pour des descriptions détaillées et des exemples concrets, consultez
-      [Internals: Provider Runtime Hooks](/fr/plugins/architecture#provider-runtime-hooks).
+      Pour des descriptions détaillées et des exemples concrets, voir
+      [Internals: Provider Runtime Hooks](/en/plugins/architecture#provider-runtime-hooks).
     </Accordion>
 
   </Step>
 
   <Step title="Ajouter des capacités supplémentaires (facultatif)">
-    Un plugin de provider peut enregistrer la reconnaissance vocale, la compréhension de média, la génération d'images et la recherche web en plus de l'inférence de texte :
+    Un plugin de provider peut enregistrer la synthèse vocale, la compréhension de médias, la génération d'images et la recherche web en plus de l'inférence de texte :
 
     ```typescript
     register(api) {
@@ -338,8 +338,8 @@ une authentification par clé API et une résolution dynamique de modèle.
     }
     ```
 
-    OpenClaw classe ceci comme un plugin à **capacités hybrides**. C'est le modèle recommandé pour les plugins d'entreprise (un plugin par fournisseur). Voir
-    [Internes : Propriété des capacités](/fr/plugins/architecture#capability-ownership-model).
+    OpenClaw classe cela comme un plugin à **capacités hybrides**. C'est le modèle recommandé pour les plugins d'entreprise (un plugin par fournisseur). Voir
+    [Internes : Propriété des capacités](/en/plugins/architecture#capability-ownership-model).
 
   </Step>
 
@@ -402,7 +402,7 @@ extensions/acme-ai/
 
 ## Étapes suivantes
 
-- [Plugins de canal](/fr/plugins/sdk-channel-plugins) — si votre plugin fournit également un canal
-- [SDK Runtime](/fr/plugins/sdk-runtime) — assistants `api.runtime` (TTS, recherche, subagent)
-- [Aperçu du SDK](/fr/plugins/sdk-overview) — référence complète des imports de sous-chemins
-- [Internes du Plugin](/fr/plugins/architecture#provider-runtime-hooks) — détails des hooks et exemples inclus
+- [Plugins de canal](/en/plugins/sdk-channel-plugins) — si votre plugin fournit également un canal
+- [Runtime du SDK](/en/plugins/sdk-runtime) — assistants `api.runtime` (TTS, recherche, sous-agent)
+- [Vue d'ensemble du SDK](/en/plugins/sdk-overview) — référence complète des imports par sous-chemin
+- [Fonctionnement interne des plugins](/en/plugins/architecture#provider-runtime-hooks) — détails des hooks et exemples inclus

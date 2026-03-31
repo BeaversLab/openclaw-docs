@@ -9,7 +9,7 @@ status: active
 
 Objectif : exécuter OpenClaw en tant que **délégué nommé** — un agent avec sa propre identité qui agit « pour le compte de » personnes au sein d'une organisation. L'agent n'impersonne jamais un humain. Il envoie, lit et planifie sous son propre compte avec des permissions de délégation explicites.
 
-Cela étend le [Multi-Agent Routing](/fr/concepts/multi-agent) d'un usage personnel aux déploiements organisationnels.
+Cela étend le [Multi-Agent Routing](/en/concepts/multi-agent) d'un usage personnel aux déploiements organisationnels.
 
 ## Qu'est-ce qu'un délégué ?
 
@@ -18,7 +18,7 @@ Un **délégué** est un agent OpenClaw qui :
 - Possède sa **propre identité** (adresse e-mail, nom d'affichage, calendrier).
 - Agit **pour le compte de** un ou plusieurs humains — ne fait jamais semblant d'être eux.
 - Opère sous **autorisations explicites** accordées par le fournisseur d'identité de l'organisation.
-- Suit les **[ordres permanents](/fr/automation/standing-orders)** — des règles définies dans le `AGENTS.md` de l'agent qui spécifient ce qu'il peut faire de manière autonome par rapport à ce qui nécessite une approbation humaine (voir [Cron Jobs](/fr/automation/cron-jobs) pour l'exécution planifiée).
+- Suit les **[ordres permanents](/en/automation/standing-orders)** — des règles définies dans le `AGENTS.md` de l'agent qui spécifient ce qu'il peut faire de manière autonome par rapport à ce qui nécessite une approbation humaine (voir [Cron Jobs](/en/automation/cron-jobs) pour l'exécution planifiée).
 
 Le modèle de délégué correspond directement au fonctionnement des assistants de direction : ils possèdent leurs propres identifiants, envoient des courriels « pour le compte de » de leur principal et suivent une portée d'autorité définie.
 
@@ -70,7 +70,7 @@ Le délégué fonctionne de manière **autonome** selon un calendrier, exécutan
 - Publication automatisée sur les réseaux sociaux via des files d'attente de contenu approuvé.
 - Tri de la boîte de réception avec catégorisation automatique et marquage.
 
-Ce niveau combine les autorisations du Niveau 2 avec des [Tâches Cron](/fr/automation/cron-jobs) et des [Ordres Permanents](/fr/automation/standing-orders).
+Ce niveau combine les autorisations du Niveau 2 avec des [Tâches Cron](/en/automation/cron-jobs) et des [Ordres Permanents](/en/automation/standing-orders).
 
 > **Avertissement de sécurité** : Le Niveau 3 nécessite une configuration minutieuse des blocs stricts — actions que l'agent ne doit jamais entreprendre quelle que soit l'instruction. Remplissez les conditions préalables ci-dessous avant d'accorder des autorisations de fournisseur d'identité.
 
@@ -119,7 +119,7 @@ Pour les déploiements à haute sécurité, isolez l'agent délégué dans un sa
 }
 ```
 
-Voir [Sandboxing](/fr/gateway/sandboxing) et [Multi-Agent Sandbox & Tools](/fr/tools/multi-agent-sandbox-tools).
+Voir [Sandboxing](/en/gateway/sandboxing) et [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools).
 
 ### Trace d'audit
 
@@ -202,7 +202,7 @@ Le compte de service emprunte l'identité de l'utilisateur délégué (et non du
 
 ### 3. Lier le délégué aux canaux
 
-Acheminez les messages entrants vers l'agent délégué à l'aide des liaisons [Multi-Agent Routing](/fr/concepts/multi-agent) :
+Acheminez les messages entrants vers l'agent délégué à l'aide des liaisons [Multi-Agent Routing](/en/concepts/multi-agent) :
 
 ```json5
 {
@@ -244,7 +244,7 @@ Copiez ou créez des profils d'authentification pour le `agentDir` du délégué
 ~/.openclaw/agents/delegate/agent/auth-profiles.json
 ```
 
-Ne partagez jamais le `agentDir` de l'agent principal avec le délégué. Consultez [Multi-Agent Routing](/fr/concepts/multi-agent) pour plus de détails sur l'isolement de l'authentification.
+Ne partagez jamais le `agentDir` de l'agent principal avec le délégué. Consultez [Multi-Agent Routing](/en/concepts/multi-agent) pour plus de détails sur l'isolement de l'authentification.
 
 ## Exemple : assistant organisationnel
 
@@ -280,7 +280,7 @@ Une configuration complète de délégué pour un assistant organisationnel gér
 }
 ```
 
-Le `AGENTS.md` du délégué définit son autorité autonome — ce qu'il peut faire sans demander, ce qui nécessite une approbation et ce qui est interdit. Les [Cron Jobs](/fr/automation/cron-jobs) pilotent son emploi du temps quotidien.
+Le `AGENTS.md` du délégué définit son autorité autonome — ce qu'il peut faire sans demander, ce qui nécessite une approbation et ce qui est interdit. Les [Cron Jobs](/en/automation/cron-jobs) pilotent son emploi du temps quotidien.
 
 ## Modèle de mise à l'échelle
 
@@ -289,7 +289,7 @@ Le modèle de délégué fonctionne pour toute petite organisation :
 1. **Créez un agent délégué** par organisation.
 2. **Sécurisez d'abord** — restrictions des outils, bac à sable (sandbox), blocages stricts, journal d'audit.
 3. **Accordez des autorisations délimitées** via le fournisseur d'identité (principe du moindre privilège).
-4. **Définissez des [ordres permanents](/fr/automation/standing-orders)** pour les opérations autonomes.
+4. **Définissez des [ordres permanents](/en/automation/standing-orders)** pour les opérations autonomes.
 5. **Planifiez des tâches cron** pour les tâches récurrentes.
 6. **Examinez et ajustez** le niveau de capacité à mesure que la confiance s'établit.
 

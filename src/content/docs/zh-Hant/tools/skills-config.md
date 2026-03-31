@@ -53,38 +53,42 @@ title: "Skills Config"
 
 ## 欄位
 
-- `allowBundled`：僅針對 **內建** Skills 的可選允許清單。設定後，僅清單中的
-  內建 Skills 符合資格（受管理/工作區 Skills 不受影響）。
-- `load.extraDirs`：要掃描的其他 Skills 目錄（優先順序最低）。
-- `load.watch`：監看 Skills 資料夾並重新整理 Skills 快照（預設為 true）。
-- `load.watchDebounceMs`：Skills 監看事件的防震動時間（毫秒，預設為 250）。
-- `install.preferBrew`：當可用時優先使用 brew 安裝程式（預設為 true）。
-- `install.nodeManager`：node 安裝程式偏好設定（`npm` | `pnpm` | `yarn` | `bun`，預設為 npm）。
-  這僅影響 **Skills 安裝**；Gateway 執行時應仍為 Node
-  （不建議在 WhatsApp/Telegram 上使用 Bun）。
-- `entries.<skillKey>`：個別 Skills 的覆寫設定。
+- 內建技能根目錄總是包含 `~/.openclaw/skills`、`~/.agents/skills`、
+  `<workspace>/.agents/skills` 和 `<workspace>/skills`。
+- `allowBundled`：僅針對**內建**技能的可選允許清單。設定後，
+  清單中僅內建技能符合資格（受控、代理和工作區技能不受影響）。
+- `load.extraDirs`：要掃描的其他技能目錄（優先順序最低）。
+- `load.watch`：監看技能資料夾並重新整理技能快照（預設：true）。
+- `load.watchDebounceMs`：技能監看器事件的防抖時間，以毫秒為單位（預設：250）。
+- `install.preferBrew`：當有提供時，優先使用 brew 安裝程式（預設：true）。
+- `install.nodeManager`：Node 安裝程式偏好（`npm` | `pnpm` | `yarn` | `bun`，預設值：npm）。
+  這僅影響 **skill 安裝**；Gateway 執行時仍應為 Node
+  （不建議用於 WhatsApp/Telegram）。
+- `entries.<skillKey>`：各技能的覆蓋設定。
 
-個別 Skills 欄位：
+各技能欄位：
 
-- `enabled`：設定 `false` 以停用 Skill，即使該 Skill 已內建/安裝。
-- `env`：為代理執行注入的環境變數（僅在尚未設定時）。
-- `apiKey`：針對宣告主要環境變數的技能的選用便利設定。
-  支援純文字字串或 SecretRef 物件 (`{ source, provider, id }`)。
+- `enabled`：設定 `false` 以停用技能，即使其已打包/安裝。
+- `env`：為 agent 執行注入的環境變數（僅在尚未設定時）。
+- `apiKey`：針對宣告主要環境變數的技能的可選便利設定。
+  支援純文字字串或 SecretRef 物件（`{ source, provider, id }`）。
 
 ## 注意事項
 
-- `entries` 下的鍵預設對應至技能名稱。如果技能定義了
+- 預設情況下，`entries` 下的鍵會對應到技能名稱。如果技能定義了
   `metadata.openclaw.skillKey`，請改用該鍵。
-- 當啟用監看器時，對技能的變更會在下一個代理回合中被套用。
+- 載入優先順序為 `<workspace>/skills` → `<workspace>/.agents/skills` →
+  `~/.agents/skills` → `~/.openclaw/skills` → bundled skills →
+  `skills.load.extraDirs`。
+- 當啟用監看器時，技能的變更會在下一個代理輪次中被接收。
 
-### 沙箱技能 + 環境變數
+### 沙盒化技能 + 環境變數
 
-當工作階段處於 **沙箱** 模式時，技能程序會在 Docker 內執行。沙箱
-**不會** 繼承主機的 `process.env`。
+當會話處於**沙盒化**（sandboxed）狀態時，技能程序會在 Docker 內執行。沙盒**不會**繼承主機的 `process.env`。
 
-使用以下其中之一：
+使用下列其中一種方式：
 
-- `agents.defaults.sandbox.docker.env` (或每個代理的 `agents.list[].sandbox.docker.env`)
-- 將環境變數內建至您的自訂沙箱映像中
+- `agents.defaults.sandbox.docker.env` （或每個代理的 `agents.list[].sandbox.docker.env`）
+- 將環境變數內建到您的自訂沙盒映像中
 
-全域 `env` 和 `skills.entries.<skill>.env/apiKey` 僅適用於 **主機** 執行。
+全域 `env` 和 `skills.entries.<skill>.env/apiKey` 僅適用於 **主機**（host）執行。

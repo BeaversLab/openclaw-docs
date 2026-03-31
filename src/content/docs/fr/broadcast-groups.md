@@ -432,6 +432,6 @@ Fonctionnalités prévues :
 
 ## Voir aussi
 
-- [Configuration multi-agent](/fr/multi-agent-sandbox-tools)
-- [Configuration du routage](/fr/concepts/channel-routing)
-- [Gestion de session](/fr/concepts/sessions)
+- [Configuration multi-agent](/en/multi-agent-sandbox-tools)
+- [Configuration du routage](/en/concepts/channel-routing)
+- [Gestion de session](/en/concepts/sessions)

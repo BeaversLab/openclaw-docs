@@ -28,14 +28,14 @@ entre agentes (causa colisiones de autenticación/sesión). Si deseas compartir 
 copia `auth-profiles.json` en el `agentDir` del otro agente.
 
 Las habilidades son por agente a través de la carpeta `skills/` de cada espacio de trabajo, con habilidades compartidas
-disponibles desde `~/.openclaw/skills`. Consulta [Habilidades: por agente vs compartidas](/es/tools/skills#per-agent-vs-shared-skills).
+disponibles desde `~/.openclaw/skills`. Consulta [Habilidades: por agente vs compartidas](/en/tools/skills#per-agent-vs-shared-skills).
 
 La Gateway puede alojar **un agente** (predeterminado) o **muchos agentes** simultáneamente.
 
 **Nota sobre el espacio de trabajo:** el espacio de trabajo de cada agente es el **cwd predeterminado**, no un
 sandbox estricto. Las rutas relativas se resuelven dentro del espacio de trabajo, pero las rutas absolutas pueden
 alcanzar otras ubicaciones del host a menos que se habilite el sandboxing. Consulta
-[Sandboxing](/es/gateway/sandboxing).
+[Sandboxing](/en/gateway/sandboxing).
 
 ## Rutas (mapa rápido)
 
@@ -98,7 +98,7 @@ Cree una cuenta por agente en sus canales preferidos:
 openclaw channels login --channel whatsapp --account work
 ```
 
-Vea las guías de canales: [Discord](/es/channels/discord), [Telegram](/es/channels/telegram), [WhatsApp](/es/channels/whatsapp).
+Vea las guías de canales: [Discord](/en/channels/discord), [Telegram](/en/channels/telegram), [WhatsApp](/en/channels/whatsapp).
 
   </Step>
 
@@ -167,7 +167,7 @@ Ejemplo:
 Notas:
 
 - El control de acceso de MD es **global por cuenta de WhatsApp** (emparejamiento/lista blanca), no por agente.
-- Para grupos compartidos, vincula el grupo a un agente o usa [Grupos de difusión](/es/channels/broadcast-groups).
+- Para grupos compartidos, vincula el grupo a un agente o usa [Grupos de difusión](/en/channels/broadcast-groups).
 
 ## Reglas de enrutamiento (cómo los mensajes eligen un agente)
 
@@ -541,4 +541,4 @@ Nota: `tools.elevated` es **global** y se basa en el remitente; no es configurab
 Si necesita límites por agente, use `agents.list[].tools` para denegar `exec`.
 Para la orientación por grupo, use `agents.list[].groupChat.mentionPatterns` para que las @menciones se asignen correctamente al agente deseado.
 
-Consulte [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para ver ejemplos detallados.
+Consulte [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) para ver ejemplos detallados.

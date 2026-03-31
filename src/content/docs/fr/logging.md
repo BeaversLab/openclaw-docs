@@ -68,7 +68,7 @@ openclaw doctor
 ### Interface de contrôle (web)
 
 L'onglet **Logs** de l'interface de contrôle suit le même fichier en utilisant `logs.tail`.
-Voir [/web/control-ui](/fr/web/control-ui) pour savoir comment l'ouvrir.
+Voir [/web/control-ui](/en/web/control-ui) pour savoir comment l'ouvrir.
 
 ### Journaux de canal uniquement
 
@@ -215,7 +215,7 @@ Notes :
 
 - Les journaux des indicateurs (Flag logs) vont vers le fichier journal standard (identique à `logging.file`).
 - La sortie est toujours masquée conformément à `logging.redactSensitive`.
-- Guide complet : [/diagnostics/flags](/fr/diagnostics/flags).
+- Guide complet : [/diagnostics/flags](/en/diagnostics/flags).
 
 ### Exporter vers OpenTelemetry
 

@@ -12,9 +12,9 @@ title: "VMs macOS"
 
 ## Par défaut recommandé (pour la plupart des utilisateurs)
 
-- **Petit VPS Linux** pour une Gateway toujours active et à faible coût. Voir [Hébergement VPS](/fr/vps).
+- **Petit VPS Linux** pour une Gateway toujours active et à faible coût. Voir [Hébergement VPS](/en/vps).
 - **Matériel dédié** (Mac mini ou boîtier Linux) si vous voulez un contrôle total et une **IP résidentielle** pour l'automatisation du navigateur. De nombreux sites bloquent les IP des centres de données, donc la navigation locale fonctionne souvent mieux.
-- **Hybride :** gardez la Gateway sur un VPS bon marché, et connectez votre Mac en tant que **nœud** lorsque vous avez besoin d'automatisation du navigateur/interface. Voir [Nœuds](/fr/nodes) et [Gateway distante](/fr/gateway/remote).
+- **Hybride :** gardez la Gateway sur un VPS bon marché, et connectez votre Mac en tant que **nœud** lorsque vous avez besoin d'automatisation du navigateur/interface. Voir [Nœuds](/en/nodes) et [Gateway distante](/en/gateway/remote).
 
 Utilisez une VM macOS lorsque vous avez spécifiquement besoin de capacités exclusives à macOS (iMessage/BlueBubbles) ou si vous souhaitez un isolement strict de votre Mac quotidien.
 
@@ -223,7 +223,7 @@ Ajoutez à votre config OpenClaw :
 
 Redémarrez la passerelle. Désormais, votre agent peut envoyer et recevoir des iMessages.
 
-Détails complets de la configuration : [channel BlueBubbles](/fr/channels/bluebubbles)
+Détails complets de la configuration : [channel BlueBubbles](/en/channels/bluebubbles)
 
 ---
 
@@ -254,7 +254,7 @@ Gardez la VM en fonctionnement en :
 - Désactivant la mise en veille dans Réglages Système → Économie d'énergie
 - Utilisant `caffeinate` si nécessaire
 
-Pour une disponibilité permanente, envisagez un Mac mini dédié ou un petit VPS. Voir [Hébergement VPS](/fr/vps).
+Pour une disponibilité permanente, envisagez un Mac mini dédié ou un petit VPS. Voir [Hébergement VPS](/en/vps).
 
 ---
 
@@ -271,11 +271,11 @@ Pour une disponibilité permanente, envisagez un Mac mini dédié ou un petit VP
 
 ## Documentation connexe
 
-- [Hébergement VPS](/fr/vps)
-- [Nœuds](/fr/nodes)
-- [Gateway distant](/fr/gateway/remote)
-- [Channel BlueBubbles](/fr/channels/bluebubbles)
+- [Hébergement VPS](/en/vps)
+- [Nœuds](/en/nodes)
+- [Gateway distant](/en/gateway/remote)
+- [Channel BlueBubbles](/en/channels/bluebubbles)
 - [Démarrage rapide Lume](https://cua.ai/docs/lume/guide/getting-started/quickstart)
 - [Référence CLI Lume](https://cua.ai/docs/lume/reference/cli-reference)
 - [Configuration de VM sans assistance](https://cua.ai/docs/lume/guide/fundamentals/unattended-setup) (avancé)
-- [Bac à sable Docker](/fr/install/docker) (méthode d'isolation alternative)
+- [Bac à sable Docker](/en/install/docker) (méthode d'isolation alternative)

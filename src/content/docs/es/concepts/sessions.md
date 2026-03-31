@@ -7,4 +7,4 @@ title: "Sesiones"
 
 # Sesiones
 
-La documentación canónica de la gestión de sesiones se encuentra en [Gestión de sesiones](/es/concepts/session).
+La documentación canónica de la gestión de sesiones se encuentra en [Gestión de sesiones](/en/concepts/session).

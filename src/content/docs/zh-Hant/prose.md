@@ -51,7 +51,7 @@ OpenProse 將 `/prose` 註冊為使用者可呼叫的技能指令。它會路由
 
 ## 範例：簡單的 `.prose` 檔案
 
-```text
+```prose
 # Research + synthesis with two agents running in parallel.
 
 input topic: "What should we research?"

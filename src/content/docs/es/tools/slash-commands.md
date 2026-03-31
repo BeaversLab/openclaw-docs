@@ -81,7 +81,7 @@ Texto + nativo (cuando está habilitado):
 - `/allowlist` (lista/añade/elimina entradas de lista de permitidos)
 - `/approve <id> allow-once|allow-always|deny` (resuelve los avisos de aprobación de ejecución)
 - `/context [list|detail|json]` (explica el "contexto"; `detail` muestra el tamaño por archivo + por herramienta + por habilidad + del prompt del sistema)
-- `/btw <question>` (hace una pregunta lateral efímera sobre la sesión actual sin cambiar el contexto de la sesión futura; consulte [/tools/btw](/es/tools/btw))
+- `/btw <question>` (hace una pregunta lateral efímera sobre la sesión actual sin cambiar el contexto de la sesión futura; consulte [/tools/btw](/en/tools/btw))
 - `/export-session [path]` (alias: `/export`) (exporta la sesión actual a HTML con el prompt del sistema completo)
 - `/whoami` (muestra su id de remitente; alias: `/id`)
 - `/session idle <duration|off>` (gestiona la auto-desactivación por inactividad para enlaces de hilos enfocados)
@@ -102,7 +102,7 @@ Texto + nativo (cuando está habilitado):
   - Las escrituras de habilitar/deshabilitar todavía responden con una sugerencia de reinicio. En una puerta de enlace en primer plano observada, OpenClaw puede realizar ese reinicio automáticamente justo después de la escritura.
 - `/debug show|set|unset|reset` (anulaciones en tiempo de ejecución, solo para el propietario; requiere `commands.debug: true`)
 - `/usage off|tokens|full|cost` (pie de página de uso por respuesta o resumen de costos locales)
-- `/tts off|always|inbound|tagged|status|provider|limit|summary|audio` (controlar TTS; ver [/tts](/es/tools/tts))
+- `/tts off|always|inbound|tagged|status|provider|limit|summary|audio` (controlar TTS; ver [/tts](/en/tools/tts))
   - Discord: el comando nativo es `/voice` (Discord reserva `/tts`); el texto `/tts` todavía funciona.
 - `/stop`
 - `/restart`
@@ -124,7 +124,7 @@ Texto + nativo (cuando está habilitado):
 
 Solo texto:
 
-- `/compact [instructions]` (consulte [/concepts/compaction](/es/concepts/compaction))
+- `/compact [instructions]` (consulte [/concepts/compaction](/en/concepts/compaction))
 - `! <command>` (solo host; uno a la vez; use `!poll` + `!stop` para trabajos de larga duración)
 - `!poll` (verificar salida / estado; acepta `sessionId` opcional; `/bash poll` también funciona)
 - `!stop` (detener el trabajo bash en ejecución; acepta `sessionId` opcional; `/bash stop` también funciona)
@@ -140,7 +140,7 @@ Notas:
 - `/restart` está habilitado por defecto; establezca `commands.restart: false` para deshabilitarlo.
 - Comando nativo solo para Discord: `/vc join|leave|status` controla los canales de voz (requiere `channels.discord.voice` y comandos nativos; no disponible como texto).
 - Los comandos de vinculación de hilos de Discord (`/focus`, `/unfocus`, `/agents`, `/session idle`, `/session max-age`) requieren que las vinculaciones de hilos efectivas estén habilitadas (`session.threadBindings.enabled` y/o `channels.discord.threadBindings.enabled`).
-- Referencia de comandos y comportamiento en tiempo de ejecución de ACP: [ACP Agents](/es/tools/acp-agents).
+- Referencia de comandos y comportamiento en tiempo de ejecución de ACP: [ACP Agents](/en/tools/acp-agents).
 - `/verbose` está destinado a la depuración y visibilidad adicional; manténgalo **desactivado** en el uso normal.
 - `/fast on|off` persiste una anulación de sesión. Use la opción `inherit` de la interfaz de usuario de Sesiones para borrarla y volver a los valores predeterminados de configuración.
 - Los resúmenes de fallos de herramientas aún se muestran cuando es relevante, pero el texto detallado del fallo solo se incluye cuando `/verbose` es `on` o `full`.
@@ -155,7 +155,7 @@ Notas:
   - `/skill <name> [input]` ejecuta una habilidad por nombre (útil cuando los límites de comandos nativos impiden comandos por habilidad).
   - Por defecto, los comandos de habilidades se reenvían al modelo como una solicitud normal.
   - Las habilidades pueden declarar opcionalmente `command-dispatch: tool` para enrutar el comando directamente a una herramienta (determinista, sin modelo).
-  - Ejemplo: `/prose` (complemento OpenProse) — ver [OpenProse](/es/prose).
+  - Ejemplo: `/prose` (complemento OpenProse) — ver [OpenProse](/en/prose).
 - **Argumentos de comandos nativos:** Discord usa autocompletado para opciones dinámicas (y menús de botones cuando omites argumentos obligatorios). Telegram y Slack muestran un menú de botones cuando un comando admite elecciones y omites el argumento.
 
 ## `/tools`
@@ -305,4 +305,4 @@ Ejemplo:
 /btw what are we doing right now?
 ```
 
-Consulta [Preguntas laterales BTW](/es/tools/btw) para obtener detalles sobre el comportamiento completo y la experiencia del usuario.
+Consulta [Preguntas laterales BTW](/en/tools/btw) para obtener detalles sobre el comportamiento completo y la experiencia del usuario.

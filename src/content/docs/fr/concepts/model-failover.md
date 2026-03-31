@@ -23,7 +23,7 @@ OpenClaw utilise des **profils d'authentification** pour les clés API et les je
 - La configuration `auth.profiles` / `auth.order` contient **uniquement des métadonnées et du routage** (pas de secrets).
 - Fichier d'importation uniquement hérité OAuth : `~/.openclaw/credentials/oauth.json` (importé dans `auth-profiles.json` lors de la première utilisation).
 
-Plus de détails : [/concepts/oauth](/fr/concepts/oauth)
+Plus de détails : [/concepts/oauth](/en/concepts/oauth)
 
 Types d'identifiants :
 
@@ -140,7 +140,7 @@ Lorsqu'une exécution commence avec une substitution de model (hooks ou CLI), le
 
 ## Configuration associée
 
-Voir la [configuration Gateway](/fr/gateway/configuration) pour :
+Voir la [configuration Gateway](/en/gateway/configuration) pour :
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
@@ -148,4 +148,4 @@ Voir la [configuration Gateway](/fr/gateway/configuration) pour :
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
 - Routage `agents.defaults.imageModel`
 
-Voir [Models](/fr/concepts/models) pour l'aperçu global de la sélection et du basculement de model.
+Voir [Models](/en/concepts/models) pour l'aperçu global de la sélection et du basculement de model.

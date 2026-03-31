@@ -128,6 +128,6 @@ Dans ce cas, posez la question normalement dans la session principale au lieu d'
 
 ## Connexes
 
-- [Commandes slash](/fr/tools/slash-commands)
-- [Niveaux de réflexion](/fr/tools/thinking)
-- [Session](/fr/concepts/session)
+- [Commandes slash](/en/tools/slash-commands)
+- [Niveaux de réflexion](/en/tools/thinking)
+- [Session](/en/concepts/session)

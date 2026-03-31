@@ -96,4 +96,4 @@ Todos los modelos de abajo usan el costo `0` (entrada/salida/caché).
 - Las referencias de modelos usan `synthetic/<modelId>`.
 - Si habilitas una lista de permitidos de modelos (`agents.defaults.models`), añade cada modelo que
   planees usar.
-- Consulta [Model providers](/es/concepts/model-providers) para conocer las reglas de los proveedores.
+- Consulta [Model providers](/en/concepts/model-providers) para conocer las reglas de los proveedores.

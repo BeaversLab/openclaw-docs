@@ -53,36 +53,38 @@ Exemples :
 
 ## Champs
 
-- `allowBundled` : liste d'autorisation (allowlist) facultative pour les compétences **intégrées** (bundled) uniquement. Lorsqu'elle est définie, seules les compétences intégrées de la liste sont éligibles (les compétences gérées/espace de travail ne sont pas affectées).
+- Les racines des compétences intégrées incluent toujours `~/.openclaw/skills`, `~/.agents/skills`,
+  `<workspace>/.agents/skills` et `<workspace>/skills`.
+- `allowBundled` : liste blanche facultative pour les compétences **intégrées** uniquement. Lorsqu'elle est définie, seules les compétences intégrées de la liste sont éligibles (les compétences gérées, d'agent et d'espace de travail ne sont pas concernées).
 - `load.extraDirs` : répertoires de compétences supplémentaires à scanner (la priorité la plus basse).
-- `load.watch` : surveiller les dossiers de compétences et rafraîchir l'instantané des compétences (par défaut : true).
-- `load.watchDebounceMs` : délai d'attente (debounce) pour les événements de surveillance des compétences en millisecondes (par défaut : 250).
+- `load.watch` : surveiller les dossiers de compétences et actualiser l'instantané des compétences (par défaut : true).
+- `load.watchDebounceMs` : délai d'attente (debounce) pour les événements du surveillant de compétences en millisecondes (par défaut : 250).
 - `install.preferBrew` : préférer les installateurs brew lorsqu'ils sont disponibles (par défaut : true).
 - `install.nodeManager` : préférence de l'installateur node (`npm` | `pnpm` | `yarn` | `bun`, par défaut : npm).
   Cela n'affecte que les **installations de compétences** ; l'exécution du Gateway doit toujours être Node
   (Bun non recommandé pour WhatsApp/Telegram).
-- `entries.<skillKey>` : remplacements spécifiques à chaque compétence.
+- `entries.<skillKey>` : substitutions par compétence.
 
-Champs spécifiques à la compétence :
+Champs par compétence :
 
-- `enabled` : définissez `false` pour désactiver une compétence même si elle est intégrée/installée.
-- `env` : variables d'environnement injectées pour l'exécution de l'agent (uniquement si elles ne sont pas déjà définies).
-- `apiKey` : commodité facultative pour les compétences qui déclarent une variable d'environnement principale.
-  Prend en charge une chaîne en texte brut ou un objet SecretRef (`{ source, provider, id }`).
+- `enabled` : définissez `false` pour désactiver une compétence même si elle est groupée/installée.
+- `env` : variables d'environnement injectées pour l'exécution de l'agent (uniquement si elles ne sont pas déjà définies).
+- `apiKey` : commodité optionnelle pour les compétences qui déclarent une env var principale.
+  Prend en charge les chaînes en texte brut ou les objets SecretRef (`{ source, provider, id }`).
 
 ## Notes
 
-- Les clés sous `entries` correspondent au nom de la compétence par défaut. Si une compétence définit
-  `metadata.openclaw.skillKey`, utilisez plutôt cette clé.
-- Les modifications apportées aux compétences sont prises en compte lors du prochain tour de l'agent lorsque la surveillance est activée.
+- Par défaut, les clés sous `entries` correspondent au nom de la compétence. Si une compétence définit `metadata.openclaw.skillKey`, utilisez plutôt cette clé.
+- La priorité de chargement est `<workspace>/skills` → `<workspace>/.agents/skills` → `~/.agents/skills` → `~/.openclaw/skills` → compétences groupées → `skills.load.extraDirs`.
+- Les modifications apportées aux compétences sont prises en compte au prochain tour de l'agent lorsque l'observateur est activé.
 
-### Compensations en bac à sable (Sandboxed) + variables d'environnement
+### Sandboxed skills + env vars
 
 Lorsqu'une session est **sandboxed**, les processus de compétences s'exécutent dans Docker. Le bac à sable n'hérite **pas** du `process.env` de l'hôte.
 
 Utilisez l'une des options suivantes :
 
-- `agents.defaults.sandbox.docker.env` (ou `agents.list[].sandbox.docker.env` par agent)
-- intégrer les variables d'environnement dans votre image de bac à sable personnalisée
+- `agents.defaults.sandbox.docker.env` (ou par agent `agents.list[].sandbox.docker.env`)
+- intégrez l'env dans votre image de bac à sable personnalisée
 
-Les `env` et `skills.entries.<skill>.env/apiKey` globaux s'appliquent uniquement aux exécutions sur l'**hôte**.
+Les `env` et `skills.entries.<skill>.env/apiKey` globaux s'appliquent uniquement aux exécutions **hôte**.

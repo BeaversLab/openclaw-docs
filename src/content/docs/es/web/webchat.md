@@ -50,7 +50,7 @@ Estado: la interfaz de usuario de chat SwiftUI de macOS/iOS se comunica directam
 
 ## Referencia de configuración (WebChat)
 
-Configuración completa: [Configuration](/es/gateway/configuration)
+Configuración completa: [Configuration](/en/gateway/configuration)
 
 Opciones de canal:
 
@@ -60,6 +60,6 @@ Opciones globales relacionadas:
 
 - `gateway.port`, `gateway.bind`: host/puerto del WebSocket.
 - `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password`: autenticación del WebSocket (token/contraseña).
-- `gateway.auth.mode: "trusted-proxy"`: autenticación de proxy inverso para clientes del navegador (consulte [Trusted Proxy Auth](/es/gateway/trusted-proxy-auth)).
+- `gateway.auth.mode: "trusted-proxy"`: autenticación de proxy inverso para clientes del navegador (consulte [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)).
 - `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password`: destino de la puerta de enlace remota.
 - `session.*`: almacenamiento de sesión y valores predeterminados de clave principal.

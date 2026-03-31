@@ -42,7 +42,7 @@ Agent -> Gateway -> Node Service (WS)
 - L'automatisation de l'interface utilisateur utilise un socket UNIX distinct nommé `bridge.sock` et le protocole JSON PeekabooBridge.
 - Ordre de préférence de l'hôte (côté client) : Peekaboo.app → Claude.app → OpenClaw.app → exécution locale.
 - Sécurité : les hôtes de pont nécessitent un TeamID autorisé ; la porte de dérobée du même UID en mode DEBUG uniquement est protégée par `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` (convention Peekaboo).
-- Voir : [utilisation de PeekabooBridge](/fr/platforms/mac/peekaboo) pour plus de détails.
+- Voir : [utilisation de PeekabooBridge](/en/platforms/mac/peekaboo) pour plus de détails.
 
 ## Flux opérationnels
 

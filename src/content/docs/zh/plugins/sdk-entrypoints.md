@@ -12,7 +12,7 @@ read_when:
 
 每个插件都会导出一个默认的入口对象。SDK 提供了三个辅助函数来创建它们。
 
-<Tip>**寻找分步指南？** 请参阅[渠道插件](/zh/plugins/sdk-channel-plugins)或[提供商 插件](/zh/plugins/sdk-提供商-plugins)获取详细教程。</Tip>
+<Tip>**正在寻找分步教程？** 请参阅 [渠道插件](/en/plugins/sdk-channel-plugins) 或 [提供商插件](/en/plugins/sdk-provider-plugins) 获取分步指南。</Tip>
 
 ## `definePluginEntry`
 
@@ -102,8 +102,8 @@ import { defineSetupPluginEntry } from "openclaw/plugin-sdk/core";
 export default defineSetupPluginEntry(myChannelPlugin);
 ```
 
-当渠道被禁用、未配置或启用延迟加载时，OpenClaw 会加载此内容而不是完整入口。有关何时需要注意这一点，请参阅
-[Setup and Config](/zh/plugins/sdk-setup#setup-entry)。
+当渠道被禁用、未配置或启用延迟加载时，OpenClaw 会加载此内容而不是完整入口。请参阅
+[Setup and Config](/en/plugins/sdk-setup#setup-entry) 了解这何时适用。
 
 ## 注册模式
 
@@ -144,8 +144,8 @@ OpenClaw 根据插件的注册行为对其进行分类：
 
 ## 相关
 
-- [SDK Overview](/zh/plugins/sdk-overview) — 注册 API 和子路径参考
-- [Runtime Helpers](/zh/plugins/sdk-runtime) — `api.runtime` 和 `createPluginRuntimeStore`
-- [Setup and Config](/zh/plugins/sdk-setup) — 清单、设置入口、延迟加载
-- [通道插件](/zh/plugins/sdk-channel-plugins) — 构建 `ChannelPlugin` 对象
-- [提供商插件](/zh/plugins/sdk-provider-plugins) — 提供商注册和钩子
+- [SDK Overview](/en/plugins/sdk-overview) — 注册 API 和子路径参考
+- [Runtime Helpers](/en/plugins/sdk-runtime) — `api.runtime` 和 `createPluginRuntimeStore`
+- [Setup and Config](/en/plugins/sdk-setup) — 清单、setup 入口、延迟加载
+- [Channel Plugins](/en/plugins/sdk-channel-plugins) — 构建 `ChannelPlugin` 对象
+- [Provider Plugins](/en/plugins/sdk-provider-plugins) — 提供商注册和钩子

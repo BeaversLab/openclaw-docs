@@ -9,7 +9,7 @@ title: "Models CLI"
 
 # Models CLI
 
-Voir [/concepts/model-failover](/fr/concepts/model-failover) pour la rotation des profils d'authentification, les temps de recharge et leur interaction avec les replis. Aperçu rapide des providers + exemples : [/concepts/model-providers](/fr/concepts/model-providers).
+Voir [/concepts/model-failover](/en/concepts/model-failover) pour la rotation des profils d'authentification, les temps de recharge et leur interaction avec les replis. Aperçu rapide des providers + exemples : [/concepts/model-providers](/en/concepts/model-providers).
 
 ## Fonctionnement de la sélection de modèle
 
@@ -25,7 +25,7 @@ Connexes :
 - `agents.defaults.models` est la liste d'autorisation/catalogue des modèles qu'OpenClaw peut utiliser (plus les alias).
 - `agents.defaults.imageModel` est utilisé **uniquement lorsque** le modèle principal ne peut pas accepter d'images.
 - `agents.defaults.imageGenerationModel` est utilisé par la fonctionnalité de génération d'images partagée. S'il est omis, `image_generate` peut toujours déduire un provider par défaut à partir des plugins de génération d'images compatibles et authentifiés. Si vous définissez un provider/model spécifique, configurez également la clé d'auth/API de ce provider.
-- Les valeurs par défaut par agent peuvent remplacer `agents.defaults.model` via `agents.list[].model` plus des liaisons (voir [/concepts/multi-agent](/fr/concepts/multi-agent)).
+- Les valeurs par défaut par agent peuvent remplacer `agents.defaults.model` via `agents.list[].model` plus des liaisons (voir [/concepts/multi-agent](/en/concepts/multi-agent)).
 
 ## Politique de modèle rapide
 
@@ -53,7 +53,7 @@ Il peut configurer le modèle + l'authentification pour les providers courants, 
 
 Les références de modèle sont normalisées en minuscules. Les alias de provider comme `z.ai/*` sont normalisés en `zai/*`.
 
-Les exemples de configuration de provider (y compris OpenCode) se trouvent dans [/providers/opencode](/fr/providers/opencode).
+Les exemples de configuration de provider (y compris OpenCode) se trouvent dans [/providers/opencode](/en/providers/opencode).
 
 ## "Modèle non autorisé" (et pourquoi les réponses s'arrêtent)
 
@@ -105,7 +105,7 @@ Remarques :
 - Si l'ID du modèle contient lui-même `/` (style OpenRouter), vous devez inclure le préfixe du provider (exemple : `/model openrouter/moonshotai/kimi-k2`).
 - Si vous omettez le provider, OpenClaw traite la saisie comme un alias ou un modèle pour le **provider par défaut** (ne fonctionne que s'il n'y a pas de `/` dans l'ID du modèle).
 
-Comportement/configuration complet de la commande : [Commandes slash](/fr/tools/slash-commands).
+Comportement/configuration complet de la commande : [Commandes slash](/en/tools/slash-commands).
 
 ## Commandes CLI
 
@@ -187,7 +187,7 @@ Les résultats de l'analyse sont classés par :
 Entrée
 
 - Liste `/models` OpenRouter (filtre `:free`)
-- Nécessite une clé OpenRouter API à partir des profils d'authentification ou `OPENROUTER_API_KEY` (voir [/environment](/fr/help/environment))
+- Nécessite une clé OpenRouter API à partir des profils d'authentification ou `OPENROUTER_API_KEY` (voir [/environment](/en/help/environment))
 - Filtres optionnels : `--max-age-days`, `--min-params`, `--provider`, `--max-candidates`
 - Contrôles de sonde : `--timeout`, `--concurrency`
 

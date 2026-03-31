@@ -25,8 +25,8 @@ La disposition de l'espace de travail par défaut utilise deux couches de mémoi
   - Si `MEMORY.md` et `memory.md` existent tous les deux à la racine de l'espace de travail, OpenClaw les charge tous les deux (dédupliqués par realpath, donc les liens symboliques pointant vers le même fichier ne sont pas injectés deux fois).
   - **Charger uniquement dans la session principale privée** (jamais dans les contextes de groupe).
 
-Ces fichiers se trouvent sous l'espace de travail (`agents.defaults.workspace`, par défaut
-`~/.openclaw/workspace`). Voir [Espace de travail de l'agent](/fr/concepts/agent-workspace) pour la disposition complète.
+Ces fichiers résident dans l'espace de travail (`agents.defaults.workspace`, par défaut
+`~/.openclaw/workspace`). Voir [Agent workspace](/en/concepts/agent-workspace) pour la disposition complète.
 
 ## Outils de mémoire
 
@@ -50,10 +50,13 @@ gérer « rien d'enregistré pour l'instant » et de continuer leur flux de trav
 
 ## Vidange automatique de la mémoire (ping pré-compaction)
 
-Lorsqu'une session est **proche de l'auto-compaction**, OpenClaw déclenche un **tour
-agentique silencieux** qui rappelle au model d'écrire une mémoire durable **avant** que
+Lorsqu'une session est **proche de la compactage automatique**, OpenClaw déclenche un **tour silencieux
+et agentique** qui rappelle au model d'écrire une mémoire durable **avant** que
 le contexte ne soit compacté. Les invites par défaut indiquent explicitement que le model _peut répondre_,
-mais généralement `NO_REPLY` est la réponse correcte afin que l'utilisateur ne voie jamais ce tour.
+mais généralement `NO_REPLY` est la bonne réponse pour que l'utilisateur ne voie jamais ce tour.
+Le plugin de mémoire actif possède la stratégie d'invite/chemin pour ce vidage ; par
+défaut, le plugin `memory-core` écrit dans le fichier quotidien canonique sous
+`memory/YYYY-MM-DD.md`.
 
 Ceci est contrôlé par `agents.defaults.compaction.memoryFlush` :
 
@@ -77,29 +80,23 @@ Ceci est contrôlé par `agents.defaults.compaction.memoryFlush` :
 
 Détails :
 
-- **Seuil souple** : la vidange se déclenche lorsque l'estimation de jetons de session dépasse
+- **Seuil souple** : le vidage se déclenche lorsque l'estimation de jetons de la session dépasse
   `contextWindow - reserveTokensFloor - softThresholdTokens`.
-- **Silencieux** par défaut : les invites incluent `NO_REPLY` donc rien n'est délivré.
+- **Silencieux** par défaut : les invites incluent `NO_REPLY`, donc rien n'est transmis.
 - **Deux invites** : une invite utilisateur plus une invite système ajoutent le rappel.
-- **Une vidange par cycle de compactage** (suivi dans `sessions.json`).
-- **L'espace de travail doit être inscriptible** : si la session s'exécute dans un bac à sable avec
-  `workspaceAccess: "ro"` ou `"none"`, la vidange est ignorée.
+- **Un vidage par cycle de compactage** (suivi dans `sessions.json`).
+- **L'espace de travail doit être accessible en écriture** : si la session s'exécute en mode sandboxé avec
+  `workspaceAccess: "ro"` ou `"none"`, le vidage est ignoré.
 
-Pour le cycle de vie complet du compactage, consultez
-[Gestion de session + compactage](/fr/reference/session-management-compaction).
+Pour le cycle de vie complet du compactage, voir
+[Gestion de session + compactage](/en/reference/session-management-compaction).
 
 ## Recherche de mémoire vectorielle
 
-OpenClaw peut construire un petit index vectoriel sur `MEMORY.md` et `memory/*.md` afin que
-les requêtes sémantiques puissent trouver des notes connexes même si le vocabulaire diffère. La recherche hybride
-(BM25 + vecteur) est disponible pour combiner la correspondance sémantique avec des recherches de mots-clés
-exactes.
+OpenClaw peut créer un petit index vectoriel sur `MEMORY.md` et `memory/*.md` afin que
+les requêtes sémantiques puissent trouver des notes connexes même lorsque la formulation diffère. La recherche hybride
+(BM25 + vecteur) est disponible pour combiner la correspondance sémantique avec des recherches de mots-clés exactes.
 
-La recherche mémoire prend en charge plusieurs providers d'intégration (OpenAI, Gemini, Voyage,
-Mistral, Ollama et les modèles GGUF locaux), un backend sidecar QMD facultatif pour
-la récupération avancée, et des fonctionnalités de post-traitement comme le réordonnancement de diversité MMR
-et la décroissance temporelle.
+Les identifiants des adaptateurs de recherche mémoire proviennent du plugin de mémoire actif. Le plugin par défaut `memory-core` inclut des intégrations pour OpenAI, Gemini, Voyage, Mistral, Ollama et les modèles GGUF locaux, ainsi qu'un backend QMD annexe optionnel pour des fonctionnalités avancées de récupération et de post-traitement comme le reclassement de diversité MMR et la décroissance temporelle.
 
-Pour la référence de configuration complète -- y compris la configuration du provider d'intégration, le backend
-QMD, le réglage de la recherche hybride, la mémoire multimodale et toutes les options de configuration -- consultez
-[Référence de configuration de la mémoire](/fr/reference/memory-config).
+Pour la référence complète de la configuration, y compris la configuration du provider d'intégration, le backend QMD, le réglage de la recherche hybride, la mémoire multimodale et tous les paramètres de configuration, voir [Référence de la configuration de la mémoire](/en/reference/memory-config).

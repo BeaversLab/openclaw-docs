@@ -14,7 +14,7 @@ Objectif : Gmail watch -> Pub/Sub push -> `gog gmail watch serve` -> Webhook Ope
 
 - `gcloud` installé et connecté ([guide d'installation](https://docs.cloud.google.com/sdk/docs/install-sdk)).
 - `gog` (gogcli) installé et autorisé pour le compte Gmail ([gogcli.sh](https://gogcli.sh/)).
-- Hooks OpenClaw activés (voir [Webhooks](/fr/automation/webhook)).
+- Hooks OpenClaw activés (voir [Webhooks](/en/automation/webhook)).
 - `tailscale` connecté ([tailscale.com](https://tailscale.com/)). L'installation prise en charge utilise Tailscale Funnel pour le point de terminaison HTTPS public.
   D'autres services de tunnel peuvent fonctionner, mais sont bricolés/non pris en charge et nécessitent un câblage manuel.
   Pour l'instant, Tailscale est ce que nous prenons en charge.
@@ -88,7 +88,7 @@ Notes :
   Pour désactiver (dangereux), définissez `hooks.gmail.allowUnsafeExternalContent: true`.
 
 Pour personnaliser davantage la gestion des charges utiles, ajoutez `hooks.mappings` ou un module de transformation JS/TS
-sous `~/.openclaw/hooks/transforms` (voir [Webhooks](/fr/automation/webhook)).
+sous `~/.openclaw/hooks/transforms` (voir [Webhooks](/en/automation/webhook)).
 
 ## Assistant (recommandé)
 

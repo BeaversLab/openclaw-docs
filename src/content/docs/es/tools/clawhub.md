@@ -102,7 +102,7 @@ Las instalaciones nativas de `openclaw skills install` se realizan en el directo
 
 La CLI separada `clawhub` también instala habilidades en `./skills` en su directorio de trabajo actual. Si se configura un espacio de trabajo de OpenClaw, `clawhub` recurre a ese espacio de trabajo a menos que anule `--workdir` (o `CLAWHUB_WORKDIR`). OpenClaw carga las habilidades del espacio de trabajo desde `<workspace>/skills` y las recogerá en la **siguiente** sesión. Si ya usa `~/.openclaw/skills` o habilidades incluidas, las habilidades del espacio de trabajo tienen prioridad.
 
-Para obtener más detalles sobre cómo se cargan, comparten y restringen las habilidades, consulte [Habilidades](/es/tools/skills).
+Para obtener más detalles sobre cómo se cargan, comparten y restringen las habilidades, consulte [Habilidades](/en/tools/skills).
 
 ## Resumen del sistema de habilidades
 

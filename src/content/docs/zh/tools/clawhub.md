@@ -22,7 +22,7 @@ ClawHub 是 **OpenClaw Skills 和插件** 的公共注册表。
 
 Skills：
 
-```exec
+```bash
 openclaw skills search "calendar"
 openclaw skills install <skill-slug>
 openclaw skills update --all
@@ -30,14 +30,14 @@ openclaw skills update --all
 
 插件：
 
-```exec
+```bash
 openclaw plugins install clawhub:<package>
 openclaw plugins update --all
 ```
 
 在尝试 npm 之前，也会针对 ClawHub 尝试裸 npm 安全插件规范：
 
-```exec
+```bash
 openclaw plugins install openclaw-codex-app-server
 ```
 
@@ -88,11 +88,11 @@ openclaw plugins install openclaw-codex-app-server
 
 对于需要注册表身份验证的工作流（如发布/同步），您仅需此功能：
 
-```exec
+```bash
 npm i -g clawhub
 ```
 
-```exec
+```bash
 pnpm add -g clawhub
 ```
 
@@ -109,7 +109,7 @@ pnpm add -g clawhub
 `~/.openclaw/skills` 或捆绑 skills，则工作区 skills 优先。
 
 有关 skills 如何加载、共享和控制的更多详细信息，请参阅
-[Skills](/zh/tools/skills)。
+[Skills](/en/tools/skills)。
 
 ## Skill 系统概述
 
@@ -226,19 +226,19 @@ ClawHub 默认是开放的。任何人都可以上传 skills，但 GitHub 账户
 
 ### 搜索技能
 
-```exec
+```bash
 clawhub search "postgres backups"
 ```
 
 ### 下载新技能
 
-```exec
+```bash
 clawhub install my-skill-pack
 ```
 
 ### 更新已安装的技能
 
-```exec
+```bash
 clawhub update --all
 ```
 
@@ -246,13 +246,13 @@ clawhub update --all
 
 对于单个技能文件夹：
 
-```exec
+```bash
 clawhub publish ./my-skill --slug my-skill --name "My Skill" --version 1.0.0 --tags latest
 ```
 
 要一次扫描并备份多个技能：
 
-```exec
+```bash
 clawhub sync --all
 ```
 
@@ -281,7 +281,7 @@ clawhub sync --all
 
 当您在登录状态下运行 `clawhub sync` 时，CLI 会发送一个最小快照以计算安装计数。您可以完全禁用此功能：
 
-```exec
+```bash
 export CLAWHUB_DISABLE_TELEMETRY=1
 ```
 

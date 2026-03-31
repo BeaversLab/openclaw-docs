@@ -65,6 +65,6 @@ Les filtres spécifiques au provider ne sont actuellement pas pris en charge.
 
 ## Connexes
 
-- [Aperçu de la recherche web](/fr/tools/web) -- tous les providers et la détection automatique
-- [Recherche Gemini](/fr/tools/gemini-search) -- réponses synthétisées par l'IA via le grounding Google
-- [Recherche Grok](/fr/tools/grok-search) -- réponses synthétisées par l'IA via le grounding xAI
+- [Aperçu de la recherche web](/en/tools/web) -- tous les providers et la détection automatique
+- [Recherche Gemini](/en/tools/gemini-search) -- réponses synthétisées par l'IA via le grounding Google
+- [Recherche Grok](/en/tools/grok-search) -- réponses synthétisées par l'IA via le grounding xAI

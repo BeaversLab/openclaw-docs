@@ -35,9 +35,9 @@ title: "apply_patch 工具"
 - `tools.exec.applyPatch.workspaceOnly` 默认为 `true`（包含在工作区内）。仅当您有意让 `apply_patch` 在工作区目录之外写入/删除时，才将其设置为 `false`。
 - 在 `*** Update File:` 块中使用 `*** Move to:` 来重命名文件。
 - `*** End of File` 在需要时标记仅文件结尾（EOF）插入。
-- 实验性功能，默认禁用。使用 `tools.exec.applyPatch.enabled` 启用。
-- OpenAI 专属（包括 OpenAI Codex）。可通过模型通过
-  `tools.exec.applyPatch.allowModels` 进行可选控制。
+- 默认情况下，OpenAI 和 OpenAI Codex 模型可用。设置
+  `tools.exec.applyPatch.enabled: false` 可将其禁用。
+- 可选择通过 `tools.exec.applyPatch.allowModels` 按模型进行限制。
 - 配置仅在 `tools.exec` 下。
 
 ## 示例

@@ -22,12 +22,12 @@ El objetivo de diseño es mantener todo el descubrimiento/publicidad de red en e
 - **Gateway WS (plano de control)**: el punto final WebSocket en `127.0.0.1:18789` de forma predeterminada; se puede vincular a LAN/tailnet mediante `gateway.bind`.
 - **Transporte WS directo**: un punto final de Gateway WS orientado a LAN/tailnet (sin SSH).
 - **Transporte SSH (alternativo)**: control remoto mediante el reenvío de `127.0.0.1:18789` a través de SSH.
-- **Puente TCP heredado (obsoleto/eliminado)**: transporte de nodo antiguo (consulte [Bridge protocol](/es/gateway/bridge-protocol)); ya no se anuncia para el descubrimiento.
+- **Puente TCP heredado (obsoleto/eliminado)**: transporte de nodo antiguo (consulte [Bridge protocol](/en/gateway/bridge-protocol)); ya no se anuncia para el descubrimiento.
 
 Detalles del protocolo:
 
-- [Gateway protocol](/es/gateway/protocol)
-- [Bridge protocol (legacy)](/es/gateway/bridge-protocol)
+- [Gateway protocol](/en/gateway/protocol)
+- [Bridge protocol (legacy)](/en/gateway/bridge-protocol)
 
 ## Por qué mantenemos tanto "direct" como SSH
 
@@ -51,7 +51,7 @@ Dirección de destino:
 - La **puerta de enlace** anuncia su punto final WS a través de Bonjour.
 - Los clientes exploran y muestran una lista de "elegir una puerta de enlace", y luego almacenan el punto de conexión elegido.
 
-Solución de problemas y detalles de la baliza: [Bonjour](/es/gateway/bonjour).
+Solución de problemas y detalles de la baliza: [Bonjour](/en/gateway/bonjour).
 
 #### Detalles de la baliza de servicio
 
@@ -95,7 +95,7 @@ Si la puerta de enlace puede detectar que se está ejecutando bajo Tailscale, pu
 
 Cuando no hay una ruta directa (o la directa está deshabilitada), los clientes siempre pueden conectarse a través de SSH reenviando el puerto de la puerta de enlace de loopback.
 
-Consulte [Acceso remoto](/es/gateway/remote).
+Consulte [Acceso remoto](/en/gateway/remote).
 
 ## Selección de transporte (política del cliente)
 
@@ -110,7 +110,7 @@ Comportamiento recomendado del cliente:
 
 La puerta de enlace es la fuente de verdad para la admisión de nodos/clientes.
 
-- Las solicitudes de emparejamiento se crean/aprueban/rechazan en la puerta de enlace (consulte [Emparejamiento de puerta de enlace](/es/gateway/pairing)).
+- Las solicitudes de emparejamiento se crean/aprueban/rechazan en la puerta de enlace (consulte [Emparejamiento de puerta de enlace](/en/gateway/pairing)).
 - La puerta de enlace hace cumplir:
   - autenticación (token / par de claves)
   - ámbitos/ACL (la puerta de enlace no es un proxy sin procesar para todos los métodos)

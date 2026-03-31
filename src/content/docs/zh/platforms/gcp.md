@@ -32,7 +32,7 @@ title: "GCP"
 
 本指南在 GCP Compute Engine 上使用 Debian。
 Ubuntu 也可以使用；请相应地映射软件包。
-有关通用 Docker 流程，请参阅 [Docker](/zh/install/docker)。
+有关通用 Docker 流程，请参阅 [Docker](/en/install/docker)。
 
 ---
 
@@ -73,7 +73,7 @@ Ubuntu 也可以使用；请相应地映射软件包。
 
 初始化并验证身份：
 
-```exec
+```bash
 gcloud init
 gcloud auth login
 ```
@@ -88,7 +88,7 @@ gcloud auth login
 
 **CLI:**
 
-```exec
+```bash
 gcloud projects create my-openclaw-project --name="OpenClaw Gateway"
 gcloud config set project my-openclaw-project
 ```
@@ -97,7 +97,7 @@ gcloud config set project my-openclaw-project
 
 启用 Compute Engine API：
 
-```exec
+```bash
 gcloud services enable compute.googleapis.com
 ```
 
@@ -121,7 +121,7 @@ gcloud services enable compute.googleapis.com
 
 **CLI:**
 
-```exec
+```bash
 gcloud compute instances create openclaw-gateway \
   --zone=us-central1-a \
   --machine-type=e2-small \
@@ -145,7 +145,7 @@ gcloud compute instances create openclaw-gateway \
 
 **CLI:**
 
-```exec
+```bash
 gcloud compute ssh openclaw-gateway --zone=us-central1-a
 ```
 
@@ -159,7 +159,7 @@ gcloud compute ssh openclaw-gateway --zone=us-central1-a
 
 ## 5) 安装 Docker（在虚拟机上）
 
-```exec
+```bash
 sudo apt-get update
 sudo apt-get install -y git curl ca-certificates
 curl -fsSL https://get.docker.com | sudo sh
@@ -168,19 +168,19 @@ sudo usermod -aG docker $USER
 
 注销并重新登录以使组更改生效：
 
-```exec
+```bash
 exit
 ```
 
 然后重新 SSH 登录：
 
-```exec
+```bash
 gcloud compute ssh openclaw-gateway --zone=us-central1-a
 ```
 
 验证：
 
-```exec
+```bash
 docker --version
 docker compose version
 ```
@@ -189,7 +189,7 @@ docker compose version
 
 ## 6) 克隆 OpenClaw 仓库
 
-```exec
+```bash
 git clone https://github.com/openclaw/openclaw.git
 cd openclaw
 ```
@@ -203,7 +203,7 @@ cd openclaw
 Docker 容器是临时的。
 所有长期存在的状态必须驻留在主机上。
 
-```exec
+```bash
 mkdir -p ~/.openclaw
 mkdir -p ~/.openclaw/workspace
 ```
@@ -214,7 +214,7 @@ mkdir -p ~/.openclaw/workspace
 
 在代码库根目录中创建 `.env`。
 
-```exec
+```bash
 OPENCLAW_IMAGE=openclaw:latest
 OPENCLAW_GATEWAY_TOKEN=change-me-now
 OPENCLAW_GATEWAY_BIND=lan
@@ -229,7 +229,7 @@ XDG_CONFIG_HOME=/home/node/.openclaw
 
 生成强密钥：
 
-```exec
+```bash
 openssl rand -hex 32
 ```
 
@@ -340,14 +340,14 @@ CMD ["node","dist/index.js"]
 
 ## 11) 构建并启动
 
-```exec
+```bash
 docker compose build
 docker compose up -d openclaw-gateway
 ```
 
 验证二进制文件：
 
-```exec
+```bash
 docker compose exec openclaw-gateway which gog
 docker compose exec openclaw-gateway which goplaces
 docker compose exec openclaw-gateway which wacli
@@ -365,7 +365,7 @@ docker compose exec openclaw-gateway which wacli
 
 ## 12) 验证 Gateway(网关)
 
-```exec
+```bash
 docker compose logs -f openclaw-gateway
 ```
 
@@ -381,7 +381,7 @@ docker compose logs -f openclaw-gateway
 
 创建一个 SSH 隧道以转发 Gateway(网关) 端口：
 
-```exec
+```bash
 gcloud compute ssh openclaw-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:18789
 ```
 
@@ -417,7 +417,7 @@ OpenClaw 在 Docker 中运行，但 Docker 并不是事实来源。
 
 要在 VM 上更新 OpenClaw：
 
-```exec
+```bash
 cd ~/openclaw
 git pull
 docker compose build
@@ -436,7 +436,7 @@ docker compose up -d
 
 检查您的 OS Login 个人资料：
 
-```exec
+```bash
 gcloud compute os-login describe-profile
 ```
 
@@ -446,7 +446,7 @@ gcloud compute os-login describe-profile
 
 如果使用 e2-micro 遇到 OOM，请升级到 e2-small 或 e2-medium：
 
-```exec
+```bash
 # Stop the VM first
 gcloud compute instances stop openclaw-gateway --zone=us-central1-a
 
@@ -469,13 +469,13 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 1. 创建服务帐户：
 
-   ```exec
+   ```bash
    gcloud iam service-accounts create openclaw-deploy \
      --display-name="OpenClaw Deployment"
    ```
 
 2. 授予 Compute Instance Admin 角色（或更窄的自定义角色）：
-   ```exec
+   ```bash
    gcloud projects add-iam-policy-binding my-openclaw-project \
      --member="serviceAccount:openclaw-deploy@my-openclaw-project.iam.gserviceaccount.com" \
      --role="roles/compute.instanceAdmin.v1"
@@ -489,6 +489,6 @@ gcloud compute instances start openclaw-gateway --zone=us-central1-a
 
 ## 后续步骤
 
-- 设置消息通道：[通道](/zh/channels)
-- 将本地设备配对为节点：[节点](/zh/nodes)
-- 配置 Gateway(网关)：[Gateway(网关) 配置](/zh/gateway/configuration)
+- 设置消息通道：[通道](/en/channels)
+- 将本地设备配对为节点：[节点](/en/nodes)
+- 配置 Gateway(网关)：[Gateway(网关) 配置](/en/gateway/configuration)

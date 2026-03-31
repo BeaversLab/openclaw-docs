@@ -1,53 +1,33 @@
 ---
-summary: "Usar Qwen OAuth (nivel gratuito) en OpenClaw"
+summary: "Usa los modelos Qwen a través de Model Studio de Alibaba Cloud"
 read_when:
   - You want to use Qwen with OpenClaw
-  - You want free-tier OAuth access to Qwen Coder
+  - You previously used Qwen OAuth
 title: "Qwen"
 ---
 
 # Qwen
 
-Qwen proporciona un flujo de OAuth de nivel gratuito para los modelos Qwen Coder y Qwen Vision
-(2.000 solicitudes/día, sujeto a los límites de velocidad de Qwen).
+<Warning>
 
-## Habilitar el complemento
+**Qwen OAuth se ha eliminado.** La integración OAuth del nivel gratuito
+(`qwen-portal`) que usaba los puntos de conexión `portal.qwen.ai` ya no está disponible.
+Consulte el [Issue #49557](https://github.com/openclaw/openclaw/issues/49557) para obtener
+más información.
 
-```bash
-openclaw plugins enable qwen-portal-auth
-```
+</Warning>
 
-Reinicie el Gateway después de habilitar.
+## Recomendado: Model Studio (Plan de Codificación de Alibaba Cloud)
 
-## Autenticar
-
-```bash
-openclaw models auth login --provider qwen-portal --set-default
-```
-
-Esto ejecuta el flujo de OAuth de código de dispositivo de Qwen y escribe una entrada de proveedor en su
-`models.json` (además de un alias `qwen` para cambiar rápidamente).
-
-## ID de modelo
-
-- `qwen-portal/coder-model`
-- `qwen-portal/vision-model`
-
-Cambie de modelos con:
+Use [Model Studio](/en/providers/modelstudio) para obtener acceso con soporte oficial a
+los modelos Qwen (Qwen 3.5 Plus, GLM-4.7, Kimi K2.5, MiniMax M2.5 y más).
 
 ```bash
-openclaw models set qwen-portal/coder-model
+# Global endpoint
+openclaw onboard --auth-choice modelstudio-api-key
+
+# China endpoint
+openclaw onboard --auth-choice modelstudio-api-key-cn
 ```
 
-## Reutilizar el inicio de sesión de Qwen Code CLI
-
-Si ya inició sesión con Qwen Code CLI, OpenClaw sincronizará las credenciales
-desde `~/.qwen/oauth_creds.json` cuando cargue el almacén de autenticación. Aún necesita una
-entrada `models.providers.qwen-portal` (use el comando de inicio de sesión anterior para crear una).
-
-## Notas
-
-- Los tokens se actualizan automáticamente; vuelva a ejecutar el comando de inicio de sesión si la actualización falla o se revoca el acceso.
-- URL base predeterminada: `https://portal.qwen.ai/v1` (anúlela con
-  `models.providers.qwen-portal.baseUrl` si Qwen proporciona un punto final diferente).
-- Consulte [Model providers](/es/concepts/model-providers) para las reglas generales del proveedor.
+Consulte [Model Studio](/en/providers/modelstudio) para obtener detalles completos de la configuración.

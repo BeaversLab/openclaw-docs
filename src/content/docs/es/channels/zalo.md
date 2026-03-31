@@ -15,7 +15,7 @@ Zalo se distribuye como un complemento y no está incluido en la instalación ce
 
 - Instalar vía CLI: `openclaw plugins install @openclaw/zalo`
 - O seleccione **Zalo** durante la configuración y confirme el mensaje de instalación
-- Detalles: [Plugins](/es/tools/plugin)
+- Detalles: [Plugins](/en/tools/plugin)
 
 ## Configuración rápida (principiante)
 
@@ -117,7 +117,7 @@ Soporte multi-cuenta: use `channels.zalo.accounts` con tokens por cuenta y opcio
 - Aprobar a través de:
   - `openclaw pairing list zalo`
   - `openclaw pairing approve zalo <CODE>`
-- El emparejamiento es el intercambio de tokens predeterminado. Detalles: [Emparejamiento](/es/channels/pairing)
+- El emparejamiento es el intercambio de tokens predeterminado. Detalles: [Emparejamiento](/en/channels/pairing)
 - `channels.zalo.allowFrom` acepta IDs de usuario numéricos (no hay búsqueda de nombre de usuario disponible).
 
 ## Control de acceso (Grupos)
@@ -208,7 +208,7 @@ Esta tabla resume el comportamiento actual del **Creador de bots de Zalo / bot d
 
 ## Referencia de configuración (Zalo)
 
-Configuración completa: [Configuration](/es/gateway/configuration)
+Configuración completa: [Configuration](/en/gateway/configuration)
 
 Las claves planas de nivel superior (`channels.zalo.botToken`, `channels.zalo.dmPolicy` y similares) son una abreviatura heredada de una sola cuenta. Prefiera `channels.zalo.accounts.<id>.*` para nuevas configuraciones. Ambas formas siguen documentadas aquí porque existen en el esquema.
 

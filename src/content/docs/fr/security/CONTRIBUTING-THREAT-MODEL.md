@@ -85,7 +85,7 @@ Si vous n'êtes pas sûr du niveau de risque, décrivez simplement l'impact et n
 - [Site Web ATLAS](https://atlas.mitre.org/)
 - [Techniques ATLAS](https://atlas.mitre.org/techniques/)
 - [Études de cas ATLAS](https://atlas.mitre.org/studies/)
-- [Modèle de menace OpenClaw](/fr/security/THREAT-MODEL-ATLAS)
+- [Modèle de menace OpenClaw](/en/security/THREAT-MODEL-ATLAS)
 
 ## Contact
 

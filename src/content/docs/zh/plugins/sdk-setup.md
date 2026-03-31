@@ -13,7 +13,7 @@ read_when:
 关于插件打包（`package.json` 元数据）、清单
 （`openclaw.plugin.json`）、设置入口和配置架构的参考。
 
-<Tip>**在寻找演练教程？** 操作指南介绍了上下文中的打包内容：[渠道 插件](/zh/plugins/sdk-渠道-plugins#step-1-package-and-manifest) 和 [提供商 插件](/zh/plugins/sdk-提供商-plugins#step-1-package-and-manifest)。</Tip>
+<Tip>**正在寻找演练？** 操作指南涵盖了相关背景下的打包： [渠道插件](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) 和 [提供者插件](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest)。</Tip>
 
 ## 包元数据
 
@@ -84,7 +84,7 @@ read_when:
 阶段仅加载 `setupEntry`，即使对于已配置的渠道也是如此。完整入口在
 网关开始监听后加载。
 
-<Warning>仅当您的 `setupEntry` 在网关开始监听之前注册了网关所需的所有内容（渠道注册、HTTP 路由、网关方法）时，才启用延迟加载。如果完整入口拥有必需的启动能力，请保留默认行为。</Warning>
+<Warning>仅当您的 `setupEntry` 在网关开始监听之前注册了网关所需的所有内容（渠道注册、HTTP 路由、 网关方法）时，才启用延迟加载。如果完整入口拥有必需的启动功能，请 保持默认行为。</Warning>
 
 ## 插件清单
 
@@ -136,7 +136,7 @@ OpenClaw 使用它来验证配置，而无需执行插件代码。
 }
 ```
 
-有关完整的架构参考，请参阅 [插件清单](/zh/plugins/manifest)。
+有关完整的架构参考，请参阅 [插件清单](/en/plugins/manifest)。
 
 ## 设置入口
 
@@ -295,7 +295,7 @@ const setupSurface = createOptionalChannelSetupSurface({
 
 ## 发布和安装
 
-**外部插件：** 发布到 [ClawHub](/zh/tools/clawhub) 或 npm，然后安装：
+**外部插件：** 发布到 [ClawHub](/en/tools/clawhub) 或 npm，然后安装：
 
 ```bash
 openclaw plugins install @myorg/openclaw-my-plugin
@@ -319,10 +319,10 @@ openclaw plugins search <query>
 openclaw plugins install <package-name>
 ```
 
-<Info>对于来自 npm 的安装，`openclaw plugins install` 运行 `npm install --ignore-scripts`（没有 生命周期脚本）。保持插件依赖树为纯 JS/TS，并避免需要 `postinstall` 构建的包。</Info>
+<Info>对于来自 npm 的安装，`openclaw plugins install` 运行 `npm install --ignore-scripts`（无生命周期脚本）。保持插件依赖 树为纯 JS/TS，并避免需要 `postinstall` 构建的包。</Info>
 
 ## 相关
 
-- [SDK 入口点](/zh/plugins/sdk-entrypoints) -- `definePluginEntry` 和 `defineChannelPluginEntry`
-- [插件清单](/zh/plugins/manifest) -- 完整的清单模式参考
-- [构建插件](/zh/plugins/building-plugins) -- 逐步入门指南
+- [SDK 入口点](/en/plugins/sdk-entrypoints) -- `definePluginEntry` 和 `defineChannelPluginEntry`
+- [插件清单](/en/plugins/manifest) -- 完整的清单架构参考
+- [构建插件](/en/plugins/building-plugins) -- 分步入门指南

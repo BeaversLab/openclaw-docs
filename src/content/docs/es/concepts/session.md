@@ -52,7 +52,7 @@ Notas:
 - El proceso de incorporación de la CLI local escribe `session.dmScope: "per-channel-peer"` de forma predeterminada cuando no está establecido (se conservan los valores explícitos existentes).
 - Para bandejas de entrada multi-cuenta en el mismo canal, se prefiere `per-account-channel-peer`.
 - Si la misma persona te contacta en múltiples canales, usa `session.identityLinks` para colapsar sus sesiones de MD en una identidad canónica.
-- Puedes verificar tus configuraciones de MD con `openclaw security audit` (consulte [seguridad](/es/cli/security)).
+- Puedes verificar tus configuraciones de MD con `openclaw security audit` (consulte [seguridad](/en/cli/security)).
 
 ## El Gateway es la fuente de verdad
 
@@ -177,14 +177,14 @@ openclaw sessions cleanup --enforce
 ## Poda de sesiones
 
 OpenClaw recorta **los resultados de herramientas antiguos** del contexto en memoria justo antes de las llamadas al LLM de forma predeterminada.
-Esto **no** reescribe el historial JSONL. Consulte [/concepts/session-pruning](/es/concepts/session-pruning).
+Esto **no** reescribe el historial JSONL. Consulte [/concepts/session-pruning](/en/concepts/session-pruning).
 
 ## Vaciado de memoria antes de la compactación
 
 Cuando una sesión está cerca de la compactación automática, OpenClaw puede ejecutar un **vaciado silencioso de memoria**
 turno que recuerda al modelo escribir notas duraderas en el disco. Esto solo se ejecuta cuando
-el espacio de trabajo es escribible. Consulte [Memory](/es/concepts/memory) y
-[Compaction](/es/concepts/compaction).
+el espacio de trabajo es escribible. Consulte [Memory](/en/concepts/memory) y
+[Compaction](/en/concepts/compaction).
 
 ## Mapeo de transportes → claves de sesión
 
@@ -284,7 +284,7 @@ Anulación en tiempo de ejecución (solo propietario):
 - Envía `/status` como un mensaje independiente en el chat para ver si el agente es alcanzable, cuánto del contexto de sesión se usa, los interruptores actuales de thinking/fast/verbose, y cuándo se actualizaron por última vez tus credenciales de WhatsApp web (ayuda a detectar necesidades de revinculación).
 - Envía `/context list` o `/context detail` para ver qué hay en el prompt del sistema y los archivos del espacio de trabajo inyectados (y los mayores contribuyentes del contexto).
 - Envía `/stop` (o frases de anulación independientes como `stop`, `stop action`, `stop run`, `stop openclaw`) para abortar la ejecución actual, limpiar los seguimientos en cola para esa sesión y detener cualquier ejecución de sub-agente generada desde ella (la respuesta incluye el contador de detenciones).
-- Envía `/compact` (instrucciones opcionales) como un mensaje independiente para resumir el contexto anterior y liberar espacio en la ventana. Consulta [/concepts/compaction](/es/concepts/compaction).
+- Envía `/compact` (instrucciones opcionales) como un mensaje independiente para resumir el contexto anterior y liberar espacio en la ventana. Consulta [/concepts/compaction](/en/concepts/compaction).
 - Las transcripciones JSONL se pueden abrir directamente para revisar las turnos completos.
 
 ## Consejos

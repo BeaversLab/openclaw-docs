@@ -330,5 +330,5 @@ l'exécution de doctor.
 Doctor suggère un système de mémoire d'espace de travail lorsqu'il est manquant et imprime un conseil de sauvegarde
 si l'espace de travail n'est pas déjà sous git.
 
-Voir [/concepts/agent-workspace](/fr/concepts/agent-workspace) pour un guide complet sur
+Voir [/concepts/agent-workspace](/en/concepts/agent-workspace) pour un guide complet sur
 la structure de l'espace de travail et la sauvegarde git (GitHub privé ou GitLab recommandé).

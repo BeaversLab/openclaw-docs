@@ -12,8 +12,8 @@ Administrar los ganchos del agente (automatizaciones controladas por eventos par
 
 Relacionado:
 
-- Hooks: [Hooks](/es/automation/hooks)
-- Plugin hooks: [Plugin hooks](/es/plugins/architecture#provider-runtime-hooks)
+- Hooks: [Hooks](/en/automation/hooks)
+- Plugin hooks: [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks)
 
 ## Listar todos los ganchos
 
@@ -269,7 +269,7 @@ openclaw hooks enable session-memory
 
 **Salida:** `~/.openclaw/workspace/memory/YYYY-MM-DD-slug.md`
 
-**Ver:** [documentación de session-memory](/es/automation/hooks#session-memory)
+**Ver:** [documentación de session-memory](/en/automation/hooks#session-memory)
 
 ### bootstrap-extra-files
 
@@ -281,7 +281,7 @@ Inyecta archivos de arranque adicionales (por ejemplo, monorepo-local `AGENTS.md
 openclaw hooks enable bootstrap-extra-files
 ```
 
-**Ver:** [documentación de bootstrap-extra-files](/es/automation/hooks#bootstrap-extra-files)
+**Ver:** [documentación de bootstrap-extra-files](/en/automation/hooks#bootstrap-extra-files)
 
 ### command-logger
 
@@ -308,7 +308,7 @@ cat ~/.openclaw/logs/commands.log | jq .
 grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 ```
 
-**Ver:** [documentación de command-logger](/es/automation/hooks#command-logger)
+**Ver:** [documentación de command-logger](/en/automation/hooks#command-logger)
 
 ### boot-md
 
@@ -322,4 +322,4 @@ Ejecuta `BOOT.md` cuando se inicia la puerta de enlace (después de que inicien 
 openclaw hooks enable boot-md
 ```
 
-**Ver:** [documentación de boot-md](/es/automation/hooks#boot-md)
+**Ver:** [documentación de boot-md](/en/automation/hooks#boot-md)

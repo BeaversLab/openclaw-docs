@@ -12,7 +12,7 @@ Administra trabajos de cron para el programador del Gateway.
 
 Relacionado:
 
-- Trabajos de cron: [Trabajos de cron](/es/automation/cron-jobs)
+- Trabajos de cron: [Trabajos de cron](/en/automation/cron-jobs)
 
 Sugerencia: ejecuta `openclaw cron --help` para ver la superficie completa de comandos.
 

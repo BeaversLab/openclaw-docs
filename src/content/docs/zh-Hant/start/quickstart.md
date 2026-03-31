@@ -8,7 +8,7 @@ title: "快速入門"
 
 # 快速入門
 
-<Info>快速入門現已併入 [入門指南](/en/start/getting-started)。</Info>
+<Info>Quick start 現在是 [Getting Started](/en/start/getting-started) 的一部分。</Info>
 
 <Columns>
   <Card title="Getting Started" href="/en/start/getting-started">

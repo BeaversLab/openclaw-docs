@@ -8,13 +8,13 @@ title: "Inicio rápido"
 
 # Inicio rápido
 
-<Info>Inicio rápido ahora forma parte de [Introducción](/es/start/getting-started).</Info>
+<Info>El inicio rápido ahora forma parte de [Introducción](/en/start/getting-started).</Info>
 
 <Columns>
-  <Card title="Getting Started" href="/es/start/getting-started">
+  <Card title="Getting Started" href="/en/start/getting-started">
     Instala OpenClaw y ejecuta tu primer chat en minutos.
   </Card>
-  <Card title="Onboarding (CLI)" href="/es/start/wizard">
+  <Card title="Onboarding (CLI)" href="/en/start/wizard">
     Referencia completa de integración de la CLI y opciones avanzadas.
   </Card>
 </Columns>

@@ -90,4 +90,4 @@ await web_search({
 - Le plan Search inclut le point de terminaison Context LLM et les droits d'inférence IA. Le stockage des résultats pour entraîner ou régler des modèles nécessite un plan avec des droits de stockage explicites. Voir les [Conditions d'utilisation](https://api-dashboard.search.brave.com/terms-of-service) de Brave.
 - Les résultats sont mis en cache pendant 15 minutes par défaut (configurable via `cacheTtlMinutes`).
 
-Voir [Outils Web](/fr/tools/web) pour la configuration complète de web_search.
+Voir [Outils Web](/en/tools/web) pour la configuration complète de web_search.

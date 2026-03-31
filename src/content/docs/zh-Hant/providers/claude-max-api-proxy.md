@@ -11,7 +11,7 @@ title: "Claude Max API 代理"
 
 **claude-max-api-proxy** 是一款社群工具，可將您的 Claude Max/Pro 訂閱公開為 OpenAI 相容的 API 端點。這讓您能透過任何支援 OpenAI API 格式的工具來使用您的訂閱。
 
-<Warning>此途徑僅為技術相容性。Anthropic 過去曾阻擋部分在 Claude Code 之外的訂閱使用。您必須自行決定是否使用，並在依賴之前驗證 Anthropic 的最新條款。</Warning>
+<Warning>此路徑僅供技術相容性使用。Anthropic 過去曾封鎖部分在 Claude Code 之外的訂閱使用。您必須自行決定是否使用，並在依賴之前確認 Anthropic 目前的條款。</Warning>
 
 ## 為何使用此工具？
 

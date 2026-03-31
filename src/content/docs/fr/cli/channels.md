@@ -12,8 +12,8 @@ Gérer les comptes de channel de chat et leur statut d'exécution sur le Gateway
 
 Documentation associée :
 
-- Guides de channel : [Channels](/fr/channels/index)
-- Configuration du Gateway : [Configuration](/fr/gateway/configuration)
+- Guides de channel : [Channels](/en/channels/index)
+- Configuration du Gateway : [Configuration](/en/gateway/configuration)
 
 ## Commandes courantes
 
@@ -44,7 +44,7 @@ Lorsque vous exécutez `openclaw channels add` sans indicateurs, l'assistant int
 
 Si vous confirmez la liaison maintenant, l'assistant demande quel agent doit posséder chaque compte de channel configuré et écrit les liaisons de routage délimitées au compte.
 
-Vous pouvez également gérer les mêmes règles de routage ultérieurement avec `openclaw agents bindings`, `openclaw agents bind` et `openclaw agents unbind` (voir [agents](/fr/cli/agents)).
+Vous pouvez également gérer les mêmes règles de routage ultérieurement avec `openclaw agents bindings`, `openclaw agents bind` et `openclaw agents unbind` (voir [agents](/en/cli/agents)).
 
 Lorsque vous ajoutez un compte non par défaut à un channel qui utilise encore des paramètres de niveau supérieur à compte unique (pas encore d'entrées `channels.<channel>.accounts`), OpenClaw déplace les valeurs de niveau supérieur à compte unique délimitées au compte dans `channels.<channel>.accounts.default`, puis écrit le nouveau compte. Cela préserve le comportement du compte d'origine lors du passage à la structure multi-comptes.
 

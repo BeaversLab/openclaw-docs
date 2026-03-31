@@ -11,7 +11,7 @@ title: "Nix"
 
 Installez OpenClaw de manière déclarative avec **[nix-openclaw](https://github.com/openclaw/nix-openclaw)** -- un module Home Manager tout-en-un.
 
-<Info>Le dépôt [nix-openclaw](https://github.com/openclaw/nix-openclaw) est la source de vérité pour l'installation de Nix. Cette page est un aperçu rapide.</Info>
+<Info>The [nix-openclaw](https://github.com/openclaw/nix-openclaw) repo is the source of truth for Nix installation. This page is a quick overview.</Info>
 
 ## Ce que vous obtenez
 
@@ -23,10 +23,10 @@ Installez OpenClaw de manière déclarative avec **[nix-openclaw](https://github
 ## Démarrage rapide
 
 <Steps>
-  <Step title="Installer Determinate Nix">Si Nix n'est pas déjà installé, suivez les instructions de l'[installeur Determinate Nix](https://github.com/DeterminateSystems/nix-installer).</Step>
-  <Step title="Créer un flake local">Utilisez le modèle agent-first depuis le dépôt nix-openclaw : ```bash mkdir -p ~/code/openclaw-local # Copy templates/agent-first/flake.nix from the nix-openclaw repo ```</Step>
-  <Step title="Configurer les secrets">Configurez votre token de bot de messagerie et la clé API du fournisseur de modèle. Des fichiers simples à `~/.secrets/` fonctionnent parfaitement.</Step>
-  <Step title="Remplir les espaces réservés du modèle et basculer">```bash home-manager switch ```</Step>
+  <Step title="Install Determinate Nix">If Nix is not already installed, follow the [Determinate Nix installer](https://github.com/DeterminateSystems/nix-installer) instructions.</Step>
+  <Step title="Create a local flake">Use the agent-first template from the nix-openclaw repo: ```bash mkdir -p ~/code/openclaw-local # Copy templates/agent-first/flake.nix from the nix-openclaw repo ```</Step>
+  <Step title="Configure secrets">Set up your messaging bot token and model provider API key. Plain files at `~/.secrets/` work fine.</Step>
+  <Step title="Fill in template placeholders and switch">```bash home-manager switch ```</Step>
   <Step title="Vérifier">Confirmez que le service launchd est en cours d'exécution et que votre bot répond aux messages.</Step>
 </Steps>
 
@@ -67,5 +67,5 @@ OpenClaw lit la configuration JSON5 depuis `OPENCLAW_CONFIG_PATH` et stocke les 
 ## Connexes
 
 - [nix-openclaw](https://github.com/openclaw/nix-openclaw) -- guide complet d'installation
-- [Assistant](/fr/start/wizard) -- configuration Nix sans CLI
-- [Docker](/fr/install/docker) -- configuration conteneurisée
+- [Assistant](/en/start/wizard) -- configuration Nix sans CLI
+- [Docker](/en/install/docker) -- configuration conteneurisée

@@ -12,7 +12,7 @@ Lorsqu'un agent s'exécute dans un sandbox, ses commandes `exec` sont confinées
 sandbox. Le **mode avec élévation** permet à l'agent de s'en échapper et d'exécuter des commandes
 sur l'hôte de la passerelle à la place, avec des barrières d'approbation configurables.
 
-<Info>Le mode avec élévation ne modifie le comportement que lorsque l'agent est **sandboxé**. Pour les agents non sandboxés, exec s'exécute déjà sur l'hôte.</Info>
+<Info>Le mode élevé ne modifie le comportement que lorsque l'agent est **sandboxed**. Pour les agents non sandboxed, exec s'exécute déjà sur l'hôte.</Info>
 
 ## Directives
 
@@ -105,7 +105,7 @@ Formats des entrées de la liste d'autorisation :
 
 ## Connexes
 
-- [Outil Exec](/fr/tools/exec) — exécution de commandes shell
-- [Approbations Exec](/fr/tools/exec-approvals) — système d'approbation et de liste d'autorisation
-- [Bac à sable (Sandboxing)](/fr/gateway/sandboxing) — configuration du bac à sable
-- [Bac à sable vs Stratégie d'outil vs Mode élevé](/fr/gateway/sandbox-vs-tool-policy-vs-elevated)
+- [Outil Exec](/en/tools/exec) — exécution de commandes shell
+- [Approbations Exec](/en/tools/exec-approvals) — système d'approbation et de liste d'autorisation
+- [Bac à sable (Sandboxing)](/en/gateway/sandboxing) — configuration du bac à sable
+- [Bac à sable vs Stratégie d'outil vs Mode élevé](/en/gateway/sandbox-vs-tool-policy-vs-elevated)

@@ -26,8 +26,8 @@ OpenClaw 记忆是 **代理工作区中的纯 Markdown**。文件是
   - 如果工作区根目录下同时存在 `MEMORY.md` 和 `memory.md`，OpenClaw 会加载两者（通过 realpath 去重，因此指向同一文件的符号链接不会被重复注入）。
   - **仅在主私有会话中加载**（切勿在群组上下文中加载）。
 
-这些文件位于工作区之下（`agents.defaults.workspace`，默认为
-`~/.openclaw/workspace`）。有关完整布局，请参阅 [Agent workspace](/zh/concepts/agent-workspace)。
+这些文件位于工作区（`agents.defaults.workspace`，默认为
+`~/.openclaw/workspace`）之下。有关完整布局，请参阅[Agent workspace](/en/concepts/agent-workspace)。
 
 ## Memory 工具
 
@@ -48,7 +48,8 @@ OpenClaw 针对这些 Markdown 文件提供了两个面向模型的工具：
 
 ## 自动 Memory 刷新（预压缩 ping）
 
-当会话**接近自动压缩**时，OpenClaw 会触发一次**静默的、智能体的轮次**，提醒模型在上下文被压缩**之前**写入持久性 Memory。默认提示词明确说明模型*可能会回复*，但通常 `NO_REPLY` 是正确的响应，因此用户永远不会看到此轮次。
+当会话**接近自动压缩**时，OpenClaw 会触发一个**静默的、智能体的轮次**，提醒模型在上下文被压缩**之前**写入持久化内存。默认提示明确指出模型*可以回复*，但通常 `NO_REPLY` 是正确的响应，因此用户永远不会看到此轮次。
+活动的内存插件拥有该刷新的提示/路径策略；默认的 `memory-core` 插件会写入 `memory/YYYY-MM-DD.md` 下的标准每日文件。
 
 这由 `agents.defaults.compaction.memoryFlush` 控制：
 
@@ -74,25 +75,25 @@ OpenClaw 针对这些 Markdown 文件提供了两个面向模型的工具：
 
 - **软阈值**：当会话 token 估算值超过
   `contextWindow - reserveTokensFloor - softThresholdTokens` 时触发刷新。
-- **默认静默**：提示词包含 `NO_REPLY`，因此不会传递任何内容。
+- **默认静默**：提示包含 `NO_REPLY`，因此不会发送任何内容。
 - **两个提示词**：一个用户提示词加上一个系统提示词，用于追加提醒。
-- **每个压缩周期执行一次清理**（在 `sessions.json` 中跟踪）。
-- **工作区必须可写**：如果会话在 `workspaceAccess: "ro"` 或 `"none"` 中以沙箱隔离方式运行，则跳过清理。
+- **每个压缩周期刷新一次**（在 `sessions.json` 中跟踪）。
+- **工作区必须可写**：如果会话在
+  `workspaceAccess: "ro"` 或 `"none"` 的沙箱隔离环境中运行，则跳过刷新。
 
 有关完整的压缩生命周期，请参阅
-[会话管理 + 压缩](/zh/reference/session-management-compaction)。
+[Session management + compaction](/en/reference/session-management-compaction)。
 
 ## 向量记忆搜索
 
-OpenClaw 可以在 `MEMORY.md` 和 `memory/*.md` 上构建小型向量索引，以便
-语义查询即使在措辞不同的情况下也能找到相关笔记。混合搜索
-（BM25 + 向量）可用于将语义匹配与精确关键字
-查找相结合。
+OpenClaw 可以基于 `MEMORY.md` 和 `memory/*.md` 构建一个小型向量索引，以便即使措辞不同，语义查询也能找到相关的笔记。混合搜索
+（BM25 + 向量）可用于将语义匹配与精确关键字查找结合起来。
 
-记忆搜索支持多个嵌入提供商（OpenAI、Gemini、Voyage、
-Mistral、Ollama 和本地 GGUF 模型）、用于高级检索的可选 QMD 附属后端，以及 MMR 多样性重排序
-和时间衰减等后处理功能。
+内存搜索适配器 ID 来自活动的内存插件。默认的
+`memory-core` 插件为 OpenAI、Gemini、Voyage、Mistral、
+Ollama 和本地 GGUF 模型提供了内置支持，外加一个可选的 QMD 边车后端，用于高级检索和后处理功能，例如 MMR 多样性重排序
+和时间衰减。
 
 有关完整的配置参考——包括嵌入提供商设置、QMD
-后端、混合搜索调整、多模态记忆和所有配置选项——请参阅
-[记忆配置参考](/zh/reference/memory-config)。
+后端、混合搜索调整、多模态内存和所有配置旋钮——请参阅
+[Memory configuration reference](/en/reference/memory-config)。

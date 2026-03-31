@@ -91,7 +91,7 @@ Ese campo también acepta objetos SecretRef.
 
 **Vía entorno:** establezca `PERPLEXITY_API_KEY` o `OPENROUTER_API_KEY`
 en el entorno de proceso de Gateway. Para una instalación de puerta de enlace, póngalo en
-`~/.openclaw/.env` (o en su entorno de servicio). Consulte [Env vars](/es/help/faq#env-vars-and-env-loading).
+`~/.openclaw/.env` (o en su entorno de servicio). Consulte [Env vars](/en/help/faq#env-vars-and-env-loading).
 
 Si `provider: "perplexity"` está configurado y el SecretRef de la clave de Perplexidad no está resuelto sin un respaldo de entorno, el inicio/recarga falla rápidamente.
 
@@ -170,5 +170,5 @@ await web_search({
 - OpenRouter o `plugins.entries.perplexity.config.webSearch.baseUrl` / `model` explícitos cambia Perplexity de nuevo a completaciones de chat Sonar para mayor compatibilidad
 - Los resultados se almacenan en caché durante 15 minutos de forma predeterminada (configurable mediante `cacheTtlMinutes`)
 
-Consulte [Herramientas web](/es/tools/web) para ver la configuración completa de web_search.
+Consulte [Herramientas web](/en/tools/web) para ver la configuración completa de web_search.
 Consulte [Documentación de la API de búsqueda de Perplexity](https://docs.perplexity.ai/docs/search/quickstart) para más detalles.

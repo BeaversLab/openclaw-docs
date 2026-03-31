@@ -116,7 +116,7 @@ Firmas comunes:
 
 Relacionado:
 
-- [/automation/cron-jobs](/es/automation/cron-jobs)
-- [/gateway/heartbeat](/es/gateway/heartbeat)
-- [/automation/cron-vs-heartbeat](/es/automation/cron-vs-heartbeat)
-- [/concepts/timezone](/es/concepts/timezone)
+- [/automation/cron-jobs](/en/automation/cron-jobs)
+- [/gateway/heartbeat](/en/gateway/heartbeat)
+- [/automation/cron-vs-heartbeat](/en/automation/cron-vs-heartbeat)
+- [/concepts/timezone](/en/concepts/timezone)

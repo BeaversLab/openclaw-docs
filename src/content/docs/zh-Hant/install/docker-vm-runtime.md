@@ -71,7 +71,7 @@ ENV NODE_ENV=production
 CMD ["node","dist/index.js"]
 ```
 
-<Note>上述下載 URL 適用於 x86_64 (amd64)。對於基於 ARM 的 VM（例如 Hetzner ARM、GCP Tau T2A），請將下載 URL 替換為各工具發行頁面中適當的 ARM64 版本。</Note>
+<Note>上述下載 URL 適用於 x86_64 (amd64)。對於基於 ARM 的 VM（例如 Hetzner ARM、GCP Tau T2A），請將下載 URL 替換為各工具發布頁面中適當的 ARM64 變體。</Note>
 
 ## 建構與啟動
 

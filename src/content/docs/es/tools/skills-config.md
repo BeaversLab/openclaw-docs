@@ -51,11 +51,14 @@ Ejemplos:
 
 ## Campos
 
-- `allowBundled`: lista de permitidos opcional solo para habilidades **incluidas** (bundled). Cuando se establece, solo las habilidades incluidas en la lista son elegibles (las habilidades administradas/del espacio de trabajo no se ven afectadas).
-- `load.extraDirs`: directorios de habilidades adicionales para escanear (menor prioridad).
-- `load.watch`: vigilar las carpetas de habilidades y actualizar la instantánea de habilidades (predeterminado: true).
-- `load.watchDebounceMs`: tiempo de espera para los eventos del observador de habilidades en milisegundos (predeterminado: 250).
-- `install.preferBrew`: preferir los instaladores brew cuando estén disponibles (predeterminado: true).
+- Las raíces de habilidades integradas siempre incluyen `~/.openclaw/skills`, `~/.agents/skills`,
+  `<workspace>/.agents/skills` y `<workspace>/skills`.
+- `allowBundled`: lista de permitidos opcional solo para habilidades **incluidas (bundled)**. Cuando se establece, solo
+  las habilidades incluidas en la lista son elegibles (las habilidades administradas, de agente y de espacio de trabajo no se ven afectadas).
+- `load.extraDirs`: directorios de habilidades adicionales para escanear (menor precedencia).
+- `load.watch`: observar las carpetas de habilidades y actualizar la instantánea de habilidades (predeterminado: true).
+- `load.watchDebounceMs`: tiempo de espera (debounce) para eventos del observador de habilidades en milisegundos (predeterminado: 250).
+- `install.preferBrew`: preferir instaladores de brew cuando estén disponibles (predeterminado: true).
 - `install.nodeManager`: preferencia del instalador de node (`npm` | `pnpm` | `yarn` | `bun`, predeterminado: npm).
   Esto solo afecta las **instalaciones de habilidades**; el tiempo de ejecución de Gateway aún debe ser Node
   (no se recomienda Bun para WhatsApp/Telegram).
@@ -65,21 +68,26 @@ Campos por habilidad:
 
 - `enabled`: establezca `false` para deshabilitar una habilidad incluso si está incluida/instalada.
 - `env`: variables de entorno inyectadas para la ejecución del agente (solo si aún no están establecidas).
-- `apiKey`: conveniencia opcional para habilidades que declaran una variable de entorno principal.
+- `apiKey`: comodidad opcional para habilidades que declaran una variable de entorno principal.
   Admite cadena de texto sin formato u objeto SecretRef (`{ source, provider, id }`).
 
 ## Notas
 
-- Las claves bajo `entries` se asignan al nombre de la habilidad de manera predeterminada. Si una habilidad define `metadata.openclaw.skillKey`, use esa clave en su lugar.
+- Las claves bajo `entries` se asignan al nombre de la habilidad de forma predeterminada. Si una habilidad define
+  `metadata.openclaw.skillKey`, use esa clave en su lugar.
+- La precedencia de carga es `<workspace>/skills` → `<workspace>/.agents/skills` →
+  `~/.agents/skills` → `~/.openclaw/skills` → habilidades incluidas →
+  `skills.load.extraDirs`.
 - Los cambios en las habilidades se detectan en el siguiente turno del agente cuando el observador está habilitado.
 
-### Habilidades en entorno limitado + variables de entorno
+### Habilidades en sandbox + variables de entorno
 
-Cuando una sesión está **sandboxed**, los procesos de las habilidades se ejecutan dentro de Docker. El sandbox **no** hereda el `process.env` del host.
+Cuando una sesión está en **sandbox**, los procesos de habilidad se ejecutan dentro de Docker. El sandbox
+**no** hereda el `process.env` del host.
 
-Usa uno de:
+Use una de las siguientes opciones:
 
 - `agents.defaults.sandbox.docker.env` (o `agents.list[].sandbox.docker.env` por agente)
-- incorporar el env en tu imagen sandbox personalizada
+- incorpore las variables de entorno en su imagen de sandbox personalizada
 
-El `env` global y el `skills.entries.<skill>.env/apiKey` solo se aplican a las ejecuciones en el **host**.
+Las `env` y `skills.entries.<skill>.env/apiKey` globales solo se aplican a ejecuciones en el **host**.

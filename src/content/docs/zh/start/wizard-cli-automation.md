@@ -11,7 +11,7 @@ sidebarTitle: "CLI 自动化"
 
 使用 `--non-interactive` 自动化 `openclaw onboard`。
 
-<Note>`--json` 并不意味着非交互模式。在脚本中请使用 `--non-interactive`（和 `--workspace`）。</Note>
+<Note>`--json` 并不意味着非交互模式。在脚本中请使用 `--non-interactive`（以及 `--workspace`）。</Note>
 
 ## 基准非交互式示例
 
@@ -208,6 +208,6 @@ openclaw agents add work \
 
 ## 相关文档
 
-- 新手引导中心：[CLI (CLI)](/zh/start/wizard)
-- 完整参考：[CLI 设置参考](/zh/start/wizard-cli-reference)
-- 命令参考：[`openclaw onboard`](/zh/cli/onboard)
+- 新手引导中心：[CLI (CLI)](/en/start/wizard)
+- 完整参考：[CLI 设置参考](/en/start/wizard-cli-reference)
+- 命令参考：[`openclaw onboard`](/en/cli/onboard)

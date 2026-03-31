@@ -10,7 +10,7 @@ title: "Ollama"
 
 Ollama es un tiempo de ejecución de LLM local que facilita la ejecución de modelos de código abierto en tu máquina. OpenClaw se integra con la API nativa de Ollama (`/api/chat`), admite streaming y llamadas a herramientas, y puede descubrir automáticamente los modelos locales de Ollama cuando te suscribes con `OLLAMA_API_KEY` (o un perfil de autenticación) y no defines una entrada explícita de `models.providers.ollama`.
 
-<Warning>**Usuarios remotos de Ollama**: No utilicen la URL compatible con OpenAI `/v1` (`http://host:11434/v1`) con OpenClaw. Esto interrumpe las llamadas a herramientas y los modelos pueden generar el JSON de la herramienta en bruto como texto sin formato. Utilicen la URL de la API nativa de Ollama en su lugar: `baseUrl: "http://host:11434"` (sin `/v1`).</Warning>
+<Warning>**Usuarios remotos de Ollama**: No utilicen la URL compatible con OpenAI `/v1` (`http://host:11434/v1`) con OpenClaw. Esto interrumpe la llamada de herramientas y los modelos pueden generar el JSON de las herramientas sin formato como texto plano. Utilicen en su lugar la URL de la API nativa de Ollama: `baseUrl: "http://host:11434"` (sin `/v1`).</Warning>
 
 ## Inicio rápido
 
@@ -204,7 +204,7 @@ Si Ollama se está ejecutando en un host o puerto diferente (la configuración e
 }
 ```
 
-<Warning>No añadas `/v1` a la URL. La ruta `/v1` utiliza el modo compatible con OpenAI, donde la llamada a herramientas no es fiable. Usa la URL base de Ollama sin un sufijo de ruta.</Warning>
+<Warning>No añada `/v1` a la URL. La ruta `/v1` utiliza el modo compatible con OpenAI, donde la llamada de herramientas no es fiable. Utilice la URL base de Ollama sin un sufijo de ruta.</Warning>
 
 ### Selección de modelo
 
@@ -251,7 +251,7 @@ La integración de Ollama de OpenClaw utiliza la **API nativa de Ollama** (`/api
 
 #### Modo heredado compatible con OpenAI
 
-<Warning>**La llamada de herramientas no es confiable en el modo compatible con OpenAI.** Use este modo solo si necesita el formato de OpenAI para un proxy y no depende del comportamiento nativo de la llamada de herramientas.</Warning>
+<Warning>**La llamada de herramientas no es fiable en el modo compatible con OpenAI.** Utilice este modo solo si necesita el formato OpenAI para un proxy y no depende del comportamiento nativo de la llamada de herramientas.</Warning>
 
 Si necesita usar el punto final compatible con OpenAI en su lugar (por ejemplo, detrás de un proxy que solo admite el formato OpenAI), establezca `api: "openai-completions"` explícitamente:
 
@@ -341,6 +341,6 @@ ollama serve
 
 ## Véase también
 
-- [Proveedores de modelos](/es/concepts/model-providers) - Resumen de todos los proveedores
-- [Selección de modelos](/es/concepts/models) - Cómo elegir modelos
-- [Configuración](/es/gateway/configuration) - Referencia completa de configuración
+- [Proveedores de modelos](/en/concepts/model-providers) - Resumen de todos los proveedores
+- [Selección de modelos](/en/concepts/models) - Cómo elegir modelos
+- [Configuración](/en/gateway/configuration) - Referencia completa de configuración

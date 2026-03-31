@@ -15,35 +15,35 @@ Ejecute el OpenClaw Gateway en cualquier servidor Linux o VPS en la nube. Esta p
 ## Elegir un proveedor
 
 <CardGroup cols={2}>
-  <Card title="Railway" href="/es/install/railway">
-    Configuración con un solo clic en el navegador
+  <Card title="Railway" href="/en/install/railway">
+    Configuración con un clic desde el navegador
   </Card>
-  <Card title="Northflank" href="/es/install/northflank">
-    Configuración con un solo clic en el navegador
+  <Card title="Northflank" href="/en/install/northflank">
+    Configuración con un clic desde el navegador
   </Card>
-  <Card title="DigitalOcean" href="/es/install/digitalocean">
-    VPS de pago sencillo
+  <Card title="DigitalOcean" href="/en/install/digitalocean">
+    VPS pago sencillo
   </Card>
-  <Card title="Oracle Cloud" href="/es/install/oracle">
-    Nivel ARM Always Free
+  <Card title="Oracle Cloud" href="/en/install/oracle">
+    Nivel ARM siempre gratuito
   </Card>
-  <Card title="Fly.io" href="/es/install/fly">
+  <Card title="Fly.io" href="/en/install/fly">
     Fly Machines
   </Card>
-  <Card title="Hetzner" href="/es/install/hetzner">
+  <Card title="Hetzner" href="/en/install/hetzner">
     Docker en VPS de Hetzner
   </Card>
-  <Card title="GCP" href="/es/install/gcp">
+  <Card title="GCP" href="/en/install/gcp">
     Compute Engine
   </Card>
-  <Card title="Azure" href="/es/install/azure">
+  <Card title="Azure" href="/en/install/azure">
     Máquina virtual Linux
   </Card>
-  <Card title="exe.dev" href="/es/install/exe-dev">
-    MV con proxy HTTPS
+  <Card title="exe.dev" href="/en/install/exe-dev">
+    VM con proxy HTTPS
   </Card>
-  <Card title="Raspberry Pi" href="/es/install/raspberry-pi">
-    ARM autoalojado
+  <Card title="Raspberry Pi" href="/en/install/raspberry-pi">
+    Autoalojado ARM
   </Card>
 </CardGroup>
 
@@ -60,7 +60,7 @@ Un video tutorial de la comunidad está disponible en
 - Predeterminado seguro: mantén el Gateway en loopback y accede a él mediante túnel SSH o Tailscale Serve.
   Si te enlazas a `lan` o `tailnet`, requiere `gateway.auth.token` o `gateway.auth.password`.
 
-Páginas relacionadas: [acceso remoto a Gateway](/es/gateway/remote), [centro de plataformas](/es/platforms).
+Páginas relacionadas: [acceso remoto a Gateway](/en/gateway/remote), [centro de plataformas](/en/platforms).
 
 ## Agente empresarial compartido en un VPS
 
@@ -70,7 +70,7 @@ Ejecutar un solo agente para un equipo es una configuración válida cuando cada
 - No inicies sesión en ese tiempo de ejecución con cuentas personales de Apple/Google ni perfiles personales de navegador/gestor de contraseñas.
 - Si los usuarios son adversarios entre sí, sepáralos por gateway/host/usuario del SO.
 
-Detalles del modelo de seguridad: [Seguridad](/es/gateway/security).
+Detalles del modelo de seguridad: [Seguridad](/en/gateway/security).
 
 ## Uso de nodos con un VPS
 
@@ -78,7 +78,7 @@ Puede mantener el Gateway en la nube y emparejar **nodos** en sus dispositivos l
 (Mac/iOS/Android/headless). Los nodos proporcionan capacidades de pantalla/cámara/lienzo y `system.run`
 locales mientras el Gateway permanece en la nube.
 
-Documentación: [Nodos](/es/nodes), [CLI de Nodos](/es/cli/nodes).
+Documentación: [Nodos](/en/nodes), [CLI de Nodos](/en/cli/nodes).
 
 ## Ajustes de inicio para máquinas virtuales pequeñas y hosts ARM
 
@@ -96,7 +96,7 @@ source ~/.bashrc
 - `NODE_COMPILE_CACHE` mejora los tiempos de inicio de comandos repetidos.
 - `OPENCLAW_NO_RESPAWN=1` evita la sobrecarga de inicio adicional de una ruta de auto-reinicio.
 - La primera ejecución del comando calienta el caché; las ejecuciones posteriores son más rápidas.
-- Para detalles específicos de Raspberry Pi, consulte [Raspberry Pi](/es/install/raspberry-pi).
+- Para detalles específicos de Raspberry Pi, consulte [Raspberry Pi](/en/install/raspberry-pi).
 
 ### lista de verificación de ajustes de systemd (opcional)
 

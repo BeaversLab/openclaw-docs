@@ -18,7 +18,7 @@ Zalo Personal 作为插件提供，不包含在核心安装中。
 
 - 通过 CLI 安装：`openclaw plugins install @openclaw/zalouser`
 - 或者从源代码检出：`openclaw plugins install ./extensions/zalouser`
-- 详情：[插件](/zh/tools/plugin)
+- 详情：[插件](/en/tools/plugin)
 
 不需要外部 `zca`/`openzca` CLI 二进制文件。
 
@@ -161,7 +161,7 @@ openclaw directory groups list --channel zalouser --query "work"
 - OpenClaw 在发送回复之前会发送正在输入事件（尽力而为）。
 - 渠道操作中支持针对 `zalouser` 的消息反应操作 `react`。
   - 使用 `remove: true` 从消息中移除特定的反应表情符号。
-  - 反应语义：[Reactions](/zh/tools/reactions)
+  - 反应语义：[Reactions](/en/tools/reactions)
 - 对于包含事件元数据的传入消息，OpenClaw 会发送已送达和已读回执（尽力而为）。
 
 ## 故障排除

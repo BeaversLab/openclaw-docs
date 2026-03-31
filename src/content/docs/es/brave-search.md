@@ -90,4 +90,4 @@ await web_search({
 - El plan Search incluye el endpoint de LLM Context y derechos de inferencia de IA. Almacenar resultados para entrenar o ajustar modelos requiere un plan con derechos de almacenamiento explícitos. Consulte los [Términos de servicio de Brave](https://api-dashboard.search.brave.com/terms-of-service).
 - Los resultados se almacenan en caché durante 15 minutos de forma predeterminada (configurable vía `cacheTtlMinutes`).
 
-Consulte [Herramientas web](/es/tools/web) para obtener la configuración completa de web_search.
+Consulte [Herramientas web](/en/tools/web) para obtener la configuración completa de web_search.

@@ -21,18 +21,18 @@ Las aplicaciones complementarias nativas de Linux están planeadas. Las contribu
 4. Desde tu portátil: `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. Abre `http://127.0.0.1:18789/` y pega tu token
 
-Guía completa del servidor Linux: [Linux Server](/es/vps). Ejemplo paso a paso de VPS: [exe.dev](/es/install/exe-dev)
+Guía completa del servidor Linux: [Linux Server](/en/vps). Ejemplo paso a paso de VPS: [exe.dev](/en/install/exe-dev)
 
 ## Instalación
 
-- [Introducción](/es/start/getting-started)
-- [Instalación y actualizaciones](/es/install/updating)
-- Flujos opcionales: [Bun (experimental)](/es/install/bun), [Nix](/es/install/nix), [Docker](/es/install/docker)
+- [Introducción](/en/start/getting-started)
+- [Instalación y actualizaciones](/en/install/updating)
+- Flujos opcionales: [Bun (experimental)](/en/install/bun), [Nix](/en/install/nix), [Docker](/en/install/docker)
 
 ## Gateway
 
-- [Manual de Gateway](/es/gateway)
-- [Configuración](/es/gateway/configuration)
+- [Manual de Gateway](/en/gateway)
+- [Configuración](/en/gateway/configuration)
 
 ## Instalación del servicio Gateway (CLI)
 
@@ -64,7 +64,7 @@ openclaw doctor
 
 ## Control del sistema (unidad de usuario systemd)
 
-OpenClaw instala un servicio de **usuario** de systemd por defecto. Use un servicio de **sistema** para servidores compartidos o siempre activos. El ejemplo completo de la unidad y la guía se encuentran en el [Gateway runbook](/es/gateway).
+OpenClaw instala un servicio de **usuario** de systemd por defecto. Use un servicio de **sistema** para servidores compartidos o siempre activos. El ejemplo completo de la unidad y la guía se encuentran en el [Gateway runbook](/en/gateway).
 
 Configuración mínima:
 

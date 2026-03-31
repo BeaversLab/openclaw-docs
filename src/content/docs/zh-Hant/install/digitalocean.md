@@ -71,7 +71,7 @@ title: "DigitalOcean"
     ```
   </Step>
 
-<Step title="驗證 gateway">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
+<Step title="驗證閘道">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
 
   <Step title="存取控制 UI">
     Gateway 預設會綁定到 loopback。請選擇其中一個選項。

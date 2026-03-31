@@ -52,7 +52,7 @@ OpenClaw 附帶三個安裝腳本，由 `openclaw.ai` 提供。
   </Tab>
 </Tabs>
 
-<Note>如果安裝成功但在新的終端機中找不到 `openclaw`，請參閱 [Node.js 疑難排解](/en/install/node#troubleshooting)。</Note>
+<Note>如果安裝成功但在新終端機中找不到 `openclaw`，請參閱 [Node.js 疑難排解](/en/install/node#troubleshooting)。</Note>
 
 ---
 
@@ -64,10 +64,10 @@ OpenClaw 附帶三個安裝腳本，由 `openclaw.ai` 提供。
 
 <Steps>
   <Step title="偵測作業系統">支援 macOS 和 Linux（包括 WSL）。如果偵測到 macOS，會在缺少時安裝 Homebrew。</Step>
-  <Step title="確保預設使用 Node.js 24">檢查 Node 版本並視需要安裝 Node 24（macOS 上使用 Homebrew，Linux 上使用針對 apt/dnf/yum 的 NodeSource 設定腳本）。OpenClaw 為了相容性，目前仍支援 Node 22 LTS (`22.14+`)。</Step>
-  <Step title="確保 Git">如果缺少 Git 則進行安裝。</Step>
-  <Step title="安裝 OpenClaw">- `npm` 方法（預設）：全域 npm 安裝 - `git` 方法：複製/更新 repo，使用 pnpm 安裝 deps，建置，然後在 `~/.local/bin/openclaw` 安裝包裝程式</Step>
-  <Step title="Post-install tasks">- 在升級和 git 安裝上運行 `openclaw doctor --non-interactive`（盡最大努力）- 在適當時嘗試入門（TTY 可用、未停用入門、且 bootstrap/config 檢查通過）- 預設值 `SHARP_IGNORE_GLOBAL_LIBVIPS=1`</Step>
+  <Step title="預設確保 Node.js 24">檢查 Node 版本並視需要安裝 Node 24（macOS 上使用 Homebrew，Linux apt/dnf/yum 上使用 NodeSource 設定腳本）。OpenClaw 為了相容性，目前仍支援 Node 22 LTS（即 `22.14+`）。</Step>
+  <Step title="確保 Git">若缺少 Git 則予以安裝。</Step>
+  <Step title="安裝 OpenClaw">- `npm` 方法（預設）：全域 npm 安裝 - `git` 方法：複製/更新 repo，使用 pnpm 安裝依賴，建置，然後安裝 wrapper 於 `~/.local/bin/openclaw`</Step>
+  <Step title="安裝後任務">- 在升級和 git 安裝時執行 `openclaw doctor --non-interactive`（盡力而為） - 在適當時候嘗試入門引導（TTY 可用、未停用入門引導，且 bootstrap/config 檢查通過） - 預設 `SHARP_IGNORE_GLOBAL_LIBVIPS=1`</Step>
 </Steps>
 
 ### 來源檢出偵測
@@ -135,7 +135,7 @@ OpenClaw 附帶三個安裝腳本，由 `openclaw.ai` 提供。
 
 ## install-cli.sh
 
-<Info>專為您希望所有內容都位於本地前綴（預設 `~/.openclaw`）下且沒有系統 Node 依賴項的環境而設計。</Info>
+<Info>專為您希望所有內容都在本地前綴（預設為 `~/.openclaw`）下且沒有系統 Node 依賴的環境所設計。</Info>
 
 ### Flow (install-cli.sh)
 
@@ -198,10 +198,10 @@ OpenClaw 附帶三個安裝腳本，由 `openclaw.ai` 提供。
 ### 流程 (install.ps1)
 
 <Steps>
-  <Step title="確保 PowerShell + Windows 環境">需要 PowerShell 5+。</Step>
-  <Step title="預設確保使用 Node.js 24">如果缺失，將嘗試透過 winget、Chocolatey 和 Scoop 進行安裝。為了相容性，目前仍支援 Node 22 LTS（`22.14+`）。</Step>
-  <Step title="安裝 OpenClaw">- `npm` 方法（預設）：使用選定的 `-Tag` 進行全域 npm 安裝 - `git` 方法：複製/更新 repo，使用 pnpm 安裝/建置，並在 `%USERPROFILE%\.local\bin\openclaw.cmd` 安裝 wrapper</Step>
-  <Step title="安裝後任務">盡可能將所需的 bin 目錄加入使用者的 PATH，然後在升級和 git 安裝上執行 `openclaw doctor --non-interactive`（盡力而為）。</Step>
+  <Step title="Ensure PowerShell + Windows environment">需要 PowerShell 5 或更高版本。</Step>
+  <Step title="Ensure Node.js 24 by default">如果缺少，嘗試透過 winget，然後 Chocolatey，再來是 Scoop 進行安裝。為了相容性，目前仍支援 Node 22 LTS，即 `22.14+`。</Step>
+  <Step title="Install OpenClaw">- `npm` 方法（預設）：使用所選的 `-Tag` 進行全域 npm 安裝 - `git` 方法：克隆/更新 repo，使用 pnpm 安裝/建置，並在 `%USERPROFILE%\.local\bin\openclaw.cmd` 安裝 wrapper</Step>
+  <Step title="安裝後任務">盡可能將所需的 bin 目錄新增至使用者的 PATH，然後在升級和 git 安裝時執行 `openclaw doctor --non-interactive`（盡力而為）。</Step>
 </Steps>
 
 ### 範例 (install.ps1)
@@ -242,7 +242,7 @@ OpenClaw 附帶三個安裝腳本，由 `openclaw.ai` 提供。
   </Accordion>
 </AccordionGroup>
 
-<Note>如果使用 `-InstallMethod git` 但缺少 Git，腳本會退出並列印 Git for Windows 連結。</Note>
+<Note>如果使用了 `-InstallMethod git` 但缺少 Git，腳本將退出並列印 Git for Windows 的連結。</Note>
 
 ---
 
@@ -266,7 +266,7 @@ OpenClaw 附帶三個安裝腳本，由 `openclaw.ai` 提供。
     `git` 安裝方法需要 Git。對於 `npm` 安裝，仍然會檢查/安裝 Git，以避免在相依性使用 git URLs 時發生 `spawn git ENOENT` 失敗。
   </Accordion>
 
-<Accordion title="為什麼 npm 在 Linux 上會遇到 EACCES？">有些 Linux 設定將 npm 全域前綴指向 root 擁有的路徑。`install.sh` 可以將前綴切換到 `~/.npm-global` 並將 PATH 匯出附加到 shell rc 檔案（當這些檔案存在時）。</Accordion>
+<Accordion title="為什麼 npm 在 Linux 上會出現 EACCES 錯誤？">某些 Linux 設定將 npm 全域前綴指向 root 擁有的路徑。`install.sh` 可以將前綴切換至 `~/.npm-global`，並將 PATH 匯出附加至 shell rc 檔案（當這些檔案存在時）。</Accordion>
 
   <Accordion title="sharp/libvips 問題">
     這些腳本預設 `SHARP_IGNORE_GLOBAL_LIBVIPS=1` 以避免 sharp 針對系統 libvips 進行建置。若要覆寫：
@@ -277,9 +277,9 @@ OpenClaw 附帶三個安裝腳本，由 `openclaw.ai` 提供。
 
   </Accordion>
 
-<Accordion title='Windows: "npm error spawn git / ENOENT"'>安裝 Git for Windows，重新開啟 PowerShell，並重新執行安裝程式。</Accordion>
+<Accordion title="Windows：「npm error spawn git / ENOENT」">安裝 Git for Windows，重新開啟 PowerShell，然後重新執行安裝程式。</Accordion>
 
-<Accordion title='Windows: "openclaw is not recognized"'>執行 `npm config get prefix` 並將該目錄新增到您的使用者 PATH（在 Windows 上不需要 `\bin` 後綴），然後重新開啟 PowerShell。</Accordion>
+<Accordion title='Windows: "openclaw is not recognized"'>執行 `npm config get prefix` 並將該目錄新增至您的使用者 PATH（Windows 上不需要 `\bin` 後綴），然後重新開啟 PowerShell。</Accordion>
 
   <Accordion title="Windows: 如何取得詳細安裝程式輸出">
     `install.ps1` 目前未公開 `-Verbose` 開關。

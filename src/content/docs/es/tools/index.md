@@ -28,22 +28,22 @@ OpenClaw tiene tres capas que trabajan juntas:
   </Step>
 
   <Step title="Las habilidades enseñan al agente cuándo y cómo">
-    Una habilidad es un archivo markdown (`SKILL.md`) inyectado en el mensaje del sistema.
-    Las habilidades dan al agente contexto, restricciones y guía paso a paso para
-    usar las herramientas de manera efectiva. Las habilidades residen en su espacio de trabajo, en carpetas compartidas,
-    o se incluyen dentro de los complementos.
+    Una habilidad es un archivo markdown (`SKILL.md`) inyectado en el indicador del sistema.
+    Las habilidades proporcionan al agente contexto, restricciones y guía paso a paso para
+    utilizar herramientas eficazmente. Las habilidades residen en su espacio de trabajo, en carpetas compartidas,
+    o se incluyen dentro de complementos.
 
-    [Referencia de habilidades](/es/tools/skills) | [Creación de habilidades](/es/tools/creating-skills)
+    [Referencia de habilidades](/en/tools/skills) | [Creación de habilidades](/en/tools/creating-skills)
 
   </Step>
 
-  <Step title="Los complementos empaquetan todo junto">
+  <Step title="Plugins package everything together">
     Un complemento es un paquete que puede registrar cualquier combinación de capacidades:
     canales, proveedores de modelos, herramientas, habilidades, voz, generación de imágenes y más.
-    Algunos complementos son **core** (incluidos con OpenClaw), otros son **externos**
+    Algunos complementos son **principales** (incluidos con OpenClaw), otros son **externos**
     (publicados en npm por la comunidad).
 
-    [Instalar y configurar complementos](/es/tools/plugin) | [Construir el suyo propio](/es/plugins/building-plugins)
+    [Instalar y configurar complementos](/en/tools/plugin) | [Construir el tuyo propio](/en/plugins/building-plugins)
 
   </Step>
 </Steps>
@@ -52,36 +52,38 @@ OpenClaw tiene tres capas que trabajan juntas:
 
 Estas herramientas se incluyen con OpenClaw y están disponibles sin instalar ningún complemento:
 
-| Herramienta                  | Lo que hace                                                                | Página                                  |
-| ---------------------------- | -------------------------------------------------------------------------- | --------------------------------------- |
-| `exec` / `process`           | Ejecutar comandos de shell, gestionar procesos en segundo plano            | [Exec](/es/tools/exec)                  |
-| `browser`                    | Controlar un navegador Chromium (navegar, hacer clic, captura de pantalla) | [Navegador](/es/tools/browser)          |
-| `web_search` / `web_fetch`   | Buscar en la web, obtener el contenido de la página                        | [Web](/es/tools/web)                    |
-| `read` / `write` / `edit`    | E/S de archivos en el espacio de trabajo                                   |                                         |
-| `apply_patch`                | Parches de archivos de múltiples fragmentos                                | [Aplicar parche](/es/tools/apply-patch) |
-| `message`                    | Enviar mensajes a través de todos los canales                              | [Envío de agente](/es/tools/agent-send) |
-| `canvas`                     | Controlar node Canvas (presentar, evaluar, captura instantánea)            |                                         |
-| `nodes`                      | Descubrir y apuntar a dispositivos emparejados                             |                                         |
-| `cron` / `gateway`           | Gestionar trabajos programados, reiniciar puerta de enlace                 |                                         |
-| `image` / `image_generate`   | Analizar o generar imágenes                                                |                                         |
-| `sessions_*` / `agents_list` | Gestión de sesiones, subagentes                                            | [Subagentes](/es/tools/subagents)       |
+| Herramienta                             | Lo que hace                                                                    | Página                                          |
+| --------------------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------- |
+| `exec` / `process`                      | Ejecutar comandos de shell, gestionar procesos en segundo plano                | [Exec](/en/tools/exec)                          |
+| `code_execution`                        | Ejecutar análisis remoto de Python en entorno sandbox                          | [Ejecución de código](/en/tools/code-execution) |
+| `browser`                               | Controlar un navegador Chromium (navegar, hacer clic, captura de pantalla)     | [Navegador](/en/tools/browser)                  |
+| `web_search` / `x_search` / `web_fetch` | Buscar en la web, buscar publicaciones de X, obtener el contenido de la página | [Web](/en/tools/web)                            |
+| `read` / `write` / `edit`               | E/S de archivos en el espacio de trabajo                                       |                                                 |
+| `apply_patch`                           | Parches de archivos multi-hunk                                                 | [Apply Patch](/en/tools/apply-patch)            |
+| `message`                               | Enviar mensajes a través de todos los canales                                  | [Agent Send](/en/tools/agent-send)              |
+| `canvas`                                | Conducir node Canvas (presentar, evaluar, instantánea)                         |                                                 |
+| `nodes`                                 | Descubrir y apuntar a dispositivos emparejados                                 |                                                 |
+| `cron` / `gateway`                      | Gestionar trabajos programados, reiniciar puerta de enlace                     |                                                 |
+| `image` / `image_generate`              | Analizar o generar imágenes                                                    |                                                 |
+| `sessions_*` / `agents_list`            | Gestión de sesiones, subagentes                                                | [Sub-agentes](/en/tools/subagents)              |
 
-Para trabajar con imágenes, use `image` para el análisis y `image_generate` para la generación o edición. Si apunta a `openai/*`, `google/*`, `fal/*` u otro proveedor de imágenes que no sea el predeterminado, configure primero la clave de autenticación/API de ese proveedor.
+Para trabajo con imágenes, usa `image` para el análisis y `image_generate` para la generación o edición. Si apuntas a `openai/*`, `google/*`, `fal/*` u otro proveedor de imágenes no predeterminado, configura primero la clave de autenticación/API de ese proveedor.
 
-### Herramientas proporcionadas por complementos
+### Herramientas proporcionadas por plugins
 
-Los complementos pueden registrar herramientas adicionales. Algunos ejemplos:
+Los plugins pueden registrar herramientas adicionales. Algunos ejemplos:
 
-- [Lobster](/es/tools/lobster) — tiempo de ejecución de flujo de trabajo con tipos y aprobaciones reanudables
-- [Tarea LLM](/es/tools/llm-task) — paso de LLM solo JSON para salida estructurada
-- [Diffs](/es/tools/diffs) — visor y renderizador de diferencias
-- [OpenProse](/es/prose) — orquestación de flujos de trabajo con prioridad de markdown
+- [Lobster](/en/tools/lobster%) — motor de flujo de trabajo tipado con aprobaciones reanudables
+- [LLM Task](/en/tools/llm-task%) — paso LLM solo JSON para salida estructurada
+- [Diffs](/en/tools/diffs%) — visor y renderizador de diferencias
+- [OpenProse](/en/prose) — orquestación de flujos de trabajo con prioridad en markdown
 
 ## Configuración de herramientas
 
 ### Listas de permitidos y denegados
 
-Controle qué herramientas puede llamar el agente mediante `tools.allow` / `tools.deny` en la configuración. Denegar siempre gana a permitir.
+Controla qué herramientas puede llamar el agente mediante `tools.allow` / `tools.deny` en la
+configuración. Denegar siempre tiene prioridad sobre permitir.
 
 ```json5
 {
@@ -94,10 +96,10 @@ Controle qué herramientas puede llamar el agente mediante `tools.allow` / `tool
 
 ### Perfiles de herramientas
 
-`tools.profile` establece una lista de permitidos (allowlist) base antes de que se aplique `allow`/`deny`.
+`tools.profile` establece una lista base de permitidos antes de que se aplique `allow`/`deny`.
 Anulación por agente: `agents.list[].tools.profile`.
 
-| Perfil      | Lo que incluye                                                  |
+| Perfil      | Qué incluye                                                     |
 | ----------- | --------------------------------------------------------------- |
 | `full`      | Todas las herramientas (predeterminado)                         |
 | `coding`    | E/S de archivos, tiempo de ejecución, sesiones, memoria, imagen |
@@ -106,20 +108,20 @@ Anulación por agente: `agents.list[].tools.profile`.
 
 ### Grupos de herramientas
 
-Use atajos `group:*` en las listas de permitir/denegar:
+Usa atajos `group:*` en listas de permitidos/denegados:
 
 | Grupo              | Herramientas                                                                                              |
 | ------------------ | --------------------------------------------------------------------------------------------------------- |
-| `group:runtime`    | exec, bash, proceso                                                                                       |
+| `group:runtime`    | exec, bash, process, code_execution                                                                       |
 | `group:fs`         | read, write, edit, apply_patch                                                                            |
 | `group:sessions`   | sessions_list, sessions_history, sessions_send, sessions_spawn, sessions_yield, subagents, session_status |
 | `group:memory`     | memory_search, memory_get                                                                                 |
-| `group:web`        | web_search, web_fetch                                                                                     |
-| `group:ui`         | navegador, lienzo                                                                                         |
-| `group:automation` | cron, puerta de enlace                                                                                    |
-| `group:messaging`  | mensaje                                                                                                   |
-| `group:nodes`      | nodos                                                                                                     |
-| `group:openclaw`   | Todas las herramientas integradas de OpenClaw (excluye herramientas de complementos)                      |
+| `group:web`        | web_search, x_search, web_fetch                                                                           |
+| `group:ui`         | browser, canvas                                                                                           |
+| `group:automation` | cron, gateway                                                                                             |
+| `group:messaging`  | message                                                                                                   |
+| `group:nodes`      | nodes                                                                                                     |
+| `group:openclaw`   | Todas las herramientas integradas de OpenClaw (excluye los complementos)                                  |
 
 ### Restricciones específicas del proveedor
 

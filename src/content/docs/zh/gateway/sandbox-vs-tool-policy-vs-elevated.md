@@ -39,7 +39,7 @@ openclaw sandbox explain --json
 - `"non-main"`：仅非主会话会被置于沙箱中（这是群组/频道常见的“意外”）。
 - `"all"`：所有内容都置于沙箱中。
 
-有关完整矩阵（作用域、工作区挂载、镜像），请参阅 [沙箱隔离](/zh/gateway/sandboxing)。
+有关完整矩阵（作用域、工作区挂载、镜像），请参阅 [沙箱隔离](/en/gateway/sandboxing)。
 
 ### 绑定挂载（安全快速检查）
 
@@ -110,7 +110,7 @@ openclaw sandbox explain --json
 - 启用方式：`tools.elevated.enabled`（以及可选的 `agents.list[].tools.elevated.enabled`）
 - 发送方白名单：`tools.elevated.allowFrom.<provider>`（以及可选的 `agents.list[].tools.elevated.allowFrom.<provider>`）
 
-请参阅 [Elevated Mode](/zh/tools/elevated)。
+请参阅 [Elevated Mode](/en/tools/elevated)。
 
 ## 常见的“沙箱监狱”修复
 
@@ -129,6 +129,6 @@ openclaw sandbox explain --json
 
 ## 另请参阅
 
-- [沙箱隔离](/zh/gateway/sandboxing) -- 完整的沙箱参考（模式、范围、后端、镜像）
-- [多智能体沙箱和工具](/zh/tools/multi-agent-sandbox-tools) -- 每个智能体的覆盖和优先级
-- [提升模式](/zh/tools/elevated)
+- [沙箱隔离](/en/gateway/sandboxing) -- 完整的沙箱参考（模式、范围、后端、镜像）
+- [多智能体沙箱和工具](/en/tools/multi-agent-sandbox-tools) -- 每个智能体的覆盖和优先级
+- [提升模式](/en/tools/elevated)

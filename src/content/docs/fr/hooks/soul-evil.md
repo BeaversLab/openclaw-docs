@@ -62,4 +62,4 @@ Créez `SOUL_EVIL.md` à la racine de l'espace de travail de l'agent (à côté 
 
 ## Voir aussi
 
-- [Crochets](/fr/hooks)
+- [Crochets](/en/hooks)

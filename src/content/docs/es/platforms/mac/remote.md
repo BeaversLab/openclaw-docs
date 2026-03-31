@@ -58,7 +58,7 @@ El modo remoto admite dos transportes:
 - Prefiera los enlaces de loopback en el host remoto y conéctese a través de SSH o Tailscale.
 - El túnel SSH utiliza verificación estricta de clave de host; confíe primero en la clave del host para que exista en `~/.ssh/known_hosts`.
 - Si vincula la Pasarela a una interfaz que no sea de loopback, requiera autenticación por token/contraseña.
-- Consulte [Seguridad](/es/gateway/security) y [Tailscale](/es/gateway/tailscale).
+- Consulte [Seguridad](/en/gateway/security) y [Tailscale](/en/gateway/tailscale).
 
 ## Flujo de inicio de sesión de WhatsApp (remoto)
 

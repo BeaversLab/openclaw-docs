@@ -210,7 +210,7 @@ openclaw message send --channel discord \
   --components '{"text":"Choose a path","blocks":[{"type":"actions","buttons":[{"label":"Approve","style":"success"},{"label":"Decline","style":"danger"}]}]}'
 ```
 
-Consulta los [componentes de Discord](/es/channels/discord#interactive-components) para ver el esquema completo.
+Consulta los [componentes de Discord](/en/channels/discord#interactive-components) para ver el esquema completo.
 
 Crear una encuesta de Discord:
 

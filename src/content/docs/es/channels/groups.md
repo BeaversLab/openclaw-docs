@@ -65,7 +65,7 @@ Esto le da un “cerebro” de agente (espacio de trabajo compartido + memoria),
 - **MD**: herramientas completas (host)
 - **Grupos**: sandbox + herramientas restringidas (Docker)
 
-> Si necesita espacios de trabajo/personas verdaderamente separados (“personal” y “público” nunca deben mezclarse), use un segundo agente + enlaces. Consulte [Enrutamiento multiagente](/es/concepts/multi-agent).
+> Si necesita espacios de trabajo/personas realmente separados (lo “personal” y lo “público” nunca deben mezclarse), use un segundo agente + enlaces. Consulte [Enrutamiento multiagente](/en/concepts/multi-agent).
 
 Ejemplo (MD en el host, grupos en sandbox y solo herramientas de mensajería):
 
@@ -116,9 +116,9 @@ Ejemplo (MD en el host, grupos en sandbox y solo herramientas de mensajería):
 
 Relacionado:
 
-- Claves de configuración y valores predeterminados: [Configuración de puerta de enlace](/es/gateway/configuration-reference#agentsdefaultssandbox)
-- Depurar por qué una herramienta está bloqueada: [Sandbox vs. Política de herramientas vs. Elevado](/es/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Detalles de montajes de enlace: [Sandboxing](/es/gateway/sandboxing#custom-bind-mounts)
+- Claves de configuración y valores predeterminados: [Configuración de puerta de enlace](/en/gateway/configuration-reference#agentsdefaultssandbox)
+- Depuración de por qué una herramienta está bloqueada: [Sandbox vs Política de herramientas vs Elevado](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Detalles de montajes de enlace (bind mounts): [Sandboxing](/en/gateway/sandboxing#custom-bind-mounts)
 
 ## Etiquetas de visualización
 
@@ -366,14 +366,18 @@ Las cargas útiles entrantes del grupo establecen:
 - `WasMentioned` (resultado de filtrado de menciones)
 - Los temas del foro de Telegram también incluyen `MessageThreadId` y `IsForum`.
 
-El mensaje del sistema del agente incluye una introducción al grupo en el primer turno de una nueva sesión de grupo. Recuerda al modelo que responda como un humano, que evite las tablas de Markdown y que evite escribir secuencias literales de `\n`.
+Notas específicas del canal:
 
-## Especificaciones de iMessage
+- BlueBubbles opcionalmente puede enriquecer a los participantes sin nombre de grupos de macOS desde la base de datos de contactos local antes de llenar `GroupMembers`. Esto está desactivado de forma predeterminada y solo se ejecuta después de que pasa el filtrado de grupo normal.
 
-- Prefiera `chat_id:<id>` al enrutar o crear listas de permitidos.
+El mensaje del sistema del agente incluye una introducción de grupo en el primer turno de una nueva sesión de grupo. Recuerda al modelo que responda como un humano, evite tablas de Markdown y evite escribir secuencias literales de `\n`.
+
+## Específicos de iMessage
+
+- Prefiera `chat_id:<id>` al enrutar o crear listas permitidas.
 - Listar chats: `imsg chats --limit 20`.
 - Las respuestas grupales siempre vuelven al mismo `chat_id`.
 
-## Especificaciones de WhatsApp
+## Específicos de WhatsApp
 
-Consulte [Mensajes grupales](/es/channels/group-messages) para obtener información sobre el comportamiento exclusivo de WhatsApp (inyección de historial, detalles del manejo de menciones).
+Consulte [Mensajes de grupo](/en/channels/group-messages) para ver el comportamiento exclusivo de WhatsApp (inyección de historial, detalles del manejo de menciones).

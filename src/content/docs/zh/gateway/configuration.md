@@ -17,9 +17,9 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 - 设置模型、工具、沙箱隔离 或自动化 (cron, hooks)
 - 调整会话、媒体、网络或 UI
 
-有关每个可用字段，请参阅[完整参考](/zh/gateway/configuration-reference)。
+有关每个可用字段，请参阅[完整参考](/en/gateway/configuration-reference)。
 
-<Tip>**刚开始接触配置？** 请从 `openclaw onboard` 开始进行交互式设置，或者查看[配置示例](/zh/gateway/configuration-examples)指南以获取完整的复制粘贴配置。</Tip>
+<Tip>**刚开始接触配置？** 请从 `openclaw onboard` 开始进行交互式设置，或者查看[配置示例](/en/gateway/configuration-examples)指南以获取完整的复制粘贴配置。</Tip>
 
 ## 最小配置
 
@@ -57,15 +57,15 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
   <Accordion title="设置渠道（WhatsApp、Telegram、Discord 等）">
     每个渠道在 `channels.<provider>` 下都有自己的配置部分。有关设置步骤，请参阅专门的渠道页面：
 
-    - [WhatsApp](/zh/channels/whatsapp) — `channels.whatsapp`
-    - [Telegram](/zh/channels/telegram) — `channels.telegram`
-    - [Discord](/zh/channels/discord) — `channels.discord`
-    - [Slack](/zh/channels/slack) — `channels.slack`
-    - [Signal](/zh/channels/signal) — `channels.signal`
-    - [iMessage](/zh/channels/imessage) — `channels.imessage`
-    - [Google Chat](/zh/channels/googlechat) — `channels.googlechat`
-    - [Mattermost](/zh/channels/mattermost) — `channels.mattermost`
-    - [Microsoft Teams](/zh/channels/msteams) — `channels.msteams`
+    - [WhatsApp](/en/channels/whatsapp) — `channels.whatsapp`
+    - [Telegram](/en/channels/telegram) — `channels.telegram`
+    - [Discord](/en/channels/discord) — `channels.discord`
+    - [Slack](/en/channels/slack) — `channels.slack`
+    - [Signal](/en/channels/signal) — `channels.signal`
+    - [iMessage](/en/channels/imessage) — `channels.imessage`
+    - [Google Chat](/en/channels/googlechat) — `channels.googlechat`
+    - [Mattermost](/en/channels/mattermost) — `channels.mattermost`
+    - [Microsoft Teams](/en/channels/msteams) — `channels.msteams`
 
     所有渠道都遵循相同的私信策略模式：
 
@@ -107,8 +107,8 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     - `agents.defaults.models` 定义模型目录并充当 `/model` 的允许列表。
     - 模型引用使用 `provider/model` 格式（例如 `anthropic/claude-opus-4-6`）。
     - `agents.defaults.imageMaxDimensionPx` 控制转录/工具图像的下采样（默认 `1200`）；较低的值通常会在截图密集的运行中减少视觉令牌的使用。
-    - 有关在聊天中切换模型的信息，请参阅 [Models CLI](/zh/concepts/models)；有关身份验证轮换和备用行为的信息，请参阅 [Model Failover](/zh/concepts/model-failover)。
-    - 对于自定义/自托管提供商，请参阅参考文档中的 [Custom providers](/zh/gateway/configuration-reference#custom-providers-and-base-urls)。
+    - 有关在聊天中切换模型的信息，请参阅 [Models CLI](/en/concepts/models)；有关身份验证轮换和备用行为的信息，请参阅 [Model Failover](/en/concepts/model-failover)。
+    - 对于自定义/自托管提供商，请参阅参考文档中的 [Custom providers](/en/gateway/configuration-reference#custom-providers-and-base-urls)。
 
   </Accordion>
 
@@ -122,7 +122,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     对于群组，请使用 `groupPolicy` + `groupAllowFrom` 或特定于渠道的允许列表。
 
-    有关每个渠道的详细信息，请参阅[完整参考](/zh/gateway/configuration-reference#dm-and-group-access)。
+    有关每个渠道的详细信息，请参阅[完整参考](/en/gateway/configuration-reference#dm-and-group-access)。
 
   </Accordion>
 
@@ -151,7 +151,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     - **元数据提及**：原生 @-提及（WhatsApp 点击提及、Telegram @bot 等）
     - **文本模式**：`mentionPatterns` 中的安全正则表达式模式
-    - 有关每个渠道的覆盖项和自聊模式，请参阅[完整参考](/zh/gateway/configuration-reference#group-chat-mention-gating)。
+    - 有关每个渠道的覆盖项和自聊模式，请参阅[完整参考](/en/gateway/configuration-reference#group-chat-mention-gating)。
 
   </Accordion>
 
@@ -181,7 +181,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     - 设置 `gateway.channelHealthCheckMinutes: 0` 以全局禁用健康监控重启。
     - `channelStaleEventThresholdMinutes` 应大于或等于检查间隔。
     - 使用 `channels.<provider>.healthMonitor.enabled` 或 `channels.<provider>.accounts.<id>.healthMonitor.enabled` 可在不禁用全局监控的情况下为单个渠道或账户禁用自动重启。
-    - 有关运营调试，请参阅[健康检查](/zh/gateway/health)；有关所有字段，请参阅[完整参考](/zh/gateway/configuration-reference#gateway)。
+    - 有关运营调试，请参阅[健康检查](/en/gateway/health)；有关所有字段，请参阅[完整参考](/en/gateway/configuration-reference#gateway)。
 
   </Accordion>
 
@@ -208,8 +208,8 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     - `dmScope`: `main` (共享) | `per-peer` | `per-channel-peer` | `per-account-channel-peer`
     - `threadBindings`: 线程绑定会话路由的全局默认设置（Discord 支持 `/focus`、`/unfocus`、`/agents`、`/session idle` 和 `/session max-age`）。
-    - 请参阅 [会话管理](/zh/concepts/session) 了解范围、身份链接和发送策略。
-    - 请参阅 [完整参考](/zh/gateway/configuration-reference#session) 了解所有字段。
+    - 请参阅 [会话管理](/en/concepts/session) 了解范围、身份链接和发送策略。
+    - 请参阅 [完整参考](/en/gateway/configuration-reference#session) 了解所有字段。
 
   </Accordion>
 
@@ -231,7 +231,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     首先构建镜像：`scripts/sandbox-setup.sh`
 
-    请参阅 [沙箱隔离](/zh/gateway/sandboxing) 以获取完整指南，并参阅 [完整参考](/zh/gateway/configuration-reference#agentsdefaultssandbox) 了解所有选项。
+    请参阅 [沙箱隔离](/en/gateway/sandboxing) 以获取完整指南，并参阅 [完整参考](/en/gateway/configuration-reference#agentsdefaultssandbox) 了解所有选项。
 
   </Accordion>
 
@@ -288,7 +288,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     - `OPENCLAW_APNS_RELAY_BASE_URL` 和 `OPENCLAW_APNS_RELAY_TIMEOUT_MS` 仍可用作临时环境变量覆盖。
     - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` 仍然是仅限环回的开发逃生口；请勿在配置中保留 HTTP 中继 URL。
 
-    请参阅 [iOS 应用](/zh/platforms/ios#relay-backed-push-for-official-builds) 了解端到端流程，并参阅 [身份验证和信任流程](/zh/platforms/ios#authentication-and-trust-flow) 了解中继安全模型。
+    请参阅 [iOS 应用](/en/platforms/ios#relay-backed-push-for-official-builds) 了解端到端流程，并参阅 [身份验证和信任流程](/en/platforms/ios#authentication-and-trust-flow) 了解中继安全模型。
 
   </Accordion>
 
@@ -309,7 +309,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     - `every`：持续时间字符串（`30m`、`2h`）。设置为 `0m` 以禁用。
     - `target`：`last` | `whatsapp` | `telegram` | `discord` | `none`
     - `directPolicy`：`allow`（默认）或 `block`，用于私信风格的心跳目标
-    - 有关完整指南，请参阅[心跳](/zh/gateway/heartbeat)。
+    - 有关完整指南，请参阅[心跳](/en/gateway/heartbeat)。
 
   </Accordion>
 
@@ -330,7 +330,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
 
     - `sessionRetention`：从 `sessions.json` 中清理已完成的隔离运行会话（默认 `24h`；设置为 `false` 以禁用）。
     - `runLog`：根据大小和保留行数清理 `cron/runs/<jobId>.jsonl`。
-    - 有关功能概述和 CLI 示例，请参阅[定时任务](/zh/automation/cron-jobs)。
+    - 有关功能概述和 CLI 示例，请参阅[定时任务](/en/automation/cron-jobs)。
 
   </Accordion>
 
@@ -363,7 +363,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     - 保持不安全内容绕过标志处于禁用状态（`hooks.gmail.allowUnsafeExternalContent`、`hooks.mappings[].allowUnsafeExternalContent`），除非进行严格范围的调试。
     - 对于由 hook 驱动的代理，首选强大的现代模型层级和严格的工具策略（例如，仅限消息传递以及在可能的情况下进行沙箱隔离）。
 
-    有关所有映射选项和 Gmail 集成，请参阅[完整参考](/zh/gateway/configuration-reference#hooks)。
+    有关所有映射选项和 Gmail 集成，请参阅[完整参考](/en/gateway/configuration-reference#hooks)。
 
   </Accordion>
 
@@ -385,7 +385,7 @@ OpenClaw 从 `~/.openclaw/openclaw.json` 读取可选的 <Tooltip tip="JSON5 sup
     }
     ```
 
-    参见 [多代理](/zh/concepts/multi-agent) 和 [完整参考](/zh/gateway/configuration-reference#multi-agent-routing) 了解绑定规则和每个代理的访问配置文件。
+    参见 [多代理](/en/concepts/multi-agent) 和 [完整参考](/en/gateway/configuration-reference#multi-agent-routing) 了解绑定规则和每个代理的访问配置文件。
 
   </Accordion>
 
@@ -595,17 +595,17 @@ OpenClaw 从父进程读取环境变量，外加：
 }
 ```
 
-SecretRef 详情（包括 `secrets.providers` 用于 `env`/`file`/`exec`）位于 [Secrets 管理](/zh/gateway/secrets)。
-支持的凭证路径列在 [SecretRef 凭证范围](/zh/reference/secretref-credential-surface) 中。
+SecretRef 详情（包括 `secrets.providers` 用于 `env`/`file`/`exec`）位于 [Secrets 管理](/en/gateway/secrets)。
+支持的凭证路径列在 [SecretRef 凭证范围](/en/reference/secretref-credential-surface) 中。
 
 </Accordion>
 
-有关完整的优先级和来源，请参阅 [Environment](/zh/help/environment)。
+有关完整的优先级和来源，请参阅 [Environment](/en/help/environment)。
 
 ## 完整参考
 
-有关完整的逐字段参考，请参阅 **[配置参考](/zh/gateway/configuration-reference)**。
+有关完整的逐字段参考，请参阅 **[配置参考](/en/gateway/configuration-reference)**。
 
 ---
 
-_相关：[配置示例](/zh/gateway/configuration-examples) · [配置参考](/zh/gateway/configuration-reference) · [Doctor](/zh/gateway/doctor)_
+_相关：[配置示例](/en/gateway/configuration-examples) · [配置参考](/en/gateway/configuration-reference) · [Doctor](/en/gateway/doctor)_

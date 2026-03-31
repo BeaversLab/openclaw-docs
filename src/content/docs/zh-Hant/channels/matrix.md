@@ -27,7 +27,7 @@ openclaw plugins install @openclaw/matrix
 openclaw plugins install ./extensions/matrix
 ```
 
-請參閱 [外掛程式](/en/tools/plugin) 以了解外掛程式行為與安裝規則。
+請參閱 [Plugins](/en/tools/plugin) 以了解插件行為和安裝規則。
 
 ## 設定
 
@@ -233,7 +233,7 @@ openclaw matrix verify status --include-recovery-key --json
 openclaw matrix verify bootstrap
 ```
 
-多帳號支援：使用 `channels.matrix.accounts` 搭配各個帳號的憑證和選用的 `name`。請參閱 [Configuration reference](/en/gateway/configuration-reference#multi-account-all-channels) 以了解共用模式。
+多帳號支援：使用 `channels.matrix.accounts` 搭配各個帳號的憑證和可選的 `name`。請參閱 [Configuration reference](/en/gateway/configuration-reference#multi-account-all-channels) 以了解共用模式。
 
 詳細引導診斷：
 
@@ -369,7 +369,7 @@ openclaw matrix verify status
 - 如果之後針對相同的帳戶、主機伺服器和用戶變更了 Matrix 存取權杖，OpenClaw 現在會傾向於重用最完整的現有權杖雜湊儲存根，而不是從空的 Matrix 狀態目錄重新開始。
 - 在下一次閘道啟動時，備份的房間金鑰會自動還原到新的加密儲存中。
 - 如果舊外掛程式有從未備份的僅限本機的房間金鑰，OpenClaw 將會發出明確警告。由於這些金鑰無法從先前的 rust crypto 存儲自動匯出，因此一些舊的加密歷史記錄可能會保持不可用，直到手動恢復。
-- 請參閱 [Matrix 遷移](/en/install/migrating-matrix) 以了解完整的升級流程、限制、恢復命令和常見的遷移訊息。
+- 請參閱 [Matrix migration](/en/install/migrating-matrix) 以了解完整的升級流程、限制、復原指令和常見的遷移訊息。
 
 加密的運行時狀態是按帳號、按用戶令牌哈希根組織在
 `~/.openclaw/matrix/accounts/<account>/<homeserver>__<user>/<token-hash>/`
@@ -542,7 +542,7 @@ Ack 反應範圍依照以下順序解析：
 }
 ```
 
-請參閱 [群組](/en/channels/groups) 以了解提及閘控與允許清單行為。
+請參閱 [Groups](/en/channels/groups) 以了解提及閘控和允許清單行為。
 
 Matrix DM 的配對範例：
 
@@ -553,7 +553,7 @@ openclaw pairing approve matrix <CODE>
 
 如果未核准的 Matrix 使用者在核准前持續傳送訊息給您，OpenClaw 將會重複使用相同的待處理配對碼，並可能會在短暫冷卻後再次發送提醒回覆，而不是鑄造新的代碼。
 
-請參閱 [配對](/en/channels/pairing) 以了解共用的 DM 配對流程與儲存配置。
+請參閱 [Pairing](/en/channels/pairing) 以了解共用的 DM 配對流程和儲存配置。
 
 ## 多帳號範例
 
@@ -644,34 +644,34 @@ Matrix 接受這些目標形式，無論 OpenClaw 何時要求您提供房間或
 - `homeserver`：主伺服器 URL，例如 `https://matrix.example.org`。
 - `allowPrivateNetwork`：允許此 Matrix 帳號連線至私有/內部主伺服器。當主伺服器解析為 `localhost`、區域網路/Tailscale IP 或內部主機（例如 `matrix-synapse`）時，請啟用此選項。
 - `userId`：完整的 Matrix 使用者 ID，例如 `@bot:example.org`。
-- `accessToken`：基於權杖的驗證存取權杖。
-- `password`：基於密碼的登入密碼。
+- `accessToken`：用於基於令牌的身份驗證的存取令牌。env/file/exec 提供者支援 `channels.matrix.accessToken` 和 `channels.matrix.accounts.<id>.accessToken` 的純文字值和 SecretRef 值。請參閱[機密管理](/en/gateway/secrets)。
+- `password`：用於基於密碼登入的密碼。支援純文字值和 SecretRef 值。
 - `deviceId`：明確的 Matrix 裝置 ID。
 - `deviceName`：密碼登入的裝置顯示名稱。
-- `avatarUrl`：用於設定檔同步和 `set-profile` 更新的已儲存自我大頭照 URL。
+- `avatarUrl`：用於個人資料同步和 `set-profile` 更新的儲存自我頭像 URL。
 - `initialSyncLimit`：啟動同步事件限制。
 - `encryption`：啟用 E2EE。
-- `allowlistOnly`：強制對私訊和房間執行僅允許清單行為。
+- `allowlistOnly`：強制對 DM 和聊天室採用僅允許清單行為。
 - `groupPolicy`：`open`、`allowlist` 或 `disabled`。
-- `groupAllowFrom`：房室流量的使用者 ID 允許清單。
-- `groupAllowFrom` 項目應為完整的 Matrix 使用者 ID。未解析的名稱將在執行時被忽略。
+- `groupAllowFrom`：針對房間通訊的使用者 ID 白名單。
+- `groupAllowFrom` 項目應為完整的 Matrix 使用者 ID。未解析的名稱會在執行時被忽略。
 - `replyToMode`：`off`、`first` 或 `all`。
 - `threadReplies`：`off`、`inbound` 或 `always`。
-- `threadBindings`：執行緒繫階段路由和生命週期的每個頻道覆寫。
+- `threadBindings`：針對執行緒繫結會話路由與生命週期的各通道覆寫設定。
 - `startupVerification`：啟動時的自動自我驗證請求模式（`if-unverified`、`off`）。
-- `startupVerificationCooldownHours`：重試自動啟動驗證請求前的冷卻時間。
+- `startupVerificationCooldownHours`：重試自動啟動驗證請求之前的冷卻時間。
 - `textChunkLimit`：傳出訊息區塊大小。
 - `chunkMode`：`length` 或 `newline`。
-- `responsePrefix`：傳出回覆的選用訊息前綴。
-- `ackReaction`：此頻道/帳號的選用 ack 反應覆寫。
-- `ackReactionScope`：選用的 ack 反應範圍覆寫（`group-mentions`、`group-all`、`direct`、`all`、`none`、`off`）。
+- `responsePrefix`：傳出回覆的可選訊息前綴。
+- `ackReaction`：此頻道/帳戶的可選 ack 反應覆寫。
+- `ackReactionScope`：可選的確認反應作用域覆蓋（`group-mentions`、`group-all`、`direct`、`all`、`none`、`off`）。
 - `reactionNotifications`：傳入反應通知模式（`own`、`off`）。
 - `mediaMaxMb`：傳出媒體大小上限（MB）。
-- `autoJoin`：邀請自動加入政策（`always`、`allowlist`、`off`）。預設值：`off`。
-- `autoJoinAllowlist`：當 `autoJoin` 為 `allowlist` 時允許的房間/別名。別名項目會在處理邀請時解析為房間 ID；OpenClaw 不信任受邀房間聲稱的別名狀態。
+- `autoJoin`：邀請自動加入策略（`always`、`allowlist`、`off`）。預設值：`off`。
+- `autoJoinAllowlist`：當 `autoJoin` 為 `allowlist` 時允許使用房間/別名。別名條目會在邀請處理期間解析為房間 ID；OpenClaw 不信任被邀請房間聲稱的別名狀態。
 - `dm`：DM 政策區塊（`enabled`、`policy`、`allowFrom`）。
-- `dm.allowFrom` 項目應為完整的 Matrix 使用者 ID，除非您已透過即時目錄查詢解析了它們。
-- `accounts`：具名各帳號覆寫。頂層 `channels.matrix` 值會作為這些項目的預設值。
-- `groups`：各房間政策對應。優先使用房間 ID 或別名；未解析的房間名稱會在執行時被忽略。會話/群組身分在解析後使用穩定的房間 ID，而可讀標籤仍來自房間名稱。
+- `dm.allowFrom` 條目應為完整的 Matrix 使用者 ID，除非您已透過即時目錄查詢解析過它們。
+- `accounts`：命名逐帳號覆寫。頂層 `channels.matrix` 值作為這些條目的預設值。
+- `groups`：每個房間的策略映射。優先使用房間 ID 或別名；未解析的房間名稱會在執行時被忽略。會話/群組身分使用解析後的穩定房間 ID，而人類可讀的標籤仍來自房間名稱。
 - `rooms`：`groups` 的舊版別名。
 - `actions`：針對每個動作的工具閘道 (`messages`、`reactions`、`pins`、`profile`、`memberInfo`、`channelInfo`、`verification`)。

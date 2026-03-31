@@ -14,7 +14,7 @@ title: "ACP 线程绑定代理"
 
 相关文档：
 
-- [统一运行时流式重构计划](/zh/experiments/plans/acp-unified-streaming-refactor)
+- [统一运行时流式重构计划](/en/experiments/plans/acp-unified-streaming-refactor)
 
 目标用户体验：
 

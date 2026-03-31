@@ -21,10 +21,10 @@ Ce document explique comment OpenClaw gère les sessions de bout en bout :
 
 Si vous souhaitez d'abord un aperçu de plus haut niveau, commencez par :
 
-- [/concepts/session](/fr/concepts/session)
-- [/concepts/compaction](/fr/concepts/compaction)
-- [/concepts/session-pruning](/fr/concepts/session-pruning)
-- [/reference/transcript-hygiene](/fr/reference/transcript-hygiene)
+- [/concepts/session](/en/concepts/session)
+- [/concepts/compaction](/en/concepts/compaction)
+- [/concepts/session-pruning](/en/concepts/session-pruning)
+- [/reference/transcript-hygiene](/en/reference/transcript-hygiene)
 
 ---
 
@@ -115,7 +115,7 @@ Modèles courants :
 - Cron : `cron:<job.id>`
 - Webhook : `hook:<uuid>` (sauf si remplacé)
 
-Les règles canoniques sont documentées sur [/concepts/session](/fr/concepts/session).
+Les règles canoniques sont documentées sur [/concepts/session](/en/concepts/session).
 
 ---
 
@@ -193,7 +193,7 @@ Si vous ajustez les limites :
 - La fenêtre contextuelle provient du catalogue de modèles (et peut être remplacée via la configuration).
 - `contextTokens` dans le magasin est une valeur d'estimation/rapport à l'exécution ; ne la traitez pas comme une garantie stricte.
 
-Pour en savoir plus, voir [/token-use](/fr/reference/token-use).
+Pour en savoir plus, voir [/token-use](/en/reference/token-use).
 
 ---
 
@@ -206,7 +206,7 @@ Après compactage, les futurs tours voient :
 - Le résumé de compactage
 - Les messages après `firstKeptEntryId`
 
-Le compactage est **persistant** (contrairement à l'élagage de session). Voir [/concepts/session-pruning](/fr/concepts/session-pruning).
+Le compactage est **persistant** (contrairement à l'élagage de session). Voir [/concepts/session-pruning](/en/concepts/session-pruning).
 
 ---
 
@@ -306,7 +306,7 @@ Notes :
 - Le vidage s'exécute une fois par cycle de compaction (suivi dans `sessions.json`).
 - Le vidage ne s'exécute que pour les sessions Pi intégrées (les backends CLI l'ignorent).
 - Le vidage est ignoré lorsque l'espace de travail de la session est en lecture seule (`workspaceAccess: "ro"` ou `"none"`).
-- Voir [Mémoire](/fr/concepts/memory) pour la disposition des fichiers de l'espace de travail et les modèles d'écriture.
+- Voir [Mémoire](/en/concepts/memory) pour la disposition des fichiers de l'espace de travail et les modèles d'écriture.
 
 Pi expose également un hook `session_before_compact` dans l'API d'extension, mais la logique de
 vidage d'OpenClaw réside aujourd'hui du côté de la Gateway.
@@ -315,7 +315,7 @@ vidage d'OpenClaw réside aujourd'hui du côté de la Gateway.
 
 ## Liste de contrôle de dépannage
 
-- Clé de session incorrecte ? Commencez par [/concepts/session](/fr/concepts/session) et confirmez le `sessionKey` dans `/status`.
+- Clé de session incorrecte ? Commencez par [/concepts/session](/en/concepts/session) et confirmez le `sessionKey` dans `/status`.
 - Incohérence entre le magasin et la transcription ? Confirmez l'hôte du Gateway et le chemin du magasin à partir de `openclaw status`.
 - Spam de compactage ? Vérifiez :
   - fenêtre de contexte du model (trop petite)

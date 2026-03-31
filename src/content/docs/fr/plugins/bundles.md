@@ -11,7 +11,7 @@ title: "Bundles de plugins"
 
 OpenClaw peut installer des plugins à partir de trois écosystèmes externes : **Codex**, **Claude**, et **Cursor**. Ils sont appelés **bundles** — des packs de contenu et de métadonnées que OpenClaw mappe vers des fonctionnalités natives telles que les compétences, les hooks et les outils MCP.
 
-<Info>Les bundles **ne sont pas** identiques aux plugins natifs OpenClaw. Les plugins natifs s'exécutent en cours de processus et peuvent enregistrer n'importe quelle capacité. Les bundles sont des packs de contenu avec un mappage sélectif des fonctionnalités et une limite de confiance plus étroite.</Info>
+<Info>Les bundles ne sont **pas** les mêmes que les plugins natifs OpenClaw. Les plugins natifs s'exécutent en processus et peuvent enregistrer n'importe quelle capacité. Les bundles sont des packs de contenu avec une sélectivité du mappage des fonctionnalités et une limite de confiance plus étroite.</Info>
 
 ## Pourquoi les bundles existent
 
@@ -146,9 +146,9 @@ tiers comme du contenu de confiance pour les fonctionnalités qu'ils exposent.
 non connectée, c'est une limite du produit — et non une installation cassée.
   </Accordion>
 
-<Accordion title="Claude command files do not appear">Assurez-vous que le bundle est activé et que les fichiers markdown sont dans une racine `commands/` ou `skills/` détectée.</Accordion>
+<Accordion title="Les fichiers de commandes Claude n'apparaissent pas">Assurez-vous que le bundle est activé et que les fichiers markdown se trouvent dans une racine `commands/` ou `skills/` détectée.</Accordion>
 
-<Accordion title="Les paramètres Claude ne s'appliquent pas">Seuls les paramètres Pi intégrés de `settings.json` sont pris en charge. OpenClaw ne traite pas les paramètres de bundle comme des correctifs de configuration bruts.</Accordion>
+<Accordion title="Les paramètres Claude ne s'appliquent pas">Seuls les paramètres Pi intégrés de `settings.json` sont pris en charge. OpenClaw ne traite pas les paramètres des bundles comme des correctifs de configuration bruts.</Accordion>
 
   <Accordion title="Les hooks Claude ne s'exécutent pas">
     `hooks/hooks.json` est en mode détection uniquement. Si vous avez besoin de hooks exécutables, utilisez la
@@ -158,6 +158,6 @@ non connectée, c'est une limite du produit — et non une installation cassée.
 
 ## Connexes
 
-- [Installer et configurer les plugins](/fr/tools/plugin)
-- [Créer des plugins](/fr/plugins/building-plugins) — créer un plugin natif
-- [Manifeste de plugin](/fr/plugins/manifest) — schéma de manifeste natif
+- [Installer et configurer les plugins](/en/tools/plugin)
+- [Créer des plugins](/en/plugins/building-plugins) — créer un plugin natif
+- [Manifeste de plugin](/en/plugins/manifest) — schéma de manifeste natif

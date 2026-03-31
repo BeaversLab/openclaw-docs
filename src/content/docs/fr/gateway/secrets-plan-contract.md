@@ -44,7 +44,7 @@ Si une cible ne correspond pas à ces règles, l'application échoue avant de mo
 
 Les cibles de plan sont acceptées pour les chemins d'identification pris en charge dans :
 
-- [SecretRef Credential Surface](/fr/reference/secretref-credential-surface)
+- [SecretRef Credential Surface](/en/reference/secretref-credential-surface)
 
 ## Comportement du type de cible
 
@@ -110,7 +110,7 @@ Si l'application échoue avec un message de chemin cible non valide, régénére
 
 ## Documentation connexe
 
-- [Gestion des secrets](/fr/gateway/secrets)
-- [CLI `secrets`](/fr/cli/secrets)
-- [Surface d'identification SecretRef](/fr/reference/secretref-credential-surface)
-- [Référence de configuration](/fr/gateway/configuration-reference)
+- [Gestion des secrets](/en/gateway/secrets)
+- [CLI `secrets`](/en/cli/secrets)
+- [Surface d'identification SecretRef](/en/reference/secretref-credential-surface)
+- [Référence de configuration](/en/gateway/configuration-reference)

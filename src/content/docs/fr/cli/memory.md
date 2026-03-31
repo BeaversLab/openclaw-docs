@@ -13,8 +13,8 @@ Fourni par le plugin de mémoire actif (par défaut : `memory-core` ; définisse
 
 Connexes :
 
-- Concept de mémoire : [Mémoire](/fr/concepts/memory)
-- Plugins : [Plugins](/fr/tools/plugin)
+- Concept de mémoire : [Mémoire](/en/concepts/memory)
+- Plugins : [Plugins](/en/tools/plugin)
 
 ## Exemples
 

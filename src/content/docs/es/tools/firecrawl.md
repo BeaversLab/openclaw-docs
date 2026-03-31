@@ -139,6 +139,6 @@ Orden de extracción de `web_fetch`:
 
 ## Relacionado
 
-- [Resumen de búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
-- [Web Fetch](/es/tools/web-fetch) -- herramienta web_fetch con respaldo Firecrawl
-- [Tavily](/es/tools/tavily) -- herramientas de búsqueda y extracción
+- [Resumen de búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
+- [Web Fetch](/en/tools/web-fetch) -- herramienta web_fetch con respaldo Firecrawl
+- [Tavily](/en/tools/tavily) -- herramientas de búsqueda y extracción

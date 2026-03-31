@@ -18,7 +18,7 @@ Zalo Personal se distribuye como un complemento y no se incluye con la instalaci
 
 - Instalar mediante CLI: `openclaw plugins install @openclaw/zalouser`
 - O desde una fuente de verificación: `openclaw plugins install ./extensions/zalouser`
-- Detalles: [Plugins](/es/tools/plugin)
+- Detalles: [Plugins](/en/tools/plugin)
 
 No se requiere ningún binario CLI externo `zca`/`openzca`.
 
@@ -161,7 +161,7 @@ Las cuentas se asignan a perfiles `zalouser` en el estado de OpenClaw. Ejemplo:
 - OpenClaw envía un evento de escritura antes de enviar una respuesta (mejor esfuerzo posible).
 - La acción de reacción al mensaje `react` es compatible con `zalouser` en las acciones del canal.
   - Use `remove: true` para eliminar un emoji de reacción específico de un mensaje.
-  - Semántica de reacciones: [Reacciones](/es/tools/reactions)
+  - Semántica de reacciones: [Reacciones](/en/tools/reactions)
 - Para los mensajes entrantes que incluyen metadatos de eventos, OpenClaw envía confirmaciones de entregado + visto (mejor esfuerzo posible).
 
 ## Solución de problemas

@@ -22,7 +22,7 @@ Synology Chat 基于插件，不属于默认核心频道安装的一部分。
 openclaw plugins install ./extensions/synology-chat
 ```
 
-详细信息：[插件](/zh/tools/plugin)
+详细信息：[插件](/en/tools/plugin)
 
 ## 快速设置
 

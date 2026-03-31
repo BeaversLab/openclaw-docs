@@ -32,5 +32,5 @@ openclaw onboard --auth-choice apiKey --token-provider openrouter --token "$OPEN
 ## Notes
 
 - Les références de modèle sont `openrouter/<provider>/<model>`.
-- Pour plus d'options de modèle/fournisseur, voir [/concepts/model-providers](/fr/concepts/model-providers).
+- Pour plus d'options de modèle/fournisseur, voir [/concepts/model-providers](/en/concepts/model-providers).
 - OpenRouter utilise un jeton Bearer avec votre clé API en arrière-plan.

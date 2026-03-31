@@ -14,7 +14,7 @@ Esta guía explica cómo crear un complemento de proveedor que añade un proveed
 (LLM) a OpenClaw. Al final tendrás un proveedor con un catálogo de modelos,
 autenticación de clave de API y resolución dinámica de modelos.
 
-<Info>Si no has creado ningún complemento de OpenClaw antes, lee primero [Introducción ](/es/plugins/building-plugins) para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
+<Info>Si no has construido ningún plugin de OpenClaw antes, lee primero [Getting Started](/en/plugins/building-plugins) para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
 
 ## Tutorial
 
@@ -219,8 +219,8 @@ autenticación de clave de API y resolución dinámica de modelos.
   </Step>
 
   <Step title="Añadir hooks de tiempo de ejecución (según sea necesario)">
-    La mayoría de los proveedores solo necesitan `catalog` + `resolveDynamicModel`. Añada hooks
-    de forma incremental a medida que su proveedor los requiera.
+    La mayoría de los proveedores solo necesitan `catalog` + `resolveDynamicModel`. Añade hooks
+    de forma incremental a medida que tu proveedor los requiera.
 
     <Tabs>
       <Tab title="Intercambio de tokens">
@@ -237,8 +237,8 @@ autenticación de clave de API y resolución dinámica de modelos.
         },
         ```
       </Tab>
-      <Tab title="Encabezados personalizados">
-        Para proveedores que necesitan encabezados de solicitud personalizados o modificaciones del cuerpo:
+      <Tab title="Cabeceras personalizadas">
+        Para proveedores que necesitan cabeceras de solicitud personalizadas o modificaciones del cuerpo:
 
         ```typescript
         // wrapStreamFn returns a StreamFn derived from ctx.streamFn
@@ -275,38 +275,38 @@ autenticación de clave de API y resolución dinámica de modelos.
 
       | # | Hook | Cuándo usar |
       | --- | --- | --- |
-      | 1 | `catalog` | Catálogo de modelos o URL base predeterminadas |
-      | 2 | `resolveDynamicModel` | Aceptar ID de modelos ascendentes arbitrarios |
-      | 3 | `prepareDynamicModel` | Obtención asincrónica de metadatos antes de resolver |
+      | 1 | `catalog` | Catálogo de modelos o valores predeterminados de URL base |
+      | 2 | `resolveDynamicModel` | Aceptar IDs de modelos de flujo ascendente arbitrarios |
+      | 3 | `prepareDynamicModel` | Obtención asíncrona de metadatos antes de resolver |
       | 4 | `normalizeResolvedModel` | Reescrituras de transporte antes del ejecutor |
       | 5 | `capabilities` | Metadatos de transcripción/herramientas (datos, no invocables) |
       | 6 | `prepareExtraParams` | Parámetros de solicitud predeterminados |
-      | 7 | `wrapStreamFn` | Envoltorios de encabezados/cuerpo personalizados |
+      | 7 | `wrapStreamFn` | Envoltorios de cabeceras/cuerpo personalizados |
       | 8 | `formatApiKey` | Forma de token de tiempo de ejecución personalizada |
       | 9 | `refreshOAuth` | Actualización de OAuth personalizada |
       | 10 | `buildAuthDoctorHint` | Guía de reparación de autenticación |
-      | 11 | `isCacheTtlEligible` | Control de TTL de caché de indicaciones |
-      | 12 | `buildMissingAuthMessage` | Sugerencia personalizada de autenticación faltante |
-      | 13 | `suppressBuiltInModel` | Ocultar filas ascendentes obsoletas |
+      | 11 | `isCacheTtlEligible` | Control de TTL de caché de prompt |
+      | 12 | `buildMissingAuthMessage` | Sugerencia personalizada de falta de autenticación |
+      | 13 | `suppressBuiltInModel` | Ocultar filas obsoletas del flujo ascendente |
       | 14 | `augmentModelCatalog` | Filas sintéticas de compatibilidad futura |
       | 15 | `isBinaryThinking` | Pensamiento binario activado/desactivado |
       | 16 | `supportsXHighThinking` | Soporte de razonamiento `xhigh` |
       | 17 | `resolveDefaultThinkingLevel` | Política predeterminada `/think` |
-      | 18 | `isModernModelRef` | Coincidencia de modelos en vivo/prueba |
+      | 18 | `isModernModelRef` | Coincidencia de modelos en vivo/smoke |
       | 19 | `prepareRuntimeAuth` | Intercambio de tokens antes de la inferencia |
       | 20 | `resolveUsageAuth` | Análisis personalizado de credenciales de uso |
-      | 21 | `fetchUsageSnapshot` | Punto de conexión de uso personalizado |
-      | 22 | `onModelSelected` | Devolución de llamada posterior a la selección (por ejemplo, telemetría) |
+      | 21 | `fetchUsageSnapshot` | Endpoint de uso personalizado |
+      | 22 | `onModelSelected` | Devolución de llamada posterior a la selección (ej. telemetría) |
 
-      Para descripciones detalladas y ejemplos del mundo real, consulte
-      [Internals: Provider Runtime Hooks](/es/plugins/architecture#provider-runtime-hooks).
+      Para descripciones detalladas y ejemplos del mundo real, consulta
+      [Internals: Provider Runtime Hooks](/en/plugins/architecture#provider-runtime-hooks).
     </Accordion>
 
   </Step>
 
   <Step title="Añadir capacidades adicionales (opcional)">
-    Un complemento de proveedor puede registrar voz, comprensión de medios, generación
-    de imágenes y búsqueda web junto con la inferencia de texto:
+    Un complemento de proveedor puede registrar voz, comprensión de medios,
+    generación de imágenes y búsqueda web junto con inferencia de texto:
 
     ```typescript
     register(api) {
@@ -339,9 +339,9 @@ autenticación de clave de API y resolución dinámica de modelos.
     }
     ```
 
-    OpenClaw clasifica esto como un complemento de **capacidades híbridas**. Este es el
-    patrón recomendado para complementos de empresas (un complemento por proveedor). Consulte
-    [Internals: Capability Ownership](/es/plugins/architecture#capability-ownership-model).
+    OpenClaw clasifica esto como un complemento de **capacidad híbrida**. Este es
+    el patrón recomendado para complementos de empresas (un complemento por
+    proveedor). Consulte [Internalidades: Propiedad de capacidades](/en/plugins/architecture#capability-ownership-model).
 
   </Step>
 
@@ -405,7 +405,7 @@ proveedores integrados:
 
 ## Siguientes pasos
 
-- [Complementos de canal](/es/plugins/sdk-channel-plugins) — si su complemento también proporciona un canal
-- [SDK Runtime](/es/plugins/sdk-runtime) — ayudantes de `api.runtime` (TTS, búsqueda, subagente)
-- [Resumen del SDK](/es/plugins/sdk-overview) — referencia completa de importación de subrutas
-- [Internos del complemento](/es/plugins/architecture#provider-runtime-hooks) — detalles de los enlaces y ejemplos incluidos
+- [Complementos de canal](/en/plugins/sdk-channel-plugins) — si su complemento también proporciona un canal
+- [Tiempo de ejecución del SDK](/en/plugins/sdk-runtime) — asistentes `api.runtime` (TTS, búsqueda, subagente)
+- [Descripción general del SDK](/en/plugins/sdk-overview) — referencia completa de importaciones de subrutas
+- [Internalidades del complemento](/en/plugins/architecture#provider-runtime-hooks) — detalles de enlaces y ejemplos incluidos

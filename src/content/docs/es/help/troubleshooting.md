@@ -38,7 +38,7 @@ Buena salida en una línea:
 
 Si ves:
 `HTTP 429: rate_limit_error: Extra usage is required for long context requests`,
-ve a [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/es/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context).
+ve a [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/en/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context).
 
 ## La instalación del complemento falla con extensiones de openclaw faltantes
 
@@ -63,7 +63,7 @@ Ejemplo:
 }
 ```
 
-Referencia: [Arquitectura de complementos](/es/plugins/architecture)
+Referencia: [Arquitectura de complementos](/en/plugins/architecture)
 
 ## Árbol de decisiones
 
@@ -112,9 +112,9 @@ flowchart TD
 
     Páginas profundas:
 
-    - [/gateway/troubleshooting#no-replies](/es/gateway/troubleshooting#no-replies)
-    - [/channels/troubleshooting](/es/channels/troubleshooting)
-    - [/channels/pairing](/es/channels/pairing)
+    - [/gateway/troubleshooting#no-replies](/en/gateway/troubleshooting#no-replies)
+    - [/channels/troubleshooting](/en/channels/troubleshooting)
+    - [/channels/pairing](/en/channels/pairing)
 
   </Accordion>
 
@@ -142,9 +142,9 @@ flowchart TD
 
     Páginas en profundidad:
 
-    - [/gateway/troubleshooting#dashboard-control-ui-connectivity](/es/gateway/troubleshooting#dashboard-control-ui-connectivity)
-    - [/web/control-ui](/es/web/control-ui)
-    - [/gateway/authentication](/es/gateway/authentication)
+    - [/gateway/troubleshooting#dashboard-control-ui-connectivity](/en/gateway/troubleshooting#dashboard-control-ui-connectivity)
+    - [/web/control-ui](/en/web/control-ui)
+    - [/gateway/authentication](/en/gateway/authentication)
 
   </Accordion>
 
@@ -171,9 +171,9 @@ flowchart TD
 
     Páginas en profundidad:
 
-    - [/gateway/troubleshooting#gateway-service-not-running](/es/gateway/troubleshooting#gateway-service-not-running)
-    - [/gateway/background-process](/es/gateway/background-process)
-    - [/gateway/configuration](/es/gateway/configuration)
+    - [/gateway/troubleshooting#gateway-service-not-running](/en/gateway/troubleshooting#gateway-service-not-running)
+    - [/gateway/background-process](/en/gateway/background-process)
+    - [/gateway/configuration](/en/gateway/configuration)
 
   </Accordion>
 
@@ -200,8 +200,8 @@ flowchart TD
 
     Páginas profundas:
 
-    - [/gateway/troubleshooting#channel-connected-messages-not-flowing](/es/gateway/troubleshooting#channel-connected-messages-not-flowing)
-    - [/channels/troubleshooting](/es/channels/troubleshooting)
+    - [/gateway/troubleshooting#channel-connected-messages-not-flowing](/en/gateway/troubleshooting#channel-connected-messages-not-flowing)
+    - [/channels/troubleshooting](/en/channels/troubleshooting)
 
   </Accordion>
 
@@ -230,9 +230,9 @@ flowchart TD
 
     Páginas profundas:
 
-    - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/es/gateway/troubleshooting#cron-and-heartbeat-delivery)
-    - [/automation/troubleshooting](/es/automation/troubleshooting)
-    - [/gateway/heartbeat](/es/gateway/heartbeat)
+    - [/gateway/troubleshooting#cron-and-heartbeat-delivery](/en/gateway/troubleshooting#cron-and-heartbeat-delivery)
+    - [/automation/troubleshooting](/en/automation/troubleshooting)
+    - [/gateway/heartbeat](/en/gateway/heartbeat)
 
   </Accordion>
 
@@ -260,9 +260,9 @@ flowchart TD
 
     Páginas en profundidad:
 
-    - [/gateway/troubleshooting#node-paired-tool-fails](/es/gateway/troubleshooting#node-paired-tool-fails)
-    - [/nodes/troubleshooting](/es/nodes/troubleshooting)
-    - [/tools/exec-approvals](/es/tools/exec-approvals)
+    - [/gateway/troubleshooting#node-paired-tool-fails](/en/gateway/troubleshooting#node-paired-tool-fails)
+    - [/nodes/troubleshooting](/en/nodes/troubleshooting)
+    - [/tools/exec-approvals](/en/tools/exec-approvals)
 
   </Accordion>
 
@@ -289,9 +289,9 @@ flowchart TD
 
     Páginas en profundidad:
 
-    - [/gateway/troubleshooting#browser-tool-fails](/es/gateway/troubleshooting#browser-tool-fails)
-    - [/tools/browser-linux-troubleshooting](/es/tools/browser-linux-troubleshooting)
-    - [/tools/browser-wsl2-windows-remote-cdp-troubleshooting](/es/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+    - [/gateway/troubleshooting#browser-tool-fails](/en/gateway/troubleshooting#browser-tool-fails)
+    - [/tools/browser-linux-troubleshooting](/en/tools/browser-linux-troubleshooting)
+    - [/tools/browser-wsl2-windows-remote-cdp-troubleshooting](/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
 
   </Accordion>
 </AccordionGroup>

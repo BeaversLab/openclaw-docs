@@ -12,8 +12,8 @@ Inicializa `~/.openclaw/openclaw.json` y el espacio de trabajo del agente.
 
 Relacionado:
 
-- Para empezar: [Para empezar](/es/start/getting-started)
-- Incorporación a la CLI: [Incorporación (CLI)](/es/start/wizard)
+- Para empezar: [Para empezar](/en/start/getting-started)
+- Incorporación a la CLI: [Incorporación (CLI)](/en/start/wizard)
 
 ## Ejemplos
 

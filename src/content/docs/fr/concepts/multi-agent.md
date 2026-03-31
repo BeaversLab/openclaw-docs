@@ -28,14 +28,14 @@ entre les agents (cela provoque des collisions d'authentification/session). Si v
 copiez `auth-profiles.json` dans le `agentDir` de l'autre agent.
 
 Les compétences (Skills) sont propres à chaque agent via le dossier `skills/` de chaque espace de travail, avec des compétences partagées
-disponibles depuis `~/.openclaw/skills`. Voir [Compétences : par agent vs partagées](/fr/tools/skills#per-agent-vs-shared-skills).
+disponibles depuis `~/.openclaw/skills`. Voir [Compétences : par agent vs partagées](/en/tools/skills#per-agent-vs-shared-skills).
 
 Le Gateway peut héberger **un agent** (par défaut) ou **plusieurs agents** côte à côte.
 
 **Note sur l'espace de travail :** l'espace de travail de chaque agent est le **cwd par défaut**, et non un bac à sable
 strict. Les chemins relatifs sont résolus à l'intérieur de l'espace de travail, mais les chemins absolus peuvent
 atteindre d'autres emplacements de l'hôte sauf si le sandboxing est activé. Voir
-[Sandboxing](/fr/gateway/sandboxing).
+[Sandboxing](/en/gateway/sandboxing).
 
 ## Chemins (carte rapide)
 
@@ -98,7 +98,7 @@ Créez un compte par agent sur les channels de votre choix :
 openclaw channels login --channel whatsapp --account work
 ```
 
-Voir les guides de channel : [Discord](/fr/channels/discord), [Telegram](/fr/channels/telegram), [WhatsApp](/fr/channels/whatsapp).
+Voir les guides de channel : [Discord](/en/channels/discord), [Telegram](/en/channels/telegram), [WhatsApp](/en/channels/whatsapp).
 
   </Step>
 
@@ -167,7 +167,7 @@ Exemple :
 Notes :
 
 - Le contrôle d'accès DM est **global par compte WhatsApp** (jumelage/liste blanche), et non par agent.
-- Pour les groupes partagés, liez le groupe à un seul agent ou utilisez [Groupes de diffusion](/fr/channels/broadcast-groups).
+- Pour les groupes partagés, liez le groupe à un seul agent ou utilisez [Groupes de diffusion](/en/channels/broadcast-groups).
 
 ## Règles de routage (comment les messages choisissent un agent)
 
@@ -541,4 +541,4 @@ Remarque : `tools.elevated` est **global** et basé sur l'expéditeur ; il n'est
 Si vous avez besoin de limites par agent, utilisez `agents.list[].tools` pour refuser `exec`.
 Pour le ciblage de groupe, utilisez `agents.list[].groupChat.mentionPatterns` afin que les @mentions correspondent proprement à l'agent prévu.
 
-Voir [Multi-Agent Sandbox & Tools](/fr/tools/multi-agent-sandbox-tools) pour des exemples détaillés.
+Voir [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) pour des exemples détaillés.

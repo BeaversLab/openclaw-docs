@@ -8,13 +8,13 @@ title: "Quick start"
 
 # Quick start
 
-<Info>Quick start fait désormais partie de [Getting Started](/fr/start/getting-started).</Info>
+<Info>Quick start fait désormais partie de [Getting Started](/en/start/getting-started).</Info>
 
 <Columns>
-  <Card title="Getting Started" href="/fr/start/getting-started">
+  <Card title="Getting Started" href="/en/start/getting-started">
     Installez OpenClaw et lancez votre premier chat en quelques minutes.
   </Card>
-  <Card title="Onboarding (CLI)" href="/fr/start/wizard">
+  <Card title="Onboarding (CLI)" href="/en/start/wizard">
     Guide complet sur l'onboarding CLI et options avancées.
   </Card>
 </Columns>

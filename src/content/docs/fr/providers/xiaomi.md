@@ -80,4 +80,4 @@ openclaw onboard --auth-choice xiaomi-api-key --xiaomi-api-key "$XIAOMI_API_KEY"
 - Référence du modèle par défaut : `xiaomi/mimo-v2-flash`.
 - Modèles intégrés supplémentaires : `xiaomi/mimo-v2-pro`, `xiaomi/mimo-v2-omni`.
 - Le fournisseur est injecté automatiquement lorsque `XIAOMI_API_KEY` est défini (ou qu'un profil d'authentification existe).
-- Voir [/concepts/model-providers](/fr/concepts/model-providers) pour les règles du fournisseur.
+- Voir [/concepts/model-providers](/en/concepts/model-providers) pour les règles du fournisseur.

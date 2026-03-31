@@ -7,7 +7,7 @@ title: "文件目錄"
 
 # 文件目錄
 
-<Note>此頁面是精選索引。如果您是新手，請從 [入門指南](/en/start/getting-started) 開始。若要查看完整的文件地圖，請參閱 [文件中心](/en/start/hubs)。</Note>
+<Note>此頁面是一個精選索引。如果您是新手，請從 [Getting Started](/en/start/getting-started) 開始。 如需文件的完整地圖，請參閱 [Docs hubs](/en/start/hubs)。</Note>
 
 ## 從這裡開始
 

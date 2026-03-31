@@ -23,7 +23,7 @@ OpenClaw utiliza **perfiles de autenticación** tanto para claves de API como pa
 - La configuración `auth.profiles` / `auth.order` es **solo metadatos y enrutamiento** (sin secretos).
 - Archivo de OAuth heredado de solo importación: `~/.openclaw/credentials/oauth.json` (importado a `auth-profiles.json` en el primer uso).
 
-Más detalles: [/concepts/oauth](/es/concepts/oauth)
+Más detalles: [/concepts/oauth](/en/concepts/oauth)
 
 Tipos de credenciales:
 
@@ -140,7 +140,7 @@ Cuando una ejecución comienza con una anulación de modelo (ganchos o CLI), los
 
 ## Configuración relacionada
 
-Consulte [Gateway configuration](/es/gateway/configuration) para:
+Consulte [Gateway configuration](/en/gateway/configuration) para:
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
@@ -148,4 +148,4 @@ Consulte [Gateway configuration](/es/gateway/configuration) para:
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
 - Enrutamiento de `agents.defaults.imageModel`
 
-Consulte [Models](/es/concepts/models) para obtener una visión general más amplia de la selección y el respaldo de modelos.
+Consulte [Models](/en/concepts/models) para obtener una visión general más amplia de la selección y el respaldo de modelos.

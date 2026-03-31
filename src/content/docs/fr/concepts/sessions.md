@@ -7,4 +7,4 @@ title: "Sessions"
 
 # Sessions
 
-La documentation canonique sur la gestion de session se trouve dans [Gestion de session](/fr/concepts/session).
+La documentation canonique sur la gestion de session se trouve dans [Gestion de session](/en/concepts/session).

@@ -192,6 +192,6 @@ La configuración del entorno de ejecución reside en `~/.openclaw/openclaw.json
 
 ## Véase también
 
-- [Documentación del entorno de ejecución](/es/gateway/sandboxing)
-- [Configuración del agente](/es/concepts/agent-workspace)
-- [Comando Doctor](/es/gateway/doctor) - Comprobar la configuración del entorno de ejecución
+- [Documentación del entorno de ejecución](/en/gateway/sandboxing)
+- [Configuración del agente](/en/concepts/agent-workspace)
+- [Comando Doctor](/en/gateway/doctor) - Comprobar la configuración del entorno de ejecución

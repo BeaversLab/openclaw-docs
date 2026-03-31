@@ -25,7 +25,7 @@ Esta página explica el endurecimiento **dentro de ese modelo**. No reclama aisl
 
 ## Verificación rápida: `openclaw security audit`
 
-Consulte también: [Verificación formal (Modelos de seguridad)](/es/security/formal-verification)
+Consulte también: [Verificación formal (Modelos de seguridad)](/en/security/formal-verification)
 
 Ejecute esto regularmente (especialmente después de cambiar la configuración o exponer superficies de red):
 
@@ -357,7 +357,7 @@ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
 - OpenClaw gateway es local/bucle local primero. Si finaliza TLS en un proxy inverso, configure HSTS en el dominio HTTPS orientado al proxy allí.
 - Si el propio gateway finaliza HTTPS, puede configurar `gateway.http.securityHeaders.strictTransportSecurity` para emitir el encabezado HSTS desde las respuestas de OpenClaw.
-- La guía detallada de implementación se encuentra en [Trusted Proxy Auth](/es/gateway/trusted-proxy-auth#tls-termination-and-hsts).
+- La guía detallada de implementación se encuentra en [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth#tls-termination-and-hsts).
 - Para las implementaciones de la Interfaz de Control que no sean de bucle local, `gateway.controlUi.allowedOrigins` es obligatorio de forma predeterminada.
 - `gateway.controlUi.allowedOrigins: ["*"]` es una política explícita de permitir todos los orígenes del navegador, no un valor predeterminado protegido. Evítela fuera de pruebas locales estrictamente controladas.
 - `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` habilita el modo de reserva de origen del encabezado Host; trátelo como una política peligrosa seleccionada por el operador.
@@ -417,8 +417,8 @@ La postura de OpenClaw:
 ## Modelo de autorización de comandos
 
 Los comandos de barra y directivas solo se respetan para **remitentes autorizados**. La autorización se deriva de
-las listas de permitidos de canales/emparejamiento más `commands.useAccessGroups` (consulte [Configuration](/es/gateway/configuration)
-y [Slash commands](/es/tools/slash-commands)). Si una lista de permitidos de canales está vacía o incluye `"*"`,
+las listas de permitidos de canales/emparejamiento más `commands.useAccessGroups` (consulte [Configuration](/en/gateway/configuration)
+y [Slash commands](/en/tools/slash-commands)). Si una lista de permitidos de canales está vacía o incluye `"*"`,
 los comandos están efectivamente abiertos para ese canal.
 
 `/exec` es una comodidad solo de sesión para operadores autorizados. **No** escribe configuración o
@@ -456,7 +456,7 @@ Los plugins se ejecutan **en el mismo proceso** que el Gateway. Trátalos como c
   - OpenClaw usa `npm pack` y luego ejecuta `npm install --omit=dev` en ese directorio (los scripts del ciclo de vida de npm pueden ejecutar código durante la instalación).
   - Prefiere versiones fijas y exactas (`@scope/pkg@1.2.3`), e inspecciona el código descomprimido en el disco antes de habilitar.
 
-Detalles: [Plugins](/es/tools/plugin)
+Detalles: [Plugins](/en/tools/plugin)
 
 ## Modelo de acceso por MD (emparejamiento / lista de permitidos / abierto / deshabilitado)
 
@@ -474,7 +474,7 @@ openclaw pairing list <channel>
 openclaw pairing approve <channel> <code>
 ```
 
-Detalles + archivos en disco: [Emparejamiento](/es/channels/pairing)
+Detalles + archivos en disco: [Emparejamiento](/en/channels/pairing)
 
 ## Aislamiento de sesión de MD (modo multiusuario)
 
@@ -498,7 +498,7 @@ Trate el fragmento anterior como **modo DM seguro**:
 - Predeterminado de incorporación de CLI local: escribe `session.dmScope: "per-channel-peer"` cuando no está configurado (mantiene los valores explícitos existentes).
 - Modo DM seguro: `session.dmScope: "per-channel-peer"` (cada par de canal+remitente obtiene un contexto de DM aislado).
 
-Si ejecuta varias cuentas en el mismo canal, use `per-account-channel-peer` en su lugar. Si la misma persona lo contacta en varios canales, use `session.identityLinks` para colapsar esas sesiones de DM en una identidad canónica. Consulte [Session Management](/es/concepts/session) y [Configuration](/es/gateway/configuration).
+Si ejecuta varias cuentas en el mismo canal, use `per-account-channel-peer` en su lugar. Si la misma persona lo contacta en varios canales, use `session.identityLinks` para colapsar esas sesiones de DM en una identidad canónica. Consulte [Session Management](/en/concepts/session) y [Configuration](/en/gateway/configuration).
 
 ## Listas de permitidos (DM + grupos) - terminología
 
@@ -515,7 +515,7 @@ OpenClaw tiene dos capas separadas de "¿quién puede activarme?":
   - Responder a un mensaje de bot (mención implícita) **no** evita las listas de permitidos de remitente como `groupAllowFrom`.
   - **Nota de seguridad:** trate `dmPolicy="open"` y `groupPolicy="open"` como configuraciones de último recurso. Deben usarse apenas; prefiera emparejamiento + listas de permitidos a menos que confíe completamente en cada miembro de la sala.
 
-Detalles: [Configuración](/es/gateway/configuration) y [Grupos](/es/channels/groups)
+Detalles: [Configuración](/en/gateway/configuration) y [Grupos](/en/channels/groups)
 
 ## Inyección de indicaciones (qué es, por qué importa)
 
@@ -582,7 +582,7 @@ llamadas a herramientas. Reduzca el radio de explosión mediante:
 
 La resistencia a la inyección de prompts **no** es uniforme en los niveles de modelo. Los modelos más pequeños/baratos son generalmente más susceptibles al uso indebido de herramientas y al secuestro de instrucciones, especialmente bajo prompts adversarios.
 
-<Warning>Para agentes con herramientas habilitadas o agentes que leen contenido que no es de confianza, el riesgo de inyección de prompts con modelos más pequeños/antiguos a menudo es demasiado alto. No ejecute esas cargas de trabajo en niveles de modelo débiles.</Warning>
+<Warning>Para los agentes habilitados para herramientas o los agentes que leen contenido no confiable, el riesgo de inyección de instrucciones con modelos más antiguos o más pequeños a menudo es demasiado alto. No ejecute esas cargas de trabajo en niveles de modelo débiles.</Warning>
 
 Recomendaciones:
 
@@ -779,7 +779,7 @@ Modos de autenticación:
 
 - `gateway.auth.mode: "token"`: token portador compartido (recomendado para la mayoría de configuraciones).
 - `gateway.auth.mode: "password"`: autenticación por contraseña (preferir configurar vía env: `OPENCLAW_GATEWAY_PASSWORD`).
-- `gateway.auth.mode: "trusted-proxy"`: confiar en un proxy inverso con conocimiento de identidad para autenticar usuarios y pasar la identidad a través de encabezados (ver [Trusted Proxy Auth](/es/gateway/trusted-proxy-auth)).
+- `gateway.auth.mode: "trusted-proxy"`: confiar en un proxy inverso con conocimiento de identidad para autenticar usuarios y pasar la identidad a través de encabezados (ver [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)).
 
 Lista de verificación de rotación (token/contraseña):
 
@@ -813,7 +813,7 @@ y exige autenticación por token/contraseña.
 
 **Regla de seguridad:** no reenvíes estos encabezados desde tu propio proxy inverso. Si
 terminas TLS o haces de proxy delante del gateway, deshabilita
-`gateway.auth.allowTailscale` y usa autenticación por token/contraseña (o [Autenticación de Proxy de Confianza](/es/gateway/trusted-proxy-auth)) en su lugar.
+`gateway.auth.allowTailscale` y usa autenticación por token/contraseña (o [Autenticación de Proxy de Confianza](/en/gateway/trusted-proxy-auth)) en su lugar.
 
 Proxies de confianza:
 
@@ -821,12 +821,12 @@ Proxies de confianza:
 - OpenClaw confiará en `x-forwarded-for` (o `x-real-ip`) de esas IPs para determinar la IP del cliente para verificaciones de emparejamiento local y verificaciones de autenticación HTTP/local.
 - Asegúrese de que su proxy **sobrescriba** `x-forwarded-for` y bloquee el acceso directo al puerto de la Gateway.
 
-Consulte [Tailscale](/es/gateway/tailscale) y [Web overview](/es/web).
+Consulte [Tailscale](/en/gateway/tailscale) y [Web overview](/en/web).
 
 ### 0.6.1) Control del navegador a través del host del nodo (recomendado)
 
 Si su Gateway es remota pero el navegador se ejecuta en otra máquina, ejecute un **node host**
-en la máquina del navegador y permita que la Gateway gestione las acciones del navegador (consulte [Browser tool](/es/tools/browser)).
+en la máquina del navegador y permita que la Gateway gestione las acciones del navegador (consulte [Browser tool](/en/tools/browser)).
 Trate el emparejamiento de nodos como el acceso de administrador.
 
 Patrón recomendado:
@@ -872,7 +872,7 @@ Recomendaciones:
 - Al compartir diagnósticos, prefiere `openclaw status --all` (pegable, secretos redactados) sobre los registros brutos.
 - Poda las transcripciones de sesión antiguas y los archivos de registro si no necesitas una retención prolongada.
 
-Detalles: [Registro](/es/gateway/logging)
+Detalles: [Registro](/en/gateway/logging)
 
 ### 1) MDs: emparejamiento por defecto
 
@@ -955,12 +955,12 @@ Línea de base integrada para turnos de agente impulsados por chat: los remitent
 
 ## Sandboxing (recomendado)
 
-Documento dedicado: [Sandboxing](/es/gateway/sandboxing)
+Documento dedicado: [Sandboxing](/en/gateway/sandboxing)
 
 Dos enfoques complementarios:
 
-- **Ejecutar la Puerta de enlace completa en Docker** (límite del contenedor): [Docker](/es/install/docker)
-- **Sandbox de herramientas** (`agents.defaults.sandbox`, puerta de enlace host + herramientas aisladas con Docker): [Sandboxing](/es/gateway/sandboxing)
+- **Ejecutar la Puerta de enlace completa en Docker** (límite del contenedor): [Docker](/en/install/docker)
+- **Sandbox de herramientas** (`agents.defaults.sandbox`, puerta de enlace host + herramientas aisladas con Docker): [Sandboxing](/en/gateway/sandboxing)
 
 Nota: para evitar el acceso entre agentes, mantenga `agents.defaults.sandbox.scope` en `"agent"` (predeterminado)
 o `"session"` para un aislamiento por sesión más estricto. `scope: "shared"` usa un
@@ -972,7 +972,7 @@ También considere el acceso al espacio de trabajo del agente dentro del sandbox
 - `agents.defaults.sandbox.workspaceAccess: "ro"` monta el espacio de trabajo del agente como solo lectura en `/agent` (deshabilita `write`/`edit`/`apply_patch`)
 - `agents.defaults.sandbox.workspaceAccess: "rw"` monta el espacio de trabajo del agente como lectura/escritura en `/workspace`
 
-Importante: `tools.elevated` es el escape hatch (salida de emergencia) global base que ejecuta exec en el host. Mantenga `tools.elevated.allowFrom` ajustado y no lo habilite para extraños. Puede restringir aún más el modo elevado por agente a través de `agents.list[].tools.elevated`. Vea [Elevated Mode](/es/tools/elevated).
+Importante: `tools.elevated` es el escape hatch (salida de emergencia) global base que ejecuta exec en el host. Mantenga `tools.elevated.allowFrom` ajustado y no lo habilite para extraños. Puede restringir aún más el modo elevado por agente a través de `agents.list[].tools.elevated`. Vea [Elevated Mode](/en/tools/elevated).
 
 ### Guardián de delegación de subagentes
 
@@ -1027,7 +1027,7 @@ Ejemplo de política estricta:
 
 Con el enrutamiento multiagente, cada agente puede tener su propia política de sandbox + herramientas:
 use esto para dar **acceso completo**, **solo lectura** o **sin acceso** por agente.
-Consulte [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para obtener detalles completos
+Consulte [Multi-Agent Sandbox & Tools](/en/tools/multi-agent-sandbox-tools) para obtener detalles completos
 y reglas de precedencia.
 
 Casos de uso comunes:

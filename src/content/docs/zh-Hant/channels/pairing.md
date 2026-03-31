@@ -15,13 +15,13 @@ title: "配對"
 1. **DM 配對**（誰被允許與機器人交談）
 2. **節點配對**（哪些設備/節點被允許加入網關網絡）
 
-安全背景：[安全](/en/gateway/security)
+Security context: [Security](/en/gateway/security)
 
 ## 1) DM 配對（傳入聊天存取權限）
 
 當頻道使用 DM 政策 `pairing` 進行配置時，未知發送者會收到一個短代碼，並且在他們的訊息在您批准之前**不會被處理**。
 
-預設 DM 政策記錄於：[安全](/en/gateway/security)
+Default DM policies are documented in: [Security](/en/gateway/security)
 
 配對代碼：
 
@@ -36,7 +36,7 @@ openclaw pairing list telegram
 openclaw pairing approve telegram <CODE>
 ```
 
-支援的頻道：`bluebubbles`、`discord`、`feishu`、`googlechat`、`imessage`、`irc`、`line`、`matrix`、`mattermost`、`msteams`、`nextcloud-talk`、`nostr`、`signal`、`slack`、`synology-chat`、`telegram`、`twitch`、`whatsapp`、`zalo`、`zalouser`。
+支援的頻道：`bluebubbles`、`discord`、`feishu`、`googlechat`、`imessage`、`irc`、`line`、`matrix`、`mattermost`、`msteams`、`nextcloud-talk`、`nostr`、`openclaw-weixin`、`signal`、`slack`、`synology-chat`、`telegram`、`twitch`、`whatsapp`、`zalo`、`zalouser`。
 
 ### 狀態儲存位置
 
@@ -56,8 +56,8 @@ openclaw pairing approve telegram <CODE>
 
 ## 2) 節點裝置配對（iOS/Android/macOS/headless 節點）
 
-節點以 `role: node` 作為**裝置**連接到 Gateway。Gateway
-會建立必須經過核准的裝置配對請求。
+節點以 **裝置** 身分使用 `role: node` 連接到 Gateway。Gateway
+會建立一個必須經過核准的裝置配對請求。
 
 ### 透過 Telegram 配對（建議用於 iOS）
 
@@ -72,7 +72,7 @@ openclaw pairing approve telegram <CODE>
 設定代碼是包含以下內容的 base64 編碼 JSON 載荷：
 
 - `url`：Gateway WebSocket URL（`ws://...` 或 `wss://...`）
-- `bootstrapToken`：用於初始配對握手的短期單一裝置啟動權杖
+- `bootstrapToken`：用於初始配對交握的短期單一裝置啟動權杖
 
 在設定代碼有效時，請將其視為密碼處理。
 
@@ -84,21 +84,18 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-如果同一個裝置使用不同的驗證詳細資料（例如不同的
-角色/範圍/公鑰）重試，先前的待處理請求會被取代，並建立新的
-`requestId`。
+如果同一設備使用不同的認證詳細資訊（例如不同的角色/範圍/公鑰）重試，之前的待處理請求將被取代，並建立一個新的 `requestId`。
 
 ### 節點配對狀態儲存
 
 儲存在 `~/.openclaw/devices/` 下：
 
-- `pending.json`（短期；待處理請求會過期）
+- `pending.json`（短期；待處理的請求會過期）
 - `paired.json`（已配對的裝置 + 權杖）
 
 ### 備註
 
-- 舊版 `node.pair.*` API（CLI：`openclaw nodes pending/approve`）是
-  個別的 Gateway 擁有的配對儲存。WS 節點仍然需要裝置配對。
+- 舊版的 `node.pair.*` API（CLI：`openclaw nodes pending/approve`）是一個獨立的閘道器擁有的配對儲存空間。WS 節點仍然需要裝置配對。
 
 ## 相關文件
 
@@ -108,7 +105,7 @@ openclaw devices reject <requestId>
   - Telegram：[Telegram](/en/channels/telegram)
   - WhatsApp：[WhatsApp](/en/channels/whatsapp)
   - Signal：[Signal](/en/channels/signal)
-  - BlueBubbles (iMessage): [BlueBubbles](/en/channels/bluebubbles)
-  - iMessage (舊版): [iMessage](/en/channels/imessage)
-  - Discord: [Discord](/en/channels/discord)
-  - Slack: [Slack](/en/channels/slack)
+  - BlueBubbles (iMessage)：[BlueBubbles](/en/channels/bluebubbles)
+  - iMessage (舊版)：[iMessage](/en/channels/imessage)
+  - Discord：[Discord](/en/channels/discord)
+  - Slack：[Slack](/en/channels/slack)

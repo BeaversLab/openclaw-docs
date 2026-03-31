@@ -107,7 +107,7 @@ Ciclo de vida de la sesión:
 - `/settings`
 - `/exit`
 
-Otros comandos de barra del Gateway (por ejemplo, `/context`) se reenvían al Gateway y se muestran como resultado del sistema. Consulte [Slash commands](/es/tools/slash-commands).
+Otros comandos de barra del Gateway (por ejemplo, `/context`) se reenvían al Gateway y se muestran como resultado del sistema. Consulte [Slash commands](/en/tools/slash-commands).
 
 ## Comandos de shell local
 

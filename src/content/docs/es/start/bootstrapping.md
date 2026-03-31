@@ -30,9 +30,9 @@ El arranque siempre se ejecuta en el **host de puerta de enlace**. Si la aplicac
 una puerta de enlace remota, el espacio de trabajo y los archivos de arranque residen en esa máquina
 remota.
 
-<Note>Cuando la puerta de enlace se ejecuta en otra máquina, edite los archivos del espacio de trabajo en el host de la puerta de enlace (por ejemplo, `user@gateway-host:~/.openclaw/workspace`).</Note>
+<Note>Cuando el Gateway se ejecuta en otra máquina, edite los archivos del espacio de trabajo en el host del gateway (por ejemplo, `user@gateway-host:~/.openclaw/workspace`).</Note>
 
 ## Documentos relacionados
 
-- Incorporación de la aplicación macOS: [Incorporación](/es/start/onboarding)
-- Diseño del espacio de trabajo: [Espacio de trabajo del agente](/es/concepts/agent-workspace)
+- Incorporación de la aplicación macOS: [Incorporación](/en/start/onboarding)
+- Diseño del espacio de trabajo: [Espacio de trabajo del agente](/en/concepts/agent-workspace)

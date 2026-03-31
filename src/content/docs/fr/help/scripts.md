@@ -20,7 +20,7 @@ Utilisez-les lorsqu'une tâche est clairement liée à un script ; sinon, préf�
 ## Scripts de surveillance d'authentification
 
 Les scripts de surveillance d'authentification sont documentés ici :
-[/automation/auth-monitoring](/fr/automation/auth-monitoring)
+[/automation/auth-monitoring](/en/automation/auth-monitoring)
 
 ## Lors de l'ajout de scripts
 

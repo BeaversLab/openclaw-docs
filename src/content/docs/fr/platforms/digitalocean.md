@@ -12,7 +12,7 @@ title: "DigitalOcean (Platform)"
 
 Exécuter un OpenClaw Gateway persistant sur DigitalOcean pour **6 $/mois** (ou 4 $/mois avec tarification réservée).
 
-Si vous souhaitez une option à 0 $/mois et que vous ne craignez pas ARM + une configuration spécifique au fournisseur, consultez le [guide Oracle Cloud](/fr/platforms/oracle).
+Si vous souhaitez une option à 0 $/mois et que vous ne craignez pas ARM + une configuration spécifique au fournisseur, consultez le [guide Oracle Cloud](/en/platforms/oracle).
 
 ## Comparaison des coûts (2026)
 
@@ -27,8 +27,8 @@ Si vous souhaitez une option à 0 $/mois et que vous ne craignez pas ARM + une c
 **Choisir un fournisseur :**
 
 - DigitalOcean : interface UX la plus simple + configuration prévisible (ce guide)
-- Hetzner : excellent rapport qualité/prix (voir le [guide Hetzner](/fr/install/hetzner))
-- Oracle Cloud : peut être gratuit (0 $/mois), mais est plus capricieux et uniquement ARM (voir le [guide Oracle](/fr/platforms/oracle))
+- Hetzner : excellent rapport qualité/prix (voir le [guide Hetzner](/en/install/hetzner))
+- Oracle Cloud : peut être gratuit (0 $/mois), mais est plus capricieux et uniquement ARM (voir le [guide Oracle](/en/platforms/oracle))
 
 ---
 
@@ -40,7 +40,7 @@ Si vous souhaitez une option à 0 $/mois et que vous ne craignez pas ARM + une c
 
 ## 1) Créer un Droplet
 
-<Warning>Utilisez une image de base propre (Ubuntu 24.04 LTS). Évitez les images en un clic tiers du Marketplace, sauf si vous avez examiné leurs scripts de démarrage et les paramètres par défaut du pare-feu.</Warning>
+<Warning>Utilisez une image de base propre (Ubuntu 24.04 LTS). Évitez les images en un clic tierces de Marketplace, sauf si vous avez examiné leurs scripts de démarrage et leurs paramètres de pare-feu par défaut.</Warning>
 
 1. Connectez-vous à [DigitalOcean](https://cloud.digitalocean.com/)
 2. Cliquez sur **Create → Droplets**
@@ -158,7 +158,7 @@ openclaw channels login whatsapp
 # Scan QR code
 ```
 
-Voir [Canaux](/fr/channels) pour les autres fournisseurs.
+Voir [Canaux](/en/channels) pour les autres fournisseurs.
 
 ---
 
@@ -223,7 +223,7 @@ Oracle Cloud propose des instances ARM **Always Free** (toujours gratuites) qui 
 - L'inscription peut être capricieuse (réessayez en cas d'échec)
 - Architecture ARM — la plupart des choses fonctionnent, mais certains binaires nécessitent des versions ARM
 
-Pour le guide de configuration complet, voir [Oracle Cloud](/fr/platforms/oracle). Pour des conseils d'inscription et le dépannage du processus d'inscription, voir ce [guide communautaire](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
+Pour le guide de configuration complet, voir [Oracle Cloud](/en/platforms/oracle). Pour des conseils d'inscription et le dépannage du processus d'inscription, voir ce [guide communautaire](https://gist.github.com/rssnyder/51e3cfedd730e7dd5f4a816143b25dbd).
 
 ---
 
@@ -258,7 +258,7 @@ free -h
 
 ## Voir aussi
 
-- [Guide Hetzner](/fr/install/hetzner) — moins cher, plus puissant
-- [Installation de Docker](/fr/install/docker) — configuration conteneurisée
-- [Tailscale](/fr/gateway/tailscale) — accès distant sécurisé
-- [Configuration](/fr/gateway/configuration) — référence complète de la configuration
+- [Guide Hetzner](/en/install/hetzner) — moins cher, plus puissant
+- [Installation de Docker](/en/install/docker) — configuration conteneurisée
+- [Tailscale](/en/gateway/tailscale) — accès distant sécurisé
+- [Configuration](/en/gateway/configuration) — référence complète de la configuration

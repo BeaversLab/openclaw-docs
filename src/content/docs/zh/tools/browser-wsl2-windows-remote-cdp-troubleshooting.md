@@ -73,7 +73,7 @@ title: "WSL2 + Windows + remote Chrome CDP 故障排除"
 
 `http://127.0.0.1:18789/`
 
-不要将控制 UI 默认设置为 LAN IP。在 LAN 或 tailnet 地址上使用纯 HTTP 可能会触发与 CDP 本身无关的不安全源/设备认证行为。参见[控制 UI](/zh/web/control-ui)。
+不要将控制 UI 默认设置为 LAN IP。在 LAN 或 tailnet 地址上使用纯 HTTP 可能会触发与 CDP 本身无关的不安全源/设备认证行为。参见[控制 UI](/en/web/control-ui)。
 
 ## 分层验证
 
@@ -100,7 +100,7 @@ curl http://127.0.0.1:9222/json/list
 
 在 WSL2 中，测试您计划在 `cdpUrl` 中使用的确切地址：
 
-```exec
+```bash
 curl http://WINDOWS_HOST_OR_IP:9222/json/version
 curl http://WINDOWS_HOST_OR_IP:9222/json/list
 ```
@@ -158,13 +158,13 @@ curl http://WINDOWS_HOST_OR_IP:9222/json/list
 
 有用的页面：
 
-- [控制 UI](/zh/web/control-ui)
+- [控制 UI](/en/web/control-ui)
 
 ### 第 5 层：验证端到端浏览器控制
 
 从 WSL2：
 
-```exec
+```bash
 openclaw browser open https://example.com --browser-profile remote
 openclaw browser tabs --browser-profile remote
 ```

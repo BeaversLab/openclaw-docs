@@ -12,9 +12,9 @@ title: "Máquinas virtuales macOS"
 
 ## Recomendado por defecto (la mayoría de usuarios)
 
-- **Pequeño VPS Linux** para una puerta de enlace siempre activa y bajo coste. Consulta [Alojamiento VPS](/es/vps).
+- **Pequeño VPS Linux** para una puerta de enlace siempre activa y bajo coste. Consulta [Alojamiento VPS](/en/vps).
 - **Hardware dedicado** (Mac mini o caja Linux) si quieres control total y una **IP residencial** para la automatización del navegador. Muchos sitios bloquean las IP de centros de datos, por lo que la navegación local a menudo funciona mejor.
-- **Híbrido:** mantén la puerta de enlace en un VPS barato y conecta tu Mac como un **nodo** cuando necesites automatización del navegador/interfaz de usuario. Consulta [Nodos](/es/nodes) y [Puerta de enlace remota](/es/gateway/remote).
+- **Híbrido:** mantén la puerta de enlace en un VPS barato y conecta tu Mac como un **nodo** cuando necesites automatización del navegador/interfaz de usuario. Consulta [Nodos](/en/nodes) y [Puerta de enlace remota](/en/gateway/remote).
 
 Utiliza una máquina virtual macOS cuando necesites específicamente capacidades exclusivas de macOS (iMessage/BlueBubbles) o desees un aislamiento estricto de tu Mac diario.
 
@@ -223,7 +223,7 @@ Agregue a su configuración de OpenClaw:
 
 Reinicie la puerta de enlace. Ahora su agente puede enviar y recibir iMessages.
 
-Detalles completos de configuración: [canal BlueBubbles](/es/channels/bluebubbles)
+Detalles completos de configuración: [canal BlueBubbles](/en/channels/bluebubbles)
 
 ---
 
@@ -254,7 +254,7 @@ Mantenga la VM en funcionamiento mediante:
 - Deshabilitar el modo suspensión en Configuración del Sistema → Ahorro de energía
 - Usando `caffeinate` si es necesario
 
-Para una disponibilidad real las 24 horas, considere un Mac mini dedicado o un pequeño VPS. Consulte [Alojamiento VPS](/es/vps).
+Para una disponibilidad real las 24 horas, considere un Mac mini dedicado o un pequeño VPS. Consulte [Alojamiento VPS](/en/vps).
 
 ---
 
@@ -271,11 +271,11 @@ Para una disponibilidad real las 24 horas, considere un Mac mini dedicado o un p
 
 ## Documentos relacionados
 
-- [Alojamiento VPS](/es/vps)
-- [Nodos](/es/nodes)
-- [Gateway remoto](/es/gateway/remote)
-- [Canal BlueBubbles](/es/channels/bluebubbles)
+- [Alojamiento VPS](/en/vps)
+- [Nodos](/en/nodes)
+- [Gateway remoto](/en/gateway/remote)
+- [Canal BlueBubbles](/en/channels/bluebubbles)
 - [Inicio rápido de Lume](https://cua.ai/docs/lume/guide/getting-started/quickstart)
 - [Referencia de la CLI de Lume](https://cua.ai/docs/lume/reference/cli-reference)
 - [Configuración de VM desatendida](https://cua.ai/docs/lume/guide/fundamentals/unattended-setup) (avanzado)
-- [Sandbox con Docker](/es/install/docker) (enfoque de aislamiento alternativo)
+- [Sandbox con Docker](/en/install/docker) (enfoque de aislamiento alternativo)

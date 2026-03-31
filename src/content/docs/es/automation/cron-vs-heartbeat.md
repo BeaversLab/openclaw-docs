@@ -70,7 +70,7 @@ El agente lee esto en cada latido y maneja todos los elementos en una sola vuelt
 }
 ```
 
-Consulte [Heartbeat](/es/gateway/heartbeat) para ver la configuración completa.
+Consulte [Heartbeat](/en/gateway/heartbeat) para ver la configuración completa.
 
 ## Cron: Programación precisa
 
@@ -128,7 +128,7 @@ openclaw cron add \
   --delete-after-run
 ```
 
-Consulte [Cron jobs](/es/automation/cron-jobs) para obtener la referencia completa de la CLI.
+Consulte [Cron jobs](/en/automation/cron-jobs) para obtener la referencia completa de la CLI.
 
 ## Diagrama de flujo de decisión
 
@@ -213,7 +213,7 @@ Para flujos de trabajo ad-hoc, llame a Lobster directamente.
 - La herramienta es un **complemento opcional**; habilítelo de forma aditiva a través de `tools.alsoAllow: ["lobster"]` (recomendado).
 - Lobster espera que la CLI `lobster` esté disponible en `PATH`.
 
-Consulte [Lobster](/es/tools/lobster) para obtener el uso completo y ejemplos.
+Consulte [Lobster](/en/tools/lobster) para obtener el uso completo y ejemplos.
 
 ## Sesión principal vs. Sesión aislada
 
@@ -281,6 +281,6 @@ openclaw cron add \
 
 ## Relacionado
 
-- [Latido](/es/gateway/heartbeat) - configuración completa del latido
-- [Trabajos cron](/es/automation/cron-jobs) - referencia completa de la CLI y API de cron
-- [Sistema](/es/cli/system) - eventos del sistema + controles de latido
+- [Latido](/en/gateway/heartbeat) - configuración completa del latido
+- [Trabajos cron](/en/automation/cron-jobs) - referencia completa de la CLI y API de cron
+- [Sistema](/en/cli/system) - eventos del sistema + controles de latido

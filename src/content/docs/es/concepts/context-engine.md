@@ -237,4 +237,4 @@ El espacio es exclusivo en tiempo de ejecución: solo se resuelve un motor de co
 - Los errores del motor se registran y se muestran en los diagnósticos. Si un motor de complemento no logra registrarse o el ID del motor seleccionado no se puede resolver, OpenClaw no recurre automáticamente; las ejecuciones fallan hasta que arregle el complemento o cambie `plugins.slots.contextEngine` de vuelta a `"legacy"`.
 - Para el desarrollo, use `openclaw plugins install -l ./my-engine` para vincular un directorio de complementos local sin copiarlo.
 
-Consulte también: [Compactación](/es/concepts/compaction), [Contexto](/es/concepts/context), [Complementos](/es/tools/plugin), [Manifiesto del complemento](/es/plugins/manifest).
+Consulte también: [Compactación](/en/concepts/compaction), [Contexto](/en/concepts/context), [Complementos](/en/tools/plugin), [Manifiesto del complemento](/en/plugins/manifest).

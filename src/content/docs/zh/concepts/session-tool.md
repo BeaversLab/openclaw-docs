@@ -166,7 +166,7 @@ WebSocket：
 
 - 默认运行时：OpenClaw 子代理 (`runtime: "subagent"`)。
 - ACP 挽具会话使用 `runtime: "acp"` 并遵循 ACP 特定的定位/策略规则。
-- 除非另有说明，本节重点介绍子代理行为。有关 ACP 特定的行为，请参阅 [ACP Agents](/zh/tools/acp-agents)。
+- 除非另有说明，本节重点介绍子代理行为。有关 ACP 特定的行为，请参阅 [ACP Agents](/en/tools/acp-agents)。
 
 参数：
 

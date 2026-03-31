@@ -171,5 +171,5 @@ secuencias decimales (por ejemplo, los espacios se convierten en `\032`).
 
 ## Documentos relacionados
 
-- Política de descubrimiento y selección de transporte: [Descubrimiento](/es/gateway/discovery)
-- Emparejamiento de nodos + aprobaciones: [Emparejamiento de Gateway](/es/gateway/pairing)
+- Política de descubrimiento y selección de transporte: [Descubrimiento](/en/gateway/discovery)
+- Emparejamiento de nodos + aprobaciones: [Emparejamiento de Gateway](/en/gateway/pairing)

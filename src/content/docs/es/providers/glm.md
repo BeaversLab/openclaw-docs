@@ -40,4 +40,4 @@ openclaw onboard --auth-choice zai-cn
 
 - Las versiones y disponibilidad de GLM pueden cambiar; consulta la documentación de Z.AI para obtener la más reciente.
 - Los IDs de modelo de ejemplo incluyen `glm-5`, `glm-4.7` y `glm-4.6`.
-- Para más detalles del proveedor, consulta [/providers/zai](/es/providers/zai).
+- Para más detalles del proveedor, consulta [/providers/zai](/en/providers/zai).

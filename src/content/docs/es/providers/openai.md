@@ -289,5 +289,5 @@ Los modelos de respuestas directas de OpenAI siguen forzando `store: true` a men
 
 ## Notas
 
-- Las referencias de modelos siempre usan `provider/model` (consulte [/concepts/models](/es/concepts/models)).
-- Los detalles de autenticación y las reglas de reutilización están en [/concepts/oauth](/es/concepts/oauth).
+- Las referencias de modelos siempre usan `provider/model` (consulte [/concepts/models](/en/concepts/models)).
+- Los detalles de autenticación y las reglas de reutilización están en [/concepts/oauth](/en/concepts/oauth).

@@ -12,7 +12,7 @@ Usa `--agent <id>` para dirigirte a un agente configurado directamente.
 
 Relacionado:
 
-- Herramienta de envío de agente: [Envío de agente](/es/tools/agent-send)
+- Herramienta de envío de agente: [Envío de agente](/en/tools/agent-send)
 
 ## Ejemplos
 

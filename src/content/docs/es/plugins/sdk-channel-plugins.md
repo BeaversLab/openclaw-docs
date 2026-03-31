@@ -14,11 +14,11 @@ Esta guía explica cómo crear un complemento de canal que conecte OpenClaw con 
 plataforma de mensajería. Al final, tendrá un canal funcional con seguridad de MD,
 emparejamiento, hilos de respuesta y mensajería saliente.
 
-<Info>Si no ha creado ningún complemento de OpenClaw antes, lea primero [Cómo empezar](/es/plugins/building-plugins) para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
+<Info>Si no ha construido ningún complemento de OpenClaw antes, lea [Introducción](/en/plugins/building-plugins) primero para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
 
 ## Cómo funcionan los complementos de canales
 
-Los complementos de canales no necesitan sus propias herramientas de envío/edición/reacción. OpenClaw mantiene una
+Los complementos de canal no necesitan sus propias herramientas de envío/edición/reacción. OpenClaw mantiene una
 herramienta `message` compartida en el núcleo. Su complemento posee:
 
 - **Configuración** — resolución de cuenta y asistente de configuración
@@ -84,9 +84,9 @@ despacho.
 
   </Step>
 
-  <Step title="Crear el objeto del complemento de canal">
+  <Step title="Construir el objeto del complemento de canal">
     La interfaz `ChannelPlugin` tiene muchas superficies de adaptador opcionales. Comience con
-    lo mínimo — `id` y `setup` — y añada adaptadores según los necesite.
+    lo mínimo — `id` y `setup` — y agregue adaptadores según los necesite.
 
     Cree `src/channel.ts`:
 
@@ -181,19 +181,19 @@ despacho.
     });
     ```
 
-    <Accordion title="Lo que createChatChannelPlugin hace por usted">
+    <Accordion title="Qué hace createChatChannelPlugin por usted">
       En lugar de implementar manualmente interfaces de adaptador de bajo nivel, usted pasa
       opciones declarativas y el constructor las compone:
 
       | Opción | Lo que conecta |
       | --- | --- |
-      | `security.dm` | Resolvedor de seguridad DM con ámbito desde campos de configuración |
-      | `pairing.text` | Flujo de emparejamiento DM basado en texto con intercambio de códigos |
-      | `threading` | Resolvedor de modo de respuesta (fijo, con ámbito de cuenta o personalizado) |
-      | `outbound.attachedResults` | Funciones de envío que devuelven metadatos de resultado (IDs de mensajes) |
+      | `security.dm` | Solucionador de seguridad de MD con ámbito desde campos de configuración |
+      | `pairing.text` | Flujo de emparejamiento de MD basado en texto con intercambio de códigos |
+      | `threading` | Solucionador de modo de respuesta (fijo, con ámbito de cuenta o personalizado) |
+      | `outbound.attachedResults` | Funciones de envío que devuelven metadatos de resultado (IDs de mensaje) |
 
       También puede pasar objetos de adaptador sin procesar en lugar de las opciones declarativas
-      si necesita un control total.
+      si necesita control total.
     </Accordion>
 
   </Step>
@@ -223,14 +223,14 @@ despacho.
     });
     ```
 
-    `defineChannelPluginEntry` maneja la división de configuración/registro completo
+    `defineChannelPluginEntry` maneja la división entre configuración y registro completo
     automáticamente. Consulte
-    [Puntos de entrada](/es/plugins/sdk-entrypoints#definechannelpluginentry) para ver todas
+    [Puntos de entrada](/en/plugins/sdk-entrypoints#definechannelpluginentry) para ver todas
     las opciones.
 
   </Step>
 
-  <Step title="Añadir una entrada de configuración">
+  <Step title="Agregar una entrada de configuración">
     Cree `setup-entry.ts` para una carga ligera durante la incorporación:
 
     ```typescript setup-entry.ts
@@ -242,14 +242,14 @@ despacho.
 
     OpenClaw carga esto en lugar de la entrada completa cuando el canal está deshabilitado
     o sin configurar. Evita cargar código de tiempo de ejecución pesado durante los flujos de configuración.
-    Consulte [Configuración y Config](/es/plugins/sdk-setup#setup-entry) para obtener más detalles.
+    Consulte [Configuración y puesta a punto](/en/plugins/sdk-setup#setup-entry) para obtener más detalles.
 
   </Step>
 
   <Step title="Gestionar mensajes entrantes">
-    Tu complemento necesita recibir mensajes de la plataforma y reenviarlos a
+    Su complemento necesita recibir mensajes de la plataforma y reenviarlos a
     OpenClaw. El patrón típico es un webhook que verifica la solicitud y
-    la envía a través del controlador de entrada de tu canal:
+    la despacha a través del controlador de entrada de su canal:
 
     ```typescript
     registerFull(api) {
@@ -273,15 +273,15 @@ despacho.
     ```
 
     <Note>
-      El manejo de mensajes entrantes es específico del canal. Cada complemento de canal es dueño
-      de su propia canalización de entrada. Mira los complementos de canal incluidos
-      (ej. `extensions/msteams`, `extensions/googlechat`) para ver patrones reales.
+      El manejo de mensajes entrantes es específico del canal. Cada complemento de canal es propietario
+      de su propia canalización de entrada. Mire los complementos de canal incluidos
+      (p. ej. `extensions/msteams`, `extensions/googlechat`) para ver patrones reales.
     </Note>
 
   </Step>
 
-  <Step title="Probar">
-    Escribe pruebas colocadas en `src/channel.test.ts`:
+  <Step title="Prueba">
+    Escriba pruebas ubicadas en `src/channel.test.ts`:
 
     ```typescript src/channel.test.ts
     import { describe, it, expect } from "vitest";
@@ -319,7 +319,7 @@ despacho.
     pnpm test -- extensions/acme-chat/
     ```
 
-    Para ver los asistentes de pruebas compartidos, consulta [Pruebas](/es/plugins/sdk-testing).
+    Para ver asistentes de pruebas compartidos, consulte [Pruebas](/en/plugins/sdk-testing).
 
   </Step>
 </Steps>
@@ -344,23 +344,23 @@ extensions/acme-chat/
 ## Temas avanzados
 
 <CardGroup cols={2}>
-  <Card title="Opciones de hilos" icon="git-branch" href="/es/plugins/sdk-entrypoints#registration-mode">
+  <Card title="Opciones de hilos" icon="git-branch" href="/en/plugins/sdk-entrypoints#registration-mode">
     Modos de respuesta fijos, con ámbito de cuenta o personalizados
   </Card>
-  <Card title="Integración de herramientas de mensajes" icon="puzzle" href="/es/plugins/architecture#channel-plugins-and-the-shared-message-tool">
+  <Card title="Integración de herramientas de mensajes" icon="puzzle" href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool">
     describeMessageTool y descubrimiento de acciones
   </Card>
-  <Card title="Resolución de objetivos" icon="crosshair" href="/es/plugins/architecture#channel-target-resolution">
+  <Card title="Resolución de objetivos" icon="crosshair" href="/en/plugins/architecture#channel-target-resolution">
     inferTargetChatType, looksLikeId, resolveTarget
   </Card>
-  <Card title="Asistentes de tiempo de ejecución" icon="settings" href="/es/plugins/sdk-runtime">
-    TTS, STT, medios, subagente vía api.runtime
+  <Card title="Asistentes de tiempo de ejecución" icon="settings" href="/en/plugins/sdk-runtime">
+    TTS, STT, media, subagente a través de api.runtime
   </Card>
 </CardGroup>
 
-## Próximos pasos
+## Pasos siguientes
 
-- [Complementos de proveedores](/es/plugins/sdk-provider-plugins) — si tu complemento también proporciona modelos
-- [Resumen del SDK](/es/plugins/sdk-overview) — referencia completa de importación de subrutas
-- [Pruebas del SDK](/es/plugins/sdk-testing) — utilidades de prueba y pruebas de contrato
-- [Manifiesto del complemento](/es/plugins/manifest) — esquema completo del manifiesto
+- [Plugins de proveedores](/en/plugins/sdk-provider-plugins) — si su complemento también proporciona modelos
+- [Resumen del SDK](/en/plugins/sdk-overview) — referencia completa de importación de subrutas
+- [Pruebas del SDK](/en/plugins/sdk-testing) — utilidades de prueba y pruebas de contrato
+- [Manifiesto del complemento](/en/plugins/manifest) — esquema completo del manifiesto

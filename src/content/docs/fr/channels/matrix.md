@@ -27,7 +27,7 @@ Installer depuis une copie locale :
 openclaw plugins install ./extensions/matrix
 ```
 
-Voir [Plugins](/fr/tools/plugin) pour le comportement des plugins et les règles d'installation.
+Voir [Plugins](/en/tools/plugin) pour le comportement des plugins et les règles d'installation.
 
 ## Configuration
 
@@ -233,7 +233,7 @@ Initialiser la signature croisée et l'état de vérification :
 openclaw matrix verify bootstrap
 ```
 
-Support multi-compte : utilisez `channels.matrix.accounts` avec des identifiants par compte et `name` en option. Voir [Référence de configuration](/fr/gateway/configuration-reference#multi-account-all-channels) pour le modèle partagé.
+Prise en charge multi-compte : utilisez `channels.matrix.accounts` avec des identifiants par compte et `name` en option. Voir [Référence de configuration](/en/gateway/configuration-reference#multi-account-all-channels) pour le modèle partagé.
 
 Diagnostics d'initialisation détaillés :
 
@@ -370,7 +370,7 @@ Mise à niveau à partir du plugin Matrix public précédent :
 - Si le jeton d'accès Matrix change ultérieurement pour le même compte, le serveur domestique et l'utilisateur, OpenClaw préfère désormais réutiliser la racine de stockage de hachage de jeton existante la plus complète au lieu de repartir d'un répertoire d'état Matrix vide.
 - Au prochain démarrage de la passerelle, les clés de salle sauvegardées sont restaurées automatiquement dans le nouveau magasin de chiffrement.
 - Si l'ancien plugin avait des clés de salle locales uniquement qui n'avaient jamais été sauvegardées, OpenClaw vous avertira clairement. Ces clés ne peuvent pas être exportées automatiquement depuis le précédent magasin de chiffrement rust, donc certains anciens historiques chiffrés peuvent rester indisponibles jusqu'à ce qu'ils soient récupérés manuellement.
-- Voir [Matrix migration](/fr/install/migrating-matrix) pour le processus complet de mise à niveau, les limites, les commandes de récupération et les messages de migration courants.
+- Voir [Migration Matrix](/en/install/migrating-matrix) pour le processus complet de mise à niveau, les limites, les commandes de récupération et les messages de migration courants.
 
 L'état d'exécution chiffré est organisé sous des racines par compte et par hachage de jeton d'utilisateur dans
 `~/.openclaw/matrix/accounts/<account>/<homeserver>__<user>/<token-hash>/`.
@@ -542,7 +542,7 @@ Comportement actuel :
 }
 ```
 
-Voir [Groupes](/fr/channels/groups) pour le comportement de restriction des mentions et de la liste d'autorisation.
+Voir [Groupes](/en/channels/groups) pour le comportement de limitation des mentions et des listes d'autorisation.
 
 Exemple d'appairage pour les DMs Matrix :
 
@@ -553,7 +553,7 @@ openclaw pairing approve matrix <CODE>
 
 Si un utilisateur Matrix non approuvé continue à vous envoyer des messages avant l'approbation, OpenClaw réutilise le même code d'appairage en attente et peut envoyer une réponse de rappel après un court délai de recharge au lieu de créer un nouveau code.
 
-Voir [Appairage](/fr/channels/pairing) pour le flux d'appairage DM partagé et la disposition du stockage.
+Voir [Appariement](/en/channels/pairing) pour le processus d'appariement DM partagé et la disposition du stockage.
 
 ## Exemple multi-compte
 
@@ -644,34 +644,34 @@ La recherche en direct dans l'annuaire utilise le compte Matrix connecté :
 - `homeserver` : URL du serveur d'accueil, par exemple `https://matrix.example.org`.
 - `allowPrivateNetwork` : autoriser ce compte Matrix à se connecter à des serveurs d'accueil privés/internes. Activez ceci lorsque le serveur d'accueil est résolu vers `localhost`, une IP LAN/Tailscale, ou un hôte interne tel que `matrix-synapse`.
 - `userId` : identifiant utilisateur Matrix complet, par exemple `@bot:example.org`.
-- `accessToken` : jeton d'accès pour l'authentification par jeton.
-- `password` : mot de passe pour la connexion par mot de passe.
-- `deviceId` : identifiant d'appareil Matrix explicite.
-- `deviceName` : nom d'affichage de l'appareil pour la connexion par mot de passe.
-- `avatarUrl` : URL de l'auto-avatar stockée pour la synchronisation du profil et les mises à jour `set-profile`.
-- `initialSyncLimit` : limite d'événements de synchronisation au démarrage.
-- `encryption` : activer E2EE.
-- `allowlistOnly` : forcer le comportement de liste d'autorisation uniquement pour les DMs et les salons.
-- `groupPolicy` : `open`, `allowlist`, ou `disabled`.
-- `groupAllowFrom` : liste d'autorisation des identifiants utilisateurs pour le trafic de salon.
-- Les entrées `groupAllowFrom` doivent être des identifiants utilisateur Matrix complets. Les noms non résolus sont ignorés lors de l'exécution.
-- `replyToMode` : `off`, `first`, ou `all`.
-- `threadReplies` : `off`, `inbound`, ou `always`.
-- `threadBindings` : substitutions par canal pour le routage et le cycle de vie des sessions liées aux fils de discussion.
-- `startupVerification` : mode de demande de vérification automatique de soi au démarrage (`if-unverified`, `off`).
-- `startupVerificationCooldownHours` : temps de refroidissement avant de réessayer les demandes de vérification automatique au démarrage.
-- `textChunkLimit` : taille du bloc des messages sortants.
-- `chunkMode` : `length` ou `newline`.
-- `responsePrefix` : préfixe de message optionnel pour les réponses sortantes.
-- `ackReaction` : substitution de réaction d'accusé de réception optionnelle pour ce channel/compte.
-- `ackReactionScope` : substitution de la portée de réaction d'accusé de réception optionnelle (`group-mentions`, `group-all`, `direct`, `all`, `none`, `off`).
-- `reactionNotifications` : mode de notification de réaction entrante (`own`, `off`).
-- `mediaMaxMb` : limite de taille des médias sortants en Mo.
-- `autoJoin` : politique de jointure automatique aux invitations (`always`, `allowlist`, `off`). Par défaut : `off`.
-- `autoJoinAllowlist` : salons/alias autorisés lorsque `autoJoin` est `allowlist`. Les entrées d'alias sont résolues en ID de salon lors du traitement des invitations ; OpenClaw ne fait pas confiance à l'état de l'alias revendiqué par le salon invité.
-- `dm` : bloc de stratégie DM (`enabled`, `policy`, `allowFrom`).
-- Les entrées `dm.allowFrom` doivent être des IDs utilisateur Matrix complets, sauf si vous les avez déjà résolus via une recherche en direct dans l'annuaire.
+- `accessToken` : jeton d'accès pour l'authentification par jeton. Les valeurs en texte brut et les valeurs SecretRef sont prises en charge pour `channels.matrix.accessToken` et `channels.matrix.accounts.<id>.accessToken` pour les fournisseurs env/file/exec. Voir [Gestion des secrets](/en/gateway/secrets).
+- `password` : mot de passe pour la connexion par mot de passe. Les valeurs en texte brut et les valeurs SecretRef sont prises en charge.
+- `deviceId` : ID d'appareil Matrix explicite.
+- `deviceName` : nom d'affichage de l'appareil pour la connexion par mot de passe.
+- `avatarUrl` : URL de l'auto-avatar stocké pour la synchronisation du profil et les mises à jour `set-profile`.
+- `initialSyncLimit` : limite d'événements de synchronisation au démarrage.
+- `encryption` : activer le chiffrement de bout en bout (E2EE).
+- `allowlistOnly` : forcer le comportement de liste d'autorisation uniquement pour les DMs et les salles.
+- `groupPolicy` : `open`, `allowlist` ou `disabled`.
+- `groupAllowFrom` : liste blanche des ID d'utilisateur pour le trafic de salon.
+- Les entrées `groupAllowFrom` doivent être des ID d'utilisateur complets Matrix. Les noms non résolus sont ignorés lors de l'exécution.
+- `replyToMode` : `off`, `first` ou `all`.
+- `threadReplies` : `off`, `inbound` ou `always`.
+- `threadBindings` : substitutions par canal pour le routage et le cycle de vie des sessions liées aux fils.
+- `startupVerification` : mode de demande de vérification automatique au démarrage (`if-unverified`, `off`).
+- `startupVerificationCooldownHours` : délai avant de réessayer les demandes de vérification automatique au démarrage.
+- `textChunkLimit` : taille des blocs de messages sortants.
+- `chunkMode` : `length` ou `newline`.
+- `responsePrefix` : préfixe de message optionnel pour les réponses sortantes.
+- `ackReaction` : substitution optionnelle de la réaction d'accusé de réception pour ce canal/compte.
+- `ackReactionScope` : optionnel, remplacement de la portée de la réaction d'accusé de réception (`group-mentions`, `group-all`, `direct`, `all`, `none`, `off`).
+- `reactionNotifications` : mode de notification de réaction entrante (`own`, `off`).
+- `mediaMaxMb` : limite de taille des médias sortants en Mo.
+- `autoJoin` : stratégie de rejointe automatique des invitations (`always`, `allowlist`, `off`). Par défaut : `off`.
+- `autoJoinAllowlist` : saluts/alias autorisés lorsque `autoJoin` est `allowlist`. Les entrées d'alias sont résolues en identifiants de salle lors du traitement des invitations ; OpenClaw ne fait pas confiance à l'état de l'alias revendiqué par la salle invitée.
+- `dm` : bloc de stratégie de DM (`enabled`, `policy`, `allowFrom`).
+- Les entrées `dm.allowFrom` doivent être des identifiants utilisateurs complets Matrix, sauf si vous les avez déjà résolus via une recherche en direct dans l'annuaire.
 - `accounts` : substitutions nommées par compte. Les valeurs `channels.matrix` de premier niveau servent de valeurs par défaut pour ces entrées.
-- `groups` : carte de stratégie par salon. Privilégiez les ID de salon ou les alias ; les noms de salon non résolus sont ignorés lors de l'exécution. L'identité de session/groupe utilise l'ID de salon stable après résolution, tandis que les étiquettes lisibles par l'homme proviennent toujours des noms de salon.
-- `rooms` : alias hérité pour `groups`.
-- `actions` : verrouillage de l'outil par action (`messages`, `reactions`, `pins`, `profile`, `memberInfo`, `channelInfo`, `verification`).
+- `groups` : mappage de stratégie par salon. Privilégiez les identifiants ou les alias de salle ; les noms de salle non résolus sont ignorés lors de l'exécution. L'identité de session/groupe utilise l'identifiant stable de la salle après résolution, tandis que les étiquettes lisibles par l'homme proviennent toujours des noms de salle.
+- `rooms` : alias hérité pour `groups`.
+- `actions` : filtrage des tools par action (`messages`, `reactions`, `pins`, `profile`, `memberInfo`, `channelInfo`, `verification`).

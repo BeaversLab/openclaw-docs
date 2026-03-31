@@ -9,9 +9,9 @@ title: "Modèles locaux"
 
 # Modèles locaux
 
-Le mode local est réalisable, mais OpenClaw s'attend à un contexte large + de solides défenses contre l'injection de prompts. Les petites cartes tronquent le contexte et fuient la sécurité. Visez haut : **≥2 Mac Studios maximisés ou une configuration GPU équivalente (~30 k$+)**. Un seul GPU de **24 Go** ne fonctionne que pour les prompts plus légers avec une latence plus élevée. Utilisez **la plus grande variante de modèle / taille complète que vous pouvez exécuter** ; les points de contrôle quantifiés de manière agressive ou « petits » augmentent le risque d'injection de prompt (voir [Sécurité](/fr/gateway/security)).
+Le mode local est réalisable, mais OpenClaw s'attend à un contexte large + de solides défenses contre l'injection de prompts. Les petites cartes tronquent le contexte et fuient la sécurité. Visez haut : **≥2 Mac Studios maximisés ou une configuration GPU équivalente (~30 k$+)**. Un seul GPU de **24 Go** ne fonctionne que pour les prompts plus légers avec une latence plus élevée. Utilisez **la plus grande variante de modèle / taille complète que vous pouvez exécuter** ; les points de contrôle quantifiés de manière agressive ou « petits » augmentent le risque d'injection de prompt (voir [Sécurité](/en/gateway/security)).
 
-Si vous souhaitez la configuration locale la plus simple, commencez par [Ollama](/fr/providers/ollama) et `openclaw onboard`. Cette page est le guide opinionné pour les stacks locales haut de gamme et les serveurs locaux compatibles OpenAI personnalisés.
+Si vous souhaitez la configuration locale la plus simple, commencez par [Ollama](/en/providers/ollama) et `openclaw onboard`. Cette page est le guide opinionné pour les stacks locales haut de gamme et les serveurs locaux compatibles OpenAI personnalisés.
 
 ## Recommandé : LM Studio + MiniMax M2.5 (Réponses API, taille complète)
 

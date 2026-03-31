@@ -122,6 +122,6 @@ await web_search({
 
 ## Relacionado
 
-- [Descripción general de la búsqueda web](/es/tools/web) -- todos los proveedores y detección automática
-- [Brave Search](/es/tools/brave-search) -- resultados estructurados con filtros de país/idioma
-- [Perplexity Search](/es/tools/perplexity-search) -- resultados estructurados con filtrado de dominio
+- [Descripción general de la búsqueda web](/en/tools/web) -- todos los proveedores y detección automática
+- [Brave Search](/en/tools/brave-search) -- resultados estructurados con filtros de país/idioma
+- [Perplexity Search](/en/tools/perplexity-search) -- resultados estructurados con filtrado de dominio

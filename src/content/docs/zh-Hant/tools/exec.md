@@ -56,7 +56,7 @@ Notes:
 - `tools.exec.node` (預設值：未設定)
 - `tools.exec.strictInlineEval` (預設值：false)：當為 true 時，內嵌直譯器 eval 表單（例如 `python -c`、`node -e`、`ruby -e`、`perl -e`、`php -r`、`lua -e` 和 `osascript -e`）始終需要明確批准，且永不會由 `allow-always` 持久化。
 - `tools.exec.pathPrepend`：要為執行預先加到 `PATH` 的目錄清單（僅限 gateway + sandbox）。
-- `tools.exec.safeBins`：可在無需明確允許清單項目的情況下執行的僅 stdin 安全二進位檔。行為詳情請參閱 [安全 bins](/en/tools/exec-approvals#safe-bins-stdin-only)。
+- `tools.exec.safeBins`：僅 stdin 的安全二進位檔，無需明確的允許清單條目即可執行。有關行為的詳細資訊，請參閱 [Safe bins](/en/tools/exec-approvals#safe-bins-stdin-only)。
 - `tools.exec.safeBinTrustedDirs`：針對 `safeBins` 路徑檢查所信任的額外明確目錄。`PATH` 項目永遠不會自動被信任。內建預設值為 `/bin` 和 `/usr/bin`。
 - `tools.exec.safeBinProfiles`：每個安全 bin 的選用自訂 argv 原則 (`minPositional`、`maxPositional`、`allowedValueFlags`、`deniedFlags`)。
 
@@ -111,8 +111,8 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 
 ## Exec 核准 (companion app / node host)
 
-沙盒化的代理程式可能需要在 `exec` 斂道或節點主機上執行前要求每次請求的核准。
-請參閱 [Exec核准](/en/tools/exec-approvals) 以了解政策、允許清單和 UI 流程。
+沙箱代理程式可以要求在 `exec` 斂道或節點主機上執行之前，對每個請求進行核准。
+有關原則、允許清單和使用者介面流程，請參閱 [Exec approvals](/en/tools/exec-approvals)。
 
 當需要核准時，exec 工具會立即傳回
 `status: "approval-pending"` 和一個核准 ID。一旦核准 (或被拒絕/逾時)，
@@ -141,7 +141,7 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 當您明確將行為廣泛的 bin（例如 `jq`）新增回 `safeBins` 時，`openclaw security audit` 和 `openclaw doctor` 也會發出警告。
 如果您明確將解釋器加入執行清單，請啟用 `tools.exec.strictInlineEval`，如此一來，內嵌程式碼評估表單仍需要新的核准。
 
-如需完整的原則詳細資訊和範例，請參閱 [Exec approvals](/en/tools/exec-approvals#safe-bins-stdin-only) 和 [Safe bins versus allowlist](/en/tools/exec-approvals#safe-bins-versus-allowlist)。
+有關完整的原則詳細資訊和範例，請參閱 [Exec approvals](/en/tools/exec-approvals#safe-bins-stdin-only) 和 [Safe bins versus allowlist](/en/tools/exec-approvals#safe-bins-versus-allowlist)。
 
 ## 範例
 
@@ -178,16 +178,16 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 { "tool": "process", "action": "paste", "sessionId": "<id>", "text": "line1\nline2\n" }
 ```
 
-## apply_patch (實驗性)
+## apply_patch
 
-`apply_patch` 是 `exec` 的子工具，用於結構化的多檔案編輯。
-請明確啟用它：
+`apply_patch` 是 `exec` 的一個子工具，用於結構化的多檔案編輯。
+預設情況下，它對 OpenAI 和 OpenAI Codex 模型啟用。僅在您想要停用它或將其限制為特定模型時才使用設定：
 
 ```json5
 {
   tools: {
     exec: {
-      applyPatch: { enabled: true, workspaceOnly: true, allowModels: ["gpt-5.2"] },
+      applyPatch: { workspaceOnly: true, allowModels: ["gpt-5.2"] },
     },
   },
 }
@@ -196,6 +196,7 @@ openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 備註：
 
 - 僅適用於 OpenAI/OpenAI Codex 模型。
-- 工具政策仍然適用；`allow: ["exec"]` 隱含允許 `apply_patch`。
+- 工具策略仍然適用；`allow: ["write"]` 隱式允許 `apply_patch`。
 - 設定位於 `tools.exec.applyPatch` 之下。
-- `tools.exec.applyPatch.workspaceOnly` 預設為 `true`（限制在工作區內）。僅在您故意希望 `apply_patch` 在工作區目錄之外寫入/刪除時，才將其設定為 `false`。
+- `tools.exec.applyPatch.enabled` 預設為 `true`；將其設定為 `false` 可針對 OpenAI 模型停用此工具。
+- `tools.exec.applyPatch.workspaceOnly` 預設為 `true`（限於工作區內）。僅當您有意讓 `apply_patch` 在工作區目錄之外寫入/刪除時，才將其設定為 `false`。

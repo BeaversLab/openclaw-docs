@@ -8,12 +8,12 @@ title: "Heartbeat"
 
 # Heartbeat (Gateway)
 
-> **Heartbeat vs Cron ?** Consultez [Cron vs Heartbeat](/fr/automation/cron-vs-heartbeat) pour savoir quand utiliser chacun d'eux.
+> **Heartbeat vs Cron ?** Consultez [Cron vs Heartbeat](/en/automation/cron-vs-heartbeat) pour savoir quand utiliser chacun d'eux.
 
 Heartbeat exécute des **tours d'agent périodiques** dans la session principale afin que le modèle puisse
 signaler tout ce qui nécessite une attention sans vous spammer.
 
-Troubleshooting : [/automation/troubleshooting](/fr/automation/troubleshooting)
+Troubleshooting : [/automation/troubleshooting](/en/automation/troubleshooting)
 
 ## Démarrage rapide (débutant)
 
@@ -65,7 +65,7 @@ Le prompt par défaut est intentionnellement large :
 - **Vérification humaine** : « Vérifiez parfois votre humain pendant la journée » incite
   à un message occasionnel et léger « avez-vous besoin de quelque chose ? », mais
   évite le spam nocturne en utilisant votre fuseau horaire local configuré
-  (voir [/concepts/timezone](/fr/concepts/timezone)).
+  (voir [/concepts/timezone](/en/concepts/timezone)).
 
 Si vous souhaitez qu'un battement effectue une tâche très spécifique (par ex. « vérifier
 les statistiques Gmail PubSub » ou « vérifier la santé de la passerelle »), définissez
@@ -221,8 +221,8 @@ Utilisez `accountId` pour cibler un compte spécifique sur les channels multi-co
 - `isolatedSession` : si vrai, chaque heartbeat s'exécute dans une nouvelle session sans historique de conversation précédent. Utilise le même modèle d'isoisonnement que le cron `sessionTarget: "isolated"`. Réduit considérablement le coût en jetons par heartbeat. Combinez avec `lightContext: true` pour des économies maximales. Le routage de la livraison utilise toujours le contexte de la session principale.
 - `session` : clé de session optionnelle pour les exécutions du heartbeat.
   - `main` (par défaut) : session principale de l'agent.
-  - Clé de session explicite (copiée depuis `openclaw sessions --json` ou la [sessions CLI](/fr/cli/sessions)).
-  - Formats de clé de session : voir [Sessions](/fr/concepts/session) et [Groupes](/fr/channels/groups).
+  - Clé de session explicite (copiée depuis `openclaw sessions --json` ou la [sessions CLI](/en/cli/sessions)).
+  - Formats de clé de session : voir [Sessions](/en/concepts/session) et [Groupes](/en/channels/groups).
 - `target` :
   - `last` : livrer vers le dernier canal externe utilisé.
   - canal explicite : `whatsapp` / `telegram` / `discord` / `googlechat` / `slack` / `msteams` / `signal` / `imessage`.

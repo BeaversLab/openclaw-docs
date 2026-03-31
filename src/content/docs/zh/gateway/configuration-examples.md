@@ -9,7 +9,7 @@ title: "配置示例"
 
 # 配置示例
 
-以下示例与当前的配置架构保持一致。如需详尽的参考和逐字段说明，请参阅 [Configuration](/zh/gateway/configuration)。
+以下示例与当前的配置架构保持一致。如需详尽的参考和逐字段说明，请参阅 [Configuration](/en/gateway/configuration)。
 
 ## 快速开始
 
@@ -542,7 +542,7 @@ title: "配置示例"
 
 ### Anthropic setup-token + API 密钥，MiniMax 备用
 
-<Warning>过去，部分用户在 Claude Code 之外使用 Anthropic setup-token 受到了限制。 请将此视为用户选择的风险，在依赖订阅 身份验证之前，请验证当前的 Anthropic 条款。</Warning>
+<Warning>过去，部分用户在 Anthropic 之外使用 Anthropic setup-token 受到了限制。请将此视为用户自担风险，并在依赖订阅认证之前确认当前的 Anthropic 条款。</Warning>
 
 ```json5
 {
@@ -643,4 +643,4 @@ title: "配置示例"
 - 如果您设置了 `dmPolicy: "open"`，则匹配的 `allowFrom` 列表必须包含 `"*"`。
 - 提供商 ID 各不相同（电话号码、用户 ID、频道 ID）。请使用提供商文档确认格式。
 - 稍后添加的可选部分：`web`、`browser`、`ui`、`discovery`、`canvasHost`、`talk`、`signal`、`imessage`。
-- 有关更深入的设置说明，请参阅 [Providers](/zh/providers) 和 [Troubleshooting](/zh/gateway/troubleshooting)。
+- 有关更深入的设置说明，请参阅 [Providers](/en/providers) 和 [Troubleshooting](/en/gateway/troubleshooting)。

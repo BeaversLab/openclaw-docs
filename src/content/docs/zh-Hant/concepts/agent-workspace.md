@@ -190,7 +190,7 @@ git push
 
 建議的 `.gitignore` 入門檔案：
 
-```text
+```gitignore
 .DS_Store
 .env
 **/*.key

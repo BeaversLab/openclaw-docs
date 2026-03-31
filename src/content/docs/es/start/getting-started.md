@@ -17,7 +17,7 @@ configurada y una sesión de chat operativa.
 - **Node.js** — Se recomienda Node 24 (también se admite Node 22.14+)
 - **Una clave de API** de un proveedor de modelos (Anthropic, OpenAI, Google, etc.) — la integración te lo solicitará
 
-<Tip>Comprueba tu versión de Node con `node --version`. **Usuarios de Windows:** tanto Windows nativo como WSL2 son compatibles. WSL2 es más estable y se recomienda para la experiencia completa. Consulta [Windows](/es/platforms/windows). ¿Necesitas instalar Node? Consulta [Configuración de Node](/es/install/node).</Tip>
+<Tip>Verifique su versión de Node con `node --version`. **Usuarios de Windows:** tanto Windows nativo como WSL2 son compatibles. WSL2 es más estable y se recomienda para la experiencia completa. Consulte [Windows](/en/platforms/windows). ¿Necesita instalar Node? Consulte [Configuración de Node](/en/install/node).</Tip>
 
 ## Configuración rápida
 
@@ -30,7 +30,7 @@ configurada y una sesión de chat operativa.
         ```
         <img
   src="/assets/install-script.svg"
-  alt="Proceso del Script de Instalación"
+  alt="Proceso de instalación del script"
   className="rounded-lg"
 />
       </Tab>
@@ -42,19 +42,19 @@ configurada y una sesión de chat operativa.
     </Tabs>
 
     <Note>
-    Otros métodos de instalación (Docker, Nix, npm): [Instalar](/es/install).
+    Otros métodos de instalación (Docker, Nix, npm): [Instalar](/en/install).
     </Note>
 
   </Step>
-  <Step title="Ejecutar la integración">
+  <Step title="Ejecutar la incorporación">
     ```bash
     openclaw onboard --install-daemon
     ```
 
-    El asistente te guía a través de la elección de un proveedor de modelos, el establecimiento de una clave de API
-    y la configuración del Gateway. Tarda unos 2 minutos.
+    El asistente te guiará a través de la elección de un proveedor de modelos, la configuración de una clave API
+    y la configuración de Gateway. Toma unos 2 minutos.
 
-    Consulta [Integración (CLI)](/es/start/wizard) para obtener la referencia completa.
+    Consulta [Onboarding (CLI)](/en/start/wizard) para obtener la referencia completa.
 
   </Step>
   <Step title="Verificar que el Gateway se está ejecutando">
@@ -74,10 +74,10 @@ configurada y una sesión de chat operativa.
 
   </Step>
   <Step title="Envía tu primer mensaje">
-    Escribe un mensaje en el chat de la Interfaz de Control (Control UI) y deberías recibir una respuesta de la IA.
+    Escribe un mensaje en el chat de la interfaz de usuario de Control y deberías recibir una respuesta de la IA.
 
     ¿Prefieres chatear desde tu teléfono? El canal más rápido de configurar es
-    [Telegram](/es/channels/telegram) (solo un token de bot). Consulta [Canales](/es/channels)
+    [Telegram](/en/channels/telegram) (solo se necesita un token de bot). Consulta [Canales](/en/channels)
     para ver todas las opciones.
 
   </Step>
@@ -86,27 +86,27 @@ configurada y una sesión de chat operativa.
 ## Qué hacer a continuación
 
 <Columns>
-  <Card title="Conecta un canal" href="/es/channels" icon="message-square">
+  <Card title="Conecta un canal" href="/en/channels" icon="message-square">
     WhatsApp, Telegram, Discord, iMessage y más.
   </Card>
-  <Card title="Emparejamiento y seguridad" href="/es/channels/pairing" icon="shield">
+  <Card title="Emparejamiento y seguridad" href="/en/channels/pairing" icon="shield">
     Controla quién puede enviar mensajes a tu agente.
   </Card>
-  <Card title="Configura el Gateway" href="/es/gateway/configuration" icon="settings">
+  <Card title="Configurar la puerta de enlace" href="/en/gateway/configuration" icon="settings">
     Modelos, herramientas, sandbox y configuraciones avanzadas.
   </Card>
-  <Card title="Explorar herramientas" href="/es/tools" icon="wrench">
-    Navegador, exec, búsqueda web, habilidades y complementos.
+  <Card title="Explorar herramientas" href="/en/tools" icon="wrench">
+    Navegador, ejecución, búsqueda web, habilidades y complementos.
   </Card>
 </Columns>
 
 <Accordion title="Avanzado: variables de entorno">
-  Si ejecutas OpenClaw como una cuenta de servicio o deseas rutas personalizadas:
+  Si ejecutas OpenClaw como una cuenta de servicio o quieres rutas personalizadas:
 
 - `OPENCLAW_HOME` — directorio principal para la resolución de rutas internas
-- `OPENCLAW_STATE_DIR` — sobrescribir el directorio de estado
-- `OPENCLAW_CONFIG_PATH` — sobrescribir la ruta del archivo de configuración
+- `OPENCLAW_STATE_DIR` — anular el directorio de estado
+- `OPENCLAW_CONFIG_PATH` — anular la ruta del archivo de configuración
 
-Referencia completa: [Variables de entorno](/es/help/environment).
+Referencia completa: [Variables de entorno](/en/help/environment).
 
 </Accordion>

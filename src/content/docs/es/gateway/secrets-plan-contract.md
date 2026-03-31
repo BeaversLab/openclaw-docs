@@ -44,7 +44,7 @@ Si un destino no coincide con estas reglas, la aplicación falla antes de mutar 
 
 Los destinos de plan se aceptan para rutas de credenciales admitidas en:
 
-- [Superficie de credenciales SecretRef](/es/reference/secretref-credential-surface)
+- [Superficie de credenciales SecretRef](/en/reference/secretref-credential-surface)
 
 ## Comportamiento del tipo de destino
 
@@ -110,7 +110,7 @@ Si la aplicación falla con un mensaje de ruta de destino no válida, regenere e
 
 ## Documentos relacionados
 
-- [Gestión de secretos](/es/gateway/secrets)
-- [CLI `secrets`](/es/cli/secrets)
-- [Superficie de credenciales SecretRef](/es/reference/secretref-credential-surface)
-- [Referencia de configuración](/es/gateway/configuration-reference)
+- [Gestión de secretos](/en/gateway/secrets)
+- [CLI `secrets`](/en/cli/secrets)
+- [Superficie de credenciales SecretRef](/en/reference/secretref-credential-surface)
+- [Referencia de configuración](/en/gateway/configuration-reference)

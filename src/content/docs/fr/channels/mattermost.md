@@ -31,7 +31,7 @@ openclaw plugins install ./extensions/mattermost
 Si vous choisissez Mattermost lors de la configuration et qu'une extraction git est détectée,
 OpenClaw proposera automatiquement le chemin d'installation local.
 
-Détails : [Plugins](/fr/tools/plugin)
+Détails : [Plugins](/en/tools/plugin)
 
 ## Configuration rapide
 

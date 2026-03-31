@@ -31,4 +31,4 @@ Cómo ver si el canal vinculado está sano desde la aplicación de la barra de m
 
 ## En caso de duda
 
-- Todavía puede usar el flujo de CLI en [Salud de la puerta de enlace](/es/gateway/health) (`openclaw status`, `openclaw status --deep`, `openclaw health --json`) y hacer seguimiento de `/tmp/openclaw/openclaw-*.log` para `web-heartbeat` / `web-reconnect`.
+- Todavía puede usar el flujo de CLI en [Salud de la puerta de enlace](/en/gateway/health) (`openclaw status`, `openclaw status --deep`, `openclaw health --json`) y hacer seguimiento de `/tmp/openclaw/openclaw-*.log` para `web-heartbeat` / `web-reconnect`.
