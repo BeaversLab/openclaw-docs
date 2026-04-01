@@ -276,3 +276,9 @@ See [Configuration reference](/en/gateway/configuration) for the full `plugins.*
 - If your plugin depends on native modules, document the build steps and any
   package-manager allowlist requirements (for example, pnpm `allow-build-scripts`
   - `pnpm rebuild <package>`).
+
+## Related
+
+- [Building Plugins](/en/plugins/building-plugins) — getting started with plugins
+- [Plugin Architecture](/en/plugins/architecture) — internal architecture
+- [SDK Overview](/en/plugins/sdk-overview) — Plugin SDK reference

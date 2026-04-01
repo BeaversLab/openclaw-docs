@@ -22,7 +22,7 @@ openclaw plugins install @openclaw/nextcloud-talk
 Local checkout (when running from a git repo):
 
 ```bash
-openclaw plugins install ./extensions/nextcloud-talk
+openclaw plugins install ./path/to/local/nextcloud-talk-plugin
 ```
 
 If you choose Nextcloud Talk during setup and a git checkout is detected,
@@ -136,3 +136,11 @@ Provider options:
 - `channels.nextcloud-talk.blockStreaming`: disable block streaming for this channel.
 - `channels.nextcloud-talk.blockStreamingCoalesce`: block streaming coalesce tuning.
 - `channels.nextcloud-talk.mediaMaxMb`: inbound media cap (MB).
+
+## Related
+
+- [Channels Overview](/en/channels) — all supported channels
+- [Pairing](/en/channels/pairing) — DM authentication and pairing flow
+- [Groups](/en/channels/groups) — group chat behavior and mention gating
+- [Channel Routing](/en/channels/channel-routing) — session routing for messages
+- [Security](/en/gateway/security) — access model and hardening

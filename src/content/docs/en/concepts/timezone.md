@@ -89,3 +89,9 @@ The system prompt includes:
 You can control the prompt format with `agents.defaults.timeFormat` (`auto` | `12` | `24`).
 
 See [Date & Time](/en/date-time) for the full behavior and examples.
+
+## Related
+
+- [Heartbeat](/en/gateway/heartbeat) — active hours use timezone for scheduling
+- [Cron Jobs](/en/automation/cron-jobs) — cron expressions use timezone for scheduling
+- [Date & Time](/en/date-time) — full date/time behavior and examples

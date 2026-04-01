@@ -145,7 +145,8 @@ If logs show nonce/signature errors, update the connecting client and verify it:
 Related:
 
 - [/web/control-ui](/en/web/control-ui)
-- [/gateway/authentication](/en/gateway/authentication)
+- [/gateway/configuration](/en/gateway/configuration) (gateway auth modes)
+- [/gateway/trusted-proxy-auth](/en/gateway/trusted-proxy-auth)
 - [/gateway/remote](/en/gateway/remote)
 - [/cli/devices](/en/cli/devices)
 
@@ -287,12 +288,15 @@ openclaw doctor
 
 Look for:
 
+- Whether `plugins.allow` is set and includes `browser`.
 - Valid browser executable path.
 - CDP profile reachability.
 - Local Chrome availability for `existing-session` / `user` profiles.
 
 Common signatures:
 
+- `unknown command "browser"` or `unknown command 'browser'` → the bundled browser plugin is excluded by `plugins.allow`.
+- browser tool missing / unavailable while `browser.enabled=true` → `plugins.allow` excludes `browser`, so the plugin never loaded.
 - `Failed to start Chrome CDP on port` → browser process failed to launch.
 - `browser.executablePath not found` → configured path is invalid.
 - `No Chrome tabs found for profile="user"` → the Chrome MCP attach profile has no open local Chrome tabs.

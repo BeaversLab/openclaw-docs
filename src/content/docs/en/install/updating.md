@@ -126,3 +126,9 @@ To return to latest: `git checkout main && git pull`.
 - Run `openclaw doctor` again and read the output carefully.
 - Check: [Troubleshooting](/en/gateway/troubleshooting)
 - Ask in Discord: [https://discord.gg/clawd](https://discord.gg/clawd)
+
+## Related
+
+- [Install Overview](/en/install) — all installation methods
+- [Doctor](/en/gateway/doctor) — health checks after updates
+- [Migrating](/en/install/migrating) — major version migration guides

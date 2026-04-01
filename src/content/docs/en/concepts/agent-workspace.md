@@ -234,3 +234,10 @@ Suggested `.gitignore` starter:
   [Channel routing](/en/channels/channel-routing) for routing configuration.
 - If `agents.defaults.sandbox` is enabled, non-main sessions can use per-session sandbox
   workspaces under `agents.defaults.sandbox.workspaceRoot`.
+
+## Related
+
+- [Standing Orders](/en/automation/standing-orders) — persistent instructions in workspace files
+- [Heartbeat](/en/gateway/heartbeat) — HEARTBEAT.md workspace file
+- [Session](/en/concepts/session) — session storage paths
+- [Sandboxing](/en/gateway/sandboxing) — workspace access in sandboxed environments

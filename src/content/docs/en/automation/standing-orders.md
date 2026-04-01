@@ -247,5 +247,8 @@ Each program should have:
 
 ## Related
 
-- [Cron Jobs](/en/automation/cron-jobs) — Schedule enforcement for standing orders
-- [Agent Workspace](/en/concepts/agent-workspace) — Where standing orders live, including the full list of auto-injected bootstrap files (AGENTS.md, SOUL.md, etc.)
+- [Automation Overview](/en/automation) — all automation mechanisms at a glance
+- [Cron Jobs](/en/automation/cron-jobs) — schedule enforcement for standing orders
+- [Hooks](/en/automation/hooks) — event-driven scripts for agent lifecycle events
+- [Webhooks](/en/automation/webhook) — inbound HTTP event triggers
+- [Agent Workspace](/en/concepts/agent-workspace) — where standing orders live, including the full list of auto-injected bootstrap files (AGENTS.md, SOUL.md, etc.)

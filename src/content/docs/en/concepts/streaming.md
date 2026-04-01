@@ -153,3 +153,9 @@ Slack:
 - `partial` can use Slack native streaming (`chat.startStream`/`append`/`stop`) when available.
 - `block` uses append-style draft previews.
 - `progress` uses status preview text, then final answer.
+
+## Related
+
+- [Messages](/en/concepts/messages) — message lifecycle and delivery
+- [Retry](/en/concepts/retry) — retry behavior on delivery failure
+- [Channels](/en/channels) — per-channel streaming support

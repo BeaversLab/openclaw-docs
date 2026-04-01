@@ -154,3 +154,8 @@ Page-filtered fallback model:
   "prompt": "Extract only customer-impacting incidents"
 }
 ```
+
+## Related
+
+- [Tools Overview](/en/tools) — all available agent tools
+- [Configuration Reference](/en/gateway/configuration-reference#agent-defaults) — pdfMaxBytesMb and pdfMaxPages config

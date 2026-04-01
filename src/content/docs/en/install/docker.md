@@ -187,13 +187,15 @@ and rolling file logs under `/tmp/openclaw/`.
 For easier day-to-day Docker management, install `ClawDock`:
 
 ```bash
-mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/openclaw/openclaw/main/scripts/shell-helpers/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
+mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/openclaw/openclaw/main/scripts/clawdock/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
 echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 ```
 
+If you installed ClawDock from the older `scripts/shell-helpers/clawdock-helpers.sh` raw path, rerun the install command above so your local helper file tracks the new location.
+
 Then use `clawdock-start`, `clawdock-stop`, `clawdock-dashboard`, etc. Run
 `clawdock-help` for all commands.
-See the [`ClawDock` Helper README](https://github.com/openclaw/openclaw/blob/main/scripts/shell-helpers/README.md).
+See [ClawDock](/en/install/clawdock) for the full helper guide.
 
 <AccordionGroup>
   <Accordion title="Enable agent sandbox for Docker gateway">
@@ -392,3 +394,11 @@ scripts/sandbox-setup.sh
 
   </Accordion>
 </AccordionGroup>
+
+## Related
+
+- [Install Overview](/en/install) — all installation methods
+- [Podman](/en/install/podman) — Podman alternative to Docker
+- [ClawDock](/en/install/clawdock) — Docker Compose community setup
+- [Updating](/en/install/updating) — keeping OpenClaw up to date
+- [Configuration](/en/gateway/configuration) — gateway configuration after install

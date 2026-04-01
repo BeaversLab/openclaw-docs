@@ -25,6 +25,7 @@ Text is supported everywhere; media and reactions vary by channel.
 - [Microsoft Teams](/en/channels/msteams) — Bot Framework; enterprise support (plugin, installed separately).
 - [Nextcloud Talk](/en/channels/nextcloud-talk) — Self-hosted chat via Nextcloud Talk (plugin, installed separately).
 - [Nostr](/en/channels/nostr) — Decentralized DMs via NIP-04 (plugin, installed separately).
+- [QQ Bot](/en/channels/qqbot) — QQ Bot API; private chat, group chat, and rich media.
 - [Signal](/en/channels/signal) — signal-cli; privacy-focused.
 - [Slack](/en/channels/slack) — Bolt SDK; workspace apps.
 - [Synology Chat](/en/channels/synology-chat) — Synology NAS Chat via outgoing+incoming webhooks (plugin, installed separately).

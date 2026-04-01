@@ -22,7 +22,7 @@ openclaw plugins install @openclaw/twitch
 Local checkout (when running from a git repo):
 
 ```bash
-openclaw plugins install ./extensions/twitch
+openclaw plugins install ./path/to/local/twitch-plugin
 ```
 
 Details: [Plugins](/en/tools/plugin)
@@ -377,3 +377,11 @@ Example:
 - **500 characters** per message (auto-chunked at word boundaries)
 - Markdown is stripped before chunking
 - No rate limiting (uses Twitch's built-in rate limits)
+
+## Related
+
+- [Channels Overview](/en/channels) — all supported channels
+- [Pairing](/en/channels/pairing) — DM authentication and pairing flow
+- [Groups](/en/channels/groups) — group chat behavior and mention gating
+- [Channel Routing](/en/channels/channel-routing) — session routing for messages
+- [Security](/en/gateway/security) — access model and hardening

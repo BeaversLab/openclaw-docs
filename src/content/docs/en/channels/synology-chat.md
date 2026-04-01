@@ -19,7 +19,7 @@ Synology Chat is plugin-based and not part of the default core channel install.
 Install from a local checkout:
 
 ```bash
-openclaw plugins install ./extensions/synology-chat
+openclaw plugins install ./path/to/local/synology-chat-plugin
 ```
 
 Details: [Plugins](/en/tools/plugin)
@@ -140,3 +140,11 @@ but duplicate exact paths are still rejected fail-closed. Prefer explicit per-ac
 - Prefer `dmPolicy: "allowlist"` for production.
 - Keep `dangerouslyAllowNameMatching` off unless you explicitly need legacy username-based reply delivery.
 - Keep `dangerouslyAllowInheritedWebhookPath` off unless you explicitly accept shared-path routing risk in a multi-account setup.
+
+## Related
+
+- [Channels Overview](/en/channels) — all supported channels
+- [Pairing](/en/channels/pairing) — DM authentication and pairing flow
+- [Groups](/en/channels/groups) — group chat behavior and mention gating
+- [Channel Routing](/en/channels/channel-routing) — session routing for messages
+- [Security](/en/gateway/security) — access model and hardening

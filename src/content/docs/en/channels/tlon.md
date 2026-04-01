@@ -27,7 +27,7 @@ openclaw plugins install @openclaw/tlon
 Local checkout (when running from a git repo):
 
 ```bash
-openclaw plugins install ./extensions/tlon
+openclaw plugins install ./path/to/local/tlon-plugin
 ```
 
 Details: [Plugins](/en/tools/plugin)
@@ -274,3 +274,11 @@ Provider options:
 - Thread replies: if the inbound message is in a thread, OpenClaw replies in-thread.
 - Rich text: Markdown formatting (bold, italic, code, headers, lists) is converted to Tlon's native format.
 - Images: URLs are uploaded to Tlon storage and embedded as image blocks.
+
+## Related
+
+- [Channels Overview](/en/channels) — all supported channels
+- [Pairing](/en/channels/pairing) — DM authentication and pairing flow
+- [Groups](/en/channels/groups) — group chat behavior and mention gating
+- [Channel Routing](/en/channels/channel-routing) — session routing for messages
+- [Security](/en/gateway/security) — access model and hardening
