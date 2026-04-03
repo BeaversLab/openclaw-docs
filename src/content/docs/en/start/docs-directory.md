@@ -60,7 +60,7 @@ For a complete map of the docs, see [Docs hubs](/en/start/hubs).
 
 - [Sessions](/en/concepts/session)
 - [Cron jobs](/en/automation/cron-jobs)
-- [Webhooks](/en/automation/webhook)
-- [Gmail hooks (Pub/Sub)](/en/automation/gmail-pubsub)
+- [Webhooks](/en/automation/cron-jobs#webhooks)
+- [Gmail hooks (Pub/Sub)](/en/automation/cron-jobs#gmail-pubsub-integration)
 - [Security](/en/gateway/security)
 - [Troubleshooting](/en/gateway/troubleshooting)

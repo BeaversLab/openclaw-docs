@@ -114,7 +114,7 @@ openclaw models status --check
 ```
 
 Optional ops scripts (systemd/Termux) are documented here:
-[/automation/auth-monitoring](/en/automation/auth-monitoring)
+[Auth monitoring scripts](/en/help/scripts#auth-monitoring-scripts)
 
 > `claude setup-token` requires an interactive TTY.
 

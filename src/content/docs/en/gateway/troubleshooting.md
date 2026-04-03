@@ -239,7 +239,7 @@ Common signatures:
 
 Related:
 
-- [/automation/troubleshooting](/en/automation/troubleshooting)
+- [/automation/cron-jobs#troubleshooting](/en/automation/cron-jobs#troubleshooting)
 - [/automation/cron-jobs](/en/automation/cron-jobs)
 - [/gateway/heartbeat](/en/gateway/heartbeat)
 

@@ -79,8 +79,8 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [iMessage (legacy)](/en/channels/imessage)
 - [Location parsing](/en/channels/location)
 - [WebChat](/en/web/webchat)
-- [Webhooks](/en/automation/webhook)
-- [Gmail Pub/Sub](/en/automation/gmail-pubsub)
+- [Webhooks](/en/automation/cron-jobs#webhooks)
+- [Gmail Pub/Sub](/en/automation/cron-jobs#gmail-pubsub-integration)
 
 ## Gateway + operations
 
@@ -111,7 +111,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [PDF tool](/en/tools/pdf)
 - [Elevated mode](/en/tools/elevated)
 - [Cron jobs](/en/automation/cron-jobs)
-- [Cron vs Heartbeat](/en/automation/cron-vs-heartbeat)
+- [Automation & Tasks](/en/automation)
 - [Thinking + verbose](/en/tools/thinking)
 - [Models](/en/concepts/models)
 - [Sub-agents](/en/tools/subagents)
@@ -119,7 +119,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Terminal UI](/en/web/tui)
 - [Browser control](/en/tools/browser)
 - [Browser (Linux troubleshooting)](/en/tools/browser-linux-troubleshooting)
-- [Polls](/en/automation/poll)
+- [Polls](/en/cli/message)
 
 ## Nodes, media, voice
 
