@@ -12,11 +12,11 @@ title: "入职与配置协议"
 
 - 向导引擎（共享会话 + 提示符 + 入职状态）。
 - CLI 入职使用与 UI 客户端相同的向导流程。
-- Gateway 网关 RPC 暴露了向导 + 配置架构端点。
+- Gateway(网关) 网关 RPC 暴露了向导 + 配置架构端点。
 - macOS 入职使用向导步骤模型。
 - Web UI 根据 JSON 架构 + UI 提示渲染配置表单。
 
-## Gateway 网关 RPC
+## Gateway(网关) 网关 RPC
 
 - `wizard.start` 参数： `{ mode?: "local"|"remote", workspace?: string }`
 - `wizard.next` 参数： `{ sessionId, answer?: { stepId, value? } }`

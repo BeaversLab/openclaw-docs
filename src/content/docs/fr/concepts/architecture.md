@@ -126,3 +126,10 @@ Détails : [Protocole Gateway](/en/gateway/protocol), [Appairage](/en/channels/p
 - Exactement un Gateway contrôle une seule session Baileys par hôte.
 - Le handshake est obligatoire ; toute première trame non-JSON ou non-connect entraîne une fermeture brutale.
 - Les événements ne sont pas rejoués ; les clients doivent actualiser en cas de rupture.
+
+## Connexes
+
+- [Agent Loop](/en/concepts/agent-loop) — cycle d'exécution détaillé de l'agent
+- [Gateway Protocol](/en/gateway/protocol) — contrat de protocole WebSocket
+- [Queue](/en/concepts/queue) — file d'attente de commandes et concurrence
+- [Security](/en/gateway/security) — modèle de confiance et durcissement

@@ -10,15 +10,15 @@ read_when:
 
 # Configuration et configuration du plugin
 
-Référence pour le packaging des plugins (métadonnées `package.json`), les manifests
+Référence pour le conditionnement des plugins (métadonnées `package.json`), les manifestes
 (`openclaw.plugin.json`), les points d'entrée de configuration et les schémas de configuration.
 
-<Tip>**Vous cherchez un guide pas à pas ?** Les guides pratiques couvrent le packaging en contexte : [Plugins de Channel](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) et [Plugins de Fournisseur](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest).</Tip>
+<Tip>**Vous cherchez un guide pas à pas ?** Les guides pratiques couvrent le conditionnement en contexte : [Plugins de canal](/en/plugins/sdk-channel-plugins#step-1-package-and-manifest) et [Plugins de fournisseur](/en/plugins/sdk-provider-plugins#step-1-package-and-manifest).</Tip>
 
 ## Métadonnées du package
 
-Votre `package.json` a besoin d'un champ `openclaw` qui indique au système de plugins ce
-que votre plugin fournit :
+Votre `package.json` a besoin d'un champ `openclaw` qui indique au système de plugins ce que
+votre plugin fournit :
 
 **Plugin de canal :**
 
@@ -39,28 +39,39 @@ que votre plugin fournit :
 }
 ```
 
-**Plugin de fournisseur :**
+**Plugin de fournisseur / ligne de base de publication ClawHub :**
 
-```json
+```json openclaw-clawhub-package.json
 {
-  "name": "@myorg/openclaw-my-provider",
+  "name": "@myorg/openclaw-my-plugin",
   "version": "1.0.0",
   "type": "module",
   "openclaw": {
     "extensions": ["./index.ts"],
-    "providers": ["my-provider"]
+    "compat": {
+      "pluginApi": ">=2026.3.24-beta.2",
+      "minGatewayVersion": "2026.3.24-beta.2"
+    },
+    "build": {
+      "openclawVersion": "2026.3.24-beta.2",
+      "pluginSdkVersion": "2026.3.24-beta.2"
+    }
   }
 }
 ```
 
-### champs `openclaw`
+Si vous publiez le plugin en externe sur ClawHub, ces champs `compat` et `build`
+sont requis. Les extraits de publication canoniques se trouvent dans
+`docs/snippets/plugin-publish/`.
+
+### Champs `openclaw`
 
 | Champ        | Type       | Description                                                                                     |
 | ------------ | ---------- | ----------------------------------------------------------------------------------------------- |
 | `extensions` | `string[]` | Fichiers de point d'entrée (relatifs à la racine du package)                                    |
 | `setupEntry` | `string`   | Point d'entrée léger uniquement pour la configuration (optionnel)                               |
 | `channel`    | `object`   | Métadonnées du canal : `id`, `label`, `blurb`, `selectionLabel`, `docsPath`, `order`, `aliases` |
-| `providers`  | `string[]` | Ids de fournisseurs enregistrés par ce plugin                                                   |
+| `providers`  | `string[]` | Identifiants de fournisseur enregistrés par ce plugin                                           |
 | `install`    | `object`   | Indices d'installation : `npmSpec`, `localPath`, `defaultChoice`                                |
 | `startup`    | `object`   | Indicateurs de comportement au démarrage                                                        |
 
@@ -80,16 +91,13 @@ Les plugins de canal peuvent opter pour un chargement différé avec :
 }
 ```
 
-Lorsqu'il est activé, OpenClaw ne charge que `setupEntry` pendant la phase de démarrage
-préalable à l'écoute, même pour les canaux déjà configurés. Le point d'entrée complet se charge après
-que la passerelle a commencé à écouter.
+Lorsqu'elle est activée, OpenClaw charge uniquement `setupEntry` pendant la phase de démarrage avant l'écoute, même pour les canaux déjà configurés. L'entrée complète se charge une fois que la passerelle commence à écouter.
 
-<Warning>N'activez le chargement différé que si votre `setupEntry` enregistre tout ce dont la passerelle a besoin avant de commencer à écouter (enregistrement de channel, routes HTTP, méthodes de passerelle). Si l'entrée complète possède des capacités de démarrage requises, gardez le comportement par défaut.</Warning>
+<Warning>N'activez le chargement différé que si votre `setupEntry` enregistre tout ce dont la passerelle a besoin avant qu'elle ne commence à écouter (enregistrement du canal, routes HTTP, méthodes de la passerelle). Si l'entrée complète possède des capacités de démarrage requises, conservez le comportement par défaut.</Warning>
 
 ## Manifeste du plugin
 
-Chaque plugin natif doit inclure un `openclaw.plugin.json` à la racine du paquet.
-OpenClaw l'utilise pour valider la configuration sans exécuter le code du plugin.
+Chaque plugin natif doit inclure un `openclaw.plugin.json` à la racine du package. OpenClaw l'utilise pour valider la configuration sans exécuter le code du plugin.
 
 ```json
 {
@@ -124,7 +132,7 @@ Pour les plugins de canal, ajoutez `kind` et `channels` :
 }
 ```
 
-Même les plugins sans configuration doivent inclure un schéma. Un schéma vide est valide :
+Même les plugins sans configuration doivent fournir un schéma. Un schéma vide est valide :
 
 ```json
 {
@@ -138,11 +146,20 @@ Même les plugins sans configuration doivent inclure un schéma. Un schéma vide
 
 Voir [Plugin Manifest](/en/plugins/manifest) pour la référence complète du schéma.
 
+## Publication sur ClawHub
+
+Pour les packages de plugins, utilisez la commande spécifique aux packages de ClawHub :
+
+```bash
+clawhub package publish your-org/your-plugin --dry-run
+clawhub package publish your-org/your-plugin
+```
+
+L'alias de publication hérité réservé aux compétences (skills) est destiné aux skills. Les packages de plugins doivent toujours utiliser `clawhub package publish`.
+
 ## Entrée de configuration
 
-Le fichier `setup-entry.ts` est une alternative légère à `index.ts` que
-OpenClaw charge lorsqu'il a besoin uniquement des surfaces de configuration (onboarding, réparation de configuration,
-inspection de canal désactivé).
+Le fichier `setup-entry.ts` est une alternative légère à `index.ts` que OpenClaw charge lorsqu'il a uniquement besoin des surfaces de configuration (onboarding, réparation de la configuration, inspection de canal désactivé).
 
 ```typescript
 // setup-entry.ts
@@ -152,8 +169,7 @@ import { myChannelPlugin } from "./src/channel.js";
 export default defineSetupPluginEntry(myChannelPlugin);
 ```
 
-Cela évite de charger du code d'exécution lourd (bibliothèques cryptographiques, enregistrements CLI,
-services d'arrière-plan) lors des flux de configuration.
+Cela évite de charger du code d'exécution lourd (bibliothèques de chiffrement, enregistrements CLI, services d'arrière-plan) pendant les flux de configuration.
 
 **Quand OpenClaw utilise `setupEntry` au lieu de l'entrée complète :**
 
@@ -163,21 +179,20 @@ services d'arrière-plan) lors des flux de configuration.
 
 **Ce que `setupEntry` doit enregistrer :**
 
-- L'objet plugin de canal (via `defineSetupPluginEntry`)
-- Toutes les routes HTTP requises avant l'écoute du gateway
-- Toutes les méthodes de gateway nécessaires lors du démarrage
+- L'objet du plugin de canal (via `defineSetupPluginEntry`)
+- Toutes les routes HTTP requises avant l'écoute de la passerelle
+- Toutes les méthodes de la passerelle nécessaires lors du démarrage
 
 **Ce que `setupEntry` ne doit PAS inclure :**
 
 - Enregistrements CLI
 - Services d'arrière-plan
 - Importations d'exécution lourdes (crypto, SDK)
-- Méthodes de gateway nécessaires uniquement après le démarrage
+- Méthodes de la Gateway nécessaires uniquement après le démarrage
 
 ## Schéma de configuration
 
-La configuration du plugin est validée par rapport au schéma JSON de votre manifeste. Les utilisateurs
-configurent les plugins via :
+La configuration du plugin est validée par rapport au schéma JSON de votre manifeste. Les utilisateurs configurent les plugins via :
 
 ```json5
 {
@@ -195,7 +210,7 @@ configurent les plugins via :
 
 Votre plugin reçoit cette configuration en tant que `api.pluginConfig` lors de l'enregistrement.
 
-Pour une configuration spécifique au canal, utilisez plutôt la section de configuration du canal :
+Pour une configuration spécifique au channel, utilisez plutôt la section de configuration du channel :
 
 ```json5
 {
@@ -208,7 +223,7 @@ Pour une configuration spécifique au canal, utilisez plutôt la section de conf
 }
 ```
 
-### Construction des schémas de configuration de canal
+### Création de schémas de configuration de channel
 
 Utilisez `buildChannelConfigSchema` de `openclaw/plugin-sdk/core` pour convertir un
 schéma Zod dans le wrapper `ChannelConfigSchema` que OpenClaw valide :
@@ -265,18 +280,18 @@ const setupWizard: ChannelSetupWizard = {
 
 Le type `ChannelSetupWizard` prend en charge `credentials`, `textInputs`,
 `dmPolicy`, `allowFrom`, `groupAccess`, `prepare`, `finalize`, et plus encore.
-Voir les plugins fournis (par exemple `extensions/discord/src/channel.setup.ts`) pour
+Voir les packages de plugins inclus (par exemple le plugin Discord `src/channel.setup.ts`) pour
 des exemples complets.
 
 Pour les invites de liste d'autorisation DM qui nécessitent uniquement le flux standard
-`note -> prompt -> parse -> merge -> patch`, privilégiez les assistants de configuration
-partagés de `openclaw/plugin-sdk/setup` : `createPromptParsedAllowFromForAccount(...)`,
+`note -> prompt -> parse -> merge -> patch`, préférez les assistants de configuration partagés
+de `openclaw/plugin-sdk/setup` : `createPromptParsedAllowFromForAccount(...)`,
 `createTopLevelChannelParsedAllowFromPrompt(...)`, et
 `createNestedChannelParsedAllowFromPrompt(...)`.
 
-Pour les blocs de statut de configuration de channel qui ne varient que par les étiquettes, les scores et les lignes
-supplémentaires facultatives, privilégiez `createStandardChannelSetupStatus(...)` de
-`openclaw/plugin-sdk/setup` au lieu de recréer le même objet `status` dans
+Pour les blocs de statut de configuration de channel qui varient uniquement par les étiquettes, les scores et les lignes
+supplémentaires facultatives, préférez `createStandardChannelSetupStatus(...)` de
+`openclaw/plugin-sdk/setup` plutôt que de recréer manuellement le même objet `status` dans
 chaque plugin.
 
 Pour les surfaces de configuration facultatives qui ne doivent apparaître que dans certains contextes, utilisez
@@ -310,8 +325,8 @@ openclaw plugins install clawhub:@myorg/openclaw-my-plugin   # ClawHub only
 openclaw plugins install npm:@myorg/openclaw-my-plugin       # npm only
 ```
 
-**Plugins dans le dépôt :** placez-les sous `extensions/` et ils sont automatiquement
-découverts lors de la construction.
+**Plugins dans le dépôt :** placez-les sous l'arborescence de l'espace de travail des plugins groupés et ils sont découverts
+automatiquement lors de la build.
 
 **Les utilisateurs peuvent parcourir et installer :**
 
@@ -320,10 +335,10 @@ openclaw plugins search <query>
 openclaw plugins install <package-name>
 ```
 
-<Info>Pour les installations depuis npm, `openclaw plugins install` exécute `npm install --ignore-scripts` (pas de scripts de cycle de vie). Gardez les arbres de dépendances des plugins en JS/TS pur et évitez les packages qui nécessitent des builds `postinstall`.</Info>
+<Info>Pour les installations provenant de npm, `openclaw plugins install` exécute `npm install --ignore-scripts` (pas de scripts de cycle de vie). Gardez les arbres de dépendances des plugins en pur JS/TS et évitez les packages qui nécessitent des builds `postinstall`.</Info>
 
 ## Connexes
 
 - [Points d'entrée du SDK](/en/plugins/sdk-entrypoints) -- `definePluginEntry` et `defineChannelPluginEntry`
-- [Plugin Manifest](/en/plugins/manifest) -- référence complète du schéma de manifeste
-- [Création de Plugins](/en/plugins/building-plugins) -- guide de démarrage pas à pas
+- [Manifeste du plugin](/en/plugins/manifest) -- référence complète du schéma de manifeste
+- [Créer des plugins](/en/plugins/building-plugins) -- guide de démarrage pas à pas

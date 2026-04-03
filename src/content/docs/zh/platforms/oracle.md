@@ -11,7 +11,7 @@ title: "Oracle Cloud (Platform)"
 
 ## 目标
 
-在 Oracle Cloud 的 **Always Free** ARM 层上运行持久的 OpenClaw Gateway 网关。
+在 Oracle Cloud 的 **Always Free** ARM 层上运行持久的 OpenClaw Gateway(网关) 网关。
 
 Oracle 的免费层非常适合 OpenClaw（特别是如果您已经拥有 OCI 账户），但它也有折衷之处：
 

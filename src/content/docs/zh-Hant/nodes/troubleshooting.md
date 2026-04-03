@@ -62,7 +62,8 @@ openclaw logs --follow
 這些是不同的閘門：
 
 1. **裝置配對**：此節點能否連線至閘道？
-2. **執行核准**：此節點能否執行特定的 shell 指令？
+2. **閘道節點指令原則**：RPC 指令 ID 是否被 `gateway.nodes.allowCommands` / `denyCommands` 和平台預設值所允許？
+3. **Exec 核准**：此節點能否在本機執行特定的 shell 指令？
 
 快速檢查：
 
@@ -74,19 +75,22 @@ openclaw approvals allowlist add --node <idOrNameOrIp> "/usr/bin/uname"
 ```
 
 如果缺少配對，請先核准節點裝置。
-如果配對正常但 `system.run` 失敗，請修復執行核准/允許清單。
+如果 `nodes describe` 缺少指令，請檢查閘道節點指令原則，以及節點在連線時是否實際宣告了該指令。
+如果配對正常但 `system.run` 失敗，請修復該節點上的 exec 核准/允許清單。
+
+節點配對是一個身分/信任閘門，而非針對每個指令的核准介面。對於 `system.run`，個別節點的原則位於該節點的 exec 核准檔案 (`openclaw approvals get --node ...`) 中，而非閘道配對記錄中。
 
 ## 常見節點錯誤代碼
 
-- `NODE_BACKGROUND_UNAVAILABLE` → app 已在背景；將其帶到前景。
-- `CAMERA_DISABLED` → 節點設定中停用了相機切換。
-- `*_PERMISSION_REQUIRED` → 遺失/拒絕 OS 權限。
-- `LOCATION_DISABLED` → 定位模式已關閉。
-- `LOCATION_PERMISSION_REQUIRED` → 未授予請求的定位模式。
-- `LOCATION_BACKGROUND_UNAVAILABLE` → 應用程式在背景執行，但僅擁有「使用時」權限。
-- `SYSTEM_RUN_DENIED: approval required` → exec 請求需要明確批准。
+- `NODE_BACKGROUND_UNAVAILABLE` → 應用程式已在背景執行；請將其帶到前景。
+- `CAMERA_DISABLED` → 相機切換在節點設定中已停用。
+- `*_PERMISSION_REQUIRED` → OS 權限缺失/被拒絕。
+- `LOCATION_DISABLED` → 位置模式已關閉。
+- `LOCATION_PERMISSION_REQUIRED` → 未授予要求的位置模式。
+- `LOCATION_BACKGROUND_UNAVAILABLE` → 應用程式已在背景執行，但僅存在「使用 App 時」的權限。
+- `SYSTEM_RUN_DENIED: approval required` → exec 請求需要明確核准。
 - `SYSTEM_RUN_DENIED: allowlist miss` → 指令被允許清單模式封鎖。
-  在 Windows 節點主機上，除非透過請求流程批准，否則在允許清單模式下，類似 `cmd.exe /c ...` 的 Shell 包裝形式會被視為允許清單遺漏。
+  在 Windows 節點主機上，諸如 `cmd.exe /c ...` 的 shell 包裝表單在允許清單模式中會被視為允許清單不符，除非透過要求流程核准。
 
 ## 快速恢復循環
 
@@ -97,12 +101,12 @@ openclaw approvals get --node <idOrNameOrIp>
 openclaw logs --follow
 ```
 
-如果仍卡住：
+如果仍然卡住：
 
-- 重新批准裝置配對。
-- 重新開啟節點應用程式（前景）。
-- 重新授予 OS 權限。
-- 重新建立/調整 exec 批准策略。
+- 重新核准裝置配對。
+- 重新開啟節點應用程式 (前景)。
+- 重新授權 OS 權限。
+- 重新建立/調整 exec 核准原則。
 
 相關連結：
 

@@ -50,7 +50,7 @@ openclaw onboard --non-interactive \
 
 ## 环境说明
 
-如果 Gateway 网关 作为守护进程（launchd/systemd）运行，请确保 `HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`
+如果 Gateway(网关) 网关 作为守护进程（launchd/systemd）运行，请确保 `HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`
 对该进程可用（例如，在 `~/.openclaw/.env` 中或通过
 `env.shellEnv`）。
 

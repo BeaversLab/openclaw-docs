@@ -12,7 +12,7 @@ Administra trabajos de cron para el programador del Gateway.
 
 Relacionado:
 
-- Trabajos de cron: [Trabajos de cron](/en/automation/cron-jobs)
+- Trabajos cron: [Trabajos cron](/en/automation/cron-jobs)
 
 Sugerencia: ejecuta `openclaw cron --help` para ver la superficie completa de comandos.
 
@@ -32,7 +32,10 @@ Nota: la retención/poda se controla en la configuración:
 - `cron.sessionRetention` (por defecto `24h`) poda las sesiones de ejecución aisladas completadas.
 - `cron.runLog.maxBytes` + `cron.runLog.keepLines` podan `~/.openclaw/cron/runs/<jobId>.jsonl`.
 
-Nota de actualización: si tienes trabajos de cron antiguos de antes del formato de entrega/almacenamiento actual, ejecuta `openclaw doctor --fix`. Doctor ahora normaliza los campos de cron heredados (`jobId`, `schedule.cron`, campos de entrega de nivel superior, payload `provider` alias de entrega) y migra trabajos de respaldo de webhook `notify: true` simples a entrega explícita de webhook cuando `cron.webhook` está configurado.
+Nota de actualización: si tiene trabajos cron más antiguos de antes del formato actual de entrega/almacenamiento, ejecute
+`openclaw doctor --fix`. Doctor ahora normaliza los campos cron heredados (`jobId`, `schedule.cron`,
+campos de entrega de nivel superior, incluidos los campos `threadId` heredados y los alias de entrega `provider` del payload) y migra los trabajos de reserva `notify: true` de webhook simples a una entrega de webhook explícita cuando `cron.webhook` está
+configurado.
 
 ## Ediciones comunes
 
@@ -72,4 +75,4 @@ openclaw cron add \
   --no-deliver
 ```
 
-`--light-context` se aplica solo a trabajos de turno de agente aislados. Para las ejecuciones de cron, el modo ligero mantiene el contexto de arranque vacío en lugar de inyectar el conjunto de arranque completo del espacio de trabajo.
+`--light-context` se aplica solo a trabajos de turno de agente aislados. Para las ejecuciones cron, el modo ligero mantiene el contexto de arranque vacío en lugar de inyectar el conjunto completo de arranque del espacio de trabajo.

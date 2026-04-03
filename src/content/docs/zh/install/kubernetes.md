@@ -1,5 +1,5 @@
 ---
-summary: "使用 Kustomize 将 OpenClaw Gateway 网关 部署到 Kubernetes 集群"
+summary: "使用 Kustomize 将 OpenClaw Gateway(网关) 网关 部署到 Kubernetes 集群"
 read_when:
   - You want to run OpenClaw on a Kubernetes cluster
   - You want to test OpenClaw in a Kubernetes environment
@@ -102,7 +102,7 @@ Namespace: openclaw (configurable via OPENCLAW_NAMESPACE)
 ./scripts/k8s/deploy.sh
 ```
 
-### Gateway 网关 配置
+### Gateway(网关) 网关 配置
 
 在 `scripts/k8s/manifests/configmap.yaml` 中编辑 `openclaw.json`。有关完整参考，请参阅 [Gateway(网关) 配置](/en/gateway/configuration)。
 

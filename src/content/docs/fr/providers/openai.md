@@ -85,8 +85,8 @@ Pour `openai/*` (Responses API), OpenClaw active également le préchauffage Web
 
 Documentation OpenAI connexe :
 
-- [API temps réel avec WebSocket](https://platform.openai.com/docs/guides/realtime-websocket)
-- [Réponses de l'API de streaming (SSE)](https://platform.openai.com/docs/guides/streaming-responses)
+- [API Temps réel avec WebSocket](https://platform.openai.com/docs/guides/realtime-websocket)
+- [Réponses de streaming de API (SSE)](https://platform.openai.com/docs/guides/streaming-responses)
 
 ```json5
 {
@@ -145,9 +145,11 @@ La documentation OpenAI décrit le préchauffage comme optionnel. OpenClaw l'act
 }
 ```
 
-### Traitement prioritaire OpenAI
+### Traitement prioritaire OpenAI et Codex
 
-L'API d'OpenAI expose le traitement prioritaire via `service_tier=priority`. Dans OpenClaw, définissez `agents.defaults.models["openai/<model>"].params.serviceTier` pour transmettre ce champ lors des requêtes directes de réponses `openai/*`.
+OpenAI's API exposes le traitement prioritaire via `service_tier=priority`. Dans
+OpenClaw, définissez `agents.defaults.models["<provider>/<model>"].params.serviceTier`
+pour transmettre ce champ via les points de terminaison OpenAI/Codex Responses natifs.
 
 ```json5
 {
@@ -155,6 +157,11 @@ L'API d'OpenAI expose le traitement prioritaire via `service_tier=priority`. Dan
     defaults: {
       models: {
         "openai/gpt-5.4": {
+          params: {
+            serviceTier: "priority",
+          },
+        },
+        "openai-codex/gpt-5.4": {
           params: {
             serviceTier: "priority",
           },
@@ -167,18 +174,28 @@ L'API d'OpenAI expose le traitement prioritaire via `service_tier=priority`. Dan
 
 Les valeurs prises en charge sont `auto`, `default`, `flex` et `priority`.
 
+OpenClaw transmet `params.serviceTier` aux demandes de réponses `openai/*` directes et aux demandes de réponses Codex `openai-codex/*` lorsque ces modèles pointent vers les points de terminaison natifs OpenAI/Codex.
+
+Comportement important :
+
+- `openai/*` direct doit cibler `api.openai.com`
+- `openai-codex/*` doit cibler `chatgpt.com/backend-api`
+- si vous acheminez l'un ou l'autre fournisseur via une autre URL de base ou un proxy, OpenClaw laisse `service_tier` intact
+
 ### Mode rapide OpenAI
 
-OpenClaw expose un commutateur de mode rapide partagé pour les sessions `openai/*` et `openai-codex/*` :
+OpenClaw expose un commutateur de mode rapide partagé pour les sessions `openai/*` et
+`openai-codex/*` :
 
 - Chat/UI : `/fast status|on|off`
 - Config : `agents.defaults.models["<provider>/<model>"].params.fastMode`
 
-Lorsque le mode rapide est activé, OpenClaw applique un profil OpenAI à faible latence :
+Lorsque le mode rapide est activé, OpenClaw le mappe au traitement prioritaire OpenAI :
 
-- `reasoning.effort = "low"` lorsque la charge utile ne spécifie pas déjà le raisonnement
-- `text.verbosity = "low"` lorsque la charge utile ne spécifie pas déjà la verbosité
-- `service_tier = "priority"` pour les appels directs `openai/*` Responses vers `api.openai.com`
+- les appels Responses `openai/*` directs vers `api.openai.com` envoient `service_tier = "priority"`
+- les appels Responses `openai-codex/*` vers `chatgpt.com/backend-api` envoient également `service_tier = "priority"`
+- les valeurs `service_tier` de charge utile existantes sont conservées
+- le mode rapide ne réécrit pas `reasoning` ou `text.verbosity`
 
 Exemple :
 
@@ -203,24 +220,22 @@ Exemple :
 }
 ```
 
-Les redéfinitions de session prévalent sur la configuration. Effacer la redéfinition de session dans l'interface Sessions
-ramène la session à la valeur par défaut configurée.
+Les remplacements de session prévalent sur la configuration. Effacer le remplacement de session dans l'interface Sessions
+retourne la session à la valeur par défaut configurée.
 
 ### Compactage côté serveur OpenAI Responses
 
-Pour les modèles OpenAI Responses directs (`openai/*` utilisant `api: "openai-responses"` avec
-`baseUrl` sur `api.openai.com`), OpenClaw active désormais automatiquement les indicateurs de charge utile de compactage côté serveur OpenAI :
+Pour les modèles OpenAI Responses directs (`openai/*` utilisant `api: "openai-responses"` avec `baseUrl` sur `api.openai.com`), OpenClaw active désormais automatiquement les indicateurs de charge utile de compactage côté serveur OpenAI :
 
 - Force `store: true` (sauf si la compatibilité du modèle définit `supportsStore: false`)
 - Injecte `context_management: [{ type: "compaction", compact_threshold: ... }]`
 
 Par défaut, `compact_threshold` est `70%` du modèle `contextWindow` (ou `80000`
-lorsqu'il est indisponible).
+lorsqu'il n'est pas disponible).
 
 ### Activer explicitement le compactage côté serveur
 
-Utilisez ceci lorsque vous souhaitez forcer l'injection de `context_management` sur les modèles Responses compatibles
-(par exemple Azure OpenAI Responses) :
+Utilisez ceci lorsque vous souhaitez forcer l'injection de `context_management` sur les modèles Responses compatibles (par exemple Azure OpenAI Responses) :
 
 ```json5
 {
@@ -276,10 +291,9 @@ Utilisez ceci lorsque vous souhaitez forcer l'injection de `context_management` 
 ```
 
 `responsesServerCompaction` contrôle uniquement l'injection de `context_management`.
-Les modèles OpenAI Responses directs forcent toujours `store: true` sauf si la compatibilité définit
-`supportsStore: false`.
+Les modèles OpenAI Responses directs forcent toujours `store: true` sauf si la compatibilité définit `supportsStore: false`.
 
 ## Notes
 
 - Les références de modèle utilisent toujours `provider/model` (voir [/concepts/models](/en/concepts/models)).
-- Les détails d'authentification + les règles de réutilisation sont dans [/concepts/oauth](/en/concepts/oauth).
+- Les détails d'authentification + les règles de réutilisation se trouvent dans [/concepts/oauth](/en/concepts/oauth).

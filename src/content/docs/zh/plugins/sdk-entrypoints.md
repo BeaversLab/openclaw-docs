@@ -4,7 +4,7 @@ sidebarTitle: "入口点"
 summary: "definePluginEntry、defineChannelPluginEntry 和 defineSetupPluginEntry 的参考文档"
 read_when:
   - You need the exact type signature of definePluginEntry or defineChannelPluginEntry
-  - You want to understand registration mode (full vs setup)
+  - You want to understand registration mode (full vs setup vs CLI metadata)
   - You are looking up entry point options
 ---
 
@@ -12,7 +12,7 @@ read_when:
 
 每个插件都会导出一个默认的入口对象。SDK 提供了三个辅助函数来创建它们。
 
-<Tip>**正在寻找分步教程？** 请参阅 [渠道插件](/en/plugins/sdk-channel-plugins) 或 [提供商插件](/en/plugins/sdk-provider-plugins) 获取分步指南。</Tip>
+<Tip>**寻找分步指南？** 请参阅[渠道插件](/en/plugins/sdk-channel-plugins) 或[提供者插件](/en/plugins/sdk-provider-plugins)。</Tip>
 
 ## `definePluginEntry`
 
@@ -55,8 +55,9 @@ export default definePluginEntry({
 
 **导入：** `openclaw/plugin-sdk/core`
 
-使用特定于渠道的连线包装 `definePluginEntry`。根据注册模式自动调用
-`api.registerChannel({ plugin })` 并控制 `registerFull`。
+用特定于渠道的连接包装 `definePluginEntry`。自动调用
+`api.registerChannel({ plugin })`，公开一个可选的根帮助 CLI 元数据
+接缝，并根据注册模式对 `registerFull` 进行门控。
 
 ```typescript
 import { defineChannelPluginEntry } from "openclaw/plugin-sdk/core";
@@ -67,33 +68,46 @@ export default defineChannelPluginEntry({
   description: "Short summary",
   plugin: myChannelPlugin,
   setRuntime: setMyRuntime,
-  registerFull(api) {
+  registerCliMetadata(api) {
     api.registerCli(/* ... */);
+  },
+  registerFull(api) {
     api.registerGatewayMethod(/* ... */);
   },
 });
 ```
 
-| 字段           | 类型                                                             | 必填 | 默认值     |
-| -------------- | ---------------------------------------------------------------- | ---- | ---------- |
-| `id`           | `string`                                                         | 是   | —          |
-| `name`         | `string`                                                         | 是   | —          |
-| `description`  | `string`                                                         | 是   | —          |
-| `plugin`       | `ChannelPlugin`                                                  | 是   | —          |
-| `configSchema` | `OpenClawPluginConfigSchema \| () => OpenClawPluginConfigSchema` | 否   | 空对象架构 |
-| `setRuntime`   | `(runtime: PluginRuntime) => void`                               | 否   | —          |
-| `registerFull` | `(api: OpenClawPluginApi) => void`                               | 否   | —          |
+| 字段                  | 类型                                                             | 必填 | 默认值     |
+| --------------------- | ---------------------------------------------------------------- | ---- | ---------- |
+| `id`                  | `string`                                                         | 是   | —          |
+| `name`                | `string`                                                         | 是   | —          |
+| `description`         | `string`                                                         | 是   | —          |
+| `plugin`              | `ChannelPlugin`                                                  | 是   | —          |
+| `configSchema`        | `OpenClawPluginConfigSchema \| () => OpenClawPluginConfigSchema` | 否   | 空对象架构 |
+| `setRuntime`          | `(runtime: PluginRuntime) => void`                               | 否   | —          |
+| `registerCliMetadata` | `(api: OpenClawPluginApi) => void`                               | 否   | —          |
+| `registerFull`        | `(api: OpenClawPluginApi) => void`                               | 否   | —          |
 
 - `setRuntime` 在注册期间被调用，以便您可以存储运行时引用
-  (通常通过 `createPluginRuntimeStore`)。
-- `registerFull` 仅在 `api.registrationMode === "full"` 时运行。在仅设置加载期间
-  它会被跳过。
+  （通常通过 `createPluginRuntimeStore`）。在 CLI 元数据
+  捕获期间会跳过它。
+- `registerCliMetadata` 在 `api.registrationMode === "cli-metadata"`
+  和 `api.registrationMode === "full"` 期间都会运行。
+  将其作为渠道拥有的 CLI 描述符的规范位置，以便根帮助
+  保持非激活状态，同时正常的 CLI 命令注册仍然与
+  完整的插件加载兼容。
+- `registerFull` 仅在 `api.registrationMode === "full"` 时运行。它仅在
+  设置期间加载时被跳过。
+- 对于插件拥有的根 CLI 命令，当您希望命令保持延迟加载而不从
+  根 CLI 解析树中消失时，请优先使用 `api.registerCli(..., { descriptors: [...] })`。
+  对于渠道插件，请优先从 `registerCliMetadata(...)` 注册这些描述符，
+  并保持 `registerFull(...)` 仅专注于运行时工作。
 
 ## `defineSetupPluginEntry`
 
 **导入：** `openclaw/plugin-sdk/core`
 
-用于轻量级的 `setup-entry.ts` 文件。仅返回 `{ plugin }`，没有
+用于轻量级 `setup-entry.ts` 文件。仅返回 `{ plugin }`，没有
 运行时或 CLI 连接。
 
 ```typescript
@@ -102,50 +116,63 @@ import { defineSetupPluginEntry } from "openclaw/plugin-sdk/core";
 export default defineSetupPluginEntry(myChannelPlugin);
 ```
 
-当渠道被禁用、未配置或启用延迟加载时，OpenClaw 会加载此内容而不是完整入口。请参阅
-[Setup and Config](/en/plugins/sdk-setup#setup-entry) 了解这何时适用。
+当渠道被禁用、未配置或启用延迟加载时，OpenClaw 会加载此文件而不是完整入口。请参阅
+[设置和配置](/en/plugins/sdk-setup#setup-entry) 了解其重要性。
 
 ## 注册模式
 
 `api.registrationMode` 告诉您的插件它是如何被加载的：
 
-| 模式              | 何时                   | 注册什么            |
-| ----------------- | ---------------------- | ------------------- |
-| `"full"`          | 正常网关启动           | 所有内容            |
-| `"setup-only"`    | 已禁用/未配置的渠道    | 仅渠道注册          |
-| `"setup-runtime"` | 有运行时可用的设置流程 | 渠道 + 轻量级运行时 |
+| 模式              | 何时                              | 注册什么             |
+| ----------------- | --------------------------------- | -------------------- |
+| `"full"`          | 正常网关启动                      | 所有内容             |
+| `"setup-only"`    | 已禁用/未配置的渠道               | 仅渠道注册           |
+| `"setup-runtime"` | Setup flow with runtime available | 渠道 + 轻量级运行时  |
+| `"cli-metadata"`  | Root help / CLI metadata capture  | CLI descriptors only |
 
-`defineChannelPluginEntry` 自动处理这种分离。如果您
-直接针对渠道使用 `definePluginEntry`，请自行检查模式：
+`defineChannelPluginEntry` handles this split automatically. If you use
+`definePluginEntry` directly for a 渠道, check mode yourself:
 
 ```typescript
 register(api) {
+  if (api.registrationMode === "cli-metadata" || api.registrationMode === "full") {
+    api.registerCli(/* ... */);
+    if (api.registrationMode === "cli-metadata") return;
+  }
+
   api.registerChannel({ plugin: myPlugin });
   if (api.registrationMode !== "full") return;
 
   // Heavy runtime-only registrations
-  api.registerCli(/* ... */);
   api.registerService(/* ... */);
 }
 ```
 
-## 插件形态
+For CLI registrars specifically:
 
-OpenClaw 根据插件的注册行为对其进行分类：
+- use `descriptors` when the registrar owns one or more root commands and you
+  want OpenClaw to lazy-load the real CLI module on first invocation
+- make sure those descriptors cover every top-level command root exposed by the
+  registrar
+- use `commands` alone only for eager compatibility paths
 
-| 形态                  | 描述                              |
-| --------------------- | --------------------------------- |
-| **plain-capability**  | 一种能力类型（例如仅提供商）      |
-| **hybrid-capability** | 多种能力类型（例如提供商 + 语音） |
-| **hook-only**         | 仅钩子，无能力                    |
-| **non-capability**    | 工具/命令/服务，但没有能力        |
+## Plugin shapes
 
-使用 `openclaw plugins inspect <id>` 查看插件的形态。
+OpenClaw classifies loaded plugins by their registration behavior:
 
-## 相关
+| Shape                 | Description                                      |
+| --------------------- | ------------------------------------------------ |
+| **plain-capability**  | One capability type (e.g. 提供商-only)           |
+| **hybrid-capability** | Multiple capability types (e.g. 提供商 + speech) |
+| **hook-only**         | Only hooks, no capabilities                      |
+| **non-capability**    | Tools/commands/services but no capabilities      |
 
-- [SDK Overview](/en/plugins/sdk-overview) — 注册 API 和子路径参考
-- [Runtime Helpers](/en/plugins/sdk-runtime) — `api.runtime` 和 `createPluginRuntimeStore`
-- [Setup and Config](/en/plugins/sdk-setup) — 清单、setup 入口、延迟加载
-- [Channel Plugins](/en/plugins/sdk-channel-plugins) — 构建 `ChannelPlugin` 对象
-- [Provider Plugins](/en/plugins/sdk-provider-plugins) — 提供商注册和钩子
+Use `openclaw plugins inspect <id>` to see a plugin's shape.
+
+## Related
+
+- [SDK Overview](/en/plugins/sdk-overview) — registration API and subpath reference
+- [Runtime Helpers](/en/plugins/sdk-runtime) — `api.runtime` and `createPluginRuntimeStore`
+- [Setup and Config](/en/plugins/sdk-setup) — manifest, setup entry, deferred loading
+- [Channel Plugins](/en/plugins/sdk-channel-plugins) — building the `ChannelPlugin` object
+- [Provider Plugins](/en/plugins/sdk-provider-plugins) — 提供商 registration and hooks

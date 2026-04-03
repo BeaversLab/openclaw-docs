@@ -10,22 +10,22 @@ read_when:
 
 OpenClaw dispose de trois canaux de publication publique :
 
-- stable : versions taguées qui sont publiées sur npm `latest`
-- beta : balises de prépublication qui sont publiées sur npm `beta`
-- dev : la tête mobile de `main`
+- stable : versions étiquetées qui sont publiées sur npm npm `latest` et reflètent la même version sur `beta`, sauf si `beta` pointe déjà vers une pré-version plus récente
+- beta : balises de pré-version qui sont publiées sur npm `beta`
+- dev : la tête mouvante de `main`
 
 ## Nommage des versions
 
-- Version de publication stable : `YYYY.M.D`
+- Version de la version stable : `YYYY.M.D`
   - Balise Git : `vYYYY.M.D`
-- Version de correction stable : `YYYY.M.D-N`
-  - Tag Git : `vYYYY.M.D-N`
-- Version de prépublication bêta : `YYYY.M.D-beta.N`
-  - Tag Git : `vYYYY.M.D-beta.N`
+- Version de la version de correction stable : `YYYY.M.D-N`
+  - Balise Git : `vYYYY.M.D-N`
+- Version de la pré-version bêta : `YYYY.M.D-beta.N`
+  - Balise Git : `vYYYY.M.D-beta.N`
 - Ne pas compléter le mois ou le jour avec des zéros
-- `latest` désigne la version stable actuelle publiée sur npm
-- `beta` désigne la version de prépublication actuelle publiée sur npm
-- Les versions de correction stables sont également publiées sur npm `latest`
+- `latest` désigne la version stable actuelle de npm
+- `beta` désigne la cible d'installation bêta actuelle, qui peut pointer soit vers la pré-version active soit vers la dernière version stable promue
+- Les versions stables et les versions de correction stables sont publiées sur npm `latest` et réétiquettent également npm `beta` avec cette même version non bêta après la promotion, sauf si `beta` pointe déjà vers une pré-version plus récente
 - Chaque version d'OpenClaw publie le paquet npm et l'application macOS ensemble
 
 ## Cadence de publication
@@ -36,25 +36,29 @@ OpenClaw dispose de trois canaux de publication publique :
 
 ## Préparation de la publication
 
-- Exécutez `pnpm build` avant `pnpm release:check` afin que les artefacts de publication `dist/*` attendus existent pour l'étape de validation du paquet
-- Exécutez `pnpm release:check` avant chaque publication taguée
+- Exécutez `pnpm build && pnpm ui:build` avant `pnpm release:check` afin que les artefacts de
+  version `dist/*` attendus et le bundle Control UI existent pour l'étape
+  de validation du pack
+- Exécutez `pnpm release:check` avant chaque version étiquetée
 - Exécutez `RELEASE_TAG=vYYYY.M.D node --import tsx scripts/openclaw-npm-release-check.ts`
-  (ou le tag bêta/correction correspondant) avant approbation
+  (ou la balise bêta/correction correspondante) avant approbation
 - Après la publication sur npm, exécutez
   `node --import tsx scripts/openclaw-npm-postpublish-verify.ts YYYY.M.D`
   (ou la version bêta/correction correspondante) pour vérifier le chemin d'installation
-  du registre publié dans un nouveau préfixe temporaire
-- Pour les versions de correction stables comme `YYYY.M.D-N`, le vérificateur post-publication
-  vérifie également le chemin de mise à niveau de même préfixe temporaire de `YYYY.M.D` vers `YYYY.M.D-N`
-  afin que les corrections de publication ne puissent pas laisser silencieusement d'anciennes installations globales sur
-  le contenu stable de base
-- La prépublication de version npm échoue fermement à moins que l'archive ne contienne à la fois
-  `dist/control-ui/index.html` et un contenu `dist/control-ui/assets/` non vide
-  afin que nous ne publions plus à nouveau un tableau de bord vide pour le navigateur
+  du registre publié dans un préfixe temporaire vierge
+- Les workflows des mainteneurs peuvent réutiliser une exécution de contrôle préliminaire réussie pour la véritable
+  publication afin que l'étape de publication promeuve les artefacts de version préparés au lieu de
+  les reconstruire
+- Pour les versions de correction stables comme `YYYY.M.D-N`, le vérificateur
+  post-publication vérifie également le même chemin de mise à niveau avec préfixe temporaire de `YYYY.M.D` vers `YYYY.M.D-N`
+  afin que les corrections de version ne puissent pas laisser silencieusement des installations globales plus anciennes sur
+  la charge utile stable de base
+- La prépublication de la version npm échoue fermement à moins que l'archive ne contienne à la fois `dist/control-ui/index.html` et une charge utile `dist/control-ui/assets/` non vide, afin que nous ne livrions plus un tableau de bord navigateur vide
+- Si le travail de publication a touché la planification CI, les manifestes de minutage d'extension ou les matrices de test rapide, régénérez et examinez le plan de partition `checks-fast-extensions` propriétaire du planificateur via `node scripts/ci-write-manifest-outputs.mjs --workflow ci` avant approbation, afin que les notes de version ne décrivent pas une disposition CI obsolète
 - La préparation de la version stable macOS inclut également les surfaces du programme de mise à jour :
-  - la publication GitHub doit contenir les éléments empaquetés `.zip`, `.dmg` et `.dSYM.zip`
+  - la publication GitHub doit finalement contenir les fichiers `.zip`, `.dmg` et `.dSYM.zip` empaquetés
   - `appcast.xml` sur `main` doit pointer vers le nouveau zip stable après publication
-  - l'application empaquetée doit conserver un identifiant de bundle non-débogage, une URL de flux Sparkle non vide et un `CFBundleVersion` supérieur ou égal au seuil de build Sparkle canonique pour cette version de publication
+  - l'application empaquetée doit conserver un identifiant de bundle non-debug, une URL de flux Sparkle non vide et une `CFBundleVersion` supérieure ou égale au plancher de construction Sparkle canonique pour cette version
 
 ## Références publiques
 
@@ -63,6 +67,4 @@ OpenClaw dispose de trois canaux de publication publique :
 - [`scripts/package-mac-dist.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-dist.sh)
 - [`scripts/make_appcast.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/make_appcast.sh)
 
-Les mainteneurs utilisent la documentation de publication privée dans
-[`openclaw/maintainers/release/README.md`](https://github.com/openclaw/maintainers/blob/main/release/README.md)
-pour le runbook réel.
+Les responsables utilisent la documentation de publication privée dans [`openclaw/maintainers/release/README.md`](https://github.com/openclaw/maintainers/blob/main/release/README.md) pour le manuel d'exécution réel.

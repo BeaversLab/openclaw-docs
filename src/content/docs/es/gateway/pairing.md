@@ -65,22 +65,46 @@ Notas:
 
 - `node.pair.request` es idempotente por nodo: las llamadas repetidas devuelven la misma
   solicitud pendiente.
-- La aprobación **siempre** genera un token nuevo; nunca se devuelve ningún token desde
-  `node.pair.request`.
-- Las solicitudes pueden incluir `silent: true` como sugerencia para los flujos de aprobación automática.
+- Las solicitudes repetidas para el mismo nodo pendiente también actualizan los metadatos del nodo almacenado y la última instantánea de comandos declarados en la lista de permitidos para la visibilidad del operador.
+- La aprobación **siempre** genera un token nuevo; nunca se devuelve ningún token desde `node.pair.request`.
+- Las solicitudes pueden incluir `silent: true` como una sugerencia para los flujos de aprobación automática.
+
+Importante:
+
+- El emparejamiento de nodos es un flujo de confianza/identidad más la emisión de tokens.
+- **No** fija la superficie de comandos del nodo en vivo por nodo.
+- Los comandos del nodo en vivo provienen de lo que el nodo declara al conectarse después de que se aplica la política global de comandos de nodo de la puerta de enlace (`gateway.nodes.allowCommands` / `denyCommands`).
+- La política de permitir/preguntar `system.run` por nodo reside en el nodo en `exec.approvals.node.*`, no en el registro de emparejamiento.
+
+## Bloqueo de comandos de nodo (2026.3.31+)
+
+<Warning>**Cambio importante:** A partir de `2026.3.31`, los comandos de nodo están deshabilitados hasta que se aprueba el emparejamiento del nodo. El emparejamiento del dispositivo por sí solo ya no es suficiente para exponer los comandos de nodo declarados.</Warning>
+
+Cuando un nodo se conecta por primera vez, el emparejamiento se solicita automáticamente. Hasta que se apruebe la solicitud de emparejamiento, todos los comandos de nodo pendientes de ese nodo se filtran y no se ejecutarán. Una vez que se establece la confianza a través de la aprobación del emparejamiento, los comandos declarados del nodo quedan disponibles sujetos a la política de comandos normal.
+
+Esto significa:
+
+- Los nodos que anteriormente dependían únicamente del emparejamiento del dispositivo para exponer comandos ahora deben completar el emparejamiento del nodo.
+- Los comandos en cola antes de la aprobación del emparejamiento se descartan, no se posponen.
+
+## Límites de confianza de eventos de nodo (2026.3.31+)
+
+<Warning>**Cambio importante:** Las ejecuciones originadas por el nodo ahora permanecen en una superficie de confianza reducida.</Warning>
+
+Los resúmenes originados por el nodo y los eventos de sesión relacionados están restringidos a la superficie de confianza prevista. Los flujos impulsados por notificaciones o desencadenados por el nodo que anteriormente dependían de un acceso más amplio a las herramientas del host o de la sesión pueden necesitar ajustes. Este endurecimiento asegura que los eventos del nodo no puedan escalar a un acceso a herramientas de nivel host más allá de lo que permite el límite de confianza del nodo.
 
 ## Aprobación automática (aplicación macOS)
 
 La aplicación macOS puede intentar opcionalmente una **aprobación silenciosa** cuando:
 
 - la solicitud está marcada como `silent`, y
-- la aplicación puede verificar una conexión SSH con el host de la puerta de enlace utilizando el mismo usuario.
+- la aplicación puede verificar una conexión SSH al host de la puerta de enlace utilizando el mismo usuario.
 
-Si falla la aprobación silenciosa, se recurre al mensaje normal de "Aprobar/Rechazar".
+Si la aprobación silenciosa falla, se vuelve al aviso normal de "Aprobar/Rechazar".
 
 ## Almacenamiento (local, privado)
 
-El estado del emparejamiento se almacena en el directorio de estado de la puerta de enlace (por defecto `~/.openclaw`):
+El estado del emparejamiento se almacena en el directorio de estado de la puerta de enlace (predeterminado `~/.openclaw`):
 
 - `~/.openclaw/nodes/paired.json`
 - `~/.openclaw/nodes/pending.json`
@@ -90,10 +114,10 @@ Si anulas `OPENCLAW_STATE_DIR`, la carpeta `nodes/` se mueve con él.
 Notas de seguridad:
 
 - Los tokens son secretos; trata `paired.json` como sensible.
-- La rotación de un token requiere una nueva aprobación (o la eliminación de la entrada del nodo).
+- Rotar un token requiere reaprobación (o eliminar la entrada del nodo).
 
 ## Comportamiento del transporte
 
-- El transporte es **sin estado**; no almacena la membresía.
-- Si la puerta de enlace está desconectada o el emparejamiento está deshabilitado, los nodos no pueden emparejarse.
-- Si la puerta de enlace está en modo remoto, el emparejamiento aún se realiza contra el almacenamiento de la puerta de enlace remota.
+- El transporte es **sin estado**; no almacena la pertenencia.
+- Si la puerta de enlace está fuera de línea o el emparejamiento está deshabilitado, los nodos no pueden emparejarse.
+- Si la puerta de enlace está en modo remoto, el emparejamiento aún ocurre contra el almacén de la puerta de enlace remota.

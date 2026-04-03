@@ -26,7 +26,7 @@ Commencez prudemment :
 
 ## Prérequis
 
-- OpenClaw installé et intégré — voir [Getting Started](/en/start/getting-started) si vous ne l'avez pas encore fait
+- OpenClaw installé et intégré — voir [Getting Started](/en/start/getting-started) si ce n'est pas encore fait
 - Un deuxième numéro de téléphone (SIM/eSIM/prépayé) pour l'assistant
 
 ## La configuration à deux téléphones (recommandée)
@@ -79,8 +79,8 @@ Conseil : traitez ce dossier comme la « mémoire » de OpenClaw et faites-en un
 openclaw setup
 ```
 
-Guide complet de la disposition de l'espace de travail + sauvegarde : [Espace de travail de l'agent](/en/concepts/agent-workspace)
-Flux de travail de la mémoire : [Mémoire](/en/concepts/memory)
+Guide complet de l'espace de travail et de sauvegarde : [Agent workspace](/en/concepts/agent-workspace)
+Flux de travail de la mémoire : [Memory](/en/concepts/memory)
 
 Optionnel : choisir un espace de travail différent avec `agents.defaults.workspace` (prend en charge `~`).
 
@@ -192,7 +192,13 @@ MEDIA:https://example.com/screenshot.png
 
 OpenClaw les extrait et les envoie en tant que médias accompagnant le texte.
 
-Pour les chemins locaux, la liste d'autorisation par défaut est intentionnellement restreinte : la racine temporaire OpenClaw, le cache média, les chemins de l'espace de travail de l'agent et les fichiers générés par le bac à sable. Si vous avez besoin de racines de pièces jointes locales plus larges, configurez une liste d'autorisation explicite de canal/plugin au lieu de vous fier à des chemins d'hôte arbitraires.
+Le comportement du chemin local suit le même modèle de confiance de lecture de fichiers que l'agent :
+
+- Si `tools.fs.workspaceOnly` est `true`, les chemins locaux `MEDIA:` sortants restent limités à la racine temp d'OpenClaw, au cache multimédia, aux chemins de l'espace de travail de l'agent et aux fichiers générés par le bac à sable.
+- Si `tools.fs.workspaceOnly` est `false`, les `MEDIA:` sortants peuvent utiliser des fichiers locaux de l'hôte que l'agent est déjà autorisé à lire.
+- Les envois locaux à l'hôte n'autorisent toujours que les types de médias et de documents sécurisés (images, audio, vidéo, PDF et documents Office). Les fichiers en texte brut et ceux ressemblant à des secrets ne sont pas considérés comme des médias envoyables.
+
+Cela signifie que les images/fichiers générés en dehors de l'espace de travail peuvent maintenant être envoyés lorsque votre stratégie de système de fichiers autorise déjà ces lectures, sans rouvrir l'exfiltration arbitraire de pièces jointes texte de l'hôte.
 
 ## Liste de contrôle des opérations
 
@@ -208,11 +214,11 @@ Les journaux se trouvent sous `/tmp/openclaw/` (par défaut : `openclaw-YYYY-MM-
 ## Étapes suivantes
 
 - WebChat : [WebChat](/en/web/webchat)
-- Opérations du Gateway : [Manuel d'exécution Gateway](/en/gateway)
-- Cron + réveils : [Tâches Cron](/en/automation/cron-jobs)
-- Compagnon de barre de menu macOS : [Application OpenClaw macOS](/en/platforms/macos)
-- Application de nœud iOS : [Application iOS](/en/platforms/ios)
-- Application de nœud Android : [Application Android](/en/platforms/android)
+- Opérations Gateway : [Gateway runbook](/en/gateway)
+- Cron + réveils : [Cron jobs](/en/automation/cron-jobs)
+- Compagnon de barre de menu macOS : [OpenClaw macOS app](/en/platforms/macos)
+- Application nœud iOS : [iOS app](/en/platforms/ios)
+- Application nœud Android : [Android app](/en/platforms/android)
 - Statut Windows : [Windows (WSL2)](/en/platforms/windows)
-- Statut Linux : [Application Linux](/en/platforms/linux)
-- Sécurité : [Sécurité](/en/gateway/security)
+- Statut Linux : [Linux app](/en/platforms/linux)
+- Sécurité : [Security](/en/gateway/security)

@@ -64,35 +64,56 @@ title: "測試"
 
 用法：
 
+- `pnpm test:startup:bench`
+- `pnpm test:startup:bench:smoke`
+- `pnpm test:startup:bench:save`
+- `pnpm test:startup:bench:update`
+- `pnpm test:startup:bench:check`
 - `pnpm tsx scripts/bench-cli-startup.ts`
 - `pnpm tsx scripts/bench-cli-startup.ts --runs 12`
-- `pnpm tsx scripts/bench-cli-startup.ts --entry dist/entry.js --timeout-ms 45000`
+- `pnpm tsx scripts/bench-cli-startup.ts --preset real`
+- `pnpm tsx scripts/bench-cli-startup.ts --preset real --case status --case gatewayStatus --runs 3`
+- `pnpm tsx scripts/bench-cli-startup.ts --entry openclaw.mjs --entry-secondary dist/entry.js --preset all`
+- `pnpm tsx scripts/bench-cli-startup.ts --preset all --output .artifacts/cli-startup-bench-all.json`
+- `pnpm tsx scripts/bench-cli-startup.ts --preset real --case gatewayStatusJson --output .artifacts/cli-startup-bench-smoke.json`
+- `pnpm tsx scripts/bench-cli-startup.ts --preset real --cpu-prof-dir .artifacts/cli-cpu`
+- `pnpm tsx scripts/bench-cli-startup.ts --json`
 
-此基準測試針對以下指令：
+預設：
 
-- `--version`
-- `--help`
-- `health --json`
-- `status --json`
-- `status`
+- `startup`： `--version`, `--help`, `health`, `health --json`, `status --json`, `status`
+- `real`： `health`, `status`, `status --json`, `sessions`, `sessions --json`, `agents list --json`, `gateway status`, `gateway status --json`, `gateway health --json`, `config get gateway.port`
+- `all`：兩種預設
 
-輸出包含每個指令的平均值、p50、p95、最小/最大值，以及結束代碼/信號分佈。
+輸出包含每個指令的 `sampleCount`、平均值、p50、p95、最小/最大值、退出代碼/訊號分佈，以及最大 RSS 摘要。可選的 `--cpu-prof-dir` / `--heap-prof-dir` 會在每次執行時寫入 V8 設定檔，以便計時和設定檔擷取使用相同的程式框架。
 
-## 入門 E2E 測試 (Docker)
+儲存的輸出慣例：
 
-Docker 是選用的；這僅需要用於容器化的入門基礎測試。
+- `pnpm test:startup:bench:smoke` 會將目標煙霧測試構件寫入 `.artifacts/cli-startup-bench-smoke.json`
+- `pnpm test:startup:bench:save` 會使用 `runs=5` 和 `warmup=1` 將完整套件構件寫入 `.artifacts/cli-startup-bench-all.json`
+- `pnpm test:startup:bench:update` 會使用 `runs=5` 和 `warmup=1` 重新整理已簽入的基線固定裝置 `test/fixtures/cli-startup-bench.json`
 
-在乾淨的 Linux 容器中執行完整的冷啟動流程：
+簽入的測試夾具：
+
+- `test/fixtures/cli-startup-bench.json`
+- 使用 `pnpm test:startup:bench:update` 重新整理
+- 使用 `pnpm test:startup:bench:check` 將當前結果與測試夾具進行比較
+
+## 入職端對端測試 (Docker)
+
+Docker 是可選的；這僅用於容器化的入職冒煙測試。
+
+在乾淨的 Linux 容器中進行完整的冷啟動流程：
 
 ```bash
 scripts/e2e/onboard-docker.sh
 ```
 
-此腳本透過偽終端機驅動互動式精靈，驗證設定/工作區/工作階段檔案，然後啟動閘道並執行 `openclaw health`。
+此腳本透過偽終端機驅動互動式嚮導，驗證配置/工作區/會話檔案，然後啟動閘道並執行 `openclaw health`。
 
-## QR 匯入基礎測試 (Docker)
+## QR 匯入冒煙測試 (Docker)
 
-確保 `qrcode-terminal` 可在支援的 Docker Node 執行環境下載入（預設 Node 24，相容 Node 22）：
+確保 `qrcode-terminal` 可在支援的 Docker Node 執行環境下載入 (預設為 Node 24，相容於 Node 22)：
 
 ```bash
 pnpm test:docker:qr

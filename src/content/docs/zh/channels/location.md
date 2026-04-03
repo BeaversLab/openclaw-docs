@@ -1,5 +1,5 @@
 ---
-summary: "入站渠道位置解析（Telegram + WhatsApp）和上下文字段"
+summary: "入站渠道位置解析 (Telegram/WhatsApp/Matrix) 和上下文字段"
 read_when:
   - Adding or modifying channel location parsing
   - Using location context fields in agent prompts or tools

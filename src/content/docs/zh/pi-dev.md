@@ -28,7 +28,7 @@ pnpm test -- \
   "src/agents/pi-tools*.test.ts" \
   "src/agents/pi-settings.test.ts" \
   "src/agents/pi-tool-definition-adapter*.test.ts" \
-  "src/agents/pi-extensions/**/*.test.ts"
+  "src/agents/pi-hooks/**/*.test.ts"
 ```
 
 要包含实时提供商演练：
@@ -44,7 +44,7 @@ OPENCLAW_LIVE_TEST=1 pnpm test -- src/agents/pi-embedded-runner-extraparams.live
 - `src/agents/pi-tools*.test.ts`
 - `src/agents/pi-settings.test.ts`
 - `src/agents/pi-tool-definition-adapter.test.ts`
-- `src/agents/pi-extensions/*.test.ts`
+- `src/agents/pi-hooks/*.test.ts`
 
 ## 手动测试
 

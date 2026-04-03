@@ -186,7 +186,21 @@ Si votre exécutable bin sûr réside dans des chemins de gestionnaire de paquet
 à `tools.exec.safeBinTrustedDirs`.
 Les chaînages et redirections de shell ne sont pas automatiquement autorisés en mode liste blanche.
 
-L'enchaînement de shell (`&&`, `||`, `;`) est autorisé lorsque chaque segment de niveau supérieur satisfait à la liste d'autorisation (y compris les bacs sûrs ou l'autorisation automatique des compétences). Les redirections restent non prises en charge en mode liste d'autorisation. La substitution de commandes (`$()` / backticks) est rejetée lors de l'analyse de la liste d'autorisation, y compris à l'intérieur des guillemets doubles ; utilisez des guillemets simples si vous avez besoin de texte littéral `$()`. Sur les approbations de l'application compagnon macOS, le texte brut du shell contenant une syntaxe de contrôle ou d'expansion du shell (`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) est considéré comme un échec de la liste d'autorisation, sauf si le binaire du shell lui-même est sur la liste d'autorisation. Pour les wrappers de shell (`bash|sh|zsh ... -c/-lc`), les remplacements d'environnement limités à la requête sont réduits à une petite liste d'autorisation explicite (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`). Pour les décisions d'autorisation toujours en mode liste d'autorisation, les wrappers de répartition connus (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) conservent les chemins des exécutables internes au lieu des chemins des wrappers. Les multiplexeurs de shell (`busybox`, `toybox`) sont également déballés pour les applets de shell (`sh`, `ash`, etc.) afin que les exécutables internes soient conservés à la place des binaires de multiplexage. Si un wrapper ou un multiplexeur ne peut pas être déballé en toute sécurité, aucune entrée de liste d'autorisation n'est conservée automatiquement. Si vous mettez sur la liste d'autorisation des interpréteurs comme `python3` ou `node`, préférez `tools.exec.strictInlineEval=true` afin que l'évaluation en ligne nécessite toujours une approbation explicite.
+Le chaînage de shell (`&&`, `||`, `;`) est autorisé lorsque chaque segment de niveau supérieur satisfait à la liste d'autorisation
+(incluant les bacs sûrs ou l'autorisation automatique des compétences). Les redirections restent non prises en charge en mode liste d'autorisation.
+La substitution de commandes (`$()` / backticks) est rejetée lors de l'analyse de la liste d'autorisation, y compris à l'intérieur
+de guillemets doubles ; utilisez des guillemets simples si vous avez besoin du texte littéral `$()`.
+Sur les approbations de l'application compagnon macOS, le texte brut du shell contenant une syntaxe de contrôle ou d'expansion du shell
+(`&&`, `||`, `;`, `|`, `` ` ``, `$`, `<`, `>`, `(`, `)`) est traité comme un échec de la liste d'autorisation à moins que
+le binaire du shell lui-même ne soit sur la liste d'autorisation.
+Pour les enveloppeurs de shell (`bash|sh|zsh ... -c/-lc`), les substitutions d'environnement à portée de requête sont réduites à une
+petite liste d'autorisation explicite (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
+Pour les décisions « allow-always » en mode liste d'autorisation, les enveloppeurs de répartition connus
+(`env`, `nice`, `nohup`, `stdbuf`, `timeout`) conservent les chemins d'exécutables internes au lieu des chemins d'enveloppeur.
+Les multiplexeurs de shell (`busybox`, `toybox`) sont également désenveloppés pour les applets de shell (`sh`, `ash`,
+etc.) afin que les exécutables internes soient conservés au lieu des binaires de multiplexeur. Si un enveloppeur ou
+un multiplexeur ne peut pas être désenveloppé en toute sécurité, aucune entrée de liste d'autorisation n'est conservée automatiquement.
+Si vous ajoutez des interpréteurs comme `python3` ou `node` à la liste d'autorisation, préférez `tools.exec.strictInlineEval=true` afin que l'évaluation en ligne nécessite toujours une approbation explicite. En mode strict, `allow-always` peut toujours conserver les appels d'interpréteur/de script bénins, mais les porteurs d'évaluation en ligne ne sont pas conservés automatiquement.
 
 Bacs sûrs par défaut :
 
@@ -196,8 +210,8 @@ Bacs sûrs par défaut :
 
 [//]: # "SAFE_BIN_DEFAULTS:END"
 
-`grep` et `sort` ne sont pas dans la liste par défaut. Si vous activez cette option, gardez des entrées de liste d'autorisation explicites pour leurs workflows sans stdin.
-Pour `grep` en mode safe-bin, fournissez le modèle avec `-e`/`--regexp` ; la forme de modèle positionnel est rejetée afin que les opérandes de fichier ne puissent pas être introduits en fraude sous forme de positionnels ambigus.
+`grep` et `sort` ne figurent pas dans la liste par défaut. Si vous les activez, conservez des entrées de liste d'autorisation explicites pour leurs workflows non-stdin.
+Pour `grep` en mode safe-bin, fournissez le modèle avec `-e`/`--regexp` ; la forme de modèle positionnel est rejetée afin que les opérandes de fichier ne puissent pas être introduits en contrebande comme positionnels ambigus.
 
 ### Bacs sûrs par rapport à la liste d'autorisation
 
@@ -206,7 +220,7 @@ Pour `grep` en mode safe-bin, fournissez le modèle avec `-e`/`--regexp` ; la fo
 | Objectif               | Autoriser automatiquement les filtres stdin étroits                | Confier explicitement des exécutables spécifiques                                             |
 | Type de correspondance | Nom de l'exécutable + stratégie argv de bac sûr                    | Modèle global de chemin d'exécutable résolu                                                   |
 | Portée des arguments   | Restreint par le profil de bac sûr et les règles de jeton littéral | Correspondance de chemin uniquement ; les arguments sont par ailleurs de votre responsabilité |
-| Exemples typiques      | `head`, `tail`, `tr`, `wc`                                         | `jq`, `python3`, `node`, `ffmpeg`, CLI personnalisés                                          |
+| Exemples typiques      | `head`, `tail`, `tr`, `wc`                                         | `jq`, `python3`, `node`, `ffmpeg`, CLIs personnalisés                                         |
 | Meilleure utilisation  | Transformations de texte à faible risque dans les pipelines        | Tout outil ayant un comportement plus large ou des effets secondaires                         |
 
 Emplacement de la configuration :
@@ -214,9 +228,9 @@ Emplacement de la configuration :
 - `safeBins` provient de la configuration (`tools.exec.safeBins` ou par agent `agents.list[].tools.exec.safeBins`).
 - `safeBinTrustedDirs` provient de la configuration (`tools.exec.safeBinTrustedDirs` ou par agent `agents.list[].tools.exec.safeBinTrustedDirs`).
 - `safeBinProfiles` provient de la configuration (`tools.exec.safeBinProfiles` ou par agent `agents.list[].tools.exec.safeBinProfiles`). Les clés de profil par agent remplacent les clés globales.
-- les entrées de la liste blanche résident dans `~/.openclaw/exec-approvals.json` local à l'hôte sous `agents.<id>.allowlist` (ou via l'interface de contrôle / `openclaw approvals allowlist ...`).
-- `openclaw security audit` avertit avec `tools.exec.safe_bins_interpreter_unprofiled` lorsque des interpréteurs/binaires d'exécution apparaissent dans `safeBins` sans profils explicites.
-- `openclaw doctor --fix` peut générer des entrées `safeBinProfiles.<bin>` personnalisées manquantes en tant que `{}` (à réviser et à resserrer ensuite). Les interpréteurs/binaires d'exécution ne sont pas générés automatiquement.
+- les entrées de la liste d'autorisation résident dans `~/.openclaw/exec-approvals.json` locale à l'hôte sous `agents.<id>.allowlist` (ou via l'interface de contrôle / `openclaw approvals allowlist ...`).
+- `openclaw security audit` avertit avec `tools.exec.safe_bins_interpreter_unprofiled` lorsque des bins d'interpréteur/d'exécution apparaissent dans `safeBins` sans profils explicites.
+- `openclaw doctor --fix` peut échafauder les entrées `safeBinProfiles.<bin>` personnalisées manquantes en tant que `{}` (à réviser et à resserrer ensuite). Les bins d'interpréteur/d'exécution ne sont pas échafaudés automatiquement.
 
 Exemple de profil personnalisé :
 
@@ -238,25 +252,21 @@ Exemple de profil personnalisé :
 }
 ```
 
-Si vous activez explicitement `jq` dans `safeBins`, OpenClaw rejette toujours la primitive `env` en mode safe-bin,
-dont `jq -n env` ne peut pas vider l'environnement du processus hôte sans un chemin de liste d'autorisation explicite
-ou une invite d'approbation.
+Si vous activez explicitement `jq` pour `safeBins`, OpenClaw rejette toujours la commande intégrée `env` en mode safe-bin, afin que `jq -n env` ne puisse pas vider l'environnement du processus hôte sans un chemin de liste d'autorisation explicite ou une invite d'approbation.
 
 ## Modification via l'interface de contrôle
 
 Utilisez la carte **Interface de contrôle → Nœuds → Approbations d'exécution** pour modifier les valeurs par défaut, les remplacements par agent et les listes d'autorisation. Choisissez une portée (Par défaut ou un agent), ajustez la stratégie, ajoutez/supprimez des motifs de liste d'autorisation, puis **Enregistrer**. L'interface affiche des métadonnées de **dernière utilisation** par motif afin que vous puissiez garder la liste en ordre.
 
-Le sélecteur de cible choisit **Gateway** (approbations locales) ou un **Node** (Nœud). Les nœuds doivent annoncer `system.execApprovals.get/set` (application macOS ou hôte de nœud sans interface graphique). Si un nœud n'annonce pas encore les approbations d'exécution, modifiez son `~/.openclaw/exec-approvals.json` local directement.
+Le sélecteur de cible choisit **Gateway** (approbations locales) ou un **Node**. Les nœuds doivent annoncer `system.execApprovals.get/set` (application macOS ou hôte de nœud sans interface graphique). Si un nœud n'annonce pas encore les approbations d'exécution, modifiez son `~/.openclaw/exec-approvals.json` local directement.
 
 CLI : `openclaw approvals` prend en charge la modification de la passerelle ou du nœud (voir [Approvals CLI](/en/cli/approvals)).
 
 ## Flux d'approbation
 
-Lorsqu'une invite est requise, la passerelle diffuse `exec.approval.requested` aux clients opérateurs.
-L'interface de contrôle et l'application macOS la résolvent via `exec.approval.resolve`, puis la passeronne transmet la
-requête approuvée à l'hôte du nœud.
+Lorsqu'une invite est requise, la passerelle diffuse `exec.approval.requested` aux clients opérateurs. L'interface de contrôle et l'application macOS la résolvent via `exec.approval.resolve`, puis la passerelle transmet la demande approuvée à l'hôte du nœud.
 
-Pour `host=node`, les demandes d'approbation incluent une charge utile `systemRunPlan` canonique. La passerelle utilise ce plan comme contexte de commande/répertoire de travail/session autoritaire lors du transfert des demandes `system.run` approuvées.
+Pour `host=node`, les demandes d'approbation incluent une charge utile de plan `systemRunPlan` canonique. La passerelle utilise ce plan comme contexte de commande/répertoire de travail/session faisant autorité lors du transfert des demandes `system.run` approuvées.
 
 ## Commandes d'interpréteur/exécution
 
@@ -264,23 +274,31 @@ Les exécutions d'interpréteur/exécution soutenues par approbation sont intent
 
 - Le contexte exact argv/répertoire de travail/env est toujours lié.
 - Les formulaires de script shell direct et de fichier d'exécution direct sont liés au mieux à un instantané concret d'un fichier local.
-- Les formes courantes d'enveloppe de gestionnaire de paquets qui résolvent toujours vers un fichier local direct (par exemple
-  `pnpm exec`, `pnpm node`, `npm exec`, `npx`) sont désenveloppées avant la liaison.
+- Les formes courantes d'enveloppeurs de gestionnaires de paquets qui résolvent toujours vers un fichier local direct (par exemple `pnpm exec`, `pnpm node`, `npm exec`, `npx`) sont déballées avant la liaison.
 - Si OpenClaw ne peut pas identifier exactement un seul fichier local concret pour une commande d'interpréteur/runtime
   (par exemple les scripts de paquets, les formes d'évaluation, les chaînes de chargeur spécifiques au runtime, ou les formes multi-fichiers
   ambiguës), l'exécution soutenue par une approbation est refusée au lieu de prétendre à une couverture sémantique qu'elle n'a pas.
 - Pour ces workflows, préférez le sandboxing, une frontière d'hôte séparée, ou une liste d'autorisation/explicite de confiance (allowlist)
   ou un workflow complet où l'opérateur accepte la sémantique runtime plus large.
 
-Lorsque des approbations sont requises, l'outil d'exécution renvoie immédiatement un identifiant d'approbation. Utilisez cet identifiant pour corréler les événements système ultérieurs (`Exec finished` / `Exec denied`). Si aucune décision n'arrive avant l'expiration du délai, la demande est traitée comme un délai d'approbation et présentée comme un motif de refus.
+Lorsque des approbations sont requises, l'outil d'exécution retourne immédiatement un identifiant d'approbation. Utilisez cet identifiant pour corréler les événements système ultérieurs (`Exec finished` / `Exec denied`). Si aucune décision n'arrive avant l'expiration du délai, la demande est traitée comme un délai d'approbation et affichée comme un motif de refus.
+
+### Comportement de livraison de suivi
+
+Après qu'une exécution asynchrone approuvée est terminée, OpenClaw envoie un tour de suivi `agent` à la même session.
+
+- Si une cible de livraison externe valide existe (canal livrable plus cible `to`), la livraison de suivi utilise ce canal.
+- Dans les flux de webchat uniquement ou de session interne sans cible externe, la livraison de suivi reste limitée à la session (`deliver: false`).
+- Si un appelant demande explicitement une livraison externe stricte sans canal externe résoluble, la demande échoue avec `INVALID_REQUEST`.
+- Si `bestEffortDeliver` est activé et qu'aucun canal externe ne peut être résolu, la livraison est rétrogradée à session uniquement au lieu d'échouer.
 
 La boîte de dialogue de confirmation inclut :
 
-- commande + args
-- cwd
+- commande + arguments
+- répertoire de travail
 - id de l'agent
 - chemin exécutable résolu
-- métadonnées d'hôte + de stratégie
+- hôte + métadonnées de stratégie
 
 Actions :
 
@@ -288,9 +306,10 @@ Actions :
 - **Toujours autoriser** → ajouter à la liste d'autorisation + exécuter
 - **Refuser** → bloquer
 
-## Transfert des approbations vers les canaux de discussion
+## Transfert des approbations vers les canaux de chat
 
-Vous pouvez transférer les invites d'approbation d'exécution vers n'importe quel canal de discussion (y compris les canaux de plugin) et les approuver avec `/approve`. Cela utilise le pipeline de livraison sortant normal.
+Vous pouvez transférer les invites d'approbation d'exécution vers n'importe quel canal de chat (y compris les canaux de plugin) et les approuver
+avec `/approve`. Cela utilise le pipeline de livraison sortant normal.
 
 Config :
 
@@ -311,7 +330,7 @@ Config :
 }
 ```
 
-Répondre dans le chat :
+Réponse dans le chat :
 
 ```
 /approve <id> allow-once
@@ -323,7 +342,8 @@ La commande `/approve` gère à la fois les approbations d'exécution et les app
 
 ### Transfert des approbations de plugin
 
-Le transfert des approbations de plug-in utilise le même pipeline de livraison que les approbations d'exécution, mais possède sa propre configuration indépendante sous `approvals.plugin`. L'activation ou la désactivation de l'une n'affecte pas l'autre.
+Le transfert des approbations de plugin utilise le même pipeline de livraison que les approbations d'exécution mais possède sa propre
+configuration indépendante sous `approvals.plugin`. L'activation ou la désactivation de l'un n'affecte pas l'autre.
 
 ```json5
 {
@@ -341,38 +361,57 @@ Le transfert des approbations de plug-in utilise le même pipeline de livraison 
 }
 ```
 
-La forme de la configuration est identique à `approvals.exec` : `enabled`, `mode`, `agentFilter`,
+La structure de configuration est identique à `approvals.exec` : `enabled`, `mode`, `agentFilter`,
 `sessionFilter` et `targets` fonctionnent de la même manière.
 
-Les canaux qui prennent en charge les boutons d'approbation d'exécution interactifs (comme Telegram) affichent également des boutons pour les approbations de plugins. Les canaux sans prise en charge de l'adaptateur reviennent à du texte brut avec des instructions `/approve`.
+Les canaux qui prennent en charge les réponses interactives partagées affichent les mêmes boutons d'approbation pour les approbations d'exécution
+et de plugin. Les canaux sans interface interactive partagée reviennent au texte brut avec des instructions
+`/approve`.
 
-### Clients d'approbation de chat intégrés
+### Approbations dans le même chat sur n'importe quel canal
 
-Discord et Telegram peuvent également agir en tant que clients d'approbation d'exécution explicites avec une configuration spécifique au canal.
+Lorsqu'une demande d'approbation d'exécution ou de plugin provient d'une surface de chat livrable, le même chat
+peut désormais l'approuver avec `/approve` par défaut. Cela s'applique aux canaux tels que Slack, Matrix et
+Microsoft Teams en plus des flux existants de l'interface Web et de l'interface terminal.
+
+Ce chemin de commande textuelle partagée utilise le modèle d'authentification de canal normal pour cette conversation. Si le
+chat d'origine peut déjà envoyer des commandes et recevoir des réponses, les demandes d'approbation n'ont plus besoin d'un
+adaptateur de livraison natif distinct juste pour rester en attente.
+
+Discord et Telegram prennent également en charge `/approve` dans le même chat, mais ces canaux utilisent toujours leur liste d'approuveurs résolus pour l'autorisation, même lorsque la livraison native des approbations est désactivée.
+
+### Livraison native des approbations
+
+Discord, Slack et Telegram peuvent également agir comme adaptateurs de livraison native des approbations avec une configuration spécifique au canal.
 
 - Discord : `channels.discord.execApprovals.*`
+- Slack : utilise le `approvals.exec.targets` partagé avec `channel: "slack"` et affiche les boutons d'approbation Block Kit lorsque l'interactivité est activée
 - Telegram : `channels.telegram.execApprovals.*`
 
-Ces clients sont opt-in. Si un channel n'a pas les approbations d'exécution activées, OpenClaw ne traite pas
-ce channel comme une surface d'approbation simplement parce que la conversation a eu lieu là-bas.
+Ces adaptateurs de livraison native sont optionnels. Ils ajoutent le routage par DM et la diffusion sur les canaux par-dessus le flux `/approve` partagé dans le même chat et les boutons d'approbation partagés.
 
 Comportement partagé :
 
-- seuls les approbateurs configurés peuvent approuver ou refuser
-- le demandeur n'a pas besoin d'être un approbateur
-- lorsque la livraison par channel est activée, les invites d'approbation incluent le texte de la commande
+- Slack, Matrix, Microsoft Teams et les chats livrables similaires utilisent le modèle d'autorisation de canal normal
+  pour `/approve` dans le même chat
+- pour Discord et Telegram, seuls les approuveurs résolus peuvent approuver ou refuser
+- les approuveurs Discord et Telegram peuvent être explicites (`execApprovals.approvers`) ou déduits de la configuration de propriétaire existante (`allowFrom`, plus `defaultTo` en message direct lorsque pris en charge)
+- le demandeur n'a pas besoin d'être un approuveur
+- le chat d'origine peut approuver directement avec `/approve` lorsque ce chat prend déjà en charge les commandes et les réponses
+- lorsque la livraison par canal est activée, les invites d'approbation incluent le texte de la commande
+- les approbations d'exécution en attente expirent après 30 minutes par défaut
 - si aucune interface utilisateur d'opérateur ou aucun client d'approbation configuré ne peut accepter la demande, l'invite revient à `askFallback`
 
-Telegram utilise par défaut les MD de l'approbant (`target: "dm"`). Vous pouvez passer à `channel` ou `both` lorsque vous
-souhaitez que les invites d'approbation apparaissent également dans la discussion/sujet Telegram d'origine. Pour les sujets de forum Telegram,
-OpenClaw conserve le sujet pour l'invite d'approbation et le suivi post-approbation.
+Telegram utilise par défaut les DMs des approuveurs (`target: "dm"`). Vous pouvez passer à `channel` ou `both` lorsque vous
+voulez que les invites d'approbation apparaissent également dans le chat/sujet Telegram d'origine. Pour les sujets de forum
+Telegram, OpenClaw conserve le sujet pour l'invite d'approbation et le suivi post-approbation.
 
 Voir :
 
 - [Discord](/en/channels/discord)
 - [Telegram](/en/channels/telegram)
 
-### Flux macOS IPC
+### Flux IPC macOS
 
 ```
 Gateway -> Node Service (WS)
@@ -384,7 +423,7 @@ Gateway -> Node Service (WS)
 Notes de sécurité :
 
 - Mode socket Unix `0600`, jeton stocké dans `exec-approvals.json`.
-- Vérification des pairs UID identique.
+- Vérification des pairs même UID.
 - Défi/réponse (nonce + jeton HMAC + hachage de la requête) + TTL court.
 
 ## Événements système
@@ -395,21 +434,36 @@ Le cycle de vie de l'exécution est exposé sous forme de messages système :
 - `Exec finished`
 - `Exec denied`
 
-Ces événements sont publiés dans la session de l'agent après que le nœud a signalé l'événement.
-Les approbations d'exécution hébergées par le Gateway émettent les mêmes événements de cycle de vie lorsque la commande est terminée (et éventuellement lorsqu'elle s'exécute plus longtemps que le seuil).
+Ces éléments sont publiés dans la session de l'agent après que le nœud a signalé l'événement.
+Les approbations d'exécution hébergées par Gateway émettent les mêmes événements de cycle de vie lorsque la commande se termine (et facultativement lorsqu'elle s'exécute plus longtemps que le seuil).
 Les exécutions soumises à approbation réutilisent l'identifiant d'approbation comme `runId` dans ces messages pour une corrélation aisée.
+
+## Comportement en cas d'approbation refusée
+
+Lorsqu'une approbation d'exécution asynchrone est refusée, OpenClaw empêche l'agent de réutiliser
+la sortie de toute exécution antérieure de la même commande dans la session. La raison du refus
+est transmise avec des directives explicites indiquant qu'aucune sortie de commande n'est disponible, ce qui empêche
+l'agent de prétendre qu'il y a une nouvelle sortie ou de répéter la commande refusée avec
+des résultats obsolètes d'une exécution réussie antérieure.
 
 ## Implications
 
 - **full** est puissant ; préférez les listes d'autorisation lorsque cela est possible.
 - **ask** vous maintient dans la boucle tout en permettant des approbations rapides.
-- Les listes d'autorisation par agent empêchent les approbations d'un agent de fuir vers d'autres.
-- Les approbations s'appliquent uniquement aux requêtes d'exécution d'hôte provenant d'**expéditeurs autorisés**. Les expéditeurs non autorisés ne peuvent pas émettre `/exec`.
-- `/exec security=full` est une commodité au niveau de la session pour les opérateurs autorisés et saute les approbations par conception.
-  Pour bloquer strictement l'exécution sur l'hôte, définissez la sécurité des approbations sur `deny` ou refusez le tool `exec` via la stratégie de tool.
+- Les listes d'autorisation par agent empêchent les approbations d'un agent de fuir vers les autres.
+- Les approbations ne s'appliquent qu'aux requêtes d'exécution sur l'hôte provenant d'**expéditeurs autorisés**. Les expéditeurs non autorisés ne peuvent pas émettre `/exec`.
+- `/exec security=full` est une commodité au niveau de la session pour les opérateurs autorisés et ignore les approbations par conception.
+  Pour bloquer fermement l'exécution sur l'hôte, définissez la sécurité des approbations sur `deny` ou refusez l'outil `exec` via la stratégie d'outils.
 
 Connexe :
 
-- [Tool Exec](/en/tools/exec)
-- [Mode élevé](/en/tools/elevated)
-- [Skills](/en/tools/skills)
+- [Outil Exec](/en/tools/exec)
+- [Mode Élevé](/en/tools/elevated)
+- [Compétences](/en/tools/skills)
+
+## Connexe
+
+- [Exec](/en/tools/exec) — outil d'exécution de commandes shell
+- [Bac à sable (Sandboxing)](/en/gateway/sandboxing) — modes de bac à sable et accès à l'espace de travail
+- [Sécurité](/en/gateway/security) — modèle de sécurité et durcissement
+- [Bac à sable vs Stratégie d'outil vs Mode Élevé](/en/gateway/sandbox-vs-tool-policy-vs-elevated) — quand utiliser chacun

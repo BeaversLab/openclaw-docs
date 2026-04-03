@@ -116,15 +116,17 @@ Notes :
 - Si la sonde réussit, les avertissements de référence d'authentification non résolue sont supprimés pour éviter les faux positifs.
 - Utilisez `--require-rpc` dans les scripts et l'automatisation lorsqu'un service d'écoute ne suffit pas et que vous avez besoin du Gateway RPC lui-même pour être en bonne santé.
 - Sur les installations systemd Linux, les vérifications de dérive d'authentification du service lisent les valeurs `Environment=` et `EnvironmentFile=` à partir de l'unité (y compris `%h`, les chemins entre guillemets, les fichiers multiples et les fichiers `-` facultatifs).
+- Les contrôles de dérive résolvent les SecretRefs `gateway.auth.token` à l'aide de l'environnement d'exécution fusionné (env de commande de service en premier, puis env de processus en secours).
+- Si l'authentification par jeton n'est pas effectivement active (`gateway.auth.mode` explicite de `password`/`none`/`trusted-proxy`, ou mode non défini où le mot de passe peut l'emporter et aucun candidat jeton ne peut l'emporter), les contrôles de dérive de jeton ignorent la résolution du jeton de configuration.
 
 ### `gateway probe`
 
-`gateway probe` est la commande « tout déboguer ». Elle sonde toujours :
+`gateway probe` est la commande "tout déboguer". Sonde toujours :
 
 - votre passerelle distante configurée (si définie), et
-- localhost (boucle de retour) **même si une passerelle distante est configurée**.
+- localhost (bouclage) **même si le distant est configuré**.
 
-Si plusieurs passerelles sont accessibles, elle les affiche toutes. Plusieurs passerelles sont prises en charge lorsque vous utilisez des profils/ports isolés (par exemple, un robot de secours), mais la plupart des installations exécutent toujours une seule passerelle.
+Si plusieurs passerelles sont accessibles, elle les imprime toutes. Plusieurs passerelles sont prises en charge lorsque vous utilisez des profils/ports isolés (par exemple, un robot de sauvetage), mais la plupart des installations exécutent toujours une seule passerelle.
 
 ```bash
 openclaw gateway probe
@@ -141,16 +143,16 @@ Interprétation :
 Notes JSON (`--json`) :
 
 - Niveau supérieur :
-  - `ok` : au moins une cible est accessible.
-  - `degraded` : au moins une cible présentait un RPC de détail limité par la portée.
+  - `ok` : au moins une cible est accessible.
+  - `degraded` : au moins une cible avait un RPC détaillé limité en portée.
 - Par cible (`targets[].connect`) :
   - `ok` : accessibilité après connexion + classification dégradée.
-  - `rpcOk` : succès de RPC avec tous les détails.
-  - `scopeLimited` : détail RPC échoué en raison d'une portée d'opérateur manquante.
+  - `rpcOk` : succès du RPC détaillé complet.
+  - `scopeLimited` : échec du RPC détaillé en raison d'une portée d'opérateur manquante.
 
-#### Distant via SSH (parité avec l'application Mac)
+#### À distance via SSH (parité avec l'application Mac)
 
-Le mode « Remote over SSH » de l'application macOS utilise un transfert de port local afin que la passerelle distante (qui peut être liée uniquement à loopback) soit accessible à `ws://127.0.0.1:<port>`.
+Le mode « Remote over SSH » de l’application macOS utilise un transfert de port local afin que la passerelle distante (qui peut être liée uniquement à la boucle locale) soit accessible à `ws://127.0.0.1:<port>`.
 
 Équivalent CLI :
 
@@ -161,8 +163,8 @@ openclaw gateway probe --ssh user@gateway-host
 Options :
 
 - `--ssh <target>` : `user@host` ou `user@host:port` (le port par défaut est `22`).
-- `--ssh-identity <path>` : fichier d'identité.
-- `--ssh-auto` : choisir le premier hôt de passerelle découvert comme cible SSH (LAN/WAB uniquement).
+- `--ssh-identity <path>` : fichier d’identité.
+- `--ssh-auto` : choisir le premier hôte de passerelle découvert comme cible SSH (LAN/WAB uniquement).
 
 Config (facultatif, utilisé comme valeurs par défaut) :
 
@@ -171,7 +173,7 @@ Config (facultatif, utilisé comme valeurs par défaut) :
 
 ### `gateway call <method>`
 
-Assistant RPC de bas niveau.
+Utilitaire RPC de bas niveau.
 
 ```bash
 openclaw gateway call status
@@ -188,33 +190,33 @@ openclaw gateway restart
 openclaw gateway uninstall
 ```
 
-Remarques :
+Notes :
 
 - `gateway install` prend en charge `--port`, `--runtime`, `--token`, `--force`, `--json`.
-- Lorsque l'authentification par jeton nécessite un jeton et que `gateway.auth.token` est géré par SecretRef, `gateway install` vérifie que le SecretRef peut être résolu, mais ne persiste pas le jeton résolu dans les métadonnées de l'environnement de service.
-- Si l'authentification par jeton nécessite un jeton et que le SecretRef configuré pour le jeton n'est pas résolu, l'installation échoue de manière fermée au lieu de conserver le texte en clair de secours.
-- Pour l'authentification par mot de passe sur `gateway run`, préférez `OPENCLAW_GATEWAY_PASSWORD`, `--password-file` ou un `gateway.auth.password` basé sur SecretRef plutôt qu'un `--password` en ligne.
-- En mode d'authentification inféré, `OPENCLAW_GATEWAY_PASSWORD` shell-only ne relâche pas les exigences du jeton d'installation ; utilisez une configuration durable (`gateway.auth.password` ou config `env`) lors de l'installation d'un service géré.
-- Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés et que `gateway.auth.mode` n'est pas défini, l'installation est bloquée jusqu'à ce que le mode soit défini explicitement.
+- Lorsque l’authentification par jeton nécessite un jeton et que `gateway.auth.token` est géré par SecretRef, `gateway install` valide que le SecretRef peut être résolu mais ne persiste pas le jeton résolu dans les métadonnées de l’environnement du service.
+- Si l’authentification par jeton nécessite un jeton et que le SecretRef du jeton configuré n’est pas résolu, l’installation échoue de manière fermée au lieu de persister du texte brut de repli.
+- Pour l’authentification par mot de passe sur `gateway run`, préférez `OPENCLAW_GATEWAY_PASSWORD`, `--password-file` ou un `gateway.auth.password` basé sur SecretRef plutôt qu’un `--password` en ligne.
+- En mode d’authentification déduit, `OPENCLAW_GATEWAY_PASSWORD` uniquement pour le shell ne relaxe pas les exigences de jeton d’installation ; utilisez une configuration persistante (`gateway.auth.password` ou config `env`) lors de l’installation d’un service géré.
+- Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés et que `gateway.auth.mode` n’est pas défini, l’installation est bloquée jusqu’à ce que le mode soit défini explicitement.
 - Les commandes de cycle de vie acceptent `--json` pour les scripts.
 
 ## Découvrir les passerelles (Bonjour)
 
-`gateway discover` recherche les balises Gateway (`_openclaw-gw._tcp`).
+`gateway discover` recherche des balises Gateway (`_openclaw-gw._tcp`).
 
 - Multicast DNS-SD : `local.`
-- Unicast DNS-SD (Wide-Area Bonjour) : choisissez un domaine (exemple : `openclaw.internal.`) et configurez un DNS fractionné + un serveur DNS ; voir [/gateway/bonjour](/en/gateway/bonjour)
+- Unicast DNS-SD (Bonjour grande zone) : choisissez un domaine (exemple : `openclaw.internal.`) et configurez un DNS fractionné + un serveur DNS ; voir [/gateway/bonjour](/en/gateway/bonjour)
 
 Seules les passerelles avec la découverte Bonjour activée (par défaut) annoncent la balise.
 
-Les enregistrements de découverte Wide-Area incluent (TXT) :
+Les enregistrements de découverte grande zone incluent (TXT) :
 
 - `role` (indice de rôle de passerelle)
-- `transport` (indice de transport, ex. `gateway`)
+- `transport` (indice de transport, par ex. `gateway`)
 - `gatewayPort` (port WebSocket, généralement `18789`)
 - `sshPort` (port SSH ; par défaut `22` si absent)
 - `tailnetDns` (nom d'hôte MagicDNS, lorsque disponible)
-- `gatewayTls` / `gatewayTlsSha256` (TLS activé + empreinte du certificat)
+- `gatewayTls` / `gatewayTlsSha256` (TLS activé + empreinte de certificat)
 - `cliPath` (indice facultatif pour les installations distantes)
 
 ### `gateway discover`
@@ -226,7 +228,7 @@ openclaw gateway discover
 Options :
 
 - `--timeout <ms>` : délai d'expiration par commande (parcourir/résoudre) ; par défaut `2000`.
-- `--json` : sortie lisible par machine (désactive également le style/l'indicateur de progression).
+- `--json` : sortie lisible par machine (désactive également le style/le spinner).
 
 Exemples :
 

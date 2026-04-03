@@ -29,7 +29,7 @@ openclaw plugins enable open-prose
 
 啟用插件後，請重新啟動 Gateway。
 
-開發/本機結帳： `openclaw plugins install ./extensions/open-prose`
+開發/本機簽出：`openclaw plugins install ./path/to/local/open-prose-plugin`
 
 相關文件：[Plugins](/en/tools/plugin)、[Plugin manifest](/en/plugins/manifest)、[Skills](/en/tools/skills)。
 

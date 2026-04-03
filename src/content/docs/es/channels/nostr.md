@@ -35,7 +35,7 @@ openclaw plugins install @openclaw/nostr
 Use un checkout local (flujos de trabajo de desarrollo):
 
 ```bash
-openclaw plugins install --link <path-to-openclaw>/extensions/nostr
+openclaw plugins install --link <path-to-local-nostr-plugin>
 ```
 
 Reinicie la puerta de enlace (Gateway) después de instalar o activar complementos.
@@ -247,3 +247,11 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 - Solo mensajes directos (sin chats grupales).
 - Sin archivos adjuntos multimedia.
 - Solo NIP-04 (NIP-17 gift-wrap planificado).
+
+## Relacionado
+
+- [Resumen de canales](/en/channels) — todos los canales compatibles
+- [Emparejamiento](/en/channels/pairing) — autenticación y flujo de emparejamiento de MD
+- [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento

@@ -7,56 +7,56 @@ title: "Directorio de documentos"
 
 # Directorio de documentación
 
-<Note>Esta página es un índice curado. Si eres nuevo, comienza con [Getting Started](/en/start/getting-started). Para ver un mapa completo de la documentación, consulta [Docs hubs](/en/start/hubs).</Note>
+<Note>Esta página es un índice curado. Si es nuevo, comience con [Getting Started](/en/start/getting-started). Para ver un mapa completo de la documentación, consulte [Docs hubs](/en/start/hubs).</Note>
 
 ## Comenzar aquí
 
-- [Docs hubs (all pages linked)](/en/start/hubs)
-- [Help](/en/help)
-- [Configuration](/en/gateway/configuration)
-- [Configuration examples](/en/gateway/configuration-examples)
-- [Slash commands](/en/tools/slash-commands)
-- [Multi-agent routing](/en/concepts/multi-agent)
-- [Updating and rollback](/en/install/updating)
-- [Pairing (DM and nodes)](/en/channels/pairing)
-- [Nix mode](/en/install/nix)
-- [OpenClaw assistant setup](/en/start/openclaw)
-- [Skills](/en/tools/skills)
-- [Skills config](/en/tools/skills-config)
-- [Workspace templates](/en/reference/templates/AGENTS)
-- [RPC adapters](/en/reference/rpc)
-- [Gateway runbook](/en/gateway)
-- [Nodes (iOS and Android)](/en/nodes)
-- [Web surfaces (Control UI)](/en/web)
-- [Discovery and transports](/en/gateway/discovery)
-- [Remote access](/en/gateway/remote)
+- [Docs hubs (todas las páginas enlazadas)](/en/start/hubs)
+- [Ayuda](/en/help)
+- [Configuración](/en/gateway/configuration)
+- [Ejemplos de configuración](/en/gateway/configuration-examples)
+- [Comandos de barra](/en/tools/slash-commands)
+- [Enrutamiento multiagente](/en/concepts/multi-agent)
+- [Actualización y reversión](/en/install/updating)
+- [Emparejamiento (DM y nodos)](/en/channels/pairing)
+- [Modo Nix](/en/install/nix)
+- [Configuración del asistente OpenClaw](/en/start/openclaw)
+- [Habilidades](/en/tools/skills)
+- [Configuración de habilidades](/en/tools/skills-config)
+- [Plantillas de espacio de trabajo](/en/reference/templates/AGENTS)
+- [Adaptadores RPC](/en/reference/rpc)
+- [Manual del Gateway](/en/gateway)
+- [Nodos (iOS y Android)](/en/nodes)
+- [Superficies web (Interfaz de control)](/en/web)
+- [Descubrimiento y transportes](/en/gateway/discovery)
+- [Acceso remoto](/en/gateway/remote)
 
 ## Proveedores y experiencia de usuario
 
 - [WebChat](/en/web/webchat)
-- [Control UI (browser)](/en/web/control-ui)
+- [Interfaz de control (navegador)](/en/web/control-ui)
 - [Telegram](/en/channels/telegram)
 - [Discord](/en/channels/discord)
-- [Mattermost (plugin)](/en/channels/mattermost)
+- [Mattermost (complemento)](/en/channels/mattermost)
 - [BlueBubbles (iMessage)](/en/channels/bluebubbles)
 - [iMessage (heredado)](/en/channels/imessage)
 - [Grupos](/en/channels/groups)
 - [Mensajes de grupo de WhatsApp](/en/channels/group-messages)
-- [Imágenes multimedia](/en/nodes/images)
-- [Audio multimedia](/en/nodes/audio)
+- [Imágenes de medios](/en/nodes/images)
+- [Audio de medios](/en/nodes/audio)
 
 ## Aplicaciones complementarias
 
-- [app de macOS](/en/platforms/macos)
-- [app de iOS](/en/platforms/ios)
-- [app de Android](/en/platforms/android)
+- [Aplicación macOS](/en/platforms/macos)
+- [Aplicación iOS](/en/platforms/ios)
+- [Aplicación Android](/en/platforms/android)
 - [Windows (WSL2)](/en/platforms/windows)
-- [app de Linux](/en/platforms/linux)
+- [Aplicación Linux](/en/platforms/linux)
 
 ## Operaciones y seguridad
 
 - [Sesiones](/en/concepts/session)
-- [Trabajos cron](/en/automation/cron-jobs)
+- [Trabajos Cron](/en/automation/cron-jobs)
 - [Webhooks](/en/automation/webhook)
 - [Gmail hooks (Pub/Sub)](/en/automation/gmail-pubsub)
 - [Seguridad](/en/gateway/security)

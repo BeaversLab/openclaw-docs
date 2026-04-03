@@ -1,5 +1,5 @@
 ---
-summary: "iOS 节点应用：连接到 Gateway 网关、配对、画布和故障排除"
+summary: "iOS 节点应用：连接到 Gateway(网关) 网关、配对、画布和故障排除"
 read_when:
   - Pairing or reconnecting the iOS node
   - Running the iOS app from source
@@ -13,13 +13,13 @@ title: "iOS App"
 
 ## 功能
 
-- 通过 WebSocket（局域网或 tailnet）连接到 Gateway 网关。
+- 通过 WebSocket（局域网或 tailnet）连接到 Gateway(网关) 网关。
 - 暴露节点功能：Canvas、屏幕快照、相机捕获、位置、通话模式、语音唤醒。
 - 接收 `node.invoke` 命令并报告节点状态事件。
 
 ## 要求
 
-- 在另一台设备上运行的 Gateway 网关（macOS、Linux 或通过 WSL2 运行的 Windows）。
+- 在另一台设备上运行的 Gateway(网关) 网关（macOS、Linux 或通过 WSL2 运行的 Windows）。
 - 网络路径：
   - 同一局域网通过 Bonjour，**或**
   - 通过单播 DNS-SD 的 Tailnet（示例域名：`openclaw.internal.`），**或**
@@ -27,7 +27,7 @@ title: "iOS App"
 
 ## 快速开始（配对 + 连接）
 
-1. 启动 Gateway：
+1. 启动 Gateway(网关)：
 
 ```bash
 openclaw gateway --port 18789

@@ -46,7 +46,16 @@ title: "反应"
   </Accordion>
 </AccordionGroup>
 
+## 反应级别
+
+针对每个渠道的 `reactionLevel` 配置控制 Agent 使用反应的广泛程度。值通常为 `off`、`ack`、`minimal` 或 `extensive`。
+
+- [Telegram reactionLevel](/en/channels/telegram#reaction-notifications) — `channels.telegram.reactionLevel`
+- [WhatsApp reactionLevel](/en/channels/whatsapp#reactions) — `channels.whatsapp.reactionLevel`
+
+在各个渠道上设置 `reactionLevel`，以调整 Agent 在每个平台上对消息做出反应的活跃程度。
+
 ## 相关
 
 - [Agent Send](/en/tools/agent-send) — 包含 `react` 的 `message` 工具
-- [Channels](/en/channels) — 渠道特定配置
+- [Channels](/en/channels) — 特定于渠道的配置

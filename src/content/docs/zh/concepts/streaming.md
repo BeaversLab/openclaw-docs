@@ -150,3 +150,9 @@ Slack：
 - `partial` 在可用时可以使用 Slack 原生流式传输（`chat.startStream`/`append`/`stop`）。
 - `block` 使用附加式草稿预览。
 - `progress` 使用状态预览文本，然后是最终答案。
+
+## 相关
+
+- [Messages](/en/concepts/messages) — 消息生命周期与传递
+- [Retry](/en/concepts/retry) — 传递失败时的重试行为
+- [Channels](/en/channels) — 每个渠道的流式传输支持

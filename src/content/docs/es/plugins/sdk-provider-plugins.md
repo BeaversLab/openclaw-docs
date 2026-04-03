@@ -1,7 +1,7 @@
 ---
-title: "Crear complementos de proveedores"
-sidebarTitle: "Complementos de proveedores"
-summary: "Guía paso a paso para crear un complemento de proveedor de modelos para OpenClaw"
+title: "Construir complementos de proveedor"
+sidebarTitle: "Complementos de proveedor"
+summary: "Guía paso a paso para construir un complemento de proveedor de modelos para OpenClaw"
 read_when:
   - You are building a new model provider plugin
   - You want to add an OpenAI-compatible proxy or custom LLM to OpenClaw
@@ -14,11 +14,12 @@ Esta guía explica cómo crear un complemento de proveedor que añade un proveed
 (LLM) a OpenClaw. Al final tendrás un proveedor con un catálogo de modelos,
 autenticación de clave de API y resolución dinámica de modelos.
 
-<Info>Si no has construido ningún plugin de OpenClaw antes, lee primero [Getting Started](/en/plugins/building-plugins) para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
+<Info>Si no has construido ningún complemento de OpenClaw antes, lee [Getting Started](/en/plugins/building-plugins) primero para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
 
 ## Tutorial
 
 <Steps>
+  <a id="step-1-package-and-manifest"></a>
   <Step title="Paquete y manifiesto">
     <CodeGroup>
     ```json package.json
@@ -28,7 +29,15 @@ autenticación de clave de API y resolución dinámica de modelos.
       "type": "module",
       "openclaw": {
         "extensions": ["./index.ts"],
-        "providers": ["acme-ai"]
+        "providers": ["acme-ai"],
+        "compat": {
+          "pluginApi": ">=2026.3.24-beta.2",
+          "minGatewayVersion": "2026.3.24-beta.2"
+        },
+        "build": {
+          "openclawVersion": "2026.3.24-beta.2",
+          "pluginSdkVersion": "2026.3.24-beta.2"
+        }
       }
     }
     ```
@@ -64,12 +73,14 @@ autenticación de clave de API y resolución dinámica de modelos.
     </CodeGroup>
 
     El manifiesto declara `providerAuthEnvVars` para que OpenClaw pueda detectar
-    las credenciales sin cargar el tiempo de ejecución de tu complemento.
+    las credenciales sin cargar el tiempo de ejecución de tu complemento. Si publicas el
+    proveedor en ClawHub, esos campos `openclaw.compat` y `openclaw.build`
+    son obligatorios en `package.json`.
 
   </Step>
 
   <Step title="Registrar el proveedor">
-    Un proveedor mínimo necesita un `id`, `label`, `auth` y `catalog`:
+    Un proveedor mínimo necesita un `id`, un `label`, un `auth` y un `catalog`:
 
     ```typescript index.ts
     import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
@@ -140,13 +151,13 @@ autenticación de clave de API y resolución dinámica de modelos.
     });
     ```
 
-    Ese es un proveedor funcional. Ahora los usuarios pueden
+    Ese es un proveedor funcional. Los usuarios ahora pueden
     `openclaw onboard --acme-ai-api-key <key>` y seleccionar
     `acme-ai/acme-large` como su modelo.
 
-    Para proveedores empaquetados que solo registran un proveedor de texto con autenticación
-    de clave de API más un tiempo de ejecución respaldado por un solo catálogo, se prefiere el asistente más específico
-    `defineSingleProviderPluginEntry(...)`:
+    Para proveedores empaquetados que solo registren un proveedor de texto con autenticación
+    de clave de API más un tiempo de ejecución con un solo catálogo, prefiere el asistente más
+    específico `defineSingleProviderPluginEntry(...)`:
 
     ```typescript
     import { defineSingleProviderPluginEntry } from "openclaw/plugin-sdk/provider-entry";
@@ -181,8 +192,8 @@ autenticación de clave de API y resolución dinámica de modelos.
     });
     ```
 
-    Si tu flujo de autenticación también necesita parchear `models.providers.*`, alias y
-    el modelo predeterminado del agente durante la incorporación, utiliza los asistentes preestablecidos de
+    Si tu flujo de autenticación también necesita modificar `models.providers.*`, los alias y
+    el modelo predeterminado del agente durante el incorporation, utiliza los asistentes preestablecidos de
     `openclaw/plugin-sdk/provider-onboard`. Los asistentes más específicos son
     `createDefaultModelPresetAppliers(...)`,
     `createDefaultModelsPresetAppliers(...)` y
@@ -190,9 +201,9 @@ autenticación de clave de API y resolución dinámica de modelos.
 
   </Step>
 
-  <Step title="Añadir resolución dinámica de modelos">
+  <Step title="Agregar resolución dinámica de modelos">
     Si su proveedor acepta ID de modelo arbitrarios (como un proxy o enrutador),
-    añada `resolveDynamicModel`:
+    agregue `resolveDynamicModel`:
 
     ```typescript
     api.registerProvider({
@@ -214,13 +225,13 @@ autenticación de clave de API y resolución dinámica de modelos.
     ```
 
     Si la resolución requiere una llamada de red, use `prepareDynamicModel` para la
-    preparación asíncrona — `resolveDynamicModel` se ejecuta de nuevo después de que se complete.
+    preparación asincrónica — `resolveDynamicModel` se ejecuta nuevamente después de que se complete.
 
   </Step>
 
   <Step title="Añadir hooks de tiempo de ejecución (según sea necesario)">
-    La mayoría de los proveedores solo necesitan `catalog` + `resolveDynamicModel`. Añade hooks
-    de forma incremental a medida que tu proveedor los requiera.
+    La mayoría de los proveedores solo necesitan `catalog` + `resolveDynamicModel`. Añada hooks
+    de manera incremental a medida que su proveedor los requiera.
 
     <Tabs>
       <Tab title="Intercambio de tokens">
@@ -275,9 +286,9 @@ autenticación de clave de API y resolución dinámica de modelos.
 
       | # | Hook | Cuándo usar |
       | --- | --- | --- |
-      | 1 | `catalog` | Catálogo de modelos o valores predeterminados de URL base |
-      | 2 | `resolveDynamicModel` | Aceptar IDs de modelos de flujo ascendente arbitrarios |
-      | 3 | `prepareDynamicModel` | Obtención asíncrona de metadatos antes de resolver |
+      | 1 | `catalog` | Catálogo de modelos o URL base predeterminadas |
+      | 2 | `resolveDynamicModel` | Aceptar IDs de modelo ascendentes arbitrarios |
+      | 3 | `prepareDynamicModel` | Obtención asincrónica de metadatos antes de resolver |
       | 4 | `normalizeResolvedModel` | Reescrituras de transporte antes del ejecutor |
       | 5 | `capabilities` | Metadatos de transcripción/herramientas (datos, no invocables) |
       | 6 | `prepareExtraParams` | Parámetros de solicitud predeterminados |
@@ -285,28 +296,29 @@ autenticación de clave de API y resolución dinámica de modelos.
       | 8 | `formatApiKey` | Forma de token de tiempo de ejecución personalizada |
       | 9 | `refreshOAuth` | Actualización de OAuth personalizada |
       | 10 | `buildAuthDoctorHint` | Guía de reparación de autenticación |
-      | 11 | `isCacheTtlEligible` | Control de TTL de caché de prompt |
-      | 12 | `buildMissingAuthMessage` | Sugerencia personalizada de falta de autenticación |
-      | 13 | `suppressBuiltInModel` | Ocultar filas obsoletas del flujo ascendente |
+      | 11 | `isCacheTtlEligible` | Control de TTL de caché de prompts |
+      | 12 | `buildMissingAuthMessage` | Sugerencia personalizada de autenticación faltante |
+      | 13 | `suppressBuiltInModel` | Ocultar filas ascendentes obsoletas |
       | 14 | `augmentModelCatalog` | Filas sintéticas de compatibilidad futura |
       | 15 | `isBinaryThinking` | Pensamiento binario activado/desactivado |
       | 16 | `supportsXHighThinking` | Soporte de razonamiento `xhigh` |
-      | 17 | `resolveDefaultThinkingLevel` | Política predeterminada `/think` |
-      | 18 | `isModernModelRef` | Coincidencia de modelos en vivo/smoke |
+      | 17 | `resolveDefaultThinkingLevel` | Política predeterminada de `/think` |
+      | 18 | `isModernModelRef` | Coincidencia de modelos en vivo/prueba |
       | 19 | `prepareRuntimeAuth` | Intercambio de tokens antes de la inferencia |
       | 20 | `resolveUsageAuth` | Análisis personalizado de credenciales de uso |
-      | 21 | `fetchUsageSnapshot` | Endpoint de uso personalizado |
+      | 21 | `fetchUsageSnapshot` | Punto final de uso personalizado |
       | 22 | `onModelSelected` | Devolución de llamada posterior a la selección (ej. telemetría) |
 
-      Para descripciones detalladas y ejemplos del mundo real, consulta
+      Para descripciones detalladas y ejemplos del mundo real, consulte
       [Internals: Provider Runtime Hooks](/en/plugins/architecture#provider-runtime-hooks).
     </Accordion>
 
   </Step>
 
   <Step title="Añadir capacidades adicionales (opcional)">
-    Un complemento de proveedor puede registrar voz, comprensión de medios,
-    generación de imágenes y búsqueda web junto con inferencia de texto:
+    <a id="step-5-add-extra-capabilities"></a>
+    Un proveedor de plugins puede registrar voz, comprensión de medios, generación
+    de imágenes y búsqueda web junto con la inferencia de texto:
 
     ```typescript
     register(api) {
@@ -339,13 +351,14 @@ autenticación de clave de API y resolución dinámica de modelos.
     }
     ```
 
-    OpenClaw clasifica esto como un complemento de **capacidad híbrida**. Este es
-    el patrón recomendado para complementos de empresas (un complemento por
-    proveedor). Consulte [Internalidades: Propiedad de capacidades](/en/plugins/architecture#capability-ownership-model).
+    OpenClaw clasifica esto como un plugin de **capacidad híbrida**. Este es el
+    patrón recomendado para los plugins de empresas (un plugin por proveedor). Consulte
+    [Internals: Capability Ownership](/en/plugins/architecture#capability-ownership-model).
 
   </Step>
 
   <Step title="Probar">
+    <a id="step-6-test"></a>
     ```typescript src/provider.test.ts
     import { describe, it, expect } from "vitest";
     // Export your provider config object from index.ts or a dedicated file
@@ -379,10 +392,22 @@ autenticación de clave de API y resolución dinámica de modelos.
   </Step>
 </Steps>
 
+## Publicar en ClawHub
+
+Los plugins de proveedores se publican de la misma manera que cualquier otro plugin de código externo:
+
+```bash
+clawhub package publish your-org/your-plugin --dry-run
+clawhub package publish your-org/your-plugin
+```
+
+No use el alias de publicación heredado solo para habilidades aquí; los paquetes de plugins deben usar
+`clawhub package publish`.
+
 ## Estructura de archivos
 
 ```
-extensions/acme-ai/
+<bundled-plugin-root>/acme-ai/
 ├── package.json              # openclaw.providers metadata
 ├── openclaw.plugin.json      # Manifest with providerAuthEnvVars
 ├── index.ts                  # definePluginEntry + registerProvider
@@ -398,14 +423,14 @@ proveedores integrados:
 
 | Orden     | Cuándo             | Caso de uso                                            |
 | --------- | ------------------ | ------------------------------------------------------ |
-| `simple`  | Primera pasada     | Proveedores de clave de API simple                     |
+| `simple`  | Primera pasada     | Proveedores de clave API simple                        |
 | `profile` | Después de simple  | Proveedores restringidos por perfiles de autenticación |
 | `paired`  | Después del perfil | Sintetizar múltiples entradas relacionadas             |
 | `late`    | Última pasada      | Anular proveedores existentes (gana en colisión)       |
 
 ## Siguientes pasos
 
-- [Complementos de canal](/en/plugins/sdk-channel-plugins) — si su complemento también proporciona un canal
-- [Tiempo de ejecución del SDK](/en/plugins/sdk-runtime) — asistentes `api.runtime` (TTS, búsqueda, subagente)
-- [Descripción general del SDK](/en/plugins/sdk-overview) — referencia completa de importaciones de subrutas
-- [Internalidades del complemento](/en/plugins/architecture#provider-runtime-hooks) — detalles de enlaces y ejemplos incluidos
+- [Channel Plugins](/en/plugins/sdk-channel-plugins) — si su plugin también proporciona un canal
+- [SDK Runtime](/en/plugins/sdk-runtime) — ayudantes `api.runtime` (TTS, búsqueda, subagente)
+- [SDK Overview](/en/plugins/sdk-overview) — referencia completa de importación de subrutas
+- [Plugin Internals](/en/plugins/architecture#provider-runtime-hooks) — detalles de los hooks y ejemplos incluidos

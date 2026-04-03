@@ -24,7 +24,7 @@ sidebarTitle: "Bootstrapping"
 
 ## 运行位置
 
-引导始终在**Gateway 网关 主机**上运行。如果 macOS 应用程序连接到远程 Gateway 网关，工作区和引导文件将驻留在此远程计算机上。
+引导始终在**Gateway(网关) 网关 主机**上运行。如果 macOS 应用程序连接到远程 Gateway(网关) 网关，工作区和引导文件将驻留在此远程计算机上。
 
 <Note>当 Gateway(网关) 在另一台机器上运行时，请在网关主机上编辑工作区文件（例如，`user@gateway-host:~/.openclaw/workspace`）。</Note>
 

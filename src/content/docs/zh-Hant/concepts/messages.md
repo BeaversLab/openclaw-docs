@@ -133,3 +133,10 @@ OpenClaw 可以顯示或隱藏模型推理：
 - 透過 `replyToMode` 和各通道預設值進行回覆串回
 
 詳情：[組態](/en/gateway/configuration-reference#messages) 和通道文件。
+
+## 相關
+
+- [串流](/en/concepts/streaming) — 即時訊息傳遞
+- [重試](/en/concepts/retry) — 訊息傳遞重試行為
+- [佇列](/en/concepts/queue) — 訊息處理佇列
+- [頻道](/en/channels) — 訊息平台整合

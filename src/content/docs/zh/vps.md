@@ -10,7 +10,7 @@ sidebarTitle: "Linux Server"
 
 # Linux Server
 
-在任何 Linux 服务器或云 VPS 上运行 OpenClaw Gateway。本页面帮助您
+在任何 Linux 服务器或云 VPS 上运行 OpenClaw Gateway(网关)。本页面帮助您
 选择提供商，解释云部署如何工作，并涵盖适用于任何地方的通用 Linux
 调优。
 
@@ -56,7 +56,7 @@ sidebarTitle: "Linux Server"
 
 ## 云设置如何工作
 
-- **Gateway 在 VPS 上运行** 并拥有状态 + 工作区。
+- **Gateway(网关) 在 VPS 上运行** 并拥有状态 + 工作区。
 - 您通过 **Control UI** 或 **Tailscale/SSH** 从笔记本电脑或手机进行连接。
 - 将 VPS 视为事实来源，并定期**备份**状态和工作区。
 - 安全默认设置：将 Gateway(网关) 保持在本地回环地址上，并通过 SSH 隧道或 Tailscale Serve 访问它。

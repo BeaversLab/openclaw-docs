@@ -23,7 +23,7 @@ OpenShell 特定的生命周期 (`sandbox create/get/delete`、`sandbox ssh-conf
 - 已安装 `openshell` CLI 并且位于 `PATH` 中（或者通过
   `plugins.entries.openshell.config.command` 设置自定义路径）
 - 具有沙盒访问权限的 OpenShell 帐户
-- 在主机上运行的 OpenClaw Gateway
+- 在主机上运行的 OpenClaw Gateway(网关)
 
 ## 快速开始
 
@@ -55,7 +55,7 @@ OpenShell 特定的生命周期 (`sandbox create/get/delete`、`sandbox ssh-conf
 }
 ```
 
-2. 重启 Gateway。在下一个代理轮次中，OpenClaw 将创建一个 OpenShell
+2. 重启 Gateway(网关)。在下一个代理轮次中，OpenClaw 将创建一个 OpenShell
    沙盒并通过它路由工具执行。
 
 3. 验证：

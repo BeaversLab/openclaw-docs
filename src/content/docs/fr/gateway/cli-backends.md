@@ -120,7 +120,6 @@ L'identifiant du provider devient le côté gauche de votre référence de modè
           modelArg: "--model",
           modelAliases: {
             "claude-opus-4-6": "opus",
-            "claude-opus-4-6": "opus",
             "claude-sonnet-4-6": "sonnet",
           },
           sessionArg: "--session",

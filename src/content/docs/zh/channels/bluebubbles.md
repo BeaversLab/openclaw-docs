@@ -13,7 +13,7 @@ title: "BlueBubbles"
 
 ## 概览
 
-- 通过 BlueBubbles 辅助应用在 macOS 上运行 ([bluebubbles.app](https://bluebubbles.app))。
+- 通过 macOS 辅助应用程序 ([bluebubbles.app](https://bluebubbles.app)) 在 BlueBubbles 上运行。
 - 推荐/测试版本：macOS Sequoia (15)。macOS Tahoe (26) 可用；但在 Tahoe 上编辑功能目前有问题，且群组图标更新可能报告成功但实际上未同步。
 - OpenClaw 通过其 REST API (`GET /api/v1/ping`, `POST /message/text`, `POST /chat/:id/*`) 与其进行通信。
 - 传入消息通过 webhook 到达；传出回复、正在输入指示器、已读回执和轻点是 REST 调用。
@@ -24,7 +24,7 @@ title: "BlueBubbles"
 
 ## 快速开始
 
-1. 在您的 Mac 上安装 BlueBubbles 服务器（遵循 [bluebubbles.app/install](https://bluebubbles.app/install) 上的说明）。
+1. 在您的 Mac 上安装 BlueBubbles 服务器（请遵循 [bluebubbles.app/install](https://bluebubbles.app/install) 上的说明）。
 2. 在 BlueBubbles 配置中，启用 Web API 并设置密码。
 3. 运行 `openclaw onboard` 并选择 BlueBubbles，或手动配置：
 
@@ -420,3 +420,11 @@ OpenClaw 可能会显示 _短_ 消息 ID（例如 `1`、`2`）以节省令牌。
 - 如需状态/健康信息：`openclaw status --all` 或 `openclaw status --deep`。
 
 如需一般渠道工作流参考，请参阅 [渠道](/en/channels) 和 [插件](/en/tools/plugin) 指南。
+
+## 相关
+
+- [频道概述](/en/channels) — 所有支持的频道
+- [配对](/en/channels/pairing) — 私信认证和配对流程
+- [Groups](/en/channels/groups) — 群聊行为和提及限制
+- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
+- [安全](/en/gateway/security) — 访问模型与加固

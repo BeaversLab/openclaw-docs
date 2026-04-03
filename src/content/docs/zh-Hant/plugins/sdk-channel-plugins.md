@@ -12,27 +12,61 @@ read_when:
 
 本指南將逐步引導您建構一個將 OpenClaw 連結至訊息平台的頻道外掛程式。完成後，您將擁有一個具備私訊安全性、配對、回覆串接以及傳出訊息功能的運作中頻道。
 
-<Info>如果您之前尚未建置任何 OpenClaw 外掛程式，請先閱讀 [Getting Started](/en/plugins/building-plugins) 以了解基本套件 結構和 manifest 設定。</Info>
+<Info>如果您之前從未建構過任何 OpenClaw 外掛程式，請先閱讀 [Getting Started](/en/plugins/building-plugins) 以了解基本的套件 結構與 manifest 設定。</Info>
 
 ## 頻道外掛程式的運作方式
 
-頻道外掛程式不需要自己的傳送/編輯/反應工具。OpenClaw 在核心中保留了一個
-共享的 `message` 工具。您的外掛程式擁有：
+頻道外掛程式不需要自己的傳送/編輯/反應工具。OpenClaw 在核心中保留一個
+共用的 `message` 工具。您的外掛程式擁有：
 
 - **Config** — 帳戶解析與設定精靈
 - **Security** — 私訊原則與允許清單
 - **Pairing** — 私訊核准流程
-- **Outbound** — 傳送文字、媒體和投票至平台
-- **Threading** — 回覆如何串接
+- **Session 文法** — 提供者特定的對話 ID 如何對應到基礎聊天、執行緒 ID 和父項備援
+- **Outbound** — 將文字、媒體和投票傳送到平台
+- **Threading** — 回覆如何建立執行緒
 
-核心擁有共享訊息工具、提示連線、會話記錄和分派功能。
+核心擁有共用的訊息工具、提示連線、外層 session-key 形狀、
+泛型 `:thread:` 簿記以及分派。
 
-## 逐步演練
+如果您的平台在對話 ID 內儲存額外的範圍，請將該解析邏輯
+保留在外掛程式中，使用 `messaging.resolveSessionConversation(...)`。這是將
+`rawId` 對應到基礎對話 ID、選用執行緒
+ID、明確的 `baseConversationId` 以及任何 `parentConversationCandidates` 的
+標準掛鉤。當您傳回 `parentConversationCandidates` 時，請將它們從
+最窄的父項到最寬/基礎對話進行排序。
+
+需要在頻道登錄檔啟動前進行相同解析的打包外掛程式，
+也可以公開頂層 `session-key-api.ts` 檔案並搭配
+`resolveSessionConversation(...)` 匯出。核心僅在執行時外掛程式登錄檔
+尚無法使用時，才會使用該引導安全的介面。
+
+當外掛程式只需要在泛型/原始 ID 之上設定父項備援時，
+`messaging.resolveParentConversationCandidates(...)` 仍可作為舊版相容性備援方案。
+如果兩個掛鉤都存在，核心會優先使用
+`resolveSessionConversation(...).parentConversationCandidates`，並僅在標準掛鉤
+省略它們時才備援到 `resolveParentConversationCandidates(...)`。
+
+## 審核與頻道功能
+
+大多數頻道外掛程式不需要特定於審核的程式碼。
+
+- 核心擁有同聊天 `/approve`、共用的審核按鈕 payload 以及泛型備援傳遞。
+- 僅當審核驗證與一般聊天驗證不同時，才使用
+  `auth.authorizeActorAction` 或 `auth.getActionAvailabilityState`。
+- 針對頻道特定的載荷生命週期行為，例如隱藏重複的本機核准提示或傳送前傳送正在輸入指示器，請使用 `outbound.shouldSuppressLocalPayloadPrompt` 或 `outbound.beforeDeliverPayload`。
+- 僅將 `approvals.delivery` 用於原生核准路由或後援抑制。
+- 僅當頻道確實需要自訂核准載荷而非共享渲染器時，才使用 `approvals.render`。
+- 如果頻道可以從現有設定中推斷穩定的類似擁有者 DM 身分，請使用 `openclaw/plugin-sdk/approval-runtime` 中的 `createResolvedApproverActionAuthAdapter` 來限制相同聊天 `/approve`，而無需新增特定於核准的核心邏輯。
+
+對於 Slack、Matrix、Microsoft Teams 和類似的聊天頻道，預設路徑通常就足夠了：核心處理核准，而外掛只需公開正常的出站和驗證功能。
+
+## 逐步指南
 
 <Steps>
-  <Step title="Package and manifest">
-    建立標準的外掛程式檔案。`package.json` 中的 `channel` 欄位
-    是使其成為頻道外掛程式的關鍵：
+  <a id="step-1-package-and-manifest"></a>
+  <Step title="套件與清單">
+    建立標準外掛檔案。`package.json` 中的 `channel` 欄位是讓這成為頻道外掛的關鍵：
 
     <CodeGroup>
     ```json package.json
@@ -81,9 +115,8 @@ read_when:
 
   </Step>
 
-  <Step title="建置通道插件物件">
-    `ChannelPlugin` 介面有許多選用的介面卡表面。從
-    最小需求開始 —— `id` 和 `setup` —— 並根據需求加入介面卡。
+  <Step title="建構通道外掛物件">
+    `ChannelPlugin` 介面有許多選用的配接器表面。從最少的選項開始 — `id` 和 `setup` — 並根據您的需求加入配接器。
 
     建立 `src/channel.ts`：
 
@@ -178,23 +211,22 @@ read_when:
     });
     ```
 
-    <Accordion title="createChatChannelPlugin 為您做些什麼">
-      不必手動實作底層介面卡介面，您只需傳入
-      宣告式選項，建構器便會將其組合起來：
+    <Accordion title="createChatChannelPlugin 為您做什麼">
+      不需要手動實作低階配接器介面，您傳遞宣告式選項，建構器會將其組合起來：
 
-      | 選項 | 連接內容 |
+      | 選項 | 它連接什麼 |
       | --- | --- |
-      | `security.dm` | 從設定欄位產生範圍化的 DM 安全性解析器 |
-      | `pairing.text` | 基於文字並包含代碼交換的 DM 配對流程 |
-      | `threading` | 回覆模式解析器（固定、帳戶範圍或自訂） |
-      | `outbound.attachedResults` | 傳回結果中繼資料（訊息 ID）的傳送函式 |
+      | `security.dm` | 從設定欄位取得範圍 DM 安全性解析器 |
+      | `pairing.text` | 基於文字的 DM 配對流程，包含代碼交換 |
+      | `threading` | 回覆模式解析器 (固定、帳戶範圍或自訂) |
+      | `outbound.attachedResults` | 傳回結果中繼資料 (訊息 ID) 的傳送函式 |
 
-      如果您需要完全控制，也可以傳入原始介面卡物件來取代宣告式選項。
+      如果您需要完全控制，您也可以傳遞原始配接器物件來取代宣告式選項。
     </Accordion>
 
   </Step>
 
-  <Step title="連接進入點">
+  <Step title="連結進入點">
     建立 `index.ts`：
 
     ```typescript index.ts
@@ -206,27 +238,36 @@ read_when:
       name: "Acme Chat",
       description: "Acme Chat channel plugin",
       plugin: acmeChatPlugin,
-      registerFull(api) {
+      registerCliMetadata(api) {
         api.registerCli(
           ({ program }) => {
             program
               .command("acme-chat")
               .description("Acme Chat management");
           },
-          { commands: ["acme-chat"] },
+          {
+            descriptors: [
+              {
+                name: "acme-chat",
+                description: "Acme Chat management",
+                hasSubcommands: false,
+              },
+            ],
+          },
         );
+      },
+      registerFull(api) {
+        api.registerGatewayMethod(/* ... */);
       },
     });
     ```
 
-    `defineChannelPluginEntry` 會自動處理設定/完整註冊的分割。請參閱
-    [進入點](/en/plugins/sdk-entrypoints#definechannelpluginentry) 以了解所有
-    選項。
+    將通道擁有的 CLI 描述符放在 `registerCliMetadata(...)` 中，這樣 OpenClaw 就可以啟動完整的通道執行時段，在根據層級的說明中顯示它們，而正常的完整載入仍然會擷取相同的描述符以進行實際的指令註冊。將 `registerFull(...)` 保留給僅限執行時段的工作。`defineChannelPluginEntry` 會自動處理註冊模式分割。請參閱 [Entry Points](/en/plugins/sdk-entrypoints#definechannelpluginentry) 以了解所有選項。
 
   </Step>
 
   <Step title="新增設定進入點">
-    建立 `setup-entry.ts` 以在引導過程中進行輕量載入：
+    建立 `setup-entry.ts` 以在入職期間進行輕量級載入：
 
     ```typescript setup-entry.ts
     import { defineSetupPluginEntry } from "openclaw/plugin-sdk/core";
@@ -235,13 +276,13 @@ read_when:
     export default defineSetupPluginEntry(acmeChatPlugin);
     ```
 
-    當頻道已停用或未設定時，OpenClaw 會載入此項目而非完整的進入點。這可以避免在設定流程中載入沉重的執行時程式碼。詳情請參閱 [設定與組態](/en/plugins/sdk-setup#setup-entry)。
+    當通道停用或未設定時，OpenClaw 會載入此項目而非完整進入點。這可以避免在設定流程中載入繁重的執行時段程式碼。詳情請參閱 [Setup and Config](/en/plugins/sdk-setup#setup-entry)。
 
   </Step>
 
   <Step title="處理傳入訊息">
     您的外掛程式需要從平台接收訊息並將其轉發給
-    OpenClaw。典型的模式是一個 webhook，它會驗證請求並透過您頻道的傳入處理程式進行分派：
+    OpenClaw。典型模式是一個驗證請求並透過您頻道的傳入處理程式分發請求的 webhook：
 
     ```typescript
     registerFull(api) {
@@ -253,7 +294,7 @@ read_when:
 
           // Your inbound handler dispatches the message to OpenClaw.
           // The exact wiring depends on your platform SDK —
-          // see a real example in extensions/msteams or extensions/googlechat.
+          // see a real example in the bundled Microsoft Teams or Google Chat plugin package.
           await handleAcmeChatInbound(api, event);
 
           res.statusCode = 200;
@@ -265,15 +306,16 @@ read_when:
     ```
 
     <Note>
-      傳入訊息處理是特定於頻道的。每個頻道外掛程式都擁有
-      自己的傳入管線。請查看打包的頻道外掛程式
-      （例如 `extensions/msteams`、`extensions/googlechat`）以了解實際模式。
+      傳入訊息的處理方式取決於特定頻道。每個頻道外掛程式都擁有
+      自己的傳入管道。請查看捆綁的頻道外掛程式
+      (例如 Microsoft Teams 或 Google Chat 外掛程式套件) 以了解實際模式。
     </Note>
 
   </Step>
 
-  <Step title="測試">
-    在 `src/channel.test.ts` 中編寫同置測試：
+<a id="step-6-test"></a>
+<Step title="測試">
+在 `src/channel.test.ts` 中編寫同置測試：
 
     ```typescript src/channel.test.ts
     import { describe, it, expect } from "vitest";
@@ -308,10 +350,10 @@ read_when:
     ```
 
     ```bash
-    pnpm test -- extensions/acme-chat/
+    pnpm test -- <bundled-plugin-root>/acme-chat/
     ```
 
-    有關共享測試輔助工具，請參閱 [測試](/en/plugins/sdk-testing)。
+    有關共享測試輔助程式，請參閱 [Testing](/en/plugins/sdk-testing)。
 
   </Step>
 </Steps>
@@ -319,7 +361,7 @@ read_when:
 ## 檔案結構
 
 ```
-extensions/acme-chat/
+<bundled-plugin-root>/acme-chat/
 ├── package.json              # openclaw.channel metadata
 ├── openclaw.plugin.json      # Manifest with config schema
 ├── index.ts                  # defineChannelPluginEntry
@@ -340,19 +382,19 @@ extensions/acme-chat/
     固定、帳戶範圍或自訂回覆模式
   </Card>
   <Card title="訊息工具整合" icon="puzzle" href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool">
-    describeMessageTool 和動作探索
+    describeMessageTool 與動作發現
   </Card>
   <Card title="目標解析" icon="crosshair" href="/en/plugins/architecture#channel-target-resolution">
-    inferTargetChatType、looksLikeId、resolveTarget
+    inferTargetChatType, looksLikeId, resolveTarget
   </Card>
-  <Card title="Runtime helpers" icon="settings" href="/en/plugins/sdk-runtime">
-    TTS、STT、媒體、透過 api.runtime 執行的子代理程式
+  <Card title="執行時期輔助程式" icon="settings" href="/en/plugins/sdk-runtime">
+    透過 api.runtime 使用 TTS、STT、媒體、subagent
   </Card>
 </CardGroup>
 
 ## 後續步驟
 
-- [提供商外掛程式](/en/plugins/sdk-provider-plugins) — 如果您的外掛程式也提供模型
+- [提供者外掛程式](/en/plugins/sdk-provider-plugins) — 如果您的外掛程式也提供模型
 - [SDK 概覽](/en/plugins/sdk-overview) — 完整的子路徑匯入參考
-- [SDK 測試](/en/plugins/sdk-testing) — 測試工具程式與合約測試
+- [SDK 測試](/en/plugins/sdk-testing) — 測試工具與合約測試
 - [外掛程式清單](/en/plugins/manifest) — 完整的清單架構

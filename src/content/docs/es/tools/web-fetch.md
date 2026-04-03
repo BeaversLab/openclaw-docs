@@ -36,10 +36,10 @@ await web_fetch({ url: "https://example.com/article" });
 ## Cómo funciona
 
 <Steps>
-  <Step title="Obtener">Envía un HTTP GET con un User-Agent similar a Chrome y el encabezado `Accept-Language` . Bloquea nombres de host privados/internos y vuelve a verificar los redireccionamientos.</Step>
-  <Step title="Extraer">Ejecuta Readability (extracción de contenido principal) en la respuesta HTML.</Step>
-  <Step title="Alternativa (opcional)">Si Readability falla y Firecrawl está configurado, se reintenta a través de la API de Firecrawl con el modo de evasión de bots.</Step>
-  <Step title="Caché">Los resultados se almacenan en caché durante 15 minutos (configurable) para reducir las búsquedas repetidas de la misma URL.</Step>
+  <Step title="Fetch">Envía un HTTP GET con un User-Agent similar al de Chrome y la cabecera `Accept-Language`. Bloquea nombres de host privados/internos y vuelve a verificar los redireccionamientos.</Step>
+  <Step title="Extract">Ejecuta Readability (extracción de contenido principal) en la respuesta HTML.</Step>
+  <Step title="Fallback (optional)">Si Readability falla y Firecrawl está configurado, se reintenta a través de la API de Firecrawl con el modo de evasión de bots.</Step>
+  <Step title="Cache">Los resultados se almacenan en caché durante 15 minutos (configurable) para reducir las búsquedas repetidas de la misma URL.</Step>
 </Steps>
 
 ## Configuración
@@ -90,7 +90,7 @@ Si la extracción con Readability falla, `web_fetch` puede usar como alternativa
 
 `tools.web.fetch.firecrawl.apiKey` admite objetos SecretRef.
 
-<Note>Si Firecrawl está habilitado y su SecretRef no está resuelto sin `FIRECRAWL_API_KEY` de respaldo env, el inicio de la puerta de enlace falla rápidamente.</Note>
+<Note>Si Firecrawl está habilitado y su SecretRef no está resuelto sin un env alternativo `FIRECRAWL_API_KEY`, el inicio de la puerta de enlace falla rápidamente.</Note>
 
 ## Límites y seguridad
 

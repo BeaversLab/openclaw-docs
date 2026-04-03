@@ -89,7 +89,7 @@ xcrun swift --version
 
 2. 如果失败，请在 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 中临时更改 `BUNDLE_ID`，以强制 macOS "从零开始"。
 
-### Gateway 网关 一直处于“启动中...”状态
+### Gateway(网关) 网关 一直处于“启动中...”状态
 
 如果网关状态一直停留在“启动中...”，请检查是否有僵尸进程占用了端口：
 

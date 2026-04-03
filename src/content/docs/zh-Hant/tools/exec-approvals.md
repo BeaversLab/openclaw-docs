@@ -171,37 +171,37 @@ macOS 分割：
 如果您的安全可執行檔位於套件管理器/使用者路徑中（例如 `/opt/homebrew/bin`、`/usr/local/bin`、`/opt/local/bin`、`/snap/bin`），請將其明確新增至 `tools.exec.safeBinTrustedDirs`。
 Shell 鏈結與重導向在允許清單模式下不會自動獲准。
 
-當每個頂層區段都符合允許清單（包括安全 bins 或技能自動允許）時，允許 Shell 鏈結（`&&`、`||`、`;`）。在允許清單模式下，重新導向仍然不受支援。在允許清單解析期間，指令替換（`$()` / 反引號）會被拒絕，包括在雙引號內；如果您需要字面 `$()` 文字，請使用單引號。在 macOS 伴隨應用程式的審核中，包含 Shell 控制或擴展語法（`&&`、`||`、`;`、`|`、`` ` ``, `$`, `<`, `>`, `(`, `)`）的原始 Shell 文字會被視為未命中允許清單，除非 Shell 二進位檔本身已被列入允許清單。對於 Shell 包裝器（`bash|sh|zsh ... -c/-lc`），請求範圍的 env 覆寫會被縮減為一個小型明確的允許清單（`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`）。對於允許清單模式下的「一律允許」決策，已知的分派包裝器（`env`、`nice`、`nohup`、`stdbuf`、`timeout`）會保留內部可執行檔路徑，而不是包裝器路徑。Shell 多工器（`busybox`、`toybox`）也會針對 Shell 小程式（`sh`、`ash` 等）進行解包，因此會保留內部可執行檔，而不是多工器二進位檔。如果無法安全地解包包裝器或多工器，則不會自動保留任何允許清單項目。如果您將直譯器（例如 `python3` 或 `node`）列入允許清單，建議優先使用 `tools.exec.strictInlineEval=true`，這樣內嵌評估仍然需要明確的審核。
+當每個頂層區段都符合允許清單（包括安全的二進位檔或技能自動允許）時，允許使用 Shell 鏈結（`&&`、`||`、`;`）。在允許清單模式下，不支援重新導向。在允許清單解析期間，會拒絕指令替換（`$()` / 反引號），包括在雙引號內；如果您需要字面意義的 `$()` 文字，請使用單引號。在 macOS 伴隨應用程式批准中，包含 Shell 控制或擴展語法（`&&`、`||`、`;`、`|`、`` ` ``, `$`, `<`, `>`, `(`, `)`）的原始 Shell 文字會被視為未通過允許清單，除非 Shell 二進位檔本身在允許清單中。對於 Shell 包裝器（`bash|sh|zsh ... -c/-lc`），請求範圍的環境變數覆寫會被縮減為一個小型明確的允許清單（`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`）。對於允許清單模式下的「一律允許」決策，已知的分發包裝器（`env`、`nice`、`nohup`、`stdbuf`、`timeout`）會保留內部可執行檔路徑，而不是包裝器路徑。Shell 多工器（`busybox`、`toybox`）也會針對 Shell 小程式（`sh`、`ash` 等）進行解包，因此會保留內部可執行檔而不是多工器二進位檔。如果無法安全地解包包裝器或多工器，則不會自動保留任何允許清單項目。如果您將直譯器（例如 `python3` 或 `node`）加入允許清單，建議優先使用 `tools.exec.strictInlineEval=true`，這樣內聯評估仍需要明確批准。在嚴格模式下，`allow-always` 仍然可以保留良性的直譯器/指令碼呼叫，但內聯評估載體不會自動保留。
 
 預設安全 bins：
 
 [//]: # "SAFE_BIN_DEFAULTS:START"
 
-`cut`、`uniq`、`head`、`tail`、`tr`、`wc`
+`cut`, `uniq`, `head`, `tail`, `tr`, `wc`
 
 [//]: # "SAFE_BIN_DEFAULTS:END"
 
-`grep` 和 `sort` 不在預設清單中。如果您選擇啟用，請保留它們的 non-stdin 工作流程的明確允許清單條目。
-對於 safe-bin 模式下的 `grep`，請使用 `-e`/`--regexp` 提供模式；位置參數模式形式會被拒絕，以防止檔案操作數被夾帶為模糊的位置參數。
+`grep` 和 `sort` 不在預設清單中。如果您選擇加入，請為其非 stdin 工作流程保留明確的允許清單條目。
+若要在安全 bin 模式下使用 `grep`，請使用 `-e`/`--regexp` 提供模式；會拒絕位置參數模式，因此檔案操作數無法被偽裝為不明確的位置參數。
 
 ### 安全 bins 與允許清單
 
-| 主題     | `tools.exec.safeBins`               | Allowlist (`exec-approvals.json`)                |
+| 主題     | `tools.exec.safeBins`               | 允許清單 (`exec-approvals.json`)                 |
 | -------- | ----------------------------------- | ------------------------------------------------ |
 | 目標     | 自動允許狹窄的 stdin 過濾器         | 明確信任特定的可執行檔                           |
 | 比對類型 | 可執行檔名稱 + 安全 bin argv 政策   | 已解析的可執行檔路徑 glob 模式                   |
 | 引數範圍 | 受安全 bin 設定檔和文字標記規則限制 | 僅路徑比對；引數方面則由您自行負責               |
-| 典型範例 | `head`、`tail`、`tr`、`wc`          | `jq`、`python3`、`node`、`ffmpeg`、自訂 CLI      |
+| 典型範例 | `head`, `tail`, `tr`, `wc`          | `jq`, `python3`, `node`, `ffmpeg`, 自訂 CLI      |
 | 最佳用途 | 管線中的低風險文字轉換              | 任何具有更廣泛行為或副作用（side effects）的工具 |
 
 設定位置：
 
-- `safeBins` 來自組態（`tools.exec.safeBins` 或每個代理程式的 `agents.list[].tools.exec.safeBins`）。
-- `safeBinTrustedDirs` 來自組態（`tools.exec.safeBinTrustedDirs` 或每個代理程式的 `agents.list[].tools.exec.safeBinTrustedDirs`）。
-- `safeBinProfiles` 來自組態（`tools.exec.safeBinProfiles` 或每個代理程式的 `agents.list[].tools.exec.safeBinProfiles`）。每個代理程式的設定檔金鑰會覆寫全域金鑰。
-- 允許清單項目位於 `agents.<id>.allowlist` 下的主機本機 `~/.openclaw/exec-approvals.json` 中（或透過 Control UI / `openclaw approvals allowlist ...`）。
-- 當直譯器/執行時期二進位檔出現在 `safeBins` 中且沒有明確的設定檔時，`openclaw security audit` 會以 `tools.exec.safe_bins_interpreter_unprofiled` 發出警告。
-- `openclaw doctor --fix` 可以將缺失的自訂 `safeBinProfiles.<bin>` 項目建構為 `{}`（事後請審閱並收緊設定）。直譯器/執行時期二進位檔不會自動建構。
+- `safeBins` 來自配置 (`tools.exec.safeBins` 或每個代理程式的 `agents.list[].tools.exec.safeBins`)。
+- `safeBinTrustedDirs` 來自配置 (`tools.exec.safeBinTrustedDirs` 或每個代理程式的 `agents.list[].tools.exec.safeBinTrustedDirs`)。
+- `safeBinProfiles` 來自配置 (`tools.exec.safeBinProfiles` 或每個代理程式的 `agents.list[].tools.exec.safeBinProfiles`)。每個代理程式的設定檔金鑰會覆寫全域金鑰。
+- 允許清單條目位於主機本地的 `~/.openclaw/exec-approvals.json` 下的 `agents.<id>.allowlist` (或透過 Control UI / `openclaw approvals allowlist ...`)。
+- 當解譯器/執行時 bins 出現在 `safeBins` 中而沒有明確的設定檔時，`openclaw security audit` 會以 `tools.exec.safe_bins_interpreter_unprofiled` 發出警告。
+- `openclaw doctor --fix` 可以將缺少的自訂 `safeBinProfiles.<bin>` 條目搭建為 `{}` (之後請檢視並調整)。解譯器/執行時 bins 不會自動搭建。
 
 自訂設定檔範例：
 
@@ -223,21 +223,21 @@ Shell 鏈結與重導向在允許清單模式下不會自動獲准。
 }
 ```
 
-如果您明確選擇將 `jq` 加入 `safeBins`，OpenClaw 在安全二進位檔模式下仍會拒絕 `env` 內建指令，因此 `jq -n env` 若無明確的允許清單路徑或核准提示，便無法傾印主機處理程序環境。
+如果您明確選擇加入 `jq` 為 `safeBins`，OpenClaw 仍會在安全二進制模式下拒絕 `env` 內建指令，因此 `jq -n env` 無法在沒有明確允許列表路徑或核准提示的情況下傾印主機進程環境。
 
 ## 控制 UI 編輯
 
 使用 **Control UI → Nodes → Exec approvals** 卡片來編輯預設值、各代理的覆寫設定與允許清單。選擇一個範圍（預設值或某個代理）、調整政策、新增/移除允許清單模式，然後按一下 **Save**。UI 會顯示每個模式的 **last used** 中繼資料，方便您整理清單。
 
-目標選擇器會選擇 **Gateway**（本地核准）或 **Node**。節點必須通告 `system.execApprovals.get/set`（macOS 應用程式或無頭節點主機）。如果節點尚未通告 exec 核准，請直接編輯其本地的 `~/.openclaw/exec-approvals.json`。
+目標選擇器會選擇 **Gateway**（本機核准）或 **Node**。節點必須廣播 `system.execApprovals.get/set`（macOS 應用程式或無頭節點主機）。如果節點尚未廣播執行核准，請直接編輯其本機 `~/.openclaw/exec-approvals.json`。
 
-CLI：`openclaw approvals` 支援 gateway 或節點編輯（請參閱 [Approvals CLI](/en/cli/approvals)）。
+CLI：`openclaw approvals` 支援閘道或節點編輯（請參閱 [Approvals CLI](/en/cli/approvals)）。
 
 ## 核准流程
 
-當需要提示時，gateway 會向操作員用戶端廣播 `exec.approval.requested`。Control UI 和 macOS 應用程式透過 `exec.approval.resolve` 解析，然後 gateway 將已核准的請求轉發至節點主機。
+當需要提示時，閘道會向操作員用戶端廣播 `exec.approval.requested`。Control UI 和 macOS 應用程式透過 `exec.approval.resolve` 解析它，然後閘道將已核准的請求轉發到節點主機。
 
-對於 `host=node`，核准請求包含標準的 `systemRunPlan` payload。當轉發已核准的 `system.run` 請求時，gateway 會使用該計畫作為授權的 command/cwd/session 上下文。
+對於 `host=node`，核准請求包含標準 `systemRunPlan` 負載。閘道在轉發已核准的 `system.run` 請求時，會將該計畫用作授權的指令/cwd/會話上下文。
 
 ## 直譯器/執行時期指令
 
@@ -245,30 +245,38 @@ CLI：`openclaw approvals` 支援 gateway 或節點編輯（請參閱 [Approvals
 
 - 精確的 argv/cwd/env 內容始終會被綁定。
 - 直接 shell 腳本與直接執行時期檔案形式會以盡力而為的方式綁定至一個具體的本機檔案快照。
-- 仍然解析為單一直接本地檔案的常見套件管理程式包裝形式（例如
-  `pnpm exec`、`pnpm node`、`npm exec`、`npx`）會在綁定前被解包。
+- 仍然解析為一個直接本機檔案的常見套件管理程式包裝程式表單（例如 `pnpm exec`、`pnpm node`、`npm exec`、`npx`）會在綁定之前被解包。
 - 如果 OpenClaw 無法為直譯器/執行階段命令識別出一個確切的本機檔案（例如套件腳本、eval 形式、執行階段特定的載入器鏈，或不明確的多檔案形式），則會拒絕經過審核的執行，而不是聲稱其不具備的語意涵蓋範圍。
 - 對於那些工作流程，建議使用沙箱、獨立的主機邊界，或是明確的可信允許清單/完整工作流程，讓操作員接受更廣泛的執行階段語意。
 
-當需要審批時，exec 工具會立即返回一個審批 ID。請使用該 ID 關聯後續的系統事件（`Exec finished` / `Exec denied`）。如果在逾時前未收到決定，該請求將被視為審批逾時，並作為拒絕原因呈現。
+當需要核准時，exec 工具會立即返回並附上核准 ID。使用該 ID 來關聯後續的系統事件（`Exec finished` / `Exec denied`）。如果在逾時前未收到決定，該請求將被視為核准逾時，並作為拒絕原因顯示出來。
+
+### 後續傳遞行為
+
+在已核准的異步執行完成後，OpenClaw 會向同一個會話發送後續 `agent` 回合。
+
+- 如果存在有效的外部傳遞目標（可傳遞通道加上目標 `to`），後續傳遞會使用該通道。
+- 在僅網頁聊天或沒有外部目標的內部會話流程中，後續傳遞保持僅限會話（`deliver: false`）。
+- 如果呼叫者明確要求嚴格的外部傳遞，但沒有可解析的外部通道，請求將失敗並傳回 `INVALID_REQUEST`。
+- 如果啟用了 `bestEffortDeliver` 且無法解析外部通道，傳遞將降級為僅限會話，而不是失敗。
 
 確認對話方塊包括：
 
-- command + args
-- cwd
-- agent id
-- resolved executable path
-- host + policy metadata
+- 指令 + 參數
+- 工作目錄
+- 代理程式 ID
+- 已解析的可執行檔路徑
+- 主機 + 原則中繼資料
 
 動作：
 
-- **Allow once** → 立即執行
-- **Always allow** → 加入允許清單並執行
-- **Deny** → 封鎖
+- **允許一次** → 現在執行
+- **一律允許** → 加入允許清單 + 執行
+- **拒絕** → 封鎖
 
-## 審核轉發至聊天頻道
+## 將審核轉發至聊天頻道
 
-您可以將 exec 審批提示轉發到任何聊天頻道（包括外掛程式頻道），並使用 `/approve` 進行審批。這使用正常的輸出傳遞管道。
+您可以將執行審核提示轉發到任何聊天頻道（包括外掛程式頻道），並使用 `/approve` 進行核准。這會使用正常的傳出傳遞管線。
 
 設定：
 
@@ -297,11 +305,11 @@ CLI：`openclaw approvals` 支援 gateway 或節點編輯（請參閱 [Approvals
 /approve <id> deny
 ```
 
-`/approve` 指令同時處理執行審批和外掛程式審批。如果 ID 不符合待處理的執行審批，它會自動檢查外掛程式審批。
+`/approve` 指令同時處理執行審核和外掛程式審核。如果 ID 與待處理的執行審核不相符，它會自動檢查外掛程式審核。
 
-### 外掛程式審批轉發
+### 外掛程式審核轉發
 
-外掛程式審批轉發使用與執行審批相同的傳遞管線，但在 `approvals.plugin` 下有其獨立的設定。啟用或停用其中一個不會影響另一個。
+外掛程式審核轉發使用與執行審核相同的傳遞管線，但在 `approvals.plugin` 下有其獨立的設定。啟用或停用其中一個不會影響另一個。
 
 ```json5
 {
@@ -319,30 +327,44 @@ CLI：`openclaw approvals` 支援 gateway 或節點編輯（請參閱 [Approvals
 }
 ```
 
-設定結構與 `approvals.exec` 相同：`enabled`、`mode`、`agentFilter`、
+設定形狀與 `approvals.exec` 相同：`enabled`、`mode`、`agentFilter`、
 `sessionFilter` 和 `targets` 的運作方式相同。
 
-支援互動式執行審批按鈕的頻道（例如 Telegram）也會為外掛程式審批呈現按鈕。不具配接器支援的頻道會改為純文字，並附上 `/approve` 指令說明。
+支援共享互動回覆的頻道會為執行和外掛程式審核呈現相同的核准按鈕。不支援共享互動 UI 的頻道會退回到純文字並附上 `/approve`
+指示。
 
-### 內建聊天審核用戶端
+### 在任何頻道上進行同頻道審核
 
-Discord 和 Telegram 也可以透過特定頻道設定，作為明確的執行審核用戶端。
+當執行或外掛程式審核請求來自可傳遞的聊天介面時，預設情況下，同一個聊天現在可以使用 `/approve` 進行核准。這適用於 Slack、Matrix 和 Microsoft Teams 等頻道，以及現有的 Web UI 和終端機 UI 流程。
+
+此共享文字指令路徑會針對該對話使用正常的頻道驗證模型。如果來源聊天已經可以傳送指令並接收回覆，審核請求就不再需要單獨的原生傳遞配接器來保持待處理狀態。
+
+Discord 和 Telegram 也支援同聊天室 `/approve`，但即使停用了原生審批傳遞，這些頻道仍會使用其解析出的審批者清單進行授權。
+
+### 原生審批傳遞
+
+Discord、Slack 和 Telegram 也可以透過特定頻道的配置，充當原生審批傳遞轉接器。
 
 - Discord：`channels.discord.execApprovals.*`
+- Slack：使用與 `channel: "slack"` 共用的 `approvals.exec.targets`，並在啟用互動功能時渲染 Block Kit 審批按鈕
 - Telegram：`channels.telegram.execApprovals.*`
 
-這些用戶端屬於選用功能。如果某個頻道未啟用執行審核，OpenClaw 不會僅因為對話發生在該頻道，就將其視為審核介面。
+這些原生傳遞轉接器是選用的。它們在共用的同聊天室 `/approve` 流程和共用審批按鈕之上，新增了 DM 路由和頻道分發功能。
 
 共用行為：
 
-- 僅設定的審核者可以核准或拒絕
-- 請求者不需要是審核者
-- 啟用頻道傳遞時，審核提示會包含指令文字
-- 如果沒有任何操作員 UI 或設定的審核用戶端能接受請求，提示會退回至 `askFallback`
+- Slack、Matrix、Microsoft Teams 和類似的可傳遞聊天室對於同聊天室 `/approve` 使用正常的頻道授權模型
+- 對於 Discord 和 Telegram，只有解析出的審批者可以批准或拒絕
+- Discord 和 Telegram 的審批者可以是明確指定的 (`execApprovals.approvers`) 或從現有的擁有者配置推斷 (`allowFrom`，加上直接訊息 `defaultTo` (如支援))
+- 請求者不必是審批者
+- 當來源聊天室已支援指令和回覆時，可以直接使用 `/approve` 進行批准
+- 啟用頻道傳遞時，審批提示會包含指令文字
+- 待處理的執行審批預設在 30 分鐘後過期
+- 如果沒有操作員 UI 或配置的審批用戶端可以接受請求，提示會回退至 `askFallback`
 
-Telegram 預設使用審批者私訊 (`target: "dm"`)。當您希望審批提示也顯示在原始 Telegram 聊天/主題中時，您可以切換到 `channel` 或 `both`。對於 Telegram 論壇主題，OpenClaw 會保留用於審批提示和審批後後續操作的主題。
+Telegram 預設使用審批者 DM (`target: "dm"`)。當您希望審批提示也出現在來源 Telegram 聊天室/主題中時，可以切換至 `channel` 或 `both`。對於 Telegram 論壇主題，OpenClaw 會保留審批提示和批准後後續處理的主題。
 
-請參閱：
+參閱：
 
 - [Discord](/en/channels/discord)
 - [Telegram](/en/channels/telegram)
@@ -358,33 +380,48 @@ Gateway -> Node Service (WS)
 
 安全注意事項：
 
-- Unix socket 模式 `0600`，token 儲存在 `exec-approvals.json`。
-- Same-UID 對等檢查。
-- Challenge/response (nonce + HMAC token + request hash) + 短 TTL。
+- Unix socket 模式 `0600`，token 儲存於 `exec-approvals.json`。
+- 相同 UID 對等檢查。
+- 挑戰/回應 (nonce + HMAC token + 請求雜湊) + 短 TTL。
 
 ## 系統事件
 
-Exec 生命週期會以系統訊息呈現：
+Exec 生命週期以系統訊息呈現：
 
 - `Exec running` (僅當指令超過執行通知閾值時)
 - `Exec finished`
 - `Exec denied`
 
-這些會在節點報告事件後發佈到代理程式的會話中。
-閘道主機 exec 批准會在命令完成時（以及可選地，當執行時間超過閾值時）發出相同的生命週期事件。
-需要批准的 exec 會重用批准 ID 作為這些訊息中的 `runId` 以便於關聯。
+這些內容會在節點報告事件後發佈到代理程式的工作階段。
+Gateway 託管的 exec 核准會在指令完成時發出相同的生命週期事件 (以及在選填情況下，當執行時間超過閾值時)。
+具有核准閘門的 exec 會重複使用核准 ID 作為這些訊息中的 `runId`，以便於關聯。
+
+## 拒絕核准的行為
+
+當非同步 exec 核准被拒絕時，OpenClaw 會防止代理程式重複使用
+工作階段中任何先前執行相同指令的輸出。拒絕原因
+會附帶明確的指示，表明沒有可用的指令輸出，這能阻止
+代理程式聲稱有新的輸出，或使用先前成功執行的過時結果
+重複執行被拒絕的指令。
 
 ## 影響
 
-- **full** 很強大；如果可能的話，請優先使用允許清單。
-- **ask** 讓您掌握情況，同時仍然允許快速批准。
-- 每個代理程式的允許清單可防止一個代理程式的批准洩漏到其他代理程式。
-- 批准僅適用於來自**授權發送者**的主機 exec 請求。未授權的發送者無法發出 `/exec`。
-- `/exec security=full` 是授權操作員的會話級便利功能，設計上會跳過審核。
-  若要強力阻擋主機執行，請將審核安全性設為 `deny` 或透過工具政策拒絕 `exec` 工具。
+- **full** (完整) 功能強大；盡可能優先使用允許清單。
+- **ask** (詢問) 讓您掌握情況，同時仍允許快速核准。
+- 每個代理程式的允許清單可防止一個代理程式的核准洩漏到其他代理程式。
+- 核准僅適用於來自**授權發送者**的主機 exec 請求。未授權的發送者無法發出 `/exec`。
+- `/exec security=full` 是授權操作員在工作階段層級的便利功能，設計上會略過核准。
+  若要徹底封鎖主機 exec，請將核准安全性設為 `deny` 或透過工具原則拒絕 `exec` 工具。
 
-相關：
+相關連結：
 
 - [Exec 工具](/en/tools/exec)
-- [提升模式](/en/tools/elevated)
+- [提權模式](/en/tools/elevated)
 - [技能](/en/tools/skills)
+
+## 相關
+
+- [Exec](/en/tools/exec) — shell 指令執行工具
+- [沙盒化](/en/gateway/sandboxing) — 沙盒模式與工作區存取
+- [安全性](/en/gateway/security) — 安全性模型與強化防護
+- [沙盒 vs 工具原則 vs 提權](/en/gateway/sandbox-vs-tool-policy-vs-elevated) — 何時使用各項功能

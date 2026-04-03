@@ -11,7 +11,7 @@ title: "Microsoft Teams"
 
 更新日期：2026-01-21
 
-状态：支持文本 + 私信附件；渠道/群组文件发送需要 `sharePointSiteId` + Graph 权限（请参阅[在群组聊天中发送文件](#sending-files-in-group-chats)）。投票通过自适应卡片发送。消息操作为文件优先发送暴露了显式的 `upload-file`。
+状态：支持文本 + 私信附件；渠道/群组文件发送需要 `sharePointSiteId` + Graph 权限（请参阅 [在群组聊天中发送文件](#sending-files-in-group-chats)）。投票通过自适应卡片发送。消息操作为文件优先发送暴露了显式的 `upload-file`。
 
 ## 所需插件
 
@@ -30,13 +30,13 @@ openclaw plugins install @openclaw/msteams
 本地检出（当从 git 仓库运行时）：
 
 ```bash
-openclaw plugins install ./extensions/msteams
+openclaw plugins install ./path/to/local/msteams-plugin
 ```
 
 如果您在设置过程中选择 Teams 并且检测到 git 检出，
 OpenClaw 将自动提供本地安装路径。
 
-详细信息：[插件](/en/tools/plugin)
+详情：[插件](/en/tools/plugin)
 
 ## 快速设置（初学者）
 
@@ -154,7 +154,7 @@ OpenClaw 将自动提供本地安装路径。
 
 ### 步骤 1：创建 Azure Bot
 
-1. 前往 [创建 Azure Bot](https://portal.azure.com/#create/Microsoft.AzureBot)
+1. 前往 [创建 Azure 机器人](https://portal.azure.com/#create/Microsoft.AzureBot)
 2. 填写 ** Basics ** 选项卡：
 
    | 字段           | 值                                                  |
@@ -183,7 +183,7 @@ OpenClaw 将自动提供本地安装路径。
 1. 在 Azure Bot 中 → **配置**
 2. 将 **消息传递终结点** 设置为你的 Webhook URL：
    - 生产环境：`https://your-domain.com/api/messages`
-   - 本地开发：使用隧道（见下方的 [本地开发](#local-development-tunneling)）
+   - 本地开发：使用隧道（见下方的[本地开发](#local-development-tunneling)）
 
 ### 步骤 4：启用 Teams 频道
 
@@ -212,7 +212,7 @@ tailscale funnel 3978
 
 ## Teams 开发者门户（替代方案）
 
-除了手动创建清单 ZIP，您还可以使用 [Teams 开发者门户](https://dev.teams.microsoft.com/apps)：
+无需手动创建清单 ZIP，您可以使用 [Teams 开发者门户](https://dev.teams.microsoft.com/apps)：
 
 1. 单击 **+ 新建应用**
 2. 填写基本信息（名称、描述、开发者信息）
@@ -242,7 +242,7 @@ tailscale funnel 3978
 
 1. **安装 Microsoft Teams 插件**
    - 从 npm：`openclaw plugins install @openclaw/msteams`
-   - 从本地检出：`openclaw plugins install ./extensions/msteams`
+   - 从本地检出：`openclaw plugins install ./path/to/local/msteams-plugin`
 
 2. **机器人注册**
    - 创建一个 Azure 机器人（见上文）并记录：
@@ -286,33 +286,45 @@ tailscale funnel 3978
 6. **运行网关**
    - 当插件已安装且存在包含凭据的 `msteams` 配置时，Teams 渠道会自动启动。
 
-## 历史记录上下文
+## 成员信息操作
 
-- `channels.msteams.historyLimit` 控制有多少条最近的频道/群组消息被包含在提示中。
+OpenClaw 为 Microsoft Teams 公开了一个基于 Graph 的 `member-info` 操作，以便代理和自动化可以直接从 Microsoft Graph 解析渠道成员详细信息（显示名称、电子邮件、角色）。
+
+要求：
+
+- `Member.Read.Group` RSC 权限（已在推荐清单中）
+- 对于跨团队查找：需要管理员同意的 `User.Read.All` Graph 应用程序权限
+
+该操作由 `channels.msteams.actions.memberInfo` 控制（默认：当 Graph 凭据可用时启用）。
+
+## 历史上下文
+
+- `channels.msteams.historyLimit` 控制将多少条最近的渠道/群组消息包装到提示词中。
 - 回退到 `messages.groupChat.historyLimit`。设置 `0` 以禁用（默认为 50）。
-- 私信历史记录可以通过 `channels.msteams.dmHistoryLimit`（用户轮次）进行限制。每用户覆盖设置：`channels.msteams.dms["<user_id>"].historyLimit`。
+- 获取的线程历史记录会按发件人允许列表（`allowFrom` / `groupAllowFrom`）进行过滤，因此线程上下文植入仅包含来自允许发件人的消息。
+- 私信历史记录可以通过 `channels.msteams.dmHistoryLimit`（用户轮次）进行限制。每个用户的覆盖设置：`channels.msteams.dms["<user_id>"].historyLimit`。
 
 ## 当前的 Teams RSC 权限（清单）
 
-这些是我们 Teams 应用清单中**现有的资源特定权限**。它们仅适用于安装了该应用的团队/聊天中。
+这些是我们 Teams 应用清单中**现有的 resourceSpecific 权限**。它们仅适用于安装了该应用的团队/聊天内部。
 
 **对于渠道（团队范围）：**
 
-- `ChannelMessage.Read.Group` (Application) - 接收所有频道消息而无需 @提及
+- `ChannelMessage.Read.Group` (Application) - 接收所有无需 @提及的渠道消息
 - `ChannelMessage.Send.Group` (Application)
 - `Member.Read.Group` (Application)
-- `Owner.Read.Group` (Application)
-- `ChannelSettings.Read.Group` (Application)
-- `TeamMember.Read.Group` (Application)
-- `TeamSettings.Read.Group` (Application)
+- `Owner.Read.Group`（应用程序）
+- `ChannelSettings.Read.Group`（应用程序）
+- `TeamMember.Read.Group`（应用程序）
+- `TeamSettings.Read.Group`（应用程序）
 
 **对于群组聊天：**
 
-- `ChatMessage.Read.Chat` (Application) - 接收所有群聊消息而无需 @提及
+- `ChatMessage.Read.Chat`（应用程序） - 在不使用 @提及 的情况下接收所有群组聊天消息
 
 ## Teams 清单示例（已编辑）
 
-包含必填字段的最低有效示例。请替换 ID 和 URL。
+包含必填字段的最小有效示例。替换 ID 和 URL。
 
 ```json5
 {
@@ -362,11 +374,11 @@ tailscale funnel 3978
 
 ### 清单注意事项（必填字段）
 
-- `bots[].botId` **必须**与 Azure Bot App ID 匹配。
-- `webApplicationInfo.id` **必须**与 Azure Bot App ID 匹配。
+- `bots[].botId` **必须**与 Azure 机器人应用 ID 匹配。
+- `webApplicationInfo.id` **必须**与 Azure 机器人应用 ID 匹配。
 - `bots[].scopes` 必须包含您计划使用的界面（`personal`、`team`、`groupChat`）。
 - 在个人范围内处理文件需要 `bots[].supportsFiles: true`。
-- 如果您希望进行频道流量交互，`authorization.permissions.resourceSpecific` 必须包含频道读取/发送权限。
+- 如果您需要渠道流量，`authorization.permissions.resourceSpecific` 必须包含渠道读取/发送权限。
 
 ### 更新现有应用
 
@@ -374,133 +386,134 @@ tailscale funnel 3978
 
 1. 使用新设置更新您的 `manifest.json`
 2. **递增 `version` 字段**（例如，`1.0.0` → `1.1.0`）
-3. **将清单与图标一起重新打包为 zip**（`manifest.json`、`outline.png`、`color.png`）
-4. 上传新的 zip 包：
+3. **重新压缩**包含图标的清单（`manifest.json`、`outline.png`、`color.png`）
+4. 上传新的 zip 文件：
    - **选项 A（Teams 管理中心）：** Teams 管理中心 → Teams 应用 → 管理应用 → 找到您的应用 → 上传新版本
-   - **选项 B（侧加载）：** 在 Teams 中 → 应用 → 管理您的应用 → 上传自定义应用
+   - **选项 B（侧载）：** 在 Teams 中 → 应用 → 管理您的应用 → 上传自定义应用
 5. **对于团队渠道：** 在每个团队中重新安装应用以使新权限生效
 6. **完全退出并重新启动 Teams**（不仅仅是关闭窗口）以清除缓存的应用元数据
 
 ## 功能：仅 RSC 与 Graph
 
-### 使用 **仅 Teams RSC**（应用已安装，无 Graph API 权限）
+### 使用 **仅 Teams RSC**（已安装应用，无 Graph API 权限）
 
-有效操作：
+有效功能：
 
 - 读取渠道消息 **文本** 内容。
 - 发送渠道消息 **文本** 内容。
 - 接收 **个人（私信）** 文件附件。
 
-无效操作：
+无效功能：
 
-- 渠道/群组 **图像或文件内容**（负载仅包含 HTML 存根）。
+- 渠道/群组 **图片或文件内容**（有效负载仅包含 HTML 存根）。
 - 下载存储在 SharePoint/OneDrive 中的附件。
-- 读取消息历史记录（超出实时 webhook 事件）。
+- 读取消息历史记录（超出实时 Webhook 事件范围）。
 
-### 使用 **Teams RSC + Microsoft Graph 应用程序权限**
+### 借助 **Teams RSC + Microsoft Graph 应用程序权限**
 
-新增：
+增加了：
 
 - 下载托管内容（粘贴到消息中的图片）。
 - 下载存储在 SharePoint/OneDrive 中的文件附件。
 - 通过 Graph 读取渠道/聊天消息历史。
 
-### RSC 与 Graph API 对比
+### RSC 与 Graph API
 
 | 功能           | RSC 权限           | Graph API               |
 | -------------- | ------------------ | ----------------------- |
 | **实时消息**   | 是（通过 webhook） | 否（仅限轮询）          |
-| **历史消息**   | 否                 | 是（可以查询历史）      |
-| **设置复杂度** | 仅限应用清单       | 需要管理员同意 + 令牌流 |
-| **离线工作**   | 否（必须正在运行） | 是（随时查询）          |
+| **历史消息**   | 否                 | 是（可查询历史）        |
+| **设置复杂度** | 仅需应用清单       | 需要管理员同意 + 令牌流 |
+| **离线工作**   | 否（必须运行中）   | 是（随时可查询）        |
 
-**底线：** RSC 用于实时监听；Graph API 用于历史访问。若要在离线时补看错过的消息，您需要 Graph API 以及 `ChannelMessage.Read.All`（需要管理员同意）。
+**底线：** RSC 用于实时监听；Graph API 用于历史访问。若要在离线时补看错过的消息，您需要配合 `ChannelMessage.Read.All` 使用 Graph API（需要管理员同意）。
 
-## 启用 Graph 的媒体 + 历史（渠道必需）
+## 启用 Graph 的媒体 + 历史记录（渠道必需）
 
-如果您需要在**渠道**中使用图片/文件，或者想要获取**消息历史**，则必须启用 Microsoft Graph 权限并授予管理员同意。
+如果您需要在 **渠道** 中使用图片/文件或想要获取 **消息历史**，则必须启用 Microsoft Graph 权限并授予管理员同意。
 
 1. 在 Entra ID (Azure AD) **应用注册** 中，添加 Microsoft Graph **应用程序权限**：
-   - `ChannelMessage.Read.All`（频道附件 + 历史）
+   - `ChannelMessage.Read.All`（渠道附件 + 历史）
    - `Chat.Read.All` 或 `ChatMessage.Read.All`（群组聊天）
-2. 为租户**授予管理员同意**。
-3. 升级 Teams 应用**清单版本**，重新上传，并**在 Teams 中重新安装该应用**。
+2. 为租户 **授予管理员同意**。
+3. 更新 Teams 应用的 **清单版本**，重新上传，并 **在 Teams 中重新安装应用**。
 4. **完全退出并重新启动 Teams** 以清除缓存的应用元数据。
 
-**用户 @提及的额外权限：** 对于对话中的用户，用户 @提及 功能可直接使用。但是，如果您想动态搜索并提及**不在当前对话中**的用户，请添加 `User.Read.All` (Application) 权限并授予管理员同意。
+**用户提及的额外权限：** 对于对话中的用户，用户 @提及功能开箱即用。但是，如果您想动态搜索并提及 **不在当前对话中** 的用户，请添加 `User.Read.All`（应用程序）权限并授予管理员同意。
 
 ## 已知限制
 
 ### Webhook 超时
 
-Teams 通过 HTTP webhook 传递消息。如果处理时间过长（例如，LLM 响应缓慢），你可能会看到：
+Teams 通过 HTTP webhook 传递消息。如果处理时间过长（例如，LLM 响应缓慢），您可能会看到：
 
 - Gateway(网关) 超时
-- Teams 重试该消息（导致重复）
+- Teams 重试消息（导致重复）
 - 回复丢失
 
-OpenClaw 通过快速返回和主动发送回复来处理此问题，但非常缓慢的响应可能仍会导致问题。
+OpenClaw 通过快速返回并主动发送回复来处理此问题，但非常缓慢的响应仍可能导致问题。
 
 ### 格式
 
-Teams markdown 比 Slack 或 Discord 更受限制：
+Teams Markdown 比 Slack 或 Discord 更有限制：
 
-- 基本格式适用：**粗体**、_斜体_、`code`、链接
-- 复杂的 markdown（表格、嵌套列表）可能无法正确渲染
-- 支持用于投票和任意卡片发送的 Adaptive Cards（见下文）
+- 基本格式有效：**粗体**，_斜体_，`code`，链接
+- 复杂的 Markdown（表格、嵌套列表）可能无法正确渲染
+- 投票和任意卡片发送支持自适应卡片（见下文）
 
 ## 配置
 
-关键设置（有关共享渠道模式，请参阅 `/gateway/configuration`）：
+关键设置（共享渠道模式请参见 `/gateway/configuration`）：
 
 - `channels.msteams.enabled`：启用/禁用渠道。
 - `channels.msteams.appId`、`channels.msteams.appPassword`、`channels.msteams.tenantId`：机器人凭据。
 - `channels.msteams.webhook.port`（默认 `3978`）
 - `channels.msteams.webhook.path`（默认 `/api/messages`）
-- `channels.msteams.dmPolicy`：`pairing | allowlist | open | disabled`（默认：pairing）
-- `channels.msteams.allowFrom`：私信允许列表（建议使用 AAD 对象 ID）。向导在设置期间会在有 Graph 访问权限时将名称解析为 ID。
-- `channels.msteams.dangerouslyAllowNameMatching`：紧急开关，用于重新启用可变的 UPN/显示名称匹配以及直接团队/渠道名称路由。
-- `channels.msteams.textChunkLimit`：出站文本块大小。
-- `channels.msteams.chunkMode`：`length`（默认）或 `newline`，用于在按长度分块之前按空行（段落边界）拆分。
+- `channels.msteams.dmPolicy`：`pairing | allowlist | open | disabled`（默认：配对）
+- `channels.msteams.allowFrom`：私信允许列表（建议使用 AAD 对象 ID）。向导在设置期间（如果可访问 Graph）会将名称解析为 ID。
+- `channels.msteams.dangerouslyAllowNameMatching`：紧急情况开关，用于重新启用可变的 UPN/显示名称匹配以及直接的团队/渠道名称路由。
+- `channels.msteams.textChunkLimit`：出站文本分块大小。
+- `channels.msteams.chunkMode`：`length`（默认）或 `newline` 在按长度分块之前按空行（段落边界）分割。
 - `channels.msteams.mediaAllowHosts`：入站附件主机的允许列表（默认为 Microsoft/Teams 域）。
 - `channels.msteams.mediaAuthAllowHosts`：在媒体重试时附加 Authorization 标头的允许列表（默认为 Graph + Bot Framework 主机）。
 - `channels.msteams.requireMention`：在渠道/群组中要求 @提及（默认为 true）。
 - `channels.msteams.replyStyle`：`thread | top-level`（参见 [回复样式](#reply-style-threads-vs-posts)）。
 - `channels.msteams.teams.<teamId>.replyStyle`：按团队覆盖。
 - `channels.msteams.teams.<teamId>.requireMention`：按团队覆盖。
-- `channels.msteams.teams.<teamId>.tools`：缺少渠道覆盖时使用的默认按团队工具策略覆盖（`allow`/`deny`/`alsoAllow`）。
-- `channels.msteams.teams.<teamId>.toolsBySender`：默认按团队按发件人工具策略覆盖（支持 `"*"` 通配符）。
+- `channels.msteams.teams.<teamId>.tools`：当缺少渠道覆盖时使用的默认按团队工具策略覆盖（`allow`/`deny`/`alsoAllow`）。
+- `channels.msteams.teams.<teamId>.toolsBySender`：默认的按团队按发送者工具策略覆盖（支持 `"*"` 通配符）。
 - `channels.msteams.teams.<teamId>.channels.<conversationId>.replyStyle`：按渠道覆盖。
 - `channels.msteams.teams.<teamId>.channels.<conversationId>.requireMention`：按渠道覆盖。
-- `channels.msteams.teams.<teamId>.channels.<conversationId>.tools`：每个渠道的tool策略覆盖 (`allow`/`deny`/`alsoAllow`)。
-- `channels.msteams.teams.<teamId>.channels.<conversationId>.toolsBySender`：每个渠道每个发送者的tool策略覆盖（支持 `"*"` 通配符）。
+- `channels.msteams.teams.<teamId>.channels.<conversationId>.tools`：按渠道工具策略覆盖 (`allow`/`deny`/`alsoAllow`)。
+- `channels.msteams.teams.<teamId>.channels.<conversationId>.toolsBySender`：按渠道按发送者工具策略覆盖 (支持 `"*"` 通配符)。
 - `toolsBySender` 键应使用显式前缀：
-  `id:`、`e164:`、`username:`、`name:`（旧的无前缀键仍仅映射到 `id:`）。
-- `channels.msteams.sharePointSiteId`：用于群组聊天/渠道中文件上传的SharePoint站点ID（请参阅[在群组聊天中发送文件](#sending-files-in-group-chats)）。
+  `id:`、`e164:`、`username:`、`name:` (旧版无前缀键仍仅映射到 `id:`)。
+- `channels.msteams.actions.memberInfo`：启用或禁用基于 Graph 的成员信息操作 (默认：当 Graph 凭据可用时启用)。
+- `channels.msteams.sharePointSiteId`：用于群聊/渠道中文件上传的 SharePoint 网站ID (参阅 [在群聊中发送文件](#sending-files-in-group-chats))。
 
 ## 路由与会话
 
-- 会话键遵循标准代理格式（请参阅 [/concepts/会话](/en/concepts/session)）：
+- 会话键遵循标准代理格式 (参阅 [/concepts/会话](/en/concepts/session))：
   - 直接消息共享主会话 (`agent:<agentId>:<mainKey>`)。
-  - 渠道/群组消息使用对话 ID：
+  - 渠道/群组消息使用对话ID：
     - `agent:<agentId>:msteams:channel:<conversationId>`
     - `agent:<agentId>:msteams:group:<conversationId>`
 
-## 回复样式：线程与帖子
+## 回复样式：主题与帖子
 
-Teams 最近在同一基础数据模型上引入了两种渠道 UI 样式：
+Teams 最近在同一基础数据模型之上引入了两种渠道UI样式：
 
-| 样式                    | 描述                           | 推荐 `replyStyle` |
-| ----------------------- | ------------------------------ | ----------------- |
-| **帖子**（经典）        | 消息显示为卡片，下方有线程回复 | `thread`（默认）  |
-| **主题** （类似 Slack） | 消息线性流动，更像 Slack       | `top-level`       |
+| 样式                  | 描述                             | 推荐的 `replyStyle` |
+| --------------------- | -------------------------------- | ------------------- |
+| **帖子** (经典)       | 消息显示为卡片，下方带有主题回复 | `thread` (默认)     |
+| **主题** (类似 Slack) | 消息线性流动，更像 Slack         | `top-level`         |
 
-**问题：** Teams API 不公开渠道使用的 UI 样式。如果您使用了错误的 `replyStyle`：
+**问题所在：** Teams API 不会公开渠道使用的是哪种UI样式。如果您使用了错误的 `replyStyle`：
 
-- 在话题式渠道中使用 `thread` → 回复显示得尴尬嵌套
-- 在帖子式渠道中使用 `top-level` → 回复显示为独立的顶级帖子，而不是在话题内
+- 在主题样式的渠道中使用 `thread` → 回复会显示为尴尬的嵌套
+- 在帖子样式的渠道中使用 `top-level` → 回复显示为单独的顶级帖子，而不是在主题内
 
-**解决方案：** 根据渠道的设置，按渠道配置 `replyStyle`：
+**解决方案：** 根据渠道的设置方式，按渠道配置 `replyStyle`：
 
 ```json5
 {
@@ -525,37 +538,37 @@ Teams 最近在同一基础数据模型上引入了两种渠道 UI 样式：
 
 **当前限制：**
 
-- **私信：** 图片和文件附件通过 Teams bot 文件 API 工作。
-- **渠道/群组：** 附件存储在 M365 存储（SharePoint/OneDrive）中。Webhook 负载仅包含 HTML 存根，不包含实际文件字节。**必须具有 Graph API 权限** 才能下载渠道附件。
-- 对于显式的文件优先发送，请结合使用 `action=upload-file` 与 `media` / `filePath` / `path`；可选的 `message` 将成为随附的文本/评论，而 `filename` 将覆盖上传的名称。
+- **私信：** 图片和文件附件通过 Teams 机器人文件 API 工作。
+- **渠道/组：** 附件存储在 M365 存储（SharePoint/OneDrive）中。Webhook 负载仅包含 HTML 存根，而不包含实际文件字节。下载渠道附件**需要 Graph API 权限**。
+- 对于显式的文件优先发送，请将 `action=upload-file` 与 `media` / `filePath` / `path` 一起使用；可选的 `message` 将成为随附文本/注释，而 `filename` 将覆盖上传的名称。
 
 如果没有 Graph 权限，包含图片的渠道消息将仅作为文本接收（机器人无法访问图片内容）。
-默认情况下，OpenClaw 仅从 Microsoft/Teams 主机名下载媒体。使用 `channels.msteams.mediaAllowHosts` 覆盖（使用 `["*"]` 以允许任何主机）。
-授权标头仅附加到 `channels.msteams.mediaAuthAllowHosts` 中的主机（默认为 Graph + Bot Framework 主机）。保持此列表严格（避免多租户后缀）。
+默认情况下，OpenClaw 仅从 Microsoft/Teams 主机名下载媒体。可以使用 `channels.msteams.mediaAllowHosts` 覆盖（使用 `["*"]` 允许任何主机）。
+授权标头仅附加到 `channels.msteams.mediaAuthAllowHosts` 中的主机（默认为 Graph + Bot Framework 主机）。请保持此列表严格（避免多租户后缀）。
 
-## 在群聊中发送文件
+## 在群组聊天中发送文件
 
-机器人可以使用 FileConsentCard 流程（内置）在私信中发送文件。但是，**在群聊/渠道中发送文件**需要额外的设置：
+机器人可以使用 FileConsentCard 流程（内置）在私信中发送文件。但是，**在群组聊天/渠道中发送文件**需要额外设置：
 
 | 上下文                 | 文件发送方式                            | 所需设置                             |
 | ---------------------- | --------------------------------------- | ------------------------------------ |
 | **私信**               | FileConsentCard → 用户接受 → 机器人上传 | 开箱即用                             |
-| **群聊/渠道**          | 上传到 SharePoint → 共享链接            | 需要 `sharePointSiteId` + Graph 权限 |
+| **群组聊天/渠道**      | 上传到 SharePoint → 共享链接            | 需要 `sharePointSiteId` + Graph 权限 |
 | **图片（任何上下文）** | Base64 编码内联                         | 开箱即用                             |
 
-### 为什么群聊需要 SharePoint
+### 为什么群组聊天需要 SharePoint
 
-机器人没有个人 OneDrive 驱动器（`/me/drive` Graph API 端点不适用于应用程序身份）。要在群聊/渠道中发送文件，机器人会上传到 **SharePoint 站点** 并创建共享链接。
+机器人没有个人的 OneDrive 驱动器（`/me/drive` Graph API 端点不适用于应用程序身份）。要在群组聊天/渠道中发送文件，机器人会上传到 **SharePoint 站点** 并创建共享链接。
 
 ### 设置
 
 1. 在 Entra ID (Azure AD) → 应用注册中**添加 Graph API 权限**：
    - `Sites.ReadWrite.All`（应用程序） - 将文件上传到 SharePoint
-   - `Chat.Read.All`（应用程序） - 可选，启用每用户共享链接
+   - `Chat.Read.All`（应用程序） - 可选，启用按用户共享链接
 
-2. **授予管理员同意** (Grant admin consent) 给租户。
+2. **授予租户管理员同意**。
 
-3. **获取您的 SharePoint 站点 ID：**
+3. **获取你的 SharePoint 站点 ID：**
 
    ```bash
    # Via Graph Explorer or curl with a valid token:
@@ -584,25 +597,25 @@ Teams 最近在同一基础数据模型上引入了两种渠道 UI 样式：
 
 ### 共享行为
 
-| 权限                                    | 共享行为                                         |
-| --------------------------------------- | ------------------------------------------------ |
-| 仅 `Sites.ReadWrite.All`                | 组织范围内的共享链接（组织内的任何人都可以访问） |
-| `Sites.ReadWrite.All` + `Chat.Read.All` | 每用户共享链接（仅聊天成员可以访问）             |
+| 权限                                    | 共享行为                                 |
+| --------------------------------------- | ---------------------------------------- |
+| 仅 `Sites.ReadWrite.All`                | 组织范围共享链接（组织内任何人均可访问） |
+| `Sites.ReadWrite.All` + `Chat.Read.All` | 每用户共享链接（仅聊天成员可访问）       |
 
-每用户共享更安全，因为只有聊天参与者可以访问该文件。如果缺少 `Chat.Read.All` 权限，机器人将回退到组织范围内的共享。
+每用户共享更安全，因为只有聊天参与者可以访问文件。如果缺少 `Chat.Read.All` 权限，机器人将回退到组织范围共享。
 
 ### 回退行为
 
-| 场景                                    | 结果                                             |
-| --------------------------------------- | ------------------------------------------------ |
-| 群聊 + 文件 + 已配置 `sharePointSiteId` | 上传到 SharePoint，发送共享链接                  |
-| 群聊 + 文件 + 无 `sharePointSiteId`     | 尝试 OneDrive 上传（可能会失败），仅发送文本     |
-| 个人聊天 + 文件                         | FileConsentCard 流程（无需 SharePoint 即可工作） |
-| 任何上下文 + 图片                       | Base64 编码内联（无需 SharePoint 即可工作）      |
+| 场景                                        | 结果                                             |
+| ------------------------------------------- | ------------------------------------------------ |
+| 群组聊天 + 文件 + 已配置 `sharePointSiteId` | 上传到 SharePoint，发送共享链接                  |
+| 群组聊天 + 文件 + 无 `sharePointSiteId`     | 尝试 OneDrive 上传（可能会失败），仅发送文本     |
+| 个人聊天 + 文件                             | FileConsentCard 流程（无需 SharePoint 即可工作） |
+| 任何上下文 + 图片                           | Base64 编码内联（无需 SharePoint 即可工作）      |
 
 ### 文件存储位置
 
-上传的文件存储在配置的 SharePoint 站点默认文档库的 `/OpenClawShared/` 文件夹中。
+上传的文件存储在已配置 SharePoint 站点的默认文档库中的 `/OpenClawShared/` 文件夹内。
 
 ## 投票（自适应卡片）
 
@@ -611,13 +624,13 @@ OpenClaw 将 Teams 投票作为自适应卡片发送（没有原生的 Teams 投
 - CLI：`openclaw message poll --channel msteams --target conversation:<id> ...`
 - 投票由网关记录在 `~/.openclaw/msteams-polls.json` 中。
 - 网关必须保持在线才能记录投票。
-- 投票尚不会自动发布结果摘要（如有需要，请检查存储文件）。
+- 投票尚不会自动发布结果摘要（如需请检查存储文件）。
 
 ## 自适应卡片（任意）
 
-使用 `message` 工具或 CLI 向 Teams 用户或对话发送任何自适应卡片 JSON。
+使用 `message` 工具或 CLI 向 Teams 用户或对话发送任何自适应卡 JSON。
 
-`card` 参数接受一个自适应卡片 JSON 对象。当提供 `card` 时，消息文本是可选的。
+`card` 参数接受自适应卡 JSON 对象。当提供 `card` 时，消息文本是可选的。
 
 **代理工具：**
 
@@ -642,18 +655,18 @@ openclaw message send --channel msteams \
   --card '{"type":"AdaptiveCard","version":"1.5","body":[{"type":"TextBlock","text":"Hello!"}]}'
 ```
 
-有关卡片架构和示例，请参阅 [Adaptive Cards 文档](https://adaptivecards.io/)。有关目标格式详细信息，请参阅下面的 [目标格式](#target-formats)。
+有关卡架构和示例，请参阅 [Adaptive Cards documentation](https://adaptivecards.io/)。有关目标格式详细信息，请参阅下面的 [Target formats](#target-formats)。
 
 ## 目标格式
 
 MSTeams 目标使用前缀来区分用户和对话：
 
-| 目标类型       | 格式                             | 示例                                             |
-| -------------- | -------------------------------- | ------------------------------------------------ |
-| 用户（按 ID）  | `user:<aad-object-id>`           | `user:40a1a0ed-4ff2-4164-a219-55518990c197`      |
-| 用户（按名称） | `user:<display-name>`            | `user:John Smith` (需要 Graph API)               |
-| 组/渠道        | `conversation:<conversation-id>` | `conversation:19:abc123...@thread.tacv2`         |
-| 组/渠道 (raw)  | `<conversation-id>`              | `19:abc123...@thread.tacv2` (如果包含 `@thread`) |
+| 目标类型          | 格式                             | 示例                                               |
+| ----------------- | -------------------------------- | -------------------------------------------------- |
+| 用户（按 ID）     | `user:<aad-object-id>`           | `user:40a1a0ed-4ff2-4164-a219-55518990c197`        |
+| 用户（按名称）    | `user:<display-name>`            | `user:John Smith`（需要 Graph API）                |
+| 群组/渠道         | `conversation:<conversation-id>` | `conversation:19:abc123...@thread.tacv2`           |
+| 群组/渠道（原始） | `<conversation-id>`              | `19:abc123...@thread.tacv2` （如果包含 `@thread`） |
 
 **CLI 示例：**
 
@@ -672,7 +685,7 @@ openclaw message send --channel msteams --target "conversation:19:abc...@thread.
   --card '{"type":"AdaptiveCard","version":"1.5","body":[{"type":"TextBlock","text":"Hello"}]}'
 ```
 
-**Agent 工具 示例：**
+**代理工具示例：**
 
 ```json5
 {
@@ -696,14 +709,14 @@ openclaw message send --channel msteams --target "conversation:19:abc...@thread.
 }
 ```
 
-注意：如果没有 `user:` 前缀，名称默认解析为组/团队。当按显示名称定位人员时，请始终使用 `user:`。
+注意：如果没有 `user:` 前缀，名称默认解析为团队/群组。当通过显示名称定位人员时，请始终使用 `user:`。
 
 ## 主动消息
 
-- 主动消息只有在用户交互**之后**才可能实现，因为我们在那个时刻存储了对话引用。
-- 请参阅 `/gateway/configuration` 以了解 `dmPolicy` 和允许列表控制。
+- 主动消息仅在用户交互**之后**才可能发送，因为我们在此时存储对话引用。
+- 请参阅 `/gateway/configuration` 以了解 `dmPolicy` 和允许列表 gating。
 
-## 团队和频道 ID（常见陷阱）
+## 团队和渠道 ID（常见陷阱）
 
 Teams URL 中的 `groupId` 查询参数**不是**用于配置的团队 ID。请改为从 URL 路径中提取 ID：
 
@@ -715,7 +728,7 @@ https://teams.microsoft.com/l/team/19%3ABk4j...%40thread.tacv2/conversations?gro
                                     Team ID (URL-decode this)
 ```
 
-**频道 URL：**
+**渠道 URL：**
 
 ```
 https://teams.microsoft.com/l/channel/19%3A15bc...%40thread.tacv2/ChannelName?groupId=...
@@ -723,59 +736,67 @@ https://teams.microsoft.com/l/channel/19%3A15bc...%40thread.tacv2/ChannelName?gr
                                       Channel ID (URL-decode this)
 ```
 
-**用于配置：**
+**对于配置：**
 
 - 团队 ID = `/team/` 之后的路径段（URL 解码后，例如 `19:Bk4j...@thread.tacv2`）
-- 频道 ID = `/channel/` 之后的路径段（URL 解码后）
+- 渠道 ID = `/channel/` 之后的路径段（URL 解码后）
 - **忽略** `groupId` 查询参数
 
-## 私人频道
+## 私密渠道
 
-机器人在私人频道中的支持有限：
+Bot 在私密渠道中的支持有限：
 
-| 功能                | 标准频道 | 私人频道         |
-| ------------------- | -------- | ---------------- |
-| 机器人安装          | 是       | 有限             |
-| 实时消息（webhook） | 是       | 可能无效         |
-| RSC 权限            | 是       | 行为可能不同     |
-| @提及               | 是       | 如果机器人可访问 |
-| Graph API 历史      | 是       | 是（需要权限）   |
+| 功能               | 标准渠道 | 私密渠道       |
+| ------------------ | -------- | -------------- |
+| Bot 安装           | 是       | 有限           |
+| 实时消息 (webhook) | 是       | 可能不起作用   |
+| RSC 权限           | 是       | 行为可能不同   |
+| @提及              | 是       | 如果可访问 Bot |
+| Graph API 历史     | 是       | 是（需要权限） |
 
-**如果私人频道无效的变通方法：**
+**如果私密渠道不起作用的解决方法：**
 
-1. 使用标准频道进行机器人交互
-2. 使用私信 - 用户始终可以直接向机器人发送消息
-3. 使用 Graph API 进行历史访问（需要 `ChannelMessage.Read.All`）
+1. 使用标准渠道进行 Bot 交互
+2. 使用私信 - 用户始终可以直接向 Bot 发送消息
+3. 使用 Graph API 进行历史记录访问（需要 `ChannelMessage.Read.All`）
 
 ## 故障排除
 
 ### 常见问题
 
-- **频道中不显示图像：** 缺少 Graph 权限或管理员同意。重新安装 Teams 应用，并完全退出/重新打开 Teams。
-- **频道中无响应：** 默认情况下需要提及；设置 `channels.msteams.requireMention=false` 或按团队/频道进行配置。
-- **版本不匹配（Teams 仍显示旧清单）：** 删除并重新添加应用，然后完全退出 Teams 以刷新。
-- **来自 webhook 的 401 Unauthorized：** 在没有 Azure JWT 的情况下手动测试时预期会出现 - 这意味着端点可达但身份验证失败。请使用 Azure Web Chat 进行正确测试。
+- **渠道中不显示图片：** 缺少 Graph 权限或管理员同意。重新安装 Teams 应用并完全退出/重新打开 Teams。
+- **渠道中无响应：** 默认需要提及；设置 `channels.msteams.requireMention=false` 或按团队/渠道配置。
+- **版本不匹配（Teams 仍显示旧清单）：** 删除 + 重新添加应用并完全退出 Teams 以刷新。
+- **来自 Webhook 的 401 未授权：** 在没有 Azure JWT 的情况下手动测试时是预期行为 - 这意味着端点可达但身份验证失败。使用 Azure Web Chat 进行正确测试。
 
 ### 清单上传错误
 
-- **“Icon file cannot be empty”：** 清单引用了大小为 0 字节的图标文件。创建有效的 PNG 图标（`outline.png` 为 32x32，`color.png` 为 192x192）。
-- **“webApplicationInfo.Id already in use”：** 该应用仍安装在另一个团队/聊天中。先找到并卸载它，或等待 5-10 分钟以进行传播。
-- **上传时出现“Something went wrong”：** 改为通过 [https://admin.teams.microsoft.com](https://admin.teams.microsoft.com) 上传，打开浏览器开发人员工具 (F12) → Network（网络）选项卡，并检查响应正文以获取实际错误。
-- **侧载失败：** 尝试使用“将应用上传到组织的应用目录”而不是“上传自定义应用”——这通常可以绕过侧载限制。
+- **"Icon file cannot be empty":** 清单引用的图标文件大小为 0 字节。请创建有效的 PNG 图标（`outline.png` 为 32x32，`color.png` 为 192x192）。
+- **"webApplicationInfo.Id already in use":** 该应用仍安装在另一个团队/聊天中。请先找到并卸载它，或者等待 5-10 分钟以等待传播。
+- **上传时出现 "Something went wrong"：** 请改通过 [https://admin.teams.microsoft.com](https://admin.teams.microsoft.com) 上传，打开浏览器开发人员工具 (F12) → Network 选项卡，并检查响应正文以获取实际错误。
+- **侧载失败：** 请尝试使用 "Upload an app to your org's app catalog" 代替 "Upload a custom app" - 这通常可以绕过侧载限制。
 
-### RSC 权限不工作
+### RSC 权限无法工作
 
-1. 验证 `webApplicationInfo.id` 与您的机器人的 App ID 完全匹配
+1. 验证 `webApplicationInfo.id` 是否与您的机器人 App ID 完全匹配
 2. 重新上传应用并在团队/聊天中重新安装
-3. 检查您的组织管理员是否已阻止 RSC 权限
-4. 确认您使用了正确的范围：团队使用 `ChannelMessage.Read.Group`，群组聊天使用 `ChatMessage.Read.Chat`
+3. 检查您的组织管理员是否阻止了 RSC 权限
+4. 确认您使用的是正确的作用域：团队使用 `ChannelMessage.Read.Group`，群组聊天使用 `ChatMessage.Read.Chat`
 
 ## 参考
 
-- [创建 Azure Bot](https://learn.microsoft.com/en-us/azure/bot-service/bot-service-quickstart-registration) - Azure Bot 设置指南
-- [Teams 开发者门户](https://dev.teams.microsoft.com/apps) - 创建/管理 Teams 应用
-- [Teams 应用清单架构](https://learn.microsoft.com/en-us/microsoftteams/platform/resources/schema/manifest-schema)
-- [使用 RSC 接收渠道消息](https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/conversations/channel-messages-with-rsc)
-- [RSC 权限参考](https://learn.microsoft.com/en-us/microsoftteams/platform/graph-api/rsc/resource-specific-consent)
-- [Teams 机器人文件处理](https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/bots-filesv4)（渠道/群组需要 Graph）
-- [主动消息传递](https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/conversations/send-proactive-messages)
+- [Create Azure Bot](https://learn.microsoft.com/en-us/azure/bot-service/bot-service-quickstart-registration) - Azure 机器人设置指南
+- [Teams Developer Portal](https://dev.teams.microsoft.com/apps) - 创建/管理 Teams 应用
+- [Teams app manifest schema](https://learn.microsoft.com/en-us/microsoftteams/platform/resources/schema/manifest-schema)
+- [Receive 渠道 messages with RSC](https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/conversations/channel-messages-with-rsc)
+- [RSC permissions reference](https://learn.microsoft.com/en-us/microsoftteams/platform/graph-api/rsc/resource-specific-consent)
+- [Teams bot file handling](https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/bots-filesv4) （渠道/群组需要 Graph）
+- [Proactive messaging](https://learn.microsoft.com/en-us/microsoftteams/platform/bots/how-to/conversations/send-proactive-messages)
+
+## 相关
+
+- [Channels Overview](/en/channels) — 所有支持的渠道
+- [Pairing](/en/channels/pairing) — 私信认证和配对流程
+- [Groups](/en/channels/groups) — 群组聊天行为和提及控制
+- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
+- [Security](/en/gateway/security) — 访问模型和加固

@@ -24,7 +24,7 @@ openclaw plugins install @openclaw/tlon
 本地检出（当从 git 仓库运行时）：
 
 ```bash
-openclaw plugins install ./extensions/tlon
+openclaw plugins install ./path/to/local/tlon-plugin
 ```
 
 详细信息：[插件](/en/tools/plugin)
@@ -200,7 +200,7 @@ openclaw plugins install ./extensions/tlon
 
 ## 捆绑技能
 
-Tlon 插件包含一个内置技能（[`@tloncorp/tlon-skill`](https://github.com/tloncorp/tlon-skill)），提供对 Tlon 操作的 CLI 访问：
+Tlon 插件包含一个捆绑技能（[`@tloncorp/tlon-skill`](https://github.com/tloncorp/tlon-skill))，提供用于 CLI 操作的 Tlon 访问：
 
 - **联系人 (Contacts)**：获取/更新个人资料，列出联系人
 - **频道 (Channels)**：列出、创建、发送消息、获取历史记录
@@ -269,3 +269,11 @@ openclaw doctor
 - 帖子回复：如果传入消息位于帖子串中，OpenClaw 将在串内回复。
 - 富文本：Markdown 格式（粗体、斜体、代码、标题、列表）将转换为 Tlon 的原生格式。
 - 图片：URL 将上传到 Tlon 存储并作为图片块嵌入。
+
+## 相关
+
+- [频道概览](/en/channels) — 所有支持的频道
+- [配对](/en/channels/pairing) — 私信认证和配对流程
+- [群组](/en/channels/groups) — 群聊行为和提及控制
+- [频道路由](/en/channels/channel-routing) — 消息的会话路由
+- [安全性](/en/gateway/security) — 访问模型和加固

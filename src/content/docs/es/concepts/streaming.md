@@ -153,3 +153,9 @@ Slack:
 - `partial` puede usar la transmisión nativa de Slack (`chat.startStream`/`append`/`stop`) cuando esté disponible.
 - `block` usa vistas previas de borrador de estilo anexar.
 - `progress` usa texto de vista previa de estado, luego la respuesta final.
+
+## Relacionado
+
+- [Mensajes](/en/concepts/messages) — ciclo de vida y entrega de mensajes
+- [Reintento](/en/concepts/retry) — comportamiento de reintento en caso de fallo de entrega
+- [Canales](/en/channels) — soporte de transmisión por canal

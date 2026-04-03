@@ -73,7 +73,7 @@ Le provider sélectionne automatiquement le point de terminaison en fonction de 
 - **qwen3-coder-plus**, **qwen3-coder-next** — modèles de code Qwen
 - **GLM-5** — Modèles GLM via Alibaba
 - **Kimi K2.5** — Moonshot AI via Alibaba
-- **MiniMax-M2.5** — MiniMax via Alibaba
+- **MiniMax-M2.7** — MiniMax via Alibaba
 
 Certains modèles (qwen3.5-plus, kimi-k2.5) prennent en charge la saisie d'images. Les fenêtres de contexte vont de 200K à 1M jetons.
 

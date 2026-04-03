@@ -263,3 +263,9 @@ Voir [Référence de la configuration](/en/gateway/configuration) pour le schém
 - `channels`, `providers`, `cliBackends` et `skills` peuvent être omis lorsqu'un plugin n'en a pas besoin.
 - Si votre plugin dépend de modules natifs, documentez les étapes de construction et toutes les exigences de liste d'autorisation du gestionnaire de paquets (par exemple, pnpm `allow-build-scripts`
   - `pnpm rebuild <package>`).
+
+## Connexes
+
+- [Création de plugins](/en/plugins/building-plugins) — démarrer avec les plugins
+- [Architecture des plugins](/en/plugins/architecture) — architecture interne
+- [Présentation du SDK](/en/plugins/sdk-overview) — référence du SDK de plugin

@@ -343,3 +343,8 @@ Files d'attente + sessions :
 - **Journaux vides ?** Vérifiez que le Gateway est en cours d'exécution et écrit dans le chemin de fichier
   indiqué dans `logging.file`.
 - **Besoin de plus de détails ?** Définissez `logging.level` sur `debug` ou `trace` et réessayez.
+
+## Connexes
+
+- [Gateway Logging Internals](/en/gateway/logging) — Styles de journalisation WS, préfixes de sous-système et capture de console
+- [Diagnostics](/en/gateway/configuration-reference#diagnostics) — Exportation OpenTelemetry et configuration du traçage du cache

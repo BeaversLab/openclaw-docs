@@ -1,121 +1,89 @@
 ---
-summary: "Fenêtre contextuelle + compactage : comment OpenClaw maintient les sessions sous les limites du modèle"
+summary: "Comment OpenClaw résume les longues conversations pour rester dans les limites du modèle"
 read_when:
   - You want to understand auto-compaction and /compact
   - You are debugging long sessions hitting context limits
 title: "Compactage"
 ---
 
-# Fenêtre contextuelle et compactage
+# Compactage
 
-Chaque modèle possède une **fenêtre contextuelle** (nombre maximum de jetons qu'il peut voir). Les conversations longues accumulent des messages et des résultats d'outils ; une fois la fenêtre saturée, OpenClaw **compacte** l'historique plus ancien pour rester dans les limites.
+Chaque modèle possède une fenêtre de contexte -- le nombre maximum de jetons qu'il peut traiter.
+Lorsqu'une conversation approche cette limite, OpenClaw **compacte** les anciens messages
+dans un résumé afin que la discussion puisse continuer.
 
-## Qu'est-ce que le compactage
+## Fonctionnement
 
-Le compactage **résume l'ancienne conversation** dans une entrée de résumé compacte et conserve les messages récents intacts. Le résumé est stocké dans l'historique de la session, de sorte que les futures requêtes utilisent :
+1. Les anciens tours de conversation sont résumés en une entrée compacte.
+2. Le résumé est enregistré dans la transcription de la session.
+3. Les messages récents sont conservés intacts.
 
-- Le résumé de compactage
-- Les messages récents après le point de compactage
+L'historique complet de la conversation reste sur le disque. Le compactage ne modifie que ce que
+le modèle voit au tour suivant.
 
-Le compactage **persiste** dans l'historique JSONL de la session.
+## Auto-compactage
 
-## Configuration
+L'auto-compactage est activé par défaut. Il s'exécute lorsque la session approche la limite
+de contexte, ou lorsque le modèle renvoie une erreur de dépassement de contexte (auquel cas
+OpenClaw compactera et réessayera).
 
-Utilisez le paramètre `agents.defaults.compaction` dans votre `openclaw.json` pour configurer le comportement de compactage (mode, jetons cibles, etc.).
-Le résumé de compactage préserve les identifiants opaques par défaut (`identifierPolicy: "strict"`). Vous pouvez remplacer cela par `identifierPolicy: "off"` ou fournir un texte personnalisé avec `identifierPolicy: "custom"` et `identifierInstructions`.
+<Info>Avant de compacter, OpenClaw rappelle automatiquement à l'agent d'enregistrer des notes importantes dans les fichiers [mémoire](/en/concepts/memory). Cela évite la perte de contexte.</Info>
 
-Vous pouvez éventuellement spécifier un modèle différent pour le résumé de compactage via `agents.defaults.compaction.model`. C'est utile lorsque votre modèle principal est un modèle local ou petit et que vous voulez que les résumés de compactage soient produits par un modèle plus capable. Le remplacement accepte n'importe quelle chaîne `provider/model-id` :
+## Compactage manuel
 
-```json
+Tapez `/compact` dans n'importe quel chat pour forcer un compactage. Ajoutez des instructions pour guider
+le résumé :
+
+```
+/compact Focus on the API design decisions
+```
+
+## Utiliser un modèle différent
+
+Par défaut, le compactage utilise le modèle principal de votre agent. Vous pouvez utiliser un modèle
+plus performant pour de meilleurs résumés :
+
+```json5
 {
-  "agents": {
-    "defaults": {
-      "compaction": {
-        "model": "openrouter/anthropic/claude-sonnet-4-6"
-      }
-    }
-  }
+  agents: {
+    defaults: {
+      compaction: {
+        model: "openrouter/anthropic/claude-sonnet-4-6",
+      },
+    },
+  },
 }
 ```
 
-Cela fonctionne également avec les modèles locaux, par exemple un deuxième modèle Ollama dédié au résumé ou un spécialiste du compactage affiné :
+## Compactage vs élagage
 
-```json
-{
-  "agents": {
-    "defaults": {
-      "compaction": {
-        "model": "ollama/llama3.1:8b"
-      }
-    }
-  }
-}
-```
+|                   | Compactage                             | Élagage                                  |
+| ----------------- | -------------------------------------- | ---------------------------------------- |
+| **Ce qu'il fait** | Résume l'ancienne conversation         | Supprime les anciens résultats d'outils  |
+| **Sauvegardé ?**  | Oui (dans la transcription de session) | Non (en mémoire uniquement, par requête) |
+| **Portée**        | Conversation entière                   | Résultats des outils uniquement          |
 
-Si non défini, le compactage utilise le modèle principal de l'agent.
+[L'élagage de session](/en/concepts/session-pruning) est un complément plus léger qui
+réduit la sortie des outils sans résumer.
 
-## Auto-compactage (activé par défaut)
+## Dépannage
 
-Lorsqu'une session approche ou dépasse la fenêtre contextuelle du modèle, OpenClaw déclenche l'auto-compactage et peut réessayer la requête originale en utilisant le contexte compacté.
+**Compactage trop fréquent ?** La fenêtre de contexte du modèle peut être petite, ou les
+sorties d'outils peuvent être volumineuses. Essayez d'activer
+[l'élagage de session](/en/concepts/session-pruning).
 
-Vous verrez :
+**Le contexte semble périmé après compactage ?** Utilisez `/compact Focus on <topic>` pour
+guider le résumé, ou activez la [vidange de la mémoire](/en/concepts/memory) afin que les notes
+soient conservées.
 
-- `🧹 Auto-compaction complete` en mode verbeux
-- `/status` affichant `🧹 Compactions: <count>`
+**Besoin d'un nouveau départ ?** `/new` lance une nouvelle session sans compactage.
 
-Avant la compactage, OpenClaw peut exécuter un tour de **silent memory flush** pour stocker
-des notes durables sur le disque. Voir [Memory](/en/concepts/memory) pour les détails et la configuration.
+Pour une configuration avancée (réservation de jetons, préservation des identifiants, moteurs de contexte personnalisés, compactage côté serveur OpenAI), consultez la section
+[Approfondissement de la gestion de session](/en/reference/session-management-compaction).
 
-## Compaction manuelle
+## Liens connexes
 
-Utilisez `/compact` (éventuellement avec des instructions) pour forcer une passe de compaction :
-
-```
-/compact Focus on decisions and open questions
-```
-
-## Source de la fenêtre de contexte
-
-La fenêtre de contexte est spécifique au modèle. OpenClaw utilise la définition du modèle issue du catalogue de providers configuré pour déterminer les limites.
-
-## Compaction vs élagage
-
-- **Compaction** : résume et **persiste** en JSONL.
-- **Élagage de session** : supprime uniquement les anciens **résultats d'outils**, **en mémoire**, par requête.
-
-Voir [/concepts/session-pruning](/en/concepts/session-pruning) pour les détails sur l'élagage (pruning).
-
-## Compaction côté serveur OpenAI
-
-OpenClaw prend également en charge les indications de compaction côté serveur OpenAI Responses pour les modèles OpenAI directs compatibles. Cela est distinct de la compaction locale OpenClaw et peut fonctionner parallèlement.
-
-- Compaction locale : OpenClaw résume et persiste dans le fichier JSONL de session.
-- Compaction côté serveur : OpenAI compacte le contexte côté provider lorsque
-  `store` + `context_management` sont activés.
-
-Voir [OpenAI provider](/en/providers/openai) pour les paramètres de modèle et les substitutions.
-
-## Moteurs de contexte personnalisés
-
-Le comportement de compactage est géré par le
-[context engine](/en/concepts/context-engine) actif. Le moteur hérité utilise la synthèse
-intégrée décrite ci-dessus. Les moteurs de plugins (sélectionnés via
-`plugins.slots.contextEngine`) peuvent implémenter n'importe quelle stratégie de compactage — synthèses DAG,
-récupération vectorielle, condensation incrémentale, etc.
-
-Lorsqu'un moteur de plugin définit `ownsCompaction: true`, OpenClaw délègue toutes
-les décisions de compactage au moteur et n'exécute pas l'auto-compactage intégré.
-
-Lorsque `ownsCompaction` est `false` ou non défini, OpenClaw peut encore utiliser l'auto-compactage intégrée
-de Pi lors de la tentative, mais la méthode `compact()` du moteur actif
-gère toujours `/compact` et la récupération des dépassements. Il n'y a pas de repli automatique
-vers le chemin de compactage du moteur hérité.
-
-Si vous créez un moteur de contexte non propriétaire, implémentez `compact()` en
-appelant `delegateCompactionToRuntime(...)` depuis `openclaw/plugin-sdk/core`.
-
-## Conseils
-
-- Utilisez `/compact` lorsque les sessions semblent obsolètes ou que le contexte est saturé.
-- Les grandes sorties d'outils sont déjà tronquées ; l'élagage peut réduire davantage l'accumulation des résultats d'outils.
-- Si vous avez besoin d'un repartir à zéro, `/new` ou `/reset` démarre un nouvel identifiant de session.
+- [Session](/en/concepts/session) — gestion et cycle de vie de session
+- [Élagage de session](/en/concepts/session-pruning) — rognage des résultats des outils
+- [Contexte](/en/concepts/context) — construction du contexte pour les tours de l'agent
+- [Hooks](/en/automation/hooks) — hooks de cycle de vie du compactage (before_compaction, after_compaction)

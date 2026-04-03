@@ -108,7 +108,7 @@ Header 值示例：
 Strict-Transport-Security: max-age=31536000; includeSubDomains
 ```
 
-### Gateway TLS 终止
+### Gateway(网关) TLS 终止
 
 如果 OpenClaw 本身直接提供 HTTPS（无 TLS 终止代理），请设置：
 
@@ -254,33 +254,45 @@ location / {
 }
 ```
 
+## 混合令牌配置
+
+OpenClaw 会拒绝模糊配置，即同时启用了 `gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）和 `trusted-proxy` 模式。混合令牌配置可能导致环回请求在错误的身份验证路径上静默通过身份验证。
+
+如果在启动时看到 `mixed_trusted_proxy_token` 错误：
+
+- 使用 trusted-proxy 模式时移除共享令牌，或
+- 如果您打算使用基于令牌的身份验证，请将 `gateway.auth.mode` 切换为 `"token"`。
+
+环回 trusted-proxy 身份验证也会以失败关闭：同主机调用者必须通过受信任的代理提供配置的身份标头，而不是被静默身份验证。
+
 ## 安全检查清单
 
-启用 trusted-proxy 认证前，请验证：
+在启用 trusted-proxy 身份验证之前，请验证：
 
-- [ ] **代理是唯一路径**：Gateway(网关) 端口已设置防火墙，仅允许您的代理访问
-- [ ] **trustedProxies 配置极简**：仅包含您实际的代理 IP，而不是整个子网
+- [ ] **代理是唯一路径**：Gateway(网关) 端口已通过防火墙设置，仅允许您的代理访问
+- [ ] **trustedProxies 最小化**：仅包含您的实际代理 IP，而不是整个子网
 - [ ] **代理剥离标头**：您的代理覆盖（而不是追加）来自客户端的 `x-forwarded-*` 标头
 - [ ] **TLS 终止**：您的代理处理 TLS；用户通过 HTTPS 连接
-- [ ] **已设置 allowUsers**（推荐）：限制为已知用户，而不是允许任何经过身份验证的人
+- [ ] **设置了 allowUsers**（推荐）：限制为已知用户，而不是允许任何经过身份验证的人
+- [ ] **无混合令牌配置**：不要同时设置 `gateway.auth.token` 和 `gateway.auth.mode: "trusted-proxy"`
 
 ## 安全审计
 
-`openclaw security audit` 将标记 trusted-proxy 认证，并给出 **严重（critical）** 级别的发现。这是有意为之——旨在提醒您正在将安全委托给您的代理设置。
+`openclaw security audit` 将把 trusted-proxy 身份验证标记为**严重**级别的发现。这是有意为之——它提醒您正在将安全性委托给您的代理设置。
 
-审计检查内容：
+审计会检查：
 
 - 缺少 `trustedProxies` 配置
 - 缺少 `userHeader` 配置
 - `allowUsers` 为空（允许任何经过身份验证的用户）
 
-## 故障排查
+## 故障排除
 
 ### "trusted_proxy_untrusted_source"
 
-请求未来自 `gateway.trustedProxies` 中的 IP。请检查：
+请求并非来自 `gateway.trustedProxies` 中的 IP。请检查：
 
-- 代理 IP 是否正确？（Docker 容器 IP 可能会变化）
+- 代理 IP 是否正确？（Docker 容器 IP 可能会发生变化）
 - 您的代理前面是否有负载均衡器？
 - 使用 `docker inspect` 或 `kubectl get pods -o wide` 查找实际 IP
 
@@ -289,34 +301,34 @@ location / {
 用户标头为空或缺失。请检查：
 
 - 您的代理是否配置为传递身份标头？
-- 标头名称是否正确？（不区分大小写，但拼写必须正确）
+- Header 名称是否正确？（不区分大小写，但拼写必须准确）
 - 用户是否确实在代理处通过了身份验证？
 
 ### "trusted*proxy_missing_header*\*"
 
-缺少必需的标头。请检查：
+缺少必需的 header。请检查：
 
-- 您的代理针对这些特定标头的配置
-- 标头是否在链路中的某处被剥离
+- 您的代理针对这些特定 header 的配置
+- 链路中某处是否剥离了这些 headers
 
 ### "trusted_proxy_user_not_allowed"
 
-用户已通过身份验证但不在 `allowUsers` 中。请将其添加或移除允许列表。
+用户已通过身份验证，但不在 `allowUsers` 中。请将他们添加进去，或移除白名单。
 
 ### WebSocket 仍然失败
 
-确保您的代理：
+请确保您的代理：
 
 - 支持 WebSocket 升级（`Upgrade: websocket`，`Connection: upgrade`）
-- 在 WebSocket 升级请求上传递身份标头（而不仅仅是 HTTP）
-- 没有为 WebSocket 连接提供单独的身份验证路径
+- 在 WebSocket 升级请求上传递身份 headers（不仅仅是 HTTP）
+- 没有为 WebSocket 连接设置单独的身份验证路径
 
 ## 从 Token Auth 迁移
 
-如果您正在从 token auth 迁移到 trusted-proxy：
+如果您正从 token auth 迁移到 trusted-proxy：
 
-1. 配置您的代理以验证用户并传递标头
-2. 独立测试代理设置（使用带标头的 curl）
+1. 配置您的代理以对用户进行身份验证并传递 headers
+2. 独立测试代理设置（使用带有 headers 的 curl）
 3. 使用 trusted-proxy auth 更新 OpenClaw 配置
 4. 重启 Gateway(网关)
 5. 从控制 UI 测试 WebSocket 连接
@@ -324,7 +336,7 @@ location / {
 
 ## 相关
 
-- [安全](/en/gateway/security) — 完整安全指南
+- [安全](/en/gateway/security) — 完整的安全指南
 - [配置](/en/gateway/configuration) — 配置参考
 - [远程访问](/en/gateway/remote) — 其他远程访问模式
 - [Tailscale](/en/gateway/tailscale) — 仅限 tailnet 访问的更简单替代方案

@@ -240,3 +240,11 @@ Le compte par défaut prend en charge :
 - Si le bot se connecte mais ne répond jamais dans les channels, vérifiez `channels.irc.groups` **et** si le filtrage par mention supprime des messages (`missing-mention`). Si vous souhaitez qu'il réponde sans mentions, définissez `requireMention:false` pour le channel.
 - Si la connexion échoue, vérifiez la disponibilité du pseudo et le mot de passe du serveur.
 - Si TLS échoue sur un réseau personnalisé, vérifiez l'hôte/le port et la configuration du certificat.
+
+## Connexes
+
+- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
+- [Appairage](/en/channels/pairing) — authentification DM et flux d'appairage
+- [Groupes](/en/channels/groups) — comportement des conversations de groupe et filtrage des mentions
+- [Routage des canaux](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

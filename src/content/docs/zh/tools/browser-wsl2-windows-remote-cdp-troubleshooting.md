@@ -1,5 +1,5 @@
 ---
-summary: "逐层排查 WSL2 Gateway + Windows Chrome 远程 CDP 故障"
+summary: "逐层排查 WSL2 Gateway(网关) + Windows Chrome 远程 CDP 故障"
 read_when:
   - Running OpenClaw Gateway in WSL2 while Chrome lives on Windows
   - Seeing overlapping browser/control-ui errors across WSL2 and Windows
@@ -11,7 +11,7 @@ title: "WSL2 + Windows + remote Chrome CDP 故障排除"
 
 本指南涵盖了常见的分主机设置，其中：
 
-- OpenClaw Gateway 网关 在 WSL2 内部运行
+- OpenClaw Gateway(网关) 网关 在 WSL2 内部运行
 - Chrome 在 Windows 上运行
 - 浏览器控制必须跨越 WSL2/Windows 边界
 
@@ -27,13 +27,13 @@ title: "WSL2 + Windows + remote Chrome CDP 故障排除"
 
 在以下情况下选择此选项：
 
-- Gateway 保留在 WSL2 内部
+- Gateway(网关) 保留在 WSL2 内部
 - Chrome 在 Windows 上运行
 - 您需要浏览器控制跨越 WSL2/Windows 边界
 
 ### 选项 2：主机本地 Chrome MCP
 
-仅当 Gateway 本身与 Chrome 在同一主机上运行时，才使用 `existing-session` / `user`。
+仅当 Gateway(网关) 本身与 Chrome 在同一主机上运行时，才使用 `existing-session` / `user`。
 
 在以下情况下选择此选项：
 
@@ -41,13 +41,13 @@ title: "WSL2 + Windows + remote Chrome CDP 故障排除"
 - 您需要本地已登录的浏览器状态
 - 您不需要跨主机浏览器传输
 
-对于 WSL2 Gateway + Windows Chrome，首选原始远程 CDP。Chrome MCP 是主机本地的，而不是 WSL2 到 Windows 的桥接。
+对于 WSL2 Gateway(网关) + Windows Chrome，首选原始远程 CDP。Chrome MCP 是主机本地的，而不是 WSL2 到 Windows 的桥接。
 
 ## 工作原理架构
 
 参考架构：
 
-- WSL2 在 `127.0.0.1:18789` 上运行 Gateway
+- WSL2 在 `127.0.0.1:18789` 上运行 Gateway(网关)
 - Windows 在普通浏览器中于 `http://127.0.0.1:18789/` 打开控制 UI
 - Windows Chrome 在端口 `9222` 上暴露 CDP 端点
 - WSL2 可以访问该 Windows CDP 端点

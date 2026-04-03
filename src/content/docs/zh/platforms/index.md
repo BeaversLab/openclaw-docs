@@ -1,5 +1,5 @@
 ---
-summary: "平台支持概览（Gateway 网关 + 伴侣应用）"
+summary: "平台支持概览（Gateway(网关) 网关 + 伴侣应用）"
 read_when:
   - Looking for OS support or install paths
   - Deciding where to run the Gateway
@@ -9,11 +9,11 @@ title: "平台"
 # 平台
 
 OpenClaw 核心是用 TypeScript 编写的。**Node 是推荐的运行时**。
-不推荐在 Gateway 网关 上使用 Bun（存在 WhatsApp/Telegram Bug）。
+不推荐在 Gateway(网关) 网关 上使用 Bun（存在 WhatsApp/Telegram Bug）。
 
 存在适用于 macOS（菜单栏应用）和移动节点（iOS/Android）的伴侣应用。目前计划推出 Windows 和
-Linux 伴侣应用，但 Gateway 网关 目前已获得完全支持。
-同时也计划推出 Windows 原生伴侣应用；对于 Windows，推荐通过 WSL2 使用 Gateway 网关。
+Linux 伴侣应用，但 Gateway(网关) 网关 目前已获得完全支持。
+同时也计划推出 Windows 原生伴侣应用；对于 Windows，推荐通过 WSL2 使用 Gateway(网关) 网关。
 
 ## 选择您的操作系统
 

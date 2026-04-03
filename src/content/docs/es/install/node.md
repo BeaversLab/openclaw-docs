@@ -29,7 +29,7 @@ Si esto imprime `v24.x.x` o superior, estás en la versión predeterminada recom
     brew install node
     ```
 
-    O descarga el instalador de macOS desde [nodejs.org](https://nodejs.org/).
+    O descargue el instalador de macOS desde [nodejs.org](https://nodejs.org/).
 
   </Tab>
   <Tab title="Linux">
@@ -62,17 +62,17 @@ Si esto imprime `v24.x.x` o superior, estás en la versión predeterminada recom
     choco install nodejs-lts
     ```
 
-    O descarga el instalador de Windows desde [nodejs.org](https://nodejs.org/).
+    O descargue el instalador de Windows desde [nodejs.org](https://nodejs.org/).
 
   </Tab>
 </Tabs>
 
-<Accordion title="Uso de un gestor de versiones (nvm, fnm, mise, asdf)">
-  Los gestores de versiones te permiten cambiar fácilmente entre versiones de Node. Opciones populares:
+<Accordion title="Using a version manager (nvm, fnm, mise, asdf)">
+  Los gestores de versiones le permiten cambiar fácilmente entre versiones de Node. Opciones populares:
 
 - [**fnm**](https://github.com/Schniz/fnm) — rápido, multiplataforma
 - [**nvm**](https://github.com/nvm-sh/nvm) — muy utilizado en macOS/Linux
-- [**mise**](https://mise.jdx.dev/) — multilenguaje (Node, Python, Ruby, etc.)
+- [**mise**](https://mise.jdx.dev/) — multiparadigma (Node, Python, Ruby, etc.)
 
 Ejemplo con fnm:
 
@@ -82,7 +82,7 @@ fnm use 24
 ```
 
   <Warning>
-  Asegúrate de que tu gestor de versiones esté inicializado en el archivo de inicio de tu shell (`~/.zshrc` o `~/.bashrc`). Si no lo está, es posible que `openclaw` no se encuentre en nuevas sesiones de terminal porque el PATH no incluirá el directorio bin de Node.
+  Asegúrese de que su gestor de versiones se inicialice en el archivo de inicio de su shell (`~/.zshrc` o `~/.bashrc`). Si no es así, es posible que `openclaw` no se encuentre en nuevas sesiones de terminal porque el PATH no incluirá el directorio bin de Node.
   </Warning>
 </Accordion>
 
@@ -136,3 +136,9 @@ export PATH="$HOME/.npm-global/bin:$PATH"
 ```
 
 Agrega la línea `export PATH=...` a tu `~/.bashrc` o `~/.zshrc` para hacerlo permanente.
+
+## Relacionado
+
+- [Resumen de instalación](/en/install) — todos los métodos de instalación
+- [Actualización](/en/install/updating) — mantener OpenClaw actualizado
+- [Primeros pasos](/en/start/getting-started) — primeros pasos después de la instalación

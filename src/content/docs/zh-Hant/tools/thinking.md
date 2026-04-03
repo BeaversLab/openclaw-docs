@@ -54,43 +54,43 @@ title: "思考層級"
   3. 各代理程式預設值（`agents.list[].fastModeDefault`）
   4. 各模型設定：`agents.defaults.models["<provider>/<model>"].params.fastMode`
   5. 後備方案：`off`
-- 對於 `openai/*`，快速模式會在支援時套用 OpenAI 快速設定檔：`service_tier=priority`，加上低推理強度與低文字詳細程度。
-- 對於 `openai-codex/*`，快速模式會在 Codex Responses 上套用相同的低延遲設定檔。OpenClaw 在兩個驗證路徑之間保持一個共用的 `/fast` 切換開關。
-- 對於直接的 `anthropic/*` API 金鑰請求，快速模式會對應到 Anthropic 服務層級：`/fast on` 設定 `service_tier=auto`，`/fast off` 設定 `service_tier=standard_only`。
-- Anthropic 快速模式僅支援 API 金鑰。OpenClaw 會略過針對 Claude 設定權杖 / OAuth 驗證以及非 Anthropic 代理基底 URL 的 Anthropic 服務層級注入。
+- 對於 `openai/*`，快速模式對應到 OpenAI 優先處理，方法是透過在支援的 Responses 請求中發送 `service_tier=priority`。
+- 對於 `openai-codex/*`，快速模式會在 Codex Responses 上發送相同的 `service_tier=priority` 標誌。OpenClaw 在這兩種驗證路徑之間維護一個共用的 `/fast` 切換開關。
+- 對於直接公開的 `anthropic/*` 請求，包括發送到 `api.anthropic.com` 的 OAuth 驗證流量，快速模式對應到 Anthropic 服務等級：`/fast on` 設定 `service_tier=auto`，`/fast off` 設定 `service_tier=standard_only`。
+- 當同時設定時，明確的 Anthropic `serviceTier` / `service_tier` 模型參數會覆寫快速模式的預設值。對於非 Anthropic 的代理基本 URL，OpenClaw 仍然會跳過 Anthropic 服務等級的注入。
 
 ## 詳細指令 (/verbose 或 /v)
 
-- 等級：`on` (最少) | `full` | `off` (預設)。
-- 僅含指令的訊息會切換工作階段詳細模式並回覆 `Verbose logging enabled.` / `Verbose logging disabled.`；無效的等級會傳回提示而不會改變狀態。
-- `/verbose off` 會儲存明確的工作階段覆寫；您可以透過工作階段 UI 選擇 `inherit` 來清除它。
+- 等級：`on` (最低) | `full` | `off` (預設)。
+- 純指令訊息會切換會話的詳細模式並回覆 `Verbose logging enabled.` / `Verbose logging disabled.`；無效的等級會傳回提示而不會改變狀態。
+- `/verbose off` 儲存明確的會話覆寫值；透過在 Sessions UI 中選擇 `inherit` 來清除它。
 - 內聯指令僅影響該訊息；否則將套用工作階段/全域預設值。
-- 傳送 `/verbose` (或 `/verbose:`) 且不帶引數以查看目前的詳細等級。
-- 當開啟詳細模式時，發出結構化工具結果的代理程式 (Pi、其他 JSON 代理程式) 會將每個工具呼叫作為僅包含元資料的訊息傳回，並在可用時加上 `<emoji> <tool-name>: <arg>` 前綴 (路徑/指令)。這些工具摘要會在每個工具啟動時立即傳送 (獨立的氣泡)，而非作為串流差異。
-- 工具失敗摘要在正常模式下保持可見，但原始錯誤詳細資訊後綴會被隱藏，除非詳細模式為 `on` 或 `full`。
-- 當詳細模式為 `full` 時，工具輸出也會在完成後轉發 (獨立氣泡，截斷至安全長度)。如果您在執行期間切換 `/verbose on|full|off`，後續的工具氣泡將採用新設定。
+- 發送 `/verbose` (或 `/verbose:`) 且不帶參數，以查看目前的詳細等級。
+- 當開啟詳細模式時，發出結構化工具結果的代理程式 (Pi、其他 JSON 代理程式) 會將每個工具呼叫作為其自己的僅中繼資料訊息傳回，並在可用時 (路徑/命令) 加上前綴 `<emoji> <tool-name>: <arg>`。這些工具摘要會在每個工具啟動時立即發送 (分開的氣泡)，而不是作為串流差異。
+- 工具失敗摘要在正常模式下仍然可見，但除非詳細等級為 `on` 或 `full`，否則會隱藏原始錯誤詳細資訊後綴。
+- 當 verbose 為 `full` 時，工具輸出也會在完成後轉發（獨立氣泡，截斷至安全長度）。如果在執行期間切換 `/verbose on|full|off`，後續工具氣泡將遵循新設定。
 
 ## 推論可見性 (/reasoning)
 
-- 等級：`on|off|stream`。
+- 層級：`on|off|stream`。
 - 僅含指令的訊息會切換是否在回覆中顯示思考區塊。
-- 啟用時，推論會作為一條以 `Reasoning:` 為前綴的 **獨立訊息** 傳送。
-- `stream` (僅限 Telegram)：在產生回覆時將推論串流至 Telegram 草稿氣泡，然後傳送不含推論的最終答案。
+- 啟用後，推理會作為一條以 `Reasoning:` 為前綴的**獨立訊息**傳送。
+- `stream`（僅限 Telegram）：在回覆生成時將推理串流至 Telegram 草稿氣泡，然後傳送不包含推理的最終答案。
 - 別名：`/reason`。
-- 傳送 `/reasoning` (或 `/reasoning:`) 且不帶引數以查看目前的推論等級。
-- 解析順序：內聯指令，然後是會話覆蓋，接著是各代理預設值（`agents.list[].reasoningDefault`），最後是後備值（`off`）。
+- 傳送 `/reasoning`（或 `/reasoning:`） 且不帶參數，以查看當前的推理層級。
+- 解析順序：內聯指令，然後是會話覆蓋，接著是每個代理的預設值（`agents.list[].reasoningDefault`），最後是後備值（`off`）。
 
 ## 相關
 
-- 昇華模式文檔位於 [昇華模式](/en/tools/elevated) 中。
+- 提升模式 (Elevated mode) 文件位於 [提升模式](/en/tools/elevated)。
 
 ## 心跳
 
-- 心跳探測主體是已配置的心跳提示詞（預設：`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`）。心跳訊息中的內聯指令照常適用（但請避免從心跳更改會話預設值）。
-- 心跳傳遞預設僅發送最終有效載荷。若也要發送單獨的 `Reasoning:` 訊息（如果有的話），請設定 `agents.defaults.heartbeat.includeReasoning: true` 或各代理的 `agents.list[].heartbeat.includeReasoning: true`。
+- 心跳探測主體是設定的心跳提示（預設：`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`）。心跳訊息中的內聯指令照常適用（但避免從心跳更改會話預設值）。
+- 心跳傳遞預設僅包含最終有效載荷。若也要傳送獨立的 `Reasoning:` 訊息（當可用時），請設定 `agents.defaults.heartbeat.includeReasoning: true` 或每個代理的 `agents.list[].heartbeat.includeReasoning: true`。
 
 ## 網頁聊天 UI
 
 - 網頁聊天思考選擇器會在頁面載入時反映傳入會話存儲/配置中所儲存的會話層級。
-- 選擇其他層級僅適用於下一則訊息（`thinkingOnce`）；發送後，選擇器會還原為儲存的會話層級。
-- 若要更改會話預設值，請發送 `/think:<level>` 指令（同前）；選擇器將在下次重新載入後反映更改。
+- 選擇另一個層級僅適用於下一則訊息（`thinkingOnce`）；傳送後，選擇器會恢復為儲存的會話層級。
+- 要更改會話預設值，請傳送 `/think:<level>` 指令（如前所述）；選擇器將在下一次重新載入後反映該設定。

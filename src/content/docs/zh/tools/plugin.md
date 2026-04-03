@@ -62,10 +62,10 @@ OpenClaw 识别两种插件格式：
 | **原生** | `openclaw.plugin.json` + 运行时模块；在进程中执行  | 官方插件，社区 npm 包                                  |
 | **包**   | Codex/Claude/Cursor 兼容布局；映射到 OpenClaw 功能 | `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/` |
 
-两者都显示在 `openclaw plugins list` 下。有关插件包的详细信息，请参阅[插件包](/en/plugins/bundles)。
+两者都显示在 `openclaw plugins list` 下。有关捆绑包的详细信息，请参阅 [Plugin Bundles](/en/plugins/bundles)。
 
-如果您正在编写原生插件，请从[构建插件](/en/plugins/building-plugins)
-和[插件 SDK 概述](/en/plugins/sdk-overview)开始。
+如果您正在编写原生插件，请从 [Building Plugins](/en/plugins/building-plugins)
+和 [Plugin SDK Overview](/en/plugins/sdk-overview) 开始。
 
 ## 官方插件
 
@@ -76,7 +76,7 @@ OpenClaw 识别两种插件格式：
 | Matrix          | `@openclaw/matrix`     | [Matrix](/en/channels/matrix)           |
 | Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/en/channels/msteams) |
 | Nostr           | `@openclaw/nostr`      | [Nostr](/en/channels/nostr)             |
-| 语音通话        | `@openclaw/voice-call` | [语音通话](/en/plugins/voice-call)      |
+| 语音通话        | `@openclaw/voice-call` | [Voice Call](/en/plugins/voice-call)    |
 | Zalo            | `@openclaw/zalo`       | [Zalo](/en/channels/zalo)               |
 | Zalo Personal   | `@openclaw/zalouser`   | [Zalo Personal](/en/plugins/zalouser)   |
 
@@ -101,7 +101,7 @@ OpenClaw 识别两种插件格式：
   </Accordion>
 </AccordionGroup>
 
-正在寻找第三方插件？请参阅[社区插件](/en/plugins/community)。
+正在寻找第三方插件？请参阅 [Community Plugins](/en/plugins/community)。
 
 ## 配置
 
@@ -142,10 +142,12 @@ OpenClaw 按以下顺序扫描插件（第一个匹配项获胜）：
   </Step>
 
   <Step title="工作区扩展">
-    `\<workspace\>/.openclaw/extensions/*.ts` 和 `\<workspace\>/.openclaw/extensions/*/index.ts`。
+    `\<workspace\>/.openclaw/<plugin-root>/*.ts` 和 `\<workspace\>/.openclaw/<plugin-root>/*/index.ts`。
   </Step>
 
-<Step title="全局扩展">`~/.openclaw/extensions/*.ts` 和 `~/.openclaw/extensions/*/index.ts`。</Step>
+  <Step title="全局扩展">
+    `~/.openclaw/<plugin-root>/*.ts` 和 `~/.openclaw/<plugin-root>/*/index.ts`。
+  </Step>
 
   <Step title="捆绑插件">
     随 OpenClaw 一起提供。许多默认启用（模型提供商，语音）。
@@ -195,6 +197,7 @@ openclaw plugins install <package>        # install (ClawHub first, then npm)
 openclaw plugins install clawhub:<pkg>   # install from ClawHub only
 openclaw plugins install <path>          # install from local path
 openclaw plugins install -l <path>       # link (no copy) for dev
+openclaw plugins install <spec> --dangerously-force-unsafe-install
 openclaw plugins update <id>             # update one plugin
 openclaw plugins update --all            # update all
 
@@ -202,11 +205,20 @@ openclaw plugins enable <id>
 openclaw plugins disable <id>
 ```
 
+`--dangerously-force-unsafe-install` 是针对内置危险代码扫描器误报的紧急覆盖开关。它允许安装
+绕过内置 `critical` 发现结果继续进行，但仍然无法绕过插件
+`before_install` 策略阻止或扫描失败阻止。
+
+此 CLI 标志仅适用于插件安装。基于 Gateway(网关) 的技能依赖项
+安装改为使用匹配的 `dangerouslyForceUnsafeInstall` 请求覆盖，
+而 `openclaw skills install` 仍然是单独的 ClawHub 技能
+下载/安装流程。
+
 有关完整详细信息，请参阅 [`openclaw plugins` CLI 参考](/en/cli/plugins)。
 
-## 插件 API 概览
+## 插件 API 概述
 
-插件导出带有 `register(api)` 的函数或对象：
+插件导出一个函数或一个带有 `register(api)` 的对象：
 
 ```typescript
 export default definePluginEntry({
@@ -228,35 +240,37 @@ export default definePluginEntry({
 
 常用注册方法：
 
-| 方法                                 | 注册内容           |
-| ------------------------------------ | ------------------ |
-| `registerProvider`                   | 模型提供商 (LLM)   |
-| `registerChannel`                    | 聊天渠道           |
-| `registerTool`                       | 代理工具           |
-| `registerHook` / `on(...)`           | 生命周期钩子       |
-| `registerSpeechProvider`             | 文本转语音 / STT   |
-| `registerMediaUnderstandingProvider` | 图像/音频分析      |
-| `registerImageGenerationProvider`    | 图像生成           |
-| `registerWebSearchProvider`          | 网络搜索           |
-| `registerHttpRoute`                  | HTTP 端点          |
-| `registerCommand` / `registerCli`    | CLI commands       |
-| `registerContextEngine`              | Context engine     |
-| `registerService`                    | Background service |
+| 方法                                 | 注册内容         |
+| ------------------------------------ | ---------------- |
+| `registerProvider`                   | 模型提供商 (LLM) |
+| `registerChannel`                    | 聊天渠道         |
+| `registerTool`                       | 代理工具         |
+| `registerHook` / `on(...)`           | 生命周期钩子     |
+| `registerSpeechProvider`             | 文本转语音 / STT |
+| `registerMediaUnderstandingProvider` | 图像/音频分析    |
+| `registerImageGenerationProvider`    | 图像生成         |
+| `registerWebSearchProvider`          | 网络搜索         |
+| `registerHttpRoute`                  | HTTP 端点        |
+| `registerCommand` / `registerCli`    | CLI 命令         |
+| `registerContextEngine`              | 上下文引擎       |
+| `registerService`                    | 后台服务         |
 
-Hook guard behavior for typed lifecycle hooks:
+类型化生命周期钩子的守卫钩子行为：
 
-- `before_tool_call`: `{ block: true }` 是终端的；较低优先级的处理程序将被跳过。
-- `before_tool_call`: `{ block: false }` 是空操作，不会清除之前的块。
-- `message_sending`: `{ cancel: true }` 是终端的；较低优先级的处理程序将被跳过。
-- `message_sending` `{ cancel: false }` 是空操作，不会清除之前的取消。
+- `before_tool_call`: `{ block: true }` 是终态；较低优先级的处理程序将被跳过。
+- `before_tool_call`: `{ block: false }` 是空操作，不会清除先前的阻止。
+- `before_install`: `{ block: true }` 是终态；较低优先级的处理程序将被跳过。
+- `before_install`: `{ block: false }` 是空操作，不会清除先前的阻止。
+- `message_sending`: `{ cancel: true }` 是终态；较低优先级的处理程序将被跳过。
+- `message_sending`: `{ cancel: false }` 是空操作，不会清除先前的取消。
 
-有关完整的类型化 Hook 行为，请参阅 [SDK Overview](/en/plugins/sdk-overview#hook-decision-semantics)。
+有关完整的类型化钩子行为，请参阅 [SDK 概述](/en/plugins/sdk-overview#hook-decision-semantics)。
 
-## Related
+## 相关
 
-- [构建插件](/en/plugins/building-plugins) — 创建您自己的插件
+- [构建插件](/en/plugins/building-plugins) — 创建你自己的插件
 - [插件包](/en/plugins/bundles) — Codex/Claude/Cursor 包兼容性
 - [插件清单](/en/plugins/manifest) — 清单架构
 - [注册工具](/en/plugins/building-plugins#registering-agent-tools) — 在插件中添加代理工具
-- [插件内部机制](/en/plugins/architecture) — 能力模型和加载流水线
+- [插件内部机制](/en/plugins/architecture) — 能力模型和加载管道
 - [社区插件](/en/plugins/community) — 第三方列表

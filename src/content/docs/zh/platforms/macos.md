@@ -9,7 +9,7 @@ title: "macOS 应用"
 # OpenClaw macOS 伴侣（菜单栏 + 网关代理）
 
 该 macOS 应用是 OpenClaw 的**菜单栏伴侣**。它拥有权限，
-在本地管理/连接 Gateway 网关（通过 launchd 或手动），并将 macOS
+在本地管理/连接 Gateway(网关) 网关（通过 launchd 或手动），并将 macOS
 功能作为节点暴露给代理。
 
 ## 功能介绍
@@ -25,10 +25,12 @@ title: "macOS 应用"
 ## Local vs remote mode
 
 - **Local** (默认)：如果存在正在运行的本地 Gateway(网关)，应用程序将附加到它；否则，它通过 `openclaw gateway install` 启用 launchd 服务。
-- **Remote（远程模式）**：该应用通过 SSH/Gateway(网关) 连接到 Tailscale，且从不启动
+- **Remote（远程）**：应用程序通过 SSH/Gateway(网关) 连接到 Tailscale，并且从不启动
   本地进程。
-  该应用会启动本地 **node host service（节点主机服务）**，以便远程 Gateway(网关) 能够连接到此 Mac。
-  该应用不会将 Gateway(网关) 作为子进程生成。
+  应用程序启动本地 **node host service（节点主机服务）**，以便远程 Gateway(网关) 可以访问此 Mac。
+  应用程序不会将 Gateway(网关) 作为子进程生成。
+  Gateway(网关) 发现现在优先使用 Tailscale MagicDNS 名称而不是原始 tailnet IP，
+  因此当 tailnet IP 更改时，Mac 应用程序的恢复更加可靠。
 
 ## Launchd control
 
@@ -113,7 +115,7 @@ Gateway -> Node Service (WS)
 
 ### `openclaw://agent`
 
-触发 Gateway `agent` 请求。
+触发 Gateway(网关) `agent` 请求。
 
 ```bash
 open 'openclaw://agent?message=Hello%20from%20deep%20link'
@@ -167,7 +169,7 @@ OPENCLAW_STATE_DIR=~/.openclaw
 
 ## 调试 Gateway 网关连接（macOS CLI）
 
-使用调试 CLI 来执行与 macOS 应用相同的 Gateway WebSocket 握手和发现逻辑，而无需启动应用。
+使用调试 CLI 来执行与 macOS 应用相同的 Gateway(网关) WebSocket 握手和发现逻辑，而无需启动应用。
 
 ```bash
 cd apps/macos
@@ -215,6 +217,6 @@ Node CLI 基于 `dns-sd` 的设备发现不同。
 ## 相关文档
 
 - [Gateway(网关) 运行手册](/en/gateway)
-- [Gateway (macOS)](/en/platforms/mac/bundled-gateway)
+- [Gateway(网关) (macOS)](/en/platforms/mac/bundled-gateway)
 - [macOS 权限](/en/platforms/mac/permissions)
 - [Canvas](/en/platforms/mac/canvas)

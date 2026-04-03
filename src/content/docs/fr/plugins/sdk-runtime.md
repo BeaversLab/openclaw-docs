@@ -13,7 +13,7 @@ read_when:
 Référence de l'objet `api.runtime` injecté dans chaque plugin lors de
 l'enregistrement. Utilisez ces assistants au lieu d'importer directement les éléments internes de l'hôte.
 
-<Tip>**Vous cherchez un guide pas à pas ?** Consultez [Channel Plugins](/en/plugins/sdk-channel-plugins) ou [Provider Plugins](/en/plugins/sdk-provider-plugins) pour des guides détaillés qui présentent ces assistants dans leur contexte.</Tip>
+<Tip>**Vous cherchez un guide pas à pas ?** Voir [Channel Plugins](/en/plugins/sdk-channel-plugins) ou [Provider Plugins](/en/plugins/sdk-provider-plugins) pour des guides étape par étape qui présentent ces aides dans leur contexte.</Tip>
 
 ```typescript
 register(api) {
@@ -330,11 +330,11 @@ Au-delà de `api.runtime`, l'objet API fournit également :
 | `api.config`             | `OpenClawConfig`          | Instantané de la configuration actuelle                                       |
 | `api.pluginConfig`       | `Record<string, unknown>` | Configuration spécifique au plugin provenant de `plugins.entries.<id>.config` |
 | `api.logger`             | `PluginLogger`            | Enregistreur avec portée (`debug`, `info`, `warn`, `error`)                   |
-| `api.registrationMode`   | `PluginRegistrationMode`  | `"full"`, `"setup-only"` ou `"setup-runtime"`                                 |
+| `api.registrationMode`   | `PluginRegistrationMode`  | `"full"`, `"setup-only"`, `"setup-runtime"`, ou `"cli-metadata"`              |
 | `api.resolvePath(input)` | `(string) => string`      | Résout un chemin relatif à la racine du plugin                                |
 
 ## Connexes
 
-- [Vue d'ensemble du SDK](/en/plugins/sdk-overview) -- référence de sous-chemin
+- [Aperçu du SDK](/en/plugins/sdk-overview) -- référence de sous-chemin
 - [Points d'entrée du SDK](/en/plugins/sdk-entrypoints) -- options `definePluginEntry`
-- [Plugin Internals](/en/plugins/architecture) -- capability model and registry
+- [Fonctionnement interne des plugins](/en/plugins/architecture) -- model de capacité et registre

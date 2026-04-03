@@ -19,8 +19,7 @@ title: "Qwen"
 
 ## 推荐：Model Studio（阿里云编程计划）
 
-使用 [Model Studio](/en/providers/modelstudio) 获取官方支持的
-Qwen 模型（Qwen 3.5 Plus、GLM-4.7、Kimi K2.5、MiniMax M2.5 等）访问权限。
+使用 [Model Studio](/en/providers/qwen_modelstudio) 获取对 Qwen 模型（Qwen 3.5 Plus、GLM-4.7、Kimi K2.5 等）的官方支持访问。
 
 ```bash
 # Global endpoint
@@ -30,4 +29,4 @@ openclaw onboard --auth-choice modelstudio-api-key
 openclaw onboard --auth-choice modelstudio-api-key-cn
 ```
 
-请参阅 [Model Studio](/en/providers/modelstudio) 了解完整的设置详情。
+有关完整的设置详细信息，请参阅 [Model Studio](/en/providers/qwen_modelstudio)。

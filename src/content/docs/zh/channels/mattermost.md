@@ -9,7 +9,8 @@ title: "Mattermost"
 # Mattermost (插件)
 
 状态：通过插件支持（机器人令牌 + WebSocket 事件）。支持频道、群组和私信。
-Mattermost 是一个可自行托管的团队消息平台；请访问 [mattermost.com](https://mattermost.com) 官方网站获取产品详情和下载。
+Mattermost 是一个可自托管的团队消息平台；有关产品详情和下载，请访问
+[mattermost.com](https://mattermost.com) 官方网站。
 
 ## 所需插件
 
@@ -24,7 +25,7 @@ openclaw plugins install @openclaw/mattermost
 本地检出（当从 git 仓库运行时）：
 
 ```bash
-openclaw plugins install ./extensions/mattermost
+openclaw plugins install ./path/to/local/mattermost-plugin
 ```
 
 如果在设置过程中选择了 Mattermost 并且检测到了 git 检出，
@@ -412,7 +413,15 @@ Mattermost 支持在 `channels.mattermost.accounts` 下配置多个账户：
 - 按钮显示为白框：Agent 可能发送了格式错误的按钮数据。检查每个按钮是否同时具有 `text` 和 `callback_data` 字段。
 - 按钮已渲染但点击无反应：验证 Mattermost 服务器配置中的 `AllowedUntrustedInternalConnections` 包含 `127.0.0.1 localhost`，并且 ServiceSettings 中的 `EnablePostActionIntegration` 为 `true`。
 - 点击按钮返回 404：按钮 `id` 可能包含连字符或下划线。Mattermost 的操作路由器会因非字母数字 ID 而中断。请仅使用 `[a-zA-Z0-9]`。
-- Gateway 记录 `invalid _token`：HMAC 不匹配。检查您是否对所有上下文字段（而非子集）进行了签名，使用了排序后的键，并使用了紧凑型 JSON（无空格）。请参阅上面的 HMAC 部分。
-- Gateway 记录 `missing _token in context`：按钮的上下文中缺少 `_token` 字段。确保在构建集成负载时包含它。
+- Gateway(网关) 记录 `invalid _token`：HMAC 不匹配。检查您是否对所有上下文字段（而非子集）进行了签名，使用了排序后的键，并使用了紧凑型 JSON（无空格）。请参阅上面的 HMAC 部分。
+- Gateway(网关) 记录 `missing _token in context`：按钮的上下文中缺少 `_token` 字段。确保在构建集成负载时包含它。
 - 确认显示原始 ID 而非按钮名称：`context.action_id` 与按钮的 `id` 不匹配。将两者设置为相同的经过清理的值。
 - Agent 识别不到按钮：将 `capabilities: ["inlineButtons"]` 添加到 Mattermost 渠道配置中。
+
+## 相关
+
+- [频道概述](/en/channels) — 所有支持的频道
+- [配对](/en/channels/pairing) — 私信认证和配对流程
+- [群组](/en/channels/groups) — 群聊行为和提及限制
+- [频道路由](/en/channels/channel-routing) — 消息的会话路由
+- [安全性](/en/gateway/security) — 访问模型和加固

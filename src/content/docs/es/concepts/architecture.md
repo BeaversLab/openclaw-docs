@@ -130,3 +130,10 @@ Detalles: [Gateway protocol](/en/gateway/protocol), [Pairing](/en/channels/pairi
 - Exactamente un Gateway controla una sola sesión de Baileys por host.
 - El protocolo de enlace es obligatorio; cualquier primer marco que no sea JSON o no sea de conexión es un cierre brusco.
 - Los eventos no se reproducen; los clientes deben actualizar cuando haya lagunas.
+
+## Relacionado
+
+- [Agent Loop](/en/concepts/agent-loop) — ciclo de ejecución detallado del agente
+- [Gateway Protocol](/en/gateway/protocol) — contrato del protocolo WebSocket
+- [Queue](/en/concepts/queue) — cola de comandos y concurrencia
+- [Security](/en/gateway/security) — modelo de confianza y endurecimiento

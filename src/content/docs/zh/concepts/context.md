@@ -133,7 +133,7 @@ Top tools (schema size):
 
 ## 命令、指令和“内联快捷方式”
 
-斜杠命令由 Gateway 网关 处理。有几种不同的行为：
+斜杠命令由 Gateway(网关) 网关 处理。有几种不同的行为：
 
 - **独立命令**：仅包含 `/...` 的消息将作为命令运行。
 - **指令**：在模型看到消息之前，会先剥离 `/think`、`/verbose`、`/reasoning`、`/elevated`、`/model`、`/queue`。
@@ -163,3 +163,10 @@ Top tools (schema size):
 - `System prompt (estimate)` = 当不存在运行报告时（或通过不生成该报告的 CLI 后端运行时）即时计算。
 
 无论哪种方式，它都会报告大小和主要贡献者；它**不**会转储完整的系统提示或工具架构。
+
+## 相关
+
+- [Context Engine](/en/concepts/context-engine) — 通过插件注入自定义上下文
+- [Compaction](/en/concepts/compaction) — 总结长对话
+- [System Prompt](/en/concepts/system-prompt) — 系统提示词的构建方式
+- [Agent Loop](/en/concepts/agent-loop) — 完整的 Agent 执行周期

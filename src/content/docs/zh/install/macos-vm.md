@@ -273,7 +273,7 @@ lume run openclaw --no-display
 
 - [VPS hosting](/en/vps)
 - [Nodes](/en/nodes)
-- [Gateway 网关 remote](/en/gateway/remote)
+- [Gateway(网关) 网关 remote](/en/gateway/remote)
 - [BlueBubbles 渠道](/en/channels/bluebubbles)
 - [Lume Quickstart](https://cua.ai/docs/lume/guide/getting-started/quickstart)
 - [Lume CLI Reference](https://cua.ai/docs/lume/reference/cli-reference)

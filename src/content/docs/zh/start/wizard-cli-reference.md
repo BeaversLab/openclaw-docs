@@ -48,7 +48,7 @@ sidebarTitle: "CLI 参考"
     - 为首次运行的引导仪式生成所需的工作区文件。
     - 工作区布局：[Agent 工作区](/en/concepts/agent-workspace)。
   </Step>
-  <Step title="Gateway">
+  <Step title="Gateway(网关)">
     - 提示输入端口、绑定、身份验证模式和 Tailscale 暴露设置。
     - 建议：即使是回环地址也保持令牌身份验证已启用，以便本地 WS 客户端必须进行身份验证。
     - 在令牌模式下，交互式设置提供：
@@ -157,16 +157,16 @@ What you set:
   <Accordion title="API key (generic)">
     为您存储密钥。
   </Accordion>
-  <Accordion title="Vercel AI Gateway">
+  <Accordion title="Vercel AI Gateway(网关)">
     提示输入 `AI_GATEWAY_API_KEY`。
-    更多详情: [Vercel AI Gateway](/en/providers/vercel-ai-gateway)。
+    更多详情: [Vercel AI Gateway(网关)](/en/providers/vercel-ai-gateway)。
   </Accordion>
   <Accordion title="Cloudflare AI Gateway(网关)">
     提示输入账户 ID、Gateway(网关) ID 和 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
     更多详情：[Cloudflare AI Gateway(网关)](/en/providers/cloudflare-ai-gateway)。
   </Accordion>
   <Accordion title="MiniMax">
-    配置自动写入。托管默认值为 `MiniMax-M2.7`；`MiniMax-M2.5` 保持可用。
+    配置会自动写入。托管默认值为 `MiniMax-M2.7`。
     更多详情：[MiniMax](/en/providers/minimax)。
   </Accordion>
   <Accordion title="Synthetic (Anthropic-compatible)">
@@ -174,7 +174,7 @@ What you set:
     更多详情：[Synthetic](/en/providers/synthetic)。
   </Accordion>
   <Accordion title="Ollama (Cloud and local open models)">
-    提示输入基础 URL（默认 `http://127.0.0.1:11434`），然后提供 Cloud + Local 或 Local 模式。
+    提示输入基础 URL（默认为 `http://127.0.0.1:11434`），然后提供 Cloud + Local 或 Local 模式选项。
     发现可用模型并建议默认值。
     更多详情：[Ollama](/en/providers/ollama)。
   </Accordion>
@@ -183,11 +183,11 @@ What you set:
     更多详情：[Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)。
   </Accordion>
   <Accordion title="Custom 提供商">
-    适用于与 OpenAI 兼容和 Anthropic 兼容的端点。
+    适用于 OpenAI 兼容和 Anthropic 兼容的端点。
 
     交互式新手引导支持与其他提供商 API 密钥流程相同的 API 密钥存储选项：
-    - **立即粘贴 API 密钥**（纯文本）
-    - **使用密钥引用**（环境变量引用或配置的提供商引用，附带预检验证）
+    - **立即粘贴 API 密钥**（明文）
+    - **使用密钥引用**（环境变量引用或配置的提供商引用，带有预检验证）
 
     非交互式标志：
     - `--auth-choice custom-api-key`
@@ -195,7 +195,7 @@ What you set:
     - `--custom-model-id`
     - `--custom-api-key`（可选；回退到 `CUSTOM_API_KEY`）
     - `--custom-provider-id`（可选）
-    - `--custom-compatibility <openai|anthropic>`（可选；默认 `openai`）
+    - `--custom-compatibility <openai|anthropic>`（可选；默认为 `openai`）
 
   </Accordion>
   <Accordion title="跳过">
@@ -211,31 +211,31 @@ What you set:
 凭据和配置文件路径：
 
 - OAuth 凭据：`~/.openclaw/credentials/oauth.json`
-- Auth 配置文件（API 密钥 + OAuth）：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+- 身份验证配置文件（API 密钥 + OAuth）：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
 
 凭据存储模式：
 
 - 默认的新手引导行为会将 API 密钥作为纯文本值保留在身份验证配置文件中。
-- `--secret-input-mode ref` 启用引用模式而非明文密钥存储。
+- `--secret-input-mode ref` 启用引用模式，而不是明文密钥存储。
   在交互式设置中，您可以选择：
   - 环境变量引用（例如 `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`）
-  - 已配置的提供商引用（`file` 或 `exec`），带提供商别名和 ID
+  - 配置的提供商引用（`file` 或 `exec`），带有提供商别名 + ID
 - 交互式引用模式在保存之前会运行快速预检验证。
   - 环境变量引用：验证当前新手引导环境中的变量名称和非空值。
   - 提供商引用：验证提供商配置并解析请求的 ID。
   - 如果预检失败，新手引导会显示错误并允许您重试。
-- 在非交互模式下，`--secret-input-mode ref` 仅支持环境变量。
+- 在非交互模式下，`--secret-input-mode ref` 仅由环境变量支持。
   - 在 新手引导 进程环境中设置 提供商 环境变量。
-  - 内联密钥标志（例如 `--openai-api-key`）要求必须设置该环境变量；否则新手引导将快速失败。
+  - 内联密钥标志（例如 `--openai-api-key`）要求必须设置该环境变量；否则新手引导会快速失败。
   - 对于自定义提供商，非交互式 `ref` 模式将 `models.providers.<id>.apiKey` 存储为 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
-  - 在这种自定义提供商的情况下，`--custom-api-key` 要求必须设置 `CUSTOM_API_KEY`；否则新手引导将快速失败。
-- Gateway 身份验证凭据在交互式设置中支持明文和 SecretRef 选择：
+  - 在该自定义提供商的情况下，`--custom-api-key` 要求必须设置 `CUSTOM_API_KEY`；否则新手引导会快速失败。
+- Gateway(网关) 身份验证凭据在交互式设置中支持明文和 SecretRef 选择：
   - 令牌模式：**生成/存储明文令牌**（默认）或 **使用 SecretRef**。
   - 密码模式：明文或 SecretRef。
 - 非交互式令牌 SecretRef 路径：`--gateway-token-ref-env <ENV_VAR>`。
 - 现有的明文设置继续不受影响地工作。
 
-<Note>Headless 和服务器提示：在带有浏览器的机器上完成 OAuth，然后将 `~/.openclaw/credentials/oauth.json`（或 `$OPENCLAW_STATE_DIR/credentials/oauth.json`） 复制到网关主机。</Note>
+<Note>无头模式和服务器提示：在带有浏览器的机器上完成 OAuth，然后将 `~/.openclaw/credentials/oauth.json`（或 `$OPENCLAW_STATE_DIR/credentials/oauth.json`） 复制到网关主机。</Note>
 
 ## 输出与内部细节
 
@@ -243,10 +243,10 @@ What you set:
 
 - `agents.defaults.workspace`
 - `agents.defaults.model` / `models.providers`（如果选择了 Minimax）
-- `tools.profile`（如果未设置，本地新手引导默认为 `"coding"`；保留现有的显式值）
-- `gateway.*`（模式、绑定、身份验证、tailscale）
-- `session.dmScope`（如果未设置，本地新手引导将其默认为 `per-channel-peer`；保留现有的显式值）
-- `channels.telegram.botToken`、`channels.discord.token`、`channels.signal.*`、`channels.imessage.*`
+- `tools.profile`（如果未设置，本地新手引导默认为 `"coding"`；现有的显式值将被保留）
+- `gateway.*`（模式、绑定、认证、tailscale）
+- `session.dmScope`（如果未设置，本地新手引导将其默认为 `per-channel-peer`；现有的显式值将被保留）
+- `channels.telegram.botToken`, `channels.discord.token`, `channels.matrix.*`, `channels.signal.*`, `channels.imessage.*`
 - 频道允许列表（Slack、Discord、Matrix、Microsoft Teams），当您在提示期间选择加入时（如果可能，名称将解析为 ID）
 - `skills.install.nodeManager`
 - `wizard.lastRunAt`

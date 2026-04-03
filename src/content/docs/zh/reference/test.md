@@ -7,7 +7,7 @@ title: "测试"
 
 # 测试
 
-- 完整的测试工具包（套件、live、Docker）：[Testing](/en/help/testing)
+- 完整测试套件（套件、实时、Docker）：[测试](/en/help/testing)
 
 - `pnpm test:force`：终止任何占用默认控制端口的残留网关进程，然后使用隔离的网关端口运行完整的 Vitest 测试套件，以防止服务器测试与正在运行的实例发生冲突。当之前的网关运行导致 18789 端口被占用时，请使用此方法。
 - `pnpm test:coverage`：运行带有 V8 覆盖率（通过 `vitest.unit.config.ts`）的单元测试套件。全局阈值为 70% 的行/分支/函数/语句。覆盖率排除了重集成的入口点（CLI 线路、网关/telegram 桥接、webchat 静态服务器），以使目标专注于可进行单元测试的逻辑。
@@ -64,35 +64,56 @@ title: "测试"
 
 用法：
 
+- `pnpm test:startup:bench`
+- `pnpm test:startup:bench:smoke`
+- `pnpm test:startup:bench:save`
+- `pnpm test:startup:bench:update`
+- `pnpm test:startup:bench:check`
 - `pnpm tsx scripts/bench-cli-startup.ts`
 - `pnpm tsx scripts/bench-cli-startup.ts --runs 12`
-- `pnpm tsx scripts/bench-cli-startup.ts --entry dist/entry.js --timeout-ms 45000`
+- `pnpm tsx scripts/bench-cli-startup.ts --preset real`
+- `pnpm tsx scripts/bench-cli-startup.ts --preset real --case status --case gatewayStatus --runs 3`
+- `pnpm tsx scripts/bench-cli-startup.ts --entry openclaw.mjs --entry-secondary dist/entry.js --preset all`
+- `pnpm tsx scripts/bench-cli-startup.ts --preset all --output .artifacts/cli-startup-bench-all.json`
+- `pnpm tsx scripts/bench-cli-startup.ts --preset real --case gatewayStatusJson --output .artifacts/cli-startup-bench-smoke.json`
+- `pnpm tsx scripts/bench-cli-startup.ts --preset real --cpu-prof-dir .artifacts/cli-cpu`
+- `pnpm tsx scripts/bench-cli-startup.ts --json`
 
-此基准测试针对以下命令：
+预设：
 
-- `--version`
-- `--help`
-- `health --json`
-- `status --json`
-- `status`
+- `startup`：`--version`、`--help`、`health`、`health --json`、`status --json`、`status`
+- `real`：`health`、`status`、`status --json`、`sessions`、`sessions --json`、`agents list --json`、`gateway status`、`gateway status --json`、`gateway health --json`、`config get gateway.port`
+- `all`：两种预设
 
-输出包括每个命令的平均值、p50、p95、最小/最大值以及退出代码/信号分布。
+输出包含每个命令的 `sampleCount`、平均值、p50、p95、最小值/最大值、退出码/信号分布以及最大 RSS 摘要。可选的 `--cpu-prof-dir` / `--heap-prof-dir` 会在每次运行时写入 V8 配置文件，以便计时和配置文件捕获使用相同的工具。
+
+保存的输出约定：
+
+- `pnpm test:startup:bench:smoke` 在 `.artifacts/cli-startup-bench-smoke.json` 处写入目标冒烟测试构件
+- `pnpm test:startup:bench:save` 使用 `runs=5` 和 `warmup=1` 在 `.artifacts/cli-startup-bench-all.json` 处写入完整套件构件
+- `pnpm test:startup:bench:update` 使用 `runs=5` 和 `warmup=1` 刷新 `test/fixtures/cli-startup-bench.json` 处的已检入基线固定装置
+
+检入的装置：
+
+- `test/fixtures/cli-startup-bench.json`
+- 使用 `pnpm test:startup:bench:update` 刷新
+- 使用 `pnpm test:startup:bench:check` 将当前结果与装置进行比较
 
 ## 新手引导 E2E (Docker)
 
 Docker 是可选的；这仅用于容器化的新手引导冒烟测试。
 
-在一个干净的 Linux 容器中执行完整的冷启动流程：
+在干净的 Linux 容器中完整的冷启动流程：
 
 ```bash
 scripts/e2e/onboard-docker.sh
 ```
 
-该脚本通过伪终端驱动交互式向导，验证 config/workspace/会话 文件，然后启动网关并运行 `openclaw health`。
+该脚本通过伪终端驱动交互式向导，验证配置/工作区/会话文件，然后启动网关并运行 `openclaw health`。
 
-## QR 导入冒烟测试 (Docker)
+## 二维码导入冒烟测试 (Docker)
 
-确保 `qrcode-terminal` 在支持的 Docker Node 运行时下加载（默认为 Node 24，兼容 Node 22）：
+确保 `qrcode-terminal` 在支持的 Docker Node 运行时下加载（Node 24 默认，Node 22 兼容）：
 
 ```bash
 pnpm test:docker:qr

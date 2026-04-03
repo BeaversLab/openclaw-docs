@@ -1,7 +1,7 @@
 ---
-title: "Búsqueda Web"
-sidebarTitle: "Búsqueda Web"
-summary: "web_search, x_search y web_fetch -- busca en la web, busca publicaciones de X u obtén el contenido de la página"
+title: "Búsqueda web"
+sidebarTitle: "Búsqueda web"
+summary: "web_search, x_search y web_fetch -- busca en la web, busca en publicaciones de X o obtén el contenido de la página"
 read_when:
   - You want to enable or configure web_search
   - You want to enable or configure x_search
@@ -15,24 +15,24 @@ La herramienta `web_search` busca en la web utilizando tu proveedor configurado 
 devuelve resultados. Los resultados se almacenan en caché por consulta durante 15 minutos (configurable).
 
 OpenClaw también incluye `x_search` para publicaciones de X (anteriormente Twitter) y
-`web_fetch` para la obtención de URL ligera. En esta fase, `web_fetch` se mantiene
-localmente, mientras que `web_search` y `x_search` pueden usar xAI Responses en segundo plano.
+`web_fetch` para una recuperación de URL ligera. En esta fase, `web_fetch` se mantiene
+local, mientras que `web_search` y `x_search` pueden utilizar xAI Responses internamente.
 
-<Info>`web_search` es una herramienta HTTP ligera, no automatización del navegador. Para sitios con mucho JS o inicios de sesión, use [Navegador Web](/en/tools/browser). Para obtener una URL específica, use [Web Fetch](/en/tools/web-fetch).</Info>
+<Info>`web_search` es una herramienta HTTP ligera, no una automatización del navegador. Para sitios con mucho JS o inicios de sesión, use el [Navegador web](/en/tools/browser). Para recuperar una URL específica, use [Web Fetch](/en/tools/web-fetch).</Info>
 
 ## Inicio rápido
 
 <Steps>
-  <Step title="Obtener una clave de API">
-    Elija un proveedor y obtenga una clave de API. Consulte las páginas del proveedor a continuación para obtener
+  <Step title="Obtén una clave de API">
+    Elija un proveedor y obtenga una clave de API. Consulte las páginas del proveedor a continuación para
     enlaces de registro.
   </Step>
   <Step title="Configurar">
     ```bash
     openclaw configure --section web
     ```
-    Esto guarda la clave y establece el proveedor. También puede establecer una variable de entorno
-    (por ejemplo, `BRAVE_API_KEY`) y omitir este paso.
+    Esto almacena la clave y establece el proveedor. También puede configurar una variable de entorno
+    (p. ej. `BRAVE_API_KEY`) y omitir este paso.
   </Step>
   <Step title="Úsalo">
     El agente ahora puede llamar a `web_search`:
@@ -54,28 +54,31 @@ localmente, mientras que `web_search` y `x_search` pueden usar xAI Responses en 
 
 <CardGroup cols={2}>
   <Card title="Brave Search" icon="shield" href="/en/tools/brave-search">
-    Resultados estructurados con fragmentos. Soporta el modo `llm-context`, filtros de país/idioma. Nivel gratuito disponible.
+    Resultados estructurados con fragmentos. Admite el modo `llm-context`, filtros de país/idioma. Plan gratuito disponible.
   </Card>
   <Card title="DuckDuckGo" icon="bird" href="/en/tools/duckduckgo-search">
-    Fallback sin clave. No se necesita clave de API. Integración no oficial basada en HTML.
+    Alternativa sin clave. No se necesita clave de API. Integración no oficial basada en HTML.
   </Card>
   <Card title="Exa" icon="brain" href="/en/tools/exa-search">
     Búsqueda neuronal + por palabras clave con extracción de contenido (destacados, texto, resúmenes).
   </Card>
   <Card title="Firecrawl" icon="flame" href="/en/tools/firecrawl">
-    Resultados estructurados. Funciona mejor con `firecrawl_search` y `firecrawl_scrape` para extracción profunda.
+    Resultados estructurados. Mejor combinado con `firecrawl_search` y `firecrawl_scrape` para una extracción profunda.
   </Card>
   <Card title="Gemini" icon="sparkles" href="/en/tools/gemini-search">
-    Respuestas sintetizadas por IA con citas a través de la fundamentación en Google Search.
+    Respuestas sintetizadas por IA con citas mediante la vinculación con Google Search.
   </Card>
   <Card title="Grok" icon="zap" href="/en/tools/grok-search">
-    Respuestas sintetizadas por IA con citas mediante anclaje web de xAI.
+    Respuestas sintetizadas por IA con citas mediante la vinculación web de xAI.
   </Card>
   <Card title="Kimi" icon="moon" href="/en/tools/kimi-search">
-    Respuestas sintetizadas por IA con citas mediante búsqueda web de Moonshot.
+    Respuestas sintetizadas por IA con citas mediante la búsqueda web de Moonshot.
   </Card>
   <Card title="Perplexity" icon="search" href="/en/tools/perplexity-search">
     Resultados estructurados con controles de extracción de contenido y filtrado de dominios.
+  </Card>
+  <Card title="SearXNG" icon="server" href="/en/tools/searxng-search">
+    Metabuscador autoalojado. No se necesita clave de API. Agrega Google, Bing, DuckDuckGo y más.
   </Card>
   <Card title="Tavily" icon="globe" href="/en/tools/tavily">
     Resultados estructurados con profundidad de búsqueda, filtrado de temas y `tavily_extract` para la extracción de URL.
@@ -84,23 +87,61 @@ localmente, mientras que `web_search` y `x_search` pueden usar xAI Responses en 
 
 ### Comparación de proveedores
 
-| Proveedor                                 | Estilo de resultado        | Filtros                                                          | Clave de API                                |
-| ----------------------------------------- | -------------------------- | ---------------------------------------------------------------- | ------------------------------------------- |
-| [Brave](/en/tools/brave-search)           | Fragmentos estructurados   | País, idioma, hora, modo `llm-context`                           | `BRAVE_API_KEY`                             |
-| [DuckDuckGo](/en/tools/duckduckgo-search) | Fragmentos estructurados   | --                                                               | Ninguno (sin clave)                         |
-| [Exa](/en/tools/exa-search)               | Estructurado + extraído    | Modo neuronal/por palabras clave, fecha, extracción de contenido | `EXA_API_KEY`                               |
-| [Firecrawl](/en/tools/firecrawl)          | Fragmentos estructurados   | Vía la herramienta `firecrawl_search`                            | `FIRECRAWL_API_KEY`                         |
-| [Gemini](/en/tools/gemini-search)         | Sintetizado por IA + citas | --                                                               | `GEMINI_API_KEY`                            |
-| [Grok](/en/tools/grok-search)             | Sintetizado por IA + citas | --                                                               | `XAI_API_KEY`                               |
-| [Kimi](/en/tools/kimi-search)             | Sintetizado por IA + citas | --                                                               | `KIMI_API_KEY` / `MOONSHOT_API_KEY`         |
-| [Perplexity](/en/tools/perplexity-search) | Fragmentos estructurados   | País, idioma, hora, dominios, límites de contenido               | `PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY` |
-| [Tavily](/en/tools/tavily)                | Fragmentos estructurados   | Vía la herramienta `tavily_search`                               | `TAVILY_API_KEY`                            |
+| Proveedor                                 | Estilo de resultado        | Filtros                                                         | Clave de API                                |
+| ----------------------------------------- | -------------------------- | --------------------------------------------------------------- | ------------------------------------------- |
+| [Brave](/en/tools/brave-search)           | Fragmentos estructurados   | País, idioma, hora, modo `llm-context`                          | `BRAVE_API_KEY`                             |
+| [DuckDuckGo](/en/tools/duckduckgo-search) | Fragmentos estructurados   | --                                                              | Ninguno (sin clave)                         |
+| [Exa](/en/tools/exa-search)               | Estructurado + extraído    | Modo neuronal/por palabra clave, fecha, extracción de contenido | `EXA_API_KEY`                               |
+| [Firecrawl](/en/tools/firecrawl)          | Fragmentos estructurados   | A través de la herramienta `firecrawl_search`                   | `FIRECRAWL_API_KEY`                         |
+| [Gemini](/en/tools/gemini-search)         | Sintetizado por IA + citas | --                                                              | `GEMINI_API_KEY`                            |
+| [Grok](/en/tools/grok-search)             | Sintetizado por IA + citas | --                                                              | `XAI_API_KEY`                               |
+| [Kimi](/en/tools/kimi-search)             | Sintetizado por IA + citas | --                                                              | `KIMI_API_KEY` / `MOONSHOT_API_KEY`         |
+| [Perplexity](/en/tools/perplexity-search) | Fragmentos estructurados   | País, idioma, hora, dominios, límites de contenido              | `PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY` |
+| [SearXNG](/en/tools/searxng-search)       | Fragmentos estructurados   | Categorías, idioma                                              | Ninguno (autohospedado)                     |
+| [Tavily](/en/tools/tavily)                | Fragmentos estructurados   | A través de la herramienta `tavily_search`                      | `TAVILY_API_KEY`                            |
 
 ## Detección automática
 
-Las listas de proveedores en los documentos y flujos de configuración son alfabéticas. La detección automática mantiene un orden de precedencia separado:
+## Búsqueda web nativa de Codex
 
-Si no se ha establecido ningún `provider`, OpenClaw busca claves de API en este orden y utiliza la primera que encuentre:
+Los modelos con capacidad para Codex pueden usar opcionalmente la herramienta Responses `web_search` nativa del proveedor en lugar de la función `web_search` administrada por OpenClaw.
+
+- Configúrelo en `tools.web.search.openaiCodex`
+- Solo se activa para modelos con capacidad para Codex (`openai-codex/*` o proveedores que usan `api: "openai-codex-responses"`)
+- Managed `web_search` todavía se aplica a modelos que no son Codex
+- `mode: "cached"` es la configuración predeterminada y recomendada
+- `tools.web.search.enabled: false` deshabilita tanto la búsqueda administrada como la nativa
+
+```json5
+{
+  tools: {
+    web: {
+      search: {
+        enabled: true,
+        openaiCodex: {
+          enabled: true,
+          mode: "cached",
+          allowedDomains: ["example.com"],
+          contextSize: "high",
+          userLocation: {
+            country: "US",
+            city: "New York",
+            timezone: "America/New_York",
+          },
+        },
+      },
+    },
+  },
+}
+```
+
+Si la búsqueda nativa de Codex está habilitada pero el modelo actual no es compatible con Codex, OpenClaw mantiene el comportamiento normal administrado de `web_search`.
+
+## Configurar la búsqueda web
+
+Las listas de proveedores en la documentación y los flujos de configuración son alfabéticas. La detección automática mantiene un orden de precedencia separado:
+
+Si no se establece ningún `provider`, OpenClaw busca claves API en este orden y usa la primera que encuentre:
 
 1. **Brave** -- `BRAVE_API_KEY` o `plugins.entries.brave.config.webSearch.apiKey`
 2. **Gemini** -- `GEMINI_API_KEY` o `plugins.entries.google.config.webSearch.apiKey`
@@ -110,9 +151,14 @@ Si no se ha establecido ningún `provider`, OpenClaw busca claves de API en este
 6. **Firecrawl** -- `FIRECRAWL_API_KEY` o `plugins.entries.firecrawl.config.webSearch.apiKey`
 7. **Tavily** -- `TAVILY_API_KEY` o `plugins.entries.tavily.config.webSearch.apiKey`
 
-Si no se encuentra ninguna clave, se recurre a Brave (obtendrá un error de clave faltante indicándole que configure una).
+Los proveedores sin clave se verifican después de los proveedores con API:
 
-<Note>Todos los campos de clave de proveedor admiten objetos SecretRef. En el modo de detección automática, OpenClaw resuelve solo la clave del proveedor seleccionado: los SecretRefs no seleccionados permanecen inactivos.</Note>
+8. **DuckDuckGo** -- no se necesita clave (orden de autodetección 100)
+9. **SearXNG** -- `SEARXNG_BASE_URL` o `plugins.entries.searxng.config.webSearch.baseUrl` (orden de autodetección 200)
+
+Si no se detecta ningún proveedor, recurre a Brave (recibirá un error de clave faltante que le pedirá que configure uno).
+
+<Note>Todos los campos de clave de proveedor admiten objetos SecretRef. En modo de detección automática, OpenClaw solo resuelve la clave del proveedor seleccionado; los SecretRef no seleccionados permanecen inactivos.</Note>
 
 ## Configuración
 
@@ -132,14 +178,16 @@ Si no se encuentra ninguna clave, se recurre a Brave (obtendrá un error de clav
 }
 ```
 
-La configuración específica del proveedor (claves de API, URL base, modos) se encuentra bajo
+La configuración específica del proveedor (claves API, URLs base, modos) se encuentra en
 `plugins.entries.<plugin>.config.webSearch.*`. Consulte las páginas del proveedor para ver
 ejemplos.
 
-Para `x_search`, configure `tools.web.x_search.*` directamente. Utiliza el mismo
-`XAI_API_KEY` de reserva que la búsqueda web de Grok.
+Para `x_search`, configure `tools.web.x_search.*` directamente. Utiliza el mismo respaldo `XAI_API_KEY` que la búsqueda web de Grok.
+Cuando eliges Grok durante `openclaw onboard` o `openclaw configure --section web`,
+OpenClaw también puede ofrecer la configuración opcional de `x_search` con la misma clave.
+Este es un paso de seguimiento separado dentro de la ruta de Grok, no una opción separada de proveedor de búsqueda web de nivel superior. Si eliges otro proveedor, OpenClaw no muestra el mensaje `x_search`.
 
-### Almacenar claves de API
+### Almacenar claves API
 
 <Tabs>
   <Tab title="Archivo de configuración">
@@ -169,8 +217,8 @@ Para `x_search`, configure `tools.web.x_search.*` directamente. Utiliza el mismo
     export BRAVE_API_KEY="YOUR_KEY"
     ```
 
-    Para una instalación de puerta de enlace, colóquela en `~/.openclaw/.env`.
-    Consulte [Variables de entorno](/en/help/faq#env-vars-and-env-loading).
+    Para una instalación de puerta de enlace, póngala en `~/.openclaw/.env`.
+    Vea [Vars de entorno](/en/help/faq#env-vars-and-env-loading).
 
   </Tab>
 </Tabs>
@@ -179,15 +227,15 @@ Para `x_search`, configure `tools.web.x_search.*` directamente. Utiliza el mismo
 
 | Parámetro             | Descripción                                                            |
 | --------------------- | ---------------------------------------------------------------------- |
-| `query`               | Consulta de búsqueda (obligatoria)                                     |
+| `query`               | Consulta de búsqueda (obligatorio)                                     |
 | `count`               | Resultados a devolver (1-10, predeterminado: 5)                        |
-| `country`             | Código de país ISO de 2 letras (por ejemplo, "US", "DE")               |
-| `language`            | Código de idioma ISO 639-1 (por ejemplo, "en", "de")                   |
+| `country`             | Código de país ISO de 2 letras (ej. "US", "DE")                        |
+| `language`            | Código de idioma ISO 639-1 (ej. "en", "de")                            |
 | `freshness`           | Filtro de tiempo: `day`, `week`, `month` o `year`                      |
 | `date_after`          | Resultados después de esta fecha (AAAA-MM-DD)                          |
 | `date_before`         | Resultados antes de esta fecha (AAAA-MM-DD)                            |
 | `ui_lang`             | Código de idioma de la interfaz de usuario (solo Brave)                |
-| `domain_filter`       | Matriz de lista de permitidos/bloqueados de dominio (solo Perplexity)  |
+| `domain_filter`       | Matriz de lista de permitidos/denegados de dominio (solo Perplexity)   |
 | `max_tokens`          | Presupuesto total de contenido, predeterminado 25000 (solo Perplexity) |
 | `max_tokens_per_page` | Límite de tokens por página, predeterminado 2048 (solo Perplexity)     |
 
@@ -195,14 +243,14 @@ Para `x_search`, configure `tools.web.x_search.*` directamente. Utiliza el mismo
 
 ## x_search
 
-`x_search` consulta publicaciones de X (anteriormente Twitter) usando xAI y devuelve
+`x_search` busca en publicaciones de X (anteriormente Twitter) usando xAI y devuelve
 respuestas sintetizadas por IA con citas. Acepta consultas en lenguaje natural y
 filtros estructurados opcionales. OpenClaw solo habilita la herramienta xAI `x_search`
 integrada en la solicitud que atiende esta llamada de herramienta.
 
 <Note>
-  xAI documenta `x_search` como compatible con búsqueda de palabras clave, búsqueda semántica, búsqueda de usuario y obtención de hilos. Para estadísticas de interacción por publicación, como republicaciones, respuestas, marcadores o visitas, prefiera una búsqueda específica de la URL exacta de la publicación n o del ID de estado. Las búsquedas amplias de palabras clave pueden encontrar la
-  publicación correcta pero devolver menos metadatos completos por publicación. Un buen patrón es: ubicar primero la publicación y luego ejecutar una segunda consulta `x_search` centrada en esa publicación exacta.
+  xAI documenta `x_search` como compatible con búsqueda de palabras clave, búsqueda semántica, búsqueda de usuario y obtención de hilos. Para estadísticas de interacción por publicación, como republicaciones, respuestas, marcadores o vistas, prefiera una búsqueda dirigida para la URL exacta de la publicación n o el ID de estado. Las búsquedas amplias de palabras clave pueden encontrar la
+  publicación correcta, pero devuelven menos metadatos completos por publicación. Un buen patrón es: localizar primero la publicación y luego ejecutar una segunda consulta `x_search` centrada en esa publicación exacta.
 </Note>
 
 ### configuración de x_search
@@ -230,14 +278,14 @@ integrada en la solicitud que atiende esta llamada de herramienta.
 | Parámetro                    | Descripción                                                                         |
 | ---------------------------- | ----------------------------------------------------------------------------------- |
 | `query`                      | Consulta de búsqueda (obligatoria)                                                  |
-| `allowed_x_handles`          | Restringir los resultados a identificadores de X específicos                        |
-| `excluded_x_handles`         | Excluir identificadores de X específicos                                            |
+| `allowed_x_handles`          | Restringir resultados a usuarios de X específicos                                   |
+| `excluded_x_handles`         | Excluir usuarios de X específicos                                                   |
 | `from_date`                  | Incluir solo publicaciones en o después de esta fecha (AAAA-MM-DD)                  |
 | `to_date`                    | Incluir solo publicaciones en o antes de esta fecha (AAAA-MM-DD)                    |
 | `enable_image_understanding` | Permitir que xAI inspeccione las imágenes adjuntas a las publicaciones coincidentes |
 | `enable_video_understanding` | Permitir que xAI inspeccione los videos adjuntos a las publicaciones coincidentes   |
 
-### Ejemplo de x_search
+### ejemplo de x_search
 
 ```javascript
 await x_search({
@@ -282,7 +330,7 @@ await web_search({
 
 ## Perfiles de herramientas
 
-Si utiliza perfiles de herramientas o listas de permitidos, agregue `web_search`, `x_search` o `group:web`:
+Si usa perfiles de herramientas o listas de permitidos, agregue `web_search`, `x_search` o `group:web`:
 
 ```json5
 {
@@ -295,6 +343,6 @@ Si utiliza perfiles de herramientas o listas de permitidos, agregue `web_search`
 
 ## Relacionado
 
-- [Web Fetch](/en/tools/web-fetch) -- recuperar una URL y extraer contenido legible
-- [Web Browser](/en/tools/browser) -- automatización completa del navegador para sitios con mucho JS
-- [Grok Search](/en/tools/grok-search) -- Grok como proveedor `web_search`
+- [Web Fetch](/en/tools/web-fetch) -- obtiene una URL y extrae el contenido legible
+- [Navegador Web](/en/tools/browser) -- automatización completa del navegador para sitios con mucho JS
+- [Búsqueda Grok](/en/tools/grok-search) -- Grok como proveedor de `web_search`

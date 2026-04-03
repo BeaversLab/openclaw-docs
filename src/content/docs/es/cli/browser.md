@@ -17,11 +17,11 @@ Relacionado:
 
 ## Opciones comunes
 
-- `--url <gatewayWsUrl>`: URL de WebSocket de la puerta de enlace (predeterminado: configuración).
-- `--token <token>`: token de la puerta de enlace (si es necesario).
+- `--url <gatewayWsUrl>`: URL del WebSocket de puerta de enlace (el valor predeterminado es la configuración).
+- `--token <token>`: token de puerta de enlace (si es necesario).
 - `--timeout <ms>`: tiempo de espera de la solicitud (ms).
-- `--browser-profile <name>`: elige un perfil de navegador (predeterminado de la configuración).
-- `--json`: salida legible por máquina (cuando sea compatible).
+- `--browser-profile <name>`: elija un perfil de navegador (valor predeterminado de la configuración).
+- `--json`: salida legible por máquina (donde sea compatible).
 
 ## Inicio rápido (local)
 
@@ -32,12 +32,33 @@ openclaw browser --browser-profile openclaw open https://example.com
 openclaw browser --browser-profile openclaw snapshot
 ```
 
+## Si falta el comando
+
+Si `openclaw browser` es un comando desconocido, verifique `plugins.allow` en
+`~/.openclaw/openclaw.json`.
+
+Cuando `plugins.allow` está presente, el complemento del navegador incluido debe estar enumerado
+explícitamente:
+
+```json5
+{
+  plugins: {
+    allow: ["telegram", "browser"],
+  },
+}
+```
+
+`browser.enabled=true` no restaura el subcomando de la CLI cuando la lista blanca de
+complementos excluye `browser`.
+
+Relacionado: [Herramienta de navegador](/en/tools/browser#missing-browser-command-or-tool)
+
 ## Perfiles
 
-Los perfiles son configuraciones de enrutamiento del navegador con nombre. En la práctica:
+Los perfiles son configuraciones de enrutamiento de navegador con nombre. En la práctica:
 
 - `openclaw`: inicia o se adjunta a una instancia de Chrome administrada por OpenClaw dedicada (directorio de datos de usuario aislado).
-- `user`: controla tu sesión de Chrome existente iniciada a través de Chrome DevTools MCP.
+- `user`: controla su sesión de Chrome con sesión iniciada existente a través de Chrome DevTools MCP.
 - perfiles CDP personalizados: apuntan a un punto de conexión CDP local o remoto.
 
 ```bash
@@ -47,7 +68,7 @@ openclaw browser create-profile --name chrome-live --driver existing-session
 openclaw browser delete-profile --name work
 ```
 
-Usa un perfil específico:
+Use un perfil específico:
 
 ```bash
 openclaw browser --browser-profile work tabs
@@ -76,7 +97,7 @@ Captura de pantalla:
 openclaw browser screenshot
 ```
 
-Navegar/clic/escribir (automatización de interfaz de usuario basada en referencias):
+Navegar/hacer clic/escribir (automatización de la interfaz de usuario basada en referencias):
 
 ```bash
 openclaw browser navigate https://example.com
@@ -86,7 +107,7 @@ openclaw browser type <ref> "hello"
 
 ## Chrome existente a través de MCP
 
-Usa el perfil integrado `user` o crea tu propio perfil `existing-session`:
+Use el perfil incorporado `user` o cree su propio perfil `existing-session`:
 
 ```bash
 openclaw browser --browser-profile user tabs
@@ -95,12 +116,12 @@ openclaw browser create-profile --name brave-live --driver existing-session --us
 openclaw browser --browser-profile chrome-live tabs
 ```
 
-Esta ruta es solo para el host. Para Docker, servidores sin cabeza, Browserless u otras configuraciones remotas, utiliza un perfil CDP en su lugar.
+Esta ruta es solo para el host. Para Docker, servidores sin cabeza, Browserless u otras configuraciones remotas, use un perfil CDP en su lugar.
 
 ## Control remoto del navegador (proxy de host de nodo)
 
-Si la puerta de enlace se ejecuta en una máquina diferente a la del navegador, ejecuta un **node host** en la máquina que tenga Chrome/Brave/Edge/Chromium. La puerta de enlace enviará mediante proxy las acciones del navegador a ese nodo (no se requiere un servidor de control del navegador separado).
+Si la puerta de enlace se ejecuta en una máquina diferente a la del navegador, ejecute un **host de nodo** en la máquina que tenga Chrome/Brave/Edge/Chromium. La puerta de enlace delegará las acciones del navegador a ese nodo (no se requiere un servidor de control de navegador separado).
 
-Usa `gateway.nodes.browser.mode` para controlar el enrutamiento automático y `gateway.nodes.browser.node` para anclar un nodo específico si hay varios conectados.
+Use `gateway.nodes.browser.mode` to control auto-routing and `gateway.nodes.browser.node` to pin a specific node if multiple are connected.
 
-Seguridad + configuración remota: [Herramienta de navegador](/en/tools/browser), [Acceso remoto](/en/gateway/remote), [Tailscale](/en/gateway/tailscale), [Seguridad](/en/gateway/security)
+Seguridad + configuración remota: [Browser tool](/en/tools/browser), [Remote access](/en/gateway/remote), [Tailscale](/en/gateway/tailscale), [Security](/en/gateway/security)

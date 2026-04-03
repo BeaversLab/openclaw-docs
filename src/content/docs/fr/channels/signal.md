@@ -327,3 +327,11 @@ Options globales connexes :
 - `agents.list[].groupChat.mentionPatterns` (Signal ne prend pas en charge les mentions natives).
 - `messages.groupChat.mentionPatterns` (repli global).
 - `messages.responsePrefix`.
+
+## Connexes
+
+- [Aperçu des canaux](/en/channels) — tous les canaux pris en charge
+- [Appairage](/en/channels/pairing) — authentification DM et flux d'appairage
+- [Groupes](/en/channels/groups) — comportement de la discussion de groupe et filtrage des mentions
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

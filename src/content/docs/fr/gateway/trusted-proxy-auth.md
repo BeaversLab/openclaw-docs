@@ -254,31 +254,43 @@ location / {
 }
 ```
 
+## Configuration de jeton mixte
+
+OpenClaw rejette les configurations ambiguës où un `gateway.auth.token` (ou `OPENCLAW_GATEWAY_TOKEN`) et le mode `trusted-proxy` sont actifs simultanément. Les configurations de jetons mixtes peuvent provoquer l'authentification silencieuse des requêtes de bouclage sur le mauvais chemin d'authentification.
+
+Si vous rencontrez une erreur `mixed_trusted_proxy_token` au démarrage :
+
+- Supprimez le jeton partagé lors de l'utilisation du mode trusted-proxy, ou
+- Passez `gateway.auth.mode` à `"token"` si vous avez l'intention d'utiliser une authentification par jeton.
+
+L'authentification trusted-proxy en boucle échoue également de manière sécurisée : les appelants sur le même hôte doivent fournir les en-têtes d'identité configurés via un proxy de confiance au lieu d'être authentifiés silencieusement.
+
 ## Liste de vérification de sécurité
 
-Avant d'activer l'authentification proxy de confiance, vérifiez :
+Avant d'activer l'authentification de proxy de confiance, vérifiez :
 
-- [ ] **Le proxy est le seul chemin** : Le port du Gateway est protégé par un pare-feu de tout accès sauf votre proxy
-- [ ] **trustedProxies est minimal** : Uniquement vos IP de proxy réelles, pas des sous-réseaux entiers
-- [ ] **Proxy strips headers** : Votre proxy remplace (n'ajoute pas) les en-têtes `x-forwarded-*` des clients
+- [ ] **Le proxy est le seul chemin** : Le port du Gateway est protégé par un pare-feu contre tout sauf votre proxy
+- [ ] **trustedProxies est minimal** : Uniquement vos adresses IP de proxy réelles, et non des sous-réseaux entiers
+- [ ] **Proxy strips headers** : Votre proxy écrase (n'ajoute pas à) les en-têtes `x-forwarded-*` des clients
 - [ ] **TLS termination** : Votre proxy gère le TLS ; les utilisateurs se connectent via HTTPS
-- [ ] **allowUsers est défini** (recommandé) : Limitez aux utilisateurs connus plutôt que d'autoriser toute personne authentifiée
+- [ ] **allowUsers est défini** (recommandé) : Restreindre aux utilisateurs connus plutôt que d'autoriser toute personne authentifiée
+- [ ] **Pas de configuration de jetons mixte** : Ne définissez pas à la fois `gateway.auth.token` et `gateway.auth.mode: "trusted-proxy"`
 
 ## Audit de sécurité
 
-`openclaw security audit` signalera l'authentification trusted-proxy avec une découverte de gravité **critique**. C'est intentionnel — c'est un rappel que vous déléguez la sécurité à votre configuration de proxy.
+`openclaw security audit` signalera l'authentification de proxy de confiance avec une constatation de gravité **critique**. C'est intentionnel — c'est un rappel que vous déléguez la sécurité à votre configuration de proxy.
 
 L'audit vérifie :
 
 - Configuration `trustedProxies` manquante
 - Configuration `userHeader` manquante
-- `allowUsers` vide (autorise n'importe quel utilisateur authentifié)
+- `allowUsers` vide (autorise tout utilisateur authentifié)
 
 ## Dépannage
 
 ### "trusted_proxy_untrusted_source"
 
-La demande ne provenait pas d'une adresse IP dans `gateway.trustedProxies`. Vérifiez :
+La requête ne provenait pas d'une adresse IP présente dans `gateway.trustedProxies`. Vérifiez :
 
 - L'adresse IP du proxy est-elle correcte ? (Les adresses IP des conteneurs Docker peuvent changer)
 - Y a-t-il un équilibreur de charge devant votre proxy ?
@@ -294,33 +306,33 @@ L'en-tête utilisateur était vide ou manquant. Vérifiez :
 
 ### "trusted*proxy_missing_header*\*"
 
-Un en-tête requis n'était pas présent. Vérifiez :
+Un en-tête requis était absent. Vérifiez :
 
-- La configuration de votre proxy pour ces en-têtes spécifiques
+- Votre configuration de proxy pour ces en-têtes spécifiques
 - Si les en-têtes sont supprimés quelque part dans la chaîne
 
 ### "trusted_proxy_user_not_allowed"
 
 L'utilisateur est authentifié mais n'est pas dans `allowUsers`. Ajoutez-le ou supprimez la liste d'autorisation.
 
-### Échec persistant de WebSocket
+### Le WebSocket échoue toujours
 
 Assurez-vous que votre proxy :
 
 - Prend en charge les mises à niveau WebSocket (`Upgrade: websocket`, `Connection: upgrade`)
-- Transfère les en-têtes d'identité sur les demandes de mise à niveau WebSocket (pas seulement HTTP)
-- N'a pas de chemin d'authentification distinct pour les connexions WebSocket
+- Transmet les en-têtes d'identité lors des demandes de mise à niveau WebSocket (pas seulement HTTP)
+- Ne possède pas de chemin d'authentification distinct pour les connexions WebSocket
 
 ## Migration depuis l'authentification par jeton
 
-Si vous passez de l'authentification par jeton au proxy de confiance :
+Si vous passez de l'authentification par jeton à trusted-proxy :
 
 1. Configurez votre proxy pour authentifier les utilisateurs et transmettre les en-têtes
-2. Testez la configuration du proxy de manière indépendante (curl avec en-têtes)
-3. Mettez à jour la configuration OpenClaw avec l'authentification trusted-proxy
-4. Redémarrez le Gateway
-5. Testez les connexions WebSocket depuis l'interface de contrôle
-6. Exécutez `openclaw security audit` et examinez les résultats
+2. Test the proxy setup independently (curl with headers)
+3. Update OpenClaw config with trusted-proxy auth
+4. Restart the Gateway
+5. Test WebSocket connections from the Control UI
+6. Exécutez `openclaw security audit` et passez en revue les résultats
 
 ## Connexes
 

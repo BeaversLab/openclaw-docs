@@ -201,9 +201,9 @@ Notas:
 - La ruta de webhook predeterminada es `/googlechat` si no se establece `webhookPath`.
 - `dangerouslyAllowNameMatching` vuelve a habilitar la coincidencia de entidades de email mutables para listas de permitidos (modo de compatibilidad de emergencia).
 - Las reacciones están disponibles a través de la herramienta `reactions` y `channels action` cuando `actions.reactions` está habilitado.
-- Las acciones de mensajes exponen `send` para texto y `upload-file` para envíos explícitos de archivos adjuntos. `upload-file` acepta `media` / `filePath` / `path` más opcionalmente `message`, `filename` y orientación de hilos.
-- `typingIndicator` soporta `none`, `message` (predeterminado) y `reaction` (la reacción requiere OAuth del usuario).
-- Los adjuntos se descargan a través de la API de Chat y se almacenan en la canalización de medios (tamaño limitado por `mediaMaxMb`).
+- Las acciones de mensaje exponen `send` para texto y `upload-file` para envíos explícitos de adjuntos. `upload-file` acepta `media` / `filePath` / `path` más opcionales `message`, `filename`, y orientación de hilos.
+- `typingIndicator` admite `none`, `message` (predeterminado) y `reaction` (reaction requiere OAuth de usuario).
+- Los adjuntos se descargan a través de la API de Chat y se almacenan en la canalización de medios (el tamaño está limitado por `mediaMaxMb`).
 
 Detalles de referencia de secretos: [Gestión de secretos](/en/gateway/secrets).
 
@@ -219,29 +219,29 @@ status code: 405, reason phrase: HTTP error response: HTTP/1.1 405 Method Not Al
 
 Esto significa que el controlador de webhook no está registrado. Causas comunes:
 
-1. **Canal no configurado**: Falta la sección `channels.googlechat` en tu configuración. Verifícalo con:
+1. **Canal no configurado**: Falta la sección `channels.googlechat` en su configuración. Verifíquelo con:
 
    ```bash
    openclaw config get channels.googlechat
    ```
 
-   Si devuelve "Config path not found", añade la configuración (ver [Config highlights](#config-highlights)).
+   Si devuelve "Ruta de configuración no encontrada", agregue la configuración (consulte [Aspectos destacados de la configuración](#config-highlights)).
 
-2. **Plugin no habilitado**: Verifica el estado del plugin:
+2. **Complemento no habilitado**: Verifique el estado del complemento:
 
    ```bash
    openclaw plugins list | grep googlechat
    ```
 
-   Si muestra "disabled", añade `plugins.entries.googlechat.enabled: true` a tu configuración.
+   Si muestra "deshabilitado", agregue `plugins.entries.googlechat.enabled: true` a su configuración.
 
-3. **Gateway no reiniciado**: Después de añadir la configuración, reinicia el gateway:
+3. **Puerta de enlace no reiniciada**: Después de agregar la configuración, reinicie la puerta de enlace:
 
    ```bash
    openclaw gateway restart
    ```
 
-Verifica que el canal se está ejecutando:
+Verifique que el canal se esté ejecutando:
 
 ```bash
 openclaw channels status
@@ -250,13 +250,21 @@ openclaw channels status
 
 ### Otros problemas
 
-- Comprueba `openclaw channels status --probe` para ver si hay errores de autenticación o falta de configuración de audiencia.
-- Si no llegan mensajes, confirma la URL del webhook de la aplicación de Chat y las suscripciones de eventos.
-- Si el bloqueo de menciones impide las respuestas, establece `botUser` en el nombre del recurso de usuario de la aplicación y verifica `requireMention`.
-- Usa `openclaw logs --follow` mientras envías un mensaje de prueba para ver si las solicitudes llegan al gateway.
+- Verifique `openclaw channels status --probe` para ver si hay errores de autenticación o falta de configuración de audiencia.
+- Si no llega ningún mensaje, confirme la URL del webhook de la aplicación de Chat + las suscripciones de eventos.
+- Si el bloqueo de menciones impide las respuestas, configure `botUser` en el nombre del recurso de usuario de la aplicación y verifique `requireMention`.
+- Use `openclaw logs --follow` mientras envía un mensaje de prueba para ver si las solicitudes llegan a la puerta de enlace.
 
-Documentación relacionada:
+Documentos relacionados:
 
-- [Configuración del gateway](/en/gateway/configuration)
+- [Configuración de la puerta de enlace](/en/gateway/configuration)
 - [Seguridad](/en/gateway/security)
 - [Reacciones](/en/tools/reactions)
+
+## Relacionado
+
+- [Resumen de canales](/en/channels) — todos los canales compatibles
+- [Emparejamiento](/en/channels/pairing) — autenticación de MD y flujo de emparejamiento
+- [Grupos](/en/channels/groups) — comportamiento del chat de grupo y control de menciones
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/en/gateway/security) — modelo de acceso y fortalecimiento

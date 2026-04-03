@@ -241,3 +241,9 @@ export default function register(api) {
 
 另请参阅：[Compaction](/en/concepts/compaction)、[Context](/en/concepts/context)、
 [Plugins](/en/tools/plugin)、[Plugin manifest](/en/plugins/manifest)。
+
+## 相关
+
+- [Context](/en/concepts/context) — 如何为代理轮次构建上下文
+- [Plugin Architecture](/en/plugins/architecture) — 注册上下文引擎插件
+- [Compaction](/en/concepts/compaction) — 总结长对话

@@ -107,7 +107,7 @@ Todos los campos son opcionales a menos que se indique lo contrario:
 - `after` (`string`): texto actualizado. Obligatorio con `before` cuando se omite `patch`.
 - `patch` (`string`): texto de diff unificado. Mutuamente excluyente con `before` y `after`.
 - `path` (`string`): nombre de archivo a mostrar para el modo antes y después.
-- `lang` (`string`): sugerencia de anulación de idioma para el modo antes y después.
+- `lang` (`string`): sugerencia de anulación de idioma para el modo antes y después. Los valores desconocidos vuelven al texto sin formato.
 - `title` (`string`): anulación del título del visor.
 - `mode` (`"view" | "file" | "both"`): modo de salida. Por defecto es el predeterminado del complemento `defaults.mode`.
   Alias obsoleto: `"image"` se comporta como `"file"` y aún se acepta por compatibilidad con versiones anteriores.
@@ -281,16 +281,18 @@ Recursos del visor:
 - `/plugins/diffs/assets/viewer.js`
 - `/plugins/diffs/assets/viewer-runtime.js`
 
+El documento del visor resuelve esos activos en relación con la URL del visor, por lo que también se conserva un prefijo de ruta opcional `baseUrl` para ambas solicitudes de activos.
+
 Comportamiento de construcción de URL:
 
-- Si se proporciona `baseUrl`, se usa tras una validación estricta.
-- Sin `baseUrl`, la URL del visor toma por defecto el loopback `127.0.0.1`.
-- Si el modo de enlace de la puerta de enlace es `custom` y está establecido `gateway.customBindHost`, se usa ese host.
+- Si se proporciona `baseUrl`, se usa después de una validación estricta.
+- Sin `baseUrl`, la URL del visor por defecto es loopback `127.0.0.1`.
+- Si el modo de enlace de gateway es `custom` y se establece `gateway.customBindHost`, se usa ese host.
 
 Reglas de `baseUrl`:
 
 - Debe ser `http://` o `https://`.
-- La consulta y el hash son rechazados.
+- Query y hash son rechazados.
 - Se permite el origen más una ruta base opcional.
 
 ## Modelo de seguridad
@@ -298,22 +300,22 @@ Reglas de `baseUrl`:
 Endurecimiento del visor:
 
 - Solo loopback por defecto.
-- Rutas del visor tokenizadas con validación estricta de ID y token.
+- Rutas de visor tokenizadas con validación estricta de ID y token.
 - CSP de respuesta del visor:
   - `default-src 'none'`
-  - scripts y recursos solo de sí mismo (self)
+  - scripts y activos solo de self
   - sin `connect-src` saliente
-- Limitación de fallos remotos cuando el acceso remoto está activado:
+- Limitación de fallos remotos cuando el acceso remoto está habilitado:
   - 40 fallos por 60 segundos
-  - Bloqueo de 60 segundos (`429 Too Many Requests`)
+  - bloqueo de 60 segundos (`429 Too Many Requests`)
 
 Endurecimiento del renderizado de archivos:
 
 - El enrutamiento de solicitudes del navegador de captura de pantalla es de denegación por defecto.
-- Solo se permiten los recursos locales del visor de `http://127.0.0.1/plugins/diffs/assets/*`.
+- Solo se permiten los activos locales del visor de `http://127.0.0.1/plugins/diffs/assets/*`.
 - Las solicitudes de red externas están bloqueadas.
 
-## Requisitos del navegador para el modo archivo
+## Requisitos del navegador para el modo de archivo
 
 `mode: "file"` y `mode: "both"` necesitan un navegador compatible con Chromium.
 
@@ -324,40 +326,40 @@ Orden de resolución:
    - `OPENCLAW_BROWSER_EXECUTABLE_PATH`
    - `BROWSER_EXECUTABLE_PATH`
    - `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`
-3. Respaldo de detección de comandos/rutas de la plataforma.
+3. Respaldo de descubrimiento de comando/ruta de la plataforma.
 
 Texto de fallo común:
 
 - `Diff PNG/PDF rendering requires a Chromium-compatible browser...`
 
-Solución: instala Chrome, Chromium, Edge o Brave, o establece una de las opciones de ruta ejecutable anteriores.
+Solución instalando Chrome, Chromium, Edge o Brave, o estableciendo una de las opciones de ruta ejecutable anteriores.
 
 ## Solución de problemas
 
 Errores de validación de entrada:
 
 - `Provide patch or both before and after text.`
-  - Incluye tanto `before` como `after`, o proporciona `patch`.
+  - Incluya tanto `before` como `after`, o proporcione `patch`.
 - `Provide either patch or before/after input, not both.`
-  - No mezcles modos de entrada.
+  - No mezcle los modos de entrada.
 - `Invalid baseUrl: ...`
-  - Use `http(s)` origin con ruta opcional, sin consulta/hash.
+  - Use el origen `http(s)` con una ruta opcional, sin consulta/hash.
 - `{field} exceeds maximum size (...)`
-  - Reduce el tamaño del payload.
-- Rechazo de parches grandes
-  - Reduce la cantidad de archivos de parche o el total de líneas.
+  - Reduzca el tamaño de la carga útil.
+- Rechazo de parche grande
+  - Reduzca el recuento de archivos de parche o el total de líneas.
 
 Problemas de accesibilidad del visor:
 
 - La URL del visor se resuelve a `127.0.0.1` de forma predeterminada.
 - Para escenarios de acceso remoto, ya sea:
-  - pasa `baseUrl` por cada llamada a la herramienta, o
-  - usa `gateway.bind=custom` y `gateway.customBindHost`
-- Habilita `security.allowRemoteViewer` solo cuando tengas previsto el acceso externo al visor.
+  - pase `baseUrl` por llamada a la herramienta, o
+  - use `gateway.bind=custom` y `gateway.customBindHost`
+- Habilite `security.allowRemoteViewer` solo cuando pretenda acceso externo al visor.
 
-La fila de líneas no modificadas no tiene botón de expandir:
+La fila de líneas sin modificar no tiene botón de expandir:
 
-- Esto puede suceder para la entrada de parche cuando el parche no lleva contexto expandible.
+- Esto puede ocurrir para la entrada de parche cuando el parche no lleva contexto expandible.
 - Esto es esperado y no indica un fallo del visor.
 
 Artefacto no encontrado:
@@ -368,19 +370,19 @@ Artefacto no encontrado:
 
 ## Guía operacional
 
-- Prefiere `mode: "view"` para revisiones interactivas locales en el lienzo.
-- Prefiere `mode: "file"` para canales de chat salientes que necesiten un adjunto.
-- Mantén `allowRemoteViewer` deshabilitado a menos que tu despliegue requiera URLs de visor remotas.
-- Establece un `ttlSeconds` corto explícito para diffs sensibles.
-- Evita enviar secretos en la entrada de diff cuando no sea necesario.
-- Si tu canal comprime las imágenes de forma agresiva (por ejemplo, Telegram o WhatsApp), prefiere la salida en PDF (`fileFormat: "pdf"`).
+- Prefiera `mode: "view"` para revisiones interactivas locales en el lienzo.
+- Prefiera `mode: "file"` para canales de chat salientes que necesitan un archivo adjunto.
+- Mantenga `allowRemoteViewer` deshabilitado a menos que su implementación requiera URLs de visor remoto.
+- Establezca un `ttlSeconds` corto explícito para diffs sensibles.
+- Evite enviar secretos en la entrada de diff cuando no sea necesario.
+- Si su canal comprime las imágenes de forma agresiva (por ejemplo, Telegram o WhatsApp), prefiera la salida PDF (`fileFormat: "pdf"`).
 
-Motor de renderizado de Diff:
+Motor de renderizado de diff:
 
-- Impulsado por [Diffs](https://diffs.com).
+- Funciona con [Diffs](https://diffs.com).
 
 ## Documentos relacionados
 
-- [Resumen de herramientas](/en/tools)
-- [Plugins](/en/tools/plugin)
+- [Descripción general de herramientas](/en/tools)
+- [Complementos](/en/tools/plugin)
 - [Navegador](/en/tools/browser)

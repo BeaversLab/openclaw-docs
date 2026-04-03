@@ -29,7 +29,7 @@ registra un backend predeterminado):
 openclaw agent --message "hi" --model claude-cli/opus-4.6
 ```
 
-Codex CLI también funciona de inmediato (a través del complemento OpenAI incluido):
+Codex CLI también funciona directamente (a través del complemento OpenAI incluido):
 
 ```bash
 openclaw agent --message "hi" --model codex-cli/gpt-5.4
@@ -54,14 +54,14 @@ ruta del comando:
 
 Eso es todo. No se necesitan claves ni configuración de autenticación extra más allá de la propia CLI.
 
-Si usas un backend CLI incluido como el **proveedor principal de mensajes** en un
+Si usas un backend CLI incluido como el **proveedor de mensajes principal** en un
 host de gateway, OpenClaw ahora carga automáticamente el complemento incluido propietario cuando tu configuración
-hace referencia explícita a ese backend en una referencia de modelo o debajo de
+hace referencia explícita a ese backend en una referencia de modelo o en
 `agents.defaults.cliBackends`.
 
-## Uso como alternativa
+## Uso como alternativa (fallback)
 
-Añade un backend CLI a tu lista de alternativas para que solo se ejecute cuando los modelos principales fallen:
+Agrega un backend CLI a tu lista de alternativas para que solo se ejecute cuando fallen los modelos principales:
 
 ```json5
 {
@@ -84,25 +84,25 @@ Añade un backend CLI a tu lista de alternativas para que solo se ejecute cuando
 Notas:
 
 - Si usas `agents.defaults.models` (lista de permitidos), debes incluir `claude-cli/...`.
-- Si el proveedor principal falla (autenticación, límites de velocidad, tiempos de espera), OpenClaw
-  intentará el backend CLI a continuación.
+- Si el proveedor principal falla (autenticación, límites de tasa, tiempos de espera), OpenClaw
+  intentará con el backend CLI a continuación.
 
 ## Resumen de configuración
 
-Todos los backends CLI se encuentran en:
+Todos los backends CLI residen en:
 
 ```
 agents.defaults.cliBackends
 ```
 
 Cada entrada está claveada por un **id de proveedor** (p. ej. `claude-cli`, `my-cli`).
-El id del proveedor se convierte en el lado izquierdo de tu referencia de modelo:
+El id de proveedor se convierte en el lado izquierdo de tu referencia de modelo:
 
 ```
 <provider>/<model>
 ```
 
-### Configuración de ejemplo
+### Ejemplo de configuración
 
 ```json5
 {
@@ -119,7 +119,6 @@ El id del proveedor se convierte en el lado izquierdo de tu referencia de modelo
           input: "arg",
           modelArg: "--model",
           modelAliases: {
-            "claude-opus-4-6": "opus",
             "claude-opus-4-6": "opus",
             "claude-sonnet-4-6": "sonnet",
           },
@@ -142,53 +141,49 @@ El id del proveedor se convierte en el lado izquierdo de tu referencia de modelo
 
 1. **Selecciona un backend** basándose en el prefijo del proveedor (`claude-cli/...`).
 2. **Construye un prompt del sistema** usando el mismo prompt de OpenClaw + contexto del espacio de trabajo.
-3. **Ejecuta el CLI** con un id de sesión (si es compatible) para que el historial se mantenga consistente.
-4. **Analiza la salida** (JSON o texto plano) y devuelve el texto final.
-5. **Persiste los ids de sesión** por backend, para que las continuaciones reutilicen la misma sesión CLI.
+3. **Ejecuta el CLI** con un id de sesión (si es compatible) para que el historial se mantenga coherente.
+4. **Analiza la salida** (JSON o texto sin formato) y devuelve el texto final.
+5. **Persiste los ids de sesión** por backend, para que las seguimientos reutilicen la misma sesión CLI.
 
 ## Sesiones
 
-- Si la CLI admite sesiones, configure `sessionArg` (p. ej., `--session-id`) o
-  `sessionArgs` (marcador de posición `{sessionId}`) cuando el ID deba insertarse
-  en múltiples indicadores.
-- Si la CLI utiliza un **subcomando de reanudación** con diferentes indicadores, configure
+- Si el CLI admite sesiones, establece `sessionArg` (p. ej. `--session-id`) o
+  `sessionArgs` (marcador de posición `{sessionId}`) cuando el ID necesita ser insertado
+  en múltiples banderas.
+- Si el CLI usa un **subcomando de reanudación** con diferentes banderas, establece
   `resumeArgs` (reemplaza `args` al reanudar) y opcionalmente `resumeOutput`
   (para reanudaciones que no son JSON).
 - `sessionMode`:
-  - `always`: enviar siempre un id de sesión (nuevo UUID si no hay ninguno almacenado).
-  - `existing`: enviar un id de sesión solo si se almacenó uno anteriormente.
+  - `always`: siempre enviar un id de sesión (nuevo UUID si no hay ninguno almacenado).
+  - `existing`: solo enviar un id de sesión si se almacenó uno anteriormente.
   - `none`: nunca enviar un id de sesión.
 
-## Imágenes (passthrough)
+## Imágenes (pass-through)
 
-Si su CLI acepta rutas de imágenes, configure `imageArg`:
+Si tu CLI acepta rutas de imagen, establece `imageArg`:
 
 ```json5
 imageArg: "--image",
 imageMode: "repeat"
 ```
 
-OpenClaw escribirá imágenes base64 en archivos temporales. Si `imageArg` está configurado, esas
-rutas se pasan como argumentos de CLI. Si `imageArg` falta, OpenClaw añade las
-rutas de archivo al mensaje (inyección de ruta), lo cual es suficiente para las CLIs que cargan
-automáticamente archivos locales desde rutas simples (comportamiento de Claude Code CLI).
+OpenClaw escribirá imágenes base64 en archivos temporales. Si `imageArg` está establecido, esas rutas se pasan como argumentos de CLI. Si `imageArg` falta, OpenClaw añade las rutas de archivo al prompt (inyección de ruta), lo cual es suficiente para CLIs que cargan automáticamente archivos locales desde rutas simples (comportamiento de Claude Code CLI).
 
 ## Entradas / salidas
 
 - `output: "json"` (predeterminado) intenta analizar JSON y extraer texto + id de sesión.
-- `output: "jsonl"` analiza flujos JSONL (Codex CLI `--json`) y extrae el
-  último mensaje del agente más `thread_id` cuando está presente.
+- `output: "jsonl"` analiza flujos JSONL (Codex CLI `--json`) y extrae el último mensaje del agente más `thread_id` cuando está presente.
 - `output: "text"` trata stdout como la respuesta final.
 
 Modos de entrada:
 
-- `input: "arg"` (predeterminado) pasa el prompt como el último argumento de la CLI.
+- `input: "arg"` (predeterminado) pasa el prompt como el último argumento de CLI.
 - `input: "stdin"` envía el prompt a través de stdin.
-- Si el prompt es muy largo y `maxPromptArgChars` está configurado, se usa stdin.
+- Si el prompt es muy largo y `maxPromptArgChars` está establecido, se usa stdin.
 
-## Valores predeterminados (propiedad del complemento)
+## Valores predeterminados (propiedad del plugin)
 
-El complemento Anthropic incluido registra un valor predeterminado para `claude-cli`:
+El plugin Anthropic incluido registra un valor predeterminado para `claude-cli`:
 
 - `command: "claude"`
 - `args: ["-p", "--output-format", "json", "--permission-mode", "bypassPermissions"]`
@@ -199,7 +194,7 @@ El complemento Anthropic incluido registra un valor predeterminado para `claude-
 - `systemPromptWhen: "first"`
 - `sessionMode: "always"`
 
-El complemento OpenAI incluido también registra un valor predeterminado para `codex-cli`:
+El plugin OpenAI incluido también registra un valor predeterminado para `codex-cli`:
 
 - `command: "codex"`
 - `args: ["exec","--json","--color","never","--sandbox","workspace-write","--skip-git-repo-check"]`
@@ -210,7 +205,7 @@ El complemento OpenAI incluido también registra un valor predeterminado para `c
 - `imageArg: "--image"`
 - `sessionMode: "existing"`
 
-El complemento Google incluido también registra un valor predeterminado para `google-gemini-cli`:
+El plugin Google incluido también registra un valor predeterminado para `google-gemini-cli`:
 
 - `command: "gemini"`
 - `args: ["--prompt", "--output-format", "json"]`
@@ -219,32 +214,32 @@ El complemento Google incluido también registra un valor predeterminado para `g
 - `sessionMode: "existing"`
 - `sessionIdFields: ["session_id", "sessionId"]`
 
-Anular solo si es necesario (común: ruta absoluta de `command`).
+Anule solo si es necesario (común: ruta absoluta de `command`).
 
-## Valores predeterminados propiedad del complemento
+## Valores predeterminados propiedad del plugin
 
-Los valores predeterminados del backend de CLI ahora son parte de la superficie del complemento:
+Los valores predeterminados del backend de CLI ahora forman parte de la superficie del plugin:
 
-- Los complementos los registran con `api.registerCliBackend(...)`.
+- Los plugins los registran con `api.registerCliBackend(...)`.
 - El backend `id` se convierte en el prefijo del proveedor en las referencias de modelos.
 - La configuración del usuario en `agents.defaults.cliBackends.<id>` todavía anula el valor predeterminado del complemento.
-- La limpieza de configuración específica del backend permanece propiedad del complemento a través del enlace opcional
+- La limpieza de la configuración específica del backend sigue siendo propiedad del complemento a través del gancho opcional
   `normalizeConfig`.
 
 ## Limitaciones
 
-- **Sin herramientas de OpenClaw** (el backend de CLI nunca recibe llamadas a herramientas). Algunas CLI
+- **Sin herramientas de OpenClaw** (el backend CLI nunca recibe llamadas a herramientas). Algunas CLIs
   aún pueden ejecutar sus propias herramientas de agente.
 - **Sin transmisión** (la salida de la CLI se recopila y luego se devuelve).
 - **Las salidas estructuradas** dependen del formato JSON de la CLI.
-- **Las sesiones de CLI de Codex** se reanudan a través de la salida de texto (sin JSONL), lo cual es menos
-  estructurado que la ejecución inicial `--json`. Las sesiones de OpenClaw aún funcionan
-  normalmente.
+- **Las sesiones de Codex CLI** se reanudan mediante salida de texto (sin JSONL), lo cual es menos
+  estructurado que la ejecución inicial `--json`. Las sesiones de OpenClaw siguen funcionando
+  con normalidad.
 
 ## Solución de problemas
 
-- **CLI no encontrado**: establezca `command` en una ruta completa.
-- **Nombre de modelo incorrecto**: use `modelAliases` para mapear `provider/model` → modelo CLI.
+- **CLI no encontrada**: establezca `command` en una ruta completa.
+- **Nombre de modelo incorrecto**: use `modelAliases` para asignar `provider/model` → modelo de CLI.
 - **Sin continuidad de sesión**: asegúrese de que `sessionArg` esté configurado y `sessionMode` no sea
   `none` (Codex CLI actualmente no puede reanudar con salida JSON).
-- **Imágenes ignoradas**: configure `imageArg` (y verifique que el CLI sea compatible con rutas de archivo).
+- **Imágenes ignoradas**: establezca `imageArg` (y verifique que la CLI admita rutas de archivo).

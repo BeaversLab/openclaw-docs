@@ -9,7 +9,7 @@ title: "系统"
 
 # `openclaw system`
 
-Gateway 网关 的系统级辅助工具：将系统事件加入队列、控制心跳
+Gateway(网关) 网关 的系统级辅助工具：将系统事件加入队列、控制心跳
 以及查看在线状态。
 
 ## 常用命令
@@ -45,7 +45,7 @@ openclaw system presence
 
 ## `system presence`
 
-列出 Gateway 网关 已知的当前系统在线状态条目（节点、
+列出 Gateway(网关) 网关 已知的当前系统在线状态条目（节点、
 实例和类似的状态行）。
 
 标志：
@@ -54,5 +54,5 @@ openclaw system presence
 
 ## 注意事项
 
-- 需要一个可通过当前配置（本地或远程）访问的运行中的 Gateway 网关。
+- 需要一个可通过当前配置（本地或远程）访问的运行中的 Gateway(网关) 网关。
 - 系统事件是临时的，不会在重启后保留。

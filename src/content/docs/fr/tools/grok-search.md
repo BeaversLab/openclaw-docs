@@ -19,6 +19,22 @@ Pour les métriques de niveau publication sur X telles que les repartages, les r
 `x_search` avec l'URL exacte de la publication ou l'ID de statut au lieu d'une requête de
 recherche large.
 
+## Intégration et configuration
+
+Si vous choisissez **Grok** pendant :
+
+- `openclaw onboard`
+- `openclaw configure --section web`
+
+OpenClaw peut afficher une étape de suivi distincte pour activer `x_search` avec la même
+`XAI_API_KEY`. Cette étape :
+
+- n'apparaît qu'après avoir choisi Grok pour `web_search`
+- n'est pas un choix distinct de fournisseur de recherche web de premier niveau
+- peut éventuellement définir le modèle `x_search` lors du même flux
+
+Si vous l'ignorez, vous pouvez activer ou modifier `x_search` ultérieurement dans la configuration.
+
 ## Obtenir une clé API
 
 <Steps>
@@ -26,7 +42,7 @@ recherche large.
     Obtenez une clé API auprès de [xAI](https://console.x.ai/).
   </Step>
   <Step title="Stocker la clé">
-    Définissez `XAI_API_KEY` dans l'environnement du Gateway ou configurez via :
+    Définissez `XAI_API_KEY` dans l'environnement Gateway, ou configurez via :
 
     ```bash
     openclaw configure --section web
@@ -35,7 +51,7 @@ recherche large.
   </Step>
 </Steps>
 
-## Config
+## Configuration
 
 ```json5
 {
@@ -60,12 +76,13 @@ recherche large.
 }
 ```
 
-**Alternative de l'environnement** : définissez `XAI_API_KEY` dans l'environnement Gateway.
-Pour une installation de gateway, placez-le dans `~/.openclaw/.env`.
+**Alternative d'environnement :** définissez `XAI_API_KEY` dans l'environnement Gateway.
+Pour une installation de passerelle, placez-la dans `~/.openclaw/.env`.
 
-## Comment cela fonctionne
+## Fonctionnement
 
-Grok utilise les réponses d'xAI basées sur le Web pour synthétiser des réponses avec des citations en ligne, similaires à l'approche d'ancrage dans la recherche Google de Gemini.
+Grok utilise les responses basées sur le web d'xAI pour synthétiser des réponses avec des
+citations en ligne, approche similaire au Google Search grounding de Gemini.
 
 ## Paramètres pris en charge
 
@@ -74,6 +91,6 @@ Les filtres spécifiques au fournisseur ne sont actuellement pas pris en charge.
 
 ## Connexes
 
-- [Vue d'ensemble de la recherche Web](/en/tools/web) -- tous les fournisseurs et la détection automatique
-- [x_search dans la recherche Web](/en/tools/web#x_search) -- recherche X de premier plan via xAI
-- [Gemini Search](/en/tools/gemini-search) -- Réponses synthétisées par l'IA via le grounding de Google
+- [Vue d'ensemble de la recherche web](/en/tools/web) -- tous les fournisseurs et la détection automatique
+- [x_search dans la recherche web](/en/tools/web#x_search) -- recherche X de premier plan via xAI
+- [Recherche Gemini](/en/tools/gemini-search) -- réponses synthétisées par IA via Google grounding

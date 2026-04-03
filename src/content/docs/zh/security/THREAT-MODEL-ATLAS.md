@@ -10,19 +10,19 @@ read_when:
 
 ## MITRE ATLAS 框架
 
-**版本：** 1.0-draft
-**最后更新：** 2026-02-04
-**方法论：** MITRE ATLAS + 数据流图
-**框架：** [MITRE ATLAS](https://atlas.mitre.org/) (人工智能系统对抗性威胁全景)
+**Version:** 1.0-draft
+**Last Updated:** 2026-02-04
+**Methodology:** MITRE ATLAS + 数据流图
+**Framework:** [MITRE ATLAS](https://atlas.mitre.org/) (针对人工智能系统的对抗性威胁全景)
 
 ### 框架归属
 
-本威胁模型基于 [MITRE ATLAS](https://atlas.mitre.org/) 构建，它是记录 AI/ML 系统对抗性威胁的行业标准框架。ATLAS 由 [MITRE](https://www.mitre.org/) 与 AI 安全社区共同维护。
+此威胁模型基于 [MITRE ATLAS](https://atlas.mitre.org/) 构建，这是记录 AI/ML 系统对抗性威胁的行业标准框架。ATLAS 由 [MITRE](https://www.mitre.org/) 与 AI 安全社区协作维护。
 
 **关键 ATLAS 资源：**
 
-- [ATLAS 技术 Tactics](https://atlas.mitre.org/techniques/)
-- [ATLAS 战术 Tactics](https://atlas.mitre.org/tactics/)
+- [ATLAS 技术](https://atlas.mitre.org/techniques/)
+- [ATLAS 战术](https://atlas.mitre.org/tactics/)
 - [ATLAS 案例研究](https://atlas.mitre.org/studies/)
 - [ATLAS GitHub](https://github.com/mitre-atlas/atlas-data)
 - [为 ATLAS 做贡献](https://atlas.mitre.org/resources/contribute)
@@ -79,7 +79,7 @@ read_when:
 │                 TRUST BOUNDARY 1: Channel Access                 │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │                      GATEWAY                              │   │
-│  │  • Device Pairing (30s grace period)                      │   │
+│  │  • Device Pairing (1h DM / 5m node grace period)           │   │
 │  │  • AllowFrom / AllowList validation                       │   │
 │  │  • Token/Password/Tailscale auth                          │   │
 │  └──────────────────────────────────────────────────────────┘   │
@@ -177,15 +177,15 @@ read_when:
 
 #### T-ACCESS-001: 配对码拦截
 
-| 属性             | 值                               |
-| ---------------- | -------------------------------- |
-| **ATLAS ID**     | AML.T0040 - AI 模型推断 API 访问 |
-| **描述**         | 攻击者在 30 秒宽限期间拦截配对码 |
-| **攻击向量**     | 肩窥、网络嗅探、社会工程学       |
-| **受影响的组件** | 设备配对系统                     |
-| **当前缓解措施** | 30 秒过期，通过现有渠道发送代码  |
-| **剩余风险**     | 中等 - 宽限期可被利用            |
-| **建议**         | 缩短宽限期，添加确认步骤         |
+| 属性             | 值                                                                           |
+| ---------------- | ---------------------------------------------------------------------------- |
+| **ATLAS ID**     | AML.T0040 - AI 模型推断 API 访问                                             |
+| **描述**         | 攻击者在配对宽限期（私信渠道配对为 1 小时，节点配对为 5 分钟）内截获配对代码 |
+| **攻击向量**     | 肩窥、网络嗅探、社会工程学                                                   |
+| **受影响的组件** | 设备配对系统                                                                 |
+| **当前缓解措施** | 1 小时过期（私信配对）/ 5 分钟过期（节点配对），代码通过现有渠道发送         |
+| **剩余风险**     | 中等 - 宽限期可被利用                                                        |
+| **建议**         | 缩短宽限期，添加确认步骤                                                     |
 
 #### T-ACCESS-002: AllowFrom 欺骗
 
@@ -582,30 +582,27 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 
 ### 7.2 关键安全文件
 
-| 路径                                | 用途                   | 风险等级 |
-| ----------------------------------- | ---------------------- | -------- |
-| `src/infra/exec-approvals.ts`       | 命令批准逻辑           | **严重** |
-| `src/gateway/auth.ts`               | Gateway(网关) 身份验证 | **严重** |
-| `src/web/inbound/access-control.ts` | 通道访问控制           | **严重** |
-| `src/infra/net/ssrf.ts`             | SSRF 防护              | **严重** |
-| `src/security/external-content.ts`  | 提示词注入缓解         | **严重** |
-| `src/agents/sandbox/tool-policy.ts` | 工具策略执行           | **严重** |
-| `convex/lib/moderation.ts`          | ClawHub 审核机制       | **高**   |
-| `convex/lib/skillPublish.ts`        | Skill 发布流程         | **高**   |
-| `src/routing/resolve-route.ts`      | 会话隔离               | **中**   |
+| 路径                                | 用途                   | 风险等级   |
+| ----------------------------------- | ---------------------- | ---------- |
+| `src/infra/exec-approvals.ts`       | 命令批准逻辑           | **严重**   |
+| `src/gateway/auth.ts`               | Gateway(网关) 身份验证 | **严重**   |
+| `src/infra/net/ssrf.ts`             | SSRF 防护              | **严重**   |
+| `src/security/external-content.ts`  | 提示注入缓解           | **严重**   |
+| `src/agents/sandbox/tool-policy.ts` | 工具策略执行           | **严重**   |
+| `src/routing/resolve-route.ts`      | 会话隔离               | **Medium** |
 
 ### 7.3 术语表
 
-| 术语              | 定义                                   |
-| ----------------- | -------------------------------------- |
-| **ATLAS**         | MITRE 针对人工智能系统的对抗性威胁全景 |
-| **ClawHub**       | OpenClaw 的技能市场                    |
-| **Gateway(网关)** | OpenClaw 的消息路由和身份验证层        |
-| **MCP**           | 模型上下文协议 - 工具提供商接口        |
-| **提示词注入**    | 一种将恶意指令嵌入输入的攻击           |
-| **Skill**         | OpenClaw 代理的可下载扩展              |
-| **SSRF**          | 服务器端请求伪造                       |
+| 术语                 | 定义                                                     |
+| -------------------- | -------------------------------------------------------- |
+| **ATLAS**            | MITRE 的针对人工智能系统的对抗性威胁全景                 |
+| **ClawHub**          | OpenClaw 的技能市场                                      |
+| **Gateway(网关)**    | OpenClaw 的消息路由和认证层                              |
+| **MCP**              | 模型上下文协议 (Model Context Protocol) - 工具提供商接口 |
+| **Prompt Injection** | 在输入中嵌入恶意指令的攻击                               |
+| **Skill**            | OpenClaw 代理的可下载扩展                                |
+| **SSRF**             | 服务器端请求伪造                                         |
 
 ---
 
-_本威胁模型是一份动态文档。请将安全问题报告至 security@openclaw.ai_
+_此威胁模型是一份活文档。请将安全问题报告至 security@openclaw.ai_

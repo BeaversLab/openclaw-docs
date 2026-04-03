@@ -18,11 +18,11 @@ OpenClaw 支持 Perplexity Search API 作为 `web_search` 提供商。
 
 1. 在 [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api) 创建一个 Perplexity 账户
 2. 在控制台中生成 API 密钥
-3. 将密钥存储在配置中，或在 Gateway 环境中设置 `PERPLEXITY_API_KEY`。
+3. 将密钥存储在配置中，或在 Gateway(网关) 环境中设置 `PERPLEXITY_API_KEY`。
 
 ## OpenRouter 兼容性
 
-如果您之前已经使用 OpenRouter 进行 Perplexity Sonar 搜索，请保留 `provider: "perplexity"` 并在 Gateway 环境中设置 `OPENROUTER_API_KEY`，或者在 `plugins.entries.perplexity.config.webSearch.apiKey` 中存储 `sk-or-...` 密钥。
+如果您之前已经使用 OpenRouter 进行 Perplexity Sonar 搜索，请保留 `provider: "perplexity"` 并在 Gateway(网关) 环境中设置 `OPENROUTER_API_KEY`，或者在 `plugins.entries.perplexity.config.webSearch.apiKey` 中存储 `sk-or-...` 密钥。
 
 可选兼容性控制：
 

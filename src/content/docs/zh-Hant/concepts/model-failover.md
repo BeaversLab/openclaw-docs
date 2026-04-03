@@ -23,7 +23,7 @@ OpenClaw 對 API 金鑰和 OAuth 權杖都使用 **驗證設定檔**。
 - 設定 `auth.profiles` / `auth.order` 僅包含 **中繼資料 + 路由** (不包含機密資料)。
 - 舊版僅供匯入的 OAuth 檔案： `~/.openclaw/credentials/oauth.json` (首次使用時會匯入 `auth-profiles.json`)。
 
-更多細節： [/concepts/oauth](/en/concepts/oauth)
+更多詳情：[/concepts/oauth](/en/concepts/oauth)
 
 憑證類型：
 
@@ -128,24 +128,31 @@ OpenAI 相容的停止原因錯誤，例如 `Unhandled stop reason: error`、
 
 - 帳務退避始於 **5 小時**，每次帳務失敗加倍，上限為 **24 小時**。
 - 如果設定檔在 **24 小時** 內未發生失敗（可設定），退避計數器會重置。
+- 過載重試允許在模型回退之前進行 **1 次同供應商設定檔輪換**。
+- 過載重試預設使用 **0 毫秒退避 (0 ms backoff)**。
 
-## 模型備援
+## 模型回退
 
-如果提供者的所有設定檔都失敗，OpenClaw 會移至
-`agents.defaults.model.fallbacks` 中的下一個模型。這適用於已用盡設定檔輪替的驗證失敗、速率限制和
-逾時（其他錯誤不會推進備援）。
+如果某個供應商的所有設定檔都失敗，OpenClaw 將移至
+`agents.defaults.model.fallbacks` 中的下一個模型。這適用於設定檔輪換已耗盡的驗證失敗、速率限制和超時（其他錯誤不會觸發回退）。
 
-當執行以模型覆寫（hooks 或 CLI）啟動時，在嘗試任何設定的備援後，備援最終仍會在
-`agents.defaults.model.primary` 結束。
+過載和速率限制錯誤的處理比帳單冷卻更積極。預設情況下，OpenClaw 允許一次同供應商驗證設定檔重試，然後立即切換到下一個配置的模型回退，無需等待。您可以透過 `auth.cooldowns.overloadedProfileRotations`、
+`auth.cooldowns.overloadedBackoffMs` 和
+`auth.cooldowns.rateLimitedProfileRotations` 進行調整。
 
-## 相關設定
+當執行以模型覆寫 (hooks 或 CLI) 開始時，在嘗試任何配置的回退後，回退仍會結束於
+`agents.defaults.model.primary`。
 
-請參閱 [Gateway configuration](/en/gateway/configuration) 以取得：
+## 相關配置
+
+請參閱 [Gateway configuration](/en/gateway/configuration) 以了解：
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
 - `auth.cooldowns.billingMaxHours` / `auth.cooldowns.failureWindowHours`
+- `auth.cooldowns.overloadedProfileRotations` / `auth.cooldowns.overloadedBackoffMs`
+- `auth.cooldowns.rateLimitedProfileRotations`
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
 - `agents.defaults.imageModel` 路由
 
-請參閱 [Models](/en/concepts/models) 以取得更廣泛的模型選擇和備援概覽。
+請參閱 [Models](/en/concepts/models) 以了解更廣泛的模型選擇和回退概述。

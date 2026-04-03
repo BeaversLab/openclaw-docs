@@ -10,7 +10,7 @@ sidebarTitle: "Añadir capacidades"
 
 # Añadir capacidades
 
-<Info>Esta es una **guía para colaboradores** para desarrolladores principales de OpenClaw. Si está construyendo un complemento externo, consulte [Construcción de complementos](/en/plugins/building-plugins) en su lugar.</Info>
+<Info>Esta es una **guía para colaboradores** para los desarrolladores principales de OpenClaw. Si está creando un complemento externo, consulte [Construcción de complementos](/en/plugins/building-plugins) en su lugar.</Info>
 
 Use esto cuando OpenClaw necesite un nuevo dominio como generación de imágenes, generación
 de video o alguna área de características futura respaldada por un proveedor.
@@ -81,7 +81,7 @@ Para una nueva capacidad, espere tocar estas áreas:
 - `src/plugins/runtime/index.ts`
 - `src/plugin-sdk/<capability>.ts`
 - `src/plugin-sdk/<capability>-runtime.ts`
-- uno o más `extensions/<vendor>/...`
+- uno o más paquetes de complementos incluidos
 - config/docs/tests
 
 ## Ejemplo: generación de imágenes

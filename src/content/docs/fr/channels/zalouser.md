@@ -17,7 +17,7 @@ Statut : expérimental. Cette intégration automatise un **compte personnel Zalo
 Zalo Personnel est fourni sous forme de plugin et n'est pas inclus avec l'installation principale.
 
 - Installer via le CLI : `openclaw plugins install @openclaw/zalouser`
-- Ou depuis une extraction des sources : `openclaw plugins install ./extensions/zalouser`
+- Ou depuis une extraction des sources : `openclaw plugins install ./path/to/local/zalouser-plugin`
 - Détails : [Plugins](/en/tools/plugin)
 
 Aucun binaire externe `zca`/`openzca` CLI n'est requis.
@@ -179,3 +179,11 @@ Les comptes correspondent aux profils `zalouser` dans l'état de OpenClaw. Exemp
 
 - Supprimez toutes les anciennes hypothèses de processus externe `zca`.
 - Le channel fonctionne désormais entièrement dans OpenClaw sans binaires CLI externes.
+
+## Connexes
+
+- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
+- [Appairage](/en/channels/pairing) — authentification par DM et flux d'appairage
+- [Groupes](/en/channels/groups) — comportement de chat de groupe et filtrage par mention
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

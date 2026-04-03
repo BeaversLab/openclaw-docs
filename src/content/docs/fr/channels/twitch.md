@@ -22,7 +22,7 @@ openclaw plugins install @openclaw/twitch
 Extraction locale (lors de l'exécution depuis un dépôt git) :
 
 ```bash
-openclaw plugins install ./extensions/twitch
+openclaw plugins install ./path/to/local/twitch-plugin
 ```
 
 Détails : [Plugins](/en/tools/plugin)
@@ -34,7 +34,7 @@ Détails : [Plugins](/en/tools/plugin)
    - Sélectionnez **Bot Token**
    - Vérifiez que les scopes `chat:read` et `chat:write` sont sélectionnés
    - Copiez le **Client ID** et le **Access Token**
-3. Trouvez votre ID utilisateur Twitch : [https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)
+3. Trouvez votre identifiant utilisateur Twitch : [https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)
 4. Configurez le token :
    - Env : `OPENCLAW_TWITCH_ACCESS_TOKEN=...` (compte par défaut uniquement)
    - Ou config : `channels.twitch.accessToken`
@@ -123,13 +123,13 @@ Privilégiez `allowFrom` pour une liste d'autorisation stricte. Utilisez plutôt
 
 **Pourquoi les IDs utilisateur ?** Les noms d'utilisateur peuvent changer, ce qui permet l'usurpation d'identité. Les IDs utilisateur sont permanents.
 
-Trouvez votre ID d'utilisateur Twitch : [https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/) (Convertissez votre nom d'utilisateur Twitch en ID)
+Trouvez votre identifiant utilisateur Twitch : [https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/) (Convertissez votre nom d'utilisateur Twitch en ID)
 
 ## Actualisation du jeton (optionnelle)
 
-Les jetons du [Générateur de jetons Twitch](https://twitchtokengenerator.com/) ne peuvent pas être actualisés automatiquement - régénérez-les une fois expirés.
+Les jetons de [Twitch Token Generator](https://twitchtokengenerator.com/) ne peuvent pas être actualisés automatiquement - régénérez-los lorsqu'ils expirent.
 
-Pour une actualisation automatique du jeton, créez votre propre application Twitch sur la [Console de développeur Twitch](https://dev.twitch.tv/console) et ajoutez-la à la configuration :
+Pour une actualisation automatique du jeton, créez votre propre application Twitch sur [Twitch Developer Console](https://dev.twitch.tv/console) et ajoutez-la à la configuration :
 
 ```json5
 {
@@ -377,3 +377,11 @@ Exemple :
 - **500 caractères** par message (découpé automatiquement aux limites des mots)
 - Le Markdown est supprimé avant le découpage
 - Aucune limitation de débit (utilise les limitations de débit intégrées de Twitch)
+
+## Connexes
+
+- [Aperçu des canaux](/en/channels) — tous les canaux pris en charge
+- [Appairage](/en/channels/pairing) — flux d'authentification et d'appairage par DM
+- [Groupes](/en/channels/groups) — comportement de chat de groupe et filtrage des mentions
+- [Routage des canaux](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

@@ -32,3 +32,5 @@ openclaw skills check
 ```
 
 `search`/`install`/`update` usan ClawHub directamente e instalan en el directorio del espacio de trabajo activo `skills/`. `list`/`info`/`check` todavía inspeccionan las habilidades locales visibles para el espacio de trabajo y la configuración actuales.
+
+Este comando `install` de la CLI descarga carpetas de habilidades de ClawHub. Las instalaciones de dependencias de habilidades respaldadas por Gateway y activadas desde la incorporación o la configuración de Habilidades utilizan la ruta de solicitud `skills.install` separada en su lugar.

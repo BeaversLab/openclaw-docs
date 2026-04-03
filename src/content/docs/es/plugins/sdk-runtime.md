@@ -13,7 +13,7 @@ read_when:
 Referencia del objeto `api.runtime` inyectado en cada complemento durante
 el registro. Utilice estos auxiliares en lugar de importar directamente los internos del host.
 
-<Tip>**¿Buscas un tutorial?** Consulta [Complementos de canal](/en/plugins/sdk-channel-plugins) o [Complementos de proveedor](/en/plugins/sdk-provider-plugins) para obtener guías paso a paso que muestren estos ayudantes en contexto.</Tip>
+<Tip>**¿Buscas un tutorial?** Consulta [Complementos de canal](/en/plugins/sdk-channel-plugins) o [Complementos de proveedor](/en/plugins/sdk-provider-plugins) para obtener guías paso a paso que muestran estos ayudantes en contexto.</Tip>
 
 ```typescript
 register(api) {
@@ -330,11 +330,11 @@ Más allá de `api.runtime`, el objeto API también proporciona:
 | `api.config`             | `OpenClawConfig`          | Instantánea de la configuración actual                                       |
 | `api.pluginConfig`       | `Record<string, unknown>` | Configuración específica del complemento desde `plugins.entries.<id>.config` |
 | `api.logger`             | `PluginLogger`            | Registrador con ámbito (`debug`, `info`, `warn`, `error`)                    |
-| `api.registrationMode`   | `PluginRegistrationMode`  | `"full"`, `"setup-only"` o `"setup-runtime"`                                 |
+| `api.registrationMode`   | `PluginRegistrationMode`  | `"full"`, `"setup-only"`, `"setup-runtime"` o `"cli-metadata"`               |
 | `api.resolvePath(input)` | `(string) => string`      | Resolver una ruta relativa a la raíz del complemento                         |
 
 ## Relacionado
 
-- [Resumen del SDK](/en/plugins/sdk-overview) -- referencia de subruta
+- [Resumen del SDK](/en/plugins/sdk-overview) -- referencia de subrutas
 - [Puntos de entrada del SDK](/en/plugins/sdk-entrypoints) -- opciones de `definePluginEntry`
-- [Internos del complemento](/en/plugins/architecture) -- modelo de capacidades y registro
+- [Aspectos internos de los complementos](/en/plugins/architecture) -- modelo de capacidades y registro

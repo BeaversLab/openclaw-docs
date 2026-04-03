@@ -28,7 +28,7 @@ pnpm test -- \
   "src/agents/pi-tools*.test.ts" \
   "src/agents/pi-settings.test.ts" \
   "src/agents/pi-tool-definition-adapter*.test.ts" \
-  "src/agents/pi-extensions/**/*.test.ts"
+  "src/agents/pi-hooks/**/*.test.ts"
 ```
 
 Para incluir el ejercicio del proveedor en vivo:
@@ -44,7 +44,7 @@ Esto cubre las principales suites de unidades de Pi:
 - `src/agents/pi-tools*.test.ts`
 - `src/agents/pi-settings.test.ts`
 - `src/agents/pi-tool-definition-adapter.test.ts`
-- `src/agents/pi-extensions/*.test.ts`
+- `src/agents/pi-hooks/*.test.ts`
 
 ## Pruebas manuales
 

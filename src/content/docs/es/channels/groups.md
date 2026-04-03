@@ -1,5 +1,5 @@
 ---
-summary: "Comportamiento del chat grupal en diferentes superficies (WhatsApp/Telegram/Discord/Slack/Signal/iMessage/Microsoft Teams/Zalo)"
+summary: "Comportamiento del chat en grupo en diferentes plataformas (Discord/iMessage/Matrix/Microsoft Teams/Signal/Slack/Telegram/WhatsApp/Zalo)"
 read_when:
   - Changing group chat behavior or mention gating
 title: "Grupos"
@@ -7,7 +7,7 @@ title: "Grupos"
 
 # Grupos
 
-OpenClaw trata los chats de grupo de manera consistente en todas las superficies: WhatsApp, Telegram, Discord, Slack, Signal, iMessage, Microsoft Teams, Zalo.
+OpenClaw trata los chats grupales de manera consistente en todas las plataformas: Discord, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo.
 
 ## Introducción para principiantes (2 minutos)
 
@@ -23,9 +23,9 @@ Traducción: los remitentes en la lista permitida pueden activar OpenClaw mencio
 
 > TL;DR
 >
-> - El **acceso por DM** está controlado por `*.allowFrom`.
-> - El **acceso a grupos** está controlado por `*.groupPolicy` + listas permitidas (`*.groups`, `*.groupAllowFrom`).
-> - La **activación de respuestas** está controlada por el filtrado por menciones (`requireMention`, `/activation`).
+> - El acceso a **DM** está controlado por `*.allowFrom`.
+> - El acceso a **grupos** está controlado por `*.groupPolicy` + listas de permitidos (`*.groups`, `*.groupAllowFrom`).
+> - La activación de **respuestas** está controlada por el filtrado de menciones (`requireMention`, `/activation`).
 
 Flujo rápido (qué sucede con un mensaje de grupo):
 
@@ -54,20 +54,22 @@ Si desea...
 - Los chats directos usan la sesión principal (o por remitente si está configurado).
 - Se omiten los latidos (heartbeats) para las sesiones de grupo.
 
-## Patrón: MDs personales + grupos públicos (agente único)
+<a id="pattern-personal-dms-public-groups-single-agent"></a>
 
-Sí, esto funciona bien si su tráfico “personal” son **MDs** y su tráfico “público” son **grupos**.
+## Patrón: DMs personales + grupos públicos (agente único)
 
-Por qué: en modo de agente único, los MD normalmente llegan a la clave de sesión **principal** (`agent:main:main`), mientras que los grupos siempre usan claves de sesión **no principales** (`agent:main:<channel>:group:<id>`). Si habilita el sandbox con `mode: "non-main"`, esas sesiones de grupo se ejecutan en Docker mientras que su sesión principal de MD se mantiene en el host.
+Sí: esto funciona bien si su tráfico “personal” son **DMs** y su tráfico “público” son **grupos**.
+
+Por qué: en modo de agente único, las DMs generalmente llegan a la clave de sesión **principal** (`agent:main:main`), mientras que los grupos siempre usan claves de sesión **no principales** (`agent:main:<channel>:group:<id>`). Si habilita el sandbox con `mode: "non-main"`, esas sesiones de grupo se ejecutan en Docker mientras su sesión principal de DMs permanece en el host.
 
 Esto le da un “cerebro” de agente (espacio de trabajo compartido + memoria), pero dos posturas de ejecución:
 
-- **MD**: herramientas completas (host)
+- **DMs**: herramientas completas (host)
 - **Grupos**: sandbox + herramientas restringidas (Docker)
 
-> Si necesita espacios de trabajo/personas realmente separados (lo “personal” y lo “público” nunca deben mezclarse), use un segundo agente + enlaces. Consulte [Enrutamiento multiagente](/en/concepts/multi-agent).
+> Si necesita espacios de trabajo/personas verdaderamente separados (“personal” y “público” nunca deben mezclarse), use un segundo agente + enlaces. Consulte [Enrutamiento multiagente](/en/concepts/multi-agent).
 
-Ejemplo (MD en el host, grupos en sandbox y solo herramientas de mensajería):
+Ejemplo (DMs en el host, grupos en sandbox + herramientas de solo mensajería):
 
 ```json5
 {
@@ -116,14 +118,14 @@ Ejemplo (MD en el host, grupos en sandbox y solo herramientas de mensajería):
 
 Relacionado:
 
-- Claves de configuración y valores predeterminados: [Configuración de puerta de enlace](/en/gateway/configuration-reference#agentsdefaultssandbox)
-- Depuración de por qué una herramienta está bloqueada: [Sandbox vs Política de herramientas vs Elevado](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Detalles de montajes de enlace (bind mounts): [Sandboxing](/en/gateway/sandboxing#custom-bind-mounts)
+- Claves y valores predeterminados de configuración: [Gateway configuration](/en/gateway/configuration-reference#agentsdefaultssandbox)
+- Depuración de por qué se bloquea una herramienta: [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
+- Detalles de los bind mounts: [Sandboxing](/en/gateway/sandboxing#custom-bind-mounts)
 
 ## Etiquetas de visualización
 
 - Las etiquetas de la interfaz de usuario usan `displayName` cuando están disponibles, formateadas como `<channel>:<token>`.
-- `#room` está reservado para salas/canales; los chats grupales usan `g-<slug>` (minúsculas, espacios -> `-`, mantener `#@+._-`).
+- `#room` está reservado para salas/canales; los chats de grupo usan `g-<slug>` (minúsculas, espacios -> `-`, conservar `#@+._-`).
 
 ## Política de grupo
 
@@ -174,36 +176,36 @@ Controle cómo se manejan los mensajes de grupos/salas por canal:
 }
 ```
 
-| Política      | Comportamiento                                                                      |
-| ------------- | ----------------------------------------------------------------------------------- |
-| `"open"`      | Los grupos omiten las listas de permitidos; el filtrado de menciones aún se aplica. |
-| `"disabled"`  | Bloquear todos los mensajes de grupos por completo.                                 |
-| `"allowlist"` | Permitir solo grupos/salas que coincidan con la lista de permitidos configurada.    |
+| Política      | Comportamiento                                                                                   |
+| ------------- | ------------------------------------------------------------------------------------------------ |
+| `"open"`      | Los grupos omiten las listas de permitidos (allowlists); el filtrado de menciones aún se aplica. |
+| `"disabled"`  | Bloquear todos los mensajes de grupos por completo.                                              |
+| `"allowlist"` | Permitir solo los grupos/salas que coincidan con la lista de permitidos configurada.             |
 
 Notas:
 
-- `groupPolicy` está separado del filtrado de menciones (que requiere @menciones).
+- `groupPolicy` es independiente del filtrado de menciones (que requiere @menciones).
 - WhatsApp/Telegram/Signal/iMessage/Microsoft Teams/Zalo: use `groupAllowFrom` (alternativa: `allowFrom` explícito).
-- Las aprobaciones de emparejamiento de MD (`*-allowFrom` store entries) se aplican solo al acceso MD; la autorización del remitente del grupo permanece explícita en las listas de permitidos del grupo.
+- Las aprobaciones de emparejamiento de DM (entradas de la tienda `*-allowFrom`) se aplican solo al acceso por DM; la autorización del remitente del grupo permanece explícita en las listas de permitidos del grupo.
 - Discord: la lista de permitidos usa `channels.discord.guilds.<id>.channels`.
 - Slack: la lista de permitidos usa `channels.slack.channels`.
-- Matrix: la lista de permitidos usa `channels.matrix.groups` (IDs de sala, alias o nombres). Use `channels.matrix.groupAllowFrom` para restringir los remitentes; también se admiten listas de permitidos `users` por sala.
-- Los MD de grupo se controlan por separado (`channels.discord.dm.*`, `channels.slack.dm.*`).
+- Matrix: la lista de permitidos usa `channels.matrix.groups`. Se prefieren los IDs o alias de sala; la búsqueda por nombre de sala unida es de mejor esfuerzo posible y los nombres no resueltos se ignoran en tiempo de ejecución. Use `channels.matrix.groupAllowFrom` para restringir remitentes; las listas de permitidas `users` por sala también son compatibles.
+- Los DMs de grupo se controlan por separado (`channels.discord.dm.*`, `channels.slack.dm.*`).
 - La lista de permitidos de Telegram puede coincidir con IDs de usuario (`"123456789"`, `"telegram:123456789"`, `"tg:123456789"`) o nombres de usuario (`"@alice"` o `"alice"`); los prefijos no distinguen entre mayúsculas y minúsculas.
-- El valor predeterminado es `groupPolicy: "allowlist"`; si su lista de permitidos de grupo está vacía, los mensajes de grupo están bloqueados.
-- Seguridad en tiempo de ejecución: cuando falta completamente un bloque de proveedor (`channels.<provider>` ausente), la política de grupo recurre a un modo de falla cerrada (típicamente `allowlist`) en lugar de heredar `channels.defaults.groupPolicy`.
+- El valor predeterminado es `groupPolicy: "allowlist"`; si su lista de permitidos de grupos está vacía, los mensajes de grupo se bloquean.
+- Seguridad en tiempo de ejecución: cuando falta completamente un bloque de proveedor (`channels.<provider>` ausente), la política de grupos recurre a un modo de fallo cerrado (típicamente `allowlist`) en lugar de heredar `channels.defaults.groupPolicy`.
 
 Modelo mental rápido (orden de evaluación para mensajes de grupo):
 
 1. `groupPolicy` (abierto/desactivado/lista de permitidos)
 2. listas de permitidos de grupo (`*.groups`, `*.groupAllowFrom`, lista de permitidos específica del canal)
-3. filtrado de menciones (`requireMention`, `/activation`)
+3. filtro de menciones (`requireMention`, `/activation`)
 
-## Filtrado de menciones (predeterminado)
+## Filtro de menciones (predeterminado)
 
-Los mensajes de grupo requieren una mención a menos que se anulen por grupo. Los valores predeterminados residen por subsistema bajo `*.groups."*"`.
+Los mensajes de grupo requieren una mención a menos que se anule por grupo. Los valores predeterminados residen por subsistema bajo `*.groups."*"`.
 
-Responder a un mensaje de bot cuenta como una mención implícita (cuando el canal admite metadatos de respuesta). Esto se aplica a Telegram, WhatsApp, Slack, Discord y Microsoft Teams.
+Responder a un mensaje del bot cuenta como una mención implícita (cuando el canal admite metadatos de respuesta). Esto se aplica a Telegram, WhatsApp, Slack, Discord y Microsoft Teams.
 
 ```json5
 {
@@ -243,12 +245,12 @@ Responder a un mensaje de bot cuenta como una mención implícita (cuando el can
 
 Notas:
 
-- `mentionPatterns` son patrones de regex seguros que no distinguen mayúsculas de minúsculas; los patrones no válidos y las formas de repetición anidada inseguras se ignoran.
+- `mentionPatterns` son patrones de regex seguros que no distinguen entre mayúsculas y minúsculas; los patrones no válidos y las formas de repetición anidada inseguras se ignoran.
 - Las superficies que proporcionan menciones explícitas aún pasan; los patrones son un respaldo.
 - Anulación por agente: `agents.list[].groupChat.mentionPatterns` (útil cuando varios agentes comparten un grupo).
-- El filtrado de menciones solo se aplica cuando es posible la detección de menciones (las menciones nativas o `mentionPatterns` están configuradas).
+- El filtrado de menciones solo se aplica cuando la detección de menciones es posible (las menciones nativas o `mentionPatterns` están configuradas).
 - Los valores predeterminados de Discord residen en `channels.discord.guilds."*"` (modificables por servidor/canal).
-- El contexto del historial del grupo se ajusta de manera uniforme en todos los canales y es **solo pendiente** (mensajes omitidos debido al filtrado de menciones); use `messages.groupChat.historyLimit` para el valor predeterminado global y `channels.<channel>.historyLimit` (o `channels.<channel>.accounts.*.historyLimit`) para las anulaciones. Establezca `0` para desactivar.
+- El contexto del historial de grupos se ajusta de manera uniforme en todos los canales y es **solo pendiente** (mensajes omitidos debido al filtrado de menciones); use `messages.groupChat.historyLimit` para el valor predeterminado global y `channels.<channel>.historyLimit` (o `channels.<channel>.accounts.*.historyLimit`) para anulaciones. Establezca `0` para desactivar.
 
 ## Restricciones de herramientas de grupo/canal (opcional)
 
@@ -257,14 +259,14 @@ Algunas configuraciones de canal permiten restringir qué herramientas están di
 - `tools`: permitir/denegar herramientas para todo el grupo.
 - `toolsBySender`: anulaciones por remitente dentro del grupo.
   Use prefijos de clave explícitos:
-  `id:<senderId>`, `e164:<phone>`, `username:<handle>`, `name:<displayName>` y el comodín `"*"`.
+  `id:<senderId>`, `e164:<phone>`, `username:<handle>`, `name:<displayName>`, y el comodín `"*"`.
   Las claves heredadas sin prefijo todavía se aceptan y coinciden solo como `id:`.
 
 Orden de resolución (gana el más específico):
 
-1. coincidencia de `toolsBySender` de grupo/canal
-2. `tools` de grupo/canal
-3. coincidencia de `toolsBySender` predeterminada (`"*"`)
+1. coincidencia de grupo/canal `toolsBySender`
+2. grupo/canal `tools`
+3. coincidencia `toolsBySender` predeterminada (`"*"`)
 4. `tools` predeterminada (`"*"`)
 
 Ejemplo (Telegram):
@@ -289,8 +291,8 @@ Ejemplo (Telegram):
 
 Notas:
 
-- Las restricciones de herramientas de grupo/canal se aplican además de la política de herramientas global/del agente (la denegación sigue teniendo prioridad).
-- Algunos canales utilizan una anidación diferente para las salas/canales (por ejemplo, Discord `guilds.*.channels.*`, Slack `channels.*`, Microsoft Teams `teams.*.channels.*`).
+- Las restricciones de herramientas de grupo/canal se aplican además de la política global/de herramientas del agente (denegar sigue ganando).
+- Algunos canales usan una anidación diferente para salas/canales (p. ej., Discord `guilds.*.channels.*`, Slack `channels.*`, Microsoft Teams `teams.*.channels.*`).
 
 ## Listas de permitidos de grupos
 
@@ -354,7 +356,7 @@ Los propietarios del grupo pueden alternar la activación por grupo:
 - `/activation mention`
 - `/activation always`
 
-El propietario se determina por `channels.whatsapp.allowFrom` (o por el E.164 propio del bot cuando no esté configurado). Envíe el comando como un mensaje independiente. Otras superficies actualmente ignoran `/activation`.
+El propietario se determina por `channels.whatsapp.allowFrom` (o el propio E.164 del bot cuando no está configurado). Envíe el comando como un mensaje independiente. Otras superficies actualmente ignoran `/activation`.
 
 ## Campos de contexto
 
@@ -363,21 +365,21 @@ Las cargas útiles entrantes del grupo establecen:
 - `ChatType=group`
 - `GroupSubject` (si se conoce)
 - `GroupMembers` (si se conoce)
-- `WasMentioned` (resultado de filtrado de menciones)
+- `WasMentioned` (resultado de filtrado de mención)
 - Los temas del foro de Telegram también incluyen `MessageThreadId` y `IsForum`.
 
 Notas específicas del canal:
 
-- BlueBubbles opcionalmente puede enriquecer a los participantes sin nombre de grupos de macOS desde la base de datos de contactos local antes de llenar `GroupMembers`. Esto está desactivado de forma predeterminada y solo se ejecuta después de que pasa el filtrado de grupo normal.
+- BlueBubbles opcionalmente puede enriquecer a los participantes de grupos de macOS sin nombre desde la base de datos de contactos locales antes de completar `GroupMembers`. Esto está desactivado por defecto y solo se ejecuta después de pasar el filtrado de grupo normal.
 
-El mensaje del sistema del agente incluye una introducción de grupo en el primer turno de una nueva sesión de grupo. Recuerda al modelo que responda como un humano, evite tablas de Markdown y evite escribir secuencias literales de `\n`.
+El mensaje del sistema del agente incluye una introducción de grupo en el primer turno de una nueva sesión de grupo. Recuerda al modelo que responda como un humano, evite tablas Markdown y evite escribir secuencias literales `\n`.
 
-## Específicos de iMessage
+## Especificaciones de iMessage
 
-- Prefiera `chat_id:<id>` al enrutar o crear listas permitidas.
+- Prefiera `chat_id:<id>` al enrutar o crear listas de permitidos.
 - Listar chats: `imsg chats --limit 20`.
 - Las respuestas grupales siempre vuelven al mismo `chat_id`.
 
-## Específicos de WhatsApp
+## Especificaciones de WhatsApp
 
-Consulte [Mensajes de grupo](/en/channels/group-messages) para ver el comportamiento exclusivo de WhatsApp (inyección de historial, detalles del manejo de menciones).
+Consulte [Mensajes grupales](/en/channels/group-messages) para el comportamiento exclusivo de WhatsApp (inyección de historial, detalles del manejo de menciones).

@@ -13,7 +13,7 @@ read_when:
 
 - 进行中。
 - 核心 + 插件通道路由已针对出站镜像进行了更新。
-- Gateway 网关 发送现在会在省略 sessionKey 时派生目标会话。
+- Gateway(网关) 网关 发送现在会在省略 sessionKey 时派生目标会话。
 
 ## 背景
 

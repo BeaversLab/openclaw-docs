@@ -25,7 +25,7 @@ title: "Google Chat"
    - 点击 **Add Key** > **Create new key**。
    - 选择 **JSON** 并点击 **Create**。
 4. 将下载的 JSON 文件存储在您的网关主机上（例如，`~/.openclaw/googlechat-service-account.json`）。
-5. 在 [Google Cloud Console Chat Configuration](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat) 中创建 Google Chat 应用：
+5. 在 [Google Cloud Console Chat Configuration](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat) 中创建一个 Google Chat 应用：
    - 填写 **Application info**：
      - **App name**:（例如 `OpenClaw`）
      - **Avatar URL**:（例如 `https://openclaw.ai/logo.png`）
@@ -260,3 +260,11 @@ openclaw channels status
 - [Gateway(网关) 配置](/en/gateway/configuration)
 - [安全](/en/gateway/security)
 - [回应](/en/tools/reactions)
+
+## 相关
+
+- [渠道概览](/en/channels) — 所有支持的渠道
+- [配对](/en/channels/pairing) — 私信认证和配对流程
+- [群组](/en/channels/groups) — 群聊行为和提及控制
+- [渠道路由](/en/channels/channel-routing) — 消息的会话路由
+- [安全](/en/gateway/security) — 访问模型和加固

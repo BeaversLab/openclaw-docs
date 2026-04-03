@@ -21,7 +21,7 @@ openclaw status --usage
 
 - `--deep` 运行实时探测（WhatsApp Web + Telegram + Discord + Google Chat + Slack + Signal）。
 - 当配置了多个代理时，输出包含每个代理的会话存储。
-- 概述包含 Gateway 网关 + 节点主机服务的安装/运行状态（如果可用）。
+- 概述包含 Gateway(网关) 网关 + 节点主机服务的安装/运行状态（如果可用）。
 - 概述包含更新通道 + git SHA（针对源代码检出）。
 - 更新信息显示在概览中；如果有可用的更新，status 会打印提示以运行 `openclaw update`（参见 [更新](/en/install/updating)）。
 - 只读状态界面（`status`、`status --json`、`status --all`）会在可能的情况下解析其目标配置路径所支持的 SecretRefs。

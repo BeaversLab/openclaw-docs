@@ -252,3 +252,9 @@ export default function register(api) {
 
 另請參閱：[壓縮](/en/concepts/compaction)、[上下文](/en/concepts/context)、
 [外掛程式](/en/tools/plugin)、[外掛程式清單](/en/plugins/manifest)。
+
+## 相關
+
+- [Context](/en/concepts/context) — 如何為 Agent 回合建構 Context
+- [Plugin Architecture](/en/plugins/architecture) — 註冊 Context 引擎外掛
+- [Compaction](/en/concepts/compaction) — 總結長對話

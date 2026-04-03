@@ -117,7 +117,6 @@ agents.defaults.cliBackends
           modelArg: "--model",
           modelAliases: {
             "claude-opus-4-6": "opus",
-            "claude-opus-4-6": "opus",
             "claude-sonnet-4-6": "sonnet",
           },
           sessionArg: "--session",

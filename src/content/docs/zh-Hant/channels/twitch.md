@@ -22,7 +22,7 @@ openclaw plugins install @openclaw/twitch
 本機簽出 (當從 git repo 執行時)：
 
 ```bash
-openclaw plugins install ./extensions/twitch
+openclaw plugins install ./path/to/local/twitch-plugin
 ```
 
 詳細資訊：[外掛程式](/en/tools/plugin)
@@ -127,9 +127,9 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 
 ## 權杖更新 (選用)
 
-來自 [Twitch Token Generator](https://twitchtokengenerator.com/) 的權杖無法自動更新 — 過期時請重新產生。
+來自 [Twitch Token Generator](https://twitchtokengenerator.com/) 的權杖無法自動重新整理 — 過期時請重新產生。
 
-若要自動更新權杖，請在 [Twitch Developer Console](https://dev.twitch.tv/console) 建立您自己的 Twitch 應用程式並加入設定：
+若要自動重新整理權杖，請在 [Twitch Developer Console](https://dev.twitch.tv/console) 建立您自己的 Twitch 應用程式並加入設定：
 
 ```json5
 {
@@ -377,3 +377,11 @@ Access token refreshed for user 123456 (expires in 14400s)
 - **每則訊息 500 個字元**（會在單字邊界自動分塊）
 - Markdown 會在分塊前被移除
 - 沒有速率限制（使用 Twitch 內建的速率限制）
+
+## 相關
+
+- [頻道概覽](/en/channels) — 所有支援的頻道
+- [配對](/en/channels/pairing) — DM 身份驗證與配對流程
+- [群組](/en/channels/groups) — 群組聊天行為與提及控制
+- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
+- [安全性](/en/gateway/security) — 存取模型與強化防護

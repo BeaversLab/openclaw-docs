@@ -12,7 +12,10 @@ read_when:
 
 插件通过新功能扩展 OpenClaw：频道、模型提供商、语音、图像生成、网络搜索、代理工具或其任意组合。
 
-您无需将插件添加到 OpenClaw 仓库中。发布到 [ClawHub](/en/tools/clawhub) 或 npm，用户使用 `openclaw plugins install <package-name>` 安装即可。OpenClaw 会先尝试 ClawHub，然后自动回退到 npm。
+您无需将插件添加到 OpenClaw 代码库中。发布到
+[ClawHub](/en/tools/clawhub) 或 npm，用户即可使用
+`openclaw plugins install <package-name>` 进行安装。OpenClaw 会优先尝试 ClawHub，
+然后自动回退到 npm。
 
 ## 先决条件
 
@@ -47,7 +50,15 @@ read_when:
       "version": "1.0.0",
       "type": "module",
       "openclaw": {
-        "extensions": ["./index.ts"]
+        "extensions": ["./index.ts"],
+        "compat": {
+          "pluginApi": ">=2026.3.24-beta.2",
+          "minGatewayVersion": "2026.3.24-beta.2"
+        },
+        "build": {
+          "openclawVersion": "2026.3.24-beta.2",
+          "pluginSdkVersion": "2026.3.24-beta.2"
+        }
       }
     }
     ```
@@ -65,8 +76,10 @@ read_when:
     ```
     </CodeGroup>
 
-    每个插件都需要一个清单，即使没有配置也是如此。请参阅
-    [Manifest](/en/plugins/manifest) 了解完整的架构。
+    每个插件都需要一个清单，即使没有配置。请参阅
+
+[Manifest](/en/plugins/manifest) 以了解完整的架构。标准的 ClawHub
+发布代码片段位于 `docs/snippets/plugin-publish/` 中。
 
   </Step>
 
@@ -94,26 +107,29 @@ read_when:
     });
     ```
 
-    `definePluginEntry` 用于非渠道插件。对于渠道，请使用
+    `definePluginEntry` 适用于非渠道插件。对于渠道，请使用
     `defineChannelPluginEntry` — 请参阅 [Channel Plugins](/en/plugins/sdk-channel-plugins)。
-    如需完整的入口点选项，请参阅 [Entry Points](/en/plugins/sdk-entrypoints)。
+    有关入口点的完整选项，请参阅 [Entry Points](/en/plugins/sdk-entrypoints)。
 
   </Step>
 
   <Step title="Test and publish">
 
-    **External plugins:** 发布到 [ClawHub](/en/tools/clawhub) 或 npm，然后安装：
+    **外部插件：** 使用 ClawHub 验证并发布，然后安装：
 
     ```bash
-    openclaw plugins install @myorg/openclaw-my-plugin
+    clawhub package publish your-org/your-plugin --dry-run
+    clawhub package publish your-org/your-plugin
+    openclaw plugins install clawhub:@myorg/openclaw-my-plugin
     ```
 
-    OpenClaw 会先检查 ClawHub，然后回退到 npm。
+    OpenClaw 也会在 npm 之前检查 ClawHub，对于像
+    `@myorg/openclaw-my-plugin` 这样的裸包规范。
 
-    **In-repo plugins:** 放置在 `extensions/` 下 — 自动发现。
+    **代码库内插件：** 放置在捆绑插件工作区树下 — 自动发现。
 
     ```bash
-    pnpm test -- extensions/my-plugin/
+    pnpm test -- <bundled-plugin-root>/my-plugin/
     ```
 
   </Step>
@@ -133,23 +149,28 @@ read_when:
 | 图像生成       | `api.registerImageGenerationProvider(...)`    | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
 | 网络搜索       | `api.registerWebSearchProvider(...)`          | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
 | Agent 工具     | `api.registerTool(...)`                       | 下方                                                                               |
-| 自定义命令     | `api.registerCommand(...)`                    | [Entry Points](/en/plugins/sdk-entrypoints)                                        |
-| 事件钩子       | `api.registerHook(...)`                       | [Entry Points](/en/plugins/sdk-entrypoints)                                        |
-| HTTP 路由      | `api.registerHttpRoute(...)`                  | [Internals](/en/plugins/architecture#gateway-http-routes)                          |
-| CLI 子命令     | `api.registerCli(...)`                        | [Entry Points](/en/plugins/sdk-entrypoints)                                        |
+| 自定义命令     | `api.registerCommand(...)`                    | [入口点](/en/plugins/sdk-entrypoints)                                              |
+| 事件钩子       | `api.registerHook(...)`                       | [入口点](/en/plugins/sdk-entrypoints)                                              |
+| HTTP 路由      | `api.registerHttpRoute(...)`                  | [内部机制](/en/plugins/architecture#gateway-http-routes)                           |
+| CLI 子命令     | `api.registerCli(...)`                        | [入口点](/en/plugins/sdk-entrypoints)                                              |
 
-有关完整的注册 API，请参阅 [SDK Overview](/en/plugins/sdk-overview#registration-api)。
+有关完整的注册 API，请参阅 [SDK 概述](/en/plugins/sdk-overview#registration-api)。
 
 需要注意的钩子守卫语义：
 
-- `before_tool_call`: `{ block: true }` 是终局性的，并停止较低优先级的处理程序。
-- `before_tool_call`: `{ block: false }` 被视为未做决定。
-- `message_sending`: `{ cancel: true }` 是终局性的，并停止较低优先级的处理程序。
-- `message_sending`: `{ cancel: false }` 被视为未做决定。
+- `before_tool_call`：`{ block: true }` 是终止性的，会停止较低优先级的处理程序。
+- `before_tool_call`：`{ block: false }` 被视为未做出决定。
+- `before_tool_call`：`{ requireApproval: true }` 暂停代理执行，并通过执行批准覆盖层、Telegram 按钮、Discord 交互或任何渠道上的 `/approve` 命令提示用户批准。
+- `before_install`：`{ block: true }` 是终止性的，会停止较低优先级的处理程序。
+- `before_install`：`{ block: false }` 被视为未做出决定。
+- `message_sending`：`{ cancel: true }` 是终止性的，会停止较低优先级的处理程序。
+- `message_sending`：`{ cancel: false }` 被视为未做出决定。
 
-有关详细信息，请参阅 [SDK Overview hook decision semantics](/en/plugins/sdk-overview#hook-decision-semantics)。
+`/approve` 命令可处理执行和插件批准，并具有自动回退功能。插件批准转发可以通过配置中的 `approvals.plugin` 单独配置。
 
-## 注册 Agent 工具
+有关详细信息，请参阅 [SDK 概述钩子决策语义](/en/plugins/sdk-overview#hook-decision-semantics)。
+
+## 注册代理工具
 
 工具是 LLM 可以调用的类型化函数。它们可以是必需的（始终可用）或可选的（用户选择加入）：
 
@@ -180,7 +201,7 @@ register(api) {
 }
 ```
 
-用户在配置中启用可选工具：
+用户可以在配置中启用可选工具：
 
 ```json5
 {
@@ -204,29 +225,28 @@ import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
 import { ... } from "openclaw/plugin-sdk";
 ```
 
-有关完整的子路径参考，请参阅 [SDK 概述](/en/plugins/sdk-overview)。
+有关完整子路径参考，请参阅 [SDK 概述](/en/plugins/sdk-overview)。
 
-在您的插件内部，请使用本地桶文件（`api.ts`、`runtime-api.ts`）进行
-内部导入 —— 切勿通过其 SDK 路径导入您自己的插件。
+在插件内部，请使用本地桶文件（`api.ts`，`runtime-api.ts`）进行内部导入 —— 切勿通过其 SDK 路径导入您自己的插件。
 
 ## 提交前检查清单
 
 <Check>**package.** 具有正确的 `openclaw` 元数据</Check>
 <Check>**openclaw.plugin.** 清单已存在且有效</Check>
 <Check>入口点使用 `defineChannelPluginEntry` 或 `definePluginEntry`</Check>
-<Check>所有导入都使用特定的 `plugin-sdk/<subpath>` 路径</Check>
+<Check>所有导入均使用特定的 `plugin-sdk/<subpath>` 路径</Check>
 <Check>内部导入使用本地模块，而非 SDK 自身导入</Check>
-<Check>测试通过 (`pnpm test -- extensions/my-plugin/`)</Check>
+<Check>测试通过（`pnpm test -- <bundled-plugin-root>/my-plugin/`）</Check>
 <Check>`pnpm check` 通过（仓库内插件）</Check>
 
 ## Beta 版本测试
 
-1. 关注 [openclaw/openclaw](https://github.com/openclaw/openclaw/releases) 上的 GitHub 发布标签，并通过 `Watch` > `Releases` 订阅。Beta 标签看起来像 `v2026.3.N-beta.1`。您也可以开启官方 OpenClaw X 账户 [@openclaw](https://x.com/openclaw) 的通知，以获取发布公告。
-2. 在 beta 标签出现后，立即针对该标签测试您的插件。稳定版发布前的窗口通常只有几个小时。
-3. 测试后，在 `plugin-forum` Discord 频道的插件主题帖中发布结果，说明 `all good` 或出现的问题。如果您还没有主题帖，请创建一个。
+1. 请关注 [openclaw/openclaw](https://github.com/openclaw/openclaw/releases) 上的 GitHub 发布标签，并通过 `Watch` > `Releases` 进行订阅。Beta 标签类似于 `v2026.3.N-beta.1`。您也可以开启官方 OpenClaw X 账号 [@openclaw](https://x.com/openclaw) 的通知以获取发布公告。
+2. Beta 标签出现后，请立即针对该版本测试您的插件。在正式版发布前的窗口期通常只有几个小时。
+3. 测试完成后，在 `plugin-forum` Discord 频道中您的插件主题帖内发布 `all good` 或遇到的问题。如果您还没有主题帖，请创建一个。
 4. 如果出现问题，请创建或更新一个标题为 `Beta blocker: <plugin-name> - <summary>` 的 issue，并应用 `beta-blocker` 标签。将 issue 链接放入您的主题帖中。
-5. 向 `main` 提交一个标题为 `fix(<plugin-id>): beta blocker - <summary>` 的 PR，并在 PR 和你的 Discord 线程中关联该 issue。贡献者无法标记 PR，因此标题是维护者和自动化工具在 PR 这边的信号。有 PR 的阻塞问题会被合并；没有 PR 的阻塞问题可能仍会发布。维护人员在 Beta 测试期间会关注这些线程。
-6. 没有消息就是好消息。如果你错过了时间窗口，你的修复很可能会在下一个周期落地。
+5. 向 `main` 提交一个标题为 `fix(<plugin-id>): beta blocker - <summary>` 的 PR，并在 PR 和您的 Discord 主题帖中链接该 issue。贡献者无法标记 PR，因此标题是维护者和自动化程序在 PR 端的信号。带有 PR 的阻碍性修复会被合并；没有 PR 的阻碍性修复可能会直接发布。维护者会在 Beta 测试期间关注这些主题帖。
+6. 没有消息就是好消息。如果您错过了窗口期，您的修复可能会在下一个周期落地。
 
 ## 后续步骤
 
@@ -237,7 +257,7 @@ import { ... } from "openclaw/plugin-sdk";
   <Card title="提供商插件" icon="cpu" href="/en/plugins/sdk-provider-plugins">
     构建模型提供商插件
   </Card>
-  <Card title="SDK 概览" icon="book-open" href="/en/plugins/sdk-overview">
+  <Card title="SDK 概述" icon="book-open" href="/en/plugins/sdk-overview">
     导入映射和注册 API 参考
   </Card>
   <Card title="运行时助手" icon="settings" href="/en/plugins/sdk-runtime">
@@ -247,6 +267,14 @@ import { ... } from "openclaw/plugin-sdk";
     测试工具和模式
   </Card>
   <Card title="插件清单" icon="file-" href="/en/plugins/manifest">
-    完整的清单架构参考
+    完整清单架构参考
   </Card>
 </CardGroup>
+
+## 相关
+
+- [插件架构](/en/plugins/architecture) — 内部架构深入解析
+- [SDK 概述](/en/plugins/sdk-overview) — 插件 SDK 参考
+- [清单](/en/plugins/manifest) — 插件清单格式
+- [渠道插件](/en/plugins/sdk-channel-plugins) — 构建渠道插件
+- [提供商插件](/en/plugins/sdk-provider-plugins) — 构建提供商插件

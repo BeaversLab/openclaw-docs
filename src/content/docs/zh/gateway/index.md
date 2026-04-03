@@ -1,13 +1,13 @@
 ---
-summary: "Gateway 网关 服务、生命周期和操作的运行手册"
+summary: "Gateway(网关) 网关 服务、生命周期和操作的运行手册"
 read_when:
   - Running or debugging the gateway process
-title: "Gateway 网关 运行手册"
+title: "Gateway(网关) 网关 运行手册"
 ---
 
-# Gateway 网关 运行手册
+# Gateway(网关) 网关 运行手册
 
-使用此页面进行 Gateway 网关 服务的第 1 天启动和第 2 天运维。
+使用此页面进行 Gateway(网关) 网关 服务的第 1 天启动和第 2 天运维。
 
 <CardGroup cols={2}>
   <Card title="深度故障排除" icon="siren" href="/en/gateway/troubleshooting">
@@ -60,7 +60,7 @@ openclaw channels status --probe
   </Step>
 </Steps>
 
-<Note>Gateway(网关) 配置重新加载会监视活动配置文件路径（从配置文件/状态默认值解析，或如果设置了 `OPENCLAW_CONFIG_PATH`）。 默认模式为 `gateway.reload.mode="hybrid"`。</Note>
+<Note>Gateway(网关) 配置重新加载会监视活动的配置文件路径（从配置文件/状态默认值解析，或设置时从 `OPENCLAW_CONFIG_PATH` 解析）。 默认模式为 `gateway.reload.mode="hybrid"`。 首次成功加载后，运行中的进程将提供活动的内存配置快照；成功重新加载将原子性地交换该快照。</Note>
 
 ## 运行时模型
 
@@ -189,7 +189,7 @@ sudo systemctl enable --now openclaw-gateway[-<profile>].service
 
 ## 在一台主机上运行多个 Gateway
 
-大多数设置应运行 **一个** Gateway。
+大多数设置应运行 **一个** Gateway(网关)。
 仅在需要严格隔离/冗余（例如救援配置文件）时才使用多个。
 
 每个实例的检查清单：

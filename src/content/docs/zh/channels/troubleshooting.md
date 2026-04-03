@@ -105,14 +105,27 @@ openclaw channels status --probe
 
 完整故障排除：[/channels/signal#故障排除](/en/channels/signal#troubleshooting)
 
+## QQ Bot
+
+### QQ Bot 故障特征
+
+| 症状                   | 最快检查                               | 修复                                                |
+| ---------------------- | -------------------------------------- | --------------------------------------------------- |
+| Bot 回复“gone to Mars” | 验证配置中的 `appId` 和 `clientSecret` | 设置凭据或重启网关。                                |
+| 没有收到传入消息       | `openclaw channels status --probe`     | 在 QQ 开放平台上验证凭据。                          |
+| 语音未转写             | 检查 STT 提供商配置                    | 配置 `channels.qqbot.stt` 或 `tools.media.audio`。  |
+| 主动消息未送达         | 检查 QQ 平台的交互要求                 | 如果没有最近的交互，QQ 可能会阻止机器人发起的消息。 |
+
+完整故障排除：[/channels/qqbot#故障排除](/en/channels/qqbot#troubleshooting)
+
 ## Matrix
 
 ### Matrix 故障特征
 
-| 症状                 | 最快检查                           | 修复                                |
-| -------------------- | ---------------------------------- | ----------------------------------- |
-| 已登录但忽略房间消息 | `openclaw channels status --probe` | 检查 `groupPolicy` 和房间允许列表。 |
-| 私信无法处理         | `openclaw pairing list matrix`     | 批准发送者或调整私信策略。          |
-| 加密房间失败         | 验证加密模块和加密设置             | 启用加密支持并重新加入/同步房间。   |
+| 症状                 | 最快检查                           | 修复                              |
+| -------------------- | ---------------------------------- | --------------------------------- |
+| 已登录但忽略房间消息 | `openclaw channels status --probe` | 检查 `groupPolicy` 和房间白名单。 |
+| 私信无法处理         | `openclaw pairing list matrix`     | 批准发送者或调整私信策略。        |
+| 加密房间失败         | 验证加密模块和加密设置             | 启用加密支持并重新加入/同步房间。 |
 
 完整设置和配置：[Matrix](/en/channels/matrix)

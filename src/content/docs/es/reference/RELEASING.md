@@ -10,22 +10,22 @@ read_when:
 
 OpenClaw tiene tres carriles de lanzamiento públicos:
 
-- stable: versiones etiquetadas que se publican en npm `latest`
-- beta: etiquetas de prelanzamiento que se publican en npm `beta`
-- dev: la cabeza móvil de `main`
+- stable: versiones etiquetadas que se publican en npm `latest` y reflejan la misma versión en `beta` a menos que `beta` ya apunte a una versión preliminar más reciente
+- beta: etiquetas de versión preliminar que se publican en npm `beta`
+- dev: la cabecera móvil de `main`
 
 ## Nomenclatura de versiones
 
 - Versión de lanzamiento estable: `YYYY.M.D`
-  - Etiqueta de Git: `vYYYY.M.D`
+  - Etiqueta Git: `vYYYY.M.D`
 - Versión de lanzamiento de corrección estable: `YYYY.M.D-N`
-  - Etiqueta de Git: `vYYYY.M.D-N`
-- Versión de prelanzamiento beta: `YYYY.M.D-beta.N`
-  - Etiqueta de Git: `vYYYY.M.D-beta.N`
+  - Etiqueta Git: `vYYYY.M.D-N`
+- Versión preliminar beta: `YYYY.M.D-beta.N`
+  - Etiqueta Git: `vYYYY.M.D-beta.N`
 - No rellene con ceros el mes o el día
 - `latest` significa el lanzamiento estable actual de npm
-- `beta` significa el lanzamiento de prelanzamiento actual de npm
-- Los lanzamientos de corrección estables también se publican en npm `latest`
+- `beta` significa el objetivo de instalación beta actual, que puede apuntar a la versión preliminar activa o a la compilación estable promovida más reciente
+- Los lanzamientos estables y de corrección estable se publican en npm `latest` y también vuelven a etiquetar npm `beta` a esa misma versión no beta después de la promoción, a menos que `beta` ya apunte a una versión preliminar más reciente
 - Cada lanzamiento de OpenClaw distribuye el paquete npm y la aplicación de macOS juntos
 
 ## Cadencia de lanzamientos
@@ -37,26 +37,26 @@ OpenClaw tiene tres carriles de lanzamiento públicos:
 
 ## Previo al lanzamiento
 
-- Ejecute `pnpm build` antes de `pnpm release:check` para que existan los artefactos de lanzamiento `dist/*` esperados
-  para el paso de validación del paquete
+- Ejecute `pnpm build && pnpm ui:build` antes de `pnpm release:check` para que existan los artefactos de lanzamiento `dist/*` esperados y el paquete de Control UI para el paso de validación del paquete
 - Ejecute `pnpm release:check` antes de cada lanzamiento etiquetado
 - Ejecute `RELEASE_TAG=vYYYY.M.D node --import tsx scripts/openclaw-npm-release-check.ts`
   (o la etiqueta beta/corrección correspondiente) antes de la aprobación
 - Después de npm publish, ejecute
   `node --import tsx scripts/openclaw-npm-postpublish-verify.ts YYYY.M.D`
-  (o la versión beta/corrección correspondiente) para verificar la ruta de instalación del registro publicado
-  en un prefijo temporal nuevo
-- Para los lanzamientos de corrección estables como `YYYY.M.D-N`, el verificador posterior a la publicación
-  también verifica la misma ruta de actualización de prefijo temporal desde `YYYY.M.D` hasta `YYYY.M.D-N`
-  para que las correcciones de lanzamiento no puedan silenciosamente dejar instalaciones globales más antiguas en
-  la carga útil estable base
-- El previo al lanzamiento de npm falla cerrado a menos que el archivo tar incluya ambos
-  `dist/control-ui/index.html` y una carga útil `dist/control-ui/assets/` no vacía
-  para que no volvamos a distribuir un tablero de navegador vacío
-- La preparación del lanzamiento de macOS estable también incluye las superficies del actualizador:
-  - el lanzamiento de GitHub debe terminar con el `.zip` empaquetado, `.dmg` y `.dSYM.zip`
-  - `appcast.xml` en `main` debe apuntar al zip estable nuevo después de la publicación
-  - la aplicación empaquetada debe mantener un identificador de bundle que no sea de depuración, una URL de fuente de Sparkle no vacía y un `CFBundleVersion` en o por encima del límite de compilación canónico de Sparkle para esa versión de lanzamiento
+  (o la versión beta/corrección correspondiente) para verificar la ruta de instalación del registro publicado en un prefijo temporal nuevo
+- Los flujos de trabajo de los mantenedores pueden reutilizar una ejecución de preflight exitosa para la publicación real, de modo que el paso de publicación promueva los artefactos de lanzamiento preparados en lugar de reconstruirlos
+- Para los lanzamientos de corrección estables como `YYYY.M.D-N`, el verificador posterior a la publicación también verifica la misma ruta de actualización de prefijo temporal de `YYYY.M.D` a `YYYY.M.D-N` para que las correcciones de lanzamiento no puedan dejar silenciosamente instalaciones globales antiguas en la carga útil estable base
+- La comprobación previa del lanzamiento de npm falla a menos que el archivo tar incluya tanto
+  `dist/control-ui/index.html` como una carga útil `dist/control-ui/assets/` no vacía
+  para que no enviemos de nuevo un panel de navegador vacío
+- Si el trabajo de lanzamiento afectó a la planificación de CI, manifiestos de tiempo de extensión o matrices de pruebas rápidas, regenere y revise el plan de fragmentos `checks-fast-extensions` propiedad del planificador a través de `node scripts/ci-write-manifest-outputs.mjs --workflow ci`
+  antes de la aprobación para que las notas de la versión no describan un diseño de CI obsoleto
+- La preparación para el lanzamiento estable de macOS también incluye las superficies del actualizador:
+  - el lanzamiento de GitHub debe terminar con los paquetes `.zip`, `.dmg` y `.dSYM.zip`
+  - `appcast.xml` en `main` debe apuntar al nuevo zip estable después de la publicación
+  - la aplicación empaquetada debe conservar un id de paquete que no sea de depuración, una URL de feed Sparkle no vacía
+    y un `CFBundleVersion` en o por encima del límite de compilación canónico de Sparkle
+    para esa versión de lanzamiento
 
 ## Referencias públicas
 
@@ -65,4 +65,6 @@ OpenClaw tiene tres carriles de lanzamiento públicos:
 - [`scripts/package-mac-dist.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-dist.sh)
 - [`scripts/make_appcast.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/make_appcast.sh)
 
-Los mantenedores utilizan la documentación de lanzamiento privada en [`openclaw/maintainers/release/README.md`](https://github.com/openclaw/maintainers/blob/main/release/README.md) para el manual de operaciones real.
+Los encargados del mantenimiento utilizan la documentación privada de lanzamientos en
+[`openclaw/maintainers/release/README.md`](https://github.com/openclaw/maintainers/blob/main/release/README.md)
+para el manual de operaciones actual.

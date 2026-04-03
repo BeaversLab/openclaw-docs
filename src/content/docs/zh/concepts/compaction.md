@@ -1,119 +1,88 @@
 ---
-summary: "上下文窗口与压缩：OpenClaw 如何保持会话在模型限制内"
+summary: "OpenClaw 如何总结长对话以保持在模型的限制范围内"
 read_when:
   - You want to understand auto-compaction and /compact
   - You are debugging long sessions hitting context limits
 title: "压缩"
 ---
 
-# 上下文窗口与压缩
+# 压缩
 
-每个模型都有一个**上下文窗口**（它能看到的最大 Token 数）。长时间的对话会积累消息和工具结果；一旦窗口紧张，OpenClaw 会**压缩**旧的历史记录以保持在限制范围内。
+每个模型都有一个上下文窗口——即其可以处理的最大 token 数。
+当对话接近该限制时，OpenClaw 会将较早的消息**压缩**
+为摘要，以便聊天能够继续。
 
-## 什么是压缩
+## 工作原理
 
-压缩会将**较旧的对话**总结为一个简洁的摘要条目，并保持最近的消息不变。摘要存储在会话历史中，因此未来的请求会使用：
+1. 较早的对话轮次被总结为一个压缩条目。
+2. 摘要保存在会话记录中。
+3. 最近的消息保持原样。
 
-- 压缩摘要
-- 压缩点之后的最近消息
+完整的对话历史保留在磁盘上。压缩仅改变模型
+在下一轮看到的内容。
 
-压缩会**持久化**保存在会话的 JSONL 历史中。
+## 自动压缩
 
-## 配置
+默认情况下启用自动压缩。当会话接近上下文限制，或模型返回上下文溢出错误时（此时
+OpenClaw 会压缩并重试），它会运行。
 
-使用 `agents.defaults.compaction` 设置中的 `openclaw.json` 来配置压缩行为（模式、目标令牌数等）。
-压缩摘要默认保留不透明标识符（`identifierPolicy: "strict"`）。您可以使用 `identifierPolicy: "off"` 覆盖此设置，或者通过 `identifierPolicy: "custom"` 和 `identifierInstructions` 提供自定义文本。
-
-您可以通过 `agents.defaults.compaction.model` 为压缩摘要指定不同的模型。当您的主模型是本地模型或小型模型，并且希望由能力更强的模型生成压缩摘要时，这非常有用。该覆盖设置接受任何 `provider/model-id` 字符串：
-
-```json
-{
-  "agents": {
-    "defaults": {
-      "compaction": {
-        "model": "openrouter/anthropic/claude-sonnet-4-6"
-      }
-    }
-  }
-}
-```
-
-这也适用于本地模型，例如第二个专门用于摘要的 Ollama 模型或微调过的压缩专家模型：
-
-```json
-{
-  "agents": {
-    "defaults": {
-      "compaction": {
-        "model": "ollama/llama3.1:8b"
-      }
-    }
-  }
-}
-```
-
-如果未设置，压缩将使用代理的主模型。
-
-## 自动压缩（默认开启）
-
-当会话接近或超过模型的上下文窗口时，OpenClaw 会触发自动压缩，并可能会使用压缩后的上下文重试原始请求。
-
-你会看到：
-
-- `🧹 Auto-compaction complete` 在详细模式下
-- `/status` 显示 `🧹 Compactions: <count>`
-
-在压缩之前，OpenClaw 可以运行一个 **静默内存刷新** 轮次，将持久化笔记存储到磁盘。有关详细信息和配置，请参阅 [Memory](/en/concepts/memory)。
+<Info>在压缩之前，OpenClaw 会自动提醒代理将重要的 笔记保存到 [memory](/en/concepts/memory) 文件中。这可以防止上下文丢失。</Info>
 
 ## 手动压缩
 
-使用 `/compact`（可选择附带指令）来强制执行一轮压缩：
+在任何聊天中输入 `/compact` 以强制进行压缩。添加指令来指导
+摘要：
 
 ```
-/compact Focus on decisions and open questions
+/compact Focus on the API design decisions
 ```
 
-## 上下文窗口来源
+## 使用不同的模型
 
-上下文窗口是特定于模型的。OpenClaw 使用来自已配置提供商目录中的模型定义来确定限制。
+默认情况下，压缩使用您代理的主模型。您可以使用一个
+能力更强的模型来获得更好的摘要：
 
-## 压缩 vs 修剪
+```json5
+{
+  agents: {
+    defaults: {
+      compaction: {
+        model: "openrouter/anthropic/claude-sonnet-4-6",
+      },
+    },
+  },
+}
+```
 
-- **压缩**：进行摘要并以 JSONL 格式**持久化**。
-- **会话修剪**：仅修剪旧的**工具结果**，在**内存中**，针对每个请求。
+## 压缩与修剪
 
-有关剪枝的详细信息，请参阅 [/concepts/会话-pruning](/en/concepts/session-pruning)。
+|                | 压缩               | 修剪                     |
+| -------------- | ------------------ | ------------------------ |
+| **作用**       | 总结较早的对话     | 修剪旧工具结果           |
+| **是否保存？** | 是（在会话记录中） | 否（仅内存中，每次请求） |
+| **范围**       | 整个对话           | 仅工具结果               |
 
-## OpenAI 服务端压缩
+[会话修剪](/en/concepts/session-pruning) 是一个更轻量级的补充功能，它在
+不进行总结的情况下修剪工具输出。
 
-OpenClaw 还支持针对兼容的直接 OpenAI 模型的 OpenAI Responses 服务端压缩提示。这与本地 OpenClaw 压缩是分开的，并且可以与它一起运行。
+## 故障排除
 
-- 本地压缩：OpenClaw 进行摘要并持久化到会话 JSONL 中。
-- 服务器端压缩：当启用 `store` + `context_management` 时，OpenAI 会在提供商端压缩上下文。
+**压缩太频繁？** 模型的上下文窗口可能太小，或者工具
+输出可能太大。尝试启用
+[会话修剪](/en/concepts/session-pruning)。
 
-有关模型参数和覆盖设置，请参阅 [OpenAI 提供商](/en/providers/openai)。
+**压缩后上下文感觉过时？** 使用 `/compact Focus on <topic>` 来
+指导摘要，或启用 [内存刷新](/en/concepts/memory) 以便笔记
+能够保留。
 
-## 自定义上下文引擎
+**需要全新的开始？** `/new` 将在不压缩的情况下开始一个新的会话。
 
-压缩行为由当前活动的
-[context engine](/en/concepts/context-engine) 拥有。传统引擎使用上述内置的
-摘要功能。插件引擎（通过
-`plugins.slots.contextEngine` 选择）可以实现任何压缩策略 —— DAG
-摘要、向量检索、增量压缩等。
+有关高级配置（预留令牌、保留标识符、自定义上下文引擎、OpenAI 服务器端压缩），请参阅
+[Session Management Deep Dive](/en/reference/session-management-compaction)。
 
-当插件引擎设置 `ownsCompaction: true` 时，OpenClaw 会将所有
-压缩决策委托给该引擎，并且不运行内置的自动压缩。
+## 相关
 
-当 `ownsCompaction` 为 `false` 或未设置时，OpenClaw 仍可能使用 Pi 的
-内置尝试中自动压缩，但活动引擎的 `compact()` 方法
-仍会处理 `/compact` 和溢出恢复。不会自动回退
-到传统引擎的压缩路径。
-
-如果您正在构建非拥有的上下文引擎，请通过
-从 `openclaw/plugin-sdk/core` 调用 `delegateCompactionToRuntime(...)` 来实现 `compact()`。
-
-## 提示
-
-- 当会话感觉陈旧或上下文臃肿时，使用 `/compact`。
-- 大型工具输出已被截断；剪枝可以进一步减少工具结果的累积。
-- 如果您需要全新的开始，`/new` 或 `/reset` 将启动一个新的会话 ID。
+- [Session](/en/concepts/session) — 会话管理和生命周期
+- [Session Pruning](/en/concepts/session-pruning) — 修剪工具结果
+- [Context](/en/concepts/context) — 如何为代理轮次构建上下文
+- [Hooks](/en/automation/hooks) — 压缩生命周期钩子（before_compaction、after_compaction）

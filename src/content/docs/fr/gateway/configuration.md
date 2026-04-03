@@ -19,7 +19,7 @@ Si le fichier est manquant, OpenClaw utilise des paramètres par défaut sûrs. 
 
 Consultez la [référence complète](/en/gateway/configuration-reference) pour chaque champ disponible.
 
-<Tip>**Nouveau dans la configuration ?** Commencez avec `openclaw onboard` pour une configuration interactive, ou consultez le guide [Exemples de configuration](/en/gateway/configuration-examples) pour des configurations complètes à copier-coller.</Tip>
+<Tip>**Nouveau dans la configuration ?** Commencez avec `openclaw onboard` pour une configuration interactive, ou consultez le guide [Exemples de configuration](/en/gateway/configuration-examples) pour des configurations complètes prêtes à copier-coller.</Tip>
 
 ## Configuration minimale
 
@@ -36,8 +36,8 @@ Consultez la [référence complète](/en/gateway/configuration-reference) pour c
 <Tabs>
   <Tab title="Interactive wizard">```bash openclaw onboard # full onboarding flow openclaw configure # config wizard ```</Tab>
   <Tab title="CLI (one-liners)">```bash openclaw config get agents.defaults.workspace openclaw config set agents.defaults.heartbeat.every "2h" openclaw config unset plugins.entries.brave.config.webSearch.apiKey ```</Tab>
-  <Tab title="Control UI">Ouvrez [http://127.0.0.1:18789](http://127.0.0.1:18789) et utilisez l'onglet **Config**. L'interface de contrôle génère un formulaire à partir du schéma de configuration, avec un éditeur **Raw JSON** comme échappatoire.</Tab>
-  <Tab title="Direct edit">Modifiez `~/.openclaw/openclaw.json` directement. Le Gateway surveille le fichier et applique les modifications automatiquement (voir [rechargement à chaud](#config-hot-reload)).</Tab>
+  <Tab title="Interface de contrôle">Ouvrez [http://127.0.0.1:18789](http://127.0.0.1:18789) et utilisez l'onglet **Config**. L'interface de contrôle génère un formulaire à partir du schéma de configuration, avec un éditeur **JSON brut** en cas de besoin.</Tab>
+  <Tab title="Édition directe">Modifiez `~/.openclaw/openclaw.json` directement. Le Gateway surveille le fichier et applique les modifications automatiquement (voir [rechargement à chaud](#config-hot-reload)).</Tab>
 </Tabs>
 
 ## Validation stricte
@@ -67,7 +67,7 @@ En cas d'échec de la validation :
     - [Mattermost](/en/channels/mattermost) — `channels.mattermost`
     - [Microsoft Teams](/en/channels/msteams) — `channels.msteams`
 
-    Tous les canaux partagent le même modèle de politique DM :
+    Tous les canaux partagent le même modèle de stratégie de DM :
 
     ```json5
     {
@@ -85,7 +85,7 @@ En cas d'échec de la validation :
   </Accordion>
 
   <Accordion title="Choisir et configurer les modèles">
-    Définissez le modèle principal et les replis facultatifs :
+    Définissez le modèle principal et les secours optionnels :
 
     ```json5
     {
@@ -104,30 +104,30 @@ En cas d'échec de la validation :
     }
     ```
 
-    - `agents.defaults.models` définit le catalogue de modèles et agit comme la liste d'autorisation pour `/model`.
+    - `agents.defaults.models` définit le catalogue de modèles et agit comme une liste blanche pour `/model`.
     - Les références de modèles utilisent le format `provider/model` (ex. `anthropic/claude-opus-4-6`).
-    - `agents.defaults.imageMaxDimensionPx` contrôle la réduction d'échelle des images de transcription/CLI (par défaut `1200`) ; des valeurs plus faibles réduisent généralement l'utilisation des jetons de vision lors des exécutions avec de nombreuses captures d'écran.
-    - Voir [Modèles CLI](/en/concepts/models) pour changer de modèles dans le chat et [Échec de modèle](/en/concepts/model-failover) pour la rotation d'authentification et le comportement de repli.
-    - Pour les fournisseurs personnalisés/auto-hébergés, voir [Fournisseurs personnalisés](/en/gateway/configuration-reference#custom-providers-and-base-urls) dans la référence.
+    - `agents.defaults.imageMaxDimensionPx` contrôle la réduction d'échelle des images de transcription/outils (par défaut `1200`) ; des valeurs plus faibles réduisent généralement l'utilisation des jetons de vision lors des exécutions avec de nombreuses captures d'écran.
+    - Voir [Models CLI](/en/concepts/models) pour changer de modèles dans le chat et [Model Failover](/en/concepts/model-failover) pour la rotation de l'authentification et le comportement de secours.
+    - Pour les fournisseurs personnalisés/auto-hébergés, voir [Custom providers](/en/gateway/configuration-reference#custom-providers-and-base-urls) dans la référence.
 
   </Accordion>
 
   <Accordion title="Contrôler qui peut envoyer un message au bot">
-    L'accès par DM est contrôlé par channel via `dmPolicy` :
+    L'accès DM est contrôlé par canal via `dmPolicy` :
 
-    - `"pairing"` (par défaut) : les expéditeurs inconnus reçoivent un code d'appariement à usage unique pour approuver
-    - `"allowlist"` : seuls les expéditeurs dans `allowFrom` (ou le stockage d'autorisation apparié)
-    - `"open"` : autoriser tous les DM entrants (nécessite `allowFrom: ["*"]`)
+    - `"pairing"` (par défaut) : les expéditeurs inconnus reçoivent un code d'appariement unique à approuver
+    - `"allowlist"` : uniquement les expéditeurs dans `allowFrom` (ou le stockage allow apparié)
+    - `"open"` : autoriser tous les DM entrants (requiert `allowFrom: ["*"]`)
     - `"disabled"` : ignorer tous les DM
 
-    Pour les groupes, utilisez `groupPolicy` + `groupAllowFrom` ou des listes d'autorisation spécifiques au channel.
+    Pour les groupes, utilisez `groupPolicy` + `groupAllowFrom` ou des listes blances spécifiques au canal.
 
-    Voir la [référence complète](/en/gateway/configuration-reference#dm-and-group-access) pour les détails par channel.
+    Voir la [référence complète](/en/gateway/configuration-reference#dm-and-group-access) pour les détails par canal.
 
   </Accordion>
 
-  <Accordion title="Configurer le filtrage par mention pour les discussions de groupe">
-    Les messages de groupe exigent par défaut une **mention**. Configurez les modèles par agent :
+  <Accordion title="Configurer le filtrage par mention pour les groupes">
+    Les messages de groupe nécessitent par défaut une **mention**. Configurez les modèles par agent :
 
     ```json5
     {
@@ -149,14 +149,14 @@ En cas d'échec de la validation :
     }
     ```
 
-    - **Mentions de métadonnées** : mentions @ natives ( WhatsApp tap-to-mention,  Telegram @bot, etc.)
-    - **Modèles de texte** : modèles d'expression rationnelle sécurisés dans `mentionPatterns`
-    - Voir la [référence complète](/en/gateway/configuration-reference#group-chat-mention-gating) pour les remplacements par channel et le mode self-chat.
+    - **Mentions de métadonnées** : mentions @ natives (tap-to-mention WhatsApp, @bot Telegram, etc.)
+    - **Modèles de texte** : modèles regex sûrs dans `mentionPatterns`
+    - Voir la [référence complète](/en/gateway/configuration-reference#group-chat-mention-gating) pour les substitutions par canal et le mode self-chat.
 
   </Accordion>
 
-  <Accordion title="Ajuster la surveillance de l'état des channels de la passerelle">
-    Contrôlez la fréquence à laquelle la passerelle redémarre les channels qui semblent obsolètes :
+  <Accordion title="Régler la surveillance de l'état de santé du canal de passerelle">
+    Contrôlez l'agressivité avec laquelle la passerelle redémarre les canaux qui semblent obsolètes :
 
     ```json5
     {
@@ -178,9 +178,9 @@ En cas d'échec de la validation :
     }
     ```
 
-    - Définissez `gateway.channelHealthCheckMinutes: 0` pour désactiver globalement les redémarrages du moniteur de santé.
+    - Définissez `gateway.channelHealthCheckMinutes: 0` pour désactiver globalement les redémarrages de surveillance de l'état de santé.
     - `channelStaleEventThresholdMinutes` doit être supérieur ou égal à l'intervalle de vérification.
-    - Utilisez `channels.<provider>.healthMonitor.enabled` ou `channels.<provider>.accounts.<id>.healthMonitor.enabled` pour désactiver les redémarrages automatiques pour un channel ou un compte sans désactiver le moniteur global.
+    - Utilisez `channels.<provider>.healthMonitor.enabled` ou `channels.<provider>.accounts.<id>.healthMonitor.enabled` pour désactiver les redémarrages automatiques pour un canal ou un compte sans désactiver le moniteur global.
     - Voir [Health Checks](/en/gateway/health) pour le débogage opérationnel et la [référence complète](/en/gateway/configuration-reference#gateway) pour tous les champs.
 
   </Accordion>
@@ -207,14 +207,14 @@ En cas d'échec de la validation :
     ```
 
     - `dmScope` : `main` (partagé) | `per-peer` | `per-channel-peer` | `per-account-channel-peer`
-    - `threadBindings` : paramètres globaux pour le routage des sessions liées aux fils de discussion (Discord prend en charge `/focus`, `/unfocus`, `/agents`, `/session idle` et `/session max-age`).
-    - Voir [Gestion des sessions](/en/concepts/session) pour la portée, les liens d'identité et la politique d'envoi.
+    - `threadBindings` : paramètres globaux par défaut pour le routage des sessions liées aux fils (Discord prend en charge `/focus`, `/unfocus`, `/agents`, `/session idle` et `/session max-age`).
+    - Voir [Session Management](/en/concepts/session) pour la portée, les liens d'identité et la politique d'envoi.
     - Voir [référence complète](/en/gateway/configuration-reference#session) pour tous les champs.
 
   </Accordion>
 
-  <Accordion title="Activer le sandboxing">
-    Exécutez les sessions d'agent dans des conteneurs Docker isolés :
+  <Accordion title="Activer le bac à sable">
+    Exécutez les sessions de l'agent dans des conteneurs Docker isolés :
 
     ```json5
     {
@@ -231,14 +231,14 @@ En cas d'échec de la validation :
 
     Construisez d'abord l'image : `scripts/sandbox-setup.sh`
 
-    Consultez le [Sandboxing](/en/gateway/sandboxing) pour le guide complet et la [référence complète](/en/gateway/configuration-reference#agentsdefaultssandbox) pour toutes les options.
+    Voir [Sandboxing](/en/gateway/sandboxing) pour le guide complet et [référence complète](/en/gateway/configuration-reference#agentsdefaultssandbox) pour toutes les options.
 
   </Accordion>
 
   <Accordion title="Activer la push relayée pour les builds officiels iOS">
     La push relayée est configurée dans `openclaw.json`.
 
-    Définissez ceci dans la config de la passerelle :
+    Définissez ceci dans la configuration de la passerelle :
 
     ```json5
     {
@@ -265,34 +265,34 @@ En cas d'échec de la validation :
     Ce que cela fait :
 
     - Permet à la passerelle d'envoyer des `push.test`, des notifications de réveil et des réveils de reconnexion via le relais externe.
-    - Utilise un autorisation d'envoi limitée à l'enregistrement, transmise par l'application iOS appariée. La passerelle n'a pas besoin d'un jeton de relais à l'échelle du déploiement.
+    - Utilise un jeton d'envoi délimité par l'enregistrement, transmis par l'application iOS appariée. La passerelle n'a pas besoin d'un jeton de relai à l'échelle du déploiement.
     - Lie chaque enregistrement relayé à l'identité de la passerelle avec laquelle l'application iOS a été appariée, empêchant ainsi une autre passerelle de réutiliser l'enregistrement stocké.
-    - Maintient les builds iOS locaux/manuels sur APNs directs. Les envois relayés ne s'appliquent qu'aux builds distribués officiellement qui se sont enregistrés via le relais.
-    - Doit correspondre à l'URL de base du relais intégrée dans le build iOS officiel/TestFlight, afin que le trafic d'enregistrement et d'envoi atteigne le même déploiement de relais.
+    - Conserve les builds locaux/manuels iOS sur les APNs directs. Les envois relayés s'appliquent uniquement aux builds distribués officielles qui se sont enregistrées via le relais.
+    - Doit correspondre à l'URL de base du relais intégrée dans le build officiel/TestFlight iOS, afin que le trafic d'enregistrement et d'envoi atteigne le même déploiement de relais.
 
     Flux de bout en bout :
 
-    1. Installez un build iOS officiel/TestFlight qui a été compilé avec la même URL de base de relais.
+    1. Installez un build officiel/TestFlight iOS qui a été compilé avec la même URL de base de relais.
     2. Configurez `gateway.push.apns.relay.baseUrl` sur la passerelle.
     3. Appariez l'application iOS à la passerelle et laissez les sessions de nœud et d'opérateur se connecter.
-    4. L'application iOS récupère l'identité de la passerelle, s'inscrit auprès du relais à l'aide d'App Attest et du reçu de l'application, puis publie la charge utile `push.apns.register` relayée vers la passerelle appariée.
-    5. La passerelle stocke le gestionnaire de relais et l'autorisation d'envoi, puis les utilise pour les `push.test`, les notifications de réveil et les réveils de reconnexion.
+    4. L'application iOS récupère l'identité de la passerelle, s'enregistre auprès du relais à l'aide d'App Attest et du reçu de l'application, puis publie la charge utile relayée `push.apns.register` vers la passerelle appariée.
+    5. La passerelle stocke le handle de relais et le jeton d'envoi, puis les utilise pour les `push.test`, les notifications de réveil et les réveils de reconnexion.
 
     Notes opérationnelles :
 
-    - Si vous basculez l'application iOS vers une autre passerelle, reconnectez l'application pour qu'elle puisse publier un nouvel enregistrement de relais lié à cette passerelle.
-    - Si vous publiez un nouveau build iOS pointant vers un déploiement de relais différent, l'application actualise son enregistrement de relais mis en cache au lieu de réutiliser l'ancienne origine de relais.
+    - Si vous basculez l'application iOS vers une autre passerelle, reconnectez l'application afin qu'elle puisse publier un nouvel enregistrement de relais lié à cette passerelle.
+    - Si vous publiez un nouveau build iOS pointant vers un déploiement de relais différent, l'application actualise son enregistrement de relais mis en cache au lieu de réutiliser l'ancienne origine du relais.
 
     Note de compatibilité :
 
-    - `OPENCLAW_APNS_RELAY_BASE_URL` et `OPENCLAW_APNS_RELAY_TIMEOUT_MS` fonctionnent toujours en tant que substitutions d'environnement temporaires.
-    - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` reste une échappatoire de développement en boucle locale uniquement ; ne pas rendre persistantes les URL de relais HTTP dans la configuration.
+    - `OPENCLAW_APNS_RELAY_BASE_URL` et `OPENCLAW_APNS_RELAY_TIMEOUT_MS` fonctionnent toujours comme substitutions d'environnement temporaires.
+    - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` reste une porte de sortie de développement en boucle locale uniquement ; ne persistez pas les URL de relais HTTP dans la configuration.
 
     Voir [Application iOS](/en/platforms/ios#relay-backed-push-for-official-builds) pour le flux de bout en bout et [Flux d'authentification et de confiance](/en/platforms/ios#authentication-and-trust-flow) pour le modèle de sécurité du relais.
 
   </Accordion>
 
-  <Accordion title="Configurer le heartbeat (contrôles périodiques)">
+  <Accordion title="Configurer le battement de cœur (points de contrôle périodiques)">
     ```json5
     {
       agents: {
@@ -306,10 +306,10 @@ En cas d'échec de la validation :
     }
     ```
 
-    - `every`: chaîne de durée (`30m`, `2h`). Définir `0m` pour désactiver.
-    - `target`: `last` | `whatsapp` | `telegram` | `discord` | `none`
-    - `directPolicy`: `allow` (par défaut) ou `block` pour les cibles de heartbeat de style DM
-    - Voir [Heartbeat](/en/gateway/heartbeat) pour le guide complet.
+    - `every`: chaîne de durée (`30m`, `2h`). Définissez `0m` pour désactiver.
+    - `target`: `last` | `none` | `<channel-id>` (par exemple `discord`, `matrix`, `telegram` ou `whatsapp`)
+    - `directPolicy`: `allow` (par défaut) ou `block` pour les cibles de battement de cœur style DM
+    - Consultez le [guide complet sur le battement de cœur](/en/gateway/heartbeat).
 
   </Accordion>
 
@@ -328,14 +328,14 @@ En cas d'échec de la validation :
     }
     ```
 
-    - `sessionRetention`: nettoyer les sessions d'exécution isolées terminées à partir de `sessions.json` (par défaut `24h`; définir `false` pour désactiver).
-    - `runLog`: nettoyer `cron/runs/<jobId>.jsonl` par taille et lignes conservées.
-    - Voir [Cron jobs](/en/automation/cron-jobs) pour la vue d'ensemble des fonctionnalités et les exemples CLI.
+    - `sessionRetention`: élimine les sessions d'exécution isolées terminées de `sessions.json` (par défaut `24h`; définissez `false` pour désactiver).
+    - `runLog`: élimine `cron/runs/<jobId>.jsonl` par taille et lignes conservées.
+    - Consultez [Tâches cron](/en/automation/cron-jobs) pour un aperçu des fonctionnalités et des exemples CLI.
 
   </Accordion>
 
   <Accordion title="Configurer les webhooks (hooks)">
-    Activer les points de terminaison HTTP webhook sur la Gateway :
+    Activer les points de terminaison HTTP webhook sur le Gateway :
 
     ```json5
     {
@@ -359,11 +359,11 @@ En cas d'échec de la validation :
     ```
 
     Note de sécurité :
-    - Traitez tout le contenu des payloads hook/webhook comme une entrée non fiable.
-    - Gardez les indicateurs de contournement de contenu non sécurisé désactivés (`hooks.gmail.allowUnsafeExternalContent`, `hooks.mappings[].allowUnsafeExternalContent`) sauf si vous effectuez un débogage à portée strictement limitée.
-    - Pour les agents pilotés par hooks, préférez les niveaux de modèle modernes et robustes ainsi qu'une politique d'outil stricte (par exemple, messagerie uniquement plus sandboxing si possible).
+    - Traitez tout le contenu de la charge utile hook/webhook comme une entrée non fiable.
+    - Gardez les indicateurs de contournement de contenu non sécurisé désactivés (`hooks.gmail.allowUnsafeExternalContent`, `hooks.mappings[].allowUnsafeExternalContent`) sauf si vous effectuez un débogage étroitement délimité.
+    - Pour les agents pilotés par hooks, privilégiez les niveaux de modèle modernes et forts et une stratégie d'outil stricte (par exemple, messagerie uniquement plus sandboxing si possible).
 
-    Voir [référence complète](/en/gateway/configuration-reference#hooks) pour toutes les options de mappage et l'intégration Gmail.
+    Consultez la [référence complète](/en/gateway/configuration-reference#hooks) pour toutes les options de mappage et l'intégration Gmail.
 
   </Accordion>
 
@@ -385,7 +385,7 @@ En cas d'échec de la validation :
     }
     ```
 
-    Voir [Multi-Agent](/en/concepts/multi-agent) et [référence complète](/en/gateway/configuration-reference#multi-agent-routing) pour les règles de liaison et les profils d'accès par agent.
+    Consultez [Multi-Agent](/en/concepts/multi-agent) et la [référence complète](/en/gateway/configuration-reference#multi-agent-routing) pour les règles de liaison et les profils d'accès par agent.
 
   </Accordion>
 
@@ -407,7 +407,7 @@ En cas d'échec de la validation :
     - **Tableau de fichiers** : fusionné en profondeur dans l'ordre (le dernier gagne)
     - **Clés frères** : fusionnées après les inclusions (remplacent les valeurs incluses)
     - **Inclusions imbriquées** : prises en charge jusqu'à 10 niveaux de profondeur
-    - **Chemins relatifs** : résolus par rapport au fichier d'inclusion
+    - **Chemins relatifs** : résolus par rapport au fichier inclus
     - **Gestion des erreurs** : erreurs claires pour les fichiers manquants, les erreurs d'analyse et les inclusions circulaires
 
   </Accordion>
@@ -449,29 +449,29 @@ La plupart des champs s'appliquent à chaud sans interruption de service. En mod
 | Gateway server      | `gateway.*` (port, bind, auth, tailscale, TLS, HTTP)                     | **Oui**                  |
 | Infrastructure      | `discovery`, `canvasHost`, `plugins`                                     | **Oui**                  |
 
-<Note>`gateway.reload` and `gateway.remote` are exceptions — changing them does **not** trigger a restart.</Note>
+<Note>`gateway.reload` et `gateway.remote` sont des exceptions — leur modification ne déclenche **pas** un redémarrage.</Note>
 
 ## Config RPC (programmatic updates)
 
-<Note>Control-plane write RPCs (`config.apply`, `config.patch`, `update.run`) are rate-limited to **3 requests per 60 seconds** per `deviceId+clientIp`. When limited, the RPC returns `UNAVAILABLE` with `retryAfterMs`.</Note>
+<Note>Les RPC d'écriture du plan de contrôle (`config.apply`, `config.patch`, `update.run`) sont limitées à **3 requêtes par 60 secondes** par `deviceId+clientIp`. Lorsqu'elles sont limitées, le RPC renvoie `UNAVAILABLE` avec `retryAfterMs`.</Note>
 
 <AccordionGroup>
   <Accordion title="config.apply (full replace)">
-    Validates + writes the full config and restarts the Gateway in one step.
+    Valide + écrit la configuration complète et redémarre la Gateway en une seule étape.
 
     <Warning>
-    `config.apply` replaces the **entire config**. Use `config.patch` for partial updates, or `openclaw config set` for single keys.
+    `config.apply` remplace la **configuration entière**. Utilisez `config.patch` pour des mises à jour partielles, ou `openclaw config set` pour des clés uniques.
     </Warning>
 
-    Params:
+    Paramètres :
 
-    - `raw` (string) — JSON5 payload for the entire config
-    - `baseHash` (optional) — config hash from `config.get` (required when config exists)
-    - `sessionKey` (optional) — session key for the post-restart wake-up ping
-    - `note` (optional) — note for the restart sentinel
-    - `restartDelayMs` (optional) — delay before restart (default 2000)
+    - `raw` (chaîne) — payload JSON5 pour la configuration entière
+    - `baseHash` (facultatif) — hachage de la configuration depuis `config.get` (requis lorsque la configuration existe)
+    - `sessionKey` (facultatif) — clé de session pour le ping de réveil après redémarrage
+    - `note` (facultatif) — note pour la sentinelle de redémarrage
+    - `restartDelayMs` (facultatif) — délai avant le redémarrage (par défaut 2000)
 
-    Restart requests are coalesced while one is already pending/in-flight, and a 30-second cooldown applies between restart cycles.
+    Les demandes de redémarrage sont fusionnées lorsque l'une est déjà en cours/en transit, et un temps de recharge de 30 secondes s'applique entre les cycles de redémarrage.
 
     ```bash
     openclaw gateway call config.get --params '{}'  # capture payload.hash
@@ -489,15 +489,15 @@ La plupart des champs s'appliquent à chaud sans interruption de service. En mod
 
     - Les objets fusionnent de manière récursive
     - `null` supprime une clé
-    - Les tableaux remplacent
+    - Les tableaux sont remplacés
 
     Paramètres :
 
-    - `raw` (chaîne) — JSON5 avec uniquement les clés à modifier
-    - `baseHash` (requis) — hachage de configuration issu de `config.get`
+    - `raw` (chaîne) — JSON5 contenant uniquement les clés à modifier
+    - `baseHash` (requis) — hachage de la configuration provenant de `config.get`
     - `sessionKey`, `note`, `restartDelayMs` — identique à `config.apply`
 
-    Le comportement de redémarrage correspond à `config.apply` : redémarrages en attente regroupés plus un temps de recharge de 30 secondes entre les cycles de redémarrage.
+    Le comportement de redémarrage correspond à `config.apply` : redémarrages en attente regroupés plus un délai de 30 secondes entre les cycles de redémarrage.
 
     ```bash
     openclaw gateway call config.patch --params '{
@@ -555,14 +555,14 @@ Aucun de ces fichiers ne remplace les variables d'environnement existantes. Vous
 Règles :
 
 - Seuls les noms en majuscules correspondent : `[A-Z_][A-Z0-9_]*`
-- Les variables manquantes ou vides génèrent une erreur au chargement
+- Les variables manquantes ou vides lancent une erreur au chargement
 - Échappez avec `$${VAR}` pour une sortie littérale
-- Fonctionne dans les fichiers `$include`
+- Fonctionne à l'intérieur des fichiers `$include`
 - Substitution en ligne : `"${BASE}/v1"` → `"https://api.example.com/v1"`
 
 </Accordion>
 
-<Accordion title="Références de secrets (env, file, exec)">
+<Accordion title="Secret refs (env, file, exec)">
   Pour les champs qui prennent en charge les objets SecretRef, vous pouvez utiliser :
 
 ```json5
@@ -600,12 +600,12 @@ Les chemins d'identification pris en charge sont répertoriés dans [SecretRef C
 
 </Accordion>
 
-Consultez [Environment](/en/help/environment) pour connaître l'ordre de priorité complet et les sources.
+Voir [Environment](/en/help/environment) pour la priorité complète et les sources.
 
 ## Référence complète
 
-Pour la référence complète champ par champ, consultez la **[Référence de configuration](/en/gateway/configuration-reference)**.
+Pour la référence complète champ par champ, voir **[Configuration Reference](/en/gateway/configuration-reference)**.
 
 ---
 
-_En relation : [Exemples de configuration](/en/gateway/configuration-examples) · [Référence de configuration](/en/gateway/configuration-reference) · [Doctor](/en/gateway/doctor)_
+_En relation : [Configuration Examples](/en/gateway/configuration-examples) · [Configuration Reference](/en/gateway/configuration-reference) · [Doctor](/en/gateway/doctor)_

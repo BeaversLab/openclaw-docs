@@ -44,9 +44,16 @@ Las credenciales de token (`type: "token"`) admiten `token` en línea y/o `token
 2. Para los perfiles elegibles, el material del token puede resolverse desde el valor en línea o `tokenRef`.
 3. Las referencias no resolubles producen `unresolved_ref` en la salida de `models status --probe`.
 
-## Mensajes compatibles con heredados
+## Guardia de políticas de OAuth SecretRef
 
-Para la compatibilidad con scripts, los errores de sonda mantienen esta primera línea sin cambios:
+- La entrada SecretRef es solo para credenciales estáticas.
+- Si una credencial de perfil es `type: "oauth"`, los objetos SecretRef no son compatibles con ese material de credencial de perfil.
+- Si `auth.profiles.<id>.mode` es `"oauth"`, se rechaza la entrada `keyRef`/`tokenRef` respaldada por SecretRef para ese perfil.
+- Las violaciones son fallos críticos en las rutas de resolución de autenticación de inicio/recarga.
+
+## Mensajes compatibles con sistemas heredados
+
+Para la compatibilidad con secuencias de comandos, los errores de sondaje mantienen esta primera línea sin cambios:
 
 `Auth profile credentials are missing or expired.`
 

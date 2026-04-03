@@ -9,20 +9,19 @@ title: "mcp"
 
 # mcp
 
-`openclaw mcp` 有兩個職責：
+`openclaw mcp` 有兩項工作：
 
-- 使用 `openclaw mcp serve` 將 OpenClaw 作為 MCP 伺服器執行
+- 使用 `openclaw mcp serve` 將 OpenClaw 作為 MCP 伺服器運行
 - 使用 `list`、`show`、
-  `set` 和 `unset` 管理屬於 OpenClaw 的輸出 MCP 伺服器定義
+  `set` 和 `unset` 管理 OpenClaw 擁有的輸出 MCP 伺服器定義
 
 換句話說：
 
-- `serve` 是 OpenClaw 作為 MCP 伺服器
+- `serve` 是 OpenClaw 作為 MCP 伺服器運作
 - `list` / `show` / `set` / `unset` 是 OpenClaw 作為 MCP 用戶端
-  註冊表，用於其執行時稍後可能使用的其他 MCP 伺服器
+  註冊表，供其執行時稍後可能使用的其他 MCP 伺服器
 
-當 OpenClaw 應自行託管編程控制台
-會話並透過 ACP 路由該執行時，請使用 [`openclaw acp`](/en/cli/acp)。
+當 OpenClaw 應自行託管編碋套件會話並透過 ACP 路由該執行時，請使用 [`openclaw acp`](/en/cli/acp)。
 
 ## OpenClaw 作為 MCP 伺服器
 
@@ -30,7 +29,7 @@ title: "mcp"
 
 ## 何時使用 `serve`
 
-當以下情況時使用 `openclaw mcp serve`：
+在以下情況使用 `openclaw mcp serve`：
 
 - Codex、Claude Code 或其他 MCP 用戶端應直接與
   支援 OpenClaw 的頻道對話通訊
@@ -38,15 +37,12 @@ title: "mcp"
 - 您想要一個能在 OpenClaw 頻道後端之間運作的 MCP 伺服器，
   而不是執行各自獨立的每個頻道橋接器
 
-當 OpenClaw 應自行託管編程
-執行時並將代理程式會話保留在 OpenClaw 內時，請改用 [`openclaw acp`](/en/cli/acp)。
+當 OpenClaw 應自行託管編碼執行時並將代理程式會話保留在 OpenClaw 內時，請改用 [`openclaw acp`](/en/cli/acp)。
 
 ## 運作方式
 
-`openclaw mcp serve` 會啟動 stdio MCP 伺服器。MCP 用戶端擁有該
-程序。當用戶端保持 stdio 會話開啟時，橋接器會透過 WebSocket 連接到
-本機或遠端 OpenClaw Gateway，並透過 MCP 公開路由的頻道
-對話。
+`openclaw mcp serve` 啟動 stdio MCP 伺服器。MCP 用戶端擁有該程序。當用戶端保持 stdio 會話開啟時，橋接器會透過 WebSocket 連接到
+本機或遠端 OpenClaw Gateway，並透過 MCP 公開路由的頻道對話。
 
 生命週期：
 
@@ -60,7 +56,7 @@ title: "mcp"
 重要行為：
 
 - 即時佇列狀態在橋接器連接時開始
-- 較舊的逐字稿歷史紀錄是透過 `messages_read` 讀取的
+- 使用 `messages_read` 讀取較舊的逐字稿歷史
 - Claude 推送通知僅在 MCP session 存活期間存在
 - 當客戶端斷線時，橋接器會退出，即時佇列也會消失
 
@@ -68,22 +64,22 @@ title: "mcp"
 
 以兩種不同的方式使用同一個橋接器：
 
-- 通用 MCP 客戶端：僅限標準 MCP 工具。使用 `conversations_list`、
-  `messages_read`、`events_poll`、`events_wait`、`messages_send` 以及
+- 通用 MCP 用戶端：僅限標準 MCP 工具。使用 `conversations_list`、
+  `messages_read`、`events_poll`、`events_wait`、`messages_send` 和
   核准工具。
-- Claude Code：標準 MCP 工具加上 Claude 專用的頻道轉接器。
+- Claude Code：標準 MCP 工具加上 Claude 專用的頻道配接器。
   啟用 `--claude-channel-mode on` 或保留預設值 `auto`。
 
-目前，`auto` 的行為與 `on` 相同。目前尚無客戶端功能檢測。
+目前，`auto` 的行為與 `on` 相同。尚無用戶端功能檢測。
 
-## `serve` 公開的內容
+## `serve` 提供的功能
 
 橋接器使用現有的 Gateway 會話路由元資料來公開由通道支援的對話。當 OpenClaw 對已知路由（例如：）已具有會話狀態時，會出現對話：
 
 - `channel`
 - 收件者或目的地元資料
-- 選用的 `accountId`
-- 選用的 `threadId`
+- 可選 `accountId`
+- 可選 `threadId`
 
 這讓 MCP 客戶端可以在一個地方：
 
@@ -198,9 +194,9 @@ openclaw mcp serve --claude-channel-mode off
 重要限制：
 
 - 佇列僅在運行時有效；它會在 MCP 橋接器啟動時開始
-- `events_poll` 和 `events_wait` 本身不會重播較舊的
-  Gateway 歷史記錄
-- 應使用 `messages_read` 讀取持久的積壓訊息
+- `events_poll` 和 `events_wait` 本身不會重播較舊的 Gateway
+  歷史記錄
+- 應使用 `messages_read` 讀取持久性待辦事項
 
 ## Claude 頻道通知
 
@@ -211,8 +207,8 @@ Claude 特定的 MCP 通知到達。
 標誌：
 
 - `--claude-channel-mode off`：僅限標準 MCP 工具
-- `--claude-channel-mode on`：啟用 Claude 通道通知
-- `--claude-channel-mode auto`：目前預設值；橋接器行為與 `on` 相同
+- `--claude-channel-mode on`：啟用 Claude 頻道通知
+- `--claude-channel-mode auto`：目前為預設值；橋接行為與 `on` 相同
 
 當啟用 Claude 通道模式時，伺服器會通告 Claude 實驗性功能並且可以發送：
 
@@ -224,7 +220,8 @@ Claude 特定的 MCP 通知到達。
 - 傳入的 `user` 逐字稿訊息會被轉發為
   `notifications/claude/channel`
 - 透過 MCP 接收到的 Claude 權限請求會在記憶體中追蹤
-- 如果連結的對話稍後發送 `yes abcde` 或 `no abcde`，橋接器會將其轉換為 `notifications/claude/channel/permission`
+- 如果連結的對話稍後傳送 `yes abcde` 或 `no abcde`，橋接器
+  會將其轉換為 `notifications/claude/channel/permission`
 - 這些通知僅限於即時會話；如果 MCP 客戶端斷開連線，將沒有推送目標
 
 這是有意為之的客戶端特定設計。通用 MCP 客戶端應依賴標準輪詢工具。
@@ -250,15 +247,15 @@ Claude 特定的 MCP 通知到達。
 
 `openclaw mcp serve` 支援：
 
-- `--url <url>`：Gateway WebSocket URL
-- `--token <token>`：Gateway 權杖
-- `--token-file <path>`：從檔案讀取權杖
-- `--password <password>`：Gateway 密碼
-- `--password-file <path>`：從檔案讀取密碼
-- `--claude-channel-mode <auto|on|off>`：Claude 通知模式
-- `-v`, `--verbose`：在 stderr 上輸出詳細日誌
+- `--url <url>`: Gateway WebSocket URL
+- `--token <token>`: Gateway 權杖
+- `--token-file <path>`: 從檔案讀取權杖
+- `--password <password>`: Gateway 密碼
+- `--password-file <path>`: 從檔案讀取密碼
+- `--claude-channel-mode <auto|on|off>`: Claude 通知模式
+- `-v`, `--verbose`: 在 stderr 上輸出詳細日誌
 
-盡可能優先使用 `--token-file` 或 `--password-file` 而非內嵌機密。
+盡可能優先使用 `--token-file` 或 `--password-file` 而非內聯機密。
 
 ## 安全性與信任邊界
 
@@ -268,13 +265,13 @@ Claude 特定的 MCP 通知到達。
 
 - 發送者允許清單、配對以及通道層級的信任仍然屬於底層
   OpenClaw 通道設定的一部分
-- `messages_send` 只能透過現有的已儲存路由進行回覆
+- `messages_send` 只能透過現有的已儲存路由回覆
 - 核准狀態僅在當前橋接工作階段中即時存放於記憶體內
 - 橋接器驗證應使用您信任用於任何其他遠端 Gateway 客戶端的
   相同 Gateway 權杖或密碼控制
 
-如果 `conversations_list` 中缺少對話，通常的原因並不是
-MCP 配置。而是底層 Gateway 會話中缺少或不完整的路由元數據。
+如果 `conversations_list` 中缺少對話，通常原因不是
+MCP 設定。而是底層 Gateway 會話中缺少或不完整的路由元資料。
 
 ## 測試
 
@@ -287,7 +284,7 @@ pnpm test:docker:mcp-channels
 該煙霧測試：
 
 - 啟動一個已植入種子的 Gateway 容器
-- 啟動第二個生成 `openclaw mcp serve` 的容器
+- 啟動第二個容器來生成 `openclaw mcp serve`
 - 驗證對話發現、對話紀錄讀取、附件元數據讀取、
   實時事件佇列行為以及出站發送路由
 - 通過真實的 stdio MCP 橋接器驗證 Claude 風格的頻道和權限通知
@@ -305,7 +302,8 @@ pnpm test:docker:mcp-channels
 
 ### `events_poll` 或 `events_wait` 遺漏較舊的訊息
 
-這是預期行為。即時佇列是在橋接器連線時才開始的。請使用 `messages_read` 讀取較舊的對話紀錄歷史。
+預期行為。即時佇列在橋接連接時啟動。請使用 `messages_read` 讀取較舊的對話紀錄
+歷史。
 
 ### 未顯示 Claude 通知
 
@@ -318,14 +316,15 @@ pnpm test:docker:mcp-channels
 
 ### 遺失核准請求
 
-`permissions_list_open` 僅顯示橋接器連線期間觀察到的核准請求。它並非持久的核准歷史記錄 API。
+`permissions_list_open` 僅顯示橋接連接期間觀察到的
+核准請求。它不是持久的核准歷史 API。
 
 ## OpenClaw 作為 MCP 客戶端註冊表
 
 這是 `openclaw mcp list`、`show`、`set` 和 `unset` 路徑。
 
-這些命令不會透過 MCP 公開 OpenClaw。它們們管理 OpenClaw 設定中 `mcp.servers` 下的 OpenClaw 擁有的 MCP
-伺服器定義。
+這些指令不會透過 MCP 公開 OpenClaw。它們管理 OpenClaw 設定中 `mcp.servers` 下
+OpenClaw 擁有的 MCP 伺服器定義。
 
 這些儲存的定義是給 OpenClaw 稍後啟動或設定的執行時期（runtime）使用的，例如嵌入式 Pi 和其他執行時期轉接器。OpenClaw 將定義集中儲存，因此那些執行時期不需要維護自己的 MCP
 伺服器清單副本。
@@ -377,24 +376,89 @@ openclaw mcp unset context7
 }
 ```
 
-典型欄位：
+### Stdio 傳輸
 
-- `command`
-- `args`
-- `env`
-- `cwd` 或 `workingDirectory`
-- `url`
+啟動本機子進程並透過 stdin/stdout 通訊。
 
-這些指令僅管理已儲存的設定。它們不會啟動通道橋接、開啟即時 MCP 用戶端工作階段，或驗證目標伺服器是否可連線。
+| 欄位                       | 描述                    |
+| -------------------------- | ----------------------- |
+| `command`                  | 要生成的可執行檔 (必填) |
+| `args`                     | 命令列引數陣列          |
+| `env`                      | 額外的環境變數          |
+| `cwd` / `workingDirectory` | 程序的執行目錄          |
+
+### SSE / HTTP 傳輸
+
+透過 HTTP Server-Sent Events 連接到遠端 MCP 伺服器。
+
+| 欄位                | 描述                                           |
+| ------------------- | ---------------------------------------------- |
+| `url`               | 遠端伺服器的 HTTP 或 HTTPS URL（必填）         |
+| `headers`           | HTTP 標頭的可選鍵值映射（例如驗證令牌）        |
+| `connectionTimeout` | 每個伺服器的連接逾時時間，以毫秒為單位（可選） |
+
+範例：
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "remote-tools": {
+        "url": "https://mcp.example.com",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        }
+      }
+    }
+  }
+}
+```
+
+`url` (userinfo) 和 `headers` 中的敏感值在日誌和
+狀態輸出中會被隱藏。
+
+### 可串流 HTTP 傳輸
+
+`streamable-http` 是除了 `sse` 和 `stdio` 之外的額外傳輸選項。它使用 HTTP 串流與遠端 MCP 伺服器進行雙向通訊。
+
+| 欄位                | 描述                                           |
+| ------------------- | ---------------------------------------------- |
+| `url`               | 遠端伺服器的 HTTP 或 HTTPS URL（必填）         |
+| `transport`         | 設為 `"streamable-http"` 以選擇此傳輸方式      |
+| `headers`           | HTTP 標頭的可選鍵值映射（例如驗證令牌）        |
+| `connectionTimeout` | 每個伺服器的連接逾時時間，以毫秒為單位（可選） |
+
+範例：
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "streaming-tools": {
+        "url": "https://mcp.example.com/stream",
+        "transport": "streamable-http",
+        "connectionTimeout": 10000,
+        "headers": {
+          "Authorization": "Bearer <token>"
+        }
+      }
+    }
+  }
+}
+```
+
+這些指令僅管理已儲存的設定。它們不會啟動通道橋接器、
+開啟即時 MCP 客戶端會話，也不會驗證目標伺服器是否可連線。
 
 ## 目前限制
 
-本頁面記錄了目前版本隨附的橋接功能。
+本頁面記錄了目前發布版本的橋接器功能。
 
 目前限制：
 
-- 對話探索取決於現有的 Gateway 工作階段路由中繼資料
-- 除了 Claude 專用的配接器外，沒有通用的推送協定
-- 尚無訊息編輯或反應工具
-- 尚無專屬的 HTTP MCP 傳輸
-- `permissions_list_open` 僅包含橋接器連線時所觀察到的核准
+- 對話探索取決於現有的 Gateway 會話路由元數據
+- 除 Claude 專用適配器外，沒有通用的推送協議
+- 尚無訊息編輯或回應工具
+- HTTP/SSE/streamable-http 傳輸連接到單一遠端伺服器；尚無多工上游
+- `permissions_list_open` 僅包含在橋接器
+  連接期間觀察到的核准記錄

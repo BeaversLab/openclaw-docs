@@ -1,16 +1,16 @@
 ---
-summary: "Gateway 网关 lifecycle on macOS (launchd)"
+summary: "Gateway(网关) 网关 lifecycle on macOS (launchd)"
 read_when:
   - Integrating the mac app with the gateway lifecycle
-title: "Gateway 网关 Lifecycle"
+title: "Gateway(网关) 网关 Lifecycle"
 ---
 
-# macOS 上的 Gateway 网关 生命周期
+# macOS 上的 Gateway(网关) 网关 生命周期
 
-macOS 应用程序默认情况下 **通过 launchd 管理 Gateway 网关**，而不会将 Gateway 网关 作为子进程生成。它首先尝试连接到配置端口上已运行的 Gateway 网关；如果无法连接到任何 Gateway 网关，它会通过外部 `openclaw` CLI 启用 launchd 服务（无嵌入式运行时）。这为您提供了可靠的登录时自动启动和崩溃后重启功能。子进程模式（由应用程序直接生成 Gateway 网关）目前**未被使用**。
+macOS 应用程序默认情况下 **通过 launchd 管理 Gateway(网关) 网关**，而不会将 Gateway(网关) 网关 作为子进程生成。它首先尝试连接到配置端口上已运行的 Gateway(网关) 网关；如果无法连接到任何 Gateway(网关) 网关，它会通过外部 `openclaw` CLI 启用 launchd 服务（无嵌入式运行时）。这为您提供了可靠的登录时自动启动和崩溃后重启功能。子进程模式（由应用程序直接生成 Gateway(网关) 网关）目前**未被使用**。
 
-子进程模式（Gateway 网关 由应用直接生成）目前**未使用**。
-如果您需要与 UI 紧密耦合，请在终端中手动运行 Gateway 网关。
+子进程模式（Gateway(网关) 网关 由应用直接生成）目前**未使用**。
+如果您需要与 UI 紧密耦合，请在终端中手动运行 Gateway(网关) 网关。
 
 ## 默认行为
 
@@ -44,7 +44,7 @@ rm ~/.openclaw/disable-launchagent
 
 若要强制 macOS 应用**永不安装或管理 launchd**，请使用
 `--attach-only`（或 `--no-launchd`）启动它。这将设置
-`~/.openclaw/disable-launchagent`，因此该应用仅附加到正在运行的 Gateway。您可以在
+`~/.openclaw/disable-launchagent`，因此该应用仅附加到正在运行的 Gateway(网关)。您可以在
 调试设置中切换相同的行为。
 
 ## 远程模式

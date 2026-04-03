@@ -9,7 +9,7 @@ title: "Sous-agents"
 
 # Sous-agents
 
-Les sous-agents sont des exécutions d'agent en arrière-plan générées à partir d'une exécution d'agent existante. Ils s'exécutent dans leur propre session (`agent:<agentId>:subagent:<uuid>`) et, une fois terminés, **annoncent** leur résultat au channel de chat demandeur.
+Les sous-agents sont des exécutions d'agent en arrière-plan générées à partir d'une exécution d'agent existante. Ils s'exécutent dans leur propre session (`agent:<agentId>:subagent:<uuid>`) et, une fois terminés, **annoncent** leur résultat au canal de discussion demandeur. Chaque exécution de sous-agent est suivie comme une [tâche d'arrière-plan](/en/automation/tasks).
 
 ## Commande slash
 
@@ -121,29 +121,30 @@ Commutateurs de configuration :
 - Par défaut global : `session.threadBindings.enabled`, `session.threadBindings.idleHours`, `session.threadBindings.maxAgeHours`
 - La priorité du canal et les clés de liaison automatique de génération sont spécifiques à l'adaptateur. Voir **Canaux supportant les fils** ci-dessus.
 
-Voir [Référence de configuration](/en/gateway/configuration-reference) et [Commandes slash](/en/tools/slash-commands) pour les détails actuels de l'adaptateur.
+Consultez [Référence de configuration](/en/gateway/configuration-reference) et [Commandes slash](/en/tools/slash-commands) pour les détails actuels de l'adaptateur.
 
 Liste d'autorisation :
 
 - `agents.list[].subagents.allowAgents` : liste des IDs d'agents qui peuvent être ciblés via `agentId` (`["*"]` pour tout autoriser). Par défaut : uniquement l'agent demandeur.
 - Garde d'héritage du bac à sable : si la session demandeur est sandboxée, `sessions_spawn` rejette les cibles qui s'exécuteraient sans bac à sable.
+- `agents.defaults.subagents.requireAgentId` / `agents.list[].subagents.requireAgentId` : si vrai, bloque les appels `sessions_spawn` qui omettent `agentId` (force la sélection explicite du profil). Par défaut : false.
 
 Discovery :
 
-- Utilisez `agents_list` pour voir quels IDs d'agents sont actuellement autorisés pour `sessions_spawn`.
+- Utilisez `agents_list` pour voir quels identifiants d'agent sont actuellement autorisés pour `sessions_spawn`.
 
 Archivage automatique :
 
 - Les sessions de sous-agents sont automatiquement archivées après `agents.defaults.subagents.archiveAfterMinutes` (par défaut : 60).
 - L'archivage utilise `sessions.delete` et renomme la transcription en `*.deleted.<timestamp>` (même dossier).
-- `cleanup: "delete"` archive immédiatement après l'annonce (conserve tout de même la transcription via renommage).
-- L'archivage automatique est au meilleur effort ; les minuteurs en attente sont perdus si la passerelle redémarre.
+- `cleanup: "delete"` archive immédiatement après l'annonce (conserve tout de même la transcription via le renommage).
+- L'archivage automatique est de type « best-effort » ; les minuteurs en attente sont perdus si la passerelle redémarre.
 - `runTimeoutSeconds` n'archive **pas** automatiquement ; il arrête seulement l'exécution. La session reste jusqu'à l'archivage automatique.
-- L'archivage automatique s'applique de manière égale aux sessions de profondeur 1 et de profondeur 2.
+- L'archivage automatique s'applique également aux sessions de profondeur 1 et de profondeur 2.
 
 ## Sous-agents imbriqués
 
-Par défaut, les sous-agents ne peuvent pas créer leurs propres sous-agents (`maxSpawnDepth: 1`). Vous pouvez activer un niveau d'imbrication en définissant `maxSpawnDepth: 2`, ce qui permet le **modèle d'orchestrateur** : principal → sous-agent orchestrateur → sous-sous-agents travailleurs.
+Par défaut, les sous-agents ne peuvent pas générer leurs propres sous-agents (`maxSpawnDepth: 1`). Vous pouvez activer un niveau d'imbrication en définissant `maxSpawnDepth: 2`, ce qui permet le **modèle d'orchestrateur** : principal → sous-agent orchestrateur → sous-sous-agents workers.
 
 ### Comment activer
 
@@ -164,28 +165,28 @@ Par défaut, les sous-agents ne peuvent pas créer leurs propres sous-agents (`m
 
 ### Niveaux de profondeur
 
-| Profondeur | Forme de la clé de session                   | Rôle                                                           | Peut créer ?                      |
-| ---------- | -------------------------------------------- | -------------------------------------------------------------- | --------------------------------- |
-| 0          | `agent:<id>:main`                            | Agent principal                                                | Toujours                          |
-| 1          | `agent:<id>:subagent:<uuid>`                 | Sous-agent (orchestrateur quand la profondeur 2 est autorisée) | Seulement si `maxSpawnDepth >= 2` |
-| 2          | `agent:<id>:subagent:<uuid>:subagent:<uuid>` | Sous-sous-agent (travailleur terminal)                         | Jamais                            |
+| Profondeur | Forme de la clé de session                   | Rôle                                                             | Peut générer ?                    |
+| ---------- | -------------------------------------------- | ---------------------------------------------------------------- | --------------------------------- |
+| 0          | `agent:<id>:main`                            | Agent principal                                                  | Toujours                          |
+| 1          | `agent:<id>:subagent:<uuid>`                 | Sous-agent (orchestrateur lorsque la profondeur 2 est autorisée) | Seulement si `maxSpawnDepth >= 2` |
+| 2          | `agent:<id>:subagent:<uuid>:subagent:<uuid>` | Sous-sous-agent (feuille de travail)                             | Jamais                            |
 
 ### Chaîne d'annonces
 
 Les résultats remontent la chaîne :
 
-1. Le travailleur de profondeur-2 se termine → annonce à son parent (orchestrateur de profondeur-1)
-2. L'orchestrateur de profondeur-1 reçoit l'annonce, synthétise les résultats, se termine → annonce au principal
+1. Le travailleur de profondeur 2 se termine → annonce à son parent (orchestrateur de profondeur 1)
+2. L'orchestrateur de profondeur 1 reçoit l'annonce, synthétise les résultats, se termine → annonce au principal
 3. L'agent principal reçoit l'annonce et la transmet à l'utilisateur
 
 Chaque niveau ne voit que les annonces de ses enfants directs.
 
-### Stratégie d'outil par profondeur
+### Stratégie d'outils par profondeur
 
-- Le rôle et le périmètre de contrôle sont écrits dans les métadonnées de session au moment de la création. Cela empêche les clés de session plates ou restaurées de retrouver accidentellement des privilèges d'orchestrateur.
+- Le rôle et le périmètre de contrôle sont écrits dans les métadonnées de la session au moment de la création. Cela empêche les clés de session plates ou restaurées de retrouver accidentellement des privilèges d'orchestrateur.
 - **Profondeur 1 (orchestrateur, quand `maxSpawnDepth >= 2`)** : Obtient `sessions_spawn`, `subagents`, `sessions_list`, `sessions_history` pour qu'il puisse gérer ses enfants. Les autres outils de session/système restent refusés.
-- **Profondeur 1 (terminal, quand `maxSpawnDepth == 1`)** : Aucun outil de session (comportement par défaut actuel).
-- **Profondeur 2 (travailleur terminal)** : Aucun outil de session — `sessions_spawn` est toujours refusé à la profondeur 2. Ne peut pas créer d'autres enfants.
+- **Profondeur 1 (feuille, quand `maxSpawnDepth == 1`)** : Aucun outil de session (comportement par défaut actuel).
+- **Profondeur 2 (travailleur feuille)** : Aucun outil de session — `sessions_spawn` est toujours refusé à la profondeur 2. Impossible de générer d'autres enfants.
 
 ### Limite de création par agent
 
@@ -193,54 +194,54 @@ Chaque session d'agent (à n'importe quelle profondeur) peut avoir au plus `maxC
 
 ### Arrêt en cascade
 
-Arrêter un orchestrateur de profondeur-1 arrête automatiquement tous ses enfants de profondeur-2 :
+Arrêter un orchestrateur de profondeur 1 arrête automatiquement tous ses enfants de profondeur 2 :
 
-- `/stop` dans le chat principal arrête tous les agents de profondeur 1 et se répercute en cascade sur leurs enfants de profondeur 2.
-- `/subagents kill <id>` arrête un sous-agent spécifique et se répercute en cascade sur ses enfants.
-- `/subagents kill all` arrête tous les sous-agents pour le demandeur et se répercute en cascade.
+- `/stop` dans le chat principal arrête tous les agents de profondeur 1 et se propage à leurs enfants de profondeur 2.
+- `/subagents kill <id>` arrête un sous-agent spécifique et se propage à ses enfants.
+- `/subagents kill all` arrête tous les sous-agents pour le demandeur et se propage.
 
 ## Authentification
 
-L'authentification du sous-agent est résolue par **agent id**, et non par type de session :
+L'auth du sous-agent est résolue par **id d'agent**, et non par type de session :
 
 - La clé de session du sous-agent est `agent:<agentId>:subagent:<uuid>`.
-- Le magasin d'authentification est chargé à partir du `agentDir` de cet agent.
-- Les profils d'authentification de l'agent principal sont fusionnés en tant que **fallback** ; les profils de l'agent prévalent sur les profils principaux en cas de conflit.
+- Le magasin d'auth est chargé à partir des `agentDir` de cet agent.
+- Les profils d'auth de l'agent principal sont fusionnés en tant que **solution de secours** ; les profils de l'agent priment sur les profils principaux en cas de conflit.
 
-Remarque : la fusion est additive, les profils principaux sont donc toujours disponibles en tant que secours. Une authentification entièrement isolée par agent n'est pas encore prise en charge.
+Remarque : la fusion est additive, donc les profils principaux sont toujours disponibles en solution de secours. Une auth entièrement isolée par agent n'est pas encore prise en charge.
 
-## Annoncer
+## Annonce
 
-Les sous-agents font rapport via une étape d'annonce :
+Les sous-agents rapportent via une étape d'annonce :
 
-- L'étape d'annonce s'exécute dans la session du sous-agent (et non dans la session du demandeur).
-- Si le sous-agent répond exactement `ANNOUNCE_SKIP`, rien n'est posté.
+- L'étape d'annonce s'exécute à l'intérieur de la session du sous-agent (pas la session du demandeur).
+- Si le sous-agent répond exactement `ANNOUNCE_SKIP`, rien n'est publié.
 - Sinon, la livraison dépend de la profondeur du demandeur :
-  - les sessions demandeur de premier niveau utilisent un appel de suivi `agent` avec livraison externe (`deliver=true`)
-  - les sessions sous-agent demandeur imbriquées reçoivent une injection de suivi interne (`deliver=false`) afin que l'orchestrateur puisse synthétiser les résultats enfants en session
-  - si une session sous-agent demandeur imbriquée a disparu, OpenClaw revient au demandeur de cette session si disponible
-- L'agrégation de l'achèvement des enfants est limitée à l'exécution du demandeur actuel lors de la construction des résultats d'achèvement imbriqués, empêchant les sorties d'enfants périmées d'exécutions précédentes de fuir dans l'annonce actuelle.
-- Les réponses d'annonce préservent le routage de fil/discussion lorsque disponible sur les adaptateurs de canal.
+  - les sessions de demandeur de niveau supérieur utilisent un appel de suivi `agent` avec livraison externe (`deliver=true`)
+  - les sessions de sous-agent demandeur imbriquées reçoivent une injection de suivi interne (`deliver=false`) afin que l'orchestrateur puisse synthétiser les résultats enfants en session
+  - si une session de sous-agent demandeur imbriqué a disparu, OpenClaw se rabat sur le demandeur de cette session si disponible
+- L'agrégation des achèvements enfants est limitée à l'exécution du demandeur actuel lors de la construction des résultats d'achèvement imbriqués, empêchant les sorties enfants périmées d'exécutions précédentes de fuir dans l'annonce actuelle.
+- Les réponses d'annonce préservent le routage de fil/discussion lorsqu'il est disponible sur les adaptateurs de channel.
 - Le contexte d'annonce est normalisé en un bloc d'événement interne stable :
   - source (`subagent` ou `cron`)
   - clé/id de session enfant
-  - type d'annonce + étiquette de tâche
+  - type d'annonce + libellé de tâche
   - ligne d'état dérivée du résultat de l'exécution (`success`, `error`, `timeout` ou `unknown`)
   - contenu du résultat de l'étape d'annonce (ou `(no output)` si manquant)
   - une instruction de suivi décrivant quand répondre ou rester silencieux
 - `Status` n'est pas déduit de la sortie du modèle ; il provient des signaux de résultat de l'exécution.
 
-Les charges utiles d'annonce incluent une ligne de statistiques à la fin (même lorsqu'elles sont encapsulées) :
+Les charges utiles d'annonce incluent une ligne de statistiques à la fin (même lorsqu'elles sont enveloppées) :
 
-- Temps d'exécution (par exemple, `runtime 5m12s`)
+- Durée d'exécution (ex. `runtime 5m12s`)
 - Utilisation des jetons (entrée/sortie/total)
 - Coût estimé lorsque la tarification du modèle est configurée (`models.providers.*.models[].cost`)
-- `sessionKey`, `sessionId` et le chemin de la transcription (afin que l'agent principal puisse récupérer l'historique via `sessions_history` ou inspecter le fichier sur le disque)
-- Les métadonnées internes sont destinées uniquement à l'orchestration ; les réponses destinées à l'utilisateur doivent être réécrites avec la voix normale de l'assistant.
+- `sessionKey`, `sessionId` et chemin de transcription (afin que l'agent principal puisse récupérer l'historique via `sessions_history` ou inspecter le fichier sur disque)
+- Les métadonnées internes sont destinées uniquement à l'orchestration ; les réponses orientées utilisateur doivent être réécrites avec la voix normale de l'assistant.
 
 ## Stratégie d'outils (outils de sous-agent)
 
-Par défaut, les sous-agents reçoivent **tous les outils sauf les outils de session** et les outils système :
+Par défaut, les sous-agents obtiennent **tous les outils sauf les outils de session** et les outils système :
 
 - `sessions_list`
 - `sessions_history`
@@ -275,7 +276,7 @@ Remplacer via la configuration :
 
 ## Simultanéité
 
-Les sous-agents utilisent une file d'attente dédiée en processus :
+Les sous-agents utilisent une file d'attente dédiée dans le processus :
 
 - Nom de la file : `subagent`
 - Simultanéité : `agents.defaults.subagents.maxConcurrent` (par défaut `8`)
@@ -287,9 +288,9 @@ Les sous-agents utilisent une file d'attente dédiée en processus :
 
 ## Limitations
 
-- L'annonce de sous-agent est effectuée sur la base du **meilleur effort**. Si la passerelle redémarre, le travail d'"annonce en retour" en attente est perdu.
-- Les sous-agents partagent toujours les mêmes ressources de processus de passerelle ; traitez `maxConcurrent` comme une soupape de sécurité.
+- L'annonce des sous-agents est effectuée au **meilleur effort**. Si la passerelle redémarre, le travail d'annonce en attente est perdu.
+- Les sous-agents partagent toujours les mêmes ressources de processus de la passerelle ; traitez `maxConcurrent` comme une soupape de sécurité.
 - `sessions_spawn` est toujours non bloquant : il renvoie `{ status: "accepted", runId, childSessionKey }` immédiatement.
 - Le contexte du sous-agent n'injecte que `AGENTS.md` + `TOOLS.md` (pas de `SOUL.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md` ou `BOOTSTRAP.md`).
-- La profondeur d'imbrication maximale est de 5 (plage `maxSpawnDepth` : 1–5). Une profondeur de 2 est recommandée pour la plupart des cas d'utilisation.
-- `maxChildrenPerAgent` limite le nombre d'enfants actifs par session (par défaut : 5, plage : 1–20).
+- La profondeur d'imbrication maximale est de 5 (plage `maxSpawnDepth` : 1–5). Une profondeur de 2 est recommandée pour la plupart des cas d'usage.
+- `maxChildrenPerAgent` limite les enfants actifs par session (par défaut : 5, plage : 1–20).

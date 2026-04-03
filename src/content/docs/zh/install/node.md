@@ -67,12 +67,12 @@ node -v
   </Tab>
 </Tabs>
 
-<Accordion title="使用版本管理器 (nvm, fnm, mise, asdf)">
-  版本管理器让您可以轻松切换 Node 版本。流行的选项包括：
+<Accordion title="Using a version manager (nvm, fnm, mise, asdf)">
+  版本管理器让你可以轻松切换 Node 版本。热门选项包括：
 
 - [**fnm**](https://github.com/Schniz/fnm) — 快速，跨平台
 - [**nvm**](https://github.com/nvm-sh/nvm) — 在 macOS/Linux 上广泛使用
-- [**mise**](https://mise.jdx.dev/) — 多语言 (Node, Python, Ruby 等)
+- [**mise**](https://mise.jdx.dev/) — 多语言支持（Node、Python、Ruby 等）
 
 fnm 示例：
 
@@ -82,7 +82,7 @@ fnm use 24
 ```
 
   <Warning>
-  请确保您的版本管理器已在您的 shell 启动文件 (`~/.zshrc` 或 `~/.bashrc`) 中初始化。如果没有初始化，新的终端会话中可能找不到 `openclaw`，因为 PATH 将不包含 Node 的 bin 目录。
+  确保你的版本管理器已在 Shell 启动文件（`~/.zshrc` 或 `~/.bashrc`）中初始化。如果没有初始化，`openclaw` 可能在新的终端会话中无法找到，因为 PATH 不会包含 Node 的 bin 目录。
   </Warning>
 </Accordion>
 
@@ -136,3 +136,9 @@ export PATH="$HOME/.npm-global/bin:$PATH"
 ```
 
 将 `export PATH=...` 行添加到您的 `~/.bashrc` 或 `~/.zshrc` 以使其永久生效。
+
+## 相关
+
+- [安装概述](/en/install) — 所有安装方法
+- [更新](/en/install/updating) — 保持 OpenClaw 为最新版本
+- [入门指南](/en/start/getting-started) — 安装后的第一步

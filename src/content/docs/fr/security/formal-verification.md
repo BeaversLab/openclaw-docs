@@ -65,9 +65,9 @@ make <target>
 
 Voir aussi : `docs/gateway-exposure-matrix.md` dans le dépôt des modèles.
 
-### Pipeline Nodes.run (capacité à plus haut risque)
+### Pipeline d'exécution de nœud (capacité à risque le plus élevé)
 
-**Affirmation :** `nodes.run` nécessite (a) une liste d'autorisation des commandes de nœud plus des commandes déclarées et (b) une approbation en direct lorsque configuré ; les approbations sont tokenisées pour empêcher la relecture (dans le modèle).
+**Revendication :** `exec host=node` nécessite (a) une liste blanche de commandes de nœud plus des commandes déclarées et (b) une approbation en direct lorsque configuré ; les approbations sont tokenisées pour empêcher la relecture (dans le modèle).
 
 - Exécutions vertes :
   - `make nodes-pipeline`

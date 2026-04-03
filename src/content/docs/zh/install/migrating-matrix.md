@@ -197,7 +197,7 @@ OpenClaw 无法自动恢复：
 `Legacy Matrix encrypted state was detected, but the Matrix plugin helper is unavailable. Install or repair @openclaw/matrix so OpenClaw can inspect the old rust crypto store before upgrading.`
 
 - 含义：OpenClaw 发现旧的加密 Matrix 状态，但无法从通常检查该存储的 Matrix 插件加载辅助入口点。
-- 操作方法：重新安装或修复 Matrix 插件（`openclaw plugins install @openclaw/matrix`，或对于仓库检出使用 `openclaw plugins install ./extensions/matrix`），然后重新运行 `openclaw doctor --fix` 或重启网关。
+- 解决方法：重新安装或修复 Matrix 插件（`openclaw plugins install @openclaw/matrix`，或者如果是代码库检出版本则为 `openclaw plugins install ./path/to/local/matrix-plugin`），然后重新运行 `openclaw doctor --fix` 或重启网关。
 
 `Matrix plugin helper path is unsafe: ... Reinstall @openclaw/matrix and try again.`
 
@@ -312,7 +312,7 @@ OpenClaw 无法自动恢复：
 `Matrix is installed from a custom path that no longer exists: ...`
 
 - 含义：您的插件安装记录指向一个已不存在的本地路径。
-- 操作方法：使用 `openclaw plugins install @openclaw/matrix` 重新安装，或者如果您是从仓库检出运行的，请使用 `openclaw plugins install ./extensions/matrix`。
+- 解决方法：使用 `openclaw plugins install @openclaw/matrix` 重新安装，或者如果您是从代码库检出版本运行的，则使用 `openclaw plugins install ./path/to/local/matrix-plugin`。
 
 ## 如果加密历史记录仍未恢复
 

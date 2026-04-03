@@ -30,7 +30,7 @@ openclaw --update
 
 ## 选项
 
-- `--no-restart`：成功更新后跳过重启 Gateway 网关 服务。
+- `--no-restart`：成功更新后跳过重启 Gateway(网关) 网关 服务。
 - `--channel <stable|beta|dev>`：设置更新通道（git + npm；持久化保存到配置中）。
 - `--tag <dist-tag|version|spec>`：仅针对本次更新覆盖软件包目标。对于软件包安装，`main` 映射到 `github:openclaw/openclaw#main`。
 - `--dry-run`：预览计划的更新操作（渠道/标签/目标/重启流程），而不写入配置、安装、同步插件或重启。

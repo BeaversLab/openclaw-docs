@@ -15,19 +15,19 @@ title: "OpenClaw"
 > _"¡EXFOLIAR! ¡EXFOLIAR!"_ — Una langosta espacial, probablemente
 
 <p align="center">
-  <strong>Un portal de cualquier sistema operativo para agentes de IA a través de WhatsApp, Telegram, Discord, iMessage y más.</strong>
+  <strong>Una puerta de enlace para cualquier sistema operativo para agentes de IA a través de WhatsApp, Telegram, Discord, iMessage y más.</strong>
   <br />
   Envía un mensaje, obtén una respuesta de un agente desde tu bolsillo. Los complementos añaden Mattermost y más.
 </p>
 
 <Columns>
-  <Card title="Empezar" href="/en/start/getting-started" icon="rocket">
-    Instala OpenClaw y pon en marcha el Gateway en minutos.
+  <Card title="Comenzar" href="/en/start/getting-started" icon="rocket">
+    Instala OpenClaw y pon en marcha la puerta de enlace en minutos.
   </Card>
   <Card title="Ejecutar incorporación" href="/en/start/wizard" icon="sparkles">
-    Configuración guiada con `openclaw onboard` y flujos de emparejamiento.
+    Configuración guiada con `openclaw onboard` y flujos de vinculación.
   </Card>
-  <Card title="Abrir la Interfaz de Control" href="/en/web/control-ui" icon="layout-dashboard">
+  <Card title="Abrir la interfaz de control" href="/en/web/control-ui" icon="layout-dashboard">
     Inicia el panel del navegador para chat, configuración y sesiones.
   </Card>
 </Columns>
@@ -45,7 +45,7 @@ OpenClaw es una **puerta de enlace autoalojada** que conecta tus aplicaciones de
 - **Nativo para agentes**: diseñado para agentes de programación con uso de herramientas, sesiones, memoria y enrutamiento multi-agente
 - **Código abierto**: con licencia MIT, impulsado por la comunidad
 
-**¿Qué necesitas?** Node 24 (recomendado), o Node 22 LTS (`22.14+`) para compatibilidad, una clave de API de tu proveedor elegido y 5 minutos. Para la mejor calidad y seguridad, utiliza el modelo más sólido de última generación disponible.
+**¿Qué necesitas?** Node 24 (recomendado), o Node 22 LTS (`22.14+`) para compatibilidad, una clave de API de tu proveedor elegido y 5 minutos. Para obtener la mejor calidad y seguridad, utiliza el modelo más potente de última generación disponible.
 
 ## Cómo funciona
 
@@ -64,8 +64,8 @@ El Gateway es la única fuente de verdad para las sesiones, el enrutamiento y la
 ## Funciones clave
 
 <Columns>
-  <Card title="Pasarela multicanal" icon="network">
-    WhatsApp, Telegram, Discord e iMessage con un único proceso de Gateway.
+  <Card title="Puerta de enlace multicanal" icon="network">
+    WhatsApp, Telegram, Discord e iMessage con un único proceso de puerta de enlace.
   </Card>
   <Card title="Canales de complementos" icon="plug">
     Añade Mattermost y más con paquetes de extensión.
@@ -80,7 +80,7 @@ El Gateway es la única fuente de verdad para las sesiones, el enrutamiento y la
     Panel del navegador para chat, configuración, sesiones y nodos.
   </Card>
   <Card title="Nodos móviles" icon="smartphone">
-    Vincula nodos iOS y Android para flujos de trabajo con Canvas, cámara y voz.
+    Empareja nodos iOS y Android para Canvas, cámara y flujos de trabajo con voz.
   </Card>
 </Columns>
 
@@ -127,7 +127,7 @@ Abre la interfaz de usuario de control del navegador después de que se inicie e
 La configuración se encuentra en `~/.openclaw/openclaw.json`.
 
 - Si **no haces nada**, OpenClaw usa el binario Pi incluido en modo RPC con sesiones por remitente.
-- Si deseas bloquearlo, comienza con `channels.whatsapp.allowFrom` y (para grupos) las reglas de mención.
+- Si deseas restringirlo, comienza con `channels.whatsapp.allowFrom` y (para grupos) reglas de mención.
 
 Ejemplo:
 
@@ -146,7 +146,7 @@ Ejemplo:
 ## Comenzar aquí
 
 <Columns>
-  <Card title="Hubs de documentación" href="/en/start/hubs" icon="book-open">
+  <Card title="Centros de documentación" href="/en/start/hubs" icon="book-open">
     Toda la documentación y guías, organizadas por caso de uso.
   </Card>
   <Card title="Configuración" href="/en/gateway/configuration" icon="settings">
@@ -170,7 +170,7 @@ Ejemplo:
 
 <Columns>
   <Card title="Lista completa de funciones" href="/en/concepts/features" icon="list">
-    Capacidades completas de canal, enrutamiento y medios.
+    Capacidades completas de canales, enrutamiento y medios.
   </Card>
   <Card title="Enrutamiento multiagente" href="/en/concepts/multi-agent" icon="route">
     Aislamiento del espacio de trabajo y sesiones por agente.

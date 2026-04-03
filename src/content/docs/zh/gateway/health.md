@@ -1,7 +1,8 @@
 ---
-summary: "通道连接性的健康检查步骤"
+summary: "Health check commands and gateway health monitoring"
 read_when:
-  - Diagnosing WhatsApp channel health
+  - Diagnosing channel connectivity or gateway health
+  - Understanding health check CLI commands and options
 title: "健康检查"
 ---
 
@@ -13,8 +14,8 @@ title: "健康检查"
 
 - `openclaw status` — 本地摘要：网关可达性/模式、更新提示、已关联通道的验证时长、会话 + 近期活动。
 - `openclaw status --all` — 完整的本地诊断（只读、彩色、可安全粘贴用于调试）。
-- `openclaw status --deep` — 同时探测正在运行的 Gateway 网关（受支持时进行逐通道探测）。
-- `openclaw health --json` — 向正在运行的 Gateway 网关 请求完整的健康快照（仅限 WS；无直接 Baileys 套接字）。
+- `openclaw status --deep` — 同时探测正在运行的 Gateway(网关) 网关（受支持时进行逐通道探测）。
+- `openclaw health --json` — 向正在运行的 Gateway(网关) 网关 请求完整的健康快照（仅限 WS；无直接 Baileys 套接字）。
 - 在 WhatsApp/WebChat 中将 `/status` 作为独立消息发送，以便在不调用代理的情况下获取状态回复。
 - 日志：尾部 `/tmp/openclaw/openclaw-*.log` 并过滤 `web-heartbeat`、`web-reconnect`、`web-auto-reply`、`web-inbound`。
 
@@ -41,4 +42,12 @@ title: "健康检查"
 
 ## 专用的“health”命令
 
-`openclaw health --json` 向运行中的 Gateway(网关) 请求其健康快照（CLI 不直接连接渠道套接字）。它在可用时报告关联的凭据/身份验证时间、每个渠道的探测摘要、会话存储摘要以及探测持续时间。如果 CLI 无法访问或探测失败/超时，它将以非零状态退出。使用 `--timeout <ms>` 覆盖 10 秒的默认值。
+`openclaw health --json` 询问正在运行的 Gateway(网关) 的健康快照（CLI 没有直接的渠道套接字）。它在可用时报告关联的凭据/身份验证期限、每个渠道的探测摘要、会话存储摘要和探测持续时间。如果 Gateway(网关) 无法访问或探测失败/超时，它将以非零代码退出。
+
+选项：
+
+- `--json`：机器可读的 JSON 输出
+- `--timeout <ms>`：覆盖默认的 10 秒探测超时
+- `--probe`：强制对所有渠道进行实时探测，而不是返回缓存的健康快照
+
+健康快照包括：`ok`（布尔值）、`ts`（时间戳）、`durationMs`（探测时间）、每个渠道的状态、代理可用性和会话存储摘要。

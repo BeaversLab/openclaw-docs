@@ -10,7 +10,7 @@ sidebarTitle: "新增功能"
 
 # 新增功能
 
-<Info>這是一本適用於 OpenClaw 核心開發者的 **貢獻者指南**。如果您正在 建構外部外掛程式，請參閱[建構外掛程式](/en/plugins/building-plugins)。</Info>
+<Info>這是一份供 OpenClaw 核心開發者使用的**貢獻者指南**。如果您正在 建構外部外掛程式，請改參閱 [Building Plugins](/en/plugins/building-plugins)。</Info>
 
 當 OpenClaw 需要一個新的領域（例如影像生成、視訊生成或某些未來廠商支援的功能區域）時，請使用本指南。
 
@@ -77,7 +77,7 @@ sidebarTitle: "新增功能"
 - `src/plugins/runtime/index.ts`
 - `src/plugin-sdk/<capability>.ts`
 - `src/plugin-sdk/<capability>-runtime.ts`
-- 一個或多個 `extensions/<vendor>/...`
+- 一或多個捆綁的外掛程式套件
 - config/docs/tests
 
 ## 範例：圖像生成
@@ -85,15 +85,15 @@ sidebarTitle: "新增功能"
 圖像生成遵循標準結構：
 
 1. core 定義了 `ImageGenerationProvider`
-2. core 公開了 `registerImageGenerationProvider(...)`
-3. core 公開了 `runtime.imageGeneration.generate(...)`
+2. core 暴露了 `registerImageGenerationProvider(...)`
+3. core 暴露了 `runtime.imageGeneration.generate(...)`
 4. `openai` 和 `google` 外掛程式註冊了廠商支援的實作
 5. 未來的廠商可以註冊相同的合約，而無需更改 channels/tools
 
 配置金鑰與視覺分析路由是分開的：
 
-- `agents.defaults.imageModel` = 分析圖像
-- `agents.defaults.imageGenerationModel` = 生成圖像
+- `agents.defaults.imageModel` = 分析影像
+- `agents.defaults.imageGenerationModel` = 生成影像
 
 將這些分開，以便後備和策略保持明確。
 

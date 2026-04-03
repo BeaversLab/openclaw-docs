@@ -343,3 +343,8 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 - **無法連線到 Gateway？** 請先執行 `openclaw doctor`。
 - **日誌空白？** 請檢查 Gateway 是否正在執行，並且正在寫入 `logging.file` 中的檔案路徑。
 - **需要更多細節？** 將 `logging.level` 設定為 `debug` 或 `trace` 並重試。
+
+## 相關
+
+- [Gateway Logging Internals](/en/gateway/logging) — WS 日誌樣式、子系統前綴與主控台擷取
+- [Diagnostics](/en/gateway/configuration-reference#diagnostics) — OpenTelemetry 匯出與快取追蹤設定

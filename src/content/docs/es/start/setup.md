@@ -8,7 +8,7 @@ title: "Configuración"
 
 # Configuración
 
-<Note>Si está configurando por primera vez, comience con [Getting Started](/en/start/getting-started). Para obtener detalles sobre la incorporación, consulte [Onboarding (CLI)](/en/start/wizard).</Note>
+<Note>Si estás configurando por primera vez, comienza con [Getting Started](/en/start/getting-started). Para obtener detalles sobre la incorporación, consulta [Onboarding (CLI)](/en/start/wizard).</Note>
 
 ## TL;DR
 

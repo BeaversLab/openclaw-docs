@@ -16,9 +16,9 @@ title: grammY
 # 我们交付了什么
 
 - **单一客户端路径：** 移除了基于 fetch 的实现；grammY 现在是唯一的 Telegram 客户端（发送 + 网关），默认启用 grammY 限流器。
-- **Gateway 网关：** `monitorTelegramProvider` 构建 grammY `Bot`，连接提及/白名单 gating，通过 `getFile`/`download` 下载媒体，并使用 `sendMessage/sendPhoto/sendVideo/sendAudio/sendDocument` 传递回复。支持通过 `webhookCallback` 进行长轮询或 Webhook。
+- **Gateway(网关) 网关：** `monitorTelegramProvider` 构建 grammY `Bot`，连接提及/白名单 gating，通过 `getFile`/`download` 下载媒体，并使用 `sendMessage/sendPhoto/sendVideo/sendAudio/sendDocument` 传递回复。支持通过 `webhookCallback` 进行长轮询或 Webhook。
 - **代理：** 可选的 `channels.telegram.proxy` 通过 grammY 的 `client.baseFetch` 使用 `undici.ProxyAgent`。
-- **Webhook 支持：** `webhook-set.ts` 封装 `setWebhook/deleteWebhook`；`webhook.ts` 托管回调，包含健康检查和优雅关闭。当设置 `channels.telegram.webhookUrl` + `channels.telegram.webhookSecret` 时，Gateway 网关 启用 Webhook 模式（否则使用长轮询）。
+- **Webhook 支持：** `webhook-set.ts` 封装 `setWebhook/deleteWebhook`；`webhook.ts` 托管回调，包含健康检查和优雅关闭。当设置 `channels.telegram.webhookUrl` + `channels.telegram.webhookSecret` 时，Gateway(网关) 网关 启用 Webhook 模式（否则使用长轮询）。
 - **会话：** 直接聊天会折叠到 Agent 主会话 (`agent:<agentId>:<mainKey>`)；群组使用 `agent:<agentId>:telegram:group:<chatId>`；回复会路由回同一频道。
 - **配置选项：** `channels.telegram.botToken`、`channels.telegram.dmPolicy`、`channels.telegram.groups`（白名单 + 提及默认值）、`channels.telegram.allowFrom`、`channels.telegram.groupAllowFrom`、`channels.telegram.groupPolicy`、`channels.telegram.mediaMaxMb`、`channels.telegram.linkPreview`、`channels.telegram.proxy`、`channels.telegram.webhookSecret`、`channels.telegram.webhookUrl`。
 - **草稿流式传输：** 可选的 `channels.telegram.streamMode` 在私有主题聊天 (Bot API 9.3+) 中使用 `sendMessageDraft`。这与频道块流式传输是分开的。

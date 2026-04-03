@@ -168,3 +168,8 @@ Session lifecycle：
 - `disconnected`：請確保 Gateway 正在運行，並且您的 `--url/--token/--password` 是正確的。
 - 選擇器中沒有 Agent：請檢查 `openclaw agents list` 和您的路由設定。
 - 空的 Session 選擇器：您可能處於全域範圍，或尚未建立任何 Session。
+
+## 相關
+
+- [Control UI](/en/web/control-ui) — 基於網路的控制介面
+- [CLI Reference](/en/cli) — 完整的 CLI 指令參考

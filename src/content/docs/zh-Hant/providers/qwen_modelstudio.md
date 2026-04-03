@@ -73,7 +73,7 @@ openclaw onboard --auth-choice modelstudio-api-key
 - **qwen3-coder-plus**、**qwen3-coder-next** — Qwen 編碼模型
 - **GLM-5** — 通過阿里雲提供的 GLM 模型
 - **Kimi K2.5** — 通過阿里雲提供的 Moonshot AI
-- **MiniMax-M2.5** — 通過阿里雲提供的 MiniMax
+- **MiniMax-M2.7** — 透過阿里巴巴雲的 MiniMax
 
 部分模型（qwen3.5-plus、kimi-k2.5）支援圖片輸入。上下文視窗範圍從 200K 到 1M tokens。
 

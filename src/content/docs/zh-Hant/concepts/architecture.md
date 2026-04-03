@@ -130,3 +130,10 @@ sequenceDiagram
 - 每個主機上只有一個 Gateway 控制單一 Baileys 工作階段。
 - 握手是強制性的；任何非 JSON 或非 connect 的第一幀都會導致強制關閉連線。
 - 事件不會重播；客戶端必須在發生遺漏時進行重新整理。
+
+## 相關
+
+- [Agent Loop](/en/concepts/agent-loop) — 詳細的代理執行循環
+- [Gateway Protocol](/en/gateway/protocol) — WebSocket 協議契約
+- [Queue](/en/concepts/queue) — 指令佇列與並發
+- [Security](/en/gateway/security) — 信任模型與強化措施

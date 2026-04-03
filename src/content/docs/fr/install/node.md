@@ -56,7 +56,7 @@ Si cela affiche `v24.x.x` ou une version supérieure, vous êtes sur la version 
     winget install OpenJS.NodeJS.LTS
     ```
 
-    **Chocolatey :**
+    **Chocolatey** :
 
     ```powershell
     choco install nodejs-lts
@@ -68,7 +68,7 @@ Si cela affiche `v24.x.x` ou une version supérieure, vous êtes sur la version 
 </Tabs>
 
 <Accordion title="Utilisation d'un gestionnaire de versions (nvm, fnm, mise, asdf)">
-  Les gestionnaires de versions vous permettent de basculer facilement entre les versions de Node. Options populaires :
+  Les gestionnaires de versions vous permettent de passer facilement d'une version de Node à l'autre. Options populaires :
 
 - [**fnm**](https://github.com/Schniz/fnm) — rapide, multiplateforme
 - [**nvm**](https://github.com/nvm-sh/nvm) — largement utilisé sur macOS/Linux
@@ -82,7 +82,7 @@ fnm use 24
 ```
 
   <Warning>
-  Assurez-vous que votre gestionnaire de versions est initialisé dans votre fichier de démarrage de shell (`~/.zshrc` ou `~/.bashrc`). Sinon, `openclaw` risque de ne pas être trouvé dans les nouvelles sessions de terminal car le PATH n'inclura pas le répertoire bin de Node.
+  Assurez-vous que votre gestionnaire de versions est initialisé dans votre fichier de démarrage de shell (`~/.zshrc` ou `~/.bashrc`). Sinon, `openclaw` pourrait ne pas être trouvé dans les nouvelles sessions de terminal car le PATH n'inclura pas le répertoire bin de Node.
   </Warning>
 </Accordion>
 
@@ -136,3 +136,9 @@ export PATH="$HOME/.npm-global/bin:$PATH"
 ```
 
 Ajoutez la ligne `export PATH=...` à votre `~/.bashrc` ou `~/.zshrc` pour rendre la modification permanente.
+
+## Connexes
+
+- [Vue d'ensemble de l'installation](/en/install) — toutes les méthodes d'installation
+- [Mise à jour](/en/install/updating) — tenir OpenClaw à jour
+- [Getting Started](/en/start/getting-started) — premiers pas après l'installation

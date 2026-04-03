@@ -24,7 +24,7 @@ openclaw plugins install @openclaw/tlon
 Extraction locale (lors de l'exécution depuis un dépôt git) :
 
 ```bash
-openclaw plugins install ./extensions/tlon
+openclaw plugins install ./path/to/local/tlon-plugin
 ```
 
 Détails : [Plugins](/en/tools/plugin)
@@ -198,8 +198,8 @@ Utilisez-les avec `openclaw message send` ou la livraison cron :
 
 ## Compétence groupée
 
-Le plugin Tlon inclut une compétence groupée ([`@tloncorp/tlon-skill`](https://github.com/tloncorp/tlon-skill))
-qui fournit un accès CLI aux opérations Tlon :
+Le plugin Tlon comprend une compétence intégrée ([`@tloncorp/tlon-skill`](https://github.com/tloncorp/tlon-skill))
+qui fournit un accès Tlon aux opérations CLI :
 
 - **Contacts** : obtenir/mettre à jour les profils, lister les contacts
 - **Channels** : lister, créer, publier des messages, récupérer l'historique
@@ -268,3 +268,11 @@ Options du fournisseur :
 - Réponses aux fils : si le message entrant fait partie d'un fil, OpenClaw répond dans le fil.
 - Texte enrichi : le formatage Markdown (gras, italique, code, en-têtes, listes) est converti au format natif de Tlon.
 - Images : les URL sont téléchargées vers le stockage de Tlon et intégrées sous forme de blocs d'image.
+
+## Connexes
+
+- [Aperçu des canaux](/en/channels) — tous les canaux pris en charge
+- [Appariement](/en/channels/pairing) — authentification par DM et flux d'appariement
+- [Groupes](/en/channels/groups) — comportement du chat de groupe et filtrage des mentions
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

@@ -11,7 +11,7 @@ title: "Ansible"
 
 Implemente OpenClaw en servidores de producción con **[openclaw-ansible](https://github.com/openclaw/openclaw-ansible)** -- un instalador automatizado con arquitectura de seguridad primero.
 
-<Info>El repositorio [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) es la fuente de verdad para el despliegue de Ansible. Esta página es un resumen rápido.</Info>
+<Info>El repositorio [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) es la fuente de verdad para el despliegue con Ansible. Esta página es un resumen rápido.</Info>
 
 ## Requisitos previos
 
@@ -57,9 +57,9 @@ El playbook de Ansible instala y configura:
 <Steps>
   <Step title="Switch to the openclaw user">```bash sudo -i -u openclaw ```</Step>
   <Step title="Ejecute el asistente de incorporación">El script posterior a la instalación le guiará a través de la configuración de los ajustes de OpenClaw.</Step>
-  <Step title="Conectar proveedores de mensajería">Inicie sesión en WhatsApp, Telegram, Discord o Signal: ```bash openclaw channels login ```</Step>
-  <Step title="Verificar la instalación">```bash sudo systemctl status openclaw sudo journalctl -u openclaw -f ```</Step>
-  <Step title="Conectar a Tailscale">Únase a su malla VPN para acceso remoto seguro.</Step>
+  <Step title="Conecte proveedores de mensajería">Inicie sesión en WhatsApp, Telegram, Discord o Signal: ```bash openclaw channels login ```</Step>
+  <Step title="Verifique la instalación">```bash sudo systemctl status openclaw sudo journalctl -u openclaw -f ```</Step>
+  <Step title="Conectarse a Tailscale">Únase a su malla VPN para un acceso remoto seguro.</Step>
 </Steps>
 
 ### Comandos rápidos

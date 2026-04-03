@@ -13,7 +13,9 @@ read_when:
 外掛程式透過新功能擴充 OpenClaw：頻道、模型提供者、語音、
 影像生成、網路搜尋、代理程式工具，或上述功能的任意組合。
 
-您不需要將外掛程式新增至 OpenClaw 儲存庫。發佈至 [ClawHub](/en/tools/clawhub) 或 npm，用戶便會使用 `openclaw plugins install <package-name>` 進行安裝。OpenClaw 會先嘗試 ClawHub，然後自動回退至 npm。
+您無需將外掛程式新增至 OpenClaw 程式庫。發佈到
+[ClawHub](/en/tools/clawhub) 或 npm，使用者即可使用
+`openclaw plugins install <package-name>` 安裝。OpenClaw 會優先嘗試 ClawHub，然後自動回退至 npm。
 
 ## 先決條件
 
@@ -49,7 +51,15 @@ read_when:
       "version": "1.0.0",
       "type": "module",
       "openclaw": {
-        "extensions": ["./index.ts"]
+        "extensions": ["./index.ts"],
+        "compat": {
+          "pluginApi": ">=2026.3.24-beta.2",
+          "minGatewayVersion": "2026.3.24-beta.2"
+        },
+        "build": {
+          "openclawVersion": "2026.3.24-beta.2",
+          "pluginSdkVersion": "2026.3.24-beta.2"
+        }
       }
     }
     ```
@@ -67,8 +77,9 @@ read_when:
     ```
     </CodeGroup>
 
-    每個外掛都需要一份清單，即使沒有配置也一樣。請參閱
-    [Manifest](/en/plugins/manifest) 以了解完整架構。
+    每個外掛程式都需要一個清單，即使沒有設定也一樣。請參閱
+    [Manifest](/en/plugins/manifest) 以了解完整架構。正式的 ClawHub
+    發佈程式碼片段位於 `docs/snippets/plugin-publish/`。
 
   </Step>
 
@@ -96,26 +107,28 @@ read_when:
     });
     ```
 
-    `definePluginEntry` 是用於非頻道外掛。對於頻道，請使用
-    `defineChannelPluginEntry` — 請參閱 [頻道外掛](/en/plugins/sdk-channel-plugins)。
-    如需完整的進入點選項，請參閱 [進入點](/en/plugins/sdk-entrypoints)。
+    `definePluginEntry` 用於非頻道外掛程式。若是頻道，請使用
+    `defineChannelPluginEntry` — 請參閱 [Channel Plugins](/en/plugins/sdk-channel-plugins)。
+    如需完整的進入點選項，請參閱 [Entry Points](/en/plugins/sdk-entrypoints)。
 
   </Step>
 
-  <Step title="測試與發布">
+  <Step title="測試與發佈">
 
-    **外部外掛：** 發布至 [ClawHub](/en/tools/clawhub) 或 npm，然後安裝：
+    **External plugins:** 使用 ClawHub 驗證並發佈，然後進行安裝：
 
     ```bash
-    openclaw plugins install @myorg/openclaw-my-plugin
+    clawhub package publish your-org/your-plugin --dry-run
+    clawhub package publish your-org/your-plugin
+    openclaw plugins install clawhub:@myorg/openclaw-my-plugin
     ```
 
-    OpenClaw 會先檢查 ClawHub，然後自動回退至 npm。
+    針對像 `@myorg/openclaw-my-plugin` 這類純套件規格，OpenClaw 也會在檢查 npm 之前先檢查 ClawHub。
 
-    **存放庫內外掛：** 置於 `extensions/` 下 — 會自動被發現。
+    **In-repo plugins:** 將其置於捆綁外掛程式工作區樹下 — 將會自動被發現。
 
     ```bash
-    pnpm test -- extensions/my-plugin/
+    pnpm test -- <bundled-plugin-root>/my-plugin/
     ```
 
   </Step>
@@ -123,37 +136,42 @@ read_when:
 
 ## 插件功能
 
-單一外掛可以透過 `api` 物件註冊任意數量的功能：
+單一外掛程式可以透過 `api` 物件註冊任意數量的功能：
 
-| 功能            | 註冊方法                                      | 詳細指南                                                                         |
-| --------------- | --------------------------------------------- | -------------------------------------------------------------------------------- |
-| 文字推斷 (LLM)  | `api.registerProvider(...)`                   | [提供者外掛程式](/en/plugins/sdk-provider-plugins)                               |
-| CLI 推論後端    | `api.registerCliBackend(...)`                 | [CLI 後端](/en/gateway/cli-backends)                                             |
-| 頻道 / 訊息傳遞 | `api.registerChannel(...)`                    | [頻道外掛程式](/en/plugins/sdk-channel-plugins)                                  |
-| 語音 (TTS/STT)  | `api.registerSpeechProvider(...)`             | [提供者外掛程式](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 媒體理解        | `api.registerMediaUnderstandingProvider(...)` | [提供者外掛程式](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 圖像生成        | `api.registerImageGenerationProvider(...)`    | [提供者外掛程式](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 網路搜尋        | `api.registerWebSearchProvider(...)`          | [提供者外掛程式](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
-| 代理程式工具    | `api.registerTool(...)`                       | 下方                                                                             |
-| 自訂指令        | `api.registerCommand(...)`                    | [進入點](/en/plugins/sdk-entrypoints)                                            |
-| 事件掛鉤        | `api.registerHook(...)`                       | [進入點](/en/plugins/sdk-entrypoints)                                            |
-| HTTP 路由       | `api.registerHttpRoute(...)`                  | [內部機制](/en/plugins/architecture#gateway-http-routes)                         |
-| CLI 子指令      | `api.registerCli(...)`                        | [進入點](/en/plugins/sdk-entrypoints)                                            |
+| 功能            | 註冊方法                                      | 詳細指南                                                                           |
+| --------------- | --------------------------------------------- | ---------------------------------------------------------------------------------- |
+| 文字推斷 (LLM)  | `api.registerProvider(...)`                   | [Provider Plugins](/en/plugins/sdk-provider-plugins)                               |
+| CLI 推論後端    | `api.registerCliBackend(...)`                 | [CLI Backends](/en/gateway/cli-backends)                                           |
+| 頻道 / 訊息傳遞 | `api.registerChannel(...)`                    | [Channel Plugins](/en/plugins/sdk-channel-plugins)                                 |
+| 語音 (TTS/STT)  | `api.registerSpeechProvider(...)`             | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 媒體理解        | `api.registerMediaUnderstandingProvider(...)` | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 圖像生成        | `api.registerImageGenerationProvider(...)`    | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 網路搜尋        | `api.registerWebSearchProvider(...)`          | [Provider Plugins](/en/plugins/sdk-provider-plugins#step-5-add-extra-capabilities) |
+| 代理程式工具    | `api.registerTool(...)`                       | 下方                                                                               |
+| 自訂指令        | `api.registerCommand(...)`                    | [進入點](/en/plugins/sdk-entrypoints)                                              |
+| 事件掛鉤        | `api.registerHook(...)`                       | [進入點](/en/plugins/sdk-entrypoints)                                              |
+| HTTP 路由       | `api.registerHttpRoute(...)`                  | [內部機制](/en/plugins/architecture#gateway-http-routes)                           |
+| CLI 子指令      | `api.registerCli(...)`                        | [進入點](/en/plugins/sdk-entrypoints)                                              |
 
 如需完整的註冊 API，請參閱 [SDK 概覽](/en/plugins/sdk-overview#registration-api)。
 
 請牢記以下掛鉤守衛語義：
 
-- `before_tool_call`：`{ block: true }` 為終止狀態，並停止較低優先級的處理程序。
-- `before_tool_call`：`{ block: false }` 被視為未做決定。
-- `message_sending`：`{ cancel: true }` 為終止狀態，並停止較低優先級的處理程序。
-- `message_sending`：`{ cancel: false }` 被視為未作決定。
+- `before_tool_call`: `{ block: true }` 是終止狀態，並會停止優先順序較低的處理程序。
+- `before_tool_call`: `{ block: false }` 被視為未做決定。
+- `before_tool_call`: `{ requireApproval: true }` 會暫停代理執行，並透過執行核准覆蓋層、Telegram 按鈕、Discord 互動或任何頻道上的 `/approve` 指令提示使用者核准。
+- `before_install`: `{ block: true }` 是終止狀態，並會停止優先順序較低的處理程序。
+- `before_install`: `{ block: false }` 被視為未做決定。
+- `message_sending`: `{ cancel: true }` 是終止狀態，並會停止優先順序較低的處理程序。
+- `message_sending`: `{ cancel: false }` 被視為未做決定。
 
-詳情請參閱 [SDK 概述 hook 決策語義](/en/plugins/sdk-overview#hook-decision-semantics)。
+`/approve` 指令會以自動回退機制處理執行與外掛程式的核准。可以透過設定中的 `approvals.plugin` 獨立設定外掛程式核准的轉送。
 
-## 註冊 Agent 工具
+詳情請參閱 [SDK 概覽 hook 決策語意](/en/plugins/sdk-overview#hook-decision-semantics)。
 
-工具是 LLM 可以呼叫的型別函式。它們可以是必要的（始終可用）或可選的（使用者選擇加入）：
+## 註冊代理工具
+
+工具是 LLM 可呼叫的型別函式。它們可以是必要（始終可用）或選用（使用者選擇加入）：
 
 ```typescript
 register(api) {
@@ -182,7 +200,7 @@ register(api) {
 }
 ```
 
-使用者可以在設定中啟用可選工具：
+使用者在設定中啟用選用工具：
 
 ```json5
 {
@@ -190,13 +208,13 @@ register(api) {
 }
 ```
 
-- 工具名稱不得與核心工具衝突（衝突的工具將被跳過）
-- 對於具有副作用或額外二進制需求的工具，請使用 `optional: true`
-- 使用者可以透過將外掛 ID 新增至 `tools.allow` 來啟用來自某個外掛的所有工具
+- 工具名稱不得與核心工具衝突（衝突項目會被跳過）
+- 對具有副作用或額外二進位需求的工具使用 `optional: true`
+- 使用者可以透過將外掛程式 ID 新增至 `tools.allow` 來啟用外掛程式中的所有工具
 
 ## 匯入慣例
 
-務必從專注的 `openclaw/plugin-sdk/<subpath>` 路徑匯入：
+請一律從專注的 `openclaw/plugin-sdk/<subpath>` 路徑匯入：
 
 ```typescript
 import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
@@ -206,49 +224,57 @@ import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
 import { ... } from "openclaw/plugin-sdk";
 ```
 
-有關完整的子路徑參考，請參閱 [SDK 概述](/en/plugins/sdk-overview)。
+如需完整的子路徑參考，請參閱 [SDK Overview](/en/plugins/sdk-overview)。
 
-在您的插件內，請使用本機 barrel 檔案（`api.ts`、`runtime-api.ts`）進行
-內部匯入 —— 絕不要透過其 SDK 路徑匯入您自己的插件。
+在您的插件內，請使用本地 barrel files (`api.ts`, `runtime-api.ts`) 進行
+內部匯入 —— 切勿通過其 SDK 路徑匯入您自己的插件。
 
 ## 提交前檢查清單
 
-<Check>**package.** 具有正確的 `openclaw` 元資料</Check>
-<Check>**openclaw.plugin.** 清單存在且有效</Check>
+<Check>**package.** 具有正確的 `openclaw` 元數據</Check>
+<Check>**openclaw.plugin.** 清單已存在且有效</Check>
 <Check>進入點使用 `defineChannelPluginEntry` 或 `definePluginEntry`</Check>
-<Check>所有匯入均使用專注的 `plugin-sdk/<subpath>` 路徑</Check>
-<Check>內部匯入使用本機模組，而非 SDK 自我匯入</Check>
-<Check>測試通過（`pnpm test -- extensions/my-plugin/`）</Check>
-<Check>`pnpm check` 通過（倉庫內插件）</Check>
+<Check>所有匯入使用專注的 `plugin-sdk/<subpath>` 路徑</Check>
+<Check>內部匯入使用本地模組，而非 SDK 自我匯入</Check>
+<Check>測試通過 (`pnpm test -- <bundled-plugin-root>/my-plugin/`)</Check>
+<Check>`pnpm check` 通過 (存放庫內插件)</Check>
 
 ## Beta 版本測試
 
-1. 留意 [openclaw/openclaw](https://github.com/openclaw/openclaw/releases) 上的 GitHub 發佈標籤，並透過 `Watch` > `Releases` 訂閱。Beta 標籤看起來像 `v2026.3.N-beta.1`。您也可以開啟官方 OpenClaw X 帳號 [@openclaw](https://x.com/openclaw) 的通知，以獲取發佈公告。
-2. 在 Beta 標籤出現後，儘快針對該標籤測試您的外掛。穩定版本發佈前的時間通常只有幾個小時。
-3. 測試完成後，請在 `plugin-forum` Discord 頻道的您的外掛主題串中張貼測試結果 `all good` 或遇到的問題。如果您還沒有主題串，請建立一個。
-4. 如果有任何問題，請開啟或更新一個標題為 `Beta blocker: <plugin-name> - <summary>` 的 issue，並加上 `beta-blocker` 標籤。請將 issue 連結放在您的討論串中。
-5. 向 `main` 開啟一個標題為 `fix(<plugin-id>): beta blocker - <summary>` 的 PR，並在 PR 和您的 Discord 執行緒中連結該問題。貢獻者無法標記 PR，因此標題是維護者和自動化工具在 PR 端的訊號。有 PR 的阻滯性問題會被合併；沒有 PR 的可能仍會發布。維護者會在測試期間監控這些執行緒。
-6. 保持沈默即表示無問題（綠燈）。如果您錯過了時窗，您的修正很可能會在下一個週期落地。
+1. 請關注 [openclaw/openclaw](https://github.com/openclaw/openclaw/releases) 上的 GitHub 發布標籤，並透過 `Watch` > `Releases` 訂閱。Beta 標籤看起來像 `v2026.3.N-beta.1`。您也可以開啟官方 OpenClaw X 帳號 [@openclaw](https://x.com/openclaw) 的通知以獲取發布公告。
+2. Beta 標籤一出現，請立即針對其測試您的插件。正式版發布前的時間通常只有幾小時。
+3. 測試後，請在 `plugin-forum` Discord 頻道的您的插件討論串中發布測試結果 `all good` 或遇到的問題。如果您還沒有討論串，請建立一個。
+4. 如果有功能損壞，請開立或更新標題為 `Beta blocker: <plugin-name> - <summary>` 的問題並套用 `beta-blocker` 標籤。將問題連結放在您的討論串中。
+5. 向 `main` 開立標題為 `fix(<plugin-id>): beta blocker - <summary>` 的 PR，並在 PR 和您的 Discord 討論串中都連結至該問題。貢獻者無法標記 PR，因此標題是維護者和自動化工具在 PR 端的訊號。附有 PR 的阻礙性問題會被合併；沒有 PR 的阻礙性問題可能仍會發布。維護者在 Beta 測試期間會關注這些討論串。
+6. 沒消息就是好消息。如果您錯過了時間窗口，您的修復可能會在下一週期落地。
 
-## 接下來的步驟
+## 下一步
 
 <CardGroup cols={2}>
-  <Card title="通道外掛程式" icon="messages-square" href="/en/plugins/sdk-channel-plugins">
-    建構訊息通道外掛程式
+  <Card title="通道插件" icon="messages-square" href="/en/plugins/sdk-channel-plugins">
+    建構訊息通道插件
   </Card>
-  <Card title="提供者外掛程式" icon="cpu" href="/en/plugins/sdk-provider-plugins">
-    建構模型提供者外掛程式
+  <Card title="提供者插件" icon="cpu" href="/en/plugins/sdk-provider-plugins">
+    建構模型提供者插件
   </Card>
-  <Card title="SDK 概覽" icon="book-open" href="/en/plugins/sdk-overview">
-    匯入圖與註冊 API 參考
+  <Card title="SDK 概述" icon="book-open" href="/en/plugins/sdk-overview">
+    匯入對應與註冊 API 參考資料
   </Card>
-  <Card title="Runtime 輔助函式" icon="settings" href="/en/plugins/sdk-runtime">
-    透過 api.runtime 進行 TTS、搜尋、子代理
+  <Card title="Runtime 輔助程式" icon="settings" href="/en/plugins/sdk-runtime">
+    透過 api.runtime 使用 TTS、搜尋、子代理程式
   </Card>
   <Card title="測試" icon="test-tubes" href="/en/plugins/sdk-testing">
     測試工具與模式
   </Card>
-  <Card title="Plugin Manifest" icon="file-" href="/en/plugins/manifest">
-    完整 Manifest 綱要參考
+  <Card title="插件清單" icon="file-" href="/en/plugins/manifest">
+    完整清單架構參考資料
   </Card>
 </CardGroup>
+
+## 相關
+
+- [插件架構](/en/plugins/architecture) — 內部架構深度剖析
+- [SDK 概述](/en/plugins/sdk-overview) — 插件 SDK 參考資料
+- [清單](/en/plugins/manifest) — 插件清單格式
+- [通道插件](/en/plugins/sdk-channel-plugins) — 建構通道插件
+- [提供者插件](/en/plugins/sdk-provider-plugins) — 建構提供者插件

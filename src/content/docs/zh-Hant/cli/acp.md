@@ -14,8 +14,7 @@ title: "acp"
 
 `openclaw acp` 是一個由 Gateway 支援的 ACP 橋接器，而非完整的 ACP 原生編輯器執行環境。它專注於會話路由、提示傳遞和基本串流更新。
 
-如果您希望外部 MCP 用戶端直接與 OpenClaw 頻道交談
-對話而不是託管 ACP harness 會話，請改用
+如果您希望外部 MCP 用戶端直接與 OpenClaw 頻道對話，而不是託管 ACP harness session，請改用
 [`openclaw mcp serve`](/en/cli/mcp)。
 
 ## 相容性矩陣
@@ -90,25 +89,26 @@ openclaw acp client --server "node" --server-args openclaw.mjs acp --url ws://12
 
 - 自動核准基於允許清單，且僅套用於受信任的核心工具 ID。
 - `read` 的自動核准範圍限定於目前工作目錄 (若設定則為 `--cwd`)。
-- 未知/非核心工具名稱、超出範圍的讀取以及危險工具始終需要明確的提示批准。
-- 伺服器提供的 `toolCall.kind` 被視為不受信任的元資料（而非授權來源）。
+- ACP 僅自動批准狹窄的唯讀類別：作用於目前 cwd 下的範圍 `read` 呼叫，以及唯讀搜尋工具 (`search`, `web_search`, `memory_search`)。未知/非核心工具、超出範圍的讀取、具備 exec 能力的工具、控制平面工具、變異工具和互動式流程始終需要明確的提示批准。
+- 伺服器提供的 `toolCall.kind` 被視為未受信任的元資料（非授權來源）。
+- 此 ACP 橋接器政策與 ACPX harness 權限分開。如果您透過 `acpx` 後端執行 OpenClaw，`plugins.entries.acpx.config.permissionMode=approve-all` 是該 harness session 的緊急「yolo」開關。
 
 ## 如何使用此功能
 
-當 IDE（或其他用戶端）使用 Agent Client Protocol 並且您希望其驅動 OpenClaw Gateway 會話時，請使用 ACP。
+當 IDE（或其他用戶端）使用 Agent Client Protocol 並且您希望它驅動 OpenClaw Gateway session 時，請使用 ACP。
 
-1. 確保 Gateway 正在運行（本機或遠端）。
+1. 確保 Gateway 正在執行（本地或遠端）。
 2. 設定 Gateway 目標（配置或標誌）。
-3. 將您的 IDE 指向透過 stdio 運行 `openclaw acp`。
+3. 將您的 IDE 指向透過 stdio 執行 `openclaw acp`。
 
-配置範例（持久化）：
+範例配置（持久化）：
 
 ```bash
 openclaw config set gateway.remote.url wss://gateway-host:18789
 openclaw config set gateway.remote.token <token>
 ```
 
-直接運行範例（不寫入配置）：
+範例直接執行（不寫入配置）：
 
 ```bash
 openclaw acp --url wss://gateway-host:18789 --token <token>
@@ -118,9 +118,9 @@ openclaw acp --url wss://gateway-host:18789 --token-file ~/.openclaw/gateway.tok
 
 ## 選擇代理程式
 
-ACP 不會直接選擇代理程式。它根據 Gateway 會話金鑰進行路由。
+ACP 不直接選擇代理程式。它透過 Gateway session 金鑰進行路由。
 
-使用代理程式範圍的會話金鑰來目標特定的代理程式：
+使用代理程式範圍的 session 金鑰來鎖定特定代理程式：
 
 ```bash
 openclaw acp --session agent:main:main
@@ -128,19 +128,28 @@ openclaw acp --session agent:design:main
 openclaw acp --session agent:qa:bug-123
 ```
 
-每個 ACP 會話對應到一個單一的 Gateway 會話金鑰。一個代理程式可以擁有多個會話；除非您覆寫金鑰或標籤，否則 ACP 預設為隔離的 `acp:<uuid>` 會話。
+每個 ACP session 對應到單一 Gateway session 金鑰。一個代理程式可以擁有多個
+session；除非您覆寫
+金鑰或標籤，否則 ACP 預設為隔離的 `acp:<uuid>` session。
 
-橋接模式不支援各個會話的 `mcpServers`。如果 ACP 用戶端在 `newSession` 或 `loadSession` 期間發送這些設定，橋接器會傳回明確的錯誤，而不是無聲地忽略它們。
+橋接器模式不支援每個 session 的 `mcpServers`。如果 ACP 用戶端
+在 `newSession` 或 `loadSession` 期間發送它們，橋接器會返回明確的
+錯誤，而不是靜默忽略它們。
 
-## 從 `acpx` 使用 (Codex、Claude、其他 ACP 用戶端)
+如果您希望 ACPX 支援的 session 能夠看到 OpenClaw 外掛程式工具，請啟用
+gateway 端的 ACPX 外掛程式橋接器，而不是嘗試傳遞每個 session 的
+`mcpServers`。請參閱 [ACP Agents](/en/tools/acp-agents#plugin-tools-mcp-bridge)。
 
-如果您希望編碼代理程式（如 Codex 或 Claude Code）透過 ACP 與您的 OpenClaw 機器人通訊，請使用內建 `openclaw` 目標的 `acpx`。
+## 從 `acpx` 使用 (Codex、Claude 及其他 ACP 用戶端)
+
+如果您希望 Codex 或 Claude Code 等編碼代理透過 ACP 與您的
+OpenClaw 機器人對話，請使用 `acpx` 及其內建的 `openclaw` 目標。
 
 典型流程：
 
-1. 執行 Gateway 並確保 ACP 橋接器可以連線到它。
+1. 執行 Gateway 並確保 ACP 橋接器能連線到它。
 2. 將 `acpx openclaw` 指向 `openclaw acp`。
-3. 指定您希望編碼代理程式使用的 OpenClaw 會話金鑰。
+3. 指定您希望編碼代理使用的 OpenClaw 會話金鑰。
 
 範例：
 
@@ -154,7 +163,8 @@ acpx openclaw -s codex-bridge --cwd /path/to/repo \
   "Ask my OpenClaw work agent for recent context relevant to this repo."
 ```
 
-如果您希望 `acpx openclaw` 每次都指向特定的 Gateway 和 session key，請在 `~/.acpx/config.json` 中覆寫 `openclaw` agent 指令：
+如果您希望 `acpx openclaw` 每次都指定特定的 Gateway 和會話金鑰，
+請在 `~/.acpx/config.json` 中覆寫 `openclaw` 代理命令：
 
 ```json
 {
@@ -166,17 +176,19 @@ acpx openclaw -s codex-bridge --cwd /path/to/repo \
 }
 ```
 
-對於存放庫本地的 OpenClaw checkout，請使用直接的 CLI 進入點而不是 dev runner，以便 ACP 串流保持乾淨。例如：
+對於存放庫本地的 OpenClaw checkout，請使用直接 CLI 進入點而非
+dev runner，以保持 ACP 串流乾淨。例如：
 
 ```bash
 env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 ```
 
-這是讓 Codex、Claude Code 或其他支援 ACP 的客戶端從 OpenClaw agent 獲取上下文資訊而不需要擷取終端機的最簡單方式。
+這是讓 Codex、Claude Code 或其他 ACP 感知的用戶端
+從 OpenClaw 代理取得相關資訊而無需擷取終端機內容的最簡單方式。
 
 ## Zed 編輯器設定
 
-在 `~/.config/zed/settings.json` 中新增自訂 ACP agent（或使用 Zed 的設定 UI）：
+在 `~/.config/zed/settings.json` 中新增自訂 ACP 代理 (或使用 Zed 的設定 UI)：
 
 ```json
 {
@@ -191,7 +203,7 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 }
 ```
 
-若要指向特定的 Gateway 或 agent：
+若要指定特定的 Gateway 或代理：
 
 ```json
 {
@@ -206,18 +218,18 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 }
 ```
 
-在 Zed 中，開啟 Agent 面板並選擇「OpenClaw ACP」以開始一個執行緒。
+在 Zed 中，開啟 Agent 面板並選擇「OpenClaw ACP」以開始執行緒。
 
-## Session 對應
+## 會話對應
 
-根據預設，ACP session 會取得具有 `acp:` 前綴的獨立 Gateway session key。
-若要重用已知的 session，請傳遞 session key 或標籤：
+預設情況下，ACP 會話會取得具有 `acp:` 前綴的隔離 Gateway 會話金鑰。
+若要重用已知會話，請傳遞會話金鑰或標籤：
 
-- `--session <key>`：使用特定的 Gateway session 金鑰。
-- `--session-label <label>`：透過標籤解析現有 session。
-- `--reset-session`：為該金鑰建立一個新的 session ID（相同金鑰，新的對話記錄）。
+- `--session <key>`：使用特定的 Gateway 會話金鑰。
+- `--session-label <label>`：依標籤解析現有會話。
+- `--reset-session`：為該金鑰產生新的會話 ID (相同金鑰，新的記錄)。
 
-如果您的 ACP 用戶端支援元資料，您可以針對每個 session 進行覆寫：
+如果您的 ACP 用戶端支援元資料，您可以針對每個會話進行覆寫：
 
 ```json
 {
@@ -229,37 +241,37 @@ env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 }
 ```
 
-在 [/concepts/session](/en/concepts/session) 深入了解 session 金鑰。
+在 [/concepts/session](/en/concepts/session) 深入了解會話金鑰。
 
 ## 選項
 
-- `--url <url>`：Gateway WebSocket URL（若已設定，預設為 gateway.remote.url）。
+- `--url <url>`：Gateway WebSocket URL (設定時預設為 gateway.remote.url)。
 - `--token <token>`：Gateway 驗證權杖。
 - `--token-file <path>`：從檔案讀取 Gateway 驗證權杖。
 - `--password <password>`：Gateway 驗證密碼。
 - `--password-file <path>`：從檔案讀取 Gateway 驗證密碼。
-- `--session <key>`：預設 session 金鑰。
-- `--session-label <label>`：要解析的預設 session 標籤。
-- `--require-existing`：如果 session key/label 不存在則失敗。
-- `--reset-session`：在首次使用前重置 session key。
-- `--no-prefix-cwd`：不要在提示詞前加上工作目錄。
-- `--verbose, -v`：詳細日誌輸出到 stderr。
+- `--session <key>`：預設會話金鑰。
+- `--session-label <label>`：要解析的預設會話標籤。
+- `--require-existing`：如果會話金鑰/標籤不存在，則失敗。
+- `--reset-session`：在首次使用前重置會話金鑰。
+- `--no-prefix-cwd`：不要在工作目錄前加上提示詞。
+- `--verbose, -v`：詳細記錄到 stderr。
 
-安全提示：
+安全說明：
 
-- 在某些系統的本機進程列表中，可能會看到 `--token` 和 `--password`。
-- 建議優先使用 `--token-file`/`--password-file` 或環境變數（`OPENCLAW_GATEWAY_TOKEN`、`OPENCLAW_GATEWAY_PASSWORD`）。
-- Gateway 驗證解析遵循其他 Gateway 用戶端使用的共用合約：
-  - 本機模式：env (`OPENCLAW_GATEWAY_*`) -> `gateway.auth.*` -> `gateway.remote.*` 僅在 `gateway.auth.*` 未設定時才回退（已設定但未解析的本機 SecretRefs 將以失敗關閉處理）
-  - 遠端模式：`gateway.remote.*` 並依據遠端優先順序規則回退至 env/config
-  - `--url` 具有覆寫安全性，不會重複使用隱含的 config/env 憑證；請傳遞明確的 `--token`/`--password`（或檔案變體）
-- ACP 執行後端子程序會接收 `OPENCLAW_SHELL=acp`，可用於特定於上下文的 shell/profile 規則。
+- `--token` 和 `--password` 在某些系統的本機進程列表中可能可見。
+- 建議優先使用 `--token-file`/`--password-file` 或環境變數（`OPENCLAW_GATEWAY_TOKEN`， `OPENCLAW_GATEWAY_PASSWORD`）。
+- Gateway 驗證解析遵循其他 Gateway 客戶端使用的共用合約：
+  - 本地模式：env (`OPENCLAW_GATEWAY_*`) -> `gateway.auth.*` -> `gateway.remote.*` 僅在 `gateway.auth.*` 未設定時後退（已設定但未解析的本地 SecretRefs 將失敗關閉）
+  - 遠端模式：`gateway.remote.*`，根據遠端優先順序規則回退至 env/config
+  - `--url` 是覆蓋安全的，不會重複使用隱含的 config/env 認證；請傳遞明確的 `--token`/`--password`（或檔案變體）
+- ACP 執行後端子進程會接收 `OPENCLAW_SHELL=acp`，可用於特定於上下文的 shell/profile 規則。
 - `openclaw acp client` 在產生的橋接程序上設定 `OPENCLAW_SHELL=acp-client`。
 
 ### `acp client` 選項
 
 - `--cwd <dir>`：ACP 會話的工作目錄。
-- `--server <command>`：ACP 伺服器指令（預設值：`openclaw`）。
-- `--server-args <args...>`：傳遞給 ACP 伺服器的額外參數。
+- `--server <command>`：ACP 伺服器指令（預設：`openclaw`）。
+- `--server-args <args...>`：傳遞給 ACP 伺服器的額外引數。
 - `--server-verbose`：在 ACP 伺服器上啟用詳細記錄。
 - `--verbose, -v`：詳細的客戶端記錄。

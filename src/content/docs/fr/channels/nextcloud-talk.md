@@ -22,7 +22,7 @@ openclaw plugins install @openclaw/nextcloud-talk
 Extraction locale (lors de l'exécution depuis un dépôt git) :
 
 ```bash
-openclaw plugins install ./extensions/nextcloud-talk
+openclaw plugins install ./path/to/local/nextcloud-talk-plugin
 ```
 
 Si vous choisissez Nextcloud Talk lors de la configuration et qu'une extraction git est détectée,
@@ -136,3 +136,11 @@ Options du fournisseur :
 - `channels.nextcloud-talk.blockStreaming` : désactiver le block streaming pour ce channel.
 - `channels.nextcloud-talk.blockStreamingCoalesce` : réglage de la coalescence du block streaming.
 - `channels.nextcloud-talk.mediaMaxMb` : limite de média entrant (Mo).
+
+## Connexes
+
+- [Aperçu des canaux](/en/channels) — tous les canaux pris en charge
+- [Appariement](/en/channels/pairing) — authentification DM et flux d'appariement
+- [Groupes](/en/channels/groups) — comportement de discussion de groupe et contrôle des mentions
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

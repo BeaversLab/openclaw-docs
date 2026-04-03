@@ -1,14 +1,14 @@
 ---
 summary: " `openclaw channels` 的 CLI 参考（账户、状态、登录/登出、日志）"
 read_when:
-  - You want to add/remove channel accounts (WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage)
+  - You want to add/remove channel accounts (WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage/Matrix)
   - You want to check channel status or tail channel logs
 title: "channels"
 ---
 
 # `openclaw channels`
 
-管理 Gateway 网关 上的聊天通道账户及其运行时状态。
+管理 Gateway(网关) 网关 上的聊天通道账户及其运行时状态。
 
 相关文档：
 

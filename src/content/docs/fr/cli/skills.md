@@ -13,8 +13,8 @@ Inspecter les compétences locales et installer/mettre à jour les compétences 
 
 Connexes :
 
-- Système de compétences : [Compétences](/en/tools/skills)
-- Configuration des compétences : [Configuration des compétences](/en/tools/skills-config)
+- Système de compétences : [Skills](/en/tools/skills)
+- Configuration des compétences : [Skills config](/en/tools/skills-config)
 - Installations ClawHub : [ClawHub](/en/tools/clawhub)
 
 ## Commandes
@@ -32,3 +32,5 @@ openclaw skills check
 ```
 
 `search`/`install`/`update` utilisent ClawHub directement et installent dans le répertoire `skills/` de l'espace de travail actif. `list`/`info`/`check` inspectent toujours les compétences locales visibles pour l'espace de travail et la configuration actuels.
+
+Cette commande CLI `install` télécharge des dossiers de compétences depuis ClawHub. Les installations de dépendances de compétences prises en charge par Gateway et déclenchées depuis l'onboarding ou les paramètres Skills utilisent plutôt le chemin de requête `skills.install` distinct.

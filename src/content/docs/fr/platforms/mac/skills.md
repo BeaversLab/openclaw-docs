@@ -20,14 +20,15 @@ L'application macOS expose les skills OpenClaw via la passerelle ; elle ne les a
 
 - `metadata.openclaw.install` définit les options d'installation (brew/node/go/uv).
 - L'application appelle `skills.install` pour exécuter les programmes d'installation sur l'hôte de la passerelle.
-- La passerelle n'expose qu'un seul programme d'installation préféré lorsque plusieurs sont fournis
-  (brew si disponible, sinon le gestionnaire de nœud depuis `skills.install`, npm par défaut).
+- Bloque `critical` les résultats de code dangereux `skills.install` par défaut ; les résultats suspects n'émettent toujours qu'un avertissement. La substitution dangereuse existe sur la demande de passerelle, mais le flux par défaut de l'application reste fermé par l'échec.
+- La passerelle ne présente qu'un seul programme d'installation préféré lorsque plusieurs sont fournis
+  (brew si disponible, sinon le gestionnaire de nœuds depuis `skills.install`, npm par défaut).
 
 ## Clés Env/API
 
 - L'application stocke les clés dans `~/.openclaw/openclaw.json` sous `skills.entries.<skillKey>`.
-- `skills.update` applique des correctifs à `enabled`, `apiKey` et `env`.
+- `skills.update` corrige `enabled`, `apiKey` et `env`.
 
 ## Mode distant
 
-- L'installation et les mises à jour de configuration se produisent sur l'hôte de la passerelle (et non sur le Mac local).
+- L'installation et les mises à jour de configuration ont lieu sur l'hôte de la passerelle (et non sur le Mac local).

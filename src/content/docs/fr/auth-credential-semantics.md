@@ -44,9 +44,16 @@ Les informations d'identification de jeton (`type: "token"`) prennent en charge 
 2. Pour les profils éligibles, le matériel du jeton peut être résolu à partir de la valeur en ligne ou `tokenRef`.
 3. Les références non résolues produisent `unresolved_ref` dans la sortie `models status --probe`.
 
-## Messagerie compatible avec les versions héritées
+## OAuth SecretRef Policy Guard
 
-Pour la compatibilité des scripts, les erreurs de sondage gardent cette première ligne inchangée :
+- L'entrée SecretRef est destinée uniquement aux informations d'identification statiques.
+- Si une information d'identification de profil est `type: "oauth"`, les objets SecretRef ne sont pas pris en charge pour ce matériel d'information d'identification de profil.
+- Si `auth.profiles.<id>.mode` est `"oauth"`, l'entrée `keyRef`/`tokenRef` basée sur SecretRef pour ce profil est rejetée.
+- Les violations sont des échecs critiques dans les chemins de résolution d'authentification au démarrage/rechargement.
+
+## Messagerie compatible avec l'héritage
+
+Pour la compatibilité des scripts, les erreurs de sondage conservent cette première ligne inchangée :
 
 `Auth profile credentials are missing or expired.`
 

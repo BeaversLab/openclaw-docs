@@ -413,3 +413,11 @@ imsg send <handle> "test"
 - [Configuration de la passerelle](/en/gateway/configuration)
 - [Jumelage](/en/channels/pairing)
 - [BlueBubbles](/en/channels/bluebubbles)
+
+## Connexes
+
+- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
+- [Appairage](/en/channels/pairing) — flux d'authentification et d'appairage DM
+- [Groupes](/en/channels/groups) — comportement des discussions de groupe et filtrage des mentions
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

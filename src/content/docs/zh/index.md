@@ -12,7 +12,7 @@ title: "OpenClaw"
   <img src="/assets/openclaw-logo-text.png" alt="OpenClaw" width="500" class="hidden dark:block" />
 </p>
 
-> _"EXFOLIATE! EXFOLIATE!"_ — A space lobster, probably
+> _"去壳! 去壳!"_ — A space lobster, probably
 
 <p align="center">
   <strong>适用于跨越 WhatsApp、Telegram、Discord、iMessage 等平台的 AI 智能体的任意操作系统网关。</strong>

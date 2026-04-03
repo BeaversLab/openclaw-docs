@@ -1,70 +1,70 @@
 ---
-title: "Kilo Gateway Provider Integration Design"
+title: "Diseño de Integración del Proveedor Kilo Gateway"
 ---
 
 # Diseño de Integración del Proveedor Kilo Gateway
 
-## Resumen
+## Visión General
 
-Este documento describe el diseño para integrar "Kilo Gateway" como un proveedor de primera clase en OpenClaw, tomando como modelo la implementación existente de OpenRouter. Kilo Gateway utiliza una API de completiones compatible con OpenAI con una URL base diferente.
+Este documento describe el diseño para integrar "Kilo Gateway" como un proveedor de primera clase en OpenClaw, modelado según la implementación existente de OpenRouter. Kilo Gateway utiliza una API de completado compatible con OpenAI con una URL base diferente.
 
 ## Decisiones de Diseño
 
-### 1. Nombre del Proveedor
+### 1. Nomenclatura del Proveedor
 
 **Recomendación: `kilocode`**
 
-Fundamento:
+Justificación:
 
 - Coincide con el ejemplo de configuración de usuario proporcionado (clave de proveedor `kilocode`)
-- Consistente con los patrones de nomenclatura de proveedores existentes (por ejemplo, `openrouter`, `opencode`, `moonshot`)
+- Coherente con los patrones de nomenclatura de proveedores existentes (por ejemplo, `openrouter`, `opencode`, `moonshot`)
 - Corto y memorable
 - Evita la confusión con los términos genéricos "kilo" o "gateway"
 
-Alternativa considerada: `kilo-gateway` - rechazada porque los nombres con guiones son menos comunes en el código base y `kilocode` es más conciso.
+Alternativa considerada: `kilo-gateway` - rechazada porque los nombres con guiones son menos comunes en la base de código y `kilocode` es más conciso.
 
-### 2. Referencia del Modelo por Defecto
+### 2. Referencia del Modelo Predeterminado
 
 **Recomendación: `kilocode/anthropic/claude-opus-4.6`**
 
-Fundamento:
+Justificación:
 
 - Basado en el ejemplo de configuración de usuario
-- Claude Opus 4.5 es un modelo por defecto capaz
+- Claude Opus 4.5 es un modelo predeterminado capaz
 - La selección explícita del modelo evita la dependencia del enrutamiento automático
 
 ### 3. Configuración de la URL Base
 
-**Recomendación: Valor predeterminado codificado con anulación de configuración**
+**Recomendación: Predeterminado codificado con anulación de configuración**
 
 - **URL Base Predeterminada:** `https://api.kilo.ai/api/gateway/`
 - **Configurable:** Sí, a través de `models.providers.kilocode.baseUrl`
 
 Esto coincide con el patrón utilizado por otros proveedores como Moonshot, Venice y Synthetic.
 
-### 4. Escaneo de modelos
+### 4. Escaneo de Modelos
 
 **Recomendación: Sin punto final dedicado para el escaneo de modelos inicialmente**
 
-Racional:
+Justificación:
 
-- Kilo Gateway actúa como proxy de OpenRouter, por lo que los modelos son dinámicos
+- Kilo Gateway actúa como proxy para OpenRouter, por lo que los modelos son dinámicos
 - Los usuarios pueden configurar manualmente los modelos en su configuración
 - Si Kilo Gateway expone un punto final `/models` en el futuro, se puede añadir el escaneo
 
-### 5. Manejo especial
+### 5. Manejo Especial
 
 **Recomendación: Heredar el comportamiento de OpenRouter para los modelos de Anthropic**
 
-Dado que Kilo Gateway actúa como proxy de OpenRouter, debe aplicarse el mismo manejo especial:
+Dado que Kilo Gateway actúa como proxy para OpenRouter, se debe aplicar el mismo manejo especial:
 
-- Elegibilidad de TTL de caché para modelos `anthropic/*`
-- Parámetros extra (cacheControlTtl) para modelos `anthropic/*`
+- Elegibilidad para TTL de caché para modelos `anthropic/*`
+- Parámetros adicionales (cacheControlTtl) para modelos `anthropic/*`
 - La política de transcripciones sigue los patrones de OpenRouter
 
-## Archivos a modificar
+## Archivos a Modificar
 
-### Gestión principal de credenciales
+### Gestión Central de Credenciales
 
 #### 1. `src/commands/onboard-auth.credentials.ts`
 
@@ -335,7 +335,7 @@ if (authChoice === "kilocode-api-key") {
 }
 ```
 
-También añada el mapeo de tokenProvider en la parte superior de la función:
+También añadir el mapeo tokenProvider en la parte superior de la función:
 
 ```typescript
 if (params.opts.tokenProvider === "kilocode") {
@@ -347,19 +347,19 @@ if (params.opts.tokenProvider === "kilocode") {
 
 #### 9. `src/cli/program/register.onboard.ts`
 
-Añadir opción de CLI:
+Añadir opción CLI:
 
 ```typescript
 .option("--kilocode-api-key <key>", "Kilo Gateway API key")
 ```
 
-Añadir al gestor de acciones:
+Añadir al controlador de acciones:
 
 ```typescript
 kilocodeApiKey: opts.kilocodeApiKey as string | undefined,
 ```
 
-Actualizar el texto de ayuda de auth-choice:
+Actualizar texto de ayuda de auth-choice:
 
 ```typescript
 .option(
@@ -418,7 +418,7 @@ export {
 
 #### 12. `src/agents/pi-embedded-runner/cache-ttl.ts`
 
-Añadir soporte de Kilo Gateway para modelos Anthropic:
+Añadir soporte de Kilo Gateway para modelos de Anthropic:
 
 ```typescript
 export function isCacheTtlEligibleProvider(provider: string, modelId: string): boolean {
@@ -495,23 +495,23 @@ const needsNonImageSanitize = isGoogle || isAnthropic || isMistral || isOpenRout
    - Probar la selección de modelo con el prefijo `kilocode/`
 
 3. **Pruebas E2E:**
-   - Probar las llamadas reales a la API a través de Kilo Gateway (pruebas en vivo)
+   - Probar llamadas reales a la API a través de Kilo Gateway (pruebas en vivo)
 
 ## Notas de Migración
 
 - No se necesita migración para los usuarios existentes
-- Los nuevos usuarios pueden usar inmediatamente la opción de autenticación `kilocode-api-key`
-- La configuración manual existente con el proveedor `kilocode` seguirá funcionando
+- Los usuarios nuevos pueden usar inmediatamente la elección de autenticación `kilocode-api-key`
+- La configuración manual existente con el proveedor `kilocode` continuará funcionando
 
 ## Consideraciones Futuras
 
-1. **Catálogo de Modelos:** Si Kilo Gateway expone un endpoint `/models`, añadir soporte de escaneo similar a `scanOpenRouterModels()`
+1. **Catálogo de Modelos:** Si Kilo Gateway expone un endpoint `/models`, añada soporte de escaneo similar a `scanOpenRouterModels()`
 
-2. **Soporte de OAuth:** Si Kilo Gateway añade OAuth, extender el sistema de autenticación en consecuencia
+2. **Soporte OAuth:** Si Kilo Gateway añade OAuth, extienda el sistema de autenticación en consecuencia
 
-3. **Limitación de Tasa:** Considerar añadir el manejo de limitación de tasa específico para Kilo Gateway si es necesario
+3. **Limitación de Tasa:** Considere añadir manejo de límites de tasa específico para Kilo Gateway si es necesario
 
-4. **Documentación:** Añadir documentación en `docs/providers/kilocode.md` explicando la configuración y el uso
+4. **Documentación:** Añada documentación en `docs/providers/kilocode.md` explicando la configuración y el uso
 
 ## Resumen de Cambios
 
@@ -519,14 +519,14 @@ const needsNonImageSanitize = isGoogle || isAnthropic || isMistral || isOpenRout
 | ----------------------------------------------------------- | -------------- | -------------------------------------------------------------------------------- |
 | `src/commands/onboard-auth.credentials.ts`                  | Añadir         | `KILOCODE_DEFAULT_MODEL_REF`, `setKilocodeApiKey()`                              |
 | `src/agents/model-auth.ts`                                  | Modificar      | Añadir `kilocode` a `envMap`                                                     |
-| `src/config/io.ts`                                          | Modificar      | Añadir `KILOCODE_API_KEY` a las claves de entorno de shell                       |
+| `src/config/io.ts`                                          | Modificar      | Añadir `KILOCODE_API_KEY` a las claves de entorno del shell                      |
 | `src/commands/onboard-auth.config-core.ts`                  | Añadir         | `applyKilocodeProviderConfig()`, `applyKilocodeConfig()`                         |
 | `src/commands/onboard-types.ts`                             | Modificar      | Añadir `kilocode-api-key` a `AuthChoice`, añadir `kilocodeApiKey` a las opciones |
 | `src/commands/auth-choice-options.ts`                       | Modificar      | Añadir grupo y opción `kilocode`                                                 |
 | `src/commands/auth-choice.preferred-provider.ts`            | Modificar      | Añadir mapeo `kilocode-api-key`                                                  |
-| `src/commands/auth-choice.apply.api-providers.ts`           | Modificar      | Añadir manejo de `kilocode-api-key`                                              |
+| `src/commands/auth-choice.apply.api-providers.ts`           | Modificar      | Añadir manejo `kilocode-api-key`                                                 |
 | `src/cli/program/register.onboard.ts`                       | Modificar      | Añadir opción `--kilocode-api-key`                                               |
 | `src/commands/onboard-non-interactive/local/auth-choice.ts` | Modificar      | Añadir manejo no interactivo                                                     |
 | `src/commands/onboard-auth.ts`                              | Modificar      | Exportar nuevas funciones                                                        |
-| `src/agents/pi-embedded-runner/cache-ttl.ts`                | Modificar      | Añadir soporte de kilocode                                                       |
-| `src/agents/transcript-policy.ts`                           | Modificar      | Añadir manejo de kilocode Gemini                                                 |
+| `src/agents/pi-embedded-runner/cache-ttl.ts`                | Modificar      | Añadir soporte para kilocode                                                     |
+| `src/agents/transcript-policy.ts`                           | Modificar      | Añadir manejo de Gemini para kilocode                                            |

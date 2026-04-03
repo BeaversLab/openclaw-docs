@@ -17,19 +17,19 @@ read_when:
 
 ### Atribución del marco
 
-Este modelo de amenazas se basa en [MITRE ATLAS](https://atlas.mitre.org/), el marco estándar de la industria para documentar amenazas adversarias a sistemas de IA/ML. ATLAS es mantenido por [MITRE](https://www.mitre.org/) en colaboración con la comunidad de seguridad de IA.
+Este modelo de amenazas se basa en [MITRE ATLAS](https://atlas.mitre.org/), el marco estándar de la industria para documentar amenazas adversariales a sistemas de IA/ML. ATLAS es mantenido por [MITRE](https://www.mitre.org/) en colaboración con la comunidad de seguridad de IA.
 
 **Recursos clave de ATLAS:**
 
 - [Técnicas de ATLAS](https://atlas.mitre.org/techniques/)
 - [Tácticas de ATLAS](https://atlas.mitre.org/tactics/)
-- [Estudios de caso de ATLAS](https://atlas.mitre.org/studies/)
+- [Casos de estudio de ATLAS](https://atlas.mitre.org/studies/)
 - [GitHub de ATLAS](https://github.com/mitre-atlas/atlas-data)
 - [Contribuir a ATLAS](https://atlas.mitre.org/resources/contribute)
 
 ### Contribuir a este modelo de amenazas
 
-Este es un documento vivo mantenido por la comunidad de OpenClaw. Consulte [CONTRIBUTING-THREAT-MODEL.md](/en/security/CONTRIBUTING-THREAT-MODEL) para obtener las pautas sobre cómo contribuir:
+Este es un documento vivo mantenido por la comunidad de OpenClaw. Consulte [CONTRIBUTING-THREAT-MODEL.md](/en/security/CONTRIBUTING-THREAT-MODEL) para obtener pautas sobre cómo contribuir:
 
 - Informar de nuevas amenazas
 - Actualizar las amenazas existentes
@@ -79,7 +79,7 @@ Nada está explícitamente fuera del alcance para este modelo de amenazas.
 │                 TRUST BOUNDARY 1: Channel Access                 │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │                      GATEWAY                              │   │
-│  │  • Device Pairing (30s grace period)                      │   │
+│  │  • Device Pairing (1h DM / 5m node grace period)           │   │
 │  │  • AllowFrom / AllowList validation                       │   │
 │  │  • Token/Password/Tailscale auth                          │   │
 │  └──────────────────────────────────────────────────────────┘   │
@@ -177,15 +177,15 @@ Nada está explícitamente fuera del alcance para este modelo de amenazas.
 
 #### T-ACCESS-001: Intercepción del código de emparejamiento
 
-| Atributo                  | Valor                                                                                  |
-| ------------------------- | -------------------------------------------------------------------------------------- |
-| **ID de ATLAS**           | AML.T0040 - Acceso a la API de inferencia del modelo de IA                             |
-| **Descripción**           | El atacante intercepta el código de emparejamiento durante el período de gracia de 30s |
-| **Vector de ataque**      | Visualización sobre el hombro, olfateo de red, ingeniería social                       |
-| **Componentes afectados** | Sistema de emparejamiento de dispositivos                                              |
-| **Mitigaciones actuales** | Caducidad de 30s, códigos enviados a través del canal existente                        |
-| **Riesgo residual**       | Medio - Período de gracia explotable                                                   |
-| **Recomendaciones**       | Reducir el período de gracia, añadir paso de confirmación                              |
+| Atributo                  | Valor                                                                                                                                                                         |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ID de ATLAS**           | AML.T0040 - Acceso a la API de inferencia del modelo de IA                                                                                                                    |
+| **Descripción**           | El atacante intercepta el código de emparejamiento durante el período de gracia de emparejamiento (1h para el emparejamiento de canal DM, 5m para el emparejamiento de nodos) |
+| **Vector de ataque**      | Visualización sobre el hombro, olfateo de red, ingeniería social                                                                                                              |
+| **Componentes afectados** | Sistema de emparejamiento de dispositivos                                                                                                                                     |
+| **Mitigaciones actuales** | Caducidad de 1h (emparejamiento DM) / 5m (emparejamiento de nodos), códigos enviados a través del canal existente                                                             |
+| **Riesgo residual**       | Medio - Período de gracia explotable                                                                                                                                          |
+| **Recomendaciones**       | Reducir el período de gracia, añadir paso de confirmación                                                                                                                     |
 
 #### T-ACCESS-002: Suplantación de AllowFrom
 
@@ -586,25 +586,22 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 | ----------------------------------- | ----------------------------------------- | --------------- |
 | `src/infra/exec-approvals.ts`       | Lógica de aprobación de comandos          | **Crítico**     |
 | `src/gateway/auth.ts`               | Autenticación de puerta de enlace         | **Crítico**     |
-| `src/web/inbound/access-control.ts` | Control de acceso al canal                | **Crítico**     |
 | `src/infra/net/ssrf.ts`             | Protección SSRF                           | **Crítico**     |
-| `src/security/external-content.ts`  | Mitigación de inyección de prompt         | **Crítico**     |
+| `src/security/external-content.ts`  | Mitigación de inyección de prompts        | **Crítico**     |
 | `src/agents/sandbox/tool-policy.ts` | Cumplimiento de políticas de herramientas | **Crítico**     |
-| `convex/lib/moderation.ts`          | Moderación de ClawHub                     | **Alto**        |
-| `convex/lib/skillPublish.ts`        | Flujo de publicación de habilidades       | **Alto**        |
 | `src/routing/resolve-route.ts`      | Aislamiento de sesión                     | **Medio**       |
 
 ### 7.3 Glosario
 
-| Término                 | Definición                                                           |
-| ----------------------- | -------------------------------------------------------------------- |
-| **ATLAS**               | Adversarial Threat Landscape for AI Systems de MITRE                 |
-| **ClawHub**             | El mercado de habilidades de OpenClaw                                |
-| **Puerta de enlace**    | Capa de enrutamiento de mensajes y autenticación de OpenClaw         |
-| **MCP**                 | Model Context Protocol - interfaz del proveedor de herramientas      |
-| **Inyección de Prompt** | Ataque en el que se incrustan instrucciones maliciosas en la entrada |
-| **Habilidad (Skill)**   | Extensión descargable para agentes OpenClaw                          |
-| **SSRF**                | Server-Side Request Forgery                                          |
+| Término                 | Definición                                                       |
+| ----------------------- | ---------------------------------------------------------------- |
+| **ATLAS**               | Adversarial Threat Landscape for AI Systems de MITRE             |
+| **ClawHub**             | Mercado de habilidades de OpenClaw                               |
+| **Gateway**             | Capa de enrutamiento de mensajes y autenticación de OpenClaw     |
+| **MCP**                 | Model Context Protocol - interfaz de proveedor de herramientas   |
+| **Inyección de Prompt** | Ataque donde se incrustan instrucciones maliciosas en la entrada |
+| **Habilidad**           | Extensión descargable para agentes de OpenClaw                   |
+| **SSRF**                | Server-Side Request Forgery                                      |
 
 ---
 

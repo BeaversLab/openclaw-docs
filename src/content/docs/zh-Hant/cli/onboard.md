@@ -11,11 +11,11 @@ title: "onboard"
 
 ## 相關指南
 
-- CLI 入門指引中心：[Onboarding (CLI)](/en/start/wizard)
-- 入門指引總覽：[Onboarding Overview](/en/start/onboarding-overview)
-- CLI 入門指引參考：[CLI Setup Reference](/en/start/wizard-cli-reference)
-- CLI 自動化：[CLI Automation](/en/start/wizard-cli-automation)
-- macOS 入門指引：[Onboarding (macOS App)](/en/start/onboarding)
+- CLI 入教中心：[入教 (CLI)](/en/start/wizard)
+- 入教概述：[入教概述](/en/start/onboarding-overview)
+- CLI 入教参考：[CLI 設定參考](/en/start/wizard-cli-reference)
+- CLI 自動化：[CLI 自動化](/en/start/wizard-cli-automation)
+- macOS 入教：[入教 (macOS 應用程式)](/en/start/onboarding)
 
 ## 範例
 
@@ -140,15 +140,16 @@ openclaw onboard --non-interactive \
 
 - `quickstart`：最精簡提示，自動產生 gateway token。
 - `manual`：針對 port/bind/auth 的完整提示（`advanced` 的別名）。
-- 本地入門 DM 範圍行為：[CLI 設定參考](/en/start/wizard-cli-reference#outputs-and-internals)。
-- 最快速首次聊天：`openclaw dashboard`（控制 UI，無須設定頻道）。
-- 自訂提供者：連接任何 OpenAI 或 Anthropic 相容端點，包含未列出的託管提供者。使用 Unknown 自動偵測。
+- 在網頁搜尋步驟中，選擇 **Grok** 可能會觸發一個獨立的後續提示，以使用相同的 `XAI_API_KEY` 啟用 `x_search` 並選擇 `x_search` 模型（可選）。其他網頁搜尋提供者不會顯示該提示。
+- 本機入教 DM 範圍行為：[CLI 設定參考](/en/start/wizard-cli-reference#outputs-and-internals)。
+- 最快首次聊天：`openclaw dashboard` (控制 UI，無須設定頻道)。
+- 自訂提供者：連接任何 OpenAI 或 Anthropic 相容的端點，包括未列出的託管提供者。使用 Unknown 進行自動偵測。
 
-## 常見後續指令
+## 常見的後續指令
 
 ```bash
 openclaw configure
 openclaw agents add <name>
 ```
 
-<Note>`--json` 並不意味著非互動模式。若要用於腳本，請使用 `--non-interactive`。</Note>
+<Note>`--json` 並不意味著非互動模式。請在腳本中使用 `--non-interactive`。</Note>

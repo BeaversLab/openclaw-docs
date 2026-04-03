@@ -1,6 +1,6 @@
 ---
 title: "Qwen / Model Studio"
-summary: "Configuración de Alibaba Cloud Model Studio (Estándar de pago por uso y Plan de codificación, puntos de conexión de región dual)"
+summary: "Configuración de Alibaba Cloud Model Studio (Estándar de pago por uso y Plan de Codificación, endpoints de región dual)"
 read_when:
   - You want to use Qwen (Alibaba Cloud Model Studio) with OpenClaw
   - You need the API key env var for Model Studio
@@ -9,9 +9,9 @@ read_when:
 
 # Qwen / Model Studio (Alibaba Cloud)
 
-El proveedor Model Studio permite acceder a los modelos de Alibaba Cloud, incluidos Qwen
+El proveedor Model Studio da acceso a los modelos de Alibaba Cloud, incluyendo Qwen
 y modelos de terceros alojados en la plataforma. Se admiten dos planes de facturación:
-**Standard** (pago por uso) y **Coding Plan** (suscripción).
+**Estándar** (pago por uso) y **Plan de Codificación** (suscripción).
 
 - Proveedor: `modelstudio`
 - Autenticación: `MODELSTUDIO_API_KEY`
@@ -19,7 +19,7 @@ y modelos de terceros alojados en la plataforma. Se admiten dos planes de factur
 
 ## Inicio rápido
 
-### Standard (pago por uso)
+### Estándar (pago por uso)
 
 ```bash
 # China endpoint
@@ -29,7 +29,7 @@ openclaw onboard --auth-choice modelstudio-standard-api-key-cn
 openclaw onboard --auth-choice modelstudio-standard-api-key
 ```
 
-### Coding Plan (suscripción)
+### Plan de Codificación (suscripción)
 
 ```bash
 # China endpoint
@@ -51,17 +51,17 @@ Después del registro, configure un modelo predeterminado:
 }
 ```
 
-## Tipos de planes y puntos de conexión
+## Tipos de plan y endpoints
 
-| Plan                      | Región | Elección de autenticación         | Punto de conexión                                |
-| ------------------------- | ------ | --------------------------------- | ------------------------------------------------ |
-| Standard (pago por uso)   | China  | `modelstudio-standard-api-key-cn` | `dashscope.aliyuncs.com/compatible-mode/v1`      |
-| Standard (pago por uso)   | Global | `modelstudio-standard-api-key`    | `dashscope-intl.aliyuncs.com/compatible-mode/v1` |
-| Coding Plan (suscripción) | China  | `modelstudio-api-key-cn`          | `coding.dashscope.aliyuncs.com/v1`               |
-| Coding Plan (suscripción) | Global | `modelstudio-api-key`             | `coding-intl.dashscope.aliyuncs.com/v1`          |
+| Plan                               | Región | Elección de autenticación         | Endpoint                                         |
+| ---------------------------------- | ------ | --------------------------------- | ------------------------------------------------ |
+| Estándar (pago por uso)            | China  | `modelstudio-standard-api-key-cn` | `dashscope.aliyuncs.com/compatible-mode/v1`      |
+| Estándar (pago por uso)            | Global | `modelstudio-standard-api-key`    | `dashscope-intl.aliyuncs.com/compatible-mode/v1` |
+| Plan de Codificación (suscripción) | China  | `modelstudio-api-key-cn`          | `coding.dashscope.aliyuncs.com/v1`               |
+| Plan de Codificación (suscripción) | Global | `modelstudio-api-key`             | `coding-intl.dashscope.aliyuncs.com/v1`          |
 
-El proveedor selecciona automáticamente el punto de conexión basándose en su elección de autenticación. Puede
-anularlo con un `baseUrl` personalizado en la configuración.
+El proveedor selecciona automáticamente el endpoint basándose en su elección de autenticación. Puede
+sobrescribirlo con un `baseUrl` personalizado en la configuración.
 
 ## Obtenga su clave de API
 
@@ -71,15 +71,15 @@ anularlo con un `baseUrl` personalizado en la configuración.
 ## Modelos disponibles
 
 - **qwen3.5-plus** (predeterminado) — Qwen 3.5 Plus
-- **qwen3-coder-plus**, **qwen3-coder-next**: modelos de codificación de Qwen
-- **GLM-5**: modelos GLM a través de Alibaba
-- **Kimi K2.5**: Moonshot AI a través de Alibaba
-- **MiniMax-M2.5**: MiniMax a través de Alibaba
+- **qwen3-coder-plus**, **qwen3-coder-next** — modelos de programación Qwen
+- **GLM-5** — modelos GLM a través de Alibaba
+- **Kimi K2.5** — Moonshot AI a través de Alibaba
+- **MiniMax-M2.7** — MiniMax a través de Alibaba
 
-Algunos modelos (qwen3.5-plus, kimi-k2.5) admiten entrada de imagen. Las ventanas de contexto van de 200K a 1M tokens.
+Algunos modelos (qwen3.5-plus, kimi-k2.5) admiten entrada de imagen. Las ventanas de contexto van desde 200K hasta 1M tokens.
 
 ## Nota sobre el entorno
 
-Si el Gateway se ejecuta como demonio (launchd/systemd), asegúrese de que
+Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que
 `MODELSTUDIO_API_KEY` esté disponible para ese proceso (por ejemplo, en
 `~/.openclaw/.env` o a través de `env.shellEnv`).

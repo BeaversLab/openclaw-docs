@@ -181,3 +181,9 @@ Documentation connexe :
 
 - [/concepts/model-failover](/en/concepts/model-failover) (règles de rotation + refroidissement)
 - [/tools/slash-commands](/en/tools/slash-commands) (interface de commande)
+
+## Connexes
+
+- [Authentification](/en/gateway/authentication) — aperçu de l'authentification du provider de model
+- [Secrets](/en/gateway/secrets) — stockage des identifiants et SecretRef
+- [Référence de configuration](/en/gateway/configuration-reference#auth-storage) — clés de configuration de l'authentification

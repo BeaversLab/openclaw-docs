@@ -79,11 +79,11 @@ openclaw browser create-profile \
 - CLI：`openclaw browser --browser-profile my-chrome tabs`
 - Agent 工具：`browser` 配合 `profile="my-chrome"`
 
-### Custom Gateway ports
+### Custom Gateway(网关) ports
 
 If you're using a custom gateway port, the extension relay port is automatically derived:
 
-**Extension Relay Port = Gateway Port + 3**
+**Extension Relay Port = Gateway(网关) Port + 3**
 
 示例：如果 `gateway.port: 19001`，则：
 
@@ -112,17 +112,17 @@ Configure the extension to use the derived relay port in the extension Options p
 
 如果您看到 `!`：
 
-- Make sure the Gateway is running locally (default setup), or run a node host on this machine if the Gateway runs elsewhere.
+- Make sure the Gateway(网关) is running locally (default setup), or run a node host on this machine if the Gateway(网关) runs elsewhere.
 - Open the extension Options page; it validates relay reachability + gateway-token auth.
 
-## Remote Gateway (use a node host)
+## Remote Gateway(网关) (use a node host)
 
-### Local Gateway (same machine as Chrome) — usually **no extra steps**
+### Local Gateway(网关) (same machine as Chrome) — usually **no extra steps**
 
-If the Gateway runs on the same machine as Chrome, it starts the browser control service on loopback
-and auto-starts the relay server. The extension talks to the local relay; the CLI/工具 calls go to the Gateway.
+If the Gateway(网关) runs on the same machine as Chrome, it starts the browser control service on loopback
+and auto-starts the relay server. The extension talks to the local relay; the CLI/工具 calls go to the Gateway(网关).
 
-### Remote Gateway (Gateway runs elsewhere) — **run a node host**
+### Remote Gateway(网关) (Gateway(网关) runs elsewhere) — **run a node host**
 
 如果您的 Gateway(网关) 在另一台机器上运行，请在运行 Chrome 的机器上启动一个 node host。
 Gateway(网关) 将把浏览器操作代理到该节点；扩展程序 + 中继保持在浏览器机器本地。

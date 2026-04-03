@@ -314,7 +314,7 @@ OPENCLAW_LIVE_CLI_BACKEND=1 \
 这些运行器在仓库 Docker 镜像内运行 `pnpm test:live`，挂载你的本地配置目录和工作区（如果已挂载，还会加载 `~/.profile`）：
 
 - 直接模型：`pnpm test:docker:live-models`（脚本：`scripts/test-live-models-docker.sh`）
-- Gateway 网关 + 开发代理：`pnpm test:docker:live-gateway`（脚本：`scripts/test-live-gateway-models-docker.sh`）
+- Gateway(网关) 网关 + 开发代理：`pnpm test:docker:live-gateway`（脚本：`scripts/test-live-gateway-models-docker.sh`）
 - 新手引导向导（TTY，完整脚手架）：`pnpm test:docker:onboard`（脚本：`scripts/e2e/onboard-docker.sh`）
 - Gateway(网关) 网络（两个容器，WS 认证 + 健康检查）：`pnpm test:docker:gateway-network`（脚本：`scripts/e2e/gateway-network-docker.sh`）
 - 插件（自定义扩展加载 + 注册中心冒烟测试）：`pnpm test:docker:plugins`（脚本：`scripts/e2e/plugins-docker.sh`）
@@ -335,7 +335,7 @@ OPENCLAW_LIVE_CLI_BACKEND=1 \
 
 这些是不包含真实提供商的“真实管道”回归测试：
 
-- Gateway 网关工具调用（模拟 OpenAI，真实的 Gateway 网关 + 代理循环）：`src/gateway/gateway.tool-calling.mock-openai.test.ts`
+- Gateway(网关) 网关工具调用（模拟 OpenAI，真实的 Gateway(网关) 网关 + 代理循环）：`src/gateway/gateway.tool-calling.mock-openai.test.ts`
 - Gateway(网关) 向导 (WS `wizard.start`/`wizard.next`, 写入配置 + 强制执行身份验证): `src/gateway/gateway.wizard.e2e.test.ts`
 
 ## Agent 代理可靠性评估

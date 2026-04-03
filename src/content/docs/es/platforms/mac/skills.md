@@ -20,8 +20,9 @@ La aplicación de macOS expone las habilidades de OpenClaw a través del gateway
 
 - `metadata.openclaw.install` define las opciones de instalación (brew/node/go/uv).
 - La aplicación llama a `skills.install` para ejecutar los instaladores en el host del gateway.
-- El gateway expone solo un instalador preferido cuando se proporcionan varios
-  (brew si está disponible, de lo contrario el administrador de node de `skills.install`, npm por defecto).
+- Bloquea por defecto los hallazgos de código peligroso `critical` `skills.install`; los hallazgos sospechosos solo emiten una advertencia. La anulación de peligro existe en la solicitud de la puerta de enlace, pero el flujo predeterminado de la aplicación permanece cerrado ante fallos (fail-closed).
+- La puerta de enlace muestra solo un instalador preferido cuando se proporcionan varios
+  (brew cuando está disponible, de lo contrario el gestor de nodos desde `skills.install`, npm predeterminado).
 
 ## Claves de entorno/API
 
@@ -30,4 +31,4 @@ La aplicación de macOS expone las habilidades de OpenClaw a través del gateway
 
 ## Modo remoto
 
-- La instalación y las actualizaciones de configuración ocurren en el host del gateway (no en el Mac local).
+- La instalación y las actualizaciones de configuración ocurren en el host de la puerta de enlace (no en el Mac local).

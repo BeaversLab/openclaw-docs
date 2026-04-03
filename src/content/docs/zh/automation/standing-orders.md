@@ -245,5 +245,8 @@ openclaw cron add \
 
 ## 相关
 
-- [Cron Jobs](/en/automation/cron-jobs) — 为长期命令安排执行
-- [Agent Workspace](/en/concepts/agent-workspace) — 长期命令的所在地，包括自动注入的引导文件的完整列表（AGENTS.md、SOUL.md 等）
+- [自动化概览](/en/automation) — 一目了然的所有自动化机制
+- [Cron 作业](/en/automation/cron-jobs) — 常规指令的调度执行
+- [钩子](/en/automation/hooks) — 用于代理生命周期事件的事件驱动脚本
+- [Webhooks](/en/automation/webhook) — 入站 HTTP 事件触发器
+- [代理工作区](/en/concepts/agent-workspace) — 常规指令的存放位置，包括自动注入的引导文件（AGENTS.md、SOUL.md 等）的完整列表

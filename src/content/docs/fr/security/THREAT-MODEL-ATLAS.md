@@ -13,11 +13,11 @@ read_when:
 **Version :** 1.0-brouillon
 **Dernière mise à jour :** 2026-02-04
 **Méthodologie :** MITRE ATLAS + Diagrammes de flux de données
-**Cadre :** [MITRE ATLAS](https://atlas.mitre.org/) (Paysage de menaces adverses pour les systèmes d'IA)
+**Cadre :** [MITRE ATLAS](https://atlas.mitre.org/) (Adversarial Threat Landscape for AI Systems)
 
 ### Attribution du cadre
 
-Ce modèle de menace est basé sur [MITRE ATLAS](https://atlas.mitre.org/), le cadre standard de l'industrie pour documenter les menaces adverses contre les systèmes d'IA/ML. ATLAS est maintenu par [MITRE](https://www.mitre.org/) en collaboration avec la communauté de sécurité de l'IA.
+Ce modèle de menace est basé sur [MITRE ATLAS](https://atlas.mitre.org/), le cadre standard de l'industrie pour documenter les menaces adverses contre les systèmes IA/ML. ATLAS est maintenu par [MITRE](https://www.mitre.org/) en collaboration avec la communauté de sécurité de l'IA.
 
 **Ressources clés ATLAS :**
 
@@ -29,7 +29,7 @@ Ce modèle de menace est basé sur [MITRE ATLAS](https://atlas.mitre.org/), le c
 
 ### Contribuer à ce modèle de menace
 
-Il s'agit d'un document vivant maintenu par la communauté OpenClaw. Consultez [CONTRIBUTING-THREAT-MODEL.md](/en/security/CONTRIBUTING-THREAT-MODEL) pour les directives sur la contribution :
+Il s'agit d'un document vivant maintenu par la communauté OpenClaw. Consultez [CONTRIBUTING-THREAT-MODEL.md](/en/security/CONTRIBUTING-THREAT-MODEL) pour les directives de contribution :
 
 - Signaler de nouvelles menaces
 - Mettre à jour les menaces existantes
@@ -79,7 +79,7 @@ Rien n'est explicitement hors de portée pour ce modèle de menace.
 │                 TRUST BOUNDARY 1: Channel Access                 │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │                      GATEWAY                              │   │
-│  │  • Device Pairing (30s grace period)                      │   │
+│  │  • Device Pairing (1h DM / 5m node grace period)           │   │
 │  │  • AllowFrom / AllowList validation                       │   │
 │  │  • Token/Password/Tailscale auth                          │   │
 │  └──────────────────────────────────────────────────────────┘   │
@@ -177,15 +177,15 @@ Rien n'est explicitement hors de portée pour ce modèle de menace.
 
 #### T-ACCESS-001 : Interception du code de couplage
 
-| Attribut                   | Valeur                                                                         |
-| -------------------------- | ------------------------------------------------------------------------------ |
-| **ID ATLAS**               | AML.T0040 - Accès à l'API d'inférence de modèle IA                             |
-| **Description**            | L'attaquant intercepte le code de couplage pendant la période de grâce de 30 s |
-| **Vecteur d'attaque**      | Surveillance d'écran, reniflage de réseau, ingénierie sociale                  |
-| **Composants affectés**    | Système de couplage d'appareils                                                |
-| **Atténuations actuelles** | Expiration de 30 s, codes envoyés via le canal existant                        |
-| **Risque résiduel**        | Moyen - Période de grâce exploitable                                           |
-| **Recommandations**        | Réduire la période de grâce, ajouter une étape de confirmation                 |
+| Attribut                   | Valeur                                                                                                                                                    |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ID ATLAS**               | AML.T0040 - Accès à l'API d'inférence de modèle IA                                                                                                        |
+| **Description**            | L'attaquant intercepte le code d'appariement pendant la période de grâce d'appariement (1h pour l'appariement de canal DM, 5m pour l'appariement de nœud) |
+| **Vecteur d'attaque**      | Surveillance d'écran, reniflage de réseau, ingénierie sociale                                                                                             |
+| **Composants affectés**    | Système de couplage d'appareils                                                                                                                           |
+| **Atténuations actuelles** | Expiration 1h (appariement DM) / expiration 5m (appariement de nœud), codes envoyés via le canal existant                                                 |
+| **Risque résiduel**        | Moyen - Période de grâce exploitable                                                                                                                      |
+| **Recommandations**        | Réduire la période de grâce, ajouter une étape de confirmation                                                                                            |
 
 #### T-ACCESS-002 : Usurpation AllowFrom
 
@@ -586,25 +586,22 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 | ----------------------------------- | ------------------------------------ | ---------------- |
 | `src/infra/exec-approvals.ts`       | Logique d'approbation de commande    | **Critique**     |
 | `src/gateway/auth.ts`               | Authentification Gateway             | **Critique**     |
-| `src/web/inbound/access-control.ts` | Contrôle d'accès au canal            | **Critique**     |
 | `src/infra/net/ssrf.ts`             | Protection SSRF                      | **Critique**     |
-| `src/security/external-content.ts`  | Atténuation des injections de prompt | **Critique**     |
-| `src/agents/sandbox/tool-policy.ts` | Application des stratégies d'outil   | **Critique**     |
-| `convex/lib/moderation.ts`          | Modération ClawHub                   | **Élevé**        |
-| `convex/lib/skillPublish.ts`        | Flux de publication de compétence    | **Élevé**        |
-| `src/routing/resolve-route.ts`      | Isolation de session                 | **Moyen**        |
+| `src/security/external-content.ts`  | Atténuation de l'injection de prompt | **Critique**     |
+| `src/agents/sandbox/tool-policy.ts` | Application de la politique d'outil  | **Critique**     |
+| `src/routing/resolve-route.ts`      | Isolement de session                 | **Moyen**        |
 
 ### 7.3 Glossaire
 
-| Terme                | Définition                                                                                   |
-| -------------------- | -------------------------------------------------------------------------------------------- |
-| **ATLAS**            | Paysage de menaces adverses pour les systèmes d'IA du MITRE                                  |
-| **ClawHub**          | Place de marché des compétences de OpenClaw                                                  |
-| **Gateway**          | Couche de routage de messages et d'authentification de OpenClaw                              |
-| **MCP**              | Protocole de contexte de modèle (Model Context Protocol) - interface du fournisseur d'outils |
-| **Prompt Injection** | Attaque dans laquelle des instructions malveillantes sont intégrées dans l'entrée            |
-| **Skill**            | Extension téléchargeable pour les agents OpenClaw                                            |
-| **SSRF**             | Server-Side Request Forgery (Falsification de requête côté serveur)                          |
+| Terme                | Définition                                                             |
+| -------------------- | ---------------------------------------------------------------------- |
+| **ATLAS**            | Adversarial Threat Landscape for AI Systems du MITRE                   |
+| **ClawHub**          | Place de marché des compétences de OpenClaw                            |
+| **Gateway**          | Couche de routage de messages et d'authentification de OpenClaw        |
+| **MCP**              | Model Context Protocol - interface du fournisseur d'outils             |
+| **Prompt Injection** | Attaque où des instructions malveillantes sont intégrées dans l'entrée |
+| **Skill**            | Extension téléchargeable pour les agents OpenClaw                      |
+| **SSRF**             | Server-Side Request Forgery                                            |
 
 ---
 

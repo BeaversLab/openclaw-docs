@@ -20,7 +20,7 @@ Zalo est fourni sous forme de plugin et n'est pas inclus dans l'installation de 
 ## Configuration rapide (débutant)
 
 1. Installer le plugin Zalo :
-   - À partir d'une source extraite : `openclaw plugins install ./extensions/zalo`
+   - À partir d'une source extraite : `openclaw plugins install ./path/to/local/zalo-plugin`
    - À partir de npm (si publié) : `openclaw plugins install @openclaw/zalo`
    - Ou choisissez **Zalo** dans la configuration et confirmez la invite d'installation
 2. Définir le jeton :
@@ -241,3 +241,11 @@ Options multi-comptes :
 - `channels.zalo.accounts.<id>.webhookSecret` : secret de webhook par compte.
 - `channels.zalo.accounts.<id>.webhookPath` : chemin de webhook par compte.
 - `channels.zalo.accounts.<id>.proxy` : URL de proxy par compte.
+
+## Connexes
+
+- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
+- [Appairage](/en/channels/pairing) — authentification et flux d'appairage DM
+- [Groupes](/en/channels/groups) — comportement du chat de groupe et restriction des mentions
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

@@ -154,9 +154,11 @@ La documentación de OpenAI describe el calentamiento como opcional. OpenClaw lo
 }
 ```
 
-### Procesamiento prioritario de OpenAI
+### Procesamiento prioritario de OpenAI y Codex
 
-La API de OpenAI expone el procesamiento prioritario a través de `service_tier=priority`. En OpenClaw, establezca `agents.defaults.models["openai/<model>"].params.serviceTier` para pasar ese campo a través de solicitudes directas de `openai/*` Responses.
+La API de OpenAI expone el procesamiento prioritario a través de `service_tier=priority`. En
+OpenClaw, configure `agents.defaults.models["<provider>/<model>"].params.serviceTier`
+para pasar ese campo a través de los puntos finales nativos de OpenAI/Codex Responses.
 
 ```json5
 {
@@ -164,6 +166,11 @@ La API de OpenAI expone el procesamiento prioritario a través de `service_tier=
     defaults: {
       models: {
         "openai/gpt-5.4": {
+          params: {
+            serviceTier: "priority",
+          },
+        },
+        "openai-codex/gpt-5.4": {
           params: {
             serviceTier: "priority",
           },
@@ -176,18 +183,30 @@ La API de OpenAI expone el procesamiento prioritario a través de `service_tier=
 
 Los valores admitidos son `auto`, `default`, `flex` y `priority`.
 
+OpenClaw reenvía `params.serviceTier` tanto a las solicitudes `openai/*` Responses
+directas como a las solicitudes `openai-codex/*` Codex Responses cuando esos modelos apuntan
+a los puntos finales nativos de OpenAI/Codex.
+
+Comportamiento importante:
+
+- `openai/*` directo debe apuntar a `api.openai.com`
+- `openai-codex/*` debe apuntar a `chatgpt.com/backend-api`
+- si enruta cualquiera de los proveedores a través de otra URL base o proxy, OpenClaw deja `service_tier` sin modificar
+
 ### Modo rápido de OpenAI
 
-OpenClaw expone un interruptor de modo rápido compartido para sesiones de `openai/*` y `openai-codex/*`:
+OpenClaw expone un interruptor de modo rápido compartido para ambas sesiones `openai/*` y
+`openai-codex/*`:
 
 - Chat/Interfaz de usuario: `/fast status|on|off`
 - Configuración: `agents.defaults.models["<provider>/<model>"].params.fastMode`
 
-Cuando se activa el modo rápido, OpenClaw aplica un perfil de baja latencia de OpenAI:
+Cuando el modo rápido está habilitado, OpenClaw lo asigna al procesamiento prioritario de OpenAI:
 
-- `reasoning.effort = "low"` cuando la carga útil aún no especifica razonamiento
-- `text.verbosity = "low"` cuando la carga útil aún no especifica verbosidad
-- `service_tier = "priority"` para llamadas directas de `openai/*` Responses a `api.openai.com`
+- las llamadas `openai/*` Responses directas a `api.openai.com` envían `service_tier = "priority"`
+- las llamadas `openai-codex/*` Responses a `chatgpt.com/backend-api` también envían `service_tier = "priority"`
+- los valores `service_tier` existentes en el payload se conservan
+- el modo rápido no reescribe `reasoning` o `text.verbosity`
 
 Ejemplo:
 
@@ -212,11 +231,12 @@ Ejemplo:
 }
 ```
 
-Las anulaciones de sesión tienen prioridad sobre la configuración. Borrar la anulación de sesión en la interfaz de usuario de Sesiones devuelve la sesión al valor predeterminado configurado.
+Las anulaciones de sesión tienen prioridad sobre la configuración. Borrar la anulación de sesión en la interfaz de usuario de Sesiones
+devuelve la sesión al valor predeterminado configurado.
 
 ### Compactación del lado del servidor de OpenAI Responses
 
-Para modelos de respuestas directas de OpenAI (`openai/*` usando `api: "openai-responses"` con
+Para modelos directos de OpenAI Responses (`openai/*` usando `api: "openai-responses"` con
 `baseUrl` en `api.openai.com`), OpenClaw ahora habilita automáticamente las sugerencias de carga de compactación del lado del servidor de OpenAI:
 
 - Fuerza `store: true` (a menos que la compatibilidad del modelo establezca `supportsStore: false`)
@@ -225,10 +245,10 @@ Para modelos de respuestas directas de OpenAI (`openai/*` usando `api: "openai-r
 De forma predeterminada, `compact_threshold` es `70%` del modelo `contextWindow` (o `80000`
 cuando no está disponible).
 
-### Habilitar explícitamente la compactación del lado del servidor
+### Habilitar la compactación del lado del servidor explícitamente
 
 Use esto cuando desee forzar la inyección de `context_management` en modelos
-de Responses compatibles (por ejemplo, Azure OpenAI Responses):
+Responses compatibles (por ejemplo, Azure OpenAI Responses):
 
 ```json5
 {
@@ -284,7 +304,7 @@ de Responses compatibles (por ejemplo, Azure OpenAI Responses):
 ```
 
 `responsesServerCompaction` solo controla la inyección de `context_management`.
-Los modelos de respuestas directas de OpenAI siguen forzando `store: true` a menos que la compatibilidad establezca
+Los modelos directos de OpenAI Responses aún fuerzan `store: true` a menos que la compatibilidad establezca
 `supportsStore: false`.
 
 ## Notas

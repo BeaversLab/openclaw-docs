@@ -107,7 +107,7 @@ read_when:
 - `after` (`string`): 更新後的文字。當省略 `patch` 時，需與 `before` 一併使用。
 - `patch` (`string`): 統一差異文字。與 `before` 和 `after` 互斥。
 - `path` (`string`): 前後模式的顯示檔名。
-- `lang` (`string`): 前後模式的語言覆寫提示。
+- `lang` (`string`)：用於前後模式的語言覆寫提示。未知值會回退為純文字。
 - `title` (`string`): 檢視器標題覆寫。
 - `mode` (`"view" | "file" | "both"`): 輸出模式。預設為外掛程式預設值 `defaults.mode`。
   已棄用的別名：`"image"` 的行為類似於 `"file"`，為向後相容性仍予以接受。
@@ -281,37 +281,39 @@ read_when:
 - `/plugins/diffs/assets/viewer.js`
 - `/plugins/diffs/assets/viewer-runtime.js`
 
+檢視器文件會相對於檢視器 URL 解析這些資產，因此可選的 `baseUrl` 路徑前綴也會保留給這兩個資源請求使用。
+
 URL 建構行為：
 
 - 如果提供了 `baseUrl`，則會在嚴格驗證後使用。
-- 若未提供 `baseUrl`，檢視器 URL 預設為回環位址 `127.0.0.1`。
-- 如果閘道連結模式為 `custom` 且設定了 `gateway.customBindHost`，則會使用該主機。
+- 如果沒有 `baseUrl`，檢視器 URL 預設為回環 `127.0.0.1`。
+- 如果閘道綁定模式是 `custom` 且設定了 `gateway.customBindHost`，則會使用該主機。
 
 `baseUrl` 規則：
 
 - 必須是 `http://` 或 `https://`。
-- 查詢字串和雜湊會被拒絕。
-- 允許來源加上選用基底路徑。
+- 查詢和雜湊會被拒絕。
+- 允許來源加上可選的基礎路徑。
 
 ## 安全模型
 
-檢視器強化：
+檢視器防護加固：
 
 - 預設僅限回環。
-- 具有嚴格 ID 和權杖驗證的權杖化檢視器路徑。
+- 標記化的檢視器路徑，具有嚴格的 ID 和權杖驗證。
 - 檢視器回應 CSP：
   - `default-src 'none'`
-  - 指令碼和資產僅來自自身
-  - 無 `connect-src` 的連出連線
-- 啟用遠端存取時的遠端未命中限流：
+  - 腳本和資產僅來源於自身
+  - 沒有出站 `connect-src`
+- 啟用遠端存取時的遠端失敗限流：
   - 60 秒內 40 次失敗
   - 60 秒鎖定 (`429 Too Many Requests`)
 
-檔案渲染強化：
+檔案渲染防護加固：
 
-- 截圖瀏覽器請求路由預設為拒絕。
+- 擷圖瀏覽器請求路由預設為拒絕。
 - 僅允許來自 `http://127.0.0.1/plugins/diffs/assets/*` 的本機檢視器資產。
-- 外部網路請求會被封鎖。
+- 外部網路請求被阻擋。
 
 ## 檔案模式的瀏覽器需求
 
@@ -319,33 +321,33 @@ URL 建構行為：
 
 解析順序：
 
-1. OpenClaw 設定中的 `browser.executablePath`。
+1. OpenClaw 配置中的 `browser.executablePath`。
 2. 環境變數：
    - `OPENCLAW_BROWSER_EXECUTABLE_PATH`
    - `BROWSER_EXECUTABLE_PATH`
    - `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`
-3. 平台指令/路徑探索後備機制。
+3. 平台指令/路徑探索回退。
 
-常見失敗文字：
+常見失敗訊息：
 
 - `Diff PNG/PDF rendering requires a Chromium-compatible browser...`
 
-請安裝 Chrome、Chromium、Edge 或 Brave，或設定上述其中一個可執行檔路徑選項來修正問題。
+請安裝 Chrome、Chromium、Edge 或 Brave，或是設定上述其中一個可執行檔路徑選項來修正。
 
 ## 疑難排解
 
 輸入驗證錯誤：
 
 - `Provide patch or both before and after text.`
-  - 同時包含 `before` 和 `after`，或提供 `patch`。
+  - 請同時包含 `before` 和 `after`，或是提供 `patch`。
 - `Provide either patch or before/after input, not both.`
-  - 不要混合輸入模式。
+  - 請勿混用輸入模式。
 - `Invalid baseUrl: ...`
-  - 使用帶有可選路徑的 `http(s)` 來源，不要查詢/雜湊。
+  - 使用 `http(s)` origin 搭配選用路徑，不使用 query/hash。
 - `{field} exceeds maximum size (...)`
-  - 減少負載大小。
-- 大型補丁被拒絕
-  - 減少補丁檔案數量或總行數。
+  - 縮減 payload 大小。
+- 大型 patch 拒絕
+  - 減少 patch 檔案數量或總行數。
 
 檢視器無障礙問題：
 
@@ -353,29 +355,29 @@ URL 建構行為：
 - 對於遠端存取場景，請：
   - 每次工具呼叫傳遞 `baseUrl`，或
   - 使用 `gateway.bind=custom` 和 `gateway.customBindHost`
-- 僅當您打算讓外部檢視器存取時，才啟用 `security.allowRemoteViewer`。
+- 僅當您打算允許外部檢視器存取時，才啟用 `security.allowRemoteViewer`。
 
 未修改行沒有展開按鈕：
 
-- 當補丁不攜帶可展開上下文時，補丁輸入可能會發生這種情況。
-- 這是預期的行為，並不表示檢視器故障。
+- 當 patch 未包含可展開的內容時，patch 輸入可能會發生此情況。
+- 這是預期行為，並不表示檢視器故障。
 
-找不到成品：
+找不到項目：
 
-- 成品因 TTL 過期。
-- 權杖或路徑已變更。
-- 清理已移除過時資料。
+- 項目因 TTL 過期。
+- Token 或路徑已變更。
+- 清理已移除過期資料。
 
 ## 操作指引
 
-- 優先在畫布中使用 `mode: "view"` 進行本機互動式審查。
-- 對於需要附件的輸出聊天頻道，優先使用 `mode: "file"`。
-- 請保持 `allowRemoteViewer` 停用，除非您的部署需要遠端檢視器 URL。
-- 為敏感差異設定明確的短 `ttlSeconds`。
-- 若非必要，請避免在差異輸入中傳送機密。
-- 如果您的頻道會大幅壓縮影像（例如 Telegram 或 WhatsApp），請優先選擇 PDF 輸出 (`fileFormat: "pdf"`)。
+- 在畫布中進行本機互動式審查時，建議使用 `mode: "view"`。
+- 對於需要附件的外傳聊天頻道，建議使用 `mode: "file"`。
+- 除非您的部署需要遠端檢視器 URL，否則請保持 `allowRemoteViewer` 為停用狀態。
+- 針對敏感 diff，請設定明確的短 `ttlSeconds`。
+- 若非必要，請避免在 diff 輸入中傳送機密資訊。
+- 如果您的頻道會積極壓縮圖片（例如 Telegram 或 WhatsApp），建議使用 PDF 輸出（`fileFormat: "pdf"`）。
 
-差異渲染引擎：
+Diff 渲染引擎：
 
 - 由 [Diffs](https://diffs.com) 提供支援。
 

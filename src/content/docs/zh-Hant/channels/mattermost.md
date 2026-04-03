@@ -8,9 +8,9 @@ title: "Mattermost"
 
 # Mattermost (外掛)
 
-狀態：透過外掛支援（Bot 權杖 + WebSocket 事件）。支援頻道、群組和私人訊息。
-Mattermost 是一個可自行架設的團隊訊息平台；請參閱
-[mattermost.com](https://mattermost.com) 官方網站以取得產品詳情和下載資訊。
+狀態：透過外掛支援（機器人權杖 + WebSocket 事件）。支援頻道、群組和私人訊息。
+Mattermost 是一個可自託管的團隊訊息平台；請造訪
+[mattermost.com](https://mattermost.com) 官方網站以取得產品詳細資訊和下載。
 
 ## 需要安裝外掛
 
@@ -25,7 +25,7 @@ openclaw plugins install @openclaw/mattermost
 本地檢出 (當從 git 儲存庫執行時)：
 
 ```bash
-openclaw plugins install ./extensions/mattermost
+openclaw plugins install ./path/to/local/mattermost-plugin
 ```
 
 如果您在設定過程中選擇 Mattermost 且偵測到 git 檢出，
@@ -422,3 +422,11 @@ Mattermost 支援在 `channels.mattermost.accounts` 下設置多個帳號：
 - Gateway 記錄 `missing _token in context`：`_token` 欄位不在按鈕的上下文中。請確保在建立整合負載時包含它。
 - 確認顯示原始 ID 而非按鈕名稱：`context.action_id` 與按鈕的 `id` 不符。請將兩者設為相同的經清理值。
 - Agent 不知道按鈕：請將 `capabilities: ["inlineButtons"]` 加入 Mattermost 頻道設定中。
+
+## 相關
+
+- [頻道概覽](/en/channels) — 所有支援的頻道
+- [配對](/en/channels/pairing) — 私人訊息驗證和配對流程
+- [群組](/en/channels/groups) — 群組聊天行為和提及閘控
+- [頻道路由](/en/channels/channel-routing) — 訊息的工作階段路由
+- [安全性](/en/gateway/security) — 存取模型和強化防護

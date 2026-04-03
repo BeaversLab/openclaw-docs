@@ -24,7 +24,7 @@ openclaw plugins install @openclaw/tlon
 本地結帳（當從 git repo 執行時）：
 
 ```bash
-openclaw plugins install ./extensions/tlon
+openclaw plugins install ./path/to/local/tlon-plugin
 ```
 
 詳細資訊：[外掛程式](/en/tools/plugin)
@@ -200,8 +200,7 @@ openclaw plugins install ./extensions/tlon
 
 ## 內建技能
 
-Tlon 外掛包含一個內建技能 ([`@tloncorp/tlon-skill`](https://github.com/tloncorp/tlon-skill))，
-提供 Tlon 操作的 CLI 存取：
+Tlon 外掛程式包含一個內建技能 ([`@tloncorp/tlon-skill`](https://github.com/tloncorp/tlon-skill))，提供對 Tlon 操作的 CLI 存取：
 
 - **聯絡人**：取得/更新個人資料，列出聯絡人
 - **頻道**：列出、建立、張貼訊息、擷取歷史記錄
@@ -270,3 +269,11 @@ openclaw doctor
 - 串列回覆：如果收到的訊息位於串列中，OpenClaw 將在串列內回覆。
 - 富文字：Markdown 格式（粗體、斜體、程式碼、標題、清單）會轉換為 Tlon 的原生格式。
 - 圖片：URL 會上傳至 Tlon 儲存空間並嵌入為圖片區塊。
+
+## 相關
+
+- [頻道總覽](/en/channels) — 所有支援的頻道
+- [配對](/en/channels/pairing) — DM 身份驗證與配對流程
+- [群組](/en/channels/groups) — 群組聊天行為與提及閘控
+- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
+- [安全性](/en/gateway/security) — 存取模型與強化

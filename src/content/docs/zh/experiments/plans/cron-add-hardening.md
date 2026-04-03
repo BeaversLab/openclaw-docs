@@ -31,7 +31,7 @@ title: "Cron Add Hardening"
 - 网关中的 `CronPayloadSchema` 排除了 `signal` + `imessage`，而 TS 类型包含了它们。
 - 控制 UI CronStatus 期望 `jobCount`，但网关返回 `jobs`。
 - 代理 cron 工具架构允许任意的 `job` 对象，从而启用了格式错误的输入。
-- Gateway 网关 严格验证 `cron.add` 而不进行规范化，因此包装的负载会失败。
+- Gateway(网关) 网关 严格验证 `cron.add` 而不进行规范化，因此包装的负载会失败。
 
 ## What changed
 

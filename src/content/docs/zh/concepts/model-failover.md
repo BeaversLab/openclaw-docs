@@ -123,21 +123,29 @@ OpenClaw 将移动到下一个模型，而不是切换配置文件。
 
 - 计费退避从 **5 小时**开始，每次计费失败时加倍，上限为 **24 小时**。
 - 如果配置文件在 **24 小时**内未失败（可配置），退避计数器将重置。
+- 过载重试在模型回退之前允许 **1 次同一提供商的配置文件轮换**。
+- 默认情况下，过载重试使用 **0 ms 的退避时间**。
 
 ## 模型回退
 
-如果提供商的所有配置文件都失败了，OpenClaw 将移动到 `agents.defaults.model.fallbacks` 中的下一个模型。这适用于身份验证失败、速率限制以及耗尽配置文件轮换的超时（其他错误不会推进故障转移）。
+如果提供商的所有配置文件都失败了，OpenClaw 将移动到 `agents.defaults.model.fallbacks` 中的下一个模型。这适用于身份验证失败、速率限制以及耗尽配置文件轮换的超时（其他错误不会推进回退）。
 
-当运行以模型覆盖（hooks 或 CLI）开始时，在尝试任何配置的故障转移后，故障转移仍然结束于 `agents.defaults.model.primary`。
+与计费冷却相比，过载和速率限制错误的处理更为激进。默认情况下，OpenClaw 允许一次同一提供商的身份验证配置文件重试，然后立即切换到下一个配置的模型回退，无需等待。可以通过 `auth.cooldowns.overloadedProfileRotations`、
+`auth.cooldowns.overloadedBackoffMs` 和
+`auth.cooldowns.rateLimitedProfileRotations` 对此进行调整。
+
+当运行以模型覆盖（hooks 或 CLI）开始时，在尝试了所有配置的回退后，回退仍然会结束于 `agents.defaults.model.primary`。
 
 ## 相关配置
 
-有关 Gateway(网关) 配置，请参阅 /en/gateway/configuration：
+参见 [Gateway(网关) configuration](/en/gateway/configuration) 了解：
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
 - `auth.cooldowns.billingMaxHours` / `auth.cooldowns.failureWindowHours`
+- `auth.cooldowns.overloadedProfileRotations` / `auth.cooldowns.overloadedBackoffMs`
+- `auth.cooldowns.rateLimitedProfileRotations`
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
 - `agents.defaults.imageModel` 路由
 
-有关更广泛的 模型 选择和故障转移概述，请参阅 [Models](/en/concepts/models)。
+参见 [Models](/en/concepts/models) 以获取更广泛的模型选择和回退概述。

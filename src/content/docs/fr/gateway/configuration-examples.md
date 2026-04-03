@@ -154,6 +154,7 @@ Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot
   // Session behavior
   session: {
     scope: "per-sender",
+    dmScope: "per-channel-peer", // recommended for multi-user inboxes
     reset: {
       mode: "daily",
       atHour: 4,
@@ -288,7 +289,7 @@ Enregistrez dans `~/.openclaw/openclaw.json` et vous pouvez envoyer un DM au bot
       },
       sandbox: {
         mode: "non-main",
-        perSession: true,
+        scope: "session", // preferred over legacy perSession: true
         workspaceRoot: "~/.openclaw/sandboxes",
         docker: {
           image: "openclaw-sandbox:bookworm-slim",
@@ -613,7 +614,7 @@ N'activez la correspondance directe mutable de nom/e-mail/pseudonyme avec le `da
 {
   agent: {
     workspace: "~/.openclaw/workspace",
-    model: { primary: "lmstudio/minimax-m2.5-gs32" },
+    model: { primary: "lmstudio/my-local-model" },
   },
   models: {
     mode: "merge",
@@ -624,8 +625,8 @@ N'activez la correspondance directe mutable de nom/e-mail/pseudonyme avec le `da
         api: "openai-responses",
         models: [
           {
-            id: "minimax-m2.5-gs32",
-            name: "MiniMax M2.5 GS32",
+            id: "my-local-model",
+            name: "Local Model",
             reasoning: false,
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },

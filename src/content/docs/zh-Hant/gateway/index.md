@@ -60,7 +60,7 @@ openclaw channels status --probe
   </Step>
 </Steps>
 
-<Note>Gateway config reload 會監看作用中的設定檔路徑（從 profile/state 預設值解析，或在設定時使用 `OPENCLAW_CONFIG_PATH`）。 預設模式為 `gateway.reload.mode="hybrid"`。</Note>
+<Note>Gateway 設定重新載入會監看作用中的設定檔路徑（從 profile/state 預設值解析，或在設定時為 `OPENCLAW_CONFIG_PATH`）。 預設模式為 `gateway.reload.mode="hybrid"`。 在第一次成功載入後，執行中的程序會提供作用中的記憶體內設定快照；成功重新載入會以原子方式交換該快照。</Note>
 
 ## Runtime model
 

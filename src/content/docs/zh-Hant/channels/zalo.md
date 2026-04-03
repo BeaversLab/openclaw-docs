@@ -20,7 +20,7 @@ Zalo 以外掛程式形式提供，並未隨附於核心安裝中。
 ## 快速設定 (初學者)
 
 1. 安裝 Zalo 外掛程式：
-   - 從原始碼簽出：`openclaw plugins install ./extensions/zalo`
+   - 從原始碼檢出：`openclaw plugins install ./path/to/local/zalo-plugin`
    - 從 npm (如果已發布)：`openclaw plugins install @openclaw/zalo`
    - 或在設定中選擇 **Zalo** 並確認安裝提示
 2. 設定權杖：
@@ -241,3 +241,11 @@ Env 選項：`ZALO_BOT_TOKEN=...`（僅適用於預設帳戶）。
 - `channels.zalo.accounts.<id>.webhookSecret`: 每個帳號的 webhook 金鑰。
 - `channels.zalo.accounts.<id>.webhookPath`: 每個帳號的 webhook 路徑。
 - `channels.zalo.accounts.<id>.proxy`: 每個帳號的代理伺服器 URL。
+
+## 相關
+
+- [Channels Overview](/en/channels) — 所有支援的頻道
+- [Pairing](/en/channels/pairing) — 私訊驗證與配對流程
+- [Groups](/en/channels/groups) — 群組聊天行為與提及控制
+- [Channel Routing](/en/channels/channel-routing) — 訊息的工作階段路由
+- [Security](/en/gateway/security) — 存取模型與加固

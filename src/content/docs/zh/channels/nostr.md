@@ -35,10 +35,10 @@ openclaw plugins install @openclaw/nostr
 使用本地检出（开发工作流）：
 
 ```bash
-openclaw plugins install --link <path-to-openclaw>/extensions/nostr
+openclaw plugins install --link <path-to-local-nostr-plugin>
 ```
 
-安装或启用插件后，重启 Gateway 网关。
+安装或启用插件后，重启 Gateway(网关) 网关。
 
 ### 非交互式设置
 
@@ -247,3 +247,11 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 - 仅限私信（无群聊）。
 - 无媒体附件。
 - 仅限 NIP-04（计划支持 NIP-17 gift-wrap）。
+
+## 相关
+
+- [渠道概述](/en/channels) — 所有支持的渠道
+- [配对](/en/channels/pairing) — 私信认证和配对流程
+- [群组](/en/channels/groups) — 群聊行为和提及限制
+- [渠道路由](/en/channels/channel-routing) — 消息的会话路由
+- [安全性](/en/gateway/security) — 访问模型和加固

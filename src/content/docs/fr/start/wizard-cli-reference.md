@@ -164,15 +164,15 @@ Ce que vous définissez :
     Plus de détails : [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway).
   </Accordion>
   <Accordion title="MiniMax">
-    La configuration est écrite automatiquement. La valeur par défaut hébergée est `MiniMax-M2.7` ; `MiniMax-M2.5` reste disponible.
+    La configuration est écrite automatiquement. La valeur par défaut hébergée est `MiniMax-M2.7`.
     Plus de détails : [MiniMax](/en/providers/minimax).
   </Accordion>
   <Accordion title="Synthétique (compatible Anthropic)">
-    Invite pour `SYNTHETIC_API_KEY`.
+    Demande `SYNTHETIC_API_KEY`.
     Plus de détails : [Synthétique](/en/providers/synthetic).
   </Accordion>
-  <Accordion title="Ollama (Cloud and local open models)">
-    Demande l'URL de base (par défaut `http://127.0.0.1:11434`), puis propose les modes Cloud + Local ou Local.
+  <Accordion title="Ollama (Cloud et modèles open locaux)">
+    Demande l'URL de base (par défaut `http://127.0.0.1:11434`), puis propose le mode Cloud + Local ou Local.
     Détecte les modèles disponibles et suggère des valeurs par défaut.
     Plus de détails : [Ollama](/en/providers/ollama).
   </Accordion>
@@ -180,12 +180,12 @@ Ce que vous définissez :
     Les configurations Moonshot (Kimi K2) et Kimi Coding sont écrites automatiquement.
     Pour plus de détails : [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot).
   </Accordion>
-  <Accordion title="Fournisseur personnalisé">
+  <Accordion title="Custom provider">
     Fonctionne avec les points de terminaison compatibles OpenAI et Anthropic.
 
-    L'intégration interactive prend en charge les mêmes options de stockage de clé API que les autres flux de clés API de fournisseur :
-    - **Coller la clé API maintenant** (en texte clair)
-    - **Utiliser une référence secrète** (réf env ou réf de fournisseur configuré, avec validation préalable)
+    L'onboarding interactif prend en charge les mêmes options de stockage de clé API que les autres flux de clés API de provider :
+    - **Coller la clé API maintenant** (en clair)
+    - **Utiliser une référence secrète** (réf. env ou réf. provider configurée, avec validation préalable)
 
     Indicateurs non interactifs :
     - `--auth-choice custom-api-key`
@@ -193,7 +193,7 @@ Ce que vous définissez :
     - `--custom-model-id`
     - `--custom-api-key` (facultatif ; revient à `CUSTOM_API_KEY`)
     - `--custom-provider-id` (facultatif)
-    - `--custom-compatibility <openai|anthropic>` (facultatif ; défaut `openai`)
+    - `--custom-compatibility <openai|anthropic>` (facultatif ; par défaut `openai`)
 
   </Accordion>
   <Accordion title="Skip">
@@ -208,23 +208,23 @@ Comportement du modèle :
 
 Chemins des identifiants et des profils :
 
-- OAuth identifiants : `~/.openclaw/credentials/oauth.json`
+- Identifiants OAuth : `~/.openclaw/credentials/oauth.json`
 - Profils d'authentification (clés API + OAuth) : `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
 
 Mode de stockage des informations d'identification :
 
 - Le comportement d'onboarding par défaut enregistre les clés API en tant que valeurs en clair dans les profils d'auth.
-- `--secret-input-mode ref` active le mode de référence au lieu du stockage de clé en texte brut.
-  Dans la configuration interactive, vous pouvez choisir entre :
+- `--secret-input-mode ref` active le mode référence au lieu du stockage de clé en texte brut.
+  Dans la configuration interactive, vous pouvez choisir :
   - référence de variable d'environnement (par exemple `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`)
-  - réf de fournisseur configurée (`file` ou `exec`) avec l'alias et l'ID du fournisseur
+  - référence de fournisseur configurée (`file` ou `exec`) avec l'alias et l'identifiant du fournisseur
 - Le mode référence interactif exécute une validation préliminaire rapide avant l'enregistrement.
   - Réf Env : valide le nom de la variable + la valeur non vide dans l'environnement d'onboarding actuel.
   - Réf Provider : valide la configuration du provider et résout l'identifiant demandé.
   - Si la validation préliminaire échoue, l'onboarding affiche l'erreur et vous permet de réessayer.
-- En mode non interactif, `--secret-input-mode ref` est basé uniquement sur les variables d'environnement.
+- En mode non interactif, `--secret-input-mode ref` est uniquement basé sur l'environnement.
   - Définissez la variable d'environnement du provider dans l'environnement du processus d'onboarding.
-  - Les indicateurs de clé en ligne (par exemple `--openai-api-key`) nécessitent que cette env var soit définie ; sinon, l'onboarding échoue rapidement.
+  - Les indicateurs de clé en ligne (par exemple `--openai-api-key`) nécessitent que cette variable d'environnement soit définie ; sinon, l'onboarding échoue rapidement.
   - Pour les fournisseurs personnalisés, le mode non interactif `ref` stocke `models.providers.<id>.apiKey` en tant que `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
   - Dans ce cas de fournisseur personnalisé, `--custom-api-key` exige que `CUSTOM_API_KEY` soit défini ; sinon, l'onboarding échoue rapidement.
 - Les identifiants d'authentification Gateway prennent en charge les choix en texte clair et SecretRef dans la configuration interactive :
@@ -233,7 +233,7 @@ Mode de stockage des informations d'identification :
 - Chemin SecretRef du jeton non interactif : `--gateway-token-ref-env <ENV_VAR>`.
 - Les configurations en clair existantes continuent de fonctionner sans modification.
 
-<Note>Conseil pour les serveurs et les installations sans interface graphique : complétez OAuth sur une machine disposant d'un navigateur, puis copiez `~/.openclaw/credentials/oauth.json` (ou `$OPENCLAW_STATE_DIR/credentials/oauth.json`) vers l'hôte de la passerelle.</Note>
+<Note>Conseil pour les serveurs et mode headless : complétez OAuth sur une machine disposant d'un navigateur, puis copiez `~/.openclaw/credentials/oauth.json` (ou `$OPENCLAW_STATE_DIR/credentials/oauth.json`) vers l'hôte de la passerelle.</Note>
 
 ## Sorties et éléments internes
 
@@ -241,10 +241,10 @@ Champs typiques dans `~/.openclaw/openclaw.json` :
 
 - `agents.defaults.workspace`
 - `agents.defaults.model` / `models.providers` (si Minimax est choisi)
-- `tools.profile` (l'onboarding local par défaut est `"coding"` si non défini; les valeurs explicites existantes sont conservées)
+- `tools.profile` (l'onboarding local utilise par défaut `"coding"` s'il n'est pas défini ; les valeurs explicites existantes sont conservées)
 - `gateway.*` (mode, bind, auth, tailscale)
 - `session.dmScope` (l'onboarding local définit cela par défaut à `per-channel-peer` s'il n'est pas défini ; les valeurs explicites existantes sont conservées)
-- `channels.telegram.botToken`, `channels.discord.token`, `channels.signal.*`, `channels.imessage.*`
+- `channels.telegram.botToken`, `channels.discord.token`, `channels.matrix.*`, `channels.signal.*`, `channels.imessage.*`
 - Listes de canaux autorisés (Slack, Discord, Matrix, Microsoft Teams) lorsque vous acceptez lors des invites (les noms sont résolus en ID si possible)
 - `skills.install.nodeManager`
 - `wizard.lastRunAt`

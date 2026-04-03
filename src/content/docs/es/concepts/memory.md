@@ -1,110 +1,88 @@
 ---
-title: "Memoria"
-summary: "Cómo funciona la memoria de OpenClaw (archivos del espacio de trabajo + vaciado automático de memoria)"
+title: "Resumen de la memoria"
+summary: "Cómo OpenClaw recuerda cosas a través de las sesiones"
 read_when:
-  - You want the memory file layout and workflow
-  - You want to tune the automatic pre-compaction memory flush
+  - You want to understand how memory works
+  - You want to know what memory files to write
 ---
 
-# Memoria
+# Resumen de la memoria
 
-La memoria de OpenClaw es **Markdown plano en el espacio de trabajo del agente**. Los archivos son la
-fuente de la verdad; el modelo solo "recuerda" lo que se escribe en el disco.
+OpenClaw recuerda las cosas escribiendo **archivos Markdown planos** en el espacio de trabajo
+de su agente. El modelo solo "recuerda" lo que se guarda en el disco -- no hay
+estado oculto.
 
-Las herramientas de búsqueda de memoria son proporcionadas por el complemento de memoria activo (por defecto:
-`memory-core`). Desactive los complementos de memoria con `plugins.slots.memory = "none"`.
+## Cómo funciona
 
-## Archivos de memoria (Markdown)
+Su agente tiene dos lugares para almacenar recuerdos:
 
-El diseño del espacio de trabajo predeterminado utiliza dos capas de memoria:
+- **`MEMORY.md`** -- memoria a largo plazo. Hechos duraderos, preferencias y
+  decisiones. Se cargan al inicio de cada sesión de DM.
+- **`memory/YYYY-MM-DD.md`** -- notas diarias. Contexto actual y observaciones.
+  Las notas de hoy y de ayer se cargan automáticamente.
 
-- `memory/YYYY-MM-DD.md`
-  - Registro diario (solo agregar).
-  - Leer hoy + ayer al inicio de la sesión.
-- `MEMORY.md` (opcional)
-  - Memoria a largo plazo curada.
-  - Si existen tanto `MEMORY.md` como `memory.md` en la raíz del espacio de trabajo, OpenClaw carga ambos (deduplicados por realpath, por lo que los enlaces simbólicos que apuntan al mismo archivo no se inyectan dos veces).
-  - **Cargar solo en la sesión principal y privada** (nunca en contextos grupales).
+Estos archivos viven en el espacio de trabajo del agente (por defecto `~/.openclaw/workspace`).
 
-Estos archivos se encuentran en el espacio de trabajo (`agents.defaults.workspace`, por defecto
-`~/.openclaw/workspace`). Consulte [Agent workspace](/en/concepts/agent-workspace) para ver el diseño completo.
+<Tip>Si quiere que su agente recuerde algo, simplemente pídaselo: "Recuerda que prefiero TypeScript". Lo escribirá en el archivo apropiado.</Tip>
 
 ## Herramientas de memoria
 
-OpenClaw expone dos herramientas orientadas al agente para estos archivos Markdown:
+El agente tiene dos herramientas para trabajar con la memoria:
 
-- `memory_search` -- recuperación semántica sobre fragmentos indexados.
-- `memory_get` -- lectura específica de un archivo o rango de líneas Markdown específico.
+- **`memory_search`** -- encuentra notas relevantes mediante búsqueda semántica, incluso cuando
+  la redacción difiere de la original.
+- **`memory_get`** -- lee un archivo de memoria o un rango de líneas específico.
 
-`memory_get` ahora **se degrada con elegancia cuando un archivo no existe** (por ejemplo,
-el registro diario de hoy antes de la primera escritura). Tanto el administrador integrado como el backend QMD
-devuelven `{ text: "", path }` en lugar de lanzar `ENOENT`, por lo que los agentes pueden
-manejar "aún no se ha registrado nada" y continuar su flujo de trabajo sin envolver la
-llamada a la herramienta en lógica try/catch.
+Ambas herramientas son proporcionadas por el plugin de memoria activo (por defecto: `memory-core`).
 
-## Cuándo escribir memoria
+## Búsqueda de memoria
 
-- Las decisiones, preferencias y datos duraderos van a `MEMORY.md`.
-- Las notas del día a día y el contexto en ejecución van a `memory/YYYY-MM-DD.md`.
-- Si alguien dice "recuerda esto", escríbelo (no lo guardes en la RAM).
-- Esta área sigue evolucionando. Ayuda recordar al modelo que almacene recuerdos; él sabrá qué hacer.
-- Si quieres que algo se quede, **pide al bot que lo escriba** en la memoria.
+Cuando se configura un proveedor de incrustaciones, `memory_search` utiliza **búsqueda
+híbrida** -- combinando la similitud de vectores (significado semántico) con la coincidencia de
+palabras clave (términos exactos como IDs y símbolos de código). Esto funciona de manera inmediata una vez que tiene
+una clave API para cualquier proveedor compatible.
 
-## Flujo de memoria automático (pre-compaction ping)
+<Info>OpenClaw detecta automáticamente su proveedor de incrustaciones a partir de las claves API disponibles. Si tiene una clave de OpenAI, Gemini, Voyage o Mistral configurada, la búsqueda de memoria se habilita automáticamente.</Info>
 
-Cuando una sesión está **cerca de la compactación automática**, OpenClaw activa un **turno
-silencioso y agentic** que recuerda al modelo que escriba una memoria duradera **antes** de que
-se compacte el contexto. Las indicaciones predeterminadas dicen explícitamente que el modelo _puede responder_,
-pero usualmente `NO_REPLY` es la respuesta correcta para que el usuario nunca vea este turno.
-El complemento de memoria activa posee la política de indicación/ruta para ese vaciado; el
-complemento `memory-core` predeterminado escribe en el archivo diario canónico bajo
-`memory/YYYY-MM-DD.md`.
+Para obtener detalles sobre cómo funciona la búsqueda, las opciones de ajuste y la configuración del proveedor, consulte
+[Búsqueda de memoria](/en/concepts/memory-search).
 
-Esto está controlado por `agents.defaults.compaction.memoryFlush`:
+## Backends de memoria
 
-```json5
-{
-  agents: {
-    defaults: {
-      compaction: {
-        reserveTokensFloor: 20000,
-        memoryFlush: {
-          enabled: true,
-          softThresholdTokens: 4000,
-          systemPrompt: "Session nearing compaction. Store durable memories now.",
-          prompt: "Write any lasting notes to memory/YYYY-MM-DD.md; reply with NO_REPLY if nothing to store.",
-        },
-      },
-    },
-  },
-}
+<CardGroup cols={3}>
+  <Card title="Integrado (por defecto)" icon="database" href="/en/concepts/memory-builtin">
+    Basado en SQLite. Funciona de inmediato con búsqueda de palabras clave, similitud de vectores y búsqueda híbrida. Sin dependencias adicionales.
+  </Card>
+  <Card title="QMD" icon="search" href="/en/concepts/memory-qmd">
+    Sidecar local-first con reordenamiento, expansión de consultas y la capacidad de indexar directorios fuera del espacio de trabajo.
+  </Card>
+  <Card title="Honcho" icon="brain" href="/en/concepts/memory-honcho">
+    Memoria multiproceso nativa de IA con modelado de usuario, búsqueda semántica y conciencia multiagente. Instalación de complemento.
+  </Card>
+</CardGroup>
+
+## Vaciado automático de memoria
+
+Antes de que la [compactación](/en/concepts/compaction) resuma su conversación, OpenClaw
+ejecuta un turno silencioso que recuerda al agente guardar el contexto importante en los archivos
+de memoria. Esto está activado de manera predeterminada; no necesita configurar nada.
+
+<Tip>El vaciado de memoria evita la pérdida de contexto durante la compactación. Si su agente tiene datos importantes en la conversación que aún no se han escrito en un archivo, se guardarán automáticamente antes de que se produzca el resumen.</Tip>
+
+## CLI
+
+```bash
+openclaw memory status          # Check index status and provider
+openclaw memory search "query"  # Search from the command line
+openclaw memory index --force   # Rebuild the index
 ```
 
-Detalles:
+## Lecturas adicionales
 
-- **Umbral suave**: el vaciado se activa cuando la estimación de tokens de la sesión supera
-  `contextWindow - reserveTokensFloor - softThresholdTokens`.
-- **Silencioso** de forma predeterminada: las indicaciones incluyen `NO_REPLY` para que no se entregue nada.
-- **Dos avisos**: un aviso de usuario más un aviso del sistema añaden el recordatorio.
-- **Un vaciado por ciclo de compactación** (rastreado en `sessions.json`).
-- **El espacio de trabajo debe ser escribible**: si la sesión se ejecuta en un espacio aislado con
-  `workspaceAccess: "ro"` o `"none"`, se omite el vaciado.
-
-Para ver el ciclo de vida completo de compactación, consulte
-[Gestión de sesiones + compactación](/en/reference/session-management-compaction).
-
-## Búsqueda de memoria vectorial
-
-OpenClaw puede construir un pequeño índice vectorial sobre `MEMORY.md` y `memory/*.md` para que
-las consultas semánticas puedan encontrar notas relacionadas incluso cuando la redacción difiera. La búsqueda híbrida
-(BM25 + vector) está disponible para combinar la coincidencia semántica con búsquedas exactas de palabras clave.
-
-Los identificadores de adaptadores de búsqueda de memoria provienen del complemento de memoria activo. El complemento
-`memory-core` predeterminado incluye funciones integradas para OpenAI, Gemini, Voyage, Mistral,
-Ollama y modelos GGUF locales, además de un backend opcional QMD sidecar para
-características avanzadas de recuperación y posprocesamiento como la reorganización de diversidad MMR
-y el decaimiento temporal.
-
-Para obtener la referencia de configuración completa, incluida la configuración del proveedor de incrustaciones, el backend QMD,
-el ajuste de búsqueda híbrida, la memoria multimodal y todos los controles de configuración, consulte
-[Referencia de configuración de memoria](/en/reference/memory-config).
+- [Motor de memoria integrado](/en/concepts/memory-builtin) -- backend SQLite predeterminado
+- [Motor de memoria QMD](/en/concepts/memory-qmd) -- sidecar local-first avanzado
+- [Memoria Honcho](/en/concepts/memory-honcho) -- memoria multiproceso nativa de IA
+- [Búsqueda de memoria](/en/concepts/memory-search) -- canalización de búsqueda, proveedores y
+  ajuste
+- [Referencia de configuración de memoria](/en/reference/memory-config) -- todos los controles de configuración
+- [Compactación](/en/concepts/compaction) -- cómo interactúa la compactación con la memoria

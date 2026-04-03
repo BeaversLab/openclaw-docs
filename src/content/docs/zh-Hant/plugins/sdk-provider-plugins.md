@@ -14,12 +14,13 @@ read_when:
 (LLM) 新增至 OpenClaw。最後，您將擁有一個包含模型目錄、
 API 金鑰驗證以及動態模型解析的提供者。
 
-<Info>如果您之前尚未建立過任何 OpenClaw 外掛程式，請先閱讀 [Getting Started](/en/plugins/building-plugins) 以了解基本的套件 結構與 manifest 設定。</Info>
+<Info>如果您之前沒有建置過任何 OpenClaw 外掛程式，請先閱讀 [入門指南](/en/plugins/building-plugins) 以了解基本套件 結構和 manifest 設定。</Info>
 
 ## 逐步演练
 
 <Steps>
-  <Step title="套件與資訊清單">
+  <a id="step-1-package-and-manifest"></a>
+  <Step title="套件與 manifest">
     <CodeGroup>
     ```json package.json
     {
@@ -28,7 +29,15 @@ API 金鑰驗證以及動態模型解析的提供者。
       "type": "module",
       "openclaw": {
         "extensions": ["./index.ts"],
-        "providers": ["acme-ai"]
+        "providers": ["acme-ai"],
+        "compat": {
+          "pluginApi": ">=2026.3.24-beta.2",
+          "minGatewayVersion": "2026.3.24-beta.2"
+        },
+        "build": {
+          "openclawVersion": "2026.3.24-beta.2",
+          "pluginSdkVersion": "2026.3.24-beta.2"
+        }
       }
     }
     ```
@@ -63,12 +72,15 @@ API 金鑰驗證以及動態模型解析的提供者。
     ```
     </CodeGroup>
 
-    資訊清單宣告了 `providerAuthEnvVars`，因此 OpenClaw 可以在不載入您的外掛程式執行時期的情況下偵測憑證。
+    Manifest 宣告了 `providerAuthEnvVars`，因此 OpenClaw 可以在
+    不載入您的外掛程式執行時期的情況下偵測憑證。如果您將
+    提供者發佈到 ClawHub，則需要在 `package.json` 中填寫
+    這些 `openclaw.compat` 和 `openclaw.build` 欄位。
 
   </Step>
 
   <Step title="註冊提供者">
-    最小化的提供者需要一個 `id`、`label`、`auth` 和 `catalog`：
+    最小的提供者需要一個 `id`、`label`、`auth` 和 `catalog`：
 
     ```typescript index.ts
     import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
@@ -141,10 +153,11 @@ API 金鑰驗證以及動態模型解析的提供者。
 
     這就是一個可運作的提供者。使用者現在可以
     `openclaw onboard --acme-ai-api-key <key>` 並選擇
-    `acme-ai/acme-large` 作為其模型。
+    `acme-ai/acme-large` 作為他們的模型。
 
-    對於僅註冊一個使用 API 金鑰驗證的文字提供者以及單一目錄支援執行時期的套件提供者，建議使用更精簡的
-    `defineSingleProviderPluginEntry(...)` 輔助函式：
+    對於僅註冊一個使用 API 金鑰驗證的
+    文字提供者加上單一目錄支援執行時期的捆綁式提供者，建議使用
+    較狹義的 `defineSingleProviderPluginEntry(...)` 輔助函式：
 
     ```typescript
     import { defineSingleProviderPluginEntry } from "openclaw/plugin-sdk/provider-entry";
@@ -179,16 +192,16 @@ API 金鑰驗證以及動態模型解析的提供者。
     });
     ```
 
-    如果您的驗證流程還需要在入職期間修補 `models.providers.*`、別名
-    和代理程式預設模型，請使用
-    `openclaw/plugin-sdk/provider-onboard` 中的預設輔助函式。最精簡的輔助函式是
-    `createDefaultModelPresetAppliers(...)`、
+    如果您的驗證流程還需要在加入時修補 `models.providers.*`、別名
+    和代理程式預設模型，請使用來自
+    `openclaw/plugin-sdk/provider-onboard` 的預設輔助函式。最狹義的
+    輔助函式是 `createDefaultModelPresetAppliers(...)`、
     `createDefaultModelsPresetAppliers(...)` 和
     `createModelCatalogPresetAppliers(...)`。
 
   </Step>
 
-  <Step title="新增動態模型解析">
+  <Step title="Add dynamic model resolution">
     如果您的提供者接受任意模型 ID（例如代理或路由器），
     請新增 `resolveDynamicModel`：
 
@@ -211,17 +224,17 @@ API 金鑰驗證以及動態模型解析的提供者。
     });
     ```
 
-    如果解析需要網路調用，請使用 `prepareDynamicModel` 進行非同步
+    如果解析需要網路請求，請使用 `prepareDynamicModel` 進行非同步
     預熱 —— `resolveDynamicModel` 會在完成後再次執行。
 
   </Step>
 
-  <Step title="新增執行時鉤子（視需要）">
-    大多數供應商僅需要 `catalog` + `resolveDynamicModel`。請根據供應商的需求逐步新增鉤子。
+  <Step title="新增運行時 Hook（按需）">
+    大多數供應商僅需 `catalog` + `resolveDynamicModel`。請根據您的供應商需求逐步添加 Hook。
 
     <Tabs>
-      <Tab title="Token 交換">
-        對於需要在每次推斷呼叫前進行 token 交換的供應商：
+      <Tab title="權杖交換">
+        對於在每次推理呼叫前需要權杖交換的供應商：
 
         ```typescript
         prepareRuntimeAuth: async (ctx) => {
@@ -253,7 +266,7 @@ API 金鑰驗證以及動態模型解析的提供者。
         ```
       </Tab>
       <Tab title="使用量與計費">
-        對於公開使用量/計費資料的供應商：
+        對於公開使用量/計費數據的供應商：
 
         ```typescript
         resolveUsageAuth: async (ctx) => {
@@ -267,42 +280,43 @@ API 金鑰驗證以及動態模型解析的提供者。
       </Tab>
     </Tabs>
 
-    <Accordion title="所有可用的供應商鉤子">
-      OpenClaw 會依下列順序呼叫鉤子。大多數供應商僅使用 2-3 個：
+    <Accordion title="所有可用的供應商 Hook">
+      OpenClaw 會依此順序呼叫 Hook。大多數供應商僅使用 2-3 個：
 
       | # | Hook | 使用時機 |
       | --- | --- | --- |
       | 1 | `catalog` | 模型型錄或基礎 URL 預設值 |
       | 2 | `resolveDynamicModel` | 接受任意上游模型 ID |
-      | 3 | `prepareDynamicModel` | 解析前的非同步元資料擷取 |
-      | 4 | `normalizeResolvedModel` | 執行器前的傳輸重寫 |
-      | 5 | `capabilities` | 逐字稿/工具元資料（資料，非可呼叫） |
+      | 3 | `prepareDynamicModel` | 解析前的非同步中繼資料擷取 |
+      | 4 | `normalizeResolvedModel` | 執行器之前的傳輸重寫 |
+      | 5 | `capabilities` | 逐字稿/工具中繼資料（資料，不可呼叫） |
       | 6 | `prepareExtraParams` | 預設請求參數 |
       | 7 | `wrapStreamFn` | 自訂標頭/主體包裝器 |
-      | 8 | `formatApiKey` | 自訂執行時 token 形狀 |
+      | 8 | `formatApiKey` | 自訂運行時權杖形狀 |
       | 9 | `refreshOAuth` | 自訂 OAuth 更新 |
       | 10 | `buildAuthDoctorHint` | 驗證修復指引 |
-      | 11 | `isCacheTtlEligible` | 提示快取 TTL 閘控 |
+      | 11 | `isCacheTtlEligible` | 提示詞快取 TTL 閘控 |
       | 12 | `buildMissingAuthMessage` | 自訂缺少驗證提示 |
-      | 13 | `suppressBuiltInModel` | 隱藏過時的上游列 |
-      | 14 | `augmentModelCatalog` | 合成向前相容列 |
-      | 15 | `isBinaryThinking` | 二元思考開啟/關閉 |
+      | 13 | `suppressBuiltInModel` | 隱藏過時的上游資料列 |
+      | 14 | `augmentModelCatalog` | 合成向前相容資料列 |
+      | 15 | `isBinaryThinking` | 二元思維開關 |
       | 16 | `supportsXHighThinking` | `xhigh` 推理支援 |
       | 17 | `resolveDefaultThinkingLevel` | 預設 `/think` 政策 |
       | 18 | `isModernModelRef` | 即時/冒煙模型匹配 |
-      | 19 | `prepareRuntimeAuth` | 推斷前的 token 交換 |
+      | 19 | `prepareRuntimeAuth` | 推理前的權杖交換 |
       | 20 | `resolveUsageAuth` | 自訂使用量憑證解析 |
       | 21 | `fetchUsageSnapshot` | 自訂使用量端點 |
       | 22 | `onModelSelected` | 選取後回呼（例如遙測） |
 
-      如需詳細描述與真實範例，請參閱
+      如需詳細描述和真實範例，請參閱
       [Internals: Provider Runtime Hooks](/en/plugins/architecture#provider-runtime-hooks)。
     </Accordion>
 
   </Step>
 
   <Step title="新增額外功能（可選）">
-    提供者外掛可以在文字推論之外，註冊語音、媒體理解、影像生成和網路搜尋功能：
+    <a id="step-5-add-extra-capabilities"></a>
+    供應商外掛程式可以註冊語音、媒體理解、影像生成和網路搜尋，以及文字推論：
 
     ```typescript
     register(api) {
@@ -335,12 +349,13 @@ API 金鑰驗證以及動態模型解析的提供者。
     }
     ```
 
-    OpenClaw 將此歸類為 **混合功能** 外掛。這是公司外掛的建議模式（每個供應商一個外掛）。請參閱
+    OpenClaw 將此歸類為 **混合功能 (hybrid-capability)** 外掛程式。這是公司外掛程式的推薦模式（每個供應商一個外掛程式）。請參閱
     [Internals: Capability Ownership](/en/plugins/architecture#capability-ownership-model)。
 
   </Step>
 
   <Step title="測試">
+    <a id="step-6-test"></a>
     ```typescript src/provider.test.ts
     import { describe, it, expect } from "vitest";
     // Export your provider config object from index.ts or a dedicated file
@@ -374,10 +389,22 @@ API 金鑰驗證以及動態模型解析的提供者。
   </Step>
 </Steps>
 
+## 發佈至 ClawHub
+
+供應商外掛程式的發佈方式與任何其他外部程式碼外掛程式相同：
+
+```bash
+clawhub package publish your-org/your-plugin --dry-run
+clawhub package publish your-org/your-plugin
+```
+
+請勿在此處使用舊版僅限技能的發佈別名；外掛程式套件應使用
+`clawhub package publish`。
+
 ## 檔案結構
 
 ```
-extensions/acme-ai/
+<bundled-plugin-root>/acme-ai/
 ├── package.json              # openclaw.providers metadata
 ├── openclaw.plugin.json      # Manifest with providerAuthEnvVars
 ├── index.ts                  # definePluginEntry + registerProvider
@@ -388,18 +415,18 @@ extensions/acme-ai/
 
 ## 目錄順序參考
 
-`catalog.order` 控制您的目錄相對於內建提供者的合併時機：
+`catalog.order` 控制您的目錄相對於內建供應商的合併時間：
 
-| 順序      | 時機         | 使用情境                     |
-| --------- | ------------ | ---------------------------- |
-| `simple`  | 第一階段     | 純 API 金鑰提供者            |
-| `profile` | 簡單設定之後 | 依據驗證設定檔限制的提供者   |
-| `paired`  | 設定檔之後   | 綜合多個相關項目             |
-| `late`    | 最後階段     | 覆寫現有提供者（衝突時優先） |
+| 順序      | 時機       | 使用案例                             |
+| --------- | ---------- | ------------------------------------ |
+| `simple`  | 第一階段   | 純 API 金鑰供應商                    |
+| `profile` | 簡單之後   | 基於設定檔限制存取的供應商           |
+| `paired`  | 設定檔之後 | 綜合多個相關項目                     |
+| `late`    | 最後階段   | 覆寫現有供應商（衝突時以本設定為準） |
 
 ## 後續步驟
 
-- [Channel Plugins](/en/plugins/sdk-channel-plugins) — 如果您的外掛也提供頻道
-- [SDK Runtime](/en/plugins/sdk-runtime) — `api.runtime` 協助程式（TTS、搜尋、子代理程式）
-- [SDK Overview](/en/plugins/sdk-overview) — 完整子路徑匯入參考
-- [Plugin Internals](/en/plugins/architecture#provider-runtime-hooks) — Hook 詳細資訊與隨附範例
+- [頻道外掛程式](/en/plugins/sdk-channel-plugins) — 如果您的外掛程式也提供頻道
+- [SDK 執行時期](/en/plugins/sdk-runtime) — `api.runtime` 協助程式（TTS、搜尋、次代理程式）
+- [SDK 概覽](/en/plugins/sdk-overview) — 完整的子路徑匯入參考
+- [外掛程式內部](/en/plugins/architecture#provider-runtime-hooks) — Hook 詳細資訊和內範例

@@ -65,9 +65,9 @@ make <target>
 
 Ver también: `docs/gateway-exposure-matrix.md` en el repositorio de modelos.
 
-### Canalización de Nodes.run (capacidad de mayor riesgo)
+### Pipeline de ejecución de nodos (capacidad de mayor riesgo)
 
-**Afirmación:** `nodes.run` requiere (a) una lista blanca de comandos de nodo además de comandos declarados y (b) aprobación en vivo cuando esté configurado; las aprobaciones se tokenizan para evitar la repetición (en el modelo).
+**Afirmación:** `exec host=node` requiere (a) una lista blanca de comandos de nodo más comandos declarados y (b) aprobación en vivo cuando esté configurado; las aprobaciones se tokenizan para evitar la repetición (en el modelo).
 
 - Ejecuciones verdes:
   - `make nodes-pipeline`

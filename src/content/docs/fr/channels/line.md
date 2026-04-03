@@ -24,12 +24,12 @@ openclaw plugins install @openclaw/line
 Extraction locale (lors de l'exécution depuis un dépôt git) :
 
 ```bash
-openclaw plugins install ./extensions/line
+openclaw plugins install ./path/to/local/line-plugin
 ```
 
 ## Configuration
 
-1. Créez un compte LINE Developers et ouvrez la Console :
+1. Create a LINE Developers account and open the Console:
    [https://developers.line.biz/console/](https://developers.line.biz/console/)
 2. Créez (ou sélectionnez) un fournisseur et ajoutez un channel **Messaging API**.
 3. Copiez le **Channel access token** et le **Channel secret** à partir des paramètres du channel.
@@ -176,10 +176,38 @@ Le plugin LINE inclut également une commande `/card` pour les préréglages de 
 /card info "Welcome" "Thanks for joining!"
 ```
 
+## Prise en charge de l'ACP
+
+LINE prend en charge les liaisons de conversation ACP (Agent Communication Protocol) :
+
+- `/acp spawn <agent> --bind here` lie la conversation LINE actuelle à une session ACP sans créer de fil de discussion enfant.
+- Les liaisons ACP configurées et les sessions ACP liées à des conversations actives fonctionnent sur LINE comme sur les autres canaux de conversation.
+
+Consultez la page sur les [agents ACP](/en/tools/acp-agents) pour plus de détails.
+
+## Médias sortants
+
+Le plugin LINE prend en charge l'envoi d'images, de vidéos et de fichiers audio via l'outil de message de l'agent. Les médias sont envoyés via le chemin de livraison spécifique à LINE avec une gestion appropriée de l'aperçu et du suivi :
+
+- **Images** : envoyées sous forme de messages image LINE avec génération automatique d'aperçu.
+- **Vidéos** : envoyées avec un aperçu explicite et une gestion du type de contenu.
+- **Audio** : envoyé sous forme de messages audio LINE.
+
+Les envois de médias génériques reviennent à l'itinéraire existant réservé aux images lorsqu'un chemin spécifique à LINE n'est pas disponible.
+
 ## Dépannage
 
-- **Échec de la vérification du webhook :** assurez-vous que l'URL du webhook est en HTTPS et que le `channelSecret` correspond à la console LINE.
-- **Pas d'événements entrants :** vérifiez que le chemin du webhook correspond à `channels.line.webhookPath`
+- **Échec de la vérification du webhook :** assurez-vous que l'URL du webhook est HTTPS et que le
+  `channelSecret` correspond à la console LINE.
+- **Aucun événement entrant :** confirmez que le chemin du webhook correspond à `channels.line.webhookPath`
   et que la passerelle est accessible depuis LINE.
-- **Erreurs de téléchargement de médias :** déclenchez `channels.line.mediaMaxMb` si le média dépasse la
+- **Erreurs de téléchargement de médias :** déclenchez `channels.line.mediaMaxMb` si les médias dépassent la
   limite par défaut.
+
+## Connexes
+
+- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
+- [Appairage](/en/channels/pairing) — authentification DM et flux d'appairage
+- [Groupes](/en/channels/groups) — comportement de chat de groupe et filtrage des mentions
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et renforcement

@@ -17,7 +17,7 @@ title: "Zalo Personal"
 Zalo Personal 作为插件提供，不包含在核心安装中。
 
 - 通过 CLI 安装：`openclaw plugins install @openclaw/zalouser`
-- 或者从源代码检出：`openclaw plugins install ./extensions/zalouser`
+- 或者从源代码检出：`openclaw plugins install ./path/to/local/zalouser-plugin`
 - 详情：[插件](/en/tools/plugin)
 
 不需要外部 `zca`/`openzca` CLI 二进制文件。
@@ -25,7 +25,7 @@ Zalo Personal 作为插件提供，不包含在核心安装中。
 ## 快速设置（初学者）
 
 1. 安装插件（见上文）。
-2. 登录（二维码，在 Gateway 网关 机器上）：
+2. 登录（二维码，在 Gateway(网关) 网关 机器上）：
    - `openclaw channels login --channel zalouser`
    - 使用 Zalo 手机应用扫描二维码。
 3. 启用渠道：
@@ -179,3 +179,11 @@ openclaw directory groups list --channel zalouser --query "work"
 
 - 移除任何关于旧的外部 `zca` 进程的假设。
 - 该渠道现在完全在 OpenClaw 中运行，无需外部 CLI 二进制文件。
+
+## 相关
+
+- [Channels Overview](/en/channels) — 所有支持的渠道
+- [Pairing](/en/channels/pairing) — 私信认证和配对流程
+- [Groups](/en/channels/groups) — 群聊行为和提及门控
+- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
+- [Security](/en/gateway/security) — 访问模型和加固

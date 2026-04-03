@@ -8,7 +8,7 @@ title: "多网关"
 
 # 多个网关（同一主机）
 
-大多数设置应使用一个 Gateway 网关，因为单个 Gateway 网关 可以处理多个消息连接和代理。如果您需要更强的隔离性或冗余（例如，救援机器人），请使用隔离的配置文件/端口运行单独的 Gateway 网关。
+大多数设置应使用一个 Gateway(网关) 网关，因为单个 Gateway(网关) 网关 可以处理多个消息连接和代理。如果您需要更强的隔离性或冗余（例如，救援机器人），请使用隔离的配置文件/端口运行单独的 Gateway(网关) 网关。
 
 ## 隔离清单（必需）
 
@@ -43,7 +43,7 @@ openclaw --profile rescue gateway install
 
 ## 救援机器人指南
 
-在同一主机上运行第二个 Gateway 网关，并使用其自己的：
+在同一主机上运行第二个 Gateway(网关) 网关，并使用其自己的：
 
 - 配置文件/配置
 - 状态目录
@@ -79,7 +79,7 @@ openclaw --profile rescue gateway install
 基础端口 = `gateway.port` （或 `OPENCLAW_GATEWAY_PORT` / `--port`）。
 
 - 浏览器控制服务端口 = 基础端口 + 2（仅限环回）
-- canvas 主机由 Gateway 网关 HTTP 服务器提供服务（端口与 `gateway.port` 相同）
+- canvas 主机由 Gateway(网关) 网关 HTTP 服务器提供服务（端口与 `gateway.port` 相同）
 - 浏览器配置文件 CDP 端口从 `browser.controlPort + 9 .. + 108` 自动分配
 
 如果您在配置或环境变量中覆盖了其中任何一项，则必须为每个实例保持它们唯一。

@@ -210,3 +210,10 @@ git push
 - 多重代理程式路由可以為每個代理程式使用不同的工作區。請參閱
   [通道路由](/en/channels/channel-routing) 以了解路由設定。
 - 如果啟用了 `agents.defaults.sandbox`，非主要會話可以在 `agents.defaults.sandbox.workspaceRoot` 下使用每會話沙箱工作區。
+
+## 相關
+
+- [常駐指令](/en/automation/standing-orders) — 工作區檔案中的持續性指令
+- [Heartbeat](/en/gateway/heartbeat) — HEARTBEAT.md 工作區檔案
+- [Session](/en/concepts/session) — 會話儲存路徑
+- [Sandboxing](/en/gateway/sandboxing) — 沙盒環境中的工作區存取

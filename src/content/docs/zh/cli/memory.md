@@ -63,4 +63,4 @@ openclaw memory index --agent main --verbose
 - `memory index --verbose` 打印每个阶段的详细信息（提供商、模型、来源、批次活动）。
 - `memory status` 包括通过 `memorySearch.extraPaths` 配置的任何额外路径。
 - 如果实际活动的内存远程 API 密钥字段被配置为 SecretRefs，该命令将从活动网关快照中解析这些值。如果网关不可用，该命令将快速失败。
-- Gateway 网关 版本偏差说明：此命令路径需要支持 `secrets.resolve` 的 Gateway 网关；较旧的 Gateway 网关 将返回未知方法错误。
+- Gateway(网关) 网关 版本偏差说明：此命令路径需要支持 `secrets.resolve` 的 Gateway(网关) 网关；较旧的 Gateway(网关) 网关 将返回未知方法错误。

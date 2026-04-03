@@ -60,7 +60,7 @@ CLI 捕获 `console.log/info/warn/error/debug/trace` 并将其写入文件日志
   - 匹配项通过保留前 6 个 + 后 4 个字符（长度 >= 18）来屏蔽，否则使用 `***`。
   - 默认值涵盖常见的密钥分配、CLI 标志、JSON 字段、承载头、PEM 块和流行的令牌前缀。
 
-## Gateway 网关 WebSocket 日志
+## Gateway(网关) 网关 WebSocket 日志
 
 网关以两种模式打印 WebSocket 协议日志：
 

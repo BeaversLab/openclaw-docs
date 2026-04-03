@@ -22,7 +22,7 @@ Ejecute el OpenClaw Gateway en cualquier servidor Linux o VPS en la nube. Esta p
     Configuración con un clic desde el navegador
   </Card>
   <Card title="DigitalOcean" href="/en/install/digitalocean">
-    VPS pago sencillo
+    VPS de pago sencillo
   </Card>
   <Card title="Oracle Cloud" href="/en/install/oracle">
     Nivel ARM siempre gratuito
@@ -43,7 +43,7 @@ Ejecute el OpenClaw Gateway en cualquier servidor Linux o VPS en la nube. Esta p
     VM con proxy HTTPS
   </Card>
   <Card title="Raspberry Pi" href="/en/install/raspberry-pi">
-    Autoalojado ARM
+    Autogestionado en ARM
   </Card>
 </CardGroup>
 

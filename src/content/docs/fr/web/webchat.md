@@ -48,14 +48,14 @@ Statut : l'interface de conversation SwiftUI macOS/iOS communique directement av
 
 Configuration complète : [Configuration](/en/gateway/configuration)
 
-Options de canal :
+Options WebChat :
 
-- Aucun bloc `webchat.*` dédié. WebChat utilise le point de terminaison de la passerelle et les paramètres d'authentification ci-dessous.
+- `gateway.webchat.chatHistoryMaxChars` : nombre maximum de caractères pour les champs de texte dans les réponses `chat.history`. Lorsqu'une entrée de transcript dépasse cette limite, Gateway tronque les champs de texte longs et peut remplacer les messages trop volumineux par un espace réservé. Un `maxChars` par requête peut également être envoyé par le client pour remplacer cette valeur par défaut pour un seul appel `chat.history`.
 
 Options globales connexes :
 
 - `gateway.port`, `gateway.bind` : hôte/port WebSocket.
 - `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password` : authentification WebSocket (jeton/mot de passe).
-- `gateway.auth.mode: "trusted-proxy"` : authentification par proxy inverse pour les clients navigateur (voir [Authentification de proxy approuvé](/en/gateway/trusted-proxy-auth)).
-- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password` : cible de la passerelle distante.
+- `gateway.auth.mode: "trusted-proxy"` : authentification par reverse-proxy pour les clients navigateur (voir [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth)).
+- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password` : cible de passerelle distante.
 - `session.*` : stockage de session et valeurs par défaut de la clé principale.

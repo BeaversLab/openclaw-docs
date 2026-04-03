@@ -24,12 +24,12 @@ openclaw plugins install @openclaw/line
 Desprotección local (cuando se ejecuta desde un repositorio de git):
 
 ```bash
-openclaw plugins install ./extensions/line
+openclaw plugins install ./path/to/local/line-plugin
 ```
 
 ## Configuración
 
-1. Cree una cuenta de LINE Developers y abra la Consola:
+1. Cree una cuenta de desarrollador de LINE y abra la Consola:
    [https://developers.line.biz/console/](https://developers.line.biz/console/)
 2. Cree (o seleccione) un proveedor y añada un canal de **API de mensajería**.
 3. Copie el **token de acceso al canal** y el **secreto del canal** desde la configuración del canal.
@@ -180,11 +180,38 @@ El complemento LINE también incluye un comando `/card` para preajustes de mensa
 /card info "Welcome" "Thanks for joining!"
 ```
 
+## Soporte de ACP
+
+LINE admite enlaces de conversación ACP (Protocolo de comunicación de agente):
+
+- `/acp spawn <agent> --bind here` vincula el chat actual de LINE a una sesión ACP sin crear un hilo secundario.
+- Los enlaces de ACP configurados y las sesiones de ACP activas vinculadas a conversaciones funcionan en LINE como en otros canales de conversación.
+
+Consulte [Agentes ACP](/en/tools/acp-agents) para obtener más detalles.
+
+## Medios salientes
+
+El complemento de LINE admite el envío de imágenes, videos y archivos de audio a través de la herramienta de mensajes del agente. Los medios se envían a través de la ruta de entrega específica de LINE con el manejo de vista previa y seguimiento apropiado:
+
+- **Imágenes**: se envían como mensajes de imagen de LINE con generación automática de vista previa.
+- **Videos**: se envían con manejo explícito de vista previa y tipo de contenido.
+- **Audio**: se envía como mensajes de audio de LINE.
+
+Los envíos de medios genéricos vuelven a la ruta existente solo para imágenes cuando no hay disponible una ruta específica de LINE.
+
 ## Solución de problemas
 
-- **Falla la verificación del webhook:** asegúrese de que la URL del webhook sea HTTPS y que
+- **Error en la verificación del webhook:** asegúrese de que la URL del webhook sea HTTPS y que
   `channelSecret` coincida con la consola de LINE.
-- **No hay eventos entrantes:** confirma que la ruta del webhook coincida con `channels.line.webhookPath`
+- **Sin eventos entrantes:** confirme que la ruta del webhook coincida con `channels.line.webhookPath`
   y que la puerta de enlace sea accesible desde LINE.
-- **Errores de descarga de medios:** genera `channels.line.mediaMaxMb` si los medios
-  exceden el límite predeterminado.
+- **Errores de descarga de medios:** genere `channels.line.mediaMaxMb` si los medios exceden el
+  límite predeterminado.
+
+## Relacionado
+
+- [Descripción general de canales](/en/channels) — todos los canales admitidos
+- [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento DM
+- [Grupos](/en/channels/groups) — comportamiento del chat de grupo y filtrado de menciones
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/en/gateway/security) — modelo de acceso y fortalecimiento

@@ -18,7 +18,7 @@ Synology Chat 是基於外掛的，並非預設核心頻道安裝的一部分。
 從本地副本安裝：
 
 ```bash
-openclaw plugins install ./extensions/synology-chat
+openclaw plugins install ./path/to/local/synology-chat-plugin
 ```
 
 詳細資訊：[外掛](/en/tools/plugin)
@@ -138,3 +138,11 @@ openclaw message send --channel synology-chat --target synology-chat:123456 --te
 - 正式環境建議使用 `dmPolicy: "allowlist"`。
 - 除非您明確需要基於舊版使用者名稱的回覆傳遞，否則請保持 `dangerouslyAllowNameMatching` 為關閉。
 - 除非您明確接受在多重帳號設置中共用路徑路由的風險，否則請保持 `dangerouslyAllowInheritedWebhookPath` 為關閉。
+
+## 相關
+
+- [頻道總覽](/en/channels) — 所有支援的頻道
+- [配對](/en/channels/pairing) — 私訊驗證與配對流程
+- [群組](/en/channels/groups) — 群組聊天行為與提及管控
+- [頻道路由](/en/channels/channel-routing) — 訊息的工作階段路由
+- [安全性](/en/gateway/security) — 存取模型與強化防護

@@ -20,15 +20,15 @@ title: "Voice Call 插件"
 快速思维模型：
 
 - 安装插件
-- 重启 Gateway 网关
+- 重启 Gateway(网关) 网关
 - 在 `plugins.entries.voice-call.config` 下进行配置
 - 使用 `openclaw voicecall ...` 或 `voice_call` 工具
 
 ## 运行位置（本地与远程）
 
-语音通话插件运行在**Gateway 网关 进程内部**。
+语音通话插件运行在**Gateway(网关) 网关 进程内部**。
 
-如果您使用远程 Gateway 网关，请在**运行 Gateway 网关 的机器上**安装/配置该插件，然后重启 Gateway 网关 以加载它。
+如果您使用远程 Gateway(网关) 网关，请在**运行 Gateway(网关) 网关 的机器上**安装/配置该插件，然后重启 Gateway(网关) 网关 以加载它。
 
 ## 安装
 
@@ -38,16 +38,17 @@ title: "Voice Call 插件"
 openclaw plugins install @openclaw/voice-call
 ```
 
-安装后重启 Gateway 网关。
+安装后重启 Gateway(网关) 网关。
 
 ### 选项 B：从本地文件夹安装（开发，不复制）
 
 ```bash
-openclaw plugins install ./extensions/voice-call
-cd ./extensions/voice-call && pnpm install
+PLUGIN_SRC=./path/to/local/voice-call-plugin
+openclaw plugins install "$PLUGIN_SRC"
+cd "$PLUGIN_SRC" && pnpm install
 ```
 
-安装后重启 Gateway 网关。
+安装后重启 Gateway(网关) 网关。
 
 ## 配置
 
@@ -211,9 +212,11 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此
 {
   tts: {
     provider: "elevenlabs",
-    elevenlabs: {
-      voiceId: "pMsXgVXv3BLzUgSXRplE",
-      modelId: "eleven_multilingual_v2",
+    providers: {
+      elevenlabs: {
+        voiceId: "pMsXgVXv3BLzUgSXRplE",
+        modelId: "eleven_multilingual_v2",
+      },
     },
   },
 }
@@ -221,9 +224,11 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此
 
 注意：
 
-- **语音通话会忽略 Microsoft 语音**（电话音频需要 PCM；当前的 Microsoft 传输不公开电话 PCM 输出）。
-- 启用 Twilio 媒体流式传输时使用核心 TTS；否则通话将回退到提供商原生语音。
-- 如果 Twilio 媒体流已处于活动状态，语音通话将不会回退到 TwiML `<Say>`。如果在此状态下电话 TTS 不可用，播放请求将失败，而不是混合两个播放路径。
+- 插件配置（`openai`、`elevenlabs`、`microsoft`、`edge`）内的旧版 `tts.<provider>` 键会在加载时自动迁移到 `tts.providers.<provider>`。在提交的配置中，建议优先使用 `providers` 结构。
+- **语音通话会忽略 Microsoft speech**（电话音频需要 PCM；当前的 Microsoft 传输不公开电话 PCM 输出）。
+- 当启用 Twilio 媒体流时，将使用核心 TTS；否则通话将回退到提供商的原生语音。
+- 如果 Twilio 媒体流已处于活动状态，Voice Call 不会回退到 TwiML `<Say>`。如果在该状态下电话 TTS 不可用，播放请求将失败，而不是混合两条播放路径。
+- 当电话 TTS 回退到辅助提供商时，Voice Call 会记录一条包含提供商链（`from`、`to`、`attempts`）的警告以便调试。
 
 ### 更多示例
 
@@ -234,13 +239,15 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此
   messages: {
     tts: {
       provider: "openai",
-      openai: { voice: "alloy" },
+      providers: {
+        openai: { voice: "alloy" },
+      },
     },
   },
 }
 ```
 
-仅针对通话覆盖为 ElevenLabs（其他地方保留核心默认值）：
+仅针对通话覆盖为 ElevenLabs（其他地方保持核心默认值）：
 
 ```json5
 {
@@ -250,10 +257,12 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此
         config: {
           tts: {
             provider: "elevenlabs",
-            elevenlabs: {
-              apiKey: "elevenlabs_key",
-              voiceId: "pMsXgVXv3BLzUgSXRplE",
-              modelId: "eleven_multilingual_v2",
+            providers: {
+              elevenlabs: {
+                apiKey: "elevenlabs_key",
+                voiceId: "pMsXgVXv3BLzUgSXRplE",
+                modelId: "eleven_multilingual_v2",
+              },
             },
           },
         },
@@ -272,9 +281,11 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此
       "voice-call": {
         config: {
           tts: {
-            openai: {
-              model: "gpt-4o-mini-tts",
-              voice: "marin",
+            providers: {
+              openai: {
+                model: "gpt-4o-mini-tts",
+                voice: "marin",
+              },
             },
           },
         },
@@ -284,9 +295,9 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此
 }
 ```
 
-## 来电
+## 呼入通话
 
-来电策略默认为 `disabled`。要启用来电，请设置：
+呼入策略默认为 `disabled`。要启用呼入通话，请设置：
 
 ```json5
 {
@@ -296,42 +307,42 @@ Twilio 对话轮次在 `<Gather>` 回调中包含每轮次令牌，因此
 }
 ```
 
-`inboundPolicy: "allowlist"` 是一个低可信度的来电 ID 筛选器。插件会对提供商提供的 `From` 值进行标准化，并将其与 `allowFrom` 进行比较。Webhook 验证可以认证提供商的传递和负载完整性，但它不能证明 PSTN/VoIP 来电号码的所有权。请将 `allowFrom` 视为来电 ID 过滤，而非强来电身份验证。
+`inboundPolicy: "allowlist"` 是一种低保证的来电者 ID 屏蔽机制。该插件会对提供商提供的 `From` 值进行标准化处理，并将其与 `allowFrom` 进行比较。Webhook 验证虽然可以认证提供商的传递和负载完整性，但并不能证明 PSTN/VoIP 来电号码的所有权。请将 `allowFrom` 视为来电者 ID 过滤，而非强有力的来电者身份验证。
 
-自动回复使用代理系统。使用以下参数进行调整：
+自动回复使用 agent 系统。请使用以下参数进行调节：
 
 - `responseModel`
 - `responseSystemPrompt`
 - `responseTimeoutMs`
 
-### 语音输出合约
+### 语音输出约定
 
-对于自动回复，语音通话会将严格的语音输出合约附加到系统提示词中：
+对于自动回复，Voice Call 会在系统提示词中附加一个严格的语音输出约定：
 
 - `{"spoken":"..."}`
 
-然后，语音通话会以防御性方式提取语音文本：
+然后，Voice Call 会谨慎地提取语音文本：
 
 - 忽略标记为推理/错误内容的负载。
 - 解析直接 JSON、围栏 JSON 或内联 `"spoken"` 键。
-- 回退到纯文本，并移除可能的规划/元引导段落。
+- 回退到纯文本并移除可能的计划/元数据引导段落。
 
-这使语音播放专注于面向呼叫者的文本，并避免将规划文本泄露到音频中。
+这使语音播放专注于面向呼叫者的文本，并避免将计划文本泄漏到音频中。
 
 ### 对话启动行为
 
 对于 `conversation` 呼叫，首条消息处理与实时播放状态绑定：
 
-- 仅在初始问候语正在主动播放时，才抑制插队队列清除和自动响应。
-- 如果初始播放失败，呼叫将返回 `listening`，并且初始消息保留在队列中以供重试。
-- Twilio 流式传输的初始播放在流连接时立即开始，没有额外延迟。
+- 仅在初始问候语正在播放时，才抑制插队队列清除和自动响应。
+- 如果初始播放失败，呼叫将返回到 `listening`，并且初始消息保持排队状态以供重试。
+- Twilio 流式传输的初始播放在流连接时开始，没有额外延迟。
 
-### Twilio 流断开连接宽限期
+### Twilio 流断开宽限期
 
-当 Twilio 媒体流断开连接时，Voice Call 会等待 `2000ms` 然后自动结束通话：
+当 Twilio 媒体流断开时，语音呼叫会在自动结束呼叫前等待 `2000ms`：
 
 - 如果流在该窗口期间重新连接，则取消自动结束。
-- 如果在宽限期后没有重新注册流，则结束通话以防止通话处于卡住活动状态。
+- 如果在宽限期后没有重新注册流，则结束呼叫以防止呼叫卡死。
 
 ## CLI
 
@@ -347,10 +358,10 @@ openclaw voicecall latency                     # summarize turn latency from log
 openclaw voicecall expose --mode funnel
 ```
 
-`latency` 从默认的 voice-call 存储路径读取 `calls.jsonl`。使用
-`--file <path>` 指向不同的日志，并使用 `--last <n>` 将分析
-限制为最后 N 条记录（默认为 200）。输出包括轮次
-延迟和监听等待时间的 p50/p90/p99。
+`latency` 从默认语音呼叫存储路径读取 `calls.jsonl`。使用
+`--file <path>` 指向不同的日志，并使用 `--last <n>` 将分析限制
+为最后 N 条记录（默认为 200）。输出包括轮流延迟和
+监听等待时间的 p50/p90/p99。
 
 ## Agent 工具
 
@@ -364,7 +375,7 @@ openclaw voicecall expose --mode funnel
 - `end_call` (callId)
 - `get_status` (callId)
 
-此仓库在 `skills/voice-call/SKILL.md` 附带了相应的技能文档。
+此仓库在 `skills/voice-call/SKILL.md` 处附带了匹配的技能文档。
 
 ## Gateway(网关) RPC
 

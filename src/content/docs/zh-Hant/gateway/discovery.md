@@ -22,12 +22,12 @@ OpenClaw 有兩個截然不同但表面上看起來相似的問題：
 - **Gateway WS (control plane)**：預設位於 `127.0.0.1:18789` 上的 WebSocket 端點；可以透過 `gateway.bind` 綁定到 LAN/tailnet。
 - **Direct WS transport**：面向 LAN/tailnet 的 Gateway WS 端點（無 SSH）。
 - **SSH transport (fallback)**：透過 SSH 轉發 `127.0.0.1:18789` 進行遠端控制。
-- **Legacy TCP bridge (deprecated/removed)**：舊的節點傳輸（請參閱 [Bridge protocol](/en/gateway/bridge-protocol)）；不再為探索而廣播。
+- **Legacy TCP bridge (已棄用/已移除)**：舊版節點傳輸（請參閱 [橋接協定](/en/gateway/bridge-protocol)）；不再對發現進行廣播。
 
 協議詳情：
 
-- [Gateway protocol](/en/gateway/protocol)
-- [Bridge protocol (legacy)](/en/gateway/bridge-protocol)
+- [Gateway 協定](/en/gateway/protocol)
+- [橋接協定 (舊版)](/en/gateway/bridge-protocol)
 
 ## 為什麼我們同時保留「direct」和 SSH
 
@@ -51,7 +51,7 @@ Target direction:
 - **Gateway** 透過 Bonjour 廣播其 WS 端點。
 - 客戶端瀏覽並顯示「選擇閘道」清單，然後儲存選定的端點。
 
-疑難排解和信標詳細資訊：[Bonjour](/en/gateway/bonjour)。
+疑難排解與信標詳細資訊：[Bonjour](/en/gateway/bonjour)。
 
 #### 服務信標詳細資訊
 
@@ -59,65 +59,69 @@ Target direction:
   - `_openclaw-gw._tcp` (閘道傳輸信標)
 - TXT 金鑰（非機密）：
   - `role=gateway`
+  - `transport=gateway`
+  - `displayName=<friendly name>` (操作員設定的顯示名稱)
   - `lanHost=<hostname>.local`
-  - `sshPort=22` (或任何廣播的內容)
-  - `gatewayPort=18789` (閘道 WS + HTTP)
-  - `gatewayTls=1` (僅當啟用 TLS 時)
-  - `gatewayTlsSha256=<sha256>` (僅當啟用 TLS 且指紋可用時)
-  - `canvasPort=<port>` (canvas host port；當 canvas host 啟用時，目前與 `gatewayPort` 相同)
-  - `cliPath=<path>` (選用；可執行 `openclaw` 進入點或二進位檔案的絕對路徑)
-  - `tailnetDns=<magicdns>` (選用提示；當 Tailscale 可用時會自動偵測)
+  - `sshPort=22` (或是任何廣播的內容)
+  - `gatewayPort=18789` (Gateway WS + HTTP)
+  - `gatewayTls=1` (僅在啟用 TLS 時)
+  - `gatewayTlsSha256=<sha256>` (僅在啟用 TLS 且指紋可用時)
+  - `canvasPort=<port>` (canvas host 連接埠；當啟用 canvas host 時，目前與 `gatewayPort` 相同)
+  - `cliPath=<path>` (可選；可執行 `openclaw` 進入點或二進位檔的絕對路徑)
+  - `tailnetDns=<magicdns>` (可選提示；當 Tailscale 可用時自動偵測)
 
-安全性備註：
+安全備註：
 
 - Bonjour/mDNS TXT 記錄是**未經驗證的**。客戶端必須將 TXT 值僅視為 UX 提示。
-- 路由（主機/埠號）應優先考慮**解析後的服務端點**（SRV + A/AAAA），而非 TXT 提供的 `lanHost`、`tailnetDns` 或 `gatewayPort`。
-- TLS 釘選絕不可允許廣播的 `gatewayTlsSha256` 覆蓋先前儲存的釘選。
-- iOS/Android 節點應將基於探索的直接連接視為**僅限 TLS**，並且在儲存首次釘選（帶外驗證）之前，要求明確的「信任此指紋」確認。
+- 路由 (主機/連接埠) 應優先考慮 **已解析的服務端點** (SRV + A/AAAA)，而非 TXT 提供的 `lanHost`、`tailnetDns` 或 `gatewayPort`。
+- TLS 釘選絕不允許廣播的 `gatewayTlsSha256` 覆蓋先前儲存的釘選。
+- iOS/Android 節點應將基於發現的直接連線視為 **僅限 TLS**，並在儲存首次釘選 (頻外驗證) 之前，要求明確的「信任此指紋」確認。
 
 停用/覆寫：
 
-- `OPENCLAW_DISABLE_BONJOUR=1` 會停用廣播。
-- `gateway.bind` 中的 `~/.openclaw/openclaw.json` 控制閘道綁定模式。
-- `OPENCLAW_SSH_PORT` 會覆寫 TXT 中廣播的 SSH 埠號（預設為 22）。
-- `OPENCLAW_TAILNET_DNS` 會發布 `tailnetDns` 提示 (MagicDNS)。
-- `OPENCLAW_CLI_PATH` 會覆寫廣播的 CLI 路徑。
+- `OPENCLAW_DISABLE_BONJOUR=1` 停用廣播。
+- `gateway.bind` 中的 `~/.openclaw/openclaw.json` 控制 Gateway 繫結模式。
+- `OPENCLAW_SSH_PORT` 覆寫 TXT 中廣播的 SSH 連接埠 (預設為 22)。
+- `OPENCLAW_TAILNET_DNS` 發布 `tailnetDns` 提示 (MagicDNS)。
+- `OPENCLAW_CLI_PATH` 覆寫廣播的 CLI 路徑。
 
 ### 2) Tailnet (跨網路)
 
-對於倫敦/維也納風格的設定，Bonjour 將無濟於事。建議的「直接」目標是：
+對於倫敦/維也納風格的設置，Bonjour 沒有幫助。推薦的「direct」目標是：
 
 - Tailscale MagicDNS 名稱（首選）或穩定的 tailnet IP。
 
-如果閘道偵測到自己在 Tailscale 下運作，它會發布 `tailnetDns` 作為給客戶端的可選提示（包含廣域網路信標）。
+如果閘道偵測到它正在 Tailscale 下運行，它會發布 `tailnetDns` 作為給用戶端的可選提示（包括廣域信標）。
+
+macOS 應用程式現在偏好使用 MagicDNS 名稱而非原始 Tailscale IP 來進行閘道探索。這能提高在 tailnet IP 變更時（例如在節點重新啟動或 CGNAT 重新分配後）的可靠性，因為 MagicDNS 名稱會自動解析為目前的 IP。
 
 ### 3) 手動 / SSH 目標
 
-當沒有直接路由（或直接連線已停用）時，客戶端總是可以透過轉送 loopback 閘道連接埠，以 SSH 方式進行連線。
+當沒有直接路由（或直接連線已停用）時，用戶端始終可以透過轉送 loopback 閘道埠來透過 SSH 連線。
 
 請參閱[遠端存取](/en/gateway/remote)。
 
-## 傳輸選擇（客戶端原則）
+## 傳輸選擇（用戶端策略）
 
-建議的客戶端行為：
+建議的用戶端行為：
 
-1. 如果已設定且可連線至配對的直接端點，請使用它。
-2. 否則，如果 Bonjour 在 LAN 上找到閘道，請提供一鍵「使用此閘道」的選項並將其儲存為直接端點。
+1. 如果已設定且可連線到配對的直接端點，請使用它。
+2. 否則，如果 Bonjour 在 LAN 上找到閘道，提供一鍵「使用此閘道」的選項並將其儲存為直接端點。
 3. 否則，如果已設定 tailnet DNS/IP，請嘗試直接連線。
-4. 否則，退回至 SSH。
+4. 否則，退回到 SSH。
 
-## 配對 + 驗證（直接傳輸）
+## 配對 + 身分驗證（直接傳輸）
 
-閘道是節點/客戶端准入的資料來源。
+閘道是節點/用戶端准入的權威來源。
 
 - 配對請求是在閘道中建立/核准/拒絕的（請參閱[閘道配對](/en/gateway/pairing)）。
-- 閘道會執行：
-  - 驗證（token / 金鑰對）
-  - 範圍/ACL（閘道並非每個方法的原始 Proxy）
+- 閘道強制執行：
+  - 身分驗證 (token / keypair)
+  - 範圍/ACL（閘道並非每個方法的原始代理伺服器）
   - 速率限制
 
 ## 各元件的職責
 
-- **閘道**：發布探索信標，擁有配對決定權，並託管 WS 端點。
+- **閘道**：發布探索信標，擁有配對決策權，並託管 WS 端點。
 - **macOS 應用程式**：協助您選擇閘道，顯示配對提示，並僅將 SSH 作為備案使用。
-- **iOS/Android 節點**：瀏覽 Bonjour 以便使用，並連線至已配對的 Gateway WS。
+- **iOS/Android 節點**：瀏覽 Bonjour 以求方便，並連線到已配對的 Gateway WS。

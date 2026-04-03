@@ -62,10 +62,10 @@ OpenClaw 可識別兩種外掛程式格式：
 | **原生**     | `openclaw.plugin.json` + 執行時間模組；於進程內執行  | 官方外掛程式、社群 npm 套件                            |
 | **套件組合** | Codex/Claude/Cursor 相容的佈局；對應至 OpenClaw 功能 | `.codex-plugin/`、`.claude-plugin/`、`.cursor-plugin/` |
 
-兩者都會顯示在 `openclaw plugins list` 下。有關套件的詳細資訊，請參閱 [Plugin Bundles](/en/plugins/bundles)。
+兩者都顯示在 `openclaw plugins list` 下。有關套件的詳細資訊，請參閱 [Plugin Bundles](/en/plugins/bundles)。
 
-如果您正在撰寫原生外掛，請從 [Building Plugins](/en/plugins/building-plugins)
-以及 [Plugin SDK Overview](/en/plugins/sdk-overview) 開始。
+如果您正在編寫原生插件，請從 [Building Plugins](/en/plugins/building-plugins)
+和 [Plugin SDK Overview](/en/plugins/sdk-overview) 開始。
 
 ## 官方外掛程式
 
@@ -101,7 +101,7 @@ OpenClaw 可識別兩種外掛程式格式：
   </Accordion>
 </AccordionGroup>
 
-尋找第三方插件嗎？請參閱 [社群外掛](/en/plugins/community)。
+尋找第三方插件？請參閱 [Community Plugins](/en/plugins/community)。
 
 ## 設定
 
@@ -141,11 +141,13 @@ OpenClaw 會依照以下順序掃描外掛程式（符合者優先）：
     `plugins.load.paths` — 明確的檔案或目錄路徑。
   </Step>
 
-  <Step title="工作區擴充功能">
-    `\<workspace\>/.openclaw/extensions/*.ts` 和 `\<workspace\>/.openclaw/extensions/*/index.ts`。
+  <Step title="Workspace extensions">
+    `\<workspace\>/.openclaw/<plugin-root>/*.ts` 和 `\<workspace\>/.openclaw/<plugin-root>/*/index.ts`。
   </Step>
 
-<Step title="全域擴充功能">`~/.openclaw/extensions/*.ts` 和 `~/.openclaw/extensions/*/index.ts`。</Step>
+  <Step title="Global extensions">
+    `~/.openclaw/<plugin-root>/*.ts` 和 `~/.openclaw/<plugin-root>/*/index.ts`。
+  </Step>
 
   <Step title="內建外掛程式">
     隨 OpenClaw 附帶。許多外掛程式預設為啟用（模型提供者、語音）。
@@ -195,6 +197,7 @@ openclaw plugins install <package>        # install (ClawHub first, then npm)
 openclaw plugins install clawhub:<pkg>   # install from ClawHub only
 openclaw plugins install <path>          # install from local path
 openclaw plugins install -l <path>       # link (no copy) for dev
+openclaw plugins install <spec> --dangerously-force-unsafe-install
 openclaw plugins update <id>             # update one plugin
 openclaw plugins update --all            # update all
 
@@ -202,11 +205,15 @@ openclaw plugins enable <id>
 openclaw plugins disable <id>
 ```
 
-完整資訊請參閱 [`openclaw plugins` CLI 參考](/en/cli/plugins)。
+`--dangerously-force-unsafe-install` 是針對內建危險代碼掃描器誤報的緊急覆蓋選項。它允許安裝繼續進行，忽略內建的 `critical` 發現結果，但仍不會繞過插件 `before_install` 策略封鎖或掃描失敗封鎖。
 
-## 外掛程式 API 概觀
+此 CLI 標誌僅適用於插件安裝。由 Gateway 支援的技能相依性安裝則改用相符的 `dangerouslyForceUnsafeInstall` 請求覆蓋選項，而 `openclaw skills install` 則仍是獨立的 ClawHub 技能下載/安裝流程。
 
-外掛匯出函數或包含 `register(api)` 的物件：
+有關完整詳情，請參閱 [`openclaw plugins` CLI reference](/en/cli/plugins)。
+
+## Plugin API 概覽
+
+插件會匯出一個函式或一個具有 `register(api)` 的物件：
 
 ```typescript
 export default definePluginEntry({
@@ -226,37 +233,39 @@ export default definePluginEntry({
 });
 ```
 
-常見的註冊方法：
+常見註冊方法：
 
 | 方法                                 | 註冊內容         |
 | ------------------------------------ | ---------------- |
 | `registerProvider`                   | 模型提供者 (LLM) |
 | `registerChannel`                    | 聊天頻道         |
-| `registerTool`                       | 代理程式工具     |
-| `registerHook` / `on(...)`           | 生命週期掛鉤     |
+| `registerTool`                       | 代理工具         |
+| `registerHook` / `on(...)`           | 生命週期鉤子     |
 | `registerSpeechProvider`             | 文字轉語音 / STT |
 | `registerMediaUnderstandingProvider` | 影像/音訊分析    |
 | `registerImageGenerationProvider`    | 影像生成         |
 | `registerWebSearchProvider`          | 網路搜尋         |
 | `registerHttpRoute`                  | HTTP 端點        |
-| `registerCommand` / `registerCli`    | CLI 命令         |
-| `registerContextEngine`              | Context 引擎     |
+| `registerCommand` / `registerCli`    | CLI 指令         |
+| `registerContextEngine`              | 脈絡引擎         |
 | `registerService`                    | 背景服務         |
 
-類型化生命週期 Hook 的 Hook 保衛行為：
+型別化生命週期掛鉤的掛鉤守衛行為：
 
-- `before_tool_call`：`{ block: true }` 是終止的；較低優先級的處理程序會被跳過。
-- `before_tool_call`：`{ block: false }` 是空操作，不會清除先前的區塊。
-- `message_sending`：`{ cancel: true }` 是終止的；較低優先級的處理程序會被跳過。
-- `message_sending`: `{ cancel: false }` 是一個無操作（no-op），不會清除先前的取消操作。
+- `before_tool_call`：`{ block: true }` 為終止狀態；將跳過較低優先級的處理程式。
+- `before_tool_call`：`{ block: false }` 為無操作，並不會清除先前的阻擋。
+- `before_install`：`{ block: true }` 為終止狀態；將跳過較低優先級的處理程式。
+- `before_install`：`{ block: false }` 為無操作，並不會清除先前的阻擋。
+- `message_sending`：`{ cancel: true }` 為終止狀態；將跳過較低優先級的處理程式。
+- `message_sending`：`{ cancel: false }` 為無操作，並不會清除先前的取消。
 
-如需完整的類型化 Hook 行為，請參閱 [SDK Overview](/en/plugins/sdk-overview#hook-decision-semantics)。
+如需完整的型別化掛鉤行為，請參閱 [SDK 概觀](/en/plugins/sdk-overview#hook-decision-semantics)。
 
 ## 相關
 
-- [Building Plugins](/en/plugins/building-plugins) — 建立您自己的外掛程式
-- [Plugin Bundles](/en/plugins/bundles) — Codex/Claude/Cursor bundle 相容性
-- [Plugin Manifest](/en/plugins/manifest) — 資訊清單架構
-- [Registering Tools](/en/plugins/building-plugins#registering-agent-tools) — 在外掛程式中新增代理工具
-- [Plugin Internals](/en/plugins/architecture) — 功能模型與載入管線
-- [Community Plugins](/en/plugins/community) — 第三方清單
+- [建置外掛程式](/en/plugins/building-plugins) — 建立您自己的外掛程式
+- [外掛程式套件](/en/plugins/bundles) — Codex/Claude/Cursor 套件相容性
+- [外掛程式清單](/en/plugins/manifest) — 清單架構
+- [註冊工具](/en/plugins/building-plugins#registering-agent-tools) — 在外掛程式中新增代理程式工具
+- [外掛程式內部](/en/plugins/architecture) — 功能模型與載入管線
+- [社群外掛程式](/en/plugins/community) — 第三方列表

@@ -1,14 +1,14 @@
 ---
-summary: "Gateway 网关 web 界面：控制 UI、绑定模式和安全"
+summary: "Gateway(网关) 网关 web 界面：控制 UI、绑定模式和安全"
 read_when:
   - You want to access the Gateway over Tailscale
   - You want the browser Control UI and config editing
 title: "Web"
 ---
 
-# Web (Gateway 网关)
+# Web (Gateway(网关) 网关)
 
-Gateway 网关 在与 Gateway 网关 WebSocket 相同的端口上提供一个小的 **browser Control UI**（基于 Vite + Lit）：
+Gateway(网关) 网关 在与 Gateway(网关) 网关 WebSocket 相同的端口上提供一个小的 **browser Control UI**（基于 Vite + Lit）：
 
 - 默认：`http://<host>:18789/`
 - 可选前缀：设置 `gateway.controlUi.basePath`（例如 `/openclaw`）
@@ -38,7 +38,7 @@ Gateway 网关 在与 Gateway 网关 WebSocket 相同的端口上提供一个小
 
 ### Integrated Serve (recommended)
 
-将 Gateway 网关 保持在环回地址上，并让 Tailscale Serve 对其进行代理：
+将 Gateway(网关) 网关 保持在环回地址上，并让 Tailscale Serve 对其进行代理：
 
 ```json5
 {
@@ -95,7 +95,7 @@ openclaw gateway
 
 ## Security notes
 
-- 默认情况下需要 Gateway 网关 认证（令牌/密码或 Tailscale 身份标头）。
+- 默认情况下需要 Gateway(网关) 网关 认证（令牌/密码或 Tailscale 身份标头）。
 - 非环回绑定仍然 **要求** 共享令牌/密码（`gateway.auth` 或环境变量）。
 - 向导默认会生成 gateway 令牌（即使在环回上）。
 - UI 发送 `connect.params.auth.token` 或 `connect.params.auth.password`。

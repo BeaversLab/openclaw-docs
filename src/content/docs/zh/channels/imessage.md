@@ -413,3 +413,11 @@ imsg send <handle> "test"
 - [Gateway(网关) 配置](/en/gateway/configuration)
 - [配对](/en/channels/pairing)
 - [BlueBubbles](/en/channels/bluebubbles)
+
+## 相关
+
+- [频道概览](/en/channels) — 所有支持的频道
+- [配对](/en/channels/pairing) — 私信认证和配对流程
+- [群组](/en/channels/groups) — 群聊行为和提及控制
+- [频道路由](/en/channels/channel-routing) — 消息的会话路由
+- [安全](/en/gateway/security) — 访问模型和加固

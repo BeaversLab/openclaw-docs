@@ -10,7 +10,7 @@ read_when:
 
 Vrais projets de la communauté. Découvrez ce que les gens construisent avec OpenClaw.
 
-<Info>**Vous souhaitez être mis en avant ?** Partagez votre projet dans [#showcase sur Discord](https://discord.gg/clawd) ou [taggez @openclaw sur X](https://x.com/openclaw).</Info>
+<Info>**Vous souhaitez être mis en avant ?** Partagez votre projet dans [#self-promotion sur Discord](https://discord.gg/clawd) ou [tagguez @openclaw sur X](https://x.com/openclaw).</Info>
 
 ## 🎥 OpenClaw en action
 
@@ -361,7 +361,7 @@ Transcription audio multilingue via OpenRouter (Gemini, etc). Disponible sur Cla
 Quelque chose à partager ? Nous aimerions le mettre en avant !
 
 <Steps>
-  <Step title="Partagez-le">Publiez dans [#showcase sur Discord](https://discord.gg/clawd) ou [tweetez @openclaw](https://x.com/openclaw)</Step>
+  <Step title="Partagez-le">Publiez dans [#self-promotion sur Discord](https://discord.gg/clawd) ou [tweetez @openclaw](https://x.com/openclaw)</Step>
   <Step title="Inclure les détails">Dites-nous ce qu'il fait, liez vers le dépôt/démo, partagez une capture d'écran si vous en avez une</Step>
   <Step title="Être mis en avant">Nous ajouterons les projets remarquables à cette page</Step>
 </Steps>

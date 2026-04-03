@@ -27,12 +27,12 @@ openclaw plugins install @openclaw/line
 本地检出版本（当从 git 仓库运行时）：
 
 ```bash
-openclaw plugins install ./extensions/line
+openclaw plugins install ./path/to/local/line-plugin
 ```
 
 ## 设置
 
-1. 创建一个 LINE Developers 账号并打开控制台：
+1. Create a LINE Developers account and open the Console:
    [https://developers.line.biz/console/](https://developers.line.biz/console/)
 2. 创建（或选择）一个 Provider 并添加一个 **Messaging API** 渠道。
 3. 从渠道设置中复制 **Channel access token** 和 **Channel secret**。
@@ -181,11 +181,38 @@ LINE 插件还提供了一个用于 Flex 消息预设的 `/card` 命令：
 /card info "Welcome" "Thanks for joining!"
 ```
 
+## ACP 支持
+
+LINE 支持 ACP（Agent Communication Protocol）对话绑定：
+
+- `/acp spawn <agent> --bind here` 将当前的 LINE 聊天绑定到 ACP 会话，而无需创建子线程。
+- 配置的 ACP 绑定和活动的对话绑定 ACP 会话在 LINE 上像其他对话渠道一样工作。
+
+详情请参阅 [ACP agents](/en/tools/acp-agents)。
+
+## 出站媒体
+
+LINE 插件支持通过代理消息工具发送图片、视频和音频文件。媒体通过 LINE 特定的发送路径发送，并进行适当的预览和跟踪处理：
+
+- **图片**：作为 LINE 图片消息发送，自动生成预览。
+- **视频**：发送时带有明确的预览和内容类型处理。
+- **音频**：作为 LINE 音频消息发送。
+
+当 LINE 特定路径不可用时，通用媒体发送会回退到现有的仅图片路径。
+
 ## 故障排除
 
-- **Webhook 验证失败：** 请确保 Webhook URL 是 HTTPS，并且
-  `channelSecret` 与 LINE 控制台中的匹配。
-- **没有接收到入站事件：** 请确认 webhook 路径与 `channels.line.webhookPath`
-  匹配，并且 LINE 可以访问到网关。
-- **媒体下载错误：** 如果媒体超出
-  默认限制，会抛出 `channels.line.mediaMaxMb`。
+- **Webhook 验证失败：** 确保 webhook URL 是 HTTPS，并且
+  `channelSecret` 与 LINE 控制台匹配。
+- **无入站事件：** 确认 webhook 路径匹配 `channels.line.webhookPath`
+  并且网关可从 LINE 访问。
+- **媒体下载错误：** 如果媒体超过
+  默认限制，则引发 `channels.line.mediaMaxMb`。
+
+## 相关
+
+- [Channels Overview](/en/channels) — 所有支持的渠道
+- [Pairing](/en/channels/pairing) — 私信认证和配对流程
+- [Groups](/en/channels/groups) — 群聊行为和提及门控
+- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
+- [Security](/en/gateway/security) — 访问模型和加固

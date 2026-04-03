@@ -10,7 +10,7 @@ title: "DigitalOcean (平台)"
 
 ## 目标
 
-在 DigitalOcean 上运行持久化的 OpenClaw Gateway 网关，费用为 **$6/月**（预留价格则为 $4/月）。
+在 DigitalOcean 上运行持久化的 OpenClaw Gateway(网关) 网关，费用为 **$6/月**（预留价格则为 $4/月）。
 
 如果您想要一个每月 0 美元的选项，并且不介意 ARM + 特定于提供商的设置，请参阅 [Oracle Cloud 指南](/en/platforms/oracle)。
 

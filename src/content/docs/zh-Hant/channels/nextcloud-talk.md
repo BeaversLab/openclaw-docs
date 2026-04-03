@@ -22,7 +22,7 @@ openclaw plugins install @openclaw/nextcloud-talk
 本機簽出 (從 git repo 執行時)：
 
 ```bash
-openclaw plugins install ./extensions/nextcloud-talk
+openclaw plugins install ./path/to/local/nextcloud-talk-plugin
 ```
 
 如果您在設定期間選擇 Nextcloud Talk 且偵測到 git 簽出，
@@ -136,3 +136,11 @@ OpenClaw 將自動提供本機安裝路徑。
 - `channels.nextcloud-talk.blockStreaming`：停用此頻道的區塊串流。
 - `channels.nextcloud-talk.blockStreamingCoalesce`：區塊串流合併調整。
 - `channels.nextcloud-talk.mediaMaxMb`：入站媒體上限（MB）。
+
+## 相關
+
+- [頻道概覽](/en/channels) — 所有支援的頻道
+- [配對](/en/channels/pairing) — 私訊驗證和配對流程
+- [群組](/en/channels/groups) — 群組聊天行為和提及控管
+- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
+- [安全性](/en/gateway/security) — 存取模型和加固

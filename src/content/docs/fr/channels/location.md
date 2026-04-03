@@ -1,5 +1,5 @@
 ---
-summary: "Analyse de la localisation entrante du canal (Telegram + WhatsApp) et champs de contexte"
+summary: "Analyse des emplacements de canal entrants (Telegram/WhatsApp/Matrix) et champs de contexte"
 read_when:
   - Adding or modifying channel location parsing
   - Using location context fields in agent prompts or tools

@@ -22,12 +22,12 @@ El objetivo de diseño es mantener todo el descubrimiento/publicidad de red en e
 - **Gateway WS (plano de control)**: el punto final WebSocket en `127.0.0.1:18789` de forma predeterminada; se puede vincular a LAN/tailnet mediante `gateway.bind`.
 - **Transporte WS directo**: un punto final de Gateway WS orientado a LAN/tailnet (sin SSH).
 - **Transporte SSH (alternativo)**: control remoto mediante el reenvío de `127.0.0.1:18789` a través de SSH.
-- **Puente TCP heredado (obsoleto/eliminado)**: transporte de nodo antiguo (consulte [Bridge protocol](/en/gateway/bridge-protocol)); ya no se anuncia para el descubrimiento.
+- **Puente TCP heredado (obsoleto/eliminado)**: transporte de nodo antiguo (ver [Protocolo de puente](/en/gateway/bridge-protocol)); ya no se anuncia para el descubrimiento.
 
 Detalles del protocolo:
 
-- [Gateway protocol](/en/gateway/protocol)
-- [Bridge protocol (legacy)](/en/gateway/bridge-protocol)
+- [Protocolo de Gateway](/en/gateway/protocol)
+- [Protocolo de puente (heredado)](/en/gateway/bridge-protocol)
 
 ## Por qué mantenemos tanto "direct" como SSH
 
@@ -51,7 +51,7 @@ Dirección de destino:
 - La **puerta de enlace** anuncia su punto final WS a través de Bonjour.
 - Los clientes exploran y muestran una lista de "elegir una puerta de enlace", y luego almacenan el punto de conexión elegido.
 
-Solución de problemas y detalles de la baliza: [Bonjour](/en/gateway/bonjour).
+Solución de problemas y detalles del beacon: [Bonjour](/en/gateway/bonjour).
 
 #### Detalles de la baliza de servicio
 
@@ -59,41 +59,45 @@ Solución de problemas y detalles de la baliza: [Bonjour](/en/gateway/bonjour).
   - `_openclaw-gw._tcp` (baliza de transporte de puerta de enlace)
 - Claves TXT (no secretas):
   - `role=gateway`
+  - `transport=gateway`
+  - `displayName=<friendly name>` (nombre de visualización configurado por el operador)
   - `lanHost=<hostname>.local`
   - `sshPort=22` (o lo que se anuncie)
   - `gatewayPort=18789` (Gateway WS + HTTP)
   - `gatewayTls=1` (solo cuando TLS está habilitado)
   - `gatewayTlsSha256=<sha256>` (solo cuando TLS está habilitado y la huella digital está disponible)
   - `canvasPort=<port>` (puerto del host del lienzo; actualmente el mismo que `gatewayPort` cuando el host del lienzo está habilitado)
-  - `cliPath=<path>` (opcional; ruta absoluta a un punto de entrada o binario ejecutable `openclaw`)
-  - `tailnetDns=<magicdns>` (pista opcional; autodetectado cuando Tailscale está disponible)
+  - `cliPath=<path>` (opcional; ruta absoluta a un punto de entrada `openclaw` ejecutable o binario)
+  - `tailnetDns=<magicdns>` (sugerencia opcional; autodetectado cuando Tailscale está disponible)
 
 Notas de seguridad:
 
-- Los registros TXT Bonjour/mDNS **no están autenticados**. Los clientes deben tratar los valores TXT solo como pistas de UX.
+- Los registros TXT de Bonjour/mDNS están **sin autenticar**. Los clientes deben tratar los valores TXT solo como sugerencias de UX.
 - El enrutamiento (host/puerto) debe preferir el **punto de conexión del servicio resuelto** (SRV + A/AAAA) sobre los `lanHost`, `tailnetDns` o `gatewayPort` proporcionados por TXT.
-- El anclaje TLS nunca debe permitir que un `gatewayTlsSha256` anunciado anule un anclaje previamente almacenado.
-- Los nodos iOS/Android deben tratar las conexiones directas basadas en descubrimiento como **solo TLS** y requerir una confirmación explícita de "confiar en esta huella digital" antes de almacenar un anclaje por primera vez (verificación fuera de banda).
+- El anclaje TLS nunca debe permitir un `gatewayTlsSha256` anunciado para anular un anclaje previamente almacenado.
+- Los nodos iOS/Android deben tratar las conexiones directas basadas en descubrimiento como **solo TLS** y requieren una confirmación explícita de "confiar en esta huella digital" antes de almacenar un anclaje por primera vez (verificación fuera de banda).
 
-Desactivar/sobrescribir:
+Deshabilitar/sobrescribir:
 
-- `OPENCLAW_DISABLE_BONJOUR=1` desactiva la publicidad.
-- `gateway.bind` en `~/.openclaw/openclaw.json` controla el modo de enlace de la puerta de enlace.
+- `OPENCLAW_DISABLE_BONJOUR=1` deshabilita la publicidad.
+- `gateway.bind` en `~/.openclaw/openclaw.json` controla el modo de enlace del Gateway.
 - `OPENCLAW_SSH_PORT` sobrescribe el puerto SSH anunciado en TXT (por defecto es 22).
-- `OPENCLAW_TAILNET_DNS` publica una pista `tailnetDns` (MagicDNS).
-- `OPENCLAW_CLI_PATH` sobrescribe la ruta CLI anunciada.
+- `OPENCLAW_TAILNET_DNS` publica una sugerencia `tailnetDns` (MagicDNS).
+- `OPENCLAW_CLI_PATH` sobrescribe la ruta del CLI anunciada.
 
 ### 2) Tailnet (entre redes)
 
-Para configuraciones estilo Londres/Viena, Bonjour no ayudará. El objetivo "directo" recomendado es:
+Para configuraciones tipo Londres/Viena, Bonjour no ayudará. El objetivo "directo" recomendado es:
 
 - Nombre MagicDNS de Tailscale (preferido) o una IP tailnet estable.
 
-Si la puerta de enlace puede detectar que se está ejecutando bajo Tailscale, publica `tailnetDns` como una pista opcional para los clientes (incluidos los faros de área amplia).
+Si la puerta de enlace puede detectar que se está ejecutando bajo Tailscale, publica `tailnetDns` como sugerencia opcional para los clientes (incluidos los balizas de área amplia).
 
-### 3) Manual / destino SSH
+La aplicación de macOS ahora prefiere los nombres MagicDNS sobre las IPs de Tailscale sin procesar para el descubrimiento de la puerta de enlace. Esto mejora la confiabilidad cuando las IPs de la tailnet cambian (por ejemplo, después de reiniciar el nodo o la reasignación de CGNAT), ya que los nombres MagicDNS se resuelven a la IP actual automáticamente.
 
-Cuando no hay una ruta directa (o la directa está deshabilitada), los clientes siempre pueden conectarse a través de SSH reenviando el puerto de la puerta de enlace de loopback.
+### 3) Objetivo Manual / SSH
+
+Cuando no hay una ruta directa (o lo directo está deshabilitado), los clientes siempre pueden conectarse a través de SSH reenviando el puerto de la puerta de enlace de loopback.
 
 Consulte [Acceso remoto](/en/gateway/remote).
 
@@ -101,9 +105,9 @@ Consulte [Acceso remoto](/en/gateway/remote).
 
 Comportamiento recomendado del cliente:
 
-1. Si se configura y se puede alcanzar un endpoint directo emparejado, úselo.
-2. De lo contrario, si Bonjour encuentra una puerta de enlace en la LAN, ofrezca una opción de "Usar esta puerta de enlace" con un solo toque y guárdela como el endpoint directo.
-3. De lo contrario, si se configura un DNS/IP de tailnet, intente una conexión directa.
+1. Si se configura y se puede alcanzar un punto final directo emparejado, úselo.
+2. De lo contrario, si Bonjour encuentra una puerta de enlace en la LAN, ofrezca una elección de "Usar esta puerta de enlace" con un solo toque y guárdela como el punto final directo.
+3. De lo contrario, si se configura un DNS/IP de tailnet, intente directamente.
 4. De lo contrario, recurra a SSH.
 
 ## Emparejamiento + autenticación (transporte directo)
@@ -113,11 +117,11 @@ La puerta de enlace es la fuente de verdad para la admisión de nodos/clientes.
 - Las solicitudes de emparejamiento se crean/aprueban/rechazan en la puerta de enlace (consulte [Emparejamiento de puerta de enlace](/en/gateway/pairing)).
 - La puerta de enlace hace cumplir:
   - autenticación (token / par de claves)
-  - ámbitos/ACL (la puerta de enlace no es un proxy sin procesar para todos los métodos)
+  - ámbitos/ACL (la puerta de enlace no es un proxy sin procesar para cada método)
   - límites de velocidad
 
 ## Responsabilidades por componente
 
-- **Puerta de enlace (Gateway)**: anuncia faros de descubrimiento, posee las decisiones de emparejamiento y aloja el endpoint WS.
-- **aplicación macOS**: le ayuda a elegir una puerta de enlace, muestra indicaciones de emparejamiento y usa SSH solo como alternativa.
-- **nodos iOS/Android**: exploran Bonjour por comodidad y se conectan al WS de la puerta de enlace emparejada.
+- **Gateway**: anuncia balizas de descubrimiento, posee decisiones de emparejamiento y aloja el punto final WS.
+- **macOS app**: le ayuda a elegir una puerta de enlace, muestra indicaciones de emparejamiento y usa SSH solo como respaldo.
+- **iOS/Android nodes**: exploran Bonjour por conveniencia y se conectan al WS de la puerta de enlace emparejada.

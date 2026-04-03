@@ -79,7 +79,7 @@ Valeurs par défaut : `debounceMs: 1000`, `cap: 20`, `drop: summarize`.
 
 - S'applique aux exécutions de l'agent de réponse automatique sur tous les canaux entrants utilisant le pipeline de réponse de la passerelle (WhatsApp web, Telegram, Slack, Discord, Signal, iMessage, webchat, etc.).
 - La voie par défaut (`main`) s'applique à l'ensemble du processus pour les battements de cœur entrants + principaux ; définissez `agents.defaults.maxConcurrent` pour autoriser plusieurs sessions en parallèle.
-- Des voies supplémentaires peuvent exister (par ex. `cron`, `subagent`) afin que les tâches d'arrière-plan puissent s'exécuter en parallèle sans bloquer les réponses entrantes.
+- Des voies supplémentaires peuvent exister (par ex. `cron`, `subagent`) afin que les tâches d'arrière-plan puissent s'exécuter en parallèle sans bloquer les réponses entrantes. Ces exécutions détachées sont suivies en tant que [tâches d'arrière-plan](/en/automation/tasks).
 - Les voies par session garantissent qu'une seule exécution de l'agent touche une session donnée à la fois.
 - Aucune dépendance externe ou thread de travail d'arrière-plan ; TypeScript pur + promesses.
 

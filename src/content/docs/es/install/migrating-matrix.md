@@ -197,7 +197,7 @@ Si el almacén antiguo informa claves de sala que nunca se respaldaron, OpenClaw
 `Legacy Matrix encrypted state was detected, but the Matrix plugin helper is unavailable. Install or repair @openclaw/matrix so OpenClaw can inspect the old rust crypto store before upgrading.`
 
 - Significado: OpenClaw encontró un estado antiguo cifrado de Matrix, pero no pudo cargar el punto de entrada auxiliar desde el complemento de Matrix que normalmente inspecciona ese almacén.
-- Qué hacer: reinstale o repare el complemento de Matrix (`openclaw plugins install @openclaw/matrix`, o `openclaw plugins install ./extensions/matrix` para una copia del repositorio), luego vuelva a ejecutar `openclaw doctor --fix` o reinicie la puerta de enlace.
+- Qué hacer: reinstalar o reparar el plugin de Matrix (`openclaw plugins install @openclaw/matrix`, o `openclaw plugins install ./path/to/local/matrix-plugin` para una revisión del repositorio), luego volver a ejecutar `openclaw doctor --fix` o reiniciar el gateway.
 
 `Matrix plugin helper path is unsafe: ... Reinstall @openclaw/matrix and try again.`
 
@@ -312,7 +312,7 @@ Si acepta perder el historial encriptado antiguo irrecuperable, en su lugar pued
 `Matrix is installed from a custom path that no longer exists: ...`
 
 - Significado: el registro de instalación de tu complemento apunta a una ruta local que ya no existe.
-- Qué hacer: reinstala con `openclaw plugins install @openclaw/matrix`, o si estás ejecutando desde una copia del repositorio, `openclaw plugins install ./extensions/matrix`.
+- Qué hacer: reinstalar con `openclaw plugins install @openclaw/matrix`, o si estás ejecutando desde una revisión del repositorio, `openclaw plugins install ./path/to/local/matrix-plugin`.
 
 ## Si el historial cifrado aún no vuelve
 

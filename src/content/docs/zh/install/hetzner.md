@@ -12,7 +12,7 @@ title: "Hetzner"
 
 ## 目标
 
-在 Hetzner VPS 上使用 Docker 运行持久化的 OpenClaw Gateway 网关，具有持久状态、内置二进制文件和安全的重启行为。
+在 Hetzner VPS 上使用 Docker 运行持久化的 OpenClaw Gateway(网关) 网关，具有持久状态、内置二进制文件和安全的重启行为。
 
 如果您想要“以约 5 美元的价格全天候运行 OpenClaw”，这是最简单可靠的设置。
 Hetzner 定价可能会有所变化；选择最小的 Debian/Ubuntu VPS，如果遇到 OOM（内存不足）则进行扩容。
@@ -29,11 +29,11 @@ Hetzner 定价可能会有所变化；选择最小的 Debian/Ubuntu VPS，如果
 
 - 租一台小型 Linux 服务器 (Hetzner VPS)
 - 安装 Docker (隔离的应用运行时)
-- 在 Docker 中启动 OpenClaw Gateway 网关
+- 在 Docker 中启动 OpenClaw Gateway(网关) 网关
 - 在主机上持久化 `~/.openclaw` + `~/.openclaw/workspace`（在重启/重建后存活）
 - 通过 SSH 隧道从您的笔记本电脑访问控制 UI
 
-可以通过以下方式访问 Gateway 网关：
+可以通过以下方式访问 Gateway(网关) 网关：
 
 - 从您的笔记本电脑进行 SSH 端口转发
 - 如果您自己管理防火墙和令牌，则可以直接暴露端口

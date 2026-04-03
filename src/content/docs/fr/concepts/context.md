@@ -170,3 +170,10 @@ complète enfichable, les hooks de cycle de vie et la configuration.
 - `System prompt (estimate)` = calculé à la volée lorsqu'aucun rapport d'exécution n'existe (ou lors de l'exécution via un backend CLI qui ne génère pas le rapport).
 
 Dans les deux cas, il signale les tailles et les principaux contributeurs ; il **ne** vide **pas** le prompt système complet ni les schémas d'outils.
+
+## Connexes
+
+- [Moteur de contexte](/en/concepts/context-engine) — injection de contexte personnalisée via des plugins
+- [Compactage](/en/concepts/compaction) — résumé des longues conversations
+- [Invite système](/en/concepts/system-prompt) — comment l'invite système est construite
+- [Boucle d'agent](/en/concepts/agent-loop) — le cycle d'exécution complet de l'agent

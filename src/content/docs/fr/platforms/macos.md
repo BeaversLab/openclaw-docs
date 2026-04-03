@@ -27,10 +27,12 @@ gère/attache la passerelle localement (launchd ou manuel), et expose les foncti
 
 - **Local** (par défaut) : l'application s'attache à une passerelle locale en cours d'exécution si elle est présente ;
   sinon, elle active le service launchd via `openclaw gateway install`.
-- **Distant** : l'application se connecte à une passerelle via SSH/Tailscale et ne démarre jamais
+- **Remote** : l'application se connecte à un Gateway via SSH/Tailscale et ne démarre jamais
   de processus local.
-  L'application démarre le **service d'hôte de nœud local** afin que la passerelle distante puisse atteindre ce Mac.
-  L'application ne génère pas la passerelle en tant que processus enfant.
+  L'application démarre le **service hôte de nœud** local afin que le Gateway distant puisse atteindre ce Mac.
+  L'application ne lance pas le Gateway en tant que processus enfant.
+  La découverte du Gateway privilégie désormais les noms MagicDNS Tailscale par rapport aux IP brutes du tailnet,
+  ce qui permet à l'application Mac de récupérer plus fiabrement lorsque les IP du tailnet changent.
 
 ## Contrôle Launchd
 

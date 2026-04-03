@@ -13,7 +13,7 @@ OpenClaw 从多个来源获取环境变量。其原则是**绝不覆盖现有值
 
 ## 优先级（从高到低）
 
-1. **进程环境**（Gateway 网关 进程从父 shell/daemon 继承的环境）。
+1. **进程环境**（Gateway(网关) 网关 进程从父 shell/daemon 继承的环境）。
 2. **当前工作目录中的 `.env`**（dotenv 默认值；不覆盖现有值）。
 3. 位于 `~/.openclaw/.env` 的 **全局 `.env`**（又称 `$OPENCLAW_STATE_DIR/.env`；不覆盖现有值）。
 4. `~/.openclaw/openclaw.json` 中的 **配置 `env` 块**（仅在缺失时应用）。

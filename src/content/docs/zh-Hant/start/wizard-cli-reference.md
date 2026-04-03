@@ -164,7 +164,7 @@ sidebarTitle: "CLI 參考"
     更多詳情：[Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)。
   </Accordion>
   <Accordion title="MiniMax">
-    配置會自動寫入。託管的預設值是 `MiniMax-M2.7`；`MiniMax-M2.5` 仍然可用。
+    配置會自動寫入。託管的預設值為 `MiniMax-M2.7`。
     更多詳情：[MiniMax](/en/providers/minimax)。
   </Accordion>
   <Accordion title="Synthetic (Anthropic-compatible)">
@@ -173,27 +173,27 @@ sidebarTitle: "CLI 參考"
   </Accordion>
   <Accordion title="Ollama (Cloud and local open models)">
     提示輸入基礎 URL（預設為 `http://127.0.0.1:11434`），然後提供 Cloud + Local 或 Local 模式。
-    探索可用的模型並建議預設值。
+    探測可用模型並建議預設值。
     更多詳情：[Ollama](/en/providers/ollama)。
   </Accordion>
   <Accordion title="Moonshot 和 Kimi Coding">
     Moonshot (Kimi K2) 和 Kimi Coding 配置會自動寫入。
     更多詳情：[Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)。
   </Accordion>
-  <Accordion title="自訂提供者">
-    適用於與 OpenAI 相容和與 Anthropic 相容的端點。
+  <Accordion title="Custom provider">
+    適用於 OpenAI 相容和 Anthropic 相容的端點。
 
-    互動式入站支援與其他提供者 API 金鑰流程相同的 API 金鑰儲存選項：
-    - **立即貼上 API 金鑰**（純文字）
-    - **使用秘密參照**（環境變數參照或已設定的提供者參照，含預檢驗證）
+    互動式入站支援與其他供應商 API 金鑰流程相同的 API 金鑰儲存選項：
+    - **現在貼上 API 金鑰**（純文字）
+    - **使用密鑰參照**（env 參照或已設定的供應商參照，並帶有飛行前驗證）
 
-    非互動式旗標：
+    非互動式標誌：
     - `--auth-choice custom-api-key`
     - `--custom-base-url`
     - `--custom-model-id`
-    - `--custom-api-key`（選用；若未提供則回退至 `CUSTOM_API_KEY`）
-    - `--custom-provider-id`（選用）
-    - `--custom-compatibility <openai|anthropic>`（選用；預設為 `openai`）
+    - `--custom-api-key`（可選；後援為 `CUSTOM_API_KEY`）
+    - `--custom-provider-id`（可選）
+    - `--custom-compatibility <openai|anthropic>`（可選；預設為 `openai`）
 
   </Accordion>
   <Accordion title="Skip">
@@ -214,37 +214,37 @@ sidebarTitle: "CLI 參考"
 憑證儲存模式：
 
 - 預設入站行為會將 API 金鑰以純文字值形式儲存在驗證設定檔中。
-- `--secret-input-mode ref` 啟用參考模式，而非明文金鑰儲存。
-  在互動式設定中，您可以選擇：
-  - 環境變數參考（例如 `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`）
-  - 已配置的提供者參考（`file` 或 `exec`），需搭配提供者別名 + ID
+- `--secret-input-mode ref` 啟用參照模式而非明文金鑰儲存。
+  在互動式設置中，您可以選擇：
+  - 環境變數參照（例如 `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`）
+  - 已配置的提供者參照（`file` 或 `exec`），需搭配提供者別名 + ID
 - 互動式參照模式會在儲存前執行快速飛行前驗證。
   - 環境變數參照：驗證目前入駐環境中的變數名稱和非空值。
   - 提供者參照：驗證提供者設定並解析請求的 ID。
   - 如果飛行前檢查失敗，入駐程序會顯示錯誤並讓您重試。
-- 在非互動式模式下，`--secret-input-mode ref` 僅支援環境變數後端。
+- 在非互動模式下，`--secret-input-mode ref` 僅支援環境變數備援。
   - 請在入駐程序環境中設定提供者環境變數。
-  - 內聯金鑰旗標（例如 `--openai-api-key`）要求必須設定該環境變數；否則上架流程會快速失敗。
+  - 內聯金鑰標誌（例如 `--openai-api-key`）要求必須設定該環境變數；否則入駐程序會快速失敗。
   - 對於自訂提供者，非互動式 `ref` 模式會將 `models.providers.<id>.apiKey` 儲存為 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`。
-  - 在該自訂提供者情況下，`--custom-api-key` 要求必須設定 `CUSTOM_API_KEY`；否則上架流程會快速失敗。
+  - 在該自訂提供者的情況下，`--custom-api-key` 要求必須設定 `CUSTOM_API_KEY`；否則入駐程序會快速失敗。
 - 在互動式設置中，閘道驗證憑證支援明文和 SecretRef 選擇：
   - Token 模式：**產生/儲存明文 Token**（預設）或 **使用 SecretRef**。
   - 密碼模式：明文或 SecretRef。
-- 非互動式權杖 SecretRef 路徑：`--gateway-token-ref-env <ENV_VAR>`。
+- 非互動式 Token SecretRef 路徑：`--gateway-token-ref-env <ENV_VAR>`。
 - 現有的明文設置會繼續正常運作，不受影響。
 
-<Note>無介面與伺服器提示：在有瀏覽器的機器上完成 OAuth，然後將 `~/.openclaw/credentials/oauth.json` （或 `$OPENCLAW_STATE_DIR/credentials/oauth.json`） 複製到閘道主機。</Note>
+<Note>Headless 和伺服器提示：在帶有瀏覽器的機器上完成 OAuth，然後將 `~/.openclaw/credentials/oauth.json`（或 `$OPENCLAW_STATE_DIR/credentials/oauth.json`） 複製到閘道主機。</Note>
 
 ## 輸出與內部機制
 
 `~/.openclaw/openclaw.json` 中的典型欄位：
 
 - `agents.defaults.workspace`
-- `agents.defaults.model` / `models.providers` （若選擇 Minimax）
-- `tools.profile` （若未設定，本機上架預設為 `"coding"` ；既有的明確值會被保留）
-- `gateway.*` （mode, bind, auth, tailscale）
-- `session.dmScope` （若未設定，本機上架會將此預設為 `per-channel-peer` ；既有的明確值會被保留）
-- `channels.telegram.botToken`, `channels.discord.token`, `channels.signal.*`, `channels.imessage.*`
+- `agents.defaults.model` / `models.providers`（若選擇 Minimax）
+- `tools.profile`（若未設定，本機入駐預設為 `"coding"`；現有的明確值會被保留）
+- `gateway.*`（mode, bind, auth, tailscale）
+- `session.dmScope`（本地上線設定若未設定會預設為 `per-channel-peer`；現有的明確值會被保留）
+- `channels.telegram.botToken`, `channels.discord.token`, `channels.matrix.*`, `channels.signal.*`, `channels.imessage.*`
 - 當您在提示期間選擇加入時的頻道允許清單（Slack、Discord、Matrix、Microsoft Teams）（名稱會盡可能解析為 ID）
 - `skills.install.nodeManager`
 - `wizard.lastRunAt`

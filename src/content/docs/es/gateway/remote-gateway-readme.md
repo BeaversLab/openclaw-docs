@@ -4,11 +4,13 @@ read_when: "Conexión de la aplicación macOS a una puerta de enlace remota a tr
 title: "Configuración de Puerta de Enlace Remota"
 ---
 
-# Ejecutar OpenClaw.app con una Puerta de Enlace Remota
+> Este contenido se ha fusionado en [Acceso remoto](/en/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent). Consulte esa página para obtener la guía actual.
+
+# Ejecutar OpenClaw.app con una puerta de enlace remota
 
 OpenClaw.app utiliza túneles SSH para conectarse a una puerta de enlace remota. Esta guía le muestra cómo configurarlo.
 
-## Visión general
+## Resumen
 
 ```mermaid
 flowchart TB
@@ -35,7 +37,7 @@ flowchart TB
 
 ### Paso 1: Agregar configuración SSH
 
-Edite `~/.ssh/config` y añada:
+Edite `~/.ssh/config` y agregue:
 
 ```ssh
 Host remote-gateway
@@ -49,7 +51,7 @@ Reemplace `<REMOTE_IP>` y `<REMOTE_USER>` con sus valores.
 
 ### Paso 2: Copiar clave SSH
 
-Copie su clave pública a la máquina remota (ingrese la contraseña una vez):
+Copie su clave pública en la máquina remota (ingrese la contraseña una vez):
 
 ```bash
 ssh-copy-id -i ~/.ssh/id_rsa <REMOTE_USER>@<REMOTE_IP>
@@ -80,7 +82,7 @@ La aplicación ahora se conectará a la puerta de enlace remota a través del t�
 
 ## Inicio automático del túnel al iniciar sesión
 
-Para que el túnel SSH se inicie automáticamente cuando inicie sesión, cree un agente de lanzamiento (Launch Agent).
+Para que el túnel SSH se inicie automáticamente cuando inicie sesión, cree un Launch Agent.
 
 ### Crear el archivo PLIST
 
@@ -107,7 +109,7 @@ Guarde esto como `~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist`:
 </plist>
 ```
 
-### Cargar el agente de lanzamiento
+### Cargar el Launch Agent
 
 ```bash
 launchctl bootstrap gui/$UID ~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist
@@ -117,7 +119,7 @@ El túnel ahora:
 
 - Se iniciará automáticamente cuando inicie sesión
 - Se reiniciará si falla
-- Seguirá ejecutándose en segundo plano
+- Se mantendrá ejecutándose en segundo plano
 
 Nota heredada: elimine cualquier LaunchAgent `com.openclaw.ssh-tunnel` restante si está presente.
 
@@ -125,7 +127,7 @@ Nota heredada: elimine cualquier LaunchAgent `com.openclaw.ssh-tunnel` restante 
 
 ## Solución de problemas
 
-**Verificar si el túnel está funcionando:**
+**Comprobar si el túnel se está ejecutando:**
 
 ```bash
 ps aux | grep "ssh -N remote-gateway" | grep -v grep
@@ -155,4 +157,4 @@ launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
 | `KeepAlive`                          | Reinicia automáticamente el túnel si falla                 |
 | `RunAtLoad`                          | Inicia el túnel cuando se carga el agente                  |
 
-OpenClaw.app se conecta a `ws://127.0.0.1:18789` en su máquina cliente. El túnel SSH reenvía esa conexión al puerto 18789 en la máquina remota donde se está ejecutando la Puerta de Enlace.
+OpenClaw.app se conecta a `ws://127.0.0.1:18789` en su máquina cliente. El túnel SSH reenvía esa conexión al puerto 18789 en la máquina remota donde se está ejecutando la puerta de enlace.

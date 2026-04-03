@@ -44,8 +44,9 @@ Redémarrez Gateway par la suite.
 ### Option B : installer depuis un dossier local (dev, pas de copie)
 
 ```bash
-openclaw plugins install ./extensions/voice-call
-cd ./extensions/voice-call && pnpm install
+PLUGIN_SRC=./path/to/local/voice-call-plugin
+openclaw plugins install "$PLUGIN_SRC"
+cd "$PLUGIN_SRC" && pnpm install
 ```
 
 Redémarrez Gateway par la suite.
@@ -213,9 +214,11 @@ Voice Call utilise la configuration centrale `messages.tts` pour la diffusion vo
 {
   tts: {
     provider: "elevenlabs",
-    elevenlabs: {
-      voiceId: "pMsXgVXv3BLzUgSXRplE",
-      modelId: "eleven_multilingual_v2",
+    providers: {
+      elevenlabs: {
+        voiceId: "pMsXgVXv3BLzUgSXRplE",
+        modelId: "eleven_multilingual_v2",
+      },
     },
   },
 }
@@ -223,26 +226,30 @@ Voice Call utilise la configuration centrale `messages.tts` pour la diffusion vo
 
 Notes :
 
-- **La synthèse vocale Microsoft est ignorée pour les appels vocaux** (l'audio téléphonique nécessite du PCM ; le transport Microsoft actuel n'expose pas de sortie PCM téléphonique).
-- Le TTS central est utilisé lorsque le flux de médias Twilio est activé ; sinon, les appels reviennent aux voix natives du fournisseur.
-- Si un flux de médias Twilio est déjà actif, Voice Call ne revient pas au TwiML `<Say>`. Si le TTS téléphonique n'est pas disponible dans cet état, la demande de lecture échoue au lieu de mélanger deux chemins de lecture.
+- Les clés héritées `tts.<provider>` dans la configuration du plugin (`openai`, `elevenlabs`, `microsoft`, `edge`) sont automatiquement migrées vers `tts.providers.<provider>` lors du chargement. Privilégiez la forme `providers` dans la configuration validée.
+- **La synthèse vocale Microsoft est ignorée pour les appels vocaux** (l'audio téléphonique nécessite le format PCM ; le transport Microsoft actuel n'expose pas de sortie PCM téléphonique).
+- Le TTS principal est utilisé lorsque le streaming média Twilio est activé ; sinon, les appels reviennent aux voix natives du fournisseur.
+- Si un flux média Twilio est déjà actif, Voice Call ne revient pas au TwiML `<Say>`. Si le TTS téléphonique n'est pas disponible dans cet état, la demande de lecture échoue au lieu de mélanger deux chemins de lecture.
+- Lorsque le TTS téléphonique revient à un fournisseur secondaire, Voice Call enregistre un avertissement avec la chaîne de fournisseurs (`from`, `to`, `attempts`) pour le débogage.
 
 ### Plus d'exemples
 
-Utiliser uniquement le TTS central (pas de remplacement) :
+Utiliser uniquement le TTS principal (pas de remplacement) :
 
 ```json5
 {
   messages: {
     tts: {
       provider: "openai",
-      openai: { voice: "alloy" },
+      providers: {
+        openai: { voice: "alloy" },
+      },
     },
   },
 }
 ```
 
-Remplacer par ElevenLabs uniquement pour les appels (garder la valeur par défaut centrale ailleurs) :
+Remplacer par ElevenLabs uniquement pour les appels (garder la valeur par défaut principale ailleurs) :
 
 ```json5
 {
@@ -252,10 +259,12 @@ Remplacer par ElevenLabs uniquement pour les appels (garder la valeur par défau
         config: {
           tts: {
             provider: "elevenlabs",
-            elevenlabs: {
-              apiKey: "elevenlabs_key",
-              voiceId: "pMsXgVXv3BLzUgSXRplE",
-              modelId: "eleven_multilingual_v2",
+            providers: {
+              elevenlabs: {
+                apiKey: "elevenlabs_key",
+                voiceId: "pMsXgVXv3BLzUgSXRplE",
+                modelId: "eleven_multilingual_v2",
+              },
             },
           },
         },
@@ -265,7 +274,7 @@ Remplacer par ElevenLabs uniquement pour les appels (garder la valeur par défau
 }
 ```
 
-Remplacer uniquement le modèle OpenAI pour les appels (exemple de fusion en profondeur) :
+Remplacer uniquement le modèle OpenAI pour les appels (exemple de fusion approfondie) :
 
 ```json5
 {
@@ -274,9 +283,11 @@ Remplacer uniquement le modèle OpenAI pour les appels (exemple de fusion en pro
       "voice-call": {
         config: {
           tts: {
-            openai: {
-              model: "gpt-4o-mini-tts",
-              voice: "marin",
+            providers: {
+              openai: {
+                model: "gpt-4o-mini-tts",
+                voice: "marin",
+              },
             },
           },
         },
@@ -298,7 +309,11 @@ La stratégie entrante par défaut est `disabled`. Pour activer les appels entra
 }
 ```
 
-`inboundPolicy: "allowlist"` est un filtre d'identification de l'appelant à faible assurance. Le plugin normalise la valeur `From` fournie par le fournisseur et la compare à `allowFrom`. La vérification du webhook authentifie la livraison et l'intégrité de la charge utile par le fournisseur, mais elle ne prouve pas la propriété du numéro d'appelant PSTN/VoIP. Traitez `allowFrom` comme un filtrage de l'identification de l'appelant, et non comme une identité forte de l'appelant.
+`inboundPolicy: "allowlist"` est un filtre d'identification de l'appelant à faible assurance. Le plugin
+normalise la valeur `From` fournie par le fournisseur et la compare à `allowFrom`.
+La vérification du webhook authentifie la livraison du fournisseur et l'intégrité de la charge utile, mais
+elle ne prouve pas la propriété du numéro d'appelant PSTN/VoIP. Traitez `allowFrom` comme un
+filtrage de l'identification de l'appelant, et non comme une forte identité de l'appelant.
 
 Les réponses automatiques utilisent le système d'agent. Ajustez avec :
 
@@ -308,23 +323,23 @@ Les réponses automatiques utilisent le système d'agent. Ajustez avec :
 
 ### Contrat de sortie vocale
 
-Pour les réponses automatiques, Voice Call ajoute un contrat strict de sortie vocale à l'invite système :
+Pour les réponses automatiques, Voice Call ajoute un contrat strict de sortie vocale au prompt système :
 
 - `{"spoken":"..."}`
 
 Voice Call extrait ensuite le texte de la parole de manière défensive :
 
 - Ignore les charges utiles marquées comme contenu de raisonnement/erreur.
-- Analyse le JSON direct, le JSON délimité ou les clés `"spoken"` en ligne.
-- Revient au texte brut et supprime les paragraphes d'introduction probables liés à la planification/métadonnées.
+- Analyse le JSON direct, le JSON délimité, ou les clés `"spoken"` en ligne.
+- Revient au texte brut et supprime les paragraphes d'introduction probables liés à la planification ou aux métadonnées.
 
-Cela permet de concentrer la lecture vocale sur le texte destiné à l'appelant et d'éviter la fuite de texte de planification dans l'audio.
+Cela permet de concentrer la lecture vocale sur le texte destiné à l'appelant et d'éviter de divulguer du texte de planification dans l'audio.
 
 ### Comportement de démarrage de la conversation
 
-Pour les appels `conversation` sortants, la gestion du premier message est liée à l'état de la lecture en direct :
+Pour les appels sortants `conversation`, la gestion du premier message est liée à l'état de la lecture en direct :
 
-- Le vidage de la file d'attente d'interruption et la réponse automatique sont supprimés uniquement pendant la lecture active du message d'accueil initial.
+- Le nettoyage de la file d'attente d'interruption (barge-in) et la réponse automatique sont supprimés uniquement pendant la lecture active de la salutation initiale.
 - Si la lecture initiale échoue, l'appel revient à `listening` et le message initial reste en file d'attente pour une nouvelle tentative.
 - La lecture initiale pour le flux Twilio commence lors de la connexion du flux sans délai supplémentaire.
 
@@ -349,10 +364,10 @@ openclaw voicecall latency                     # summarize turn latency from log
 openclaw voicecall expose --mode funnel
 ```
 
-`latency` lit `calls.jsonl` à partir du chemin de stockage vocal par défaut. Utilisez
+`latency` lit `calls.jsonl` à partir du chemin de stockage voice-call par défaut. Utilisez
 `--file <path>` pour pointer vers un journal différent et `--last <n>` pour limiter l'analyse
-aux N derniers enregistrements (par défaut 200). La sortie comprend p50/p90/p99 pour la latence
-de tour et les temps d'attente d'écoute.
+aux N derniers enregistrements (par défaut 200). La sortie inclut p50/p90/p99 pour la latence
+des tours et les temps d'attente d'écoute.
 
 ## Outil de l'agent
 

@@ -78,47 +78,48 @@ Texto + nativo (cuando está habilitado):
 - `/tools [compact|verbose]` (muestra lo que el agente actual puede usar ahora mismo; `verbose` añade descripciones)
 - `/skill <name> [input]` (ejecuta una habilidad por nombre)
 - `/status` (muestra el estado actual; incluye el uso/cuota del proveedor para el proveedor del modelo actual cuando está disponible)
-- `/allowlist` (lista/añade/elimina entradas de lista de permitidos)
-- `/approve <id> allow-once|allow-always|deny` (resuelve los avisos de aprobación de ejecución)
-- `/context [list|detail|json]` (explica el "contexto"; `detail` muestra el tamaño por archivo + por herramienta + por habilidad + del prompt del sistema)
-- `/btw <question>` (hace una pregunta lateral efímera sobre la sesión actual sin cambiar el contexto de la sesión futura; consulte [/tools/btw](/en/tools/btw))
-- `/export-session [path]` (alias: `/export`) (exporta la sesión actual a HTML con el prompt del sistema completo)
-- `/whoami` (muestra su id de remitente; alias: `/id`)
-- `/session idle <duration|off>` (gestiona la auto-desactivación por inactividad para enlaces de hilos enfocados)
-- `/session max-age <duration|off>` (gestiona la auto-desactivación por antigüedad máxima fija para enlaces de hilos enfocados)
-- `/subagents list|kill|log|info|send|steer|spawn` (inspecciona, controla o genera ejecuciones de sub-agentes para la sesión actual)
-- `/acp spawn|cancel|steer|close|status|set-mode|set|cwd|permissions|timeout|model|reset-options|doctor|install|sessions` (inspecciona y controla las sesiones de tiempo de ejecución de ACP)
-- `/agents` (lista los agentes vinculados al hilo para esta sesión)
-- `/focus <target>` (Discord: vincula este hilo, o un nuevo hilo, a un objetivo de sesión/subagente)
-- `/unfocus` (Discord: elimina el vínculo del hilo actual)
-- `/kill <id|#|all>` (aborta inmediatamente uno o todos los sub-agentes en ejecución para esta sesión; sin mensaje de confirmación)
-- `/steer <id|#> <message>` (dirige inmediatamente un subagente en ejecución: durante la ejecución cuando sea posible, de lo contrario aborta el trabajo actual y se reinicia con el mensaje de dirección)
+- `/tasks` (enumerar las tareas en segundo plano para la sesión actual; muestra detalles de tareas activas y recientes con recuentos de retorno alternativo locales del agente)
+- `/allowlist` (enumerar/añadir/eliminar entradas de lista de permitidos)
+- `/approve <id> allow-once|allow-always|deny` (resolver indicaciones de aprobación de exec)
+- `/context [list|detail|json]` (explicar "contexto"; `detail` muestra el tamaño del indicador del sistema + por habilidad + por herramienta + por archivo)
+- `/btw <question>` (hacer una pregunta secundaria efímera sobre la sesión actual sin cambiar el contexto de la sesión futura; consulte [/tools/btw](/en/tools/btw))
+- `/export-session [path]` (alias: `/export`) (exportar la sesión actual a HTML con el indicador del sistema completo)
+- `/whoami` (mostrar su ID de remitente; alias: `/id`)
+- `/session idle <duration|off>` (administrar la auto-desenfocada por inactividad para los enlaces de hilos enfocados)
+- `/session max-age <duration|off>` (administrar la auto-desenfocada rígida de antigüedad máxima para los enlaces de hilos enfocados)
+- `/subagents list|kill|log|info|send|steer|spawn` (inspeccionar, controlar o iniciar ejecuciones de subagentes para la sesión actual)
+- `/acp spawn|cancel|steer|close|status|set-mode|set|cwd|permissions|timeout|model|reset-options|doctor|install|sessions` (inspeccionar y controlar sesiones de tiempo de ejecución de ACP)
+- `/agents` (enumerar los agentes vinculados al hilo para esta sesión)
+- `/focus <target>` (Discord: vincular este hilo, o un nuevo hilo, a un objetivo de sesión/subagente)
+- `/unfocus` (Discord: eliminar el enlace del hilo actual)
+- `/kill <id|#|all>` (abortar inmediatamente uno o todos los subagentes en ejecución para esta sesión; sin mensaje de confirmación)
+- `/steer <id|#> <message>` (dirigir inmediatamente un subagente en ejecución: en ejecución cuando sea posible, de lo contrario, abortar el trabajo actual y reiniciar con el mensaje de dirección)
 - `/tell <id|#> <message>` (alias para `/steer`)
-- `/config show|get|set|unset` (persistir la configuración en el disco, solo para el propietario; requiere `commands.config: true`)
-- `/mcp show|get|set|unset` (gestionar la configuración del servidor MCP OpenClaw, solo para el propietario; requiere `commands.mcp: true`)
-- `/plugins list|show|get|install|enable|disable` (inspeccionar plugins descubiertos, instalar nuevos y alternar la habilitación; solo para el propietario para escrituras; requiere `commands.plugins: true`)
+- `/config show|get|set|unset` (guardar la configuración en el disco, solo para el propietario; requiere `commands.config: true`)
+- `/mcp show|get|set|unset` (administrar la configuración del servidor MCP de OpenClaw, solo para el propietario; requiere `commands.mcp: true`)
+- `/plugins list|show|get|install|enable|disable` (inspeccionar los complementos descubiertos, instalar nuevos y alternar su habilitación; solo para el propietario para escrituras; requiere `commands.plugins: true`)
   - `/plugin` es un alias de `/plugins`.
-  - `/plugin install <spec>` acepta las mismas especificaciones de plugin que `openclaw plugins install`: ruta/archivo local, paquete npm o `clawhub:<pkg>`.
-  - Las escrituras de habilitar/deshabilitar todavía responden con una sugerencia de reinicio. En una puerta de enlace en primer plano observada, OpenClaw puede realizar ese reinicio automáticamente justo después de la escritura.
+  - `/plugin install <spec>` acepta las mismas especificaciones de complemento que `openclaw plugins install`: ruta local/archivo, paquete npm o `clawhub:<pkg>`.
+  - Las escrituras de habilitar/deshabilitar todavía responden con una sugerencia de reinicio. En una puerta de enlace en primer plano vigilada, OpenClaw puede realizar ese reinicio automáticamente justo después de la escritura.
 - `/debug show|set|unset|reset` (anulaciones en tiempo de ejecución, solo para el propietario; requiere `commands.debug: true`)
-- `/usage off|tokens|full|cost` (pie de página de uso por respuesta o resumen de costos locales)
-- `/tts off|always|inbound|tagged|status|provider|limit|summary|audio` (controlar TTS; ver [/tts](/en/tools/tts))
+- `/usage off|tokens|full|cost` (pie de página de uso por respuesta o resumen de costos local)
+- `/tts off|always|inbound|tagged|status|provider|limit|summary|audio` (controlar TTS; consulte [/tts](/en/tools/tts))
   - Discord: el comando nativo es `/voice` (Discord reserva `/tts`); el texto `/tts` todavía funciona.
 - `/stop`
 - `/restart`
-- `/dock-telegram` (alias: `/dock_telegram`) (cambiar respuestas a Telegram)
-- `/dock-discord` (alias: `/dock_discord`) (cambiar respuestas a Discord)
-- `/dock-slack` (alias: `/dock_slack`) (cambiar respuestas a Slack)
+- `/dock-telegram` (alias: `/dock_telegram`) (cambiar las respuestas a Telegram)
+- `/dock-discord` (alias: `/dock_discord`) (cambiar las respuestas a Discord)
+- `/dock-slack` (alias: `/dock_slack`) (cambiar las respuestas a Slack)
 - `/activation mention|always` (solo grupos)
 - `/send on|off|inherit` (solo para el propietario)
-- `/reset` o `/new [model]` (sugerencia de modelo opcional; el resto se pasa a través)
+- `/reset` o `/new [model]` (sugerencia de modelo opcional; el resto se pasa directamente)
 - `/think <off|minimal|low|medium|high|xhigh>` (opciones dinámicas por modelo/proveedor; alias: `/thinking`, `/t`)
-- `/fast status|on|off` (omitir el argumento muestra el estado efectivo actual del modo rápido)
+- `/fast status|on|off` (omitir el argumento muestra el estado actual efectivo del modo rápido)
 - `/verbose on|full|off` (alias: `/v`)
-- `/reasoning on|off|stream` (alias: `/reason`; cuando está activado, envía un mensaje separado con el prefijo `Reasoning:`; `stream` = solo borrador de Telegram)
+- `/reasoning on|off|stream` (alias: `/reason`; cuando está activado, envía un mensaje separado prefijado `Reasoning:`; `stream` = solo borrador de Telegram)
 - `/elevated on|off|ask|full` (alias: `/elev`; `full` omite las aprobaciones de ejecución)
-- `/exec host=<sandbox|gateway|node> security=<deny|allowlist|full> ask=<off|on-miss|always> node=<id>` (envíe `/exec` para mostrar lo actual)
-- `/model <name>` (alias: `/models`; o `/<alias>` desde `agents.defaults.models.*.alias`)
+- `/exec host=<auto|sandbox|gateway|node> security=<deny|allowlist|full> ask=<off|on-miss|always> node=<id>` (envíe `/exec` para mostrar el actual)
+- `/model <name>` (alias: `/models`; o `/<alias>` de `agents.defaults.models.*.alias`)
 - `/queue <mode>` (más opciones como `debounce:2s cap:25 drop:summarize`; envíe `/queue` para ver la configuración actual)
 - `/bash <command>` (solo host; alias para `! <command>`; requiere listas de permitidos `commands.bash: true` + `tools.elevated`)
 
@@ -134,47 +135,50 @@ Notas:
 - Los comandos aceptan un `:` opcional entre el comando y los argumentos (por ejemplo, `/think: high`, `/send: on`, `/help:`).
 - `/new <model>` acepta un alias de modelo, `provider/model`, o un nombre de proveedor (coincidencia aproximada); si no hay coincidencia, el texto se trata como el cuerpo del mensaje.
 - Para un desglose completo del uso del proveedor, use `openclaw status --usage`.
-- `/allowlist add|remove` requiere `commands.config=true` y respeta el `configWrites` del canal.
-- En canales multicuenta, `/allowlist --account <id>` y `/config set channels.<provider>.accounts.<id>...` destinados a la configuración también respetan el `configWrites` de la cuenta de destino.
-- `/usage` controla el pie de página de uso por respuesta; `/usage cost` imprime un resumen de costos local desde los registros de sesión de OpenClaw.
-- `/restart` está habilitado por defecto; establezca `commands.restart: false` para deshabilitarlo.
-- Comando nativo solo para Discord: `/vc join|leave|status` controla los canales de voz (requiere `channels.discord.voice` y comandos nativos; no disponible como texto).
+- `/allowlist add|remove` requiere `commands.config=true` y respeta el canal `configWrites`.
+- En canales multicuenta, `/allowlist --account <id>` y `/config set channels.<provider>.accounts.<id>...` dirigidos a la configuración también respetan el `configWrites` de la cuenta objetivo.
+- `/usage` controla el pie de página de uso por respuesta; `/usage cost` imprime un resumen de costes local desde los registros de sesión de OpenClaw.
+- `/restart` está habilitado de forma predeterminada; establezca `commands.restart: false` para deshabilitarlo.
+- Comando nativo solo de Discord: `/vc join|leave|status` controla los canales de voz (requiere `channels.discord.voice` y comandos nativos; no disponible como texto).
 - Los comandos de vinculación de hilos de Discord (`/focus`, `/unfocus`, `/agents`, `/session idle`, `/session max-age`) requieren que las vinculaciones de hilos efectivas estén habilitadas (`session.threadBindings.enabled` y/o `channels.discord.threadBindings.enabled`).
-- Referencia de comandos y comportamiento en tiempo de ejecución de ACP: [ACP Agents](/en/tools/acp-agents).
-- `/verbose` está destinado a la depuración y visibilidad adicional; manténgalo **desactivado** en el uso normal.
-- `/fast on|off` persiste una anulación de sesión. Use la opción `inherit` de la interfaz de usuario de Sesiones para borrarla y volver a los valores predeterminados de configuración.
-- Los resúmenes de fallos de herramientas aún se muestran cuando es relevante, pero el texto detallado del fallo solo se incluye cuando `/verbose` es `on` o `full`.
-- `/reasoning` (y `/verbose`) son arriesgados en entornos grupales: pueden revelar razonamiento interno o salida de herramientas que no tenía intención de exponer. Es preferible dejarlos desactivados, especialmente en chats grupales.
-- **Ruta rápida:** los mensajes que solo contienen comandos de remitentes en la lista de permitidos se manejan inmediatamente (omitir cola + modelo).
-- **Filtrado de mención grupal:** los mensajes que solo contienen comandos de remitentes en la lista de permitidos omiten los requisitos de mención.
-- **Accesos directos en línea (solo remitentes en la lista de permitidos):** ciertos comandos también funcionan cuando se incrustan en un mensaje normal y se eliminan antes de que el modelo vea el texto restante.
-  - Ejemplo: `hey /status` activa una respuesta de estado, y el texto restante continúa a través del flujo normal.
+- Referencia de comandos ACP y comportamiento en tiempo de ejecución: [ACP Agents](/en/tools/acp-agents).
+- `/verbose` está pensado para la depuración y visibilidad adicional; manténgalo **desactivado** en uso normal.
+- `/fast on|off` persiste una anulación de sesión. Utilice la opción `inherit` de la interfaz de usuario de Sesiones para borrarla y volver a los valores predeterminados de configuración.
+- `/fast` es específico del proveedor: OpenAI/OpenAI Codex lo asignan a `service_tier=priority` en los puntos finales de Respuestas nativos, mientras que las solicitudes directas públicas de Anthropic, incluido el tráfico autenticado mediante OAuth enviado a `api.anthropic.com`, lo asignan a `service_tier=auto` o `standard_only`. Consulte [OpenAI](/en/providers/openai) y [Anthropic](/en/providers/anthropic).
+- Los resúmenes de fallos de herramientas aún se muestran cuando corresponde, pero el texto detallado del fallo solo se incluye cuando `/verbose` es `on` o `full`.
+- `/reasoning` (y `/verbose`) son arriesgados en entornos grupales: pueden revelar razonamiento interno o resultados de herramientas que no pretendía exponer. Es preferible dejarlos desactivados, especialmente en chats grupales.
+- `/model` guarda el nuevo modelo de sesión inmediatamente, pero no interrumpe una ejecución ocupada. El turno actual termina primero, luego el trabajo en cola o futuro utiliza el modelo actualizado.
+- **Ruta rápida:** los mensajes de solo comando de remitentes en la lista permitida se manejan inmediatamente (omitir cola + modelo).
+- **Filtro de mención de grupo:** los mensajes de solo comando de remitentes en la lista permitida omiten los requisitos de mención.
+- **Accesos directos en línea (solo remitentes en la lista permitida):** ciertos comandos también funcionan cuando se incrustan en un mensaje normal y se eliminan antes de que el modelo vea el texto restante.
+  - Ejemplo: `hey /status` activa una respuesta de estado y el texto restante continúa a través del flujo normal.
 - Actualmente: `/help`, `/commands`, `/status`, `/whoami` (`/id`).
-- Los mensajes de solo comando no autorizados se ignoran silenciosamente, y los tokens en línea `/...` se tratan como texto sin formato.
-- **Comandos de habilidades (Skill commands):** Las habilidades `user-invocable` se exponen como comandos de barra diagonal. Los nombres se sanean a `a-z0-9_` (máx. 32 caracteres); las colisiones obtienen sufijos numéricos (p. ej. `_2`).
+- Los mensajes de solo comando no autorizados se ignoran silenciosamente y los tokens `/...` en línea se tratan como texto sin formato.
+- **Comandos de habilidades:** las habilidades `user-invocable` se exponen como comandos de barra. Los nombres se sanitizan a `a-z0-9_` (máx. 32 caracteres); las colisiones obtienen sufijos numéricos (ej. `_2`).
   - `/skill <name> [input]` ejecuta una habilidad por nombre (útil cuando los límites de comandos nativos impiden comandos por habilidad).
-  - Por defecto, los comandos de habilidades se reenvían al modelo como una solicitud normal.
+  - De forma predeterminada, los comandos de habilidades se reenvían al modelo como una solicitud normal.
   - Las habilidades pueden declarar opcionalmente `command-dispatch: tool` para enrutar el comando directamente a una herramienta (determinista, sin modelo).
-  - Ejemplo: `/prose` (complemento OpenProse) — ver [OpenProse](/en/prose).
-- **Argumentos de comandos nativos:** Discord usa autocompletado para opciones dinámicas (y menús de botones cuando omites argumentos obligatorios). Telegram y Slack muestran un menú de botones cuando un comando admite elecciones y omites el argumento.
+  - Ejemplo: `/prose` (complemento OpenProse) — consulte [OpenProse](/en/prose).
+- **Argumentos de comandos nativos:** Discord usa autocompletado para opciones dinámicas (y menús de botones cuando omite los argumentos obligatorios). Telegram y Slack muestran un menú de botones cuando un comando admite opciones y omite el argumento.
 
 ## `/tools`
 
-`/tools` responde a una pregunta en tiempo de ejecución, no a una pregunta de configuración: **lo que este agente puede usar ahora mismo en esta conversación**.
+`/tools` responde a una pregunta de tiempo de ejecución, no a una pregunta de configuración: **lo que este agente puede usar ahora mismo en
+esta conversación**.
 
-- El valor predeterminado `/tools` es compacto y está optimizado para una lectura rápida.
-- `/tools verbose` añade descripciones breves.
-- Las superficies de comandos nativos que admiten argumentos exponen el mismo selector de modo que `compact|verbose`.
+- El `/tools` predeterminado es compacto y está optimizado para un escaneo rápido.
+- `/tools verbose` agrega descripciones breves.
+- Las superficies de comandos nativos que admiten argumentos exponen el mismo interruptor de modo que `compact|verbose`.
 - Los resultados están limitados a la sesión, por lo que cambiar el agente, el canal, el hilo, la autorización del remitente o el modelo puede cambiar la salida.
-- `/tools` incluye herramientas que son realmente accesibles en tiempo de ejecución, incluyendo herramientas principales, herramientas de complementos conectadas y herramientas propiedad del canal.
+- `/tools` incluye las herramientas que son realmente accesibles en tiempo de ejecución, incluyendo herramientas principales, herramientas de complementos conectados y herramientas propiedad del canal.
 
-Para la edición de perfiles y anulaciones, utiliza el panel Herramientas de la interfaz de control o las superficies de configuración/catálogo en lugar de tratar `/tools` como un catálogo estático.
+Para la edición de perfiles y anulaciones, utilice el panel Herramientas de la IU de Control o las superficies de configuración/catálogo en lugar de tratar `/tools` como un catálogo estático.
 
 ## Superficies de uso (qué se muestra dónde)
 
 - **Uso/cuota del proveedor** (ejemplo: "Claude 80% restante") aparece en `/status` para el proveedor del modelo actual cuando el seguimiento de uso está habilitado.
-- **Tokens/coste por respuesta** está controlado por `/usage off|tokens|full` (añadido a las respuestas normales).
-- `/model status` se trata de **modelos/auth/endpoints**, no del uso.
+- **Tokens/costo por respuesta** está controlado por `/usage off|tokens|full` (agregado a las respuestas normales).
+- `/model status` se trata de **modelos/autorización/puntos de conexión**, no del uso.
 
 ## Selección de modelo (`/model`)
 
@@ -193,14 +197,14 @@ Ejemplos:
 
 Notas:
 
-- `/model` y `/model list` muestran un selector numérico compacto (familia de modelo + proveedores disponibles).
+- `/model` y `/model list` muestran un selector numerado compacto (familia de modelo + proveedores disponibles).
 - En Discord, `/model` y `/models` abren un selector interactivo con menús desplegables de proveedor y modelo más un paso de Enviar.
 - `/model <#>` selecciona de ese selector (y prefiere el proveedor actual cuando es posible).
-- `/model status` muestra la vista detallada, incluyendo el endpoint del proveedor configurado (`baseUrl`) y el modo de API (`api`) cuando está disponible.
+- `/model status` muestra la vista detallada, incluyendo el punto de conexión del proveedor configurado (`baseUrl`) y el modo de API (`api`) cuando están disponibles.
 
-## Sobrescrituras de depuración
+## Anulaciones de depuración
 
-`/debug` te permite establecer sobrescrituras de configuración **solo en tiempo de ejecución** (memoria, no disco). Solo para propietarios. Deshabilitado por defecto; habilite con `commands.debug: true`.
+`/debug` le permite establecer anulaciones de configuración **solo en tiempo de ejecución** (memoria, no disco). Solo para propietarios. Deshabilitado por defecto; habilítelo con `commands.debug: true`.
 
 Ejemplos:
 
@@ -214,12 +218,12 @@ Ejemplos:
 
 Notas:
 
-- Las sobrescrituras se aplican inmediatamente a las nuevas lecturas de configuración, pero **no** escriben en `openclaw.json`.
-- Use `/debug reset` para borrar todas las sobrescrituras y volver a la configuración en disco.
+- Las anulaciones se aplican inmediatamente a las nuevas lecturas de configuración, pero **no** escriben en `openclaw.json`.
+- Use `/debug reset` para borrar todas las anulaciones y volver a la configuración en disco.
 
 ## Actualizaciones de configuración
 
-`/config` escribe en su configuración en disco (`openclaw.json`). Solo para propietarios. Deshabilitado por defecto; habilite con `commands.config: true`.
+`/config` escribe en su configuración en disco (`openclaw.json`). Solo para propietarios. Deshabilitado por defecto; habilítelo con `commands.config: true`.
 
 Ejemplos:
 
@@ -233,12 +237,12 @@ Ejemplos:
 
 Notas:
 
-- La configuración se valida antes de escribirse; los cambios inválidos se rechazan.
+- La configuración se valida antes de escribirse; los cambios no válidos se rechazan.
 - Las actualizaciones de `/config` persisten tras los reinicios.
 
 ## Actualizaciones de MCP
 
-`/mcp` escribe las definiciones de servidores MCP gestionados por OpenClaw bajo `mcp.servers`. Solo para propietarios. Deshabilitado por defecto; habilite con `commands.mcp: true`.
+`/mcp` escribe las definiciones de servidores MCP administradas por OpenClaw bajo `mcp.servers`. Solo para el propietario. Deshabilitado por defecto; habilítelo con `commands.mcp: true`.
 
 Ejemplos:
 
@@ -270,20 +274,20 @@ Ejemplos:
 
 Notas:
 
-- `/plugins list` y `/plugins show` utilizan el descubrimiento real de complementos contra el espacio de trabajo actual más la configuración en disco.
-- `/plugins enable|disable` actualiza solo la configuración del complemento; no instala ni desinstala complementos.
-- Después de los cambios de habilitar/deshabilitar, reinicie el gateway para aplicarlos.
+- `/plugins list` y `/plugins show` usan el descubrimiento real de complementos contra el espacio de trabajo actual más la configuración en disco.
+- `/plugins enable|disable` solo actualiza la configuración del complemento; no instala ni desinstala complementos.
+- Después de los cambios de habilitar/deshabilitar, reinicie la puerta de enlace para aplicarlos.
 
 ## Notas de superficie
 
-- Los **comandos de texto** se ejecutan en la sesión de chat normal (los MD comparten `main`, los grupos tienen su propia sesión).
-- Los **comandos nativos** utilizan sesiones aisladas:
+- Los **comandos de texto** se ejecutan en la sesión de chat normal (los MDs comparten `main`, los grupos tienen su propia sesión).
+- Los **comandos nativos** usan sesiones aisladas:
   - Discord: `agent:<agentId>:discord:slash:<userId>`
-  - Slack: `agent:<agentId>:slack:slash:<userId>` (prefijo configurable mediante `channels.slack.slashCommand.sessionPrefix`)
+  - Slack: `agent:<agentId>:slack:slash:<userId>` (prefijo configurable vía `channels.slack.slashCommand.sessionPrefix`)
   - Telegram: `telegram:slash:<userId>` (apunta a la sesión de chat a través de `CommandTargetSessionKey`)
 - **`/stop`** apunta a la sesión de chat activa para que pueda abortar la ejecución actual.
-- **Slack:** `channels.slack.slashCommand` todavía es compatible con un solo comando estilo `/openclaw`. Si habilita `commands.native`, debe crear un comando de barra de Slack para cada comando integrado (mismos nombres que `/help`). Los menús de argumentos de comandos para Slack se entregan como botones efímeros de Block Kit.
-  - Excepción nativa de Slack: registre `/agentstatus` (no `/status`) porque Slack reserva `/status`. El texto `/status` todavía funciona en los mensajes de Slack.
+- **Slack:** `channels.slack.slashCommand` todavía es compatible con un solo comando estilo `/openclaw`. Si habilita `commands.native`, debe crear un comando de barra de Slack por cada comando integrado (mismos nombres que `/help`). Los menús de argumentos de comandos para Slack se entregan como botones efímeros de Block Kit.
+  - Excepción nativa de Slack: registrar `/agentstatus` (no `/status`) porque Slack reserva `/status`. El texto `/status` todavía funciona en los mensajes de Slack.
 
 ## Preguntas laterales BTW
 
@@ -291,13 +295,14 @@ Notas:
 
 A diferencia del chat normal:
 
-- utiliza la sesión actual como contexto de fondo,
-- se ejecuta como una llamada única separada **sin herramientas**,
-- no cambia el contexto de la sesión futura,
+- usa la sesión actual como contexto de fondo,
+- se ejecuta como una llamada única **sin herramientas** separada,
+- no cambia el contexto futuro de la sesión,
 - no se escribe en el historial de transcripciones,
 - se entrega como un resultado lateral en vivo en lugar de un mensaje normal del asistente.
 
-Esto hace que `/btw` sea útil cuando quieres una aclaración temporal mientras la tarea principal continúa.
+Eso hace que `/btw` sea útil cuando deseas una aclaración temporal mientras la tarea
+principal continúa.
 
 Ejemplo:
 
@@ -305,4 +310,5 @@ Ejemplo:
 /btw what are we doing right now?
 ```
 
-Consulta [Preguntas laterales BTW](/en/tools/btw) para obtener detalles sobre el comportamiento completo y la experiencia del usuario.
+Consulte [Preguntas laterales BTW](/en/tools/btw) para obtener detalles completos sobre el comportamiento y la experiencia
+de usuario del cliente.

@@ -143,3 +143,10 @@ El formato de los mensajes salientes está centralizado en `messages`:
 - Hilos de respuesta mediante `replyToMode` y valores predeterminados por canal
 
 Detalles: [Configuración](/en/gateway/configuration-reference#messages) y documentación del canal.
+
+## Relacionado
+
+- [Streaming](/en/concepts/streaming) — entrega de mensajes en tiempo real
+- [Retry](/en/concepts/retry) — comportamiento de reintento de entrega de mensajes
+- [Queue](/en/concepts/queue) — cola de procesamiento de mensajes
+- [Channels](/en/channels) — integraciones de plataformas de mensajería

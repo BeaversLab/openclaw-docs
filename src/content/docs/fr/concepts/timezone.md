@@ -89,3 +89,9 @@ L'invite système comprend :
 Vous pouvez contrôler le format de l'invite avec `agents.defaults.timeFormat` (`auto` | `12` | `24`).
 
 Voir [Date & Heure](/en/date-time) pour le comportement complet et les exemples.
+
+## Connexes
+
+- [Heartbeat](/en/gateway/heartbeat) — les heures actives utilisent le fuseau horaire pour la planification
+- [Cron Jobs](/en/automation/cron-jobs) — les expressions cron utilisent le fuseau horaire pour la planification
+- [Date & Time](/en/date-time) — comportement complet de la date et de l'heure et exemples

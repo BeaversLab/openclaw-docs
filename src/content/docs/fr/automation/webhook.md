@@ -84,11 +84,11 @@ Charge utile :
 - `sessionKey` facultatif (chaîne) : La clé utilisée pour identifier la session de l'agent. Par défaut, ce champ est rejeté sauf si `hooks.allowRequestSessionKey=true`.
 - `wakeMode` facultatif (`now` | `next-heartbeat`) : S'il faut déclencher un battement de cœur immédiat (par défaut `now`) ou attendre la prochaine vérification périodique.
 - `deliver` facultatif (booléen) : Si `true`, la réponse de l'agent sera envoyée au channel de messagerie. La valeur par défaut est `true`. Les réponses qui ne sont que des accusés de réception de battement de cœur sont automatiquement ignorées.
-- `channel` optionnel (chaîne) : Le canal de messagerie pour la livraison. Canaux principaux : `last`, `whatsapp`, `telegram`, `discord`, `slack`, `signal`, `imessage`, `irc`, `googlechat`, `line`. Canaux d'extension (plugins) : `msteams`, `mattermost` et autres. La valeur par défaut est `last`.
-- `to` optionnel (chaîne) : L'identifiant du destinataire pour le canal (par exemple, numéro de téléphone pour WhatsApp/Signal, ID de chat pour Telegram, ID de canal pour Discord/Slack/Mattermost (plugin), ID de conversation pour Microsoft Teams). La valeur par défaut est le dernier destinataire de la session principale.
-- `model` optionnel (chaîne) : Remplacement du model (par exemple `anthropic/claude-sonnet-4-6` ou un alias). Doit figurer dans la liste des models autorisés si une restriction est appliquée.
-- `thinking` optionnel (chaîne) : Remplacement du niveau de réflexion (par exemple `low`, `medium`, `high`).
-- `timeoutSeconds` optionnel (nombre) : Durée maximale de l'exécution de l'agent en secondes.
+- `channel` facultatif (chaîne) : Le canal de messagerie pour la livraison. Utilisez `last` ou tout canal configuré ou id de plugin, par exemple `discord`, `matrix`, `telegram` ou `whatsapp`. La valeur par défaut est `last`.
+- `to` facultatif (chaîne) : L'identifiant du destinataire pour le canal (par exemple, numéro de téléphone pour WhatsApp/Signal, ID de chat pour Telegram, ID de canal pour Discord/Slack/Mattermost (plugin), ID de conversation pour Microsoft Teams). La valeur par défaut est le dernier destinataire de la session principale.
+- `model` facultatif (chaîne) : Remplacement du modèle (par exemple, `anthropic/claude-sonnet-4-6` ou un alias). Doit figurer dans la liste des modèles autorisés si une restriction est appliquée.
+- `thinking` facultatif (chaîne) : Remplacement du niveau de réflexion (par exemple, `low`, `medium`, `high`).
+- `timeoutSeconds` facultatif (nombre) : Durée maximale de l'exécution de l'agent en secondes.
 
 Effet :
 
@@ -98,7 +98,7 @@ Effet :
 
 ## Politique de clé de session (rupture de compatibilité)
 
-Les remplacements de payload `/hooks/agent` `sessionKey` sont désactivés par défaut.
+Les remplacements de `sessionKey` de payload `/hooks/agent` sont désactivés par défaut.
 
 - Recommandé : définir une `hooks.defaultSessionKey` fixe et désactiver les remplacements de requête.
 - Optionnel : autoriser les remplacements de requête uniquement lorsque nécessaire, et restreindre les préfixes.
@@ -132,24 +132,26 @@ Configuration de compatibilité (ancien comportement) :
 
 ### `POST /hooks/<name>` (mappé)
 
-Les noms de hooks personnalisés sont résolus via `hooks.mappings` (voir la configuration). Un mappage peut transformer des payloads arbitraires en actions `wake` ou `agent`, avec des modèles ou des transformations de code optionnels.
+Les noms de hooks personnalisés sont résolus via `hooks.mappings` (voir la configuration). Un mappage peut
+transformer des payloads arbitraires en actions `wake` ou `agent`, avec des modèles ou
+transformations de code optionnels.
 
 Options de mappage (résumé) :
 
-- `hooks.presets: ["gmail"]` active le mappage intégré de Gmail.
+- `hooks.presets: ["gmail"]` active le mappage Gmail intégré.
 - `hooks.mappings` vous permet de définir `match`, `action` et des modèles dans la configuration.
 - `hooks.transformsDir` + `transform.module` charge un module JS/TS pour une logique personnalisée.
   - `hooks.transformsDir` (si défini) doit rester dans la racine des transformations sous votre répertoire de configuration OpenClaw (généralement `~/.openclaw/hooks/transforms`).
   - `transform.module` doit être résolu dans le répertoire effectif des transformations (les chemins de traversée/échappement sont rejetés).
 - Utilisez `match.source` pour conserver un point de terminaison d'ingestion générique (routage basé sur la charge utile).
-- Les transformations TS nécessitent un chargeur TS (par exemple `bun` ou `tsx`) ou `.js` précompilé à l'exécution.
+- Les transformations TS nécessitent un chargeur TS (par ex. `bun` ou `tsx`) ou `.js` précompilé lors de l'exécution.
 - Définissez `deliver: true` + `channel`/`to` sur les mappages pour router les réponses vers une surface de chat
   (`channel` par défaut est `last` et revient à WhatsApp).
 - `agentId` route le hook vers un agent spécifique ; les ID inconnus reviennent à l'agent par défaut.
 - `hooks.allowedAgentIds` restreint le routage explicite `agentId`. Omettez-le (ou incluez `*`) pour autoriser n'importe quel agent. Définissez `[]` pour refuser le routage explicite `agentId`.
-- `hooks.defaultSessionKey` définit la session par défaut pour les exécutions de l'agent de hook lorsqu'aucune clé explicite n'est fournie.
+- `hooks.defaultSessionKey` définit la session par défaut pour les exécutions d'agent de hook lorsqu'aucune clé explicite n'est fournie.
 - `hooks.allowRequestSessionKey` contrôle si les charges utiles `/hooks/agent` peuvent définir `sessionKey` (par défaut : `false`).
-- `hooks.allowedSessionKeyPrefixes` restreint facultativement les valeurs explicites `sessionKey` des charges utiles de requête et des mappages.
+- `hooks.allowedSessionKeyPrefixes` restreint facultativement les valeurs explicites `sessionKey` provenant des charges utiles de requête et des mappages.
 - `allowUnsafeExternalContent: true` désactive le wrapper de sécurité de contenu externe pour ce hook
   (dangereux ; uniquement pour les sources internes de confiance).
 - `openclaw webhooks gmail setup` écrit la configuration `hooks.gmail` pour `openclaw webhooks gmail run`.
@@ -162,7 +164,7 @@ Options de mappage (résumé) :
 - `401` en cas d'échec de l'authentification
 - `429` après des échecs d'authentification répétés du même client (vérifiez `Retry-After`)
 - `400` en cas de charge utile non valide
-- `413` en cas de charges utiles trop volumineuses
+- `413` sur les payloads trop volumineux
 
 ## Exemples
 
@@ -182,7 +184,7 @@ curl -X POST http://127.0.0.1:18789/hooks/agent \
 
 ### Utiliser un modèle différent
 
-Ajoutez `model` à la charge utile de l'agent (ou au mappage) pour remplacer le modèle pour cette exécution :
+Ajoutez `model` au payload de l'agent (ou au mapping) pour remplacer le model pour cette exécution :
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/agent \
@@ -191,7 +193,7 @@ curl -X POST http://127.0.0.1:18789/hooks/agent \
   -d '{"message":"Summarize inbox","name":"Email","model":"openai/gpt-5.2-mini"}'
 ```
 
-Si vous appliquez `agents.defaults.models`, assurez-vous que le modèle de substitution y est inclus.
+Si vous appliquez `agents.defaults.models`, assurez-vous que le model de remplacement y est inclus.
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/gmail \
@@ -204,12 +206,12 @@ curl -X POST http://127.0.0.1:18789/hooks/gmail \
 
 - Gardez les points de terminaison des hooks derrière boucle locale (loopback), tailnet ou un proxy inverse de confiance.
 - Utilisez un jeton de hook dédié ; ne réutilisez pas les jetons d'authentification de la passerelle.
-- Privilégiez un agent de hook dédié avec des `tools.profile` strictes et un bac à sable (sandboxing) pour que l'entrée du hook ait un rayon d'impact plus restreint.
+- Privilégiez un agent de hook dédié avec un `tools.profile` strict et un sandboxing afin que l'entrée du hook ait un rayon d'impact plus restreint.
 - Les échecs d'authentification répétés sont limités par taux par adresse client pour ralentir les tentatives de force brute.
 - Si vous utilisez le routage multi-agent, définissez `hooks.allowedAgentIds` pour limiter la sélection explicite de `agentId`.
-- Conservez `hooks.allowRequestSessionKey=false` à moins que vous n'ayez besoin de sessions sélectionnées par l'appelant.
+- Conservez `hooks.allowRequestSessionKey=false` sauf si vous nécessitez des sessions sélectionnées par l'appelant.
 - Si vous activez la `sessionKey` de la requête, restreignez `hooks.allowedSessionKeyPrefixes` (par exemple, `["hook:"]`).
 - Évitez d'inclure des payloads bruts sensibles dans les journaux des webhooks.
-- Les charges utiles des hooks sont traitées comme non fiables et enveloppées avec des limites de sécurité par défaut.
+- Les payloads de hook sont traités comme non fiables et enveloppés avec des limites de sécurité par défaut.
   Si vous devez désactiver cela pour un hook spécifique, définissez `allowUnsafeExternalContent: true`
-  dans le mappage de ce hook (dangereux).
+  dans le mapping de ce hook (dangereux).

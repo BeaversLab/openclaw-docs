@@ -12,12 +12,12 @@ read_when:
 
 **版本：** 1.0-draft
 **最後更新：** 2026-02-04
-**方法論：** MITRE ATLAS + 資料流圖
-**架構：** [MITRE ATLAS](https://atlas.mitre.org/) (Adversarial Threat Landscape for AI Systems)
+**方法論：** MITRE ATLAS + 資料流程圖
+**框架：** [MITRE ATLAS](https://atlas.mitre.org/) (Adversarial Threat Landscape for AI Systems)
 
 ### 架構歸屬
 
-此威脅模型基於 [MITRE ATLAS](https://atlas.mitre.org/) 構建，這是記錄 AI/ML 系統對抗性威脅的業界標準架構。ATLAS 由 [MITRE](https://www.mitre.org/) 與 AI 安全社群共同維護。
+此威脅模型基於 [MITRE ATLAS](https://atlas.mitre.org/) 構建，這是記錄 AI/ML 系統對抗性威脅的業界標準框架。ATLAS 由 [MITRE](https://www.mitre.org/) 與 AI 安全社群共同維護。
 
 **主要 ATLAS 資源：**
 
@@ -25,11 +25,11 @@ read_when:
 - [ATLAS 戰術](https://atlas.mitre.org/tactics/)
 - [ATLAS 案例研究](https://atlas.mitre.org/studies/)
 - [ATLAS GitHub](https://github.com/mitre-atlas/atlas-data)
-- [貢獻給 ATLAS](https://atlas.mitre.org/resources/contribute)
+- [貢獻 ATLAS](https://atlas.mitre.org/resources/contribute)
 
 ### 貢獻此威脅模型
 
-這是一份由 OpenClaw 社群維護的動態文件。請參閱 [CONTRIBUTING-THREAT-MODEL.md](/en/security/CONTRIBUTING-THREAT-MODEL) 以了解貢獻準則：
+這是由 OpenClaw 社群維護的持續更新文件。請參閱 [CONTRIBUTING-THREAT-MODEL.md](/en/security/CONTRIBUTING-THREAT-MODEL) 以了解貢獻指南：
 
 - 回報新威脅
 - 更新現有威脅
@@ -79,7 +79,7 @@ read_when:
 │                 TRUST BOUNDARY 1: Channel Access                 │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │                      GATEWAY                              │   │
-│  │  • Device Pairing (30s grace period)                      │   │
+│  │  • Device Pairing (1h DM / 5m node grace period)           │   │
 │  │  • AllowFrom / AllowList validation                       │   │
 │  │  • Token/Password/Tailscale auth                          │   │
 │  └──────────────────────────────────────────────────────────┘   │
@@ -177,15 +177,15 @@ read_when:
 
 #### T-ACCESS-001：配對碼攔截
 
-| 屬性             | 數值                                        |
-| ---------------- | ------------------------------------------- |
-| **ATLAS ID**     | AML.T0040 - AI 模型推論 API 存取            |
-| **描述**         | 攻擊者在 30 秒寬限期內攔截配對碼            |
-| **攻擊向量**     | 窺視 (Shoulder surfing)、網路嗅探、社交工程 |
-| **受影響元件**   | 裝置配對系統                                |
-| **現有緩解措施** | 30 秒過期、透過既有頻道發送代碼             |
-| **剩餘風險**     | 中等 - 寬限期可被利用                       |
-| **建議**         | 縮短寬限期、新增確認步驟                    |
+| 屬性             | 數值                                                                     |
+| ---------------- | ------------------------------------------------------------------------ |
+| **ATLAS ID**     | AML.T0040 - AI 模型推論 API 存取                                         |
+| **描述**         | 攻擊者在配對寬限期內攔截配對碼 (DM 通道配對為 1 小時，節點配對為 5 分鐘) |
+| **攻擊向量**     | 窺視 (Shoulder surfing)、網路嗅探、社交工程                              |
+| **受影響元件**   | 裝置配對系統                                                             |
+| **現有緩解措施** | 1 小時過期 (DM 配對) / 5 分鐘過期 (節點配對)，透過既有通道傳送代碼       |
+| **剩餘風險**     | 中等 - 寬限期可被利用                                                    |
+| **建議**         | 縮短寬限期、新增確認步驟                                                 |
 
 #### T-ACCESS-002：AllowFrom 詐騙
 
@@ -582,30 +582,27 @@ T-EXEC-002 → T-EXFIL-001 → External exfiltration
 
 ### 7.2 關鍵安全性檔案
 
-| 路徑                                | 用途             | 風險等級 |
-| ----------------------------------- | ---------------- | -------- |
-| `src/infra/exec-approvals.ts`       | 指令審核邏輯     | **嚴重** |
-| `src/gateway/auth.ts`               | 閘道驗證         | **嚴重** |
-| `src/web/inbound/access-control.ts` | 管道存取控制     | **嚴重** |
-| `src/infra/net/ssrf.ts`             | SSRF 防護        | **嚴重** |
-| `src/security/external-content.ts`  | 提示詞注入緩解   | **嚴重** |
-| `src/agents/sandbox/tool-policy.ts` | 工具政策執行     | **嚴重** |
-| `convex/lib/moderation.ts`          | ClawHub 內容審核 | **高**   |
-| `convex/lib/skillPublish.ts`        | 技能發布流程     | **高**   |
-| `src/routing/resolve-route.ts`      | 工作階段隔離     | **中**   |
+| 路徑                                | 用途         | 風險等級 |
+| ----------------------------------- | ------------ | -------- |
+| `src/infra/exec-approvals.ts`       | 指令審核邏輯 | **嚴重** |
+| `src/gateway/auth.ts`               | 閘道驗證     | **嚴重** |
+| `src/infra/net/ssrf.ts`             | SSRF 防護    | **嚴重** |
+| `src/security/external-content.ts`  | 提示注入緩解 | **嚴重** |
+| `src/agents/sandbox/tool-policy.ts` | 工具政策執行 | **嚴重** |
+| `src/routing/resolve-route.ts`      | 會話隔離     | **中等** |
 
 ### 7.3 術語表
 
-| 術語           | 定義                                    |
-| -------------- | --------------------------------------- |
-| **ATLAS**      | MITRE 的 AI 系統對手威脅環境            |
-| **ClawHub**    | OpenClaw 的技能市集                     |
-| **閘道**       | OpenClaw 的訊息路由與驗證層             |
-| **MCP**        | Model Context Protocol - 工具提供者介面 |
-| **提示詞注入** | 在輸入中嵌入惡意指令的攻擊              |
-| **技能**       | OpenClaw 代理程式的可下載擴充功能       |
-| **SSRF**       | 伺服器端請求偽造                        |
+| 術語                 | 定義                                                 |
+| -------------------- | ---------------------------------------------------- |
+| **ATLAS**            | MITRE 的 Adversarial Threat Landscape for AI Systems |
+| **ClawHub**          | OpenClaw 的技能市集                                  |
+| **Gateway**          | OpenClaw 的訊息路由與驗證層                          |
+| **MCP**              | Model Context Protocol - 工具提供者介面              |
+| **Prompt Injection** | 在輸入中嵌入惡意指令的攻擊                           |
+| **Skill**            | OpenClaw 代理程式的可下載擴充功能                    |
+| **SSRF**             | Server-Side Request Forgery                          |
 
 ---
 
-_此威脅模型為一份持續更新的文件。請將安全性問題回報至 security@openclaw.ai_
+_此威脅模型為持續更新的文件。請將安全問題回報至 security@openclaw.ai_

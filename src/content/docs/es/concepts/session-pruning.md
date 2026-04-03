@@ -1,121 +1,75 @@
 ---
-title: "Session Pruning"
-summary: "Session pruning: tool-result trimming to reduce context bloat"
+title: "Poda de sesión"
+summary: "Recortar resultados de herramientas antiguos para mantener el contexto ligero y el almacenamiento en caché eficiente"
 read_when:
-  - You want to reduce LLM context growth from tool outputs
-  - You are tuning agents.defaults.contextPruning
+  - You want to reduce context growth from tool outputs
+  - You want to understand Anthropic prompt cache optimization
 ---
 
 # Session Pruning
 
-Session pruning trims **old tool results** from the in-memory context right before each LLM call. It does **not** rewrite the on-disk session history (`*.jsonl`).
+La poda de sesión recorta **resultados de herramientas antiguos** del contexto antes de cada llamada al LLM. Reduce la hinchazón del contexto causada por la acumulación de resultados de herramientas (resultados de ejecución, lecturas de archivos, resultados de búsqueda) sin tocar sus mensajes de conversación.
 
-## When it runs
+<Info>La poda se realiza solo en memoria; no modifica la transcripción de la sesión en el disco. Su historial completo siempre se conserva.</Info>
 
-- When `mode: "cache-ttl"` is enabled and the last Anthropic call for the session is older than `ttl`.
-- Only affects the messages sent to the model for that request.
-- Only active for Anthropic API calls (and OpenRouter Anthropic models).
-- For best results, match `ttl` to your model `cacheRetention` policy (`short` = 5m, `long` = 1h).
-- After a prune, the TTL window resets so subsequent requests keep cache until `ttl` expires again.
+## Por qué es importante
 
-## Smart defaults (Anthropic)
+Las sesiones largas acumulan resultados de herramientas que inflan la ventana de contexto. Esto
+aumenta el costo y puede forzar la [compactación](/en/concepts/compaction) antes de
+lo necesario.
 
-- **OAuth or setup-token** profiles: enable `cache-ttl` pruning and set heartbeat to `1h`.
-- **API key** profiles: enable `cache-ttl` pruning, set heartbeat to `30m`, and default `cacheRetention: "short"` on Anthropic models.
-- If you set any of these values explicitly, OpenClaw does **not** override them.
+La poda es especialmente valiosa para el **almacenamiento en caché de prompt de Anthropic**. Una vez que el TTL
+del caché expira, la siguiente solicitud vuelve a almacenar en caché el prompt completo. La poda reduce el
+tamaño de escritura del caché, reduciendo directamente el costo.
 
-## What this improves (cost + cache behavior)
+## Cómo funciona
 
-- **Why prune:** Anthropic prompt caching only applies within the TTL. If a session goes idle past the TTL, the next request re-caches the full prompt unless you trim it first.
-- **What gets cheaper:** pruning reduces the **cacheWrite** size for that first request after the TTL expires.
-- **Why the TTL reset matters:** once pruning runs, the cache window resets, so follow‑up requests can reuse the freshly cached prompt instead of re-caching the full history again.
-- **What it does not do:** pruning doesn’t add tokens or “double” costs; it only changes what gets cached on that first post‑TTL request.
+1. Esperar a que expire el TTL del caché (por defecto 5 minutos).
+2. Buscar resultados de herramientas antiguos (los mensajes del usuario y del asistente nunca se tocan).
+3. **Recorte suave** de los resultados excesivamente grandes -- mantener el principio y el final, insertar `...`.
+4. **Limpieza dura** del resto -- reemplazar con un marcador de posición.
+5. Restablecer el TTL para que las solicitudes de seguimiento reutilicen el caché actualizado.
 
-## What can be pruned
+## Valores predeterminados inteligentes
 
-- Only `toolResult` messages.
-- User + assistant messages are **never** modified.
-- Los últimos `keepLastAssistants` mensajes del asistente están protegidos; los resultados de las herramientas después de ese punto de corte no se eliminan.
-- Si no hay suficientes mensajes del asistente para establecer el punto de corte, se omite la eliminación.
-- Los resultados de las herramientas que contienen **bloques de imagen** se omiten (nunca se recortan/borran).
+OpenClaw habilita automáticamente la poda para los perfiles de Anthropic:
 
-## Estimación de la ventana de contexto
+| Tipo de perfil                 | Poda habilitada | Latido (Heartbeat) |
+| ------------------------------ | --------------- | ------------------ |
+| OAuth o token de configuración | Sí              | 1 hora             |
+| Clave de API                   | Sí              | 30 min             |
 
-La eliminación utiliza una ventana de contexto estimada (caracteres ≈ tokens × 4). La ventana base se resuelve en este orden:
+Si establece valores explícitos, OpenClaw no los anulará.
 
-1. `models.providers.*.models[].contextWindow` anulación.
-2. Definición del modelo `contextWindow` (del registro de modelos).
-3. Por defecto `200000` tokens.
+## Habilitar o deshabilitar
 
-Si se establece `agents.defaults.contextTokens`, se trata como un límite (mínimo) en la ventana resuelta.
-
-## Modo
-
-### cache-ttl
-
-- La eliminación solo se ejecuta si la última llamada a Anthropic es anterior a `ttl` (por defecto `5m`).
-- Cuando se ejecuta: el mismo comportamiento de recorte suave (soft-trim) + borrado duro (hard-clear) que antes.
-
-## Recorte suave vs. duro
-
-- **Recorte suave (Soft-trim)**: solo para resultados de herramientas excesivamente grandes.
-  - Mantiene el principio + el final, inserta `...` y añade una nota con el tamaño original.
-  - Omite los resultados con bloques de imagen.
-- **Borrado duro (Hard-clear)**: reemplaza todo el resultado de la herramienta con `hardClear.placeholder`.
-
-## Selección de herramientas
-
-- `tools.allow` / `tools.deny` admiten comodines `*`.
-- Denegar gana.
-- La coincidencia no distingue entre mayúsculas y minúsculas.
-- Lista de permitidos vacía => todas las herramientas permitidas.
-
-## Interacción con otros límites
-
-- Las herramientas integradas ya truncan su propia salida; la eliminación de sesiones es una capa adicional que evita que las conversaciones largas acumulen demasiada salida de herramientas en el contexto del modelo.
-- La compactación es independiente: la compactación resume y persiste, la eliminación es transitoria por solicitud. Consulte [/concepts/compaction](/en/concepts/compaction).
-
-## Valores predeterminados (cuando está habilitado)
-
-- `ttl`: `"5m"`
-- `keepLastAssistants`: `3`
-- `softTrimRatio`: `0.3`
-- `hardClearRatio`: `0.5`
-- `minPrunableToolChars`: `50000`
-- `softTrim`: `{ maxChars: 4000, headChars: 1500, tailChars: 1500 }`
-- `hardClear`: `{ enabled: true, placeholder: "[Old tool result content cleared]" }`
-
-## Ejemplos
-
-Predeterminado (desactivado):
-
-```json5
-{
-  agents: { defaults: { contextPruning: { mode: "off" } } },
-}
-```
-
-Activar poda consciente de TTL:
-
-```json5
-{
-  agents: { defaults: { contextPruning: { mode: "cache-ttl", ttl: "5m" } } },
-}
-```
-
-Restringir la poda a herramientas específicas:
+La poda está desactivada por defecto para proveedores que no son Anthropic. Para habilitarla:
 
 ```json5
 {
   agents: {
     defaults: {
-      contextPruning: {
-        mode: "cache-ttl",
-        tools: { allow: ["exec", "read"], deny: ["*image*"] },
-      },
+      contextPruning: { mode: "cache-ttl", ttl: "5m" },
     },
   },
 }
 ```
 
-Consultar referencia de configuración: [Configuración de Gateway](/en/gateway/configuration)
+Para deshabilitar: establecer `mode: "off"`.
+
+## Poda frente a compactación
+
+|                | Poda                               | Compactación             |
+| -------------- | ---------------------------------- | ------------------------ |
+| **Qué**        | Recorta resultados de herramientas | Resume la conversación   |
+| **¿Guardado?** | No (por solicitud)                 | Sí (en la transcripción) |
+| **Alcance**    | Solo resultados de herramientas    | Conversación completa    |
+
+Se complementan entre sí: la poda mantiene el resultado de las herramientas ligero entre
+los ciclos de compactación.
+
+## Lecturas adicionales
+
+- [Compactación](/en/concepts/compaction) -- reducción de contexto basada en resumen
+- [Configuración de Gateway](/en/gateway/configuration) -- todos los controles de configuración de poda
+  (`contextPruning.*`)

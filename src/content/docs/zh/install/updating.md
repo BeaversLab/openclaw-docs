@@ -125,4 +125,10 @@ openclaw gateway restart
 
 - 再次运行 `openclaw doctor` 并仔细阅读输出。
 - 检查：[故障排除](/en/gateway/troubleshooting)
-- 在 Discord 中询问：[https://discord.gg/clawd](https://discord.gg/clawd)
+- 在 Discord 提问: [https://discord.gg/clawd](https://discord.gg/clawd)
+
+## 相关
+
+- [安装概述](/en/install) — 所有安装方法
+- [Doctor](/en/gateway/doctor) — 更新后的健康检查
+- [迁移](/en/install/migrating) — 主要版本迁移指南

@@ -163,3 +163,10 @@ De forma predeterminada, OpenClaw utiliza el motor de contexto `legacy` integrad
 - `System prompt (estimate)` = calculado al vuelo cuando no existe un informe de ejecución (o al ejecutarse a través de un backend de CLI que no genera el informe).
 
 De cualquier manera, reporta los tamaños y los principales contribuyentes; **no** vuelca el prompt del sistema completo ni los esquemas de herramientas.
+
+## Relacionado
+
+- [Context Engine](/en/concepts/context-engine) — inyección de contexto personalizada mediante complementos
+- [Compaction](/en/concepts/compaction) — resumiendo conversaciones largas
+- [System Prompt](/en/concepts/system-prompt) — cómo se construye el prompt del sistema
+- [Agent Loop](/en/concepts/agent-loop) — el ciclo completo de ejecución del agente

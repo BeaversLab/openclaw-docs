@@ -192,7 +192,7 @@ pnpm test -- src/plugins/contracts/
 对于特定插件：
 
 ```bash
-pnpm test -- extensions/my-channel/
+pnpm test -- <bundled-plugin-root>/my-channel/
 ```
 
 仅对于合约测试：
@@ -222,10 +222,10 @@ OpenClaw 使用 Vitest 和 V8 覆盖率阈值。对于插件测试：
 pnpm test
 
 # Run specific plugin tests
-pnpm test -- extensions/my-channel/src/channel.test.ts
+pnpm test -- <bundled-plugin-root>/my-channel/src/channel.test.ts
 
 # Run with a specific test name filter
-pnpm test -- extensions/my-channel/ -t "resolves account"
+pnpm test -- <bundled-plugin-root>/my-channel/ -t "resolves account"
 
 # Run with coverage
 pnpm test:coverage

@@ -13,41 +13,50 @@ Este concentrador vincula los documentos principales sobre cómo OpenClaw conect
 
 ## Modelo principal
 
-- [Arquitectura de puerta de enlace](/en/concepts/architecture)
-- [Protocolo de puerta de enlace](/en/gateway/protocol)
-- [Manual de procedimientos de puerta de enlace](/en/gateway)
-- [Superficies web + modos de enlace](/en/web)
+La mayoría de las operaciones fluyen a través del Gateway (`openclaw gateway`), un único proceso de larga ejecución que posee las conexiones de los canales y el plano de control WebSocket.
+
+- **Loopback primero**: el WS del Gateway usa por defecto `ws://127.0.0.1:18789`. Se requieren tokens para enlaces no loopback.
+- Se recomienda **un solo Gateway por host**. Para el aislamiento, ejecute múltiples gateways con perfiles y puertos aislados ([Multiple Gateways](/en/gateway/multiple-gateways)).
+- El **Canvas host** se sirve en el mismo puerto que el Gateway (`/__openclaw__/canvas/`, `/__openclaw__/a2ui/`), protegido por la autenticación del Gateway cuando se enlaza más allá del loopback.
+- El **acceso remoto** es típicamente un túnel SSH o VPN Tailscale ([Remote Access](/en/gateway/remote)).
+
+Referencias clave:
+
+- [Gateway architecture](/en/concepts/architecture)
+- [Gateway protocol](/en/gateway/protocol)
+- [Gateway runbook](/en/gateway)
+- [Web surfaces + bind modes](/en/web)
 
 ## Emparejamiento + identidad
 
-- [Descripción general del emparejamiento (DM + nodos)](/en/channels/pairing)
-- [Emparejamiento de nodos propiedad de la puerta de enlace](/en/gateway/pairing)
-- [CLI de dispositivos (emparejamiento + rotación de tokens)](/en/cli/devices)
-- [CLI de emparejamiento (aprobaciones de DM)](/en/cli/pairing)
+- [Pairing overview (DM + nodes)](/en/channels/pairing)
+- [Gateway-owned node pairing](/en/gateway/pairing)
+- [Devices CLI (pairing + token rotation)](/en/cli/devices)
+- [Pairing CLI (DM approvals)](/en/cli/pairing)
 
 Confianza local:
 
-- Las conexiones locales (loopback o la dirección tailnet propia del host de la puerta de enlace) pueden ser
-  aprobadas automáticamente para el emparejamiento para mantener fluida la UX en el mismo host.
-- Los clientes de tailnet/LAN no locales aún requieren aprobación explícita de emparejamiento.
+- Las conexiones locales (loopback o la propia dirección de tailnet del host del gateway) pueden ser
+  auto-aprobadas para el emparejamiento para mantener la UX del mismo host fluida.
+- Los clientes de tailnet/LAN no locales todavía requieren aprobación explícita de emparejamiento.
 
 ## Descubrimiento + transportes
 
-- [Descubrimiento y transportes](/en/gateway/discovery)
+- [Discovery & transports](/en/gateway/discovery)
 - [Bonjour / mDNS](/en/gateway/bonjour)
-- [Acceso remoto (SSH)](/en/gateway/remote)
+- [Remote access (SSH)](/en/gateway/remote)
 - [Tailscale](/en/gateway/tailscale)
 
 ## Nodos + transportes
 
-- [Descripción general de nodos](/en/nodes)
-- [Protocolo de puente (nodos heredados)](/en/gateway/bridge-protocol)
-- [Manual de procedimientos de nodo: iOS](/en/platforms/ios)
-- [Manual de procedimientos de nodo: Android](/en/platforms/android)
+- [Nodes overview](/en/nodes)
+- [Bridge protocol (legacy nodes)](/en/gateway/bridge-protocol)
+- [Node runbook: iOS](/en/platforms/ios)
+- [Node runbook: Android](/en/platforms/android)
 
 ## Seguridad
 
-- [Descripción general de seguridad](/en/gateway/security)
-- [Referencia de configuración de puerta de enlace](/en/gateway/configuration)
-- [Solución de problemas](/en/gateway/troubleshooting)
+- [Security overview](/en/gateway/security)
+- [Gateway config reference](/en/gateway/configuration)
+- [Troubleshooting](/en/gateway/troubleshooting)
 - [Doctor](/en/gateway/doctor)

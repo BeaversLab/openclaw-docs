@@ -12,7 +12,7 @@ Statut : prêt pour les DMs + espaces via les webhooks de l'API Google Chat API 
 ## Configuration rapide (débutant)
 
 1. Créez un projet Google Cloud et activez l'**API Google Chat API**.
-   - Accédez à : [Google Chat API Credentials](https://console.cloud.google.com/apis/api/chat.googleapis.com/credentials)
+   - Accéder à : [Identifiants de l'API Google Chat](https://console.cloud.google.com/apis/api/chat.googleapis.com/credentials)
    - Activez l'**API API** si elle n'est pas déjà activée.
 2. Créez un **compte de service** :
    - Cliquez sur **Créer des identifiants** > **Compte de service**.
@@ -25,7 +25,7 @@ Statut : prêt pour les DMs + espaces via les webhooks de l'API Google Chat API 
    - Cliquez sur **Ajouter une clé** > **Créer une nouvelle clé**.
    - Sélectionnez **JSON** et appuyez sur **Créer**.
 4. Stockez le fichier JSON téléchargé sur votre hôte de passerelle (par exemple, `~/.openclaw/googlechat-service-account.json`).
-5. Créez une application Google Chat dans la [Google Cloud Console Chat Configuration](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat) :
+5. Créer une application Google Chat Chat dans la [Configuration de Chat de la Google Cloud Console](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat) :
    - Remplissez les **Informations sur l'application** :
      - **Nom de l'application** : (par exemple `OpenClaw`)
      - **URL de l'avatar** : (par exemple `https://openclaw.ai/logo.png`)
@@ -53,7 +53,7 @@ Statut : prêt pour les DMs + espaces via les webhooks de l'API Google Chat API 
 
 Une fois la passerelle démarrée et votre e-mail ajouté à la liste de visibilité :
 
-1. Accédez à [Google Chat](https://chat.google.com/).
+1. Accéder à [Google Chat](https://chat.google.com/).
 2. Cliquez sur l'icône **+** (plus) à côté de **Direct Messages** (Messages directs).
 3. Dans la barre de recherche (où vous ajoutez habituellement des personnes), saisissez le **App name** (Nom de l'application) que vous avez configuré dans la Google Cloud Console.
    - **Remarque** : Le bot n'apparaîtra _pas_ dans la liste de navigation du "Marketplace" car il s'agit d'une application privée. Vous devez le rechercher par son nom.
@@ -260,3 +260,11 @@ Documentation connexe :
 - [Configuration Gateway](/en/gateway/configuration)
 - [Sécurité](/en/gateway/security)
 - [Réactions](/en/tools/reactions)
+
+## Connexes
+
+- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
+- [Appairage](/en/channels/pairing) — authentification et flux d'appairage DM
+- [Groupes](/en/channels/groups) — comportement de la conversation de groupe et filtrage des mentions
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et renforcement

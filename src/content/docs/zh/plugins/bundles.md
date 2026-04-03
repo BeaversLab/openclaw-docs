@@ -50,7 +50,7 @@ OpenClaw 可以从三个外部生态系统安装插件：**Codex**、**Claude** 
     openclaw gateway restart
     ```
 
-    映射的功能（技能、钩子、MCP 工具）将在下一次会话中可用。
+    映射的功能（技能、钩子、MCP 工具）将在下次会话中可用。
 
   </Step>
 </Steps>
@@ -61,57 +61,145 @@ OpenClaw 可以从三个外部生态系统安装插件：**Codex**、**Claude** 
 
 ### 目前支持
 
-| 功能     | 映射方式                                                                 | 适用范围       |
-| -------- | ------------------------------------------------------------------------ | -------------- |
-| 技能内容 | 插件包技能根目录作为普通 OpenClaw 技能加载                               | 所有格式       |
-| 命令     | `commands/` 和 `.cursor/commands/` 被视为技能根目录                      | Claude、Cursor |
-| 钩子包   | OpenClaw 风格的 `HOOK.md` + `handler.ts` 布局                            | Codex          |
-| MCP 工具 | 插件包 MCP 配置合并到嵌入式 Pi 设置中；支持的 stdio 服务器作为子进程启动 | 所有格式       |
-| 设置     | Claude `settings.json` 作为嵌入式 Pi 默认值导入                          | Claude         |
+| 功能     | 映射方式                                                                   | 适用范围       |
+| -------- | -------------------------------------------------------------------------- | -------------- |
+| 技能内容 | 插件包技能根目录作为普通 OpenClaw 技能加载                                 | 所有格式       |
+| 命令     | `commands/` 和 `.cursor/commands/` 被视为技能根目录                        | Claude、Cursor |
+| 钩子包   | OpenClaw 风格的 `HOOK.md` + `handler.ts` 布局                              | Codex          |
+| MCP 工具 | 插件包 MCP 配置合并到嵌入式 Pi 设置中；受支持的 stdio 和 HTTP 服务器已加载 | 所有格式       |
+| 设置     | Claude `settings.json` 作为嵌入式 Pi 默认值导入                            | Claude         |
+
+#### 技能内容
+
+- 插件包技能根目录作为普通 OpenClaw 技能根目录加载
+- Claude `commands` 根目录被视为附加技能根目录
+- Cursor `.cursor/commands` 根目录被视为附加技能根目录
+
+这意味着 Claude markdown 命令文件通过普通的 OpenClaw 技能加载器工作。Cursor 命令 markdown 通过相同路径工作。
+
+#### 钩子包
+
+- 插件包钩子根目录 **仅** 在它们使用普通 OpenClaw 钩子包布局时才工作。目前这主要是 Codex 兼容的情况：
+  - `HOOK.md`
+  - `handler.ts` 或 `handler.js`
+
+#### MCP for Pi
+
+- 已启用的插件包可以提供 MCP 服务器配置
+- OpenClaw 将插件包 MCP 配置合并为有效的嵌入式 Pi 设置，作为 `mcpServers`
+- OpenClaw 在嵌入式 Pi 代理回合期间通过启动 stdio 服务器或连接到 HTTP 服务器来公开受支持的插件包 MCP 工具
+- 项目本地 Pi 设置在插件包默认值之后仍然应用，因此工作区设置可以在需要时覆盖插件包 MCP 条目
+
+##### 传输方式
+
+MCP 服务器可以使用 stdio 或 HTTP 传输方式：
+
+**Stdio** 启动子进程：
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "my-server": {
+        "command": "node",
+        "args": ["server.js"],
+        "env": { "PORT": "3000" }
+      }
+    }
+  }
+}
+```
+
+**HTTP** 默认通过 `sse` 连接到正在运行的 MCP 服务器，或者在请求时通过 `streamable-http` 连接：
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "my-server": {
+        "url": "http://localhost:3100/mcp",
+        "transport": "streamable-http",
+        "headers": {
+          "Authorization": "Bearer ${MY_SECRET_TOKEN}"
+        },
+        "connectionTimeoutMs": 30000
+      }
+    }
+  }
+}
+```
+
+- `transport` 可以设置为 `"streamable-http"` 或 `"sse"`；如果省略，OpenClaw 将使用 `sse`
+- 仅允许 `http:` 和 `https:` URL 方案
+- `headers` 值支持 `${ENV_VAR}` 插值
+- 包含 `command` 和 `url` 两者 的服务器条目将被拒绝
+- URL 凭证（用户信息和查询参数）会从工具描述和日志中编辑掉
+- `connectionTimeoutMs` 会覆盖 stdio 和 HTTP 传输默认的 30 秒连接超时
+
+##### 工具命名
+
+OpenClaw 以 `serverName__toolName` 的形式注册提供商安全名称的 bundle MCP 工具。例如，键为 `"vigil-harbor"` 且暴露 `memory_search` 工具的服务器注册为 `vigil-harbor__memory_search`。
+
+- `A-Za-z0-9_-` 之外的字符将被替换为 `-`
+- 服务器前缀限制为 30 个字符
+- 完整工具名称限制为 64 个字符
+- 空服务器名称将回退到 `mcp`
+- 冲突的清理名称通过数字后缀进行消歧
+
+#### 嵌入式 Pi 设置
+
+- 当 bundle 被启用时，Claude `settings.json` 被导入为默认的嵌入式 Pi 设置
+- OpenClaw 在应用 shell 覆盖键之前会对其进行清理
+
+已清理的键：
+
+- `shellPath`
+- `shellCommandPrefix`
 
 ### 已检测但未执行
 
-这些会被识别并显示在诊断信息中，但 OpenClaw 不会运行它们：
+这些内容会被识别并显示在诊断信息中，但 OpenClaw 不会运行它们：
 
 - Claude `agents`，`hooks.json` 自动化，`lspServers`，`outputStyles`
 - Cursor `.cursor/agents`，`.cursor/hooks.json`，`.cursor/rules`
-- Codex 内联/应用程序元数据（超出能力报告范围）
+- 超出能力报告的 Codex 内联/应用元数据
 
-## 插件包格式
+## Bundle 格式
 
 <AccordionGroup>
-  <Accordion title="Codex 插件包">
+  <Accordion title="Codex bundles">
     标记：`.codex-plugin/plugin.json`
 
-    可选内容：`skills/`，`hooks/`，`.mcp.json`，`.app.json`
+    可选内容：`skills/`、`hooks/`、`.mcp.json`、`.app.json`
 
-    当 Codex 插件包使用技能根目录和 OpenClaw 风格的挂钩包目录（`HOOK.md` + `handler.ts`）时，最适合 OpenClaw。
+    当 Codex 包使用技能根目录和 OpenClaw 风格的
+    hook-pack 目录（`HOOK.md` + `handler.ts`）时，最适合 OpenClaw。
 
   </Accordion>
 
-  <Accordion title="Claude 插件包">
+  <Accordion title="Claude bundles">
     两种检测模式：
 
     - **基于清单：** `.claude-plugin/plugin.json`
-    - **无清单：** 默认 Claude 布局（`skills/`，`commands/`，`agents/`，`hooks/`，`.mcp.json`，`settings.json`）
+    - **无清单：** 默认 Claude 布局（`skills/`、`commands/`、`agents/`、`hooks/`、`.mcp.json`、`settings.json`）
 
-    Claude 特有行为：
+    Claude 特定行为：
 
     - `commands/` 被视为技能内容
     - `settings.json` 被导入到嵌入式 Pi 设置中（Shell 覆盖键会被清理）
-    - `.mcp.json` 向嵌入式 Pi 暴露支持的 stdio 工具
+    - `.mcp.json` 将支持的 stdio 工具暴露给嵌入式 Pi
     - `hooks/hooks.json` 被检测到但不会被执行
     - 清单中的自定义组件路径是累加的（它们扩展默认值，而不是替换它们）
 
   </Accordion>
 
-  <Accordion title="Cursor 包">
-    标记: `.cursor-plugin/plugin.json`
+  <Accordion title="Cursor bundles">
+    标记：`.cursor-plugin/plugin.json`
 
-    可选内容: `skills/`, `.cursor/commands/`, `.cursor/agents/`, `.cursor/rules/`, `.cursor/hooks.json`, `.mcp.json`
+    可选内容：`skills/`、`.cursor/commands/`、`.cursor/agents/`、`.cursor/rules/`、`.cursor/hooks.json`、`.mcp.json`
 
-    - `.cursor/commands/` 被视为 skill 内容
-    - `.cursor/rules/`, `.cursor/agents/`, 和 `.cursor/hooks.json` 仅用于检测
+    - `.cursor/commands/` 被视为技能内容
+    - `.cursor/rules/`、`.cursor/agents/` 和 `.cursor/hooks.json` 仅用于检测
 
   </Accordion>
 </AccordionGroup>
@@ -121,42 +209,41 @@ OpenClaw 可以从三个外部生态系统安装插件：**Codex**、**Claude** 
 OpenClaw 首先检查原生插件格式：
 
 1. `openclaw.plugin.json` 或包含 `openclaw.extensions` 的有效 `package.json` — 视为 **原生插件**
-2. Bundle 标记 (`.codex-plugin/`, `.claude-plugin/`, 或默认 Claude/Cursor 布局) — 视为 **bundle**
+2. Bundle 标记（`.codex-plugin/`、`.claude-plugin/` 或默认 Claude/Cursor 布局）— 视为 **包 (bundle)**
 
-如果一个目录同时包含两者，OpenClaw 将使用原生路径。这可以防止
-双格式包被部分安装为 bundle。
+如果目录同时包含两者，OpenClaw 将使用原生路径。这可以防止双格式包被部分安装为 Bundle。
 
 ## 安全性
 
 Bundle 的信任边界比原生插件更窄：
 
-- OpenClaw **不会** 在进程内加载任意的 bundle 运行时模块
-- Skills 和 hook-pack 路径必须保持在插件根目录内 (边界检查)
-- 读取设置文件时使用相同的边界检查
+- OpenClaw **不会**在进程中加载任意的 Bundle 运行时模块
+- Skills 和 hook-pack 的路径必须保持在插件根目录内（经过边界检查）
+- 读取设置文件时会进行相同的边界检查
 - 支持的 stdio MCP 服务器可能会作为子进程启动
 
-这使得 bundle 默认更安全，但您仍应将第三方
-bundle 视为其暴露功能的受信任内容。
+这使得 Bundle 默认情况下更安全，但对于第三方 Bundle 暴露的功能，您仍应将其视为受信任的内容。
 
 ## 故障排除
 
 <AccordionGroup>
   <Accordion title="检测到 Bundle 但功能未运行">
     运行 `openclaw plugins inspect <id>`。如果列出了某个功能但标记为
-    未连接，则这是产品限制 — 而不是安装损坏。
+    未连接（not wired），则是产品限制——而不是安装损坏。
   </Accordion>
 
-<Accordion title="Claude 命令文件未显示">确保已启用该插件包，并且 markdown 文件位于检测到的 `commands/` 或 `skills/` 根目录中。</Accordion>
+<Accordion title="未显示 Claude 命令文件">请确保 Bundle 已启用，且 markdown 文件位于检测到的 `commands/` 或 `skills/` 根目录内。</Accordion>
 
-<Accordion title="Claude 设置未生效">仅支持来自 `settings.json` 的嵌入式 Pi 设置。OpenClaw 不会将插件包设置视为原始配置补丁。</Accordion>
+<Accordion title="Claude 设置未生效">仅支持来自 `settings.json` 的嵌入式 Pi 设置。OpenClaw 不会 将 Bundle 设置视为原始配置补丁。</Accordion>
 
-  <Accordion title="Claude 钩子不执行">
-    `hooks/hooks.json` 仅用于检测。如果您需要可运行的钩子，请使用 OpenClaw hook-pack 布局或打包原生插件。
+  <Accordion title="Claude 钩子未执行">
+    `hooks/hooks.json` 仅用于检测。如果您需要可运行的钩子，请使用
+    OpenClaw hook-pack 布局或打包一个原生插件。
   </Accordion>
 </AccordionGroup>
 
 ## 相关
 
 - [安装和配置插件](/en/tools/plugin)
-- [构建插件](/en/plugins/building-plugins) — 创建原生插件
+- [构建插件](/en/plugins/building-plugins) — 创建一个原生插件
 - [插件清单](/en/plugins/manifest) — 原生清单架构

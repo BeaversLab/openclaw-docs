@@ -81,18 +81,18 @@ Los inquilinos de Lark (global) deben usar [https://open.larksuite.com/app](http
 2. Complete el nombre de la aplicación + descripción
 3. Elija un icono para la aplicación
 
-![Crear aplicación empresarial](/images/feishu-step2-create-app.png)
+![Create enterprise app](/images/feishu-step2-create-app.png)
 
 ### 3. Copiar las credenciales
 
 Desde **Credenciales e información básica**, copie:
 
-- **ID de aplicación** (formato: `cli_xxx`)
+- **App ID** (formato: `cli_xxx`)
 - **Secreto de la aplicación**
 
 ❗ **Importante:** mantenga el secreto de la aplicación en privado.
 
-![Obtener credenciales](/images/feishu-step3-credentials.png)
+![Get credentials](/images/feishu-step3-credentials.png)
 
 ### 4. Configurar permisos
 
@@ -126,7 +126,7 @@ En **Permisos**, haga clic en **Importación por lotes** y pegue:
 }
 ```
 
-![Configurar permisos](/images/feishu-step4-permissions.png)
+![Configure permissions](/images/feishu-step4-permissions.png)
 
 ### 5. Habilitar la capacidad del bot
 
@@ -135,7 +135,7 @@ En **Capacidad de la aplicación** > **Bot**:
 1. Habilitar capacidad del bot
 2. Establecer el nombre del bot
 
-![Activar capacidad de bot](/images/feishu-step5-bot-capability.png)
+![Enable bot capability](/images/feishu-step5-bot-capability.png)
 
 ### 6. Configurar la suscripción de eventos
 
@@ -148,15 +148,16 @@ En **Suscripción de eventos**:
 
 1. Elija **Usar conexión larga para recibir eventos** (WebSocket)
 2. Añada el evento: `im.message.receive_v1`
+3. (Opcional) Para los flujos de trabajo de comentarios de Drive, también añada: `drive.notice.comment_add_v1`
 
 ⚠️ Si la puerta de enlace no se está ejecutando, es posible que la configuración de conexión larga no se guarde.
 
-![Configurar suscripción de eventos](/images/feishu-step6-event-subscription.png)
+![Configure event subscription](/images/feishu-step6-event-subscription.png)
 
 ### 7. Publicar la aplicación
 
 1. Cree una versión en **Gestión de versiones y lanzamiento**
-2. Enviar para su revisión y publicación
+2. Envíe para revisión y publicación
 3. Espere la aprobación del administrador (las aplicaciones empresariales generalmente se aprueban automáticamente)
 
 ---
@@ -169,7 +170,7 @@ En **Suscripción de eventos**:
 openclaw channels add
 ```
 
-Elija **Feishu** y pegue su ID de aplicación + Secreto de aplicación.
+Elija **Feishu** y pegue su App ID + App Secret.
 
 ### Configurar mediante archivo de configuración
 
@@ -193,18 +194,18 @@ Edite `~/.openclaw/openclaw.json`:
 }
 ```
 
-Si usa `connectionMode: "webhook"`, configure tanto `verificationToken` como `encryptKey`. El servidor webhook de Feishu se vincula a `127.0.0.1` de manera predeterminada; configure `webhookHost` solo si necesita intencionalmente una dirección de enlace diferente.
+Si usa `connectionMode: "webhook"`, establezca tanto `verificationToken` como `encryptKey`. El servidor webhook de Feishu se vincula a `127.0.0.1` de forma predeterminada; establezca `webhookHost` solo si intencionalmente necesita una dirección de enlace diferente.
 
 #### Token de verificación y clave de cifrado (modo webhook)
 
-Al usar el modo webhook, configure tanto `channels.feishu.verificationToken` como `channels.feishu.encryptKey` en su configuración. Para obtener los valores:
+Al usar el modo webhook, establezca tanto `channels.feishu.verificationToken` como `channels.feishu.encryptKey` en su configuración. Para obtener los valores:
 
-1. En la plataforma abierta de Feishu, abra su aplicación
-2. Vaya a **Desarrollo** → **Eventos y devoluciones de llamada** (开发配置 → 事件与回调)
-3. Abra la pestaña **Cifrado** (加密策略)
-4. Copie el **Token de verificación** y la **Clave de cifrado**
+1. En Feishu Open Platform, abra su aplicación
+2. Vaya a **Development** → **Events & Callbacks** (开发配置 → 事件与回调)
+3. Abra la pestaña **Encryption** (加密策略)
+4. Copie **Verification Token** y **Encrypt Key**
 
-La siguiente captura de pantalla muestra dónde encontrar el **Token de verificación**. La **Clave de cifrado** aparece en la misma sección de **Cifrado**.
+La captura de pantalla a continuación muestra dónde encontrar el **Token de verificación**. La **Clave de cifrado** se lista en la misma sección de **Cifrado**.
 
 ![Ubicación del Token de verificación](/images/feishu-verification-token.png)
 
@@ -239,10 +240,10 @@ Si su inquilino está en Lark (internacional), configure el dominio en `lark` (o
 
 Puede reducir el uso de la API de Feishu con dos indicadores opcionales:
 
-- `typingIndicator` (predeterminado `true`): cuando `false`, omite las llamadas de reacción de escritura.
-- `resolveSenderNames` (predeterminado `true`): cuando `false`, omite las llamadas de búsqueda de perfil del remitente.
+- `typingIndicator` (predeterminado `true`): cuando `false`, omita las llamadas de reacción de escritura.
+- `resolveSenderNames` (predeterminado `true`): cuando `false`, omita las llamadas de búsqueda de perfil del remitente.
 
-Establécelos a nivel superior o por cuenta:
+Establézcalos en el nivel superior o por cuenta:
 
 ```json5
 {
@@ -265,7 +266,7 @@ Establécelos a nivel superior o por cuenta:
 
 ---
 
-## Paso 3: Iniciar + probar
+## Paso 3: Iniciar y probar
 
 ### 1. Iniciar la puerta de enlace
 
@@ -275,25 +276,25 @@ openclaw gateway
 
 ### 2. Enviar un mensaje de prueba
 
-En Feishu, busca tu bot y envía un mensaje.
+En Feishu, busque su bot y envíe un mensaje.
 
 ### 3. Aprobar el emparejamiento
 
-Por defecto, el bot responde con un código de emparejamiento. Apruébalo:
+De forma predeterminada, el bot responde con un código de emparejamiento. Apruébelo:
 
 ```bash
 openclaw pairing approve feishu <CODE>
 ```
 
-Después de la aprobación, puedes chatear con normalidad.
+Después de la aprobación, puede chatear con normalidad.
 
 ---
 
-## Descripción general
+## Resumen
 
 - **Canal del bot Feishu**: bot de Feishu gestionado por la puerta de enlace
 - **Enrutamiento determinista**: las respuestas siempre regresan a Feishu
-- **Aislamiento de sesión**: los MDs comparten una sesión principal; los grupos están aislados
+- **Aislamiento de sesión**: los MD comparten una sesión principal; los grupos están aislados
 - **Conexión WebSocket**: conexión larga a través del SDK de Feishu, no se necesita una URL pública
 
 ---
@@ -312,19 +313,19 @@ Después de la aprobación, puedes chatear con normalidad.
 
 - **Modo de lista de permitidos**: configure `channels.feishu.allowFrom` con los Open ID permitidos
 
-### Chats de grupo
+### Chats grupales
 
 **1. Política de grupo** (`channels.feishu.groupPolicy`):
 
 - `"open"` = permitir a todos en los grupos
 - `"allowlist"` = permitir solo `groupAllowFrom`
-- `"disabled"` = desactivar mensajes de grupo
+- `"disabled"` = deshabilitar mensajes de grupo
 
 Predeterminado: `allowlist`
 
-**2. Requisito de mención** (`channels.feishu.requireMention`, reemplazable vía `channels.feishu.groups.<chat_id>.requireMention`):
+**2. Requisito de mención** (`channels.feishu.requireMention`, se puede anular mediante `channels.feishu.groups.<chat_id>.requireMention`):
 
-- `true` explícito = requerir @mención
+- `true` explícito = requiere @mención
 - `false` explícito = responder sin menciones
 - cuando no está configurado y `groupPolicy: "open"` = predeterminado a `false`
 - cuando no está configurado y `groupPolicy` no es `"open"` = predeterminado a `true`
@@ -345,7 +346,7 @@ Predeterminado: `allowlist`
 }
 ```
 
-### Permitir todos los grupos, pero aún requiriendo @mención
+### Permitir todos los grupos, pero aún así requerir @mención
 
 ```json5
 {
@@ -374,7 +375,7 @@ Predeterminado: `allowlist`
 
 ### Restringir qué remitentes pueden enviar mensajes en un grupo (lista de permitidos de remitentes)
 
-Además de permitir el grupo en sí, **todos los mensajes** en ese grupo están controlados por el open_id del remitente: solo los usuarios listados en `groups.<chat_id>.allowFrom` tienen sus mensajes procesados; los mensajes de otros miembros se ignoran (este es un control total a nivel de remitente, no solo para comandos de control como /reset o /new).
+Además de permitir el grupo en sí, **todos los mensajes** en ese grupo están controlados por el open_id del remitente: solo los usuarios listados en `groups.<chat_id>.allowFrom` hacen que sus mensajes sean procesados; los mensajes de otros miembros se ignoran (este es un control completo a nivel de remitente, no solo para comandos de control como /reset o /new).
 
 ```json5
 {
@@ -395,6 +396,8 @@ Además de permitir el grupo en sí, **todos los mensajes** en ese grupo están 
 
 ---
 
+<a id="get-groupuser-ids"></a>
+
 ## Obtener IDs de grupo/usuario
 
 ### IDs de grupo (chat_id)
@@ -408,7 +411,7 @@ Los IDs de grupo se parecen a `oc_xxx`.
 
 **Método 2**
 
-Use el depurador de la API de Feishu para listar los chats grupales.
+Use el depurador de la API de Feishu para listar los chats de grupo.
 
 ### IDs de usuario (open_id)
 
@@ -421,7 +424,7 @@ Los IDs de usuario se parecen a `ou_xxx`.
 
 **Método 2**
 
-Compruebe las solicitudes de emparejamiento para los Open IDs de usuario:
+Verifique las solicitudes de emparejamiento para ver los Open IDs de usuario:
 
 ```bash
 openclaw pairing list feishu
@@ -431,23 +434,23 @@ openclaw pairing list feishu
 
 ## Comandos comunes
 
-| Comando   | Descripción               |
-| --------- | ------------------------- |
-| `/status` | Mostrar el estado del bot |
-| `/reset`  | Restablecer la sesión     |
-| `/model`  | Mostrar/cambiar modelo    |
+| Comando   | Descripción            |
+| --------- | ---------------------- |
+| `/status` | Mostrar estado del bot |
+| `/reset`  | Restablecer la sesión  |
+| `/model`  | Mostrar/cambiar modelo |
 
 > Nota: Feishu aún no admite menús de comandos nativos, por lo que los comandos deben enviarse como texto.
 
-## Comandos de gestión de la pasarela
+## Comandos de gestión del gateway
 
-| Comando                    | Descripción                              |
-| -------------------------- | ---------------------------------------- |
-| `openclaw gateway status`  | Mostrar el estado de la pasarela         |
-| `openclaw gateway install` | Instalar/iniciar el servicio de pasarela |
-| `openclaw gateway stop`    | Detener el servicio de pasarela          |
-| `openclaw gateway restart` | Reiniciar el servicio de pasarela        |
-| `openclaw logs --follow`   | Ver los registros de la pasarela         |
+| Comando                    | Descripción                       |
+| -------------------------- | --------------------------------- |
+| `openclaw gateway status`  | Mostrar estado del gateway        |
+| `openclaw gateway install` | Instalar/iniciar servicio gateway |
+| `openclaw gateway stop`    | Detener servicio gateway          |
+| `openclaw gateway restart` | Reiniciar servicio gateway        |
+| `openclaw logs --follow`   | Ver registros del gateway         |
 
 ---
 
@@ -455,10 +458,10 @@ openclaw pairing list feishu
 
 ### El bot no responde en los chats de grupo
 
-1. Asegúrese de que el bot se haya añadido al grupo
-2. Asegúrese de @mencionar al bot (comportamiento predeterminado)
-3. Compruebe que `groupPolicy` no esté establecido en `"disabled"`
-4. Compruebe los registros: `openclaw logs --follow`
+1. Asegúrese de que el bot se haya agregado al grupo
+2. Asegúrese de hacer @mención al bot (comportamiento predeterminado)
+3. Verifique que `groupPolicy` no esté configurado en `"disabled"`
+4. Verifique los registros: `openclaw logs --follow`
 
 ### El bot no recibe mensajes
 
@@ -466,20 +469,20 @@ openclaw pairing list feishu
 2. Asegúrese de que la suscripción de eventos incluya `im.message.receive_v1`
 3. Asegúrese de que la **conexión larga** esté habilitada
 4. Asegúrese de que los permisos de la aplicación estén completos
-5. Asegúrese de que la pasarela se esté ejecutando: `openclaw gateway status`
-6. Compruebe los registros: `openclaw logs --follow`
+5. Asegúrese de que la puerta de enlace se esté ejecutando: `openclaw gateway status`
+6. Verifique los registros: `openclaw logs --follow`
 
 ### Fuga de App Secret
 
-1. Restablezca el App Secret en la Feishu Open Platform
+1. Restablezca el App Secret en Feishu Open Platform
 2. Actualice el App Secret en su configuración
-3. Reinicie la pasarela
+3. Reinicie la puerta de enlace
 
 ### Fallos en el envío de mensajes
 
 1. Asegúrese de que la aplicación tenga el permiso `im:message:send_as_bot`
 2. Asegúrese de que la aplicación esté publicada
-3. Compruebe los registros para ver errores detallados
+3. Verifique los registros para ver errores detallados
 
 ---
 
@@ -510,16 +513,16 @@ openclaw pairing list feishu
 }
 ```
 
-`defaultAccount` controla qué cuenta de Feishu se utiliza cuando las APIs salientes no especifican un `accountId` explícitamente.
+`defaultAccount` controla qué cuenta de Feishu se utiliza cuando las APIs de salida no especifican un `accountId` explícitamente.
 
 ### Límites de mensajes
 
-- `textChunkLimit`: tamaño del fragmento de texto saliente (predeterminado: 2000 caracteres)
+- `textChunkLimit`: tamaño del fragmento de texto de salida (predeterminado: 2000 caracteres)
 - `mediaMaxMb`: límite de carga/descarga de medios (predeterminado: 30MB)
 
-### Transmisión
+### Transmisión (Streaming)
 
-Feishu admite respuestas en transmisión mediante tarjetas interactivas. Cuando está habilitado, el bot actualiza una tarjeta a medida que genera texto.
+Feishu admite respuestas en streaming a través de tarjetas interactivas. Cuando está habilitado, el bot actualiza una tarjeta a medida que genera texto.
 
 ```json5
 {
@@ -532,20 +535,20 @@ Feishu admite respuestas en transmisión mediante tarjetas interactivas. Cuando 
 }
 ```
 
-Establezca `streaming: false` para esperar a que se complete la respuesta antes de enviarla.
+Establezca `streaming: false` para esperar la respuesta completa antes de enviar.
 
 ### Sesiones ACP
 
 Feishu admite ACP para:
 
-- Mensajes directos
-- conversaciones de temas de grupo
+- Mensajes directos (DMs)
+- Conversaciones de temas de grupo
 
-El ACP de Feishu se basa en comandos de texto. No hay menús nativos de comandos de barra, por lo que debe usar mensajes `/acp ...` directamente en la conversación.
+El ACP de Feishu se basa en comandos de texto. No hay menús nativos de comandos de barra diagonal, así que use mensajes `/acp ...` directamente en la conversación.
 
 #### Enlaces ACP persistentes
 
-Use enlaces ACP escritos de nivel superior para fijar un MD de Feishu o una conversación de tema a una sesión ACP persistente.
+Use enlaces ACP escritos de nivel superior para fijar un mensaje directo de Feishu o una conversación de tema a una sesión ACP persistente.
 
 ```json5
 {
@@ -589,9 +592,9 @@ Use enlaces ACP escritos de nivel superior para fijar un MD de Feishu o una conv
 }
 ```
 
-#### Generación de ACP ligada a hilos desde el chat
+#### Generación de ACP ligado a hilos desde el chat
 
-En un MD de Feishu o conversación de tema, puede generar y vincular una sesión ACP en el lugar:
+En un mensaje directo de Feishu o una conversación de tema, puede generar y vincular una sesión ACP en su lugar:
 
 ```text
 /acp spawn codex --thread here
@@ -599,13 +602,13 @@ En un MD de Feishu o conversación de tema, puede generar y vincular una sesión
 
 Notas:
 
-- `--thread here` funciona para MDs y temas de Feishu.
-- Los mensajes de seguimiento en el MD/tema vinculado se enrutan directamente a esa sesión ACP.
-- v1 no tiene como objetivo los chats grupales genéricos que no son temas.
+- `--thread here` funciona para mensajes directos y temas de Feishu.
+- Los mensajes de seguimiento en el mensaje directo/tema vinculado se enrutan directamente a esa sesión ACP.
+- v1 no apunta a chats de grupo genéricos sin tema.
 
 ### Enrutamiento multiagente
 
-Use `bindings` para enrutar MDs o grupos de Feishu a diferentes agentes.
+Use `bindings` para enrutar mensajes directos o grupos de Feishu a diferentes agentes.
 
 ```json5
 {
@@ -654,19 +657,19 @@ Campos de enrutamiento:
 
 - `match.channel`: `"feishu"`
 - `match.peer.kind`: `"direct"` o `"group"`
-- `match.peer.id`: ID abierto de usuario (`ou_xxx`) o ID de grupo (`oc_xxx`)
+- `match.peer.id`: ID de usuario abierto (`ou_xxx`) o ID de grupo (`oc_xxx`)
 
-Consulte [Obtener IDs de grupo/usuario](#get-groupuser-ids) para obtener consejos de búsqueda.
+Consulte [Get group/user IDs](#get-groupuser-ids) para obtener consejos de búsqueda.
 
 ---
 
 ## Referencia de configuración
 
-Configuración completa: [Configuración de Gateway](/en/gateway/configuration)
+Configuración completa: [Gateway configuration](/en/gateway/configuration)
 
 Opciones clave:
 
-| Configuración                                     | Descripción                                               | Predeterminado   |
+| Ajuste                                            | Descripción                                               | Predeterminado   |
 | ------------------------------------------------- | --------------------------------------------------------- | ---------------- |
 | `channels.feishu.enabled`                         | Habilitar/deshabilitar canal                              | `true`           |
 | `channels.feishu.domain`                          | Dominio de API (`feishu` o `lark`)                        | `feishu`         |
@@ -674,23 +677,23 @@ Opciones clave:
 | `channels.feishu.defaultAccount`                  | ID de cuenta predeterminada para el enrutamiento saliente | `default`        |
 | `channels.feishu.verificationToken`               | Requerido para el modo webhook                            | -                |
 | `channels.feishu.encryptKey`                      | Requerido para el modo webhook                            | -                |
-| `channels.feishu.webhookPath`                     | Ruta de enrutamiento de webhook                           | `/feishu/events` |
+| `channels.feishu.webhookPath`                     | Ruta de webhook                                           | `/feishu/events` |
 | `channels.feishu.webhookHost`                     | Host de enlace de webhook                                 | `127.0.0.1`      |
 | `channels.feishu.webhookPort`                     | Puerto de enlace de webhook                               | `3000`           |
 | `channels.feishu.accounts.<id>.appId`             | ID de aplicación                                          | -                |
 | `channels.feishu.accounts.<id>.appSecret`         | Secreto de aplicación                                     | -                |
-| `channels.feishu.accounts.<id>.domain`            | Anulación de dominio de API por cuenta                    | `feishu`         |
+| `channels.feishu.accounts.<id>.domain`            | Anulación del dominio de API por cuenta                   | `feishu`         |
 | `channels.feishu.dmPolicy`                        | Política de MD                                            | `pairing`        |
 | `channels.feishu.allowFrom`                       | Lista de permitidos de MD (lista de open_id)              | -                |
 | `channels.feishu.groupPolicy`                     | Política de grupo                                         | `allowlist`      |
 | `channels.feishu.groupAllowFrom`                  | Lista de permitidos de grupo                              | -                |
-| `channels.feishu.requireMention`                  | Requerir @mención por defecto                             | condicional      |
+| `channels.feishu.requireMention`                  | Requerir @mención predeterminado                          | condicional      |
 | `channels.feishu.groups.<chat_id>.requireMention` | Anulación de requerir @mención por grupo                  | heredado         |
 | `channels.feishu.groups.<chat_id>.enabled`        | Habilitar grupo                                           | `true`           |
-| `channels.feishu.textChunkLimit`                  | Tamaño del fragmento de mensaje                           | `2000`           |
+| `channels.feishu.textChunkLimit`                  | Tamaño de fragmento de mensaje                            | `2000`           |
 | `channels.feishu.mediaMaxMb`                      | Límite de tamaño de medios                                | `30`             |
-| `channels.feishu.streaming`                       | Habilitar salida de tarjeta en flujo continuo             | `true`           |
-| `channels.feishu.blockStreaming`                  | Habilitar flujo continuo de bloques                       | `true`           |
+| `channels.feishu.streaming`                       | Habilitar salida de tarjetas en streaming                 | `true`           |
+| `channels.feishu.blockStreaming`                  | Habilitar streaming de bloques                            | `true`           |
 
 ---
 
@@ -701,11 +704,11 @@ Opciones clave:
 | `"pairing"`   | **Por defecto.** Los usuarios desconocidos reciben un código de emparejamiento; deben ser aprobados |
 | `"allowlist"` | Solo los usuarios en `allowFrom` pueden chatear                                                     |
 | `"open"`      | Permitir todos los usuarios (requiere `"*"` en allowFrom)                                           |
-| `"disabled"`  | Desactivar MDs                                                                                      |
+| `"disabled"`  | Desactivar mensajes directos                                                                        |
 
 ---
 
-## Tipos de mensajes admitidos
+## Tipos de mensajes compatibles
 
 ### Recibir
 
@@ -714,8 +717,8 @@ Opciones clave:
 - ✅ Imágenes
 - ✅ Archivos
 - ✅ Audio
-- ✅ Video/medios
-- ✅ Pegatinas
+- ✅ Video/multimedia
+- ✅ Stickers
 
 ### Enviar
 
@@ -723,19 +726,46 @@ Opciones clave:
 - ✅ Imágenes
 - ✅ Archivos
 - ✅ Audio
-- ✅ Video/medios
+- ✅ Video/multimedia
 - ✅ Tarjetas interactivas
-- ⚠️ Texto enriquecido (formato de estilo de publicación y tarjetas, no características de autoría arbitrarias de Feishu)
+- ⚠️ Texto enriquecido (formato de estilo de publicación y tarjetas, no funciones de autoría arbitrarias de Feishu)
 
 ### Hilos y respuestas
 
 - ✅ Respuestas en línea
 - ✅ Respuestas a hilos de temas donde Feishu expone `reply_in_thread`
-- ✅ Las respuestas de medios mantienen el conocimiento del hilo al responder a un mensaje de hilo/tema
+- ✅ Las respuestas multimedia mantienen el conocimiento del hilo al responder a un mensaje de hilo/tema
+
+## Comentarios de Drive
+
+Feishu puede activar el agente cuando alguien añade un comentario en un documento de Feishu Drive (Docs, Hojas de cálculo, etc.). El agente recibe el texto del comentario, el contexto del documento y el hilo de comentarios para que pueda responder en el hilo o realizar ediciones en el documento.
+
+Requisitos:
+
+- Suscribirse a `drive.notice.comment_add_v1` en la configuración de suscripción de eventos de tu aplicación Feishu
+  (junto con el `im.message.receive_v1` existente)
+- La herramienta Drive está habilitada por defecto; desactívala con `channels.feishu.tools.drive: false`
+
+La herramienta `feishu_drive` expone estas acciones de comentario:
+
+| Acción                 | Descripción                                  |
+| ---------------------- | -------------------------------------------- |
+| `list_comments`        | Listar comentarios en un documento           |
+| `list_comment_replies` | Listar respuestas en un hilo de comentarios  |
+| `add_comment`          | Añadir un nuevo comentario de nivel superior |
+| `reply_comment`        | Responder a un hilo de comentarios existente |
+
+Cuando el agente maneja un evento de comentario de Drive, recibe:
+
+- el texto del comentario y el remitente
+- metadatos del documento (título, tipo, URL)
+- el contexto del hilo de comentarios para respuestas en el hilo
+
+Tras realizar ediciones en el documento, se guía al agente para usar `feishu_drive.reply_comment` para notificar al comentarista y luego generar `NO_REPLY` para evitar envíos duplicados.
 
 ## Superficie de acción en tiempo de ejecución
 
-Feishu actualmente expone estas acciones en tiempo de ejecución:
+Actualmente, Feishu expone estas acciones en tiempo de ejecución:
 
 - `send`
 - `read`
@@ -748,3 +778,12 @@ Feishu actualmente expone estas acciones en tiempo de ejecución:
 - `channel-info`
 - `channel-list`
 - `react` y `reactions` cuando las reacciones están habilitadas en la configuración
+- `feishu_drive` acciones de comentario: `list_comments`, `list_comment_replies`, `add_comment`, `reply_comment`
+
+## Relacionado
+
+- [Descripción general de canales](/en/channels) — todos los canales compatibles
+- [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento por MD
+- [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento

@@ -1,7 +1,7 @@
 ---
-title: "Créer des plugins de fournisseur"
+title: "Construire des plugins de fournisseur"
 sidebarTitle: "Plugins de fournisseur"
-summary: "Guide étape par étape pour créer un plugin de fournisseur de modèle pour OpenClaw"
+summary: "Guide étape par étape pour construire un plugin de fournisseur de modèle pour OpenClaw"
 read_when:
   - You are building a new model provider plugin
   - You want to add an OpenAI-compatible proxy or custom LLM to OpenClaw
@@ -14,11 +14,12 @@ Ce guide explique la création d'un plugin de fournisseur qui ajoute un fourniss
 (LLM) à OpenClaw. À la fin, vous disposerez d'un fournisseur avec un catalogue de modèles,
 une authentification par clé API et une résolution dynamique de modèle.
 
-<Info>Si vous n'avez jamais construit de plugin OpenClaw auparavant, lisez d'abord [Getting Started](/en/plugins/building-plugins) pour connaître la structure de base du package et la configuration du manifeste.</Info>
+<Info>Si vous n'avez jamais construit de plugin OpenClaw auparavant, lisez d'abord [Getting Started](/en/plugins/building-plugins) pour connaître la structure de package de base et la configuration du manifeste.</Info>
 
 ## Procédure pas à pas
 
 <Steps>
+  <a id="step-1-package-and-manifest"></a>
   <Step title="Package et manifeste">
     <CodeGroup>
     ```json package.json
@@ -28,7 +29,15 @@ une authentification par clé API et une résolution dynamique de modèle.
       "type": "module",
       "openclaw": {
         "extensions": ["./index.ts"],
-        "providers": ["acme-ai"]
+        "providers": ["acme-ai"],
+        "compat": {
+          "pluginApi": ">=2026.3.24-beta.2",
+          "minGatewayVersion": "2026.3.24-beta.2"
+        },
+        "build": {
+          "openclawVersion": "2026.3.24-beta.2",
+          "pluginSdkVersion": "2026.3.24-beta.2"
+        }
       }
     }
     ```
@@ -64,12 +73,14 @@ une authentification par clé API et une résolution dynamique de modèle.
     </CodeGroup>
 
     Le manifeste déclare `providerAuthEnvVars` afin que OpenClaw puisse détecter
-    les identifiants sans charger le runtime de votre plugin.
+    les identifiants sans charger votre runtime de plugin. Si vous publiez le
+    fournisseur sur ClawHub, ces champs `openclaw.compat` et `openclaw.build`
+    sont requis dans `package.json`.
 
   </Step>
 
   <Step title="Enregistrer le fournisseur">
-    Un fournisseur minimal nécessite un `id`, `label`, `auth` et un `catalog` :
+    Un fournisseur minimal nécessite un `id`, un `label`, un `auth` et un `catalog` :
 
     ```typescript index.ts
     import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
@@ -145,8 +156,8 @@ une authentification par clé API et une résolution dynamique de modèle.
     `acme-ai/acme-large` comme modèle.
 
     Pour les fournisseurs groupés qui n'enregistrent qu'un seul fournisseur de texte avec une authentification par clé API
-    ainsi qu'un seul runtime basé sur un catalogue, préférez l'assistant plus ciblé
-    `defineSingleProviderPluginEntry(...)` :
+    ainsi qu'un runtime basé sur un catalogue unique, préférez l'assistant plus
+    restreint `defineSingleProviderPluginEntry(...)` :
 
     ```typescript
     import { defineSingleProviderPluginEntry } from "openclaw/plugin-sdk/provider-entry";
@@ -181,16 +192,16 @@ une authentification par clé API et une résolution dynamique de modèle.
     });
     ```
 
-    Si votre flux d'authentification doit également corriger `models.providers.*`, les alias et
+    Si votre flux d'authentification doit également modifier `models.providers.*`, les alias et
     le modèle par défaut de l'agent lors de l'onboarding, utilisez les assistants prédéfinis de
-    `openclaw/plugin-sdk/provider-onboard`. Les assistants les plus ciblés sont
+    `openclaw/plugin-sdk/provider-onboard`. Les assistants les plus restreints sont
     `createDefaultModelPresetAppliers(...)`,
     `createDefaultModelsPresetAppliers(...)` et
     `createModelCatalogPresetAppliers(...)`.
 
   </Step>
 
-  <Step title="Ajouter la résolution dynamique de model">
+  <Step title="Ajouter une résolution dynamique de model">
     Si votre provider accepte des ID de model arbitraires (comme un proxy ou un routeur),
     ajoutez `resolveDynamicModel` :
 
@@ -218,7 +229,7 @@ une authentification par clé API et une résolution dynamique de modèle.
 
   </Step>
 
-  <Step title="Ajouter des hooks d'exécution (si nécessaire)">
+  <Step title="Ajouter les hooks d'exécution (si nécessaire)">
     La plupart des providers n'ont besoin que de `catalog` + `resolveDynamicModel`. Ajoutez les hooks
     de manière incrémentielle au fur et à mesure que votre provider en a besoin.
 
@@ -278,25 +289,25 @@ une authentification par clé API et une résolution dynamique de modèle.
       | 1 | `catalog` | Catalogue de modèles ou URL de base par défaut |
       | 2 | `resolveDynamicModel` | Accepter les ID de modèle en amont arbitraires |
       | 3 | `prepareDynamicModel` | Récupération asynchrone des métadonnées avant la résolution |
-      | 4 | `normalizeResolvedModel` | Réécritures du transport avant l'exécuteur |
+      | 4 | `normalizeResolvedModel` | Réécritures du transport avant le runner |
       | 5 | `capabilities` | Métadonnées de transcription/outillage (données, non appelable) |
       | 6 | `prepareExtraParams` | Paramètres de requête par défaut |
-      | 7 | `wrapStreamFn` | En-têtes personnalisés/wrappers de corps |
+      | 7 | `wrapStreamFn` | Enveloppes d'en-têtes/corps personnalisés |
       | 8 | `formatApiKey` | Forme de jeton d'exécution personnalisée |
       | 9 | `refreshOAuth` | Actualisation OAuth personnalisée |
-      | 10 | `buildAuthDoctorHint` | Guide de réparation d'authentification |
-      | 11 | `isCacheTtlEligible` | Porte de TTL du cache de prompt |
-      | 12 | `buildMissingAuthMessage` | Indicateur personnalisé d'auth manquante |
+      | 10 | `buildAuthDoctorHint` | Conseils de réparation d'authentification |
+      | 11 | `isCacheTtlEligible` | Filtrage TTL du cache de prompt |
+      | 12 | `buildMissingAuthMessage` | Indication personnalisée d'authentification manquante |
       | 13 | `suppressBuiltInModel` | Masquer les lignes en amont obsolètes |
-      | 14 | `augmentModelCatalog` | Lignes synthétiques de compatibilité future |
+      | 14 | `augmentModelCatalog` | Lignes synthétiques de compatibilité ascendante |
       | 15 | `isBinaryThinking` | Pensée binaire activée/désactivée |
       | 16 | `supportsXHighThinking` | Support du raisonnement `xhigh` |
       | 17 | `resolveDefaultThinkingLevel` | Politique `/think` par défaut |
-      | 18 | `isModernModelRef` | Correspondance de modèle en direct/test |
-      | 19 | `prepareRuntimeAuth` | Échange de jetons avant inférence |
+      | 18 | `isModernModelRef` | Correspondance de modèle live/smoke |
+      | 19 | `prepareRuntimeAuth` | Échange de jetons avant l'inférence |
       | 20 | `resolveUsageAuth` | Analyse personnalisée des informations d'identification d'utilisation |
       | 21 | `fetchUsageSnapshot` | Point de terminaison d'utilisation personnalisé |
-      | 22 | `onModelSelected` | Rappel post-sélection (ex: télémétrie) |
+      | 22 | `onModelSelected` | Rappel post-sélection (ex. télémétrie) |
 
       Pour des descriptions détaillées et des exemples concrets, voir
       [Internals: Provider Runtime Hooks](/en/plugins/architecture#provider-runtime-hooks).
@@ -305,7 +316,8 @@ une authentification par clé API et une résolution dynamique de modèle.
   </Step>
 
   <Step title="Ajouter des capacités supplémentaires (facultatif)">
-    Un plugin de provider peut enregistrer la synthèse vocale, la compréhension de médias, la génération d'images et la recherche web en plus de l'inférence de texte :
+    <a id="step-5-add-extra-capabilities"></a>
+    Un plugin provider peut enregistrer la reconnaissance vocale, la compréhension des médias, la génération d'images et la recherche web en plus de l'inférence de texte :
 
     ```typescript
     register(api) {
@@ -343,7 +355,8 @@ une authentification par clé API et une résolution dynamique de modèle.
 
   </Step>
 
-  <Step title="Test">
+  <Step title="Tester">
+    <a id="step-6-test"></a>
     ```typescript src/provider.test.ts
     import { describe, it, expect } from "vitest";
     // Export your provider config object from index.ts or a dedicated file
@@ -377,10 +390,22 @@ une authentification par clé API et une résolution dynamique de modèle.
   </Step>
 </Steps>
 
+## Publier sur ClawHub
+
+Les plugins provider sont publiés de la même manière que tout autre plugin de code externe :
+
+```bash
+clawhub package publish your-org/your-plugin --dry-run
+clawhub package publish your-org/your-plugin
+```
+
+N'utilisez pas ici l'alias de publication legacy réservé aux compétences ; les packages de plugins doivent utiliser
+`clawhub package publish`.
+
 ## Structure des fichiers
 
 ```
-extensions/acme-ai/
+<bundled-plugin-root>/acme-ai/
 ├── package.json              # openclaw.providers metadata
 ├── openclaw.plugin.json      # Manifest with providerAuthEnvVars
 ├── index.ts                  # definePluginEntry + registerProvider
@@ -393,16 +418,16 @@ extensions/acme-ai/
 
 `catalog.order` contrôle le moment où votre catalogue fusionne par rapport aux providers intégrés :
 
-| Ordre     | Quand           | Cas d'usage                                                   |
-| --------- | --------------- | ------------------------------------------------------------- |
-| `simple`  | Première passe  | Providers avec clé API simple                                 |
-| `profile` | Après simple    | Providers restreints par des profils d'authentification       |
-| `paired`  | Après le profil | Synthétiser plusieurs entrées liées                           |
-| `late`    | Dernière passe  | Remplacer les providers existants (gagne en cas de collision) |
+| Ordre     | Quand          | Cas d'usage                                                   |
+| --------- | -------------- | ------------------------------------------------------------- |
+| `simple`  | Première passe | Providers avec clé API simple                                 |
+| `profile` | Après simple   | Providers conditionnés par des profils d'authentification     |
+| `paired`  | Après profil   | Synthétiser plusieurs entrées liées                           |
+| `late`    | Dernière passe | Remplacer les providers existants (gagne en cas de collision) |
 
 ## Étapes suivantes
 
 - [Plugins de canal](/en/plugins/sdk-channel-plugins) — si votre plugin fournit également un canal
-- [Runtime du SDK](/en/plugins/sdk-runtime) — assistants `api.runtime` (TTS, recherche, sous-agent)
-- [Vue d'ensemble du SDK](/en/plugins/sdk-overview) — référence complète des imports par sous-chemin
-- [Fonctionnement interne des plugins](/en/plugins/architecture#provider-runtime-hooks) — détails des hooks et exemples inclus
+- [SDK Runtime](/en/plugins/sdk-runtime) — assistants `api.runtime` (TTS, recherche, subagent)
+- [Aperçu du SDK](/en/plugins/sdk-overview) — référence complète des imports de sous-chemins
+- [Internes des plugins](/en/plugins/architecture#provider-runtime-hooks) — détails des hooks et exemples inclus

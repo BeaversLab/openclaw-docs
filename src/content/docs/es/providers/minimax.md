@@ -8,20 +8,43 @@ title: "MiniMax"
 
 # MiniMax
 
-El proveedor MiniMax de OpenClaw usa por defecto **MiniMax M2.7**.
+El proveedor MiniMax de OpenClaw utiliza por defecto **MiniMax M2.7**.
 
 ## Línea de modelos
 
-- `MiniMax-M2.7`: modelo de texto alojado por defecto.
+- `MiniMax-M2.7`: modelo de texto alojado predeterminado.
 - `MiniMax-M2.7-highspeed`: nivel de texto M2.7 más rápido.
+- `image-01`: modelo de generación de imágenes (generación y edición de imagen a imagen).
 
-## Elige una configuración
+## Generación de imágenes
 
-### MiniMax OAuth (Plan de codificación) - recomendado
+El complemento MiniMax registra el modelo `image-01` para la herramienta `image_generate`. Admite:
 
-**Mejor para:** configuración rápida con el Plan de codificación MiniMax a través de OAuth, no se requiere clave de API.
+- **Generación de texto a imagen** con control de relación de aspecto.
+- **Edición de imagen a imagen** (referencia de sujeto) con control de relación de aspecto.
+- Relaciones de aspecto compatibles: `1:1`, `16:9`, `4:3`, `3:2`, `2:3`, `3:4`, `9:16`, `21:9`.
 
-Habilita el complemento OAuth incluido y autentícate:
+Para usar MiniMax para la generación de imágenes, configúrelo como proveedor de generación de imágenes:
+
+```json5
+{
+  agents: {
+    defaults: {
+      imageGenerationModel: { primary: "minimax/image-01" },
+    },
+  },
+}
+```
+
+El complemento utiliza el mismo `MINIMAX_API_KEY` o autenticación OAuth que los modelos de texto. No se necesita configuración adicional si MiniMax ya está configurado.
+
+## Elegir una configuración
+
+### MiniMax OAuth (Coding Plan) - recomendado
+
+**Ideal para:** configuración rápida con MiniMax Coding Plan a través de OAuth, no se requiere clave de API.
+
+Habilite el complemento OAuth incluido y autentíquese:
 
 ```bash
 openclaw plugins enable minimax  # skip if already loaded.
@@ -29,22 +52,22 @@ openclaw gateway restart  # restart if gateway is already running
 openclaw onboard --auth-choice minimax-portal
 ```
 
-Se te pedirá que selecciones un punto de conexión:
+Se le pedirá que seleccione un punto de conexión:
 
 - **Global** - Usuarios internacionales (`api.minimax.io`)
 - **CN** - Usuarios en China (`api.minimaxi.com`)
 
-Consulta el [LÉEME del complemento MiniMax](https://github.com/openclaw/openclaw/tree/main/extensions/minimax) para obtener detalles.
+Consulte el archivo README del paquete del complemento MiniMax en el repositorio de OpenClaw para obtener más detalles.
 
 ### MiniMax M2.7 (clave de API)
 
-**Mejor para:** MiniMax alojado con API compatible con Anthropic.
+**Ideal para:** MiniMax alojado con API compatible con Anthropic.
 
 Configurar a través de CLI:
 
-- Ejecuta `openclaw configure`
-- Selecciona **Modelo/autenticación**
-- Elige una opción de autenticación **MiniMax**
+- Ejecutar `openclaw configure`
+- Seleccione **Model/auth**
+- Elija una opción de autenticación **MiniMax**
 
 ```json5
 {
@@ -85,8 +108,8 @@ Configurar a través de CLI:
 
 ### MiniMax M2.7 como alternativa (ejemplo)
 
-**Mejor para:** mantener tu modelo más potente de última generación como principal, cambiar a MiniMax M2.7 en caso de error.
-El siguiente ejemplo usa Opus como un principal concreto; cámbialo por tu modelo principal de última generación preferido.
+**Ideal para:** mantenga su modelo más potente de última generación como principal, cambie a MiniMax M2.7 como alternativa.
+El ejemplo siguiente utiliza Opus como principal concreto; cámbielo por su modelo principal de última generación preferido.
 
 ```json5
 {
@@ -106,54 +129,54 @@ El siguiente ejemplo usa Opus como un principal concreto; cámbialo por tu model
 }
 ```
 
-## Configurar a través de `openclaw configure`
+## Configurar vía `openclaw configure`
 
-Usa el asistente de configuración interactivo para establecer MiniMax sin editar JSON:
+Use el asistente de configuración interactivo para establecer MiniMax sin editar JSON:
 
-1. Ejecuta `openclaw configure`.
-2. Selecciona **Modelo/autenticación**.
-3. Elige una opción de autenticación de **MiniMax**.
-4. Elige tu modelo predeterminado cuando se te solicite.
+1. Ejecutar `openclaw configure`.
+2. Seleccione **Model/auth**.
+3. Elija una opción de autenticación **MiniMax**.
+4. Elija su modelo predeterminado cuando se le solicite.
 
 ## Opciones de configuración
 
-- `models.providers.minimax.baseUrl`: prefiere `https://api.minimax.io/anthropic` (compatible con Anthropic); `https://api.minimax.io/v1` es opcional para cargas útiles compatibles con OpenAI.
-- `models.providers.minimax.api`: prefiere `anthropic-messages`; `openai-completions` es opcional para cargas útiles compatibles con OpenAI.
+- `models.providers.minimax.baseUrl`: prefiera `https://api.minimax.io/anthropic` (compatible con Anthropic); `https://api.minimax.io/v1` es opcional para cargas útiles compatibles con OpenAI.
+- `models.providers.minimax.api`: prefiera `anthropic-messages`; `openai-completions` es opcional para cargas útiles compatibles con OpenAI.
 - `models.providers.minimax.apiKey`: clave de API de MiniMax (`MINIMAX_API_KEY`).
-- `models.providers.minimax.models`: define `id`, `name`, `reasoning`, `contextWindow`, `maxTokens`, `cost`.
-- `agents.defaults.models`: crea alias para los modelos que quieras en la lista de permitidos.
-- `models.mode`: mantén `merge` si quieres agregar MiniMax junto a los integrados.
+- `models.providers.minimax.models`: defina `id`, `name`, `reasoning`, `contextWindow`, `maxTokens`, `cost`.
+- `agents.defaults.models`: asigne un alias a los modelos que desee en la lista de permitidos.
+- `models.mode`: mantenga `merge` si desea agregar MiniMax junto con los integrados.
 
 ## Notas
 
-- Las referencias de modelo son `minimax/<model>`.
+- Las referencias de modelos son `minimax/<model>`.
 - Modelo de texto predeterminado: `MiniMax-M2.7`.
 - Modelo de texto alternativo: `MiniMax-M2.7-highspeed`.
-- API de uso del Coding Plan: `https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains` (requiere una clave de coding plan).
-- Actualice los valores de precios en `models.json` si necesita un seguimiento exacto de costos.
+- API de uso del Coding Plan: `https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains` (requiere una clave de plan de código).
+- Actualice los valores de precios en `models.json` si necesita un seguimiento de costos exacto.
 - Enlace de referencia para el MiniMax Coding Plan (10% de descuento): [https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)
-- Vea [/concepts/model-providers](/en/concepts/model-providers) para las reglas del proveedor.
+- Consulte [/concepts/model-providers](/en/concepts/model-providers) para obtener las reglas del proveedor.
 - Use `openclaw models list` y `openclaw models set minimax/MiniMax-M2.7` para cambiar.
 
 ## Solución de problemas
 
-### "Modelo desconocido: minimax/MiniMax-M2.7"
+### "Unknown model: minimax/MiniMax-M2.7"
 
-Esto generalmente significa que **el proveedor MiniMax no está configurado** (no se encontró ninguna entrada de proveedor
-ni clave de perfil/env de autenticación de MiniMax). Una solución para esta detección está en
+Esto generalmente significa que el **proveedor de MiniMax no está configurado** (no se encontró ninguna entrada de proveedor
+ni ninguna clave de perfil/entorno de autenticación de MiniMax). Una solución para esta detección está en
 **2026.1.12**. Solución:
 
 - Actualizando a **2026.1.12** (o ejecutando desde la fuente `main`) y luego reiniciando la puerta de enlace.
 - Ejecutando `openclaw configure` y seleccionando una opción de autenticación **MiniMax**, o
-- Añadiendo el bloque `models.providers.minimax` manualmente, o
-- Configurando `MINIMAX_API_KEY` (o un perfil de autenticación MiniMax) para que el proveedor pueda ser inyectado.
+- Agregando el bloque `models.providers.minimax` manualmente, o
+- Configurando `MINIMAX_API_KEY` (o un perfil de autenticación de MiniMax) para que se pueda inyectar el proveedor.
 
 Asegúrese de que el ID del modelo sea **sensible a mayúsculas y minúsculas**:
 
 - `minimax/MiniMax-M2.7`
 - `minimax/MiniMax-M2.7-highspeed`
 
-Luego verifique nuevamente con:
+Luego vuelva a verificar con:
 
 ```bash
 openclaw models list

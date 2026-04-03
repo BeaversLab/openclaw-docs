@@ -134,3 +134,10 @@ OpenClaw 可以暴露或隐藏模型推理：
 - 通过 `replyToMode` 和各渠道默认值进行回复串接
 
 详情：[配置](/en/gateway/configuration-reference#messages)和渠道文档。
+
+## 相关
+
+- [Streaming](/en/concepts/streaming) — 实时消息传送
+- [Retry](/en/concepts/retry) — 消息传送重试行为
+- [Queue](/en/concepts/queue) — 消息处理队列
+- [Channels](/en/channels) — 消息平台集成

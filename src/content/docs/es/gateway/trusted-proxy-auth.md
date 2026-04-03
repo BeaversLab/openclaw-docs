@@ -254,24 +254,36 @@ location / {
 }
 ```
 
+## Configuración de token mixto
+
+OpenClaw rechaza las configuraciones ambiguas donde tanto un `gateway.auth.token` (o `OPENCLAW_GATEWAY_TOKEN`) como el modo `trusted-proxy` están activos al mismo tiempo. Las configuraciones de token mixto pueden hacer que las solicitudes de loopback se autentiquen silenciosamente en la ruta de autenticación incorrecta.
+
+Si ve un error `mixed_trusted_proxy_token` al iniciar:
+
+- Elimine el token compartido al usar el modo trusted-proxy, o
+- Cambie `gateway.auth.mode` a `"token"` si pretende utilizar la autenticación basada en token.
+
+La autenticación trusted-proxy de loopback también falla de forma segura: los llamadores del mismo host deben proporcionar los encabezados de identidad configurados a través de un proxy de confianza en lugar de ser autenticados silenciosamente.
+
 ## Lista de verificación de seguridad
 
-Antes de habilitar la autenticación de proxy de confianza, verifique:
+Antes de habilitar la autenticación trusted-proxy, verifique:
 
-- [ ] **El proxy es la única ruta**: El puerto del Gateway está protegido por un firewall de todo excepto de su proxy
+- [ ] **El proxy es la única ruta**: El puerto de Gateway está protegido por un cortafuegos de todo excepto de su proxy
 - [ ] **trustedProxies es mínimo**: Solo sus IPs de proxy reales, no subredes completas
 - [ ] **El proxy elimina los encabezados**: Su proxy sobrescribe (no añade) los encabezados `x-forwarded-*` de los clientes
 - [ ] **Terminación TLS**: Su proxy maneja TLS; los usuarios se conectan a través de HTTPS
-- [ ] **allowUsers está configurado** (recomendado): Restrinja a usuarios conocidos en lugar de permitir a cualquier usuario autenticado
+- [ ] **allowUsers está configurado** (recomendado): Restrinja a usuarios conocidos en lugar de permitir a cualquiera autenticado
+- [ ] **Sin configuración de token mixto**: No configure tanto `gateway.auth.token` como `gateway.auth.mode: "trusted-proxy"`
 
 ## Auditoría de seguridad
 
-`openclaw security audit` marcará la autenticación de proxy de confianza con un hallazgo de gravedad **crítica**. Esto es intencional: es un recordatorio de que está delegando la seguridad a su configuración de proxy.
+`openclaw security audit` marcará la autenticación trusted-proxy con un hallazgo de severidad **crítica**. Esto es intencional: es un recordatorio de que está delegando la seguridad a la configuración de su proxy.
 
 La auditoría comprueba:
 
-- Configuración faltante de `trustedProxies`
-- Configuración faltante de `userHeader`
+- Falta la configuración `trustedProxies`
+- Falta la configuración `userHeader`
 - `allowUsers` vacío (permite cualquier usuario autenticado)
 
 ## Solución de problemas
@@ -280,51 +292,51 @@ La auditoría comprueba:
 
 La solicitud no provino de una IP en `gateway.trustedProxies`. Compruebe:
 
-- ¿Es correcta la IP del proxy? (Las IP de los contenedores de Docker pueden cambiar)
+- ¿Es correcta la IP del proxy? (Las IPs de los contenedores Docker pueden cambiar)
 - ¿Hay un equilibrador de carga delante de su proxy?
-- Use `docker inspect` o `kubectl get pods -o wide` para encontrar las IP reales
+- Use `docker inspect` o `kubectl get pods -o wide` para encontrar las IPs reales
 
 ### "trusted_proxy_user_missing"
 
 El encabezado de usuario estaba vacío o faltaba. Compruebe:
 
 - ¿Está su proxy configurado para pasar los encabezados de identidad?
-- ¿Es correcto el nombre del encabezado? (distingue mayúsculas y minúsculas, pero la ortografía importa)
+- ¿Es correcto el nombre del encabezado? (no distingue mayúsculas de minúsculas, pero la ortografía importa)
 - ¿Está el usuario realmente autenticado en el proxy?
 
 ### "trusted*proxy_missing_header*\*"
 
-Faltaba un encabezado requerido. Compruebe:
+Faltaba un encabezado requerido. Verifique:
 
 - La configuración de su proxy para esos encabezados específicos
 - Si los encabezados se están eliminando en algún lugar de la cadena
 
 ### "trusted_proxy_user_not_allowed"
 
-El usuario está autenticado pero no está en `allowUsers`. Agréguelo o elimine la lista de permitidos.
+El usuario está autenticado pero no en `allowUsers`. Agréguelo o elimine la lista blanca.
 
-### WebSocket sigue fallando
+### WebSocket Sigue Fallando
 
 Asegúrese de que su proxy:
 
-- Admite actualizaciones de WebSocket (`Upgrade: websocket`, `Connection: upgrade`)
-- Pasa los encabezados de identidad en las solicitudes de actualización de WebSocket (no solo HTTP)
-- No tiene una ruta de autenticación separada para las conexiones WebSocket
+- Admita actualizaciones de WebSocket (`Upgrade: websocket`, `Connection: upgrade`)
+- Pase los encabezados de identidad en las solicitudes de actualización de WebSocket (no solo HTTP)
+- No tenga una ruta de autenticación separada para las conexiones WebSocket
 
-## Migración desde Token Auth
+## Migración desde la Autenticación por Token
 
-Si estás pasando de la autenticación por token a trusted-proxy:
+Si está cambiando de la autenticación por token a proxy de confianza:
 
-1. Configura tu proxy para autenticar usuarios y pasar encabezados
-2. Prueba la configuración del proxy de forma independiente (curl con encabezados)
-3. Actualiza la configuración de OpenClaw con autenticación trusted-proxy
-4. Reinicia el Gateway
-5. Prueba las conexiones WebSocket desde la interfaz de usuario de Control
-6. Ejecuta `openclaw security audit` y revisa los hallazgos
+1. Configure su proxy para autenticar usuarios y pasar encabezados
+2. Pruebe la configuración del proxy de forma independiente (curl con encabezados)
+3. Actualice la configuración de OpenClaw con la autenticación de proxy de confianza
+4. Reinicie el Gateway
+5. Pruebe las conexiones WebSocket desde la interfaz de usuario de control
+6. Ejecute `openclaw security audit` y revise los hallazgos
 
 ## Relacionado
 
 - [Seguridad](/en/gateway/security) — guía de seguridad completa
 - [Configuración](/en/gateway/configuration) — referencia de configuración
-- [Acceso remoto](/en/gateway/remote) — otros patrones de acceso remoto
-- [Tailscale](/en/gateway/tailscale) — alternativa más sencilla para acceso exclusivo a tailnet
+- [Acceso Remoto](/en/gateway/remote) — otros patrones de acceso remoto
+- [Tailscale](/en/gateway/tailscale) — alternativa más simple para acceso solo a tailnet

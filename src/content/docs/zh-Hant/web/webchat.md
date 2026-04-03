@@ -48,14 +48,14 @@ title: "WebChat"
 
 完整組態：[Configuration](/en/gateway/configuration)
 
-通道選項：
+WebChat 選項：
 
-- 沒有專屬的 `webchat.*` 區塊。WebChat 使用下方的閘道端點與驗證設定。
+- `gateway.webchat.chatHistoryMaxChars`：`chat.history` 回應中文字欄位的最大字元數。當記錄條目超過此限制時，Gateway 會截斷長文字欄位，並可能用預留位置取代過大的訊息。用戶端也可以傳送每次請求的 `maxChars` 來覆寫單一 `chat.history` 呼叫的此預設值。
 
 相關全域選項：
 
 - `gateway.port`, `gateway.bind`：WebSocket 主機/連接埠。
 - `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password`：WebSocket 驗證 (token/password)。
-- `gateway.auth.mode: "trusted-proxy"`：瀏覽器客戶端的反向代理驗證 (請參閱 [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth))。
+- `gateway.auth.mode: "trusted-proxy"`：瀏覽器用戶端的反向代理驗證 (請參閱 [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth))。
 - `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password`：遠端閘道目標。
-- `session.*`：會話儲存與主要金鑰預設值。
+- `session.*`：會話儲存和主金鑰預設值。

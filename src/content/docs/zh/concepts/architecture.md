@@ -2,10 +2,10 @@
 summary: "WebSocket 网关架构、组件和客户端流程"
 read_when:
   - Working on gateway protocol, clients, or transports
-title: "Gateway 网关 架构"
+title: "Gateway(网关) 网关 架构"
 ---
 
-# Gateway 网关 架构
+# Gateway(网关) 网关 架构
 
 ## 概述
 
@@ -134,3 +134,10 @@ sequenceDiagram
 - 每个主机上仅有一个 Gateway(网关) 控制单个 Baileys 会话。
 - 握手是强制性的；任何非 JSON 或非连接的首帧都将导致强制关闭。
 - 事件不会重放；客户端必须在出现缺口时进行刷新。
+
+## 相关
+
+- [Agent Loop](/en/concepts/agent-loop) — 详细的 Agent 执行周期
+- [Gateway(网关) Protocol](/en/gateway/protocol) — WebSocket 协议契约
+- [Queue](/en/concepts/queue) — 命令队列与并发
+- [Security](/en/gateway/security) — 信任模型与加固

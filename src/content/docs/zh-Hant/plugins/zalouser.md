@@ -37,8 +37,9 @@ openclaw plugins install @openclaw/zalouser
 ### 選項 B：從本機資料夾安裝（開發用）
 
 ```bash
-openclaw plugins install ./extensions/zalouser
-cd ./extensions/zalouser && pnpm install
+PLUGIN_SRC=./path/to/local/zalouser-plugin
+openclaw plugins install "$PLUGIN_SRC"
+cd "$PLUGIN_SRC" && pnpm install
 ```
 
 之後請重新啟動 Gateway。

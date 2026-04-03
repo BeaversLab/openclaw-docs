@@ -50,7 +50,7 @@ openclaw message poll --channel msteams --target conversation:19:abc@thread.tacv
 - `--poll-duration-seconds`：仅限 Telegram（5-600 秒）
 - `--poll-anonymous` / `--poll-public`：仅限 Telegram 的投票可见性
 
-## Gateway 网关 RPC
+## Gateway(网关) 网关 RPC
 
 方法：`poll`
 

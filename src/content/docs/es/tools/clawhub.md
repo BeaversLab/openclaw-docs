@@ -2,7 +2,7 @@
 summary: "Guía de ClawHub: registro público, flujos de instalación nativos de OpenClaw y flujos de trabajo de la CLI de ClawHub"
 read_when:
   - Introducing ClawHub to new users
-  - Installing, searching, or publishing skills
+  - Installing, searching, or publishing skills or plugins
   - Explaining ClawHub CLI flags and sync behavior
 title: "ClawHub"
 ---
@@ -11,8 +11,8 @@ title: "ClawHub"
 
 ClawHub es el registro público para **habilidades y plugins de OpenClaw**.
 
-- Utilice comandos nativos de `openclaw` para buscar/instalar/actualizar habilidades e instalar
-  plugins desde ClawHub.
+- Use los comandos nativos `openclaw` para buscar/instalar/actualizar habilidades e instalar
+  complementos desde ClawHub.
 - Use la CLI `clawhub` separada cuando necesite autenticación de registro, publicación, eliminación,
   restauración o flujos de trabajo de sincronización.
 
@@ -41,12 +41,12 @@ Las especificaciones de plugin "bare" compatibles con npm también se intentan e
 openclaw plugins install openclaw-codex-app-server
 ```
 
-Los comandos nativos de `openclaw` se instalan en su espacio de trabajo activo y persisten los metadatos
-de origen para que las llamadas posteriores a `update` puedan permanecer en ClawHub.
+Los comandos nativos `openclaw` instalan en su espacio de trabajo activo y conservan los metadatos
+originales para que las llamadas posteriores a `update` puedan permanecer en ClawHub.
 
 ## Qué es ClawHub
 
-- Un registro público para habilidades de OpenClaw.
+- Un registro público para habilidades y complementos de OpenClaw.
 - Un almacén versionado de paquetes de habilidades y metadatos.
 - Una superficie de descubrimiento para búsqueda, etiquetas y señales de uso.
 
@@ -82,7 +82,7 @@ Si desea agregar nuevas capacidades a su agente de OpenClaw, ClawHub es la forma
    - `openclaw skills install <skill-slug>`
 3. Inicie una nueva sesión de OpenClaw para que recoja la nueva habilidad.
 4. Si desea publicar o administrar la autenticación del registro, instale también la CLI
-   `clawhub` por separado.
+   `clawhub` separada.
 
 ## Instalar la CLI de ClawHub
 
@@ -98,11 +98,19 @@ pnpm add -g clawhub
 
 ## Cómo se integra en OpenClaw
 
-Las instalaciones nativas de `openclaw skills install` se realizan en el directorio del espacio de trabajo activo `skills/`. `openclaw plugins install clawhub:...` registra una instalación de complemento administrada normal más los metadatos de origen de ClawHub para las actualizaciones.
+La instalación nativa de `openclaw skills install` se realiza en el directorio `skills/`
+del espacio de trabajo activo. `openclaw plugins install clawhub:...` registra una instalación de complemento
+gestionada normal más los metadatos de origen de ClawHub para las actualizaciones.
 
-La CLI separada `clawhub` también instala habilidades en `./skills` en su directorio de trabajo actual. Si se configura un espacio de trabajo de OpenClaw, `clawhub` recurre a ese espacio de trabajo a menos que anule `--workdir` (o `CLAWHUB_WORKDIR`). OpenClaw carga las habilidades del espacio de trabajo desde `<workspace>/skills` y las recogerá en la **siguiente** sesión. Si ya usa `~/.openclaw/skills` o habilidades incluidas, las habilidades del espacio de trabajo tienen prioridad.
+La CLI `clawhub` separada también instala habilidades en `./skills` bajo su
+directorio de trabajo actual. Si se configura un espacio de trabajo de OpenClaw, `clawhub`
+recurre a ese espacio de trabajo a menos que anule `--workdir` (o
+`CLAWHUB_WORKDIR`). OpenClaw carga las habilidades del espacio de trabajo desde `<workspace>/skills`
+y las recuperará en la **siguiente** sesión. Si ya usa
+`~/.openclaw/skills` o habilidades incluidas, las habilidades del espacio de trabajo tienen prioridad.
 
-Para obtener más detalles sobre cómo se cargan, comparten y restringen las habilidades, consulte [Habilidades](/en/tools/skills).
+Para obtener más detalles sobre cómo se cargan, comparten y restringen las habilidades, consulte
+[Skills](/en/tools/skills).
 
 ## Resumen del sistema de habilidades
 
@@ -120,7 +128,7 @@ ClawHub utiliza metadatos para potenciar el descubrimiento y exponer de manera s
 
 - **Navegación pública** de habilidades y su contenido de `SKILL.md`.
 - **Búsqueda** impulsada por incrustaciones (búsqueda vectorial), no solo por palabras clave.
-- **Control de versiones** con semver, registros de cambios y etiquetas (incluyendo `latest`).
+- **Versionado** con semver, registros de cambios y etiquetas (incluyendo `latest`).
 - **Descargas** como un archivo zip por versión.
 - **Estrellas y comentarios** para los comentarios de la comunidad.
 - **Ganchos de moderación** para aprobaciones y auditorías.
@@ -145,9 +153,9 @@ Informes y moderación:
 
 Opciones globales (aplican a todos los comandos):
 
-- `--workdir <dir>`: Directorio de trabajo (predeterminado: directorio actual; usa el espacio de trabajo de OpenClaw como alternativa).
-- `--dir <dir>`: Directorio de habilidades, relativo al directorio de trabajo (predeterminado: `skills`).
-- `--site <url>`: URL base del sitio (inicio de sesión del navegador).
+- `--workdir <dir>`: Directorio de trabajo (predeterminado: directorio actual; retrocede al espacio de trabajo de OpenClaw).
+- `--dir <dir>`: Directorio de habilidades, relativo a workdir (predeterminado: `skills`).
+- `--site <url>`: URL base del sitio (inicio de sesión en el navegador).
 - `--registry <url>`: URL base de la API del registro.
 - `--no-input`: Desactivar avisos (no interactivo).
 - `-V, --cli-version`: Imprimir versión de la CLI.
@@ -179,21 +187,29 @@ Actualizar:
 
 - `clawhub update <slug>`
 - `clawhub update --all`
-- `--version <version>`: Actualizar a una versión específica (solo un slug individual).
+- `--version <version>`: Actualizar a una versión específica (solo un solo slug).
 - `--force`: Sobrescribir cuando los archivos locales no coinciden con ninguna versión publicada.
 
 Listar:
 
 - `clawhub list` (lee `.clawhub/lock.json`)
 
-Publicar:
+Publicar habilidades:
 
-- `clawhub publish <path>`
+- `clawhub skill publish <path>`
 - `--slug <slug>`: Slug de habilidad.
 - `--name <name>`: Nombre para mostrar.
 - `--version <version>`: Versión Semver.
 - `--changelog <text>`: Texto del registro de cambios (puede estar vacío).
 - `--tags <tags>`: Etiquetas separadas por comas (predeterminado: `latest`).
+
+Publicar complementos:
+
+- `clawhub package publish <source>`
+- `<source>` puede ser una carpeta local, `owner/repo`, `owner/repo@ref` o una URL de GitHub.
+- `--dry-run`: Construir el plan exacto de publicación sin subir nada.
+- `--json`: Emitir salida legible por máquina para CI.
+- `--source-repo`, `--source-commit`, `--source-ref`: Sobrescrituras opcionales cuando la detección automática no es suficiente.
 
 Eliminar/Restaurar (solo propietario/administrador):
 
@@ -204,7 +220,7 @@ Sincronizar (escanear habilidades locales + publicar nuevas/actualizadas):
 
 - `clawhub sync`
 - `--root <dir...>`: Raíces de escaneo adicionales.
-- `--all`: Subir todo sin preguntas.
+- `--all`: Subir todo sin pedir confirmación.
 - `--dry-run`: Mostrar qué se subiría.
 - `--bump <type>`: `patch|minor|major` para actualizaciones (predeterminado: `patch`).
 - `--changelog <text>`: Registro de cambios para actualizaciones no interactivas.
@@ -231,12 +247,12 @@ clawhub install my-skill-pack
 clawhub update --all
 ```
 
-### Hacer copia de seguridad de sus habilidades (publicar o sincronizar)
+### Hacer copia de seguridad de tus habilidades (publicar o sincronizar)
 
-Para una sola carpeta de habilidad:
+Para una sola carpeta de habilidades:
 
 ```bash
-clawhub publish ./my-skill --slug my-skill --name "My Skill" --version 1.0.0 --tags latest
+clawhub skill publish ./my-skill --slug my-skill --name "My Skill" --version 1.0.0 --tags latest
 ```
 
 Para escanear y hacer copia de seguridad de muchas habilidades a la vez:
@@ -245,21 +261,51 @@ Para escanear y hacer copia de seguridad de muchas habilidades a la vez:
 clawhub sync --all
 ```
 
+### Publicar un complemento desde GitHub
+
+```bash
+clawhub package publish your-org/your-plugin --dry-run
+clawhub package publish your-org/your-plugin
+clawhub package publish your-org/your-plugin@v1.0.0
+clawhub package publish https://github.com/your-org/your-plugin
+```
+
+Los complementos de código deben incluir los metadatos requeridos de OpenClaw en `package.json`:
+
+```json
+{
+  "name": "@myorg/openclaw-my-plugin",
+  "version": "1.0.0",
+  "type": "module",
+  "openclaw": {
+    "extensions": ["./index.ts"],
+    "compat": {
+      "pluginApi": ">=2026.3.24-beta.2",
+      "minGatewayVersion": "2026.3.24-beta.2"
+    },
+    "build": {
+      "openclawVersion": "2026.3.24-beta.2",
+      "pluginSdkVersion": "2026.3.24-beta.2"
+    }
+  }
+}
+```
+
 ## Detalles avanzados (técnicos)
 
 ### Control de versiones y etiquetas
 
-- Cada publicación crea una nueva versión **semver** `SkillVersion`.
-- Las etiquetas (como `latest`) apuntan a una versión; mover las etiquetas le permite revertir.
+- Cada publicación crea una nueva `SkillVersion` **semver**.
+- Las etiquetas (como `latest`) apuntan a una versión; mover las etiquetas te permite retroceder.
 - Los registros de cambios se adjuntan por versión y pueden estar vacíos al sincronizar o publicar actualizaciones.
 
-### Cambios locales vs. versiones del registro
+### Cambios locales vs versiones del registro
 
 Las actualizaciones comparan el contenido de la habilidad local con las versiones del registro utilizando un hash de contenido. Si los archivos locales no coinciden con ninguna versión publicada, la CLI pregunta antes de sobrescribir (o requiere `--force` en ejecuciones no interactivas).
 
 ### Escaneo de sincronización y raíces de respaldo
 
-`clawhub sync` escanea su directorio de trabajo actual primero. Si no se encuentran habilidades, recurre a ubicaciones heredadas conocidas (por ejemplo `~/openclaw/skills` y `~/.openclaw/skills`). Esto está diseñado para encontrar instalaciones de habilidades antiguas sin indicadores adicionales.
+`clawhub sync` escanea primero tu directorio de trabajo actual. Si no se encuentran habilidades, recurre a ubicaciones heredadas conocidas (por ejemplo `~/openclaw/skills` y `~/.openclaw/skills`). Esto está diseñado para encontrar instalaciones de habilidades antiguas sin banderas adicionales.
 
 ### Almacenamiento y archivo de bloqueo
 
@@ -268,7 +314,7 @@ Las actualizaciones comparan el contenido de la habilidad local con las versione
 
 ### Telemetría (recuentos de instalaciones)
 
-Cuando ejecutas `clawhub sync` mientras has iniciado sesión, la CLI envía una instantánea mínima para calcular los recuentos de instalaciones. Puedes desactivar esto por completo:
+Cuando ejecutas `clawhub sync` mientras tienes la sesión iniciada, la CLI envía una instantánea mínima para calcular los recuentos de instalaciones. Puedes desactivar esto por completo:
 
 ```bash
 export CLAWHUB_DISABLE_TELEMETRY=1

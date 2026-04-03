@@ -12,7 +12,7 @@ title: "cron"
 
 相關：
 
-- Cron 工作：[Cron jobs](/en/automation/cron-jobs)
+- Cron 工作：[Cron 工作](/en/automation/cron-jobs)
 
 提示：執行 `openclaw cron --help` 以取得完整的命令介面。
 
@@ -31,7 +31,10 @@ title: "cron"
 - `cron.sessionRetention`（預設為 `24h`）會修剪已完成的隔離執行階段。
 - `cron.runLog.maxBytes` + `cron.runLog.keepLines` 會修剪 `~/.openclaw/cron/runs/<jobId>.jsonl`。
 
-升級注意：如果您擁有來自目前傳遞/儲存格式之前的舊 cron 工作，請執行 `openclaw doctor --fix`。Doctor 現在會正規化舊版 cron 欄位（`jobId`、`schedule.cron`、頂層傳遞欄位、payload `provider` 傳遞別名），並在配置 `cron.webhook` 時將簡單的 `notify: true` webhook 退回工作遷移為明確的 webhook 傳遞。
+升級提示：如果您擁有當前交付/存儲格式之前的舊版 cron 工作，請執行
+`openclaw doctor --fix`。Doctor 現在會標準化舊版 cron 欄位（`jobId`、`schedule.cron`、
+包含舊版 `threadId` 的頂層交付欄位、payload `provider` 交付別名），並在設定 `cron.webhook` 時將簡單的
+`notify: true` webhook 後備作業遷移至明確的 webhook 交付。
 
 ## 常見編輯
 
@@ -71,4 +74,4 @@ openclaw cron add \
   --no-deliver
 ```
 
-`--light-context` 僅適用於隔離的 agent-turn 工作。對於 cron 執行，輕量級模式會讓啟動上下文保持空白，而不會注入完整的 workspace 啟動集。
+`--light-context` 僅適用於隔離的 agent-turn 工作。對於 cron 執行，輕量級模式會將 bootstrap 內容保持為空，而不是注入完整的 workspace bootstrap 集合。

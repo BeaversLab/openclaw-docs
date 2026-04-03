@@ -7,7 +7,7 @@ title: "Centros de documentación"
 
 # Centros de documentación
 
-<Note>Si eres nuevo en OpenClaw, empieza con [Introducción](/en/start/getting-started).</Note>
+<Note>Si eres nuevo en OpenClaw, empieza con [Getting Started](/en/start/getting-started).</Note>
 
 Utilice estos centros para descubrir todas las páginas, incluidos los análisis profundos y los documentos de referencia que no aparecen en la navegación izquierda.
 

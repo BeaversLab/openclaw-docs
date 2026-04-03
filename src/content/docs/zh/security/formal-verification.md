@@ -51,7 +51,7 @@ cd openclaw-formal-models
 make <target>
 ```
 
-### Gateway 网关 暴露和开放 Gateway 网关 错误配置
+### Gateway(网关) 网关 暴露和开放 Gateway(网关) 网关 错误配置
 
 **声明：** 在未经身份验证的情况下绑定到环回地址之外可能会导致远程入侵成为可能 / 增加暴露面；令牌/密码可以阻止未经身份验证的攻击者（根据模型假设）。
 
@@ -63,9 +63,9 @@ make <target>
 
 另请参阅：模型仓库中的 `docs/gateway-exposure-matrix.md`。
 
-### Nodes.run 流水线（最高风险能力）
+### Node exec pipeline（最高风险能力）
 
-**声明：** `nodes.run` 需要 (a) 节点命令允许列表以及声明的命令，并且 (b) 在配置时需要实时批准；批准已进行令牌化以防止重放（在模型中）。
+**声明：** `exec host=node` 需要 (a) 节点命令允许列表及声明的命令，以及 (b) 配置时的实时批准；批准已令牌化以防止重放（在模型中）。
 
 - 绿色运行：
   - `make nodes-pipeline`

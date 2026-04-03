@@ -22,7 +22,7 @@ openclaw plugins install @openclaw/nextcloud-talk
 本地检出（当从 git 仓库运行时）：
 
 ```bash
-openclaw plugins install ./extensions/nextcloud-talk
+openclaw plugins install ./path/to/local/nextcloud-talk-plugin
 ```
 
 如果在设置期间选择了 Nextcloud Talk 并且检测到了 git checkout，
@@ -136,3 +136,11 @@ OpenClaw 将自动提供本地安装路径。
 - `channels.nextcloud-talk.blockStreaming`：禁用此渠道的分块流式传输。
 - `channels.nextcloud-talk.blockStreamingCoalesce`：分块流式传输合并调整。
 - `channels.nextcloud-talk.mediaMaxMb`：入站媒体上限（MB）。
+
+## 相关
+
+- [Channels Overview](/en/channels) — 所有支持的渠道
+- [Pairing](/en/channels/pairing) — 私信认证和配对流程
+- [Groups](/en/channels/groups) — 群组聊天行为和提及控制
+- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
+- [Security](/en/gateway/security) — 访问模型和加固

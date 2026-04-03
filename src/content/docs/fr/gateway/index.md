@@ -60,7 +60,10 @@ openclaw channels status --probe
   </Step>
 </Steps>
 
-<Note>Le rechargement de la configuration de la Gateway surveille le chemin du fichier de configuration actif (résolu à partir des valeurs par défaut du profil/état, ou `OPENCLAW_CONFIG_PATH` si défini). Le mode par défaut est `gateway.reload.mode="hybrid"`.</Note>
+<Note>
+  Le rechargement de la config du Gateway surveille le chemin d'accès au fichier de configuration actif (résolu à partir des valeurs par défaut du profil/état, ou `OPENCLAW_CONFIG_PATH` si défini). Le mode par défaut est `gateway.reload.mode="hybrid"`. Après le premier chargement réussi, le processus en cours dessert l'instantané de configuration actif en mémoire ; un rechargement réussi échange
+  cet instantané de manière atomique.
+</Note>
 
 ## Modèle d'exécution
 

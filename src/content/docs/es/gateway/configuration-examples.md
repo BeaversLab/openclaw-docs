@@ -154,6 +154,7 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
   // Session behavior
   session: {
     scope: "per-sender",
+    dmScope: "per-channel-peer", // recommended for multi-user inboxes
     reset: {
       mode: "daily",
       atHour: 4,
@@ -288,7 +289,7 @@ Guarde en `~/.openclaw/openclaw.json` y puede enviar un mensaje directo al bot d
       },
       sandbox: {
         mode: "non-main",
-        perSession: true,
+        scope: "session", // preferred over legacy perSession: true
         workspaceRoot: "~/.openclaw/sandboxes",
         docker: {
           image: "openclaw-sandbox:bookworm-slim",
@@ -613,7 +614,7 @@ Solo habilite la coincidencia directa de nombre/correo/nick mutable con el `dang
 {
   agent: {
     workspace: "~/.openclaw/workspace",
-    model: { primary: "lmstudio/minimax-m2.5-gs32" },
+    model: { primary: "lmstudio/my-local-model" },
   },
   models: {
     mode: "merge",
@@ -624,8 +625,8 @@ Solo habilite la coincidencia directa de nombre/correo/nick mutable con el `dang
         api: "openai-responses",
         models: [
           {
-            id: "minimax-m2.5-gs32",
-            name: "MiniMax M2.5 GS32",
+            id: "my-local-model",
+            name: "Local Model",
             reasoning: false,
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },

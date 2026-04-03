@@ -8,7 +8,7 @@ title: "node"
 
 # `openclaw node`
 
-运行一个连接到 Gateway 网关 WebSocket 并在此机器上暴露
+运行一个连接到 Gateway(网关) 网关 WebSocket 并在此机器上暴露
 `system.run` / `system.which` 的**无头节点主机**。
 
 ## 为什么要使用节点主机？

@@ -105,14 +105,27 @@ Solución de problemas completa:
 
 Solución de problemas completa: [/channels/signal#troubleshooting](/en/channels/signal#troubleshooting)
 
+## Bot de QQ
+
+### Firmas de fallo del Bot de QQ
+
+| Síntoma                             | Verificación más rápida                                     | Solución                                                                                  |
+| ----------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| El bot responde "se ha ido a Marte" | Verificar `appId` y `clientSecret` en la configuración      | Establezca las credenciales o reinicie la pasarela.                                       |
+| No hay mensajes entrantes           | `openclaw channels status --probe`                          | Verifique las credenciales en la Plataforma Abierta de QQ.                                |
+| Voz no transcrita                   | Verificar la configuración del proveedor STT                | Configure `channels.qqbot.stt` o `tools.media.audio`.                                     |
+| Los mensajes proactivos no llegan   | Verifique los requisitos de interacción de la plataforma QQ | Es posible que QQ bloquee los mensajes iniciados por el bot sin una interacción reciente. |
+
+Solución de problemas completa: [/channels/qqbot#troubleshooting](/en/channels/qqbot#troubleshooting)
+
 ## Matrix
 
-### Firmas de fallos de Matrix
+### Firmas de fallo de Matrix
 
-| Síntoma                                             | Verificación más rápida                                     | Solución                                                       |
-| --------------------------------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------- |
-| Sesión iniciada pero ignora los mensajes de la sala | `openclaw channels status --probe`                          | Verifica `groupPolicy` y la lista de permitidos de la sala.    |
-| Los MD no se procesan                               | `openclaw pairing list matrix`                              | Aprobar remitente o ajustar la política de MD.                 |
-| Fallo en salas cifradas                             | Verificar módulo de criptografía y configuración de cifrado | Habilitar soporte de cifrado y volver a unir/sincronizar sala. |
+| Síntoma                                         | Verificación más rápida                                         | Solución                                                            |
+| ----------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Sesión iniciada pero ignora mensajes de la sala | `openclaw channels status --probe`                              | Verifique `groupPolicy` y la lista blanca de salas.                 |
+| Los MD no se procesan                           | `openclaw pairing list matrix`                                  | Apruebe al remitente o ajuste la política de MD.                    |
+| Fallo en salas cifradas                         | Verificar el módulo criptográfico y la configuración de cifrado | Habilite el soporte de cifrado y vuelva a unir/sincronizar la sala. |
 
 Configuración completa: [Matrix](/en/channels/matrix)

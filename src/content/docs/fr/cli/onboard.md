@@ -11,11 +11,11 @@ Onboarding interactif pour la configuration locale ou distante de Gateway.
 
 ## Guides connexes
 
-- Hub d'onboarding CLI : [Onboarding (CLI)](/en/start/wizard)
-- Aperçu de l'onboarding : [Aperçu de l'onboarding](/en/start/onboarding-overview)
-- Référence d'onboarding CLI : [Référence de configuration CLI](/en/start/wizard-cli-reference)
-- Automatisation CLI : [Automatisation CLI](/en/start/wizard-cli-automation)
-- Onboarding macOS : [Onboarding (Application macOS)](/en/start/onboarding)
+- Centre d'onboarding CLI : [Onboarding (CLI)](/en/start/wizard)
+- Aperçu de l'onboarding : [Onboarding Overview](/en/start/onboarding-overview)
+- Référence de l'onboarding CLI : [CLI Setup Reference](/en/start/wizard-cli-reference)
+- Automatisation CLI : [CLI Automation](/en/start/wizard-cli-automation)
+- Onboarding macOS : [Onboarding (macOS App)](/en/start/onboarding)
 
 ## Exemples
 
@@ -140,12 +140,12 @@ Notes de flux :
 
 - `quickstart` : invites minimales, génère automatiquement un jeton de passerelle.
 - `manual` : invites complètes pour le port/liaison/auth (alias de `advanced`).
-- Comportement de la portée DM pour l'onboarding local : [Référence de configuration CLI](/en/start/wizard-cli-reference#outputs-and-internals).
-- Premier chat le plus rapide : `openclaw dashboard` (Interface de contrôle, aucune configuration de canal).
-- Fournisseur personnalisé : connectez n'importe quel point de terminaison compatible OpenAI ou Anthropic,
-  y compris les fournisseurs hébergés non répertoriés. Utilisez Inconnu pour détecter automatiquement.
+- Dans l'étape de recherche web, choisir **Grok** peut déclencher une invite de suivi distincte pour activer `x_search` avec le même `XAI_API_KEY` et, optionnellement, choisir un modèle `x_search`. Les autres fournisseurs de recherche web n'affichent pas cette invite.
+- Comportement de l'étendue DM de l'onboarding local : [CLI Setup Reference](/en/start/wizard-cli-reference#outputs-and-internals).
+- Premier chat le plus rapide : `openclaw dashboard` (Interface de contrôle, aucune configuration de channel).
+- Fournisseur personnalisé : connectez n'importe quel point de terminaison compatible OpenAI ou Anthropic, y compris les fournisseurs hébergés non répertoriés. Utilisez Unknown pour la détection automatique.
 
-## Commandes de suite courantes
+## Commandes de suivi courantes
 
 ```bash
 openclaw configure

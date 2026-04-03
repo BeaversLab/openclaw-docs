@@ -1,14 +1,14 @@
 ---
-title: "Vercel AI Gateway 网关"
-summary: "Vercel AI Gateway 网关 设置（身份验证 + 模型选择）"
+title: "Vercel AI Gateway(网关) 网关"
+summary: "Vercel AI Gateway(网关) 网关 设置（身份验证 + 模型选择）"
 read_when:
   - You want to use Vercel AI Gateway with OpenClaw
   - You need the API key env var or CLI auth choice
 ---
 
-# Vercel AI Gateway 网关
+# Vercel AI Gateway(网关) 网关
 
-[Vercel AI Gateway 网关](https://vercel.com/ai-gateway) 提供了一个统一的 API，通过单一端点访问数百个模型。
+[Vercel AI Gateway(网关) 网关](https://vercel.com/ai-gateway) 提供了一个统一的 API，通过单一端点访问数百个模型。
 
 - 提供商：`vercel-ai-gateway`
 - 身份验证：`AI_GATEWAY_API_KEY`

@@ -1,13 +1,13 @@
 ---
-summary: "用于聊天 UI 的 Loopback WebChat 静态主机和 Gateway 网关 WS 用法"
+summary: "用于聊天 UI 的 Loopback WebChat 静态主机和 Gateway(网关) 网关 WS 用法"
 read_when:
   - Debugging or configuring WebChat access
 title: "WebChat"
 ---
 
-# WebChat（Gateway 网关 WebSocket UI）
+# WebChat（Gateway(网关) 网关 WebSocket UI）
 
-状态：macOS/iOS SwiftUI 聊天 UI 直接与 Gateway 网关 WebSocket 通信。
+状态：macOS/iOS SwiftUI 聊天 UI 直接与 Gateway(网关) 网关 WebSocket 通信。
 
 ## 它是什么
 
@@ -23,11 +23,11 @@ title: "WebChat"
 
 ## 它是如何工作的（行为）
 
-- UI 连接到 Gateway 网关 WebSocket 并使用 `chat.history`、`chat.send` 和 `chat.inject`。
-- `chat.history` 为保持稳定性而受限：Gateway 网关 可能会截断长文本字段、省略繁重的元数据，并用 `[chat.history omitted: message too large]` 替换超大条目。
+- UI 连接到 Gateway(网关) 网关 WebSocket 并使用 `chat.history`、`chat.send` 和 `chat.inject`。
+- `chat.history` 为保持稳定性而受限：Gateway(网关) 网关 可能会截断长文本字段、省略繁重的元数据，并用 `[chat.history omitted: message too large]` 替换超大条目。
 - `chat.inject` 将助手备注直接附加到记录并广播到 UI（不运行代理）。
 - 中止的运行可以使部分助手输出在 UI 中保持可见。
-- 当存在缓冲输出时，Gateway 网关 会将中止的部分助手文本保存到记录单历史记录中，并用中止元数据标记这些条目。
+- 当存在缓冲输出时，Gateway(网关) 网关 会将中止的部分助手文本保存到记录单历史记录中，并用中止元数据标记这些条目。
 - 历史记录始终从网关获取（无本地文件监视）。
 - 如果无法访问网关，WebChat 将变为只读。
 
@@ -50,16 +50,16 @@ title: "WebChat"
 
 ## 配置参考 (WebChat)
 
-完整配置：[Configuration](/en/gateway/configuration)
+完整配置：[配置](/en/gateway/configuration)
 
-渠道选项：
+WebChat 选项：
 
-- 没有专用的 `webchat.*` 块。WebChat 使用下面的网关端点 + 身份验证设置。
+- `gateway.webchat.chatHistoryMaxChars`：`chat.history` 响应中文本字段的最大字符数。当条目超过此限制时，Gateway(网关)将截断长文本字段，并可能会用占位符替换过大的消息。客户端还可以发送每个请求的 `maxChars`，以针对单个 `chat.history` 调用覆盖此默认值。
 
 相关全局选项：
 
-- `gateway.port`, `gateway.bind`: WebSocket 主机/端口。
-- `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password`: WebSocket 身份验证 (令牌/密码)。
-- `gateway.auth.mode: "trusted-proxy"`: 用于浏览器客户端的反向代理身份验证 (请参阅 [Trusted Proxy Auth](/en/gateway/trusted-proxy-auth))。
-- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password`: 远程网关目标。
-- `session.*`: 会话存储和主密钥默认值。
+- `gateway.port`、`gateway.bind`：WebSocket 主机/端口。
+- `gateway.auth.mode`、`gateway.auth.token`、`gateway.auth.password`：WebSocket 认证（令牌/密码）。
+- `gateway.auth.mode: "trusted-proxy"`：针对浏览器客户端的反向代理认证（请参阅[可信代理认证](/en/gateway/trusted-proxy-auth)）。
+- `gateway.remote.url`、`gateway.remote.token`、`gateway.remote.password`：远程网关目标。
+- `session.*`：会话存储和主键默认值。

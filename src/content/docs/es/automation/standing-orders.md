@@ -42,7 +42,7 @@ Cada programa especifica:
 
 El agente carga estas instrucciones en cada sesión a través de los archivos de arranque del espacio de trabajo (consulte [Agent Workspace](/en/concepts/agent-workspace) para obtener la lista completa de archivos autoinyectados) y se ejecuta basándose en ellas, combinado con [cron jobs](/en/automation/cron-jobs) para el cumplimiento basado en tiempo.
 
-<Tip>Coloque las órdenes permanentes en `AGENTS.md` para garantizar que se carguen en cada sesión. El arranque del espacio de trabajo inyecta automáticamente `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md` y `MEMORY.md` — pero no archivos arbitrarios en subdirectorios.</Tip>
+<Tip>Coloca las órdenes permanentes en `AGENTS.md` para garantizar que se carguen en cada sesión. El arranque del espacio de trabajo inyecta automáticamente `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md` y `MEMORY.md` — pero no archivos arbitrarios en subdirectorios.</Tip>
 
 ## Anatomía de una Orden Permanente
 
@@ -245,5 +245,8 @@ Cada programa debe tener:
 
 ## Relacionado
 
-- [Trabajos Cron](/en/automation/cron-jobs) — Programar el cumplimiento de las órdenes permanentes
-- [Espacio de Trabajo del Agente](/en/concepts/agent-workspace) — Donde residen las órdenes permanentes, incluida la lista completa de archivos de arranque inyectados automáticamente (AGENTS.md, SOUL.md, etc.)
+- [Resumen de automatización](/en/automation) — todos los mecanismos de automatización de un vistazo
+- [Trabajos Cron](/en/automation/cron-jobs) — cumplimiento de horarios para las órdenes permanentes
+- [Ganchos (Hooks)](/en/automation/hooks) — scripts controlados por eventos para eventos del ciclo de vida del agente
+- [Webhooks](/en/automation/webhook) — disparadores de eventos HTTP entrantes
+- [Espacio de trabajo del agente](/en/concepts/agent-workspace) — donde residen las órdenes permanentes, incluida la lista completa de archivos de arranque inyectados automáticamente (AGENTS.md, SOUL.md, etc.)

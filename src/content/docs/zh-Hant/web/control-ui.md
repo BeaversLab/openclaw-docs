@@ -52,8 +52,7 @@ openclaw devices approve <requestId>
 重試配對，先前的待處理要求將會被取代，並建立一個新的 `requestId`。
 請在核准前重新執行 `openclaw devices list`。
 
-一旦核准，該裝置會被記住，除非您使用 `openclaw devices revoke --device <id> --role <role>` 將其撤銷，否則將不需要重新核准。
-請參閱 [Devices CLI](/en/cli/devices) 以了解權杖輪換與撤銷。
+一旦批准，該裝置會被記住，除非您使用 `openclaw devices revoke --device <id> --role <role>` 撤銷它，否則不需要重新批准。請參閱 [Devices CLI](/en/cli/devices) 以了解 token 輪換和撤銷。
 
 **備註：**
 
@@ -85,42 +84,45 @@ openclaw devices approve <requestId>
 - 設定：檢視/編輯 `~/.openclaw/openclaw.json` (`config.get`、`config.set`)
 - 設定：套用 + 搭配驗證重新啟動 (`config.apply`) 並喚醒最後一個使用中的工作階段
 - 設定寫入包含基本雜湊守衛，以防止覆蓋並行的編輯
-- 設定結構描述 + 表單呈現 (`config.schema`，包括外掛程式 + 頻道結構描述)；原始 JSON 編輯器仍可使用
-- 偵錯：狀態/健全狀況/模型快照 + 事件記錄 + 手動 RPC 呼叫 (`status`、`health`、`models.list`)
-- 日誌：即時追蹤閘道檔案日誌並支援過濾/匯出 (`logs.tail`)
-- 更新：執行套件/git 更新 + 重新啟動 (`update.run`)，並附帶重新啟動報告
+- 配置寫入 (`config.set`/`config.apply`/`config.patch`) 也會對提交的配置負載中的參照進行預檢 active SecretRef 解析；未解析的 active 提交參照會在寫入前被拒絕
+- 配置架構 + 表單呈現 (`config.schema`，包括外掛 + 通道架構)；只有當快照能安全地進行原始往返時，才提供 Raw JSON 編輯器
+- 如果快照無法安全地往返原始文字，Control UI 會強制啟用表單模式，並針對該快照停用 Raw 模式
+- 結構化 SecretRef 物件值在表單文字輸入中呈現為唯讀，以防止意外將物件轉換為字串而損毀
+- Debug：status/health/models 快照 + 事件日誌 + 手動 RPC 呼叫 (`status`, `health`, `models.list`)
+- 日誌：即時追蹤 gateway 檔案日誌並具有過濾/匯出功能 (`logs.tail`)
+- 更新：執行套件/git 更新 + 重新啟動 (`update.run`) 並附帶重新啟動報告
 
-Cron 任務面板備註：
+Cron jobs 面板備註：
 
-- 對於隔離任務，傳遞預設為公告摘要。如果您想要僅限內部的執行，可以切換為無。
-- 選取公告時會出現頻道/目標欄位。
-- Webhook 模式使用 `delivery.mode = "webhook"`，並將 `delivery.to` 設定為有效的 HTTP(S) webhook URL。
-- 對於主工作階段任務，提供 webhook 和無傳遞模式。
-- 進階編輯控制項包括執行後刪除、清除代理覆寫、cron 精確/錯開選項、代理模型/思考覆寫，以及盡力傳遞切換開關。
-- 表單驗證為行內，並會顯示欄位層級錯誤；無效的數值會停用儲存按鈕，直到修正為止。
-- 設定 `cron.webhookToken` 以傳送專屬 bearer token，如果省略，則傳送不含 auth 標頭的 webhook。
-- 已棄用的後備機制：儲存具有 `notify: true` 的舊版任務在遷移前仍可使用 `cron.webhook`。
+- 對於 isolated jobs，交付預設為 announce summary。如果您只需要內部執行，可以切換為 none。
+- 選取 announce 時會出現 Channel/target 欄位。
+- Webhook 模式使用 `delivery.mode = "webhook"` 並將 `delivery.to` 設定為有效的 HTTP(S) webhook URL。
+- 對於 main-session jobs，可以使用 webhook 和 none 交付模式。
+- 進階編輯控制項包括 delete-after-run、clear agent override、cron exact/stagger 選項、agent model/thinking 覆蓋，以及 best-effort delivery 切換開關。
+- 表單驗證是內嵌的，顯示欄位層級的錯誤；無效的值會停用儲存按鈕，直到修正為止。
+- 設定 `cron.webhookToken` 以傳送專用的 bearer token；如果省略，webhook 將在不帶 auth 標頭的情況下傳送。
+- 已棄用的後援：具有 `notify: true` 的已儲存 legacy jobs 在遷移前仍可使用 `cron.webhook`。
 
-## 聊天行為
+## Chat 行為
 
-- `chat.send` 是**非阻塞**的：它會立即以 `{ runId, status: "started" }` 確認，並且回應透過 `chat` 事件串流傳輸。
-- 使用相同的 `idempotencyKey` 重新傳送，會在執行期間回傳 `{ status: "in_flight" }`，並在完成後回傳 `{ status: "ok" }`。
-- `chat.history` 回應的大小受限以確保 UI 安全。當對話紀錄條目過大時，閘道可能會截斷長文字欄位、省略龐大的中繼資料區塊，並以預留位置 (`[chat.history omitted: message too large]`) 取代過大的訊息。
-- `chat.inject` 會將助理備註附加到工作階段對話紀錄，並廣播 `chat` 事件以進行僅限 UI 的更新（不執行代理，不進行頻道傳遞）。
+- `chat.send` 是**非阻塞**的：它會立即以 `{ runId, status: "started" }` 進行確認，並透過 `chat` 事件串流回應。
+- 使用相同的 `idempotencyKey` 重新發送會在執行時返回 `{ status: "in_flight" }`，並在完成後返回 `{ status: "ok" }`。
+- `chat.history` 回應會因 UI 安全性而有大小限制。當對話記錄條目過大時，Gateway 可能會截斷長文字欄位、省略繁重的元資料區塊，並以預留位置 (`[chat.history omitted: message too large]`) 取代過大的訊息。
+- `chat.inject` 會將助理備註附加至工作階段對話記錄，並廣播 `chat` 事件以進行僅 UI 的更新（不執行 agent，不透過管道傳送）。
 - 停止：
-  - 點擊 **停止** (呼叫 `chat.abort`)
-  - 輸入 `/stop` (或獨立的中止片語，例如 `stop`、`stop action`、`stop run`、`stop openclaw`、`please stop`) 以進行帶外中止
-  - `chat.abort` 支援 `{ sessionKey }`（無 `runId`）以中止該階段的所有活躍執行
-- 中止部分保留：
-  - 當執行被中止時，部分助理文字仍可顯示在 UI 中
-  - 當存在緩衝輸出時，Gateway 會將中止的部分助理文字保存到逐字稿歷史中
-  - 保存的條目包含中止中繼資料，因此逐字稿消費者可以區分中止的部分與正常完成的輸出
+  - 點擊 **Stop**（呼叫 `chat.abort`）
+  - 輸入 `/stop`（或獨立的中止短語，如 `stop`、`stop action`、`stop run`、`stop openclaw`、`please stop`）以進行帶外中止
+  - `chat.abort` 支援 `{ sessionKey }`（無 `runId`）以中止該工作階段的所有活動執行
+- 中止部分的保留：
+  - 當執行中止時，部分的助理文字仍可在 UI 中顯示
+  - 當有緩衝輸出時，Gateway 會將中止的部分助理文字保存至對話記錄歷史中
+  - 已保存的條目包含中止元資料，因此對話記錄消費者可以區分中止部分與正常完成輸出
 
-## Tailnet 存取（推薦）
+## Tailnet 存取（建議）
 
-### 整合式 Tailscale Serve（優先）
+### 整合式 Tailscale Serve（建議選項）
 
-將 Gateway 保持在 loopback 上，並讓 Tailscale Serve 使用 HTTPS 進行代理：
+將 Gateway 保持在 loopback 上，並讓 Tailscale Serve 使用 HTTPS 代理它：
 
 ```bash
 openclaw gateway --tailscale serve
@@ -130,25 +132,34 @@ openclaw gateway --tailscale serve
 
 - `https://<magicdns>/`（或您設定的 `gateway.controlUi.basePath`）
 
-預設情況下，當 `gateway.auth.allowTailscale` 為 `true` 時，Control UI/WebSocket Serve 請求可以透過 Tailscale 身分標頭 (`tailscale-user-login`) 進行驗證。OpenClaw 透過使用 `tailscale whois` 解析 `x-forwarded-for` 位址並將其與標頭匹配來驗證身分，並且僅在請求透過 Tailscale 的 `x-forwarded-*` 標頭命中 loopback 時才接受這些請求。如果您希望即使對於 Serve 流量也要求令牌/密碼，請設定 `gateway.auth.allowTailscale: false`（或強制 `gateway.auth.mode: "password"`）。無令牌 Serve 驗證假設 gateway 主機是受信任的。如果不受信任的本機程式碼可能在该主機上運行，請要求令牌/密碼驗證。
+預設情況下，當 `gateway.auth.allowTailscale` 為 `true` 時，Control UI/WebSocket Serve 請求可以透過 Tailscale 身份標頭
+(`tailscale-user-login`) 進行驗證。OpenClaw
+透過使用 `tailscale whois` 解析 `x-forwarded-for` 位址
+並將其與標頭匹配來驗證身份，並且僅當請求透過 Tailscale 的 `x-forwarded-*` 標頭
+存取 loopback 時才接受這些請求。如果您希望即使對於 Serve 流量也要求 token/密碼，
+請設定 `gateway.auth.allowTailscale: false` (或強制 `gateway.auth.mode: "password"`)。
+無 Token Serve 驗證假設 gateway 主機是受信任的。如果該主機上可能執行不受信任的本機
+程式碼，請要求 token/密碼驗證。
 
-### 綁定到 tailnet + 令牌
+### 綁定到 tailnet + token
 
 ```bash
 openclaw gateway --bind tailnet --token "$(openssl rand -hex 32)"
 ```
 
-然後開啟：
+然後打開：
 
-- `http://<tailscale-ip>:18789/`（或您設定的 `gateway.controlUi.basePath`）
+- `http://<tailscale-ip>:18789/` (或您設定的 `gateway.controlUi.basePath`)
 
-將令牌貼上到 UI 設定中（作為 `connect.params.auth.token` 發送）。
+將 token 貼上到 UI 設定中 (作為 `connect.params.auth.token` 發送)。
 
 ## 不安全的 HTTP
 
-如果您透過純 HTTP (`http://<lan-ip>` 或 `http://<tailscale-ip>`) 開啟儀表板，瀏覽器會在**不安全的上下文**中運行並阻擋 WebCrypto。預設情況下，OpenClaw 會**阻擋**沒有裝置身分的 Control UI 連線。
+如果您透過純 HTTP (`http://<lan-ip>` 或 `http://<tailscale-ip>`) 開啟儀表板，
+瀏覽器將在 **不安全的上下文** 中運作並阻擋 WebCrypto。預設情況下，
+OpenClaw 會 **阻擋** 沒有裝置身份的 Control UI 連線。
 
-**建議的修復方法：** 使用 HTTPS (Tailscale Serve) 或在本地開啟 UI：
+**建議的修復方法：** 使用 HTTPS (Tailscale Serve) 或在本機開啟 UI：
 
 - `https://<magicdns>/` (Serve)
 - `http://127.0.0.1:18789/` (在 gateway 主機上)
@@ -165,13 +176,14 @@ openclaw gateway --bind tailnet --token "$(openssl rand -hex 32)"
 }
 ```
 
-`allowInsecureAuth` 僅是一個本地相容性切換：
+`allowInsecureAuth` 僅是一個本機相容性切換開關：
 
-- 它允許在本機 控制介面會話在不安全 HTTP 環境下，於不具備裝置身分的情況下繼續進行。
-- 它並不會繞過配對檢查。
-- 它不會放寬遠端 (非 localhost) 的裝置身分要求。
+- 它允許 localhost Control UI 工作階段在
+  不安全的 HTTP 上下文中沒有裝置身份的情況下繼續。
+- 它不會繞過配對檢查。
+- 它不會放寬遠端 (非 localhost) 裝置身份要求。
 
-**僅限緊急破窗：**
+**僅供緊急情況使用：**
 
 ```json5
 {
@@ -183,25 +195,26 @@ openclaw gateway --bind tailnet --token "$(openssl rand -hex 32)"
 }
 ```
 
-`dangerouslyDisableDeviceAuth` 會停用控制介面的裝置身分檢查，並將會造成嚴重的安全性降級。請在緊急使用後盡速還原。
+`dangerouslyDisableDeviceAuth` 會停用 Control UI 裝置身份檢查，這是一個
+嚴重的安全性降級。緊急使用後請迅速還原。
 
-請參閱 [Tailscale](/en/gateway/tailscale) 以取得 HTTPS 設定指南。
+請參閱 [Tailscale](/en/gateway/tailscale) 以取得 HTTPS 設定指導。
 
-## 建構 UI
+## 建置 UI
 
-Gateway 從 `dist/control-ui` 提供靜態檔案。使用以下指令進行建構：
+Gateway 從 `dist/control-ui` 提供靜態檔案。使用以下指令建置它們：
 
 ```bash
 pnpm ui:build # auto-installs UI deps on first run
 ```
 
-可選的絕對路徑基底 (當您想要固定的資源 URL 時)：
+可選的絕對基礎 (當您想要固定的資產 URL 時)：
 
 ```bash
 OPENCLAW_CONTROL_UI_BASE_PATH=/openclaw/ pnpm ui:build
 ```
 
-若為本地開發 (獨立的開發伺服器)：
+用於本機開發 (獨立的 dev server)：
 
 ```bash
 pnpm ui:dev # auto-installs UI deps on first run
@@ -211,16 +224,16 @@ pnpm ui:dev # auto-installs UI deps on first run
 
 ## 除錯/測試：開發伺服器 + 遠端 Gateway
 
-控制介面是靜態檔案；WebSocket 目標可設定，並且可以與 HTTP 來源不同。當您想要在本地使用 Vite 開發伺服器，但 Gateway 在其他地方運行時，這非常方便。
+Control UI 是靜態檔案；WebSocket 目標是可配置的，並且可以與 HTTP origin 不同。當您想要在本地使用 Vite 開發伺服器但 Gateway 在其他地方運行時，這非常方便。
 
 1. 啟動 UI 開發伺服器：`pnpm ui:dev`
-2. 開啟類似這樣的 URL：
+2. 開啟如下 URL：
 
 ```text
 http://localhost:5173/?gatewayUrl=ws://<gateway-host>:18789
 ```
 
-可選的一次性驗證 (如果需要)：
+可選的一次性授權（如果需要）：
 
 ```text
 http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789#token=<gateway-token>
@@ -229,14 +242,18 @@ http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789#token=<gateway-toke
 備註：
 
 - `gatewayUrl` 在載入後會儲存在 localStorage 中，並從 URL 中移除。
-- `token` 應盡可能透過 URL 片段 (`#token=...`) 傳遞。片段不會傳送至伺服器，這可避免請求日誌 和 Referer 洩漏。舊版 `?token=` 查詢參數為了相容性仍會匯入一次，但僅作為後備手段，並在啟動後立即移除。
-- `password` 僅保存在記憶體中。
-- 當設定 `gatewayUrl` 時，UI 不會回退至設定或環境認證。請明確提供 `token` (或 `password`)。缺少明確認證會被視為錯誤。
-- 當 Gateway 位於 TLS 後方 (Tailscale Serve、HTTPS 代理等) 時，請使用 `wss://`。
-- 為防止點擊劫持，`gatewayUrl` 僅在頂層視窗 (非嵌入式) 中被接受。
-- 非迴路 控制介面部署必須明確設定 `gateway.controlUi.allowedOrigins` (完整來源)。這包括遠端開發環境。
-- 請勿使用 `gateway.controlUi.allowedOrigins: ["*"]`，除非是在嚴格控制的本地測試中。這表示允許任何瀏覽器來源，而不是「符合我目前使用的主機」。
-- `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` 啟用 Host 標頭來源後援模式，但這是一種危險的安全模式。
+- 應盡可能透過 URL 片段 (`#token=...`) 傳遞 `token`。片段不會傳送到伺服器，這可避免請求日誌和 Referer 洩漏。舊版的 `?token=` 查詢參數仍會為了相容性匯入一次，但僅作為後備方案，並會在啟動後立即移除。
+- `password` 僅保留在記憶體中。
+- 當設定 `gatewayUrl` 時，UI 不會回退到設定或環境認證。
+  請明確提供 `token` (或 `password`)。缺少明確的認證是一種錯誤。
+- 當 Gateway 位於 TLS (Tailscale Serve, HTTPS proxy 等) 之後時，請使用 `wss://`。
+- `gatewayUrl` 僅在頂層視窗 (非嵌入式) 中被接受，以防止點擊劫持。
+- 非本機回路的 Control UI 部署必須明確設定 `gateway.controlUi.allowedOrigins`
+  (完整的 origin)。這包括遠端開發設定。
+- 除嚴格控制的
+  本地測試外，請勿使用 `gateway.controlUi.allowedOrigins: ["*"]`。這表示允許任何瀏覽器 origin，而不是「符合我正在使用的任何主機」。
+- `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` 啟用
+  Host 標頭 origin 後援模式，但這是一種危險的安全性模式。
 
 範例：
 
@@ -251,3 +268,10 @@ http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789#token=<gateway-toke
 ```
 
 遠端存取設定詳細資訊：[Remote access](/en/gateway/remote)。
+
+## 相關
+
+- [Dashboard](/en/web/dashboard) — gateway 儀表板
+- [WebChat](/en/web/webchat) — 基於瀏覽器的聊天介面
+- [TUI](/en/web/tui) — 終端機使用者介面
+- [Health Checks](/en/gateway/health) — gateway 健康監控

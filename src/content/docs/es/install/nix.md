@@ -23,10 +23,10 @@ Instala OpenClaw declarativamente con **[nix-openclaw](https://github.com/opencl
 ## Inicio rápido
 
 <Steps>
-  <Step title="Instalar Determinate Nix">Si Nix aún no está instalado, sigue las instrucciones del instalador [Determinate Nix](https://github.com/DeterminateSystems/nix-installer).</Step>
-  <Step title="Crear un flake local">Usa la plantilla agent-first del repositorio nix-openclaw: ```bash mkdir -p ~/code/openclaw-local # Copy templates/agent-first/flake.nix from the nix-openclaw repo ```</Step>
-  <Step title="Configurar secretos">Configura el token de tu bot de mensajería y la clave API del proveedor de modelos. Los archivos simples en `~/.secrets/` funcionan bien.</Step>
-  <Step title="Rellenar los marcadores de posición de la plantilla y cambiar">```bash home-manager switch ```</Step>
+  <Step title="Instalar Determinate Nix">Si Nix no está instalado, siga las instrucciones del [instalador Determinate Nix](https://github.com/DeterminateSystems/nix-installer).</Step>
+  <Step title="Crear un flake local">Use la plantilla agent-first del repositorio nix-openclaw: ```bash mkdir -p ~/code/openclaw-local # Copy templates/agent-first/flake.nix from the nix-openclaw repo ```</Step>
+  <Step title="Configurar secretos">Configure su token de bot de mensajería y la clave API del proveedor de modelos. Los archivos simples en `~/.secrets/` funcionan bien.</Step>
+  <Step title="Rellenar marcadores de posición de la plantilla y cambiar">```bash home-manager switch ```</Step>
   <Step title="Verificar">Confirma que el servicio launchd se está ejecutando y que tu bot responde a los mensajes.</Step>
 </Steps>
 

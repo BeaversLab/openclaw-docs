@@ -254,25 +254,37 @@ location / {
 }
 ```
 
+## 混合 Token 配置
+
+OpenClaw 會拒絕同時啟用 `gateway.auth.token`（或 `OPENCLAW_GATEWAY_TOKEN`）和 `trusted-proxy` 模式的模糊配置。混合 Token 配置可能會導致回送請求在錯誤的驗證路徑上被靜默驗證。
+
+如果在啟動時看到 `mixed_trusted_proxy_token` 錯誤：
+
+- 使用 trusted-proxy 模式時移除共用 Token，或
+- 如果您打算使用基於 Token 的驗證，請將 `gateway.auth.mode` 切換為 `"token"`。
+
+回送 trusted-proxy 驗證也會失敗關閉：同主機呼叫者必須透過受信任的 Proxy 提供設定的標頭，而不是被靜默驗證。
+
 ## 安全檢查清單
 
-在啟用 trusted-proxy auth 之前，請驗證：
+啟用 trusted-proxy 驗證之前，請驗證：
 
-- [ ] **Proxy is the only path**: 閘道連接埠對除了您的代理伺服器之外的所有來源都設有防火牆保護
-- [ ] **trustedProxies is minimal**: 僅包含您實際的代理伺服器 IP，而非整個子網路
-- [ ] **Proxy strips headers**: 您的代理伺服器會覆寫（而非附加）來自用戶端的 `x-forwarded-*` 標頭
-- [ ] **TLS termination**: 您的代理伺服器處理 TLS；使用者透過 HTTPS 連線
-- [ ] **allowUsers is set** （建議）：限制為已知使用者，而非允許任何已驗證的人
+- [ ] **Proxy 是唯一路徑**：Gateway 連接埠已設定防火牆，僅允許您的 Proxy 存取
+- [ ] **trustedProxies 是最少的**：僅包含您實際的 Proxy IP，而非整個子網路
+- [ ] **Proxy 剝離標頭**：您的 Proxy 覆寫（而非附加）來自用戶端的 `x-forwarded-*` 標頭
+- [ ] **TLS 終止**：您的 Proxy 處理 TLS；使用者透過 HTTPS 連線
+- [ ] **已設定 allowUsers**（建議）：限制為已知使用者，而非允許任何通過驗證的人
+- [ ] **無混合 Token 配置**：不要同時設定 `gateway.auth.token` 和 `gateway.auth.mode: "trusted-proxy"`
 
 ## 安全稽核
 
-`openclaw security audit` 會將 trusted-proxy auth 標記為 **critical** （嚴重）嚴重性發現。這是有意為之的 — 這是提醒您將安全性委託給代理伺服器設定。
+`openclaw security audit` 將以 **嚴重** 嚴重性標記 trusted-proxy 驗證。這是刻意為之 — 這是一個提醒，表示您將安全性委派給了您的 Proxy 設定。
 
-稽核會檢查：
+稽核檢查項目包括：
 
 - 缺少 `trustedProxies` 配置
 - 缺少 `userHeader` 配置
-- 空的 `allowUsers` （允許任何已驗證的使用者）
+- `allowUsers` 為空（允許任何已驗證的使用者）
 
 ## 疑難排解
 
@@ -280,51 +292,51 @@ location / {
 
 請求並非來自 `gateway.trustedProxies` 中的 IP。請檢查：
 
-- 代理伺服器 IP 是否正確？（Docker 容器 IP 可能會變更）
-- 您的代理伺服器前面是否有負載平衡器？
-- 使用 `docker inspect` 或 `kubectl get pods -o wide` 來找出實際 IP
+- Proxy IP 是否正確？（Docker 容器 IP 可能會變更）
+- 您的 Proxy 前面是否有負載平衡器？
+- 使用 `docker inspect` 或 `kubectl get pods -o wide` 尋找實際 IP
 
 ### "trusted_proxy_user_missing"
 
-使用者標頭為空白或遺失。請檢查：
+使用者標頭為空或遺失。請檢查：
 
-- 您的代理伺服器是否已設定為傳遞身分標頭？
-- 標頭名稱是否正確？（不區分大小寫，但拼字很重要）
-- 使用者是否實際上已在代理伺服器完成驗證？
+- 您的 Proxy 是否設定為傳遞識別標頭？
+- 標頭名稱是否正確？（不區分大小寫，但拼寫很重要）
+- 用戶是否實際上已通過代理驗證？
 
 ### "trusted*proxy_missing_header*\*"
 
-遺失必要的標頭。請檢查：
+缺少必要的標頭。請檢查：
 
-- 您的代理伺服器對於這些特定標頭的配置
-- 標頭是否在鏈結中的某處被移除
+- 您針對這些特定標頭的代理配置
+- 標頭是否在鏈路的某處被剝離
 
 ### "trusted_proxy_user_not_allowed"
 
-使用者已驗證，但不在 `allowUsers` 中。請將他們新增或移除允許清單。
+用戶已通過驗證但不在 `allowUsers` 中。請將其加入或移除允許列表。
 
 ### WebSocket 仍然失敗
 
-請確定您的代理伺服器：
+請確保您的代理：
 
-- 支援 WebSocket 升級 （`Upgrade: websocket`、 `Connection: upgrade`）
-- 在 WebSocket 升級請求上傳遞身分標頭（不僅限於 HTTP）
-- 沒有針對 WebSocket 連線的單獨驗證路徑
+- 支援 WebSocket 升級（`Upgrade: websocket`、`Connection: upgrade`）
+- 在 WebSocket 升級請求上傳遞身分標頭（而不僅僅是 HTTP）
+- 沒有針對 WebSocket 連接的單獨驗證路徑
 
-## 從 Token Auth 遷移
+## 從 Token 驗證遷移
 
-如果您正在從 token auth 遷移到 trusted-proxy：
+如果您正在從 token 驗證遷移到 trusted-proxy：
 
-1. 設定您的 proxy 以驗證使用者並傳遞標頭
-2. 獨立測試 proxy 設定（使用標頭的 curl）
-3. 使用 trusted-proxy auth 更新 OpenClaw 設定
-4. 重新啟動 Gateway
-5. 從 Control UI 測試 WebSocket 連線
-6. 執行 `openclaw security audit` 並檢視結果
+1. 配置您的代理以驗證用戶並傳遞標頭
+2. 獨立測試代理設置（使用帶標頭的 curl）
+3. 使用 trusted-proxy 驗證更新 OpenClaw 配置
+4. 重啟 Gateway
+5. 從 Control UI 測試 WebSocket 連接
+6. 運行 `openclaw security audit` 並檢查發現結果
 
 ## 相關
 
-- [安全](/en/gateway/security) — 完整的安全指南
-- [設定](/en/gateway/configuration) — 設定參考
+- [安全性](/en/gateway/security) — 完整安全指南
+- [配置](/en/gateway/configuration) — 配置參考
 - [遠端存取](/en/gateway/remote) — 其他遠端存取模式
 - [Tailscale](/en/gateway/tailscale) — 僅限 tailnet 存取的更簡單替代方案

@@ -89,3 +89,9 @@ El aviso del sistema incluye:
 Puede controlar el formato del aviso con `agents.defaults.timeFormat` (`auto` | `12` | `24`).
 
 Consulte [Fecha y hora](/en/date-time) para conocer el comportamiento completo y los ejemplos.
+
+## Relacionado
+
+- [Heartbeat](/en/gateway/heartbeat) — las horas activas usan la zona horaria para la programación
+- [Cron Jobs](/en/automation/cron-jobs) — las expresiones cron usan la zona horaria para la programación
+- [Date & Time](/en/date-time) — comportamiento completo de fecha/hora y ejemplos

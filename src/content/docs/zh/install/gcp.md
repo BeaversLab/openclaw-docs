@@ -11,7 +11,7 @@ title: "GCP"
 
 ## 目标
 
-在 GCP Compute Engine 虚拟机上使用 Docker 运行持久化的 OpenClaw Gateway 网关，具备持久化状态、内置二进制文件和安全重启行为。
+在 GCP Compute Engine 虚拟机上使用 Docker 运行持久化的 OpenClaw Gateway(网关) 网关，具备持久化状态、内置二进制文件和安全重启行为。
 
 如果您希望“OpenClaw 全天候 (24/7) 运行，月费约 $5-12”，这是在 Google Cloud 上的可靠设置。
 价格因机器类型和地区而异；请选择适合您工作负载的最小虚拟机，如果遇到内存不足 (OOM) 再进行扩容。
@@ -21,11 +21,11 @@ title: "GCP"
 - 创建一个 GCP 项目并启用计费
 - 创建一个 Compute Engine 虚拟机
 - 安装 Docker (隔离的应用运行时)
-- 在 Docker 中启动 OpenClaw Gateway 网关
+- 在 Docker 中启动 OpenClaw Gateway(网关) 网关
 - 在主机上持久化 `~/.openclaw` + `~/.openclaw/workspace`（在重启/重建后仍然存在）
 - 通过 SSH 隧道从您的笔记本电脑访问控制 UI
 
-可以通过以下方式访问 Gateway 网关：
+可以通过以下方式访问 Gateway(网关) 网关：
 
 - 从您的笔记本电脑进行 SSH 端口转发
 - 如果您自行管理防火墙和令牌，可直接暴露端口

@@ -128,24 +128,35 @@ Valeurs par défaut :
 
 - Le délai de récupération de facturation commence à **5 heures**, double à chaque échec de facturation et plafonne à **24 heures**.
 - Les compteurs de délai sont réinitialisés si le profil n'a pas échoué pendant **24 heures** (configurable).
+- Les tentatives surchargées autorisent **1 rotation de profil au sein du même fournisseur** avant le basculement de modèle.
+- Les tentatives surchargées utilisent **0 ms d'attente** par défaut.
 
-## Basculer de model
+## Basculement de modèle
 
-Si tous les profils d'un fournisseur échouent, OpenClaw passe au model suivant dans
-`agents.defaults.model.fallbacks`. Cela s'applique aux échecs d'authentification, aux limites de débit et aux
+Si tous les profils d'un fournisseur échouent, OpenClaw passe au modèle suivant dans
+`agents.defaults.model.fallbacks`. Cela s'applique aux échecs d'authentification, aux limites de taux et aux
 délais d'attente qui ont épuisé la rotation des profils (les autres erreurs n'avancent pas le basculement).
 
-Lorsqu'une exécution commence avec une substitution de model (hooks ou CLI), les basculements se terminent toujours à
+Les erreurs de surcharge et de limitation de débit sont gérées plus agressivement que les
+périodes de refroidissement de facturation. Par défaut, OpenClaw autorise une nouvelle tentative de profil d'authentification au sein du même fournisseur,
+puis bascule vers le modèle de repli configuré suivant sans attendre. Ajustez cela
+avec `auth.cooldowns.overloadedProfileRotations`,
+`auth.cooldowns.overloadedBackoffMs` et
+`auth.cooldowns.rateLimitedProfileRotations`.
+
+Lorsqu'une exécution commence avec une priorité de modèle (hooks ou CLI), les basculements se terminent toujours à
 `agents.defaults.model.primary` après avoir essayé tous les basculements configurés.
 
-## Configuration associée
+## Configuration connexe
 
-Voir la [configuration Gateway](/en/gateway/configuration) pour :
+Voir la [configuration de Gateway](/en/gateway/configuration) pour :
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
 - `auth.cooldowns.billingMaxHours` / `auth.cooldowns.failureWindowHours`
+- `auth.cooldowns.overloadedProfileRotations` / `auth.cooldowns.overloadedBackoffMs`
+- `auth.cooldowns.rateLimitedProfileRotations`
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
 - Routage `agents.defaults.imageModel`
 
-Voir [Models](/en/concepts/models) pour l'aperçu global de la sélection et du basculement de model.
+Voir [Modèles](/en/concepts/models) pour l'aperçu global de la sélection et du basculement de modèles.

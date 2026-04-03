@@ -1,5 +1,5 @@
 ---
-summary: "Terminal UI (TUI)：从任意机器连接到 Gateway 网关"
+summary: "Terminal UI (TUI)：从任意机器连接到 Gateway(网关) 网关"
 read_when:
   - You want a beginner-friendly walkthrough of the TUI
   - You need the complete list of TUI features, commands, and shortcuts
@@ -10,7 +10,7 @@ title: "TUI"
 
 ## 快速开始
 
-1. 启动 Gateway 网关。
+1. 启动 Gateway(网关) 网关。
 
 ```bash
 openclaw gateway
@@ -24,13 +24,13 @@ openclaw tui
 
 3. 输入消息并按 Enter 键。
 
-远程 Gateway 网关：
+远程 Gateway(网关) 网关：
 
 ```bash
 openclaw tui --url ws://<host>:<port> --token <gateway-token>
 ```
 
-如果您的 Gateway 网关 使用密码认证，请使用 `--password`。
+如果您的 Gateway(网关) 网关 使用密码认证，请使用 `--password`。
 
 ## 您看到的内容
 
@@ -42,7 +42,7 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 ## 心智模型：Agent + 会话
 
-- Agent 是唯一的标识符（例如 `main`、`research`）。Gateway 网关 会公开该列表。
+- Agent 是唯一的标识符（例如 `main`、`research`）。Gateway(网关) 网关 会公开该列表。
 - 会话属于当前 Agent。
 - 会话密钥存储为 `agent:<agentId>:<sessionKey>`。
   - 如果您输入 `/session main`，TUI 会将其展开为 `agent:<currentAgent>:main`。
@@ -54,7 +54,7 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 ## 发送 + 投递
 
-- 消息发送到 Gateway 网关；默认关闭向提供商的投递。
+- 消息发送到 Gateway(网关) 网关；默认关闭向提供商的投递。
 - 开启投递：
   - `/deliver on`
   - 或设置面板
@@ -129,12 +129,12 @@ openclaw tui --url ws://<host>:<port> --token <gateway-token>
 
 ## 连接详情
 
-- TUI 以 `mode: "tui"` 的身份向 Gateway 注册。
+- TUI 以 `mode: "tui"` 的身份向 Gateway(网关) 注册。
 - 重连时显示系统消息；事件间隔会在日志中显示。
 
 ## 选项
 
-- `--url <url>`：Gateway 网关 WebSocket URL（默认为配置或 `ws://127.0.0.1:<port>`）
+- `--url <url>`：Gateway(网关) 网关 WebSocket URL（默认为配置或 `ws://127.0.0.1:<port>`）
 - `--token <token>`: Gateway(网关) token (如果需要)
 - `--password <password>`: Gateway(网关)密码（如果需要）
 - `--session <key>`：会话键（默认：`main`，如果作用域为全局，则为 `global`）

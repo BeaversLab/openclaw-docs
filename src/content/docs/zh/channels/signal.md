@@ -8,7 +8,7 @@ title: "Signal"
 
 # Signal (signal-cli)
 
-状态：外部 CLI 集成。Gateway 网关 通过 HTTP JSON-RPC + SSE 与 `signal-cli` 通信。
+状态：外部 CLI 集成。Gateway(网关) 网关 通过 HTTP JSON-RPC + SSE 与 `signal-cli` 通信。
 
 ## 先决条件
 
@@ -327,3 +327,11 @@ grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 - `agents.list[].groupChat.mentionPatterns`（Signal 不支持原生提及）。
 - `messages.groupChat.mentionPatterns`（全局回退）。
 - `messages.responsePrefix`。
+
+## 相关
+
+- [频道概览](/en/channels) — 所有支持的频道
+- [配对](/en/channels/pairing) — 私信认证和配对流程
+- [群组](/en/channels/groups) — 群聊行为和提及限制
+- [频道路由](/en/channels/channel-routing) — 消息的会话路由
+- [安全性](/en/gateway/security) — 访问模型和加固

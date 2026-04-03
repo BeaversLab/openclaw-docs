@@ -19,7 +19,7 @@ Synology Chat 基于插件，不属于默认核心频道安装的一部分。
 从本地检出安装：
 
 ```bash
-openclaw plugins install ./extensions/synology-chat
+openclaw plugins install ./path/to/local/synology-chat-plugin
 ```
 
 详细信息：[插件](/en/tools/plugin)
@@ -139,3 +139,11 @@ openclaw message send --channel synology-chat --target synology-chat:123456 --te
 - 生产环境建议使用 `dmPolicy: "allowlist"`。
 - 除非您明确需要基于用户名的传统回复投递，否则请保持 `dangerouslyAllowNameMatching` 关闭。
 - 除非您明确接受多账户设置中的共享路径路由风险，否则请保持 `dangerouslyAllowInheritedWebhookPath` 关闭。
+
+## 相关
+
+- [渠道概览](/en/channels) — 所有支持的渠道
+- [配对](/en/channels/pairing) — 私信认证和配对流程
+- [群组](/en/channels/groups) — 群组聊天行为和提及门控
+- [通道路由](/en/channels/channel-routing) — 消息的会话路由
+- [安全](/en/gateway/security) — 访问模型和加固

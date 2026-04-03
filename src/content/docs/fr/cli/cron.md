@@ -33,11 +33,7 @@ Remarque : la rétention/le nettoyage sont contrôlés dans la configuration :
 - `cron.sessionRetention` (par défaut `24h`) nettoie les sessions d'exécution isolées terminées.
 - `cron.runLog.maxBytes` + `cron.runLog.keepLines` nettoient `~/.openclaw/cron/runs/<jobId>.jsonl`.
 
-Remarque de mise à niveau : si vous avez d'anciennes tâches cron antérieures au format actuel de livraison/stockage, exécutez
-`openclaw doctor --fix`. Doctor normalise désormais les champs cron hérités (`jobId`, `schedule.cron`,
-champs de livraison de premier niveau, alias de livraison de payload `provider`) et migre les tâches de secours webhook simples
-`notify: true` vers une livraison webhook explicite lorsque `cron.webhook` est
-configuré.
+Remarque de mise à jour : si vous avez d'anciennes tâches cron antérieures au format actuel de livraison/stockage, exécutez `openclaw doctor --fix`. Doctor normalise désormais les champs cron hérités (`jobId`, `schedule.cron`, champs de livraison de niveau supérieur, y compris l'ancien `threadId`, alias de livraison payload `provider`) et migre les simples tâches de secours webhook `notify: true` vers une livraison webhook explicite lorsque `cron.webhook` est configuré.
 
 ## Modifications courantes
 
@@ -77,4 +73,4 @@ openclaw cron add \
   --no-deliver
 ```
 
-`--light-context` s'applique uniquement aux tâches de tour d'agent isolées. Pour les exécutions cron, le mode léger maintient le contexte d'amorçage vide au lieu d'injecter l'ensemble complet d'amorçage de l'espace de travail.
+`--light-context` s'applique uniquement aux tâches de tour d'agent isolées. Pour les exécutions cron, le mode léger garde le contexte d'amorçage vide au lieu d'injecter l'ensemble complet d'amorçage de l'espace de travail.

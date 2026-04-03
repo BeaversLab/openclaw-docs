@@ -11,7 +11,7 @@ title: "日志概述"
 
 OpenClaw 在两个位置记录日志：
 
-- **文件日志**（JSON 行），由 Gateway 网关 写入。
+- **文件日志**（JSON 行），由 Gateway(网关) 网关 写入。
 - **控制台输出**，显示在终端和控制 UI 中。
 
 本页面说明了日志的存储位置、读取方法，以及如何配置日志
@@ -19,7 +19,7 @@ OpenClaw 在两个位置记录日志：
 
 ## 日志位置
 
-默认情况下，Gateway 网关 会在以下路径写入滚动日志文件：
+默认情况下，Gateway(网关) 网关 会在以下路径写入滚动日志文件：
 
 `/tmp/openclaw/openclaw-YYYY-MM-DD.log`
 
@@ -60,7 +60,7 @@ openclaw logs --follow
 - `notice`：截断/轮换提示
 - `raw`：未解析的日志行
 
-如果 Gateway 网关 无法访问，CLI 会打印一条简短提示以运行：
+如果 Gateway(网关) 网关 无法访问，CLI 会打印一条简短提示以运行：
 
 ```bash
 openclaw doctor
@@ -343,6 +343,11 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 
 ## 故障排除提示
 
-- **无法连接 Gateway 网关？** 首先运行 `openclaw doctor`。
+- **无法连接 Gateway(网关) 网关？** 首先运行 `openclaw doctor`。
 - **Logs empty?** 检查 Gateway(网关) 是否正在运行并写入 `logging.file` 中的文件路径。
 - **需要更多详细信息？** 将 `logging.level` 设置为 `debug` 或 `trace` 并重试。
+
+## 相关
+
+- [Gateway(网关) Logging Internals](/en/gateway/logging) — WS 日志样式、子系统前缀和控制台捕获
+- [Diagnostics](/en/gateway/configuration-reference#diagnostics) — OpenTelemetry 导出和缓存跟踪配置

@@ -154,3 +154,8 @@ Modelo alternativo filtrado por páginas:
   "prompt": "Extract only customer-impacting incidents"
 }
 ```
+
+## Relacionado
+
+- [Resumen de herramientas](/en/tools) — todas las herramientas de agente disponibles
+- [Referencia de configuración](/en/gateway/configuration-reference#agent-defaults) — configuración de pdfMaxBytesMb y pdfMaxPages

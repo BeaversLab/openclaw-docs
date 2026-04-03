@@ -78,103 +78,109 @@ title: "斜杠命令"
 - `/tools [compact|verbose]`（显示当前代理现在可以使用的内容；`verbose` 添加描述）
 - `/skill <name> [input]`（按名称运行技能）
 - `/status`（显示当前状态；包括当前模型提供商的提供商使用/配额（如可用））
-- `/allowlist`（列出/添加/移除允许列表条目）
-- `/approve <id> allow-once|allow-always|deny`（解决执行批准提示）
-- `/context [list|detail|json]`（解释“上下文”；`detail` 显示每个文件 + 每个工具 + 每个技能 + 系统提示词大小）
-- `/btw <question>`（询问关于当前会话的临时附带问题，而不改变未来的会话上下文；参见 [/tools/btw](/en/tools/btw)）
-- `/export-session [path]`（别名：`/export`）（将当前会话导出为包含完整系统提示词的 HTML）
-- `/whoami`（显示您的发送者 ID；别名：`/id`）
-- `/session idle <duration|off>`（管理聚焦线程绑定的非活动自动取消聚焦）
-- `/session max-age <duration|off>`（管理聚焦线程绑定的硬性最大时间自动取消聚焦）
-- `/subagents list|kill|log|info|send|steer|spawn`（检查、控制或为当前会话生成子代理运行）
-- `/acp spawn|cancel|steer|close|status|set-mode|set|cwd|permissions|timeout|model|reset-options|doctor|install|sessions`（检查和控制 ACP 运行时会话）
-- `/agents`（列出此会话的线程绑定代理）
-- `/focus <target>`（Discord：将此线程或新线程绑定到会话/子代理目标）
-- `/unfocus`（Discord：移除当前线程绑定）
-- `/kill <id|#|all>`（立即中止此会话的一个或所有正在运行的子代理；无确认消息）
-- `/steer <id|#> <message>`（立即引导正在运行的子代理：尽可能在运行中，否则中止当前工作并在引导消息上重新开始）
-- `/tell <id|#> <message>`（`/steer` 的别名）
-- `/config show|get|set|unset` （将配置持久化到磁盘，仅所有者；需要 `commands.config: true`）
-- `/mcp show|get|set|unset` （管理 OpenClaw MCP 服务器配置，仅所有者；需要 `commands.mcp: true`）
-- `/plugins list|show|get|install|enable|disable` （检查已发现的插件，安装新插件以及切换启用状态；写入操作仅限所有者；需要 `commands.plugins: true`）
+- `/tasks` (列出当前会话的后台任务；显示活动和最近的任务详情，以及代理本地的回退计数)
+- `/allowlist` (列出/添加/移除允许列表条目)
+- `/approve <id> allow-once|allow-always|deny` (解决执行批准提示)
+- `/context [list|detail|json]` (解释“上下文”；`detail` 显示每个文件 + 每个 工具 + 每个技能 + 系统提示的大小)
+- `/btw <question>` (询问关于当前会话的临时附带问题，而不改变未来的会话上下文；参见 [/tools/btw](/en/tools/btw))
+- `/export-session [path]` (别名：`/export`) (将当前会话导出为包含完整系统提示的 HTML)
+- `/whoami` (显示您的发送者 ID；别名：`/id`)
+- `/session idle <duration|off>` (管理聚焦线程绑定的非活动自动取消聚焦)
+- `/session max-age <duration|off>` (管理聚焦线程绑定的硬性最大存活时间自动取消聚焦)
+- `/subagents list|kill|log|info|send|steer|spawn` (检查、控制或为当前会话生成子代理运行)
+- `/acp spawn|cancel|steer|close|status|set-mode|set|cwd|permissions|timeout|model|reset-options|doctor|install|sessions` (检查和控制 ACP 运行时会话)
+- `/agents` (列出此会话的线程绑定代理)
+- `/focus <target>` (Discord：将此线程或新线程绑定到会话/子代理目标)
+- `/unfocus` (Discord：移除当前的线程绑定)
+- `/kill <id|#|all>` (立即中止此会话的一个或所有正在运行的子代理；无确认消息)
+- `/steer <id|#> <message>` (立即引导正在运行的子代理：尽可能在运行中引导，否则中止当前工作并根据引导消息重新启动)
+- `/tell <id|#> <message>` (`/steer` 的别名)
+- `/config show|get|set|unset` (将配置持久化到磁盘，仅所有者；需要 `commands.config: true`)
+- `/mcp show|get|set|unset` (管理 OpenClaw MCP 服务器配置，仅所有者；需要 `commands.mcp: true`)
+- `/plugins list|show|get|install|enable|disable`（检查已发现的插件，安装新插件以及切换启用状态；写入操作仅限所有者；需要 `commands.plugins: true`）
   - `/plugin` 是 `/plugins` 的别名。
-  - `/plugin install <spec>` 接受与 `openclaw plugins install` 相同的插件规范：本地路径/归档、npm 包，或 `clawhub:<pkg>`。
-  - 启用/禁用写入操作仍会回复重启提示。在受监控的前台网关上，OpenClaw 可能在写入后立即自动执行重启。
-- `/debug show|set|unset|reset` （运行时覆盖，仅所有者；需要 `commands.debug: true`）
-- `/usage off|tokens|full|cost` （每次响应的使用情况页脚或本地成本摘要）
-- `/tts off|always|inbound|tagged|status|provider|limit|summary|audio` （控制 TTS；请参阅 [/tts](/en/tools/tts)）
-  - Discord：原生命令是 `/voice` （Discord 保留了 `/tts`）；文本 `/tts` 仍然有效。
+  - `/plugin install <spec>` 接受与 `openclaw plugins install` 相同的插件规范：本地路径/存档、npm 包或 `clawhub:<pkg>`。
+  - 启用/禁用写入操作仍会回复重启提示。在受监视的前台网关上，OpenClaw 可能会在写入后立即自动执行该重启。
+- `/debug show|set|unset|reset`（运行时覆盖，仅限所有者；需要 `commands.debug: true`）
+- `/usage off|tokens|full|cost`（每次响应的使用页脚或本地成本摘要）
+- `/tts off|always|inbound|tagged|status|provider|limit|summary|audio`（控制 TTS；参见 [/tts](/en/tools/tts)）
+  - Discord：原生命令是 `/voice`（Discord 保留了 `/tts`）；文本 `/tts` 仍然有效。
 - `/stop`
 - `/restart`
-- `/dock-telegram` （别名：`/dock_telegram`）（将回复切换到 Telegram）
-- `/dock-discord` （别名：`/dock_discord`）（将回复切换到 Discord）
-- `/dock-slack` （别名：`/dock_slack`）（将回复切换到 Slack）
-- `/activation mention|always` （仅限群组）
-- `/send on|off|inherit` （仅限所有者）
-- `/reset` 或 `/new [model]` （可选模型提示；其余部分将透传）
-- `/think <off|minimal|low|medium|high|xhigh>` （由模型/提供商提供的动态选择；别名：`/thinking`，`/t`）
-- `/fast status|on|off` （省略参数会显示当前有效的快速模式状态）
-- `/verbose on|full|off` （别名：`/v`）
-- `/reasoning on|off|stream` (别名: `/reason`; 开启时，发送一条带有 `Reasoning:` 前缀的单独消息; `stream` = 仅限 Telegram 草稿)
-- `/elevated on|off|ask|full` (别名: `/elev`; `full` 跳过执行批准)
-- `/exec host=<sandbox|gateway|node> security=<deny|allowlist|full> ask=<off|on-miss|always> node=<id>` (发送 `/exec` 以显示当前设置)
-- `/model <name>` (别名: `/models`; 或从 `agents.defaults.models.*.alias` 中使用 `/<alias>`)
-- `/queue <mode>` (加上选项如 `debounce:2s cap:25 drop:summarize`; 发送 `/queue` 查看当前设置)
-- `/bash <command>` (仅限主机; `! <command>` 的别名; 需要 `commands.bash: true` + `tools.elevated` 允许列表)
+- `/dock-telegram`（别名：`/dock_telegram`）（将回复切换到 Telegram）
+- `/dock-discord`（别名：`/dock_discord`）（将回复切换到 Discord）
+- `/dock-slack`（别名：`/dock_slack`）（将回复切换到 Slack）
+- `/activation mention|always`（仅限群组）
+- `/send on|off|inherit`（仅限所有者）
+- `/reset` 或 `/new [model]`（可选的模型提示；其余部分将透传）
+- `/think <off|minimal|low|medium|high|xhigh>`（根据模型/提供商动态选择；别名：`/thinking`、`/t`）
+- `/fast status|on|off`（省略参数将显示当前有效的快速模式状态）
+- `/verbose on|full|off`（别名：`/v`）
+- `/reasoning on|off|stream`（别名：`/reason`；开启时，发送一条带有 `Reasoning:` 前缀的单独消息；`stream` = 仅限 Telegram 草稿）
+- `/elevated on|off|ask|full` (别名：`/elev`；`full` 跳过执行审批)
+- `/exec host=<auto|sandbox|gateway|node> security=<deny|allowlist|full> ask=<off|on-miss|always> node=<id>` (发送 `/exec` 以显示当前值)
+- `/model <name>` (别名：`/models`；或来自 `agents.defaults.models.*.alias` 的 `/<alias>`)
+- `/queue <mode>` (加上 `debounce:2s cap:25 drop:summarize` 等选项；发送 `/queue` 查看当前设置)
+- `/bash <command>` (仅限主机；`! <command>` 的别名；需要 `commands.bash: true` + `tools.elevated` 白名单)
 
-仅限文本:
+纯文本：
 
 - `/compact [instructions]` (参见 [/concepts/compaction](/en/concepts/compaction))
-- `! <command>` (仅限主机; 一次一个; 长时间运行的任务使用 `!poll` + `!stop`)
-- `!poll` (检查输出 / 状态; 接受可选的 `sessionId`; `/bash poll` 也可以使用)
-- `!stop` (停止正在运行的 bash 任务; 接受可选的 `sessionId`; `/bash stop` 也可以使用)
+- `! <command>` (仅限主机；一次一个；对于长时间运行的任务，使用 `!poll` + `!stop`)
+- `!poll` (检查输出 / 状态；接受可选的 `sessionId`；`/bash poll` 也可以)
+- `!stop` (停止正在运行的 bash 任务；接受可选的 `sessionId`；`/bash stop` 也可以)
 
-注意:
+注意：
 
-- 命令在命令和参数之间接受可选的 `:` (例如 `/think: high`, `/send: on`, `/help:`)。
-- `/new <model>` 接受模型别名、`provider/model` 或提供商名称 (模糊匹配); 如果没有匹配，该文本将被视为消息正文。
-- 如需完整的提供商使用细分，请使用 `openclaw status --usage`。
+- 命令接受在命令和参数之间加入可选的 `:` (例如 `/think: high`、`/send: on`、`/help:`)。
+- `/new <model>` 接受模型别名、`provider/model` 或提供商名称（模糊匹配）；如果没有匹配项，该文本将被视为消息正文。
+- 如需完整的提供商使用明细，请使用 `openclaw status --usage`。
 - `/allowlist add|remove` 需要 `commands.config=true` 并遵守渠道 `configWrites`。
-- 在多账号频道中，针对配置的 `/allowlist --account <id>` 和 `/config set channels.<provider>.accounts.<id>...` 也会遵循目标账号的 `configWrites`。
-- `/usage` 控制每次回复的使用情况页脚；`/usage cost` 会从 OpenClaw 会话日志中打印本地成本摘要。
+- 在多账户渠道中，针对配置的 `/allowlist --account <id>` 和 `/config set channels.<provider>.accounts.<id>...` 也会遵守目标账户的 `configWrites`。
+- `/usage` 控制每次响应的使用情况页脚；`/usage cost` 从 OpenClaw 会话日志中打印本地费用摘要。
 - `/restart` 默认启用；设置 `commands.restart: false` 可将其禁用。
-- Discord 专属的原生命令：`/vc join|leave|status` 控制语音频道（需要 `channels.discord.voice` 和原生命令；不可作为文本使用）。
+- Discord 专属原生命令：`/vc join|leave|status` 控制语音频道（需要 `channels.discord.voice` 和原生命令；不可作为文本使用）。
 - Discord 线程绑定命令（`/focus`、`/unfocus`、`/agents`、`/session idle`、`/session max-age`）需要启用有效的线程绑定（`session.threadBindings.enabled` 和/或 `channels.discord.threadBindings.enabled`）。
-- ACP 命令参考和运行时行为：[ACP Agents](/en/tools/acp-agents)。
-- `/verbose` 旨在用于调试和增加可见性；在正常使用中请保持 **关闭**。
-- `/fast on|off` 会持久化会话覆盖设置。使用会话 UI 中的 `inherit` 选项将其清除，并回退到配置默认值。
-- 相关时仍会显示工具失败摘要，但仅当 `/verbose` 为 `on` 或 `full` 时，才会包含详细的失败文本。
-- `/reasoning`（以及 `/verbose`）在群组设置中具有风险：它们可能会泄露您无意暴露的内部推理或工具输出。建议保持关闭，尤其是在群聊中。
-- **快速路径：** 来自白名单发送者的纯命令消息会被立即处理（绕过队列 + 模型）。
-- **群组提及限制：** 来自白名单发送者的纯命令消息可绕过提及要求。
-- **内联快捷方式（仅限白名单发送者）：** 某些命令在嵌入到普通消息中时也有效，并且会在模型看到剩余文本之前被剔除。
-  - 示例：`hey /status` 会触发状态回复，而剩余的文本会继续通过正常流程处理。
-- 目前包括：`/help`、`/commands`、`/status`、`/whoami`（`/id`）。
-- 未经授权的纯命令消息将被静默忽略，内联 `/...` 令牌将被视为纯文本。
-- **Skills 命令：** `user-invocable` Skills 被暴露为斜杠命令。名称会被清洗为 `a-z0-9_`（最多 32 个字符）；冲突会加上数字后缀（例如 `_2`）。
-  - `/skill <name> [input]` 按名称运行一个 Skill（当原生命令限制阻止每个 Skill 对应命令时很有用）。
-  - 默认情况下，Skills 命令作为正常请求转发给模型。
-  - Skills 可以选择性地声明 `command-dispatch: tool` 以将命令直接路由到工具（确定性，不经过模型）。
+- ACP 命令参考和运行时行为：[ACP 代理](/en/tools/acp-agents)。
+- `/verbose` 旨在用于调试和额外的可见性；在正常使用中请保持关闭。
+- `/fast on|off` 持久化会话覆盖。使用会话 UI 中的 `inherit` 选项将其清除并回退到配置默认值。
+- `/fast` 因提供商而异：OpenAI/OpenAI Codex 在原生 Responses 端点上将其映射到 `service_tier=priority`，而直接面向 Anthropic 的公共请求（包括发送到 `api.anthropic.com` 的 OAuth 认证流量）则将其映射到 `service_tier=auto` 或 `standard_only`。请参阅 [OpenAI](/en/providers/openai) 和 [Anthropic](/en/providers/anthropic)。
+- 相关的工具故障摘要仍会显示，但仅当 `/verbose` 为 `on` 或 `full` 时，才会包含详细的故障文本。
+- `/reasoning`（以及 `/verbose`）在群组设置中有风险：它们可能会泄露您无意暴露的内部推理或工具输出。建议将其关闭，尤其是在群组聊天中。
+- `/model` 会立即持久化新的会话模型，但它不会中断正在进行的运行。当前回合将先完成，然后排队或未来的工作将使用更新的模型。
+- **快速路径：** 来自允许列表发送者的纯命令消息会被立即处理（绕过队列 + 模型）。
+- **群组提及限制：** 来自允许列表发送者的纯命令消息可以绕过提及要求。
+- **内联快捷方式（仅限允许列表发送者）：** 某些命令在嵌入到普通消息中时也有效，并且在模型看到剩余文本之前会被剥离。
+  - 示例：`hey /status` 会触发状态回复，剩余文本将继续通过正常流程。
+- 目前包括：`/help`、`/commands`、`/status`、`/whoami` (`/id`)。
+- 未授权的纯命令消息将被静默忽略，而内联 `/...` 标记将被视为纯文本。
+- **技能命令：** `user-invocable` Skills 作为斜杠命令公开。名称会被清理为 `a-z0-9_`（最多 32 个字符）；冲突的名称会加上数字后缀（例如 `_2`）。
+  - `/skill <name> [input]` 按名称运行一个 Skill（当原生命令限制无法为每个 Skill 创建命令时很有用）。
+  - 默认情况下，技能命令会作为普通请求转发给模型。
+  - Skills 可以选择性地声明 `command-dispatch: tool`，以便将命令直接路由到工具（确定性的，不使用模型）。
   - 示例：`/prose`（OpenProse 插件）——参见 [OpenProse](/en/prose)。
-- **原生命令参数：** Discord 使用自动完成功能来提供动态选项（当您省略必需参数时还会显示按钮菜单）。当命令支持选项并且您省略了参数时，Telegram 和 Slack 会显示按钮菜单。
+- **原生命令参数：** Discord 对动态选项使用自动完成（当您省略必需参数时还会显示按钮菜单）。Telegram 和 Slack 在命令支持选项且您省略参数时会显示按钮菜单。
 
 ## `/tools`
 
-`/tools` 回答的是运行时问题，而不是配置问题：**此 Agent 在此会话中此刻可以使用什么**。
+`/tools` 回答的是一个运行时问题，而不是配置问题：**该智能体在此对话中此刻可以使用什么**。
 
-- 默认的 `/tools` 是紧凑的，并针对快速浏览进行了优化。
+- 默认的 `/tools` 是紧凑的，并经过优化以便快速浏览。
 - `/tools verbose` 会添加简短描述。
-- 支持参数的原生命令界面会像 `compact|verbose` 一样公开相同的模式切换。
-- 结果是会话作用域的，因此更改 Agent、渠道、线程、发送者授权或模型可能会改变输出。
-- `/tools` 包括在运行时实际可访问的工具，包括核心工具、已连接的插件工具和渠道拥有的工具。
+- 支持参数的原生命令界面会暴露与 `compact|verbose` 相同的模式切换。
+- 结果的范围限定于会话，因此更改 agent、渠道、thread、发送者授权或模型可以
+  更改输出。
+- `/tools` 包含在运行时实际可访问的工具，包括核心工具、已连接的
+  插件工具和渠道拥有的工具。
 
-对于配置文件和覆盖编辑，请使用控制 UI 工具面板或配置/目录界面，而不是将 `/tools` 视为静态目录。
+对于配置文件和覆盖编辑，请使用控制 UI 工具面板或配置/目录界面，而不是将
+`/tools` 视为静态目录。
 
-## 使用界面（在哪里显示什么）
+## 使用界面（在何处显示什么）
 
-- **提供商使用量/配额**（例如：“Claude 剩余 80%”）会在启用使用量跟踪时显示在 `/status` 中，针对当前模型提供商。
-- **每次响应的令牌/成本**由 `/usage off|tokens|full` 控制（附加到正常回复中）。
-- `/model status` 关乎**模型/认证/端点**，而非使用量。
+- **提供商使用情况/配额**（例如：“Claude 剩余 80%”）会在 `/status` 中显示当前模型提供商的信息，前提是启用了使用情况跟踪。
+- **每次响应的 token/成本** 由 `/usage off|tokens|full` 控制（附加到正常回复后）。
+- `/model status` 关乎 **模型/认证/端点**，而非使用情况。
 
 ## 模型选择 (`/model`)
 
@@ -191,16 +197,16 @@ title: "斜杠命令"
 /model status
 ```
 
-说明：
+备注：
 
-- `/model` 和 `/model list` 会显示一个紧凑的、带编号的选择器（模型系列 + 可用提供商）。
-- 在 Discord 上，`/model` 和 `/models` 会打开一个交互式选择器，其中包含提供商和模型下拉菜单以及一个提交步骤。
-- `/model <#>` 会从该选择器中进行选择（并在可能的情况下首选当前提供商）。
-- `/model status` 会显示详细视图，包括已配置的提供商端点 (`baseUrl`) 和 API 模式 (`api`)（如果可用）。
+- `/model` 和 `/model list` 显示一个紧凑的带编号选择器（模型系列 + 可用提供商）。
+- 在 Discord 上，`/model` 和 `/models` 会打开一个交互式选择器，其中包含提供商和模型下拉菜单以及提交步骤。
+- `/model <#>` 从该选择器中进行选择（并在可能的情况下首选当前提供商）。
+- `/model status` 显示详细视图，包括配置的提供商端点 (`baseUrl`) 和 API 模式 (`api`)（如果可用）。
 
 ## 调试覆盖
 
-`/debug` 允许您设置**仅运行时**的配置覆盖（内存中，而非磁盘）。仅限所有者。默认禁用；通过 `commands.debug: true` 启用。
+`/debug` 允许您设置 **仅运行时** 的配置覆盖（内存中，而非磁盘）。仅限所有者。默认禁用；通过 `commands.debug: true` 启用。
 
 示例：
 
@@ -212,9 +218,9 @@ title: "斜杠命令"
 /debug reset
 ```
 
-说明：
+备注：
 
-- 覆盖会立即应用于新的配置读取，但**不会**写入 `openclaw.json`。
+- 覆盖立即应用于新的配置读取，但 **不会** 写入 `openclaw.json`。
 - 使用 `/debug reset` 清除所有覆盖并返回磁盘上的配置。
 
 ## 配置更新
@@ -231,14 +237,14 @@ title: "斜杠命令"
 /config unset messages.responsePrefix
 ```
 
-说明：
+备注：
 
 - 配置在写入前会进行验证；无效的更改将被拒绝。
-- `/config` 更新在重启后依然有效。
+- `/config` 更新在重启后仍然保留。
 
 ## MCP 更新
 
-`/mcp` 会将 OpenClaw 托管的 MCP 服务器定义写入 `mcp.servers` 下。仅限所有者。默认禁用；通过 `commands.mcp: true` 启用。
+`/mcp` 将 OpenClaw 托管的 MCP 服务器定义写入 `mcp.servers`。仅限所有者。默认禁用；通过 `commands.mcp: true` 启用。
 
 示例：
 
@@ -249,10 +255,10 @@ title: "斜杠命令"
 /mcp unset context7
 ```
 
-说明：
+注意：
 
-- `/mcp` 将配置存储在 OpenClaw 配置中，而非 Pi 拥有的项目设置中。
-- 运行时适配器决定哪些传输方式实际上是可执行的。
+- `/mcp` 将配置存储在 OpenClaw 配置中，而不是 Pi 拥有的项目设置中。
+- 运行时适配器决定哪些传输实际上是可执行的。
 
 ## 插件更新
 
@@ -268,36 +274,36 @@ title: "斜杠命令"
 /plugins disable context7
 ```
 
-注意事项：
+注意：
 
-- `/plugins list` 和 `/plugins show` 针对当前工作区以及磁盘配置使用真实的插件发现机制。
+- `/plugins list` 和 `/plugins show` 使用针对当前工作区以及磁盘配置的真实插件发现。
 - `/plugins enable|disable` 仅更新插件配置；它不安装或卸载插件。
-- 在启用/禁用更改后，重启网关以应用它们。
+- 启用/禁用更改后，重启网关以应用它们。
 
 ## 界面说明
 
 - **文本命令** 在普通聊天会话中运行（私信共享 `main`，群组有自己的会话）。
 - **原生命令** 使用隔离的会话：
-  - Discord：`agent:<agentId>:discord:slash:<userId>`
-  - Slack：`agent:<agentId>:slack:slash:<userId>`（前缀可通过 `channels.slack.slashCommand.sessionPrefix` 配置）
-  - Telegram：`telegram:slash:<userId>`（通过 `CommandTargetSessionKey` 定位聊天会话）
-- **`/stop`** 以当前活动的聊天会话为目标，以便它可以中止当前的运行。
-- **Slack：** 仍然支持对单个 `/openclaw` 样式的命令使用 `channels.slack.slashCommand`。如果启用 `commands.native`，则必须为每个内置命令创建一个 Slack 斜杠命令（名称与 `/help` 相同）。Slack 的命令参数菜单以临时 Block Kit 按钮的形式提供。
-  - Slack 原生例外：注册 `/agentstatus`（而非 `/status`），因为 Slack 保留了 `/status`。文本 `/status` 在 Slack 消息中仍然有效。
+  - Discord: `agent:<agentId>:discord:slash:<userId>`
+  - Slack: `agent:<agentId>:slack:slash:<userId>` (前缀可通过 `channels.slack.slashCommand.sessionPrefix` 配置)
+  - Telegram: `telegram:slash:<userId>` (通过 `CommandTargetSessionKey` 定位聊天会话)
+- **`/stop`** 以活动的聊天会话为目标，以便它可以中止当前的运行。
+- **Slack:** `channels.slack.slashCommand` 仍然支持用于单个 `/openclaw` 样式的命令。如果您启用 `commands.native`，您必须为每个内置命令创建一个 Slack 斜杠命令（名称与 `/help` 相同）。Slack 的命令参数菜单作为临时的 Block Kit 按钮提供。
+  - Slack 原生例外：注册 `/agentstatus`（而不是 `/status`），因为 Slack 保留了 `/status`。文本 `/status` 在 Slack 消息中仍然有效。
 
-## 顺便说一句（BTW）附加问题
+## BTW 附带问题
 
-`/btw` 是关于当前会话的一个快速**附加问题**。
+`/btw` 是关于当前会话的快速**附带问题**。
 
 与普通聊天不同：
 
 - 它使用当前会话作为背景上下文，
-- 它作为一次单独的**无工具**一次性调用运行，
+- 它作为单独的**无工具（工具-less）**一次性调用运行，
 - 它不会更改未来的会话上下文，
-- 它不会写入转录记录历史，
-- 它作为实时侧边结果提供，而不是普通的助手消息。
+- 它不会写入脚本历史记录，
+- 它作为实时附带结果交付，而不是普通的助手消息。
 
-这使得 `/btw` 在你需要进行临时澄清，同时主任务继续进行时非常有用。
+这使得 `/btw` 在您想要临时澄清而主任务继续进行时非常有用。
 
 示例：
 
@@ -305,4 +311,4 @@ title: "斜杠命令"
 /btw what are we doing right now?
 ```
 
-有关完整的行为和客户端 UX 详细信息，请参阅 [BTW Side Questions](/en/tools/btw)。
+有关完整行为和客户端 UX 详细信息，请参阅 [BTW 附带问题](/en/tools/btw)。

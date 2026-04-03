@@ -1,5 +1,5 @@
 ---
-summary: "Utiliser les modèles Amazon Bedrock (Converse API) avec OpenClaw"
+summary: "Utiliser les modèles Amazon Bedrock (API Converse) avec API"
 read_when:
   - You want to use Amazon Bedrock models with OpenClaw
   - You need AWS credential/region setup for model calls
@@ -19,7 +19,7 @@ OpenClaw peut utiliser des modèles **Amazon Bedrock** via le fournisseur de str
 
 ## Découverte automatique de modèles
 
-Si des informations d'identification AWS sont détectées, OpenClaw peut découvrir automatiquement les modèles Bedrock qui prennent en charge le **streaming** et la **sortie de texte**. La découverte utilise `bedrock:ListFoundationModels` et est mise en cache (par défaut : 1 heure).
+Si des identifiants AWS sont détectés, OpenClaw peut découvrir automatiquement les modèles Bedrock qui prennent en charge le **streaming** et la **sortie de texte**. La découverte utilise `bedrock:ListFoundationModels` et est mise en cache (par défaut : 1 heure).
 
 Les options de configuration se trouvent sous `models.bedrockDiscovery` :
 
@@ -40,12 +40,11 @@ Les options de configuration se trouvent sous `models.bedrockDiscovery` :
 
 Remarques :
 
-- `enabled` correspond par défaut à `true` lorsque les informations d'identification AWS sont présentes.
-- `region` correspond par défaut à `AWS_REGION` ou `AWS_DEFAULT_REGION`, puis `us-east-1`.
+- `enabled` est défini par défaut sur `true` lorsque des identifiants AWS sont présents.
+- `region` est défini par défaut sur `AWS_REGION` ou `AWS_DEFAULT_REGION`, puis `us-east-1`.
 - `providerFilter` correspond aux noms des fournisseurs Bedrock (par exemple `anthropic`).
-- `refreshInterval` est en secondes ; définissez sur `0` pour désactiver la mise en cache.
-- `defaultContextWindow` (par défaut : `32000`) et `defaultMaxTokens` (par défaut : `4096`)
-  sont utilisés pour les modèles découverts (remplacez-les si vous connaissez les limites de votre modèle).
+- `refreshInterval` correspond à des secondes ; définissez sur `0` pour désactiver la mise en cache.
+- `defaultContextWindow` (par défaut : `32000`) et `defaultMaxTokens` (par défaut : `4096`) sont utilisés pour les modèles découverts (remplacez-les si vous connaissez les limites de votre modèle).
 
 ## Intégration
 
@@ -101,8 +100,7 @@ utilisera automatiquement le service de métadonnées de l'instance (IMDS) pour 
 Cependant, la détection d'informations d'identification par OpenClaw vérifie actuellement uniquement les variables d'environnement,
 et non les informations d'identification IMDS.
 
-**Solution de contournement :** Définissez `AWS_PROFILE=default` pour signaler que les informations d'identification AWS sont
-disponibles. L'authentification réelle utilise toujours le rôle d'instance via IMDS.
+**Solution de contournement :** Définissez `AWS_PROFILE=default` pour signaler que les identifiants AWS sont disponibles. L'authentification réelle utilise toujours le rôle d'instance via IMDS.
 
 ```bash
 # Add to ~/.bashrc or your shell profile
@@ -163,10 +161,49 @@ openclaw models list
 - Bedrock nécessite que l'**accès aux models** soit activé dans votre compte/region AWS.
 - La découverte automatique nécessite l'autorisation `bedrock:ListFoundationModels`.
 - Si vous utilisez des profils, définissez `AWS_PROFILE` sur l'hôte de la passerelle.
-- OpenClaw expose la source des informations d'identification dans cet ordre : `AWS_BEARER_TOKEN_BEDROCK`,
-  puis `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY`, puis `AWS_PROFILE`, puis la
-  chaîne par défaut du AWS SDK.
+- OpenClaw expose la source des identifiants dans cet ordre : `AWS_BEARER_TOKEN_BEDROCK`, puis `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY`, puis `AWS_PROFILE`, puis la chaîne SDK AWS par défaut.
 - La prise en charge du raisonnement dépend du model ; consultez la fiche technique du model Bedrock pour
   connaître les capacités actuelles.
 - Si vous préférez un flux de clés géré, vous pouvez également placer un proxy compatible OpenAI
   devant Bedrock et le configurer en tant que fournisseur OpenAI à la place.
+
+## Guardrails
+
+Vous pouvez appliquer les [ Amazon Bedrock Guardrails](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html)
+à tous les appels de modèle Bedrock en ajoutant un objet `guardrail` à la
+configuration du plugin `amazon-bedrock`. Les garde-fous vous permettent d'appliquer un filtrage de contenu,
+le refus de sujets, des filtres de mots, des filtres d'informations sensibles et des vérifications
+d'ancrage contextuel.
+
+```json5
+{
+  plugins: {
+    entries: {
+      "amazon-bedrock": {
+        config: {
+          guardrail: {
+            guardrailIdentifier: "abc123", // guardrail ID or full ARN
+            guardrailVersion: "1", // version number or "DRAFT"
+            streamProcessingMode: "sync", // optional: "sync" or "async"
+            trace: "enabled", // optional: "enabled", "disabled", or "enabled_full"
+          },
+        },
+      },
+    },
+  },
+}
+```
+
+- `guardrailIdentifier` (requis) accepte un ID de garde-fou (p. ex. `abc123`) ou un
+  ARN complet (p. ex. `arn:aws:bedrock:us-east-1:123456789012:guardrail/abc123`).
+- `guardrailVersion` (requis) spécifie la version publiée à utiliser, ou
+  `"DRAFT"` pour la brouillon de travail.
+- `streamProcessingMode` (facultatif) contrôle si l'évaluation du garde-fou s'exécute
+  de manière synchrone (`"sync"`) ou asynchrone (`"async"`) pendant le streaming. Si
+  omis, Bedrock utilise son comportement par défaut.
+- `trace` (facultatif) active la sortie de trace du garde-fou dans la réponse API. Définissez sur
+  `"enabled"` ou `"enabled_full"` pour le débogage ; omettez ou définissez `"disabled"` pour
+  la production.
+
+Le principal IAM utilisé par la passerelle doit disposer de l'autorisation `bedrock:ApplyGuardrail`
+en plus des autorisations d'appel standard.

@@ -5,7 +5,7 @@ description: 在 Fly.io 上部署 OpenClaw
 
 # Fly.io 部署
 
-**目标：** 在 [Fly.io](https://fly.io) 机器上运行 OpenClaw Gateway 网关，具有持久存储、自动 HTTPS 和 Discord/渠道访问权限。
+**目标：** 在 [Fly.io](https://fly.io) 机器上运行 OpenClaw Gateway(网关) 网关，具有持久存储、自动 HTTPS 和 Discord/渠道访问权限。
 
 ## 你需要准备
 
@@ -211,7 +211,7 @@ exit
 fly machine restart <machine-id>
 ```
 
-## 6) 访问 Gateway 网关
+## 6) 访问 Gateway(网关) 网关
 
 ### 控制 UI
 

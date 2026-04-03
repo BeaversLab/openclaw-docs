@@ -107,7 +107,7 @@ read_when:
 - `after` (`string`): 更新后的文本。当省略 `patch` 时，与 `before` 一起使用时是必需的。
 - `patch` (`string`): 统一差异文本。与 `before` 和 `after` 互斥。
 - `path` (`string`): 前后模式的显示文件名。
-- `lang` (`string`): 前后模式的语言覆盖提示。
+- `lang` (`string`)：用于之前和之后模式的语言覆盖提示。未知值将回退到纯文本。
 - `title` (`string`): 查看器标题覆盖。
 - `mode` (`"view" | "file" | "both"`): 输出模式。默认为插件默认值 `defaults.mode`。
   已弃用的别名：`"image"` 的行为类似于 `"file"`，为了向后兼容仍然接受。
@@ -281,31 +281,33 @@ read_when:
 - `/plugins/diffs/assets/viewer.js`
 - `/plugins/diffs/assets/viewer-runtime.js`
 
+查看器文档会相对于查看器 URL 解析这些资源，因此对于这两个资源请求也会保留可选的 `baseUrl` 路径前缀。
+
 URL 构建行为：
 
-- 如果提供了 `baseUrl`，则在进行严格验证后使用它。
-- 如果没有 `baseUrl`，查看器 URL 默认为本地回环 `127.0.0.1`。
+- 如果提供了 `baseUrl`，则会在严格验证后使用它。
+- 如果没有 `baseUrl`，查看器 URL 默认为回环 `127.0.0.1`。
 - 如果网关绑定模式是 `custom` 并且设置了 `gateway.customBindHost`，则使用该主机。
 
 `baseUrl` 规则：
 
 - 必须是 `http://` 或 `https://`。
-- 查询和哈希会被拒绝。
-- 允许源加上可选的基本路径。
+- 查询字符串和哈希值会被拒绝。
+- 允许源 加上可选的基路径。
 
 ## 安全模型
 
 查看器加固：
 
-- 默认仅限本地回环。
+- 默认仅限回环。
 - 带有严格 ID 和令牌验证的令牌化查看器路径。
 - 查看器响应 CSP：
   - `default-src 'none'`
-  - 脚本和资源仅来自自身
+  - 脚本和资源仅允许来自 self
   - 没有出站 `connect-src`
 - 启用远程访问时的远程未命中限制：
-  - 60 秒内 40 次失败
-  - 60 秒锁定 (`429 Too Many Requests`)
+  - 60秒内40次失败
+  - 60秒锁定 (`429 Too Many Requests`)
 
 文件渲染加固：
 
@@ -330,50 +332,50 @@ URL 构建行为：
 
 - `Diff PNG/PDF rendering requires a Chromium-compatible browser...`
 
-修复方法：安装 Chrome、Chromium、Edge 或 Brave，或设置上述可执行路径选项之一。
+请通过安装 Chrome、Chromium、Edge 或 Brave 来解决，或者设置上述可执行路径选项之一。
 
 ## 故障排除
 
 输入验证错误：
 
 - `Provide patch or both before and after text.`
-  - 同时包含 `before` 和 `after`，或提供 `patch`。
+  - 请同时包含 `before` 和 `after`，或提供 `patch`。
 - `Provide either patch or before/after input, not both.`
-  - 不要混合输入模式。
+  - 请勿混合输入模式。
 - `Invalid baseUrl: ...`
-  - 使用 `http(s)` 源（可选路径），无查询/哈希。
+  - 使用带有可选路径的 `http(s)` 源，不要包含查询/哈希。
 - `{field} exceeds maximum size (...)`
-  - 减少负载大小。
+  - 减少有效载荷大小。
 - 大型补丁拒绝
   - 减少补丁文件数量或总行数。
 
 查看器可访问性问题：
 
-- 查看器 URL 默认解析为 `127.0.0.1`。
-- 对于远程访问场景，请：
-  - 每次工具调用传递 `baseUrl`，或
+- 默认情况下，查看器 URL 解析为 `127.0.0.1`。
+- 对于远程访问场景，请执行以下任一操作：
+  - 在每次工具调用时传递 `baseUrl`，或
   - 使用 `gateway.bind=custom` 和 `gateway.customBindHost`
-- 仅当您打算允许外部查看器访问时，才启用 `security.allowRemoteViewer`。
+- 仅当您打算进行外部查看器访问时，才启用 `security.allowRemoteViewer`。
 
 未修改行没有展开按钮：
 
-- 当补丁不包含可展开的上下文时，补丁输入可能会发生这种情况。
-- 这是预期行为，并不表示查看器失败。
+- 当补丁不包含可展开上下文时，补丁输入可能会发生这种情况。
+- 这是预期行为，并不表示查看器故障。
 
-未找到工件：
+找不到工件：
 
-- 工件因 TTL（生存时间）到期而过期。
-- Token 或路径已更改。
-- 清理操作删除了陈旧数据。
+- 工件因 TTL 过期。
+- 令牌或路径已更改。
+- 清理已删除陈旧数据。
 
 ## 操作指南
 
-- 对于画布中的本地交互式审查，请优先使用 `mode: "view"`。
-- 对于需要附件的出站聊天渠道，请优先使用 `mode: "file"`。
+- 对于在画布中进行本地交互式审阅，请首选 `mode: "view"`。
+- 对于需要附件的外发聊天渠道，请首选 `mode: "file"`。
 - 除非您的部署需要远程查看器 URL，否则请保持 `allowRemoteViewer` 禁用状态。
 - 为敏感差异设置明确的简短 `ttlSeconds`。
 - 在不必要时，避免在差异输入中发送机密信息。
-- 如果您的渠道（例如 Telegram 或 WhatsApp）会激进地压缩图像，请首选 PDF 输出 (`fileFormat: "pdf"`)。
+- 如果您的渠道对图像进行过度压缩（例如 Telegram 或 WhatsApp），请首选 PDF 输出（`fileFormat: "pdf"`）。
 
 差异渲染引擎：
 

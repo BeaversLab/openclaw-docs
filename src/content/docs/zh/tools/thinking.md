@@ -54,43 +54,43 @@ title: "思考级别"
   3. 每代理默认（`agents.list[].fastModeDefault`）
   4. 每模型配置：`agents.defaults.models["<provider>/<model>"].params.fastMode`
   5. 回退：`off`
-- 对于 `openai/*`，快速模式应用 OpenAI 快速配置文件：在支持时应用 `service_tier=priority`，以及低推理强度和低文本冗长度。
-- 对于 `openai-codex/*`，快速模式在 Codex 响应上应用相同的低延迟配置文件。OpenClaw 在这两种身份验证路径之间保持一个共享的 `/fast` 切换开关。
-- 对于直接的 `anthropic/*` API 密钥请求，快速模式映射到 Anthropic 服务层级：`/fast on` 设置 `service_tier=auto`，`/fast off` 设置 `service_tier=standard_only`。
-- Anthropic 快速模式仅支持 API 密钥。OpenClaw 会跳过为 Claude 设置令牌 / Anthropic 认证以及非 OAuth 代理基础 URL 注入 Anthropic 服务层级的操作。
+- 对于 `openai/*`，快速模式通过在支持的 Responses 请求中发送 `service_tier=priority` 映射到 OpenAI 优先处理。
+- 对于 `openai-codex/*`，快速模式在 Codex Responses 上发送相同的 `service_tier=priority` 标志。OpenClaw 在两条身份验证路径之间保持一个共享的 `/fast` 切换开关。
+- 对于直接公开的 `anthropic/*` 请求，包括发送到 `api.anthropic.com` 的 OAuth 认证流量，快速模式映射到 Anthropic 服务层：`/fast on` 设置 `service_tier=auto`，`/fast off` 设置 `service_tier=standard_only`。
+- 当两者都设置时，显式的 Anthropic `serviceTier` / `service_tier` 模型参数会覆盖快速模式的默认值。对于非 OpenClaw 代理基础 URL，Anthropic 仍然跳过 Anthropic 服务层注入。
 
 ## 详细指令 (/verbose 或 /v)
 
 - 级别：`on`（最少）| `full` | `off`（默认）。
-- 仅指令消息会切换会话的详细模式并回复 `Verbose logging enabled.` / `Verbose logging disabled.`；无效的级别会返回提示而不改变状态。
-- `/verbose off` 存储显式的会话覆盖；通过会话 UI 选择 `inherit` 来清除它。
+- 仅指令的消息切换会话详细模式并回复 `Verbose logging enabled.` / `Verbose logging disabled.`；无效级别返回提示而不改变状态。
+- `/verbose off` 存储显式的会话覆盖；通过 Sessions UI 通过选择 `inherit` 清除它。
 - 内联指令仅影响该消息；否则应用会话/全局默认值。
-- 发送不带参数的 `/verbose`（或 `/verbose:`）以查看当前的详细级别。
-- 当详细模式开启时，发出结构化工具结果（Pi，其他 JSON 代理）的代理会将每个工具调用作为其自身的仅元数据消息发回，并在可用时（路径/命令）加上 `<emoji> <tool-name>: <arg>` 前缀。这些工具摘要会在每个工具启动时立即发送（独立的气泡），而不是作为流式增量发送。
-- 工具失败摘要在正常模式下仍然可见，但原始错误详情后缀会被隐藏，除非详细级别为 `on` 或 `full`。
-- 当详细级别为 `full` 时，工具输出也会在完成后转发（独立的气泡，截断至安全长度）。如果在运行过程中切换 `/verbose on|full|off`，随后的工具气泡将遵循新设置。
+- 发送不带参数的 `/verbose`（或 `/verbose:`）以查看当前详细级别。
+- 当详细模式开启时，发出结构化工具结果的代理（Pi，其他 JSON 代理）将每个工具调用作为其自己的仅元数据消息发回，并在可用时以 `<emoji> <tool-name>: <arg>` 为前缀（路径/命令）。这些工具摘要在每个工具启动时立即发送（单独的气泡），而不是作为流式增量发送。
+- 工具失败摘要在正常模式下仍然可见，但除非详细模式为 `on` 或 `full`，否则原始错误详细信息后缀会被隐藏。
+- 当 verbose 为 `full` 时，工具输出也会在完成后被转发（单独的气泡，截断至安全长度）。如果在运行过程中切换 `/verbose on|full|off`，随后的工具气泡将遵循新设置。
 
 ## 推理可见性 (/reasoning)
 
 - 级别：`on|off|stream`。
 - 仅指令消息切换是否在回复中显示思考块。
-- 启用后，推理会作为以 `Reasoning:` 为前缀的**单独消息**发送。
-- `stream`（仅限 Telegram）：在生成回复时将推理流式传输到 Telegram 草稿气泡中，然后发送不含推理的最终答案。
+- 启用后，推理将作为一条**单独的消息**发送，前缀为 `Reasoning:`。
+- `stream`（仅限 Telegram）：在生成回复时，将推理流式传输到 Telegram 的草稿气泡中，然后发送不包含推理的最终答案。
 - 别名：`/reason`。
-- 发送不带参数的 `/reasoning`（或 `/reasoning:`）以查看当前的推理级别。
-- 解析顺序：内联指令，然后是会话覆盖，接着是每个代理的默认值（`agents.list[].reasoningDefault`），最后是回退值（`off`）。
+- 发送 `/reasoning`（或 `/reasoning:`）且不带参数，以查看当前的推理级别。
+- 解析顺序：内联指令，然后是会话覆盖，然后是每个代理的默认值（`agents.list[].reasoningDefault`），最后是回退值（`off`）。
 
 ## 相关
 
-- 提升模式文档位于 [提升模式](/en/tools/elevated)。
+- Elevated 模式文档位于 [Elevated mode](/en/tools/elevated)。
 
 ## 心跳
 
-- 心跳探测正文是配置的心跳提示（默认：`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`）。心跳消息中的内联指令照常应用（但避免从心跳更改会话默认值）。
-- 心跳传递默认仅包含最终负载。要同时发送单独的 `Reasoning:` 消息（如果可用），请设置 `agents.defaults.heartbeat.includeReasoning: true` 或每个代理的 `agents.list[].heartbeat.includeReasoning: true`。
+- 心跳探测正文是配置的心跳提示（默认值：`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`）。心跳消息中的内联指令照常应用（但应避免从心跳中更改会话默认值）。
+- 心跳传递默认仅发送最终有效载荷。若要同时发送单独的 `Reasoning:` 消息（如果可用），请设置 `agents.defaults.heartbeat.includeReasoning: true` 或每个代理的 `agents.list[].heartbeat.includeReasoning: true`。
 
 ## Web 聊天界面
 
 - 页面加载时，Web 聊天思考选择器会镜像反映传入会话存储/配置中会话的存储级别。
-- 选择其他级别仅适用于下一条消息（`thinkingOnce`）；发送后，选择器将恢复到存储的会话级别。
-- 要更改会话默认值，请发送 `/think:<level>` 指令（如前所述）；选择器将在下次重新加载后反映这一点。
+- 选择另一个级别仅适用于下一条消息（`thinkingOnce`）；发送后，选择器会恢复到存储的会话级别。
+- 要更改会话默认值，请发送 `/think:<level>` 指令（照常）；选择器将在下次重新加载后反映该设置。

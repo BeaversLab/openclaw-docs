@@ -6,10 +6,10 @@ read_when:
 owner: "openclaw"
 status: "草稿"
 last_updated: "2026-01-19"
-title: "OpenResponses Gateway 网关 计划"
+title: "OpenResponses Gateway(网关) 网关 计划"
 ---
 
-# OpenResponses Gateway 网关 集成计划
+# OpenResponses Gateway(网关) 网关 集成计划
 
 ## 背景
 

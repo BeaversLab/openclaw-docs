@@ -27,7 +27,7 @@ openclaw plugins install @openclaw/tlon
 Copia local (cuando se ejecuta desde un repositorio git):
 
 ```bash
-openclaw plugins install ./extensions/tlon
+openclaw plugins install ./path/to/local/tlon-plugin
 ```
 
 Detalles: [Plugins](/en/tools/plugin)
@@ -274,3 +274,11 @@ Opciones del proveedor:
 - Respuestas en hilos: si el mensaje entrante está en un hilo, OpenClaw responde en el hilo.
 - Texto enriquecido: el formato Markdown (negrita, cursiva, código, encabezados, listas) se convierte al formato nativo de Tlon.
 - Imágenes: las URL se cargan en el almacenamiento de Tlon y se incrustan como bloques de imagen.
+
+## Relacionado
+
+- [Descripción general de canales](/en/channels) — todos los canales compatibles
+- [Emparejamiento](/en/channels/pairing) — autenticación de MD y flujo de emparejamiento
+- [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesión para mensajes
+- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento

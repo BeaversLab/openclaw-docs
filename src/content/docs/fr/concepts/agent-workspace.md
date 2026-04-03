@@ -233,3 +233,10 @@ Starter `.gitignore` suggéré :
   [Channel routing](/en/channels/channel-routing) pour la configuration du routage.
 - Si `agents.defaults.sandbox` est activé, les sessions non principales peuvent utiliser des espaces de travail sandbox par session
   sous `agents.defaults.sandbox.workspaceRoot`.
+
+## Connexes
+
+- [Standing Orders](/en/automation/standing-orders) — instructions persistantes dans les fichiers de l'espace de travail
+- [Heartbeat](/en/gateway/heartbeat) — fichier de l'espace de travail HEARTBEAT.md
+- [Session](/en/concepts/session) — chemins de stockage de session
+- [Sandboxing](/en/gateway/sandboxing) — accès à l'espace de travail dans les environnements sandboxés

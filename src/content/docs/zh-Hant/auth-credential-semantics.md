@@ -44,10 +44,17 @@ read_when:
 2. 對於符合資格的設定檔，權杖內容可以從內聯值或 `tokenRef` 解析。
 3. 無法解析的參照會在 `models status --probe` 輸出中產生 `unresolved_ref`。
 
-## 舊版相容訊息
+## OAuth SecretRef 原則守衛
 
-為了與腳本相容，探錯錯誤會保留第一行不變：
+- SecretRef 輸入僅適用於靜態憑證。
+- 如果設定檔憑證是 `type: "oauth"`，則該設定檔憑證素材不支援 SecretRef 物件。
+- 如果 `auth.profiles.<id>.mode` 為 `"oauth"`，則該設定檔的 SecretRef 支援之 `keyRef`/`tokenRef` 輸入將被拒絕。
+- 違規在啟動/重新載入驗證解析路徑中屬於嚴重失敗。
+
+## 相容舊版的訊息
+
+為了指令碼相容性，探測錯誤保持第一行不變：
 
 `Auth profile credentials are missing or expired.`
 
-後續行可以加入人類可讀的詳細資訊和穩定的原因代碼。
+人類易讀的詳細資訊和穩定的原因代碼可能會在後續行中新增。

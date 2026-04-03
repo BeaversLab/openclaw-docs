@@ -181,3 +181,9 @@ openclaw agents add personal
 
 - [/concepts/model-failover](/en/concepts/model-failover) （輪詢 + 冷卻規則）
 - [/tools/slash-commands](/en/tools/slash-commands) （指令介面）
+
+## 相關
+
+- [Authentication](/en/gateway/authentication) — 模型供應商驗證概覽
+- [Secrets](/en/gateway/secrets) — 憑證儲存與 SecretRef
+- [Configuration Reference](/en/gateway/configuration-reference#auth-storage) — 驗證配置鍵值

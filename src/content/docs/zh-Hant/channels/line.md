@@ -27,12 +27,12 @@ openclaw plugins install @openclaw/line
 本機簽出 (當從 git repo 執行時)：
 
 ```bash
-openclaw plugins install ./extensions/line
+openclaw plugins install ./path/to/local/line-plugin
 ```
 
 ## 設定
 
-1. 建立一個 LINE Developers 帳號並開啟控制台：
+1. 建立 LINE Developers 帳號並開啟控制台：
    [https://developers.line.biz/console/](https://developers.line.biz/console/)
 2. 建立 (或選擇) 一個 Provider 並新增一個 **Messaging API** 頻道。
 3. 從頻道設定中複製 **Channel access token** (頻道存取權杖) 與 **Channel secret** (頻道金鑰)。
@@ -180,8 +180,36 @@ LINE 外掛還附帶了一個 `/card` 指令，用於 Flex 訊息預設：
 /card info "Welcome" "Thanks for joining!"
 ```
 
+## ACP 支援
+
+LINE 支援 ACP（Agent Communication Protocol）對話綁定：
+
+- `/acp spawn <agent> --bind here` 將目前的 LINE 聊天綁定至 ACP 工作階段，而不建立子執行緒。
+- 已設定的 ACP 綁定和作用中的對話綁定 ACP 工作階段在 LINE 上的運作方式與其他對話管道相同。
+
+詳情請參閱 [ACP agents](/en/tools/acp-agents)。
+
+## 傳出媒體
+
+LINE 插件支援透過代理程式訊息工具傳送圖片、影片和音訊檔案。媒體會透過 LINE 專用的傳送路徑進行傳送，並包含適當的預覽和追蹤處理：
+
+- **圖片**：作為 LINE 圖片訊息發送，並自動產生預覽。
+- **影片**：附帶明確的預覽圖和內容類型處理方式發送。
+- **音訊**：作為 LINE 音訊訊息發送。
+
+當無法使用 LINE 專屬路徑時，一般媒體傳送會回退到現有的僅圖片路徑。
+
 ## 疑難排解
 
-- **Webhook 驗證失敗：**請確保 Webhook URL 是 HTTPS，且 `channelSecret` 與 LINE 主控台相符。
-- **沒有傳入事件：**請確認 Webhook 路徑符合 `channels.line.webhookPath`，且 LINE 可以連線到閘道。
-- **媒體下載錯誤：**如果媒體超過預設限制，請提高 `channels.line.mediaMaxMb`。
+- **Webhook 驗證失敗：** 請確保 webhook URL 是 HTTPS，且 `channelSecret` 與 LINE 主控台一致。
+- **No inbound events:** confirm the webhook path matches `channels.line.webhookPath`
+  and that the gateway is reachable from LINE.
+- **媒體下載錯誤：** 如果媒體超過預設限制，則引發 `channels.line.mediaMaxMb`。
+
+## 相關
+
+- [頻道總覽](/en/channels) — 所有支援的頻道
+- [配對](/en/channels/pairing) — 私訊驗證與配對流程
+- [群組](/en/channels/groups) — 群組聊天行為與提及限制
+- [通道路由](/en/channels/channel-routing) — 訊息的會話路由
+- [安全性](/en/gateway/security) — 存取模型與強化防護

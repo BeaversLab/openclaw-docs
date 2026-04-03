@@ -79,7 +79,7 @@ Valores predeterminados: `debounceMs: 1000`, `cap: 20`, `drop: summarize`.
 
 - Se aplica a las ejecuciones del agente de auto-respuesta en todos los canales entrantes que utilizan la canalización de respuesta de la puerta de enlace (WhatsApp web, Telegram, Slack, Discord, Signal, iMessage, webchat, etc.).
 - El carril predeterminado (`main`) es para todo el proceso para latidos entrantes + principales; establece `agents.defaults.maxConcurrent` para permitir múltiples sesiones en paralelo.
-- Pueden existir carriles adicionales (ej. `cron`, `subagent`) para que los trabajos en segundo plano se ejecuten en paralelo sin bloquear las respuestas entrantes.
+- Pueden existir carriles adicionales (p. ej. `cron`, `subagent`) para que los trabajos en segundo plano se ejecuten en paralelo sin bloquear las respuestas entrantes. Estas ejecuciones desacopladas se rastrean como [tareas en segundo plano](/en/automation/tasks).
 - Los carriles por sesión garantizan que solo una ejecución del agente toque una sesión dada a la vez.
 - Sin dependencias externas ni subprocesos de trabajo en segundo plano; TypeScript puro + promesas.
 

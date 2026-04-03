@@ -1,5 +1,5 @@
 ---
-summary: "在 exe.dev (VM + HTTPS 代理) 上运行 OpenClaw Gateway 网关 以进行远程访问"
+summary: "在 exe.dev (VM + HTTPS 代理) 上运行 OpenClaw Gateway(网关) 网关 以进行远程访问"
 read_when:
   - You want a cheap always-on Linux host for the Gateway
   - You want remote Control UI access without running your own VPS
@@ -8,7 +8,7 @@ title: "exe.dev"
 
 # exe.dev
 
-目标：在 exe.dev 虚拟机上运行 OpenClaw Gateway 网关，可通过以下方式从笔记本电脑访问： `https://<vm-name>.exe.xyz`
+目标：在 exe.dev 虚拟机上运行 OpenClaw Gateway(网关) 网关，可通过以下方式从笔记本电脑访问： `https://<vm-name>.exe.xyz`
 
 本页面假设使用 exe.dev 默认的 **exeuntu** 镜像。如果您选择了其他发行版，请相应地调整软件包。
 

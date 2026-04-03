@@ -48,7 +48,7 @@ cd openclaw-formal-models
 make <target>
 ```
 
-### Gateway 网关 暴露和开放 Gateway 网关 错误配置
+### Gateway(网关) 网关 暴露和开放 Gateway(网关) 网关 错误配置
 
 **声明：** 在没有身份验证的情况下绑定到环回地址之外的地址可能导致远程入侵 / 增加暴露面；令牌/密码会阻止未经身份验证的攻击者（根据模型假设）。
 

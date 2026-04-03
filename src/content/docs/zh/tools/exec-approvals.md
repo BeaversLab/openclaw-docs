@@ -24,7 +24,7 @@ Exec approvals 在执行主机上本地执行：
 
 信任模型说明：
 
-- 经过 Gateway 网关 身份验证的调用者是该 Gateway 网关 的受信任操作员。
+- 经过 Gateway(网关) 网关 身份验证的调用者是该 Gateway(网关) 网关 的受信任操作员。
 - 配对的节点将该受信任操作员能力扩展到节点主机。
 - Exec approvals 可以降低意外执行的风险，但并非每用户身份验证边界。
 - 批准的节点主机运行绑定规范执行上下文：规范 cwd、精确 argv、存在时的
@@ -143,12 +143,12 @@ macOS 拆分：
 
 ## 自动允许技能 CLI
 
-启用 **Auto-allow skill CLIs** 后，已知技能引用的可执行文件将被视为在节点（macOS 节点或无头节点主机）上已加入允许列表。这通过 Gateway RPC 使用 `skills.bins` 来获取技能二进制文件列表。如果您需要严格的手动允许列表，请禁用此功能。
+启用 **Auto-allow skill CLIs** 后，已知技能引用的可执行文件将被视为在节点（macOS 节点或无头节点主机）上已加入允许列表。这通过 Gateway(网关) RPC 使用 `skills.bins` 来获取技能二进制文件列表。如果您需要严格的手动允许列表，请禁用此功能。
 
 重要信任说明：
 
 - 这是一个**隐式便利允许列表**，与手动路径允许列表条目分开。
-- 它适用于 Gateway 和节点处于相同信任边界中的受信任操作员环境。
+- 它适用于 Gateway(网关) 和节点处于相同信任边界中的受信任操作员环境。
 - 如果您需要严格的显式信任，请保持 `autoAllowSkills: false` 启用，并仅使用手动路径允许列表条目。
 
 ## 安全二进制文件 (仅 stdin)
@@ -186,20 +186,11 @@ macOS 拆分：
 如果您的安全二进制文件可执行文件位于包管理器/用户路径中（例如 `/opt/homebrew/bin`、`/usr/local/bin`、`/opt/local/bin`、`/snap/bin`），请将其显式添加到 `tools.exec.safeBinTrustedDirs`。
 在允许列表模式下，Shell 链接和重定向不会自动被允许。
 
-当每个顶层段都满足允许列表
-（包括安全 bin 或技能自动允许）时，允许 Shell 链接（`&&`、`||`、`;`）。在允许列表模式下，重定向仍然不受支持。
-命令替换（`$()` / 反引号）在允许列表解析期间会被拒绝，包括在双引号内；如果您需要字面意义的 `$()` 文本，请使用单引号。
-在 macOS 伴随应用批准中，包含 Shell 控制或扩展语法
-（`&&`、`||`、`;`、`|`、`` ` ``, `$`, `<`, `>`, `(`, `)`)的原始 Shell 文本将被视为允许列表未命中，除非
-Shell 二进制文件本身在允许列表中。
-对于 Shell 包装器（`bash|sh|zsh ... -c/-lc`），请求范围的 env 覆盖被缩减为
-一个小的显式允许列表（`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`）。
-对于允许列表模式下的“始终允许”决策，已知的分发包装器
-（`env`、`nice`、`nohup`、`stdbuf`、`timeout`）将保留内部可执行文件路径而不是包装器
-路径。Shell 多路复用器（`busybox`、`toybox`）也会针对 Shell 小程序（`sh`、`ash`
-等）进行解包，以便保留内部可执行文件而不是多路复用器二进制文件。如果无法安全地解包
-包装器或多路复用器，则不会自动保留任何允许列表条目。
-如果您将解释器（如 `python3` 或 `node`）加入允许列表，请首选 `tools.exec.strictInlineEval=true`，这样内联评估仍然需要显式批准。
+当每个顶层段都满足允许列表（包括安全二进制文件或技能自动允许）时，允许 Shell 链接（`&&`、`||`、`;`）。在允许列表模式下，重定向仍然不受支持。在允许列表解析期间，会拒绝命令替换（`$()` / 反引号），包括在双引号内；如果您需要字面量 `$()` 文本，请使用单引号。
+在 macOS 伴随应用批准中，包含 Shell 控制或扩展语法（`&&`、`||`、`;`、`|`、`` ` ``, `$`, `<`, `>`, `(`, `) `）的原始 Shell 文本将被视为允许列表匹配失败，除非 Shell 二进制文件本身在允许列表中。
+对于 Shell 包装器（`bash|sh|zsh ... -c/-lc`），请求范围的 env 覆盖将被减少到一个小型显式允许列表（`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`）。
+对于允许列表模式下的“始终允许”决策，已知的调度包装器（`env`、`nice`、`nohup`、`stdbuf`、`timeout`）将持久化内部可执行文件路径，而不是包装器路径。Shell 多路复用器（`busybox`、`toybox`）也会针对 Shell 小程序（`sh`、`ash` 等）进行解包，因此持久化的是内部可执行文件，而不是多路复用器二进制文件。如果包装器或多路复用器无法安全解包，则不会自动持久化允许列表条目。
+如果您将解释器（如 `python3` 或 `node`）加入允许列表，请首选 `tools.exec.strictInlineEval=true`，以便内联评估仍需要显式批准。在严格模式下，`allow-always` 仍然可以持久化良性解释器/脚本调用，但内联评估载体不会自动持久化。
 
 默认安全 bins：
 
@@ -210,7 +201,7 @@ Shell 二进制文件本身在允许列表中。
 [//]: # "SAFE_BIN_DEFAULTS:END"
 
 `grep` 和 `sort` 不在默认列表中。如果您选择加入，请为其非 stdin 工作流保留显式的允许列表条目。
-对于安全箱模式下的 `grep`，请使用 `-e`/`--regexp` 提供模式；位置参数形式将被拒绝，以防止文件操作数被混入为模糊的位置参数。
+对于安全二进制模式下的 `grep`，请使用 `-e`/`--regexp` 提供模式；位置参数形式将被拒绝，以防止文件操作数被作为模糊的位置参数走私。
 
 ### 安全 bin 与允许列表
 
@@ -224,11 +215,11 @@ Shell 二进制文件本身在允许列表中。
 
 配置位置：
 
-- `safeBins` 来自配置（`tools.exec.safeBins` 或每代理 `agents.list[].tools.exec.safeBins`）。
-- `safeBinTrustedDirs` 来自配置（`tools.exec.safeBinTrustedDirs` 或每代理 `agents.list[].tools.exec.safeBinTrustedDirs`）。
-- `safeBinProfiles` 来自配置（`tools.exec.safeBinProfiles` 或每代理 `agents.list[].tools.exec.safeBinProfiles`）。每代理配置文件键会覆盖全局键。
+- `safeBins` 来自配置（`tools.exec.safeBins` 或每个代理的 `agents.list[].tools.exec.safeBins`）。
+- `safeBinTrustedDirs` 来自配置（`tools.exec.safeBinTrustedDirs` 或每个代理的 `agents.list[].tools.exec.safeBinTrustedDirs`）。
+- `safeBinProfiles` 来自配置（`tools.exec.safeBinProfiles` 或每个代理的 `agents.list[].tools.exec.safeBinProfiles`）。每个代理的配置文件键会覆盖全局键。
 - 允许列表条目位于 `agents.<id>.allowlist` 下的主机本地 `~/.openclaw/exec-approvals.json` 中（或通过控制 UI / `openclaw approvals allowlist ...`）。
-- 当解释器/运行时二进制文件出现在 `safeBins` 中而没有显式配置文件时，`openclaw security audit` 会发出 `tools.exec.safe_bins_interpreter_unprofiled` 警告。
+- 当解释器/运行时二进制文件出现在没有显式配置文件的 `safeBins` 中时，`openclaw security audit` 会发出 `tools.exec.safe_bins_interpreter_unprofiled` 警告。
 - `openclaw doctor --fix` 可以将缺失的自定义 `safeBinProfiles.<bin>` 条目搭建为 `{}`（随后请审查并收紧）。解释器/运行时二进制文件不会自动搭建。
 
 自定义配置文件示例：
@@ -251,21 +242,29 @@ Shell 二进制文件本身在允许列表中。
 }
 ```
 
-如果您明确选择启用 `jq` 为 `safeBins`，OpenClaw 仍会在 safe-bin 模式下拒绝 `env` 内置命令，因此 `jq -n env` 无法在没有明确的允许列表路径或批准提示的情况下转储主机进程环境。
+如果您显式选择将 `jq` 加入 `safeBins`，OpenClaw 仍会在 safe-bin
+模式下拒绝 `env` 内置命令，因此 `jq -n env` 无法在没有明确的允许列表路径
+或批准提示的情况下转储主机进程环境。
 
 ## 控制 UI 编辑
 
 使用 **Control UI → Nodes → Exec approvals** 卡片来编辑默认值、每个代理的覆盖和允许列表。选择一个范围（Defaults 或某个代理），调整策略，添加/删除允许列表模式，然后点击 **Save**。UI 会显示每个模式的 **last used** 元数据，以便您保持列表整洁。
 
-目标选择器选择 **Gateway(网关)**（本地批准）或 **Node**（节点）。节点必须通告 `system.execApprovals.get/set`（macOS 应用或无头节点主机）。如果节点尚未通告 exec 批准，请直接编辑其本地 `~/.openclaw/exec-approvals.json`。
+目标选择器选择 **Gateway(网关)**（本地批准）或一个 **Node（节点）**。节点
+必须通告 `system.execApprovals.get/set`（macOS 应用或无头节点主机）。
+如果节点尚未通告 exec approvals，请直接编辑其本地
+`~/.openclaw/exec-approvals.json`。
 
-CLI：`openclaw approvals` 支持网关或节点编辑（请参阅 [Approvals CLI](/en/cli/approvals)）。
+CLI：`openclaw approvals` 支持 gateway 或 node 编辑（请参阅 [Approvals CLI](/en/cli/approvals)）。
 
 ## 批准流程
 
-当需要提示时，网关向操作员客户端广播 `exec.approval.requested`。控制 UI 和 macOS 应用通过 `exec.approval.resolve` 解析它，然后网关将批准的请求转发给节点主机。
+当需要提示时，gateway 会向操作员客户端广播 `exec.approval.requested`。
+Control UI 和 macOS 应用通过 `exec.approval.resolve` 对其进行解析，然后 gateway 将
+批准的请求转发到节点主机。
 
-对于 `host=node`，批准请求包含一个规范的 `systemRunPlan` 有效载荷。网关在转发已批准的 `system.run` 请求时，使用该计划作为权威的命令/cwd/会话上下文。
+对于 `host=node`，批准请求包含一个规范 `systemRunPlan` 负载。当转发批准的 `system.run`
+请求时，gateway 将该计划用作权威的 command/cwd/会话 上下文。
 
 ## 解释器/运行时命令
 
@@ -273,19 +272,31 @@ CLI：`openclaw approvals` 支持网关或节点编辑（请参阅 [Approvals CL
 
 - 确切的 argv/cwd/env 上下文始终是绑定的。
 - 直接 Shell 脚本和直接运行时文件形式尽可能绑定到一个具体的本地文件快照。
-- 仍然解析为一个直接本地文件的常见包管理器包装形式（例如 `pnpm exec`、`pnpm node`、`npm exec`、`npx`）在绑定之前会被解包。
+- 仍然解析为一个直接本地文件的常见包管理器包装器形式（例如
+  `pnpm exec`、`pnpm node`、`npm exec`、`npx`）在绑定之前会被解包。
 - 如果 OpenClaw 无法为解释器/运行时命令准确识别一个具体的本地文件
   （例如包脚本、eval 形式、特定于运行时的加载器链或多文件歧义形式），
   将拒绝基于批准的执行，而不是声明其不具备的语义覆盖范围。
 - 对于这些工作流，首选沙箱隔离、独立的主机边界，或显式受信任的
   允许列表/完整工作流，其中操作员接受更广泛的运行时语义。
 
-当需要批准时，exec 工具会立即返回一个批准 ID。使用该 ID 关联后续系统事件（`Exec finished` / `Exec denied`）。如果在超时之前没有做出决定，该请求将被视为批准超时，并作为拒绝原因显示出来。
+当需要批准时，exec 工具会立即返回一个批准 ID。使用该 ID
+关联后续系统事件（`Exec finished` / `Exec denied`）。如果在超时前
+没有做出决定，该请求将被视为批准超时，并作为拒绝原因被呈现。
+
+### 后续交付行为
+
+在批准的异步 exec 完成后，OpenClaw 会向同一会话发送一个后续 `agent` 轮次。
+
+- 如果存在有效的外部交付目标（可交付渠道加上目标 `to`），后续交付将使用该渠道。
+- 在没有外部目标的仅 webchat 或内部会话流程中，后续交付保持仅为会话（`deliver: false`）。
+- 如果调用方明确请求严格的外部传递，但没有可解析的外部渠道，则该请求将失败，返回 `INVALID_REQUEST`。
+- 如果启用了 `bestEffortDeliver` 且无法解析外部渠道，传递将被降级为仅限会话，而不会失败。
 
 确认对话框包括：
 
 - 命令 + 参数
-- 工作目录
+- 当前工作目录
 - 代理 ID
 - 解析的可执行文件路径
 - 主机 + 策略元数据
@@ -298,7 +309,7 @@ CLI：`openclaw approvals` 支持网关或节点编辑（请参阅 [Approvals CL
 
 ## 批准转发到聊天渠道
 
-您可以将 exec 批准提示转发到任何聊天渠道（包括插件渠道），并使用 `/approve` 进行批准。这使用正常的出站交付管道。
+您可以将执行批准提示转发到任何聊天渠道（包括插件渠道），并使用 `/approve` 进行批准。这使用常规的出站传递管道。
 
 配置：
 
@@ -327,11 +338,11 @@ CLI：`openclaw approvals` 支持网关或节点编辑（请参阅 [Approvals CL
 /approve <id> deny
 ```
 
-`/approve` 命令同时处理 exec 批准和插件批准。如果 ID 与待处理的 exec 批准不匹配，它会自动检查插件批准。
+`/approve` 命令处理执行批准和插件批准。如果 ID 不匹配待处理的执行批准，它会自动检查插件批准。
 
 ### 插件批准转发
 
-插件审批转发使用与 exec 审批相同的交付管道，但在 `approvals.plugin` 下有其自己的独立配置。启用或禁用其中一个不会影响另一个。
+插件批准转发使用与执行批准相同的传递管道，但在 `approvals.plugin` 下有其独立的配置。启用或禁用一个不会影响另一个。
 
 ```json5
 {
@@ -349,28 +360,45 @@ CLI：`openclaw approvals` 支持网关或节点编辑（请参阅 [Approvals CL
 }
 ```
 
-配置形状与 `approvals.exec` 相同：`enabled`、`mode`、`agentFilter`、
+配置结构与 `approvals.exec` 相同：`enabled`、`mode`、`agentFilter`、
 `sessionFilter` 和 `targets` 的工作方式相同。
 
-支持交互式 exec 审批按钮的渠道（例如 Telegram）也会为插件审批渲染按钮。没有适配器支持的渠道会回退到纯文本，其中包含 `/approve` 指令。
+支持共享交互式回复的渠道会为执行批准和插件批准渲染相同的批准按钮。没有共享交互式 UI 的渠道将回退到带有 `/approve`
+说明的纯文本。
 
-### 内置聊天审批客户端
+### 任何渠道上的同聊天批准
 
-Discord 和 Telegram 也可以作为显式的 exec 审批客户端，并具有特定于渠道的配置。
+当执行或插件批准请求源自可传递的聊天界面时，默认情况下，同一聊天现在可以使用 `/approve` 批准它。除了现有的 Web UI 和终端 UI 流程外，这还适用于 Slack、Matrix 和
+Microsoft Teams 等渠道。
+
+此共享文本命令路径使用该对话的正常渠道身份验证模型。如果发起聊天的渠道已经可以发送命令并接收回复，则批准请求不再需要单独的原生传递适配器来保持待处理状态。
+
+Discord 和 Telegram 也支持同频道 `/approve`，但即使在禁用原生审批传递时，这些渠道仍使用其解析的审批者列表进行授权。
+
+### 原生审批传递
+
+Discord、Slack 和 Telegram 也可以作为具有特定渠道配置的原生审批传递适配器。
 
 - Discord：`channels.discord.execApprovals.*`
+- Slack：使用与 `channel: "slack"` 共享的 `approvals.exec.targets`，并在启用交互功能时呈现 Block Kit 审批按钮
 - Telegram：`channels.telegram.execApprovals.*`
 
-这些客户端是可选启用的。如果某个渠道未启用 exec 审批，仅因为对话发生在该渠道，OpenClaw 并不会将该渠道视为审批表面。
+这些原生传递适配器是可选加入的。它们在共享的同频道 `/approve` 流程和共享审批按钮的基础上，增加了私信路由和渠道分发。
 
 共享行为：
 
-- 只有已配置的审批者才能批准或拒绝
+- Slack、Matrix、Microsoft Teams 和类似的可传递聊天渠道使用正常的渠道授权模型
+  进行同频道 `/approve`
+- 对于 Discord 和 Telegram，只有解析的审批者可以批准或拒绝
+- Discord 和 Telegram 的审批者可以是显式的 (`execApprovals.approvers`) 或从现有的所有者配置推断 (`allowFrom`，加上支持情况下的直接消息 `defaultTo`)
 - 请求者不需要是审批者
-- 启用渠道交付时，审批提示包含命令文本
-- 如果没有操作员 UI 或已配置的审批客户端可以接受请求，提示将回退到 `askFallback`
+- 当发起聊天已经支持命令和回复时，该聊天可以直接通过 `/approve` 进行批准
+- 启用渠道传递时，审批提示包含命令文本
+- 待处理的执行审批默认在 30 分钟后过期
+- 如果没有操作员界面或配置的审批客户端可以接受请求，提示将回退到 `askFallback`
 
-Telegram 默认为审批者私信（`target: "dm"`）。当您希望审批提示也出现在发起的 Telegram 聊天/主题中时，您可以切换到 `channel` 或 `both`。对于 Telegram 论坛主题，OpenClaw 会保留审批提示和审批后后续跟进的主题。
+Telegram 默认为审批者私信 (`target: "dm"`)。当您希望审批提示也出现在发起的 Telegram 聊天/话题中时，您可以切换到 `channel` 或 `both`。对于 Telegram 论坛
+话题，OpenClaw 会保留审批提示和审批后跟进的话题。
 
 参见：
 
@@ -388,9 +416,9 @@ Gateway -> Node Service (WS)
 
 安全说明：
 
-- Unix 套接字模式 `0600`，令牌存储在 `exec-approvals.json` 中。
-- 相同 UID 对等体检查。
-- 质询/响应（nonce + HMAC 令牌 + 请求哈希）+ 短 TTL。
+- Unix socket 模式 `0600`，令牌存储在 `exec-approvals.json` 中。
+- Same-UID 对等检查。
+- 挑战/响应（nonce + HMAC 令牌 + 请求哈希）+ 短 TTL。
 
 ## 系统事件
 
@@ -400,21 +428,32 @@ Exec 生命周期作为系统消息呈现：
 - `Exec finished`
 - `Exec denied`
 
-这些事件在节点报告事件后发送到代理的会话。
-当命令完成时（以及可选地，当运行时间超过阈值时），Gateway(网关) 托管的执行审批会发出相同的生命周期事件。
-受审批限制的执行在这些消息中复用审批 ID 作为 `runId`，以便于关联。
+这些消息在节点报告事件后发送到代理的会话。
+Gateway(网关) 托管的 exec 批准在命令完成时（以及可选地当运行时间超过阈值时）会发出相同的生命周期事件。
+批准门控的 exec 在这些消息中重用批准 ID 作为 `runId` 以便轻松关联。
+
+## 拒绝批准的行为
+
+当异步 exec 批准被拒绝时，OpenClaw 会阻止代理重用会话中同一命令的早期运行输出。拒绝原因会附带明确的指导，即没有可用的命令输出，从而阻止代理声称有新输出或使用先前成功运行的陈旧结果重复被拒绝的命令。
 
 ## 影响
 
-- **full** 功能强大；尽可能首选允许列表。
-- **ask** 让您保持了解情况，同时仍允许快速审批。
-- 每个代理的允许列表可防止一个代理的审批泄漏到其他代理。
-- 审批仅适用于来自**授权发送方**的主机执行请求。未经授权的发送方无法发出 `/exec`。
-- `/exec security=full` 是授权操作员的会话级便利功能，设计上会跳过审批。
-  若要硬性阻止主机执行，请将审批安全性设置为 `deny` 或通过工具策略拒绝 `exec` 工具。
+- **full** 很强大；请尽可能使用允许列表（allowlists）。
+- **ask** 让您随时了解情况，同时仍然允许快速批准。
+- 每个代理的允许列表可防止一个代理的批准泄漏到其他代理。
+- 批准仅适用于来自**授权发送者**的主机 exec 请求。未经授权的发送者无法发出 `/exec`。
+- `/exec security=full` 是授权操作员的会话级便利功能，设计上会跳过批准。
+  要硬阻止主机 exec，请将批准安全性设置为 `deny` 或通过工具策略拒绝 `exec` 工具。
 
 相关：
 
 - [Exec 工具](/en/tools/exec)
 - [提升模式](/en/tools/elevated)
 - [Skills](/en/tools/skills)
+
+## 相关
+
+- [Exec](/en/tools/exec) — Shell 命令执行工具
+- [沙箱隔离](/en/gateway/sandboxing) — 沙箱模式和工作区访问
+- [安全性](/en/gateway/security) — 安全模型和加固
+- [沙箱 vs 工具策略 vs 提升](/en/gateway/sandbox-vs-tool-policy-vs-elevated) — 何时使用每种方法

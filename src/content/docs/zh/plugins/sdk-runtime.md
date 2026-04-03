@@ -12,7 +12,7 @@ read_when:
 
 注入到每个插件中的 `api.runtime` 对象的参考。请使用这些辅助程序，而不是直接导入主机内部组件。
 
-<Tip>**正在寻找分步指南？** 请参阅 [Channel Plugins](/en/plugins/sdk-channel-plugins) 或 [Provider Plugins](/en/plugins/sdk-provider-plugins)，查看在具体上下文中 演示这些辅助函数的分步指南。</Tip>
+<Tip>**寻找演练？** 请参阅 [通道插件](/en/plugins/sdk-channel-plugins) 或 [提供商插件](/en/plugins/sdk-provider-plugins) 获取分步指南， 其中展示了这些辅助函数的上下文用法。</Tip>
 
 ```typescript
 register(api) {
@@ -320,18 +320,18 @@ export function tryGetRuntime() {
 
 除了 `api.runtime`，API 对象还提供：
 
-| 字段                     | 类型                      | 描述                                              |
-| ------------------------ | ------------------------- | ------------------------------------------------- |
-| `api.id`                 | `string`                  | 插件 ID                                           |
-| `api.name`               | `string`                  | 插件显示名称                                      |
-| `api.config`             | `OpenClawConfig`          | 当前配置快照                                      |
-| `api.pluginConfig`       | `Record<string, unknown>` | 来自 `plugins.entries.<id>.config` 的插件特定配置 |
-| `api.logger`             | `PluginLogger`            | 作用域记录器 (`debug`, `info`, `warn`, `error`)   |
-| `api.registrationMode`   | `PluginRegistrationMode`  | `"full"`、`"setup-only"` 或 `"setup-runtime"`     |
-| `api.resolvePath(input)` | `(string) => string`      | 解析相对于插件根目录的路径                        |
+| 字段                     | 类型                      | 描述                                                            |
+| ------------------------ | ------------------------- | --------------------------------------------------------------- |
+| `api.id`                 | `string`                  | 插件 ID                                                         |
+| `api.name`               | `string`                  | 插件显示名称                                                    |
+| `api.config`             | `OpenClawConfig`          | 当前配置快照                                                    |
+| `api.pluginConfig`       | `Record<string, unknown>` | 来自 `plugins.entries.<id>.config` 的插件特定配置               |
+| `api.logger`             | `PluginLogger`            | 作用域记录器 (`debug`, `info`, `warn`, `error`)                 |
+| `api.registrationMode`   | `PluginRegistrationMode`  | `"full"`、`"setup-only"`、`"setup-runtime"` 或 `"cli-metadata"` |
+| `api.resolvePath(input)` | `(string) => string`      | 解析相对于插件根目录的路径                                      |
 
 ## 相关
 
-- [SDK Overview](/en/plugins/sdk-overview) -- 子路径参考
-- [SDK Entry Points](/en/plugins/sdk-entrypoints) -- `definePluginEntry` 选项
-- [Plugin Internals](/en/plugins/architecture) -- 能力模型和注册表
+- [SDK 概述](/en/plugins/sdk-overview) -- 子路径参考
+- [SDK 入口点](/en/plugins/sdk-entrypoints) -- `definePluginEntry` 选项
+- [插件内部机制](/en/plugins/architecture) -- 功能模型和注册表

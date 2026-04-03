@@ -19,8 +19,7 @@ title: "Qwen"
 
 ## 建議：Model Studio (阿里雲 Coding 方案)
 
-使用 [Model Studio](/en/providers/modelstudio) 以取得官方支援的 Qwen 模型
-(Qwen 3.5 Plus、GLM-4.7、Kimi K2.5、MiniMax M2.5 等) 的存取權限。
+使用 [Model Studio](/en/providers/qwen_modelstudio) 以獲得對 Qwen 模型（Qwen 3.5 Plus、GLM-4.7、Kimi K2.5 等）的官方支援存取。
 
 ```bash
 # Global endpoint
@@ -30,4 +29,4 @@ openclaw onboard --auth-choice modelstudio-api-key
 openclaw onboard --auth-choice modelstudio-api-key-cn
 ```
 
-請參閱 [Model Studio](/en/providers/modelstudio) 以取得完整的設定詳細資料。
+參閱 [Model Studio](/en/providers/qwen_modelstudio) 以取得完整的設定詳細資訊。

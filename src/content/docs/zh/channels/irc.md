@@ -240,3 +240,11 @@ IRC 频道有两个独立的“入口”：
 - 如果机器人已连接但从未在渠道中回复，请验证 `channels.irc.groups` **以及**提及门控是否正在丢弃消息 (`missing-mention`)。如果您希望它在没有 ping 的情况下回复，请为该渠道设置 `requireMention:false`。
 - 如果登录失败，请验证昵称可用性和服务器密码。
 - 如果在自定义网络上 TLS 失败，请验证主机/端口和证书设置。
+
+## 相关
+
+- [Channels Overview](/en/channels) — 所有支持的频道
+- [Pairing](/en/channels/pairing) — 私信身份验证和配对流程
+- [Groups](/en/channels/groups) — 群聊行为和提及限制
+- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
+- [Security](/en/gateway/security) — 访问模型和加固

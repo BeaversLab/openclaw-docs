@@ -54,31 +54,31 @@ title: "Niveles de pensamiento"
   3. Predeterminado por agente (`agents.list[].fastModeDefault`)
   4. Configuración por modelo: `agents.defaults.models["<provider>/<model>"].params.fastMode`
   5. Alternativa: `off`
-- Para `openai/*`, el modo rápido aplica el perfil rápido de OpenAI: `service_tier=priority` cuando es compatible, además de un bajo esfuerzo de razonamiento y una baja verbosidad de texto.
-- Para `openai-codex/*`, el modo rápido aplica el mismo perfil de baja latencia en las respuestas de Codex. OpenClaw mantiene un interruptor `/fast` compartido entre ambas rutas de autenticación.
-- Para solicitudes directas de clave de API `anthropic/*`, el modo rápido se asigna a los niveles de servicio de Anthropic: `/fast on` establece `service_tier=auto`, `/fast off` establece `service_tier=standard_only`.
-- El modo rápido de Anthropic es solo para clave de API. OpenClaw omite la inyección del nivel de servicio de Anthropic para el token de configuración de Claude / autenticación OAuth y para URLs base de proxy que no sean de Anthropic.
+- Para `openai/*`, el modo rápido se asigna al procesamiento prioritario de OpenAI enviando `service_tier=priority` en las solicitudes de Responses compatibles.
+- Para `openai-codex/*`, el modo rápido envía el mismo indicador `service_tier=priority` en las Respuestas de Codex. OpenClaw mantiene un único interruptor `/fast` compartido en ambas rutas de autenticación.
+- Para solicitudes `anthropic/*` públicas directas, incluido el tráfico autenticado con OAuth enviado a `api.anthropic.com`, el modo rápido se asigna a los niveles de servicio de Anthropic: `/fast on` establece `service_tier=auto`, `/fast off` establece `service_tier=standard_only`.
+- Los parámetros de modelo explícitos de Anthropic `serviceTier` / `service_tier` anulan el valor predeterminado del modo rápido cuando ambos están configurados. OpenClaw aún omite la inyección del nivel de servicio de Anthropic para URL base de proxy no Anthropic.
 
 ## Directivas detalladas (/verbose o /v)
 
 - Niveles: `on` (mínimo) | `full` | `off` (predeterminado).
-- Un mensaje de solo directiva alterna el modo detallado de la sesión y responde `Verbose logging enabled.` / `Verbose logging disabled.`; los niveles no válidos devuelven una sugerencia sin cambiar el estado.
-- `/verbose off` almacena una anulación explícita de la sesión; bórrela a través de la interfaz de usuario de Sesiones eligiendo `inherit`.
+- Un mensaje de solo directiva activa/desactiva el modo detallado (verbose) de la sesión y responde `Verbose logging enabled.` / `Verbose logging disabled.`; los niveles no válidos devuelven una sugerencia sin cambiar el estado.
+- `/verbose off` almacena una anulación explícita de la sesión; bórrela a través de la Interfaz de usuario de Sesiones (Sessions UI) eligiendo `inherit`.
 - La directiva en línea afecta solo ese mensaje; de lo contrario, se aplican los valores predeterminados de sesión/global.
-- Envíe `/verbose` (o `/verbose:`) sin argumentos para ver el nivel detallado actual.
-- Cuando el modo detallado está activado, los agentes que emiten resultados de herramientas estructurados (Pi, otros agentes JSON) devuelven cada llamada a herramienta como su propio mensaje de solo metadatos, prefijado con `<emoji> <tool-name>: <arg>` cuando está disponible (ruta/comando). Estos resúmenes de herramientas se envían tan pronto como cada herramienta se inicia (burbujas separadas), no como deltas de transmisión.
-- Los resúmenes de fallos de herramientas permanecen visibles en modo normal, pero los sufijos de detalles de error sin procesar están ocultos a menos que el modo detallado sea `on` o `full`.
-- Cuando el modo detallado es `full`, las salidas de las herramientas también se reenvían después de la finalización (burbuja separada, truncada a una longitud segura). Si alterna `/verbose on|full|off` mientras una ejecución está en curso, las burbujas de herramientas posteriores respetan la nueva configuración.
+- Envíe `/verbose` (o `/verbose:`) sin argumentos para ver el nivel de detalle actual.
+- Cuando el modo detallado está activado, los agentes que emiten resultados de herramientas estructurados (Pi, otros agentes JSON) devuelven cada llamada de herramienta como su propio mensaje de solo metadatos, con el prefijo `<emoji> <tool-name>: <arg>` cuando está disponible (ruta/comando). Estos resúmenes de herramientas se envían tan pronto como cada herramienta comienza (burbujas separadas), no como deltas de transmisión.
+- Los resúmenes de fallos de herramientas permanecen visibles en el modo normal, pero los sufijos de detalles de errores sin procesar están ocultos a menos que el modo detallado sea `on` o `full`.
+- Cuando el modo detallado (verbose) está `full`, las salidas de las herramientas también se reenvían después de completarse (burbuja separada, truncada a una longitud segura). Si activas o desactivas `/verbose on|full|off` mientras una ejecución está en curso, las siguientes burbujas de herramientas respetarán la nueva configuración.
 
 ## Visibilidad del razonamiento (/reasoning)
 
 - Niveles: `on|off|stream`.
 - Un mensaje de solo directiva alterna si se muestran los bloques de pensamiento en las respuestas.
 - Cuando está habilitado, el razonamiento se envía como un **mensaje separado** prefijado con `Reasoning:`.
-- `stream` (solo Telegram): transmite el razonamiento a la burbuja de borrador de Telegram mientras se genera la respuesta y luego envía la respuesta final sin razonamiento.
+- `stream` (solo Telegram): transmite el razonamiento en la burbuja de borrador de Telegram mientras se genera la respuesta, y luego envía la respuesta final sin el razonamiento.
 - Alias: `/reason`.
 - Envía `/reasoning` (o `/reasoning:`) sin argumentos para ver el nivel de razonamiento actual.
-- Orden de resolución: directiva en línea, luego anulación de sesión, luego predeterminado por agente (`agents.list[].reasoningDefault`), luego alternativa (`off`).
+- Orden de resolución: directiva en línea, luego anulación de sesión, luego valor predeterminado por agente (`agents.list[].reasoningDefault`), y finalmente valor de reserva (`off`).
 
 ## Relacionado
 
@@ -86,11 +86,11 @@ title: "Niveles de pensamiento"
 
 ## Latidos
 
-- El cuerpo de la sonda de latido es el prompt de latido configurado (predeterminado: `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`). Las directivas en línea en un mensaje de latido se aplican como de costumbre (pero evite cambiar los valores predeterminados de la sesión desde los latidos).
-- La entrega de latidos se predetermina solo a la carga final. Para también enviar el mensaje `Reasoning:` por separado (cuando esté disponible), configure `agents.defaults.heartbeat.includeReasoning: true` o por agente `agents.list[].heartbeat.includeReasoning: true`.
+- El cuerpo del sondeo de latido (heartbeat) es el prompt de latido configurado (predeterminado: `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`). Las directivas en línea en un mensaje de latido se aplican de la forma habitual (pero evita cambiar los valores predeterminados de la sesión desde los latidos).
+- La entrega del latido (heartbeat) predetermina solo a la carga útil final. Para enviar también el mensaje separado `Reasoning:` (cuando esté disponible), establece `agents.defaults.heartbeat.includeReasoning: true` o `agents.list[].heartbeat.includeReasoning: true` por agente.
 
 ## Interfaz de usuario de chat web
 
 - El selector de pensamiento del chat web refleja el nivel almacenado de la sesión desde el almacenamiento/configuración de la sesión entrante cuando se carga la página.
-- Elegir otro nivel se aplica solo al siguiente mensaje (`thinkingOnce`); después de enviarlo, el selector vuelve al nivel de sesión almacenado.
-- Para cambiar el valor predeterminado de la sesión, envíe una directiva `/think:<level>` (como antes); el selector lo reflejará después de la próxima recarga.
+- Elegir otro nivel se aplica solo al siguiente mensaje (`thinkingOnce`); después de enviar, el selector vuelve al nivel de sesión almacenado.
+- Para cambiar el valor predeterminado de la sesión, envía una directiva `/think:<level>` (como antes); el selector lo reflejará después de la próxima recarga.

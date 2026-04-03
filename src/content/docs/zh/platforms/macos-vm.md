@@ -12,7 +12,7 @@ title: "macOS 虚拟机"
 
 ## 推荐的默认选项（大多数用户）
 
-- **小型 Linux VPS** 用于全天候 Gateway 和低成本。请参阅 [VPS hosting](/en/vps)。
+- **小型 Linux VPS** 用于全天候 Gateway(网关) 和低成本。请参阅 [VPS hosting](/en/vps)。
 - 如果您希望完全控制并拥有用于浏览器自动化的**住宅 IP**，请使用**专用硬件**（Mac mini 或 Linux 主机）。许多网站会阻止数据中心 IP，因此本地浏览通常效果更好。
 - **混合模式：** 将 Gateway(网关) 保留在便宜的 VPS 上，并在您需要浏览器/UI 自动化时将 Mac 作为 **节点** 连接。请参阅 [Nodes](/en/nodes) 和 [Gateway(网关) remote](/en/gateway/remote)。
 

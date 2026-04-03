@@ -44,10 +44,17 @@ Token credentials (`type: "token"`) support inline `token` and/or `tokenRef`.
 2. For eligible profiles, token material may be resolved from inline value or `tokenRef`.
 3. Unresolvable refs produce `unresolved_ref` in `models status --probe` output.
 
-## Legacy-Compatible Messaging
+## OAuth SecretRef 策略守卫
 
-For script compatibility, probe errors keep this first line unchanged:
+- SecretRef 输入仅用于静态凭据。
+- 如果配置文件凭据是 `type: "oauth"`，则该配置文件凭据材料不支持 SecretRef 对象。
+- 如果 `auth.profiles.<id>.mode` 为 `"oauth"`，则该配置文件的 SecretRef 支持的 `keyRef`/`tokenRef` 输入将被拒绝。
+- 违规行为在启动/重新加载身份验证解析路径中属于硬性失败。
+
+## 旧版兼容消息
+
+出于脚本兼容性考虑，探测错误会保持第一行不变：
 
 `Auth profile credentials are missing or expired.`
 
-Human-friendly detail and stable reason codes may be added on subsequent lines.
+人类可读的详细信息和稳定的原因代码可能会添加在后续行中。

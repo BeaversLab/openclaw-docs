@@ -10,7 +10,7 @@ sidebarTitle: "Referencia de CLI"
 # Referencia de configuración de la CLI
 
 Esta página es la referencia completa de `openclaw onboard`.
-Para la guía breve, consulte [Onboarding (CLI)](/en/start/wizard).
+Para ver la guía breve, consulte [Onboarding (CLI)](/en/start/wizard).
 
 ## Lo que hace el asistente
 
@@ -45,8 +45,8 @@ No instala ni modifica nada en el host remoto.
   </Step>
   <Step title="Espacio de trabajo">
     - Por defecto `~/.openclaw/workspace` (configurable).
-    - Inicializa los archivos del espacio de trabajo necesarios para el ritual de arranque de primera ejecución.
-    - Disposición del espacio de trabajo: [Agent workspace](/en/concepts/agent-workspace).
+    - Crea los archivos del espacio de trabajo necesarios para el ritual de arranque inicial.
+    - Diseño del espacio de trabajo: [Agent workspace](/en/concepts/agent-workspace).
   </Step>
   <Step title="Puerta de enlace">
     - Solicita puerto, enlace, modo de autenticación y exposición de tailscale.
@@ -63,14 +63,14 @@ No instala ni modifica nada en el host remoto.
   </Step>
   <Step title="Canales">
     - [WhatsApp](/en/channels/whatsapp): inicio de sesión con QR opcional
-    - [Telegram](/en/channels/telegram): token del bot
-    - [Discord](/en/channels/discord): token del bot
-    - [Google Chat](/en/channels/googlechat): JSON de cuenta de servicio + audiencia del webhook
-    - Complemento [Mattermost](/en/channels/mattermost): token del bot + URL base
+    - [Telegram](/en/channels/telegram): token de bot
+    - [Discord](/en/channels/discord): token de bot
+    - [Google Chat](/en/channels/googlechat): JSON de cuenta de servicio + audiencia de webhook
+    - Complemento [Mattermost](/en/channels/mattermost): token de bot + URL base
     - [Signal](/en/channels/signal): instalación opcional de `signal-cli` + configuración de cuenta
     - [BlueBubbles](/en/channels/bluebubbles): recomendado para iMessage; URL del servidor + contraseña + webhook
-    - [iMessage](/en/channels/imessage): ruta de la CLI `imsg` heredada + acceso a la base de datos
-    - Seguridad de MD: el valor predeterminado es el emparejamiento. El primer MD envía un código; apruebe a través de
+    - [iMessage](/en/channels/imessage): ruta de CLI heredada de `imsg` + acceso a la base de datos
+    - Seguridad de DM: el valor predeterminado es emparejamiento. El primer DM envía un código; apruébelo a través de
       `openclaw pairing approve <channel> <code>` o use listas de permitidos.
   </Step>
   <Step title="Instalación del demonio">
@@ -95,7 +95,7 @@ No instala ni modifica nada en el host remoto.
   </Step>
 </Steps>
 
-<Note>Si no se detecta ninguna GUI, el asistente imprime instrucciones de reenvío de puerto SSH para la Interfaz de Control en lugar de abrir un navegador. Si faltan los recursos de la Interfaz de Control, el asistente intenta compilarlos; la alternativa es `pnpm ui:build` (instala automáticamente las dependencias de la interfaz de usuario).</Note>
+<Note>Si no se detecta ninguna GUI, el asistente imprime instrucciones de reenvío de puerto SSH para la interfaz de usuario de Control en lugar de abrir un navegador. Si faltan los activos de la interfaz de usuario de Control, el asistente intenta compilarlos; la alternativa es `pnpm ui:build` (instala automáticamente las dependencias de la interfaz de usuario).</Note>
 
 ## Detalles del modo remoto
 
@@ -108,7 +108,7 @@ Lo que configura:
 - URL de la puerta de enlace remota (`ws://...`)
 - Token si se requiere autenticación en la puerta de enlace remota (recomendado)
 
-<Note>- Si la puerta de enlace es solo de bucle local (loopback), use túnel SSH o una tailnet. - Sugerencias de descubrimiento: - macOS: Bonjour (`dns-sd`) - Linux: Avahi (`avahi-browse`)</Note>
+<Note>- Si la puerta de enlace es solo de bucle invertido, use túnel SSH o una red de cola. - Sugerencias de descubrimiento: - macOS: Bonjour (`dns-sd`) - Linux: Avahi (`avahi-browse`)</Note>
 
 ## Opciones de autenticación y modelo
 
@@ -117,39 +117,39 @@ Lo que configura:
     Usa `ANTHROPIC_API_KEY` si está presente o pide una clave, luego la guarda para uso del demonio.
   </Accordion>
   <Accordion title="Anthropic Claude CLI">
-    Reutiliza un inicio de sesión local de Claude CLI en el host de la puerta de enlace y cambia la
+    Reutiliza un inicio de sesión local de la CLI de Claude en el host de la puerta de enlace y cambia la
     selección del modelo a `claude-cli/...`.
 
     - macOS: verifica el elemento del Llavero "Claude Code-credentials"
     - Linux y Windows: reutiliza `~/.claude/.credentials.json` si está presente
 
-    En macOS, elija "Permitir siempre" para que los inicios de launchd no se bloqueen.
+    En macOS, elija "Always Allow" (Permitir siempre) para que los inicios de launchd no se bloqueen.
 
   </Accordion>
   <Accordion title="Anthropic token (setup-token paste)">
-    Ejecute `claude setup-token` en cualquier máquina y luego pegue el token.
-    Puede asignarle un nombre; si se deja en blanco se usa el predeterminado.
+    Ejecute `claude setup-token` en cualquier máquina, luego pegue el token.
+    Puede darle un nombre; si se deja en blanco se usa el predeterminado.
   </Accordion>
   <Accordion title="OpenAI Code subscription (Codex CLI reuse)">
     Si existe `~/.codex/auth.json`, el asistente puede reutilizarlo.
   </Accordion>
-  <Accordion title="Suscripción OpenAI Code (OAuth)">
-    Flujo del navegador; pegar `code#state`.
+  <Accordion title="OpenAI Code subscription (OAuth)">
+    Flujo del navegador; pegue `code#state`.
 
     Establece `agents.defaults.model` en `openai-codex/gpt-5.4` cuando el modelo no está configurado o es `openai/*`.
 
   </Accordion>
-  <Accordion title="Clave de API de OpenAI">
+  <Accordion title="OpenAI API key">
     Usa `OPENAI_API_KEY` si está presente o solicita una clave, luego almacena la credencial en los perfiles de autenticación.
 
     Establece `agents.defaults.model` en `openai/gpt-5.4` cuando el modelo no está configurado, es `openai/*`, o `openai-codex/*`.
 
   </Accordion>
-  <Accordion title="Clave de API de xAI (Grok)">
+  <Accordion title="xAI (Grok) API key">
     Solicita `XAI_API_KEY` y configura xAI como proveedor de modelos.
   </Accordion>
   <Accordion title="OpenCode">
-    Solicita `OPENCODE_API_KEY` (o `OPENCODE_ZEN_API_KEY`) y te permite elegir el catálogo Zen o Go.
+    Solicita `OPENCODE_API_KEY` (o `OPENCODE_ZEN_API_KEY`) y le permite elegir el catálogo Zen o Go.
     URL de configuración: [opencode.ai/auth](https://opencode.ai/auth).
   </Accordion>
   <Accordion title="API key (generic)">
@@ -164,7 +164,7 @@ Lo que configura:
     Más detalles: [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway).
   </Accordion>
   <Accordion title="MiniMax">
-    La configuración se escribe automáticamente. El predeterminado alojado es `MiniMax-M2.7`; `MiniMax-M2.5` permanece disponible.
+    La configuración se escribe automáticamente. El valor predeterminado alojado es `MiniMax-M2.7`.
     Más detalles: [MiniMax](/en/providers/minimax).
   </Accordion>
   <Accordion title="Synthetic (Anthropic-compatible)">
@@ -172,26 +172,26 @@ Lo que configura:
     Más detalles: [Synthetic](/en/providers/synthetic).
   </Accordion>
   <Accordion title="Ollama (Cloud and local open models)">
-    Solicita la URL base (por defecto `http://127.0.0.1:11434`), luego ofrece modo Cloud + Local o Local.
-    Descubre los modelos disponibles y sugiere los predeterminados.
+    Solicita la URL base (predeterminada `http://127.0.0.1:11434`) y luego ofrece el modo Cloud + Local o Local.
+    Descubre los modelos disponibles y sugiere los valores predeterminados.
     Más detalles: [Ollama](/en/providers/ollama).
   </Accordion>
   <Accordion title="Moonshot and Kimi Coding">
     Las configuraciones de Moonshot (Kimi K2) y Kimi Coding se escriben automáticamente.
     Más detalles: [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot).
   </Accordion>
-  <Accordion title="Proveedor personalizado">
+  <Accordion title="Custom provider">
     Funciona con endpoints compatibles con OpenAI y Anthropic.
 
-    La integración interactiva admite las mismas opciones de almacenamiento de claves API que otros flujos de claves API de proveedores:
-    - **Pegar clave API ahora** (texto sin formato)
-    - **Usar referencia secreta** (referencia de entorno o referencia de proveedor configurada, con validación previa al vuelo)
+    La incorporación interactiva admite las mismas opciones de almacenamiento de claves API que otros flujos de claves API de proveedores:
+    - **Paste API key now** (texto plano)
+    - **Use secret reference** (referencia de entorno o referencia de proveedor configurada, con validación previa)
 
-    Opciones no interactivas:
+    Marcas no interactivas:
     - `--auth-choice custom-api-key`
     - `--custom-base-url`
     - `--custom-model-id`
-    - `--custom-api-key` (opcional; recurre a `CUSTOM_API_KEY`)
+    - `--custom-api-key` (opcional; se recurre a `CUSTOM_API_KEY`)
     - `--custom-provider-id` (opcional)
     - `--custom-compatibility <openai|anthropic>` (opcional; predeterminado `openai`)
 
@@ -208,32 +208,32 @@ Comportamiento del modelo:
 
 Rutas de credenciales y perfiles:
 
-- Credenciales de OAuth: `~/.openclaw/credentials/oauth.json`
+- Credenciales OAuth: `~/.openclaw/credentials/oauth.json`
 - Perfiles de autenticación (claves API + OAuth): `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
 
 Modo de almacenamiento de credenciales:
 
 - El comportamiento de incorporación predeterminado persiste las claves de API como valores de texto sin formato en los perfiles de autenticación.
-- `--secret-input-mode ref` activa el modo de referencia en lugar del almacenamiento de clave en texto sin formato.
-  En la configuración interactiva, puede elegir:
+- `--secret-input-mode ref` activa el modo de referencia en lugar del almacenamiento de clave en texto plano.
+  En la configuración interactiva, puede elegir cualquiera de las siguientes opciones:
   - referencia de variable de entorno (por ejemplo `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`)
-  - referencia de proveedor configurado (`file` o `exec`) con alias de proveedor + id
+  - referencia de proveedor configurada (`file` o `exec`) con alias de proveedor + id
 - El modo de referencia interactiva ejecuta una validación previa rápida antes de guardar.
   - Referencias de entorno: valida el nombre de la variable + valor no vacío en el entorno de incorporación actual.
   - Referencias de proveedor: valida la configuración del proveedor y resuelve el id solicitado.
   - Si la validación previa falla, la incorporación muestra el error y le permite reintentar.
-- En modo no interactivo, `--secret-input-mode ref` solo se basa en variables de entorno.
+- En modo no interactivo, `--secret-input-mode ref` solo está respaldado por variables de entorno (env-backed).
   - Establezca la variable de entorno del proveedor en el entorno del proceso de incorporación.
-  - Las opciones de clave en línea (por ejemplo `--openai-api-key`) requieren que se establezca esa variable de entorno; de lo contrario, la integración falla rápidamente.
+  - Las banderas de clave en línea (por ejemplo `--openai-api-key`) requieren que se establezca esa variable de entorno; de lo contrario, la integración falla rápidamente.
   - Para proveedores personalizados, el modo `ref` no interactivo almacena `models.providers.<id>.apiKey` como `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
   - En ese caso de proveedor personalizado, `--custom-api-key` requiere que se establezca `CUSTOM_API_KEY`; de lo contrario, la integración falla rápidamente.
 - Las credenciales de autenticación de la puerta de enlace admiten opciones de texto plano y SecretRef en la configuración interactiva:
   - Modo de token: **Generar/almacenar token de texto sin formato** (predeterminado) o **Usar SecretRef**.
   - Modo de contraseña: texto sin formato o SecretRef.
-- Ruta de SecretRef de token no interactivo: `--gateway-token-ref-env <ENV_VAR>`.
+- Ruta de token no interactivo SecretRef: `--gateway-token-ref-env <ENV_VAR>`.
 - Las configuraciones existentes de texto sin formato siguen funcionando sin cambios.
 
-<Note>Consejo para servidores y modo sin cabeza: complete OAuth en una máquina con un navegador, luego copie `~/.openclaw/credentials/oauth.json` (o `$OPENCLAW_STATE_DIR/credentials/oauth.json`) al host de la puerta de enlace.</Note>
+<Note>Sugerencia para servidores y sin cabeza: complete OAuth en una máquina con un navegador y luego copie `~/.openclaw/credentials/oauth.json` (o `$OPENCLAW_STATE_DIR/credentials/oauth.json`) al host de la puerta de enlace.</Note>
 
 ## Salidas e internos
 
@@ -241,10 +241,10 @@ Campos típicos en `~/.openclaw/openclaw.json`:
 
 - `agents.defaults.workspace`
 - `agents.defaults.model` / `models.providers` (si se elige Minimax)
-- `tools.profile` (el onboarding local establece esto por defecto a `"coding"` cuando no se establece; se preservan los valores explícitos existentes)
-- `gateway.*` (modo, bind, auth, tailscale)
-- `session.dmScope` (el onboarding local establece esto por defecto a `per-channel-peer` cuando no se establece; se preservan los valores explícitos existentes)
-- `channels.telegram.botToken`, `channels.discord.token`, `channels.signal.*`, `channels.imessage.*`
+- `tools.profile` (la integración local predetermina esto a `"coding"` cuando no está establecido; los valores explícitos existentes se conservan)
+- `gateway.*` (mode, bind, auth, tailscale)
+- `session.dmScope` (la integración local predetermina esto a `per-channel-peer` cuando no está establecido; los valores explícitos existentes se conservan)
+- `channels.telegram.botToken`, `channels.discord.token`, `channels.matrix.*`, `channels.signal.*`, `channels.imessage.*`
 - Listas de permitidos de canales (Slack, Discord, Matrix, Microsoft Teams) cuando optas por participar durante las indicaciones (los nombres se resuelven en IDs cuando es posible)
 - `skills.install.nodeManager`
 - `wizard.lastRunAt`
@@ -272,7 +272,7 @@ Los clientes (aplicación macOS e interfaz de usuario de Control) pueden renderi
 Comportamiento de configuración de Signal:
 
 - Descarga el activo de lanzamiento adecuado
-- Lo guarda en `~/.openclaw/tools/signal-cli/<version>/`
+- Lo guarda bajo `~/.openclaw/tools/signal-cli/<version>/`
 - Escribe `channels.signal.cliPath` en la configuración
 - Las compilaciones de JVM requieren Java 21
 - Se usan compilaciones nativas cuando están disponibles

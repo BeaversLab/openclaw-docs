@@ -71,12 +71,12 @@ openclaw onboard --auth-choice modelstudio-api-key
 - **qwen3-coder-plus**，**qwen3-coder-next** — Qwen 编码模型
 - **GLM-5** — 通过阿里云的 GLM 模型
 - **Kimi K2.5** — 通过阿里云的 Moonshot AI
-- **MiniMax-M2.5** — 通过阿里云的 MiniMax
+- **MiniMax-M2.7** — MiniMax 通过阿里云
 
 某些模型（qwen3.5-plus、kimi-k2.5）支持图像输入。上下文窗口范围从 200K 到 1M tokens。
 
 ## 环境说明
 
-如果 Gateway 作为守护进程运行，请确保
+如果 Gateway(网关) 作为守护进程运行，请确保
 `MODELSTUDIO_API_KEY` 对该进程可用（例如，在
 `~/.openclaw/.env` 中或通过 `env.shellEnv`）。

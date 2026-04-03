@@ -62,7 +62,8 @@ Si ve `NODE_BACKGROUND_UNAVAILABLE`, traiga la aplicación del nodo al primer pl
 Estos son diferentes obstáculos:
 
 1. **Emparejamiento de dispositivos**: ¿puede este nodo conectarse a la puerta de enlace?
-2. **Aprobaciones de exec**: ¿puede este nodo ejecutar un comando de shell específico?
+2. **Política de comandos del nodo de puerta de enlace**: ¿está el ID de comando RPC permitido por `gateway.nodes.allowCommands` / `denyCommands` y los valores predeterminados de la plataforma?
+3. **Aprobaciones de ejecución**: ¿puede este nodo ejecutar un comando de shell específico localmente?
 
 Verificaciones rápidas:
 
@@ -74,20 +75,23 @@ openclaw approvals allowlist add --node <idOrNameOrIp> "/usr/bin/uname"
 ```
 
 Si falta el emparejamiento, apruebe primero el dispositivo del nodo.
-Si el emparejamiento está bien pero `system.run` falla, corrija las aprobaciones/lista blanca de exec.
+Si a `nodes describe` le falta un comando, verifique la política de comandos del nodo de puerta de enlace y si el nodo declaró realmente ese comando al conectarse.
+Si el emparejamiento está bien pero `system.run` falla, corrija las aprobaciones/listas de permitidos de ejecución en ese nodo.
 
-## Códigos de error comunes de nodo
+El emparejamiento de nodos es una puerta de identidad/confianza, no una superficie de aprobación por comando. Para `system.run`, la política por nodo reside en el archivo de aprobaciones de ejecución de ese nodo (`openclaw approvals get --node ...`), no en el registro de emparejamiento de la puerta de enlace.
 
-- `NODE_BACKGROUND_UNAVAILABLE` → la aplicación está en segundo plano; tráigala al primer plano.
+## Códigos de error comunes de nodos
+
+- `NODE_BACKGROUND_UNAVAILABLE` → la aplicación está en segundo plano; póngala en primer plano.
 - `CAMERA_DISABLED` → el interruptor de cámara está deshabilitado en la configuración del nodo.
-- `*_PERMISSION_REQUIRED` → falta/se deniega el permiso del SO.
+- `*_PERMISSION_REQUIRED` → permiso del SO faltante/denegado.
 - `LOCATION_DISABLED` → el modo de ubicación está desactivado.
-- `LOCATION_PERMISSION_REQUIRED` → no se concedió el modo de ubicación solicitado.
-- `LOCATION_BACKGROUND_UNAVAILABLE` → la aplicación está en segundo plano, pero solo existe el permiso "Mientras se usa".
-- `SYSTEM_RUN_DENIED: approval required` → la solicitud exec necesita aprobación explícita.
+- `LOCATION_PERMISSION_REQUIRED` → modo de ubicación solicitado no otorgado.
+- `LOCATION_BACKGROUND_UNAVAILABLE` → la aplicación está en segundo plano pero solo existe el permiso Mientras se usa.
+- `SYSTEM_RUN_DENIED: approval required` → la solicitud de ejecución necesita aprobación explícita.
 - `SYSTEM_RUN_DENIED: allowlist miss` → comando bloqueado por el modo de lista de permitidos.
-  En los hosts de nodo de Windows, las formas de contenedor de shell como `cmd.exe /c ...` se tratan como fallos de la lista de permitidos en
-  el modo de lista de permitidos, a menos que se aprueben mediante el flujo de solicitud.
+  En los hosts de nodo Windows, las formas de contenedor de shell como `cmd.exe /c ...` se tratan como fallos en la lista de permitidos en
+  modo de lista de permitidos a menos que se aprueben mediante el flujo de solicitud.
 
 ## Bucle de recuperación rápida
 
@@ -98,12 +102,12 @@ openclaw approvals get --node <idOrNameOrIp>
 openclaw logs --follow
 ```
 
-Si sigue bloqueado:
+Si sigue atascado:
 
 - Volver a aprobar el emparejamiento del dispositivo.
 - Volver a abrir la aplicación del nodo (en primer plano).
-- Volver a conceder los permisos del sistema operativo.
-- Volver a crear/ajustar la política de aprobación exec.
+- Volver a otorgar permisos del SO.
+- Recrear/ajustar la política de aprobación de ejecución.
 
 Relacionado:
 

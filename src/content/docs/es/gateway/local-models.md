@@ -9,38 +9,38 @@ title: "Modelos locales"
 
 # Modelos locales
 
-Ejecutarlo localmente es posible, pero OpenClaw espera un contexto grande + defensas sólidas contra la inyección de avisos. Las tarjetas pequeñas truncan el contexto y filtran la seguridad. Apunta alto: **≥2 Mac Studios al máximo o un equipo de GPU equivalente (~$30k+)**. Una sola GPU de **24 GB** solo funciona para avisos más ligeros con mayor latencia. Utiliza la **variante del modelo más grande / de tamaño completo que puedas ejecutar**; los puntos de control cuantificados agresivamente o “pequeños” aumentan el riesgo de inyección de avisos (consulta [Seguridad](/en/gateway/security)).
+Lo local es viable, pero OpenClaw espera un contexto grande + defensas sólidas contra la inyección de prompts. Las tarjetas pequeñas truncan el contexto y filtran la seguridad. Apunta alto: **≥2 Mac Studios al máximo o un equipo GPU equivalente (~$30k+)**. Una única GPU de **24 GB** solo funciona para prompts más ligeros con mayor latencia. Utiliza la **variante de modelo más grande / de tamaño completo que puedas ejecutar**; los puntos de control agresivamente cuantificados o “pequeños” aumentan el riesgo de inyección de prompts (consulta [Security](/en/gateway/security)).
 
-Si deseas la configuración local con menos fricción, comienza con [Ollama](/en/providers/ollama) y `openclaw onboard`. Esta página es la guía con opiniones para pilas locales de gama alta y servidores locales compatibles con OpenAI personalizados.
+Si deseas la configuración local con menos fricción, comienza con [Ollama](/en/providers/ollama) y `openclaw onboard`. Esta página es la guía con opiniones para stacks locales de gama alta y servidores locales compatibles con OpenAI personalizados.
 
-## Recomendado: LM Studio + MiniMax M2.5 (API de respuestas, tamaño completo)
+## Recomendado: LM Studio + modelo local grande (Responses API)
 
-Mejor pila local actual. Carga MiniMax M2.5 en LM Studio, habilita el servidor local (por defecto `http://127.0.0.1:1234`) y usa la API de respuestas para mantener el razonamiento separado del texto final.
+El mejor stack local actual. Carga un modelo grande en LM Studio (por ejemplo, una compilación Qwen, DeepSeek o Llama de tamaño completo), habilita el servidor local (por defecto `http://127.0.0.1:1234`) y utiliza Responses API para mantener el razonamiento separado del texto final.
 
 ```json5
 {
   agents: {
     defaults: {
-      model: { primary: "lmstudio/minimax-m2.5-gs32" },
+      model: { primary: “lmstudio/my-local-model” },
       models: {
-        "anthropic/claude-opus-4-6": { alias: "Opus" },
-        "lmstudio/minimax-m2.5-gs32": { alias: "Minimax" },
+        “anthropic/claude-opus-4-6”: { alias: “Opus” },
+        “lmstudio/my-local-model”: { alias: “Local” },
       },
     },
   },
   models: {
-    mode: "merge",
+    mode: “merge”,
     providers: {
       lmstudio: {
-        baseUrl: "http://127.0.0.1:1234/v1",
-        apiKey: "lmstudio",
-        api: "openai-responses",
+        baseUrl: “http://127.0.0.1:1234/v1”,
+        apiKey: “lmstudio”,
+        api: “openai-responses”,
         models: [
           {
-            id: "minimax-m2.5-gs32",
-            name: "MiniMax M2.5 GS32",
+            id: “my-local-model”,
+            name: “Local Model”,
             reasoning: false,
-            input: ["text"],
+            input: [“text”],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 196608,
             maxTokens: 8192,
@@ -54,15 +54,16 @@ Mejor pila local actual. Carga MiniMax M2.5 en LM Studio, habilita el servidor l
 
 **Lista de verificación de configuración**
 
-- Instalar LM Studio: [https://lmstudio.ai](https://lmstudio.ai)
-- En LM Studio, descarga la **compilación más grande de MiniMax M2.5 disponible** (evita las variantes “pequeñas”/muy cuantificadas), inicia el servidor, confirma que `http://127.0.0.1:1234/v1/models` la liste.
+- Instala LM Studio: [https://lmstudio.ai](https://lmstudio.ai)
+- En LM Studio, descarga la **compilación de modelo más grande disponible** (evita las variantes “pequeñas”/fuertemente cuantificadas), inicia el servidor, confirma que `http://127.0.0.1:1234/v1/models` lo enumera.
+- Reemplaza `my-local-model` con el ID de modelo real que se muestra en LM Studio.
 - Mantén el modelo cargado; la carga en frío añade latencia de inicio.
 - Ajusta `contextWindow`/`maxTokens` si tu compilación de LM Studio difiere.
-- Para WhatsApp, mantente en la API de respuestas para que solo se envíe el texto final.
+- Para WhatsApp, mantente en Responses API para que solo se envíe el texto final.
 
-Mantén los modelos alojados configurados incluso cuando ejecutes localmente; usa `models.mode: "merge"` para que las alternativas sigan disponibles.
+Mantén los modelos alojados configurados incluso cuando se ejecute localmente; utiliza `models.mode: "merge"` para que las alternativas de respaldo sigan disponibles.
 
-### Configuración híbrida: alojado principal, alternativa local
+### Configuración híbrida: alojado principal, respaldo local
 
 ```json5
 {
@@ -70,11 +71,11 @@ Mantén los modelos alojados configurados incluso cuando ejecutes localmente; us
     defaults: {
       model: {
         primary: "anthropic/claude-sonnet-4-6",
-        fallbacks: ["lmstudio/minimax-m2.5-gs32", "anthropic/claude-opus-4-6"],
+        fallbacks: ["lmstudio/my-local-model", "anthropic/claude-opus-4-6"],
       },
       models: {
         "anthropic/claude-sonnet-4-6": { alias: "Sonnet" },
-        "lmstudio/minimax-m2.5-gs32": { alias: "MiniMax Local" },
+        "lmstudio/my-local-model": { alias: "Local" },
         "anthropic/claude-opus-4-6": { alias: "Opus" },
       },
     },
@@ -88,8 +89,8 @@ Mantén los modelos alojados configurados incluso cuando ejecutes localmente; us
         api: "openai-responses",
         models: [
           {
-            id: "minimax-m2.5-gs32",
-            name: "MiniMax M2.5 GS32",
+            id: "my-local-model",
+            name: "Local Model",
             reasoning: false,
             input: ["text"],
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
@@ -103,18 +104,18 @@ Mantén los modelos alojados configurados incluso cuando ejecutes localmente; us
 }
 ```
 
-### Primero local con red de seguridad alojada
+### Local primero con red de seguridad alojada
 
-Intercambia el orden principal y de alternativa; mantén el mismo bloque de proveedores y `models.mode: "merge"` para que puedas recurrir a Sonnet u Opus cuando el cuadro local esté caído.
+Intercambia el orden principal y de respaldo; mantén el mismo bloque de proveedores y `models.mode: "merge"` para que puedas volver a Sonnet u Opus cuando el equipo local esté caído.
 
 ### Alojamiento regional / enrutamiento de datos
 
-- También existen variantes alojadas de MiniMax/Kimi/GLM en OpenRouter con puntos de conexión anclados a regiones (por ejemplo, alojados en EE. UU.). Elige la variante regional allí para mantener el tráfico en tu jurisdicción elegida mientras sigues usando `models.mode: "merge"` para respaldos de Anthropic/OpenAI.
-- Solo local sigue siendo la ruta de privacidad más sólida; el enrutamiento regional alojado es el término medio cuando necesitas funciones del proveedor pero deseas el control sobre el flujo de datos.
+- También existen variantes alojadas de MiniMax/Kimi/GLM en OpenRouter con endpoints anclados a regiones (por ejemplo, alojados en EE. UU.). Elige la variante regional allí para mantener el tráfico en tu jurisdicción elegida mientras sigues utilizando `models.mode: "merge"` para las alternativas de Anthropic/OpenAI.
+- Solo local sigue siendo la ruta de privacidad más sólida; el enrutamiento regional alojado es el término medio cuando necesitas funciones del proveedor pero quieres controlar el flujo de datos.
 
-## Otros proxies locales compatibles con OpenAI
+## Otros servidores proxy locales compatibles con OpenAI
 
-vLLM, LiteLLM, OAI-proxy o pasarelas personalizadas funcionan si exponen un punto de conexión estilo OpenAI `/v1`. Reemplaza el bloque de proveedor anterior con tu punto de conexión e ID de modelo:
+vLLM, LiteLLM, OAI-proxy o gateways personalizados funcionan si exponen un punto final `/v1` estilo OpenAI. Reemplaza el bloque de proveedor anterior con tu punto final e ID de modelo:
 
 ```json5
 {
@@ -142,11 +143,11 @@ vLLM, LiteLLM, OAI-proxy o pasarelas personalizadas funcionan si exponen un punt
 }
 ```
 
-Mantén `models.mode: "merge"` para que los modelos alojados sigan disponibles como respaldos.
+Mantén `models.mode: "merge"` para que los modelos alojados sigan disponibles como respaldo.
 
 ## Solución de problemas
 
-- ¿La pasarela puede alcanzar el proxy? `curl http://127.0.0.1:1234/v1/models`.
-- ¿Modelo de LM Studio descargado? Vuelve a cargarlo; el arranque en frío es una causa común de "bloqueo".
+- ¿Puede el Gateway alcanzar el proxy? `curl http://127.0.0.1:1234/v1/models`.
+- ¿Modelo de LM Studio descargado? Vuelve a cargarlo; el inicio en frío es una causa común de "bloqueo".
 - ¿Errores de contexto? Reduce `contextWindow` o aumenta el límite de tu servidor.
-- Seguridad: los modelos locales omiten los filtros del lado del proveedor; mantén los agentes limitados y la compactación activa para limitar el radio de explosión de la inyección de prompts.
+- Seguridad: los modelos locales omiten los filtros del lado del proveedor; mantén los agentes estrechos y la compactación activa para limitar el radio de explosión de la inyección de avisos.

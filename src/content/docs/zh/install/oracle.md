@@ -9,7 +9,7 @@ title: "Oracle Cloud"
 
 # Oracle Cloud
 
-在 Oracle Cloud 的 **Always Free** ARM 层（最多 4 个 OCPU，24 GB 内存，200 GB 存储）上免费运行持久的 OpenClaw Gateway。
+在 Oracle Cloud 的 **Always Free** ARM 层（最多 4 个 OCPU，24 GB 内存，200 GB 存储）上免费运行持久的 OpenClaw Gateway(网关)。
 
 ## 先决条件
 

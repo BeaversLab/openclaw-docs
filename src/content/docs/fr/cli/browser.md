@@ -1,10 +1,10 @@
 ---
-summary: "Référence CLI pour `openclaw browser` (profils, onglets, actions, Chrome MCP et CDP)"
+summary: "Référence de la CLI pour `openclaw browser` (profils, onglets, actions, Chrome MCP et CDP)"
 read_when:
   - You use `openclaw browser` and want examples for common tasks
   - You want to control a browser running on another machine via a node host
   - You want to attach to your local signed-in Chrome via Chrome MCP
-title: "browser"
+title: "navigateur"
 ---
 
 # `openclaw browser`
@@ -17,8 +17,8 @@ Connexes :
 
 ## Drapeaux courants
 
-- `--url <gatewayWsUrl>` : URL WebSocket du Gateway (par défaut depuis la configuration).
-- `--token <token>` : jeton du Gateway (si requis).
+- `--url <gatewayWsUrl>` : URL WebSocket de la passerelle (par défaut depuis la configuration).
+- `--token <token>` : jeton de la passerelle (si requis).
 - `--timeout <ms>` : délai d'expiration de la requête (ms).
 - `--browser-profile <name>` : choisir un profil de navigateur (celui par défaut depuis la configuration).
 - `--json` : sortie lisible par machine (lorsque pris en charge).
@@ -32,12 +32,32 @@ openclaw browser --browser-profile openclaw open https://example.com
 openclaw browser --browser-profile openclaw snapshot
 ```
 
+## Si la commande est manquante
+
+Si `openclaw browser` est une commande inconnue, vérifiez `plugins.allow` dans
+`~/.openclaw/openclaw.json`.
+
+Lorsque `plugins.allow` est présent, le plugin de navigateur intégré doit être listé
+explicitement :
+
+```json5
+{
+  plugins: {
+    allow: ["telegram", "browser"],
+  },
+}
+```
+
+`browser.enabled=true` ne restaure pas la sous-commande CLI lorsque la liste d'autorisation des plugins exclut `browser`.
+
+Connexe : [Outil de navigateur](/en/tools/browser#missing-browser-command-or-tool)
+
 ## Profils
 
 Les profils sont des configurations de routage de navigateur nommées. En pratique :
 
-- `openclaw` : lance ou se connecte à une instance Chrome dédiée gérée par OpenClaw (répertoire de données utilisateur isolé).
-- `user` : contrôle votre session Chrome existante et connectée via Chrome DevTools MCP.
+- `openclaw` : lance ou se connecte à une instance Chrome gérée dédiée par OpenClaw (répertoire de données utilisateur isolé).
+- `user` : contrôle votre session Chrome existante connectée via Chrome DevTools MCP.
 - profils CDP personnalisés : pointent vers un point de terminaison CDP local ou distant.
 
 ```bash
@@ -76,7 +96,7 @@ Capture d'écran :
 openclaw browser screenshot
 ```
 
-Naviguer/cliquer/saisir (automatisation de l'interface utilisateur basée sur des références) :
+Navigation / clic / saisie (automatisation de l'interface utilisateur basée sur des références) :
 
 ```bash
 openclaw browser navigate https://example.com
@@ -95,12 +115,12 @@ openclaw browser create-profile --name brave-live --driver existing-session --us
 openclaw browser --browser-profile chrome-live tabs
 ```
 
-Ce chemin est réservé à l'hôte. Pour Docker, les serveurs sans tête (headless), Browserless ou d'autres configurations distantes, utilisez plutôt un profil CDP.
+Ce chemin est réservé à l'hôte. Pour Docker, les serveurs sans interface, Browserless ou d'autres configurations distantes, utilisez plutôt un profil CDP.
 
 ## Contrôle distant du navigateur (proxy d'hôte de nœud)
 
-Si le Gateway s'exécute sur une machine différente de celle du navigateur, exécutez un **node host** sur la machine qui dispose de Chrome/Brave/Edge/Chromium. Le Gateway transmettra les actions du navigateur à ce nœud (aucun serveur de contrôle de navigateur distinct requis).
+Si la passerelle s'exécute sur une machine différente de celle du navigateur, exécutez un **hôte de nœud** sur la machine qui dispose de Chrome/Brave/Edge/Chromium. La passerelle proxiera les actions du navigateur vers ce nœud (aucun serveur de contrôle de navigateur séparé requis).
 
 Utilisez `gateway.nodes.browser.mode` pour contrôler le routage automatique et `gateway.nodes.browser.node` pour épingler un nœud spécifique si plusieurs sont connectés.
 
-Sécurité + configuration à distance : [Outil de navigateur](/en/tools/browser), [Accès distant](/en/gateway/remote), [Tailscale](/en/gateway/tailscale), [Sécurité](/en/gateway/security)
+Sécurité + configuration à distance : [Browser tool](/en/tools/browser), [Remote access](/en/gateway/remote), [Tailscale](/en/gateway/tailscale), [Security](/en/gateway/security)

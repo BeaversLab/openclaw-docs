@@ -361,7 +361,7 @@ Después de configurar el entorno restringido y las herramientas multiagente:
    - Enviar un mensaje que requiera herramientas restringidas
    - Verificar que el agente no puede usar las herramientas denegadas
 
-4. **Supervisar registros:**
+4. **Supervisar los registros:**
    ```bash
    tail -f "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/logs/gateway.log" | grep -E "routing|sandbox|tools"
    ```

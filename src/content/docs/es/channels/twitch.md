@@ -22,7 +22,7 @@ openclaw plugins install @openclaw/twitch
 Repositorio local (al ejecutar desde un repositorio git):
 
 ```bash
-openclaw plugins install ./extensions/twitch
+openclaw plugins install ./path/to/local/twitch-plugin
 ```
 
 Detalles: [Plugins](/en/tools/plugin)
@@ -30,11 +30,11 @@ Detalles: [Plugins](/en/tools/plugin)
 ## Configuración rápida (principiante)
 
 1. Cree una cuenta de Twitch dedicada para el bot (o use una cuenta existente).
-2. Genere credenciales: [Twitch Token Generator](https://twitchtokengenerator.com/)
+2. Generar credenciales: [Twitch Token Generator](https://twitchtokengenerator.com/)
    - Seleccione **Bot Token**
    - Verifique que los alcances `chat:read` y `chat:write` estén seleccionados
    - Copie el **Client ID** y el **Access Token**
-3. Encuentre su ID de usuario de Twitch: [https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)
+3. Encuentra tu ID de usuario de Twitch: [https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)
 4. Configure el token:
    - Entorno: `OPENCLAW_TWITCH_ACCESS_TOKEN=...` (solo cuenta predeterminada)
    - O configuración: `channels.twitch.accessToken`
@@ -71,7 +71,7 @@ Configuración mínima:
 
 ### Generar credenciales
 
-Use [Twitch Token Generator](https://twitchtokengenerator.com/):
+Usa [Twitch Token Generator](https://twitchtokengenerator.com/):
 
 - Seleccione **Bot Token**
 - Verifique que los alcances `chat:read` y `chat:write` estén seleccionados
@@ -127,9 +127,9 @@ Encuentra tu ID de usuario de Twitch: [https://www.streamweasels.com/tools/conve
 
 ## Actualización de token (opcional)
 
-Los tokens de [Twitch Token Generator](https://twitchtokengenerator.com/) no se pueden actualizar automáticamente; regenérelos cuando caduquen.
+Los tokens de [Twitch Token Generator](https://twitchtokengenerator.com/) no se pueden actualizar automáticamente: regenéralos cuando expiren.
 
-Para la actualización automática de tokens, cree su propia aplicación de Twitch en [Twitch Developer Console](https://dev.twitch.tv/console) y agréguela a la configuración:
+Para la actualización automática de tokens, crea tu propia aplicación de Twitch en [Twitch Developer Console](https://dev.twitch.tv/console) y agrégala a la configuración:
 
 ```json5
 {
@@ -377,3 +377,11 @@ Ejemplo:
 - **500 caracteres** por mensaje (divididos automáticamente en los límites de las palabras)
 - Se elimina el formato Markdown antes de dividir
 - Sin limitación de velocidad (usa los límites de velocidad integrados de Twitch)
+
+## Relacionado
+
+- [Descripción general de canales](/en/channels) — todos los canales compatibles
+- [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento por MD
+- [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento

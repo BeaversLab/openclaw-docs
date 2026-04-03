@@ -4,7 +4,9 @@ read_when: "Connexion de l'application macOS à une passerelle distante via SSH"
 title: "Configuration de la passerelle distante"
 ---
 
-# Exécution de OpenClaw.app avec une passerelle distante
+> Ce contenu a été fusionné dans [Accès distant](/en/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent). Consultez cette page pour le guide actuel.
+
+# Exécution de OpenClaw.app avec une Gateway distante
 
 OpenClaw.app utilise le tunneling SSH pour se connecter à une passerelle distante. Ce guide vous montre comment le configurer.
 
@@ -31,7 +33,7 @@ flowchart TB
     T --> C
 ```
 
-## Installation rapide
+## Configuration rapide
 
 ### Étape 1 : Ajouter la configuration SSH
 
@@ -74,7 +76,7 @@ ssh -N remote-gateway &
 open /path/to/OpenClaw.app
 ```
 
-L'application se connectera désormais à la passerelle distante via le tunnel SSH.
+L'application se connectera maintenant à la passerelle distante via le tunnel SSH.
 
 ---
 
@@ -119,7 +121,7 @@ Le tunnel va maintenant :
 - Redémarrer en cas de plantage
 - Continuer à fonctionner en arrière-plan
 
-Note relative aux anciennes versions : supprimez tout LaunchAgent `com.openclaw.ssh-tunnel` résiduel s'il est présent.
+Note de compatibilité : supprimez tout LaunchAgent `com.openclaw.ssh-tunnel` restant s'il est présent.
 
 ---
 
@@ -152,7 +154,7 @@ launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
 | ------------------------------------ | --------------------------------------------------------------------- |
 | `LocalForward 18789 127.0.0.1:18789` | Transfère le port local 18789 vers le port distant 18789              |
 | `ssh -N`                             | SSH sans exécuter de commandes distantes (juste le transfert de port) |
-| `KeepAlive`                          | Redémarre automatiquement le tunnel s'il plante                       |
-| `RunAtLoad`                          | Démarre le tunnel lorsque l'agent se charge                           |
+| `KeepAlive`                          | Redémarre automatiquement le tunnel en cas de plantage                |
+| `RunAtLoad`                          | Démarre le tunnel lors du chargement de l'agent                       |
 
-OpenClaw.app se connecte à `ws://127.0.0.1:18789` sur votre machine cliente. Le tunnel SSH transfère cette connexion vers le port 18789 sur la machine distante où le Gateway est en cours d'exécution.
+OpenClaw.app se connecte à `ws://127.0.0.1:18789` sur votre machine cliente. Le tunnel SSH transfère cette connexion vers le port 18789 sur la machine distante où la Gateway est en cours d'exécution.

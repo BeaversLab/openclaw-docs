@@ -29,7 +29,7 @@ openclaw plugins enable open-prose
 
 Reinicie la puerta de enlace después de habilitar el complemento.
 
-Desarrollo/verificación local: `openclaw plugins install ./extensions/open-prose`
+Despliegue en desarrollo/local: `openclaw plugins install ./path/to/local/open-prose-plugin`
 
 Documentos relacionados: [Complementos](/en/tools/plugin), [Manifiesto del complemento](/en/plugins/manifest), [Habilidades](/en/tools/skills).
 

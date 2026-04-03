@@ -26,7 +26,7 @@ OpenClaw 是一個自託管的閘道，可將 WhatsApp、Telegram、Discord、iM
 
 ## 先決條件
 
-- 已安裝並註冊 OpenClaw — 如果您尚未完成此操作，請參閱[入門指南](/en/start/getting-started)
+- 已安裝並入職 OpenClaw — 如果您尚未完成此操作，請參閱[入門指南](/en/start/getting-started)
 - 助理的第二個電話號碼（SIM/eSIM/預付卡）
 
 ## 雙手機設定（推薦）
@@ -79,8 +79,8 @@ OpenClaw 從其工作區目錄讀取操作指令和「記憶」。
 openclaw setup
 ```
 
-完整的工作區佈局 + 備份指南：[代理工作區](/en/concepts/agent-workspace)
-記憶工作流程：[記憶](/en/concepts/memory)
+完整的工作區佈局 + 備份指南：[代理程式工作區](/en/concepts/agent-workspace)
+記憶體工作流程：[記憶體](/en/concepts/memory)
 
 可選：使用 `agents.defaults.workspace` 選擇不同的工作區（支援 `~`）。
 
@@ -192,9 +192,15 @@ MEDIA:https://example.com/screenshot.png
 
 OpenClaw 會提取這些內容，並將其作為媒體與文字一起發送。
 
-對於本機路徑，預設的允許清單特意設得很窄：OpenClaw 暫存根目錄、媒體快取、代理工作區路徑以及沙盒產生的檔案。如果您需要更廣泛的本機檔案附件根目錄，請設定明確的通道/外掛允許清單，而不是依賴任意的主機路徑。
+本機路徑行為遵循與代理程式相同的檔案讀取信任模型：
 
-## 操作檢查清單
+- 如果 `tools.fs.workspaceOnly` 是 `true`，傳出的 `MEDIA:` 本機路徑將僅限於 OpenClaw 臨時根目錄、媒體快取、代理程式工作區路徑以及沙箱產生的檔案。
+- 如果 `tools.fs.workspaceOnly` 是 `false`，傳出的 `MEDIA:` 可以使用代理程式已有權限讀取的主機本機檔案。
+- 從主機本機發送仍然僅允許媒體和安全文件類型（圖片、音訊、影片、PDF 和 Office 文件）。純文字和類似機密的檔案不被視為可發送的媒體。
+
+這意味著當您的 fs 原則已允許讀取時，工作區外產生的圖片/檔案現在可以發送，而不會重新開放任意主機文字附件的外洩風險。
+
+## 運作檢查清單
 
 ```bash
 openclaw status          # local status (creds, sessions, queued events)
@@ -203,16 +209,16 @@ openclaw status --deep   # adds gateway health probes (Telegram + Discord)
 openclaw health --json   # gateway health snapshot (WS)
 ```
 
-日誌存放在 `/tmp/openclaw/` 下 (預設為：`openclaw-YYYY-MM-DD.log`)。
+日誌存儲於 `/tmp/openclaw/` 下（預設：`openclaw-YYYY-MM-DD.log`）。
 
 ## 下一步
 
-- WebChat: [WebChat](/en/web/webchat)
-- Gateway 操作: [Gateway runbook](/en/gateway)
-- Cron + 喚醒: [Cron jobs](/en/automation/cron-jobs)
-- macOS 功能表列伴隨應用程式: [OpenClaw macOS app](/en/platforms/macos)
-- iOS 節點應用程式: [iOS app](/en/platforms/ios)
-- Android 節點應用程式: [Android app](/en/platforms/android)
-- Windows 狀態: [Windows (WSL2)](/en/platforms/windows)
-- Linux 狀態：[Linux 應用程式](/en/platforms/linux)
+- WebChat：[WebChat](/en/web/webchat)
+- 閘道運作：[Gateway runbook](/en/gateway)
+- Cron + 喚醒：[Cron jobs](/en/automation/cron-jobs)
+- macOS 選單列伴隨程式：[OpenClaw macOS app](/en/platforms/macos)
+- iOS 節點應用程式：[iOS app](/en/platforms/ios)
+- Android 節點應用程式：[Android app](/en/platforms/android)
+- Windows 狀態：[Windows (WSL2)](/en/platforms/windows)
+- Linux 狀態：[Linux app](/en/platforms/linux)
 - 安全性：[Security](/en/gateway/security)

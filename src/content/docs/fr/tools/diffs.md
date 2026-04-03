@@ -107,7 +107,7 @@ Tous les champs sont facultatifs sauf indication contraire :
 - `after` (`string`) : texte mis à jour. Requis avec `before` lorsque `patch` est omis.
 - `patch` (`string`) : texte de diff unifié. Mutuellement exclusif avec `before` et `after`.
 - `path` (`string`) : nom de fichier à afficher pour le mode avant et après.
-- `lang` (`string`) : indication de substitution de langue pour le mode avant et après.
+- `lang` (`string`) : indicateur de substitution de langue pour le mode avant et après. Les valeurs inconnues reviennent au texte brut.
 - `title` (`string`) : substitution du titre de la visionneuse.
 - `mode` (`"view" | "file" | "both"`) : mode de sortie. La valeur par défaut est `defaults.mode` du plugin.
   Alias déconseillé : `"image"` se comporte comme `"file"` et est toujours accepté pour la rétrocompatibilité.
@@ -281,41 +281,43 @@ Ressources de la visionneuse :
 - `/plugins/diffs/assets/viewer.js`
 - `/plugins/diffs/assets/viewer-runtime.js`
 
+Le document de visualisateur résout ces actifs par rapport à l'URL du visualisateur, donc un préfixe de chemin `baseUrl` optionnel est également préservé pour les deux demandes d'actifs.
+
 Comportement de construction de l'URL :
 
 - Si `baseUrl` est fourni, il est utilisé après une validation stricte.
-- Sans `baseUrl`, l'URL de la visionneuse par défaut est le bouclage (loopback) `127.0.0.1`.
+- Sans `baseUrl`, l'URL du visualisateur par défaut est `127.0.0.1` en boucle locale.
 - Si le mode de liaison de la passerelle est `custom` et que `gateway.customBindHost` est défini, cet hôte est utilisé.
 
 Règles `baseUrl` :
 
 - Doit être `http://` ou `https://`.
-- Les paramètres de requête et les hachages sont rejetés.
-- L'origine plus un chemin de base facultatif est autorisé.
+- Les requêtes et les hachages sont rejetés.
+- L'origine plus le chemin de base optionnel sont autorisés.
 
 ## Modèle de sécurité
 
-Durcissement de la visionneuse :
+Renforcement du visualisateur :
 
-- Bouclage uniquement (loopback-only) par défaut.
-- Chemins de visionneuse tokenisés avec une validation stricte de l'ID et du jeton.
-- CSP de réponse de la visionneuse :
+- Boucle locale uniquement par défaut.
+- Chemins de visualisateur tokenisés avec une validation stricte de l'ID et du jeton.
+- CSP de réponse du visualisateur :
   - `default-src 'none'`
-  - scripts et ressources uniquement depuis self
+  - scripts et actifs uniquement depuis self
   - aucun `connect-src` sortant
 - Limitation des échecs à distance lorsque l'accès à distance est activé :
   - 40 échecs par 60 secondes
   - Verrouillage de 60 secondes (`429 Too Many Requests`)
 
-Durcissement du rendu des fichiers :
+Renforcement du rendu des fichiers :
 
 - Le routage des demandes du navigateur de capture d'écran est refusé par défaut.
-- Seules les ressources de visionneuse locales de `http://127.0.0.1/plugins/diffs/assets/*` sont autorisées.
+- Seuls les actifs de visualisateur locaux provenant de `http://127.0.0.1/plugins/diffs/assets/*` sont autorisés.
 - Les demandes réseau externes sont bloquées.
 
-## Configuration requise du navigateur pour le mode fichier
+## Exigences du navigateur pour le mode fichier
 
-`mode: "file"` et `mode: "both"` nécessitent un navigateur compatible Chromium.
+`mode: "file"` et `mode: "both"` ont besoin d'un navigateur compatible Chromium.
 
 Ordre de résolution :
 
@@ -324,13 +326,13 @@ Ordre de résolution :
    - `OPENCLAW_BROWSER_EXECUTABLE_PATH`
    - `BROWSER_EXECUTABLE_PATH`
    - `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`
-3. Repli sur la découverte de commande/chemin de la plateforme.
+3. Repli de la découverte de commande/chemin de la plateforme.
 
 Texte d'échec courant :
 
 - `Diff PNG/PDF rendering requires a Chromium-compatible browser...`
 
-Corrigez en installant Chrome, Chromium, Edge ou Brave, ou en définissant l'une des options de chemin exécutable ci-dessus.
+Correction en installant Chrome, Chromium, Edge ou Brave, ou en définissant l'une des options de chemin exécutable ci-dessus.
 
 ## Dépannage
 
@@ -339,7 +341,7 @@ Erreurs de validation de l'entrée :
 - `Provide patch or both before and after text.`
   - Incluez à la fois `before` et `after`, ou fournissez `patch`.
 - `Provide either patch or before/after input, not both.`
-  - Ne mélangez pas les modes d'entrée.
+  - Ne mélangez pas les modes de saisie.
 - `Invalid baseUrl: ...`
   - Utilisez l'origine `http(s)` avec un chemin facultatif, sans requête/hachage.
 - `{field} exceeds maximum size (...)`
@@ -349,15 +351,15 @@ Erreurs de validation de l'entrée :
 
 Problèmes d'accessibilité de la visionneuse :
 
-- L'URL de la visionneuse résout vers `127.0.0.1` par défaut.
+- L'URL de la visionneuse résout par défaut `127.0.0.1`.
 - Pour les scénarios d'accès à distance, soit :
   - passez `baseUrl` par appel d'outil, ou
   - utilisez `gateway.bind=custom` et `gateway.customBindHost`
-- Activez `security.allowRemoteViewer` uniquement lorsque vous envisagez un accès externe à la visionneuse.
+- Activez `security.allowRemoteViewer` uniquement lorsque vous avez l'intention d'autoriser l'accès externe à la visionneuse.
 
 La ligne des lignes non modifiées n'a pas de bouton d'extension :
 
-- Cela peut arriver pour l'entrée de correctif lorsque le correctif ne contient pas de contexte extensible.
+- Cela peut se produire pour l'entrée de correctif lorsque le correctif ne contient pas de contexte extensible.
 - Ceci est attendu et n'indique pas une défaillance de la visionneuse.
 
 Artefact introuvable :
@@ -366,13 +368,13 @@ Artefact introuvable :
 - Le jeton ou le chemin a changé.
 - Le nettoyage a supprimé les données périmées.
 
-## Conseils opérationnels
+## Directives opérationnelles
 
 - Privilégiez `mode: "view"` pour les révisions interactives locales dans le canevas.
 - Privilégiez `mode: "file"` pour les canaux de chat sortants qui nécessitent une pièce jointe.
 - Gardez `allowRemoteViewer` désactivé, sauf si votre déploiement nécessite des URL de visionneuse à distance.
 - Définissez un `ttlSeconds` court explicite pour les diffs sensibles.
-- Évitez d'envoyer des secrets dans l'entrée de diff lorsque ce n'est pas nécessaire.
+- Évitez d'envoyer des secrets dans l'entrée de diff lorsque cela n'est pas nécessaire.
 - Si votre channel compresse agressivement les images (par exemple Telegram ou WhatsApp), privilégiez la sortie PDF (`fileFormat: "pdf"`).
 
 Moteur de rendu de diff :

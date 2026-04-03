@@ -154,3 +154,8 @@ Modèle de repli filtré par page :
   "prompt": "Extract only customer-impacting incidents"
 }
 ```
+
+## Connexes
+
+- [Aperçu des outils](/en/tools) — tous les outils d'agent disponibles
+- [Référence de configuration](/en/gateway/configuration-reference#agent-defaults) — configuration pdfMaxBytesMb et pdfMaxPages

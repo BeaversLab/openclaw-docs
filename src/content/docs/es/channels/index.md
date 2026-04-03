@@ -25,25 +25,26 @@ El texto es compatible en todas partes; los medios y las reacciones varían seg�
 - [Microsoft Teams](/en/channels/msteams) — Bot Framework; soporte empresarial (complemento, instalado por separado).
 - [Nextcloud Talk](/en/channels/nextcloud-talk) — Chat autohospedado a través de Nextcloud Talk (complemento, instalado por separado).
 - [Nostr](/en/channels/nostr) — MDs descentralizados a través de NIP-04 (complemento, instalado por separado).
+- [QQ Bot](/en/channels/qqbot) — Bot API de QQ; chat privado, chat de grupo y medios enriquecidos.
 - [Signal](/en/channels/signal) — signal-cli; centrado en la privacidad.
-- [Slack](/en/channels/slack) — Bolt SDK; aplicaciones del área de trabajo.
-- [Synology Chat](/en/channels/synology-chat) — Synology NAS Chat mediante webhooks de salida y entrada (complemento, instalado por separado).
-- [Telegram](/en/channels/telegram) — Bot API a través de grammY; compatible con grupos.
+- [Slack](/en/channels/slack) — Bolt SDK; aplicaciones de espacio de trabajo.
+- [Synology Chat](/en/channels/synology-chat) — Synology NAS Chat vía webhooks de salida y entrada (complemento, instalado por separado).
+- [Telegram](/en/channels/telegram) — Bot API vía grammY; admite grupos.
 - [Tlon](/en/channels/tlon) — Mensajero basado en Urbit (complemento, instalado por separado).
-- [Twitch](/en/channels/twitch) — Chat de Twitch a través de conexión IRC (complemento, instalado por separado).
+- [Twitch](/en/channels/twitch) — Chat de Twitch vía conexión IRC (complemento, instalado por separado).
 - [Voice Call](/en/plugins/voice-call) — Telefonía vía Plivo o Twilio (complemento, instalado por separado).
-- [WebChat](/en/web/webchat) — Interfaz de usuario de WebChat de Gateway a través de WebSocket.
-- [WeChat](https://www.npmjs.com/package/@tencent-weixin/openclaw-weixin) — complemento de bot de Tencent iLink mediante inicio de sesión con QR; solo chats privados.
-- [WhatsApp](/en/channels/whatsapp) — El más popular; usa Baileys y requiere emparejamiento con QR.
-- [Zalo](/en/channels/zalo) — API de bot de Zalo; el mensajero más popular de Vietnam (complemento, se instala por separado).
-- [Zalo Personal](/en/channels/zalouser) — cuenta personal de Zalo mediante inicio de sesión con QR (complemento, se instala por separado).
+- [WebChat](/en/web/webchat) — Interfaz de usuario WebChat del Gateway sobre WebSocket.
+- [WeChat](https://www.npmjs.com/package/@tencent-weixin/openclaw-weixin) — Complemento de bot Tencent iLink vía login con QR; solo chats privados.
+- [WhatsApp](/en/channels/whatsapp) — El más popular; usa Baileys y requiere emparejamiento con código QR.
+- [Zalo](/en/channels/zalo) — Zalo Bot API; mensajero popular de Vietnam (complemento, instalado por separado).
+- [Zalo Personal](/en/channels/zalouser) — Cuenta personal de Zalo vía login con QR (complemento, instalado por separado).
 
 ## Notas
 
 - Los canales pueden ejecutarse simultáneamente; configure varios y OpenClaw enrutará por chat.
-- La configuración más rápida suele ser **Telegram** (token de bot simple). WhatsApp requiere emparejamiento con QR y
-  guarda más estado en el disco.
+- La configuración más rápida suele ser **Telegram** (token de bot simple). WhatsApp requiere emparejamiento con código QR y
+  almacena más estado en el disco.
 - El comportamiento del grupo varía según el canal; consulte [Grupos](/en/channels/groups).
-- El emparejamiento de MD y las listas de permitidos se aplican por seguridad; consulte [Seguridad](/en/gateway/security).
-- Solución de problemas: [Solución de problemas del canal](/en/channels/troubleshooting).
+- El emparejamiento DM y las listas de permitidos se aplican por seguridad; consulte [Seguridad](/en/gateway/security).
+- Solución de problemas: [Solución de problemas de canales](/en/channels/troubleshooting).
 - Los proveedores de modelos están documentados por separado; consulte [Proveedores de modelos](/en/providers/models).

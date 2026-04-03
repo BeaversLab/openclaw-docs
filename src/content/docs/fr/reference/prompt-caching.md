@@ -1,6 +1,6 @@
 ---
-title: "Prompt Caching"
-summary: "Contrôles de mise en cache des prompts, ordre de fusion, comportement du provider et modèles de réglage"
+title: "Mise en cache des invites"
+summary: "Contrôles de mise en cache des invites, ordre de fusion, comportement du fournisseur et modèles de réglage"
 read_when:
   - You want to reduce prompt token costs with cache retention
   - You need per-agent cache behavior in multi-agent setups
@@ -9,20 +9,29 @@ read_when:
 
 # Mise en cache des prompts
 
-La mise en cache des prompts signifie que le provider du modèle peut réutiliser les préfixes de prompts inchangés (généralement les instructions système/développeur et d'autres contextes stables) d'un tour à l'autre au lieu de les traiter à chaque fois. La première demande correspondante écrit des jetons de cache (`cacheWrite`), et les demandes correspondantes ultérieures peuvent les relire (`cacheRead`).
+La mise en cache des invites signifie que le fournisseur de modèles peut réutiliser les préfixes d'invites inchangés (généralement les instructions système/développeur et d'autres contextes stables) d'un tour à l'autre au lieu de les retraiter à chaque fois. La première demande correspondante écrit des jetons de cache (`cacheWrite`), et les demandes correspondantes ultérieures peuvent les relire (`cacheRead`).
 
 Pourquoi cela est important : coûts de jetons réduits, réponses plus rapides et performances plus prévisibles pour les sessions de longue durée. Sans mise en cache, les prompts répétés paient le coût total du prompt à chaque tour, même lorsque la plupart des entrées n'ont pas changé.
 
 Cette page couvre tous les contrôles liés au cache qui affectent la réutilisation des prompts et le coût des jetons.
 
-Pour les détails tarifaires d'Anthropic, consultez :
+Pour plus de détails sur la tarification Anthropic, voir :
 [https://docs.anthropic.com/docs/build-with-claude/prompt-caching](https://docs.anthropic.com/docs/build-with-claude/prompt-caching)
 
 ## Contrôles principaux
 
-### `cacheRetention` (model et par agent)
+### `cacheRetention` (par défaut global, modèle et par agent)
 
-Définir la rétention du cache sur les paramètres du modèle :
+Définir la rétention du cache comme valeur par défaut globale pour tous les modèles :
+
+```yaml
+agents:
+  defaults:
+    params:
+      cacheRetention: "long" # none | short | long
+```
+
+Remplacer par modèle :
 
 ```yaml
 agents:
@@ -45,8 +54,9 @@ agents:
 
 Ordre de fusion de la configuration :
 
-1. `agents.defaults.models["provider/model"].params`
-2. `agents.list[].params` (id d'agent correspondant ; remplacements par clé)
+1. `agents.defaults.params` (par défaut global — s'applique à tous les modèles)
+2. `agents.defaults.models["provider/model"].params` (remplacement par modèle)
+3. `agents.list[].params` (id d'agent correspondant ; remplace par clé)
 
 ### `cacheControlTtl` hérité
 
@@ -59,7 +69,7 @@ Préférez `cacheRetention` pour la nouvelle configuration.
 
 ### `contextPruning.mode: "cache-ttl"`
 
-Supprime l'ancien contexte de résultat d'outil après les fenêtres TTL du cache afin que les demandes post-inactivité ne remettent pas en cache un historique trop volumineux.
+Supprime l'ancien contexte des résultats d'outils après les fenêtres TTL du cache afin que les demandes post-inactivité ne remettent pas en cache un historique trop volumineux.
 
 ```yaml
 agents:
@@ -71,9 +81,9 @@ agents:
 
 Voir [Session Pruning](/en/concepts/session-pruning) pour le comportement complet.
 
-### Maintien de chaleur du heartbeat
+### Maintien de la chaleur par pulsation (Heartbeat keep-warm)
 
-Le heartbeat peut garder les fenêtres de cache au chaud et réduire les écritures de cache répétées après les périodes d'inactivité.
+La pulsation peut garder les fenêtres de cache au chaud et réduire les écritures de cache répétées après les périodes d'inactivité.
 
 ```yaml
 agents:
@@ -82,33 +92,33 @@ agents:
       every: "55m"
 ```
 
-Le heartbeat par agent est pris en charge à `agents.list[].heartbeat`.
+La pulsation par agent est prise en charge au niveau `agents.list[].heartbeat`.
 
-## Comportement du provider
+## Comportement du fournisseur
 
 ### Anthropic (API directe)
 
 - `cacheRetention` est pris en charge.
-- Avec les profils d'authentification par clé API Anthropic, API initialise `cacheRetention: "short"` pour les références de modèle OpenClaw lorsqu'il n'est pas défini.
+- Avec les profils d'authentification par clé Anthropic API, OpenClaw amorce `cacheRetention: "short"` pour les références de modèles Anthropic lorsqu'il n'est pas défini.
 
 ### Amazon Bedrock
 
-- Les références de modèle Claude Anthropic (`amazon-bedrock/*anthropic.claude*`) prennent en charge le passage explicite de `cacheRetention`.
-- Les modèles Bedrock non Anthropic sont forcés à `cacheRetention: "none"` lors de l'exécution.
+- Les références de modèles Claude Anthropic (`amazon-bedrock/*anthropic.claude*`) prennent en charge le passage explicite de `cacheRetention`.
+- Les modèles Bedrock non-Anthropic sont forcés à `cacheRetention: "none"` lors de l'exécution.
 
 ### Modèles OpenRouter Anthropic
 
-Pour les références de modèle `openrouter/anthropic/*`, OpenClaw injecte `cache_control` Anthropic sur les blocs de invite système/développeur pour améliorer la réutilisation du cache d'invite.
+Pour les références de modèle `openrouter/anthropic/*`, OpenClaw injecte Anthropic `cache_control` sur les blocs de invites système/développeur pour améliorer la réutilisation du cache d'invites.
 
-### Autres fournisseurs
+### Autres providers
 
-Si le fournisseur ne prend pas en charge ce mode de cache, `cacheRetention` n'a aucun effet.
+Si le provider ne prend pas en charge ce mode de cache, `cacheRetention` n'a aucun effet.
 
-## Modèles de réglage
+## Motifs de réglage
 
-### Trafic mixte (valeur par défaut recommandée)
+### Trafic mixte (recommandé par défaut)
 
-Conservez une base de référence à long terme sur votre agent principal, désactivez la mise en cache sur les agents de notification par pics :
+Conservez une ligne de base à long terme sur votre agent principal, désactivez la mise en cache sur les agents de notification par salves :
 
 ```yaml
 agents:
@@ -129,17 +139,17 @@ agents:
         cacheRetention: "none"
 ```
 
-### Base de référence axée sur les coûts
+### Ligne de base priorisant les coûts
 
-- Définissez la base de référence `cacheRetention: "short"`.
+- Définissez la ligne de base `cacheRetention: "short"`.
 - Activez `contextPruning.mode: "cache-ttl"`.
-- Maintenez le battement de cœur en dessous de votre TTL uniquement pour les agents qui bénéficient de caches chauds.
+- Maintenez le heartbeat en dessous de votre TTL uniquement pour les agents qui bénéficient de caches chauds.
 
 ## Diagnostics de cache
 
-OpenClaw expose des diagnostics de trace de cache dédiés pour les exécutions d'agent intégrées.
+OpenClaw expose des diagnostics de trace de cache dédiés pour les exécutions d'agents intégrés.
 
-### Config `diagnostics.cacheTrace`
+### Configuration `diagnostics.cacheTrace`
 
 ```yaml
 diagnostics:
@@ -158,7 +168,7 @@ Valeurs par défaut :
 - `includePrompt` : `true`
 - `includeSystem` : `true`
 
-### Commutateurs Env (dépannage ponctuel)
+### Commutateurs d'environnement (dépannage ponctuel)
 
 - `OPENCLAW_CACHE_TRACE=1` active le traçage du cache.
 - `OPENCLAW_CACHE_TRACE_FILE=/path/to/cache-trace.jsonl` remplace le chemin de sortie.
@@ -173,13 +183,13 @@ Valeurs par défaut :
 
 ## Dépannage rapide
 
-- `cacheWrite` élevé sur la plupart des tours : vérifiez la présence d'entrées de système volatile (system-prompt) et assurez-vous que le modèle/fournisseur prend en charge vos paramètres de cache.
+- `cacheWrite` élevés sur la plupart des tours : vérifiez les entrées volatiles de l'invite système et confirmez que le modèle/le provider prend en charge vos paramètres de cache.
 - Aucun effet de `cacheRetention` : confirmez que la clé du modèle correspond à `agents.defaults.models["provider/model"]`.
-- Requêtes Bedrock Nova/Mistral avec paramètres de cache : forçage attendu de l'exécution vers `none`.
+- Requêtes Bedrock Nova/Mistral avec des paramètres de cache : forçage de l'exécution attendu vers `none`.
 
 Documentation connexe :
 
 - [Anthropic](/en/providers/anthropic)
-- [Utilisation et coûts des jetons](/en/reference/token-use)
-- [Nettoyage de session](/en/concepts/session-pruning)
-- [Référence de configuration de la Gateway](/en/gateway/configuration-reference)
+- [Utilisation des jetons et coûts](/en/reference/token-use)
+- [Élagage de session](/en/concepts/session-pruning)
+- [Référence de configuration de la passerelle](/en/gateway/configuration-reference)

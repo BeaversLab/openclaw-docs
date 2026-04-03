@@ -35,7 +35,7 @@ openclaw plugins install @openclaw/nostr
 使用本地 checkout（開發工作流程）：
 
 ```bash
-openclaw plugins install --link <path-to-openclaw>/extensions/nostr
+openclaw plugins install --link <path-to-local-nostr-plugin>
 ```
 
 安裝或啟用外掛後，請重新啟動 Gateway。
@@ -247,3 +247,11 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 - 僅限直接訊息（無群組聊天）。
 - 無媒體附件。
 - 僅支援 NIP-04（計劃支援 NIP-17 gift-wrap）。
+
+## 相關
+
+- [通道概覽](/en/channels) — 所有支援的通道
+- [配對](/en/channels/pairing) — DM 認證與配對流程
+- [群組](/en/channels/groups) — 群組聊天行為與提及門控
+- [通道路由](/en/channels/channel-routing) — 訊息的會話路由
+- [安全性](/en/gateway/security) — 存取模型與加固

@@ -49,7 +49,7 @@ openclaw pairing approve telegram <CODE>
 
 ## 2) 节点设备配对（iOS/Android/macOS/headless 节点）
 
-节点作为**设备**通过 `role: node` 连接到 Gateway 网关。Gateway 网关
+节点作为**设备**通过 `role: node` 连接到 Gateway(网关) 网关。Gateway(网关) 网关
 会创建一个必须批准的设备配对请求。
 
 ### 批准节点设备

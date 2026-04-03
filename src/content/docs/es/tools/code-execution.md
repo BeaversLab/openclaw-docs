@@ -1,5 +1,5 @@
 ---
-summary: "code_execution -- ejecuta análisis remoto de Python en un entorno seguro con xAI"
+summary: "code_execution -- ejecuta análisis remoto de Python en un entorno aislado con xAI"
 read_when:
   - You want to enable or configure code_execution
   - You want remote analysis without local shell access
@@ -9,13 +9,13 @@ title: "Ejecución de Código"
 
 # Ejecución de Código
 
-`code_execution` ejecuta análisis remoto de Python en un entorno seguro en la API de Respuestas de xAI.
+`code_execution` ejecuta análisis remoto de Python en un entorno aislado en la API de Responses de xAI.
 Esto es diferente de [`exec`](/en/tools/exec) local:
 
 - `exec` ejecuta comandos de shell en tu máquina o nodo
-- `code_execution` ejecuta Python en el entorno seguro remoto de xAI
+- `code_execution` ejecuta Python en el sandbox remoto de xAI
 
-Use `code_execution` para:
+Usa `code_execution` para:
 
 - cálculos
 - tabulación
@@ -23,12 +23,12 @@ Use `code_execution` para:
 - análisis de estilo gráfico
 - analizar datos devueltos por `x_search` o `web_search`
 
-**No** lo use cuando necesite archivos locales, su shell, su repositorio o dispositivos
-emparejados. Use [`exec`](/en/tools/exec) para eso.
+**No** lo uses cuando necesites archivos locales, tu shell, tu repositorio o dispositivos
+emparejados. Usa [`exec`](/en/tools/exec) para eso.
 
 ## Configuración
 
-Necesita una clave de API de xAI. Cualquiera de estos funciona:
+Necesitas una clave de API de xAI. Cualquiera de estos funciona:
 
 - `XAI_API_KEY`
 - `plugins.entries.xai.config.webSearch.apiKey`
@@ -57,9 +57,9 @@ Ejemplo:
 }
 ```
 
-## Cómo usarlo
+## Cómo Usarlo
 
-Pregunte de forma natural y haga explícita la intención del análisis:
+Pregunta de forma natural y haz explícita la intención del análisis:
 
 ```text
 Use code_execution to calculate the 7-day moving average for these numbers: ...
@@ -73,17 +73,17 @@ Use x_search to find posts mentioning OpenClaw this week, then use code_executio
 Use web_search to gather the latest AI benchmark numbers, then use code_execution to compare percent changes.
 ```
 
-La herramienta toma internamente un solo parámetro `task`, por lo que el agente debe enviar
+La herramienta toma internamente un único parámetro `task`, por lo que el agente debe enviar
 la solicitud de análisis completa y cualquier dato en línea en un solo mensaje.
 
 ## Límites
 
-- Esta es una ejecución remota de xAI, no una ejecución de procesos local.
+- Esta es una ejecución remota de xAI, no una ejecución de proceso local.
 - Debe tratarse como un análisis efímero, no como un cuaderno persistente.
-- No asuma acceso a archivos locales o a su espacio de trabajo.
-- Para obtener datos frescos de X, use primero [`x_search`](/en/tools/web#x_search).
+- No asumas acceso a archivos locales o a tu espacio de trabajo.
+- Para datos frescos de X, usa primero [`x_search`](/en/tools/web#x_search).
 
-## Vea también
+## Véase También
 
 - [Herramientas web](/en/tools/web)
 - [Exec](/en/tools/exec)

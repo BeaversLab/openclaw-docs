@@ -1,5 +1,5 @@
 ---
-summary: "面向长期运行的 OpenClaw Gateway 主机的共享 Docker VM 运行时步骤"
+summary: "面向长期运行的 OpenClaw Gateway(网关) 主机的共享 Docker VM 运行时步骤"
 read_when:
   - You are deploying OpenClaw on a cloud VM with Docker
   - You need the shared binary bake, persistence, and update flow

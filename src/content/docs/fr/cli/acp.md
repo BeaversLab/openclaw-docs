@@ -8,7 +8,7 @@ title: "acp"
 
 # acp
 
-Exécutez le pont [Agent Client Protocol (ACP)](https://agentclientprotocol.com/) qui communique avec une OpenClaw Gateway.
+Exécutez le pont [Agent Client Protocol (ACP)](https://agentclientprotocol.com/) qui communique avec une passerelle OpenClaw Gateway.
 
 Cette commande communique en ACP via stdio pour les IDE et transfère les invites au Gateway
 via WebSocket. Elle maintient les sessions ACP mappées aux clés de session Gateway.
@@ -17,9 +17,7 @@ via WebSocket. Elle maintient les sessions ACP mappées aux clés de session Gat
 Il se concentre sur le routage des sessions, la livraison des invites et les mises à jour de
 streaming de base.
 
-Si vous souhaitez qu'un client MCP externe communique directement avec les conversations de la OpenClaw
-au lieu d'héberger une session harnais ACP, utilisez
-[`openclaw mcp serve`](/en/cli/mcp) à la place.
+Si vous souhaitez qu'un client MCP externe communique directement avec les conversations du canal OpenClaw au lieu d'héberger une session de harnais ACP, utilisez plutôt [`openclaw mcp serve`](/en/cli/mcp).
 
 ## Matrix de compatibilité
 
@@ -94,26 +92,26 @@ Modèle d'autorisation (mode de débogage client) :
 
 - L'approbation automatique est basée sur une liste d'autorisation et ne s'applique qu'aux ID d'outils principaux de confiance.
 - L'approbation automatique `read` est limitée au répertoire de travail actuel (`--cwd` lorsqu'il est défini).
-- Les noms d'outils inconnus ou non principaux, les lectures hors portée et les outils dangereux nécessitent toujours une approbation explicite via une invite.
-- Le `toolCall.kind` fourni par le serveur est traité comme des métadonnées non fiables (et non comme une source d'autorisation).
+- ACP n'approuve automatiquement que les classes étroites en lecture seule : appels `read` délimités sous le cwd actif plus les outils de recherche en lecture seule (`search`, `web_search`, `memory_search`). Les outils inconnus/non essentiels, les lectures hors portée, les outils capables d'exécution, les outils du plan de contrôle, les outils de mutation et les flux interactifs nécessitent toujours une approbation explicite de l'invite.
+- Le `toolCall.kind` fourni par le serveur est traité comme des métadonnées non fiables (pas une source d'autorisation).
+- Cette politique de pont ACP est distincte des autorisations de harnais ACPX. Si vous exécutez OpenClaw via le backend `acpx`, `plugins.entries.acpx.config.permissionMode=approve-all` est l'interrupteur de secours « yolo » pour cette session de harnais.
 
 ## Comment utiliser ceci
 
-Utilisez ACP lorsqu'un IDE (ou un autre client) parle le protocole Agent Client Protocol et que vous souhaitez
-qu'il pilote une session OpenClaw Gateway.
+Utilisez ACP lorsqu'un IDE (ou un autre client) parle l'Agent Client Protocol et que vous souhaitez qu'il pilote une session de passerelle OpenClaw Gateway.
 
-1. Assurez-vous que le Gateway est en cours d'exécution (local ou distant).
-2. Configurez la cible du Gateway (config ou indicateurs).
-3. Pointez votre IDE pour exécuter `openclaw acp` via stdio.
+1. Assurez-vous que la passerelle Gateway est en cours d'exécution (locale ou distante).
+2. Configurez la cible de la passerelle Gateway (config ou drapeaux).
+3. Dirigez votre IDE pour exécuter `openclaw acp` via stdio.
 
-Exemple de configuration (persistante) :
+Exemple de configuration (persistée) :
 
 ```bash
 openclaw config set gateway.remote.url wss://gateway-host:18789
 openclaw config set gateway.remote.token <token>
 ```
 
-Exemple d'exécution directe (sans écriture de configuration) :
+Exemple d'exécution directe (pas d'écriture de configuration) :
 
 ```bash
 openclaw acp --url wss://gateway-host:18789 --token <token>
@@ -121,11 +119,11 @@ openclaw acp --url wss://gateway-host:18789 --token <token>
 openclaw acp --url wss://gateway-host:18789 --token-file ~/.openclaw/gateway.token
 ```
 
-## Sélection des agents
+## Sélection d'agents
 
-ACP ne choisit pas les agents directement. Il achemine par la clé de session Gateway.
+ACP ne choisit pas les agents directement. Il achemine par la clé de session de la passerelle Gateway.
 
-Utilisez des clés de session avec portée d'agent pour cibler un agent spécifique :
+Utilisez des clés de session délimitées par l'agent pour cibler un agent spécifique :
 
 ```bash
 openclaw acp --session agent:main:main
@@ -133,17 +131,19 @@ openclaw acp --session agent:design:main
 openclaw acp --session agent:qa:bug-123
 ```
 
-Chaque session ACP correspond à une seule clé de session Gateway. Un agent peut avoir plusieurs sessions ; ACP utilise par défaut une session `acp:<uuid>` isolée, sauf si vous remplacez la clé ou l'étiquette.
+Chaque session ACP correspond à une seule clé de session de passerelle Gateway. Un agent peut avoir plusieurs sessions ; ACP par défaut à une session `acp:<uuid>` isolée, sauf si vous remplacez la clé ou l'étiquette.
 
 Les `mcpServers` par session ne sont pas prises en charge en mode pont. Si un client ACP les envoie pendant `newSession` ou `loadSession`, le pont renvoie une erreur claire au lieu de les ignorer silencieusement.
 
+Si vous souhaitez que les sessions prises en charge par ACPX voient les outils de plug-in OpenClaw, activez plutôt le pont de plug-in ACPX côté passerelle au lieu d'essayer de transmettre des `mcpServers` par session. Voir [ACP Agents](/en/tools/acp-agents#plugin-tools-mcp-bridge).
+
 ## Utilisation depuis `acpx` (Codex, Claude, autres clients ACP)
 
-Si vous souhaitez qu'un agent de codage tel que Codex ou Claude Code communique avec votre bot OpenClaw via ACP, utilisez `acpx` avec sa cible `openclaw` intégrée.
+Si vous souhaitez qu'un agent de codage tel que Codex ou Claude Code communique avec votre bot OpenClaw via ACP, utilisez `acpx` avec sa cible intégrée `openclaw`.
 
-Flux typique :
+Flux type :
 
-1. Lancez la Gateway et assurez-vous que le pont ACP peut l'atteindre.
+1. Lancez le Gateway et assurez-vous que le pont ACP peut l'atteindre.
 2. Pointez `acpx openclaw` vers `openclaw acp`.
 3. Ciblez la clé de session OpenClaw que vous souhaitez que l'agent de codage utilise.
 
@@ -159,7 +159,7 @@ acpx openclaw -s codex-bridge --cwd /path/to/repo \
   "Ask my OpenClaw work agent for recent context relevant to this repo."
 ```
 
-Si vous souhaitez que `acpx openclaw` cible un Gateway et une clé de session spécifiques à chaque fois, remplacez la commande agent `openclaw` dans `~/.acpx/config.json` :
+Si vous souhaitez que `acpx openclaw` cible un Gateway et une clé de session spécifiques à chaque fois, remplacez la commande de l'agent `openclaw` dans `~/.acpx/config.json` :
 
 ```json
 {
@@ -171,13 +171,13 @@ Si vous souhaitez que `acpx openclaw` cible un Gateway et une clé de session sp
 }
 ```
 
-Pour un checkout OpenClaw local au dépôt, utilisez le point d'entrée CLI direct au lieu du dev runner afin que le flux ACP reste propre. Par exemple :
+Pour un checkout OpenClaw local au dépôt, utilisez le point d'entrée CLI direct au lieu du lanceur de développement afin que le flux ACP reste propre. Par exemple :
 
 ```bash
 env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node openclaw.mjs acp ...
 ```
 
-C'est le moyen le plus simple de permettre à Codex, Claude Code ou un autre client compatible ACP d'extraire des informations contextuelles d'un agent OpenClaw sans avoir à scraper un terminal.
+C'est le moyen le plus simple de permettre à Codex, Claude Code ou à un autre client compatible ACP d'extraire des informations contextuelles d'un agent OpenClaw sans avoir à récupérer le contenu d'un terminal.
 
 ## Configuration de l'éditeur Zed
 
@@ -211,18 +211,18 @@ Pour cibler un Gateway ou un agent spécifique :
 }
 ```
 
-Dans Zed, ouvrez le panneau Agent et sélectionnez « OpenClaw ACP » pour démarrer une discussion.
+Dans Zed, ouvrez le panneau Agent et sélectionnez « OpenClaw ACP » pour démarrer un fil de discussion.
 
-## Mapping de session
+## Mappage de session
 
 Par défaut, les sessions ACP obtiennent une clé de session Gateway isolée avec un préfixe `acp:`.
 Pour réutiliser une session connue, transmettez une clé ou une étiquette de session :
 
-- `--session <key>` : utiliser une clé de session Gateway spécifique.
+- `--session <key>` : utilisez une clé de session Gateway spécifique.
 - `--session-label <label>` : résoudre une session existante par étiquette.
-- `--reset-session` : créer un identifiant de session frais pour cette clé (même clé, nouveau transcript).
+- `--reset-session` : générer un identifiant de session frais pour cette clé (même clé, nouveau transcript).
 
-Si votre client ACP prend en charge les métadonnées, vous pouvez remplacer par session :
+Si votre client ACP prend en charge les métadonnées, vous pouvez les remplacer par session :
 
 ```json
 {
@@ -246,19 +246,19 @@ En savoir plus sur les clés de session sur [/concepts/session](/en/concepts/ses
 - `--session <key>` : clé de session par défaut.
 - `--session-label <label>` : étiquette de session par défaut à résoudre.
 - `--require-existing` : échoue si la clé/étiquette de session n'existe pas.
-- `--reset-session` : réinitialise la clé de session avant la première utilisation.
+- `--reset-session` : réinitialiser la clé de session avant la première utilisation.
 - `--no-prefix-cwd` : ne pas préfixer les invites avec le répertoire de travail.
 - `--verbose, -v` : journalisation détaillée vers stderr.
 
 Note de sécurité :
 
 - `--token` et `--password` peuvent être visibles dans les listes de processus locaux sur certains systèmes.
-- Privilégiez `--token-file`/`--password-file` ou les variables d'environnement (`OPENCLAW_GATEWAY_TOKEN`, `OPENCLAW_GATEWAY_PASSWORD`).
+- Privilégiez `--token-file`/`--password-file` ou les environment variables (`OPENCLAW_GATEWAY_TOKEN`, `OPENCLAW_GATEWAY_PASSWORD`).
 - La résolution d'authentification du Gateway suit le contrat partagé utilisé par d'autres clients Gateway :
   - mode local : env (`OPENCLAW_GATEWAY_*`) -> `gateway.auth.*` -> `gateway.remote.*` repli uniquement lorsque `gateway.auth.*` n'est pas défini (les SecretRefs locaux configurés mais non résolus échouent en mode fermé)
-  - mode distant : `gateway.remote.*` avec repli env/config selon les règles de priorité distantes
-  - `--url` est sécurisé contre le remplacement et ne réutilise pas les identifiants implicites de config/env ; passez `--token`/`--password` explicites (ou variantes de fichier)
-- Les processus enfants du backend d'exécution ACP reçoivent `OPENCLAW_SHELL=acp`, qui peut être utilisé pour des règles shell/profile spécifiques au contexte.
+  - mode distant : `gateway.remote.*` avec repli env/config selon les règles de priorité à distance
+  - `--url` est sécurisé contre le remplacement et ne réutilise pas les identifiants implicites de configuration/env ; passez `--token`/`--password` explicites (ou variantes de fichier)
+- Les processus enfants du backend d'exécution ACP reçoivent `OPENCLAW_SHELL=acp`, qui peut être utilisé pour des règles de shell/profil spécifiques au contexte.
 - `openclaw acp client` définit `OPENCLAW_SHELL=acp-client` sur le processus de pont généré.
 
 ### options `acp client`

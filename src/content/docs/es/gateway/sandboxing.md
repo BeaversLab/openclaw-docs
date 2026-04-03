@@ -50,8 +50,8 @@ No está en sandbox:
 
 `agents.defaults.sandbox.scope` controla **cuántos contenedores** se crean:
 
-- `"session"` (por defecto): un contenedor por sesión.
-- `"agent"`: un contenedor por agente.
+- `"agent"` (predeterminado): un contenedor por agente.
+- `"session"`: un contenedor por sesión.
 - `"shared"`: un contenedor compartido por todas las sesiones en sandbox.
 
 ## Backend
@@ -397,10 +397,10 @@ Valores predeterminados de seguridad:
 Las instalaciones de Docker y el gateway en contenedor se encuentran aquí:
 [Docker](/en/install/docker)
 
-Para despliegues de gateway en Docker, `scripts/docker/setup.sh` puede iniciar la configuración del sandbox.
+Para las implementaciones de Docker Gateway, `scripts/docker/setup.sh` puede iniciar la configuración de sandbox.
 Establezca `OPENCLAW_SANDBOX=1` (o `true`/`yes`/`on`) para habilitar esa ruta. Puede
-anular la ubicación del socket con `OPENCLAW_DOCKER_SOCKET`. Referencia completa de configuración y
-entorno: [Docker](/en/install/docker#agent-sandbox).
+anular la ubicación del socket con `OPENCLAW_DOCKER_SOCKET`. Consulte la configuración completa y el
+entorno de referencia: [Docker](/en/install/docker#agent-sandbox).
 
 ## setupCommand (configuración única del contenedor)
 

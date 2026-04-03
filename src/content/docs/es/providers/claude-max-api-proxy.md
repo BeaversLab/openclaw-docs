@@ -11,7 +11,7 @@ title: "Claude Max API Proxy"
 
 **claude-max-api-proxy** es una herramienta comunitaria que expone tu suscripción Claude Max/Pro como un punto final de API compatible con OpenAI. Esto te permite usar tu suscripción con cualquier herramienta que admita el formato de API de OpenAI.
 
-<Warning>Esta ruta es solo para compatibilidad técnica. Anthropic ha bloqueado algún uso de suscripciones fuera de Claude Code en el pasado. Debes decidir por ti mismo si usarlo y verificar los términos actuales de Anthropic antes de confiar en ello.</Warning>
+<Warning>Esta ruta es solo para compatibilidad técnica. Anthropic ha bloqueado algún uso de la suscripción fuera de Claude Code en el pasado. Debes decidir por ti mismo si usarlo y verificar los términos actuales de Anthropic antes de confiar en ello.</Warning>
 
 ## ¿Por qué usar esto?
 

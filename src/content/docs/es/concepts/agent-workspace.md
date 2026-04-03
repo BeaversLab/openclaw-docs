@@ -233,3 +233,10 @@ Inicio `.gitignore` sugerido:
 - El enrutamiento multiagente puede usar diferentes espacios de trabajo por agente.
   Vea [Enrutamiento de canales](/en/channels/channel-routing) para la configuración de enrutamiento.
 - Si `agents.defaults.sandbox` está habilitado, las sesiones que no son las principales pueden usar espacios de trabajo de sandbox por sesión bajo `agents.defaults.sandbox.workspaceRoot`.
+
+## Relacionado
+
+- [Standing Orders](/en/automation/standing-orders) — instrucciones persistentes en archivos del espacio de trabajo
+- [Heartbeat](/en/gateway/heartbeat) — archivo del espacio de trabajo HEARTBEAT.md
+- [Session](/en/concepts/session) — rutas de almacenamiento de sesión
+- [Sandboxing](/en/gateway/sandboxing) — acceso al espacio de trabajo en entornos con sandbox

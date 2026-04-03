@@ -65,7 +65,7 @@ OpenClaw reconnaît deux formats de plugins :
 | **Native** | `openclaw.plugin.json` + module d'exécution ; s'exécute dans le processus        | Plugins officiels, packages npm communautaires         |
 | **Bundle** | Disposition compatible Codex/Claude/Cursor ; mappée aux fonctionnalités OpenClaw | `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/` |
 
-Les deux apparaissent sous `openclaw plugins list`. Voir [Plugin Bundles](/en/plugins/bundles) pour les détails sur les bundles.
+Les deux apparaissent sous `openclaw plugins list`. Consultez [Plugin Bundles](/en/plugins/bundles) pour plus de détails sur les bundles.
 
 Si vous écrivez un plugin natif, commencez par [Building Plugins](/en/plugins/building-plugins)
 et la [Plugin SDK Overview](/en/plugins/sdk-overview).
@@ -104,7 +104,7 @@ et la [Plugin SDK Overview](/en/plugins/sdk-overview).
   </Accordion>
 </AccordionGroup>
 
-Vous recherchez des plugins tiers ? Voir [Plugins communautaires](/en/plugins/community).
+Vous cherchez des plugins tiers ? Consultez [Community Plugins](/en/plugins/community).
 
 ## Configuration
 
@@ -145,10 +145,12 @@ OpenClaw recherche les plugins dans cet ordre (la première correspondance l'emp
   </Step>
 
   <Step title="Extensions de l'espace de travail">
-    `\<workspace\>/.openclaw/extensions/*.ts` et `\<workspace\>/.openclaw/extensions/*/index.ts`.
+    `\<workspace\>/.openclaw/<plugin-root>/*.ts` et `\<workspace\>/.openclaw/<plugin-root>/*/index.ts`.
   </Step>
 
-<Step title="Extensions globales">`~/.openclaw/extensions/*.ts` et `~/.openclaw/extensions/*/index.ts`.</Step>
+  <Step title="Extensions globales">
+    `~/.openclaw/<plugin-root>/*.ts` et `~/.openclaw/<plugin-root>/*/index.ts`.
+  </Step>
 
   <Step title="Plugins groupés">
     Livrés avec OpenClaw. Beaucoup sont activés par défaut (fournisseurs de model, parole).
@@ -198,6 +200,7 @@ openclaw plugins install <package>        # install (ClawHub first, then npm)
 openclaw plugins install clawhub:<pkg>   # install from ClawHub only
 openclaw plugins install <path>          # install from local path
 openclaw plugins install -l <path>       # link (no copy) for dev
+openclaw plugins install <spec> --dangerously-force-unsafe-install
 openclaw plugins update <id>             # update one plugin
 openclaw plugins update --all            # update all
 
@@ -205,9 +208,18 @@ openclaw plugins enable <id>
 openclaw plugins disable <id>
 ```
 
-Voir la [référence de la CLI `openclaw plugins`](/en/cli/plugins) pour tous les détails.
+`--dangerously-force-unsafe-install` est une dérogation de secours pour les faux
+positifs du scanneur de code dangereux intégré. Elle permet aux installations de
+se poursuivre malgré les détections intégrées de `critical`, mais ne contourne toujours pas les blocs de
+stratégie de plugin `before_install` ou le blocage en cas d'échec du scan.
 
-## Aperçu de API des plugins
+Ce drapeau CLI s'applique uniquement aux installations de plugins. Les installations de dépendances de compétences soutenues par Gateway
+utilisent plutôt la dérogation de requête `dangerouslyForceUnsafeInstall` correspondante,
+tandis que `openclaw skills install` reste le flux distinct de téléchargement/installation de compétences ClawHub.
+
+Consultez [`openclaw plugins` référence CLI](/en/cli/plugins) pour tous les détails.
+
+## Aperçu de l'API des plugins
 
 Les plugins exportent soit une fonction, soit un objet avec `register(api)` :
 
@@ -231,10 +243,10 @@ export default definePluginEntry({
 
 Méthodes d'enregistrement courantes :
 
-| Méthode                              | Ce qu'elle enregistre       |
+| Méthode                              | Ce qu'il enregistre         |
 | ------------------------------------ | --------------------------- |
 | `registerProvider`                   | Fournisseur de modèle (LLM) |
-| `registerChannel`                    | Salon de discussion         |
+| `registerChannel`                    | Canal de discussion         |
 | `registerTool`                       | Outil d'agent               |
 | `registerHook` / `on(...)`           | Crochets de cycle de vie    |
 | `registerSpeechProvider`             | Synthèse vocale / STT       |
@@ -242,24 +254,26 @@ Méthodes d'enregistrement courantes :
 | `registerImageGenerationProvider`    | Génération d'images         |
 | `registerWebSearchProvider`          | Recherche Web               |
 | `registerHttpRoute`                  | Point de terminaison HTTP   |
-| `registerCommand` / `registerCli`    | CLI commandes               |
+| `registerCommand` / `registerCli`    | Commandes CLI               |
 | `registerContextEngine`              | Moteur de contexte          |
 | `registerService`                    | Service d'arrière-plan      |
 
-Comportement de garde de hook pour les hooks de cycle de vie typés :
+Comportement de garde des hooks pour les hooks de cycle de vie typés :
 
 - `before_tool_call` : `{ block: true }` est terminal ; les gestionnaires de priorité inférieure sont ignorés.
 - `before_tool_call` : `{ block: false }` est une opération vide et ne efface pas un bloc précédent.
+- `before_install` : `{ block: true }` est terminal ; les gestionnaires de priorité inférieure sont ignorés.
+- `before_install` : `{ block: false }` est une opération vide et ne efface pas un bloc précédent.
 - `message_sending` : `{ cancel: true }` est terminal ; les gestionnaires de priorité inférieure sont ignorés.
-- `message_sending` : `{ cancel: false }` est une opération sans effet et n'annule pas une annulation antérieure.
+- `message_sending` : `{ cancel: false }` est une opération vide et ne efface pas une annulation précédente.
 
-Pour le comportement complet des hooks typés, consultez [Présentation du SDK](/en/plugins/sdk-overview#hook-decision-semantics).
+Pour le comportement complet des hooks typés, voir [Vue d'ensemble du SDK](/en/plugins/sdk-overview#hook-decision-semantics).
 
 ## Connexes
 
-- [Création de plugins](/en/plugins/building-plugins) — créez votre propre plugin
-- [Plugin Bundles](/en/plugins/bundles) — Compatibilité des bundles Codex/Claude/Cursor
-- [Plugin Manifest](/en/plugins/manifest) — schéma de manifeste
+- [Créer des plugins](/en/plugins/building-plugins) — créer votre propre plugin
+- [Bundles de plugins](/en/plugins/bundles) — compatibilité des bundles Codex/Claude/Cursor
+- [Manifeste de plugin](/en/plugins/manifest) — schéma de manifeste
 - [Enregistrement des outils](/en/plugins/building-plugins#registering-agent-tools) — ajouter des outils d'agent dans un plugin
-- [Plugin Internals](/en/plugins/architecture) — modèle de capacités et pipeline de chargement
+- [Fonctionnement interne des plugins](/en/plugins/architecture) — modèle de capacité et pipeline de chargement
 - [Plugins communautaires](/en/plugins/community) — listes tierces

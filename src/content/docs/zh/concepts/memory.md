@@ -1,99 +1,79 @@
 ---
-title: "Memory"
-summary: "OpenClaw 记忆的工作原理（工作区文件 + 自动记忆刷新）"
+title: "内存概述"
+summary: "OpenClaw 如何跨会话记忆事物"
 read_when:
-  - You want the memory file layout and workflow
-  - You want to tune the automatic pre-compaction memory flush
+  - You want to understand how memory works
+  - You want to know what memory files to write
 ---
 
-# 记忆
+# 内存概述
 
-OpenClaw 记忆是 **代理工作区中的纯 Markdown**。文件是
-事实来源；模型仅“记住”写入磁盘的内容。
+OpenClaw 通过在您的代理工作区中编写**纯 Markdown 文件**来记忆事物。模型只“记住”保存到磁盘上的内容——没有隐藏状态。
 
-记忆搜索工具由活动的记忆插件提供（默认为：
-`memory-core`）。使用 `plugins.slots.memory = "none"` 禁用记忆插件。
+## 工作原理
 
-## Memory files (Markdown)
+您的代理有两个地方可以存储记忆：
 
-默认工作区布局使用两层内存：
+- **`MEMORY.md`** -- 长期记忆。持久性事实、偏好和决策。在每次 私信 会话开始时加载。
+- **`memory/YYYY-MM-DD.md`** -- 每日笔记。运行的上下文和观察。今天的和昨天的笔记会自动加载。
 
-- `memory/YYYY-MM-DD.md`
-  - 每日日志（仅追加）。
-  - 在会话开始时读取今天 + 昨天的记录。
-- `MEMORY.md`（可选）
-  - 精选长期记忆。
-  - 如果工作区根目录下同时存在 `MEMORY.md` 和 `memory.md`，OpenClaw 会加载两者（通过 realpath 去重，因此指向同一文件的符号链接不会被重复注入）。
-  - **仅在主私有会话中加载**（切勿在群组上下文中加载）。
+这些文件位于代理工作区中（默认为 `~/.openclaw/workspace`）。
 
-这些文件位于工作区（`agents.defaults.workspace`，默认为
-`~/.openclaw/workspace`）之下。有关完整布局，请参阅[Agent workspace](/en/concepts/agent-workspace)。
+<Tip>如果您想让您的代理记住某事，只需告诉它：“记住我更喜欢 TypeScript。”它会将其写入适当的文件。</Tip>
 
-## Memory 工具
+## 记忆工具
 
-OpenClaw 针对这些 Markdown 文件提供了两个面向模型的工具：
+代理有两个用于处理记忆的工具：
 
-- `memory_search` -- 对索引片段进行语义召回。
-- `memory_get` -- 针对特定 Markdown 文件/行范围进行定向读取。
+- **`memory_search`** -- 使用语义搜索查找相关笔记，即使措辞与原文不同。
+- **`memory_get`** -- 读取特定的记忆文件或行范围。
 
-`memory_get` 现在在文件不存在时**能够优雅降级**（例如，首次写入之前的今日日志）。内置管理器和 QMD 后端均返回 `{ text: "", path }` 而非抛出 `ENOENT`，因此模型可以处理“尚未记录任何内容”的情况，并继续其工作流程，而无需将工具调用包裹在 try/catch 逻辑中。
+这两个工具均由活动的记忆插件提供（默认：`memory-core`）。
 
-## 何时写入 Memory
+## 记忆搜索
 
-- 决策、偏好和持久性事实存入 `MEMORY.md`。
-- 日常笔记和运行上下文存入 `memory/YYYY-MM-DD.md`。
-- 如果有人说“记住这个”，请将其写下来（不要仅保留在 RAM 中）。
-- 该领域仍在不断发展。提醒模型存储记忆会有所帮助；它知道该怎么做。
-- 如果您希望某些信息被保留，**请要求机器人将其写入** memory。
+当配置了嵌入提供商（embedding 提供商）时，`memory_search` 使用**混合搜索**——结合向量相似度（语义含义）与关键词匹配（确切的术语，如 ID 和代码符号）。一旦您拥有任何受支持的提供商的 API 密钥，此功能即可开箱即用。
 
-## 自动 Memory 刷新（预压缩 ping）
+<Info>OpenClaw 会从可用的 API 密钥中自动检测您的嵌入提供商。如果您配置了 OpenAI、Gemini、Voyage 或 Mistral 密钥，记忆搜索将自动启用。</Info>
 
-当会话**接近自动压缩**时，OpenClaw 会触发一个**静默的、智能体的轮次**，提醒模型在上下文被压缩**之前**写入持久化内存。默认提示明确指出模型*可以回复*，但通常 `NO_REPLY` 是正确的响应，因此用户永远不会看到此轮次。
-活动的内存插件拥有该刷新的提示/路径策略；默认的 `memory-core` 插件会写入 `memory/YYYY-MM-DD.md` 下的标准每日文件。
+有关搜索工作原理、调整选项和提供商设置的详细信息，请参阅
+[记忆搜索](/en/concepts/memory-search)。
 
-这由 `agents.defaults.compaction.memoryFlush` 控制：
+## 记忆后端
 
-```json5
-{
-  agents: {
-    defaults: {
-      compaction: {
-        reserveTokensFloor: 20000,
-        memoryFlush: {
-          enabled: true,
-          softThresholdTokens: 4000,
-          systemPrompt: "Session nearing compaction. Store durable memories now.",
-          prompt: "Write any lasting notes to memory/YYYY-MM-DD.md; reply with NO_REPLY if nothing to store.",
-        },
-      },
-    },
-  },
-}
+<CardGroup cols={3}>
+  <Card title="内置（默认）" icon="数据库" href="/en/concepts/memory-builtin">
+    基于 SQLite。开箱即用，支持关键词搜索、向量相似度和混合搜索。无额外依赖。
+  </Card>
+  <Card title="QMD" icon="search" href="/en/concepts/memory-qmd">
+    本地优先的伴随程序，具有重排序、查询扩展以及索引工作区之外目录的能力。
+  </Card>
+  <Card title="Honcho" icon="brain" href="/en/concepts/memory-honcho">
+    具有用户建模、语义搜索和多代理感知能力的 AI 原生跨会话记忆。需安装插件。
+  </Card>
+</CardGroup>
+
+## 自动刷新内存
+
+在[压缩](/en/concepts/compaction)总结您的对话之前，OpenClaw
+会运行一个静默轮次，提醒代理将重要的上下文保存到内存文件中。默认情况下此功能处于开启状态——您无需进行任何配置。
+
+<Tip>内存刷新可防止压缩过程中的上下文丢失。如果您的代理在对话中包含尚未写入文件的重要事实，它们将在总结发生之前自动保存。</Tip>
+
+## CLI
+
+```bash
+openclaw memory status          # Check index status and provider
+openclaw memory search "query"  # Search from the command line
+openclaw memory index --force   # Rebuild the index
 ```
 
-详细信息：
+## 延伸阅读
 
-- **软阈值**：当会话 token 估算值超过
-  `contextWindow - reserveTokensFloor - softThresholdTokens` 时触发刷新。
-- **默认静默**：提示包含 `NO_REPLY`，因此不会发送任何内容。
-- **两个提示词**：一个用户提示词加上一个系统提示词，用于追加提醒。
-- **每个压缩周期刷新一次**（在 `sessions.json` 中跟踪）。
-- **工作区必须可写**：如果会话在
-  `workspaceAccess: "ro"` 或 `"none"` 的沙箱隔离环境中运行，则跳过刷新。
-
-有关完整的压缩生命周期，请参阅
-[Session management + compaction](/en/reference/session-management-compaction)。
-
-## 向量记忆搜索
-
-OpenClaw 可以基于 `MEMORY.md` 和 `memory/*.md` 构建一个小型向量索引，以便即使措辞不同，语义查询也能找到相关的笔记。混合搜索
-（BM25 + 向量）可用于将语义匹配与精确关键字查找结合起来。
-
-内存搜索适配器 ID 来自活动的内存插件。默认的
-`memory-core` 插件为 OpenAI、Gemini、Voyage、Mistral、
-Ollama 和本地 GGUF 模型提供了内置支持，外加一个可选的 QMD 边车后端，用于高级检索和后处理功能，例如 MMR 多样性重排序
-和时间衰减。
-
-有关完整的配置参考——包括嵌入提供商设置、QMD
-后端、混合搜索调整、多模态内存和所有配置旋钮——请参阅
-[Memory configuration reference](/en/reference/memory-config)。
+- [内置内存引擎](/en/concepts/memory-builtin) -- 默认的 SQLite 后端
+- [QMD 内存引擎](/en/concepts/memory-qmd) -- 高级本地优先伴随程序
+- [Honcho 内存](/en/concepts/memory-honcho) -- AI 原生跨会话内存
+- [内存搜索](/en/concepts/memory-search) -- 搜索管道、提供商和
+  调优
+- [内存配置参考](/en/reference/memory-config) -- 所有配置选项
+- [压缩](/en/concepts/compaction) -- 压缩如何与内存交互

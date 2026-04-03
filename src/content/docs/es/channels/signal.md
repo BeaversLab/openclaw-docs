@@ -327,3 +327,11 @@ Opciones globales relacionadas:
 - `agents.list[].groupChat.mentionPatterns` (Signal no admite menciones nativas).
 - `messages.groupChat.mentionPatterns` (alternativa global).
 - `messages.responsePrefix`.
+
+## Relacionado
+
+- [Descripción general de canales](/en/channels) — todos los canales compatibles
+- [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento en MD
+- [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/en/gateway/security) — modelo de acceso y fortalecimiento

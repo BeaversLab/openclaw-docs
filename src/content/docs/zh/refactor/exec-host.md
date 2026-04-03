@@ -22,7 +22,7 @@ title: "执行主机重构"
 
 - 不进行旧版允许列表迁移或旧版架构支持。
 - 不支持节点执行的 PTY/流式传输（仅限聚合输出）。
-- 除了现有的 Bridge + Gateway 网关 之外，不添加新的网络层。
+- 除了现有的 Bridge + Gateway(网关) 网关 之外，不添加新的网络层。
 
 ## 决策（已锁定）
 
@@ -223,11 +223,11 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 选项 A（推荐）：
 
 - Runner 发送 Bridge `event` 帧 `exec.started` / `exec.finished`。
-- Gateway 网关 `handleBridgeEvent` 将这些映射到 `enqueueSystemEvent`。
+- Gateway(网关) 网关 `handleBridgeEvent` 将这些映射到 `enqueueSystemEvent`。
 
 选项 B：
 
-- Gateway 网关 `exec` 工具 直接处理生命周期（仅同步）。
+- Gateway(网关) 网关 `exec` 工具 直接处理生命周期（仅同步）。
 
 ## 执行流
 
@@ -243,7 +243,7 @@ Agent -> Gateway -> Bridge -> Node Service (TS)
 
 ### 节点主机
 
-- Gateway 网关 调用 `node.invoke` 并带有 `system.run`。
+- Gateway(网关) 网关 调用 `node.invoke` 并带有 `system.run`。
 - Runner 强制执行本地审批。
 - Runner 返回聚合的 stdout/stderr。
 - 用于开始/完成/拒绝的可选 Bridge 事件。

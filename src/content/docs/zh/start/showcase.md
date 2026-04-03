@@ -10,7 +10,7 @@ read_when:
 
 来自社区的真实项目。看看大家正在用 OpenClaw 构建什么。
 
-<Info>**想要被展示吗？** 在 Discord 上的 [#showcase](https://discord.gg/clawd) 中分享你的项目，或者在 X 上 [标记 @openclaw](https://x.com/openclaw)。</Info>
+<Info>**想要被展示吗？** 在 [Discord 上的 #self-promotion 频道](https://discord.gg/clawd) 分享你的项目，或者在 X 上 [标记 @openclaw](https://x.com/openclaw)。</Info>
 
 ## 🎥 OpenClaw 实战演示
 
@@ -361,7 +361,7 @@ OpenClaw 连接到 Jira，然后即时生成了一个新技能（在它存在于
 有东西想分享？我们很乐意展示它！
 
 <Steps>
-  <Step title="Share It">在 [Discord 上的 #showcase 频道](https://discord.gg/clawd) 发帖或 [发推文 @openclaw](https://x.com/openclaw)</Step>
+  <Step title="分享它">在 [Discord 上的 #self-promotion 频道](https://discord.gg/clawd) 发帖，或者 [发推文 @openclaw](https://x.com/openclaw)</Step>
   <Step title="Include Details">告诉我们它的作用，链接到代码库/演示，如果有截图请分享</Step>
   <Step title="Get Featured">我们会将优秀项目添加到此页面</Step>
 </Steps>

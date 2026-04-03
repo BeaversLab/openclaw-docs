@@ -245,5 +245,8 @@ Chaque programme doit avoir :
 
 ## Connexes
 
-- [Tâches cron](/en/automation/cron-jobs) — Planifier l'application des ordres permanents
-- [Espace de travail de l'agent](/en/concepts/agent-workspace) — Là où résident les ordres permanents, y compris la liste complète des fichiers d'amorçage auto-injectés (AGENTS.md, SOUL.md, etc.)
+- [Vue d'ensemble de l'automatisation](/en/automation) — tous les mécanismes d'automatisation en un coup d'œil
+- [Tâches planifiées (Cron Jobs)](/en/automation/cron-jobs) — application des planifications pour les ordres permanents
+- [Hooks](/en/automation/hooks) — scripts pilotés par les événements pour le cycle de vie de l'agent
+- [Webhooks](/en/automation/webhook) — déclencheurs d'événements HTTP entrants
+- [Espace de travail de l'agent](/en/concepts/agent-workspace) — endroit où résident les ordres permanents, y compris la liste complète des fichiers d'amorçage auto-injectés (AGENTS.md, SOUL.md, etc.)

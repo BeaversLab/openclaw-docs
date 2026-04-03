@@ -13,22 +13,32 @@ Ce hub relie la documentation de base expliquant comment OpenClaw connecte, asso
 
 ## Modèle principal
 
-- [Architecture Gateway](/en/concepts/architecture)
-- [Protocole Gateway](/en/gateway/protocol)
-- [Runbook Gateway](/en/gateway)
-- [Surfaces Web + modes de bind](/en/web)
+La plupart des opérations passent par la Gateway (`openclaw gateway`), un processus unique de longue durée qui possède les connexions de canal et le plan de contrôle WebSocket.
 
-## Association + identité
+- **Boucle locale en priorité** : le WS de la Gateway est par défaut configuré sur `ws://127.0.0.1:18789`. Des jetons sont requis pour les liaisons non boucle locale.
+- **Une Gateway par hôte** est recommandée. Pour l'isolation, exécutez plusieurs passerelles avec des profils et des ports isolés ([Multiple Gateways](/en/gateway/multiple-gateways)).
+- L'hôte **Canvas** est servi sur le même port que la Gateway (`/__openclaw__/canvas/`, `/__openclaw__/a2ui/`), protégé par l'authentification Gateway lors d'une liaison au-delà de la boucle locale.
+- **L'accès à distance** se fait généralement via un tunnel SSH ou le VPN Tailscale ([Remote Access](/en/gateway/remote)).
 
-- [Aperçu de l'association (DM + nœuds)](/en/channels/pairing)
-- [Association de nœuds appartenant à la Gateway](/en/gateway/pairing)
-- [CLI des appareils (association + rotation des jetons)](/en/cli/devices)
-- [CLI d'association (approbations DM)](/en/cli/pairing)
+Références clés :
+
+- [Architecture de la Gateway](/en/concepts/architecture)
+- [Protocole de la Gateway](/en/gateway/protocol)
+- [Runbook de la Gateway](/en/gateway)
+- [Surfaces Web + modes de liaison](/en/web)
+
+## Appairage + identité
+
+- [Aperçu de l'appairage (DM + nœuds)](/en/channels/pairing)
+- [Appairage de nœuds possédés par Gateway](/en/gateway/pairing)
+- [CLI des appareils (appairage + rotation des jetons)](/en/cli/devices)
+- [CLI d'appairage (approbations DM)](/en/cli/pairing)
 
 Confiance locale :
 
-- Les connexions locales (boucle locale ou propre adresse tailnet de l'hôte de la passerelle) peuvent être approuvées automatiquement pour l'association afin de garder l'UX same-host fluide.
-- Les clients tailnet/LAN non locaux nécessitent toujours une approbation d'association explicite.
+- Les connexions locales (boucle locale ou adresse tailnet propre de l'hôte de la passerelle) peuvent être
+  approuvées automatiquement pour l'appairage afin de garder l'UX du même hôte fluide.
+- Les clients tailnet/LAN non locaux nécessitent toujours une approbation d'appairage explicite.
 
 ## Discovery + transports
 
@@ -47,6 +57,6 @@ Confiance locale :
 ## Sécurité
 
 - [Aperçu de la sécurité](/en/gateway/security)
-- [Référence de configuration Gateway](/en/gateway/configuration)
+- [Référence de configuration de la Gateway](/en/gateway/configuration)
 - [Dépannage](/en/gateway/troubleshooting)
-- [Doctor](/en/gateway/doctor)
+- [Docteur](/en/gateway/doctor)

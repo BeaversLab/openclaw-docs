@@ -14,27 +14,61 @@ Esta guía explica cómo crear un complemento de canal que conecte OpenClaw con 
 plataforma de mensajería. Al final, tendrá un canal funcional con seguridad de MD,
 emparejamiento, hilos de respuesta y mensajería saliente.
 
-<Info>Si no ha construido ningún complemento de OpenClaw antes, lea [Introducción](/en/plugins/building-plugins) primero para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
+<Info>Si no has construido ningún complemento de OpenClaw antes, lee [Getting Started](/en/plugins/building-plugins) primero para conocer la estructura básica del paquete y la configuración del manifiesto.</Info>
 
 ## Cómo funcionan los complementos de canales
 
 Los complementos de canal no necesitan sus propias herramientas de envío/edición/reacción. OpenClaw mantiene una
-herramienta `message` compartida en el núcleo. Su complemento posee:
+herramienta `message` compartida en el núcleo. Tu complemento es dueño de:
 
 - **Configuración** — resolución de cuenta y asistente de configuración
 - **Seguridad** — política de MD y listas de permitidos
 - **Emparejamiento** — flujo de aprobación de MD
+- **Gramática de sesión** — cómo se asignan los ids de conversación específicos del proveedor a chats base, ids de hilo y reservas principales
 - **Saliente** — envío de texto, medios y encuestas a la plataforma
-- **Hilos** — cómo se agrupan las respuestas
+- **Hilos** — cómo se hilvanan las respuestas
 
-El núcleo posee la herramienta de mensajes compartida, el cableado de indicaciones, el mantenimiento de sesiones y el
-despacho.
+El núcleo es dueño de la herramienta de mensaje compartida, el cableado del prompt, la forma de la clave de sesión externa,
+la contabilidad `:thread:` genérica y el despacho.
+
+Si tu plataforma almacena un alcance adicional dentro de los ids de conversación, mantén ese análisis
+en el complemento con `messaging.resolveSessionConversation(...)`. Ese es
+el enlace canónico para asignar `rawId` al id de conversación base, id de hilo opcional,
+`baseConversationId` explícito y cualquier `parentConversationCandidates`.
+Cuando devuelvas `parentConversationCandidates`, mantenlos ordenados del
+principal más estrecho al más amplio/conversación base.
+
+Los complementos empaquetados que necesitan el mismo análisis antes de que se inicie el registro del canal
+también pueden exponer un archivo `session-key-api.ts` de nivel superior con una exportación
+`resolveSessionConversation(...)` coincidente. El núcleo usa esa superficie segura para el arranque
+solo cuando el registro de complementos en tiempo de ejecución aún no está disponible.
+
+`messaging.resolveParentConversationCandidates(...)` permanece disponible como una
+reserva de compatibilidad heredada cuando un complemento solo necesita reservas principales encima
+del id genérico/sin procesar. Si existen ambos enlaces, el núcleo usa
+`resolveSessionConversation(...).parentConversationCandidates` primero y solo
+recurre a `resolveParentConversationCandidates(...)` cuando el enlace canónico
+los omite.
+
+## Aprobaciones y capacidades del canal
+
+La mayoría de los complementos de canal no necesitan código específico para aprobaciones.
+
+- El núcleo es propietario de `/approve` en el mismo chat, cargas útiles de botones de aprobación compartidas y entrega de reserva genérica.
+- Usa `auth.authorizeActorAction` o `auth.getActionAvailabilityState` solo cuando la autenticación de aprobación difiera de la autenticación de chat normal.
+- Use `outbound.shouldSuppressLocalPayloadPrompt` o `outbound.beforeDeliverPayload` para el comportamiento del ciclo de vida de la carga útil específico del canal, como ocultar avisos de aprobación local duplicados o enviar indicadores de escritura antes de la entrega.
+- Use `approvals.delivery` solo para el enrutamiento nativo de aprobaciones o la supresión de retorno (fallback).
+- Use `approvals.render` solo cuando un canal realmente necesite cargas útiles de aprobación personalizadas en lugar del procesador compartido.
+- Si un canal puede inferir identidades de MD estables tipo propietario desde la configuración existente, use `createResolvedApproverActionAuthAdapter` de `openclaw/plugin-sdk/approval-runtime` para restringir el `/approve` del mismo chat sin añadir lógica central específica para aprobaciones.
+
+Para Slack, Matrix, Microsoft Teams y canales de chat similares, la ruta predeterminada suele ser suficiente: el núcleo maneja las aprobaciones y el complemento solo expone capacidades normales de salida y autenticación.
 
 ## Tutorial
 
 <Steps>
+  <a id="step-1-package-and-manifest"></a>
   <Step title="Paquete y manifiesto">
-    Cree los archivos estándar del complemento. El campo `channel` en `package.json` es
+    Cree los archivos de complemento estándar. El campo `channel` en `package.json` es
     lo que convierte a esto en un complemento de canal:
 
     <CodeGroup>
@@ -86,7 +120,7 @@ despacho.
 
   <Step title="Construir el objeto del complemento de canal">
     La interfaz `ChannelPlugin` tiene muchas superficies de adaptador opcionales. Comience con
-    lo mínimo — `id` y `setup` — y agregue adaptadores según los necesite.
+    lo mínimo — `id` y `setup` — y agregue adaptadores a medida que los necesite.
 
     Cree `src/channel.ts`:
 
@@ -181,18 +215,18 @@ despacho.
     });
     ```
 
-    <Accordion title="Qué hace createChatChannelPlugin por usted">
-      En lugar de implementar manualmente interfaces de adaptador de bajo nivel, usted pasa
+    <Accordion title="Lo que hace createChatChannelPlugin por usted">
+      En lugar de implementar interfaces de adaptador de bajo nivel manualmente, usted pasa
       opciones declarativas y el constructor las compone:
 
       | Opción | Lo que conecta |
       | --- | --- |
-      | `security.dm` | Solucionador de seguridad de MD con ámbito desde campos de configuración |
-      | `pairing.text` | Flujo de emparejamiento de MD basado en texto con intercambio de códigos |
-      | `threading` | Solucionador de modo de respuesta (fijo, con ámbito de cuenta o personalizado) |
-      | `outbound.attachedResults` | Funciones de envío que devuelven metadatos de resultado (IDs de mensaje) |
+      | `security.dm` | Solucionador de seguridad DM con alcance desde campos de configuración |
+      | `pairing.text` | Flujo de emparejamiento DM basado en texto con intercambio de código |
+      | `threading` | Solucionador de modo de respuesta (fijo, con alcance de cuenta o personalizado) |
+      | `outbound.attachedResults` | Funciones de envío que devuelven metadatos de resultado (ID de mensajes) |
 
-      También puede pasar objetos de adaptador sin procesar en lugar de las opciones declarativas
+      También puede pasar objetos de adaptador brutos en lugar de las opciones declarativas
       si necesita control total.
     </Accordion>
 
@@ -210,22 +244,36 @@ despacho.
       name: "Acme Chat",
       description: "Acme Chat channel plugin",
       plugin: acmeChatPlugin,
-      registerFull(api) {
+      registerCliMetadata(api) {
         api.registerCli(
           ({ program }) => {
             program
               .command("acme-chat")
               .description("Acme Chat management");
           },
-          { commands: ["acme-chat"] },
+          {
+            descriptors: [
+              {
+                name: "acme-chat",
+                description: "Acme Chat management",
+                hasSubcommands: false,
+              },
+            ],
+          },
         );
+      },
+      registerFull(api) {
+        api.registerGatewayMethod(/* ... */);
       },
     });
     ```
 
-    `defineChannelPluginEntry` maneja la división entre configuración y registro completo
-    automáticamente. Consulte
-    [Puntos de entrada](/en/plugins/sdk-entrypoints#definechannelpluginentry) para ver todas
+    Coloque descriptores de CLI propiedad del canal en `registerCliMetadata(...)` para que OpenClaw
+    pueda mostrarlos en la ayuda raíz sin activar el tiempo de ejecución completo del canal,
+    mientras que las cargas completas normales aún recogen los mismos descriptores para el registro real de
+    comandos. Mantenga `registerFull(...)` para el trabajo solo de tiempo de ejecución.
+    `defineChannelPluginEntry` maneja la división del modo de registro automáticamente. Vea
+    [Puntos de entrada](/en/plugins/sdk-entrypoints#definechannelpluginentry) para todas
     las opciones.
 
   </Step>
@@ -241,15 +289,15 @@ despacho.
     ```
 
     OpenClaw carga esto en lugar de la entrada completa cuando el canal está deshabilitado
-    o sin configurar. Evita cargar código de tiempo de ejecución pesado durante los flujos de configuración.
-    Consulte [Configuración y puesta a punto](/en/plugins/sdk-setup#setup-entry) para obtener más detalles.
+    o sin configurar. Esto evita introducir código pesado de tiempo de ejecución durante los flujos de configuración.
+    Vea [Configuración y Config](/en/plugins/sdk-setup#setup-entry) para obtener detalles.
 
   </Step>
 
-  <Step title="Gestionar mensajes entrantes">
-    Su complemento necesita recibir mensajes de la plataforma y reenviarlos a
+  <Step title="Manejar mensajes entrantes">
+    Tu complemento necesita recibir mensajes de la plataforma y reenviarlos a
     OpenClaw. El patrón típico es un webhook que verifica la solicitud y
-    la despacha a través del controlador de entrada de su canal:
+    la despacha a través del controlador de entrada de tu canal:
 
     ```typescript
     registerFull(api) {
@@ -261,7 +309,7 @@ despacho.
 
           // Your inbound handler dispatches the message to OpenClaw.
           // The exact wiring depends on your platform SDK —
-          // see a real example in extensions/msteams or extensions/googlechat.
+          // see a real example in the bundled Microsoft Teams or Google Chat plugin package.
           await handleAcmeChatInbound(api, event);
 
           res.statusCode = 200;
@@ -273,15 +321,16 @@ despacho.
     ```
 
     <Note>
-      El manejo de mensajes entrantes es específico del canal. Cada complemento de canal es propietario
-      de su propia canalización de entrada. Mire los complementos de canal incluidos
-      (p. ej. `extensions/msteams`, `extensions/googlechat`) para ver patrones reales.
+      El manejo de mensajes entrantes es específico del canal. Cada complemento de canal posee
+      su propia canalización de entrada. Observa los complementos de canal incluidos
+      (por ejemplo, el paquete del complemento de Microsoft Teams o Google Chat) para ver patrones reales.
     </Note>
 
   </Step>
 
-  <Step title="Prueba">
-    Escriba pruebas ubicadas en `src/channel.test.ts`:
+<a id="step-6-test"></a>
+<Step title="Prueba">
+Escribe pruebas ubicadas en `src/channel.test.ts`:
 
     ```typescript src/channel.test.ts
     import { describe, it, expect } from "vitest";
@@ -316,10 +365,10 @@ despacho.
     ```
 
     ```bash
-    pnpm test -- extensions/acme-chat/
+    pnpm test -- <bundled-plugin-root>/acme-chat/
     ```
 
-    Para ver asistentes de pruebas compartidos, consulte [Pruebas](/en/plugins/sdk-testing).
+    Para ver los asistentes de pruebas compartidos, consulta [Testing](/en/plugins/sdk-testing).
 
   </Step>
 </Steps>
@@ -327,7 +376,7 @@ despacho.
 ## Estructura de archivos
 
 ```
-extensions/acme-chat/
+<bundled-plugin-root>/acme-chat/
 ├── package.json              # openclaw.channel metadata
 ├── openclaw.plugin.json      # Manifest with config schema
 ├── index.ts                  # defineChannelPluginEntry
@@ -345,7 +394,7 @@ extensions/acme-chat/
 
 <CardGroup cols={2}>
   <Card title="Opciones de hilos" icon="git-branch" href="/en/plugins/sdk-entrypoints#registration-mode">
-    Modos de respuesta fijos, con ámbito de cuenta o personalizados
+    Modos de respuesta fijos, de ámbito de cuenta o personalizados
   </Card>
   <Card title="Integración de herramientas de mensajes" icon="puzzle" href="/en/plugins/architecture#channel-plugins-and-the-shared-message-tool">
     describeMessageTool y descubrimiento de acciones
@@ -354,13 +403,13 @@ extensions/acme-chat/
     inferTargetChatType, looksLikeId, resolveTarget
   </Card>
   <Card title="Asistentes de tiempo de ejecución" icon="settings" href="/en/plugins/sdk-runtime">
-    TTS, STT, media, subagente a través de api.runtime
+    TTS, STT, medios, subagente a través de api.runtime
   </Card>
 </CardGroup>
 
-## Pasos siguientes
+## Siguientes pasos
 
-- [Plugins de proveedores](/en/plugins/sdk-provider-plugins) — si su complemento también proporciona modelos
-- [Resumen del SDK](/en/plugins/sdk-overview) — referencia completa de importación de subrutas
+- [Complementos de proveedor](/en/plugins/sdk-provider-plugins) — si tu complemento también proporciona modelos
+- [Descripción general del SDK](/en/plugins/sdk-overview) — referencia completa de importaciones de subrutas
 - [Pruebas del SDK](/en/plugins/sdk-testing) — utilidades de prueba y pruebas de contrato
 - [Manifiesto del complemento](/en/plugins/manifest) — esquema completo del manifiesto

@@ -9,7 +9,7 @@ title: "mcp"
 
 # mcp
 
-`openclaw mcp` 有两个工作：
+`openclaw mcp` 有两个任务：
 
 - 使用 `openclaw mcp serve` 将 OpenClaw 作为 MCP 服务器运行
 - 使用 `list`、`show`、
@@ -19,10 +19,10 @@ title: "mcp"
 
 - `serve` 是作为 MCP 服务器运行的 OpenClaw
 - `list` / `show` / `set` / `unset` 是作为 MCP 客户端
-  注册表运行的 OpenClaw，用于其运行时稍后可能使用的其他 MCP 服务器
+  注册表运行的 OpenClaw，用于存储其运行时稍后可能使用的其他 MCP 服务器
 
-当 OpenClaw 应自行托管编码工具
-会话并通过 ACP 路由该运行时时，请使用 [`openclaw acp`](/en/cli/acp)
+当 OpenClaw 应自行托管编程工具
+会话并通过 ACP 路由该运行时时，请使用 [`openclaw acp`](/en/cli/acp)。
 
 ## OpenClaw 作为 MCP 服务器
 
@@ -30,7 +30,7 @@ title: "mcp"
 
 ## 何时使用 `serve`
 
-在以下情况使用 `openclaw mcp serve`：
+在以下情况下使用 `openclaw mcp serve`：
 
 - Codex、Claude Code 或另一个 MCP 客户端应直接与
   OpenClaw 支持的渠道对话
@@ -38,14 +38,14 @@ title: "mcp"
 - 您希望拥有一个可跨 OpenClaw 渠道后端工作的 MCP 服务器，
   而不是运行单独的每渠道桥接器
 
-当 OpenClaw 应自行托管编码
-运行时并将代理会话保留在 OpenClaw 内部时，请改为使用 [`openclaw acp`](/en/cli/acp)
+当 OpenClaw 应自行托管编程
+运行时并将代理会话保留在 OpenClaw 内部时，请改用 [`openclaw acp`](/en/cli/acp)。
 
 ## 工作原理
 
-`openclaw mcp serve` 启动一个 stdio MCP 服务器。MCP 客户端拥有该
-进程。当客户端保持 stdio 会话打开时，桥接器通过 WebSocket 连接到
-本地或远程 OpenClaw Gateway(网关) 并通过 MCP 公开路由的渠道
+`openclaw mcp serve` 启动一个 stdio MCP 服务器。该 MCP 客户端拥有该
+进程。当客户端保持 stdio 会话打开时，网桥会通过 WebSocket 连接到
+本地或远程 OpenClaw Gateway(网关)，并通过 MCP 公开路由后的渠道
 对话。
 
 生命周期：
@@ -60,7 +60,7 @@ title: "mcp"
 重要行为：
 
 - 当桥接器连接时，实时队列状态开始
-- 较旧的对话历史记录通过 `messages_read` 读取
+- 旧的脚本历史记录使用 `messages_read` 读取
 - Claude 推送通知仅在 MCP 会话存活时存在
 - 当客户端断开连接时，桥接器退出，实时队列消失
 
@@ -68,15 +68,16 @@ title: "mcp"
 
 通过两种不同的方式使用同一个桥接器：
 
-- 通用 MCP 客户端：仅使用标准 MCP 工具。使用 `conversations_list`，
-  `messages_read`，`events_poll`，`events_wait`，`messages_send` 以及
-  审批工具。
-- Claude Code：标准 MCP 工具加上 Claude 特定的渠道适配器。
-  启用 `--claude-channel-mode on` 或保留默认值 `auto`。
+- 通用 MCP 客户端：仅限标准 MCP 工具。使用 `conversations_list`、
+  `messages_read`、`events_poll`、`events_wait`、`messages_send` 以及
+  批准工具。
+- Claude Code：标准 MCP 工具以及 Claude 特定的渠道适配器。
+  启用 `--claude-channel-mode on` 或保留默认的 `auto`。
 
-目前，`auto` 的行为与 `on` 相同。目前尚不支持客户端功能检测。
+目前，`auto` 的行为与 `on` 相同。尚无客户端功能检测
+功能。
 
-## `serve` 暴露的内容
+## `serve` 公开的内容
 
 桥接器使用现有的 Gateway(网关) 会话路由元数据来暴露由渠道支持的
 对话。当 OpenClaw 已经与已知路由（例如）拥有会话状态时，
@@ -143,7 +144,7 @@ Gateway(网关) 会话状态中已经具有路由元数据。
 
 ### `conversation_get`
 
-根据 `session_key` 返回一个会话。
+根据 `session_key` 返回一个对话。
 
 ### `messages_read`
 
@@ -201,8 +202,8 @@ Gateway(网关) 会话状态中已经具有路由元数据。
 重要限制：
 
 - 队列仅用于实时；它在 MCP 桥接器启动时开始
-- `events_poll` 和 `events_wait` 不会自行重放旧的 Gateway(网关) 历史
-- 持久化积压工作应使用 `messages_read` 读取
+- `events_poll` 和 `events_wait` 本身不会重放旧的 Gateway(网关) 历史记录
+- 应使用 `messages_read` 读取持久积压
 
 ## Claude 渠道通知
 
@@ -210,9 +211,9 @@ Gateway(网关) 会话状态中已经具有路由元数据。
 
 标志：
 
-- `--claude-channel-mode off`：仅限标准 MCP 工具
+- `--claude-channel-mode off`：仅标准 MCP 工具
 - `--claude-channel-mode on`：启用 Claude 渠道通知
-- `--claude-channel-mode auto`：当前默认值；与 `on` 的桥接行为相同
+- `--claude-channel-mode auto`：当前默认值；与 `on` 具有相同的桥接行为
 
 启用 Claude 渠道模式时，服务器会公布 Claude 实验性功能并可以发送：
 
@@ -221,8 +222,8 @@ Gateway(网关) 会话状态中已经具有路由元数据。
 
 当前桥接行为：
 
-- 传入的 `user` 副本消息将作为
-  `notifications/claude/channel` 转发
+- 传入的 `user` 脚本消息被转发为
+  `notifications/claude/channel`
 - 通过 MCP 接收的 Claude 权限请求将在内存中跟踪
 - 如果关联的对话稍后发送 `yes abcde` 或 `no abcde`，桥接器
   会将其转换为 `notifications/claude/channel/permission`
@@ -254,15 +255,15 @@ Claude 模式。仅对确实理解 Claude 特定通知方法的客户端启用 C
 
 `openclaw mcp serve` 支持：
 
-- `--url <url>`：Gateway(网关) WebSocket URL
-- `--token <token>`：Gateway(网关) 令牌
-- `--token-file <path>`：从文件读取令牌
-- `--password <password>`：Gateway(网关) 密码
-- `--password-file <path>`：从文件读取密码
-- `--claude-channel-mode <auto|on|off>`：Claude 通知模式
-- `-v`、`--verbose`：在 stderr 上输出详细日志
+- `--url <url>`: Gateway(网关) WebSocket URL
+- `--token <token>`: Gateway(网关) token
+- `--token-file <path>`: 从文件读取 token
+- `--password <password>`: Gateway(网关) 密码
+- `--password-file <path>`: 从文件读取密码
+- `--claude-channel-mode <auto|on|off>`: Claude 通知模式
+- `-v`, `--verbose`: 在 stderr 上输出详细日志
 
-尽可能优先使用 `--token-file` 或 `--password-file`，而不是内联密钥。
+如果可能，请优先使用 `--token-file` 或 `--password-file` 而非内联机密信息。
 
 ## 安全与信任边界
 
@@ -277,7 +278,8 @@ Claude 模式。仅对确实理解 Claude 特定通知方法的客户端启用 C
 - 审批状态仅在当前桥接会话中存在于内存中
 - bridge auth 应该使用与您信任用于任何其他远程 Gateway(网关) 客户端相同的 Gateway(网关) 令牌或密码控制
 
-如果 `conversations_list` 中缺少某个对话，通常原因不是 MCP 配置问题，而是底层 Gateway(网关) 会话中缺少或不完整的路由元数据。
+如果 `conversations_list` 中缺少对话，通常原因并非
+MCP 配置问题。而是底层 Gateway(网关) 会话中缺失或不完整的路由元数据。
 
 ## 测试
 
@@ -290,13 +292,13 @@ pnpm test:docker:mcp-channels
 该冒烟测试：
 
 - 启动一个已设置种子的 Gateway(网关) 容器
-- 启动第二个生成 `openclaw mcp serve` 的容器
+- 启动第二个容器来生成 `openclaw mcp serve`
 - 验证对话发现、脚本读取、附件元数据读取、实时事件队列行为以及出站发送路由
 - 通过真实的 stdio MCP 桥接验证 Claude 风格的渠道和权限通知
 
 这是证明桥接有效而无需将真实的 Telegram、Discord 或 iMessage 账户连接到测试运行的最快方法。
 
-有关更广泛的测试上下文，请参阅 [Testing](/en/help/testing)。
+有关更广泛的测试上下文，请参阅 [测试](/en/help/testing)。
 
 ## 故障排除
 
@@ -304,9 +306,9 @@ pnpm test:docker:mcp-channels
 
 通常意味着 Gateway(网关) 会话尚不可路由。请确认底层会话已存储渠道/提供商、收件人以及可选的账户/线程路由元数据。
 
-### `events_poll` 或 `events_wait` 遗漏了较旧的消息
+### `events_poll` 或 `events_wait` 缺少旧消息
 
-这是预期的。实时队列在桥接连接时启动。使用 `messages_read` 读取较旧的脚本历史记录。
+预期行为。实时队列在桥接连接时启动。请使用 `messages_read` 读取旧的历史记录。
 
 ### Claude 通知未显示
 
@@ -319,13 +321,14 @@ pnpm test:docker:mcp-channels
 
 ### 批准请求丢失
 
-`permissions_list_open` 仅显示在桥接连接时观察到的批准请求。它不是持久的批准历史 API。
+`permissions_list_open` 仅显示桥接连接期间观察到的审批请求。它不是一个持久的审批历史 API。
 
 ## OpenClaw 作为 MCP 客户端注册表
 
 这是 `openclaw mcp list`、`show`、`set` 和 `unset` 路径。
 
-这些命令不会通过 MCP 暴露 OpenClaw。它们在 OpenClaw 配置中的 `mcp.servers` 下管理 OpenClaw 拥有的 MCP 服务器定义。
+这些命令不通过 MCP 暴露 OpenClaw。它们在 OpenClaw 配置的 `mcp.servers` 下管理 OpenClaw 拥有的 MCP
+服务器定义。
 
 这些保存的定义专供 OpenClaw 稍后启动或配置的运行时使用，例如嵌入式 Pi 和其他运行时适配器。OpenClaw 将这些定义集中存储，以便这些运行时无需维护自己的重复 MCP 服务器列表。
 
@@ -375,24 +378,88 @@ openclaw mcp unset context7
 }
 ```
 
-典型字段：
+### Stdio 传输
 
-- `command`
-- `args`
-- `env`
-- `cwd` 或 `workingDirectory`
-- `url`
+启动本地子进程并通过 stdin/stdout 进行通信。
 
-这些命令仅管理已保存的配置。它们不启动渠道桥接，不打开实时 MCP 客户端会话，也不证明目标服务器可访问。
+| 字段                       | 描述                       |
+| -------------------------- | -------------------------- |
+| `command`                  | 要生成的可执行文件（必需） |
+| `args`                     | 命令行参数数组             |
+| `env`                      | 额外的环境变量             |
+| `cwd` / `workingDirectory` | 进程的工作目录             |
+
+### SSE / HTTP 传输
+
+通过 HTTP 服务器发送事件连接到远程 MCP 服务器。
+
+| 字段                | 描述                                           |
+| ------------------- | ---------------------------------------------- |
+| `url`               | 远程服务器的 HTTP 或 HTTPS URL（必需）         |
+| `headers`           | HTTP 标头的可选键值映射（例如身份验证令牌）    |
+| `connectionTimeout` | 每个服务器的连接超时时间，以毫秒为单位（可选） |
+
+示例：
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "remote-tools": {
+        "url": "https://mcp.example.com",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        }
+      }
+    }
+  }
+}
+```
+
+`url`（用户信息）和 `headers` 中的敏感值在日志和
+状态输出中会被编辑隐藏。
+
+### 可流式 HTTP 传输
+
+`streamable-http` 是除了 `sse` 和 `stdio` 之外的额外传输选项。它使用 HTTP 流与远程 MCP 服务器进行双向通信。
+
+| 字段                | 描述                                           |
+| ------------------- | ---------------------------------------------- |
+| `url`               | 远程服务器的 HTTP 或 HTTPS URL（必需）         |
+| `transport`         | 设置为 `"streamable-http"` 以选择此传输方式    |
+| `headers`           | HTTP 标头的可选键值映射（例如身份验证令牌）    |
+| `connectionTimeout` | 每个服务器的连接超时时间，以毫秒为单位（可选） |
+
+示例：
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "streaming-tools": {
+        "url": "https://mcp.example.com/stream",
+        "transport": "streamable-http",
+        "connectionTimeout": 10000,
+        "headers": {
+          "Authorization": "Bearer <token>"
+        }
+      }
+    }
+  }
+}
+```
+
+这些命令仅管理已保存的配置。它们不启动渠道桥接器，
+不打开实时 MCP 客户端会话，也不证明目标服务器是可访问的。
 
 ## 当前限制
 
-本页面记录了当前发布的桥接功能。
+本页面记录了目前发布的桥接器功能。
 
 当前限制：
 
-- 会话发现依赖于现有的 Gateway 会话路由元数据
-- 除 Claude 专用适配器外，没有通用的推送协议
+- 会话发现依赖于现有的 Gateway(网关) 会话路由元数据
+- 除了 Claude 特定的适配器外，没有通用的推送协议
 - 尚无消息编辑或反应工具
-- 尚无专用的 HTTP MCP 传输
-- `permissions_list_open` 仅包含在桥接连接时观察到的审批
+- HTTP/SSE/streamable-http 传输连接到单个远程服务器；尚不支持多路复用上游
+- `permissions_list_open` 仅包含桥接器连接时观察到的批准

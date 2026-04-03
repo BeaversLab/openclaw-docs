@@ -8,7 +8,7 @@ title: "cron"
 
 # `openclaw cron`
 
-管理 Gateway 网关 调度器的 cron 作业。
+管理 Gateway(网关) 网关 调度器的 cron 作业。
 
 相关：
 
@@ -32,7 +32,10 @@ title: "cron"
 - `cron.sessionRetention`（默认为 `24h`）修剪已完成的隔离运行会话。
 - `cron.runLog.maxBytes` + `cron.runLog.keepLines` 修剪 `~/.openclaw/cron/runs/<jobId>.jsonl`。
 
-升级提示：如果您有当前传递/存储格式之前的旧 cron 作业，请运行 `openclaw doctor --fix`。Doctor 现在会规范化旧的 cron 字段（`jobId`、`schedule.cron`、顶层传递字段、有效负载 `provider` 传递别名），并在配置了 `cron.webhook` 时将简单的 `notify: true` webhook 回退作业迁移到显式 webhook 传递。
+升级说明：如果您有来自当前交付/存储格式之前的较旧 cron 作业，请运行
+`openclaw doctor --fix`。Doctor 现在会规范化旧版 cron 字段（`jobId`、`schedule.cron`、
+包括旧版 `threadId` 的顶级交付字段、payload `provider` 交付别名），并在配置 `cron.webhook` 时将简单的
+`notify: true` webhook 后备作业迁移到显式 webhook 交付。
 
 ## 常见编辑
 
@@ -72,4 +75,4 @@ openclaw cron add \
   --no-deliver
 ```
 
-`--light-context` 仅适用于隔离的代理轮次作业。对于 cron 运行，轻量级模式保持引导上下文为空，而不是注入完整的工作区引导集。
+`--light-context` 仅适用于隔离的 agent-turn 作业。对于 cron 运行，轻量级模式保持 bootstrap 上下文为空，而不是注入完整的工作区 bootstrap 集。

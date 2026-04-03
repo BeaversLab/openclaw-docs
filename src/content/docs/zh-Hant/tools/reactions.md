@@ -45,7 +45,16 @@ Agent 可以使用 `message` 工具的 `react` 動作，在訊息上新增及移
   </Accordion>
 </AccordionGroup>
 
-## 相關
+## 反應層級
+
+每個頻道的 `reactionLevel` 設定控制代理程式使用回應的廣泛程度。數值通常是 `off`、`ack`、`minimal` 或 `extensive`。
+
+- [Telegram reactionLevel](/en/channels/telegram#reaction-notifications) — `channels.telegram.reactionLevel`
+- [WhatsApp reactionLevel](/en/channels/whatsapp#reactions) — `channels.whatsapp.reactionLevel`
+
+在個別頻道上設定 `reactionLevel`，以調整代理在各個平台上對訊息做出反應的頻率。
+
+## 相關內容
 
 - [Agent Send](/en/tools/agent-send) — 包含 `react` 的 `message` 工具
-- [Channels](/en/channels) — 特定頻道的設定
+- [Channels](/en/channels) — 特定通道的配置

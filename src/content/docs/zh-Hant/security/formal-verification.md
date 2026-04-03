@@ -63,9 +63,9 @@ make <target>
 
 另請參閱：模型 repo 中的 `docs/gateway-exposure-matrix.md`。
 
-### Nodes.run 管線（最高風險功能）
+### Node 執行管線（最高風險能力）
 
-**聲明：** `nodes.run` 需要 (a) 節點命令允許清單加上聲明的命令，以及 (b) 配置時的即時批准；批准已令牌化以防止重放（在模型中）。
+**聲明：** `exec host=node` 需要 (a) 節點命令允許清單以及已宣告的命令，以及 (b) 在配置時進行即時審批；審批已透過權杖化以防止重放（在模型中）。
 
 - 綠色執行：
   - `make nodes-pipeline`

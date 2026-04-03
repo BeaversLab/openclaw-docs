@@ -44,10 +44,12 @@ Remarques :
 - Si un SecretRef d'authentification requis n'est pas résolu dans ce chemin de commande, `daemon status --json` signale `rpc.authWarning` lorsque la connectivité/l'authentification de la sonde échoue ; passez `--token`/`--password` explicitement ou résolvez d'abord la source du secret.
 - Si la sonde réussit, les avertissements d'auth-ref non résolus sont supprimés pour éviter les faux positifs.
 - Sur les installations systemd Linux, les vérifications de dérive de jeton `status` incluent les sources d'unité `Environment=` et `EnvironmentFile=`.
-- Lorsque l'authentification par jeton nécessite un jeton et que `gateway.auth.token` est géré par SecretRef, `install` valide que le SecretRef peut être résolu mais ne conserve pas le jeton résolu dans les métadonnées de l'environnement de service.
-- Si l'authentification par jeton nécessite un jeton et que le SecretRef du jeton configuré n'est pas résolu, l'installation échoue de manière sécurisée.
-- Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés et que `gateway.auth.mode` n'est pas défini, l'installation est bloquée jusqu'à ce que le mode soit défini explicitement.
+- Les vérifications de dérive résolvent les SecretRefs `gateway.auth.token` à l'aide de l'environnement d'exécution fusionné (environnement de commande de service en premier, puis repli sur l'environnement de processus).
+- Si l'authentification par jeton n'est pas effectivement active (`gateway.auth.mode` explicite de `password`/`none`/`trusted-proxy`, ou mode non défini où le mot de passe peut l'emporter et qu'aucun candidat de jeton ne peut l'emporter), les vérifications de dérive de jeton ignorent la résolution du jeton de configuration.
+- Lorsque l'authentification par jeton nécessite un jeton et que `gateway.auth.token` est géré par SecretRef, `install` valide que le SecretRef peut être résolu mais ne persiste pas le jeton résolu dans les métadonnées de l'environnement de service.
+- Si l'authentification par jeton nécessite un jeton et que le SecretRef du jeton configuré n'est pas résolu, l'installation échoue de manière fermée.
+- Si à la fois `gateway.auth.token` et `gateway.auth.password` sont configurés et que `gateway.auth.mode` n'est pas défini, l'installation est bloquée jusqu'à ce que le mode soit défini explicitement.
 
-## Préférence
+## Préférer
 
 Utilisez [`openclaw gateway`](/en/cli/gateway) pour la documentation actuelle et les exemples.

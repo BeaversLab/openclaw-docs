@@ -19,7 +19,8 @@ plus de contexte.
 
 ## Recommandé : Model Studio (Plan de codage Alibaba Cloud)
 
-Utilisez [Model Studio](/en/providers/modelstudio) pour un accès officiellement pris en charge aux modèles Qwen (Qwen 3.5 Plus, GLM-4.7, Kimi K2.5, MiniMax M2.5, et plus).
+Utilisez [Model Studio](/en/providers/qwen_modelstudio) pour un accès officiellement pris en charge aux
+modèles Qwen (Qwen 3.5 Plus, GLM-4.7, Kimi K2.5, et plus).
 
 ```bash
 # Global endpoint
@@ -29,4 +30,4 @@ openclaw onboard --auth-choice modelstudio-api-key
 openclaw onboard --auth-choice modelstudio-api-key-cn
 ```
 
-Voir [Model Studio](/en/providers/modelstudio) pour tous les détails de configuration.
+Consultez [Model Studio](/en/providers/qwen_modelstudio) pour tous les détails de configuration.

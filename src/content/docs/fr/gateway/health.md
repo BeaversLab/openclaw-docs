@@ -1,7 +1,8 @@
 ---
-summary: "Étapes de vérification de l'état pour la connectivité du canal"
+summary: "Health check commands and gateway health monitoring"
 read_when:
-  - Diagnosing WhatsApp channel health
+  - Diagnosing channel connectivity or gateway health
+  - Understanding health check CLI commands and options
 title: "Vérifications de l'état"
 ---
 
@@ -41,4 +42,12 @@ Guide court pour vérifier la connectivité du canal sans deviner.
 
 ## Commande "health" dédiée
 
-`openclaw health --json` demande au Gateway en cours d'exécution son instantané de santé (pas de sockets de channel directs depuis le CLI). Il signale l'âge des informations d'identification/authentification liées lorsqu'elles sont disponibles, des résumés de sondage par channel, un résumé du session-store et une durée de sondage. Il renvoie un code non nul si le Gateway est injoignable ou si le sondage échoue/expire. Utilisez `--timeout <ms>` pour remplacer la valeur par défaut de 10s.
+`openclaw health --json` demande au Gateway en cours d'exécution son instantané de santé (pas de sockets de channel directs depuis le CLI). Il signale l'âge des identifiants liés/de l'authentification lorsque disponible, les résumés des sondages par channel, le résumé du session-store et une durée de sondage. Il se termine avec un code non nul si le Gateway est injoignable ou si le sondage échoue/expire.
+
+Options :
+
+- `--json` : sortie JSON lisible par machine
+- `--timeout <ms>` : remplacer le délai d'expiration du sondage par défaut de 10s
+- `--probe` : forcer un sondage en direct de tous les channels au lieu de renvoyer l'instantané de santé mis en cache
+
+L'instantané de santé inclut : `ok` (booléen), `ts` (horodatage), `durationMs` (temps de sondage), l'état par channel, la disponibilité de l'agent et le résumé du session-store.

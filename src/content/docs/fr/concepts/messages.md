@@ -142,3 +142,10 @@ Le formatage des messages sortants est centralisé dans `messages` :
 - Fils de discussion de réponse via `replyToMode` et les valeurs par défaut par channel
 
 Détails : [Configuration](/en/gateway/configuration-reference#messages) et documentation sur les channels.
+
+## Connexes
+
+- [Streaming](/en/concepts/streaming) — livraison de messages en temps réel
+- [Retry](/en/concepts/retry) — comportement de nouvelle tentative de livraison de messages
+- [Queue](/en/concepts/queue) — file de traitement des messages
+- [Channels](/en/channels) — intégrations de plateformes de messagerie

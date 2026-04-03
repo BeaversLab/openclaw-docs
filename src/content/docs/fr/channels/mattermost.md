@@ -8,9 +8,9 @@ title: "Mattermost"
 
 # Mattermost (plugin)
 
-État : pris en charge via un plugin (jeton de bot + événements WebSocket). Les canaux, les groupes et les DMs sont pris en charge.
-Mattermost est une plateforme de messagerie d'équipe auto-hébergeable ; consultez le site officiel sur
-[mattermost.com](https://mattermost.com) pour les détails du produit et les téléchargements.
+Statut : pris en charge via un plugin (jeton de bot + événements WebSocket). Les canaux, les groupes et les DM sont pris en charge.
+Mattermost est une plateforme de messagerie d'équipe auto-hébergeable ; voir le site officiel à
+[mattermost.com](https://mattermost.com) pour les détails sur le produit et les téléchargements.
 
 ## Plugin requis
 
@@ -25,7 +25,7 @@ openclaw plugins install @openclaw/mattermost
 Extraction locale (lors de l'exécution depuis un dépôt git) :
 
 ```bash
-openclaw plugins install ./extensions/mattermost
+openclaw plugins install ./path/to/local/mattermost-plugin
 ```
 
 Si vous choisissez Mattermost lors de la configuration et qu'une extraction git est détectée,
@@ -411,3 +411,11 @@ Mattermost prend en charge plusieurs comptes sous `channels.mattermost.accounts`
 - Le Gateway journalise `missing _token in context` : le champ `_token` n'est pas dans le contexte du bouton. Assurez-vous qu'il est inclus lors de la construction de la charge utile d'intégration.
 - La confirmation affiche l'ID brut au lieu du nom du bouton : `context.action_id` ne correspond pas au `id` du bouton. Définissez les deux avec la même valeur nettoyée.
 - L'agent ne connaît pas les boutons : ajoutez `capabilities: ["inlineButtons"]` à la configuration du canal Mattermost.
+
+## Connexes
+
+- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
+- [Appariement](/en/channels/pairing) — authentification DM et flux d'appariement
+- [Groupes](/en/channels/groups) — comportement de la conversation de groupe et filtrage des mentions
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

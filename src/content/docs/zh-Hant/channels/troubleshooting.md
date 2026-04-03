@@ -38,7 +38,7 @@ openclaw channels status --probe
 | 群組訊息被忽略        | 檢查 `requireMention` + 設定中的提及模式  | 提及機器人或放寬該群組的提及策略。 |
 | 隨機斷線/重新登入循環 | `openclaw channels status --probe` + 日誌 | 重新登入並驗證憑證目錄是否正常。   |
 
-完整故障排除：[/channels/whatsapp#troubleshooting](/en/channels/whatsapp#troubleshooting)
+完整疑難排解：[/channels/whatsapp#troubleshooting](/en/channels/whatsapp#troubleshooting)
 
 ## Telegram
 
@@ -52,7 +52,7 @@ openclaw channels status --probe
 | `setMyCommands` 在啟動時被拒絕 | 檢查日誌中的 `BOT_COMMANDS_TOO_MUCH`   | 減少外掛/技能/自訂 Telegram 指令或停用原生選單。                    |
 | 升級後白名單阻擋了您           | `openclaw security audit` 和設定白名單 | 執行 `openclaw doctor --fix` 或將 `@username` 替換為數字發送者 ID。 |
 
-完整故障排除：[/channels/telegram#troubleshooting](/en/channels/telegram#troubleshooting)
+完整疑難排解：[/channels/telegram#troubleshooting](/en/channels/telegram#troubleshooting)
 
 ## Discord
 
@@ -105,14 +105,27 @@ openclaw channels status --probe
 
 完整疑難排解：[/channels/signal#troubleshooting](/en/channels/signal#troubleshooting)
 
+## QQ 機器人
+
+### QQ 機器人故障特徵
+
+| 症狀                       | 最快檢查                               | 修復                                               |
+| -------------------------- | -------------------------------------- | -------------------------------------------------- |
+| 機器人回覆「gone to Mars」 | 驗證設定中的 `appId` 和 `clientSecret` | 設定憑證或重新啟動閘道。                           |
+| 無接收訊息                 | `openclaw channels status --probe`     | 驗證 QQ 開放平台上的憑證。                         |
+| 語音未轉錄                 | 檢查 STT 供應商設定                    | 設定 `channels.qqbot.stt` 或 `tools.media.audio`。 |
+| 主動訊息未送達             | 檢查 QQ 平台互動要求                   | 若無近期互動，QQ 可能會封鎖機器人發起的訊息。      |
+
+完整疑難排解：[/channels/qqbot#troubleshooting](/en/channels/qqbot#troubleshooting)
+
 ## Matrix
 
-### Matrix 失敗特徵
+### Matrix 故障特徵
 
 | 症狀                 | 最快檢查                           | 修復                                |
 | -------------------- | ---------------------------------- | ----------------------------------- |
 | 已登入但忽略房間訊息 | `openclaw channels status --probe` | 檢查 `groupPolicy` 和房間允許清單。 |
-| DM 未處理            | `openclaw pairing list matrix`     | 批准發送者或調整 DM 政策。          |
+| 私訊 (DM) 未處理     | `openclaw pairing list matrix`     | 核准發送者或調整私訊 (DM) 政策。    |
 | 加密房間失敗         | 驗證加密模組和加密設定             | 啟用加密支援並重新加入/同步房間。   |
 
 完整設定與配置：[Matrix](/en/channels/matrix)

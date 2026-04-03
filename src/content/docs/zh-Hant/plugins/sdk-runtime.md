@@ -13,7 +13,7 @@ read_when:
 Reference for the `api.runtime` object injected into every plugin during
 registration. Use these helpers instead of importing host internals directly.
 
-<Tip>**正在尋找逐步指南？** 請參閱 [Channel Plugins](/en/plugins/sdk-channel-plugins) 或 [Provider Plugins](/en/plugins/sdk-provider-plugins)，查看展示這些輔助函式 使用情境的逐步指南。</Tip>
+<Tip>**正在尋找逐步教學？** 請參閱 [頻道外掛程式](/en/plugins/sdk-channel-plugins) 或 [提供者外掛程式](/en/plugins/sdk-provider-plugins)，以查看展示這些輔助函式實際應用的 逐步指南。</Tip>
 
 ```typescript
 register(api) {
@@ -322,18 +322,18 @@ export function tryGetRuntime() {
 
 除了 `api.runtime`，API 物件還提供：
 
-| 欄位                     | 類型                      | 描述                                              |
-| ------------------------ | ------------------------- | ------------------------------------------------- |
-| `api.id`                 | `string`                  | 外掛 ID                                           |
-| `api.name`               | `string`                  | 外掛顯示名稱                                      |
-| `api.config`             | `OpenClawConfig`          | 目前的設定快照                                    |
-| `api.pluginConfig`       | `Record<string, unknown>` | 來自 `plugins.entries.<id>.config` 的外掛特定設定 |
-| `api.logger`             | `PluginLogger`            | 作用域記錄器 (`debug`、`info`、`warn`、`error`)   |
-| `api.registrationMode`   | `PluginRegistrationMode`  | `"full"`、`"setup-only"` 或 `"setup-runtime"`     |
-| `api.resolvePath(input)` | `(string) => string`      | 解析相對於外掛根目錄的路徑                        |
+| 欄位                     | 類型                      | 描述                                                            |
+| ------------------------ | ------------------------- | --------------------------------------------------------------- |
+| `api.id`                 | `string`                  | 外掛 ID                                                         |
+| `api.name`               | `string`                  | 外掛顯示名稱                                                    |
+| `api.config`             | `OpenClawConfig`          | 目前的設定快照                                                  |
+| `api.pluginConfig`       | `Record<string, unknown>` | 來自 `plugins.entries.<id>.config` 的外掛特定設定               |
+| `api.logger`             | `PluginLogger`            | 作用域記錄器 (`debug`、`info`、`warn`、`error`)                 |
+| `api.registrationMode`   | `PluginRegistrationMode`  | `"full"`、`"setup-only"`、`"setup-runtime"` 或 `"cli-metadata"` |
+| `api.resolvePath(input)` | `(string) => string`      | 解析相對於外掛根目錄的路徑                                      |
 
 ## 相關
 
 - [SDK 概觀](/en/plugins/sdk-overview) -- 子路徑參考
 - [SDK 進入點](/en/plugins/sdk-entrypoints) -- `definePluginEntry` 選項
-- [外掛內部機制](/en/plugins/architecture) -- 功能模型和註冊表
+- [外掛程式內部機制](/en/plugins/architecture) -- 功能模型與註冊表

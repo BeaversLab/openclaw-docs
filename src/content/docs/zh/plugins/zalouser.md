@@ -18,9 +18,9 @@ title: "Zalo Personal 插件"
 
 ## 运行位置
 
-此插件在 **Gateway 网关 进程内部** 运行。
+此插件在 **Gateway(网关) 网关 进程内部** 运行。
 
-如果您使用远程 Gateway 网关，请在 **运行 Gateway 网关 的机器** 上安装/配置它，然后重启 Gateway 网关。
+如果您使用远程 Gateway(网关) 网关，请在 **运行 Gateway(网关) 网关 的机器** 上安装/配置它，然后重启 Gateway(网关) 网关。
 
 不需要外部的 `zca`/`openzca` CLI 二进制文件。
 
@@ -32,16 +32,17 @@ title: "Zalo Personal 插件"
 openclaw plugins install @openclaw/zalouser
 ```
 
-之后重启 Gateway 网关。
+之后重启 Gateway(网关) 网关。
 
 ### 选项 B：从本地文件夹安装（开发）
 
 ```bash
-openclaw plugins install ./extensions/zalouser
-cd ./extensions/zalouser && pnpm install
+PLUGIN_SRC=./path/to/local/zalouser-plugin
+openclaw plugins install "$PLUGIN_SRC"
+cd "$PLUGIN_SRC" && pnpm install
 ```
 
-之后重启 Gateway 网关。
+之后重启 Gateway(网关) 网关。
 
 ## 配置
 

@@ -60,34 +60,41 @@ cat ~/.openclaw/openclaw.json
 - Actualización previa opcional para instalaciones de git (solo interactivo).
 - Verificación de frescura del protocolo de la interfaz de usuario (reconstruye la interfaz de usuario de Control cuando el esquema del protocolo es más reciente).
 - Verificación de estado + solicitud de reinicio.
-- Resumen del estado de las habilidades (aptas/faltantes/bloqueadas).
+- Resumen del estado de las habilidades (elegibles/faltantes/bloqueadas) y estado del complemento.
 - Normalización de configuración para valores heredados.
 - La migración del navegador busca configuraciones heredadas de la extensión de Chrome y la preparación para Chrome MCP.
 - Advertencias de anulación del proveedor OpenCode (`models.providers.opencode` / `models.providers.opencode-go`).
-- Migración del estado heredado en disco (sesiones/dir. agente/aut. WhatsApp).
-- Migración del almacén de cron heredado (`jobId`, `schedule.cron`, campos de entrega/payload de nivel superior, payload `provider`, trabajos de respaldo de webhook simples `notify: true`).
+- Verificación de requisitos previos de OAuth TLS para perfiles OAuth de OpenAI Codex.
+- Migración de estado heredado en disco (sesiones/directorio del agente/auth de WhatsApp).
+- Migración de clave de contrato de manifiesto de complemento heredada (`speechProviders`, `mediaUnderstandingProviders`, `imageGenerationProviders` → `contracts`).
+- Migración de almacenamiento cron heredado (`jobId`, `schedule.cron`, campos de nivel superior de entrega/carga útil, carga útil `provider`, trabajos de reserva de webhook simples `notify: true`).
+- Inspección del archivo de bloqueo de sesión y limpieza de bloqueos obsoletos.
 - Verificaciones de integridad y permisos del estado (sesiones, transcripciones, directorio de estado).
 - Verificaciones de permisos del archivo de configuración (chmod 600) al ejecutarse localmente.
-- Salud de autenticación del modelo: verifica la caducidad de OAuth, puede actualizar los tokens que caducan y reporta los estados de perfil de autenticación (enfriamiento/deshabilitado).
+- Salud de autenticación del modelo: verifica la caducidad de OAuth, puede actualizar tokens que están por caducar e informa de estados de perfil de autenticación en período de espera/deshabilitados.
 - Detección de directorio de espacio de trabajo adicional (`~/openclaw`).
 - Reparación de la imagen de sandbox cuando el sandbox está habilitado.
 - Migración de servicio heredado y detección de puerta de enlace adicional.
+- Migración de estado heredado del canal Matrix (en modo `--fix` / `--repair`).
 - Verificaciones de tiempo de ejecución de la puerta de enlace (servicio instalado pero no en ejecución; etiqueta launchd en caché).
 - Advertencias de estado del canal (sondeadas desde la puerta de enlace en ejecución).
 - Auditoría de configuración del supervisor (launchd/systemd/schtasks) con reparación opcional.
-- Verificaciones de mejores prácticas de tiempo de ejecución de la puerta de enlace (Node frente a Bun, rutas del gestor de versiones).
-- Diagnósticos de colisión de puertos de la puerta de enlace (predeterminado `18789`).
+- Verificaciones de mejores prácticas de tiempo de ejecución de la puerta de enlace (Node frente a Bun, rutas del administrador de versiones).
+- Diagnósticos de colisión de puertos de la puerta de enlace (puerto predeterminado `18789`).
 - Advertencias de seguridad para políticas de MD abiertas.
-- Verificaciones de autenticación de la puerta de enlace para el modo de token local (ofrece generación de token cuando no existe una fuente de token; no sobrescribe las configuraciones de token SecretRef).
+- Verificaciones de autenticación de la puerta de enlace para el modo de token local (ofrece generación de token cuando no existe una fuente de token; no sobrescribe las configuraciones de SecretRef de token).
 - Verificación de persistencia de systemd en Linux.
-- Verificaciones de instalación desde código fuente (discordancia del espacio de trabajo pnpm, activos de interfaz faltantes, binario tsx faltante).
+- Verificación del tamaño del archivo de arranque del espacio de trabajo (advertencias de truncamiento/cerca del límite para archivos de contexto).
+- Verificación del estado de finalización del shell e instalación/actualización automática.
+- Verificación de preparación del proveedor de incrustación de búsqueda de memoria (modelo local, clave de API remota o binario QMD).
+- Verificaciones de instalación de origen (desajuste del espacio de trabajo pnpm, activos de interfaz de usuario faltantes, binario tsx faltante).
 - Escribe la configuración actualizada + los metadatos del asistente.
 
-## Comportamiento detallado y justificación
+## Comportamiento detallado y fundamentos
 
 ### 0) Actualización opcional (instalaciones git)
 
-Si esto es una comprobación de git y doctor se ejecuta de forma interactiva, ofrece
+Si esto es una copia de trabajo de git y doctor se ejecuta de forma interactiva, ofrece
 actualizar (fetch/rebase/build) antes de ejecutar doctor.
 
 ### 1) Normalización de la configuración
@@ -101,13 +108,15 @@ actual.
 Cuando la configuración contiene claves obsoletas, otros comandos se niegan a ejecutarse y le piden
 que ejecute `openclaw doctor`.
 
-Doctor hará:
+Doctor hará lo siguiente:
 
-- Explicar qué claves heredadas se encontraron.
-- Muestra la migración que aplicó.
-- Reescribe `~/.openclaw/openclaw.json` con el esquema actualizado.
+- Explicará qué claves heredadas se encontraron.
+- Mostrará la migración que aplicó.
+- Reescribirá `~/.openclaw/openclaw.json` con el esquema actualizado.
 
-Gateway también ejecuta automáticamente las migraciones de doctor al iniciar cuando detecta un formato de configuración heredado, por lo que las configuraciones obsoletas se reparan sin intervención manual.
+Gateway también ejecuta automáticamente las migraciones de doctor al inicio cuando detecta un
+formato de configuración heredado, por lo que las configuraciones obsoletas se reparan sin intervención manual.
+Las migraciones de la tienda de trabajos de Cron son manejadas por `openclaw doctor --fix`.
 
 Migraciones actuales:
 
@@ -120,220 +129,293 @@ Migraciones actuales:
 - `routing.agents`/`routing.defaultAgentId` → `agents.list` + `agents.list[].default`
 - `routing.agentToAgent` → `tools.agentToAgent`
 - `routing.transcribeAudio` → `tools.media.audio.models`
+- `messages.tts.<provider>` (`openai`/`elevenlabs`/`microsoft`/`edge`) → `messages.tts.providers.<provider>`
+- `channels.discord.voice.tts.<provider>` (`openai`/`elevenlabs`/`microsoft`/`edge`) → `channels.discord.voice.tts.providers.<provider>`
+- `channels.discord.accounts.<id>.voice.tts.<provider>` (`openai`/`elevenlabs`/`microsoft`/`edge`) → `channels.discord.accounts.<id>.voice.tts.providers.<provider>`
+- `plugins.entries.voice-call.config.tts.<provider>` (`openai`/`elevenlabs`/`microsoft`/`edge`) → `plugins.entries.voice-call.config.tts.providers.<provider>`
 - `bindings[].match.accountID` → `bindings[].match.accountId`
-- Para canales con `accounts` con nombre pero sin `accounts.default`, mueve los valores de canal de nivel superior de cuenta única con ámbito de cuenta a `channels.<channel>.accounts.default` cuando estén presentes
+- Para los canales con `accounts` con nombre pero sin `accounts.default`, mueve los valores de canal de nivel superior de una sola cuenta con ámbito de cuenta a `channels.<channel>.accounts.default` cuando estén presentes
 - `identity` → `agents.list[].identity`
-- `agent.*` → `agents.defaults` + `tools.*` (herramientas/elevados/exec/sandbox/subagentes)
+- `agent.*` → `agents.defaults` + `tools.*` (herramientas/elevated/exec/sandbox/subagentes)
 - `agent.model`/`allowedModels`/`modelAliases`/`modelFallbacks`/`imageModelFallbacks`
   → `agents.defaults.models` + `agents.defaults.model.primary/fallbacks` + `agents.defaults.imageModel.primary/fallbacks`
 - `browser.ssrfPolicy.allowPrivateNetwork` → `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork`
 - `browser.profiles.*.driver: "extension"` → `"existing-session"`
-- eliminar `browser.relayBindHost` (configuración heredada de rele de extensión)
+- eliminar `browser.relayBindHost` (configuración de retransmisión de extensión heredada)
 
-Las advertencias de Doctor también incluyen orientación predeterminada de la cuenta para canales multicuenta:
+Las advertencias del Doctor también incluyen orientación predeterminada de la cuenta para canales multicuenta:
 
-- Si se configuran dos o más entradas `channels.<channel>.accounts` sin `channels.<channel>.defaultAccount` o `accounts.default`, doctor advierte que el enrutamiento de respaldo puede elegir una cuenta inesperada.
-- Si `channels.<channel>.defaultAccount` está configurado con un ID de cuenta desconocido, doctor advierte y enumera los IDs de cuenta configurados.
+- Si se configuran dos o más entradas `channels.<channel>.accounts` sin `channels.<channel>.defaultAccount` o `accounts.default`, el Doctor advierte que el enrutamiento de reserva puede elegir una cuenta inesperada.
+- Si `channels.<channel>.defaultAccount` está configurado con un ID de cuenta desconocido, el Doctor advierte y enumera los IDs de cuenta configurados.
 
-### 2b) Anulaciones del proveedor OpenCode
+### 2b) Invalidaciones de proveedor de OpenCode
 
 Si has añadido `models.providers.opencode`, `opencode-zen` o `opencode-go`
 manualmente, esto anula el catálogo integrado de OpenCode de `@mariozechner/pi-ai`.
-Eso puede forzar a los modelos a usar la API incorrecta o anular los costos. Doctor advierte para que
-puedas eliminar la anulación y restaurar el enrutamiento de API y los costos por modelo.
+Eso puede forzar a los modelos a usar la API incorrecta o anular los costos. El Doctor advierte para que
+puedas eliminar la invalidación y restaurar el enrutamiento de API por modelo + los costos.
 
 ### 2c) Migración del navegador y preparación para Chrome MCP
 
-Si la configuración de tu navegador todavía apunta a la ruta de la extensión de Chrome eliminada, doctor
-la normaliza al modelo de conexión local del host Chrome MCP actual:
+Si la configuración de su navegador todavía apunta a la ruta eliminada de la extensión de Chrome, doctor la normaliza al modelo de conexión local actual de Chrome MCP:
 
 - `browser.profiles.*.driver: "extension"` se convierte en `"existing-session"`
 - `browser.relayBindHost` se elimina
 
-Doctor también audita la ruta local del host de Chrome MCP cuando usas el perfil `defaultProfile:
+Doctor también audita la ruta local de Chrome MCP cuando utiliza el perfil `defaultProfile:
 "user"` or a configured `existing-session`:
 
-- verifica si Google Chrome está instalado en el mismo host para los perfiles
-  de conexión automática predeterminados
+- verifica si Google Chrome está instalado en el mismo host para perfiles de
+  autoconexión predeterminados
 - verifica la versión de Chrome detectada y advierte cuando es inferior a Chrome 144
-- te recuerda que habilites la depuración remota en la página de inspección del navegador (por
-  ejemplo `chrome://inspect/#remote-debugging`, `brave://inspect/#remote-debugging`,
+- le recuerda que habilite la depuración remota en la página de inspección del navegador (por
+  ejemplo `chrome://inspect/#remote-debugging`, `brave://inspect/#remote-debugging`
   o `edge://inspect/#remote-debugging`)
 
-Doctor no puede habilitar la configuración del lado de Chrome por ti. Chrome MCP local del host
-aún requiere:
+Doctor no puede habilitar la configuración del lado de Chrome por usted. Chrome MCP local
+todavía requiere:
 
 - un navegador basado en Chromium 144+ en el host de puerta de enlace/nodo
 - el navegador ejecutándose localmente
 - depuración remota habilitada en ese navegador
-- aprobar el primer prompt de consentimiento de conexión en el navegador
+- aprobar el primer mensaje de consentimiento de conexión en el navegador
 
-Esta verificación **no** se aplica a Docker, sandbox, remote-browser u otros
-flujos sin interfaz gráfica. Esos continúan usando CDP sin procesar.
+Esta verificación **no** se aplica a Docker, sandbox, navegador remoto u otros
+flujos sin cabeza. Esos continúan usando CDP sin procesar.
 
-### 3) Migraciones de estado heredadas (disposición del disco)
+### 2d) Requisitos previos de OAuth TLS
 
-Doctor puede migrar disposiciones en disco antiguas a la estructura actual:
+Cuando se configura un perfil OAuth de OpenAI Codex, doctor sondea el punto final de autorización de OpenAI para verificar que la pila TLS local de Node/OpenSSL pueda validar la cadena de certificados. Si el sondeo falla con un error de certificado (por ejemplo `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`, certificado caducado o certificado autofirmado), doctor imprime instrucciones de reparación específicas de la plataforma. En macOS con un Node de Homebrew, la solución suele ser `brew postinstall ca-certificates`. Con `--deep`, el sondeo se ejecuta incluso si la puerta de enlace está sana.
 
-- Almacén de sesiones + transcripciones:
+### 3) Migraciones de estado heredadas (diseño de disco)
+
+Doctor puede migrar diseques en disco antiguos a la estructura actual:
+
+- Almacenamiento de sesiones + transcripciones:
   - de `~/.openclaw/sessions/` a `~/.openclaw/agents/<agentId>/sessions/`
 - Directorio del agente:
   - de `~/.openclaw/agent/` a `~/.openclaw/agents/<agentId>/agent/`
 - Estado de autenticación de WhatsApp (Baileys):
-  - desde `~/.openclaw/credentials/*.json` heredado (excepto `oauth.json`)
+  - de `~/.openclaw/credentials/*.json` heredado (excepto `oauth.json`)
   - a `~/.openclaw/credentials/whatsapp/<accountId>/...` (id de cuenta predeterminado: `default`)
 
-Estas migraciones se realizan con el mejor esfuerzo y son idempotentes; doctor emitirá advertencias cuando
-deje carpetas heredadas como copias de seguridad. Gateway/CLI también migra automáticamente
-las sesiones heredadas y el directorio de agentes al inicio para que el historial/autenticación/modelos se ubiquen en la
-ruta por agente sin una ejecución manual de doctor. La autenticación de WhatsApp se migra intencionalmente solo
+Estas migraciones son de mejor esfuerzo e idempotentes; el doctor emitirá advertencias cuando
+deje carpetas heredadas como copias de seguridad. La Gateway/CLI también auto-migra
+las sesiones heredadas y el directorio del agente al inicio para que el historial/autenticación/modelos aterricen en la
+ruta por agente sin una ejecución manual del doctor. La autenticación de WhatsApp se migra intencionalmente solo
 a través de `openclaw doctor`.
 
-### 3b) Migraciones del almacén de cron heredado
+### 3a) Migraciones de manifiestos de plugins heredados
 
-Doctor también verifica el almacén de trabajos cron (`~/.openclaw/cron/jobs.json` de forma predeterminada,
-o `cron.store` cuando se anula) en busca de formas de trabajo antiguas que el planificador todavía
+El doctor escanea todos los manifiestos de plugins instalados en busca de claves de capacidad de nivel superior obsoletas
+(`speechProviders`, `mediaUnderstandingProviders`, `imageGenerationProviders`).
+Cuando se encuentran, ofrece moverlas al objeto `contracts` y reescribir el archivo de manifiesto
+in situ. Esta migración es idempotente; si la clave `contracts` ya tiene los
+mismos valores, la clave heredada se elimina sin duplicar los datos.
+
+### 3b) Migraciones de almacén de cron heredado
+
+El doctor también verifica el almacén de trabajos de cron (`~/.openclaw/cron/jobs.json` por defecto,
+o `cron.store` cuando se anula) en busca de formas de trabajo antiguas que el planificador aún
 acepta por compatibilidad.
 
 Las limpiezas de cron actuales incluyen:
 
 - `jobId` → `id`
 - `schedule.cron` → `schedule.expr`
-- campos de payload de nivel superior (`message`, `model`, `thinking`, ...) → `payload`
+- campos de carga útil de nivel superior (`message`, `model`, `thinking`, ...) → `payload`
 - campos de entrega de nivel superior (`deliver`, `channel`, `to`, `provider`, ...) → `delivery`
-- alias de entrega `provider` del payload → `delivery.channel` explícito
-- trabajos de respaldo webhook `notify: true` heredados simples → `delivery.mode="webhook"` explícito con `delivery.to=cron.webhook`
+- alias de entrega `provider` de carga útil → `delivery.channel` explícito
+- trabajos de reserva de webhook `notify: true` heredados simples → `delivery.mode="webhook"` explícito con `delivery.to=cron.webhook`
 
-Doctor solo migra automáticamente los trabajos `notify: true` cuando puede hacerlo sin
-cambiar el comportamiento. Si un trabajo combina el respaldo de notificación heredado con un modo de
-entrega existente que no sea webhook, doctor advierte y deja ese trabajo para su revisión manual.
+El doctor solo auto-migra los trabajos `notify: true` cuando puede hacerlo sin
+cambiar el comportamiento. Si un trabajo combina la reserva de notificación heredada con un modo de
+entrega existente que no sea webhook, el doctor advierte y deja ese trabajo para revisión manual.
 
-### 4) Verificaciones de integridad del estado (persistencia de sesión, enrutamiento y seguridad)
+### 3c) Limpieza de bloqueos de sesión
 
-El directorio de estado es el tronco encefálico operativo. Si desaparece, pierde
-sesiones, credenciales, registros y configuración (a menos que tenga copias de seguridad en otro lugar).
+Doctor escanea cada directorio de sesión del agente en busca de archivos de bloqueo de escritura obsoletos (stale) — archivos que quedan atrás cuando una sesión sale de manera anormal. Por cada archivo de bloqueo encontrado, informa: la ruta, PID, si el PID sigue vivo, la antigüedad del bloqueo y si se considera obsoleto (PID muerto o anterior a 30 minutos). En modo `--fix` / `--repair` elimina automáticamente los archivos de bloqueo obsoletos; de lo contrario, imprime una nota y le instruye para que vuelva a ejecutar con `--fix`.
+
+### 4) Verificaciones de integridad del estado (persistencia de la sesión, enrutamiento y seguridad)
+
+El directorio de estado es el tronco encefálico operativo. Si desaparece, pierde sesiones, credenciales, registros y configuración (a menos que tenga copias de seguridad en otro lugar).
 
 Doctor verifica:
 
-- **Directorio de estado faltante**: advierte sobre la pérdida catastrófica de estado, solicita recrear
-  el directorio y le recuerda que no puede recuperar los datos faltantes.
-- **Permisos del directorio de estado**: verifica la capacidad de escritura; ofrece reparar los permisos
-  (y emite una sugerencia `chown` cuando se detecta una discrepancia de propietario/grupo).
-- **Directorio de estado sincronizado en la nube en macOS**: advierte cuando el estado se resuelve bajo iCloud Drive
-  (`~/Library/Mobile Documents/com~apple~CloudDocs/...`) o
-  `~/Library/CloudStorage/...` porque las rutas respaldadas por sincronización pueden causar E/S más lenta
-  y condiciones de carrera de bloqueo/sincronización.
-- **Directorio de estado en SD o eMMC de Linux**: advierte cuando el estado se resuelve en una fuente de montaje `mmcblk*`
-  porque la E/S aleatoria respaldada por SD o eMMC puede ser más lenta y desgastarse
-  más rápido con las escrituras de sesión y credenciales.
-- **Faltan directorios de sesión**: `sessions/` y el directorio de almacenamiento de sesión son
-  necesarios para persistir el historial y evitar fallos `ENOENT`.
-- **Discrepancia de transcripción**: advierte cuando las entradas de sesión recientes tienen archivos de
-  transcripción faltantes.
-- **“JSONL de 1 línea” de la sesión principal**: marca cuando la transcripción principal tiene solo una
-  línea (el historial no se está acumulando).
-- **Múltiples directorios de estado**: advierte cuando existen múltiples carpetas `~/.openclaw` en
-  directorios de inicio o cuando `OPENCLAW_STATE_DIR` apunta a otro lugar (el historial puede
-  dividirse entre instalaciones).
-- **Recordatorio de modo remoto**: si `gateway.mode=remote`, doctor le recuerda que lo ejecute
-  en el host remoto (el estado reside allí).
+- **State dir missing (Directorio de estado faltante)**: advierte sobre una pérdida catastrófica del estado, solicita recrear el directorio y le recuerda que no puede recuperar los datos faltantes.
+- **State dir permissions (Permisos del directorio de estado)**: verifica la capacidad de escritura; ofrece reparar los permisos (y emite una sugerencia `chown` cuando se detecta una discrepancia de propietario/grupo).
+- **macOS cloud-synced state dir (Directorio de estado sincronizado en la nube en macOS)**: advierte cuando el estado se resuelve bajo iCloud Drive (`~/Library/Mobile Documents/com~apple~CloudDocs/...`) o `~/Library/CloudStorage/...` porque las rutas respaldadas por sincronización pueden causar E/S más lenta y carreras de bloqueo/sincronización.
+- **Linux SD or eMMC state dir (Directorio de estado en SD o eMMC de Linux)**: advierte cuando el estado se resuelve en un origen de montaje `mmcblk*`, porque la E/S aleatoria respaldada por SD o eMMC puede ser más lenta y desgastarse más rápido bajo las escrituras de sesión y credenciales.
+- **Session dirs missing (Directorios de sesión faltantes)**: se requiere `sessions/` y el directorio de almacenamiento de sesiones para persistir el historial y evitar fallos `ENOENT`.
+- **Transcript mismatch (Discrepancia de transcripción)**: advierte cuando las entradas de sesión recientes tienen archivos de transcripción faltantes.
+- **Main session “1-line JSONL” (Sesión principal “1 línea JSONL”)**: marca cuando la transcripción principal tiene solo una línea (el historial no se está acumulando).
+- **Multiple state dirs (Múltiples directorios de estado)**: advierte cuando existen múltiples carpetas `~/.openclaw` en diferentes directorios de inicio o cuando `OPENCLAW_STATE_DIR` apunta a otro lugar (el historial puede dividirse entre instalaciones).
+- **Remote mode reminder (Recordatorio de modo remoto)**: si `gateway.mode=remote`, doctor le recuerda que lo ejecute en el host remoto (el estado reside allí).
 - **Permisos del archivo de configuración**: advierte si `~/.openclaw/openclaw.json` es
   legible por el grupo/mundo y ofrece ajustarlo a `600`.
 
 ### 5) Estado de autenticación del modelo (caducidad de OAuth)
 
 Doctor inspecciona los perfiles de OAuth en el almacén de autenticación, advierte cuando los tokens están
-por expirar/expirados y puede actualizarlos cuando sea seguro. Si el perfil de Anthropic Claude Code
+por caducar/caducados y puede actualizarlos cuando sea seguro. Si el perfil de Anthropic Claude Code
 está obsoleto, sugiere ejecutar `claude setup-token` (o pegar un token de configuración).
-Las solicitudes de actualización solo aparecen al ejecutarse de forma interactiva (TTY); `--non-interactive`
+Los mensajes de actualización solo aparecen al ejecutarse de forma interactiva (TTY); `--non-interactive`
 omite los intentos de actualización.
 
 Doctor también informa sobre los perfiles de autenticación que están temporalmente inutilizables debido a:
 
-- períodos de espera cortos (límites de tasa/timeout/fallos de autenticación)
-- desactivaciones más largas (fallos de facturación/crédito)
+- períodos de enfriamiento cortos (límites de velocidad/tiempos de espera/fallos de autenticación)
+- inhabilitaciones más largas (fallos de facturación/crédito)
 
 ### 6) Validación del modelo de Hooks
 
 Si `hooks.gmail.model` está establecido, doctor valida la referencia del modelo contra el
-catálogo y la lista de permitidos y advierte cuando no se resolverá o no está permitido.
+catálogo y la lista de permitidos (allowlist) y advierte cuando no se resuelva o no esté permitido.
 
-### 7) Reparación de la imagen de Sandbox
+### 7) Reparación de la imagen de sandbox
 
-Cuando el sandbox está habilitado, doctor verifica las imágenes de Docker y ofrece compilar o cambiar a nombres heredados si falta la imagen actual.
+Cuando el sandbox está habilitado, doctor verifica las imágenes de Docker y ofrece compilar o
+cambiar a nombres heredados si falta la imagen actual.
 
-### 8) Migraciones y sugerencias de limpieza del servicio de puerta de enlace
+### 7b) Dependencias del tiempo de ejecución de complementos incluidos
 
-Doctor detecta los servicios de puerta de enlace heredados (launchd/systemd/schtasks) y ofrece eliminarlos e instalar el servicio de OpenClaw utilizando el puerto de puerta de enlace actual. También puede buscar servicios adicionales similares a la puerta de enlace e imprimir sugerencias de limpieza. Los servicios de puerta de enlace de OpenClaw con nombre de perfil se consideran de primera clase y no se marcan como "extra".
+Doctor verifica que las dependencias del tiempo de ejecución de los complementos incluidos (por ejemplo, los
+paquetes del tiempo de ejecución del complemento de Discord) estén presentes en la raíz de instalación de OpenClaw.
+Si falta alguno, doctor informa sobre los paquetes y los instala en
+modo `openclaw doctor --fix` / `openclaw doctor --repair`.
+
+### 8) Migraciones del servicio de puerta de enlace y sugerencias de limpieza
+
+Doctor detecta servicios de puerta de enlace heredados (launchd/systemd/schtasks) y
+ofrece eliminarlos e instalar el servicio OpenClaw utilizando el puerto de puerta de enlace
+actual. También puede buscar servicios adicionales similares a puertas de enlace e imprimir sugerencias de limpieza.
+Los servicios de puerta de enlace de OpenClaw con nombre de perfil se consideran de primera clase y no
+se marcan como "adicionales".
+
+### 8b) Migración de la matriz de inicio (Startup Matrix)
+
+Cuando una cuenta de canal de Matrix tiene una migración de estado heredada pendiente o accionable, doctor (en modo `--fix` / `--repair`) crea una instantánea previa a la migración y luego ejecuta los pasos de migración de mejor esfuerzo: migración de estado heredada de Matrix y preparación de estado cifrado heredado. Ambos pasos no son fatales; los errores se registran y el inicio continúa. En modo de solo lectura (`openclaw doctor` sin `--fix`) esta verificación se omite por completo.
 
 ### 9) Advertencias de seguridad
 
 Doctor emite advertencias cuando un proveedor está abierto a MD sin una lista de permitidos, o cuando una política está configurada de forma peligrosa.
 
-### 10) Persistencia de systemd (Linux)
+### 10) persistencia de systemd (Linux)
 
-Si se ejecuta como un servicio de usuario de systemd, doctor asegura que la persistencia esté habilitada para que la puerta de enlace se mantenga activa después de cerrar la sesión.
+Si se ejecuta como un servicio de usuario de systemd, doctor asegura que la persistencia esté habilitada para que la puerta de enlace permanezca activa después de cerrar la sesión.
 
-### 11) Estado de las habilidades
+### 11) Estado del espacio de trabajo (habilidades, complementos y directorios heredados)
 
-Doctor imprime un resumen rápido de las habilidades elegibles/faltantes/bloqueadas para el espacio de trabajo actual.
+Doctor imprime un resumen del estado del espacio de trabajo para el agente predeterminado:
 
-### 12) Verificaciones de autenticación de la puerta de enlace (token local)
+- **Estado de las habilidades**: cuenta las habilidades elegibles, con requisitos faltantes y bloqueadas por la lista de permitidos.
+- **Directorios de espacio de trabajo heredados**: advierte cuando `~/openclaw` u otros directorios de espacio de trabajo heredados existen junto con el espacio de trabajo actual.
+- **Estado de los complementos**: cuenta los complementos cargados/deshabilitados/con error; enumera los ID de complemento para cualquier error; informa las capacidades de los complementos del paquete.
+- **Advertencias de compatibilidad de complementos**: marca los complementos que tienen problemas de compatibilidad con el tiempo de ejecución actual.
+- **Diagnósticos de complementos**: expone cualquier advertencia o error en tiempo de carga emitido por el registro de complementos.
 
-Doctor verifica la preparación de la autenticación mediante token de la puerta de enlace local.
+### 11b) Tamaño del archivo de arranque
+
+Doctor verifica si los archivos de arranque del espacio de trabajo (por ejemplo `AGENTS.md`, `CLAUDE.md` u otros archivos de contexto inyectados) están cerca o por encima del presupuesto de caracteres configurado. Informa los recuentos de caracteres brutos frente a inyectados por archivo, el porcentaje de truncamiento, la causa del truncamiento (`max/file` o `max/total`) y el total de caracteres inyectados como fracción del presupuesto total. Cuando los archivos están truncados o cerca del límite, doctor imprime consejos para ajustar `agents.defaults.bootstrapMaxChars` y `agents.defaults.bootstrapTotalMaxChars`.
+
+### 11c) Completado de shell
+
+Doctor verifica si el completado por tabulación está instalado para el shell actual (zsh, bash, fish o PowerShell):
+
+- Si el perfil del shell usa un patrón de completado dinámico lento
+  (`source <(openclaw completion ...)`), doctor lo actualiza a la variante
+  de archivo en caché más rápida.
+- Si el completado está configurado en el perfil pero falta el archivo de caché,
+  doctor regenera la caché automáticamente.
+- Si no hay ningún completado configurado, doctor sugiere instalarlo
+  (solo en modo interactivo; se omite con `--non-interactive`).
+
+Ejecute `openclaw completion --write-state` para regenerar la caché manualmente.
+
+### 12) Verificaciones de autenticación de Gateway (token local)
+
+Doctor verifica la preparación de la autenticación mediante token local del gateway.
 
 - Si el modo de token necesita un token y no existe ninguna fuente de token, doctor ofrece generar uno.
 - Si `gateway.auth.token` está administrado por SecretRef pero no está disponible, doctor advierte y no lo sobrescribe con texto sin formato.
 - `openclaw doctor --generate-gateway-token` fuerza la generación solo cuando no hay ningún SecretRef de token configurado.
 
-### 12b) Reparaciones con conocimiento de SecretRef de solo lectura
+### 12b) Reparaciones con reconocimiento de SecretRef de solo lectura
 
-Algunos flujos de reparación necesitan inspeccionar las credenciales configuradas sin debilitar el comportamiento de fallo rápido en tiempo de ejecución.
+Algunos flujos de reparación necesitan inspeccionar las credenciales configuradas sin debilitar el comportamiento de falla rápida en tiempo de ejecución.
 
-- `openclaw doctor --fix` ahora utiliza el mismo modelo de resumen de SecretRef de solo lectura que los comandos de la familia de estado para reparaciones de configuración específicas.
-- Ejemplo: la reparación de `allowFrom` / `groupAllowFrom` `@username` de Telegram intenta utilizar las credenciales del bot configuradas cuando están disponibles.
+- `openclaw doctor --fix` ahora usa el mismo modelo de resumen de SecretRef de solo lectura que los comandos de la familia de estado para reparaciones de configuración específicas.
+- Ejemplo: la reparación de `allowFrom` / `groupAllowFrom` `@username` de Telegram intenta usar las credenciales del bot configuradas cuando están disponibles.
 - Si el token del bot de Telegram está configurado a través de SecretRef pero no está disponible en la ruta del comando actual, doctor informa que la credencial está configurada pero no disponible y omite la resolución automática en lugar de fallar o informar erróneamente que falta el token.
 
-### 13) Verificación de estado + reinicio de la puerta de enlace
+### 13) Verificación de estado del Gateway + reinicio
 
-Doctor ejecuta una verificación de estado y ofrece reiniciar la puerta de enlace cuando parece poco saludable.
+Doctor ejecuta una verificación de estado y ofrece reiniciar el gateway cuando parece
+no saludable.
 
-### 14) Advertencias de estado del canal
+### 13b) Preparación de la búsqueda de memoria
 
-Si la puerta de enlace está saludable, doctor ejecuta una sonda de estado del canal e informa advertencias con soluciones sugeridas.
+Doctor verifica si el proveedor de incrustación (embedding) de búsqueda de memoria configurado está listo
+para el agente predeterminado. El comportamiento depende del backend y el proveedor configurados:
+
+- **Backend QMD**: comprueba si el binario `qmd` está disponible y se puede iniciar.
+  Si no, imprime orientación de solución que incluye el paquete npm y una opción de ruta binaria manual.
+- **Proveedor local explícito**: busca un archivo de modelo local o una URL de modelo
+  remota/descargable reconocida. Si falta, sugiere cambiar a un proveedor remoto.
+- **Proveedor remoto explícito** (`openai`, `voyage`, etc.): verifica que una clave de API
+  esté presente en el entorno o en el almacén de autenticación. Imprime sugerencias de reparación accionables si falta.
+- **Proveedor automático**: comprueba primero la disponibilidad del modelo local y luego intenta cada
+  proveedor remoto en el orden de selección automática.
+
+Cuando hay un resultado de sondeo de la puerta de enlace disponible (la puerta de enlace estaba sana en el momento de la
+verificación), doctor compara su resultado con la configuración visible en la CLI y señala
+cualquier discrepancia.
+
+Use `openclaw memory status --deep` para verificar la preparación de los embeddings en tiempo de ejecución.
+
+### 14) Advertencias del estado del canal
+
+Si la puerta de enlace está sana, doctor ejecuta un sondeo del estado del canal e informa
+advertencias con soluciones sugeridas.
 
 ### 15) Auditoría y reparación de la configuración del supervisor
 
-Doctor comprueba la configuración del supervisor instalada (launchd/systemd/schtasks) para detectar valores predeterminados faltantes o desactualizados (por ejemplo, dependencias de red en línea de systemd y retraso de reinicio). Cuando encuentra una discrepancia, recomienda una actualización y puede reescribir el archivo de servicio/tarea con los valores predeterminados actuales.
+Doctor verifica la configuración del supervisor instalada (launchd/systemd/schtasks) para detectar
+valores predeterminados faltantes o obsoletos (por ejemplo, dependencias de red en línea de systemd y
+retraso de reinicio). Cuando encuentra una discrepancia, recomienda una actualización y puede
+reescribir el archivo/tarea de servicio a los valores predeterminados actuales.
 
 Notas:
 
 - `openclaw doctor` solicita confirmación antes de reescribir la configuración del supervisor.
 - `openclaw doctor --yes` acepta las solicitudes de reparación predeterminadas.
-- `openclaw doctor --repair` aplica las reparaciones recomendadas sin solicitar confirmación.
+- `openclaw doctor --repair` aplica las soluciones recomendadas sin solicitar confirmación.
 - `openclaw doctor --repair --force` sobrescribe las configuraciones personalizadas del supervisor.
-- Si la autenticación por token requiere un token y `gateway.auth.token` está administrado por SecretRef, la instalación/reparación del servicio de doctor valida el SecretRef pero no persiste los valores de token de texto plano resueltos en los metadatos del entorno del servicio del supervisor.
-- Si la autenticación por token requiere un token y el SecretRef del token configurado no está resuelto, doctor bloquea la ruta de instalación/reparación con orientación procesable.
+- Si la autenticación por token requiere un token y `gateway.auth.token` está gestionado por SecretRef, la instalación/reparación del servicio doctor valida el SecretRef pero no persiste los valores de token en texto plano resueltos en los metadatos del entorno del servicio del supervisor.
+- Si la autenticación por token requiere un token y el SecretRef del token configurado no está resuelto, doctor bloquea la ruta de instalación/reparación con orientación accionable.
 - Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está establecido, doctor bloquea la instalación/reparación hasta que el modo se establezca explícitamente.
-- Para las unidades de systemd de usuario de Linux, las comprobaciones de desviación de token de doctor ahora incluyen tanto las fuentes `Environment=` como `EnvironmentFile=` al comparar los metadatos de autenticación del servicio.
-- Siempre puedes forzar una reescritura completa mediante `openclaw gateway install --force`.
+- Para las unidades user-systemd de Linux, las comprobaciones de deriva de tokens de doctor ahora incluyen tanto las fuentes `Environment=` como `EnvironmentFile=` al comparar los metadatos de autenticación del servicio.
+- Siempre puede forzar una reescritura completa mediante `openclaw gateway install --force`.
 
-### 16) Diagnósticos del tiempo de ejecución y puerto de la puerta de enlace
+### 16) Diagnóstico del tiempo de ejecución y puerto de la puerta de enlace
 
-Doctor inspecciona el tiempo de ejecución del servicio (PID, último estado de salida) y advierte cuando el servicio está instalado pero no se está ejecutando realmente. También comprueba si hay colisiones de puerto en el puerto de la puerta de enlace (predeterminado `18789`) e informa de las causas probables (la puerta de enlace ya se está ejecutando, túnel SSH).
+Doctor inspecciona el tiempo de ejecución del servicio (PID, último estado de salida) y advierte cuando el
+servicio está instalado pero no se está ejecutando realmente. También verifica colisiones de puertos
+en el puerto de gateway (por defecto `18789`) e informa las causas probables (gateway ya
+en ejecución, túnel SSH).
 
-### 17) Mejores prácticas del tiempo de ejecución de la puerta de enlace
+### 17) Mejores prácticas de tiempo de ejecución del Gateway
 
-Doctor advierte cuando el servicio de gateway se ejecuta en Bun o en una ruta de Node administrada por versiones
+Doctor advierte cuando el servicio del gateway se ejecuta en Bun o en una ruta de Node gestionada por versiones
 (`nvm`, `fnm`, `volta`, `asdf`, etc.). Los canales de WhatsApp + Telegram requieren Node,
-y las rutas de los administradores de versiones pueden romperse después de las actualizaciones porque el servicio no
-carga su shell de inicio. Doctor ofrece migrar a una instalación del sistema de Node cuando
+y las rutas de gestores de versiones pueden romperse después de las actualizaciones porque el servicio no
+carga la inicialización de su shell. Doctor ofrece migrar a una instalación del sistema Node cuando
 está disponible (Homebrew/apt/choco).
 
 ### 18) Escritura de configuración + metadatos del asistente
 
-Doctor persiste cualquier cambio en la configuración y marca los metadatos del asistente para registrar la
-ejecución del doctor.
+Doctor conserva cualquier cambio en la configuración y aplica los metadatos del asistente para registrar la
+ejecución de doctor.
 
 ### 19) Consejos del espacio de trabajo (copia de seguridad + sistema de memoria)
 
@@ -341,4 +423,4 @@ Doctor sugiere un sistema de memoria del espacio de trabajo cuando falta e impri
 si el espacio de trabajo aún no está bajo git.
 
 Consulte [/concepts/agent-workspace](/en/concepts/agent-workspace) para obtener una guía completa sobre
-la estructura del espacio de trabajo y la copia de seguridad en git (se recomienda GitHub o GitLab privados).
+la estructura del espacio de trabajo y la copia de seguridad con git (se recomienda GitHub o GitLab privados).

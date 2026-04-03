@@ -10,7 +10,7 @@ sidebarTitle: "新手引导：CLI"
 # 新手引导 (CLI)
 
 CLI 新手引导是在 macOS、Linux 或 Windows（通过 WSL2；强烈推荐）上设置 OpenClaw 的**推荐**方式。
-它在一个引导式流程中配置本地 Gateway 或远程 Gateway 连接，以及频道、技能
+它在一个引导式流程中配置本地 Gateway(网关) 或远程 Gateway(网关) 连接，以及频道、技能
 和工作区默认值。
 
 ```bash
@@ -36,8 +36,8 @@ openclaw agents add <name>
 
 <Tabs>
   <Tab title="QuickStart (defaults)">
-    - 本地 Gateway (loopback) - 工作区默认值（或现有工作区） - Gateway 端口 **18789** - Gateway 认证 **Token**（自动生成，即使在 loopback 上） - 新本地设置的工具策略默认值：`tools.profile: "coding"`（现有的显式配置文件将被保留） - 私信隔离默认值：本地新手引导在未设置时写入 `session.dmScope: "per-channel-peer"`。详情：[CLI Setup Reference](/en/start/wizard-cli-reference#outputs-and-internals) -
-    Tailscale 暴露 **关闭** - Telegram + WhatsApp 私信默认为 **允许列表**（系统将提示您输入电话号码）
+    - 本地 Gateway(网关) (loopback) - 工作区默认值（或现有工作区） - Gateway(网关) 端口 **18789** - Gateway(网关) 认证 **Token**（自动生成，即使在 loopback 上） - 新本地设置的工具策略默认值：`tools.profile: "coding"`（现有的显式配置文件将被保留） - 私信隔离默认值：本地新手引导在未设置时写入 `session.dmScope: "per-channel-peer"`。详情：[CLI Setup
+    Reference](/en/start/wizard-cli-reference#outputs-and-internals) - Tailscale 暴露 **关闭** - Telegram + WhatsApp 私信默认为 **允许列表**（系统将提示您输入电话号码）
   </Tab>
   <Tab title="Advanced (full control)">- 显示每个步骤（模式、工作区、网关、通道、守护进程、技能）。</Tab>
 </Tabs>
@@ -53,7 +53,7 @@ openclaw agents add <name>
    在非交互式 `ref` 模式下，必须设置提供商环境变量；在没有该环境变量的情况下传递内联密钥标志将快速失败。
    在交互式运行中，选择密钥引用模式允许您指向环境变量或配置的提供商引用（`file` 或 `exec`），并在保存前进行快速预检验证。
 2. **工作区** — 代理文件的位置（默认为 `~/.openclaw/workspace`）。种子引导文件。
-3. **Gateway 网关** — 端口、绑定地址、身份验证模式、Tailscale 暴露。
+3. **Gateway(网关) 网关** — 端口、绑定地址、身份验证模式、Tailscale 暴露。
    在交互式令牌模式下，选择默认的明文令牌存储或选择使用 SecretRef。
    非交互式令牌 SecretRef 路径：`--gateway-token-ref-env <ENV_VAR>`。
 4. **Channels** — WhatsApp、Telegram、Discord、Google Chat、Mattermost、Signal、BlueBubbles 或 iMessage。

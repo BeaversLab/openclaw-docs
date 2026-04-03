@@ -8,8 +8,8 @@ title: "Mattermost"
 
 # Mattermost (plugin)
 
-Estado: compatible a través del complemento (token de bot + eventos de WebSocket). Se admiten canales, grupos y MD.
-Mattermost es una plataforma de mensajería para equipos que puede alojarla uno mismo; consulte el sitio oficial en
+Estado: compatible mediante complemento (token de bot + eventos de WebSocket). Se admiten canales, grupos y MDs.
+Mattermost es una plataforma de mensajería para equipos que se puede alojar por cuenta propia; consulte el sitio oficial en
 [mattermost.com](https://mattermost.com) para obtener detalles del producto y descargas.
 
 ## Plugin requerido
@@ -25,7 +25,7 @@ openclaw plugins install @openclaw/mattermost
 Descarga local (al ejecutar desde un repositorio git):
 
 ```bash
-openclaw plugins install ./extensions/mattermost
+openclaw plugins install ./path/to/local/mattermost-plugin
 ```
 
 Si eliges Mattermost durante la configuración y se detecta una comprobación de git,
@@ -422,3 +422,11 @@ Mattermost admite múltiples cuentas bajo `channels.mattermost.accounts`:
 - El registro de la puerta de enlace `missing _token in context`: el campo `_token` no está en el contexto del botón. Asegúrese de que se incluya al crear la carga útil de integración.
 - La confirmación muestra el ID sin procesar en lugar del nombre del botón: `context.action_id` no coincide con el `id` del botón. Establezca ambos al mismo valor saneado.
 - El agente no conoce los botones: agregue `capabilities: ["inlineButtons"]` a la configuración del canal de Mattermost.
+
+## Relacionado
+
+- [Visión general de canales](/en/channels) — todos los canales compatibles
+- [Emparejamiento](/en/channels/pairing) — autenticación de MD y flujo de emparejamiento
+- [Grupos](/en/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesión para mensajes
+- [Seguridad](/en/gateway/security) — modelo de acceso y fortalecimiento

@@ -89,3 +89,9 @@ OpenClaw 标准化时间戳，以便模型看到**单一参考时间**。
 您可以使用 `agents.defaults.timeFormat`（`auto` | `12` | `24`）控制提示词格式。
 
 有关完整的行为和示例，请参阅[日期与时间](/en/date-time)。
+
+## 相关
+
+- [Heartbeat](/en/gateway/heartbeat) — 活跃时段使用时区进行调度
+- [Cron Jobs](/en/automation/cron-jobs) — cron 表达式使用时区进行调度
+- [Date & Time](/en/date-time) — 完整的日期/时间行为和示例

@@ -1,5 +1,5 @@
 ---
-summary: "Bonjour/mDNS 发现 + 调试（Gateway 网关 信标、客户端和常见故障模式）"
+summary: "Bonjour/mDNS 发现 + 调试（Gateway(网关) 网关 信标、客户端和常见故障模式）"
 read_when:
   - Debugging Bonjour discovery issues on macOS/iOS
   - Changing mDNS service types, TXT records, or discovery UX
@@ -9,7 +9,7 @@ title: "Bonjour 发现"
 # Bonjour / mDNS 发现
 
 OpenClaw 使用 Bonjour (mDNS / DNS-SD) 作为一种**仅限局域网的便利手段**来发现
-活动的 Gateway 网关（WebSocket 端点）。它是尽力而为的，并**不**替代 SSH 或
+活动的 Gateway(网关) 网关（WebSocket 端点）。它是尽力而为的，并**不**替代 SSH 或
 基于 Tailnet 的连接。
 
 ## 通过 Bonjour 的广域 Tailscale (单播 DNS-SD)
@@ -90,7 +90,7 @@ Gateway(网关) 会发布一些非机密的小提示，以方便 UI 流程：
 - `role=gateway`
 - `displayName=<friendly name>`
 - `lanHost=<hostname>.local`
-- `gatewayPort=<port>` (Gateway WS + HTTP)
+- `gatewayPort=<port>` (Gateway(网关) WS + HTTP)
 - `gatewayTls=1` （仅在启用 TLS 时）
 - `gatewayTlsSha256=<sha256>` （仅在启用 TLS 且指纹可用时）
 - `canvasPort=<port>`（仅在启用 canvas 主机时；当前与 `gatewayPort` 相同）

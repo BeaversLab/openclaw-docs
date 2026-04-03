@@ -27,10 +27,12 @@ macOS al agente como un nodo.
 
 - **Local** (predeterminado): la aplicación se adjunta a una Puerta de enlace local en ejecución si está presente;
   de lo contrario, habilita el servicio launchd a través de `openclaw gateway install`.
-- **Remoto**: la aplicación se conecta a una Puerta de enlace a través de SSH/Tailscale y nunca inicia
+- **Remoto**: la aplicación se conecta a un Gateway a través de SSH/Tailscale y nunca inicia
   un proceso local.
-  La aplicación inicia el **servicio host del nodo** local para que la Puerta de enlace remota pueda alcanzar este Mac.
-  La aplicación no genera la Puerta de enlace como un proceso secundario.
+  La aplicación inicia el **servicio host del nodo** local para que el Gateway remoto pueda alcanzar este Mac.
+  La aplicación no genera el Gateway como un proceso secundario.
+  El descubrimiento de Gateway ahora prefiere los nombres de MagicDNS de Tailscale sobre las IPs de tailnet sin procesar,
+  por lo que la aplicación Mac se recupera de manera más confiable cuando las IPs de tailnet cambian.
 
 ## Control de Launchd
 

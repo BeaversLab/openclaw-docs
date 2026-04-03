@@ -327,3 +327,11 @@ grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 - `agents.list[].groupChat.mentionPatterns`（Signal 不支援原生提及功能）。
 - `messages.groupChat.mentionPatterns`（全域後備值）。
 - `messages.responsePrefix`。
+
+## 相關
+
+- [頻道總覽](/en/channels) — 所有支援的頻道
+- [配對](/en/channels/pairing) — 私訊驗證與配對流程
+- [群組](/en/channels/groups) — 群組聊天行為與提及控制
+- [頻道路由](/en/channels/channel-routing) — 訊息的工作階段路由
+- [安全性](/en/gateway/security) — 存取模型與強化防護

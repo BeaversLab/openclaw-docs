@@ -126,3 +126,9 @@ Para volver a la última versión: `git checkout main && git pull`.
 - Ejecuta `openclaw doctor` de nuevo y lee la salida cuidadosamente.
 - Consulta: [Solución de problemas](/en/gateway/troubleshooting)
 - Pregunta en Discord: [https://discord.gg/clawd](https://discord.gg/clawd)
+
+## Relacionado
+
+- [Resumen de instalación](/en/install) — todos los métodos de instalación
+- [Doctor](/en/gateway/doctor) — comprobaciones de estado después de las actualizaciones
+- [Migración](/en/install/migrating) — guías de migración de versiones principales

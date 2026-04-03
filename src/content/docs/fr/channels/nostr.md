@@ -35,7 +35,7 @@ openclaw plugins install @openclaw/nostr
 Utiliser un checkout local (flux de travail dev) :
 
 ```bash
-openclaw plugins install --link <path-to-openclaw>/extensions/nostr
+openclaw plugins install --link <path-to-local-nostr-plugin>
 ```
 
 Redémarrez la passerelle après avoir installé ou activé les plugins.
@@ -247,3 +247,11 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 - Messages directs uniquement (pas de discussions de groupe).
 - Pas de pièces jointes multimédias.
 - NIP-04 uniquement (NIP-17 gift-wrap prévu).
+
+## Connexes
+
+- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
+- [Appairage](/en/channels/pairing) — authentification DM et flux d'appairage
+- [Groupes](/en/channels/groups) — comportement du chat de groupe et filtrage des mentions
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

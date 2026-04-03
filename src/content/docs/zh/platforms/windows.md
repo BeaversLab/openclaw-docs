@@ -9,7 +9,7 @@ title: "Windows"
 
 # Windows
 
-OpenClaw 同时支持 **原生 Windows** 和 **WSL2**。WSL2 是更稳定的路径，推荐用于完整体验 —— CLI、Gateway 和工具在 Linux 内部运行，具有完全兼容性。原生 Windows 适用于核心 CLI 和 Gateway 使用，但有一些注意事项，如下所述。
+OpenClaw 同时支持 **原生 Windows** 和 **WSL2**。WSL2 是更稳定的路径，推荐用于完整体验 —— CLI、Gateway(网关) 和工具在 Linux 内部运行，具有完全兼容性。原生 Windows 适用于核心 CLI 和 Gateway(网关) 使用，但有一些注意事项，如下所述。
 
 原生 Windows 配套应用已在计划中。
 

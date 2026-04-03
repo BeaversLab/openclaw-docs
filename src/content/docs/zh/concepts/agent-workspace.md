@@ -213,3 +213,10 @@ git push
 
 - 多代理路由可以为每个代理使用不同的工作空间。有关路由配置，请参阅[通道路由](/en/channels/channel-routing)。
 - 如果启用了 `agents.defaults.sandbox`，非主会话可以使用 `agents.defaults.sandbox.workspaceRoot` 下的每个会话沙盒工作空间。
+
+## 相关
+
+- [Standing Orders](/en/automation/standing-orders) — 工作区文件中的持久指令
+- [Heartbeat](/en/gateway/heartbeat) — HEARTBEAT.md 工作区文件
+- [Session](/en/concepts/session) — 会话存储路径
+- [沙箱隔离](/en/gateway/sandboxing) — 沙箱隔离环境中的工作区访问

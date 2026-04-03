@@ -163,3 +163,10 @@ System prompt 是 **OpenClaw 擁有** 的，並在每次執行時重建。它包
 - `System prompt (estimate)` = 在沒有運行報告時（或在透過不產生報告的 CLI 後端運行時）即時計算。
 
 無論如何，它都會報告大小和主要貢獻者；它**不會**傾印完整的系統提示詞或工具架構。
+
+## 相關
+
+- [Context Engine](/en/concepts/context-engine) — 透過插件自訂插入內容
+- [Compaction](/en/concepts/compaction) — 摘要長對話
+- [System Prompt](/en/concepts/system-prompt) — 系統提示詞的建構方式
+- [Agent Loop](/en/concepts/agent-loop) — 完整的 Agent 執行週期

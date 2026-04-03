@@ -337,3 +337,8 @@ Colas + sesiones:
 - **¿Registros vacíos?** Compruebe que la puerta de enlace se esté ejecutando y escribiendo en la ruta de archivo
   en `logging.file`.
 - **¿Necesita más detalles?** Establezca `logging.level` en `debug` o `trace` y vuelva a intentarlo.
+
+## Relacionado
+
+- [Internals of Gateway Logging](/en/gateway/logging) — Estilos de registro WS, prefijos de subsistema y captura de consola
+- [Diagnóstico](/en/gateway/configuration-reference#diagnostics) — Exportación de OpenTelemetry y configuración de rastreo de caché

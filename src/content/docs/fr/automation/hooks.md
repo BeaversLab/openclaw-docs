@@ -8,16 +8,16 @@ title: "Hooks"
 
 # Hooks
 
-Les Hooks fournissent un système évolutif basé sur les événements pour automatiser les actions en réponse aux commandes et événements des agents. Les Hooks sont découverts automatiquement à partir des répertoires et peuvent être inspectés avec `openclaw hooks`, tandis que l'installation et la mises à jour des packs de hooks se font désormais via `openclaw plugins`.
+Les Hooks fournissent un système extensible basé sur les événements pour automatiser les actions en réponse aux commandes et événements de l'agent. Les Hooks sont découverts automatiquement depuis les répertoires et peuvent être inspectés avec `openclaw hooks`, tandis que l'installation et les mises à jour des packs de hooks passent maintenant par `openclaw plugins`.
 
 ## Prise en main
 
 Les Hooks sont de petits scripts qui s'exécutent lorsque quelque chose se produit. Il en existe deux types :
 
-- **Hooks** (cette page) : s'exécutent à l'intérieur du Gateway lorsque des événements d'agent se déclenchent, comme `/new`, `/reset`, `/stop`, ou des événements de cycle de vie.
-- **Webhooks** : webhooks HTTP externes qui permettent à d'autres systèmes de déclencher des tâches dans OpenClaw. Voir [Webhook Hooks](/en/automation/webhook) ou utilisez `openclaw webhooks` pour les commandes d'aide Gmail.
+- **Hooks** (cette page) : s'exécutent à l'intérieur du Gateway lorsque les événements de l'agent se déclenchent, comme `/new`, `/reset`, `/stop`, ou les événements de cycle de vie.
+- **Webhooks** : webhooks HTTP externes qui permettent à d'autres systèmes de déclencher des tâches dans OpenClaw. Voir [Webhook Hooks](/en/automation/webhook) ou utilisez `openclaw webhooks` pour les commandes d'assistance Gmail.
 
-Les Hooks peuvent également être regroupés dans des plugins ; voir [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks). `openclaw hooks list` affiche à la fois les hooks autonomes et les hooks gérés par des plugins.
+Les Hooks peuvent également être regroupés dans des plugins ; voir [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks). `openclaw hooks list` affiche à la fois les hooks autonomes et les hooks gérés par plugin.
 
 Cas d'usage courants :
 
@@ -32,7 +32,7 @@ Si vous savez écrire une petite fonction TypeScript, vous pouvez écrire un hoo
 
 Le système de Hooks vous permet de :
 
-- Sauvegarder le contexte de la session dans la mémoire lorsque `/new` est émis
+- Sauvegarder le contexte de la session en mémoire lorsque `/new` est émise
 - Journaliser toutes les commandes pour l'audit
 - Déclencher des automatisations personnalisées sur les événements de cycle de vie des agents
 - Étendre le comportement de OpenClaw sans modifier le code central
@@ -44,9 +44,9 @@ Le système de Hooks vous permet de :
 OpenClaw est fourni avec quatre hooks regroupés qui sont automatiquement découverts :
 
 - **💾 session-memory** : Enregistre le contexte de la session dans votre espace de travail agent (défaut `~/.openclaw/workspace/memory/`) lorsque vous émettez `/new` ou `/reset`
-- **📎 bootstrap-extra-files** : Injecte des fichiers de démarrage d'espace de travail supplémentaires à partir de modèles glob/chemin configurés pendant `agent:bootstrap`
+- **📎 bootstrap-extra-files** : Injecte des fichiers d'amorçage d'espace de travail supplémentaires à partir des modèles de glob/chemin configurés pendant `agent:bootstrap`
 - **📝 command-logger** : Enregistre tous les événements de commande dans `~/.openclaw/logs/commands.log`
-- **🚀 boot-md** : Exécute `BOOT.md` au démarrage de la passerelle (nécessite l'activation des hooks internes)
+- **🚀 boot-md** : Exécute `BOOT.md` au démarrage de la passerelle (nécessite que les hooks internes soient activés)
 
 Lister les hooks disponibles :
 
@@ -74,20 +74,20 @@ openclaw hooks info session-memory
 
 ### Onboarding
 
-Pendant l'onboarding (`openclaw onboard`), il vous sera demandé d'activer les hooks recommandés. L'assistant découvre automatiquement les hooks éligibles et les présente pour sélection.
+Pendant l'onboarding (`openclaw onboard`), vous serez invité à activer les hooks recommandés. L'assistant découvre automatiquement les hooks éligibles et les présente pour sélection.
 
 ### Limite de confiance
 
-Les Hooks s'exécutent dans le processus Gateway. Traitez les hooks regroupés, les hooks gérés et `hooks.internal.load.extraDirs` comme du code local de confiance. Les hooks de l'espace de travail sous `<workspace>/hooks/` sont du code local au dépôt, donc OpenClaw nécessite une étape d'activation explicite avant de les charger.
+Les hooks s'exécutent dans le processus du Gateway. Traitez les hooks regroupés, les hooks gérés et `hooks.internal.load.extraDirs` comme du code local de confiance. Les hooks d'espace de travail sous `<workspace>/hooks/` sont du code local au dépôt, donc OpenClaw nécessite une étape d'activation explicite avant de les charger.
 
 ## Hook Discovery
 
 Les hooks sont découverts automatiquement à partir de ces répertoires, par ordre de priorité de substitution croissante :
 
-1. **Bundled hooks** : livrés avec OpenClaw ; situés à `<openclaw>/dist/hooks/bundled/` pour les installations npm (ou un `hooks/bundled/` adjacent pour les binaires compilés)
+1. **Bundled hooks** : fournis avec OpenClaw ; situés à `<openclaw>/dist/hooks/bundled/` pour les installations npm (ou un `hooks/bundled/` sibling pour les binaires compilés)
 2. **Plugin hooks** : hooks regroupés dans les plugins installés (voir [Plugin hooks](/en/plugins/architecture#provider-runtime-hooks))
-3. **Managed hooks** : `~/.openclaw/hooks/` (installés par l'utilisateur, partagés entre les espaces de travail ; peuvent remplacer les hooks intégrés et ceux des plugins). **Les répertoires de hooks supplémentaires** configurés via `hooks.internal.load.extraDirs` sont également considérés comme des hooks gérés et partagent la même priorité de remplacement.
-4. **Workspace hooks** : `<workspace>/hooks/` (par agent, désactivés par défaut jusqu'à ce qu'ils soient explicitement activés ; ne peuvent pas remplacer les hooks d'autres sources)
+3. **Managed hooks** : `~/.openclaw/hooks/` (installés par l'utilisateur, partagés entre les espaces de travail ; peuvent remplacer les hooks groupés et les plugins). Les **répertoires de hooks supplémentaires** configurés via `hooks.internal.load.extraDirs` sont également traités comme des hooks gérés et partagent la même priorité de remplacement.
+4. **Workspace hooks** : `<workspace>/hooks/` (par agent, désactivés par défaut jusqu'à activation explicite ; ne peuvent pas remplacer les hooks d'autres sources)
 
 Les hooks de l'espace de travail peuvent ajouter de nouveaux noms de hooks pour un dépôt, mais ils ne peuvent pas remplacer les hooks fournis, gérés ou fournis par un plugin portant le même nom.
 
@@ -103,7 +103,7 @@ my-hook/
 
 ## Hook Packs (npm/archives)
 
-Les hook packs sont des packages npm standard qui exportent un ou plusieurs hooks via `openclaw.hooks` dans
+Les hook packs sont des packages standard npm qui exportent un ou plusieurs hooks via `openclaw.hooks` dans
 `package.json`. Installez-les avec :
 
 ```bash
@@ -113,9 +113,9 @@ openclaw plugins install <path-or-spec>
 Les specs npm sont exclusivement pour le registre (nom du package + version exacte en option ou dist-tag).
 Les specs Git/URL/fichier et les plages semver sont rejetées.
 
-Les spécifications brutes et `@latest` restent sur la voie stable. Si npm résolve l'un de
+Les spécifications nues et `@latest` restent sur la voie stable. Si npm résout l'un de
 ceux-ci vers une préversion, OpenClaw s'arrête et vous demande d'accepter explicitement avec une
-tague de préversion telle que `@beta`/`@rc` ou une version de préversion exacte.
+balise de préversion telle que `@beta`/`@rc` ou une version de préversion exacte.
 
 Exemple `package.json` :
 
@@ -129,12 +129,11 @@ Exemple `package.json` :
 }
 ```
 
-Chaque entrée pointe vers un répertoire de hooks contenant `HOOK.md` et `handler.ts` (ou `index.ts`).
+Chaque entrée pointe vers un répertoire de hook contenant `HOOK.md` et un fichier de gestionnaire. Le chargeur essaie `handler.ts`, `handler.js`, `index.ts`, `index.js` dans l'ordre.
 Les hook packs peuvent inclure des dépendances ; elles seront installées sous `~/.openclaw/hooks/<id>`.
-Chaque entrée `openclaw.hooks` doit rester à l'intérieur du répertoire du package après la résolution des liens symboliques ;
-les entrées qui en sortent sont rejetées.
+Chaque entrée `openclaw.hooks` doit rester à l'intérieur du répertoire du package après la résolution des liens symboliques ; les entrées qui en sortent sont rejetées.
 
-Note de sécurité : `openclaw plugins install` installe les dépendances des hook packs avec `npm install --ignore-scripts`
+Note de sécurité : `openclaw plugins install` installe les dépendances des hook-packs avec `npm install --ignore-scripts`
 (pas de scripts de cycle de vie). Gardez les arbres de dépendances des hook packs "pur JS/TS" et évitez les packages qui reposent
 sur des builds `postinstall`.
 
@@ -142,7 +141,7 @@ sur des builds `postinstall`.
 
 ### Format HOOK.md
 
-Le fichier `HOOK.md` contient des métadonnées dans le frontmatter YAML plus la documentation Markdown :
+Le fichier `HOOK.md` contient des métadonnées dans le frontmatter YAML ainsi que de la documentation Markdown :
 
 ```markdown
 ---
@@ -175,16 +174,16 @@ No configuration needed.
 
 L'objet `metadata.openclaw` prend en charge :
 
-- **`emoji`** : Emoji d'affichage pour la CLI (par exemple, `"💾"`)
-- **`events`** : Tableau des événements à écouter (par ex., `["command:new", "command:reset"]`)
+- **`emoji`** : Emoji d'affichage pour CLI (ex. `"💾"`)
+- **`events`** : Tableau des événements à écouter (ex. `["command:new", "command:reset"]`)
 - **`export`** : Export nommé à utiliser (par défaut `"default"`)
 - **`homepage`** : URL de la documentation
-- **`os`** : Plateformes requises (par ex., `["darwin", "linux"]`)
+- **`os`** : Plateformes requises (ex. `["darwin", "linux"]`)
 - **`requires`** : Exigences optionnelles
-  - **`bins`** : Binaires requis dans le PATH (par ex., `["git", "node"]`)
+  - **`bins`** : Binaires requis dans le PATH (ex. `["git", "node"]`)
   - **`anyBins`** : Au moins l'un de ces binaires doit être présent
   - **`env`** : Variables d'environnement requises
-  - **`config`** : Chemins de configuration requis (par ex., `["workspace.dir"]`)
+  - **`config`** : Chemins de configuration requis (ex. `["workspace.dir"]`)
 - **`always`** : Contourner les vérifications d'éligibilité (booléen)
 - **`install`** : Méthodes d'installation (pour les hooks regroupés : `[{"id":"bundled","kind":"bundled"}]`)
 
@@ -235,6 +234,9 @@ Chaque événement inclut :
     sessionId?: string,
     // Agent bootstrap events (agent:bootstrap):
     bootstrapFiles?: WorkspaceBootstrapFile[],
+    sessionKey?: string,           // routing session key
+    sessionId?: string,            // internal session UUID
+    agentId?: string,              // resolved agent ID
     // Message events (see Message Events section for full details):
     from?: string,             // message:received
     to?: string,               // message:sent
@@ -258,21 +260,40 @@ Déclenchés lorsque des commandes d'agent sont émises :
 
 ### Événements de session
 
-- **`session:compact:before`** : Juste avant que la compactage ne résume l'historique
-- **`session:compact:after`** : Après la fin du compactage avec les métadonnées du résumé
+- **`session:compact:before`** : Juste avant que la compression ne résume l'historique
+- **`session:compact:after`** : Après la fin de la compression avec les métadonnées du résumé
 
-Les payloads de hook internes émettent ceux-ci en tant que `type: "session"` avec `action: "compact:before"` / `action: "compact:after"` ; les écouteurs s'abonnent avec les clés combinées ci-dessus.
+Les payloads de hook internes émettent ceux-ci en tant que `type: "session"` avec `action: "compact:before"` / `action: "compact:after"` ; les auditeurs s'abonnent avec les clés combinées ci-dessus.
 L'enregistrement spécifique du gestionnaire utilise le format de clé littéral `${type}:${action}`. Pour ces événements, enregistrez `session:compact:before` et `session:compact:after`.
+
+Champs de contexte `session:compact:before` :
+
+- `sessionId` : UUID de session interne
+- `missingSessionKey` : true lorsque aucune clé de session n'était disponible
+- `messageCount` : nombre de messages avant la compactage
+- `tokenCount` : nombre de jetons avant la compactage (peut être absent)
+- `messageCountOriginal` : nombre de messages de l'historique de session complet non tronqué
+- `tokenCountOriginal` : nombre de jetons de l'historique original complet (peut être absent)
+
+Champs de contexte `session:compact:after` (en plus de `sessionId` et `missingSessionKey`) :
+
+- `messageCount` : nombre de messages après la compactage
+- `tokenCount` : nombre de jetons après la compactage (peut être absent)
+- `compactedCount` : nombre de messages qui ont été compactés/supprimés
+- `summaryLength` : longueur en caractères du résumé de compactage généré
+- `tokensBefore` : nombre de jetons avant la compactage (pour le calcul du delta)
+- `tokensAfter` : nombre de jetons après la compactage
+- `firstKeptEntryId` : ID de la première entrée de message conservée après la compactage
 
 ### Événements d'agent
 
-- **`agent:bootstrap`** : Avant l'injection des fichiers d'amorçage de l'espace de travail (les hooks peuvent modifier `context.bootstrapFiles`)
+- **`agent:bootstrap`** : Avant que les fichiers d'amorçage de l'espace de travail ne soient injectés (les hooks peuvent modifier `context.bootstrapFiles`)
 
-### Événements de Gateway
+### Événements Gateway
 
 Déclenché au démarrage de la passerelle :
 
-- **`gateway:startup`** : Une fois les channels démarrés et les hooks chargés
+- **`gateway:startup`** : Après le démarrage des canaux et le chargement des hooks
 
 ### Événements de correctif de session
 
@@ -292,12 +313,16 @@ Les événements de session incluent un contexte riche sur la session et les mod
     label?: string | null,           // Human-readable session label
 
     // AI model configuration
-    model?: string | null,           // Model override (e.g., "claude-opus-4-5")
+    model?: string | null,           // Model override (e.g., "claude-sonnet-4-6")
     thinkingLevel?: string | null,   // Thinking level ("off"|"low"|"med"|"high")
     verboseLevel?: string | null,    // Verbose output level
     reasoningLevel?: string | null,  // Reasoning mode override
     elevatedLevel?: string | null,   // Elevated mode override
-    responseUsage?: "off" | "tokens" | "full" | null, // Usage display mode
+    responseUsage?: "off" | "tokens" | "full" | "on" | null, // Usage display mode ("on" is backwards-compat alias for "full")
+    fastMode?: boolean | null,                    // Fast/turbo mode toggle
+    spawnedWorkspaceDir?: string | null,          // Workspace dir override for spawned subagents
+    subagentRole?: "orchestrator" | "leaf" | null, // Subagent role assignment
+    subagentControlScope?: "children" | "none" | null, // Scope of subagent control
 
     // Tool execution settings
     execHost?: string | null,        // Exec host (sandbox|gateway|node)
@@ -317,11 +342,11 @@ Les événements de session incluent un contexte riche sur la session et les mod
 }
 ```
 
-**Note de sécurité :** Seuls les clients privilégiés (y compris l'interface de contrôle) peuvent déclencher des événements `session:patch`. Les clients WebChat standard sont bloqués pour la modification des sessions (voir PR #20800), le hook ne se déclenchera donc pas depuis ces connexions.
+**Note de sécurité :** Seuls les clients privilégiés (y compris l'interface de contrôle) peuvent déclencher des événements `session:patch`. Les clients WebChat standard sont bloqués pour la modification des sessions, le hook ne se déclenchera donc pas depuis ces connexions.
 
 Voir `SessionsPatchParamsSchema` dans `src/gateway/protocol/schema/sessions.ts` pour la définition complète du type.
 
-#### Exemple : Hook de journalisation des correctifs de session
+#### Exemple : Hook d'enregistreur de correctif de session
 
 ```typescript
 const handler = async (event) => {
@@ -338,12 +363,12 @@ export default handler;
 
 ### Événements de message
 
-Déclenché lors de la réception ou de l'envoi de messages :
+Déclenché lorsque des messages sont reçus ou envoyés :
 
 - **`message`** : Tous les événements de message (écouteur général)
-- **`message:received`** : Lorsqu'un message entrant est reçu de n'importe quel channel. Se déclenche tôt dans le traitement avant la compréhension des médias. Le contenu peut contenir des espaces réservés bruts comme `<media:audio>` pour les pièces jointes multimédias qui n'ont pas encore été traitées.
-- **`message:transcribed`** : Lorsqu'un message a été entièrement traité, y compris la transcription audio et la compréhension des liens. À ce stade, `transcript` contient le texte complet de la transcription pour les messages audio. Utilisez ce hook lorsque vous devez accéder au contenu audio transcrit.
-- **`message:preprocessed`** : Se déclenche pour chaque message après que toute la compréhension des médias et des liens est terminée, donnant aux hooks accès au corps entièrement enrichi (transcriptions, descriptions d'images, résumés de liens) avant que l'agent ne le voie.
+- **`message:received`** : Lorsqu'un message entrant est reçu depuis n'importe quel canal. Se déclenche tôt dans le traitement, avant la compréhension des médias. Le contenu peut contenir des espaces réservés bruts comme `<media:audio>` pour les pièces jointes multimédias qui n'ont pas encore été traitées.
+- **`message:transcribed`** : Lorsqu'un message a été entièrement traité, y compris la transcription audio et la compréhension des liens. À ce stade, `transcript` contient le texte complet de la transcription pour les messages audio. Utilisez ce hook lorsque vous avez besoin d'accéder au contenu audio transcrit.
+- **`message:preprocessed`** : Se déclenche pour chaque message une fois que toute la compréhension des médias et des liens est terminée, donnant aux hooks accès au corps entièrement enrichi (transcriptions, descriptions d'images, résumés de liens) avant que l'agent ne le voie.
 - **`message:sent`** : Lorsqu'un message sortant est envoyé avec succès
 
 #### Contexte de l'événement de message
@@ -431,7 +456,7 @@ Les événements de message incluent un contexte riche sur le message :
 }
 ```
 
-#### Exemple : Hook de journalisation de messages
+#### Exemple : Hook de logger de messages
 
 ```typescript
 const isMessageReceivedEvent = (event: { type: string; action: string }) => event.type === "message" && event.action === "received";
@@ -452,22 +477,22 @@ export default handler;
 
 Ces hooks ne sont pas des écouteurs de flux d'événements ; ils permettent aux plugins d'ajuster de manière synchrone les résultats des outils avant que OpenClaw ne les persiste.
 
-- **`tool_result_persist`** : transformer les résultats des outils avant qu'ils ne soient écrits dans la transcription de session. Doit être synchrone ; renvoyez la charge utile du résultat de l'outil mise à jour ou `undefined` pour la laisser telle quelle. Voir [Agent Loop](/en/concepts/agent-loop).
+- **`tool_result_persist`** : transformer les résultats des outils avant qu'ils ne soient écrits dans la transcription de session. Doit être synchrone ; renvoie la charge utile du résultat d'outil mise à jour ou `undefined` pour la laisser telle quelle. Voir [Agent Loop](/en/concepts/agent-loop).
 
-### Événements de hook de plugin
+### Événements de Hook de Plugin
 
 #### before_tool_call
 
-S'exécute avant chaque appel d'outil. Les plugins peuvent modifier les paramètres, bloquer l'appel ou demander une approbation utilisateur.
+S'exécute avant chaque appel d'outil. Les plugins peuvent modifier les paramètres, bloquer l'appel ou demander une approbation de l'utilisateur.
 
 Champs de retour :
 
 - **`params`** : Remplacer les paramètres de l'outil (fusionnés avec les paramètres d'origine)
-- **`block`** : Définir sur `true` pour bloquer l'appel de l'outil
-- **`blockReason`** : Raison affichée à l'agent lorsqu'il est bloqué
-- **`requireApproval`** : Suspendre l'exécution et attendre l'approbation de l'utilisateur via les channels
+- **`block`** : Définir sur `true` pour bloquer l'appel d'outil
+- **`blockReason`** : Raison affichée à l'agent en cas de blocage
+- **`requireApproval`** : Mettre en pause l'exécution et attendre l'approbation de l'utilisateur via les canaux
 
-Le champ `requireApproval` déclenche l'approbation native de la plateforme (boutons Telegram, composants Discord, commande `/approve`) au lieu de s'appuyer sur la coopération de l'agent :
+Le champ `requireApproval` déclenche l'approbation native de la plateforme (boutons Telegram, composants Discord, commande `/approve`) au lieu de compter sur la coopération de l'agent :
 
 ```typescript
 {
@@ -484,34 +509,188 @@ Le champ `requireApproval` déclenche l'approbation native de la plateforme (bou
 }
 ```
 
-Le rappel `onResolution` est invoqué avec la chaîne de décision finale une fois l'approbation résolue, expirée ou annulée. Il s'exécute en processus au sein du plugin (non envoyé à la passerelle). Utilisez-le pour rendre les décisions persistantes, mettre à jour les caches ou effectuer un nettoyage.
+Le rappel `onResolution` est invoqué avec la chaîne de décision finale une fois que l'approbation est résolue, expire ou est annulée. Il s'exécute en interne au sein du plugin (et n'est pas envoyé à la passerelle). Utilisez-le pour rendre les décisions persistantes, mettre à jour les caches ou effectuer un nettoyage.
 
-Le champ `pluginId` est automatiquement ajouté par le lanceur de hooks à partir de l'enregistrement du plugin. Lorsque plusieurs plugins renvoient `requireApproval`, le premier (la priorité la plus élevée) l'emporte.
+Le champ `pluginId` est appliqué automatiquement par le lanceur de hooks à partir de l'enregistrement du plugin. Lorsque plusieurs plugins renvoient `requireApproval`, le premier (la priorité la plus élevée) l'emporte.
 
-`block` a priorité sur `requireApproval` : si le résultat du hook fusionné a à la fois `block: true` et un champ `requireApproval`, l'appel d'outil est bloqué immédiatement sans déclencher le flux d'approbation. Cela garantit qu'un blocage d'un plugin de priorité supérieure ne peut pas être annulé par une demande d'approbation d'un plugin de priorité inférieure.
+`block` prévaut sur `requireApproval` : si le résultat du hook fusionné contient à la fois `block: true` et un champ `requireApproval`, l'appel d'outil est bloqué immédiatement sans déclencher le flux d'approbation. Cela garantit qu'un blocage par un plugin de priorité plus élevée ne peut pas être annulé par une demande d'approbation d'un plugin de priorité inférieure.
 
-Si la passerelle n'est pas disponible ou ne prend pas en charge les approbations de plugins, l'appel d'outil revient à un blocage souple en utilisant le `description` comme raison du blocage.
+Si la passerelle n'est pas disponible ou ne prend pas en charge les approbations de plugins, l'appel d'outil revient à un blocage doux en utilisant le `description` comme motif de blocage.
+
+#### before_install
+
+S'exécute après l'analyse de sécurité intégrée de l'installation et avant que l'installation ne se poursuive. OpenClaw déclenche ce hook pour les installations de compétences interactives ainsi que pour les installations de bundle, de package et de fichier unique de plugins.
+
+Le comportement par défaut diffère selon le type de cible :
+
+- Les installations de plugins échouent de manière fermée sur les résultats d'analyse `critical` intégrés et les erreurs d'analyse, sauf si l'opérateur utilise explicitement `openclaw plugins install --dangerously-force-unsafe-install`.
+- Les installations de compétences affichent toujours les résultats d'analyse intégrés et les erreurs d'analyse sous forme d'avertissements et poursuivent par défaut.
+
+Champs de retour :
+
+- **`findings`** : Résultats d'analyse supplémentaires à afficher sous forme d'avertissements
+- **`block`** : Définir sur `true` pour bloquer l'installation
+- **`blockReason`** : Raison lisible par l'homme affichée lors d'un blocage
+
+Champs de l'événement :
+
+- **`targetType`** : Catégorie de la cible d'installation (`skill` ou `plugin`)
+- **`targetName`** : Nom de la compétence lisible par l'homme ou ID du plugin pour la cible d'installation
+- **`sourcePath`** : Chemin absolu vers le contenu de la cible d'installation en cours d'analyse
+- **`sourcePathKind`** : Indique si le contenu analysé est un `file` ou un `directory`
+- **`origin`** : Origine de l'installation normalisée, si disponible (par exemple `openclaw-bundled`, `openclaw-workspace`, `plugin-bundle`, `plugin-package` ou `plugin-file`)
+- **`request`** : Provenance de la demande d'installation, y compris `kind`, `mode` et l'option `requestedSpecifier`
+- **`builtinScan`** : Résultat structuré de l'analyseur intégré, incluant `status`, les totaux récapitulatifs, les constatations et l'option `error`
+- **`skill`** : Métadonnées d'installation de la compétence lorsque `targetType` est `skill`, y compris `installId` et le `installSpec` sélectionné
+- **`plugin`** : Métadonnées d'installation du plugin lorsque `targetType` est `plugin`, y compris le `pluginId` canonique, le `contentType` normalisé, l'option `packageName` / `manifestId` / `version` et `extensions`
+
+Exemple d'événement (installation de package de plugin) :
+
+```json
+{
+  "targetType": "plugin",
+  "targetName": "acme-audit",
+  "sourcePath": "/var/folders/.../openclaw-plugin-acme-audit/package",
+  "sourcePathKind": "directory",
+  "origin": "plugin-package",
+  "request": {
+    "kind": "plugin-npm",
+    "mode": "install",
+    "requestedSpecifier": "@acme/openclaw-plugin-audit@1.4.2"
+  },
+  "builtinScan": {
+    "status": "ok",
+    "scannedFiles": 12,
+    "critical": 0,
+    "warn": 1,
+    "info": 0,
+    "findings": [
+      {
+        "severity": "warn",
+        "ruleId": "network_fetch",
+        "file": "dist/index.js",
+        "line": 88,
+        "message": "Dynamic network fetch detected during install review."
+      }
+    ]
+  },
+  "plugin": {
+    "pluginId": "acme-audit",
+    "contentType": "package",
+    "packageName": "@acme/openclaw-plugin-audit",
+    "manifestId": "acme-audit",
+    "version": "1.4.2",
+    "extensions": ["./dist/index.js"]
+  }
+}
+```
+
+Les installations de compétences utilisent la même structure d'événement avec `targetType: "skill"` et un objet `skill` au lieu de `plugin`.
+
+Sémantique de décision :
+
+- `before_install` : `{ block: true }` est terminal et arrête les gestionnaires de moindre priorité.
+- `before_install` : `{ block: false }` est traité comme une absence de décision.
+
+Utilisez ce crochet pour les analyseurs de sécurité externes, les moteurs de stratégie ou les portes d'approbation d'entreprise qui doivent auditer les sources d'installation avant leur installation.
 
 #### Cycle de vie de compactage
 
-Hooks du cycle de vie de compactage exposés via le lanceur de hooks de plugin :
+Crochets du cycle de vie de compactage exposés via le lanceur de crochets de plugin :
 
-- **`before_compaction`** : S'exécute avant le compactage avec les métadonnées de nombre/jeton
-- **`after_compaction`** : S'exécute après le compactage avec les métadonnées du résumé de compactage
+- **`before_compaction`**: S'exécute avant la compactage avec les métadonnées de nombre/jeton
+- **`after_compaction`**: S'exécute après le compactage avec les métadonnées du résumé de compactage
+
+### Référence complète des hooks de plugin
+
+Les 27 hooks enregistrés via le Plugin SDK. Les hooks marqués **séquentiels** s'exécutent dans l'ordre de priorité et peuvent modifier les résultats ; les hooks **parallèles** sont du type tirer-et-oublier.
+
+#### Hooks de modèle et de prompt
+
+| Hook                   | Quand                                                 | Exécution  | Retourne                                                   |
+| ---------------------- | ----------------------------------------------------- | ---------- | ---------------------------------------------------------- |
+| `before_model_resolve` | Avant la recherche de modèle/fournisseur              | Séquentiel | `{ modelOverride?, providerOverride? }`                    |
+| `before_prompt_build`  | Après résolution du modèle, messages de session prêts | Séquentiel | `{ systemPrompt?, prependContext?, appendSystemContext? }` |
+| `before_agent_start`   | Hook combiné hérité (préférez les deux ci-dessus)     | Séquentiel | Union des deux formes de résultat                          |
+| `llm_input`            | Immédiatement avant l'appel à l'LLM du API            | Parallèle  | `void`                                                     |
+| `llm_output`           | Immédiatement après réception de la réponse du LLM    | Parallèle  | `void`                                                     |
+
+#### Hooks du cycle de vie de l'agent
+
+| Hook                | Quand                                          | Exécution | Retourne |
+| ------------------- | ---------------------------------------------- | --------- | -------- |
+| `agent_end`         | Après l'exécution de l'agent (succès ou échec) | Parallèle | `void`   |
+| `before_reset`      | Lorsque `/new` ou `/reset` efface une session  | Parallèle | `void`   |
+| `before_compaction` | Avant que le compactage ne résume l'historique | Parallèle | `void`   |
+| `after_compaction`  | Après achèvement du compactage                 | Parallèle | `void`   |
+
+#### Hooks du cycle de vie de session
+
+| Hook            | Quand                                | Exécution | Retourne |
+| --------------- | ------------------------------------ | --------- | -------- |
+| `session_start` | Lorsqu'une nouvelle session commence | Parallèle | `void`   |
+| `session_end`   | Lorsqu'une session se termine        | Parallèle | `void`   |
+
+#### Hooks de flux de messages
+
+| Hook                   | Quand                                                                    | Exécution            | Retourne                      |
+| ---------------------- | ------------------------------------------------------------------------ | -------------------- | ----------------------------- |
+| `inbound_claim`        | Avant l'envoi de la commande/de l'agent ; le premier à revendiquer gagne | Séquentiel           | `{ handled: boolean }`        |
+| `message_received`     | Après réception d'un message entrant                                     | Parallèle            | `void`                        |
+| `before_dispatch`      | After commands parsed, before model dispatch                             | Séquentiel           | `{ handled: boolean, text? }` |
+| `message_sending`      | Before an outbound message is delivered                                  | Séquentiel           | `{ content?, cancel? }`       |
+| `message_sent`         | After an outbound message is delivered                                   | Parallèle            | `void`                        |
+| `before_message_write` | Before a message is written to session transcript                        | **Sync**, séquentiel | `{ block?, message? }`        |
+
+#### Tool execution hooks
+
+| Hook                  | Quand                                         | Exécution            | Retours                                               |
+| --------------------- | --------------------------------------------- | -------------------- | ----------------------------------------------------- |
+| `before_tool_call`    | Before each tool call                         | Séquentiel           | `{ params?, block?, blockReason?, requireApproval? }` |
+| `after_tool_call`     | After a tool call completes                   | Parallèle            | `void`                                                |
+| `tool_result_persist` | Before a tool result is written to transcript | **Sync**, séquentiel | `{ message? }`                                        |
+
+#### Subagent hooks
+
+| Hook                       | Quand                                      | Exécution  | Retours                           |
+| -------------------------- | ------------------------------------------ | ---------- | --------------------------------- |
+| `subagent_spawning`        | Before a subagent session is created       | Séquentiel | `{ status, threadBindingReady? }` |
+| `subagent_delivery_target` | After spawning, to resolve delivery target | Séquentiel | `{ origin? }`                     |
+| `subagent_spawned`         | After a subagent is fully spawned          | Parallèle  | `void`                            |
+| `subagent_ended`           | When a subagent session terminates         | Parallèle  | `void`                            |
+
+#### Gateway hooks
+
+| Hook            | Quand                                      | Exécution | Retours |
+| --------------- | ------------------------------------------ | --------- | ------- |
+| `gateway_start` | After the gateway process is fully started | Parallèle | `void`  |
+| `gateway_stop`  | When the gateway is shutting down          | Parallèle | `void`  |
+
+#### Install hooks
+
+| Hook             | Quand                                                 | Exécution  | Retours                               |
+| ---------------- | ----------------------------------------------------- | ---------- | ------------------------------------- |
+| `before_install` | After built-in security scan, before install proceeds | Séquentiel | `{ findings?, block?, blockReason? }` |
+
+<Note>Two hooks (`tool_result_persist` and `before_message_write`) are **synchronous only** — they must not return a Promise. Returning a Promise from these hooks is caught at runtime and the result is discarded with a warning.</Note>
+
+Pour les signatures complètes des gestionnaires et les types de contexte, consultez [Plugin Architecture](/en/plugins/architecture).
 
 ### Événements futurs
 
-Types d'événements prévus :
+Les types d'événements suivants sont prévus pour le flux d'événements de hook interne.
+Notez que `session_start` et `session_end` existent déjà en tant que hooks de [Plugin Hook API](/en/plugins/architecture#provider-runtime-hooks)
+mais ne sont pas encore disponibles en tant que clés d'événement de hook interne dans les métadonnées `HOOK.md` :
 
-- **`session:start`** : Lorsqu'une nouvelle session commence
-- **`session:end`** : Lorsqu'une session se termine
+- **`session:start`** : Lorsqu'une nouvelle session commence (prévu pour le flux de hook interne ; disponible en tant que hook de plugin `session_start`)
+- **`session:end`** : Lorsqu'une session se termine (prévu pour le flux de hook interne ; disponible en tant que hook de plugin `session_end`)
 - **`agent:error`** : Lorsqu'un agent rencontre une erreur
 
-## Créer des Hooks personnalisés
+## Créer des hooks personnalisés
 
 ### 1. Choisir l'emplacement
 
-- **Hooks d'espace de travail** (`<workspace>/hooks/`) : Par agent ; peut ajouter de nouveaux noms de hooks mais ne peut pas remplacer les hooks groupés, gérés ou de plugin du même nom
+- **Hooks d'espace de travail** (`<workspace>/hooks/`) : Par agent ; peut ajouter de nouveaux noms de hooks mais ne peut pas remplacer les hooks groupés, gérés ou de plugin avec le même nom
 - **Hooks gérés** (`~/.openclaw/hooks/`) : Partagés entre les espaces de travail ; peut remplacer les hooks groupés et de plugin
 
 ### 2. Créer la structure des répertoires
@@ -583,7 +762,7 @@ openclaw hooks enable my-hook
 }
 ```
 
-### Configuration par Hook
+### Configuration par hook
 
 Les hooks peuvent avoir une configuration personnalisée :
 
@@ -607,7 +786,7 @@ Les hooks peuvent avoir une configuration personnalisée :
 
 ### Répertoires supplémentaires
 
-Chargez les hooks à partir de répertoires supplémentaires (traités comme des hooks gérés, même priorité de remplacement) :
+Charger les hooks à partir de répertoires supplémentaires (traités comme des hooks gérés, même priorité de remplacement) :
 
 ```json
 {
@@ -622,7 +801,7 @@ Chargez les hooks à partir de répertoires supplémentaires (traités comme des
 }
 ```
 
-### Format de configuration hérité (toujours pris en charge)
+### Format de configuration hérité (Encore pris en charge)
 
 L'ancien format de configuration fonctionne toujours pour la rétrocompatibilité :
 
@@ -643,9 +822,9 @@ L'ancien format de configuration fonctionne toujours pour la rétrocompatibilit�
 }
 ```
 
-Note : `module` doit être un chemin relatif à l'espace de travail. Les chemins absolus et les traversées hors de l'espace de travail sont rejetés.
+Remarque : `module` doit être un chemin relatif à l'espace de travail. Les chemins absolus et les traversées en dehors de l'espace de travail sont rejetés.
 
-**Migration** : Utilisez le nouveau système basé sur la découverte pour les nouveaux hooks. Les gestionnaires hérités sont chargés après les hooks basés sur les répertoires.
+**Migration** : Utilisez le nouveau système basé sur la découverte pour les nouveaux hooks. Les gestionnaires hérités sont chargés après les hooks basés sur des répertoires.
 
 ## Commandes CLI
 
@@ -695,11 +874,11 @@ openclaw hooks enable session-memory
 openclaw hooks disable command-logger
 ```
 
-## Référence des hooks inclus
+## Référence des hooks groupés
 
 ### session-memory
 
-Enregistre le contexte de la session dans la mémoire lorsque vous émettez `/new` ou `/reset`.
+Enregistre le contexte de la session en mémoire lorsque vous émettez `/new` ou `/reset`.
 
 **Événements** : `command:new`, `command:reset`
 
@@ -709,10 +888,10 @@ Enregistre le contexte de la session dans la mémoire lorsque vous émettez `/ne
 
 **Ce qu'il fait** :
 
-1. Utilise l'entrée de session pré-réinitialisation pour localiser la bonne transcription
+1. Utilise l'entrée de session avant réinitialisation pour localiser la bonne transcription
 2. Extrait les 15 derniers messages utilisateur/assistant de la conversation (configurable)
-3. Utilise LLM pour générer un slug de nom de fichier descriptif
-4. Enregistre les métadonnées de la session dans un fichier de mémoire daté
+3. Utilise le LLM pour générer un slug de nom de fichier descriptif
+4. Enregistre les métadonnées de session dans un fichier de mémoire daté
 
 **Exemple de sortie** :
 
@@ -771,16 +950,16 @@ Injecte des fichiers d'amorçage supplémentaires (par exemple `AGENTS.md` / `TO
 
 **Options de configuration** :
 
-- `paths` (string[]) : modèles glob/chemin à résoudre depuis l'espace de travail.
+- `paths` (string[]) : modèles de glob/chemin à résoudre depuis l'espace de travail.
 - `patterns` (string[]) : alias de `paths`.
 - `files` (string[]) : alias de `paths`.
 
 **Notes** :
 
 - Les chemins sont résolus par rapport à l'espace de travail.
-- Les fichiers doivent rester à l'intérieur de l'espace de travail (vérifiés par realpath).
+- Les fichiers doivent rester dans l'espace de travail (vérifiés par realpath).
 - Seuls les noms de base d'amorçage reconnus sont chargés (`AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md`, `MEMORY.md`, `memory.md`).
-- Pour les sessions de sous-agent/cron, une liste blanche plus stricte s'applique (`AGENTS.md`, `TOOLS.md`, `SOUL.md`, `IDENTITY.md`, `USER.md`).
+- Pour les sessions de sous-agent/cron, une liste d'autorisation plus stricte s'applique (`AGENTS.md`, `TOOLS.md`, `SOUL.md`, `IDENTITY.md`, `USER.md`).
 
 **Activer** :
 
@@ -802,7 +981,7 @@ Enregistre tous les événements de commande dans un fichier d'audit centralisé
 
 1. Capture les détails de l'événement (action de commande, horodatage, clé de session, ID de l'expéditeur, source)
 2. Ajoute au fichier journal au format JSONL
-3. S'exécute silencieusement en arrière-plan
+3. S'exécute en silencieux en arrière-plan
 
 **Exemples d'entrées de journal** :
 
@@ -920,8 +1099,8 @@ metadata: { "openclaw": { "events": ["command"] } } # General - more overhead
 
 La passerelle enregistre le chargement des hooks au démarrage :
 
-```
-Registered hook: session-memory -> command:new
+```text
+Registered hook: session-memory -> command:new, command:reset
 Registered hook: bootstrap-extra-files -> agent:bootstrap
 Registered hook: command-logger -> command
 Registered hook: boot-md -> gateway:startup
@@ -958,7 +1137,7 @@ Recherchez les conditions requises manquantes dans la sortie.
 
 ## Tests
 
-### Journaux de la Gateway
+### Journaux de la passerelle
 
 Surveillez les journaux de la passerelle pour voir l'exécution des hooks :
 
@@ -970,9 +1149,9 @@ Surveillez les journaux de la passerelle pour voir l'exécution des hooks :
 tail -f ~/.openclaw/gateway.log
 ```
 
-### Test Hooks Directly
+### Tester directement les hooks
 
-Test your handlers in isolation:
+Testez vos gestionnaires en isolation :
 
 ```typescript
 import { test } from "vitest";
@@ -996,19 +1175,19 @@ test("my handler works", async () => {
 
 ## Architecture
 
-### Core Components
+### Composants principaux
 
-- **`src/hooks/types.ts`**: Type definitions
-- **`src/hooks/workspace.ts`**: Directory scanning and loading
-- **`src/hooks/frontmatter.ts`**: HOOK.md metadata parsing
-- **`src/hooks/config.ts`**: Eligibility checking
-- **`src/hooks/hooks-status.ts`**: Status reporting
-- **`src/hooks/loader.ts`**: Dynamic module loader
-- **`src/cli/hooks-cli.ts`**: CLI commands
-- **`src/gateway/server-startup.ts`**: Loads hooks at gateway start
-- **`src/auto-reply/reply/commands-core.ts`**: Triggers command events
+- **`src/hooks/types.ts`** : Définitions de types
+- **`src/hooks/workspace.ts`** : Analyse et chargement de répertoires
+- **`src/hooks/frontmatter.ts`** : Analyse des métadonnées HOOK.md
+- **`src/hooks/config.ts`** : Vérification de l'éligibilité
+- **`src/hooks/hooks-status.ts`** : Rapport de statut
+- **`src/hooks/loader.ts`** : Chargeur de module dynamique
+- **`src/cli/hooks-cli.ts`** : Commandes CLI
+- **`src/gateway/server-startup.ts`** : Charge les hooks au démarrage de la passerelle
+- **`src/auto-reply/reply/commands-core.ts`** : Déclenche des événements de commande
 
-### Discovery Flow
+### Flux de découverte
 
 ```
 Gateway startup
@@ -1026,7 +1205,7 @@ Load handlers from eligible hooks
 Register handlers for events
 ```
 
-### Event Flow
+### Flux des événements
 
 ```
 User sends /new
@@ -1042,46 +1221,46 @@ Command processing continues
 Session reset
 ```
 
-## Troubleshooting
+## Dépannage
 
-### Hook Not Discovered
+### Hook non découvert
 
-1. Check directory structure:
+1. Vérifiez la structure des répertoires :
 
    ```bash
    ls -la ~/.openclaw/hooks/my-hook/
    # Should show: HOOK.md, handler.ts
    ```
 
-2. Verify HOOK.md format:
+2. Vérifiez le format HOOK.md :
 
    ```bash
    cat ~/.openclaw/hooks/my-hook/HOOK.md
    # Should have YAML frontmatter with name and metadata
    ```
 
-3. List all discovered hooks:
+3. Listez tous les hooks découverts :
 
    ```bash
    openclaw hooks list
    ```
 
-### Hook Not Eligible
+### Hook non éligible
 
-Check requirements:
+Vérifiez les conditions requises :
 
 ```bash
 openclaw hooks info my-hook
 ```
 
-Look for missing:
+Recherchez des éléments manquants :
 
-- Binaries (check PATH)
+- Fichiers binaires (vérifiez le PATH)
 - Variables d'environnement
 - Valeurs de configuration
 - Compatibilité du système d'exploitation
 
-### Le hook ne s'exécute pas
+### Hook non exécuté
 
 1. Vérifiez que le hook est activé :
 
@@ -1090,17 +1269,17 @@ Look for missing:
    # Should show ✓ next to enabled hooks
    ```
 
-2. Redémarrez votre processus passerelle afin que les hooks soient rechargés.
+2. Redémarrez votre processus passerelle pour que les hooks soient rechargés.
 
-3. Vérifiez les journaux de la passerelle pour détecter les erreurs :
+3. Vérifiez les journaux de la passerelle pour les erreurs :
 
    ```bash
    ./scripts/clawlog.sh | grep hook
    ```
 
-### Erreurs de gestionnaire
+### Erreurs du gestionnaire
 
-Vérifiez les erreurs TypeScript/d'importation :
+Vérifiez les erreurs TypeScript/importation :
 
 ```bash
 # Test import directly
@@ -1177,14 +1356,14 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 **Avantages de la migration** :
 
 - Découverte automatique
-- CLI management
+- Gestion CLI
 - Vérification de l'éligibilité
 - Meilleure documentation
 - Structure cohérente
 
 ## Voir aussi
 
-- [CLI Reference: hooks](/en/cli/hooks)
-- [Bundled Hooks README](https://github.com/openclaw/openclaw/tree/main/src/hooks/bundled)
-- [Webhook Hooks](/en/automation/webhook)
+- [Référence CLI : hooks](/en/cli/hooks)
+- [LISEZMOI des Hooks intégrés](https://github.com/openclaw/openclaw/tree/main/src/hooks/bundled)
+- [Hooks Webhook](/en/automation/webhook)
 - [Configuration](/en/gateway/configuration-reference#hooks)

@@ -9,7 +9,7 @@ title: "子代理"
 
 # 子代理
 
-子代理是从现有代理运行中生成的后台代理运行。它们在自己的会话（`agent:<agentId>:subagent:<uuid>`）中运行，并在完成后向请求者聊天频道**通告**其结果。
+Sub-agents 是从现有 agent 运行中生成的后台 agent 运行。它们在自己的 会话 (`agent:<agentId>:subagent:<uuid>`) 中运行，并在完成后将其结果**通报**回请求的聊天渠道。每个 sub-agent 运行都作为[后台任务](/en/automation/tasks)进行跟踪。
 
 ## 斜杠命令
 
@@ -53,7 +53,7 @@ title: "子代理"
 - `--model` 和 `--thinking` 会覆盖该特定运行的默认设置。
 - 使用 `info`/`log` 在完成后检查详细信息和输出。
 - `/subagents spawn` 是单次模式（`mode: "run"`）。对于持久的线程绑定会话，请将 `sessions_spawn` 与 `thread: true` 和 `mode: "session"` 一起使用。
-- 对于 ACP 约束会话（Codex、Claude Code、Gemini CLI），请将 `sessions_spawn` 与 `runtime: "acp"` 一起使用，并参阅 [ACP Agents](/en/tools/acp-agents)。
+- 对于 ACP 驱动会话（Codex、Claude Code、Gemini CLI），请将 `sessions_spawn` 与 `runtime: "acp"` 结合使用，并参阅 [ACP Agents](/en/tools/acp-agents)。
 
 主要目标：
 
@@ -119,29 +119,30 @@ title: "子代理"
 - 全局默认：`session.threadBindings.enabled`，`session.threadBindings.idleHours`，`session.threadBindings.maxAgeHours`
 - 通道覆盖和生成自动绑定键特定于适配器。请参阅上面的 **支持线程的通道**。
 
-有关当前适配器的详细信息，请参阅 [配置参考](/en/gateway/configuration-reference) 和 [斜杠命令](/en/tools/slash-commands)。
+有关当前适配器的详细信息，请参阅[配置参考](/en/gateway/configuration-reference)和 [Slash 命令](/en/tools/slash-commands)。
 
 允许列表：
 
 - `agents.list[].subagents.allowAgents`：可通过 `agentId` 定位的代理 ID 列表（`["*"]` 表示允许任何）。默认值：仅请求者代理。
 - 沙箱继承保护：如果请求者会话是沙箱隔离的，`sessions_spawn` 将拒绝以非沙箱隔离方式运行的目标。
+- `agents.defaults.subagents.requireAgentId` / `agents.list[].subagents.requireAgentId`：如果为 true，则阻止省略 `agentId` 的 `sessions_spawn` 调用（强制显式选择配置文件）。默认值：false。
 
 设备发现：
 
-- 使用 `agents_list` 查看当前允许用于 `sessions_spawn` 的代理 ID。
+- 使用 `agents_list` 查看当前允许 `sessions_spawn` 使用哪些 agent ID。
 
 自动归档：
 
-- 子代理会话在 `agents.defaults.subagents.archiveAfterMinutes` 后自动归档（默认值：60）。
-- 归档使用 `sessions.delete` 并将对话记录重命名为 `*.deleted.<timestamp>`（同一文件夹）。
-- `cleanup: "delete"` 在宣布后立即归档（仍然通过重命名保留对话记录）。
-- 自动归档是尽力而为的；如果网关重启，挂起的计时器将丢失。
-- `runTimeoutSeconds` **不会**自动归档；它仅停止运行。该会话会一直保留直到自动归档。
-- 自动归档同样适用于深度 1 和深度 2 的会话。
+- Sub-agent session 会在 `agents.defaults.subagents.archiveAfterMinutes` 后自动归档（默认值：60）。
+- 归档使用 `sessions.delete` 并将记录重命名为 `*.deleted.<timestamp>`（同一文件夹）。
+- `cleanup: "delete"` 在通报后立即归档（仍通过重命名保留记录）。
+- 自动归档尽力而为；如果网关重启，待处理的定时器将丢失。
+- `runTimeoutSeconds` **不**自动归档；它仅停止运行。Session 将保留直到自动归档。
+- 自动归档同等地适用于深度 1 和深度 2 的 session。
 
-## 嵌套子代理
+## 嵌套 Sub-Agents
 
-默认情况下，子代理无法生成自己的子代理（`maxSpawnDepth: 1`）。您可以通过设置 `maxSpawnDepth: 2` 来启用一级嵌套，从而实现**编排器模式**（orchestrator pattern）：主代理 → 编排器子代理 → 工作器子子代理。
+默认情况下，sub-agents 无法生成自己的 sub-agents (`maxSpawnDepth: 1`)。您可以通过设置 `maxSpawnDepth: 2` 来启用一级嵌套，从而允许**编排器模式**：主 → 编排器 sub-agent → 工作者 sub-sub-agents。
 
 ### 如何启用
 
@@ -162,90 +163,90 @@ title: "子代理"
 
 ### 深度级别
 
-| 深度 | 会话密钥形状                                 | 角色                              | 能否生成？                   |
-| ---- | -------------------------------------------- | --------------------------------- | ---------------------------- |
-| 0    | `agent:<id>:main`                            | 主代理                            | 始终                         |
-| 1    | `agent:<id>:subagent:<uuid>`                 | 子代理（当允许深度 2 时为编排器） | 仅当 `maxSpawnDepth >= 2` 时 |
-| 2    | `agent:<id>:subagent:<uuid>:subagent:<uuid>` | 子子代理（叶工作器）              | 从不                         |
+| 深度 | Session 键形状                               | 角色                                 | 能否生成？                   |
+| ---- | -------------------------------------------- | ------------------------------------ | ---------------------------- |
+| 0    | `agent:<id>:main`                            | 主 agent                             | 始终                         |
+| 1    | `agent:<id>:subagent:<uuid>`                 | Sub-agent（当允许深度 2 时为编排器） | 仅当 `maxSpawnDepth >= 2` 时 |
+| 2    | `agent:<id>:subagent:<uuid>:subagent:<uuid>` | 子子代理（叶工作器）                 | 从不                         |
 
 ### 公告链
 
-结果沿着链向上回流：
+结果沿链向上回流：
 
 1. 深度 2 工作器完成 → 向其父级（深度 1 编排器）公告
 2. 深度 1 编排器接收公告，综合结果，完成 → 向主代理公告
-3. 主代理接收公告并传递给用户
+3. 主代理接收公告并交付给用户
 
-每一层只能看到其直接子代的公告。
+每个层级仅能看到其直接子级的公告。
 
-### 按深度划分的工具策略
+### 按深度的工具策略
 
-- 角色和控制范围在生成时被写入会话元数据。这可以防止扁平化的或恢复的会话密钥意外地重新获得编排器权限。
-- **深度 1（编排器，当 `maxSpawnDepth >= 2` 时）**：获得 `sessions_spawn`、`subagents`、`sessions_list`、`sessions_history`，以便它可以管理其子代。其他会话/系统工具仍然被拒绝。
-- **深度 1（叶节点，当 `maxSpawnDepth == 1` 时）**：没有会话工具（当前默认行为）。
-- **深度 2（叶工作器）**：没有会话工具 —— `sessions_spawn` 在深度 2 始终被拒绝。无法生成更多子代。
+- 角色和控制范围在生成时被写入会话元数据。这可以防止扁平化或还原的会话密钥意外重新获得编排器权限。
+- **深度 1（编排器，当 `maxSpawnDepth >= 2` 时）**：获取 `sessions_spawn`、`subagents`、`sessions_list`、`sessions_history`，以便它可以管理其子级。其他会话/系统工具仍然被拒绝。
+- **深度 1（叶，当 `maxSpawnDepth == 1` 时）**：无会话工具（当前默认行为）。
+- **深度 2（叶工作器）**：无会话工具 —— `sessions_spawn` 在深度 2 始终被拒绝。无法生成更多子级。
 
 ### 每个代理的生成限制
 
-每个代理会话（任何深度）一次最多可以有 `maxChildrenPerAgent`（默认：5）个活动子项。这可以防止来自单个编排器的失控扩散。
+每个代理会话（在任何深度）一次最多可以有 `maxChildrenPerAgent`（默认：5）个活动的子级。这可以防止来自单个编排器的失控扩散。
 
 ### 级联停止
 
-停止深度为 1 的编排器会自动停止其所有深度为 2 的子项：
+停止深度 1 编排器会自动停止其所有深度 2 子级：
 
-- 主聊天中的 `/stop` 会停止所有深度为 1 的代理并级联到其深度为 2 的子项。
-- `/subagents kill <id>` 会停止特定的子代理并级联到其子项。
-- `/subagents kill all` 会停止请求者的所有子代理并级联。
+- 主聊天中的 `/stop` 会停止所有深度 1 代理并级联到其深度 2 子级。
+- `/subagents kill <id>` 停止特定的子代理并级联到其子级。
+- `/subagents kill all` 停止请求者的所有子代理并级联。
 
 ## 身份验证
 
-子代理的身份验证由**代理 ID** 解析，而不是由会话类型解析：
+子代理身份验证由 **代理 ID** 解析，而不是由会话类型解析：
 
 - 子代理会话密钥是 `agent:<agentId>:subagent:<uuid>`。
-- 身份验证存储从该代理的 `agentDir` 加载。
-- 主代理的身份验证配置文件作为**后备**合并进来；发生冲突时，代理配置文件会覆盖主配置文件。
+- 身份验证存储是从该代理的 `agentDir` 加载的。
+- 主代理的身份验证配置文件作为 **后备** 合并进来；代理配置文件在冲突时覆盖主配置文件。
 
-注意：合并是相加的，因此主配置文件始终可用作后备。尚不支持每个代理完全隔离的身份验证。
+注意：合并是累加的，因此主配置文件始终可作为后备使用。尚不支持每个代理完全隔离的身份验证。
 
-## 宣布
+## 公告
 
-子代理通过宣布步骤进行报告：
+子代理通过公告步骤报告回来：
 
-- 宣布步骤在子代理会话（而不是请求者会话）内部运行。
-- 如果子代理准确回复 `ANNOUNCE_SKIP`，则不会发布任何内容。
-- 否则，传递取决于请求者深度：
-  - 顶级请求者会话使用具有外部传递（`deliver=true`）的后续 `agent` 调用
-  - 嵌套请求者子代理会话接收内部后续注入（`deliver=false`），以便编排器可以在会话中综合子项结果
+- 公告步骤在子代理会话内部运行（而不是在请求者会话中）。
+- 如果子代理完全回复 `ANNOUNCE_SKIP`，则不会发布任何内容。
+- 否则，传递方式取决于请求者的深度：
+  - 顶级请求者会话使用带有外部传递 (`deliver=true`) 的后续 `agent` 调用
+  - 嵌套请求者子代理会话接收内部后续注入 (`deliver=false`)，以便编排器可以在会话中综合子结果
   - 如果嵌套请求者子代理会话已消失，OpenClaw 会在可用时回退到该会话的请求者
-- 在构建嵌套完成发现时，子完成聚合的范围限定为当前请求者运行，从而防止陈旧的先前运行子输出泄漏到当前宣布中。
-- 当渠道适配器可用时，宣布回复会保留会话/主题路由。
+- 在构建嵌套完成发现时，子完成聚合的范围限定于当前请求者运行，从而防止陈旧的先前运行子输出泄漏到当前通告中。
+- 通告回复在渠道适配器上可用时会保留线程/主题路由。
 - 通告上下文被规范化为一个稳定的内部事件块：
-  - source (`subagent` 或 `cron`)
-  - 子会话 key/id
+  - 来源 (`subagent` 或 `cron`)
+  - 子会话密钥/ID
   - 通告类型 + 任务标签
-  - 根据运行结果派生的状态行 (`success`, `error`, `timeout`, 或 `unknown`)
+  - 源自运行时结果的状态行 (`success`、`error`、`timeout` 或 `unknown`)
   - 来自通告步骤的结果内容（如果缺失则为 `(no output)`）
-  - 一条后续指令，描述何时回复以及何时保持静默
-- `Status` 不是根据模型输出推断出来的；它来自运行结果信号。
+  - 描述何时回复与保持静默的后续指令
+- `Status` 不是从模型输出推断出来的；它来自运行时结果信号。
 
-通告载荷在末尾包含一个统计行（即使在被包裹的情况下）：
+通告有效负载在末尾包含一个统计行（即使被包装）：
 
 - 运行时（例如 `runtime 5m12s`）
 - Token 使用量（输入/输出/总计）
-- 配置了模型定价时的估算成本 (`models.providers.*.models[].cost`)
-- `sessionKey`, `sessionId`, 和转录路径（以便主代理可以通过 `sessions_history` 获取历史记录或在磁盘上检查文件）
-- 内部元数据仅供编排使用；面向用户的回复应以正常的助手语音重写。
+- 配置模型定价时的估算成本 (`models.providers.*.models[].cost`)
+- `sessionKey`、`sessionId` 和脚本路径（以便主代理可以通过 `sessions_history` 获取历史记录或在磁盘上检查文件）
+- 内部元数据仅供编排使用；面向用户的回复应以普通助手语音重写。
 
 ## 工具策略（子代理工具）
 
-默认情况下，子代理获得**除会话工具和系统工具外的所有工具**：
+默认情况下，子代理获得除会话工具和系统工具之外的所有工具：
 
 - `sessions_list`
 - `sessions_history`
 - `sessions_send`
 - `sessions_spawn`
 
-当 `maxSpawnDepth >= 2` 时，深度为 1 的编排器子代理还会额外获得 `sessions_spawn`, `subagents`, `sessions_list`, 和 `sessions_history`，以便它们管理其子级。
+当 `maxSpawnDepth >= 2` 时，深度为 1 的编排器子代理还会接收 `sessions_spawn`、`subagents`、`sessions_list` 和 `sessions_history`，以便管理其子级。
 
 通过配置覆盖：
 
@@ -273,21 +274,21 @@ title: "子代理"
 
 ## 并发
 
-子代理使用一个专用的进程内队列通道：
+子代理使用专用的进程内队列通道：
 
 - 通道名称：`subagent`
 - 并发数：`agents.defaults.subagents.maxConcurrent`（默认 `8`）
 
 ## 停止
 
-- 在请求者聊天中发送 `/stop` 会中止请求者会话并停止由此产生的任何活动子代理运行，并级联到嵌套的子级。
-- `/subagents kill <id>` 停止特定的子代理并级联到其子级。
+- 在请求者聊天中发送 `/stop` 会中止请求者会话并停止由其生成的任何活动子代理运行，并级联停止嵌套的子级。
+- `/subagents kill <id>` 会停止特定的子代理并级联停止其子级。
 
 ## 限制
 
-- 子代理公告是 **尽力而为** 的。如果网关重启，待处理的“公告回传”工作将丢失。
-- 子代理仍然共享相同的网关进程资源；将 `maxConcurrent` 视为安全阀。
-- `sessions_spawn` 始终是非阻塞的：它立即返回 `{ status: "accepted", runId, childSessionKey }`。
-- 子代理上下文仅注入 `AGENTS.md` + `TOOLS.md`（没有 `SOUL.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md` 或 `BOOTSTRAP.md`）。
+- 子代理的公告是“尽力而为”的。如果网关重启，挂起的“回传公告”工作将会丢失。
+- 子代理仍然共享相同的网关进程资源；请将 `maxConcurrent` 视为安全阀。
+- `sessions_spawn` 始终是非阻塞的：它会立即返回 `{ status: "accepted", runId, childSessionKey }`。
+- 子代理上下文仅注入 `AGENTS.md` + `TOOLS.md`（不包含 `SOUL.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md` 或 `BOOTSTRAP.md`）。
 - 最大嵌套深度为 5（`maxSpawnDepth` 范围：1–5）。对于大多数用例，建议深度为 2。
-- `maxChildrenPerAgent` 限制每个会话的活动子级数（默认：5，范围：1–20）。
+- `maxChildrenPerAgent` 限制每个会话的活动子级数量（默认：5，范围：1–20）。

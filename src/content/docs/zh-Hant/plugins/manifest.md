@@ -258,3 +258,9 @@ OpenClaw 會在提供者運行時載入之前讀取此內容。
 - 如果您的外掛程式依賴原生模組，請記錄建置步驟以及任何
   套件管理器允許清單需求（例如，pnpm `allow-build-scripts`
   - `pnpm rebuild <package>`）。
+
+## 相關
+
+- [建置外掛](/en/plugins/building-plugins) — 開始使用外掛
+- [外掛架構](/en/plugins/architecture) — 內部架構
+- [SDK 概觀](/en/plugins/sdk-overview) — 外掛 SDK 參考資料

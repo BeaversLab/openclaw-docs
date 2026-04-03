@@ -10,7 +10,7 @@ sidebarTitle: "Ajout de capacités"
 
 # Ajout de capacités
 
-<Info>This is a **contributor guide** for OpenClaw core developers. If you are building an external plugin, see [Building Plugins](/en/plugins/building-plugins) instead.</Info>
+<Info>Il s'agit d'un **guide pour les contributeurs** destiné aux développeurs du cœur de OpenClaw. Si vous créez un plugin externe, consultez plutôt [Building Plugins](/en/plugins/building-plugins) .</Info>
 
 Utilisez ceci lorsque OpenClaw a besoin d'un nouveau domaine tel que la génération d'images,
 la génération de vidéos, ou une future zone fonctionnalité supportée par un fournisseur.
@@ -81,7 +81,7 @@ Pour une nouvelle capacité, prévoyez de toucher ces zones :
 - `src/plugins/runtime/index.ts`
 - `src/plugin-sdk/<capability>.ts`
 - `src/plugin-sdk/<capability>-runtime.ts`
-- un ou plusieurs `extensions/<vendor>/...`
+- un ou plusieurs packages de plugins groupés
 - config/docs/tests
 
 ## Exemple : génération d'images
@@ -91,7 +91,7 @@ La génération d'images suit la structure standard :
 1. le cœur définit `ImageGenerationProvider`
 2. le cœur expose `registerImageGenerationProvider(...)`
 3. le cœur expose `runtime.imageGeneration.generate(...)`
-4. les plugins `openai` et `google` enregistrent des implémentations prises en charge par les fournisseurs
+4. les plugins `openai` et `google` enregistrent des implémentations prises en charge par un fournisseur
 5. les futurs fournisseurs peuvent enregistrer le même contrat sans modifier les channels/tools
 
 La clé de configuration est distincte du routage de l'analyse d'image :

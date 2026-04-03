@@ -136,16 +136,16 @@ imsg send <handle> "test"
 
 <Tabs>
   <Tab title="DM policy">
-    `channels.imessage.dmPolicy` 控制直接訊息:
+    `channels.imessage.dmPolicy` 控制直接訊息：
 
     - `pairing` (預設)
     - `allowlist`
-    - `open` (需要 `allowFrom` 包含 `"*"`)
+    - `open` (要求 `allowFrom` 包含 `"*"`)
     - `disabled`
 
-    允許清單欄位: %%PH:INLINE_CODE:96:15e47f2b%%。
+    允許清單欄位：`channels.imessage.allowFrom`。
 
-    允許清單項目可以是 handles 或 chat targets (`chat_id:*`, `chat_guid:*`, `chat_identifier:*`)。
+    允許清單條目可以是 handles 或 chat targets (`chat_id:*`, `chat_guid:*`, `chat_identifier:*`)。
 
   </Tab>
 
@@ -413,3 +413,11 @@ imsg send <handle> "test"
 - [Gateway 設定](/en/gateway/configuration)
 - [配對](/en/channels/pairing)
 - [BlueBubbles](/en/channels/bluebubbles)
+
+## 相關
+
+- [頻道總覽](/en/channels) — 所有支援的頻道
+- [配對](/en/channels/pairing) — 直接訊息認證和配對流程
+- [群組](/en/channels/groups) — 群組聊天行為和提及控制
+- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
+- [安全性](/en/gateway/security) — 存取模型和強化防護

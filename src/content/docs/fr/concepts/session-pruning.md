@@ -1,121 +1,70 @@
 ---
 title: "Élagage de session"
-summary: "Élagage de session : réduction des résultats des outils pour limiter l'expansion du contexte"
+summary: "Suppression des anciens résultats d'outils pour garder le contexte léger et le cache efficace"
 read_when:
-  - You want to reduce LLM context growth from tool outputs
-  - You are tuning agents.defaults.contextPruning
+  - You want to reduce context growth from tool outputs
+  - You want to understand Anthropic prompt cache optimization
 ---
 
 # Élagage de session
 
-L'élagage de session supprime les **anciens résultats des outils** du contexte en mémoire juste avant chaque appel LLM. Cela ne **réécrit pas** l'historique de session sur disque (`*.jsonl`).
+L'élagage de session supprime les **anciens résultats d'outils** du contexte avant chaque appel LLM. Cela réduit le gonflement du contexte dû aux résultats d'outils accumulés (résultats d'exécution, lectures de fichiers, résultats de recherche) sans toucher à vos messages de conversation.
 
-## Quand il s'exécute
+<Info>L'élagage s'effectue uniquement en mémoire -- il ne modifie pas la transcription de session sur disque. Votre historique complet est toujours préservé.</Info>
 
-- Lorsque `mode: "cache-ttl"` est activé et que le dernier appel Anthropic pour la session est antérieur à `ttl`.
-- N'affecte que les messages envoyés au modèle pour cette demande.
-- Actif uniquement pour les appels Anthropic API (et les modèles OpenRouter Anthropic).
-- Pour de meilleurs résultats, faites correspondre `ttl` à votre stratégie de `cacheRetention` du modèle (`short` = 5 m, `long` = 1 h).
-- Après un élagage, la fenêtre TTL est réinitialisée, de sorte que les demandes ultérieures conservent le cache jusqu'à ce que `ttl` expire à nouveau.
+## Pourquoi c'est important
 
-## Valeurs par défaut intelligentes (Anthropic)
+Les sessions longues accumulent des résultats d'outils qui gonflent la fenêtre de contexte. Cela augmente les coûts et peut forcer la [compactage](/en/concepts/compaction) plus tôt que nécessaire.
 
-- Profils **OAuth ou setup-token** : activez l'élagage `cache-ttl` et définissez le heartbeat sur `1h`.
-- Profils **clé API** : activez l'élagage `cache-ttl`, définissez le heartbeat sur `30m` et `cacheRetention: "short"` par défaut sur les modèles Anthropic.
-- Si vous définissez explicitement l'une de ces valeurs, OpenClaw ne les remplacera pas.
+L'élagage est particulièrement précieux pour le **cache de prompt Anthropic**. Une fois le TTL du cache expiré, la requête suivante remet en cache le prompt complet. L'élagage réduit la taille de l'écriture dans le cache, ce qui réduit directement les coûts.
 
-## Ce que cela améliore (coût + comportement du cache)
+## Comment cela fonctionne
 
-- **Pourquoi élaguer :** la mise en cache du prompt Anthropic ne s'applique que dans la limite du TTL. Si une session reste inactive au-delà du TTL, la prochaine demande remet en cache le prompt complet, sauf si vous le réduisez d'abord.
-- **Ce qui devient moins cher :** l'élagage réduit la taille **cacheWrite** pour cette première demande après l'expiration du TTL.
-- **Pourquoi la réinitialisation du TTL est importante :** une fois l'élagage effectué, la fenêtre de cache est réinitialisée, ce qui permet aux demandes suivantes de réutiliser le prompt fraîchement mis en cache au lieu de remettre en cache l'historique complet.
-- **Ce qu'il ne fait pas :** l'élagage n'ajoute pas de jetons ou de coûts « doubles » ; il modifie uniquement ce qui est mis en cache lors de cette première demande post‑TTL.
+1. Attendez l'expiration du TTL du cache (par défaut 5 minutes).
+2. Trouvez les anciens résultats d'outils (les messages de l'utilisateur et de l'assistant ne sont jamais touchés).
+3. **Couper en douceur** les résultats trop volumineux -- gardez le début et la fin, insérez `...`.
+4. **Effacer fermement** le reste -- remplacez par un espace réservé.
+5. Réinitialisez le TTL pour que les requêtes de suivi réutilisent le cache frais.
 
-## Ce qui peut être élagué
+## Paramètres par défaut intelligents
 
-- Seulement les messages `toolResult`.
-- Les messages utilisateur + assistant ne sont **jamais** modifiés.
-- Les derniers messages de l'assistant `keepLastAssistants` sont protégés ; les résultats des outils après cette limite ne sont pas élagués.
-- S'il n'y a pas assez de messages d'assistant pour établir la limite, l'élagage est ignoré.
-- Les résultats des outils contenant des **blocs d'image** sont ignorés (jamais taillés/effacés).
+OpenClaw active automatiquement l'élagage pour les profils Anthropic :
 
-## Estimation de la fenêtre contextuelle
+| Type de profil                  | Élagage activé | Heartbeat |
+| ------------------------------- | -------------- | --------- |
+| OAuth ou jeton de configuration | Oui            | 1 heure   |
+| Clé API                         | Oui            | 30 min    |
 
-L'élagage utilise une fenêtre contextuelle estimée (caractères ≈ jetons × 4). La fenêtre de base est résolue dans cet ordre :
+Si vous définissez des valeurs explicites, OpenClaw ne les remplacera pas.
 
-1. Remplacement `models.providers.*.models[].contextWindow`.
-2. Définition du modèle `contextWindow` (à partir du registre de modèles).
-3. `200000` jetons par défaut.
+## Activer ou désactiver
 
-Si `agents.defaults.contextTokens` est défini, il est traité comme une limite (min) sur la fenêtre résolue.
-
-## Mode
-
-### cache-ttl
-
-- L'élagage ne s'exécute que si le dernier appel Anthropic est antérieur à `ttl` (par défaut `5m`).
-- Lorsqu'il s'exécute : même comportement de découpage souple + effacement dur qu'auparavant.
-
-## Élagage souple vs dur
-
-- **Découpage souple** : uniquement pour les résultats d' outils trop volumineux.
-  - Conserve le début + la fin, insère `...`, et ajoute une note avec la taille originale.
-  - Ignore les résultats avec des blocs d'image.
-- **Effacement dur** : remplace tout le résultat de l'outil par `hardClear.placeholder`.
-
-## Sélection d'outils
-
-- `tools.allow` / `tools.deny` prennent en charge les caractères génériques `*`.
-- Le refus l'emporte.
-- La correspondance ne tient pas compte de la casse.
-- Liste d'autorisation vide => tous les outils autorisés.
-
-## Interaction avec d'autres limites
-
-- Les outils intégrés tronquent déjà leur propre sortie ; l'élagage de session est une couche supplémentaire qui empêche les conversations de longue durée d'accumuler trop de résultats d'outils dans le contexte du modèle.
-- La compaction est distincte : la compaction résume et rend persistant, tandis que l'élagage est transitoire par requête. Voir [/concepts/compaction](/en/concepts/compaction).
-
-## Valeurs par défaut (lorsqu'activé)
-
-- `ttl` : `"5m"`
-- `keepLastAssistants` : `3`
-- `softTrimRatio` : `0.3`
-- `hardClearRatio` : `0.5`
-- `minPrunableToolChars` : `50000`
-- `softTrim` : `{ maxChars: 4000, headChars: 1500, tailChars: 1500 }`
-- `hardClear` : `{ enabled: true, placeholder: "[Old tool result content cleared]" }`
-
-## Exemples
-
-Par défaut (désactivé) :
-
-```json5
-{
-  agents: { defaults: { contextPruning: { mode: "off" } } },
-}
-```
-
-Activer l'élagage sensible au TTL :
-
-```json5
-{
-  agents: { defaults: { contextPruning: { mode: "cache-ttl", ttl: "5m" } } },
-}
-```
-
-Limiter l'élagage à des outils spécifiques :
+L'élagage est désactivé par défaut pour les fournisseurs autres que Anthropic. Pour activer :
 
 ```json5
 {
   agents: {
     defaults: {
-      contextPruning: {
-        mode: "cache-ttl",
-        tools: { allow: ["exec", "read"], deny: ["*image*"] },
-      },
+      contextPruning: { mode: "cache-ttl", ttl: "5m" },
     },
   },
 }
 ```
 
-Voir la référence de configuration : [Configuration du Gateway](/en/gateway/configuration)
+Pour désactiver : définissez `mode: "off"`.
+
+## Élagage vs compactage
+
+|                  | Élagage                       | Compactage                  |
+| ---------------- | ----------------------------- | --------------------------- |
+| **Quoi**         | Coupe les résultats d'outils  | Résume la conversation      |
+| **Sauvegardé ?** | Non (par requête)             | Oui (dans la transcription) |
+| **Portée**       | Résultats d'outils uniquement | Conversation entière        |
+
+Ils se complètent -- l'élagage garde les résultats d'outils légers entre les cycles de compactage.
+
+## Pour aller plus loin
+
+- [Compactage](/en/concepts/compaction) -- réduction du contexte basée sur le résumé
+- [Configuration Gateway](/en/gateway/configuration) -- tous les paramètres de configuration d'élagage
+  (`contextPruning.*`)

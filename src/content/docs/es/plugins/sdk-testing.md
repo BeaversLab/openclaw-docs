@@ -12,7 +12,7 @@ read_when:
 
 Referencia de utilidades de prueba, patrones y aplicación de reglas de lint para complementos de OpenClaw.
 
-<Tip>**¿Buscas ejemplos de pruebas?** Las guías prácticas incluyen ejemplos de pruebas detallados: [Pruebas de complementos de canal](/en/plugins/sdk-channel-plugins#step-6-test) y [Pruebas de complementos de proveedor](/en/plugins/sdk-provider-plugins#step-6-test).</Tip>
+<Tip>**¿Buscas ejemplos de pruebas?** Las guías prácticas incluyen ejemplos de pruebas completos: [Pruebas de complementos de canal](/en/plugins/sdk-channel-plugins#step-6-test) y [Pruebas de complementos de proveedor](/en/plugins/sdk-provider-plugins#step-6-test).</Tip>
 
 ## Utilidades de prueba
 
@@ -193,7 +193,7 @@ Estas pruebas afirman:
 Para un complemento específico:
 
 ```bash
-pnpm test -- extensions/my-channel/
+pnpm test -- <bundled-plugin-root>/my-channel/
 ```
 
 Solo para pruebas de contrato:
@@ -223,10 +223,10 @@ OpenClaw usa Vitest con umbrales de cobertura de V8. Para las pruebas de complem
 pnpm test
 
 # Run specific plugin tests
-pnpm test -- extensions/my-channel/src/channel.test.ts
+pnpm test -- <bundled-plugin-root>/my-channel/src/channel.test.ts
 
 # Run with a specific test name filter
-pnpm test -- extensions/my-channel/ -t "resolves account"
+pnpm test -- <bundled-plugin-root>/my-channel/ -t "resolves account"
 
 # Run with coverage
 pnpm test:coverage
@@ -242,5 +242,5 @@ OPENCLAW_TEST_PROFILE=low OPENCLAW_TEST_SERIAL_GATEWAY=1 pnpm test
 
 - [Descripción general del SDK](/en/plugins/sdk-overview) -- convenciones de importación
 - [Complementos de canal del SDK](/en/plugins/sdk-channel-plugins) -- interfaz del complemento de canal
-- [Complementos de proveedor del SDK](/en/plugins/sdk-provider-plugins) -- enlaces del complemento de proveedor
-- [Compilación de complementos](/en/plugins/building-plugins) -- guía de introducción
+- [Complementos de proveedor del SDK](/en/plugins/sdk-provider-plugins) -- hooks del complemento de proveedor
+- [Creación de complementos](/en/plugins/building-plugins) -- guía de introducción

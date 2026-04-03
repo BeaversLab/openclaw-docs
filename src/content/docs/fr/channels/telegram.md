@@ -1,5 +1,5 @@
 ---
-summary: "Statut du support du bot Telegram, capacités et configuration"
+summary: "Statut de support, capacités et configuration du bot Telegram"
 read_when:
   - Working on Telegram features or webhooks
 title: "Telegram"
@@ -10,28 +10,28 @@ title: "Telegram"
 Statut : prêt pour la production pour les DMs de bot + groupes via grammY. Le long polling est le mode par défaut ; le mode webhook est facultatif.
 
 <CardGroup cols={3}>
-  <Card title="Appariement" icon="link" href="/en/channels/pairing">
-    La stratégie par défaut pour les Telegram sur Telegram est l'appariement.
+  <Card title="Pairing" icon="link" href="/en/channels/pairing">
+    La stratégie DM par défaut pour Telegram est l'appairage.
   </Card>
   <Card title="Channel troubleshooting" icon="wrench" href="/en/channels/troubleshooting">
-    Manuels de diagnostic et de réparation multi-canal.
+    Playbooks de diagnostic et de réparation multi-canal.
   </Card>
   <Card title="Gateway configuration" icon="settings" href="/en/gateway/configuration">
-    Modèles et exemples complets de configuration de canal.
+    Modèles et exemples de configuration complète du canal.
   </Card>
 </CardGroup>
 
 ## Configuration rapide
 
 <Steps>
-  <Step title="Créer le jeton du bot dans BotFather">
-    Ouvrez Telegram et discutez avec **@BotFather** (confirmez que le gestionnaire est exactement `@BotFather`).
+  <Step title="Create the bot token in BotFather">
+    Ouvrez Telegram et chattez avec **@BotFather** (confirmez que le handle est exactement `@BotFather`).
 
-    Exécutez `/newbot`, suivez les instructions et enregistrez le jeton.
+    Exécutez `/newbot`, suivez les invites et enregistrez le jeton.
 
   </Step>
 
-  <Step title="Configurer le jeton et la politique de DM">
+  <Step title="Configure token and DM policy">
 
 ```json5
 {
@@ -46,12 +46,12 @@ Statut : prêt pour la production pour les DMs de bot + groupes via grammY. Le l
 }
 ```
 
-    Alternative de variable d'environnement : `TELEGRAM_BOT_TOKEN=...` (compte par défaut uniquement).
+    Fallback Env : `TELEGRAM_BOT_TOKEN=...` (compte par défaut uniquement).
     Telegram n'utilise **pas** `openclaw channels login telegram` ; configurez le jeton dans config/env, puis démarrez la passerelle.
 
   </Step>
 
-  <Step title="Démarrer la passerelle et approuver le premier DM">
+  <Step title="Start gateway and approve first DM">
 
 ```bash
 openclaw gateway
@@ -59,43 +59,43 @@ openclaw pairing list telegram
 openclaw pairing approve telegram <CODE>
 ```
 
-    Les codes de jumelage expirent après 1 heure.
+    Les codes d'appairage expirent après 1 heure.
 
   </Step>
 
-  <Step title="Ajouter le bot à un groupe">
-    Ajoutez le bot à votre groupe, puis définissez `channels.telegram.groups` et `groupPolicy` pour correspondre à votre modèle d'accès.
+  <Step title="Add the bot to a group">
+    Ajoutez le bot à votre groupe, puis définissez `channels.telegram.groups` et `groupPolicy` pour qu'ils correspondent à votre modèle d'accès.
   </Step>
 </Steps>
 
-<Note>L'ordre de résolution des jetons est conscient du compte. En pratique, les valeurs de configuration l'emportent sur la valeur de repli de l'environnement, et `TELEGRAM_BOT_TOKEN` s'applique uniquement au compte par défaut.</Note>
+<Note>L'ordre de résolution des jetons est conscient du compte. En pratique, les valeurs de configuration l'emportent sur le fallback d'env, et `TELEGRAM_BOT_TOKEN` ne s'applique qu'au compte par défaut.</Note>
 
 ## Paramètres côté Telegram
 
 <AccordionGroup>
-  <Accordion title="Mode de confidentialité et visibilité du groupe">
-    Les bots Telegram sont par défaut en **Mode de confidentialité**, ce qui limite les messages de groupe qu'ils reçoivent.
+  <Accordion title="Privacy mode and group visibility">
+    Les bots Telegram sont par défaut en **Privacy Mode**, ce qui limite les messages de groupe qu'ils reçoivent.
 
-    Si le bot doit voir tous les messages du groupe, vous pouvez soit :
+    Si le bot doit voir tous les messages de groupe, vous pouvez soit :
 
-    - désactiver le mode de confidentialité via `/setprivacy`, ou
+    - désactiver le mode privé via `/setprivacy`, soit
     - rendre le bot administrateur du groupe.
 
-    Lorsque vous basculez le mode de confidentialité, supprimez et ajoutez à nouveau le bot dans chaque groupe pour que Telegram applique le changement.
+    Lorsque vous basculez le mode privé, retirez et ajoutez à nouveau le bot dans chaque groupe pour que Telegram applique la modification.
 
   </Accordion>
 
   <Accordion title="Group permissions">
-    Le statut d'administrateur est contrôlé dans les paramètres du groupe Telegram.
+    Le statut d'administrateur est contrôlé dans les paramètres de groupe Telegram.
 
-    Les bots administrateurs reçoivent tous les messages du groupe, ce qui est utile pour un comportement de groupe toujours actif.
+    Les bots administrateurs reçoivent tous les messages de groupe, ce qui est utile pour un comportement de groupe toujours actif.
 
   </Accordion>
 
   <Accordion title="Helpful BotFather toggles">
 
-    - `/setjoingroups` pour autoriser/refuser les ajouts au groupe
-    - `/setprivacy` pour le comportement de visibilité du groupe
+    - `/setjoingroups` pour autoriser/interdire les ajouts dans les groupes
+    - `/setprivacy` pour le comportement de visibilité dans les groupes
 
   </Accordion>
 </AccordionGroup>
@@ -103,7 +103,7 @@ openclaw pairing approve telegram <CODE>
 ## Contrôle d'accès et activation
 
 <Tabs>
-  <Tab title="Stratégie de DM">
+  <Tab title="DM policy">
     `channels.telegram.dmPolicy` contrôle l'accès aux messages directs :
 
     - `pairing` (par défaut)
@@ -111,19 +111,19 @@ openclaw pairing approve telegram <CODE>
     - `open` (nécessite que `allowFrom` inclue `"*"`)
     - `disabled`
 
-    `channels.telegram.allowFrom` accepte les IDs numériques d'utilisateurs Telegram. Les préfixes `telegram:` / `tg:` sont acceptés et normalisés.
+    `channels.telegram.allowFrom` accepte les IDs utilisateur numériques Telegram. Les préfixes `telegram:` / `tg:` sont acceptés et normalisés.
     `dmPolicy: "allowlist"` avec un `allowFrom` vide bloque tous les DMs et est rejeté par la validation de la configuration.
     L'intégration accepte les entrées `@username` et les résout en IDs numériques.
-    Si vous avez effectué une mise à niveau et que votre configuration contient des entrées de liste blanche `@username`, exécutez `openclaw doctor --fix` pour les résoudre (au mieux ; nécessite un jeton de bot Telegram).
-    Si vous utilisiez précédemment des fichiers de liste blanche de magasin d'appairage, `openclaw doctor --fix` peut récupérer les entrées dans `channels.telegram.allowFrom` dans les flux de liste blanche (par exemple lorsque `dmPolicy: "allowlist"` n'a pas encore d'IDs explicites).
+    Si vous avez effectué une mise à niveau et que votre configuration contient des entrées de liste d'autorisation `@username`, exécutez `openclaw doctor --fix` pour les résoudre (au mieux ; nécessite un jeton de bot Telegram).
+    Si vous utilisiez précédemment des fichiers de liste d'autorisation de magasin d'appariement, `openclaw doctor --fix` peut récupérer les entrées dans `channels.telegram.allowFrom` dans les flux de liste d'autorisation (par exemple, lorsque `dmPolicy: "allowlist"` n'a pas encore d'IDs explicites).
 
-    Pour les bots à un seul propriétaire, préférez `dmPolicy: "allowlist"` avec des IDs numériques `allowFrom` explicites pour garder la politique d'accès durable dans la configuration (au lieu de dépendre des approbations d'appairage précédentes).
+    Pour les bots à un seul propriétaire, privilégiez `dmPolicy: "allowlist"` avec des IDs numériques `allowFrom` explicites pour garder la politique d'accès durable dans la configuration (au lieu de dépendre des approbations d'appariement précédentes).
 
-    ### Trouver votre ID d'utilisateur Telegram
+    ### Trouver votre ID utilisateur Telegram
 
     Plus sûr (pas de bot tiers) :
 
-    1. Envoyez un DM à votre bot.
+    1. Envoyez un message privé à votre bot.
     2. Exécutez `openclaw logs --follow`.
     3. Lisez `from.id`.
 
@@ -142,7 +142,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     1. **Quels groupes sont autorisés** (`channels.telegram.groups`)
        - aucune configuration `groups` :
-         - avec `groupPolicy: "open"` : n'importe quel groupe peut réussir les vérifications d'ID de groupe
+         - avec `groupPolicy: "open"` : n'importe quel groupe peut passer les vérifications d'ID de groupe
          - avec `groupPolicy: "allowlist"` (par défaut) : les groupes sont bloqués jusqu'à ce que vous ajoutiez des entrées `groups` (ou `"*"`)
        - `groups` configuré : agit comme une liste d'autorisation (IDs explicites ou `"*"`)
 
@@ -155,9 +155,9 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     Les entrées `groupAllowFrom` doivent être des IDs utilisateur numériques Telegram (les préfixes `telegram:` / `tg:` sont normalisés).
     Ne mettez pas les IDs de chat de groupe ou de supergroupe Telegram dans `groupAllowFrom`. Les IDs de chat négatifs appartiennent à `channels.telegram.groups`.
     Les entrées non numériques sont ignorées pour l'autorisation de l'expéditeur.
-    Limite de sécurité (`2026.2.25+`) : l'authentification de l'expéditeur de groupe n'hérite **pas** des approbations du magasin d'appariement DM.
-    L'appariement reste réservé au DM. Pour les groupes, définissez `groupAllowFrom` ou `allowFrom` par groupe/sujet.
-    Note d'exécution : si `channels.telegram` est complètement absent, l'exécution revient par défaut à `groupPolicy="allowlist"` fermé par défaut, sauf si `channels.defaults.groupPolicy` est explicitement défini.
+    Limite de sécurité (`2026.2.25+`) : l'authentification de l'expéditeur de groupe **n'hérite pas** des approbations du magasin d'appariement DM.
+    L'appariement reste limité aux DM. Pour les groupes, définissez `groupAllowFrom` ou `allowFrom` par groupe/sujet.
+    Remarque d'exécution : si `channels.telegram` est totalement absent, l'exécution revient par défaut à `groupPolicy="allowlist"` en mode échec-fermé, sauf si `channels.defaults.groupPolicy` est défini explicitement.
 
     Exemple : autoriser n'importe quel membre dans un groupe spécifique :
 
@@ -197,28 +197,28 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
       Erreur courante : `groupAllowFrom` n'est pas une liste d'autorisation de groupe Telegram.
 
       - Mettez les IDs de chat de groupe ou de supergroupe négatifs Telegram comme `-1001234567890` sous `channels.telegram.groups`.
-      - Mettez les IDs utilisateur Telegram comme `8734062810` sous `groupAllowFrom` lorsque vous souhaitez limiter les personnes autorisées dans un groupe pouvant déclencher le bot.
+      - Mettez les IDs utilisateur Telegram comme `8734062810` sous `groupAllowFrom` lorsque vous souhaitez limiter les personnes au sein d'un groupe autorisé pouvant déclencher le bot.
       - Utilisez `groupAllowFrom: ["*"]` uniquement lorsque vous souhaitez que n'importe quel membre d'un groupe autorisé puisse parler au bot.
     </Warning>
 
   </Tab>
 
-  <Tab title="Mention behavior">
+  <Tab title="Comportement de mention">
     Les réponses de groupe nécessitent une mention par défaut.
 
     La mention peut provenir de :
 
-    - une mention native `@botusername` , ou
-    - des modèles de mention dans :
+    - mention native `@botusername`, ou
+    - modèles de mention dans :
       - `agents.list[].groupChat.mentionPatterns`
       - `messages.groupChat.mentionPatterns`
 
-    Commandes de basculement au niveau de la session :
+    Commutateurs de commande au niveau de la session :
 
     - `/activation always`
     - `/activation mention`
 
-    Celles-ci ne mettent à jour que l'état de la session. Utilisez la configuration pour la persistance.
+    Ceux-ci ne mettent à jour que l'état de la session. Utilisez la configuration pour la persistance.
 
     Exemple de configuration persistante :
 
@@ -238,7 +238,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     - transférer un message de groupe vers `@userinfobot` / `@getidsbot`
     - ou lire `chat.id` depuis `openclaw logs --follow`
-    - ou inspecter API `getUpdates`
+    - ou inspecter le Bot API `getUpdates`
 
   </Tab>
 </Tabs>
@@ -248,49 +248,49 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 - Telegram appartient au processus de passerelle.
 - Le routage est déterministe : les réponses entrantes Telegram reviennent vers Telegram (le modèle ne choisit pas les canaux).
 - Les messages entrants sont normalisés dans l'enveloppe de canal partagée avec les métadonnées de réponse et les espaces réservés pour les médias.
-- Les sessions de groupe sont isolées par l'ID de groupe. Les sujets du forum ajoutent `:topic:<threadId>` pour maintenir les sujets isolés.
-- Les messages DM peuvent transporter `message_thread_id` ; OpenClaw les achemine avec des clés de session sensibles aux fils de discussion et conserve l'ID du fil pour les réponses.
-- Le long polling utilise le runner grammY avec un séquencement par chat par fil de discussion. La concurrence globale du sink du runner utilise `agents.defaults.maxConcurrent`.
-- Le Bot Telegram API ne prend pas en charge les accusés de réception (`sendReadReceipts` ne s'applique pas).
+- Les sessions de groupe sont isolées par ID de groupe. Les sujets du forum ajoutent `:topic:<threadId>` pour garder les sujets isolés.
+- Les messages DM peuvent transporter `message_thread_id` ; OpenClaw les achemine avec des clés de session conscientes des fils et préserve l'ID de fil pour les réponses.
+- Le polling long utilise le lanceur grammY avec un séquençage par chat/fil. La concurrence globale du récepteur du lanceur utilise `agents.defaults.maxConcurrent`.
+- Le Bot Telegram API ne prend pas en charge les accusés de lecture (`sendReadReceipts` ne s'applique pas).
 
 ## Référence des fonctionnalités
 
 <AccordionGroup>
-  <Accordion title="Live stream preview (message edits)">
+  <Accordion title="Aperçu en direct du flux (modifications de message)">
     OpenClaw peut diffuser des réponses partielles en temps réel :
 
-    - chats directs : message de prévisualisation + `editMessageText`
-    - groupes/sujets : message de prévisualisation + `editMessageText`
+    - discussions directes : message d'aperçu + `editMessageText`
+    - groupes/sujets : message d'aperçu + `editMessageText`
 
     Condition requise :
 
     - `channels.telegram.streaming` est `off | partial | block | progress` (par défaut : `partial`)
-    - `progress` correspond à `partial` sur Telegram (compatibilité avec la nommage inter-canal)
+    - `progress` correspond à `partial` sur Telegram (compatibilité avec la nommage inter-OpenClaw)
     - les valeurs héritées `channels.telegram.streamMode` et booléennes `streaming` sont mappées automatiquement
 
-    Pour les réponses texte uniquement :
+    Pour les réponses en texte uniquement :
 
-    - DM : OpenClaw conserve le même message de prévisualisation et effectue une modification finale sur place (pas de second message)
-    - groupe/sujet : OpenClaw conserve le même message de prévisualisation et effectue une modification finale sur place (pas de second message)
+    - DM : OpenClaw conserve le même message d'aperçu et effectue une modification finale sur place (pas de second message)
+    - groupe/sujet : OpenClaw conserve le même message d'aperçu et effectue une modification finale sur place (pas de second message)
 
-    Pour les réponses complexes (par exemple les charges utiles multimédias), OpenClaw revient à la livraison finale normale puis nettoie le message de prévisualisation.
+    Pour les réponses complexes (par exemple charges utiles média), Telegram revient à la livraison finale normale puis nettoie le message d'aperçu.
 
-    Le streaming de prévisualisation est distinct du block streaming. Lorsque le block streaming est explicitement activé pour Telegram, OpenClaw ignore le flux de prévisualisation pour éviter le double-streaming.
+    Le flux d'aperçu est distinct du flux de bloc. Lorsque le flux de bloc est explicitement activé pour OpenClaw, OpenClaw ignore le flux d'aperçu pour éviter la double diffusion.
 
-    Si le transport de brouillon natif n'est pas disponible/rejeté, OpenClaw revient automatiquement à `sendMessage` + `editMessageText`.
+    Si le transport de brouillon natif est indisponible ou rejeté, Telegram revient automatiquement à `sendMessage` + `editMessageText`.
 
     Flux de raisonnement exclusif à Telegram :
 
-    - `/reasoning stream` envoie le raisonnement à la prévisualisation en direct pendant la génération
+    - `/reasoning stream` envoie le raisonnement à l'aperçu en direct lors de la génération
     - la réponse finale est envoyée sans le texte de raisonnement
 
   </Accordion>
 
-  <Accordion title="Mise en forme et repli HTML">
-    Le texte sortant utilise Telegram `parse_mode: "HTML"`.
+  <Accordion title="Formatage et repli HTML">
+    Le texte sortant utilise le `parse_mode: "HTML"` de Telegram.
 
     - Le texte de type Markdown est rendu en HTML sécurisé pour Telegram.
-    - Le HTML brut du model est échappé pour réduire les échecs d'analyse de Telegram.
+    - Le HTML brut du modèle est échappé pour réduire les échecs d'analyse de Telegram.
     - Si Telegram rejette le HTML analysé, OpenClaw réessaie en texte brut.
 
     Les aperçus de liens sont activés par défaut et peuvent être désactivés avec `channels.telegram.linkPreview: false`.
@@ -298,9 +298,9 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
   </Accordion>
 
   <Accordion title="Commandes natives et commandes personnalisées">
-    L'enregistrement du menu de commandes Telegram est géré au démarrage avec `setMyCommands`.
+    L'enregistrement du menu des commandes Telegram est géré au démarrage avec `setMyCommands`.
 
-    Valeurs par défaut des commandes natives :
+    Paramètres par défaut des commandes natives :
 
     - `commands.native: "auto"` active les commandes natives pour Telegram
 
@@ -321,30 +321,30 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     Règles :
 
-    - les noms sont normalisés (suppression du `/` de début, en minuscules)
+    - les noms sont normalisés (suppression du `/` au début, en minuscules)
     - modèle valide : `a-z`, `0-9`, `_`, longueur `1..32`
     - les commandes personnalisées ne peuvent pas remplacer les commandes natives
-    - les conflits/doublons sont ignorés et consignés
+    - les conflits/doublons sont ignorés et journalisés
 
-    Notes :
+    Remarques :
 
     - les commandes personnalisées sont des entrées de menu uniquement ; elles n'implémentent pas automatiquement le comportement
-    - les commandes de plug-in/compétence peuvent toujours fonctionner lorsqu'elles sont saisies, même si elles ne sont pas affichées dans le menu Telegram
+    - les commandes des plugins/compétences peuvent toujours fonctionner lorsqu'elles sont saisies, même si elles ne sont pas affichées dans le menu Telegram
 
-    Si les commandes natives sont désactivées, les commandes intégrées sont supprimées. Les commandes personnalisées/de plug-in peuvent toujours s'enregistrer si elles sont configurées.
+    Si les commandes natives sont désactivées, les commandes intégrées sont supprimées. Les commandes de plugins/personnalisées peuvent toujours s'enregistrer si elles sont configurées.
 
-    Échecs de configuration courants :
+    Échecs courants de la configuration :
 
-    - `setMyCommands failed` avec `BOT_COMMANDS_TOO_MUCH` signifie que le menu Telegram déborde toujours après la réduction ; réduisez les commandes de plug-in/compétence/personnalisées ou désactivez `channels.telegram.commands.native`.
-    - `setMyCommands failed` avec des erreurs de réseau/récupération signifie généralement que le DNS/HTTPS sortant vers `api.telegram.org` est bloqué.
+    - `setMyCommands failed` avec `BOT_COMMANDS_TOO_MUCH` signifie que le menu Telegram a débordé après la réduction ; réduisez les commandes de plugins/compétences/personnalisées ou désactivez `channels.telegram.commands.native`.
+    - `setMyCommands failed` avec des erreurs réseau/récupération signifie généralement que le DNS/HTTPS sortant vers `api.telegram.org` est bloqué.
 
-    ### Commandes d'appariement d'appareils (plug-in `device-pair`)
+    ### Commandes de jumelage d'appareils (plugin `device-pair`)
 
-    Lorsque le plug-in `device-pair` est installé :
+    Lorsque le plugin `device-pair` est installé :
 
     1. `/pair` génère le code de configuration
     2. collez le code dans l'application iOS
-    3. `/pair pending` répertorie les demandes en attente (y compris le rôle/les portées)
+    3. `/pair pending` liste les demandes en attente (y compris le rôle/les portées)
     4. approuvez la demande :
        - `/pair approve <requestId>` pour une approbation explicite
        - `/pair approve` lorsqu'il n'y a qu'une seule demande en attente
@@ -352,12 +352,12 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     Si un appareil réessaie avec des détails d'authentification modifiés (par exemple rôle/portées/clé publique), la demande en attente précédente est remplacée et la nouvelle demande utilise un `requestId` différent. Réexécutez `/pair pending` avant d'approuver.
 
-    Plus de détails : [Appariement](/en/channels/pairing#pair-via-telegram-recommended-for-ios).
+    Plus de détails : [Jumelage](/en/channels/pairing#pair-via-telegram-recommended-for-ios).
 
   </Accordion>
 
-  <Accordion title="Boutons en ligne">
-    Configurer la portée du clavier en ligne :
+  <Accordion title="Boutons intégrés">
+    Configurer la portée du clavier intégré :
 
 ```json5
 {
@@ -417,13 +417,13 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 }
 ```
 
-    Les clics de rappel sont transmis à l'agent sous forme de texte :
+    Les clics sur les rappels sont transmis à l'agent sous forme de texte :
     `callback_data: <value>`
 
   </Accordion>
 
   <Accordion title="Actions de message Telegram pour les agents et l'automatisation">
-    Les actions d'outil Telegram incluent :
+    Les actions de l'outil Telegram incluent :
 
     - `sendMessage` (`to`, `content`, `mediaUrl` facultatif, `replyToMessageId`, `messageThreadId`)
     - `react` (`chatId`, `messageId`, `emoji`)
@@ -433,7 +433,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     Les actions de message de canal exposent des alias ergonomiques (`send`, `react`, `delete`, `edit`, `sticker`, `sticker-search`, `topic-create`).
 
-    Contrôles de blocage :
+    Contrôles de limitation :
 
     - `channels.telegram.actions.sendMessage`
     - `channels.telegram.actions.deleteMessage`
@@ -441,14 +441,14 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     - `channels.telegram.actions.sticker` (par défaut : désactivé)
 
     Remarque : `edit` et `topic-create` sont actuellement activés par défaut et n'ont pas de commutateurs `channels.telegram.actions.*` distincts.
-    Les envois lors de l'exécution utilisent l'instantané actif de la configuration/des secrets (démarrage/rechargement), les chemins d'action n'effectuent donc pas de nouvelle résolution ad hoc de SecretRef par envoi.
+    Les envois à l'exécution utilisent l'instantané actif de la configuration/secrets (démarrage/rechargement), les chemins d'action n'effectuent donc pas de nouvelle résolution ad hoc de SecretRef par envoi.
 
     Sémantique de suppression des réactions : [/tools/reactions](/en/tools/reactions)
 
   </Accordion>
 
   <Accordion title="Reply threading tags">
-    Telegram prend en charge les balises de fil de réponse explicites dans la sortie générée :
+    Telegram prend en charge les balises explicites de threading de réponse dans la sortie générée :
 
     - `[[reply_to_current]]` répond au message déclencheur
     - `[[reply_to:<id>]]` répond à un ID de message Telegram spécifique
@@ -459,11 +459,11 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     - `first`
     - `all`
 
-    Remarque : `off` désactive le fil de réponse implicite. Les balises explicites `[[reply_to_*]]` sont toujours respectées.
+    Remarque : `off` désactive le threading de réponse implicite. Les balises explicites `[[reply_to_*]]` sont toujours respectées.
 
   </Accordion>
 
-  <Accordion title="Sujets du forum et comportement des fils">
+  <Accordion title="Sujets de forum et comportement des fils">
     Super-groupes de forum :
 
     - les clés de session de sujet ajoutent `:topic:<threadId>`
@@ -476,10 +476,10 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     - l'envoi de messages omet `message_thread_id` (Telegram rejette `sendMessage(...thread_id=1)`)
     - les actions d'écriture incluent toujours `message_thread_id`
 
-    Héritage de sujet : les entrées de sujet héritent des paramètres du groupe, sauf en cas de substitution (`requireMention`, `allowFrom`, `skills`, `systemPrompt`, `enabled`, `groupPolicy`).
+    Héritage de sujet : les entrées de sujet héritent des paramètres du groupe, sauf en cas de remplacement (`requireMention`, `allowFrom`, `skills`, `systemPrompt`, `enabled`, `groupPolicy`).
     `agentId` est réservé aux sujets et n'hérite pas des valeurs par défaut du groupe.
 
-    **Routage d'agent par sujet** : chaque sujet peut être routé vers un agent différent en définissant `agentId` dans la configuration du sujet. Cela donne à chaque sujet son propre espace de travail isolé, sa mémoire et sa session. Exemple :
+    **Routage d'agent par sujet** : Chaque sujet peut être acheminé vers un agent différent en définissant `agentId` dans la configuration du sujet. Cela donne à chaque sujet son propre espace de travail, sa propre mémoire et sa propre session. Exemple :
 
     ```json5
     {
@@ -499,9 +499,9 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     }
     ```
 
-    Chaque sujet possède alors sa propre clé de session : `agent:zu:telegram:group:-1001234567890:topic:3`
+    Chaque sujet possède ensuite sa propre clé de session : `agent:zu:telegram:group:-1001234567890:topic:3`
 
-    **Liaison persistante de sujet ACP** : les sujets de forum peuvent épingler les sessions de harnais ACP via des liaisons ACP typées de niveau supérieur :
+    **Liaison persistante de sujet ACP** : Les sujets de forum peuvent épingler des sessions de harnais ACP via des liaisons ACP typées de premier niveau :
 
     - `bindings[]` avec `type: "acp"` et `match.channel: "telegram"`
 
@@ -554,10 +554,10 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     Ceci est actuellement limité aux sujets de forum dans les groupes et super-groupes.
 
-    **Génération ACP liée au fil depuis le chat** :
+    **Génération ACP liée au fil à partir du chat** :
 
     - `/acp spawn <agent> --thread here|auto` peut lier le sujet Telegram actuel à une nouvelle session ACP.
-    - les messages de suivi du sujet sont routés directement vers la session ACP liée (aucun `/acp steer` requis).
+    - Les messages de suivi du sujet sont acheminés directement vers la session ACP liée (aucun `/acp steer` requis).
     - OpenClaw épingle le message de confirmation de génération dans le sujet après une liaison réussie.
     - Nécessite `channels.telegram.threadBindings.spawnAcpSessions=true`.
 
@@ -568,17 +568,17 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     Comportement du fil DM :
 
-    - les chats privés avec `message_thread_id` conservent le routage DM mais utilisent des clés de session/cibles de réponse tenant compte du fil.
+    - les discussions privées avec `message_thread_id` conservent le routage DM mais utilisent des clés de session/cibles de réponse tenant compte du fil.
 
   </Accordion>
 
   <Accordion title="Audio, vidéo et stickers">
     ### Messages audio
 
-    Telegram fait la distinction entre les notes vocales et les fichiers audio.
+    Telegram distingue les messages vocaux des fichiers audio.
 
     - par défaut : comportement de fichier audio
-    - balise `[[audio_as_voice]]` dans la réponse de l'agent pour forcer l'envoi d'une note vocale
+    - balise `[[audio_as_voice]]` dans la réponse de l'agent pour forcer l'envoi d'un message vocal
 
     Exemple d'action de message :
 
@@ -594,7 +594,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     ### Messages vidéo
 
-    Telegram fait la distinction entre les fichiers vidéo et les notes vidéo.
+    Telegram distingue les fichiers vidéo des messages vidéo.
 
     Exemple d'action de message :
 
@@ -608,7 +608,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 }
 ```
 
-    Les notes vidéo ne prennent pas en charge les légendes ; le texte du message fourni est envoyé séparément.
+    Les messages vidéo ne prennent pas en charge les légendes ; le texte du message fourni est envoyé séparément.
 
     ### Stickers
 
@@ -618,7 +618,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     - TGS animé : ignoré
     - WEBM vidéo : ignoré
 
-    Champs de contexte du sticker :
+    Champs de contexte de sticker :
 
     - `Sticker.emoji`
     - `Sticker.setName`
@@ -646,7 +646,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 }
 ```
 
-    Envoyer l'action de sticker :
+    Action d'envoi de sticker :
 
 ```json5
 {
@@ -670,8 +670,8 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
   </Accordion>
 
-  <Accordion title="Reaction notifications">
-    Les réactions Telegram arrivent sous forme de mises à jour `message_reaction` (séparées des payloads de messages).
+  <Accordion title="Notification de réaction">
+    Les réactions Telegram arrivent sous forme de mises à jour `message_reaction` (séparément des payloads de messages).
 
     Lorsqu'elles sont activées, OpenClaw met en file d'attente des événements système tels que :
 
@@ -684,39 +684,39 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     Notes :
 
-    - `own` signifie que seules les réactions des utilisateurs aux messages envoyés par le bot sont prises en compte (au mieux, via le cache des messages envoyés).
+    - `own` signifie les réactions des utilisateurs uniquement aux messages envoyés par le bot (au mieux via le cache des messages envoyés).
     - Les événements de réaction respectent toujours les contrôles d'accès Telegram (`dmPolicy`, `allowFrom`, `groupPolicy`, `groupAllowFrom`) ; les expéditeurs non autorisés sont ignorés.
-    - Telegram ne fournit pas d'identifiants de fil de discussion dans les mises à jour de réaction.
-      - les groupes non-forum routent vers la session de chat de groupe
-      - les groupes de forum routent vers la session du sujet général du groupe (`:topic:1`), et non vers le sujet exact d'origine
+    - Telegram ne fournit pas les ID de fil dans les mises à jour de réaction.
+      - les groupes non-forums acheminent vers la session de chat de groupe
+      - les groupes forums acheminent vers la session du sujet général du groupe (`:topic:1`), et non vers le sujet d'origine exact
 
     `allowed_updates` pour le polling/webhook incluent `message_reaction` automatiquement.
 
   </Accordion>
 
-  <Accordion title="Ack reactions">
-    `ackReaction` envoie un émoji d'accusé de réception pendant que OpenClaw traite un message entrant.
+  <Accordion title="Réactions d'accusé de réception">
+    `ackReaction` envoie un emoji d'accusé de réception pendant que OpenClaw traite un message entrant.
 
     Ordre de résolution :
 
     - `channels.telegram.accounts.<accountId>.ackReaction`
     - `channels.telegram.ackReaction`
     - `messages.ackReaction`
-    - repli vers l'émoji d'identité de l'agent (`agents.list[].identity.emoji`, sinon "👀")
+    - repli vers l'emoji d'identité de l'agent (`agents.list[].identity.emoji`, sinon "👀")
 
-    Remarques :
+    Notes :
 
-    - Telegram attend des émojis unicode (par exemple "👀").
-    - Utilisez `""` pour désactiver la réaction pour une chaîne ou un compte.
+    - Telegram attend des emoji unicode (par exemple "👀").
+    - Utilisez `""` pour désactiver la réaction pour un canal ou un compte.
 
   </Accordion>
 
-  <Accordion title="Écritures de configuration depuis les événements et les commandes Telegram">
+  <Accordion title="Écritures de configuration depuis les événements et commandes Telegram">
     Les écritures de configuration du canal sont activées par défaut (`configWrites !== false`).
 
     Les écritures déclenchées par Telegram incluent :
 
-    - les événements de migration de groupe (`migrate_to_chat_id`) pour mettre à jour `channels.telegram.groups`
+    - événements de migration de groupe (`migrate_to_chat_id`) pour mettre à jour `channels.telegram.groups`
     - `/config set` et `/config unset` (nécessite l'activation des commandes)
 
     Désactiver :
@@ -738,8 +738,8 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     Mode webhook :
 
-    - définissez `channels.telegram.webhookUrl`
-    - définissez `channels.telegram.webhookSecret` (requis lorsque l'URL du webhook est définie)
+    - définir `channels.telegram.webhookUrl`
+    - définir `channels.telegram.webhookSecret` (requis lorsque l'URL du webhook est définie)
     - optionnel `channels.telegram.webhookPath` (par défaut `/telegram-webhook`)
     - optionnel `channels.telegram.webhookHost` (par défaut `127.0.0.1`)
     - optionnel `channels.telegram.webhookPort` (par défaut `8787`)
@@ -751,25 +751,25 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
   </Accordion>
 
-  <Accordion title="Limites, nouvelles tentatives et cibles CLI">
-    - `channels.telegram.textChunkLimit` par défaut est 4000.
+  <Accordion title="Limites, nouvelle tentative et cibles CLI">
+    - `channels.telegram.textChunkLimit` la valeur par défaut est 4000.
     - `channels.telegram.chunkMode="newline"` préfère les limites de paragraphe (lignes vides) avant le fractionnement par longueur.
     - `channels.telegram.mediaMaxMb` (par défaut 100) plafonne la taille des médias Telegram entrants et sortants.
-    - `channels.telegram.timeoutSeconds` remplace le délai d'attente du client Telegram API (si non défini, la valeur par défaut grammY s'applique).
+    - `channels.telegram.timeoutSeconds` remplace le délai d'attente du client Telegram de l'API (si non défini, la valeur par défaut de grammY s'applique).
     - l'historique du contexte de groupe utilise `channels.telegram.historyLimit` ou `messages.groupChat.historyLimit` (par défaut 50) ; `0` désactive.
-    - contrôles de l'historique DM :
+    - contrôles de l'historique des Telegram :
       - `channels.telegram.dmHistoryLimit`
       - `channels.telegram.dms["<user_id>"].historyLimit`
-    - la config `channels.telegram.retry` s'applique aux helpers d'envoi Telegram (CLI/tools/actions) pour les erreurs API sortantes récupérables.
+    - la config `channels.telegram.retry` s'applique aux assistants d'envoi CLI (API/tools/actions) pour les erreurs d'CLI sortantes récupérables.
 
-    La cible d'envoi API peut être un ID de chat numérique ou un nom d'utilisateur :
+    La cible d'envoi Telegram peut être un ID de chat numérique ou un nom d'utilisateur :
 
 ```bash
 openclaw message send --channel telegram --target 123456789 --message "hi"
 openclaw message send --channel telegram --target @name --message "hi"
 ```
 
-    Les sondages CLI utilisent `openclaw message poll` et prennent en charge les sujets de forum :
+    Les sondages Telegram utilisent `openclaw message poll` et prennent en charge les sujets de forum :
 
 ```bash
 openclaw message poll --channel telegram --target 123456789 \
@@ -779,7 +779,7 @@ openclaw message poll --channel telegram --target -1001234567890:topic:42 \
   --poll-duration-seconds 300 --poll-public
 ```
 
-    Drapeaux de sondage Telegram uniquement :
+    Indicateurs de sondage exclusifs à Telegram :
 
     - `--poll-duration-seconds` (5-600)
     - `--poll-anonymous`
@@ -791,7 +791,7 @@ openclaw message poll --channel telegram --target -1001234567890:topic:42 \
     - `--buttons` pour les claviers en ligne lorsque `channels.telegram.capabilities.inlineButtons` l'autorise
     - `--force-document` pour envoyer des images et des GIF sortants sous forme de documents plutôt que comme des photos compressées ou des téléchargements de médias animés
 
-    Gestion des actions :
+    Limitation des actions :
 
     - `channels.telegram.actions.sendMessage=false` désactive les messages sortants Telegram, y compris les sondages
     - `channels.telegram.actions.poll=false` désactive la création de sondages Telegram tout en laissant les envois réguliers activés
@@ -799,26 +799,28 @@ openclaw message poll --channel telegram --target -1001234567890:topic:42 \
   </Accordion>
 
   <Accordion title="Approbations d'exécution sur Telegram">
-    Telegram prend en charge les approbations d'exécution dans les DMs des approbateurs et peut éventuellement publier des invites d'approbation dans le chat ou le sujet d'origine.
+    Telegram prend en charge les approbations d'exécution dans les DM des approbateurs et peut éventuellement publier des invites d'approbation dans la discussion ou le sujet d'origine.
 
     Chemin de configuration :
 
     - `channels.telegram.execApprovals.enabled`
-    - `channels.telegram.execApprovals.approvers`
+    - `channels.telegram.execApprovals.approvers` (optionnel ; revient aux ID de propriétaire numériques déduits de `allowFrom` et des `defaultTo` directs si possible)
     - `channels.telegram.execApprovals.target` (`dm` | `channel` | `both`, par défaut : `dm`)
     - `agentFilter`, `sessionFilter`
 
-    Les approbateurs doivent être des ID utilisateur numériques Telegram. Lorsque `enabled` est faux ou que `approvers` est vide, Telegram n'agit pas comme client d'approbation d'exécution. Les demandes d'approbation reviennent aux autres routes d'approbation configurées ou à la politique de secours pour l'approbation d'exécution.
+    Les approbateurs doivent être des ID utilisateur Telegram numériques. Telegram devient un client d'approbation d'exécution lorsque `enabled` est vrai et qu'au moins un approbateur peut être résolu, soit à partir de `execApprovals.approvers`, soit à partir de la configuration du propriétaire numérique du compte (`allowFrom` et `defaultTo` en message direct). Sinon, les demandes d'approbation reviennent aux autres routes d'approbation configurées ou à la politique de secours pour l'approbation d'exécution.
+
+    Telegram affiche également les boutons d'approbation partagés utilisés par les autres canaux de discussion. L'adaptateur natif Telegram ajoute principalement le routage vers le DM de l'approbateur, la diffusion vers le canal/sujet et les indices de frappe avant la livraison.
 
     Règles de livraison :
 
-    - `target: "dm"` envoie les invites d'approbation uniquement aux DMs des approbateurs configurés
-    - `target: "channel"` renvoie l'invite au chat/sujet Telegram d'origine
-    - `target: "both"` envoie aux DMs des approbateurs et au chat/sujet d'origine
+    - `target: "dm"` envoie les invites d'approbation uniquement aux DM des approbateurs résolus
+    - `target: "channel"` renvoie l'invite vers la discussion/sujet Telegram d'origine
+    - `target: "both"` envoie vers les DM des approbateurs et la discussion/sujet d'origine
 
-    Seuls les approbateurs configurés peuvent approuver ou refuser. Les non-approbateurs ne peuvent pas utiliser `/approve` ni utiliser les boutons d'approbation Telegram.
+    Seuls les approbateurs résolus peuvent approuver ou refuser. Les non-approbateurs ne peuvent pas utiliser `/approve` ni utiliser les boutons d'approbation Telegram.
 
-    La livraison sur le canal affiche le texte de la commande dans le chat, n'activez donc `channel` ou `both` que dans les groupes/sujets de confiance. Lorsque l'invite atterrit dans un sujet de forum, OpenClaw préserve le sujet pour l'invite d'approbation et le suivi post-approbation.
+    La livraison par canal affiche le texte de la commande dans la discussion, n'activez donc `channel` ou `both` que dans les groupes/sujets de confiance. Lorsque l'invite atterrit dans un sujet de forum, OpenClaw conserve le sujet à la fois pour l'invite d'approbation et le suivi post-approbation. Les approbations d'exécution expirent après 30 minutes par défaut.
 
     Les boutons d'approbation en ligne dépendent également de `channels.telegram.capabilities.inlineButtons` autorisant la surface cible (`dm`, `group` ou `all`).
 
@@ -827,40 +829,67 @@ openclaw message poll --channel telegram --target -1001234567890:topic:42 \
   </Accordion>
 </AccordionGroup>
 
+## Contrôles des réponses d'erreur
+
+Lorsque l'agent rencontre une erreur de livraison ou de fournisseur, Telegram peut soit répondre avec le texte de l'erreur, soit le supprimer. Deux clés de configuration contrôlent ce comportement :
+
+| Clé                                 | Valeurs           | Par défaut | Description                                                                                                |
+| ----------------------------------- | ----------------- | ---------- | ---------------------------------------------------------------------------------------------------------- |
+| `channels.telegram.errorPolicy`     | `reply`, `silent` | `reply`    | `reply` envoie un message d'erreur convivial au chat. `silent` supprime entièrement les réponses d'erreur. |
+| `channels.telegram.errorCooldownMs` | nombre (ms)       | `60000`    | Temps minimum entre les réponses d'erreur vers le même chat. Empêche le spam d'erreurs pendant les pannes. |
+
+Les remplacements par compte, par groupe et par sujet sont pris en charge (même héritage que les autres clés de configuration Telegram).
+
+```json5
+{
+  channels: {
+    telegram: {
+      errorPolicy: "reply",
+      errorCooldownMs: 120000,
+      groups: {
+        "-1001234567890": {
+          errorPolicy: "silent", // suppress errors in this group
+        },
+      },
+    },
+  },
+}
+```
+
 ## Dépannage
 
 <AccordionGroup>
-  <Accordion title="Bot does not respond to non mention group messages">
+  <Accordion title="Le bot ne répond pas aux messages de groupe sans mention">
 
     - Si `requireMention=false`, le mode de confidentialité Telegram doit autoriser une visibilité complète.
-      - BotFather : `/setprivacy` -> Disable
-      - puis supprimer et rajouter le bot au groupe
-    - `openclaw channels status` avertit lorsque la configuration attend des messages de groupe non mentionnés.
-    - `openclaw channels status --probe` peut vérifier les ID numériques explicites de groupe ; le caractère générique `"*"` ne peut pas faire l'objet d'une vérification d'appartenance.
+      - BotFather : `/setprivacy` -> Désactiver
+      - puis retirer et ajouter à nouveau le bot au groupe
+    - `openclaw channels status` avertit lorsque la configuration attend des messages de groupe sans mention.
+    - `openclaw channels status --probe` peut vérifier les ID numériques explicites de groupe ; le caractère générique `"*"` ne peut pas faire l'objet d'une sonde d'appartenance.
     - test de session rapide : `/activation always`.
 
   </Accordion>
 
-  <Accordion title="Bot ne voit pas du tout les messages du groupe">
+  <Accordion title="Le bot ne voit pas du tout les messages de groupe">
 
-    - lorsque `channels.telegram.groups` existe, le groupe doit être listé (ou inclure `"*"`)
+    - lorsque `channels.telegram.groups` existe, le groupe doit être répertorié (ou inclure `"*"`)
     - vérifier l'appartenance du bot au groupe
-    - consulter les journaux : `openclaw logs --follow` pour les raisons de l'omission
+    - consulter les journaux : `openclaw logs --follow` pour connaître les raisons de l'ignorance
 
   </Accordion>
 
   <Accordion title="Les commandes fonctionnent partiellement ou pas du tout">
 
-    - autorisez votre identité d'expéditeur (jumelage et/ou identifiant numérique `allowFrom`)
-    - l'autorisation des commandes s'applique toujours même lorsque la stratégie de groupe est `open`
-    - `setMyCommands failed` avec `BOT_COMMANDS_TOO_MUCH` signifie que le menu natif contient trop d'entrées ; réduisez les commandes de plug-in/compétence/personnalisées ou désactivez les menus natifs
-    - `setMyCommands failed` avec des erreurs de réseau/récupération indique généralement des problèmes d'accessibilité DNS/HTTPS vers `api.telegram.org`
+    - autorisez votre identité d'expéditeur (appairage et/ou `allowFrom` numérique)
+    - l'autorisation de commande s'applique toujours même lorsque la stratégie de groupe est `open`
+    - `setMyCommands failed` avec `BOT_COMMANDS_TOO_MUCH` signifie que le menu natif contient trop d'entrées ; réduisez les commandes de plugin/compétence/personnalisées ou désactivez les menus natifs
+    - `setMyCommands failed` avec des erreurs réseau/récupération indique généralement des problèmes d'accessibilité DNS/HTTPS vers `api.telegram.org`
 
   </Accordion>
 
-  <Accordion title="Polling ou instabilité du réseau">
+  <Accordion title="Instabilité du sondage ou du réseau">
 
-    - Node 22+ + fetch/proxy personnalisé peut déclencher un comportement d'abandon immédiat si les types AbortSignal ne correspondent pas.
+    - Node 22+ + récupération personnalisée/proxy peut déclencher un comportement d'abandon immédiat si les types AbortSignal ne correspondent pas.
     - Certains hôtes résolvent `api.telegram.org` d'abord en IPv6 ; une sortie IPv6 défaillante peut provoquer des échecs intermittents de l'Telegram API.
     - Si les journaux incluent `TypeError: fetch failed` ou `Network request for 'getUpdates' failed!`, OpenClaw réessaie désormais ces erreurs en tant qu'erreurs réseau récupérables.
     - Sur les hôtes VPS avec une sortie/TLS directe instable, acheminez les appels de l'Telegram API via `channels.telegram.proxy` :
@@ -897,89 +926,94 @@ dig +short api.telegram.org AAAA
 
 Plus d'aide : [Channel troubleshooting](/en/channels/troubleshooting).
 
-## Telegram pointeurs de référence de configuration
+## Pointeurs vers la référence de configuration Telegram
 
 Référence principale :
 
 - `channels.telegram.enabled` : activer/désactiver le démarrage du canal.
 - `channels.telegram.botToken` : jeton du bot (BotFather).
-- `channels.telegram.tokenFile` : lire le jeton depuis un chemin de fichier classique. Les liens symboliques sont rejetés.
-- `channels.telegram.dmPolicy` : `pairing | allowlist | open | disabled` (par défaut : pairing).
-- `channels.telegram.allowFrom` : liste d'autorisation DM (identifiants utilisateur numériques Telegram). `allowlist` nécessite au moins un ID d'expéditeur. `open` nécessite `"*"`. `openclaw doctor --fix` peut résoudre les entrées `@username` héritées en ID et peut récupérer les entrées de la liste d'autorisation à partir des fichiers de stockage d'appariement dans les flux de migration de la liste d'autorisation.
-- `channels.telegram.actions.poll` : activer ou désactiver la création de sondages Telegram (par défaut : activé ; nécessite toujours `sendMessage`).
-- `channels.telegram.defaultTo` : cible Telegram par défaut utilisée par la CLI `--deliver` lorsqu'aucune `--reply-to` explicite n'est fournie.
-- `channels.telegram.groupPolicy` : `open | allowlist | disabled` (par défaut : liste blanche).
-- `channels.telegram.groupAllowFrom` : liste blanche des expéditeurs de groupe (IDs utilisateur Telegram numériques). `openclaw doctor --fix` peut résoudre les entrées `@username` héritées en IDs. Les entrées non numériques sont ignorées au moment de l'authentification. L'authentification de groupe n'utilise pas le repli du magasin d'appariement DM (`2026.2.25+`).
-- Priorité multi-compte :
-  - Lorsque deux ou plusieurs IDs de compte sont configurés, définissez `channels.telegram.defaultAccount` (ou incluez `channels.telegram.accounts.default`) pour rendre le routage par défaut explicite.
-  - Si aucun n'est défini, OpenClaw revient au premier ID de compte normalisé et `openclaw doctor` avertit.
+- `channels.telegram.tokenFile` : lire le jeton depuis un chemin de fichier normal. Les liens symboliques sont rejetés.
+- `channels.telegram.dmPolicy` : `pairing | allowlist | open | disabled` (par défaut : appairage).
+- `channels.telegram.allowFrom` : liste d'autorisation DM (identifiants utilisateur numériques Telegram). `allowlist` nécessite au moins un ID d'expéditeur. `open` nécessite `"*"`. `openclaw doctor --fix` peut résoudre les entrées `@username` héritées en ID et peut récupérer les entrées de la liste d'autorisation à partir des fichiers de stockage d'appairage dans les flux de migration de la liste d'autorisation.
+- `channels.telegram.actions.poll` : activer ou désactiver la création de sondages Telegram (par défaut : activé ; nécessite toujours `sendMessage`).
+- `channels.telegram.defaultTo` : cible Telegram par défaut utilisée par CLI `--deliver` lorsqu'aucun `--reply-to` explicite n'est fourni.
+- `channels.telegram.groupPolicy` : `open | allowlist | disabled` (par défaut : liste d'autorisation).
+- `channels.telegram.groupAllowFrom` : liste d'autorisation des expéditeurs de groupe (identifiants utilisateur numériques Telegram). `openclaw doctor --fix` peut résoudre les entrées `@username` héritées en ID. Les entrées non numériques sont ignorées au moment de l'authentification. L'authentification de groupe n'utilise pas le repli du magasin d'appairage DM (`2026.2.25+`).
+- Priorité multi-compte :
+  - Lorsque deux ou plusieurs identifiants de compte sont configurés, définissez `channels.telegram.defaultAccount` (ou incluez `channels.telegram.accounts.default`) pour rendre le routage par défaut explicite.
+  - Si aucun n'est défini, OpenClaw revient au premier identifiant de compte normalisé et `openclaw doctor` avertit.
   - `channels.telegram.accounts.default.allowFrom` et `channels.telegram.accounts.default.groupAllowFrom` ne s'appliquent qu'au compte `default`.
   - Les comptes nommés héritent de `channels.telegram.allowFrom` et `channels.telegram.groupAllowFrom` lorsque les valeurs au niveau du compte ne sont pas définies.
   - Les comptes nommés n'héritent pas de `channels.telegram.accounts.default.allowFrom` / `groupAllowFrom`.
-- `channels.telegram.groups` : valeurs par par groupe + liste d'autorisation (utilisez `"*"` pour les valeurs par globales).
-  - `channels.telegram.groups.<id>.groupPolicy` : remplacement pour chaque groupe de groupPolicy (`open | allowlist | disabled`).
-  - `channels.telegram.groups.<id>.requireMention` : valeur par défaut de la mention gating.
-  - `channels.telegram.groups.<id>.skills` : filtre de compétence (omit = toutes les compétences, empty = aucune).
-  - `channels.telegram.groups.<id>.allowFrom` : remplacement de la liste d'autorisation des expéditeurs par groupe.
-  - `channels.telegram.groups.<id>.systemPrompt` : invite système supplémentaire pour le groupe.
-  - `channels.telegram.groups.<id>.enabled` : désactiver le groupe lorsque `false`.
-  - `channels.telegram.groups.<id>.topics.<threadId>.*` : remplacements par sujet (champs de groupe + `agentId` exclusifs au sujet).
-  - `channels.telegram.groups.<id>.topics.<threadId>.agentId` : acheminer ce sujet vers un agent spécifique (remplace le routage au niveau du groupe et de la liaison).
-- `channels.telegram.groups.<id>.topics.<threadId>.groupPolicy` : remplacement par sujet pour groupPolicy (`open | allowlist | disabled`).
-- `channels.telegram.groups.<id>.topics.<threadId>.requireMention` : remplacement par sujet pour le filtrage des mentions.
-- `bindings[]` de niveau supérieur avec `type: "acp"` et l'ID du sujet canonique `chatId:topic:topicId` dans `match.peer.id` : champs de liaison persistante du sujet ACP (voir [ACP Agents](/en/tools/acp-agents#channel-specific-settings)).
-- `channels.telegram.direct.<id>.topics.<threadId>.agentId` : acheminer les sujets de DM vers un agent spécifique (même comportement que pour les sujets de forum).
-- `channels.telegram.execApprovals.enabled` : activer Telegram en tant que client d'approbation exec basé sur le chat pour ce compte.
-- `channels.telegram.execApprovals.approvers` : ID d'utilisateur Telegram autorisés à approuver ou refuser les requêtes exec. Requis lorsque les approbations exec sont activées.
-- `channels.telegram.execApprovals.target` : `dm | channel | both` (par défaut : `dm`). `channel` et `both` préservent le sujet Telegram d'origine lorsqu'il est présent.
-- `channels.telegram.execApprovals.agentFilter` : filtre ID d'agent optionnel pour les invites d'approbation transférées.
+- `channels.telegram.groups` : valeurs par groupe + liste d'autorisation (utilisez `"*"` pour les valeurs par défaut globales).
+  - `channels.telegram.groups.<id>.groupPolicy` : remplacement par groupe pour groupPolicy (`open | allowlist | disabled`).
+  - `channels.telegram.groups.<id>.requireMention` : valeur par défaut de filtrage des mentions.
+  - `channels.telegram.groups.<id>.skills` : filtre de compétences (omettre = toutes les compétences, vide = aucune).
+  - `channels.telegram.groups.<id>.allowFrom` : remplacement de la liste d'autorisation des expéditeurs par groupe.
+  - `channels.telegram.groups.<id>.systemPrompt` : invite système supplémentaire pour le groupe.
+  - `channels.telegram.groups.<id>.enabled` : désactiver le groupe lorsque `false`.
+  - `channels.telegram.groups.<id>.topics.<threadId>.*` : remplacements par sujet (champs de groupe + `agentId` exclusifs aux sujets).
+  - `channels.telegram.groups.<id>.topics.<threadId>.agentId` : acheminer ce sujet vers un agent spécifique (remplace le routage au niveau du groupe et la liaison).
+- `channels.telegram.groups.<id>.topics.<threadId>.groupPolicy` : remplacement par sujet pour groupPolicy (`open | allowlist | disabled`).
+- `channels.telegram.groups.<id>.topics.<threadId>.requireMention` : remplacement par sujet pour le filtrage des mentions.
+- `bindings[]` de niveau supérieur avec `type: "acp"` et l'ID canonique du sujet `chatId:topic:topicId` dans `match.peer.id` : champs de liaison de sujet ACP persistants (voir [ACP Agents](/en/tools/acp-agents#channel-specific-settings)).
+- `channels.telegram.direct.<id>.topics.<threadId>.agentId` : acheminer les sujets de DM vers un agent spécifique (même comportement que les sujets de forum).
+- `channels.telegram.execApprovals.enabled` : activer Telegram en tant que client d'approbation d'exécution basé sur le chat pour ce compte.
+- `channels.telegram.execApprovals.approvers` : IDs d'utilisateur Telegram autorisés à approuver ou refuser les demandes d'exécution. Facultatif lorsque `channels.telegram.allowFrom` ou un `channels.telegram.defaultTo` direct identifie déjà le propriétaire.
+- `channels.telegram.execApprovals.target` : `dm | channel | both` (par défaut : `dm`). `channel` et `both` préservent le sujet Telegram d'origine lorsqu'il est présent.
+- `channels.telegram.execApprovals.agentFilter` : filtre d'ID d'agent optionnel pour les invites d'approbation transférées.
 - `channels.telegram.execApprovals.sessionFilter` : filtre de clé de session optionnel (sous-chaîne ou regex) pour les invites d'approbation transférées.
-- `channels.telegram.accounts.<account>.execApprovals` : remplacement par compte pour le routage des approbations d'exécution Telegram et l'autorisation des approbateurs.
+- `channels.telegram.accounts.<account>.execApprovals` : remplacement par compte pour le routage de l'approbation d'exécution Telegram et l'autorisation de l'approbateur.
 - `channels.telegram.capabilities.inlineButtons` : `off | dm | group | all | allowlist` (par défaut : allowlist).
 - `channels.telegram.accounts.<account>.capabilities.inlineButtons` : remplacement par compte.
 - `channels.telegram.commands.nativeSkills` : activer/désactiver les commandes de compétences natives Telegram.
-- `channels.telegram.replyToMode` : `off | first | all` (par défaut : `off`).
-- `channels.telegram.textChunkLimit` : taille du bloc sortant (caractères).
+- `channels.telegram.replyToMode` : `off | first | all` (par défaut : `off`).
+- `channels.telegram.textChunkLimit` : taille du bloc sortant (caractères).
 - `channels.telegram.chunkMode` : `length` (par défaut) ou `newline` pour diviser sur les lignes vides (limites de paragraphe) avant le découpage par longueur.
 - `channels.telegram.linkPreview` : activer/désactiver les aperçus de liens pour les messages sortants (par défaut : true).
-- `channels.telegram.streaming` : `off | partial | block | progress` (aperçu du flux en direct ; par défaut : `partial` ; `progress` correspond à `partial` ; `block` est la compatibilité avec le mode d'aperçu hérité). Le streaming d'aperçu Telegram utilise un seul message d'aperçu qui est modifié sur place.
-- `channels.telegram.mediaMaxMb` : limite de taille des médias Telegram entrants/sortants (Mo, par défaut : 100).
-- `channels.telegram.retry` : stratégie de réessai pour les assistants d'envoi Telegram (CLI/tools/actions) sur les erreurs API sortantes récupérables (attempts, minDelayMs, maxDelayMs, jitter).
-- `channels.telegram.network.autoSelectFamily` : remplacer le Node autoSelectFamily (true=activer, false=désactiver). Activé par défaut sur Node 22+, avec WSL2 désactivé par défaut.
-- `channels.telegram.network.dnsResultOrder` : remplacer l'ordre des résultats DNS (`ipv4first` ou `verbatim`). Par défaut `ipv4first` sur Node 22+.
-- `channels.telegram.proxy` : URL du proxy pour les appels Bot API (SOCKS/HTTP).
+- `channels.telegram.streaming` : `off | partial | block | progress` (aperçu du flux en direct ; par défaut : `partial` ; `progress` correspond à `partial` ; `block` est pour la compatibilité avec le mode d'aperçu hérité). Le flux d'aperçu Telegram utilise un seul message d'aperçu qui est modifié sur place.
+- `channels.telegram.mediaMaxMb` : plafond de média Telegram entrant/sortant (Mo, par défaut : 100).
+- `channels.telegram.retry` : politique de nouvelle tentative pour les assistants d'envoi Telegram (CLI/tools/actions) lors d'erreurs de API sortantes récupérables (attempts, minDelayMs, maxDelayMs, jitter).
+- `channels.telegram.network.autoSelectFamily` : remplacer autoSelectFamily de Node (true=activer, false=désactiver). Activé par défaut sur Node 22+, avec WSL2 désactivé par défaut.
+- `channels.telegram.network.dnsResultOrder` : remplacer l'ordre des résultats DNS (`ipv4first` ou `verbatim`). `ipv4first` par défaut sur Node 22+.
+- `channels.telegram.proxy` : URL proxy pour les appels au Bot API (SOCKS/HTTP).
 - `channels.telegram.webhookUrl` : activer le mode webhook (nécessite `channels.telegram.webhookSecret`).
-- `channels.telegram.webhookSecret` : secret du webhook (requis quand webhookUrl est défini).
+- `channels.telegram.webhookSecret` : secret du webhook (requis lorsque webhookUrl est défini).
 - `channels.telegram.webhookPath` : chemin du webhook local (par défaut `/telegram-webhook`).
 - `channels.telegram.webhookHost` : hôte de liaison du webhook local (par défaut `127.0.0.1`).
 - `channels.telegram.webhookPort` : port de liaison du webhook local (par défaut `8787`).
-- `channels.telegram.actions.reactions` : limiter les réactions du Telegram tool.
-- `channels.telegram.actions.sendMessage` : limiter les envois de messages du Telegram tool.
-- `channels.telegram.actions.deleteMessage` : limiter les suppressions de messages du Telegram tool.
+- `channels.telegram.actions.reactions` : limiter les réactions aux outils Telegram.
+- `channels.telegram.actions.sendMessage` : limiter les envois de messages d'outil Telegram.
+- `channels.telegram.actions.deleteMessage` : limiter les suppressions de messages de Telegram tool Telegram.
 - `channels.telegram.actions.sticker` : limiter les actions de stickers Telegram — envoi et recherche (par défaut : false).
 - `channels.telegram.reactionNotifications` : `off | own | all` — contrôler quelles réactions déclenchent des événements système (par défaut `own` si non défini).
 - `channels.telegram.reactionLevel` : `off | ack | minimal | extensive` — contrôler la capacité de réaction de l'agent (par défaut `minimal` si non défini).
+- `channels.telegram.errorPolicy` : `reply | silent` — contrôler le comportement de réponse en cas d'erreur (par défaut `reply`). Les remplacements par compte/groupe/sujet sont pris en charge.
+- `channels.telegram.errorCooldownMs` : durée minimale en ms entre les réponses d'erreur pour le même chat (par défaut `60000`). Empêche le spam d'erreurs pendant les pannes.
 
-- [Référence de configuration - Telegram](/en/gateway/configuration-reference#telegram)
+- [Référence de la configuration - Telegram](/en/gateway/configuration-reference#telegram)
 
-Champs importants spécifiques à Telegram :
+Champs à fort signal spécifiques à Telegram :
 
 - démarrage/auth : `enabled`, `botToken`, `tokenFile`, `accounts.*` (`tokenFile` doit pointer vers un fichier régulier ; les liens symboliques sont rejetés)
 - contrôle d'accès : `dmPolicy`, `allowFrom`, `groupPolicy`, `groupAllowFrom`, `groups`, `groups.*.topics.*`, `bindings[]` de premier niveau (`type: "acp"`)
 - approbations d'exécution : `execApprovals`, `accounts.*.execApprovals`
 - commande/menu : `commands.native`, `commands.nativeSkills`, `customCommands`
-- threading/réponses : `replyToMode`
+- fil de discussion/réponses : `replyToMode`
 - streaming : `streaming` (aperçu), `blockStreaming`
-- formatting/livraison : `textChunkLimit`, `chunkMode`, `linkPreview`, `responsePrefix`
-- media/réseau : `mediaMaxMb`, `timeoutSeconds`, `retry`, `network.autoSelectFamily`, `proxy`
+- formatage/livraison : `textChunkLimit`, `chunkMode`, `linkPreview`, `responsePrefix`
+- media/network : `mediaMaxMb`, `timeoutSeconds`, `retry`, `network.autoSelectFamily`, `proxy`
 - webhook : `webhookUrl`, `webhookSecret`, `webhookPath`, `webhookHost`
-- actions/capacités : `capabilities.inlineButtons`, `actions.sendMessage|editMessage|deleteMessage|reactions|sticker`
-- réactions : `reactionNotifications`, `reactionLevel`
+- actions/capabilities : `capabilities.inlineButtons`, `actions.sendMessage|editMessage|deleteMessage|reactions|sticker`
+- reactions : `reactionNotifications`, `reactionLevel`
+- errors : `errorPolicy`, `errorCooldownMs`
 - writes/history : `configWrites`, `historyLimit`, `dmHistoryLimit`, `dms.*.historyLimit`
 
 ## Connexes
 
-- [Appariement](/en/channels/pairing)
+- [Jumelage](/en/channels/pairing)
+- [Groupes](/en/channels/groups)
+- [Sécurité](/en/gateway/security)
 - [Routage de canal](/en/channels/channel-routing)
 - [Routage multi-agent](/en/concepts/multi-agent)
 - [Dépannage](/en/channels/troubleshooting)

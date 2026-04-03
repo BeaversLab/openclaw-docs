@@ -8,10 +8,10 @@ title: "WebChat (macOS)"
 # WebChat (macOS 应用)
 
 macOS 菜单栏应用程序将 WebChat UI 嵌入为原生 SwiftUI 视图。它
-连接到 Gateway 网关，默认为所选代理的**主会话**
+连接到 Gateway(网关) 网关，默认为所选代理的**主会话**
 （并提供用于切换其他会话的切换器）。
 
-- **本地模式**：直接连接到本地 Gateway 网关 WebSocket。
+- **本地模式**：直接连接到本地 Gateway(网关) 网关 WebSocket。
 - **远程模式**：通过 SSH 转发 Gateway(网关) 控制端口，并将该隧道用作数据平面。
 
 ## 启动与调试

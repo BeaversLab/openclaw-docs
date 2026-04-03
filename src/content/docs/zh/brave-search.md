@@ -14,7 +14,7 @@ OpenClaw 支持 Brave Search API 作为 `web_search` 提供商。
 
 1. 在 [https://brave.com/search/api/](https://brave.com/search/api/) 创建 Brave Search API 账户
 2. 在仪表板中，选择 **Search** 计划并生成 API 密钥。
-3. 将密钥存储在配置中，或在 Gateway 网关 环境中设置 `BRAVE_API_KEY`。
+3. 将密钥存储在配置中，或在 Gateway(网关) 网关 环境中设置 `BRAVE_API_KEY`。
 
 ## 配置示例
 

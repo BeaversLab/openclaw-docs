@@ -84,23 +84,23 @@ Payload：
 - `sessionKey` optional (string): 用於識別代理會話的金鑰。預設情況下，除非 `hooks.allowRequestSessionKey=true`，否則會拒絕此欄位。
 - `wakeMode` 選填 (`now` | `next-heartbeat`)：是否立即觸發心跳（預設 `now`）或等待下一次定期檢查。
 - `deliver` 選填 (boolean)：若為 `true`，代理程式的回應將傳送至訊息頻道。預設為 `true`。僅為心跳確認的回應會自動跳過。
-- `channel` 選填 (string)：傳送用的訊息頻道。核心頻道：`last`、`whatsapp`、`telegram`、`discord`、`slack`、`signal`、`imessage`、`irc`、`googlechat`、`line`。擴充頻道 (plugins)：`msteams`、`mattermost` 等。預設為 `last`。
-- `to` 選填 (string)：該頻道的收件者識別碼（例如：WhatsApp/Signal 的電話號碼、Telegram 的聊天 ID、Discord/Slack/Mattermost (plugin) 的頻道 ID、Microsoft Teams 的對話 ID）。預設為主工作階段中的最後一位收件者。
-- `model` 選填 (string)：模型覆寫（例如 `anthropic/claude-sonnet-4-6` 或別名）。若有限制，必須位於允許的模型清單中。
-- `thinking` 選填 (string)：思考層級覆寫（例如 `low`、`medium`、`high`）。
-- `timeoutSeconds` 選填 (number)：代理程式執行的最大持續時間（秒）。
+- `channel` 選填（字串）：用於傳送的訊息管道。使用 `last` 或任何已設定的管道或外掛 ID，例如 `discord`、`matrix`、`telegram` 或 `whatsapp`。預設為 `last`。
+- `to` 選填（字串）：管道的收件者識別碼（例如：WhatsApp/Signal 的電話號碼、Telegram 的聊天 ID、Discord/Slack/Mattermost (外掛) 的頻道 ID、Microsoft Teams 的對話 ID）。預設為主工作階段中的最後一個收件者。
+- `model` 選填（字串）：模型覆寫（例如 `anthropic/claude-sonnet-4-6` 或別名）。若有限制，必須在允許的模型清單中。
+- `thinking` 選填（字串）：思考層級覆寫（例如 `low`、`medium`、`high`）。
+- `timeoutSeconds` 選填（數字）：代理程式執行的最大持續時間（秒）。
 
 效果：
 
 - 執行 **獨立** 的代理程式輪次（自有工作階段金鑰）
 - 一律將摘要張貼至 **主** 工作階段
-- 若 `wakeMode=now`，會立即觸發心跳
+- 如果為 `wakeMode=now`，則觸發立即心跳
 
 ## 工作階段金鑰政策（重大變更）
 
-`/hooks/agent` payload 的 `sessionKey` 覆寫預設為停用。
+`/hooks/agent` 載荷 `sessionKey` 覆寫功能預設為停用。
 
-- 建議：設定固定的 `hooks.defaultSessionKey` 並關閉請求覆寫。
+- 建議：設定固定的 `hooks.defaultSessionKey` 並保持請求覆寫關閉。
 - 選用：僅在需要時允許請求覆寫，並限制前綴。
 
 建議的配置：
@@ -130,39 +130,39 @@ Payload：
 }
 ```
 
-### `POST /hooks/<name>` (對應)
+### `POST /hooks/<name>`（已對應）
 
-自訂掛鉤名稱透過 `hooks.mappings` 解析（請參閱配置）。對應可以將任意 Payload 轉換為 `wake` 或 `agent` 動作，並可選用範本或程式碼轉換。
+自訂 Hook 名稱透過 `hooks.mappings` 解析（請參閱設定）。對應可以將任意載荷轉換為 `wake` 或 `agent` 動作，並搭配選用的範本或程式碼轉換。
 
 對應選項（摘要）：
 
 - `hooks.presets: ["gmail"]` 啟用內建的 Gmail 對應。
-- `hooks.mappings` 讓您在設定中定義 `match`、`action` 和範本。
-- `hooks.transformsDir` + `transform.module` 載入 JS/TS 模組以進行自訂邏輯處理。
-  - `hooks.transformsDir`（若設定）必須位於您的 OpenClaw 配置目錄下的轉換根目錄中（通常是 `~/.openclaw/hooks/transforms`）。
-  - `transform.module` 必須在有效的轉換目錄內解析（不接受遍歷/逃出路徑）。
-- 使用 `match.source` 以保留通用接收端點（由 Payload 驅動的路由）。
-- TS 轉換需要在執行時期搭配 TS 載入器（例如 `bun` 或 `tsx`）或預先編譯的 `.js`。
-- 在對應上設定 `deliver: true` + `channel`/`to` 以將回覆路由至聊天介面
-  (`channel` 預設為 `last`，並會後備使用 WhatsApp)。
-- `agentId` 將掛鉤路由至特定的代理程式；未知的 ID 會後備至預設代理程式。
+- `hooks.mappings` 讓您可以在設定中定義 `match`、`action` 和範本。
+- `hooks.transformsDir` + `transform.module` 載入用於自訂邏輯的 JS/TS 模組。
+  - `hooks.transformsDir`（若已設定）必須位於您的 OpenClaw 設定目錄下的轉換根目錄內（通常為 `~/.openclaw/hooks/transforms`）。
+  - `transform.module` 必須在有效的 transforms 目錄內解析（拒絕遍歷/逃逸路徑）。
+- 使用 `match.source` 以保留通用的接收端點（由驅動的負載路由）。
+- TS 變換需要 TS 載入器（例如 `bun` 或 `tsx`）或在執行時期預先編譯的 `.js`。
+- 在映射上設定 `deliver: true` + `channel`/`to` 以將回覆路由至聊天介面
+  （`channel` 預設為 `last` 並退回至 WhatsApp）。
+- `agentId` 將 hook 路由至特定的代理程式；未知的 ID 會退回至預設代理程式。
 - `hooks.allowedAgentIds` 限制明確的 `agentId` 路由。省略它（或包含 `*`）以允許任何代理程式。設定 `[]` 以拒絕明確的 `agentId` 路由。
-- 當未提供明確金鑰時，`hooks.defaultSessionKey` 會設定掛鉤代理程式執行的預設工作階段。
-- `hooks.allowRequestSessionKey` 控制是否允許 `/hooks/agent` payload 設定 `sessionKey` (預設值：`false`)。
-- `hooks.allowedSessionKeyPrefixes` 選擇性地限制來自請求 payload 和對映中的明確 `sessionKey` 值。
-- `allowUnsafeExternalContent: true` 停用該 hook 的外部內容安全包裝器
-  (危險；僅適用於受信任的內部來源)。
+- 當未提供明確金鑰時，`hooks.defaultSessionKey` 為 hook 代理程式執行設定預設階段。
+- `hooks.allowRequestSessionKey` 控制 `/hooks/agent` 負載是否可以設定 `sessionKey`（預設：`false`）。
+- `hooks.allowedSessionKeyPrefixes` 可選地限制來自請求負載和映射的明確 `sessionKey` 值。
+- `allowUnsafeExternalContent: true` 停用該 hook 的外部內容安全包裝函式
+  （危險；僅適用於受信任的內部來源）。
 - `openclaw webhooks gmail setup` 寫入 `hooks.gmail` 設定給 `openclaw webhooks gmail run`。
   請參閱 [Gmail Pub/Sub](/en/automation/gmail-pubsub) 以了解完整的 Gmail watch 流程。
 
 ## 回應
 
-- `200` 表示 `/hooks/wake`
-- `200` 表示 `/hooks/agent` (已接受非同步執行)
-- 當驗證失敗時回傳 `401`
-- 當同一客戶端重複驗證失敗時回傳 `429` (請檢查 `Retry-After`)
-- 當 payload 無效時回傳 `400`
-- 當 payload 過大時回傳 `413`
+- `200` 用於 `/hooks/wake`
+- `200` 用於 `/hooks/agent`（已接受非同步執行）
+- `401` 於驗證失敗時
+- `429` 於來自同一個客戶端的重複驗證失敗後（檢查 `Retry-After`）
+- `400` 於無效負載時
+- `413` 超過負載大小限制時
 
 ## 範例
 
@@ -182,7 +182,7 @@ curl -X POST http://127.0.0.1:18789/hooks/agent \
 
 ### 使用不同的模型
 
-將 `model` 新增至 agent payload (或對映) 中，以覆寫該次執行的模型：
+將 `model` 新增至代理程式負載（或對映）以覆寫該次執行的模型：
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/agent \
@@ -191,7 +191,7 @@ curl -X POST http://127.0.0.1:18789/hooks/agent \
   -d '{"message":"Summarize inbox","name":"Email","model":"openai/gpt-5.2-mini"}'
 ```
 
-如果您強制執行 `agents.defaults.models`，請確保覆寫的模型已包含在其中。
+如果您強制執行 `agents.defaults.models`，請確保該處包含覆寫模型。
 
 ```bash
 curl -X POST http://127.0.0.1:18789/hooks/gmail \
@@ -204,12 +204,12 @@ curl -X POST http://127.0.0.1:18789/hooks/gmail \
 
 - 將 hook 端點保持在 loopback、tailnet 或受信任的反向代理後面。
 - 使用專用的 hook token；請勿重複使用 gateway 驗證 token。
-- 建議使用具有嚴格 `tools.profile` 和沙盒機制的專用 hook agent，以便縮小 hook 進入點的受影響範圍。
+- 優先使用具有嚴格 `tools.profile` 和沙箱機制的專用 Hook 代理程式，以便縮小 Hook 流入攻擊的影響範圍。
 - 重複的驗證失敗會根據客戶端位址進行速率限制，以減緩暴力嘗試。
-- 如果您使用多 agent 路由，請設定 `hooks.allowedAgentIds` 以限制明確的 `agentId` 選擇。
-- 除非您需要由呼叫者選擇 session，否則請保持 `hooks.allowRequestSessionKey=false`。
-- 如果您啟用請求 `sessionKey`，請限制 `hooks.allowedSessionKeyPrefixes` (例如，`["hook:"]`)。
+- 如果您使用多代理程式路由，請設定 `hooks.allowedAgentIds` 以限制明確的 `agentId` 選取。
+- 除非您需要由呼叫者選取的工作階段，否則請保留 `hooks.allowRequestSessionKey=false`。
+- 如果您啟用請求 `sessionKey`，請限制 `hooks.allowedSessionKeyPrefixes`（例如 `["hook:"]`）。
 - 避免在 webhook 記錄中包含敏感的原始 payload。
-- Hook payloads are treated as untrusted and wrapped with safety boundaries by default.
-  If you must disable this for a specific hook, set `allowUnsafeExternalContent: true`
-  in that hook's mapping (dangerous).
+- Hook 負載預設被視為不受信任，並以安全邊界包裝。
+  如果您必須針對特定 Hook 停用此功能，請在該 Hook 的對映中設定 `allowUnsafeExternalContent: true`
+  （危險）。

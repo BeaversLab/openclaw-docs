@@ -240,3 +240,11 @@ IRC 頻道有兩個分開的「關卡」：
 - 如果機器人已連線但在頻道中從未回覆，請驗證 `channels.irc.groups` **以及**提及封鎖是否正在捨棄訊息（`missing-mention`）。如果您希望它在無需提及的情況下回覆，請為該頻道設定 `requireMention:false`。
 - 如果登入失敗，請驗證暱稱可用性和伺服器密碼。
 - 如果在自訂網路上 TLS 失敗，請驗證主機/連接埠和憑證設定。
+
+## 相關
+
+- [頻道概覽](/en/channels) — 所有支援的頻道
+- [配對](/en/channels/pairing) — 私訊認證與配對流程
+- [群組](/en/channels/groups) — 群組聊天行為與提及閘道
+- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
+- [安全性](/en/gateway/security) — 存取模型與防護加固

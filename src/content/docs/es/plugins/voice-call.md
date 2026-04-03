@@ -43,8 +43,9 @@ Reinicie el Gateway después.
 ### Opción B: instalar desde una carpeta local (desarrollo, sin copia)
 
 ```bash
-openclaw plugins install ./extensions/voice-call
-cd ./extensions/voice-call && pnpm install
+PLUGIN_SRC=./path/to/local/voice-call-plugin
+openclaw plugins install "$PLUGIN_SRC"
+cd "$PLUGIN_SRC" && pnpm install
 ```
 
 Reinicie el Gateway después.
@@ -213,9 +214,11 @@ Voice Call utiliza la configuración principal `messages.tts` para transmitir vo
 {
   tts: {
     provider: "elevenlabs",
-    elevenlabs: {
-      voiceId: "pMsXgVXv3BLzUgSXRplE",
-      modelId: "eleven_multilingual_v2",
+    providers: {
+      elevenlabs: {
+        voiceId: "pMsXgVXv3BLzUgSXRplE",
+        modelId: "eleven_multilingual_v2",
+      },
     },
   },
 }
@@ -223,26 +226,30 @@ Voice Call utiliza la configuración principal `messages.tts` para transmitir vo
 
 Notas:
 
-- **El voz de Microsoft se ignora para las llamadas de voz** (el audio de telefonía necesita PCM; el transporte actual de Microsoft no expone la salida PCM de telefonía).
-- Se utiliza el TTS principal cuando está habilitada la transmisión de medios de Twilio; de lo contrario, las llamadas vuelven a las voces nativas del proveedor.
-- Si ya está activo un flujo de medios de Twilio, Voice Call no recurre a TwiML `<Say>`. Si el TTS de telefonía no está disponible en ese estado, la solicitud de reproducción falla en lugar de mezclar dos rutas de reproducción.
+- Las claves `tts.<provider>` heredadas dentro de la configuración del complemento (`openai`, `elevenlabs`, `microsoft`, `edge`) se migran automáticamente a `tts.providers.<provider>` al cargar. Prefiera la forma `providers` en la configuración guardada.
+- **Microsoft speech se ignora para las llamadas de voz** (el audio de telefonía necesita PCM; el transporte actual de Microsoft no expone la salida PCM de telefonía).
+- Se usa el TTS central cuando el streaming de medios de Twilio está habilitado; de lo contrario, las llamadas vuelven a las voces nativas del proveedor.
+- Si ya hay un stream de medios de Twilio activo, Voice Call no vuelve al TwiML `<Say>`. Si el TTS de telefonía no está disponible en ese estado, la solicitud de reproducción falla en lugar de mezclar dos rutas de reproducción.
+- Cuando el TTS de telefonía vuelve a un proveedor secundario, Voice Call registra una advertencia con la cadena de proveedores (`from`, `to`, `attempts`) para depuración.
 
 ### Más ejemplos
 
-Usar solo el TTS principal (sin anulación):
+Usar solo el TTS central (sin invalidación):
 
 ```json5
 {
   messages: {
     tts: {
       provider: "openai",
-      openai: { voice: "alloy" },
+      providers: {
+        openai: { voice: "alloy" },
+      },
     },
   },
 }
 ```
 
-Anular a ElevenLabs solo para llamadas (mantener el predeterminado principal en otros lugares):
+Invalidar a ElevenLabs solo para llamadas (mantener el valor predeterminado central en otros lugares):
 
 ```json5
 {
@@ -252,10 +259,12 @@ Anular a ElevenLabs solo para llamadas (mantener el predeterminado principal en 
         config: {
           tts: {
             provider: "elevenlabs",
-            elevenlabs: {
-              apiKey: "elevenlabs_key",
-              voiceId: "pMsXgVXv3BLzUgSXRplE",
-              modelId: "eleven_multilingual_v2",
+            providers: {
+              elevenlabs: {
+                apiKey: "elevenlabs_key",
+                voiceId: "pMsXgVXv3BLzUgSXRplE",
+                modelId: "eleven_multilingual_v2",
+              },
             },
           },
         },
@@ -265,7 +274,7 @@ Anular a ElevenLabs solo para llamadas (mantener el predeterminado principal en 
 }
 ```
 
-Anular solo el modelo de OpenAI para llamadas (ejemplo de fusión profunda):
+Invalidar solo el modelo de OpenAI para llamadas (ejemplo de fusión profunda):
 
 ```json5
 {
@@ -274,9 +283,11 @@ Anular solo el modelo de OpenAI para llamadas (ejemplo de fusión profunda):
       "voice-call": {
         config: {
           tts: {
-            openai: {
-              model: "gpt-4o-mini-tts",
-              voice: "marin",
+            providers: {
+              openai: {
+                model: "gpt-4o-mini-tts",
+                voice: "marin",
+              },
             },
           },
         },
@@ -288,7 +299,7 @@ Anular solo el modelo de OpenAI para llamadas (ejemplo de fusión profunda):
 
 ## Llamadas entrantes
 
-La política entrante por defecto es `disabled`. Para habilitar las llamadas entrantes, configure:
+La política de entrada tiene como valor predeterminado `disabled`. Para habilitar las llamadas entrantes, configure:
 
 ```json5
 {
@@ -298,9 +309,13 @@ La política entrante por defecto es `disabled`. Para habilitar las llamadas ent
 }
 ```
 
-`inboundPolicy: "allowlist"` es un filtro de identificación de llamantes de baja seguridad. El complemento normaliza el valor `From` proporcionado por el proveedor y lo compara con `allowFrom`. La verificación del webhook autentica la entrega y la integridad de la carga útil del proveedor, pero no prueba la propiedad del número de llamante PSTN/VoIP. Trate `allowFrom` como un filtrado de identificación de llamantes, no como una identidad de llamante fuerte.
+`inboundPolicy: "allowlist"` es un filtro de identificación de llamada de baja seguridad. El complemento
+normaliza el valor `From` proporcionado por el proveedor y lo compara con `allowFrom`.
+La verificación del webhook autentica la entrega del proveedor y la integridad de la carga útil, pero
+no prueba la propiedad del número de llamante PSTN/VoIP. Trate `allowFrom` como
+filtrado de identificación de llamada, no como una identidad de llamada fuerte.
 
-Las respuestas automáticas utilizan el sistema del agente. Ajuste con:
+Las respuestas automáticas usan el sistema de agentes. Ajuste con:
 
 - `responseModel`
 - `responseSystemPrompt`
@@ -316,24 +331,24 @@ Luego, Voice Call extrae el texto de voz de forma defensiva:
 
 - Ignora las cargas útiles marcadas como contenido de razonamiento/error.
 - Analiza JSON directo, JSON cercado o claves `"spoken"` en línea.
-- Recurre a texto sin formato y elimina los párrafos iniciales probables de planificación/metadatos.
+- Revierte a texto sin formato y elimina los párrafos iniciales probables de planificación/metadatos.
 
 Esto mantiene la reproducción hablada centrada en el texto orientado al llamante y evita filtrar texto de planificación en el audio.
 
-### Comportamiento de inicio de conversación
+### Comportamiento de inicio de la conversación
 
-Para las llamadas salientes `conversation`, el manejo del primer mensaje está vinculado al estado de reproducción en vivo:
+Para las llamadas `conversation` salientes, el manejo del primer mensaje está vinculado al estado de reproducción en vivo:
 
 - La limpieza de la cola de interrupción y la respuesta automática se suprimen solo mientras el saludo inicial se está reproduciendo activamente.
-- Si la reproducción inicial falla, la llamada regresa a `listening` y el mensaje inicial permanece en cola para reintentar.
-- La reproducción inicial para el streaming de Twilio comienza al conectar el stream sin retraso adicional.
+- Si la reproducción inicial falla, la llamada vuelve a `listening` y el mensaje inicial permanece en cola para reintentar.
+- La reproducción inicial para el streaming de Twilio comienza al conectar el flujo sin retraso adicional.
 
-### Período de gracia de desconexión del stream de Twilio
+### Período de gracia de desconexión del flujo de Twilio
 
-Cuando se desconecta un stream de medios de Twilio, Voice Call espera `2000ms` antes de finalizar automáticamente la llamada:
+Cuando se desconecta un flujo de medios de Twilio, Voice Call espera `2000ms` antes de finalizar automáticamente la llamada:
 
-- Si el stream se reconecta durante ese período, la finalización automática se cancela.
-- Si no se vuelve a registrar ningún stream después del período de gracia, la llamada finaliza para evitar llamadas activas atascadas.
+- Si el flujo se vuelve a conectar durante ese período, la finalización automática se cancela.
+- Si no se vuelve a registrar ningún flujo después del período de gracia, la llamada finaliza para evitar llamadas activas atascadas.
 
 ## CLI
 
@@ -354,21 +369,21 @@ openclaw voicecall expose --mode funnel
 a los últimos N registros (predeterminado 200). La salida incluye p50/p90/p99 para la latencia
 de turno y los tiempos de espera de escucha.
 
-## Herramienta de agente
+## Herramienta del agente
 
 Nombre de la herramienta: `voice_call`
 
 Acciones:
 
-- `initiate_call` (mensaje, ¿destino?, ¿modo?)
-- `continue_call` (callId, mensaje)
-- `speak_to_user` (callId, mensaje)
+- `initiate_call` (message, to?, mode?)
+- `continue_call` (callId, message)
+- `speak_to_user` (callId, message)
 - `end_call` (callId)
 - `get_status` (callId)
 
 Este repositorio incluye un documento de habilidad coincidente en `skills/voice-call/SKILL.md`.
 
-## RPC de puerta de enlace
+## RPC de Gateway
 
 - `voicecall.initiate` (`to?`, `message`, `mode?`)
 - `voicecall.continue` (`callId`, `message`)

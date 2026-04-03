@@ -32,3 +32,5 @@ openclaw skills check
 ```
 
 `search`/`install`/`update` 直接使用 ClawHub 並安裝到目前啟用的工作區 `skills/` 目錄中。`list`/`info`/`check` 則仍會檢查目前工作區和設定可見的本地技能。
+
+此 CLI `install` 指令會從 ClawHub 下載技能資料夾。由入門導覽或技能設定觸發的 Gateway 支援技能相依性安裝，則是使用獨立的 `skills.install` 請求路徑。

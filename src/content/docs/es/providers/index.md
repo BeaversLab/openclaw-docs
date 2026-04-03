@@ -63,9 +63,9 @@ OpenClaw puede utilizar muchos proveedores de LLM. Elija un proveedor, autentíq
 
 - [Deepgram (transcripción de audio)](/en/providers/deepgram)
 
-## Herramientas de la comunidad
+## Herramientas comunitarias
 
-- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Proxy comunitario para las credenciales de suscripción de Claude (verifique la política/términos de Anthropic antes de usar)
+- [Claude Max API Proxy](/en/providers/claude-max-api-proxy) - Proxy comunitario para credenciales de suscripción a Claude (verifique la política/términos de Anthropic antes de usar)
 
 Para el catálogo completo de proveedores (xAI, Groq, Mistral, etc.) y la configuración avanzada,
-vea [Proveedores de modelos](/en/concepts/model-providers).
+consulte [Proveedores de modelos](/en/concepts/model-providers).

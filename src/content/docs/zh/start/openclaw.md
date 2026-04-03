@@ -26,7 +26,7 @@ OpenClaw 是一个自托管网关，用于将 WhatsApp、Telegram、Discord、iM
 
 ## 先决条件
 
-- 已安装并完成 OpenClaw 入门设置 — 如果尚未完成，请参阅[入门指南](/en/start/getting-started)
+- 已安装并完成 OpenClaw 的入驻 — 如果尚未完成此操作，请参阅 [入门指南](/en/start/getting-started)
 - 用于助手的第二个电话号码（SIM/eSIM/预付费）
 
 ## 双手机设置（推荐）
@@ -49,7 +49,7 @@ flowchart TB
 openclaw channels login
 ```
 
-2. 启动 Gateway 网关（保持其运行）：
+2. 启动 Gateway(网关) 网关（保持其运行）：
 
 ```bash
 openclaw gateway --port 18789
@@ -79,7 +79,7 @@ OpenClaw 从其工作区目录读取操作指令和“记忆”。
 openclaw setup
 ```
 
-完整的工作区布局 + 备份指南：[Agent 工作区](/en/concepts/agent-workspace)
+完整的工作区布局 + 备份指南：[Agent workspace](/en/concepts/agent-workspace)
 记忆工作流：[Memory](/en/concepts/memory)
 
 可选：使用 `agents.defaults.workspace` 选择不同的工作区（支持 `~`）。
@@ -192,9 +192,15 @@ MEDIA:https://example.com/screenshot.png
 
 OpenClaw 提取这些内容，并将它们作为媒体与文本一起发送。
 
-对于本地路径，默认的允许列表故意设置得很窄：OpenClaw 临时根目录、媒体缓存、代理工作区路径以及沙盒生成的文件。如果您需要更广泛的本地文件附件根目录，请配置明确的渠道/插件允许列表，而不是依赖任意的主机路径。
+本地路径行为遵循与 agent 相同的文件读取信任模型：
 
-## 操作检查清单
+- 如果 `tools.fs.workspaceOnly` 为 `true`，出站 `MEDIA:` 本地路径仍将限制在 OpenClaw 临时根目录、媒体缓存、agent 工作区路径和沙盒生成的文件中。
+- 如果 `tools.fs.workspaceOnly` 为 `false`，出站 `MEDIA:` 可以使用 agent 已被允许读取的本地主机文件。
+- 本地主机发送仍然仅允许媒体和安全文档类型（图像、音频、视频、PDF 和 Office 文档）。纯文本和类似机密的文件不被视为可发送的媒体。
+
+这意味着，当您的文件系统策略已允许读取工作区之外生成的图像/文件时，现在可以发送这些文件，而无需重新开放任意主机文本附件的外泄风险。
+
+## 运维检查清单
 
 ```bash
 openclaw status          # local status (creds, sessions, queued events)
@@ -203,16 +209,16 @@ openclaw status --deep   # adds gateway health probes (Telegram + Discord)
 openclaw health --json   # gateway health snapshot (WS)
 ```
 
-日志位于 `/tmp/openclaw/` 下（默认：`openclaw-YYYY-MM-DD.log`）。
+日志位于 `/tmp/openclaw/` 下（默认为：`openclaw-YYYY-MM-DD.log`）。
 
 ## 后续步骤
 
 - WebChat：[WebChat](/en/web/webchat)
-- Gateway(网关) 操作：[Gateway(网关) 运维手册](/en/gateway)
-- Cron + 唤醒：[Cron 作业](/en/automation/cron-jobs)
-- macOS 菜单栏伴侣：[OpenClaw macOS 应用](/en/platforms/macos)
-- iOS 节点应用：[iOS 应用](/en/platforms/ios)
-- Android 节点应用：[Android 应用](/en/platforms/android)
+- Gateway(网关) 运维：[Gateway(网关) runbook](/en/gateway)
+- Cron + 唤醒：[Cron jobs](/en/automation/cron-jobs)
+- macOS 菜单栏伴侣：[OpenClaw macOS app](/en/platforms/macos)
+- iOS 节点应用：[iOS app](/en/platforms/ios)
+- Android 节点应用：[Android app](/en/platforms/android)
 - Windows 状态：[Windows (WSL2)](/en/platforms/windows)
-- Linux 状态：[Linux 应用](/en/platforms/linux)
+- Linux 状态：[Linux app](/en/platforms/linux)
 - 安全性：[Security](/en/gateway/security)

@@ -1,7 +1,8 @@
 ---
-summary: "檢查通道連線的健康檢查步驟"
+summary: "Health check commands and gateway health monitoring"
 read_when:
-  - Diagnosing WhatsApp channel health
+  - Diagnosing channel connectivity or gateway health
+  - Understanding health check CLI commands and options
 title: "健康檢查"
 ---
 
@@ -41,4 +42,12 @@ title: "健康檢查"
 
 ## 專用的 "health" 指令
 
-`openclaw health --json` 會向正在執行的 Gateway 要求其健康快照 (CLI 不直接使用通道 socket)。它會在可用時回報連結的憑證/驗證時間、每個通道的探查摘要、session-store 摘要以及探查持續時間。如果 Gateway 無法連線或探查失敗/逾時，它會以非零狀態碼結束。使用 `--timeout <ms>` 覆寫預設的 10 秒。
+`openclaw health --json` 會詢問執行中的 Gateway 其健康狀態快照（CLI 不會直接建立 channel sockets）。它會在可用時回報已連結的 creds/auth 餘壽、各 channel 的探查摘要、session-store 摘要以及探查持續時間。如果 Gateway 無法連線，或探查失敗/逾時，它會以非零狀態碼結束。
+
+選項：
+
+- `--json`：機器可讀的 JSON 輸出
+- `--timeout <ms>`：覆寫預設的 10 秒探查逾時時間
+- `--probe`：強制對所有 channel 進行即時探查，而不是傳回快取的健康狀態快照
+
+健康狀態快照包含：`ok`（布林值）、`ts`（時間戳記）、`durationMs`（探查時間）、各 channel 狀態、Agent 可用性以及 session-store 摘要。

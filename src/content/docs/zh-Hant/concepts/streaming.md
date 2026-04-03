@@ -151,3 +151,9 @@ Slack：
 - `partial` 可以在可用時使用 Slack 原生串流（`chat.startStream`/`append`/`stop`）。
 - `block` 使用附加樣式（append-style）的草稿預覽。
 - `progress` 使用狀態預覽文字，然後是最終答案。
+
+## 相關
+
+- [訊息](/en/concepts/messages) — 訊息生命週期與傳遞
+- [重試](/en/concepts/retry) — 傳遞失敗時的重試行為
+- [頻道](/en/channels) — 逐頻道的串流支援

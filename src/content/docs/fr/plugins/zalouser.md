@@ -37,8 +37,9 @@ Redémarrez la Gateway ensuite.
 ### Option B : installer depuis un dossier local (dev)
 
 ```bash
-openclaw plugins install ./extensions/zalouser
-cd ./extensions/zalouser && pnpm install
+PLUGIN_SRC=./path/to/local/zalouser-plugin
+openclaw plugins install "$PLUGIN_SRC"
+cd "$PLUGIN_SRC" && pnpm install
 ```
 
 Redémarrez la Gateway ensuite.

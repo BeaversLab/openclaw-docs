@@ -46,7 +46,16 @@ avec l'action `react`. Le comportement des réactions varie selon le canal.
   </Accordion>
 </AccordionGroup>
 
-## Connexes
+## Niveau de réaction
+
+La config `reactionLevel` par channel contrôle l'étendue de l'utilisation des réactions par l'agent. Les valeurs sont généralement `off`, `ack`, `minimal` ou `extensive`.
+
+- [Telegram reactionLevel](/en/channels/telegram#reaction-notifications) — `channels.telegram.reactionLevel`
+- [WhatsApp reactionLevel](/en/channels/whatsapp#reactions) — `channels.whatsapp.reactionLevel`
+
+Définissez `reactionLevel` sur des channels individuels pour régler la réactivité de l'agent aux messages sur chaque plateforme.
+
+## Connexe
 
 - [Agent Send](/en/tools/agent-send) — l'outil `message` qui inclut `react`
 - [Channels](/en/channels) — configuration spécifique au channel

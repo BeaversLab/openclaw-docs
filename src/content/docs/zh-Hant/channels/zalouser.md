@@ -17,7 +17,7 @@ title: "Zalo Personal"
 Zalo Personal 以外掛程式形式提供，並未包含在核心安裝中。
 
 - 透過 CLI 安裝： `openclaw plugins install @openclaw/zalouser`
-- 或從原始碼檢出： `openclaw plugins install ./extensions/zalouser`
+- 或者從原始碼結帳：`openclaw plugins install ./path/to/local/zalouser-plugin`
 - 詳細資訊：[外掛程式](/en/tools/plugin)
 
 不需要外部的 `zca`/`openzca` CLI 執行檔。
@@ -179,3 +179,11 @@ openclaw directory groups list --channel zalouser --query "work"
 
 - 移除任何舊的外部 `zca` 程序假設。
 - 該頻道現在完全在 OpenClaw 中運行，無需外部 CLI 二進位檔案。
+
+## 相關
+
+- [頻道總覽](/en/channels) — 所有支援的頻道
+- [配對](/en/channels/pairing) — 私訊驗證與配對流程
+- [群組](/en/channels/groups) — 群組聊天行為與提及閘控
+- [頻道路由](/en/channels/channel-routing) — 訊息的會話路由
+- [安全性](/en/gateway/security) — 存取模型與強化措施

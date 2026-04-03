@@ -11,7 +11,7 @@ title: "Raspberry Pi (Platform)"
 
 ## 目标
 
-在Raspberry Pi上运行一个持久、在线的 OpenClaw Gateway 网关，一次性成本约为 **~35-80 美元**（无月费）（Raspberry Pi）。
+在Raspberry Pi上运行一个持久、在线的 OpenClaw Gateway(网关) 网关，一次性成本约为 **~35-80 美元**（无月费）（Raspberry Pi）。
 
 适用于：
 

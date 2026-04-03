@@ -8,7 +8,7 @@ title: "qr"
 
 # `openclaw qr`
 
-根据当前的 Gateway 网关 配置生成 iOS 配对二维码和设置代码。
+根据当前的 Gateway(网关) 网关 配置生成 iOS 配对二维码和设置代码。
 
 ## 用法
 

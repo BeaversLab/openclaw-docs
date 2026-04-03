@@ -13,7 +13,7 @@ title: "onboard"
 
 - CLI 新手引导中心：[新手引导 (CLI)](/en/start/wizard)
 - 新手引导概述：[新手引导概述](/en/start/onboarding-overview)
-- CLI 新手引导参考：[CLI Setup Reference](/en/start/wizard-cli-reference)
+- CLI 新手引导参考：[CLI 设置参考](/en/start/wizard-cli-reference)
 - CLI 自动化：[CLI 自动化](/en/start/wizard-cli-automation)
 - macOS 新手引导：[新手引导 (macOS 应用)](/en/start/onboarding)
 
@@ -73,7 +73,7 @@ openclaw onboard --non-interactive \
 - 除非设置了相应的环境变量，否则不要传递内联密钥标志（例如 `--openai-api-key`）。
 - 如果传递了内联密钥标志但未设置所需的环境变量，新手引导将立即失败并提供指导。
 
-非交互模式下的 Gateway 令牌选项：
+非交互模式下的 Gateway(网关) 令牌选项：
 
 - `--gateway-auth token --gateway-token <token>` 存储明文令牌。
 - `--gateway-auth token --gateway-token-ref-env <name>` 将 `gateway.auth.token` 存储为环境变量 SecretRef。
@@ -139,9 +139,13 @@ Flow 备注：
 
 - `quickstart`：最少的提示，自动生成网关令牌。
 - `manual`：针对端口/绑定/身份验证的完整提示（`advanced` 的别名）。
-- 本地新手引导私信作用域行为：[CLI Setup Reference](/en/start/wizard-cli-reference#outputs-and-internals)。
+- 在网络搜索步骤中，选择 **Grok** 可能会触发一个单独的后续
+  提示，以使用相同的 `XAI_API_KEY` 启用 `x_search`，并可选择
+  一个 `x_search` 模型。其他网络搜索提供商不会显示该提示。
+- 本地新手引导私信范围行为：[CLI 设置参考](/en/start/wizard-cli-reference#outputs-and-internals)。
 - 最快的首次聊天：`openclaw dashboard`（控制 UI，无需渠道设置）。
-- 自定义提供商：连接任何 OpenAI 或 Anthropic 兼容端点，包括未列出的托管提供商。使用 Unknown 进行自动检测。
+- 自定义提供商：连接任何 OpenAI 或 Anthropic 兼容的端点，
+  包括未列出的托管提供商。使用 Unknown 进行自动检测。
 
 ## 常见后续命令
 
@@ -150,4 +154,4 @@ openclaw configure
 openclaw agents add <name>
 ```
 
-<Note>`--json` 并不意味着非交互模式。请使用 `--non-interactive` 进行脚本操作。</Note>
+<Note>`--json` 并不意味着非交互模式。请使用 `--non-interactive` 进行脚本编写。</Note>

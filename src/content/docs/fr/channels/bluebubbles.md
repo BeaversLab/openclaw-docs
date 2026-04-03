@@ -13,7 +13,7 @@ Statut : plugin inclus qui communique avec le serveur BlueBubbles macOS via HTTP
 
 ## Vue d'ensemble
 
-- Fonctionne sur macOS via l'application auxiliaire BlueBubbles ([bluebubbles.app](https://bluebubbles.app)).
+- S'exécute sur macOS via l'application auxiliaire BlueBubbles ([bluebubbles.app](https://bluebubbles.app)).
 - Recommandé/testé : macOS Sequoia (15). macOS Tahoe (26) fonctionne ; l'édition est actuellement cassée sur Tahoe, et les mises à jour d'icône de groupe peuvent signaler le succès mais ne pas se synchroniser.
 - OpenClaw communique avec elle via son REST API (`GET /api/v1/ping`, `POST /message/text`, `POST /chat/:id/*`).
 - Les messages entrants arrivent via des webhooks ; les réponses sortantes, les indicateurs de frappe, les accusés de lecture et les tapbacks sont des appels REST.
@@ -420,3 +420,11 @@ Privilégiez `chat_guid` pour un routage stable :
 - Pour les informations de statut/santé : `openclaw status --all` ou `openclaw status --deep`.
 
 Pour une référence générale du workflow des canaux, consultez [Channels](/en/channels) et le guide [Plugins](/en/tools/plugin).
+
+## Connexes
+
+- [Vue d'ensemble des canaux](/en/channels) — tous les canaux pris en charge
+- [Appairage](/en/channels/pairing) — authentification DM et flux d'appairage
+- [Groupes](/en/channels/groups) — comportement des discussions de groupe et filtrage des mentions
+- [Routage de canal](/en/channels/channel-routing) — routage de session pour les messages
+- [Sécurité](/en/gateway/security) — modèle d'accès et durcissement

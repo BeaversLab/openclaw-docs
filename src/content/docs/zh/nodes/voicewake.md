@@ -1,5 +1,5 @@
 ---
-summary: "全局语音唤醒词（由 Gateway 网关 拥有）及其在各节点间的同步方式"
+summary: "全局语音唤醒词（由 Gateway(网关) 网关 拥有）及其在各节点间的同步方式"
 read_when:
   - Changing voice wake words behavior or defaults
   - Adding new node platforms that need wake word sync
@@ -8,14 +8,14 @@ title: "语音唤醒"
 
 # 语音唤醒（全局唤醒词）
 
-OpenClaw 将唤醒词视为由**Gateway 网关 拥有的单一全局列表**。
+OpenClaw 将唤醒词视为由**Gateway(网关) 网关 拥有的单一全局列表**。
 
 - **没有每个节点的自定义唤醒词**。
-- **任何节点/应用 UI 都可以编辑**该列表；更改由 Gateway 网关 持久化并广播给所有人。
+- **任何节点/应用 UI 都可以编辑**该列表；更改由 Gateway(网关) 网关 持久化并广播给所有人。
 - macOS 和 iOS 保留本地的**语音唤醒启用/禁用**开关（本地 UX 和权限不同）。
 - Android 目前保持语音唤醒关闭，并在语音选项卡中使用手动麦克风流程。
 
-## 存储（Gateway 网关 主机）
+## 存储（Gateway(网关) 网关 主机）
 
 唤醒词存储在网关机器的以下位置：
 
@@ -58,7 +58,7 @@ OpenClaw 将唤醒词视为由**Gateway 网关 拥有的单一全局列表**。
 ### iOS 节点
 
 - 使用全局列表进行 `VoiceWakeManager` 触发检测。
-- 在设置中编辑唤醒词会调用 `voicewake.set`（通过 Gateway 网关 WS），并保持本地唤醒词检测的响应性。
+- 在设置中编辑唤醒词会调用 `voicewake.set`（通过 Gateway(网关) 网关 WS），并保持本地唤醒词检测的响应性。
 
 ### Android 节点
 

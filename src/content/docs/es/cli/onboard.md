@@ -12,10 +12,10 @@ Incorporación interactiva para la configuración de Gateway local o remota.
 ## Guías relacionadas
 
 - Centro de incorporación de la CLI: [Incorporación (CLI)](/en/start/wizard)
-- Descripción general de la integración: [Descripción general de la integración](/en/start/onboarding-overview)
+- Descripción general de la incorporación: [Descripción general de la incorporación](/en/start/onboarding-overview)
 - Referencia de incorporación de la CLI: [Referencia de configuración de la CLI](/en/start/wizard-cli-reference)
-- Automatización de CLI: [Automatización de CLI](/en/start/wizard-cli-automation)
-- Integración en macOS: [Integración (Aplicación macOS)](/en/start/onboarding)
+- Automatización de la CLI: [Automatización de la CLI](/en/start/wizard-cli-automation)
+- Incorporación en macOS: [Incorporación (Aplicación macOS)](/en/start/onboarding)
 
 ## Ejemplos
 
@@ -140,10 +140,13 @@ Notas sobre el flujo:
 
 - `quickstart`: indicaciones mínimas, genera automáticamente un token de puerta de enlace.
 - `manual`: indicaciones completas para puerto/vínculo/autenticación (alias de `advanced`).
-- Comportamiento del alcance de MD en la incorporación local: [Referencia de configuración de la CLI](/en/start/wizard-cli-reference#outputs-and-internals).
-- El primer chat más rápido: `openclaw dashboard` (UI de control, sin configuración de canal).
+- En el paso de búsqueda web, elegir **Grok** puede activar un mensaje de seguimiento
+  separado para habilitar `x_search` con el mismo `XAI_API_KEY` y, opcionalmente, elegir
+  un modelo `x_search`. Otros proveedores de búsqueda web no muestran ese mensaje.
+- Comportamiento del alcance de DM en la incorporación local: [Referencia de configuración de la CLI](/en/start/wizard-cli-reference#outputs-and-internals).
+- Primera conversación más rápida: `openclaw dashboard` (Interfaz de usuario de control, sin configuración de canal).
 - Proveedor personalizado: conecte cualquier punto final compatible con OpenAI o Anthropic,
-  incluidos los proveedores alojados que no figuran en la lista. Use Unknown para detectar automáticamente.
+  incluidos los proveedores alojados que no figuran en la lista. Use Desconocido para detectar automáticamente.
 
 ## Comandos de seguimiento comunes
 
@@ -152,4 +155,4 @@ openclaw configure
 openclaw agents add <name>
 ```
 
-<Note>`--json` no implica el modo no interactivo. Use `--non-interactive` para scripts.</Note>
+<Note>`--json` no implica el modo no interactivo. Use `--non-interactive` para secuencias de comandos.</Note>

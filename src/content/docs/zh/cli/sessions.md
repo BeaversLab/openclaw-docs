@@ -24,7 +24,7 @@ openclaw sessions --json
 - `--all-agents`：聚合所有配置的代理存储
 - `--store <path>`：显式存储路径（不能与 `--agent` 或 `--all-agents` 组合使用）
 
-`openclaw sessions --all-agents` 读取已配置的代理存储。Gateway 网关 和 ACP 会话发现范围更广：它们还包括在默认 `agents/` 根目录或模板化 `session.store` 根目录下发现的仅磁盘存储。这些发现的存储必须解析为代理根目录内的常规 `sessions.json` 文件；符号链接和根目录外的路径会被跳过。
+`openclaw sessions --all-agents` 读取已配置的代理存储。Gateway(网关) 网关 和 ACP 会话发现范围更广：它们还包括在默认 `agents/` 根目录或模板化 `session.store` 根目录下发现的仅磁盘存储。这些发现的存储必须解析为代理根目录内的常规 `sessions.json` 文件；符号链接和根目录外的路径会被跳过。
 
 JSON 示例：
 

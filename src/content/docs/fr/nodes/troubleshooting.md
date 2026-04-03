@@ -62,7 +62,8 @@ Si vous voyez `NODE_BACKGROUND_UNAVAILABLE`, amenez l'application du nœud au pr
 Il s'agit de différentes portes :
 
 1. **Appareil appairé** : ce nœud peut-il se connecter à la passerelle ?
-2. **Approbations Exec** : ce nœud peut-il exécuter une commande shell spécifique ?
+2. **Stratégie de commande de nœud Gateway** : l'ID de commande RPC est-il autorisé par `gateway.nodes.allowCommands` / `denyCommands` et les valeurs par défaut de la plateforme ?
+3. **Approbations Exec** : ce nœud peut-il exécuter une commande shell spécifique localement ?
 
 Vérifications rapides :
 
@@ -73,21 +74,24 @@ openclaw approvals get --node <idOrNameOrIp>
 openclaw approvals allowlist add --node <idOrNameOrIp> "/usr/bin/uname"
 ```
 
-Si l'appairage est manquant, approuvez d'abord l'appareil du nœud.
-Si l'appairage est correct mais que `system.run` échoue, corrigez les approbations/listes d'autorisation Exec.
+Si l'appariement est manquant, approuvez d'abord l'appareil du nœud.
+Si `nodes describe` manque une commande, vérifiez la stratégie de commande du nœud passerelle et si le nœud a réellement déclaré cette commande lors de la connexion.
+Si l'appariement est correct mais que `system.run` échoue, corrigez les approbations/listes blanches d'exécution sur ce nœud.
+
+L'appariement de nœud est une porte d'identité/confiance, et non une surface d'approbation par commande. Pour `system.run`, la stratégie par nœud réside dans le fichier d'approbations d'exécution de ce nœud (`openclaw approvals get --node ...`), et non dans l'enregistrement d'appariement de la passerelle.
 
 ## Codes d'erreur de nœud courants
 
-- `NODE_BACKGROUND_UNAVAILABLE` → l'application est en arrière-plan ; amenez-la au premier plan.
-- `CAMERA_DISABLED` → bascule de caméra désactivée dans les paramètres du nœud.
-- `*_PERMISSION_REQUIRED` → permission OS manquante/refusée.
+- `NODE_BACKGROUND_UNAVAILABLE` → l'application est en arrière-plan ; passez-la au premier plan.
+- `CAMERA_DISABLED` → le bouton de basculement de la caméra est désactivé dans les paramètres du nœud.
+- `*_PERMISSION_REQUIRED` → autorisation OS manquante/refusée.
 - `LOCATION_DISABLED` → le mode de localisation est désactivé.
-- `LOCATION_PERMISSION_REQUIRED` → le mode de localisation demandé n'a pas été accordé.
-- `LOCATION_BACKGROUND_UNAVAILABLE` → l'application est en arrière-plan mais seule la permission « Pendant l'utilisation » existe.
-- `SYSTEM_RUN_DENIED: approval required` → la requête d'exécution nécessite une approbation explicite.
-- `SYSTEM_RUN_DENIED: allowlist miss` → commande bloquée par le mode liste autorisée.
-  Sur les hôtes de nœud Windows, les formulaires d'enveloppe de shell comme `cmd.exe /c ...` sont traités comme des absences de la liste autorisée en
-  mode liste autorisée, sauf s'ils sont approuvés via le flux de demande.
+- `LOCATION_PERMISSION_REQUIRED` → le mode de localisation demandé n'est pas accordé.
+- `LOCATION_BACKGROUND_UNAVAILABLE` → l'application est en arrière-plan mais seule l'autorisation « Pendant l'utilisation » existe.
+- `SYSTEM_RUN_DENIED: approval required` → la requête exec nécessite une approbation explicite.
+- `SYSTEM_RUN_DENIED: allowlist miss` → commande bloquée par le mode liste blanche.
+  Sur les hôtes de nœuds Windows, les formes d'enveloppe shell comme `cmd.exe /c ...` sont traitées comme des absences de liste blanche en
+  mode liste blanche, sauf si elles sont approuvées via le flux de demande.
 
 ## Boucle de récupération rapide
 
@@ -98,12 +102,12 @@ openclaw approvals get --node <idOrNameOrIp>
 openclaw logs --follow
 ```
 
-Si toujours bloqué :
+Si vous êtes toujours bloqué :
 
-- Approuver à nouveau le jumelage de l'appareil.
+- Réapprouver l'appariement de l'appareil.
 - Rouvrir l'application de nœud (premier plan).
-- Accorder à nouveau les permissions OS.
-- Recréer/ajuster la politique d'approbation d'exécution.
+- Redonner les autorisations OS.
+- Recréer/ajuster la stratégie d'approbation exec.
 
 Connexes :
 

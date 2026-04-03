@@ -128,24 +128,35 @@ Valores predeterminados:
 
 - El retroceso de facturación comienza en **5 horas**, se duplica por cada fallo de facturación y tiene un máximo de **24 horas**.
 - Los contadores de retroceso se restablecen si el perfil no ha fallado durante **24 horas** (configurable).
+- Los reintentos sobrecargados permiten **1 rotación de perfil del mismo proveedor** antes de la reserva del modelo.
+- Los reintentos sobrecargados usan **0 ms de espera** por defecto.
 
-## Respaldo de modelo
+## Reserva del modelo
 
-Si fallan todos los perfiles de un proveedor, OpenClaw pasa al siguiente modelo en
-`agents.defaults.model.fallbacks`. Esto se aplica a fallos de autenticación, límites de velocidad y
-tiempos de espera que agotaron la rotación de perfiles (otros errores no avanzan el respaldo).
+Si todos los perfiles de un proveedor fallan, OpenClaw pasa al siguiente modelo en
+`agents.defaults.model.fallbacks`. Esto se aplica a fallos de autenticación, límites de tasa y
+tiempos de espera que agotaron la rotación de perfiles (otros errores no avanzan la reserva).
 
-Cuando una ejecución comienza con una anulación de modelo (ganchos o CLI), los respaldos aún terminan en
-`agents.defaults.model.primary` después de intentar cualquier respaldo configurado.
+Los errores de sobrecarga y límite de tasa se manejan de manera más agresiva que los
+períodos de espera de facturación. Por defecto, OpenClaw permite un reintento de perfil de autenticación del mismo proveedor,
+luego cambia a la siguiente reserva de modelo configurada sin esperar. Ajuste esto
+con `auth.cooldowns.overloadedProfileRotations`,
+`auth.cooldowns.overloadedBackoffMs` y
+`auth.cooldowns.rateLimitedProfileRotations`.
+
+Cuando una ejecución comienza con una anulación de modelo (hooks o CLI), las reservas aún terminan en
+`agents.defaults.model.primary` después de intentar cualquier reserva configurada.
 
 ## Configuración relacionada
 
-Consulte [Gateway configuration](/en/gateway/configuration) para:
+Consulte [Configuración de Gateway](/en/gateway/configuration) para:
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
 - `auth.cooldowns.billingMaxHours` / `auth.cooldowns.failureWindowHours`
+- `auth.cooldowns.overloadedProfileRotations` / `auth.cooldowns.overloadedBackoffMs`
+- `auth.cooldowns.rateLimitedProfileRotations`
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
-- Enrutamiento de `agents.defaults.imageModel`
+- Enrutamiento `agents.defaults.imageModel`
 
-Consulte [Models](/en/concepts/models) para obtener una visión general más amplia de la selección y el respaldo de modelos.
+Consulte [Modelos](/en/concepts/models) para obtener una visión general más amplia de la selección y reserva de modelos.

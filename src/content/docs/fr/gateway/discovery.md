@@ -26,7 +26,7 @@ L'objectif de conception est de conserver toute la découverte/publicité résea
 
 Protocol details:
 
-- [Protocole de Gateway](/en/gateway/protocol)
+- [Protocole Gateway](/en/gateway/protocol)
 - [Protocole de pont (hérité)](/en/gateway/bridge-protocol)
 
 ## Pourquoi nous conservons à la fois le mode "direct" et SSH
@@ -59,58 +59,62 @@ Dépannage et détails de la balise : [Bonjour](/en/gateway/bonjour).
   - `_openclaw-gw._tcp` (balise de transport de la passerelle)
 - Clés TXT (non secrètes) :
   - `role=gateway`
+  - `transport=gateway`
+  - `displayName=<friendly name>` (nom d'affichage configuré par l'opérateur)
   - `lanHost=<hostname>.local`
-  - `sshPort=22` (ou ce qui est annoncé)
+  - `sshPort=22` (ou tout ce qui est annoncé)
   - `gatewayPort=18789` (Gateway WS + HTTP)
   - `gatewayTls=1` (uniquement lorsque TLS est activé)
-  - `gatewayTlsSha256=<sha256>` (uniquement lorsque TLS est activé et que l'empreinte digitale est disponible)
-  - `canvasPort=<port>` (port d'hôte de canevas ; actuellement le même que `gatewayPort` lorsque l'hôte de canevas est activé)
-  - `cliPath=<path>` (facultatif ; chemin absolu vers un point d'entrée `openclaw` exécutable ou un binaire)
-  - `tailnetDns=<magicdns>` (indice facultatif ; détecté automatiquement lorsque Tailscale est disponible)
+  - `gatewayTlsSha256=<sha256>` (uniquement lorsque TLS est activé et que l'empreinte est disponible)
+  - `canvasPort=<port>` (port d'hôte canvas ; actuellement identique à `gatewayPort` lorsque l'hôte canvas est activé)
+  - `cliPath=<path>` (optionnel ; chemin absolu vers un point d'entrée ou un binaire `openclaw` exécutable)
+  - `tailnetDns=<magicdns>` (indice optionnel ; détecté automatiquement lorsque Tailscale est disponible)
 
 Notes de sécurité :
 
-- Les enregistrements TXT Bonjour/mDNS sont **non authentifiés**. Les clients doivent traiter les valeurs TXT uniquement comme des indices UX.
-- Le routage (hôte/port) doit préférer le **point de terminaison de service résolu** (SRV + A/AAAA) par rapport aux `lanHost`, `tailnetDns` ou `gatewayPort` fournis par TXT.
+- Les enregistrements TXT Bonjour/mDNS sont **non authentifiés**. Les clients doivent traiter les valeurs TXT comme des indices d'interface utilisateur uniquement.
+- Le routage (hôte/port) doit privilégier le **point de terminaison de service résolu** (SRV + A/AAAA) par rapport aux `lanHost`, `tailnetDns` ou `gatewayPort` fournis par TXT.
 - L'épinglage TLS ne doit jamais permettre à un `gatewayTlsSha256` annoncé de remplacer une épingle précédemment stockée.
-- Les nœuds iOS/Android doivent traiter les connexions directes basées sur la découverte comme **TLS uniquement** et exiger une confirmation explicite « faire confiance à cette empreinte digitale » avant de stocker une épingle pour la première fois (vérification hors bande).
+- Les nœuds iOS/Android doivent traiter les connexions directes basées sur la découverte comme **TLS uniquement** et exiger une confirmation explicite « faire confiance à cette empreinte » avant de stocker une première épingle (vérification hors bande).
 
-Désactiver/remplacer :
+Désactiver/Remplacer :
 
-- `OPENCLAW_DISABLE_BONJOUR=1` désactive la publicité.
-- `gateway.bind` dans `~/.openclaw/openclaw.json` contrôle le mode de liaison de la Gateway.
+- `OPENCLAW_DISABLE_BONJOUR=1` désactive l'annonce.
+- `gateway.bind` dans `~/.openclaw/openclaw.json` contrôle le mode de liaison Gateway.
 - `OPENCLAW_SSH_PORT` remplace le port SSH annoncé dans TXT (par défaut 22).
 - `OPENCLAW_TAILNET_DNS` publie un indice `tailnetDns` (MagicDNS).
 - `OPENCLAW_CLI_PATH` remplace le chemin CLI annoncé.
 
 ### 2) Tailnet (inter-réseau)
 
-Pour les configurations de type Londres/Vienne, Bonjour ne sera pas utile. La cible « directe » recommandée est :
+Pour les configurations de type Londres/Vienne, Bonjour ne sera d'aucune aide. La cible « directe » recommandée est :
 
 - Nom MagicDNS Tailscale (préféré) ou une IP tailnet stable.
 
-Si la passerelle peut détecter qu'elle fonctionne sous Tailscale, elle publie `tailnetDns` comme indice facultatif pour les clients (y compris les balises de zone étendue).
+Si la passerelle peut détecter qu'elle fonctionne sous Tailscale, elle publie `tailnetDns` comme indice optionnel pour les clients (y compris les balises longue portée).
 
-### 3) Manuel / Cible SSH
+L'application macOS préfère désormais les noms MagicDNS aux adresses IP brutes Tailscale pour la découverte de passerelles. Cela améliore la fiabilité lorsque les IP tailnet changent (par exemple après le redémarrage des nœuds ou la réaffectation CGNAT), car les noms MagicDNS résolvent automatiquement l'IP actuelle.
 
-Lorsqu'il n'y a pas de route directe (ou que le mode direct est désactivé), les clients peuvent toujours se connecter via SSH en transférant le port de passerelle de bouclage.
+### 3) Cible manuelle / SSH
 
-Voir [Accès distant](/en/gateway/remote).
+Lorsqu'il n'y a pas de route directe (ou que la connexion directe est désactivée), les clients peuvent toujours se connecter via SSH en redirigeant le port de passerelle de bouclage (loopback).
+
+Voir [Accès à distance](/en/gateway/remote).
 
 ## Sélection du transport (politique client)
 
 Comportement recommandé du client :
 
-1. Si un point de terminaison direct couplé est configuré et accessible, utilisez-le.
-2. Sinon, si Bonjour trouve une passerelle sur le réseau local, proposez un choix en un clic « Utiliser cette passerelle » et enregistrez-la en tant que point de terminaison direct.
-3. Sinon, si un DNS/IP tailnet est configuré, essayez en mode direct.
-4. Sinon, repliez-vous sur SSH.
+1. Si un point de terminaison direct appairé est configuré et accessible, utilisez-le.
+2. Sinon, si Bonjour trouve une passerelle sur le réseau local, proposez un choix en un appui « Utiliser cette passerelle » et enregistrez-la en tant que point de terminaison direct.
+3. Sinon, si un DNS/IP tailnet est configuré, essayez en direct.
+4. Sinon, revenez à SSH.
 
-## Couplage + auth (transport direct)
+## Appairage + auth (transport direct)
 
 La passerelle est la source de vérité pour l'admission des nœuds/clients.
 
-- Les demandes de couplage sont créées/approuvées/rejetées dans la passerelle (voir [Couplage de Gateway](/en/gateway/pairing)).
+- Les demandes d'appairage sont créées/approuvées/rejetées dans la passerelle (voir [Appairage de la Gateway](/en/gateway/pairing)).
 - La passerelle applique :
   - auth (jeton / paire de clés)
   - portées/ACL (la passerelle n'est pas un proxy brut vers chaque méthode)
@@ -118,6 +122,6 @@ La passerelle est la source de vérité pour l'admission des nœuds/clients.
 
 ## Responsabilités par composant
 
-- **Gateway** : publie des balises de découverte, possède les décisions de couplage et héberge le point de terminaison WS.
-- **Application macOS** : vous aide à choisir une passerelle, affiche les invites de couplage et utilise SSH uniquement en repli.
-- **Nœuds iOS/Android** : explorent Bonjour par commodité et se connectent au WS de la Gateway couplée.
+- **Gateway** : diffuse les balises de découverte, possède les décisions d'appairage et héberge le point de terminaison WS.
+- **Application macOS** : vous aide à choisir une passerelle, affiche les invites d'appairage et utilise SSH uniquement en repli.
+- **Nœuds iOS/Android** : explorent Bonjour par commodité et se connectent au WS de la Gateway appairée.

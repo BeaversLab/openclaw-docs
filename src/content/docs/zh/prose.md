@@ -27,9 +27,9 @@ OpenProse 是一种可移植的、以 Markdown 为优先的工作流格式，用
 openclaw plugins enable open-prose
 ```
 
-启用插件后重启 Gateway 网关。
+启用插件后重启 Gateway(网关) 网关。
 
-开发/本地检出：`openclaw plugins install ./extensions/open-prose`
+开发/本地检出：`openclaw plugins install ./path/to/local/open-prose-plugin`
 
 相关文档：[插件](/en/tools/plugin)、[插件清单](/en/plugins/manifest)、[Skills](/en/tools/skills)。
 

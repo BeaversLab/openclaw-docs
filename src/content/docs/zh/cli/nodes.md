@@ -37,13 +37,10 @@ openclaw nodes status --last-connected 24h
 使用 `--connected` 仅显示当前连接的节点。使用 `--last-connected <duration>` 过滤
 在特定时长内连接的节点（例如 `24h`、`7d`）。
 
-## 调用 / 运行
+## 调用
 
 ```bash
 openclaw nodes invoke --node <id|name|ip> --command <command> --params <json>
-openclaw nodes run --node <id|name|ip> <command...>
-openclaw nodes run --raw "git status"
-openclaw nodes run --agent main --node <id|name|ip> --raw "git status"
 ```
 
 调用标志：
@@ -51,25 +48,7 @@ openclaw nodes run --agent main --node <id|name|ip> --raw "git status"
 - `--params <json>`：JSON 对象字符串（默认为 `{}`）。
 - `--invoke-timeout <ms>`：节点调用超时时间（默认为 `15000`）。
 - `--idempotency-key <key>`：可选的幂等密钥（idempotency key）。
+- 此处阻止了 `system.run` 和 `system.run.prepare`；请使用带有 `host=node` 的 `exec` 工具进行 shell 执行。
 
-### Exec 风格默认值
-
-`nodes run` 镜像了模型的 exec 行为（默认值 + 批准）：
-
-- 读取 `tools.exec.*`（加上 `agents.list[].tools.exec.*` 覆盖项）。
-- 在调用 `system.run` 之前使用 exec 批准（`exec.approval.request`）。
-- 当设置了 `tools.exec.node` 时，可以省略 `--node`。
-- 需要一个通告 `system.run` 的节点（macOS 伴侣应用或无头节点主机）。
-
-标志：
-
-- `--cwd <path>`：工作目录。
-- `--env <key=val>`：环境变量覆盖（可重复）。注意：节点主机忽略 `PATH` 覆盖（并且 `tools.exec.pathPrepend` 不会应用于节点主机）。
-- `--command-timeout <ms>`：命令超时时间。
-- `--invoke-timeout <ms>`：节点调用超时时间（默认为 `30000`）。
-- `--needs-screen-recording`：需要屏幕录制权限。
-- `--raw <command>`: 运行 shell 字符串（`/bin/sh -lc` 或 `cmd.exe /c`）。
-  在 Windows 节点主机上的 allowlist 模式下，`cmd.exe /c` shell-wrapper 运行需要批准
-  （仅 allowlist 条目不会自动允许 wrapper 形式）。
-- `--agent <id>`：agent-scoped 批准/allowlists（默认为配置的 agent）。
-- `--ask <off|on-miss|always>`，`--security <deny|allowlist|full>`：overrides。
+若要在节点上执行 shell 命令，请使用带有 `host=node` 的 `exec` 工具，而不是 `openclaw nodes run`。
+`nodes` CLI 现在专注于功能：通过 `nodes invoke` 进行直接 RPC，以及配对、相机、屏幕、位置、画布和通知功能。

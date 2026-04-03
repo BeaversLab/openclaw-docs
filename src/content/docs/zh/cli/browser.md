@@ -1,5 +1,5 @@
 ---
-summary: "CLI 参考文档 `openclaw browser`（配置文件、标签页、操作、Chrome MCP 和 CDP）"
+summary: "CLI 参考文档（`openclaw browser`），包括配置文件、标签页、操作、Chrome MCP 和 CDP"
 read_when:
   - You use `openclaw browser` and want examples for common tasks
   - You want to control a browser running on another machine via a node host
@@ -17,7 +17,7 @@ title: "browser"
 
 ## 通用标志
 
-- `--url <gatewayWsUrl>`：Gateway(网关) WebSocket URL（默认为配置）。
+- `--url <gatewayWsUrl>`：Gateway(网关) WebSocket URL（默认为配置中的值）。
 - `--token <token>`：Gateway(网关) 令牌（如果需要）。
 - `--timeout <ms>`：请求超时（毫秒）。
 - `--browser-profile <name>`：选择浏览器配置文件（默认来自配置）。
@@ -32,12 +32,31 @@ openclaw browser --browser-profile openclaw open https://example.com
 openclaw browser --browser-profile openclaw snapshot
 ```
 
+## 如果缺少命令
+
+如果 `openclaw browser` 是未知命令，请检查 `plugins.allow` 中的
+`~/.openclaw/openclaw.json`。
+
+当存在 `plugins.allow` 时，必须显式列出捆绑的浏览器插件：
+
+```json5
+{
+  plugins: {
+    allow: ["telegram", "browser"],
+  },
+}
+```
+
+如果插件允许列表排除了 `browser`，`browser.enabled=true` 不会恢复 CLI 子命令。
+
+相关内容：[Browser 工具](/en/tools/browser#missing-browser-command-or-tool)
+
 ## 配置文件
 
 配置文件是命名的浏览器路由配置。实际上：
 
-- `openclaw`：启动或连接到专用的 OpenClaw 管理的 Chrome 实例（隔离的用户数据目录）。
-- `user`：通过 Chrome DevTools MCP 控制您现有的已登录 Chrome 会话。
+- `openclaw`：启动或附加到专用的 OpenClaw 管理的 Chrome 实例（隔离的用户数据目录）。
+- `user`：通过 Chrome DevTools MCP 控制现有的已登录 Chrome 会话。
 - 自定义 CDP 配置文件：指向本地或远程 CDP 端点。
 
 ```bash
@@ -76,7 +95,7 @@ openclaw browser snapshot
 openclaw browser screenshot
 ```
 
-导航/点击/输入（基于参考的 UI 自动化）：
+导航/点击/输入（基于引用的 UI 自动化）：
 
 ```bash
 openclaw browser navigate https://example.com
@@ -86,7 +105,7 @@ openclaw browser type <ref> "hello"
 
 ## 通过 MCP 连接现有的 Chrome
 
-使用内置的 `user` 配置文件，或创建您自己的 `existing-session` 配置文件：
+使用内置的 `user` 配置文件，或创建你自己的 `existing-session` 配置文件：
 
 ```bash
 openclaw browser --browser-profile user tabs
@@ -95,12 +114,12 @@ openclaw browser create-profile --name brave-live --driver existing-session --us
 openclaw browser --browser-profile chrome-live tabs
 ```
 
-此路径仅限主机使用。对于 Docker、无头服务器、Browserless 或其他远程设置，请改用 CDP 配置文件。
+此路径仅适用于主机。对于 Docker、无头服务器、Browserless 或其他远程设置，请改用 CDP 配置文件。
 
 ## 远程浏览器控制（节点主机代理）
 
-如果 Gateway(网关) 运行在与浏览器不同的机器上，请在装有 Chrome/Brave/Edge/Chromium 的机器上运行**节点主机**。Gateway(网关) 将把浏览器操作代理到该节点（无需单独的浏览器控制服务器）。
+如果 Gateway(网关) 运行在与浏览器不同的机器上，请在装有 Chrome/Brave/Edge/Chromium 的机器上运行 **节点主机**。Gateway(网关) 将把浏览器操作代理到该节点（无需单独的浏览器控制服务器）。
 
-使用 `gateway.nodes.browser.mode` 控制自动路由，如果连接了多个节点，则使用 `gateway.nodes.browser.node` 固定特定节点。
+如果连接了多个节点，请使用 `gateway.nodes.browser.mode` 控制自动路由，并使用 `gateway.nodes.browser.node` 固定特定节点。
 
-安全与远程设置：[Browser 工具](/en/tools/browser)、[Remote access](/en/gateway/remote)、[Tailscale](/en/gateway/tailscale)、[Security](/en/gateway/security)
+安全性和远程设置：[浏览器工具](/en/tools/browser)、[远程访问](/en/gateway/remote)、[Tailscale](/en/gateway/tailscale)、[安全性](/en/gateway/security)

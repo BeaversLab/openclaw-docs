@@ -20,7 +20,7 @@ Zalo se distribuye como un complemento y no está incluido en la instalación ce
 ## Configuración rápida (principiante)
 
 1. Instale el plugin de Zalo:
-   - Desde un checkout de fuente: `openclaw plugins install ./extensions/zalo`
+   - Desde una checkout de código fuente: `openclaw plugins install ./path/to/local/zalo-plugin`
    - Desde npm (si está publicado): `openclaw plugins install @openclaw/zalo`
    - O elija **Zalo** en la configuración y confirme el mensaje de instalación
 2. Configure el token:
@@ -64,7 +64,7 @@ Los **bots de Official Account (OA) de Zalo** son una superficie de producto dif
 
 ### 1) Crear un token de bot (Plataforma de Bot de Zalo)
 
-1. Vaya a [https://bot.zaloplatforms.com](https://bot.zaloplatforms.com) e inicie sesión.
+1. Ve a [https://bot.zaloplatforms.com](https://bot.zaloplatforms.com) e inicia sesión.
 2. Cree un nuevo bot y configure sus ajustes.
 3. Copie el token completo del bot (típicamente `numeric_id:secret`). Para los bots de Marketplace, el token de tiempo de ejecución utilizable puede aparecer en el mensaje de bienvenida del bot después de la creación.
 
@@ -241,3 +241,11 @@ Opciones multicuenta:
 - `channels.zalo.accounts.<id>.webhookSecret`: secreto de webhook por cuenta.
 - `channels.zalo.accounts.<id>.webhookPath`: ruta de webhook por cuenta.
 - `channels.zalo.accounts.<id>.proxy`: URL de proxy por cuenta.
+
+## Relacionado
+
+- [Descripción general de canales](/en/channels) — todos los canales compatibles
+- [Emparejamiento](/en/channels/pairing) — flujo de autenticación y emparejamiento de DM
+- [Grupos](/en/channels/groups) — comportamiento del chat de grupo y filtrado de menciones
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/en/gateway/security) — modelo de acceso y endurecimiento

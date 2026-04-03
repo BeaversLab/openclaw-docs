@@ -201,8 +201,8 @@ your-domain.com {
 - 如果未設定 `webhookPath`，預設 webhook 路徑為 `/googlechat`。
 - `dangerouslyAllowNameMatching` 重新啟用允許清單的可變電子郵件主體比對（緊急相容性模式）。
 - 當啟用 `actions.reactions` 時，可以透過 `reactions` 工具和 `channels action` 使用回應。
-- 訊息動作公開 `send` 用於文字和 `upload-file` 用於明確附件發送。`upload-file` 接受 `media` / `filePath` / `path` 以及選用的 `message`、`filename` 和執行緒目標。
-- `typingIndicator` 支援 `none`、`message`（預設）和 `reaction`（反應需要使用者 OAuth）。
+- 訊息動作會針對文字公開 `send`，並針對明確附件傳送公開 `upload-file`。`upload-file` 接受 `media` / `filePath` / `path` 以及選用的 `message`、`filename` 和執行緒目標。
+- `typingIndicator` 支援 `none`、`message`（預設）以及 `reaction`（回應需要使用者 OAuth）。
 - 附件透過 Chat API 下載並儲存在媒體管線中（大小受 `mediaMaxMb` 限制）。
 
 祕鑰參考詳情：[Secrets Management](/en/gateway/secrets)。
@@ -260,3 +260,11 @@ openclaw channels status
 - [閘道設定](/en/gateway/configuration)
 - [安全性](/en/gateway/security)
 - [反應](/en/tools/reactions)
+
+## 相關
+
+- [頻道概覽](/en/channels) — 所有支援的頻道
+- [配對](/en/channels/pairing) — 私訊驗證與配對流程
+- [群組](/en/channels/groups) — 群組聊天行為與提及控制
+- [頻道路由](/en/channels/channel-routing) — 訊息的工作階段路由
+- [安全性](/en/gateway/security) — 存取模型與強化防護

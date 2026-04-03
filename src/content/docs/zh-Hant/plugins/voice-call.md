@@ -43,8 +43,9 @@ openclaw plugins install @openclaw/voice-call
 ### 選項 B：從本機資料夾安裝（開發用，不進行複製）
 
 ```bash
-openclaw plugins install ./extensions/voice-call
-cd ./extensions/voice-call && pnpm install
+PLUGIN_SRC=./path/to/local/voice-call-plugin
+openclaw plugins install "$PLUGIN_SRC"
+cd "$PLUGIN_SRC" && pnpm install
 ```
 
 之後重新啟動 Gateway。
@@ -213,9 +214,11 @@ Voice Call 使用核心 `messages.tts` 設定在通話上進行
 {
   tts: {
     provider: "elevenlabs",
-    elevenlabs: {
-      voiceId: "pMsXgVXv3BLzUgSXRplE",
-      modelId: "eleven_multilingual_v2",
+    providers: {
+      elevenlabs: {
+        voiceId: "pMsXgVXv3BLzUgSXRplE",
+        modelId: "eleven_multilingual_v2",
+      },
     },
   },
 }
@@ -223,9 +226,11 @@ Voice Call 使用核心 `messages.tts` 設定在通話上進行
 
 備註：
 
-- **Microsoft 語音在語音通話中會被忽略**（電話音訊需要 PCM；目前的 Microsoft 傳輸層未公開電話 PCM 輸出）。
-- 當啟用 Twilio 媒體串流時會使用核心 TTS；否則通話會回退到提供商的原生語音。
-- 如果 Twilio 媒體串流已經啟用，Voice Call 不會回退到 TwiML `<Say>`。如果在該狀態下電話 TTS 不可用，播放請求將會失敗，而不會混合兩個播放路徑。
+- 外掛程式設定內的舊版 `tts.<provider>` 金鑰 (`openai`, `elevenlabs`, `microsoft`, `edge`) 會在載入時自動遷移至 `tts.providers.<provider>`。建議在提交的設定中優先使用 `providers` 格式。
+- **語音通話會忽略 Microsoft 語音**（電話音訊需要 PCM；目前的 Microsoft 傳輸方式不公開電話 PCM 輸出）。
+- 啟用 Twilio 媒體串流時會使用核心 TTS；否則通話會退回至提供者原生的語音。
+- 如果 Twilio 媒體串流已經啟用，Voice Call 不會退回至 TwiML `<Say>`。如果在此狀態下無法使用電話 TTS，播放請求將會失敗，而不是混合兩條播放路徑。
+- 當電話 TTS 退回至次要提供者時，Voice Call 會記錄包含提供者鏈 (`from`, `to`, `attempts`) 的警告以供偵錯。
 
 ### 更多範例
 
@@ -236,7 +241,9 @@ Voice Call 使用核心 `messages.tts` 設定在通話上進行
   messages: {
     tts: {
       provider: "openai",
-      openai: { voice: "alloy" },
+      providers: {
+        openai: { voice: "alloy" },
+      },
     },
   },
 }
@@ -252,10 +259,12 @@ Voice Call 使用核心 `messages.tts` 設定在通話上進行
         config: {
           tts: {
             provider: "elevenlabs",
-            elevenlabs: {
-              apiKey: "elevenlabs_key",
-              voiceId: "pMsXgVXv3BLzUgSXRplE",
-              modelId: "eleven_multilingual_v2",
+            providers: {
+              elevenlabs: {
+                apiKey: "elevenlabs_key",
+                voiceId: "pMsXgVXv3BLzUgSXRplE",
+                modelId: "eleven_multilingual_v2",
+              },
             },
           },
         },
@@ -265,7 +274,7 @@ Voice Call 使用核心 `messages.tts` 設定在通話上進行
 }
 ```
 
-僅針對通話覆寫 OpenAI 模型（深度合併範例）：
+僅覆寫通話的 OpenAI 模型（深度合併範例）：
 
 ```json5
 {
@@ -274,9 +283,11 @@ Voice Call 使用核心 `messages.tts` 設定在通話上進行
       "voice-call": {
         config: {
           tts: {
-            openai: {
-              model: "gpt-4o-mini-tts",
-              voice: "marin",
+            providers: {
+              openai: {
+                model: "gpt-4o-mini-tts",
+                voice: "marin",
+              },
             },
           },
         },
@@ -298,45 +309,43 @@ Voice Call 使用核心 `messages.tts` 設定在通話上進行
 }
 ```
 
-`inboundPolicy: "allowlist"` 是低保真度來電者 ID 篩選。此外掛程式會將提供商提供的 `From` 值正規化，並將其與 `allowFrom` 比較。
-Webhook 驗證會驗證提供商的傳送與載酬完整性，但
-這並不能證明 PSTN/VoIP 來電號碼的持有權。請將 `allowFrom` 視為
-來電者 ID 篩選，而非強來電者身份驗證。
+`inboundPolicy: "allowlist"` 是一個低保驗證的來電顯示篩選器。此外掛程式會將提供者提供的 `From` 值標準化，並將其與 `allowFrom` 進行比較。
+Webhook 驗證會驗證提供者傳送和負載的完整性，但它無法證明 PSTN/VoIP 來電號碼的所有權。請將 `allowFrom` 視為來電顯示篩選，而非強力的來電身份驗證。
 
-自動回應使用代理系統。使用以下方式進行調整：
+自動回應使用代理系統。請透過以下方式調整：
 
 - `responseModel`
 - `responseSystemPrompt`
 - `responseTimeoutMs`
 
-### 語音輸出合約
+### 口語輸出合約
 
-針對自動回應，Voice Call 會將嚴格的語音輸出合約附加到系統提示中：
+對於自動回應，Voice Call 會在系統提示詞中附加嚴格的口語輸出合約：
 
 - `{"spoken":"..."}`
 
-Voice Call 接著會防禦性地提取語音文字：
+然後 Voice Call 會防禦性地提取語音文字：
 
-- 忽略標記為推理/錯誤內容的載酬。
-- 解析直接 JSON、圍籬 JSON 或內聯 `"spoken"` 鍵值。
-- 回退到純文字並移除可能的規劃/元資料導言段落。
+- 忽略標記為推理/錯誤內容的負載。
+- 解析直接 JSON、圍籬 JSON 或行內 `"spoken"` 金鑰。
+- 會回退為純文字並移除可能的規劃/元資訊前導段落。
 
-這能讓語音播放專注於面向來電者的文字，並避免將規劃文字洩漏到音訊中。
+這樣可以保持語音播放專注於面向呼叫者的文字，並避免將規劃文字洩漏到音訊中。
 
 ### 對話啟動行為
 
-針對撥出 `conversation` 通話，首則訊息處理與即時播放狀態相關聯：
+對於 `conversation` 呼出，首則訊息的處理與即時播放狀態綁定：
 
-- 插隊佇列清除與自動回應僅在初始問候語主動播放時被抑制。
-- 如果初始播放失敗，通話會返回 `listening`，且初始訊息保持排隊等待重試。
-- Twilio 串流的初始播放在串流連線時開始，沒有額外延遲。
+- 插隊佇列清除與自動回應僅在初始問候語正在播放時受到抑制。
+- 如果初始播放失敗，通話會返回 `listening` 狀態，且初始訊息會保留在佇列中以供重試。
+- Twilio 串流的初始播放會在串流連線建立時立即開始，無額外延遲。
 
-### Twilio 串流中斷寬限期
+### Twilio 串流斷線寬限期
 
-當 Twilio 媒體串流中斷時，Voice Call 會在自動結束通話前等待 `2000ms`：
+當 Twilio 媒體串流斷線時，Voice Call 會等待 `2000ms` 才自動結束通話：
 
-- 如果在該時間視窗內串流重新連線，自動結束將被取消。
-- 如果在寬限期後沒有重新註冊串流，通話將被結束以防止卡在進行中的通話。
+- 如果串流在該期間內重新連線，將取消自動結束。
+- 如果寬限期過後沒有重新註冊串流，將結束通話以防止卡在活躍狀態。
 
 ## CLI
 
@@ -352,11 +361,12 @@ openclaw voicecall latency                     # summarize turn latency from log
 openclaw voicecall expose --mode funnel
 ```
 
-`latency` 從預設的 voice-call 儲存路徑讀取 `calls.jsonl`。使用
+`latency` 會從預設的 voice-call 儲存路徑讀取 `calls.jsonl`。使用
 `--file <path>` 指向不同的日誌，並使用 `--last <n>` 將分析限制
-在最後 N 筆記錄（預設 200）。輸出包含輪替延遲和聆聽等待時間的 p50/p90/p99。
+在最後 N 筆記錄（預設為 200）。輸出包含回合延遲
+和聆聽等待時間的 p50/p90/p99 數值。
 
-## Agent 工具
+## 代理工具
 
 工具名稱：`voice_call`
 
@@ -368,9 +378,9 @@ openclaw voicecall expose --mode funnel
 - `end_call` (callId)
 - `get_status` (callId)
 
-此 repo 附帶一個匹配的技能文件，位於 `skills/voice-call/SKILL.md`。
+此儲存庫在 `skills/voice-call/SKILL.md` 提供了相應的技能文件。
 
-## Gateway RPC
+## 閘道 RPC
 
 - `voicecall.initiate` (`to?`, `message`, `mode?`)
 - `voicecall.continue` (`callId`, `message`)

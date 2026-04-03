@@ -53,6 +53,6 @@ openclaw config set plugins.entries.perplexity.config.webSearch.apiKey "pplx-xxx
 
 ## 环境说明
 
-如果 Gateway 作为守护进程（launchd/systemd）运行，请确保
+如果 Gateway(网关) 作为守护进程（launchd/systemd）运行，请确保
 `PERPLEXITY_API_KEY` 对该进程可用（例如，位于
 `~/.openclaw/.env` 中或通过 `env.shellEnv`）。

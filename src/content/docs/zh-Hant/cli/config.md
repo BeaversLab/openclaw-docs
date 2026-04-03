@@ -114,10 +114,14 @@ openclaw config set --batch-json '[
 openclaw config set --batch-file ./config-set.batch.json --dry-run
 ```
 
-Batch parsing always uses the batch payload (`--batch-json`/`--batch-file`) as the source of truth.
-`--strict-json` / `--json` do not change batch parsing behavior.
+政策說明：
 
-JSON path/value mode remains supported for both SecretRefs and providers:
+- 在不受支援的執行時可變介面上（例如 `hooks.token`、`commands.ownerDisplaySecret`、Discord 執行緒綁定 webhook 權杖以及 WhatsApp 憑證 JSON），會拒絕 SecretRef 指定。請參閱 [SecretRef Credential Surface](/en/reference/secretref-credential-surface)。
+
+批次解析始終使用批次載荷（`--batch-json`/`--batch-file`）作為事實來源。
+`--strict-json` / `--json` 不會改變批次解析行為。
+
+JSON 路徑/數值模式仍然同時支援 SecretRef 和提供者：
 
 ```bash
 openclaw config set channels.discord.token \
@@ -129,11 +133,11 @@ openclaw config set secrets.providers.vaultfile \
   --strict-json
 ```
 
-## Provider Builder Flags
+## 提供者建構器旗標
 
-Provider builder 目標必須使用 `secrets.providers.<alias>` 作為路徑。
+提供者建構器目標必須使用 `secrets.providers.<alias>` 作為路徑。
 
-常見旗標：
+通用旗標：
 
 - `--provider-source <env|file|exec>`
 - `--provider-timeout-ms <ms>` (`file`, `exec`)
@@ -142,7 +146,7 @@ Env 提供者 (`--provider-source env`)：
 
 - `--provider-allowlist <ENV_VAR>` (可重複)
 
-File 提供者 (`--provider-source file`)：
+檔案提供者 (`--provider-source file`)：
 
 - `--provider-path <path>` (必要)
 - `--provider-mode <singleValue|json>`
@@ -175,9 +179,9 @@ openclaw config set secrets.providers.vault \
   --provider-timeout-ms 5000
 ```
 
-## 試執行 (Dry run)
+## 試執行
 
-使用 `--dry-run` 來驗證變更，而不寫入 `openclaw.json`。
+使用 `--dry-run` 來驗證變更而不寫入 `openclaw.json`。
 
 ```bash
 openclaw config set channels.discord.token \
@@ -203,21 +207,23 @@ openclaw config set channels.discord.token \
 
 試執行行為：
 
-- Builder 模式：對變更的 refs/providers 執行 SecretRef 可解析性檢查。
-- JSON 模式 (`--strict-json`、`--json` 或批次模式)：執行結構描述驗證以及 SecretRef 可解析性檢查。
-- 在試執行期間，Exec SecretRef 檢查預設會被跳過，以避免指令副作用。
-- 使用 `--allow-exec` 搭配 `--dry-run` 以選擇加入 Exec SecretRef 檢查 (這可能會執行提供者指令)。
-- `--allow-exec` 僅適用於試執行，若未與 `--dry-run` 搭配使用則會報錯。
+- 建構器模式：針對變更過的 refs/providers 執行 SecretRef 可解析性檢查。
+- JSON 模式（`--strict-json`、`--json` 或批次模式）：執行 schema 驗證以及 SecretRef 可解析性檢查。
+- 政策驗證也會針對已知不支援的 SecretRef 目標介面執行。
+- 原則檢查會評估完整的變更後配置，因此父物件寫入（例如將 `hooks` 設定為物件）無法繞過不支援介面的驗證。
+- 為了避免指令的副作用，試執行期間預設會跳過 Exec SecretRef 檢查。
+- 使用 `--allow-exec` 搭配 `--dry-run` 以選擇加入 exec SecretRef 檢查（這可能會執行提供者指令）。
+- `--allow-exec` 僅適用於試執行，若未搭配 `--dry-run` 使用則會報錯。
 
-`--dry-run --json` 列印機器可讀報告：
+`--dry-run --json` 會列印機器可讀的報告：
 
-- `ok`：乾執行是否通過
+- `ok`：試執行是否通過
 - `operations`：已評估的指派數量
-- `checks`：是否執行了結構描述/可解析性檢查
-- `checks.resolvabilityComplete`：可解析性檢查是否執行完畢（跳過 exec refs 時為 false）
-- `refsChecked`：乾執行期間實際解析的 refs 數量
+- `checks`：是否執行了架構/可解析性檢查
+- `checks.resolvabilityComplete`：可解析性檢查是否執行至完成（當跳過 exec refs 時為 false）
+- `refsChecked`：試執行期間實際解析的 refs 數量
 - `skippedExecRefs`：因未設定 `--allow-exec` 而跳過的 exec refs 數量
-- `errors`：當 `ok=false` 時的結構化結構描述/可解析性失敗資訊
+- `errors`：當 `ok=false` 時的結構化架構/可解析性失敗
 
 ### JSON 輸出結構
 
@@ -287,23 +293,23 @@ openclaw config set channels.discord.token \
 }
 ```
 
-如果乾執行失敗：
+如果試執行失敗：
 
-- `config schema validation failed`：您變更後的配置結構無效；請修正路徑/數值或 provider/ref 物件結構。
-- `SecretRef assignment(s) could not be resolved`：引用的提供者/參照目前無法解析（缺少環境變數、無效的檔案指標、執行提供者失敗，或提供者/來源不匹配）。
-- `Dry run note: skipped <n> exec SecretRef resolvability check(s)`：試執行跳過了執行參照；如果您需要執行解析能力的驗證，請使用 `--allow-exec` 重新執行。
-- 對於批次模式，請修正失敗的項目並在寫入之前重新執行 `--dry-run`。
+- `config schema validation failed`：您的變更後配置結構無效；請修正路徑/數值或提供者/ref 物件結構。
+- `Config policy validation failed: unsupported SecretRef usage`：將該憑證移回純文字/字串輸入，並僅在不支援的介面上保留 SecretRefs。
+- `SecretRef assignment(s) could not be resolved`：參照的提供者/ref 目前無法解析（缺少環境變數、無效的檔案指標、exec 提供者失敗，或提供者/來源不匹配）。
+- `Dry run note: skipped <n> exec SecretRef resolvability check(s)`：試執行跳過了 exec refs；如果您需要 exec 可解析性驗證，請使用 `--allow-exec` 重新執行。
+- 對於批次模式，請修正失敗的項目，並在寫入前重新執行 `--dry-run`。
 
 ## 子指令
 
-- `config file`：列印作用中的組態檔案路徑（從 `OPENCLAW_CONFIG_PATH` 或預設位置解析）。
+- `config file`：列印作用中的配置檔案路徑（從 `OPENCLAW_CONFIG_PATH` 或預設位置解析）。
 
-編輯後重新啟動閘道。
+編輯後請重新啟動閘道。
 
 ## 驗證
 
-針對作用中的架構驗證目前的組態，而無須啟動
-閘道。
+根據作用中的架構驗證目前的配置，而不啟動閘道。
 
 ```bash
 openclaw config validate

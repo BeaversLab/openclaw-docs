@@ -40,7 +40,7 @@ Si desea una opción de $0/mes y no le importa ARM + una configuración específ
 
 ## 1) Crear un Droplet
 
-<Warning>Utilice una imagen base limpia (Ubuntu 24.04 LTS). Evite las imágenes de un clic de Marketplace de terceros a menos que haya revisado sus scripts de inicio y configuraciones predeterminadas del firewall.</Warning>
+<Warning>Utilice una imagen base limpia (Ubuntu 24.04 LTS). Evite las imágenes de un clic de Marketplace de terceros a menos que haya revisado sus scripts de inicio y las configuraciones predeterminadas del firewall.</Warning>
 
 1. Inicie sesión en [DigitalOcean](https://cloud.digitalocean.com/)
 2. Haga clic en **Create → Droplets**

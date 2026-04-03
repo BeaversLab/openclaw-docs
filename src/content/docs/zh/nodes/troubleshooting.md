@@ -62,7 +62,8 @@ openclaw logs --follow
 这是两个不同的关卡：
 
 1. **设备配对**：此节点能否连接到网关？
-2. **Exec 批准**：此节点能否运行特定的 shell 命令？
+2. **Gateway(网关)节点命令策略**：`gateway.nodes.allowCommands` / `denyCommands` 和平台默认设置是否允许该 RPC 命令 ID？
+3. **Exec 批准**：该节点能否在本地运行特定的 shell 命令？
 
 快速检查：
 
@@ -74,19 +75,22 @@ openclaw approvals allowlist add --node <idOrNameOrIp> "/usr/bin/uname"
 ```
 
 如果缺少配对，请先批准节点设备。
-如果配对正常但 `system.run` 失败，请修复 exec 批准/允许列表。
+如果 `nodes describe` 缺少命令，请检查网关节点命令策略以及节点在连接时是否实际声明了该命令。
+如果配对正常但 `system.run` 失败，请修复该节点上的 exec 批准/允许列表。
+
+节点配对是一个身份/信任关口，而不是按命令进行的批准界面。对于 `system.run`，按节点的策略位于该节点的 exec 批准文件 (`openclaw approvals get --node ...`) 中，而不是在网关配对记录中。
 
 ## 常见节点错误代码
 
-- `NODE_BACKGROUND_UNAVAILABLE` → 应用处于后台；将其切换到前台。
-- `CAMERA_DISABLED` → 节点设置中禁用了相机开关。
-- `*_PERMISSION_REQUIRED` → 缺少/被拒绝的 OS 权限。
-- `LOCATION_DISABLED` → 位置模式已关闭。
-- `LOCATION_PERMISSION_REQUIRED` → 未授予请求的位置模式。
-- `LOCATION_BACKGROUND_UNAVAILABLE` → 应用处于后台，但仅有“使用时”权限。
-- `SYSTEM_RUN_DENIED: approval required` → Exec 请求需要显式批准。
+- `NODE_BACKGROUND_UNAVAILABLE` → 应用已后台运行；将其切换到前台。
+- `CAMERA_DISABLED` → 相机切换开关在节点设置中被禁用。
+- `*_PERMISSION_REQUIRED` → 缺少/被拒绝 OS 权限。
+- `LOCATION_DISABLED` → 定位模式已关闭。
+- `LOCATION_PERMISSION_REQUIRED` → 未授予请求的定位模式。
+- `LOCATION_BACKGROUND_UNAVAILABLE` → 应用已后台运行，但仅存在“使用期间”权限。
+- `SYSTEM_RUN_DENIED: approval required` → exec 请求需要明确批准。
 - `SYSTEM_RUN_DENIED: allowlist miss` → 命令被允许列表模式阻止。
-  在 Windows 节点主机上，除非通过请求流程批准，否则在允许列表模式下，像 `cmd.exe /c ...` 这样的 shell 封装形式将被视为允许列表遗漏。
+  在 Windows 节点主机上，像 `cmd.exe /c ...` 这样的 shell 包装形式在允许列表模式下被视为允许列表未命中，除非通过请求流程获得批准。
 
 ## 快速恢复循环
 
@@ -100,7 +104,7 @@ openclaw logs --follow
 如果仍然卡住：
 
 - 重新批准设备配对。
-- 重新打开节点应用 (前台)。
+- 重新打开节点应用（前台）。
 - 重新授予 OS 权限。
 - 重新创建/调整 exec 批准策略。
 

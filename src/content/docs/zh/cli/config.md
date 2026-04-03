@@ -113,10 +113,14 @@ openclaw config set --batch-json '[
 openclaw config set --batch-file ./config-set.batch.json --dry-run
 ```
 
-批处理解析始终使用批处理负载（`--batch-json`/`--batch-file`）作为单一事实来源。
-`--strict-json` / `--json` 不会更改批处理解析行为。
+策略说明：
 
-JSON 路径/值模式仍受 SecretRefs 和提供商支持：
+- 在不支持的运行时可变表面上（例如 `hooks.token`、`commands.ownerDisplaySecret`、Discord 线程绑定 webhook 令牌以及 WhatsApp 凭证 JSON）会拒绝 SecretRef 分配。请参阅 [SecretRef Credential Surface](/en/reference/secretref-credential-surface)。
+
+批处理解析始终使用批处理载荷（`--batch-json`/`--batch-file`）作为事实来源。
+`--strict-json` / `--json` 不会改变批处理解析行为。
+
+SecretRef 和提供商均继续支持 JSON 路径/值模式：
 
 ```bash
 openclaw config set channels.discord.token \
@@ -135,19 +139,19 @@ openclaw config set secrets.providers.vaultfile \
 通用标志：
 
 - `--provider-source <env|file|exec>`
-- `--provider-timeout-ms <ms>` (`file`, `exec`)
+- `--provider-timeout-ms <ms>`（`file`、`exec`）
 
-Env 提供商 (`--provider-source env`)：
+环境提供商（`--provider-source env`）：
 
-- `--provider-allowlist <ENV_VAR>` (可重复)
+- `--provider-allowlist <ENV_VAR>`（可重复）
 
-File 提供商 (`--provider-source file`)：
+文件提供商（`--provider-source file`）：
 
-- `--provider-path <path>` (必填)
+- `--provider-path <path>`（必需）
 - `--provider-mode <singleValue|json>`
 - `--provider-max-bytes <bytes>`
 
-Exec 提供商 (`--provider-source exec`)：
+Exec 提供商（`--provider-source exec`）：
 
 - `--provider-command <path>`（必需）
 - `--provider-arg <arg>`（可重复）
@@ -160,7 +164,7 @@ Exec 提供商 (`--provider-source exec`)：
 - `--provider-allow-insecure-path`
 - `--provider-allow-symlink-command`
 
-加固型 exec 提供商示例：
+强化 exec 提供商示例：
 
 ```bash
 openclaw config set secrets.providers.vault \
@@ -176,7 +180,7 @@ openclaw config set secrets.providers.vault \
 
 ## 试运行
 
-使用 `--dry-run` 来验证更改而不写入 `openclaw.json`。
+使用 `--dry-run` 验证更改而不写入 `openclaw.json`。
 
 ```bash
 openclaw config set channels.discord.token \
@@ -202,20 +206,22 @@ openclaw config set channels.discord.token \
 
 试运行行为：
 
-- Builder 模式：对已更改的引用/提供商运行 SecretRef 可解析性检查。
+- 构建器模式：对已更改的引用/提供商运行 SecretRef 可解析性检查。
 - JSON 模式（`--strict-json`、`--json` 或批处理模式）：运行架构验证以及 SecretRef 可解析性检查。
-- 为了避免命令产生副作用，默认情况下会在试运行期间跳过 Exec SecretRef 检查。
-- 使用 `--allow-exec` 配合 `--dry-run` 以选择加入 Exec SecretRef 检查（这可能会执行提供商命令）。
-- `--allow-exec` 仅适用于试运行，如果未与 `--dry-run` 一起使用则会报错。
+- 还会针对已知的不受支持的 SecretRef 目标表面运行策略验证。
+- 策略检查评估完整的变更后配置，因此父对象写入（例如将 `hooks` 设置为对象）无法绕过不支持表面的验证。
+- 为了避免命令副作用，试运行期间默认会跳过 Exec SecretRef 检查。
+- 使用带有 `--dry-run` 的 `--allow-exec` 来选择加入 exec SecretRef 检查（这可能会执行提供商命令）。
+- `--allow-exec` 仅用于试运行，如果在没有 `--dry-run` 的情况下使用会报错。
 
 `--dry-run --json` 打印机器可读的报告：
 
 - `ok`：试运行是否通过
-- `operations`：已评估的赋值数量
+- `operations`：评估的赋值数量
 - `checks`：是否运行了架构/可解析性检查
-- `checks.resolvabilityComplete`：可解析性检查是否运行至完成（跳过 exec 引用时为 false）
-- `refsChecked`：试运行期间实际解析的引用数量
-- `skippedExecRefs`：因未设置 `--allow-exec` 而跳过的 exec 引用数量
+- `checks.resolvabilityComplete`：可解析性检查是否运行完成（跳过 exec refs 时为 false）
+- `refsChecked`：试运行期间实际解析的 refs 数量
+- `skippedExecRefs`：因未设置 `--allow-exec` 而跳过的 exec refs 数量
 - `errors`：当 `ok=false` 时的结构化架构/可解析性失败信息
 
 ### JSON 输出结构
@@ -288,20 +294,22 @@ openclaw config set channels.discord.token \
 
 如果试运行失败：
 
-- `config schema validation failed`：您的更改后配置结构无效；请修复路径/值或提供商/引用对象结构。
-- `SecretRef assignment(s) could not be resolved`：引用的提供商/引用当前无法解析（缺少环境变量、文件指针无效、exec 提供商失败或提供商/源不匹配）。
-- `Dry run note: skipped <n> exec SecretRef resolvability check(s)`: dry-run 跳过了 exec 引用；如果需要 exec 可解析性验证，请使用 `--allow-exec` 重新运行。
-- 对于批量模式，请在写入前修复失败的条目并重新运行 `--dry-run`。
+- `config schema validation failed`：您的变更后配置结构无效；请修复路径/值或提供商/ref 对象结构。
+- `Config policy validation failed: unsupported SecretRef usage`：将该凭据移回纯文本/字符串输入，并仅在不支持的表面上保留 SecretRefs。
+- `SecretRef assignment(s) could not be resolved``SecretRef assignment(s) could not be resolved`：引用的提供商/ref 目前无法解析（缺少环境变量、文件指针无效、exec 提供商失败或提供商/源不匹配）。
+- `Dry run note: skipped <n> exec SecretRef resolvability check(s)`：试运行跳过了 exec refs；如果需要 exec 可解析性验证，请使用 `--allow-exec` 重新运行。
+- 对于批处理模式，请在写入之前修复失败的条目并重新运行 `--dry-run`。
 
 ## 子命令
 
-- `config file`: 打印活动配置文件路径（从 `OPENCLAW_CONFIG_PATH` 或默认位置解析）。
+- `config file`：打印活动配置文件路径（从 `OPENCLAW_CONFIG_PATH` 或默认位置解析）。
 
 编辑后重启网关。
 
 ## 验证
 
-根据活动架构验证当前配置，而不启动网关。
+根据活动架构验证当前配置，而无需启动
+网关。
 
 ```bash
 openclaw config validate

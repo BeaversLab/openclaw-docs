@@ -35,7 +35,7 @@ title: "Remote Control"
    - **传输方式**：**SSH 隧道**或**直连 (ws/wss)**。
    - **SSH 目标**：`user@host`（可选 `:port`）。
      - 如果 Gateway 网关在同一局域网内并通告了 Bonjour，请从已发现的列表中选取它以自动填充此字段。
-   - **Gateway 网关 URL**（仅限直连）：`wss://gateway.example.ts.net`（或用于本地/局域网的 `ws://...`）。
+   - **Gateway(网关) 网关 URL**（仅限直连）：`wss://gateway.example.ts.net`（或用于本地/局域网的 `ws://...`）。
    - **身份文件**（高级）：您的密钥路径。
    - **项目根目录**（高级）：用于命令的远程检出路径。
    - **CLI 路径**（高级）：可运行 `openclaw` 入口点/二进制文件的可选路径（通告时自动填充）。

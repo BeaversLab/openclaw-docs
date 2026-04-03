@@ -154,3 +154,8 @@ read_when:
   "prompt": "Extract only customer-impacting incidents"
 }
 ```
+
+## 相关
+
+- [工具概述](/en/tools) — 所有可用的代理工具
+- [配置参考](/en/gateway/configuration-reference#agent-defaults) — pdfMaxBytesMb 和 pdfMaxPages 配置

@@ -26,7 +26,7 @@ Empiece de forma conservadora:
 
 ## Requisitos previos
 
-- OpenClaw instalado e integrado — consulte [Introducción](/en/start/getting-started) si aún no ha hecho esto
+- OpenClaw instalado y configurado — consulta [Introducción](/en/start/getting-started) si aún no lo has hecho
 - Un segundo número de teléfono (SIM/eSIM/prepago) para el asistente
 
 ## La configuración de dos teléfonos (recomendada)
@@ -79,7 +79,7 @@ Consejo: trata esta carpeta como la "memoria" de OpenClaw y conviértela en un r
 openclaw setup
 ```
 
-Guía completa del diseño del espacio de trabajo + copia de seguridad: [Agente workspace](/en/concepts/agent-workspace)
+Guía completa del diseño del espacio de trabajo + copia de seguridad: [Espacio de trabajo del agente](/en/concepts/agent-workspace)
 Flujo de trabajo de memoria: [Memoria](/en/concepts/memory)
 
 Opcional: elige un espacio de trabajo diferente con `agents.defaults.workspace` (admite `~`).
@@ -192,7 +192,13 @@ MEDIA:https://example.com/screenshot.png
 
 OpenClaw los extrae y los envía como medios junto con el texto.
 
-Para las rutas locales, la lista de permitidos predeterminada es intencionadamente estrecha: la raíz temporal de OpenClaw, la caché de medios, las rutas del espacio de trabajo del agente y los archivos generados por el sandbox. Si necesita raíces de archivos adjuntos locales más amplias, configure una lista de permitidos explícita de canal/complemento en lugar de confiar en rutas de host arbitrarias.
+El comportamiento de la ruta local sigue el mismo modelo de confianza de lectura de archivos que el agente:
+
+- Si `tools.fs.workspaceOnly` es `true`, las rutas locales salientes de `MEDIA:` se mantienen restringidas a la raíz temporal de OpenClaw, la caché de medios, las rutas del espacio de trabajo del agente y los archivos generados en el sandbox.
+- Si `tools.fs.workspaceOnly` es `false`, los `MEDIA:` salientes pueden usar archivos locales del host que el agente ya tiene permitido leer.
+- Los envíos locales del host aún solo permiten tipos de medios y documentos seguros (imágenes, audio, video, PDF y documentos de Office). Los archivos de texto sin formato y los similares a secretos no se tratan como medios enviables.
+
+Esto significa que las imágenes/archivos generados fuera del espacio de trabajo ahora se pueden enviar cuando tu política de sistema de archivos ya permite esas lecturas, sin reabrir la exfiltración de archivos de texto arbitrarios del host.
 
 ## Lista de verificación de operaciones
 
@@ -203,16 +209,16 @@ openclaw status --deep   # adds gateway health probes (Telegram + Discord)
 openclaw health --json   # gateway health snapshot (WS)
 ```
 
-Los registros se encuentran en `/tmp/openclaw/` (predeterminado: `openclaw-YYYY-MM-DD.log`).
+Los registros residen en `/tmp/openclaw/` (predeterminado: `openclaw-YYYY-MM-DD.log`).
 
 ## Próximos pasos
 
 - WebChat: [WebChat](/en/web/webchat)
 - Operaciones de la puerta de enlace: [Manual de operaciones de la puerta de enlace](/en/gateway)
-- Cron + despertares: [Trabajos de Cron](/en/automation/cron-jobs)
+- Cron + activaciones: [Trabajos Cron](/en/automation/cron-jobs)
 - Compañero de la barra de menús de macOS: [Aplicación OpenClaw para macOS](/en/platforms/macos)
-- Aplicación de nodo para iOS: [Aplicación para iOS](/en/platforms/ios)
-- Aplicación de nodo para Android: [Aplicación para Android](/en/platforms/android)
+- Aplicación de nodo iOS: [Aplicación iOS](/en/platforms/ios)
+- Aplicación de nodo Android: [Aplicación Android](/en/platforms/android)
 - Estado de Windows: [Windows (WSL2)](/en/platforms/windows)
-- Estado de Linux: [Aplicación para Linux](/en/platforms/linux)
+- Estado de Linux: [Aplicación Linux](/en/platforms/linux)
 - Seguridad: [Seguridad](/en/gateway/security)

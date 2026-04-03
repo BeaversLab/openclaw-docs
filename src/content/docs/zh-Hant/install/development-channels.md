@@ -41,7 +41,7 @@ openclaw update --channel dev
 
 ```bash
 # Install a specific version
-openclaw update --tag 2026.3.28-beta.1
+openclaw update --tag 2026.4.1-beta.1
 
 # Install from the beta dist-tag (one-off, does not persist)
 openclaw update --tag beta
@@ -50,7 +50,7 @@ openclaw update --tag beta
 openclaw update --tag main
 
 # Install a specific npm package spec
-openclaw update --tag openclaw@2026.3.28-beta.1
+openclaw update --tag openclaw@2026.4.1-beta.1
 ```
 
 備註：
@@ -66,7 +66,7 @@ openclaw update --tag openclaw@2026.3.28-beta.1
 ```bash
 openclaw update --dry-run
 openclaw update --channel beta --dry-run
-openclaw update --tag 2026.3.28-beta.1 --dry-run
+openclaw update --tag 2026.4.1-beta.1 --dry-run
 openclaw update --dry-run --json
 ```
 

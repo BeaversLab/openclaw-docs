@@ -113,10 +113,14 @@ openclaw config set --batch-json '[
 openclaw config set --batch-file ./config-set.batch.json --dry-run
 ```
 
-L'analyse par lot utilise toujours la charge utile du lot (`--batch-json`/`--batch-file`) comme source de vérité.
+Remarque concernant la stratégie :
+
+- Les affectations SecretRef sont rejetées sur les surfaces mutables lors de l'exécution non prises en charge (par exemple `hooks.token`, `commands.ownerDisplaySecret`, les jetons de webhook de liaison de thread Discord et les identifiants JSON WhatsApp). Voir [SecretRef Credential Surface](/en/reference/secretref-credential-surface).
+
+L'analyse par lot utilise toujours la charge utile de lot (`--batch-json`/`--batch-file`) comme source de vérité.
 `--strict-json` / `--json` ne modifient pas le comportement de l'analyse par lot.
 
-Le mode de chemin/valeur JSON reste pris en charge pour les SecretRefs et les fournisseurs :
+Le mode chemin/valeur JSON reste pris en charge pour les SecretRefs et les providers :
 
 ```bash
 openclaw config set channels.discord.token \
@@ -128,20 +132,20 @@ openclaw config set secrets.providers.vaultfile \
   --strict-json
 ```
 
-## Indicateurs du constructeur de fournisseur
+## Indicateurs du constructeur de provider
 
-Les cibles du constructeur de fournisseur doivent utiliser `secrets.providers.<alias>` comme chemin.
+Les cibles du constructeur de provider doivent utiliser `secrets.providers.<alias>` comme chemin.
 
-Indicateurs courants :
+Indicateurs communs :
 
 - `--provider-source <env|file|exec>`
 - `--provider-timeout-ms <ms>` (`file`, `exec`)
 
-Env provider (`--provider-source env`) :
+Provider Env (`--provider-source env`) :
 
 - `--provider-allowlist <ENV_VAR>` (répétable)
 
-Fournisseur de fichier (`--provider-source file`) :
+Provider Fichier (`--provider-source file`) :
 
 - `--provider-path <path>` (requis)
 - `--provider-mode <singleValue|json>`
@@ -160,7 +164,7 @@ Provider Exec (`--provider-source exec`) :
 - `--provider-allow-insecure-path`
 - `--provider-allow-symlink-command`
 
-Exemple de provider d'exécution renforcé :
+Exemple de provider Exec renforcé :
 
 ```bash
 openclaw config set secrets.providers.vault \
@@ -174,7 +178,7 @@ openclaw config set secrets.providers.vault \
   --provider-timeout-ms 5000
 ```
 
-## Essai à blanc
+## Simulation
 
 Utilisez `--dry-run` pour valider les modifications sans écrire `openclaw.json`.
 
@@ -200,25 +204,27 @@ openclaw config set channels.discord.token \
   --allow-exec
 ```
 
-Comportement de l'essai à blanc :
+Comportement de la simulation :
 
-- Mode Builder : exécute les contrôles de résolvabilité SecretRef pour les références/providers modifiés.
-- Mode JSON (`--strict-json`, `--json`, ou mode batch) : exécute la validation du schéma ainsi que les contrôles de résolvabilité SecretRef.
+- Mode Constructeur : exécute les contrôles de résolvabilité SecretRef pour les refs/providers modifiés.
+- Mode JSON (`--strict-json`, `--json` ou mode par lot) : exécute la validation du schéma ainsi que les contrôles de résolvabilité SecretRef.
+- La validation de la stratégie s'exécute également pour les surfaces cibles SecretRef non prises en charge connues.
+- Les vérifications de stratégie évaluent la configuration complète après modification, les écritures d'objets parents (par exemple, définir `hooks` comme un objet) ne peuvent donc pas contourner la validation de surface non prise en charge.
 - Les vérifications Exec SecretRef sont ignorées par défaut lors du dry-run pour éviter les effets secondaires de la commande.
 - Utilisez `--allow-exec` avec `--dry-run` pour activer les vérifications exec SecretRef (cela peut exécuter des commandes provider).
 - `--allow-exec` est réservé au dry-run et génère une erreur s'il est utilisé sans `--dry-run`.
 
-`--dry-run --json` imprime un rapport lisible par la machine :
+`--dry-run --json` imprime un rapport lisible par machine :
 
-- `ok`: indique si le dry-run a réussi
-- `operations`: nombre d'assignations évaluées
-- `checks`: indique si les vérifications de schéma/de résolubilité ont été exécutées
-- `checks.resolvabilityComplete`: indique si les vérifications de résolubilité ont été exécutées jusqu'au bout (false lorsque les exec refs sont ignorés)
-- `refsChecked`: nombre de refs réellement résolues pendant le dry-run
-- `skippedExecRefs` : nombre de références d'exécution ignorées car `--allow-exec` n'était pas défini
-- `errors` : échecs structurés de schéma/de résolvabilité lors du `ok=false`
+- `ok` : indique si le dry-run a réussi
+- `operations` : nombre d'affectations évaluées
+- `checks` : indique si les vérifications de schéma/de résolvabilité ont été exécutées
+- `checks.resolvabilityComplete` : indique si les vérifications de résolvabilité ont été exécutées jusqu'au bout (faux lorsque les exec refs sont ignorés)
+- `refsChecked` : nombre de refs réellement résolues lors du dry-run
+- `skippedExecRefs` : nombre d'exec refs ignorées car `--allow-exec` n'était pas défini
+- `errors` : échecs structurés de schéma/résolvabilité lorsque `ok=false`
 
-### Structure de sortie JSON
+### Format de sortie JSON
 
 ```json5
 {
@@ -243,7 +249,7 @@ Comportement de l'essai à blanc :
 }
 ```
 
-Exemple de succès :
+Exemple de réussite :
 
 ```json
 {
@@ -288,20 +294,22 @@ Exemple d'échec :
 
 Si le dry-run échoue :
 
-- `config schema validation failed` : la structure de votre config après modification est invalide ; corrigez le chemin/la valeur ou la forme de l'objet provider/référence.
-- `SecretRef assignment(s) could not be resolved` : le provider/référencé ne peut pas actuellement être résolu (env var manquante, pointeur de fichier invalide, échec du provider d'exécution ou inadéquation provider/source).
-- `Dry run note: skipped <n> exec SecretRef resolvability check(s)` : dry-run a ignoré les références exec ; relancez avec `--allow-exec` si vous avez besoin d'une validation de la résolution exec.
-- Pour le mode batch, corrigez les entrées défaillantes et relancez `--dry-run` avant d'écrire.
+- `config schema validation failed` : la forme de votre configuration après modification n'est pas valide ; corrigez le chemin/la valeur ou la forme de l'objet provider/ref.
+- `Config policy validation failed: unsupported SecretRef usage` : remettez cette information d'identification sous forme d'entrée en texte brut/chaîne et conservez les SecretRefs uniquement sur les surfaces prises en charge.
+- `SecretRef assignment(s) could not be resolved` : le provider/ref référencé ne peut pas être résolu actuellement (env var manquante, pointeur de fichier invalide, échec du provider d'exécution ou inadéquation provider/source).
+- `Dry run note: skipped <n> exec SecretRef resolvability check(s)` : le dry-run a ignoré les exec refs ; relancez avec `--allow-exec` si vous avez besoin de la validation de la résolvabilité par exec.
+- Pour le mode batch, corrigez les entrées en échec et relancez `--dry-run` avant d'écrire.
 
 ## Sous-commandes
 
-- `config file` : Affiche le chemin du fichier de configuration actif (résolu à partir de `OPENCLAW_CONFIG_PATH` ou de l'emplacement par défaut).
+- `config file` : Imprime le chemin du fichier de configuration actif (résolu à partir de `OPENCLAW_CONFIG_PATH` ou de l'emplacement par défaut).
 
 Redémarrez la passerelle après les modifications.
 
 ## Valider
 
-Valider la configuration actuelle par rapport au schéma actif sans démarrer la passerelle.
+Valide la configuration actuelle par rapport au schéma actif sans démarrer la
+passerelle.
 
 ```bash
 openclaw config validate

@@ -9,7 +9,7 @@ title: "Nodes"
 
 # Nodes
 
-Un **nœud** est un appareil compagnon (macOS/iOS/Android/headless) qui se connecte au **WebSocket** du **Gateway** (même port que les opérateurs) avec `role: "node"` et expose une surface de commande (ex. `canvas.*`, `camera.*`, `device.*`, `notifications.*`, `system.*`) via `node.invoke`. Détails du protocole : [Gateway protocol](/en/gateway/protocol).
+Un **nœud** est un appareil compagnon (macOS/iOS/Android/sans interface) qui se connecte au **WebSocket** du Gateway (même port que les opérateurs) avec `role: "node"` et expose une surface de commande (ex. `canvas.*`, `camera.*`, `device.*`, `notifications.*`, `system.*`) via `node.invoke`. Détails du protocole : [Gateway protocol](/en/gateway/protocol).
 
 Transport hérité : [Bridge protocol](/en/gateway/bridge-protocol) (TCP JSONL ; déprécié/supprimé pour les nœuds actuels).
 
@@ -19,7 +19,7 @@ Notes :
 
 - Les nodes sont des **périphériques**, pas des passerelles. Elles n'exécutent pas le service de passerelle.
 - Les messages Telegram/WhatsApp/etc. atterrissent sur la **passerelle**, pas sur les nodes.
-- Runbook de dépannage : [/nodes/troubleshooting](/en/nodes/troubleshooting)
+- Guide de dépannage : [/nodes/troubleshooting](/en/nodes/troubleshooting)
 
 ## Appairage + statut
 
@@ -315,29 +315,31 @@ L'hôte de nœud headless expose `system.run`, `system.which` et `system.execApp
 Exemples :
 
 ```bash
-openclaw nodes run --node <idOrNameOrIp> -- echo "Hello from mac node"
 openclaw nodes notify --node <idOrNameOrIp> --title "Ping" --body "Gateway ready"
+openclaw nodes invoke --node <idOrNameOrIp> --command system.which --params '{"name":"git"}'
 ```
 
 Notes :
 
 - `system.run` renvoie stdout/stderr/le code de sortie dans la charge utile.
-- `system.notify` respecte l'état de la permission de notification sur l'application macOS.
-- Les métadonnées de nœud non reconnu `platform` / `deviceFamily` utilisent une liste d'autorisation par défaut conservatrice qui exclut `system.run` et `system.which`. Si vous avez intentionnellement besoin de ces commandes pour une plateforme inconnue, ajoutez-les explicitement via `gateway.nodes.allowCommands`.
+- L'exécution du shell passe désormais par l'outil `exec` avec `host=node` ; `nodes` reste la surface RPC directe pour les commandes de nœud explicites.
+- `nodes invoke` n'expose pas `system.run` ou `system.run.prepare` ; ceux-ci restent uniquement sur le chemin d'exécution.
+- `system.notify` respecte l'état de l'autorisation de notification sur l'application macOS.
+- Les métadonnées de nœud non reconnues `platform` / `deviceFamily` utilisent une liste d'autorisation (allowlist) par défaut conservatrice qui exclut `system.run` et `system.which`. Si vous avez intentionnellement besoin de ces commandes pour une plateforme inconnue, ajoutez-les explicitement via `gateway.nodes.allowCommands`.
 - `system.run` prend en charge `--cwd`, `--env KEY=VAL`, `--command-timeout` et `--needs-screen-recording`.
-- Pour les wrappers de shell (`bash|sh|zsh ... -c/-lc`), les valeurs `--env` limitées à la requête sont réduites à une liste d'autorisation explicite (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
-- Pour les décisions de type « toujours autoriser » en mode liste d'autorisation, les wrappers de répartition connus (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) conservent les chemins des exécutables internes au lieu des chemins des wrappers. Si le déballage n'est pas sûr, aucune entrée de liste d'autorisation n'est conservée automatiquement.
-- Sur les hôtes de nœuds Windows en mode liste d'autorisation, les exécutions de wrappers de shell via `cmd.exe /c` nécessitent une approbation (l'entrée de la liste d'autorisation seule n'autorise pas automatiquement la forme du wrapper).
+- Pour les enveloppeurs de shell (`bash|sh|zsh ... -c/-lc`), les valeurs `--env` limitées à la requête sont réduites à une liste d'autorisation explicite (`TERM`, `LANG`, `LC_*`, `COLORTERM`, `NO_COLOR`, `FORCE_COLOR`).
+- Pour les décisions « toujours autoriser » en mode liste blanche, les wrappers de répartition connus (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) persistent les chemins des exécutables internes au lieu des chemins des wrappers. Si le déballage n'est pas sûr, aucune entrée de liste blanche n'est persistée automatiquement.
+- Sur les hôtes de nœuds Windows en mode liste blanche, les exécutions de shell-wrapper via `cmd.exe /c` nécessitent une approbation (une entrée de liste blanche seule n'autorise pas automatiquement le formulaire du wrapper).
 - `system.notify` prend en charge `--priority <passive|active|timeSensitive>` et `--delivery <system|overlay|auto>`.
-- Les hôtes de nœuds ignorent les substitutions `PATH` et suppriment les clés de démarrage/shell dangereuses (`DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`). Si vous avez besoin d'entrées PATH supplémentaires, configurez l'environnement du service hôte de nœud (ou installez les outils dans des emplacements standards) au lieu de transmettre `PATH` via `--env`.
-- En mode nœud macOS, `system.run` est soumis aux approbations d'exécution dans l'application macOS (Paramètres → Approbations d'exécution).
-  Demander/liste d'autorisation/complet se comportent de la même manière que l'hôte de nœud headless ; les invites refusées renvoient `SYSTEM_RUN_DENIED`.
-- Sur l'hôte de nœud headless, `system.run` est soumis aux approbations d'exécution (`~/.openclaw/exec-approvals.json`).
+- Les hôtes de nœuds ignorent les remplacements `PATH` et suppriment les clés de démarrage/shell dangereuses (`DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`). Si vous avez besoin d'entrées PATH supplémentaires, configurez l'environnement du service d'hôte de nœud (ou installez les outils dans des emplacements standard) au lieu de passer `PATH` via `--env`.
+- En mode nœud macOS, `system.run` est régi par les approbations d'exécution dans l'application macOS (Paramètres → Approbations d'exécution).
+  Demander/liste blanche/complet se comportent de la même manière que l'hôte de nœud sans interface ; les invites refusées renvoient `SYSTEM_RUN_DENIED`.
+- Sur l'hôte de nœud sans interface, `system.run` est régi par les approbations d'exécution (`~/.openclaw/exec-approvals.json`).
 
-## Liaison du nœud d'exécution
+## Liaison de nœud d'exécution
 
 Lorsque plusieurs nœuds sont disponibles, vous pouvez lier l'exécution à un nœud spécifique.
-Cela définit le nœud par défaut pour `exec host=node` (et peut être remplacé pour chaque agent).
+Cela définit le nœud par défaut pour `exec host=node` (et peut être remplacé par agent).
 
 Par défaut global :
 
@@ -361,11 +363,13 @@ openclaw config unset agents.list[0].tools.exec.node
 
 ## Carte des autorisations
 
-Les nœuds peuvent inclure une carte `permissions` dans `node.list` / `node.describe`, indexée par nom d'autorisation (ex. `screenRecording`, `accessibility`) avec des valeurs booléennes (`true` = accordée).
+Les nœuds peuvent inclure une carte `permissions` dans `node.list` / `node.describe`, indexée par nom d'autorisation (ex. `screenRecording`, `accessibility`) avec des valeurs booléennes (`true` = accordé).
 
 ## Hôte de nœud sans interface (multiplateforme)
 
-OpenClaw peut exécuter un **hôte de nœud sans interface** (sans IU) qui se connecte au WebSocket du Gateway et expose `system.run` / `system.which`. C'est utile sur Linux/Windows ou pour exécuter un nœud minimal à côté d'un serveur.
+OpenClaw peut exécuter un **hôte de nœud sans interface** (sans UI) qui se connecte au WebSocket
+Gateway et expose `system.run` / `system.which`. C'est utile sur OpenClaw/Gateway
+ou pour exécuter un nœud minimal alongside un serveur.
 
 Démarrez-le :
 
@@ -376,12 +380,15 @@ openclaw node run --host <gateway-host> --port 18789
 Notes :
 
 - Le jumelage est toujours requis (le Gateway affichera une invite de jumelage d'appareil).
-- L'hôte du nœud stocke son id de nœud, son jeton, son nom d'affichage et les informations de connexion à la passerelle dans `~/.openclaw/node.json`.
-- Les approbations d'exécution sont appliquées localement via `~/.openclaw/exec-approvals.json` (voir [Exec approvals](/en/tools/exec-approvals)).
-- Sur macOS, l'hôte de nœud sans interface exécute `system.run` localement par défaut. Définissez `OPENCLAW_NODE_EXEC_HOST=app` pour acheminer `system.run` via l'hôte d'exécution de l'application compagnon ; ajoutez `OPENCLAW_NODE_EXEC_FALLBACK=0` pour exiger l'hôte de l'application et échouer en mode fermé s'il n'est pas disponible.
-- Ajoutez `--tls` / `--tls-fingerprint` lorsque le WS du Gateway utilise TLS.
+- L'hôte de nœud stocke son identifiant de nœud, son jeton, son nom d'affichage et les informations de connexion à la passerelle dans `~/.openclaw/node.json`.
+- Les approbations d'exécution sont appliquées localement via `~/.openclaw/exec-approvals.json`
+  (voir [Approbations d'exécution](/en/tools/exec-approvals)).
+- Sur macOS, l'hôte de nœud sans interface exécute `system.run` localement par défaut. Définissez
+  `OPENCLAW_NODE_EXEC_HOST=app` pour acheminer `system.run` via l'hôte d'exécution de l'application compagnon ; ajoutez
+  `OPENCLAW_NODE_EXEC_FALLBACK=0` pour exiger l'hôte de l'application et échouer en mode fermé s'il n'est pas disponible.
+- Ajoutez `--tls` / `--tls-fingerprint` lorsque le WS Gateway utilise TLS.
 
 ## Mode nœud Mac
 
-- L'application de barre de menus macOS se connecte au serveur WS du Gateway en tant que nœud (donc `openclaw nodes …` fonctionne sur ce Mac).
-- En mode distant, l'application ouvre un tunnel SSH pour le port du Gateway et se connecte à `localhost`.
+- L'application de barre de menus macOS se connecte au serveur WS Gateway en tant que nœud (donc `openclaw nodes …` fonctionne sur ce Mac).
+- En mode distant, l'application ouvre un tunnel SSH pour le port Gateway et se connecte à `localhost`.

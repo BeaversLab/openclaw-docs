@@ -13,22 +13,25 @@ title: "configure"
 
 提示：不带子命令运行 `openclaw config` 会打开相同的向导。请使用 `openclaw config get|set|unset` 进行非交互式编辑。
 
+对于网络搜索，`openclaw configure --section web` 让您选择提供商并配置其凭证。如果您选择 **Grok**，configure 还可以显示一个单独的后续步骤，以便使用相同的 `XAI_API_KEY` 启用 `x_search` 并选择 `x_search` 模型。其他网络搜索提供商不会显示该步骤。
+
 相关：
 
-- Gateway(网关) 网关配置参考：[配置](/en/gateway/configuration)
+- Gateway(网关) 配置参考：[Configuration](/en/gateway/configuration)
 - 配置 CLI：[Config](/en/cli/config)
 
-备注：
+说明：
 
-- 选择 Gateway 网关 运行的位置总是会更新 `gateway.mode`。如果这是您所需的全部操作，则可以在不选择其他部分的情况下选择“继续”。
-- 面向渠道的服务（Slack/Discord/Matrix/Microsoft Teams）会在设置过程中提示输入频道/房间白名单。您可以输入名称或 ID；向导会尽可能将名称解析为 ID。
-- 如果您运行守护进程安装步骤，令牌认证需要一个令牌，并且 `gateway.auth.token` 是由 SecretRef 管理的，configure 会验证 SecretRef，但不会将解析后的明文令牌值持久化到 supervisor 服务环境元数据中。
-- 如果令牌身份验证需要令牌，但配置的令牌 SecretRef 未解析，configure 会阻止守护进程安装，并提供可操作的修复指导。
-- 如果 `gateway.auth.token` 和 `gateway.auth.password` 均已配置且 `gateway.auth.mode` 未设置，configure 将阻止守护进程安装，直到显式设置模式为止。
+- 选择 Gateway(网关) 的运行位置总是会更新 `gateway.mode`。如果您只需要这样做，可以在没有其他部分的情况下选择“Continue”（继续）。
+- 面向渠道的服务（Slack/Discord/Matrix/Microsoft Teams）会在设置过程中提示输入渠道/房间允许列表。您可以输入名称或 ID；向导会在可能的情况下将名称解析为 ID。
+- 如果您运行守护程序安装步骤，令牌身份验证需要一个令牌，并且 `gateway.auth.token` 由 SecretRef 管理，configure 会验证 SecretRef，但不会将解析后的纯文本令牌值持久化到主管服务环境元数据中。
+- 如果令牌身份验证需要令牌，但配置的令牌 SecretRef 未解析，configure 会阻止守护程序安装并提供可行的修复指导。
+- 如果 `gateway.auth.token` 和 `gateway.auth.password` 均已配置，但未设置 `gateway.auth.mode`，configure 将阻止守护程序安装，直到明确设置模式为止。
 
 ## 示例
 
 ```bash
 openclaw configure
+openclaw configure --section web
 openclaw configure --section model --section channels
 ```

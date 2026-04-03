@@ -38,7 +38,7 @@ Ligne de base saine :
 | Messages de groupe ignorés                    | Vérifiez `requireMention` + les modèles de mention dans la configuration | Mentionnez le bot ou assouplissez la stratégie de mention pour ce groupe.   |
 | Boucles de déconnexion/reconnexion aléatoires | `openclaw channels status --probe` + journaux                            | Reconnectez-vous et vérifiez que le répertoire des identifiants est sain.   |
 
-Dépannage complet : [/channels/whatsapp#troubleshooting](/en/channels/whatsapp#troubleshooting)
+Full troubleshooting: [/channels/whatsapp#troubleshooting](/en/channels/whatsapp#troubleshooting)
 
 ## Telegram
 
@@ -52,7 +52,7 @@ Dépannage complet : [/channels/whatsapp#troubleshooting](/en/channels/whatsapp#
 | `setMyCommands` rejeté au démarrage                 | Inspectez les journaux pour `BOT_COMMANDS_TOO_MUCH`                 | Réduisez les commandes de plug-in/compétence/personnalisées Telegram ou désactivez les menus natifs. |
 | Mis à niveau et la liste d'autorisation vous bloque | `openclaw security audit` et listes d'autorisation de configuration | Exécutez `openclaw doctor --fix` ou remplacez `@username` par des ID d'expéditeurs numériques.       |
 
-Dépannage complet : [/channels/telegram#troubleshooting](/en/channels/telegram#troubleshooting)
+Full troubleshooting: [/channels/telegram#troubleshooting](/en/channels/telegram#troubleshooting)
 
 ## Discord
 
@@ -64,7 +64,7 @@ Dépannage complet : [/channels/telegram#troubleshooting](/en/channels/telegram#
 | Messages de groupe ignorés                  | Vérifier les journaux pour les abandons dus au filtrage des mentions | Mentionner le bot ou définir `requireMention: false` de guilde/channel.    |
 | Réponses DM manquantes                      | `openclaw pairing list discord`                                      | Approuver l'appariement DM ou ajuster la stratégie DM.                     |
 
-Dépannage complet : [/channels/discord#troubleshooting](/en/channels/discord#troubleshooting)
+Full troubleshooting: [/channels/discord#troubleshooting](/en/channels/discord#troubleshooting)
 
 ## Slack
 
@@ -76,7 +76,7 @@ Dépannage complet : [/channels/discord#troubleshooting](/en/channels/discord#tr
 | DMs bloqués                              | `openclaw pairing list slack`                                | Approuver l'appariement ou assouplir la stratégie DM.                       |
 | Message de channel ignoré                | Vérifier `groupPolicy` et la liste d'autorisation du channel | Autoriser le channel ou changer la stratégie pour `open`.                   |
 
-Dépannage complet : [/channels/slack#troubleshooting](/en/channels/slack#troubleshooting)
+Full troubleshooting: [/channels/slack#troubleshooting](/en/channels/slack#troubleshooting)
 
 ## iMessage et BlueBubbles
 
@@ -103,16 +103,29 @@ Dépannage complet :
 | DM bloqué                                    | `openclaw pairing list signal`                                         | Approuver l'expéditeur ou ajuster la stratégie DM.                      |
 | Les réponses de groupe ne se déclenchent pas | Vérifier la liste d'autorisation des groupes et les modèles de mention | Ajouter l'expéditeur/le groupe ou assouplir le filtrage.                |
 
-Dépannage complet : [/channels/signal#troubleshooting](/en/channels/signal#troubleshooting)
+Full troubleshooting: [/channels/signal#troubleshooting](/en/channels/signal#troubleshooting)
+
+## QQ Bot
+
+### QQ Bot failure signatures
+
+| Symptôme                        | Vérification la plus rapide                 | Correction                                                      |
+| ------------------------------- | ------------------------------------------- | --------------------------------------------------------------- |
+| Bot replies "gone to Mars"      | Verify `appId` and `clientSecret` in config | Set credentials or restart the gateway.                         |
+| No inbound messages             | `openclaw channels status --probe`          | Verify credentials on the QQ Open Platform.                     |
+| Voice not transcribed           | Check STT provider config                   | Configure `channels.qqbot.stt` or `tools.media.audio`.          |
+| Proactive messages not arriving | Check QQ platform interaction requirements  | QQ may block bot-initiated messages without recent interaction. |
+
+Full troubleshooting: [/channels/qqbot#troubleshooting](/en/channels/qqbot#troubleshooting)
 
 ## Matrix
 
 ### Matrix failure signatures
 
-| Symptôme                                   | Vérification la plus rapide                                        | Correction                                                                    |
-| ------------------------------------------ | ------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
-| Connecté mais ignore les messages du salon | `openclaw channels status --probe`                                 | Vérifiez `groupPolicy` et la liste d'autorisation des salons.                 |
-| Les DMs ne sont pas traités                | `openclaw pairing list matrix`                                     | Approuver l'expéditeur ou ajuster la politique de DM.                         |
-| Les salons chiffrés échouent               | Vérifier le module de chiffrement et les paramètres de chiffrement | Activer la prise en charge du chiffrement et rejoindre/synchroniser le salon. |
+| Symptom                             | Fastest check                                | Fix                                             |
+| ----------------------------------- | -------------------------------------------- | ----------------------------------------------- |
+| Logged in but ignores room messages | `openclaw channels status --probe`           | Check `groupPolicy` and room allowlist.         |
+| DMs do not process                  | `openclaw pairing list matrix`               | Approve sender or adjust DM policy.             |
+| Encrypted rooms fail                | Verify crypto module and encryption settings | Enable encryption support and rejoin/sync room. |
 
-Configuration et installation complètes : [Matrix](/en/channels/matrix)
+Full setup and config: [Matrix](/en/channels/matrix)

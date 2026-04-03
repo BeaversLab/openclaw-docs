@@ -88,7 +88,7 @@ src/agents/
 ├── pi-tools.types.ts              # AnyAgentTool type alias
 ├── pi-tool-definition-adapter.ts  # AgentTool -> ToolDefinition adapter
 ├── pi-settings.ts                 # Settings overrides
-├── pi-extensions/                 # Custom pi extensions
+├── pi-hooks/                      # Custom pi hooks
 │   ├── compaction-safeguard.ts    # Safeguard extension
 │   ├── compaction-safeguard-runtime.ts
 │   ├── context-pruning.ts         # Cache-TTL context pruning extension
@@ -132,10 +132,10 @@ src/agents/
 Los tiempos de ejecución de acciones de mensajes específicos del canal ahora residen en los directorios de extensión propiedad del complemento
 en lugar de bajo `src/agents/tools`, por ejemplo:
 
-- `extensions/discord/src/actions/runtime*.ts`
-- `extensions/slack/src/action-runtime.ts`
-- `extensions/telegram/src/action-runtime.ts`
-- `extensions/whatsapp/src/action-runtime.ts`
+- los archivos de tiempo de ejecución de acciones del complemento de Discord
+- el archivo de tiempo de ejecución de acciones del complemento de Slack
+- el archivo de tiempo de ejecución de acciones del complemento de Telegram
+- el archivo de tiempo de ejecución de acciones del complemento de WhatsApp
 
 ## Flujo de Integración Principal
 
@@ -216,7 +216,7 @@ const subscription = subscribeEmbeddedPiSession({
 
 Los eventos manejados incluyen:
 
-- `message_start` / `message_end` / `message_update` (transmisión de texto/pensamiento)
+- `message_start` / `message_end` / `message_update` (texto/pensamiento en streaming)
 - `tool_execution_start` / `tool_execution_update` / `tool_execution_end`
 - `turn_start` / `turn_end`
 - `agent_start` / `agent_end`
@@ -233,15 +233,15 @@ await session.prompt(effectivePrompt, { images: imageResult.images });
 El SDK maneja el bucle completo del agente: enviar al LLM, ejecutar llamadas a herramientas, transmitir respuestas.
 
 La inyección de imágenes es local al prompt: OpenClaw carga las referencias de imágenes del prompt actual y
-las pasa a través de `images` solo para ese turno. No vuelve a escanea los turnos de historial anteriores
-para volver a inyectar las cargas de imagen.
+las pasa a través de `images` solo para ese turno. No vuelve a escanear turnos de historial antiguos
+para volver a inyectar cargas de imágenes.
 
 ## Arquitectura de Herramientas
 
 ### Canalización de Herramientas
 
-1. **Herramientas Base**: `codingTools` de pi (read, bash, edit, write)
-2. **Reemplazos Personalizados**: OpenClaw reemplaza bash con `exec`/`process`, personaliza read/edit/write para el sandbox
+1. **Herramientas base**: el `codingTools` de pi (read, bash, edit, write)
+2. **Reemplazos personalizados**: OpenClaw reemplaza bash con `exec`/`process`, personaliza read/edit/write para el sandbox
 3. **Herramientas de OpenClaw**: mensajería, navegador, lienzo, sesiones, cron, puerta de enlace, etc.
 4. **Herramientas de Canal**: herramientas de acción específicas de Discord/Telegram/Slack/WhatsApp
 5. **Filtrado de Políticas**: Herramientas filtradas por perfil, proveedor, agente, grupo, políticas de sandbox
@@ -250,7 +250,7 @@ para volver a inyectar las cargas de imagen.
 
 ### Adaptador de Definición de Herramientas
 
-La `AgentTool` de pi-agent-core tiene una firma `execute` diferente a la `ToolDefinition` de pi-coding-agent. El adaptador en `pi-tool-definition-adapter.ts` soluciona esto:
+El `AgentTool` de pi-agent-core tiene una firma `execute` diferente a la `ToolDefinition` de pi-coding-agent. El adaptador en `pi-tool-definition-adapter.ts` salva esta diferencia:
 
 ```typescript
 export function toToolDefinitions(tools: AnyAgentTool[]): ToolDefinition[] {
@@ -284,9 +284,9 @@ Esto asegura que el filtrado de políticas de OpenClaw, la integración de sandb
 
 ## Construcción del Prompt del Sistema
 
-El prompt del sistema se construye en `buildAgentSystemPrompt()` (`system-prompt.ts`). Ensambla un prompt completo con secciones que incluyen Herramientas, Estilo de Llamada de Herramientas, Guardias de Seguridad, Referencia de CLI de OpenClaw, Habilidades, Documentos, Espacio de Trabajo, Sandbox, Mensajería, Etiquetas de Respuesta, Voz, Respuestas Silenciosas, Latidos, Metadatos de Tiempo de Ejecución, más Memoria y Reacciones cuando están habilitados, y archivos de contexto opcionales y contenido adicional del prompt del sistema. Las secciones se recortan para el modo de prompt mínimo utilizado por subagentes.
+El prompt del sistema se construye en `buildAgentSystemPrompt()` (`system-prompt.ts`). Ensambla un prompt completo con secciones que incluyen Tooling, Tool Call Style, Safety guardrails, OpenClaw CLI reference, Skills, Docs, Workspace, Sandbox, Messaging, Reply Tags, Voice, Silent Replies, Heartbeats, Runtime metadata, además de Memory y Reactions cuando están habilitados, y archivos de contexto opcionales y contenido adicional del prompt del sistema. Las secciones se recortan para el modo de prompt mínimo utilizado por los subagentes.
 
-El prompt se aplica después de la creación de la sesión a través de `applySystemPromptOverrideToSession()`:
+El prompt se aplica después de la creación de la sesión mediante `applySystemPromptOverrideToSession()`:
 
 ```typescript
 const systemPromptOverride = createSystemPromptOverride(appendPrompt);
@@ -297,7 +297,7 @@ applySystemPromptOverrideToSession(session, systemPromptOverride);
 
 ### Archivos de Sesión
 
-Las sesiones son archivos JSONL con estructura de árbol (enlace id/parentId). El `SessionManager` de Pi maneja la persistencia:
+Las sesiones son archivos JSONL con estructura de árbol (vinculación id/parentId). El `SessionManager` de Pi maneja la persistencia:
 
 ```typescript
 const sessionManager = SessionManager.open(params.sessionFile);
@@ -317,11 +317,11 @@ trackSessionManagerAccess(params.sessionFile);
 
 ### Límite del Historial
 
-`limitHistoryTurns()` recorta el historial de conversación basándose en el tipo de canal (DM vs grupo).
+`limitHistoryTurns()` recorta el historial de conversación según el tipo de canal (DM vs grupo).
 
 ### Compactación
 
-La autocompactación se activa al desbordarse el contexto. `compactEmbeddedPiSessionDirect()` maneja la compactación manual:
+La compactación automática se activa al desbordar el contexto. `compactEmbeddedPiSessionDirect()` maneja la compactación manual:
 
 ```typescript
 const compactResult = await compactEmbeddedPiSessionDirect({
@@ -360,7 +360,7 @@ authStorage.setRuntimeApiKey(model.provider, apiKeyInfo.apiKey);
 
 ### Conmutación por Error
 
-`FailoverError` activa el modelo alternativo cuando se configura:
+`FailoverError` activa el modelo de reserva (fallback) cuando está configurado:
 
 ```typescript
 if (fallbackConfigured && isFailoverErrorMessage(errorText)) {
@@ -380,7 +380,7 @@ OpenClaw carga extensiones pi personalizadas para un comportamiento especializad
 
 ### Salvaguarda de Compactación
 
-`src/agents/pi-extensions/compaction-safeguard.ts` añade guardas a la compactación, incluyendo presupuesto de tokens adaptativo más resúmenes de fallos de herramientas y operaciones de archivos:
+`src/agents/pi-hooks/compaction-safeguard.ts` añade guardias a la compactación, incluida la asignación adaptativa de tokens más resúmenes de fallos de herramientas y operaciones de archivos:
 
 ```typescript
 if (resolveCompactionMode(params.cfg) === "safeguard") {
@@ -391,7 +391,7 @@ if (resolveCompactionMode(params.cfg) === "safeguard") {
 
 ### Poda de Contexto
 
-`src/agents/pi-extensions/context-pruning.ts` implementa la poda de contexto basada en caché-TTL:
+`src/agents/pi-hooks/context-pruning.ts` implementa la poda de contexto basada en caché-TTL:
 
 ```typescript
 if (cfg?.agents?.defaults?.contextPruning?.mode === "cache-ttl") {
@@ -409,7 +409,7 @@ if (cfg?.agents?.defaults?.contextPruning?.mode === "cache-ttl") {
 
 ### Fragmentación de Bloques
 
-`EmbeddedBlockChunker` gestiona el texto de transmisión en bloques de respuesta discretos:
+`EmbeddedBlockChunker` gestiona el flujo de texto en bloques de respuesta discretos:
 
 ```typescript
 const blockChunker = blockChunking ? new EmbeddedBlockChunker(blockChunking) : null;
@@ -417,7 +417,7 @@ const blockChunker = blockChunking ? new EmbeddedBlockChunker(blockChunking) : n
 
 ### Eliminación de Etiquetas Thinking/Final
 
-La salida de transmisión se procesa para eliminar bloques `<think>`/`<thinking>` y extraer el contenido `<final>`:
+El resultado de la transmisión se procesa para eliminar los bloques `<think>`/`<thinking>` y extraer el contenido `<final>`:
 
 ```typescript
 const stripBlockTags = (text: string, state: { thinking: boolean; final: boolean }) => {
@@ -492,9 +492,9 @@ if (sandboxRoot) {
 
 ### Google/Gemini
 
-- Correcciones de orden de turnos (`applyGoogleTurnOrderingFix`)
+- Correcciones del orden de turnos (`applyGoogleTurnOrderingFix`)
 - Saneamiento del esquema de herramientas (`sanitizeToolsForGoogle`)
-- Saneamiento del historial de sesión (`sanitizeSessionHistory`)
+- Saneamiento del historial de sesiones (`sanitizeSessionHistory`)
 
 ### OpenAI
 
@@ -530,8 +530,8 @@ Esto proporciona la experiencia de terminal interactiva similar al modo nativo d
 
 1. **Alineación de firmas de herramientas**: Actualmente adaptando entre firmas de pi-agent-core y pi-coding-agent
 2. **Envoltura del gestor de sesiones**: `guardSessionManager` añade seguridad pero aumenta la complejidad
-3. **Carga de extensiones**: Podría usarse el `ResourceLoader` de pi más directamente
-4. **Complejidad del manejador de streaming**: `subscribeEmbeddedPiSession` ha crecido
+3. **Carga de extensiones**: Podría usar `ResourceLoader` de pi más directamente
+4. **Complejidad del gestor de streaming**: `subscribeEmbeddedPiSession` ha crecido mucho
 5. **Particularidades del proveedor**: Muchas rutas de código específicas del proveedor que pi podría manejar potencialmente
 
 ## Pruebas
@@ -548,7 +548,7 @@ La cobertura de integración de Pi abarca estas suites:
 - `src/agents/pi-tools*.test.ts`
 - `src/agents/pi-tool-definition-adapter*.test.ts`
 - `src/agents/pi-settings.test.ts`
-- `src/agents/pi-extensions/**/*.test.ts`
+- `src/agents/pi-hooks/**/*.test.ts`
 
 En vivo/opcional:
 

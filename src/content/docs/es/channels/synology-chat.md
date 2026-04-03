@@ -19,7 +19,7 @@ Synology Chat está basado en un plugin y no forma parte de la instalación del 
 Instalar desde una copia local:
 
 ```bash
-openclaw plugins install ./extensions/synology-chat
+openclaw plugins install ./path/to/local/synology-chat-plugin
 ```
 
 Detalles: [Plugins](/en/tools/plugin)
@@ -140,3 +140,11 @@ pero las rutas exactas duplicadas aún se rechazan con fallo cerrado. Prefiera r
 - Prefiera `dmPolicy: "allowlist"` para producción.
 - Mantenga `dangerouslyAllowNameMatching` desactivado a menos que necesite explícitamente la entrega de respuestas heredada basada en nombre de usuario.
 - Mantenga `dangerouslyAllowInheritedWebhookPath` desactivado a menos que acepte explícitamente el riesgo de enrutamiento de ruta compartida en una configuración multicuenta.
+
+## Relacionado
+
+- [Descripción general de canales](/en/channels) — todos los canales compatibles
+- [Emparejamiento](/en/channels/pairing) — autenticación de MD y flujo de emparejamiento
+- [Grupos](/en/channels/groups) — comportamiento del chat grupal y control de menciones
+- [Enrutamiento de canales](/en/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Seguridad](/en/gateway/security) — modelo de acceso y fortalecimiento

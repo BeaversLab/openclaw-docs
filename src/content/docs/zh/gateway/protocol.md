@@ -1,15 +1,15 @@
 ---
-summary: "Gateway 网关 WebSocket 协议：握手、帧、版本控制"
+summary: "Gateway(网关) 网关 WebSocket 协议：握手、帧、版本控制"
 read_when:
   - Implementing or updating gateway WS clients
   - Debugging protocol mismatches or connect failures
   - Regenerating protocol schema/models
-title: "Gateway 网关 协议"
+title: "Gateway(网关) 网关 协议"
 ---
 
-# Gateway 网关 协议 (WebSocket)
+# Gateway(网关) 网关 协议 (WebSocket)
 
-Gateway 网关 WS 协议是 OpenClaw 的**单一控制平面 + 节点传输**。
+Gateway(网关) 网关 WS 协议是 OpenClaw 的**单一控制平面 + 节点传输**。
 所有客户端（CLI、Web UI、macOS 应用、iOS/Android 节点、无头节点）
 均通过 WebSocket 连接，并在握手时声明其**角色** + **作用域**。
 
@@ -20,7 +20,7 @@ Gateway 网关 WS 协议是 OpenClaw 的**单一控制平面 + 节点传输**。
 
 ## 握手 (连接)
 
-Gateway 网关 → 客户端 (连接前挑战)：
+Gateway(网关) 网关 → 客户端 (连接前挑战)：
 
 ```json
 {
@@ -30,7 +30,7 @@ Gateway 网关 → 客户端 (连接前挑战)：
 }
 ```
 
-客户端 → Gateway 网关：
+客户端 → Gateway(网关) 网关：
 
 ```json
 {
@@ -65,7 +65,7 @@ Gateway 网关 → 客户端 (连接前挑战)：
 }
 ```
 
-Gateway 网关 → 客户端：
+Gateway(网关) 网关 → 客户端：
 
 ```json
 {
@@ -158,7 +158,7 @@ Method scope 只是第一道关卡。通过 `chat.send` 访问的某些斜杠命
 - `commands`: 用于调用的命令允许列表。
 - `permissions`: 细粒度开关 (例如 `screen.record`, `camera.capture`)。
 
-Gateway 网关 将这些视为**声明** 并执行服务端允许列表。
+Gateway(网关) 网关 将这些视为**声明** 并执行服务端允许列表。
 
 ## 在线状态
 
@@ -186,69 +186,75 @@ Gateway 网关 将这些视为**声明** 并执行服务端允许列表。
 - 操作员客户端通过调用 `exec.approval.resolve` 来解决（需要 `operator.approvals` scope）。
 - 对于 `host=node`，`exec.approval.request` 必须包含 `systemRunPlan`（规范化的 `argv`/`cwd`/`rawCommand`/会话元数据）。缺少 `systemRunPlan` 的请求将被拒绝。
 
+## Agent 传送回退
+
+- `agent` 请求可以包含 `deliver=true` 以请求出站传送。
+- `bestEffortDeliver=false` 保持严格行为：未解析或仅限内部的传递目标返回 `INVALID_REQUEST`。
+- 当无法解析外部可投递路由时（例如内部/网络聊天会话或模糊的多渠道配置），`bestEffortDeliver=true` 允许回退到仅会话执行。
+
 ## 版本控制
 
-- `PROTOCOL_VERSION` 位于 `src/gateway/protocol/schema.ts` 中。
-- 客户端发送 `minProtocol` + `maxProtocol`；服务器拒绝不匹配的请求。
-- 模式 + 模型是从 TypeBox 定义生成的：
+- `PROTOCOL_VERSION` 位于 `src/gateway/protocol/schema.ts`。
+- 客户端发送 `minProtocol` + `maxProtocol`；服务器拒绝不匹配的连接。
+- Schemas + 模型从 TypeBox 定义生成：
   - `pnpm protocol:gen`
   - `pnpm protocol:gen:swift`
   - `pnpm protocol:check`
 
-## 身份验证
+## Auth
 
-- 如果设置了 `OPENCLAW_GATEWAY_TOKEN`（或 `--token`），`connect.params.auth.token`
-  必须匹配，否则套接字将关闭。
-- 配对后，Gateway(网关) 会颁发一个限定于连接角色 + 范围的 **设备令牌**。它在 `hello-ok.auth.deviceToken` 中返回，客户端应将其持久化以供将来连接使用。
-- 设备令牌可以通过 `device.token.rotate` 和
-  `device.token.revoke` 轮换/撤销（需要 `operator.pairing` scope）。
+- 如果设置了 `OPENCLAW_GATEWAY_TOKEN` （或 `--token` ），则 `connect.params.auth.token` 必须匹配，否则套接字将关闭。
+- 配对后，Gateway(网关) 会颁发一个限定于连接角色和范围的 **device token**。它在 `hello-ok.auth.deviceToken` 中返回，客户端应将其保存以用于未来的连接。
+- 设备令牌可以通过 `device.token.rotate` 和 `device.token.revoke` 进行轮换/撤销（需要 `operator.pairing` 作用域）。
 - 身份验证失败包括 `error.details.code` 以及恢复提示：
-  - `error.details.canRetryWithDeviceToken` (布尔值)
-  - `error.details.recommendedNextStep` (`retry_with_device_token`, `update_auth_configuration`, `update_auth_credentials`, `wait_then_retry`, `review_auth_configuration`)
-- `AUTH_TOKEN_MISMATCH` 的客户端行为：
-  - 受信任的客户端可以使用缓存的每设备令牌尝试一次受限的重试。
-  - 如果该重试失败，客户端应停止自动重新连接循环并向操作员显示操作指导。
+  - `error.details.canRetryWithDeviceToken`（布尔值）
+  - `error.details.recommendedNextStep` (`retry_with_device_token`、`update_auth_configuration`、`update_auth_credentials`、`wait_then_retry`、`review_auth_configuration`)
+- 针对 `AUTH_TOKEN_MISMATCH` 的客户端行为：
+  - 受信任的客户端可以使用缓存的每设备令牌尝试一次有界的重试。
+  - 如果重试失败，客户端应停止自动重连循环，并显示操作员操作指南。
 
 ## 设备身份 + 配对
 
-- 节点应包含源自密钥对指纹的稳定设备身份 (`device.id`)。
-- 网关按设备 + 角色颁发令牌。
-- 除非启用了本地自动批准，否则新设备 ID 需要配对批准。
-- **Local** 连接包括回环地址和网关主机自己的 tailnet 地址（因此同主机 tailnet 绑定仍可以自动批准）。
-- 所有 WS 客户端在 `connect` 期间必须包含 `device` 身份（操作员 + 节点）。
-  控制 UI 仅在这些模式下可以省略它：
-  - `gateway.controlUi.allowInsecureAuth=true` 用于仅本地主机的不安全 HTTP 兼容性。
-  - `gateway.controlUi.dangerouslyDisableDeviceAuth=true` （破窗，严重安全降级）。
+- 节点应包含从密钥对指纹派生的稳定设备标识（`device.id`）。
+- 网关会根据设备和角色颁发令牌。
+- 除非启用了本地自动批准，否则新的设备 ID 需要配对批准。
+- **本地** 连接包括回环地址和网关主机自身的 tailnet 地址
+  （因此同主机 tailnet 绑定仍可以自动批准）。
+- 所有 WS 客户端必须在 `device` 期间包含 `connect` 身份（operator + node）。
+  控制 UI 仅在以下模式下可以省略它：
+  - `gateway.controlUi.allowInsecureAuth=true` 用于仅限本地主机的不安全 HTTP 兼容性。
+  - `gateway.controlUi.dangerouslyDisableDeviceAuth=true` （break-glass，严重的安全降级）。
 - 所有连接必须对服务器提供的 `connect.challenge` nonce 进行签名。
 
-### 设备身份验证迁移诊断
+### 设备身份迁移诊断
 
-对于仍使用预挑战签名行为的旧客户端，`connect` 现在在 `error.details.code` 下返回 `DEVICE_AUTH_*` 详细代码，并带有稳定的 `error.details.reason`。
+对于仍使用挑战前签名行为的旧版客户端，`connect` 现在返回
+`error.details.code` 下的 `DEVICE_AUTH_*` 详细代码，并带有稳定的 `error.details.reason`。
 
 常见迁移失败：
 
-| 消息                        | details.code                     | details.reason           | 含义                                        |
-| --------------------------- | -------------------------------- | ------------------------ | ------------------------------------------- |
-| `device nonce required`     | `DEVICE_AUTH_NONCE_REQUIRED`     | `device-nonce-missing`   | 客户端省略了 `device.nonce`（或发送为空）。 |
-| `device nonce mismatch`     | `DEVICE_AUTH_NONCE_MISMATCH`     | `device-nonce-mismatch`  | 客户端使用了过时/错误的 nonce 进行签名。    |
-| `device signature invalid`  | `DEVICE_AUTH_SIGNATURE_INVALID`  | `device-signature`       | 签名负载与 v2 负载不匹配。                  |
-| `device signature expired`  | `DEVICE_AUTH_SIGNATURE_EXPIRED`  | `device-signature-stale` | 签名时间戳超出允许的偏差范围。              |
-| `device identity mismatch`  | `DEVICE_AUTH_DEVICE_ID_MISMATCH` | `device-id-mismatch`     | `device.id` 与公钥指纹不匹配。              |
-| `device public key invalid` | `DEVICE_AUTH_PUBLIC_KEY_INVALID` | `device-public-key`      | 公钥格式/规范化失败。                       |
+| 消息                        | details.code                     | details.reason           | 含义                                            |
+| --------------------------- | -------------------------------- | ------------------------ | ----------------------------------------------- |
+| `device nonce required`     | `DEVICE_AUTH_NONCE_REQUIRED`     | `device-nonce-missing`   | 客户端省略了 `device.nonce`（或发送了空白值）。 |
+| `device nonce mismatch`     | `DEVICE_AUTH_NONCE_MISMATCH`     | `device-nonce-mismatch`  | 客户端使用了过期/错误的 nonce 进行签名。        |
+| `device signature invalid`  | `DEVICE_AUTH_SIGNATURE_INVALID`  | `device-signature`       | 签名负载与 v2 负载不匹配。                      |
+| `device signature expired`  | `DEVICE_AUTH_SIGNATURE_EXPIRED`  | `device-signature-stale` | 签名的时间戳超出了允许的偏差范围。              |
+| `device identity mismatch`  | `DEVICE_AUTH_DEVICE_ID_MISMATCH` | `device-id-mismatch`     | `device.id` 与公钥指纹不匹配。                  |
+| `device public key invalid` | `DEVICE_AUTH_PUBLIC_KEY_INVALID` | `device-public-key`      | 公钥格式/规范化失败。                           |
 
 迁移目标：
 
 - 始终等待 `connect.challenge`。
-- 签署包含服务器随机数 (nonce) 的 v2 载荷。
-- 在 `connect.params.device.nonce` 中发送相同的随机数。
-- 首选签名载荷是 `v3`，除了 device/client/role/scopes/token/nonce 字段外，它还绑定了 `platform` 和 `deviceFamily`。
-- 为了兼容性，仍接受传统的 `v2` 签名，但在重新连接时，配对设备元数据固定仍然控制命令策略。
+- 对包含服务器 nonce 的 v2 负载进行签名。
+- 在 `connect.params.device.nonce` 中发送相同的 nonce。
+- 首选签名负载是 `v3`，它除了 device/client/role/scopes/token/nonce 字段外，还绑定了 `platform` 和 `deviceFamily`。
+- 为了兼容性，传统的 `v2` 签名仍然被接受，但在重新连接时，配对设备的元数据固定仍然控制着命令策略。
 
-## TLS + 固定 (pinning)
+## TLS + 证书固定
 
 - WS 连接支持 TLS。
-- 客户端可以选择固定网关证书指纹（请参阅 `gateway.tls` 配置以及 `gateway.remote.tlsFingerprint` 或 CLI `--tls-fingerprint`）。
+- 客户端可以选择固定网关证书指纹（请参阅 `gateway.tls` 配置加上 `gateway.remote.tlsFingerprint` 或 CLI `--tls-fingerprint`）。
 
-## 范围
+## 作用域
 
-此协议公开了**完整的网关 API**（状态、频道、模型、聊天、代理、会话、节点、批准等）。具体的表面由 `src/gateway/protocol/schema.ts` 中的 TypeBox 模式定义。
+此协议暴露了**完整的网关 API**（状态、通道、模型、聊天、代理、会话、节点、批准等）。其确切的接口范围由 `src/gateway/protocol/schema.ts` 中的 TypeBox 模式定义。

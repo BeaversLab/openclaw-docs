@@ -7,7 +7,7 @@ title: "health"
 
 # `openclaw health`
 
-从正在运行的 Gateway 网关 获取健康信息。
+从正在运行的 Gateway(网关) 网关 获取健康信息。
 
 ```bash
 openclaw health

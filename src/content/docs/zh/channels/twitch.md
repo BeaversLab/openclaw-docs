@@ -22,7 +22,7 @@ openclaw plugins install @openclaw/twitch
 本地检出（当从 git 仓库运行时）：
 
 ```bash
-openclaw plugins install ./extensions/twitch
+openclaw plugins install ./path/to/local/twitch-plugin
 ```
 
 详情：[插件](/en/tools/plugin)
@@ -34,7 +34,7 @@ openclaw plugins install ./extensions/twitch
    - 选择 **Bot Token**
    - 确认作用域 `chat:read` 和 `chat:write` 已被选中
    - 复制 **Client ID** 和 **Access Token**
-3. 查找你的 Twitch 用户 ID：[https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)
+3. 查找您的 Twitch 用户 ID：[https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/](https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/)
 4. 配置令牌：
    - 环境变量：`OPENCLAW_TWITCH_ACCESS_TOKEN=...`（仅限默认账户）
    - 或配置文件：`channels.twitch.accessToken`
@@ -62,7 +62,7 @@ openclaw plugins install ./extensions/twitch
 
 ## 这是什么
 
-- Gateway 拥有的 Twitch。
+- Gateway(网关) 拥有的 Twitch。
 - 确定性路由：回复总是发送回 Twitch。
 - 每个账户都映射到一个隔离的会话密钥 `agent:<agentId>:twitch:<accountName>`。
 - `username` 是机器人的账户（进行身份验证的一方），`channel` 是要加入的聊天室。
@@ -127,9 +127,9 @@ OPENCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 
 ## 令牌刷新（可选）
 
-来自 [Twitch Token Generator](https://twitchtokengenerator.com/) 的令牌无法自动刷新 - 过期时请重新生成。
+来自 [Twitch Token Generator](https://twitchtokengenerator.com/) 的令牌无法自动刷新 —— 过期时请重新生成。
 
-若要自动刷新令牌，请在 [Twitch Developer Console](https://dev.twitch.tv/console) 创建您自己的 Twitch 应用程序并添加到配置：
+若要自动刷新令牌，请在 [Twitch Developer Console](https://dev.twitch.tv/console) 创建您自己的 Twitch 应用程序并添加到配置中：
 
 ```json5
 {
@@ -377,3 +377,11 @@ Access token refreshed for user 123456 (expires in 14400s)
 - **每条消息 500 个字符**（在单词边界自动分块）
 - Markdown 会在分块前被去除
 - 无速率限制（使用 Twitch 的内置速率限制）
+
+## 相关
+
+- [Channels Overview](/en/channels) — 所有支持的频道
+- [Pairing](/en/channels/pairing) — 私信身份验证和配对流程
+- [Groups](/en/channels/groups) — 群聊行为和提及限制
+- [Channel Routing](/en/channels/channel-routing) — 消息的会话路由
+- [Security](/en/gateway/security) — 访问模型和加固

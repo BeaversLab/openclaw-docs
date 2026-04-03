@@ -8,8 +8,8 @@ title: "Dépannage"
 
 # Dépannage de la passerelle
 
-Cette page est le runbook approfondi.
-Commencez par [/help/troubleshooting](/en/help/troubleshooting) si vous souhaitez d'abord suivre le flux de triage rapide.
+Cette page est le guide d'exécution approfondi.
+Commencez par [/help/troubleshooting](/en/help/troubleshooting) si vous souhaitez d'abord le flux de triage rapide.
 
 ## Échelle de commande
 
@@ -124,8 +124,8 @@ Utilisez `error.details.code` de la réponse `connect` échouée pour choisir l'
 | Code de détail               | Signification                                                                    | Action recommandée                                                                                                                                                                                                               |
 | ---------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `AUTH_TOKEN_MISSING`         | Le client n'a pas envoyé un jeton partagé requis.                                | Collez/définissez le jeton dans le client et réessayez. Pour les chemins du tableau de bord : `openclaw config get gateway.auth.token` puis collez dans les paramètres de l'interface de contrôle.                               |
-| `AUTH_TOKEN_MISMATCH`        | Le jeton partagé ne correspond pas au jeton d'authentification de la passerelle. | Si `canRetryWithDeviceToken=true`, autorisez une nouvelle tentative de confiance. Si l'échec persiste, exécutez la [liste de vérification de récupération de dérive des jetons](/en/cli/devices#token-drift-recovery-checklist). |
-| `AUTH_DEVICE_TOKEN_MISMATCH` | Le jeton mis en cache par appareil est périmé ou révoqué.                        | Faites pivoter/réapprouver le jeton de l'appareil en utilisant le [devices CLI](/en/cli/devices), puis reconnectez-vous.                                                                                                         |
+| `AUTH_TOKEN_MISMATCH`        | Le jeton partagé ne correspond pas au jeton d'authentification de la passerelle. | Si `canRetryWithDeviceToken=true`, autorisez une nouvelle tentative de confiance. En cas d'échec persistant, exécutez la [liste de contrôle de récupération de dérive de jeton](/en/cli/devices#token-drift-recovery-checklist). |
+| `AUTH_DEVICE_TOKEN_MISMATCH` | Le jeton mis en cache par appareil est périmé ou révoqué.                        | Faire pivoter/réapprouver le jeton de l'appareil à l'aide de [devices CLI](/en/cli/devices), puis se reconnecter.                                                                                                                |
 | `PAIRING_REQUIRED`           | L'identité de l'appareil est connue mais n'est pas approuvée pour ce rôle.       | Approuver la demande en attente : `openclaw devices list` puis `openclaw devices approve <requestId>`.                                                                                                                           |
 
 Vérification de la migration de l'authentification d'appareil v2 :
@@ -145,11 +145,12 @@ Si les journaux indiquent des erreurs de nonce/signature, mettez à jour le clie
 Connexes :
 
 - [/web/control-ui](/en/web/control-ui)
-- [/gateway/authentication](/en/gateway/authentication)
+- [/gateway/configuration](/en/gateway/configuration) (modes d'authentification de la passerelle)
+- [/gateway/trusted-proxy-auth](/en/gateway/trusted-proxy-auth)
 - [/gateway/remote](/en/gateway/remote)
 - [/cli/devices](/en/cli/devices)
 
-## Le service Gateway ne fonctionne pas
+## Service Gateway non exécuté
 
 Utilisez ceci lorsque le service est installé mais que le processus ne reste pas actif.
 
@@ -161,27 +162,27 @@ openclaw doctor
 openclaw gateway status --deep
 ```
 
-Recherchez :
+Rechercher :
 
-- `Runtime: stopped` avec des indicateurs de sortie.
-- Inadéquation de la configuration du service (`Config (cli)` contre `Config (service)`).
-- Conflits de port/d'écoute.
+- `Runtime: stopped` avec des indications de sortie.
+- Inadéquation de la configuration du service (`Config (cli)` vs `Config (service)`).
+- Conflits de port/écouteur.
 
 Signatures courantes :
 
-- `Gateway start blocked: set gateway.mode=local` → le mode passerelle locale n'est pas activé. Correction : définissez `gateway.mode="local"` dans votre configuration (ou exécutez `openclaw configure`). Si vous exécutez OpenClaw via Podman, le chemin de configuration par défaut est `~/.openclaw/openclaw.json`.
-- `refusing to bind gateway ... without auth` → liaison non-boucle sans jeton/mot de passe.
+- `Gateway start blocked: set gateway.mode=local` → le mode passerelle locale n'est pas activé. Correctif : définissez `gateway.mode="local"` dans votre configuration (ou exécutez `openclaw configure`). Si vous exécutez OpenClaw via Podman, le chemin de configuration par défaut est `~/.openclaw/openclaw.json`.
+- `refusing to bind gateway ... without auth` → liaison non-bouclée sans jeton/mot de passe.
 - `another gateway instance is already listening` / `EADDRINUSE` → conflit de port.
 
-Connexes :
+Connexe :
 
 - [/gateway/background-process](/en/gateway/background-process)
 - [/gateway/configuration](/en/gateway/configuration)
 - [/gateway/doctor](/en/gateway/doctor)
 
-## Les messages ne circulent pas alors que le canal est connecté
+## Messages du channel connecté ne circulant pas
 
-Si l'état du canal est connecté mais que le flux de messages est mort, concentrez-vous sur la stratégie, les autorisations et les règles de livraison spécifiques au canal.
+Si l'état du channel est connecté mais que le flux de messages est mort, concentrez-vous sur la stratégie, les autorisations et les règles de livraison spécifiques au channel.
 
 ```bash
 openclaw channels status --probe
@@ -195,7 +196,7 @@ Recherchez :
 
 - Stratégie DM (`pairing`, `allowlist`, `open`, `disabled`).
 - Liste blanche de groupe et exigences de mention.
-- Autorisations/portées de l'API du channel manquantes.
+- Autorisations/étendues de l'API du API manquantes.
 
 Signatures courantes :
 
@@ -210,7 +211,7 @@ Connexes :
 - [/channels/telegram](/en/channels/telegram)
 - [/channels/discord](/en/channels/discord)
 
-## Livraison du cron et du heartbeat
+## Livraison Cron et heartbeat
 
 Si le cron ou le heartbeat ne s'est pas exécuté ou n'a pas été livré, vérifiez d'abord l'état du planificateur, puis la cible de livraison.
 
@@ -222,19 +223,19 @@ openclaw system heartbeat last
 openclaw logs --follow
 ```
 
-Rechercher :
+Recherchez :
 
 - Cron activé et prochain réveil présent.
 - Statut de l'historique d'exécution des tâches (`ok`, `skipped`, `error`).
-- Raisons de l'omission du battement de cœur (`quiet-hours`, `requests-in-flight`, `alerts-disabled`).
+- Raisons de l'omission du heartbeat (`quiet-hours`, `requests-in-flight`, `alerts-disabled`).
 
 Signatures courantes :
 
 - `cron: scheduler disabled; jobs will not run automatically` → cron désactivé.
-- `cron: timer tick failed` → échec du tick du planificateur ; vérifiez les erreurs de fichier/journal/d'exécution.
+- `cron: timer tick failed` → échec du tick du planificateur ; vérifiez les erreurs de fichier/journal/runtime.
 - `heartbeat skipped` avec `reason=quiet-hours` → en dehors de la fenêtre des heures actives.
-- `heartbeat: unknown accountId` → identifiant de compte invalide pour la cible de livraison du battement de cœur.
-- `heartbeat skipped` avec `reason=dm-blocked` → la cible du battement de cœur est résolue vers une destination de type DM alors que `agents.defaults.heartbeat.directPolicy` (ou une priorité par agent) est défini sur `block`.
+- `heartbeat: unknown accountId` → id de compte invalide pour la cible de livraison du heartbeat.
+- `heartbeat skipped` avec `reason=dm-blocked` → la cible du heartbeat correspond à une destination de style DM alors que `agents.defaults.heartbeat.directPolicy` (ou la substitution par agent) est défini sur `block`.
 
 Connexes :
 
@@ -242,9 +243,9 @@ Connexes :
 - [/automation/cron-jobs](/en/automation/cron-jobs)
 - [/gateway/heartbeat](/en/gateway/heartbeat)
 
-## Échec de l'outil couplé au nœud
+## Échec de l'outil appairé au nœud
 
-Si un nœud est apparié mais que les outils échouent, isolez les états de premier plan, d'autorisation et d'approbation.
+Si un nœud est appairé mais que les outils échouent, isolez les états de premier plan, d'autorisation et d'approbation.
 
 ```bash
 openclaw nodes status
@@ -257,15 +258,15 @@ openclaw status
 Recherchez :
 
 - Nœud en ligne avec les fonctionnalités attendues.
-- Autorisations OS pour la caméra, le micro, la localisation et l'écran.
-- Approbations d'exécution et état de la liste autorisée.
+- Autorisations d'accès OS pour la caméra/le microphone/la localisation/l'écran.
+- Approbations d'exécution et état de la liste d'autorisation (allowlist).
 
 Signatures courantes :
 
-- `NODE_BACKGROUND_UNAVAILABLE` → l'application node doit être au premier plan.
-- `*_PERMISSION_REQUIRED` / `LOCATION_PERMISSION_REQUIRED` → permission OS manquante.
+- `NODE_BACKGROUND_UNAVAILABLE` → l'application nœud doit être au premier plan.
+- `*_PERMISSION_REQUIRED` / `LOCATION_PERMISSION_REQUIRED` → autorisation OS manquante.
 - `SYSTEM_RUN_DENIED: approval required` → approbation d'exécution en attente.
-- `SYSTEM_RUN_DENIED: allowlist miss` → commande bloquée par la liste autorisée.
+- `SYSTEM_RUN_DENIED: allowlist miss` → commande bloquée par la liste d'autorisation.
 
 Connexes :
 
@@ -273,9 +274,9 @@ Connexes :
 - [/nodes/index](/en/nodes/index)
 - [/tools/exec-approvals](/en/tools/exec-approvals)
 
-## Échec de l'outil navigateur
+## Échec de l'outil de navigateur
 
-Utilisez ceci lorsque les actions de l'outil navigateur échouent alors que la passerelle elle-même est saine.
+Utilisez ceci lorsque les actions de l'outil de navigateur échouent alors que la passerelle elle-même est en bonne santé.
 
 ```bash
 openclaw browser status
@@ -285,18 +286,21 @@ openclaw logs --follow
 openclaw doctor
 ```
 
-Recherchez :
+Vérifiez :
 
-- Chemin d'exécutable du navigateur valide.
+- Si `plugins.allow` est défini et inclut `browser`.
+- Chemin exécutable valide du navigateur.
 - Accessibilité du profil CDP.
 - Disponibilité locale de Chrome pour les profils `existing-session` / `user`.
 
 Signatures courantes :
 
-- `Failed to start Chrome CDP on port` → le processus du navigateur n'a pas pu démarrer.
+- `unknown command "browser"` ou `unknown command 'browser'` → le module externe du navigateur inclus est exclu par `plugins.allow`.
+- outil de navigateur manquant / indisponible alors que `browser.enabled=true` → `plugins.allow` exclut `browser`, le module ne s'est donc jamais chargé.
+- `Failed to start Chrome CDP on port` → échec du lancement du processus du navigateur.
 - `browser.executablePath not found` → le chemin configuré n'est pas valide.
-- `No Chrome tabs found for profile="user"` → le profil de jointure MCP Chrome n'a aucun onglet Chrome local ouvert.
-- `Browser attachOnly is enabled ... not reachable` → le profil de jointure uniquement n'a aucune cible accessible.
+- `No Chrome tabs found for profile="user"` → le profil d'attachement Chrome MCP n'a aucun onglet Chrome local ouvert.
+- `Browser attachOnly is enabled ... not reachable` → le profil d'attachement uniquement n'a aucune cible accessible.
 
 Connexes :
 
@@ -305,9 +309,9 @@ Connexes :
 
 ## Si vous avez effectué une mise à niveau et que quelque chose s'est soudainement brisé
 
-La plupart des pannes post-mise à niveau sont dues à une dérive de la configuration ou à des valeurs par défaut plus strictes désormais appliquées.
+La plupart des pannes post-mise à niveau sont dues à une dérive de la configuration ou à des paramètres par défaut plus stricts désormais appliqués.
 
-### 1) Le comportement de remplacement de l'authentification et de l'URL a changé
+### 1) Comportement de substitution de l'authentification et de l'URL modifié
 
 ```bash
 openclaw gateway status
@@ -318,12 +322,12 @@ openclaw config get gateway.auth.mode
 
 Ce qu'il faut vérifier :
 
-- Si `gateway.mode=remote`, les appels CLI peuvent cibler une instance distante alors que votre service local est correct.
+- Si `gateway.mode=remote`, les appels CLI peuvent cibler le distant alors que votre service local est correct.
 - Les appels explicites `--url` ne reviennent pas aux identifiants stockés.
 
 Signatures courantes :
 
-- `gateway connect failed:` → mauvaise cible d'URL.
+- `gateway connect failed:` → mauvaise URL cible.
 - `unauthorized` → point de terminaison accessible mais mauvaise authentification.
 
 ### 2) Les garde-fous de liaison et d'authentification sont plus stricts
@@ -343,7 +347,7 @@ Ce qu'il faut vérifier :
 Signatures courantes :
 
 - `refusing to bind gateway ... without auth` → inadéquation liaison+auth.
-- `RPC probe: failed` alors que le runtime est en cours d'exécution → passerelle active mais inaccessible avec l'authentification/l'URL actuelle.
+- `RPC probe: failed` pendant l'exécution du runtime → passerelle active mais inaccessible avec l'authentification/l'URL actuelle.
 
 ### 3) L'état du jumelage et de l'identité de l'appareil a changé
 
@@ -356,13 +360,13 @@ openclaw doctor
 
 Ce qu'il faut vérifier :
 
-- Approbations d'appareils en attente pour le tableau de bord/les nœuds.
+- Approbations d'appareil en attente pour le tableau de bord/les nœuds.
 - Approbations de jumelage DM en attente après des modifications de stratégie ou d'identité.
 
 Signatures courantes :
 
 - `device identity required` → authentification de l'appareil non satisfaite.
-- `pairing required` → l'expéditeur/appareil doit être approuvé.
+- `pairing required` → l'expéditeur/l'appareil doit être approuvé.
 
 Si la configuration du service et le runtime sont toujours en désaccord après les vérifications, réinstallez les métadonnées du service à partir du même répertoire de profil/état :
 
@@ -371,7 +375,7 @@ openclaw gateway install --force
 openclaw gateway restart
 ```
 
-Connexes :
+Connexe :
 
 - [/gateway/pairing](/en/gateway/pairing)
 - [/gateway/authentication](/en/gateway/authentication)
