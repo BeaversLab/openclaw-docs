@@ -24,22 +24,36 @@ model as `provider/model`.
 
 ## Supported providers (starter set)
 
-- [OpenAI (API + Codex)](/en/providers/openai)
-- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
-- [OpenRouter](/en/providers/openrouter)
-- [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
+- [Alibaba Model Studio](/en/providers/alibaba)
+- [Anthropic (API + Claude CLI)](/en/providers/anthropic)
+- [Amazon Bedrock](/en/providers/bedrock)
+- [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
+- [Chutes](/en/providers/chutes)
+- [ComfyUI](/en/providers/comfy)
 - [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
-- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
-- [Mistral](/en/providers/mistral)
-- [Synthetic](/en/providers/synthetic)
-- [OpenCode (Zen + Go)](/en/providers/opencode)
-- [Z.AI](/en/providers/zai)
+- [fal](/en/providers/fal)
+- [Fireworks](/en/providers/fireworks)
 - [GLM models](/en/providers/glm)
 - [MiniMax](/en/providers/minimax)
-- [Venice (Venice AI)](/en/providers/venice)
-- [Amazon Bedrock](/en/providers/bedrock)
+- [Mistral](/en/providers/mistral)
+- [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
+- [OpenAI (API + Codex)](/en/providers/openai)
+- [OpenCode (Zen + Go)](/en/providers/opencode)
+- [OpenRouter](/en/providers/openrouter)
 - [Qianfan](/en/providers/qianfan)
+- [Qwen](/en/providers/qwen)
+- [Runway](/en/providers/runway)
+- [StepFun](/en/providers/stepfun)
+- [Synthetic](/en/providers/synthetic)
+- [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
+- [Venice (Venice AI)](/en/providers/venice)
 - [xAI](/en/providers/xai)
+- [Z.AI](/en/providers/zai)
+
+## Additional bundled provider variants
+
+- `anthropic-vertex` - implicit Anthropic on Google Vertex support when Vertex credentials are available; no separate onboarding auth choice
+- `copilot-proxy` - local VS Code Copilot Proxy bridge; use `openclaw onboard --auth-choice copilot-proxy`
 
 For the full provider catalog (xAI, Groq, Mistral, etc.) and advanced configuration,
 see [Model providers](/en/concepts/model-providers).

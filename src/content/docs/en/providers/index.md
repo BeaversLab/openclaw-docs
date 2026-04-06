@@ -26,10 +26,16 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 
 ## Provider docs
 
+- [Alibaba Model Studio](/en/providers/alibaba)
 - [Amazon Bedrock](/en/providers/bedrock)
-- [Anthropic (API + Claude Code CLI)](/en/providers/anthropic)
+- [Anthropic (API + Claude CLI)](/en/providers/anthropic)
+- [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
+- [Chutes](/en/providers/chutes)
+- [ComfyUI](/en/providers/comfy)
 - [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
 - [DeepSeek](/en/providers/deepseek)
+- [fal](/en/providers/fal)
+- [Fireworks](/en/providers/fireworks)
 - [GitHub Copilot](/en/providers/github-copilot)
 - [GLM models](/en/providers/glm)
 - [Google (Gemini)](/en/providers/google)
@@ -48,17 +54,27 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [OpenRouter](/en/providers/openrouter)
 - [Perplexity (web search)](/en/providers/perplexity-provider)
 - [Qianfan](/en/providers/qianfan)
-- [Qwen / Model Studio (Alibaba Cloud)](/en/providers/qwen_modelstudio)
+- [Qwen Cloud](/en/providers/qwen)
+- [Runway](/en/providers/runway)
 - [SGLang (local models)](/en/providers/sglang)
+- [StepFun](/en/providers/stepfun)
 - [Synthetic](/en/providers/synthetic)
 - [Together AI](/en/providers/together)
 - [Venice (Venice AI, privacy-focused)](/en/providers/venice)
 - [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
+- [Vydra](/en/providers/vydra)
 - [vLLM (local models)](/en/providers/vllm)
 - [Volcengine (Doubao)](/en/providers/volcengine)
 - [xAI](/en/providers/xai)
 - [Xiaomi](/en/providers/xiaomi)
 - [Z.AI](/en/providers/zai)
+
+## Shared overview pages
+
+- [Additional bundled variants](/en/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy, and Gemini CLI OAuth
+- [Image Generation](/en/tools/image-generation) - Shared `image_generate` tool, provider selection, and failover
+- [Music Generation](/en/tools/music-generation) - Shared `music_generate` tool, provider selection, and failover
+- [Video Generation](/en/tools/video-generation) - Shared `video_generate` tool, provider selection, and failover
 
 ## Transcription providers
 
